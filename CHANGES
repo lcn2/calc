@@ -51,6 +51,9 @@ Following is the change from calc version 2.10.3t5.38 to date:
     The function version(), now returns a malloced version string
     without the title.
 
+    Consolidated multiple SGI IRIX -n32 sections (for r4k, r5k and r10k)
+    into a single section.
+
 
 Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 

@@ -556,7 +556,7 @@ CC= ${PURIFY} cc
 #
 ###
 #
-# SGI IRIX6.2 (or later) -n32 (v7.1 or later) Compiler for the R4k
+# SGI IRIX6.2 (or later) -n32 (v7.1 or later) Compiler
 #
 # You must set above:
 #	RANLIB=:
@@ -572,87 +572,19 @@ CC= ${PURIFY} cc
 #
 #CCWARN= -fullwarn -woff 1209
 #CCOPT= ${DEBUG} ${NO_SHARED}
-#CCMISC= -use_readonly_const
+#CCMISC= -rdata_shared
 #
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
 #CCMAIN= ${ICFLAGS} ${MAIN}
-#CCSHS= ${CFLAGS}
+#CCSHS=
 #
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
 #
-#CC= ${PURIFY} cc -n32 -r4000 -xansi
-#
-###
-#
-# SGI IRIX6.2 (or later) -n32 (v7.1 or later) Compiler for the R5k
-#
-# You must set above:
-#	RANLIB=:
-#
-# for better performance, set the following above:
-#	DEBUG= -O2 -g3
-#
-# If you have the directory /usr/lib32/nonshared, then set the following above:
-#	NO_SHARED= -non_shared
-#	LD_NO_SHARED= -Wl,-rdata_shared
-#
-# woff 1209: cancel 'controlling expression is constant' warnings
-#
-#CCWARN= -fullwarn -woff 1209
-#CCOPT= ${DEBUG} ${NO_SHARED}
-#CCMISC= -use_readonly_const
-#
-#CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= ${CCWARN} ${CCMISC}
-#
-#CCMAIN= ${ICFLAGS} ${MAIN}
-#CCSHS= ${CFLAGS}
-#
-#LCFLAGS=
-#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
-#ILDFLAGS=
-#
-#CC= ${PURIFY} cc -n32 -r5000 -xansi
-#
-###
-#
-# SGI IRIX6.5 (or later) -n32 (v7.2 or later) Compiler for the R10k
-#
-# NOTE: For Pre IRIX6.5 and pre v7.2 compilers, use:
-#
-#	CCSHS= ${CFLAGS} -OPT:fold_arith_limit=1668
-#
-# You must set above:
-#       RANLIB=:
-#
-# for better performance, set the following above:
-#	DEBUG= -O2 -g3
-#
-# If you have the directory /usr/lib32/nonshared, then set the following above:
-#	NO_SHARED= -non_shared
-#	LD_NO_SHARED= -Wl,-rdata_shared
-#
-# woff 1209: cancel 'controlling expression is constant' warnings
-#
-#CCWARN= -fullwarn -woff 1209
-#CCOPT= ${DEBUG} ${NO_SHARED}
-#CCMISC= -use_readonly_const
-#
-#CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= ${CCWARN} ${CCMISC}
-#
-#CCMAIN= ${ICFLAGS} ${MAIN}
-#CCSHS= ${CFLAGS}
-#
-#LCFLAGS=
-#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
-#ILDFLAGS=
-#
-#CC= ${PURIFY} cc -n32 -r10000 -mips4 -xansi
+#CC= ${PURIFY} cc -n32 -xansi
 #
 ###
 #

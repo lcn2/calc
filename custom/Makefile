@@ -470,7 +470,8 @@ install: all
 	else \
 	    true; \
 	fi
-	${Q}for i in ${INSTALL_H_SRC}; do \
+	${Q}for i in ${INSTALL_H_SRC} /dev/null; do \
+		if [ X$$i = X/dev/null ]; then continue; fi; \
 		echo rm -f ${CUSTOMLIBDIR}/$$i; \
 		rm -f ${CUSTOMLIBDIR}/$$i; \
 		echo cp $$i ${CUSTOMLIBDIR}; \
