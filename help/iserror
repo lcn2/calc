@@ -1,5 +1,5 @@
 NAME
-    error - test whether a value is an error value
+    iserror - test whether a value is an error value
 
 SYNOPSIS
     iserror(x)
@@ -25,4 +25,8 @@ LIBRARY
     none
 
 SEE ALSO
-    error, errorcodes
+    error, errorcodes,
+    isassoc, isatty, isblk, isconfig, isdefined, iseven, isfile,
+    ishash, isident, isint, islist, ismat, ismult, isnull, isnum, isobj,
+    isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
+    issimple, issq, isstr, istype

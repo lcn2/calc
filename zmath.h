@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
@@ -8,10 +8,11 @@
  * and longs must be addressible on word boundaries.
  */
 
-#if !defined(ZMATH_H)
-#define	ZMATH_H
 
-#include <stdio.h>
+#if !defined(__ZMATH_H__)
+#define	__ZMATH_H__
+
+
 #include "alloc.h"
 #include "endian_calc.h"
 #include "longbits.h"
@@ -24,13 +25,8 @@
 
 
 #ifndef ALLOCTEST
-# if defined(CALC_MALLOC)
-#  define freeh(p) (((void *)p == (void *)_zeroval_) ||			\
-		    ((void *)p == (void *)_oneval_) || free((void *)p))
-# else
-#  define freeh(p) { if (((void *)p != (void *)_zeroval_) &&		\
+# define freeh(p) { if (((void *)p != (void *)_zeroval_) &&		\
 			 ((void *)p != (void *)_oneval_)) free((void *)p); }
-# endif
 #endif
 
 
@@ -177,10 +173,6 @@ typedef union {
 } SIUNION;
 
 
-#if !defined(BYTE_ORDER)
-#include <machine/endian.h>
-#endif
-
 #if !defined(LITTLE_ENDIAN)
 #define LITTLE_ENDIAN	1234	/* Least Significant Byte first */
 #endif
@@ -189,15 +181,15 @@ typedef union {
 #endif
 /* PDP_ENDIAN - LSB in word, MSW in long is not supported */
 
-#if BYTE_ORDER == LITTLE_ENDIAN
+#if CALC_BYTE_ORDER == LITTLE_ENDIAN
 # define silow	sis.Svalue1	/* low order half of full value */
 # define sihigh	sis.Svalue2	/* high order half of full value */
 #else
-# if BYTE_ORDER == BIG_ENDIAN
+# if CALC_BYTE_ORDER == BIG_ENDIAN
 #  define silow	sis.Svalue2	/* low order half of full value */
 #  define sihigh sis.Svalue1	/* high order half of full value */
 # else
-   /\oo/\    BYTE_ORDER must be BIG_ENDIAN or LITTLE_ENDIAN    /\oo/\  !!!
+   /\oo/\    CALC_BYTE_ORDER must be BIG_ENDIAN or LITTLE_ENDIAN    /\oo/\  !!!
 # endif
 #endif
 
@@ -232,6 +224,7 @@ extern void zprintval(ZVALUE z, long decimals, long width);
 extern void zprintx(ZVALUE z, long width);
 extern void zprintb(ZVALUE z, long width);
 extern void zprinto(ZVALUE z, long width);
+extern void fitzprint(ZVALUE, long, long);
 
 
 /*
@@ -251,6 +244,8 @@ extern BOOL zdivides(ZVALUE z1, ZVALUE z2);
 extern void zor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 extern void zand(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 extern void zxor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern void zandnot(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern long zpopcnt(ZVALUE z, int bitval);
 extern void zshift(ZVALUE z, long n, ZVALUE *res);
 extern void zsquare(ZVALUE z, ZVALUE *res);
 extern long zlowbit(ZVALUE z);
@@ -261,6 +256,7 @@ extern BOOL zisonebit(ZVALUE z);
 extern BOOL zisallbits(ZVALUE z);
 extern FLAG ztest(ZVALUE z);
 extern FLAG zrel(ZVALUE z1, ZVALUE z2);
+extern FLAG zabsrel(ZVALUE z1, ZVALUE z2);
 extern BOOL zcmp(ZVALUE z1, ZVALUE z2);
 
 
@@ -292,6 +288,7 @@ extern long zdigit(ZVALUE z1, long n);
 extern FLAG zsqrt(ZVALUE z1, ZVALUE *dest, long R);
 extern void zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest);
 extern BOOL zissquare(ZVALUE z);
+extern void zhnrmod(ZVALUE v, ZVALUE h, ZVALUE zn, ZVALUE zr, ZVALUE *res);
 
 
 /*
@@ -318,9 +315,9 @@ extern void zlcmfact(ZVALUE z, ZVALUE *dest);
 #if 0
 extern void zapprox(ZVALUE z1, ZVALUE z2, ZVALUE *res1, ZVALUE *res2);
 extern void zmulmod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res);
-extern void zsquaremod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 extern void zsubmod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res);
 #endif
+extern void zsquaremod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 extern void zminmod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 extern BOOL zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3);
 extern void zio_init(void);
@@ -502,7 +499,6 @@ extern void math_fill(char *str, long width);
 extern void math_flush(void);
 extern void math_divertio(void);
 extern void math_cleardiversions(void);
-extern void math_setfp(FILE *fp);
 extern char *math_getdivertedio(void);
 extern int math_setmode(int mode);
 extern long math_setdigits(long digits);
@@ -533,15 +529,74 @@ extern HALF _fiveval_[], _sixval_[], _sevenval_[], _eightval_[], _nineval_[];
 extern HALF _tenval_[], _elevenval_[], _twelveval_[], _thirteenval_[];
 extern HALF _fourteenval_[], _fifteenval_[];
 extern HALF _sqbaseval_[];
+extern HALF _fourthbaseval_[];
 
 extern ZVALUE zconst[];		/* ZVALUE integers from 0 thru 15 */
 
-extern ZVALUE _zero_, _one_, _two_, _ten_, _sqbase_;
+extern ZVALUE _zero_, _one_, _two_, _ten_, _neg_one_;
+extern ZVALUE _sqbase_, _pow4base_, _pow8base_;
+
+extern ZVALUE _b32_, _b64_;
 
 extern BOOL _math_abort_;	/* nonzero to abort calculations */
 extern ZVALUE _tenpowers_[];	/* table of 10^2^n */
+
+/*
+ * Bit fiddeling functions and types
+ */
 extern HALF bitmask[];		/* bit rotation, norm 0 */
 extern HALF lowhalf[];		/* bit masks from low end of HALF */
+extern HALF rlowhalf[];		/* reversed bit masks from low end of HALF */
 extern HALF highhalf[];		/* bit masks from high end of HALF */
+extern HALF rhighhalf[];	/* reversed bit masks from high end of HALF */
+#define HAVE_REVERSED_MASKS	/* allows old code to know libcalc.a has them */
+
+
+/*
+ * BITSTR - string of bits within an array of HALFs
+ *
+ * This typedef records a location of a bit in an array of HALFs.
+ * Bit 0 in a HALF is assumed to be the least significant bit in that HALF.
+ *
+ * The most significant bit is found at (loc,bit).  Bits of lesser
+ * significance may be found in previous bits and HALFs.
+ */
+typedef struct {
+	HALF *loc;	/* half address of most significant bit */
+	int bit;	/* bit position within half of most significant bit */
+	int len;	/* length of string in bits */
+} BITSTR;
+
+
+/*
+ * HVAL(a,b) - form an array of HALFs given 8 hex digits
+ *		  a: up to 4 hex digits without the leading 0x (upper half)
+ *		  b: up to 4 hex digits without the leading 0x (lower half)
+ *
+ *	NOTE: Due to a SunOS cc bug, don't put spaces in the HVAL call!
+ */
+#if FULL_BITS == 64
+
+# if defined(__STDC__) && __STDC__ != 0
+#  define HVAL(a,b) (HALF)(0x ## a ## b)
+# else
+#  define HVAL(a,b) (HALF)(0x/**/a/**/b)
+# endif
+
+#elif 2*FULL_BITS == 64
+
+# if defined(__STDC__) && __STDC__ != 0
+#  define HVAL(a,b) (HALF)0x##b, (HALF)0x##a
+# else
+   /* NOTE: Due to a SunOS cc bug, don't put spaces in the HVAL call! */
+#  define HVAL(a,b) (HALF)0x/**/b, (HALF)0x/**/a
+# endif
+
+#else
+
+   /\../\	FULL_BITS must be 32 or 64	/\../\   !!!
 
 #endif
+
+
+#endif /* !__ZMATH_H__*/

@@ -1,31 +1,48 @@
 NAME
-    errno - return a system error message
+    errno - return or set a stored error-number
 
 SYNOPSIS
-    errno(errnum)
+    errno([errnum])
 
 TYPES
-    errnum	int
+    errnum	integer, 0 <= errnum <= 32767
 
-    return	string
+    return	integer
 
 DESCRIPTION
-    If a file builtin function such as fopen() encounters an error,
-    it will return an errno number.  This function will convert this
-    number into a somewhat more meaningful string.
 
-    Note that errno() may return different strings on different systems.
+    Whenever an operation or evaluation of function returns an error-value,
+    the numerical code for that value is stored as calc_errno.
+
+    errno() returns the current value of calc_errno.
+
+    errno(errnum) sets calc_errno to the value errnum and returns its
+    previous value.
+
+    To detect whether an error occurs during some sequence of operations,
+    one may immediately before that sequence set the stored error-number
+    to zero by errno(0), and then after the operations, whether or not
+    an error has occurred will be indicated by errno() being nonzero or
+    zero.  If a non-zero value is returned, that value will be the code
+    for the most recent error encountered.
+
+    The default argument for the functions error() and strerror() is the
+    currently stored error-number; in particular, if no error-value has
+    been returned after the last errno(0), strerror() will return
+    "No error".
 
 EXAMPLE
+    Assuming there is no file with name "not_a_file"
+    > errno(0)
+    > errmax(errcount()+4)
+	    0
     > badfile = fopen("not_a_file", "r")
-    > if (!isfile(badfile)) print "error #" : badfile : ":", errno(badfile);
-    error #2: No such file or directory
+    > print errno(), error(), strerror()
+    2 System error 2 No such file or directory
 
-    > print errno(13)
-    Permission denied
-
-    > errno(31)
-	    "Too many links"
+    > a = 1/0
+    > print errno(), error(), strerror()
+    10001 Error 10001 Division by zero
 
 LIMITS
     none
@@ -34,5 +51,4 @@ LIBRARY
     none
 
 SEE ALSO
-    errno, fclose, feof, ferror, fflush, fgetc, fgetline, files, fopen,
-    fprintf, isfile, printf, prompt
+    errmax, errcount, error, strerror, iserror, newerror, errorcodes

@@ -45,4 +45,8 @@ LIBRARY
     FLAG zisprime(ZVALUE x)	(return 1 if prime, 0 not prime, -1 if >= 2^32)
 
 SEE ALSO
-    factor, lfactor, nextprime, prevprime, pfact, pix
+    factor, lfactor, nextprime, prevprime, pfact, pix,
+    isassoc, isatty, isblk, isconfig, isdefined, iserror, iseven, isfile,
+    ishash, isident, isint, islist, ismat, ismult, isnull, isnum, isobj,
+    isobjtype, isodd, isrand, israndom, isreal, isrel,
+    issimple, issq, isstr, istype

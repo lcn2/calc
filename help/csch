@@ -21,9 +21,7 @@ EXAMPLE
     .85092 .8509181282 .850918128239322 .85091812823932154513
 
 LIMITS
-    unlike sin and cos, x must be real
-    x != 0
-    eps > 0
+    none
 
 LIBRARY
     NUMBER *qcsch(NUMBER *x, NUMBER *eps)

@@ -5,10 +5,10 @@ SYNOPSIS
     comb(x, y)
 
 TYPES
-    x		int
-    y		int
+    x		integer
+    y		integer
 
-    return	int
+    return	integer
 
 DESCRIPTION
     Return the combinatorial number C(x,y) which is defined as:
@@ -33,7 +33,7 @@ LIMITS
     x-y < 2^24
 
 LIBRARY
-    void zcomb(NUMBER x, y, *ret)
+    void zcomb(ZVALUE x, ZVALUE y, ZVALUE *res)
 
 SEE ALSO
     fact, perm

@@ -53,3 +53,7 @@ Quick introduction
 	    (2+3i) * (4-3i)
 
     prints "17+6i".
+
+    For more information about the calc lauguage and features, try:
+
+	    help overview

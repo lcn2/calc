@@ -1,19 +1,28 @@
 /*
- * Copyright (c) 1996 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Generic value manipulation routines.
  */
 
+#include <stdio.h>
+#include <sys/types.h>
 #include "value.h"
 #include "opcodes.h"
 #include "func.h"
 #include "symbol.h"
 #include "string.h"
 #include "zrand.h"
+#include "zrandom.h"
 #include "cmath.h"
+#include "nametype.h"
+#include "file.h"
+#include "config.h"
 
+#define LINELEN 80		/* length of a typical tty line */
+
+extern int sys_nerr;
 
 /*
  * Free a value and set its type to undefined.
@@ -33,11 +42,17 @@ freevalue(VALUE *vp)
 	switch (type) {
 		case V_NULL:
 		case V_ADDR:
+		case V_OCTET:
+		case V_NBLOCK:
 		case V_FILE:
+		case V_VPTR:
+		case V_OPTR:
+		case V_SPTR:
+		case V_NPTR:
+			/* nothing to free */
 			break;
 		case V_STR:
-			if (vp->v_subtype == V_STRALLOC)
-				free(vp->v_str);
+			sfree(vp->v_str);
 			break;
 		case V_NUM:
 			qfree(vp->v_num);
@@ -66,16 +81,53 @@ freevalue(VALUE *vp)
 		case V_CONFIG:
 			config_free(vp->v_config);
 			break;
-#if 0 /* XXX - write */
 		case V_HASH:
 			hash_free(vp->v_hash);
 			break;
-#endif
+		case V_BLOCK:
+			blk_free(vp->v_block);
+			break;
 		default:
 			math_error("Freeing unknown value type");
 			/*NOTREACHED*/
 	}
 	vp->v_subtype = V_NOSUBTYPE;
+}
+
+
+/*
+ * Set protection status for a value and all of its components
+ */
+void
+protectall(VALUE *vp, int sts)
+{
+	VALUE *vq;
+	int i;
+	LISTELEM *ep;
+
+	if (vp->v_type == V_NBLOCK) {
+		vp->v_nblock->subtype |= sts;
+		return;
+	}
+	vp->v_subtype |= sts;
+	switch(vp->v_type) {
+		case V_MAT:
+			vq = vp->v_mat->m_table;
+			i = vp->v_mat->m_size;
+			while (i-- > 0)
+				protectall(vq++, sts);
+			break;
+		case V_LIST:
+			for (ep = vp->v_list->l_first; ep; ep = ep->e_next)
+				protectall(&ep->e_value, sts);
+			break;
+		case V_OBJ:
+			vq = vp->v_obj->o_table;
+			i = vp->v_obj->o_actions->count;
+			while (i-- > 0)
+				protectall(vq++, sts);
+			break;
+	}
 }
 
 
@@ -90,13 +142,17 @@ freevalue(VALUE *vp)
 void
 copyvalue(VALUE *oldvp, VALUE *newvp)
 {
-	if (oldvp->v_type < 0) {
-		newvp->v_type = oldvp->v_type;
-		return;
-	}
-	newvp->v_type = V_NULL;
-	switch (oldvp->v_type) {
+
+	newvp->v_type = oldvp->v_type;
+	if (oldvp->v_type >= 0) {
+		switch (oldvp->v_type) {
 		case V_NULL:
+		case V_ADDR:
+		case V_VPTR:
+		case V_OPTR:
+		case V_SPTR:
+		case V_NPTR:
+			*newvp = *oldvp;
 			break;
 		case V_FILE:
 			newvp->v_file = oldvp->v_file;
@@ -108,15 +164,7 @@ copyvalue(VALUE *oldvp, VALUE *newvp)
 			newvp->v_com = clink(oldvp->v_com);
 			break;
 		case V_STR:
-			newvp->v_str = oldvp->v_str;
-			if (oldvp->v_subtype == V_STRALLOC) {
-				newvp->v_str = (char *)malloc(strlen(oldvp->v_str) + 1);
-				if (newvp->v_str == NULL) {
-					math_error("Cannot get memory for string copy");
-					/*NOTREACHED*/
-				}
-				strcpy(newvp->v_str, oldvp->v_str);
-			}
+			newvp->v_str = slink(oldvp->v_str);
 			break;
 		case V_MAT:
 			newvp->v_mat = matcopy(oldvp->v_mat);
@@ -126,9 +174,6 @@ copyvalue(VALUE *oldvp, VALUE *newvp)
 			break;
 		case V_ASSOC:
 			newvp->v_assoc = assoccopy(oldvp->v_assoc);
-			break;
-		case V_ADDR:
-			newvp->v_addr = oldvp->v_addr;
 			break;
 		case V_OBJ:
 			newvp->v_obj = objcopy(oldvp->v_obj);
@@ -142,22 +187,103 @@ copyvalue(VALUE *oldvp, VALUE *newvp)
 		case V_CONFIG:
 			newvp->v_config = config_copy(oldvp->v_config);
 			break;
-#if 0 /* XXX - write */
 		case V_HASH:
 			newvp->v_hash = hash_copy(oldvp->v_hash);
 			break;
-#endif
+		case V_BLOCK:
+			newvp->v_block = blk_copy(oldvp->v_block);
+			break;
+		case V_OCTET:
+			newvp->v_type = V_NUM;
+			newvp->v_num = itoq((long) *oldvp->v_octet);
+			break;
+		case V_NBLOCK:
+			newvp->v_nblock = oldvp->v_nblock;
+			return;
 		default:
 			math_error("Copying unknown value type");
 			/*NOTREACHED*/
+		}
 	}
-	if (oldvp->v_type == V_STR) {
-		newvp->v_subtype = oldvp->v_subtype;
-	} else {
-		newvp->v_subtype = V_NOSUBTYPE;
-	}
-	newvp->v_type = oldvp->v_type;
+	newvp->v_subtype |= oldvp->v_subtype;
+}
 
+
+/*
+ * copy the low order 8 bits of a value to an octet
+ */
+void
+copy2octet(VALUE *vp, OCTET *op)
+{
+	USB8 oval;	/* low order 8 bits to store into OCTET */
+	NUMBER *q;
+	HALF h;
+
+	if (vp->v_type == V_ADDR)
+		vp = vp->v_addr;
+
+	oval = 0;
+
+	/*
+	 * we can (at the moment) only store certain types
+	 * values into an OCTET, so get the low order 8 bits
+	 * of these particular value types
+	 */
+	h = 0;
+	switch(vp->v_type) {
+	case V_NULL:
+		/* nothing to store ... so do nothing */
+		return;
+	case V_INT:
+		oval = (USB8)(vp->v_int & 0xff);
+		break;
+	case V_NUM:
+		if (qisint(vp->v_num)) {
+			/* use low order 8 bits of integer value */
+			h = vp->v_num->num.v[0];
+		} else {
+			/* use low order 8 bits of int(value) */
+			q = qint(vp->v_num);
+			h = q->num.v[0];
+			qfree(q);
+		}
+		if (qisneg(vp->v_num))
+			h = -h;
+		oval = (USB8) h;
+		break;
+	case V_COM:
+		if (cisint(vp->v_com)) {
+			/* use low order 8 bits of integer value */
+			h = vp->v_com->real->num.v[0];
+		} else {
+			/* use low order 8 bits of int(value) */
+			q = qint(vp->v_com->real);
+			h = q->num.v[0];
+			qfree(q);
+		}
+		if (qisneg(vp->v_com->real))
+			h = -h;
+		oval = (USB8) h;
+		break;
+	case V_STR:
+		oval = (USB8) vp->v_str->s_str[0];
+		break;
+	case V_BLOCK:
+		oval = (USB8) vp->v_block->data[0];
+		break;
+	case V_OCTET:
+		oval = *vp->v_octet;
+		break;
+	case V_NBLOCK:
+		if (vp->v_nblock->blk->data == NULL)
+			return;
+		oval = (USB8) vp->v_nblock->blk->data[0];
+		break;
+	default:
+		math_error("invalid assignment into an OCTET");
+		break;
+	}
+	*op = oval;
 }
 
 
@@ -169,6 +295,7 @@ void
 negvalue(VALUE *vp, VALUE *vres)
 {
 	vres->v_type = vp->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	switch (vp->v_type) {
 		case V_NUM:
 			vres->v_num = qneg(vp->v_num);
@@ -179,6 +306,16 @@ negvalue(VALUE *vp, VALUE *vres)
 		case V_MAT:
 			vres->v_mat = matneg(vp->v_mat);
 			return;
+		case V_STR:
+			vres->v_str = stringneg(vp->v_str);
+			if (vres->v_str == NULL)
+				*vres = error_value(E_STRNEG);
+			return;
+		case V_OCTET:
+			vres->v_type = V_NUM;
+			vres->v_num = itoq(- (long) *vp->v_octet);
+			return;
+
 		case V_OBJ:
 			*vres = objcall(OBJ_NEG, vp, NULL_VALUE, NULL_VALUE);
 			return;
@@ -207,7 +344,6 @@ addnumeric(VALUE *v1, VALUE *v2, VALUE *vres)
 	/*
 	 * add numeric values
 	 */
-	vres->v_subtype = V_NOSUBTYPE;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
 	case TWOVAL(V_NUM, V_NUM):
 		vres->v_num = qqadd(v1->v_num, v2->v_num);
@@ -270,7 +406,10 @@ addvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
 	COMPLEX *c;
 	VALUE tmp;
+	NUMBER *q;
+	long i;
 
+	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type == V_LIST) {
 		tmp.v_type = V_NULL;
 		addlistitems(v1->v_list, &tmp);
@@ -314,6 +453,31 @@ addvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		case TWOVAL(V_MAT, V_MAT):
 			vres->v_mat = matadd(v1->v_mat, v2->v_mat);
 			return;
+		case TWOVAL(V_STR, V_STR):
+			vres->v_str = stringadd(v1->v_str, v2->v_str);
+			if (vres->v_str == NULL)
+				*vres = error_value(E_STRADD);
+			return;
+		case TWOVAL(V_VPTR, V_NUM):
+			q = v2->v_num;
+			if (qisfrac(q)) {
+				math_error("Adding non-integer to address");
+				/*NOTREACHED*/
+			}
+			i = qtoi(q);
+			vres->v_addr = v1->v_addr + i;
+			vres->v_type = V_VPTR;
+			return;
+		case TWOVAL(V_OPTR, V_NUM):
+			q = v2->v_num;
+			if (qisfrac(q)) {
+				math_error("Adding non-integer to address");
+				/*NOTREACHED*/
+			}
+			i = qtoi(q);
+			vres->v_octet = v1->v_octet + i;
+			vres->v_type = V_OPTR;
+			return;
 		default:
 			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
 				if (v1->v_type < 0) {
@@ -341,8 +505,11 @@ void
 subvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
 	COMPLEX *c;
+	NUMBER *q;
+	int i;
 
 	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
 		case TWOVAL(V_NUM, V_NUM):
 			vres->v_num = qsub(v1->v_num, v2->v_num);
@@ -367,6 +534,39 @@ subvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			return;
 		case TWOVAL(V_MAT, V_MAT):
 			vres->v_mat = matsub(v1->v_mat, v2->v_mat);
+			return;
+		case TWOVAL(V_STR, V_STR):
+			vres->v_str = stringsub(v1->v_str, v2->v_str);
+			if (vres->v_str == NULL)
+				*vres = error_value(E_STRSUB);
+			return;
+		case TWOVAL(V_VPTR, V_NUM):
+			q = v2->v_num;
+			if (qisfrac(q)) {
+				math_error("Subtracting non-integer from address");
+				/*NOTREACHED*/
+			}
+			i = qtoi(q);
+			vres->v_addr = v1->v_addr - i;
+			vres->v_type = V_VPTR;
+			return;
+		case TWOVAL(V_OPTR, V_NUM):
+			q = v2->v_num;
+			if (qisfrac(q)) {
+				math_error("Adding non-integer to address");
+				/*NOTREACHED*/
+			}
+			i = qtoi(q);
+			vres->v_octet = v1->v_octet - i;
+			vres->v_type = V_OPTR;
+			return;
+		case TWOVAL(V_VPTR, V_VPTR):
+			vres->v_type = V_NUM;
+			vres->v_num = itoq(v1->v_addr - v2->v_addr);
+			return;
+		case TWOVAL(V_OPTR, V_OPTR):
+			vres->v_type = V_NUM;
+			vres->v_num = itoq(v1->v_octet - v2->v_octet);
 			return;
 		default:
 			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
@@ -397,6 +597,7 @@ mulvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	COMPLEX *c;
 
 	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
 		case TWOVAL(V_NUM, V_NUM):
 			vres->v_num = qmul(v1->v_num, v2->v_num);
@@ -422,6 +623,17 @@ mulvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		case TWOVAL(V_COM, V_MAT):
 			vres->v_mat = matmulval(v2->v_mat, v1);
 			vres->v_type = V_MAT;
+			return;
+		case TWOVAL(V_NUM, V_STR):
+			vres->v_type = V_STR;
+			vres->v_str = stringmul(v1->v_num, v2->v_str);
+			if (vres->v_str == NULL)
+				*vres = error_value(E_STRMUL);
+			return;
+		case TWOVAL(V_STR, V_NUM):
+			vres->v_str= stringmul(v2->v_num, v1->v_str);
+			if (vres->v_str == NULL)
+				*vres = error_value(E_STRMUL);
 			return;
 		default:
 			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
@@ -458,6 +670,7 @@ squarevalue(VALUE *vp, VALUE *vres)
 	COMPLEX *c;
 
 	vres->v_type = vp->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	switch (vp->v_type) {
 		case V_NUM:
 			vres->v_num = qsquare(vp->v_num);
@@ -495,10 +708,16 @@ squarevalue(VALUE *vp, VALUE *vres)
 void
 invertvalue(VALUE *vp, VALUE *vres)
 {
+	NUMBER *q1, *q2;
+
 	vres->v_type = vp->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	switch (vp->v_type) {
 		case V_NUM:
-			vres->v_num = qinv(vp->v_num);
+			if (qiszero(vp->v_num))
+				*vres = error_value(E_1OVER0);
+			else
+				vres->v_num = qinv(vp->v_num);
 			return;
 		case V_COM:
 			vres->v_com = cinv(vp->v_com);
@@ -506,10 +725,26 @@ invertvalue(VALUE *vp, VALUE *vres)
 		case V_MAT:
 			vres->v_mat = matinv(vp->v_mat);
 			return;
+		case V_OCTET:
+			if (*vp->v_octet == 0) {
+				*vres = error_value(E_1OVER0);
+				return;
+			}
+			q1 = itoq((long) *vp->v_octet);
+			q2 = qinv(q1);
+			qfree(q1);
+			vres->v_num = q2;
+			vres->v_type = V_NUM;
+			return;
 		case V_OBJ:
 			*vres = objcall(OBJ_INV, vp, NULL_VALUE, NULL_VALUE);
 			return;
 		default:
+			if (vp->v_type == -E_1OVER0) {
+				vres->v_type = V_NUM;
+				vres->v_num = qlink(&_qzero_);
+				return;
+			}
 			if (vp->v_type < 0) {
 				copyvalue(vp, vres);
 				return;
@@ -517,6 +752,310 @@ invertvalue(VALUE *vp, VALUE *vres)
 			*vres = error_value(E_INV);
 			return;
 	}
+}
+
+
+
+/*
+ * "AND" two arbitrary values together.
+ * Result is placed in the indicated location.
+ */
+void
+andvalue(VALUE *v1, VALUE *v2, VALUE *vres)
+{
+	vres->v_subtype = V_NOSUBTYPE;
+	if (v1->v_type == V_NULL) {
+		copyvalue(v2, vres);
+		return;
+	}
+	if (v2->v_type == V_NULL) {
+		copyvalue(v1, vres);
+		return;
+	}
+	vres->v_type = v1->v_type;
+	switch (TWOVAL(v1->v_type, v2->v_type)) {
+		case TWOVAL(V_NUM, V_NUM):
+			vres->v_num = qand(v1->v_num, v2->v_num);
+			return;
+		case TWOVAL(V_STR, V_STR):
+			vres->v_str = stringand(v1->v_str, v2->v_str);
+			if (vres->v_str == NULL)
+				*vres = error_value(E_STRAND);
+			return;
+		case TWOVAL(V_OCTET, V_OCTET):
+			vres->v_type = V_STR;
+			vres->v_str = charstring(*v1->v_octet & *v2->v_octet);
+			return;
+		case TWOVAL(V_STR, V_OCTET):
+			vres->v_str = charstring(*v1->v_str->s_str &
+						*v2->v_octet);
+			return;
+		case TWOVAL(V_OCTET, V_STR):
+			vres->v_type = V_STR;
+			vres->v_str = charstring(*v1->v_octet &
+						*v2->v_str->s_str);
+			return;
+		default:
+			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
+				if (v1->v_type < 0) {
+					copyvalue(v1, vres);
+					return;
+				}
+				if (v2->v_type < 0) {
+					copyvalue(v2, vres);
+					return;
+				}
+				*vres = error_value(E_AND);
+				return;
+			}
+			*vres = objcall(OBJ_AND, v1, v2, NULL_VALUE);
+			return;
+	}
+}
+
+
+/*
+ * "OR" two arbitrary values together.
+ * Result is placed in the indicated location.
+ */
+void
+orvalue(VALUE *v1, VALUE *v2, VALUE *vres)
+{
+	if (v1->v_type == V_NULL) {
+		copyvalue(v2, vres);
+		return;
+	}
+	if (v2->v_type == V_NULL) {
+		copyvalue(v1, vres);
+		return;
+	}
+	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
+	switch (TWOVAL(v1->v_type, v2->v_type)) {
+		case TWOVAL(V_NUM, V_NUM):
+			vres->v_num = qor(v1->v_num, v2->v_num);
+			return;
+		case TWOVAL(V_STR, V_STR):
+			vres->v_str = stringor(v1->v_str, v2->v_str);
+			if (vres->v_str == NULL)
+				*vres = error_value(E_STROR);
+			return;
+		case TWOVAL(V_OCTET, V_OCTET):
+			vres->v_type = V_STR;
+			vres->v_str = charstring(*v1->v_octet | *v2->v_octet);
+			return;
+		case TWOVAL(V_STR, V_OCTET):
+			vres->v_str = charstring(*v1->v_str->s_str |
+					*v2->v_octet);
+			return;
+		case TWOVAL(V_OCTET, V_STR):
+			vres->v_type = V_STR;
+			vres->v_str = charstring(*v1->v_octet |
+					*v2->v_str->s_str);
+			return;
+		default:
+			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
+				if (v1->v_type < 0) {
+					copyvalue(v1, vres);
+					return;
+				}
+				if (v2->v_type < 0) {
+					copyvalue(v2, vres);
+					return;
+				}
+				*vres = error_value(E_OR);
+				return;
+			}
+			*vres = objcall(OBJ_OR, v1, v2, NULL_VALUE);
+			return;
+	}
+}
+
+
+/*
+ * "~" two values, returns the "symmetric difference" bitwise xor(v1, v2) for
+ * strings, octets and real numbers, and a user-defined function if at least
+ * one of v1 and v2 is an object.
+ */
+void
+xorvalue(VALUE *v1, VALUE *v2, VALUE *vres)
+{
+	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
+	switch (TWOVAL(v1->v_type, v2->v_type)) {
+		case (TWOVAL(V_NUM, V_NUM)):
+			vres->v_num = qxor(v1->v_num, v2->v_num);
+			return;
+		case (TWOVAL(V_STR, V_STR)):
+			vres->v_str = stringxor(v1->v_str, v2->v_str);
+			if (vres->v_str == NULL)
+				*vres = error_value(E_STRDIFF);
+			return;
+		case (TWOVAL(V_STR, V_OCTET)):
+			if (v1->v_str->s_len) {
+				vres->v_str = stringcopy(v1->v_str);
+				*vres->v_str->s_str ^= *v2->v_octet;
+			} else
+				vres->v_str = charstring(*v2->v_octet);
+			return;
+		case (TWOVAL(V_OCTET, V_STR)):
+			if (v2->v_str->s_len) {
+				vres->v_str = stringcopy(v2->v_str);
+				*vres->v_str->s_str ^= *v1->v_octet;
+			} else
+				vres->v_str = charstring(*v1->v_octet);
+			return;
+		case (TWOVAL(V_OCTET, V_OCTET)):
+			vres->v_type = V_STR;
+			vres->v_str = charstring(*v1->v_octet ^ *v2->v_octet);
+			return;
+		default:
+			if (v1->v_type == V_OBJ || v2->v_type == V_OBJ)
+				*vres = objcall(OBJ_XOR, v1, v2, NULL_VALUE);
+			else
+				*vres = error_value(E_XOR);
+	}
+}
+
+
+/*
+ * "#" two values - abs(v1-v2) for numbers, user-defined for objects
+ */
+void
+hashopvalue(VALUE *v1, VALUE *v2, VALUE *vres)
+{
+	NUMBER *q;
+
+	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
+	switch (TWOVAL(v1->v_type, v2->v_type)) {
+		case TWOVAL(V_NUM, V_NUM):
+			q = qsub(v1->v_num, v2->v_num);
+			vres->v_num = qqabs(q);
+			qfree(q);
+			return;
+		default:
+			if (v1->v_type == V_OBJ || v2->v_type == V_OBJ)
+				*vres = objcall(OBJ_HASHOP, v1, v2, NULL_VALUE);
+			else
+				*vres = error_value(E_HASHOP);
+	}
+}
+
+
+void
+compvalue(VALUE *vp, VALUE *vres)
+{
+
+	vres->v_type = vp->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
+	switch (vp->v_type) {
+		case V_NUM:
+			vres->v_num = qcomp(vp->v_num);
+			return;
+		case V_STR:
+			vres->v_str = stringcomp(vp->v_str);
+			if (vres->v_str == NULL)
+				*vres = error_value(E_STRCOMP);
+			return;
+		case V_OCTET:
+			vres->v_type = V_STR;
+			vres->v_str = charstring(~*vp->v_octet);
+			return;
+		case V_OBJ:
+			*vres = objcall(OBJ_COMP, vp, NULL_VALUE, NULL_VALUE);
+			return;
+		default:
+			*vres = error_value(E_COMP);
+	}
+}
+
+/*
+ * "\" a value, user-defined only
+ */
+void
+backslashvalue(VALUE *vp, VALUE *vres)
+{
+	if (vp->v_type == V_OBJ)
+		*vres = objcall(OBJ_BACKSLASH, vp, NULL_VALUE, NULL_VALUE);
+	else
+		*vres = error_value(E_BACKSLASH);
+}
+
+
+/*
+ * "\" two values, for strings performs bitwise "AND-NOT" operation
+ * User defined for objects
+ */
+void
+setminusvalue(VALUE *v1, VALUE *v2, VALUE *vres)
+{
+	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
+	switch (TWOVAL(v1->v_type, v2->v_type)) {
+		case TWOVAL(V_NUM, V_NUM):
+			vres->v_num = qandnot(v1->v_num, v2->v_num);
+			return;
+		case TWOVAL(V_STR, V_STR):
+			vres->v_str = stringdiff(v1->v_str, v2->v_str);
+			return;
+		case TWOVAL(V_STR, V_OCTET):
+			vres->v_str = charstring(*v1->v_str->s_str &
+				~*v2->v_octet);
+			return;
+		case TWOVAL(V_OCTET, V_STR):
+			vres->v_type = V_STR;
+			vres->v_str = charstring(*v1->v_octet &
+				~*v2->v_str->s_str);
+			return;
+		case TWOVAL(V_OCTET, V_OCTET):
+			vres->v_type = V_STR;
+			vres->v_str = charstring(*v1->v_octet &
+				~*v2->v_octet);
+			return;
+		default:
+			if (v1->v_type == V_OBJ || v2->v_type == V_OBJ)
+				*vres = objcall(OBJ_SETMINUS, v1, v2,
+					NULL_VALUE);
+			else
+				*vres = error_value(E_SETMINUS);
+	}
+}
+
+
+/*
+ * "#" a value, for strings and octets returns the number of nonzero bits
+ * in the value; user-defined for an object
+ */
+void
+contentvalue(VALUE *vp, VALUE *vres)
+{
+	long count;
+	unsigned char u;
+
+	vres->v_type = V_NUM;
+	vres->v_subtype = V_NOSUBTYPE;
+	count = 0;
+	switch (vp->v_type) {
+		case V_STR:
+			count = stringcontent(vp->v_str);
+			break;
+		case V_OCTET:
+			for (u = *vp->v_octet; u; u >>= 1)
+				count += (u & 1);
+			break;
+		case V_NUM:
+			count = zpopcnt(vp->v_num->num, 1);
+			break;
+		case V_OBJ:
+			*vres = objcall(OBJ_CONTENT, vp, NULL_VALUE,
+				NULL_VALUE);
+			return;
+		default:
+			*vres = error_value(E_CONTENT);
+			return;
+	}
+	vres->v_num = itoq(count);
 }
 
 
@@ -533,6 +1072,7 @@ apprvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	COMPLEX *c;
 
 	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type < 0) {
 		copyvalue(v1, vres);
 		return;
@@ -585,6 +1125,8 @@ apprvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 				return;
 			}
 			c = comalloc();
+			qfree(c->real);
+			qfree(c->imag);
 			c->real = q1;
 			c->imag = q2;
 			vres->v_com = c;
@@ -608,6 +1150,7 @@ roundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	long places, rnd;
 
 	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type == V_MAT) {
 		vres->v_mat = matround(v1->v_mat, v2, v3);
 		return;
@@ -665,6 +1208,8 @@ roundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 				return;
 			}
 			c = comalloc();
+			qfree(c->real);
+			qfree(c->imag);
 			c->real = q1;
 			c->imag = q2;
 			vres->v_com = c;
@@ -693,6 +1238,7 @@ broundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	long places, rnd;
 
 	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type == V_MAT) {
 		vres->v_mat = matbround(v1->v_mat, v2, v3);
 		return;
@@ -750,6 +1296,8 @@ broundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 				return;
 			}
 			c = comalloc();
+			qfree(c->real);
+			qfree(c->imag);
 			c->real = q1;
 			c->imag = q2;
 			vres->v_com = c;
@@ -774,6 +1322,7 @@ intvalue(VALUE *vp, VALUE *vres)
 	COMPLEX *c;
 
 	vres->v_type = vp->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	switch (vp->v_type) {
 		case V_NUM:
 			if (qisint(vp->v_num))
@@ -821,6 +1370,7 @@ fracvalue(VALUE *vp, VALUE *vres)
 	COMPLEX *c;
 
 	vres->v_type = vp->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	switch (vp->v_type) {
 		case V_NUM:
 			if (qisint(vp->v_num))
@@ -870,21 +1420,28 @@ incvalue(VALUE *vp, VALUE *vres)
 	switch (vp->v_type) {
 		case V_NUM:
 			vres->v_num = qinc(vp->v_num);
-			return;
+			break;
 		case V_COM:
 			vres->v_com = caddq(vp->v_com, &_qone_);
-			return;
+			break;
 		case V_OBJ:
 			*vres = objcall(OBJ_INC, vp, NULL_VALUE, NULL_VALUE);
-			return;
+			break;
+		case V_OCTET:
+			*vres->v_octet = *vp->v_octet + 1;
+			break;
+		case V_OPTR:
+			vres->v_octet = vp->v_octet + 1;
+			break;
+		case V_VPTR:
+			vres->v_addr = vp->v_addr + 1;
+			break;
 		default:
-			if (vp->v_type < 0) {
-				copyvalue(vp, vres);
-				return;
-			}
-			*vres = error_value(E_INCV);
-			return;
+			if (vp->v_type >= 0)
+				*vres = error_value(E_INCV);
+			break;
 	}
+	vres->v_subtype = vp->v_subtype;
 }
 
 
@@ -899,21 +1456,28 @@ decvalue(VALUE *vp, VALUE *vres)
 	switch (vp->v_type) {
 		case V_NUM:
 			vres->v_num = qdec(vp->v_num);
-			return;
+			break;
 		case V_COM:
 			vres->v_com = caddq(vp->v_com, &_qnegone_);
-			return;
+			break;
 		case V_OBJ:
 			*vres = objcall(OBJ_DEC, vp, NULL_VALUE, NULL_VALUE);
-			return;
+			break;
+		case V_OCTET:
+			*vres->v_octet = *vp->v_octet - 1;
+			break;
+		case V_OPTR:
+			vres->v_octet = vp->v_octet - 1;
+			break;
+		case V_VPTR:
+			vres->v_addr = vp->v_addr - 1;
+			break;
 		default:
-			if (vp->v_type < 0) {
-				copyvalue(vp, vres);
-				return;
-			}
-			*vres = error_value(E_DECV);
-			return;
+			if (vp->v_type >= 0)
+				*vres = error_value(E_DECV);
+			break;
 	}
+	vres->v_subtype = vp->v_subtype;
 }
 
 
@@ -926,12 +1490,15 @@ void
 conjvalue(VALUE *vp, VALUE *vres)
 {
 	vres->v_type = vp->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	switch (vp->v_type) {
 		case V_NUM:
 			vres->v_num = qlink(vp->v_num);
 			return;
 		case V_COM:
 			vres->v_com = comalloc();
+			qfree(vres->v_com->real);
+			qfree(vres->v_com->imag)
 			vres->v_com->real = qlink(vp->v_com->real);
 			vres->v_com->imag = qneg(vp->v_com->imag);
 			return;
@@ -968,6 +1535,7 @@ sqrtvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 			return;
 	}
 	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type < 0) {
 		copyvalue(v1, vres);
 		return;
@@ -998,6 +1566,7 @@ sqrtvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 			}
 			tmp = qneg(v1->v_num);
 			c = comalloc();
+			qfree(c->imag);
 			c->imag = qsqrt(tmp, q, R);
 			qfree(tmp);
 			vres->v_com = c;
@@ -1033,10 +1602,11 @@ void
 rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 {
 	NUMBER *q1, *q2;
-	COMPLEX ctmp;
+	COMPLEX *ctmp;
 	COMPLEX *c;
 
 	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type < 0) {
 		copyvalue(v1, vres);
 		return;
@@ -1061,10 +1631,11 @@ rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 				vres->v_num = qroot(v1->v_num, q1, q2);
 				return;
 			}
-			ctmp.real = v1->v_num;
-			ctmp.imag = &_qzero_;
-			ctmp.links = 1;
-			vres->v_com = croot(&ctmp, q1, q2);
+			ctmp = comalloc();
+			qfree(ctmp->real);
+			ctmp->real = v1->v_num;
+			vres->v_com = croot(ctmp, q1, q2);
+			comfree(ctmp);
 			vres->v_type = V_COM;
 			break;
 		case V_COM:
@@ -1099,6 +1670,7 @@ absvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		*vres = objcall(OBJ_ABS, v1, v2, NULL_VALUE);
 		return;
 	}
+	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type < 0) {
 		copyvalue(v1, vres);
 		return;
@@ -1137,6 +1709,7 @@ normvalue(VALUE *vp, VALUE *vres)
 	NUMBER *q1, *q2;
 
 	vres->v_type = vp->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	if (vp->v_type < 0) {
 		copyvalue(vp, vres);
 		return;
@@ -1171,7 +1744,7 @@ normvalue(VALUE *vp, VALUE *vres)
  *
  * given:
  *	v1		value to shift
- *	v2		shirt amount
+ *	v2		shift amount
  *	rightshift	TRUE if shift right instead of left
  *	vres		result
  */
@@ -1180,8 +1753,10 @@ shiftvalue(VALUE *v1, VALUE *v2, BOOL rightshift, VALUE *vres)
 {
 	COMPLEX *c;
 	long n = 0;
+	unsigned int ch;
 	VALUE tmp;
 
+	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type < 0) {
 		copyvalue(v1, vres);
 		return;
@@ -1226,6 +1801,21 @@ shiftvalue(VALUE *v1, VALUE *v2, BOOL rightshift, VALUE *vres)
 		case V_MAT:
 			vres->v_mat = matshift(v1->v_mat, n);
 			return;
+		case V_STR:
+			vres->v_str = stringshift(v1->v_str, n);
+			if (vres->v_str == NULL)
+				*vres = error_value(E_STRSHIFT);
+			return;
+		case V_OCTET:
+			vres->v_type = V_STR;
+			if (n >= 8 || n <= -8)
+				ch = 0;
+			else if (n >= 0)
+				ch = (unsigned int) *v1->v_octet << n;
+			else
+				ch = (unsigned int) *v1->v_octet >> -n;
+			vres->v_str = charstring(ch);
+			return;
 		case V_OBJ:
 			if (!rightshift) {
 				*vres = objcall(OBJ_SHIFT, v1, v2, NULL_VALUE);
@@ -1252,6 +1842,7 @@ scalevalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
 	long n = 0;
 
+	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type < 0) {
 		copyvalue(v1, vres);
 		return;
@@ -1298,12 +1889,16 @@ powivalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	NUMBER *q;
 	COMPLEX *c;
 
-	if (v1->v_type < 0) {
-		copyvalue(v1, vres);
+	if (v1->v_type == V_OBJ || v2->v_type == V_OBJ) {
+		*vres = objcall(OBJ_POW, v1, v2, NULL_VALUE);
 		return;
 	}
+	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
+	if (v1->v_type < 0 && v1->v_type != -E_1OVER0)
+		return;
 	if (v2->v_type < 0) {
-		copyvalue(v2, vres);
+		vres->v_type = v2->v_type;
 		return;
 	}
 	if (v2->v_type != V_NUM || qisfrac(v2->v_num)) {
@@ -1311,9 +1906,21 @@ powivalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		return;
 	}
 	q = v2->v_num;
-	vres->v_type = v1->v_type;
+	if (v1->v_type == -E_1OVER0) {
+		if (qisneg(q)) {
+			vres->v_type = V_NUM;
+			vres->v_num = qlink(&_qzero_);
+		}
+		return;
+	}
 	switch (v1->v_type) {
 		case V_NUM:
+			if (qiszero(v1->v_num)) {
+				if (qisneg(q)) {
+					*vres = error_value(E_1OVER0);
+					return;
+				}
+			}
 			vres->v_num = qpowi(v1->v_num, q);
 			return;
 		case V_COM:
@@ -1327,9 +1934,6 @@ powivalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			return;
 		case V_MAT:
 			vres->v_mat = matpowi(v1->v_mat, q);
-			return;
-		case V_OBJ:
-			*vres = objcall(OBJ_POW, v1, v2, NULL_VALUE);
 			return;
 		default:
 			*vres = error_value(E_POWI);
@@ -1348,6 +1952,7 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	NUMBER *epsilon;
 	COMPLEX *c, ctmp;
 
+	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type < 0) {
 		copyvalue(v1, vres);
 		return;
@@ -1412,14 +2017,20 @@ divvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
 	COMPLEX *c;
 	COMPLEX ctmp;
+	NUMBER *q;
 	VALUE tmpval;
 
-	if (v1->v_type < 0) {
-		copyvalue(v1, vres);
+	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
+	if (v1->v_type < 0)
 		return;
-	}
 	if (v2->v_type < 0) {
-		copyvalue(v2, vres);
+		if (testvalue(v1) && v2->v_type == -E_1OVER0) {
+			vres->v_type = V_NUM;
+			vres->v_num = qlink(&_qzero_);
+		}
+		else
+			vres->v_type = v2->v_type;
 		return;
 	}
 	if (!testvalue(v2)) {
@@ -1432,7 +2043,7 @@ divvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	vres->v_type = v1->v_type;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
 		case TWOVAL(V_NUM, V_NUM):
-			vres->v_num = qdiv(v1->v_num, v2->v_num);
+			vres->v_num = qqdiv(v1->v_num, v2->v_num);
 			return;
 		case TWOVAL(V_COM, V_NUM):
 			vres->v_com = cdivq(v1->v_com, v2->v_num);
@@ -1463,6 +2074,13 @@ divvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			vres->v_mat = matmulval(v1->v_mat, &tmpval);
 			freevalue(&tmpval);
 			return;
+		case TWOVAL(V_STR, V_NUM):
+			q = qinv(v2->v_num);
+			vres->v_str = stringmul(q, v1->v_str);
+			qfree(q);
+			if (vres->v_str == NULL)
+				*vres = error_value(E_DIV);
+			return;
 		default:
 			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
 				*vres = error_value(E_DIV);
@@ -1486,6 +2104,7 @@ quovalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	long rnd;
 
 	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type < 0) {
 		copyvalue(v1, vres);
 		return;
@@ -1540,6 +2159,8 @@ quovalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 				return;
 			}
 			c = comalloc();
+			qfree(c->real);
+			qfree(c->imag);
 			c->real = q1;
 			c->imag = q2;
 			vres->v_com = c;
@@ -1562,6 +2183,7 @@ modvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	NUMBER *q1, *q2;
 	long rnd;
 
+	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type < 0) {
 		copyvalue(v1, vres);
 		return;
@@ -1617,6 +2239,8 @@ modvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 				return;
 			}
 			c = comalloc();
+			qfree(c->real);
+			qfree(c->imag);
 			c->real = q1;
 			c->imag = q2;
 			vres->v_com = c;
@@ -1638,6 +2262,8 @@ BOOL
 testvalue(VALUE *vp)
 {
 	VALUE val;
+	LISTELEM *ep;
+	int i;
 
 	switch (vp->v_type) {
 		case V_NUM:
@@ -1645,11 +2271,15 @@ testvalue(VALUE *vp)
 		case V_COM:
 			return !ciszero(vp->v_com);
 		case V_STR:
-			return (vp->v_str[0] != '\0');
+			return stringtest(vp->v_str);
 		case V_MAT:
 			return mattest(vp->v_mat);
 		case V_LIST:
-			return (vp->v_list->l_count != 0);
+			for (ep = vp->v_list->l_first; ep; ep = ep->e_next) {
+				if (testvalue(&ep->e_value))
+					return TRUE;
+			}
+			return FALSE;
 		case V_ASSOC:
 			return (vp->v_assoc->a_count != 0);
 		case V_FILE:
@@ -1659,9 +2289,26 @@ testvalue(VALUE *vp)
 		case V_OBJ:
 			val = objcall(OBJ_TEST, vp, NULL_VALUE, NULL_VALUE);
 			return (val.v_int != 0);
+		case V_BLOCK:
+			for (i=0; i < vp->v_block->datalen; ++i) {
+				if (vp->v_block->data[i]) {
+					return TRUE;
+				}
+			}
+			return FALSE;
+		case V_OCTET:
+			return (*vp->v_octet != 0);
+		case V_NBLOCK:
+			if (vp->v_nblock->blk->data == NULL)
+				return FALSE;
+			for (i=0; i < vp->v_nblock->blk->datalen; ++i) {
+				if (vp->v_nblock->blk->data[i]) {
+					return TRUE;
+				}
+			}
+			return FALSE;
 		default:
-			math_error("Testing improper type");
-			/*NOTREACHED*/
+			return TRUE;
 	}
 	/* hack to get gcc on SunOS to be quiet */
 	return FALSE;
@@ -1684,6 +2331,19 @@ comparevalue(VALUE *v1, VALUE *v2)
 	}
 	if (v1 == v2)
 		return FALSE;
+	if (v1->v_type ==  V_OCTET) {
+		if (v2->v_type == V_OCTET)
+			return (*v1->v_octet != *v2->v_octet);
+		if (v2->v_type == V_STR)
+			return (*v1->v_octet != (OCTET) *v2->v_str->s_str)
+				|| (v2->v_str->s_len != 1);
+		if (v2->v_type != V_NUM || qisfrac(v2->v_num) ||
+			qisneg(v2->v_num) || v2->v_num->num.len > 1)
+				return TRUE;
+		return (*v2->v_num->num.v != *v1->v_octet);
+	}
+	if (v2->v_type == V_OCTET)
+		return comparevalue(v2, v1);
 	if (v1->v_type != v2->v_type)
 		return TRUE;
 	if (v1->v_type < 0)
@@ -1696,9 +2356,7 @@ comparevalue(VALUE *v1, VALUE *v2)
 			r = ccmp(v1->v_com, v2->v_com);
 			break;
 		case V_STR:
-			r = ((v1->v_str != v2->v_str) &&
-				((v1->v_str[0] - v2->v_str[0]) ||
-				strcmp(v1->v_str, v2->v_str)));
+			r = stringcmp(v1->v_str, v2->v_str);
 			break;
 		case V_MAT:
 			r = matcmp(v1->v_mat, v2->v_mat);
@@ -1723,16 +2381,54 @@ comparevalue(VALUE *v1, VALUE *v2)
 		case V_CONFIG:
 			r = config_cmp(v1->v_config, v2->v_config);
 			break;
-#if 0 /* XXX - write */
 		case V_HASH:
 			r = hash_cmp(v1->v_hash, v2->v_hash);
 			break;
-#endif
+		case V_BLOCK:
+			r = blk_cmp(v1->v_block, v2->v_block);
+			break;
+		case V_OCTET:
+			r = (v1->v_octet != v2->v_octet);
+			break;
+		case V_NBLOCK:
+			return (v1->v_nblock != v2->v_nblock);
+		case V_VPTR:
+			return (v1->v_addr != v2->v_addr);
+		case V_OPTR:
+			return (v1->v_octet != v2->v_octet);
+		case V_SPTR:
+			return (v1->v_str != v2->v_str);
+		case V_NPTR:
+			return (v1->v_num != v2->v_num);
 		default:
 			math_error("Illegal values for comparevalue");
 			/*NOTREACHED*/
 	}
 	return (r != 0);
+}
+
+BOOL
+acceptvalue(VALUE *v1, VALUE *v2)
+{
+	long index;
+	FUNC *fp;
+	BOOL ret;
+
+	index = adduserfunc("accept");
+	fp = findfunc(index);
+	if (fp) {
+		++stack;
+		stack->v_type = V_ADDR;
+		stack->v_addr = v1;
+		++stack;
+		stack->v_type = V_ADDR;
+		stack->v_addr = v2;
+		calculate(fp, 2);
+		ret = testvalue(stack);
+		freevalue(stack--);
+		return ret;
+	}
+	return (!comparevalue(v1, v2));
 }
 
 
@@ -1743,6 +2439,7 @@ precvalue(VALUE *v1, VALUE *v2)
 	long index;
 	int r = 0;
 	FUNC *fp;
+	BOOL ret;
 
 	index = adduserfunc("precedes");
 	fp = findfunc(index);
@@ -1754,12 +2451,9 @@ precvalue(VALUE *v1, VALUE *v2)
 		stack->v_type = V_ADDR;
 		stack->v_addr = v2;
 		calculate(fp, 2);
-		val = *stack--;
-		if (val.v_type != V_NUM) {
-			math_error("Non-numeric value for precvalue()");
-			/*NOTREACHED*/
-		}
-		return (qtoi(val.v_num) ? TRUE : FALSE);
+		ret = testvalue(stack);
+		freevalue(stack--);
+		return ret;
 	}
 	relvalue(v1, v2, &val);
 	if ((val.v_type == V_NUM && qisneg(val.v_num)) ||
@@ -1772,6 +2466,23 @@ precvalue(VALUE *v1, VALUE *v2)
 }
 
 
+VALUE
+signval(int r)
+{
+	VALUE val;
+
+	val.v_type = V_NUM;
+	val.v_subtype = V_NOSUBTYPE;
+	if (r > 0)
+		val.v_num = qlink(&_qone_);
+	else if (r < 0)
+		val.v_num = qlink(&_qnegone_);
+	else
+		val.v_num = qlink(&_qzero_);
+	return val;
+}
+
+
 /*
  * Compare two values for their relative values.
  * Result is placed in the indicated location.
@@ -1780,56 +2491,130 @@ void
 relvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
 	int r = 0;
-	COMPLEX ctmp, *c;
+	int i = 0;
+	NUMBER *q;
+	COMPLEX *c;
 
+	vres->v_subtype = V_NOSUBTYPE;
+	vres->v_type = V_NULL;
 	if ((v1->v_type == V_OBJ) || (v2->v_type == V_OBJ)) {
 		*vres = objcall(OBJ_REL, v1, v2, NULL_VALUE);
 		return;
 	}
-	switch (TWOVAL(v1->v_type, v2->v_type)) {
-		case TWOVAL(V_NUM, V_NUM):
-			r = qrel(v1->v_num, v2->v_num);
-			vres->v_type = V_NUM;
-			vres->v_num = itoq((long) r);
-			return;
-		case TWOVAL(V_STR, V_STR):
-			r = strcmp(v1->v_str, v2->v_str);
-			vres->v_type = V_NUM;
-			if (r < 0) {
-				vres->v_num = itoq((long) -1);
-			} else if (r > 0) {
-				vres->v_num = itoq((long) 1);
-			} else {
-				vres->v_num = itoq((long) 0);
+	switch(v1->v_type) {
+		case V_NUM:
+			switch(v2->v_type) {
+			case V_NUM:
+				r = qrel(v1->v_num, v2->v_num);
+				break;
+			case V_OCTET:
+				q = itoq((long) *v2->v_octet);
+				r = qrel(v1->v_num, q);
+				qfree(q);
+				break;
+			case V_COM:
+				r = qrel(v1->v_num, v2->v_com->real);
+				i = qrel(&_qzero_, v2->v_com->imag);
+				break;
+			default:
+				return;
 			}
-			return;
-		case TWOVAL(V_COM, V_COM):
-			c = crel(v1->v_com, v2->v_com);
 			break;
-		case TWOVAL(V_COM, V_NUM):
-			ctmp.real = v2->v_num;
-			ctmp.imag = &_qzero_;
-			ctmp.links = 1;
-			c = crel(v1->v_com, &ctmp);
+		case V_COM:
+			switch(v2->v_type) {
+			case V_NUM:
+				r = qrel(v1->v_com->real, v2->v_num);
+				i = qrel(v1->v_com->imag, &_qzero_);
+				break;
+			case V_COM:
+				r = qrel(v1->v_com->real, v2->v_com->real);
+				i = qrel(v1->v_com->imag, v2->v_com->imag);
+				break;
+			case V_OCTET:
+				q = itoq((long) *v2->v_octet);
+				r = qrel(v1->v_com->real, q);
+				qfree(q);
+				i = qrel(v1->v_com->imag, &_qzero_);
+				break;
+			default:
+				return;
+			}
 			break;
-		case TWOVAL(V_NUM, V_COM):
-			ctmp.real = v1->v_num;
-			ctmp.imag = &_qzero_;
-			ctmp.links = 1;
-			c = crel(&ctmp, v2->v_com);
+		case V_STR:
+			switch(v2->v_type) {
+			case V_STR:
+				r = stringrel(v1->v_str, v2->v_str);
+				break;
+			case V_OCTET:
+				r = (unsigned char) *v1->v_str->s_str
+					- *v2->v_octet;
+				if (r == 0) {
+					if (v1->v_str->s_len == 0)
+						r = -1;
+					else
+						r = (v1->v_str->s_len > 1);
+				}
+				break;
+			default:
+				return;
+			}
+			break;
+		case V_OCTET:
+			switch(v2->v_type) {
+			case V_NUM:
+				q = itoq((long) *v1->v_octet);
+				r = qrel(q, v2->v_num);
+				qfree(q);
+				break;
+			case V_COM:
+				q = itoq((long) *v1->v_octet);
+				r = qrel(q, v2->v_com->real);
+				qfree(q);
+				i = qrel(&_qzero_, v2->v_com->imag);
+				break;
+			case V_OCTET:
+				r = *v1->v_octet - *v2->v_octet;
+				break;
+			case V_STR:
+				r = *v1->v_octet -
+					(unsigned char) *v2->v_str->s_str;
+				if (r == 0) {
+					if (v2->v_str->s_len == 0)
+						r = 1;
+					else
+						r = -(v2->v_str->s_len > 1);
+				}
+				break;
+			default:
+				return;
+			}
+			break;
+		case V_VPTR:
+			if (v2->v_type != V_VPTR)
+				return;
+			r = (v1->v_addr - v2->v_addr);
+			break;
+		case V_OPTR:
+			if (v2->v_type != V_OPTR)
+				return;
+			r = (v1->v_octet - v2->v_octet);
 			break;
 		default:
-			vres->v_type = V_NULL;
 			return;
 	}
-	if (cisreal(c)) {
-		vres->v_num = qlink(c->real);
-		vres->v_type = V_NUM;
-		comfree(c);
+	vres->v_type = V_NUM;
+	*vres = signval(r);
+	if (i == 0)
 		return;
-	}
-	vres->v_com = c;
+	c = comalloc();
+	qfree(c->real);
+	c->real = vres->v_num;
+	*vres = signval(i);
+	qfree(c->imag);
+	c->imag = vres->v_num;
 	vres->v_type = V_COM;
+	vres->v_com = c;
+	return;
 }
 
 
@@ -1849,10 +2634,16 @@ sgnvalue(VALUE *vp, VALUE *vres)
 			return;
 		case V_COM:
 			c = comalloc();
+			qfree(c->real);
+			qfree(c->imag);
 			c->real = qsign(vp->v_com->real);
 			c->imag = qsign(vp->v_com->imag);
 			vres->v_com = c;
 			vres->v_type = V_COM;
+			return;
+		case V_OCTET:
+			vres->v_type = V_NUM;
+			vres->v_num = itoq((long) (*vp->v_octet != 0));
 			return;
 		case V_OBJ:
 			*vres = objcall(OBJ_SGN, vp, NULL_VALUE, NULL_VALUE);
@@ -1868,6 +2659,24 @@ sgnvalue(VALUE *vp, VALUE *vres)
 }
 
 
+int
+userfunc(char *fname, VALUE *vp)
+{
+	FUNC *fp;
+
+	fp = findfunc(adduserfunc(fname));
+	if (fp == NULL)
+		return 0;
+	++stack;
+	stack->v_addr = vp;
+	stack->v_type = V_ADDR;
+	stack->v_subtype = V_NOSUBTYPE;
+	calculate(fp, 1);
+	freevalue(stack--);
+	return 1;
+}
+
+
 /*
  * Print the value of a descriptor in one of several formats.
  * If flags contains PRINT_SHORT, then elements of arrays and lists
@@ -1877,11 +2686,14 @@ sgnvalue(VALUE *vp, VALUE *vres)
 void
 printvalue(VALUE *vp, int flags)
 {
+	NUMBER *qtemp;
 	int type;
 
 	type = vp->v_type;
 	if (type < 0) {
-		if (-type > E__BASE)
+		if (userfunc("error_print", vp))
+			return;
+		if (-type >= sys_nerr)
 			printf("Error %d", -type);
 		else
 			printf("System error %d", -type);
@@ -1901,7 +2713,7 @@ printvalue(VALUE *vp, int flags)
 		case V_STR:
 			if (flags & PRINT_UNAMBIG)
 				math_chr('\"');
-			math_str(vp->v_str);
+			math_str(vp->v_str->s_str);
 			if (flags & PRINT_UNAMBIG)
 				math_chr('\"');
 			break;
@@ -1913,7 +2725,8 @@ printvalue(VALUE *vp, int flags)
 			(void) objcall(OBJ_PRINT, vp, NULL_VALUE, NULL_VALUE);
 			break;
 		case V_LIST:
-			listprint(vp->v_list,
+			if (!userfunc("list_print", vp))
+				listprint(vp->v_list,
 				((flags & PRINT_SHORT) ? 0L : conf->maxprint));
 			break;
 		case V_ASSOC:
@@ -1921,11 +2734,13 @@ printvalue(VALUE *vp, int flags)
 				((flags & PRINT_SHORT) ? 0L : conf->maxprint));
 			break;
 		case V_MAT:
-			matprint(vp->v_mat,
+			if (!userfunc("mat_print", vp))
+				matprint(vp->v_mat,
 				((flags & PRINT_SHORT) ? 0L : conf->maxprint));
 			break;
 		case V_FILE:
-			printid(vp->v_file, flags);
+			if (!userfunc("file_print", vp))
+				printid(vp->v_file, flags);
 			break;
 		case V_RAND:
 			randprint(vp->v_rand, flags);
@@ -1936,13 +2751,38 @@ printvalue(VALUE *vp, int flags)
 		case V_CONFIG:
 			config_print(vp->v_config);
 			break;
-#if 0 /* XXX - write */
 		case V_HASH:
 			hash_print(vp->v_hash);
 			break;
-#endif
+		case V_BLOCK:
+			if (!userfunc("blk_print", vp))
+				blk_print(vp->v_block);
+			break;
+		case V_OCTET:
+			if (userfunc("octet_print", vp))
+				break;
+			qtemp = itoq((long) *vp->v_octet);
+			qprintnum(qtemp, MODE_DEFAULT);
+			qfree(qtemp);
+			break;
+		case V_OPTR:
+ 			printf("o-ptr: %p", vp->v_octet);
+			break;
+		case V_VPTR:
+			printf("v-ptr: %p", vp->v_addr);
+			break;
+		case V_SPTR:
+			printf("s_ptr: %p", vp->v_str);
+			break;
+		case V_NPTR:
+			printf("n_ptr: %p", vp->v_num);
+			break;
+		case V_NBLOCK:
+			if (!userfunc("nblk_print", vp))
+				nblock_print(vp->v_nblock);
+			break;
 		default:
-			math_error("Printing unknown value");
+			math_error("Printing unrecognized type of value");
 			/*NOTREACHED*/
 	}
 }
@@ -1977,8 +2817,8 @@ config_print(CONFIG *cfg)
 	tab_over = FALSE;
 	for (cp = configs; cp->name; cp++) {
 
-		/* skip if special all value */
-		if (cp->type == CONFIG_ALL)
+		/* skip if special all or duplicate maxerr value */
+		if (cp->type == CONFIG_ALL || strcmp(cp->name, "maxerr") == 0)
 			continue;
 
 		/* print tab if allowed */
@@ -2002,5 +2842,3 @@ config_print(CONFIG *cfg)
 			printf("\n");
 	}
 }
-
-/* END CODE */

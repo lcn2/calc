@@ -8,38 +8,34 @@ TYPES
     return	association
 
 DESCRIPTION
-    This functions returns an empty association array.
+    This function returns an empty association array.
 
-    Associations are special values that act like matrices, except
-    that they are more general (and slower) than normal matrices.
-    Unlike matrices, associations can be indexed by arbitrary values.
-    For example, if 'val' was an association, you could do the following:
+    After A = assoc(), elements can be added to the association by
+    assignments of the forms
 
-	    val['hello'] = 11;
-	    val[4.5] = val['hello'];
-	    print val[9/2];
+	A[a_1] = v_1
+        A[a_1, a_2] = v_2
+	A[a_1, a_2, a_3] = v_3
+	A[a_1, a_2, a_3, a_4] = v_4
 
-    and 11 would be printed.
+    There are no restrictions on the values of the "indices" a_i or
+    the "values" v_i.
 
-    Associations are created by the 'assoc' function.  It takes no
-    arguments, and simply returns an empty association.  You can then
-    insert elements into the association by indexing the returned value
-    as shown above.
+    After the above assignments, so long as no new values have been
+    assigned to A[a_i], etc., the expressions A[a_1], A[a_1, a_2], etc.
+    will return the values v_1, v_2, ...
 
-    Associations are multi-dimensional.  You can index them using one to
-    four dimensions as desired, and the elements with different numbers
-    of dimensions will remain separated.  For example, 'val[3]' and
-    'val[3,0]' can both be used in the same association and will be
-    distinct elements.
+    Until A[a_1], A[a_1, a_2], ... are defined as described above, these
+    expressions return the null value.
 
-    When references are made to undefined elements of an association,
-    a null value is simply returned.  Therefore no bounds errors can
-    occur when indexing an association.  Assignments of a null value
+    Thus associations act like matrices except that different elements
+    may have different numbers (between 1 and 4 inclusive) of indices,
+    and these indices need not be integers in specified ranges.
+
+    Assignments of a null value
     to an element of an association does not delete the element, but
     a later reference to that element will return the null value as if
-    the element was undefined.  Elements with null values are implicitly
-    created on certain other operations which require an address to be
-    taken, such as the += operator and using & in a function call.
+    the element is undefined.
 
     The elements of an association are stored in a hash table for
     quick access.  The index values are hashed to select the correct
@@ -65,9 +61,18 @@ DESCRIPTION
     and are illegal.
 
 EXAMPLE
-    > print assoc()
+    > A = assoc(); print A
+     assoc (0 elements):
 
-      assoc (0 elements):
+    > A["zero"] = 0; A["one"] = 1; A["two"] = 2; A["three"] = 3;
+    > A["smallest", "prime"] = 2;
+    > print A
+    assoc (5 elements);
+    ["two"] = 2
+    ["three"] = 3
+    ["one"] = 1
+    ["zero"] = 0
+    ["smallest","prime"] = 2
 
 LIMITS
     none

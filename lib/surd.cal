@@ -261,8 +261,7 @@ define surd_rel(a, b)
 	return sgn(x^2 - y^2 * surd_type) * sgn(x);
 }
 
-global lib_debug;
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
     print "obj surd {a, b} defined";
     print "surd(a, b) defined";
     print "surd_print(a) defined";

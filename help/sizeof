@@ -10,9 +10,19 @@ TYPES
     return	integer
 
 DESCRIPTION
-    This is analogous to the C operator sizeof.  It attempts to assess
-    the number of bytes in memory used to store a value and all its
-    components.
+    This is analogous to the C operator sizeof for the value only.
+    It attempts to assess the number of bytes in memory used to store
+    a value and all of its components.  Unlike memsize(x), this
+    builtin does not include the size of the overhead.
+
+    Unlike size(x), this builtin incldues the trailing \0 byte on the
+    end of strings.
+
+    For numeric values, sizeof(x) ignores the demoninator if 'x' is
+    an integer.  For complex values, sizeof(x) ignores the imaginary
+    part if 'x' is real.  Because the 0, 1 and -1 numeric values are
+    shared static values, sizeof(x) reports such values as having
+    0 bytes of storage.
 
     The number returned by sizeof(x) may be less than the actual number
     used because, for example, more memory may have been allocated for
@@ -36,10 +46,12 @@ DESCRIPTION
 
     Similar sharing of memory occurs with literal strings.
 
+    For associative arrays, only the value part of the name/value pair
+    is counted.
+
     The minimum value for sizeof(x) occurs for the null and error values.
 
 EXAMPLES
-
     The results for examples like these will depend to some extent on
     the system being used.  The following were for an SGI R4k machine
     in 32-bit mode:

@@ -22,7 +22,7 @@ DESCRIPTION
     there is no "approximation" - the result represents x exactly.
 
     In the following it is assumed y is nonzero and x is not a multiple of y.
-    For Real x:
+    For real x:
 
 	appr(x,y,z) is either the nearest multiple of y greater
 	than x or the nearest multiple of y less than x.  Thus, if
@@ -45,9 +45,9 @@ DESCRIPTION
 
 	z = 3	round away from zero, sgn(r) = -sgn(x)
 
-	z = 4	round down
+	z = 4	round down, r > 0
 
-	z = 5	round up
+	z = 5	round up, r < 0
 
 	z = 6	round towards or from zero according as y is positive or
 		negative, sgn(r) = sgn(x/y)
@@ -82,7 +82,9 @@ DESCRIPTION
 	appr(x,y,z) returns the matrix or list indexed in the same way as x,
 	in which each element t has been replaced by appr(t,y,z).
 
-    XXX - complex x needs to be documented
+    Complex x:
+
+	Returns  appr(re(x), y, z) + appr(im(x), y, z) * 1i
 
 PROPERTIES
 	If appr(x,y,z) != x, then abs(x - appr(x,y,z)) < abs(y).
@@ -133,6 +135,10 @@ EXAMPLES
 
     > print appr(-.44,-.1,15),appr(.44,-.1,15),appr(5.7,-1,15),appr(-5.7,-1,15)
     -.4 .5 5 -6
+
+    > x = sqrt(7-3i, 1e-20)
+    > print appr(x,1e-5,0), appr(x,1e-5,1), appr(x,1e-5,2), appr(x,1e-6,3)
+    2.70331-.55488i 2.70332-.55487i 2.70331-.55487i 2.70332-.55488i
 
 LIMITS
     none

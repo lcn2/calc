@@ -1,0 +1,27 @@
+NAME
+    devnull - does nothing
+
+SYNOPSIS
+    custom("devnull" [, arg ...])
+
+TYPES
+    arg		any
+
+    return	null
+
+DESCRIPTION
+    This custom function does nothing.  It is intented for testing
+    of the general custom interface.
+
+EXAMPLE
+    > custom("devnull", foo, bar, baz, 3+4.5i, pi())
+
+LIMITS
+    calc must be built with ALLOW_CUSTOM= -DCUSTOM
+    calc must be executed with a -C arg.
+
+LIBRARY
+    none
+
+SEE ALSO
+    custom

@@ -27,8 +27,8 @@ EXAMPLE
       [2] = -1
 
 LIMITS
-    x	1-dimensional matrix with 3 elements
-    y	1-dimensional matrix with 3 elements
+    The components of the matrices are to be of types for which the
+    required algebraic operations have been defined.
 
 LIBRARY
     MATRIX *matcross(MATRIX *x, MATRIX *y)

@@ -33,9 +33,16 @@ Configuration parameters
 	    "outround"		sets rounding mode for printing of numbers
 	    "leadzero"		enables/disables printing of 0 as in 0.5
 	    "fullzero"		enables/disables padding zeros as in .5000
-	    "maxerr"		maximum number of scan errors before abort
+	    "maxscan"		maximum number of scan errors before abort
 	    "prompt"		default interactive prompt
 	    "more"		default interactive multi-line input prompt
+	    "blkmaxprint"	number of block octets to print, 0 means all
+	    "blkverbose"	TRUE=>print all lines, FALSE=>skip duplicates
+	    "blkbase"		block output base
+	    "blkfmt"		block output format
+	    "lib_debug"		calc library script debug level
+	    "calc_debug"	internal calc debug level
+	    "user_debug"	user defined debug level
 
 
     The "all" config value allows one to save/restore the configuration
@@ -90,6 +97,8 @@ Configuration parameters
 	8: the opcodes for a new functions are displayed when the function
 	   is successfully defined.
 
+    See also lib_debug, calc_debug and user_debug below for more debug levels.
+
     The "display" parameter specifies the maximum number of digits after
     the decimal point to be printed in real or exponential mode in
     normal unformatted printing (print, strprint, fprint) or in
@@ -127,7 +136,6 @@ Configuration parameters
 	    "hex"		hex fractions
 	    "oct"		octal fractions
 	    "bin"		binary fractions
-
 
     The "maxprint" parameter specifies the maximum number of elements to
     be displayed when a matrix or list is printed.  The initial value is 16.
@@ -172,7 +180,7 @@ Configuration parameters
 
     Config ("tab") controls the printing of a tab before results
     automatically displayed when working interactively.  It does not
-    affect the printing by the functions print, printf, etc.  The inital
+    affect the printing by the functions print, printf, etc.  The initial
     "tab" value is 1.
 
     The "quomod", "quo", "mod", "sqrt", "appr", "cfappr", "cfsim", and
@@ -232,11 +240,11 @@ Configuration parameters
     parameter is 0, so that, for example, if config("display") >= 2,
     5/4 will print in "real" mode as 1.25.
 
-    The maxerr value controls how many scan errors are allowed
+    The maxscan value controls how many scan errors are allowed
     before the compiling phase of a computation is aborted.  The initial
-    value of "maxerr" is 20.  Setting maxerr to 0 disables this feature.
+    value of "maxscan" is 20.  Setting maxscan to 0 disables this feature.
 
-    The default prompt when in teractive mode is "> ".  One may change
+    The default prompt when in interactive mode is "> ".  One may change
     this prompt to a more cut-and-paste friendly prompt by:
 
 	    config("prompt", "; ")
@@ -249,6 +257,121 @@ Configuration parameters
     change it by:
 
 	    config("more", ";; ")
+
+    The "blkmaxprint" config value limits the number of octets to print
+    for a block.  A "blkmaxprint" of 0 means to print all octets of a
+    block, regardless of size.
+
+    The default is to print only the first 256 octets.
+
+    The "blkverbose" determines if all lines, including duplicates
+    should be printed.  If TRUE, then all lines are printed.  If false,
+    duplicate lines are skipped and only a "*" is printed in a style
+    similar to od.  This config value has not meaning if "blkfmt" is "str".
+
+    The default value for "blkverbose" is FALSE: duplicate lines are
+    not printed.
+
+    The "blkbase" determines the base in which octets of a block
+    are printed.  Possible values are:
+
+	"hexadecimal"		Octets printed in 2 digit hex
+	"hex"
+
+	"octal"			Octets printed in 3 digit octal
+	"oct"
+
+	"character"		Octets printed as chars with non-printing
+	"char"			    chars as \123 or \n, \t, \r
+
+	"binary"		Octets printed as 0 or 1 chars
+	"bin"
+
+	"raw"			Octets printed as is, i.e. raw binary
+	"none"
+
+    The default "blkbase" is "hex".
+
+    The "blkfmt" determines for format of how block are printed:
+
+	"line"		print in lines of up to 79 chars + newline
+	"lines"
+
+	"str"		print as one long string
+	"string"
+	"strings"
+
+	"od"		print in od-like format, with leading offset,
+	"odstyle"	   followed by octets in the given base
+	"od_style"
+
+	"hd"		print in hex dump format, with leading offset,
+	"hdstyle"	   followed by octets in the given base, followed
+	"hd_style"	   by chars or '.' if no-printable or blank
+
+    The default "blkfmt" is "hd".
+
+    With regards to "lib_debug", "calc_debug" and "user_debug":
+    higher absolute values result in more detailed debugging and
+    more verbose debug messages.  The default value is 0 in which
+    a very amount of debugging will be performed with nil messages.
+    The -1 value is reserved for no debugging or messages.  Any
+    value <-1 will perform debugging silently (presumably collecting
+    data to be displayed at a later time).  Values >0 result in a
+    greater degree of debugging and more verbose messages.
+
+    The "lib_debug" is reserved by convention for calc library scripts.
+    This config parameter takes the place of the lib_debug global variable.
+    By convention, "lib_debug" has the following meanings:
+
+	<-1	no debug messages are printed though some internal
+		    debug actions and information may be collected
+
+	-1	no debug messages are printed, no debug actions will be taken
+
+	0	only usage message regarding each important object are
+		    printed at the time of the read (default)
+
+	>0	messages regarding each important object are
+		    printed at the time of the read in addition
+		    to other debug messages
+
+    The "calc_debug" is reserved by convention for internal calc routines.
+    The output of "calc_debug" will change from release to release.
+    Generally this value is used by calc wizards and by the regress.cal
+    routine (make check).  By convention, "calc_debug" has the following
+    meanings:
+
+	<-1	reserved for future use
+
+	-1	no debug messages are printed, no debug actions will be taken
+
+	0	very little, if any debugging is performed (and then mostly
+		    in alpha test code).  The only output is as a result of
+		    internal fatal errors (typically either math_error() or
+		    exit() will be called). (default)
+
+	>0	a greater degree of debugging is performed and more
+		    verbose messages are printed (regress.cal uses 1).
+
+    The "user_debug" is provided for use by users.  Calc ignores this value
+    other than to set it to 0 by default (for both "oldstd" and "newstd").
+    No calc code or shipped library will change this value other than
+    during startup or during a config("all", xyz) call.
+
+    The following is suggested as a convention for use of "user_debug".
+    These are only suggestions: feel free to use it as you like:
+
+	<-1	no debug messages are printed though some internal
+		    debug actions and information may be collected
+
+	-1	no debug messages are printed, no debug actions will be taken
+
+	0	very little, if any debugging is performed.  The only output
+		    are from fatal errors. (default)
+
+	>0	a greater degree of debugging is performed and more
+		    verbose messages are printed
 
     The following are synonyms for true:
 

@@ -1,28 +1,41 @@
 NAME
-    error - generate a value of an error type
+    error - generate a value of specified error type
 
 SYNOPSIS
-    error(n)
+    error([n])
 
 TYPES
-    n		integer less than 32768
+    n		integer, 0 <= n <= 32767; defaults to errno()
 
     return	null value or error value
 
 DESCRIPTION
-    If n is zero or negative, error(n) returns the null value.
+
+    If n is zero,  error(n) returns the null value.
+
     For positive n, error(n) returns a value of error type n.
 
+    error(n) sets calc_errno to n so that until another error-value
+    is returned by some function, errno() will return the value n.
+
 EXAMPLE
+    Note that by default, errmax() is 0 so unless errmax() is
+    increased you will get:
+
+    > ba = error(10009)
+    Error 10009 caused errcount to exceed errmax
+
+    > errmax(errcount()+1)
+	   0
     > a = error(10009)
-    a
-	Error 10009
+    > a
+	   Error 10009
 
 LIMITS
-    0 <= n < 32768
+    none
 
 LIBRARY
     none
 
 SEE ALSO
-    errorcodes, iserror
+    errcount, errmax, errorcodes, iserror, errno, strerror, newerror

@@ -5,7 +5,7 @@ SYNOPSIS
     isatty(fd)
 
 TYPES
-    fd		file
+    fd		any
 
     return	int
 
@@ -21,10 +21,15 @@ EXAMPLE
 	    0
 
 LIMITS
-    fd must be associaed with an open file
+    none
 
 LIBRARY
     none
 
 SEE ALSO
-    XXX - fill in
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt,
+    isassoc, isblk, isconfig, isdefined, iserror, iseven, isfile,
+    ishash, isident, isint, islist, ismat, ismult, isnull, isnum, isobj,
+    isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
+    issimple, issq, isstr, istype

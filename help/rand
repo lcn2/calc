@@ -15,10 +15,28 @@ DESCRIPTION
     We return a pseudo-random number over the half closed interval [min,max).
     By default, min is 0 and max is 2^64.
 
+    The shuffle method is fast and serves as a fairly good standard
+    pseudo-random generator.   If you need a fast generator and do not
+    need a cryptographically strong one, this generator is likely to do
+    the job.  Casual direct use of the shuffle generator may be
+    acceptable.  For a much higher quality cryptographically strong
+    (but slower) generator use the Blum-Blum-Shub generator (see the
+    random help page).
+
     Other arg forms:
 
 	rand()		Same as rand(0, 2^64)
 	rand(max)	Same as rand(0, max)
+
+    The rand generator generates the highest order bit first.  Thus:
+
+	rand(256)
+
+    will produce the save value as:
+
+	(rand(8) << 5) + rand(32)
+
+    when seeded with the same seed.
 
     The rand generator has two distinct parts, the additive 55 method
     and the shuffle method.  The additive 55 method is described in:
@@ -36,11 +54,6 @@ DESCRIPTION
 	"The Art of Computer Programming - Seminumerical Algorithms"
 	by Knuth, Vol 2, 2nd edition (1981), Section 3.2.2, page 32,
 	Algorithm B.
-
-    The shuffle method is fast and serves as a fairly good standard
-    pseudo-random generator.   If you need a fast generator and do not
-    need a cryptographically strong one, this generator is likely to do
-    the job.  Casual direct use of the shuffle generator may be acceptable.
 
     The rand generator has a good period, and is fast.  It is reasonable as
     generators go, though there are better ones available.  The shuffle
@@ -89,13 +102,13 @@ DESCRIPTION
     The shuffle table size is longer than the 100 entries recommended
     by Knuth.  We use a power of 2 shuffle table length so that the
     shuffle process can select a table entry from a new additive 55
-    value by extracting its low order bits.  The value 256 is conveient
+    value by extracting its low order bits.  The value 256 is convenient
     in that it is the size of a byte which allows for easy extraction.
 
     We use the upper byte of the additive 55 value to select the
     shuffle table entry because it allows all of 64 bits to play a part
     in the entry selection.  If we were to select a lower 8 bits in the
-    64 bit value, carries that proprogate above our 8 bits would not
+    64 bit value, carries that propagate above our 8 bits would not
     impact the additive 55 generator output.
 
     It is 'nice' when a seed of "n" produces a 'significantly different'
@@ -172,7 +185,7 @@ DESCRIPTION
     lost or favored (used by more than one input seed).
 
     The randreseed64 process does not reduce the security of the rand
-    genertator.  Every seed is converted into a different unique seed.
+    generator.  Every seed is converted into a different unique seed.
     No seed is ignored or favored.
 
     The truly paranoid might suggest that my claims in the MAGIC NUMBERS
@@ -196,7 +209,7 @@ DESCRIPTION
 	srand(mat55)
 
     and avoid using my magic numbers.  Of course, you must pick good
-    additive 55 values youself!
+    additive 55 values yourself!
 
 EXAMPLE
     > print srand(0), rand(), rand(), rand()

@@ -1,0 +1,48 @@
+We welcome and encourage you to send us:
+
+    * calc scripts
+    * any builtin functions that you have modified or written
+    * custom functions that you have modified or written
+    * any other source code modifications
+
+Prior to doing so, you should consider trying your changes on the most
+recent alpha test code.  To obtain the most recent code, look under
+
+	http://reality.sgi.com/chongo/calc/
+
+You should also consider joining the calc testing group by sending a
+request to:
+
+	calc-tester-request@postofc.corp.sgi.com
+
+    Your message body (not the subject) should consist of:
+
+	subscribe calc-tester address
+	end
+	name your_full_name
+
+    where "address" is your EMail address and "your_full_name"
+    is your full name.
+
+In order to consider integrating your code, we need:
+
+    * help files (documentation)
+    * CHANGES text (brief description of what it does)
+    * regress.cal test (to test non-custom code)
+    * your source code and/or source code changes (:-))
+
+The best way to send us new code, if your changes are small, is
+via a patch (diff -c from the latest alpha code to your code).
+If your change is large, you should send entire files (either
+as a diff -c /dev/null your-file patch, or as a uuencoded and
+gziped (or compressed) tar file).
+
+You should send submissions to:
+
+	calc-tester@postofc.corp.sgi.com
+
+Thanks for considering submitting code to calc.  Calc is a collective
+work by a number of people.  It would not be what it is today without
+your efforts and submissions!
+
+Landon Curt Noll <chongo@toad.com> /\oo/\

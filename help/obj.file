@@ -165,6 +165,10 @@ Using objects
 	    xx_bround   2	round to given number of binary places
 	    xx_root     3	root of value within given error
 	    xx_sqrt     2	square root within given error
+	    xx_or	2	boolean or
+	    xx_and	2	boolean and
+	    xx_not	1	boolean not
+	    xx_fact	1	factorial
 
 
     Also see the library files:

@@ -1,4 +1,3 @@
-/* XXX - this code is currently not really used, but it will be soon */
 /*
  * shs - old Secure Hash Standard
  *
@@ -25,20 +24,16 @@
  * USE,  DATA  OR  PROFITS, WHETHER IN AN ACTION OF CONTRACT,
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- *
- * See shsdrvr.c for version and modification history.
  */
 
-#if !defined(SHS_H)
-#define SHS_H
 
-#include <sys/types.h>
-#include <sys/stat.h>
+#if !defined(__SHS_H__)
+#define __SHS_H__
+
 
 /* SHS_CHUNKSIZE must be a power of 2 - fixed value defined by the algorithm */
 #define SHS_CHUNKSIZE (1<<6)
 #define SHS_CHUNKWORDS (SHS_CHUNKSIZE/sizeof(USB32))
-#define SHS_CHUNKHALFS (SHS_CHUNKSIZE/sizeof(HALF))
 
 /* SHS_DIGESTSIZE is a the length of the digest as defined by the algorithm */
 #define SHS_DIGESTSIZE (20)
@@ -50,25 +45,17 @@
 /* SHS_HIGH - where high 32 bits of 64 bit count is stored during final */
 #define SHS_HIGH 14
 
-/* what to xor to digest value when hashing special values */
-#define SHS_BASE 0x1234face		/* base special hash value */
-#define SHS_HASH_NEG (1+SHS_BASE)	/* note a negative value */
-#define SHS_HASH_COMPLEX (2+SHS_BASE)	/* note a complex value */
-#define SHS_HASH_DIV (4+SHS_BASE)	/* note a division by a value */
-#define SHS_HASH_ZERO (8+SHS_BASE)	/* note a zero numeric value */
-#define SHS_HASH_ZVALUE (16+SHS_BASE)	/* note a ZVALUE */
-
 /*
  * The structure for storing SHS info
  *
  * We will assume that bit count is a multiple of 8.
  */
 typedef struct {
-    USB32 digest[SHS_DIGESTWORDS];	/* message digest */
-    USB32 countLo;			/* 64 bit count: bits 3-34 */
-    USB32 countHi;			/* 64 bit count: bits 35-63 */
-    USB32 datalen;			/* length of data in data */
-    USB32 data[SHS_CHUNKWORDS];		/* SHS chunk buffer */
+	USB32 digest[SHS_DIGESTWORDS];	/* message digest */
+	USB32 countLo;			/* 64 bit count: bits 3-34 */
+	USB32 countHi;			/* 64 bit count: bits 35-63 */
+	USB32 datalen;			/* length of data in data */
+	USB32 data[SHS_CHUNKWORDS];	/* SHS chunk buffer */
 } SHS_INFO;
 
 /*
@@ -77,12 +64,13 @@ typedef struct {
  * We will count bytes and convert to bit count during the final
  * transform.  This assumes that the count is < 2^32.
  */
-#define SHSCOUNT(shsinfo, count) {				\
-    USB32 tmp_countLo;						\
-    tmp_countLo = (shsinfo)->countLo;				\
-    if (((shsinfo)->countLo += (count)) < tmp_countLo) {	\
-	(shsinfo)->countHi++;					\
-    }								\
+#define SHSCOUNT(shsinfo, count) {					\
+	USB32 tmp_countLo;						\
+	tmp_countLo = (shsinfo)->countLo;				\
+	if (((shsinfo)->countLo += (count)) < tmp_countLo) {		\
+		(shsinfo)->countHi++;					\
+	}								\
 }
 
-#endif
+
+#endif /* !__SHS_H__ */

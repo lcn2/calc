@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1993 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
@@ -17,7 +17,6 @@
 extern long irand(long s);
 
 static LISTELEM *elemalloc(void);
-static LISTELEM *listelement(LIST *lp, long index);
 static void elemfree(LISTELEM *ep);
 static void removelistelement(LIST *lp, LISTELEM *ep);
 
@@ -214,55 +213,113 @@ removelistelement(LIST *lp, LISTELEM *ep)
 }
 
 
+LIST *
+listsegment(LIST *lp, long n1, long n2)
+{
+	LIST *newlp;
+	LISTELEM *ep;
+	long i;
+
+	newlp = listalloc();
+	if ((n1 >= lp->l_count && n2 >= lp->l_count) || (n1 < 0 && n2 < 0))
+		return newlp;
+	if (n1 >= lp->l_count)
+		n1 = lp->l_count - 1;
+	if (n2 >= lp->l_count)
+		n2 = lp->l_count - 1;
+	if (n1 < 0)
+		n1 = 0;
+	if (n2 < 0)
+		n2 = 0;
+
+	ep = lp->l_first;
+	if (n1 <= n2) {
+		i = n2 - n1 + 1;
+		while(n1-- > 0 && ep)
+			ep = ep->e_next;
+		while(i-- > 0 && ep) {
+			insertlistlast(newlp, &ep->e_value);
+			ep = ep->e_next;
+		}
+	}
+	else {
+		i = n1 - n2 + 1;
+		while(n2-- > 0 && ep)
+			ep = ep->e_next;
+		while(i-- > 0 && ep) {
+			insertlistfirst(newlp, &ep->e_value);
+			ep = ep->e_next;
+		}
+	}
+	return newlp;
+}
+
+
 /*
  * Search a list for the specified value starting at the specified index.
- * Returns the element number (zero based) of the found value, or -1 if
- * the value was not found.
+ * Returns 0 and stores the element number (zero based) if the value is
+ * found, otherwise returns 1.
  */
-long
-listsearch(LIST *lp, VALUE *vp, long index)
+int
+listsearch(LIST *lp, VALUE *vp, long i, long j, ZVALUE *index)
 {
 	register LISTELEM *ep;
 
-	if (index < 0)
-		index = 0;
-	ep = listelement(lp, index);
-	while (ep) {
-		if (!comparevalue(&ep->e_value, vp)) {
+	if (i < 0 || j > lp->l_count) {
+		math_error("This should not happen in call to listsearch");
+		/*NOTREACHED*/
+	}
+
+	ep = listelement(lp, i);
+	while (i < j) {
+		if (!ep) {
+			math_error("This should not happen in listsearch");
+			/*NOTREACHED*/
+		}
+		if (acceptvalue(&ep->e_value, vp)) {
 			lp->l_cache = ep;
-			lp->l_cacheindex = index;
-			return index;
+			lp->l_cacheindex = i;
+			utoz(i, index);
+			return 0;
 		}
 		ep = ep->e_next;
-		index++;
+		i++;
 	}
-	return -1;
+	return 1;
 }
 
 
 /*
  * Search a list backwards for the specified value starting at the
- * specified index.  Returns the element number (zero based) of the
- * found value, or -1 if the value was not found.
+ * specified index.  Returns 0 and stores i if the value is found at
+ * index i; otherwise returns 1.
  */
-long
-listrsearch(LIST *lp, VALUE *vp, long index)
+int
+listrsearch(LIST *lp, VALUE *vp, long i, long j, ZVALUE *index)
 {
 	register LISTELEM *ep;
 
-	if (index >= lp->l_count)
-		index = lp->l_count - 1;
-	ep = listelement(lp, index);
-	while (ep) {
-		if (!comparevalue(&ep->e_value, vp)) {
+	if (i < 0 || j > lp->l_count) {
+		math_error("This should not happen in call to listrsearch");
+		/*NOTREACHED*/
+	}
+
+	ep = listelement(lp, --j);
+	while (j >= i) {
+		if (!ep) {
+			math_error("This should not happen in listsearch");
+			/*NOTREACHED*/
+		}
+		if (acceptvalue(&ep->e_value, vp)) {
 			lp->l_cache = ep;
-			lp->l_cacheindex = index;
-			return index;
+			lp->l_cacheindex = j;
+			utoz(j, index);
+			return 0;
 		}
 		ep = ep->e_prev;
-		index--;
+		j--;
 	}
-	return -1;
+	return 1;
 }
 
 
@@ -298,7 +355,7 @@ listfindex(LIST *lp, long index)
  *	lp		list to index into
  *	index		index of desired element
  */
-static LISTELEM *
+LISTELEM *
 listelement(LIST *lp, long index)
 {
 	register LISTELEM *ep;	/* current list element */
@@ -726,6 +783,7 @@ elemalloc(void)
 	ep->e_next = NULL;
 	ep->e_prev = NULL;
 	ep->e_value.v_type = V_NULL;
+	ep->e_value.v_subtype = V_NOSUBTYPE;
 	return ep;
 }
 
@@ -825,5 +883,3 @@ listprint(LIST *lp, long max_print)
 	if (max_print < lp->l_count)
 		math_str("  ...\n");
 }
-
-/* END CODE */

@@ -1,0 +1,31 @@
+NAME
+    mattrace - trace of a square matrix
+
+SYNOPSIS
+    mattrace(m)
+
+TYPES
+    m		square matrix with summable diagonal elements
+
+    return	determined by addition of elements
+
+DESCRIPTION
+    For a two-dimensional square matrix, mattrace(m) returns the sum of
+    the elements on the principal diagonal.  In particular, if m
+    has been created by mat m[N,N] where N > 0, mattrace(m) returns
+
+		m[0,0] + m{1,1] + ... + m[N-1,N-1]
+
+EXAMPLE
+    > mat m[2,2] = {1,2,3,4}
+    > print mattrace(m), mattrace(m^2)
+    5 29
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    mat, mattrans

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1995 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
@@ -43,13 +43,14 @@ zfact(ZVALUE z, ZVALUE *dest)
 	for (; n > 1; n--) {
 		for (m = n; ((m & 0x1) == 0); m >>= 1)
 			ptwo++;
-		mul *= m;
-		if (mul < BASE1/2)
+		if (mul <= MAXLONG/m) {
+			mul *= m;
 			continue;
+		}
 		zmuli(res, mul, &temp);
 		zfree(res);
 		res = temp;
-		mul = 1;
+		mul = m;
 	}
 	/*
 	 * Multiply by the remaining value, then scale result by
@@ -456,7 +457,7 @@ ztenpow(long power, ZVALUE *res)
 BOOL
 zmodinv(ZVALUE u, ZVALUE v, ZVALUE *res)
 {
-	FULL	q1, q2, ui3, vi3, uh, vh, A, B, C, D, T;
+ 	FULL	q1, q2, ui3, vi3, uh, vh, A, B, C, D, T;
 	ZVALUE	u2, u3, v2, v3, qz, tmp1, tmp2, tmp3;
 
 	v.sign = 0;
@@ -470,15 +471,21 @@ zmodinv(ZVALUE u, ZVALUE v, ZVALUE *res)
 
 	/*
 	 * Loop here while the size of the numbers remain above
-	 * the size of a FULL.  Throughout this loop u3 >= v3.
+	 * the size of a HALF.  Throughout this loop u3 >= v3.
 	 */
 	while ((u3.len > 1) && !ziszero(v3)) {
-		uh = (((FULL) u3.v[u3.len - 1]) << BASEB) + u3.v[u3.len - 2];
 		vh = 0;
-		if ((v3.len + 1) >= u3.len)
-			vh = v3.v[v3.len - 1];
+#if LONG_BITS == BASEB
+		uh =  u3.v[u3.len - 1];
 		if (v3.len == u3.len)
-			vh = (vh << BASEB) + v3.v[v3.len - 2];
+			vh = v3.v[v3.len - 1];
+#else
+ 		uh = (((FULL) u3.v[u3.len - 1]) << BASEB) + u3.v[u3.len - 2];
+ 		if ((v3.len + 1) >= u3.len)
+ 			vh = v3.v[v3.len - 1];
+  		if (v3.len == u3.len)
+ 			vh = (vh << BASEB) + v3.v[v3.len - 2];
+#endif
 		A = 1;
 		B = 0;
 		C = 0;

@@ -1,0 +1,46 @@
+NAME
+    errcount - return or set the internal error count
+
+SYNOPSIS
+    errcount([num])
+
+TYPES
+    num		integer
+
+    return	integer
+
+DESCRIPTION
+    An internal variable keeps count of the number of functions
+    evaluating to an error value either internally or by a call to
+    error() or newerror().
+
+    The errcount() with no args returns the current error count.  Calling
+    errcount(num) returns the current error count and resets it to num.
+
+    If the count exceeds the current value of errmax, execution is aborted
+    with a message displaying the errno for the error.
+
+    If an error value is assigned to a variable as in:
+
+			infty = 1/0;
+
+    then a function returning that variable does not contribute to
+    errcount.
+
+EXAMPLE
+    > errmax(10)
+	    0
+    > errcount()
+	    0
+    > a = 1/0; b = 2 + ""; c = error(27); d = newerror("a");
+    > print errcount(), a, errcount(), errmax();
+    4 Error 10001 4 10
+
+LIMITS
+    0 <= num < 2^32
+
+LIBRARY
+    none
+
+SEE ALSO
+    errmax, error, strerror, iserror, errno, newerror, errorcodes

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1995 by Landon Curt Noll.  All Rights Reserved.
+ * Copyright (c) 1997 by Landon Curt Noll.  All Rights Reserved.
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby granted,
@@ -20,8 +20,10 @@
  * PERFORMANCE OF THIS SOFTWARE.
  */
 
-#if !defined(BYTESWAP_H)
-#define BYTESWAP_H
+
+#if !defined(__BYTESWAP_H__)
+#define __BYTESWAP_H__
+
 
 #include "longbits.h"
 
@@ -163,4 +165,5 @@
 
 #endif /* LONG_BITS == 64 */
 
-#endif /* !BYTESWAP_H */
+
+#endif /* !__BYTESWAP_H__ */

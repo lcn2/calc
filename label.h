@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 1993 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  */
 
-#ifndef	LABEL_H
-#define	LABEL_H
+
+#if !defined(__LABEL_H__)
+#define	__LABEL_H__
 
 
 #include "zmath.h"
@@ -32,6 +33,5 @@ extern void setlabel(LABEL *lp);
 extern void uselabel(LABEL *lp);
 extern void checklabels(void);
 
-#endif
 
-/* END CODE */
+#endif /* !__LABEL_H__ */

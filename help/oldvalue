@@ -1,0 +1,54 @@
+NAME
+    . - oldvalue
+
+SYNOPSIS
+    .  (with no adjacent letters or digits or _ or .)
+
+TYPES
+    return	any
+
+DESCRIPTION
+    The "old value" is essentially a global variable with identifier "."
+    which at top level when directly from a file or keyboard
+    is automatically assigned the saved value for a line
+    of statements when evaluation of that line is completed and this saved
+    value is not null.  A line of statements is normally completed by a
+    '\n' not within a block bounded by braces or an expression bounded by
+    parentheses.
+
+    Disabling of saving by calling saveval(0) causes lines to return a
+    null value and . then becomes in effect a global variable whose
+    value may be changed by assignments and operations like ++ and --.
+
+    A null value may be assigned to . by . = null() or free(.).
+
+EXAMPLE
+    > saveval(1);
+    > a = 2
+    > .
+	    2
+    > . += 3; b = . + 4
+    > print ., b
+    9 9
+    > . += 3; b = . + 4; null()
+    > print ., b
+    12 16
+    > list(a, b, a + b)
+
+    list (3 elements, 3 nonzero):
+	    [[0]] = 2
+	    [[1]] = 16
+	    [[2]] = 18
+
+    > saveval(0)
+    > print pop(.), .[[1]]
+    2 18
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    saveval

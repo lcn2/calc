@@ -21,9 +21,7 @@ EXAMPLE
     1.0472 1.0471975512 1.047197551196598 1.04719755119659774615
 
 LIMITS
-    unlike sin and cos, x must be real
-    abs(x) <= 1
-    eps > 0
+    none
 
 LIBRARY
     NUMBER *qacos(NUMBER *x, NUMBER *eps)

@@ -2,11 +2,24 @@ Calc command line
 
     Calc has the following command line:
 
-	calc [-h] [-m mode] [-p] [-q] [-u] [calc_command ...]
+	calc [-C] [-e] [-h] [-i] [-m mode] [-n] [-p] [-q] [-u] [calc_cmd ...]
+
+	-C  Permit the execution of custom builtin functions.  Without
+	    this flag, calling the custom() builtin function will
+	    simply generate an error.
+
+	    Use if this flag may cause calc to execute functions that
+	    are non-standard and that are not portable.  Custom builtin
+	    functions are disabled by default for this reason.
+
+	-e  Ignore any environment variables on startup.  The
+	    getenv() builtin will still return values, however.
 
 	-h  Print a help message.  This option implies  -q.  This
 	    is equivalent to the calc command help help.  The help
 	    facility is disabled unless the mode is 5 or 7.  See -m.
+
+	-i  Do not about if the error count exceeds maxerr().
 
 	-m mode
 	   This flag sets the permission mode of calc.  It
@@ -46,6 +59,10 @@ Calc command line
 	   given.  The reading of key bindings is also disabled
 	   when the mode disables opening of files for reading.
 
+	-n  Use the new configutation defaults instead of the old
+	    default classic defaults.  This flag as the same effect
+	    as executing config("all", "newcfg") at startup time.
+
 	-p  Pipe processing is enabled by use of -p.  For example:
 
 		     echo "print 2^21701-1, 2^23209-1" | calc -p | fizzbin
@@ -57,8 +74,8 @@ Calc command line
 
 	-u  Disable buffering of stdin and stdout.
 
-    Without calc_cmds, calc operates interactively.  If one or more
-    calc_cmds are given on the command line, calc will execute them and
+    Without `calc_cmd', calc operates interactively.  If one or more
+    `calc_cmd' are given on the command line, calc will execute them and
     exit.  The printing of leading tabs on output is disabled as if
     config("tab",0) had been executed.
 
@@ -87,6 +104,8 @@ Calc command line
 
     For more information use the following calc commands:
 
-       help usage
        help help
+       help overview
+       help usage
        help environment
+       help config

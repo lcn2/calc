@@ -1,14 +1,17 @@
 /*
- * Copyright (c) 1995 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Arbitrary precision calculator.
  */
 
+#include <stdio.h>
 #include <signal.h>
 #include <pwd.h>
 #include <sys/types.h>
+#include <ctype.h>
+#include <setjmp.h>
 
 #define CALC_C
 #include "calc.h"
@@ -19,6 +22,10 @@
 #include "token.h"
 #include "symbol.h"
 #include "have_uid_t.h"
+#include "have_const.h"
+#include "custom.h"
+#include "math_error.h"
+#include "args.h"
 
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
@@ -30,69 +37,32 @@
 #include <stdlib.h>
 #endif
 
-/*
- * in case we do not have certain .h files
- */
-#if !defined(HAVE_STDLIB_H) && !defined(HAVE_UNISTD_H)
-#if !defined(HAVE_UID_T) && !defined(_UID_T)
-typedef unsigned short uid_t;
-#endif
-extern char *getenv();
-extern uid_t geteuid();
-#endif
 
 /*
- * Common definitions
+ * external and static definitions
  */
-int abortlevel;		/* current level of aborts */
-BOOL inputwait;		/* TRUE if in a terminal input wait */
-jmp_buf jmpbuf;		/* for errors */
-int start_done = FALSE;	/* TRUE => start up processing finished */
-
+extern int abortlevel;		/* current level of aborts */
+extern BOOL inputwait;		/* TRUE if in a terminal input wait */
+extern jmp_buf jmpbuf;		/* for errors */
 extern int isatty(int tty);	/* TRUE if fd is a tty */
 
-static int p_flag = FALSE;	/* TRUE => pipe mode */
-static int q_flag = FALSE;	/* TRUE => don't execute rc files */
-static int u_flag = FALSE;	/* TRUE => unbuffer stdin and stdout */
+extern int p_flag;		/* TRUE => pipe mode */
+extern int q_flag;		/* TRUE => don't execute rc files */
+extern int u_flag;		/* TRUE => unbuffer stdin and stdout */
+
+extern char *pager;		/* $PAGER or default */
+extern int stdin_tty;		/* TRUE if stdin is a tty */
+extern char *program;		/* our name */
+extern char cmdbuf[];		/* command line expression */
+
+extern char *version(void);	/* return version string */
+
 
 /*
- * global permissions
+ * forward static functions
  */
-int allow_read = TRUE;	/* FALSE => may not open any files for reading */
-int allow_write = TRUE;	/* FALSE => may not open any files for writing */
-int allow_exec = TRUE;	/* FALSE => may not execute any commands */
-
-char *calcpath;		/* $CALCPATH or default */
-char *calcrc;		/* $CALCRC or default */
-char *calcbindings;	/* $CALCBINDINGS or default */
-char *home;		/* $HOME or default */
-static char *pager;	/* $PAGER or default */
-char *shell;		/* $SHELL or default */
-int stdin_tty = TRUE;	/* TRUE if stdin is a tty */
-int post_init = FALSE;	/* TRUE setjmp for math_error is readready */
-
-/*
- * some help topics are symbols, so we alias them to nice filenames
- */
-static struct help_alias {
-	char *topic;
-	char *filename;
-} halias[] = {
-	{"=", "assign"},
-	{"%", "mod"},
-	{"//", "quo"},
-	{NULL, NULL}
-};
-
-NUMBER *epsilon_default;	/* default allowed error for float calcs */
-
 static void intint(int arg);	/* interrupt routine */
-static void initenv(void);	/* initialize environment vars */
 
-extern void file_init(void);
-extern void zio_init(void);
-
-char cmdbuf[MAXCMD+1];	/* command line expression */
 
 /*
  * Top level calculator routine.
@@ -108,12 +78,33 @@ main(int argc, char **argv)
 	/*
 	 * parse args
 	 */
+	program = argv[0];
 	argc--;
 	argv++;
 	while ((argc > 0) && (**argv == '-')) {
 		for (str = &argv[0][1]; *str; str++) switch (*str) {
+			case 'C':
+#if defined(CUSTOM)
+				allow_custom = TRUE;
+				break;
+#else
+				fprintf(stderr,
+				    "Calc was built with custom functions "
+				    "disabled, -C usage is disallowed\n");
+				/*
+				 * we are too early in processing to call
+				 * libcalc_call_me_last() - nothing to cleanup
+				 */
+				exit(1);
+#endif /* CUSTOM */
+			case 'e':
+				no_env = TRUE;
+				break;
 			case 'h':
 				want_defhelp = 1;
+				break;
+			case 'i':
+				ign_errmax = TRUE;
 				break;
 			case 'm':
 				if (argv[0][2]) {
@@ -124,15 +115,28 @@ main(int argc, char **argv)
 					argv++;
 				} else {
 					fprintf(stderr, "-m requires an arg\n");
+					/*
+					 * we are too early in processing to
+					 * call libcalc_call_me_last()
+					 * nothing to cleanup
+					 */
 					exit(1);
 				}
 				if (p[1] != '\0' || *p < '0' || *p > '7') {
 					fprintf(stderr, "unknown -m arg\n");
+					/*
+					 * we are too early in processing to
+					 * call libcalc_call_me_last()
+					 * nothing to cleanup
+					 */
 					exit(1);
 				}
 				allow_read = (((*p-'0') & 04) > 0);
 				allow_write = (((*p-'0') & 02) > 0);
 				allow_exec = (((*p-'0') & 01) > 0);
+				break;
+			case 'n':
+				new_std = TRUE;
 				break;
 			case 'p':
 				p_flag = TRUE;
@@ -144,21 +148,37 @@ main(int argc, char **argv)
 				u_flag = TRUE;
 				break;
 			case 'v':
-				version(stdout);
+				printf("%s (version %s)\n",
+				    CALC_TITLE, version());
+				/*
+				 * we are too early in processing to call
+				 * libcalc_call_me_last() - nothing to cleanup
+				 */
 				exit(0);
 			default:
-				fprintf(stderr, "Unknown option\n");
+				fprintf(stderr,
+			"usage: %s [-C] [-e] [-h] [-i] [-m mode] [-n] [-p]\n",
+				    program);
+				fprintf(stderr, "\t[-q] [-u] [calc_cmd ...]\n");
+				/*
+				 * we are too early in processing to call
+				 * libcalc_call_me_last() - nothing to cleanup
+				 */
 				exit(1);
 		}
 		argc--;
 		argv++;
 	}
+	cmdbuf[0] = '\0';
 	str = cmdbuf;
-	*str = '\0';
 	while (--argc >= 0) {
 		i = (long)strlen(*argv);
-		if (str+1+i+2 >= cmdbuf+MAXCMD) {
+		if (i+3 >= MAXCMD) {
 			fprintf(stderr, "command in arg list too long\n");
+			/*
+			 * we are too early in processing to call
+			 * libcalc_call_me_last() - nothing to cleanup
+			 */
 			exit(1);
 		}
 		*str++ = ' ';
@@ -181,12 +201,11 @@ main(int argc, char **argv)
 	 * initialize
 	 */
 	libcalc_call_me_first();
-	hash_init();
-	file_init();
-	initenv();
-	resetinput();
+	stdin_tty = TRUE;	/* assume internactive default */
+	conf->tab_ok = TRUE;	/* assume internactive default */
 	if (want_defhelp) {
 		givehelp(DEFAULTCALCHELP);
+		libcalc_call_me_last();
 		exit(0);
 	}
 
@@ -197,10 +216,7 @@ main(int argc, char **argv)
 		/*
 		 * check for pipe mode and/or non-tty stdin
 		 */
-		if (p_flag) {
-			stdin_tty = FALSE;    /* stdin not a tty in pipe mode */
-			conf->tab_ok = FALSE; /* config("tab",0) if pipe mode */
-		} else {
+		if (!p_flag) {
 			stdin_tty = isatty(0);	/* assume stdin is on fd 0 */
 		}
 
@@ -213,11 +229,9 @@ main(int argc, char **argv)
 		 * if tty, setup bindings
 		 */
 		if (stdin_tty) {
-			version(stdout);
+			printf("%s (version %s)\n", CALC_TITLE, version());
 			printf("[%s]\n\n",
 			    "Type \"exit\" to exit, or \"help\" for help.");
-		}
-		if (stdin_tty) {
 			switch (hist_init(calcbindings)) {
 			case HIST_NOFILE:
 				fprintf(stderr,
@@ -232,13 +246,6 @@ main(int argc, char **argv)
 				break;
 			}
 		}
-	} else {
-
-		/*
-		 * process args, not stdin
-		 */
-		stdin_tty = FALSE;	/* stdin not a tty in arg mode */
-		conf->tab_ok = FALSE;	/* config("tab",0) if pipe mode */
 	}
 
 	/*
@@ -249,17 +256,12 @@ main(int argc, char **argv)
 		/*
 		 * reset/initialize the computing environment
 		 */
-		post_init = TRUE;	/* jmpbuf is ready for math_error() */
-		inittokens();
-		initglobals();
-		initfunctions();
-		initstack();
-		resetinput();
-		math_cleardiversions();
-		math_setfp(stdout);
-		math_setmode(MODE_INITIAL);
-		math_setdigits((long)DISPLAY_DEFAULT);
-		conf->maxprint = MAXPRINT_DEFAULT;
+		if (post_init) {
+			initialize();
+		} else {
+			/* initialize already done, jmpbuf is ready */
+			post_init = TRUE;	
+		}
 
 		/*
 		 * if arg mode or non-tty mode, just do the work and be gone
@@ -275,146 +277,32 @@ main(int argc, char **argv)
 				(void) openterminal();
 			start_done = TRUE;
 			getcommands(FALSE);
+			libcalc_call_me_last();
 			exit(0);
 		}
 	}
-	start_done = TRUE;
-
-	/*
-	 * if in arg mode, we should not get here
-	 */
-	if (str)
+	/* if in arg mode, we should not get here */
+	if (str) {
+		libcalc_call_me_last();
 		exit(1);
+	}
 
 	/*
-	 * process commands (from stdin, not the command line)
+	 * process commands
 	 */
-	abortlevel = 0;
-	_math_abort_ = FALSE;
-	inputwait = FALSE;
-	(void) signal(SIGINT, intint);
-	math_cleardiversions();
-	math_setfp(stdout);
-	resetscopes();
-	resetinput();
-	if (q_flag == FALSE && allow_read) {
-		q_flag = TRUE;
-		runrcfiles();
+	if (!start_done) {
+		reinitialize();
 	}
-	(void) openterminal();
+	(void) signal(SIGINT, intint);
+	start_done = TRUE;
 	getcommands(TRUE);
 
 	/*
 	 * all done
 	 */
+	libcalc_call_me_last();
 	exit(0);
 	/*NOTREACHED*/
-}
-
-
-/*
- * initenv - obtain $CALCPATH, $CALCRC, $CALCBINDINGS, $HOME, $PAGER
- * and $SHELL values
- *
- * If $CALCPATH, $CALCRC, $CALCBINDINGS, $PAGER or $SHELL do not exist,
- * use the default values.  If $PAGER or $SHELL is an empty string, also
- * use a default value. If $HOME does not exist, or is empty, use the home
- * directory information from the password file.
- */
-static void
-initenv(void)
-{
-	struct passwd *ent;		/* our password entry */
-
-	/* determine the $CALCPATH value */
-	calcpath = getenv(CALCPATH);
-	if (calcpath == NULL)
-		calcpath = DEFAULTCALCPATH;
-
-	/* determine the $CALCRC value */
-	calcrc = getenv(CALCRC);
-	if (calcrc == NULL) {
-		calcrc = DEFAULTCALCRC;
-	}
-
-	/* determine the $CALCBINDINGS value */
-	calcbindings = getenv(CALCBINDINGS);
-	if (calcbindings == NULL) {
-		calcbindings = DEFAULTCALCBINDINGS;
-	}
-
-	/* determine the $HOME value */
-	home = getenv(HOME);
-	if (home == NULL || home[0] == '\0') {
-		ent = (struct passwd *)getpwuid(geteuid());
-		if (ent == NULL) {
-			/* just assume . is home if all else fails */
-			home = ".";
-		}
-		home = (char *)malloc(strlen(ent->pw_dir)+1);
-		strcpy(home, ent->pw_dir);
-	}
-
-	/* determine the $PAGER value */
-	pager = getenv(PAGER);
-	if (pager == NULL || *pager == '\0') {
-		pager = DEFAULTCALCPAGER;
-	}
-
-	/* determine the $SHELL value */
-	shell = getenv(SHELL);
-	if (shell == NULL)
-		shell = DEFAULTSHELL;
-}
-
-
-/*
- * givehelp - display a help file
- *
- * given:
- *	type		the type of help to give, NULL => index
- */
-void
-givehelp(char *type)
-{
-	struct help_alias *p;	/* help alias being considered */
-	char *helpcmd;		/* what to execute to print help */
-
-	/*
-	 * check permissions to see if we are allowed to help
-	 */
-	if (!allow_exec || !allow_read) {
-		fprintf(stderr,
-		    "sorry, help is only allowed with -m mode 5 or 7\n");
-		return;
-	}
-
-	/* catch the case where we just print the index */
-	if (type == NULL) {
-		type = DEFAULTCALCHELP;		/* the help index file */
-	}
-
-	/* alias the type of help, if needed */
-	for (p=halias; p->topic; ++p) {
-		if (strcmp(type, p->topic) == 0) {
-			type = p->filename;
-			break;
-		}
-	}
-
-	/* form the help command name */
-	helpcmd = (char *)malloc(
-		sizeof("if [ ! -d \"")+sizeof(HELPDIR)+1+strlen(type)+
-		sizeof("\" ];then ")+
-		strlen(pager)+1+1+sizeof(HELPDIR)+1+strlen(type)+1+1+
-		sizeof(";else echo no such help;fi"));
-	sprintf(helpcmd,
-	    "if [ -r \"%s/%s\" ];then %s \"%s/%s\";else echo no such help;fi",
-	    HELPDIR, type, pager, HELPDIR, type);
-
-	/* execute the help command */
-	system(helpcmd);
-	free(helpcmd);
 }
 
 
@@ -438,4 +326,34 @@ intint(int arg)
 	printf("\n[Abort level %d]\n", abortlevel);
 }
 
-/* END CODE */
+
+/*
+ * Routine called on any runtime error, to complain about it (with possible
+ * arguments), and then longjump back to the top level command scanner.
+ */
+void
+math_error(char *fmt, ...)
+{
+	va_list ap;
+	char buf[MAXERROR+1];
+
+	if (funcname && (*funcname != '*'))
+		fprintf(stderr, "\"%s\": ", funcname);
+	if (funcline && ((funcname && (*funcname != '*')) || !inputisterminal()))
+		fprintf(stderr, "line %ld: ", funcline);
+	va_start(ap, fmt);
+	vsprintf(buf, fmt, ap);
+	va_end(ap);
+	fprintf(stderr, "%s\n", buf);
+	funcname = NULL;
+	if (post_init) {
+		longjmp(jmpbuf, 1);
+	} else {
+		fprintf(stderr, "no jmpbuf jumpback point - ABORTING!!!\n");
+		/*
+		 * don't call libcalc_call_me_last() -- we might loop
+		 * and besides ... this is an unusual internal error case
+		 */
+		exit(3);
+	}
+}

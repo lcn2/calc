@@ -1,10 +1,15 @@
 /*
- * Copyright (c) 1996 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * File I/O routines callable by users.
  */
+
+
+#if !defined(__FILE_H__)
+#define __FILE_H__
+
 
 #include "have_fpos.h"
 
@@ -56,5 +61,11 @@ typedef struct {
 /*
  * external functions
  */
+extern FILEIO * findid(FILEID id, int mode);
 extern int fgetposid(FILEID id, FILEPOS *ptr);
 extern int fsetposid(FILEID id, FILEPOS *ptr);
+extern int get_open_siz(FILE *fp, ZVALUE *res);
+extern char* findfname(FILEID);
+
+
+#endif /* !__FILE_H__ */

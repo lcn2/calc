@@ -1,15 +1,20 @@
 /*
- * Copyright (c) 1995 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Read input file characters into tokens
  */
 
+
+#include <stdio.h>
+#include <setjmp.h>
+
 #include "calc.h"
 #include "token.h"
 #include "string.h"
 #include "args.h"
+#include "math_error.h"
 
 
 #define isletter(ch)	((((ch) >= 'a') && ((ch) <= 'z')) || \
@@ -26,7 +31,8 @@
  */
 static struct {
 	short t_type;		/* type of token */
-	char *t_str;		/* string value or symbol name */
+	char *t_sym;		/* symbol name */
+	long t_strindex;	/* index of string value */
 	long t_numindex;	/* index of numeric value */
 } curtoken;
 
@@ -76,6 +82,7 @@ static struct keyword keywords[] = {
 	{"obj",		T_OBJ},
 	{"print",	T_PRINT},
 	{"cd",		T_CD},
+	{"undefine",	T_UNDEFINE},
 	{NULL,		0}
 };
 
@@ -140,7 +147,8 @@ gettoken(void)
 		rescan = FALSE;
 		return curtoken.t_type;
 	}
-	curtoken.t_str = NULL;
+	curtoken.t_sym = NULL;
+	curtoken.t_strindex = 0;
 	curtoken.t_numindex = 0;
 	type = T_NULL;
 	while (type == T_NULL) {
@@ -170,6 +178,9 @@ gettoken(void)
 		case ':': type = T_COLON; break;
 		case ',': type = T_COMMA; break;
 		case '?': type = T_QUESTIONMARK; break;
+		case '@': type = T_AT; break;
+		case '`': type = T_BACKQUOTE; break;
+		case '$': type = T_DOLLAR; break;
 		case '"':
 		case '\'':
 			type = T_STRING;
@@ -198,6 +209,7 @@ gettoken(void)
 			switch (nextchar()) {
 				case '-': type = T_MINUSMINUS; break;
 				case '=': type = T_MINUSEQUALS; break;
+				case '>': type = T_ARROW; break;
 				default: type = T_MINUS; reread();
 			}
 			break;
@@ -276,10 +288,23 @@ gettoken(void)
 				default: type = T_NOT; reread(); break;
 			}
 			break;
+		case '#':
+			switch(nextchar()) {
+				case '=': type = T_HASHEQUALS; break;
+				default: type = T_HASH; reread();
+			}
+			break;
+		case '~':
+			switch (nextchar()) {
+				case '=': type = T_TILDEEQUALS; break;
+				default: type = T_TILDE; reread();
+			}
+			break;
 		case '\\':
 			switch (nextchar()) {
 				case '\n': setprompt(conf->prompt2); break;
-				default: scanerror(T_NULL, "Unknown token character '%c'", ch);
+				case '=': type = T_BACKSLASHEQUALS; break;
+				default: type = T_BACKSLASH; reread();
 			}
 			break;
 		default:
@@ -357,7 +382,6 @@ eatstring(int quotechar)
 			case '\n':
 				if (!newlines)
 					break;
-			case '\0':
 			case EOF:
 				reread();
 				scanerror(T_NULL, "Unterminated string constant");
@@ -379,7 +403,7 @@ eatstring(int quotechar)
 			 	    if (i > 0)
 				        reread();
 				    break;
-				}	
+				}
 				switch (ch) {
 				    case 'n': ch = '\n'; break;
 				    case 'r': ch = '\r'; break;
@@ -419,7 +443,7 @@ eatstring(int quotechar)
 				}
 				break;
 		    }
-		    
+
 		*cp++ = (char) ch;
 		len++;
 	    }
@@ -436,12 +460,12 @@ eatstring(int quotechar)
 		totlen += len;
 	    }
 	}
-  	curtoken.t_str = addliteral(str);
+  	curtoken.t_strindex = addstring(str, totlen + len);
 	if (str != buf)
 		free(str);
 }
-	
-			
+
+
 /*
  * Read in a symbol name which may or may not be a keyword.
  * If allsyms is set, keywords are not looked up and almost all chars
@@ -470,7 +494,7 @@ eatsymbol(void)
 		*cp = '\0';
 		if (cc < 0)
 			scanerror(T_NULL, "Symbol too long");
-		curtoken.t_str = buf;
+		curtoken.t_sym = buf;
 		return T_SYMBOL;
 	}
 	for (;;) {
@@ -487,7 +511,7 @@ eatsymbol(void)
 	for (kp = keywords; kp->k_name; kp++)
 		if (strcmp(kp->k_name, buf) == 0)
 			return kp->k_token;
-	curtoken.t_str = buf;
+	curtoken.t_sym = buf;
 	return T_SYMBOL;
 }
 
@@ -559,12 +583,12 @@ eatnumber(void)
 
 
 /*
- * Return the string value of the current token.
+ * Return the index for string value of the current token.
  */
-char *
+long
 tokenstring(void)
 {
-	return curtoken.t_str;
+	return curtoken.t_strindex;
 }
 
 
@@ -577,6 +601,14 @@ tokennumber(void)
 	return curtoken.t_numindex;
 }
 
+/*
+ * Return the address of a symbol
+ */
+char *
+tokensymbol(void)
+{
+	return curtoken.t_sym;
+}
 
 /*
  * Push back the token just read so that it will be seen again.
@@ -612,7 +644,7 @@ scanerror(int skip, char *fmt, ...)
 	fprintf(stderr, "%s\n", buf);
 
 	/* bail out if too many errors */
-	if (conf->maxerrorcount > 0 && errorcount > conf->maxerrorcount) {
+	if (conf->maxscancount > 0 && errorcount > conf->maxscancount) {
 		fputs("Too many scan errors, compilation aborted.\n", stderr);
 		longjmp(jmpbuf, 1);
 		/*NOTREACHED*/

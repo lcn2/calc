@@ -27,4 +27,7 @@ LIBRARY
     none
 
 SEE ALSO
-    iseven, isint, isnum, isodd, isreal
+    isassoc, isatty, isblk, isconfig, isdefined, iserror, isfile,
+    ishash, isident, isint, islist, ismat, ismult, isnull, isnum, isobj,
+    isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
+    issimple, issq, isstr, istype

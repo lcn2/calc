@@ -29,7 +29,7 @@ EXAMPLE
     0 1 4 2 8
 
 LIMITS
-    none
+    If x is not an integer, y > -2^31
 
 LIBRARY
     long qdigit(NUMBER *x, long y)

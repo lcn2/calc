@@ -91,6 +91,7 @@ associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices)
 	ep->e_dim = dim;
 	ep->e_hash = hash;
 	ep->e_value.v_type = V_NULL;
+	ep->e_value.v_subtype = V_NOSUBTYPE;
 	for (i = 0; i < dim; i++)
 		copyvalue(&indices[i], &ep->e_indices[i]);
 	ep->e_next = *listhead;
@@ -105,47 +106,62 @@ associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices)
 
 /*
  * Search an association for the specified value starting at the
- * specified index.  Returns the element number (zero based) of the
- * found value, or -1 if the value was not found.
+ * specified index.  Returns 0 and stores index if value found,
+ * otherwise returns 1.
  */
-long
-assocsearch(ASSOC *ap, VALUE *vp, long index)
+int
+assocsearch(ASSOC *ap, VALUE *vp, long i, long j, ZVALUE *index)
 {
 	ASSOCELEM *ep;
 
-	if (index < 0)
-		index = 0;
-	while (TRUE) {
-		ep = elemindex(ap, index);
-		if (ep == NULL)
-			return -1;
-		if (!comparevalue(&ep->e_value, vp))
-			return index;
-		index++;
+	if (i < 0 || j > ap->a_count) {
+		math_error("This should not happen in assocsearch");
+		/*NOTREACHED*/
 	}
+	while (i < j) {
+		ep = elemindex(ap, i);
+		if (ep == NULL) {
+			math_error("This should not happen in assocsearch");
+			/*NOTREACHED*/
+		}
+		if (acceptvalue(&ep->e_value, vp)) {
+			utoz(i, index);
+			return 0;
+		}
+		i++;
+	}
+	return 1;
 }
 
 
 /*
  * Search an association backwards for the specified value starting at the
- * specified index.  Returns the element number (zero based) of the
- * found value, or -1 if the value was not found.
+ * specified index.  Returns 0 and stores the index if the value is
+ * found; otherwise returns 1.
  */
-long
-assocrsearch(ASSOC *ap, VALUE *vp, long index)
+int
+assocrsearch(ASSOC *ap, VALUE *vp, long i, long j, ZVALUE *index)
 {
 	ASSOCELEM *ep;
 
-	if (index >= ap->a_count)
-		index = ap->a_count - 1;
-	while (TRUE) {
-		ep = elemindex(ap, index);
-		if (ep == NULL)
-			return -1;
-		if (!comparevalue(&ep->e_value, vp))
-			return index;
-		index--;
+	if (i < 0 || j > ap->a_count) {
+		math_error("This should not happen in assocsearch");
+		/*NOTREACHED*/
 	}
+	j--;
+	while (j >= i) {
+		ep = elemindex(ap, j);
+		if (ep == NULL) {
+			math_error("This should not happen in assocsearch");
+			/*NOTREACHED*/
+		}
+		if (acceptvalue(&ep->e_value, vp)) {
+			utoz(j, index);
+			return 0;
+		}
+		j--;
+	}
+	return 1;
 }
 
 

@@ -23,7 +23,7 @@ DESCRIPTION
 
     If x is omitted, it is assumed to have the value of 1.
 
-    See the rand help page for details on the additive 55 shuffle
+    See the rand() help page for details on the additive 55 shuffle
     pseudo-random number generator.
 
 EXAMPLE

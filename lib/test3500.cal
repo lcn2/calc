@@ -273,8 +273,7 @@ define test3500(verbose, tnum, n, N)
 	return tnum;
 }
 
-global lib_debug;
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
 	print "global defaultverbose defined";
 	print "global err defined";
 	print "testfrem(x, y, verbose) defined";

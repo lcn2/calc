@@ -1,0 +1,33 @@
+NAME
+    popcnt - number of bit that match a given value
+
+SYNOPSIS
+    popcnt(x [,bitval])
+
+TYPES
+    x		number (real or integer)
+    bitval	0 or 1
+
+    return	number
+
+DESCRIPTION
+    Count the number of bits in abs(x) that match bitval.  The default
+    bitval is 1 which counts the number of 1 bits.
+
+    The popcnt function is equivalent to #x when x is an integer.
+
+EXAMPLE
+    > print popcnt(32767), popcnt(3/2), popcnt(pi(),0), popcnt(pi(),1)
+    15 3 69 65
+
+    > print popcnt(randombit(128), 0), popcnt(randombit(128), 1)
+    61 64
+
+LIMITS
+    none
+
+LIBRARY
+    long zpopcnt(ZVALUE z, int bitval)
+
+SEE ALSO
+    none

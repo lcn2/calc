@@ -1,0 +1,192 @@
+NAME
+    blkcpy, copy - copy items from a structure to a structure
+
+SYNOPSIS
+    blkcpy(dst, src [, num [, dsi [, ssi]]]
+    copy(src, dest [, [ssi [, num [, dsi]]])
+
+TYPES
+    src		block, file, string, matrix, or list
+    dest	block, file, matrix or list - compatible with src
+
+    ssi		nonnegative integer, defaults to zero
+    num		nonnegative integer, defaults to maximum possible
+    dsi		nonnegative integer, defaults to datalen for a block, filepos
+			for a file, zero for other structures
+
+    return	null if successful, error value otherwise
+
+DESCRIPTION
+    A call to:
+
+	    blkcpy(dst, src, num, dsi, ssi)
+
+    attempts to copy 'num' consecutive items (octets or values) starting
+    from the source item 'src' with index 'ssi'.  By default, 'num'
+    is the maximum possible and 'ssi' is 0.
+
+    A call to:
+
+	    copy(src, dst, ssi, num, dsi)
+
+    does the same thing, but with a different arg order.
+
+    A copy fails if ssi or num is too large for the number of items in
+    the source, if sdi is too large for the number of positions
+    available in the destination, or, in cases involving a file stream,
+    if the file is not open in the required mode.  The source and
+    destination need not be of the same type, e.g. when a block is
+    copied to a matrix the octets are converted to numbers.
+
+    The following pairs of source-type, destination-type are permitted:
+
+		block to
+			 int
+			 block
+			 matrix
+			 file
+
+		matrix to
+			 block
+			 matrix
+			 list
+
+		string to
+			 block
+			 file
+
+		list to
+			 list
+			 matrix
+
+		file to
+			 block
+
+		int to
+			 block
+
+    In the above table, int refers to integer values.  However if a
+    rational value is supplied, only the numerator is copied.
+
+    Each copied octet or value replaces the octet or value in the
+    corresponding place in the destination structure.  When copying values
+    to values, the new values are stored in a buffer, the old values are
+    removed, and the new values copied from the buffer to the destination.
+    This permits movement of data within one matrix or list, and copying
+    of an element of structure to the structure.
+
+    Except for copying to files or blocks, the destination is already to have
+    sufficient memory allocated for the copying.  For example, to copy
+    a matrix M of size 100 to a newly created list, one may use:
+
+			L = makelist(100);
+			copy(M, L);
+   or:
+			L = makelist(100);
+			blkcpy(L, M);
+
+    For copying from a block B (named or unnamed), the total number of octets
+    available for copying is taken to the the datalen for that block,
+    so that num can be at most size(B) - ssi.
+
+    For copying to a block B (named or unnamed), reallocation will be
+    required if dsi + num > sizeof(B).  (This will not be permitted if
+    protect(B) has bit 4 set.)
+
+    For copying from a file stream fs, num can be at most size(fs) - ssi.
+
+    For copying from a string str, the string is taken to include the
+    terminating '\0', so the total number of octets available is
+    strlen(str) + 1 and num can be at most strlen(str) + 1 - ssi.
+    If num <= strlen(str) - ssi, the '\0' is not copied.
+
+    For copying from or to a matrix M, the total number of values in
+    M is size(M), so in the source case, num <= size(M) - ssi, and
+    in the destination case, num <= size(M) - dsi.  The indices ssi
+    and dsi refer to the double-bracket method of indexing, i.e. the
+    matrix is as if its elements were indexed 0, 1, ..., size(M) - 1.
+
+
+EXAMPLE
+    > A = blk() = {1,2,3,4}
+    > B = blk()
+    > blkcpy(B,A)
+    > B
+	chunksize = 256, maxsize = 256, datalen = 4
+	01020304
+    >
+    > blkcpy(B,A)
+    > B
+	chunksize = 256, maxsize = 256, datalen = 8
+	0102030401020304
+    > blkcpy(B, A, 2, 10)
+    > B
+	chunksize = 256, maxsize = 256, datalen = 12
+	010203040102030400000102
+    > blkcpy(B,32767)
+    > B
+	chunksize = 256, maxsize = 256, datalen = 16
+	010203040102030400000102ff7f0000
+    > mat M[2,2]
+    > blkcpy(M, A)
+    > M
+	mat [2,2] (4 elements, 4 nonzero):
+	  [0,0] = 1
+	  [0,1] = 2
+	  [1,0] = 3
+	  [1,1] = 4
+    > blkcpy(M, A, 2, 2)
+    > M
+	mat [2,2] (4 elements, 4 nonzero):
+	  [0,0] = 1
+	  [0,1] = 2
+	  [1,0] = 1
+	  [1,1] = 2
+
+    > A = blk() = {1,2,3,4}
+    > B = blk()
+    > copy(A,B)
+    > B
+	chunksize = 256, maxsize = 256, datalen = 4
+	01020304
+    > copy(A,B)
+    > B
+	chunksize = 256, maxsize = 256, datalen = 8
+	0102030401020304
+    > copy(A,B,1,2)
+    > B
+	chunksize = 256, maxsize = 256, datalen = 10
+	01020304010203040203
+    > mat M[2,2]
+    > copy(A,M)
+    > M
+	mat [2,2] (4 elements, 4 nonzero):
+	  [0,0] = 1
+	  [0,1] = 2
+	  [1,0] = 3
+	  [1,1] = 4
+
+    > copy(A,M,2)
+    > M
+	mat [2,2] (4 elements, 4 nonzero):
+	  [0,0] = 3
+	  [0,1] = 4
+	  [1,0] = 3
+	  [1,1] = 4
+
+    > copy(A,M,0,2,2)
+    > M
+	mat [2,2] (4 elements, 4 nonzero):
+	  [0,0] = 3
+	  [0,1] = 4
+	  [1,0] = 1
+	  [1,1] = 2
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    blk, mat, file, list, str

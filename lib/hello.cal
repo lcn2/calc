@@ -1,0 +1,12 @@
+/*
+ * Hello world
+ *
+ * See:
+ *	http://www.latech.edu/~acm/helloworld/calc.html
+ */
+
+while(1) print "Hello World!";
+
+if (config("lib_debug") >= 0) {
+    /* nothing to do */
+}

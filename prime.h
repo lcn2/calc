@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1995 by Landon Curt Noll.  All Rights Reserved.
+ * Copyright (c) 1997 by Landon Curt Noll.  All Rights Reserved.
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby granted,
@@ -21,6 +21,11 @@
  *
  * chongo was here	/\../\
  */
+
+
+#if !defined(__PRIME_H__)
+#define __PRIME_H__
+
 
 #include "qmath.h"
 #include "have_const.h"
@@ -73,3 +78,6 @@ extern CONST unsigned short pi18b[];
 extern NUMBER _nxtprime_;		/* 2^32+15 - smallest prime > 2^32 */
 extern CONST ZVALUE _nxt_prime_;	/* 2^32+15 - smallest prime > 2^32 */
 extern CONST ZVALUE _jmpmod2_;		/* JMPMOD*2 as a ZVALUE */
+
+
+#endif /* !__PRIME_H__ */

@@ -1,7 +1,7 @@
 #
 # lib - makefile for calc library scripts
 #
-# Copyright (c) 1996 David I. Bell and Landon Curt Noll
+# Copyright (c) 1997 David I. Bell and Landon Curt Noll
 # Permission is granted to use, distribute, or modify this source,
 # provided that this copyright notice remains intact.
 #
@@ -36,19 +36,19 @@ Q=@
 # The calc files to install
 #
 CALC_FILES= README bigprime.cal deg.cal ellip.cal lucas.cal lucas_chk.cal \
-	lucas_tbl.cal mersenne.cal mod.cal pell.cal pi.cal \
+	lucas_tbl.cal mersenne.cal mod.cal pell.cal pi.cal pix.cal \
 	pollard.cal poly.cal psqrt.cal quat.cal regress.cal solve.cal \
 	sumsq.cal surd.cal unitfrac.cal varargs.cal chrem.cal mfactor.cal \
 	bindings altbind randmprime.cal test1700.cal randrun.cal \
-	randbitrun.cal cryrand.cal bernoulli.cal test2300.cal test2600.cal \
+	randbitrun.cal bernoulli.cal test2300.cal test2600.cal \
 	test2700.cal test3100.cal test3300.cal test3400.cal prompt.cal \
-	test3500.cal seedrandom.cal test4000.cal test4100.cal test4600.cal
+	test3500.cal seedrandom.cal test4000.cal test4100.cal test4600.cal \
+	beer.cal hello.cal test5100.cal test5200.cal randombitrun.cal \
+	randomrun.cal xx_print.cal natnumset.cal
 
 # These files are found (but not built) in the distribution
 #
 DISTLIST= ${CALC_FILES} ${MAKE_FILE}
-
-SHELL= /bin/sh
 
 all: ${CALC_FILES} ${MAKE_FILE} .all
 
@@ -113,4 +113,4 @@ install: all
 	-rm -f nextprime.cal nextprim.cal
 	-rm -f test1000.cal test2000.cal ${LIBDIR}/test2000.cal
 	-rm -f ${LIBDIR}/nextprime.cal ${LIBDIR}/nextprim.cal
-	-rm -f ${LIBDIR}/test1000.cal
+	-rm -f ${LIBDIR}/test1000.cal ${LIBDIR}/cryrand.cal

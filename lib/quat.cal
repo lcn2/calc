@@ -195,8 +195,7 @@ define quat_shift(a, b)
 	return x.s;
 }
 
-global lib_debug;
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
     print "obj quat {s, v} defined";
     print "quat(a, b, c, d) defined";
     print "quat_print(a) defined";

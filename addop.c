@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 1995 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Add opcodes to a function being compiled.
  */
 
+#include <stdio.h>
 #include "calc.h"
 #include "opcodes.h"
 #include "string.h"
@@ -22,6 +23,7 @@
 static long maxopcodes;		/* number of opcodes available */
 static long newindex;		/* index of new function */
 static long oldop;		/* previous opcode */
+static long oldoldop;		/* opcode before previous opcode */
 static long debugline;		/* line number of latest debug opcode */
 static long funccount;		/* number of functions */
 static long funcavail;		/* available number of functions */
@@ -61,20 +63,25 @@ showfunctions(void)
 {
 	FUNC **fpp;		/* pointer into function table */
 	FUNC *fp;		/* current function */
+	long count;
 
-	if (funccount == 0) {
-		printf("No user functions defined.\n");
-		return;
+	count = 0;
+	if (funccount > 0) {
+		for (fpp = &functions[funccount - 1]; fpp >= functions; fpp--) {
+			fp = *fpp;
+			if (fp == NULL)
+				continue;
+			if (count++ == 0) {
+				printf("Name Arguments\n---- ---------\n");
+			}
+			printf("%-12s %-2d\n", fp->f_name, fp->f_paramcount);
+		}
 	}
-	printf("Name Arguments\n");
-	printf("---- ---------\n");
-	for (fpp = &functions[funccount - 1]; fpp >= functions; fpp--) {
-		fp = *fpp;
-		if (fp == NULL)
-			continue;
-		printf("%-12s %-2d\n", fp->f_name, fp->f_paramcount);
+	if (count > 0) {
+		printf("\nNumber: %ld\n", count);
+	} else {
+		printf("No user functions defined\n");
 	}
-	printf("\n");
 }
 
 
@@ -112,6 +119,7 @@ beginfunc(char *name, BOOL newflag)
 	initlocals();
 	initlabels();
 	oldop = OP_NOP;
+	oldoldop = OP_NOP;
 	debugline = 0;
 	errorcount = 0;
 }
@@ -128,8 +136,13 @@ endfunc(void)
 	register FUNC *fp;		/* function just finished */
 	unsigned long size;		/* size of just created function */
 
+	if (oldop != OP_RETURN) {
+		addop(OP_UNDEF);
+		addop(OP_RETURN);
+	}
 	checklabels();
 	if (errorcount) {
+		freefunc(curfunc);
 		printf("\"%s\": %ld error%s\n", curfunc->f_name, errorcount,
 			((errorcount == 1) ? "" : "s"));
 		return;
@@ -151,13 +164,15 @@ endfunc(void)
 		}
 	}
 	if (functions[newindex]) {
+		freenumbers(functions[newindex]);
 		free(functions[newindex]);
-		fprintf(stderr, "**** %s() has been redefined\n", fp->f_name);
+		if (inputisterminal() || conf->lib_debug >= 0)
+			printf("%s() redefined\n", fp->f_name);
 	}
+	else if (inputisterminal() || conf->lib_debug >= 0)
+		printf("%s() defined\n", fp->f_name);
 	functions[newindex] = fp;
 	objuncache();
-	if (inputisterminal())
-		printf("\"%s\" defined\n", fp->f_name);
 }
 
 
@@ -195,6 +210,83 @@ adduserfunc(char *name)
 	return index;
 }
 
+/*
+ * Remove user defined function
+ */
+void
+rmuserfunc(char *name)
+{
+	long index;		/* index of function */
+
+	index = findstr(&funcnames, name);
+	if (index < 0) {
+		printf("%s() has never been defined\n",
+			name);
+		return;
+	}
+	if (functions[index] == NULL)
+		return;
+	freenumbers(functions[index]);
+	free(functions[index]);
+	if (!inputisterminal() && conf->lib_debug >= 0)
+		printf("%s() undefined\n", name);
+	functions[index] = NULL;
+}
+
+
+/*
+ * Free memory used to store function and its constants
+ */
+void
+freefunc(FUNC *fp)
+{
+	long i;
+
+	if (fp == NULL)
+		return;
+	if (conf->traceflags & TRACE_FNCODES) {
+		printf("Freeing function \"%s\"\n", fp->f_name);
+		dumpnames = FALSE;
+		for (i = 0; i < fp->f_opcodecount; ) {
+			printf("%ld: ", i);
+			i += dumpop(&fp->f_opcodes[i]);
+		}
+	}
+	freenumbers(fp);
+	if (fp != functemplate)
+		free(fp);
+}
+
+
+void
+rmalluserfunc(void)
+{
+	FUNC **fpp;
+
+	for (fpp = functions; fpp < &functions[funccount]; fpp++) {
+		if (*fpp) {
+			freefunc(*fpp);
+			*fpp = NULL;
+		}
+	}
+}
+
+
+/*
+ * get index of defined user function with specified name, or -1 if there
+ * is none or if it has been undefined
+ */
+long
+getuserfunc(char *name)
+{
+ 	long index;
+
+ 	index = findstr(&funcnames, name);
+ 	if (index >= 0 && functions[index] != NULL)
+ 		return index;
+ 	return -1L;
+}
+
 
 /*
  * Clear any optimization that may be done for the next opcode.
@@ -204,6 +296,7 @@ void
 clearopt(void)
 {
 	oldop = OP_NOP;
+	oldoldop = OP_NOP;
 	debugline = 0;
 }
 
@@ -253,10 +346,17 @@ void
 addop(long op)
 {
 	register FUNC *fp;		/* current function */
-	NUMBER *q;
+	NUMBER *q, *q1, *q2;
+	unsigned long count;
+	BOOL cut;
+	int diff;
 
 	fp = curfunc;
-	if ((fp->f_opcodecount + 5) >= maxopcodes) {
+	count = fp->f_opcodecount;
+	cut = TRUE;
+	diff = 2;
+	q = NULL;
+	if ((count + 5) >= maxopcodes) {
 		maxopcodes += OPCODEALLOCSIZE;
 		fp = (FUNC *) malloc(funcsize(maxopcodes));
 		if (fp == NULL) {
@@ -269,73 +369,169 @@ addop(long op)
 			free(curfunc);
 		curfunc = fp;
 	}
+
 	/*
 	 * Check the current opcode against the previous opcode and try to
 	 * slightly optimize the code depending on the various combinations.
 	 */
-	if (op == OP_GETVALUE) {
-		switch (oldop) {
+	switch (op) {
+		case OP_GETVALUE:
+			switch (oldop) {
+				case OP_NUMBER:
+				case OP_ZERO:
+				case OP_ONE:
+				case OP_IMAGINARY:
+				case OP_GETEPSILON:
+				case OP_SETEPSILON:
+				case OP_STRING:
+				case OP_UNDEF:
+				case OP_GETCONFIG:
+				case OP_SETCONFIG:
+					return;
+				case OP_DUPLICATE:
+					diff = 1;
+					oldop = OP_DUPVALUE;
+					break;
+				case OP_FIADDR:
+					diff = 1;
+					oldop = OP_FIVALUE;
+					break;
+				case OP_GLOBALADDR:
+					diff = 1 + PTR_SIZE;
+					oldop = OP_GLOBALVALUE;
+					break;
+				case OP_LOCALADDR:
+					oldop = OP_LOCALVALUE;
+					break;
+				case OP_PARAMADDR:
+					oldop = OP_PARAMVALUE;
+					break;
+				case OP_ELEMADDR:
+					oldop = OP_ELEMVALUE;
+					break;
+				default:
+					cut = FALSE;
 
-		case OP_NUMBER: case OP_ZERO: case OP_ONE: case OP_IMAGINARY:
-		case OP_GETEPSILON: case OP_SETEPSILON: case OP_STRING:
-		case OP_UNDEF: case OP_GETCONFIG: case OP_SETCONFIG:
-			return;
-		case OP_DUPLICATE:
-			fp->f_opcodes[fp->f_opcodecount - 1] = OP_DUPVALUE;
-			oldop = OP_DUPVALUE;
-			return;
-		case OP_FIADDR:
-			fp->f_opcodes[fp->f_opcodecount - 1] = OP_FIVALUE;
-			oldop = OP_FIVALUE;
-			return;
-		case OP_GLOBALADDR:
-			fp->f_opcodes[fp->f_opcodecount - 2] = OP_GLOBALVALUE;
-			oldop = OP_GLOBALVALUE;
-			return;
-		case OP_LOCALADDR:
-			fp->f_opcodes[fp->f_opcodecount - 2] = OP_LOCALVALUE;
-			oldop = OP_LOCALVALUE;
-			return;
-		case OP_PARAMADDR:
-			fp->f_opcodes[fp->f_opcodecount - 2] = OP_PARAMVALUE;
-			oldop = OP_PARAMVALUE;
-			return;
-		case OP_ELEMADDR:
-			fp->f_opcodes[fp->f_opcodecount - 2] = OP_ELEMVALUE;
-			oldop = OP_ELEMVALUE;
-			return;
-		}
+			}
+			if (cut) {
+				fp->f_opcodes[count - diff] = oldop;
+				return;
+			}
+			break;
+		case OP_POP:
+			switch (oldop) {
+			case OP_ASSIGN:
+				fp->f_opcodes[count-1] = OP_ASSIGNPOP;
+				oldop = OP_ASSIGNPOP;
+				return;
+			case OP_NUMBER:
+			case OP_IMAGINARY:
+				q = constvalue(fp->f_opcodes[count-1]);
+				qfree(q);
+				break;
+			case OP_STRING:
+				sfree(findstring((long)fp->f_opcodes[count-1]));
+				break;
+			case OP_LOCALADDR:
+			case OP_PARAMADDR:
+				break;
+			case OP_GLOBALADDR:
+				diff = 1 + PTR_SIZE;
+				break;
+			default:
+				cut = FALSE;
+			}
+			if (cut) {
+				fp->f_opcodecount -= diff;
+				oldop = OP_NOP;
+				oldoldop = OP_NOP;
+				fprintf(stderr, "%ld: unused value ignored\n",
+					linenumber());
+				return;
+			}
+			break;
+		case OP_NEGATE:
+			if (oldop == OP_NUMBER) {
+				q = constvalue(fp->f_opcodes[count-1]);
+				fp->f_opcodes[count-1] = addqconstant(qneg(q));
+				qfree(q);
+				return;
+			}
 	}
-	if ((op == OP_NEGATE) && (oldop == OP_NUMBER)) {
-		q = constvalue(fp->f_opcodes[fp->f_opcodecount - 1]);
-		fp->f_opcodes[fp->f_opcodecount - 1] = addqconstant(qneg(q));
-		oldop = OP_NUMBER;
-		return;
-	}
-	if ((op == OP_POWER) && (oldop == OP_NUMBER)) {
-		if (qcmpi(constvalue(fp->f_opcodes[fp->f_opcodecount - 1]), 2L) == 0) {
-			fp->f_opcodecount--;
-			fp->f_opcodes[fp->f_opcodecount - 1] = OP_SQUARE;
-			oldop = OP_SQUARE;
-			return;
+	if (oldop == OP_NUMBER) {
+		if (oldoldop == OP_NUMBER) {
+			q1 = constvalue(fp->f_opcodes[count - 3]);
+			q2 = constvalue(fp->f_opcodes[count - 1]);
+			switch (op) {
+				case OP_DIV:
+					if (qiszero(q2)) {
+						cut = FALSE;
+						break;
+					}
+					q = qqdiv(q1,q2);
+					break;
+				case OP_MUL:
+					q = qmul(q1,q2);
+					break;
+				case OP_ADD:
+					q = qqadd(q1,q2);
+					break;
+				case OP_SUB:
+					q = qsub(q1,q2);
+					break;
+				case OP_POWER:
+					if (qisfrac(q2) || qisneg(q2))
+						cut = FALSE;
+					else
+						q = qpowi(q1,q2);
+					break;
+				default:
+					cut = FALSE;
+			}
+			if (cut) {
+				qfree(q1);
+				qfree(q2);
+				fp->f_opcodes[count - 3] = addqconstant(q);
+				fp->f_opcodecount -= 2;
+				oldoldop = OP_NOP;
+				return;
+			}
+		} else if (op != OP_NUMBER) {
+			q = constvalue(fp->f_opcodes[count - 1]);
+			if (op == OP_POWER) {
+				if (qcmpi(q, 2L) == 0) {
+					fp->f_opcodecount--;
+					fp->f_opcodes[count - 2] = OP_SQUARE;
+					qfree(q);
+					oldop = OP_SQUARE;
+					return;
+				}
+				if (qcmpi(q, 4L) == 0) {
+					fp->f_opcodes[count - 2] = OP_SQUARE;
+					fp->f_opcodes[count - 1] = OP_SQUARE;
+					qfree(q);
+					oldop = OP_SQUARE;
+					return;
+				}
+			}
+			if (qiszero(q)) {
+				qfree(q);
+				fp->f_opcodes[count - 2] = OP_ZERO;
+				fp->f_opcodecount--;
+			}
+			else if (qisone(q)) {
+				qfree(q);
+				fp->f_opcodes[count - 2] = OP_ONE;
+				fp->f_opcodecount--;
+			}
 		}
-		if (qcmpi(constvalue(fp->f_opcodes[fp->f_opcodecount - 1]), 4L) == 0) {
-			fp->f_opcodes[fp->f_opcodecount - 2] = OP_SQUARE;
-			fp->f_opcodes[fp->f_opcodecount - 1] = OP_SQUARE;
-			oldop = OP_SQUARE;
-			return;
-		}
-	}
-	if ((op == OP_POP) && (oldop == OP_ASSIGN)) {	/* optimize */
-		fp->f_opcodes[fp->f_opcodecount - 1] = OP_ASSIGNPOP;
-		oldop = OP_ASSIGNPOP;
-		return;
 	}
 	/*
 	 * No optimization possible, so store the opcode.
 	 */
 	fp->f_opcodes[fp->f_opcodecount] = op;
 	fp->f_opcodecount++;
+	oldoldop = oldop;
 	oldop = op;
 }
 
@@ -347,24 +543,7 @@ addop(long op)
 void
 addopone(long op, long arg)
 {
-	NUMBER *q;
-
-	switch (op) {
-	case OP_NUMBER:
-		q = constvalue(arg);
-		if (q == NULL)
-			break;
-		if (qiszero(q)) {
-			addop(OP_ZERO);
-			return;
-		}
-		if (qisone(q)) {
-			addop(OP_ONE);
-			return;
-		}
-		break;
-
-	case OP_DEBUG:
+	if (op == OP_DEBUG) {
 		if ((conf->traceflags & TRACE_NODEBUG) || (arg == debugline))
 			return;
 		debugline = arg;
@@ -372,7 +551,6 @@ addopone(long op, long arg)
 			curfunc->f_opcodes[curfunc->f_opcodecount - 1] = arg;
 			return;
 		}
-		break;
 	}
 	addop(op);
 	curfunc->f_opcodes[curfunc->f_opcodecount] = arg;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
@@ -156,14 +156,14 @@ qpowi(NUMBER *q1, NUMBER *q2)
 {
 	register NUMBER *r;
 	BOOL invert, sign;
-	ZVALUE num, den, z2;
+	ZVALUE num, zden, z2;
 
 	if (qisfrac(q2)) {
 		math_error("Raising number to fractional power");
 		/*NOTREACHED*/
 	}
 	num = q1->num;
-	den = q1->den;
+	zden = q1->den;
 	z2 = q2->num;
 	sign = (num.sign && zisodd(z2));
 	invert = z2.sign;
@@ -179,7 +179,7 @@ qpowi(NUMBER *q1, NUMBER *q2)
 		}
 		return qlink(&_qzero_);
 	}
-	if (zisunit(num) && zisunit(den)) {	/* 1 or -1 raised to a power */
+	if (zisunit(num) && zisunit(zden)) {	/* 1 or -1 raised to a power */
 		r = (sign ? q1 : &_qone_);
 		r->links++;
 		return r;
@@ -197,8 +197,8 @@ qpowi(NUMBER *q1, NUMBER *q2)
 	r = qalloc();
 	if (!zisunit(num))
 		zpowi(num, z2, &r->num);
-	if (!zisunit(den))
-		zpowi(den, z2, &r->den);
+	if (!zisunit(zden))
+		zpowi(zden, z2, &r->den);
 	if (invert) {
 		z2 = r->num;
 		r->num = r->den;
@@ -223,9 +223,9 @@ qhypot(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 		/*NOTREACHED*/
 	}
 	if (qiszero(q1))
-		return qabs(q2);
+		return qqabs(q2);
 	if (qiszero(q2))
-		return qabs(q1);
+		return qqabs(q1);
 	tmp1 = qsquare(q1);
 	tmp2 = qsquare(q2);
 	tmp3 = qqadd(tmp1, tmp2);
@@ -788,37 +788,125 @@ qlcmfact(NUMBER *q)
 
 
 /*
- * Compute the permutation function  M! / (M - N)!.
+ * Compute the permutation function  q1 * (q1-1) * ... * (q1-q2+1).
  */
 NUMBER *
 qperm(NUMBER *q1, NUMBER *q2)
 {
-	register NUMBER *r;
+	NUMBER *r;
+	NUMBER *qtmp1, *qtmp2;
+	long i;
 
-	if (qisfrac(q1) || qisfrac(q2)) {
-		math_error("Non-integral arguments for permutation");
+	if (qisfrac(q2)) {
+		math_error("Non-integral second arg for permutation");
 		/*NOTREACHED*/
 	}
-	r = qalloc();
-	zperm(q1->num, q2->num, &r->num);
+	if (qiszero(q2))
+		return qlink(&_qone_);
+	if (qisone(q2))
+		return qlink(q1);
+	if (qisint(q1) && !qisneg(q1)) {
+		if (qrel(q2, q1) > 0)
+			return qlink(&_qzero_);
+		if (qispos(q2)) {
+			r = qalloc();
+			zperm(q1->num, q2->num, &r->num);
+			return r;
+		}
+	}
+	if (zge31b(q2->num)) {
+		math_error("Too large arg2 for permutation");
+		/*NOTREACHED*/
+	}
+	i = qtoi(q2);
+	if (i > 0) {
+		q1 = qlink(q1);
+		r = qlink(q1);
+		while (--i > 0) {
+			qtmp1 = qdec(q1);
+			qtmp2 = qmul(r, qtmp1);
+			qfree(q1);
+			q1 = qtmp1;
+			qfree(r);
+			r = qtmp2;
+		}
+		qfree(q1);
+		return r;
+	}
+	i = -i;
+	qtmp1 = qinc(q1);
+	r = qinv(qtmp1);
+	while (--i > 0) {
+		qtmp2 = qinc(qtmp1);
+		qfree(qtmp1);
+		qtmp1 = qqdiv(r, qtmp2);
+		qfree(r);
+		r = qtmp1;
+		qtmp1 = qtmp2;
+	}
+	qfree(qtmp1);
 	return r;
 }
 
 
 /*
- * Compute the combinatorial function  M! / (N! * (M - N)!).
+ * Compute the combinatorial function  q1 * (q1-1) * ... * (q1-q2+1)/q2!
  */
 NUMBER *
 qcomb(NUMBER *q1, NUMBER *q2)
 {
-	register NUMBER *r;
+	NUMBER *r;
+	NUMBER *qtmp1, *qtmp2;
+	long i, j;
 
-	if (qisfrac(q1) || qisfrac(q2)) {
-		math_error("Non-integral arguments for combinatorial");
+	if (qisfrac(q2)) {
+		math_error("Non-integral second argument for comb");
 		/*NOTREACHED*/
 	}
-	r = qalloc();
-	zcomb(q1->num, q2->num, &r->num);
+	if (qisneg(q2))
+		return qlink(&_qzero_);
+	if (qiszero(q2) || qcmp(q1, q2) == 0)
+		return qlink(&_qone_);
+	if (qisone(q2))
+		return qlink(q1);
+	if (qisint(q1)) {
+		if (qisneg(q1)) {
+			qtmp1 = qsub(q2, q1);
+			qtmp2 = qdec(qtmp1);
+			qfree(qtmp1);
+			r = qalloc();
+			zcomb(qtmp2->num, q2->num, &r->num);
+			qfree(qtmp2);
+			if (qiseven(q2))
+				return r;
+			qtmp2 = qneg(r);
+			qfree(r);
+			return qtmp2;
+		}
+		if (qrel(q2, q1) > 0)
+			return qlink(&_qzero_);
+		r = qalloc();
+		zcomb(q1->num, q2->num, &r->num);
+		return r;
+	}
+	if (zge31b(q2->num)) {
+		math_error("Too large second argument for comb");
+		/*NOTREACHED*/
+	}
+	i = qtoi(q2);
+	q1 = qlink(q1);
+	r = qlink(q1);
+	j = 1;
+	while (--i > 0) {
+		qtmp1 = qdec(q1);
+		qfree(q1);
+		q1 = qtmp1;
+		qtmp2 = qmul(r, q1);
+		qfree(r);
+		r = qdivi(qtmp2, ++j);
+		qfree(qtmp2);
+	}
+	qfree(q1);
 	return r;
 }
 
@@ -871,7 +959,7 @@ qtrunc(NUMBER *q1, NUMBER *q2)
 		math_error("Bad number of places for qtrunc");
 		/*NOTREACHED*/
 	}
-	places = z1tol(q2->num);
+	places = qtoi(q2);
 	e = qtenpow(-places);
 	r = qmappr(q1, e, 2);
 	qfree(e);
@@ -895,7 +983,7 @@ qbtrunc(NUMBER *q1, NUMBER *q2)
 		math_error("Bad number of places for qtrunc");
 		/*NOTREACHED*/
 	}
-	places = z1tol(q2->num);
+	places = qtoi(q2);
 	e = qbitvalue(-places);
 	r = qmappr(q1, e, 2);
 	qfree(e);
@@ -984,7 +1072,7 @@ NUMBER *
 qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 {
 	NUMBER *res, etemp, *epsilon1;
-	ZVALUE num, den, oldnum, oldden;
+	ZVALUE num, zden, oldnum, oldden;
 	ZVALUE rem, oldrem, quot;
 	ZVALUE tmp1, tmp2, tmp3, tmp4;
 	ZVALUE denbnd;
@@ -1034,10 +1122,10 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 	oldden = _zero_;
 	zcopy(q->den, &oldrem);
 	zdiv(q->num, q->den, &num, &rem, 0);
-	den = _one_;
+	zden = _one_;
 	for (;;) {
 		if (!bnddencase) {
-			zmul(f, den, &tmp1);
+			zmul(f, zden, &tmp1);
 			zmul(g, rem, &tmp2);
 			if (ziszero(rem) || (s >= 0 && zrel(tmp1,tmp2) >= 0))
 				break;
@@ -1048,12 +1136,12 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 		zfree(oldrem);
 		oldrem = rem;
 		rem = tmp1;
-		zmul(quot, den, &tmp1);
+		zmul(quot, zden, &tmp1);
 		zadd(tmp1, oldden, &tmp2);
 		zfree(tmp1);
 		zfree(oldden);
-		oldden = den;
-		den = tmp2;
+		oldden = zden;
+		zden = tmp2;
 		zmul(quot, num, &tmp1);
 		zadd(tmp1, oldnum, &tmp2);
 		zfree(tmp1);
@@ -1062,7 +1150,7 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 		num = tmp2;
 		zfree(quot);
 		if (bnddencase) {
-			if (zrel(den, denbnd) >= 0)
+			if (zrel(zden, denbnd) >= 0)
 				break;
 		}
 		s = -s;
@@ -1071,7 +1159,7 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 		if (s > 0)
 			useold = TRUE;
 		else {
-			zsub(den, denbnd, &tmp1);
+			zsub(zden, denbnd, &tmp1);
 			zquo(tmp1, oldden, &k, 1);
 			zfree(tmp1);
 		}
@@ -1086,7 +1174,7 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 			zfree(oldnum);
 			zfree(oldden);
 			zfree(num);
-			zfree(den);
+			zfree(zden);
 			zfree(oldrem);
 			zfree(rem);
 			return qlink(q);
@@ -1112,10 +1200,10 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 		zfree(num);
 		num = tmp2;
 		zmul(k, oldden, &tmp1);
-		zsub(den, tmp1, &tmp2);
+		zsub(zden, tmp1, &tmp2);
 		zfree(tmp1);
-		zfree(den);
-		den = tmp2;
+		zfree(zden);
+		zden = tmp2;
 	}
 	if (bnddencase && s == 0) {
 		zmul(k, oldrem, &tmp1);
@@ -1124,7 +1212,7 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 		zfree(rem);
 		rem = tmp2;
 		zmul(rem, oldden, &tmp1);
-		zmul(den, oldrem, &tmp2);
+		zmul(zden, oldrem, &tmp2);
 		useold = (zrel(tmp1, tmp2) >= 0);
 		zfree(tmp1);
 		zfree(tmp2);
@@ -1136,7 +1224,7 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 	res = qalloc();
 	if (useold) {
 		zfree(num);
-		zfree(den);
+		zfree(zden);
 		res->num = oldnum;
 		res->den = oldden;
 		return res;
@@ -1144,7 +1232,7 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 	zfree(oldnum);
 	zfree(oldden);
 	res->num = num;
-	res->den = den;
+	res->den = zden;
 	return res;
 }
 
@@ -1271,7 +1359,7 @@ qgcd(NUMBER *q1, NUMBER *q2)
 	NUMBER *q;
 
 	if (q1 == q2)
-		return qabs(q1);
+		return qqabs(q1);
 	if (qisfrac(q1) || qisfrac(q2)) {
 		q = qalloc();
 		zgcd(q1->num, q2->num, &q->num);
@@ -1279,9 +1367,9 @@ qgcd(NUMBER *q1, NUMBER *q2)
 		return q;
 	}
 	if (qiszero(q1))
-		return qabs(q2);
+		return qqabs(q2);
 	if (qiszero(q2))
-		return qabs(q1);
+		return qqabs(q1);
 	if (qisunit(q1) || qisunit(q2))
 		return qlink(&_qone_);
 	zgcd(q1->num, q2->num, &z);
@@ -1307,11 +1395,11 @@ qlcm(NUMBER *q1, NUMBER *q2)
 	if (qiszero(q1) || qiszero(q2))
 		return qlink(&_qzero_);
 	if (q1 == q2)
-		return qabs(q1);
+		return qqabs(q1);
 	if (qisunit(q1))
-		return qabs(q2);
+		return qqabs(q2);
 	if (qisunit(q2))
-		return qabs(q1);
+		return qqabs(q1);
 	q = qalloc();
 	zlcm(q1->num, q2->num, &q->num);
 	if (qisfrac(q1) || qisfrac(q2))
@@ -1336,7 +1424,7 @@ qfacrem(NUMBER *q1, NUMBER *q2)
 		/*NOTREACHED*/
 	}
 	if (qiszero(q2))
-		return qabs(q1);
+		return qqabs(q1);
 	if (qiszero(q1))
 		return qlink(&_qzero_);
 	count = zfacrem(q1->num, q2->num, &tmp);

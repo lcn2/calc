@@ -911,11 +911,11 @@ CONST unsigned short prime[MAP_POPCNT+1] = {
 #if BASEB == 32
 static CONST HALF _nxt_prime_val_[] = { 0xf, 0x1 };
 ZVALUE CONST _nxt_prime_ = { (HALF *)_nxt_prime_val_, 2, 0 };
-NUMBER _nxtprime_ = { { (HALF *)_nxt_prime_val_, 2, 0}, { _oneval_, 1, 0 }, 1 };
+NUMBER _nxtprime_ = {{(HALF *)_nxt_prime_val_,2,0}, {_oneval_,1,0}, 1, NULL};
 #else
 static CONST HALF _nxt_prime_val_[] = { 0xf, 0x0, 0x1 };
 ZVALUE CONST _nxt_prime_ = { (HALF *)_nxt_prime_val_, 3, 0 };
-NUMBER _nxtprime_ = { { (HALF *)_nxt_prime_val_, 3, 0}, { _oneval_, 1, 0 }, 1 };
+NUMBER _nxtprime_ = {{(HALF *)_nxt_prime_val_,3,0}, {_oneval_,1,0}, 1, NULL};
 #endif
 
 /*

@@ -2,7 +2,7 @@
  * math_error - a simple libcalc math error routine
  */
 /*
- * Copyright (c) 1995 by Landon Curt Noll.  All Rights Reserved.
+ * Copyright (c) 1997 by Landon Curt Noll.  All Rights Reserved.
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby granted,
@@ -49,15 +49,23 @@
  *	...
  *
  *	if ((error = setjmp(calc_jmp_buf)) != 0) {
+ *
+ *	        (* reinitialize calc after a longjmp *)
+ *	        reinitialize();
+ *
+ *	        (* report the error *)
  *		printf("Ouch: %s\n", calc_error);
  *	}
  *	calc_jmp = 1;
  */
 
+
 #include <stdio.h>
 #include <setjmp.h>
 #include "args.h"
 #include "calc.h"
+#include "math_error.h"
+
 
 /*
  * error jump point we will longjmp to this jmp_buf if calc_jmp is non-zero
@@ -100,5 +108,6 @@ math_error(char *fmt, ...)
 	(void) fflush(stderr);
 	fprintf(stderr, "%s\n", calc_error);
 	fputc('\n', stderr);
+	libcalc_call_me_last();
 	exit(1);
 }

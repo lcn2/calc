@@ -1,14 +1,19 @@
 /*
- * Copyright (c) 1995 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Configuration routines.
  */
 
+#include <stdio.h>
 #include "calc.h"
 #include "token.h"
 #include "zrand.h"
+#include "block.h"
+#include "nametype.h"
+#include "config.h"
+#include "string.h"
 
 
 /*
@@ -39,10 +44,17 @@ NAMETYPE configs[] = {
 	{"round",	CONFIG_ROUND},
 	{"leadzero",	CONFIG_LEADZERO},
 	{"fullzero",	CONFIG_FULLZERO},
-	{"maxerr",	CONFIG_MAXERR},
+	{"maxscan",	CONFIG_MAXSCAN},
+	    {"maxerr",	CONFIG_MAXSCAN},	/* old name for maxscan */
 	{"prompt",	CONFIG_PROMPT},
 	{"more",	CONFIG_MORE},
-	{"random",	CONFIG_RANDOM},
+	{"blkmaxprint",	CONFIG_BLKMAXPRINT},
+	{"blkverbose",	CONFIG_BLKVERBOSE},
+	{"blkbase",	CONFIG_BLKBASE},
+	{"blkfmt",	CONFIG_BLKFMT},
+	{"lib_debug",	CONFIG_LIB_DEBUG},
+	{"calc_debug",	CONFIG_CALC_DEBUG},
+	{"user_debug",	CONFIG_USER_DEBUG},
 	{NULL,		0}
 };
 
@@ -74,10 +86,16 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	24,			/* round()/bround() default rounding mode */
 	FALSE,			/* ok to print leading 0 before decimal pt */
 	0,			/* ok to print trailing 0's */
-	MAXERRORCOUNT,		/* max errors before abort */
+	MAXSCANCOUNT,		/* max scan errors before abort */
 	PROMPT1,		/* normal prompt */
 	PROMPT2,		/* prompt when inside multi-line input */
-	3			/* require 1 mod 4 and to pass ptest(newn,1) */
+	BLK_DEF_MAXPRINT,	/* number of octets of a block to print */
+	FALSE,			/* skip duplicate block output lines */
+	BLK_BASE_HEX,		/* block octet print base */
+	BLK_FMT_HD_STYLE,	/* block output format */
+	0,			/* calc library debug level */
+	0,			/* internal calc debug level */
+	0 			/* user defined debug level */
 };
 CONFIG newstd = {	/* new non-backward compatible configuration */
 	MODE_INITIAL,		/* current output mode */
@@ -103,10 +121,16 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	24,			/* round()/bround() default rounding mode */
 	TRUE,			/* ok to print leading 0 before decimal pt */
 	1,			/* ok to print trailing 0's */
-	MAXERRORCOUNT,		/* max errors before abort */
+	MAXSCANCOUNT,		/* max scan errors before abort */
 	"; ",			/* normal prompt */
 	";; ",			/* prompt when inside multi-line input */
-	3			/* require 1 mod 4 and to pass ptest(newn,1) */
+	BLK_DEF_MAXPRINT,	/* number of octets of a block to print */
+	FALSE,			/* skip duplicate block output lines */
+	BLK_BASE_HEX,		/* block octet print base */
+	BLK_FMT_HD_STYLE,	/* block output format */
+	0,			/* calc library debug level */
+	0,			/* internal calc debug level */
+	0 			/* user defined debug level */
 };
 CONFIG *conf = NULL;	/* loaded in at startup - current configuration */
 
@@ -154,9 +178,48 @@ static NAMETYPE truth[] = {
 
 
 /*
+ * Possible block base output modes
+ */
+static NAMETYPE blk_base[] = {
+	{"hexadecimal",	BLK_BASE_HEX},
+	{"hex",		BLK_BASE_HEX},
+	{"octal",	BLK_BASE_OCT},
+	{"oct",		BLK_BASE_OCT},
+	{"character",	BLK_BASE_CHAR},
+	{"char",	BLK_BASE_CHAR},
+	{"binary",	BLK_BASE_BINARY},
+	{"bin",		BLK_BASE_BINARY},
+	{"raw",		BLK_BASE_RAW},
+	{"none",	BLK_BASE_RAW},
+	{NULL,		0}
+};
+
+
+/*
+ * Possible block output formats
+ */
+static NAMETYPE blk_fmt[] = {
+	{"line",	BLK_FMT_LINE},
+	{"lines",	BLK_FMT_LINE},
+	{"str",		BLK_FMT_STRING},
+	{"string",	BLK_FMT_STRING},
+	{"strings",	BLK_FMT_STRING},
+	{"od",		BLK_FMT_OD_STYLE},
+	{"odstyle",	BLK_FMT_OD_STYLE},
+	{"od_style",	BLK_FMT_OD_STYLE},
+	{"hd",		BLK_FMT_HD_STYLE},
+	{"hdstyle",	BLK_FMT_HD_STYLE},
+	{"hd_style",	BLK_FMT_HD_STYLE},
+	{NULL,		0}
+};
+
+
+/*
  * declate static functions
  */
 static int modetype(char *name);
+static int blkbase(char *name);
+static int blkfmt(char *name);
 static int truthtype(char *name);
 static char *modename(int type);
 
@@ -195,6 +258,46 @@ modetype(char *name)
 	NAMETYPE *cp;		/* current config pointer */
 
 	for (cp = modes; cp->name; cp++) {
+		if (strcmp(cp->name, name) == 0)
+			return cp->type;
+	}
+	return -1;
+}
+
+
+/*
+ * Given the name of a block output base, convert it to the internal format.
+ * Returns -1 if the string is unknown.
+ *
+ * given:
+ *	name			mode name
+ */
+static int
+blkbase(char *name)
+{
+	NAMETYPE *cp;		/* current config pointer */
+
+	for (cp = blk_base; cp->name; cp++) {
+		if (strcmp(cp->name, name) == 0)
+			return cp->type;
+	}
+	return -1;
+}
+
+
+/*
+ * Given the name of a block output format, convert it to the internal format.
+ * Returns -1 if the string is unknown.
+ *
+ * given:
+ *	name			mode name
+ */
+static int
+blkfmt(char *name)
+{
+	NAMETYPE *cp;		/* current config pointer */
+
+	for (cp = blk_fmt; cp->name; cp++) {
 		if (strcmp(cp->name, name) == 0)
 			return cp->type;
 	}
@@ -257,9 +360,9 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_ALL:
 		newconf = NULL;	/* firewall */
 		if (vp->v_type == V_STR) {
-			if (strcmp(vp->v_str, "oldstd") == 0) {
+			if (strcmp(vp->v_str->s_str, "oldstd") == 0) {
 				newconf = &oldstd;
-			} else if (strcmp(vp->v_str, "newstd") == 0) {
+			} else if (strcmp(vp->v_str->s_str, "newstd") == 0) {
 				newconf = &newstd;
 			} else {
 				math_error("CONFIG alias not oldstd or newstd");
@@ -311,7 +414,7 @@ setconfig(int type, VALUE *vp)
 			math_error("Non-string for mode");
 			/*NOTREACHED*/
 		}
-		temp = modetype(vp->v_str);
+		temp = modetype(vp->v_str->s_str);
 		if (temp < 0) {
 			math_error("Unknown mode \"%s\"", vp->v_str);
 			/*NOTREACHED*/
@@ -415,15 +518,14 @@ setconfig(int type, VALUE *vp)
 		conf->redc2 = (int)temp;
 		break;
 
-
 	case CONFIG_TILDE:
 		if (vp->v_type == V_NUM) {
 			q = vp->v_num;
 			conf->tilde_ok = !qiszero(q);
 		} else if (vp->v_type == V_STR) {
-			temp = truthtype(vp->v_str);
+			temp = truthtype(vp->v_str->s_str);
 			if (temp < 0) {
-				math_error("Illegal truth value");
+				math_error("Illegal truth value for tilde");
 				/*NOTREACHED*/
 			}
 			conf->tilde_ok = (int)temp;
@@ -435,9 +537,9 @@ setconfig(int type, VALUE *vp)
 			q = vp->v_num;
 			conf->tab_ok = !qiszero(q);
 		} else if (vp->v_type == V_STR) {
-			temp = truthtype(vp->v_str);
+			temp = truthtype(vp->v_str->s_str);
 			if (temp < 0) {
-				math_error("Illegal truth value");
+				math_error("Illegal truth value for tab");
 				/*NOTREACHED*/
 			}
 			conf->tab_ok = (int)temp;
@@ -575,9 +677,9 @@ setconfig(int type, VALUE *vp)
 			q = vp->v_num;
 			conf->leadzero = !qiszero(q);
 		} else if (vp->v_type == V_STR) {
-			temp = truthtype(vp->v_str);
+			temp = truthtype(vp->v_str->s_str);
 			if (temp < 0) { {
-				math_error("Illegal truth value");
+				math_error("Illegal truth value for leadzero");
 				/*NOTREACHED*/
 			}
 			}
@@ -590,9 +692,9 @@ setconfig(int type, VALUE *vp)
 			q = vp->v_num;
 			conf->fullzero = !qiszero(q);
 		} else if (vp->v_type == V_STR) {
-			temp = truthtype(vp->v_str);
+			temp = truthtype(vp->v_str->s_str);
 			if (temp < 0) { {
-				math_error("Illegal truth value");
+				math_error("Illegal truth value for fullzero");
 				/*NOTREACHED*/
 			}
 			}
@@ -600,9 +702,9 @@ setconfig(int type, VALUE *vp)
 		}
 		break;
 
-	case CONFIG_MAXERR:
+	case CONFIG_MAXSCAN:
 		if (vp->v_type != V_NUM) {
-			math_error("Non-numeric for maxerr");
+			math_error("Non-numeric for maxscancount");
 			/*NOTREACHED*/
 		}
 		q = vp->v_num;
@@ -610,10 +712,10 @@ setconfig(int type, VALUE *vp)
 		if (qisfrac(q) || qisneg(q) || !zistiny(q->num))
 			temp = -1;
 		if (temp < 0) {
-			math_error("Maxerr value is out of range");
+			math_error("Maxscan value is out of range");
 			/*NOTREACHED*/
 		}
-		conf->maxerrorcount = temp;
+		conf->maxscancount = temp;
 		break;
 
 	case CONFIG_PROMPT:
@@ -621,12 +723,12 @@ setconfig(int type, VALUE *vp)
 			math_error("Non-string for prompt");
 			/*NOTREACHED*/
 		}
-		p = (char *)malloc(strlen(vp->v_str) + 1);
+		p = (char *)malloc(vp->v_str->s_len + 1);
 		if (p == NULL) {
 			math_error("Cannot duplicate new prompt");
 			/*NOTREACHED*/
 		}
-		strcpy(p, vp->v_str);
+		strcpy(p, vp->v_str->s_str);
 		free(conf->prompt1);
 		conf->prompt1 = p;
 		break;
@@ -636,30 +738,114 @@ setconfig(int type, VALUE *vp)
 			math_error("Non-string for more prompt");
 			/*NOTREACHED*/
 		}
-		p = (char *)malloc(strlen(vp->v_str) + 1);
+		p = (char *)malloc(vp->v_str->s_len + 1);
 		if (p == NULL) {
 			math_error("Cannot duplicate new more prompt");
 			/*NOTREACHED*/
 		}
-		strcpy(p, vp->v_str);
+		strcpy(p, vp->v_str->s_str);
 		free(conf->prompt2);
 		conf->prompt2 = p;
 		break;
 
-	case CONFIG_RANDOM:
+	case CONFIG_BLKMAXPRINT:
 		if (vp->v_type != V_NUM) {
-			math_error("Non-numeric for random config value");
+			math_error("Non-numeric for blkmaxprint");
 			/*NOTREACHED*/
 		}
 		q = vp->v_num;
 		temp = qtoi(q);
 		if (qisfrac(q) || qisneg(q) || !zistiny(q->num))
 			temp = -1;
-		if (temp < BLUM_CFG_MIN || temp > BLUM_CFG_MAX) {
-			math_error("Random config value is out of range");
+		if (temp < 0) {
+			math_error("Blkmaxprint value is out of range");
 			/*NOTREACHED*/
 		}
-		conf->random = temp;
+		conf->blkmaxprint = temp;
+		break;
+
+	case CONFIG_BLKVERBOSE:
+		if (vp->v_type == V_NUM) {
+			q = vp->v_num;
+			conf->blkverbose = !qiszero(q);
+		} else if (vp->v_type == V_STR) {
+			temp = truthtype(vp->v_str->s_str);
+			if (temp < 0) {
+			    math_error("Illegal truth value for blkverbose");
+			    /*NOTREACHED*/
+			}
+			conf->blkverbose = (int)temp;
+		}
+		break;
+
+	case CONFIG_BLKBASE:
+		if (vp->v_type != V_STR) {
+			math_error("Non-string for blkbase");
+			/*NOTREACHED*/
+		}
+		temp = blkbase(vp->v_str->s_str);
+		if (temp < 0) {
+			math_error("Unknown mode \"%s\" for blkbase",
+			    vp->v_str->s_str);
+			/*NOTREACHED*/
+		}
+		conf->blkbase = temp;
+		break;
+
+	case CONFIG_BLKFMT:
+		if (vp->v_type != V_STR) {
+			math_error("Non-string for blkfmt");
+			/*NOTREACHED*/
+		}
+		temp = blkfmt(vp->v_str->s_str);
+		if (temp < 0) {
+			math_error("Unknown mode \"%s\" for blkfmt",
+			    vp->v_str->s_str);
+			/*NOTREACHED*/
+		}
+		conf->blkfmt = temp;
+		break;
+
+	case CONFIG_LIB_DEBUG:
+		if (vp->v_type != V_NUM) {
+			math_error("Non numeric for lib_debug");
+			/*NOTREACHED*/
+		}
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || !zistiny(q->num)) {
+			math_error("Illegal lib_debug parameter value");
+			/*NOTREACHED*/
+		}
+		conf->lib_debug = temp;
+		break;
+
+	case CONFIG_CALC_DEBUG:
+		if (vp->v_type != V_NUM) {
+			math_error("Non numeric for calc_debug");
+			/*NOTREACHED*/
+		}
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || !zistiny(q->num)) {
+			math_error("Illegal calc_debug parameter value");
+			/*NOTREACHED*/
+		}
+		conf->calc_debug = temp;
+		break;
+
+	case CONFIG_USER_DEBUG:
+		if (vp->v_type != V_NUM) {
+			math_error("Non numeric for user_debug");
+			/*NOTREACHED*/
+		}
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || !zistiny(q->num)) {
+			math_error("Illegal user_debug parameter value");
+			/*NOTREACHED*/
+		}
+		conf->user_debug = temp;
 		break;
 
 	default:
@@ -676,7 +862,7 @@ setconfig(int type, VALUE *vp)
  *	src	copy this configuration
  *
  * returns:
- *	prointer to the configuration copy
+ *	pointer to the configuration copy
  */
 CONFIG *
 config_copy(CONFIG *src)
@@ -747,7 +933,7 @@ config_free(CONFIG *cfg)
 	}
 
 	/*
-	 * free prointer values
+	 * free pointer values
 	 */
 	if (cfg->epsilon != NULL) {
 		qfree(cfg->epsilon);
@@ -812,8 +998,7 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 
 	case CONFIG_MODE:
 		vp->v_type = V_STR;
-		vp->v_subtype = V_STRLITERAL;
-		vp->v_str = modename(cfg->outmode);
+		vp->v_str = makenewstring(modename(cfg->outmode));
 		return;
 
 	case CONFIG_EPSILON:
@@ -892,24 +1077,46 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		i = cfg->fullzero;
 		break;
 
-	case CONFIG_MAXERR:
-		i = cfg->maxerrorcount;
+	case CONFIG_MAXSCAN:
+		i = cfg->maxscancount;
 		break;
 
 	case CONFIG_PROMPT:
 		vp->v_type = V_STR;
-		vp->v_subtype = V_STRLITERAL;
-		vp->v_str = cfg->prompt1;
+		vp->v_str = makenewstring(cfg->prompt1);
 		return;
 
 	case CONFIG_MORE:
 		vp->v_type = V_STR;
-		vp->v_subtype = V_STRLITERAL;
-		vp->v_str = cfg->prompt2;
+		vp->v_str = makenewstring(cfg->prompt2);
 		return;
 
-	case CONFIG_RANDOM:
-		i = cfg->random;
+	case CONFIG_BLKMAXPRINT:
+		i = cfg->blkmaxprint;
+		break;
+
+	case CONFIG_BLKVERBOSE:
+		i = cfg->blkverbose;
+		break;
+
+	case CONFIG_BLKBASE:
+		i = cfg->blkbase;
+		break;
+
+	case CONFIG_BLKFMT:
+		i = cfg->blkfmt;
+		break;
+
+	case CONFIG_LIB_DEBUG:
+		i = cfg->lib_debug;
+		break;
+
+	case CONFIG_CALC_DEBUG:
+		i = cfg->calc_debug;
+		break;
+
+	case CONFIG_USER_DEBUG:
+		i = cfg->user_debug;
 		break;
 
 	default:
@@ -978,8 +1185,14 @@ config_cmp(CONFIG *cfg1, CONFIG *cfg2)
 	       cfg1->round != cfg2->round ||
 	       cfg1->leadzero != cfg2->leadzero ||
 	       cfg1->fullzero != cfg2->fullzero ||
-	       cfg1->maxerrorcount != cfg2->maxerrorcount ||
+	       cfg1->maxscancount != cfg2->maxscancount ||
 	       strcmp(cfg1->prompt1, cfg2->prompt1) != 0 ||
 	       strcmp(cfg1->prompt2, cfg2->prompt2) != 0 ||
-	       cfg1->random != cfg2->random;
+	       cfg1->blkmaxprint != cfg2->blkmaxprint ||
+	       cfg1->blkverbose != cfg2->blkverbose ||
+	       cfg1->blkbase != cfg2->blkbase ||
+	       cfg1->blkfmt != cfg2->blkfmt ||
+	       cfg1->lib_debug != cfg2->lib_debug ||
+	       cfg1->calc_debug != cfg2->calc_debug ||
+	       cfg1->user_debug != cfg2->user_debug;
 }

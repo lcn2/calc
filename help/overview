@@ -36,6 +36,41 @@
     type of variable to those functions and operators which only work
     for a subset of types.
 
+    Calc has a help command that will produce information about
+    every builtin function, command as well as a number of other
+    aspects of calc usage.  Try the command:
+
+	    help help
+
+    for and overview of the help system.  The command:
+
+	    help builtins
+
+    provides information on built-in mathematical functions, whereas:
+
+	    help asinh
+
+    will provides information a specific function.  The following
+    help files:
+
+	    help command
+	    help define
+	    help operator
+	    help statement
+	    help variable
+
+    provide a good overview of the calc language.  If you are familiar
+    with C, you should also try:
+
+	    help unexpected
+
+    It contains information about differences between C and calc
+    that may surprize you.
+
+    A full and extensive overview of calc may be obtained by:
+
+	    help full
+
     By default, arguments to functions are passed by value (even
     matrices).  For speed, you can put an ampersand before any
     variable argument in a function call, and that variable will be

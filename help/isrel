@@ -28,4 +28,8 @@ LIBRARY
     BOOL zrelprime(ZVALUE x, y)
 
 SEE ALSO
-    gcd, ismult, isprime, isrel, issq
+    gcd,
+    isassoc, isatty, isblk, isconfig, isdefined, iserror, iseven, isfile,
+    ishash, isident, isint, islist, ismat, ismult, isnull, isnum, isobj,
+    isobjtype, isodd, isprime, isrand, israndom, isreal,
+    issimple, issq, isstr, istype

@@ -29,7 +29,6 @@ define factor(N, B, ai, af)
 	return 1;
 }
 
-global lib_debug;
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
     print "factor(N, B, ai, af) defined";
 }

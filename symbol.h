@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 1993 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  */
 
-#ifndef	SYMBOL_H
-#define	SYMBOL_H
+
+#if !defined(__SYMBOL_H__)
+#define	__SYMBOL_H__
+
 
 #include "zmath.h"
 
@@ -57,6 +59,7 @@ extern void enterfilescope(void);
 extern void exitfilescope(void);
 extern void enterfuncscope(void);
 extern void exitfuncscope(void);
+extern void endscope (char *name, BOOL isglobal);
 
 
 /*
@@ -71,7 +74,10 @@ extern void initglobals(void);
 extern int writeglobals(char *name);
 extern int symboltype(char *name);
 extern void showglobals(void);
+extern void showallglobals(void);
+extern void freeglobals(void);
+extern void showstatics(void);
+extern void freestatics(void);
 
-#endif
 
-/* END CODE */
+#endif /* !__SYMBOL_H__ */

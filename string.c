@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 1995 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * String list routines.
  */
 
+#include <stdio.h>
 #include "calc.h"
 #include "string.h"
 
@@ -13,6 +14,7 @@
 #define STR_CHUNK	2000	/* size of string storage allocation */
 #define STR_UNIQUE	100	/* size of string to allocate separately */
 
+STRING _nullstring_ = {"", 0, 1, NULL};
 
 static char *chartable;		/* single character string table */
 
@@ -285,5 +287,1096 @@ addliteral(char *str)
 	strcpy(newstr, str);
 	return newstr;
 }
+
+
+STRING *
+stringadd(STRING *s1, STRING *s2)
+{
+	STRING *s;
+	char *cfrom, *c;
+	long len;
+
+	if (s1->s_len == 0)
+		return slink(s2);
+	if (s2->s_len == 0)
+		return slink(s1);
+	len = s1->s_len + s2->s_len;
+	s = stralloc();
+	s->s_len = len;
+	s->s_str = (char *) malloc(len + 1);
+	if (s->s_str == NULL)
+		return NULL;
+	len = s1->s_len;
+	cfrom = s1->s_str;
+	c = s->s_str;
+	while (len-- > 0)
+		*c++ = *cfrom++;
+	len = s2->s_len;
+	cfrom = s2->s_str;
+	while (len-- > 0)
+		*c++ = *cfrom++;
+	*c = '\0';
+	return s;
+}
+
+/*
+ * stringneg reverses the characters in a string, returns null if malloc fails
+ */
+STRING *
+stringneg(STRING *str)
+{
+	long len;
+	STRING *s;
+	char *c, *cfrom;
+
+	len = str->s_len;
+	if (len <= 1)
+		return slink(str);
+	c = (char *) malloc(len + 1);
+	if (c == NULL)
+		return NULL;
+	s = stralloc();
+	s->s_len = len;
+	s->s_str = c;
+	cfrom = str->s_str + len;
+	while (len-- > 0)
+		*c++ = *--cfrom;
+	*c = '\0';
+	return s;
+}
+
+STRING *
+stringsub(STRING *s1, STRING *s2)
+{
+	STRING *tmp, *s;
+
+	tmp = stringneg(s2);
+	if (tmp == NULL)
+		return NULL;
+	s = stringadd(s1, tmp);
+	if (s != NULL)
+		sfree(tmp);
+	return s;
+}
+
+/*
+ * stringmul: repeated concatenation, reverse if negative multiplier
+ * returns null if malloc fails
+ */
+STRING *
+stringmul(NUMBER *q, STRING *str)
+{
+	long len;
+	long j;
+	NUMBER *tmp1, *tmp2;
+	char *c, *c1;
+	STRING *s;
+	BOOL neg;
+
+	if (str->s_len == 0)
+		return slink(str);
+	neg = qisneg(q);
+	q = neg ? qneg(q): qlink(q);
+	tmp1 = itoq(str->s_len);
+	tmp2 = qmul(q, tmp1);
+	qfree(tmp1);
+	tmp1 = qint(tmp2);
+	qfree(tmp2);
+	if (zge31b(tmp1->num)) {
+		qfree(q);
+		qfree(tmp1);
+		return NULL;
+	}
+	len = qtoi(tmp1);
+	qfree(tmp1);
+	qfree(q);
+	if (len == 0) {
+		s = stralloc();
+		s->s_len = 0;
+		s->s_str = charstr('\0');
+		return s;
+	}
+	c = (char *) malloc(len + 1);
+	if (c == NULL)
+		return NULL;
+	str = neg ? stringneg(str) : slink(str);
+	s = stralloc();
+	s->s_str = c;
+	s->s_len = len;
+	j = 0;
+	c1 = str->s_str;
+	while (len-- > 0) {
+		*c++ = *c1++;
+		if (++j == str->s_len) {
+			j = 0;
+			c1 = str->s_str;
+		}
+	}
+	*c = '\0';
+	sfree(str);
+	return s;
+}
+
+STRING *
+stringand(STRING *s1, STRING *s2)
+{
+	STRING *s;
+	long len;
+	char *c1, *c2, *c;
+
+	if (s1->s_len == 0  || s2->s_len == 0)
+		return slink(&_nullstring_);
+	len = s1->s_len;
+	if (s2->s_len < len)
+		len = s2->s_len;
+	s = stralloc();
+	s->s_len = len;
+	c = malloc(len + 1);
+	if (c == NULL)
+		return NULL;
+	s->s_str = c;
+	c1 = s1->s_str;
+	c2 = s2->s_str;
+	while (len-- > 0)
+		*c++ = *c1++ & *c2++;
+	return s;
+}
+
+
+STRING *
+stringor(STRING *s1, STRING *s2)
+{
+	STRING *s;
+	long len, i, j;
+	char *c1, *c2, *c;
+
+	if (s1->s_len < s2->s_len) {
+		s = s1;
+		s1 = s2;
+		s2 = s;
+	}		/* Now len(s1) >= len(s2) */
+	if (s2->s_len == 0)
+		return slink(s1);
+	i = s1->s_len;
+	if (i == 0)
+		return slink(&_nullstring_);
+	len = s1->s_len;
+	s = stralloc();
+	s->s_len = len;
+	c = malloc(len + 1);
+	if (c == NULL)
+		return NULL;
+	s->s_str = c;
+	c1 = s1->s_str;
+	c2 = s2->s_str;
+	i = s2->s_len;
+	j = s1->s_len - i;
+	while (i-- > 0)
+		*c++ = *c1++ | *c2++;
+	while (j-- > 0)
+		*c++ = *c1++;
+	return s;
+}
+
+
+STRING *
+stringxor(STRING *s1, STRING *s2)
+{
+	STRING *s;
+	long len, i, j;
+	char *c1, *c2, *c;
+
+	if (s1->s_len < s2->s_len) {
+		s = s1;
+		s1 = s2;
+		s2 = s;
+	}		/* Now len(s1) >= len(s2) */
+	if (s2->s_len == 0)
+		return slink(s1);
+	i = s1->s_len;
+	if (i == 0)
+		return slink(&_nullstring_);
+	len = s1->s_len;
+	s = stralloc();
+	s->s_len = len;
+	c = malloc(len + 1);
+	if (c == NULL)
+		return NULL;
+	s->s_str = c;
+	c1 = s1->s_str;
+	c2 = s2->s_str;
+	i = s2->s_len;
+	j = s1->s_len - i;
+	while (i-- > 0)
+		*c++ = *c1++ ^ *c2++;
+	while (j-- > 0)
+		*c++ = *c1++;
+	return s;
+}
+
+
+STRING *
+stringdiff(STRING *s1, STRING *s2)
+{
+	STRING *s;
+	long i;
+	char *c2, *c;
+
+	i = s1->s_len;
+	if (i == 0)
+		return slink(s1);
+	s = stringcopy(s1);
+	if (i > s2->s_len)
+		i = s2->s_len;
+	c = s->s_str;
+	c2 = s2->s_str;
+	while (i-- > 0)
+		*c++ &= ~*c2++;
+	return s;
+}
+
+STRING *
+stringcomp(STRING *s1)
+{
+	long len;
+	STRING *s;
+	char *c1, *c;
+
+	len = s1->s_len;
+	if (len == 0)
+		return slink(&_nullstring_);
+	c = malloc(len + 1);
+	if (c == NULL)
+		return NULL;
+	s = stralloc();
+	s->s_len = len;
+	s->s_str = c;
+	c1 = s1->s_str;
+	while (len-- > 0)
+		*c++ = ~*c1++;
+	*c = '\0';
+	return s;
+}
+
+STRING *
+stringsegment(STRING *s1, long n1, long n2)
+{
+	STRING *s;
+	char *c, *c1;
+	long len;
+
+	if ((n1 < 0 && n2 < 0) || (n1 >= s1->s_len && n2 >= s1->s_len))
+		return slink(&_nullstring_);
+	if (n1 < 0)
+		n1 = 0;
+	if (n2 < 0)
+		n2 = 0;
+	if (n1 >= s1->s_len)
+		n1 = s1->s_len - 1;
+	if (n2 >= s1->s_len)
+		n2 = s1->s_len - 1;
+	len = (n1 >= n2) ? n1 - n2 + 1 : n2 - n1 + 1;
+	s = stralloc();
+	c = malloc(len + 1);
+	if (c == NULL)
+		return NULL;
+	s->s_len = len;
+	s->s_str = c;
+	c1 = s1->s_str + n1;
+	if (n1 >= n2) {
+		while (len-- > 0)
+			*c++ = *c1--;
+	}
+	else {
+		while (len-- > 0)
+			*c++ = *c1++;
+	}
+	*c = '\0';
+	return s;
+}
+
+/*
+ * stringshift shifts s1 n bits to left if n > 0, -n to the right if n < 0;
+ * octets in string considered to be in decreasing order of index, as in
+ * ... a_3 a_2 a_1 a_0.  Returned string has same length as s1.
+ * Vacated bits are filled with '\0'; bits shifted off end are lost
+ */
+STRING *
+stringshift(STRING *s1, long n)
+{
+	char *c1, *c;
+	STRING *s;
+	long len, i, j, k;
+	BOOL right;
+	char ch;
+
+	len = s1->s_len;
+	if (len == 0 || n == 0)
+		return slink(s1);
+	right = (n < 0);
+	if (right) n = -n;
+	j = n & 7;
+	k = 8 - j;
+	n >>= 3;
+	c = malloc(len + 1);
+	if (c == NULL)
+		return NULL;
+	s = stralloc();
+	s->s_len = len;
+	s->s_str = c;
+	c[len] = '\0';
+	if (n > len)
+		n = len;
+	ch = '\0';
+	c1 = s1->s_str;
+	i = n;
+	if (right) {
+		c += len;
+		c1 += len;
+		while (i-- > 0)
+			*--c = '\0';
+		i = len - n;
+		while (i-- > 0) {
+			*--c = ((unsigned char) *--c1 >> j) | ch;
+			ch = (unsigned char) *c1 << k;
+		}
+	}
+	else {
+		while (i-- > 0)
+			*c++ = '\0';
+		i = len - n;
+		while (i-- > 0) {
+			*c++ = ((unsigned char) *c1 << j) | ch;
+			ch = (unsigned char) *c1++ >> k;
+		}
+	}
+	return s;
+}
+
+/*
+ * stringcpy copies as many characters as possible up to and including
+ * the first '\0' from s2 to s1 and returns s1
+ */
+STRING *
+stringcpy(STRING *s1, STRING *s2)
+{
+	char *c1, *c2;
+	long len;
+
+	c1 = s1->s_str;
+	c2 = s2->s_str;
+	len = s1->s_len;
+	while (len-- > 0 && *c2 != 0)
+		*c1++ = *c2++;
+	*c1 = '\0';
+	return slink(s1);
+}
+
+/*
+ * stringncpy copies up to n characters from s2 to s1 and returns s1
+ */
+STRING *
+stringncpy(STRING *s1, STRING *s2, long num)
+{
+	char *c1, *c2;
+
+	if (num > s1->s_len)
+		num = s1->s_len;
+	c1 = s1->s_str;
+	c2 = s2->s_str;
+	while (num-- > 0 && *c2 != 0)
+		*c1++ = *c2++;
+	while (num-- > 0)
+		*c1++ = '\0';
+	*c1 = '\0';
+	return slink(s1);
+}
+
+
+/*
+ * stringcontent counts the number of set bits in s
+ */
+long
+stringcontent(STRING *s)
+{
+	char *c;
+	unsigned char ch;
+	long count;
+	long len;
+
+	len = s->s_len;
+	count = 0;
+	c = s->s_str;
+	while (len-- > 0) {
+		ch = *c++;
+		while (ch) {
+			count += (ch & 1);
+			ch >>= 1;
+		}
+	}
+	return count;
+}
+
+long
+stringhighbit(STRING *s)
+{
+	char *c;
+	unsigned char ch;
+	long i;
+
+	i = s->s_len;
+	c = s->s_str + i;
+	while (--i >= 0 && *--c == '\0');
+	if (i < 0)
+		return -1;
+	i <<= 3;
+	for (ch = *c; ch >>= 1; i++);
+	return i;
+}
+
+long
+stringlowbit(STRING *s)
+{
+	char *c;
+	unsigned char ch;
+	long i;
+
+	for (i = s->s_len, c = s->s_str; i > 0 && *c ==  '\0'; i--, c++);
+	if (i == 0)
+		return -1;
+	i = (s->s_len - i) << 3;
+	for (ch = *c; !(ch & 1); ch >>= 1, i++);
+	return i;
+}
+
+
+/*
+ * stringcompare compares first len characters of strings starting at c1, c2
+ * Returns TRUE if and only if a difference is encountered.
+ * Essentially a local version of memcmp.
+ */
+static BOOL
+stringcompare(char *c1, char *c2, long len)
+{
+	while (len-- > 0) {
+		if (*c1++ != *c2++)
+			return TRUE;
+	}
+	return FALSE;
+}
+
+/*
+ * stringcmp returns TRUE if strings differ, FALSE if strings equal
+ */
+BOOL
+stringcmp(STRING *s1, STRING *s2)
+{
+	if (s1->s_len != s2->s_len)
+		return TRUE;
+	return stringcompare(s1->s_str, s2->s_str, s1->s_len);
+}
+
+
+/*
+ * stringrel returns 0 if strings are equal; otherwise 1 or -1 according
+ * as the greater of the first unequal characters are in the first or
+ * second string, or in the case of unequal-length strings when the compared
+ * characters are all equal, 1 or -1 according as the first or second string
+ * is longer.
+ */
+FLAG
+stringrel(STRING *s1, STRING *s2)
+{
+	char *c1, *c2;
+	long i1, i2;
+
+	i1 = s1->s_len;
+	i2 = s2->s_len;
+	if (i1 == 0)
+		return (i2 > 0);
+	if (i2 == 0)
+		return -1;
+	c1 = s1->s_str;
+	c2 = s2->s_str;
+	while (i1 > 0 && i2 > 0 && *c1 == *c2) {
+		i1--;
+		i2--;
+		c1++;
+		c2++;
+	}
+	if ((unsigned char) *c1 > (unsigned char) *c2) return 1;
+	if ((unsigned char) *c1 < (unsigned char) *c2) return -1;
+	if (i1 < i2) return -1;
+	return (i1 > i2);
+}
+
+
+/*
+ * str with characters c0, c1, ... is considered as a bitstream, 8 bits
+ * per character; within a character the bits ordered from low order to
+ * high order.  For 0 <= i < 8 * length of str, stringbit returns 1 or 0
+ * according as the bit with index i is set or not set; other values of i
+ * return -1.
+ */
+int
+stringbit(STRING *s, long index)
+{
+	unsigned int ch;
+	int res;
+
+	if (index < 0)
+		return -1;
+	res = index & 7;
+	index >>= 3;
+	if (index >= s->s_len)
+		return -1;
+	ch = s->s_str[index];
+	return (ch >> res) & 1;
+}
+
+
+BOOL
+stringtest(STRING *s)
+{
+	long i;
+	char *c;
+
+	i = s->s_len;
+	c = s->s_str;
+	while (i-- > 0) {
+		if (*c++)
+			return TRUE;
+	}
+	return FALSE;
+}
+
+/*
+ * If index is in acceptable range, stringsetbit sets or resets specified
+ * bit in string s according as val is TRUE or FALSE, and returns 0.
+ * Returns 1 if index < 0; 2 if index too large.
+ */
+int
+stringsetbit(STRING *s, long index, BOOL val)
+{
+	char *c;
+	int bit;
+
+	if (index < 0)
+		return 1;
+	bit = 1 << (index & 7);
+	index >>= 3;
+	if (index >= s->s_len)
+		return 2;
+	c = &s->s_str[index];
+	*c &= ~bit;
+	if (val)
+		*c |= bit;
+	return 0;
+}
+
+/*
+ * stringsearch returns 0 and sets index = i if the first occurrence
+ * of s2 in s1 for start <= i < end is at index i.  If no such occurrence
+ * is found, -1 is returned.
+ */
+int
+stringsearch(STRING *s1, STRING *s2, long start, long end, ZVALUE *index)
+{
+	long len2, i, j;
+	char *c1, *c2, *c;
+	char ch;
+
+	len2 = s2->s_len;
+	if (start < 0)
+		start = 0;
+	if (end < start + len2)
+		return -1;
+	if (len2 == 0) {
+		itoz(start, index);
+		return 0;
+	}
+	i = end - start - len2;
+	c1 = s1->s_str + start;
+	ch = *s2->s_str;
+	while (i-- >= 0) {
+		if (*c1++ == ch) {
+			c = c1;
+			c2 = s2->s_str;
+			j = len2;
+			while (--j > 0 && *c++ == *++c2);
+			if (j == 0) {
+				itoz(end - len2 - i - 1, index);
+				return 0;
+			}
+		}
+	}
+	return -1;
+}
+
+int
+stringrsearch(STRING *s1, STRING *s2, long start, long end, ZVALUE *index)
+{
+	long len1, len2, i, j;
+	char *c1, *c2, *c, *c2top;
+	char ch;
+
+	len1 = s1->s_len;
+	len2 = s2->s_len;
+	if (start < 0)
+		start = 0;
+	if (end > len1)
+		end = len1;
+	if (end < start + len2)
+		return -1;
+	if (len2 == 0) {
+		itoz(start, index);
+		return 0;
+	}
+	i = end - start - len2 + 1;
+	c1 = s1->s_str + end - 1;
+	c2top = s2->s_str + len2 - 1;
+	ch = *c2top;
+
+	while (--i >= 0) {
+		if (*c1-- == ch) {
+			c = c1;
+			j = len2;
+			c2 = c2top;
+			while (--j > 0 && *c-- == *--c2);
+			if (j == 0) {
+				itoz(start + i, index);
+				return 0;
+			}
+		}
+	}
+	return -1;
+}
+
+
+/*
+ * String allocation routines
+ */
+
+#define	STRALLOC	100
+
+
+static STRING	*freeStr;
+static STRING	**firstStrs;
+static long	blockcount = 0;
+
+
+STRING *
+stralloc(void)
+{
+	STRING *temp;
+	STRING **newfn;
+
+	if (freeStr == NULL) {
+		freeStr = (STRING *) malloc(sizeof (STRING) * STRALLOC);
+		if (freeStr == NULL) {
+			math_error("Unable to allocate memory for stralloc");
+			/*NOTREACHED*/
+		}
+		freeStr[STRALLOC - 1].s_next = NULL;
+		freeStr[STRALLOC - 1].s_links = 0;
+		for (temp = freeStr + STRALLOC - 2; temp >= freeStr; --temp) {
+			temp->s_next = temp + 1;
+			temp->s_links = 0;
+		}
+		blockcount++;
+		newfn = (STRING **)
+			realloc(firstStrs, blockcount * sizeof(STRING *));
+		if (newfn == NULL) {
+			math_error("Cannot allocate new string block");
+			/*NOTREACHED*/
+		}
+		firstStrs = newfn;
+		firstStrs[blockcount - 1] = freeStr;
+	}
+	temp = freeStr;
+	freeStr = temp->s_next;
+	temp->s_links = 1;
+	temp->s_str = NULL;
+	return temp;
+}
+
+
+/*
+ * makestring to be called only when str is the result of a malloc
+ */
+STRING *
+makestring(char *str)
+{
+	STRING *s;
+	long len;
+
+	len = (long)strlen(str);
+	s = stralloc();
+	s->s_str = str;
+	s->s_len = len;
+	return s;
+}
+
+STRING *
+charstring(int ch)
+{
+	STRING *s;
+	char *c;
+
+	c = (char *) malloc(2);
+	if (c == NULL) {
+		math_error("Allocation failure for charstring");
+		/*NOTREACHED*/
+	}
+	s = stralloc();
+	s->s_len = 1;
+	s->s_str = c;
+	*c++ = (char) ch;
+	*c = '\0';
+	return s;
+}
+
+
+/*
+ * makenewstring creates a new string by copying null-terminated str;
+ * str is not freed
+ */
+STRING *
+makenewstring(char *str)
+{
+	STRING *s;
+	char *c;
+	long len;
+
+	len = (long)strlen(str);
+	if (len == 0)
+		return slink(&_nullstring_);
+	c = (char *) malloc(len + 1);
+	if (c == NULL) {
+		math_error("malloc for makenewstring failed");
+		/*NOTREACHED*/
+	}
+	s = stralloc();
+	s->s_str = c;
+	s->s_len = len;
+	while (len-- > 0)
+		*c++ = *str++;
+	*c = '\0';
+	return s;
+}
+
+
+STRING *
+stringcopy (STRING *s1)
+{
+	STRING *s;
+	char *c, *c1;
+	long len;
+
+	len = s1->s_len;
+	if (len == 0)
+		return slink(s1);
+	c = malloc(len + 1);
+	if (c == NULL) {
+		math_error("Malloc failed for stringcopy");
+		/*NOTREACHED*/
+	}
+	s = stralloc();
+	s->s_len = len;
+	s->s_str = c;
+	c1 = s1->s_str;
+	while (len-- > 0)
+		*c++ = *c1++;
+	*c = '\0';
+	return s;
+}
+
+
+STRING *
+slink(STRING *s)
+{
+	if (s->s_links <= 0) {
+		math_error("Argument for slink has nonpositive links!!!");
+		/*NOTREACHED*/
+	}
+	++s->s_links;
+	return s;
+}
+
+
+void
+sfree(STRING *s)
+{
+	if (s->s_links <= 0) {
+		math_error("Argument for sfree has nonpositive links!!!");
+		/*NOTREACHED*/
+	}
+	if (--s->s_links > 0 || s->s_len == 0)
+		return;
+	free(s->s_str);
+	s->s_next = freeStr;
+	freeStr = s;
+}
+
+static long	stringconstcount = 0;
+static long	stringconstavail = 0;
+static STRING   **stringconsttable;
+#define STRCONSTALLOC 100
+
+void
+initstrings(void)
+{
+	stringconsttable = (STRING **) malloc(sizeof(STRING *) * STRCONSTALLOC);
+	if (stringconsttable == NULL) {
+		math_error("Unable to allocate constant table");
+		/*NOTREACHED*/
+	}
+	stringconsttable[0] = &_nullstring_;
+	stringconstcount = 1;
+	stringconstavail = STRCONSTALLOC - 1;
+}
+
+/*
+ * addstring is called only from token.c
+ * When called, len is length if string including '\0'
+ */
+long
+addstring(char *str, long len)
+{
+	STRING **sp;
+	STRING *s;
+	char *c;
+	long index;		/* index into constant table */
+	long first;		/* first non-null position found */
+	BOOL havefirst;
+
+	if (stringconstavail <= 0) {
+		if (stringconsttable == NULL) {
+			initstrings();
+		}
+		else {
+			sp = (STRING **) realloc((char *) stringconsttable,
+			sizeof(STRING *) * (stringconstcount + STRCONSTALLOC));
+			if (sp == NULL) {
+				math_error("Unable to reallocate string const table");
+				/*NOTREACHED*/
+			}
+			stringconsttable = sp;
+			stringconstavail = STRCONSTALLOC;
+		}
+	}
+	len--;
+	first = 0;
+	havefirst = FALSE;
+	sp = stringconsttable;
+	for (index = 0; index < stringconstcount; index++, sp++) {
+		s = *sp;
+		if (s->s_links == 0) {
+			if (!havefirst) {
+				havefirst = TRUE;
+				first = index;
+			}
+			continue;
+		}
+		if (s->s_len == len && stringcompare(s->s_str, str, len) == 0) {
+			s->s_links++;
+			return index;
+		}
+	}
+	s = stralloc();
+	c = (char *) malloc(len + 1);
+	if (c == NULL) {
+		math_error("Unable to allocate string constant memory");
+		/*NOTREACHED*/
+	}
+	s->s_str = c;
+	s->s_len = len;
+	while (len-- >= 0)
+		*c++ = *str++;
+	if (havefirst) {
+		stringconsttable[first] = s;
+		return first;
+	}
+	stringconstavail--;
+	stringconsttable[stringconstcount++] = s;
+	return index;
+}
+
+
+STRING *
+findstring(long index)
+{
+	if (index < 0 || index >= stringconstcount) {
+		math_error("Bad index for findstring");
+		/*NOTREACHED*/
+	}
+	return stringconsttable[index];
+}
+
+
+void
+freestringconstant(long index)
+{
+	STRING *s;
+	STRING **sp;
+
+	if (index >= 0) {
+		s = findstring(index);
+		sfree(s);
+		if (index == stringconstcount - 1) {
+			sp = &stringconsttable[index];
+			while (stringconstcount > 0 && (*sp)->s_links == 0) {
+				stringconstcount--;
+				stringconstavail++;
+				sp--;
+			}
+		}
+	}
+}
+
+long
+printechar(char *c)
+{
+	long n;
+	unsigned char ch;
+	unsigned char ech;	/* for escape sequence */
+	unsigned char nch;	/* for next character */
+	BOOL three;
+
+	ch = *c;
+	if (ch >= ' ' && ch < 127 && ch != '\\' && ch != '\"') {
+		putchar(ch);
+		return 1;
+	}
+	putchar('\\');
+	ech = 0;
+	switch (ch) {
+		case '\n': ech = 'n'; break;
+		case '\r': ech = 'r'; break;
+		case '\t': ech = 't'; break;
+		case '\b': ech = 'b'; break;
+		case '\f': ech = 'f'; break;
+		case '\v': ech = 'v'; break;
+		case '\\': ech = '\\'; break;
+		case '\"': ech = '\"'; break;
+		case 7: ech = 'a'; break;
+		case 27: ech = 'e'; break;
+	}
+	if (ech) {
+		putchar(ech);
+		return 2;
+	}
+	nch = *(c + 1);
+	three = (nch >= '0' && nch < '8');
+	n = 2;
+	if (three || ch >= 64) {
+		putchar('0' + ch/64);
+		n++;
+	}
+	ch %= 64;
+	if (three || ch >= 8) {
+		putchar('0' + ch/8);
+		n++;
+	}
+	ch %= 8;
+	putchar('0' + ch);
+	return n;
+}
+
+
+void
+fitstring(char *str, long len, long width)
+{
+	long i, j, n, max;
+	char *c;
+	unsigned char ch, nch;
+
+	max = (width - 3)/2;
+	if (len == 0)
+		return;
+	c = str;
+	for (i = 0, n = 0; i < len && n < max; i++) {
+		n += printechar(c++);
+	}
+	if (i >= len)
+		return;
+	c = str + len;
+	nch = '\0';
+	for (n = 0, j = len ; j > i && n < max ; --j, nch = ch) {
+		ch = *--c;
+		n++;
+		if (ch >= ' ' && ch <= 127 && ch != '\\' && ch != '\"')
+			continue;
+		n++;
+		switch (ch) {
+			case '\n': case '\r': case '\t': case '\b': case '\f':
+			case '\v': case '\\': case '\"': case 7: case 27:
+				continue;
+		}
+		if (ch >= 64 || (nch >= '0' && nch <= '7')) {
+			n += 2;
+			continue;
+		}
+		if (ch >= 8)
+			n++;
+	}
+	if (j > i)
+		printf("...");
+	while (j++ < len)
+		(void) printechar(c++);
+}
+
+void
+showstrings(void)
+{
+	STRING *sp;
+	long i, j, k;
+	long count;
+
+
+	printf("Index  Links  Length  String\n");
+	printf("-----  -----  ------  ------\n");
+	sp = &_nullstring_;
+	printf("    0  %5ld       0  \"\"\n", sp->s_links);
+	for (i = 0, k = 1, count = 1; i < blockcount; i++) {
+		sp = firstStrs[i];
+		for (j = 0; j < STRALLOC; j++, k++, sp++) {
+			if (sp->s_links > 0) {
+				++count;
+				printf("%5ld  %5ld  %6ld  \"",
+					k, sp->s_links, sp->s_len);
+				fitstring(sp->s_str, sp->s_len, 50);
+				printf("\"\n");
+			}
+		}
+	}
+	printf("\nNumber: %ld\n", count);
+}
+
+
+void
+showliterals(void)
+{
+	STRING *sp;
+	long i;
+	long count = 0;
+
+
+	printf("Index  Links  Length  String\n");
+	printf("-----  -----  ------  ------\n");
+	for (i = 0; i < stringconstcount; i++) {
+		sp = stringconsttable[i];
+		if (sp->s_links > 0) {
+			++count;
+			printf("%5ld  %5ld  %6ld  \"",
+				i, sp->s_links, sp->s_len);
+			fitstring(sp->s_str, sp->s_len, 50);
+			printf("\"\n");
+		}
+
+	}
+	printf("\nNumber: %ld\n", count);
+}
+
 
 /* END CODE */

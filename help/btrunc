@@ -2,19 +2,24 @@ NAME
     btrunc - truncate a value to a number of binary places
 
 SYNOPSIS
-    btrunc(x [,j])
+    btrunc(x [,plcs])
 
 TYPES
     x		real
-    j		int
+    plcs	integer, defaults to zero
 
     return	real
 
 DESCRIPTION
-    Truncate x to j binary places.  If j is omitted, 0 places is assumed.
-    Specifying zero places makes the result identical to int().
+    Truncate x to plcs binary places, rounding if necessary towards zero,
+    i.e. btrunc(x, plcs) is a multiple of 2^-plcs and the remainder
+    x - btrunc(x, plcs) is either zero or has the same sign as x and
+    absolute value less than 2^-plcs.  Here plcs may be positive, zero or
+    negative.
 
-    Truncation of a non-integer prodcues values nearer to zero.
+    Except that it is defined only for real x, btrunc(x, plcs) is equivalent
+    to bround(x, plcs, 2).  btrunc(x,0) and btrunc(x) are equivalent to
+    int(x).
 
 EXAMPLE
     > print btrunc(pi()), btrunc(pi(), 10)
@@ -26,8 +31,11 @@ EXAMPLE
     > print btrunc(-3.3), btrunc(-3.7), btrunc(-3.3, 2), btrunc(-3.7, 2)
     -3 -3 -3.25 -3.5
 
+    > print btrunc(55.123, -4), btrunc(-55.123, -4)
+    48 -48
+
 LIMITS
-    0 <= j < 2^31
+    abs(j) < 2^31
 
 LIBRARY
     NUMBER *qbtrunc(NUMBER *x, *j)

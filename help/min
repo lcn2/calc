@@ -1,26 +1,71 @@
 NAME
-    min - minimum of a set of rational numbers
+    min - minimum, or minimum of defined minima
 
 SYNOPSIS
-    min(x1, x2, ...)
+    min(x_1, x_2, ...)
 
 TYPES
-    x1, x2, ...	rational number
+    x_1, x_2, ...	any
 
-    return	rational number
+    return		any
 
 DESCRIPTION
-    Compute the minimum value of a set of rational numbers.
+    If an argument x_i is a list with elements e_1, e_2, ..., e_n, it
+    is treated as if x_i were replaced by e_1, e_2, ..., e_n; this may
+    continue recurively if any of the e_j is a list.
+
+    If an argument x_i is an object of type xx, then x_i is replaced by
+    xx_min(x_i) if the function xx_min() has been defined.  If the
+    type xx has been defined by:
+
+		obj xx = {x, y, z},
+
+    an appropriate definition of xx_min(a) is sometimes min(a.x, a.y, a.z).
+    min(a) then returns the minimum of the elements of a.
+
+    If x_i has the null value, it is ignored.  Thus, sum(a, , b, , c)
+
+    If x_i has the null value, it is ignored.  Thus, min(a, , b, , c)
+    will return the same as min(a, b, c).
+
+    Assuming the above replacements, and that the x_1, x_2, ..., are
+    of sufficently simple ordered types (e.g. real numbers or strings),
+    or, if some are objects, the relevant xx_rel(a,b) has been defined
+    and returns a real-number value for any comparison that has to be made,
+    min(x_1, x_2, ...) returns the value determined by min(x_1) = x_1,
+    and succesively for later arguments, by the use of the equivalent of
+    min(a,b) = (a < b) ? a : b.  If the ordering determined by < is total,
+    min(x_1, ...) will be the minimum value among the arguments.  For a
+    preorder relation it may be one of several minimal values.  For other
+    relations, it may be difficult to predict the result.
 
 EXAMPLE
     > print min(2), min(5, 3, 7, 2, 9), min(3.2, -0.5, 8.7, -1.2, 2.5)
     2 2 -1.2
 
+    > print min(list(3,5), 7, list(6, list(7,8), 2))
+    2
+
+    > print min("one", "two", "three", "four")
+    four
+
+    > obj point {x, y}
+    > define point_rel(a,b) = sgn(a.x - b.x)
+    > obj point A = {1, 5}
+    > obj point B = {1, 4}
+    > obj point C = {3, 3}
+    > print min(A, B, C)
+    obj point {1, 5}
+
+    > define point_min(a) = a.x
+    > print min(A, B, C)
+    1
+
 LIMITS
-    The number of arguments may not to exceed 100.
+    The number of arguments is not to exceed 100.
 
 LIBRARY
     NUMBER *qmin(NUMBER *x1, NUMBER *x2)
 
 SEE ALSO
-    max
+    max, obj

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1995 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
@@ -48,6 +48,7 @@
 # include <string.h>
 #endif
 
+extern FILE *curstream(void);
 
 #define	STDIN		0
 #define	SAVE_SIZE	256		/* size of save buffer */
@@ -1135,11 +1136,11 @@ static void
 list_history(void)
 {
 	HIST	*hp;
-	int	num;
+	int	hnum;
 
-	for (num = 0; num < HS.histcount; num++) {
-		hp = get_event(num);
-		printf("\n%3d: ", HS.histcount - num);
+	for (hnum = 0; hnum < HS.histcount; hnum++) {
+		hp = get_event(hnum);
+		printf("\n%3d: ", HS.histcount - hnum);
 		echo_string(hp->data, hp->len);
 	}
 	refresh_line();
@@ -1378,6 +1379,7 @@ quit_calc(void)
 {
 	hist_term();
 	putchar('\n');
+	libcalc_call_me_last();
 	exit(0);
 }
 

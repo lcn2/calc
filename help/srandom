@@ -1,0 +1,340 @@
+NAME
+    srandom - seed the Blum-Blum-Shub pseudo-random number generator
+
+SYNOPSIS
+    srandom([state])
+    srandom(seed)
+    srandom(seed, newn)
+    srandom(seed, ip, iq, trials)
+
+TYPES
+    state	random state
+    seed	integer
+    newn	integer
+    ip		integer
+    iq		integer
+    trails	integer
+
+    return	random state
+
+DESCRIPTION
+    Seed the pseudo-random number using the Blum-Blum-Shub generator.
+
+    There are two primary values contained inside generator state:
+
+	Blum modulus:
+
+		A product of two primes.  Each prime is 3 mod 4.
+
+	Quadratic residue:
+
+		Some integer squared modulo the Blum modulus.
+
+    Seeding the generator involves changing the Quadratic residue
+    and in most cases the Blum modulus as well.
+
+    In addition to the two primary values values, an internal buffer of
+    unused random output is kept.  When the generator is seeded, any
+    buffered random output is tossed.
+
+    In each of the following cases, srandom returns the previous state
+    of the generator.  Depending on what args are supplied, a new
+    generator state is established.  The exception is the no-arg state.
+
+    0 args:				srandom()
+
+	Returns the current generator state.  Unlike all of the other
+	srandom calls, this call does not modify the generator, nor
+	does it flush the internal bits.
+
+    1 arg (state arg):			srandom(state)
+
+	sets the generator to 'state', where 'state' is a previous
+	return of srandom().
+
+    1 arg (0 seed):			srandom(0)
+
+	Sets the generator to the initial startup state.  This a
+	call of srandom(0) will restore the generator to the state
+	found when calc starts.
+
+    1 arg (seed >= 2^32):		srandom(21609139158123209^9+17)
+
+	The seed value is used to compute the new quadratic residue.
+	The seed passed will be successively squared mod the Blum
+	modulus until we get a smaller value (modulus wrap).  The
+	calc script produces an equivalent effect:
+
+		/* assume n is the current Blum modulus */
+		r = seed;
+		do {
+			last_r = r;
+			r = pmod(r, 2, n);
+		} while (r > last_r);
+		/* r is the new Quadratic residue */
+
+	In this form of srandom, the Blum modulus is not changed.
+
+	NOTE: [1,2^32) seed values and seed<0 values
+	      are reserved for future use.
+
+    2 args (seed, newn>=2^32):		srandom(seed, newn)
+
+	The newn value is used as the new Blum modulus.  This modulus
+	is assumed to be a product of two primes that are both 3 mod
+	4.  The newn value is not factored, it is only checked to see
+	if it is 1 mod 4.
+
+	In this call form, newn value must be >= 2^32.
+
+	The seed arg is used to establish the initial quadratic value
+	once newn has been made the Blum moduli.  The seed must
+	be either 0 or >= 2^32.  If seed == 0, the initial quadratic
+	residue used with srandom(0) is used with the new Blum moduli.
+	If seed >= 2^32, then srandom(seed, newn) has the same effect as:
+
+		srandom(0, newn);    /* set Blum modulus & def quad res */
+		srandom(seed);	     /* set quadratic residue */
+
+	Use of newn values that are not the product of two 3 mod 4
+	primes will result in a non-cryptographically strong generator.
+	While the generator will produce values, their quality will
+	be suspect.
+
+	The period of the generator determines how many bits will
+	be produced before it repeats.  The period is determined
+	by the Blum modulus.  Some newn values (that are a product
+	of two 3 mod 4 primes) can produce a generator with a
+	very short period making is useless for most applications.
+
+	When Blum modulus is p*q, the period of a generator is:
+
+	    lcm(factors of p-1 and q-1)
+
+	One can construct a generator with a maximal period when 'p'
+	and 'q' have the fewest possible factors in common.  The
+	quickest way to select such primes is only use 'p' and 'q' when
+	'(p-1)/2' and '(q-1)/2' are both primes.  Assuming that
+	fp=(p-1)/2, fq=(q-1)/2, p and q are all primes 3 mod 4, the
+	period of the generator is the longest possible:
+
+	    lcm(factors of p-1 and q-1) == lcm(2,fp,2,fq) = 2*fp*fq = ~n/2
+
+	The following calc script:
+
+	    /* find first Blum prime: p */
+	    fp = int((ip-1)/2);
+	    do {
+		do {
+		    fp = nextcand(fp+2, 1, 0, 3, 4);
+		    p = 2*fp+1;
+		} while (ptest(p, 1, 0) == 0);
+	    } while (ptest(p, trials) == 0 || ptest(fp, trials));
+
+	    /* find second Blum prime: q */
+	    fq = int((iq-1)/2);
+	    do {
+		do {
+		    fq = nextcand(fq+2, 1, 0, 3, 4);
+		    q = 2*fq+1;
+		} while (ptest(q, 1, 0) == 0);
+	    } while (ptest(q, trials) == 0 || ptest(fq, trials));
+
+	    /* seed the generator */
+	    srandom(ir, p*q);
+
+	Where:
+	    ip
+		initial search location for the Blum prime 'p'
+	    iq
+		initial search location for the Blum prime 'q'
+	    ir
+		initial Blum quadratic residue generator.  The 'ir'
+		must be 0 or >= 2^32, preferably large some random
+		value < p*q.  The following may be useful to set ir:
+
+			srand(p+q);
+			ir = randbit(highbit(p)+highbit(q))
+	    trials
+		number of pseudo prime tests that a candidate must pass
+		before being considered a probable prime (must be >0, try 25)
+
+	The calc library script seedrandom.cal will produce a seed a
+	generator.  If the global value lib_debug is 0 or 1, then
+	the selected Blum modulus and quadratic residue will be printed.
+	If the global value is 1, then p and q are also printed.
+	The script defines the function:
+
+		seedrandom(seed1, seed2, size [, trials])
+
+	Where:
+	    seed1
+		A random number >= 10^20 and perhaps < 10^93.
+	    seed2
+		A random number >= 10^20 and perhaps < 10^93.
+	    size
+		Minimal Blum modulus size in bits,  This must be >= 32.
+		A value of 512 might be a good choice.
+	    trials
+		number of pseudo prime tests that a candidate must pass
+		before being considered a probable prime (must be >0, try 25).
+		Using the default value of 25 might be a good choice.
+
+	Unfortunately finding optimal values can be very slow for large
+	values of 'p' and 'q'.  On a 200Mhz r4k, it can take as long as
+	1 minute at 512 bits, and 5 minutes at 1024 bits.
+
+	For the sake of speed, you may want to use to use one of the
+	pre-compiled in Blum moduli via the [1
+	If you don't want to use a pre-compiled in Blum moduli you can
+	compute your own values ahead of time.  This can be done by a
+	method of your own choosing, or by using the seedrandom.cal
+	script in the following way:
+
+	    1) calc			# run calc
+	    2) read seedrandom		# load seedrandom
+	    3) lib_debug=0		# we want the modulus and quad res only
+	    4) seedrandom( ~pound out 20-93 random digits on the keyboard~,
+			   ~pound out 20-93 random digits on the keyboard~,
+			   512 )
+	    5) save the seed and newn values for later use
+
+	NOTE: [1,2^32) seed values, seed<0 values, [21,2^32) newn values
+	      and newn<=0 values are reserved for future use.
+
+    2 args (seed, 1>=newn>=20):		srandom(seed, newn)
+
+	The newn is used to select one of 20 pre-computed Blum moduli.
+
+	The seed arg is used to establish the initial quadratic value
+	once newn has been made the Blum moduli.  The seed must be
+	either 0 or >= 2^32.  If seed == 0, the pre-compiled quadratic
+	residue for the given newn is selected.  If seed >= 2^32, then
+	srandom(seed, newn) has the same effect as:
+
+		srandom(0, newn);    /* set Blum modulus & def quad res */
+		srandom(seed);	     /* set quadratic residue */
+
+	Note that unlike the newn>=2^32 case, a seed if 0 uses the
+	pre-compiled quadratic residue for the selected pre-compiled
+	Blum moduli.
+
+	The pre-defined Blum moduli and quadratic residues were selected
+	by lavarand, a hardware random number generator.  See the URL:
+
+	    http://lavarand.sgi.com
+	    XXX - This URL is not available on 17Feb97 ... but will be soon.
+
+	for an explanation of how the lavarand random number generator works.
+	For more information, see the comments at the top of the calc
+	source file, zrandom.c.
+
+	The purpose of these pre-defined Blum moduli is to provide users with
+	an easy way to use a generator where the individual Blum primes used
+	are not well known.  True, these values are in some way "MAGIC", on
+	the other hand that is their purpose!  If this bothers you, don't
+	use them.
+
+	The value 'newn' determines which pre-defined generator is used.
+
+	    newn ==  1: (Blum modulus bit length 130)
+	    newn ==  2: (Blum modulus bit length 137)
+	    newn ==  3: (Blum modulus bit length 147)
+	    newn ==  4: (Blum modulus bit length 157)
+	    newn ==  5: (Blum modulus bit length 257)
+	    newn ==  6: (Blum modulus bit length 259)
+	    newn ==  7: (Blum modulus bit length 286)
+	    newn ==  8: (Blum modulus bit length 294)
+	    newn ==  9: (Blum modulus bit length 533)
+	    newn == 10: (Blum modulus bit length 537)
+	    newn == 11: (Blum modulus bit length 542)
+	    newn == 12: (Blum modulus bit length 549)
+	    newn == 13: (Blum modulus bit length 1048)
+	    newn == 14: (Blum modulus bit length 1054)
+	    newn == 15: (Blum modulus bit length 1055)
+	    newn == 16: (Blum modulus bit length 1062)
+	    newn == 17: (Blum modulus bit length 2062)
+	    newn == 18: (Blum modulus bit length 2074)
+	    newn == 19: (Blum modulus bit length 2133)
+	    newn == 20: (Blum modulus bit length 2166)
+
+	See the comments near the top of the source file, zrandom.c, for the
+	actual pre-compiled values.
+
+	The Blum moduli associated with 1 <= newn < 9 are subject
+	to having their Blum moduli factored, depending in their size,
+	by small PCs in a reasonable to large supercomputers/highly
+	parallel processors over a long time.  Their value lies in their
+	speed relative the the default Blum generator.  As of Feb 1997,
+	the Blum moduli associated with 13 <= newn < 20 appear to
+	be well beyond the scope of hardware and algorithms,
+	and 9 <= newn < 12 might be factorable with extreme difficulty.
+
+	The following table may be useful as a guide for how easy it
+	is to factor the modulus:
+
+	     1 <= newn <= 4   PC using ECM in a short amount of time
+	     5 <= newn <= 8   Workstation using MPQS in a short amount of time
+	     8 <= newn <= 12  High end supercomputer or high parallel processor
+			      using state of the art factoring over a long time
+	    12 <= newn <= 16  Beyond Feb 1997 systems and factoring methods
+	    17 <= newn <= 20  Well beyond Feb 1997 systems and factoring methods
+
+	In other words, use of newn == 9, 10, 11 and 12 is likely to
+	work just fine for all but the truly paranoid.
+
+	NOTE: [1,2^32) seed values, seed<0 values, [21,2^32) newn values
+	      and newn<=0 values are reserved for future use.
+
+    4 args (seed, ip>=2^16, iq>=2^16, trials):	srandom(seed, ip, iq, 25)
+
+	The 'ip' and 'iq' args are used to find simples prime 3 mod 4
+
+	The call srandom(seed, ip, iq, trials) has the same effect as:
+
+	    srandom(seed,
+		    nextcand(ip, trials,0, 3,4)*nextcand(iq, trials,0, 3,4));
+
+	Note that while the newn is very likely to be a product of
+	two primes both 3 mod 4, there is no guarantee that the period
+	of the generator will be long.  The likelihood is that the
+	period will be long, however.  See one of the 2 arg srandom
+	calls above for more information on this issue.
+
+	NOTE: [1,2^32) seed values, seed<0 values, [21,2^32) newn values,
+	      newn<=0 values, ip<2^16 and iq<2^16 are reserved for future use.
+
+    See the random help file for details on the generator.
+
+EXAMPLE
+    > srandom(0x8d2dcb2bed3212844f4ad31)
+	    RANDOM state
+    > state = srandom();
+    > print random(123), random(123), random(123), random(123), random(123)
+    42 58 57 82 15
+    > print random(123), random(123), random(123), random(123), random(123)
+    90 121 109 114 80
+    > state2 = srandom(state);
+    > print random(123), random(123), random(123), random(123), random(123)
+    42 58 57 82 15
+    > print random(123), random(123), random(123), random(123), random(123)
+    90 121 109 114 80
+    > state3 = srandom();
+    > print state3 == state2;
+    1
+    > print random();
+    2101582493746841221
+
+LIMITS
+    integer seed == 0 or >= 2^32
+    for newn >= 2^32: newn % 4 == 1
+    for small newn: 1 <= newn <= 20
+    ip >= 2^16
+    iq >= 2^16
+
+LIBRARY
+    RAND *zsrandom(ZVALUE *pseed, MATRIX *pmat55)
+    RAND *zsetrandom(RAND *state)
+
+SEE ALSO
+    srand, randbit, isrand, random, srandom, israndom

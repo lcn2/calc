@@ -120,16 +120,22 @@ E_UNGETC1	Non-file argument for ungetc
 E_UNGETC2	File not open for reading for ungetc
 E_UNGETC3	Bad second argument or other error for ungetc
 E_BIGEXP	Exponent too big in scanning
-E_ISATTY1	Non-file argument for isatty
-E_ISATTY2	File not open for isatty
+E_ISATTY1	E_ISATTY1 is no longer used
+E_ISATTY2	E_ISATTY2 is no longer used
 E_ACCESS1	Non-string first argument for access
 E_ACCESS2	Bad second argument for access
 E_SEARCH1	Bad first argument for search
 E_SEARCH2	Bad second argument for search
 E_SEARCH3	Bad third argument for search
+E_SEARCH4	Bad fourth argument for search
+E_SEARCH5	Cannot find fsize or fpos for search
+E_SEARCH6	File not readable for search
 E_RSEARCH1	Bad first argument for rsearch
 E_RSEARCH2	Bad second argument for rsearch
 E_RSEARCH3	Bad third argument for rsearch
+E_RSEARCH4	Bad fourth argument for rsearch
+E_RSEARCH5	Cannot find fsize or fpos for rsearch
+E_RSEARCH6	File not readable for rsearch
 E_FOPEN3	Too many open files
 E_REWIND2	Attempt to rewind a file that is not open
 E_STRERROR1	Bad argument type for strerror
@@ -148,7 +154,7 @@ E_MATFILL1	Non-variable first argument for matfill
 E_MATFILL2	Non-matrix first argument-value for matfill
 E_MATDIM	Non-matrix argument for matdim
 E_MATSUM	Non-matrix argument for matsum
-E_ISIDENT	Non-matrix argument for isident
+E_ISIDENT	E_ISIDENT is no longer used
 E_MATTRANS1	Non-matrix argument for mattrans
 E_MATTRANS2	Non-two-dimensional matrix for mattrans
 E_DET1		Non-matrix argument for det
@@ -191,3 +197,142 @@ E_RM2		Unable to remove a file
 E_RDPERM	Operation allowed because calc mode disallows read operations
 E_WRPERM	Operation allowed because calc mode disallows write operations
 E_EXPERM	Operation allowed because calc mode disallows exec operations
+E_MIN		Unordered arguments for min
+E_MAX		Unordered arguments for max
+E_LISTMIN	Unordered items for minimum of list
+E_LISTMAX	Unordered items for maximum of list
+E_SIZE		Size undefined for argument type
+E_NO_C_ARG	Calc must be run with a -C argument to use custom function
+E_NO_CUSTOM	Calc was built with custom functions disabled
+E_UNK_CUSTOM	Custom function unknown, try: show custom
+E_BLK1		Non-integral length for block
+E_BLK2		Negative or too-large length for block
+E_BLK3		Non-integral chunksize for block
+E_BLK4		Negative or too-large chunksize for block
+E_BLKFREE1	Named block does not exist for blkfree
+E_BLKFREE2	Non-integral id specification for blkfree
+E_BLKFREE3	Block with specified id does not exist
+E_BLKFREE4	Block already freed
+E_BLKFREE5	No-realloc protection prevents blkfree
+E_BLOCKS1	Non-integer argument for blocks
+E_BLOCKS2	Non-allocated index number for blocks
+E_COPY1		Non-integer or negative source index for copy
+E_COPY2		Source index too large for copy
+E_COPY3		E_COPY3 is no longer used
+E_COPY4		Non-integer or negative number for copy
+E_COPY5		Number too large for copy
+E_COPY6		Non-integer or negative destination index for copy
+E_COPY7		Destination index too large for copy
+E_COPY8		Freed block source for copy
+E_COPY9		Unsuitable source type for copy
+E_COPY10	Freed block destinction for copy
+E_COPY11	Unsuitable destination type for copy
+E_COPY12	Incompatible source and destination for copy
+E_COPY13	No-copy-from source variable
+E_COPY14	No-copy-to destination variable
+E_COPY15	No-copy-from source named block
+E_COPY16	No-copy-to destination named block
+E_COPY17	No-relocation destination for copy
+E_COPYF1	File not open for copy
+E_COPYF2	fseek or fsize failure for copy
+E_COPYF3	fwrite error for copy
+E_COPYF4	fread error for copy
+E_PROTECT1	Non-variable first argument for protect
+E_PROTECT2	Non-integer second argument for protect
+E_PROTECT3	Out-of-range second argument for protect
+E_MATFILL3	No-copy-to destination for matfill
+E_MATFILL4	No-assign-from source for matfill
+E_MATTRACE1	Non-matrix argument for mattrace
+E_MATTRACE2	Non-two-dimensional argument for mattrace
+E_MATTRACE3	Non-square argument for mattrace
+E_TAN1		Bad epsilon for tan
+E_TAN2		Bad argument for tan
+E_COT1		Bad epsilon for cot
+E_COT2		Bad argument for cot
+E_SEC1		Bad epsilon for sec
+E_SEC2		Bad argument for sec
+E_CSC1		Bad epsilon for csc
+E_CSC2		Bad argument for csc
+E_SINH1		Bad epsilon for sinh
+E_SINH2		Bad argument for sinh
+E_COSH1		Bad epsilon for cosh
+E_COSH2		Bad argument for cosh
+E_TANH1		Bad epsilon for tanh
+E_TANH2		Bad argument for tanh
+E_COTH1		Bad epsilon for coth
+E_COTH2		Bad argument for coth
+E_SECH1		Bad epsilon for sech
+E_SECH2		Bad argument for sech
+E_CSCH1		Bad epsilon for csch
+E_CSCH2		Bad argument for csch
+E_ASIN1		Bad epsilon for asin
+E_ASIN2		Bad argument for asin
+E_ACOS1		Bad epsilon for acos
+E_ACOS2		Bad argument for acos
+E_ATAN1		Bad epsilon for atan
+E_ATAN2		Bad argument for atan
+E_ACOT1		Bad epsilon for acot
+E_ACOT2		Bad argument for acot
+E_ASEC1		Bad epsilon for asec
+E_ASEC2		Bad argument for asec
+E_ACSC1		Bad epsilon for acsc
+E_ACSC2		Bad argument for acsc
+E_ASINH1	Bad epsilon for asin
+E_ASINH2	Bad argument for asinh
+E_ACOSH1	Bad epsilon for acosh
+E_ACOSH2	Bad argument for acosh
+E_ATANH1	Bad epsilon for atanh
+E_ATANH2	Bad argument for atanh
+E_ACOTH1	Bad epsilon for acoth
+E_ACOTH2	Bad argument for acoth
+E_ASECH1	Bad epsilon for asech
+E_ASECH2	Bad argument for asech
+E_ACSCH1	Bad epsilon for acsch
+E_ACSCH2	Bad argument for acsch
+E_GD1		Bad epsilon for gd
+E_GD2		Bad argument for gd
+E_AGD1		Bad epsilon for agd
+E_AGD2		Bad argument for agd
+E_LOGINF	Log of zero or infinity
+E_STRADD	String addition failure
+E_STRMUL	String multiplication failure
+E_STRNEG	String reversal failure
+E_STRSUB	String subtraction failure
+E_BIT1		Bad argument type for bit
+E_BIT2		Index too large for bit
+E_SETBIT1	Non-integer second argument for setbit
+E_SETBIT2	Out-of-range index for setbit
+E_SETBIT3	Non-string first argument for setbit
+E_OR		Bad argument for or
+E_AND		Bad argument for and
+E_STROR		Allocation failure for string or
+E_STRAND	Allocation failure for string and
+E_XOR		Bad argument for xorvalue
+E_COMP		Bad argument for comp
+E_STRDIFF	Allocation failure for string diff
+E_STRCOMP	Allocation failure for string comp
+E_SEG1		Bad first argument for segment
+E_SEG2		Bad second argument for segment
+E_SEG3		Bad third argument for segment
+E_STRSEG	Failure for string segment
+E_HIGHBIT1	Bad argument type for highbit
+E_HIGHBIT2	Non-integer argument for highbit
+E_LOWBIT1	Bad argument type for lowbit
+E_LOWBIT2	Non-integer argument for lowbit
+E_CONTENT	Bad argument type for unary hash op
+E_HASHOP	Bad argument type for binary hash op
+E_HEAD1		Bad first argument for head
+E_HEAD2		Bad second argument for head
+E_STRHEAD	Failure for strhead
+E_TAIL1		Bad first argument for tail
+E_TAIL2		Bad second argument for tail
+E_STRTAIL	Failure for strtail
+E_STRSHIFT	Failure for strshift
+E_STRCMP	Non-string argument for strcmp
+E_STRNCMP	Bad argument type for strncmp
+E_XOR1		Varying types of argument for xor
+E_XOR2		Bad argument type for xor
+E_STRCPY	Bad argument type for strcpy
+E_STRNCPY	Bad argument type for strncpy
+E_BACKSLASH	Bad argument type for unary backslash
+E_SETMINUS	Bad argument type for setminus

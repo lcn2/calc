@@ -5,7 +5,7 @@ SYNOPSIS
     dp(x, y)
 
 TYPES
-    x, y	1-dimensional matrices with the same number of elements
+    x, y	1-dimensional matrices of the same size
 
     return	depends on the nature of the elements of x and y
 
@@ -23,13 +23,12 @@ DESCRIPTION
 
 EXAMPLE
     > mat x[3] = {2,3,4}
-    > mat y[3] = {3,4,5}
+    > mat y[1:3] = {3,4,5}
     > print dp(x,y)
     38
 
 LIMITS
-    x and y are 1-dimensional matrices
-    x and y have the same number of elements
+    none
 
 LIBRARY
     VALUE matdot(MATRIX *x, MATRIX *y)

@@ -13,8 +13,11 @@ DESCRIPTION
     this function will return an empty string.
 
 EXAMPLE
-    > cmdbuf("")
-	    ""
+    % calc "print cmdbuf(); a = 3; print a^2;"
+    print cmdbuf(); a = 3; print a^2;
+
+    9
+    %
 
 LIMITS
     none

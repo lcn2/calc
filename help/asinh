@@ -14,16 +14,16 @@ DESCRIPTION
     Returns the asinh of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    asinh(x) = ln(x + sqrt(1 + x^2)) is the real number v for which
-    sinh(v) = x.
+    asinh(x) is the real number v for which sinh(v) = x.  It is given by
+
+    		asinh(x) = ln(x + sqrt(1 + x^2))
 
 EXAMPLE
     > print asinh(2, 1e-5), asinh(2, 1e-10), asinh(2, 1e-15), asinh(2, 1e-20)
     1.44363 1.4436354752 1.44363547517881 1.44363547517881034249
 
 LIMITS
-    unlike sin and cos, x must be real
-    eps > 0
+    none
 
 LIBRARY
     NUMBER *qasinh(NUMBER *x, NUMBER *eps)

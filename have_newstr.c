@@ -39,6 +39,8 @@
  * chongo was here	/\../\
  */
 
+#include <stdio.h>
+
 #define MOVELEN 3
 
 char src[] = "chongo was here";

@@ -1,0 +1,45 @@
+NAME
+    freestatics - free memory used for static variables
+
+SYNOPSIS
+    freestatics()
+
+TYPES
+
+    return	null value
+
+DESCRIPTION
+    This function frees the memory used for the values of all unscoped
+    static variables by in effect assigning null values to them.  As this
+    will usually have significant effects of any functions in whose
+    definitions these variables have been used, it is primarily intended
+    for use when these functions are being undefined or redefined..
+
+EXAMPLE
+    > static a = 5
+    > define f(x) = a++ * x;
+    f() defined
+    > global a
+    > f(1)
+	    5
+    > show statics
+
+    Name    Scopes    Type
+    ----    ------    -----
+    a         1  0    real = 6
+
+    Number: 1
+    > freestatics()
+    > f(1)
+	    Error 10005
+    > strerror(.)
+	    "Bad arguments for *"
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    free, freeglobals, freeredc

@@ -40,6 +40,8 @@
  * chongo was here	/\../\
  */
 
+#include <stdio.h>
+
 MAIN
 main(void)
 {

@@ -492,8 +492,7 @@ define test2600(verbose, tnum)
 	return tnum;
 }
 
-global lib_debug;
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
 	print "global defaultverbose defined";
 	print "global err defined";
 	print "testismult(str,n,verbose) defined";

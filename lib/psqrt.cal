@@ -50,7 +50,6 @@ define psqrt(u, p)
 }
 
 
-global lib_debug;
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
     print "psqrt(u, p) defined";
 }

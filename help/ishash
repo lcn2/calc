@@ -5,18 +5,22 @@ SYNOPSIS
     ishash(x)
 
 TYPES
-    x		any, &any
+    x		any
 
-    return	int
+    return	integer
 
 DESCRIPTION
-    Determine if x is a hash state.  This function will return 1 if x is
-    a file, 0 otherwise.
+    The value returned by ishash(x) is:
+
+	0 if x is not a hash state,
+	1 if x is a sha hash state,
+	2 if x is a sha1 hash state,
+	3 if x is a md5 hash state.
 
 EXAMPLE
-    > a = shs(0)
-    > print ishash(a), ishash(0);
-    1 0
+    > a = shs(0), b = shs1(0), c = md5(0)
+    > print ishash(0), ishash(a), ishash(b), ishash(c);
+    0 1 2 3
 
 LIMITS
     none
@@ -25,4 +29,8 @@ LIBRARY
     none
 
 SEE ALSO
-    XXX - fill in
+    sha, sha1, md5,
+    isassoc, isatty, isblk, isconfig, isdefined, iserror, iseven, isfile,
+    isident, isint, islist, ismat, ismult, isnull, isnum, isobj,
+    isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
+    issimple, issq, isstr, istype

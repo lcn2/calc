@@ -24,11 +24,11 @@ EXAMPLE
     > .000001 1.414214 .000001 1.4142 .0001
 
 LIMITS
-    0 < eps < 1
+    none
 
 LIBRARY
     void setepsilon(NUMBER *eps)
     NUMBER *_epsilon_
 
 SEE ALSO
-    XXX - fill in
+    config

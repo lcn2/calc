@@ -10,3 +10,7 @@
  */
 
 ++value;
+
+if (config("lib_debug") >= 0) {
+    /* nothing to do */
+}

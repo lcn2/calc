@@ -11,9 +11,9 @@
 
 HALF _qlgenum_[] = { 36744 };
 HALF _qlgeden_[] = { 25469 };
-NUMBER _qlge_ = { { _qlgenum_, 1, 0 }, { _qlgeden_, 1, 0 }, 1 };
+NUMBER _qlge_ = { { _qlgenum_, 1, 0 }, { _qlgeden_, 1, 0 }, 1, NULL };
 
-NUMBER *qmappr(NUMBER *q, NUMBER *e, long R);
+static NUMBER *pivalue[2];
 static NUMBER *qexprel(NUMBER *q, long bitnum);
 
 /*
@@ -27,7 +27,7 @@ qsincos(NUMBER *q, long bitnum, NUMBER **vs, NUMBER **vc)
 	NUMBER *qtmp1, *qtmp2;
 	ZVALUE X, cossum, sinsum, mul, ztmp1, ztmp2, ztmp3;
 
-	qtmp1 = qabs(q);
+	qtmp1 = qqabs(q);
 	h = qilog2(qtmp1);
 	qfree(qtmp1);
 	k = bitnum + h + 1;
@@ -214,7 +214,7 @@ qtan(NUMBER *q, NUMBER *epsilon)
 		qfree(cos);
 		k = m + 1;
 	}
-	tan = qdiv(sin, cos);
+	tan = qqdiv(sin, cos);
 	qfree(sin);
 	qfree(cos);
 	res = qmappr(tan, epsilon, 24);
@@ -260,7 +260,7 @@ qcot(NUMBER *q, NUMBER *epsilon)
 		qfree(cos);
 		k = m + 1;
 	}
-	cot = qdiv(cos, sin);
+	cot = qqdiv(cos, sin);
 	qfree(sin);
 	qfree(cos);
 	res = qmappr(cot, epsilon, 24);
@@ -362,7 +362,6 @@ qasin(NUMBER *q, NUMBER *epsilon)
 	BOOL neg;
 	FLAG r;
 
-
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for asin");
 		/*NOTREACHED*/
@@ -373,10 +372,8 @@ qasin(NUMBER *q, NUMBER *epsilon)
 	neg = ztmp.sign;
 	ztmp.sign = 0;
 	r = zrel(ztmp, q->den);
-	if (r > 0) {
-		math_error("Argument out of range for asin");
-		/*NOTREACHED*/
-	}
+	if (r > 0)
+		return NULL;
 	if (r == 0) {
 		epsilon1 = qscale(epsilon, 1L);
 		qtmp2 = qpi(epsilon1);
@@ -426,10 +423,8 @@ qacos(NUMBER *q, NUMBER *epsilon)
 
 	z = q->num;
 	z.sign = 0;
-	if (zrel(z, q->den) > 0) {
-		math_error("Argument out of range for acos");
-		/*NOTREACHED*/
-	}
+	if (zrel(z, q->den) > 0)
+		return NULL;
 	epsilon1 = qscale(epsilon, -3L);		/* ??? */
 	q1 = qalloc();
 	zsub(q->den, q->num, &q1->num);
@@ -641,7 +636,7 @@ qatan2(NUMBER *qy, NUMBER *qx, NUMBER *epsilon)
 	if (!qisneg(qx) && !qiszero(qx)) {
 		if (qiszero(qy))
 			return qlink(&_qzero_);
-		tmp1 = qdiv(qy, qx);
+		tmp1 = qqdiv(qy, qx);
 		tmp2 = qatan(tmp1, epsilon);
 		qfree(tmp1);
 		return tmp2;
@@ -652,7 +647,7 @@ qatan2(NUMBER *qy, NUMBER *qx, NUMBER *epsilon)
 	 *	atan2(y,x) = 2 * atan(sgn(y) * sqrt((x/y)^2 + 1) - x/y).
 	 */
 	epsilon2 = qscale(epsilon, -4L);
-	tmp1 = qdiv(qx, qy);
+	tmp1 = qqdiv(qx, qy);
 	tmp2 = qsquare(tmp1);
 	tmp3 = qqadd(tmp2, &_qone_);
 	qfree(tmp2);
@@ -699,6 +694,12 @@ qpi(NUMBER *epsilon)
 		math_error("zero epsilon value for pi");
 		/*NOTREACHED*/
 	}
+	if (epsilon == pivalue[0])
+		return qlink(pivalue[1]);
+	if (pivalue[0]) {
+		qfree(pivalue[0]);
+		qfree(pivalue[1]);
+	}
 	bits = -qilog2(epsilon) + 4;
 	if (bits < 4)
 		bits = 4;
@@ -731,6 +732,8 @@ qpi(NUMBER *epsilon)
 	zfree(sum);
 	r = qmappr(t1, epsilon, 24L);
 	qfree(t1);
+	pivalue[0] = qlink(epsilon);
+	pivalue[1] = qlink(r);
 	return r;
 }
 
@@ -757,7 +760,7 @@ qexp(NUMBER *q, NUMBER *epsilon)
 	n = qilog2(epsilon);	/* 2^n <= epsilon < 2^(n+1) */
 	if (m < n)
 		return qlink(&_qzero_);
-	tmp1 = qabs(q);
+	tmp1 = qqabs(q);
 	tmp2 = qexprel(tmp1, m - n + 2);
 	qfree(tmp1);
 	if (qisneg(q)) {
@@ -874,7 +877,7 @@ qln(NUMBER *q, NUMBER *epsilon)
 	}
 	if (qisunit(q))
 		return qlink(&_qzero_);
-	q = qabs(q);			/* Ignore sign of q */
+	q = qqabs(q);			/* Ignore sign of q */
 	neg = (zrel(q->num, q->den) < 0);
 	if (neg) {
 		qtmp = qinv(q);
@@ -984,10 +987,7 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 		/*NOTREACHED*/
 	}
 	if (qiszero(q2) || qisone(q1)) {
-		tmp1 = qlink(&_qone_);
-		tmp2 = qmappr(tmp1, epsilon, 24L);
-		qfree(tmp1);
-		return tmp2;
+		return qmappr(&_qone_, epsilon, 24L);
 	}
 	if (qiszero(q1))
 		return qlink(&_qzero_);
@@ -1023,7 +1023,7 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 		}
 		else {
 			tmp1 = qdec(q1tmp);
-			tmp2 = qdiv(tmp1, q1tmp);
+			tmp2 = qqdiv(tmp1, q1tmp);
 			qfree(tmp1);
 			tmp1 = qmul(tmp2, q2tmp);
 			qfree(tmp2);
@@ -1053,9 +1053,9 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 		qfree(q2tmp);
 		return qlink(&_qzero_);
 	}
-	tmp1 = qdiv(epsilon, q2tmp);
+	tmp1 = qqdiv(epsilon, q2tmp);
 	tmp2 = qscale(tmp1, -m - 4);
-	epsilon2 = qabs(tmp2);
+	epsilon2 = qqabs(tmp2);
 	qfree(tmp1);
 	qfree(tmp2);
 	tmp1 = qln(q1tmp, epsilon2);
@@ -1107,7 +1107,7 @@ qroot(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 			math_error("Taking even root of negative number");
 			/*NOTREACHED*/
 		}
-		q1 = qabs(q1);
+		q1 = qqabs(q1);
 	}
 	tmp2 = qinv(q2);
 	tmp1 = qpower(q1, tmp2, epsilon);
@@ -1131,7 +1131,7 @@ qcosh(NUMBER *q, NUMBER *epsilon)
 	NUMBER *tmp1, *tmp2, *tmp3, *epsilon1;
 
 	epsilon1 = qscale(epsilon, -2);
-	tmp1 = qabs(q);
+	tmp1 = qqabs(q);
 	tmp2 = qexp(tmp1, epsilon1);
 	qfree(tmp1);
 	qfree(epsilon1);
@@ -1160,7 +1160,7 @@ qsinh(NUMBER *q, NUMBER *epsilon)
 	if (qiszero(q))
 		return qlink(&_qzero_);
 	epsilon1 = qscale(epsilon, -3);
-	tmp1 = qabs(q);
+	tmp1 = qqabs(q);
 	tmp2 = qexp(tmp1, epsilon1);
 	qfree(tmp1);
 	qfree(epsilon1);
@@ -1191,7 +1191,7 @@ qtanh(NUMBER *q, NUMBER *epsilon)
 	n = qilog2(epsilon);
 	if (n > 0 || qiszero(q))
 		return qlink(&_qzero_);
-	tmp1 = qabs(q);
+	tmp1 = qqabs(q);
 	tmp2 = qscale(tmp1, 1);
 	qfree(tmp1);
 	tmp1 = qexprel(tmp2, 2 - n);
@@ -1199,7 +1199,7 @@ qtanh(NUMBER *q, NUMBER *epsilon)
 	tmp2 = qdec(tmp1);
 	tmp3 = qinc(tmp1);
 	qfree(tmp1);
-	tmp1 = qdiv(tmp2, tmp3);
+	tmp1 = qqdiv(tmp2, tmp3);
 	qfree(tmp2);
 	qfree(tmp3);
 	tmp2 = qmappr(tmp1, epsilon, 24L);
@@ -1232,20 +1232,21 @@ qcoth(NUMBER *q, NUMBER *epsilon)
 		/*NOTREACHED*/
 	}
 	tmp1 = qscale(q, 1);
-	tmp2 = qabs(tmp1);
+	tmp2 = qqabs(tmp1);
 	qfree(tmp1);
-	k = -qilog2(tmp2);
-	if (k < 0) {
+	k = qilog2(tmp2);
+	n = qilog2(epsilon);
+	if (k > 0) {
 		tmp1 = qmul(&_qlge_, tmp2);
-		k = -qtoi(tmp1);
+		k = qtoi(tmp1);
 		qfree(tmp1);
 	}
-	n = qilog2(epsilon);
-	if (k + n > 1) {
-		qfree(tmp2);
-		return qlink(&_qzero_);
-	}
-	tmp1 = qexprel(tmp2, 4 - k - n);
+	else
+		k = 2 * k;
+	k = 4 - k - n;
+	if (k < 4)
+		k = 4;
+	tmp1 = qexprel(tmp2,  k);
 	qfree(tmp2);
 	tmp2 = qdec(tmp1);
 	qfree(tmp1);
@@ -1283,7 +1284,7 @@ qsech(NUMBER *q, NUMBER *epsilon)
 	if (qiszero(q))
 		return qmappr(&_qone_, epsilon, 24L);
 
-	tmp1 = qabs(q);
+	tmp1 = qqabs(q);
 	k = 0;
 	if (zrel(tmp1->num, tmp1->den) >= 0) {
 		tmp2 = qmul(&_qlge_, tmp1);
@@ -1327,7 +1328,7 @@ qcsch(NUMBER *q, NUMBER *epsilon)
 	}
 
 	n = qilog2(epsilon);
-	tmp1 = qabs(q);
+	tmp1 = qqabs(q);
 	if (zrel(tmp1->num, tmp1->den) >= 0) {
 		tmp2 = qmul(&_qlge_, tmp1);
 		k = qtoi(tmp2);
@@ -1375,10 +1376,8 @@ qacosh(NUMBER *q, NUMBER *epsilon)
 	}
 	if (qisone(q))
 		return qlink(&_qzero_);
-	if (zrel(q->num, q->den) < 0) {
-		math_error("Argument less than one for acosh");
-		/*NOTREACHED*/
-	}
+	if (zrel(q->num, q->den) < 0)
+		return NULL;
 	n = qilog2(epsilon);
 	epsilon1 = qbitvalue(n - 3);
 	tmp1 = qsquare(q);
@@ -1416,7 +1415,7 @@ qasinh(NUMBER *q, NUMBER *epsilon)
 	if (qiszero(q))
 		return qlink(&_qzero_);
 	neg = qisneg(q);
-	q = qabs(q);
+	q = qqabs(q);
 	n = qilog2(epsilon);
 	epsilon1 = qbitvalue(n - 3);
 	tmp1 = qsquare(q);
@@ -1459,13 +1458,11 @@ qatanh(NUMBER *q, NUMBER *epsilon)
 		return qlink(&_qzero_);
 	z = q->num;
 	z.sign = 0;
-	if (zrel(z, q->den) >= 0) {
-		math_error("Argument not between -1 and 1 for atanh");
-		/*NOTREACHED*/
-	}
+	if (zrel(z, q->den) >= 0)
+		return NULL;
 	tmp1 = qinc(q);
 	tmp2 = qsub(&_qone_, q);
-	tmp3 = qdiv(tmp1, tmp2);
+	tmp3 = qqdiv(tmp1, tmp2);
 	qfree(tmp1);
 	qfree(tmp2);
 	epsilon1 = qscale(epsilon, 1L);

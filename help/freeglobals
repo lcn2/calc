@@ -1,0 +1,47 @@
+NAME
+    freeglobals - free memory used for values of global variabls
+
+SYNOPSIS
+    freeglobals()
+
+TYPES
+    return	null value
+
+DESCRIPTION
+    This function frees the memory used for the values of all global
+    and not unscoped static variables by assigning null values.
+    The oldvalue (.) is not freed by this function.
+
+EXAMPLE
+    > global a = 1, b = list(2,3,4), c = mat[3]
+    > static a = 2
+    > show globals
+
+    Name    Level    Type
+    ----    -----    -----
+    a          1     real = 2
+    a          0     real = 1
+    b          0     list
+    c          0     matrix
+
+    Number: 4
+    > freeglobals()
+    > show globals
+
+    Name    Level    Type
+    ----    -----    -----
+    a          1     null
+    a          0     null
+    b          0     null
+    c          0     null
+
+    Number: 4
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    free, freestatics, freeredc

@@ -473,9 +473,7 @@ define test4100(v, tnum)
 	return tnum;
 }
 
-global lib_debug;
-
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
 	print "global defaultverbose";
 	print "global err";
 	print "global K1";

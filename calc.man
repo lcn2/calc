@@ -317,7 +317,7 @@ A :-separated list of directories used to search for
 scripts filenames that do not begin with /, ./ or ~.
 .br
 .sp
-Default value: .:./lib:~/lib:${LIBDIR}
+Default value: ${CALCPATH}
 .br
 .sp
 .TP 5
@@ -327,7 +327,7 @@ line), calc searches for files along this :-separated
 environment variable.
 .br
 .sp
-Default value: ${LIBDIR}/startup:~/.calcrc
+Default value: ${CALCRC}
 .br
 .sp
 .TP 5
@@ -338,7 +338,7 @@ key bindings from the filename specified
 by this environment variable.
 .br
 .sp
-Default value: ${LIBDIR}/bindings
+Default value: ${CALCBINDINGS}
 .sp
 .SH CREDIT
 \&

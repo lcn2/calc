@@ -1,0 +1,242 @@
+Unexpected
+
+    While calc is C-like, users of C will find some unexpected
+    surprises in calc syntax and usage.  Persons familiar with C should
+    review this file.
+
+
+    The Comma
+    =========
+
+    The comma is also used for continuation of obj and mat creation
+    expressions and for separation of expressions to be used for
+    arguments or values in function calls or initialization lists.  The
+    precedence order of these different uses is:  continuation,
+    separator, comma operator.  For example, assuming the variables a,
+    b, c, d, e, and object type xx have been defined, the arguments
+    passed to f in:
+
+	    f(a, b, c, obj xx d, e)
+
+    are a, b, c, and e, with e having the value of a newly created xx
+    object.  In:
+
+	    f((a, b), c, (obj xx d), e)
+
+    the arguments of f are b, c, d, e, with only d being a newly
+    created xx object.
+
+    In combination with other operators, the continuation use of the
+    comma has the same precedence as [] and ., the separator use the
+    same as the comma operator.  For example, assuming xx.mul() has
+    been defined:
+
+	    f(a = b, obj xx c, d = {1,2} * obj xx e = {3,4})
+
+    passes two arguments: a (with value b) and the product d * e of two
+    initialized xx objects.
+
+
+    ^ is not xor
+    ============
+
+    In C, ^ is the xor operator.  Like the '**', '^' is the
+    exponentiation operator.  The expression:
+
+	    a^b
+
+    yields "a to the b power", NOT "a xor b".
+
+    Note that 'b' must be an integer.  Also if 'a' == 0, 'b'
+    must be >= 0 as well.
+
+    To raise to a non-integer power, use the power() builtin function.
+
+
+    ** is exponentiation
+    ====================
+
+    As was suggested in the '^ is not xor' section, the expression:
+
+	    a**b
+
+    yields "a to the b power", NOT "a xor b".
+
+    Note that 'b' must be an integer.  Also if 'a' == 0, 'b'
+    must be >= 0 as well.
+
+    To raise to a non-integer power, use the power() builtin function.
+
+
+    op= operators associate left to right
+    =====================================
+
+    Operator-with-assignments:
+
+	    +=  -=  *=  /=  %=  //=  &=  |=  <<=  >>=  ^=  **=
+
+    associate from left to right instead of right to left as in C.
+    For example:
+
+	    a += b *= c
+
+    has the effect of:
+
+	    a = (a + b) * c
+
+    where only 'a' is required to be an lvalue.  For the effect of:
+
+	    b *= c; a += b
+
+    when both 'a' and 'b' are lvalues, use:
+
+	    a += (b *= c)
+
+
+    || yields values other than 0 or 1
+    ==================================
+
+    In C:
+
+	    a || b
+
+    will produce 0 or 1 depending on the logical evaluation
+    of the expression.  In calc, this expression will produce
+    either 'a' or 'b' and is equivalent to the expression:
+
+	    a ? a : b
+
+    In other words, if 'a' is true, then 'a' is returned, otherwise
+    'b' is returned.
+
+
+    && yields values other than 0 or 1
+    ==================================
+
+    In C:
+
+	    a && b
+
+    will produce 0 or 1 depending on the logical evaluation
+    of the expression.  In calc, this expression will produce
+    either 'a' or 'b' and is equivalent to the expression:
+
+	    a ? b : a
+
+    In other words, if 'a' is true, then 'b' is returned, otherwise
+    'a' is returned.
+
+
+    / is fractional divide, // is integral divide
+    =============================================
+
+    In C:
+
+	    x/y
+
+    performs integer division when 'x' and 'y' are integer types.
+    In calc, this expression yields a rational number.
+
+    Calc uses:
+
+	    x//y
+
+    to perform division with integer truncation and is the equivalent to:
+
+	    int(x/y)
+
+
+    | and & have higher precedence than ==, +, -, *, / and %
+    ========================================================
+
+    Is C:
+
+	    a == b | c * d
+
+    is interpreted as:
+
+	    (a == b) | (c * d)
+
+    and calc it is interpreted as:
+
+	    a == ((b | c) * d)
+
+
+    calc always evaluates terms from left to right
+    ==============================================
+
+    Calc has a definite order for evaluation of terms (addends in a
+    sum, factors in a product, arguments for a function or a matrix,
+    etc.).  This order is always from left to right. but skipping of
+    terms may occur for ||, && and ? : .
+
+    Consider, for example:
+
+	    A * B + C * D
+
+    In calc above expression is evaluated in the following order:
+
+	    A
+	    B
+	    A * B
+	    C
+	    D
+	    C * D
+	    A * B + C * D
+
+    This order of evaluation is significant if evaluation of a
+    term changes a variable on which a later term depends.  For example:
+
+	    x++ * x++ + x++ * x++
+
+    in calc returns the value:
+
+	    x * (x + 1) + (x + 2) * (x + 3)
+
+    and increments x as if by x += 4.  Similarly, for functions f, g,
+    the expression:
+
+	    f(x++, x++) + g(x++)
+
+    evaluates to:
+
+	    f(x, x + 1) + g(x + 2)
+
+    and increments x three times.
+
+
+    &A[0] and A are different things in calc
+    ========================================
+
+    In calc, value of &A[0] is the address of the first element, whereas
+    A is the entire array.
+
+
+    *X may be used to to return the value of X
+    ==========================================
+
+    If the current value of a variable X is an octet, number or string,
+    *X may be used to to return the value of X; in effect X is an
+    address and *X is the value at X.
+
+
+    freeing a variable has the effect of assigning the null value to it
+    ===================================================================
+
+    The freeglobals(), freestatics(), freeredc() and free() free
+    builtins to not "undefine" the variables, but have the effect of
+    assigning the null value to them, and so frees the memory used for
+    elements of a list, matrix or object.
+
+    Along the same lines:
+
+	    undefine *
+
+    undefines all current user-defined functions.  After executing
+    all the above freeing functions (and if necessary free(.) to free
+    the current "old value"), the only remaining numbers as displayed by
+
+	    show numbers
+
+    should be those associated with epsilon(), and if it has been
+    called, qpi().

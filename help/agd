@@ -1,0 +1,57 @@
+NAME
+    agd - inverse gudermannian function
+
+SYNOPSIS
+    agd(z [,eps])
+
+TYPES
+    z		number (real or complex)
+    eps		nonzero real, defaults to epsilon()
+
+    return	number or infinite error value
+
+DESCRIPTION
+    Calculate the inverse gudermannian of z to a nultiple of eps with
+    errors in real and imaginary parts less in absolute value than .75 * eps,
+    or an error value if z is very close to one of the one of the branch
+    points of agd(z)..
+
+    agd(z) is usually defined initially for real z with abs(z) < pi/2 by
+    one of the formulae
+
+		 agd(z) = ln(sec(z) + tan(z))
+
+			= 2 * atanh(tan(z/2))
+
+			= asinh(tan(z)),
+
+    or as the integral from 0 to z of (1/cos(t))dt.  For complex z, the
+    principal branch, approximated by gd(z, eps), has cuts along the real
+    axis outside -pi/2 < z < pi/2.
+
+    If z = x + i * y and abs(x) < pi/2, agd(z) is given by
+
+	agd(z) = atanh(sin(x)/cosh(y)) + i * atan(sinh(y)/cos(x)>
+
+
+EXAMPLE
+    > print agd(1, 1e-5), agd(1, 1e-10), agd(1, 1e-15)
+    1.22619 1.2261911709 1.226191170883517
+
+    > print agd(2, 1e-5), agd(2, 1e-10)
+    1.52345-3.14159i 1.5234524436-3.1415926536i
+
+    > print agd(5, 1e-5), agd(5, 1e-10), agd(5, 1e-15)
+    -1.93237 -1.9323667197 -1.932366719745925
+
+    > print agd(1+2i, 1e-5), agd(1+2i, 1e-10)
+    .22751+1.42291i .2275106584+1.4229114625i
+
+LIMITS
+    none
+
+LIBRARY
+    COMPLEX *cagd(COMPLEX *x, NUMBER *eps)
+
+SEE ALSO
+    gd, exp, ln, sin, sinh, etc.

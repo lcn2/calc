@@ -35,10 +35,10 @@
 	the user.  For example, x=eval(prompt("Number: ")) sets x to the
 	value input by the user.
 
-	The digit and isset functions return individual digits of a number,
+	The digit and bit functions return individual digits of a number,
 	either in base 10 or in base 2, where the lowest digit of a number
 	is at digit position 0.  For example, digit(5678, 3) is 5, and
-	isset(0b1000100, 2) is 1.  Negative digit positions indicate places
+	bit(0b1000100, 2) is 1.  Negative digit positions indicate places
 	to the right of the decimal or binary point, so that for example,
 	digit(3.456, -1) is 4.
 

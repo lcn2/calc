@@ -189,8 +189,7 @@ define mod_pow(a, b)
 }
 
 
-global lib_debug;
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
     print "obj mod {a} defined";
     print "mod(a) defined";
     print "mod_print(a) defined";

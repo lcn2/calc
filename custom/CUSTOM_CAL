@@ -1,0 +1,51 @@
+#
+# Copyright (c) 1997 Landon Curt Noll
+#
+# Permission to use, copy, modify, and distribute this software and
+# its documentation for any purpose and without fee is hereby granted,
+# provided that the above copyright, this permission notice and text
+# this comment, and the disclaimer below appear in all of the following:
+#
+#	supporting documentation
+#	source copies
+#	source works derived from this source
+#	binaries derived from this source or from derived source
+#
+# LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+# EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+# CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+# USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+# OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+# PERFORMANCE OF THIS SOFTWARE.
+#
+# chongo was here	/\../\		chongo@toad.com
+
+The following custom calc library files are provided because they serve
+as examples of how use the custom interface.  The custom interface
+allows for machine dependent and/or non-portable code to be added as
+builtins to the calc program.  A few example custom functions and
+library files are shipped with calc to provide you with examples.
+
+By default, the custom builtin returns an error.  Calc have been
+built with:
+
+	ALLOW_CUSTOM= -DCUSTOM
+
+in the top level Makefile (this is the shipped default) and calc
+must be invoked with a -C argument:
+
+	calc -C
+
+when it is run.
+
+See the ../lib/README or "help stdlib" for information about
+calc library standards and guidelines.
+
+=-=
+
+halflen.cal
+
+    halflen(num)
+
+    Calculate the length of a numeric value in HALF's.

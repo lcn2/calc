@@ -1,0 +1,31 @@
+NAME
+    freeredc - free the memory used to store redc data
+
+SYNOPSIS
+    freeredc()
+
+TYPES
+    return	null value
+
+DESCRIPTION
+    This function frees the memory used for any redc data currently stored by
+    calls to rcin, rcout, etc.
+
+EXAMPLE
+    > a = rcin(10,27)
+    > b = rcin(10,15)
+    > show redc
+    0       1       27
+    1       2       15
+    > freeredc()
+    > show redc
+    >
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    free, freeglobals, freestatics

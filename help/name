@@ -1,0 +1,39 @@
+NAME
+    name - return name of some kinds of structure
+
+SYNOPSIS
+    name(val)
+
+TYPES
+    val		any
+
+    return	string or null value
+
+DESCRIPTION
+    If val is a named block or open file stream, name(val) returns the
+    name associated with val.  Otherwise the null value is returned.
+
+    Since the name associated with a file stream is that used when the stream
+    was opened, different names may refer to the same file, e.g. "foo"
+    and "./foo".
+
+EXAMPLE
+    > A = blk("alpha");
+    > name(A)
+	"alpha"
+
+    > f = fopen("/tmp/beta", "w")
+    > name(f)
+	"/tmp/beta"
+
+    > names(files(0))
+	"(stdin)"
+
+LIMITS
+    none
+
+LIBRARY
+    none - XXX ???
+
+SEE ALSO
+    blk, fopen

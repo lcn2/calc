@@ -47,7 +47,7 @@ RUNTIME
     The runtime for v = prevcand(n, ...) will depend strongly on the
     number and nature of the integers between n and v.  If this number
     is reasonably large the size of count is largely irrelevant as the
-    compositeness of the numbers betweeen n and v will usually be
+    compositeness of the numbers between n and v will usually be
     determined by the test for small prime factors or one pseudoprime
     test with some base b.  If N > 1, count should be positive so that
     candidates divisible by small primes will be passed over quickly.

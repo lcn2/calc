@@ -11,7 +11,7 @@ TYPES
 
 DESCRIPTION
     The base function allows one to specify how numbers should be
-    printer.  The base function provides a numeric shorthand to the
+    printed.  The base function provides a numeric shorthand to the
     config("mode") interface.  With no args, base() will return the
     current mode.  With 1 arg, base(val) will set the mode according to
     the arg and return the previous mode.

@@ -1,20 +1,21 @@
 NAME
-    rm - remove a file
+    rm - remove file(s)
 
 SYNOPSIS
-    rm(name)
+    rm(["-f",] name, ...)
 
 TYPES
-    name	name of a file
+    name	name of a file(s)
 
     return	nil
 
 DESCRIPTION
-    Removes a file.
+    Removes one or more files.  If the first arg is "-f", then a forced
+    removal is performed and "no such file" errors are ignored.
 
 EXAMPLE
     > rm("junk")
-    > rm("more/junk.cal")
+    > rm("-f", "more/junk.cal", "curds", "whey")
 
 LIMITS
     name must be a non-zero length string

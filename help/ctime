@@ -9,14 +9,14 @@ TYPES
 
 DESCRIPTION
    The ctime() builtin returns the string formed by the first 24
-   characters returned by the C library function, ctime():
+   characters returned by the C library function, ctime(): E.g.
 
 	"Mon Oct 28 00:47:00 1996"
 
    The 25th ctime() character, '\n' is removed.
 
 EXAMPLE
-    > printf("The time is now %s.\n", time())
+    > printf("The time is now %s.\n", ctime())
     The time is now Mon Apr 15 12:41:44 1996.
 
 LIMITS

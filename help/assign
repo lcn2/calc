@@ -3,21 +3,110 @@ NAME
 
 SYNOPSIS
     a = b
+    a = {e_1, e_2, ...[ { ... } ] }
 
 TYPES
-    a		lvalue
-    b		expression
+    a			lvalue, current value a structure in { } case
 
-    return	lvalue
+    b			expression
+
+    e_0, e_1, ...	expressions, blanks, or initializer lists
+
+
+    return		lvalue (a)
 
 DESCRIPTION
+    Here an lvalue is either a simple variable specified by an identifier,
+    or an element of an existing structure specified by one or more
+    qualifiers following an identifier.
+
+    An initializer list is a comma-separated list enclosed in braces as in
+
+		{e_0, e_1, ... }
+
+    where each e_i is an expression, blank or initializer list.
+
     a = b evaluates b, assigns its value to a, and returns a.
+
+    a = {e_0, e_1, ... } where the e_i are expressions or blanks,
+    requires the current value of a to be a matrix, list
+    or object with at least as many elements as listed e_i.  Each non-blank
+    e_i is evaluated and its value is assigned to a[[i]]; elements a[[i]]
+    corresponding to blank e_i are unchanged.
+
+    If, in a = {e_0, e_1, ...}, e_i is an initializer list, as in
+    {e_i_0, e_1_1, ...}, the corresponding a[[i]] is to be a matrix, list
+    or object with at least as many elements as listed e_i_j.  Depending on
+    whether e_i_j is an expression, blank, or initializer list, one, no, or
+    possibly more than one assignment, is made to a[[i]][[j]] or, if
+    relevant and possible, its elements.
+
+    In simple assignments, = associates from right to left so that, for
+    example,
+
+    		a = b = c
+
+    has the effect of a = (b = c) and results in assigning the value of c
+    to both a and b.  The expression (a = b) = c is acceptable, but has the
+    effect of a = b; a = c; in which the first assignment is superseded by
+    the second.
+
+    In initializations, = { ...} associates from left to right so that,
+    for example,
+
+		a = {e_0, ... } = {v_0, ...}
+
+    first assigns e_0, ... to the elements of a, and then assigns v_0, ...
+    to the result.
+
+    If there are side effects in the evaluations involved in executing a = b,
+    it should be noted that the order of evaluations is: first the address
+    for a, then the value of b, and finally the assignment.  For example if
+    A is a matrix and i = 0, then the assignment in A[i++] = A[i] is
+    that of A[0] = A[1].
+
+    If, in execution of a = b, a is changed by the evaluation of b, the
+    value of b may be stored in an unintended or inaccessible location.  For
+    example,
+		mat A[2]= {1,2};
+		A[0] = (A = 3);
+
+    results in the value 3 being stored not only as the new value for A
+    but also at the now unnamed location earlier used for A[0].
+
 
 EXAMPLE
     > b = 3+1
     > a = b
     > print a, b
     4 4
+
+    > obj point {x,y}
+    > mat A[3] = {1, list(2,3), obj point = {4,5}}
+
+    > A[1][[0]] = 6; A[2].x = 7
+    > print A[1]
+
+    list (2 elements, 2 nonzero):
+	[[0]] = 6
+	[[1]] = 3
+
+    > print A[2]
+    obj point {7, 5}
+
+    > A = {A[2], , {9,10}}
+    > print A[0]
+    obj point {7, 5}
+
+    > print A[2]
+    obj point {9, 10}
+
+    > A = {, {2}}
+    print A[1]
+
+    list (2 elements, 2 nonzero):
+	[[0]] = 2
+	[[1]] = 3
 
 LIMITS
     none
@@ -26,4 +115,4 @@ LIBRARY
     none
 
 SEE ALSO
-    XXX - fill in
+    swap, quomod

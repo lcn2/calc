@@ -10,7 +10,7 @@ TYPES
     return	rand state
 
 DESCRIPTION
-    See the pseudo-random number using an additive 55 shuffle generator.
+    Seed the pseudo-random number using an additive 55 shuffle generator.
 
     For integer seed != 0:
 
@@ -22,7 +22,7 @@ DESCRIPTION
 	The following calc code produces the same effect on the internal
 	additive table:
 
-	    /* reload default additive table xored with low 64 seed bits */
+	    /* reload default additive table xor-ed with low 64 seed bits */
 	    seed_xor = seed & ((1<<64)-1);
 	    for (i=0; i < 55; ++i) {
 	        additive[i] = xor(default_additive[i], seed_xor);
@@ -58,7 +58,7 @@ DESCRIPTION
 	between the seed and the production of the generator.
 
 	The randreseed64 process does not reduce the security of the
-	rand genertator.  Every seed is converted into a different
+	rand generator.  Every seed is converted into a different
 	unique seed.  No seed is ignored or favored.  See the rand
 	help file for details.
 
@@ -81,7 +81,7 @@ DESCRIPTION
     For matrix arg:
 
 	Any buffered random bits are flushed.  The additive table with the
-	first 55 entries of the martix mod 2^64.
+	first 55 entries of the matrix mod 2^64.
 
 	The additive 55 pointers are reset to additive[23] and additive[54].
 	Last the shuffle table is loaded with successive values from the
@@ -148,4 +148,4 @@ LIBRARY
     RAND *zsetrand(RAND *state)
 
 SEE ALSO
-    srand, randbit, isrand, random, srandom, israndom
+    srandom, randbit, isrand, random, srandom, israndom

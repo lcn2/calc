@@ -454,9 +454,7 @@ define test4000(v, tnum)
 }
 
 
-global lib_debug;
-
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
 	print "global defaultverbose";
 	print "global err";
 	print "global BASEB";

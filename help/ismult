@@ -33,4 +33,7 @@ LIBRARY
     BOOL zdivides(ZVALUE x, y)
 
 SEE ALSO
-    ismult, isprime, isrel, issq
+    isassoc, isatty, isblk, isconfig, isdefined, iserror, iseven, isfile,
+    ishash, isident, isint, islist, ismat, isnull, isnum, isobj,
+    isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
+    issimple, issq, isstr, istype

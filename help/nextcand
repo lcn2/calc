@@ -27,14 +27,15 @@ DESCRIPTION
     If skip == 0, and abs(n) >= 2^32 or count < 0, the probabilistic test with
     random bases is used so that if n is composite the
     probability that it passes ptest() is less than 4^-abs(count).
-    In any case, if the integer returned by nextcand() is not zero,
-    all integers between abs(n) and that integer are composite.
 
     If skip == 1 (the default value), the bases used in the probabilistic
     test are the first abs(count) primes 2, 3, 5, ...
 
     For other values of skip, the bases used in the probabilistic tests
     are the abs(count) consecutive integers, skip, skip + 1, skip + 2, ...
+
+    In any case, if the integer returned by nextcand() is not zero,
+    all integers between abs(n) and that integer are composite.
 
     If modulus is zero, the value returned is that of residue if this is
     greater than abs(n) and ptest(residue,count,skip) = 1. Otherwise
@@ -44,7 +45,7 @@ RUNTIME
     The runtime for v = nextcand(n, ...) will depend strongly on the
     number and nature of the integers between n and v.  If this number
     is reasonably large the size of count is largely irrelevant as the
-    compositeness of the numbers betweeen n and v will usually be
+    compositeness of the numbers between n and v will usually be
     determined by the test for small prime factors or one pseudoprime
     test with some base b.  If N > 1, count should be positive so that
     candidates divisible by small primes will be passed over quickly.

@@ -11,7 +11,7 @@ TYPES
 
 DESCRIPTION
     For real x, digits(x) returns the number of digits in the decimal
-    representation of int(abs(x)).
+    representation of int(abs(x)).  If x >= 1, digits(x) = 1 + ilog10(x).
 
 EXAMPLE
     > print digits(0), digits(0.0123), digits(3.7), digits(-27), digits(-99.7)

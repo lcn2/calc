@@ -1,0 +1,60 @@
+NAME
+    sum - sum, or sum of defined sums
+
+SYNOPSIS
+    sum(x_1, x_2, ...)
+
+TYPES
+    x_1, x_2, ...	any
+
+    return		any
+
+DESCRIPTION
+    If an argument x_i is a list with elements e_1, e_2, ..., e_n, it
+    is treated as if x_i were replaced by e_1, e_2, ..., e_n; this may
+    continue recurively if any of the e_j is a list.
+
+    If an argument x_i is an object of type xx, then x_i is replaced by
+    xx_sum(x_i) if the function xx_sum() has been defined.  If the
+    type xx has been defined by:
+
+		obj xx = {x, y, z},
+
+    an appropriate definition of xx_sum(a) is sometimes a.x + a.y + a.z.
+    sum(a) then returns the sum of the elements of a.
+
+    If x_i has the null value, it is ignored.  Thus, sum(a, , b, , c)
+    will return the same as sum(a, b, c).
+
+    Assuming the above replacements, and that the x_1, x_2, ..., are
+    of types for which addition is defined, sum(x_1, x_2, ...) returns
+    the sum of the arguments.
+
+EXAMPLE
+    > print sum(2), sum(5, 3, 7, 2, 9), sum(3.2, -0.5, 8.7, -1.2, 2.5)
+    2 26 12.7
+
+    > print sum(list(3,5), 7, list(6, list(7,8), 2))
+    38
+
+
+    > obj point {x, y}
+    > define point_add(a,b) = obj point = {a.x + b.x, a.y + b.y}
+    > obj point A = {1, 5}
+    > obj point B = {1, 4}
+    > obj point C = {3, 3}
+    > print sum(A, B, C)
+    obj point {5, 12}
+
+    > define point_sum(a) = a.x
+    > print sum(A, B, C)
+    5
+
+LIMITS
+    The number of arguments is not to exceed 100.
+
+LIBRARY
+    NUMBER *qmin(NUMBER *x1, NUMBER *x2)
+
+SEE ALSO
+    max, obj

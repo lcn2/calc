@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 1996 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Extended precision integral arithmetic primitives
  */
 
+#include <stdio.h>
 #include "zmath.h"
 
 HALF _zeroval_[] = { 0 };
@@ -24,7 +25,14 @@ HALF _twelveval_[] = { 12 };
 HALF _thirteenval_[] = { 13 };
 HALF _fourteenval_[] = { 14 };
 HALF _fifteenval_[] = { 15 };
+HALF _sixteenval_[] = { 16 };
+HALF _seventeenval_[] = { 17 };
+HALF _eightteenval_[] = { 18 };
+HALF _nineteenval_[] = { 19 };
+HALF _twentyval_[] = { 20 };
 HALF _sqbaseval_[] = { 0, 1 };
+HALF _pow4baseval_[] = { 0, 0, 1 };
+HALF _pow8baseval_[] = { 0, 0, 0, 0, 1 };
 
 ZVALUE zconst[] = {
     { _zeroval_, 1, 0}, { _oneval_, 1, 0}, { _twoval_, 1, 0},
@@ -32,7 +40,8 @@ ZVALUE zconst[] = {
     { _sixval_, 1, 0}, { _sevenval_, 1, 0}, { _eightval_, 1, 0},
     { _nineval_, 1, 0}, { _tenval_, 1, 0}, { _elevenval_, 1, 0},
     { _twelveval_, 1, 0}, { _thirteenval_, 1, 0}, { _fourteenval_, 1, 0},
-    { _fifteenval_, 1, 0}
+    { _fifteenval_, 1, 0}, { _sixteenval_, 1, 0}, { _seventeenval_, 1, 0},
+    { _eightteenval_, 1, 0}, { _nineteenval_, 1, 0}, { _twentyval_, 1, 0}
 };
 
 ZVALUE _zero_ = { _zeroval_, 1, 0};
@@ -40,11 +49,29 @@ ZVALUE _one_ = { _oneval_, 1, 0 };
 ZVALUE _two_ = { _twoval_, 1, 0 };
 ZVALUE _ten_ = { _tenval_, 1, 0 };
 ZVALUE _sqbase_ = { _sqbaseval_, 2, 0 };
+ZVALUE _pow4base_ = { _pow4baseval_, 4, 0 };
+ZVALUE _pow8base_ = { _pow8baseval_, 4, 0 };
+ZVALUE _neg_one_ = { _oneval_, 1, 1 };
+
+/*
+ * 2^64 as a ZVALUE
+ */
+#if BASEB == 32
+ZVALUE _b32_ = { _sqbaseval_, 2, 0 };
+ZVALUE _b64_ = { _pow4baseval_, 3, 0 };
+#elif BASEB == 16
+ZVALUE _b32_ = { _pow4baseval_, 3, 0 };
+ZVALUE _b64_ = { _pow8baseval_, 5, 0 };
+#else
+	-=@=- BASEB not 16 or 32 -=@=-
+#endif
 
 
 /*
  * highhalf[i] - masks off the upper i bits of a HALF
+ * rhighhalf[i] - masks off the upper BASEB-i bits of a HALF
  * lowhalf[i] - masks off the upper i bits of a HALF
+ * rlowhalf[i] - masks off the upper BASEB-i bits of a HALF
  * bitmask[i] - (1 << i) for  0 <= i <= BASEB*2
  */
 HALF highhalf[BASEB+1] = {
@@ -68,6 +95,27 @@ HALF highhalf[BASEB+1] = {
 	-=@=- BASEB not 16 or 32 -=@=-
 #endif
 };
+HALF rhighhalf[BASEB+1] = {
+#if BASEB == 32
+	0xFFFFFFFF, 0xFFFFFFFE, 0xFFFFFFFC, 0xFFFFFFF8,
+	0xFFFFFFF0, 0xFFFFFFE0, 0xFFFFFFC0, 0xFFFFFF80,
+	0xFFFFFF00, 0xFFFFFE00, 0xFFFFFC00, 0xFFFFF800,
+	0xFFFFF000, 0xFFFFE000, 0xFFFFC000, 0xFFFF8000,
+	0xFFFF0000, 0xFFFE0000, 0xFFFC0000, 0xFFF80000,
+	0xFFF00000, 0xFFE00000, 0xFFC00000, 0xFF800000,
+	0xFF000000, 0xFE000000, 0xFC000000, 0xF8000000,
+	0xF0000000, 0xE0000000, 0xC0000000, 0x80000000,
+	0x00000000
+#elif BASEB == 16
+	0xFFFF, 0xFFFE, 0xFFFC, 0xFFF8,
+	0xFFF0, 0xFFE0, 0xFFC0, 0xFF80,
+	0xFF00, 0xFE00, 0xFC00, 0xF800,
+	0xF000, 0xE000, 0xC000, 0x8000,
+	0x0000
+#else
+	-=@=- BASEB not 16 or 32 -=@=-
+#endif
+};
 HALF lowhalf[BASEB+1] = {
 	0x0,
 	0x1,  0x3, 0x7, 0xF,
@@ -80,6 +128,19 @@ HALF lowhalf[BASEB+1] = {
 	0x1FFFFFF,  0x3FFFFFF, 0x7FFFFFF, 0xFFFFFFF,
 	0x1FFFFFFF,  0x3FFFFFFF, 0x7FFFFFFF, 0xFFFFFFFF
 #endif
+};
+HALF rlowhalf[BASEB+1] = {
+#if BASEB == 32
+	0xFFFFFFFF, 0x7FFFFFFF, 0x3FFFFFFF, 0x1FFFFFFF,
+	0xFFFFFFF, 0x7FFFFFF, 0x3FFFFFF, 0x1FFFFFF,
+	0xFFFFFF, 0x7FFFFF, 0x3FFFFF, 0x1FFFFF,
+	0xFFFFF, 0x7FFFF, 0x3FFFF, 0x1FFFF,
+#endif
+	0xFFFF, 0x7FFF, 0x3FFF, 0x1FFF,
+	0xFFF, 0x7FF, 0x3FF, 0x1FF,
+	0xFF, 0x7F, 0x3F, 0x1F,
+	0xF, 0x7, 0x3, 0x1,
+	0x0
 };
 HALF bitmask[(2*BASEB)+1] = {
 #if BASEB == 32
@@ -116,6 +177,30 @@ HALF bitmask[(2*BASEB)+1] = {
 };		/* actual rotation thru 8 cycles */
 
 BOOL _math_abort_;		/* nonzero to abort calculations */
+
+
+/*
+ * popcnt - popcnt[x] number of 1 bits in 0 <= x < 256
+ */
+char popcnt[256] = {
+    0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
+    1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+    1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+    2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+    1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+    2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+    2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+    3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+    1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+    2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+    2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+    3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+    2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+    3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+    3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+    4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
+};
+
 
 
 #ifdef ALLOCTEST
@@ -1157,7 +1242,7 @@ zdivides(ZVALUE z1, ZVALUE z2)
 
 
 /*
- * Compute the logical OR of two numbers
+ * Compute the bitwise OR of two integers
  */
 void
 zor(ZVALUE z1, ZVALUE z2, ZVALUE *res)
@@ -1187,7 +1272,7 @@ zor(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 
 
 /*
- * Compute the logical AND of two numbers.
+ * Compute the bitwise AND of two integers
  */
 void
 zand(ZVALUE z1, ZVALUE z2, ZVALUE *res)
@@ -1217,38 +1302,74 @@ zand(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 
 
 /*
- * Compute the logical XOR of two numbers.
+ * Compute the bitwise XOR of two integers.
  */
 void
 zxor(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
-	register HALF *sp, *dp;
-	LEN len;
-	ZVALUE bz, lz, dest;
+	HALF *dp, *h1, *h2;
+	LEN len, j, k;
+	ZVALUE dest;
 
-	if (z1.len == z2.len) {
-		/* ignore Saber-C warning #530 about empty for statement */
-		/*	  ok to ignore in proc zxor */
-		for (len = z1.len; ((len > 1) && (z1.v[len-1] == z2.v[len-1])); len--) ;
-		z1.len = len;
-		z2.len = len;
+	h1 = z1.v;
+	h2 = z2.v;
+	len = z1.len;
+	j = z2.len;
+	if (z1.len < z2.len) {
+		len = z2.len;
+		j = z1.len;
+		h1 = z2.v;
+		h2 = z1.v;
 	}
-	if (z1.len >= z2.len) {
-		bz = z1;
-		lz = z2;
-	} else {
-		bz = z2;
-		lz = z1;
+	else if (z1.len == z2.len) {
+		while (len > 1 && z1.v[len-1] == z2.v[len-1])
+			len--;
+		j = len;
 	}
-	dest.len = bz.len;
-	dest.v = alloc(dest.len);
+	k = len - j;
+	dest.len = len;
+	dest.v = alloc(len);
 	dest.sign = 0;
-	zcopyval(bz, dest);
-	len = lz.len;
-	sp = lz.v;
 	dp = dest.v;
-	while (len--)
-		*dp++ ^= *sp++;
+	while (j-- > 0)
+		*dp++ = *h1++ ^ *h2++;
+	while (k-- > 0)
+		*dp++ = *h1++;
+	*res = dest;
+}
+
+
+/*
+ * Compute the bitwise ANDNOT of two integers.
+ */
+void
+zandnot(ZVALUE z1, ZVALUE z2, ZVALUE *res)
+{
+	HALF *dp, *h1, *h2;
+	LEN len, j, k;
+	ZVALUE dest;
+
+	len = z1.len;
+	if (z2.len >= len) {
+		while (len > 1 && (z1.v[len-1] & ~z2.v[len-1]) == 0)
+			len--;
+		j = len;
+		k = 0;
+	}
+	else {
+		j = z2.len;
+		k = len - z2.len;
+	}
+	dest.len = len;
+	dest.v = alloc(len);
+	dest.sign = 0;
+	dp = dest.v;
+	h1 = z1.v;
+	h2 = z2.v;
+	while (j-- > 0)
+		*dp++ = *h1++ & ~*h2++;
+	while (k-- > 0)
+		*dp++ = *h1++;
 	*res = dest;
 }
 
@@ -1581,6 +1702,44 @@ zrel(ZVALUE z1, ZVALUE z2)
 
 
 /*
+ * Compare the absolute value two numbers to see which is larger.
+ * Returns -1 if first number is smaller, 0 if they are equal, and 1 if
+ * first number is larger.  This is the same result as ztest(abs(z2)-abs(z1))
+ * or zrel(abs(z1), abs(z2)).
+ */
+FLAG
+zabsrel(ZVALUE z1, ZVALUE z2)
+{
+	register HALF *h1, *h2;
+	register FULL len1, len2;
+
+	len1 = z1.len;
+	len2 = z2.len;
+	h1 = z1.v + z1.len - 1;
+	h2 = z2.v + z2.len - 1;
+	while (len1 > len2) {
+		if (*h1--)
+			return 1;
+		len1--;
+	}
+	while (len2 > len1) {
+		if (*h2--)
+			return -1;
+		len2--;
+	}
+	while (len1--) {
+		if (*h1-- != *h2--)
+			break;
+	}
+	if ((len1 = *++h1) > (len2 = *++h2))
+		return 1;
+	if (len1 < len2)
+		return -1;
+	return 0;
+}
+
+
+/*
  * Compare two numbers to see if they are equal or not.
  * Returns TRUE if they differ.
  */
@@ -1739,4 +1898,64 @@ zshiftl(ZVALUE z, long n)
 	}
 }
 
-/* END CODE */
+
+/*
+ * popcnt - count the number of 0 or 1 bits in an integer
+ *
+ * We ignore all 0 bits above the highest bit.
+ */
+long
+zpopcnt(ZVALUE z, int bitval)
+{
+	long cnt = 0;	/* number of times found */
+	HALF h;		/* HALF to count */
+	int i;
+
+	/*
+	 * count 1's
+	 */
+	if (bitval) {
+
+		/*
+		 * count each HALF
+		 */
+		for (i=0; i < z.len; ++i) {
+			/* count each octet */
+			for (h = z.v[i]; h; h >>= 8) {
+				cnt += (long)popcnt[h & 0xff];
+			}
+		}
+
+	/*
+	 * count 0's
+	 */
+	} else {
+
+		/*
+		 * count each HALF up until the last
+		 */
+		for (i=0; i < z.len-1; ++i) {
+
+			/* count each octet */
+			cnt += BASEB;
+			for (h = z.v[i]; h; h >>= 8) {
+				cnt -= (long)popcnt[h & 0xff];
+			}
+		}
+
+		/*
+		 * count the last octet up until the highest 1 bit
+		 */
+		for (h = z.v[z.len-1]; h; h>>=1) {
+			/* count each 0 bit */
+			if ((h & 0x1) == 0) {
+				++cnt;
+			}
+		}
+	}
+
+	/*
+	 * return count
+	 */
+	return cnt;
+}

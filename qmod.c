@@ -7,6 +7,7 @@
  * the faster REDC algorithm.
  */
 
+#include <stdio.h>
 #include "qmath.h"
 #include "config.h"
 
@@ -15,7 +16,7 @@
  * Structure used for caching REDC information.
  */
 typedef struct	{
-	NUMBER	*num;		/* modulus being cached */
+	NUMBER	*rnum;		/* modulus being cached */
 	REDC	*redc;		/* REDC information for modulus */
 	long	age;		/* age counter for reallocation */
 } REDC_CACHE;
@@ -445,7 +446,7 @@ qfindredc(NUMBER *q)
 	 * First try for an exact pointer match in the table.
 	 */
 	for (rcp = redc_cache; rcp < &redc_cache[MAXREDC]; rcp++) {
-		if (q == rcp->num) {
+		if (q == rcp->rnum) {
 			rcp->age = ++redc_age;
 			return rcp->redc;
 		}
@@ -455,7 +456,7 @@ qfindredc(NUMBER *q)
 	 * Search the table again looking for a value which matches.
 	 */
 	for (rcp = redc_cache; rcp < &redc_cache[MAXREDC]; rcp++) {
-		if (rcp->age && (qcmp(q, rcp->num) == 0)) {
+		if (rcp->age && (qcmp(q, rcp->rnum) == 0)) {
 			rcp->age = ++redc_age;
 			return rcp->redc;
 		}
@@ -485,14 +486,44 @@ qfindredc(NUMBER *q)
 	rcp = bestrcp;
 	if (rcp->age) {
 		rcp->age = 0;
-		qfree(rcp->num);
+		qfree(rcp->rnum);
 		zredcfree(rcp->redc);
 	}
 
 	rcp->redc = zredcalloc(q->num);
-	rcp->num = qlink(q);
+	rcp->rnum = qlink(q);
 	rcp->age = ++redc_age;
 	return rcp->redc;
+}
+
+void
+showredcdata(void)
+{
+	REDC_CACHE *rcp;
+	long i;
+
+	for (i = 0, rcp = redc_cache; i < MAXREDC; i++, rcp++) {
+		if (rcp->age > 0) {
+			printf("%-8ld%-8ld", i, rcp->age);
+			qprintnum(rcp->rnum, 0);
+			printf("\n");
+		}
+	}
+}
+
+void
+freeredcdata(void)
+{
+	REDC_CACHE *rcp;
+	long i;
+
+	for (i = 0, rcp = redc_cache; i < MAXREDC; i++, rcp++) {
+		if (rcp->age > 0) {
+			rcp->age = 0;
+			qfree(rcp->rnum);
+			zredcfree(rcp->redc);
+		}
+	}
 }
 
 /* END CODE */

@@ -11,6 +11,7 @@ following topics:
     builtin		builtin functions
     command		top level commands
     config		configuration parameters
+    custom		information about the custom builtin interface
     define		how to define functions
     environment		how environment variables effect calc
     errorcodes		calc generated error codes
@@ -25,21 +26,25 @@ following topics:
     statement		flow control and declaration statements
     stdlib		description of some lib files shipped with calc
     types		builtin data types
+    unexpected		unexpected syntax/usage surprises for C programmers
     usage		how to invoke the calc command
     variable		variables and variable declarations
 
-    bindings		input & history character bindings
     altbind		alternative input & history character bindings
-    changes		recent changes to calc
+    bindings		input & history character bindings
+    custom_cal		information about custom calc library files
     libcalc		using the arbitrary precision routines in a C program
+    new_custom		information about how to add new custom functions
     stdlib		standard calc library files and standards
 
-    bugs		known bugs and mis-features
-    todo		needed enhancements and wish list
-    credit		who wrote calc and who helped
     archive		where to get the latest versions of calc
+    bugs		known bugs and mis-features
+    changes		recent changes to calc
+    contrib		how to contribute scripts, code or custom functions
+    credit		who wrote calc and who helped
+    todo		needed enhancements and wish list
 
-    full		all of the above
+    full		all of the above (in the above order)
 
 You can also ask for help on a particular function name.  For example,
 
@@ -67,3 +72,28 @@ then the help facility will be disabled.  See:
     help usage
 
 for details of the -m mode.
+
+The help command is able to display installed help files for custom builtin
+functions.  However, if the custom name is the same as a standard help
+file, the standard help file will be displayed instead.  The custom help
+builtin should be used to directly access the custom help file.
+
+For example, the custom help builtin has the same name as the standard
+help file.  That is:
+
+    help help
+
+will print this file only.  However the custom help builtin will print
+only the custom builtin help file:
+
+    custom("help", "help");
+
+will by-pass a standard help file and look for the custom version directly.
+
+As a hack, the following:
+
+     help custhelp/anything
+
+as the same effect as:
+
+    custom("help", "anything");

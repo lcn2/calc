@@ -6,6 +6,7 @@
  * Scanf and printf routines for arbitrary precision integers.
  */
 
+#include <stdio.h>
 #include "config.h"
 #include "zmath.h"
 #include "args.h"
@@ -708,6 +709,34 @@ str2z(char *s, ZVALUE *res)
 	if (minus && !ziszero(z))
 		z.sign = 1;
 	*res = z;
+}
+
+
+void
+fitzprint(ZVALUE z, long digits, long show)
+{
+	ZVALUE ztmp1, ztmp2;
+	long i;
+
+	if (digits <= show) {
+		zprintval(z, 0, 0);
+		return;
+	}
+	show /= 2;
+	ztenpow(digits - show, &ztmp1);
+	(void) zquo(z, ztmp1, &ztmp2, 1);
+	zprintval(ztmp2, 0, 0);
+	zfree(ztmp1);
+	zfree(ztmp2);
+	printf("...");
+	ztenpow(show, &ztmp1);
+	(void) zmod(z, ztmp1, &ztmp2, 0);
+	i = zdigits(ztmp2);
+	while (i++ < show)
+		printf("0");
+	zprintval(ztmp2, 0, 0);
+	zfree(ztmp1);
+	zfree(ztmp2);
 }
 
 /* END CODE */

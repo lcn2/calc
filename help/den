@@ -10,7 +10,8 @@ TYPES
     return	integer
 
 DESCRIPTION
-    For real x, den(x) returns the denominator of x.  In calc,
+    For real x, den(x) returns the denominator of x when x is expressed
+    in lowest terms with positive denominator.  In calc,
     real values are actually rational values.  Each calc real
     value can be uniquely expressed as:
 
@@ -22,7 +23,7 @@ DESCRIPTION
 	gcd(n,d) == 1
 	d > 0
 
-    If x = n/x, then den(x) == d.
+    The denominator for this n/d is d.
 
 EXAMPLE
     > print den(7), den(-1.25), den(121/33)

@@ -25,5 +25,9 @@ LIBRARY
     none
 
 SEE ALSO
-    isassoc, isfile, isident, isint, ismat, isnull, isnum, isobj,
-    isreal, isstr, issimple, istype
+    append, delete, insert, islist, pop, push, remove, rsearch,
+    search, size, list,
+    isassoc, isatty, isblk, isconfig, isdefined, iserror, iseven, isfile,
+    ishash, isident, isint, ismat, ismult, isnull, isnum, isobj,
+    isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
+    issimple, issq, isstr, istype

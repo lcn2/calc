@@ -5,7 +5,7 @@ SYNOPSIS
     isfile(x)
 
 TYPES
-    x		any, &any
+    x		any
 
     return	int
 
@@ -25,5 +25,7 @@ LIBRARY
     none
 
 SEE ALSO
-    isassoc, isident, isint, islist, ismat, isnull, isnum, isobj,
-    isreal, isstr, issimple, istype
+    isassoc, isatty, isblk, isconfig, isdefined, iserror, iseven,
+    ishash, isident, isint, islist, ismat, ismult, isnull, isnum, isobj,
+    isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
+    issimple, issq, isstr, istype

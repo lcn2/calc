@@ -2,32 +2,33 @@ NAME
     atan2 - angle to point
 
 SYNOPSIS
-    atan2(y, x, [,acc])
+    atan2(y, x, [,eps])
 
 TYPES
     y		real
     x		real
-    acc		real
+    eps		nonzero real, defaults to epsilon()
 
     return	real
 
 DESCRIPTION
-    Return the angle which is determined by the point (x,y).  This
-    function computes the arctangent of y/x in the range [-pi, pi].
-    The value acc specifies the accuracy of the result.  By default, acc
-    is epsilon().
+    If x and y are not both zero, atan2(y, x, eps) returns, as a multiple of
+    eps with error less than abs(eps), the angle t such that
+    -pi < t <= pi and x = r * cos(t), y = r * sin(t), where
+    r > 0.  Usually the error does not exceed abs(eps)/2.
 
-    Note that by convention, y is the first argument.
+    Note that by convention, y is the first argument; if x > 0,
+    atan2(y, x) = atan(y/x).
 
-    To conform to the 4.3BSD ANSI/IEEE 754-1985 math lib, atan2(0,0) is
-    defined to return 0.
+    To conform to the 4.3BSD ANSI/IEEE 754-1985 math lib, atan2(0,0)
+    returns 0.
 
 EXAMPLE
     > print atan2(0,0), atan2(1,sqrt(3)), atan2(17,53,1e-100)
     0 ~.52359877559829887307 ~.31038740713235146535
 
 LIMITS
-    acc > 0
+    none
 
 LIBRARY
     NUMBER *qatan2(NUMBER *y, *x, *acc)

@@ -37,7 +37,7 @@
  * The primality was demonstrated by a program implementing the test
  * found in these routines.  An Amdahl 1200 takes 1987 seconds to test
  * the primality of this number.  A Cray 2 took several hours to
- * confirm this prime.  As of 28 Aug 1993, this prime was the 2nd
+ * confirm this prime.  As of 31 Dec 1995, this prime was the 3rd
  * largest known prime and the largest known non-Mersenne prime.
  *
  * The same team also discovered the following twin prime pair:
@@ -75,7 +75,7 @@
  *
  * The Mersenne test for '2^n-1' is the fastest known primality test
  * for a given large numbers.  However, it is faster to search for
- * primes of the form 'h*2^n-1'.  When n is around 20000, one can find
+ * primes of the form 'h*2^n-1'.  When n is around 200000, one can find
  * a prime of the form 'h*2^n-1' in about 1/2 the time.
  *
  * Critical to understanding why 'h*2^n-1' is to observe that primes of
@@ -122,7 +122,6 @@
  */
 
 global pprod256;	/* product of  "primes up to 256" / "primes up to 46" */
-global lib_debug;	/* 1 => print debug statements */
 
 /*
  * lucas - lucas primality test on h*2^n-1
@@ -171,6 +170,10 @@ global lib_debug;	/* 1 => print debug statements */
  * In order to reduce the number of tests, as attempt to eliminate
  * any number that is divisible by a prime less than 257.  Valid prime
  * candidates less than 257 are declared prime as a special case.
+ *
+ * In real life, you would eliminate candidates by checking for
+ * divisibility by a prime much larger than 257 (perhaps as high
+ * as 2^39).
  *
  * The condition 'h mod 2 == 1' is not a problem.  Say one is testing
  * 'j*2^m-1', where j is even.  If we note that:
@@ -351,20 +354,21 @@ lucas(h, n)
 	 * the number is not prime, even though if we had a larger
 	 * table, we might have been able to show that it is prime.
 	 */
-	v1 = gen_v1(h, n, testval);
+	v1 = gen_v1(h, n);
 	if (v1 < 0) {
 		/* failure to test number */
 		print "unable to compute v(1) for", h : "*2^" : n : "-1";
 		ldebug("lucas", "unknown: no v(1)");
 		return -1;
 	}
-	u = gen_u0(h, n, testval, v1);
+	u = gen_u0(h, n, v1);
 
 	/*
 	 * compute u(n-2)
 	 */
 	for (i=3; i <= n; ++i) {
-		u = (u^2 - 2) % testval;
+		/* u = (u^2 - 2) % testval; */
+		u = hnrmod(u^2 - 2, h, n, -1);
 	}
 
 	/*
@@ -417,7 +421,6 @@ lucas(h, n)
  * input:
  *	h	- h as in h*2^n-1	(h mod 2 != 0)
  *	n	- n as in h*2^n-1
- *	testval	- h*2^n-1
  *	v1	- gen_v1(h,n)		(see function below)
  *
  * returns:
@@ -425,7 +428,7 @@ lucas(h, n)
  *	-1	- failed to generate u(0)
  */
 define
-gen_u0(h, n, testval, v1)
+gen_u0(h, n, v1)
 {
 	local shiftdown;	/* the power of 2 that divides h */
 	local r;		/* low value: v(n) */
@@ -442,14 +445,8 @@ gen_u0(h, n, testval, v1)
 	if (!isint(n)) {
 		quit "bad args: n must be an integer";
 	}
-	if (!isint(testval)) {
-		quit "bad args: testval must be an integer";
-	}
 	if (!isint(v1)) {
 		quit "bad args: v1 must be an integer";
-	}
-	if (testval <= 0) {
-		quit "bogus arg: testval is <= 0";
 	}
 	if (v1 <= 0) {
 		quit "bogus arg: v1 is <= 0";
@@ -488,34 +485,40 @@ gen_u0(h, n, testval, v1)
 	 */
 	if (h == 1) {
 		ldebug("gen_u0", "quick h == 1 case");
-		return r%testval;
+		/* return r%(h*2^n-1); */
+		return hnrmod(r, h, n, -1);
 	}
 
 	/* cycle from second highest bit to second lowest bit of h */
 	for (i=hbits-1; i > 0; --i) {
 
 		/* bit(i) is 1 */
-		if (isset(h,i)) {
+		if (bit(h,i)) {
 
 			/* compute v(2n+1) = v(r+1)*v(r)-v1 */
-			r = (r*s - v1) % testval;
+			/* r = (r*s - v1) % (h*2^n-1); */
+			r = hnrmod((r*s - v1), h, n, -1);
 
 			/* compute v(2n+2) = v(r+1)^2-2 */
-			s = (s^2 - 2) % testval;
+			/* s = (s^2 - 2) % (h*2^n-1); */
+			s = hnrmod((s^2 - 2), h, n, -1);
 
 		/* bit(i) is 0 */
 		} else {
 
 			/* compute v(2n+1) = v(r+1)*v(r)-v1 */
-			s = (r*s - v1) % testval;
+			/* s = (r*s - v1) % (h*2^n-1); */
+			s = hnrmod((r*s - v1), h, n, -1);
 
 			/* compute v(2n) = v(r)^-2 */
-			r = (r^2 - 2) % testval;
+			/* r = (r^2 - 2) % (h*2^n-1); */
+			r = hnrmod((r^2 - 2), h, n, -1);
 		}
 	}
 
 	/* we know that h is odd, so the final bit(0) is 1 */
-	r = (r*s - v1) % testval;
+	/* r = (r*s - v1) % (h*2^n-1); */
+	r = hnrmod((r*s - v1), h, n, -1);
 
 	/* compute the final u2 return value */
 	return r;
@@ -1021,13 +1024,12 @@ gen_v1(h, n)
 define
 ldebug(funct, str)
 {
-	if (lib_debug > 0) {
+	if (config("lib_debug") > 0) {
 		print "DEBUG:", funct:":", str;
 	}
 	return;
 }
 
-global lib_debug;
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
     print "lucas(h, n) defined";
 }

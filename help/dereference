@@ -1,0 +1,82 @@
+NAME
+    * - dereference or indirection operator
+
+SYNOPSIS
+    * X
+
+TYPES
+    X		address or lvalue
+
+    return	any
+
+DESCRIPTION
+    When used as a binary operator, '*' performs multiplication.  When
+    used as a operator, '*' returns the value at a given address.
+
+    If X is an address, *X returns the value at that address.  This value
+    will be an octet, lvalue, string, or number, depending on the
+    type of address.  Thus, for any addressable A, *&A is the same as A.
+
+    If X is an lvalue, *X returns the current value at the address
+    considered to be specified by X.  This value may be an lvalue or
+    octet, in which cases, for most operations except when X is the
+    destination of an assignment, *X will contribute the same as X to
+    the result of the operation. For example, if A and B are lvalues
+    whose current values are numbers, A + B, *A + B, A + *B and *A + *B
+    will all return the same result.  However if C is an lvalue and A is
+    the result of the assignment A = &C, then A = B will assign the value
+    of B to A, *A = B will assign the value of B to C without affecting
+    the value of A.
+
+    If X is an lvalue whose current value is a structure (matrix, object,
+    list, or association), the value returned by *X is a copy of the
+    structure rather than the structure identified by X.  For example,
+    suppose B has been created by
+
+			mat B[3] = {1,2,3}
+
+    then
+			A = *B = {4,5,6}
+
+    will assign the values 4,5,6 to the elements of a copy of B, which
+    will then become the value of A, so that the values of A and B will
+    be different.  On the other hand,
+
+			A = B = {4,5,6}
+
+    will result in A and B having the same value.
+
+    If X is an octet, *X returns the value of that octet as a number.
+
+    The * operator may be iterated with suitable sequences of pointer-valued
+    lvalues.  For example, after
+
+			> global a, b, c;
+			> b = &a;
+			> c = &b;
+
+    **c returns the lvalue a;  ***c returns the value of a.
+
+EXAMPLE
+    > mat A[3] = {1,2,3}
+    > p = &A[0]
+    > print *p, *(p + 1), *(p + 2)
+    1 2 3
+
+    > *(p + 1) = 4
+    > print A[1]
+    4
+
+    > A[0] = &a
+    > a = 7
+    > print **p
+    7
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    address, isptr

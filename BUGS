@@ -10,7 +10,8 @@ If that does not help, cd to the calc source directory and try:
 
 Look at the end of the output, it should say something like:
 
-    9999: passed all tests  /\../\
+    9998: passed all tests  /\../\
+    9999: Ending regression tests
 
 If it does not, then something is really broken!
 
@@ -79,16 +80,11 @@ of a context diff patch) to:
 
 Known problems or mis-features:
 
-    * In calc2.10.2t3, when scan() reads characters from stdin, they
-      are not echoed.  This also happens with fgets(files(0)) and
-      fgetline(files(0)).  Reports indicate that this did not happen in
-      calc.2.10.1t20 but did in 2.10.2t0.
-
-    * Many of LIBRARY, LIMITS and SEE ALSO sections of help files
+    * Many of and SEE ALSO sections of help files
       for builtins are either inconsistent or missing information.
 
-    * The functions filepos2z() and z2filepos() do not work (or
-      worse do not compile) when FILEPOS is 64 bits long.
+    * Many of the LIBRARY sections are incorrect now that libcalc.a
+      contains most of the calc system.
 
     * There is some places in the source with obscure variable names
       and not much in the way of comments.  We need some major cleanup

@@ -1,0 +1,58 @@
+NAME
+    blkfree - free memory allocated to named block
+
+SYNOPSIS
+    blkfree(val)
+
+TYPES
+    val		named block, string, or integer
+
+    return	null value
+
+DESCRIPTION
+    If val is a named block, or the name of a named block, or the
+    identifying index for a named block, blkfree(val) frees the
+    memory block allocated to this named block.  The block remains
+    in existence with the same name, identifying index, and chunksize,
+    but its size and maxsize becomes zero and the pointer for the start
+    of its data block null.
+
+    A new block of memory may be allocated to a freed block B by
+    blk(B [, len, chunk]), len defaulting to zero and chunk to the
+    chunksize when the block was freed.
+
+EXAMPLE
+
+    > B1 = blk("foo")
+    > B2 = blk("Second block")
+    show blocks
+     id   name
+    ----  -----
+     0   foo
+     1   Second block
+
+    > blkfree(B1)
+    > show blocks
+     id   name
+    ----  -----
+     1   Second block
+
+    > B1
+	block 0: foo
+	chunksize = 256, maxsize = 0, datalen = 0
+	NULL
+
+    > blk(B1); B[7] = 5
+    > B1
+	block 0: foo
+	chunksize = 256, maxsize = 256, datalen = 8
+	0000000000000005
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    blk, blocks

@@ -1,0 +1,188 @@
+NAME
+    protect - read or set protect status for a variable or named block
+
+SYNOPSIS
+    protect(var [, sts])
+    protect(nblk [, sts])
+
+TYPES
+    var		lvalue
+    nblk	named block
+    sts		integer, 0 <= sts < 512
+
+    return	null value
+
+DESCRIPTION
+    With one argument, protect(var) or protect(nblk) returns the current
+    protection status for var or nblk.
+
+    With two arguments, protect(var, sts) or protect(nblk, sts) sets the
+    protection status for var or nblk to the value sts.  Each nonzero bit
+    of sts corresponds to one kind of protection as follows:
+
+		sts	protection
+
+		  1	no assign to var
+		  2	no change of value of var
+		  4	no change of type of var
+		  8	no error value for var
+		 16	no copy to var or nblk
+		 32	no relocation of var or nblk
+		 64	no assign from var
+		128	no copy from var or nblk
+		256	protect recursively all components of var
+
+
+    Here "assign" refers to use of '=' as in A = expr to assign the value
+    of expr to A, and in A = {..., expr, ...} to assign the value of expr
+    to some component of A, and to the assignments implicit in swap(A, B),
+    quomod(x, y, A, B), and pre or post ++ or --.
+
+    For example, if A is a global variable, then after
+
+		protect(A, 1);
+
+    an error state is established if  A = expr  is attempted.  It does
+    not imply constancy if, for example, the current value of A is a list
+    or matrix; such a value may be changed by assignments to the elements
+    of A, or by push or copy commands.
+
+    If the current value of A is val, protect(A, 2) will prevent any
+    assignment to A other than
+
+		A = expr
+
+    where expr evaluates to val.
+
+    Any such protection of A is cancelled by protect(A, 0).
+
+    If A has components as in a matrix or list, components may be
+    protected independently from each other and from A by stateents like:
+
+		protect(A[0], 1);
+		protect(A[1], 2);
+
+    "Copy" refers to the use of copy(A, B, ...) or blkcpy(B, A, ...) to
+    copy A to B.  For example if B is a block, then after
+
+		protect(B, 16);
+
+    attempts to copy to B will fail.
+
+    The protection status of var refers to var as a variable, not to its
+    current value: if an operation like var = value is executed it may
+    change the value of var but not protect(var).
+
+    A named block may be referred to by using the blocks() or blk()
+    functions, or by assigning it to a variable A and then using either
+    A or *A.  In the latter cases, protect(A, sts) sets the status for
+    the variable A; protect(*A, sts) assigns the status for the named
+    block.  For example, protect(*A,16) will prevent any copying to the
+    named block; protect(A,16) will prevent any copying to the named block
+    only when it is referred to by A.
+
+    The protection provided by sts = 32 prevents relocation of the memory
+    used by a block, the freeing of a named block, and addition or removal
+    of one or more elements from a list.  For example, if a block B has
+    maxsize 256, then after
+
+		protect(B, 32);
+
+    copy(A, B) will fail if the copying would cause size(B) to equal or
+    exceed 256; if B is a named block, blkfree(B) will not be permitted.
+    If the current value of L is a list, protect(L, 32) prevents the
+    execution of push, pop, append, remove, insert, and delete with first
+    argument L.
+
+    With bit 8 of sts set, as with
+
+		protect(A, 257);
+
+    the protection provided by the lower order bits extends to any
+    elements A may have, and recursively to any elements of these elements,
+    etc.
+
+    All protection of A as described above is removed by
+
+		protect(A, 0).
+
+
+EXAMPLE
+	> A = 27
+	> protect(A,1)
+	> protect(A)
+		1
+	> A = 99
+	No-assign-to destination for assign
+
+	> protect(A,2)
+	> A = 45
+	Change of value in assign not permitted
+
+	> A = 27
+
+	> protect(A,4)
+	> A = 2 + 3i
+	Change of type in assign not permitted
+
+	> protect(A,8)
+	> A = 1/0
+	Error value in assign not permitted
+
+	> A = mat[4] = {1,2,3,4}
+	> B = list(5,6,7,8)
+	> protect(A,16)
+	> copy(B,A)
+		Error 10226
+	> strerror()
+		"No-copy-to destination variable"
+
+	> A = blk(0,5)
+	> protect(A,32)
+	> copy("abc", A)
+	> copy("de",A)
+	Error 10229
+	> strerror()
+	"No-relocation destination variable"
+
+	> A = list(1,2,3)
+	> append(A, 4)
+	No-relocate list for push
+
+	> protect(A, 64)
+	> X = A
+	No-assign-from source for assign
+
+	> protect(A,128)
+	> copy(A,B)
+	Error 10225
+	> strerror()
+	"No-copy-from source variable"
+
+	> mat A[2] = {1, list(2, mat[2])}
+	> protect(A,257)
+	> A[1][[1]][1] = 4
+	No-assign-to destination for assign
+	> protect(A,256)
+	> A[1][[1]][1] = 4
+	> A[1][[1]]
+
+	mat [2] (2 elements, 1 nonzero):
+	    [0] = 0
+ 	    [1] = 4
+
+	> A = blk("alpha") = {1,2,3,4}
+	> protect(A, 0)
+	> protect(*A, 16)
+	copy("abc", A)
+	Error 10228
+	No-copy-to destination named block
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    assign, copy, blk

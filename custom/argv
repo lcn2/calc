@@ -1,0 +1,41 @@
+NAME
+    argv - displays information about its args
+
+SYNOPSIS
+    custom("argv" [, arg ...])
+
+TYPES
+    arg		any
+
+    return	int
+
+DESCRIPTION
+    This custom function will, for each arg given print:
+
+	arg number
+	arg type
+	number of elements (size())
+	memory size (sizeof())
+
+    The number of args passed, not counting the initial "argv" name
+    arg is returned.
+
+EXAMPLE
+    > foo=5^713; bar=17; baz=list(2,3,4);
+    > custom("argv", foo, bar, baz, 3+4.5i, pi())
+	    arg[0]  rational_value          size=1  sizeof=272
+	    arg[1]  rational_value          size=1  sizeof=68
+	    arg[2]  list                    size=3  sizeof=256
+	    arg[3]  complex_value           size=1  sizeof=140
+	    arg[4]  rational_value          size=1  sizeof=84
+	    5
+
+LIMITS
+    calc must be built with ALLOW_CUSTOM= -DCUSTOM
+    calc must be executed with a -C arg.
+
+LIBRARY
+    none
+
+SEE ALSO
+    custom

@@ -38,7 +38,6 @@ define ss(p)
 	print a : "^2 +" , b : "^2 =" , a^2 + b^2;
 }
 
-global lib_debug;
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
     print "ss(p) defined";
 }

@@ -1,0 +1,100 @@
+NAME
+    sha1 - Secure Hash Algorithm (SHS-1 FIPS Pub 180-1)
+
+SYNOPSIS
+    sha1([arg1 [, val ...]])
+
+TYPES
+    arg1	any
+    val		any
+
+    return	HASH or number
+
+DESCRIPTION
+    The sha1() builtin implements the old Secure Hash Algorithm
+    (SHA).  The SHA is sometimes referenced as SHS.  The SHA
+    is a 160 bit hash.
+
+    With no args, sha1() returns the default initial SHA-1 HASH state.
+
+    If arg1 is a HASH state and no other val args are given, then the
+    HASH state is finalized and the numeric value of the hash is given.
+
+    If arg1 is a HASH state and one or more val args are given,
+    then the val args are used to modify the arg1 HASH state.
+    The new arg1 HASH state is returned.
+
+    If arg1 is not a a HASH state, then the initial HASH is
+    used and modifed by arg1 and any val args supplied.  The
+    return value is the new HASH state.
+
+    The following table gives a summary of actions and return values.
+    Here, assume that 'h' is a HASH state:
+
+	sha1()			HASH	returns initial HASH state
+
+	sha1(h)			number	h is put into final form and the
+					numeric value of the hash state
+
+	sha1(x)			HASH	modify the initial state by hashing 'x'
+
+	sha1(sha1(), x)		HASH	the same as sha1(x)
+
+	sha1(x, y)		HASH	the same as sha1(sha1(x), y)
+
+	sha1(h, x, y)		HASH	modify state 'h' by 'x' and then 'y'
+
+	sha1(sha1(h,x,y))	number	numeric value of the above call
+
+EXAMPLE
+    > base(16)
+	    0xa
+
+    > sha1()
+	    sha1 hash state
+    > sha1(sha1())
+	    0xda39a3ee5e6b4b0d3255bfef95601890afd80709
+
+    > sha1("x", "y", "z") == sha1("xyz")
+	    1
+    > sha1("x", "y", "z") == sha1("xy")
+	    0
+
+    > sha1(sha1("this is", 7^19-8, "a composit", 3i+4.5, "hash"))
+	    0xc3e1b562bf45b3bcfc055ac65b5b39cdeb6a6c55
+
+    > x = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi())
+    > x
+	    sha1 hash state
+    > sha1(x)
+	    0x988d2de4584b7536aa9a50a5749707a37affa1b5
+
+    > y = sha1()
+    > y = sha1(y, list(1,2,3), "curds and whey")
+    > y = sha1(y, 2^21701-1)
+    > y = sha1(y, pi())
+    > y
+	    sha1 hash state
+    > sha1(y)
+	    0x988d2de4584b7536aa9a50a5749707a37affa1b5
+
+LIMITS
+    none
+
+LIBRARY
+    HASH* hash_init(int, HASH*);
+    void hash_free(HASH*);
+    HASH* hash_copy(HASH*);
+    int hash_cmp(HASH*, HASH*);
+    void hash_print(HASH*);
+    ZVALUE hash_final(HASH*);
+    HASH* hash_long(int, long, HASH*);
+    HASH* hash_zvalue(int, ZVALUE, HASH*);
+    HASH* hash_number(int, void*, HASH*);
+    HASH* hash_complex(int, void*, HASH*);
+    HASH* hash_str(int, char*, HASH*);
+    HASH* hash_usb8(int, USB8*, int, HASH*);
+    HASH* hash_value(int, void*, HASH*);
+
+SEE ALSO
+    ishash, sha

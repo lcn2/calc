@@ -7,6 +7,7 @@
  * For terminal input, this also provides a simple command stack.
  */
 
+#include <stdio.h>
 #include <ctype.h>
 #include <pwd.h>
 #include <sys/types.h>
@@ -16,6 +17,8 @@
 #include "hist.h"
 
 extern int stdin_tty;		/* TRUE if stdin is a tty */
+extern FILE *f_open(char *name, char *mode);
+extern FILE *curstream(void);
 
 
 #define TTYSIZE		100	/* reallocation size for terminal buffers */

@@ -1,30 +1,47 @@
 /*
- * Copyright (c) 1996 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Opcode execution module
  */
 
+#include <stdio.h>
+#include <sys/types.h>
+#include <setjmp.h>
+
 #include "calc.h"
 #include "opcodes.h"
 #include "func.h"
 #include "symbol.h"
 #include "hist.h"
-#include "args.h"
 #include "file.h"
 #include "zrand.h"
+#include "zrandom.h"
 #include "have_fpos.h"
+#include "custom.h"
+#include "math_error.h"
+#include "block.h"
+#include "string.h"
 
 #define	QUICKLOCALS	20		/* local vars to handle quickly */
 
 
-VALUE *stack;				/* current location of top of stack */
 static VALUE stackarray[MAXSTACK];	/* storage for stack */
 static VALUE oldvalue;			/* previous calculation value */
-static char *funcname;			/* function being executed */
-static long funcline;			/* function line being executed */
-int dumpnames;				/* names if TRUE, otherwise indices */
+static BOOL saveval = TRUE;		/* to enable or disable saving */
+static int calc_errno;			/* most recent error-number */
+static int errcount;			/* counts calls to error_value */
+static int errmax = ERRMAX;		/* maximum for errcount without abort */
+static BOOL go;
+
+/*
+ * global symbols
+ */
+VALUE *stack;			/* current location of top of stack */
+int dumpnames;			/* names if TRUE, otherwise indices */
+char *funcname;			/* function being executed */
+long funcline;			/* function line being executed */
 
 
 /*
@@ -113,6 +130,7 @@ o_localaddr(FUNC *fp, VALUE *locals, long index)
 	stack++;
 	stack->v_addr = locals;
 	stack->v_type = V_ADDR;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -127,6 +145,7 @@ o_globaladdr(FUNC *fp, GLOBAL *sp)
 	stack++;
 	stack->v_addr = &sp->g_value;
 	stack->v_type = V_ADDR;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -140,11 +159,13 @@ o_paramaddr(FUNC *fp, int argcount, VALUE *args, long index)
 	}
 	args += index;
 	stack++;
-	if (args->v_type == V_ADDR)
-		stack->v_addr = args->v_addr;
-	else
-		stack->v_addr = args;
+	if (args->v_type == V_OCTET || args->v_type == V_ADDR) {
+		*stack = *args;
+		return;
+	}
+	stack->v_addr = args;
 	stack->v_type = V_ADDR;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -230,6 +251,7 @@ o_number(FUNC *fp, long arg)
 	stack++;
 	stack->v_num = qlink(q);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -246,13 +268,14 @@ o_imaginary(FUNC *fp, long arg)
 		/*NOTREACHED*/
 	}
 	stack++;
+	stack->v_subtype = V_NOSUBTYPE;
 	if (qiszero(q)) {
 		stack->v_num = qlink(q);
 		stack->v_type = V_NUM;
 		return;
 	}
 	c = comalloc();
-	c->real = qlink(&_qzero_);
+	qfree(c->imag);
 	c->imag = qlink(q);
 	stack->v_com = c;
 	stack->v_type = V_COM;
@@ -261,12 +284,11 @@ o_imaginary(FUNC *fp, long arg)
 
 /*ARGSUSED*/
 static void
-o_string(FUNC *fp, char *cp)
+o_string(FUNC *fp, long arg)
 {
 	stack++;
-	stack->v_str = cp;
+	stack->v_str = slink(findstring(arg));
 	stack->v_type = V_STR;
-	stack->v_subtype = V_STRLITERAL;
 }
 
 
@@ -341,6 +363,7 @@ o_matcreate(FUNC *fp, long dim)
 	}
 	stack++;
 	stack->v_type = V_MAT;
+	stack->v_subtype = V_NOSUBTYPE;
 	stack->v_mat = mp;
 }
 
@@ -351,35 +374,79 @@ o_eleminit(FUNC *fp, long index)
 {
 	VALUE *vp;
 	static VALUE *oldvp;
-	MATRIX *mp;
-	OBJECT *op;
 	VALUE tmp;
+	OCTET *ptr;
+	BLOCK *blk;
+	int subtype;
 
 	vp = &stack[-1];
 	if (vp->v_type == V_ADDR)
 		vp = vp->v_addr;
 	switch (vp->v_type) {
 		case V_MAT:
-			mp = vp->v_mat;
-			if ((index < 0) || (index >= mp->m_size)) {
+			if ((index < 0) || (index >= vp->v_mat->m_size)) {
 				math_error("Too many initializer values");
 				/*NOTREACHED*/
 			}
-			oldvp = &mp->m_table[index];
+
+			oldvp = &vp->v_mat->m_table[index];
 			break;
 		case V_OBJ:
-			op = vp->v_obj;
-			if ((index < 0) || (index >= op->o_actions->count)) {
+			if (index < 0 || index >= vp->v_obj->o_actions->count) {
 				math_error("Too many initializer values");
 				/*NOTREACHED*/
 			}
-			oldvp = &op->o_table[index];
+			oldvp = &vp->v_obj->o_table[index];
 			break;
+		case V_LIST:
+			oldvp = listfindex(vp->v_list, index);
+			if (oldvp == NULL) {
+				math_error("Too many initializer values");
+				/*NOTREACHED*/
+			}
+			break;
+		case V_STR:
+			if (index < 0 || index >= vp->v_str->s_len) {
+				math_error("Bad index for string initializing");
+				/*NOTREACHED*/
+			}
+			ptr = (OCTET *)(&vp->v_str->s_str[index]);
+			vp = stack;
+			if (vp->v_type == V_ADDR)
+				vp = vp->v_addr;
+			copy2octet(vp, ptr);
+			freevalue(stack--);
+			return;
+		case V_NBLOCK:
+		case V_BLOCK:
+			if (vp->v_type == V_NBLOCK) {
+				blk = vp->v_nblock->blk;
+				if (blk->data == NULL) {
+					math_error("Attempt to initialize freed block");
+					/*NOTREACHED*/
+				}
+			}
+			else
+				blk = vp->v_block;
+			if (index >= blk->maxsize) {
+				math_error("Too many initializer values");
+				/*NOTREACHED*/
+			}
+			ptr = blk->data + index;
+			vp = stack;
+			if (vp->v_type == V_ADDR)
+				vp = vp->v_addr;
+			copy2octet(vp, ptr);
+			if (index >= blk->datalen)
+				blk->datalen = index + 1;
+			freevalue(stack--);
+			return;
 		default:
-			math_error("Attempt to initialize non matrix or object");
+			math_error("Bad destination type for eleminit");
 			/*NOTREACHED*/
 	}
 	vp = stack--;
+	subtype = oldvp->v_subtype;
 	if (vp->v_type == V_ADDR) {
 		vp = vp->v_addr;
 		if (vp == oldvp)
@@ -390,11 +457,12 @@ o_eleminit(FUNC *fp, long index)
 		tmp = *vp;
 	freevalue(oldvp);
 	*oldvp = tmp;
+	oldvp->v_subtype = subtype;
 }
 
 
 /*
- * o_indexaddr 
+ * o_indexaddr
  *
  * given:
  *	fp		function to calculate
@@ -410,6 +478,9 @@ o_indexaddr(FUNC *fp, long dim, long writeflag)
 	VALUE *val;
 	VALUE *vp;
 	VALUE indices[MAXDIM];	/* index values */
+	long index;		/* single dimension index for blocks */
+	VALUE ret;		/* OCTET from as indexed from a block */
+	BLOCK *blk;
 
 	flag = (writeflag != 0);
 	if (dim <= 0)  {
@@ -417,11 +488,14 @@ o_indexaddr(FUNC *fp, long dim, long writeflag)
 		/*NOTREACHED*/
 	}
 	val = &stack[-dim];
-	if (val->v_type != V_ADDR) {
-		math_error("Non-pointer for indexaddr");
-		/*NOTREACHED*/
+	if (val->v_type != V_NBLOCK && val->v_type != V_FILE) {
+		if (val->v_type != V_ADDR) {
+			math_error("Non-pointer for indexaddr");
+			/*NOTREACHED*/
+		}
+		val = val->v_addr;
 	}
-	val = val->v_addr;
+	blk = NULL;
 	vp = &stack[-dim + 1];
 	for (i = 0; i < dim; i++) {
 		if (vp->v_type == V_ADDR)
@@ -436,6 +510,105 @@ o_indexaddr(FUNC *fp, long dim, long writeflag)
 			break;
 		case V_ASSOC:
 			vp = associndex(val->v_assoc, flag, dim, indices);
+			break;
+		case V_NBLOCK:
+                case V_BLOCK:
+			if (val->v_type == V_BLOCK)
+				blk = val->v_block;
+			else
+				blk = val->v_nblock->blk;
+			if (blk->data == NULL) {
+				math_error("Freed block");
+				/*NOTREACHED*/
+			}
+
+			/*
+			 * obtain single dimensional block index
+			 */
+			if (dim != 1) {
+				math_error("block has only one dimension");
+				/*NOTREACHED*/
+			}
+			if (indices[0].v_type != V_NUM) {
+				math_error("Non-numeric index for block");
+				/*NOTREACHED*/
+			}
+			if (qisfrac(indices[0].v_num)) {
+				math_error("Non-integral index for block");
+				/*NOTREACHED*/
+			}
+			if (zge31b(indices[0].v_num->num) ||
+			    zisneg(indices[0].v_num->num)) {
+				math_error("Index out of bounds for block");
+				/*NOTREACHED*/
+			}
+			index = ztoi(indices[0].v_num->num);
+
+			if (index >= blk->maxsize) {
+				math_error("Index out of bounds for block");
+				/*NOTREACHED*/
+			}
+			if (index >= blk->datalen)
+				blk->datalen = index + 1;
+			ret.v_type = V_OCTET;
+			ret.v_subtype = V_NOSUBTYPE;
+			ret.v_octet = &blk->data[index];
+			freevalue(stack--);
+			*stack = ret;
+			return;
+		case V_STR:
+			if (dim != 1) {
+				math_error("string has only one dimension");
+				/*NOTREACHED*/
+			}
+			if (indices[0].v_type != V_NUM) {
+				math_error("Non-numeric index for string");
+				/*NOTREACHED*/
+			}
+			if (qisfrac(indices[0].v_num)) {
+				math_error("Non-integral index for string");
+				/*NOTREACHED*/
+			}
+			if (zge31b(indices[0].v_num->num) ||
+			    zisneg(indices[0].v_num->num)) {
+				math_error("Index out of bounds for string");
+				/*NOTREACHED*/
+			}
+			index = ztoi(indices[0].v_num->num);
+			if (index >= val->v_str->s_len) {
+				math_error("Index out of bounds for string");
+				/*NOTREACHED*/
+			}
+			ret.v_type = V_OCTET;
+			ret.v_subtype = V_NOSUBTYPE;
+			ret.v_octet = (OCTET *)(val->v_str->s_str + index);
+			freevalue(stack--);
+			*stack = ret;
+			return;
+		case V_LIST:
+			if (dim != 1) {
+				math_error("list has only one dimension");
+				/*NOTREACHED*/
+			}
+			if (indices[0].v_type != V_NUM) {
+				math_error("Non-numeric index for list");
+				/*NOTREACHED*/
+			}
+			if (qisfrac(indices[0].v_num)) {
+				math_error("Non-integral index for list");
+				/*NOTREACHED*/
+			}
+			if (zge31b(indices[0].v_num->num) ||
+			    zisneg(indices[0].v_num->num)) {
+				math_error("Index out of bounds for list");
+				/*NOTREACHED*/
+			}
+			index = ztoi(indices[0].v_num->num);
+			vp = listfindex(val->v_list, index);
+			if (vp == NULL) {
+				math_error("Index out of bounds for list");
+				/*NOTREACHED*/
+			}
 			break;
 		default:
 			math_error("Illegal value for indexing");
@@ -502,6 +675,7 @@ o_objcreate(FUNC *fp, long arg)
 {
 	stack++;
 	stack->v_type = V_OBJ;
+	stack->v_subtype = V_NOSUBTYPE;
 	stack->v_obj = objalloc(arg);
 }
 
@@ -512,52 +686,211 @@ o_assign(void)
 	VALUE *var;		/* variable value */
 	VALUE *vp;
 	VALUE tmp;
+	short subtype;
 
+	/*
+	 * get what we will store into
+	 */
 	var = &stack[-1];
+
+	/*
+	 * If what we will store into is an OCTET, we must
+	 * handle this specially.  Only the bottom 8 bits of
+	 * certain value types will be assigned ... not the
+	 * entire value.
+	 */
+	if (var->v_type == V_OCTET) {
+		if (var->v_subtype & V_NOCOPYTO) {
+			math_error("No-copy-to octet destination");
+			/*NOTREACHED*/
+		}
+		copy2octet(stack, var->v_octet);
+		freevalue(stack--);
+		return;
+	}
 	if (var->v_type != V_ADDR) {
 		math_error("Assignment into non-variable");
 		/*NOTREACHED*/
 	}
+
 	var = var->v_addr;
-	vp = stack--;
+	subtype = var->v_subtype;
+
+	if (subtype & V_NOASSIGNTO) {
+		math_error("No-assign-to destination for assign");
+		/*NOTREACHED*/
+	}
+
+	vp = stack;
+
+	if (var->v_type == V_OBJ)  {
+		if (vp->v_type == V_ADDR)
+			vp = vp->v_addr;
+		(void) objcall(OBJ_ASSIGN, var, vp, NULL_VALUE);
+		freevalue(stack--);
+		return;
+	}
+
+	stack--;
+
+	/*
+	 * Get what we will store from
+	 * If what will store from is an address, make a copy
+	 * of the de-referenced address instead.
+	 */
 	if (vp->v_type == V_ADDR) {
 		vp = vp->v_addr;
 		if (vp == var)
 			return;
+		if (vp->v_subtype & V_NOASSIGNFROM) {
+			math_error("No-assign-from source for assign");
+			/*NOTREACHED*/
+		}
 		copyvalue(vp, &tmp);
-	}
-	else
+	} else if (vp->v_type == V_OCTET) {
+		copyvalue(vp, &tmp);
+	} else {
 		tmp = *vp;
+	}
+
+	/*
+	 * perform the assignment
+	 */
+	if ((subtype & V_NONEWVALUE) && comparevalue(var, &tmp)) {
+		freevalue(&tmp);
+		math_error("Change of value in assign not permitted");
+		/*NOTREACHED*/
+	}
+	if ((subtype & V_NONEWTYPE) && var->v_type != tmp.v_type) {
+		freevalue(&tmp);
+		math_error("Change of type in assign not permitted");
+		/*NOTREACHED*/
+	}
+	if ((subtype & V_NOERROR) && tmp.v_type < 0) {
+		math_error("Error value in assign not permitted");
+		/*NOTREACHED*/
+	}
 	freevalue(var);
 	*var = tmp;
+	var->v_subtype = subtype;
+}
+
+
+static void
+o_assignback(void)
+{
+	VALUE tmp;
+
+	tmp = stack[-1];
+	stack[-1] = stack[0];
+	stack[0] = tmp;
+	o_assign();
 }
 
 
 static void
 o_assignpop(void)
 {
-	VALUE *var;		/* variable value */
-	VALUE *vp;
-	VALUE tmp;
+	o_assign();
+	stack--;
+}
 
-	var = &stack[-1];
-	if (var->v_type != V_ADDR) {
-		math_error("Assignment into non-variable");
+
+static void
+o_ptr(void)
+{
+	switch (stack->v_type) {
+		case V_ADDR:
+			stack->v_type = V_VPTR;
+			break;
+		case V_OCTET:
+			stack->v_type = V_OPTR;
+			break;
+		case V_STR:
+			sfree(stack->v_str);
+			stack->v_type = V_SPTR;
+			break;
+		case V_NUM:
+			qfree(stack->v_num);
+			stack->v_type = V_NPTR;
+			break;
+		default:
+			math_error("Addressing non-addressable type");
+			/*NOTREACHED*/
+	}
+}
+
+
+static void
+o_deref(void)
+{
+	VALUE *vp;
+	short subtype;
+
+	vp = stack;
+	subtype = stack->v_subtype;
+
+	if (stack->v_type == V_OCTET) {
+		stack->v_num = itoq(*vp->v_octet);
+		stack->v_type = V_NUM;
+		return;
+	}
+	if (stack->v_type == V_OPTR) {
+		stack->v_type = V_OCTET;
+		return;
+	}
+	if (stack->v_type == V_VPTR) {
+		stack->v_type = V_ADDR;
+		return;
+	}
+	if (stack->v_type == V_SPTR) {
+		stack->v_type = V_STR;
+		return;
+	}
+	if (stack->v_type == V_NPTR) {
+		if (stack->v_num->links == 0) {
+			stack->v_type = V_NULL;
+			return;
+		}
+		stack->v_type = V_NUM;
+		stack->v_num->links++;
+		return;
+	}
+	if (stack->v_type != V_ADDR) {
+		math_error("Deferencing a non-variable");
 		/*NOTREACHED*/
 	}
-	var = var->v_addr;
-	vp = &stack[0];
-	stack -= 2;
-	if (vp->v_type == V_ADDR) {
-		vp = vp->v_addr;
-		if (vp == var)
-			return;
-		copyvalue(vp, &tmp);
+	vp = vp->v_addr;
+	switch (vp->v_type) {
+		case V_ADDR:
+		case V_OCTET:
+			*stack = *vp;
+			break;
+		case V_OPTR:
+			*stack = *vp;
+			stack->v_type = V_OCTET;
+			break;
+		case V_VPTR:
+			*stack = *vp;
+			stack->v_type = V_ADDR;
+			break;
+		case V_SPTR:
+			*stack = *vp;
+			stack->v_type = V_STR;
+			break;
+		case V_NPTR:
+			if (vp->v_num->links == 0) {
+				stack->v_type = V_NULL;
+				break;
+			}
+			stack->v_type = V_NUM;
+			stack->v_num = vp->v_num;
+			stack->v_num->links++;
+			break;
+		default:
+			copyvalue(vp, stack);
 	}
-	else
-		tmp = *vp;
-	freevalue(var);
-	*var = tmp;
+	stack->v_subtype = subtype;
 }
 
 
@@ -566,17 +899,34 @@ o_swap(void)
 {
 	VALUE *v1, *v2;		/* variables to be swapped */
 	VALUE tmp;
+	USB8 usb;
+	short s1, s2;		/* for subtypes */
 
-	v1 = &stack[-1];
-	v2 = &stack[0];
-	if ((v1->v_type != V_ADDR) || (v2->v_type != V_ADDR)) {
-		math_error("Swapping non-variables");
+	v1 = stack--;
+	v2 = stack;
+
+	if (v1->v_type == V_OCTET && v2->v_type == V_OCTET) {
+			usb = *v1->v_octet;
+			*v1->v_octet = *v2->v_octet;
+			*v2->v_octet = usb;
+	} else if (v1->v_type == V_ADDR && v2->v_type == V_ADDR) {
+		v1 = v1->v_addr;
+		v2 = v2->v_addr;
+		s1 = v1->v_subtype;
+		s2 = v2->v_subtype;
+		if ((s1 | s2) & (V_NOASSIGNTO | V_NOASSIGNFROM)) {
+			math_error("Swap not permitted by protection levels");
+			/*NOTREACHED*/
+		}
+		tmp = *v1;
+		*v1 = *v2;
+		*v2 = tmp;
+		v1->v_subtype = s1;
+		v2->v_subtype = s2;
+	} else {
+		math_error("Swapping values of non-variables");
 		/*NOTREACHED*/
 	}
-	tmp = v1->v_addr[0];
-	v1->v_addr[0] = v2->v_addr[0];
-	v2->v_addr[0] = tmp;
-	stack--;
 	stack->v_type = V_NULL;
 }
 
@@ -586,6 +936,7 @@ o_add(void)
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
+	VALUE w1, w2;
 
 	v1 = &stack[-1];
 	v2 = &stack[0];
@@ -593,7 +944,22 @@ o_add(void)
 		v1 = v1->v_addr;
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
+	if (v1->v_type == V_OCTET) {
+		w1.v_type = V_NUM;
+		w1.v_num = itoq(*v1->v_octet);
+		v1 = &w1;
+	}
+	if (v2->v_type == V_OCTET) {
+		w2.v_type = V_NUM;
+		w2.v_num = itoq(*v2->v_octet);
+		v2 = &w2;
+	}
+
 	addvalue(v1, v2, &tmp);
+	if (v1 == &w1)
+		qfree(w1.v_num);
+	if (v2 == &w2)
+		qfree(w2.v_num);
 	freevalue(stack--);
 	freevalue(stack);
 	*stack = tmp;
@@ -605,6 +971,7 @@ o_sub(void)
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
+	VALUE w1, w2;
 
 	v1 = &stack[-1];
 	v2 = &stack[0];
@@ -612,7 +979,22 @@ o_sub(void)
 		v1 = v1->v_addr;
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
+	if (v1->v_type == V_OCTET) {
+		w1.v_type = V_NUM;
+		w1.v_num = itoq((unsigned char) *v1->v_octet);
+		v1 = &w1;
+	}
+	if (v2->v_type == V_OCTET) {
+		w2.v_type = V_NUM;
+		w2.v_num = itoq((unsigned char) *v2->v_octet);
+		v2 = &w2;
+	}
+
 	subvalue(v1, v2, &tmp);
+	if (v1 == &w1)
+		qfree(w1.v_num);
+	if (v2 == &w2)
+		qfree(w2.v_num);
 	freevalue(stack--);
 	freevalue(stack);
 	*stack = tmp;
@@ -624,6 +1006,7 @@ o_mul(void)
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
+	VALUE w1, w2;
 
 	v1 = &stack[-1];
 	v2 = &stack[0];
@@ -631,7 +1014,21 @@ o_mul(void)
 		v1 = v1->v_addr;
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
+	if (v1->v_type == V_OCTET) {
+		w1.v_type = V_NUM;
+		w1.v_num = itoq(*v1->v_octet);
+		v1 = &w1;
+	}
+	if (v2->v_type == V_OCTET) {
+		w2.v_type = V_NUM;
+		w2.v_num = itoq(*v2->v_octet);
+		v2 = &w2;
+	}
 	mulvalue(v1, v2, &tmp);
+	if (v1 == &w1)
+		qfree(w1.v_num);
+	if (v2 == &w2)
+		qfree(w2.v_num);
 	freevalue(stack--);
 	freevalue(stack);
 	*stack = tmp;
@@ -662,6 +1059,7 @@ o_div(void)
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
+	VALUE w1, w2;
 
 	v1 = &stack[-1];
 	v2 = &stack[0];
@@ -669,7 +1067,21 @@ o_div(void)
 		v1 = v1->v_addr;
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
+	if (v1->v_type == V_OCTET) {
+		w1.v_type = V_NUM;
+		w1.v_num = itoq(*v1->v_octet);
+		v1 = &w1;
+	}
+	if (v2->v_type == V_OCTET) {
+		w2.v_type = V_NUM;
+		w2.v_num = itoq(*v2->v_octet);
+		v2 = &w2;
+	}
 	divvalue(v1, v2, &tmp);
+	if (v1 == &w1)
+		qfree(w1.v_num);
+	if (v2 == &w2)
+		qfree(w2.v_num);
 	freevalue(stack--);
 	freevalue(stack);
 	*stack = tmp;
@@ -741,6 +1153,15 @@ o_quomod(void)
 	}
 	v3 = v3->v_addr;
 	v4 = v4->v_addr;
+
+	valquo.v_subtype = v3->v_subtype;
+	valmod.v_subtype = v4->v_subtype;
+
+	if ((v3->v_subtype | v4->v_subtype) & V_NOASSIGNTO) {
+		math_error("No-assign-to destination for quomod");
+		/*NOTREACHED*/
+	}
+
 	valquo.v_type = V_NUM;
 	valmod.v_type = V_NUM;
 	res = qquomod(v1->v_num, v2->v_num, &valquo.v_num, &valmod.v_num);
@@ -752,8 +1173,10 @@ o_quomod(void)
 		qfree(stack->v_num);
 	stack->v_num = (res ? qlink(&_qone_) : qlink(&_qzero_));
 	stack->v_type = V_NUM;
+
 	freevalue(v3);
 	freevalue(v4);
+
 	*v3 = valquo;
 	*v4 = valmod;
 }
@@ -763,7 +1186,7 @@ static void
 o_and(void)
 {
 	VALUE *v1, *v2;
-	NUMBER *q;
+	VALUE tmp;
 
 	v1 = &stack[-1];
 	v2 = &stack[0];
@@ -771,18 +1194,11 @@ o_and(void)
 		v1 = v1->v_addr;
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
-	if ((v1->v_type != V_NUM) || (v2->v_type != V_NUM)) {
-		math_error("Non-numerics for and");
-		/*NOTREACHED*/
-	}
-	q = qand(v1->v_num, v2->v_num);
-	if (stack->v_type == V_NUM)
-		qfree(stack->v_num);
-	stack--;
-	if (stack->v_type == V_NUM)
-		qfree(stack->v_num);
-	stack->v_num = q;
-	stack->v_type = V_NUM;
+
+	andvalue(v1, v2, &tmp);
+	freevalue(stack--);
+	freevalue(stack);
+	*stack = tmp;
 }
 
 
@@ -790,7 +1206,7 @@ static void
 o_or(void)
 {
 	VALUE *v1, *v2;
-	NUMBER *q;
+	VALUE tmp;
 
 	v1 = &stack[-1];
 	v2 = &stack[0];
@@ -798,18 +1214,46 @@ o_or(void)
 		v1 = v1->v_addr;
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
-	if ((v1->v_type != V_NUM) || (v2->v_type != V_NUM)) {
-		math_error("Non-numerics for or");
-		/*NOTREACHED*/
-	}
-	q = qor(v1->v_num, v2->v_num);
-	if (stack->v_type == V_NUM)
-		qfree(stack->v_num);
-	stack--;
-	if (stack->v_type == V_NUM)
-		qfree(stack->v_num);
-	stack->v_num = q;
-	stack->v_type = V_NUM;
+
+	orvalue(v1, v2, &tmp);
+	freevalue(stack--);
+	freevalue(stack);
+	*stack = tmp;
+}
+
+static void
+o_xor (void)
+{
+	VALUE *v1, *v2;
+	VALUE tmp;
+
+	v1 = &stack[-1];
+	v2 = &stack[0];
+
+	if (v1->v_type == V_ADDR)
+		v1 = v1->v_addr;
+	if (v2->v_type == V_ADDR)
+		v2 = v2->v_addr;
+
+	xorvalue(v1, v2, &tmp);
+	freevalue(stack--);
+	freevalue(stack);
+	*stack = tmp;
+}
+
+
+static void
+o_comp (void)
+{
+	VALUE *vp;
+	VALUE tmp;
+
+	vp = stack;
+	if (vp->v_type == V_ADDR)
+		vp = vp->v_addr;
+	compvalue(vp, &tmp);
+	freevalue(stack);
+	*stack = tmp;
 }
 
 
@@ -817,15 +1261,49 @@ static void
 o_not(void)
 {
 	VALUE *vp;
-	int r;
+	VALUE val;
+	int r = 0;
 
 	vp = stack;
 	if (vp->v_type == V_ADDR)
 		vp = vp->v_addr;
+	if (vp->v_type == V_OBJ) {
+		val = objcall(OBJ_NOT, vp, NULL_VALUE, NULL_VALUE);
+		freevalue(stack);
+		*stack = val;
+		return;
+	}
 	r = testvalue(vp);
 	freevalue(stack);
 	stack->v_num = (r ? qlink(&_qzero_) : qlink(&_qone_));
 	stack->v_type = V_NUM;
+}
+
+
+static void
+o_plus (void)
+{
+	VALUE *vp;
+	VALUE tmp;
+
+	vp = stack;
+	if (vp->v_type == V_ADDR)
+		vp = vp->v_addr;
+
+	tmp.v_type = V_NULL;
+	tmp.v_subtype = V_NOSUBTYPE;
+	switch (vp->v_type) {
+		case V_OBJ:
+			tmp = objcall(OBJ_PLUS, vp, NULL_VALUE, NULL_VALUE);
+			break;
+		case V_LIST:
+			addlistitems(vp->v_list, &tmp);
+			break;
+		default:
+			return;
+	}
+	freevalue(stack);
+	*stack = tmp;
 }
 
 
@@ -857,20 +1335,12 @@ static void
 o_invert(void)
 {
 	VALUE *vp;
-	NUMBER *q;
 	VALUE tmp;
 
 	vp = stack;
 	if (vp->v_type == V_ADDR)
 		vp = vp->v_addr;
-	if (vp->v_type == V_NUM) {
-		q = qinv(vp->v_num);
-		if (stack->v_type == V_NUM)
-			qfree(stack->v_num);
-		stack->v_num = q;
-		stack->v_type = V_NUM;
-		return;
-	}
+
 	invertvalue(vp, &tmp);
 	freevalue(stack);
 	*stack = tmp;
@@ -953,7 +1423,7 @@ o_abs(void)
 	stack--;
 	if ((stack->v_type == V_NUM) && !qisneg(v1->v_num))
 		return;
-	q = qabs(v1->v_num);
+	q = qqabs(v1->v_num);
 	if (stack->v_type == V_NUM)
 		qfree(stack->v_num);
 	stack->v_num = q;
@@ -1004,6 +1474,267 @@ o_square(void)
 		return;
 	}
 	squarevalue(vp, &tmp);
+	freevalue(stack);
+	*stack = tmp;
+}
+
+
+static void
+o_test(void)
+{
+	VALUE *vp;
+	int i;
+
+	vp = stack;
+	if (vp->v_type == V_ADDR)
+		vp = vp->v_addr;
+	i = testvalue(vp);
+	freevalue(stack);
+	stack->v_type = V_NUM;
+	stack->v_num = i ? qlink(&_qone_) : qlink(&_qzero_);
+}
+
+
+static void
+o_links(void)
+{
+	VALUE *vp;
+	long links;
+	BOOL haveaddress;
+
+	vp = stack;
+	haveaddress = (vp->v_type == V_ADDR);
+	if (haveaddress)
+		vp = vp->v_addr;
+	switch (vp->v_type) {
+		case V_NUM: links = vp->v_num->links; break;
+		case V_COM: links = vp->v_com->links; break;
+		case V_STR: links = vp->v_str->s_links; break;
+		default:
+			freevalue(stack);
+			return;
+	}
+	if (links <= 0) {
+		math_error("Non-positive links!!!");
+		/*NOTREACHED*/
+	}
+	freevalue(stack);
+	if (!haveaddress)
+		links--;
+	stack->v_type = V_NUM;
+	stack->v_num = itoq(links);
+}
+
+
+static void
+o_bit (void)
+{
+	VALUE *v1, *v2;
+	long index;
+	int r;
+
+	v1 = &stack[-1];
+	v2 = &stack[0];
+	if (v1->v_type == V_ADDR)
+		v1 = v1->v_addr;
+	if (v2->v_type == V_ADDR)
+		v2 = v2->v_addr;
+	if (v2->v_type != V_NUM || qisfrac(v2->v_num)) {
+		freevalue(stack--);
+		freevalue(stack);
+		*stack = error_value(E_BIT1);
+		return;
+	}
+	if (zge31b(v2->v_num->num)) {
+		freevalue(stack--);
+		freevalue(stack);
+		*stack = error_value(E_BIT2);
+		return;
+	}
+	index = qtoi(v2->v_num);
+	switch (v1->v_type) {
+		case V_NUM:
+			r = qisset(v1->v_num, index);
+			break;
+		case V_STR:
+			r = stringbit(v1->v_str, index);
+			break;
+		default:
+			r = 2;
+	}
+	freevalue(stack--);
+	freevalue(stack);
+	if (r > 1)
+		*stack = error_value(E_BIT1);
+	else if (r < 0)
+		stack->v_type = V_NULL;
+	else {
+		stack->v_type = V_NUM;
+		stack->v_num = itoq(r);
+	}
+}
+
+static void
+o_highbit (void)
+{
+	VALUE *vp;
+	long index;
+	unsigned int u;
+
+	vp = stack;
+	if (vp->v_type == V_ADDR)
+		vp = vp->v_addr;
+	switch (vp->v_type) {
+		case V_NUM:
+			if (qiszero(vp->v_num)) {
+				index = -1;
+				break;
+			}
+			if (qisfrac(vp->v_num)) {
+				index = -2;
+				break;
+			}
+			index = zhighbit(vp->v_num->num);
+			break;
+		case V_STR:
+			index = stringhighbit(vp->v_str);
+			break;
+		case V_OCTET:
+			u = *vp->v_octet;
+			for (index = -1; u; u >>= 1, ++index);
+			break;
+		default:
+			index = -3;
+	}
+	freevalue(stack);
+	switch (index) {
+		case -3:
+			*stack = error_value(E_HIGHBIT1);
+			return;
+		case -2:
+			*stack = error_value(E_HIGHBIT2);
+			return;
+		default:
+			stack->v_type = V_NUM;
+			stack->v_num = itoq(index);
+	}
+}
+
+
+static void
+o_lowbit (void)
+{
+	VALUE *vp;
+	long index;
+	unsigned int u;
+
+	vp = stack;
+	if (vp->v_type == V_ADDR)
+		vp = vp->v_addr;
+	switch (vp->v_type) {
+		case V_NUM:
+			if (qiszero(vp->v_num)) {
+				index = -1;
+				break;
+			}
+			if (qisfrac(vp->v_num)) {
+				index = -2;
+				break;
+			}
+			index = zlowbit(vp->v_num->num);
+			break;
+		case V_STR:
+			index = stringlowbit(vp->v_str);
+			break;
+		case V_OCTET:
+			u = *vp->v_octet;
+			index = -1;
+			if (u) do {
+				++index;
+				u >>= 1;
+			} while (!(u & 1));
+			break;
+		default:
+			index = -3;
+	}
+	freevalue(stack);
+	switch (index) {
+		case -3:
+			*stack = error_value(E_LOWBIT1);
+			return;
+		case -2:
+			*stack = error_value(E_LOWBIT2);
+			return;
+		default:
+			stack->v_type = V_NUM;
+			stack->v_num = itoq(index);
+	}
+}
+
+
+static void
+o_content (void)
+{
+	VALUE *vp;
+	VALUE tmp;
+
+	vp = stack;
+	if (vp->v_type == V_ADDR)
+		vp = vp->v_addr;
+	contentvalue(vp, &tmp);
+	freevalue(stack);
+	*stack = tmp;
+}
+
+
+static void
+o_hashop (void)
+{
+	VALUE *v1, *v2;
+	VALUE tmp;
+
+	v1 = &stack[-1];
+	v2 = &stack[0];
+	if (v1->v_type == V_ADDR)
+		v1 = v1->v_addr;
+	if (v2->v_type == V_ADDR)
+		v2 = v2->v_addr;
+	hashopvalue(v1, v2, &tmp);
+	freevalue(stack--);
+	freevalue(stack);
+	*stack = tmp;
+}
+
+
+static void
+o_backslash (void)
+{
+	VALUE *vp;
+	VALUE tmp;
+
+	vp = stack;
+	if (vp->v_type == V_ADDR)
+		vp = vp->v_addr;
+	backslashvalue(vp, &tmp);
+	freevalue(stack);
+	*stack = tmp;
+}
+
+
+static void
+o_setminus (void)
+{
+	VALUE *v1, *v2;
+	VALUE tmp;
+
+	v1 = &stack[-1];
+	v2 = &stack[0];
+	if (v1->v_type == V_ADDR)
+		v1 = v1->v_addr;
+	if (v2->v_type == V_ADDR)
+		v2 = v2->v_addr;
+	setminusvalue(v1, v2, &tmp);
+	freevalue(stack--);
 	freevalue(stack);
 	*stack = tmp;
 }
@@ -1228,8 +1959,10 @@ o_ishash(void)
 	if (vp->v_type == V_ADDR)
 		vp = vp->v_addr;
 	r = (vp->v_type == V_HASH);
+	if (r != 0)
+		r = vp->v_hash->hashtype;
 	freevalue(stack);
-	stack->v_num = (r ? qlink(&_qone_) : qlink(&_qzero_));
+	stack->v_num = itoq((long) r);
 	stack->v_type = V_NUM;
 }
 
@@ -1246,6 +1979,113 @@ o_isassoc(void)
 	r = (vp->v_type == V_ASSOC);
 	freevalue(stack);
 	stack->v_num = (r ? qlink(&_qone_) : qlink(&_qzero_));
+	stack->v_type = V_NUM;
+}
+
+
+static void
+o_isblock(void)
+{
+	VALUE *vp;
+	long r;
+
+	vp = stack;
+	if (vp->v_type == V_ADDR)
+		vp = vp->v_addr;
+	r = 0;
+	if (vp->v_type == V_NBLOCK)
+		r = 2;
+	else if (vp->v_type == V_BLOCK)
+		r = 1;
+	freevalue(stack);
+	stack->v_num = itoq(r);
+	stack->v_type = V_NUM;
+}
+
+
+static void
+o_isoctet(void)
+{
+	VALUE *vp;
+	long r;
+
+	vp = stack;
+	if (vp->v_type == V_ADDR)
+		vp = vp->v_addr;
+	r = (vp->v_type == V_OCTET);
+	freevalue(stack);
+	stack->v_num = itoq(r);
+	stack->v_type = V_NUM;
+}
+
+
+static void
+o_isptr(void)
+{
+	VALUE *vp;
+	long r;
+
+	vp = stack;
+	if (vp->v_type == V_ADDR)
+		vp = vp->v_addr;
+	r = 0;
+	switch(vp->v_type) {
+		case V_OPTR: r = 1; break;
+		case V_VPTR: r = 2; break;
+		case V_SPTR: r = 3; break;
+		case V_NPTR: r = 4; break;
+	}
+	freevalue(stack);
+	stack->v_num = itoq(r);
+	stack->v_type = V_NUM;
+}
+
+
+static void
+o_isdefined(void)
+{
+	VALUE *vp;
+	long r;
+	long index;
+
+	vp = stack;
+	if (vp->v_type == V_ADDR)
+		vp = vp->v_addr;
+	if (vp->v_type != V_STR) {
+		math_error("Non-string argument for isdefined");
+		/*NOTREACHED*/
+	}
+	r = 0;
+ 	index = getbuiltinfunc(vp->v_str->s_str);
+ 	if (index >= 0)
+ 		r = 1;
+ 	else {
+ 		index = getuserfunc(vp->v_str->s_str);
+ 		if (index >= 0)
+ 			r = 2;
+ 	}
+	freevalue(stack);
+	stack->v_num = itoq(r);
+	stack->v_type = V_NUM;
+}
+
+
+static void
+o_isobjtype(void)
+{
+	VALUE *vp;
+	long index;
+
+	vp = stack;
+	if (vp->v_type == V_ADDR)
+		vp = vp->v_addr;
+	if (vp->v_type != V_STR) {
+		math_error("Non-string argument for isobjtype");
+		/*NOTREACHED*/
+	}
+	index = checkobject(vp->v_str->s_str);
+	freevalue(stack);
+ 	stack->v_num = itoq(index >= 0);
 	stack->v_type = V_NUM;
 }
 
@@ -1438,65 +2278,62 @@ static void
 o_fiaddr(void)
 {
 	register MATRIX *m;	/* current matrix element */
-	NUMBER *q;		/* index value */
 	LIST *lp;		/* list header */
 	ASSOC *ap;		/* association header */
 	VALUE *vp;		/* stack value */
 	long index;		/* index value as an integer */
+	VALUE *res;
 
 	vp = stack;
+	res = NULL;
 	if (vp->v_type == V_ADDR)
 		vp = vp->v_addr;
-	if (vp->v_type != V_NUM) {
-		math_error("Fast indexing by non-number");
-		/*NOTREACHED*/
-	}
-	q = vp->v_num;
-	if (qisfrac(q)) {
+	if (vp->v_type != V_NUM || qisfrac(vp->v_num)) {
 		math_error("Fast indexing by non-integer");
 		/*NOTREACHED*/
 	}
-	index = qtoi(q);
-	if (zge31b(q->num) || (index < 0)) {
+	index = qtoi(vp->v_num);
+	if (zge31b(vp->v_num->num) || (index < 0)) {
 		math_error("Index out of range for fast indexing");
 		/*NOTREACHED*/
 	}
 	if (stack->v_type == V_NUM)
-		qfree(q);
+		qfree(stack->v_num);
 	stack--;
 	vp = stack;
 	if (vp->v_type != V_ADDR) {
-		math_error("Bad value for fast indexing");
+		math_error("Non-pointer for fast indexing");
 		/*NOTREACHED*/
 	}
-	switch (vp->v_addr->v_type) {
+	vp = vp->v_addr;
+	switch (vp->v_type) {
 		case V_OBJ:
-			if (index >= vp->v_addr->v_obj->o_actions->count) {
+			if (index >= vp->v_obj->o_actions->count) {
 				math_error("Index out of bounds for object");
 				/*NOTREACHED*/
 			}
-			vp->v_addr = vp->v_addr->v_obj->o_table + index;
+			res = vp->v_obj->o_table + index;
 			break;
 		case V_MAT:
-			m = vp->v_addr->v_mat;
+			m = vp->v_mat;
 			if (index >= m->m_size) {
 				math_error("Index out of bounds for matrix");
 				/*NOTREACHED*/
 			}
-			vp->v_addr = m->m_table + index;
+			res = m->m_table + index;
 			break;
 		case V_LIST:
-			lp = vp->v_addr->v_list;
-			vp->v_addr = listfindex(lp, index);
-			if (vp->v_addr == NULL) {
+			lp = vp->v_list;
+			res = listfindex(lp, index);
+			if (res == NULL) {
 				math_error("Index out of bounds for list");
 				/*NOTREACHED*/
 			}
 			break;
 		case V_ASSOC:
-			ap = vp->v_addr->v_assoc;
-			vp->v_addr = assocfindex(ap, index);
-			if (vp->v_addr == NULL) {
+			ap = vp->v_assoc;
+			res = assocfindex(ap, index);
+			if (res == NULL) {
 				math_error("Index out of bounds for association");
 				/*NOTREACHED*/
 			}
@@ -1505,6 +2342,7 @@ o_fiaddr(void)
 			math_error("Bad variable type for fast indexing");
 			/*NOTREACHED*/
 	}
+	stack->v_addr = res;
 }
 
 
@@ -1861,12 +2699,18 @@ o_le(void)
 	relvalue(v1, v2, &tmp);
 	freevalue(stack--);
 	freevalue(stack);
-	if (tmp.v_type == V_NUM && !qispos(tmp.v_num))
-		stack->v_num = qlink(&_qone_);
-	else
-		stack->v_num = qlink(&_qzero_);
-	freevalue(&tmp);
+
 	stack->v_type = V_NUM;
+	if (tmp.v_type == V_NUM) {
+		stack->v_num =  !qispos(tmp.v_num) ? qlink(&_qone_):
+				qlink(&_qzero_);
+	}
+	else if (tmp.v_type == V_COM) {
+		stack->v_num = qlink(&_qzero_);
+	}
+	else
+		stack->v_type = V_NULL;
+	freevalue(&tmp);
 }
 
 
@@ -1885,12 +2729,18 @@ o_ge(void)
 	relvalue(v1, v2, &tmp);
 	freevalue(stack--);
 	freevalue(stack);
-	if (tmp.v_type == V_NUM && !qisneg(tmp.v_num))
-		stack->v_num = qlink(&_qone_);
-	else
-		stack->v_num = qlink(&_qzero_);
-	freevalue(&tmp);
 	stack->v_type = V_NUM;
+	if (tmp.v_type == V_NUM) {
+		stack->v_num =  !qisneg(tmp.v_num) ? qlink(&_qone_):
+				qlink(&_qzero_);
+	}
+	else if (tmp.v_type == V_COM) {
+		stack->v_num = qlink(&_qzero_);
+	}
+	else {
+		stack->v_type = V_NULL;
+	}
+	freevalue(&tmp);
 }
 
 
@@ -1909,12 +2759,17 @@ o_lt(void)
 	relvalue(v1, v2, &tmp);
 	freevalue(stack--);
 	freevalue(stack);
-	if (tmp.v_type == V_NUM && qisneg(tmp.v_num))
-		stack->v_num = qlink(&_qone_);
-	else
-		stack->v_num = qlink(&_qzero_);
-	freevalue(&tmp);
 	stack->v_type = V_NUM;
+	if (tmp.v_type == V_NUM) {
+		stack->v_num =  qisneg(tmp.v_num) ? qlink(&_qone_):
+				qlink(&_qzero_);
+	}
+	else if (tmp.v_type == V_COM) {
+		stack->v_num = qlink(&_qzero_);
+	}
+	else
+		stack->v_type = V_NULL;
+	freevalue(&tmp);
 }
 
 
@@ -1933,33 +2788,39 @@ o_gt(void)
 	relvalue(v1, v2, &tmp);
 	freevalue(stack--);
 	freevalue(stack);
-	if (tmp.v_type == V_NUM && qispos(tmp.v_num))
-		stack->v_num = qlink(&_qone_);
-	else
-		stack->v_num = qlink(&_qzero_);
-	freevalue(&tmp);
 	stack->v_type = V_NUM;
+	if (tmp.v_type == V_NUM) {
+		stack->v_num = qispos(tmp.v_num) ? qlink(&_qone_):
+				qlink(&_qzero_);
+	}
+	else if (tmp.v_type == V_COM) {
+		stack->v_num = qlink(&_qzero_);
+	}
+	else
+		stack->v_type = V_NULL;
+	freevalue(&tmp);
 }
 
 
 static void
 o_preinc(void)
 {
-	NUMBER *q, **np;
 	VALUE *vp, tmp;
 
+	if (stack->v_type == V_OCTET) {
+		stack->v_octet[0] = stack->v_octet[0] + 1;
+		return;
+	}
 	if (stack->v_type != V_ADDR) {
 		math_error("Preincrementing non-variable");
 		/*NOTREACHED*/
 	}
-	if (stack->v_addr->v_type == V_NUM) {
-		np = &stack->v_addr->v_num;
-		q = qinc(*np);
-		qfree(*np);
-		*np = q;
-		return;
-	}
 	vp = stack->v_addr;
+
+	if (vp->v_subtype & V_NOASSIGNTO) {
+		math_error("No-assign-to variable for pre ++");
+		/*NOTREACHED*/
+	}
 	incvalue(vp, &tmp);
 	freevalue(vp);
 	*vp = tmp;
@@ -1969,21 +2830,21 @@ o_preinc(void)
 static void
 o_predec(void)
 {
-	NUMBER *q, **np;
 	VALUE *vp, tmp;
 
+	if (stack->v_type == V_OCTET) {
+		--(*stack->v_octet);
+		return;
+	}
 	if (stack->v_type != V_ADDR) {
 		math_error("Predecrementing non-variable");
 		/*NOTREACHED*/
 	}
-	if (stack->v_addr->v_type == V_NUM) {
-		np = &stack->v_addr->v_num;
-		q = qdec(*np);
-		qfree(*np);
-		*np = q;
-		return;
-	}
 	vp = stack->v_addr;
+	if (vp->v_subtype & V_NOASSIGNTO) {
+		math_error("No-assign-to variable for pre --");
+		/*NOTREACHED*/
+	}
 	decvalue(vp, &tmp);
 	freevalue(vp);
 	*vp = tmp;
@@ -1996,16 +2857,29 @@ o_postinc(void)
 	VALUE *vp;
 	VALUE tmp;
 
+	if (stack->v_type == V_OCTET) {
+		stack[1] = stack[0];
+		stack->v_type = V_NUM;
+		stack->v_num = itoq((long) stack->v_octet[0]);
+		stack++;
+		stack->v_octet[0]++;
+		return;
+	}
 	if (stack->v_type != V_ADDR) {
 		math_error("Postincrementing non-variable");
 		/*NOTREACHED*/
 	}
 	vp = stack->v_addr;
+	if (vp->v_subtype & V_NOASSIGNTO) {
+		math_error("No-assign-to variable for post ++");
+		/*NOTREACHED*/
+	}
 	copyvalue(vp, stack++);
 	incvalue(vp, &tmp);
 	freevalue(vp);
 	*vp = tmp;
 	stack->v_type = V_ADDR;
+	stack->v_subtype = V_NOSUBTYPE;
 	stack->v_addr = vp;
 }
 
@@ -2016,17 +2890,30 @@ o_postdec(void)
 	VALUE *vp;
 	VALUE tmp;
 
+	if (stack->v_type == V_OCTET) {
+		stack[1] = stack[0];
+		stack->v_type = V_NUM;
+		stack->v_num = itoq((long) stack->v_octet[0]);
+		stack++;
+		stack->v_octet[0]--;
+		return;
+	}
 	if (stack->v_type != V_ADDR) {
 		math_error("Postdecrementing non-variable");
 		/*NOTREACHED*/
 	}
 	vp = stack->v_addr;
+	if (vp->v_subtype & V_NOASSIGNTO) {
+		math_error("No-assign-to variable for post --");
+		/*NOTREACHED*/
+	}
 	copyvalue(vp, stack++);
 	decvalue(vp, &tmp);
 	freevalue(vp);
 	*vp = tmp;
 	stack->v_type = V_ADDR;
 	stack->v_addr = vp;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2135,8 +3022,13 @@ o_printspace(void)
 
 /*ARGSUSED*/
 static void
-o_printstring(FUNC *fp, char *cp)
+o_printstring(FUNC *fp, long index)
 {
+	STRING *s;
+	char *cp;
+
+	s = findstring(index);
+	cp = s->s_str;
 	math_str(cp);
 	if (conf->traceflags & TRACE_OPCODES)
 		printf("\n");
@@ -2167,24 +3059,49 @@ o_save(FUNC *fp)
 {
 	VALUE *vp;
 
-	vp = stack;
-	if (vp->v_type == V_ADDR)
-		vp = vp->v_addr;
-	freevalue(&fp->f_savedvalue);
-	copyvalue(vp, &fp->f_savedvalue);
+	if (saveval || fp->f_name[1] == '*') {
+		vp = stack;
+		if (vp->v_type == V_ADDR)
+			vp = vp->v_addr;
+		freevalue(&fp->f_savedvalue);
+		copyvalue(vp, &fp->f_savedvalue);
+	}
 }
 
 
 static void
 o_oldvalue(void)
 {
-	copyvalue(&oldvalue, ++stack);
+	++stack;
+	stack->v_type = V_ADDR;
+	stack->v_addr = &oldvalue;
+}
+
+
+void
+o_setsaveval(void)
+{
+	VALUE *vp;
+
+	vp = stack;
+	if (vp->v_type == V_ADDR)
+		vp = vp->v_addr;
+	saveval = testvalue(vp);
+	freevalue(stack);
 }
 
 
 static void
-o_quit(FUNC *fp, char *cp)
+o_quit(FUNC *fp, long index)
 {
+	STRING *s;
+	char *cp;
+
+	cp = NULL;
+	if (index >= 0) {
+		s = findstring(index);
+		cp = s->s_str;
+	}
 	if ((fp->f_name[0] == '*') && (fp->f_name[1] == '\0')) {
 		if (cp)
 			printf("%s\n", cp);
@@ -2193,14 +3110,14 @@ o_quit(FUNC *fp, char *cp)
 			freevalue(stack--);
 		}
 		freevalue(stackarray);
+		libcalc_call_me_last();
 		exit(0);
 	}
-	if (cp) {
-		math_error("%s", cp);
-		/*NOTREACHED*/
-	}
-	math_error("quit statement executed");
-	/*NOTREACHED*/
+	if (cp)
+		printf("%s\n", cp);
+	else
+		printf("Quit statement executed\n");
+	go = FALSE;
 }
 
 
@@ -2252,9 +3169,10 @@ o_setconfig(void)
 		math_error("Non-string for config");
 		/*NOTREACHED*/
 	}
-	type = configtype(v1->v_str);
+	type = configtype(v1->v_str->s_str);
 	if (type < 0) {
-		math_error("Unknown config name \"%s\"", v1->v_str);
+		math_error("Unknown config name \"%s\"",
+				v1->v_str->s_str);
 		/*NOTREACHED*/
 	}
 	config_value(conf, type, &tmp);
@@ -2278,9 +3196,10 @@ o_getconfig(void)
 		math_error("Non-string for config");
 		/*NOTREACHED*/
 	}
-	type = configtype(vp->v_str);
+	type = configtype(vp->v_str->s_str);
 	if (type < 0) {
-		math_error("Unknown config name \"%s\"", vp->v_str);
+		math_error("Unknown config name \"%s\"",
+			vp->v_str->s_str);
 		/*NOTREACHED*/
 	}
 	freevalue(stack);
@@ -2303,35 +3222,7 @@ updateoldvalue(FUNC *fp)
 
 
 /*
- * Routine called on any runtime error, to complain about it (with possible
- * arguments), and then longjump back to the top level command scanner.
- */
-void
-math_error(char *fmt, ...)
-{
-	va_list ap;
-	char buf[MAXERROR+1];
-
-	if (funcname && (*funcname != '*'))
-		fprintf(stderr, "\"%s\": ", funcname);
-	if (funcline && ((funcname && (*funcname != '*')) || !inputisterminal()))
-		fprintf(stderr, "line %ld: ", funcline);
-	va_start(ap, fmt);
-	vsprintf(buf, fmt, ap);
-	va_end(ap);
-	fprintf(stderr, "%s\n", buf);
-	funcname = NULL;
-	if (post_init) {
-		longjmp(jmpbuf, 1);
-	} else {
-		fprintf(stderr, "no jmpbuf jumpback point - ABORTING!!!\n");
-		exit(3);
-	}
-}
-
-
-/*
- * error_value - return error as a value
+ * error_value - return error as a value and store type in calc_errno
  */
 VALUE
 error_value(int e)
@@ -2340,7 +3231,58 @@ error_value(int e)
 
 	if (-e > 0)
 		e = 0;
-	res.v_type = -e;
+	calc_errno = e;
+	if (e > 0)
+		errcount++;
+	if (errcount > errmax && !ign_errmax) {
+		math_error("Error %d caused errcount to exceed errmax", e);
+		/*NOTREACHED*/
+	}
+	res.v_type = (short) -e;
+	return res;
+}
+
+/*
+ * set_errno - return and set calc_errno
+ */
+int
+set_errno(int e)
+{
+	int res;
+
+	res = calc_errno;
+	if (e >= 0)
+		calc_errno = e;
+	return res;
+}
+
+
+/*
+ * set_errcount - return and set errcount
+ */
+int
+set_errcount(int e)
+{
+	int res;
+
+	res = errcount;
+	if (e >= 0)
+		errcount = e;
+	return res;
+}
+
+
+/*
+ * set_errno - return and set errno
+ */
+int
+set_errmax(int e)
+{
+	int res;
+
+	res = errmax;
+	if (e >= 0)
+		errmax = e;
 	return res;
 }
 
@@ -2348,7 +3290,6 @@ error_value(int e)
 /*
  * Fill a newly created matrix at v1 with copies of value at v2.
  */
-
 static void
 o_initfill(void)
 {
@@ -2373,7 +3314,7 @@ o_initfill(void)
 		copyvalue(v2, vp++);
 	freevalue(stack--);
 }
-		
+
 
 /*ARGSUSED*/
 static void
@@ -2390,8 +3331,18 @@ o_show(FUNC *fp, long arg)
 		case 6: showobjtypes(); return;
 		case 7: showfiles(); return;
 		case 8: showsizes(); return;
+		case 9: showerrors(); return;
+		case 10: showcustom(); return;
+		case 11: shownblocks(); return;
+		case 12: showconstants(); return;
+		case 13: showallglobals(); return;
+		case 14: showstatics(); return;
+		case 15: shownumbers(); return;
+		case 16: showredcdata(); return;
+		case 17: showstrings(); return;
+		case 18: showliterals(); return;
 	}
-	fp = findfunc(arg - 9);
+	fp = findfunc(arg - 19);
 	if (fp == NULL) {
 		printf("Function not defined\n");
 		return;
@@ -2420,6 +3371,7 @@ showsizes(void)
 	printf("\tNUMBER\t\t%4ld\n", (long)sizeof(NUMBER));
 	printf("\tZVALUE\t\t%4ld\n", (long)sizeof(ZVALUE));
 	printf("\tCOMPLEX\t\t%4ld\n", (long)sizeof(COMPLEX));
+	printf("\tSTRING\t\t%4ld\n", (long)sizeof(STRING));
 	printf("\tMATRIX\t\t%4ld\n", (long)sizeof(MATRIX));
 	printf("\tLIST\t\t%4ld\n", (long)sizeof(LIST));
 	printf("\tLISTELEM\t%4ld\n", (long)sizeof(LISTELEM));
@@ -2427,6 +3379,8 @@ showsizes(void)
 	printf("\tOBJECTACTIONS\t%4ld\n", (long)sizeof(OBJECTACTIONS));
 	printf("\tASSOC\t\t%4ld\n", (long)sizeof(ASSOC));
 	printf("\tASSOCELEM\t%4ld\n", (long)sizeof(ASSOCELEM));
+	printf("\tBLOCK\t\t%4ld\n", (long)sizeof(BLOCK));
+	printf("\tNBLOCK\t\t%4ld\n", (long)sizeof(NBLOCK));
 	printf("\tCONFIG\t\t%4ld\n", (long)sizeof(CONFIG));
 	printf("\tFILEIO\t\t%4ld\n", (long)sizeof(FILEIO));
 	printf("\tRAND\t\t%4ld\n", (long)sizeof(RAND));
@@ -2486,12 +3440,12 @@ static struct opcode opcodes[MAX_OPCODE+1] = {
 	{o_one,		OPNUL,  "ONE"},		/* put one on the stack */
 	{o_printeol,	OPNUL,  "PRINTEOL"},	/* print end of line */
 	{o_printspace,	OPNUL,  "PRINTSPACE"},	/* print a space */
-	{o_printstring,	OPSTR,  "PRINTSTR"},	/* print constant string */
+	{o_printstring,	OPONE,  "PRINTSTR"},	/* print constant string */
 	{o_dupvalue,	OPNUL,  "DUPVALUE"},	/* duplicate value of top value */
 	{o_oldvalue,	OPNUL,  "OLDVALUE"},	/* old value from previous calc */
 	{o_quo,		OPNUL,  "QUO"},		/* integer quotient of top values */
 	{o_power,	OPNUL,  "POWER"},	/* value raised to a power */
-	{o_quit,	OPSTR,  "QUIT"},	/* quit program */
+	{o_quit,	OPONE,  "QUIT"},	/* quit program */
 	{o_call,	OPTWO,  "CALL"},	/* call built-in routine */
 	{o_getepsilon,	OPNUL,  "GETEPSILON"},	/* get allowed error for calculations */
 	{o_and,		OPNUL,  "AND"},		/* arithmetic and or top two values */
@@ -2503,7 +3457,7 @@ static struct opcode opcodes[MAX_OPCODE+1] = {
 	{o_condorjump,	OPJMP,  "CONDORJUMP"},	/* conditional or jump */
 	{o_condandjump,	OPJMP,  "CONDANDJUMP"},	/* conditional and jump */
 	{o_square,	OPNUL,  "SQUARE"},	/* square top value */
-	{o_string,	OPSTR,  "STRING"},	/* string constant value */
+	{o_string,	OPONE,  "STRING"},	/* string constant value */
 	{o_isnum,	OPNUL,  "ISNUM"},	/* whether value is a number */
 	{o_undef,	OPNUL,  "UNDEF"},	/* load undefined value on stack */
 	{o_isnull,	OPNUL,  "ISNULL"},	/* whether value is the null value */
@@ -2547,7 +3501,28 @@ static struct opcode opcodes[MAX_OPCODE+1] = {
 	{o_isrand,	OPNUL,  "ISRAND"},	/* whether value is a rand element */
 	{o_israndom,	OPNUL,  "ISRANDOM"},	/* whether value is a random element */
 	{o_show,	OPONE,	"SHOW"},	/* show current state data */
-	{o_initfill,	OPNUL,	"INITFILL"}	/* initially fill matrix */
+	{o_initfill,	OPNUL,	"INITFILL"},	/* initially fill matrix */
+	{o_assignback,	OPNUL,	"ASSIGNBACK"},	/* assign in reverse order */
+	{o_test,	OPNUL,  "TEST"},	 /* test that value is "nonzero" */
+	{o_isdefined,	OPNUL,	"ISDEFINED"},	/* whether a string names a function */
+	{o_isobjtype,	OPNUL,	"ISOBJTYPE"},	/* whether a string names an object type */
+	{o_isblock,	OPNUL,	"ISBLK"},	/* whether value is a block */
+	{o_ptr,		OPNUL,	"PTR"},		/* octet pointer */
+	{o_deref,	OPNUL,	"DEREF"},	/* dereference an octet pointer */
+	{o_isoctet,	OPNUL,  "ISOCTET"},	/* whether a value is an octet */
+	{o_isptr,	OPNUL,  "ISPTR"},	/* whether a value is a pointer */
+	{o_setsaveval,	OPNUL,	"SAVEVAL"},	/* enable or disable saving */
+	{o_links,	OPNUL,  "LINKS"},	/* links to number or string */
+	{o_bit,		OPNUL,	"BIT"},		/* whether bit is set */
+	{o_comp,	OPNUL,	"COMP"},	/* complement value */
+	{o_xor,		OPNUL,	"XOR"},		/* xor (~) of values */
+	{o_highbit,	OPNUL,	"HIGHBIT"},	/* highbit of value */
+	{o_lowbit,	OPNUL,	"LOWBIT"},	/* lowbit of value */
+	{o_content,	OPNUL,	"CONTENT"},	/* unary hash op */
+	{o_hashop,	OPNUL,	"HASHOP"},	/* binary hash op */
+	{o_backslash,	OPNUL,	"BACKSLASH"},	/* unary backslash op */
+	{o_setminus,	OPNUL,	"SETMINUS"},	/* binary backslash op */
+	{o_plus,	OPNUL,	"PLUS"}		/* unary + op */
 };
 
 
@@ -2580,10 +3555,12 @@ calculate(FUNC *fp, int argcount)
 	oldline = funcline;
 	funcname = fp->f_name;
 	funcline = 0;
+	go = TRUE;
 	origargcount = argcount;
 	while (argcount < fp->f_paramcount) {
 		stack++;
 		stack->v_type = V_NULL;
+		stack->v_subtype = V_NOSUBTYPE;
 		argcount++;
 	}
 	locals = localtable;
@@ -2602,7 +3579,7 @@ calculate(FUNC *fp, int argcount)
 	pc = 0;
 	beginstack = stack;
 	args = beginstack - (argcount - 1);
-	for (;;) {
+	while (go) {
 		if (abortlevel >= ABORT_OPCODE) {
 			math_error("Calculation aborted in opcode");
 			/*NOTREACHED*/
@@ -2657,7 +3634,6 @@ calculate(FUNC *fp, int argcount)
 			break;
 
 		case OPGLB:	/* global symbol reference (pointer arg) */
-		case OPSTR:	/* string constant address */
 			/* ignore Saber-C warning #68 - benign type mismatch */
 			/* 	  ok to ignore in proc calculate */
 			(*op->o_func)(fp, *((char **) &fp->f_opcodes[pc]));
@@ -2687,15 +3663,12 @@ calculate(FUNC *fp, int argcount)
 				math_error("Misaligned stack");
 				/*NOTREACHED*/
 			}
-			if (argcount <= 0) {
-				funcname = oldname;
-				funcline = oldline;
-				return;
+			if (argcount > 0) {
+				retval = *stack--;
+				while (--argcount >= 0)
+					freevalue(stack--);
+				*++stack = retval;
 			}
-			retval = *stack--;
-			while (--argcount >= 0)
-				freevalue(stack--);
-			*++stack = retval;
 			funcname = oldname;
 			funcline = oldline;
 			return;
@@ -2709,6 +3682,16 @@ calculate(FUNC *fp, int argcount)
 			/*NOTREACHED*/
 		}
 	}
+	for (i = 0; i < fp->f_localcount; i++)
+		freevalue(&locals[i]);
+	if (locals != localtable)
+		free(locals);
+	printf("\t\"%s\": line %ld\n", funcname, funcline);
+	while (stack > beginstack)
+		freevalue(stack--);
+	funcname = oldname;
+	funcline = oldline;
+	return;
 }
 
 
@@ -2722,6 +3705,7 @@ calculate(FUNC *fp, int argcount)
 int
 dumpop(unsigned long *pc)
 {
+	GLOBAL *sp;
 	unsigned long op;	/* opcode number */
 
 	op = *pc++;
@@ -2737,7 +3721,11 @@ dumpop(unsigned long *pc)
 				printf(" %ld\n", *pc);
 			return 2;
 		case OP_GLOBALADDR: case OP_GLOBALVALUE:
-			printf(" %s\n", globalname(*((GLOBAL **) pc)));
+			sp = * (GLOBAL **) pc;
+			printf(" %s", sp->g_name);
+			if (sp->g_filescope > SCOPE_GLOBAL)
+				printf(" %p", (void *) &sp->g_value);
+			putchar('\n');
 			return (1 + PTR_SIZE);
 		case OP_PARAMADDR: case OP_PARAMVALUE:
 			if (dumpnames)
@@ -2746,14 +3734,11 @@ dumpop(unsigned long *pc)
 				printf(" %ld\n", *pc);
 			return 2;
 		case OP_PRINTSTRING: case OP_STRING:
-			printf(" \"%s\"\n", *((char **) pc));
-			return (1 + PTR_SIZE);
+			printf(" \"%s\"\n", findstring((long)(*pc))->s_str);
+			return 2;
 		case OP_QUIT:
-			if (*(char **) pc)
-				printf(" \"%s\"\n", *((char **) pc));
-			else
-				printf("\n");
-			return (1 + PTR_SIZE);
+			printf(" \"%s\"\n", findstring((long)(*pc))->s_str);
+			return 2;
 		case OP_INDEXADDR:
 			printf(" %ld %ld\n", pc[0], pc[1]);
 			return 3;
@@ -2783,4 +3768,60 @@ dumpop(unsigned long *pc)
 			printf("\n");
 			return 1;
 	}
+}
+
+
+/*
+ * Free the constant numbers in a function definition
+ */
+void
+freenumbers(FUNC *fp)
+{
+	unsigned long pc;
+	unsigned int opnum;
+	struct opcode *op;
+
+	for (pc = 0; pc < fp->f_opcodecount; ) {
+		opnum = fp->f_opcodes[pc++];
+		op = &opcodes[opnum];
+		switch (op->o_type) {
+			case OPRET:
+			case OPARG:
+			case OPNUL:
+				continue;
+			case OPONE:
+				switch(opnum) {
+				case OP_NUMBER:
+				case OP_IMAGINARY:
+					freeconstant(fp->f_opcodes[pc]);
+					break;
+				case OP_PRINTSTRING:
+				case OP_STRING:
+				case OP_QUIT:
+					freestringconstant(
+					    (long)fp->f_opcodes[pc]);
+				}
+				/*FALLTHRU*/
+			case OPLOC:
+			case OPPAR:
+			case OPJMP:
+			case OPSTI:
+				pc++;
+				continue;
+			case OPTWO:
+				pc += 2;
+				continue;
+			case OPGLB:
+				pc += PTR_SIZE;
+				continue;
+			default:
+				math_error("Unknown opcode type for freeing");
+				/*NOTREACHED*/
+		}
+	}
+	if (pc != fp->f_opcodecount) {
+		math_error("Incorrect opcodecount ???");
+		/*NOTREACHED*/
+	}
+	trimconstants();
 }

@@ -8,7 +8,7 @@ TYPES
     x		list or matrix
     y		string
 
-    return	int
+    return	integer
 
 DESCRIPTION
     For count(x, y), y is to be the name of a user-defined function;
@@ -28,4 +28,4 @@ LIBRARY
     none
 
 SEE ALSO
-    XXX - fill in
+    select, modify

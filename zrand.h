@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996 by Landon Curt Noll.  All Rights Reserved.
+ * Copyright (c) 1997 by Landon Curt Noll.  All Rights Reserved.
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby granted,
@@ -35,33 +35,17 @@
  *
  * chongo was here	/\../\
  */
-
 /*
- * random number generator - see random.c for details
+ * random number generator - see zrand.c for details
  */
 
-#if !defined(ZRAND_H)
-#define	ZRAND_H
+
+#if !defined(__ZRAND_H__)
+#define	__ZRAND_H__
 
 
 #include "value.h"
 #include "have_const.h"
-
-
-/*
- * BITSTR - string of bits within an array of HALFs
- *
- * This typedef records a location of a bit in an array of HALFs.
- * Bit 0 in a HALF is assumed to be the least significant bit in that HALF.
- *
- * The most significant bit is found at (loc,bit).  Bits of lesser
- * significance may be found in previous bits and HALFs.
- */
-typedef struct {
-	HALF *loc;	/* half address of most significant bit */
-	int bit;	/* bit position within half of most significant bit */
-	int len;	/* length of string in bits */
-} BITSTR;
 
 
 /*
@@ -99,9 +83,9 @@ typedef struct {
  *
  * SLEN		- length in FULLs of an additive 55 slot
  *
- * SVAL(x,y)	- form a 64 bit hex slot entry in the additive 55 table
- *		  x: up to 8 hex digits without the leading 0x (upper half)
- *		  y: up to 8 hex digits without the leading 0x (lower half)
+ * SVAL(a,b)	- form a 64 bit hex slot entry in the additive 55 table
+ *		  a: up to 8 hex digits without the leading 0x (upper half)
+ *		  b: up to 8 hex digits without the leading 0x (lower half)
  *
  *	NOTE: Due to a SunOS cc bug, don't put spaces in the SVAL call!
  *
@@ -112,12 +96,6 @@ typedef struct {
  *		  d: up to 4 hex digits without the leading 0x (lower half)
  *
  *	NOTE: Due to a SunOS cc bug, don't put spaces in the SHVAL call!
- *
- * HVAL(x,y) - form an array of HALFs given 8 hex digits
- *		  x: up to 4 hex digits without the leading 0x (upper half)
- *		  y: up to 4 hex digits without the leading 0x (lower half)
- *
- *	NOTE: Due to a SunOS cc bug, don't put spaces in the HVAL call!
  *
  * SLOAD(s,i,z)	- load table slot i from additive 55 state s with zvalue z
  *		  s: type RAND
@@ -165,13 +143,11 @@ typedef struct {
 
 # define SLEN 1		/* a 64 bit slot can be held in a FULL */
 # if defined(__STDC__) && __STDC__ != 0
-#  define SVAL(x,y) (FULL)U(0x ## x ## y)
+#  define SVAL(a,b) (FULL)U(0x ## a ## b)
 #  define SHVAL(a,b,c,d) (HALF)0x ## c ## d, (HALF)0x ## a ## b
-#  define HVAL(x,y) (HALF)(0x ## x ## y)
 # else
-#  define SVAL(x,y) (FULL)U(0x/**/x/**/y)
+#  define SVAL(a,b) (FULL)U(0x/**/a/**/b)
 #  define SHVAL(a,b,c,d) (HALF)0x/**/c/**/d,(HALF)0x/**/a/**/b
-#  define HVAL(x,y) (HALF)(0x/**/x/**/y)
 # endif
 #define SLOAD(s,i,z) ((s).slot[i] = ztofull(z))
 #define SADD(s,k,j) ((s).slot[k] += (s).slot[j])
@@ -191,18 +167,15 @@ typedef struct {
 
 # define SLEN 2			/* a 64 bit slot needs 2 FULLs */
 # if defined(__STDC__) && __STDC__ != 0
-#  define SVAL(x,y) (FULL)(0x ## y), (FULL)(0x ## x)
-#  define SHVAL(a,b,c,d) (HALF)0x ## d, (HALF)0x ## c, \
-			 (HALF)0x ## b, (HALF)0x ## a
-#  define HVAL(x,y) (HALF)(0x ## y), (HALF)(0x ## x)
+#  define SVAL(a,b) (FULL)0x##b, (FULL)0x##a
+#  define SHVAL(a,b,c,d) (HALF)0x##d, (HALF)0x##c, \
+			 (HALF)0x##b, (HALF)0x##a
 # else
    /* NOTE: Due to a SunOS cc bug, don't put spaces in the SVAL call! */
-#  define SVAL(x,y) (FULL)(0x/**/y), (FULL)(0x/**/x)
+#  define SVAL(a,b) (FULL)0x/**/b, (FULL)0x/**/a
    /* NOTE: Due to a SunOS cc bug, don't put spaces in the SHVAL call! */
 #  define SHVAL(a,b,c,d) (HALF)0x/**/d, (HALF)0x/**/c, \
 			 (HALF)0x/**/b, (HALF)0x/**/a
-   /* NOTE: Due to a SunOS cc bug, don't put spaces in the HVAL call! */
-#  define HVAL(x,y) (HALF)(0x/**/y), (HALF)(0x/**/x)
 # endif
 #define SLOAD(s,i,z) {(s).slot[(i)<<1] = ztofull(z); \
 		      (s).slot[1+((i)<<1)] = \
@@ -243,7 +216,7 @@ typedef struct {
 
 #else
 
-   /\../\	FULL_BITS is assumed to be SBITS or 2*SBITS	/\../\   !!!
+   /\../\	FULL_BITS must be 32 or 64	/\../\   !!!
 
 #endif
 
@@ -265,44 +238,6 @@ struct rand {
 
 
 /*
- * Blum generator state
- *
- * The size of the buffer implies that a turn of the quadratic residue crank
- * will never yield more than the number of bits in a FULL.  At worst
- * this implies that a turn can yield no more than 32 bits.  This implies that
- * the lower bound on the largest modulus supported is 2^32 bits long.
- */
-struct random {
-	int seeded;	/* 1 => state has been seeded */
-	int bits;	/* number of unused bits in buffer */
-	int loglogn;	/* int(log2(log2(n))), bits produced per turn */
-	HALF buffer;	/* unused random bits from previous call */
-	HALF mask;	/* mask for the log2(log2(n)) lower bits of r */
-	ZVALUE *n;	/* Blum modulus */
-	ZVALUE *r;	/* Blum quadratic residue */
-};
-
-
-/*
- * Blum constants
- */
-#define BLUM_PREGEN 20	/* number of non-default predefined Blum generators */
-
-
-/*
- * Blum random config constants
- */
-#define BLUM_CFG_MIN BLUM_CFG_NOCHECK
-#define BLUM_CFG_NOCHECK	0	/* no checks are performed */
-#define BLUM_CFG_1MOD4		1	/* require 1 mod 4 */
-#define BLUM_CFG_1MOD4_PTEST0	2	/* require 1 mod 4 and ptest(n,0) */
-#define BLUM_CFG_1MOD4_PTEST1	3	/* require 1 mod 4 and ptest(n,1) */
-#define BLUM_CFG_1MOD4_PTEST25	4	/* require 1 mod 4 and ptest(n,25) */
-#define BLUM_CFG_MAX BLUM_CFG_1MOD4_PTEST25
-#define BLUM_CFG_DEFAULT BLUM_CFG_1MOD4_PTEST1	/* default config value */
-
-
-/*
  * a55 generator function declarations
  */
 extern RAND *zsrand(CONST ZVALUE *seed, CONST MATRIX *pmat55);
@@ -317,14 +252,4 @@ extern BOOL randcmp(CONST RAND *s1, CONST RAND *s2);
 extern void randprint(CONST RAND *state, int flags);
 
 
-/*
- * Blum generator function declarations
- */
-extern RANDOM *zsrandom(CONST ZVALUE seed, CONST ZVALUE *newn);
-extern RANDOM *zsetrandom(CONST RANDOM *state);
-extern RANDOM *randomcopy(CONST RANDOM *random);
-extern void randomfree(RANDOM *random);
-extern BOOL randomcmp(CONST RANDOM *s1, CONST RANDOM *s2);
-extern void randomprint(CONST RANDOM *state, int flags);
-
-#endif /* ZRAND_H */
+#endif /* !__ZRAND_H__ */

@@ -1,0 +1,35 @@
+NAME
+    isobjtype - whether a string names an object type
+
+SYNOPSIS
+    isobjtype(str)
+
+TYPES
+    str		string
+
+    return	0 or 1
+
+DESCRIPTION
+    isobjtype(str) returns 1 or 0 according as an object type with name
+    str has been defined or not defined.
+
+EXAMPLE
+    > isobjtype("xy")
+	0
+
+    > obj xy {x, y}
+    > isobjtype("xy")
+	1
+
+LIMITS
+    none
+
+LIBRARY
+    none - XXX ???
+
+SEE ALSO
+    obj,
+    isassoc, isatty, isblk, isconfig, isdefined, iserror, iseven, isfile,
+    ishash, isident, isint, islist, ismat, ismult, isnull, isnum, isobj,
+    isodd, isprime, isrand, israndom, isreal, isrel,
+    issimple, issq, isstr, istype

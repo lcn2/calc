@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 1996 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Global and local symbol routines.
  */
 
+#include <stdio.h>
 #include "calc.h"
 #include "token.h"
 #include "symbol.h"
@@ -15,6 +16,7 @@
 
 #define HASHSIZE	37	/* size of hash table */
 
+extern FILE *f_open(char *name, char *mode);
 
 static int filescope;		/* file scope level for static variables */
 static int funcscope;		/* function scope level for static variables */
@@ -23,8 +25,12 @@ static STRINGHEAD globalnames;	/* list of global variable names */
 static STRINGHEAD paramnames;	/* list of parameter variable names */
 static GLOBAL *globalhash[HASHSIZE];	/* hash table for globals */
 
-static void fitprint(NUMBER *num, long digits, long width);
+static void printtype(VALUE *);
 static void unscope(void);
+static void addstatic(GLOBAL *);
+static long staticcount = 0;
+static long staticavail = 0;
+static GLOBAL **statictable;
 
 
 /*
@@ -93,6 +99,7 @@ addglobal(char *name, BOOL isstatic)
 	sp->g_funcscope = newfuncscope;
 	sp->g_value.v_num = qlink(&_qzero_);
 	sp->g_value.v_type = V_NUM;
+	sp->g_value.v_subtype = V_NOSUBTYPE;
 	sp->g_next = *hp;
 	*hp = sp;
 	return sp;
@@ -100,14 +107,9 @@ addglobal(char *name, BOOL isstatic)
 
 
 /*
- * Look up the name of a global variable and return its address.
- * Since the same variable may appear in different scopes, we search
- * for the one with the highest function scope value within the current
- * file scope level (or which is global).  Returns NULL if the symbol
- * was not found.
- *
- * given:
- *	name		name of global variable
+ * Look for the highest-scope global variable with a specified name.
+ * Returns the address of the variable or NULL according as the search
+ * succeeds or fails.
  */
 GLOBAL *
 findglobal(char *name)
@@ -117,19 +119,14 @@ findglobal(char *name)
 	long len;		/* length of string */
 
 	bestsp = NULL;
-	len = (long)strlen(name);
+	len = (long) strlen(name);
 	for (sp = globalhash[HASHSYM(name, len)]; sp; sp = sp->g_next) {
-		if ((sp->g_len != len) || strcmp(sp->g_name, name))
-			continue;
-		if (sp->g_filescope == SCOPE_GLOBAL) {
-			if (bestsp == NULL)
+		if ((sp->g_len == len) && !strcmp(sp->g_name, name)) {
+			if ((bestsp == NULL) ||
+				(sp->g_filescope > bestsp->g_filescope) ||
+				 (sp->g_funcscope > bestsp->g_funcscope))
 				bestsp = sp;
-			continue;
 		}
-		if (sp->g_filescope != filescope)
-			continue;
-		if ((bestsp == NULL) || (sp->g_funcscope > bestsp->g_funcscope))
-			bestsp = sp;
 	}
 	return bestsp;
 }
@@ -151,8 +148,9 @@ globalname(GLOBAL *sp)
 
 
 /*
- * Show the value of all global variables, typing only the head and
- * tail of very large numbers.  Only truly global symbols are shown.
+ * Show the value of all real-number valued global variables, displaying
+ * only the head and tail of very large numerators and denominators.
+ * Static variables are not included.
  */
 void
 showglobals(void)
@@ -160,74 +158,136 @@ showglobals(void)
 	GLOBAL **hp;			/* hash table head address */
 	register GLOBAL *sp;		/* current global symbol pointer */
 	long count;			/* number of global variables shown */
-	NUMBER *num, *den;
-	long digits;
 
 	count = 0;
 	for (hp = &globalhash[HASHSIZE-1]; hp >= globalhash; hp--) {
 		for (sp = *hp; sp; sp = sp->g_next) {
 			if (sp->g_value.v_type != V_NUM)
 				continue;
-			if (sp->g_filescope != SCOPE_GLOBAL)
-				continue;
 			if (count++ == 0) {
-				printf("\nName    Digits  Value\n");
-				printf(  "----    ------  -----\n");
+				printf("\nName    Digits           Value\n");
+				printf(  "----    ------           -----\n");
 			}
-			printf("%-8s ", sp->g_name);
-			num = qnum(sp->g_value.v_num);
-			digits = qdigits(num);
-			printf("%-7ld ", digits);
-			fitprint(num, digits, 60L);
-			qfree(num);
-			if (!qisint(sp->g_value.v_num)) {
-				den = qden(sp->g_value.v_num);
-				digits = qdigits(den);
-				printf("\n	%-6ld /", digits);
-				fitprint(den, digits, 60L);
-				qfree(den);
-			}
+			printf("%-8s", sp->g_name);
+			if (sp->g_filescope != SCOPE_GLOBAL)
+				printf(" (s)");
+			fitprint(sp->g_value.v_num, 50);
 			printf("\n");
 		}
 	}
-	printf(count ? "\n" : "No global variables defined\n");
+	printf(count ? "\n" : "No real-valued global variables\n");
 }
 
 
-/*
- * Print an integer which is guaranteed to fit in the specified number
- * of columns, using imbedded '...' characters if it is too large.
- */
-static void
-fitprint(NUMBER *num, long digits, long width)
+void
+showallglobals(void)
 {
-	long show, used;
-	NUMBER *p, *t, *div, *val;
+	GLOBAL **hp;			/* hash table head address */
+	register GLOBAL *sp;		/* current global symbol pointer */
+	long count;			/* number of global variables shown */
 
-	if (digits <= width) {
-		qprintf("%r", num);
+	count = 0;
+	for (hp = &globalhash[HASHSIZE-1]; hp >= globalhash; hp--) {
+		for (sp = *hp; sp; sp = sp->g_next) {
+			if (count++ == 0) {
+				printf("\nName    Level    Type\n");
+				printf(  "----    -----    -----\n");
+			}
+			printf("%-8s%4d     ", sp->g_name, sp->g_filescope);
+			printtype(&sp->g_value);
+			printf("\n");
+		}
+	}
+	if (count > 0)
+		printf("\nNumber: %ld\n", count);
+	else
+		printf("No global variables\n");
+}
+
+static void
+printtype(VALUE *vp)
+{
+	int	type;
+	char 	*s;
+
+	type = vp->v_type;
+	if (type < 0) {
+		printf("Error %d", -type);
 		return;
 	}
-	show = (width / 2) - 2;
-	t = itoq(10L);
-	p = itoq((long) (digits - show));
-	div = qpowi(t, p);
-	val = qquo(num, div, 0);
-	qprintf("%r", val);
-	printf("...");
-	qfree(p);
-	qfree(div);
-	qfree(val);
-	p = itoq(show);
-	div = qpowi(t, p);
-	val = qmod(num, div, 0);
-	used = qdigits(val);
-	while (used++ < show) printf("0");
-	qprintf("%r", val);
-	qfree(p);
-	qfree(div);
-	qfree(val);
-	qfree(t);
+	switch (type) {
+		case V_NUM:
+			printf("real = ");
+			fitprint(vp->v_num, 32);
+			return;
+		case V_COM:
+			printf("complex = ");
+			fitprint(vp->v_com->real, 8);
+			if (!vp->v_com->imag->num.sign)
+				printf("+");
+			fitprint(vp->v_com->imag, 8);
+			printf("i");
+			return;
+		case V_STR:
+			printf("string = \"");
+			fitstring(vp->v_str->s_str, vp->v_str->s_len, 50);
+			printf("\"");
+			return;
+		case V_NULL:
+			s = "null";
+			break;
+		case V_MAT:
+			s = "matrix";
+			break;
+		case V_LIST:
+			s = "list";
+			break;
+		case V_ASSOC:
+			s = "association";
+			break;
+		case V_OBJ:
+			printf("%s ",
+			vp->v_obj->o_actions->name);
+			s = "object";
+			break;
+		case V_FILE:
+			s = "file id";
+			break;
+		case V_RAND:
+			s = "additive 55 random state";
+			break;
+		case V_RANDOM:
+			s = "Blum random state";
+			break;
+		case V_CONFIG:
+			s = "config state";
+			break;
+		case V_HASH:
+			s = "hash state";
+			break;
+		case V_BLOCK:
+			s = "unnamed block";
+			break;
+		case V_NBLOCK:
+			s = "named block";
+			break;
+		case V_VPTR:
+			s = "value pointer";
+			break;
+		case V_OPTR:
+			s = "octet pointer";
+			break;
+		case V_SPTR:
+			s = "string pointer";
+			break;
+		case V_NPTR:
+			s = "number pointer";
+			break;
+		default:
+			s = "???";
+			break;
+	}
+	printf("%s", s);
 }
 
 
@@ -243,6 +303,7 @@ writeglobals(char *name)
 	GLOBAL **hp;			/* hash table head address */
 	register GLOBAL *sp;		/* current global symbol pointer */
 	int savemode;			/* saved output mode */
+	extern void math_setfp(FILE *fp);
 
 	fp = f_open(name, "w");
 	if (fp == NULL)
@@ -269,6 +330,45 @@ writeglobals(char *name)
 	if (fclose(fp))
 		return 1;
 	return 0;
+}
+
+/*
+ * Free all non-null global and visible static variables
+ */
+void
+freeglobals(void)
+{
+	GLOBAL **hp;		/* hash table head address */
+	GLOBAL *sp;		/* current global symbol pointer */
+	long count;		/* number of global variables freed */
+
+	count = 0;
+	for (hp = &globalhash[HASHSIZE-1]; hp >= globalhash; hp--) {
+		for (sp = *hp; sp; sp = sp->g_next) {
+			if (sp->g_value.v_type != V_NULL) {
+				freevalue(&sp->g_value);
+				count++;
+			}
+		}
+	}
+}
+
+/*
+ * Free all invisible static variables
+ */
+void
+freestatics(void)
+{
+	GLOBAL **stp;
+	GLOBAL *sp;
+	long count;
+
+	stp = statictable;
+	count = staticcount;
+	while (count-- > 0) {
+		sp = *stp++;
+		freevalue(&sp->g_value);
+	}
 }
 
 
@@ -343,6 +443,91 @@ exitfuncscope(void)
 
 
 /*
+ * To end the scope of any static variable with identifier id when
+ * id is being declared as global, or when id is declared as static and the
+ * variable is at the same file and function level.
+ */
+void
+endscope(char *name, BOOL isglobal)
+{
+	GLOBAL *sp;
+	GLOBAL *prevsp;
+	GLOBAL **hp;
+	int len;
+
+	len = strlen(name);
+	prevsp = NULL;
+	hp = &globalhash[HASHSYM(name, len)];
+	for (sp = *hp; sp; sp = sp->g_next) {
+		if (sp->g_len == len && !strcmp(sp->g_name, name) &&
+				sp->g_filescope > SCOPE_GLOBAL) {
+			if (isglobal || (sp->g_filescope == filescope &&
+					sp->g_funcscope == funcscope)) {
+				addstatic(sp);
+				if (prevsp)
+					prevsp->g_next = sp->g_next;
+				else
+					*hp = sp->g_next;
+			}
+		}
+		prevsp = sp;
+	}
+}
+
+/*
+ * To store in a table a static variable whose scope is being ended
+ */
+void
+addstatic(GLOBAL *sp)
+{
+	GLOBAL **stp;
+
+	if (staticavail <= 0) {
+		if (staticcount <= 0)
+			stp = (GLOBAL **) malloc(20 * sizeof(GLOBAL *));
+		else
+			stp = (GLOBAL **) realloc(statictable,
+				 (20 + staticcount) * sizeof(GLOBAL *));
+		if (stp == NULL) {
+			math_error("Cannot allocate static-variable table");
+			/*NOTREACHED*/
+		}
+		statictable = stp;
+		staticavail = 20;
+	}
+	statictable[staticcount++] = sp;
+	staticavail--;
+}
+
+/*
+ * To display all static variables whose scope has been ended
+ */
+void
+showstatics(void)
+{
+	long count;
+	GLOBAL **stp;
+	GLOBAL *sp;
+
+	for (count = 0, stp = statictable; count < staticcount; count++) {
+		sp = *stp++;
+		if (count == 0) {
+			printf("\nName    Scopes    Type\n");
+			printf(  "----    ------    -----\n");
+		}
+		printf("%-8s", sp->g_name);
+		printf("%3d", sp->g_filescope);
+		printf("%3d    ", sp->g_funcscope);
+		printtype(&sp->g_value);
+		printf("\n");
+	}
+	if (count > 0)
+		printf("\nNumber: %ld\n", count);
+	else
+		printf("No unscoped static variables\n");
+}
+
+/*
  * Remove all the symbols from the global symbol table which have file or
  * function scopes larger than the current scope levels.  Their memory
  * remains allocated since their values still actually exist.
@@ -369,6 +554,7 @@ unscope(void)
 			/*
 			 * This symbol needs removing.
 			 */
+			addstatic(sp);
 			if (prevsp)
 				prevsp->g_next = sp->g_next;
 			else

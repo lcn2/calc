@@ -1,21 +1,34 @@
 Function definitions
 
     Function definitions are introduced by the 'define' keyword.
-    Other than this, the basic structure of a function is like in C.
-    That is, parameters are specified for the function within parenthesis,
-    the function body is introduced by a left brace, variables are
-    declared for the function, statements implementing the function
-    follow, and the function is ended with a right brace.
+    Other than this, the basic structure of an ordinary definition
+    is like in that in C: parameters are specified for the function
+    within parenthesis, the function body is introduced by a left brace,
+    variables may declared for the function, statements implementing the
+    function may follow, any value to be returned by the function is specified
+    by a return statement, and the function definition is ended with a
+    right brace.
 
     There are some subtle differences, however.  The types of parameters
-    and variables are not defined at compile time, but instead are typed
-    at runtime.  Thus there is no definitions needed to distinguish
-    between integers, fractions, complex numbers, matrices, and so on.
-    Thus when declaring parameters for a function, only the name of
-    the parameter is needed.  Thus there are never any declarations
-    between the function parameter list and the body of the function.
+    and variables are not defined at compile time, and may vary during
+    execution and be different in different calls to the function.  For
+    example, a two-argument function add may be defined by
 
-    For example, the following function computes a factorial:
+		define add(a,b) {
+			return a + b;
+		}
+
+    and be called with integer, fractional, or complex number values for a
+    and b, or, under some compatibility conditions, matrices or objects.
+    Any variable, not already defined as global, used in a definition has
+    to be declared as local, global or static, and retains this character
+    until its scope is terminated by the end of the definition, the end of
+    the file being read or some other condition (see help variable for
+    details).
+
+    For example, the following function computes the factorial of n, where
+    we may suppose it is to be called only with positive integral values
+    for n:
 
 	    define factorial(n)
 	    {
@@ -27,22 +40,38 @@ Function definitions
 		    return ans;
 	    }
 
-    If a function is very simple and just returns a value, then the
-    function can be defined in shortened manner by using an equals sign
-    in place of the left brace.  In this case, the function declaration
-    is terminated by a newline character, and its value is the specified
-    expression.  Statements such as 'if' are not allowed.  An optional
-    semicolon ending the expression is allowed.  As an example, the
+    (In calc, this definition is unncessary since there is a built-in
+    function fact(n), also expressible as n!, which returns the factorial
+    of n.)
+
+    Any functions used in the body of the definition need not have already
+    been defined; it is sufficient that they have been defined when they are
+    encountered during evaluation when the function is called.
+
+    If a function definition is sufficiently simple and does not require
+    local or static variables, it may be defined in shortened manner by
+    using an equals sign following by an expression involving some or all
+    of the parameters and already existing global variables.
+
+    In this case, the definition is terminated by a newline character
+    (which may be preceded by a semicolon), and the value the function
+    returns when called will be determined by the specified expression.
+    Loops and "if" statements are not allowed (but ? : expressions and the
+    logical operators ||, && and !  are permitted).  As an example, the
     average of two numbers could be defined as:
 
 	    define average(a, b) = (a + b) / 2;
 
-    Functions can be defined which can be very complex.  These can be
+    (Again, this function is not necessary, as the same result is
+    returned by the builtin function avg() when called with the
+    two arguments a, b.)
+
+    Function definitions can be very complicated.  Functions may be
     defined on the command line if desired, but editing of partial
     functions is not possible past a single line.  If an error is made
     on a previous line, then the function must be finished (with probable
     errors) and reentered from the beginning.  Thus for complicated
-    functions, it is best to use an editor to create the function in a
+    functions, it is best to use an editor to create the definition in a
     file, and then enter the calculator and read in the file containing
     the definition.
 
@@ -52,7 +81,7 @@ Function definitions
     the parameters are numbered starting from 1.  The total number
     of parameters to the function is returned by using 'param(0)'.
     Using this function allows you to implement varargs-like routines
-    which can handle any number of calling parameters.  For example:
+    which can handle up to 100 calling parameters.  For example:
 
 	    define sc()
 	    {
@@ -64,5 +93,24 @@ Function definitions
 		    return s;
 	    }
 
-    defines a function which returns the sum of the cubes of all it's
+    defines a function which returns the sum of the cubes of all its
     parameters.
+
+    Any identifier other than a reserved word (if, for, etc.) and the
+    name of a builtin function (abs, fact, sin, etc.) can be used when
+    defining a new function or redefining an existing function.
+
+    An indication of how a user-defined function is stored may be obtained
+    by using the "show opcodes" command.  For example:
+
+		> global alpha
+		> define f(x) = 5 + alpha * x
+		"f" defined
+		> show opcodes f
+		0: NUMBER 5
+		2: GLOBALADDR alpha
+		4: PARAMADDR 0
+		6: MUL
+		7: ADD
+		8: RETURN
+

@@ -1,5 +1,5 @@
 /*
- * randbitrun - check rand bit run lengths
+ * randbitrun - check rand bit run lengths of the a55 generator
  *
  * We will use randbit(1) to generate a stream if single bits.
  * The odds that we will have n bits the same in a row is 1/2^n.
@@ -113,7 +113,6 @@ define randbitrun(run_cnt)
     printf("max length=%d\n", max_run);
 }
 
-global lib_debug;
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
     print "randbitrun([run_length]) defined";
 }

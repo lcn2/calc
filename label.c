@@ -44,7 +44,7 @@ definelabel(char *name)
 	i = findstr(&labelnames, name);
 	if (i >= 0) {
 		lp = &labels[i];
-		if (lp->l_offset) {
+		if (lp->l_offset >= 0) {
 			scanerror(T_NULL, "Label \"%s\" is multiply defined",
 				name);
 			return;
@@ -57,7 +57,7 @@ definelabel(char *name)
 		return;
 	}
 	lp = &labels[labelcount++];
-	lp->l_chain = 0;
+	lp->l_chain = -1L;
 	lp->l_offset = (long)curfunc->f_opcodecount;
 	lp->l_name = addstr(&labelnames, name);
 	clearopt();
@@ -90,8 +90,8 @@ addlabel(char *name)
 		return;
 	}
 	lp = &labels[labelcount++];
-	lp->l_offset = 0;
-	lp->l_chain = 0;
+	lp->l_offset = -1L;
+	lp->l_chain = -1L;
 	lp->l_name = addstr(&labelnames, name);
 	uselabel(lp);
 }
@@ -107,7 +107,7 @@ checklabels(void)
 	long i;				/* counter */
 
 	for (i = labelcount, lp = labels; --i >= 0; lp++) {
-		if (lp->l_offset > 0)
+		if (lp->l_offset >= 0)
 			continue;
 		scanerror(T_NULL, "Label \"%s\" was never defined",
 			lp->l_name);
@@ -124,8 +124,8 @@ checklabels(void)
 void
 clearlabel(LABEL *lp)
 {
-	lp->l_offset = 0;
-	lp->l_chain = 0;
+	lp->l_offset = -1L;
+	lp->l_chain = -1L;
 	lp->l_name = NULL;
 }
 
@@ -142,19 +142,19 @@ void
 setlabel(LABEL *lp)
 {
 	register FUNC *fp;	/* current function */
-	unsigned long curfix;	/* offset of current location being fixed */
-	unsigned long nextfix;	/* offset of next location to fix up */
-	unsigned long offset;	/* offset of this label */
+	long curfix;		/* offset of current location being fixed */
+	long nextfix;		/* offset of next location to fix up */
+	unsigned long offset;		/* offset of this label */
 
 	fp = curfunc;
 	offset = fp->f_opcodecount;
-	nextfix = lp->l_chain;
-	while (nextfix > 0) {
+	nextfix = (long)lp->l_chain;
+	while (nextfix >= 0) {
 		curfix = nextfix;
-		nextfix = fp->f_opcodes[curfix];
+		nextfix = (long)fp->f_opcodes[curfix];
 		fp->f_opcodes[curfix] = offset;
 	}
-	lp->l_chain = 0;
+	lp->l_chain = -1L;
 	lp->l_offset = (long)offset;
 	clearopt();
 }
@@ -175,7 +175,7 @@ uselabel(LABEL *lp)
 	unsigned long offset;		/* offset being added */
 
 	offset = curfunc->f_opcodecount;
-	if (lp->l_offset > 0) {
+	if (lp->l_offset >= 0) {
 		curfunc->f_opcodes[curfunc->f_opcodecount++] = lp->l_offset;
 		return;
 	}

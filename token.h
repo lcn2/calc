@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 1995 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  */
 
-#ifndef	TOKEN_H
-#define	TOKEN_H
+
+#if !defined(__TOKEN_H__)
+#define	__TOKEN_H__
+
 
 #include "zmath.h"
 
@@ -67,6 +69,16 @@
 #define T_IMAGINARY		51	/* numeric imaginary constant */
 #define	T_AMPERSAND		52	/* ampersand "&" */
 #define	T_QUESTIONMARK		53	/* question mark "?" */
+#define T_AT			54	/* at sign "@" */
+#define T_DOLLAR		55	/* dollar sign "$" */
+#define T_HASH			56	/* hash or pound sign "#" */
+#define T_HASHEQUALS		57	/* hash equals "#=" */
+#define T_BACKQUOTE		58	/* backquote sign "`" */
+#define T_ARROW			59	/* arrow "->" */
+#define T_TILDE			60	/* tilde "~" */
+#define T_TILDEEQUALS		61	/* tilde equals "~=" */
+#define T_BACKSLASH		62	/* backslash or setminus "\" */
+#define T_BACKSLASHEQUALS	63	/* backslash equals "\=" */
 
 
 /*
@@ -97,6 +109,7 @@
 #define T_OBJ			123	/* obj keyword */
 #define T_PRINT			124	/* print keyword */
 #define T_CD			125	/* change directory keyword */
+#define T_UNDEFINE		126	/* undefine keyword */
 
 
 #define iskeyword(n) ((n) > 100)	/* TRUE if token is a keyword */
@@ -125,14 +138,14 @@
 
 extern long errorcount;		/* number of errors found */
 
-extern char *tokenstring(void);
+extern long tokenstring(void);
 extern long tokennumber(void);
+extern char *tokensymbol(void);
 extern void inittokens(void);
 extern int tokenmode(int flag);
 extern int gettoken(void);
 extern void rescantoken(void);
 extern void scanerror(int, char *, ...);
 
-#endif
 
-/* END CODE */
+#endif /* !__TOKEN_H__ */

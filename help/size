@@ -15,12 +15,19 @@ DESCRIPTION
 	null		0
 	real number	1
 	complex number	1
-	string		1
+	string		length of string (not counding the trailing \0)
 	matrix		number of elements
 	list		number of members
 	association	number of (elements, value) pairs
-	object		number of elements for the object-type of x
-
+	object		value returned by xx_size(x) if x of type xx
+	file		length of the file in octets
+	rand state	1
+	random state	1
+	config state	1
+	hash state	1
+	block		numer of octets of data it currently holds
+	octet		1
+	named block	numer of octets of data it currently holds
 
 EXAMPLE
     > print size(null()), size(3), size(2 - 7i), size("abc")
@@ -36,9 +43,10 @@ EXAMPLE
     3
 
     > obj point {x,y}
-    > obj point P = {4,5}
+    > obj point P = {4,-5}
+    > define point_size(a) = abs(a.x) + abs(a.y)
     > print size(P)
-    2
+    9
 
 LIMITS
     none
@@ -47,4 +55,4 @@ LIBRARY
     none
 
 SEE ALSO
-    list, mat, assoc, obj
+    list, mat, assoc, obj, sizeof, memsize

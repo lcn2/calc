@@ -1,0 +1,28 @@
+NAME
+    help - help for custom functions
+
+SYNOPSIS
+    custom("help", name)
+
+TYPES
+    name	string
+
+    return	null
+
+DESCRIPTION
+    This custom function will display the help for the builtin function
+    named by the name argument.
+
+EXAMPLE
+    > custom("help", "custom_cal")
+    ... output the same as is produced by help custhelp/custom_cal ...
+
+LIMITS
+    calc must be built with ALLOW_CUSTOM= -DCUSTOM
+    calc must be executed with a -C arg.
+
+LIBRARY
+    none
+
+SEE ALSO
+    custom

@@ -19,12 +19,10 @@ EXAMPLE
     .64209 .6420926159 .642092615934331 .64209261593433070301
 
 LIMITS
-    unlike sin and cos, x must be real
-    x != 0
-    eps > 0
+    none
 
 LIBRARY
-    NUMBER *qcot(NUMBER *x, *eps)
+    NUMBER *qcot(NUMBER *x, NUMBER *eps)
 
 SEE ALSO
     sin, cos, tan, sec, csc, epsilon

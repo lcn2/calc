@@ -1,23 +1,30 @@
 /*
- * Copyright (c) 1995 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Extended precision rational arithmetic primitive routines
  */
 
+#include <stdio.h>
 #include "qmath.h"
 #include "config.h"
 
 
-NUMBER _qzero_ =	{ { _zeroval_, 1, 0 }, { _oneval_, 1, 0 }, 1 };
-NUMBER _qone_ =		{ { _oneval_, 1, 0 }, { _oneval_, 1, 0 }, 1 };
-static NUMBER _qtwo_ =	{ { _twoval_, 1, 0 }, { _oneval_, 1, 0 }, 1 };
-static NUMBER _qten_ =	{ { _tenval_, 1, 0 }, { _oneval_, 1, 0 }, 1 };
-NUMBER _qnegone_ =	{ { _oneval_, 1, 1 }, { _oneval_, 1, 0 }, 1 };
-NUMBER _qonehalf_ =	{ { _oneval_, 1, 0 }, { _twoval_, 1, 0 }, 1 };
-NUMBER _qonesqbase_ =	{ { _oneval_, 1, 0 }, { _sqbaseval_, 2, 0 }, 1 };
+NUMBER _qzero_ =	{ { _zeroval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
+NUMBER _qone_ =		{ { _oneval_, 1, 0  }, { _oneval_, 1, 0 }, 1, NULL };
+NUMBER _qtwo_ =		{ { _twoval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
+NUMBER _qthree_ =	{ { _threeval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
+NUMBER _qfour_ =	{ { _fourval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
+NUMBER _qten_ =		{ { _tenval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
+NUMBER _qnegone_ =	{ { _oneval_, 1, 1 }, { _oneval_, 1, 0 }, 1, NULL };
+NUMBER _qonehalf_ =	{ { _oneval_, 1, 0 }, { _twoval_, 1, 0 }, 1, NULL };
+NUMBER _qonesqbase_ =	{ { _oneval_, 1, 0 }, { _sqbaseval_, 2, 0 }, 1, NULL };
 
+#define INITCONSTCOUNT 8
+
+NUMBER * initnumbs[INITCONSTCOUNT] = {&_qzero_, &_qone_, &_qtwo_, &_qthree_,
+	&_qfour_, &_qten_, &_qnegone_, &_qonehalf_};
 
 /*
  * Create another copy of a number.
@@ -498,10 +505,10 @@ qmuli(NUMBER *q, long n)
 
 /*
  * Divide two numbers (as fractions).
- *	q3 = qdiv(q1, q2);
+ *	q3 = qqdiv(q1, q2);
  */
 NUMBER *
-qdiv(NUMBER *q1, NUMBER *q2)
+qqdiv(NUMBER *q1, NUMBER *q2)
 {
 	NUMBER temp;
 
@@ -589,10 +596,10 @@ qquo(NUMBER *q1, NUMBER *q2, long rnd)
 
 /*
  * Return the absolute value of a number.
- *	q2 = qabs(q1);
+ *	q2 = qqabs(q1);
  */
 NUMBER *
-qabs(NUMBER *q)
+qqabs(NUMBER *q)
 {
 	register NUMBER *r;
 
@@ -756,19 +763,19 @@ qint(NUMBER *q)
 NUMBER *
 qsquare(NUMBER *q)
 {
-	ZVALUE num, den;
+	ZVALUE num, zden;
 
 	if (qiszero(q))
 		return qlink(&_qzero_);
 	if (qisunit(q))
 		return qlink(&_qone_);
 	num = q->num;
-	den = q->den;
+	zden = q->den;
 	q = qalloc();
 	if (!zisunit(num))
 		zsquare(num, &q->num);
-	if (!zisunit(den))
-		zsquare(den, &q->den);
+	if (!zisunit(zden))
+		zsquare(zden, &q->den);
 	return q;
 }
 
@@ -872,21 +879,47 @@ qmax(NUMBER *q1, NUMBER *q2)
 
 
 /*
- * Perform the logical OR of two integers.
+ * Perform the bitwise OR of two integers.
  */
 NUMBER *
 qor(NUMBER *q1, NUMBER *q2)
 {
 	register NUMBER *r;
+	NUMBER *q1tmp, *q2tmp, *q;
 
 	if (qisfrac(q1) || qisfrac(q2)) {
-		math_error("Non-integers for logical or");
+		math_error("Non-integers for bitwise or");
 		/*NOTREACHED*/
 	}
-	if ((q1 == q2) || qiszero(q2))
+	if (qcmp(q1,q2) == 0 || qiszero(q2))
 		return qlink(q1);
 	if (qiszero(q1))
 		return qlink(q2);
+	if (qisneg(q1)) {
+		q1tmp = qcomp(q1);
+		if (qisneg(q2)) {
+			q2tmp = qcomp(q2);
+			q = qand(q1tmp,q2tmp);
+			r = qcomp(q);
+			qfree(q1tmp);
+			qfree(q2tmp);
+			qfree(q);
+			return r;
+		}
+		q = qandnot(q1tmp, q2);
+		qfree(q1tmp);
+		r = qcomp(q);
+		qfree(q);
+		return r;
+	}
+	if (qisneg(q2)) {
+		q2tmp = qcomp(q2);
+		q = qandnot(q2tmp, q1);
+		qfree(q2tmp);
+		r = qcomp(q);
+		qfree(q);
+		return r;
+	}
 	r = qalloc();
 	zor(q1->num, q2->num, &r->num);
 	return r;
@@ -894,22 +927,44 @@ qor(NUMBER *q1, NUMBER *q2)
 
 
 /*
- * Perform the logical AND of two integers.
+ * Perform the bitwise AND of two integers.
  */
 NUMBER *
 qand(NUMBER *q1, NUMBER *q2)
 {
 	register NUMBER *r;
+	NUMBER *q1tmp, *q2tmp, *q;
 	ZVALUE res;
 
 	if (qisfrac(q1) || qisfrac(q2)) {
-		math_error("Non-integers for logical and");
+		math_error("Non-integers for bitwise and");
 		/*NOTREACHED*/
 	}
-	if (q1 == q2)
+	if (qcmp(q1, q2) == 0)
 		return qlink(q1);
 	if (qiszero(q1) || qiszero(q2))
 		return qlink(&_qzero_);
+	if (qisneg(q1)) {
+		q1tmp = qcomp(q1);
+		if (qisneg(q2)) {
+			q2tmp = qcomp(q2);
+			q = qor(q1tmp, q2tmp);
+			qfree(q1tmp);
+			qfree(q2tmp);
+			r = qcomp(q);
+			qfree(q);
+			return r;
+		}
+		r = qandnot(q2, q1tmp);
+		qfree(q1tmp);
+		return r;
+	}
+	if (qisneg(q2)) {
+		q2tmp = qcomp(q2);
+		r = qandnot(q1, q2tmp);
+		qfree(q2tmp);
+		return r;
+	}
 	zand(q1->num, q2->num, &res);
 	if (ziszero(res)) {
 		zfree(res);
@@ -922,24 +977,48 @@ qand(NUMBER *q1, NUMBER *q2)
 
 
 /*
- * Perform the logical XOR of two integers.
+ * Perform the bitwise XOR of two integers.
  */
 NUMBER *
 qxor(NUMBER *q1, NUMBER *q2)
 {
 	register NUMBER *r;
+	NUMBER *q1tmp, *q2tmp, *q;
 	ZVALUE res;
 
 	if (qisfrac(q1) || qisfrac(q2)) {
-		math_error("Non-integers for logical xor");
+		math_error("Non-integers for bitwise xor");
 		/*NOTREACHED*/
 	}
-	if (q1 == q2)
+	if (qcmp(q1,q2) == 0)
 		return qlink(&_qzero_);
 	if (qiszero(q1))
 		return qlink(q2);
 	if (qiszero(q2))
 		return qlink(q1);
+	if (qisneg(q1)) {
+		q1tmp = qcomp(q1);
+		if (qisneg(q2)) {
+			q2tmp = qcomp(q2);
+			r = qxor(q1tmp, q2tmp);
+			qfree(q1tmp);
+			qfree(q2tmp);
+			return r;
+		}
+		q = qxor(q1tmp, q2);
+		qfree(q1tmp);
+		r = qcomp(q);
+		qfree(q);
+		return r;
+	}
+	if (qisneg(q2)) {
+		q2tmp = qcomp(q2);
+		q = qxor(q1, q2tmp);
+		qfree(q2tmp);
+		r = qcomp(q);
+		qfree(q);
+		return r;
+	}
 	zxor(q1->num, q2->num, &res);
 	if (ziszero(res)) {
 		zfree(res);
@@ -948,6 +1027,72 @@ qxor(NUMBER *q1, NUMBER *q2)
 	r = qalloc();
 	r->num = res;
 	return r;
+}
+
+
+/*
+ * Perform the bitwise ANDNOT of two integers.
+ */
+NUMBER *
+qandnot(NUMBER *q1, NUMBER *q2)
+{
+	register NUMBER *r;
+	NUMBER *q1tmp, *q2tmp, *q;
+
+	if (qisfrac(q1) || qisfrac(q2)) {
+		math_error("Non-integers for bitwise xor");
+		/*NOTREACHED*/
+	}
+	if (qcmp(q1,q2) == 0 || qiszero(q1))
+		return qlink(&_qzero_);
+	if (qiszero(q2))
+		return qlink(q1);
+	if (qisneg(q1)) {
+		q1tmp = qcomp(q1);
+		if (qisneg(q2)) {
+			q2tmp = qcomp(q2);
+			r = qandnot(q2tmp, q1tmp);
+			qfree(q1tmp);
+			qfree(q2tmp);
+			return r;
+		}
+		q = qor(q1tmp, q2);
+		qfree(q1tmp);
+		r = qcomp(q);
+		qfree(q);
+		return r;
+	}
+	if (qisneg(q2)) {
+		q2tmp = qcomp(q2);
+		r = qand(q1, q2tmp);
+		qfree(q2tmp);
+		return r;
+	}
+	r = qalloc();
+	zandnot(q1->num, q2->num, &r->num);
+	return r;
+}
+
+/*
+ * Return the bitwise "complement" of a number.  This is - q -1 if q is an
+ * integer, - q otherwise.
+ */
+NUMBER *
+qcomp(NUMBER *q)
+{
+	NUMBER *qtmp;
+	NUMBER *res;
+
+	if (qiszero(q))
+		return qlink(&_qnegone_);
+	if (qisnegone(q))
+		return qlink(&_qzero_);
+	qtmp = qneg(q);
+	if (qisfrac(q))
+		return qtmp;
+	res = qdec(qtmp);
+	qfree(qtmp);
+	return res;
 }
 
 
@@ -1154,48 +1299,34 @@ qcmp(NUMBER *q1, NUMBER *q2)
  * Compare a number against a normal small integer.
  * Returns 1, 0, or -1, according to whether the first number is greater,
  * equal, or less than the second number.
- *	n = qreli(q, n);
+ *	res = qreli(q, n);
  */
 FLAG
 qreli(NUMBER *q, long n)
 {
-	int sign;
-	ZVALUE num;
-	HALF h2[2];
-	NUMBER q2;
+	ZVALUE z1, z2;
+	FLAG res;
 
-	sign = ztest(q->num);		/* do trivial sign checks */
-	if (sign == 0) {
-		if (n > 0)
-			return -1;
-		return (n < 0);
+	if (qiszero(q))
+		return ((n > 0) ? -1 : (n < 0));
+
+	if (n == 0)
+		return (q->num.sign ? -1 : 0);
+
+	if (q->num.sign != n < 0)
+		return ((n < 0) ? 1 : -1);
+
+	itoz(n, &z1);
+
+	if (qisfrac(q)) {
+		zmul(q->den, z1, &z2);
+		zfree(z1);
+		z1 = z2;
 	}
-	if ((sign < 0) && (n >= 0))
-		return -1;
-	if ((sign > 0) && (n <= 0))
-		return 1;
-	n *= sign;
-	if (n == 1) {			/* quick check against 1 or -1 */
-		num = q->num;
-		num.sign = 0;
-		return (sign * zrel(num, q->den));
-	}
-	num.sign = (sign < 0);
-#if LONG_BITS > BASEB
-	num.len = 1 + (n >= BASE);
-	h2[0] = (HALF)(n & BASE1);
-	h2[1] = (HALF)(n >> BASEB);
-#else
-	num.len = 1;
-	h2[0] = n;
-#endif
-	num.v = h2;
-	if (zisunit(q->den))	/* integer compare if no denominator */
-		return zrel(q->num, num);
-	q2.num = num;
-	q2.den = _one_;
-	q2.links = 1;
-	return qrel(q, &q2);	/* full fractional compare */
+
+	res = zrel(q->num, z1);
+	zfree(z1);
+	return res;
 }
 
 
@@ -1206,11 +1337,13 @@ qreli(NUMBER *q, long n)
 BOOL
 qcmpi(NUMBER *q, long n)
 {
-	FULL nf;
 	long len;
+#if LONG_BITS > BASEB
+	FULL nf;
+#endif
 
 	len = q->num.len;
-	if ((len > 2) || qisfrac(q) || (q->num.sign != (n < 0)))
+	if (qisfrac(q) || (q->num.sign != (n < 0)))
 		return TRUE;
 	if (n < 0)
 		n = -n;
@@ -1218,10 +1351,10 @@ qcmpi(NUMBER *q, long n)
 		return TRUE;
 #if LONG_BITS > BASEB
 	nf = ((FULL) n) >> BASEB;
+	return ((nf != 0 || len > 1) && (len != 2 || nf != q->num.v[1]));
 #else
-	nf = 0;
+	return (len > 1);
 #endif
-	return (((nf != 0) != (len == 2)) || (nf != q->num.v[1]));
 }
 
 
@@ -1231,52 +1364,96 @@ qcmpi(NUMBER *q, long n)
 
 #define	NNALLOC	1000
 
-union allocNode {
-	NUMBER	num;
-	union allocNode	*link;
-};
 
-static union allocNode	*freeNum;
+static NUMBER	*freeNum;
+static NUMBER	**firstNums;
+static long	blockcount = 0;
 
 
 NUMBER *
 qalloc(void)
 {
-	register union allocNode *temp;
+	NUMBER *temp;
+	NUMBER ** newfn;
 
 	if (freeNum == NULL) {
-		freeNum = (union allocNode *)
-		malloc(sizeof (NUMBER) * NNALLOC);
+		freeNum = (NUMBER *) malloc(sizeof (NUMBER) * NNALLOC);
 		if (freeNum == NULL) {
 			math_error("Not enough memory");
 			/*NOTREACHED*/
 		}
-		freeNum[NNALLOC-1].link = NULL;
-		for (temp=freeNum+NNALLOC-2; temp >= freeNum; --temp) {
-			temp->link = temp+1;
+		freeNum[NNALLOC - 1].next = NULL;
+		freeNum[NNALLOC - 1].links = 0;
+		for (temp = freeNum + NNALLOC - 2; temp >= freeNum; --temp) {
+			temp->next = temp + 1;
+			temp->links = 0;
 		}
+		blockcount++;
+		newfn = (NUMBER **)
+			realloc(firstNums, blockcount * sizeof(NUMBER *));
+		if (newfn == NULL) {
+			math_error("Cannot allocate new number block");
+			/*NOTREACHED*/
+		}
+		firstNums = newfn;
+		firstNums[blockcount - 1] = freeNum;
 	}
 	temp = freeNum;
-	freeNum = temp->link;
-	temp->num.links = 1;
-	temp->num.num = _one_;
-	temp->num.den = _one_;
-	return &temp->num;
+	freeNum = temp->next;
+	temp->links = 1;
+	temp->num = _one_;
+	temp->den = _one_;
+	return temp;
 }
 
 
 void
 qfreenum(NUMBER *q)
 {
-	union allocNode *a;
-
-	if (q == NULL)
-		return;
+	if (q == NULL) {
+		math_error("Calling qfreenum with null argument!!!");
+		/*NOTREACHED*/
+	}
+	if (q->links != 0) {
+		math_error("Calling qfreenum with nozero links!!!");
+		/*NOTREACHED*/
+	}
 	zfree(q->num);
 	zfree(q->den);
-	a = (union allocNode *) q;
-	a->link = freeNum;
-	freeNum = a;
+	q->next = freeNum;
+	freeNum = q;
+}
+
+void
+shownumbers(void)
+{
+	NUMBER *vp;
+	long i, j, k;
+	long count = 0;
+
+	printf("Index  Links  Digits           Value\n");
+	printf("-----  -----  ------           -----\n");
+
+	for (i = 0, k = 0; i < INITCONSTCOUNT; i++) {
+		count++;
+		vp = initnumbs[i];
+		printf("%6ld  %4ld  ", k++, vp->links);
+		fitprint(vp, 40);
+		printf("\n");
+	}
+
+	for (i = 0; i < blockcount; i++) {
+		vp = firstNums[i];
+		for (j = 0; j < NNALLOC; j++, k++, vp++) {
+			if (vp->links > 0) {
+				count++;
+				printf("%6ld  %4ld  ", k, vp->links);
+				fitprint(vp, 40);
+				printf("\n");
+			}
+		}
+	}
+	printf("\nNumber: %ld\n", count);
 }
 
 /* END CODE */

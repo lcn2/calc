@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
@@ -7,6 +7,7 @@
  */
 
 
+#include <stdio.h>
 #include <ctype.h>
 #include <sys/types.h>
 
@@ -52,18 +53,24 @@
 #include "prime.h"
 #include "file.h"
 #include "zrand.h"
+#include "zrandom.h"
+#include "custom.h"
+
+#if defined(CUSTOM)
+# define E_CUSTOM_ERROR E_NO_C_ARG
+#else
+# define E_CUSTOM_ERROR E_NO_CUSTOM
+#endif
 
 
 /*
  * forward declarations
  */
 static NUMBER *base_value(long mode);
-static long zsize(ZVALUE z);
-static long qsize(NUMBER *q);
-static long lsizeof(VALUE *vp);
 static int strscan(char *s, int count, VALUE **vals);
 static int filescan(FILEID id, int count, VALUE **vals);
 static VALUE f_eval(VALUE *vp);
+static VALUE f_fsize(VALUE *vp);
 
 
 
@@ -93,7 +100,7 @@ extern int idungetc(FILEID id, int ch);
 
 
 /*
- * used defined error strings
+ * user-defined error strings
  */
 static short nexterrnum = E_USERDEF;
 static STRINGHEAD newerrorstr;
@@ -132,10 +139,12 @@ f_eval(VALUE *vp)
 	FUNC	*oldfunc;
 	FUNC	*newfunc;
 	VALUE	result;
+	char	*cp;
 
 	if (vp->v_type != V_STR)
 		return error_value(E_EVAL2);
-	switch (openstring(vp->v_str)) {
+	cp = vp->v_str->s_str;
+	switch (openstring(cp)) {
 		case -2:
 			return error_value(E_EVAL3);
 		case -1:
@@ -150,6 +159,7 @@ f_eval(VALUE *vp)
 		curfunc = oldfunc;
 		result = newfunc->f_savedvalue;
 		newfunc->f_savedvalue.v_type = V_NULL;
+		freenumbers(newfunc);
 		if (newfunc != oldfunc)
 			free(newfunc);
 		return result;
@@ -159,6 +169,7 @@ f_eval(VALUE *vp)
 	curfunc = oldfunc;
 	freevalue(&newfunc->f_savedvalue);
 	newfunc->f_savedvalue.v_type = V_NULL;
+	freenumbers(newfunc);
 	if (newfunc != oldfunc)
 		free(newfunc);
 	return error_value(E_EVAL);
@@ -171,7 +182,9 @@ f_prompt(VALUE *vp)
 	VALUE result;
 	char *cp;
 	char *newcp;
+	unsigned int len;
 
+	result.v_type = V_STR;
 	if (inputisterminal()) {
 		printvalue(vp, PRINT_SHORT);
 		math_flush();
@@ -182,21 +195,30 @@ f_prompt(VALUE *vp)
 		/*NOTREACHED*/
 	}
 	if (*cp == '\0') {
-		result.v_type = V_STR;
-		result.v_subtype = V_STRLITERAL;
-		result.v_str = "";
+		result.v_str = slink(&_nullstring_);
 		return result;
 	}
-	newcp = (char *)malloc(strlen(cp) + 1);
+	len = strlen(cp);
+	newcp = (char *) malloc(len + 1);
 	if (newcp == NULL) {
 		math_error("Cannot allocate string");
 		/*NOTREACHED*/
 	}
 	strcpy(newcp, cp);
-	result.v_str = newcp;
+	result.v_str = makestring(newcp);
 	result.v_type = V_STR;
-	result.v_subtype = V_STRALLOC;
 	return result;
+}
+
+
+/*ARGSUSED*/
+static VALUE
+f_null(int count, VALUE **vals)
+{
+	VALUE res;
+
+	res.v_type = 0;
+	return res;
 }
 
 
@@ -204,16 +226,18 @@ static VALUE
 f_str(VALUE *vp)
 {
 	VALUE result;
-	static char *cp;
+	char *cp;
 
+	result.v_type = V_STR;
 	switch (vp->v_type) {
 		case V_STR:
-			copyvalue(vp, &result);
+			result.v_str = stringcopy(vp->v_str);
 			return result;
 		case V_NULL:
-			result.v_str = "";
-			result.v_type = V_STR;
-			result.v_subtype = V_STRLITERAL;
+			result.v_str = slink(&_nullstring_);
+			return result;
+		case V_OCTET:
+			result.v_str = charstring(*vp->v_octet);
 			return result;
 		case V_NUM:
 			math_divertio();
@@ -228,11 +252,43 @@ f_str(VALUE *vp)
 		default:
 			return error_value(E_STR);
 	}
-	result.v_str = cp;
-	result.v_type = V_STR;
-	result.v_subtype = V_STRALLOC;
+	result.v_str = makestring(cp);
 	return result;
 }
+
+
+static VALUE
+f_name (VALUE *vp)
+{
+	VALUE result;
+	char *cp;
+	char *name;
+
+	result.v_type = V_STR;
+	switch (vp->v_type) {
+		case V_NBLOCK:
+			result.v_type = V_STR;
+			result.v_str = makenewstring(vp->v_nblock->name);
+			return result;
+		case V_FILE:
+			name = findfname(vp->v_file);
+			if (name == NULL) {
+				result.v_type = V_NULL;
+				return result;
+			}
+			math_divertio();
+			math_str(name);
+			cp = math_getdivertedio();
+			break;
+		default:
+			result.v_type = V_NULL;
+			return result;
+	}
+	result.v_str = makestring(cp);
+	result.v_type = V_STR;
+	return result;
+}
+
 
 
 static VALUE
@@ -721,7 +777,7 @@ f_rand(int count, NUMBER **vals)
 	/* parse args */
 	switch (count) {
 	case 0:			/* rand() == rand(2^64) */
-		/* generate a random number */
+		/* generate an a55 random number */
 		ans = qalloc();
 		zrand(SBITS, &ans->num);
 		break;
@@ -755,7 +811,7 @@ f_rand(int count, NUMBER **vals)
 		return NULL;
 	}
 
-	/* return the random number */
+	/* return the a55 random number */
 	return ans;
 }
 
@@ -768,7 +824,6 @@ f_randbit(int count, NUMBER **vals)
 	long cnt;		/* bits needed or skipped */
 
 	/* parse args */
-
 	if (count == 0) {
 		zrand(1, &ztmp);
 		ans = ziszero(ztmp) ? qlink(&_qzero_) : qlink(&_qone_);
@@ -789,7 +844,7 @@ f_randbit(int count, NUMBER **vals)
 	}
 
 	/*
-	 * generate a random number or skip random bits
+	 * generate an a55 random number or skip random bits
 	 */
 	ans = qalloc();
 	cnt = ztolong(vals[0]->num);
@@ -803,7 +858,7 @@ f_randbit(int count, NUMBER **vals)
 	}
 
 	/*
-	 * return the random number
+	 * return the a55 random number
 	 */
 	return ans;
 }
@@ -862,6 +917,101 @@ f_srand(int count, VALUE **vals)
 }
 
 
+static NUMBER *
+f_random(int count, NUMBER **vals)
+{
+	NUMBER *ans;
+
+	/* parse args */
+	switch (count) {
+	case 0:			/* random() == random(2^64) */
+		/* generate a Blum-Blum-Shub random number */
+		ans = qalloc();
+		zrandom(SBITS, &ans->num);
+		break;
+
+	case 1:			/* random(limit) */
+		if (!qisint(vals[0])) {
+			math_error("random limit must be an integer");
+			/*NOTREACHED*/
+		}
+		if (zislezero(vals[0]->num)) {
+			math_error("random limit must > 0");
+			/*NOTREACHED*/
+		}
+		ans = qalloc();
+		zrandomrange(_zero_, vals[0]->num, &ans->num);
+		break;
+
+	case 2:			/* random(low, limit) */
+		/* firewall */
+		if (!qisint(vals[0]) || !qisint(vals[1])) {
+			math_error("random range must be integers");
+			/*NOTREACHED*/
+		}
+		ans = qalloc();
+		zrandomrange(vals[0]->num, vals[1]->num, &ans->num);
+		break;
+
+	default:
+		math_error("invalid number of args passed to random");
+		/*NOTREACHED*/
+		return NULL;
+	}
+
+	/* return the Blum-Blum-Shub random number */
+	return ans;
+}
+
+
+static NUMBER *
+f_randombit(int count, NUMBER **vals)
+{
+	NUMBER *ans;
+	ZVALUE ztmp;
+	long cnt;		/* bits needed or skipped */
+
+	/* parse args */
+	if (count == 0) {
+		zrandom(1, &ztmp);
+		ans = ziszero(ztmp) ? qlink(&_qzero_) : qlink(&_qone_);
+		zfree(ztmp);
+		return ans;
+	}
+
+	/*
+	 * firewall
+	 */
+	if (!qisint(vals[0])) {
+		math_error("random bit count must be an integer");
+		/*NOTREACHED*/
+	}
+	if (zge31b(vals[0]->num)) {
+		math_error("huge random bit count");
+		/*NOTREACHED*/
+	}
+
+	/*
+	 * generate a Blum-Blum-Shub random number or skip random bits
+	 */
+	ans = qalloc();
+	cnt = ztolong(vals[0]->num);
+	if (zisneg(vals[0]->num)) {
+		/* skip bits */
+		zrandomskip(cnt);
+		itoz(cnt, &ans->num);
+	} else {
+		/* generate bits */
+		zrandom(cnt, &ans->num);
+	}
+
+	/*
+	 * return the Blum-Blum-Shub random number
+	 */
+	return ans;
+}
+
+
 static VALUE
 f_srandom(int count, VALUE **vals)
 {
@@ -869,12 +1019,12 @@ f_srandom(int count, VALUE **vals)
 
 	/* parse args */
 	switch (count) {
-	case 0:
+	case 0:		/* srandom() */
 		/* get the current random state */
 		result.v_random = zsetrandom(NULL);
 		break;
 
-	case 1:
+	case 1:		/* srandom(seed) or srandom(state) */
 		switch (vals[0]->v_type) {
 		case V_NUM:		/* srand(seed) */
 			/* seed Blum and return previous state */
@@ -883,7 +1033,7 @@ f_srandom(int count, VALUE **vals)
 				  "srandom number seed must be an integer");
 			        /*NOTREACHED*/
 			}
-			result.v_random = zsrandom(vals[0]->v_num->num, NULL);
+			result.v_random = zsrandom1(vals[0]->v_num->num, TRUE);
 			break;
 
 		case V_RANDOM:		/* srandom(state) */
@@ -896,6 +1046,46 @@ f_srandom(int count, VALUE **vals)
 			/*NOTREACHED*/
 			break;
 		}
+		break;
+
+	case 2:		/* srandom(seed, newn) */
+		if (vals[0]->v_type != V_NUM || !qisint(vals[0]->v_num)) {
+			math_error("srandom seed must be an integer");
+			/*NOTREACHED*/
+		}
+		if (vals[1]->v_type != V_NUM || !qisint(vals[1]->v_num)) {
+			math_error("srandom Blum modulus must be an integer");
+			/*NOTREACHED*/
+		}
+		result.v_random = zsrandom2(vals[0]->v_num->num,
+					    vals[1]->v_num->num);
+		break;
+
+	case 4:		/* srandom(seed, ip, iq, trials) */
+		if (vals[0]->v_type != V_NUM || !qisint(vals[0]->v_num)) {
+			math_error("srandom seed must be an integer");
+			/*NOTREACHED*/
+		}
+		if (vals[1]->v_type != V_NUM || !qisint(vals[1]->v_num)) {
+			math_error("srandom 2nd arg must be an integer");
+			/*NOTREACHED*/
+		}
+		if (vals[2]->v_type != V_NUM || !qisint(vals[2]->v_num)) {
+			math_error("srandom 3rd arg must be an integer");
+			/*NOTREACHED*/
+		}
+		if (vals[3]->v_type != V_NUM || !qisint(vals[3]->v_num)) {
+			math_error("srandom 4th arg must be an integer");
+			/*NOTREACHED*/
+		}
+		if (zge24b(vals[3]->v_num->num)) {
+			math_error("srandom trials count is excessive");
+			/*NOTREACHED*/
+		}
+		result.v_random = zsrandom4(vals[0]->v_num->num,
+					    vals[1]->v_num->num,
+					    vals[2]->v_num->num,
+					    ztoi(vals[3]->v_num->num));
 		break;
 
 	default:
@@ -922,20 +1112,26 @@ f_primetest(int count, NUMBER **vals)
 }
 
 
-static NUMBER *
-f_isset(NUMBER *val1, NUMBER *val2)
+static VALUE
+f_setbit(int count, VALUE **vals)
 {
-	if (qisfrac(val2)) {
-		math_error("Non-integral bit position");
-		/*NOTREACHED*/
-	}
-	if (qiszero(val1) || (qisint(val1) && qisneg(val2)))
-		return qlink(&_qzero_);
-	if (zge31b(val2->num)) {
-		math_error("Very large bit position");
-		/*NOTREACHED*/
-	}
-	return itoq((long) qisset(val1, qtoi(val2)));
+	BOOL r;
+	long index;
+	VALUE result;
+
+	r = (count == 3) ? testvalue(vals[2]) : 1;
+
+	if (vals[1]->v_type != V_NUM || qisfrac(vals[1]->v_num))
+		return error_value(E_SETBIT1);
+	if (zge31b(vals[1]->v_num->num))
+		return error_value(E_SETBIT2);
+	if (vals[0]->v_type != V_STR)
+		return error_value(E_SETBIT3);
+	index = qtoi(vals[1]->v_num);
+	if (stringsetbit(vals[0]->v_str, index, r))
+		return error_value(E_SETBIT2);
+	result.v_type = V_NULL;
+	return result;
 }
 
 
@@ -974,47 +1170,268 @@ f_places(NUMBER *val)
 
 
 static NUMBER *
-f_xor(int count, NUMBER **vals)
+f_popcnt(int count, NUMBER **vals)
 {
-	NUMBER *val, *tmp;
+	int bitval = 1;
 
-	val = qlink(*vals);
-	while (--count > 0) {
-		tmp = qxor(val, *++vals);
-		qfree(val);
-		val = tmp;
+	/*
+	 * parse args
+	 */
+	if (count == 2 && qiszero(vals[1])) {
+		bitval = 0;
 	}
-	return val;
+
+	/*
+	 * count bit values
+	 */
+	if (qisint(vals[0])) {
+		return itoq(zpopcnt(vals[0]->num, bitval));
+	} else {
+		return itoq(zpopcnt(vals[0]->num, bitval) +
+			    zpopcnt(vals[0]->den, bitval));
+	}
 }
 
 
-static NUMBER *
-f_min(int count, NUMBER **vals)
+static VALUE
+f_xor(int count, VALUE **vals)
 {
-	NUMBER *val, *tmp;
+	NUMBER *q, *qtmp;
+	STRING *s, *stmp;
+	VALUE result;
+	int i;
+	int type;
 
-	val = qlink(*vals);
-	while (--count > 0) {
-		tmp = qmin(val, *++vals);
-		qfree(val);
-		val = tmp;
+	type = vals[0]->v_type;
+	result.v_type = type;
+	for (i = 1; i < count; i++) {
+		if (vals[i]->v_type != type)
+			return error_value(E_XOR1);
 	}
-	return val;
+	switch (type) {
+		case V_NUM:
+			q = qlink(vals[0]->v_num);
+			for (i = 1; i < count; i++) {
+				qtmp = qxor(q, vals[i]->v_num);
+				qfree(q);
+				q = qtmp;
+			}
+			result.v_num = q;
+			break;
+		case V_STR:
+			s = slink(vals[0]->v_str);
+			for (i = 1; i < count; i++) {
+				stmp = stringxor(s, vals[i]->v_str);
+				sfree(s);
+				s = stmp;
+			}
+			result.v_str = s;
+			break;
+		default:
+			return error_value(E_XOR2);
+	}
+	return result;
 }
 
 
-static NUMBER *
-f_max(int count, NUMBER **vals)
+VALUE
+minlistitems(LIST *lp)
 {
-	NUMBER *val, *tmp;
+	LISTELEM *ep;
+	VALUE *vp;
+	VALUE term;
+	VALUE rel;
+	VALUE min;
 
-	val = qlink(*vals);
-	while (--count > 0) {
-		tmp = qmax(val, *++vals);
-		qfree(val);
-		val = tmp;
+	min.v_type = V_NULL;
+
+	for (ep = lp->l_first; ep; ep = ep->e_next) {
+		vp = &ep->e_value;
+		switch(vp->v_type) {
+			case V_LIST:
+				term = minlistitems(vp->v_list);
+				break;
+			case V_OBJ:
+				term = objcall(OBJ_MIN, vp,
+					       NULL_VALUE, NULL_VALUE);
+				break;
+			default:
+				copyvalue(vp, &term);
+		}
+		if (min.v_type == V_NULL) {
+			min = term;
+			continue;
+		}
+		if (term.v_type == V_NULL)
+			continue;
+		relvalue(&term, &min, &rel);
+		if (rel.v_type != V_NUM) {
+			freevalue(&term);
+			freevalue(&min);
+			freevalue(&rel);
+			return error_value(E_LISTMIN);
+		}
+		if (qisneg(rel.v_num)) {
+			freevalue(&min);
+			min = term;
+		}
+		else
+			freevalue(&term);
+		freevalue(&rel);
 	}
-	return val;
+	return min;
+}
+
+
+VALUE
+maxlistitems(LIST *lp)
+{
+	LISTELEM *ep;
+	VALUE *vp;
+	VALUE term;
+	VALUE rel;
+	VALUE max;
+
+	max.v_type = V_NULL;
+
+	for (ep = lp->l_first; ep; ep = ep->e_next) {
+		vp = &ep->e_value;
+		switch(vp->v_type) {
+			case V_LIST:
+				term = maxlistitems(vp->v_list);
+				break;
+			case V_OBJ:
+				term = objcall(OBJ_MAX, vp,
+					       NULL_VALUE, NULL_VALUE);
+				break;
+			default:
+				copyvalue(vp, &term);
+		}
+		if (max.v_type == V_NULL) {
+			max = term;
+			continue;
+		}
+		if (term.v_type == V_NULL)
+			continue;
+		relvalue(&max, &term, &rel);
+		if (rel.v_type != V_NUM) {
+			freevalue(&max);
+			freevalue(&term);
+			freevalue(&rel);
+			return error_value(E_LISTMAX);
+		}
+		if (qisneg(rel.v_num)) {
+			freevalue(&max);
+			max = term;
+		}
+		else
+			freevalue(&term);
+		freevalue(&rel);
+	}
+	return max;
+}
+
+
+static VALUE
+f_min(int count, VALUE **vals)
+{
+	VALUE min;
+	VALUE term;
+	VALUE *vp;
+	VALUE rel;
+
+	min.v_type = V_NULL;
+	while (count-- > 0) {
+		vp = *vals++;
+		switch(vp->v_type) {
+			case V_LIST:
+				term = minlistitems(vp->v_list);
+				break;
+			case V_OBJ:
+				term = objcall(OBJ_MIN, vp,
+					      NULL_VALUE, NULL_VALUE);
+				break;
+			default:
+				copyvalue(vp, &term);
+		}
+		if (min.v_type == V_NULL) {
+			min = term;
+			continue;
+		}
+		if (term.v_type == V_NULL)
+			continue;
+		if (term.v_type < 0) {
+			freevalue(&min);
+			return term;
+		}
+		relvalue(&term, &min, &rel);
+		if (rel.v_type != V_NUM) {
+			freevalue(&min);
+			freevalue(&term);
+			freevalue(&rel);
+			return error_value(E_MIN);
+		}
+		if (qisneg(rel.v_num)) {
+			freevalue(&min);
+			min = term;
+		}
+		else
+			freevalue(&term);
+		freevalue(&rel);
+	}
+	return min;
+}
+
+
+static VALUE
+f_max(int count, VALUE **vals)
+{
+	VALUE max;
+	VALUE term;
+	VALUE *vp;
+	VALUE rel;
+
+	max.v_type = V_NULL;
+
+	while (count-- > 0) {
+		vp = *vals++;
+		switch(vp->v_type) {
+			case V_LIST:
+				term = maxlistitems(vp->v_list);
+				break;
+			case V_OBJ:
+				term = objcall(OBJ_MAX, vp,
+					       NULL_VALUE, NULL_VALUE);
+				break;
+			default:
+				copyvalue(vp, &term);
+		}
+		if (max.v_type == V_NULL) {
+			max = term;
+			continue;
+		}
+		if (term.v_type == V_NULL)
+			continue;
+		if (term.v_type < 0) {
+			freevalue(&max);
+			return term;
+		}
+		relvalue(&max, &term, &rel);
+		if (rel.v_type != V_NUM) {
+			freevalue(&max);
+			freevalue(&term);
+			freevalue(&rel);
+			return error_value(E_MAX);
+		}
+		if (qisneg(rel.v_num)) {
+			freevalue(&max);
+			max = term;
+		}
+		else
+			freevalue(&term);
+		freevalue(&rel);
+	}
+	return max;
 }
 
 
@@ -1023,7 +1440,7 @@ f_gcd(int count, NUMBER **vals)
 {
 	NUMBER *val, *tmp;
 
-	val = qabs(*vals);
+	val = qqabs(*vals);
 	while (--count > 0) {
 		tmp = qgcd(val, *++vals);
 		qfree(val);
@@ -1038,7 +1455,7 @@ f_lcm(int count, NUMBER **vals)
 {
 	NUMBER *val, *tmp;
 
-	val = qabs(*vals);
+	val = qqabs(*vals);
 	while (--count > 0) {
 		tmp = qlcm(val, *++vals);
 		qfree(val);
@@ -1066,6 +1483,90 @@ f_hash(int count, VALUE **vals)
 	result.v_num = itoq(lhash);
 	result.v_type = V_NUM;
 	return result;
+}
+
+
+VALUE
+sumlistitems(LIST *lp)
+{
+	LISTELEM *ep;
+	VALUE *vp;
+	VALUE term;
+	VALUE tmp;
+	VALUE sum;
+
+	sum.v_type = V_NULL;
+
+	for (ep = lp->l_first; ep; ep = ep->e_next) {
+		vp = &ep->e_value;
+		switch(vp->v_type) {
+			case V_LIST:
+				term = sumlistitems(vp->v_list);
+				break;
+			case V_OBJ:
+				term = objcall(OBJ_SUM, vp,
+					       NULL_VALUE, NULL_VALUE);
+				break;
+			default:
+				copyvalue(vp, &term);
+		}
+		if (sum.v_type == V_NULL) {
+			sum = term;
+			continue;
+		}
+		if (term.v_type == V_NULL)
+			continue;
+		addvalue(&sum, &term, &tmp);
+		freevalue(&sum);
+		freevalue(&term);
+		sum = tmp;
+		if (sum.v_type < 0)
+			break;
+	}
+	return sum;
+}
+
+
+static VALUE
+f_sum(int count, VALUE **vals)
+{
+	VALUE tmp;
+	VALUE sum;
+	VALUE term;
+	VALUE *vp;
+
+	sum.v_type = V_NULL;
+	while (count-- > 0) {
+		vp = *vals++;
+		switch(vp->v_type) {
+			case V_LIST:
+				term = sumlistitems(vp->v_list);
+				break;
+			case V_OBJ:
+				term = objcall(OBJ_SUM, vp,
+					      NULL_VALUE, NULL_VALUE);
+				break;
+			default:
+				copyvalue(vp, &term);
+		}
+		if (sum.v_type == V_NULL) {
+			sum = term;
+			continue;
+		}
+		if (term.v_type == V_NULL)
+			continue;
+		if (term.v_type < 0) {
+			freevalue(&sum);
+			return term;
+		}
+		addvalue(&sum, &term, &tmp);
+		freevalue(&term);
+		freevalue(&sum);
+		sum = tmp;
+		if (sum.v_type < 0)
+			return sum;
+	}
+	return sum;
 }
 
 
@@ -1105,6 +1606,24 @@ f_avg(int count, VALUE **vals)
 
 
 static VALUE
+f_fact(VALUE *vp)
+{
+	VALUE res;
+
+	if (vp->v_type == V_OBJ) {
+		return objcall(OBJ_FACT, vp, NULL_VALUE, NULL_VALUE);
+	}
+	if (vp->v_type != V_NUM) {
+		math_error("Non-real argument for fact()");
+		/*NOTREACHED*/
+	}
+	res.v_type = V_NUM;
+	res.v_num = qfact(vp->v_num);
+	return res;
+}
+
+
+static VALUE
 f_hmean(int count, VALUE **vals)
 {
 	VALUE sum, tmp1, tmp2;
@@ -1133,6 +1652,46 @@ f_hmean(int count, VALUE **vals)
 	qfree(tmp1.v_num);
 	freevalue(&sum);
 	return tmp2;
+}
+
+
+static NUMBER *
+f_hnrmod(NUMBER *val1, NUMBER *val2, NUMBER *val3, NUMBER *val4)
+{
+	ZVALUE answer;			/* v mod h*2^n+r */
+	NUMBER *res;			/* v mod h*2^n+r */
+
+	/*
+	 * firewall
+	 */
+	if (qisfrac(val1)) {
+		math_error("1st arg of hnrmod (v) must be an integer");
+		/*NOTREACHED*/
+	}
+	if (qisfrac(val2) || qisneg(val2) || qiszero(val2)) {
+		math_error("2nd arg of hnrmod (h) must be an integer > 0");
+		/*NOTREACHED*/
+	}
+	if (qisfrac(val3) || qisneg(val3) || qiszero(val3)) {
+		math_error("3rd arg of hnrmod (n) must be an integer > 0");
+		/*NOTREACHED*/
+	}
+	if (qisfrac(val4) || !zisabsleone(val4->num)) {
+		math_error("4th arg of hnrmod (r) must be -1, 0 or 1");
+		/*NOTREACHED*/
+	}
+
+	/*
+	 * perform the val1 mod (val2 * 2^val3 + val4) operation
+	 */
+	zhnrmod(val1->num, val2->num, val3->num, val4->num, &answer);
+
+	/*
+	 * return the answer
+	 */
+	res = qalloc();
+	res->num = answer;
+	return res;
 }
 
 
@@ -1314,6 +1873,968 @@ f_sin(int count, VALUE **vals)
 			break;
 		default:
 			return error_value(E_COS2);
+	}
+	return result;
+}
+
+
+static VALUE
+f_tan(int count, VALUE **vals)
+{
+	VALUE result;
+	VALUE tmp1, tmp2;
+	NUMBER *err;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_TAN1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qtan(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			tmp1.v_type = V_COM;
+			tmp1.v_com = csin(vals[0]->v_com, err);
+			tmp2.v_type = V_COM;
+			tmp2.v_com = ccos(vals[0]->v_com, err);
+			divvalue(&tmp1, &tmp2, &result);
+			comfree(tmp1.v_com);
+			comfree(tmp2.v_com);
+			break;
+		default:
+			return error_value(E_TAN2);
+	}
+	return result;
+}
+
+static VALUE
+f_sec(int count, VALUE **vals)
+{
+	VALUE result;
+	VALUE tmp;
+	NUMBER *err;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_SEC1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qsec(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			tmp.v_type = V_COM;
+			tmp.v_com = ccos(vals[0]->v_com, err);
+			invertvalue(&tmp, &result);
+			comfree(tmp.v_com);
+			break;
+		default:
+			return error_value(E_SEC2);
+	}
+	return result;
+}
+
+
+static VALUE
+f_cot(int count, VALUE **vals)
+{
+	VALUE result;
+	VALUE tmp1, tmp2;
+	NUMBER *err;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_COT1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			if (qiszero(vals[0]->v_num))
+				return error_value(E_1OVER0);
+			result.v_num = qcot(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			tmp1.v_type = V_COM;
+			tmp1.v_com = ccos(vals[0]->v_com, err);
+			tmp2.v_type = V_COM;
+			tmp2.v_com = csin(vals[0]->v_com, err);
+			divvalue(&tmp1, &tmp2, &result);
+			comfree(tmp1.v_com);
+			comfree(tmp2.v_com);
+			break;
+		default:
+			return error_value(E_COT2);
+	}
+	return result;
+}
+
+
+static VALUE
+f_csc(int count, VALUE **vals)
+{
+	VALUE result;
+	VALUE tmp;
+	NUMBER *err;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_CSC1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			if (qiszero(vals[0]->v_num))
+				return error_value(E_1OVER0);
+			result.v_num = qcsc(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			tmp.v_type = V_COM;
+			tmp.v_com = csin(vals[0]->v_com, err);
+			invertvalue(&tmp, &result);
+			comfree(tmp.v_com);
+			break;
+		default:
+			return error_value(E_CSC2);
+	}
+	return result;
+}
+
+static VALUE
+f_sinh(int count, VALUE **vals)
+{
+	VALUE result;
+	NUMBER *err;
+	NUMBER *q;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_SINH1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qsinh(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			result.v_com = csinh(vals[0]->v_com, err);
+			result.v_type = V_COM;
+			if (cisreal(result.v_com)) {
+				q = qlink(result.v_com->real);
+				comfree(result.v_com);
+				result.v_num = q;
+				result.v_type = V_NUM;
+			}
+			break;
+		default:
+			return error_value(E_SINH2);
+	}
+	return result;
+}
+
+static VALUE
+f_cosh(int count, VALUE **vals)
+{
+	VALUE result;
+	NUMBER *err;
+	NUMBER *q;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_COSH1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qcosh(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			result.v_com = ccosh(vals[0]->v_com, err);
+			result.v_type = V_COM;
+			if (cisreal(result.v_com)) {
+				q = qlink(result.v_com->real);
+				comfree(result.v_com);
+				result.v_num = q;
+				result.v_type = V_NUM;
+			}
+			break;
+		default:
+			return error_value(E_COSH2);
+	}
+	return result;
+}
+
+
+static VALUE
+f_tanh(int count, VALUE **vals)
+{
+	VALUE result;
+	VALUE tmp1, tmp2;
+	NUMBER *err;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_TANH1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qtanh(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			tmp1.v_type = V_COM;
+			tmp1.v_com = csinh(vals[0]->v_com, err);
+			tmp2.v_type = V_COM;
+			tmp2.v_com = ccosh(vals[0]->v_com, err);
+			divvalue(&tmp1, &tmp2, &result);
+			comfree(tmp1.v_com);
+			comfree(tmp2.v_com);
+			break;
+		default:
+			return error_value(E_TANH2);
+	}
+	return result;
+}
+
+
+static VALUE
+f_coth(int count, VALUE **vals)
+{
+	VALUE result;
+	VALUE tmp1, tmp2;
+	NUMBER *err;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_COTH1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			if (qiszero(vals[0]->v_num))
+				return error_value(E_1OVER0);
+			result.v_num = qcoth(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			tmp1.v_type = V_COM;
+			tmp1.v_com = ccosh(vals[0]->v_com, err);
+			tmp2.v_type = V_COM;
+			tmp2.v_com = csinh(vals[0]->v_com, err);
+			divvalue(&tmp1, &tmp2, &result);
+			comfree(tmp1.v_com);
+			comfree(tmp2.v_com);
+			break;
+		default:
+			return error_value(E_COTH2);
+	}
+	return result;
+}
+
+
+static VALUE
+f_sech(int count, VALUE **vals)
+{
+	VALUE result;
+	VALUE tmp;
+	NUMBER *err;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_SECH1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qsech(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			tmp.v_type = V_COM;
+			tmp.v_com = ccosh(vals[0]->v_com, err);
+			invertvalue(&tmp, &result);
+			comfree(tmp.v_com);
+			break;
+		default:
+			return error_value(E_SECH2);
+	}
+	return result;
+}
+
+
+static VALUE
+f_csch(int count, VALUE **vals)
+{
+	VALUE result;
+	VALUE tmp;
+	NUMBER *err;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_CSCH1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			if (qiszero(vals[0]->v_num))
+				return error_value(E_1OVER0);
+			result.v_num = qcsch(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			tmp.v_type = V_COM;
+			tmp.v_com = csinh(vals[0]->v_com, err);
+			invertvalue(&tmp, &result);
+			comfree(tmp.v_com);
+			break;
+		default:
+			return error_value(E_CSCH2);
+	}
+	return result;
+}
+
+
+static VALUE
+f_atan(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *tmp;
+	NUMBER *err;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_ATAN1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qatan(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			tmp = catan(vals[0]->v_com, err);
+			if (tmp == NULL)
+				return error_value(E_LOGINF);
+			result.v_type = V_COM;
+			result.v_com = tmp;
+			if (cisreal(tmp)) {
+				result.v_num = qlink(tmp->real);
+				result.v_type = V_NUM;
+				comfree(tmp);
+			}
+			break;
+		default:
+			return error_value(E_ATAN2);
+	}
+	return result;
+}
+
+
+static VALUE
+f_acot(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *tmp;
+	NUMBER *err;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_ACOT1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qacot(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			tmp = cacot(vals[0]->v_com, err);
+			if (tmp == NULL)
+				return error_value(E_LOGINF);
+			result.v_type = V_COM;
+			result.v_com = tmp;
+			if (cisreal(tmp)) {
+				result.v_num = qlink(tmp->real);
+				result.v_type = V_NUM;
+				comfree(tmp);
+			}
+			break;
+		default:
+			return error_value(E_ACOT2);
+	}
+	return result;
+}
+
+static VALUE
+f_asin(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *tmp;
+	NUMBER *err;
+	NUMBER *q;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_ASIN1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qasin(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			if (result.v_num == NULL) {
+				tmp = comalloc();
+				qfree(tmp->real);
+				tmp->real = qlink(vals[0]->v_num);
+				result.v_type = V_COM;
+				result.v_com = casin(tmp, err);
+				comfree(tmp);
+			}
+			break;
+		case V_COM:
+			result.v_com = casin(vals[0]->v_com, err);
+			result.v_type = V_COM;
+			break;
+		default:
+			return error_value(E_ASIN2);
+	}
+	if (result.v_type == V_COM && cisreal(result.v_com)) {
+		q = qlink(result.v_com->real);
+		comfree(result.v_com);
+		result.v_type = V_NUM;
+		result.v_num = q;
+	}
+	return result;
+}
+
+static VALUE
+f_acos(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *tmp;
+	NUMBER *err;
+	NUMBER *q;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_ACOS1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qacos(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			if (result.v_num == NULL) {
+				tmp = comalloc();
+				qfree(tmp->real);
+				tmp->real = qlink(vals[0]->v_num);
+				result.v_type = V_COM;
+				result.v_com = cacos(tmp, err);
+				comfree(tmp);
+			}
+			break;
+		case V_COM:
+			result.v_com = cacos(vals[0]->v_com, err);
+			result.v_type = V_COM;
+			break;
+		default:
+			return error_value(E_ACOS2);
+	}
+	if (result.v_type == V_COM && cisreal(result.v_com)) {
+		q = qlink(result.v_com->real);
+		comfree(result.v_com);
+		result.v_type = V_NUM;
+		result.v_num = q;
+	}
+	return result;
+}
+
+
+static VALUE
+f_asec(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *tmp;
+	NUMBER *err;
+	NUMBER *q;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_ASEC1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			if (qiszero(vals[0]->v_num))
+				return error_value(E_LOGINF);
+			result.v_num = qasec(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			if (result.v_num == NULL) {
+				tmp = comalloc();
+				qfree(tmp->real);
+				tmp->real = qlink(vals[0]->v_num);
+				result.v_com = casec(tmp, err);
+				result.v_type = V_COM;
+				comfree(tmp);
+			}
+			break;
+		case V_COM:
+			result.v_com = casec(vals[0]->v_com, err);
+			result.v_type = V_COM;
+			break;
+		default:
+			return error_value(E_ASEC2);
+	}
+	if (result.v_type == V_COM) {
+		if (result.v_com == NULL)
+			return error_value(E_LOGINF);
+		if (cisreal(result.v_com)) {
+			q = qlink(result.v_com->real);
+			comfree(result.v_com);
+			result.v_type = V_NUM;
+			result.v_num = q;
+		}
+	}
+	return result;
+}
+
+
+static VALUE
+f_acsc(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *tmp;
+	NUMBER *err;
+	NUMBER *q;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_ACSC1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			if (qiszero(vals[0]->v_num))
+				return error_value(E_LOGINF);
+			result.v_num = qacsc(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			if (result.v_num == NULL) {
+				tmp = comalloc();
+				qfree(tmp->real);
+				tmp->real = qlink(vals[0]->v_num);
+				result.v_com = cacsc(tmp, err);
+				result.v_type = V_COM;
+				comfree(tmp);
+			}
+			break;
+		case V_COM:
+			result.v_com = cacsc(vals[0]->v_com, err);
+			result.v_type = V_COM;
+			break;
+		default:
+			return error_value(E_ACSC2);
+	}
+	if (result.v_type == V_COM) {
+		if (result.v_com == NULL)
+			return error_value(E_LOGINF);
+		if (cisreal(result.v_com)) {
+			q = qlink(result.v_com->real);
+			comfree(result.v_com);
+			result.v_type = V_NUM;
+			result.v_num = q;
+		}
+	}
+	return result;
+}
+
+
+static VALUE
+f_asinh(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *tmp;
+	NUMBER *err;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_ASINH1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qasinh(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			tmp = casinh(vals[0]->v_com, err);
+			result.v_type = V_COM;
+			result.v_com = tmp;
+			if (cisreal(tmp)) {
+				result.v_num = qlink(tmp->real);
+				result.v_type = V_NUM;
+				comfree(tmp);
+			}
+			break;
+		default:
+			return error_value(E_ASINH2);
+	}
+	return result;
+}
+
+
+static VALUE
+f_acosh(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *tmp;
+	NUMBER *err;
+	NUMBER *q;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_ACOSH1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qacosh(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			if (result.v_num == NULL) {
+				tmp = comalloc();
+				qfree(tmp->real);
+				tmp->real = qlink(vals[0]->v_num);
+				result.v_com = cacosh(tmp, err);
+				result.v_type = V_COM;
+				comfree(tmp);
+			}
+			break;
+		case V_COM:
+			result.v_com = cacosh(vals[0]->v_com, err);
+			result.v_type = V_COM;
+			break;
+		default:
+			return error_value(E_ACOSH2);
+	}
+	if (result.v_type == V_COM && cisreal(result.v_com)) {
+		q = qlink(result.v_com->real);
+		comfree(result.v_com);
+		result.v_type = V_NUM;
+		result.v_num = q;
+	}
+	return result;
+}
+
+
+static VALUE
+f_atanh(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *tmp;
+	NUMBER *err;
+	NUMBER *q;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_ATANH1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qatanh(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			if (result.v_num == NULL) {
+				tmp = comalloc();
+				qfree(tmp->real);
+				tmp->real = qlink(vals[0]->v_num);
+				result.v_com = catanh(tmp, err);
+				result.v_type = V_COM;
+				comfree(tmp);
+			}
+			break;
+		case V_COM:
+			result.v_com = catanh(vals[0]->v_com, err);
+			result.v_type = V_COM;
+			break;
+		default:
+			return error_value(E_ATANH2);
+	}
+	if (result.v_type == V_COM) {
+		if (result.v_com == NULL)
+			return error_value(E_LOGINF);
+		if (cisreal(result.v_com)) {
+			q = qlink(result.v_com->real);
+			comfree(result.v_com);
+			result.v_type = V_NUM;
+			result.v_num = q;
+		}
+	}
+	return result;
+}
+
+
+static VALUE
+f_acoth(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *tmp;
+	NUMBER *err;
+	NUMBER *q;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_ACOTH1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qacoth(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			if (result.v_num == NULL) {
+				tmp = comalloc();
+				qfree(tmp->real);
+				tmp->real = qlink(vals[0]->v_num);
+				result.v_com = cacoth(tmp, err);
+				result.v_type = V_COM;
+				comfree(tmp);
+			}
+			break;
+		case V_COM:
+			result.v_com = cacoth(vals[0]->v_com, err);
+			result.v_type = V_COM;
+			break;
+		default:
+			return error_value(E_ACOTH2);
+	}
+	if (result.v_type == V_COM) {
+		if (result.v_com == NULL)
+			return error_value(E_LOGINF);
+		if (cisreal(result.v_com)) {
+			q = qlink(result.v_com->real);
+			comfree(result.v_com);
+			result.v_type = V_NUM;
+			result.v_num = q;
+		}
+	}
+	return result;
+}
+
+
+static VALUE
+f_asech(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *tmp;
+	NUMBER *err;
+	NUMBER *q;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_SECH1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			if (qiszero(vals[0]->v_num))
+				return error_value(E_LOGINF);
+			result.v_num = qasech(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			if (result.v_num == NULL) {
+				tmp = comalloc();
+				qfree(tmp->real);
+				tmp->real = qlink(vals[0]->v_num);
+				result.v_com = casech(tmp, err);
+				result.v_type = V_COM;
+				comfree(tmp);
+			}
+			break;
+		case V_COM:
+			result.v_com = casech(vals[0]->v_com, err);
+			result.v_type = V_COM;
+			break;
+		default:
+			return error_value(E_ASECH2);
+	}
+	if (result.v_type == V_COM) {
+		if (result.v_com == NULL)
+			return error_value(E_LOGINF);
+		if (cisreal(result.v_com)) {
+			q = qlink(result.v_com->real);
+			comfree(result.v_com);
+			result.v_type = V_NUM;
+			result.v_num = q;
+		}
+	}
+	return result;
+}
+
+
+static VALUE
+f_acsch(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *tmp;
+	NUMBER *err;
+	NUMBER *q;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_ACSCH1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			if (qiszero(vals[0]->v_num))
+				return error_value(E_LOGINF);
+			result.v_num = qacsch(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			if (result.v_num == NULL) {
+				tmp = comalloc();
+				qfree(tmp->real);
+				tmp->real = qlink(vals[0]->v_num);
+				result.v_com = cacsch(tmp, err);
+				result.v_type = V_COM;
+				comfree(tmp);
+			}
+			break;
+		case V_COM:
+			result.v_com = cacsch(vals[0]->v_com, err);
+			result.v_type = V_COM;
+			break;
+		default:
+			return error_value(E_ACSCH2);
+	}
+	if (result.v_type == V_COM) {
+		if (result.v_com == NULL)
+			return error_value(E_LOGINF);
+		if (cisreal(result.v_com)) {
+			q = qlink(result.v_com->real);
+			comfree(result.v_com);
+			result.v_type = V_NUM;
+			result.v_num = q;
+		}
+	}
+	return result;
+}
+
+
+static VALUE
+f_gd(int count, VALUE **vals)
+{
+	VALUE result;
+	NUMBER *err;
+	NUMBER *q;
+	COMPLEX *tmp;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_GD1);
+		err = vals[1]->v_num;
+	}
+	result.v_type = V_COM;
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			if (qiszero(vals[0]->v_num)) {
+				result.v_type = V_NUM;
+				result.v_num = qlink(&_qzero_);
+				return result;
+			}
+			tmp = comalloc();
+			qfree(tmp->real);
+			tmp->real = qlink(vals[0]->v_num);
+			result.v_com = cgd(tmp, err);
+			comfree(tmp);
+			break;
+		case V_COM:
+			result.v_com = cgd(vals[0]->v_com, err);
+			break;
+		default:
+			return error_value(E_GD2);
+	}
+	if (result.v_com == NULL)
+		return error_value(E_LOGINF);
+	if (cisreal(result.v_com)) {
+		q = qlink(result.v_com->real);
+		comfree(result.v_com);
+		result.v_num = q;
+		result.v_type = V_NUM;
+	}
+	return result;
+}
+
+
+static VALUE
+f_agd(int count, VALUE **vals)
+{
+	VALUE result;
+	NUMBER *err;
+	NUMBER *q;
+	COMPLEX *tmp;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_AGD1);
+		err = vals[1]->v_num;
+	}
+	result.v_type = V_COM;
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			if (qiszero(vals[0]->v_num)) {
+				result.v_type = V_NUM;
+				result.v_num = qlink(&_qzero_);
+				return result;
+			}
+			tmp = comalloc();
+			qfree(tmp->real);
+			tmp->real = qlink(vals[0]->v_num);
+			result.v_com = cagd(tmp, err);
+			comfree(tmp);
+			break;
+		case V_COM:
+			result.v_com = cagd(vals[0]->v_com, err);
+			break;
+		default:
+			return error_value(E_AGD2);
+	}
+	if (result.v_com == NULL)
+			return error_value(E_LOGINF);
+	if (cisreal(result.v_com)) {
+		q = qlink(result.v_com->real);
+		comfree(result.v_com);
+		result.v_num = q;
+		result.v_type = V_NUM;
 	}
 	return result;
 }
@@ -1522,9 +3043,8 @@ f_ceil(VALUE *val)
 	VALUE tmp, res;
 
 	tmp.v_type = V_NUM;
-	tmp.v_num = qlink(&_qone_);
+	tmp.v_num = &_qone_;
 	apprvalue(val, &tmp, &tmp, &res);
-	qfree(tmp.v_num);
 	return res;
 }
 
@@ -1535,43 +3055,11 @@ f_floor(VALUE *val)
 	VALUE tmp1, tmp2, res;
 
 	tmp1.v_type = V_NUM;
-	tmp1.v_num = qlink(&_qone_);
+	tmp1.v_num = &_qone_;
 	tmp2.v_type = V_NUM;
-	tmp2.v_num = qlink(&_qzero_);
+	tmp2.v_num = &_qzero_;
 	apprvalue(val, &tmp1, &tmp2, &res);
-	qfree(tmp1.v_num);
-	qfree(tmp2.v_num);
 	return res;
-}
-
-
-static NUMBER *
-f_highbit(NUMBER *val)
-{
-	if (qiszero(val)) {
-		math_error("Highbit of zero");
-		/*NOTREACHED*/
-	}
-	if (qisfrac(val)) {
-		math_error("Highbit of non-integer");
-		/*NOTREACHED*/
-	}
-	return itoq(zhighbit(val->num));
-}
-
-
-static NUMBER *
-f_lowbit(NUMBER *val)
-{
-	if (qiszero(val)) {
-		math_error("Lowbit of zero");
-		/*NOTREACHED*/
-	}
-	if (qisfrac(val)) {
-		math_error("Lowbit of non-integer");
-		/*NOTREACHED*/
-	}
-	return itoq(zlowbit(val->num));
 }
 
 
@@ -1697,14 +3185,20 @@ f_matfill(int count, VALUE **vals)
 	if (v1->v_type != V_ADDR)
 		return error_value(E_MATFILL1);
 	v1 = v1->v_addr;
+	if (v1->v_subtype & V_NOCOPYTO)
+		return error_value(E_MATFILL3);
 	if (v1->v_type != V_MAT)
 		return error_value(E_MATFILL2);
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
+	if (v2->v_subtype & V_NOASSIGNFROM)
+		return error_value(E_MATFILL4);
 	if (count == 3) {
 		v3 = vals[2];
 		if (v3->v_type == V_ADDR)
 			v3 = v3->v_addr;
+		if (v3->v_subtype & V_NOASSIGNFROM)
+			return error_value(E_MATFILL4);
 	}
 	else
 		v3 = NULL;
@@ -1734,11 +3228,22 @@ f_isident(VALUE *vp)
 {
 	VALUE result;
 
-	if (vp->v_type != V_MAT)
-		return error_value(E_ISIDENT);
 	result.v_type = V_NUM;
-	result.v_num = itoq((long) matisident(vp->v_mat));
+	if (vp->v_type == V_MAT) {
+		result.v_num = itoq((long) matisident(vp->v_mat));
+	} else {
+		result.v_num = itoq(0);
+	}
 	return result;
+}
+
+
+static VALUE
+f_mattrace(VALUE *vp)
+{
+	if (vp->v_type != V_MAT)
+		return error_value(E_MATTRACE1);
+	return mattrace(vp->v_mat);
 }
 
 
@@ -1779,10 +3284,18 @@ f_matdim(VALUE *vp)
 {
 	VALUE result;
 
-	if (vp->v_type != V_MAT)
-		return error_value(E_MATDIM);
 	result.v_type = V_NUM;
-	result.v_num = itoq((long) vp->v_mat->m_dim);
+
+	switch(vp->v_type) {
+		case V_OBJ:
+			result.v_num = itoq(vp->v_obj->o_actions->count);
+			break;
+		case V_MAT:
+			result.v_num = itoq((long) vp->v_mat->m_dim);
+			break;
+		default:
+			return error_value(E_MATDIM);
+	}
 	return result;
 }
 
@@ -1874,11 +3387,67 @@ static VALUE
 f_strlen(VALUE *vp)
 {
 	VALUE result;
+	long len = 0;
+	char *c;
 
 	if (vp->v_type != V_STR)
 		return error_value(E_STRLEN);
+	c = vp->v_str->s_str;
+	while (*c++)
+		len++;
 	result.v_type = V_NUM;
-	result.v_num = itoq((long) strlen(vp->v_str));
+	result.v_num = itoq(len);
+	return result;
+}
+
+
+static VALUE
+f_strcmp(VALUE *v1, VALUE *v2)
+{
+	unsigned char *c1, *c2;
+	VALUE result;
+
+	if (v1->v_type != V_STR || v2->v_type != V_STR)
+		return error_value(E_STRCMP);
+
+	c1 = (unsigned char *)v1->v_str->s_str;
+	c2 = (unsigned char *)v2->v_str->s_str;
+
+	result.v_type = V_NUM;
+	for (; *c1 == *c2; ++c1, ++c2) {
+		if (*c1 == '\0') {
+			result.v_num = qlink(&_qzero_);
+			return result;
+		}
+	}
+	result.v_num = (*c1 > *c2) ? qlink(&_qone_) : qlink(&_qnegone_);
+	return result;
+}
+
+
+static VALUE
+f_strncmp(VALUE *v1, VALUE *v2, VALUE *v3)
+{
+	unsigned char *c1, *c2;
+	long i;
+	VALUE result;
+
+	if (v1->v_type != V_STR || v2->v_type != V_STR ||
+		v3->v_type != V_NUM || qisneg(v3->v_num) ||
+		qisfrac(v3->v_num) || zge31b(v3->v_num->num))
+			return error_value(E_STRNCMP);
+	i = qtoi(v3->v_num);
+	for (c1 = (unsigned char *)v1->v_str->s_str,
+	     c2 = (unsigned char *)v2->v_str->s_str;
+	     i > 0 && *c1 == *c2; ++c1, ++c2, --i) {
+		if (*c1 == '\0')
+			break;
+	}
+	result.v_type = V_NUM;
+	if (i == 0 || *c1 == *c2)
+		result.v_num = qlink(&_qzero_);
+	else
+		result.v_num = (*c1>*c2) ? qlink(&_qone_) : qlink(&_qnegone_);
 	return result;
 }
 
@@ -1886,35 +3455,72 @@ f_strlen(VALUE *vp)
 static VALUE
 f_strcat(int count, VALUE **vals)
 {
-	register VALUE **vp;
-	register char *cp;
+	VALUE **vp;
+	char *c, *c1;
 	int i;
 	long len;
-	long lengths[IN];
 	VALUE result;
 
-	len = 1;
+	len = 0;
+	result.v_type = V_STR;
 	vp = vals;
-	for (i = 0; i < count; i++) {
+	for (i = 0; i < count; i++, vp++) {
 		if ((*vp)->v_type != V_STR)
 			return error_value(E_STRCAT);
-		lengths[i] = (long)strlen((*vp)->v_str);
-		len += lengths[i];
-		vp++;
+		c = (*vp)->v_str->s_str;
+		while (*c++)
+			len++;
 	}
-	cp = (char *)malloc(len);
-	if (cp == NULL) {
+	if (len == 0) {
+		result.v_str = slink(&_nullstring_);
+		return result;
+	}
+	c = (char *) malloc(len + 1) ;
+	if (c == NULL) {
 		math_error("No memory for strcat");
 		/*NOTREACHED*/
 	}
-	result.v_str = cp;
-	result.v_type = V_STR;
-	result.v_subtype = V_STRALLOC;
-	i = 0;
+	result.v_str = stralloc();
+	result.v_str->s_str = c;
+	result.v_str->s_len = len;
 	for (vp = vals; count-- > 0; vp++) {
-		strcpy(cp, (*vp)->v_str);
-		cp += lengths[i++];
+		c1 = (*vp)->v_str->s_str;
+		while (*c1)
+			*c++ = *c1++;
 	}
+	*c = '\0';
+	return result;
+}
+
+
+static VALUE
+f_strcpy(VALUE *v1, VALUE *v2)
+{
+	VALUE result;
+
+	if (v1->v_type != V_STR || v2->v_type != V_STR)
+		return error_value(E_STRCPY);
+	result.v_str = stringcpy(v1->v_str, v2->v_str);
+	result.v_type = V_STR;
+	return result;
+}
+
+
+static VALUE
+f_strncpy(VALUE *v1, VALUE *v2, VALUE *v3)
+{
+	VALUE result;
+	long num;
+
+	if (v1->v_type != V_STR || v2->v_type != V_STR ||
+		v3->v_type != V_NUM || qisfrac(v3->v_num) || qisneg(v3->v_num))
+			return error_value(E_STRNCPY);
+	if (zge31b(v3->v_num->num))
+		num = v2->v_str->s_len;
+	else
+		num = qtoi(v3->v_num);
+	result.v_str = stringncpy(v1->v_str, v2->v_str, num);
+	result.v_type = V_STR;
 	return result;
 }
 
@@ -1925,6 +3531,7 @@ f_substr(VALUE *v1, VALUE *v2, VALUE *v3)
 	NUMBER *q1, *q2;
 	long i1, i2, len;
 	char *cp;
+	char *ccp;
 	VALUE result;
 
 	if (v1->v_type != V_STR)
@@ -1937,38 +3544,27 @@ f_substr(VALUE *v1, VALUE *v2, VALUE *v3)
 		return error_value(E_SUBSTR2);
 	i1 = qtoi(q1);
 	i2 = qtoi(q2);
-	cp = v1->v_str;
+	cp = v1->v_str->s_str;
 	len = (long)strlen(cp);
 	result.v_type = V_STR;
 	if (i1 > 0)
 		i1--;
 	if (i1 >= len) {	/* indexing off of end */
-		result.v_subtype = V_STRLITERAL;
-		result.v_str = "";
+		result.v_str = slink(&_nullstring_);
 		return result;
 	}
 	cp += i1;
 	len -= i1;
-	if ((i2 >= len) && (v1->v_subtype == V_STRLITERAL)) {
-		result.v_subtype = V_STRLITERAL;
-		result.v_str = cp;
-		return result;
-	}
 	if (len > i2)
 		len = i2;
-	if (len == 1) {
-		result.v_subtype = V_STRLITERAL;
-		result.v_str = charstr(*cp);
-		return result;
-	}
-	result.v_subtype = V_STRALLOC;
-	result.v_str = (char *)malloc(len + 1);
-	if (result.v_str == NULL) {
+	ccp = (char *) malloc(len + 1);
+	if (ccp == NULL) {
 		math_error("No memory for substr");
 		/*NOTREACHED*/
 	}
-	strncpy(result.v_str, cp, len);
-	result.v_str[len] = '\0';
+	strncpy(ccp, cp, len);
+	ccp[len] = '\0';
+	result.v_str = makestring(ccp);
 	return result;
 }
 
@@ -1976,19 +3572,28 @@ f_substr(VALUE *v1, VALUE *v2, VALUE *v3)
 static VALUE
 f_char(VALUE *vp)
 {
-	long num;
-	NUMBER *q;
+	char ch;
 	VALUE result;
 
-	if (vp->v_type != V_NUM)
-		return error_value(E_CHAR);
-	q = vp->v_num;
-	num = qtoi(q);
-	if (qisneg(q) || qisfrac(q) || !zistiny(q->num) || (num > 255))
-		return error_value(E_CHAR);
+	switch(vp->v_type) {
+		case V_NUM:
+			if (qisfrac(vp->v_num))
+				return error_value(E_CHAR);
+			ch = (char) vp->v_num->num.v[0];
+			if (qisneg(vp->v_num))
+				ch = -ch;
+			break;
+		case V_OCTET:
+			ch = *vp->v_octet;
+			break;
+		case V_STR:
+			ch = *vp->v_str->s_str;
+			break;
+		default:
+			return error_value(E_CHAR);
+	}
 	result.v_type = V_STR;
-	result.v_subtype = V_STRLITERAL;
-	result.v_str = charstr((int) num);
+	result.v_str = charstring(ch);
 	return result;
 }
 
@@ -1996,14 +3601,70 @@ f_char(VALUE *vp)
 static VALUE
 f_ord(VALUE *vp)
 {
-	char *str;
+	OCTET *c;
 	VALUE result;
 
-	if (vp->v_type != V_STR)
-		return error_value(E_ORD);
-	str = vp->v_str;
+	switch(vp->v_type) {
+		case V_STR:
+			c = (OCTET *)vp->v_str->s_str;
+			break;
+		case V_OCTET:
+			c = vp->v_octet;
+			break;
+		default:
+			return error_value(E_ORD);
+	}
+
 	result.v_type = V_NUM;
-	result.v_num = itoq((long) (*str & 0xff));
+	result.v_num = itoq((long) (*c & 0xff));
+	return result;
+}
+
+
+static VALUE
+f_protect(int count, VALUE **vals)
+{
+	int i;
+	VALUE *v1, *v2;
+	VALUE result;
+	BOOL have_nblock;
+
+	result.v_subtype = V_NOSUBTYPE;
+	result.v_type = V_NULL;
+	v1 = vals[0];
+	have_nblock = (v1->v_type == V_NBLOCK);
+	if (!have_nblock) {
+		if (v1->v_type != V_ADDR)
+			return error_value(E_PROTECT1);
+		v1 = v1->v_addr;
+	}
+	if (count == 1) {
+		result.v_type = V_NUM;
+		if (have_nblock)
+			result.v_num = itoq(v1->v_nblock->subtype);
+		else
+			result.v_num = itoq(v1->v_subtype);
+		return result;
+	}
+	v2 = vals[1];
+	if (v2->v_type == V_ADDR)
+		v2 = v2->v_addr;
+	if (v2->v_type != V_NUM || qisfrac(v2->v_num))
+		return error_value(E_PROTECT2);
+	if (qisneg(v2->v_num) || zge31b(v2->v_num->num))
+		return error_value(E_PROTECT3);
+	i = qtoi(v2->v_num);
+	if (i > MAXPROTECT)
+		return error_value(E_PROTECT3);
+	if (have_nblock) {
+		v1->v_nblock->subtype |= i;
+		return result;
+	}
+	if (i & V_PROTECTALL) {
+		protectall(v1, i);
+		return result;
+	}
+	v1->v_subtype |= i;
 	return result;
 }
 
@@ -2011,122 +3672,25 @@ f_ord(VALUE *vp)
 static VALUE
 f_size(VALUE *vp)
 {
-	long count;
 	VALUE result;
 
-	switch (vp->v_type) {
-		case V_NULL:	count = 0; break;
-		case V_MAT:	count = vp->v_mat->m_size; break;
-		case V_LIST:	count = vp->v_list->l_count; break;
-		case V_ASSOC:	count = vp->v_assoc->a_count; break;
-		case V_OBJ:	count = vp->v_obj->o_actions->count; break;
-		case V_FILE:	count = filesize(vp->v_file); break;
-		case V_STR:	count = (long)strlen(vp->v_str); break;
-		default:	count = 1; break;
+	/*
+	 * return information about the number of elements
+	 *
+	 * This is not the sizeof, see f_sizeof() for that information.
+	 * This is not the memsize, see f_memsize() for that information.
+	 *
+	 * The size of a file is treated in a special way ... we do
+	 * not use the number of elements, but rather the length
+	 * of the file as would be reported by fsize().
+	 */
+	if (vp->v_type == V_FILE) {
+		return f_fsize(vp);
+	} else {
+		result.v_type = V_NUM;
+		result.v_num = itoq(elm_count(vp));
 	}
-	result.v_type = V_NUM;
-	result.v_num = itoq(count);
 	return result;
-}
-
-
-static long
-zsize(ZVALUE z)
-{
-	return (long)sizeof(ZVALUE) + (long)z.len * (long)sizeof(HALF);
-}
-
-
-static long
-qsize(NUMBER *q)
-{
-	return (long)sizeof(NUMBER) + (long)zsize(q->num) + (long)zsize(q->den);
-}
-
-
-static long
-lsizeof(VALUE *vp)
-{
-	long s;
-	long i, j;
-	VALUE *p;
-	LISTELEM *ep;
-	OBJECTACTIONS *oap;
-	ASSOCELEM *aep;
-	ASSOCELEM **ept;
-
-	i = j = 0;
-	s = (long) sizeof(VALUE);
-	if (vp->v_type > 0) {
-		switch(vp->v_type) {
-			case V_INT:
-			case V_ADDR:
-				break;
-			case V_NUM:
-				s += qsize(vp->v_num);
-				break;
-			case V_COM:
-				s += sizeof(COMPLEX) +
-					qsize(vp->v_com->real) +
-					qsize(vp->v_com->imag);
-				break;
-			case V_STR:
-				s += (long)strlen(vp->v_str) + 1;
-				break;
-			case V_MAT:
-				s += sizeof(MATRIX);
-				i = vp->v_mat->m_size;
-				p = vp->v_mat->m_table;
-				while (i-- > 0)
-					s += lsizeof(p++);
-				break;
-			case V_LIST:
-				s += sizeof(LIST);
-				for (ep = vp->v_list->l_first;ep;ep=ep->e_next)
-					s += sizeof(LISTELEM) - sizeof(VALUE)
-						+ lsizeof(&ep->e_value);
-				break;
-			case V_OBJ:
-				s += sizeof(OBJECT);
-				oap = vp->v_obj->o_actions;
-				s += (long)strlen(oap->name) + 1;
-				i = oap->count;
-				s += (i + 2) * sizeof(int);
-				p = vp->v_obj->o_table;
-				while (i-- > 0)
-					s += lsizeof(p++);
-				break;
-			case V_FILE:
-				s += sizeof(vp->v_file);
-				break;
-			case V_RAND:
-				s += sizeof(RAND);
-				break;
-			case V_RANDOM:
-				s += sizeof(RANDOM);
-				break;
-			case V_ASSOC:
-				s += sizeof(ASSOC);
-				i = vp->v_assoc->a_size;
-				ept = vp->v_assoc->a_table;
-				while (i-- > 0) {
-				    s += sizeof(ASSOCELEM *);
-				    for (aep = *ept++;aep;aep=aep->e_next){
-					s += sizeof(ASSOCELEM) - sizeof(VALUE);
-					s += lsizeof(&aep->e_value);
-					j = aep->e_dim;
-					p = aep->e_indices;
-					while (j-- > 0)
-						s += lsizeof(p++);
-					}
-				}
-				break;
-			default:
-			math_error("sizeof not defined for value type");
-			/*NOTREACHED*/
-		}
-	}
-	return s;
 }
 
 
@@ -2135,6 +3699,12 @@ f_sizeof(VALUE *vp)
 {
 	VALUE result;
 
+	/*
+	 * return information about memory footprint
+	 *
+	 * This is not the number of elements, see f_size() for that info.
+	 * This is not the memsize, see f_memsize() for that information.
+	 */
 	result.v_type = V_NUM;
 	result.v_num = itoq(lsizeof(vp));
 	return result;
@@ -2142,48 +3712,180 @@ f_sizeof(VALUE *vp)
 
 
 static VALUE
+f_memsize(VALUE *vp)
+{
+	VALUE result;
+
+	/*
+	 * return information about memory footprint
+	 *
+	 * This is not the number of elements, see f_size() for that info.
+	 * This is not the sizeof, see f_sizeof() for that information.
+	 */
+	result.v_type = V_NUM;
+	result.v_num = itoq(memsize(vp));
+	return result;
+}
+
+
+static VALUE
 f_search(int count, VALUE **vals)
 {
-	VALUE *v1, *v2;
-	NUMBER *q;
-	long start;
-	long index = -1;
+	VALUE *v1, *v2, *v3, *v4;
+	NUMBER *start, *end;
+	VALUE vsize;
+	NUMBER *size;
+	ZVALUE pos;
+	ZVALUE indx;
+	long len;
+	ZVALUE zlen, tmp;
 	VALUE result;
+	long l_start = 0, l_end = 0;
+	int i = 0;
 
 	v1 = *vals++;
 	v2 = *vals++;
-	start = 0;
-	if (count == 3) {
-		if ((*vals)->v_type != V_NUM)
+	if ((v1->v_type == V_FILE || v1->v_type == V_STR) &&
+		 v2->v_type != V_STR)
+			return error_value(E_SEARCH2);
+	start = end = NULL;
+	if (count > 2) {
+		v3 = *vals++;
+		if (v3->v_type != V_NUM && v3->v_type != V_NULL)
 			return error_value(E_SEARCH3);
-		q = (*vals)->v_num;
-		if (qisfrac(q) || qisneg(q))
-			return error_value(E_SEARCH3);
-		start = qtoi(q);
+		if (v3->v_type == V_NUM) {
+			start = v3->v_num;
+			if (qisfrac(start))
+				return error_value(E_SEARCH3);
+		}
 	}
-	switch (v1->v_type) {
-		case V_MAT:
-			index = matsearch(v1->v_mat, v2, start);
-			break;
-		case V_LIST:
-			index = listsearch(v1->v_list, v2, start);
-			break;
-		case V_ASSOC:
-			index = assocsearch(v1->v_assoc, v2, start);
-			break;
-		case V_FILE:
-			if (v2->v_type != V_STR)
-				return error_value(E_SEARCH2);
-			if (count == 2) start = -1;
-			index = fsearch(v1->v_file, v2->v_str, start);
-			break;
-		default:
-			return error_value(E_SEARCH1);
+	if (count > 3) {
+		v4 = *vals;
+		if (v4->v_type != V_NUM && v4->v_type != V_NULL)
+			return error_value(E_SEARCH4);
+		if (v4->v_type == V_NUM) {
+			end = v4->v_num;
+			if (qisfrac(end))
+				return error_value(E_SEARCH4);
+		}
 	}
 	result.v_type = V_NULL;
-	if (index >= 0) {
+	vsize = f_size(v1);
+	if (vsize.v_type != V_NUM)
+		return error_value(E_SEARCH5);
+	size = vsize.v_num;
+	if (start) {
+		if (qisneg(start)) {
+			start = qqadd(size, start);
+			if (qisneg(start)) {
+				qfree(start);
+				start = qlink(&_qzero_);
+			}
+		}
+		else
+			start = qlink(start);
+	}
+	if (end) {
+		if (!qispos(end))
+			end = qqadd(size, end);
+		else {
+			if (qrel(end, size) > 0)
+				end = qlink(size);
+			else
+				end = qlink(end);
+		}
+	}
+	if (v1->v_type == V_FILE) {
+		if (count == 2|| (count == 4 &&
+				 (start == NULL || end == NULL))) {
+			i = ftellid(v1->v_file, &pos);
+			if (i < 0) {
+				qfree(size);
+				if (start)
+					qfree(start);
+				if (end)
+					qfree(end);
+				return error_value(E_SEARCH5);
+			}
+			if (count == 2 || (count == 4 && end != NULL)) {
+				start = qalloc();
+				start->num = pos;
+			}
+			else {
+				end = qalloc();
+				end->num = pos;
+			}
+		}
+		if (start == NULL)
+			start = qlink(&_qzero_);
+		if (end == NULL)
+			end = size;
+		else
+			qfree(size);
+		len = v2->v_str->s_len;
+		utoz(len, &zlen);
+		zsub(end->num, zlen, &tmp);
+		zfree(zlen);
+		i = fsearch(v1->v_file, v2->v_str->s_str,
+			 start->num, tmp, &indx);
+		zfree(tmp);
+		if (i == 2) {
+			result.v_type = V_NUM;
+			result.v_num = start;
+			qfree(end);
+			return result;
+		}
+		qfree(start);
+		qfree(end);
+		if (i == EOF)
+			return error_value(errno);
+		if (i < 0)
+			return error_value(E_SEARCH6);
+		if (i == 0) {
+			result.v_type = V_NUM;
+			result.v_num = qalloc();
+			result.v_num->num = indx;
+		}
+		return result;
+	}
+	if (start == NULL)
+		start = qlink(&_qzero_);
+	if (end == NULL)
+		end = qlink(size);
+	if (qrel(start, end) >= 0) {
+		qfree(size);
+		qfree(start);
+		qfree(end);
+		return result;
+	}
+	qfree(size);
+	l_start = ztolong(start->num);
+	l_end = ztolong(end->num);
+	switch (v1->v_type) {
+		case V_MAT:
+			i = matsearch(v1->v_mat, v2, l_start, l_end, &indx);
+			break;
+		case V_LIST:
+			i = listsearch(v1->v_list, v2, l_start, l_end, &indx);
+			break;
+		case V_ASSOC:
+			i = assocsearch(v1->v_assoc, v2, l_start, l_end, &indx);
+			break;
+		case V_STR:
+			i = stringsearch(v1->v_str, v2->v_str, l_start, l_end,
+					&indx);
+			break;
+		default:
+			qfree(start);
+			qfree(end);
+			return error_value(E_SEARCH1);
+	}
+	qfree(start);
+	qfree(end);
+	if (i == 0) {
 		result.v_type = V_NUM;
-		result.v_num = itoq(index);
+		result.v_num = qalloc();
+		result.v_num->num = indx;
 	}
 	return result;
 }
@@ -2192,46 +3894,183 @@ f_search(int count, VALUE **vals)
 static VALUE
 f_rsearch(int count, VALUE **vals)
 {
-	VALUE *v1, *v2;
-	NUMBER *q;
-	long start;
-	long index = -1;
+	VALUE *v1, *v2, *v3, *v4;
+	NUMBER *start, *end;
+	VALUE vsize;
+	NUMBER *size;
+	NUMBER *qlen;
+	NUMBER *qtmp;
+	ZVALUE pos;
+	ZVALUE indx;
 	VALUE result;
+	long l_start = 0, l_end = 0;
+	int i;
 
 	v1 = *vals++;
 	v2 = *vals++;
-	start = MAXLONG;
-	if (count == 3) {
-		if ((*vals)->v_type != V_NUM)
+	if ((v1->v_type == V_FILE || v1->v_type == V_STR) &&
+		v2->v_type != V_STR)
+			return error_value(E_RSEARCH2);
+	start = end = NULL;
+	if (count > 2) {
+		v3 = *vals++;
+		if (v3->v_type != V_NUM && v3->v_type != V_NULL)
 			return error_value(E_RSEARCH3);
-		q = (*vals)->v_num;
-		if (qisfrac(q) || qisneg(q))
-			return error_value(E_RSEARCH3);
-		start = qtoi(q);
+		if (v3->v_type == V_NUM) {
+			start = v3->v_num;
+			if (qisfrac(start))
+				return error_value(E_RSEARCH3);
+		}
 	}
-	switch (v1->v_type) {
-		case V_MAT:
-			index = matrsearch(v1->v_mat, v2, start);
-			break;
-		case V_LIST:
-			index = listrsearch(v1->v_list, v2, start);
-			break;
-		case V_ASSOC:
-			index = assocrsearch(v1->v_assoc, v2, start);
-			break;
-		case V_FILE:
-			if (v2->v_type != V_STR)
-				return error_value(E_RSEARCH2);
-			if (count == 2) start = -1;
-			index = frsearch(v1->v_file, v2->v_str, start);
-			break;
-		default:
-			return error_value(E_RSEARCH1);
+	if (count > 3) {
+		v4 = *vals;
+		if (v4->v_type != V_NUM && v4->v_type != V_NULL)
+			return error_value(E_RSEARCH4);
+		if (v4->v_type == V_NUM) {
+			end = v4->v_num;
+			if (qisfrac(end))
+				return error_value(E_RSEARCH3);
+		}
 	}
 	result.v_type = V_NULL;
-	if (index >= 0) {
+	vsize = f_size(v1);
+	if (vsize.v_type != V_NUM)
+		return error_value(E_RSEARCH5);
+	size = vsize.v_num;
+	if (start) {
+		if (qisneg(start)) {
+			start = qqadd(size, start);
+			if (qisneg(start)) {
+				qfree(start);
+				start = qlink(&_qzero_);
+			}
+		}
+		else
+			start = qlink(start);
+	}
+	if (end) {
+		if (!qispos(end))
+			end = qqadd(size, end);
+		else {
+			if (qrel(end, size) > 0)
+				end = qlink(size);
+			else
+				end = qlink(end);
+		}
+	}
+	if (v1->v_type == V_FILE) {
+		if (count == 2 || (count == 4 &&
+				(start == NULL || end == NULL))) {
+			i = ftellid(v1->v_file, &pos);
+			if (i < 0) {
+				qfree(size);
+				if (start)
+					qfree(start);
+				if (end)
+					qfree(end);
+				return error_value(E_RSEARCH5);
+			}
+			if (count == 2 || (count == 4 && end != NULL)) {
+				start = qalloc();
+				start->num = pos;
+			}
+			else {
+				end = qalloc();
+				end->num = pos;
+			}
+		}
+		qlen = utoq(v2->v_str->s_len);
+		qtmp = qsub(size, qlen);
+		qfree(size);
+		size = qtmp;
+		if (count < 4) {
+			end = start;
+			start = NULL;
+		}
+		else {
+			qtmp = qsub(end, qlen);
+			qfree(end);
+			end = qtmp;
+		}
+		if (end == NULL)
+			end = qlink(size);
+		if (start == NULL)
+			start = qlink(&_qzero_);
+		if (qrel(end, size) > 0) {
+			qfree(end);
+			end = qlink(size);
+		}
+		qfree(qlen);
+		qfree(size);
+		if (qrel(start, end) > 0) {
+			qfree(start);
+			qfree(end);
+			return result;
+		}
+		i = frsearch(v1->v_file, v2->v_str->s_str,
+			end->num,start->num, &indx);
+		qfree(start);
+		qfree(end);
+		if (i == EOF)
+			return error_value(errno);
+		if (i < 0)
+			return error_value(E_RSEARCH6);
+		if (i == 0) {
+			result.v_type = V_NUM;
+			result.v_num = qalloc();
+			result.v_num->num = indx;
+		}
+		return result;
+	}
+	if (count < 4) {
+		if (start) {
+			end = qinc(start);
+			qfree(start);
+		}
+		else
+			end = qlink(size);
+		start = qlink(&_qzero_);
+	}
+	else {
+		if (start == NULL)
+			start = qlink(&_qzero_);
+		if (end == NULL)
+			end = qlink(size);
+	}
+
+	qfree(size);
+	if (qrel(start, end) >= 0) {
+		qfree(start);
+		qfree(end);
+		return result;
+	}
+	l_start = ztolong(start->num);
+	l_end = ztolong(end->num);
+	switch (v1->v_type) {
+		case V_MAT:
+			i = matrsearch(v1->v_mat, v2, l_start, l_end, &indx);
+			break;
+		case V_LIST:
+			i = listrsearch(v1->v_list, v2, l_start, l_end, &indx);
+			break;
+		case V_ASSOC:
+			i = assocrsearch(v1->v_assoc, v2, l_start, l_end, &indx);
+			break;
+		case V_STR:
+			i = stringrsearch(v1->v_str, v2->v_str, l_start,
+				l_end, &indx);
+			break;
+		default:
+			qfree(start);
+			qfree(end);
+			return error_value(E_RSEARCH1);
+	}
+	qfree(start);
+	qfree(end);
+	if (i == 0) {
 		result.v_type = V_NUM;
-		result.v_num = itoq(index);
+		result.v_num = qalloc();
+		result.v_num->num = indx;
 	}
 	return result;
 }
@@ -2257,6 +4096,7 @@ f_assoc(int count, VALUE **vals)
 	VALUE result;
 
 	result.v_type = V_ASSOC;
+	result.v_subtype = V_NOSUBTYPE;
 	result.v_assoc = assocalloc(0L);
 	return result;
 }
@@ -2272,6 +4112,10 @@ f_listinsert(int count, VALUE **vals)
 	v1 = *vals++;
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
 		return error_value(E_INSERT1);
+	if (v1->v_addr->v_subtype & V_NOREALLOC) {
+		math_error("No-relocate list for insert");
+		/*NOTREACHED*/
+	}
 	v2 = *vals++;
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
@@ -2299,6 +4143,10 @@ f_listpush(int count, VALUE **vals)
 	v1 = *vals++;
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
 		return error_value(E_PUSH);
+	if (v1->v_addr->v_subtype & V_NOREALLOC) {
+		math_error("No-relocate list for push");
+		/*NOTREACHED*/
+	}
 	while (--count > 0) {
 		v2 = *vals++;
 		if (v2->v_type == V_ADDR)
@@ -2319,6 +4167,10 @@ f_listappend(int count, VALUE **vals)
 	v1 = *vals++;
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
 		return error_value(E_APPEND);
+	if (v1->v_addr->v_subtype & V_NOREALLOC) {
+		math_error("No-relocate list for append");
+		/*NOTREACHED*/
+	}
 	while (--count > 0) {
 		v2 = *vals++;
 		if (v2->v_type == V_ADDR)
@@ -2337,6 +4189,10 @@ f_listdelete(VALUE *v1, VALUE *v2)
 
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
 		return error_value(E_DELETE1);
+	if (v1->v_addr->v_subtype & V_NOREALLOC) {
+		math_error("No-relocate list for delete");
+		/*NOTREACHED*/
+	}
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
 	if ((v2->v_type != V_NUM) || qisfrac(v2->v_num))
@@ -2353,6 +4209,10 @@ f_listpop(VALUE *vp)
 
 	if ((vp->v_type != V_ADDR) || (vp->v_addr->v_type != V_LIST))
 		return error_value(E_POP);
+	if (vp->v_addr->v_subtype & V_NOREALLOC) {
+		math_error("No-relocate list for pop");
+		/*NOTREACHED*/
+	}
 	removelistfirst(vp->v_addr->v_list, &result);
 	return result;
 }
@@ -2365,6 +4225,10 @@ f_listremove(VALUE *vp)
 
 	if ((vp->v_type != V_ADDR) || (vp->v_addr->v_type != V_LIST))
 		return error_value(E_REMOVE);
+	if (vp->v_addr->v_subtype & V_NOREALLOC) {
+		math_error("No-relocate list for remove");
+		/*NOTREACHED*/
+	}
 	removelistlast(vp->v_addr->v_list, &result);
 	return result;
 }
@@ -2412,9 +4276,8 @@ f_ctime(void)
 	systime = time(NULL);
 	strcpy(str, ctime(&systime));
 	str[24] = '\0';
-	res.v_str = str;
+	res.v_str = makestring(str);
 	res.v_type = V_STR;
-	res.v_subtype = V_STRALLOC;
 	return res;
 }
 
@@ -2428,7 +4291,7 @@ f_fopen(VALUE *v1, VALUE *v2)
 
 	if (v1->v_type != V_STR || v2->v_type != V_STR)
 		return error_value(E_FOPEN1);
-	mode = v2->v_str;
+	mode = v2->v_str->s_str;
 
 	if ((*mode != 'r') && (*mode != 'w') && (*mode != 'a'))
 		return error_value(E_FOPEN2);
@@ -2439,7 +4302,7 @@ f_fopen(VALUE *v1, VALUE *v2)
 			return error_value(E_FOPEN2);
 	}
 	errno = 0;
-	id = openid(v1->v_str, v2->v_str);
+	id = openid(v1->v_str->s_str, v2->v_str->s_str);
 	if (id == FILEID_NONE)
 		return error_value(errno);
 	if (id < 0)
@@ -2462,7 +4325,7 @@ f_freopen(int count, VALUE **vals)
 	if (vals[1]->v_type != V_STR)
 		return error_value(E_FREOPEN2);
 
-	mode = vals[1]->v_str;
+	mode = vals[1]->v_str->s_str;
 
 	if ((*mode != 'r') && (*mode != 'w') && (*mode != 'a'))
 		return error_value(E_FREOPEN2);
@@ -2478,7 +4341,8 @@ f_freopen(int count, VALUE **vals)
 	else {
 		if (vals[2]->v_type != V_STR)
 			return error_value(E_FREOPEN3);
-		id = reopenid(vals[0]->v_file, mode, vals[2]->v_str);
+		id = reopenid(vals[0]->v_file, mode,
+			vals[2]->v_str->s_str);
 	}
 
 	if (id == FILEID_NONE)
@@ -2489,27 +4353,95 @@ f_freopen(int count, VALUE **vals)
 
 
 static VALUE
-f_errno(VALUE *v1)
+f_errno(int count, VALUE **vals)
 {
-	long error;		/* error number to look up */
+	int newerr, olderr;
+	VALUE *vp;
 	VALUE result;
 
-	/* arg must be an integer */
-	if (v1->v_type != V_NUM || qisfrac(v1->v_num)) {
-		math_error("errno argument must be an integer");
-		/*NOTREACHED*/
-	}
+	newerr = -1;
+	result.v_type = V_NUM;
 
-	/* return the error string */
-	result.v_type = V_STR;
-	result.v_subtype = V_STRLITERAL;
-	error = z1tol(v1->v_num->num);
-	if (qisneg(v1->v_num) || zge16b(v1->v_num->num) ||
-	    error < 0 || error >= sys_nerr) {
-		result.v_str = "Unknown error number";
-	} else {
-		result.v_str = (char *)sys_errlist[error];
+	if (count > 0) {
+		vp = vals[0];
+
+		if (vp->v_type <= 0) {
+			newerr = (int) -vp->v_type;
+			(void) set_errno(newerr);
+			result.v_num = itoq((long) newerr);
+			return result;
+		}
+
+		/* arg must be an integer */
+		if (vp->v_type != V_NUM || qisfrac(vp->v_num) ||
+		qisneg(vp->v_num) || zge16b(vp->v_num->num)) {
+			math_error("errno argument out of range");
+			/*NOTREACHED*/
+		}
+		newerr = z1tol(vp->v_num->num);
+		if (newerr >= 32768) {
+			math_error("errno argument out of range");
+			/*NOTREACHED*/
+		}
 	}
+	olderr = set_errno(newerr);
+
+	result.v_num = itoq((long) olderr);
+	return result;
+}
+
+
+
+static VALUE
+f_errcount(int count, VALUE **vals)
+{
+	int newcount, oldcount;
+	VALUE *vp;
+	VALUE result;
+
+	newcount = -1;
+	if (count > 0) {
+		vp = vals[0];
+
+		/* arg must be an integer */
+		if (vp->v_type != V_NUM || qisfrac(vp->v_num) ||
+		qisneg(vp->v_num) || zge31b(vp->v_num->num)) {
+			math_error("errcount argument out of range");
+			/*NOTREACHED*/
+		}
+		newcount = z1tol(vp->v_num->num);
+	}
+	oldcount = set_errcount(newcount);
+
+	result.v_type = V_NUM;
+	result.v_num = itoq((long) oldcount);
+	return result;
+}
+
+
+static VALUE
+f_errmax(int count, VALUE **vals)
+{
+	int newmax, oldmax;
+	VALUE *vp;
+	VALUE result;
+
+	newmax = -1;
+	if (count > 0) {
+		vp = vals[0];
+
+		/* arg must be an integer */
+		if (vp->v_type != V_NUM || qisfrac(vp->v_num) ||
+		qisneg(vp->v_num) || zge31b(vp->v_num->num)) {
+			math_error("errcount argument out of range");
+			/*NOTREACHED*/
+		}
+		newmax = z1tol(vp->v_num->num);
+	}
+	oldmax = set_errmax(newmax);
+
+	result.v_type = V_NUM;
+	result.v_num = itoq((long) oldmax);
 	return result;
 }
 
@@ -2545,10 +4477,12 @@ f_fclose(int count, VALUE **vals)
 
 
 static VALUE
-f_rm(VALUE *v1)
+f_rm(int count, VALUE **vals)
 {
 	VALUE result;
+	int force;	/* TRUE -> -f was given as 1st arg */
 	int i;
+	int j;
 
 	/*
 	 * firewall
@@ -2558,22 +4492,33 @@ f_rm(VALUE *v1)
 
 	/*
 	 * check on each arg
-	 *
-	 * For now we will do just one arg ... worry about
-	 * rm flags such as -r or -f maybe someday later ...
 	 */
-	if (v1->v_type != V_STR)
-		return error_value(E_RM1);
-	if (v1->v_str[0] == '\0')
-		return error_value(E_RM1);
+	for (i=0; i < count; ++i) {
+		if (vals[i]->v_type != V_STR)
+			return error_value(E_RM1);
+		if (vals[i]->v_str->s_str[0] == '\0')
+			return error_value(E_RM1);
+	}
 
 	/*
-	 * unlink file(s)
+	 * look for a leading -f option
 	 */
-	i = unlink(v1->v_str);
-	if (i < 0)
-		return error_value(E_RM2);
+	force = (strcmp(vals[0]->v_str->s_str, "-f") == 0);
+	if (force) {
+		--count;
+		++vals;
+	}
+
+	/*
+	 * remove file(s)
+	 */
+	for (i=0; i < count; ++i) {
+		j = remove(vals[i]->v_str->s_str);
+		if (!force && j < 0)
+			return error_value(errno);
+	}
 	result.v_type = V_NULL;
+	result.v_subtype = V_NOSUBTYPE;
 	return result;
 }
 
@@ -2581,66 +4526,80 @@ f_rm(VALUE *v1)
 static VALUE
 f_newerror(int count, VALUE **vals)
 {
-	VALUE result;
 	char *str;
+	int index;
+	int errnum;
 
 	str = NULL;
-	if (count > 0 && vals[0]->v_type == V_STR) {
-		str = vals[0]->v_str;
-		if (*str == '\0')
-			str = NULL;
-	}
+	if (count > 0 && vals[0]->v_type == V_STR)
+		str = vals[0]->v_str->s_str;
+	if (str == NULL || str[0] == '\0')
+		str = "???";
 	if (nexterrnum == E_USERDEF)
 		initstr(&newerrorstr);
-	if (str)
+	index = findstr(&newerrorstr, str);
+	if (index >= 0)
+		errnum = E_USERDEF + index;
+	else {
+		if (nexterrnum == 32767)
+			math_error("Too many new error values");
+		errnum = nexterrnum++;
 		addstr(&newerrorstr, str);
-	else
-		addstr(&newerrorstr, "???");
-	result.v_type = - nexterrnum++;
-	return result;
+	}
+	return error_value(errnum);
 }
 
 
 static VALUE
-f_strerror(VALUE *vp)
+f_strerror(int count, VALUE **vals)
 {
+	VALUE *vp;
 	VALUE result;
 	long i;
+	char *cp;
 
-	/* firewall */
-	if (vp->v_type < 0)
-		i = (long) -vp->v_type;
-	else {
-		if (vp->v_type != V_NUM || qisfrac(vp->v_num) ||
-			qisneg(vp->v_num)) {
-			return error_value(E_STRERROR1);
+	if (count > 0) {
+		vp = vals[0];
+		if (vp->v_type < 0)
+			i = (long) -vp->v_type;
+		else {
+			if (vp->v_type != V_NUM || qisfrac(vp->v_num))
+				return error_value(E_STRERROR1);
+			i = qtoi(vp->v_num);
+			if (i < 0 || i > 32767)
+				return error_value(E_STRERROR2);
 		}
-		i = qtoi(vp->v_num);
 	}
+	else
+		i = set_errno(-1);
 
-	/* process system error messages */
-	if (i < E__BASE) {
-		if (i >= sys_nerr) {
-			return error_value(E_STRERROR2);
+	result.v_type = V_STR;
+
+	if (i == 0)
+		i = E__BASE;
+
+	if (i >= nexterrnum || (i > E__HIGHEST && i < E_USERDEF)
+			|| (i < E__BASE && i >= sys_nerr)) {
+		cp = (char *) malloc(12);
+		if (cp == NULL) {
+			math_error("Out of memory for strerror");
+			/*NOTREACHED*/
 		}
-		result.v_str = (char *) sys_errlist[i];
-		result.v_type = V_STR;
-		result.v_subtype = V_STRLITERAL;
+		sprintf(cp, "Error %ld", i);
+		result.v_str = makestring(cp);
 		return result;
 	}
 
-	/* more filewall */
-	if (i <= 0 || i >= nexterrnum || (i > E__HIGHEST && i < E_USERDEF)) {
-		return error_value(E_STRERROR2);
-	}
+	if (i < E__BASE)		/* system error */
+		cp = (char *) sys_errlist[i];
 
-	/* convert user or calc error */
-	result.v_type = V_STR;
-	result.v_subtype = V_STRLITERAL;
-	if (i >= E_USERDEF)
-		result.v_str = namestr(&newerrorstr, i - E_USERDEF);
-	else
-		result.v_str = (char *)error_table[i - E__BASE];
+	else if (i >= E_USERDEF)	/* user-described error */
+		cp = namestr(&newerrorstr, i - E_USERDEF);
+
+	else				/* calc-described error */
+		cp = (char *)error_table[i - E__BASE];
+
+	result.v_str = makenewstring(cp);
 	return result;
 }
 
@@ -2706,19 +4665,30 @@ f_fflush(int count, VALUE **vals)
 
 
 static VALUE
-f_error(VALUE *vp)
+f_error(int count, VALUE **vals)
 {
-	VALUE res;
+	VALUE *vp;
 	long r;
 
-	if (vp->v_type != V_NUM || qisfrac(vp->v_num) ||
-		qisneg(vp->v_num))
-			return error_value(E_ERROR1);
-	r = qtoi(vp->v_num);
-	if (r < 0 || r >= 32768)
-		return error_value(E_ERROR2);
-	res.v_type = (short) -r;
-	return res;
+	if (count > 0) {
+		vp = vals[0];
+
+		if (vp->v_type <= 0)
+			r = (long) -vp->v_type;
+		else {
+			if (vp->v_type != V_NUM || qisfrac(vp->v_num))
+				r = E_ERROR1;
+			else {
+				r = qtoi(vp->v_num);
+				if (r < 0 || r >= 32768)
+					r = E_ERROR2;
+			}
+		}
+	}
+	else
+		r = set_errno(-1);
+
+	return error_value(r);
 }
 
 
@@ -2737,15 +4707,19 @@ static VALUE
 f_fsize(VALUE *vp)
 {
 	VALUE result;
-	long i;
+	ZVALUE len;		/* file length */
+	int i;
 
 	if (vp->v_type != V_FILE)
 		return error_value(E_FSIZE1);
-	i = filesize(vp->v_file);
-	if (i < 0)
+	i = getsize(vp->v_file, &len);
+	if (i == EOF)
+		return error_value(errno);
+	if (i)
 		return error_value(E_FSIZE2);
 	result.v_type = V_NUM;
-	result.v_num = itoq(i);
+	result.v_num = qalloc();
+	result.v_num->num = len;
 	return result;
 }
 
@@ -2755,7 +4729,6 @@ f_fseek(int count, VALUE **vals)
 {
 	VALUE result;
 	int whence;
-	long offset;
 	int i;
 
 	/* firewalls */
@@ -2776,9 +4749,8 @@ f_fseek(int count, VALUE **vals)
 		if (whence > 2)
 			return error_value (E_FSEEK2);
 	}
-	offset = ztoi(vals[1]->v_num->num);
 
-	i = fseekid(vals[0]->v_file, offset, whence);
+	i = fseekid(vals[0]->v_file, vals[1]->v_num->num, whence);
 	result.v_type = V_NULL;
 	if (i == EOF)
 		return error_value(errno);
@@ -2792,19 +4764,19 @@ static VALUE
 f_ftell(VALUE *vp)
 {
 	VALUE result;
-	long i;
+	ZVALUE pos;		/* current file position */
+	int i;
 
 	errno = 0;
 	if (vp->v_type != V_FILE)
 		return error_value(E_FTELL1);
-	i = ftellid(vp->v_file);
-	if (i == EOF)
-		return error_value(errno);
+	i = ftellid(vp->v_file, &pos);
 	if (i < 0)
 		return error_value(E_FTELL2);
 
 	result.v_type = V_NUM;
-	result.v_num = itoq(i);
+	result.v_num = qalloc();
+	result.v_num->num = pos;
 	return result;
 }
 
@@ -2844,7 +4816,8 @@ f_fprintf(int count, VALUE **vals)
 		return error_value(E_FPRINTF1);
 	if (vals[1]->v_type != V_STR)
 		return error_value(E_FPRINTF2);
-	i = idprintf(vals[0]->v_file, vals[1]->v_str, count - 2, vals + 2);
+	i = idprintf(vals[0]->v_file, vals[1]->v_str->s_str,
+			 count - 2, vals + 2);
 	if (i > 0)
 		return error_value(E_FPRINTF3);
 	result.v_type = V_NULL;
@@ -2878,7 +4851,7 @@ strscan(char *s, int count, VALUE **vals)
 		chtmp = ch;
 		*s = '\0';
 		n++;
-		val.v_str = s0;
+		val.v_str = makenewstring(s0);
 		result = f_eval(&val);
 		var = *vals++;
 		if (var->v_type == V_ADDR) {
@@ -2913,7 +4886,7 @@ filescan(FILEID id, int count, VALUE **vals)
 		if (i > 0)
 			return EOF;
 		n++;
-		val.v_str = str;
+		val.v_str = makenewstring(str);
 		result = f_eval(&val);
 		var = *vals++;
 		if (var->v_type == V_ADDR) {
@@ -2960,7 +4933,7 @@ f_strscan(int count, VALUE **vals)
 	if (vp->v_type != V_STR)
 		return error_value(E_STRSCAN);
 
-	i = strscan(vp->v_str, count - 1, vals + 1);
+	i = strscan(vp->v_str->s_str, count - 1, vals + 1);
 
 	result.v_type = V_NUM;
 	result.v_num = itoq((long) i);
@@ -3011,7 +4984,7 @@ f_scanf(int count, VALUE **vals)
 		if (vals[i]->v_type != V_ADDR)
 			return error_value(E_SCANF2);
 	}
-	i = fscanfid(FILEID_STDIN, vp->v_str, count - 1, vals + 1);
+	i = fscanfid(FILEID_STDIN, vp->v_str->s_str, count - 1, vals + 1);
 	if (i < 0)
 		return error_value(E_SCANF3);
 	result.v_type = V_NUM;
@@ -3042,7 +5015,8 @@ f_strscanf(int count, VALUE **vals)
 		if (vals[i]->v_type != V_ADDR)
 			return error_value(E_STRSCANF3);
 	}
-	i = scanfstr(vp->v_str, vq->v_str, count - 2, vals + 2);
+	i = scanfstr(vp->v_str->s_str, vq->v_str->s_str,
+			 count - 2, vals + 2);
 	if (i == EOF)
 		return error_value(errno);
 	if (i < 0)
@@ -3074,7 +5048,7 @@ f_fscanf(int count, VALUE **vals)
 		if (vals[i]->v_type != V_ADDR)
 			return error_value(E_FSCANF3);
 	}
-	i = fscanfid(vp->v_file, sp->v_str, count - 2, vals);
+	i = fscanfid(vp->v_file, sp->v_str->s_str, count - 2, vals);
 	if (i == EOF) {
 		result.v_type = V_NULL;
 		return result;
@@ -3099,7 +5073,7 @@ f_fputc(VALUE *v1, VALUE *v2)
 		return error_value(E_FPUTC1);
 	switch (v2->v_type) {
 		case V_STR:
-			ch = v2->v_str[0];
+			ch = v2->v_str->s_str[0];
 			break;
 		case V_NUM:
 			q = v2->v_num;
@@ -3136,7 +5110,7 @@ f_fputs(int count, VALUE **vals)
 			return error_value(E_FPUTS2);
 	}
 	for (i = 1; i < count; i++) {
-		err = idfputs(vals[0]->v_file, vals[i]->v_str);
+		err = idfputs(vals[0]->v_file, vals[i]->v_str->s_str);
 		if (err > 0)
 			return error_value(E_FPUTS3);
 	}
@@ -3158,7 +5132,8 @@ f_fputstr(int count, VALUE **vals)
 			return error_value(E_FPUTSTR2);
 	}
 	for (i = 1; i < count; i++) {
-		err = idfputstr(vals[0]->v_file, vals[i]->v_str);
+		err = idfputstr(vals[0]->v_file,
+			vals[i]->v_str->s_str);
 		if (err > 0)
 			return error_value(E_FPUTSTR3);
 	}
@@ -3175,7 +5150,8 @@ f_printf(int count, VALUE **vals)
 
 	if (vals[0]->v_type != V_STR)
 		return error_value(E_PRINTF1);
-	i = idprintf(FILEID_STDOUT, vals[0]->v_str, count - 1, vals + 1);
+	i = idprintf(FILEID_STDOUT, vals[0]->v_str->s_str,
+			 count - 1, vals + 1);
 	if (i)
 		return error_value(E_PRINTF2);
 	result.v_type = V_NULL;
@@ -3188,16 +5164,18 @@ f_strprintf(int count, VALUE **vals)
 {
 	VALUE result;
 	int i;
+	char *cp;
 
 	if (vals[0]->v_type != V_STR)
 		return error_value(E_STRPRINTF1);
 	math_divertio();
-	i = idprintf(FILEID_STDOUT, vals[0]->v_str, count - 1, vals + 1);
+	i = idprintf(FILEID_STDOUT, vals[0]->v_str->s_str,
+		 count - 1, vals + 1);
 	if (i)
 		return error_value(E_STRPRINTF2);
-	result.v_str = math_getdivertedio();
+	cp = math_getdivertedio();
 	result.v_type = V_STR;
-	result.v_subtype = V_STRALLOC;
+	result.v_str = makenewstring(cp);
 	return result;
 }
 
@@ -3216,8 +5194,7 @@ f_fgetc(VALUE *vp)
 	result.v_type = V_NULL;
 	if (ch != EOF) {
 		result.v_type = V_STR;
-		result.v_subtype = V_STRLITERAL;
-		result.v_str = charstr(ch);
+		result.v_str = charstring(ch);
 	}
 	return result;
 }
@@ -3236,7 +5213,7 @@ f_ungetc(VALUE *v1, VALUE *v2)
 		return error_value(E_UNGETC1);
 	switch (v2->v_type) {
 		case V_STR:
-			ch = v2->v_str[0];
+			ch = v2->v_str->s_str[0];
 			break;
 		case V_NUM:
 			q = v2->v_num;
@@ -3273,8 +5250,7 @@ f_fgetline(VALUE *vp)
 	result.v_type = V_NULL;
 	if (i == 0) {
 		result.v_type = V_STR;
-		result.v_subtype = V_STRALLOC;
-		result.v_str = str;
+		result.v_str = makestring(str);
 	}
 	return result;
 }
@@ -3295,8 +5271,7 @@ f_fgets(VALUE *vp)
 	result.v_type = V_NULL;
 	if (i == 0) {
 		result.v_type = V_STR;
-		result.v_subtype = V_STRALLOC;
-		result.v_str = str;
+		result.v_str = makestring(str);
 	}
 	return result;
 }
@@ -3317,8 +5292,7 @@ f_fgetstr(VALUE *vp)
 	result.v_type = V_NULL;
 	if (i == 0) {
 		result.v_type = V_STR;
-		result.v_subtype = V_STRALLOC;
-		result.v_str = str;
+		result.v_str = makestring(str);
 	}
 	return result;
 }
@@ -3339,8 +5313,7 @@ f_fgetfield(VALUE *vp)
 	result.v_type = V_NULL;
 	if (i == 0) {
 		result.v_type = V_STR;
-		result.v_subtype = V_STRALLOC;
-		result.v_str = str;
+		result.v_str = makestring(str);
 	}
 	return result;
 }
@@ -3380,6 +5353,11 @@ f_reverse(VALUE *val)
 		case V_LIST:
 			res.v_list = listcopy(val->v_list);
 			listreverse(res.v_list);
+			break;
+		case V_STR:
+			res.v_str = stringneg(val->v_str);
+			if (res.v_str == NULL)
+				return error_value(E_STRNEG);
 			break;
 		default:
 			math_error("Bad argument type for reverse");
@@ -3440,113 +5418,122 @@ f_join(int count, VALUE **vals)
 static VALUE
 f_head(VALUE *v1, VALUE *v2)
 {
-	LIST *lp;
-	LISTELEM *ep;
-	long n;
 	VALUE res;
+	long n;
 
-	if (v1->v_type != V_LIST) {
-		math_error("Non-list first argument for head");
-		/*NOTREACHED*/
-	}
-	if (v2->v_type != V_NUM || qisfrac(v2->v_num)) {
-		math_error("Non-integer second argument for head");
-		/*NOTREACHED*/
-	}
+	if (v2->v_type != V_NUM || qisfrac(v2->v_num) ||
+		zge31b(v2->v_num->num))
+			return error_value(E_HEAD2);
 	n = qtoi(v2->v_num);
-	if (n < 0)
-		n += v1->v_list->l_count;
-	lp = listalloc();
-	for (ep = v1->v_list->l_first; n-- > 0 && ep; ep = ep->e_next)
-		insertlistlast(lp, &ep->e_value);
-	res.v_type = V_LIST;
-	res.v_list = lp;
-	return res;
+
+	res.v_type = v1->v_type;
+	switch (v1->v_type) {
+		case V_LIST:
+			if (n == 0)
+				res.v_list = listalloc();
+			else if (n > 0)
+				res.v_list = listsegment(v1->v_list,0,n-1);
+			else
+				res.v_list = listsegment(v1->v_list,-n-1,0);
+			return res;
+		case V_STR:
+			if (n == 0)
+				res.v_str = slink(&_nullstring_);
+			else if (n > 0)
+				res.v_str = stringsegment(v1->v_str,0,n-1);
+			else
+				res.v_str = stringsegment(v1->v_str,-n-1,0);
+			if (res.v_str == NULL)
+				return error_value(E_STRHEAD);
+			return res;
+		default:
+			return error_value(E_HEAD1);
+	}
 }
 
 
 static VALUE
 f_tail(VALUE *v1, VALUE *v2)
 {
-	LIST *lp;
-	LISTELEM *ep;
 	long n;
 	VALUE res;
 
-	if (v1->v_type != V_LIST) {
-		math_error("Non-list first argument for tail");
-		/*NOTREACHED*/
-	}
-	if (v2->v_type != V_NUM || qisfrac(v2->v_num)) {
-		math_error("Non-integer second argument for tail");
-		/*NOTREACHED*/
-	}
+	if (v2->v_type != V_NUM || qisfrac(v2->v_num) ||
+		zge31b(v2->v_num->num))
+			return error_value(E_TAIL1);
 	n = qtoi(v2->v_num);
-	if (n < 0)
-		n += v1->v_list->l_count;
-	lp = listalloc();
-	for (ep = v1->v_list->l_last; n-- > 0 && ep; ep = ep->e_prev)
-		insertlistfirst(lp, &ep->e_value);
-	res.v_type = V_LIST;
-	res.v_list = lp;
-	return res;
+	res.v_type = v1->v_type;
+	switch (v1->v_type) {
+		case V_LIST:
+			if (n == 0)
+				res.v_list = listalloc();
+			else if (n > 0) {
+				res.v_list = listsegment(v1->v_list,
+					v1->v_list->l_count - n,
+					v1->v_list->l_count - 1);
+			}
+			else {
+				res.v_list = listsegment(v1->v_list,
+					v1->v_list->l_count - 1,
+					v1->v_list->l_count + n);
+			}
+			return res;
+		case V_STR:
+			if (n == 0)
+				res.v_str = slink(&_nullstring_);
+			else if (n > 0) {
+				res.v_str = stringsegment(v1->v_str,
+					v1->v_str->s_len - n,
+					v1->v_str->s_len - 1);
+			}
+			else {
+				res.v_str = stringsegment(v1->v_str,
+					v1->v_str->s_len - 1,
+					v1->v_str->s_len + n);
+			}
+			if (res.v_str == V_NULL)
+				return error_value(E_STRTAIL);
+			return res;
+		default:
+			return error_value(E_TAIL1);
+	}
 }
 
 
 static VALUE
-f_segment(VALUE *v1, VALUE *v2, VALUE *v3)
+f_segment(int count, VALUE **vals)
 {
-	LIST *lp;
-	LISTELEM *ep;
-	long n1, n2, i;
-	VALUE res;
+	VALUE *vp;
+	long n1, n2;
+	VALUE result;
 
-	if (v1->v_type != V_LIST) {
-		math_error("Non-list first argument for segment");
-		/*NOTREACHED*/
-	}
-	if (v2->v_type != V_NUM || qisfrac(v2->v_num)) {
-		math_error("Non-integer second argument for segment");
-		/*NOTREACHED*/
-	}
-	if (v3->v_type != V_NUM || qisfrac(v3->v_num)) {
-		math_error("Non-integer third argument for segment");
-		/*NOTREACHED*/
-	}
-	n1 = qtoi(v2->v_num);
-	n2 = qtoi(v3->v_num);
-	if (n1 < 0 || n1 >= v1->v_list->l_count) {
-		math_error("Second argument out of range for segment");
-		/*NOTREACHED*/
-	}
-	if (n2 < 0 || n2 >= v1->v_list->l_count) {
-		math_error("Third argument out of range for segment");
-		/*NOTREACHED*/
-	}
-	lp = listalloc();
-	ep = v1->v_list->l_first;
-	if (n1 <= n2) {
-		i = n2 - n1 + 1;
-		while(n1-- > 0 && ep)
-			 ep = ep->e_next;
-		while(i-- > 0 && ep) {
-			insertlistlast(lp, &ep->e_value);
-			ep = ep->e_next;
-		}
+	vp = vals[1];
 
+	if (vp->v_type != V_NUM || qisfrac(vp->v_num) || zge31b(vp->v_num->num))
+		return error_value(E_SEG2);
+	n1 = qtoi(vp->v_num);
+	n2 = n1;
+	if (count == 3) {
+		vp = vals[2];
+		if (vp->v_type != V_NUM || qisfrac(vp->v_num) ||
+			zge31b(vp->v_num->num))
+				return error_value(E_SEG3);
+		n2 = qtoi(vp->v_num);
 	}
-	else {
-		i = n1 - n2 + 1;
-		while(n2-- > 0 && ep)
-			ep = ep->e_next;
-		while(i-- > 0 && ep) {
-			insertlistfirst(lp, &ep->e_value);
-			ep = ep->e_next;
-		}
+	vp = vals[0];
+	result.v_type = vp->v_type;
+	switch (vp->v_type) {
+		case V_LIST:
+			result.v_list = listsegment(vp->v_list, n1, n2);
+			return result;
+		case V_STR:
+			result.v_str = stringsegment(vp->v_str, n1, n2);
+			if (result.v_str == NULL)
+				return error_value(E_STRSEG);
+			return result;
+		default:
+			return error_value(E_SEG1);
 	}
-	res.v_type = V_LIST;
-	res.v_list = lp;
-	return res;
 }
 
 
@@ -3570,7 +5557,7 @@ f_modify(VALUE *v1, VALUE *v2)
 		math_error("Non-string second argument for modify");
 		/*NOTREACHED*/
 	}
-	fp = findfunc(adduserfunc(v2->v_str));
+	fp = findfunc(adduserfunc(v2->v_str->s_str));
 	if (!fp) {
 		math_error("Undefined function for modify");
 		/*NOTREACHED*/
@@ -3614,7 +5601,7 @@ f_forall(VALUE *v1, VALUE *v2)
 		math_error("Non-string second argument for forall");
 		/*NOTREACHED*/
 	}
-	fp = findfunc(adduserfunc(v2->v_str));
+	fp = findfunc(adduserfunc(v2->v_str->s_str));
 	if (!fp) {
 		math_error("Undefined function for forall");
 		/*NOTREACHED*/
@@ -3661,7 +5648,7 @@ f_select(VALUE *v1, VALUE *v2)
 		math_error("Non-string second argument for select");
 		/*NOTREACHED*/
 	}
-	fp = findfunc(adduserfunc(v2->v_str));
+	fp = findfunc(adduserfunc(v2->v_str->s_str));
 	if (!fp) {
 		math_error("Undefined function for select");
 		/*NOTREACHED*/
@@ -3694,7 +5681,7 @@ f_count(VALUE *v1, VALUE *v2)
 		math_error("Non-string second argument for select");
 		/*NOTREACHED*/
 	}
-	fp = findfunc(adduserfunc(v2->v_str));
+	fp = findfunc(adduserfunc(v2->v_str->s_str));
 	if (!fp) {
 		math_error("Undefined function for select");
 		/*NOTREACHED*/
@@ -3748,6 +5735,7 @@ f_makelist(VALUE *v1)
 	n = qtoi(v1->v_num);
 	lp = listalloc();
 	res.v_type = V_NULL;
+	res.v_subtype = V_NOSUBTYPE;
 	while (n-- > 0)
 		insertlistlast(lp, &res);
 	res.v_type = V_LIST;
@@ -3788,8 +5776,7 @@ f_cmdbuf(void)
 	newcp = (char *)malloc(strlen(cmdbuf) + 1);
 	strcpy(newcp, cmdbuf);
         result.v_type = V_STR;
-	result.v_subtype = V_STRALLOC;
-	result.v_str = newcp;
+	result.v_str = makestring(newcp);
 	return result;
 }
 
@@ -3798,17 +5785,18 @@ static VALUE
 f_getenv(VALUE *v1)
 {
 	VALUE result;
+	char *str;
 
 	if (v1->v_type != V_STR) {
 		math_error("Non-string argument for getenv");
 		/*NOTREACHED*/
 	}
         result.v_type = V_STR;
-	result.v_subtype = V_STRLITERAL;
-	result.v_str = getenv(v1->v_str);
-        if(result.v_str == NULL) {
-	        result.v_type = V_NULL;
-        }
+	str = getenv(v1->v_str->s_str);
+	if (str == NULL)
+		result.v_type = V_NULL;
+	else
+		result.v_str = makenewstring(str);
 	return result;
 }
 
@@ -3817,15 +5805,13 @@ static VALUE
 f_isatty(VALUE *vp)
 {
 	VALUE result;
-	int i;
 
-	if (vp->v_type != V_FILE)
-		return error_value(E_ISATTY1);
-	i = isattyid(vp->v_file);
-	if (i == -2)
-		return error_value(E_ISATTY2);
 	result.v_type = V_NUM;
-	result.v_num = i ? qlink(&_qone_) : qlink(&_qzero_);
+	if (vp->v_type == V_FILE && isattyid(vp->v_file) == 1) {
+		result.v_num = itoq(1);
+	} else {
+		result.v_num = itoq(0);
+	}
 	return result;
 }
 
@@ -3842,7 +5828,7 @@ f_access(int count, VALUE **vals)
 	errno = 0;
 	if (vals[0]->v_type != V_STR)
 		return error_value(E_ACCESS1);
-	fname = vals[0]->v_str;
+	fname = vals[0]->v_str->s_str;
 	m = 0;
 	if (count == 2) {
 		switch (vals[1]->v_type) {
@@ -3853,7 +5839,7 @@ f_access(int count, VALUE **vals)
 				m = (int)(q->num.v[0] & 7);
 				break;
 			case V_STR:
-				s = vals[1]->v_str;
+				s = vals[1]->v_str->s_str;
 				i = (long)strlen(s);
 				while (i-- > 0) {
 					switch (*s++) {
@@ -3895,13 +5881,14 @@ f_putenv(int count, VALUE **vals)
 		}
 
 		/* convert putenv("foo","bar") into putenv("foo=bar") */
-		putenv_str = (char *)malloc(strlen(vals[0]->v_str) + 1 +
-					    strlen(vals[1]->v_str) + 1);
+		putenv_str = (char *)malloc(vals[0]->v_str->s_len + 1 +
+			    vals[1]->v_str->s_len + 1);
 		if (putenv_str == NULL) {
 			math_error("Cannot allocate string in putenv");
 			/*NOTREACHED*/
 		}
-		sprintf(putenv_str, "%s=%s", vals[0]->v_str, vals[1]->v_str);
+		sprintf(putenv_str, "%s=%s", vals[0]->v_str->s_str,
+			vals[1]->v_str->s_str);
 
 
 	} else {
@@ -3912,7 +5899,7 @@ f_putenv(int count, VALUE **vals)
 		}
 
 		/* putenv(arg) must be of the form "foo=bar" */
-		if ((char *)strchr(vals[0]->v_str, '=') == NULL) {
+		if ((char *)strchr(vals[0]->v_str->s_str, '=') == NULL) {
 			math_error("putenv single arg string missing =");
 			/*NOTREACHED*/
 		}
@@ -3921,12 +5908,12 @@ f_putenv(int count, VALUE **vals)
 		 * make a copy of the arg because subsequent changes
 		 * would change the environment.
 		 */
-		putenv_str = (char *)malloc(strlen(vals[0]->v_str) + 1);
+		putenv_str = (char *)malloc(vals[0]->v_str->s_len + 1);
 		if (putenv_str == NULL) {
 			math_error("Cannot allocate string in putenv");
 			/*NOTREACHED*/
 		}
-		strcpy(putenv_str, vals[0]->v_str);
+		strcpy(putenv_str, vals[0]->v_str->s_str);
 	}
 
 	/* return putenv result */
@@ -3948,9 +5935,12 @@ f_strpos(VALUE *haystack, VALUE *needle)
 		/*NOTREACHED*/
 	}
 	result.v_type = V_NUM;
-        cpointer = strstr(haystack->v_str,needle->v_str);
-        if(cpointer == NULL) cindex=0;
-        else cindex=cpointer - haystack->v_str + 1;
+        cpointer = strstr(haystack->v_str->s_str,
+		needle->v_str->s_str);
+        if (cpointer == NULL)
+		cindex = 0;
+        else
+		cindex = cpointer - haystack->v_str->s_str + 1;
 	result.v_num = itoq((long) cindex);
 	return result;
 }
@@ -3970,7 +5960,7 @@ f_system(VALUE *vp)
 		/*NOTREACHED*/
 	}
 	result.v_type = V_NUM;
-	result.v_num = itoq((long) system(vp->v_str));
+	result.v_num = itoq((long) system(vp->v_str->s_str));
 	return result;
 }
 
@@ -4100,6 +6090,556 @@ base_value(long mode)
 }
 
 
+static VALUE
+f_custom(int count, VALUE **vals)
+{
+
+	VALUE result;
+
+	/*
+	 * disable custom functions unless -C was given
+	 */
+	if (!allow_custom) {
+		fprintf(stderr,
+#if defined(CUSTOM)
+		    "%sCalc must be run with a -C argument to "
+		    "use custom function\n",
+#else /* CUSTOM */
+		    "%sCalc was built with custom functions disabled\n",
+#endif /* CUSTOM */
+		    (conf->tab_ok ? "\t" : ""));
+		return error_value(E_CUSTOM_ERROR);
+	}
+
+	/*
+	 * perform the custom operation
+	 */
+	if (count <= 0) {
+		/* perform the usage function function */
+		showcustom();
+		result.v_type = V_NULL;
+	} else {
+		/* firewall */
+		if (vals[0]->v_type != V_STR) {
+			math_error("custom: 1st arg not a string name");
+			/*NOTREACHED*/
+		}
+
+		/* perform the custom function */
+		result = custom(vals[0]->v_str->s_str, count-1, vals+1);
+	}
+
+	/*
+	 * return the custom result
+	 */
+	return result;
+}
+
+
+static VALUE
+f_blk(int count, VALUE **vals)
+{
+	int len;		/* number of octets to malloc */
+	int chunk;		/* block chunk size */
+	VALUE result;
+	int id;
+	VALUE *vp;
+	int type;
+
+	vp = *vals;
+	type = 0;
+	result.v_subtype = V_NOSUBTYPE;
+	if (count > 0) {
+		type = vp->v_type;
+		if (type == V_STR || type == V_NBLOCK || type == V_BLOCK) {
+			vals++;
+			count--;
+		}
+	}
+
+	len = -1;		/* signal to use old or zero len */
+	chunk = -1;		/* signal to use old or default chunksize */
+	if (count > 0 && vals[0]->v_type != V_NULL) {
+		/* parse len */
+		if (vals[0]->v_type != V_NUM || qisfrac(vals[0]->v_num))
+			return error_value(E_BLK1);
+		if (qisneg(vals[0]->v_num) || zge31b(vals[0]->v_num->num))
+			return error_value(E_BLK2);
+		len = qtoi(vals[0]->v_num);
+	}
+	if (count > 1 && vals[1]->v_type != V_NULL) {
+		/* parse chunk */
+		if (vals[1]->v_type != V_NUM || qisfrac(vals[1]->v_num))
+			return error_value(E_BLK3);
+		if (qisneg(vals[1]->v_num) || zge31b(vals[1]->v_num->num))
+			return error_value(E_BLK4);
+		chunk = qtoi(vals[1]->v_num);
+	}
+
+	if (type == V_STR) {
+		result.v_type = V_NBLOCK;
+		id = findnblockid(vp->v_str->s_str);
+		if (id < 0) {
+			/* create new named block */
+			result.v_nblock = createnblock(vp->v_str->s_str,
+				 len, chunk);
+			return result;
+		}
+		/* reallocate nblock */
+		result.v_nblock = reallocnblock(id, len, chunk);
+		return result;
+	}
+
+	if (type == V_NBLOCK) {
+		/* reallocate nblock */
+		result.v_type = V_NBLOCK;
+		id = vp->v_nblock->id;
+		result.v_nblock = reallocnblock(id, len, chunk);
+		return result;
+	}
+	if (type == V_BLOCK) {
+		/* reallocate block */
+		result.v_type = V_BLOCK;
+		result.v_block = copyrealloc(vp->v_block, len, chunk);
+		return result;
+	}
+
+	/* allocate block */
+	result.v_block = blkalloc(len, chunk);
+	result.v_type = V_BLOCK;
+	return result;
+}
+
+
+static VALUE
+f_blkfree(VALUE *vp)
+{
+	int id;
+	VALUE result;
+
+	id = 0;
+	switch (vp->v_type) {
+		case V_NBLOCK:
+			id = vp->v_nblock->id;
+			break;
+		case V_STR:
+			id = findnblockid(vp->v_str->s_str);
+			if (id < 0)
+				return error_value(E_BLKFREE1);
+			break;
+		case V_NUM:
+			if (qisfrac(vp->v_num) || qisneg(vp->v_num))
+				return error_value(E_BLKFREE2);
+			if (zge31b(vp->v_num->num))
+				return error_value(E_BLKFREE3);
+			id = qtoi(vp->v_num);
+			break;
+		default:
+			return error_value(E_BLKFREE4);
+	}
+	id = removenblock(id);
+	if (id)
+		return error_value(id);
+	result.v_type = V_NULL;
+	return result;
+}
+
+
+static VALUE
+f_blocks(int count, VALUE **vals)
+{
+	NBLOCK *nblk;
+	VALUE result;
+	int id;
+
+	if (count == 0) {
+		result.v_type = V_NUM;
+		result.v_num = itoq((long) countnblocks());
+		return result;
+	}
+	if (vals[0]->v_type != V_NUM || qisfrac(vals[0]->v_num))
+		return error_value(E_BLOCKS1);
+	id = (int) qtoi(vals[0]->v_num);
+
+	nblk = findnblock(id);
+
+	if (nblk == NULL)
+		return error_value(E_BLOCKS2);
+	else {
+		result.v_type = V_NBLOCK;
+		result.v_nblock = nblk;
+	}
+	return result;
+}
+
+
+static VALUE
+f_free(int count, VALUE **vals)
+{
+	VALUE result;
+	VALUE *val;
+
+	result.v_type = V_NULL;
+	while (count-- > 0) {
+		val = *vals++;
+		if (val->v_type == V_ADDR)
+			freevalue(val->v_addr);
+	}
+	return result;
+}
+
+static VALUE
+f_freeglobals(void)
+{
+	VALUE result;
+
+	freeglobals();
+	result.v_type = V_NULL;
+	return result;
+}
+
+static VALUE
+f_freeredc(void)
+{
+	VALUE result;
+	freeredcdata();
+	result.v_type = V_NULL;
+	return result;
+}
+
+
+static VALUE
+f_freestatics(void)
+{
+	VALUE result;
+
+	freestatics();
+	result.v_type = V_NULL;
+	return result;
+}
+
+
+/*
+ * f_copy - copy consecutive items between values
+ *
+ *	copy(src, dst [, ssi [, num [, dsi]]])
+ *
+ * Copy 'num' consecutive items from 'src' with index 'ssi' to
+ * 'dest', starting at position with index 'dsi'.
+ */
+static VALUE
+f_copy(int count, VALUE **vals)
+{
+	long ssi = 0;	/* source start index */
+	long num = -1;	/* number of items to copy (-1 ==> all) */
+	long dsi = -1;	/* destination start index, -1 ==> default */
+	int errtype;	/* error type if unable to perform copy */
+	VALUE result;	/* null if successful */
+
+	/*
+	 * parse args
+	 */
+	switch(count) {
+	case 5:
+		/* parse dsi */
+		if (vals[4]->v_type != V_NULL) {
+			if (vals[4]->v_type != V_NUM ||
+			    qisfrac(vals[4]->v_num) ||
+			    qisneg(vals[4]->v_num)) {
+				return error_value(E_COPY6);
+			}
+			if (zge31b(vals[4]->v_num->num)) {
+				return error_value(E_COPY7);
+			}
+			dsi = qtoi(vals[4]->v_num);
+		}
+		/*FALLTHRU*/
+
+	case 4:
+		/* parse num */
+		if (vals[3]->v_type != V_NULL) {
+			if (vals[3]->v_type != V_NUM ||
+			    qisfrac(vals[3]->v_num) ||
+			    qisneg(vals[3]->v_num)) {
+				return error_value(E_COPY1);
+			}
+			if (zge31b(vals[3]->v_num->num)) {
+				return error_value(E_COPY2);
+			}
+			num = qtoi(vals[3]->v_num);
+		}
+		/*FALLTHRU*/
+
+	case 3:
+		/* parse ssi */
+		if (vals[2]->v_type != V_NULL) {
+			if (vals[2]->v_type != V_NUM ||
+			    qisfrac(vals[2]->v_num) ||
+			    qisneg(vals[2]->v_num)) {
+				return error_value(E_COPY4);
+			}
+			if (zge31b(vals[2]->v_num->num)) {
+				return error_value(E_COPY5);
+			}
+			ssi = qtoi(vals[2]->v_num);
+		}
+		break;
+	}
+
+	/*
+	 * copy
+	 */
+	errtype = copystod(vals[0], ssi, num, vals[1], dsi);
+	if (errtype > 0)
+		return error_value(errtype);
+	result.v_type = V_NULL;
+	return result;
+}
+
+
+/*
+ * f_blkcpy - copy consecutive items between values
+ *
+ *	copy(dst, src [, num [, dsi [, ssi]]])
+ *
+ * Copy 'num' consecutive items from 'src' with index 'ssi' to
+ * 'dest', starting at position with index 'dsi'.
+ */
+static VALUE
+f_blkcpy(int count, VALUE **vals)
+{
+	VALUE *args[5];		/* args to re-order */
+	VALUE null_value;	/* dummy argument */
+
+	/*
+	 * parse args into f_copy order
+	 */
+	args[0] = vals[1];
+	args[1] = vals[0];
+	switch(count) {
+	case 5:
+		args[2] = vals[4];
+		args[4] = vals[3];
+		args[3] = vals[2];
+		break;
+	case 4:
+		count = 5;
+		args[4] = vals[3];
+		args[3] = vals[2];
+		null_value.v_type = V_NULL;
+		args[2] = &null_value;
+		break;
+	case 3:
+		count = 4;
+		args[3] = vals[2];
+		null_value.v_type = V_NULL;
+		args[2] = &null_value;
+		break;
+	}
+
+	/*
+	 * copy
+	 */
+	return f_copy(count, args);
+}
+
+
+static VALUE
+f_sha(int count, VALUE **vals)
+{
+	VALUE result;
+	HASH *state;		/* pointer to hash state to use */
+	int i;			/* vals[i] to hash */
+
+	state = NULL;
+
+	/*
+	 * arg check
+	 */
+	if (count == 0) {
+
+		/* return an initial hash state */
+		result.v_type = V_HASH;
+		result.v_hash = hash_init(SHS_HASH_TYPE, NULL);
+
+	} else if (count == 1 && vals[0]->v_type == V_HASH &&
+		vals[0]->v_hash->hashtype == SHS_HASH_TYPE) {
+
+		/* if just a hash value, finalize it */
+		state = hash_copy(vals[0]->v_hash);
+		result.v_type = V_NUM;
+		result.v_num = qalloc();
+		result.v_num->num = hash_final(state);
+		hash_free(state);
+
+	} else {
+
+		/*
+		 * If the first value is a hash, use that as
+		 * the initial hash state
+		 */
+		if (vals[0]->v_type == V_HASH &&
+			vals[0]->v_hash->hashtype == SHS_HASH_TYPE) {
+			state = hash_copy(vals[0]->v_hash);
+			i = 1;
+
+		/*
+		 * otherwise use the default initial state
+		 */
+		} else {
+			state = hash_init(SHS_HASH_TYPE, NULL);
+			i = 0;
+		}
+
+		/*
+		 * hash the remaining values
+		 */
+		do {
+			state = hash_value(SHS_HASH_TYPE, vals[i], state);
+		} while (++i < count);
+
+		/*
+		 * return the current hash state
+		 */
+		result.v_type = V_HASH;
+		result.v_hash = state;
+	}
+
+	/* return the result */
+	return result;
+}
+
+
+static VALUE
+f_sha1(int count, VALUE **vals)
+{
+	VALUE result;
+	HASH *state;		/* pointer to hash state to use */
+	int i;			/* vals[i] to hash */
+
+	/*
+	 * arg check
+	 */
+	if (count == 0) {
+
+		/* return an initial hash state */
+		result.v_type = V_HASH;
+		result.v_hash = hash_init(SHS1_HASH_TYPE, NULL);
+
+	} else if (count == 1 && vals[0]->v_type == V_HASH &&
+		vals[0]->v_hash->hashtype == SHS1_HASH_TYPE) {
+
+		/* if just a hash value, finalize it */
+		state = hash_copy(vals[0]->v_hash);
+		result.v_type = V_NUM;
+		result.v_num = qalloc();
+		result.v_num->num = hash_final(state);
+		hash_free(state);
+
+	} else {
+
+		/*
+		 * If the first value is a hash, use that as
+		 * the initial hash state
+		 */
+		if (vals[0]->v_type == V_HASH &&
+			vals[0]->v_hash->hashtype == SHS1_HASH_TYPE) {
+			state = hash_copy(vals[0]->v_hash);
+			i = 1;
+
+		/*
+		 * otherwise use the default initial state
+		 */
+		} else {
+			state = hash_init(SHS1_HASH_TYPE, NULL);
+			i = 0;
+		}
+
+		/*
+		 * hash the remaining values
+		 */
+		do {
+			state = hash_value(SHS1_HASH_TYPE, vals[i], state);
+		} while (++i < count);
+
+		/*
+		 * return the current hash state
+		 */
+		result.v_type = V_HASH;
+		result.v_hash = state;
+	}
+
+	/* return the result */
+	return result;
+}
+
+
+static VALUE
+f_md5(int count, VALUE **vals)
+{
+	VALUE result;
+	HASH *state;		/* pointer to hash state to use */
+	int i;			/* vals[i] to hash */
+
+	state = NULL;
+
+	/*
+	 * arg check
+	 */
+	if (count == 0) {
+
+		/* return an initial hash state */
+		result.v_type = V_HASH;
+		result.v_hash = hash_init(MD5_HASH_TYPE, NULL);
+
+	} else if (count == 1 && vals[0]->v_type == V_HASH &&
+		vals[0]->v_hash->hashtype == MD5_HASH_TYPE) {
+
+		/* if just a hash value, finalize it */
+		state = hash_copy(vals[0]->v_hash);
+		result.v_type = V_NUM;
+		result.v_num = qalloc();
+		result.v_num->num = hash_final(state);
+		hash_free(state);
+
+	} else {
+
+		/*
+		 * If the first value is a hash, use that as
+		 * the initial hash state
+		 */
+		if (vals[0]->v_type == V_HASH &&
+			vals[0]->v_hash->hashtype == MD5_HASH_TYPE) {
+			state = hash_copy(vals[0]->v_hash);
+			i = 1;
+
+		/*
+		 * otherwise use the default initial state
+		 */
+		} else {
+			state = hash_init(MD5_HASH_TYPE, NULL);
+			i = 0;
+		}
+
+		/*
+		 * hash the remaining values
+		 */
+		do {
+			state = hash_value(MD5_HASH_TYPE, vals[i], state);
+		} while (++i < count);
+
+		/*
+		 * return the current hash state
+		 */
+		result.v_type = V_HASH;
+		result.v_hash = state;
+	}
+
+	/* return the result */
+	return result;
+}
+
+
 #endif /* !FUNCLIST */
 
 
@@ -4144,44 +6684,56 @@ static CONST struct builtin builtins[] = {
 	 "absolute value within accuracy b"},
 	{"access", 1, 2, 0, OP_NOP, 0, f_access,
 	 "determine accessibility of file a for mode b"},
-	{"acos", 1, 2, FE, OP_NOP, qacos, 0,
+	{"acos", 1, 2, 0, OP_NOP, 0, f_acos,
 	 "arccosine of a within accuracy b"},
-	{"acosh", 1, 2, FE, OP_NOP, qacosh, 0,
+	{"acosh", 1, 2, 0, OP_NOP, 0, f_acosh,
 	 "inverse hyperbolic cosine of a within accuracy b"},
-	{"acot", 1, 2, FE, OP_NOP, qacot, 0,
+	{"acot", 1, 2, 0, OP_NOP, 0, f_acot,
 	 "arccotangent of a within accuracy b"},
-	{"acoth", 1, 2, FE, OP_NOP, qacoth, 0,
+	{"acoth", 1, 2, 0, OP_NOP, 0, f_acoth,
 	 "inverse hyperbolic cotangent of a within accuracy b"},
-	{"acsc", 1, 2, FE, OP_NOP, qacsc, 0,
+	{"acsc", 1, 2, 0, OP_NOP, 0, f_acsc,
 	 "arccosecant of a within accuracy b"},
-	{"acsch", 1, 2, FE, OP_NOP, qacsch, 0,
+	{"acsch", 1, 2, 0, OP_NOP, 0, f_acsch,
 	 "inverse csch of a within accuracy b"},
+	{"agd", 1, 2, 0, OP_NOP, 0, f_agd,
+	 "inverse gudermannian function"},
 	{"append", 1, IN, FA, OP_NOP, 0, f_listappend,
 	 "append values to end of list"},
 	{"appr", 1, 3, 0, OP_NOP, 0, f_appr,
 	 "approximate a by multiple of b using rounding c"},
 	{"arg", 1, 2, 0, OP_NOP, 0, f_arg,
 	 "argument (the angle) of complex number"},
-	{"asec", 1, 2, FE, OP_NOP, qasec, 0,
+	{"asec", 1, 2, 0, OP_NOP, 0, f_asec,
 	 "arcsecant of a within accuracy b"},
-	{"asech", 1, 2, FE, OP_NOP, qasech, 0,
+	{"asech", 1, 2, 0, OP_NOP, 0, f_asech,
 	 "inverse hyperbolic secant of a within accuracy b"},
-	{"asin", 1, 2, FE, OP_NOP, qasin, 0,
+	{"asin", 1, 2, 0, OP_NOP, 0, f_asin,
 	 "arcsine of a within accuracy b"},
-	{"asinh", 1, 2, FE, OP_NOP, qasinh, 0,
+	{"asinh", 1, 2, 0, OP_NOP, 0, f_asinh,
 	 "inverse hyperbolic sine of a within accuracy b"},
 	{"assoc", 0, 0, 0, OP_NOP, 0, f_assoc,
 	 "create new association array"},
-	{"atan", 1, 2, FE, OP_NOP, qatan, 0,
+	{"atan", 1, 2, 0, OP_NOP, 0, f_atan,
 	 "arctangent of a within accuracy b"},
 	{"atan2", 2, 3, FE, OP_NOP, qatan2, 0,
 	 "angle to point (b,a) within accuracy c"},
-	{"atanh", 1, 2, FE, OP_NOP, qatanh, 0,
+	{"atanh", 1, 2, 0, OP_NOP, 0, f_atanh,
 	 "inverse hyperbolic tangent of a within accuracy b"},
 	{"avg", 0, IN, 0, OP_NOP, 0, f_avg,
 	 "arithmetic mean of values"},
 	{"base", 0, 1, 0, OP_NOP, f_base, 0,
 	 "set default output base"},
+	{"bit", 2, 2, 0, OP_BIT, 0, 0,
+	 "whether bit b in value a is set"},
+	{"blk", 0, 3, 0, OP_NOP, 0, f_blk,
+	 "block with or without name, octet number, chunksize"},
+	{"blkcpy", 2, 5, 0, OP_NOP, 0, f_blkcpy,
+	 "copy value to/from a block: blkcpy(d,s,len,di,si)"},
+	{"blkfree", 1, 1, 0, OP_NOP, 0, f_blkfree,
+	 "free all storage from a named block"},
+	{"blocks", 0, 1, 0, OP_NOP, 0, f_blocks,
+	 "named block with specified index, or null value"},
 	{"bround", 1, 3, 0, OP_NOP, 0, f_bround,
 	 "round value a to b number of binary places"},
 	{"btrunc", 1, 2, 0, OP_NOP, f_btrunc, 0,
@@ -4204,24 +6756,28 @@ static CONST struct builtin builtins[] = {
 	 "set or read configuration value"},
 	{"conj", 1, 1, 0, OP_CONJUGATE, 0, 0,
 	 "complex conjugate of value"},
+	{"copy", 2, 5, 0, OP_NOP, 0, f_copy,
+	 "copy value to/from a block: copy(s,d,len,si,di)"},
 	{"cos", 1, 2, 0, OP_NOP, 0, f_cos,
 	 "cosine of value a within accuracy b"},
-	{"cosh", 1, 2, FE, OP_NOP, qcosh, 0,
+	{"cosh", 1, 2, 0, OP_NOP, 0, f_cosh,
 	 "hyperbolic cosine of a within accuracy b"},
-	{"cot", 1, 2, FE, OP_NOP, qcot, 0,
+	{"cot", 1, 2, 0, OP_NOP, 0, f_cot,
 	 "cotangent of a within accuracy b"},
-	{"coth", 1, 2, FE, OP_NOP, qcoth, 0,
+	{"coth", 1, 2, 0, OP_NOP, 0, f_coth,
 	 "hyperbolic cotangent of a within accuracy b"},
 	{"count", 2, 2, 0, OP_NOP, 0, f_count,
 	 "count listr/matrix elements satisfying some condition"},
 	{"cp", 2, 2, 0, OP_NOP, 0, f_cp,
 	 "cross product of two vectors"},
-	{"csc", 1, 2, FE, OP_NOP, qcsc, 0,
+	{"csc", 1, 2, 0, OP_NOP, 0, f_csc,
 	 "cosecant of a within accuracy b"},
-	{"csch", 1, 2, FE, OP_NOP, qcsch, 0,
+	{"csch", 1, 2, 0, OP_NOP, 0, f_csch,
 	 "hyperbolic cosecant of a within accuracy b"},
 	{"ctime", 0, 0, 0, OP_NOP, 0, f_ctime,
 	 "date and time as string"},
+	{"custom", 0, IN, 0, OP_NOP, 0, f_custom,
+	 "custom builtin function interface"},
 	{"delete", 2, 2, FA, OP_NOP, 0, f_listdelete,
 	 "delete element from list a at position b"},
 	{"den", 1, 1, 0, OP_DENOMINATOR, qden, 0,
@@ -4236,9 +6792,13 @@ static CONST struct builtin builtins[] = {
 	 "dot product of two vectors"},
 	{"epsilon", 0, 1, 0, OP_SETEPSILON, 0, 0,
 	 "set or read allowed error for real calculations"},
-	{"errno", 1, 1, 0, OP_NOP, 0, f_errno,
-	 "system error message"},
-	{"error", 1, 1, 0, OP_NOP, 0, f_error,
+	{"errcount", 0, 1, 0, OP_NOP, 0, f_errcount,
+	 "set or read error count"},
+	{"errmax", 0, 1, 0, OP_NOP, 0, f_errmax,
+	 "set or read maximum for error count"},
+	{"errno", 0, 1, 0, OP_NOP, 0, f_errno,
+	 "set or read calc_errno"},
+	{"error", 0, 1, 0, OP_NOP, 0, f_error,
 	 "generate error value"},
 	{"eval", 1, 1, 0, OP_NOP, 0, f_eval,
 	 "evaluate expression from string to value"},
@@ -4254,7 +6814,7 @@ static CONST struct builtin builtins[] = {
 	 "do function for all elements of list or matrix"},
 	{"frem", 2, 2, 0, OP_NOP, qfacrem, 0,
 	 "number with all occurrences of factor removed"},
-	{"fact", 1, 1, 0, OP_NOP, qfact, 0,
+	{"fact", 1, 1, 0, OP_NOP, 0, f_fact,
 	 "factorial"},
 	{"fclose", 0, IN, 0, OP_NOP, 0, f_fclose,
 	 "close file"},
@@ -4288,6 +6848,14 @@ static CONST struct builtin builtins[] = {
 	 "write one or more strings to a file"},
 	{"fputstr", 2, IN, 0, OP_NOP, 0, f_fputstr,
 	 "write one or more null-terminated strings to a file"},
+	{"free", 0, IN, FA, OP_NOP, 0, f_free,
+	 "free listed or all global variables"},
+	{"freeglobals", 0, 0, 0, OP_NOP, 0, f_freeglobals,
+	 "free all global and visible static variables"},
+	{"freeredc", 0, 0, 0, OP_NOP, 0, f_freeredc,
+	 "free redc data cache"},
+	{"freestatics", 0, 0, 0, OP_NOP, 0, f_freestatics,
+	 "free all unscoped static variables"},
 	{"freopen", 2, 3, 0, OP_NOP, 0, f_freopen,
 	 "reopen a file stream to a named file"},
 	{"fscan", 2, IN, FA, OP_NOP, 0, f_fscan,
@@ -4306,16 +6874,20 @@ static CONST struct builtin builtins[] = {
 	 "greatest common divisor"},
 	{"gcdrem", 2, 2, 0, OP_NOP, qgcdrem, 0,
 	 "a divided repeatedly by gcd with b"},
+	{"gd", 1, 2, 0, OP_NOP, 0, f_gd,
+	 "gudermannian function"},
 	{"getenv", 1, 1, 0, OP_NOP, 0, f_getenv,
 	 "value of environment variable (or NULL)"},
 	{"hash", 1, IN, 0, OP_NOP, 0, f_hash,
 	 "return non-negative hash value for one or\n\t\t    more values"},
 	{"head", 2, 2, 0, OP_NOP, 0, f_head,
 	 "return list of specified number at head of a list"},
-	{"highbit", 1, 1, 0, OP_NOP, f_highbit, 0,
+	{"highbit", 1, 1, 0, OP_HIGHBIT, 0, 0,
 	 "high bit number in base 2 representation"},
 	{"hmean", 0, IN, 0, OP_NOP, 0, f_hmean,
 	 "harmonic mean of values"},
+	{"hnrmod", 4, 4, 0, OP_NOP, f_hnrmod, 0,
+	 "v mod h*2^n+r, h>0, n>0, r = -1, 0 or 1"},
 	{"hypot", 2, 3, FE, OP_NOP, qhypot, 0,
 	 "hypotenuse of right triangle within accuracy c"},
 	{"ilog", 2, 2, 0, OP_NOP, f_ilog, 0,
@@ -4338,8 +6910,12 @@ static CONST struct builtin builtins[] = {
 	 "whether a value is an association"},
 	{"isatty", 1, 1, 0, OP_NOP, 0, f_isatty,
 	 "whether a file is a tty"},
+	{"isblk", 1, 1, 0, OP_ISBLK, 0, 0,
+	 "whether a value is a block"},
 	{"isconfig", 1, 1, 0, OP_ISCONFIG, 0, 0,
 	 "whether a value is a config state"},
+	{"isdefined", 1, 1, 0, OP_ISDEFINED, 0, 0,
+	 "whether a string names a function"},
 	{"iserror", 1, 1, 0, OP_NOP, 0, f_iserror,
 	 "where a value is an error"},
 	{"iseven", 1, 1, 0, OP_ISEVEN, 0, 0,
@@ -4364,10 +6940,16 @@ static CONST struct builtin builtins[] = {
 	 "whether a value is a number"},
 	{"isobj", 1, 1, 0, OP_ISOBJ, 0, 0,
 	 "whether a value is an object"},
+	{"isobjtype", 1, 1, 0, OP_ISOBJTYPE, 0,0,
+	 "whether a string names an object type"},
 	{"isodd", 1, 1, 0, OP_ISODD, 0, 0,
 	 "whether a value is an odd integer"},
+	{"isoctet", 1, 1, 0, OP_ISOCTET, 0, 0,
+	 "whether a value is an octet"},
 	{"isprime", 1, 2, 0, OP_NOP, f_isprime, 0,
 	 "whether a is a small prime, return b if error"},
+	{"isptr", 1, 1, 0, OP_ISPTR, 0, 0,
+	 "whether a value is a pointer"},
 	{"isqrt", 1, 1, 0, OP_NOP, qisqrt, 0,
 	 "integer part of square root"},
 	{"isrand", 1, 1, 0, OP_ISRAND, 0, 0,
@@ -4378,8 +6960,6 @@ static CONST struct builtin builtins[] = {
 	 "whether a value is a real number"},
 	{"isrel", 2, 2, 0, OP_NOP, f_isrel, 0,
 	 "whether two numbers are relatively prime"},
-	{"isset", 2, 2, 0, OP_NOP, f_isset, 0,
-	 "whether bit b of abs(a) (in base 2) is set"},
 	{"isstr", 1, 1, 0, OP_ISSTR, 0, 0,
 	 "whether a value is a string"},
 	{"issimple", 1, 1, 0, OP_ISSIMPLE, 0, 0,
@@ -4398,11 +6978,13 @@ static CONST struct builtin builtins[] = {
 	 "lcm of all integers up till number"},
 	{"lfactor", 2, 2, 0, OP_NOP, qlowfactor, 0,
 	 "lowest prime factor of a in first b primes"},
+	{"links", 1, 1, 0, OP_LINKS, 0, 0,
+	 "links to number or string value"},
 	{"list", 0, IN, 0, OP_NOP, 0, f_list,
 	 "create list of specified values"},
 	{"ln", 1, 2, 0, OP_NOP, 0, f_ln,
 	 "natural logarithm of value a within accuracy b"},
-	{"lowbit", 1, 1, 0, OP_NOP, f_lowbit, 0,
+	{"lowbit", 1, 1, 0, OP_LOWBIT, 0, 0,
 	 "low bit number in base 2 representation"},
 	{"ltol", 1, 2, FE, OP_NOP, f_legtoleg, 0,
 	 "leg-to-leg of unit right triangle (sqrt(1 - a^2))"},
@@ -4418,13 +7000,19 @@ static CONST struct builtin builtins[] = {
 	 "minimum index of matrix a dim b"},
 	{"matsum", 1, 1, 0, OP_NOP, 0, f_matsum,
 	 "sum the numeric values in a matrix"},
+	{"mattrace", 1, 1, 0, OP_NOP, 0, f_mattrace,
+	 "return the trace of a square matrix"},
 	{"mattrans", 1, 1, 0, OP_NOP, 0, f_mattrans,
 	 "transpose of matrix"},
-	{"max", 1, IN, 0, OP_NOP, f_max, 0,
+	{"max", 0, IN, 0, OP_NOP, 0, f_max,
 	 "maximum value"},
+	{"md5", 0, IN, 0, OP_NOP, 0, f_md5,
+	 "MD5 Hash Algorithm"},
+	{"memsize", 1, 1, 0, OP_NOP, 0, f_memsize,
+	 "number of octets used by the value, including overhead"},
 	{"meq", 3, 3, 0, OP_NOP, f_meq, 0,
 	 "whether a and b are equal modulo c"},
-	{"min", 1, IN, 0, OP_NOP, f_min, 0,
+	{"min", 0, IN, 0, OP_NOP, 0, f_min,
 	 "minimum value"},
 	{"minv", 2, 2, 0, OP_NOP, qminv, 0,
 	 "inverse of a modulo b"},
@@ -4436,6 +7024,8 @@ static CONST struct builtin builtins[] = {
 	 "residue of a modulo b, rounding type c"},
 	{"modify", 2, 2, FA, OP_NOP, 0, f_modify,
 	 "modify elements of a list or matrix"},
+	{"name", 1, 1, 0, OP_NOP, 0, f_name,
+	 "name assigned to block or file"},
 	{"near", 2, 3, 0, OP_NOP, f_near, 0,
 	 "sign of (abs(a-b) - c)"},
 	{"newerror", 0, 1, 0, OP_NOP, 0, f_newerror,
@@ -4446,7 +7036,7 @@ static CONST struct builtin builtins[] = {
 	 "return next small prime, return b if err"},
 	{"norm", 1, 1, 0, OP_NORM, 0, 0,
 	 "norm of a value (square of absolute value)"},
-	{"null", 0, 0, 0, OP_UNDEF, 0, 0,
+	{"null", 0, IN, 0, OP_NOP, 0, f_null,
 	 "null value"},
 	{"num", 1, 1, 0, OP_NUMERATOR, qnum, 0,
 	 "numerator of fraction"},
@@ -4476,8 +7066,12 @@ static CONST struct builtin builtins[] = {
 	 "evaluates a polynomial given its coefficients or coefficient-list"},
 	{"pop", 1, 1, FA, OP_NOP, 0, f_listpop,
 	 "pop value from front of list"},
+	{"popcnt", 1, 2, 0, OP_NOP, f_popcnt, 0,
+	 "number of bits in a that match b (or 1)"},
 	{"power", 2, 3, 0, OP_NOP, 0, f_power,
 	 "value a raised to the power b within accuracy c"},
+	{"protect", 1, 2, FA, OP_NOP, 0, f_protect,
+	 "read or set protection level for variable"},
 	{"ptest", 1, 3, 0, OP_NOP, f_primetest, 0,
 	 "probabilistic primality test"},
 	{"printf", 1, IN, 0, OP_NOP, 0, f_printf,
@@ -4496,6 +7090,10 @@ static CONST struct builtin builtins[] = {
 	 "additive 55 random number [0,2^64), [0,a), or [a,b)"},
 	{"randbit", 0, 1, 0, OP_NOP, f_randbit, 0,
 	 "additive 55 random number [0,2^a)"},
+	{"random", 0, 2, 0, OP_NOP, f_random, 0,
+	 "Blum-Blum-Shub random number [0,2^64), [0,a), or [a,b)"},
+	{"randombit", 0, 1, 0, OP_NOP, f_randombit, 0,
+	 "Blum-Blum-Sub random number [0,2^a)"},
 	{"randperm", 1, 1, 0, OP_NOP, 0, f_randperm,
 	 "random permutation of a list or matrix"},
 	{"rcin", 2, 2, 0, OP_NOP, qredcin, 0,
@@ -4516,49 +7114,57 @@ static CONST struct builtin builtins[] = {
 	 "reverse a copy of a matrix or list"},
 	{"rewind", 0, IN, 0, OP_NOP, 0, f_rewind,
 	 "rewind file(s)"},
-	{"rm", 1, 1, 0, OP_NOP, 0, f_rm,
-	 "remove a file"},
+	{"rm", 1, IN, 0, OP_NOP, 0, f_rm,
+	 "remove file(s), -f turns off no-such-file errors"},
 	{"root", 2, 3, 0, OP_NOP, 0, f_root,
 	 "value a taken to the b'th root within accuracy c"},
 	{"round", 1, 3, 0, OP_NOP, 0, f_round,
 	 "round value a to b number of decimal places"},
-	{"rsearch", 2, 3, 0, OP_NOP, 0, f_rsearch,
+	{"rsearch", 2, 4, 0, OP_NOP, 0, f_rsearch,
 	 "reverse search matrix or list for value b\n\t\t    starting at index c"},
 	{"runtime", 0, 0, 0, OP_NOP, f_runtime, 0,
 	 "user mode cpu time in seconds"},
+	{"saveval", 1, 1, 0, OP_SAVEVAL, 0, 0,
+	 "set flag for saving values"},
 	{"scale", 2, 2, 0, OP_SCALE, 0, 0,
 	 "scale value up or down by a power of two"},
 	{"scan", 1, IN, FA, OP_NOP, 0, f_scan,
 	 "scan standard input for assignment to one or more variables"},
 	{"scanf", 2, IN, FA, OP_NOP, 0, f_scanf,
 	 "formatted scan of standard input for assignment to variables"},
-	{"search", 2, 3, 0, OP_NOP, 0, f_search,
+	{"search", 2, 4, 0, OP_NOP, 0, f_search,
 	 "search matrix or list for value b starting\n\t\t    at index c"},
-	{"sec", 1, 2, FE, OP_NOP, qsec, 0,
+	{"sec", 1, 2, 0, OP_NOP, 0, f_sec,
 	 "sec of a within accuracy b"},
-	{"sech", 1, 2, FE, OP_NOP, qsech, 0,
+	{"sech", 1, 2, 0, OP_NOP, 0, f_sech,
 	 "hyperbolic secant of a within accuracy b"},
-	{"segment", 3, 3, 0, OP_NOP, 0, f_segment,
+	{"segment", 2, 3, 0, OP_NOP, 0, f_segment,
 	 "specified segment of specified list"},
 	{"select", 2, 2, 0, OP_NOP, 0, f_select,
 	 "form sublist of selected elements from list"},
+	{"setbit", 2, 3, 0, OP_NOP, 0, f_setbit,
+	 "set specified bit in string"},
 	{"sgn", 1, 1, 0, OP_SGN, qsign, 0,
 	 "sign of value (-1, 0, 1)"},
+	{"sha", 0, IN, 0, OP_NOP, 0, f_sha,
+	 "old Secure Hash Algorithm (SHS FIPS Pub 180)"},
+	{"sha1", 0, IN, 0, OP_NOP, 0, f_sha1,
+	 "Secure Hash Algorithm (SHS-1 FIPS Pub 180-1)"},
 	{"sin", 1, 2, 0, OP_NOP, 0, f_sin,
 	 "sine of value a within accuracy b"},
-	{"sinh", 1, 2, FE, OP_NOP, qsinh, 0,
+	{"sinh", 1, 2, 0, OP_NOP, 0, f_sinh,
 	 "hyperbolic sine of a within accuracy b"},
 	{"size", 1, 1, 0, OP_NOP, 0, f_size,
 	 "total number of elements in value"},
 	{"sizeof", 1, 1, 0, OP_NOP, 0, f_sizeof,
-	 "number of bytes in memory storage for value"},
+	 "number of octets used to hold the value"},
 	{"sort", 1, 1, 0, OP_NOP, 0, f_sort,
 	 "sort a copy of a matrix or list"},
 	{"sqrt", 1, 3, 0, OP_NOP, 0, f_sqrt,
 	 "square root of value a within accuracy b"},
 	{"srand", 0, 1, 0, OP_NOP, 0, f_srand,
 	 "seed the rand() function"},
-	{"srandom", 0, 1, 0, OP_NOP, 0, f_srandom,
+	{"srandom", 0, 4, 0, OP_NOP, 0, f_srandom,
 	 "seed the random() function"},
 	{"ssq", 1, IN, 0, OP_NOP, 0, f_ssq,
 	 "sum of squares of values"},
@@ -4566,10 +7172,18 @@ static CONST struct builtin builtins[] = {
 	 "simple value converted to string"},
 	{"strcat", 1,IN, 0, OP_NOP, 0, f_strcat,
 	 "concatenate strings together"},
-	{"strerror", 1, 1, 0, OP_NOP, 0, f_strerror,
+	{"strcmp", 2, 2, 0, OP_NOP, 0, f_strcmp,
+	 "compare two null-terminated strings"},
+	{"strcpy", 2, 2, 0, OP_NOP, 0, f_strcpy,
+	 "copy null-terminated string to string"},
+	{"strerror", 0, 1, 0, OP_NOP, 0, f_strerror,
 	 "string describing error type"},
 	{"strlen", 1, 1, 0, OP_NOP, 0, f_strlen,
 	 "length of string"},
+	{"strncmp", 3, 3, 0, OP_NOP, 0, f_strncmp,
+	 "compare strings a, b to c characters"},
+	{"strncpy", 3, 3, 0, OP_NOP, 0, f_strncpy,
+	 "copy up to c characters from string to string"},
 	{"strpos", 2, 2, 0, OP_NOP, 0, f_strpos,
 	 "index of first occurrence of b in a"},
 	{"strprintf", 1, IN, 0, OP_NOP, 0, f_strprintf,
@@ -4580,23 +7194,27 @@ static CONST struct builtin builtins[] = {
 	 "formatted scan of string for assignments to variables"},
 	{"substr", 3, 3, 0, OP_NOP, 0, f_substr,
 	 "substring of a from position b for c chars"},
+	{"sum", 0, IN, 0, OP_NOP, 0, f_sum,
+	 "sum of list or object sums and/or other terms"},
 	{"swap", 2, 2, 0, OP_SWAP, 0, 0,
 	 "swap values of variables a and b (can be dangerous)"},
 	{"system", 1, 1, 0, OP_NOP, 0, f_system,
 	 "call Unix command"},
 	{"tail", 2, 2, 0, OP_NOP, 0, f_tail,
 	 "retain list of specified number at tail of list"},
-	{"tan", 1, 2, FE, OP_NOP, qtan, 0,
+	{"tan", 1, 2, 0, OP_NOP, 0, f_tan,
 	 "tangent of a within accuracy b"},
-	{"tanh", 1, 2, FE, OP_NOP, qtanh, 0,
+	{"tanh", 1, 2, 0, OP_NOP, 0, f_tanh,
 	 "hyperbolic tangent of a within accuracy b"},
+	{"test", 1, 1, 0, OP_TEST, 0, 0,
+	 "test that value is nonzero"},
 	{"time", 0, 0, 0, OP_NOP, f_time, 0,
 	 "number of seconds since 00:00:00 1 Jan 1970 UTC"},
 	{"trunc", 1, 2, 0, OP_NOP, f_trunc, 0,
 	 "truncate a to b number of decimal places"},
 	{"ungetc", 2, 2, 0, OP_NOP, 0, f_ungetc,
 	 "unget char read from file"},
-	{"xor", 1, IN, 0, OP_NOP, f_xor, 0,
+	{"xor", 1, IN, 0, OP_NOP, 0, f_xor,
 	 "logical xor"},
 
 	/* end of table */
@@ -4700,6 +7318,8 @@ builtinfunc(long index, int argcount, VALUE *stck)
 			result = (*bp->b_valfunc)(vpp[0], vpp[1]);
 		else if ((bp->b_minargs == 3) && (bp->b_maxargs == 3))
 			result = (*bp->b_valfunc)(vpp[0], vpp[1], vpp[2]);
+		else if ((bp->b_minargs == 4) && (bp->b_maxargs == 4))
+			result = (*bp->b_valfunc)(vpp[0],vpp[1],vpp[2],vpp[3]);
 		else
 			result = (*bp->b_valfunc)(argcount, vpp);
 		return result;
@@ -4735,7 +7355,12 @@ builtinfunc(long index, int argcount, VALUE *stck)
 			result.v_num = (*bp->b_numfunc)(numargs[0], numargs[1]);
 			break;
 		case 3:
-			result.v_num = (*bp->b_numfunc)(numargs[0], numargs[1], numargs[2]);
+			result.v_num = (*bp->b_numfunc)(numargs[0],
+					numargs[1], numargs[2]);
+			break;
+		case 4:
+			result.v_num = (*bp->b_numfunc)(numargs[0], numargs[1],
+					numargs[2], numargs[3]);
 			break;
 		default:
 			math_error("Bad builtin function call");
@@ -4813,6 +7438,21 @@ builtinopcode(long index)
 	    (sizeof(builtins) / sizeof(builtins[0])) - 1)
 		return OP_NOP;
 	return builtins[index].b_opcode;
+}
+
+/*
+ * Show the error-values created by newerror(str).
+ */
+void
+showerrors(void)
+{
+	int i;
+
+	if (nexterrnum == E_USERDEF)
+		printf("No new error-values created\n");
+	for (i = E_USERDEF; i < nexterrnum; i++)
+		printf("%d: %s\n", i,
+			namestr(&newerrorstr, i - E_USERDEF));
 }
 
 

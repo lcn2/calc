@@ -1,0 +1,44 @@
+/*
+ * Permission to use, copy, modify, and distribute this software and
+ * its documentation for any purpose and without fee is hereby granted.
+ *
+ * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+ * EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+ * USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+ * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ * PERFORMANCE OF THIS SOFTWARE.
+ *
+ * chongo was here	/\../\		chongo@toad.com
+ */
+/*
+ * argv - print information about various args
+ *
+ * This file is part of the custom sample calc files.
+ *
+ * NOTE: You must use a calc that was compiled with ALLOW_CUSTOM= -DCUSTOM
+ *	 and run with a -C arg.
+ */
+define argv()
+{
+	local i;	/* arg number */
+	local junk;	/* throw away value */
+
+	/*
+	 * process each arg passed to us
+	 */
+	for (i = 1; i <= param(0); ++i) {
+		/*
+		 * This won't really work because all the arg numbers
+		 * will be reported as arg[0] ... but what the heck
+		 * this is only a demo!
+		 */
+		junk = custom("argv", param(i));
+	}
+	return i-1;
+}
+
+if (config("lib_debug") >= 0) {
+    print "argv(var, ...) defined";
+}

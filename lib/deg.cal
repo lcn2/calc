@@ -111,8 +111,7 @@ define fixdms(a)
 	a.deg %= 360;
 }
 
-global lib_debug;
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
     print "obj dms {deg, min, sec} defined";
     print "dms(deg, min, sec) defined";
     print "dms_add(a, b) defined";

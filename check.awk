@@ -29,7 +29,7 @@ NF == 0 {
     next;
 }
 
-$1 ~ /^[0-9]/ {
+$1 ~ /^[0-9]+:/ {
     if (error > 0) {
 	if (havebuf2) {
 	    print buf2;
@@ -71,4 +71,5 @@ END {
     if (error > 0 && havebuf0) {
 	print buf0;
     }
+    exit (error > 0);
 }

@@ -2,48 +2,74 @@ NAME
     null - null value
 
 SYNOPSIS
-    null()
+    null([v_1, v_2,...])
 
 TYPES
-    return	null
+    v_1, v_2,... 	any
+    return		null
 
 DESCRIPTION
-    There is only one value of null type.  After x = null(), isnull(x)
-    returns 1 but isreal(x). isnum(x), etc. all return zero, and
-    x == y is true if and only if y is also null.  The null value
-    tests as false in conditions.
+    After evaluating in order any arguments it may have, null(...)
+    returns the null value.  This is a particular value, different from
+    all other types; it is the only value v for which isnull(v) returns
+    TRUE.  The null value tests as FALSE in conditions, and normally
+    delivers no output in print statements, except that when a list or
+    matrix is printed, null elements are printed as "NULL".
 
-    The null value is the value returned by some functions, e.g.
-    x = printf("%d\n", 27) assigns to x the null value.  If L is a
-    list with no elements (given by L = list()), then both pop(L)
-    and remove(L) return the null value.
+    A few builtin functions may return the null value, e.g.
+    printf(...) returns the null value; if L = list(), then both
+    pop(L) and remove(L) return the null value; when successful,
+    file-handling functions like fclose(fs), fflush(fs), fputs(fs, ...)
+    return the null value when successful (when they fail they return an
+    error-value).  User-defined functions where execution ends
+    without a "return" statement or with "return ;" return the null
+    value.
+
+    Missing expressions in argument lists are assigned the null value.
+    For example, after
+		define f(a,b,c) = ...
+    calling
+		f(1,2)
+    is as if c == null().  Similarly, f(1,,2) is as if b == null().
+    (Note that this does not occur in initialization lists; missing
+    expressions there indicate no change.)
 
     The null value may be used as an argument in some operations, e.g.
-    for any x, x + null() returns x.
+    if v == null(), then for any x, x + v returns x.
+
+    When calc is used interactively, a function that returns the null value
+    causes no printed output and does not change the "oldvalue".  Thus,
+    null(config("mode", "frac")) may be used to change the output mode
+    without printing the current mode or changing the stored oldvalue.
 
 EXAMPLE
-    In a print statement like
+    > L = list(-1,0,1,2);
+    > while (!isnull(x = pop(L)) print x,; print
+    -1 0 1 2
 
-	print 2, null(), 3;
+    > printf("%d %d %d\n", 2, , 3);
+    2  3
 
-    or
+    > L = list(,1,,2,)
+    > print L
 
-	printf("%d %d %d\n", 2, null(), 3);
+    list (5 elements, 5 nonzero):
+	[[0]] = NULL
+	[[1]] = 1
+	[[2]] = NULL
+	[[3]] = 2
+	[[4]] = NULL
 
-    the null value produces no output.  Both of these examples
-    print the same as both
-
-	print 2, null(), 3;
-
-    and
-
-	print "2  3";
+    > a = 27
+    > null(pi = pi(1e-1000))
+    > .
+	27
 
 LIMITS
-    none
+    The number of arguments is not to exceed 100.
 
 LIBRARY
     none
 
 SEE ALSO
-    XXX - missing
+    isnull, test

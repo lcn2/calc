@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 1995 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
- * "Object" handling primatives.
+ * "Object" handling primitives.
  * This simply means that user-specified routines are called to perform
  * the indicated operations.
  */
 
+#include <stdio.h>
 #include "calc.h"
 #include "opcodes.h"
 #include "func.h"
@@ -34,6 +35,8 @@
 #define ERR_INC	6	/* increment by one */
 #define ERR_DEC	7	/* decrement by one */
 #define ERR_SQUARE 8	/* square value */
+#define ERR_VALUE 9	/* return value */
+#define ERR_ASSIGN 10	/* assign value */
 
 
 static struct objectinfo {
@@ -72,6 +75,21 @@ static struct objectinfo {
 	{3, A_VALUE, ERR_NONE,  "bround",	"round to given number of binary places"},
 	{3, A_VALUE, ERR_NONE,  "root",	"root of value within given error"},
 	{3, A_VALUE, ERR_NONE,  "sqrt",	"square root within given error"},
+	{2, A_VALUE, ERR_NONE,  "or",	"bitwise or"},
+	{2, A_VALUE, ERR_NONE,  "and",	"bitwise and"},
+	{1, A_VALUE, ERR_NONE,	"not",	"logical not"},
+	{1, A_VALUE, ERR_NONE,  "fact",	"factorial or postfix !"},
+	{1, A_VALUE, ERR_VALUE,	"min",	"value for min(...)"},
+	{1, A_VALUE, ERR_VALUE,	"max",	"value for max(...)"},
+	{1, A_VALUE, ERR_VALUE,	"sum",	"value for sum(...)"},
+	{2, A_UNDEF, ERR_ASSIGN, "assign", "assign, defaults to a = b"},
+	{2, A_VALUE, ERR_NONE,	"xor",	"value for binary ~"},
+	{1, A_VALUE, ERR_NONE,	"comp",	"value for unary ~"},
+	{1, A_VALUE, ERR_NONE,  "content", "unary hash op"},
+	{2, A_VALUE, ERR_NONE,  "hashop",  "binary hash op"},
+	{1, A_VALUE, ERR_NONE,	"backslash", "unary backslash op"},
+	{2, A_VALUE, ERR_NONE,  "setminus", "binary backslash op"},
+	{1, A_VALUE, ERR_NONE,	"plus",	"unary + op"},
 	{0, 0, 0, NULL}
 };
 
@@ -186,6 +204,16 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 				break;
 			case ERR_SQUARE:
 				val = objcall(OBJ_MUL, v1, v1, NULL_VALUE);
+				break;
+			case ERR_VALUE:
+				copyvalue(v1, &val);
+				break;
+			case ERR_ASSIGN:
+				copyvalue(v2, &tmp);
+				tmp.v_subtype = v1->v_subtype;
+				freevalue(v1);
+				*v1 = tmp;
+				val.v_type = V_NULL;
 				break;
 			default:
 				math_error("Function \"%s\" is undefined", namefunc(index));
@@ -593,6 +621,7 @@ objalloc(long index)
 	for (i = oap->count; i-- > 0; vp++) {
 		vp->v_num = qlink(&_qzero_);
 		vp->v_type = V_NUM;
+		vp->v_subtype = V_NOSUBTYPE;
 	}
 	return op;
 }
@@ -651,6 +680,7 @@ objcopy(OBJECT *op)
 			v2->v_type = V_NUM;
 		} else
 			copyvalue(v1, v2);
+		v2->v_subtype = V_NOSUBTYPE;
 	}
 	return np;
 }

@@ -1,0 +1,51 @@
+NAME
+    gd - gudermannian function
+
+SYNOPSIS
+    gd(z [,eps])
+
+TYPES
+    z		number (real or complex)
+    eps		nonzero real, defaults to epsilon()
+
+    return	number or "Log of zero or infinity" error value
+
+DESCRIPTION
+    Calculate the gudermannian of z to a nultiple of eps with errors in
+    real and imaginary parts less in absolute value than .75 * eps,
+    or return an error value if z is close to one of the branch points
+    at odd multiples of (pi/2) * i.
+
+    gd(z) is usually defined initially for real z by one of the formulae
+
+		gd(z) = 2 * atan(exp(z)) - pi/2
+
+		      = 2 * atan(tanh(z/2))
+
+		      = atan(sinh(z)),
+
+    or as the integral from 0 to z of (1/cosh(t))dt.  For complex z, the
+    principal branch, approximated by gd(z, eps), has the cut:
+    re(z) = 0, abs(im(z)) >= pi/2; on the cut calc takes gd(z) to be
+    the limit as z is approached from the right or left according as
+    im(z) > or < 0.
+
+    If z = x + y*i and abs(y) < pi/2, gd(z) is given by
+
+	gd(z) = atan(sinh(x)/cos(y)) + i * atanh(sin(y)/cosh(x)).
+
+EXAMPLE
+    > print gd(1, 1e-5), gd(1, 1e-10), gd(1, 1e-15)
+    .86577 .8657694832 .865769483239659
+
+    > print gd(2+1i, 1e-5), gd(2+1i, 1e-10)
+    1.42291+.22751i 1.4229114625+.2275106584i
+
+LIMITS
+    none
+
+LIBRARY
+    COMPLEX *cgd(COMPLEX *x, NUMBER *eps)
+
+SEE ALSO
+    agd, exp, ln, sin, sinh, etc.

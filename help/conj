@@ -14,12 +14,18 @@ TYPES
     return	real, complex, or matrix
 
 DESCRIPTION
+
     For real x, conj(x) returns x.
 
     For complex x, conj(x) returns re(x) - im(x) * 1i.
 
     For matrix x, conj(x) returns a matrix of the same structure as x
     in which each element t of x has been replaced by conj(t).
+
+    For xx objects, xx_conj(a) may return any type of value, but
+    for the properties usually expected of conjugates, xx_conj(a)
+    would return an xx object in which each number component is the
+    conjugate of the corresponding component of a.
 
 EXAMPLE
     > print conj(3), conj(3 + 4i)

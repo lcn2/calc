@@ -1,0 +1,43 @@
+NAME
+    blocks - return a named file or number of unfreed named blocks
+
+SYNOPSIS
+    blocks([id])
+
+TYPES
+    id		non-negative integer
+
+    return	named block or null value
+
+DESCRIPTION
+    With no argument blocks() returns the number of blocks that have
+    been created but not freed by the blkfree function.
+
+    With argument id less than the number of named blocks that have been
+    created, blocks(id) returns the named block with identifying index id.
+    These indices 0, 1, 2, ... are assigned to named blocks in the order
+    of their creation.
+
+EXAMPLE
+
+    > A = blk("alpha")
+    > B = blk("beta") = {1,2,3}
+    > blocks()
+	2
+    > blocks(1)
+	block 1: beta
+	chunksize = 256, maxsize = 256, datalen = 3
+	010203
+    > blocks(2)
+	Error 10211
+    > strerror()
+	"Non-allocated index number for blocks"
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    blk, blkfree

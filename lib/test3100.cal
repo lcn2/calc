@@ -18,8 +18,7 @@ define res_neg(a) {local obj res v = {(-a.r) % md}; return v;};
 define res_inv(a) {local obj res v = {minv(a.r, md)}; return v;};
 define res(x) {local obj res v = {x % md}; return v;};
 
-global lib_debug;
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
 	print "obj res defined";
 	print "global md defined";
 	print "res_test(a) defined";

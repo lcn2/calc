@@ -1,0 +1,56 @@
+NAME
+    test - whether a value is deemed to be true or false
+
+SYNOPSIS
+    test(x)
+
+TYPES
+    x		any
+
+    return	0 or 1
+
+DESCRIPTION
+    This function returns 1 or 0 according as x tests as "true" or "false".
+
+    Conditions under which a value x is considered to be false are:
+
+	Numbers (real or complex):  x is zero
+
+	String: x == ""
+
+	Matrix: every component of x tests as false
+
+        List: every element of x tests as false
+
+        Association: x has no element
+
+	File: x is not open
+
+	Null: always
+
+	Object of type xx: if xx_test has been defined, xx_test(x)
+		returns zero;  if xx_test has not been defined,
+		every element of x tests as false.
+
+	Error-value or other types: never
+
+EXAMPLE
+	> print test(27), test(0), test("abc"), test("")
+	1 0 1 0
+
+	> print test(mat[3] = {1,,2}), test(mat[2][2])
+	1 0
+
+	> A = list(0, 2, 0)
+	> print test(A), test(pop(A)), test(A), test(pop(A)), test(A)
+	1 0 1 1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    isassoc, isfile, isident, isnum, isint, islist, ismat, isnull, isobj,
+    isreal, isstr, issimple, istype

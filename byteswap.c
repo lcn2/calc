@@ -39,6 +39,7 @@
 HALF *
 swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len)
 {
+	HALF *ret;
 	LEN i;
 
 	/*
@@ -47,6 +48,7 @@ swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len)
 	if (dest == NULL) {
 		dest = alloc(len);
 	}
+	ret = dest;
 
 	/*
 	 * swap the array
@@ -58,7 +60,7 @@ swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len)
 	/*
 	 * return the result
 	 */
-	return dest;
+	return ret;
 }
 
 
@@ -272,6 +274,7 @@ swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
 HALF *
 swap_b16_in_HALFs(HALF *dest, HALF *src, LEN len)
 {
+	HALF *ret;
 	LEN i;
 
 	/*
@@ -280,6 +283,7 @@ swap_b16_in_HALFs(HALF *dest, HALF *src, LEN len)
 	if (dest == NULL) {
 		dest = alloc(len);
 	}
+	ret = dest;
 
 	/*
 	 * swap the array
@@ -291,7 +295,7 @@ swap_b16_in_HALFs(HALF *dest, HALF *src, LEN len)
 	/*
 	 * return the result
 	 */
-	return dest;
+	return ret;
 }
 
 

@@ -1,13 +1,15 @@
 /*
- * Copyright (c) 1993 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Definitions for command history module.
  */
 
-#if !defined(_HIST_H_)
-#define _HIST_H_
+
+#if !defined(__HIST_H__)
+#define __HIST_H__
+
 
 /*
  * Default binding file and history size.
@@ -47,4 +49,5 @@ extern	void	hist_term(void);
 extern	int	hist_getline(char *prompt, char *buf, int len);
 extern	void	hist_saveline(char *line, int len);
 
-#endif /* _HIST_H_ */
+
+#endif /* !__HIST_H__ */

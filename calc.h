@@ -1,17 +1,16 @@
 /*
- * Copyright (c) 1995 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Definitions for calculator program.
  */
 
-#ifndef	CALC_H
-#define	CALC_H
+
+#if !defined(__CALC_H__)
+#define	__CALC_H__
 
 
-#include <stdio.h>
-#include <setjmp.h>
 #include "value.h"
 
 
@@ -94,20 +93,23 @@ extern int flushall(void);
 extern int idfputstr(FILEID id, char *str);
 extern int rewindid(FILEID id);
 extern void rewindall(void);
-extern long filesize(FILEID id);
+extern ZVALUE zfilesize(FILEID id);
 extern void showfiles(void);
 extern int fscanfid(FILEID id, char *fmt, int count, VALUE **vals);
 extern int scanfstr(char *str, char *fmt, int count, VALUE **vals);
-extern long ftellid(FILEID id);
-extern long fseekid(FILEID id, long offset, int whence);
+extern int ftellid(FILEID id, ZVALUE *res);
+extern int fseekid(FILEID id, ZVALUE offset, int whence);
 extern int isattyid(FILEID id);
-long fsearch(FILEID id, char *str, long pos);
-long frsearch(FILEID id, char *str, long pos);
+extern int fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res);
+extern int frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res);
+extern void showconstants(void);
+extern void freeconstant(unsigned long);
+extern void freestringconstant(long);
+extern void trimconstants(void);
 
 /*
  * Input routines.
  */
-extern FILE *f_open(char *name, char *mode);
 extern int openstring(char *str);
 extern int openterminal(void);
 extern int opensearchfile(char *name, char *pathlist, char *exten, int reopen_ok);
@@ -121,7 +123,6 @@ extern char *inputname(void);
 extern long linenumber(void);
 extern void runrcfiles(void);
 extern void closeinput(void);
-extern FILE *curstream(void);
 
 
 /*
@@ -131,11 +132,18 @@ extern NUMBER *constvalue(unsigned long index);
 extern long addnumber(char *str);
 extern long addqconstant(NUMBER *q);
 extern void initstack(void);
-extern void version(FILE *stream);
 extern void getcommands(BOOL toplevel);
 extern void givehelp(char *type);
-extern void hash_init(void);
 extern void libcalc_call_me_first(void);
+extern void libcalc_call_me_last(void);
+extern void showerrors(void);
+
+
+/*
+ * Initialization
+ */
+extern void initialize(void);
+extern void reinitialize(void);
 
 
 /*
@@ -144,7 +152,6 @@ extern void libcalc_call_me_first(void);
 extern int abortlevel;		/* current level of aborts */
 extern BOOL inputwait;		/* TRUE if in a terminal input wait */
 extern VALUE *stack;		/* execution stack */
-extern jmp_buf jmpbuf;		/* for errors */
 extern int start_done;		/* TRUE => start up processing finished */
 extern int dumpnames;		/* TRUE => dump names rather than indices */
 
@@ -153,6 +160,11 @@ extern char *calcrc;		/* $CALCRC or default */
 extern char *calcbindings;	/* $CALCBINDINGS or default */
 extern char *home;		/* $HOME or default */
 extern char *shell;		/* $SHELL or default */
+extern char *program;		/* our name (argv[0]) */
+
+extern int no_env;	/* TRUE (-e) => ignore env vars on startup */
+extern int ign_errmax;	/* TRUE (-i) => ignore when errcount exceeds errmax */
+extern int new_std;	/* TRUE (-n) => use newstd configuration */
 
 extern int allow_read;	/* FALSE => may not open any files for reading */
 extern int allow_write;	/* FALSE => may not open any files for writing */
@@ -160,6 +172,16 @@ extern int allow_exec;	/* FALSE => may not execute any commands */
 
 extern int post_init;	/* TRUE => setjmp for math_error is ready */
 
-#endif
 
-/* END CODE */
+/*
+ * calc version information
+ */
+#define CALC_TITLE "C-style arbitrary precision calculator"
+extern int calc_major_ver;
+extern int calc_minor_ver;
+extern int calc_major_patch;
+extern char *calc_minor_patch;
+extern char *version(void);	/* return version string */
+
+
+#endif /* !__CALC_H__ */

@@ -1,14 +1,16 @@
 operators
 
-    The operators are similar to C, but there are some differences
-    in the associativity and precedence rules for some operators.
-    In addition, there several operators not in C, and some C operators
-    are missing.  Below is a list giving the operators arranged in
-    order of precedence, from the least tightly binding to the most
-    tightly binding.
+    The operators are similar to C, but there are some differences in
+    the associativity and precedence rules for some operators.  In
+    addition, there are several operators not in C, and some C
+    operators are missing.  A more detailed discussion of situations
+    that may be unexpected for the C programmer may be found in
+    the 'unexpected' help file.
 
-    Except where otherwise indicated, operators at the same level of
-    precedence associate from left to right.
+    Below is a list giving the operators arranged in order of
+    precedence, from the least tightly binding to the most tightly
+    binding.  Except where otherwise indicated, operators at the same
+    level of precedence associate from left to right.
 
     Unlike C, calc has a definite order for evaluation of terms (addends
     in a sum, factors in a product, arguments for a function or a
@@ -55,13 +57,24 @@ operators
 
 
     ,	Comma operator.
+	    a, b returns the value of b.
 	    For situations in which a comma is used for another purpose
 	    (function arguments, array indexing, and the print statement),
-	    parenthesis must be used around the comma operator.
+	    parenthesis must be used around the comma operator expression.
+	    E.g., if A is a matrix, A[(a, b), c] evaluates a, b, and c, and
+	    returns the value of A[b, c].
 
-    =  +=  -=  *=  /=  %=  //=  &=  |=  <<=  >>=  ^=  **=
-	    Assignments.  As in C, these associate from right to left.
+    +=  -=  *=  /=  %=  //=  &=  |=  <<=  >>=  ^=  **=
+	 Operator-with-assignments.
+	    These associate from left to right, e.g. a += b *= c has the
+	    effect of a = (a + b) * c, where only a is required to be an
+	    lvalue.  For the effect of b *= c; a += b; when both a and b
+	    are lvalues, use a += (b *= c).
 
+    =	Assignment.
+	    As in C, this, when repeated, this associates from right to left,
+	    e.g. a = b = c has the effect of a = (b = c).  Here both a and b
+	    are to be lvalues.
 
     ? :	Conditional value.
 	    a ? b : c  returns b if a tests as true (i.e. nonzero if
@@ -90,7 +103,8 @@ operators
 	    Relations.
 
     +  -
-	    Binary plus and minus.
+	    Binary plus and minus and unary plus and minus when applied to
+	    a first or only term.
 
     *  /  //  %
 	    Multiply, divide, and modulo.
@@ -129,12 +143,18 @@ operators
 	    e.g.  a << b ^ c = a << (b ^ c).
 
     +  -  !
-	    Unary operators.
-	    The '!' is the logical NOT operator: !a returns 0 if
-	    a is nonzero, and 1 if a is zero, i.e. it is
+            Plus (+) and minus (-) have their usual meanings as unary
+            prefix operators at this level of precedence when applied to
+	    other than a first or only term.
+
+	    As a prefix operator, '!' is the logical NOT: !a returns 0 if
+	    a tests as nonzero, and 1 if a tests as zero, i.e. it is
 	    equivalent to a ? 0 : 1.  Be careful about
 	    using this as the first character of a top level command,
 	    since it is also used for executing shell commands.
+
+	    As a postfix operator ! gives the factorial function, i.e.
+	    a! = fact(a).
 
     ++  --
 	    Pre or post incrementing or decrementing.
@@ -183,3 +203,8 @@ operators
 	    The shift amount must be an integer.  The value being
 	    shifted must be an integer or a complex number with
 	    integral real and imaginary parts.
+
+
+    See the 'unexpected' help file for a list of unexpected
+    surprises in calc syntax/usage.  Persons familiar with C should
+    read the 'unexpected' help file to avoid confusion.

@@ -20,27 +20,30 @@ DESCRIPTION
     'w' or bit 1 for writing, 'x' or bit 0 for execution.
 
 EXAMPLE
+    The system error-numbers and messages may differ for different
+	implementations
+
     > !rm -f junk
     > access("junk")
-	Error 10002	XXX This number will probably be changed
+	System error 2
+    > strerror(.)
+	"No such file or directory"
     > f = fopen("junk", "w")
     > access("junk")
-    > fputs(f, "Now is the time");
-    > freopen(f, "r");
+    > fputs(f, "Alpha")
+    > fclose(f)
     > !chmod u-w junk
-    > fgets(f)
-	"Now is the time"
     > access("junk", "w")
-	Error 10013	XXX
-    > freopen(f, "w")
-	Error 10013	XXX
+	System error 13
+    > strerror(.)
+	"Permission denied"
 
 LIMITS
-    none - XXX - is this correct?
+    There may be implementation-dependent limits inherited from the
+    system call "access" used by this function.
 
 LIBRARY
-    none - XXX - is this correct?
+    none
 
 SEE ALSO
-    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
-    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt
+    fopen, fclose, isfile, files

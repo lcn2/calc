@@ -1,0 +1,161 @@
+NAME
+    & - address operator
+
+SYNOPSIS
+    &X
+
+TYPES
+    X		expression specifying an octet, lvalue, string or number
+
+    return	pointer
+
+DESCRIPTION
+    &X returns the address at which information for determining the current
+    value of X is stored.  After an assignment as in p = &X, the
+    value of X is accessible by *p so long as the connection between p
+    and the value is not broken by relocation of the information or by the
+    value ceasing to exist.  Use of an address after the connection
+    is broken is unwise since the calculator may use that address for other
+    purposes; the consequences of attempting to write data to, or
+    otherwise accessing, such a vacated address may be catastrophic.
+
+    An octet is normally expressed by B[i] where B is a block and
+    0 <= i < sizeof(B).  &B[i] then returns the address at which this
+    octet is located until the block is freed or relocated.  Freeing
+    of an unnamed block B occurs when a new value is assigned to B or
+    when B ceases to exist; a named block B is freed by blkfree(B().
+    A block is relocated when an operation like copying to B requires
+    a change of sizeof(B).
+
+    An lvalue may be expressed by an identifier for a variable, or by
+    such an identifier followed by one or more qualifiers compatible with
+    the type of values associated with the variable and earlier qualifiers.
+    If an identifier A specifies a global or static variable, the address
+    &A is permanently associated with that variable.  For a local variable
+    or function parameter A, the association of the variable with &A
+    is limited to each occasion when the function is called.  If X specifies a
+    component or element of a matrix or object, connection of
+    &X with that component or element depends only on the continued existence
+    of the matrix or object.  For example, after
+
+			> mat A[3]
+
+    the addresses &A[0], &A[1], &A[2] locate the three elements
+    of the matrix specified by A until another value is assigned to A, etc.
+    Note one difference from C in that &A[0] is not the same as A.
+
+    An element of a list has a fixed address while the list exists and
+    the element is not removed by pop(), remove(), or delete(); the index
+    of the element changes if an element is pushed onto the list, or if
+    earlier elements are popped or deleted.
+
+    Elements of an association have fixed addresses so long as the association
+    exists.  If A[a,b,...] has not been defined for the association A,
+    &A[a,b,...] returns the constant address of a particular null value.
+
+    Some other special values have fixed addresses; e.g. the old value (.).
+
+    Some arithmetic operations are defined for addresses but these should
+    be used only for octets or components of a matrix or object where the
+    results refer to octets in the same block or existing components of the
+    same matrix or object.  For example, immediately after
+
+			> mat A[10]
+			> p = &A[5]
+
+    it is permitted to use expressions like p + 4, p - 5, p++ .
+
+    Strings defined literally have fixed addresses, e.g., after
+
+			> p = &"abc"
+			> A = "abc"
+
+    The address &*A of the value of A will be equal to p.
+
+    Except in cases like strcat(A, "") when *A identified with a literal
+    string as above, definitions of string values using strcat() or substr()
+    will copy the relevant strings to newly allocated addresses which will
+    be useable only while the variables retain these defined values.
+    For example,
+
+			> B = C = strcat("a", "bc");
+
+    &*B and &*C will be different.  If p is defined by p = &*B, p should
+    not be used after a mew value is assigned to B, or B ceases to exist,
+    etc.
+
+    When compilation of a function encounters for the first time a particular
+    literal number or the result of simple arithmetic operations (like +, -, *,
+    or /) on literal numbers, that number is assigned to a particular
+    address which is then used for later similar occurrences of that number
+    so long as the number remains associated with at least one function or
+    lvalue.  For example, after
+
+			> x = 27;
+			> y = 3 * 9;
+			> define f(a) = 27 + a;
+
+    the three occurrences of 27 have the same address which may be displayed
+    by any of &27, &*x, &*y and &f(0).  If x and y are assigned
+    other values and f is redefined or undefined and the 27 has not been
+    stored elsewhere (e.g. as the "old value" or in another function
+    definition or as an element in an association), the address assigned at
+    the first occurrence of 27 will be freed and calc may later use it for
+    another number.
+
+    When a function returns a number value, that number value is usually
+    placed at a newly allocated address, even if an equal number is stored
+    elsewhere.  For example calls to f(a), as defined above, with the same
+    non-zero value for a will be assigned to different addresses as can be
+    seen from printing &*A, &*B, &*C after
+
+		> A = f(2); B = f(2); C = f(2);
+
+    (the case of f(0) is exceptional since 27 + 0 simply copies the 27
+    rather than creating a new number value).  Here it is clearly more
+    efficient to use
+
+		> A = B = C = f(2);
+
+    which, not only performs the addition n f() only once, but stores the
+    number values for A, B and C at the same address.
+
+    Whether a value V is a pointer and if so, its type, is indicated by the
+    value returned by isptr(V): 1, 2, 3, 4 for octet-, value-, string-
+    and number-pointer respectively, and 0 otherwise.
+
+    The output when addresses are printed consists of a description (o_ptr,
+    v_ptr, s_ptr, n_ptr) followed by : and the address printed in
+    %p format.
+
+    Iteration of & is not permitted; &&X causes a "non-variable operand"
+    scan error.
+
+EXAMPLE
+    Addresses for particular systems may differ from those displayed here.
+
+    > mat A[3]
+    > B = blk()
+
+    > print &A, &A[0], &A[1]
+    v-ptr: 1400470d0 v-ptr: 140044b70 v-ptr: 140044b80
+
+    > print &B, &B[0], &B[1]
+    v-ptr: 140047130 o-ptr: 140044d00 o-ptr: 140044d01
+
+    > a = A[0] = 27
+    > print &*a, &*A[0]. &27
+    n_ptr: 14003a850 n_ptr: 14003a850 n_ptr: 14003a850
+
+    > a = A[0] = "abc"
+    > print &*a, &*A[0], &"abc"
+    s_ptr: 14004cae0 s_ptr: 14004cae0 s_ptr: 14004cae0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    dereference, isptr

@@ -1,16 +1,18 @@
 /*
- * Copyright (c) 1995 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  */
 
 
-#if !defined(ALLOC_H)
-#define ALLOC_H
+#if !defined(__ALLOC_H__)
+#define __ALLOC_H__
+
 
 #include "have_malloc.h"
 #include "have_newstr.h"
 #include "have_string.h"
+#include "have_memmv.h"
 
 #ifdef HAVE_MALLOC_H
 # include <malloc.h>
@@ -37,7 +39,7 @@ extern void *memset();
 #  if defined(__STDC__) && __STDC__ != 0
 extern size_t strlen();
 #  else
-extern long strlen();	/* should be size_t, but old systems don't have it */
+extern long strlen();
 #  endif
 # else /* HAVE_NEWSTR */
 extern void bcopy();
@@ -61,4 +63,14 @@ extern int strcmp();
 #define strchr(s, c) index(s, c)
 #endif /* HAVE_NEWSTR */
 
-#endif /* !ALLOC_H */
+#if !defined(HAVE_MEMMOVE)
+# undef CALC_SIZE_T
+# if defined(__STDC__) && __STDC__ != 0
+#  define CALC_SIZE_T size_t
+# else
+#  define CALC_SIZE_T long
+# endif
+extern void *memmove(void *s1, const void *s2, CALC_SIZE_T n);
+#endif
+
+#endif /* !__ALLOC_H__ */

@@ -11,19 +11,20 @@ TYPES
     return	nonnegative real
 
 DESCRIPTION
-    Returns the cosh of x to a multiple of eps with error less in
+    Returns the acosh of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    acosh(x) = ln(x + sqrt(x^2 - 1)) is the nonnegative real number v
-    for which cosh(v) = x.
+    acosh(x) is the nonnegative real number v for which cosh(v) = x.
+    It is given by
+
+   		 acosh(x) = ln(x + sqrt(x^2 - 1))
 
 EXAMPLE
     > print acosh(2, 1e-5), acosh(2, 1e-10), acosh(2, 1e-15), acosh(2, 1e-20)
     1.31696 1.3169578969 1.316957896924817 1.31695789692481670862
 
 LIMITS
-    unlike sin and cos, x must be real
-    eps > 0
+    none
 
 LIBRARY
     NUMBER *qacosh(NUMBER *x, NUMBER *eps)

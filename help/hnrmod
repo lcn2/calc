@@ -1,0 +1,43 @@
+NAME
+    hnrmod - compute mod h * 2^n +r
+
+SYNOPSIS
+    hnrmod(v, h, n, r)
+
+TYPES
+    v		integer
+    h		integer
+    n		integer
+    r		integer
+
+    return	integer
+
+DESCRIPTION
+    Compute the value:
+
+	v % (h * 2^n +r)
+
+    where:
+
+	h > 0
+	n > 0
+	r == -1, 0 or 1
+
+    This builtin in faster than the standard mod in that is makes use
+    of shifts and additions when h == 1.  When h > 1, a division by h
+    is also needed.
+
+EXAMPLE
+    > print hnrmod(2^177-1, 1, 177, -1), hnrmod(10^40, 17, 51, 1)
+    0 33827019788296445
+
+LIMITS
+    h > 0
+    2^31 > n > 0
+    r == -1, 0 or 1
+
+LIBRARY
+    void zhnrmod(ZVALUE v, ZVALUE h, ZVALUE zn, ZVALUE zr, ZVALUE *res)
+
+SEE ALSO
+    mod

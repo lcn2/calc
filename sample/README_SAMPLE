@@ -1,0 +1,52 @@
+This directory contains a few examples of how to use libcalc.a.
+
+For more details on how to use libcalc.a, see the file ../LIBRARY.
+
+chongo <share and enjoy :-)> /\oo/\
+
+=-=
+
+
+test_random
+-----------
+
+    Generate random bits using the Blum-Blum-Shub generator that
+    is used by the random() and srandom() builtin functions.
+
+    This prog uses the 10th compiled in Blum modulus.
+
+    This routine makes use of some of the lib_util.c routines.
+
+    usage:
+
+	test_random [bitlen [seed_string]]
+
+	bitlen		number of random bits to generate (default: 128 bits)
+	seed_string	seed using this ASCII string (default: use default seed)
+
+
+many_random
+-----------
+
+    Generate many (100000) sets random bits using the Blum-Blum-Shub
+    generator that is used by the random() and srandom() builtin functions.
+
+    Output is one set per line.  Unlike test_random, the seed is not
+    printed.  There is no leading 0x on numbers and there is no prefix
+    strings.  The only thing printed (normally) is ASCII hex chars and
+    newlines.
+
+    Unlike test_random, this prog will execute for a while.  It is
+    useful to watch the process size in order to determine of there
+    is a memory leak.
+
+    This prog uses the 1st compiled in Blum modulus.
+
+    This routine makes use of some of the lib_util.c routines.
+
+    usage:
+
+	many_random [bitlen [seed_string]]
+
+	bitlen		number of random bits per line set (default: 128 bits)
+	seed_string	seed using this ASCII string (default: use default seed)

@@ -1,71 +1,95 @@
 NAME
-    cmp - compare two values
+    cmp - compare two values of certain simple or object types
 
 SYNOPSIS
     cmp(x, y)
 
 TYPES
-    If x is an object of type xx or x is not an object and y is an object
-    of type xx, the funcion xx_cmp has to have been defined; any
+    If x is an object of type xx, or x is not an object and y is an object
+    of type xx, the function xx_rel has to have been defined; any
     further conditions on x and y, and the type of the returned
-    value depends on the definition of xx_cmp.
+    value depends on the definition of xx_rel.
 
     For non-object x and y:
 
-    x		number or string
-    y		same as x
+    x		any
+    y		any
 
-    return	-1, 0, 1					(real & string)
-    		-1, 0, 1, -1+1i, 1i, 1+1i, -1-1i, -1i or 1-1i	(complex)
+    return	if x and y are both real: -1, 0, or 1
+		if x and y are both numbers but not both real:
+    			-1, 0, 1, -1+1i, 1i, 1+1i, -1-1i, -1i, or 1-1i
+		if x and y are both strings: -1, 0, or 1
+		all other cases: the null value
 
 DESCRIPTION
-    Compare two values and return a value based on their relationship.
-    Comparison by type is indicated below.  Where more than one test is
-    indicated, tests are performed in the order listed.  If the test is
-    inconclusive, the next test is performed.  If all tests are
-    inconclusive, the values are considered equivalent.
 
-    real	(returns -1, 0, or 1)
-	the greater number is greater
+    x and y both real: cmp(x, y) = sgn(x - y), i.e. -1, 0, or 1
+	according as x < y, x == y, or x > y
 
-    complex	(returns -1, 0, 1, -1+1i, 1i, 1+1i, -1-1i, -1i or 1-1i)
-	sgn(re(x) - re(y)) + sgn(im(x) - im(y)) * 1i
+    x and y both numbers, at least one being complex:
+	cmp(x,y) = sgn(re(x) - re(y)) + sgn(im(x) - im(y)) * 1i
 
-    string	(returns -1, 0, or 1)
-	the string with the greater first different character is greater
-	the longer string is greater
+    x and y both strings: successive characters are compared until either
+	different characters are encountered or at least one string is
+	completed.  If the comparison ends because of different characters,
+	cmp(x,y) = 1 or -1 according as the greater character is in x or y.
+	If all characters compared in both strings are equal, then
+	cmp(x,y) = -1, 0 or 1 according as the length of x is less than,
+	equal to, or greater than the length of y.  (This comparison
+	is performed via the strcmp() libc function.)
 
-    object	(depends on xx_cmp)
-	the greater object as defined by xx_cmp is greater
+    objects: comparisons of objects are usually intended for some total or
+	partial ordering and appropriate definitions of cmp(a,b) may
+	make use of comparison of numerical or string components.
+	definitions using comparison of numbers or strings are usually
+	appropriate.  For example, after
 
-    String comparison is performed via the strcmp() libc function.
+		obj point {x,y};
 
-    Note that this function is not a substitution for equality.  The ==
-    operator always takes epsilon() into account when comparing numeric
-    values.  For example:
+	if points with real components are to be partially ordered by their
+        euclidean distance from the origin, an appropriate point_rel
+	function may be that given by
 
-	> cmp(1, 1+epsilon()/2)
-		-1
-	> 1 == 1+epsilon()/2
-		0
+		define point_rel(a,b) = sgn(a.x^2 + a.y^2 - b.x^2 - b.y^2);
 
-    It should be noted epsilon() is used when comparing complex values.
+	A total "lexicographic" ordering is that given by:
 
-    Properties of cmp(a,b) for real or complex a and b are:
+		define point_rel(a,b) {
+			if (a.y != b.y)
+				return sgn(a.y - b.y);
+			return (a.x - b.x);
+		}
 
-	cmp(a + c, b + c) = cmp(a,b)
+	A comparison function that compares points analogously to
+	cmp(a,b) for real and complex numbers is that given by
+
+		define point_rel(P1, P2) {
+			return obj point = {sgn(P1.x-P2.x), sgn(P1.y-P2.y)};
+		}
+
+	The range of this function is the set of nine points with zero
+	or unit components.
+
+
+    Some properties of cmp(a,b) for real or complex a and b are:
+
+	cmp(a + c, b + c) = cmp(a, b)
 
 	cmp(a, b) == 0 if and only if a == b
 
-	cmp(b, a) = -cmp(a,b)
+	cmp(b, a) = -cmp(a, b)
 
 	if c is real or pure imaginary, cmp(c * a, c * b) = c * cmp(a,b)
 
-	cmp(a,b) == cmp(b,c) if and only if b is "between" a and c
+    Then a function that defines "b is between a and c" in an often useful
+    sense is
 
-    The numbers between 2 + 3i and 4 + 5i are those with real part between
-    2 and 4, imaginary part between 3 and 5; the numbers between 2 + 3i
-    and 4 + 3i are those with real part between 2 and 4, imaginary part = 3.
+	define between(a,b,c) = (cmp(a,b) == cmp(b,c)).
+
+    For example, in this sense, 3 + 4i is between 1 + 5i and 4 + 2i.
+
+    Note that using cmp to compare non-object values of different types,
+    for example, cmp(2, "2"), returns the null value.
 
 EXAMPLE
     > print cmp(3,4), cmp(4,3), cmp(4,4), cmp("a","b"), cmp("abcd","abc")
@@ -84,7 +108,8 @@ LIMITS
     none
 
 LIBRARY
-    none
+    FLAG qrel(NUMBER *q1, NUMBER *q2)
+    FLAG zrel(ZVALUE z1, ZVALUE z2)
 
 SEE ALSO
-    abs, epsilon, sgn
+    sgn, test, operator

@@ -1,0 +1,40 @@
+NAME
+    errmax - return or set maximum error-count before execution stops
+
+SYNOPSIS
+    errmax([num])
+
+TYPES
+    num		integer
+
+    return	integer
+
+DESCRIPTION
+    Without an argument, errmax() returns the current value of an
+    internal variable errmax.  Calling errmax(num) returns this value
+    but then resets its value to num.  Execution is aborted if
+    evaluation of an error value if this makes errcount > errmax.
+    An error message displays the errno for the error.
+
+EXAMPLE
+    > errmax(2)
+	0
+    > errcount()
+	0
+    > a = 1/0; b = 2 + ""; c = error(27); d = newerror("alpha");
+    Error 27 caused errcount to exceed errmax
+
+    > print c, d
+    0 0
+
+    Here global variables c and d were created when compiling the line
+    but execution was aborted before the intended assignments to c and d.
+
+LIMITS
+    0 <= num < 2^32
+
+LIBRARY
+    none
+
+SEE ALSO
+    errcount, error, strerror, iserror, errno, newerror, errorcodes

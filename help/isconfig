@@ -2,7 +2,7 @@ NAME
     isconfig - whether a value is a configuration state
 
 SYNOPSIS
-    isrand(x)
+    isconfig(x)
 
 TYPES
     x		any, &any
@@ -25,4 +25,8 @@ LIBRARY
     none
 
 SEE ALSO
-    config
+    config,
+    isassoc, isatty, isblk, isdefined, iserror, iseven, isfile,
+    ishash, isident, isint, islist, ismat, ismult, isnull, isnum, isobj,
+    isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
+    issimple, issq, isstr, istype

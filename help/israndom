@@ -27,4 +27,8 @@ LIBRARY
     none
 
 SEE ALSO
-    XXX - fill in
+    random, srandom, randombit,
+    isassoc, isatty, isblk, isconfig, isdefined, iserror, iseven, isfile,
+    ishash, isident, isint, islist, ismat, ismult, isnull, isnum, isobj,
+    isobjtype, isodd, isprime, isrand, isreal, isrel,
+    issimple, issq, isstr, istype

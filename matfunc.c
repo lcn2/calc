@@ -9,6 +9,7 @@
 
 #include "value.h"
 #include "zrand.h"
+#include "calcerr.h"
 
 extern long irand(long s);
 
@@ -397,21 +398,21 @@ MATRIX *
 matscale(MATRIX *m, long n)
 {
 	register VALUE *val, *vres;
-	VALUE num;
+	VALUE temp;
 	long index;
 	MATRIX *res;		/* resulting matrix */
 
 	if (n == 0)
 		return matcopy(m);
-	num.v_type = V_NUM;
-	num.v_num = itoq(n);
+	temp.v_type = V_NUM;
+	temp.v_num = itoq(n);
 	res = matalloc(m->m_size);
 	*res = *m;
 	val = m->m_table;
 	vres = res->m_table;
 	for (index = m->m_size; index > 0; index--)
-		scalevalue(val++, &num, vres++);
-	qfree(num.v_num);
+		scalevalue(val++, &temp, vres++);
+	qfree(temp.v_num);
 	return res;
 }
 
@@ -428,21 +429,21 @@ MATRIX *
 matshift(MATRIX *m, long n)
 {
 	register VALUE *val, *vres;
-	VALUE num;
+	VALUE temp;
 	long index;
 	MATRIX *res;		/* resulting matrix */
 
 	if (n == 0)
 		return matcopy(m);
-	num.v_type = V_NUM;
-	num.v_num = itoq(n);
+	temp.v_type = V_NUM;
+	temp.v_num = itoq(n);
 	res = matalloc(m->m_size);
 	*res = *m;
 	val = m->m_table;
 	vres = res->m_table;
 	for (index = m->m_size; index > 0; index--)
-		shiftvalue(val++, &num, FALSE, vres++);
-	qfree(num.v_num);
+		shiftvalue(val++, &temp, FALSE, vres++);
+	qfree(temp.v_num);
 	return res;
 }
 
@@ -528,6 +529,33 @@ matmodval(MATRIX *m, VALUE *vp, VALUE *v3)
 	for (index = m->m_size; index > 0; index--)
 		modvalue(val++, vp, v3, vres++);
 	return res;
+}
+
+
+VALUE
+mattrace(MATRIX *m)
+{
+	VALUE *vp;
+	VALUE sum;
+	VALUE tmp;
+	long i, j;
+
+	if (m->m_dim != 2)
+		return error_value(E_MATTRACE2);
+	i = (m->m_max[0] - m->m_min[0] + 1);
+	j = (m->m_max[1] - m->m_min[1] + 1);
+	if (i != j)
+		return error_value(E_MATTRACE3);
+	vp = m->m_table;
+	copyvalue(vp, &sum);
+	j++;
+	while (--i > 0) {
+		vp += j;
+		addvalue(&sum, vp, &tmp);
+		freevalue(&sum);
+		sum = tmp;
+	}
+	return sum;
 }
 
 
@@ -755,48 +783,53 @@ matindex(MATRIX *mp, BOOL create, long dim, VALUE *indices)
 
 /*
  * Search a matrix for the specified value, starting with the specified index.
- * Returns the index of the found value, or -1 if the value was not found.
+ * Returns 0 and stores index if value found; otherwise returns 1.
  */
-long
-matsearch(MATRIX *m, VALUE *vp, long index)
+int
+matsearch(MATRIX *m, VALUE *vp, long i, long j, ZVALUE *index)
 {
 	register VALUE *val;
 
-	if (index < 0)
-		index = 0;
-	val = &m->m_table[index];
-	while (index < m->m_size) {
-		if (!comparevalue(vp, val))
-			return index;
-		index++;
-		val++;
+	val = &m->m_table[i];
+	if (i < 0 || j > m->m_size) {
+		math_error("This should not happen in call to matsearch");
+		/*NOTREACHED*/
 	}
-	return -1;
+	while (i < j) {
+		if (acceptvalue(val++, vp)) {
+			utoz(i, index);
+			return 0;
+		}
+		i++;
+	}
+	return 1;
 }
 
 
 /*
  * Search a matrix backwards for the specified value, starting with the
- * specified index.  Returns the index of the found value, or -1 if the
- * value was not found.
+ * specified index.  Returns 0 and stores index if value found; otherwise
+ * returns 1.
  */
-long
-matrsearch(MATRIX *m, VALUE *vp, long index)
+int
+matrsearch(MATRIX *m, VALUE *vp, long i, long j, ZVALUE *index)
 {
 	register VALUE *val;
 
-	if (index >= m->m_size)
-		index = m->m_size - 1;
-	val = &m->m_table[index];
-	while (index >= 0) {
-		if (!comparevalue(vp, val))
-			return index;
-		index--;
-		val--;
+	if (i < 0 || j > m->m_size) {
+		math_error("This should not happen in call to matrsearch");
+		/*NOTREACHED*/
 	}
-	return -1;
+	val = &m->m_table[--j];
+	while (j >= i) {
+		if (acceptvalue(val--, vp)) {
+			utoz(j, index);
+			return 0;
+		}
+		j--;
+	}
+	return 1;
 }
-
 
 /*
  * Fill all of the elements of a matrix with one of two specified values.
@@ -1030,6 +1063,7 @@ matdet(MATRIX *m)
 			if (--i <= 0) {
 				tmp1.v_type = V_NUM;
 				tmp1.v_num = qlink(&_qzero_);
+				matfree(m);
 				return tmp1;
 			}
 			val += n;
@@ -1253,6 +1287,8 @@ MATRIX *
 matalloc(long size)
 {
 	MATRIX *m;
+	long i;
+	VALUE *vp;
 
 	m = (MATRIX *) malloc(matsize(size));
 	if (m == NULL) {
@@ -1260,6 +1296,8 @@ matalloc(long size)
 		/*NOTREACHED*/
 	}
 	m->m_size = size;
+	for (i = size, vp = m->m_table; i > 0; i--, vp++)
+		vp->v_subtype = V_NOSUBTYPE;
 	return m;
 }
 
@@ -1275,20 +1313,14 @@ matfree(MATRIX *m)
 
 	vp = m->m_table;
 	i = m->m_size;
-	while (i-- > 0) {
-		if (vp->v_type == V_NUM) {
-			vp->v_type = V_NULL;
-			qfree(vp->v_num);
-		} else
-			freevalue(vp);
-		vp++;
-	}
+	while (i-- > 0)
+		freevalue(vp++);
 	free(m);
 }
 
 
 /*
- * Test whether a matrix has any nonzero values.
+ * Test whether a matrix has any "nonzero" values.
  * Returns TRUE if so.
  */
 BOOL
@@ -1300,50 +1332,33 @@ mattest(MATRIX *m)
 	vp = m->m_table;
 	i = m->m_size;
 	while (i-- > 0) {
-		if ((vp->v_type != V_NUM) || (!qiszero(vp->v_num)))
+		if (testvalue(vp++))
 			return TRUE;
-		vp++;
 	}
 	return FALSE;
 }
 
 /*
- * Sum the numeric values in a matrix.
+ * Sum the elements in a matrix.
  */
 void
 matsum(MATRIX *m, VALUE *vres)
 {
 	VALUE *vp;
 	VALUE tmp;		/* first sum value */
-	VALUE sum;		/* second sum value */
+	VALUE sum;		/* final sum value */
 	long i;
 
-	/*
-	 * sum setup
-	 */
 	vp = m->m_table;
 	i = m->m_size;
-	sum.v_type = V_NUM;
-	sum.v_subtype = V_NOSUBTYPE;
-	sum.v_num = qlink(&_qzero_);
+	copyvalue(vp, &sum);
 
-	/*
-	 * sum values
-	 */
-	while (i-- > 0) {
-		/* tmp = sum */
-		copyvalue(&sum, &tmp);
+	while (--i > 0) {
+		addvalue(&sum, ++vp, &tmp);
 		freevalue(&sum);
-
-		/* add next matrix value */
-		(void) addnumeric(vp++, &tmp, &sum);
+		sum = tmp;
 	}
-
-	/*
-	 * return sum
-	 */
-	copyvalue(&sum, vres);
-	freevalue(&sum);
+	*vres = sum;
 }
 
 
@@ -1525,8 +1540,8 @@ void
 matprint(MATRIX *m, long max_print)
 {
 	VALUE *vp;
-	long fullsize, count, index, num;
-	long dim, i;
+	long fullsize, count, index;
+	long dim, i, j;
 	char *msg;
 	long sizes[MAXDIM];
 
@@ -1566,10 +1581,10 @@ matprint(MATRIX *m, long max_print)
 	vp = m->m_table;
 	for (index = 0; index < max_print; index++) {
 		msg = "  [";
-		num = index;
+		j = index;
 		for (i = 0; i < dim; i++) {
-			math_fmt("%s%ld", msg, m->m_min[i] + (num / sizes[i]));
-			num %= sizes[i];
+			math_fmt("%s%ld", msg, m->m_min[i] + (j / sizes[i]));
+			j %= sizes[i];
 			msg = ",";
 		}
 		math_str("] = ");
@@ -1579,5 +1594,3 @@ matprint(MATRIX *m, long max_print)
 	if (max_print < fullsize)
 		math_str("  ...\n");
 }
-
-/* END CODE */

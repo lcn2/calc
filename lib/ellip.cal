@@ -166,7 +166,6 @@ define point_pow(p, pow)
 	return r;
 }
 
-global lib_debug;
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
     print "factor(N, I, B, force) defined";
 }

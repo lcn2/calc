@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1995 by Landon Curt Noll.  All Rights Reserved.
+ * Copyright (c) 1997 by Landon Curt Noll.  All Rights Reserved.
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby granted,
@@ -36,9 +36,12 @@
  * chongo was here	/\../\
  */
 
-#if !defined(CONFIG_H)
-#define CONFIG_H
 
+#if !defined(__CONFIG_H__)
+#define __CONFIG_H__
+
+
+#include "nametype.h"
 #include "qmath.h"
 
 
@@ -69,10 +72,16 @@
 #define CONFIG_ROUND	20
 #define CONFIG_LEADZERO	21
 #define CONFIG_FULLZERO	22
-#define CONFIG_MAXERR	23
+#define CONFIG_MAXSCAN	23
 #define CONFIG_PROMPT	24
 #define CONFIG_MORE	25
-#define CONFIG_RANDOM	26
+#define CONFIG_BLKMAXPRINT 26
+#define CONFIG_BLKVERBOSE 27
+#define CONFIG_BLKBASE 28
+#define CONFIG_BLKFMT 29
+#define CONFIG_LIB_DEBUG 30
+#define CONFIG_CALC_DEBUG 31
+#define CONFIG_USER_DEBUG 32
 
 
 /*
@@ -84,11 +93,19 @@
 #define NEW_EPSILON_DEFAULT "1e-10"	/* newstd EPSILON_DEFAULT */
 #define NEW_EPSILONPREC_DEFAULT 34	/* 34 ==> 2^-34 <= 1e-10 < 2^-33 */
 #define MAXPRINT_DEFAULT 16	/* default number of elements printed */
-#define MAXERRORCOUNT 20	/* default max errors before an abort */
+#define MAXSCANCOUNT 20		/* default max scan errors before an abort */
+
+#define ERRMAX 20		/* default errmax value */
 
 
 /*
  * configuration object
+ *
+ * If you add elements to this structure, you need to also update:
+ *
+ *	quickhash.c	- config_hash()
+ *	hash.c		- hash_value()
+ *	config.c	- setconfig(), config_value(), config_cmp()
  */
 struct config {
 	int outmode;		/* current output mode */
@@ -113,11 +130,17 @@ struct config {
 	long outround;		/* output default rounding mode */
 	long round;		/* round()/bround() default rounding mode */
 	int leadzero;		/* ok to print leading 0 before decimal pt */
-	int fullzero;		/* ok to print trailing 0's -- XXX ??? */
-	long maxerrorcount;	/* max errors before abort */
+	int fullzero;		/* ok to print trailing 0's */
+	long maxscancount;	/* max scan errors before abort */
 	char *prompt1;		/* normal prompt */
 	char *prompt2;		/* prompt when inside multi-line input */
-	int random;		/* random mode */
+	int blkmaxprint;	/* octets of a block to print, 0 => all */
+	int blkverbose;		/* TRUE => print all lines if a block */
+	int blkbase;		/* block output base */
+	int blkfmt;		/* block output style */
+	int lib_debug;		/* library debug: <0 none, 0 default, >0 more */
+	int calc_debug;		/* internal debug: <0 none, 0 default,>0 more */
+	int user_debug;		/* user defined debug value: 0 default */
 };
 typedef	struct config CONFIG;
 
@@ -131,13 +154,14 @@ extern CONFIG newstd;		/* new non-backward compatible configuration */
 
 
 /*
- * configuration functions
+ * configuration externals
  */
 extern CONFIG *config_copy(CONFIG *src);
 extern void config_free(CONFIG *cfg);
 extern void config_print(CONFIG *cfg);
-extern BOOL config_cmp(CONFIG *cfg1, CONFIG *cfg2);
-extern int configtype(char *name);
+extern int configtype(char*);
+extern void config_print(CONFIG*);
+extern BOOL config_cmp(CONFIG*, CONFIG*);
 
 
-#endif
+#endif /* !__CONFIG_H__ */

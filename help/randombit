@@ -1,0 +1,42 @@
+NAME
+    randbit - Blum-Blum-Shub pseudo-random number generator
+
+SYNOPSIS
+    randombit([x])
+
+TYPES
+    x		integer
+
+    return	integer
+
+DESCRIPTION
+    If x > 0, randombit(x) returns a pseudo-random integer in [0, 2^x),
+    i.e. the same as rand(2^x).  If the integer returned is
+
+	    b_1 * 2^(x-1) + b_2 * 2^(x-2) + ... + b_n,
+
+    where each b_i is 0 or 1, then b_1, b_2, ..., b_n may be
+    considered as a sequence of x random bits.
+
+    If x <= 0, randombit(x) causes the random-number generator to skip
+    abs(x) bits, and returns abs(x).
+
+    If x is omitted, it is assumed to have the value of 1.
+
+    See the random() help page for details on the additive 55 shuffle
+    pseudo-random number generator.
+
+EXAMPLE
+    > print srandom(0), randombit(20), randombit(20), randombit(20)
+    RANDOM state 523139 567456 693508
+    > print srandom(0), randombit(-20), randombit(20), randombit(-20)
+    RANDOM state 20 567456 20
+
+LIMITS
+    x != 0
+
+LIBRARY
+    void zrandom(long cnt, ZVALUE *res)
+
+SEE ALSO
+    srand, randbit, isrand, rand, srandom, israndom

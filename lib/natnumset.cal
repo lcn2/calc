@@ -1,0 +1,632 @@
+/*
+ * Copyright (c) 1997 Ernest Bowen
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
+ * By: Ernest Bowen <ernie@neumann.une.edu.au>
+ */
+/*
+ * Functions for sets of natural numbers not exceeding a fixed bound B.
+ *
+ * The default value for B is 100; B may be assigned another
+ * value n by setbound(n); with no argument, setbound() returns the current
+ * upper bound.
+ *
+ * A set S is stored as an object with one element with one component S.s;
+ * This component is a string of just sufficient size to include m bits,
+ * where m is the maximum integer in S.
+ *
+ * With zero or more integer arguments, set(a, b, ...) returns the set
+ * whose elements are those of a, b, ... in [0, B].  Note that arguments
+ * < 0 or > B are ignored.
+ *
+ * In an assignment of a set-valued lvalue to an lvalue, as in
+ *
+ *		A = set(1,2,3);
+ *		B = A;
+ *
+ * the sets share the same data string, so a change to either has the effect
+ * of changing both.  A set equal to A but with a different string can be
+ * created by
+ *
+ *		B = A | set()
+ *
+ * The functions empty() and full() return the empty set and the set of all
+ * integers in [0,B] respectively.
+ *
+ * isset(A) returns 1 or 0 according as A is or is not a set
+ *
+ * test(A) returns 0 or 1 according as A is or is not the empty set
+ *
+ * isin(A, n) for set A and integer n returns 1 if n is in A, 0 if
+ *	0 <= n <= B and n is not in A, the null value if n < 0 or n > B.
+ *
+ * addmember(A, n) adds n as a member of A, provided n is in [0, B];
+ *	 this is also achieved by A |= n.
+ *
+ * rmmember(A, n) removes n from A if it is a member; this is also achieved
+ *	by A \= n.
+ *
+ * The following unary and binary operations are defined for sets A, B.
+ *	For binary operations with one argument a set and the other an
+ *	integer n, the integer taken to represent set(n).
+ *
+ *	A | B = union of A and B, integers in at least one of A and B
+ *	A & B = intersection of A and B, integers in both A and B
+ *	A ~ B = symmetric difference (boolean sum) of A and Bi, integers
+ *			in exactly one of A and B
+ *	A \ B = set difference, integers in A but not in B
+ *
+ *	~A	= complement of A, integers not in A
+ *	#A	= number ofintegers in A
+ *	!A	= 1 or 0 according as A is empty or not empty
+ *	+A	= sum of the members of A
+ *
+ *	min(A)  = least member of A, -1 for empty set
+ *	max(A)  = greatest member of A, -1 for empty set
+ *	sum(A)  = sum of the members of A
+ *
+ * In the following a and b denote arbitrary members of A and B:
+ *
+ *	A + B = set of sums a + b
+ *	A - B = set of differences a - b
+ *	A * B = set of products a * b
+ *	A ^ n = set of powers a ^ n
+ *	A % m = set of integers congruent to a mod m
+ *
+ *	A == B returns 1 or not according as A and B are equal or not
+ *	A != B = !(A == B)
+ *	A <= B returns 1 if A is a subset of B, i.e. every member of A is
+ *		a member of B
+ *	A < B = ((A <= B) && (A != B))
+ *	A >= B = (B <= A)
+ *	A > B = (B < A)
+ *
+ * Expresssions may be formed from the above "arithmetic" operations in
+ * the usual way, with parentheses for variations from the usual precedence
+ * rules.  For example
+ *
+ *	A + 3 * A ^ 2 + (A - B) ^ 3
+ *
+ * returns the set of integers expressible as
+ *
+ *	a_1 + 3 * a_2 ^ 2 + (a_3 - b) ^3
+ *
+ * where a_1, a_2, a_3 are in A, and b is in B.
+ *
+ * primes(a, b) returns the set of primes between a and b inclusive.
+ *
+ * interval(a, b) returns the integers between a and b inclusive
+ *
+ * isinterval(A) returns 1 if A is a non-empty interval, 0 otherwise.
+ *
+ * randset(n, a, b) returns a random set of n integers between a and b
+ *	inclusive; a defaults to 0, b to N-1.  An error occurs if
+ *	n is too large.
+ *
+ * polyvals(L, A) for L = list(c_0, c_1, c_2, ...) returns the set of
+ * values of
+ *
+ *	c_0 + c_1 * a + c_2 * a^2 + ...
+ *
+ * for a in the set A.
+ *
+ * polyvals2(L, A, B) returns the set of values of poly(L, i, j) for i in
+ *	A and j in B.  Here L is a list whose members are integers or
+ *	lists of integers, the latter representing polynomials in the
+ *	second variable.  For example, with L = list(0, list(0, 1), 1),
+ *	polyvals2(L, A, B) will return the values of i^2 + i * j for
+ *	i in A, j in B.
+ *
+ */
+
+
+static N;		/* Number of integers in [0,B], = B + 1 */
+static M;		/* Maximum string size required, = N // 8 */
+
+obj set {s};
+
+define isset(a) = istype(a, obj set);
+
+define setbound(n)
+{
+	local v;
+
+	v = N - 1;
+	if (isnull(n))
+		return v;
+	if (!isint(n) || n < 0)
+		quit "Bad argument for setbound";
+	N = n + 1;
+	M = quo(N, 8, 1);	/* M // 8 rounded up */
+	if (v >= 0)
+		return v;
+}
+
+setbound(100);
+
+define empty() = obj set = {""};
+
+define full()
+{
+	local v;
+
+	obj set v;
+	v.s = M * char(-1);
+	if (!ismult(N, 8)) v.s[M-1] = 255 >> (8 - N & 7);
+	return v;
+}
+
+define isin(a, b)
+{
+	if (!isset(a) || !isint(b))
+		quit "Bad argument for isin";
+	return bit(a.s, b);
+}
+
+define addmember(a, n)
+{
+	if (!isset(a) || !isint(n))
+		quit "Bad argument for addmember";
+	if (n < N && n >= 0)
+		setbit(a.s, n);
+}
+
+define rmmember(a, n)
+{
+	if (n < N && n >= 0)
+		setbit(a.s, n, 0);
+}
+
+define set()
+{
+	local i, v, s;
+
+	s = M * char(0);
+	for (i = 1; i <= param(0); i++) {
+		v = param(i);
+		if (!isint(v))
+			quit "Non-integral argument for set";
+		if (v >= 0 && v < N)
+			setbit(s, v);
+	}
+	return mkset(s);
+}
+
+
+define mkset(s)
+{
+	local h, m;
+
+	if (!isstr(s))
+		quit "Non-string argument for mkset";
+	h = highbit(s);
+	if (h >= N)
+		quit "Too-long string for mkset";
+	m = quo(h + 1, 8, 1);
+	return obj set = {head(s, m)};
+}
+
+
+define primes(a,b)
+{
+	local i, s, m;
+
+	if (isnull(b)) {
+		if (isnull(a)) {
+			a = 0;
+			b = N - 1;
+		}
+		else b = 0;
+	}
+
+	if (!isint(a) || !isint(b))
+		quit "Non-integer argument for primes";
+	if (a > b)
+		swap(a,b);
+	if (b < 0 || a >= N)
+		return empty();
+	a = max(a, 0);
+	b = min(b, N-1);
+	s = M * char(0);
+	for (i = a; i <= b; i++)
+		if (isprime(i))
+			setbit(s, i);
+	return mkset(s);
+}
+
+define set_max(a) = highbit(a.s);
+
+define set_min(a) = lowbit(a.s);
+
+define set_not(a) = !a.s;
+
+define set_cmp(a,b)
+{
+	if (isset(a) && isset(b))
+		return a.s != b.s;
+	return 1;
+}
+
+define set_rel(a,b)
+{
+	local c;
+
+	if (a == b)
+		return 0;
+	if (isset(a)) {
+		if (isset(b)) {
+			c = a & b;
+			if (c == a)
+				return -1;
+			if (c == b)
+				return 1;
+			return;
+		}
+		if (!isint(b))
+			return set_rel(a, set(b));
+	}
+	if (isint(a))
+		return set_rel(set(a), b);
+}
+
+
+define set_or(a, b)
+{
+	if (isset(a)) {
+		if (isset(b))
+			return obj set = {a.s | b.s};
+		if (isint(b))
+			return a | set(b);
+	}
+	if (isint(a))
+		return set(a) | b;
+	return newerror("Bad argument for set_or");
+}
+
+define set_and(a, b)
+{
+	if (isint(a))
+		return set(a) & b;
+	if (isint(b))
+		return a & set(b);
+	if (!isset(a) || !isset(b))
+		return newerror("Bad argument for set_and");
+	return mkset(a.s & b.s);
+}
+
+
+define set_comp(a) = full() \ a;
+
+define set_setminus(a,b)
+{
+	if (isint(a))
+		return set(a) \ b;
+	if (isint(b))
+		return a \ set(b);
+	if (!isset(a) || !isset(b))
+		return newerror("Bad argument for set_setminus");
+	return mkset(a.s \ b.s);
+}
+
+
+define set_xor(a,b)
+{
+	if (isint(a))
+		return set(a) ~ b;
+	if (isint(b))
+		return a ~ set(b);
+	if (!isset(a) || !isset(b))
+		return newerror("Bad argument for set_xor");
+	return mkset(a.s ~ b.s);
+}
+
+define set_content(a) = #a.s;
+
+define set_add(a, b)
+{
+	local s, i, j, m, n;
+
+	if (isint(a))
+		return set(a) + b;
+	if (isint(b))
+		return a + set(b);
+	if (!isset(a) || !isset(b))
+		return newerror("Bad argument for set_add");
+	if (!a || !b)
+		return empty();
+	m = highbit(a.s);
+	n = highbit(b.s);
+	s = M * char(0);
+	for (i = 0; i <= m; i++)
+		if (isin(a, i))
+			for (j = 0; j <= n && i + j < N; j++)
+				if (isin(b, j))
+					setbit(s, i + j);
+	return mkset(s);
+}
+
+define set_sub(a,b)
+{
+	local s, i, j, m, n;
+
+	if (isint(b))
+		return a - set(b);
+	if (isint(a))
+		return set(a) - b;
+	if (isset(a) && isset(b)) {
+		if (!a || !b)
+			return empty();
+		m = highbit(a.s);
+		n = highbit(b.s);
+		s = M * char(0);
+		for (i = 0; i <= m; i++)
+			if (isin(a, i))
+				for (j = 0; j <= n && j <= i; j++)
+					if (isin(b, j))
+						setbit(s, i - j);
+		return mkset(s);
+	}
+	return newerror("Bad argument for set_sub");
+}
+
+define set_mul(a, b)
+{
+	local s, i, j, m, n;
+
+	if (isset(a)) {
+		s = M * char(0);
+		m = highbit(a.s);
+		if (isset(b)) {
+			if (!a || !b)
+				return empty();
+			n = highbit(b.s);
+			for (i = 0; i <= m; ++i)
+				if (isin(a, i))
+					for (j = 1; j <= n && i * j < N; ++j)
+						if (isin(b, j))
+							setbit(s, i * j);
+			return mkset(s);
+		}
+		if (isint(b)) {
+			if (b == 0) {
+				if (a)
+					return set(0);
+				return empty();
+			}
+			s = M * char(0);
+			for (i = 0; i <= m && b * i < N; ++i)
+				if (isin(a, i))
+					setbit(s, b * i);
+			return mkset(s);
+		}
+	}
+	if (isint(a))
+		return b * a;
+	return newerror("Bad argument for set_mul");
+}
+
+define set_square(a)
+{
+	local s, i, m;
+
+	s = M * char(0);
+	m = highbit(a.s);
+	for (i = 0; i <= m && i^2 < N; ++i)
+		if (bit(a.s, i))
+			setbit(s, i^2);
+	return mkset(s);
+}
+
+define set_pow(a, n)
+{
+	local s, i, m;
+
+	if (!isint(n) || n < 0)
+		quit "Bad exponent for set_power";
+	s = M * char(0);
+	m = highbit(a.s);
+	for (i = 0; i <= m && i^n < N; ++i)
+		if (bit(a.s, i))
+			setbit(s, i^n);
+	return mkset(s);
+}
+
+define set_sum(a)
+{
+	local v, m, i;
+
+	v = 0;
+	m = highbit(a.s);
+	for (i = 0; i <= m; ++i)
+		if (bit(a.s, i))
+			v += i;
+	return v;
+}
+
+define set_plus(a) = set_sum(a);
+
+define interval(a, b)
+{
+	local i, j, s;
+	static tail = str("\0\1\3\7\17\37\77\177\377");
+
+	if (!isint(a) || !isint(b))
+		quit "Non-integer argument for interval";
+	if (a > b)
+		swap(a, b);
+	if (b < 0 || a >= N)
+		return empty();
+	a = max(a, 0);
+	b = min(b, N-1);
+	i = quo(a, 8, 0);
+	j = quo(b, 8, 0);
+	s = M * char(0);
+	if (i == j) {
+		s[i] = tail[b + 1 - 8 * i] \ tail[a - 8 * i];
+		return mkset(s);
+	}
+	s[i] = ~tail[a - 8 * i];
+	while (++i < j)
+		s[i] = -1;
+	s[j] = tail[b + 1 - 8 * j];
+	return mkset(s);
+}
+
+define isinterval(a)
+{
+	local i, max, s;
+
+	if (!isset(a))
+		quit "Non-set argument for isinterval";
+
+	s = a.s;
+	if (!s)
+		return 0;
+	for (i = lowbit(s) + 1, max = highbit(s); i < max; i++)
+		if (!bit(s, i))
+			return 0;
+	return 1;
+}
+
+define set_mod(a, b)
+{
+	local s, m, i, j;
+
+	if (isset(a) && isint(b)) {
+		s = M * char(0);
+		m = highbit(a.s);
+		for (i = 0; i <= m; i++)
+			if (bit(a.s, i))
+				for (j = 0; j < N; j++)
+					if (meq(i, j, b))
+						setbit(s, j);
+		return mkset(s);
+	}
+	return newerror("Bad argument for set_mod");
+}
+
+define randset(n, a, b)
+{
+	local m, s, i;
+
+	if (isnull(a))
+		a = 0;
+	if (isnull(b))
+		b = N - 1;
+	if (!isint(n) || !isint(a) || !isint(b) || n < 0 || a < 0 || b < 0)
+		quit "Bad argument for randset";
+	if (a > b)
+		swap(a, b);
+	m = b - a + 1;
+	if (n > m)
+		return newerror("Too many numbers specified for randset");
+	if (2 * n > m)
+		return interval(a,b) \ randset(m - n, a, b);
+	++b;
+	s = M * char(0);
+	while (n-- > 0) {
+		do
+			i = rand(a, b);
+		while
+			(bit(s, i));
+		setbit(s, i);
+	}
+	return mkset(s);
+}
+
+define polyvals(L, A)
+{
+	local s, m, v, i;
+
+	if (!islist(L))
+		quit "Non-list first argument for polyvals";
+	if (!isset(A))
+		quit "Non-set second argument for polyvals";
+	m = highbit(A.s);
+	s = M * char(0);
+	for (i = 0; i <= m; i++)
+		if (bit(A.s, i)) {
+			v = poly(L,i);
+			if (v >> 0 && v < N)
+				setbit(s, v);
+		}
+	return mkset(s);
+}
+
+define polyvals2(L, A, B)
+{
+	local s1, s2, s, m, n, i, j, v;
+
+	s1 = A.s;
+	s2 = B.s;
+	m = highbit(s1);
+	n = highbit(s2);
+	s = M * char(0);
+	for (i = 0; i <= m; i++)
+		if (bit(s1, i))
+			for (j = 0; j <= n; j++)
+				if (bit(s2, j)) {
+					v = poly(L, i, j);
+					if (v >= 0 && v < N)
+						setbit(s, v);
+				}
+	return mkset(s);
+}
+
+define set_print(a)
+{
+	local i, s, m;
+
+	s = a.s;
+	i = lowbit(s);
+	print "set(":;
+	if (i >= 0) {
+		print i:;
+		m = highbit(s);
+		while (++i <= m)
+			if (bit(s, i))
+				print ",":i:;
+	}
+	print ")",;
+}
+
+local N, M;	/* End scope of static variables N, M */
+
+if (config("lib_debug") >= 0) {
+    print "isset(a) defined";
+    print "setbound(n) defined";
+    print "empty() defined";
+    print "full() defined";
+    print "isin(a, b) defined";
+    print "addmember(a, n) defined";
+    print "rmmember(a, n) defined";
+    print "set() defined";
+    print "mkset(s) defined";
+    print "primes(a, b) defined";
+    print "set_max(a) defined";
+    print "set_min(a) defined";
+    print "set_not(a) defined";
+    print "set_cmp(a, b) defined";
+    print "set_rel(a, b) defined";
+    print "set_or(a, b) defined";
+    print "set_and(a, b) defined";
+    print "set_comp(a) defined";
+    print "set_setminus(a, b) defined";
+    print "set_xor(a,b) defined";
+    print "set_content(a) defined";
+    print "set_add(a, b) defined";
+    print "set_sub(a, b) defined";
+    print "set_mul(a, b) defined";
+    print "set_square(a) defined";
+    print "set_pow(a, n) defined";
+    print "set_sum(a) defined";
+    print "set_plus(a) defined";
+    print "interval(a, b) defined";
+    print "isinterval(a) defined";
+    print "set_mod(a, b) defined";
+    print "randset(n, a, b) defined";
+    print "polyvals(L, A) defined";
+    print "polyvals2(L, A, B) defined";
+    print "set_print(a) defined";
+}

@@ -14,16 +14,16 @@ DESCRIPTION
     Returns the atanh of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    atanh(x) = ln((1 + x)/(1 - x))/2 is the real number v for whichi
-    tanh(v) = x.
+    atanh(x) is the real number v for which tanh(v) = x.  It is given by
+
+		atanh(x) = ln((1 + x)/(1 - x))/2
 
 EXAMPLE
     > print atanh(.5,1e-5), atanh(.5,1e-10), atanh(.5,1e-15), atanh(.5,1e-20)
     .54931 .5493061443 .549306144334055 .5493061443340548457
 
 LIMITS
-    unlike sin and cos, x must be real
-    eps > 0
+    none
 
 LIBRARY
     NUMBER *qatanh(NUMBER *x, NUMBER *eps)

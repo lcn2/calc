@@ -21,9 +21,7 @@ EXAMPLE
     .5236 .5235987756 .523598775598299 .52359877559829887308
 
 LIMITS
-    unlike sin and cos, x must be real
-    abs(x) >= 1
-    eps > 0
+    none
 
 LIBRARY
     NUMBER *qacsc(NUMBER *x, NUMBER *eps)

@@ -1,0 +1,44 @@
+NAME
+    isdefined - whether a string names a defined function
+
+SYNOPSIS
+    isdefined(str)
+
+TYPES
+    str		string
+
+    return	0, 1, or 2
+
+DESCRIPTION
+    isdefined(str) returns 1 if str is the name of a builtin function,
+    2 if str is the name of a user-defined function, 0 otherwise.
+
+EXAMPLE
+    > isdefined("abs")
+	1
+
+    > isdefined("fun")
+	0
+
+    > define fun() { }
+    fun() defined
+
+    > isdefined("fun")
+	2
+
+    > undefine fun
+    > isdefined("fun")
+	0
+
+LIMITS
+    none
+
+LIBRARY
+    none - XXX ?
+
+SEE ALSO
+    define, undefine,
+    isassoc, isatty, isblk, isconfig, iserror, iseven, isfile,
+    ishash, isident, isint, islist, ismat, ismult, isnull, isnum, isobj,
+    isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
+    issimple, issq, isstr, istype

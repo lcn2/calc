@@ -1,0 +1,41 @@
+NAME
+    isptr - whether a value is a pointer
+
+SYNOPSIS
+    isptr(x)
+
+TYPES
+    x		any
+
+    return	0, 1, 2, 3, or 4
+
+DESCRIPTION
+    isptr(x) returns:
+
+		0 if x is a not pointer
+		1 if x is an octet-pointer
+		2 if x is a value-pointer
+		3 if x is a string-pointer
+		4 if x is a number-pointer
+
+     Pointers are initially defined by using the addreess (&) operator
+     with an "addressable" value; currently, these are octets, lvalues,
+     strings and real numbers.
+
+EXAMPLE
+	> a = "abc", b = 3, B = blk()
+	> p1 = &B[1]
+	> p2 = &a
+	> p3 = &*a
+	> p4 = &*b
+	> print isptr(a), isptr(p1), isptr(p2), isptr(p3), isptr(p4)
+	0 1 2 3 4
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    isnum, isstr, isblk, isoctet

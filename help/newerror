@@ -1,39 +1,70 @@
 NAME
-    newerror - create a new error type
+    newerror - create or recall a described error-value
 
 SYNOPSIS
     newerror([str])
 
 TYPES
-    str		non-null string
+    str		string
 
     return	error-value
 
 DESCRIPTION
-    With or without an argument, newerror() creates an error-value
-    different from already existing error-values.  With the argument
-    str, if x == newerror(str), strerror(iserror(x)) returns str.
+    If str is not "" and has not earlier been used as an argument for
+    this function, newerror(str) creates a new described error-value so
+    that any future use of newerror(str) with the same str will return
+    the same error-value.
+
+    If x = newerror(str), both strerror(x) and strerror(iserro(x)) will
+    return str and iserror(x) will return the error code value of the
+    new error.
+
+    The null cases newerror() and newerror("") are equivalent to
+    newerror("???").
 
 EXAMPLE
-    > e1 = newerror("Non-positive side")
-    > e2 = newerror("Non-triangle sides")
+    Note that by default, errmax() is 0 so unless errmax() is
+    increased you will get:
 
-    > define area(a,b,c) {\
-    >	local s;\
-    >	if (!(a > 0) || !(b > 0) || !(c > 0)) return e1;\
-    >	s = (a + b + c)/2;\
-    >	if (s <= a || s <= b || s <= c) return e2;\
-    >	return sqrt(s * (s - a) * (s - b) * (s - c)); }
+    > ba = newerror("curds n' whey");
+    Error 20000 caused errcount to exceed errmax
 
-    > print strerror(iserror(area(8,2,5)))
+    > errmax(errcount()+5)
+	    0
+    > e1 = newerror("triangle side length <= 0")
+    > iserror(e1)
+	    20000
+    > error(20000)
+	    Error 20000
+    > strerror(error(20000))
+	    "triangle side length <= 0"
+    > strerror(e1);
+	    "triangle side length <= 0"
+    > strerror(error(iserror(e1)))
+	    "triangle side length <= 0"
 
-    Non-triangle sides
+    > define area(a,b,c) {
+    >>	local s;
+    >>	if (!(a > 0) || !(b > 0) || !(c > 0)) return e1;
+    >>	s = (a + b + c)/2;
+    >>	if (s <= a || s <= b || s <= c) return newerror("Non-triangle sides");
+    >>	return sqrt(s * (s - a) * (s - b) * (s - c));
+    >> }
+    "area" defined
+
+    > A = area(8,2,5);
+    > if (iserror(A)) print strerror(A) : ":", iserror(A);
+    Non-triangle sides: 20001
+
+    > A = area(-3,4,5)
+    > if (iserror(A)) print strerror(A) : ":", iserror(A);
+    triangle side length <= 0: 20000
 
 LIMITS
-    none - XXX - is this correct?
+    The number of new described error-values is not to exceed 12767.
 
 LIBRARY
     none
 
 SEE ALSO
-    errorcodes, iserror, error
+    errmax, errcount, error, strerror, iserror, errno, errorcodes

@@ -1,12 +1,13 @@
 /*
- * Copyright (c) 1993 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  */
 
 
-#ifndef	FUNC_H
-#define	FUNC_H
+#if !defined(__FUNC_H__)
+#define	__FUNC_H__
+
 
 #include "calc.h"
 #include "label.h"
@@ -53,6 +54,9 @@ extern FUNC *findfunc(long index);
 extern char *namefunc(long index);
 extern BOOL evaluate(BOOL nestflag);
 extern long adduserfunc(char *name);
+extern void rmuserfunc(char *name);
+extern void rmalluserfunc(void);
+extern long getuserfunc(char *name);
 extern void beginfunc(char *name, BOOL newflag);
 extern int builtinopcode(long index);
 extern char *builtinname(long index);
@@ -74,7 +78,8 @@ extern void clearopt(void);
 extern void updateoldvalue(FUNC *fp);
 extern void calculate(FUNC *fp, int argcount);
 extern VALUE builtinfunc(long index, int argcount, VALUE *stck);
+extern void freenumbers(FUNC *);
+extern void freefunc(FUNC *);
 
-#endif
 
-/* END CODE */
+#endif /* !__FUNC_H__ */

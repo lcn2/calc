@@ -1,31 +1,117 @@
 NAME
-    search - search a matrix, list or association for a value
+    search - search for an element satisfying a specified condition
 
 SYNOPSIS
-    search(x, val [,idx])
+    search(a, b [, [c] [, [d] ] ])
 
 TYPES
-    x		matrix, &matrix, list, &list, assoc, &assoc
-    val		any, &any
-    idx		int
+    a		matrix, list, association or file
+    b		string if a is a file, otherwise any
+    c	 	integer, defaults to zero or current file-position
+    d		integer, defaults to size(a) or current file-position
 
-    return	any
+    return	nonnegative integer or null value
 
 DESCRIPTION
-    Searchs the matrix, list or association x for the value val.  By
-    default, the search starts at index 0.  If idx is given, the search
-    starts at index indx.
 
-    If the value is not found, this function returns nil.
+    Negative values of c and nonpositive values for d are treated as
+    offsets from size(a), i.e. as if c were replaced by size(a) + c,
+    and d by size(a) + d.  Any such adjustment is assumed in the following
+    description.
+
+
+    For Non-file a:
+
+    For a matrix, list, or association a,
+    search(a, b, c, d) returns, if it exists, the least index i for which
+    c <= i < d,  0 <= i < size(a), and, if accept() has not been defined,
+    a[[i]] == b, or if accept() has been defined, accept(a[[i]], b)
+    tests as nonzero.  The null value is returned if there is no such i.
+
+    For example, to search for the first a[[i]] > b an appropriate
+    accept() function is given by:
+
+		define accept(v,b) = (v > b);
+
+    To restore the original behavior of search(), one may then use
+
+		define accept(v, b) = (v == b).
+
+    Since the addresses (rather than values) of a and b are passed,
+    the values of v = x[[i]] and b may be changed during execution
+    of search(a, b, c, d), e.g. if accept(v,b) has been defined by
+
+		define accept(v,b) = (v > b ? v-- : b++);
+
+
+    For a is a file-stream:
+
+    c defaults to the current file-position if there are just two
+    arguments (a,b) or if there are four arguments as in (a,b, ,d)
+    where d is an integer.  Otherwise c defaults to zero.
+
+    d defaults to the current file-position or size(a) according as
+    the number of arguments (indicated by commas) is four or less
+    than four.
+
+    If a is a file, a string formed by n successive characters in a
+    is considered to occur at the file position
+    of the first character.  E.g. if a has the characters "123456",
+    the string "345" is said to occur at position 2.
+
+    The file is searched forwards from file-position pos = c for
+    a match with b (not including the terminating '\0').
+    Only characters with file-positions less than d are considered,
+    so the effective interval for the first-character position pos
+    for a matching string is limited by both c <= pos <= d - strlen(b)
+    and 0 <= pos < size(a) - strlen(b).
+
+    The function returns pos if a match is found, and the reading position
+    for the stream after the search will then correspond to the position of
+    the terminating '\0' for the string b.
+
+    The null value is returned if no match is found.  If c, d, size(a)
+    and strlen(b) are such that no match is possible, no reading of the
+    file occurs and the current file-position is not changed.  In a case
+    where characters are read, the final file-position will be
+    min(d, size(a)) - strlen(b) + 1,
+    i.e. the file will be at the first position where a match is impossible
+    because the specified search region has insufficient remaining characters.
 
 EXAMPLE
-    > lst = list(2,"three",4i)
-    > search(lst,"three")
+    > L = list(2,"three",4i)
+    > search(L,"three")
 	    1
-    > search(lst,"threes")
-    > search(lst, 4i, 4)
-    > search(lst, 4i, 1)
+    > search(L,"threes")
+    > search(L, 4i, 4)
+    > search(L, 4i, 1)
 	    2
+
+    > f = fopen("foo", "w+")
+    > fputs(f, "This file has 28 characters.")
+    > rewind(f)
+    > search(f, "ha")
+	10
+    > ftell(f)
+        12
+    > search(f, "ha")
+	18
+    > search(f, "ha")
+    > search(f, "ha",)
+	10
+    > search(f, "ha", 12)
+	18
+    > search(f, "ha", -10)
+	18
+    > search(f, "ha", ,)
+	10
+    > search(f, "ha", 11, 19)
+    > ftell(f)
+	18
+    > search(f, "ha", 11, 20)
+	18
+    > search(f, "ha", 5, 500)
+	10
 
 LIMITS
     none
@@ -35,3 +121,4 @@ LIBRARY
 
 SEE ALSO
     assoc, list, mat, rsearch
+

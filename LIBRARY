@@ -10,13 +10,19 @@ precision arithmetic with integers, rational numbers, or complex numbers.
 There are also many numeric functions such as factorial and gcd, along
 with some transcendental functions such as sin and exp.
 
+Take a look at the sample sub-directory.  It contains a few simple
+examples of how to use libcalc.a that might be helpful to look at
+after you have read this file.
+
 ------------------
 FIRST THINGS FIRST
 ------------------
 
-*******************************************************************************
-* You MUST call libcalc_call_me_first() prior to using libcalc lib functions! *
-*******************************************************************************
+...............................................................................
+.									      .
+. You MUST call libcalc_call_me_first() prior to using libcalc lib functions! .
+.									      .
+...............................................................................
 
 The function libcalc_call_me_first() takes no args and returns void.  You
 need call libcalc_call_me_first() only once.
@@ -98,7 +104,11 @@ For example:
     ...
 
     if ((error = setjmp(calc_jmp_buf)) != 0) {
-	    /* handle error */
+
+	    /* reinitialize calc after a longjmp */
+	    reinitialize();
+
+	    /* report the error */
 	    printf("Ouch: %s\n", calc_error);
     }
     calc_jmp = 1;
@@ -434,3 +444,14 @@ for equality.  The ccmp function returns TRUE if two complex numbers differ.
 There are three predefined values for complex numbers.  You should clink
 them when you want to use them.  They are _czero_, _cone_, and _conei_.
 These have the values 0, 1, and i.
+
+----------------
+LAST THINGS LAST
+----------------
+
+If you wish, when you are all doen you can call libcalc_call_me_last()
+to free a small amount of storage associated with the libcalc_call_me_first()
+call.  This is not required, but is does bring things to a closure.
+
+The function libcalc_call_me_last() takes no args and returns void.  You
+need call libcalc_call_me_last() only once.

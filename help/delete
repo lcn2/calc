@@ -1,20 +1,18 @@
 NAME
-    delete - delete an element from a list at a given position
+    delete - delete an element from a list at a specified position
 
 SYNOPSIS
-    delete(lst, idx)
+    delete(lst, index)
 
 TYPES
-    lst		list, &list
-    idx		int, &int
+    lst		list
+    index	nonnegative integer less than the size of the list
 
-    return	any
+    return	type of the deleted element
 
 DESCRIPTION
-     Delete element at index idx from list lst.
-
-     The index must refer to an element in the list.  That is, idx must
-     be in the range [0, size(lst)-1].
+     Deletes element at the specified index from list lst, and returns
+     the value of this element.
 
 EXAMPLE
     > lst = list(2,3,4,5)
@@ -41,4 +39,4 @@ LIBRARY
     none
 
 SEE ALSO
-    append, insert, islist, list, pop, push, remove, rsearch, search, size
+    append, insert, pop, push, remove, size

@@ -14,17 +14,16 @@ DESCRIPTION
     Returns the acoth of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    acoth(x) = ln((x + 1)/(x - 1))/2 is the real number v for which
-    coth(v) = x.
+    acoth(x) is the real number v for which coth(v) = x.
+    It is given by
+    		acoth(x) = ln((x + 1)/(x - 1))/2
 
 EXAMPLE
     > print acoth(2, 1e-5), acoth(2, 1e-10), acoth(2, 1e-15), acoth(2, 1e-20)
     .54931 .5493061443 .549306144334055 .5493061443340548457
 
 LIMITS
-    unlike sin and cos, x must be real
-    abs(x) > 1
-    eps > 0
+    none
 
 LIBRARY
     NUMBER *qacoth(NUMBER *x, NUMBER *eps)

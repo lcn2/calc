@@ -43,47 +43,96 @@ FMT= fmt
 CMP= cmp
 CAT= cat
 
-# Standard help files
+# Standard and Builtin help files
 #
-# The obj.file is special and is not listed here.
-#
-STD_HELP_FILES1= intro overview help command config \
-	define environment expression file history interrupt mat
-STD_HELP_FILES2= operator statement types usage variable
-STD_HELP_FILES3= todo credit
-STD_HELP_FILES= ${STD_HELP_FILES1} ${STD_HELP_FILES2} ${STD_HELP_FILES3}
-SYMBOL_HELP= assign
+STD_HELP_FILES_1= intro overview help
+STD_HELP_FILES_2= assoc
 
-# These two lists are prodiced by the detaillist and missinglist rules
-# when no WARNINGS are detected.
+BLT_HELP_FILES_3= builtin
+
+STD_HELP_FILES_4= command config custom define environment expression
+
+BLT_HELP_FILES_5= errorcodes
+
+STD_HELP_FILES_6= file history interrupt list mat
+
+# beacuse obj is built special (due to confusion with it as
+# a symlink for some built environments, we treat obj specially
+# and call it obj.file
 #
-DETAIL_HELP= abs access acos acosh acot acoth acsc acsch append appr archive \
-	arg asec asech asin asinh assoc atan atan2 atanh avg base bround \
-	btrunc ceil cfappr cfsim char cmdbuf cmp comb conj cos cosh cot coth \
-	count cp csc csch ctime delete den det digit digits dp epsilon errno \
+SPECIAL_HELP_7= obj.file
+
+STD_HELP_FILES_8= operator statement
+
+BLT_HELP_FILES_9= stdlib
+
+STD_HELP_FILES_10= types usage unexpected variable
+
+BLT_HELP_FILES_11= altbind bindings custom_cal libcalc new_custom stdlib
+
+STD_HELP_FILES_12= archive
+
+BLT_HELP_FILES_13= bugs changes
+
+STD_HELP_FILES_14= contrib credit todo
+
+# These files are used in the following order to construct full
+#
+FULL_HELP_FILES= ${STD_HELP_FILES_1} ${STD_HELP_FILES_2} \
+		${BLT_HELP_FILES_3} ${STD_HELP_FILES_4} \
+		${BLT_HELP_FILES_5} ${STD_HELP_FILES_6} \
+		${SPECIAL_HELP_7} ${STD_HELP_FILES_8} \
+		${BLT_HELP_FILES_9} ${STD_HELP_FILES_10} \
+		${BLT_HELP_FILES_11} ${STD_HELP_FILES_12} \
+		${BLT_HELP_FILES_13} ${STD_HELP_FILES_14}
+
+# These full files are those who are not built or constrcuted
+#
+STD_HELP_FILES= ${STD_HELP_FILES_1} ${STD_HELP_FILES_2} \
+		${STD_HELP_FILES_4} ${STD_HELP_FILES_6} \
+		${STD_HELP_FILES_8} ${STD_HELP_FILES_10} \
+		${STD_HELP_FILES_12} ${STD_HELP_FILES_14}
+
+# These full files are those who are built by this Makefile
+#
+# Note that ${SPECIAL_HELP_7} is not included in this list
+# because of problems with its name.
+#
+BLT_HELP_FILES= ${BLT_HELP_FILES_3} ${BLT_HELP_FILES_5} \
+		${BLT_HELP_FILES_9} \
+		${BLT_HELP_FILES_11} ${BLT_HELP_FILES_13}
+
+# This list is prodiced by the detaillist rule when no WARNINGS are detected.
+#
+DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
+	appr arg arrow asec asech asin asinh assign atan atan2 atanh avg base \
+	bit blk blkcpy blkfree blocks bround btrunc ceil cfappr cfsim char \
+	cmdbuf cmp comb conj cos cosh cot coth count cp csc csch ctime delete \
+	den dereference det digit digits dp epsilon errcount errmax errno \
 	error eval exp fact factor fclose fcnt feof ferror fflush fgetc \
 	fgetfield fgetline fgets fgetstr fib files floor fopen forall fprintf \
-	fputc fputs fputstr frac frem freopen fscan fscanf fseek fsize ftell \
-	gcd gcdrem getenv hash head highbit hmean hypot ilog ilog10 ilog2 im \
-	insert int inverse iroot isassoc isatty isconfig iserror iseven \
-	isfile ishash isident isint islist ismat ismult isnull isnum isobj \
-	isodd isprime isqrt isrand israndom isreal isrel isset issimple issq \
-	isstr istype jacobi join lcm lcmfact lfactor list ln lowbit ltol \
-	makelist matdim matfill matmax matmin matsum mattrans max meq min \
-	minv mmin mne mod modify near newerror nextcand nextprime norm null \
-	num ord param perm pfact pi pix places pmod polar poly pop power \
-	prevcand prevprime printf prompt ptest push putenv quo quomod rand \
-	randbit randperm rcin rcmul rcout rcpow rcsq re rm remove reverse \
-	rewind root round rsearch runtime scale scan scanf search sec sech \
-	segment select sgn sin sinh size sizeof sort sqrt srand ssq str \
-	strcat strerror strlen strpos strprintf strscan strscanf substr swap \
-	system tail tan tanh time trunc xor
+	fputc fputs fputstr frac free freeglobals freeredc freestatics frem \
+	freopen fscan fscanf fseek fsize ftell gcd gcdrem gd getenv hash head \
+	highbit hmean hnrmod hypot ilog ilog10 ilog2 im insert int inverse \
+	iroot isassoc isatty isblk isconfig isdefined iserror iseven isfile \
+	ishash isident isint islist ismat ismult isnull isnum isobj isobjtype \
+	isodd isprime isptr isqrt isrand israndom isreal isrel issimple issq \
+	isstr istype jacobi join lcm lcmfact lfactor ln lowbit ltol makelist \
+	matdim matfill matmax matmin matsum mattrace mattrans max md5 memsize \
+	meq min minv mmin mne mod modify name near newerror nextcand \
+	nextprime norm null num oldvalue ord param perm pfact pi pix places \
+	pmod polar poly pop popcnt power prevcand prevprime printf prompt \
+	protect ptest push putenv quo quomod rand randbit random randombit \
+	randperm rcin rcmul rcout rcpow rcsq re remove reverse rewind rm root \
+	round rsearch runtime saveval scale scan scanf search sec sech \
+	segment select sgn sha sha1 sin sinh size sizeof sort sqrt srand \
+	srandom ssq str strcat strerror strlen strpos strprintf strscan \
+	strscanf substr sum swap system tail tan tanh test time trunc xor
 
-# Help files that are constructed from other sources
+# This list is of files that are clones of DETAIL_HELP files.  They are
+# built from DETAIL_HELP files.
 #
-# The obj.file is special and is not listed here.
-#
-BUILT_HELP_FILES= bindings altbind changes libcalc stdlib bugs errorcodes
+DETAIL_CLONE= copy
 
 # Singular files
 #
@@ -94,12 +143,12 @@ SINGULAR_FILES= binding bug change errorcode type
 
 # These files are found (but not built) in the distribution
 #
-DISTLIST= ${STD_HELP_FILES} ${DETAIL_HELP} ${SYMBOL_HELP} ${MAKE_FILE} \
+DISTLIST= ${STD_HELP_FILES} ${DETAIL_HELP} ${MAKE_FILE} \
 	obj.file builtin.top builtin.end funclist.sed \
 	errorcodes.hdr errorcodes.sed
 
-all: ${STD_HELP_FILES} obj.file ${BUILT_HELP_FILES} full \
-     ${DETAIL_HELP} ${SINGULAR_FILES} builtin .all
+all: ${FULL_HELP_FILES} full ${DETAIL_HELP} ${DETAIL_CLONE} \
+     ${SINGULAR_FILES} calc .all
 
 # used by the upper level Makefile to determine of we have done all
 #
@@ -111,9 +160,9 @@ all: ${STD_HELP_FILES} obj.file ${BUILT_HELP_FILES} full \
 	touch .all
 
 bindings: ../lib/bindings
-	rm -f bindings
-	cp ../lib/bindings bindings
-	chmod 0444 bindings
+	rm -f $@
+	cp ../lib/bindings $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -123,9 +172,9 @@ bindings: ../lib/bindings
 	fi
 
 altbind: ../lib/altbind
-	rm -f altbind
-	cp ../lib/altbind altbind
-	chmod 0444 altbind
+	rm -f $@
+	cp ../lib/altbind $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -135,9 +184,9 @@ altbind: ../lib/altbind
 	fi
 
 stdlib: ../lib/README
-	rm -f stdlib
-	cp ../lib/README stdlib
-	chmod 0444 stdlib
+	rm -f $@
+	cp ../lib/README $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -147,9 +196,9 @@ stdlib: ../lib/README
 	fi
 
 changes: ../CHANGES
-	rm -f changes
-	cp ../CHANGES changes
-	chmod 0444 changes
+	rm -f $@
+	cp ../CHANGES $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -159,9 +208,9 @@ changes: ../CHANGES
 	fi
 
 libcalc: ../LIBRARY
-	rm -f libcalc
-	${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' < ../LIBRARY > libcalc
-	chmod 0444 libcalc
+	rm -f $@
+	${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' < ../LIBRARY > $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -171,9 +220,9 @@ libcalc: ../LIBRARY
 	fi
 
 bugs: ../BUGS
-	rm -f bugs
-	cp ../BUGS bugs
-	chmod 0444 bugs
+	rm -f $@
+	cp ../BUGS $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -183,10 +232,10 @@ bugs: ../BUGS
 	fi
 
 errorcodes: ../calcerr.h errorcodes.hdr errorcodes.sed
-	rm -f errorcodes
-	${CAT} errorcodes.hdr > errorcodes
-	${SED} -n -f errorcodes.sed < ../calcerr.h >> errorcodes
-	chmod 0444 errorcodes
+	rm -f $@
+	${CAT} errorcodes.hdr > $@
+	${SED} -n -f errorcodes.sed < ../calcerr.h >> $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -195,11 +244,58 @@ errorcodes: ../calcerr.h errorcodes.hdr errorcodes.sed
 	    true; \
 	fi
 
-full: ${STD_HELP_FILES} ${BUILT_HELP_FILES} ${MAKE_FILE}
+calc: usage
+	rm -f $@
+	cp usage $@
+	chmod 0444 $@
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo ''; \
+	else \
+	    true; \
+	fi
+
+custom_cal: ../custom/CUSTOM_CAL
+	rm -f $@
+	cp usage $@
+	chmod 0444 $@
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo ''; \
+	else \
+	    true; \
+	fi
+
+new_custom: ../custom/HOW_TO_ADD
+	rm -f $@
+	cp usage $@
+	chmod 0444 $@
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo ''; \
+	else \
+	    true; \
+	fi
+
+copy: blkcpy
+	rm -f $@
+	cp usage $@
+	chmod 0444 $@
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo ''; \
+	else \
+	    true; \
+	fi
+
+full: ${FULL_HELP_FILES} ${MAKE_FILE}
 	${Q}echo "forming full"
-	-${Q}rm -f full
-	-${Q}for i in ${STD_HELP_FILES1} obj.file ${STD_HELP_FILES2} \
-	    ${BUILT_HELP_FILES} ${STD_HELP_FILES3}; do \
+	-${Q}rm -f $@
+	-${Q}for i in ${FULL_HELP_FILES}; do \
 	    if [ Xintro != X"$$i" ]; then \
 		echo ""; \
 	    else \
@@ -215,7 +311,7 @@ full: ${STD_HELP_FILES} ${BUILT_HELP_FILES} ${MAKE_FILE}
 	    echo "*************"; \
 	    echo ""; \
 	    cat $$i; \
-	done > full
+	done > $@
 	${Q}echo "full formed"
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -302,8 +398,8 @@ distlist: ${DISTLIST}
 
 # The bsdi distribution has generated files as well as distributed files.
 #
-bsdilist: ${DISTLIST} ${BUILT_HELP_FILES}
-	${Q}for i in ${DISTLIST} ${BUILT_HELP_FILES}; do \
+bsdilist: ${DISTLIST} ${BLT_HELP_FILES}
+	${Q}for i in ${DISTLIST} ${BLT_HELP_FILES}; do \
 		echo calc/help/$$i; \
 	done | ${SORT}
 
@@ -333,8 +429,9 @@ clean:
 	rm -f obj mkbuiltin funclist.c funclist.o funclist
 
 clobber:
-	rm -f ${BUILT_HELP_FILES} full builtin .all
-	rm -f obj mkbuiltin funclist.c funclist.o funclist ${SINGULAR_FILES}
+	rm -f ${BLT_HELP_FILES} full .all calc
+	rm -f obj mkbuiltin funclist.c funclist.o funclist
+	rm -f ${SINGULAR_FILES} ${DETAIL_CLONE}
 
 install: all
 	-${Q}if [ ! -d ${TOPDIR} ]; then \
@@ -355,8 +452,8 @@ install: all
 	else \
 	    true; \
 	fi
-	${Q}for i in ${STD_HELP_FILES} ${BUILT_HELP_FILES} builtin \
-		  full ${DETAIL_HELP} ${SINGULAR_FILES} ${SYMBOL_HELP}; do \
+	${Q}for i in ${STD_HELP_FILES} ${BLT_HELP_FILES} builtin \
+		  full ${DETAIL_HELP} ${SINGULAR_FILES}; do \
 		echo rm -f ${HELPDIR}/$$i; \
 		rm -f ${HELPDIR}/$$i; \
 		echo cp $$i ${HELPDIR}; \
@@ -367,3 +464,5 @@ install: all
 	rm -f ${HELPDIR}/obj
 	cp obj.file ${HELPDIR}/obj
 	chmod 0444 ${HELPDIR}/obj
+	# remove dead files
+	-@rm -f rmblk block

@@ -28,7 +28,7 @@ define stest(str, verbose)
 	if (verbose > 0) {
 		print str:":",:;
 	}
-	x = rm("junk4600");
+	x = rm("-f", "junk4600");
 
 	/*
 	 * do file operations
@@ -92,14 +92,14 @@ define stest(str, verbose)
 		print '**** rsearch(f, "and") != 109 failed';
 		return 1;
 	}
-	if (ftell(f) != 112) {
+	if (ftell(f) != 111) {
 		print 'failed';
-		print '**** ftell(f) != 112 failed';
+		print '**** ftell(f) != 111 failed';
 		return 1;
 	}
-	if (iserror(fseek(f, -1, 1))) {
+	if (iserror(fseek(f, -4, 1))) {
 		print 'failed';
-		print '**** iserror(fseek(f, -1, 1)) failed';
+		print '**** iserror(fseek(f, -4, 1)) failed';
 		return 1;
 	}
 	if (rsearch(f, "and") != 10) {
@@ -107,14 +107,14 @@ define stest(str, verbose)
 		print '**** rsearch(f, "and") != 10 failed';
 		return 1;
 	}
-	if (ftell(f) != 13) {
+	if (ftell(f) != 12) {
 		print 'failed';
-		print '**** ftell(f) != 13 failed';
+		print '**** ftell(f) != 12 failed';
 		return 1;
 	}
-	if (iserror(fseek(f, -1, 1))) {
+	if (iserror(fseek(f, -4, 1))) {
 		print 'failed';
-		print '**** iserror(fseek(f, -1, 1)) failed';
+		print '**** iserror(fseek(f, -4, 1)) failed';
 		return 1;
 	}
 	if (!isnull(rsearch(f, "and"))) {
@@ -152,7 +152,7 @@ define ttest(str, m, n, verbose)
 	if (verbose > 0) {
 		print str:":",:;
 	}
-	i = rm("junk4600");
+	i = rm("-f", "junk4600");
 	f = fopen("junk4600", "w");
 
 	if (isnull(n))
@@ -168,13 +168,14 @@ define ttest(str, m, n, verbose)
 		j = 1 + randbit(n);
 		a = "";
 		while (j-- > 0)
-			a = strcat(a, char(rand(1, 256)));
+			a = strcat(a, char(rand(32, 127)));
 		A[i] = a;
 		fputs(f, a);
 		pos[i+1] = ftell(f);
 		if (verbose > 1)
 			printf("A[%d] has length %d\n", i, strlen(a));
 	}
+	fflush(f);
 	if (verbose > 1)
 		printf("File has size %d\n", pos[i]);
 	freopen(f, "r");
@@ -216,7 +217,7 @@ define ttest(str, m, n, verbose)
 				break;
 			fseek(f, -1, 1);
 		}
-		if (ftell(f) != pos[i + 1]) {
+		if (ftell(f) != pos[i + 1] - 1) {
 			print 'failed';
 			printf("**** Failure 5 for i = %d\n", i);
 			return 1;
@@ -299,9 +300,7 @@ define test4600(v, tnum)
 	return tnum;
 }
 
-global lib_debug;
-
-if (lib_debug >= 0) {
+if (config("lib_debug") >= 0) {
 	print "stest(str [, verbose]) defined";
 	print "ttest([m, [n [,verbose]]]) defined";
 	print "sprint(x) defined";

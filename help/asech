@@ -14,17 +14,16 @@ DESCRIPTION
     Returns the asech of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    asech(x) = ln((1 + sqrt(1 - x^2))/x) is the real number v for which
-    sech(v) = x.
+    asech(x) is the real number v for which sech(v) = x.  It is given by
+
+    		asech(x) = ln((1 + sqrt(1 - x^2))/x)
 
 EXAMPLE
     > print asech(.5,1e-5), asech(.5,1e-10), asech(.5,1e-15), asech(.5,1e-20)
     1.31696 1.3169578969 1.316957896924817 1.31695789692481670862
 
 LIMITS
-    unlike sin and cos, x must be real
-    0 < x <= 1
-    eps > 0
+    none
 
 LIBRARY
     NUMBER *qasech(NUMBER *x, NUMBER *eps)

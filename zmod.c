@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
@@ -98,6 +98,7 @@ zmulmod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 	zmod(tmp, z3, res, 0);
 	zfree(tmp);
 }
+#endif
 
 
 /*
@@ -158,6 +159,7 @@ zsquaremod(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 }
 
 
+#if 0
 /*
  * Add two numbers together and then mod the result with a third number.
  * The two numbers to be added can be negative or out of modulo range.
@@ -1986,6 +1988,9 @@ zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
 				}
 			}
 			pp = &lowpowers[curpow];
+			if (pp->len > 0) {
+				zfree(*pp);
+			}
 			*pp = modpow;
 		}
 
@@ -2036,4 +2041,316 @@ zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
 		zfree(ztmp);
 }
 
-/* END CODE */
+
+/*
+ * zhnrmod - compute z mod h*2^n+r
+ *
+ * We compute v mod h*2^n+r, where h>0, n>0, abs(r) <= 1, as follows:
+ *
+ *	Let v = b*2^n + a, where 0 <= a < 2^n
+ *
+ *	Now v mod h*2^n+r == b*2^n + a mod h*2^n+r,
+ *	and thus v mod h*2^n+r == b*2^n mod h*2^n+r + a mod h*2^n+r.
+ *
+ *	Because 0 <= a < 2^n < h*2^n+r, a mod h*2^n+r == a.
+ *	Thus v mod h*2^n+r == b*2^n mod h*2^n+r + a.
+ *
+ *	It can be shown that b*2^n mod h*2^n == 2^n * (b mod h).
+ *
+ *	Thus for r == 0, v mod h*2^n+r == (2^n)*(b mod h) + a.
+ *
+ *	It can be shown that v mod 2^n-1 == a+b mod 2^n-1.
+ *
+ *	Thus for r == -1, v mod h*2^n+r == (2^n)*(b mod h) + a + int(b/h).
+ *
+ *	It can be shown that v mod 2^n+1 == a-b mod 2^n+1.
+ *
+ *	Thus for r == +1, v mod h*2^n+r == (2^n)*(b mod h) + a - int(b/h).
+ *
+ *	Therefore, v mod h*2^n+r == (2^n)*(b mod h) + a - r*int(b/h).
+ *
+ * The above proof leads to the following calc script which computes
+ * the value z mod h*2^n+r:
+ *
+ *    define hnrmod(v,h,n,r)
+ *    {
+ *	local a,b,modulus,tquo,tmod,lbit,ret;
+ *
+ *	if (!isint(h) || h < 1) {
+ *	    quit "h must be an integer be > 0";
+ *	}
+ *	if (!isint(n) || n < 1) {
+ *	    quit "n must be an integer be > 0";
+ *	}
+ *	if (r != 1 && r != 0 && r != -1) {
+ *	    quit "r must be -1, 0 or 1";
+ *	}
+ *
+ *	lbit = lowbit(h);
+ *	if (lbit > 0) {
+ *	    n += lbit;
+ *	    h >>= lbit;
+ *	}
+ *
+ *	modulus = h<<n+r;
+ *	if (modulus <= 2^31-1) {
+ *	    return v % modulus;
+ *	}
+ *	ret = v;
+ *
+ *	do {
+ *	    if (highbit(ret) < n) {
+ *		break;
+ *	    }
+ *	    b = ret>>n;
+ *	    a = ret - (b<<n);
+ *
+ *	    switch (r) {
+ *	    case -1:
+ *		if (h == 1) {
+ *		    ret = a + b;
+ *		} else {
+ *		    quomod(b, h, tquo, tmod);
+ *		    ret = tmod<<n + a + tquo;
+ *		}
+ *		break;
+ *	    case 0:
+ *		if (h == 1) {
+ *		    ret = a;
+ *		} else {
+ *		    ret = (b%h)<<n + a;
+ *		}
+ *		break;
+ *	    case 1:
+ *		if (h == 1) {
+ *		    ret = ((a > b) ? a-b : modulus+a-b);
+ *		} else {
+ *		    quomod(b, h, tquo, tmod);
+ *		    tmod = tmod<<n + a;
+ *		    ret = ((tmod >= tquo) ? tmod-tquo : modulus+tmod-tquo);
+ *		}
+ *		break;
+ *	    }
+ *	} while (ret > modulus);
+ *	ret = ((ret < 0) ? ret+modlus : ((ret == modulus) ? 0 : ret));
+ *
+ *	return ret;
+ *    }
+ *
+ * This function implements the above calc script.
+ *
+ * given:
+ *	v		take mod of this value, v >= 0
+ *	zh		h from modulus h*2^n+r, h > 0
+ *	zn		n from modulus h*2^n+r, n > 0
+ *	zr		r from modulus h*2^n+r, abs(r) <= 1
+ *	res		v mod h*2^n+r
+ */
+void
+zhnrmod(ZVALUE v, ZVALUE zh, ZVALUE zn, ZVALUE zr, ZVALUE *res)
+{
+	ZVALUE a;		/* lower n bits of v */
+	ZVALUE b;		/* bits above the lower n bits of v */
+	ZVALUE h;		/* working zh value */
+	ZVALUE modulus;		/* h^2^n + r */
+	ZVALUE tquo;		/* b // h */
+	ZVALUE tmod;		/* b % h or (b%h)<<n + a */
+	ZVALUE t;		/* temp ZVALUE */
+	ZVALUE t2;		/* temp ZVALUE */
+	ZVALUE ret;		/* return value, what *res is set to */
+	long n;			/* integer value of zn */
+	long r;			/* integer value of zr */
+	long hbit;		/* highbit(res) */
+	long lbit;		/* lowbit(h) */
+	int zrelval;		/* return value of zrel() */
+	int hisone;		/* 1 => h == 1, 0 => h != 1 */
+
+	/*
+	 * firewall
+	 */
+	if (zisneg(zh) || ziszero(zh)) {
+		math_error("h must be > 0");
+		/*NOTREACHED*/
+	}
+	if (zisneg(zn) || ziszero(zn)) {
+		math_error("n must be > 0");
+		/*NOTREACHED*/
+	}
+	if (zge31b(zn)) {
+		math_error("n must be < 2^31");
+		/*NOTREACHED*/
+	}
+	if (!zisabsleone(zr)) {
+		math_error("r must be -1, 0 or 1");
+		/*NOTREACHED*/
+	}
+
+
+	/*
+	 * setup for loop
+	 */
+	n = ztolong(zn);
+	r = ztolong(zr);
+	if (zisneg(zr)) {
+		r = -r;
+	}
+	/* lbit = lowbit(h); */
+	lbit = zlowbit(zh);
+	/* if (lbit > 0) { n += lbit; h >>= lbit; } */
+	if (lbit > 0) {
+		n += lbit;
+		zshift(zh, -lbit, &h);
+	} else {
+		h = zh;
+	}
+	/* modulus = h<<n+r; */
+	zshift(h, n, &t);
+	switch (r) {
+	case 1:
+		zadd(t, _one_, &modulus);
+		zfree(t);
+		break;
+	case 0:
+		modulus = t;
+		break;
+	case -1:
+		zsub(t, _one_, &modulus);
+		zfree(t);
+		break;
+	}
+	/* if (modulus <= MAXLONG) { return v % modulus; } */
+	if (!zgtmaxlong(modulus)) {
+		itoz(zmodi(v, ztolong(modulus)), res);
+		zfree(modulus);
+		if (lbit > 0) {
+			zfree(h);
+		}
+		return;
+	}
+	/* ret = v; */
+	zcopy(v, &ret);
+
+	/*
+	 * shift-add modulus loop
+	 */
+	hisone = zisone(h);
+	do {
+
+		/*
+		 * split ret into to chunks, the lower n bits
+		 * and everything above the lower n bits
+		 */
+		/* if (highbit(ret) < n) { break; } */
+		hbit = (long)zhighbit(ret);
+		if (hbit < n) {
+			zrelval = (zcmp(ret, modulus) ? -1 : 0);
+			break;
+		}
+		/* b = ret>>n; */
+		zshift(ret, -n, &b);
+		b.sign = ret.sign;
+		/* a = ret - (b<<n); */
+		a.sign = ret.sign;
+		a.len = (n+BASEB-1)/BASEB;
+		a.v = alloc(a.len);
+		memcpy(a.v, ret.v, a.len*sizeof(HALF));
+		if (n % BASEB) {
+			a.v[a.len - 1] &= lowhalf[n % BASEB];
+		}
+		ztrim(&a);
+
+		/*
+		 * switch depending on r == -1, 0 or 1
+		 */
+		switch (r) {
+		case -1:	/* v mod h*2^h-1 */
+			/* if (h == 1) ... */
+			if (hisone) {
+				/* ret = a + b; */
+				zfree(ret);
+				zadd(a, b, &ret);
+
+			/* ... else ... */
+			} else {
+				/* quomod(b, h, tquo, tmod); */
+				(void) zdiv(b, h, &tquo, &tmod, 0);
+				/* ret = tmod<<n + a + tquo; */
+				zshift(tmod, n, &t);
+				zfree(tmod);
+				zadd(a, tquo, &t2);
+				zfree(tquo);
+				zfree(ret);
+				zadd(t, t2, &ret);
+				zfree(t);
+				zfree(t2);
+			}
+			break;
+
+		case 0:		/* v mod h*2^h-1 */
+			/* if (h == 1) ... */
+			if (hisone) {
+				/* ret = a; */
+				zfree(ret);
+				zcopy(a, &ret);
+
+			/* ... else ... */
+			} else {
+				/* ret = (b%h)<<n + a; */
+				(void) zmod(b, h, &tmod, 0);
+				zshift(tmod, n, &t);
+				zfree(tmod);
+				zfree(ret);
+				zadd(t, a, &ret);
+				zfree(t);
+			}
+			break;
+
+		case 1:		/* v mod h*2^h-1 */
+			/* if (h == 1) ... */
+			if (hisone) {
+				/* ret = a-b; */
+				zfree(ret);
+				zsub(a, b, &ret);
+
+			/* ... else ... */
+			} else {
+				/* quomod(b, h, tquo, tmod); */
+				(void) zdiv(b, h, &tquo, &tmod, 0);
+				/* tmod = tmod<<n + a; */
+				zshift(tmod, n, &t);
+				zfree(tmod);
+				zadd(t, a, &tmod);
+				zfree(t);
+				/* ret = tmod-tquo; */
+				zfree(ret);
+				zsub(tmod, tquo, &ret);
+				zfree(tquo);
+				zfree(tmod);
+			}
+			break;
+		}
+		zfree(a);
+		zfree(b);
+
+	/* ... while (abs(ret) > modulus); */
+	} while ((zrelval = zabsrel(ret, modulus)) > 0);
+	/* ret = ((ret < 0) ? ret+modlus : ((ret == modulus) ? 0 : ret)); */
+	if (ret.sign) {
+		zadd(ret, modulus, &t);
+		zfree(t);
+		ret = t;
+	} else if (zrelval == 0) {
+		zfree(ret);
+		ret = _zero_;
+	}
+	zfree(modulus);
+	if (lbit > 0) {
+		zfree(h);
+	}
+
+	/*
+	 * return ret
+	 */
+	*res = ret;
+	return;
+}

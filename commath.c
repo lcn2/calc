@@ -29,10 +29,14 @@ cadd(COMPLEX *c1, COMPLEX *c2)
 	if (ciszero(c2))
 		return clink(c1);
 	r = comalloc();
-	if (!qiszero(c1->real) || !qiszero(c2->real))
+	if (!qiszero(c1->real) || !qiszero(c2->real)) {
+		qfree(r->real);
 		r->real = qqadd(c1->real, c2->real);
-	if (!qiszero(c1->imag) || !qiszero(c2->imag))
+	}
+	if (!qiszero(c1->imag) || !qiszero(c2->imag)) {
+		qfree(r->imag);
 		r->imag = qqadd(c1->imag, c2->imag);
+	}
 	return r;
 }
 
@@ -50,10 +54,14 @@ csub(COMPLEX *c1, COMPLEX *c2)
 	if (ciszero(c2))
 		return clink(c1);
 	r = comalloc();
-	if (!qiszero(c1->real) || !qiszero(c2->real))
+	if (!qiszero(c1->real) || !qiszero(c2->real)) {
+		qfree(r->real);
 		r->real = qsub(c1->real, c2->real);
-	if (!qiszero(c1->imag) || !qiszero(c2->imag))
+	}
+	if (!qiszero(c1->imag) || !qiszero(c2->imag)) {
+		qfree(r->imag);
 		r->imag = qsub(c1->imag, c2->imag);
+	}
 	return r;
 }
 
@@ -95,7 +103,9 @@ cmul(COMPLEX *c1, COMPLEX *c2)
 	q2 = qmul(c1->real, c2->real);
 	q3 = qmul(c1->imag, c2->imag);
 	q4 = qqadd(q2, q3);
+	qfree(r->real);
 	r->real = qsub(q2, q3);
+	qfree(r->imag);
 	r->imag = qsub(q1, q4);
 	qfree(q1);
 	qfree(q2);
@@ -122,10 +132,12 @@ csquare(COMPLEX *c)
 		return clink(&_cnegone_);
 	r = comalloc();
 	if (cisreal(c)) {
+		qfree(r->real);
 		r->real = qsquare(c->real);
 		return r;
 	}
 	if (cisimag(c)) {
+		qfree(r->real);
 		q1 = qsquare(c->imag);
 		r->real = qneg(q1);
 		qfree(q1);
@@ -133,9 +145,11 @@ csquare(COMPLEX *c)
 	}
 	q1 = qsquare(c->real);
 	q2 = qsquare(c->imag);
+	qfree(r->real);
 	r->real = qsub(q1, q2);
 	qfree(q1);
 	qfree(q2);
+	qfree(r->imag);
 	q1 = qmul(c->real, c->imag);
 	r->imag = qscale(q1, 1L);
 	qfree(q1);
@@ -160,26 +174,32 @@ cdiv(COMPLEX *c1, COMPLEX *c2)
 		return clink(&_cone_);
 	r = comalloc();
 	if (cisreal(c1) && cisreal(c2)) {
-		r->real = qdiv(c1->real, c2->real);
+		qfree(r->real);
+		r->real = qqdiv(c1->real, c2->real);
 		return r;
 	}
 	if (cisimag(c1) && cisimag(c2)) {
-		r->real = qdiv(c1->imag, c2->imag);
+		qfree(r->real);
+		r->real = qqdiv(c1->imag, c2->imag);
 		return r;
 	}
 	if (cisimag(c1) && cisreal(c2)) {
-		r->imag = qdiv(c1->imag, c2->real);
+		qfree(r->imag);
+		r->imag = qqdiv(c1->imag, c2->real);
 		return r;
 	}
 	if (cisreal(c1) && cisimag(c2)) {
-		q1 = qdiv(c1->real, c2->imag);
+		qfree(r->imag);
+		q1 = qqdiv(c1->real, c2->imag);
 		r->imag = qneg(q1);
 		qfree(q1);
 		return r;
 	}
 	if (cisreal(c2)) {
-		r->real = qdiv(c1->real, c2->real);
-		r->imag = qdiv(c1->imag, c2->real);
+		qfree(r->real);
+		qfree(r->imag);
+		r->real = qqdiv(c1->real, c2->real);
+		r->imag = qqdiv(c1->imag, c2->real);
 		return r;
 	}
 	q1 = qsquare(c2->real);
@@ -192,14 +212,16 @@ cdiv(COMPLEX *c1, COMPLEX *c2)
 	q3 = qqadd(q1, q2);
 	qfree(q1);
 	qfree(q2);
-	r->real = qdiv(q3, den);
+	qfree(r->real);
+	r->real = qqdiv(q3, den);
 	qfree(q3);
 	q1 = qmul(c1->real, c2->imag);
 	q2 = qmul(c1->imag, c2->real);
 	q3 = qsub(q2, q1);
 	qfree(q1);
 	qfree(q2);
-	r->imag = qdiv(q3, den);
+	qfree(r->imag);
+	r->imag = qqdiv(q3, den);
 	qfree(q3);
 	qfree(den);
 	return r;
@@ -221,11 +243,13 @@ cinv(COMPLEX *c)
 	}
 	r = comalloc();
 	if (cisreal(c)) {
+		qfree(r->real);
 		r->real = qinv(c->real);
 		return r;
 	}
 	if (cisimag(c)) {
 		q1 = qinv(c->imag);
+		qfree(r->imag);
 		r->imag = qneg(q1);
 		qfree(q1);
 		return r;
@@ -235,8 +259,10 @@ cinv(COMPLEX *c)
 	den = qqadd(q1, q2);
 	qfree(q1);
 	qfree(q2);
-	r->real = qdiv(c->real, den);
-	q1 = qdiv(c->imag, den);
+	qfree(r->real);
+	r->real = qqdiv(c->real, den);
+	q1 = qqdiv(c->imag, den);
+	qfree(r->imag);
 	r->imag = qneg(q1);
 	qfree(q1);
 	qfree(den);
@@ -255,10 +281,14 @@ cneg(COMPLEX *c)
 	if (ciszero(c))
 		return clink(&_czero_);
 	r = comalloc();
-	if (!qiszero(c->real))
+	if (!qiszero(c->real)) {
+		qfree(r->real);
 		r->real = qneg(c->real);
-	if (!qiszero(c->imag))
+	}
+	if (!qiszero(c->imag)) {
+		qfree(r->imag);
 		r->imag = qneg(c->imag);
+	}
 	return r;
 }
 
@@ -275,7 +305,9 @@ cint(COMPLEX *c)
 	if (cisint(c))
 		return clink(c);
 	r = comalloc();
+	qfree(r->real);
 	r->real = qint(c->real);
+	qfree(r->imag);
 	r->imag = qint(c->imag);
 	return r;
 }
@@ -293,7 +325,9 @@ cfrac(COMPLEX *c)
 	if (cisint(c))
 		return clink(&_czero_);
 	r = comalloc();
+	qfree(r->real);
 	r->real = qfrac(c->real);
+	qfree(r->imag);
 	r->imag = qfrac(c->imag);
 	return r;
 }
@@ -311,8 +345,11 @@ cconj(COMPLEX *c)
 	if (cisreal(c))
 		return clink(c);
 	r = comalloc();
-	if (!qiszero(c->real))
+	if (!qiszero(c->real)) {
+		qfree(r->real);
 		r->real = qlink(c->real);
+	}
+	qfree(r->imag);
 	r->imag = qneg(c->imag);
 	return r;
 }
@@ -329,8 +366,10 @@ creal(COMPLEX *c)
 	if (cisreal(c))
 		return clink(c);
 	r = comalloc();
-	if (!qiszero(c->real))
+	if (!qiszero(c->real)) {
+		qfree(r->real);
 		r->real = qlink(c->real);
+	}
 	return r;
 }
 
@@ -346,6 +385,7 @@ cimag(COMPLEX *c)
 	if (cisreal(c))
 		return clink(&_czero_);
 	r = comalloc();
+	qfree(r->real);
 	r->real = qlink(c->imag);
 	return r;
 }
@@ -362,6 +402,8 @@ caddq(COMPLEX *c, NUMBER *q)
 	if (qiszero(q))
 		return clink(c);
 	r = comalloc();
+	qfree(r->real);
+	qfree(r->imag);
 	r->real = qqadd(c->real, q);
 	r->imag = qlink(c->imag);
 	return r;
@@ -379,6 +421,8 @@ csubq(COMPLEX *c, NUMBER *q)
 	if (qiszero(q))
 		return clink(c);
 	r = comalloc();
+	qfree(r->real);
+	qfree(r->imag);
 	r->real = qsub(c->real, q);
 	r->imag = qlink(c->imag);
 	return r;
@@ -397,6 +441,8 @@ cshift(COMPLEX *c, long n)
 	if (ciszero(c) || (n == 0))
 		return clink(c);
 	r = comalloc();
+	qfree(r->real);
+	qfree(r->imag);
 	r->real = qshift(c->real, n);
 	r->imag = qshift(c->imag, n);
 	return r;
@@ -414,6 +460,8 @@ cscale(COMPLEX *c, long n)
 	if (ciszero(c) || (n == 0))
 		return clink(c);
 	r = comalloc();
+	qfree(r->real);
+	qfree(r->imag);
 	r->real = qscale(c->real, n);
 	r->imag = qscale(c->imag, n);
 	return r;
@@ -435,6 +483,8 @@ cmulq(COMPLEX *c, NUMBER *q)
 	if (qisnegone(q))
 		return cneg(c);
 	r = comalloc();
+	qfree(r->real);
+	qfree(r->imag);
 	r->real = qmul(c->real, q);
 	r->imag = qmul(c->imag, q);
 	return r;
@@ -458,8 +508,10 @@ cdivq(COMPLEX *c, NUMBER *q)
 	if (qisnegone(q))
 		return cneg(c);
 	r = comalloc();
-	r->real = qdiv(c->real, q);
-	r->imag = qdiv(c->imag, q);
+	qfree(r->real);
+	qfree(r->imag);
+	r->real = qqdiv(c->real, q);
+	r->imag = qqdiv(c->imag, q);
 	return r;
 }
 
@@ -477,10 +529,10 @@ qqtoc(NUMBER *q1, NUMBER *q2)
 	if (qiszero(q1) && qiszero(q2))
 		return clink(&_czero_);
 	r = comalloc();
-	if (!qiszero(q1))
-		r->real = qlink(q1);
-	if (!qiszero(q2))
-		r->imag = qlink(q2);
+	qfree(r->real);
+	qfree(r->imag);
+	r->real = qlink(q1);
+	r->imag = qlink(q2);
 	return r;
 }
 
@@ -512,6 +564,8 @@ crel(COMPLEX *c1, COMPLEX *c2)
 	COMPLEX *c;
 
 	c = comalloc();
+	qfree(c->real);
+	qfree(c->imag);
 	c->real = itoq((long) qrel(c1->real, c2->real));
 	c->imag = itoq((long) qrel(c1->imag, c2->imag));
 

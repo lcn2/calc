@@ -21,8 +21,7 @@ EXAMPLE
     1.54308 1.5430806348 1.543080634815244 1.54308063481524377848
 
 LIMITS
-    unlike sin and cos, x must be real
-    eps > 0
+    none
 
 LIBRARY
     NUMBER *qcosh(NUMBER *x, NUMBER *eps)

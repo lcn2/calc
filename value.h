@@ -1,19 +1,24 @@
 /*
- * Copyright (c) 1995 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Definitions of general values and related routines used by the calculator.
  */
 
-#ifndef	VALUE_H
-#define	VALUE_H
+
+#if !defined(__VALUE_H__)
+#define	__VALUE_H__
+
 
 #include "cmath.h"
 #include "config.h"
 #include "shs.h"
 #include "calcerr.h"
 #include "hash.h"
+#include "block.h"
+#include "nametype.h"
+#include "string.h"
 
 #define MAXDIM		4	/* maximum number of dimensions in matrices */
 #define USUAL_ELEMENTS	4	/* usual number of elements for objects */
@@ -39,7 +44,6 @@ typedef	struct assoc ASSOC;
 typedef	long FILEID;
 typedef	struct rand RAND;
 typedef	struct random RANDOM;
-typedef struct block BLOCK;
 
 
 /*
@@ -52,10 +56,10 @@ struct value {
 	short v_subtype;		/* other data related to some types */
 	union {				/* types of values (see V_XYZ below) */
 		long vv_int;		/* 1: small integer value */
-		NUMBER *vv_num;		/* 2: arbitrary sized numeric value */
+		NUMBER *vv_num;		/* 2, 21: real number */
 		COMPLEX *vv_com;	/* 3: complex number */
-		VALUE *vv_addr;		/* 4: address of variable value */
-		char *vv_str;		/* 5: string value */
+		VALUE *vv_addr;		/* 4, 18: address of variable value */
+		STRING *vv_str;		/* 5, 20: string value */
 		MATRIX *vv_mat;		/* 6: address of matrix */
 		LIST *vv_list;		/* 7: address of list */
 		ASSOC *vv_assoc;	/* 8: address of association */
@@ -66,6 +70,8 @@ struct value {
 		CONFIG *vv_config;	/* 13: configuration state */
 		HASH *vv_hash;		/* 14: hash state */
 		BLOCK *vv_block;	/* 15: memory block */
+		OCTET *vv_octet;	/* 16, 19: octet addr (unsigned char) */
+		NBLOCK *vv_nblock;	/* 17: named memory block */
 	} v_union;
 };
 
@@ -89,6 +95,8 @@ struct value {
 #define v_config v_union.vv_config
 #define v_hash	v_union.vv_hash
 #define v_block	v_union.vv_block
+#define v_octet	v_union.vv_octet
+#define v_nblock v_union.vv_nblock
 
 
 /*
@@ -96,9 +104,13 @@ struct value {
  *
  * NOTE: The following files should be checked/adjusted for a new type:
  *
- *	quickhash.c
- *	shs.c
- *	value.c
+ *	size.c		- elm_count(), lsizeof()
+ *	help/size	- update what the size() builtin will report
+ *	hash.c		- hash_value()
+ *	quickhash.c	- hashvalue()
+ *	value.c		- freevalue(), copyvalue(), comparevalue(),
+ *			  printvalue(),
+ *			  and other as needed such as testvalue(), etc.
  *
  * There may be others, but at is at least a start.
  */
@@ -118,13 +130,35 @@ struct value {
 #define V_CONFIG 13	/* configuration state */
 #define V_HASH	14	/* hash state */
 #define V_BLOCK	15	/* memory block */
-#define V_MAX	15	/* highest legal value */
+#define V_OCTET 16	/* octet (unsigned char) */
+#define V_NBLOCK 17	/* named memory block */
+#define V_VPTR	18	/* value address as pointer */
+#define V_OPTR	19	/* octet address as pointer */
+#define V_SPTR	20	/* string address as pointer */
+#define V_NPTR  21	/* number address as pointer */
+#define V_MAX	21	/* highest legal value */
 
-#define V_NOSUBTYPE	0	/* subtype has no meaning */
-#define V_STRLITERAL	1	/* string subtype for literal str */
-#define V_STRALLOC	2	/* string subtype for allocated str */
+#define V_NOSUBTYPE	0       /* subtype has no meaning */
+#define V_NOASSIGNTO	1	/* protection status 1 */
+#define V_NONEWVALUE	2	/* protection status 2 */
+#define V_NONEWTYPE	4	/* protection status 4 */
+#define V_NOERROR	8	/* protection status 8 */
+#define V_NOCOPYTO	16	/* protection status 16 */
+#define V_NOREALLOC	32	/* protection status 32 */
+#define V_NOASSIGNFROM	64	/* protection status 64 */
+#define V_NOCOPYFROM	128	/* protection status 128 */
+#define V_PROTECTALL	256	/* protection status 256 */
 
-#define TWOVAL(a,b) ((a) << 4 | (b))	/* for switch of two values */
+#define MAXPROTECT	511
+
+/*
+ * At present protect(var, sts) determines bits in var->v_subtype
+ * corresponding to 4 * sts.  MAXPROTECT is the sum of the simple
+ * (power of two) protection status values.
+ */
+
+
+#define TWOVAL(a,b) ((a) << 5 | (b))	/* for switch of two values */
 
 #define	NULL_VALUE	((VALUE *) 0)
 
@@ -139,10 +173,18 @@ extern void addvalue(VALUE *v1, VALUE *v2, VALUE *vres);
 extern void addnumeric(VALUE *v1, VALUE *v2, VALUE *vres);
 extern void subvalue(VALUE *v1, VALUE *v2, VALUE *vres);
 extern void mulvalue(VALUE *v1, VALUE *v2, VALUE *vres);
+extern void orvalue(VALUE *v1, VALUE *v2, VALUE *vres);
+extern void andvalue(VALUE *v1, VALUE *v2, VALUE *vres);
+extern void compvalue(VALUE *vp, VALUE *vres);
+extern void xorvalue(VALUE *v1, VALUE *v2, VALUE *vres);
 extern void squarevalue(VALUE *vp, VALUE *vres);
 extern void invertvalue(VALUE *vp, VALUE *vres);
 extern void roundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
 extern void broundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
+extern void setminusvalue(VALUE *, VALUE *, VALUE *);
+extern void backslashvalue(VALUE *, VALUE *);
+extern void contentvalue(VALUE *, VALUE *);
+extern void hashopvalue(VALUE *, VALUE *, VALUE *);
 extern void apprvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
 extern void intvalue(VALUE *vp, VALUE *vres);
 extern void fracvalue(VALUE *vp, VALUE *vres);
@@ -162,16 +204,23 @@ extern void quovalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
 extern void modvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
 extern BOOL testvalue(VALUE *vp);
 extern BOOL comparevalue(VALUE *v1, VALUE *v2);
+extern BOOL acceptvalue(VALUE *v1, VALUE *v2);
 extern void relvalue(VALUE *v1, VALUE *v2, VALUE *vres);
 extern void sgnvalue(VALUE *vp, VALUE *vres);
 extern QCKHASH hashvalue(VALUE *vp, QCKHASH val);
 extern void printvalue(VALUE *vp, int flags);
 extern BOOL precvalue(VALUE *v1, VALUE *v2);
 extern VALUE error_value(int e);
+extern int set_errno(int e);
+extern int set_errcount(int e);
+extern int set_errmax(int e);
 extern long countlistitems(LIST *lp);
 extern void addlistitems(LIST *lp, VALUE *vres);
 extern void addlistinv(LIST *lp, VALUE *vres);
-
+extern void copy2octet(VALUE *, OCTET *);
+extern int copystod(VALUE *, long, long, VALUE *, long);
+extern void protectall(VALUE *, int);
+extern void set_update(int);
 
 
 /*
@@ -207,13 +256,14 @@ extern MATRIX *matmodval(MATRIX *m, VALUE *vp, VALUE *v3);
 extern MATRIX *matint(MATRIX *m);
 extern MATRIX *matfrac(MATRIX *m);
 extern MATRIX *matappr(MATRIX *m, VALUE *v2, VALUE *v3);
+extern VALUE mattrace(MATRIX *m);
 extern MATRIX *mattrans(MATRIX *m);
 extern MATRIX *matcross(MATRIX *m1, MATRIX *m2);
 extern BOOL mattest(MATRIX *m);
 extern void matsum(MATRIX *m, VALUE *vres);
 extern BOOL matcmp(MATRIX *m1, MATRIX *m2);
-extern long matsearch(MATRIX *m, VALUE *vp, long index);
-extern long matrsearch(MATRIX *m, VALUE *vp, long index);
+extern int matsearch(MATRIX *m, VALUE *vp, long start, long end, ZVALUE *index);
+extern int matrsearch(MATRIX *m, VALUE *vp, long start, long end, ZVALUE *index);
 extern VALUE matdet(MATRIX *m);
 extern VALUE matdot(MATRIX *m1, MATRIX *m2);
 extern void matfill(MATRIX *m, VALUE *v1, VALUE *v2);
@@ -225,7 +275,6 @@ extern void matsort(MATRIX *m);
 extern BOOL matisident(MATRIX *m);
 extern MATRIX *matround(MATRIX *m, VALUE *v2, VALUE *v3);
 extern MATRIX *matbround(MATRIX *m, VALUE *v2, VALUE *v3);
-
 
 
 /*
@@ -260,8 +309,8 @@ extern void removelistlast(LIST *lp, VALUE *vp);
 extern void removelistmiddle(LIST *lp, long index, VALUE *vp);
 extern void listfree(LIST *lp);
 extern void listprint(LIST *lp, long max_print);
-extern long listsearch(LIST *lp, VALUE *vp, long index);
-extern long listrsearch(LIST *lp, VALUE *vp, long index);
+extern int listsearch(LIST *lp, VALUE *vp, long start, long end, ZVALUE *index);
+extern int listrsearch(LIST *lp, VALUE *vp, long start, long end, ZVALUE *index);
 extern BOOL listcmp(LIST *lp1, LIST *lp2);
 extern VALUE *listfindex(LIST *lp, long index);
 extern LIST *listalloc(void);
@@ -276,6 +325,8 @@ extern LIST *listmod(LIST *lp, VALUE *v2, VALUE *v3);
 extern BOOL evp(LISTELEM *cp, LISTELEM *x, VALUE *vres);
 extern BOOL evalpoly(LIST *clist, LISTELEM *x, VALUE *vres);
 extern void insertitems(LIST *lp1, LIST *lp2);
+extern LISTELEM *listelement(LIST *, long);
+extern LIST *listsegment(LIST *, long, long);
 
 
 /*
@@ -304,8 +355,8 @@ extern ASSOC *assocalloc(long initsize);
 extern ASSOC *assoccopy(ASSOC *ap);
 extern void assocfree(ASSOC *ap);
 extern void assocprint(ASSOC *ap, long max_print);
-extern long assocsearch(ASSOC *ap, VALUE *vp, long index);
-extern long assocrsearch(ASSOC *ap, VALUE *vp, long index);
+extern int assocsearch(ASSOC *ap, VALUE *vp, long start, long end, ZVALUE *index);
+extern int assocrsearch(ASSOC *ap, VALUE *vp, long start, long end, ZVALUE *index);
 extern BOOL assoccmp(ASSOC *ap1, ASSOC *ap2);
 extern VALUE *assocfindex(ASSOC *ap, long index);
 extern VALUE *associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices);
@@ -343,7 +394,22 @@ extern VALUE *associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices);
 #define OBJ_BROUND	26	/* round to specified binary places */
 #define OBJ_ROOT	27	/* take nth root of value */
 #define OBJ_SQRT	28	/* take square root of value */
-#define OBJ_MAXFUNC	28	/* highest function */
+#define OBJ_OR		29	/* take bitwise or of values */
+#define OBJ_AND		30	/* take bitwise and of values */
+#define OBJ_NOT		31	/* take logical not of value */
+#define OBJ_FACT	32	/* factorial or postfix ! */
+#define OBJ_MIN		33	/* minimum value */
+#define OBJ_MAX		34	/* maximum value */
+#define OBJ_SUM		35	/* sum value */
+#define OBJ_ASSIGN	36	/* assign value */
+#define OBJ_XOR		37	/* ~ difference of values */
+#define OBJ_COMP	38	/* ~ complement of value */
+#define OBJ_CONTENT	39	/* unary hash op */
+#define OBJ_HASHOP	40	/* binary hash op */
+#define OBJ_BACKSLASH	41	/* unary backslash op */
+#define OBJ_SETMINUS	42	/* binary backslash op */
+#define OBJ_PLUS	43	/* unary + op */
+#define OBJ_MAXFUNC	43	/* highest function */
 
 
 /*
@@ -392,10 +458,6 @@ extern int objoffset(OBJECT *op, long index);
 /*
  * Configuration parameter name and type.
  */
-typedef struct {
-	char *name;	/* name of configuration string */
-	int type;	/* type for configuration */
-} NAMETYPE;
 extern NAMETYPE configs[];
 extern void config_value(CONFIG *cfg, int type, VALUE *ret);
 extern void setconfig(int type, VALUE *vp);
@@ -403,53 +465,38 @@ extern void config_print(CONFIG *cfg);	/* the CONFIG to print */
 
 
 /*
- * hashfunc - interface for hashing hash objects
+ * size, memsize and sizeof support
  */
-struct hashfunc {
-	int type;		/* hash type (see XYZ_HASH_TYPE below) */
-	HASH *(*init)(HASH*);			/* initialize hash state */
-	HASH *(*longval)(HASH*, long);		/* hash a long value */
-	HASH *(*str)(HASH*, char*);		/* hash a string */
-#if defined(FUNCT_DECL_BUG)
-	HASH *(*value)(HASH*, void*);		/* hash a VALUE */
-	HASH *(*complex)(HASH*, void*);		/* hash a COMPLEX* */
-	HASH *(*number)(HASH*, void*);		/* hash a NUMBER* */
-	HASH *(*zvalue)(HASH*, void);		/* hash a ZVALUE */
-#else
-	HASH *(*value)(HASH*, VALUE*);		/* hash a VALUE */
-	HASH *(*complex)(HASH*, COMPLEX*);	/* hash a COMPLEX* */
-	HASH *(*number)(HASH*, NUMBER*);	/* hash a NUMBER* */
-	HASH *(*zvalue)(HASH*, ZVALUE);		/* hash a ZVALUE */
-#endif
-	ZVALUE (*final)(HASH *); /* complete hash state and return a ZVALUE */
-};
-typedef struct hashfunc HASHFUNC;
-
-/* external HASHFUNC functions */
-extern void shs_hashfunc(HASHFUNC *);
-
+extern long elm_count(VALUE *vp);
+extern long lsizeof(VALUE *vp);
+extern long memsize(VALUE *vp);
 
 /*
- * block - dynamic of fixed memory block
- *
- * There are two types of memory blocks: fixed memory blocks are fixed
- * in size and dynamic memory blocks can grow in size.  The max length
- * (x.max) may be >= current (x.len), even in the fixed case.  A fixed block
- * can be shrunk instead of realloced.  The (x.max) refers to the number
- * of bytes malloced and 0 <= (x.len) <= (x.max).  If (x.max) == 0, then
- * (x.data) does not point to malloced storage.
+ * String functions
  */
-struct block {
-	int type;		/* block type */
-	int len;		/* current block length in USB8's */
-	int max;		/* malloced block length in USB8's */
-	USB8 *data;		/* start of data block if max > 0 */
-};
+extern STRING *stringadd(STRING *, STRING *);
+extern STRING *stringcopy(STRING *);
+extern STRING *stringsub(STRING *, STRING *);
+extern STRING *stringmul(NUMBER *, STRING *);
+extern STRING *stringand(STRING *, STRING *);
+extern STRING *stringor(STRING *, STRING *);
+extern STRING *stringxor(STRING *, STRING *);
+extern STRING *stringdiff(STRING *, STRING *);
+extern STRING *stringsegment(STRING *, long, long);
+extern STRING *stringshift(STRING *, long);
+extern STRING *stringcomp(STRING *);
+extern STRING *stringneg(STRING *);
+extern STRING *stringcpy(STRING *, STRING *);
+extern STRING *stringncpy(STRING *, STRING *, long);
+extern long stringcontent(STRING *s);
+extern long stringlowbit(STRING *s);
+extern long stringhighbit(STRING *s);
+extern BOOL stringcmp(STRING *, STRING *);
+extern BOOL stringrel(STRING *, STRING *);
+extern int stringbit(STRING *, long);
+extern BOOL stringtest(STRING *);
+extern int stringsetbit(STRING *, long, BOOL);
+extern int stringsearch(STRING *, STRING *, long, long, ZVALUE *);
+extern int stringrsearch(STRING *, STRING *, long, long, ZVALUE *);
 
-#define V_FIXEDBLOCK	1	/* memory block is fixed in size */
-#define V_DYNAMBLOCK	2	/* memory block size is dynamic */
-
-#define is_fixedblock(x) (((x)->type) == V_FIXEDBLOCK)
-#define is_dynamblock(x) (((x)->type) == V_DYNAMBLOCK)
-
-#endif
+#endif /* !__VALUE_H__ */

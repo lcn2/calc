@@ -13,7 +13,7 @@ TYPES
 DESCRIPTION
     Returns the argument of x to the nearest or next to nearest multiple of
     eps; the error will be less in absolute value than 0.75 * abs(eps),
-    but usually less than 0.5 * abs(eps).  By default, acc is epsilon().
+    but usually less than 0.5 * abs(eps).
 
 EXAMPLE
     > print arg(2), arg(2+3i, 1e-5), arg(2+3i, 1e-10), arg(2+3i, 1e-20)

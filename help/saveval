@@ -1,0 +1,48 @@
+NAME
+    saveval - enable or disable saving of values
+
+SYNOPSIS
+    saveval(arg)
+
+TYPES
+    arg		any
+
+    return	null value
+
+DESCRIPTION
+    When evaluation of a line of statements at top level starts, a
+    "saved value" for that line is assigned the null value.  When saving
+    is enabled (the initial state) and a statement being evaluated is an
+    expression or a return statement, the value returned by that expression
+    or statement replaces the current saved value; on completion of
+    evaluation of the line, the saved value, if it is not null, updates
+    the "oldvalue".
+
+    This saving of values is enabled or disabled by calling saveval(arg)
+    with an argument arg that tests as nonzero or zero,
+
+    Whether saving is enabled or disabled does not affect the operation of
+    eval(str).
+
+EXAMPLE
+    > saveval(1);
+    > a = 27;
+    .
+	    27
+    > saveval(0);
+    > a = 45
+    .
+	    27
+    > saveval(1);
+    > a = 63
+    .
+	    63
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    oldvalue, eval

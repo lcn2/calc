@@ -315,7 +315,7 @@ zpprime(ZVALUE z)
 
 	/* deal with special case small values */
 	n = ztofull(z);
-	switch (n) {
+	switch ((int)n) {
 	case 0:
 	case 1:
 	case 2:

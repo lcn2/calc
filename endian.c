@@ -66,12 +66,13 @@ main(void)
     /* Determine byte order */
     if (intp[0] == 0x12364859) {
 	/* Most Significant Byte first */
-	printf("#define BYTE_ORDER\tBIG_ENDIAN\n");
+	printf("#define CALC_BYTE_ORDER\tBIG_ENDIAN\n");
     } else if (intp[0] == 0x59483612) {
 	/* Least Significant Byte first */
-	printf("#define BYTE_ORDER\tLITTLE_ENDIAN\n");
+	printf("#define CALC_BYTE_ORDER\tLITTLE_ENDIAN\n");
     } else {
-	fprintf(stderr, "Unknown int Byte Order, set BYTE_ORDER in Makefile\n");
+	fprintf(stderr,
+	    "Unknown int Byte Order, set CALC_BYTE_ORDER in Makefile\n");
 	exit(1);
     }
     exit(0);

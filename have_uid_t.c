@@ -36,6 +36,8 @@
  * chongo was here	/\../\
  */
 
+#include <stdio.h>
+
 #if !defined(HAVE_NO_UID_T)
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)

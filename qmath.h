@@ -1,13 +1,15 @@
 /*
- * Copyright (c) 1995 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Data structure declarations for extended precision rational arithmetic.
  */
 
-#ifndef	QMATH_H
-#define	QMATH_H
+
+#if !defined(__QMATH_H__)
+#define	__QMATH_H__
+
 
 #include "zmath.h"
 
@@ -15,11 +17,14 @@
 /*
  * Rational arithmetic definitions.
  */
-typedef struct {
+struct number {
 	ZVALUE num;		/* numerator (containing sign) */
 	ZVALUE den;		/* denominator (always positive) */
 	long links;		/* number of links to this value */
-} NUMBER;
+	struct number *next;	/* pointer to next number */
+};
+
+typedef struct number NUMBER;
 
 extern NUMBER _qlge_;
 
@@ -46,6 +51,10 @@ extern void qprintfx(NUMBER *q, long width);
 extern void qprintfb(NUMBER *q, long width);
 extern void qprintfo(NUMBER *q, long width);
 extern void qprintf(char *, ...);
+extern void shownumbers(void);
+extern void showredcdata(void);
+extern void freeredcdata(void);
+extern void fitprint(NUMBER *, long);
 
 
 
@@ -58,7 +67,7 @@ extern NUMBER *qdivi(NUMBER *q, long i);
 extern NUMBER *qqadd(NUMBER *q1, NUMBER *q2);
 extern NUMBER *qsub(NUMBER *q1, NUMBER *q2);
 extern NUMBER *qmul(NUMBER *q1, NUMBER *q2);
-extern NUMBER *qdiv(NUMBER *q1, NUMBER *q2);
+extern NUMBER *qqdiv(NUMBER *q1, NUMBER *q2);
 extern NUMBER *qquo(NUMBER *q1, NUMBER *q2, long rnd);
 extern NUMBER *qmod(NUMBER *q1, NUMBER *q2, long rnd);
 extern NUMBER *qmin(NUMBER *q1, NUMBER *q2);
@@ -66,6 +75,8 @@ extern NUMBER *qmax(NUMBER *q1, NUMBER *q2);
 extern NUMBER *qand(NUMBER *q1, NUMBER *q2);
 extern NUMBER *qor(NUMBER *q1, NUMBER *q2);
 extern NUMBER *qxor(NUMBER *q1, NUMBER *q2);
+extern NUMBER *qandnot(NUMBER *q1, NUMBER *q2);
+extern NUMBER *qcomp(NUMBER *q);
 extern NUMBER *qpowermod(NUMBER *q1, NUMBER *q2, NUMBER *q3);
 extern NUMBER *qpowi(NUMBER *q1, NUMBER *q2);
 extern NUMBER *qsquare(NUMBER *q);
@@ -76,7 +87,7 @@ extern NUMBER *qfrac(NUMBER *q);
 extern NUMBER *qnum(NUMBER *q);
 extern NUMBER *qden(NUMBER *q);
 extern NUMBER *qinv(NUMBER *q);
-extern NUMBER *qabs(NUMBER *q);
+extern NUMBER *qqabs(NUMBER *q);
 extern NUMBER *qinc(NUMBER *q);
 extern NUMBER *qdec(NUMBER *q);
 extern NUMBER *qshift(NUMBER *q, long n);
@@ -230,5 +241,8 @@ extern NUMBER *swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all);
  * constants used often by the arithmetic routines
  */
 extern NUMBER _qzero_, _qone_, _qnegone_, _qonehalf_, _qonesqbase_;
+extern NUMBER _qtwo_, _qthree_, _qfour_;
+extern NUMBER * initnumbs[];
 
-#endif
+
+#endif /* !__QMATH_H__ */

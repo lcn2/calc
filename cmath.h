@@ -1,13 +1,15 @@
 /*
- * Copyright (c) 1993 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Data structure declarations for extended precision complex arithmetic.
  */
 
-#ifndef	CMATH_H
-#define	CMATH_H
+
+#if !defined(__CMATH_H__)
+#define	__CMATH_H__
+
 
 #include "qmath.h"
 
@@ -73,8 +75,25 @@ extern COMPLEX *cexp(COMPLEX *c, NUMBER *epsilon);
 extern COMPLEX *cln(COMPLEX *c, NUMBER *epsilon);
 extern COMPLEX *ccos(COMPLEX *c, NUMBER *epsilon);
 extern COMPLEX *csin(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *ccosh(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *csinh(COMPLEX *c, NUMBER *epsilon);
 extern COMPLEX *cpolar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon);
 extern COMPLEX *crel(COMPLEX *c1, COMPLEX *c2);
+extern COMPLEX *casin(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *cacos(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *catan(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *cacot(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *casec(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *cacsc(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *casinh(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *cacosh(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *catanh(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *cacoth(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *casech(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *cacsch(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *cgd(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *cagd(COMPLEX *c, NUMBER *epsilon);
+
 
 
 /*
@@ -108,6 +127,5 @@ extern COMPLEX *swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all);
  */
 extern COMPLEX _czero_, _cone_, _conei_;
 
-#endif
 
-/* END CODE */
+#endif /* !__CMATH_H__ */

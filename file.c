@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
@@ -17,21 +17,16 @@
 #include "have_fpos.h"
 #include "fposval.h"
 #include "file.h"
-
+#include "calcerr.h"
 
 #define	READSIZE	1024	/* buffer size for reading */
 
-
 /*
- * XXX - the seek / tell stuff needs to deal with:
- *
- *	files larger than 2^32 bytes (at least as large as 2^40 bytes)
- *	use Posix conventions
- *	use Posix file position types
- *	not assume that a 'long' can hold a file position
- *
- *	Should use fgetpos and fsetpos functions.
+ * external STDIO functions
  */
+extern void math_setfp(FILE *fp);
+extern FILE *f_open(char *name, char *mode);
+
 
 /*
  * Table of opened files.
@@ -58,11 +53,9 @@ static ZVALUE filepos2z(FILEPOS pos);
 static FILEPOS z2filepos(ZVALUE pos);
 static int set_open_pos(FILE *fp, ZVALUE zpos);
 static int get_open_pos(FILE *fp, ZVALUE *res);
-static ZVALUE stsize2z(off_t siz);
+static ZVALUE off_t2z(off_t siz);
 static ZVALUE dev2z(dev_t dev);
 static ZVALUE inode2z(ino_t inode);
-static int get_open_siz(FILE *fp, ZVALUE *res);
-static FILEIO *findid(FILEID id, int mode);
 static void getscanfield(FILE *fp, BOOL skip, unsigned int width,
 			 int scannum, char *scanptr, char **strptr);
 static void getscanwhite(FILE *fp, BOOL skip, unsigned int width,
@@ -338,7 +331,7 @@ reopenid(FILEID id, char *mode, char *name)
  * If mode is 0, then no open checks are made at all, and NULL is then
  * returned if the id represents a closed file.
  */
-static FILEIO *
+FILEIO *
 findid(FILEID id, int mode)
 {
 	FILEIO *fiop;		/* file structure */
@@ -403,7 +396,6 @@ indexid(long index)
 		return FILEID_NONE;
 	return id;
 }
-
 
 
 /*
@@ -519,6 +511,7 @@ flushid(FILEID id)
 	return fflush(fiop->fp);
 }
 
+
 int
 flushall(void)
 {
@@ -566,7 +559,7 @@ readid(FILEID id, int flags, char **retptr)
 	char *b;
 	int c;
 	BOOL nlstop, nullstop, wsstop, rmstop, done;
-	long fpos;
+	FILEPOS fpos;
 
 	totlen = 0;
 	str = NULL;
@@ -582,9 +575,9 @@ readid(FILEID id, int flags, char **retptr)
 	fp = fiop->fp;
 
 	if (fiop->action == 'w') {
-		fpos = ftell(fp);
+		f_tell(fp, &fpos);
 		fflush(fp);
-		if (fseek(fp, fpos, 0) < 0)
+		if (f_seek_set(fp, &fpos) < 0)
 			return 3;
 	}
 	fiop->action = 'r';
@@ -650,15 +643,15 @@ int
 getcharid(FILEID id)
 {
 	FILEIO *fiop;
-	long fpos;
+	FILEPOS fpos;
 
 	fiop = findid(id, 'r');
 	if (fiop == NULL)
 		return -2;
 	if (fiop->action == 'w') {
-		fpos = ftell(fiop->fp);
+		f_tell(fiop->fp, &fpos);
 		fflush(fiop->fp);
-		if (fseek(fiop->fp, fpos, SEEK_SET) < 0)
+		if (f_seek_set(fiop->fp, &fpos) < 0)
 			return -3;
 	}
 	fiop->action = 'r';
@@ -756,19 +749,23 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 	long olddigits, newdigits;
 	long width, precision;
 	BOOL didneg, didprecision;
-	long fpos;
+	FILEPOS fpos;
+	BOOL printstring;
+	BOOL printchar;
 
 	fiop = findid(id, 'w');
 	if (fiop == NULL)
 		return 1;
 	if (fiop->action == 'r') {
-		fpos = ftell(fiop->fp);
-		if (fseek(fiop->fp, fpos, SEEK_SET) < 0)
+		f_tell(fiop->fp, &fpos);
+		if (f_seek_set(fiop->fp, &fpos) < 0)
 			return 3;
 	}
 
 	fiop->action = 'w';
 
+	printstring = FALSE;
+	printchar = FALSE;
 
 	math_setfp(fiop->fp);
 
@@ -814,9 +811,11 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 			newdigits = precision;
 
 		switch (ch) {
-			case 'd':
 			case 's':
+				printstring = TRUE;
 			case 'c':
+				printchar = TRUE;
+			case 'd':
 				break;
 			case 'f':
 				newmode = MODE_REAL;
@@ -860,13 +859,49 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 		 * value directly.
 		 */
 		if ((width == 0) ||
-			(vp->v_type == V_MAT) || (vp->v_type == V_LIST))
-		{
-			printvalue(vp, PRINT_NORMAL);
+			(vp->v_type == V_MAT) || (vp->v_type == V_LIST)) {
+			switch(vp->v_type) {
+				case V_OCTET:
+					if (printstring)
+						math_str((char *)vp->v_octet);
+					else if (printchar)
+						math_chr(*vp->v_octet);
+					else
+						printvalue(vp, PRINT_NORMAL);
+					break;
+				case V_BLOCK:
+					if (printstring)
+						math_str((char *)
+							 vp->v_block->data);
+					else if (printchar)
+						math_chr(*vp->v_block->data);
+					else
+						printvalue(vp, PRINT_NORMAL);
+					break;
+				case V_NBLOCK:
+					if (printstring) {
+						if (vp->v_nblock->blk->data !=
+						    NULL)
+							math_str((char *)
+								 vp->v_nblock
+								 ->blk->data);
+					 } else if (printchar) {
+						if (vp->v_nblock->blk->data !=
+						    NULL)
+							math_chr(*vp->v_nblock->
+								 blk->data);
+					} else
+						printvalue(vp, PRINT_NORMAL);
+					break;
+				default:
+					printvalue(vp, PRINT_NORMAL);
+			}
+
 			math_setmode(oldmode);
 			math_setdigits(olddigits);
 			continue;
 		}
+
 
 		/*
 		 * There is a field width.  Collect the output in a string,
@@ -875,7 +910,39 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 		 * the field width.
 		 */
 		math_divertio();
-		printvalue(vp, PRINT_NORMAL);
+		switch(vp->v_type) {
+		case V_OCTET:
+			if (printstring)
+				math_str((char *)vp->v_octet);
+			else if (printchar)
+				math_chr(*vp->v_octet);
+			else
+				printvalue(vp, PRINT_NORMAL);
+			break;
+		case V_BLOCK:
+			if (printstring)
+				math_str((char *)vp->v_block->data);
+			else if (printchar)
+				math_chr(*vp->v_block->data);
+			else
+				printvalue(vp, PRINT_NORMAL);
+			break;
+		case V_NBLOCK:
+			if (printstring) {
+				if (vp->v_nblock->blk->data != NULL)
+					math_str((char *)
+						 vp->v_nblock->blk->data);
+			}
+			else if (printchar) {
+				if (vp->v_nblock->blk->data != NULL)
+					math_chr(*vp->v_nblock->blk->data);
+			}
+			else
+				printvalue(vp, PRINT_NORMAL);
+			break;
+		default:
+			printvalue(vp, PRINT_NORMAL);
+		}
 		str = math_getdivertedio();
 		if (strchr(str, '\n'))
 			width = 0;
@@ -909,15 +976,15 @@ int
 idfputc(FILEID id, int ch)
 {
 	FILEIO *fiop;
-	long fpos;
+	FILEPOS fpos;
 
 	/* get the file info pointer */
 	fiop = findid(id, 'w');
 	if (fiop == NULL)
 		return 1;
 	if (fiop->action == 'r') {
-		fpos = ftell(fiop->fp);
-		if (fseek(fiop->fp, fpos, SEEK_SET))
+		f_tell(fiop->fp, &fpos);
+		if (f_seek_set(fiop->fp, &fpos) < 0)
 			return 2;
 	}
 
@@ -967,7 +1034,7 @@ int
 idfputs(FILEID id, char *str)
 {
 	FILEIO *fiop;
-	long fpos;
+	FILEPOS fpos;
 
 	/* get the file info pointer */
 	fiop = findid(id, 'w');
@@ -975,8 +1042,8 @@ idfputs(FILEID id, char *str)
 		return 1;
 
 	if (fiop->action == 'r') {
-		fpos = ftell(fiop->fp);
-		if (fseek(fiop->fp, fpos, SEEK_SET))
+		f_tell(fiop->fp, &fpos);
+		if (f_seek_set(fiop->fp, &fpos) < 0)
 			return 2;
 	}
 
@@ -993,6 +1060,7 @@ idfputs(FILEID id, char *str)
 	return 0;
 }
 
+
 /*
  * Same as idfputs but writes a terminating null character
  *
@@ -1004,7 +1072,7 @@ int
 idfputstr(FILEID id, char *str)
 {
 	FILEIO *fiop;
-	long fpos;
+	FILEPOS fpos;
 
 	/* get the file info pointer */
 	fiop = findid(id, 'w');
@@ -1012,8 +1080,8 @@ idfputstr(FILEID id, char *str)
 		return 1;
 
 	if (fiop->action == 'r') {
-		fpos = ftell(fiop->fp);
-		if (fseek(fiop->fp, fpos, SEEK_SET))
+		f_tell(fiop->fp, &fpos);
+		if (f_seek_set(fiop->fp, &fpos) < 0)
 			return 2;
 	}
 
@@ -1032,6 +1100,7 @@ idfputstr(FILEID id, char *str)
 	return 0;
 }
 
+
 int
 rewindid(FILEID id)
 {
@@ -1043,6 +1112,7 @@ rewindid(FILEID id)
 	fiop->action = 0;
 	return 0;
 }
+
 
 void
 rewindall(void)
@@ -1111,7 +1181,11 @@ z2filepos(ZVALUE zpos)
 	FILEPOS tmp;		/* temp file position as a FILEPOS */
 #endif
 	FILEPOS ret;		/* file position as a FILEPOS */
+#if FILEPOS_BITS < FULL_BITS
+	long pos;		/* zpos as a long */
+#else
 	FULL pos;		/* zpos as a FULL */
+#endif
 
 	/*
 	 * firewall
@@ -1121,14 +1195,21 @@ z2filepos(ZVALUE zpos)
 	/*
 	 * quick return if the position can fit into a long
 	 */
-#if FILEPOS_BITS <= FULL_BITS
+#if FILEPOS_BITS == FULL_BITS
 	/* ztofull puts the value into native byte order */
 	pos = ztofull(zpos);
 	/* on some hosts, FILEPOS is not a scalar */
 	memset(&ret, 0, sizeof(FILEPOS));
 	memcpy((void *)&ret, (void *)&pos, sizeof(FILEPOS));
 	return ret;
-#else /* FILEPOS_BITS <= FULL_BITS */
+#elif FILEPOS_BITS < FULL_BITS
+	/* ztofull puts the value into native byte order */
+	pos = ztolong(zpos);
+	/* on some hosts, FILEPOS is not a scalar */
+	memset(&ret, 0, sizeof(FILEPOS));
+	memcpy((void *)&ret, (void *)&pos, sizeof(pos));
+	return ret;
+#else /* FILEPOS_BITS > FULL_BITS */
 	if (!zgtmaxfull(zpos)) {
 		/* ztofull puts the value into native byte order */
 		pos = ztofull(zpos);
@@ -1177,18 +1258,10 @@ get_open_pos(FILE *fp, ZVALUE *res)
 	/*
 	 * get the file position
 	 */
-#if defined(HAVE_FPOS)
-	if (fgetpos(fp, (FILEPOS *)&pos) < 0) {
+	if (f_tell(fp, &pos) < 0) {
 	    /* cannot get file position, return -1 */
 	    return -1;
 	}
-#else
-	pos = ftell(fp);
-	if (pos < 0) {
-	    /* cannot get file position, return -1 */
-	    return -1;
-	}
-#endif
 
 	/*
 	 * update file position and return success
@@ -1235,42 +1308,91 @@ getloc(FILEID id, ZVALUE *res)
 	return get_open_pos(fp, res);
 }
 
-long
-ftellid(FILEID id)
+
+int
+ftellid(FILEID id, ZVALUE *res)
 {
 	FILEIO *fiop;
+	FILEPOS fpos;		/* current file position */
 
-	fiop = findid(id, 0);
-	if (fiop == NULL)
-		return -2L;
-	return ftell(fiop->fp);
-}
-
-
-long
-fseekid(FILEID id, long offset, int whence)
-{
-	FILEIO *fiop;
-	long i = 0;
-
+	/* get FILEIO */
 	fiop = findid(id, 0);
 	if (fiop == NULL)
 		return -2;
+
+	/* get the file position */
+	if (f_tell(fiop->fp, &fpos) < 0)
+		return -3;
+
+	/* convert file position to ZVALUE */
+	*res = filepos2z(fpos);
+	return 0;
+}
+
+
+int
+fseekid(FILEID id, ZVALUE offset, int whence)
+{
+	FILEIO *fiop;		/* FILEIO of file */
+	FILEPOS off;		/* offset as a FILEPOS */
+	ZVALUE cur, tmp;	/* current or end of file location */
+	int ret = 0;		/* return code */
+
+	/* setup */
+	fiop = findid(id, 0);
+	if (fiop == NULL)
+		return -2;
+
+	/* seek depending on whence */
 	switch (whence) {
 		case 0:
-			i = fseek(fiop->fp, offset, SEEK_SET);
+			/* construct seek position, off = offset */
+			if (zisneg(offset))
+				return -3;
+			off = z2filepos(offset);
+
+			/* seek there */
+			ret = f_seek_set(fiop->fp, &off);
 			break;
+
 		case 1:
-			i = fseek(fiop->fp, offset, SEEK_CUR);
+			/* construct seek position, off = cur+offset */
+			f_tell(fiop->fp, &off);
+			cur = filepos2z(off);
+			zadd(cur, offset, &tmp);
+			zfree(cur);
+			if (zisneg(tmp)) {
+				zfree(tmp);
+				return -3;
+			}
+			off = z2filepos(tmp);
+			zfree(tmp);
+
+			/* seek there */
+			ret = f_seek_set(fiop->fp, &off);
 			break;
+
 		case 2:
-			i = fseek(fiop->fp, offset, SEEK_END);
+			/* construct seek position, off = len+offset */
+			if (get_open_siz(fiop->fp, &cur) < 0)
+				return -4;
+			zadd(cur, offset, &tmp);
+			zfree(cur);
+			if (zisneg(tmp)) {
+				zfree(tmp);
+				return -3;
+			}
+			off = z2filepos(tmp);
+			zfree(tmp);
+
+			/* seek there */
+			ret = f_seek_set(fiop->fp, &off);
 			break;
+
 		default:
-			math_error("This should not happen in fseekid");
-			/*NOTREACHED*/
+			return -5;
 	}
-	return i;
+	return ret;
 }
 
 
@@ -1301,17 +1423,10 @@ set_open_pos(FILE *fp, ZVALUE zpos)
 	/*
 	 * set the file position
 	 */
-#if defined(HAVE_FPOS)
-	if (fsetpos(fp, (FILEPOS *)&pos) < 0) {
+	if (f_seek_set(fp, &pos) < 0) {
 	    /* cannot set file position, return -1 */
 	    return -1;
 	}
-#else
-	if (fseek(fp, pos, 0) < 0) {
-	    /* cannot set file position, return -1 */
-	    return -1;
-	}
-#endif
 
 	/*
 	 * return sucess
@@ -1330,9 +1445,6 @@ set_open_pos(FILE *fp, ZVALUE zpos)
  * returns:
  *	0	able to set file position
  *	-1	unable to set file position
- *
- * NOTE: Due to fsetpos limitation, position is set relative to only
- *	 the beginning of the file.
  */
 int
 setloc(FILEID id, ZVALUE zpos)
@@ -1373,7 +1485,7 @@ setloc(FILEID id, ZVALUE zpos)
 
 
 /*
- * stsize2z - convert a file size into a ZVALUE
+ * off_t2z - convert an off_t into a ZVALUE
  *
  * given:
  *	siz		file size
@@ -1382,17 +1494,17 @@ setloc(FILEID id, ZVALUE zpos)
  *	file size as a ZVALUE
  */
 static ZVALUE
-stsize2z(off_t siz)
+off_t2z(off_t siz)
 {
 	ZVALUE ret;		/* ZVALUE file size to return */
 
 	/*
 	 * store off_t in a ZVALUE as a positive value
 	 */
-	ret.len = STSIZE_BITS/BASEB;
+	ret.len = OFF_T_BITS/BASEB;
 	ret.v = alloc(ret.len);
 	zclearval(ret);
-	SWAP_HALF_IN_STSIZE(ret.v, &siz);
+	SWAP_HALF_IN_OFF_T(ret.v, &siz);
 	ret.sign = 0;
 	ztrim(&ret);
 
@@ -1476,7 +1588,7 @@ inode2z(ino_t inode)
  *	0		res points to the file size
  *	-1		error
  */
-static int
+int
 get_open_siz(FILE *fp, ZVALUE *res)
 {
 	struct stat buf;	/* file status */
@@ -1492,7 +1604,7 @@ get_open_siz(FILE *fp, ZVALUE *res)
 	/*
 	 * update file size and return success
 	 */
-	*res = stsize2z(buf.st_size);
+	*res = off_t2z(buf.st_size);
 	return 0;
 }
 
@@ -1502,11 +1614,12 @@ get_open_siz(FILE *fp, ZVALUE *res)
  *
  * given:
  *	id	file id of the file
- *	siz	pointer to result
+ *	res	pointer to result
  *
  * returns:
- *	0	able to get file size
- *	-1	unable to get file size
+ *	0		able to get file size
+ *	EOF		system error
+ *	other nonzero	file not open or other problem
  */
 int
 getsize(FILEID id, ZVALUE *res)
@@ -1520,11 +1633,11 @@ getsize(FILEID id, ZVALUE *res)
 	fiop = findid(id, 0);
 	if (fiop == NULL) {
 	  	/* file not open */
-		return -1;
+		return 1;
 	}
 	fp = fiop->fp;
 	if (fp == NULL) {
-		return -2;
+		return 2;
 	}
 
 	/*
@@ -1599,24 +1712,42 @@ get_inode(FILEID id, ZVALUE *inode)
 	return 0;
 }
 
-/* deal with file sizes > long */
-long
-filesize(FILEID id)
+
+static off_t
+filesize(FILEIO *fiop)
 {
-	FILEIO *fiop;
 	struct stat sbuf;
 
-	fiop = findid(id, 0);
-	if (fiop == NULL)
-		return -1;
-
+	/* return length */
 	if (fstat(fileno(fiop->fp), &sbuf) < 0) {
 		math_error("bad fstat");
 		/*NOTREACHED*/
 	}
-
-	return (long) sbuf.st_size;
+	return sbuf.st_size;
 }
+
+
+ZVALUE
+zfilesize(FILEID id)
+{
+	FILEIO *fiop;
+	off_t len;		/* file length */
+	ZVALUE ret;		/* file size as a ZVALUE return value */
+
+	/* file FILEIO */
+	fiop = findid(id, 0);
+	if (fiop == NULL) {
+		/* return neg value for non-file error */
+		itoz(-1, &ret);
+		return ret;
+	}
+
+	/* get length */
+	len = filesize(fiop);
+	ret = off_t2z(len);
+	return ret;
+}
+
 
 void
 showfiles(void)
@@ -1824,6 +1955,7 @@ getscanwhite(FILE *fp, BOOL skip, unsigned int width, int scannum, char **strptr
 	}
 }
 
+
 static int
 fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
 {
@@ -1837,6 +1969,8 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
 	BOOL skip;	/* True if string to be skipped rather than read */
 	int width;
 	VALUE *var;	/* lvalue to be assigned to */
+	short subtype;	/* for var->v_subtype */
+	FILEPOS cur;	/* current location */
 
 	if (feof(fp))
 		return EOF;
@@ -1923,8 +2057,11 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
 				if (var->v_type != V_ADDR)
 				math_error("This should not happen!!");
 				var = var->v_addr;
+				subtype = var->v_subtype;
+				freevalue(var);
 				count--;
 				freadsum(fp, var);
+				var->v_subtype = subtype;
 				continue;
 			case 'n':
 				assnum++;
@@ -1933,8 +2070,13 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
 				if (var->v_type != V_ADDR)
 					math_error("This should not happen!!");
 				var = var->v_addr;
+				subtype = var->v_subtype;
+				freevalue(var);
 				var->v_type = V_NUM;
-				var->v_num = itoq(ftell(fp));
+				var->v_num = qalloc();
+				f_tell(fp, &cur);
+				var->v_num->num = filepos2z(cur);
+				var->v_subtype = subtype;
 				continue;
 			default:
 				fprintf(stderr, "Unsupported scan specifier");
@@ -1945,21 +2087,23 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
 			var = *vals++;
 			count--;
 			if (var->v_type != V_ADDR)
-				math_error("Assigning to nonvariable XXX");
+				math_error("Assigning to nonvariable");
 			var = var->v_addr;
+			subtype = var->v_subtype;
+			freevalue(var);
 			var->v_type = V_STR;
-			var->v_subtype = V_STRALLOC;
-			var->v_str = str;
+			var->v_str = makestring(str);
 		}
 	}
 }
+
 
 int
 fscanfid(FILEID id, char *fmt, int count, VALUE **vals)
 {
 	FILEIO *fiop;
 	FILE *fp;
-	long fpos;
+	FILEPOS fpos;
 
 	fiop = findid(id, 'r');
 	if (fiop == NULL)
@@ -1968,9 +2112,9 @@ fscanfid(FILEID id, char *fmt, int count, VALUE **vals)
 	fp = fiop->fp;
 
 	if (fiop->action == 'w') {
-		fpos = ftell(fp);
+		f_tell(fp, &fpos);
 		fflush(fp);
-		if (fseek(fp, fpos, 0) < 0)
+		if (f_seek_set(fp, &fpos) < 0)
 			return -4;
 	}
 	fiop->action = 'r';
@@ -2009,7 +2153,7 @@ scanfstr(char *str, char *fmt, int count, VALUE **vals)
 static void
 freadnum(FILE *fp, VALUE *valptr)
 {
-	ZVALUE num, den, newnum, newden, div, tmp;
+	ZVALUE num, zden, newnum, newden, div, tmp;
 	NUMBER *q;
 	COMPLEX *c;
 	VALUE val;
@@ -2099,13 +2243,13 @@ freadnum(FILE *fp, VALUE *valptr)
 		*valptr = error_value(E_BIGEXP);
 		return;
 	}
-	ztenpow(decimals, &den);
+	ztenpow(decimals, &zden);
 	if (exp) {
 		ztenpow(exp, &tmp);
 		if (negexp) {
-			zmul(den, tmp, &newden);
-			zfree(den);
-			den = newden;
+			zmul(zden, tmp, &newden);
+			zfree(zden);
+			zden = newden;
 		} else {
 			zmul(num, tmp, &newnum);
 			zfree(num);
@@ -2113,22 +2257,23 @@ freadnum(FILE *fp, VALUE *valptr)
 		}
 		zfree(tmp);
 	}
-	if (!zisunit(num) && !zisunit(den)) {
-		zgcd(num, den, &div);
+	if (!zisunit(num) && !zisunit(zden)) {
+		zgcd(num, zden, &div);
 		if (!zisunit(div)) {
 			zequo(num, div, &newnum);
 			zfree(num);
-			zequo(den, div, &newden);
-			zfree(den);
+			zequo(zden, div, &newden);
+			zfree(zden);
 			num = newnum;
-			den = newden;
+			zden = newden;
 		}
 	}
 	q = qalloc();
 	q->num = num;
-	q->den = den;
+	q->den = zden;
 	if (imag) {
 		c = comalloc();
+		qfree(c->imag);
 		c->imag = q;
 		val.v_type = V_COM;
 		val.v_com = c;
@@ -2139,6 +2284,7 @@ freadnum(FILE *fp, VALUE *valptr)
 	}
 	*valptr = val;
 }
+
 
 static void
 freadsum(FILE *fp, VALUE *valptr)
@@ -2189,6 +2335,7 @@ freadprod(FILE *fp, VALUE *valptr)
 	*valptr = v1;
 }
 
+
 static void
 fskipnum(FILE *fp)
 {
@@ -2214,6 +2361,7 @@ fskipnum(FILE *fp)
 	ungetc(ch, fp);
 }
 
+
 int
 isattyid(FILEID id)
 {
@@ -2225,84 +2373,237 @@ isattyid(FILEID id)
 	return isatty(fileno(fiop->fp));
 }
 
-long
-fsearch(FILEID id, char *str, long pos)
-{
-	FILEIO *fiop;
-	FILE *fp;
-	long len, n, i;
-	char c;
-	char *s;
 
+/*
+ * fsearch - search for a string in a file
+ *
+ * given:
+ *	id	FILEID to search
+ *	str	string to look for
+ *	pos	file postion to start at (NULL => current position)
+ *
+ * returns:
+ *	EOF if system error
+ *	other negative integer if file not open, etc.
+ *	positive integer if string not found
+ *	zero if string found, position stored at res
+ *
+ * XXX - This search is a translation of the original search that did not
+ *	 work with large files.  The search algorithm used is slow and
+ *	 should be spead up much more.
+ */
+int
+fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
+{
+	FILEIO *fiop;		/* FILEIO of file id */
+	FILEPOS cur;		/* current file position */
+	ZVALUE tmp, tmp2;	/* temporary ZVALUEs */
+	char c;			/* str comparison character */
+	int r;			/* character read from file */
+	char *s;		/* str comparison pointer */
+	long k = 0;
+
+	/* get FILEIO */
 	fiop = findid(id, 'r');
 	if (fiop == NULL)
 		return -2;
-	fp = fiop->fp;
-	if (pos < 0)
-		pos = ftell(fp);
+
+	/*
+	 * file setup
+	 */
 	if (fiop->action == 'w')
-		fflush(fp);
-	fseek(fp, pos, SEEK_SET);
-	len = (long)strlen(str);
-	if (len == 0)
-		return pos;
-	c = *str++;
-	n = filesize(id) -  pos - len;
-	while (n-- >= 0) {
-		if ((char) fgetc(fp) == c) {
-			s = str;
-			i = len;
-			while (--i > 0  && (char) fgetc(fp) == *s++);
-			if (i == 0)
-				return pos;
-			fseek(fp, pos + 1, SEEK_SET);
-		}
-		pos++;
+		fflush(fiop->fp);
+
+	zsub(end, start, &tmp2);
+
+	if (zisneg(tmp2)) {
+		zfree(tmp2);
+		return 1;
 	}
-	return -1;
+
+	tmp.sign  = 0;
+	tmp.len = tmp2.len;
+	tmp.v = alloc(tmp.len);
+	zcopyval(tmp2, tmp);
+	zfree(tmp2);
+
+	cur = z2filepos(start);
+
+	if (f_seek_set(fiop->fp, &cur) < 0) {
+		zfree(tmp);
+		return EOF;
+	}
+
+	/*
+	 * search setup
+	 */
+	/* note the first str search character */
+	c = *str++;
+
+	if (c == '\0') {
+		zfree(tmp);
+		return 2;
+	}
+	clearerr(fiop->fp);
+	while ((r = fgetc(fiop->fp)) != EOF) {
+		if ((char)r == c) {
+			(void) f_tell(fiop->fp, &cur);
+			s = str;
+			while (*s) {
+				r = fgetc(fiop->fp);
+				if ((char)r != *s)
+					break;
+				s++;
+			}
+			if (r == EOF)
+				break;
+			if (*s == '\0') {
+				zfree(tmp);
+				tmp = filepos2z(cur);
+				zsub(tmp, _one_, res);
+				zfree(tmp);
+				return 0;
+			}
+			(void) f_seek_set(fiop->fp, &cur);
+		}
+		if (*tmp.v)
+			(*tmp.v)--;
+		else {
+			if (tmp.len == 1)
+				break;
+			k = 0;
+			do {
+				tmp.v[k++] = BASE1;
+			}
+			while (k < tmp.len && tmp.v[k] == 0);
+			if (k == tmp.len) {
+				math_error("This should not happen");
+				/*NOTREACHED*/
+			}
+			tmp.v[k]--;
+			if (tmp.v[tmp.len - 1] == 0)
+				tmp.len--;
+		}
+	}
+	zfree(tmp);
+	if (ferror(fiop->fp))
+		return EOF;
+	return 1;
 }
 
 
-long
-frsearch(FILEID id, char *str, long pos)
+/*
+ * frsearch - reverse search for a string in a file
+ *
+ * given:
+ *	id	FILEID to search
+ *	str	string to look for
+ *	search starts at pos = first and continues for decreasing
+ *		pos >= last
+ *
+ * returns:
+ *	EOF if system error
+ *	other negative integer if file not open, etc.
+ *	positive integer if string not found
+ *	zero if string found, position stored at res
+ *
+ * XXX - This search is a translation of the original search that did not
+ *	 work with large files.  The search algorithm used is so slow
+ *	 as to be painful to the user and needs to be sped up much more.
+ */
+int
+frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res)
 {
-	FILEIO *fiop;
-	FILE *fp;
-	long len, n, i;
-	char c;
-	char *s;
+	FILEIO *fiop;		/* FILEIO of file id */
+	FILEPOS cur;		/* current file position */
+	ZVALUE pos;		/* current file position as ZVALUE */
+	ZVALUE tmp;		/* temporary ZVALUEs */
+	char c;			/* str comparison character */
+	int r;			/* character read from file */
+	char *s;		/* str comparison pointer */
 
+	/* get FILEIO */
 	fiop = findid(id, 'r');
 	if (fiop == NULL)
 		return -2;
-	fp = fiop->fp;
-	if (pos < 0)
-		pos = ftell(fp);
+
+	/*
+	 * file setup
+	 */
 	if (fiop->action == 'w')
-		fflush(fp);
-	n = filesize(id);
-	if (pos > n)
-		pos = n;
-	len = (long)strlen(str);
-	if (pos < len) {
-		fseek(fp, pos, SEEK_SET);
-		return -1;
-	}
-	pos -= len;
-	if (len == 0)
-		return pos;
+		fflush(fiop->fp);
+
+	zcopy(first, &pos);
+
+	/*
+	 * search setup
+	 */
+	/* note the first str search character */
 	c = *str++;
-	while (pos >= 0) {
-		fseek(fp, pos, SEEK_SET);
-		if ((char) fgetc(fp) == c) {
-			s = str;
-			i = len;
-			while (--i > 0 && (char) fgetc(fp) == *s++);
-			if (i == 0)
-				return pos;
+
+	if (c == '\0') {
+		cur = z2filepos(pos);
+		if (f_seek_set(fiop->fp, &cur) < 0) {
+			zfree(pos);
+			return EOF;
 		}
-		pos--;
+		*res = pos;
+		return 0;
 	}
-	fseek(fp, 0, SEEK_SET);
-	return -1;
+
+	clearerr(fiop->fp);
+
+	while(zrel(pos, last) >= 0) {
+		cur = z2filepos(pos);
+		if (f_seek_set(fiop->fp, &cur) < 0) {
+			zfree(pos);
+			return EOF;
+		}
+		r = fgetc(fiop->fp);
+		if (r == EOF) {
+			zfree(pos);
+			return EOF;
+		}
+		if ((char) r == c) {
+			s = str;
+			while (*s) {
+				r = fgetc(fiop->fp);
+				if ((char)r != *s)
+					break;
+				s++;
+			}
+			if (r == EOF) {
+				zfree(pos);
+				return EOF;
+			}
+			if (*s == '\0') {
+				*res = pos;
+				ungetc(r, fiop->fp);
+				return 0;
+			}
+		}
+		zsub(pos, _one_, &tmp);
+		zfree(pos);
+		pos = tmp;
+	}
+	cur = z2filepos(last);
+	f_seek_set(fiop->fp, &cur);
+	zfree(pos);
+	if (ferror(fiop->fp))
+		return EOF;
+	return 1;
+}
+
+
+char *
+findfname(FILEID id)
+{
+	FILEIO *fiop;
+
+	fiop = findid(id, 0);
+
+	if (fiop == NULL)
+		return NULL;
+
+	return fiop->name;
 }

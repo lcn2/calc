@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 1993 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  */
 
-#ifndef	OPCODES_H
-#define	OPCODES_H
+
+#if !defined(__OPCODES_H__)
+#define	__OPCODES_H__
 
 
 /*
@@ -121,8 +122,35 @@
 #define OP_ISRANDOM	107L	/* whether value is a Blum random state */
 #define OP_SHOW		108L	/* show data about current state */
 #define OP_INITFILL	109L	/* fill new matrix with copies of a value */
-#define MAX_OPCODE	109L	/* highest legal opcode */
+#define OP_ASSIGNBACK	110L	/* assign in reverse order */
+#define OP_TEST		111L	/* test whether value is "nonzero" */
+#define OP_ISDEFINED	112L	/* whether string names a function */
+#define OP_ISOBJTYPE	113L	/* whether string names an object type */
+#define OP_ISBLK	114L	/* whether value is a block */
+#define OP_PTR		115L	/* octet pointer */
+#define OP_DEREF	116L	/* dereference an octet pointer */
+#define OP_ISOCTET	117L	/* whether value is an octet */
+#define OP_ISPTR	118L	/* whether value is a pointer */
+#define OP_SAVEVAL	119L	/* activate updating */
+#define OP_LINKS	120L	/* return links for numbers and strings */
+#define OP_BIT		121L	/* whether specified bit is set */
+#define OP_COMP		122L	/* complement value */
+#define OP_XOR		123L	/* xor (~) of values */
+#define OP_HIGHBIT	124L	/* index of high bit of value */
+#define OP_LOWBIT	125L	/* index of low bit of value */
+#define OP_CONTENT	126L	/* value returned by unary # */
+#define OP_HASHOP	127L	/* binary # */
+#define OP_BACKSLASH	128L	/* unary backslash */
+#define OP_SETMINUS	129L	/* binary backslash */
+#define OP_PLUS		130L	/* unary + */
+#define MAX_OPCODE	130L	/* highest legal opcode */
 
-#endif
 
-/* END CODE */
+/*
+ * external declarations
+ */
+extern char *funcname;			/* function being executed */
+extern long funcline;			/* function line being executed */
+
+
+#endif /* !__OPCODES_H__ */

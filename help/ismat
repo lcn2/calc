@@ -25,5 +25,8 @@ LIBRARY
     none
 
 SEE ALSO
-    isassoc, isfile, isident, isint, islist, isnull, isnum, isobj,
-    isreal, isstr, issimple, istype
+    mat, matdim, matfill, matmax, matmin, matsum, mattrans,
+    isassoc, isatty, isblk, isconfig, isdefined, iserror, iseven, isfile,
+    ishash, isident, isint, islist, ismult, isnull, isnum, isobj,
+    isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
+    issimple, issq, isstr, istype

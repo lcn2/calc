@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 1996 David I. Bell
+ * Copyright (c) 1997 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
  * Module to generate opcodes from the input tokens.
  */
 
+#include <stdio.h>
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
@@ -28,9 +29,12 @@ static BOOL getfilename(char *name, BOOL msg_ok, BOOL *once);
 static BOOL getid(char *buf);
 static void getshowstatement(void);
 static void getfunction(void);
+static void ungetfunction(void);
 static void getbody(LABEL *contlabel, LABEL *breaklabel,
 		    LABEL *nextcaselabel, LABEL *defaultlabel, BOOL toplevel);
-static void getdeclarations(void);
+static void getdeclarations(int symtype);
+static void getsimpledeclaration (int symtype);
+static int getonevariable (int symtype);
 static void getstatement(LABEL *contlabel, LABEL *breaklabel,
 			 LABEL *nextcaselabel, LABEL *defaultlabel);
 static void getobjdeclaration(int symtype);
@@ -40,7 +44,6 @@ static void getmatdeclaration(int symtype);
 static void getonematrix(int symtype);
 static void creatematrix(void);
 static void getsimplebody(void);
-static void getonedeclaration(int type);
 static void getcondition(void);
 static void getmatargs(void);
 static void getelement(void);
@@ -49,6 +52,7 @@ static void definesymbol(char *name, int symtype);
 static void getcallargs(char *name);
 static void do_changedir(void);
 static int getexprlist(void);
+static int getopassignment(void);
 static int getassignment(void);
 static int getaltcond(void);
 static int getorcond(void);
@@ -59,6 +63,8 @@ static int getproduct(void);
 static int getorexpr(void);
 static int getandexpr(void);
 static int getshiftexpr(void);
+static int getreference(void);
+static int getincdecexpr(void);
 static int getterm(void);
 static int getidexpr(BOOL okmat, BOOL autodef);
 static long getinitlist(void);
@@ -85,6 +91,10 @@ getcommands(BOOL toplevel)
 
 		case T_DEFINE:
 			getfunction();
+			break;
+
+		case T_UNDEFINE:
+			ungetfunction();
 			break;
 
 		case T_EOF:
@@ -147,6 +157,7 @@ getcommands(BOOL toplevel)
 			initstack();
 			if (evaluate(FALSE))
 				updateoldvalue(curfunc);
+			freefunc(curfunc);
 		}
 	}
 }
@@ -169,12 +180,10 @@ BOOL
 evaluate(BOOL nestflag)
 {
 	char *funcname;
-	BOOL gotstatement;
 	int loop = 1;		/* 0 => end the main while loop */
 
 	funcname = (nestflag ? "**" : "*");
 	beginfunc(funcname, nestflag);
-	gotstatement = FALSE;
 	if (nestflag)
 		(void) tokenmode(TM_DEFAULT);
 	while (loop) {
@@ -187,22 +196,10 @@ evaluate(BOOL nestflag)
 				loop = 0;
 				break;
 
-			case T_GLOBAL:
-			case T_LOCAL:
-			case T_STATIC:
-				if (gotstatement) {
-					scanerror(T_SEMICOLON, "Declarations must be used before code");
-					return FALSE;
-				}
-				rescantoken();
-				getdeclarations();
-				break;
-
 			default:
 				rescantoken();
 				getstatement(NULL_LABEL, NULL_LABEL,
 					NULL_LABEL, NULL_LABEL);
-				gotstatement = TRUE;
 		}
 	}
 	addop(OP_UNDEF);
@@ -212,6 +209,40 @@ evaluate(BOOL nestflag)
 		return FALSE;
 	calculate(curfunc, 0);
 	return TRUE;
+}
+
+/*
+ * Undefine one or more functions
+ */
+static void
+ungetfunction(void)
+{
+	char *name;
+	int type;
+
+	for (;;) {
+		switch (gettoken()) {
+			case T_COMMA:
+				continue;
+			case T_SYMBOL:
+				name = tokensymbol();
+				type = getbuiltinfunc(name);
+				if (type >= 0) {
+					fprintf(stderr,
+		 "Attempt to undefine builtin function \"%s\" ignored\n",
+			name);
+				continue;
+				}
+				rmuserfunc(name);
+				continue;
+			case T_MULT:
+				rmalluserfunc();
+				continue;
+			default:
+				rescantoken();
+				return;
+		}
+	}
 }
 
 
@@ -228,10 +259,10 @@ getfunction(void)
 
 	(void) tokenmode(TM_DEFAULT);
 	if (gettoken() != T_SYMBOL) {
-		scanerror(T_NULL, "Function name expected");
+		scanerror(T_NULL, "Function name was expected");
 		return;
 	}
-	name = tokenstring();
+	name = tokensymbol();
 	type = getbuiltinfunc(name);
 	if (type >= 0) {
 		scanerror(T_SEMICOLON, "Using builtin function name");
@@ -251,7 +282,7 @@ getfunction(void)
 			scanerror(T_COMMA, "Bad function definition");
 			return;
 		}
-		name = tokenstring();
+		name = tokensymbol();
 		switch (symboltype(name)) {
 			case SYM_UNDEFINED:
 			case SYM_GLOBAL:
@@ -284,8 +315,6 @@ getfunction(void)
 				"Left brace or equals sign expected for function");
 			return;
 	}
-	addop(OP_UNDEF);
-	addop(OP_RETURN);
 	endfunc();
 	exitfuncscope();
 }
@@ -318,10 +347,10 @@ getsimplebody(void)
  * body = '{' [ declarations ] ... [ statement ] ... '}'
  *	| [ declarations ] ... [statement ] ... '\n'
  */
+/*ARGSUSED*/
 static void
 getbody(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *defaultlabel, BOOL toplevel)
 {
-	BOOL gotstatement;	/* TRUE if seen a real statement yet */
 	int oldmode;
 
 	if (gettoken() != T_LEFTBRACE) {
@@ -329,32 +358,15 @@ getbody(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *defaul
 		return;
 	}
 	oldmode = tokenmode(TM_DEFAULT);
-	gotstatement = FALSE;
 	while (TRUE) {
 		switch (gettoken()) {
 		case T_RIGHTBRACE:
 			(void) tokenmode(oldmode);
 			return;
 
-		case T_GLOBAL:
-		case T_LOCAL:
-		case T_STATIC:
-			if (!toplevel) {
-				scanerror(T_SEMICOLON, "Declarations must be at the top of the function");
-				return;
-			}
-			if (gotstatement) {
-				scanerror(T_SEMICOLON, "Declarations must be used before code");
-				return;
-			}
-			rescantoken();
-			getdeclarations();
-			break;
-
 		default:
 			rescantoken();
 			getstatement(contlabel, breaklabel, nextcaselabel, defaultlabel);
-			gotstatement = TRUE;
 		}
 	}
 }
@@ -366,27 +378,35 @@ getbody(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *defaul
  *	[ ',' onedeclaration ] ... ';'.
  */
 static void
-getdeclarations(void)
+getdeclarations(int symtype)
 {
-	int type;
-
-	type = gettoken();
-
-	if ((type != T_LOCAL) && (type != T_GLOBAL) && (type != T_STATIC)) {
-		rescantoken();
-		return;
-	}
-
 	while (TRUE) {
-		getonedeclaration(type);
-
 		switch (gettoken()) {
 			case T_COMMA:
 				continue;
+
 			case T_NEWLINE:
-				rescantoken();
 			case T_SEMICOLON:
+			case T_RIGHTBRACE:
+				rescantoken();
 				return;
+
+			case T_SYMBOL:
+				addopone(OP_DEBUG, linenumber());
+				rescantoken();
+				getsimpledeclaration(symtype);
+				break;
+
+			case T_MAT:
+				addopone(OP_DEBUG, linenumber());
+				getmatdeclaration(symtype);
+				break;
+
+			case T_OBJ:
+				addopone(OP_DEBUG, linenumber());
+				getobjdeclaration(symtype);
+				addop(OP_POP);
+				break;
 
 			default:
 				scanerror(T_SEMICOLON, "Bad syntax in declaration statement");
@@ -397,83 +417,63 @@ getdeclarations(void)
 
 
 /*
- * Get a single declaration of a symbol of the specified type.
- * onedeclaration = name [ '=' getassignment ]
- *	| 'obj' type name [ '=' objvalues ]
- *	| 'mat' name '[' matargs ']' [ '=' matvalues ].
+ * Get declaration of a sequence of simple identifiers, as in
+ *	global a, b = 1, c d = 2, d;
+ * Subsequences end with "," or at end of line; spaces indicate
+ * repeated assignment, e.g. "c d = 2" has the effect of "c = 2, d = 2".
  */
 static void
-getonedeclaration(int type)
+getsimpledeclaration(int symtype)
 {
-	char *name;		/* name of symbol seen */
-	int symtype;		/* type of symbol */
-	int vartype;		/* type of variable being defined */
-	LABEL label;
 
-	switch (type) {
-		case T_LOCAL:
-			symtype = SYM_LOCAL;
-			break;
-		case T_GLOBAL:
-			symtype = SYM_GLOBAL;
-			break;
-		case T_STATIC:
-			symtype = SYM_STATIC;
-			clearlabel(&label);
-			addoplabel(OP_INITSTATIC, &label);
-			break;
-		default:
-			symtype = SYM_UNDEFINED;
-			break;
+	for (;;) {
+		switch (gettoken()) {
+			case T_SYMBOL:
+				rescantoken();
+				if (getonevariable(symtype))
+					addop(OP_POP);
+				continue;
+			case T_COMMA:
+				continue;
+			default:
+				rescantoken();
+				return;
+		}
 	}
-
-	vartype = gettoken();
-	switch (vartype) {
-		case T_SYMBOL:
-			name = tokenstring();
-			definesymbol(name, symtype);
-			break;
-
-		case T_MAT:
-			addopone(OP_DEBUG, linenumber());
-			getmatdeclaration(symtype);
-			addop(OP_POP);
-			if (symtype == SYM_STATIC)
-				setlabel(&label);
-			return;
-
-		case T_OBJ:
-			addopone(OP_DEBUG, linenumber());
-			getobjdeclaration(symtype);
-			addop(OP_POP);
-			if (symtype == SYM_STATIC)
-				setlabel(&label);
-			return;
-
-		default:
-			scanerror(T_COMMA, "Bad syntax for declaration");
-			return;
-	}
-
-	if (gettoken() != T_ASSIGN) {
-		rescantoken();
-		if (symtype == SYM_STATIC)
-			setlabel(&label);
-		return;
-	}
-
-	/*
-	 * Initialize the variable with the expression.  If the variable is
-	 * static, arrange for the initialization to only be done once.
-	 */
-	addopone(OP_DEBUG, linenumber());
-	usesymbol(name, FALSE);
-	getassignment();
-	addop(OP_ASSIGNPOP);
-	if (symtype == SYM_STATIC)
-		setlabel(&label);
 }
 
+
+/*
+ * Get one variable in a sequence of simple identifiers.
+ * Returns 1 if the subsequence in which the variable occurs ends with
+ * an assignment, e.g. for the variables b, c, d, in
+ *	static a, b = 1, c d = 2, d;
+ */
+static int
+getonevariable(int symtype)
+{
+	char *name;
+	int res = 0;
+
+	switch(gettoken()) {
+		case T_SYMBOL:
+			name = addliteral(tokensymbol());
+			res = getonevariable(symtype);
+			definesymbol(name, symtype);
+			if (res) {
+				usesymbol(name, FALSE);
+				addop(OP_ASSIGNBACK);
+			}
+			return res;
+		case T_ASSIGN:
+			getopassignment();
+			rescantoken();
+			return 1;
+		default:
+			rescantoken();
+			return 0;
+	}
+}
 
 /*
  * Get a statement.
@@ -506,15 +506,32 @@ getonedeclaration(int type)
 static void
 getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *defaultlabel)
 {
+	LABEL label;
 	LABEL label1, label2, label3, label4;	/* locations for jumps */
 	int type;
 	BOOL printeol;
+	int oldmode;
 
 	addopone(OP_DEBUG, linenumber());
 	switch (gettoken()) {
 	case T_NEWLINE:
 	case T_SEMICOLON:
 		return;
+
+	case T_GLOBAL:
+		getdeclarations(SYM_GLOBAL);
+		break;
+
+	case T_STATIC:
+		clearlabel(&label);
+		addoplabel(OP_INITSTATIC, &label);
+		getdeclarations(SYM_STATIC);
+		setlabel(&label);
+		break;
+
+	case T_LOCAL:
+		getdeclarations(SYM_LOCAL);
+		break;
 
 	case T_RIGHTBRACE:
 		scanerror(T_NULL, "Extraneous right brace");
@@ -542,7 +559,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 			return;
 		}
 		addop(OP_JUMP);
-		addlabel(tokenstring());
+		addlabel(tokensymbol());
 		break;
 
 	case T_RETURN:
@@ -570,20 +587,55 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		clearlabel(&label1);
 		clearlabel(&label2);
 		getcondition();
-		addoplabel(OP_JUMPEQ, &label1);
-		getstatement(contlabel, breaklabel, NULL_LABEL, NULL_LABEL);
+		switch(gettoken()) {
+			case T_CONTINUE:
+				if (contlabel == NULL_LABEL) {
+					scanerror(T_SEMICOLON, "CONTINUE not within FOR, WHILE, or DO");
+					return;
+				}
+				addoplabel(OP_JUMPNE, contlabel);
+				break;
+			case T_BREAK:
+				if (breaklabel == NULL_LABEL) {
+					scanerror(T_SEMICOLON, "BREAK not within FOR, WHILE, or DO");
+					return;
+				}
+				addoplabel(OP_JUMPNE, breaklabel);
+				break;
+			case T_GOTO:
+				if (gettoken() != T_SYMBOL) {
+					scanerror(T_SEMICOLON, "Missing label in goto");
+					return;
+				}
+				addop(OP_JUMPNE);
+				addlabel(tokensymbol());
+				break;
+			default:
+				addoplabel(OP_JUMPEQ, &label1);
+				rescantoken();
+				getstatement(contlabel, breaklabel, NULL_LABEL, NULL_LABEL);
+				if (gettoken() != T_ELSE) {
+					setlabel(&label1);
+					rescantoken();
+					return;
+				}
+				addoplabel(OP_JUMP, &label2);
+				setlabel(&label1);
+				getstatement(contlabel, breaklabel, NULL_LABEL, NULL_LABEL);
+				setlabel(&label2);
+				return;
+		}
+		if (gettoken() != T_SEMICOLON) /* This makes ';' optional */
+			rescantoken();
 		if (gettoken() != T_ELSE) {
-			setlabel(&label1);
 			rescantoken();
 			return;
 		}
-		addoplabel(OP_JUMP, &label2);
-		setlabel(&label1);
 		getstatement(contlabel, breaklabel, NULL_LABEL, NULL_LABEL);
-		setlabel(&label2);
 		return;
 
 	case T_FOR:	/* for (a; b; c) x */
+		oldmode = tokenmode(TM_DEFAULT);
 		clearlabel(&label1);
 		clearlabel(&label2);
 		clearlabel(&label3);
@@ -591,6 +643,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		contlabel = NULL_LABEL;
 		breaklabel = &label4;
 		if (gettoken() != T_LEFTPAREN) {
+			(void) tokenmode(oldmode);
 			scanerror(T_SEMICOLON, "Left parenthesis expected");
 			return;
 		}
@@ -599,6 +652,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 			(void) getexprlist();
 			addop(OP_POP);
 			if (gettoken() != T_SEMICOLON) {
+				(void) tokenmode(oldmode);
 				scanerror(T_SEMICOLON, "Missing semicolon");
 				return;
 			}
@@ -611,6 +665,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 			addoplabel(OP_JUMPNE, &label3);
 			addoplabel(OP_JUMP, breaklabel);
 			if (gettoken() != T_SEMICOLON) {
+				(void) tokenmode(oldmode);
 				scanerror(T_SEMICOLON, "Missing semicolon");
 				return;
 			}
@@ -626,6 +681,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 			if (label1.l_offset > 0)
 				addoplabel(OP_JUMP, &label1);
 			if (gettoken() != T_RIGHTPAREN) {
+				(void) tokenmode(oldmode);
 				scanerror(T_SEMICOLON, "Right parenthesis expected");
 				return;
 			}
@@ -636,9 +692,11 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		getstatement(contlabel, breaklabel, NULL_LABEL, NULL_LABEL);
 		addoplabel(OP_JUMP, contlabel);
 		setlabel(breaklabel);
+		(void) tokenmode(oldmode);
 		return;
 
 	case T_WHILE:
+		oldmode = tokenmode(TM_DEFAULT);
 		contlabel = &label1;
 		breaklabel = &label2;
 		clearlabel(contlabel);
@@ -649,9 +707,11 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		getstatement(contlabel, breaklabel, NULL_LABEL, NULL_LABEL);
 		addoplabel(OP_JUMP, contlabel);
 		setlabel(breaklabel);
+		(void) tokenmode(oldmode);
 		return;
 
 	case T_DO:
+		oldmode = tokenmode(TM_DEFAULT);
 		contlabel = &label1;
 		breaklabel = &label2;
 		clearlabel(contlabel);
@@ -660,6 +720,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		setlabel(&label3);
 		getstatement(contlabel, breaklabel, NULL_LABEL, NULL_LABEL);
 		if (gettoken() != T_WHILE) {
+			(void) tokenmode(oldmode);
 			scanerror(T_SEMICOLON, "WHILE keyword expected for DO statement");
 			return;
 		}
@@ -667,9 +728,11 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		getcondition();
 		addoplabel(OP_JUMPNE, &label3);
 		setlabel(breaklabel);
+		(void) tokenmode(oldmode);
 		return;
 
 	case T_SWITCH:
+		oldmode = tokenmode(TM_DEFAULT);
 		breaklabel = &label1;
 		nextcaselabel = &label2;
 		defaultlabel = &label3;
@@ -678,6 +741,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		clearlabel(defaultlabel);
 		getcondition();
 		if (gettoken() != T_LEFTBRACE) {
+			(void) tokenmode(oldmode);
 			scanerror(T_SEMICOLON, "Missing left brace for switch statement");
 			return;
 		}
@@ -691,6 +755,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		else
 			addop(OP_POP);
 		setlabel(breaklabel);
+		(void) tokenmode(oldmode);
 		return;
 
 	case T_CASE:
@@ -762,12 +827,12 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 					break;
 				case T_STRING:
 					printeol = TRUE;
-					addopptr(OP_PRINTSTRING, tokenstring());
+					addopone(OP_PRINTSTRING, tokenstring());
 					break;
 				default:
 					printeol = TRUE;
 					rescantoken();
-					(void) getassignment();
+					(void) getopassignment();
 					addopone(OP_PRINT, (long) PRINT_NORMAL);
 			}
 		}
@@ -775,17 +840,22 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 	case T_QUIT:
 		switch (gettoken()) {
 			case T_STRING:
-				addopptr(OP_QUIT, tokenstring());
+				addopone(OP_QUIT, tokenstring());
 				break;
 			default:
-				addopptr(OP_QUIT, NULL);
+				addopone(OP_QUIT, -1);
 				rescantoken();
 		}
 		break;
 
 	case T_SYMBOL:
 		if (nextchar() == ':') {	/****HACK HACK ****/
-			definelabel(tokenstring());
+			definelabel(tokensymbol());
+			if (gettoken() == T_RIGHTBRACE) {
+				rescantoken();
+				return;
+			}
+			rescantoken();
 			getstatement(contlabel, breaklabel,
 				NULL_LABEL, NULL_LABEL);
 			return;
@@ -808,17 +878,24 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		addop(OP_PRINTRESULT);
 		break;
 	}
-	switch (gettoken()) {
-		case T_RIGHTBRACE:
-		case T_NEWLINE:
-		case T_EOF:
-			rescantoken();
-			break;
-		case T_SEMICOLON:
-			break;
-		default:
-			scanerror(T_SEMICOLON, "Semicolon expected");
-			break;
+	for (;;) {
+		switch (gettoken()) {
+			case T_RIGHTBRACE:
+			case T_NEWLINE:
+			case T_EOF:
+				rescantoken();
+				return;
+			case T_SEMICOLON:
+				return;
+			case T_NUMBER:
+			case T_IMAGINARY:
+				addopone(OP_NUMBER, tokennumber());
+				scanerror(T_NULL, "Unexpected number");
+				continue;
+			default:
+				scanerror(T_NULL, "Semicolon expected");
+				return;
+		}
 	}
 }
 
@@ -838,15 +915,14 @@ getobjdeclaration(int symtype)
 	int count;			/* number of elements */
 	int index;			/* current index */
 	int i;				/* loop counter */
-	BOOL err;			/* error flag */
 	int indices[MAXINDICES];	/* indices for elements */
+	int oldmode;
 
-	err = FALSE;
 	if (gettoken() != T_SYMBOL) {
 		scanerror(T_SEMICOLON, "Object type name missing");
 		return;
 	}
-	name = addliteral(tokenstring());
+	name = addliteral(tokensymbol());
 	if (gettoken() != T_LEFTBRACE) {
 		rescantoken();
 		getobjvars(name, symtype);
@@ -856,34 +932,43 @@ getobjdeclaration(int symtype)
 	 * Read in the definition of the elements of the object.
 	 */
 	count = 0;
+	oldmode = tokenmode(TM_DEFAULT);
 	for (;;) {
-		if (gettoken() != T_SYMBOL) {
-			scanerror(T_SEMICOLON, "Missing element name in OBJ statement");
-			return;
-		}
-		index = addelement(tokenstring());
-		for (i = 0; i < count; i++) {
-			if (indices[i] == index) {
-				scanerror(T_NULL, "Duplicate element name \"%s\"", tokenstring());
-				err = TRUE;
-				break;
-			}
-		}
-		indices[count++] = index;
 		switch (gettoken()) {
-			case T_RIGHTBRACE:
-				if (!err) {
-					(void) defineobject(name, indices, count);
-					getobjvars(name, symtype);
+			case T_SYMBOL:
+				if (count == MAXINDICES) {
+					scanerror(T_SEMICOLON, "Too many elements in OBJ statement");
+					(void) tokenmode(oldmode);
 					return;
 				}
-				scanerror(T_SEMICOLON, "Error in object definition");
-			case T_COMMA:
-			case T_SEMICOLON:
+				index = addelement(tokensymbol());
+				for (i = 0; i < count; i++) {
+					if (indices[i] == index) {
+						scanerror(T_SEMICOLON, "Duplicate element name \"%s\"", tokensymbol());
+						(void) tokenmode(oldmode);
+						return;
+					}
+				}
+				indices[count++] = index;
+				if (gettoken() == T_COMMA)
+					continue;
+				rescantoken();
+				if (gettoken() != T_RIGHTBRACE) {
+					scanerror(T_SEMICOLON, "Bad object type definition");
+					(void) tokenmode(oldmode);
+					return;
+				}
+				/*FALLTHRU*/
+			case T_RIGHTBRACE:
+				(void) tokenmode(oldmode);
+				(void) defineobject(name, indices, count);
+				getobjvars(name, symtype);
+				return;
 			case T_NEWLINE:
-				break;
+				continue;
 			default:
-				scanerror(T_SEMICOLON, "Bad object element definition");
+				scanerror(T_SEMICOLON, "Bad object type definition");
+				(void) tokenmode(oldmode);
 				return;
 		}
 	}
@@ -897,25 +982,22 @@ getoneobj(long index, int symtype)
 	if (gettoken() == T_SYMBOL) {
 		if (symtype == SYM_UNDEFINED) {
 			rescantoken();
-			(void) getidexpr(FALSE, TRUE);
+			(void) getidexpr(TRUE, TRUE);
 		}
 		else {
-			symname = tokenstring();
+			symname = tokensymbol();
 			definesymbol(symname, symtype);
 			usesymbol(symname, FALSE);
 		}
-		while (gettoken() == T_COMMA);
-		rescantoken();
 		getoneobj(index, symtype);
 		addop(OP_ASSIGN);
 		return;
 	}
 	rescantoken();
 	addopone(OP_OBJCREATE, index);
-	if (gettoken() == T_ASSIGN)
+	while (gettoken() == T_ASSIGN)
 		(void) getinitlist();
-	else
-		rescantoken();
+	rescantoken();
 }
 
 /*
@@ -956,20 +1038,25 @@ getobjvars(char *name, int symtype)
 static void
 getmatdeclaration(int symtype)
 {
-
-
-	for(;;) {
-		getonematrix(symtype);
-		if (gettoken() != T_COMMA) {
-			rescantoken();
-			return;
+	for (;;) {
+		switch (gettoken()) {
+			case T_SYMBOL:
+				rescantoken();
+				getonematrix(symtype);
+				addop(OP_POP);
+				continue;
+			case T_COMMA:
+				continue;
+			default:
+				rescantoken();
+				return;
 		}
-		addop(OP_POP);
 	}
 }
 
-static
-void getonematrix(int symtype)
+
+static void
+getonematrix(int symtype)
 {
 	long dim;
 	long index;
@@ -983,7 +1070,7 @@ void getonematrix(int symtype)
 			(void) getidexpr(FALSE, TRUE);
 		}
 		else {
-			name = tokenstring();
+			name = tokensymbol();
 			definesymbol(name, symtype);
 			usesymbol(name, FALSE);
 		}
@@ -996,8 +1083,8 @@ void getonematrix(int symtype)
 	rescantoken();
 
 	if (gettoken() != T_LEFTBRACKET) {
-		addopone(OP_MATCREATE, 0);
 		rescantoken();
+		scanerror(T_SEMICOLON, "Left-bracket expected");
 		return;
 	}
 	dim = 1;
@@ -1035,23 +1122,21 @@ void getonematrix(int symtype)
 	 */
 	rescantoken();
 	creatematrix();
-	if (gettoken() == T_ASSIGN)
+	while (gettoken() == T_ASSIGN)
 		(void) getinitlist();
-	else
-		rescantoken();
-	return;
+	rescantoken();
 }
-	
+
 
 static void
-creatematrix(void) 
+creatematrix(void)
 {
 	long dim;
 
 	dim = 1;
 
 	while (TRUE) {
-		(void) getassignment();
+		(void) getopassignment();
 		switch (gettoken()) {
 			case T_RIGHTBRACKET:
 			case T_COMMA:
@@ -1061,7 +1146,7 @@ creatematrix(void)
 				addop(OP_ZERO);
 				break;
 			case T_COLON:
-				(void) getassignment();
+				(void) getopassignment();
 				break;
 			default:
 				rescantoken();
@@ -1112,6 +1197,7 @@ getinitlist(void)
 	for (index = 0; ; index++) {
 		switch(gettoken()) {
 			case T_COMMA:
+			case T_NEWLINE:
 				continue;
 			case T_RIGHTBRACE:
 				(void) tokenmode(oldmode);
@@ -1124,11 +1210,12 @@ getinitlist(void)
 				break;
 			default:
 				rescantoken();
-				getassignment();
+				getopassignment();
 		}
 		addopone(OP_ELEMINIT, index);
 		switch (gettoken()) {
 			case T_COMMA:
+			case T_NEWLINE:
 				continue;
 
 			case T_RIGHTBRACE:
@@ -1167,7 +1254,7 @@ getcondition(void)
  * Get an expression list consisting of one or more expressions,
  * separated by commas.  The value of the list is that of the final expression.
  * This is the top level routine for parsing expressions.
- * Returns flags describing the type of assignment or expression found.
+ * Returns flags describing the type of the last assignment or expression found.
  * exprlist = assignment [ ',' assignment ] ...
  */
 static int
@@ -1175,11 +1262,10 @@ getexprlist(void)
 {
 	int	type;
 
-	type = getassignment();
+	type = getopassignment();
 	while (gettoken() == T_COMMA) {
 		addop(OP_POP);
-		(void) getassignment();
-		type = EXPR_RVALUE;
+		type = getopassignment();
 	}
 	rescantoken();
 	return type;
@@ -1187,7 +1273,7 @@ getexprlist(void)
 
 
 /*
- * Get an assignment (or possibly just an expression).
+ * Get an opassignment or possibly just an assignment or expression.
  * Returns flags describing the type of assignment or expression found.
  * assignment = lvalue '=' assignment
  *	| lvalue '+=' assignment
@@ -1205,14 +1291,13 @@ getexprlist(void)
  *	| orcond.
  */
 static int
-getassignment(void)
+getopassignment(void)
 {
 	int type;		/* type of expression */
 	long op;		/* opcode to generate */
 
-	type = getaltcond();
+	type = getassignment();
 	switch (gettoken()) {
-		case T_ASSIGN:		op = 0; break;
 		case T_PLUSEQUALS:	op = OP_ADD; break;
 		case T_MINUSEQUALS:	op = OP_SUB; break;
 		case T_MULTEQUALS:	op = OP_MUL; break;
@@ -1224,9 +1309,77 @@ getassignment(void)
 		case T_LSHIFTEQUALS: 	op = OP_LEFTSHIFT; break;
 		case T_RSHIFTEQUALS: 	op = OP_RIGHTSHIFT; break;
 		case T_POWEREQUALS:	op = OP_POWER; break;
+		case T_HASHEQUALS:	op = OP_HASHOP; break;
+		case T_TILDEEQUALS:	op = OP_XOR; break;
+		case T_BACKSLASHEQUALS: op = OP_SETMINUS; break;
 
+		default:
+			rescantoken();
+			return type;
+	}
+	if (isrvalue(type)) {
+		scanerror(T_NULL, "Illegal assignment in getopassignment");
+		(void) getopassignment();
+		return (EXPR_RVALUE | EXPR_ASSIGN);
+	}
+	writeindexop();
+	for(;;) {
+		addop(OP_DUPLICATE);
+		if (gettoken() == T_LEFTBRACE) {
+			rescantoken();
+			addop(OP_DUPVALUE);
+			getinitlist();
+			while (gettoken() == T_ASSIGN)
+				getinitlist();
+			rescantoken();
+		}
+		else {
+			rescantoken();
+			(void) getassignment();
+		}
+		addop(op);
+		addop(OP_ASSIGN);
+		switch (gettoken()) {
+			case T_PLUSEQUALS:	op = OP_ADD; break;
+			case T_MINUSEQUALS:	op = OP_SUB; break;
+			case T_MULTEQUALS:	op = OP_MUL; break;
+			case T_DIVEQUALS:	op = OP_DIV; break;
+			case T_SLASHSLASHEQUALS: op = OP_QUO; break;
+			case T_MODEQUALS:	op = OP_MOD; break;
+			case T_ANDEQUALS:	op = OP_AND; break;
+			case T_OREQUALS:	op = OP_OR; break;
+			case T_LSHIFTEQUALS: 	op = OP_LEFTSHIFT; break;
+			case T_RSHIFTEQUALS: 	op = OP_RIGHTSHIFT; break;
+			case T_POWEREQUALS:	op = OP_POWER; break;
+			case T_HASHEQUALS:	op = OP_HASHOP; break;
+			case T_TILDEEQUALS:	op = OP_XOR; break;
+			case T_BACKSLASHEQUALS: op = OP_SETMINUS; break;
+
+			default:
+				rescantoken();
+				return EXPR_ASSIGN;
+		}
+	}
+}
+
+
+/*
+ * Get an assignment (lvalue = ...) or possibly just an expression
+ */
+
+static int
+getassignment (void)
+{
+	int type;		/* type of expression */
+
+	type = getaltcond();
+
+	switch (gettoken()) {
 		case T_NUMBER:
 		case T_IMAGINARY:
+			addopone(OP_NUMBER, tokennumber());
+			type = (EXPR_RVALUE | EXPR_CONST);
+			/*FALLTHRU*/
 		case T_STRING:
 		case T_SYMBOL:
 		case T_OLDVALUE:
@@ -1236,36 +1389,29 @@ getassignment(void)
 		case T_NOT:
 			scanerror(T_NULL, "Missing operator");
 			return type;
+		case T_ASSIGN:
+			break;
 
 		default:
 			rescantoken();
 			return type;
 	}
 	if (isrvalue(type)) {
-		scanerror(T_NULL, "Illegal assignment");
+		scanerror(T_SEMICOLON, "Illegal assignment in getassignment");
 		(void) getassignment();
 		return (EXPR_RVALUE | EXPR_ASSIGN);
 	}
 	writeindexop();
-	if (op)
-		addop(OP_DUPLICATE);
 	if (gettoken() == T_LEFTBRACE) {
 		rescantoken();
-		if (op) {
-			addop(OP_DUPVALUE);
+		getinitlist();
+		while (gettoken() == T_ASSIGN)
 			getinitlist();
-			addop(op);
-			addop(OP_ASSIGN);
-		}
-		else
-			getinitlist();
+		rescantoken();
 		return EXPR_ASSIGN;
 	}
 	rescantoken();
 	(void) getassignment();
-	if (op) {
-		addop(op);
-	}
 	addop(OP_ASSIGN);
 	return EXPR_ASSIGN;
 }
@@ -1291,16 +1437,16 @@ getaltcond(void)
 	clearlabel(&donelab);
 	clearlabel(&altlab);
 	addoplabel(OP_JUMPEQ, &altlab);
-	(void) getaltcond();
+	type = getaltcond();
 	if (gettoken() != T_COLON) {
 		scanerror(T_SEMICOLON, "Missing colon for conditional expression");
 		return EXPR_RVALUE;
 	}
 	addoplabel(OP_JUMP, &donelab);
 	setlabel(&altlab);
-	(void) getaltcond();
+	type |= getaltcond();
 	setlabel(&donelab);
-	return EXPR_RVALUE;
+	return type;
 }
 
 
@@ -1319,11 +1465,10 @@ getorcond(void)
 	type = getandcond();
 	while (gettoken() == T_OROR) {
 		addoplabel(OP_CONDORJUMP, &donelab);
-		(void) getandcond();
-		type = EXPR_RVALUE;
+		type |= getandcond();
 	}
 	rescantoken();
-	if (donelab.l_chain > 0)
+	if (donelab.l_chain >= 0)
 		setlabel(&donelab);
 	return type;
 }
@@ -1344,11 +1489,10 @@ getandcond(void)
 	type = getrelation();
 	while (gettoken() == T_ANDAND) {
 		addoplabel(OP_CONDANDJUMP, &donelab);
-		(void) getrelation();
-		type = EXPR_RVALUE;
+		type |= getrelation();
 	}
 	rescantoken();
-	if (donelab.l_chain > 0)
+	if (donelab.l_chain >= 0)
 		setlabel(&donelab);
 	return type;
 }
@@ -1400,7 +1544,20 @@ getsum(void)
 	int type;		/* type of expression found */
 	long op;		/* opcode to generate */
 
-	type = getproduct();
+	type = EXPR_RVALUE;
+	switch(gettoken()) {
+		case T_PLUS:
+			(void) getproduct();
+			addop(OP_PLUS);
+			break;
+		case T_MINUS:
+			(void) getproduct();
+			addop(OP_NEGATE);
+			break;
+		default:
+			rescantoken();
+			type = getproduct();
+	}
 	for (;;) {
 		switch (gettoken()) {
 			case T_PLUS:	op = OP_ADD; break;
@@ -1475,31 +1632,122 @@ static int
 getandexpr(void)
 {
 	int type;		/* type of value found */
+	long op;
 
 	type = getshiftexpr();
-	while (gettoken() == T_AND) {
+	for (;;) {
+		switch (gettoken()) {
+			case T_AND: op = OP_AND; break;
+			case T_HASH: op = OP_HASHOP; break;
+			case T_TILDE: op = OP_XOR; break;
+			case T_BACKSLASH: op = OP_SETMINUS; break;
+			default:
+				rescantoken();
+				return type;
+		}
 		(void) getshiftexpr();
-		addop(OP_AND);
+		addop(op);
 		type = EXPR_RVALUE;
 	}
-	rescantoken();
-	return type;
 }
 
 
 /*
  * Get a shift or power expression.
  * Flags indicating the type of expression found are returned.
- * shift = term '^' shiftexpr
- *	 | term '<<' shiftexpr
- *	 | term '>>' shiftexpr
- *	 | term.
+ * shift = '+' shift
+ *	 | '-' shift
+ *	 | '/' shift
+ *	 | '\' shift
+ *	 | '~' shift
+ *	 | '#' shift
+ *	 | reference '^' shiftexpr
+ *	 | reference '<<' shiftexpr
+ *	 | reference '>>' shiftexpr
+ *	 | reference.
  */
 static int
 getshiftexpr(void)
 {
 	int type;		/* type of value found */
 	long op;		/* opcode to generate */
+
+	op = 0;
+	switch (gettoken()) {
+		case T_PLUS:		op = OP_PLUS; break;
+		case T_MINUS:		op = OP_NEGATE; break;
+		case T_NOT:		op = OP_NOT; break;
+		case T_DIV:		op = OP_INVERT; break;
+		case T_BACKSLASH:	op = OP_BACKSLASH; break;
+		case T_TILDE: 		op = OP_COMP; break;
+		case T_HASH:		op = OP_CONTENT; break;
+	}
+	if (op) {
+		(void) getshiftexpr();
+		addop(op);
+		return EXPR_RVALUE;
+	}
+	rescantoken();
+	type = getreference();
+	switch (gettoken()) {
+		case T_POWER:		op = OP_POWER; break;
+		case T_LEFTSHIFT:	op = OP_LEFTSHIFT; break;
+		case T_RIGHTSHIFT: 	op = OP_RIGHTSHIFT; break;
+		default:
+			rescantoken();
+			return type;
+	}
+	(void) getshiftexpr();
+	addop(op);
+	return EXPR_RVALUE;
+}
+
+
+/*
+ * set an address or dereference indicator
+ * address = '&' term
+ * dereference = '*' term
+ */
+static int
+getreference(void)
+{
+	int type;
+
+	switch(gettoken()) {
+		case T_ANDAND:
+			scanerror(T_NULL, "Non-variable operand for &");
+		case T_AND:
+			type = getreference();
+			addop(OP_PTR);
+			type = EXPR_RVALUE;
+			break;
+		case T_MULT:
+			(void) getreference();
+			addop(OP_DEREF);
+			type = 0;
+			break;
+		case T_POWER:			/* '**' or '^' */
+			(void) getreference();
+			addop(OP_DEREF);
+			addop(OP_DEREF);
+			type = 0;
+			break;
+		default:
+			rescantoken();
+			type = getincdecexpr();
+	}
+	return type;
+}
+
+
+/*
+ * get an increment or decrement expression
+ * ++expr, --expr, expr++, expr--
+ */
+static int
+getincdecexpr(void)
+{
+	int type;
 	int tok;
 
 	type = getterm();
@@ -1523,27 +1771,19 @@ getshiftexpr(void)
 					continue;
 				default:
 					addop(OP_POP);
-					goto done;
+					break;
 			}
+			break;
 		}
-done:		type = EXPR_RVALUE | EXPR_ASSIGN;
+		type = EXPR_RVALUE | EXPR_ASSIGN;
 	}
 	if (tok == T_NOT) {
 		addopfunction(OP_CALL, getbuiltinfunc("fact"), 1);
 		tok = gettoken();
 		type = EXPR_RVALUE;
 	}
-	switch (tok) {
-		case T_POWER:		op = OP_POWER; break;
-		case T_LEFTSHIFT:	op = OP_LEFTSHIFT; break;
-		case T_RIGHTSHIFT: 	op = OP_RIGHTSHIFT; break;
-		default:
-			rescantoken();
-			return type;
-	}
-	(void) getshiftexpr();
-	addop(op);
-	return EXPR_RVALUE;
+	rescantoken();
+	return type;
 }
 
 
@@ -1554,8 +1794,6 @@ done:		type = EXPR_RVALUE | EXPR_ASSIGN;
  *	| lvalue '[' assignment ']'
  *	| lvalue '++'
  *	| lvalue '--'
- *	| '++' lvalue
- *	| '--' lvalue
  *	| real_number
  *	| imaginary_number
  *	| '.'
@@ -1563,16 +1801,15 @@ done:		type = EXPR_RVALUE | EXPR_ASSIGN;
  *	| '(' assignment ')'
  *	| function [ '(' [assignment  [',' assignment] ] ')' ]
  *	| '!' term
- *	| '+' term
- *	| '-' term.
  */
 static int
 getterm(void)
 {
 	int type;		/* type of term found */
+	int oldmode;
 
-	type = gettoken();
-	switch (type) {
+	type = 0;
+	switch (gettoken()) {
 		case T_NUMBER:
 			addopone(OP_NUMBER, tokennumber());
 			type = (EXPR_RVALUE | EXPR_CONST);
@@ -1589,8 +1826,8 @@ getterm(void)
 			break;
 
 		case T_STRING:
-			addopptr(OP_STRING, tokenstring());
-			type = (EXPR_RVALUE | EXPR_CONST);
+			addopone(OP_STRING, tokenstring());
+			type = EXPR_RVALUE;
 			break;
 
 		case T_PLUSPLUS:
@@ -1609,31 +1846,21 @@ getterm(void)
 			type = EXPR_ASSIGN;
 			break;
 
-		case T_NOT:
-			(void) getterm();
-			addop(OP_NOT);
-			type = EXPR_RVALUE;
-			break;
-
-		case T_MINUS:
-			(void) getterm();
-			addop(OP_NEGATE);
-			type = EXPR_RVALUE;
-			break;
-
-		case T_PLUS:
-			(void) getterm();
-			type = EXPR_RVALUE;
-			break;
-
 		case T_LEFTPAREN:
+			oldmode = tokenmode(TM_DEFAULT);
 			type = getexprlist();
 			if (gettoken() != T_RIGHTPAREN)
 				scanerror(T_SEMICOLON, "Missing right parenthesis");
+			(void) tokenmode(oldmode);
 			break;
 
 		case T_MAT:
-			getmatdeclaration(SYM_UNDEFINED);
+			getonematrix(SYM_UNDEFINED);
+			while (gettoken() == T_COMMA) {
+				addop(OP_POP);
+				getonematrix(SYM_UNDEFINED);
+			}
+			rescantoken();
 			type = EXPR_ASSIGN;
 			break;
 
@@ -1649,23 +1876,39 @@ getterm(void)
 
 		case T_LEFTBRACKET:
 			scanerror(T_NULL, "Bad index usage");
-			type = 0;
 			break;
 
 		case T_PERIOD:
 			scanerror(T_NULL, "Bad element reference");
-			type = 0;
 			break;
 
 		default:
 			if (iskeyword(type)) {
 				scanerror(T_NULL, "Expression contains reserved keyword");
-				type = 0;
 				break;
 			}
 			rescantoken();
 			scanerror(T_COMMA, "Missing expression");
-			type = 0;
+	}
+	if (type == 0) {
+		for (;;) {
+			switch (gettoken()) {
+				case T_LEFTBRACKET:
+					rescantoken();
+					getmatargs();
+					type = 0;
+					break;
+				case T_PERIOD:
+					getelement();
+					type = 0;
+					break;
+				case T_LEFTPAREN:
+					scanerror(T_NULL, "Function calls not allowed as expressions");
+				default:
+					rescantoken();
+				return type;
+			}
+		}
 	}
 	return type;
 }
@@ -1682,13 +1925,16 @@ getidexpr(BOOL okmat, BOOL autodef)
 {
 	int type;
 	char name[SYMBOLSIZE+1];	/* symbol name */
+	int oldmode;
 
 	type = 0;
 	if (!getid(name))
 		return type;
 	switch (gettoken()) {
 		case T_LEFTPAREN:
+			oldmode = tokenmode(TM_DEFAULT);
 			getcallargs(name);
+			(void) tokenmode(oldmode);
 			type = 0;
 			break;
 		case T_ASSIGN:
@@ -1711,6 +1957,9 @@ getidexpr(BOOL okmat, BOOL autodef)
 				getmatargs();
 				type = 0;
 				break;
+			case T_ARROW:
+				addop(OP_DEREF);
+				/*FALLTHRU*/
 			case T_PERIOD:
 				getelement();
 				type = 0;
@@ -1734,23 +1983,29 @@ getidexpr(BOOL okmat, BOOL autodef)
  * given:
  *	name		filename to read
  *	msg_ok		TRUE => ok to print error messages
- *	once		non-NULL => set to TRUE of -once read 
+ *	once		non-NULL => set to TRUE of -once read
  */
 static BOOL
 getfilename(char *name, BOOL msg_ok, BOOL *once)
 {
+	STRING *s;
+
 	/* look at the next token */
 	(void) tokenmode(TM_NEWLINES | TM_ALLSYMS);
 	switch (gettoken()) {
 		case T_STRING:
+			s = findstring(tokenstring());
+			strcpy(name, s->s_str);
+			sfree(s);
+			break;
 		case T_SYMBOL:
+			strcpy(name, tokensymbol());
 			break;
 		default:
 			if (msg_ok)
 				scanerror(T_SEMICOLON, "Filename expected");
 			return FALSE;
 	}
-	strcpy(name, tokenstring());
 
 	/* determine if we care about a possible -once option */
 	if (once != NULL) {
@@ -1761,7 +2016,12 @@ getfilename(char *name, BOOL msg_ok, BOOL *once)
 			/* look for the filename */
 			switch (gettoken()) {
 				case T_STRING:
+					s = findstring(tokenstring());
+					strcpy(name, s->s_str);
+					sfree(s);
+					break;
 				case T_SYMBOL:
+					strcpy(name, tokensymbol());
 					break;
 				default:
 					if (msg_ok)
@@ -1769,7 +2029,6 @@ getfilename(char *name, BOOL msg_ok, BOOL *once)
 						    "Filename expected");
 					return FALSE;
 			}
-			strcpy(name, tokenstring());
 		} else {
 			*once = FALSE;
 		}
@@ -1802,29 +2061,32 @@ getshowstatement(void)
 
 	switch (gettoken()) {
 		case T_SYMBOL:
-			strncpy(name, tokenstring(), 4);
+			strncpy(name, tokensymbol(), 4);
 			name[4] = '\0';
-			arg = stringindex("buil\000glob\000func\000objf\000conf\000objt\000file\000size\000opco\0", name);
-			if (arg == 9) {
+			arg = stringindex("buil\000real\000func\000objf\000conf\000objt\000file\000size\000erro\000cust\000bloc\000cons\000glob\000stat\000numb\000redc\000stri\000lite\000opco\000", name);
+			if (arg == 19) {
 				if (gettoken() != T_SYMBOL) {
 					rescantoken();
 					scanerror(T_SEMICOLON, "Function name expected");
 					return;
 				}
-				index = adduserfunc(tokenstring());
-				addopone(OP_SHOW, index + 9);
+				index = adduserfunc(tokensymbol());
+				addopone(OP_SHOW, index + 19);
 				return;
 			}
 			if (arg > 0)
 				addopone(OP_SHOW, arg);
 			else
-				printf("Unknown SHOW parameter ignored");
+				printf("Unknown SHOW parameter ignored\n");
 			return;
 		default:
 			printf("SHOW command to be followed by at least ");
 			printf("four letters of one of:\n");
-			printf("\tbuiltin, global, function, objfunc, ");
-			printf("config, objtype, files, sizes\n");
+			printf("\tblocks, builtin, config, constants, ");
+			printf("custom, errors, files, functions,\n");
+			printf("\tglobaltypes, objfunctions, objtypes, opcodes, sizes, ");
+			printf("realglobals,\n");
+			printf("\tstatics, numbers, redcdata, strings, literals\n");
 			rescantoken();
 			return;
 
@@ -1850,7 +2112,7 @@ getmatargs(void)
 	 * Look for the 'fast index' first.
 	 */
 	if (gettoken() == T_LEFTBRACKET) {
-		(void) getassignment();
+		(void) getopassignment();
 		if ((gettoken() != T_RIGHTBRACKET) ||
 			(gettoken() != T_RIGHTBRACKET)) {
 				scanerror(T_NULL, "Bad fast index usage");
@@ -1869,7 +2131,7 @@ getmatargs(void)
 	 */
 	dim = 1;
 	for (;;) {
-		(void) getassignment();
+		(void) getopassignment();
 		switch (gettoken()) {
 			case T_RIGHTBRACKET:
 				addoptwo(OP_INDEXADDR, (long) dim,
@@ -1930,31 +2192,40 @@ getid(char *buf)
 		*buf = '\0';
 		return FALSE;
 	}
-	strncpy(buf, tokenstring(), SYMBOLSIZE);
+	strncpy(buf, tokensymbol(), SYMBOLSIZE);
 	buf[SYMBOLSIZE] = '\0';
 	return TRUE;
 }
 
 
 /*
- * Define a symbol name to be of the specified symbol type.  This also checks
- * to see if the symbol was already defined in an incompatible manner.
+ * Define a symbol name to be of the specified symbol type.  The scope
+ * of a static variable with the same name is terminated if symtype is
+ * global or if symtype is static and the old variable is at the same
+ * level.  A scan error occurs if the name is already in use in an
+ * incompatible manner.
  */
 static void
 definesymbol(char *name, int symtype)
 {
 	switch (symboltype(name)) {
+		case SYM_STATIC:
+			if (symtype == SYM_GLOBAL || symtype == SYM_STATIC)
+				endscope(name, symtype == SYM_GLOBAL);
+			/*FALLTHRU*/
 		case SYM_UNDEFINED:
 		case SYM_GLOBAL:
-		case SYM_STATIC:
 			if (symtype == SYM_LOCAL)
 				(void) addlocal(name);
 			else
 				(void) addglobal(name, (symtype == SYM_STATIC));
 			break;
 
-		case SYM_PARAM:
 		case SYM_LOCAL:
+			if (symtype == SYM_LOCAL)
+				return;
+			/*FALLTHRU*/
+		case SYM_PARAM:
 			scanerror(T_COMMA, "Variable \"%s\" is already defined", name);
 			return;
 	}
@@ -2014,7 +2285,6 @@ getcallargs(char *name)
 	long index;		/* function index */
 	long op;		/* opcode to add */
 	int argcount;		/* number of arguments */
-	int type;
 	BOOL addrflag;
 
 	op = OP_CALL;
@@ -2046,13 +2316,11 @@ getcallargs(char *name)
 			continue;
 		}
 		rescantoken();
-		addrflag = (gettoken() == T_AND);
+		addrflag = (gettoken() == T_BACKQUOTE);
 		if (!addrflag)
 			rescantoken();
-		type = getassignment();
+		(void) getopassignment();
 		if (addrflag) {
-			if (isrvalue(type))
-				scanerror(T_NULL, "Taking address of non-variable");
 			writeindexop();
 		}
 		if (!addrflag && (op != OP_CALL))
@@ -2091,12 +2359,12 @@ do_changedir(void)
 	case T_NULL:
 	case T_NEWLINE:
 	case T_SEMICOLON:
-		p = getenv("HOME");
+		p = home;
 		break;
 	default:
-		p = tokenstring();
+		p = tokensymbol(); /* This is not enough XXX */
 		if (p == NULL) {
-			p = getenv("HOME");
+			p = home;
 		}
 		break;
 	}

@@ -343,21 +343,21 @@ qprintfe(NUMBER *q, long width, long precision)
 {
 	long exponent;
 	NUMBER q2;
-	ZVALUE num, den, tenpow, tmp;
+	ZVALUE num, zden, tenpow, tmp;
 
 	if (qiszero(q)) {
 		PUTSTR("0.0");
 		return;
 	}
 	num = q->num;
-	den = q->den;
+	zden = q->den;
 	num.sign = 0;
-	exponent = zdigits(num) - zdigits(den);
+	exponent = zdigits(num) - zdigits(zden);
 	if (exponent > 0) {
 		ztenpow(exponent, &tenpow);
-		zmul(den, tenpow, &tmp);
+		zmul(zden, tenpow, &tmp);
 		zfree(tenpow);
-		den = tmp;
+		zden = tmp;
 	}
 	if (exponent < 0) {
 		ztenpow(-exponent, &tenpow);
@@ -365,7 +365,7 @@ qprintfe(NUMBER *q, long width, long precision)
 		zfree(tenpow);
 		num = tmp;
 	}
-	if (zrel(num, den) < 0) {
+	if (zrel(num, zden) < 0) {
 		zmuli(num, 10L, &tmp);
 		if (num.v != q->num.v)
 			zfree(num);
@@ -373,15 +373,15 @@ qprintfe(NUMBER *q, long width, long precision)
 		exponent--;
 	}
 	q2.num = num;
-	q2.den = den;
+	q2.den = zden;
 	q2.num.sign = q->num.sign;
 	qprintff(&q2, 0L, precision);
 	if (exponent)
 		PRINTF1("e%ld", exponent);
 	if (num.v != q->num.v)
 		zfree(num);
-	if (den.v != q->den.v)
-		zfree(den);
+	if (zden.v != q->den.v)
+		zfree(zden);
 }
 
 
@@ -548,17 +548,17 @@ str2q(char *s)
 	/*
 	 * Reduce the fraction to lowest terms
 	 */
-	if (zisunit(q->num) || zisunit(q->den))
-		return q;
-	zgcd(q->num, q->den, &div);
-	if (zisunit(div))
-		return q;
-	zequo(q->num, div, &newnum);
-	zfree(q->num);
-	zequo(q->den, div, &newden);
-	zfree(q->den);
-	q->num = newnum;
-	q->den = newden;
+	if (!zisunit(q->num) && !zisunit(q->den)) {
+		zgcd(q->num, q->den, &div);
+		if (!zisunit(div)) {
+			zequo(q->num, div, &newnum);
+			zfree(q->num);
+			zequo(q->den, div, &newden);
+			zfree(q->den);
+			q->num = newnum;
+			q->den = newden;
+		}
+	}
 	return q;
 }
 
@@ -671,6 +671,66 @@ qparse(char *cp, int flags)
 		((*cp >= 'A') && (*cp <= 'Z')))
 			return -1;
 	return (cp - oldcp);
+}
+
+
+/*
+ * Print an integer which is guaranteed to fit in the specified number
+ * of columns, using imbedded '...' characters if numerator and/or
+ * denominator is too large.
+ */
+void
+fitprint(NUMBER *q, long width)
+{
+	long numdigits, dendigits, digits;
+	long width1, width2;
+	long n, k;
+
+	if (width < 8)
+		width = 8;
+	numdigits = zdigits(q->num);
+	n = numdigits;
+	k = 0;
+	while (++k, n)
+		n /= 10;
+	if (qisint(q)) {
+		width -= k;
+		k = 16 - k;
+		if (k < 2)
+			k = 2;
+		PRINTF1("(%ld)", numdigits);
+		while (k-- > 0)
+			PUTCHAR(' ');
+		fitzprint(q->num, numdigits, width);
+		return;
+	}
+	dendigits = zdigits(q->den);
+	PRINTF2("(%ld/%ld)", numdigits, dendigits);
+	digits = numdigits + dendigits;
+	n = dendigits;
+	while (++k, n)
+		n /= 10;
+	width -= k;
+	k = 16 - k;
+	if (k < 2)
+		k = 2;
+	while (k-- > 0)
+		PUTCHAR(' ');
+	if (digits <= width) {
+		qprintf("%r", q);
+		return;
+	}
+	width1 = (width * numdigits)/digits;
+	if (width1 < 8)
+		width1 = 8;
+	width2 = width - width1;
+	if (width2 < 8) {
+		width2 = 8;
+		width1 = width - width2;
+	}
+	fitzprint(q->num, numdigits, width1);
+	PUTCHAR('/');
+	fitzprint(q->den, dendigits, width2);
 }
 
 /* END CODE */

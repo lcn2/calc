@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996 by Landon Curt Noll.  All Rights Reserved.
+ * Copyright (c) 1997 by Landon Curt Noll.  All Rights Reserved.
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby granted,
@@ -56,8 +56,8 @@
  * average reduces the values we need to test by a factor of at least 2.4.
  */
 
-#if !defined(JUMP_H)
-#define JUMP_H
+#if !defined(__JUMP_H__)
+#define __JUMP_H__
 
 #include "have_const.h"
 
@@ -93,4 +93,4 @@ extern CONST short jmpindx[];
 extern CONST unsigned char jmp[];
 extern CONST unsigned char *CONST lastjmp;
 
-#endif /* !JUMP_H */
+#endif /* !__JUMP_H__ */

@@ -1,0 +1,102 @@
+NAME
+    md5 - MD5 Message-Digest Algorithm
+
+SYNOPSIS
+    md5([arg1 [, val ...]])
+
+TYPES
+    arg1	any
+    val		any
+
+    return	HASH or number
+
+DESCRIPTION
+    The md5() builtin implements the MD5 Message-Digest Algorithm.
+    The SHA is a 128 bit hash.
+
+    With no args, md5() returns the default initial md5 HASH state.
+
+    If arg1 is a HASH state and no other val args are given, then the
+    HASH state is finalized and the numeric value of the hash is given.
+
+    If arg1 is a HASH state and one or more val args are given,
+    then the val args are used to modify the arg1 HASH state.
+    The new arg1 HASH state is returned.
+
+    If arg1 is not a a HASH state, then the initial HASH is
+    used and modifed by arg1 and any val args supplied.  The
+    return value is the new HASH state.
+
+    The following table gives a summary of actions and return values.
+    Here, assume that 'h' is a HASH state:
+
+	md5()			HASH	returns initial HASH state
+
+	md5(h)			number	h is put into final form and the
+					numeric value of the hash state
+
+	md5(x)			HASH	modify the initial state by hashing 'x'
+
+	md5(md5(), x)		HASH	the same as md5(x)
+
+	md5(x, y)		HASH	the same as md5(md5(x), y)
+
+	md5(h, x, y)		HASH	modify state 'h' by 'x' and then 'y'
+
+	md5(md5(h,x,y))		number	numeric value of the above call
+
+    NOTE: These functions were "derived from the RSA Data Security, Inc.
+	  MD5 Message-Digest Algorithm".
+
+EXAMPLE
+    > base(16)
+	    0xa
+
+    > md5()
+	    md5 hash state
+    > md5(md5())
+	    0xd41d8cd98f00b204e9800998ecf8427e
+
+    > md5("x", "y", "z") == md5("xyz")
+	    1
+    > md5("x", "y", "z") == md5("xy")
+	    0
+
+    > md5(md5("this is", 7^19-8, "a composit", 3i+4.5, "hash"))
+	    0x5a90d942335b0dbbdce38d90e7cb6dac
+
+    > x = md5(list(1,2,3), "curds and whey", 2^21701-1, pi())
+    > x
+	    md5 hash state
+    > md5(x)
+	    0x88790b3ea9eb0128134c103ac9b683ed
+
+    > y = md5()
+    > y = md5(y, list(1,2,3), "curds and whey")
+    > y = md5(y, 2^21701-1)
+    > y = md5(y, pi())
+    > y
+	    md5 hash state
+    > md5(y)
+	    0x88790b3ea9eb0128134c103ac9b683ed
+
+LIMITS
+    none
+
+LIBRARY
+    HASH* hash_init(int, HASH*);
+    void hash_free(HASH*);
+    HASH* hash_copy(HASH*);
+    int hash_cmp(HASH*, HASH*);
+    void hash_print(HASH*);
+    ZVALUE hash_final(HASH*);
+    HASH* hash_long(int, long, HASH*);
+    HASH* hash_zvalue(int, ZVALUE, HASH*);
+    HASH* hash_number(int, void*, HASH*);
+    HASH* hash_complex(int, void*, HASH*);
+    HASH* hash_str(int, char*, HASH*);
+    HASH* hash_usb8(int, USB8*, int, HASH*);
+    HASH* hash_value(int, void*, HASH*);
+
+SEE ALSO
+    ishash, sha, sha1

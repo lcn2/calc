@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996 by Landon Curt Noll.  All Rights Reserved.
+ * Copyright (c) 1997 by Landon Curt Noll.  All Rights Reserved.
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby granted,
@@ -44,6 +44,7 @@
 
 #include "value.h"
 #include "zrand.h"
+#include "zrandom.h"
 
 #define ZMOST 2		/* most significant HALFs to hash */
 #define ZLEAST 2	/* least significant HALFs to hash */
@@ -63,6 +64,8 @@ static QCKHASH config_hash(CONFIG *cfg, QCKHASH val);
 static QCKHASH fnv_strhash(char *str, QCKHASH val);
 static QCKHASH fnv_fullhash(FULL *v, LEN len, QCKHASH val);
 static QCKHASH fnv_zhash(ZVALUE z, QCKHASH val);
+static QCKHASH hash_hash(HASH *hash, QCKHASH val);
+static QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
 
 
 /*
@@ -142,7 +145,7 @@ hashvalue(VALUE *vp, QCKHASH val)
 		case V_COM:
 			return fnv_chash(vp->v_com, val);
 		case V_STR:
-			return fnv_strhash(vp->v_str, val);
+			return fnv_strhash(vp->v_str->s_str, val);
 		case V_NULL:
 			return val;
 		case V_OBJ:
@@ -161,6 +164,14 @@ hashvalue(VALUE *vp, QCKHASH val)
 			return randomhash(vp->v_random, val);
 		case V_CONFIG:
 			return config_hash(vp->v_config, val);
+		case V_HASH:
+			return hash_hash(vp->v_hash, val);
+		case V_BLOCK:
+			return blk_hash(vp->v_block, val);
+		case V_OCTET:
+			return fnv((int)*vp->v_octet, V_OCTET+val);
+		case V_NBLOCK:
+			return blk_hash(vp->v_nblock->blk, val);
 		default:
 			math_error("Hashing unknown value");
 			/*NOTREACHED*/
@@ -321,11 +332,11 @@ randomhash(RANDOM *state, QCKHASH val)
 	 * hash a seeded RANDOM state
 	 */
 	val = fnv(state->buffer+state->bits, V_RANDOM+val);
-	if (state->r != NULL && state->r->v != NULL) {
-		val = fnv_zhash(*(state->r), val);
+	if (state->r.v != NULL) {
+		val = fnv_zhash(state->r, val);
 	}
-	if (state->n != NULL && state->n->v != NULL) {
-		val = fnv_zhash(*(state->n), val);
+	if (state->n.v != NULL) {
+		val = fnv_zhash(state->n, val);
 	}
 	return val;
 }
@@ -337,16 +348,52 @@ randomhash(RANDOM *state, QCKHASH val)
 static QCKHASH
 config_hash(CONFIG *cfg, QCKHASH val)
 {
+	USB32 value;		/* value to hash from hash elements */
+
 	/*
-	 * hash scalar values
+	 * build up a scalar value
+	 *
+	 * We will rotate a value left 5 bits and xor in each scalar element
 	 */
-	val = fnv(cfg->traceflags + cfg->outdigits + cfg->outmode +
-		  cfg->epsilonprec + cfg->maxprint + cfg->mul2 +
-		  cfg->sq2 + cfg->pow2 + cfg->redc2 + cfg->tilde_ok +
-	          cfg->tab_ok + cfg->quomod + cfg->quo + cfg->mod +
-	          cfg->sqrt + cfg->appr + cfg->cfappr + cfg->cfsim +
-	          cfg->outround + cfg->round + cfg->leadzero +
-	          cfg->fullzero + cfg->maxerrorcount, V_CONFIG+val);
+	value = cfg->outmode;
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->outmode);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->outdigits);
+	/* epsilon is handeled out of order */
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->epsilonprec);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->traceflags);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->maxprint);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->mul2);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->sq2);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->pow2);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->redc2);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->tilde_ok);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->tab_ok);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->quomod);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->quo);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->mod);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->sqrt);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->appr);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->cfappr);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->cfsim);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->outround);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->round);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->leadzero);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->fullzero);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->maxscancount);
+	/* prompt1 is handeled out of order */
+	/* prompt2 is handeled out of order */
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->blkmaxprint);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->blkverbose);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->blkbase);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->blkfmt);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->lib_debug);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->calc_debug);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->user_debug);
+
+	/*
+	 * hash the built up scalar
+	 */
+	val = fnv(value, V_CONFIG+val);
 
 	/*
 	 * hash the strings if possible
@@ -385,7 +432,7 @@ fnv_strhash(char *str, QCKHASH val)
 	 * hash each character in the string
 	 */
 	while (*str) {
-	    val = fnv(*str++, val);
+		val = fnv(*str++, val);
 	}
 	return val;
 }
@@ -409,7 +456,7 @@ fnv_fullhash(FULL *v, LEN len, QCKHASH val)
 	 * hash each character in the string
 	 */
 	while (len-- > 0) {
-	    val = fnv(*v++, val);
+		val = fnv(*v++, val);
 	}
 	return val;
 }
@@ -468,6 +515,61 @@ fnv_zhash(ZVALUE z, QCKHASH val)
 		/* hash the ZMOST significant HALFs */
 		for (i=z.len-1-ZMOST; i < z.len; ++i) {
 			val = fnv(z.v[i], val);
+		}
+	}
+	return val;
+}
+
+
+/*
+ * hash_hash - Fowler/Noll/Vo 32 bit hash of a block
+ *
+ * given:
+ *	hash	the HASH to quickhash
+ *	val	initial hash value
+ *
+ * returns:
+ *	a 32 bit QCKHASH value
+ */
+static QCKHASH
+hash_hash(HASH *hash, QCKHASH val)
+{
+	int i;
+
+	/*
+	 * hash each USB8 in the BLOCK
+	 */
+	for (i=0; i < hash->unionsize; ++i) {
+		val = fnv(hash->h_union.data[i], val);
+	}
+	return val;
+}
+
+
+/*
+ * blk_hash - Fowler/Noll/Vo 32 bit hash of a block
+ *
+ * given:
+ *	blk	the BLOCK to hash
+ *	val	initial hash value
+ *
+ * returns:
+ *	a 32 bit QCKHASH value
+ */
+static QCKHASH
+blk_hash(BLOCK *blk, QCKHASH val)
+{
+	int i;
+
+	if (blk == NULL)		/* block has no data */
+		return val;
+
+	/*
+	 * hash each USB8 in the BLOCK
+	 */
+	if (blk->datalen > 0) {
+		for (i=0; i < blk->datalen; ++i) {
+			val = fnv(blk->data[i], val);
 		}
 	}
 	return val;
