@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: zfunc.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: zfunc.c,v 29.4 2003/08/26 04:35:11 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:27
@@ -817,7 +817,9 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	needw = TRUE;
 
 	w = 0;
+	j = 0;
 	while (m) {				/* START OF MAIN LOOP */
+	   if (m - n < 2 || needw) {
 		q = 0;
 		u = *a0;
 		v = 1;
@@ -872,6 +874,8 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 			else g &= BASE1;
 		}
 		else g = 1;
+	   } else
+		g = (HALF) *a0 * w;
 		a = a0;
 		b = b0;
 		i = n;
@@ -947,6 +951,10 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 			}
 			a0 += q;
 			m -= q;
+			while (m && !*a0) { /* Removing trailing zeros */
+				m--;
+				a0++;
+			}
 		}
 		while (m && !a0[m-1]) m--;	/* Removing leading zeros */
 	}

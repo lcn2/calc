@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.12 $
- * @(#) $Id: config.h,v 29.12 2002/12/29 09:20:25 chongo Exp chongo $
+ * @(#) $Revision: 29.13 $
+ * @(#) $Id: config.h,v 29.13 2003/08/26 04:36:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17

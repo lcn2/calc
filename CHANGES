@@ -44,6 +44,10 @@ The following are the changes from calc version 2.11.8.0 to date:
     The new default config is the old classic config with outround being
     24, leadzero being set, and the prompts being ;'s.
 
+    Fixed a bug in the evaluation of tanh(1e-23) with an epsilon(1e-100).
+    Thanks goes to Dmitry G. Baksheyev <bd at nbsp dot nsk dot su>
+    for reprting the problem, and thanks goes to Ernest Bowen
+    <ernie at turing dot une dot edu dot au> for the fix.
 
 The following are the changes from calc version 2.11.7.0 to 2.11.7.1:
 
@@ -5608,8 +5612,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.59 $
-## @(#) $Id: CHANGES,v 29.59 2003/02/26 17:17:12 chongo Exp chongo $
+## @(#) $Revision: 29.60 $
+## @(#) $Id: CHANGES,v 29.60 2003/08/26 04:35:45 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
