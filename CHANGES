@@ -96,6 +96,13 @@ Following is the change from calc version 2.11.0t7 to date:
 
     A call of errmax(-1) will prevent errcount from aborting calc.
 
+    Add the function stoponerror(n) which, as the name implies, controls
+    if calc stop on an error based on the value of n:
+
+	n > 0	stop on error even if -c was given on the command line
+	n == 0	if -c, continue, without -c, stop
+	n < 0	continue on error, even if -c was given on the command line
+
 
 Following is the change from calc version 2.11.0t1 to 2.11.0t6.3:
 

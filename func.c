@@ -84,6 +84,8 @@ extern void matrandperm(MATRIX *M);
 extern void listrandperm(LIST *lp);
 extern int idungetc(FILEID id, int ch);
 
+extern int stoponerror;
+
 
 /*
  * if HZ & CLK_TCK are not defined, pick typical values, hope for the best
@@ -4477,6 +4479,30 @@ f_errmax(int count, VALUE **vals)
 
 
 static VALUE
+f_stoponerror(int count, VALUE **vals)
+{
+	int oldval;
+	VALUE *vp;
+	VALUE result;
+
+	oldval = stoponerror;
+	if (count > 0) {
+		vp = vals[0];
+
+		if (vp->v_type != V_NUM || qisfrac(vp->v_num) ||
+				zge31b(vp->v_num->num))
+			fprintf(stderr,
+				 "Out-of-range arg for stoponerror ignored\n");
+		else
+			stoponerror = (int) ztoi(vp->v_num->num);
+	}
+
+	result.v_type = V_NUM;
+	result.v_num = itoq((long) oldval);
+	return result;
+}
+
+static VALUE
 f_fclose(int count, VALUE **vals)
 {
 	VALUE result;
@@ -7206,6 +7232,8 @@ static CONST struct builtin builtins[] = {
 	 "seed the random() function"},
 	{"ssq", 1, IN, 0, OP_NOP, 0, f_ssq,
 	 "sum of squares of values"},
+	{"stoponerror", 0, 1, 0, OP_NOP, 0, f_stoponerror,
+	 "assign value to stoponerror flag"},
 	{"str", 1, 1, 0, OP_NOP, 0, f_str,
 	 "simple value converted to string"},
 	{"strcat", 1,IN, 0, OP_NOP, 0, f_strcat,

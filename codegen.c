@@ -829,6 +829,8 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		printeol = TRUE;
 		for (;;) {
 			switch (gettoken()) {
+				case T_RIGHTPAREN:
+				case T_RIGHTBRACKET:
 				case T_RIGHTBRACE:
 				case T_NEWLINE:
 				case T_EOF:

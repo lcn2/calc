@@ -84,6 +84,7 @@ int q_flag = FALSE;	/* TRUE => don't execute rc files */
 int u_flag = FALSE;	/* TRUE => unbuffer stdin and stdout */
 int d_flag = FALSE;	/* TRUE => disable heading, lib_debug == 0 */
 
+int stoponerror = FALSE;	/* >0 => stop, <0 => continue on error */
 
 /*
  * global values

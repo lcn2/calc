@@ -50,6 +50,7 @@ extern int p_flag;		/* TRUE => pipe mode */
 extern int q_flag;		/* TRUE => don't execute rc files */
 extern int u_flag;		/* TRUE => unbuffer stdin and stdout */
 extern int d_flag;		/* TRUE => disable heading, lib_debug == 0 */
+extern int stoponerror;		/* >0 => stop, <0 => continue, ==0 => use -c */
 
 extern char *pager;		/* $PAGER or default */
 extern int stdin_tty;		/* TRUE if stdin is a tty */
@@ -268,9 +269,17 @@ main(int argc, char **argv)
 	}
 	if (start_done == 1) {
 		fprintf(stderr, "Execution error in rcfiles\n");
-		if (c_flag)
+		if ((c_flag && !stoponerror) || stoponerror < 0) {
 			getcommands(FALSE);
-		start_done = 2;
+			start_done = 2;
+		} else {
+			if ((havecommands && !i_flag) || !stdin_tty)
+				start_done = 7;
+			else if (havecommands)
+				start_done = 4;
+			else
+				start_done = 2;
+		}
 	}
 	if (start_done == 2) {
 		if (havecommands) {
@@ -282,11 +291,17 @@ main(int argc, char **argv)
 	}
 	if (start_done == 3) {
 		fprintf(stderr, "Execution error in commands\n");
-		if (c_flag)
+		if ((c_flag && !stoponerror) || stoponerror < 0) {
 			getcommands(FALSE);
-		else
+			start_done = 4;
+		}
+		else {
 			closeinput();
-		start_done = 4;
+			if (!stdin_tty || !i_flag)
+				start_done = 7;
+			else
+				start_done = 4;
+		}
 	}
 	if (start_done == 4) {
 		if (stdin_tty && ((havecommands && !i_flag) || p_flag))
@@ -295,10 +310,13 @@ main(int argc, char **argv)
 			openterminal();
 	}
 	else if (start_done == 5) {
-		if (!stdin_tty && !c_flag) {
-			start_done = 6;
+		if (!stdin_tty && (!c_flag || stoponerror) && stoponerror >= 0) {
+			start_done = 7;
 		}
-		reinitialize();
+		else if ((c_flag && !stoponerror) || stoponerror < 0)
+			getcommands(FALSE);
+		else
+			reinitialize();
 	}
 
 	if (start_done < 6) {
