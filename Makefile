@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.30 $$
-# @(#) $Id: Makefile.ship,v 29.30 2001/05/29 00:16:53 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.31 $$
+# @(#) $Id: Makefile.ship,v 29.31 2001/06/01 21:44:44 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -607,12 +607,12 @@ CATMODE= 0444
 # If the $CALCPATH environment variable is not defined, then the following
 # path will be search for calc resource file routines.
 #
-CALCPATH= .:./cal:~/cal:${LIBDIR}:${CUSTOMLIBDIR}
+CALCPATH= .:./cal:~/.cal:${CSHAREDIR}:${CUSTOMLIBDIR}
 
 # If the $CALCRC environment variable is not defined, then the following
 # path will be search for calc resource files.
 #
-CALCRC= ${LIBDIR}/startup:~/.calcrc:./.calcinit
+CALCRC= ${CSHAREDIR}/startup:~/.calcrc:./.calcinit
 
 # Determine of the GNU-readline facility will be used instead of the
 # built-in calc binding method.
@@ -625,6 +625,7 @@ CALCRC= ${LIBDIR}/startup:~/.calcrc:./.calcinit
 #	READLINE_LIB		The flags needed to link in the readline
 #				and history link libraries
 #	READLINE_INCLUDE	Where the readline include files reside
+#				(leave blank if they are /usr/include/readline)
 #
 # NOTE: The GNU-readline code is not shipped with calc.	 You must have
 #	the appropriate headers and link libs installed on your system in
@@ -635,10 +636,10 @@ CALCRC= ${LIBDIR}/startup:~/.calcrc:./.calcinit
 USE_READLINE=
 #USE_READLINE= -DUSE_READLINE
 #
-READLINE_LIB=
-#READLINE_LIB= -L/usr/gnu/lib -lreadline -lhistory
-#READLINE_LIB= -lreadline -lhistory
-#READLINE_LIB= -L/usr/local/lib -lreadline -lhistory
+#READLINE_LIB=
+READLINE_LIB= -lreadline -lhistory -lncurses
+#READLINE_LIB= -L/usr/gnu/lib -lreadline -lhistory -lncurses
+#READLINE_LIB= -L/usr/local/lib -lreadline -lhistory -lncurses
 #
 READLINE_INCLUDE=
 #READLINE_INCLUDE= -I/usr/gnu/include

@@ -21,6 +21,21 @@ The following are the changes from calc version 2.11.5t4.1 to date:
 
     for details.
 
+    Corrected a bug that incorrectly set the default calc path
+    back in version 2.11.5t4.  The default CALCPATH is now:
+
+	.:./cal:~/.cal:/usr/share/calc:/usr/share/calc/custom
+
+    and the default CALCRC is now:
+
+	/usr/share/calc/startup:~/.calcrc:./.calcinit
+
+    This fixes the missing bindings error and it places the calc
+    resource files into the default path.
+
+    If you are using the GNU readline then the Makefile recommends that
+    you link with the ncurses library.
+
 
 The following are the changes from calc version 2.11.5t3 to 2.11.5t4:
 
@@ -5305,8 +5320,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.34 $
-## @(#) $Id: CHANGES,v 29.34 2001/06/01 11:26:53 chongo Exp chongo $
+## @(#) $Revision: 29.35 $
+## @(#) $Id: CHANGES,v 29.35 2001/06/01 21:44:44 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
