@@ -21,6 +21,34 @@ Very High priority items:
 
     * Update the errmax about the meaning of errmax(-1).
 
+    * Review and if needed, correct/update the help topics:
+
+	    topic		description
+	    -----		-----------
+	    intro		introduction to calc
+	    overview		overview of calc
+	    assoc		using associations
+	    command		top level commands
+	    config		configuration parameters
+	    define		how to define functions
+	    environment		how environment variables effect calc
+	    errorcodes		calc generated error codes
+	    expression		expression sequences
+	    file		using files
+	    history		command history
+	    interrupt		how interrupts are handled
+	    list		using lists
+	    mat			using matrices
+	    obj			user defined data types
+	    operator		math, relational, logic and variable access ...
+	    statement		flow control and declaration statements
+	    types		builtin data types
+	    unexpected		unexpected syntax/usage surprises for C ...
+	    variable		variables and variable declarations
+	    libcalc		using the arbitrary precision routines in ...
+	    bugs		known bugs and mis-features
+	    wishlist		wish list of future enhancements of calc
+
     * Fix any 'Known bugs' as noted in the BUGS file or as
       displayed by 'calc help bugs'.
 

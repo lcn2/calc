@@ -27,3 +27,5 @@ print "BIG_ENDIAN: ", custom("sysinfo", "BIG_ENDIAN");
 print "LITTLE_ENDIAN: ", custom("sysinfo", "LITTLE_ENDIAN");
 print "LONG_BITS: ", custom("sysinfo", "LONG_BITS");
 print "LONGLONG_BITS: ", custom("sysinfo", "LONGLONG_BITS");
+print "Calc sizes:";
+show sizes;

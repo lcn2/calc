@@ -1,5 +1,5 @@
 #
-# Copyright (c) 1997 Landon Curt Noll
+# Copyright (c) 1999 Landon Curt Noll
 #
 # Permission to use, copy, modify, and distribute this software and
 # its documentation for any purpose and without fee is hereby granted,
@@ -44,8 +44,19 @@ calc library standards and guidelines.
 
 =-=
 
+argv.cal
+
+    argv(var, ...)
+
+    print information about various args
+
 halflen.cal
 
     halflen(num)
 
     Calculate the length of a numeric value in HALF's.
+
+pzasusb8.cal
+
+    Run custom("pzasusb8") on a standard set of data, print Endian
+    related information and print value size information.

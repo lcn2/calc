@@ -38,17 +38,17 @@ Step 1: Do some background work
     you look at some examples of custom functions.  Check out
     the following source files:
 
-	../custom.c
-	custom.h
-	custtbl.c
-	c_*.[ch]
-	../help/custom
+	custom.c
+	custom/custom.h
+	custom/custtbl.c
+	custom/c_*.[ch]
+	help/custom		(or run:  calc help custom)
 
     You would be well advised to look at a more recent calc source
-    such as one available in from the calc alpha test archive.
+    such as one available in from the calc version archive.
     See the following for more details:
 
-	../help/archive
+	help/archive		(or run:  calc help archive)
 
 
 Step 2: Name your custom function
@@ -604,3 +604,16 @@ Step 11: Install
 
     Although calc does not run setuid, you may need to be root to install
     the directories into which calc installs may be write protected.
+
+
+Step 12: Contribute
+
+    Your custom function may be of interest to some people and/or
+    serve as an example of what one can do with custom functions.
+
+    Read the file:
+
+	help/contrib		(or run:  calc help contrib)
+
+    and consider submitting your custom function for possible
+    inclusion in later versions of calc.

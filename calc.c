@@ -87,7 +87,7 @@ main(int argc, char **argv)
 			i_flag = TRUE;
 			break;
 		case 'm':
-			if (optarg[1] == '\0' || *optarg<'0' || *optarg>'7') {
+			if (optarg[1] != '\0' || *optarg<'0' || *optarg>'7') {
 				/*
 				 * we are too early in processing to
 				 * call libcalc_call_me_last()

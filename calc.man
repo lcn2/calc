@@ -62,6 +62,13 @@ cause
 .B calc
 to try to process each line being read
 despite the errors that it encounters.
+.sp 1
+By default, calc startup scripts ($CALCRC) are silently
+ignored if not found.
+This flag will report missing
+startup scripts unless
+.B \-d
+is also given.
 
 .TP
 .B \-C
@@ -112,6 +119,8 @@ It's nearly ten past six.
 .fi
 .in -5n
 .sp 1
+This flag disables the reporting of missing calc
+startup scripts ($CALCRC).
 
 .TP
 .B \-e

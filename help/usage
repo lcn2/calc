@@ -19,6 +19,10 @@ Calc command line
 	    will cause calc to try to process each line being read
 	    despite the errors that it encounters.
 
+	    By default, calc startup scripts ($CALCRC) are silently
+	    ignored if not found.  This flag will report missing
+	    startup scripts unless -d is also given.
+
 	-C  Permit the execution of custom builtin functions.  Without
 	    this flag, calling the custom() builtin function will
 	    simply generate an error.
@@ -47,6 +51,9 @@ Calc command line
 	    will just say:
 
 		It's nearly ten past six.
+
+	    This flag disables the reporting of missing calc
+	    startup scripts ($CALCRC).
 
 	-e  Ignore any environment variables on startup.  The
 	    getenv() builtin will still return values, however.

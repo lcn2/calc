@@ -132,12 +132,24 @@ Following is the change from calc version 2.11.0t8 to date:
     Fixed the help/custom_cal, help/new_custom, and help/copy files so
     that they contain the correct contents instead of the 'usage' file.
 
-    Fixed problem with loss of bindings when .calc -i args runs into
+    Fixed problem with loss of bindings when calc -i args runs into
     an error while processing 'args' and drops into interactive mode
     without the terminal bindings being set.
 
+    Added patch from Ernest Bowen to extablish the abort command as
+    well as to clarify the roles of quit and exit.  See the help/command
+    file for details.
+
     Updated to some extend, the help/statement and help/command help
     files with new information about SHOW, QUIT, EXIT and ABORT.
+
+    Added show sizes to pzasusb8.cal.
+
+    Updated calc man page and help/usage file to reflect recent
+    command line changes.
+
+    Fixed a bug, reported by Michael Somos <somos@grail.cba.csuohio.edu>,
+    which prevented calc -m from being used.
 
     Fixed misc compiler warnings.
 

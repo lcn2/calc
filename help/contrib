@@ -5,30 +5,27 @@ We welcome and encourage you to send us:
     * custom functions that you have modified or written
     * any other source code modifications
 
-Prior to doing so, you should consider trying your changes on the most
-recent alpha test code.  To obtain the most recent code, look under
+Prior to doing so, you should consider applying your changes to the most
+recent version of calc.
+
+Landon Noll maintains the official calc home page at:
 
 	http://reality.sgi.com/chongo/tech/comp/calc/
 
-You should also consider joining the calc testing group by sending a
-request to:
+See:
 
-	calc-tester-request@postofc.corp.sgi.com
+	http://reality.sgi.com/chongo/tech/comp/calc/calc-download.html
 
-    Your message body (not the subject) should consist of:
+for information on how to obtain up a recent version of calc.
 
-	subscribe calc-tester address
-	end
-	name your_full_name
-
-    where "address" is your EMail address and "your_full_name"
-    is your full name.
+=-=
 
 In order to consider integrating your code, we need:
 
-    * help files (documentation)
-    * CHANGES text (brief description of what it does)
-    * regress.cal test (to test non-custom code)
+    * the calc version you are working with (use the latest calc, see above)
+    * new help files or help file patches, if applicable (documentation)
+    * proposed text for the CHANGES file (brief description of what it does)
+    * regress.cal test patch, if applicable
     * your source code and/or source code changes (:-))
 
 The best way to send us new code, if your changes are small, is
@@ -44,6 +41,21 @@ You should send submissions to:
 Thanks for considering submitting code to calc.  Calc is a collective
 work by a number of people.  It would not be what it is today without
 your efforts and submissions!
+
+=-=
+
+One may join the calc testing group by sending a request to:
+
+	calc-tester-request@postofc.corp.sgi.com
+
+    Your message body (not the subject) should consist of:
+
+	subscribe calc-tester address
+	end
+	name your_full_name
+
+    where "address" is your EMail address and "your_full_name"
+    is your full name.
 
 Landon Curt Noll
 http://reality.sgi.com/chongo

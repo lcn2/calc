@@ -17,7 +17,7 @@ For example:
 
 will cause calc to load and execute the 'lucas.cal' library.
 Executing the library will cause several functions to be defined.
-Executing the lucas function
+Executing the lucas function:
 
     > lucas(149,60)
 	    1

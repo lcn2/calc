@@ -71,6 +71,10 @@
 
 	    help stdlib
 
+    To learn how to invoke the calc command and about calc -flags, try:
+
+	    help usage
+
     A full and extensive overview of calc may be obtained by:
 
 	    help full
@@ -160,5 +164,3 @@
     These can contain both functions to be defined, and expressions
     to be calculated.  Global variables which are numbers can be
     saved to a file by using the 'write filename' command.
-
-    XXX - update this file and add in new major features

@@ -22,41 +22,10 @@ Credits
 
     Most of this source and binary has one of the following copyrights:
 
-	    Copyright (c) 19xx David I. Bell
-	    Copyright (c) 19xx David I. Bell and Landon Curt Noll
-	    Copyright (c) 19xx Landon Curt Noll
-	    Copyright (c) 19xx Ernest Bowen and Landon Curt Noll
+	    Copyright (c) year David I. Bell
+	    Copyright (c) year David I. Bell and Landon Curt Noll
+	    Copyright (c) year Landon Curt Noll
+	    Copyright (c) year Ernest Bowen and Landon Curt Noll
 
     Permission is granted to use, distribute, or modify this source,
     provided that this copyright notice remains intact.
-
-    Send calc comments, suggestions, bug fixes, enhancements and
-    interesting calc scripts that you would like you see included in
-    future distributions to:
-
-	calc-tester@postofc.corp.sgi.com
-
-    Landon Noll maintains the official calc http/ftp archive at:
-
-	ftp://reality.sgi.com/users/chongo/src/calc
-	http://reality.sgi.com/chongo/src/calc/
-
-    Alpha test versions, complete with bugs, untested code and
-    experimental features may be fetched (if you are brave) under:
-
-	http://reality.sgi.com/chongo/tech/comp/calc/
-
-    One may join the calc testing group by sending a request to:
-
-	calc-tester-request@postofc.corp.sgi.com
-
-    Your message body (not the subject) should consist of:
-
-	subscribe calc-tester address
-	end
-	name your_full_name
-
-    where "address" is your EMail address and "your_full_name"
-    is your full name.
-
-    Enjoy!
