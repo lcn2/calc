@@ -99,6 +99,7 @@ int stdin_tty = FALSE;		/* TRUE if stdin is a tty */
 int havecommands = FALSE;	/* TRUE if have one or more cmd args */
 int stoponerror = FALSE;	/* >0 => stop, <0 => continue on error */
 int post_init = FALSE;		/* TRUE setjmp for math_error is ready */
+BOOL abort_now = FALSE;		/* TRUE => go interactive now, if permitted */
 
 int no_env = FALSE;		/* TRUE (-e) => ignore env vars on startup */
 int errmax = ERRMAX;		/* if >= 0,  maximum value for errcount */

@@ -164,6 +164,7 @@ extern int d_flag;		/* TRUE => disable heading, lib_debug == 0 */
 extern int c_flag;		/* TRUE => continue after error if permitted */
 extern int i_flag;		/* TRUE => try to go interactive after error */
 extern int stoponerror;		/* >0 => stop, <0 => continue, ==0 => use -c */
+extern BOOL abort_now;		/* TRUE => try to go interactive */
 
 extern char *pager;		/* $PAGER or default */
 extern int stdin_tty;		/* TRUE if stdin is a tty */

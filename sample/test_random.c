@@ -33,18 +33,6 @@
  */
 
 
-#if defined(__sgi)
-# include "../longbits.h"
-# if defined(HAVE_B64)
-typedef USB64 k_sigset_t;
-# else
-typedef struct {
-	USB32 sigbits[2];
-} k_sigset_t;
-# endif
-#endif
-
-
 #include <sys/types.h>
 #include <stdio.h>
 #include "../calc.h"

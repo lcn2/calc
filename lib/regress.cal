@@ -3302,7 +3302,7 @@ define test_fileops()
 
 	print '4261: Ending test_fileops';
 }
-print '071: parsed test_redc()';
+print '071: parsed test_fileops()';
 
 
 /*

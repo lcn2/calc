@@ -136,6 +136,9 @@ Following is the change from calc version 2.11.0t8 to date:
     an error while processing 'args' and drops into interactive mode
     without the terminal bindings being set.
 
+    Updated to some extend, the help/statement and help/command help
+    files with new information about SHOW, QUIT, EXIT and ABORT.
+
     Fixed misc compiler warnings.
 
 

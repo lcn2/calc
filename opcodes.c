@@ -33,7 +33,6 @@ static BOOL saveval = TRUE;		/* to enable or disable saving */
 static int calc_errno;			/* most recent error-number */
 static int errcount;			/* counts calls to error_value */
 static BOOL go;
-static BOOL abort_now;
 
 /*
  * global symbols
@@ -3714,11 +3713,12 @@ calculate(FUNC *fp, int argcount)
 		freevalue(stack--);
 	funcname = oldname;
 	funcline = oldline;
-	if (abort_now) {
+	if (abort_now && stack == stackarray) {
 		if (!stdin_tty)
 			run_state = RUN_EXIT;
 		else if (run_state < RUN_PRE_TOP_LEVEL)
 			run_state = RUN_PRE_TOP_LEVEL;
+		freefunc(curfunc);
 		longjmp(jmpbuf, 1);
 	}
 	return;

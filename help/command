@@ -14,12 +14,10 @@ Command sequence
     described in the next section.
 
 
-    NOTE: Calc commands are in lower case.   UPPER case is used below
-	  for emphasis only, and should be considered in lower case.
-
-
-    DEFINE function(params) { body }
-    DEFINE function(params) = expression
+    define a function
+    -----------------
+    define function(params) { body }
+    define function(params) = expression
 	    This first form defines a full function which can consist
 	    of declarations followed by many statements which implement
 	    the function.
@@ -30,13 +28,22 @@ Command sequence
 	    and question mark operators can be useful.  Examples of
 	    simple functions are:
 
-		    define sumcubes(a, b) = a^3 + b^3;
-		    define pimod(a) = a % pi();
+		    define sumcubes(a, b) = a^3 + b^3
+		    define pimod(a) = a % pi()
+		    define printnum(a, n, p)
+		    {
+			if (p == 0) {
+			    print a: "^": n, "=", a^n;
+			} else {
+			    print a: "^": n, "mod", p, "=", pmod(a,n,p);
+			}
+		    }
 
-    HELP
-	    This displays a general help message.
 
-    READ filename
+    read calc commands
+    ------------------
+    read filename
+    read -once filename
 	    This reads definitions from the specified filename.
 	    The name can be quoted if desired.  The calculator
 	    uses the CALCPATH environment variable to search
@@ -52,14 +59,11 @@ Command sequence
 	    evaluate or functions to define, just like at the top
 	    level command level.
 
-	    If the -m mode disallows opening of files for reading,
-	    this command will be disabled.
+	    When -once is given, the read command acts like the regular
+	    read expect that it will ignore filename if is has been
+	    previously read.
 
-    READ -once filename
-	    This command acts like the regular READ expect that it
-	    will ignore filename if is has been previously read.
-
-	    This command is particularly useful in a library that
+	    The read -once form is particularly useful in a library that
 	    needs to read a 2nd library.  By using the READ -once
 	    command, one will not reread that 2nd library, nor will
 	    once risk entering into a infinite READ loop (where
@@ -69,7 +73,10 @@ Command sequence
 	    If the -m mode disallows opening of files for reading,
 	    this command will be disabled.
 
-    WRITE filename
+
+    write calc commands
+    -------------------
+    write filename
 	    This writes the values of all global variables to the
 	    specified filename, in such a way that the file can be
 	    later read in order to recreate the variable values.
@@ -81,23 +88,221 @@ Command sequence
 	    If the -m mode disallows opening of files for writing,
 	    this command will be disabled.
 
-    QUIT
-	    This leaves the calculator, when given as a top-level
-	    command.
 
-    ABORT
-	    Forces an immediate quit regardless calc command line
-	    flags and termina state.
+    quit or exit
+    ------------
+    quit
+    quit string
+    exit
+    exit string
+	    The action of these commands depends on where they are used.
+	    At the interactive level, they will cause calc it edit.
+	    This is the normal way to leave the calculator.  In any
+	    other use, they will stop the current calculation as if
+	    an error had occurred.
 
-    CD
-	    Change the current directory to the home directory, if $HOME
+	    If a string is given, then the string is printed as the reason
+	    for quitting, otherwise a general quit message is printed.
+	    The routine name and line number which executed the quit is
+	    also printed in either case.
+
+	    Exit is an alias for quit.
+
+	    Quit is useful when a routine detects invalid arguments,
+	    in order to stop a calculation cleanly.  For example,
+	    for a square root routine, an error can be given if the
+	    supplied parameter was a negative number, as in:
+
+		    define mysqrt(n)
+		    {
+			if (! isnum(n))
+			    quit "non-numeric argument";
+			if (n < 0)
+			    quit "Negative argument";
+			return sqrt(n);
+		    }
+
+	    See 'more information about abort and quit' below for
+	    more information.
+
+
+
+    abort
+    -----
+    abort
+    abort string
+	    This command behaves like QUIT except that it will attempt
+	    to return to the interactive level if permitted, otherwise
+	    calc exit.
+
+	    See 'more information about abort and quit' below for
+	    more information.
+
+
+    change current directory
+    ------------------------
+    cd
+    cd dir
+	    Change the current directory to 'dir'.  If 'dir' is ommitted,
+	    change the current directory to the home directory, if $HOME
 	    is set in the environment.
 
-    CD dir
-	    Change the current directory to dir.
+
+    show information
+    ----------------
+    show item
+	    This command displays some information where 'item' is
+	    one of the following:
+
+		    blocks		unfreed named blocks
+		    builtin		built in functions
+		    config		config parameters and values
+		    constants		cache of numeric constants
+		    custom		custom functions if calc -C was used
+		    errors		new error-values created
+		    files		open files, file position and sizes
+		    function		user-defined functions
+		    globaltypes		global variables
+		    objfunctions	possible object functions
+		    objtypes		defined objects
+		    opcodes func	internal opcodes for function `func'
+		    sizes		size in octets of calc value types
+		    realglobals		numeric global variables
+		    statics		unscoped static variables
+		    numbers		calc number cache
+		    redcdata		REDC data defined
+		    strings		calc string cache
+		    literals		calc literal cache
+
+	    Only the first 4 characters of item are examined, so:
+
+		    show globals
+		    show global
+		    show glob
+
+	    do the same thing.
+
+
+    calc help
+    ---------
+    help
+    help name
+	    This displays a help related to 'name' or general
+	    help of none is given.
+
+
+    =-=
+
+
+    more information about abort and quit
+    =====================================
+
+    Consider the following calc file called myfile.cal:
+
+	print "start of myfile.cal";
+	define q() {quit "quit from q()"; print "end of q()"}
+	define a() {abort "abort from a()"}
+	x = 3;
+	{print "start #1"; if (x > 1) q()} print "after #1";
+	{print "start #2"; if (x > 1) a()} print "after #2";
+	{print "start #3"; if (x > 1) quit "quit from 3rd statement"}
+	print "end of myfile.cal";
+
+    The command:
+
+	calc read myfile
+
+    will produce:
+
+	q() defined
+	a() defined
+	start statment #1
+	quit from q()
+	after statment #1
+	start statment #2
+	abort from a()
+
+    The QUIT within the q() function prevented the ``end of q()''
+    statement from being evaluated.  This QUIT command caused
+    control to be returned to just after the place where q()
+    was called.
+
+    Notice that unlike QUIT, the ABORT inside function a() halts
+    the processing of statements from the input source (myfile.cal).
+    Because calc was not interactive, ABORT causes calc to exit.
+
+    The command:
+
+	calc -i read myfile
+
+    will produce:
+
+	q() defined
+	a() defined
+	start statment #1
+	quit from q()
+	after statment #1
+	start statment #2
+	abort from a()
+	>		<==== calc interactive prompt
+
+    because the '-i' calc causes ABORT to drop into an
+    interactive prompt.  However typing a QUIT or ABORT
+    at the interactive prompt level will always calc to exit,
+    even when calc is invoked with '-i'.
+
+    Also observe that both of these commands:
+
+	cat myfile.cal | calc
+	cat myfile.cal | calc -i
+
+    will produce:
+
+	q() defined
+	a() defined
+	start statment #1
+	quit from q()
+	after statment #1
+	start statment #2
+	abort from a()
+
+    The ABORT inside function a() halts the processing of statements
+    from the input source (standard input).  Because standard input
+    is not a terminal, using '-i' does not force it to drop into
+    an interactive prompt.
+
+    If one were to type in the contents of myfile.cal interactively,
+    calc will produce:
+
+	> print "start of myfile.cal";
+	start of myfile.cal
+	> define q() {quit "quit from q()"; print "end of q()"}
+	q() defined
+	> define a() {abort "abort from a()"}
+	a() defined
+	> x = 3;
+	> {print "start #1"; if (x > 1) q()} print "after #1";
+	start statment #1
+	quit from q()
+	after statment #1
+	> {print "start #2"; if (x > 1) a()} print "after #2";
+	start statment #2
+	abort from a()
+	> {print "start #3"; if (x > 1) quit "quit from 3rd statement"}
+	start #3
+	quit from 3rd statement
+
+    The ABORT from within the a() function returned control to
+    the interactive level.
+
+    The QUIT (after the if (x > 1) ...) will cause calc to exit
+    because it was given at the interactive prompt level.
+
+
+    =-=
 
 
     Also see the help topic:
 
 	    statement       flow control and declaration statements
-	    usage		for -m modes
+	    usage	    how to invoke the calc command and calc -options

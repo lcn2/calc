@@ -86,6 +86,7 @@ getcommands(BOOL toplevel)
 	/* firewall */
 	name[0] = '\0';
 	name[MAXCMD+1] = '\0';
+	abort_now = FALSE;
 
 	/* getcommands */
 	if (!toplevel)
@@ -164,6 +165,13 @@ getcommands(BOOL toplevel)
 			if (evaluate(FALSE))
 				updateoldvalue(curfunc);
 			freefunc(curfunc);
+			if (abort_now) {
+				if (!stdin_tty)
+					run_state = RUN_EXIT;
+				else if (run_state < RUN_PRE_TOP_LEVEL)
+				run_state = RUN_PRE_TOP_LEVEL;
+				longjmp(jmpbuf, 1);
+			}
 		}
 	}
 }
@@ -874,7 +882,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		break;
 
 	case T_SYMBOL:
-		if (nextchar() == ':') {	/****HACK HACK ****/
+		if (nextchar() == ':') {	/****HACK HACK****/
 			definelabel(tokensymbol());
 			if (gettoken() == T_RIGHTBRACE) {
 				rescantoken();

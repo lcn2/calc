@@ -10,28 +10,38 @@ Statements
     expressions are optional and may be omitted (as in RETURN).
 
 
-    NOTE: Calc commands are in lower case.   UPPER case is used below
-	  for emphasis only, and should be considered in lower case.
-
-
-    IF (expr) statement
-    IF (expr) statement ELSE statement
-    FOR (optionalexpr ; optionalexpr ; optionalexpr) statement
-    WHILE (expr) statement
-    DO statement WHILE (expr)
-    CONTINUE
-    BREAK
-    GOTO label
+    C-like statements
+    -----------------
+    { statement }
+    { statement; ... statement }
+    if (expr) statement
+    if (expr) statement ELSE statement
+    for (optionalexpr ; optionalexpr ; optionalexpr) statement
+    while (expr) statement
+    do statement while (expr)
+    continue
+    break
+    goto label
 	    These all work like in normal C.
 
-    RETURN optionalexpr
+	    See 'help expression' for details on expressions.
+	    See 'help builtin' for details on calc builtin functions.
+
+
+    return
+    ------
+    return optionalexpr
+    return ( optionalexpr )
 	    This returns a value from a function.  Functions always
 	    have a return value, even if this statement is not used.
 	    If no return statement is executed, or if no expression
 	    is specified in the return statement, then the return
 	    value from the function is the null type.
 
-    SWITCH (expr) { caseclauses }
+
+    switch
+    ------
+    switch (expr) { caseclauses }
 	    Switch statements work similarly to C, except for the
 	    following.  A switch can be done on any type of value,
 	    and the case statements can be of any type of values.
@@ -42,17 +52,12 @@ Statements
 	    is the exception, and only matches once all other cases
 	    have been tested.
 
-    { statements }
-	    This is a normal list of statements, each one ended by
-	    a semicolon.  Unlike the C language, no declarations are
-	    permitted within an inner-level compound statement.
-	    Declarations are only permitted at the beginning of a
-	    function definition, or at the beginning of an expression
-	    sequence.
 
-    MAT variable [dimension] [dimension] ...
-    MAT variable [dimension, dimension, ...]
-    MAT variable [] = { value, ... }
+    matrix
+    ------
+    mat variable [dimension] [dimension] ...
+    mat variable [dimension, dimension, ...]
+    mat variable [] = { value, ... }
 	    This creates a matrix variable with the specified dimensions.
 	    Matrices can have from 1 to 4 dimensions.  When specifying
 	    multiple dimensions, you can use either the standard C syntax,
@@ -119,8 +124,11 @@ Statements
 		    local mat temp[5];
 		    static mat strtable[] = {"hi", "there", "folks");
 
-    OBJ type { elementnames } optionalvariables
-    OBJ type variable
+
+    object
+    ------
+    obj type { elementnames } optionalvariables
+    obj type variable
 	    These create a new object type, or create one or more
 	    variables of the specified type.  For this calculator,
 	    an object is just a structure which is implicitly acted
@@ -183,36 +191,12 @@ Statements
 		    static obj point temp2 = {4, 3};
 		    global obj point p1, p2, p3;
 
-    EXIT string
-    QUIT string
-	    This command is used in two cases.  At the top command
-	    line level, quit will exit from the calculator.  This
-	    is the normal way to leave the calculator.  In any other
-	    use, quit will abort the current calculation as if an
-	    error had occurred.  If a string is given, then the string
-	    is printed as the reason for quitting, otherwise a general
-	    quit message is printed.  The routine name and line number
-	    which executed the quit is also printed in either case.
 
-	    Quit is useful when a routine detects invalid arguments,
-	    in order to stop a calculation cleanly.  For example,
-	    for a square root routine, an error can be given if the
-	    supplied parameter was a negative number, as in:
-
-		    define mysqrt(n)
-		    {
-			    if (n < 0)
-				    quit "Negative argument";
-			    ...
-		    }
-
-	    Exit is an alias for quit.
-
-    ABORT
-	    Forces an immediate quit regardless calc command line
-	    flags and termina state.
-
-    PRINT exprs
+    print expressions
+    -----------------
+    print expr
+    print expr, ... expr
+    print expr: ... expr
 	    For interactive expression evaluation, the values of all
 	    typed-in expressions are automatically displayed to the
 	    user.  However, within a function or loop, the printing of
@@ -231,8 +215,8 @@ Statements
 	    expression unless the statement ends with a colon.  As
 	    examples:
 
-		    print 3, 4;		prints "3 4" and newline.
-		    print 5:;		prints "5" with no newline.
+		    print 3, 4;			prints "3 4" and newline.
+		    print 5:;			prints "5" with no newline.
 		    print 'a' : 'b' , 'c';	prints "ab c" and newline.
 		    print;			prints a newline.
 
@@ -250,25 +234,9 @@ Statements
 	    prints the name of the file that was opened.
 
 
-    SHOW item
-	    This command displays some information.
-
-		    builtin		built in functions
-		    global		global variables
-		    function	user-defined functions
-		    objfunc		possible object functions
-		    config		config parameters and values
-		    objtype		defined objects
-
-	    Only the first 4 characters of item are examined, so:
-
-		    show globals
-		    show global
-		    show glob
-
-	    do the same thing.
-
-
     Also see the help topic:
 
 	    command         top level commands
+	    expression	    calc expression syntax
+	    builtin	    calc builtin functions
+	    usage	    how to invoke the calc command and calc -options
