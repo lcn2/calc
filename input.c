@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: input.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: input.c,v 29.4 2001/02/25 22:07:36 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/input.c,v $
  *
  * Under source code control:	1990/02/15 01:48:16
@@ -35,7 +35,9 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#if !defined(_WIN32)
 #include <pwd.h>
+#endif /* Windoz free systems */
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -257,6 +259,12 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 static char *
 homeexpand(char *name)
 {
+#if defined (_WIN32)
+
+	return NULL;
+
+#else /* Windoz free systems */
+
 	struct passwd *ent;	/* password entry */
 	char *home2;		/* fullpath of the home directory */
 	char *fullpath;		/* the malloced expanded path */
@@ -323,6 +331,7 @@ homeexpand(char *name)
 	}
 	sprintf(fullpath, "%s%s", home2, after);
 	return fullpath;
+#endif /* Windoz free systems */
 }
 
 

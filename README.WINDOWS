@@ -1,0 +1,113 @@
+Dear calc user on a Windoz based system,
+
+See the HOWTO.INSTALL file for information on how to build and install calc.
+See also the README file.
+
+NOTE: The Windoz port is extremely experimental, untested and perhaps
+      incomplete.  We are in the process of making it easier.  The
+      following should help anyone who is trying to make a go of this
+      under the current code conditions.
+
+NOTE: We are currently ONLY making an effort to support building under
+      Windoz using the Cygwin project (http://sources.redhat.com/cygwin/)
+      with the GCC compiler and Un*x tools for Windows.
+
+NOTE: The main developers do not have access to a Windoz based platform.
+      While we will make an effort to not break calc Windoz based system,
+      our lack of a Windoz test environment will mean we will make mistakes
+      from time to time.  Hopefully Windowz users can overcome these mistakes.
+      Of course you are welcome to send us any patches that fix your
+      Windoz build environment.
+
+=-=
+
+An effort is being made to allow windows users to compile calc using the
+Cygwin project (http://sources.redhat.com/cygwin/) with the GCC compiler
+and Un*x tools for Windows.
+
+The major porting work was performed by Thomas Jones-Low
+(tjoneslo at softstart dot com).  He said:
+
+    I had previous stated to this group that I have successfully managed
+    to port a version of Calc to Windows, and promised some point to
+    post what was required, so here it is.
+
+    One obvious manner of doing this port is to get the latest version
+    of the Cygwin project (http://sources.redhat.com/cygwin/) with the
+    GCC compiler and Un*x tools for Windows and recompile.
+
+    I built my working version using Calc ... I am using Visual C++
+    version 7.0, which is an older version of the Microsoft development
+    tools. The make file provided with Calc is not compatible with
+    NMAKE, so I used the Visual Studio tools to generate another one
+    (not included). Calc is built in two parts, calc.dll, which is the
+    library, and calcexe.exe which is the command line interface.
+
+He recommends that you generate by hand all of the header files generated
+by the make file:
+
+    align32.h args.h calcerr.h conf.h endian_calc.h
+    fposval.h have_const.h have_fpos.h have_fpos_pos.h have_malloc.h
+    have_memmv.h have_newstr.h have_offscl.h have_posscl.h
+    have_stdlib.h have_string.h have_times.h have_uid_t.h
+    have_unistd.h longbits.h longlong.h terminal.h
+    have_ustat.h have_getsid.h have_getpgid.h
+    have_gettime.h have_getprid.h have_urandom.h have_rusage.h
+    have_strdup.h
+
+NOTE: In a future release, a tarball of these files will be shipped with
+      calc so that you do not have to do much other than inspect them.
+
+=-=
+
+People who maintain calc need to keep in mind the following:
+
+The following was added to opcodes.h, config.h, zmath.h and value.h:
+
+	#if defined (_WIN32)
+	#ifdef _EXPORTING
+	  #define DLL	__declspec(dllexport)
+	#else
+	  #define DLL	__declspec(dllimport)
+	#endif
+
+	#else /* Windoz free systems */
+
+	  #define DLL
+
+	#endif /* Windoz free systems */
+
+Then DLL was added in front of all the exported functions.  For example:
+
+    extern int configtype(char*);
+
+was changed to:
+
+    DLL extern int configtype(char*);
+
+
+## Copyright (C) 2001  Landon Curt Noll and Thomas Jones-Low
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.2 $
+## @(#) $Id: README.WINDOWS,v 29.2 2001/02/25 22:20:38 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/RCS/README.WINDOWS,v $
+##
+## Under source code control:	2001/02/25 14:00:05
+## File existed as early as:	2001
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

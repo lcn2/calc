@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: file.c,v 29.3 2000/12/17 12:24:42 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: file.c,v 29.5 2001/02/25 22:07:36 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -35,7 +35,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdlib.h>
+#include "have_unistd.h"
+#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <ctype.h>
 #include "calc.h"
 #include "longbits.h"
@@ -1179,7 +1182,7 @@ filepos2z(FILEPOS pos)
 	ret.len = FILEPOS_BITS/BASEB;
 	ret.v = alloc(ret.len);
 	zclearval(ret);
-	SWAP_HALF_IN_FILEPOS(ret.v, &pos);
+	SWAP_HALF_IN_FILEPOS(ret.v, (HALF *)&pos);
 	ret.sign = 0;
 	ztrim(&ret);
 

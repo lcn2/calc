@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: help.c,v 29.4 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: help.c,v 29.5 2001/02/25 22:07:36 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/help.c,v $
  *
  * Under source code control:	1997/09/14 10:58:30
@@ -105,7 +105,11 @@ page_file(FILE *stream)
 	/*
 	 * form a write pipe to a pager
 	 */
-	cmd = popen(pager, "w");
+	if (pager == NULL || pager[0] == '\0') {
+	    cmd = stdout;
+	} else {
+	    cmd = popen(pager, "w");
+	}
 	if (cmd == NULL) {
 		fprintf(stderr, "unable form pipe to pager: %s", pager);
 		return;

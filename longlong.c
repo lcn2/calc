@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: longlong.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: longlong.c,v 29.3 2001/02/23 20:46:38 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/longlong.c,v $
  *
  * Under source code control:	1994/08/05 01:09:19
@@ -119,10 +119,10 @@ main(int argc, char **argv)
 			printf(" * if defined(L64_FORMAT), ok to use %%ld\n");
 			printf(" * if !defined(L64_FORMAT), use %%lld\n");
 			printf(" */\n");
-			if (buf[0] == '-') {
-				printf("#undef L64_FORMAT\n");
-			} else {
+			if (strcmp(buf, "1311768467284833366") == 0) {
 				printf("#define L64_FORMAT\n");
+			} else {
+				printf("#undef L64_FORMAT\n");
 			}
 
 		/*

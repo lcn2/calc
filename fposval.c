@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: fposval.c,v 29.3 2000/12/17 12:25:36 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: fposval.c,v 29.5 2001/02/25 21:01:34 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/fposval.c,v $
  *
  * Under source code control:	1994/11/05 03:19:52
@@ -85,13 +85,12 @@ main(int argc, char **argv)
 	 * print the file position information
 	 */
 #if defined(HAVE_FPOS_POS)
-	printf("#undef FILEPOS_BITS\n");
-	printf("#define FILEPOS_BITS %d\n", FPOS_POS_BITS);
+	fileposlen = FPOS_POS_BITS;
 #else /* ! HAVE_FPOS_POS */
 	fileposlen = sizeof(FILEPOS)*8;
+#endif /* ! HAVE_FPOS_POS */
 	printf("#undef FILEPOS_BITS\n");
 	printf("#define FILEPOS_BITS %d\n", fileposlen);
-#endif /* ! HAVE_FPOS_POS */
 #if CALC_BYTE_ORDER == BIG_ENDIAN
 	/*
 	 * Big Endian

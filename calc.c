@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: calc.c,v 29.5 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: calc.c,v 29.6 2001/02/25 22:07:36 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11
@@ -35,6 +35,18 @@
 #include <pwd.h>
 #include <sys/types.h>
 #include <ctype.h>
+
+#if defined (_WIN32)
+#include <io.h>
+/* 
+ * getopt.h file is from the Cygwin GNU library 
+ *
+ * See:
+ *	http://sources.redhat.com/cygwin/
+ */
+#include "../getopt/getopt.h"	
+#define strdup _strdup
+#endif /* Windoz */
 
 #define CALC_C
 #include "calc.h"

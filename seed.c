@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: seed.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: seed.c,v 29.3 2001/02/25 22:07:36 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/seed.c,v $
  *
  * Under source code control:	1999/10/03 10:06:53
@@ -40,7 +40,16 @@
 
 #include <stdio.h>
 #include <errno.h>
+
+#include "have_unistd.h"
+#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
+#endif
+
+#if defined(_WIN32)
+#include <process.h>
+#define pid_t int
+#endif /* Windoz */
 
 /*
  * PORTING NOTE:
@@ -55,10 +64,19 @@
  */
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "have_times.h"
+#if defined(HAVE_TIME_H)
 #include <time.h>
+#endif
+#if defined(HAVE_SYS_TIME_H)
 #include <sys/time.h>
+#endif
+#if defined(HAVE_SYS_TIMES_H)
 #include <sys/times.h>
+#endif
+#if !defined(_WIN32)
 #include <sys/resource.h>
+#endif /* Windoz free systems */
 #include <setjmp.h>
 #include "qmath.h"
 #include "longbits.h"
@@ -69,14 +87,15 @@
 #include "have_getprid.h"
 #include "have_urandom.h"
 #include "have_rusage.h"
+#include "have_uid_t.h"
 #if defined(HAVE_USTAT)
 # include <ustat.h>
-#endif /* HAVE_USTAT */
+#endif
 #if defined(HAVE_URANDOM)
 # include <fcntl.h>
 # define DEV_URANDOM "/dev/urandom"
 # define DEV_URANDOM_POOL 16
-#endif /* HAVE_URANDOM */
+#endif
 
 
 /*
@@ -272,26 +291,30 @@ pseudo_seed(void)
 #if defined(HAVE_GETTIME)
 # if defined(CLOCK_SGI_CYCLE)
 	struct timespec sgi_cycle;	/* SGI hardware clock */
-# endif /* CLOCK_SGI_CYCLE */
+# endif
 # if defined(CLOCK_REALTIME)
 	struct timespec realtime;	/* POSIX realtime clock */
-# endif /* CLOCK_REALTIME */
-#endif /* HAVE_GETTIME */
+# endif
+#endif
 #if defined(HAVE_GETPRID)
 	prid_t getprid;			/* project ID */
-#endif /* HAVE_GETPRID */
+#endif
 #if defined(HAVE_URANDOM)
 	int urandom_fd;			/* open descriptor for /dev/urandom */
 	int urandom_ret;		/* read() of /dev/random */
 	char urandom_pool[DEV_URANDOM_POOL];	/* /dev/urandom data pool */
-#endif /* HAVE_URANDOM */
+#endif
+#if defined(HAVE_SYS_TIME_H)
 	struct timeval tp;		/* time of day */
+#endif
 	pid_t getpid;			/* process ID */
 	pid_t getppid;			/* parent process ID */
+#if defined(HAVE_UID_T)
 	uid_t getuid;			/* real user ID */
 	uid_t geteuid;			/* effective user ID */
 	gid_t getgid;			/* real group ID */
 	gid_t getegid;			/* effective group ID */
+#endif
 	struct stat stat_dot;		/* stat of "." */
 	struct stat stat_dotdot;	/* stat of ".." */
 	struct stat stat_tmp;		/* stat of "/tmp" */
@@ -307,19 +330,21 @@ pseudo_seed(void)
 	struct ustat ustat_stdin;	/* usage stat of stdin */
 	struct ustat ustat_stdout;	/* usage stat of stdout */
 	struct ustat ustat_stderr;	/* usage stat of stderr */
-#endif /* HAVE_USTAT */
+#endif
 #if defined(HAVE_GETSID)
 	pid_t getsid;			/* session ID */
-#endif /* HAVE_GETSID */
+#endif
 #if defined(HAVE_GETPGID)
 	pid_t getpgid;			/* process group ID */
-#endif /* HAVE_GETPGID */
+#endif
 #if defined(HAVE_GETRUSAGE)
 	struct rusage rusage;		/* resource utilization */
 	struct rusage rusage_chld;	/* resource utilization of children */
-#endif /* HAVE_GETRUSAGE */
+#endif
+#if defined(HAVE_SYS_TIME_H)
 	struct timeval tp2;		/* time of day again */
 	struct tms times;		/* process times */
+#endif
 	time_t time;			/* local time */
 	size_t size;			/* size of this data structure */
 	jmp_buf env;			/* setjmp() context */
@@ -339,14 +364,14 @@ pseudo_seed(void)
 #if defined(HAVE_GETTIME)
 # if defined(CLOCK_SGI_CYCLE)
     (void) clock_gettime(CLOCK_SGI_CYCLE, &sdata.sgi_cycle);
-# endif /* CLOCK_SGI_CYCLE */
+# endif
 # if defined(CLOCK_REALTIME)
     (void) clock_gettime(CLOCK_REALTIME, &sdata.realtime);
-# endif /* CLOCK_REALTIME */
-#endif /* HAVE_GETTIME */
+# endif
+#endif
 #if defined(HAVE_GETPRID)
     sdata.getprid = getprid();
-#endif /* HAVE_GETPRID */
+#endif
 #if defined(HAVE_URANDOM)
     sdata.urandom_fd = open(DEV_URANDOM, O_NONBLOCK|O_RDONLY);
     if (sdata.urandom_fd >= 0) {
@@ -358,13 +383,17 @@ pseudo_seed(void)
 	sdata.urandom_ret = EOF;
     }
 #endif /* HAVE_URANDOM */
+#if defined(HAVE_SYS_TIME_H)
     (void) gettimeofday(&sdata.tp, NULL);
+#endif
     sdata.getpid = getpid();
     sdata.getppid = getppid();
+#if defined(HAVE_UID_T)
     sdata.getuid = getuid();
     sdata.geteuid = geteuid();
     sdata.getgid = getgid();
     sdata.getegid = getegid();
+#endif
     (void) stat(".", &sdata.stat_dot);
     (void) stat("..", &sdata.stat_dotdot);
     (void) stat("/tmp", &sdata.stat_tmp);
@@ -380,19 +409,21 @@ pseudo_seed(void)
     (void) ustat(sdata.fstat_stdin.st_dev, &sdata.ustat_stdin);
     (void) ustat(sdata.fstat_stdout.st_dev, &sdata.ustat_stdout);
     (void) ustat(sdata.fstat_stderr.st_dev, &sdata.ustat_stderr);
-#endif /* HAVE_USTAT */
+#endif
 #if defined(HAVE_GETSID)
     sdata.getsid = getsid((pid_t)0);
-#endif /* HAVE_GETSID */
+#endif
 #if defined(HAVE_GETPGID)
     sdata.getpgid = getpgid((pid_t)0);
-#endif /* HAVE_GETPGID */
+#endif
 #if defined(HAVE_GETRUSAGE)
     (void) getrusage(RUSAGE_SELF, &sdata.rusage);
     (void) getrusage(RUSAGE_CHILDREN, &sdata.rusage_chld);
-#endif /* HAVE_GETRUSAGE */
+#endif
+#if defined(HAVE_SYS_TIME_H)
     (void) gettimeofday(&sdata.tp2, NULL);
     (void) times(&sdata.times);
+#endif
     sdata.time = time(NULL);
     sdata.size = sizeof(sdata);
     (void) setjmp(sdata.env);

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: func.c,v 29.5 2000/12/04 19:32:33 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: func.c,v 29.6 2001/02/25 22:07:36 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -34,6 +34,11 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <errno.h>
+
+#if defined(_WIN32)
+#include <io.h>
+#define _access access
+#endif /* Windoz */
 
 #if defined(FUNCLIST)
 
@@ -4922,10 +4927,14 @@ f_listremove(VALUE *vp)
 static NUMBER *
 f_runtime(void)
 {
+#if defined(_WIN32)
+	return qlink(&_qzero_);
+#else /* Windoz free systems */
 	struct tms buf;
 
 	times(&buf);
 	return iitoq((long) buf.tms_utime, (long) CLK_TCK);
+#endif /* Windoz free systems */
 }
 
 

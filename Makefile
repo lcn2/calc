@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.10 $
-# @(#) $Id: Makefile.ship,v 29.10 2000/12/17 12:23:29 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.14 $$
+# @(#) $Id: Makefile.ship,v 29.14 2001/02/25 22:07:36 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -1050,7 +1050,7 @@ LICENSE= COPYING COPYING-LGPL
 # These files are found (but not built) in the distribution
 #
 DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README \
-	  calc.man HOWTO.INSTALL ${UTIL_MISC_SRC} ${LICENSE}
+	  README.WINDOWS calc.man HOWTO.INSTALL ${UTIL_MISC_SRC} ${LICENSE}
 
 # These files are used to make (but not built) a calc .a link library
 #
@@ -2661,94 +2661,95 @@ chk: ./cal/regress.cal
 
 env:
 	@echo '=-=-=-=-= dumping major make variables =-=-=-=-='
-	@echo "TERMCONTROL=${TERMCONTROL}"; echo ""
-	@echo "HAVE_VSPRINTF=${HAVE_VSPRINTF}"; echo ""
-	@echo "BYTE_ORDER=${BYTE_ORDER}"; echo ""
-	@echo "LONG_BITS=${LONG_BITS}"; echo ""
-	@echo "LONGLONG_BITS=${LONGLONG_BITS}"; echo ""
-	@echo "HAVE_FPOS=${HAVE_FPOS}"; echo ""
-	@echo "HAVE_FPOS_POS=${HAVE_FPOS_POS}"; echo ""
-	@echo "HAVE_OFFSCL=${HAVE_OFFSCL}"; echo ""
-	@echo "HAVE_POSSCL=${HAVE_POSSCL}"; echo ""
-	@echo "HAVE_CONST=${HAVE_CONST}"; echo ""
-	@echo "HAVE_UID_T=${HAVE_UID_T}"; echo ""
-	@echo "HAVE_NEWSTR=${HAVE_NEWSTR}"; echo ""
-	@echo "HAVE_USTAT=${HAVE_USTAT}"; echo ""
-	@echo "HAVE_GETSID=${HAVE_GETSID}"; echo ""
-	@echo "HAVE_GETPGID=${HAVE_GETPGID}"; echo ""
-	@echo "HAVE_GETTIME=${HAVE_GETTIME}"; echo ""
-	@echo "HAVE_GETPRID=${HAVE_GETPRID}"; echo ""
-	@echo "HAVE_URANDOM=${HAVE_URANDOM}"; echo ""
-	@echo "ALIGN32=${ALIGN32}"; echo ""
-	@echo "BINDIR=${BINDIR}"; echo ""
-	@echo "TOPDIR=${TOPDIR}"; echo ""
-	@echo "LIBDIR=${LIBDIR}"; echo ""
-	@echo "HELPDIR=${HELPDIR}"; echo ""
-	@echo "CUSTOMLIBDIR=${CUSTOMLIBDIR}"; echo ""
-	@echo "CUSTOMHELPDIR=${CUSTOMHELPDIR}"; echo ""
-	@echo "SCRIPTDIR=${SCRIPTDIR}"; echo ""
-	@echo "MANDIR=${MANDIR}"; echo ""
-	@echo "CATDIR=${CATDIR}"; echo ""
-	@echo "MANEXT=${MANEXT}"; echo ""
-	@echo "CATEXT=${CATEXT}"; echo ""
-	@echo "NROFF=${NROFF}"; echo ""
-	@echo "NROFF_ARG=${NROFF_ARG}"; echo ""
-	@echo "MANMAKE=${MANMAKE}"; echo ""
-	@echo "CALCPATH=${CALCPATH}"; echo ""
-	@echo "CALCRC=${CALCRC}"; echo ""
-	@echo "CALCPAGER=${CALCPAGER}"; echo ""
-	@echo "DEBUG=${DEBUG}"; echo ""
-	@echo "NO_SHARED=${NO_SHARED}"; echo ""
-	@echo "LD_NO_SHARED=${LD_NO_SHARED}"; echo ""
-	@echo "RANLIB=${RANLIB}"; echo ""
-	@echo "MAKE_FILE=${MAKE_FILE}"; echo ""
-	@echo "PURIFY=${PURIFY}"; echo ""
-	@echo "LD_DEBUG=${LD_DEBUG}"; echo ""
-	@echo "CALC_ENV=${CALC_ENV}"; echo ""
-	@echo "ALLOW_CUSTOM=${ALLOW_CUSTOM}"; echo ""
-	@echo "CCOPT=${CCOPT}"; echo ""
-	@echo "CCWARN=${CCWARN}"; echo ""
-	@echo "CCMISC=${CCMISC}"; echo ""
-	@echo "CFLAGS=${CFLAGS}"; echo ""
-	@echo "ICFLAGS=${ICFLAGS}"; echo ""
-	@echo "LDFLAGS=${LDFLAGS}"; echo ""
-	@echo "ILDFLAGS=${ILDFLAGS}"; echo ""
-	@echo "LCC=${LCC}"; echo ""
-	@echo "CC=${CC}"; echo ""
-	@echo "SHELL=${SHELL}"; echo ""
-	@echo "MAKE=${MAKE}"; echo ""
-	@echo "AWK=${AWK}"; echo ""
-	@echo "SED=${SED}"; echo ""
-	@echo "SORT=${SORT}"; echo ""
-	@echo "TEE=${TEE}"; echo ""
-	@echo "CTAGS=${CTAGS}"; echo ""
-	@echo "MAKEDEPEND=${MAKEDEPEND}"; echo ""
-	@echo "Q=${Q}"; echo ""
-	@echo "V=${V}"; echo ""
-	@echo "LIBSRC=${LIBSRC}"; echo ""
-	@echo "LIBOBJS=${LIBOBJS}"; echo ""
-	@echo "CALCSRC=${CALCSRC}"; echo ""
-	@echo "CALCOBJS=${CALCOBJS}"; echo ""
-	@echo "BUILD_H_SRC=${BUILD_H_SRC}"; echo ""
-	@echo "BUILD_C_SRC=${BUILD_C_SRC}"; echo ""
-	@echo "UTIL_C_SRC=${UTIL_C_SRC}"; echo ""
-	@echo "UTIL_MISC_SRC=${UTIL_MISC_SRC}"; echo ""
-	@echo "UTIL_OBJS=${UTIL_OBJS}"; echo ""
-	@echo "UTIL_TMP=${UTIL_TMP}"; echo ""
-	@echo "UTIL_PROGS=${UTIL_PROGS}"; echo ""
-	@echo "LIB_H_SRC=${LIB_H_SRC}"; echo ""
-	@echo "CUSTOM_PASSDOWN=${CUSTOM_PASSDOWN}"; echo ""
-	@echo "SAMPLE_PASSDOWN=${SAMPLE_PASSDOWN}"; echo ""
-	@echo "HELP_PASSDOWN=${HELP_PASSDOWN}"; echo ""
-	@echo "CAL_PASSDOWN=${CAL_PASSDOWN}"; echo ""
-	@echo "CSCRIPT_PASSDOWN=${CSCRIPT_PASSDOWN}"; echo ""
-	@echo "H_SRC=${H_SRC}"; echo ""
-	@echo "C_SRC=${C_SRC}"; echo ""
-	@echo "DISTLIST=${DISTLIST}"; echo ""
-	@echo "OBJS=${OBJS}"; echo ""
-	@echo "CALC_LIBS=${CALC_LIBS}"; echo ""
-	@echo "PROGS=${PROGS}"; echo ""
-	@echo "TARGETS=${TARGETS}"; echo ""
+	@echo 'MAKEFILE_REV=${MAKEFILE_REV}'; echo ''
+	@echo 'TERMCONTROL=${TERMCONTROL}'; echo ''
+	@echo 'HAVE_VSPRINTF=${HAVE_VSPRINTF}'; echo ''
+	@echo 'BYTE_ORDER=${BYTE_ORDER}'; echo ''
+	@echo 'LONG_BITS=${LONG_BITS}'; echo ''
+	@echo 'LONGLONG_BITS=${LONGLONG_BITS}'; echo ''
+	@echo 'HAVE_FPOS=${HAVE_FPOS}'; echo ''
+	@echo 'HAVE_FPOS_POS=${HAVE_FPOS_POS}'; echo ''
+	@echo 'HAVE_OFFSCL=${HAVE_OFFSCL}'; echo ''
+	@echo 'HAVE_POSSCL=${HAVE_POSSCL}'; echo ''
+	@echo 'HAVE_CONST=${HAVE_CONST}'; echo ''
+	@echo 'HAVE_UID_T=${HAVE_UID_T}'; echo ''
+	@echo 'HAVE_NEWSTR=${HAVE_NEWSTR}'; echo ''
+	@echo 'HAVE_USTAT=${HAVE_USTAT}'; echo ''
+	@echo 'HAVE_GETSID=${HAVE_GETSID}'; echo ''
+	@echo 'HAVE_GETPGID=${HAVE_GETPGID}'; echo ''
+	@echo 'HAVE_GETTIME=${HAVE_GETTIME}'; echo ''
+	@echo 'HAVE_GETPRID=${HAVE_GETPRID}'; echo ''
+	@echo 'HAVE_URANDOM=${HAVE_URANDOM}'; echo ''
+	@echo 'ALIGN32=${ALIGN32}'; echo ''
+	@echo 'BINDIR=${BINDIR}'; echo ''
+	@echo 'TOPDIR=${TOPDIR}'; echo ''
+	@echo 'LIBDIR=${LIBDIR}'; echo ''
+	@echo 'HELPDIR=${HELPDIR}'; echo ''
+	@echo 'CUSTOMLIBDIR=${CUSTOMLIBDIR}'; echo ''
+	@echo 'CUSTOMHELPDIR=${CUSTOMHELPDIR}'; echo ''
+	@echo 'SCRIPTDIR=${SCRIPTDIR}'; echo ''
+	@echo 'MANDIR=${MANDIR}'; echo ''
+	@echo 'CATDIR=${CATDIR}'; echo ''
+	@echo 'MANEXT=${MANEXT}'; echo ''
+	@echo 'CATEXT=${CATEXT}'; echo ''
+	@echo 'NROFF=${NROFF}'; echo ''
+	@echo 'NROFF_ARG=${NROFF_ARG}'; echo ''
+	@echo 'MANMAKE=${MANMAKE}'; echo ''
+	@echo 'CALCPATH=${CALCPATH}'; echo ''
+	@echo 'CALCRC=${CALCRC}'; echo ''
+	@echo 'CALCPAGER=${CALCPAGER}'; echo ''
+	@echo 'DEBUG=${DEBUG}'; echo ''
+	@echo 'NO_SHARED=${NO_SHARED}'; echo ''
+	@echo 'LD_NO_SHARED=${LD_NO_SHARED}'; echo ''
+	@echo 'RANLIB=${RANLIB}'; echo ''
+	@echo 'MAKE_FILE=${MAKE_FILE}'; echo ''
+	@echo 'PURIFY=${PURIFY}'; echo ''
+	@echo 'LD_DEBUG=${LD_DEBUG}'; echo ''
+	@echo 'CALC_ENV=${CALC_ENV}'; echo ''
+	@echo 'ALLOW_CUSTOM=${ALLOW_CUSTOM}'; echo ''
+	@echo 'CCOPT=${CCOPT}'; echo ''
+	@echo 'CCWARN=${CCWARN}'; echo ''
+	@echo 'CCMISC=${CCMISC}'; echo ''
+	@echo 'CFLAGS=${CFLAGS}'; echo ''
+	@echo 'ICFLAGS=${ICFLAGS}'; echo ''
+	@echo 'LDFLAGS=${LDFLAGS}'; echo ''
+	@echo 'ILDFLAGS=${ILDFLAGS}'; echo ''
+	@echo 'LCC=${LCC}'; echo ''
+	@echo 'CC=${CC}'; echo ''
+	@echo 'SHELL=${SHELL}'; echo ''
+	@echo 'MAKE=${MAKE}'; echo ''
+	@echo 'AWK=${AWK}'; echo ''
+	@echo 'SED=${SED}'; echo ''
+	@echo 'SORT=${SORT}'; echo ''
+	@echo 'TEE=${TEE}'; echo ''
+	@echo 'CTAGS=${CTAGS}'; echo ''
+	@echo 'MAKEDEPEND=${MAKEDEPEND}'; echo ''
+	@echo 'Q=${Q}'; echo ''
+	@echo 'V=${V}'; echo ''
+	@echo 'LIBSRC=${LIBSRC}'; echo ''
+	@echo 'LIBOBJS=${LIBOBJS}'; echo ''
+	@echo 'CALCSRC=${CALCSRC}'; echo ''
+	@echo 'CALCOBJS=${CALCOBJS}'; echo ''
+	@echo 'BUILD_H_SRC=${BUILD_H_SRC}'; echo ''
+	@echo 'BUILD_C_SRC=${BUILD_C_SRC}'; echo ''
+	@echo 'UTIL_C_SRC=${UTIL_C_SRC}'; echo ''
+	@echo 'UTIL_MISC_SRC=${UTIL_MISC_SRC}'; echo ''
+	@echo 'UTIL_OBJS=${UTIL_OBJS}'; echo ''
+	@echo 'UTIL_TMP=${UTIL_TMP}'; echo ''
+	@echo 'UTIL_PROGS=${UTIL_PROGS}'; echo ''
+	@echo 'LIB_H_SRC=${LIB_H_SRC}'; echo ''
+	@echo 'CUSTOM_PASSDOWN=${CUSTOM_PASSDOWN}'; echo ''
+	@echo 'SAMPLE_PASSDOWN=${SAMPLE_PASSDOWN}'; echo ''
+	@echo 'HELP_PASSDOWN=${HELP_PASSDOWN}'; echo ''
+	@echo 'CAL_PASSDOWN=${CAL_PASSDOWN}'; echo ''
+	@echo 'CSCRIPT_PASSDOWN=${CSCRIPT_PASSDOWN}'; echo ''
+	@echo 'H_SRC=${H_SRC}'; echo ''
+	@echo 'C_SRC=${C_SRC}'; echo ''
+	@echo 'DISTLIST=${DISTLIST}'; echo ''
+	@echo 'OBJS=${OBJS}'; echo ''
+	@echo 'CALC_LIBS=${CALC_LIBS}'; echo ''
+	@echo 'PROGS=${PROGS}'; echo ''
+	@echo 'TARGETS=${TARGETS}'; echo ''
 	@echo '=-=-=-=-= end of major make variable dump =-=-=-=-='
 
 mkdebug: env version.c

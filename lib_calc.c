@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: lib_calc.c,v 29.4 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: lib_calc.c,v 29.5 2001/02/25 22:07:36 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.c,v $
  *
  * Under source code control:	1996/06/17 18:06:19
@@ -68,10 +68,15 @@ typedef struct termios ttystruct;
 # include <termio.h>
 typedef struct termio ttystruct;
 
-#else /* assume USE_SGTTY */
+#elif defined(USE_SGTTY)
 
 # include <sys/ioctl.h>
 typedef struct sgttyb ttystruct;
+
+#elif !defined(_WIN32)
+
+-=*#*=- A Windoz free system without termio, termios or sgtty!!! -=*#*=-
+-=*#*=- We do not know how to compile for such a host, sorry!!!! -=*#*=-
 
 #endif
 
@@ -192,7 +197,9 @@ libcalc_call_me_first(void)
 	 * Disable SIGPIPE so that the pipe to the help file pager will
 	 * not stop calc.
 	 */
+#if !defined(_WIN32)
 	(void) signal(SIGPIPE, SIG_IGN);
+#endif /* Windoz free systems */
 
 	/*
 	 * determine the basename
@@ -373,7 +380,9 @@ cvmalloc_error(char *message)
 static void
 initenv(void)
 {
+#if !defined(_WIN32)
 	struct passwd *ent;		/* our password entry */
+#endif /* Windoz free systems */
 	char *c;
 
 	/* determine the $CALCPATH value */
@@ -402,6 +411,12 @@ initenv(void)
 	/* determine the $HOME value */
 	c = (no_env ? NULL : getenv(HOME));
 	home = (c ? strdup(c) : NULL);
+#if defined(_WIN32)
+	if (home == NULL || home[0] == '\0') {
+		/* just assume . is home if all else fails */
+		home = ".";
+	}
+#else /* Windoz free systems */
 	if (home == NULL || home[0] == '\0') {
 		ent = (struct passwd *)getpwuid(geteuid());
 		if (ent == NULL) {
@@ -411,6 +426,7 @@ initenv(void)
 		home = (char *)malloc(strlen(ent->pw_dir)+1);
 		strcpy(home, ent->pw_dir);
 	}
+#endif /* Windoz free systems */
 
 	/* determine the $PAGER value */
 	c = (no_env ? NULL : getenv(PAGER));

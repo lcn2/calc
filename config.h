@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: config.h,v 29.4 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: config.h,v 29.5 2001/02/25 22:07:36 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -33,6 +33,20 @@
 
 #if !defined(__CONFIG_H__)
 #define __CONFIG_H__
+
+
+#if defined (_WIN32)
+#ifdef _EXPORTING
+  #define DLL	__declspec(dllexport)
+#else
+  #define DLL	__declspec(dllimport)
+#endif
+
+#else /* Windoz free systems */
+
+  #define DLL
+
+#endif /* Windoz free systems */
 
 
 #include "nametype.h"
@@ -193,12 +207,12 @@ extern char *user_debug;	/* !=NULL => value of config("user_debug") */
 /*
  * configuration externals
  */
-extern CONFIG *config_copy(CONFIG *src);
-extern void config_free(CONFIG *cfg);
-extern void config_print(CONFIG *cfg);
-extern int configtype(char*);
-extern void config_print(CONFIG*);
-extern BOOL config_cmp(CONFIG*, CONFIG*);
+DLL extern CONFIG *config_copy(CONFIG *src);
+DLL extern void config_free(CONFIG *cfg);
+DLL extern void config_print(CONFIG *cfg);
+DLL extern int configtype(char*);
+DLL extern void config_print(CONFIG*);
+DLL extern BOOL config_cmp(CONFIG*, CONFIG*);
 
 
 #endif /* !__CONFIG_H__ */

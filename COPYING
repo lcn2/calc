@@ -12,8 +12,8 @@ This file is Copyrighted
 	Everyone is permitted to copy and distribute verbatim copies
 	of this license document, but changing it is not allowed.
 
-    # @(#) $Revision: 29.3 $
-    # @(#) $Id: COPYING,v 29.3 2000/12/14 09:18:06 chongo Exp $
+    # @(#) $Revision: 29.5 $
+    # @(#) $Id: COPYING,v 29.5 2000/12/18 10:22:55 chongo Exp $
     # @(#) $Source: /usr/local/src/cmd/calc/RCS/COPYING,v $
 
 =-=
@@ -140,7 +140,7 @@ Calc copyrights and exception files
 -----------------------------------
 
     With the exception of the files listed below, Calc is covered under
-    the following Copyrights:
+    the following GNU Lesser General Public License Copyrights:
 
 	Copyright (C) year  David I. Bell
 	Copyright (C) year  David I. Bell and Landon Curt Noll
@@ -150,12 +150,11 @@ Calc copyrights and exception files
 	Copyright (C) year  Ernest Bowen and Landon Curt Noll
 	Copyright (C) year  Ernest Bowen
 
-    A few files are not covered under the GNU Lesser General Public
-    License.  The source files not covered are:
+    These files are not covered under one of the Copyrights listed above:
 
-	    shs1.c	    shs1.h	shs.c		 shs.h
-	    md5.c	    md5.h	lib/qtime.cal	 COPYING
-	    COPYING-LGPL
+	    shs1.c	    shs1.h	 shs.c		shs.h
+	    md5.c	    md5.h	 COPYING	COPYING-LGPL
+	    cal/qtime.cal
 
     The file COPYING-LGPL, which contains a copy of the version 2.1
     GNU Lesser General Public License, is itself Copyrighted by the
@@ -168,10 +167,12 @@ Calc copyrights and exception files
     verbatim copies of this file but you may not modify this file.
 
     Some of these exception files are in the public domain.  Other
-    exception files have non-LGPL Copyrights.  In all cases one may
-    use and distribute these exception files freely.  And because one
-    may freely distribute the LGPL covered files, the entire calc
-    source may be freely used and distributed.
+    exception files have non-LGPL Copyrights.  Other files are under a
+    LGPL Copyright but have different authors.
+
+    In all cases one may use and distribute these exception files freely.
+    And because one may freely distribute the LGPL covered files, the
+    entire calc source may be freely used and distributed.
 
 =-=
 

@@ -1,24 +1,46 @@
 /*
  * qtime - Display time as English sentence
  *
+ * Copyright (C) 1999  Klaus Alexander Seistrup and Landon Curt Noll
+ *
+ * Written by: Klaus Alexander Seistrup <kseis@magnetic-ink.dk>
+ * With mods by: Landon Curt Noll <http://www.isthe.com/chongo/>
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: qtime.cal,v 29.4 2000/12/18 10:18:40 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/qtime.cal,v $
+ *
+ * Under source code control:	1999/10/13 04:10:33
+ * File existed as early as:	1999
+ *
+ * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ */
+
+/*
  * usage:
  *	qtime(utc_hr_offset)
  *
  *	utc_hr_offset	Offset from UTC in hours.
  *
- * Written by: Klaus Alexander Seistrup <kseis@magnetic-ink.dk>
- * With minor mods by: Landon Curt Noll <http://www.isthe.com/chongo/>
- *
  * See:
  *	http://www.magnetic-ink.dk/download/qtime.html
  *
  * for examples of qtime() written on other languages.
- *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: qtime.cal,v 29.2 2000/06/07 14:02:25 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/qtime.cal,v $
- *
- * This file is not covered under version 2.1 of the GNU LGPL.
  */
 
 
