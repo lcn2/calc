@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.6 $
-# @(#) $Id: Makefile.ship,v 29.6 1999/12/19 03:19:58 chongo Exp $
+# @(#) $Revision: 29.5 $
+# @(#) $Id: Makefile.ship,v 29.5 1999/12/17 09:07:35 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -3316,7 +3316,6 @@ func.o: have_malloc.h
 func.o: have_memmv.h
 func.o: have_newstr.h
 func.o: have_stdlib.h
-func.o: have_strdup.h
 func.o: have_string.h
 func.o: have_times.h
 func.o: have_unistd.h
