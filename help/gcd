@@ -5,7 +5,7 @@ SYNOPSIS
     gcd(x1, x2, ...)
 
 TYPES
-    x1, x2, ...	rational number
+    x1, x2, ... rational number
 
     return	rational number
 

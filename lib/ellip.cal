@@ -4,7 +4,7 @@
  * provided that this copyright notice remains intact.
  *
  * Attempt to factor numbers using elliptic functions.
- * 	y^2 = x^3 + a*x + b   (mod N).
+ *	y^2 = x^3 + a*x + b   (mod N).
  *
  * Many points (x,y) (mod N) are found that solve the above equation,
  * starting from a trivial solution and 'multiplying' that point together
@@ -55,7 +55,7 @@
  * of the powers so far.
  *
  * If a factor is found, it is returned and is also saved in the global
- * variable f.  The number being factored is also saved in the global
+ * variable f.	The number being factored is also saved in the global
  * variable N.
  */
 

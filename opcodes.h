@@ -6,7 +6,7 @@
 
 
 #if !defined(__OPCODES_H__)
-#define	__OPCODES_H__
+#define __OPCODES_H__
 
 
 /*
@@ -21,7 +21,7 @@
 #define OP_PARAMVALUE	6L	/* load value of paramater variable */
 #define OP_NUMBER	7L	/* load constant real numeric value */
 #define OP_INDEXADDR	8L	/* load array index address */
-#define	OP_PRINTRESULT	9L	/* print result of top-level expression */
+#define OP_PRINTRESULT	9L	/* print result of top-level expression */
 #define OP_ASSIGN	10L	/* assign value to variable */
 #define OP_ADD		11L	/* add top two values */
 #define OP_SUB		12L	/* subtract top two values */
@@ -105,17 +105,17 @@
 #define OP_ELEMVALUE	90L	/* value of element of object */
 #define OP_ISTYPE	91L	/* whether two values are the same type */
 #define OP_SCALE	92L	/* scale value by a power of two */
-#define	OP_ISLIST	93L	/* whether value is a list */
-#define	OP_SWAP		94L	/* swap values of two variables */
-#define	OP_ISSIMPLE	95L	/* whether value is a simple type */
-#define	OP_CMP		96L	/* compare values returning -1, 0, or 1 */
-#define	OP_QUOMOD	97L	/* calculate quotient and remainder */
-#define	OP_SETCONFIG	98L	/* set configuration parameter */
-#define	OP_SETEPSILON	99L	/* set allowed error for calculations */
-#define	OP_ISFILE	100L	/* whether value is a file */
-#define	OP_ISASSOC	101L	/* whether value is an association */
-#define	OP_INITSTATIC	102L	/* once only code for static initialization */
-#define	OP_ELEMINIT	103L	/* assign element of matrix or object */
+#define OP_ISLIST	93L	/* whether value is a list */
+#define OP_SWAP		94L	/* swap values of two variables */
+#define OP_ISSIMPLE	95L	/* whether value is a simple type */
+#define OP_CMP		96L	/* compare values returning -1, 0, or 1 */
+#define OP_QUOMOD	97L	/* calculate quotient and remainder */
+#define OP_SETCONFIG	98L	/* set configuration parameter */
+#define OP_SETEPSILON	99L	/* set allowed error for calculations */
+#define OP_ISFILE	100L	/* whether value is a file */
+#define OP_ISASSOC	101L	/* whether value is an association */
+#define OP_INITSTATIC	102L	/* once only code for static initialization */
+#define OP_ELEMINIT	103L	/* assign element of matrix or object */
 #define OP_ISCONFIG	104L	/* whether value is a configuration state */
 #define OP_ISHASH	105L	/* whether value is a hash state */
 #define OP_ISRAND	106L	/* whether value is additive 55 random state */

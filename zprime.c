@@ -90,10 +90,10 @@ static CONST unsigned char topbit[256] = {
  * We have enough table entries for a FULL that is 64 bits long.
  */
 static CONST FULL isqrt_pow2[64] = {
-    1, 1, 2, 2, 4, 5, 8, 11, 					/*  0 ..  7 */
+    1, 1, 2, 2, 4, 5, 8, 11,					/*  0 ..  7 */
     16, 22, 32, 45, 64, 90, 128, 181,				/*  8 .. 15 */
-    256, 362, 512, 724, 1024, 1448, 2048, 2896, 		/* 16 .. 23 */
-    4096, 5792, 8192, 11585, 16384, 23170, 32768, 46340, 	/* 24 .. 31 */
+    256, 362, 512, 724, 1024, 1448, 2048, 2896,			/* 16 .. 23 */
+    4096, 5792, 8192, 11585, 16384, 23170, 32768, 46340,	/* 24 .. 31 */
     65536, 92681, 131072, 185363,				/* 32 .. 35 */
     262144, 370727, 524288, 741455,				/* 36 .. 39 */
     1048576, 1482910, 2097152, 2965820,				/* 40 .. 43 */
@@ -109,7 +109,7 @@ static CONST FULL isqrt_pow2[64] = {
  */
 static FULL fsqrt(FULL v);		/* quick square root of v */
 static long pix(FULL x);		/* pi of x */
-static FULL small_factor(ZVALUE n, FULL limit);   /* factor or 0 */
+static FULL small_factor(ZVALUE n, FULL limit);	  /* factor or 0 */
 
 
 /*
@@ -136,7 +136,7 @@ zisprime(ZVALUE z)
 	if (ziseven(z)) {
 		/*
 		 * "2 is the greatest odd prime because it is the least even!"
-		 *					- Dr. Dan Jurca  1978
+		 *					- Dr. Dan Jurca	 1978
 		 */
 		return zisabstwo(z);
 	}
@@ -159,7 +159,7 @@ zisprime(ZVALUE z)
 	/* a number >=2^16 and < 2^32 */
 	for (isqr=fsqrt(n), tp=prime; (*tp <= isqr) && (n % *tp); ++tp) {
 	}
- 	return ((*tp <= isqr && *tp != 1) ? 0 : 1);
+	return ((*tp <= isqr && *tp != 1) ? 0 : 1);
 }
 
 
@@ -306,7 +306,7 @@ zpprime(ZVALUE z)
 	CONST unsigned char *j;		/* current jump increment */
 	int tmp;
 
-	z.sign  = 0;
+	z.sign	= 0;
 
 	/* ignore large values */
 	if (zge32b(z)) {
@@ -890,7 +890,7 @@ zpfact(ZVALUE z, ZVALUE *dest)
  *
  * It is interesting to note that ptest(a,1,x) (for any x >= 0) of this
  * test will always return TRUE for a prime, and rarely return TRUE for
- * a non-prime.  The 1/4 is appears in practice to be a poor upper
+ * a non-prime.	 The 1/4 is appears in practice to be a poor upper
  * bound.  Even so the only result that is EXACT and TRUE is when
  * this test returns FALSE for a non-prime.  When ptest returns TRUE,
  * one cannot determine if the value in question is prime, or the value
@@ -973,15 +973,13 @@ zprimetest(ZVALUE z, long count, ZVALUE skip)
 	if (ziszero(skip)) {
 		type = 0;
 		zbase = _zero_;
-	}
-	else if (zisone(skip)) {
+	} else if (zisone(skip)) {
 		type = 1;
 		itoz(2, &zbase);
 		limit = 1 << 16;
 		if (!zge16b(z))
 			limit = ztolong(z);
-	}
-	else {
+	} else {
 		type = 2;
 		if (zrel(skip, z) >= 0 || zisneg(skip))
 			zmod(skip, z, &zbase, 0);
@@ -1024,7 +1022,7 @@ zprimetest(ZVALUE z, long count, ZVALUE skip)
 		zpowermod(zbase, z1, z, &z3);
 		for (;;) {
 			if (zisone(z3)) {
-				if (ij)	{
+				if (ij) {
 				/* number is definitely not prime */
 					zfree(z3);
 					zfree(zm1);
@@ -1082,15 +1080,13 @@ zredcprimetest(ZVALUE z, long count, ZVALUE skip)
 	if (ziszero(skip)) {
 		zbase = _zero_;
 		type = 0;
-	}
-	else if (zisone(skip)) {
+	} else if (zisone(skip)) {
 		itoz(2, &zbase);
 		type = 1;
 		limit = 1 << 16;
 		if (!zge16b(z))
 			limit = ztolong(z);
-	}
-	else {
+	} else {
 		zredcencode(rp, skip, &zbase);
 		type = 2;
 	}
@@ -1147,7 +1143,7 @@ zredcprimetest(ZVALUE z, long count, ZVALUE skip)
 		zredcpower(rp, zbase, z1, &z3);
 		for (;;) {
 			if (!zcmp(z3, rp->one)) {
-				if (ij)	{
+				if (ij) {
 				/* number is definitely not prime */
 					zfree(z3);
 					zfree(zm1);
@@ -1190,7 +1186,7 @@ zredcprimetest(ZVALUE z, long count, ZVALUE skip)
 
 /*
  * znextcand - find the next integer that passes ptest().
- * The signs of z and mod are ignored.  Result is the least integer
+ * The signs of z and mod are ignored.	Result is the least integer
  * greater than abs(z) congruent to res modulo abs(mod), or if there
  * is no such integer, zero.
  *
@@ -1208,7 +1204,7 @@ znextcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *can
 	ZVALUE tmp1;
 	ZVALUE tmp2;
 
-	z.sign  = 0;
+	z.sign	= 0;
 	mod.sign = 0;
 	if (ziszero(mod)) {
 		if (zrel(res, z) > 0 && zprimetest(res, count, skip)) {
@@ -1269,7 +1265,7 @@ znextcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *can
 
 /*
  * zprevcand - find the nearest previous integer that passes ptest().
- * The signs of z and mod are ignored.  Result is greatest positive integer
+ * The signs of z and mod are ignored.	Result is greatest positive integer
  * less than abs(z) congruent to res modulo abs(mod), or if there
  * is no such integer, zero.
  *
@@ -1287,7 +1283,7 @@ zprevcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *can
 	ZVALUE tmp1;
 	ZVALUE tmp2;
 
-	z.sign  = 0;
+	z.sign	= 0;
 	mod.sign = 0;
 	if (ziszero(mod)) {
 		if (zispos(res)&&zrel(res, z)<0 && zprimetest(res,count,skip)) {

@@ -19,10 +19,10 @@
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  *
- *      Landon Curt Noll
- *      http://reality.sgi.com/chongo/
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo/
  *
- *      chongo <was here> /\../\
+ *	chongo <was here> /\../\
  */
 /*
  * lucas - perform a Lucas primality test on h*2^n-1
@@ -34,26 +34,26 @@
  * Sergio Zarantonello proved the following 65087 digit number to be prime:
  *
  *				  216193
- *			391581 * 2      -1
+ *			391581 * 2	-1
  *
  * At the time of discovery, this number was the largest known prime.
  * The primality was demonstrated by a program implementing the test
  * found in these routines.  An Amdahl 1200 takes 1987 seconds to test
  * the primality of this number.  A Cray 2 took several hours to
- * confirm this prime.  As of 31 Dec 1995, this prime was the 3rd
+ * confirm this prime.	As of 31 Dec 1995, this prime was the 3rd
  * largest known prime and the largest known non-Mersenne prime.
  *
  * The same team also discovered the following twin prime pair:
  *
  *			   11235		   11235
- *		1706595 * 2     -1	1706595 * 2     +1
+ *		1706595 * 2	-1	1706595 * 2	+1
  *
  * At the time of discovery, this was the largest known twin prime pair.
  *
  * NOTE: Both largest known and largest known twin prime records have been
- *       broken.  Rather than update this file each time, I'll just
+ *	 broken.  Rather than update this file each time, I'll just
  *	 congratulate the finders and encourage others to try for
- *	 larger finds.  Records were made to be broken afterall!
+ *	 larger finds.	Records were made to be broken afterall!
  *
  * ON GAINING A WORLD RECORD:
  *
@@ -89,7 +89,7 @@
  * 'h', the time to test each number remains relatively constant.
  *
  * It is clearly a win to eliminate potential test candidates by
- * rejecting numbers that that are divisible by 'small' primes.  We
+ * rejecting numbers that that are divisible by 'small' primes.	 We
  * (the "Amdahl 6") rejected all numbers that were divisible by primes
  * less than '2^40'.  We stopped looking for small factors at '2^40'
  * when the rate of candidates being eliminated was slowed down to
@@ -132,7 +132,7 @@ global pprod256;	/* product of  "primes up to 256" / "primes up to 46" */
  * ABOUT THE TEST:
  *
  * This routine will perform a primality test on h*2^n-1 based on
- * the mathematics of Lucas, Lehmer and Riesel.  One should read
+ * the mathematics of Lucas, Lehmer and Riesel.	 One should read
  * the following article:
  *
  * Ref1:
@@ -153,7 +153,7 @@ global pprod256;	/* product of  "primes up to 256" / "primes up to 46" */
  *
  * This test is performed as follows:	(see Ref1, Theorem 5)
  *
- *	a) generate u(0) 		(see the function gen_u0() below)
+ *	a) generate u(0)		(see the function gen_u0() below)
  *
  *	b) generate u(n-2) according to the rule:
  *
@@ -163,9 +163,9 @@ global pprod256;	/* product of  "primes up to 256" / "primes up to 46" */
  *
  * Now the following conditions must be true for the test to work:
  *
- *      n >= 2
+ *	n >= 2
  *	h >= 1
- *      h < 2^n
+ *	h < 2^n
  *	h mod 2 == 1
  *
  * A few misc notes:
@@ -179,9 +179,9 @@ global pprod256;	/* product of  "primes up to 256" / "primes up to 46" */
  * as 2^39).
  *
  * The condition 'h mod 2 == 1' is not a problem.  Say one is testing
- * 'j*2^m-1', where j is even.  If we note that:
+ * 'j*2^m-1', where j is even.	If we note that:
  *
- *      j mod 2^x == 0 for x>0   implies   j*2^m-1 == ((j/2^x)*2^(m+x))-1,
+ *	j mod 2^x == 0 for x>0	 implies   j*2^m-1 == ((j/2^x)*2^(m+x))-1,
  *
  * then we can let h=j/2^x and n=m+x and test 'h*2^n-1' which is the value.
  * We need only consider odd values of h because we can rewrite our numbers
@@ -227,7 +227,7 @@ lucas(h, n)
 	 */
 	oldh = h;
 	oldn = n;
-	shiftdown = fcnt(h,2);  /* h % 2^shiftdown == 0, max shiftdown */
+	shiftdown = fcnt(h,2);	/* h % 2^shiftdown == 0, max shiftdown */
 	if (shiftdown > 0) {
 		h >>= shiftdown;
 		n += shiftdown;
@@ -238,13 +238,13 @@ lucas(h, n)
 	 */
 	if (h <= 0 || n <= 0) {
 		print "ERROR: reduced args violate the rule: 0 < h < 2^n";
-		print "    ERROR: h=":oldh, "n=":oldn, "reduced h=":h, "n=":n;
+		print "	   ERROR: h=":oldh, "n=":oldn, "reduced h=":h, "n=":n;
 		ldebug("lucas", "unknown: h <= 0 || n <= 0");
 		return -1;
 	}
 	if (highbit(h) >= n) {
 		print "ERROR: reduced args violate the rule: h < 2^n";
-		print "    ERROR: h=":oldh, "n=":oldn, "reduced h=":h, "n=":n;
+		print "	   ERROR: h=":oldh, "n=":oldn, "reduced h=":h, "n=":n;
 		ldebug("lucas", "unknown: highbit(h) >= n");
 		return -1;
 	}
@@ -351,7 +351,7 @@ lucas(h, n)
 	 * the v(1) into u(0).
 	 *
 	 * If gen_v1() returns a negative value, then we failed to
-	 * generate a test for h*2^n-1.  This is because h mod 3 == 0
+	 * generate a test for h*2^n-1.	 This is because h mod 3 == 0
 	 * is hard to do, and in rare cases, exceed the tables found
 	 * in this program.  We will generate an message and assume
 	 * the number is not prime, even though if we had a larger
@@ -561,14 +561,14 @@ gen_u0(h, n, v1)
 quickmax = 8;
 mat d_qval[quickmax];
 mat v1_qval[quickmax];
-d_qval[0] = 5;		v1_qval[0] = 3;		/* a=1   b=1  r=4  */
-d_qval[1] = 7;		v1_qval[1] = 5;		/* a=3   b=1  r=12  D=21 */
-d_qval[2] = 13;		v1_qval[2] = 11;	/* a=3   b=1  r=4  */
-d_qval[3] = 11;		v1_qval[3] = 20;	/* a=3   b=1  r=2  */
-d_qval[4] = 29;		v1_qval[4] = 27;	/* a=5   b=1  r=4  */
-d_qval[5] = 53;		v1_qval[5] = 51;	/* a=53  b=1  r=4  */
-d_qval[6] = 17;		v1_qval[6] = 66;	/* a=17  b=1  r=1  */
-d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38  b=1  r=2  */
+d_qval[0] = 5;		v1_qval[0] = 3;		/* a=1	 b=1  r=4  */
+d_qval[1] = 7;		v1_qval[1] = 5;		/* a=3	 b=1  r=12  D=21 */
+d_qval[2] = 13;		v1_qval[2] = 11;	/* a=3	 b=1  r=4  */
+d_qval[3] = 11;		v1_qval[3] = 20;	/* a=3	 b=1  r=2  */
+d_qval[4] = 29;		v1_qval[4] = 27;	/* a=5	 b=1  r=4  */
+d_qval[5] = 53;		v1_qval[5] = 51;	/* a=53	 b=1  r=4  */
+d_qval[6] = 17;		v1_qval[6] = 66;	/* a=17	 b=1  r=1  */
+d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38	 b=1  r=2  */
 
 /*
  * gen_v1 - compute the v(1) for a given h*2^n-1 if we can
@@ -671,7 +671,7 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38  b=1  r=2  */
  * are true, and return the related v(1).
  *
  * Before we address the two conditions, we need some background information
- * on two symbols, Legendre and Jacobi.  In Ref 2, pp 278, 284-285, we find
+ * on two symbols, Legendre and Jacobi.	 In Ref 2, pp 278, 284-285, we find
  * the following definitions of J(a,p) and L(a,n):
  *
  * The Legendre symbol L(a,p) takes the value:
@@ -724,7 +724,7 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38  b=1  r=2  */
  *
  * From Ref2, table 32:
  *
- *	p mod 8 == +/-1   implies  L(2,p) == 1			{note 3}
+ *	p mod 8 == +/-1	  implies  L(2,p) == 1			{note 3}
  *	p mod 12 == +/-1  implies  L(3,p) == 1			{note 4}
  *
  * Since h*2^n-1 mod 8 == -1, for n>2, note 3 implies:
@@ -737,14 +737,14 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38  b=1  r=2  */
  *
  * By use of {A3.5}, {note 2}, {note 5} and {note 6}, one can show:
  *
- *	L((2^g)*(3^l)*(z^2), h*2^n-1) == 1  (g>=0,l>=0,z>0,n>2)	{note 7}
+ *	L((2^g)*(3^l)*(z^2), h*2^n-1) == 1  (g>=0,l>=0,z>0,n>2) {note 7}
  *
  * Returning to the testing of conditions, take condition 1:
  *
  *	L(D, h*2^n-1) == -1			[condition 1]
  *
  * In order for J(D, h*2^n-1) to be defined, we must ensure that D
- * is not a factor of h*2^n-1.  This is done by pre-screening h*2^n-1 to
+ * is not a factor of h*2^n-1.	This is done by pre-screening h*2^n-1 to
  * not have small factors and selecting D less than that factor check limit.
  *
  * By use of {note 7}, we can show that when we choose D to be:
@@ -765,7 +765,7 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38  b=1  r=2  */
  *		      == J(h*2^n-1 mod P, P)*(-1)^((h*2^n-2)*(P-1)/4)  {note 0}
  *
  * When does J(h*2^n-1 mod P, P)*(-1)^((h*2^n-2)*(P-1)/4) take the value of -1,
- * thus satisfy [condition 1]?  The answer depends on P.  Now P is a prime>2,
+ * thus satisfy [condition 1]?	The answer depends on P.  Now P is a prime>2,
  * thus P mod 4 == 1 or -1.
  *
  * Take P mod 4 == 1:
@@ -780,7 +780,7 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38  b=1  r=2  */
  *
  * Take P mod 4 == -1:
  *
- *	P mod 4 == -1  implies  (-1)^((h*2^n-2)*(P-1)/4) == -1
+ *	P mod 4 == -1  implies	(-1)^((h*2^n-2)*(P-1)/4) == -1
  *
  * Thus:
  *
@@ -832,7 +832,7 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38  b=1  r=2  */
  *		      == J(h*2^n-1 mod Q, Q)*(-1)^((h*2^n-2)*(Q-1)/4)  {note 0}
  *
  * When does J(h*2^n-1 mod Q, Q)*(-1)^((h*2^n-2)*(Q-1)/4) take the value of 1,
- * thus satisfy [condition 2]?  The answer depends on Q.  Now Q is a prime>2,
+ * thus satisfy [condition 2]?	The answer depends on Q.  Now Q is a prime>2,
  * thus Q mod 4 == 1 or -1.
  *
  * Take Q mod 4 == 1:
@@ -847,7 +847,7 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38  b=1  r=2  */
  *
  * Take Q mod 4 == -1:
  *
- *	Q mod 4 == -1  implies  (-1)^((h*2^n-2)*(Q-1)/4) == -1
+ *	Q mod 4 == -1  implies	(-1)^((h*2^n-2)*(Q-1)/4) == -1
  *
  * Thus:
  *
@@ -855,7 +855,7 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38  b=1  r=2  */
  *		      == L(h*2^n-1 mod Q, Q) * -1
  *		      == -J(h*2^n-1 mod Q, Q)
  *
- * Therefore [condition 2] is met by selecting  D = Q*(2^j)*(3^k)*(z^2),
+ * Therefore [condition 2] is met by selecting	D = Q*(2^j)*(3^k)*(z^2),
  * where Q is prime>2, j>=0, k>=0, z>0; if and only if one of the following
  * to cases are true:
  *
@@ -894,7 +894,7 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38  b=1  r=2  */
  *
  *	   r == Q*(2^j)*(3^k)*(z^2)	(Q==1 or Q is prime>2, j>=0, k>=0, z>0)
  *
- *         one of the following is true:
+ *	   one of the following is true:
  *	       P mod 4 ==  1  and  J(h*2^n-1 mod P, P) == -1
  *	       P mod 4 == -1  and  J(h*2^n-1 mod P, P) ==  1
  *
@@ -903,7 +903,7 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38  b=1  r=2  */
  *	       Q mod 4 == -1  and  J(h*2^n-1 mod Q, Q) == -1
  *
  *     If we cannot find a v(1) quickly enough, then we will give up
- *     testing h*2^n-1.  This does not happen too often, so this hack
+ *     testing h*2^n-1.	 This does not happen too often, so this hack
  *     is not too bad.
  *
  ***
@@ -971,28 +971,28 @@ gen_v1(h, n)
 	 *
 	 * We will check with:
 	 *
-	 *	v(1)=81      D=6557      a=79      b=1      r=316
+	 *	v(1)=81	     D=6557	 a=79	   b=1	    r=316
 	 *
-	 * Now, D==79*83 and r=79*2^2.  If we show that:
+	 * Now, D==79*83 and r=79*2^2.	If we show that:
 	 *
 	 *	J(h*2^n-1 mod 79, 79) == -1
 	 *	J(h*2^n-1 mod 83, 83) == 1
 	 *
-	 * then we will satisfy [condition 1].  Observe:
+	 * then we will satisfy [condition 1].	Observe:
 	 *
- 	 *	79 mod 4 == -1  implies  (-1)^((h*2^n-2)*(79-1)/4) == -1
- 	 *	83 mod 4 == -1  implies  (-1)^((h*2^n-2)*(83-1)/4) == -1
+	 *	79 mod 4 == -1	implies	 (-1)^((h*2^n-2)*(79-1)/4) == -1
+	 *	83 mod 4 == -1	implies	 (-1)^((h*2^n-2)*(83-1)/4) == -1
 	 *
 	 *	J(D, h*2^n-1) == J(83, h*2^n-1) * J(79, h*2^n-1)
 	 *		      == J(h*2^n-1, 83) * (-1)^((h*2^n-2)*(83-1)/4) *
-	 *		         J(h*2^n-1, 79) * (-1)^((h*2^n-2)*(79-1)/4)
+	 *			 J(h*2^n-1, 79) * (-1)^((h*2^n-2)*(79-1)/4)
 	 *		      == J(h*2^n-1 mod 83, 83) * -1 *
-	 *		         J(h*2^n-1 mod 79, 79) * -1
+	 *			 J(h*2^n-1 mod 79, 79) * -1
 	 *		      ==  1 * -1 *
 	 *			 -1 * -1
 	 *		      == -1
 	 *
-	 * We will also satisfy [condition 2].  Observe:
+	 * We will also satisfy [condition 2].	Observe:
 	 *
 	 *	(a^2 - b^2*D)/r == (79^2 - 1^1*6557)/316
 	 *			== -1

@@ -44,7 +44,7 @@ DESCRIPTION
     In simple assignments, = associates from right to left so that, for
     example,
 
-    		a = b = c
+		a = b = c
 
     has the effect of a = (b = c) and results in assigning the value of c
     to both a and b.  The expression (a = b) = c is acceptable, but has the
@@ -66,7 +66,7 @@ DESCRIPTION
     that of A[0] = A[1].
 
     If, in execution of a = b, a is changed by the evaluation of b, the
-    value of b may be stored in an unintended or inaccessible location.  For
+    value of b may be stored in an unintended or inaccessible location.	 For
     example,
 		mat A[2]= {1,2};
 		A[0] = (A = 3);

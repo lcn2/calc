@@ -7,7 +7,7 @@
  *
  * GNU readline support added by Martin Buck <mbuck@debian.org>
  *
- * Interactive readline module.  This is called to read lines of input,
+ * Interactive readline module.	 This is called to read lines of input,
  * while using emacs-like editing commands within a command stack.
  * The key bindings for the editing commands are (slightly) configurable.
  */
@@ -59,9 +59,9 @@
 
 extern FILE *curstream(void);
 
-#define	STDIN		0
-#define	SAVE_SIZE	256		/* size of save buffer */
-#define	MAX_KEYS	60		/* number of key bindings */
+#define STDIN		0
+#define SAVE_SIZE	256		/* size of save buffer */
+#define MAX_KEYS	60		/* number of key bindings */
 
 
 #define CONTROL(x)		((char)(((int)(x)) & 0x1f))
@@ -79,11 +79,11 @@ static	struct {
 } HS;
 
 
-typedef	void (*FUNCPTR)();
+typedef void (*FUNCPTR)();
 
 typedef struct {
 	char	*name;
-	FUNCPTR	func;
+	FUNCPTR func;
 } FUNC;
 
 /* declare binding functions */
@@ -155,7 +155,7 @@ static	FUNC	funcs[] =
 	{"quote-char",		quote_char},
 	{"arrow-key",		arrow_key},
 	{"quit",		quit_calc},
-	{NULL, 			NULL}
+	{NULL,			NULL}
 };
 
 
@@ -185,11 +185,11 @@ static KEY_MAP	maps[] = {
 };
 
 
-#define	INTROUND	(sizeof(int) - 1)
-#define	HISTLEN(hp)	((((hp)->len + INTROUND) & ~INTROUND) + sizeof(int))
-#define	HISTOFFSET(hp)	(((char *) (hp)) - histbuf)
-#define	FIRSTHIST	((HIST *) histbuf)
-#define	NEXTHIST(hp)	((HIST *) (((char *) (hp)) + HISTLEN(hp)))
+#define INTROUND	(sizeof(int) - 1)
+#define HISTLEN(hp)	((((hp)->len + INTROUND) & ~INTROUND) + sizeof(int))
+#define HISTOFFSET(hp)	(((char *) (hp)) - histbuf)
+#define FIRSTHIST	((HIST *) histbuf)
+#define NEXTHIST(hp)	((HIST *) (((char *) (hp)) + HISTLEN(hp)))
 
 
 typedef struct {
@@ -211,7 +211,7 @@ static	char		histbuf[HIST_SIZE + 1];
 static	char		save_buffer[SAVE_SIZE];
 
 /* declare other static functions */
-static	FUNCPTR	find_func(char *name);
+static	FUNCPTR find_func(char *name);
 static	HIST	*get_event(int n);
 static	HIST	*find_event(char *pat, int len);
 static	void	read_key(void);
@@ -516,9 +516,9 @@ do_bind_line(KEY_MAP *map, char *line)
 		} else {
 			key = CONTROL(*cp++);
 		}
-	}
-	else if (key == '\\')
+	} else if (key == '\\') {
 		key = *cp++;
+	}
 
 	while (isspace((int)*cp))
 		cp++;
@@ -582,8 +582,7 @@ do_default_line(KEY_MAP *map, char *line)
 	func_name = cp;
 	while ((*cp != '\0') && !isspace((int)*cp))
 		cp++;
-	if (*cp != '\0')
-	{
+	if (*cp != '\0') {
 		*cp++ = '\0';
 		while (isspace((int)*cp))
 			cp++;
@@ -592,15 +591,13 @@ do_default_line(KEY_MAP *map, char *line)
 	if (func == NULL)
 		return;
 
-	if (*cp == '\0')
+	if (*cp == '\0') {
 		next = map;
-	else
-	{
+	} else {
 		next_name = cp;
 		while ((*cp != '\0') && !isspace((int)*cp))
 			cp++;
-		if (*cp != '\0')
-		{
+		if (*cp != '\0') {
 			*cp++ = '\0';
 			while (isspace((int)*cp))
 				cp++;
@@ -624,7 +621,7 @@ static int
 read_bindings(FILE *fp)
 {
 	char	*cp;
-	KEY_MAP	*input_map;
+	KEY_MAP *input_map;
 	char	line[100];
 
 	base_map = find_map(base_map_name);
@@ -677,7 +674,7 @@ read_key(void)
 		cur_map = ent->next;
 	if (ent->func)
 		/* ignore Saber-C warning #65 - has 1 arg, expecting 0 */
-		/* 	  ok to ignore in proc read_key */
+		/*	  ok to ignore in proc read_key */
 		(*ent->func)(key);
 	else
 		insert_char(key);
@@ -691,7 +688,7 @@ read_key(void)
 static HIST *
 get_event(int n)
 {
-	register HIST *	hp;
+	register HIST * hp;
 
 	if ((n < 0) || (n >= HS.histcount))
 		return NULL;
@@ -709,11 +706,11 @@ get_event(int n)
 static HIST *
 find_event(char *pat, int len)
 {
-	register HIST *	hp;
+	register HIST * hp;
 
 	for (hp = FIRSTHIST; hp->len; hp = NEXTHIST(hp)) {
 		if ((hp->len == len) && (memcmp(hp->data, pat, len) == 0))
-		    	return hp;
+			return hp;
 	}
 	return NULL;
 }
@@ -1406,9 +1403,9 @@ beep(void)
 static void
 echo_char(int ch)
 {
-	if (isprint(ch))
+	if (isprint(ch)) {
 		putchar(ch);
-	else {
+	} else {
 		putchar('^');
 		putchar((ch + '@') & 0x7f);
 	}

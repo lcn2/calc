@@ -11,7 +11,7 @@ TYPES
 
 DESCRIPTION
     For a list or matrix x, reverse(x) returns a list or matrix in
-    which the order of the elements has been reversed.  The original
+    which the order of the elements has been reversed.	The original
     list or matrix x is unchanged.
 
     In the case of matrix x, the returned value is a matrix with
@@ -23,11 +23,11 @@ EXAMPLE
     > print reverse(A)
 
     list (5 elements, 5 nonzero):
-          [[0]]	= 2
-          [[1]]	= 4
-          [[2]]	= 2
-	  [[3]]	= 7
-	  [[4]]	= 1
+	  [[0]] = 2
+	  [[1]] = 4
+	  [[2]] = 2
+	  [[3]] = 7
+	  [[4]] = 1
 
     > mat B[2,3] = {1,2,3,4,5,6}
     > print reverse(B)

@@ -20,11 +20,11 @@
  * PERFORMANCE OF THIS SOFTWARE.
  *
  * Prior to calc 2.9.3t9, these routines existed as a calc library called
- * cryrand.cal.  They have been rewritten in C for performance as well
+ * cryrand.cal.	 They have been rewritten in C for performance as well
  * as to make them available directly from libcalc.a.
  *
  * Comments, suggestions, bug fixes and questions about these routines
- * are welcome.  Send EMail to the address given below.
+ * are welcome.	 Send EMail to the address given below.
  *
  * Happy bit twiddling,
  *
@@ -39,7 +39,7 @@
 
 
 #if !defined(__ZRANDOM_H__)
-#define	__ZRANDOM_H__
+#define __ZRANDOM_H__
 
 
 #include "value.h"
@@ -54,7 +54,7 @@
  * most this implies that a turn can yield no more than 15 bits when BASEB==16
  * or 31 bits when BASEB==32.  Should we deal with a excessively large
  * Blum modulus (>=2^16 bits long for BASEB==16, >=2^32 bits for BASEB==32)
- * the higher order random bits will be tossed.  This is not a loss as
+ * the higher order random bits will be tossed.	 This is not a loss as
  * regular sub-segments of the sequence are just as random.  It only means
  * that excessively large Blum modulus values waste CPU time.
  */

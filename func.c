@@ -133,8 +133,8 @@ static STRINGHEAD newerrorstr;
  * arg count definitons
  */
 #define IN 100		/* maximum number of arguments */
-#define	FE 0x01		/* flag to indicate default epsilon argument */
-#define	FA 0x02		/* preserve addresses of variables */
+#define FE 0x01		/* flag to indicate default epsilon argument */
+#define FA 0x02		/* preserve addresses of variables */
 
 
 /*
@@ -146,7 +146,7 @@ struct builtin {
 	short b_maxargs;	/* maximum number of arguments */
 	short b_flags;		/* special handling flags */
 	short b_opcode;		/* opcode which makes the call quick */
-	NUMBER *(*b_numfunc)();	/* routine to calculate numeric function */
+	NUMBER *(*b_numfunc)(); /* routine to calculate numeric function */
 	VALUE (*b_valfunc)();	/* routine to calculate general values */
 	char *b_desc;		/* description of function */
 };
@@ -566,7 +566,7 @@ f_factor(int count, NUMBER **vals)
 	NUMBER *err;	/* error return, NULL => use math_error */
 	ZVALUE limit;	/* highest prime factor in search */
 	ZVALUE n;	/* number to factor */
-	NUMBER *factor;	/* the prime factor found */
+	NUMBER *factor; /* the prime factor found */
 	int res;	/* -1 => error, 0 => not found, 1 => factor found */
 
 	/*
@@ -966,7 +966,7 @@ f_srand(int count, VALUE **vals)
 			if (!qisint(vals[0]->v_num)) {
 				math_error(
 				  "srand number seed must be an integer");
-			        /*NOTREACHED*/
+				/*NOTREACHED*/
 			}
 			result.v_rand = zsrand(&vals[0]->v_num->num, NULL);
 			break;
@@ -1117,7 +1117,7 @@ f_srandom(int count, VALUE **vals)
 			if (!qisint(vals[0]->v_num)) {
 				math_error(
 				  "srandom number seed must be an integer");
-			        /*NOTREACHED*/
+				/*NOTREACHED*/
 			}
 			result.v_random = zsrandom1(vals[0]->v_num->num, TRUE);
 			break;
@@ -1476,9 +1476,9 @@ f_min(int count, VALUE **vals)
 		if (qisneg(rel.v_num)) {
 			freevalue(&min);
 			min = term;
-		}
-		else
+		} else {
 			freevalue(&term);
+		}
 		freevalue(&rel);
 	}
 	return min;
@@ -1532,9 +1532,9 @@ f_max(int count, VALUE **vals)
 		if (qisneg(rel.v_num)) {
 			freevalue(&max);
 			max = term;
-		}
-		else
+		} else {
 			freevalue(&term);
+		}
 		freevalue(&rel);
 	}
 	return max;
@@ -3370,9 +3370,9 @@ f_root(int count, VALUE **vals)
 	err.v_subtype = V_NOSUBTYPE;
 	result.v_subtype = V_NOSUBTYPE;
 
-	if (count > 2)
+	if (count > 2) {
 		vp = vals[2];
-	else {
+	} else {
 		err.v_num = conf->epsilon;
 		err.v_type = V_NUM;
 		vp = &err;
@@ -3391,9 +3391,9 @@ f_power(int count, VALUE **vals)
 	err.v_subtype = V_NOSUBTYPE;
 	result.v_subtype = V_NOSUBTYPE;
 
-	if (count > 2)
+	if (count > 2) {
 		vp = vals[2];
-	else {
+	} else {
 		err.v_num = conf->epsilon;
 		err.v_type = V_NUM;
 		vp = &err;
@@ -3413,9 +3413,9 @@ f_polar(int count, VALUE **vals)
 	err.v_subtype = V_NOSUBTYPE;
 	result.v_subtype = V_NOSUBTYPE;
 
-	if (count > 2)
+	if (count > 2) {
 		vp = vals[2];
-	else {
+	} else {
 		err.v_num = conf->epsilon;
 		err.v_type = V_NUM;
 		vp = &err;
@@ -4138,9 +4138,9 @@ f_search(int count, VALUE **vals)
 				qfree(start);
 				start = qlink(&_qzero_);
 			}
-		}
-		else
+		} else {
 			start = qlink(start);
+		}
 	}
 	if (end) {
 		if (!qispos(end)) {
@@ -4388,8 +4388,7 @@ f_rsearch(int count, VALUE **vals)
 		else
 			end = qlink(size);
 		start = qlink(&_qzero_);
-	}
-	else {
+	} else {
 		if (start == NULL)
 			start = qlink(&_qzero_);
 		if (end == NULL)
@@ -4726,9 +4725,9 @@ f_freopen(int count, VALUE **vals)
 			return error_value(E_FREOPEN2);
 	}
 	errno = 0;
-	if (count == 2)
+	if (count == 2) {
 		id = reopenid(vals[0]->v_file, mode, NULL);
-	else {
+	} else {
 		if (vals[2]->v_type != V_STR)
 			return error_value(E_FREOPEN3);
 		id = reopenid(vals[0]->v_file, mode,
@@ -4963,9 +4962,9 @@ f_newerror(int count, VALUE **vals)
 	if (nexterrnum == E_USERDEF)
 		initstr(&newerrorstr);
 	index = findstr(&newerrorstr, str);
-	if (index >= 0)
+	if (index >= 0) {
 		errnum = E_USERDEF + index;
-	else {
+	} else {
 		if (nexterrnum == 32767)
 			math_error("Too many new error values");
 		errnum = nexterrnum++;
@@ -5092,9 +5091,9 @@ f_fflush(int count, VALUE **vals)
 
 	i = 0;
 	errno = 0;
-	if (count == 0)
+	if (count == 0) {
 		i = flushall();
-	else {
+	} else {
 		for (n = 0; n < count; n++) {
 			if (vals[n]->v_type != V_FILE)
 				return error_value(E_FFLUSH);
@@ -5130,9 +5129,9 @@ f_error(int count, VALUE **vals)
 					r = E_ERROR2;
 			}
 		}
-	}
-	else
+	} else {
 		r = set_errno(-1);
+	}
 
 	return error_value(r);
 }
@@ -5192,9 +5191,9 @@ f_fseek(int count, VALUE **vals)
 		return error_value(E_FSEEK1);
 	if (vals[1]->v_type != V_NUM || qisfrac(vals[1]->v_num))
 		return error_value(E_FSEEK2);
-	if (count == 2)
+	if (count == 2) {
 		whence = 0;
-	else {
+	} else {
 		if (vals[2]->v_type != V_NUM || qisfrac(vals[2]->v_num) ||
 			qisneg(vals[2]->v_num))
 			return error_value(E_FSEEK2);
@@ -5248,10 +5247,10 @@ f_rewind(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
-	if (count == 0)
+	if (count == 0) {
 		rewindall();
 
-	else {
+	} else {
 		for (n = 0; n < count; n++) {
 			if (vals[n]->v_type != V_FILE)
 				return error_value(E_REWIND1);
@@ -5337,7 +5336,7 @@ static int
 filescan(FILEID id, int count, VALUE **vals)
 {
 	char	*str;
-	int 	i;
+	int	i;
 	int	n = 0;
 	VALUE	val;
 	VALUE	result;
@@ -6331,10 +6330,10 @@ static VALUE
 f_cmdbuf(void)
 {
 	VALUE result;
-        char *newcp;
+	char *newcp;
 
 	/* initialize VALUE */
-        result.v_type = V_STR;
+	result.v_type = V_STR;
 	result.v_subtype = V_NOSUBTYPE;
 
 	newcp = (char *)malloc(strlen(cmdbuf) + 1);
@@ -6357,7 +6356,7 @@ f_getenv(VALUE *v1)
 		math_error("Non-string argument for getenv");
 		/*NOTREACHED*/
 	}
-        result.v_type = V_STR;
+	result.v_type = V_STR;
 	str = getenv(v1->v_str->s_str);
 	if (str == NULL)
 		result.v_type = V_NULL;
@@ -6468,7 +6467,7 @@ static VALUE
 f_putenv(int count, VALUE **vals)
 {
 	VALUE result;
-        char *putenv_str;
+	char *putenv_str;
 
 	/* initialize VALUE */
 	result.v_type = V_NUM;
@@ -6530,8 +6529,8 @@ static VALUE
 f_strpos(VALUE *haystack, VALUE *needle)
 {
 	VALUE result;
-        char *cpointer;
-        int cindex;
+	char *cpointer;
+	int cindex;
 
 	/* initialize VALUE */
 	result.v_type = V_NUM;
@@ -6541,11 +6540,11 @@ f_strpos(VALUE *haystack, VALUE *needle)
 		math_error("Non-string argument for index");
 		/*NOTREACHED*/
 	}
-        cpointer = strstr(haystack->v_str->s_str,
+	cpointer = strstr(haystack->v_str->s_str,
 		needle->v_str->s_str);
-        if (cpointer == NULL)
+	if (cpointer == NULL)
 		cindex = 0;
-        else
+	else
 		cindex = cpointer - haystack->v_str->s_str + 1;
 	result.v_num = itoq((long) cindex);
 	return result;
@@ -6584,7 +6583,7 @@ static NUMBER *
 f_base(int count, NUMBER **vals)
 {
 	long base;	/* output base/mode */
-	long oldbase=0;	/* output base/mode */
+	long oldbase=0; /* output base/mode */
 
 	/* deal with just a query */
 	if (count != 1) {
@@ -6886,9 +6885,9 @@ f_blocks(int count, VALUE **vals)
 
 	nblk = findnblock(id);
 
-	if (nblk == NULL)
+	if (nblk == NULL) {
 		return error_value(E_BLOCKS2);
-	else {
+	} else {
 		result.v_type = V_NBLOCK;
 		result.v_nblock = nblk;
 	}
@@ -7311,14 +7310,14 @@ f_md5(int count, VALUE **vals)
  *
  *	  For nice output, when the description of function (b_desc)
  *	  gets too long (extends into col 79) you should chop the
- *	  line and add "\n\t\t    ", thats newline, 2 tabs a 4 spaces.
+ *	  line and add "\n\t\t	  ", thats newline, 2 tabs a 4 spaces.
  *	  For example the description:
  *
  *		... very long description that goes beyond col 79
  *
  *	  should be written as:
  *
- *		"... very long description that\n\t\t    goes beyond col 79"},
+ *		"... very long description that\n\t\t	 goes beyond col 79"},
  *
  * fields:
  *	b_name		name of built-in function
@@ -7394,7 +7393,7 @@ static CONST struct builtin builtins[] = {
 	{"ceil", 1, 1, 0, OP_NOP, 0, f_ceil,
 	 "smallest integer greater than or equal to number"},
 	{"cfappr", 1, 3, 0, OP_NOP, f_cfappr, 0,
-	 "approximate a within accuracy b using\n\t\t    continued fractions"},
+	 "approximate a within accuracy b using\n\t\t	 continued fractions"},
 	{"cfsim", 1, 2, 0, OP_NOP, f_cfsim, 0,
 	 "simplify number using continued fractions"},
 	{"char", 1, 1, 0, OP_NOP, 0, f_char,
@@ -7626,7 +7625,7 @@ static CONST struct builtin builtins[] = {
 	{"istype", 2, 2, 0, OP_ISTYPE, 0, 0,
 	 "whether the type of a is same as the type of b"},
 	{"jacobi", 2, 2, 0, OP_NOP, qjacobi, 0,
-	 "-1 => a is not quadratic residue mod b\n\t\t    1 => b is composite, or a is quad residue of b"},
+	 "-1 => a is not quadratic residue mod b\n\t\t	  1 => b is composite, or a is quad residue of b"},
 	{"join", 1, IN, 0, OP_NOP, 0, f_join,
 	 "join one or more lists into one list"},
 	{"lcm", 1, IN, 0, OP_NOP, f_lcm, 0,
@@ -7700,7 +7699,7 @@ static CONST struct builtin builtins[] = {
 	{"ord", 1, 1, 0, OP_NOP, 0, f_ord,
 	 "integer corresponding to character value"},
 	{"param", 1, 1, 0, OP_ARGVALUE, 0, 0,
-	 "value of parameter n (or parameter count if n\n\t\t    is zero)"},
+	 "value of parameter n (or parameter count if n\n\t\t	 is zero)"},
 	{"perm", 2, 2, 0, OP_NOP, qperm, 0,
 	 "permutation number a!/(a-b)!"},
 	{"prevcand", 1, 5, 0, OP_NOP, f_prevcand, 0,

@@ -15,7 +15,7 @@ Credits
     hist.c which is used to do the command line editing.
 
     Thanks to Ernest W. Bowen for supplying many improvements in
-    accuracy and generality for some numeric functions.  Much of
+    accuracy and generality for some numeric functions.	 Much of
     this was in terms of actual code which I gratefully accepted.
     Ernest also supplied the original text for many of the help files.
 

@@ -56,10 +56,10 @@ zmul(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	/*
 	 * Allocate a temporary buffer for the recursion levels to use.
 	 * An array needs to be allocated large enough for all of the
-	 * temporary results to fit in.  This size is about twice the size
+	 * temporary results to fit in.	 This size is about twice the size
 	 * of the largest original number, since each recursion level uses
 	 * the size of its given number, and whose size is 1/2 the size of
-	 * the previous level.  The sum of the infinite series is 2.
+	 * the previous level.	The sum of the infinite series is 2.
 	 * Add some extra words because of rounding when dividing by 2
 	 * and also because of the extra word that each multiply needs.
 	 */
@@ -160,7 +160,7 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	/*
 	 * If the smaller number has only a few digits, then calculate
 	 * the result in the normal manner in order to avoid the overhead
-	 * of the recursion for small numbers.  The number of digits where
+	 * of the recursion for small numbers.	The number of digits where
 	 * the algorithm changes is settable from 2 to maxint.
 	 */
 	if (size2 < conf->mul2) {
@@ -183,7 +183,7 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 			len -= 4;
 			sival.ivalue = ((FULL) *h1++) * digit + carry;
 			/* ignore Saber-C warning #112 - get ushort from uint */
-			/* 	  ok to ignore on name domul`sival */
+			/*	  ok to ignore on name domul`sival */
 			*hd++ = sival.silow;
 			carry = sival.sihigh;
 			sival.ivalue = ((FULL) *h1++) * digit + carry;
@@ -263,8 +263,8 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	/*
 	 * Need to multiply by a large number.
 	 * Allocate temporary space for calculations, and calculate the
-	 * value for the shift.  The shift value is 1/2 the size of the
-	 * larger (first) number (rounded up).  The amount of temporary
+	 * value for the shift.	 The shift value is 1/2 the size of the
+	 * larger (first) number (rounded up).	The amount of temporary
 	 * space needed is twice the size of the shift, plus one more word
 	 * for the multiply to use.
 	 */
@@ -326,58 +326,58 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	 * The insure tool also reports a problem at this position:
 	 *
 	 * [zmul.c:319] **COPY_BAD_RANGE**
-	 * >>         baseC = v2 + shift;
+	 * >>	      baseC = v2 + shift;
 	 *
 	 *   Copying pointer which is out-of-range: v2 + shift
 	 *
 	 *		[[NOTE: line numbers may have changed]]
 	 *
-	 *   Pointer      : 0x1400919cc
+	 *   Pointer	  : 0x1400919cc
 	 *   Actual block : 0x140090c80 thru 0x140090def (368 bytes,92 elements)
-	 *                  hp, allocated at:
-	 *                           malloc()
-	 *                            alloc()  zmath.c, 221
-	 *                             zmul()  zmul.c, 73
-	 *                          ztenpow()  zfunc.c, 441
-	 *                            str2q()  qio.c, 537
-	 *                        addnumber()  const.c, 52
-	 *                        eatnumber()  token.c, 594
-	 *                         gettoken()  token.c, 319
-	 *                      getcallargs()  codegen.c, 2358
+	 *		    hp, allocated at:
+	 *			     malloc()
+	 *			      alloc()  zmath.c, 221
+	 *			       zmul()  zmul.c, 73
+	 *			    ztenpow()  zfunc.c, 441
+	 *			      str2q()  qio.c, 537
+	 *			  addnumber()  const.c, 52
+	 *			  eatnumber()  token.c, 594
+	 *			   gettoken()  token.c, 319
+	 *			getcallargs()  codegen.c, 2358
 	 *
 	 *   Stack trace where the error occurred:
-	 *                            domul()  zmul.c, 319
-	 *                             zmul()  zmul.c, 74
-	 *                          ztenpow()  zfunc.c, 441
-	 *                            str2q()  qio.c, 537
-	 *                        addnumber()  const.c, 52
-	 *                        eatnumber()  token.c, 594
-	 *                         gettoken()  token.c, 319
-	 *                      getcallargs()  codegen.c, 2358
-	 *                        getidexpr()  codegen.c, 1998
-	 *                          getterm()  codegen.c, 1936
-	 *                    getincdecexpr()  codegen.c, 1820
-	 *                     getreference()  codegen.c, 1804
-	 *                     getshiftexpr()  codegen.c, 1758
-	 *                       getandexpr()  codegen.c, 1704
-	 *                        getorexpr()  codegen.c, 1682
-	 *                       getproduct()  codegen.c, 1654
-	 *                           getsum()  codegen.c, 1626
-	 *                      getrelation()  codegen.c, 1585
-	 *                       getandcond()  codegen.c, 1556
-	 *                        getorcond()  codegen.c, 1532
-	 *                       getaltcond()  codegen.c, 1499
-	 *                    getassignment()  codegen.c, 1442
-	 *                  getopassignment()  codegen.c, 1352
-	 *                      getexprlist()  codegen.c, 1318
-	 *                     getstatement()  codegen.c, 921
-	 *                         evaluate()  codegen.c, 219
-	 *                      getcommands()  codegen.c, 165
-	 *                             main()  calc.c, 321
+	 *			      domul()  zmul.c, 319
+	 *			       zmul()  zmul.c, 74
+	 *			    ztenpow()  zfunc.c, 441
+	 *			      str2q()  qio.c, 537
+	 *			  addnumber()  const.c, 52
+	 *			  eatnumber()  token.c, 594
+	 *			   gettoken()  token.c, 319
+	 *			getcallargs()  codegen.c, 2358
+	 *			  getidexpr()  codegen.c, 1998
+	 *			    getterm()  codegen.c, 1936
+	 *		      getincdecexpr()  codegen.c, 1820
+	 *		       getreference()  codegen.c, 1804
+	 *		       getshiftexpr()  codegen.c, 1758
+	 *			 getandexpr()  codegen.c, 1704
+	 *			  getorexpr()  codegen.c, 1682
+	 *			 getproduct()  codegen.c, 1654
+	 *			     getsum()  codegen.c, 1626
+	 *			getrelation()  codegen.c, 1585
+	 *			 getandcond()  codegen.c, 1556
+	 *			  getorcond()  codegen.c, 1532
+	 *			 getaltcond()  codegen.c, 1499
+	 *		      getassignment()  codegen.c, 1442
+	 *		    getopassignment()  codegen.c, 1352
+	 *			getexprlist()  codegen.c, 1318
+	 *		       getstatement()  codegen.c, 921
+	 *			   evaluate()  codegen.c, 219
+	 *			getcommands()  codegen.c, 165
+	 *			       main()  calc.c, 321
 	 *
 	 * The final domul() call point is the next executable line below.
 	 */
-	/* 	ok to ignore on name domul`baseC */
+	/*	ok to ignore on name domul`baseC */
 	baseC = v2 + shift;
 	baseD = v2;
 	baseAB = ans;
@@ -464,11 +464,11 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	 * Note: step (*) above can produce a result which is larger than
 	 * the final product will be, and this is where the extra word
 	 * needed in the product comes from.  After the final subtraction is
-	 * done, the result fits in the expected size.  Using the extra word
+	 * done, the result fits in the expected size.	Using the extra word
 	 * is easier than suppressing the carries and borrows everywhere.
 	 *
 	 * Begin by forming the product (A-B)*(D-C) into a temporary
-	 * location that we save until the final step.  Do each subtraction
+	 * location that we save until the final step.	Do each subtraction
 	 * at positions 0 and S.  Be very careful about the relative sizes
 	 * of the numbers since this result can be negative.  For the first
 	 * step calculate the absolute difference of A and B into a temporary
@@ -520,7 +520,7 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	}
 
 	/*
-	 * This completes the calculation of abs(A-B).  For the next step
+	 * This completes the calculation of abs(A-B).	For the next step
 	 * calculate the absolute difference of D and C into a temporary
 	 * location at position S of the result.  Negate the sign if C is
 	 * larger than D.
@@ -535,8 +535,7 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 			h2--;
 		}
 	}
-	if ((sizeC > sizeD) || ((sizeC == sizeD) && (*h1 > *h2)))
-	{
+	if ((sizeC > sizeD) || ((sizeC == sizeD) && (*h1 > *h2))) {
 		neg = !neg;
 		h1 = baseC;
 		h2 = baseD;
@@ -569,7 +568,7 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	}
 
 	/*
-	 * This completes the calculation of abs(D-C).  Now multiply
+	 * This completes the calculation of abs(D-C).	Now multiply
 	 * together abs(A-B) and abs(D-C) into a temporary location,
 	 * which is preserved until the final steps.
 	 */
@@ -738,7 +737,7 @@ zsquare(ZVALUE z, ZVALUE *res)
 	/*
 	 * Allocate a temporary array if necessary for the recursion to use.
 	 * The array needs to be allocated large enough for all of the
-	 * temporary results to fit in.  This size is about 3 times the
+	 * temporary results to fit in.	 This size is about 3 times the
 	 * size of the original number, since each recursion level uses 3/2
 	 * of the size of its given number, and whose size is 1/2 the size
 	 * of the previous level.  The sum of the infinite series is 3.
@@ -886,7 +885,7 @@ dosquare(HALF *vp, LEN size, HALF *ans)
 			digit = ((FULL) *hd);
 			sival.ivalue = digit + digit + carry;
 			/* ignore Saber-C warning #112 - get ushort from uint */
-			/* 	  ok to ignore on name dosquare`sival */
+			/*	  ok to ignore on name dosquare`sival */
 			*hd++ = sival.silow;
 			carry = sival.sihigh;
 		}
@@ -1046,8 +1045,7 @@ dosquare(HALF *vp, LEN size, HALF *ans)
 			h2--;
 		}
 	}
-	if ((sizeA > sizeB) || ((sizeA == sizeB) && (*h1 > *h2)))
-	{
+	if ((sizeA > sizeB) || ((sizeA == sizeB) && (*h1 > *h2))) {
 		h1 = baseA;
 		h2 = baseB;
 		sizeAB = sizeA;
@@ -1155,5 +1153,3 @@ zalloctemp(LEN len)
 	buflen = len;
 	return hp;
 }
-
-/* END CODE */

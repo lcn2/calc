@@ -340,7 +340,7 @@ Normally on startup,
 attempts to execute a collection of
 library scripts.
 The environment variable $CALCRC (if non-existent
-then a compiled in value) contains a :  separated list of startup
+then a compiled in value) contains a :	separated list of startup
 library scripts.
 No error conditions are produced if these startup
 library scripts are not found.
@@ -589,7 +589,7 @@ Ernest also supplied the original text for many of the help files.
 .sp
 Portions of this program are derived from an earlier set of
 public domain arbitrarily precision routines which was posted
-to the net around 1984.  By now, there is almost no recognizable
+to the net around 1984.	 By now, there is almost no recognizable
 code left from that original source.
 .sp
 Most of this source and binary has one of the following copyrights:
@@ -632,7 +632,7 @@ calc-bugs at postofc dot corp dot sgi dot com
 .sp
 See the
 .I BUGS
-source file or use the 
+source file or use the
 .I calc
 command:
 .sp

@@ -19,21 +19,21 @@
 /*
  * Types of values returned by calling object routines.
  */
-#define A_VALUE	0	/* returns arbitrary value */
+#define A_VALUE 0	/* returns arbitrary value */
 #define A_INT	1	/* returns integer value */
-#define A_UNDEF	2	/* returns no value */
+#define A_UNDEF 2	/* returns no value */
 
 /*
  * Error handling actions for when the function is undefined.
  */
 #define ERR_NONE	0	/* no special action */
 #define ERR_PRINT	1	/* print element */
-#define ERR_CMP	2	/* compare two values */
+#define ERR_CMP 2	/* compare two values */
 #define ERR_TEST	3	/* test value for nonzero */
-#define ERR_POW	4	/* call generic power routine */
-#define ERR_ONE	5	/* return number 1 */
-#define ERR_INC	6	/* increment by one */
-#define ERR_DEC	7	/* decrement by one */
+#define ERR_POW 4	/* call generic power routine */
+#define ERR_ONE 5	/* return number 1 */
+#define ERR_INC 6	/* increment by one */
+#define ERR_DEC 7	/* decrement by one */
 #define ERR_SQUARE 8	/* square value */
 #define ERR_VALUE 9	/* return value */
 #define ERR_ASSIGN 10	/* assign value */
@@ -47,49 +47,49 @@ static struct objectinfo {
 	char *comment;	/* useful comment if any */
 } objectinfo[] = {
 	{1, A_UNDEF, ERR_PRINT, "print",	"print value, default prints elements"},
-	{1, A_VALUE, ERR_ONE,   "one",	"multiplicative identity, default is 1"},
-	{1, A_INT,   ERR_TEST,  "test",	"logical test (false,true => 0,1), default tests elements"},
-	{2, A_VALUE, ERR_NONE,  "add",	NULL},
-	{2, A_VALUE, ERR_NONE,  "sub",	NULL},
-	{1, A_VALUE, ERR_NONE,  "neg",	"negative"},
-	{2, A_VALUE, ERR_NONE,  "mul",	NULL},
-	{2, A_VALUE, ERR_NONE,  "div",	"non-integral division"},
-	{1, A_VALUE, ERR_NONE,  "inv",	"multiplicative inverse"},
-	{2, A_VALUE, ERR_NONE,  "abs",	"absolute value within given error"},
-	{1, A_VALUE, ERR_NONE,  "norm",	"square of absolute value"},
-	{1, A_VALUE, ERR_NONE,  "conj",	"conjugate"},
-	{2, A_VALUE, ERR_POW,   "pow",	"integer power, default does multiply, square, inverse"},
-	{1, A_VALUE, ERR_NONE,  "sgn",	"sign of value (-1, 0, 1)"},
-	{2, A_INT,   ERR_CMP,   "cmp",	"equality (equal,nonequal => 0,1), default tests elements"},
-	{2, A_VALUE, ERR_NONE,  "rel",	"relative order, positive for >, etc."},
-	{3, A_VALUE, ERR_NONE,  "quo",	"integer quotient"},
-	{3, A_VALUE, ERR_NONE,  "mod",	"remainder of division"},
-	{1, A_VALUE, ERR_NONE,  "int",	"integer part"},
-	{1, A_VALUE, ERR_NONE,  "frac",	"fractional part"},
-	{1, A_VALUE, ERR_INC,   "inc",	"increment, default adds 1"},
-	{1, A_VALUE, ERR_DEC,   "dec",	"decrement, default subtracts 1"},
+	{1, A_VALUE, ERR_ONE,	"one",	"multiplicative identity, default is 1"},
+	{1, A_INT,   ERR_TEST,	"test", "logical test (false,true => 0,1), default tests elements"},
+	{2, A_VALUE, ERR_NONE,	"add",	NULL},
+	{2, A_VALUE, ERR_NONE,	"sub",	NULL},
+	{1, A_VALUE, ERR_NONE,	"neg",	"negative"},
+	{2, A_VALUE, ERR_NONE,	"mul",	NULL},
+	{2, A_VALUE, ERR_NONE,	"div",	"non-integral division"},
+	{1, A_VALUE, ERR_NONE,	"inv",	"multiplicative inverse"},
+	{2, A_VALUE, ERR_NONE,	"abs",	"absolute value within given error"},
+	{1, A_VALUE, ERR_NONE,	"norm", "square of absolute value"},
+	{1, A_VALUE, ERR_NONE,	"conj", "conjugate"},
+	{2, A_VALUE, ERR_POW,	"pow",	"integer power, default does multiply, square, inverse"},
+	{1, A_VALUE, ERR_NONE,	"sgn",	"sign of value (-1, 0, 1)"},
+	{2, A_INT,   ERR_CMP,	"cmp",	"equality (equal,nonequal => 0,1), default tests elements"},
+	{2, A_VALUE, ERR_NONE,	"rel",	"relative order, positive for >, etc."},
+	{3, A_VALUE, ERR_NONE,	"quo",	"integer quotient"},
+	{3, A_VALUE, ERR_NONE,	"mod",	"remainder of division"},
+	{1, A_VALUE, ERR_NONE,	"int",	"integer part"},
+	{1, A_VALUE, ERR_NONE,	"frac", "fractional part"},
+	{1, A_VALUE, ERR_INC,	"inc",	"increment, default adds 1"},
+	{1, A_VALUE, ERR_DEC,	"dec",	"decrement, default subtracts 1"},
 	{1, A_VALUE, ERR_SQUARE,"square",	"default multiplies by itself"},
-	{2, A_VALUE, ERR_NONE,  "scale",	"multiply by power of 2"},
-	{2, A_VALUE, ERR_NONE,  "shift",	"shift left by n bits (right if negative)"},
-	{3, A_VALUE, ERR_NONE,  "round",	"round to given number of decimal places"},
-	{3, A_VALUE, ERR_NONE,  "bround",	"round to given number of binary places"},
-	{3, A_VALUE, ERR_NONE,  "root",	"root of value within given error"},
-	{3, A_VALUE, ERR_NONE,  "sqrt",	"square root within given error"},
-	{2, A_VALUE, ERR_NONE,  "or",	"bitwise or"},
-	{2, A_VALUE, ERR_NONE,  "and",	"bitwise and"},
+	{2, A_VALUE, ERR_NONE,	"scale",	"multiply by power of 2"},
+	{2, A_VALUE, ERR_NONE,	"shift",	"shift left by n bits (right if negative)"},
+	{3, A_VALUE, ERR_NONE,	"round",	"round to given number of decimal places"},
+	{3, A_VALUE, ERR_NONE,	"bround",	"round to given number of binary places"},
+	{3, A_VALUE, ERR_NONE,	"root", "root of value within given error"},
+	{3, A_VALUE, ERR_NONE,	"sqrt", "square root within given error"},
+	{2, A_VALUE, ERR_NONE,	"or",	"bitwise or"},
+	{2, A_VALUE, ERR_NONE,	"and",	"bitwise and"},
 	{1, A_VALUE, ERR_NONE,	"not",	"logical not"},
-	{1, A_VALUE, ERR_NONE,  "fact",	"factorial or postfix !"},
-	{1, A_VALUE, ERR_VALUE,	"min",	"value for min(...)"},
-	{1, A_VALUE, ERR_VALUE,	"max",	"value for max(...)"},
-	{1, A_VALUE, ERR_VALUE,	"sum",	"value for sum(...)"},
+	{1, A_VALUE, ERR_NONE,	"fact", "factorial or postfix !"},
+	{1, A_VALUE, ERR_VALUE, "min",	"value for min(...)"},
+	{1, A_VALUE, ERR_VALUE, "max",	"value for max(...)"},
+	{1, A_VALUE, ERR_VALUE, "sum",	"value for sum(...)"},
 	{2, A_UNDEF, ERR_ASSIGN, "assign", "assign, defaults to a = b"},
 	{2, A_VALUE, ERR_NONE,	"xor",	"value for binary ~"},
-	{1, A_VALUE, ERR_NONE,	"comp",	"value for unary ~"},
-	{1, A_VALUE, ERR_NONE,  "content", "unary hash op"},
-	{2, A_VALUE, ERR_NONE,  "hashop",  "binary hash op"},
+	{1, A_VALUE, ERR_NONE,	"comp", "value for unary ~"},
+	{1, A_VALUE, ERR_NONE,	"content", "unary hash op"},
+	{2, A_VALUE, ERR_NONE,	"hashop",  "binary hash op"},
 	{1, A_VALUE, ERR_NONE,	"backslash", "unary backslash op"},
-	{2, A_VALUE, ERR_NONE,  "setminus", "binary backslash op"},
-	{1, A_VALUE, ERR_NONE,	"plus",	"unary + op"},
+	{2, A_VALUE, ERR_NONE,	"setminus", "binary backslash op"},
+	{1, A_VALUE, ERR_NONE,	"plus", "unary + op"},
 	{0, 0, 0, NULL}
 };
 
@@ -135,7 +135,7 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 {
 	FUNC *fp;		/* function to call */
 	static OBJECTACTIONS *oap; /* object to call for */
-	struct objectinfo *oip;	/* information about action */
+	struct objectinfo *oip; /* information about action */
 	long index;		/* index of function (negative if undefined) */
 	VALUE val;		/* return value */
 	VALUE tmp;		/* temp value */
@@ -150,11 +150,11 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 		/*NOTREACHED*/
 	}
 	oip = &objectinfo[action];
-	if (v1->v_type == V_OBJ)
+	if (v1->v_type == V_OBJ) {
 		oap = v1->v_obj->o_actions;
-	else if (v2->v_type == V_OBJ)
+	} else if (v2->v_type == V_OBJ) {
 		oap = v2->v_obj->o_actions;
-	else {
+	} else {
 		math_error("Object routine called with non-object");
 		/*NOTREACHED*/
 	}
@@ -287,7 +287,7 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 
 /*
  * Routine called to clear the cache of known undefined functions for
- * the objects.  This changes negative indices back into positive ones
+ * the objects.	 This changes negative indices back into positive ones
  * so that they will all be checked for existence again.
  */
 void
@@ -495,7 +495,7 @@ defineobject(char *name, int indices[], int count)
 	if (hp->h_count >= maxobjcount) {
 		if (maxobjcount == 0) {
 			newobjects = (OBJECTACTIONS **) malloc(
-			 	OBJALLOC * sizeof(OBJECTACTIONS *));
+				OBJALLOC * sizeof(OBJECTACTIONS *));
 			maxobjcount = OBJALLOC;
 		} else {
 			maxobjcount += OBJALLOC;
@@ -597,7 +597,7 @@ objtypename(unsigned long index)
 /*
  * Return the value table offset to be used for an object element name.
  * This converts the element index from the element table into an offset
- * into the object value array.  Returns -1 if the element index is unknown.
+ * into the object value array.	 Returns -1 if the element index is unknown.
  */
 int
 objoffset(OBJECT *op, long index)

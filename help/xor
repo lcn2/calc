@@ -5,7 +5,7 @@ SYNOPSIS
     xor(x1, x2, ...)
 
 TYPES
-    x1, x2, ...	integer
+    x1, x2, ... integer
 
     return	integer
 

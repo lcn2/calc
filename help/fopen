@@ -20,7 +20,7 @@ DESCRIPTION
 	"a"	appending
 
     Names of files are subject to ~ expansion just like the C or
-    Korn shell.  For example, the file name:
+    Korn shell.	 For example, the file name:
 
 	~/lib/gleet
 

@@ -62,9 +62,9 @@
  *	!A	= 1 or 0 according as A is empty or not empty
  *	+A	= sum of the members of A
  *
- *	min(A)  = least member of A, -1 for empty set
- *	max(A)  = greatest member of A, -1 for empty set
- *	sum(A)  = sum of the members of A
+ *	min(A)	= least member of A, -1 for empty set
+ *	max(A)	= greatest member of A, -1 for empty set
+ *	sum(A)	= sum of the members of A
  *
  * In the following a and b denote arbitrary members of A and B:
  *

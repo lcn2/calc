@@ -5,7 +5,7 @@ SYNOPSIS
     null([v_1, v_2,...])
 
 TYPES
-    v_1, v_2,... 	any
+    v_1, v_2,...	any
     return		null
 
 DESCRIPTION

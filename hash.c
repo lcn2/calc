@@ -248,14 +248,14 @@ hash_final(HASH *state)
  *
  * given:
  *	type	- hash type (see hash.h)
- *	longval	- a long value
+ *	longval - a long value
  *	state	- the state to hash
  *
  * returns:
- *      the new state
+ *	the new state
  *
  * This function will hash a long value as if it were a 64 bit value.
- * The input is a long.  If a long is smaller than 64 bits, we will
+ * The input is a long.	 If a long is smaller than 64 bits, we will
  * hash a final 32 bits of zeros.
  */
 HASH *

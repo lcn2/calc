@@ -1,5 +1,5 @@
 NAME
-    exp	- exponential function
+    exp - exponential function
 
 SYNOPSIS
     exp(x [,eps])

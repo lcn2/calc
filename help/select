@@ -14,7 +14,7 @@ DESCRIPTION
     If y is to be the name of a user-defined function, select(x, y)
     returns a list whose members are the values z of elements of x
     for which the function at z tests as nonzero.
-    The list x is not changed.  The order of the returned list is
+    The list x is not changed.	The order of the returned list is
     the same as in x.
 
 

@@ -20,7 +20,7 @@ DESCRIPTION
 EXAMPLE
     > fd = fopen("/etc/motd", "r")
     > ferror(fd)
-            0
+	    0
 
 LIMITS
     fd must be associaed with an open file

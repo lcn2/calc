@@ -17,7 +17,7 @@ DESCRIPTION
     acosh(x) is the nonnegative real number v for which cosh(v) = x.
     It is given by
 
-   		 acosh(x) = ln(x + sqrt(x^2 - 1))
+		 acosh(x) = ln(x + sqrt(x^2 - 1))
 
 EXAMPLE
     > print acosh(2, 1e-5), acosh(2, 1e-10), acosh(2, 1e-15), acosh(2, 1e-20)

@@ -8,7 +8,7 @@
 
 
 #if !defined(__CMATH_H__)
-#define	__CMATH_H__
+#define __CMATH_H__
 
 
 #include "qmath.h"
@@ -114,7 +114,7 @@ extern COMPLEX *swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all);
 #define cisnegone(c)	(cisreal(c) && qisnegone((c)->real))
 #define cisrunit(c)	(cisreal(c) && qisunit((c)->real))
 #define cisiunit(c)	(qiszero((c)->real) && qisunit((c)->imag))
-#define	cisunit(c)	(cisrunit(c) || cisiunit(c))
+#define cisunit(c)	(cisrunit(c) || cisiunit(c))
 #define cistwo(c)	(cisreal(c) && qistwo((c)->real))
 #define cisint(c)	(qisint((c)->real) && qisint((c)->imag))
 #define ciseven(c)	(qiseven((c)->real) && qiseven((c)->imag))

@@ -14,7 +14,7 @@ DESCRIPTION
     assignments of the forms
 
 	A[a_1] = v_1
-        A[a_1, a_2] = v_2
+	A[a_1, a_2] = v_2
 	A[a_1, a_2, a_3] = v_3
 	A[a_1, a_2, a_3, a_4] = v_4
 
@@ -53,7 +53,7 @@ DESCRIPTION
     a sequential scan through the elements difficult.
 
     The search and rsearch functions can search for an element in an
-    association which has the specified value.  They return the index
+    association which has the specified value.	They return the index
     of the found element, or a NULL value if the value was not found.
 
     Associations can be copied by an assignment, and can be compared

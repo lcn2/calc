@@ -547,7 +547,7 @@ copylist2list(LIST *slp, long ssi, long num, LIST *dlp, long dsi)
 int
 copyblk2file(BLOCK *sblk, long ssi, long num, FILEID id, long dsi)
 {
-	FILEIO 	*fiop;
+	FILEIO	*fiop;
 	FILE	*fp;
 	unsigned int	numw;
 
@@ -563,7 +563,7 @@ copyblk2file(BLOCK *sblk, long ssi, long num, FILEID id, long dsi)
 		return E_COPYF1;
 	fp = fiop->fp;
 	if (id == 1 || id == 2) {
-		numw = idfputstr(id, (char *)sblk->data + ssi);  /* XXX */
+		numw = idfputstr(id, (char *)sblk->data + ssi);	 /* XXX */
 		return 0;
 	}
 	if (dsi >= 0) {
@@ -584,7 +584,7 @@ copyblk2file(BLOCK *sblk, long ssi, long num, FILEID id, long dsi)
 int
 copyfile2blk(FILEID id, long ssi, long num, BLOCK *dblk, long dsi, BOOL noreloc)
 {
-	FILEIO 	*fiop;
+	FILEIO	*fiop;
 	FILE	*fp;
 	unsigned int	numw;
 	ZVALUE	fsize;
@@ -672,7 +672,7 @@ copystr2file(STRING *str, long ssi, long num, FILEID id, long dsi)
 		return E_COPYF1;
 	fp = fiop->fp;
 	if (id == 1 || id == 2) {
-		numw = idfputstr(id, str->s_str + ssi);  /* XXX */
+		numw = idfputstr(id, str->s_str + ssi);	 /* XXX */
 		return 0;
 	}
 	if (dsi >= 0) {
@@ -830,7 +830,7 @@ int
 copyostr2str(char *sstr, long ssi, long num, STRING *dstr, long dsi)
 {
 	long len;
-	char 	*c, *c1;
+	char	*c, *c1;
 
 	len = (long)strlen(sstr);
 
@@ -898,8 +898,8 @@ copyostr2blk(char *str,long ssi,long num,BLOCK *dblk,long dsi,BOOL noreloc)
  * Copying between objects that overlap will take place correctly.
  *
  * given:
- *	s1 	destination
- *	s2 	source
+ *	s1	destination
+ *	s2	source
  *	n	octet count
  *
  * returns:
@@ -959,7 +959,7 @@ copynum2blk(NUMBER *snum, long ssi, long num, BLOCK *dblk, long dsi, BOOL norelo
 	long	newsize;
 	USB8	*newdata;
 #if CALC_BYTE_ORDER == BIG_ENDIAN
-	ZVALUE	*swnum;	/* byte swapped numerator */
+	ZVALUE	*swnum; /* byte swapped numerator */
 #endif
 
 	if (ssi > snum->num.len)

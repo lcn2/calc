@@ -12,7 +12,7 @@ TYPES
 DESCRIPTION
     If val is a named block, or the name of a named block, or the
     identifying index for a named block, blkfree(val) frees the
-    memory block allocated to this named block.  The block remains
+    memory block allocated to this named block.	 The block remains
     in existence with the same name, identifying index, and chunksize,
     but its size and maxsize becomes zero and the pointer for the start
     of its data block null.
@@ -26,16 +26,16 @@ EXAMPLE
     > B1 = blk("foo")
     > B2 = blk("Second block")
     show blocks
-     id   name
+     id	  name
     ----  -----
-     0   foo
-     1   Second block
+     0	 foo
+     1	 Second block
 
     > blkfree(B1)
     > show blocks
-     id   name
+     id	  name
     ----  -----
-     1   Second block
+     1	 Second block
 
     > B1
 	block 0: foo

@@ -26,7 +26,7 @@ EXAMPLE
 
     Name    Scopes    Type
     ----    ------    -----
-    a         1  0    real = 6
+    a	      1	 0    real = 6
 
     Number: 1
     > freestatics()

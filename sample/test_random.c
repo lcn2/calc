@@ -4,7 +4,7 @@
  * usage:
  *	test_random [[bits] seed_string]
  *
- *	seed_string 	something for which we can seed (def: default seed)
+ *	seed_string	something for which we can seed (def: default seed)
  *	bits		number of bits to generate
  */
 

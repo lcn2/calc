@@ -80,7 +80,7 @@ DESCRIPTION
 
     2 args (seed, newn>=2^32):		srandom(seed, newn)
 
-	The newn value is used as the new Blum modulus.  This modulus
+	The newn value is used as the new Blum modulus.	 This modulus
 	is assumed to be a product of two primes that are both 3 mod
 	4.  The newn value is not factored, it is only checked to see
 	if it is 1 mod 4.
@@ -89,7 +89,7 @@ DESCRIPTION
 
 	The seed arg is used to establish the initial quadratic value
 	once newn has been made the Blum moduli.  The seed must
-	be either 0 or >= 2^32.  If seed == 0, the initial quadratic
+	be either 0 or >= 2^32.	 If seed == 0, the initial quadratic
 	residue used with srandom(0) is used with the new Blum moduli.
 	If seed >= 2^32, then srandom(seed, newn) has the same effect as:
 
@@ -102,7 +102,7 @@ DESCRIPTION
 	be suspect.
 
 	The period of the generator determines how many bits will
-	be produced before it repeats.  The period is determined
+	be produced before it repeats.	The period is determined
 	by the Blum modulus.  Some newn values (that are a product
 	of two 3 mod 4 primes) can produce a generator with a
 	very short period making is useless for most applications.
@@ -181,13 +181,13 @@ DESCRIPTION
 		Using the default value of 25 might be a good choice.
 
 	Unfortunately finding optimal values can be very slow for large
-	values of 'p' and 'q'.  On a 200Mhz r4k, it can take as long as
+	values of 'p' and 'q'.	On a 200Mhz r4k, it can take as long as
 	1 minute at 512 bits, and 5 minutes at 1024 bits.
 
 	For the sake of speed, you may want to use to use one of the
 	pre-compiled in Blum moduli via the [1
 	If you don't want to use a pre-compiled in Blum moduli you can
-	compute your own values ahead of time.  This can be done by a
+	compute your own values ahead of time.	This can be done by a
 	method of your own choosing, or by using the seedrandom.cal
 	script in the following way:
 
@@ -209,7 +209,7 @@ DESCRIPTION
 	The seed arg is used to establish the initial quadratic value
 	once newn has been made the Blum moduli.  The seed must be
 	either 0 or >= 2^32.  If seed == 0, the pre-compiled quadratic
-	residue for the given newn is selected.  If seed >= 2^32, then
+	residue for the given newn is selected.	 If seed >= 2^32, then
 	srandom(seed, newn) has the same effect as:
 
 		srandom(0, newn);    /* set Blum modulus & def quad res */
@@ -264,7 +264,7 @@ DESCRIPTION
 	to having their Blum moduli factored, depending in their size,
 	by small PCs in a reasonable to large supercomputers/highly
 	parallel processors over a long time.  Their value lies in their
-	speed relative the the default Blum generator.  As of Feb 1997,
+	speed relative the the default Blum generator.	As of Feb 1997,
 	the Blum moduli associated with 13 <= newn < 20 appear to
 	be well beyond the scope of hardware and algorithms,
 	and 9 <= newn < 12 might be factorable with extreme difficulty.
@@ -296,7 +296,7 @@ DESCRIPTION
 
 	Note that while the newn is very likely to be a product of
 	two primes both 3 mod 4, there is no guarantee that the period
-	of the generator will be long.  The likelihood is that the
+	of the generator will be long.	The likelihood is that the
 	period will be long, however.  See one of the 2 arg srandom
 	calls above for more information on this issue.
 

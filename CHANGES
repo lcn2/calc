@@ -1,4 +1,10 @@
-Following is the change from calc version 2.11.0t8.9.1 to date:
+The following are the changes from calc version 2.11.0t10 to date:
+
+    Misc code cleanup.  Removed dead code.  Removed trailing whitespace.
+    Fixed whitespace to make the best use of 8 character tabs.
+
+
+The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
 
     The config("verbose_quit") will control the printing of the message:
 
@@ -52,7 +58,7 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
 	    print "Good bye";
 
 	Comments entered at input terminal level may be spread over several
-	lines.  For example:
+	lines.	For example:
 
 	    /*
 	     * Assume that this calc script is called: comment.cal
@@ -135,19 +141,19 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
 
     Fixed the make depend code in the custom and sample Makefiles.
 
-    Fixed how the help/builtin file is formed.  The help/Makefile is
+    Fixed how the help/builtin file is formed.	The help/Makefile is
     now given the name of the native C compiler by the top level Makefile.
 
     The include files are installed under INCDIRCALC (a new Makefile variable)
-    which by default is ${INCDIR}/calc.  The INCDIR (also a new Makefile var)
+    which by default is ${INCDIR}/calc.	 The INCDIR (also a new Makefile var)
     by default is /usr/local/include.  Include files previously installed
     directly under ${LIBDIR} will be removed.
 
     Added the piforever() funcion to lib/pi.cal.  It was written by
     Klaus Alexander Seistrup <klaus@seistrup.dk> and was inspired by
-    an algorithm conceived by Lambert Meertens.  (See also the ABC
+    an algorithm conceived by Lambert Meertens.	 (See also the ABC
     Programmer's Handbook, by Geurts, Meertens & Pemberton, published
-    by Prentice-Hall (UK) Ltd., 1990.)  The piforever() funcion prints
+    by Prentice-Hall (UK) Ltd., 1990.)	The piforever() funcion prints
     digits of pi for as long as your memory and system uptime allows.  :-)
 
     Fixed the URLs found thruout the source and documentation which did
@@ -173,7 +179,7 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
 
 	will now require something like:
 
-	    mat A[2], mat B[3]	or 	A = mat[2], B = mat[3]
+	    mat A[2], mat B[3]	or	A = mat[2], B = mat[3]
 
 	For example, if obj point and obj pair are known types, the
 	following is now allowed:
@@ -207,8 +213,8 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
     othewise if "%lld" is required, l_format will be < 0.
 
     Added HAVE_STRDUP Makefile variable as well as the have_strdup.c
-    program that forms the have_strdup.h file.  The have_strdup.h file
-    will define HAVE_STRDUP is the system has strdup().  If HAVE_STRDUP
+    program that forms the have_strdup.h file.	The have_strdup.h file
+    will define HAVE_STRDUP is the system has strdup().	 If HAVE_STRDUP
     is not defined, then calc will use calc_strdup() to simulate
     the real strdup() function.
 
@@ -219,8 +225,9 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
     10000 will be considered calc errors instead.  The Makefile symbol
     ERRNO_DECL has gone away as well as calc_errno.c and calc_errno.h.
 
-    On system errors are are not known to to the libc strerror() function,
-    strerror() will now print something such as:
+    System errors that are are not known to to the libc strerror()
+    function, will now print (via the strerror() calc builtin function)
+    something such as:
 
 	    Unknown error 9999
 
@@ -235,10 +242,10 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
     stay under the radar of spammers as much as one can do so.
 
 
-Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:
+The following are the changes from calc version 2.11.0t8 to 2.11.0t8.9:
 
     Moved 'wishlist' enhancements from the help/todo file to a new
-    help/wishlist file.  Ordered, by priority, help/todo items into
+    help/wishlist file.	 Ordered, by priority, help/todo items into
     Very High, High and Medium priority items.
 
     The BUGS file now has a 'bugs' section as well as a 'mis-features'
@@ -317,21 +324,21 @@ Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:
     the way config("calc_debug").  Now the lower 4 bits of the
     config("calc_debug") parameter have the following meaning:
 
-       n               Meaning of bit n of config("calc_debug")
+       n	       Meaning of bit n of config("calc_debug")
 
        0       Outputs shell commands prior to execution.
 
        1       Outputs currently active functions when a quit instruction
-               is executed.
+	       is executed.
 
        2       Some details of shs, shs1 and md5 hash states are included
-               in the output when these are printed.
+	       in the output when these are printed.
 
        3       When a function constructs a block value, tests are
-               made that the result has the properties required for use of
-               that block, e.g. that the pointer to the start of the
-               block is not NULL, and that its "length" is not negative.
-               A failure will result in a runtime error.
+	       made that the result has the properties required for use of
+	       that block, e.g. that the pointer to the start of the
+	       block is not NULL, and that its "length" is not negative.
+	       A failure will result in a runtime error.
 
     Changed the meaning of (config("calc_debug") & 1) from only printing
     the shell commands (and pausing) while displaying help files into
@@ -339,13 +346,13 @@ Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:
 
     Documented the meaning of config("lib_debug"):
 
-	n               Meaning of bit n of config("lib_debug")
+	n		Meaning of bit n of config("lib_debug")
 
-	0       When a function is defined, redefined or undefined at
+	0	When a function is defined, redefined or undefined at
 		interactive level, a message saying what has been done
 		is displayed.
 
-	1       When a function is defined, redefined or undefined during
+	1	When a function is defined, redefined or undefined during
 		the reading of a file, a message saying what has been done
 		is displayed.
 
@@ -357,7 +364,7 @@ Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:
 	of a file.
 
     Changed the calc lib files to reflect the new config("lib_debug")
-    bit field meaning.  Calc lib files that need to print extra information
+    bit field meaning.	Calc lib files that need to print extra information
     should now do something such as:
 
 	if (config("lib_debug") & 3) {
@@ -391,12 +398,12 @@ Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:
     Fixed misc compiler warnings.
 
 
-Following is the change from calc version 2.11.0t7 to 2.11.0t7.5:
+The following are the changes from calc version 2.11.0t7 to 2.11.0t7.5:
 
     Calc has some new command line flags / command line meaning:
     (Thanks goes to Ernest Bowen <ernie@turing.une.edu.au>)
 
-	-i 	Go into interactive mode if possible.
+	-i	Go into interactive mode if possible.
 
 	-c	Continue reading command lines even after an execution
 		error has caused the abandonment of a line
@@ -450,7 +457,7 @@ Following is the change from calc version 2.11.0t7 to 2.11.0t7.5:
 	    mat A[1] = {2,3};
 	    print "end";'
 
-	will print both ``start'' and ``end''.  C-shell users can do:
+	will print both ``start'' and ``end''.	C-shell users can do:
 
 	    calc -c 'print "start"; \
 	    mat A[1] = {2,3}; \
@@ -468,7 +475,7 @@ Following is the change from calc version 2.11.0t7 to 2.11.0t7.5:
 
     Added another command line flag to calc:
 
-	-d 	Disable display of the opening title and config("lib_debug",0)
+	-d	Disable display of the opening title and config("lib_debug",0)
 
 	The command:
 
@@ -515,9 +522,9 @@ Following is the change from calc version 2.11.0t7 to 2.11.0t7.5:
 
     Added the Makefile variable ${LCC} to invoke the local c compiler.
     By default, ${CC} also run the ${LCC} compiler.  The distinction is
-    useful when using something such as purify.  In the case of ${LCC},
+    useful when using something such as purify.	 In the case of ${LCC},
     only the local C compiler is invoked.  In the case of ${CC} a purify
-    compile is invoked.  Only the source that must be compiled and run
+    compile is invoked.	 Only the source that must be compiled and run
     on the local machine use ${LCC}; everything else uses ${CC}.
 
     Fixed memory buffer ovreread problem in eatstring() in token.c.
@@ -528,7 +535,7 @@ Following is the change from calc version 2.11.0t7 to 2.11.0t7.5:
 
     Fixed compilation warnings and problems on BSDI.
 
-    Removed ${CCMAIN} as a variable from the Makefile.  Now files
+    Removed ${CCMAIN} as a variable from the Makefile.	Now files
     use either ${CFLAGS} for general C source and ${ICFLAGS} for
     intermediate C source (e.g., special code for building hsrc files).
 
@@ -539,14 +546,14 @@ Following is the change from calc version 2.11.0t7 to 2.11.0t7.5:
     Misc calc man page fixes.
 
 
-Following is the change from calc version 2.11.0t1 to 2.11.0t6.3:
+The following are the changes from calc version 2.11.0t1 to 2.11.0t6.3:
 
     Removed the makefile symbol MAIN.  Now forcing all functions to correctly
     be declared main.  To satisfy some old broken compilers, a return 0;
     (instead of an exit(0);) is used at the end of main().
 
     A few of files that were added to calc used 4 character indentation
-    whereas most of calc uses 8 character indentation.  These imported
+    whereas most of calc uses 8 character indentation.	These imported
     sources have been changed to conform better with the calc style.
 
     Added the program calc_errno.c and the Makefile symbol ERRNO_DECL.
@@ -562,7 +569,7 @@ Following is the change from calc version 2.11.0t1 to 2.11.0t6.3:
 
     Changed check.awk to be more 'old awk' friendly.
 
-    Made some of the source a little more ++ friendly.  We are NOT
+    Made some of the source a little more ++ friendly.	We are NOT
     porting calc to C++!  We will NOT support C++ compilation of calc.
     Calc will written ANSI C.  We just compiled with a suggestion from
     Love-Jensen, John <jlove-jensen@globalmt.com> to make calc's version
@@ -612,11 +619,11 @@ Following is the change from calc version 2.11.0t1 to 2.11.0t6.3:
     Ernest Bowen <ernie@neumann.une.edu.au>.
 
     Added FORCE_STDC symbol.  When defined it will force __STDC__ like
-    conditions.  Thus for compilers with as the Solaris cc compiler
+    conditions.	 Thus for compilers with as the Solaris cc compiler
     that are ANSI-like but still define __STDC__ as 0, one can use
     -DFORCE_STDC and make use of ANSI-like features.
 
-    Removed the CCSHS symbol from the Makefile.  The shs.c and shs1.c
+    Removed the CCSHS symbol from the Makefile.	 The shs.c and shs1.c
     files are now compiled with full ${CFLAGS}.
 
     The custom.c file is now compiled with full ${CFLAGS}.
@@ -691,7 +698,7 @@ Following is the change from calc version 2.11.0t1 to 2.11.0t6.3:
 
     Removed if (config("lib_debug") >= 0) { ... } the ends of most
     of the calc library scripts because it was redundant with the
-    new config("lib_debug") >= 0 functionality.  Some of the calc
+    new config("lib_debug") >= 0 functionality.	 Some of the calc
     library still has a partial section because some useful
     additional information was being printed:
 
@@ -731,12 +738,12 @@ Following is the change from calc version 2.11.0t1 to 2.11.0t6.3:
     Fixed misc compile warnings and notices.
 
 
-Following is the change from calc version 2.10.3t5.38 to 2.11.0t0:
+The following are the changes from calc version 2.10.3t5.38 to 2.11.0t0:
 
     Fixed a few compile problems found under Red Hat 6.0 Linux.
 
 
-Following is the change from calc version 2.10.3t5.38 to 2.11.3t5.46:
+The following are the changes from calc version 2.10.3t5.38 to 2.11.3t5.46:
 
     Fixed a bug discovered by Ernest Bowen related to matrix-to-matrix copies.
 
@@ -759,7 +766,7 @@ Following is the change from calc version 2.10.3t5.38 to 2.11.3t5.46:
     Fixed previously reported bug in popcnt() in relation to . values.
 
     Calc man page changes per suggestion from Martin Buck
-    <Martin-2.Buck@student.uni-ulm.de>.  The calc man page is
+    <Martin-2.Buck@student.uni-ulm.de>.	 The calc man page is
     edited with a few more parameters from the Makefile.
 
     Misc Makefile changes per Martin Buck <Martin-2.Buck@student.uni-ulm.de>.
@@ -770,7 +777,7 @@ Following is the change from calc version 2.10.3t5.38 to 2.11.3t5.46:
     Fixed the regress.cal dependency list.
 
     Make chk and check will exit with an error if check.awk detects
-    a problem in the regression output.  (Martin Buck)
+    a problem in the regression output.	 (Martin Buck)
 
     Fixed print line for test #4404.
 
@@ -793,7 +800,7 @@ Following is the change from calc version 2.10.3t5.38 to 2.11.3t5.46:
     into a single section.
 
 
-Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
+The following are the changes from calc version 2.10.3t5.34 to 2.10.3t5.37:
 
     Per request from David I Bell, the README line:
 
@@ -808,7 +815,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 	address agd arrow dereference free freeglobals freeredc freestatics
 	gd isptr mattrace oldvalue saveval & * -> and .
 
-    Fixed blkcpy() and copy() arg order and processing.  Now:
+    Fixed blkcpy() and copy() arg order and processing.	 Now:
 
 	A = blk() = {1,2,3,4}
 	B = blk()
@@ -819,12 +826,12 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 
     Since "make chk" pipes the regression output to awk, we cannot
     assume that stdout and stderr are ttys.  Tests #5985 and #5986
-    have been removed for this reason.  (thanks to Martin Buck
+    have been removed for this reason.	(thanks to Martin Buck
     <Martin-2.Buck@student.uni-ulm.de> for this report)
 
     Fixed the order of prints in regress.cal.  By convention, a print
     of a test line happens after the test.  This is because function
-    parsed messages occur after the function is parsed.  Also the
+    parsed messages occur after the function is parsed.	 Also the
     boolean tesrt of vrfy happens before any print statement.
     Therefore a non-test line is tested and printed as follows:
 
@@ -838,7 +845,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 
     Moved string.c into libcalc.a.
 
-    The NUMBER union was converted back into a flat structure.  Changes
+    The NUMBER union was converted back into a flat structure.	Changes
     where 'num' and 'next' symbols were changed to avoid #define conflicts
     were reverse since the #define's needed to support the union went away.
 
@@ -852,7 +859,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 		    A = B = strcat("abc", "def");
 
 	would store "abc" and "def" as literal strings never to be freed, and
-	store "abcdef" once each for both A and  B.  Now the "abc" and "bcd"
+	store "abcdef" once each for both A and	 B.  Now the "abc" and "bcd"
 	are freed immediately after they are concatenated and "abcdef" is stored
 	only once, just as the number 47 would be stored only once for
 
@@ -877,17 +884,17 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 	distinction between a string-octet and a block-octet.  The same
 	operations and functions can be used for both, and as before, an octet
 	is in some respects a number in [0,256) and in others a one-character
-	string.  For example, for A = "abc\0def" one will have both A[0] == "a"
-	and A[0] == 97.  Assignments to octets can be used to change
+	string.	 For example, for A = "abc\0def" one will have both A[0] == "a"
+	and A[0] == 97.	 Assignments to octets can be used to change
 	characters in the string, e.g. A[0] = "A", A[1] = 0, A[2] -= 32,
 	A[3] = " " will change the above A to "A\0C def".
 
     (3) "show strings" now displays the indices, links, length, and some or all
 	of the early and late characters in all unfreed strings which are values
 	of lvalues or occur as "constants" in function definitions,
-	using "\n", "\t", "\0", "\252", etc. when appropriate.  For example,
+	using "\n", "\t", "\0", "\252", etc. when appropriate.	For example,
 	the string A in (1) would be displayed as in the definition there.
-	Only one line is used for each string.  I've also changed the
+	Only one line is used for each string.	I've also changed the
 	analogous "show numbers" so that only some digits of numbers that
 	would require more than one line are displayed.
 
@@ -896,7 +903,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 	literal strings as in A = "abc".  There is a major difference between
 	strings and numbers in that there are operations by which characters
 	in any string may be changed.  For example, after A = "abc",
-	A[0] = "X" changes A to "Xbc".  It follows that if a literal string
+	A[0] = "X" changes A to "Xbc".	It follows that if a literal string
 	is to be constant in the sense of never changing, such a character-
 	changing operation should never be applied to that string.
 
@@ -905,7 +912,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 			    A = B
 
 	results in A referring to exactly the same string as B rather than to
-	a copy of what is in B.  Thie is like the use of character-pointers in
+	a copy of what is in B.	 Thie is like the use of character-pointers in
 	C, as in
 
 			    char *s1, *s2;
@@ -971,7 +978,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 
 		     k * A    and      A * k
 
-	for any real number k and any string A.   In the case of k == 1, these
+	for any real number k and any string A.	  In the case of k == 1, these
 	return a new string rather than A itself.  (This differs from
 	"" + A and A + "" which return A.)
 
@@ -1000,7 +1007,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 	 S1 & S2 having the size of the smaller of S1 and S2.  By using, say,
 	 4-character strings, one can simulate a C integral type so far as the
 	 | and & operations are concerned.   It then seemed appropriate to
-	 use the operator ~ for a "bitwise complement" as in C.  Thus I have
+	 use the operator ~ for a "bitwise complement" as in C.	 Thus I have
 	 defined ~s for a string s to be the string of the same size as s
 	 with each character being complemented by the C ~ operation.
 
@@ -1009,9 +1016,9 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 	 would be confusing when this is used elsewhere for powers, so I
 	 decided to use ~.  For setminus, I adopted the commonly used '\'.
 	 Strings of fixed size n can now be used for a boolean algebra
-	 structure with 8 * n elements.  The zero element is n * char(0),
+	 structure with 8 * n elements.	 The zero element is n * char(0),
 	 the unity is n * char(-1), and one have all of the usual laws like
-	 A & (B | C) == A & B | A * C,  A \ B = A & ~B, etc.
+	 A & (B | C) == A & B | A * C,	A \ B = A & ~B, etc.
 
     (13) Having extended the bitwise operations for strings, it was appropriate
 	 to do the same for integers.  Definitions of the binary ~ and \
@@ -1024,7 +1031,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 
 		    2^i_1 + 2^i_2 + ...
 
-	 For ~N for non-integer real N, I have simply used -N.  There is some
+	 For ~N for non-integer real N, I have simply used -N.	There is some
 	 logic in this and it is certainly better than an error value.
 	 I have not defined the binary operations |, &, ~, \ for non-integral
 	 arguments.
@@ -1034,7 +1041,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 	 To resolve this, my preference would be to replace the printing of
 	 "~" as a prefix by a trailing ellipsis "...", the rounding always
 	 being towards zero.  E.g. with config("display", 5), 1/7 would print
-	 as ".14285..." rather than "~.14285".   The config("outround")
+	 as ".14285..." rather than "~.14285".	 The config("outround")
 	 parameter would determine the type of rounding only for the
 	 equivalent of config("tilde", 0).
 
@@ -1045,7 +1052,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 
     (15) For the obviously useful feature corresponding to cardinality of a
 	 set, I have defined #S for a string S to be the number of nonzero bits
-	 in S.   For a degree of consistency, it was then appropriate to
+	 in S.	 For a degree of consistency, it was then appropriate to
 	 define #N for a nonnegative integer N to be the number of nonzero bits
 	 in the binary representation of N.  I've extended this to arbitrary
 	 real N by using in effect #(abs(num(N))).  I feel it is better to make
@@ -1059,7 +1066,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 	 use for a binary operation.  For real numbers x and y I have defined
 	 x # y to be abs(x - y).  (This is often symbolized by x ~ y, but it
 	 would be confusing to have x ~ y meaning xor(x,y) for strings and
-	 abs(x-y) for numbers.)  Because '#' is commonly called the hash symbol,
+	 abs(x-y) for numbers.)	 Because '#' is commonly called the hash symbol,
 	 I have used xx_hashop to permit definition of x # y for xx-objects.
 
     (17) For a similar reason I've added one line of code to codegen.c so that
@@ -1080,7 +1087,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 
 
     (20) For octets o1, o2, I've defined o1 | o2, o1 & o2, o1 ~ o2, ~o1 so
-	 that they return 1-character strings.  #o for an octet o returns the
+	 that they return 1-character strings.	#o for an octet o returns the
 	 number of nonzero bits in o.
 
     (21) For substrings I've left substr() essentially as before, but
@@ -1099,7 +1106,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 		    segment(A, n)
 
 	 now returns the one-character string with its character being that with
-	 index n in A.  (I've made a corresponding modification to the segment
+	 index n in A.	(I've made a corresponding modification to the segment
 	 function for lists.)  Some examples, if A = "abcdef",
 
 		    segment(A,2,4) = "cde",
@@ -1134,7 +1141,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 	 of the indices.
 
     (24) A string A of length N determines in obvious ways arrays of M = 8 * N
-	 bits.  If the characters in increasing index order are c_0, c_1, ...
+	 bits.	If the characters in increasing index order are c_0, c_1, ...
 	 and the bits in increasing order in c_i are b_j, b_j+1, ..., b_j+7
 	 where j = 8 * i, I've taken the array of bits determined by A to be
 
@@ -1168,21 +1175,21 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 
     (27) To achieve much the same as the C strcpy and strncpy functions for
 	 null-terminated strings, strcpy(S1, S2) and strncpy(S1, S2, n) have
-	 been defined.  Unlike the blkcpy() and copy() functions, the copying
+	 been defined.	Unlike the blkcpy() and copy() functions, the copying
 	 for these is only from the beginning of the strings.  Also, unlike C,
 	 no memory overflow can occur as the copying ceases when size(S1) is
 	 reached.  Note that these overwrite the content of S1 (which affects
 	 all strings linked to it) as well as returning S1.  Examples:
 
-	    S = strcpy(6 * "x", "abc")      <=>  S = "abc\0xx"
+	    S = strcpy(6 * "x", "abc")	    <=>	 S = "abc\0xx"
 
-	    S = strcpy(3 * "x", "abcdef")   <=>  S = "abc"
+	    S = strcpy(3 * "x", "abcdef")   <=>	 S = "abc"
 
-	    S = strncpy(6 * "x", "abcd", 2) <=>  S = "ab\0xxx"
+	    S = strncpy(6 * "x", "abcd", 2) <=>	 S = "ab\0xxx"
 
-	    S = strncpy(6 * "x", "ab", 4)   <=>  S = "ab\0\0xx"
+	    S = strncpy(6 * "x", "ab", 4)   <=>	 S = "ab\0\0xx"
 
-	    S = strncpy(6 * "x", "ab", 20)  <=>  S = "ab\0\0\0\0"
+	    S = strncpy(6 * "x", "ab", 20)  <=>	 S = "ab\0\0\0\0"
 
 	 If a new string S not linked to S1 is to be created, this can be
 	 achieved by using str(S1) in place of S1.  For example, the strcpy in
@@ -1209,7 +1216,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 		    A = "abcdefg";
 		    copy(A, A, , , 2);
 
-	 will result in A == "abababa".  If the overwriting that occurs here
+	 will result in A == "abababa".	 If the overwriting that occurs here
 	 is not wanted, one may use
 
 		    A = "abcdefg";
@@ -1242,7 +1249,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 
 	 There may be one or two other changes resulting from the way I have
 	 rewritten the optimization code in addop.c.  I think there was a bug
-	 that assumed that PTR_SIZE would be the same as sizeof(long).  By
+	 that assumed that PTR_SIZE would be the same as sizeof(long).	By
 	 the way, the new OP_STRING is now of index rather than pointer type.
 	 It follows that pointers are now used in opcodes only for global
 	 variables.  By introducing a table of addresses of global variables
@@ -1255,7 +1262,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 	 stack, etc.  Maybe more detail should be added to math_error(), but
 	 to achieve the freeing of memory for a quit statement and at the same
 	 time give more information about its occurrence I have changed the
-	 way opcodes.c handles OP_QUIT.  Now it should free the local variables
+	 way opcodes.c handles OP_QUIT.	 Now it should free the local variables
 	 and whatever is on the stack, and display the name and line-number,
 	 for each of the functions currently being evaluated.  The last
 	 function listed should be the "top-level" one with name "*".
@@ -1312,7 +1319,7 @@ Following is the change from calc version 2.10.3t5.34 to 2.10.3t5.37:
 	 user-specified bound.
 
 
-Following is the change from calc version 2.10.3t5.28 to 2.10.3t5.33:
+The following are the changes from calc version 2.10.3t5.28 to 2.10.3t5.33:
 
     Added hnrmod(v, h, n, r) builtin to compute:
 
@@ -1371,7 +1378,7 @@ Following is the change from calc version 2.10.3t5.28 to 2.10.3t5.33:
 
 	    To allow & to be used as a C-like address operator, use of it
 	    has been dropped in calls to user-defined functions.  For the
-	    time being I have replaced it by the back-quote `.  For example:
+	    time being I have replaced it by the back-quote `.	For example:
 
 		> global a
 		> define f(a,b) = a = b
@@ -1451,7 +1458,7 @@ Following is the change from calc version 2.10.3t5.28 to 2.10.3t5.33:
 	    if q->links = 0.  The old "num" is #defined to "nu->n_num".
 
 	    The prior method calc has used for handling "constants" amounted
-	    to leakage.  After:
+	    to leakage.	 After:
 
 		> define f(x) = 27 + x;
 		> a = 27;
@@ -1463,7 +1470,7 @@ Following is the change from calc version 2.10.3t5.28 to 2.10.3t5.33:
 		> a = 45;
 
 	    There seems little point in retaining 27 as a constant and
-	    therefore using up memory.  If this example seems trivial,
+	    therefore using up memory.	If this example seems trivial,
 	    replace 27 with a few larger numbers like 2e12345, or better,
 	    -2e12345, for which calc needs memory for both 2e12345 and
 	    -2e12345!
@@ -1547,7 +1554,7 @@ Following is the change from calc version 2.10.3t5.28 to 2.10.3t5.33:
 		> .
 		4
 
-	    can now be treated as an unnamed variable.  For example:
+	    can now be treated as an unnamed variable.	For example:
 
 		> mat x[3,3]={1,2,3,4,5,6,7,8,9}
 		> x
@@ -1620,7 +1627,7 @@ Following is the change from calc version 2.10.3t5.28 to 2.10.3t5.33:
 		LONG_BITS > BASEB, len = 1 and nf = 0, since it then
 		reduces to the value of (nf != q->num.v[1]) in which
 		q->num.v[1] is not part of the size-1 array of HALFs for
-		q->num.  At present this is used only for changing opcodes
+		q->num.	 At present this is used only for changing opcodes
 		for ^2 and ^4 from sequences involving OP_POWER to
 		sequences using OP_SQUARE, which has no effect on the
 		results of calculations.
@@ -1668,17 +1675,17 @@ Following is the change from calc version 2.10.3t5.28 to 2.10.3t5.33:
     is now 10000 cycles.
 
     SGI Mips r10k compile set is speced for IRIX6.5 with v7.2
-    compilers.  A note for pre-IRIX6.5 and/or pre-v7.2 compilers
+    compilers.	A note for pre-IRIX6.5 and/or pre-v7.2 compilers
     is given in the compile set.
 
     Added regression tests related to saveval(), dot and pointers.
 
 
-Following is the change from calc version 2.10.3t5.11 to 2.10.3t5.27:
+The following are the changes from calc version 2.10.3t5.11 to 2.10.3t5.27:
 
     The todo help file as been updated with the in-progress items:
 
-	XXX - block print function is not written yet ...
+	xxx - block print function is not written yet ...
 
     Expanded the role of blk() to produce unnamed blocks as in:
 
@@ -1708,13 +1715,13 @@ Following is the change from calc version 2.10.3t5.11 to 2.10.3t5.27:
     The builtin function blkfree(val) will free memory allocated to block.
     If val is a named block, or the name of a named block, or the
     identifying index for a named block, blkfree(val) frees the
-    memory block allocated to this named block.  The block remains
+    memory block allocated to this named block.	 The block remains
     in existence with the same name, identifying index, and chunksize,
     but its size and maxsize becomes zero and the pointer for the start
     of its data block null.
 
     The builtin function blocks() returns the number of blocks that
-    have been created but not freed by the blkfree() function.  When called
+    have been created but not freed by the blkfree() function.	When called
     as blocks(id) and the argument id less than the number of named
     blocks that have been created, blocks(id) returns the named block
     with identifying index id.
@@ -1729,7 +1736,7 @@ Following is the change from calc version 2.10.3t5.11 to 2.10.3t5.27:
     Added isobjtype() to determine the type of an object.
 
     The isatty(v) builtin will return 1 if v is a file that associated
-    with a tty (terminal, xterm, etc.) and 0 otherwise.  The isatty(v)
+    with a tty (terminal, xterm, etc.) and 0 otherwise.	 The isatty(v)
     builtin will no longer return an error if v is not a file or
     is a closed file.
 
@@ -1788,15 +1795,15 @@ Following is the change from calc version 2.10.3t5.11 to 2.10.3t5.27:
     Resolved a number of missing symbols for libcalc users.
 
     Added lib_util.{c,h} to the calc source to support users of
-    libcalc.a.  These utility routines are not directly used by
+    libcalc.a.	These utility routines are not directly used by
     calc but are otherwise have utility to those programmers who
     directly use libcalc.a instead.
 
-    Added sample sub-directory.  This sub-directory contains a few
-    sample programs that use libcalc.a.  These sample programs are
+    Added sample sub-directory.	 This sub-directory contains a few
+    sample programs that use libcalc.a.	 These sample programs are
     built via the all rule because they will help check to see that
     libcalc.a library does not contain external references that
-    cannot be resolved.  At the current time none of these sample
+    cannot be resolved.	 At the current time none of these sample
     programs are installed.
 
     Added a libcalc_call_me_last() call to return storage created
@@ -1807,7 +1814,7 @@ Following is the change from calc version 2.10.3t5.11 to 2.10.3t5.27:
 
     Fixed fseek() file operations for SunOS.
 
-    Fixed convz2hex() fencepost error.  It also removes leading 0's.
+    Fixed convz2hex() fencepost error.	It also removes leading 0's.
 
     Plugged a memory leak relating to pmod.  The following calculation:
 
@@ -1816,7 +1823,7 @@ Following is the change from calc version 2.10.3t5.11 to 2.10.3t5.27:
     where x was not 2^n-1 would leak memory.  This has been fixed.
 
 
-Following is the change from calc version 2.10.3t5.1 to 2.10.3t5.10:
+The following are the changes from calc version 2.10.3t5.1 to 2.10.3t5.10:
 
     Misc printf warning bug fixes.
 
@@ -1831,7 +1838,7 @@ Following is the change from calc version 2.10.3t5.1 to 2.10.3t5.10:
 
 		P = {A, B}
 
-    has the effect of P.x = A; P.y = B.  Sometimes one might want these in
+    has the effect of P.x = A; P.y = B.	 Sometimes one might want these in
     the reverse order: P.y = B; P.x = A.  This is achieved by:
 
 		P = { , B} = {A}
@@ -1842,20 +1849,20 @@ Following is the change from calc version 2.10.3t5.1 to 2.10.3t5.10:
 
     which results in Q having Q.x.x = 1, Q.x.y = 2, etc.
 
-    The role of the comma in has been changed.  Expressions such as:
+    The role of the comma in has been changed.	Expressions such as:
 
-                mat A[2], B[3]
+		mat A[2], B[3]
 
     are equivalent to:
 
-                (mat A[2]), (mat B[3])
+		(mat A[2]), (mat B[3])
 
     Now, expr1, expr2  returns type of expr2 rather than EXPR_RVALUE.  This
     permits expressions such as:
 
 		(a = 2, b) = 3
 
-    Also, expr1 ? expr2 : expr3  returns type(expr2) | type(expr3).
+    Also, expr1 ? expr2 : expr3	 returns type(expr2) | type(expr3).
     This will make the result an lvalue (i.e. EXPR_RVALUE bit not set)
     For example, if both expr2 and expr3 are lvalues.  Then:
 
@@ -1870,7 +1877,7 @@ Following is the change from calc version 2.10.3t5.1 to 2.10.3t5.10:
     which does d = b if a is "nonzero", otherwise d = c.
 
     And now, expr1 || expr2 and expr1 && expr2 each return
-    htype(expr1)| type(expr2).  So for example:
+    htype(expr1)| type(expr2).	So for example:
 
 		a || b = c
 
@@ -1920,7 +1927,7 @@ Following is the change from calc version 2.10.3t5.1 to 2.10.3t5.10:
 
     Now 's' will print '10' instead of '5'.
 
-    Added more regression tests to regress.cal.  Changed the error
+    Added more regression tests to regress.cal.	 Changed the error
     counter from 'err' to 'prob'.  The errmax() is set very high and
     the expected value of errcount() is kept in ecnt.
 
@@ -1933,7 +1940,7 @@ Following is the change from calc version 2.10.3t5.1 to 2.10.3t5.10:
 
     The blkalloc() builtin has been renamed blk().
 
-    Only a "fixed" type of BLOCK will be used.  Other types of
+    Only a "fixed" type of BLOCK will be used.	Other types of
     blocks in the future will be different VALUE types.
 
     Introduced an undefine command so that
@@ -1956,12 +1963,12 @@ Following is the change from calc version 2.10.3t5.1 to 2.10.3t5.10:
     a USB8 in B.
 
     xx_assign added to object functions to permit the possibility of
-    specifying what A = B will do if A is an xx-object.  Normal
+    specifying what A = B will do if A is an xx-object.	 Normal
     assignment use of = is restored by the command: undefine
     xx_assign.
 
     For error-value err, errno(err) returns the error-code for err and
-    stores this in calc_errno;  error(err) returns err as if
+    stores this in calc_errno;	error(err) returns err as if
     error(errno(err)) were called.
 
     Anticipating probable future use, names have been introduced for
@@ -1983,7 +1990,7 @@ Following is the change from calc version 2.10.3t5.1 to 2.10.3t5.10:
     In most cases, CALC_ENV= CALCPATH=./lib is sufficent.
 
     Added ${CALC_LIBS} to list the libaraies created and used to
-    build calc.  The CALC_LIBS= custom/libcustcalc.a libcalc.a
+    build calc.	 The CALC_LIBS= custom/libcustcalc.a libcalc.a
     is standard for everyone.
 
     Improved how 'make calc' and 'make all' rules work with respect
@@ -2017,10 +2024,10 @@ Following is the change from calc version 2.10.3t5.1 to 2.10.3t5.10:
     regression tests for memsize(), sizeof() and size().
 
 
-Following is the change from calc version 2.10.3t4.16 to 2.10.3t5.0:
+The following are the changes from calc version 2.10.3t4.16 to 2.10.3t5.0:
 
     The calc source now comes with a custom sub-directory which
-    contains the custom interface code.  The main Makefile now
+    contains the custom interface code.	 The main Makefile now
     drives the building and installing of this code in a similar
     way that it drives the lib and help sub-directories.  (see below)
 
@@ -2115,7 +2122,7 @@ Following is the change from calc version 2.10.3t4.16 to 2.10.3t5.0:
     Added the custom() builtin function.  The custom() builtin
     interface is designed to make it easier for local custom
     modification to be added to calc.  Custom functions are
-    non-standard or non-portable code.  For these reasons, one must can
+    non-standard or non-portable code.	For these reasons, one must can
     only execute custom() code by way of an explicit action.
 
     By default, custom() returns an error.  A new calc command line
@@ -2139,7 +2146,7 @@ Following is the change from calc version 2.10.3t4.16 to 2.10.3t5.0:
     of calling config("all", "newstd") at startup time.
 
     Added -e as a calc command line option to ignore all environment
-    varialbes at startup time.  The getenv() builtin function will
+    varialbes at startup time.	The getenv() builtin function will
     still return values, however.
 
     Added -i as a calc command line option.  This has the effect
@@ -2156,7 +2163,7 @@ Following is the change from calc version 2.10.3t4.16 to 2.10.3t5.0:
     The 'make check' rule now uses the -i calc command line flag
     so that regress.cal can continue beyond when errcount exceeds
     errmax.  In regress.cal, vrfy() reports when errcount exceeds
-    errmax and resets errmax to match errcount.  This check
+    errmax and resets errmax to match errcount.	 This check
     and report is independent of the test success of failure.
 
     Fixed missing or out of order tests in regress.cal.
@@ -2171,9 +2178,9 @@ Following is the change from calc version 2.10.3t4.16 to 2.10.3t5.0:
 
     The help command will search ${LIBDIR}/custhelp if it fails to find
     a file in ${LIBDIR}.  This allows the help command to also print
-    help for a custom function.  However if a standard help file and a
+    help for a custom function.	 However if a standard help file and a
     custom help file share the same name, help will only print the
-    standard help file.  One can skip the standard help file and print
+    standard help file.	 One can skip the standard help file and print
     the custom help file by:
 
 	help custhelp/name
@@ -2209,7 +2216,7 @@ Following is the change from calc version 2.10.3t4.16 to 2.10.3t5.0:
     The max(), min() builtins work for lists.
 
 
-Following is the change from calc version 2.10.3t3 to 2.10.3t4.15:
+The following are the changes from calc version 2.10.3t3 to 2.10.3t4.15:
 
     The priority of unary + and - to that of binary + and - when they are
     applied to a first or only term.  Thus:
@@ -2257,7 +2264,7 @@ Following is the change from calc version 2.10.3t3 to 2.10.3t4.15:
     and randrun.cal a55 tests.
 
     Improved hash.c interface to lower level hash functions.  The hash
-    interface does not yet have a func.c interface ...  it is still
+    interface does not yet have a func.c interface ...	it is still
     under test.
 
     Added randombitrun.cal to test the Blum-Blum-Shub generator.
@@ -2267,7 +2274,7 @@ Following is the change from calc version 2.10.3t3 to 2.10.3t4.15:
 
     In the original version, each call to newerror(str) created a new
     error-value.  Now a new value will be created only if str has not
-    been used in a previous call to newerror().  In effect, the string
+    been used in a previous call to newerror().	 In effect, the string
     serves to identify the error-value; for example:
 
 	    return newerror("Non-integer argument");
@@ -2317,11 +2324,11 @@ Following is the change from calc version 2.10.3t3 to 2.10.3t4.15:
 
     Added "blkmaxprint" config value, which limits the octets to print
     for a block.  A "blkmaxprint" of 0 means to print all octets of a
-    block, regardless of size.  The default is to print only the first
+    block, regardless of size.	The default is to print only the first
     256 octets.
 
     The "blkverbose" determines if all lines, including duplicates
-    should be printed.  If TRUE, then all lines are printed.  If false,
+    should be printed.	If TRUE, then all lines are printed.  If false,
     duplicate lines are skipped and only a "*" is printed in a sytle
     similar to od.  This config value has not meaning if "blkfmt" is
     "str".  The default value for "blkverbose" is FALSE: duplicate
@@ -2330,39 +2337,39 @@ Following is the change from calc version 2.10.3t3 to 2.10.3t4.15:
     The "blkbase" determines the base in which octets of a block
     are printed.  Possible values are:
 
-        "hexadecimal"           Octets printed in 2 digit hex
-        "hex"
+	"hexadecimal"		Octets printed in 2 digit hex
+	"hex"
 
-        "octal"                 Octets printed in 3 digit octal
-        "oct"
+	"octal"			Octets printed in 3 digit octal
+	"oct"
 
-        "character"             Octets printed as chars with non-printing
-        "char"                      chars as \123 or \n, \t, \r
+	"character"		Octets printed as chars with non-printing
+	"char"			    chars as \123 or \n, \t, \r
 
-        "binary"                Octets printed as 0 or 1 chars
-        "bin"
+	"binary"		Octets printed as 0 or 1 chars
+	"bin"
 
-        "raw"                   Octets printed as is, i.e. raw binary
-        "none"
+	"raw"			Octets printed as is, i.e. raw binary
+	"none"
 
     The default "blkbase" is "hex".
 
     The "blkfmt" determines for format of how block are printed:
 
-        "line"          print in lines of up to 79 chars + newline
-        "lines"
+	"line"		print in lines of up to 79 chars + newline
+	"lines"
 
-        "str"           print as one long string
-        "string"
-        "strings"
+	"str"		print as one long string
+	"string"
+	"strings"
 
-        "od"            print in od-like format, with leading offset,
-        "odstyle"          followed by octets in the given base
-        "od_style"
+	"od"		print in od-like format, with leading offset,
+	"odstyle"	   followed by octets in the given base
+	"od_style"
 
-        "hd"            print in hex dump format, with leading offset,
-        "hdstyle"          followed by octets in the given base, followed
-        "hd_style"         by chars or '.' if no-printable or blank
+	"hd"		print in hex dump format, with leading offset,
+	"hdstyle"	   followed by octets in the given base, followed
+	"hd_style"	   by chars or '.' if no-printable or blank
 
     The default "blkfmt" is "hd".
 
@@ -2385,7 +2392,7 @@ Following is the change from calc version 2.10.3t3 to 2.10.3t4.15:
     Fixed error in using cmdbuf("").
 
 
-Following is the change from calc version 2.10.3t0 to 2.10.3t2:
+The following are the changes from calc version 2.10.3t0 to 2.10.3t2:
 
     Bumped to version 2.10.3 due to the amount of changes.
 
@@ -2394,7 +2401,7 @@ Following is the change from calc version 2.10.3t0 to 2.10.3t2:
     Fixed a casting problem in label.c.
 
     A lot of work was performed on the code generation by Ernest Bowen
-    <ernie@neumann.une.edu.au>.  Declarations no longer need to precese code:
+    <ernie@neumann.une.edu.au>.	 Declarations no longer need to precese code:
 
 	define f(x) {
 		local i = x^2;
@@ -2464,7 +2471,7 @@ Following is the change from calc version 2.10.3t0 to 2.10.3t2:
 	}
 
     Fixed some faults in the handling of syntax errors for the matrix
-    and object creation operators mat and obj.  In previous versions of calc:
+    and object creation operators mat and obj.	In previous versions of calc:
 
 	mat;				<- Bad dimension 0 for matrix
 	mat A;				<- Bad dimension 0 for matrix
@@ -2513,7 +2520,7 @@ Following is the change from calc version 2.10.3t0 to 2.10.3t2:
     5200 regress test and lib/test5200.cal for details.
 
     Optimized opcode generator so that functions defined using '=' do not
-    have two unreached opcodes.  I.e.,:
+    have two unreached opcodes.	 I.e.,:
 
 	define f(x) = x^2
 	show opcodes f
@@ -2534,7 +2541,7 @@ Following is the change from calc version 2.10.3t0 to 2.10.3t2:
 
     The LONG_BITS make variable, if set, will force the size of a long
     as well as forcing the USB8, SB8, USB16, SB16, USB32, SB32,
-    HAVE_B64, USB64, SB64, U(x) and L(x) types.  If the longbits
+    HAVE_B64, USB64, SB64, U(x) and L(x) types.	 If the longbits
     program is given an arg (of 32 or 64), then it will output
     based on a generic 32 or 64 bit machine where the long is
     the same size as the wordsize.
@@ -2547,7 +2554,7 @@ Following is the change from calc version 2.10.3t0 to 2.10.3t2:
     SGI 6.2 and later uses -xansi.
 
 
-Following is the change from calc version 2.10.2t33 to 2.10.2t34:
+The following are the changes from calc version 2.10.2t33 to 2.10.2t34:
 
     Fixed a bug related to fact().
 
@@ -2593,27 +2600,27 @@ Following is the change from calc version 2.10.2t33 to 2.10.2t34:
     essentially "start" as before, but for rsearch() is better for c
     and d to be the same as for search().  For a non-file case, if:
 
-             0 <= c < d <= size(a),
+	     0 <= c < d <= size(a),
 
     the index-interval over which the search is to take place is:
 
-             c <= i < d.
+	     c <= i < d.
 
     If the user has defined a function accept(v,b), this is used rather
     than the test v == b to decide for matrix, list, or association
     searches when a "match" of v = a[[i]] with b occurs. E.g.  after:
 
-             define accept(v,b) = (v >= b);
+	     define accept(v,b) = (v >= b);
 
     then calling:
 
-             search(a, 5, 100, 200)
+	     search(a, 5, 100, 200)
 
     will return, if it exists, the smallest index i for which
     100 <= i < 200 and a[[i]] >= 5.  To restore the effect of
     the original "match" function, one would then have to:
 
-             define accept(v,b) == (v == b).
+	     define accept(v,b) == (v == b).
 
     Renamed the calc symbol BYTE_ORDER to CALC_BYTE_ORDER in order
     to avoid conflict.
@@ -2624,10 +2631,10 @@ Following is the change from calc version 2.10.2t33 to 2.10.2t34:
 	http://www.latech.edu/~acm/HelloWorld.shtml
 
 
-Following is the change from calc version 2.10.2t25 to 2.10.2t32:
+The following are the changes from calc version 2.10.2t25 to 2.10.2t32:
 
     Eliminated use of VARARG and <varargs.h>.  Calc supports only
-    <stdarg.h>.  The VARARGS Makefile variable has been eliminated.
+    <stdarg.h>.	 The VARARGS Makefile variable has been eliminated.
 
     Source is converted to ANSI C.  In particular, functions
     will now have ANSI C style args.  Any comments from old K&R
@@ -2692,12 +2699,12 @@ Following is the change from calc version 2.10.2t25 to 2.10.2t32:
 	"static a" in the second line; the second "a" remains active
 	until its scope ends with the ending of the definition of f().
 	Thus one ends with g(x) = 10 + x and on successive calls to
-	f(), f(x) returns 20 + x, 21 + x, etc.  With successive "static
+	f(), f(x) returns 20 + x, 21 + x, etc.	With successive "static
 	a" declarations at the same level, the active one at any stage
 	is the most recent; if the instructions are being read from a
 	file, the scope of the last "static a" ends at the end-of-file.
 
-	Here I have assumed that no "global a" is encountered.  As
+	Here I have assumed that no "global a" is encountered.	As
 	there can be only one global variable with name "a", it seems
 	to me that its use must end the scope of any static "a".  Thus
 	the changes I introduce are such that after:
@@ -2712,7 +2719,7 @@ Following is the change from calc version 2.10.2t25 to 2.10.2t32:
 	g(x) will always return 20 + x, and until h(x) has been called,
 	f(x) and i(x) will return 10 + x; when h(x) is called, it
 	returns 30 + x and any later call to f(x) or i(x) will return
-	30 + x.  It is the reading of "global a" in the definition of
+	30 + x.	 It is the reading of "global a" in the definition of
 	h() that terminates the scope of the static a = 20, so that the
 	"a" for the last line is the global variable defined in the
 	first line.  The "a = 30" is executed only when h() is called.
@@ -2723,7 +2730,7 @@ Following is the change from calc version 2.10.2t25 to 2.10.2t32:
 	The other changes produced by the patch are more straightforward,
 	but some tricky programming was needed to get the possibility of
 	multiple assignments and what seems to be the appropriate order
-	of executions and assignments.  For example, the order for the
+	of executions and assignments.	For example, the order for the
 	declaration:
 
 		global a, b = expr1, c, d = expr2, e, f
@@ -2740,7 +2747,7 @@ Following is the change from calc version 2.10.2t25 to 2.10.2t32:
 		a = 0; b = expr1; c = 0; d = expr2; e = 0; f = 0;
 
 	The order is important when the same name is used for different
-	variables in the same context.  E.g. one may have:
+	variables in the same context.	E.g. one may have:
 
 		define f(x) {
 			global a = 10;
@@ -2808,7 +2815,7 @@ Following is the change from calc version 2.10.2t25 to 2.10.2t32:
     and file system permits.
 
 
-Following is the change from calc version 2.10.2t4 to 2.10.2t24:
+The following are the changes from calc version 2.10.2t4 to 2.10.2t24:
 
     Added makefile debugging rules:
 
@@ -2858,7 +2865,7 @@ Following is the change from calc version 2.10.2t4 to 2.10.2t24:
 	> demo()
 
      Added a new trace option for display of links to real and complex
-     numbers.  This is activated by config("trace", 4).  The printing
+     numbers.  This is activated by config("trace", 4).	 The printing
      of a real number is immediately followed by "#" and the number of
      links to that number; complex numbers are printed in the same
      except for having "##" instead of "#".  <ernie@neumann.une.edu.au>
@@ -2877,7 +2884,7 @@ Following is the change from calc version 2.10.2t4 to 2.10.2t24:
      file to indicate where recent versions of calc are available.
 
      The regression test suite output has been changed so that it will
-     output the same information regardless of CPU performance.  In
+     output the same information regardless of CPU performance.	 In
      particular, cpu times of certain tests are not printed.  This allows
      one to compare the regression output of two different systems easier.
 
@@ -2908,7 +2915,7 @@ Following is the change from calc version 2.10.2t4 to 2.10.2t24:
      Missing arguments are considered as "no change" rather than
      "assign null values".  As in recent versions of calc, the default
      value assigned to matrix elements is zero and the default for object
-     elements is a null value).  Thus:
+     elements is a null value).	 Thus:
 
 	mat A[2] = {1,2};
 	A = { , 3};
@@ -2940,7 +2947,7 @@ Following is the change from calc version 2.10.2t4 to 2.10.2t24:
 	B == A[i]	implies		A[i][j] = B[j]
 
      There is requirement in the use of A[i][j] that the matrices A[i]
-     for i = 0, 1, ... all be of the same size.  Thus:
+     for i = 0, 1, ... all be of the same size.	 Thus:
 
 	mat A[3] = {(mat[2]), (mat[3]), (mat[2])};
 
@@ -3042,29 +3049,29 @@ Following is the change from calc version 2.10.2t4 to 2.10.2t24:
 
     Statements such as:
 
-                mat A[2][3];
+		mat A[2][3];
 
     now to the same as:
 
-                mat M[3];
-                mat A[2] = {M, M};
+		mat M[3];
+		mat A[2] = {M, M};
 
     To initialize such an A one can use a statement like
 
-                A = {{1,2,3}, {4,5,6}};
+		A = {{1,2,3}, {4,5,6}};
 
     or combine initialization with creation by:
 
-                mat A[2][3] = {{1,2,3}, {4,5,6}};
+		mat A[2][3] = {{1,2,3}, {4,5,6}};
 
     One would then have, for example, A[1][0] = 4.  Also, the inner braces
     cannot be removed from the initialization for A:
 
-                mat A[2][3] = {1,2};
+		mat A[2][3] = {1,2};
 
     results in exactly the same as:
 
-                mat A[2] = {1,2};
+		mat A[2] = {1,2};
 
     Added rm("file") builtin to remove a file.
 
@@ -3089,11 +3096,11 @@ Following is the change from calc version 2.10.2t4 to 2.10.2t24:
     for more tests.  Fixed all out of sequence test numbers.  Fixed some
     malformatted regression reports.
 
-    Renamed STSIZE_BITS to OFF_T_BITS.  Renamed SWAP_HALF_IN_STSIZE to
+    Renamed STSIZE_BITS to OFF_T_BITS.	Renamed SWAP_HALF_IN_STSIZE to
     SWAP_HALF_IN_OFF_T.
 
 
-Following is the change from calc version 2.10.2t1 to 2.10.2t3:
+The following are the changes from calc version 2.10.2t1 to 2.10.2t3:
 
     Fixed bug in the regression suite that made test3400 and test4100
     fail on correct computations.
@@ -3222,7 +3229,7 @@ Following is the change from calc version 2.10.2t1 to 2.10.2t3:
     E.g. expressions like 2e4i+7/8 are acceptable.
 
     The builtin size(x) now returns the size of x if x is an open file
-    or -1 if x is a file but not open.  If s is a string, size(s) returns
+    or -1 if x is a file but not open.	If s is a string, size(s) returns
     characters in s.
 
     Added buildin access("foo", "w") returns the null value if a file
@@ -3237,14 +3244,14 @@ Following is the change from calc version 2.10.2t1 to 2.10.2t3:
 
     Calc error codes are now as follows:
 
-	<0 			invalid
+	<0			invalid
 	0 .. sys_nerr-1		system error ala C's errno values
 	sys_nerr .. E__BASE-1	reserved for future system errors
 	E__BASE .. E__HIGHEST	calc internal errors
 	E__HIGHEST+1 .. E_USERDEF-1	invalid
 	E_USERDEF ..		user defined errors
 
-    Currently, E__BASE == 10000 and E_USERDEF == 20000.  Of course,
+    Currently, E__BASE == 10000 and E_USERDEF == 20000.	 Of course,
     sys_nerr is system defined however is likely to be < E__BASE.
 
     Renamed CONST_TYPE (as defined in have_const.h) to just CONST.
@@ -3252,14 +3259,14 @@ Following is the change from calc version 2.10.2t1 to 2.10.2t3:
     on if your compiler understands const.
 
     CONST is beginning to be used with read-only tables and some
-    function arguments.  This allows certain compilers to better
+    function arguments.	 This allows certain compilers to better
     optimize the code as well as alerts one to when some value
     is being changed inappropriately.  Use of CONST as in:
 
 	int foo(CONST int curds, char *CONST whey)
 
     while legal C is not as useful because the caller is protected
-    by the fact that args are passed by value.  However, the
+    by the fact that args are passed by value.	However, the
     in the following:
 
 	int bar(CONST char *fizbin, CONST HALF *data)
@@ -3269,7 +3276,7 @@ Following is the change from calc version 2.10.2t1 to 2.10.2t3:
     treated as read-only.
 
 
-Following is the change from calc version 2.10.1t21 to 2.10.2t0:
+The following are the changes from calc version 2.10.1t21 to 2.10.2t0:
 
     Bumped patch level 2.10.2t0 in honor of having help files for
     all builtin functions.  Beta release will happen at the end of
@@ -3277,7 +3284,7 @@ Following is the change from calc version 2.10.1t21 to 2.10.2t0:
 
     Fewer items listed in BUGS due to a number of bug fixes.
 
-    Less todo in the help/todo file because more has already been done.  :-)
+    Less todo in the help/todo file because more has already been done.	 :-)
 
     All builtin functions have help files!  While a number need cleanup
     and some of the LIMITS, LIBRARY and SEE ALSO sections need fixing
@@ -3351,7 +3358,7 @@ Following is the change from calc version 2.10.1t21 to 2.10.2t0:
 	mat D[] = { }
 
 
-Following is the change from calc version 2.10.1t20 to 2.10.1t20:
+The following are the changes from calc version 2.10.1t20 to 2.10.1t20:
 
     Changes made in preparation for Blum Blum Shub random number generator.
 
@@ -3364,7 +3371,7 @@ Following is the change from calc version 2.10.1t20 to 2.10.1t20:
 	sometimes lost rather than added to the appropriate carry.
 
     A new function zredcmodinv(ZVALUE z, ZVALUE *res) has been defined for
-    evaluating rp->inv in zredcalloc().  <ernie@neumann.une.edu.au>
+    evaluating rp->inv in zredcalloc().	 <ernie@neumann.une.edu.au>
 
     New functions zmod5(ZVALUE *zp) and zmod6(ZVALUE z, ZVALUE *res) have
     been defined to give O(N^1.585)-runtime evaluation of z % m for
@@ -3415,20 +3422,20 @@ Following is the change from calc version 2.10.1t20 to 2.10.1t20:
 
     Changed zprimetest() so that skip in ptest(n, count, skip)
     determines the way bases for the tests are selected.  Neg values of
-    n are treated differently.   When considering factorization,
+    n are treated differently.	 When considering factorization,
     primeness, etc. one is concerned with equivalence classes which for
     the rational integers are {0}, {-1, 1}, {-2, 2}, etc.  To refer to
     an equivalence class users may use any of its elements but when
     returning a value for a factor the computer normally gives the
     non-negative member.  The same sort of thing happens with integers
     modulo an integer, with fractions, etc., etc.  E.g. users may refer
-    to 3/4 as 6/8 or 9/12, etc.  A simple summary of the way negative n
+    to 3/4 as 6/8 or 9/12, etc.	 A simple summary of the way negative n
     is treated is "the sign is ignored". E.g. isprime(-97) and
     nextprime(-97) now return the same as isprime(97) and nextprime(97).
     <ernie@neumann.une.edu.au>
 
 
-Following is the change from calc version 2.10.1t11 to 2.10.1t19:
+The following are the changes from calc version 2.10.1t11 to 2.10.1t19:
 
     Added many more regression tests to lib/regress.cal.  Some
     due to <ernie@neumann.une.edu.au>.
@@ -3436,7 +3443,7 @@ Following is the change from calc version 2.10.1t11 to 2.10.1t19:
     Added many help files, most due to <ernie@neumann.une.edu.au>.
 
     Fixed exp() and ln() so that when they return a complex value with a
-    zero imaginary component, isreal() is true.  <ernie@neumann.une.edu.au>
+    zero imaginary component, isreal() is true.	 <ernie@neumann.une.edu.au>
 
     Fixed cast problem in byteswap.c.  <ernie@neumann.une.edu.au>
 
@@ -3462,7 +3469,7 @@ Following is the change from calc version 2.10.1t11 to 2.10.1t19:
 
     Added the CONFIG type; a structure containing all of the configuration
     values under the control of config().  Added V_CONFIG data type.
-    The call config("all") returns a V_CONFIG.  One may now save/restore
+    The call config("all") returns a V_CONFIG.	One may now save/restore
     the configuration state as follows:
 
 	x = config("all")
@@ -3508,7 +3515,7 @@ Following is the change from calc version 2.10.1t11 to 2.10.1t19:
 	display		10
 	epsilon		1e-10
 	quo		0
-	outround        24
+	outround	24
 	leadzero	1
 	fullzero	1
 	prompt		"; "		(allows full line cut/paste)
@@ -3560,9 +3567,9 @@ Following is the change from calc version 2.10.1t11 to 2.10.1t19:
 	}
 
     The ploy() function can take a list of coefficients.  See
-    the help/poly file.  Added poly.c.  <ernie@neumann.une.edu.au>
+    the help/poly file.	 Added poly.c.	<ernie@neumann.une.edu.au>
 
-    Fixes and performance improvemtns to det().  <ernie@neumann.une.edu.au>
+    Fixes and performance improvemtns to det().	 <ernie@neumann.une.edu.au>
 
     Renamed atoq() and atoz() to str2q() and str2z() to avoid conflicts
     with libc function names.
@@ -3573,9 +3580,9 @@ Following is the change from calc version 2.10.1t11 to 2.10.1t19:
     long long or with LONGLONG_BITS=0.
 
     Added error() and iserror() to generate a value of a given error type.
-    See help/error for details.  <ernie@neumann.une.edu.au>
+    See help/error for details.	 <ernie@neumann.une.edu.au>
 
-    Added singular forms of help files.  For example one can now get
+    Added singular forms of help files.	 For example one can now get
     help for binding, bug, change, errorcode and type.
 
     The builtin mmin(x, md) has been changed to return the same as
@@ -3585,10 +3592,10 @@ Following is the change from calc version 2.10.1t11 to 2.10.1t19:
     <ernie@neumann.une.edu.au>
 
     The builtin avg(x_1, x_2, ...) has been changed to accept list-valued
-    arguments:  a list x_i contributes its elements to the list of items to
+    arguments:	a list x_i contributes its elements to the list of items to
     be averaged.  E.g. avg(list(1,2,list(3,4)),5) is treated as if it were
     avg(1,2,3,4,5).  If an error value is encountered in the items to be
-    averaged, the first such value is returned.  If the number of items to be
+    averaged, the first such value is returned.	 If the number of items to be
     averaged is zero, the null value is returned.  <ernie@neumann.une.edu.au>
 
     The builtin hmean(x_1, x_2, ...) has been changed to admit types
@@ -3605,7 +3612,7 @@ Following is the change from calc version 2.10.1t11 to 2.10.1t19:
     Calc used to accept with no warning or error message, gcdrem(0,2) or
     generally gcdrem(0,y) for any y with abs(y) > 1, but then went into an
     infinite loop.  This has been fixed by never calling zfacrem() with zero x.
-    Both frem(x,y) and gcdrem(x,y) now reject y = -1, 0 or 1 as errors.  For
+    Both frem(x,y) and gcdrem(x,y) now reject y = -1, 0 or 1 as errors.	 For
     nonzero x, and y == -1 or 1, defining frem(x,y) and gcdrem(x,y) to equal
     abs(x) is almost as natural as defining x^0 to be 1.  Similarly, if x is
     not zero then gcdrem(x,0) == 1.
@@ -3628,7 +3635,7 @@ Following is the change from calc version 2.10.1t11 to 2.10.1t19:
     Ha Lam <hl@kuhep5.phsx.ukans.edu>
 
 
-Following is the change from calc version 2.10.0t13 to 2.10.1t10:
+The following are the changes from calc version 2.10.0t13 to 2.10.1t10:
 
     Added SB8, USB8, SB16, USB16, SB32, USB32 typedefs, determined by
     longbits and declared in longbits.h, to deal with 8, 16 and 32 bit
@@ -3650,7 +3657,7 @@ Following is the change from calc version 2.10.0t13 to 2.10.1t10:
     and if HAVE_LONGLONG, in longbits.h if it is needed.  The only place
     were a long long constant might be used is in longlong.c.  Any
     long long constants, if HAVE_LONGLONG, are hidden under the U(x) and
-    L(x) macros on longbits.h.  And of course, if you don't have long long,
+    L(x) macros on longbits.h.	And of course, if you don't have long long,
     then HAVE_LONGLONG will NOT be defined and long long's will not be used.
 
     The longlong.h file is no longer directly used by the main calc source.
@@ -3675,7 +3682,7 @@ Following is the change from calc version 2.10.0t13 to 2.10.1t10:
     the nonprincipal root rather than the principal value.
 
     If commands are given on the command line, leading tabs are not
-    printed in output.  Giving a command on the command line implies
+    printed in output.	Giving a command on the command line implies
     that config("tab",0) was given.
 
     Pipe processing is enabled by use of -p.  For example:
@@ -3745,7 +3752,8 @@ Following is the change from calc version 2.10.0t13 to 2.10.1t10:
     digits or bits rather than places, e.g. round(.00238, 2, 32)
     returns .0023, round(.00238, 2, 56) returns .0024.
 
-Following is the change from calc version 2.9.3t11 to 2.10.0t12:
+
+The following are the changes from calc version 2.9.3t11 to 2.10.0t12:
 
     The default ${LIBDIR}/bindings CALCBINDINGS uses ^D for editing.
     The alternate CALCBINDINGS ${LIBDIR}/altbind uses ^D for EOF.
@@ -3782,11 +3790,11 @@ Following is the change from calc version 2.9.3t11 to 2.10.0t12:
     stderr is re-directed to a non-file by some test suite.
 
     Changed how <stdarg.h>, <varags.h> or simulate stdarg is determined.
-    Changed how vsprintf() vs sprintf() is determined.  The args.h file
+    Changed how vsprintf() vs sprintf() is determined.	The args.h file
     is created by Makefile to test which combination works.  Setting
     VARARG and/or HAVE_VSPRINTF in the Makefile will alter these tests
     and direct a specific combination to be used.  Removed have_vs.c,
-    std_arg.h and try_stdarg.c.  Added have_stdvs.c and have_varvs.c.
+    std_arg.h and try_stdarg.c.	 Added have_stdvs.c and have_varvs.c.
 
     Added 3rd optional arg to round(), bround(), appr() to specify the type of
     rounding to be used.
@@ -3799,7 +3807,8 @@ Following is the change from calc version 2.9.3t11 to 2.10.0t12:
     to provide a more extensive test suite for some builtin numeric
     functions.
 
-Following is the change from calc version 2.9.3t9.2+ to 2.9.3t10:
+
+The following are the changes from calc version 2.9.3t9.2+ to 2.9.3t10:
 
     Added many help files for builtin functions and some symbols.
     More help files are needed, see help/todo.
@@ -3828,8 +3837,8 @@ Following is the change from calc version 2.9.3t9.2+ to 2.9.3t10:
 
     Fixed bug that caused:
 
-	global a,b,c 		(newline with no semicolon)
-        read test.cal
+	global a,b,c		(newline with no semicolon)
+	read test.cal
 
     the read command to not be recognized.
 
@@ -3902,7 +3911,8 @@ Following is the change from calc version 2.9.3t9.2+ to 2.9.3t10:
 	{
 	}
 
-Following is the change from calc version 2.9.3t8 to 2.9.3t9.2:
+
+The following are the changes from calc version 2.9.3t8 to 2.9.3t9.2:
 
     Use of the macro zisleone(z) has been clarified.  The zisleone(z) macro
     tests if z <= 1.  The macro zisabsleone(z) tests of z is 1, 0 or -1.
@@ -3931,14 +3941,14 @@ Following is the change from calc version 2.9.3t8 to 2.9.3t9.2:
     The second ptest() argument, which is now optional, defaults to 1.
     This ptest(x) is the same as ptest(x,1).
 
-    Added an optional 3rd argument to ptest().  The 3rd arg tells how many
+    Added an optional 3rd argument to ptest().	The 3rd arg tells how many
     tests to skip.  Thus ptest(a,10) performs the same probabilistic
     tests as ptest(a,3) and ptest(a,7,3).
 
     The ptest() builtin by default will determine if a value is divisible
-    by a trivial prime.  Thus, ptest(a,0) will only perform a quick trivial
+    by a trivial prime.	 Thus, ptest(a,0) will only perform a quick trivial
     factor check.  If the test count is < 0, then this trivial factor check
-    is omitted.  Thus ptest(a,10) performs the same amount of work as
+    is omitted.	 Thus ptest(a,10) performs the same amount of work as
     ptest(a,3) and ptest(a,-7,3) and the same amount of work as
     ptest(a,-3) and ptest(a,7,3).
 
@@ -3949,7 +3959,7 @@ Following is the change from calc version 2.9.3t8 to 2.9.3t9.2:
 
     Added nextprime(x) and and prevprime(x) return the next and
     previous primes with respect to x respectively.  As of this
-    release, x must be < 2^32.  With one argument, they will return
+    release, x must be < 2^32.	With one argument, they will return
     an error if x is out of range.  With two arguments, they will
     not generate an error but instead will return y.
 
@@ -3981,17 +3991,17 @@ Following is the change from calc version 2.9.3t8 to 2.9.3t9.2:
     instead will return y.
 
     Added pix(x) to return the number of primes <= x.  As of this
-    release, x must be < 2^32.  With one argument, pix(x) will
+    release, x must be < 2^32.	With one argument, pix(x) will
     return an error if x is out of range.  With two arguments,
     pix(x,y) will not generate an error but instead will return y.
 
-    Fixed the way *.h files are formed.  Each file guards against
+    Fixed the way *.h files are formed.	 Each file guards against
     multiple inclusion.
 
     Fixed numeric I/O on 64 bit systems.  Previously the print and
     constant conversion routines assumed a base of 2^16.
 
-    Added support for 'long long' type.  If the Makefile is setup
+    Added support for 'long long' type.	 If the Makefile is setup
     with 'LONGLONG_BITS=', then it will attempt to detect support
     for the 'long long' type.  If the Makefile is setup with
     'LONGLONG_BITS=64', then a 64 bit 'long long' is assumed.
@@ -4007,7 +4017,7 @@ Following is the change from calc version 2.9.3t8 to 2.9.3t9.2:
     Fixed btrunc() limit.
 
     The ord("string") function can now take a string of multiple
-    characters.  However it still will only operate on the first
+    characters.	 However it still will only operate on the first
     character.
 
     Renamed stdarg.h to std_arg.h and endian.h endian_calc.h to
@@ -4017,15 +4027,15 @@ Following is the change from calc version 2.9.3t8 to 2.9.3t9.2:
     Added additive 55 shuffle generator functions rand(), randbits()
     and its seed function srand().  Calling rand(a,b) produces a
     random value over the open half interval [a,b).  With one arg,
-    rand(a) is equivalent to rand(0,a).  Calling rand() produces
+    rand(a) is equivalent to rand(0,a).	 Calling rand() produces
     64 random bits and is equivalent to rand(0,2^64).
 
     Calling randbit(x>0) produces x random bits.  Calling randbit(skip<0)
     skips -skip bits and returns -skip.
 
-    The srand() function will return the current state.  The call
-    srand(0) returns the initial state.  Calling srand(x), where
-    x > 0 will seed the generator to a different state.  Calling
+    The srand() function will return the current state.	 The call
+    srand(0) returns the initial state.	 Calling srand(x), where
+    x > 0 will seed the generator to a different state.	 Calling
     srand(mat55) (mat55 is a matrix of integers at least 55 elements long)
     will seed the internal table with the matrix elements mod 2^64.
     Finally calling srand(state) where state is a generator state
@@ -4077,7 +4087,7 @@ Following is the change from calc version 2.9.3t8 to 2.9.3t9.2:
 		a = 3
 		++(b = a)		(a == 3, b == 4)
 		++++a			(a == 5)
-        	(++a)++ == 6		(a == 7)
+		(++a)++ == 6		(a == 7)
 		(++a) *= b		(a == 32, b == 4)
 
     Fixed a bug related to calling epsilon(variable) thanks to ernie.
@@ -4086,21 +4096,21 @@ Following is the change from calc version 2.9.3t8 to 2.9.3t9.2:
 
     Some compilers do not support the const type.  The file have_const.h,
     which is built from have_const.c will determine if we can or should
-    use const.  See the Makefile for details.
+    use const.	See the Makefile for details.
 
     Some systems do not have uid_t.  The file have_uid_t.h, which is
     built from have_uid_t.c will determine if we can or should depend
-    on uid_t being typefed by the system include files.  See the Makefile
+    on uid_t being typefed by the system include files.	 See the Makefile
     for details.
 
     Some systems do not have memcpy(), memset() and strchr().  The
     file have_newstr.h, which is built from have_newstr.c will
     determine if we can or should depend libc providing these
-    functions.  See the Makefile for details.
+    functions.	See the Makefile for details.
 
     The Makefile symbol DONT_HAVE_VSPRINTF is now called HAVE_VSPRINTF.
     The file have_vs.h, which is built from have_vs.c will determine if
-    we can or should depend libc providing vsprintf().  See the Makefile
+    we can or should depend libc providing vsprintf().	See the Makefile
     for details.
 
     Removed UID_T and OLD_BSD symbols from the Makefile.
@@ -4110,7 +4120,8 @@ Following is the change from calc version 2.9.3t8 to 2.9.3t9.2:
 
     Fixed bug where reserved keyword used as symbol name caused a core dump.
 
-Following is the change from calc version 2.9.3t7 to 2.9.3t7:
+
+The following are the changes from calc version 2.9.3t7 to 2.9.3t7:
 
     The 'show' command by itself will issue an error message
     that will remind one of the possible show arguments.
@@ -4143,7 +4154,7 @@ Following is the change from calc version 2.9.3t7 to 2.9.3t7:
     digit, ), matrix operations (size, index, creation), scaling,
     shifting, rounding and computing a Fibonacci number is 2^31.
     For example, one cannot raise a number by a power >= 2^31.
-    One cannot test for a bit position >= 2^31.  One cannot round
+    One cannot test for a bit position >= 2^31.	 One cannot round
     a value to 2^31 decimal digit places.  One cannot compute
     the Fibonacci number F(2^31).
 
@@ -4157,12 +4168,13 @@ Following is the change from calc version 2.9.3t7 to 2.9.3t7:
     Added utoz(), ztou() to zmath.c, and utoq(), qtou() to qmath.c
     in preparation for 2.9.3t9 mods.
 
-Following is the change from calc version 2.9.2 to 2.9.3t7:
+
+The following are the changes from calc version 2.9.2 to 2.9.3t7:
 
     Calc can now compile on OSF/1, SGI and IBM RS6000 systems.
 
     A number of systems that have both <varargs.h> and <stdarg.h> do
-    not correctly implement both types.  On some System V, MIPS and DEC
+    not correctly implement both types.	 On some System V, MIPS and DEC
     systems, vsprintf() and <stdarg.h> do not mix.  While calc will
     pass the regression test, use of undefined variables will cause
     problems.  The Makefile has been modified to look for this problem
@@ -4175,20 +4187,20 @@ Following is the change from calc version 2.9.2 to 2.9.3t7:
     The library script nextprim.cal is now a link to nextprime.cal.
     The lib/Makefile will take care of this link and install.
 
-    The show command now takes singular forms.  For example, the
+    The show command now takes singular forms.	For example, the
     command 'show builtin' does the same as 'show builtins'.  This
     allows show to match the historic singular names used in
     the help system.
 
     Synced 'show builtin' output with 'help builtin' output.
 
-    Fixed the ilog2() builtin.  Previously ilog2(2^-20) returned
+    Fixed the ilog2() builtin.	Previously ilog2(2^-20) returned
     -21 instead of -20.
 
-    The internal function qprecision() has been fixed.  The changes
+    The internal function qprecision() has been fixed.	The changes
     ensure that for any e for which 0 < e <= 1:
 
-	1/4 < sup(abs(appr(x,e) - x))/e  <= 1/2.
+	1/4 < sup(abs(appr(x,e) - x))/e	 <= 1/2.
 
     Here 'sup' denotes the supremum or least upper bound over values of x.
     Previousld calc did: 1/4 <= sup(abs(appr(x,e) - x))/e  < 1.
@@ -4226,7 +4238,7 @@ Following is the change from calc version 2.9.2 to 2.9.3t7:
     work-a-rounds involved initializing or making static, certain
     local variables.
 
-    The cryrand.cal library has been improved.  Due to the way
+    The cryrand.cal library has been improved.	Due to the way
     the initial quadratic residues are selected, the random numbers
     produced differ from previous versions.
 
@@ -4245,7 +4257,7 @@ Following is the change from calc version 2.9.2 to 2.9.3t7:
     The value atan2(0,0) now returns 0 value in conformance with
     the 4.3BSD ANSI/IEEE 754-1985 math library.
 
-    For all values of x, x^0 yields 1.  The major change here is
+    For all values of x, x^0 yields 1.	The major change here is
     that 0^0 yields 1 instead of an error.
 
     Fixed gcd() bug that caused gcd(2,3,1/2) to ignore the 1/2 arg.
@@ -4275,10 +4287,11 @@ Following is the change from calc version 2.9.2 to 2.9.3t7:
 
     The regression test code is now more extensive.
 
-    Updated the help/todo list.  A BUGS file was added.  Volunteers are
+    Updated the help/todo list.	 A BUGS file was added.	 Volunteers are
     welcome to send in patches!
 
-Following is the change from calc version 2.9.1 to 2.9.1:
+
+The following are the changes from calc version 2.9.1 to 2.9.1:
 
     Fixed floor() for values -1 < x < 0.
 
@@ -4292,12 +4305,14 @@ Following is the change from calc version 2.9.1 to 2.9.1:
 
     Added more regression test code.
 
-Following is the change from calc version 2.9.0 to 2.9.0:
+
+The following are the changes from calc version 2.9.0 to 2.9.0:
 
     A major bug was fixed in subtracting two numbers when the first
     number was zero.  The problem caused wrong answers and core dumps.
 
-Following is a list of visible changes to calc from version 1.27.0 to 2.8.0:
+
+The following are the changes from calc version 1.27.0 to 2.8.0:
 
     Full prototypes have been provided for all C functions, and are used
     if calc is compiled with an ANSI compiler.
@@ -4337,7 +4352,7 @@ Following is a list of visible changes to calc from version 1.27.0 to 2.8.0:
     statement, to immediately define a variable as an object.
 
     Object definitions can be repeated as long as they are exactly the same
-    as the previous definition.  This allows the rereading of files which
+    as the previous definition.	 This allows the rereading of files which
     happen to define objects.
 
     The integer, rational, and complex routines have been made into a
@@ -4369,15 +4384,15 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
     There is a new emacs-like command line editing and edit history
     feature.  The old history mechanism has been removed.  The key
     bindings for the new editing commands are slightly configurable
-    since they are read in from an initialization file.  This file is
+    since they are read in from an initialization file.	 This file is
     usually called /usr/lib/calc/bindings, but can be changed by the
-    CALCBINDINGS environment variable.  All editing code is
+    CALCBINDINGS environment variable.	All editing code is
     self-contained in the new files hist.c and hist.h, which can be
     easily extracted and used in other programs.
 
     Two new library files have been added: chrem.cal and cryrand.cal.
     The first of these solves the chinese remainder problem for a set
-    of modulos and remainders.  The second of these implements several
+    of modulos and remainders.	The second of these implements several
     very good random number generators for large numbers.
 
     A small bug which allowed division by zero was fixed.

@@ -19,10 +19,10 @@
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  *
- *      Landon Curt Noll
- *      http://reality.sgi.com/chongo/
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo/
  *
- *      chongo <was here> /\../\
+ *	chongo <was here> /\../\
  */
 
 /*
@@ -57,10 +57,10 @@ define seedrandom(seed1, seed2, size, trials)
 {
 	local p;		/* first Blum prime */
 	local fp;		/* prime co-factor of p-1 */
-	local sp;	 	/* min bit size of p */
+	local sp;		/* min bit size of p */
 	local q;		/* second Blum prime */
 	local fq;		/* prime co-factor of q-1 */
-	local sq;	 	/* min bit size of q */
+	local sq;		/* min bit size of q */
 	local n;		/* Blum modulus */
 	local binsize;		/* smallest power of 2 > n=p*q */
 	local r;		/* initial quadratic residue */
@@ -135,7 +135,7 @@ define seedrandom(seed1, seed2, size, trials)
 	 * seed the Blum generator
 	 */
 	n = p*q;				/* the Blum modulus */
- 	binsize = highbit(n)+1;			/* smallest power of 2 > p*q */
+	binsize = highbit(n)+1;			/* smallest power of 2 > p*q */
 	r = pmod(rand(1<<ceil(binsize*4/5), 1<<(binsize-2)), 2, n);
 	if (config("lib_debug") & 3) {
 		print "/* seed quadratic residue */ r=", r;

@@ -108,8 +108,7 @@ qquomod(NUMBER *q1, NUMBER *q2, NUMBER **retqdiv, NUMBER **retqmod)
 	if (qiszero(q2)) {			/* zero modulus case */
 		qq = qlink(&_qzero_);
 		qm = qlink(q1);
-	}
-	else if (qisint(q1) && qisint(q2)) {	/* integer case */
+	} else if (qisint(q1) && qisint(q2)) {	/* integer case */
 		zdiv(q1->num, q2->num, &tmp1, &tmp2, conf->quomod);
 		if (ziszero(tmp1)) {
 			zfree(tmp1);
@@ -127,8 +126,7 @@ qquomod(NUMBER *q1, NUMBER *q2, NUMBER **retqdiv, NUMBER **retqmod)
 				qm->num = tmp2;
 			}
 		}
-	}
-	else {					/* fractional case */
+	} else {					/* fractional case */
 		zmul(q1->num, q2->den, &tmp1);
 		zmul(q2->num, q1->den, &tmp2);
 		zdiv(tmp1, tmp2, &tmp3, &tmp4, conf->quomod);
@@ -158,118 +156,6 @@ qquomod(NUMBER *q1, NUMBER *q2, NUMBER **retqdiv, NUMBER **retqmod)
 	*retqmod = qm;
 	return !qiszero(qm);
 }
-
-
-#if 0
-/*
- * Return the product of two integers modulo a third integer.
- * The result is in the range 0 to q3 - 1 inclusive.
- *	q4 = (q1 * q2) mod q3.
- */
-NUMBER *
-qmulmod(NUMBER *q1, NUMBER *q2, NUMBER *q3)
-{
-	NUMBER *q;
-
-	if (qisneg(q3) || qiszero(q3))
-		math_error("Non-positive modulus");
-	if (qisfrac(q1) || qisfrac(q2) || qisfrac(q3))
-		math_error("Non-integers for qmulmod");
-	if (qiszero(q1) || qiszero(q2) || qisunit(q3))
-		return qlink(&_qzero_);
-	q = qalloc();
-	zmulmod(q1->num, q2->num, q3->num, &q->num);
-	return q;
-}
-
-
-/*
- * Return the square of an integer modulo another integer.
- * The result is in the range 0 to q2 - 1 inclusive.
- *	q2 = (q1^2) mod q2.
- */
-NUMBER *
-qsquaremod(NUMBER *q1, NUMBER *q2)
-{
-	NUMBER *q;
-
-	if (qisneg(q2) || qiszero(q2))
-		math_error("Non-positive modulus");
-	if (qisfrac(q1) || qisfrac(q2))
-		math_error("Non-integers for qsquaremod");
-	if (qiszero(q1) || qisunit(q2))
-		return qlink(&_qzero_);
-	if (qisunit(q1))
-		return qlink(&_qone_);
-	q = qalloc();
-	zsquaremod(q1->num, q2->num, &q->num);
-	return q;
-}
-
-
-/*
- * Return the sum of two integers modulo a third integer.
- * The result is in the range 0 to q3 - 1 inclusive.
- *	q4 = (q1 + q2) mod q3.
- */
-NUMBER *
-qaddmod(NUMBER *q1, NUMBER *q2, NUMBER *q3)
-{
-	NUMBER *q;
-
-	if (qisneg(q3) || qiszero(q3))
-		math_error("Non-positive modulus");
-	if (qisfrac(q1) || qisfrac(q2) || qisfrac(q3))
-		math_error("Non-integers for qaddmod");
-	q = qalloc();
-	zaddmod(q1->num, q2->num, q3->num, &q->num);
-	return q;
-}
-
-
-/*
- * Return the difference of two integers modulo a third integer.
- * The result is in the range 0 to q3 - 1 inclusive.
- *	q4 = (q1 - q2) mod q3.
- */
-NUMBER *
-qsubmod(NUMBER *q1, NUMBER *q2, NUMBER *q3)
-{
-	NUMBER *q;
-
-	if (qisneg(q3) || qiszero(q3))
-		math_error("Non-positive modulus");
-	if (qisfrac(q1) || qisfrac(q2) || qisfrac(q3))
-		math_error("Non-integers for qsubmod");
-	if (q1 == q2)
-		return qlink(&_qzero_);
-	q = qalloc();
-	zsubmod(q1->num, q2->num, q3->num, &q->num);
-	return q;
-}
-
-
-/*
- * Return the negative of an integer modulo another integer.
- * The result is in the range 0 to q2 - 1 inclusive.
- *	q2 = (-q1) mod q2.
- */
-NUMBER *
-qnegmod(NUMBER *q1, NUMBER *q2)
-{
-	NUMBER *q;
-
-	if (qisneg(q2) || qiszero(q2))
-		math_error("Non-positive modulus");
-	if (qisfrac(q1) || qisfrac(q2))
-		math_error("Non-integers for qnegmod");
-	if (qiszero(q1) || qisunit(q2))
-		return qlink(&_qzero_);
-	q = qalloc();
-	znegmod(q1->num, q2->num, &q->num);
-	return q;
-}
-#endif
 
 
 /*
@@ -426,7 +312,7 @@ qredcpower(NUMBER *q1, NUMBER *q2, NUMBER *q3)
 /*
  * Search for and return the REDC information for the specified number.
  * The information is cached into a local table so that future calls
- * for this information will be quick.  If the table fills up, then
+ * for this information will be quick.	If the table fills up, then
  * the oldest cached entry is reused.
  *
  * given:
@@ -521,5 +407,3 @@ freeredcdata(void)
 		}
 	}
 }
-
-/* END CODE */

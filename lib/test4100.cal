@@ -48,7 +48,7 @@
  *
  */
 
-global defaultverbose = 1;      /* default verbose value */
+global defaultverbose = 1;	/* default verbose value */
 global err;
 
 /*

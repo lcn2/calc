@@ -21,7 +21,7 @@ Installing calc in 4 easy steps:
 
 	   The CALCBINDINGS is matter of personal taste.  As shipped
 	   the Makefile assumes a default quasi-emacs-like command
-	   line editor.  Changing CALCBINDINGS= altbind will cause ^D
+	   line editor.	 Changing CALCBINDINGS= altbind will cause ^D
 	   to end calc in a fashion similar to that of the bc(1) command.
 
 	   Set TOPDIR to be the place under which help files, calc,

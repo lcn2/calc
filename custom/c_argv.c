@@ -11,12 +11,12 @@
  * PERFORMANCE OF THIS SOFTWARE.
  *
  * Comments, suggestions, bug fixes and questions about these routines
- * are welcome.  Send EMail to the address given below.
+ * are welcome.	 Send EMail to the address given below.
  *
  * Happy bit twiddling,
  *
- *      Landon Curt Noll
- *      http://reality.sgi.com/chongo/
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo/
  *
  * chongo <was here> /\../\
  */
@@ -98,13 +98,13 @@ c_argv(char *name, int count, VALUE **vals)
 		case V_FILE:	/* opened file id */
 			type = "file";
 			break;
-		case V_RAND:    /* address of additive 55 random state */
+		case V_RAND:	/* address of additive 55 random state */
 			type = "rand_state";
 			break;
-		case V_RANDOM:  /* address of Blum random state */
+		case V_RANDOM:	/* address of Blum random state */
 			type = "random_state";
 			break;
-		case V_CONFIG:  /* configuration state */
+		case V_CONFIG:	/* configuration state */
 			type = "config_state";
 			break;
 		case V_HASH:	/* hash state */
@@ -115,7 +115,7 @@ c_argv(char *name, int count, VALUE **vals)
 			break;
 #if 0
 		/* XXX - V_OCTET is subject to change */
-		case V_OCTET: 	/* octet (unsigned char) */
+		case V_OCTET:	/* octet (unsigned char) */
 			type = "octet";
 			break;
 #endif

@@ -20,7 +20,7 @@ DESCRIPTION
     and other waitpid values will change the return value.
 
     On POSIX P1003.1 compliant systems, if cmd is empty then this function
-    will determine if the shell is executable.  If the shell is executable,
+    will determine if the shell is executable.	If the shell is executable,
     0 is returned otherwise non-zero is returned.
 
 

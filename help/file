@@ -6,7 +6,7 @@ Using files
     Some differences do occur, as will be explained here.
 
     Names of files are subject to ~ expansion just like the C or
-    Korn shell.  For example, the file name:
+    Korn shell.	 For example, the file name:
 
 	    ~/.rc.cal
 
@@ -19,8 +19,8 @@ Using files
 
     A file can be opened for either reading, writing, or appending.
     To do this, the 'fopen' function is used, which accepts a filename
-    and an open mode, both as strings.  You use 'r' for reading, 'w'
-    for writing, and 'a' for appending.  For example, to open the file
+    and an open mode, both as strings.	You use 'r' for reading, 'w'
+    for writing, and 'a' for appending.	 For example, to open the file
     'foo' for reading, the following could be used:
 
 	    fd = fopen('foo', 'r');
@@ -53,7 +53,7 @@ Using files
     The 'fclose' function is used to close a file which had been opened.
     When this is done, the file value associated with the file remains
     a file value, but appears 'closed', and cannot be used in further
-    file-related calls (except fclose) without causing errors.  This same
+    file-related calls (except fclose) without causing errors.	This same
     action occurs to all copies of the file value.  You do not need to
     explicitly close all the copies of a file value.  The 'fclose'
     function returns the numeric value of errno if there had been an
@@ -67,7 +67,7 @@ Using files
 		print "error #" : badfile : ":", errno(badfile);
 	    }
 
-    File values can be printed.  When this is done, the filename of the
+    File values can be printed.	 When this is done, the filename of the
     opened file is printed inside of quote marks.  If the file value had
     been closed, then the null string is printed.  If a file value is the
     result of a top-level expression, then in addition to the filename,
@@ -75,7 +75,7 @@ Using files
     status is also displayed.
 
     File values can be used inside of 'if' tests.  When this is done,
-    an opened file is TRUE, and a closed file is FALSE.  As an example
+    an opened file is TRUE, and a closed file is FALSE.	 As an example
     of this, the following loop will print the names of all the currently
     opened non-standard files with their indexes, and then close them:
 
@@ -89,9 +89,9 @@ Using files
     The functions to read from files are 'fgetline' and 'fgetc'.
     The 'fgetline' function accepts a file value, and returns the next
     input line from a file.  The line is returned as a string value, and
-    does not contain the end of line character.  Empty lines return the
+    does not contain the end of line character.	 Empty lines return the
     null string.  When the end of file is reached, fgetline returns the
-    null value.  (Note the distinction between a null string and a null
+    null value.	 (Note the distinction between a null string and a null
     value.)  If the line contained a numeric value, then the 'eval'
     function can then be used to convert the string to a numeric value.
     Care should be used when doing this, however, since eval will
@@ -103,7 +103,7 @@ Using files
     The 'printf' and 'fprintf' functions are used to print results to a
     file (which could be stdout or stderr).  The 'fprintf' function
     accepts a file variable, whereas the 'printf' function assumes the
-    use of 'files(1)' (stdout).  They both require a format string, which
+    use of 'files(1)' (stdout).	 They both require a format string, which
     is used in almost the same way as in normal C.  The differences come
     in the interpretation of values to be printed for various formats.
     Unlike in C, where an unmatched format type and value will cause

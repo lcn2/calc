@@ -90,7 +90,7 @@ DESCRIPTION
     so that num can be at most size(B) - ssi.
 
     For copying to a block B (named or unnamed), reallocation will be
-    required if dsi + num > sizeof(B).  (This will not be permitted if
+    required if dsi + num > sizeof(B).	(This will not be permitted if
     protect(B) has bit 4 set.)
 
     For copying from a file stream fs, num can be at most size(fs) - ssi.

@@ -480,7 +480,7 @@ define test2600(verbose, tnum)
 	for (i=0; i < 32; ++i) {
 		config("sqrt", i);
 		err += testsqrt(strcat(str(tnum++),": sqrt",str(i)), n*10,
-			        ep, verbose);
+				ep, verbose);
 	}
 	if (verbose > 1) {
 		if (err) {

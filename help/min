@@ -34,9 +34,9 @@ DESCRIPTION
     and returns a real-number value for any comparison that has to be made,
     min(x_1, x_2, ...) returns the value determined by min(x_1) = x_1,
     and succesively for later arguments, by the use of the equivalent of
-    min(a,b) = (a < b) ? a : b.  If the ordering determined by < is total,
+    min(a,b) = (a < b) ? a : b.	 If the ordering determined by < is total,
     min(x_1, ...) will be the minimum value among the arguments.  For a
-    preorder relation it may be one of several minimal values.  For other
+    preorder relation it may be one of several minimal values.	For other
     relations, it may be difficult to predict the result.
 
 EXAMPLE

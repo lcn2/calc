@@ -23,7 +23,7 @@
  * PERFORMANCE OF THIS SOFTWARE.
  *
  * Comments, suggestions, bug fixes and questions about these routines
- * are welcome.  Send EMail to the address given below.
+ * are welcome.	 Send EMail to the address given below.
  *
  * Happy bit twiddling,
  *
@@ -35,7 +35,7 @@
 
 
 #if !defined(__BLOCK_H__)
-#define	__BLOCK_H__
+#define __BLOCK_H__
 
 
 /*
@@ -139,8 +139,8 @@
  *		style of output = {
  *		    "line",	lines in blkbase with no spaces between octets
  *		    "string",	as one long line with no spaces between octets
- *		    "od_style",	position, spaces between octets
- *		    "hd_style"}	position, spaces between octets, chars on end
+ *		    "od_style", position, spaces between octets
+ *		    "hd_style"} position, spaces between octets, chars on end
  */
 struct block {
 	LEN blkchunk;	/* allocation chunk size */

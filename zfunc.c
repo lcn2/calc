@@ -37,7 +37,7 @@ zfact(ZVALUE z, ZVALUE *dest)
 	res = _one_;
 	/*
 	 * Multiply numbers together, but squeeze out all powers of two.
-	 * We will put them back in at the end.  Also collect multiple
+	 * We will put them back in at the end.	 Also collect multiple
 	 * numbers together until there is a risk of overflow.
 	 */
 	for (; n > 1; n--) {
@@ -458,7 +458,7 @@ ztenpow(long power, ZVALUE *res)
 BOOL
 zmodinv(ZVALUE u, ZVALUE v, ZVALUE *res)
 {
- 	FULL	q1, q2, ui3, vi3, uh, vh, A, B, C, D, T;
+	FULL	q1, q2, ui3, vi3, uh, vh, A, B, C, D, T;
 	ZVALUE	u2, u3, v2, v3, qz, tmp1, tmp2, tmp3;
 
 	v.sign = 0;
@@ -472,7 +472,7 @@ zmodinv(ZVALUE u, ZVALUE v, ZVALUE *res)
 
 	/*
 	 * Loop here while the size of the numbers remain above
-	 * the size of a HALF.  Throughout this loop u3 >= v3.
+	 * the size of a HALF.	Throughout this loop u3 >= v3.
 	 */
 	while ((u3.len > 1) && !ziszero(v3)) {
 		vh = 0;
@@ -481,11 +481,11 @@ zmodinv(ZVALUE u, ZVALUE v, ZVALUE *res)
 		if (v3.len == u3.len)
 			vh = v3.v[v3.len - 1];
 #else
- 		uh = (((FULL) u3.v[u3.len - 1]) << BASEB) + u3.v[u3.len - 2];
- 		if ((v3.len + 1) >= u3.len)
- 			vh = v3.v[v3.len - 1];
-  		if (v3.len == u3.len)
- 			vh = (vh << BASEB) + v3.v[v3.len - 2];
+		uh = (((FULL) u3.v[u3.len - 1]) << BASEB) + u3.v[u3.len - 2];
+		if ((v3.len + 1) >= u3.len)
+			vh = v3.v[v3.len - 1];
+		if (v3.len == u3.len)
+			vh = (vh << BASEB) + v3.v[v3.len - 2];
 #endif
 		A = 1;
 		B = 0;
@@ -611,61 +611,6 @@ zmodinv(ZVALUE u, ZVALUE v, ZVALUE *res)
 }
 
 
-#if 0
-/*
- * Approximate the quotient of two integers by another set of smaller
- * integers.  This uses continued fractions to determine the smaller set.
- */
-void
-zapprox(ZVALUE z1, ZVALUE z2, ZVALUE *res1, ZVALUE *res2)
-{
-	int sign;
-	ZVALUE u1, v1, u3, v3, q, t1, t2, t3;
-
-	sign = ((z1.sign != 0) ^ (z2.sign != 0));
-	z1.sign = 0;
-	z2.sign = 0;
-	v3 = z2;
-	u3 = z1;
-	u1 = _one_;
-	v1 = _zero_;
-	while (!ziszero(v3)) {
-		zdiv(u3, v3, &q, &t1, 0);
-		zmul(v1, q, &t2);
-		zsub(u1, t2, &t3);
-		zfree(q);
-		zfree(t2);
-		zfree(u1);
-		if ((u3.v != z1.v) && (u3.v != z2.v))
-			zfree(u3);
-		u1 = v1;
-		u3 = v3;
-		v1 = t3;
-		v3 = t1;
-	}
-	if (!zisunit(u3)) {
-		math_error("Non-relativly prime numbers for approx");
-		/*NOTREACHED*/
-	}
-	if ((u3.v != z1.v) && (u3.v != z2.v))
-		zfree(u3);
-	if ((v3.v != z1.v) && (v3.v != z2.v))
-		zfree(v3);
-	zfree(v1);
-	zmul(u1, z1, &t1);
-	zsub(t1, _one_, &t2);
-	zfree(t1);
-	zquo(t2, z2, &t1, 0);
-	zfree(t2);
-	u1.sign = (BOOL)sign;
-	t1.sign = 0;
-	*res1 = t1;
-	*res2 = u1;
-}
-#endif
-
-
-
 /*
  * Compute the greatest common divisor of a pair of integers.
  */
@@ -754,7 +699,7 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 		b0 = A;
 		m = 1;
 		a0 = B;
-    		if (m == 1) {				/* a has one digit */
+		if (m == 1) {				/* a has one digit */
 			v = *a0;
 			if (v > 1) {			/* Euclid's algorithm */
 				b = b0 + n;
@@ -784,8 +729,9 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 				*a++ = (HALF) f;
 			}
 			if (f >>= BASEB) {len++; *a = (HALF) f;}
+		} else {
+			memcpy(gcd.v + o, b0, n * sizeof(HALF));
 		}
-		else memcpy(gcd.v + o, b0, n * sizeof(HALF));
 		gcd.len = len;
 		gcd.sign = 0;
 		freeh(A);
@@ -795,7 +741,7 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	}
 
 	u = B[n-1];				/* Bit count for b */
-	k = (n  - 1) * BASEB;
+	k = (n	- 1) * BASEB;
 	while (u >>= 1) k++;
 
 	needw = TRUE;
@@ -880,7 +826,7 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 				m--;
 				a0++;
 			}
-			if (f) { 		/* a - g * b < 0 */
+			if (f) {		/* a - g * b < 0 */
 				while (m > 1 && a0[m-1] == BASE1) m--;
 				*a0 = - *a0;
 				a = a0;
@@ -962,9 +908,12 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 			*a++ = (HALF) f;
 			f >>= BASEB;
 		}
-		if (f) {len++; *a = (HALF) f;}
+		if (f) {
+			len++; *a = (HALF) f;
+		}
+	} else {
+		memcpy(gcd.v + o, b0, n * sizeof(HALF));
 	}
-	else memcpy(gcd.v + o, b0, n * sizeof(HALF));
 	gcd.len = len;
 	gcd.sign = 0;
 	freeh(A);
@@ -1002,11 +951,11 @@ zrelprime(ZVALUE z1, ZVALUE z2)
 
 	z1.sign = 0;
 	z2.sign = 0;
-	if (ziseven(z1) && ziseven(z2))	/* false if both even */
+	if (ziseven(z1) && ziseven(z2)) /* false if both even */
 		return FALSE;
-	if (zisunit(z1) || zisunit(z2))	/* true if either is a unit */
+	if (zisunit(z1) || zisunit(z2)) /* true if either is a unit */
 		return TRUE;
-	if (ziszero(z1) || ziszero(z2))	/* false if either is zero */
+	if (ziszero(z1) || ziszero(z2)) /* false if either is zero */
 		return FALSE;
 	if (zistwo(z1) || zistwo(z2))	/* true if either is two */
 		return TRUE;
@@ -1098,7 +1047,7 @@ zlog(ZVALUE z1, ZVALUE z2)
 	worth = 1;
 	zp = &squares[0];
 	*zp = z2;
-	while (((zp->len * 2) - 1) <= z1.len) {	/* while square not too large */
+	while (((zp->len * 2) - 1) <= z1.len) { /* while square not too large */
 		zsquare(*zp, zp + 1);
 		zp++;
 		worth *= 2;
@@ -1116,7 +1065,7 @@ zlog(ZVALUE z1, ZVALUE z2)
 	 * more time.
 	 *
 	 * We could stop the loop with just zp >= squares, but stopping
-	 * short and running the loop one last time manually helps make 
+	 * short and running the loop one last time manually helps make
 	 * code checkers such as insure happy.
 	 */
 	for (; zp > squares; zp--, worth /= 2) {
@@ -1196,7 +1145,7 @@ zlog10(ZVALUE z)
 	 * more time.
 	 *
 	 * We could stop the loop with just zp >= _tenpowers_, but stopping
-	 * short and running the loop one last time manually helps make 
+	 * short and running the loop one last time manually helps make
 	 * code checkers such as insure happy.
 	 */
 	for (; zp > _tenpowers_; zp--, worth /= 2) {
@@ -1315,7 +1264,7 @@ zfacrem(ZVALUE z1, ZVALUE z2, ZVALUE *rem)
 	worth = 1;
 	zp = &squares[0];
 	*zp = z2;
-	while (((zp->len * 2) - 1) <= z1.len) {	/* while square not too large */
+	while (((zp->len * 2) - 1) <= z1.len) { /* while square not too large */
 		zsquare(*zp, &temp1);
 		zdiv(z1, temp1, &temp2, &temp3, 0);
 		if (!ziszero(temp3)) {
@@ -1342,7 +1291,7 @@ zfacrem(ZVALUE z1, ZVALUE z2, ZVALUE *rem)
 	 * more time.
 	 *
 	 * We could stop the loop with just zp >= squares, but stopping
-	 * short and running the loop one last time manually helps make 
+	 * short and running the loop one last time manually helps make
 	 * code checkers such as insure happy.
 	 */
 	for (; zp > squares; zp--, worth /= 2) {
@@ -1450,7 +1399,7 @@ zdigits(ZVALUE z1)
 
 /*
  * Return the single digit at the specified decimal place of a number,
- * where 0 means the rightmost digit.  Example:  zdigit(1234, 1) = 3.
+ * where 0 means the rightmost digit.  Example:	 zdigit(1234, 1) = 3.
  */
 long
 zdigit(ZVALUE z1, long n)
@@ -1482,8 +1431,8 @@ zdigit(ZVALUE z1, long n)
  * z is to be a nonnegative integer
  * If z is the square of a integer stores at dest the square root of z;
  *	otherwise stores at z an integer differing from the square root
- *	by less than 1.  Returns the sign of the true square root minus
- *	the calculated integer.  Type of rounding is determined by
+ *	by less than 1.	 Returns the sign of the true square root minus
+ *	the calculated integer.	 Type of rounding is determined by
  *	rnd as follows: rnd = 0 gives round down, rnd = 1
  *	rounds up, rnd = 8 rounds to even integer, rnd = 9 rounds to odd
  *	integer, rnd = 16 rounds to nearest integer.
@@ -1535,8 +1484,7 @@ zsqrt(ZVALUE z, ZVALUE *dest, long rnd)
 			f = A[1];
 		g = (FULL) A[0] << (j + BASEB);
 		d = e = topbit = (FULL)1 << (k - 1);
-	}
-	else {
+	} else {
 		if (j)
 			f = (FULL) A[m-1] << (j + BASEB) | (FULL) A[m-2] << j |
 				A[m-3] >> k;
@@ -1609,8 +1557,7 @@ zsqrt(ZVALUE z, ZVALUE *dest, long rnd)
 		A[m1 - 4] = (HALF)f;
 		m = m1 - 2;
 		k1 = k + 1;
-	}
-	else {
+	} else {
 		A[m1 - 1] = 1;
 		A[m1 - 2] = (HALF)(e >> (BASEB - 1));
 		A[m1 - 3] = ((HALF)(e << 1) | (HALF)(s > 0));
@@ -1667,9 +1614,9 @@ zsqrt(ZVALUE z, ZVALUE *dest, long rnd)
 					a[1] |= 1;
 			}
 			*a = ((HALF)(x << 1) | (HALF)(u > 0));
-		}
-		else
+		} else {
 			*a = u;
+		}
 		m--;
 		if (*--a == u) {
 			while (m > 1 && *--a == u)
@@ -1742,9 +1689,9 @@ done:	if (s == 0) {
 			n++;
 			*a = 1;
 		}
-	}
-	else
+	} else {
 		remsign = 1;
+	}
 	sqrt.v = alloc(n);
 	sqrt.len = n;
 	sqrt.sign = 0;
@@ -1802,7 +1749,7 @@ zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest)
 	sival.ivalue = k - 1;
 	k1.v = &sival.silow;
 	/* ignore Saber-C warning #112 - get ushort from uint */
-	/* 	  ok to ignore on name zroot`sival */
+	/*	  ok to ignore on name zroot`sival */
 	k1.len = 1 + (sival.sihigh != 0);
 	k1.sign = 0;
 	z1.sign = 0;
@@ -1903,5 +1850,3 @@ zissquare(ZVALUE z)
 	zfree(tmp);
 	return (n ? TRUE : FALSE);
 }
-
-/* END CODE */

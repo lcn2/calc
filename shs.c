@@ -2,29 +2,29 @@
  * shs - old Secure Hash Standard
  *
  **************************************************************************
- * This version implements the old Secure Hash Algorithm specified by     *
+ * This version implements the old Secure Hash Algorithm specified by	  *
  * (FIPS Pub 180).  This version is kept for backward compatibility with  *
- * shs version 2.10.1.  See the shs utility for the new standard.	  *
+ * shs version 2.10.1.	See the shs utility for the new standard.	  *
  **************************************************************************
  *
  * Written 2 September 1992, Peter C. Gutmann.
  *
  * This file was Modified/Re-written by:
  *
- *      Landon Curt Noll
- *      http://reality.sgi.com/chongo/
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo/
  *
- *      chongo <was here> /\../\
+ *	chongo <was here> /\../\
  *
  * This code has been placed in the public domain.  Please do not
  * copyright this code.
  *
  * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH  REGARD  TO
- * THIS  SOFTWARE,  INCLUDING  ALL IMPLIED WARRANTIES OF MER-
- * CHANTABILITY AND FITNESS.  IN NO EVENT SHALL  LANDON  CURT
- * NOLL  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+ * THIS	 SOFTWARE,  INCLUDING  ALL IMPLIED WARRANTIES OF MER-
+ * CHANTABILITY AND FITNESS.  IN NO EVENT SHALL	 LANDON	 CURT
+ * NOLL	 BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  LOSS  OF
- * USE,  DATA  OR  PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+ * USE,	 DATA  OR  PROFITS, WHETHER IN AN ACTION OF CONTRACT,
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
@@ -43,7 +43,7 @@
  *
  * In calc, we want to hash equal values to the same hash value.
  * For the most part, we will be hashing arrays of HALF's instead
- * of strings.  For this reason, the functions below do not byte
+ * of strings.	For this reason, the functions below do not byte
  * swap on little endian machines automatically.  Instead it is
  * the responsibility of the caller of the internal SHS function
  * to ensure that the values are already in the canonical 32 bit
@@ -67,23 +67,23 @@
  * f1: ((x&y) | (~x&z)) == (z ^ (x&(y^z)))
  * f3: ((x&y) | (x&z) | (y&z)) == ((x&y) | (z&(x|y)))
  */
-#define f1(x,y,z)       (z ^ (x&(y^z)))		/* Rounds  0-19 */
-#define f2(x,y,z)       (x^y^z)			/* Rounds 20-39 */
-#define f3(x,y,z)       ((x&y) | (z&(x|y)))	/* Rounds 40-59 */
-#define f4(x,y,z)       (x^y^z)			/* Rounds 60-79 */
+#define f1(x,y,z)	(z ^ (x&(y^z)))		/* Rounds  0-19 */
+#define f2(x,y,z)	(x^y^z)			/* Rounds 20-39 */
+#define f3(x,y,z)	((x&y) | (z&(x|y)))	/* Rounds 40-59 */
+#define f4(x,y,z)	(x^y^z)			/* Rounds 60-79 */
 
 /* The SHS Mysterious Constants */
-#define K1      0x5A827999L	/* Rounds  0-19 */
-#define K2      0x6ED9EBA1L	/* Rounds 20-39 */
-#define K3      0x8F1BBCDCL	/* Rounds 40-59 */
-#define K4      0xCA62C1D6L	/* Rounds 60-79 */
+#define K1	0x5A827999L	/* Rounds  0-19 */
+#define K2	0x6ED9EBA1L	/* Rounds 20-39 */
+#define K3	0x8F1BBCDCL	/* Rounds 40-59 */
+#define K4	0xCA62C1D6L	/* Rounds 60-79 */
 
 /* SHS initial values */
-#define h0init  0x67452301L
-#define h1init  0xEFCDAB89L
-#define h2init  0x98BADCFEL
-#define h3init  0x10325476L
-#define h4init  0xC3D2E1F0L
+#define h0init	0x67452301L
+#define h1init	0xEFCDAB89L
+#define h2init	0x98BADCFEL
+#define h3init	0x10325476L
+#define h4init	0xC3D2E1F0L
 
 /* 32-bit rotate left - kludged with shifts */
 #define LEFT_ROT(X,n)  (((X)<<(n)) | ((X)>>(32-(n))))
@@ -93,7 +93,7 @@
  * 80-word expanded input array W, where the first 16 are copies of the input
  * data, and the remaining 64 are defined by
  *
- *      W[i] = W[i-16] ^ W[i-14] ^ W[i-8] ^ W[i-3]
+ *	W[i] = W[i-16] ^ W[i-14] ^ W[i-8] ^ W[i-3]
  *
  * This implementation generates these values on the fly in a circular
  * buffer - thanks to Colin Plumb (colin@nyx10.cs.du.edu) for this
@@ -102,13 +102,13 @@
 #define exor(W,i) (W[i&15] ^= (W[(i-14)&15] ^ W[(i-8)&15] ^ W[(i-3)&15]))
 
 /*
- * The prototype SHS sub-round.  The fundamental sub-round is:
+ * The prototype SHS sub-round.	 The fundamental sub-round is:
  *
- *      a' = e + LEFT_ROT(a,5) + f(b,c,d) + k + data;
- *      b' = a;
- *      c' = LEFT_ROT(b,30);
- *      d' = c;
- *      e' = d;
+ *	a' = e + LEFT_ROT(a,5) + f(b,c,d) + k + data;
+ *	b' = a;
+ *	c' = LEFT_ROT(b,30);
+ *	d' = c;
+ *	e' = d;
  *
  * but this is implemented by unrolling the loop 5 times and renaming the
  * variables ( e, a, b, c, d ) = ( a', b', c', d', e' ) each iteration.
@@ -345,7 +345,7 @@ shsUpdate(HASH *state, USB8 *buffer, USB32 count)
  * Next if we have more than 56 bytes, we will zero fill the remainder
  * of the chunk, transform and then zero fill the first 56 bytes.
  * If we have 56 or fewer bytes, we will zero fill out to the 56th
- * chunk byte.  Regardless, we wind up with 56 bytes data.
+ * chunk byte.	Regardless, we wind up with 56 bytes data.
  *
  * Finally we append the 64 bit length on to the 56 bytes of data
  * remaining.  This final chunk is transformed.
@@ -380,8 +380,7 @@ shsFinal(HASH *state)
 		for (i=0; i < SHS_CHUNKWORDS; ++i) {
 			SWAP_B8_IN_B32(dig->data+i, dig->data+i);
 		}
-	}
-	else {
+	} else {
 		if (count % 4) {
 			math_error("This should not happen in shsFinal");
 			/*NOTREACHED*/
@@ -697,13 +696,13 @@ shs_print(HASH *state)
 	 * form the hash value
 	 */
 	if (conf->calc_debug & CALCDBG_HASH_STATE) {
-		char buf[DEBUG_SIZE+1];	/* hash value buffer */
+		char buf[DEBUG_SIZE+1]; /* hash value buffer */
 
 		/*
 		 * print numeric debug value
 		 *
 		 * NOTE: This value represents only the hash value as of
-		 *	 the last full update or finalization.  Thus it
+		 *	 the last full update or finalization.	Thus it
 		 *	 may NOT be the actual hash value.
 		 */
 		sprintf(buf,

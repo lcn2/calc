@@ -38,8 +38,8 @@ If you write something that you think is useful, please send it to:
     [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
 
 By convention, a lib file only defines and/or initializes functions,
-objects and variables.  (The regress.cal and testxxx.cal regression test
-suite is an exception.)  Also by convention, an additional usage message
+objects and variables.	(The regress.cal and testxxx.cal regression test
+suite is an exception.)	 Also by convention, an additional usage message
 regarding important object and functions is printed.
 
 If a lib file needs to load another lib file, it should use the -once
@@ -192,7 +192,7 @@ mfactor.cal
     By default, start_k == 1, rept_loop = 10000 and p_elim = 17.
 
     The p_elim == 17 overhead takes ~3 minutes on an 200 Mhz r4k CPU and
-    requires about ~13 Megs of memory.  The p_elim == 13 overhead
+    requires about ~13 Megs of memory.	The p_elim == 13 overhead
     takes about 3 seconds and requires ~1.5 Megs of memory.
 
     The value p_elim == 17 is best for long factorizations.  It is the
@@ -306,7 +306,7 @@ pollard.cal
 
 poly.cal
 
-    Calculate with polynomials of one variable.  There are many functions.
+    Calculate with polynomials of one variable.	 There are many functions.
     Read the documentation in the library file.
 
 
@@ -350,7 +350,7 @@ quat.cal
     quat_scale(a, b)
     quat_shift(a, b)
 
-    Calculate using quaternions of the form: a + bi + cj + dk.  In these
+    Calculate using quaternions of the form: a + bi + cj + dk.	In these
     functions, quaternians are manipulated in the form: s + v, where
     s is a scalar and v is a vector of size 3.
 
@@ -416,7 +416,7 @@ randrun.cal
 regress.cal
 
     Test the correct execution of the calculator by reading this library file.
-    Errors are reported with '****' mssages, or worse.  :-)
+    Errors are reported with '****' mssages, or worse.	:-)
 
 
 seedrandom.cal
@@ -426,7 +426,7 @@ seedrandom.cal
     Given:
 	seed1 - a large random value (at least 10^20 and perhaps < 10^93)
 	seed2 - a large random value (at least 10^20 and perhaps < 10^93)
- 	size - min Blum modulus as a power of 2 (at least 100, perhaps > 1024)
+	size - min Blum modulus as a power of 2 (at least 100, perhaps > 1024)
 	trials - number of ptest() trials (default 25) (optional arg)
 
     Returns:

@@ -10,7 +10,7 @@ TYPES
     return	int
 
 DESCRIPTION
-    Determine if x is a matrix.  This function will return 1 if x is
+    Determine if x is a matrix.	 This function will return 1 if x is
     a matrix, 0 otherwise.
 
 EXAMPLE

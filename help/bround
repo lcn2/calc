@@ -12,7 +12,7 @@ TYPES
     Otherwise, if x is an object of type tt, or if x is not an object or
     number but y is an object of type tt, and the function tt_bround has
     to be defined; the types for x, plcs, rnd, and the returned value,
-    if any, are as required for specified in tt_bround.  For the object
+    if any, are as required for specified in tt_bround.	 For the object
     case, plcs and rnd default to the null value.
 
     For other cases:
@@ -31,7 +31,7 @@ DESCRIPTION
     If the number of binary places is n and eps = 10^-n, the
     result is the same as for appr(x, eps, rnd).  This will be
     exactly x if x is a multiple of eps; otherwise rounding occurs
-    to one of the nearest multiples of eps on either side of x.  Which
+    to one of the nearest multiples of eps on either side of x.	 Which
     of these multiples is returned is determined by z = rnd & 31, i.e.
     the five low order bits of rnd, as follows:
 

@@ -4,7 +4,7 @@
  * usage:
  *	many_random [[bits] seed_string]
  *
- *	seed_string 	something for which we can seed (def: default seed)
+ *	seed_string	something for which we can seed (def: default seed)
  *	bits		number of bits to generate
  */
 
@@ -93,7 +93,7 @@ main(int argc, char **argv)
 
 	/*
 	 * reseed every so often
- 	 */
+	 */
 	for (j=0; j < RESEED; ++j) {
 
 		/*

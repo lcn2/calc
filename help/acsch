@@ -16,7 +16,7 @@ DESCRIPTION
 
     acsch(x) is the real number v for which csch(v) = x.  It is given by
 
-    		acsch(x) = ln((1 + sqrt(1 + x^2))/x)
+		acsch(x) = ln((1 + sqrt(1 + x^2))/x)
 
 
 EXAMPLE

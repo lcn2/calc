@@ -16,7 +16,7 @@ DESCRIPTION
 
     asinh(x) is the real number v for which sinh(v) = x.  It is given by
 
-    		asinh(x) = ln(x + sqrt(1 + x^2))
+		asinh(x) = ln(x + sqrt(1 + x^2))
 
 EXAMPLE
     > print asinh(2, 1e-5), asinh(2, 1e-10), asinh(2, 1e-15), asinh(2, 1e-20)

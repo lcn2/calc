@@ -11,7 +11,7 @@ TYPES
 
 DESCRIPTION
     If x > 0, randombit(x) returns a pseudo-random integer in [0, 2^x),
-    i.e. the same as rand(2^x).  If the integer returned is
+    i.e. the same as rand(2^x).	 If the integer returned is
 
 	    b_1 * 2^(x-1) + b_2 * 2^(x-2) + ... + b_n,
 

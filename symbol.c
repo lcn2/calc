@@ -165,8 +165,8 @@ showglobals(void)
 			if (sp->g_value.v_type != V_NUM)
 				continue;
 			if (count++ == 0) {
-				printf("\nName    Digits           Value\n");
-				printf(  "----    ------           -----\n");
+				printf("\nName	  Digits	   Value\n");
+				printf(	 "----	  ------	   -----\n");
 			}
 			printf("%-8s", sp->g_name);
 			if (sp->g_filescope != SCOPE_GLOBAL)
@@ -193,10 +193,10 @@ showallglobals(void)
 	for (hp = &globalhash[HASHSIZE-1]; hp >= globalhash; hp--) {
 		for (sp = *hp; sp; sp = sp->g_next) {
 			if (count++ == 0) {
-				printf("\nName    Level    Type\n");
-				printf(  "----    -----    -----\n");
+				printf("\nName	  Level	   Type\n");
+				printf(	 "----	  -----	   -----\n");
 			}
-			printf("%-8s%4d     ", sp->g_name, sp->g_filescope);
+			printf("%-8s%4d	    ", sp->g_name, sp->g_filescope);
 			printtype(&sp->g_value);
 			printf("\n");
 		}
@@ -211,7 +211,7 @@ static void
 printtype(VALUE *vp)
 {
 	int	type;
-	char 	*s;
+	char	*s;
 
 	type = vp->v_type;
 	if (type < 0) {
@@ -351,7 +351,7 @@ freeglobals(void)
 	 * more time.
 	 *
 	 * We could stop the loop with just hp >= globalhash, but stopping
-	 * short and running the loop one last time manually helps make 
+	 * short and running the loop one last time manually helps make
 	 * code checkers such as insure happy.
 	 */
 	count = 0;
@@ -408,7 +408,7 @@ resetscopes(void)
 /*
  * Enter a new file scope level so that newly defined static variables
  * will have the appropriate scope, and so that previously defined static
- * variables will temporarily be unaccessible.  This should only be called
+ * variables will temporarily be unaccessible.	This should only be called
  * when the function scope level is zero.
  */
 void
@@ -531,8 +531,8 @@ showstatics(void)
 	for (count = 0, stp = statictable; count < staticcount; count++) {
 		sp = *stp++;
 		if (count == 0) {
-			printf("\nName    Scopes    Type\n");
-			printf(  "----    ------    -----\n");
+			printf("\nName	  Scopes    Type\n");
+			printf(	 "----	  ------    -----\n");
 		}
 		printf("%-8s", sp->g_name);
 		printf("%3d", sp->g_filescope);
@@ -564,7 +564,7 @@ unscope(void)
 	 * more time.
 	 *
 	 * We could stop the loop with just hp >= globalhash, but stopping
-	 * short and running the loop one last time manually helps make 
+	 * short and running the loop one last time manually helps make
 	 * code checkers such as insure happy.
 	 */
 	for (hp = &globalhash[HASHSIZE-1]; hp > globalhash; hp--) {

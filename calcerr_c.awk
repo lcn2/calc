@@ -6,12 +6,12 @@ BEGIN {
     printf(" * names of calc error values\n");
     printf(" */\n");
     printf("CONST char *error_table[E__COUNT+2] = {\n");
-    printf("    \"No error\",\n");
+    printf("	\"No error\",\n");
 }
 {
     print $0;
 }
 END {
-    printf("    NULL\n");
+    printf("	NULL\n");
     printf("};\n");
 }

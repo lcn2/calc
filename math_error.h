@@ -23,7 +23,7 @@
  * PERFORMANCE OF THIS SOFTWARE.
  *
  * Comments, suggestions, bug fixes and questions about these routines
- * are welcome.  Send EMail to the address given below.
+ * are welcome.	 Send EMail to the address given below.
  *
  * Happy bit twiddling,
  *

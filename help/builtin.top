@@ -1,8 +1,8 @@
 Builtin functions
 
-	There is a large number of built-in functions.  Many of the
+	There is a large number of built-in functions.	Many of the
 	functions work on several types of arguments, whereas some only
-	work for the correct types (e.g., numbers or strings).  In the
+	work for the correct types (e.g., numbers or strings).	In the
 	following description, this is indicated by whether or not the
 	description refers to values or numbers.  This display is generated
 	by the 'show builtin' command.

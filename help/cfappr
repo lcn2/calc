@@ -6,7 +6,7 @@ SYNOPSIS
 
 TYPES
     x		real
-    eps 	real with abs(eps) < 1, defaults to epsilon()
+    eps		real with abs(eps) < 1, defaults to epsilon()
     n		real with n >= 1
     rnd		integer, defaults to config("cfappr")
 
@@ -21,7 +21,7 @@ DESCRIPTION
 
     If n >= 1 and den(x) > n, cfappr(x, n) returns the nearest above,
     nearest below, or nearest, approximation to x with denominator less
-    than or equal to n.  If den(x) <= n, cfappr(x,n) returns x.
+    than or equal to n.	 If den(x) <= n, cfappr(x,n) returns x.
 
     In either case when the result v is not x, how v relates to x is
     determined by bits 0, 1, 2 and 4 of the argument rnd in the same way as

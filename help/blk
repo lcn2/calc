@@ -26,7 +26,7 @@ DESCRIPTION
     ... , B[len-1], these all initially having zero value.
 
     The octets B[i] for i >= len always have zero value.  If B[i] with
-    some i >= len is referenced, len is increased by 1.  For example:
+    some i >= len is referenced, len is increased by 1.	 For example:
 
 			B[i] = x
 
@@ -70,7 +70,7 @@ DESCRIPTION
     If a block value B created by B = blk(len, chunk) is assigned to
     another variable by C = B, a new block of the same structure as B
     is created to become the value of C, and the octets in B are copied
-    to this new block.  A block with possibly different length or
+    to this new block.	A block with possibly different length or
     chunksize is created by C = blk(B, newlen, newchunk), only the first
     min(len, newlen) octets being copied from B; later octets are
     assigned zero value.  If omitted, newlen and newchunk default to
@@ -120,14 +120,14 @@ DESCRIPTION
     last two avoid printing of the new value for A.
 
     Named blocks are assigned index numbers 0, 1, 2, ..., in the order
-    of their creation.  The block with index id is returned by blocks(id).
+    of their creation.	The block with index id is returned by blocks(id).
     With no argument, blocks() returns the number of current unfreed
     named blocks.  A named block may be used
 
     The memory allocated to a named block is freed by the blkfree()
     function with argument the named block, its name, or its id number.
     The block remains in existence but with a null data pointer,
-    its length and size being reduced to zero.  A new block of memory
+    its length and size being reduced to zero.	A new block of memory
     may be allocated to it, with possibly new length and chunksize by:
 
 			blk(val [, len, chunk])

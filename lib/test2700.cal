@@ -124,7 +124,7 @@ define testcsqrt(str, n, verbose)
 }
 
 
-define checksqrt(x,y,z,v) 	/* Returns >0 if an error is detected */
+define checksqrt(x,y,z,v)	/* Returns >0 if an error is detected */
 {
 	local A, B, X, Y, t1, t2, eps, u, n, f, s;
 

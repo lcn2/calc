@@ -11,7 +11,7 @@ TYPES
     return	int
 
 DESCRIPTION
-    Determine if the binary bit y is set in x.  If:
+    Determine if the binary bit y is set in x.	If:
 
 	     x
 	int(---) mod 2 == 1

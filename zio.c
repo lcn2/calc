@@ -12,14 +12,14 @@
 #include "args.h"
 
 
-#define	OUTBUFSIZE	200		/* realloc size for output buffers */
+#define OUTBUFSIZE	200		/* realloc size for output buffers */
 
-#define	PUTCHAR(ch)		math_chr(ch)
-#define	PUTSTR(str)		math_str(str)
-#define	PRINTF1(fmt, a1)		math_fmt(fmt, a1)
-#define	PRINTF2(fmt, a1, a2)		math_fmt(fmt, a1, a2)
-#define	PRINTF3(fmt, a1, a2, a3)	math_fmt(fmt, a1, a2, a3)
-#define	PRINTF4(fmt, a1, a2, a3, a4)	math_fmt(fmt, a1, a2, a3, a4)
+#define PUTCHAR(ch)		math_chr(ch)
+#define PUTSTR(str)		math_str(str)
+#define PRINTF1(fmt, a1)		math_fmt(fmt, a1)
+#define PRINTF2(fmt, a1, a2)		math_fmt(fmt, a1, a2)
+#define PRINTF3(fmt, a1, a2, a3)	math_fmt(fmt, a1, a2, a3)
+#define PRINTF4(fmt, a1, a2, a3, a4)	math_fmt(fmt, a1, a2, a3, a4)
 
 
 /*
@@ -176,7 +176,7 @@ math_flush(void)
 /*
  * Divert further output so that it is saved into a string that will be
  * returned later when the diversion is completed.  The current state of
- * output is remembered for later restoration.  Diversions can be nested.
+ * output is remembered for later restoration.	Diversions can be nested.
  * Output diversion is only intended for saving output to "stdout".
  */
 void
@@ -314,9 +314,9 @@ math_setdigits(long newdigits)
 /*
  * Print an integer value as a hex number.
  * Width is the number of columns to print the number in, including the
- * sign if required.  If zero, no extra output is done.  If positive,
+ * sign if required.  If zero, no extra output is done.	 If positive,
  * leading spaces are typed if necessary. If negative, trailing spaces are
- * typed if necessary.  The special characters 0x appear to indicate the
+ * typed if necessary.	The special characters 0x appear to indicate the
  * number is hex.
  */
 /*ARGSUSED*/
@@ -457,7 +457,7 @@ zprinto(ZVALUE z, long width)
 		num4 = (hp[-2] & 0xffffff);
 		if (num1) {
 			PRINTF4("0%lo%08lo%08lo%08lo",
- 			    (PRINT) num1, (PRINT) num2,
+			    (PRINT) num1, (PRINT) num2,
 			    (PRINT) num3, (PRINT) num4);
 		} else {
 			PRINTF3("0%lo%08lo%08lo",
@@ -532,10 +532,10 @@ zprinto(ZVALUE z, long width)
  * Decimals supplies number of decimal places to print, with a decimal
  * point at the right location, with zero meaning no decimal point.
  * Width is the number of columns to print the number in, including the
- * decimal point and sign if required.  If zero, no extra output is done.
+ * decimal point and sign if required.	If zero, no extra output is done.
  * If positive, leading spaces are typed if necessary. If negative, trailing
  * spaces are typed if necessary.  As examples of the effects of these values,
- * (345,0,0) = "345", (345,2,0) = "3.45", (345,5,8) = "  .00345".
+ * (345,0,0) = "345", (345,2,0) = "3.45", (345,5,8) = "	 .00345".
  *
  * given:
  *	z		number to be printed
@@ -651,7 +651,7 @@ zprintval(ZVALUE z, long decimals, long width)
 /*
  * Read an integer value in decimal, hex, octal, or binary.
  * Hex numbers are indicated by a leading "0x", binary with a leading "0b",
- * and octal by a leading "0".  Periods are skipped over, but any other
+ * and octal by a leading "0".	Periods are skipped over, but any other
  * extraneous character stops the scan.
  */
 void

@@ -53,7 +53,7 @@
  *	modulus to 1.
  */
 
-global defaultverbose = 1;      /* default verbose value */
+global defaultverbose = 1;	/* default verbose value */
 global err;
 
 /*
@@ -302,7 +302,7 @@ define testnextcand(str, N, n, count, skip, residue, modulus, verbose)
 	if (isnull(count))
 		count = COUNT;
 	if (isnull(n)) {
- 		n = ceil(K3/(H3 + N^3));
+		n = ceil(K3/(H3 + N^3));
 		print "n =",n;
 	}
 	if (isnull(skip))
@@ -356,7 +356,7 @@ define testprevcand(str, N, n, count, skip, residue, modulus, verbose)
 	if (isnull(count))
 		count = COUNT;
 	if (isnull(n)) {
- 		n = ceil(K3/(H3 + N^3));
+		n = ceil(K3/(H3 + N^3));
 		print "n =",n;
 	}
 	if (isnull(skip))

@@ -60,14 +60,14 @@ DESCRIPTION
     number of format specifiers in fmt, the "missing" arguments
     may be taken to be null values - these contribute nothing to the
     output; if a positive width w has been specified, the effect is
-    to produce w spaces, e.g. printf("abc%6dxyz") prints "abc      xyz".
+    to produce w spaces, e.g. printf("abc%6dxyz") prints "abc	   xyz".
 
     If i <= the number of specifiers in fmt, the value of argument x_i
     is printed in the format specified by the i-th specifier.
     If a positive width w has been specified and normal printing of x_i
     does not include a '\n' character, what is printed will if necessary
     be padded with spaces so that the length of the printed output
-    is at least the w.  Note that control
+    is at least the w.	Note that control
     characters like '\t', '\b' each count as one character.  If
     the 'right-pad' flag has been set, the padding is on the right;
     otherwise it is on the left.
@@ -79,13 +79,13 @@ DESCRIPTION
 
     If the i-th specifier is of numerical type, any numbers in the
     printing of x_i will be printed in the specified format, unless
-    this is modified by the printing procedure for x_i's type.  Any
+    this is modified by the printing procedure for x_i's type.	Any
     specified precision will be ignored except for floating-point
     mode.
 
     In the case of floating-point (f) format the precision determines
     the maximum number of decimal places to be
-    displayed.  Other aspects of this printing may be affected by the
+    displayed.	Other aspects of this printing may be affected by the
     configuration parameters "outround", "tilde", "fullzero", "leadzero".
 
 EXAMPLE

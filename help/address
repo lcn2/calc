@@ -20,7 +20,7 @@ DESCRIPTION
     otherwise accessing, such a vacated address may be catastrophic.
 
     An octet is normally expressed by B[i] where B is a block and
-    0 <= i < sizeof(B).  &B[i] then returns the address at which this
+    0 <= i < sizeof(B).	 &B[i] then returns the address at which this
     octet is located until the block is freed or relocated.  Freeing
     of an unnamed block B occurs when a new value is assigned to B or
     when B ceases to exist; a named block B is freed by blkfree(B().
@@ -96,7 +96,7 @@ DESCRIPTION
 			> define f(a) = 27 + a;
 
     the three occurrences of 27 have the same address which may be displayed
-    by any of &27, &*x, &*y and &f(0).  If x and y are assigned
+    by any of &27, &*x, &*y and &f(0).	If x and y are assigned
     other values and f is redefined or undefined and the 27 has not been
     stored elsewhere (e.g. as the "old value" or in another function
     definition or as an element in an association), the address assigned at
@@ -105,7 +105,7 @@ DESCRIPTION
 
     When a function returns a number value, that number value is usually
     placed at a newly allocated address, even if an equal number is stored
-    elsewhere.  For example calls to f(a), as defined above, with the same
+    elsewhere.	For example calls to f(a), as defined above, with the same
     non-zero value for a will be assigned to different addresses as can be
     seen from printing &*A, &*B, &*C after
 

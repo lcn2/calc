@@ -10,7 +10,7 @@ TYPES
     return	integer
 
 DESCRIPTION
-    This is analogous to the C operator sizeof.  It attempts to assess
+    This is analogous to the C operator sizeof.	 It attempts to assess
     the number of bytes in memory used to store a value and all its
     components plus all of the related structue overhead.  Unlike
     sizeof(x), this builtin includes overhead.
@@ -19,7 +19,7 @@ DESCRIPTION
     end of strings.
 
     Unlike sizeof(x), this builtin includes the size demonitor for integers
-    and the imaginary part for complex values.  Storage for holding
+    and the imaginary part for complex values.	Storage for holding
     0, 1 and -1 values are also included.
 
     The number returned by memsize(x) may be less than the actual number

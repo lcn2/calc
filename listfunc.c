@@ -35,9 +35,9 @@ insertlistfirst(LIST *lp, VALUE *vp)
 
 	ep = elemalloc();
 	copyvalue(vp, &ep->e_value);
-	if (lp->l_count == 0)
+	if (lp->l_count == 0) {
 		lp->l_last = ep;
-	else {
+	} else {
 		lp->l_cacheindex++;
 		lp->l_first->e_prev = ep;
 		ep->e_next = lp->l_first;
@@ -61,9 +61,9 @@ insertlistlast(LIST *lp, VALUE *vp)
 
 	ep = elemalloc();
 	copyvalue(vp, &ep->e_value);
-	if (lp->l_count == 0)
+	if (lp->l_count == 0) {
 		lp->l_first = ep;
-	else {
+	} else {
 		lp->l_last->e_next = ep;
 		ep->e_prev = lp->l_last;
 	}
@@ -246,8 +246,7 @@ listsegment(LIST *lp, long n1, long n2)
 			insertlistlast(newlp, &ep->e_value);
 			ep = ep->e_next;
 		}
-	}
-	else {
+	} else {
 		i = n1 - n2 + 1;
 		while(n2-- > 0 && ep)
 			ep = ep->e_next;
@@ -351,7 +350,7 @@ listfindex(LIST *lp, long index)
 /*
  * Return the element at a specified index number of a list.
  * The list is indexed starting at zero, and negative indices
- * indicate to index from the end of the list.  This routine finds
+ * indicate to index from the end of the list.	This routine finds
  * the element by chaining through the list from the closest one
  * of the first, last, and cached elements.  Returns NULL if the
  * element does not exist.
@@ -414,7 +413,7 @@ listelement(LIST *lp, long index)
 	}
 	/*
 	 * Now walk forwards or backwards from the selected element
-	 * until we reach the correct element.  Cache the location of
+	 * until we reach the correct element.	Cache the location of
 	 * the found element for future use.
 	 */
 	if (forward) {

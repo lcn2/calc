@@ -13,7 +13,7 @@ DESCRIPTION
     This function closes the open file associated with the descriptor fd.
     When this is done, the file value associated with the file remains
     a file value, but appears 'closed', and cannot be used in further
-    file-related calls (except fclose) without causing errors.  This same
+    file-related calls (except fclose) without causing errors.	This same
     action occurs to all copies of the file value.  You do not need to
     explicitly close all the copies of a file value.
 
@@ -26,7 +26,7 @@ DESCRIPTION
     there had been an error using the file, or the null value if
     there was no error.
 
-    Closing a closed file is permitted.  Fclose returns null in
+    Closing a closed file is permitted.	 Fclose returns null in
     this case.
 
 EXAMPLE

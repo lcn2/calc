@@ -30,7 +30,7 @@
 /*
  * pi10b - number of primes <= 2^18 in multiples of 2^10
  *
- * pi10b[x]  ==  pi(x*1024)		for 0 <= x <= 256
+ * pi10b[x]  ==	 pi(x*1024)		for 0 <= x <= 256
  */
 CONST unsigned short pi10b[(MAX_PI10B/1024)+1+1] = {
     0, 172, 309, 439, 564, 685, 801, 916, 1028, 1142, 1254, 1362, 1469, 1580,
@@ -62,7 +62,7 @@ CONST unsigned short pi10b[(MAX_PI10B/1024)+1+1] = {
  * pi18b - primes found in a given 2^18 interval
  *
  * i<x
- * sum pi18b[i]  ==  pi(x*262144)	for 0 <= x <= 16384
+ * sum pi18b[i]	 ==  pi(x*262144)	for 0 <= x <= 16384
  * i=0
  */
 CONST unsigned short pi18b[(MAX_PI18B/262144)+1] = {

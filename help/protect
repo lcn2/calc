@@ -17,7 +17,7 @@ DESCRIPTION
     protection status for var or nblk.
 
     With two arguments, protect(var, sts) or protect(nblk, sts) sets the
-    protection status for var or nblk to the value sts.  Each nonzero bit
+    protection status for var or nblk to the value sts.	 Each nonzero bit
     of sts corresponds to one kind of protection as follows:
 
 		sts	protection
@@ -42,7 +42,7 @@ DESCRIPTION
 
 		protect(A, 1);
 
-    an error state is established if  A = expr  is attempted.  It does
+    an error state is established if  A = expr	is attempted.  It does
     not imply constancy if, for example, the current value of A is a list
     or matrix; such a value may be changed by assignments to the elements
     of A, or by push or copy commands.
@@ -169,7 +169,7 @@ EXAMPLE
 
 	mat [2] (2 elements, 1 nonzero):
 	    [0] = 0
- 	    [1] = 4
+	    [1] = 4
 
 	> A = blk("alpha") = {1,2,3,4}
 	> protect(A, 0)

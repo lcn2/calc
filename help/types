@@ -4,7 +4,7 @@ Builtin types
 
     null value
 	    This is the undefined value type.  The function 'null'
-	    returns this value.  Functions which do not explicitly
+	    returns this value.	 Functions which do not explicitly
 	    return a value return this type.  If a function is called
 	    with fewer parameters than it is defined for, then the
 	    missing parameters have the null type.  The null value is
@@ -16,7 +16,7 @@ Builtin types
 	    can be arbitrarily large.  The fractions are always
 	    in lowest terms.  Integers have a denominator of 1.
 	    The numerator of the number contains the sign, so that
-	    the denominator is always positive.  When a number is
+	    the denominator is always positive.	 When a number is
 	    entered in floating point or exponential notation, it is
 	    immediately converted to the appropriate fractional value.
 	    Printing a value as a floating point or exponential value
@@ -31,7 +31,7 @@ Builtin types
 
     complex numbers
 	    Complex numbers are composed of real and imaginary parts,
-	    which are both fractions as defined above.  An integer which
+	    which are both fractions as defined above.	An integer which
 	    is followed by an 'i' character is a pure imaginary number.
 	    Complex numbers such as "2+3i" when typed in, are processed
 	    as the sum of a real and pure imaginary number, resulting
@@ -54,7 +54,7 @@ Builtin types
 	    They are input using either of the single or double
 	    quote characters.  The quote mark which starts the
 	    string also ends it.  Various special characters can
-	    also be inserted using back-slash.  Example strings:
+	    also be inserted using back-slash.	Example strings:
 
 		    "hello\n"
 		    "that's all"
@@ -81,8 +81,8 @@ Builtin types
     associations
 	    These are one to four dimensional matrices which can be
 	    indexed by arbitrary values, instead of just integers.
-	    These are also known as associative arrays.  The elements of
-	    an association can be of any type.  Very few operations are
+	    These are also known as associative arrays.	 The elements of
+	    an association can be of any type.	Very few operations are
 	    permitted on an association except for indexing.  Associations
 	    are created using the 'assoc' function.
 

@@ -10,7 +10,7 @@ TYPES
     return	nil
 
 DESCRIPTION
-    Removes one or more files.  If the first arg is "-f", then a forced
+    Removes one or more files.	If the first arg is "-f", then a forced
     removal is performed and "no such file" errors are ignored.
 
 EXAMPLE

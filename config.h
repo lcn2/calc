@@ -20,16 +20,16 @@
  * PERFORMANCE OF THIS SOFTWARE.
  *
  * Prior to calc 2.9.3t9, these routines existed as a calc library called
- * cryrand.cal.  They have been rewritten in C for performance as well
+ * cryrand.cal.	 They have been rewritten in C for performance as well
  * as to make them available directly from libcalc.a.
  *
  * Comments, suggestions, bug fixes and questions about these routines
- * are welcome.  Send EMail to the address given below.
+ * are welcome.	 Send EMail to the address given below.
  *
  * Happy bit twiddling,
  *
- *      Landon Curt Noll
- *      http://reality.sgi.com/chongo/
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo/
  *
  * chongo <was here> /\../\
  */
@@ -52,11 +52,11 @@
 #define CONFIG_EPSILON	3
 #define CONFIG_EPSILONPREC 3	/* not a real type -- tied to CONFIG_EPSILON */
 #define CONFIG_TRACE	4
-#define CONFIG_MAXPRINT	5
-#define	CONFIG_MUL2	6
-#define	CONFIG_SQ2	7
-#define	CONFIG_POW2	8
-#define	CONFIG_REDC2	9
+#define CONFIG_MAXPRINT 5
+#define CONFIG_MUL2	6
+#define CONFIG_SQ2	7
+#define CONFIG_POW2	8
+#define CONFIG_REDC2	9
 #define CONFIG_TILDE	10
 #define CONFIG_TAB	11
 #define CONFIG_QUOMOD	12
@@ -66,10 +66,10 @@
 #define CONFIG_APPR	16
 #define CONFIG_CFAPPR	17
 #define CONFIG_CFSIM	18
-#define CONFIG_OUTROUND	19
+#define CONFIG_OUTROUND 19
 #define CONFIG_ROUND	20
-#define CONFIG_LEADZERO	21
-#define CONFIG_FULLZERO	22
+#define CONFIG_LEADZERO 21
+#define CONFIG_FULLZERO 22
 #define CONFIG_MAXSCAN	23
 #define CONFIG_PROMPT	24
 #define CONFIG_MORE	25
@@ -87,7 +87,7 @@
  * config default symbols
  */
 #define DISPLAY_DEFAULT 20	/* default digits for float display */
-#define EPSILON_DEFAULT "1e-20"	/* allowed error for float calculations */
+#define EPSILON_DEFAULT "1e-20" /* allowed error for float calculations */
 #define EPSILONPREC_DEFAULT 67	/* 67 ==> 2^-67 <= EPSILON_DEFAULT < 2^-66 */
 #define NEW_EPSILON_DEFAULT "1e-10"	/* newstd EPSILON_DEFAULT */
 #define NEW_EPSILONPREC_DEFAULT 34	/* 34 ==> 2^-34 <= 1e-10 < 2^-33 */
@@ -140,7 +140,7 @@ struct config {
 	long user_debug;	/* user defined debug value: 0 default */
 	BOOL verbose_quit;	/* TRUE => print Quit or abort executed msg */
 };
-typedef	struct config CONFIG;
+typedef struct config CONFIG;
 
 
 /*

@@ -19,10 +19,10 @@
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  *
- *      Landon Curt Noll
- *      http://reality.sgi.com/chongo/
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo/
  *
- *      chongo <was here> /\../\
+ *	chongo <was here> /\../\
  */
 
 /*
@@ -39,7 +39,7 @@
  *
  * The Fowler/Noll/Vo hash does a very good job in producing
  * a 32 bit hash from ASCII strings in a short amount of time.
- * It is not bad for hashing calc data as well.  So doing a
+ * It is not bad for hashing calc data as well.	 So doing a
  * quick and dirty job of hashing on a part of a calc value,
  * combined with using a reasonable hash function will result
  * acceptable associative array performance.
@@ -80,14 +80,14 @@ static QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
  * The basis of this hash algorithm was taken from an idea sent
  * as reviewer comments to the IEEE POSIX P1003.2 committee by:
  *
- *      Phong Vo (http://www.research.att.com/info/kpv/)
- *      Glenn Fowler (http://www.research.att.com/~gsf/)
+ *	Phong Vo (http://www.research.att.com/info/kpv/)
+ *	Glenn Fowler (http://www.research.att.com/~gsf/)
  *
  * In a subsequent ballot round:
  *
- *      Landon Curt Noll (http://reality.sgi.com/chongo/)
+ *	Landon Curt Noll (http://reality.sgi.com/chongo/)
  *
- * improved on their algorithm.  Some people tried this hash
+ * improved on their algorithm.	 Some people tried this hash
  * and found that it worked rather well.  In an EMail message
  * to Landon, they named it ``Fowler/Noll/Vo'' or the FNV hash.
  *
@@ -95,7 +95,7 @@ static QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
  * collision rate. The FNV speed allows one to quickly hash lots
  * of data while maintaining a reasonable collision rate.  See:
  *
- *      http://reality.sgi.com/chongo/tech/comp/fnv/
+ *	http://reality.sgi.com/chongo/tech/comp/fnv/
  *
  * for more details as well as other forms of the FNV hash.
  *
@@ -313,7 +313,7 @@ randhash(RAND *r, QCKHASH val)
 	 * hash the RAND state
 	 */
 	if (!r->seeded) {
-	        /* unseeded state hashes to V_RAND */
+		/* unseeded state hashes to V_RAND */
 		return V_RAND+val;
 	} else {
 		/* hash control values */

@@ -56,7 +56,7 @@ define mat_print (a) {
 
 	for (i = matmin(a,1); i <= matmax(a,1); i++) {
 		if (i >= matmin(a,1) + matcolmax) {
-			print "     ...";
+			print "	    ...";
 			break;
 		}
 		for (j = matmin(a,2); j <= matmax(a,2); j++) {

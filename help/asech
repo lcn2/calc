@@ -16,7 +16,7 @@ DESCRIPTION
 
     asech(x) is the real number v for which sech(v) = x.  It is given by
 
-    		asech(x) = ln((1 + sqrt(1 - x^2))/x)
+		asech(x) = ln((1 + sqrt(1 - x^2))/x)
 
 EXAMPLE
     > print asech(.5,1e-5), asech(.5,1e-10), asech(.5,1e-15), asech(.5,1e-20)

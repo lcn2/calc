@@ -1,6 +1,6 @@
 /*
  * A collection of functions designed for calculations involving
- * 	polynomials in one variable (by Ernest W. Bowen).
+ *	polynomials in one variable (by Ernest W. Bowen).
  *
  * On starting the program the independent variable has identifier x
  *	and name "x", i.e. the user can refer to it as x, the
@@ -24,25 +24,25 @@
  *	would assign to q a number value.  As with number expressions
  *	involving operations, the expression used to define the
  *	polynomial is usually lost; in the above example, the normal
- *	computer display for p will be  x^2 - 2x + 1.  Different
+ *	computer display for p will be	x^2 - 2x + 1.  Different
  *	identifiers may of course have the same polynomial value.
  *
  * The polynomial we think of as a_0 + a_1 * x + ... + a_n * x^n,
  *	for number coefficients a_0, a_1, ... a_n may also be
- *	constructed as pol(a_0, a_1, ..., a_n).  Note that here the
+ *	constructed as pol(a_0, a_1, ..., a_n).	 Note that here the
  *	coefficients are to be in ascending power order.  The independent
  *	variable is pol(0,1), so to use t, say, as an identifier for
  *	this, one may assign  t = pol(0,1).  To simultaneously specify
  *	an identifier and a name for the independent variable, there is
- *	the instruction var, used as in identifier = var(name).  For
+ *	the instruction var, used as in identifier = var(name).	 For
  *	example, to use "t" in the way "x" is initially, one may give
- *	the instruction  t = var("t").
+ *	the instruction	 t = var("t").
  *
  * There are four parameters pmode, order, iod and ims for controlling
  *	the format in which polynomials are displayed.
  *	The parameter pmode may have values "alg" or "list": the
  *	former gives a display as an algebraic formula, while
- *	the latter only lists the coefficients.  Whether the terms or
+ *	the latter only lists the coefficients.	 Whether the terms or
  *	coefficients are in ascending or descending power order is
  *	controlled by order being "up" or "down".  If the
  *	parameter iod (for integer-only display), the polynomial
@@ -69,7 +69,7 @@
  *	polynomial, list or matrix were a function.  For example,
  *	if a = 1 + x^2, a(2) will return the value 5, just as if
  *			define a(t) = 1 + t^2;
- *	had been used.   However, when the polynomial definition is
+ *	had been used.	 However, when the polynomial definition is
  *	used, changing the polynomial a will change a(t) to the value
  *	of the new polynomial at t.  For example,
  *	after
@@ -87,7 +87,7 @@
  * Matrices with polynomial elements may be added, subtracted and
  *	multiplied as long as the usual rules for compatibility are
  *	observed.  Also, matrices may be multiplied by polynomials,
- *	i.e. if p is a 	polynomial and A a matrix whose elements
+ *	i.e. if p is a	polynomial and A a matrix whose elements
  *	may be numbers or polynomials, p * A returns the matrix of
  *	the same shape as A with each element multiplied by p.
  *	Square matrices may also be 'substituted for the variable' in
@@ -106,7 +106,7 @@
  * Functions defined include:
  *
  *	monic(a) returns the monic multiple of a, i.e., if a != 0,
- *		the multiple of	a with leading coefficient 1
+ *		the multiple of a with leading coefficient 1
  *	conj(a) returns the complex conjugate of a
  *	ispmult(a,b) returns 1 or 0 according as a is or is not
  *		a polynomial multiple of b
@@ -119,7 +119,7 @@
  *		by Newtonian divided difference interpolation, where
  *		X is a list of x-values, Y a list of corresponding
  *		y-values.  If t is omitted, the interpolating
- *		polynomial is returned.  A y-value may be replaced by
+ *		polynomial is returned.	 A y-value may be replaced by
  *		list (y, y_1, y_2, ...), where y_1, y_2, ... are
  *		the reduced derivatives at the corresponding x;
  *		i.e. y_r is the r-th derivative divided by fact(r).
@@ -328,7 +328,7 @@ define poly_cmp(a,b) {
 	local sa, sb;
 	sa = findlist(a);
 	sb=findlist(b);
-	return  (sa != sb);
+	return	(sa != sb);
 }
 
 define poly_mul(a,b) {
@@ -547,7 +547,7 @@ define D(a, n) {
 	local i,j,v;
 	if (isnull(n)) n = 1;
 	if (!isint(n) || n < 1) quit "Bad order for derivative";
- 	if (ismat(a)) {
+	if (ismat(a)) {
 		v = a;
 		for (i = matmin(a,1); i <= matmax(a,1); i++)
 			for (j = matmin(a,2); j <= matmax(a,2); j++)
@@ -561,7 +561,7 @@ define D(a, n) {
 define Dp(a,n) {
 	local i, v;
 	if (n > 1) return Dp(Dp(a, n-1), 1);
- 	obj poly v;
+	obj poly v;
 	v.p=list();
 	for (i=1; i<size(a.p); i++) append (v.p, i*a.p[[i]]);
 	return v;

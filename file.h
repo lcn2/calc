@@ -42,7 +42,7 @@ typedef struct {
  * We assume that if your system does not have fgetpos/fsetpos,
  * then it will have a FILEPOS that is a scalar type (e.g., long).
  * Some obscure systems without fgetpos/fsetpos may not have a simple
- * scalar type.  In these cases the f_tell macro below will fail.
+ * scalar type.	 In these cases the f_tell macro below will fail.
  */
 #if defined(HAVE_FPOS)
 
@@ -51,7 +51,7 @@ typedef struct {
 
 #else
 
-#define f_seek_set(stream, loc)  \
+#define f_seek_set(stream, loc)	 \
 	fseek((FILE*)(stream), *(FILEPOS*)(loc), SEEK_SET)
 #define f_tell(stream, loc) (*((FILEPOS*)(loc)) = ftell((FILE*)(stream)))
 

@@ -23,11 +23,11 @@ DESCRIPTION
 EXAMPLE
     > foo=5^713; bar=17; baz=list(2,3,4);
     > custom("argv", foo, bar, baz, 3+4.5i, pi())
-	    arg[0]  rational_value          size=1  sizeof=272
-	    arg[1]  rational_value          size=1  sizeof=68
-	    arg[2]  list                    size=3  sizeof=256
-	    arg[3]  complex_value           size=1  sizeof=140
-	    arg[4]  rational_value          size=1  sizeof=84
+	    arg[0]  rational_value	    size=1  sizeof=272
+	    arg[1]  rational_value	    size=1  sizeof=68
+	    arg[2]  list		    size=3  sizeof=256
+	    arg[3]  complex_value	    size=1  sizeof=140
+	    arg[4]  rational_value	    size=1  sizeof=84
 	    5
 
 LIMITS

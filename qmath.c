@@ -422,7 +422,7 @@ qmul(NUMBER *q1, NUMBER *q2)
 		return qlink(q2);
 	if (qisone(q2))
 		return qlink(q1);
-	if (qisint(q1) && qisint(q2)) {	/* easy results if integers */
+	if (qisint(q1) && qisint(q2)) { /* easy results if integers */
 		r = qalloc();
 		zmul(q1->num, q2->num, &r->num);
 		return r;
@@ -573,9 +573,9 @@ qquo(NUMBER *q1, NUMBER *q2, long rnd)
 
 	if (qiszero(q1) || qiszero(q2))
 		return qlink(&_qzero_);
-	if (qisint(q1) && qisint(q2))
+	if (qisint(q1) && qisint(q2)) {
 		zquo(q1->num, q2->num, &tmp, rnd);
-	else {
+	} else {
 		zmul(q1->num, q2->den, &tmp1);
 		zmul(q2->num, q1->den, &tmp2);
 		zquo(tmp1, tmp2, &tmp, rnd);
@@ -1072,7 +1072,7 @@ qandnot(NUMBER *q1, NUMBER *q2)
 }
 
 /*
- * Return the bitwise "complement" of a number.  This is - q -1 if q is an
+ * Return the bitwise "complement" of a number.	 This is - q -1 if q is an
  * integer, - q otherwise.
  */
 NUMBER *
@@ -1132,26 +1132,6 @@ qtenpow(long n)
 }
 
 
-#if 0
-/*
- * Test to see if the specified bit of a number is on (counted from zero).
- * Returns TRUE if the bit is set, or FALSE if it is not.
- *	i = qbittest(q, n);
- */
-BOOL
-qbittest(NUMBER *q, long n)
-{
-	int x, y;
-
-	if ((n < 0) || (n >= (q->num.len * BASEB)))
-		return FALSE;
-	x = q->num.v[n / BASEB];
-	y = (1 << (n % BASEB));
-	return ((x & y) != 0);
-}
-#endif
-
-
 /*
  * Return the precision of a number (usually for examining an epsilon value).
  * The precision of a number e less than 1 is the positive
@@ -1171,23 +1151,6 @@ qprecision(NUMBER *q)
 	r = - qilog2(q);
 	return (r < 0 ? 0 : r);
 }
-
-
-#if 0
-/*
- * Return an integer indicating the sign of a number (-1, 0, or 1).
- *	i = qtst(q);
- */
-FLAG
-qtest(NUMBER *q)
-{
-	if (!ztest(q->num))
-		return 0;
-	if (q->num.sign)
-		return -1;
-	return 1;
-}
-#endif
 
 
 /*
@@ -1246,19 +1209,19 @@ qrel(NUMBER *q1, NUMBER *q2)
 	/*
 	 * Quick check failed, must actually do the full comparison.
 	 */
-	if (zisunit(q2->den))
+	if (zisunit(q2->den)) {
 		z1 = q1->num;
-	else if (zisone(q1->num))
+	} else if (zisone(q1->num)) {
 		z1 = q2->den;
-	else {
+	} else {
 		z1f = 1;
 		zmul(q1->num, q2->den, &z1);
 	}
-	if (zisunit(q1->den))
+	if (zisunit(q1->den)) {
 		z2 = q2->num;
-	else if (zisone(q2->num))
+	} else if (zisone(q2->num)) {
 		z2 = q1->den;
-	else {
+	} else {
 		z2f = 1;
 		zmul(q2->num, q1->den, &z2);
 	}
@@ -1360,7 +1323,7 @@ qcmpi(NUMBER *q, long n)
  * Number node allocation routines
  */
 
-#define	NNALLOC	1000
+#define NNALLOC 1000
 
 
 static NUMBER	*freeNum = NULL;
@@ -1446,8 +1409,8 @@ shownumbers(void)
 	long i, j, k;
 	long count = 0;
 
-	printf("Index  Links  Digits           Value\n");
-	printf("-----  -----  ------           -----\n");
+	printf("Index  Links  Digits	       Value\n");
+	printf("-----  -----  ------	       -----\n");
 
 	for (i = 0, k = 0; i < INITCONSTCOUNT; i++) {
 		count++;
@@ -1470,5 +1433,3 @@ shownumbers(void)
 	}
 	printf("\nNumber: %ld\n", count);
 }
-
-/* END CODE */

@@ -4,25 +4,25 @@
 	to be set or read.  If only one argument is given, then the current
 	value of the named parameter is returned.  If two arguments are given,
 	then the named parameter is set to the value of the second argument,
-	and the old value of the parameter is returned.  Therefore you can
+	and the old value of the parameter is returned.	 Therefore you can
 	change a parameter and restore its old value later.  The possible
 	parameters are explained in the next section.
 
 	The scale function multiplies or divides a number by a power of 2.
 	This is used for fractional calculations, unlike the << and >>
-	operators, which are only defined for integers.  For example,
+	operators, which are only defined for integers.	 For example,
 	scale(6, -3) is 3/4.
 
 	The quomod function is used to obtain both the quotient and remainder
-	of a division in one operation.  The first two arguments a and b are
+	of a division in one operation.	 The first two arguments a and b are
 	the numbers to be divided.  The last two arguments c and d are two
 	variables which will be assigned the quotient and remainder.  For
 	nonnegative arguments, the results are equivalent to computing a//b
 	and a%b.  If a is negative and the remainder is nonzero, then the
 	quotient will be one less than a//b.  This makes the following three
-	properties always hold:  The quotient c is always an integer.  The
+	properties always hold:	 The quotient c is always an integer.  The
 	remainder d is always 0 <= d < b.  The equation a = b * c + d always
-	holds.  This function returns 0 if there is no remainder, and 1 if
+	holds.	This function returns 0 if there is no remainder, and 1 if
 	there is a remainder.  For examples, quomod(10, 3, x, y) sets x to 3,
 	y to 1, and returns the value 1, and quomod(-4, 3.14159, x, y) sets x
 	to -2, y to 2.28318, and returns the value 1.
@@ -37,8 +37,8 @@
 
 	The digit and bit functions return individual digits of a number,
 	either in base 10 or in base 2, where the lowest digit of a number
-	is at digit position 0.  For example, digit(5678, 3) is 5, and
-	bit(0b1000100, 2) is 1.  Negative digit positions indicate places
+	is at digit position 0.	 For example, digit(5678, 3) is 5, and
+	bit(0b1000100, 2) is 1.	 Negative digit positions indicate places
 	to the right of the decimal or binary point, so that for example,
 	digit(3.456, -1) is 4.
 
@@ -139,11 +139,11 @@
 
 	The functions rcin, rcmul, rcout, rcpow, and rcsq are used to
 	perform modular arithmetic calculations for large odd numbers
-	faster than the usual methods.  To do this, you first use the
+	faster than the usual methods.	To do this, you first use the
 	rcin function to convert all input values into numbers which are
-	in a format called REDC format.  Then you use rcmul, rcsq, and
+	in a format called REDC format.	 Then you use rcmul, rcsq, and
 	rcpow to multiply such numbers together to produce results also
-	in REDC format.  Finally, you use rcout to convert a number in
+	in REDC format.	 Finally, you use rcout to convert a number in
 	REDC format back to a normal number.  The addition, subtraction,
 	negation, and equality comparison between REDC numbers are done
 	using the normal modular methods.  For example, to calculate the
@@ -185,8 +185,8 @@
 
 	The following convention is used to declare modes:
 
-		 base    config
-		value    string
+		 base	 config
+		value	 string
 
 		   2	"binary"	binary fractions
 		   8	"octal"		octal fractions

@@ -48,7 +48,7 @@ NAMETYPE configs[] = {
 	    {"maxerr",	CONFIG_MAXSCAN},	/* old name for maxscan */
 	{"prompt",	CONFIG_PROMPT},
 	{"more",	CONFIG_MORE},
-	{"blkmaxprint",	CONFIG_BLKMAXPRINT},
+	{"blkmaxprint", CONFIG_BLKMAXPRINT},
 	{"blkverbose",	CONFIG_BLKVERBOSE},
 	{"blkbase",	CONFIG_BLKBASE},
 	{"blkfmt",	CONFIG_BLKFMT},
@@ -96,7 +96,7 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	BLK_FMT_HD_STYLE,	/* block output format */
 	0,			/* internal calc debug level */
 	3,			/* calc library debug level */
-	0, 			/* user defined debug level */
+	0,			/* user defined debug level */
 	TRUE			/* print Quit or abort executed messages */
 };
 CONFIG newstd = {	/* new non-backward compatible configuration */
@@ -132,7 +132,7 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	BLK_FMT_HD_STYLE,	/* block output format */
 	0,			/* internal calc debug level */
 	3,			/* calc library debug level */
-	0, 			/* user defined debug level */
+	0,			/* user defined debug level */
 	TRUE			/* print Quit or abort executed messages */
 };
 CONFIG *conf = NULL;	/* loaded in at startup - current configuration */
@@ -148,7 +148,7 @@ static NAMETYPE modes[] = {
 	{"int",		MODE_INT},
 	{"real",	MODE_REAL},
 	{"exp",		MODE_EXP},
-	{"hexadecimal",	MODE_HEX},
+	{"hexadecimal", MODE_HEX},
 	{"hex",		MODE_HEX},
 	{"octal",	MODE_OCTAL},
 	{"oct",		MODE_OCTAL},
@@ -184,7 +184,7 @@ static NAMETYPE truth[] = {
  * Possible block base output modes
  */
 static NAMETYPE blk_base[] = {
-	{"hexadecimal",	BLK_BASE_HEX},
+	{"hexadecimal", BLK_BASE_HEX},
 	{"hex",		BLK_BASE_HEX},
 	{"octal",	BLK_BASE_OCT},
 	{"oct",		BLK_BASE_OCT},
@@ -361,7 +361,7 @@ setconfig(int type, VALUE *vp)
 
 	switch (type) {
 	case CONFIG_ALL:
-		newconf = NULL;	/* firewall */
+		newconf = NULL; /* firewall */
 		if (vp->v_type == V_STR) {
 			if (strcmp(vp->v_str->s_str, "oldstd") == 0) {
 				newconf = &oldstd;

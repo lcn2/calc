@@ -13,7 +13,7 @@ TYPES
 DESCRIPTION
     For 0 <= y < size(x) and 0 <= z < size(x), segment(x, y, z)
     returns a list for which the values of the elements are those
-    of the segment of x from x[[y]] to x[[z]].  If y < z, the
+    of the segment of x from x[[y]] to x[[z]].	If y < z, the
     new list is in the same order as x; if y > z, the order is
     reversed.
 

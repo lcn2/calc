@@ -5,7 +5,7 @@
  *
  * Routines to do modulo arithmetic both normally and also using the REDC
  * algorithm given by Peter L. Montgomery in Mathematics of Computation,
- * volume 44, number 170 (April, 1985).  For multiple multiplies using
+ * volume 44, number 170 (April, 1985).	 For multiple multiplies using
  * the same large modulus, the REDC algorithm avoids the usual division
  * by the modulus, instead replacing it with two multiplies or else a
  * special algorithm.  When these two multiplies or the special algorithm
@@ -17,8 +17,8 @@
 #include "zmath.h"
 
 
-#define	POWBITS	4		/* bits for power chunks (must divide BASEB) */
-#define	POWNUMS	(1<<POWBITS)	/* number of powers needed in table */
+#define POWBITS 4		/* bits for power chunks (must divide BASEB) */
+#define POWNUMS (1<<POWBITS)	/* number of powers needed in table */
 
 static void zmod5(ZVALUE *zp);
 static void zmod6(ZVALUE z1, ZVALUE *res);
@@ -29,76 +29,6 @@ static REDC *powermodredc = NULL;	/* REDC info for raising to power */
 BOOL havelastmod = FALSE;
 static ZVALUE lastmod[1];
 static ZVALUE lastmodinv[1];
-
-#if 0
-extern void zaddmod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res);
-extern void znegmod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-
-/*
- * Multiply two numbers together and then mod the result with a third number.
- * The two numbers to be multiplied can be negative or out of modulo range.
- * The result will be in the range 0 to the modulus - 1.
- *
- * given:
- *	z1		first number to be multiplied
- *	z2		second number to be multiplied
- *	z3		number to take mod with
- *	res		result
- */
-void
-zmulmod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
-{
-	ZVALUE tmp;
-	FULL prod;
-	FULL digit;
-	BOOL neg;
-
-	if (ziszero(z3) || zisneg(z3))
-		math_error("Mod of non-positive integer");
-		/*NOTREACHED*/
-	if (ziszero(z1) || ziszero(z2) || zisunit(z3)) {
-		*res = _zero_;
-		return;
-	}
-
-	/*
-	 * If the modulus is a single digit number, then do the result
-	 * cheaply.  Check especially for a small power of two.
-	 */
-	if (zistiny(z3)) {
-		neg = (z1.sign != z2.sign);
-		digit = z3.v[0];
-		if ((digit & -digit) == digit) {	/* NEEDS 2'S COMP */
-			prod = ((FULL) z1.v[0]) * ((FULL) z2.v[0]);
-			prod &= (digit - 1);
-		} else {
-			z1.sign = 0;
-			z2.sign = 0;
-			prod = (FULL) zmodi(z1, (long) digit);
-			prod *= (FULL) zmodi(z2, (long) digit);
-			prod %= digit;
-		}
-		if (neg && prod)
-			prod = digit - prod;
-		itoz((long) prod, res);
-		return;
-	}
-
-	/*
-	 * The modulus is more than one digit.
-	 * Actually do the multiply and divide if necessary.
-	 */
-	zmul(z1, z2, &tmp);
-	if (zispos(tmp) && ((tmp.len < z3.len) || ((tmp.len == z3.len) &&
-		(tmp.v[tmp.len-1] < z2.v[z3.len-1]))))
-	{
-		*res = tmp;
-		return;
-	}
-	zmod(tmp, z3, res, 0);
-	zfree(tmp);
-}
-#endif
 
 
 /*
@@ -159,159 +89,11 @@ zsquaremod(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 }
 
 
-#if 0
-/*
- * Add two numbers together and then mod the result with a third number.
- * The two numbers to be added can be negative or out of modulo range.
- * The result will be in the range 0 to the modulus - 1.
- *
- * given:
- *	z1		first number to be added
- *	z2		second number to be added
- *	z3		number to take mod with
- *	res		result
- */
-static void
-zaddmod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
-{
-	ZVALUE tmp;
-	FULL sumdigit;
-	FULL moddigit;
-
-	if (ziszero(z3) || zisneg(z3))
-		math_error("Mod of non-positive integer");
-		/*NOTREACHED*/
-	if ((ziszero(z1) && ziszero(z2)) || zisunit(z3)) {
-		*res = _zero_;
-		return;
-	}
-	if (zistwo(z2)) {
-		if ((z1.v[0] + z2.v[0]) & 0x1)
-			*res = _one_;
-		else
-			*res = _zero_;
-		return;
-	}
-	zadd(z1, z2, &tmp);
-	if (zisneg(tmp) || (tmp.len > z3.len)) {
-		zmod(tmp, z3, res, 0);
-		zfree(tmp);
-		return;
-	}
-	sumdigit = tmp.v[tmp.len - 1];
-	moddigit = z3.v[z3.len - 1];
-	if ((tmp.len < z3.len) || (sumdigit < moddigit)) {
-		*res = tmp;
-		return;
-	}
-	if (sumdigit < 2 * moddigit) {
-		zsub(tmp, z3, res);
-		zfree(tmp);
-		return;
-	}
-	zmod(tmp, z2, res, 0);
-	zfree(tmp);
-}
-
-
-/*
- * Subtract two numbers together and then mod the result with a third number.
- * The two numbers to be subtract can be negative or out of modulo range.
- * The result will be in the range 0 to the modulus - 1.
- *
- * given:
- *	z1		number to be subtracted from
- *	z2		number to be subtracted
- *	z3		number to take mod with
- *	res		result
- */
-void
-zsubmod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
-{
-	if (ziszero(z3) || zisneg(z3)) {
-		math_error("Mod of non-positive integer");
-		/*NOTREACHED*/
-	}
-	if (ziszero(z2)) {
-		zmod(z1, z3, res, 0);
-		return;
-	}
-	if (ziszero(z1)) {
-		znegmod(z2, z3, res);
-		return;
-	}
-	if ((z1.sign == z2.sign) && (z1.len == z2.len) &&
-		(z1.v[0] == z2.v[0]) && (zcmp(z1, z2) == 0)) {
-			*res = _zero_;
-			return;
-	}
-	z2.sign = !z2.sign;
-	zaddmod(z1, z2, z3, res);
-}
-
-
-/*
- * Calculate the negative of a number modulo another number.
- * The number to be negated can be negative or out of modulo range.
- * The result will be in the range 0 to the modulus - 1.
- *
- * given:
- *	z1		number to take negative of
- *	z2		number to take mod with
- *	res		result
- */
-static void
-znegmod(ZVALUE z1, ZVALUE z2, ZVALUE *res)
-{
-	int sign;
-	int cv;
-
-	if (ziszero(z2) || zisneg(z2)) {
-		math_error("Mod of non-positive integer");
-		/*NOTREACHED*/
-	}
-	if (ziszero(z1) || zisunit(z2)) {
-		*res = _zero_;
-		return;
-	}
-	if (zistwo(z2)) {
-		if (z1.v[0] & 0x1)
-			*res = _one_;
-		else
-			*res = _zero_;
-		return;
-	}
-
-	/*
-	 * If the absolute value of the number is within the modulo range,
-	 * then the result is just a copy or a subtraction.  Otherwise go
-	 * ahead and negate and reduce the result.
-	 */
-	sign = z1.sign;
-	z1.sign = 0;
-	cv = zrel(z1, z2);
-	if (cv == 0) {
-		*res = _zero_;
-		return;
-	}
-	if (cv < 0) {
-		if (sign)
-			zcopy(z1, res);
-		else
-			zsub(z2, z1, res);
-		return;
-	}
-	z1.sign = !sign;
-	zmod(z1, z2, res, 0);
-}
-#endif
-
-
 /*
  * Calculate the number congruent to the given number whose absolute
  * value is minimal.  The number to be reduced can be negative or out of
  * modulo range.  The result will be within the range -int((modulus-1)/2)
- * to int(modulus/2) inclusive.  For example, for modulus 7, numbers are
+ * to int(modulus/2) inclusive.	 For example, for modulus 7, numbers are
  * reduced to the range [-3, 3], and for modulus 8, numbers are reduced to
  * the range [-3, 4].
  *
@@ -477,8 +259,7 @@ zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3)
 	 */
 	if ((tmp1.sign == tmp2.sign) &&
 		((tmp1.len < len) || (zrel(tmp1, z3) < 0)) &&
-		((tmp2.len < len) || (zrel(tmp2, z3) < 0)))
-	{
+		((tmp2.len < len) || (zrel(tmp2, z3) < 0))) {
 		if (tmp1.v != z1.v)
 			zfree(tmp1);
 		if (tmp2.v != z2.v)
@@ -665,8 +446,8 @@ zmod6(ZVALUE z1, ZVALUE *res)
  * This calculates the result by examining the power POWBITS bits at a time,
  * using a small table of POWNUMS low powers to calculate powers for those bits,
  * and repeated squaring and multiplying by the partial powers to generate
- * the complete power.  If the power being raised to is high enough, then
- * this uses the REDC algorithm to avoid doing many divisions.  When using
+ * the complete power.	If the power being raised to is high enough, then
+ * this uses the REDC algorithm to avoid doing many divisions.	When using
  * REDC, multiple calls to this routine using the same modulus will be
  * slightly faster.
  */
@@ -747,8 +528,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 	/*
 	 * If modulus is large enough use zmod5
 	 */
-	if (z3.len >= conf->pow2)
-	{
+	if (z3.len >= conf->pow2) {
 		if (havelastmod && zcmp(z3, *lastmod)) {
 			zfree(*lastmod);
 			zfree(*lastmodinv);
@@ -867,10 +647,9 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 
 	/*
 	 * If the modulus is odd and small enough then use
-	 * the REDC algorithm.  The size where this is done is configurable.
+	 * the REDC algorithm.	The size where this is done is configurable.
 	 */
-	if (z3.len < conf->redc2 && zisodd(z3))
-	{
+	if (z3.len < conf->redc2 && zisodd(z3)) {
 		if (powermodredc && zcmp(powermodredc->mod, z3)) {
 			zredcfree(powermodredc);
 			powermodredc = NULL;
@@ -1045,7 +824,7 @@ zredcmodinv(ZVALUE z, ZVALUE *res)
 /*
  * Initialize the REDC algorithm for a particular modulus,
  * returning a pointer to a structure that is used for other
- * REDC calls.  An error is generated if the structure cannot
+ * REDC calls.	An error is generated if the structure cannot
  * be allocated.  The modulus must be odd and positive.
  *
  * given:
@@ -1071,7 +850,7 @@ zredcalloc(ZVALUE z1)
 
 	/*
 	 * Round up the binary modulus to the next power of two
-	 * which is at a word boundary.  Then the shift and modulo
+	 * which is at a word boundary.	 Then the shift and modulo
 	 * operations mod the binary modulus can be done very cheaply.
 	 * Calculate the REDC format for the number 1 for future use.
 	 */
@@ -1111,7 +890,7 @@ zredcfree(REDC *rp)
  * The resulting number can be used for multiplying, adding, subtracting,
  * or comparing with any other such converted numbers, as if the numbers
  * were being calculated modulo the number which initialized the REDC
- * information.  When the final value is unconverted, the result is the
+ * information.	 When the final value is unconverted, the result is the
  * same as if the usual operations were done with the original numbers.
  *
  * given:
@@ -1283,17 +1062,16 @@ zredcdecode(REDC *rp, ZVALUE z1, ZVALUE *res)
 		if (len == 0)
 			len = 1;
 		res->len = len;
-	}
-	else {
-	/* Here 0 < z1 < 2^bitnum */
+	} else {
+		/* Here 0 < z1 < 2^bitnum */
 
-	/*
-	 * First calculate the following:
-	 * 	tmp2 = ((z1 * inv) % 2^bitnum.
-	 * The mod operations can be done with no work since the bit
-	 * number was selected as a multiple of the word size.  Just
-	 * reduce the sizes of the numbers as required.
-	 */
+		/*
+		 * First calculate the following:
+		 *	tmp2 = ((z1 * inv) % 2^bitnum.
+		 * The mod operations can be done with no work since the bit
+		 * number was selected as a multiple of the word size.	Just
+		 * reduce the sizes of the numbers as required.
+		 */
 		zmul(z1, rp->inv, &tmp2);
 		if (tmp2.len > modlen) {
 			h1 = tmp2.v + modlen;
@@ -1303,14 +1081,14 @@ zredcdecode(REDC *rp, ZVALUE z1, ZVALUE *res)
 			tmp2.len = len;
 		}
 
-	/*
-	 * Next calculate the following:
-	 *	res = (z1 + tmp2 * modulus) / 2^bitnum
-	 * Since 0 < z1 < 2^bitnum and the division is always exact,
-	 * the quotient can be evaluated by rounding up
-	 * (tmp2 * modulus)/2^bitnum.  This can be achieved by defining
-	 * zp1 by an appropriate shift and then adding one.
-	 */
+		/*
+		 * Next calculate the following:
+		 *	res = (z1 + tmp2 * modulus) / 2^bitnum
+		 * Since 0 < z1 < 2^bitnum and the division is always exact,
+		 * the quotient can be evaluated by rounding up
+		 * (tmp2 * modulus)/2^bitnum.  This can be achieved by defining
+		 * zp1 by an appropriate shift and then adding one.
+		 */
 		zmul(tmp2, rp->mod, &tmp1);
 		zfree(tmp2);
 		if (tmp1.len > modlen) {
@@ -1318,9 +1096,9 @@ zredcdecode(REDC *rp, ZVALUE z1, ZVALUE *res)
 			zp1.len = tmp1.len - modlen;
 			zp1.sign = 0;
 			zadd(zp1, _one_, res);
-		}
-		else
+		} else {
 			*res = _one_;
+		}
 		zfree(tmp1);
 	}
 	if (ztop.len) {
@@ -1355,7 +1133,7 @@ zredcdecode(REDC *rp, ZVALUE z1, ZVALUE *res)
  * Multiply two numbers in REDC format together producing a result also
  * in REDC format.  If the result is converted back to a normal number,
  * then the result is the same as the modulo'd multiplication of the
- * original numbers before they were converted to REDC format.  This
+ * original numbers before they were converted to REDC format.	This
  * calculation is done in one of two ways, depending on the size of the
  * modulus.  For large numbers, the REDC definition is used directly
  * which involves three multiplies overall.  For small numbers, a
@@ -1467,7 +1245,7 @@ zredcmul(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
 
 	/*
 	 * The number is small enough to calculate by doing the O(N^2) REDC
-	 * algorithm directly.  This algorithm performs the multiplication and
+	 * algorithm directly.	This algorithm performs the multiplication and
 	 * the reduction at the same time.  Notice the obscure facts that
 	 * only the lowest word of the inverse value is used, and that
 	 * there is no shifting of the partial products as there is in a
@@ -1619,7 +1397,7 @@ zredcmul(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
 
 	/*
 	 * Do a subtraction to reduce the result to a value less than
-	 * the modulus.  The REDC algorithm guarantees that a single subtract
+	 * the modulus.	 The REDC algorithm guarantees that a single subtract
 	 * is all that is needed.  Ignore any borrowing from the possible
 	 * highest word of the current result because that would affect
 	 * only the top digit value that was not stored and would become
@@ -2033,9 +1811,9 @@ zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	if (sign && !ziszero(ans)) {
 		zsub(rp->mod, ans, res);
 		zfree(ans);
-	}
-	else
+	} else {
 		*res = ans;
+	}
 	if (ztmp.len)
 		zfree(ztmp);
 }

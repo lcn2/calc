@@ -31,8 +31,8 @@
 /*
  * odd prime bitmap for odd values < 2^16
  *
- * pr_map[i] & (1<<j) == 1  ==>  i*16 + j*2 + 1 is prime
- *                       0  ==>  i*16 + j*2 + 1 is not prime
+ * pr_map[i] & (1<<j) == 1  ==>	 i*16 + j*2 + 1 is prime
+ *			 0  ==>	 i*16 + j*2 + 1 is not prime
  *
  * This table is useful to quickly determining if a 16 bit odd number
  * is prime.  Use the prime[] array to quickly walk thru the 16 bit

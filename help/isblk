@@ -14,7 +14,7 @@ DESCRIPTION
     named block, 0 otherwise.
 
     Note that a named block B retains its name after its data block is
-    freed by rmblk(B).  That a named block B has null data block may be
+    freed by rmblk(B).	That a named block B has null data block may be
     tested using sizeof(B);  this returns 0 if and only if the memory
     has been freed.
 

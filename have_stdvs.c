@@ -9,7 +9,7 @@
  * as if it were vsprintf() and hope for the best.
  *
  * This program will output #defines and exits 0 if vsprintf() (or sprintf())
- * produces the results that we expect.  This program exits 1 if vsprintf()
+ * produces the results that we expect.	 This program exits 1 if vsprintf()
  * (or sprintf()) produces unexpected results while using the <stdarg.h>
  * include file.
  */
@@ -109,14 +109,14 @@ main(void)
 	puts(" * SIMULATE_STDARG");
 	puts(" *");
 	puts(" * WARNING: This type of stdarg makes assumptions about the stack");
-	puts(" * 	    that may not be true on your system.  You may want to");
+	puts(" *	    that may not be true on your system.  You may want to");
 	puts(" *	    define STDARG (if using ANSI C) or VARARGS.");
 	puts(" */");
 	puts("typedef char *va_list;");
 	puts("#define va_start(ap,parmn) (void)((ap) = (char*)(&(parmn) + 1))");
 	puts("#define va_end(ap) (void)((ap) = 0)");
 	puts("#define va_arg(ap, type) \\");
-	puts("        (((type*)((ap) = ((ap) + sizeof(type))))[-1])");
+	puts("	      (((type*)((ap) = ((ap) + sizeof(type))))[-1])");
 	puts("#define SIMULATE_STDARG /* use std_arg.h to simulate <stdarg.h> */");
 #else
 	puts("#define STDARG /* use <stdarg.h> */");

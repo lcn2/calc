@@ -5,20 +5,20 @@
  *
  * This file was Modified by:
  *
- *      Landon Curt Noll
- *      http://reality.sgi.com/chongo/
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo/
  *
- *      chongo <was here> /\../\
+ *	chongo <was here> /\../\
  *
  * This code has been placed in the public domain.  Please do not
  * copyright this code.
  *
  * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH  REGARD  TO
- * THIS  SOFTWARE,  INCLUDING  ALL IMPLIED WARRANTIES OF MER-
- * CHANTABILITY AND FITNESS.  IN NO EVENT SHALL  LANDON  CURT
- * NOLL  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+ * THIS	 SOFTWARE,  INCLUDING  ALL IMPLIED WARRANTIES OF MER-
+ * CHANTABILITY AND FITNESS.  IN NO EVENT SHALL	 LANDON	 CURT
+ * NOLL	 BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  LOSS  OF
- * USE,  DATA  OR  PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+ * USE,	 DATA  OR  PROFITS, WHETHER IN AN ACTION OF CONTRACT,
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
@@ -48,7 +48,7 @@
  * We will assume that bit count is a multiple of 8.
  */
 typedef struct {
-	USB32 digest[SHS1_DIGESTWORDS];	/* message digest */
+	USB32 digest[SHS1_DIGESTWORDS]; /* message digest */
 	USB32 countLo;			/* 64 bit count: bits 3-34 */
 	USB32 countHi;			/* 64 bit count: bits 35-63 */
 	USB32 datalen;			/* length of data in data */

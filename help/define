@@ -9,7 +9,7 @@ Function definitions
     by a return statement, and the function definition is ended with a
     right brace.
 
-    There are some subtle differences, however.  The types of parameters
+    There are some subtle differences, however.	 The types of parameters
     and variables are not defined at compile time, and may vary during
     execution and be different in different calls to the function.  For
     example, a two-argument function add may be defined by

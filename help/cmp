@@ -17,7 +17,7 @@ TYPES
 
     return	if x and y are both real: -1, 0, or 1
 		if x and y are both numbers but not both real:
-    			-1, 0, 1, -1+1i, 1i, 1+1i, -1-1i, -1i, or 1-1i
+			-1, 0, 1, -1+1i, 1i, 1+1i, -1-1i, -1i, or 1-1i
 		if x and y are both strings: -1, 0, or 1
 		all other cases: the null value
 
@@ -47,7 +47,7 @@ DESCRIPTION
 		obj point {x,y};
 
 	if points with real components are to be partially ordered by their
-        euclidean distance from the origin, an appropriate point_rel
+	euclidean distance from the origin, an appropriate point_rel
 	function may be that given by
 
 		define point_rel(a,b) = sgn(a.x^2 + a.y^2 - b.x^2 - b.y^2);

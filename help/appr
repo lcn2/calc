@@ -84,7 +84,7 @@ DESCRIPTION
 
     Complex x:
 
-	Returns  appr(re(x), y, z) + appr(im(x), y, z) * 1i
+	Returns	 appr(re(x), y, z) + appr(im(x), y, z) * 1i
 
 PROPERTIES
 	If appr(x,y,z) != x, then abs(x - appr(x,y,z)) < abs(y).

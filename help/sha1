@@ -25,7 +25,7 @@ DESCRIPTION
     The new arg1 HASH state is returned.
 
     If arg1 is not a a HASH state, then the initial HASH is
-    used and modifed by arg1 and any val args supplied.  The
+    used and modifed by arg1 and any val args supplied.	 The
     return value is the new HASH state.
 
     The following table gives a summary of actions and return values.

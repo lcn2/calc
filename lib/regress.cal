@@ -4,11 +4,11 @@
  * provided that this copyright notice remains intact.
  *
  * Test the correct execution of the calculator by reading this library file.
- * Errors are reported with '****' messages, or worse.  :-)
+ * Errors are reported with '****' messages, or worse.	:-)
  *
  * NOTE: Unlike most calc lib files, this one performs its work when
- *       it is read.  Normally one would just define functions and
- *	 values for later use.  In the case of the regression test,
+ *	 it is read.  Normally one would just define functions and
+ *	 values for later use.	In the case of the regression test,
  *	 we do not want to do this.
  */
 
@@ -148,7 +148,7 @@ define test_booleans()
 	else
 		prob = prob + 1;
 
-	vrfy(1,      '311: vrfy 1');
+	vrfy(1,	     '311: vrfy 1');
 	vrfy(2 == 2, '312: vrfy 2 == 2');
 	vrfy(2 != 3, '313: vrfy 2 != 3');
 	vrfy(2 <  3, '314: vrfy 2 <  3');
@@ -159,7 +159,7 @@ define test_booleans()
 	vrfy(3 >= 2, '319: vrfy 3 >= 2');
 	vrfy(!0,     '320: vrfy !0');
 	vrfy(!1 == 0,'321: vrfy !1 == 0');
-	vrfy((1 ? 2 ? 3 : 4 : 5) == 3,    '322: (1 ? 2 ? 3 : 4 : 5) == 3');
+	vrfy((1 ? 2 ? 3 : 4 : 5) == 3,	  '322: (1 ? 2 ? 3 : 4 : 5) == 3');
 
 	print '323: Ending test_booleans';
 }
@@ -269,7 +269,7 @@ define test_variables()
 	x = 2 && 0; vrfy(x == 0,	'381: (2 && 0) == 0');
 	x = 0 && 3; vrfy(x == 0,	'382: (0 && 3) == 0');
 	x = 2 || prob('2 || prob()');
-	print			 	"383: x = 2 || prob('2 || prob()'";
+	print				"383: x = 2 || prob('2 || prob()'";
 	x = 0 && prob('0 && prob()');
 	print				"384: x = 0 && prob('0 && prob()'";
 
@@ -305,34 +305,34 @@ define test_arithmetic()
 	vrfy(6+12/3==10,	'418: 6+12/3 == 10');
 	vrfy(2+3==1+4,		'419: 2+3 == 1+4');
 	vrfy(-(2+3)==-5,	'420: -(2+3) == -5');
-	vrfy(7&18==2,  		'421: 7&18 == 2');
-	vrfy(3|17==19,  	'422: 3|17 == 19');
-	vrfy(2&3|1==3,  	'423: 2&3|1 == 3');
+	vrfy(7&18==2,		'421: 7&18 == 2');
+	vrfy(3|17==19,		'422: 3|17 == 19');
+	vrfy(2&3|1==3,		'423: 2&3|1 == 3');
 	vrfy(2&(3|1)==2,	'424: 2&(3|1) == 2');
-	vrfy(3<<4==48,  	'425: 3<<4 == 48');
-	vrfy(5>>1==2,   	'426: 5>>1 == 2');
-	vrfy(3<<-1==1,  	'427: 3<<-1 == 1');
-	vrfy(5>>-2==20, 	'428: 5>>-2 == 20');
+	vrfy(3<<4==48,		'425: 3<<4 == 48');
+	vrfy(5>>1==2,		'426: 5>>1 == 2');
+	vrfy(3<<-1==1,		'427: 3<<-1 == 1');
+	vrfy(5>>-2==20,		'428: 5>>-2 == 20');
 	vrfy(1<<2<<3==65536,	'429: 1<<2<<3 == 65536');
 	vrfy((1<<2)<<3==32,	'430: (1<<2)<<3 == 32');
 	vrfy(2^3^2==512,	'431: 2^3^2 == 512');
 	vrfy((2^3)^2==64,	'432: (2^3)^2 == 64');
-	vrfy(4//3==1, 		'433: 4//3==1');
-	vrfy(4//-3==-1, 	'434: 4//-3==-1');
+	vrfy(4//3==1,		'433: 4//3==1');
+	vrfy(4//-3==-1,		'434: 4//-3==-1');
 	vrfy(0.75//-0.51==-1,	'435: 0.75//-0.51==-1');
 	vrfy(0.75//-0.50==-1,	'436: 0.75//-0.50==-1');
 	vrfy(0.75//-0.49==-1,	'437: 0.75//-0.49==-1');
 	vrfy((3/4)//(-1/4)==-3, '438: (3/4)//(-1/4)==-3');
-	vrfy(7%3==1,   		'439: 7%3==1');
+	vrfy(7%3==1,		'439: 7%3==1');
 	vrfy(0-.5==-.5,		'440: 0-.5==-.5');
-	vrfy(0^0 == 1,  	'441: 0^0 == 1');
-	vrfy(0^1 == 0,  	'442: 0^1 == 0');
-	vrfy(1^0 == 1,  	'443: 1^0 == 1');
-	vrfy(1^1 == 1,  	'444: 1^1 == 1');
+	vrfy(0^0 == 1,		'441: 0^0 == 1');
+	vrfy(0^1 == 0,		'442: 0^1 == 0');
+	vrfy(1^0 == 1,		'443: 1^0 == 1');
+	vrfy(1^1 == 1,		'444: 1^1 == 1');
 	vrfy(1/(.8+.8i)==.625-.625i,	'445: 1/(.8+.8i)==.625-.625i');
 	vrfy((.6+.8i)*(3.6-4.8i)==6,	'446: (.6+.8i)*(3.6-4.8i)==6');
 	vrfy(-16^-2 == -1/256,	'447: -16^-2 == -1/256');
-	vrfy(-7^2 == -49,  	'448: -7^2 == -49');
+	vrfy(-7^2 == -49,	'448: -7^2 == -49');
 	vrfy(-3! == -6,		'449: -3! == -6');
 
 	print '450: Ending test_arithmetic';
@@ -353,14 +353,14 @@ define test_config()
 
 	/* check the set and return of all config */
 	callcfg = config("all");
-	print 				'501: callcfg = config("all")';
+	print				'501: callcfg = config("all")';
 	callcfg = config("all", "oldstd");
-	print 				'502: callcfg = config("all","oldstd")';
+	print				'502: callcfg = config("all","oldstd")';
 	oldcfg = config("all", "newstd");
-	print 				'503: oldcfg = config("all","newstd")';
+	print				'503: oldcfg = config("all","newstd")';
 	vrfy(callcfg == startcfg,	'504: callcfg == startcfg');
 	newcfg = config("all");
-	print 				'505: newcfg = config("all")';
+	print				'505: newcfg = config("all")';
 	vrfy(config("all") == newcfg,	'506: config("all") == newcfg');
 	vrfy(config("all", oldcfg) == newcfg,
 					'507: config("all", oldcfg) == newcfg');
@@ -455,8 +455,8 @@ define test_config()
 	/* restore calling config */
 	vrfy(config("all",callcfg) == oldcfg,
 					'550: config("all",callcfg) == oldcfg');
-	vrfy(config("all") == callcfg,  '551: config("all") == callcfg');
-	vrfy(config("all") == startcfg,	'552: config("all") == startcfg');
+	vrfy(config("all") == callcfg,	'551: config("all") == callcfg');
+	vrfy(config("all") == startcfg, '552: config("all") == startcfg');
 
 	print '553: Ending test_config';
 }
@@ -707,19 +707,19 @@ define test_functions()
 
 	print '700: Beginning test_functions';
 
-	vrfy(abs(3) == 3,    		'701: abs(3) == 3');
-	vrfy(abs(-4) == 4,  		'702: abs(-4) == 4');
-	vrfy(avg(7) == 7,  		'703: avg(7) == 7');
+	vrfy(abs(3) == 3,		'701: abs(3) == 3');
+	vrfy(abs(-4) == 4,		'702: abs(-4) == 4');
+	vrfy(avg(7) == 7,		'703: avg(7) == 7');
 	vrfy(avg(3,5) == 4,		'704: avg(3,5) == 4');
 	vrfy(cmp(2,3) == -1,		'705: cmp(2,3) == -1');
 	vrfy(cmp(6,6) == 0,		'706: cmp(6,6) == 0');
 	vrfy(cmp(7,4) == 1,		'707: cmp(7,4) == 1');
 	vrfy(comb(9,9) == 1,		'708: comb(9,9) == 1');
 	vrfy(comb(5,2) == 10,		'709: comb(5,2) == 10');
-	vrfy(conj(4) == 4,   		'710: conj(4) == 4');
+	vrfy(conj(4) == 4,		'710: conj(4) == 4');
 	vrfy(conj(2-3i) == 2+3i,	'711: conj(2-3i) == 2+3i');
-	vrfy(den(17) == 1,   		'712: den(17) == 1');
-	vrfy(den(3/7) == 7, 		'713: den(3/7) == 7');
+	vrfy(den(17) == 1,		'712: den(17) == 1');
+	vrfy(den(3/7) == 7,		'713: den(3/7) == 7');
 	vrfy(den(-2/3) == 3,		'714: den(-2/3) == 3');
 	vrfy(digits(0) == 1,		'715: digits(0) == 1');
 	vrfy(digits(9) == 1,		'716: digits(9) == 1');
@@ -728,15 +728,15 @@ define test_functions()
 	vrfy(eval('2+3') == 5,		"719: eval('2+3') == 5");
 	vrfy(fcnt(11,3) == 0,		'720: fcnt(11,3) == 0');
 	vrfy(fcnt(18,3) == 2,		'721: fcnt(18,3) == 2');
-	vrfy(fib(0) == 0,    		'722: fib(0) == 0');
-	vrfy(fib(1) == 1,    		'723: fib(1) == 1');
-	vrfy(fib(9) == 34,   		'724: fib(9) == 34');
+	vrfy(fib(0) == 0,		'722: fib(0) == 0');
+	vrfy(fib(1) == 1,		'723: fib(1) == 1');
+	vrfy(fib(9) == 34,		'724: fib(9) == 34');
 	vrfy(frem(12,5) == 12,		'725: frem(12,5) == 12');
 	vrfy(frem(45,3) == 5,		'726: frem(45,3) == 5');
 	vrfy(fact(0) == 1,		'727: fact(0) == 1');
-	vrfy(fact(1) == 1, 		'728: fact(1) == 1');
+	vrfy(fact(1) == 1,		'728: fact(1) == 1');
 	vrfy(fact(5) == 120,		'729: fact(5) == 120');
-	vrfy(frac(3) == 0,  		'730: frac(3) == 0');
+	vrfy(frac(3) == 0,		'730: frac(3) == 0');
 	vrfy(frac(2/3) == 2/3,		'731: frac(2/3) == 2/3');
 	vrfy(frac(17/3) == 2/3,		'732: frac(17/3) == 2/3');
 	vrfy(gcd(0,3) == 3,		'733: gcd(0,3) == 3');
@@ -749,9 +749,9 @@ define test_functions()
 	vrfy(highbit(15) == 3,		'740: highbit(15) == 3');
 	vrfy(hypot(3,4) == 5,		'741: hypot(3,4) == 5');
 	vrfy(ilog(90,3) == 4,		'742: ilog(90,3) == 4');
-	vrfy(ilog10(123) == 2, 		'743: ilog10(123) == 2');
+	vrfy(ilog10(123) == 2,		'743: ilog10(123) == 2');
 	vrfy(ilog2(17) == 4,		'744: ilog2(17) == 4');
-	vrfy(im(3) == 0,  		'745: im(3) == 0');
+	vrfy(im(3) == 0,		'745: im(3) == 0');
 	vrfy(im(2+3i) == 3,		'746: im(2+3i) == 3');
 	vrfy(fact(20) == 2432902008176640000,
 					'747: fact(20) == 2432902008176640000');
@@ -765,31 +765,31 @@ define test_functions()
 	print				'754: test unused';
 	print				'755: test unused';
 	print				'756: test unused';
-	vrfy(int(5) == 5,   		'757: int(5) == 5');
-	vrfy(int(19/3) == 6, 		'758: int(19/3) == 6');
+	vrfy(int(5) == 5,		'757: int(5) == 5');
+	vrfy(int(19/3) == 6,		'758: int(19/3) == 6');
 	vrfy(inverse(3/2) == 2/3,	'759: inverse(3/2) == 2/3');
-	vrfy(iroot(18,2) == 4, 		'760: iroot(18,2) == 4');
-	vrfy(iroot(100,3) == 4, 	'761: iroot(100,3) == 4');
-	vrfy(iseven(10) == 1, 		'762: iseven(10) == 1');
-	vrfy(iseven(13) == 0, 		'763: iseven(13) == 0');
-	vrfy(iseven('a') == 0, 		"764: iseven('a') == 0");
-	vrfy(isint(7) == 1,  		'765: isint(7) == 1');
+	vrfy(iroot(18,2) == 4,		'760: iroot(18,2) == 4');
+	vrfy(iroot(100,3) == 4,		'761: iroot(100,3) == 4');
+	vrfy(iseven(10) == 1,		'762: iseven(10) == 1');
+	vrfy(iseven(13) == 0,		'763: iseven(13) == 0');
+	vrfy(iseven('a') == 0,		"764: iseven('a') == 0");
+	vrfy(isint(7) == 1,		'765: isint(7) == 1');
 	vrfy(isint(19/2) == 0,		'766: isint(19/2) == 0');
 	vrfy(isint('a') == 0,		"767: isint('a') == 0");
 	vrfy(islist(3) == 0,		'768: islist(3) == 0');
 	vrfy(islist(list(2,3)) == 1,	'769: islist(list(2,3)) == 1');
 	vrfy(ismat(3) == 0,		'770: ismat(3) == 0');
-	vrfy(ismult(7,3) == 0, 		'771: ismult(7,3) == 0');
-	vrfy(ismult(15,5) == 1, 	'772: ismult(15,5) == 1');
-	vrfy(isnull(3) == 0, 		'773: isnull(3) == 0');
-	vrfy(isnull(null()) == 1, 	'774: isnull(null()) == 1');
-	vrfy(isnum(2/3) == 1, 		'775: isnum(2/3) == 1');
-	vrfy(isnum('xx') == 0, 		"776: isnum('xx') == 0");
-	vrfy(isobj(3) == 0, 		'777: isobj(3) == 0');
-	vrfy(isodd(7) == 1, 		'778: isodd(7) == 1');
-	vrfy(isodd(8) == 0, 		'779: isodd(8) == 0');
-	vrfy(isodd('x') == 0, 		"780: isodd('a') == 0");
-	vrfy(isqrt(27) == 5, 		'781: isqrt(27) == 5');
+	vrfy(ismult(7,3) == 0,		'771: ismult(7,3) == 0');
+	vrfy(ismult(15,5) == 1,		'772: ismult(15,5) == 1');
+	vrfy(isnull(3) == 0,		'773: isnull(3) == 0');
+	vrfy(isnull(null()) == 1,	'774: isnull(null()) == 1');
+	vrfy(isnum(2/3) == 1,		'775: isnum(2/3) == 1');
+	vrfy(isnum('xx') == 0,		"776: isnum('xx') == 0");
+	vrfy(isobj(3) == 0,		'777: isobj(3) == 0');
+	vrfy(isodd(7) == 1,		'778: isodd(7) == 1');
+	vrfy(isodd(8) == 0,		'779: isodd(8) == 0');
+	vrfy(isodd('x') == 0,		"780: isodd('a') == 0");
+	vrfy(isqrt(27) == 5,		'781: isqrt(27) == 5');
 	vrfy(isreal(3) == 1,		'782: isreal(3) == 1');
 	vrfy(isreal('x') == 0,		"783: isreal('x') == 0");
 	vrfy(isreal(2+3i) == 0,		'784: isreal(2+3i) == 0');
@@ -805,7 +805,7 @@ define test_functions()
 	print				'794: test unused';
 	vrfy(istype(9,4) == 1,		'795: istype(9,4) == 1');
 	vrfy(istype(3,'xx') == 0,	"796: istype(3,'xx') == 0");
-	vrfy(jacobi(5,11) == 1, 	'797: jacobi(2,7) == 1');
+	vrfy(jacobi(5,11) == 1,		'797: jacobi(2,7) == 1');
 	vrfy(jacobi(6,13) == -1,	'798: jacobi(6,13) == -1');
 	vrfy(lcm(3,4,5,6) == 60,	'799: lcm(3,4,5,6) == 60');
 	vrfy(lcmfact(8) == 840,		'800: lcmfact(8) == 840');
@@ -821,14 +821,14 @@ define test_functions()
 	vrfy(minv(13,97) == 15,		'810: minv(13,97) == 15');
 	vrfy(mne(16,37,10) == 1,	'811: mne(16,37,10) == 1');
 	vrfy(mne(46,79,11) == 0,	'812: mne(46,79,11) == 0');
-	vrfy(norm(4) == 16,   		'813: norm(4) == 16');
-	vrfy(norm(2-3i) == 13, 		'814: norm(2-3i) == 13');
-	vrfy(num(7) == 7,   		'815: num(7) == 7');
+	vrfy(norm(4) == 16,		'813: norm(4) == 16');
+	vrfy(norm(2-3i) == 13,		'814: norm(2-3i) == 13');
+	vrfy(num(7) == 7,		'815: num(7) == 7');
 	vrfy(num(11/4) == 11,		'816: num(11/4) == 11');
-	vrfy(num(-9/5) == -9, 		'817: num(-9/5) == -9');
+	vrfy(num(-9/5) == -9,		'817: num(-9/5) == -9');
 	vrfy(char(ord('a')+2) == 'c',	"818: char(ord('a')+2) == 'c'");
-	vrfy(perm(7,3) == 210, 		'819: perm(7,3) == 210');
-	vrfy(pfact(10) == 210, 		'820: pfact(10) == 210');
+	vrfy(perm(7,3) == 210,		'819: perm(7,3) == 210');
+	vrfy(pfact(10) == 210,		'820: pfact(10) == 210');
 	vrfy(places(3/7) == -1,		'821: places(3/7) == -1');
 	vrfy(places(.347) == 3,		'822: places(.347) == 3');
 	vrfy(places(17) == 0,		'823: places(17) == 0');
@@ -836,21 +836,21 @@ define test_functions()
 	vrfy(poly(2,3,5,2) == 19,	'825: poly(2,3,5,2) == 19');
 	vrfy(ptest(101,10) == 1,	'826: ptest(101,10) == 1');
 	vrfy(ptest(221,30) == 0,	'827: ptest(221,30) == 0');
-	vrfy(re(9) == 9,       		'828: re(9) == 9');
-	vrfy(re(-7+3i) == -7,  		'829: re(-7+3i) == -7');
-	vrfy(scale(3,4) == 48, 		'830: scale(3,4) == 48');
-	vrfy(sgn(-4) == -1,    		'831: sgn(-4) == -1');
-	vrfy(sgn(0) == 0,      		'832: sgn(0) == 0');
-	vrfy(sgn(3) == 1,      		'833: sgn(3) == 1');
-	vrfy(size(7) == 1,     		'834: size(7) == 1');
-	vrfy(sqrt(121) == 11,  		'835: sqrt(121) == 11');
+	vrfy(re(9) == 9,		'828: re(9) == 9');
+	vrfy(re(-7+3i) == -7,		'829: re(-7+3i) == -7');
+	vrfy(scale(3,4) == 48,		'830: scale(3,4) == 48');
+	vrfy(sgn(-4) == -1,		'831: sgn(-4) == -1');
+	vrfy(sgn(0) == 0,		'832: sgn(0) == 0');
+	vrfy(sgn(3) == 1,		'833: sgn(3) == 1');
+	vrfy(size(7) == 1,		'834: size(7) == 1');
+	vrfy(sqrt(121) == 11,		'835: sqrt(121) == 11');
 	vrfy(ssq(2,3,4) == 29,		'836: ssq(2,3,4) == 29');
-	vrfy(str(45) == '45',  		"837: str(45) == '45'");
+	vrfy(str(45) == '45',		"837: str(45) == '45'");
 	vrfy(strcat('a','bc','def')=='abcdef',
 			       "838: strcat('a','bc','def')=='abcdef'");
-	vrfy(strlen('') == 0, 		"839: strlen('') == 0");
+	vrfy(strlen('') == 0,		"839: strlen('') == 0");
 	vrfy(strlen('abcd') == 4,	"840: strlen('abcd') == 4");
-	vrfy(substr('abcd',2,1) == 'b',   "841: substr('abcd',2,1) == 'b'");
+	vrfy(substr('abcd',2,1) == 'b',	  "841: substr('abcd',2,1) == 'b'");
 	vrfy(substr('abcd',3,4) == 'cd',  "842: substr('abcd',3,4) == 'cd'");
 	vrfy(substr('abcd',1,3) == 'abc', "843: substr('abcd',1,3) == 'abc'");
 	vrfy(xor(17,17) == 0,		'844: xor(17,17) == 0');
@@ -924,7 +924,7 @@ define test_functions()
 	vrfy(istype(2, 3i) == 0,	'912: istype(2, 3i) == 0');
 	vrfy(istype(2i+2, 3i) == 1,	'913: istype(2i+2, 3i) == 1');
 	a = epsilon();
-	print 				'914: a = epsilon()';
+	print				'914: a = epsilon()';
 	vrfy(epsilon(a) == epsilon(),	'915: epsilon(a) == epsilon()');
 	vrfy(epsilon(a) == epsilon(),	'916: epsilon(a) == epsilon()');
 	vrfy(epsilon(a) == epsilon(),	'917: epsilon(a) == epsilon()');
@@ -1060,7 +1060,7 @@ define test_functions()
 	vrfy(fib(-1) == 1,		'1033: fib(-1) == 1');
 	vrfy(fib(-10) == -55,		'1034: fib(-10) == -55');
 	vrfy(ilog(1/8, 3) == -2,	'1035: ilog(1/8, 3) == -2');
-	vrfy(ilog(8.9, 3) == 1,	'1036: ilog(8.9, 3) == 1');
+	vrfy(ilog(8.9, 3) == 1, '1036: ilog(8.9, 3) == 1');
 	vrfy(iroot(1,9) == 1,		'1037: iroot(1,9) == 1');
 	vrfy(iroot(pi()^8,5) == 6,	'1038: iroot(pi()^8,5)');
 	vrfy(isqrt(8.5) == 2,		'1039: isqrt(8.5) == 2');
@@ -1162,7 +1162,7 @@ define test_functions()
 	vrfy(popcnt(-237/39929) == 17,
 					'1099: popcnt(-237/39929) == 17');
 	vrfy(popcnt(pi(1e-20)) == 65,	'1100: popcnt(pi(1e-20)) == 65');
-	vrfy(popcnt(pi(1e-20),0) == 69,	'1101: popcnt(pi(1e-20),0) == 69');
+	vrfy(popcnt(pi(1e-20),0) == 69, '1101: popcnt(pi(1e-20),0) == 69');
 	vrfy(popcnt(17^777) == 1593,	'1102: popcnt(17^777) == 1593');
 
 	/*
@@ -1302,7 +1302,7 @@ define test_list()
 	vrfy(isnull(search(a,3,2)),	'1407: isnull(search(a,3,2))');
 	vrfy(rsearch(a,3,2) == 1,	'1408: rsearch(a,3,2) == 1');
 	push(a,7);
-	print 				'1409: push(a,7)';
+	print				'1409: push(a,7)';
 	vrfy(search(a,7) == 0,		'1410: search(a,7) == 0');
 	vrfy(pop(a) == 7,		'1411: pop(a) == 7');
 	vrfy(size(a) == 3,		'1412: size(a) == 3');
@@ -1482,7 +1482,7 @@ define test_rand()
 	vrfy(srand() == init,		  '1520: srand() == init');
 	tmp = srand(0x87e6ec938ff55aa5<<64);
 	print	  '1521: tmp = srand(0x87e6ec938ff55aa5<<64)';
-	vrfy(srand() == init,	  	  '1522: srand() == init');
+	vrfy(srand() == init,		  '1522: srand() == init');
 	tmp = srand(state0);
 	print				  '1523: tmp = srand(state0)';
 	vrfy(srand() == init,		  '1524: srand() == init');
@@ -1506,10 +1506,10 @@ define test_rand()
 	print				  '1533: tmp = srand(0)';
 	vrfy(randbit(32) == 0xc79ef743,	  '1534: randbit(32) == 0xc79ef743');
 	vrfy(randbit(32) == 0xe2e6849c,	  '1535: randbit(32) == 0xe2e6849c');
-	vrfy(randbit(1) == 0x1,	 	  '1536: randbit(1) == 0x1');
-	vrfy(randbit(5) == 0x3,	 	  '1537: randbit(5) == 0x3');
-	vrfy(randbit(33) == 0x96e595f6,   '1538: randbit(33) == 0x96e595f6');
-	vrfy(randbit(25) == 0x1321284,    '1539: randbit(25) == 0x1321284');
+	vrfy(randbit(1) == 0x1,		  '1536: randbit(1) == 0x1');
+	vrfy(randbit(5) == 0x3,		  '1537: randbit(5) == 0x3');
+	vrfy(randbit(33) == 0x96e595f6,	  '1538: randbit(33) == 0x96e595f6');
+	vrfy(randbit(25) == 0x1321284,	  '1539: randbit(25) == 0x1321284');
 	vrfy(randbit(2) == 0x1,		  '1540: randbit(2) == 0x1');
 	vrfy(randbit(13) == 0x7a5,	  '1541: randbit(13) == 0x7a5');
 	vrfy(randbit(18) == 0x1a63e,	  '1542: randbit(18) == 0x1a63e');
@@ -1608,43 +1608,43 @@ define test_mode()
 	tmp = config("mode", "bin");
 	print				'1619: tmp = config("mode", "bin")';
 	vrfy(tmp == "octal",		'1620: tmp == "octal"');
-	vrfy(base() == 2,	 	'1621: base() == 2');
+	vrfy(base() == 2,		'1621: base() == 2');
 
 	tmp = config("mode", "real");
-	print			 	'1622: tmp = config("mode", "real")';
-	vrfy(tmp == "binary",	  	'1623: tmp == "binary"');
+	print				'1622: tmp = config("mode", "real")';
+	vrfy(tmp == "binary",		'1623: tmp == "binary"');
 
 	tmp = base(1/3);
-	print			  	'1624: tmp = base(1/3)';
-	vrfy(config("mode") == "frac",  '1625: config("mode") == "frac"');
+	print				'1624: tmp = base(1/3)';
+	vrfy(config("mode") == "frac",	'1625: config("mode") == "frac"');
 
 	tmp = base(-10);
-	print			  	'1626: tmp = base(-10)';
-	vrfy(config("mode") == "int",   '1627: config("mode") == "int"');
+	print				'1626: tmp = base(-10)';
+	vrfy(config("mode") == "int",	'1627: config("mode") == "int"');
 
 	tmp = base(10);
-	print			  	'1628: tmp = base(10)';
-	vrfy(config("mode") == "real",  '1629: config("mode") == "real"');
+	print				'1628: tmp = base(10)';
+	vrfy(config("mode") == "real",	'1629: config("mode") == "real"');
 
 	tmp = base(1e20);
-	print			  	'1630: tmp = base(1e20)';
-	vrfy(config("mode") == "exp",   '1631: config("mode") == "exp"');
+	print				'1630: tmp = base(1e20)';
+	vrfy(config("mode") == "exp",	'1631: config("mode") == "exp"');
 
 	tmp = base(16);
-	print			  	'1632: tmp = base(16)';
+	print				'1632: tmp = base(16)';
 	vrfy(config("mode") == "hexadecimal", \
 		'1633: config("mode") == "hexadecimal"');
 
 	tmp = base(8);
-	print			 	'1634: tmp = base(8)';
+	print				'1634: tmp = base(8)';
 	vrfy(config("mode") == "octal", '1635: config("mode") == "octal"');
 
 	tmp = base(2);
-	print			  	'1636: tmp = base(2)';
+	print				'1636: tmp = base(2)';
 	vrfy(config("mode") == "binary",'1637: config("mode") == "binary"');
 
 	tmp = base(8);
-	print			  	'1638: tmp = base(8)';
+	print				'1638: tmp = base(8)';
 	vrfy(str(0x80000000) == "020000000000", \
 		'1639: str(0x8000000) == \"020000000000\"');
 	vrfy(str(0xffffffff) == "037777777777", \
@@ -1653,7 +1653,7 @@ define test_mode()
 		'1641: str(3e9) == \"026264057000\"');
 
 	tmp = base(16);
-	print			  	'1642: tmp = base(16)';
+	print				'1642: tmp = base(16)';
 	vrfy(str(0x80000000) == "0x80000000", \
 		'1643: str(0x8000000) == \"0x80000000\"');
 	vrfy(str(0xffffffff) == "0xffffffff", \
@@ -1662,7 +1662,7 @@ define test_mode()
 		'1645: str(3e9) == \"0xb2d05e00\"');
 
 	tmp = base(10);
-	print			  	'1646: tmp = base(10)';
+	print				'1646: tmp = base(10)';
 	vrfy(config("mode") == "real", \
 		'1647: config("mode") == "real"');
 
@@ -1799,7 +1799,7 @@ define test_prime()
 	vrfy(nextprime(65536) == 65537,
 					'1944: nextprime(65536) == 65537');
 	vrfy(nextprime(1234576,2)==1234577,
-				        '1945: nextprime(1234576,2)==1234577');
+					'1945: nextprime(1234576,2)==1234577');
 	vrfy(nextprime(2^31-9) == 2^31-1,
 					'1946: nextprime(2^31-9) == 2^31-1');
 	vrfy(nextprime(2^31-1) == 2^31+11,
@@ -1807,10 +1807,10 @@ define test_prime()
 	vrfy(nextprime(3e9) == 3e9+19,'1948: nextprime(3e9) == 3e9+19');
 	vrfy(nextprime(2^32-7) == 2^32-5,
 					'1949: nextprime(2^32-7) == 2^32-5');
-	vrfy(nextprime(2^32,-1) == -1,  '1950: nextprime(2^32,-1) == -1');
+	vrfy(nextprime(2^32,-1) == -1,	'1950: nextprime(2^32,-1) == -1');
 	vrfy(nextprime(2^32+5,-1) == -1,'1951: nextprime(2^32+5,-1) == -1');
-	vrfy(nextprime(3^99,-1) == -1,  '1952: nextprime(3^99,-1) == -1');
-	vrfy(nextprime(3^99,2) == 2,    '1953: nextprime(3^99,2) == 2');
+	vrfy(nextprime(3^99,-1) == -1,	'1952: nextprime(3^99,-1) == -1');
+	vrfy(nextprime(3^99,2) == 2,	'1953: nextprime(3^99,2) == 2');
 	vrfy(prevprime(-3,-1) == 2,	'1954: prevprime(-3,-1) == 2');
 	vrfy(prevprime(0,-1) == 0,	'1955: prevprime(0,-1) == 0');
 	vrfy(prevprime(1,-1) == 0,	'1956: prevprime(1,-1) == 0');
@@ -1841,7 +1841,7 @@ define test_prime()
 	vrfy(prevprime(65539) == 65537,
 					'1972: prevprime(65539) == 65537');
 	vrfy(prevprime(1234578,2)==1234577,
-				        '1973: prevprime(1234578,2)==1234577');
+					'1973: prevprime(1234578,2)==1234577');
 	vrfy(prevprime(2^31-1) == 2^31-19,
 					'1974: prevprime(2^31-1) == 2^31-19');
 	vrfy(prevprime(2^31+11) == 2^31-1,
@@ -1851,9 +1851,9 @@ define test_prime()
 					'1977: prevprime(2^32-3) == 2^32-5');
 	vrfy(prevprime(2^32-1) == 2^32-5,
 					'1978: prevprime(2^32-1) == 2^32-5');
-	vrfy(prevprime(2^32,-1) == -1,  '1979: prevprime(2^32,-1) == -1');
-	vrfy(prevprime(3^99,-1) == -1,  '1980: prevprime(3^99,-1) == -1');
-	vrfy(prevprime(3^99,2) == 2,    '1981: prevprime(3^99,2) == 2');
+	vrfy(prevprime(2^32,-1) == -1,	'1979: prevprime(2^32,-1) == -1');
+	vrfy(prevprime(3^99,-1) == -1,	'1980: prevprime(3^99,-1) == -1');
+	vrfy(prevprime(3^99,2) == 2,	'1981: prevprime(3^99,2) == 2');
 	vrfy(pix(-1) == 0,		'1982: pix(-1) == 0');
 	vrfy(pix(1) == 0,		'1983: pix(1) == 0');
 	vrfy(pix(2) == 1,		'1984: pix(2) == 1');
@@ -1865,9 +1865,9 @@ define test_prime()
 	vrfy(pix(2^19+59) == 43393,	'1990: pix(2^19+59) == 43393');
 	vrfy(pix(1000000) == 78498,	'1991: pix(1000000) == 78498');
 	vrfy(pix(10000000) == 664579,	'1992: pix(10000000) == 664579');
-	vrfy(pix(2^32-6) == 203280220,  '1993: pix(2^32-6) == 203280220');
-	vrfy(pix(2^32-5) == 203280221,  '1994: pix(2^32-5) == 203280221');
-	vrfy(pix(2^32-1) == 203280221,  '1995: pix(2^32-1) == 203280221');
+	vrfy(pix(2^32-6) == 203280220,	'1993: pix(2^32-6) == 203280220');
+	vrfy(pix(2^32-5) == 203280221,	'1994: pix(2^32-5) == 203280221');
+	vrfy(pix(2^32-1) == 203280221,	'1995: pix(2^32-1) == 203280221');
 	vrfy(pfact(40) == 7420738134810,'1996: pfact(40) == 7420738134810');
 	vrfy(pfact(200)/pfact(198)==199,'1997: pfact(200)/pfact(198)==199');
 	vrfy(nextprime(3e9)==nextcand(3e9),
@@ -1919,7 +1919,7 @@ define test_prime()
 	vrfy(lfactor(1001,100) == 7,	'2023: lfactor(1001,100) == 7');
 	vrfy(lfactor(1001,4) == 7,	'2024: lfactor(1001,4) == 7');
 	vrfy(lfactor(1001,3) == 1,	'2025: lfactor(1001,3) == 1');
-	vrfy(lfactor(127,10000) == 1,   '2026: lfactor(127,10000) == 1');
+	vrfy(lfactor(127,10000) == 1,	'2026: lfactor(127,10000) == 1');
 	vrfy(lfactor(2^19-1,10000) == 1,'2027: lfactor(2^19-1,10000) == 1');
 	vrfy(lfactor(2^31-1,10000) == 1,'2028: lfactor(2^31-1,10000) == 1');
 	vrfy(lfactor(2^32-5,10000) == 1,'2029: lfactor(2^32-5,10000) == 1');
@@ -1974,19 +1974,19 @@ define test_newop()
 	print '2200: Beginning new operator functionality test';
 
 	(v = 3) = 4;
-	print 			'2201: (v = 3) = 4';
+	print			'2201: (v = 3) = 4';
 	vrfy(v == 4,		'2202: v == 4');
 	(v += 3) *= 4;
-	print 			'2203: (v += 3) *= 4';
+	print			'2203: (v += 3) *= 4';
 	vrfy(v == 28,		'2204: v == 28');
 	vrfy(A == A2,		'2205: A == A2');
 	matfill(B = A, 4);
 	print			'2206: matfill(B = A, 4)';
 	vrfy(A == A2,		'2207: A == A2');
 	vrfy(size(B) == 3,	'2208: size(B) == 3');
-	vrfy(B[0] == 4,	'2209: B[0] == 4');
-	vrfy(B[1] == 4,	'2210: B[1] == 4');
-	vrfy(B[2] == 4,	'2211: B[2] == 4');
+	vrfy(B[0] == 4, '2209: B[0] == 4');
+	vrfy(B[1] == 4, '2210: B[1] == 4');
+	vrfy(B[2] == 4, '2211: B[2] == 4');
 	a = 3;
 	print			'2212: a = 3';
 	++(b = a);
@@ -2562,7 +2562,7 @@ define test_matrix()
 	matfill(e,1,0);
 	print				'2862: matfill(e,1,0)';
 	vrfy(matsum(d) == 945,		'2863: matsum(d) == 945');
-	vrfy(matsum(e) == 20,	   	'2864: matsum(e) == 20');
+	vrfy(matsum(e) == 20,		'2864: matsum(e) == 20');
 	vrfy(search(binv,1) == 1,	'2865: search(binv,1) == 1');
 	vrfy(search(binv,2) == 4,	'2866: search(binv,2) == 4');
 	vrfy(search(binv,2,4) == 4,	'2867: search(binv,2,4) == 4');
@@ -2603,7 +2603,7 @@ define test_matrix()
 	vrfy(cp(xp,yp) == zp,		'2898: cp(xp,yp) == zp');
 	vrfy(cp(yp,xp) == -zp,		'2899: cp(yp,xp) == -zp');
 	matfill(zero3,0);
-	print 				'2900: matfill(zero3,0)';
+	print				'2900: matfill(zero3,0)';
 	vrfy(cp(xp,xp) == zero3,	'2901: cp(xp,xp) == zero3');
 	vrfy(dp(xp,yp) == 38,		'2902: dp(xp,yp) == 38');
 	vrfy(dp(yp,xp) == 38,		'2903: dp(yp,xp) == 38');
@@ -2657,12 +2657,12 @@ define test_strings()
 	print '3000: Beginning test_strings';
 
 	x = 'string';
-	print 				"3001: x = 'string'";
+	print				"3001: x = 'string'";
 	y = "string";
-	print 				'3002: y = "string"';
+	print				'3002: y = "string"';
 	z = x;
-	print 				'3003: z = x';
-	vrfy(z == "string", 		'3004: z == "string"');
+	print				'3003: z = x';
+	vrfy(z == "string",		'3004: z == "string"');
 	vrfy(z != "foo",		'3005: z != "foo"');
 	vrfy(z != 3,			'3006: z != 3');
 	vrfy('' == "",		'3007: \'\' == ""');
@@ -2701,7 +2701,7 @@ define test_matobj()
 	vrfy(det(A^3) == -474552,	'3103: det(A^3) == -474552');
 	vrfy(det(A^-1) == -1/78,	'3104: det(A^-1) == -1/78');
 	md = 0;
-	print 				'3105: md = 0';
+	print				'3105: md = 0';
 	B[0,0] = res(2);
 	print				'3106: B[0,0] = res(2)';
 	B[0,1] = res(3);
@@ -2888,8 +2888,8 @@ define test_error()
 	vrfy(0/0 == error(10002),	'3605: 0/0 == error(10002)');
 	vrfy(2 + "x" == error(10003),	'3606: 2 + "x" == error(10003)');
 	vrfy("x" - 2 == error(10004),	'3607: "x" - 2 == error(10004)');
-	vrfy("x" * "y" == error(10005),	'3608: "x" * "y" == error(10005)');
-	vrfy("x" / "y" == error(10006),	'3609: "x" / "y" == error(10006)');
+	vrfy("x" * "y" == error(10005), '3608: "x" * "y" == error(10005)');
+	vrfy("x" / "y" == error(10006), '3609: "x" / "y" == error(10006)');
 	vrfy(-list(1) == error(10007),	'3610: -list(1) == error(10007)');
 	vrfy("x"^2 == error(10008),	'3611: "x"^2 == error(10008)');
 	vrfy(inverse("x")==error(10009),'3612: inverse("x") == error(10009)');
@@ -2903,8 +2903,8 @@ define test_error()
 	print				'3618: strx = "x"';
 	vrfy(--strx == error(10011),	'3619: strx == error(10011)');
 	vrfy(int("x") == error(10012),	'3620: int("x") == error(10012)');
-	vrfy(frac("x") == error(10013),	'3621: frac("x") == error(10013)');
-	vrfy(conj("x") == error(10014),	'3622: conj("x") == error(10014)');
+	vrfy(frac("x") == error(10013), '3621: frac("x") == error(10013)');
+	vrfy(conj("x") == error(10014), '3622: conj("x") == error(10014)');
 	vrfy(appr("x",.1) == error(10015),
 				    '3623: appr("x",.1) == error(10015)');
 	vrfy(appr(1.27,.1i) == error(10016),
@@ -2954,7 +2954,7 @@ define test_error()
 	vrfy(1.5 << 2 == error(10031),	'3647: 1.5 << 2 == error(10031)');
 	vrfy(3 << "x" == error(10032),	'3648: 3 << "x" == error(10032)');
 	vrfy(3 << 1.5 == error(10032),	'3649: 3 << 1.5 == error(10032)');
-	vrfy(3 << 2^31 == error(10032),	'3650: 3 << 2^31 == error(10032)');
+	vrfy(3 << 2^31 == error(10032), '3650: 3 << 2^31 == error(10032)');
 	vrfy(scale("x",2) == error(10033),
 				    '3651: scale("x",2) == error(10033)');
 	vrfy(scale(3,"x") == error(10034),
@@ -3035,8 +3035,8 @@ define test_error()
 	b = newerror("beta");
 	print				'3705: c = newerror("alpha")';
 	c = newerror("alpha");
-	vrfy(a == c, 			'3706: a == c');
-	vrfy(strerror(a) == "alpha", 	'3707: strerror(a) == "alpha"');
+	vrfy(a == c,			'3706: a == c');
+	vrfy(strerror(a) == "alpha",	'3707: strerror(a) == "alpha"');
 	print				'3708: n = iserror(a)';
 	n = iserror(a);
 	vrfy(a == error(n),		'3709: a == error(n)');
@@ -3338,7 +3338,7 @@ define test_matdcl()
 	vrfy(ismat(mat_X2),		    '4307: ismat(mat_X2)');
 	vrfy(ismat(mat_X3),		    '4308: ismat(mat_X3)');
 	mat_Y0 = mat[4];
-	print 				    '4309: mat_Y0 = mat[4]';
+	print				    '4309: mat_Y0 = mat[4]';
 	vrfy(size(mat_Y0) == 4,		    '4310: size(mat_Y0) == 4');
 	vrfy(size(mat_Y1) == 2,		    '4311: size(mat_Y1) == 2');
 	vrfy(size(mat_Y2) == 2,		    '4312: size(mat_Y2) == 2');
@@ -3390,9 +3390,9 @@ define test_matdcl()
 	for (i=0; i < 4; ++i) mat_X0[i] = size(mat_Y0[i]);
 	print '4349: for (i=0; i < 4; ++i) mat_X0[i] = size(mat_Y0[i])';
 	mat_X0==(mat[4]={2,1,2,3});
-	print			    	    '4350: mat_X0==(mat[4]={2,1,2,3})';
+	print				    '4350: mat_X0==(mat[4]={2,1,2,3})';
 	vrfy(mat_Y0[0] == mat_Z0,	    '4351: mat_Y0[0] == mat_Z0');
-	vrfy(mat_Y0[1] == 0,	    	    '4352: mat_Y0[1] == 0');
+	vrfy(mat_Y0[1] == 0,		    '4352: mat_Y0[1] == 0');
 	vrfy(mat_Y0[2] == mat_Z1,	    '4353: mat_Y0[2] == mat_Z1');
 	vrfy(mat_Y0[3] == mat_X3,	    '4354: mat_Y0[3] == mat_X3');
 	vrfy(mat_Y0[0][0] == 2,		    '4355: mat_Y0[0][0] == 2');
@@ -3449,7 +3449,7 @@ define test_objmat()
 	vrfy(Q == (mat[2]={5+3i,17+4i}),    '4408: Q == (mat[2]={5+3i,17+4i})');
 	R = {M2,M3};
 	print				    '4409: R = {M2,M3}';
-	vrfy(norm(R) == M4,	    	    '4410: norm(R) == M4');
+	vrfy(norm(R) == M4,		    '4410: norm(R) == M4');
 	vrfy(det(surd_value(R^2)) == -23-6i, \
 				'4411: det(surd_value(R^2)) == -23-6i');
 	vrfy(det(norm(R^5))==268107761663283843865, \
@@ -3484,13 +3484,13 @@ define test_objmat()
 	    '4424: (mat [] = {1,2,3}) == (mat[3] = {1,2,3})');
 
 	mat A[3] = {2,3,5};
-	print 			    '4425: mat A[3] = {2,3,5}';
+	print			    '4425: mat A[3] = {2,3,5}';
 	mat A[3] = {A[0], A[2], A[1]};
 	print			    '4426: mat A[3] = {A[0], A[2], A[1]}';
 	vrfy(A == (mat[3] = {2, 5, 3}),	    '4427: A == (mat[3] = {2, 5, 3})');
 
 	B = mat[3] = {2,5,3};
-	print			    	    '4428: B = mat[3] = {2,5,3}';
+	print				    '4428: B = mat[3] = {2,5,3}';
 	vrfy(A == B,			    '4429: A == B');
 
 	mat A[2] = {A[1], A[2]};
@@ -3727,7 +3727,7 @@ define test_strprintf()
 	vrfy(strprintf("%5s", "abc") == "  abc",
 		'4833: strprintf("%5s", "abc") == "  abc"');
 	vrfy(strprintf("%-5s", "abc") == "abc  ",
-		'4834: strprintf("%-5s", "abc") == "abc  "');
+		'4834: strprintf("%-5s", "abc") == "abc	 "');
 
 	/* restore config */
 	c = config("all", callcfg);
@@ -3817,8 +3817,8 @@ define test_listsearch()
 	vrfy(search(L,0,-5) == 8,	'4913: search(L,0,-5) == 8');
 	vrfy(rsearch(L,0,-9,-2) == 4,	'4914: rsearch(L,0,-9,-2) == 4');
 	vrfy(isnull(search(L,3,20)),	'4915: isnull(search(L,3,20)');
-	vrfy(isnull(search(L,3,0,-20)),	'4916: isnull(search(L,3,0,-20)');
-	vrfy(isnull(rsearch(L,3,20,2)),	'4917: isnull(rsearch(L,3,20,2)');
+	vrfy(isnull(search(L,3,0,-20)), '4916: isnull(search(L,3,0,-20)');
+	vrfy(isnull(rsearch(L,3,20,2)), '4917: isnull(rsearch(L,3,20,2)');
 	vrfy(rsearch(L,3,-20,20) == 7,	'4918: rsearch(L,3,-20,20) == 7');
 
 	print '4919: Ending test_strprintf';
@@ -3905,7 +3905,7 @@ define test_filesearch()
 	vrfy(ftell(f) == 17,		'5029: ftell(f) == 17');
 	vrfy(rsearch(f, "", 5) == 5,	'5030: rsearch(f, "", 5) == 5');
 	vrfy(ftell(f) == 5,		'5031: ftell(f) == 5');
-	vrfy(search(f, "beta", 0) == 6,	'5032: search(f, "beta", 0) == 6');
+	vrfy(search(f, "beta", 0) == 6, '5032: search(f, "beta", 0) == 6');
 	vrfy(ftell(f) == 10,		'5033: ftell(f) == 10');
 	vrfy(rsearch(f, "beta", 100) == 6,
 					'5034: rsearch(f, "beta", 100) == 6');
@@ -3916,16 +3916,16 @@ define test_filesearch()
 	vrfy(search(f, "m") == 13,	'5039: search(f, "m") == 13');
 	vrfy(search(f, "m") == 14,	'5040: search(f, "m") == 14');
 	vrfy(isnull(search(f, "m")),	'5041: isnull(search(f, "m"))');
-	vrfy(rsearch(f, "m", 15) == 14,	'5042: rsearch(f, "m", 14) == 14');
+	vrfy(rsearch(f, "m", 15) == 14, '5042: rsearch(f, "m", 14) == 14');
 	vrfy(isnull(search(f, "beta", 7)),
 					'5043: isnull(search(f, "beta", 7))');
 	vrfy(ftell(f) == 14,		'5044: ftell(f) == 14');
 	vrfy(search(f,"a",2,15) == 4,	'5045: search(f,"a",2,15) == 4');
 	vrfy(ftell(f) == 5,		'5046: ftell(f) == 5');
-	vrfy(isnull(search(f,"a",2,4)),	'5047: isnull(search(f,"a",2,4))');
+	vrfy(isnull(search(f,"a",2,4)), '5047: isnull(search(f,"a",2,4))');
 	vrfy(ftell(f) == 4,		'5048: ftell(f) == 4');
 	vrfy(search(f,"a",,5) == 4,	'5049: search(f,"a",,5) == 4');
-	vrfy(rsearch(f,"a",2,15) == 12,	'5050: rsearch(f,"a",2,15) == 12');
+	vrfy(rsearch(f,"a",2,15) == 12, '5050: rsearch(f,"a",2,15) == 12');
 	vrfy(ftell(f) == 12,		'5051: ftell(f) == 12');
 	vrfy(rsearch(f,"a",2,12) == 9,	'5052: rsearch(f,"a",2,12) == 9');
 
@@ -4157,7 +4157,7 @@ define test_random()
 	vrfy(srandom() == init,		  '5320: srandom() == init');
 	tmp = srandom(0x87e6ec938ff55aa5<<64);
 	print	  '5321: tmp = srandom(0x87e6ec938ff55aa5<<64)';
-	vrfy(srandom() == init,	  	  '5322: srandom() == init');
+	vrfy(srandom() == init,		  '5322: srandom() == init');
 	tmp = srandom(state0);
 	print				  '5323: tmp = srandom(state0)';
 	vrfy(srandom() == init,		  '5324: srandom() == init');
@@ -4184,7 +4184,7 @@ define test_random()
 	vrfy(randombit(1) == 0x1,	  '5336: randombit(1) == 0x1');
 	vrfy(randombit(5) == 0xe,	  '5337: randombit(5) == 0xe');
 	vrfy(randombit(33) == 0xececfda2, '5338: randombit(33) == 0xececfda2');
-	vrfy(randombit(25) == 0x40f7bb,  '5339: randombit(25) == 0x40f7bb');
+	vrfy(randombit(25) == 0x40f7bb,	 '5339: randombit(25) == 0x40f7bb');
 	vrfy(randombit(2) == 0x3,	  '5340: randombit(2) == 0x3');
 	vrfy(randombit(13) == 0xd3,	  '5341: randombit(13) == 0xd3');
 	vrfy(randombit(18) == 0x37a76,	  '5342: randombit(18) == 0x37a76');
@@ -4671,8 +4671,8 @@ define test_commaeq()
 	 */
 	obj xy5600 A = {1, 2} = {3, 4};
 	print		'5612: obj xy5600 A = {1, 2} = {3, 4}';
-	vrfy(A.x == 3,		  	  '5613: A.x == 3');
-	vrfy(A.y == 4,		  	  '5614: A.y == 4');
+	vrfy(A.x == 3,			  '5613: A.x == 3');
+	vrfy(A.y == 4,			  '5614: A.y == 4');
 	obj xy5600 B = {A,A};
 	print		'5613: obj xy5600 B = {A,A}';
 	vrfy(B.x.x == 3,		  '5615: B.x.x == 3');
@@ -6011,7 +6011,7 @@ define test_blk()
 
 	/* Assignment of copy with initialization */
 
-        B = A;
+	B = A;
 	print				  '6733: B = A;';
 	C=blk(A)={,,,,,,,,,,0xbb};
 	print				  '6734: C=blk(A)={,,,,,,,,,,0xbb};';
@@ -6135,7 +6135,7 @@ define test_blkcpy()
 {
 	local A, B, C, A1, A2, B1, fs, S, M1, M2, L1, L2, x;
 
-	print   '6800: Beginning test_blkcpy';
+	print	'6800: Beginning test_blkcpy';
 
 	A = blk() = {1,2,3,4,5};
 	print				  '6801: A = blk() = {1,2,3,4,5};';
@@ -6230,7 +6230,7 @@ define test_blkcpy()
 	vrfy(M2 == (mat[4]={1,2,3,4}),	  '6844: M2 == (mat[4]={1,2,3,4}');
 	blkcpy(M2, M2, 2, 2, 0);
 	print				  '6845: blkcpy(M2, M2, 2, 2, 0);';
-	vrfy(M2 == (mat[4]={1,2,1,2}),    '6846: M2 == (mat[4]={1,2,1,2}');
+	vrfy(M2 == (mat[4]={1,2,1,2}),	  '6846: M2 == (mat[4]={1,2,1,2}');
 
 	/* blkcpy between blocks and matrices */
 
@@ -6394,7 +6394,7 @@ define test_sha()
 	vrfy(y == sha(1),		'7106: y == sha(1)');
 	vrfy(sha(y,2) == sha(1,2),	'7107: sha(y,2) == sha(1,2)');
 
-    	vrfy(sha(sha()) == 0xf96cea198ad1dd5617ac084a3d92c6107708c0ef,
+	vrfy(sha(sha()) == 0xf96cea198ad1dd5617ac084a3d92c6107708c0ef,
 	    '7108: sha(sha()) == 0xf96cea198ad1dd5617ac084a3d92c6107708c0ef');
 
 	vrfy(sha(sha("a"))==0x37f297772fae4cb1ba39b6cf9cf0381180bd62f2,
@@ -6426,10 +6426,10 @@ define test_sha()
 	vrfy(sha(sha(isqrt(2e1000))) ==
 	    0x6db8d9cf0b018b8f9cbbf5aa1edb8066d19e1bb0,
     '7120: sha(sha(isqrt(2e1000)==0x6db8d9cf0b018b8f9cbbf5aa1edb8066d19e1bb0');
-   	vrfy(sha("x", "y", "z") == sha("xyz"),
+	vrfy(sha("x", "y", "z") == sha("xyz"),
 		'7121: sha("x", "y", "z") == sha("xyz")');
 
-    	vrfy(sha(sha("this is", 7^19-8, "a composit", 3i+4.5, "hash")) ==
+	vrfy(sha(sha("this is", 7^19-8, "a composit", 3i+4.5, "hash")) ==
 	    0x21e42319a26787046c2b28b7ae70f1b54bf0ba2a,
 		'7122: sha(sha("this is", 7^19-8, ..., "hash")) == 0x21e4...');
 
@@ -6494,17 +6494,17 @@ define test_sha1()
 	print				'7204: z = sha1(1);';
 	vrfy(sha1(y,1) == z,		'7205: sha1(y,1) == z');
 	vrfy(sha1(z,2) == sha1(1,2),	'7206: sha1(z,2) == sha1(1,2)');
-    	vrfy(sha1(sha1()) == 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+	vrfy(sha1(sha1()) == 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	    '7207: sha1(sha1()) == 0xda39a3ee5e6b4b0d3255bfef95601890afd80709');
-    	vrfy(sha1("x", "y", "z") == sha1("xyz"),
+	vrfy(sha1("x", "y", "z") == sha1("xyz"),
 	    '7208: sha1("x", "y", "z") == sha1("xyz")');
 
-    	vrfy(sha1(sha1("this is",7^19-8,"a composit",3i+4.5,"hash")) ==
+	vrfy(sha1(sha1("this is",7^19-8,"a composit",3i+4.5,"hash")) ==
 	    0xc3e1b562bf45b3bcfc055ac65b5b39cdeb6a6c55,
 	'7209: sha1(sha1("this is",7^19-8,"a composit",3i+4.5,"hash")) == ...');
 
 
-    	z = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi());
+	z = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi());
 	print '7210: z = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi());';
 	vrfy(sha1(z) == 0xc19e7317675dbf71e293b4c41e117169e9da5b6f,
 		'7211: sha1(z) == 0xc19e7317675dbf71e293b4c41e117169e9da5b6f');
@@ -6582,17 +6582,17 @@ define test_md5()
 	vrfy(y == z,			'7306: y == z');
 	vrfy(md5(z,2) == md5(1,2),	'7307: md5(z,2) == md5(1,2)');
 
-    	vrfy(md5(md5()) == 0xd41d8cd98f00b204e9800998ecf8427e,
+	vrfy(md5(md5()) == 0xd41d8cd98f00b204e9800998ecf8427e,
 		'7308: md5(md5()) == 0xd41d8cd98f00b204e9800998ecf8427e');
-    	vrfy(md5("x", "y", "z") == md5("xyz"),
+	vrfy(md5("x", "y", "z") == md5("xyz"),
 		'7309: md5("x", "y", "z") == md5("xyz")');
 
-    	vrfy(md5(md5("this is", 7^19-8, "a composit", 3i+4.5, "hash")) ==
+	vrfy(md5(md5("this is", 7^19-8, "a composit", 3i+4.5, "hash")) ==
 		0x39a5a8e24a2eb65a51af462c8bdd5e3,
     '7310: md5(md5("this is", 7^19-8, "a composit", 3i+4.5, "hash")) == ...');
 
 
-    	z = md5(list(1,2,3), "curds and whey", 2^21701-1, pi());
+	z = md5(list(1,2,3), "curds and whey", 2^21701-1, pi());
 	print '7311: z = md5(list(1,2,3), "curds and whey", 2^21701-1, pi());';
 	vrfy(md5(z) == 0x63d2b2fccae2de265227c30b05abb6b5,
 		'7312: md5(z) == 0x63d2b2fccae2de265227c30b05abb6b5');
@@ -6675,7 +6675,7 @@ define test_ptr()
 	/* testing octet pointers */
 
 	B = blk() = {1,2,3,4,5,6};
-	print 				'7503: B = blk() = {1,2,3,4,5,6};';
+	print				'7503: B = blk() = {1,2,3,4,5,6};';
 	vrfy(isoctet(B[0]) == 1,	'7504: isoctet(B[0]) == 1');
 	vrfy(isnum(B[0]) == 0,		'7505: isnum(B[0]) == 0');
 	vrfy(isptr(B[0]) == 0,		'7506: isptr(B[0]) == 0');
@@ -6721,7 +6721,7 @@ define test_ptr()
 	vrfy(B[3] == 8,			'7537: B[3] == 8');
 	p0 = p++;
 	print				'7538: p0 = p++;';
-	vrfy(p0 == &B[0] && p == &B[1],	'7539: p0 == &B[0] && p == &B[1]');
+	vrfy(p0 == &B[0] && p == &B[1], '7539: p0 == &B[0] && p == &B[1]');
 	q0 = --q;
 	print				'7540: q0 = --q';
 	vrfy(q0 == &B[4] && q == q0,	'7541: q0 == &B[4] && q == q0');
@@ -6753,7 +6753,7 @@ define test_ptr()
 	vrfy(g7500c(&A[0],2) == 3,	'7558: g7500c(&A[0], 2) == 3');
 	vrfy(g7500d(`A[0]) == &A[0],	'7559: g7500d(`A[0]) == &A[0]');
 	p = &A[0];
-	print 				'7560: p = &A[0];';
+	print				'7560: p = &A[0];';
 	vrfy(g7500a(*p, 6) == 6,	'7561: g7500a(*p, 6) == 6');
 	vrfy(*p == 6,			'7562: *p == 6');
 	vrfy(g7500a(`*p,6) == 6,	'7563: g7500a(`*p,6) == 6');
@@ -6806,8 +6806,8 @@ define test_ptr()
 	vrfy(M[1] == 2 && M[2] == 3,	'7597: M[1] == 2 && M[2] == 3');
 	A = *M = {7,8};
 	print				'7598: A = *M = {7,8};';
-	vrfy(M == (mat[4] = {5,2,3,4}),	'7599: M == (mat[4] = {5,2,3,4})');
-	vrfy(A == (mat[4] = {7,8,3,4}),	'7600: A == (mat[4] = {7,8,3,4})');
+	vrfy(M == (mat[4] = {5,2,3,4}), '7599: M == (mat[4] = {5,2,3,4})');
+	vrfy(A == (mat[4] = {7,8,3,4}), '7600: A == (mat[4] = {7,8,3,4})');
 
 	/* Values which point to themselves */
 
@@ -7078,7 +7078,7 @@ define test_natnumset()
 	vrfy(#~A == 97,			'8109: #~A == 97');
 	vrfy(A + 5 == set(5,7,22,29),	'8110: A + 5 == set(5,7,22,29)');
 	vrfy(A - 5 == set(12,19),	'8111: A - 5 == set(12,19)');
-	vrfy(30 - A == set(6,13,28,30),	'8112: 30 - A == set(6,13,28,30)');
+	vrfy(30 - A == set(6,13,28,30), '8112: 30 - A == set(6,13,28,30)');
 	vrfy(2 * A == set(0,4,34,48),	'8113: 2 * A == set(0,4,34,48)');
 	vrfy(10 * A == set(0,20),	'8114: 10 * A == set(0,20)');
 	vrfy(A + A == set(0,2,4,17,19,24,26,34,41,48),
@@ -7416,7 +7416,7 @@ saveval(1);
 print				'7402: a7400 = 2;';
 a7400 = 2;
 vrfy(. == 2,			'7403: . == 2;');
-vrfy((. += 3, . == 5), 		'7404: (. += 3, . == 5)');
+vrfy((. += 3, . == 5),		'7404: (. += 3, . == 5)');
 vrfy(. == 5,			'7405: . == 5;');
 print				'7406: a7400 = 5; b7400 = 6;';
 a7400 = 5; b7400 = 6;

@@ -6,7 +6,7 @@
  * Represent a fraction as sum of distinct unit fractions.
  * The output is the unit fractions themselves, and in square brackets,
  * the number of digits in the numerator and denominator of the value left
- * to be found.  Numbers larger than 3.5 become very difficult to calculate.
+ * to be found.	 Numbers larger than 3.5 become very difficult to calculate.
  */
 
 define unitfrac(x)
@@ -21,9 +21,9 @@ define unitfrac(x)
 		if (n > d)
 			d = n;
 		di = 1/d;
-		print '  [': digits(num(x)): '/': digits(den(x)): ']',, di;
+		print '	 [': digits(num(x)): '/': digits(den(x)): ']',, di;
 		x -= di;
 		d++;
 	} while ((num(x) > 1) || (x == di) || (x == 1));
-	print '  [1/1]',, x;
+	print '	 [1/1]',, x;
 }

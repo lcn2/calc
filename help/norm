@@ -17,7 +17,7 @@ TYPES
 DESCRIPTION
     For real x, norm(x) returns:
 
-   	 x^2.
+	 x^2.
 
     For complex x, norm(x) returns:
 

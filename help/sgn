@@ -8,7 +8,7 @@ TYPES
     x		real or complex
 
     return	-1, 0, 1					(real)
-    		-1, 0, 1, -1+1i, 1i, 1+1i, -1-1i, -1i or 1-1i	(complex)
+		-1, 0, 1, -1+1i, 1i, 1+1i, -1-1i, -1i or 1-1i	(complex)
 
 DESCRIPTION
     Return the value of cmp(a,0).

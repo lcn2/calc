@@ -14,7 +14,7 @@ TYPES
 
 DESCRIPTION
     Returns 0 or 1 according as x is or is not a multiple of y.
-    Let  x = q * y + r  where q is an integer and 0 <= r < y
+    Let	 x = q * y + r	where q is an integer and 0 <= r < y
     This function assigns the values q and r to the variables
     Q and R.  If x >= 0, the results for Q and R are the same as
     those given by Q = x // y, R = x % y.
@@ -39,4 +39,4 @@ LIBRARY
     BOOL qquomod(NUMBER *q1, NUMBER *q2, NUMBER **retqdiv, NUMBER **retqmod)
 
 SEE ALSO
-    //,  %
+    //,	 %

@@ -18,7 +18,7 @@ DESCRIPTION
     string of length min(strlen(str) - pos + 1, len) formed by
     consecutive characters of str starting at position pos, i.e. the
     string has length len if this is possible, otherwise it ends with
-    the last character of str.  (The first character has pos = 1, the
+    the last character of str.	(The first character has pos = 1, the
     second pos = 2, etc.)
 
     If pos = 0, the result is the same as for pos = 1.

@@ -14,7 +14,7 @@ TYPES
 DESCRIPTION
 
     If n >= 0 and n has a prime factor less than or equal to limit,
-    factor(n, limit) returns the smallest such factor.  If n >= 0
+    factor(n, limit) returns the smallest such factor.	If n >= 0
     and the smallest prime factor of n exceeds limit, 1 is returned.
     In particular, if n >= 0 and limit <= 1, factor(n, limit)
     always returns 1; factor(n,2) returns 2 if and only if n is even.

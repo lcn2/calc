@@ -22,7 +22,7 @@
 # PERFORMANCE OF THIS SOFTWARE.
 #
 # Comments, suggestions, bug fixes and questions about these routines
-# are welcome.  Send EMail to the address given below.
+# are welcome.	Send EMail to the address given below.
 #
 # Happy bit twiddling,
 #
@@ -146,7 +146,7 @@ DEBUG= -O
 #	BSD	    NO_SHARED=
 #	SYSV	    NO_SHARED= -dn
 #	IRIX	    NO_SHARED= -non_shared
-#	disable     NO_SHARED=
+#	disable	    NO_SHARED=
 #
 # If in doubt, use NO_SHARED=
 #
@@ -168,7 +168,7 @@ RANLIB=:
 # a default here just in case you want to build from this directory.
 #
 # Normally certain files depend on the Makefile.  If the Makefile is
-# changed, then certain steps should be redone.  If MAKE_FILE is
+# changed, then certain steps should be redone.	 If MAKE_FILE is
 # set to Makefile, then these files will depend on Makefile.  If
 # MAKE_FILE is empty, they they wont.
 #
@@ -192,7 +192,7 @@ MAKE_FILE= Makefile
 #
 # By default, custom builtin functions may only be executed if calc
 # is given the -C option.  This is because custom builtin functions
-# may invoke non-standard or non-portable code.  One may completely
+# may invoke non-standard or non-portable code.	 One may completely
 # disable custom builtin functions by not compiling any of code
 #
 # ALLOW_CUSTOM= -DCUSTOM	# allow custom only if -C is given
@@ -333,14 +333,14 @@ c_sysinfo.o: c_sysinfo.c ${MAKE_FILE}
 
 ##
 #
-# File list generation.  You can ignore this section.
+# File list generation.	 You can ignore this section.
 #
 #
 # We will form the names of source files as if they were in a
 # sub-directory called calc/lib.
 #
 # NOTE: Due to bogus shells found on one common system we must have
-#       an non-emoty else clause for every if condition.  *sigh*
+#	an non-emoty else clause for every if condition.  *sigh*
 #
 ##
 
@@ -376,7 +376,7 @@ depend:
 	${Q}mkdir skel
 	${Q}mkdir skel/custom
 	-${Q}for i in ${C_SRC}; do \
-		${SED} -n '/^#[	 ]*include[ 	]*"/p' \
+		${SED} -n '/^#[	 ]*include[	]*"/p' \
 		    "$$i" > "skel/custom/$$i"; \
 	done
 	-${Q}for i in /dev/null ${H_SRC}; do \

@@ -11,7 +11,7 @@ TYPES
 
 DESCRIPTION
     This custom function prints out the numerator of a real value
-    in octets.  Each HALF value is printed in a separate line.
+    in octets.	Each HALF value is printed in a separate line.
 
     NOTE: The output will vary depending on the size of a HALF
 	  and the byte order of the system.  See:
@@ -26,15 +26,15 @@ DESCRIPTION
 
 EXAMPLE
     > custom("pzasusb8", 0x01020304050607080910111213141516);
-    0:      13141516
-    1:      09101112
-    2:      05060708
-    3:      01020304
+    0:	    13141516
+    1:	    09101112
+    2:	    05060708
+    3:	    01020304
 
     > custom("pzasusb8", 10^25)
-    0:      4a000000
-    1:      16140148
-    2:      00084595
+    0:	    4a000000
+    1:	    16140148
+    2:	    00084595
 
     > printf("%x\n", 10^25);
     0x84595161401484a000000

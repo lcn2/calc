@@ -8,7 +8,7 @@
 
 
 #if !defined(__VALUE_H__)
-#define	__VALUE_H__
+#define __VALUE_H__
 
 
 #include "cmath.h"
@@ -28,9 +28,9 @@
  * Flags to modify results from the printvalue routine.
  * These flags are OR'd together.
  */
-#define	PRINT_NORMAL	0x00	/* print in normal manner */
-#define	PRINT_SHORT	0x01	/* print in short format (no elements) */
-#define	PRINT_UNAMBIG	0x02	/* print in non-ambiguous manner */
+#define PRINT_NORMAL	0x00	/* print in normal manner */
+#define PRINT_SHORT	0x01	/* print in short format (no elements) */
+#define PRINT_UNAMBIG	0x02	/* print in non-ambiguous manner */
 
 
 /*
@@ -40,10 +40,10 @@ typedef struct value VALUE;
 typedef struct object OBJECT;
 typedef struct matrix MATRIX;
 typedef struct list LIST;
-typedef	struct assoc ASSOC;
-typedef	long FILEID;
-typedef	struct rand RAND;
-typedef	struct random RANDOM;
+typedef struct assoc ASSOC;
+typedef long FILEID;
+typedef struct rand RAND;
+typedef struct random RANDOM;
 
 
 /*
@@ -80,22 +80,22 @@ struct value {
  * For ease in referencing
  */
 #define v_int	v_union.vv_int
-#define	v_file	v_union.vv_file
+#define v_file	v_union.vv_file
 #define v_num	v_union.vv_num
 #define v_com	v_union.vv_com
 #define v_addr	v_union.vv_addr
 #define v_str	v_union.vv_str
 #define v_mat	v_union.vv_mat
-#define	v_list	v_union.vv_list
-#define	v_assoc	v_union.vv_assoc
+#define v_list	v_union.vv_list
+#define v_assoc v_union.vv_assoc
 #define v_obj	v_union.vv_obj
-#define	v_valid	v_union.vv_int
+#define v_valid v_union.vv_int
 #define v_rand	v_union.vv_rand
 #define v_random v_union.vv_random
 #define v_config v_union.vv_config
 #define v_hash	v_union.vv_hash
-#define v_block	v_union.vv_block
-#define v_octet	v_union.vv_octet
+#define v_block v_union.vv_block
+#define v_octet v_union.vv_octet
 #define v_nblock v_union.vv_nblock
 
 
@@ -121,24 +121,24 @@ struct value {
 #define V_ADDR	4	/* address of variable value */
 #define V_STR	5	/* address of string */
 #define V_MAT	6	/* address of matrix structure */
-#define	V_LIST	7	/* address of list structure */
-#define	V_ASSOC	8	/* address of association structure */
+#define V_LIST	7	/* address of list structure */
+#define V_ASSOC 8	/* address of association structure */
 #define V_OBJ	9	/* address of object structure */
-#define	V_FILE	10	/* opened file id */
-#define V_RAND  11	/* address of additive 55 random state */
+#define V_FILE	10	/* opened file id */
+#define V_RAND	11	/* address of additive 55 random state */
 #define V_RANDOM 12	/* address of Blum random state */
 #define V_CONFIG 13	/* configuration state */
 #define V_HASH	14	/* hash state */
-#define V_BLOCK	15	/* memory block */
+#define V_BLOCK 15	/* memory block */
 #define V_OCTET 16	/* octet (unsigned char) */
 #define V_NBLOCK 17	/* named memory block */
 #define V_VPTR	18	/* value address as pointer */
 #define V_OPTR	19	/* octet address as pointer */
 #define V_SPTR	20	/* string address as pointer */
-#define V_NPTR  21	/* number address as pointer */
+#define V_NPTR	21	/* number address as pointer */
 #define V_MAX	21	/* highest legal value */
 
-#define V_NOSUBTYPE	0       /* subtype has no meaning */
+#define V_NOSUBTYPE	0	/* subtype has no meaning */
 #define V_NOASSIGNTO	1	/* protection status 1 */
 #define V_NONEWVALUE	2	/* protection status 2 */
 #define V_NONEWTYPE	4	/* protection status 4 */
@@ -160,7 +160,7 @@ struct value {
 
 #define TWOVAL(a,b) ((a) << 5 | (b))	/* for switch of two values */
 
-#define	NULL_VALUE	((VALUE *) 0)
+#define NULL_VALUE	((VALUE *) 0)
 
 
 /*
@@ -333,7 +333,7 @@ extern LIST *listsegment(LIST *, long, long);
  * Associations are "indexed" by one or more arbitrary values, and are
  * stored in a hash table with their hash values for quick indexing.
  */
-typedef	struct assocelem ASSOCELEM;
+typedef struct assocelem ASSOCELEM;
 struct assocelem {
 	ASSOCELEM *e_next;	/* next element in list (or NULL) */
 	long e_dim;		/* dimension of indexing for this element */

@@ -14,10 +14,10 @@
 #include "value.h"
 
 
-#define	MINHASHSIZE	31	/* minimum size of hash tables */
-#define	GROWHASHSIZE	50	/* approximate growth for hash tables */
-#define	CHAINLENGTH	10	/* desired number of elements on a hash chain */
-#define	ELEMSIZE(n)	(sizeof(ASSOCELEM) + (sizeof(VALUE) * ((n) - 1)))
+#define MINHASHSIZE	31	/* minimum size of hash tables */
+#define GROWHASHSIZE	50	/* approximate growth for hash tables */
+#define CHAINLENGTH	10	/* desired number of elements on a hash chain */
+#define ELEMSIZE(n)	(sizeof(ASSOCELEM) + (sizeof(VALUE) * ((n) - 1)))
 
 
 static ASSOCELEM *elemindex(ASSOC *ap, long index);
@@ -245,8 +245,7 @@ assoccmp(ASSOC *ap1, ASSOC *ap2)
 			hash = ep1->e_hash;
 			dim = ep1->e_dim;
 			for (ep2 = ap2->a_table[hash % size2]; ;
-				ep2 = ep2->e_next)
-			{
+				ep2 = ep2->e_next) {
 				if (ep2 == NULL)
 					return TRUE;
 				if (ep2->e_hash != hash)
@@ -283,8 +282,7 @@ assoccopy(ASSOC *oldap)
 
 	for (oldhi = 0; oldhi < oldap->a_size; oldhi++) {
 		for (oldep = oldap->a_table[oldhi]; oldep;
-			oldep = oldep->e_next)
-		{
+			oldep = oldep->e_next) {
 			ep = (ASSOCELEM *) malloc(ELEMSIZE(oldep->e_dim));
 			if (ep == NULL) {
 				math_error("Cannot allocate association element");
@@ -449,8 +447,7 @@ assocprint(ASSOC *ap, long max_print)
 		((ap->a_count == 1) ? "" : "s"));
 
 	for (index = 0; ((index < max_print) && (index < ap->a_count));
-		index++)
-	{
+		index++) {
 		ep = elemindex(ap, index);
 		if (ep == NULL)
 			continue;
@@ -491,5 +488,3 @@ compareindices(VALUE *v1, VALUE *v2, long dim)
 
 	return TRUE;
 }
-
-/* END CODE */

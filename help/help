@@ -60,7 +60,7 @@ For example:
 
     help usage
 
-will print the calc command usage information.  One can obtain calc help
+will print the calc command usage information.	One can obtain calc help
 without invoking any startup code by running calc as follows:
 
     calc -q help topic
@@ -76,7 +76,7 @@ for details of the -m mode.
 
 The help command is able to display installed help files for custom builtin
 functions.  However, if the custom name is the same as a standard help
-file, the standard help file will be displayed instead.  The custom help
+file, the standard help file will be displayed instead.	 The custom help
 builtin should be used to directly access the custom help file.
 
 For example, the custom help builtin has the same name as the standard

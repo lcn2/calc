@@ -16,7 +16,7 @@ DESCRIPTION
 
 EXAMPLE
     > strprintf("h=%d, i=%d", 2, 3);
-            "h=2, i=3"
+	    "h=2, i=3"
 
     > c = config("epsilon", 1e-6); c = config("display", 6);
     > c = config("tilde", 1); c = config("outround", 0);
@@ -24,7 +24,7 @@ EXAMPLE
     > fmt = "%f,%10f,%-10f,%10.4f,%.4f,%.f.\n";
     > a = sqrt(3);
     > strprintf(fmt,a,a,a,a,a,a);
-	    "1.732051,  1.732051,1.732051  ,   ~1.7320,~1.7320,~1.
+	    "1.732051,	1.732051,1.732051  ,   ~1.7320,~1.7320,~1.
     "
 
 LIMITS

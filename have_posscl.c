@@ -5,7 +5,7 @@
  *	have_posscl
  *
  * On some systems, FILEPOS is a scalar value on which one can perform
- * arithmetic operations, assignments and comparisons.  On some systems
+ * arithmetic operations, assignments and comparisons.	On some systems
  * FILEPOS is some sort of union or struct which must be converted into
  * a ZVALUE in order to perform arithmetic operations, assignments and
  * comparisons.
@@ -51,7 +51,7 @@ main(void)
 {
 #if !defined(FILEPOS_NON_SCALAR)
 	FILEPOS value;	/* an FILEPOS to perform arithmatic on */
-	FILEPOS value2;	/* an FILEPOS to perform arithmatic on */
+	FILEPOS value2; /* an FILEPOS to perform arithmatic on */
 
 	/*
 	 * do some math opts on an FILEPOS

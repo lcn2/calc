@@ -35,10 +35,10 @@ DESCRIPTION
        one of the two integers v for which abs(x/y - v) < 1.  Which
        integer is returned is controlled by rnd as follows:
 
-		rnd	sign of x/y - v         Description of rounding
+		rnd	sign of x/y - v		Description of rounding
 
-		0	      + 	 	down, towards minus infinity
-		1             - 		up, towards infinity
+		0	      +			down, towards minus infinity
+		1	      -			up, towards infinity
 		2	    sgn(x/y)		towards zero
 		3	   -sgn(x/y)		from zero
 		4	    sgn(y)

@@ -6,7 +6,7 @@ SYNOPSIS
 
 TYPES
     fs		file stream open for writing
-    s_1, ...    string
+    s_1, ...	string
 
     return	null or error value
 
@@ -22,9 +22,9 @@ EXAMPLE
     > fputstr(f, "Alpha", "Beta")
     > freopen(f, "r")
     > fgetstr(f)
-    	"Alpha"
+	"Alpha"
     > fgetstr(f)
-    	"Beta"
+	"Beta"
     > fgetstr(f)
     >
     > fputstr(f, "Gamma")

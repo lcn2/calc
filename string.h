@@ -6,7 +6,7 @@
 
 
 #if !defined(__CALCSTRING_H__)
-#define	__CALCSTRING_H__
+#define __CALCSTRING_H__
 
 
 #include "zmath.h"

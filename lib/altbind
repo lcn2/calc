@@ -5,7 +5,7 @@
 #	are used in place of those found below.
 
 map	base-map
-default	insert-char
+default insert-char
 ^@	set-mark
 ^A	start-of-line
 ^B	backward-char
@@ -30,7 +30,7 @@ default	insert-char
 ^[	ignore-char	esc-map
 
 map	esc-map
-default	ignore-char	base-map
+default ignore-char	base-map
 G	start-of-line
 H	backward-history
 P	forward-history

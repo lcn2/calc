@@ -192,7 +192,7 @@ qpowi(NUMBER *q1, NUMBER *q2)
 		return qlink(q1);
 	}
 	/*
-	 * Not a trivial case.  Do the real work.
+	 * Not a trivial case.	Do the real work.
 	 */
 	r = qalloc();
 	if (!zisunit(num))
@@ -211,7 +211,7 @@ qpowi(NUMBER *q1, NUMBER *q2)
 
 /*
  * Given the legs of a right triangle, compute its hypothenuse within
- * the specified error.  This is sqrt(a^2 + b^2).
+ * the specified error.	 This is sqrt(a^2 + b^2).
  */
 NUMBER *
 qhypot(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
@@ -303,35 +303,10 @@ qsqrt(NUMBER *q1, NUMBER *epsilon, long rnd)
 	if (qiszero(q1))
 		return qlink(&_qzero_);
 	sign = (rnd & 64) != 0;
-#if 0
-	if (qiszero(epsilon)) {
-		s1 = zesqrt(q1->num, &tmp1);
-		if (s1) {
-			if (qisint(q1)) {
-				r = qalloc();
-				tmp1.sign = sign;
-				r->num = tmp1;
-				return r;
-			}
-			s2 = zesqrt(q1->den, &tmp2);
-			if (s2) {
-				r = qalloc();
-				tmp1.sign = sign;
-				r->num = tmp1;
-				r->den = tmp2;
-				return r;
-			}
-			zfree(tmp2);
-		}
-		zfree(tmp1);
-		return qlink(&_qzero_);
-	}
-#else
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon for qsqrt");
 		/*NOTREACHED*/
 	}
-#endif
 
 	etemp = *epsilon;
 	etemp.num.sign = 0;
@@ -384,8 +359,7 @@ qsqrt(NUMBER *q1, NUMBER *epsilon, long rnd)
 		zshift(tmp1, -1, &mul);
 		up = (*tmp1.v & 1) ? s1 + s2 : -1;
 		zfree(tmp1);
-	}
-	else {
+	} else {
 		s1 = zquo(tmp2, divisor, &quo, 0);
 		zfree(tmp2);
 		s2 = zsqrt(quo, &mul, 0);
@@ -494,7 +468,7 @@ qiroot(NUMBER *q1, NUMBER *q2)
 
 /*
  * Return the greatest integer of the base 2 log of a number.
- * This is the number such that  1 <= x / log2(x) < 2.
+ * This is the number such that	 1 <= x / log2(x) < 2.
  * Examples:  qilog2(8) = 3, qilog2(1.3) = 1, qilog2(1/7) = -3.
  *
  * given:
@@ -535,7 +509,7 @@ qilog2(NUMBER *q)
 
 /*
  * Return the greatest integer of the base 10 log of a number.
- * This is the number such that  1 <= x / log10(x) < 10.
+ * This is the number such that	 1 <= x / log10(x) < 10.
  * Examples:  qilog10(100) = 2, qilog10(12.3) = 1, qilog10(.023) = -2.
  *
  * given:
@@ -568,9 +542,9 @@ qilog10(NUMBER *q)
 	}
 	/*
 	 * Here if the number is less than one.
-	 * If the number is the inverse of a power of ten, then the obvious answer
-	 * will be off by one.  Subtracting one if the number is the inverse of an
-	 * integer will fix it.
+	 * If the number is the inverse of a power of ten, then the
+	 * obvious answer will be off by one.  Subtracting one if the
+	 * number is the inverse of an integer will fix it.
 	 */
 	if (zisunit(tmp1))
 		zsub(q->den, _one_, &tmp2);
@@ -646,7 +620,7 @@ qdigits(NUMBER *q)
 /*
  * Return the digit at the specified decimal place of a number represented
  * in floating point.  The lowest digit of the integral part of a number
- * is the zeroth decimal place.  Negative decimal places indicate digits
+ * is the zeroth decimal place.	 Negative decimal places indicate digits
  * to the right of the decimal point.  Examples: qdigit(1234.5678, 1) = 3,
  * qdigit(1234.5678, -3) = 7.
  */
@@ -1028,7 +1002,7 @@ qround(NUMBER *q, long places, long rnd)
 }
 
 /*
- * Approximate a number to nearest multiple of a given number.  Whether
+ * Approximate a number to nearest multiple of a given number.	Whether
  * rounding is down, up, etc. is determined by rnd.
  */
 NUMBER *
@@ -1095,8 +1069,7 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 			zfree(denbnd);
 			return qlink(q);
 		}
-	}
-	else {
+	} else {
 		if (rnd & 16)
 			epsilon1 = qscale(epsilon, -1);
 		else
@@ -1107,9 +1080,9 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 		zfree(tmp1);
 		qfree(epsilon1);
 	}
-	if (rnd & 16 && !zistwo(q->den))
+	if (rnd & 16 && !zistwo(q->den)) {
 		s = 0;
-	else {
+	} else {
 		s = esign ? -1 : 1;
 		if (rnd & 1)
 			s = -s;
@@ -1164,8 +1137,7 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 			zfree(tmp1);
 		}
 		zfree(denbnd);
-	}
-	else {
+	} else {
 		if (s < 0) {
 			zfree(tmp1);
 			zfree(tmp2);
@@ -1251,9 +1223,9 @@ qcfsim(NUMBER *q, long rnd)
 
 	if (qiszero(q) && rnd & 26)
 		return qlink(&_qzero_);
-	if (rnd & 24)
+	if (rnd & 24) {
 		s = q->num.sign;
-	else {
+	} else {
 		s = rnd & 1;
 		if (rnd & 2)
 			s ^= q->num.sign;
@@ -1558,5 +1530,3 @@ qprimetest(NUMBER *q1, NUMBER *q2, NUMBER *q3)
 	}
 	return zprimetest(q1->num, ztoi(q2->num), q3->num);
 }
-
-/* END CODE */

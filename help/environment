@@ -14,7 +14,7 @@ Environment variables
 
 		    /usr/local/lib/calc
 
-	This value is used by the READ command.  It is an error
+	This value is used by the READ command.	 It is an error
 	if no such readable file is found.
 
 	The CALCBINDINGS file searches the CALCPATH as well.

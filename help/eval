@@ -11,7 +11,7 @@ TYPES
 
 DESCRIPTION
    For eval(str), the value of str is to be a string that could be the body
-   of the definition of a function f().  This string may declare local
+   of the definition of a function f().	 This string may declare local
    variables and include keywords (while, for, ...) other than the
    reserved keywords (define, show, help, read, write, show, cd) intended
    for interactive use or for reading from a file.

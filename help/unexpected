@@ -1,7 +1,7 @@
 Unexpected
 
     While calc is C-like, users of C will find some unexpected
-    surprises in calc syntax and usage.  Persons familiar with C should
+    surprises in calc syntax and usage.	 Persons familiar with C should
     review this file.
 
 
@@ -12,7 +12,7 @@ Unexpected
     expressions and for separation of expressions to be used for
     arguments or values in function calls or initialization lists.  The
     precedence order of these different uses is:  continuation,
-    separator, comma operator.  For example, assuming the variables a,
+    separator, comma operator.	For example, assuming the variables a,
     b, c, d, e, and object type xx have been defined, the arguments
     passed to f in:
 
@@ -28,7 +28,7 @@ Unexpected
 
     In combination with other operators, the continuation use of the
     comma has the same precedence as [] and ., the separator use the
-    same as the comma operator.  For example, assuming xx.mul() has
+    same as the comma operator.	 For example, assuming xx.mul() has
     been defined:
 
 	    f(a = b, obj xx c, d = {1,2} * obj xx e = {3,4})
@@ -73,7 +73,7 @@ Unexpected
 
     Operator-with-assignments:
 
-	    +=  -=  *=  /=  %=  //=  &=  |=  <<=  >>=  ^=  **=
+	    +=	-=  *=	/=  %=	//=  &=	 |=  <<=  >>=  ^=  **=
 
     associate from left to right instead of right to left as in C.
     For example:
@@ -84,7 +84,7 @@ Unexpected
 
 	    a = (a + b) * c
 
-    where only 'a' is required to be an lvalue.  For the effect of:
+    where only 'a' is required to be an lvalue.	 For the effect of:
 
 	    b *= c; a += b
 
@@ -101,7 +101,7 @@ Unexpected
 	    a || b
 
     will produce 0 or 1 depending on the logical evaluation
-    of the expression.  In calc, this expression will produce
+    of the expression.	In calc, this expression will produce
     either 'a' or 'b' and is equivalent to the expression:
 
 	    a ? a : b
@@ -118,7 +118,7 @@ Unexpected
 	    a && b
 
     will produce 0 or 1 depending on the logical evaluation
-    of the expression.  In calc, this expression will produce
+    of the expression.	In calc, this expression will produce
     either 'a' or 'b' and is equivalent to the expression:
 
 	    a ? b : a

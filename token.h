@@ -6,7 +6,7 @@
 
 
 #if !defined(__TOKEN_H__)
-#define	__TOKEN_H__
+#define __TOKEN_H__
 
 
 #include "zmath.h"
@@ -67,8 +67,8 @@
 #define T_POWEREQUALS		49	/* power equals "^=" or "**=" */
 #define T_PERIOD		50	/* period "." */
 #define T_IMAGINARY		51	/* numeric imaginary constant */
-#define	T_AMPERSAND		52	/* ampersand "&" */
-#define	T_QUESTIONMARK		53	/* question mark "?" */
+#define T_AMPERSAND		52	/* ampersand "&" */
+#define T_QUESTIONMARK		53	/* question mark "?" */
 #define T_AT			54	/* at sign "@" */
 #define T_DOLLAR		55	/* dollar sign "$" */
 #define T_HASH			56	/* hash or pound sign "#" */
@@ -93,7 +93,7 @@
 #define T_RETURN		107	/* return keyword */
 #define T_LOCAL			108	/* local keyword */
 #define T_GLOBAL		109	/* global keyword */
-#define	T_STATIC		110	/* static keyword */
+#define T_STATIC		110	/* static keyword */
 #define T_DO			111	/* do keyword */
 #define T_FOR			112	/* for keyword */
 #define T_SWITCH		113	/* switch keyword */

@@ -24,12 +24,12 @@ DESCRIPTION
     4, 6, and 7.
 
     The 'push' and 'pop' functions insert or remove an element from
-    the beginning of the list.  The 'append' and 'remove' functions
+    the beginning of the list.	The 'append' and 'remove' functions
     insert or remove an element from the end of the list.  The 'insert'
     and 'delete' functions insert or delete an element from the middle
     (or ends) of a list.  The functions which insert elements return
     the null value, but the functions which remove an element return
-    the element as their value.  The 'size' function returns the number
+    the element as their value.	 The 'size' function returns the number
     of elements in the list.
 
     Note that these functions manipulate the actual list argument,
@@ -43,11 +43,11 @@ DESCRIPTION
     An arbitrary element of a linked list can be accessed by using the
     double-bracket operator.  The beginning of the list has index 0.
     Thus in the new list x above, the expression x[[0]] returns the
-    value of the first element of the list, which is 9.  Note that this
+    value of the first element of the list, which is 9.	 Note that this
     indexing does not remove elements from the list.
 
     Since lists are doubly linked in memory, random access to arbitrary
-    elements can be slow if the list is large.  However, for each list
+    elements can be slow if the list is large.	However, for each list
     a pointer is kept to the latest indexed element, thus relatively
     sequential accesses to the elements in a list will not be slow.
 

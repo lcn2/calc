@@ -52,8 +52,8 @@
  */
 typedef struct hashstate HASH;
 struct hashstate {
-        int hashtype;		/* XYZ_HASH_TYPE debug value */
-        BOOL bytes;		/* TRUE => reading bytes rather than words */
+	int hashtype;		/* XYZ_HASH_TYPE debug value */
+	BOOL bytes;		/* TRUE => reading bytes rather than words */
 	void (*update)(HASH*, USB8*, USB32);	/* update arbitrary length */
 	void (*chkpt)(HASH*);			/* checkpoint a state */
 	void (*note)(int, HASH*);		/* note a special value */

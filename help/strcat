@@ -11,7 +11,7 @@ TYPES
 
 DESCRIPTION
     strcat(x1, x2, ...) forms a string starting with a copy of
-    x1, followed by the characters in order of x2, etc.  The
+    x1, followed by the characters in order of x2, etc.	 The
     length of the resulting string will be the sum of the lengths
     of the component strings.
 

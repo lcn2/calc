@@ -31,7 +31,7 @@ DESCRIPTION
     '%'.  A single '%' read from fmt is taken to indicate the beginning of
     a conversion specification field consisting in succession of:
 
-    		an optional '*',
+		an optional '*',
 		optional decimal digits,
 		one of 'c', 's', 'n', 'f', 'e', 'i' or a scanset specifier.
 
@@ -40,7 +40,7 @@ DESCRIPTION
     other sequence of characters follows the '%', characters before the
     first exceptional character (which could be the terminating null
     character of the fmt string) are ignored, e.g. the sequence " %*3d " does
-    the same as " d ".  If there is no '*' at the beginning of the specifier,
+    the same as " d ".	If there is no '*' at the beginning of the specifier,
     and the list x_1, x_2, ... has not been exhausted,
     a value will be assigned to the next lvalue in the list; if no lvalue
     remains, the reading of fs stops and the function returns the number
@@ -68,7 +68,7 @@ DESCRIPTION
 
     The cases 'f', 'e', 'r', 'i' may be considered to indicate expectation of
     floating-point, exponential, ratio, or integer representation of the
-    number to be read.  For example, 'i'
+    number to be read.	For example, 'i'
     might be taken to suggest a number like +2345; 'r' might suggest
     a representation like -27/49; 'e' might suggest a representation like
     1.24e-7; 'f' might suggest a representation like 27.145. However, there
@@ -82,7 +82,7 @@ DESCRIPTION
 
 			2+3/4*7i+3.15e7
 
-    would be interpreted as for an ordinary evaluation.  A decimal fraction
+    would be interpreted as for an ordinary evaluation.	 A decimal fraction
     may have more than one dot: dots after the first, which is taken to be
     the decimal point, are ignored.  Thus "12.3..45e6.7" is interpreted
     as if it were "12.345e67".

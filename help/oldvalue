@@ -12,7 +12,7 @@ DESCRIPTION
     which at top level when directly from a file or keyboard
     is automatically assigned the saved value for a line
     of statements when evaluation of that line is completed and this saved
-    value is not null.  A line of statements is normally completed by a
+    value is not null.	A line of statements is normally completed by a
     '\n' not within a block bounded by braces or an expression bounded by
     parentheses.
 

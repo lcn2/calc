@@ -14,7 +14,7 @@ DESCRIPTION
     associated with fd.
 
     If there is a next character, this function returns a 1
-    character string containing that character.  In the case
+    character string containing that character.	 In the case
     of EOF or error, nil is returned.
 
 EXAMPLE

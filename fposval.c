@@ -12,7 +12,7 @@
  *
  * We will #define of 8 symbols:
  *
- *	FILEPOS_BITS 		length in bits of the type FILEPOS
+ *	FILEPOS_BITS		length in bits of the type FILEPOS
  *	SWAP_HALF_IN_FILEPOS	will copy/swap FILEPOS into an HALF array
  *	OFF_T_BITS		length in bits of the st_size stat element
  *	SWAP_HALF_IN_OFF_T	will copy/swap st_size into an HALF array

@@ -120,8 +120,8 @@ HALF lowhalf[BASEB+1] = {
 	0x0,
 	0x1,  0x3, 0x7, 0xF,
 	0x1F,  0x3F, 0x7F, 0xFF,
-	0x1FF,  0x3FF, 0x7FF, 0xFFF,
-	0x1FFF,  0x3FFF, 0x7FFF, 0xFFFF
+	0x1FF,	0x3FF, 0x7FF, 0xFFF,
+	0x1FFF,	 0x3FFF, 0x7FFF, 0xFFFF
 #if BASEB == 32
        ,0x1FFFF,  0x3FFFF, 0x7FFFF, 0xFFFFF,
 	0x1FFFFF,  0x3FFFFF, 0x7FFFFF, 0xFFFFFF,
@@ -400,7 +400,7 @@ zadd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	while (len--) {
 		sival.ivalue = ((FULL) *p1++) + ((FULL) *p2++) + carry;
 		/* ignore Saber-C warning #112 - get ushort from uint */
-		/* 	  ok to ignore on name zadd`sival */
+		/*	  ok to ignore on name zadd`sival */
 		*pd++ = sival.silow;
 		carry = sival.sihigh;
 	}
@@ -470,7 +470,7 @@ zsub(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	carry = 0;
 	while (--len2 >= 0) {
 		/* ignore Saber-C warning #112 - get ushort from uint */
-		/* 	  ok to ignore on name zsub`sival */
+		/*	  ok to ignore on name zsub`sival */
 		sival.ivalue = (BASE1 - ((FULL) *h1++)) + *h2++ + carry;
 		*hd++ = (HALF)(BASE1 - sival.silow);
 		carry = sival.sihigh;
@@ -531,7 +531,7 @@ zmuli(ZVALUE z, long n, ZVALUE *res)
 	carry = 0;
 	while (len--) {
 		/* ignore Saber-C warning #112 - get ushort from uint */
-		/* 	  ok to ignore on name zmuli`sival */
+		/*	  ok to ignore on name zmuli`sival */
 		sival.ivalue = ((FULL) *h1++) * low + carry;
 		*sd++ = sival.silow;
 		carry = sival.sihigh;
@@ -755,7 +755,7 @@ done:	while (m > 0 && A[m - 1] == 0)
 			if (g > 0 && g < BASE)
 				t = 1;
 			else if (g == 0 && f == 0)
-			 	t = 0;
+				t = 0;
 		}
 		if (t)
 			adjust = (t > 0);
@@ -816,9 +816,9 @@ done:	while (m > 0 && A[m - 1] == 0)
 	val = rem->sign ? -1 : 1;
 	if (a1[len - 1] == 0)
 		len--;
-	if (len == 0)
+	if (len == 0) {
 		*quo = _zero_;
-	else {
+	} else {
 		quo->len = len;
 		quo->v = alloc(len);
 		memcpy(quo->v, a1, len * sizeof(HALF));
@@ -926,7 +926,7 @@ zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 			v |= B[1] << j;
 		u = v - 1;
 		w = x = 1;
-		while (u) { 	/* To find w = inverse of v modulo BASE */
+		while (u) {	/* To find w = inverse of v modulo BASE */
 			do {
 				v <<= 1;
 				x <<= 1;
@@ -1318,8 +1318,7 @@ zxor(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 		j = z1.len;
 		h1 = z2.v;
 		h2 = z1.v;
-	}
-	else if (z1.len == z2.len) {
+	} else if (z1.len == z2.len) {
 		while (len > 1 && z1.v[len-1] == z2.v[len-1])
 			len--;
 		j = len;
@@ -1353,8 +1352,7 @@ zandnot(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 			len--;
 		j = len;
 		k = 0;
-	}
-	else {
+	} else {
 		j = z2.len;
 		k = len - z2.len;
 	}
@@ -1503,41 +1501,6 @@ zhighbit(ZVALUE z)
 	}
 	return (z.len*BASEB)+(LEN)(bitval-bitmask-BASEB);
 }
-
-
-#if 0
-/*
- * Reverse the bits of a particular range of bits of a number.
- *
- * This function returns an integer with bits a thru b swapped.
- * That is, bit a is swapped with bit b, bit a+1 is swapped with b-1,
- * and so on.
- *
- * As a special case, if the ending bit position is < 0, is it taken to
- * mean the highest bit set.  Thus zbitrev(0, -1, z, &res) will
- * perform a complete bit reverse of the number 'z'.
- *
- * As a special case, if the starting bit position is < 0, is it taken to
- * mean the lowest bit set.  Thus zbitrev(-1, -1, z, &res) is the
- * same as zbitrev(lowbit(z), highbit(z), z, &res).
- *
- * Note that the low order bit number is taken to be 0.  Also, bitrev
- * ignores the sign of the number.
- *
- * Bits beyond the highest bit are taken to be zero.  Thus the calling
- * bitrev(0, 100, _one_, &res) will result in a value of 2^100.
- *
- * given:
- *	low		lowest bit to reverse, <0 => lowbit(z)
- *	high		highest bit to reverse, <0 => highbit(z)
- *	z		value to bit reverse
- *	res		resulting bit reverse number
- */
-void
-zbitrev(long low, long high, ZVALUE z, ZVALUE *res)
-{
-}
-#endif
 
 
 /*
@@ -1857,7 +1820,7 @@ zshiftr(ZVALUE z, long n)
  * Utility routine to shift left.
  *
  * NOTE: The ZVALUE length is not adjusted.  The bits in the upper
- * 	 HALF are simply tossed.  You may want to use zshift() instead.
+ *	 HALF are simply tossed.  You may want to use zshift() instead.
  */
 void
 zshiftl(ZVALUE z, long n)

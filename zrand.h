@@ -20,11 +20,11 @@
  * PERFORMANCE OF THIS SOFTWARE.
  *
  * Prior to calc 2.9.3t9, these routines existed as a calc library called
- * cryrand.cal.  They have been rewritten in C for performance as well
+ * cryrand.cal.	 They have been rewritten in C for performance as well
  * as to make them available directly from libcalc.a.
  *
  * Comments, suggestions, bug fixes and questions about these routines
- * are welcome.  Send EMail to the address given below.
+ * are welcome.	 Send EMail to the address given below.
  *
  * Happy bit twiddling,
  *
@@ -39,7 +39,7 @@
 
 
 #if !defined(__ZRAND_H__)
-#define	__ZRAND_H__
+#define __ZRAND_H__
 
 
 #include "value.h"
@@ -95,7 +95,7 @@
  *
  *	NOTE: Due to a SunOS cc bug, don't put spaces in the SHVAL call!
  *
- * SLOAD(s,i,z)	- load table slot i from additive 55 state s with zvalue z
+ * SLOAD(s,i,z) - load table slot i from additive 55 state s with zvalue z
  *		  s: type RAND
  *		  i: type int, s.slot[i] slot index
  *		  z: type ZVALUE, what to load into s.slot[i]
@@ -118,9 +118,9 @@
  * SSHUF(s,t,k) - save slot[k] into shuffle entry t
  *		  s: type RAND
  *		  t: type int, s.shuf[t] entry index, what gets changed
- *		  k: type int, s.slot[k] slot index, load into  s.shuf[t]
+ *		  k: type int, s.slot[k] slot index, load into	s.shuf[t]
  *
- * SSWAP(s,j,k)	- swap slot[j] with slot[k]
+ * SSWAP(s,j,k) - swap slot[j] with slot[k]
  *		  s: type RAND
  *		  j: type int, s.slot[j] slot index, goes into s.slot[k]
  *		  k: type int, s.slot[k] slot index, goes into s.slot[j]
@@ -177,7 +177,7 @@
 # endif
 #define SLOAD(s,i,z) {(s).slot[(i)<<1] = ztofull(z); \
 		      (s).slot[1+((i)<<1)] = \
-		     	(((z).len <= 2) ? (FULL)0 : \
+			(((z).len <= 2) ? (FULL)0 : \
 			 (((z).len == 3) ? (FULL)((z).v[2]) : \
 			  ((FULL)((z).v[2]) + ((FULL)((z).v[3]) << BASEB)))); \
 		     }
@@ -214,7 +214,7 @@
 
 #else
 
-   /\../\	FULL_BITS must be 32 or 64	/\../\   !!!
+   /\../\	FULL_BITS must be 32 or 64	/\../\	 !!!
 
 #endif
 

@@ -60,14 +60,14 @@ all: ${CALC_FILES} ${MAKE_FILE} .all
 
 ##
 #
-# File list generation.  You can ignore this section.
+# File list generation.	 You can ignore this section.
 #
 #
 # We will form the names of source files as if they were in a
 # sub-directory called calc/lib.
 #
 # NOTE: Due to bogus shells found on one common system we must have
-#       an non-emoty else clause for every if condition.  *sigh*
+#	an non-emoty else clause for every if condition.  *sigh*
 #
 ##
 

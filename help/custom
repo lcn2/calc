@@ -28,7 +28,7 @@ DESCRIPTION
 		calc -C
 
     In other words, explicit action must be taken in order to
-    enable the use of custom functions.  By default (no -C arg)
+    enable the use of custom functions.	 By default (no -C arg)
     custom functions are compiled in but disabled so that only
     portable calc scripts may be used.
 
@@ -36,7 +36,7 @@ DESCRIPTION
     multi-precision calculations in a C-like environment.  You should
     consider implementing algorithms in the calc language as a first
     choice.  Sometimes an algorithm requires use of special hardware, a
-    non-portable OS or pre-compiled C library.  In these cases a custom
+    non-portable OS or pre-compiled C library.	In these cases a custom
     interface may be needed.
 
     The custom function interface is intended to make is easy for

@@ -11,7 +11,7 @@ TYPES
 
 DESCRIPTION
     If x is a nonzero integer, lowbit(x) returns the index of the
-    lowest nonzero bit in the binary representation of abs(x).  Equivalently,
+    lowest nonzero bit in the binary representation of abs(x).	Equivalently,
     lowbit(x) is the greatest integer for which x/2^n is an integer;
     the binary representation of x then ends with n zero bits.
 

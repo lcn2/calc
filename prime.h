@@ -32,13 +32,13 @@
 
 
 #define MAX_MAP_PRIME ((FULL)65521)	   /* (2^16-15) larest prime in prmap */
-#define MAX_MAP_VAL   ((FULL)65535)	   /* (2^16-1)  larest bit in pr_map */
-#define MAX_SM_PRIME  ((FULL)0xfffffffb)   /* (2^32-5)  larest 32 bit prime */
-#define MAX_SM_VAL    ((FULL)0xffffffff)   /* (2^32-1)  larest 32 bit value */
+#define MAX_MAP_VAL   ((FULL)65535)	   /* (2^16-1)	larest bit in pr_map */
+#define MAX_SM_PRIME  ((FULL)0xfffffffb)   /* (2^32-5)	larest 32 bit prime */
+#define MAX_SM_VAL    ((FULL)0xffffffff)   /* (2^32-1)	larest 32 bit value */
 
 #define MAP_POPCNT    6541		   /* number of odd primes in pr_map */
 
-#define NXT_MAP_PRIME ((FULL)65537)	   /* (2^16+1)  smallest prime > 2^16 */
+#define NXT_MAP_PRIME ((FULL)65537)	   /* (2^16+1)	smallest prime > 2^16 */
 
 #define PIX_32B	      ((FULL)203280221)	   /* pix(2^32-1) - max pix() value */
 
@@ -56,8 +56,8 @@
 /*
  * If n is odd and 1 <= n <= MAX_MAP_VAL, then:
  *
- *	pr_map_bit(n) != 0  ==>  n is prime
- *	pr_map_bit(n) == 0  ==>  n is NOT prime
+ *	pr_map_bit(n) != 0  ==>	 n is prime
+ *	pr_map_bit(n) == 0  ==>	 n is NOT prime
  */
 #define pr_map_bit(n) (pr_map[(HALF)(n)>>4] & (1 << (((HALF)(n)>>1)&0x7)))
 

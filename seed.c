@@ -4,7 +4,7 @@
  * Generate a quasi-random seed based on system and process information.
  *
  * NOTE: This is not a good source of chaotic data.  The lavarand
- *	 system does a much better job of that.  See:
+ *	 system does a much better job of that.	 See:
  *
  *		http://lavarand.sgi.com/index.html
  *
@@ -15,10 +15,10 @@
  * provided that the above copyright, this permission notice and text
  * this comment, and the disclaimer below appear in all of the following:
  *
- *      supporting documentation
- *      source copies
- *      source works derived from this source
- *      binaries derived from this source or from derived source
+ *	supporting documentation
+ *	source copies
+ *	source works derived from this source
+ *	binaries derived from this source or from derived source
  *
  * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
  * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
@@ -28,10 +28,10 @@
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  *
- *      Landon Curt Noll
- *      http://reality.sgi.com/chongo/
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo/
  *
- *      chongo <was here> /\../\
+ *	chongo <was here> /\../\
  *
  * Share and enjoy! :-)
  */
@@ -98,7 +98,7 @@ typedef struct s_hash64 hash64;
  * 0 hash value.  The virgin value that we use below is the hash value
  * that we would get from following 32 ASCII characters:
  *
- *              chongo <Landon Curt Noll> /\../\
+ *		chongo <Landon Curt Noll> /\../\
  *
  * Note that the \'s above are not back-slashing escape characters.
  * They are literal ASCII  backslash 0x5c characters.
@@ -158,27 +158,27 @@ hash_buf(char *buf, unsigned len)
 	/*
 	 * FNV-1 - Fowler/Noll/Vo-1 64 bit hash
 	 *
-         * The basis of this hash algorithm was taken from an idea sent
-         * as reviewer comments to the IEEE POSIX P1003.2 committee by:
-         *
-         *      Phong Vo (http://www.research.att.com/info/kpv/)
-         *      Glenn Fowler (http://www.research.att.com/~gsf/)
-         *
-         * In a subsequent ballot round:
-         *
-         *      Landon Curt Noll (http://reality.sgi.com/chongo/)
-         *
-         * improved on their algorithm.  Some people tried this hash
-         * and found that it worked rather well.  In an EMail message
-         * to Landon, they named it ``Fowler/Noll/Vo'' or the FNV hash.
-         *
-         * FNV hashes are architected to be fast while maintaining a low
-         * collision rate. The FNV speed allows one to quickly hash lots
-         * of data while maintaining a reasonable collision rate.  See:
-         *
-         *      http://reality.sgi.com/chongo/tech/comp/fnv/
-         *
-         * for more details as well as other forms of the FNV hash.
+	 * The basis of this hash algorithm was taken from an idea sent
+	 * as reviewer comments to the IEEE POSIX P1003.2 committee by:
+	 *
+	 *	Phong Vo (http://www.research.att.com/info/kpv/)
+	 *	Glenn Fowler (http://www.research.att.com/~gsf/)
+	 *
+	 * In a subsequent ballot round:
+	 *
+	 *	Landon Curt Noll (http://reality.sgi.com/chongo/)
+	 *
+	 * improved on their algorithm.	 Some people tried this hash
+	 * and found that it worked rather well.  In an EMail message
+	 * to Landon, they named it ``Fowler/Noll/Vo'' or the FNV hash.
+	 *
+	 * FNV hashes are architected to be fast while maintaining a low
+	 * collision rate. The FNV speed allows one to quickly hash lots
+	 * of data while maintaining a reasonable collision rate.  See:
+	 *
+	 *	http://reality.sgi.com/chongo/tech/comp/fnv/
+	 *
+	 * for more details as well as other forms of the FNV hash.
 	 */
 #if defined(HAVE_B64)
 	/* hash each octet of the buffer */
@@ -250,7 +250,7 @@ hash_buf(char *buf, unsigned len)
  * Generate a quasi-random seed based on system and process information.
  *
  * NOTE: This is not a good source of chaotic data.  The lavarand
- *	 system does a much better job of that.  See:
+ *	 system does a much better job of that.	 See:
  *
  *		http://lavarand.sgi.com/index.html
  *
@@ -258,7 +258,7 @@ hash_buf(char *buf, unsigned len)
  *    If when porting this code to your system and something
  *    won't compile, just remove that line or replace it with
  *    some other system call.  We don't have to have every call
- *    operating below.  We only want to hash the resulting data.
+ *    operating below.	We only want to hash the resulting data.
  *
  * returns:
  *	a pseudo-seed as a NUMBER over the range [0, 2^64)
@@ -269,59 +269,59 @@ pseudo_seed(void)
     struct {			/* data used for quasi-random seed */
 #if defined(HAVE_GETTIME)
 # if defined(CLOCK_SGI_CYCLE)
-	struct timespec sgi_cycle;      /* SGI hardware clock */
+	struct timespec sgi_cycle;	/* SGI hardware clock */
 # endif /* CLOCK_SGI_CYCLE */
 # if defined(CLOCK_REALTIME)
 	struct timespec realtime;	/* POSIX realtime clock */
 # endif /* CLOCK_REALTIME */
 #endif /* HAVE_GETTIME */
 #if defined(HAVE_GETPRID)
-	prid_t getprid;                 /* project ID */
+	prid_t getprid;			/* project ID */
 #endif /* HAVE_GETPRID */
 #if defined(HAVE_URANDOM)
 	int urandom_fd;			/* open scriptor for /dev/urandom */
 	int urandom_ret;		/* read() of /dev/random */
 	char urandom_pool[DEV_URANDOM_POOL];	/* /dev/urandom data pool */
 #endif /* HAVE_URANDOM */
-	struct timeval tp;              /* time of day */
-	pid_t getpid;                   /* process ID */
-	pid_t getppid;                  /* parent process ID */
-	uid_t getuid;                   /* real user ID */
-	uid_t geteuid;                  /* effective user ID */
-	gid_t getgid;                   /* real group ID */
-	gid_t getegid;                  /* effective group ID */
-	struct stat stat_dot;           /* stat of "." */
-	struct stat stat_dotdot;        /* stat of ".." */
-	struct stat stat_tmp;           /* stat of "/tmp" */
+	struct timeval tp;		/* time of day */
+	pid_t getpid;			/* process ID */
+	pid_t getppid;			/* parent process ID */
+	uid_t getuid;			/* real user ID */
+	uid_t geteuid;			/* effective user ID */
+	gid_t getgid;			/* real group ID */
+	gid_t getegid;			/* effective group ID */
+	struct stat stat_dot;		/* stat of "." */
+	struct stat stat_dotdot;	/* stat of ".." */
+	struct stat stat_tmp;		/* stat of "/tmp" */
 	struct stat stat_root;		/* stat of "/" */
-	struct stat fstat_stdin;        /* stat of stdin */
-	struct stat fstat_stdout;       /* stat of stdout */
-	struct stat fstat_stderr;       /* stat of stderr */
+	struct stat fstat_stdin;	/* stat of stdin */
+	struct stat fstat_stdout;	/* stat of stdout */
+	struct stat fstat_stderr;	/* stat of stderr */
 #if defined(HAVE_USTAT)
-	struct ustat ustat_dot;         /* usage stat of "." */
-	struct ustat ustat_dotdot;      /* usage stat of ".." */
-	struct ustat ustat_tmp;         /* usage stat of "/tmp" */
-	struct ustat ustat_root;        /* usage stat of "/" */
-	struct ustat ustat_stdin;       /* usage stat of stdin */
-	struct ustat ustat_stdout;      /* usage stat of stdout */
-	struct ustat ustat_stderr;      /* usage stat of stderr */
+	struct ustat ustat_dot;		/* usage stat of "." */
+	struct ustat ustat_dotdot;	/* usage stat of ".." */
+	struct ustat ustat_tmp;		/* usage stat of "/tmp" */
+	struct ustat ustat_root;	/* usage stat of "/" */
+	struct ustat ustat_stdin;	/* usage stat of stdin */
+	struct ustat ustat_stdout;	/* usage stat of stdout */
+	struct ustat ustat_stderr;	/* usage stat of stderr */
 #endif /* HAVE_USTAT */
 #if defined(HAVE_GETSID)
-	pid_t getsid;                   /* session ID */
+	pid_t getsid;			/* session ID */
 #endif /* HAVE_GETSID */
 #if defined(HAVE_GETPGID)
-	pid_t getpgid;                  /* process group ID */
+	pid_t getpgid;			/* process group ID */
 #endif /* HAVE_GETPGID */
 #if defined(HAVE_GETRUSAGE)
-	struct rusage rusage;           /* resource utilization */
-	struct rusage rusage_chld;      /* resource utilization of children */
+	struct rusage rusage;		/* resource utilization */
+	struct rusage rusage_chld;	/* resource utilization of children */
 #endif /* HAVE_GETRUSAGE */
-	struct timeval tp2;             /* time of day again */
+	struct timeval tp2;		/* time of day again */
 	struct tms times;		/* process times */
 	time_t time;			/* local time */
 	size_t size;			/* size of this data structure */
 	jmp_buf env;			/* setjmp() context */
-	char *sdata_p;                  /* address of this structure */
+	char *sdata_p;			/* address of this structure */
     } sdata;
     hash64 hash_val;			/* fnv64 hash of sdata */
     ZVALUE hash;			/* hash_val as a ZVALUE */
@@ -331,7 +331,7 @@ pseudo_seed(void)
      * pick up process/system information
      *
      * NOTE:
-     *    We do care (that much) if these calls fail.  We do not
+     *	  We do care (that much) if these calls fail.  We do not
      *	  need to process any data in the 'sdata' structure.
      */
 #if defined(HAVE_GETTIME)

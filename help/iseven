@@ -10,7 +10,7 @@ TYPES
     return	int
 
 DESCRIPTION
-    Determine if x is an even integer.  This function will return 1 if x is
+    Determine if x is an even integer.	This function will return 1 if x is
     even integer, 0 otherwise.
 
 EXAMPLE

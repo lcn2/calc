@@ -18,7 +18,7 @@ DESCRIPTION
 
     With three arguments, fs, if open, is closed, and an attempt is made to
     open the file with the specified name and assign it to the stream
-    fs.  A non-null value is returned only if the attempt fails.
+    fs.	 A non-null value is returned only if the attempt fails.
 
 EXAMPLE
 

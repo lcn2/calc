@@ -44,10 +44,10 @@ DESCRIPTION
 	(Blank entries indicate that the description would be complicated
 	 and probably not of much interest.)
 
-	     rnd & 15	   sign of r   		parity of q
+	     rnd & 15	   sign of r		parity of q
 
 		0	     sgn(y)
-		1           -sgn(y)
+		1	    -sgn(y)
 		2	     sgn(x)
 		3	    -sgn(x)
 		4	      +
@@ -55,7 +55,7 @@ DESCRIPTION
 		6	     sgn(x/y)
 		7	    -sgn(x/y)
 		8				   even
-		9			 	   odd
+		9				   odd
 	       10				even if x/y > 0, otherwise odd
 	       11				odd if x/y > 0, otherwise even
 	       12				even if y > 0, otherwise odd

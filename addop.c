@@ -16,8 +16,8 @@
 #include "symbol.h"
 
 
-#define	FUNCALLOCSIZE	20	/* reallocate size for functions */
-#define	OPCODEALLOCSIZE	100	/* reallocate size for opcodes in functions */
+#define FUNCALLOCSIZE	20	/* reallocate size for functions */
+#define OPCODEALLOCSIZE 100	/* reallocate size for opcodes in functions */
 
 
 static long maxopcodes;		/* number of opcodes available */
@@ -168,7 +168,7 @@ endfunc(void)
 	if ((inputisterminal() && conf->lib_debug & LIBDBG_STDIN_FUNC) ||
 		(!inputisterminal() && conf->lib_debug & LIBDBG_FILE_FUNC)) {
 		printf("%s(", fp->f_name);
-		for (index = 0; index <  fp->f_paramcount; index++) {
+		for (index = 0; index <	 fp->f_paramcount; index++) {
 			if (index)
 				putchar(',');
 			printf("%s", paramname(index));
@@ -291,12 +291,12 @@ rmalluserfunc(void)
 long
 getuserfunc(char *name)
 {
- 	long index;
+	long index;
 
- 	index = findstr(&funcnames, name);
- 	if (index >= 0 && functions[index] != NULL)
- 		return index;
- 	return -1L;
+	index = findstr(&funcnames, name);
+	if (index >= 0 && functions[index] != NULL)
+		return index;
+	return -1L;
 }
 
 
@@ -535,8 +535,7 @@ addop(long op)
 				qfree(q);
 				fp->f_opcodes[count - 2] = OP_ZERO;
 				fp->f_opcodecount--;
-			}
-			else if (qisone(q)) {
+			} else if (qisone(q)) {
 				qfree(q);
 				fp->f_opcodes[count - 2] = OP_ONE;
 				fp->f_opcodecount--;
@@ -639,5 +638,3 @@ addoplabel(long op, LABEL *label)
 	addop(op);
 	uselabel(label);
 }
-
-/* END CODE */

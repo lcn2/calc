@@ -6,7 +6,7 @@ SYNOPSIS
 
 TYPES
     r		real
-    t 		real
+    t		real
     eps		nonzero real, defaults to epsilon()
 
     return	number (real or complex)

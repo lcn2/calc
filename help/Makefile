@@ -153,7 +153,7 @@ all: ${FULL_HELP_FILES} full ${DETAIL_HELP} ${DETAIL_CLONE} \
 # used by the upper level Makefile to determine of we have done all
 #
 # NOTE: Due to bogus shells found on one common system we must have
-#       an non-emoty else clause for every if condition.  *sigh*
+#	an non-emoty else clause for every if condition.  *sigh*
 #
 .all:
 	rm -f .all
@@ -341,7 +341,7 @@ ${SINGULAR_FILES}: ${PLURAL_FILES}
 # Form the builtin file
 #
 # We ave a "chicken-and-egg" problem.  We want the builtn help file to
-# accurately reflect the function list.  It would be nice if we could
+# accurately reflect the function list.	 It would be nice if we could
 # just execute calc show builtin, but calc may not have been built or
 # buildable at this point.  The hack-a-round used is to convert ../func.c
 # into a standalone program that generates a suitable function list
@@ -379,7 +379,7 @@ builtin: builtin.top builtin.end ../func.c funclist.sed
 
 ##
 #
-# File list generation.  You can ignore this section.
+# File list generation.	 You can ignore this section.
 #
 #
 # We will form the names of source files as if they were in a

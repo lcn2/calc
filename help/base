@@ -18,8 +18,8 @@ DESCRIPTION
 
     The following convention is used to declare modes:
 
-	     base        config
-	    value        string
+	     base	 config
+	    value	 string
 
 	       2	"binary"	binary fractions
 	       8	"octal"		octal fractions

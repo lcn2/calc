@@ -16,7 +16,7 @@ DESCRIPTION
 
     acoth(x) is the real number v for which coth(v) = x.
     It is given by
-    		acoth(x) = ln((x + 1)/(x - 1))/2
+		acoth(x) = ln((x + 1)/(x - 1))/2
 
 EXAMPLE
     > print acoth(2, 1e-5), acoth(2, 1e-10), acoth(2, 1e-15), acoth(2, 1e-20)

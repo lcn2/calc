@@ -19,10 +19,10 @@
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  *
- *      Landon Curt Noll
- *      http://reality.sgi.com/chongo/
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo/
  *
- *      chongo <was here> /\../\
+ *	chongo <was here> /\../\
  */
 
 
@@ -64,10 +64,10 @@
  *	k = (Q*g + hx/n)/2
  *
  * This allows us to quickly eliminate factor values that are divisible
- * by 2, 3, 5, 7, 11, 13 or 17.  (well <= p value found below)
+ * by 2, 3, 5, 7, 11, 13 or 17.	 (well <= p value found below)
  *
  * The following loop shows how test_factor is advanced to higher test
- * values using hset[].  Here, hcount is the number of elements in hset[].
+ * values using hset[].	 Here, hcount is the number of elements in hset[].
  * It can be shown that hset[0] == 0.  We add hset[hcount] to the hset[]
  * array for looping control convenience.
  *
@@ -83,22 +83,22 @@
  *
  * The test, mfactor(67, 1, 10000) took on an 200 Mhz r4k (user CPU seconds):
  *
- *	210.83 	(prior to use of hset[])
- * 	 78.35 	(hset[] for p_elim = 7)
- * 	 73.87 	(hset[] for p_elim = 11)
- * 	 73.92 	(hset[] for p_elim = 13)
- * 	234.16 	(hset[] for p_elim = 17)
+ *	210.83	(prior to use of hset[])
+ *	 78.35	(hset[] for p_elim = 7)
+ *	 73.87	(hset[] for p_elim = 11)
+ *	 73.92	(hset[] for p_elim = 13)
+ *	234.16	(hset[] for p_elim = 17)
  *	p_elim == 19 requires over 190 Megs of memory
  *
  * Over a long period of time, the call to load_hset() becomes insignificant.
  * If we look at the user CPU seconds from the first 10000 cycle to the
  * end of the test we find:
  *
- *	205.00 	(prior to use of hset[])
- * 	 75.89 	(hset[] for p_elim = 7)
- * 	 73.74 	(hset[] for p_elim = 11)
- * 	 70.61 	(hset[] for p_elim = 13)
- * 	 57.78 	(hset[] for p_elim = 17)
+ *	205.00	(prior to use of hset[])
+ *	 75.89	(hset[] for p_elim = 7)
+ *	 73.74	(hset[] for p_elim = 11)
+ *	 70.61	(hset[] for p_elim = 13)
+ *	 57.78	(hset[] for p_elim = 17)
  *	 p_elim == 19 rejected because of memory size
  *
  * The p_elim == 17 overhead takes ~3 minutes on an 200 Mhz r4k CPU and
@@ -124,7 +124,7 @@
  *
  * We know that factors of a Mersenne number are of the form:
  *
- *	2*k*n+1   and   +/- 1 mod 8
+ *	2*k*n+1	  and	+/- 1 mod 8
  *
  * We make use of the hset[] difference array to eliminate factor
  * candidates that would otherwise be divisible by 2, 3, 5, 7 ... p_elim.
@@ -140,7 +140,7 @@
  *
  * NOTE: The p_elim argument is optional and defaults to 17.  A p_elim value
  *	 of 17 is faster than 13 for even medium length runs.  However 13
- * 	 uses less memory and has a shorter startup time.
+ *	 uses less memory and has a shorter startup time.
  */
 define mfactor(n, start_k, rept_loop, p_elim)
 {

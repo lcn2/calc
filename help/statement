@@ -1,6 +1,6 @@
 Statements
 
-    Statements are very much like C statements.  Most statements act
+    Statements are very much like C statements.	 Most statements act
     identically to those in C, but there are minor differences and
     some additions.  The following is a list of the statement types,
     with explanation of the non-C statements.  In this list, upper
@@ -43,10 +43,10 @@ Statements
     ------
     switch (expr) { caseclauses }
 	    Switch statements work similarly to C, except for the
-	    following.  A switch can be done on any type of value,
+	    following.	A switch can be done on any type of value,
 	    and the case statements can be of any type of values.
 	    The case statements can also be expressions calculated
-	    at runtime.  The calculator compares the switch value
+	    at runtime.	 The calculator compares the switch value
 	    with each case statement in the order specified, and
 	    selects the first case which matches.  The default case
 	    is the exception, and only matches once all other cases
@@ -79,7 +79,7 @@ Statements
 
 		    mat x[3]	one dimension, bounds are 0-2
 		    mat foo[4][5]	two dimensions, bounds are 0-3 and 0-4
-		    mat a[-7:7]	one dimension, bounds are (-7)-7
+		    mat a[-7:7] one dimension, bounds are (-7)-7
 		    mat s[1:9,1:9]	two dimensions, bounds are 1-9 and 1-9
 
 	    Note that the MAT statement is not a declaration, but is
@@ -101,9 +101,9 @@ Statements
 
 	    Initial values for the elements of a matrix can be specified
 	    by following the bounds information with an equals sign and
-	    then a list of values enclosed in a pair of braces.  Even if
+	    then a list of values enclosed in a pair of braces.	 Even if
 	    the matrix has more than one dimension, the elements must be
-	    specified as a linear list.  If too few values are specified,
+	    specified as a linear list.	 If too few values are specified,
 	    the remaining values are set to zero.  If too many values are
 	    specified, a runtime error will result.  Examples of some
 	    initializations are:
@@ -114,7 +114,7 @@ Statements
 	    When an initialization is done, the bounds of the matrix
 	    can optionally be left out of the square brackets, and the
 	    correct bounds (zero based) will be set.  This can only be
-	    done for one-dimensional matrices.  An example of this is:
+	    done for one-dimensional matrices.	An example of this is:
 
 		    mat fred[] = {99, 98, 97};
 
@@ -148,7 +148,7 @@ Statements
 		    obj point {x, y, z};
 
 	    This defines an object type called point, whose elements
-	    have the names x, y, and z.  The elements are accessed
+	    have the names x, y, and z.	 The elements are accessed
 	    similarly to structure element accesses, by using a period.
 	    For example, given a variable 'v' which is a point object,
 	    the three coordinates of the point can be referenced by:
@@ -158,7 +158,7 @@ Statements
 		    v.z
 
 	    A particular object type can only be defined once, and
-	    is global throughout all functions.  However, different
+	    is global throughout all functions.	 However, different
 	    object types can be used at the same time.
 
 	    In order to create variables of an object type, they
@@ -212,7 +212,7 @@ Statements
 	    and printed, with no other output, except for the following
 	    special cases.  The comma which separates expressions prints
 	    a single space, and a newline is printed after the last
-	    expression unless the statement ends with a colon.  As
+	    expression unless the statement ends with a colon.	As
 	    examples:
 
 		    print 3, 4;			prints "3 4" and newline.
@@ -228,7 +228,7 @@ Statements
 	    If a matrix or list is printed, then the elements contained
 	    within the matrix or list will also be printed, up to the
 	    maximum number specified by the "maxprint" configuration
-	    parameter.  If an element is also a matrix or a list, then
+	    parameter.	If an element is also a matrix or a list, then
 	    their values are not recursively printed.  Objects are printed
 	    using their user-defined routine.  Printing a file value
 	    prints the name of the file that was opened.
@@ -236,7 +236,7 @@ Statements
 
     Also see the help topic:
 
-	    command         top level commands
+	    command	    top level commands
 	    expression	    calc expression syntax
 	    builtin	    calc builtin functions
 	    usage	    how to invoke the calc command and calc -options

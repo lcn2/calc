@@ -22,6 +22,6 @@ define bigprime(a, m, p)
 			continue;
 		if (pmod(a, n1 / p, n) == 1)
 			continue;
-		print "	" : n;
+		print " " : n;
 	}
 }

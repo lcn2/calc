@@ -20,7 +20,7 @@
  * PERFORMANCE OF THIS SOFTWARE.
  *
  * Comments, suggestions, bug fixes and questions about these routines
- * are welcome.  Send EMail to the address given below.
+ * are welcome.	 Send EMail to the address given below.
  *
  * Happy bit twiddling,
  *
@@ -117,7 +117,7 @@ showcustom(void)
 {
 #if defined(CUSTOM)
 
-	CONST struct custom *p;	/* current function */
+	CONST struct custom *p; /* current function */
 
 	/*
 	 * disable custom functions unless -C was given

@@ -30,7 +30,7 @@ DESCRIPTION
     This corresponds to the use of rnd for functions like round(x, n, rnd).
 
     If bit 3 or 4 of rnd is set, the lower order bits are ignored; bit 3
-    is ignored if bit 4 is set.  Thusi, for rnd > 3, it sufficient to
+    is ignored if bit 4 is set.	 Thusi, for rnd > 3, it sufficient to
     consider the two cases rnd = 8 and rnd = 16.
 
     If den(x) > 2, cfsim(x, 8) returns the value of the penultimate simple
@@ -55,7 +55,7 @@ DESCRIPTION
 
 	rnd		integer x	half-integer x		den(x) > 2
 
-         8 		0		x - sgn(x)/2		approximant
+	 8		0		x - sgn(x)/2		approximant
 	16		x - sgn(x)	x + sgn(x)/2		nearest
 
      From either cfsim(x, 0) and cfsim(x, 1), the other is easily
@@ -72,7 +72,7 @@ DESCRIPTION
      Iteration of cfsim(x,8) until an integer is obtained gives a sequence of
      "good" approximations to x with decreasing denominators and
      correspondingly decreasing accuracy; each denominator is less than half
-     the preceding denominator.  (Unlike the "forward" sequence of
+     the preceding denominator.	 (Unlike the "forward" sequence of
      continued-fraction approximants these are not necessarily alternately
      greater than and less than x.)
 

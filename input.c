@@ -79,7 +79,7 @@ static char *homeexpand(char *name);
 
 /*
  * Open an input file by possibly searching through a path list
- * and also possibly applying the specified extension.  For example:
+ * and also possibly applying the specified extension.	For example:
  * opensearchfile("barf", ".:/tmp", ".c", once) searches in order
  * for the files "./barf", "./barf.c", "/tmp/barf", and "/tmp/barf.c".
  *
@@ -145,7 +145,7 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 
 	/*
 	 * If the name is absolute, or if there is no path list, then
-	 * make one which just searches for the name straight.  Then
+	 * make one which just searches for the name straight.	Then
 	 * search through the path list for the file, without and with
 	 * the specified extension.
 	 */
@@ -524,9 +524,9 @@ nextchar(void)
 		if (cip->i_num) {
 			ch = chartoint(*cip->i_cp++);
 			cip->i_num--;
-		}
-		else
+		} else {
 			ch = EOF;
+		}
 	} else if (cip->i_fp) {		/* from file */
 		ch = fgetc(cip->i_fp);
 	} else if (!stdin_tty) {		/* from file */
@@ -545,7 +545,7 @@ nextchar(void)
 /*
  * Read in the next line of input from the current input source.
  * The line is terminated with a null character, and does not contain
- * the final newline character.  The returned string is only valid
+ * the final newline character.	 The returned string is only valid
  * until the next such call, and so must be copied if necessary.
  * Returns NULL on end of file.
  */
@@ -908,6 +908,3 @@ addreadset(char *name, char *path, struct stat *sbuf)
 	/* return index of the newly added entry */
 	return ret;
 }
-
-
-/* END CODE */

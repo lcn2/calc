@@ -21,10 +21,10 @@
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  *
- *      Landon Curt Noll
- *      http://reality.sgi.com/chongo/
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo/
  *
- *      chongo <was here> /\../\
+ *	chongo <was here> /\../\
  */
 
 /* obtain our required libs */
@@ -64,7 +64,7 @@ randmprime(bits, seed, dbg)
 	bits = 1;
     }
     if (param(0) == 2 || dbg < 0) {
-    	dbg = 0;
+	dbg = 0;
     }
 
     /* seed generator */
@@ -96,7 +96,7 @@ randmprime(bits, seed, dbg)
 	/* bump h, and n if needed */
 	if (dbg >= 2) {
 	    stop = runtime();
-	    print "DEBUG2: last test:", stop-start, "   total time:", stop-init;
+	    print "DEBUG2: last test:", stop-start, "	total time:", stop-init;
 	}
 	if (dbg >= 1) {
 	    print "DEBUG1: composite: (h+" : plush : ")*2^" : n : "-1";

@@ -19,13 +19,13 @@ EXAMPLE
     > x = prompt("? ");
     ? 273
     > x
- 	"273"
+	"273"
 
     > for (;;) {s = prompt("? "); if (s=="end") break; print "\t":eval(s)^2;}
     ? 3
- 	    9
+	    9
     ? 2 + 3
- 	    25
+	    25
     ? end
     >
 

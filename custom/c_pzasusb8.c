@@ -2,7 +2,7 @@
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby granted.
  *
- *            Ernest Bowen, following Landon Curt Noll
+ *	      Ernest Bowen, following Landon Curt Noll
  */
 
 #if defined(CUSTOM)
@@ -20,7 +20,7 @@
  *
  * given:
  *    count = 1;
- *    vals[0]   real number;
+ *    vals[0]	real number;
  *
  * returns:
  *    null
@@ -29,7 +29,7 @@
 VALUE
 c_pzasusb8(char *name, int count, VALUE **vals)
 {
-	VALUE result;           /* what we will return */
+	VALUE result;		/* what we will return */
 	ZVALUE z;		/* numerator of the value */
 	long half_cnt;		/* number of HALFs in the numerator */
 	USB8 *h;		/* octet pointer */

@@ -18,14 +18,14 @@ Using matrices
 	    x = name[3,5];
 
     The double-square bracket operator can be used on any matrix to
-    make references to the elements easy and efficient.  This operator
+    make references to the elements easy and efficient.	 This operator
     bypasses the normal indexing mechanism, and treats the array as if
     it was one-dimensional and with a lower bound of zero.  In this
     indexing mode, elements correspond to the normal indexing mode where
     the rightmost index increases most frequently.  For example, when
     using double-square bracket indexing on a two-dimensional matrix,
     increasing indexes will reference the matrix elements left to right,
-    row by row.  Thus in the following example, 'x' and 'y' are copied
+    row by row.	 Thus in the following example, 'x' and 'y' are copied
     from the same matrix element:
 
 	    mat m[1:2, 1:3];

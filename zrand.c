@@ -20,11 +20,11 @@
  * PERFORMANCE OF THIS SOFTWARE.
  *
  * Prior to calc 2.9.3t9, these routines existed as a calc library called
- * cryrand.cal.  They have been rewritten in C for performance as well
+ * cryrand.cal.	 They have been rewritten in C for performance as well
  * as to make them available directly from libcalc.a.
  *
  * Comments, suggestions, bug fixes and questions about these routines
- * are welcome.  Send EMail to the address given below.
+ * are welcome.	 Send EMail to the address given below.
  *
  * Happy bit twiddling,
  *
@@ -117,7 +117,7 @@
  *
  *	shuffle table - 256 entries of 64 bits used by the shuffle
  *			part of the a55 generator and feed by the
- *		 	additive table.
+ *			additive table.
  *
  * Casual direct use of the shuffle generator may be acceptable.  If one
  * desires cryptographically strong random numbers, or if one is paranoid,
@@ -131,7 +131,7 @@
  *
  *   rand()
  *
- *	Same as rand(0, 2^64).  Print 64 bits.
+ *	Same as rand(0, 2^64).	Print 64 bits.
  *
  *   rand(lim)			(where 0 > lim)
  *
@@ -318,7 +318,7 @@
  * FOR THE PARANOID:
  *
  * The truly paranoid might suggest that my claims in the MAGIC NUMBERS
- * section are a lie intended to entrap people.  Well they are not, but
+ * section are a lie intended to entrap people.	 Well they are not, but
  * you need not take my word for it.
  *
  * The random numbers from the Rand Book of Random Numbers can be
@@ -350,7 +350,7 @@
  * so that srand(0) does the default action and randreseed64() remains
  * an 1-to-1 and onto map.  Thus calling srand(0) with the randreseed64()
  * process would be the same as calling srand(4967126403401436567) without
- * it.  No extra security is gained or reduced by using the randreseed64()
+ * it.	No extra security is gained or reduced by using the randreseed64()
  * process.  The meaning of seeds are exchanged, but not lost or favored
  * (used by more than one input seed).
  */
@@ -374,7 +374,7 @@ static CONST RAND init_a55 = {
 #elif 2*FULL_BITS == SBITS
 	{0, 0},
 #else
-   /\../\	BASEB is assumed to be 16 or 32 	/\../\   !!!
+   /\../\	BASEB is assumed to be 16 or 32		/\../\	 !!!
 #endif
 	3,		/* j */
 	34,		/* k */
@@ -488,7 +488,7 @@ static CONST RAND init_a55 = {
   SVAL(fa2bed49,9a7244cd), SVAL(847c40e5,213a970a), SVAL(c685f1a0,b28f5cd8),
   SVAL(7b097038,1d22ad26), SVAL(ce00b094,05b5d608), SVAL(a3572534,b519bc02),
   SVAL(74cbc38f,e7cd0932)
- 	}
+	}
 };
 
 /*
@@ -528,7 +528,7 @@ static CONST FULL additive[SCNT] = {
 /*
  * Linear Congruential Constants
  *
- * 	a = 6316878969928993981 = 0x57aa0ff473c0ccbd
+ *	a = 6316878969928993981 = 0x57aa0ff473c0ccbd
  *	c = 1363042948800878693 = 0x12ea805718e09865
  *
  * These constants are used in the randreseed64().  See below.
@@ -612,7 +612,7 @@ static void slotcp64(BITSTR *bitstr, FULL *src);
  *		a is prime
  *
  * The choice of an adder 'c' is considered immaterial according (based
- * in note v).  Knuth suggests 'c==1' or 'c==a'.  We elect to select 'c'
+ * in note v).	Knuth suggests 'c==1' or 'c==a'.  We elect to select 'c'
  * using the same process as we used to select 'a'.  The choice is
  * 'immaterial' after all, and as long as:
  *
@@ -626,10 +626,10 @@ static void slotcp64(BITSTR *bitstr, FULL *src);
  * then the adders and multipliers will be more independent.
  *
  * We will obtain the values 'a' and 'c for our generator from the
- * Rand Book of Random Numbers.  Because m=2^64 is 20 decimal digits long,
- * we will search the Rand Book of Random Numbers 20 at a time.  We will
+ * Rand Book of Random Numbers.	 Because m=2^64 is 20 decimal digits long,
+ * we will search the Rand Book of Random Numbers 20 at a time.	 We will
  * skip any of the 55 values that were used to initialize the additive 55
- * generators.  The values obtained from the Rand Book of Random Numbers are:
+ * generators.	The values obtained from the Rand Book of Random Numbers are:
  *
  *		a = 6316878969928993981
  *		c = 1363042948800878693
@@ -663,7 +663,7 @@ static void slotcp64(BITSTR *bitstr, FULL *src);
  *
  * To determine which value maps back into 0, we let z = 0 and compute:
  *
- *	((0-c) * minv(a,m)) % m	==> 10239951819489363767
+ *	((0-c) * minv(a,m)) % m ==> 10239951819489363767
  *
  * and thus we find that the congruence generator would also normally map:
  *
@@ -676,11 +676,11 @@ static void slotcp64(BITSTR *bitstr, FULL *src);
  *
  * To repeat, this function converts a values into a seed value.  With the
  * except of 'seed == 0', every value is mapped into a unique seed value.
- * This mapping need not be complex, random or secure.  All we attempt
+ * This mapping need not be complex, random or secure.	All we attempt
  * to do here is to allow humans who pick small or successive seed values
  * to obtain reasonably different sequences from the generators below.
  *
- * NOTE: This is NOT a pseudo random number generator.  This function is
+ * NOTE: This is NOT a pseudo random number generator.	This function is
  *	 intended to be used internally by sa55rand() and sshufrand().
  */
 static void
@@ -802,8 +802,8 @@ randreseed64(ZVALUE seed, ZVALUE *res)
  * zsrand - seed the a55 generator
  *
  * given:
- *	pseed   - ptr to seed of the generator or NULL
- *	pmat55  - additive 55 state table or NULL
+ *	pseed	- ptr to seed of the generator or NULL
+ *	pmat55	- additive 55 state table or NULL
  *
  * returns:
  *	previous a55 state
@@ -863,7 +863,7 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat55)
 	/*
 	 * clear buffered bits, initialize pointers
 	 */
-	a55.seeded = 0;	/* not seeded now */
+	a55.seeded = 0; /* not seeded now */
 	a55.j = INIT_J-1;
 	a55.k = INIT_K-1;
 	a55.bits = 0;
@@ -927,32 +927,32 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat55)
 	/*
 	 * shuffle additive 55 table according to seed, if passed
 	 */
-        if (pseed != NULL && zge64b(zscram)) {
+	if (pseed != NULL && zge64b(zscram)) {
 
-        	/* prepare the seed for additive slot shuffling */
-        	zshiftr(zscram, 64);
+		/* prepare the seed for additive slot shuffling */
+		zshiftr(zscram, 64);
 		ztrim(&zscram);
 
-        	/* shuffle additive table */
-        	for (i=A55-1; i > 0 && !zislezero(zscram); --i) {
+		/* shuffle additive table */
+		for (i=A55-1; i > 0 && !zislezero(zscram); --i) {
 
-        		/* determine what we will swap with */
-        		indx = zdivi(zscram, i+1, &ztmp);
+			/* determine what we will swap with */
+			indx = zdivi(zscram, i+1, &ztmp);
 			zfree(zscram);
 			zscram = ztmp;
 
-        		/* do nothing if swap with itself */
-        		if (indx == i) {
-        			continue;
-        		}
+			/* do nothing if swap with itself */
+			if (indx == i) {
+				continue;
+			}
 
-        		/* swap slot[i] with slot[indx] */
-        		SSWAP(a55, i, indx);
-        	}
-        	zfree(zscram);
+			/* swap slot[i] with slot[indx] */
+			SSWAP(a55, i, indx);
+		}
+		zfree(zscram);
 	} else if (pseed != NULL) {
-        	zfree(zscram);
-        }
+		zfree(zscram);
+	}
 
 	/*
 	 * load the shuffle table
@@ -1044,7 +1044,7 @@ zsetrand(CONST RAND *state)
  *
  * given:
  *	bitstr	- most significant destination bit in a bit string
- *	src     - low order FULL in a 64 bit slot
+ *	src	- low order FULL in a 64 bit slot
  *	count	- number of bits to transfer (must be 0 < count <= 64)
  *
  * returns:
@@ -1134,7 +1134,7 @@ slotcp(BITSTR *bitstr, FULL *src, int count)
 	 * load the 2nd most significant HALF
 	 */
 	if (need > BASEB) {
-		/* fill  up the 2nd most significant HALF */
+		/* fill	 up the 2nd most significant HALF */
 		*dh-- = (HALF)(src[SLEN-1] >> (BASEB-dnxtbit));
 		need -= BASEB;
 	} else if (need > 0) {
@@ -1182,7 +1182,7 @@ slotcp(BITSTR *bitstr, FULL *src, int count)
 	 * At this point, only 32 bit FULLs are operating.
 	 */
 	if (need > BASEB) {
-		/* fill  up the 2nd most significant HALF */
+		/* fill	 up the 2nd most significant HALF */
 		*dh-- = (HALF)(src[0] >> (BASEB-dnxtbit));
 		/* no need todo: need -= BASEB, because we are nearly done */
 	} else if (need > 0) {
@@ -1214,13 +1214,13 @@ slotcp(BITSTR *bitstr, FULL *src, int count)
  *
  * The src slot is 64 bits long and is stored as an array of FULLs.
  * When FULL_BITS is 64 this array is 1 FULL, otherwise FULL_BITS
- * is 32 bits and the array is 2 FULLs.  The most significant bit
+ * is 32 bits and the array is 2 FULLs.	 The most significant bit
  * in the array (highest bit in the last FULL of the array) is to
  * be transfered to the most significant bit in the destination.
  *
  * given:
  *	bitstr	- most significant destination bit in a bit string
- *	src     - low order FULL in a 64 bit slot
+ *	src	- low order FULL in a 64 bit slot
  *
  * returns:
  *	number of bits transfered
@@ -1343,7 +1343,7 @@ zrandskip(long cnt)
 		}
 #endif
 		a55.bits -= cnt;
-		return;	/* skip need satisfied */
+		return; /* skip need satisfied */
 	}
 
 	/*
@@ -1649,7 +1649,7 @@ zrandrange(CONST ZVALUE low, CONST ZVALUE high, ZVALUE *res)
 	 * generate a random value between [0, diff)
 	 *
 	 * We will not fall into the trap of thinking that we can simply take
-	 * a value mod 'range'.  Consider the case where 'range' is '80'
+	 * a value mod 'range'.	 Consider the case where 'range' is '80'
 	 * and we are given pseudo-random numbers [0,100).  If we took them
 	 * mod 80, then the numbers [0,20) would be produced more frequently
 	 * because the numbers [81,100) mod 80 wrap back into [0,20).

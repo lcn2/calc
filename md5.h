@@ -3,11 +3,11 @@
  * md5 - RSA Data Security, Inc. MD5 Message-Digest Algorithm
  *
  * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH  REGARD  TO
- * THIS  SOFTWARE,  INCLUDING  ALL IMPLIED WARRANTIES OF MER-
- * CHANTABILITY AND FITNESS.  IN NO EVENT SHALL  LANDON  CURT
- * NOLL  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+ * THIS	 SOFTWARE,  INCLUDING  ALL IMPLIED WARRANTIES OF MER-
+ * CHANTABILITY AND FITNESS.  IN NO EVENT SHALL	 LANDON	 CURT
+ * NOLL	 BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  LOSS  OF
- * USE,  DATA  OR  PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+ * USE,	 DATA  OR  PROFITS, WHETHER IN AN ACTION OF CONTRACT,
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
@@ -23,13 +23,13 @@
  **								      **
  ** License is also granted to make and use derivative works	      **
  ** provided that such works are identified as "derived from the RSA  **
- ** Data Security, Inc. MD5 Message-Digest Algorithm" in all          **
+ ** Data Security, Inc. MD5 Message-Digest Algorithm" in all	      **
  ** material mentioning or referencing the derived work.	      **
  **								      **
- ** RSA Data Security, Inc. makes no representations concerning       **
+ ** RSA Data Security, Inc. makes no representations concerning	      **
  ** either the merchantability of this software or the suitability    **
  ** of this software for any particular purpose.  It is provided "as  **
- ** is" without express or implied warranty of any kind.              **
+ ** is" without express or implied warranty of any kind.	      **
  **								      **
  ** These notices must be retained in any copies of any part of this  **
  ** documentation and/or software.				      **

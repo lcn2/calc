@@ -69,7 +69,7 @@ csub(COMPLEX *c1, COMPLEX *c2)
 /*
  * Multiply two complex numbers.
  * This saves one multiplication over the obvious algorithm by
- * trading it for several extra additions, as follows.  Let
+ * trading it for several extra additions, as follows.	Let
  *	q1 = (a + b) * (c + d)
  *	q2 = a * c
  *	q3 = b * d

@@ -6,7 +6,7 @@ SYNOPSIS
 
 TYPES
     x		number (real or complex), matrix, list, object
-    md    	real
+    md		real
 
     return	real
 

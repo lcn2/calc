@@ -1,21 +1,21 @@
 /*
  * Here is an iterative method of finding the number of primes less than
- * or equal to a given number.  This method is from "Computer Recreations"
+ * or equal to a given number.	This method is from "Computer Recreations"
  * June 1996 issue of Scientific American.
  *
  * NOTE: For reasonable values of x, the builtin function pix(x) is
- *       much faster.  This code is provided because the method
- *       is interesting.
+ *	 much faster.  This code is provided because the method
+ *	 is interesting.
  */
 
 define pi_of_x(x)
 {
-	local An;       /* A(n) */
-	local An1;      /* A(n-1) */
-	local An2;      /* A(n-2) */
-	local An3;      /* A(n-3) */
-	local primes;   /* number of primes found */
-	local n;        /* loop counter */
+	local An;	/* A(n) */
+	local An1;	/* A(n-1) */
+	local An2;	/* A(n-2) */
+	local An3;	/* A(n-3) */
+	local primes;	/* number of primes found */
+	local n;	/* loop counter */
 
 	/*
 	 * setup

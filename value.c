@@ -1542,18 +1542,18 @@ sqrtvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		copyvalue(v1, vres);
 		return;
 	}
-	if (v2->v_type == V_NULL)
+	if (v2->v_type == V_NULL) {
 		q = conf->epsilon;
-	else {
+	} else {
 		if (v2->v_type != V_NUM || qiszero(v2->v_num)) {
 			*vres = error_value(E_SQRT2);
 			return;
 		}
 		q = v2->v_num;
 	}
-	if (v3->v_type == V_NULL)
+	if (v3->v_type == V_NULL) {
 		R = conf->sqrt;
-	else {
+	} else {
 		if (v3->v_type != V_NUM || qisfrac(v3->v_num)) {
 			*vres = error_value(E_SQRT3);
 			return;
@@ -2689,7 +2689,7 @@ userfunc(char *fname, VALUE *vp)
 /*
  * Print the value of a descriptor in one of several formats.
  * If flags contains PRINT_SHORT, then elements of arrays and lists
- * will not be printed.  If flags contains PRINT_UNAMBIG, then quotes
+ * will not be printed.	 If flags contains PRINT_UNAMBIG, then quotes
  * are placed around strings and the null value is explicitly printed.
  */
 void
@@ -2775,7 +2775,7 @@ printvalue(VALUE *vp, int flags)
 			qfree(qtemp);
 			break;
 		case V_OPTR:
- 			printf("o-ptr: %p", vp->v_octet);
+			printf("o-ptr: %p", vp->v_octet);
 			break;
 		case V_VPTR:
 			printf("v-ptr: %p", vp->v_addr);

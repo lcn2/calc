@@ -10,7 +10,7 @@ TYPES
 DESCRIPTION
     This function returns the calculation level at which it is called.
     When a command is being read from a terminal or from a file,
-    calc is at calculation level zero.  The level is increased
+    calc is at calculation level zero.	The level is increased
     by 1 each time calculation starts of a user-defined function
     or of eval(S) for some expression S which evaluates to a string.  It
     decreases to zero if an error occurs or a quit or abort statement

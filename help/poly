@@ -24,7 +24,7 @@ TYPES
 
     Here an arithmetic type is one for which the required + and *
     operations are defined, e.g. real or complex numbers or square
-    matrices of the same size.  A coefficient is either of arithmetic
+    matrices of the same size.	A coefficient is either of arithmetic
     type or a list of coefficients.
 
 DESCRIPTION
@@ -48,11 +48,11 @@ DESCRIPTION
 
     In particular:
 
-    	poly(a, x) returns the value of a.
+	poly(a, x) returns the value of a.
 
-    	poly(a, b, x) returns the value of b + a * x
+	poly(a, b, x) returns the value of b + a * x
 
-    	poly(a, b, c, x) returns the value of c + (b + a * x) * x
+	poly(a, b, c, x) returns the value of c + (b + a * x) * x
 
 
     If the first argument is a list as if defined by:
@@ -90,7 +90,7 @@ DESCRIPTION
 
     returns the same as poly(list(1,2,3), x).  If the number of
     arguments is less than greatest depth of lists in clist, the
-    "missing" arguments are deemed to be zero.  E.g.:
+    "missing" arguments are deemed to be zero.	E.g.:
 
 	poly(list(list(1,2), list(3,4), 5), x)
 

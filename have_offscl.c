@@ -5,7 +5,7 @@
  *	have_offscl
  *
  * On some systems, off_t is a scalar value on which one can perform
- * arithmetic operations, assignments and comparisons.  On some systems
+ * arithmetic operations, assignments and comparisons.	On some systems
  * off_t is some sort of union or struct which must be converted into
  * a ZVALUE in order to perform arithmetic operations, assignments and
  * comparisons.

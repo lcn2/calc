@@ -52,7 +52,7 @@ Calc Enhancement Wish List:
     *  Allow results of a command (or all commands) to be re-directed to a
        file or piped into a command.
 
-    *  Add some kind of #include and #define facility.  Perhaps use
+    *  Add some kind of #include and #define facility.	Perhaps use
        the C pre-processor itself?
 
     *  Support a more general input and output base mode other than
@@ -99,7 +99,7 @@ Calc Enhancement Wish List:
 	    histval(-10)
 
        returns the 10th value on the history value list, if such
-       a value is in the history list (null otherwise).  And:
+       a value is in the history list (null otherwise).	 And:
 
 	    histval(23)
 
@@ -126,13 +126,13 @@ Calc Enhancement Wish List:
        One could use the eval() function to re-evaluate the command.
 
     *  Allow one to optionally restore the command number to calc
-       prompts.  When going back in the history list, indicate the
+       prompts.	 When going back in the history list, indicate the
        command number that is being examined.
 
        The command number was a useful item.  When one is scanning the
-       history list, knowing where you are is hard without it.  It can
+       history list, knowing where you are is hard without it.	It can
        get confusing when the history list wraps or when you use
-       search bindings.  Command numbers would be useful in
+       search bindings.	 Command numbers would be useful in
        conjunction with positive args for the history() and histval()
        functions as suggested above.
 
@@ -143,20 +143,20 @@ Calc Enhancement Wish List:
 
        returns the current command number.
 
-       This would allow one to tag a value in the history list.  One
+       This would allow one to tag a value in the history list.	 One
        could save the result of cmdnum() in a variable and later use
        it as an arg to the histval() or history() functions.
 
     *  Add a factoring builtin functions.  Provide functions that perform
        multiple polynomial quadratic sieves, elliptic curve, difference
-       of two squares, N-1 factoring as so on.  Provide a easy general
+       of two squares, N-1 factoring as so on.	Provide a easy general
        factoring builtin (say factor(foo)) that would attempt to apply
        whatever process was needed based on the value.
 
        Factoring builtins would return a matrix of factors.
 
        It would be handy to configure, via config(), the maximum time
-       that one should try to factor a number.  By default the time
+       that one should try to factor a number.	By default the time
        should be infinite.  If one set the time limit to a finite
        value and the time limit was exceeded, the factoring builtin
        would return whatever if had found thus far, even if no new

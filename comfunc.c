@@ -138,38 +138,6 @@ csqrt(COMPLEX *c, NUMBER *epsilon, long R)
 
 	up1 = up2 = 0;
 	sign = (R & 64) != 0;
-#if 0
-	if (qiszero(epsilon)) {
-		aes = qsquare(c->real);
-		bes = qsquare(c->imag);
-		v = qqadd(aes, bes);
-		qfree(aes);
-		qfree(bes);
-		u = qsqrt(v, epsilon, 0);
-		qfree(v);
-		if (qiszero(u)) {
-			qfree(u);
-			return clink(&_czero_);
-		}
-		aes = qqadd(u, c->real);
-		qfree(u);
-		bes = qscale(aes, -1);
-		qfree(aes);
-		u = qsqrt(bes, epsilon, R);
-		qfree(bes);
-		if (qiszero(u)) {
-			qfree(u);
-			return clink(&_czero_);
-		}
-		aes = qscale(c->imag, -1);
-		v = qqdiv(aes, u);
-		qfree(aes);
-		r = comalloc();
-		r->real = u;
-		r->imag = v;
-		return r;
-	}
-#endif
 	imsign = c->imag->num.sign;
 	es = qsquare(epsilon);
 	aes = qqdiv(c->real, es);
@@ -255,8 +223,7 @@ csqrt(COMPLEX *c, NUMBER *epsilon, long R)
 			up2 = -1;
 		zfree(tmp1);
 		zfree(aa);
-	}
-	else {
+	} else {
 		s1 = zsqrt(tmp3, &cc, 0);
 		zfree(tmp3);
 		zadd(cc, a, &tmp1);
@@ -333,9 +300,9 @@ csqrt(COMPLEX *c, NUMBER *epsilon, long R)
 		zfree(mul2);
 		mul2 = tmp2;
 	}
-	if (ziszero(mul1))
+	if (ziszero(mul1)) {
 		u = qlink(&_qzero_);
-	else {
+	} else {
 		mul1.sign = sign ^ epsilon->num.sign;
 		u = qalloc();
 		zreduce(mul1, epsilon->den, &tmp2, &u->den);
@@ -343,9 +310,9 @@ csqrt(COMPLEX *c, NUMBER *epsilon, long R)
 		zfree(tmp2);
 	}
 	zfree(mul1);
-	if (ziszero(mul2))
+	if (ziszero(mul2)) {
 		v = qlink(&_qzero_);
-	else {
+	} else {
 		mul2.sign = imsign ^ sign ^ epsilon->num.sign;
 		v = qalloc();
 		zreduce(mul2, epsilon->den, &tmp2, &v->den);
@@ -1147,5 +1114,3 @@ cprintfr(COMPLEX *c)
 		zprintval(i->den, 0L, 0L);
 	}
 }
-
-/* END CODE */

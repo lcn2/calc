@@ -1,5 +1,5 @@
 # This awk script will print 3 lines before and after any non-blank line that
-# does not begin with a number.  This allows the 'make debug' rule to remove
+# does not begin with a number.	 This allows the 'make debug' rule to remove
 # all non-interest lines the the 'make check' regression output while providing
 # 3 lines of context around unexpected output.
 #

@@ -401,8 +401,8 @@ eatstring(int quotechar)
 					ch = 8 * ch + cch - '0';
 				    }
 				    ch &= 0xff;
-			 	    if (i > 0)
-				        reread();
+				    if (i > 0)
+					reread();
 				    break;
 				}
 				switch (ch) {
@@ -474,7 +474,7 @@ eatstring(int quotechar)
 		len = 0;
 	    }
 	}
-  	curtoken.t_strindex = addstring(str, totlen + len);
+	curtoken.t_strindex = addstring(str, totlen + len);
 	if (str != buf)
 		free(str);
 }

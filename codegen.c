@@ -180,8 +180,8 @@ getcommands(BOOL toplevel)
 /*
  * Evaluate a line of statements.
  * This is done by treating the current line as a function body,
- * compiling it, and then executing it.  Returns TRUE if the line
- * successfully compiled and executed.  The last expression result
+ * compiling it, and then executing it.	 Returns TRUE if the line
+ * successfully compiled and executed.	The last expression result
  * is saved in the f_savedvalue element of the current function.
  * The nestflag variable should be FALSE for the outermost evaluation
  * level, and TRUE for all other calls (such as the 'eval' function).
@@ -956,7 +956,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 /*
  * Read in an object declaration.
  * This is of the following form:
- *	OBJ type [ '{' id [ ',' id ] ... '}' ]  [ objlist ].
+ *	OBJ type [ '{' id [ ',' id ] ... '}' ]	[ objlist ].
  * The OBJ keyword has already been read.  Symtype is SYM_UNDEFINED if this
  * is an OBJ statement, otherwise this is part of a declaration which will
  * define new symbols with the specified type.
@@ -1305,7 +1305,7 @@ getcondition(void)
 
 /*
  * Get an expression list consisting of one or more expressions,
- * separated by commas.  The value of the list is that of the final expression.
+ * separated by commas.	 The value of the list is that of the final expression.
  * This is the top level routine for parsing expressions.
  * Returns flags describing the type of the last assignment or expression found.
  * exprlist = assignment [ ',' assignment ] ...
@@ -1359,8 +1359,8 @@ getopassignment(void)
 		case T_MODEQUALS:	op = OP_MOD; break;
 		case T_ANDEQUALS:	op = OP_AND; break;
 		case T_OREQUALS:	op = OP_OR; break;
-		case T_LSHIFTEQUALS: 	op = OP_LEFTSHIFT; break;
-		case T_RSHIFTEQUALS: 	op = OP_RIGHTSHIFT; break;
+		case T_LSHIFTEQUALS:	op = OP_LEFTSHIFT; break;
+		case T_RSHIFTEQUALS:	op = OP_RIGHTSHIFT; break;
 		case T_POWEREQUALS:	op = OP_POWER; break;
 		case T_HASHEQUALS:	op = OP_HASHOP; break;
 		case T_TILDEEQUALS:	op = OP_XOR; break;
@@ -1400,8 +1400,8 @@ getopassignment(void)
 			case T_MODEQUALS:	op = OP_MOD; break;
 			case T_ANDEQUALS:	op = OP_AND; break;
 			case T_OREQUALS:	op = OP_OR; break;
-			case T_LSHIFTEQUALS: 	op = OP_LEFTSHIFT; break;
-			case T_RSHIFTEQUALS: 	op = OP_RIGHTSHIFT; break;
+			case T_LSHIFTEQUALS:	op = OP_LEFTSHIFT; break;
+			case T_RSHIFTEQUALS:	op = OP_RIGHTSHIFT; break;
 			case T_POWEREQUALS:	op = OP_POWER; break;
 			case T_HASHEQUALS:	op = OP_HASHOP; break;
 			case T_TILDEEQUALS:	op = OP_XOR; break;
@@ -1746,7 +1746,7 @@ getshiftexpr(void)
 		case T_NOT:		op = OP_NOT; break;
 		case T_DIV:		op = OP_INVERT; break;
 		case T_BACKSLASH:	op = OP_BACKSLASH; break;
-		case T_TILDE: 		op = OP_COMP; break;
+		case T_TILDE:		op = OP_COMP; break;
 		case T_HASH:		op = OP_CONTENT; break;
 	}
 	if (op) {
@@ -1759,7 +1759,7 @@ getshiftexpr(void)
 	switch (gettoken()) {
 		case T_POWER:		op = OP_POWER; break;
 		case T_LEFTSHIFT:	op = OP_LEFTSHIFT; break;
-		case T_RIGHTSHIFT: 	op = OP_RIGHTSHIFT; break;
+		case T_RIGHTSHIFT:	op = OP_RIGHTSHIFT; break;
 		default:
 			rescantoken();
 			return type;
@@ -2187,7 +2187,7 @@ getmatargs(void)
 	/*
 	 * Normal indexing with the indexes separated by commas.
 	 * Initialize the flag in the opcode to assume that the array
-	 * element will only be referenced for reading.  If the parser
+	 * element will only be referenced for reading.	 If the parser
 	 * finds that the element will be referenced for writing, then
 	 * it will call writeindexop to change the flag in the opcode.
 	 */

@@ -14,7 +14,7 @@ EXAMPLE
     The result for this example will depend on the speed and number of
     of clock-ticks per second for the computer being used.
     The result is a multiple of 1/CLK_TCK, where CLK_TCK is
-    usually 60.  The following is for a XXX machine.
+    usually 60.	 The following is for a XXX machine.
 
     > t = runtime();
     > pi = pi(1e-1000);

@@ -10,7 +10,7 @@
 
 
 #if !defined(__ZMATH_H__)
-#define	__ZMATH_H__
+#define __ZMATH_H__
 
 
 #include "alloc.h"
@@ -31,10 +31,10 @@
 
 
 #if !defined(TRUE)
-#define	TRUE	((BOOL) 1)			/* booleans */
+#define TRUE	((BOOL) 1)			/* booleans */
 #endif
 #if !defined(FALSE)
-#define	FALSE	((BOOL) 0)
+#define FALSE	((BOOL) 0)
 #endif
 
 
@@ -89,17 +89,17 @@ typedef SB32 SFULL;			/* signed FULL */
 
 #define BASE	((FULL)1<<BASEB)		/* base for calculations */
 #define BASE1	(BASE - (FULL)1)		/* one less than base */
-#define	BASEDIG	((BASEB/16)*5)			/* number of digits in base */
+#define BASEDIG ((BASEB/16)*5)			/* number of digits in base */
 #define FULL_BITS (2*BASEB)			/* bits in a FULL */
 
-#define	TOPHALF	((FULL)1 << (BASEB-1))		/* highest bit in a HALF */
+#define TOPHALF ((FULL)1 << (BASEB-1))		/* highest bit in a HALF */
 #define MAXHALF (TOPHALF - (FULL)1)		/* largest SHALF value */
 
-#define	TOPFULL	((FULL)1 << (FULL_BITS-1))	/* highest bit in FULL */
+#define TOPFULL ((FULL)1 << (FULL_BITS-1))	/* highest bit in FULL */
 #define MAXFULL (TOPFULL - (FULL)1)		/* largest SFULL value */
 #define MAXUFULL (MAXFULL | TOPHALF)		/* largest FULL value */
 
-#define	TOPLONG	((unsigned long)1 << (LONG_BITS-1))	/* top long bit */
+#define TOPLONG ((unsigned long)1 << (LONG_BITS-1))	/* top long bit */
 #define MAXLONG ((long) (TOPLONG - (unsigned long)1))	/* largest long val */
 #define MAXULONG (MAXLONG | TOPLONG)		/* largest unsigned long val */
 
@@ -117,7 +117,7 @@ typedef FULL PRINT;			/* cast for zio printing fucctions */
 #define SWAP_B16_IN_PRINT(dest, src)	SWAP_B16_IN_FULL(dest, src)
 #define SWAP_B8_IN_PRINT(dest, src)	SWAP_B8_IN_FULL(dest, src)
 #endif
-typedef	SB32 FLAG;			/* small value (e.g. comparison) */
+typedef SB32 FLAG;			/* small value (e.g. comparison) */
 typedef SB32 BOOL;			/* TRUE or FALSE value */
 typedef SB32 LEN;			/* unit of length storage */
 
@@ -152,7 +152,7 @@ typedef SB32 LEN;			/* unit of length storage */
  * 0 hash value.  The virgin value that we use below is the hash value
  * that we would get from following 32 ASCII characters:
  *
- *              chongo <Landon Curt Noll> /\../\
+ *		chongo <Landon Curt Noll> /\../\
  *
  * Note that the \'s above are not back-slashing escape characters.
  * They are literal ASCII  backslash 0x5c characters.
@@ -191,14 +191,14 @@ typedef SB32 LEN;			/* unit of length storage */
 /*
  * LEN storage size must be <= FULL storage size
  */
-#define MAXLEN	((LEN) 0x7fffffff >> 3)	/* longest value allowed */
+#define MAXLEN	((LEN) 0x7fffffff >> 3) /* longest value allowed */
 
 
-#define	MAXREDC	5			/* number of entries in REDC cache */
-#define	SQ_ALG2	20			/* size for alternative squaring */
-#define	MUL_ALG2 20			/* size for alternative multiply */
-#define	POW_ALG2 40			/* size for using REDC for powers */
-#define	REDC_ALG2 50			/* size for using alternative REDC */
+#define MAXREDC 5			/* number of entries in REDC cache */
+#define SQ_ALG2 20			/* size for alternative squaring */
+#define MUL_ALG2 20			/* size for alternative multiply */
+#define POW_ALG2 40			/* size for using REDC for powers */
+#define REDC_ALG2 50			/* size for using alternative REDC */
 
 
 typedef union {
@@ -220,10 +220,10 @@ typedef union {
 
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
 # define silow	sis.Svalue1	/* low order half of full value */
-# define sihigh	sis.Svalue2	/* high order half of full value */
+# define sihigh sis.Svalue2	/* high order half of full value */
 #else
 # if CALC_BYTE_ORDER == BIG_ENDIAN
-#  define silow	sis.Svalue2	/* low order half of full value */
+#  define silow sis.Svalue2	/* low order half of full value */
 #  define sihigh sis.Svalue1	/* high order half of full value */
 # else
    /\oo/\    CALC_BYTE_ORDER must be BIG_ENDIAN or LITTLE_ENDIAN    /\oo/\  !!!
@@ -349,11 +349,6 @@ extern void zlcmfact(ZVALUE z, ZVALUE *dest);
 /*
  * Misc misc functions. :-)
  */
-#if 0
-extern void zapprox(ZVALUE z1, ZVALUE z2, ZVALUE *res1, ZVALUE *res2);
-extern void zmulmod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res);
-extern void zsubmod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res);
-#endif
 extern void zsquaremod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 extern void zminmod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 extern BOOL zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3);
@@ -376,7 +371,7 @@ extern HALF *zalloctemp(LEN len);
  * calculations with more than one modulus at the same time.
  * Len of zero means the structure is not initialized.
  */
-typedef	struct {
+typedef struct {
 	LEN len;		/* number of words in binary modulus */
 	ZVALUE mod;		/* modulus REDC is computing with */
 	ZVALUE inv;		/* inverse of modulus in binary modulus */
@@ -441,15 +436,15 @@ extern void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 /*
  * Some algorithms testing for values of a certain length.  Macros such as
  * zistiny() do this well.  In other cases algorthms require tests for values
- * in comparison to a given power of 2.  In the later case, zistiny() compares
- * against a different power of 2 on a 64 bit machine.  The macros below
+ * in comparison to a given power of 2.	 In the later case, zistiny() compares
+ * against a different power of 2 on a 64 bit machine.	The macros below
  * provide a tests against powers of 2 that are independent of the work size.
  *
- * 	zge16b(z)	TRUE if abs(z) >= 2^16
- * 	zge24b(z)	TRUE if abs(z) >= 2^24
- * 	zge31b(z)	TRUE if abs(z) >= 2^31
- * 	zge32b(z)	TRUE if abs(z) >= 2^32
- * 	zge64b(z)	TRUE if abs(z) >= 2^64
+ *	zge16b(z)	TRUE if abs(z) >= 2^16
+ *	zge24b(z)	TRUE if abs(z) >= 2^24
+ *	zge31b(z)	TRUE if abs(z) >= 2^31
+ *	zge32b(z)	TRUE if abs(z) >= 2^32
+ *	zge64b(z)	TRUE if abs(z) >= 2^64
  */
 #if BASEB == 32
 
@@ -504,11 +499,11 @@ extern void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
  */
 #define ztolong(z)	((long)(ztoulong(z) & MAXLONG))
 
-#define	zclearval(z)	memset((z).v, 0, (z).len * sizeof(HALF))
-#define	zcopyval(z1,z2)	memcpy((z2).v, (z1).v, (z1).len * sizeof(HALF))
+#define zclearval(z)	memset((z).v, 0, (z).len * sizeof(HALF))
+#define zcopyval(z1,z2) memcpy((z2).v, (z1).v, (z1).len * sizeof(HALF))
 #define zquicktrim(z)	{if (((z).len > 1) && ((z).v[(z).len-1] == 0)) \
 				(z).len--;}
-#define	zfree(z)	freeh((z).v)
+#define zfree(z)	freeh((z).v)
 
 
 /*
@@ -631,7 +626,7 @@ typedef struct {
 
 #else
 
-   /\../\	FULL_BITS must be 32 or 64	/\../\   !!!
+   /\../\	FULL_BITS must be 32 or 64	/\../\	 !!!
 
 #endif
 

@@ -11,15 +11,10 @@
 #include "args.h"
 
 
-#define	PUTCHAR(ch)		math_chr(ch)
-#define	PUTSTR(str)		math_str(str)
-#define	PRINTF1(fmt, a1)	math_fmt(fmt, a1)
-#define	PRINTF2(fmt, a1, a2)	math_fmt(fmt, a1, a2)
-
-#if 0
-static long	etoalen;
-static char	*etoabuf = NULL;
-#endif
+#define PUTCHAR(ch)		math_chr(ch)
+#define PUTSTR(str)		math_str(str)
+#define PRINTF1(fmt, a1)	math_fmt(fmt, a1)
+#define PRINTF2(fmt, a1, a2)	math_fmt(fmt, a1, a2)
 
 static long	scalefactor;
 static ZVALUE	scalenumber = { 0, 0, 0 };
@@ -150,72 +145,6 @@ qprintf(char *fmt, ...)
 	}
 	va_end(ap);
 }
-
-
-#if 0
-/*
- * Read a number from the specified FILE stream (NULL means stdin).
- * The number can be an integer, a fraction, a real number, an
- * exponential number, or a hex, octal or binary number.  Leading blanks
- * are skipped.  Illegal numbers return NULL.  Unrecognized characters
- * remain to be read on the line.
- *	q = qreadval(fp);
- *
- * given:
- *	fp		file stream to read from (or NULL)
- */
-NUMBER *
-qreadval(FILE *fp)
-{
-	NUMBER *r;		/* returned number */
-	char *cp; 		/* current buffer location */
-	long savecc;		/* characters saved in buffer */
-	long scancc; 		/* characters parsed correctly */
-	int ch;			/* current character */
-
-	if (fp == NULL)
-		fp = stdin;
-	if (etoabuf == NULL) {
-		etoabuf = (char *)malloc(OUTBUFSIZE + 2);
-		if (etoabuf == NULL)
-			return NULL;
-		etoalen = OUTBUFSIZE;
-	}
-	cp = etoabuf;
-	ch = fgetc(fp);
-	while ((ch == ' ') || (ch == '\t'))
-		ch = fgetc(fp);
-	savecc = 0;
-	for (;;) {
-		if (ch == EOF)
-			return NULL;
-		if (savecc >= etoalen)
-		{
-			cp = (char *)realloc(etoabuf, etoalen + OUTBUFSIZE + 2);
-			if (cp == NULL)
-				return NULL;
-			etoabuf = cp;
-			etoalen += OUTBUFSIZE;
-			cp += savecc;
-		}
-		*cp++ = (char)ch;
-		*cp = '\0';
-		scancc = qparse(etoabuf, QPF_SLASH);
-		if (scancc != ++savecc)
-			break;
-		ch = fgetc(fp);
-	}
-	ungetc(ch, fp);
-	if (scancc < 0)
-		return NULL;
-	r = str2q(etoabuf);
-	if (ziszero(r->den)) {
-		qfree(r);
-		r = NULL;
-	}
-	return r;
-}
-#endif
 
 
 /*
@@ -734,5 +663,3 @@ fitprint(NUMBER *q, long width)
 	PUTCHAR('/');
 	fitzprint(q->den, dendigits, width2);
 }
-
-/* END CODE */

@@ -47,7 +47,7 @@
  *	U(x)	form a 33 to 64 bit unsigned constant
  *
  * We will also note if we have a standard 64 bit type (i.e., long).  If we
- * do, we will typedef it and define HAVE_B64.  If we do not then if longlong.h
+ * do, we will typedef it and define HAVE_B64.	If we do not then if longlong.h
  * says we can use long long types, we will use that.  If we cannot use a
  * long long type, then HAVE_B64 will not be defined.
  *

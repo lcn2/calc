@@ -6,7 +6,7 @@
  * and hope for the best.
  *
  * This program will output #defines and exits 0 if vsprintf() (or sprintf())
- * produces the results that we expect.  This program exits 1 if vsprintf()
+ * produces the results that we expect.	 This program exits 1 if vsprintf()
  * (or sprintf()) produces unexpected results while using the <stdarg.h>
  * include file.
  */

@@ -6,7 +6,7 @@ Step 0: Determine if is should it be done?
     multi-precision calculations in a C-like environment.  You should
     consider implementing algorithms in the calc language as a first
     choice.  Sometimes an algorithm requires use of special hardware, a
-    non-portable OS or pre-compiled C library.  In these cases a custom
+    non-portable OS or pre-compiled C library.	In these cases a custom
     interface may be needed.
 
     The custom function interface is intended to make is easy for
@@ -184,7 +184,7 @@ Step 5: Write your custom function
 	   The 3 args are passed in by the custom interface
 	   and have the following meaning:
 
-		name    The name of the custom function that
+		name	The name of the custom function that
 			was called.  In particular, this is the first
 			string arg that was given to the custom()
 			builtin.  This is the equivalent of argv[0] for
@@ -215,11 +215,11 @@ Step 5: Write your custom function
 
 			    custom("curds", a, b, c)
 
-		        would cause vals to point to the following array:
+			would cause vals to point to the following array:
 
-			    vals[0]  points to  a
-			    vals[1]  points to  b
-			    vals[2]  points to  c
+			    vals[0]  points to	a
+			    vals[1]  points to	b
+			    vals[2]  points to	c
 
 	c) The return value is the function must be a VALUE.
 
@@ -247,7 +247,7 @@ Step 5: Write your custom function
 
     The VALUE is a union of major value types found inside calc.
     The v_type VALUE element determines which union element is
-    being used.   Assume that we have:
+    being used.	  Assume that we have:
 
 	VALUE *vp;
 
@@ -427,12 +427,12 @@ Step 6: Register the function in the custom interface table
     level Makefile, one does not have unsatisfied symbols.
 
     The brief description should be brief so that 'show custom' looks well
-    formatted.  If the brief description cannot fit on the same line as
+    formatted.	If the brief description cannot fit on the same line as
     the name without wrapping on a 80 col window, the description is
     probably too long and will not look nice in the show custom output.
 
     The minargs places a lower bound on the number of args that
-    must be supplied to the interface.  This does NOT count
+    must be supplied to the interface.	This does NOT count
     the name argument given to custom().  So if minargs is 2:
 
 	custom("curds")		/* call blocked at high level interface */

@@ -8,7 +8,7 @@
 
 
 #if !defined(__CALC_H__)
-#define	__CALC_H__
+#define __CALC_H__
 
 #include <setjmp.h>
 
@@ -20,42 +20,42 @@
 /*
  * Configuration definitions
  */
-#define	CALCPATH	"CALCPATH"	/* environment variable for files */
-#define	CALCRC		"CALCRC"	/* environment variable for startup */
-#define	CALCBINDINGS	"CALCBINDINGS"	/* environment variable for hist bindings */
-#define	HOME		"HOME"		/* environment variable for home dir */
-#define	PAGER		"PAGER"		/* environment variable for help */
-#define	SHELL		"SHELL"		/* environment variable for shell */
-#define DEFAULTCALCHELP	"help"		/* help file that -h prints */
+#define CALCPATH	"CALCPATH"	/* environment variable for files */
+#define CALCRC		"CALCRC"	/* environment variable for startup */
+#define CALCBINDINGS	"CALCBINDINGS"	/* environment variable for hist bindings */
+#define HOME		"HOME"		/* environment variable for home dir */
+#define PAGER		"PAGER"		/* environment variable for help */
+#define SHELL		"SHELL"		/* environment variable for shell */
+#define DEFAULTCALCHELP "help"		/* help file that -h prints */
 #define DEFAULTSHELL	"sh"		/* default shell to use */
-#define	CALCEXT		".cal"	/* extension for files read in */
-#define	MAX_CALCRC	1024	/* maximum length of $CALCRC */
-#define	HOMECHAR	'~'	/* char which indicates home directory */
+#define CALCEXT		".cal"	/* extension for files read in */
+#define MAX_CALCRC	1024	/* maximum length of $CALCRC */
+#define HOMECHAR	'~'	/* char which indicates home directory */
 #define DOTCHAR		'.'	/* char which indicates current directory */
-#define	PATHCHAR	'/'	/* char which separates path components */
-#define	LISTCHAR	':'	/* char which separates paths in a list */
-#define	MAXCMD		16384	/* maximum length of command invocation */
-#define	MAXERROR	512	/* maximum length of error message string */
+#define PATHCHAR	'/'	/* char which separates path components */
+#define LISTCHAR	':'	/* char which separates paths in a list */
+#define MAXCMD		16384	/* maximum length of command invocation */
+#define MAXERROR	512	/* maximum length of error message string */
 
-#define	SYMBOLSIZE	256	/* maximum symbol name size */
-#define	MAXINDICES	20	/* maximum number of indices for objects */
-#define	MAXLABELS	100	/* maximum number of user labels in function */
-#define	MAXSTRING	1024	/* maximum size of string constant */
-#define	MAXSTACK	1000	/* maximum depth of evaluation stack */
-#define	MAXFILES	20	/* maximum number of opened files */
+#define SYMBOLSIZE	256	/* maximum symbol name size */
+#define MAXINDICES	20	/* maximum number of indices for objects */
+#define MAXLABELS	100	/* maximum number of user labels in function */
+#define MAXSTRING	1024	/* maximum size of string constant */
+#define MAXSTACK	1000	/* maximum depth of evaluation stack */
+#define MAXFILES	20	/* maximum number of opened files */
 #define PROMPT1		"> "	/* default normal prompt*/
 #define PROMPT2		">> "	/* default prompt inside multi-line input */
 
 
-#define	TRACE_NORMAL	0x00	/* normal trace flags */
-#define	TRACE_OPCODES	0x01	/* trace every opcode */
-#define	TRACE_NODEBUG	0x02	/* suppress debugging opcodes */
+#define TRACE_NORMAL	0x00	/* normal trace flags */
+#define TRACE_OPCODES	0x01	/* trace every opcode */
+#define TRACE_NODEBUG	0x02	/* suppress debugging opcodes */
 #define TRACE_LINKS	0x04	/* display links for real and complex numbers */
 #define TRACE_FNCODES	0x08	/* display code for newly defined function */
-#define	TRACE_MAX	0x0f	/* maximum value for trace flag */
+#define TRACE_MAX	0x0f	/* maximum value for trace flag */
 
 #define ABORT_NONE	0	/* abort not needed yet */
-#define ABORT_STATEMENT	1	/* abort on statement boundary */
+#define ABORT_STATEMENT 1	/* abort on statement boundary */
 #define ABORT_OPCODE	2	/* abort on any opcode boundary */
 #define ABORT_MATH	3	/* abort on any math operation */
 #define ABORT_NOW	4	/* abort right away */
@@ -65,10 +65,10 @@
 /*
  * File ids corresponding to standard in, out, error, and when not in use.
  */
-#define	FILEID_STDIN	((FILEID) 0)
-#define	FILEID_STDOUT	((FILEID) 1)
-#define	FILEID_STDERR	((FILEID) 2)
-#define	FILEID_NONE	((FILEID) -1)
+#define FILEID_STDIN	((FILEID) 0)
+#define FILEID_STDOUT	((FILEID) 1)
+#define FILEID_STDERR	((FILEID) 2)
+#define FILEID_NONE	((FILEID) -1)
 
 /*
  * File I/O routines.
@@ -192,7 +192,7 @@ extern int errmax;	/* if >= 0, error when errcount exceeds errmax */
 extern int new_std;	/* TRUE (-n) => use newstd configuration */
 
 extern int allow_read;	/* FALSE => may not open any files for reading */
-extern int allow_write;	/* FALSE => may not open any files for writing */
+extern int allow_write; /* FALSE => may not open any files for writing */
 extern int allow_exec;	/* FALSE => may not execute any commands */
 
 /*

@@ -43,7 +43,7 @@ to use more than one type of arithmetic, since qmath.h automatically includes
 zmath.h, and cmath.h automatically includes qmath.h.
 
 The prototypes for the available routines are listed in the above include
-files.  Some of these routines are meant for internal use, and so aren't
+files.	Some of these routines are meant for internal use, and so aren't
 convenient for outside use.  So you should read the source for a routine
 to see if it really does what you think it does.  I won't guarantee that
 obscure internal routines won't change or disappear in future releases!
@@ -60,7 +60,7 @@ External programs may want to compile with:
 ERROR HANDLING
 --------------
 
-Your program MUST provide a function called math_error.  This is called by
+Your program MUST provide a function called math_error.	 This is called by
 the math routines on an error condition, such as malloc failures or a
 division by zero.  The routine is called in the manner of printf, with a
 format string and optional arguments.  (However, none of the low level math
@@ -142,7 +142,7 @@ output strings with space filling, output formatted strings like printf, and
 flush the output.  Output from these routines is diverted as described above.
 
 You can change the default output mode by calling math_setmode, and you can
-change the default number of digits printed by calling math_setdigits.  These
+change the default number of digits printed by calling math_setdigits.	These
 routines return the previous values.  The possible modes are described in
 zmath.h.
 
@@ -154,7 +154,7 @@ The arbitrary precision integer routines define a structure called a ZVALUE.
 This is defined in zmath.h.  A ZVALUE contains a pointer to an array of
 integers, the length of the array, and a sign flag.  The array is allocated
 using malloc, so you need to free this array when you are done with a
-ZVALUE.  To do this, you should call zfree with the ZVALUE as an argument
+ZVALUE.	 To do this, you should call zfree with the ZVALUE as an argument
 (or call freeh with the pointer as an argument) and never try to free the
 array yourself using free.  The reason for this is that sometimes the pointer
 points to one of two statically allocated arrays which should NOT be freed.
@@ -248,7 +248,7 @@ If the value is too large for ztofull(), ztoulong() or ztolong(), only
 the low order bits converted.
 
 There are two types of comparisons you can make on ZVALUEs.  This is whether
-or not they are equal, or the ordering on size of the numbers.  The zcmp
+or not they are equal, or the ordering on size of the numbers.	The zcmp
 function tests whether two ZVALUEs are equal, returning TRUE if they differ.
 The zrel function tests the relative sizes of two ZVALUEs, returning -1 if
 the first one is smaller, 0 if they are the same, and 1 if the first one
@@ -267,7 +267,7 @@ is always positive.  If the NUMBER is an integer, the denominator has the
 value 1.
 
 Unlike ZVALUEs, NUMBERs are passed using pointers, and pointers to them are
-returned by functions.  So the basic type for using fractions is not really
+returned by functions.	So the basic type for using fractions is not really
 (NUMBER), but is (NUMBER *).  NUMBERs are allocated using the qalloc routine.
 This returns a pointer to a number which has the value 1.  Because of the
 special property of a ZVALUE of 1, the numerator and denominator of this
@@ -283,7 +283,7 @@ A better way to create NUMBERs with particular values is to use the itoq,
 iitoq, or atoq functions.  Using itoq makes a long value into a NUMBER,
 using iitoq makes a pair of longs into the numerator and denominator of a
 NUMBER (reducing them first if needed), and atoq converts a string representing
-a number into the corresponding NUMBER.  The atoq function accepts input in
+a number into the corresponding NUMBER.	 The atoq function accepts input in
 integral, fractional, real, or exponential formats.  Examples of allocating
 numbers are:
 
@@ -294,7 +294,7 @@ numbers are:
 	q3 = atoq("456.78");
 
 Also unlike ZVALUEs, NUMBERs are quickly copied.  This is because they contain
-a link count, which is the number of pointers there are to the NUMBER.  The
+a link count, which is the number of pointers there are to the NUMBER.	The
 qlink macro is used to copy a pointer to a NUMBER, and simply increments
 the link count and returns the same pointer.  Since it is a macro, the
 argument should not be a function call, but a real pointer variable.  The
@@ -329,11 +329,11 @@ denominator, qint to return the integer part of, qfrac to return the
 fractional part of, and qinv to invert a fraction.
 
 There are some transcendental functions in the library, such as sin and cos.
-These cannot be evaluated exactly as fractions.  Therefore, they accept
-another argument which tells how accurate you want the result.  This is an
+These cannot be evaluated exactly as fractions.	 Therefore, they accept
+another argument which tells how accurate you want the result.	This is an
 "epsilon" value, and the returned value will be within that quantity of
 the correct value.  This is usually an absolute difference, but for some
-functions (such as exp), this is a relative difference.  For example, to
+functions (such as exp), this is a relative difference.	 For example, to
 calculate sin(0.5) to 100 decimal places, you could do:
 
 	NUMBER *q, *ans, *epsilon;
@@ -363,7 +363,7 @@ macros are:
 The comparisons for NUMBERs are similar to the ones for ZVALUEs.  You use the
 qcmp and qrel functions.
 
-There are four predefined values for fractions.  You should qlink them when
+There are four predefined values for fractions.	 You should qlink them when
 you want to use them.  These are _qzero_, _qone_, _qnegone_, and _qonehalf_.
 These have the values 0, 1, -1, and 1/2.  An example of using them is:
 
@@ -377,7 +377,7 @@ USING COMPLEX NUMBERS
 ---------------------
 
 The arbitrary precision complex arithmetic routines define a structure
-called COMPLEX.  This is defined in cmath.h.  This contains two NUMBERs
+called COMPLEX.	 This is defined in cmath.h.  This contains two NUMBERs
 for the real and imaginary parts of a complex number, and a count of the
 number of links there are to this COMPLEX number.
 
@@ -410,7 +410,7 @@ There is no direct routine to convert a string value into a COMPLEX value.
 But you can do this yourself by converting two strings into two NUMBERS,
 and then using the qqtoc routine.
 
-COMPLEX values are always returned from these routines.  To split out the
+COMPLEX values are always returned from these routines.	 To split out the
 real and imaginary parts into normal NUMBERs, you can simply qlink the
 two components, as shown in the following example:
 
@@ -423,7 +423,7 @@ two components, as shown in the following example:
 
 There are many macros for checking quick things about complex numbers,
 similar to the ZVALUE and NUMBER macros.  In addition, there are some
-only used for complex numbers.  Examples of macros are:
+only used for complex numbers.	Examples of macros are:
 
 	cisreal(c)	(number is real)
 	cisimag(c)	(number is pure imaginary)
@@ -441,8 +441,8 @@ only used for complex numbers.  Examples of macros are:
 There is only one comparison you can make for COMPLEX values, and that is
 for equality.  The ccmp function returns TRUE if two complex numbers differ.
 
-There are three predefined values for complex numbers.  You should clink
-them when you want to use them.  They are _czero_, _cone_, and _conei_.
+There are three predefined values for complex numbers.	You should clink
+them when you want to use them.	 They are _czero_, _cone_, and _conei_.
 These have the values 0, 1, and i.
 
 ----------------

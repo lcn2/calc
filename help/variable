@@ -4,7 +4,7 @@ Variable declarations
     Global variables are visible to all functions and on the command
     line, and are permanent.  Local variables are visible only within
     a single function or command sequence.  When the function or command
-    sequence returns, the local variables are deleted.  Static variables
+    sequence returns, the local variables are deleted.	Static variables
     are permanent like global variables, but are only visible within the
     same input file or function where they are defined.
 
@@ -18,7 +18,7 @@ Variable declarations
 	    local	foo, bar;
 	    static	var1, var2, var3;
 
-    Variables may have initializations applied to them.  This is done
+    Variables may have initializations applied to them.	 This is done
     by following the variable name by an equals sign and an expression.
     Global and local variables are initialized each time that control
     reaches them (e.g., at the entry to a function which contains them).
@@ -33,7 +33,7 @@ Variable declarations
 
     Within function declarations, all variables must be defined.
     But on the top level command line, assignments automatically define
-    global variables as needed.  For example, on the top level command
+    global variables as needed.	 For example, on the top level command
     line, the following defines the global variable x if it had not
     already been defined:
 
@@ -44,7 +44,7 @@ Variable declarations
     functions defined interactively.
 
     Variables have no fixed type, thus there is no need or way to
-    specify the types of variables as they are defined.  Instead, the
+    specify the types of variables as they are defined.	 Instead, the
     types of variables change as they are assigned to or are specified
     in special statements such as 'mat' and 'obj'.  When a variable is
     first defined using 'local', 'global', or 'static', it has the
@@ -66,7 +66,7 @@ Variable declarations
 
     There are no pointers in the calculator language, thus all
     arguments to user-defined functions are normally passed by value.
-    This is true even for matrices, strings, and lists.  In order
+    This is true even for matrices, strings, and lists.	 In order
     to circumvent this, the '&' operator is allowed before a variable
     when it is an argument to a function.  When this is done, the
     address of the variable is passed to the function instead of its

@@ -28,9 +28,9 @@
  * swap_b8_in_HALFs - swap 8 and if needed, 16 bits in an array of HALFs
  *
  * given:
- *      dest    - pointer to where the swapped src wil be put or
+ *	dest	- pointer to where the swapped src wil be put or
  *		  NULL to allocate the storage
- *	src     - pointer to a HALF array to swap
+ *	src	- pointer to a HALF array to swap
  *	len	- length of the src HALF array
  *
  * returns:
@@ -263,9 +263,9 @@ swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
  * swap_b16_in_HALFs - swap 16 bits in an array of HALFs
  *
  * given:
- *      dest    - pointer to where the swapped src wil be put or
+ *	dest	- pointer to where the swapped src wil be put or
  *		  NULL to allocate the storage
- *	src     - pointer to a HALF array to swap
+ *	src	- pointer to a HALF array to swap
  *	len	- length of the src HALF array
  *
  * returns:

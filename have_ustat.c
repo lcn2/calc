@@ -50,8 +50,8 @@ main(void)
 
 #else /* HAVE_NO_USTAT */
 
-	struct stat stat_dot;           /* stat of "." */
-	struct ustat ustat_dot;         /* usage stat of "." */
+	struct stat stat_dot;		/* stat of "." */
+	struct ustat ustat_dot;		/* usage stat of "." */
 
 	(void) stat(".", &stat_dot);
 	(void) ustat(stat_dot.st_dev, &ustat_dot);

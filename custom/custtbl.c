@@ -20,12 +20,12 @@
  * PERFORMANCE OF THIS SOFTWARE.
  *
  * Comments, suggestions, bug fixes and questions about these routines
- * are welcome.  Send EMail to the address given below.
+ * are welcome.	 Send EMail to the address given below.
  *
  * Happy bit twiddling,
  *
- *      Landon Curt Noll
- *      http://reality.sgi.com/chongo/
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo/
  *
  * chongo <was here> /\../\
  */
@@ -37,7 +37,7 @@
 
 /*
  * NOTE: See the file CUSTOM for instructions on how to add
- * 	 custom functions.
+ *	 custom functions.
  */
 
 

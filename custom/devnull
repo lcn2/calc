@@ -10,7 +10,7 @@ TYPES
     return	null
 
 DESCRIPTION
-    This custom function does nothing.  It is intented for testing
+    This custom function does nothing.	It is intented for testing
     of the general custom interface.
 
 EXAMPLE

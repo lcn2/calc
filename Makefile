@@ -17,12 +17,12 @@
 
 # Determine the type of terminal controls that you want to use
 #
-#	value	  	  meaning
+#	value		  meaning
 #	--------	  -------
 #	(nothing)	  let the makefile guess at what you need
 #	-DUSE_TERMIOS	  use struct termios from <termios.h>
-#	-DUSE_TERMIO 	  use struct termios from <termio.h>
-#	-DUSE_SGTTY    	  use struct sgttyb from <sys/ioctl.h>
+#	-DUSE_TERMIO	  use struct termios from <termio.h>
+#	-DUSE_SGTTY	  use struct sgttyb from <sys/ioctl.h>
 #
 # If in doubt, leave TERMCONTROL empty.
 #
@@ -41,7 +41,7 @@ TERMCONTROL=
 # for the best.
 #
 # If HAVE_VSPRINTF is empty, this makefile will run the have_stdvs.c and/or
-# have_varvs.c program to determine if vsprintf() is supported.  If
+# have_varvs.c program to determine if vsprintf() is supported.	 If
 # HAVE_VSPRINTF is set to -DDONT_HAVE_VSPRINTF then calc will hope that
 # sprintf() will work.
 #
@@ -55,12 +55,12 @@ HAVE_VSPRINTF=
 #    Big Endian:	Amdahl, 68k, Pyramid, Mips, Sparc, ...
 #    Little Endian:	Vax, 32k, Spim (Dec Mips), i386, i486, ...
 #
-# If in doubt, leave BYTE_ORDER empty.  This makefile will attempt to
+# If in doubt, leave BYTE_ORDER empty.	This makefile will attempt to
 # use BYTE_ORDER in <machine/endian.h> or it will attempt to run
 # the endian program.  If you get syntax errors when you compile,
 # try forcing the value to be BIG_ENDIAN and run the calc regression
-# tests. (see the README file)  If the calc regression tests fail, do
-# a make clobber and try LITTLE_ENDIAN.  If that fails, ask a wizard
+# tests. (see the README file)	If the calc regression tests fail, do
+# a make clobber and try LITTLE_ENDIAN.	 If that fails, ask a wizard
 # for help.
 #
 BYTE_ORDER=
@@ -112,7 +112,7 @@ HAVE_FPOS=
 #HAVE_FPOS= -DHAVE_NO_FPOS
 
 # Determine if we have an off_t which one can perform arithmetic operations,
-# assignments and comparisons.  On some systems off_t is some sort of union
+# assignments and comparisons.	On some systems off_t is some sort of union
 # or struct.
 #
 # If HAVE_OFFSCL is empty, this makefile will run the have_offscl program
@@ -126,7 +126,7 @@ HAVE_OFFSCL=
 #HAVE_OFFSCL= -DOFF_T_NON_SCALAR
 
 # Determine if we have an fpos_t which one can perform arithmetic operations,
-# assignments and comparisons.  On some systems fpos_t is some sort of union
+# assignments and comparisons.	On some systems fpos_t is some sort of union
 # or struct.  Some systems do not have an fpos_t and long is as a file
 # offset instead.
 #
@@ -192,7 +192,7 @@ HAVE_MEMMOVE=
 # Determine if we have ustat()
 #
 # If HAVE_USTAT is empty, this makefile will run the have_memmv program
-# to determine if ustat() is supported.  If HAVE_USTAT is set to
+# to determine if ustat() is supported.	 If HAVE_USTAT is set to
 # -DHAVE_NO_USTAT, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
 #
@@ -228,7 +228,7 @@ HAVE_GETPGID=
 # Determine if we have clock_gettime()
 #
 # If HAVE_GETTIME is empty, this makefile will run the have_memmv program
-# to determine if clock_gettime() is supported.  If HAVE_GETTIME is set to
+# to determine if clock_gettime() is supported.	 If HAVE_GETTIME is set to
 # -DHAVE_NO_GETTIME, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
 #
@@ -289,7 +289,7 @@ HAVE_STRDUP=
 # that are not alligned on a 32 bit boundary.
 #
 # The Dec Alpha running OSF/1 will produce alignment error messages when
-# align32.c tries to figure out if alignment is needed.  Use the
+# align32.c tries to figure out if alignment is needed.	 Use the
 # ALIGN32= -DMUST_ALIGN32 to force alignment and avoid such error messages.
 #
 # ALIGN32=		     let align32.c figure out if alignment is needed
@@ -426,8 +426,8 @@ CALCBINDINGS= bindings
 #				and history libs
 #	READLINE_INCLUDE	Where the readline include files reside
 #
-# NOTE: The GNU-readline code is not shipped with calc.  You must have
-# 	the appropriate headers and libs installed on your system in
+# NOTE: The GNU-readline code is not shipped with calc.	 You must have
+#	the appropriate headers and libs installed on your system in
 #	order to use it.
 #
 # If in doubt, set USE_READLINE, READLINE_LIB and READLINE_INCLUDE to nothing.
@@ -483,7 +483,7 @@ DEBUG= -O2 -g3
 #	BSD	    NO_SHARED=
 #	SYSV	    NO_SHARED= -dn
 #	IRIX	    NO_SHARED= -non_shared
-#	disable     NO_SHARED=
+#	disable	    NO_SHARED=
 #
 # If in doubt, use NO_SHARED=
 #
@@ -494,11 +494,11 @@ NO_SHARED=
 # On some systems where you are disabling dynamic shared libs, you may
 # need to pass a special flag to ${CC} and ${LCC} during linking stage.
 #
-#    System type    			    NO_SHARED recommendation
+#    System type			    NO_SHARED recommendation
 #
 #	IRIX with NO_SHARED= -non_shared    LD_NO_SHARED= -Wl,-rdata_shared
 #	IRIX with NO_SHARED=		    LD_NO_SHARED=
-#	others	    			    LD_NO_SHARED=
+#	others				    LD_NO_SHARED=
 #
 # If in doubt, use LD_NO_SHARED=
 #
@@ -520,7 +520,7 @@ RANLIB=ranlib
 #
 #	BSD	    ${LINT} ${LCFLAGS} ${LINTFLAGS} -u -Ccalc
 #	SYSV	    ${LINT} ${LCFLAGS} ${LINTFLAGS} -u -o calc
-#	disable     :
+#	disable	    :
 #
 # If in doubt and you don't care about lint, use LINTLIB= :
 #
@@ -529,10 +529,10 @@ RANLIB=ranlib
 LINTLIB= :
 
 # The lint flags vary from system to system.  Some systems have the
-# opposite meaning for the flags below.  Other systems change flag
+# opposite meaning for the flags below.	 Other systems change flag
 # meaning altogether.
 #
-#       System    LINTFLAGS recommendation
+#	System	  LINTFLAGS recommendation
 #
 #	SunOs	  -a -h -v -z
 #
@@ -542,7 +542,7 @@ LINTLIB= :
 LINTFLAGS=
 
 # Normally certain files depend on the Makefile.  If the Makefile is
-# changed, then certain steps should be redone.  If MAKE_FILE is
+# changed, then certain steps should be redone.	 If MAKE_FILE is
 # set to Makefile, then these files will depend on Makefile.  If
 # MAKE_FILE is empty, they they wont.
 #
@@ -593,7 +593,7 @@ CALC_ENV= CALCPATH=./lib
 
 # By default, custom builtin functions may only be executed if calc
 # is given the -C option.  This is because custom builtin functions
-# may invoke non-standard or non-portable code.  One may completely
+# may invoke non-standard or non-portable code.	 One may completely
 # disable custom builtin functions by not compiling any of code
 #
 # ALLOW_CUSTOM= -DCUSTOM	# allow custom only if -C is given
@@ -1079,7 +1079,7 @@ TARGETS= ${CALC_LIBS} custom/.all calc sample/sample \
 
 ###
 #
-# The reason for this Makefile  :-)
+# The reason for this Makefile	:-)
 #
 ###
 
@@ -1286,9 +1286,9 @@ have_malloc.h: ${MAKE_FILE}
 	${Q}echo '' >> have_malloc.h
 	${Q}echo '/* do we have /usr/include/malloc.h? */' >> have_malloc.h
 	-${Q}if [ -f /usr/include/malloc.h ]; then \
-	    echo '#define HAVE_MALLOC_H  /* yes */' >> have_malloc.h; \
+	    echo '#define HAVE_MALLOC_H	 /* yes */' >> have_malloc.h; \
 	else \
-	    echo '#undef HAVE_MALLOC_H  /* no */' >> have_malloc.h; \
+	    echo '#undef HAVE_MALLOC_H	/* no */' >> have_malloc.h; \
 	fi
 	${Q}echo '' >> have_malloc.h
 	${Q}echo '' >> have_malloc.h
@@ -1318,7 +1318,7 @@ have_times.h: ${MAKE_FILE}
 	${Q}echo '' >> have_times.h
 	${Q}echo '/* do we have /usr/include/times.h? */' >> have_times.h
 	-${Q}if [ -f /usr/include/times.h ]; then \
-	    echo '#define HAVE_TIMES_H  /* yes */' >> have_times.h; \
+	    echo '#define HAVE_TIMES_H	/* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_TIMES_H  /* no */' >> have_times.h; \
 	fi
@@ -1365,9 +1365,9 @@ have_stdlib.h: ${MAKE_FILE}
 	${Q}echo '' >> have_stdlib.h
 	${Q}echo '/* do we have /usr/include/stdlib.h? */' >> have_stdlib.h
 	-${Q}if [ -f /usr/include/stdlib.h ]; then \
-	    echo '#define HAVE_STDLIB_H  /* yes */' >> have_stdlib.h; \
+	    echo '#define HAVE_STDLIB_H	 /* yes */' >> have_stdlib.h; \
 	else \
-	    echo '#undef HAVE_STDLIB_H  /* no */' >> have_stdlib.h; \
+	    echo '#undef HAVE_STDLIB_H	/* no */' >> have_stdlib.h; \
 	fi
 	${Q}echo '' >> have_stdlib.h
 	${Q}echo '' >> have_stdlib.h
@@ -1397,9 +1397,9 @@ have_unistd.h: ${MAKE_FILE}
 	${Q}echo '' >> have_unistd.h
 	${Q}echo '/* do we have /usr/include/unistd.h? */' >> have_unistd.h
 	-${Q}if [ -f /usr/include/unistd.h ]; then \
-	    echo '#define HAVE_UNISTD_H  /* yes */' >> have_unistd.h; \
+	    echo '#define HAVE_UNISTD_H	 /* yes */' >> have_unistd.h; \
 	else \
-	    echo '#undef HAVE_UNISTD_H  /* no */' >> have_unistd.h; \
+	    echo '#undef HAVE_UNISTD_H	/* no */' >> have_unistd.h; \
 	fi
 	${Q}echo '' >> have_unistd.h
 	${Q}echo '' >> have_unistd.h
@@ -1429,9 +1429,9 @@ have_string.h: ${MAKE_FILE}
 	${Q}echo '' >> have_string.h
 	${Q}echo '/* do we have /usr/include/string.h? */' >> have_string.h
 	-${Q}if [ -f /usr/include/string.h ]; then \
-	    echo '#define HAVE_STRING_H  /* yes */' >> have_string.h; \
+	    echo '#define HAVE_STRING_H	 /* yes */' >> have_string.h; \
 	else \
-	    echo '#undef HAVE_STRING_H  /* no */' >> have_string.h; \
+	    echo '#undef HAVE_STRING_H	/* no */' >> have_string.h; \
 	fi
 	${Q}echo '' >> have_string.h
 	${Q}echo '' >> have_string.h
@@ -2102,7 +2102,7 @@ have_urandom.h: ${MAKE_FILE}
 	-${Q}if [ -c /dev/urandom ]; then \
 	    echo '#define HAVE_URANDOM_H  /* yes */' >> have_urandom.h; \
 	else \
-	    echo '#undef HAVE_URANDOM_H  /* no */' >> have_urandom.h; \
+	    echo '#undef HAVE_URANDOM_H	 /* no */' >> have_urandom.h; \
 	fi
 	${Q}echo '' >> have_urandom.h
 	${Q}echo '' >> have_urandom.h
@@ -2428,7 +2428,7 @@ sample/all:
 ##
 #
 # The BSDI cdrom makefile expects certain files to be pre-built in a sub-dir
-# called gen_h.  This rule creats this sub-directory so that the release can
+# called gen_h.	 This rule creats this sub-directory so that the release can
 # be shipped off to BSDI.  You can ignore this rule.
 #
 ##
@@ -2498,7 +2498,7 @@ depend: hsrc
 	-${Q}rm -rf skel
 	${Q}mkdir skel
 	-${Q}for i in ${C_SRC} ${BUILD_C_SRC}; do \
-		${SED} -n '/^#[	 ]*include[ 	]*"/p' "$$i" > "skel/$$i"; \
+		${SED} -n '/^#[	 ]*include[	]*"/p' "$$i" > "skel/$$i"; \
 	done
 	${Q}mkdir skel/custom
 	-${Q}for i in ${H_SRC} ${BUILD_H_SRC} custom.h; do \

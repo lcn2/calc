@@ -19,7 +19,7 @@
 #include "file.h"
 #include "calcerr.h"
 
-#define	READSIZE	1024	/* buffer size for reading */
+#define READSIZE	1024	/* buffer size for reading */
 
 /*
  * external STDIO functions
@@ -34,7 +34,7 @@ extern FILE *f_open(char *name, char *mode);
  * and cannot be closed.  Their file ids are always 0, 1, and 2.
  */
 static FILEIO files[MAXFILES] = {
-	{FILEID_STDIN,  NULL,  (dev_t)0, (ino_t)0,
+	{FILEID_STDIN,	NULL,  (dev_t)0, (ino_t)0,
 	 "(stdin)",  TRUE, FALSE, 'r', "r"},
 	{FILEID_STDOUT, NULL, (dev_t)0, (ino_t)0,
 	 "(stdout)", FALSE,  TRUE, 'w', "w"},
@@ -43,7 +43,7 @@ static FILEIO files[MAXFILES] = {
 };
 
 
-static int ioindex[MAXFILES] = {0,1,2};	/* Indices for FILEIO table */
+static int ioindex[MAXFILES] = {0,1,2}; /* Indices for FILEIO table */
 static FILEID lastid = FILEID_STDERR;	/* Last allocated file id */
 static int idnum = 3;			/* Number of allocated file ids */
 
@@ -398,7 +398,7 @@ indexid(long index)
 
 
 /*
- * Close the specified file id.  Returns TRUE if there was an error.
+ * Close the specified file id.	 Returns TRUE if there was an error.
  * Closing of stdin, stdout, or stderr is illegal, but closing of already
  * closed files is allowed.
  */
@@ -536,7 +536,7 @@ flushall(void)
  *
  *	bit 0:	at newline
  *	bit 1:	at null character
- *	bit 2:  at white space (also skips leading white space)
+ *	bit 2:	at white space (also skips leading white space)
  *
  * If neither '\n' nor '\0' is encountered reading continues until EOF.
  * If bit 3 is set the stop character is removed.
@@ -725,7 +725,7 @@ printid(FILEID id, int flags)
 
 
 /*
- * Print a formatted string similar to printf.  Various formats of output
+ * Print a formatted string similar to printf.	Various formats of output
  * are possible, depending on the format string AND the actual types of the
  * values.  Mismatches do not cause errors, instead something reasonable is
  * printed instead.  The output goes to the file with the specified id.
@@ -1294,7 +1294,7 @@ getloc(FILEID id, ZVALUE *res)
 	 */
 	fiop = findid(id, 0);
 	if (fiop == NULL) {
-	  	/* file not open */
+		/* file not open */
 		return -1;
 	}
 	fp = fiop->fp;
@@ -1467,7 +1467,7 @@ setloc(FILEID id, ZVALUE zpos)
 	 */
 	fiop = findid(id, 0);
 	if (fiop == NULL) {
-	  	/* file not open */
+		/* file not open */
 		return -1;
 	}
 	fp = fiop->fp;
@@ -1635,7 +1635,7 @@ getsize(FILEID id, ZVALUE *res)
 	 */
 	fiop = findid(id, 0);
 	if (fiop == NULL) {
-	  	/* file not open */
+		/* file not open */
 		return 1;
 	}
 	fp = fiop->fp;
@@ -1671,7 +1671,7 @@ get_device(FILEID id, ZVALUE *dev)
 	 */
 	fiop = findid(id, 0);
 	if (fiop == NULL) {
-	  	/* file not open */
+		/* file not open */
 		return -1;
 	}
 
@@ -1704,7 +1704,7 @@ get_inode(FILEID id, ZVALUE *inode)
 	 */
 	fiop = findid(id, 0);
 	if (fiop == NULL) {
-	  	/* file not open */
+		/* file not open */
 		return -1;
 	}
 
@@ -2144,7 +2144,7 @@ scanfstr(char *str, char *fmt, int count, VALUE **vals)
 
 
 /*
- * Read a number in floating-point format from a file.  The first dot,
+ * Read a number in floating-point format from a file.	The first dot,
  * if any, is considered as the decimal point; later dots are ignored.
  * For example, -23.45..67. is interpreted as -23.4567
  * An optional 'e' or 'E' indicates multiplication by a power or 10,
@@ -2394,7 +2394,7 @@ isattyid(FILEID id)
  *	zero if string found, position stored at res
  *
  * XXX - This search is a translation of the original search that did not
- *	 work with large files.  The search algorithm used is slow and
+ *	 work with large files.	 The search algorithm used is slow and
  *	 should be spead up much more.
  */
 int
@@ -2513,7 +2513,7 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
  *	zero if string found, position stored at res
  *
  * XXX - This search is a translation of the original search that did not
- *	 work with large files.  The search algorithm used is so slow
+ *	 work with large files.	 The search algorithm used is so slow
  *	 as to be painful to the user and needs to be sped up much more.
  */
 int

@@ -25,7 +25,7 @@ EXAMPLE
     > errmax(errcount()+3)
 	    0
     > strerror(2)
- 	"No such file or directory"
+	"No such file or directory"
 
     > x = 3 * ("a" + "b")
     > print strerror(x)

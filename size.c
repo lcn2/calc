@@ -118,7 +118,7 @@ zsize(ZVALUE z)
 /*
  * qsize - calculate memory footprint of a NUMBER (exlcuding overhead)
  *
- * The numeric -1, - and 1 storage values are ignored.  Denominator
+ * The numeric -1, - and 1 storage values are ignored.	Denominator
  * parts of integers are ignored.
  *
  * given:
@@ -142,7 +142,7 @@ qsize(NUMBER *q)
 /*
  * csize - calculate memory footprint of a COMPLEX (exlcuding overhead)
  *
- * The numeric -1, - and 1 storage values are ignored.  Denominator
+ * The numeric -1, - and 1 storage values are ignored.	Denominator
  * parts of integers are ignored.  Imaginary parts of pure reals
  * are ignored.
  *
@@ -285,8 +285,8 @@ lsizeof(VALUE *vp)
 		case V_HASH:
 			/* ignore the unused part of the union */
 			s = (long)sizeof(HASH) +
-			 	vp->v_hash->unionsize -
-			 	(long)sizeof(vp->v_hash->h_union);
+				vp->v_hash->unionsize -
+				(long)sizeof(vp->v_hash->h_union);
 			break;
 		case V_BLOCK:
 			s = vp->v_block->maxsize;

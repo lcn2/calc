@@ -1,7 +1,7 @@
 operators
 
     The operators are similar to C, but there are some differences in
-    the associativity and precedence rules for some operators.  In
+    the associativity and precedence rules for some operators.	In
     addition, there are several operators not in C, and some C
     operators are missing.  A more detailed discussion of situations
     that may be unexpected for the C programmer may be found in
@@ -64,7 +64,7 @@ operators
 	    E.g., if A is a matrix, A[(a, b), c] evaluates a, b, and c, and
 	    returns the value of A[b, c].
 
-    +=  -=  *=  /=  %=  //=  &=  |=  <<=  >>=  ^=  **=
+    +=	-=  *=	/=  %=	//=  &=	 |=  <<=  >>=  ^=  **=
 	 Operator-with-assignments.
 	    These associate from left to right, e.g. a += b *= c has the
 	    effect of a = (a + b) * c, where only a is required to be an
@@ -76,7 +76,7 @@ operators
 	    e.g. a = b = c has the effect of a = (b = c).  Here both a and b
 	    are to be lvalues.
 
-    ? :	Conditional value.
+    ? : Conditional value.
 	    a ? b : c  returns b if a tests as true (i.e. nonzero if
 	    a is a number), c otherwise.  Thus it is equivalent to:
 	    if (a) return b; else return c;.
@@ -99,7 +99,7 @@ operators
 	    true, b is returned, otherwise a.  The effect in a
 	    test like "if (a && b) ... " is the same as in C.
 
-    ==  !=  <=  >=  <  >
+    ==	!=  <=	>=  <  >
 	    Relations.
 
     +  -
@@ -134,7 +134,7 @@ operators
 
 	    For the shift operators both arguments are to be
 	    integers, or if the first is complex, it is to have
-	    integral real and imaginary parts.  Changing the
+	    integral real and imaginary parts.	Changing the
 	    sign of the second argument reverses the shift, e.g.
 	    a >> -b = a << b.  The result has the same sign as
 	    the first argument except that a nonzero value is
@@ -143,8 +143,8 @@ operators
 	    e.g.  a << b ^ c = a << (b ^ c).
 
     +  -  !
-            Plus (+) and minus (-) have their usual meanings as unary
-            prefix operators at this level of precedence when applied to
+	    Plus (+) and minus (-) have their usual meanings as unary
+	    prefix operators at this level of precedence when applied to
 	    other than a first or only term.
 
 	    As a prefix operator, '!' is the logical NOT: !a returns 0 if
@@ -156,13 +156,13 @@ operators
 	    As a postfix operator ! gives the factorial function, i.e.
 	    a! = fact(a).
 
-    ++  --
+    ++	--
 	    Pre or post incrementing or decrementing.
 	    These are applicable only to variables.
 
-    [ ]  [[ ]]  .  ( )
+    [ ]	 [[ ]]	.  ( )
 	    Indexing, double-bracket indexing, element references,
-	    and function calls.  Indexing can only be applied to matrices,
+	    and function calls.	 Indexing can only be applied to matrices,
 	    element references can only be applied to objects, but
 	    double-bracket indexing can be applied to matrices, objects,
 	    or lists.
@@ -199,7 +199,7 @@ operators
     |  &
 	    Both both arguments must be integers.
 
-    <<  >>
+    <<	>>
 	    The shift amount must be an integer.  The value being
 	    shifted must be an integer or a complex number with
 	    integral real and imaginary parts.

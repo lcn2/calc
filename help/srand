@@ -25,14 +25,14 @@ DESCRIPTION
 	    /* reload default additive table xor-ed with low 64 seed bits */
 	    seed_xor = seed & ((1<<64)-1);
 	    for (i=0; i < 55; ++i) {
-	        additive[i] = xor(default_additive[i], seed_xor);
+		additive[i] = xor(default_additive[i], seed_xor);
 	    }
 
 	    /* shuffle the additive table */
 	    seed >>= 64;
 	    for (i=55; seed > 0 && i > 0; --i) {
-	        quomod(seed, i+1, seed, j);
-	        swap(additive[i], additive[j]);
+		quomod(seed, i+1, seed, j);
+		swap(additive[i], additive[j]);
 	    }
 
 	Seed must be >= 0.  All seed values < 0 are reserved for future use.
@@ -58,7 +58,7 @@ DESCRIPTION
 	between the seed and the production of the generator.
 
 	The randreseed64 process does not reduce the security of the
-	rand generator.  Every seed is converted into a different
+	rand generator.	 Every seed is converted into a different
 	unique seed.  No seed is ignored or favored.  See the rand
 	help file for details.
 

@@ -14,7 +14,7 @@ DESCRIPTION
     is set or clear.
 
     The end-of-file flag for the stream fd is set if reading at the
-    end-of-file position is attempted.  The flag is cleared by
+    end-of-file position is attempted.	The flag is cleared by
     positioning operations (fseek, rewind, fsetpos) and by freopen.
 
 EXAMPLE
@@ -23,14 +23,14 @@ EXAMPLE
     > fflush(fd1)
     > fd2 = fopen("/tmp/newfile", "r")
     > feof(fd2)
-            0
+	    0
     > fgetline(fd2)
 	    "Chongo was here"
     > feof(fd2)
-            0
+	    0
     > fgetline(fd2)
     > feof(fd2)
-            1
+	    1
 
 LIMITS
     none

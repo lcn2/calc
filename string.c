@@ -116,7 +116,7 @@ charstr(int ch)
 
 /*
  * Find a string with the specified name and return its number in the
- * string list.  The first string is numbered zero.  Minus one is returned
+ * string list.	 The first string is numbered zero.  Minus one is returned
  * if the string is not found.
  *
  * given:
@@ -175,7 +175,7 @@ namestr(STRINGHEAD *hp, long n)
 /*
  * Useful routine to return the index of one string within another one
  * which has the format:  "str1\000str2\000str3\000...strn\0\0".  Index starts
- * at one for the first string.  Returns zero if the string being checked
+ * at one for the first string.	 Returns zero if the string being checked
  * is not contained in the formatted string.
  *
  * Be sure to use \000 instead of \0.  ANSI-C compilers interpret "foo\0foo..."
@@ -586,8 +586,7 @@ stringsegment(STRING *s1, long n1, long n2)
 	if (n1 >= n2) {
 		while (len-- > 0)
 			*c++ = *c1--;
-	}
-	else {
+	} else {
 		while (len-- > 0)
 			*c++ = *c1++;
 	}
@@ -598,7 +597,7 @@ stringsegment(STRING *s1, long n1, long n2)
 /*
  * stringshift shifts s1 n bits to left if n > 0, -n to the right if n < 0;
  * octets in string considered to be in decreasing order of index, as in
- * ... a_3 a_2 a_1 a_0.  Returned string has same length as s1.
+ * ... a_3 a_2 a_1 a_0.	 Returned string has same length as s1.
  * Vacated bits are filled with '\0'; bits shifted off end are lost
  */
 STRING *
@@ -640,8 +639,7 @@ stringshift(STRING *s1, long n)
 			*--c = ((unsigned char) *--c1 >> j) | ch;
 			ch = (unsigned char) *c1 << k;
 		}
-	}
-	else {
+	} else {
 		while (i-- > 0)
 			*c++ = '\0';
 		i = len - n;
@@ -741,7 +739,7 @@ stringlowbit(STRING *s)
 	unsigned char ch;
 	long i;
 
-	for (i = s->s_len, c = s->s_str; i > 0 && *c ==  '\0'; i--, c++);
+	for (i = s->s_len, c = s->s_str; i > 0 && *c ==	 '\0'; i--, c++);
 	if (i == 0)
 		return -1;
 	i = (s->s_len - i) << 3;
@@ -814,7 +812,7 @@ stringrel(STRING *s1, STRING *s2)
 /*
  * str with characters c0, c1, ... is considered as a bitstream, 8 bits
  * per character; within a character the bits ordered from low order to
- * high order.  For 0 <= i < 8 * length of str, stringbit returns 1 or 0
+ * high order.	For 0 <= i < 8 * length of str, stringbit returns 1 or 0
  * according as the bit with index i is set or not set; other values of i
  * return -1.
  */
@@ -957,7 +955,7 @@ stringrsearch(STRING *s1, STRING *s2, long start, long end, ZVALUE *index)
  * String allocation routines
  */
 
-#define	STRALLOC	100
+#define STRALLOC	100
 
 
 static STRING	*freeStr = NULL;
@@ -1137,7 +1135,7 @@ sfree(STRING *s)
 
 static long	stringconstcount = 0;
 static long	stringconstavail = 0;
-static STRING   **stringconsttable;
+static STRING	**stringconsttable;
 #define STRCONSTALLOC 100
 
 void
@@ -1352,7 +1350,7 @@ showstrings(void)
 	printf("Index  Links  Length  String\n");
 	printf("-----  -----  ------  ------\n");
 	sp = &_nullstring_;
-	printf("    0  %5ld       0  \"\"\n", sp->s_links);
+	printf("    0  %5ld	  0  \"\"\n", sp->s_links);
 	for (i = 0, k = 1, count = 1; i < blockcount; i++) {
 		sp = firstStrs[i];
 		for (j = 0; j < STRALLOC; j++, k++, sp++) {
@@ -1392,6 +1390,3 @@ showliterals(void)
 	}
 	printf("\nNumber: %ld\n", count);
 }
-
-
-/* END CODE */

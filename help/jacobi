@@ -29,7 +29,7 @@ DESCRIPTION
     where the p_i are primes, not necessarily distinct, the
     jacobi symbol function is given by
 
-		jacobi(x,y)  =  (x/p_1) * (x/p_2) * ... * (x/p_k).
+		jacobi(x,y)  =	(x/p_1) * (x/p_2) * ... * (x/p_k).
 
     where the functions on the right are Legendre symbol functions.
 

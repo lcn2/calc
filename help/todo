@@ -87,7 +87,7 @@ High priority items:
       as noted in the BUGS file or as displayed by 'calc help bugs'.
 
     * The shell script that is currently constructed to display a help
-      file (in help.c) is a gross hack.  That code should be replaced
+      file (in help.c) is a gross hack.	 That code should be replaced
       with code that looks for the help file in the pre-defined help
       directories.  When the specific help file is found and opened,
       then a $PAGER should be forked and execed after doing things such

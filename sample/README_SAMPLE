@@ -31,7 +31,7 @@ many_random
     Generate many (100000) sets random bits using the Blum-Blum-Shub
     generator that is used by the random() and srandom() builtin functions.
 
-    Output is one set per line.  Unlike test_random, the seed is not
+    Output is one set per line.	 Unlike test_random, the seed is not
     printed.  There is no leading 0x on numbers and there is no prefix
     strings.  The only thing printed (normally) is ASCII hex chars and
     newlines.

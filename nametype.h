@@ -20,11 +20,11 @@
  * PERFORMANCE OF THIS SOFTWARE.
  *
  * Prior to calc 2.9.3t9, these routines existed as a calc library called
- * cryrand.cal.  They have been rewritten in C for performance as well
+ * cryrand.cal.	 They have been rewritten in C for performance as well
  * as to make them available directly from libcalc.a.
  *
  * Comments, suggestions, bug fixes and questions about these routines
- * are welcome.  Send EMail to the address given below.
+ * are welcome.	 Send EMail to the address given below.
  *
  * Happy bit twiddling,
  *

@@ -15,8 +15,8 @@ EXAMPLE
     > a = rcin(10,27)
     > b = rcin(10,15)
     > show redc
-    0       1       27
-    1       2       15
+    0	    1	    27
+    1	    2	    15
     > freeredc()
     > show redc
     >

@@ -11,7 +11,7 @@ TYPES
 
 DESCRIPTION
     For real x, den(x) returns the denominator of x when x is expressed
-    in lowest terms with positive denominator.  In calc,
+    in lowest terms with positive denominator.	In calc,
     real values are actually rational values.  Each calc real
     value can be uniquely expressed as:
 

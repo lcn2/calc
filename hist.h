@@ -14,22 +14,22 @@
 /*
  * Default binding file and history size.
  */
-#ifndef	HIST_BINDING_FILE
-#define	HIST_BINDING_FILE	"/usr/lib/hist.bind"
+#ifndef HIST_BINDING_FILE
+#define HIST_BINDING_FILE	"/usr/lib/hist.bind"
 #endif
 
-#ifndef	HIST_SIZE
-#define	HIST_SIZE		(1024*10)
+#ifndef HIST_SIZE
+#define HIST_SIZE		(1024*10)
 #endif
 
 
 /*
  * path search defines
  */
-#define	HOMECHAR	'~'	/* char which indicates home directory */
+#define HOMECHAR	'~'	/* char which indicates home directory */
 #define DOTCHAR		'.'	/* char which indicates current directory */
-#define	PATHCHAR	'/'	/* char which separates path components */
-#define	LISTCHAR	':'	/* char which separates paths in a list */
+#define PATHCHAR	'/'	/* char which separates path components */
+#define LISTCHAR	':'	/* char which separates paths in a list */
 
 
 /*
@@ -37,10 +37,10 @@
  * not prevent calling the other routines, but fancy command line editing
  * is then disabled.
  */
-#define	HIST_SUCCESS	0	/* successfully inited */
-#define	HIST_INITED	1	/* initialization is already done */
-#define	HIST_NOFILE	2	/* bindings file could not be read */
-#define	HIST_NOTTY	3	/* terminal modes could not be set */
+#define HIST_SUCCESS	0	/* successfully inited */
+#define HIST_INITED	1	/* initialization is already done */
+#define HIST_NOFILE	2	/* bindings file could not be read */
+#define HIST_NOTTY	3	/* terminal modes could not be set */
 
 
 extern	int	hist_init(char *filename);

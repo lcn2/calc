@@ -6,7 +6,7 @@
 
 
 #if !defined(__SYMBOL_H__)
-#define	__SYMBOL_H__
+#define __SYMBOL_H__
 
 
 #include "zmath.h"
@@ -19,10 +19,10 @@
 #define SYM_PARAM	1	/* parameter symbol */
 #define SYM_LOCAL	2	/* local symbol */
 #define SYM_GLOBAL	3	/* global symbol */
-#define	SYM_STATIC	4	/* static symbol */
+#define SYM_STATIC	4	/* static symbol */
 
-#define	SCOPE_GLOBAL	0	/* file scope level for global variables */
-#define	SCOPE_STATIC	1	/* lowest file scope for static variables */
+#define SCOPE_GLOBAL	0	/* file scope level for global variables */
+#define SCOPE_STATIC	1	/* lowest file scope for static variables */
 
 
 typedef struct global GLOBAL;

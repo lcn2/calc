@@ -394,7 +394,7 @@ main(int argc, char **argv)
 				    printf("DEBUG: run_state from %s to %s\n",
 					run_state_name(run_state),
 					run_state_name(RUN_EXIT_WITH_ERROR));
-			 	run_state = RUN_EXIT_WITH_ERROR;
+				run_state = RUN_EXIT_WITH_ERROR;
 			}
 		}
 	}

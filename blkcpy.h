@@ -8,7 +8,7 @@
 
 
 #if !defined(__BLKCPY_H__)
-#define	__BLKCPY_H__
+#define __BLKCPY_H__
 
 /*
  * the main copy gateway function

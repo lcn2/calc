@@ -75,7 +75,7 @@ not currently a member of the calc-tester mailing list.
 
 Known bugs:
 
-    * Calc does not support the #! exec method.  For example of the
+    * Calc does not support the #! exec method.	 For example of the
       following is placed in an executable file (assume the path to
       calc is correct) called /tmp/xyzzy:
 
@@ -127,7 +127,7 @@ Other items of note:
 
       fails because it puts a space inside the concatenated hex.  Calc
       has code that is affected by this bug.  This bug has been reported
-      to Compaq and may be fixed in the future.  A work-a-round is to
+      to Compaq and may be fixed in the future.	 A work-a-round is to
       compile with cc -std0 or to use a later version of their compiler.
 
     * On a Digital UNIX V4.0F (Rev. 1229) on a 500 Mhz 21264, make check
@@ -148,7 +148,7 @@ Other items of note:
 	it finally hangs at test 2000.
 
       The work-a-round is to compile calc without the optimizer.  If this
-      happens to you, try compiling without -O and without -O2.  I.e., in
+      happens to you, try compiling without -O and without -O2.	 I.e., in
       the Makefile, set:
 
 	DEBUG= -g

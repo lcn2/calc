@@ -19,7 +19,7 @@ DESCRIPTION
 	is almost certainly non-chaotic.  This function is likely not
 	suitable for applications (such as cryptographic applications)
 	where the unpredictability of seeds is critical.  For such critical
-	applications, lavarand should be used.  See the URL:
+	applications, lavarand should be used.	See the URL:
 
 		http://lavarand.sgi.com/index.html
 

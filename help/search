@@ -7,7 +7,7 @@ SYNOPSIS
 TYPES
     a		matrix, list, association or file
     b		string if a is a file, otherwise any
-    c	 	integer, defaults to zero or current file-position
+    c		integer, defaults to zero or current file-position
     d		integer, defaults to size(a) or current file-position
 
     return	nonnegative integer or null value
@@ -24,7 +24,7 @@ DESCRIPTION
 
     For a matrix, list, or association a,
     search(a, b, c, d) returns, if it exists, the least index i for which
-    c <= i < d,  0 <= i < size(a), and, if accept() has not been defined,
+    c <= i < d,	 0 <= i < size(a), and, if accept() has not been defined,
     a[[i]] == b, or if accept() has been defined, accept(a[[i]], b)
     tests as nonzero.  The null value is returned if there is no such i.
 
@@ -93,7 +93,7 @@ EXAMPLE
     > search(f, "ha")
 	10
     > ftell(f)
-        12
+	12
     > search(f, "ha")
 	18
     > search(f, "ha")

@@ -34,9 +34,9 @@ DESCRIPTION
     and returns a real-number value for any comparison that has to be made,
     max(x_1, x_2, ...) returns the value determined by max(x_1) = x_1,
     and succesively for later arguments, by the use of the equivalent of
-    max(a,b) = (a < b) ? b : a.  If the ordering determined by < is total,
+    max(a,b) = (a < b) ? b : a.	 If the ordering determined by < is total,
     max(x_1, ...) will be the maximum value among the arguments.  For a
-    preorder relation it may be one of several maximal values.  For
+    preorder relation it may be one of several maximal values.	For
     other relations, it may be difficult to predict the result.
 
 EXAMPLE

@@ -11,7 +11,7 @@ DESCRIPTION
     The time() builtin returns the number of seconds since the Epoch,
     which according to Posix is:
 
-	Thr Jan  1 00:00:00 UTC 1970
+	Thr Jan	 1 00:00:00 UTC 1970
 
 EXAMPLE
     > print time();

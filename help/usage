@@ -28,10 +28,10 @@ Calc command line
 	    simply generate an error.
 
 	    Use if this flag may cause calc to execute functions that
-	    are non-standard and that are not portable.  Custom builtin
+	    are non-standard and that are not portable.	 Custom builtin
 	    functions are disabled by default for this reason.
 
-	-d  Disable the printing of the opening title.  The printing
+	-d  Disable the printing of the opening title.	The printing
 	    of library debug and informational messages is also disabled
 	    as if config("lib_debug",0) had been executed.
 
@@ -63,7 +63,7 @@ Calc command line
 	    The : separated strings are interpreted as signed 32 bit values.
 	    After an optional leading sign a leading zero indicates octal
 	    conversion, and a leading ``0x'' or ``0X'' hexadecimal
-	    conversion.  Otherwise, decimal conversion is assumed.
+	    conversion.	 Otherwise, decimal conversion is assumed.
 
 	    By default, calc_debug is 0, lib_debug is 3 and lib_debug is 0.
 
@@ -74,7 +74,7 @@ Calc command line
 	-e  Ignore any environment variables on startup.  The
 	    getenv() builtin will still return values, however.
 
-	-h  Print a help message.  This option implies  -q.  This
+	-h  Print a help message.  This option implies	-q.  This
 	    is equivalent to the calc command help help.  The help
 	    facility is disabled unless the mode is 5 or 7.  See -m.
 
@@ -95,7 +95,7 @@ Calc command line
 	    calc commands.
 
 	-m mode
-	   This flag sets the permission mode of calc.  It
+	   This flag sets the permission mode of calc.	It
 	   controls the ability for calc to open files and execute
 	   programs. Mode may be a number from 0 to 7.
 
@@ -141,7 +141,7 @@ Calc command line
 		     calc -p '2^21701-1' | fizzbin
 
 	    In pipe mode, calc does not prompt, does not print leading
-	    tabs and does not print the initial header.  The -p flag
+	    tabs and does not print the initial header.	 The -p flag
 	    overrides -i.
 
 	-q  Disable the use of the $CALCRC startup scripts.
@@ -177,7 +177,7 @@ Calc command line
     present calc with an already open file using sh, ksh or bash-like
     shells is to:
 
-        calc 3<open_file 4<open_file2
+	calc 3<open_file 4<open_file2
 
     For more information use the following calc commands:
 

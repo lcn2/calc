@@ -965,7 +965,7 @@ matinv(MATRIX *m)
 	/*
 	 * Now loop over each row, and eliminate all entries in the
 	 * corresponding column by using row operations.  Do the same
-	 * operations on the resulting matrix.  Copy the original matrix
+	 * operations on the resulting matrix.	Copy the original matrix
 	 * so that we don't destroy it.
 	 */
 	m = matcopy(m);
@@ -1036,7 +1036,7 @@ matinv(MATRIX *m)
 VALUE
 matdet(MATRIX *m)
 {
-	long n;		 	/* original matrix is n x n */
+	long n;			/* original matrix is n x n */
 	long k;			/* working submatrix is k x k */
 	long i, j;
 	VALUE *pivot, *div, *val;
@@ -1586,7 +1586,7 @@ matprint(MATRIX *m, long max_print)
 	math_str(":\n");
 	vp = m->m_table;
 	for (index = 0; index < max_print; index++) {
-		msg = "  [";
+		msg = "	 [";
 		j = index;
 		for (i = 0; i < dim; i++) {
 			math_fmt("%s%ld", msg, m->m_min[i] + (j / sizes[i]));

@@ -23,7 +23,7 @@
  * PERFORMANCE OF THIS SOFTWARE.
  *
  * Comments, suggestions, bug fixes and questions about these routines
- * are welcome.  Send EMail to the address given below.
+ * are welcome.	 Send EMail to the address given below.
  *
  * Happy bit twiddling,
  *
@@ -141,7 +141,7 @@ blk_free(BLOCK *blk)
 /*
  * blkchk - check the sanity of a block
  *
- * These checks should never fail if calc is working correctly.  During
+ * These checks should never fail if calc is working correctly.	 During
  * debug time, we plan to call this function often.  Once we are satisfied,
  * we will normally call this code only in a few places.
  *
@@ -205,13 +205,13 @@ blkchk(BLOCK *blk)
  *
  * Reallocation of a block can change several aspects of a block.
  *
- * 	It can change the much data it holds or can hold.
+ *	It can change the much data it holds or can hold.
  *
- * 	It can change the memory footprint (in terms of
- * 	how much storage is malloced for current or future use).
+ *	It can change the memory footprint (in terms of
+ *	how much storage is malloced for current or future use).
  *
  *	It can change the chunk size used to grow malloced size
- * 	as the data size grows.
+ *	as the data size grows.
  *
  * Each of the len and chunksize may be kept the same.
  *
@@ -329,7 +329,7 @@ blkrealloc(BLOCK *blk, int newlen, int newchunk)
 /*
  * blktrunc - truncate a BLOCK down to a minimal fixed block
  *
- * NOTE: THIS IS NOT THE INTERNAL CALC FREE FUNCTION!!  This
+ * NOTE: THIS IS NOT THE INTERNAL CALC FREE FUNCTION!!	This
  * is what blktrunc() builtin calls to reduce storage of a block
  * down to an absolute minimum.
  *
@@ -479,7 +479,7 @@ blk_print(BLOCK *blk)
 	BOOL havetail;
 	USB8 *ptr;
 
-	/* XXX - use the config parameters for better print control */
+	/* XXX - should use the config parameters for better print control */
 
 	printf("chunksize = %d, maxsize = %d, datalen = %d\n\t",
 		(int)blk->blkchunk, (int)blk->maxsize, (int)blk->datalen);
@@ -512,9 +512,9 @@ nblock_print(NBLOCK *nblk)
 		printf("chunksize = %d, maxsize = %d, datalen = %d\n\t",
 		(int)blk->blkchunk, (int)blk->maxsize, (int)blk->datalen);
 		printf("NULL");
-	}
-	else
+	} else {
 		blk_print(blk);
+	}
 }
 
 
@@ -556,8 +556,7 @@ reallocnblock(int id, int len, int chunk)
 			math_error("Allocation failed");
 			/*NOTREACHED*/
 		}
-	}
-	else if (newsize != oldsize) {
+	} else if (newsize != oldsize) {
 		newdata = realloc(blk->data, newsize);
 		if (newdata == NULL) {
 			math_error("Reallocation failed");
@@ -719,7 +718,7 @@ findnblock(int id)
 
 /*
  * Create a new block with specified newlen and new chunksize and copy
- * min(newlen, oldlen) octets to the new block.  The old block is
+ * min(newlen, oldlen) octets to the new block.	 The old block is
  * not changed.
  */
 BLOCK *
@@ -730,7 +729,7 @@ copyrealloc(BLOCK *blk, int newlen, int newchunk)
 
 	oldlen = blk->datalen;
 
-	if (newlen < 0) 		/* retain length */
+	if (newlen < 0)			/* retain length */
 		newlen = oldlen;
 
 	if (newchunk < 0)		/* retain chunksize */

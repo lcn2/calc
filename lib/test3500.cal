@@ -12,7 +12,7 @@
  * Stringent tests of the functions frem, fcnt, gcdrem.
  *
  * testf(n) gives n tests of frem(x,y) and fcnt(x,y) with randomly
- * 	integers x and y generated so that x = f * y^k where f, y and
+ *	integers x and y generated so that x = f * y^k where f, y and
  *	k are randomly generated.
  *
  * testg(n) gives n tests of gcdrem(x,y) with x and y generated as for
@@ -22,7 +22,7 @@
  *	powers of small primes some of which are common to both x and y.
  *	This test uses f = abs(x) and iteratively f = frem(f,p) where
  *	p varies over the prime divisors of y; the final value for f
- *	should equal g.  For both x and y the primes are raised to the
+ *	should equal g.	 For both x and y the primes are raised to the
  *	power rand(N); N defaults to 10.
  *
  * If verbose is > 1, the numbers x, y and values for some of the

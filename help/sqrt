@@ -45,7 +45,7 @@ DESCRIPTION
 
 	1:	return exact square root when real & imaginary are rational
 
-    z bits 5-0  (z & 31)
+    z bits 5-0	(z & 31)
 
 	0:	round down or up according as y is positive or negative,
 		sgn(r) = sgn(y)
@@ -88,7 +88,7 @@ DESCRIPTION
     of the square root, if this is a multiple of y, it is returned
     exactly; otherwise the value returned for the part is the
     multiple of y nearest below or nearest above the true value.
-    For z = 0, the remainder has the sign of y;  changing bit 0
+    For z = 0, the remainder has the sign of y;	 changing bit 0
     changes to the other possibility; for z = 2, the remainder has the
     sign of the true value, i.e. the rounding is towards zero; for
     z = 4, the remainder is always positive, i.e. the rounding is down;

@@ -8,7 +8,7 @@
 
 
 #if !defined(__QMATH_H__)
-#define	__QMATH_H__
+#define __QMATH_H__
 
 
 #include "zmath.h"
@@ -147,17 +147,6 @@ extern long qdigits(NUMBER *q);
 extern void setepsilon(NUMBER *q);
 extern NUMBER *qbitvalue(long i);
 extern NUMBER *qtenpow(long i);
-
-#if 0
-extern NUMBER *qmulmod(NUMBER *q1, NUMBER *q2, NUMBER *q3);
-extern NUMBER *qsquaremod(NUMBER *q1, NUMBER *q2);
-extern NUMBER *qaddmod(NUMBER *q1, NUMBER *q2, NUMBER *q3);
-extern NUMBER *qsubmod(NUMBER *q1, NUMBER *q2, NUMBER *q3);
-extern NUMBER *qreadval(FILE *fp);
-extern NUMBER *qnegmod(NUMBER *q1, NUMBER *q2);
-extern BOOL qbittest(NUMBER *q, long i);
-extern FLAG qtest(NUMBER *q);
-#endif
 
 
 /*

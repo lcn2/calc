@@ -11,16 +11,16 @@
  * where the residues r1, r2, ... and the moduli m1, m2, ... are
  * given integers.  The Chinese remainder theorem states that if
  * m1, m2, ... are relatively prime in pairs, the above congruences
- * have a unique solution modulo  m1 * m2 * ...   If m1, m2, ...
+ * have a unique solution modulo  m1 * m2 * ...	  If m1, m2, ...
  * are not relatively prime in pairs, it is possible that no solution
  * exists.  If solutions exist, the general solution is expressible as:
  *
- *                   x = r (mod m)
+ *		     x = r (mod m)
  *
- * where m = lcm(m1,m2,...), and if m > 0, 0 <= r < m.  This
+ * where m = lcm(m1,m2,...), and if m > 0, 0 <= r < m.	This
  * solution may be interpreted as:
  *
- *                  x = r + k * m			[[NOTE 1]]
+ *		    x = r + k * m			[[NOTE 1]]
  *
  * where k is an arbitrary integer.
  *
@@ -30,15 +30,15 @@
  *
  *	chrem(r1,m1 [,r2,m2, ...])
  *
- * 	    r1, r2, ...  	remainder integers or null values
- * 	    m1, m2, ...  	moduli integers
+ *	    r1, r2, ...		remainder integers or null values
+ *	    m1, m2, ...		moduli integers
  *
  *	chrem(r_list, [m_list])
  *
  *	    r_list	list (r1,r2, ...)
  *	    m_list	list (m1,m2, ...)
  *
- * 	    If m_list is omitted, then 'defaultmlist' is used.
+ *	    If m_list is omitted, then 'defaultmlist' is used.
  *	    This default list is a global value that may be changed
  *	    by the user.  Initially it is the first 8 primes.
  *
@@ -50,13 +50,13 @@
  *
  * The moduli may be any integers, not necessarily relatively prime in
  * pairs (as required for the Chinese remainder theorem).  Any moduli
- * may be zero;  x = r (mod 0) has the meaning of x = r.
+ * may be zero;	 x = r (mod 0) has the meaning of x = r.
  *
  * returns:
  *
  *    If args were integer pairs:
  *
- *    	  r		('r' is defined above, see [[NOTE 1]])
+ *	  r		('r' is defined above, see [[NOTE 1]])
  *
  *    If 1 or 2 list args were given:
  *
@@ -96,7 +96,7 @@ define chrem()
     local argc;		/* number of args given */
     local rlist;	/* reminder list - ri */
     local mlist;	/* modulus list - mi */
-    local list_args;  	/* true => args given are lists, not r1,m1, ... */
+    local list_args;	/* true => args given are lists, not r1,m1, ... */
     local m,z,r,y,d,t,x,u,i;
 
     /*
@@ -121,7 +121,7 @@ define chrem()
 	mlist = list();
 	for (i=1; i <= argc; i+=2) {
 	    push(rlist, param(i));
-            push(mlist, param(i+1));
+	    push(mlist, param(i+1));
 	}
     }
 

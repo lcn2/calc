@@ -38,7 +38,7 @@ Four argument case:
 
     For non-file a, the search is for a[[i]] == b, except that if
     the function accept() as been defined, it is for i such that
-    accept(a[[i]], b) tests as nonzero.  Since the addresses (rather than
+    accept(a[[i]], b) tests as nonzero.	 Since the addresses (rather than
     values) of a[[i]] and b are passed to accept(), the values of one or
     both of a[[i]] and b may be changed during a call to rsearch().
 

@@ -6,13 +6,13 @@
 
 
 #if !defined(__LABEL_H__)
-#define	__LABEL_H__
+#define __LABEL_H__
 
 
 #include "zmath.h"
 
 
-#define	NULL_LABEL	((LABEL *) 0)
+#define NULL_LABEL	((LABEL *) 0)
 
 
 /*

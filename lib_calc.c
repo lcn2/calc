@@ -77,7 +77,7 @@ run run_state = RUN_UNKNOWN;	/* calc startup and run state */
  * global permissions
  */
 int allow_read = TRUE;	/* FALSE => may not open any files for reading */
-int allow_write = TRUE;	/* FALSE => may not open any files for writing */
+int allow_write = TRUE; /* FALSE => may not open any files for writing */
 int allow_exec = TRUE;	/* FALSE => may not execute any commands */
 
 
@@ -285,7 +285,7 @@ reinitialize(void)
  * cvmalloc_error - for users of the SGI Workshop Debugger
  *
  * usage:
- *	message	- error message passed along via libmalloc_cv.a
+ *	message - error message passed along via libmalloc_cv.a
  */
 void
 cvmalloc_error(char *message)

@@ -10,7 +10,7 @@ TYPES
     return	int
 
 DESCRIPTION
-    Determine if x is a numeric value.  This function will return 1 if x
+    Determine if x is a numeric value.	This function will return 1 if x
     is a a numeric value, 0 otherwise.
 
 EXAMPLE

@@ -31,7 +31,7 @@ DESCRIPTION
     If the number of decimal places is n and eps = 10^-n, the
     result is the same as for appr(x, eps, rnd).  This will be
     exactly x if x is a multiple of eps; otherwise rounding occurs
-    to one of the nearest multiples of eps on either side of x.  Which
+    to one of the nearest multiples of eps on either side of x.	 Which
     of these multiples is returned is determined by z = rnd & 31, i.e.
     the five low order bits of rnd, as follows:
 

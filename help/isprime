@@ -11,7 +11,7 @@ TYPES
     return	int
 
 DESCRIPTION
-    Determine if x is is a small prime.  This function will return
+    Determine if x is is a small prime.	 This function will return
     1 if x is a small prime.  If x is even, this function will
     return 0.  If x is negative or a small composite (non-prime),
     0 will be returned.
@@ -39,7 +39,7 @@ EXAMPLE
     -1 2 0
 
 LIMITS
-    err not given  and  (y is even  or  y < 2^32)
+    err not given  and	(y is even  or	y < 2^32)
 
 LIBRARY
     FLAG zisprime(ZVALUE x)	(return 1 if prime, 0 not prime, -1 if >= 2^32)

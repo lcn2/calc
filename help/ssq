@@ -5,7 +5,7 @@ SYNOPSIS
     ssq(x1, x2, ...)
 
 TYPES
-    x1, x2, ...	any for which the required squaring and addition
+    x1, x2, ... any for which the required squaring and addition
     operations are defined
 
     return	as determined by the operations on x1, x2, ...

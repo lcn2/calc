@@ -50,10 +50,10 @@
  *
  *	if ((error = setjmp(calc_jmp_buf)) != 0) {
  *
- *	        (* reinitialize calc after a longjmp *)
- *	        reinitialize();
+ *		(* reinitialize calc after a longjmp *)
+ *		reinitialize();
  *
- *	        (* report the error *)
+ *		(* report the error *)
  *		printf("Ouch: %s\n", calc_error);
  *	}
  *	calc_jmp = 1;

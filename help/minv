@@ -6,7 +6,7 @@ SYNOPSIS
 
 TYPES
     x		integer
-    md    	integer
+    md		integer
 
     return	integer
 
@@ -22,11 +22,11 @@ DESCRIPTION
 		    0		0 < v < md	   md < v < 0
 		    1	      -md < v < 0	    0 < v < -md
 		    4		0 < v < md	    0 < v < -md
-		    5         -md < v < 0	   md < v < 0
-		   16	    -md/2 < v <= md/2   md/2 <= v < -md/2
-		   17      -md/2 <= v < md/2     md/2 < v <= -md/2
-		   20	    -md/2 < v <= md/2    md/2 < v <= -md/2
-		   21	   -md/2 <= v < md/2    md/2 <= v < -md/2
+		    5	      -md < v < 0	   md < v < 0
+		   16	    -md/2 < v <= md/2	md/2 <= v < -md/2
+		   17	   -md/2 <= v < md/2	 md/2 < v <= -md/2
+		   20	    -md/2 < v <= md/2	 md/2 < v <= -md/2
+		   21	   -md/2 <= v < md/2	md/2 <= v < -md/2
 
 EXAMPLE
     > c = config("mod", 0)

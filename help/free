@@ -5,14 +5,14 @@ SYNOPSIS
     free(a, b, ...)
 
 TYPES
-    a, b, ... 	any
+    a, b, ...	any
 
     return	null value
 
 DESCRIPTION
     Those of the arguments a, b, ... that specify lvalues are assigned
     the null value, effectively freeing whatever memory is used to
-    store their current values.  Other arguments are ignored.
+    store their current values.	 Other arguments are ignored.
 
     free(.) frees the current "old value".
 

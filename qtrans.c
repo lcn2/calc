@@ -112,9 +112,9 @@ qsincos(NUMBER *q, long bitnum, NUMBER **vs, NUMBER **vc)
 	if (m > h) {
 		zshift(cossum, -h, &qtmp1->num);
 		zbitvalue(m - h, &qtmp1->den);
-	}
-	else
+	} else {
 		zshift(cossum, - m, &qtmp1->num);
+	}
 	zfree(cossum);
 	*vc = qtmp1;
 	h = zlowbit(sinsum);
@@ -122,9 +122,9 @@ qsincos(NUMBER *q, long bitnum, NUMBER **vs, NUMBER **vc)
 	if (m > h) {
 		zshift(sinsum, -h, &qtmp2->num);
 		zbitvalue(m - h, &qtmp2->den);
-	}
-	else
+	} else {
 		zshift(sinsum, -m, &qtmp2->num);
+	}
 	zfree(sinsum);
 	*vs = qtmp2;
 	return;
@@ -378,8 +378,7 @@ qasin(NUMBER *q, NUMBER *epsilon)
 		epsilon1 = qscale(epsilon, 1L);
 		qtmp2 = qpi(epsilon1);
 		qtmp1 = qscale(qtmp2, -1L);
-	}
-	else {
+	} else {
 		epsilon1 = qscale(epsilon, -2L);
 		qtmp1 = qalloc();
 		zsquare(q->num, &qtmp1->num);
@@ -444,7 +443,7 @@ qacos(NUMBER *q, NUMBER *epsilon)
 
 /*
  * Calculate the arctangent function to the nearest or next to nearest
- * multiple of epsilon.  Algorithm uses
+ * multiple of epsilon.	 Algorithm uses
  *	atan(x) = 2 * atan(x/(1 + sqrt(1+x^2)))
  * to reduce x to a small value and then
  *	atan(x) = x - x^3/3 + ...
@@ -528,9 +527,9 @@ qatan(NUMBER *q, NUMBER *epsilon)
 	if (k) {
 		zshift(sum, -k, &qtmp->num);
 		zfree(sum);
-	}
-	else
+	} else {
 		qtmp->num = sum;
+	}
 	zbitvalue(m - 4 - k, &qtmp->den);
 	res = qmappr(qtmp, epsilon, 24L);
 	qfree(qtmp);
@@ -842,9 +841,9 @@ qexprel(NUMBER *q, long bitnum)
 		if (zrel(ztmp1, B) >= 0) {
 			zshift(ztmp1, -m - 1, &sum);
 			k++;
-		}
-		else
+		} else {
 			zshift(ztmp1, -m, &sum);
+		}
 		zfree(ztmp1);
 	}
 	zfree(B);
@@ -929,7 +928,7 @@ qln(NUMBER *q, NUMBER *epsilon)
 
 	zcopy(pow, &sum);	/* pow is first term of sum */
 	zsquare(pow, &ztmp);
-	zshift(ztmp, -m, &mul);	/* mul is now multiplier for powers */
+	zshift(ztmp, -m, &mul); /* mul is now multiplier for powers */
 	zfree(ztmp);
 
 	d = 1;
@@ -957,8 +956,7 @@ qln(NUMBER *q, NUMBER *epsilon)
 	if (k) {
 		zshift(sum, -k, &qtmp->num);
 		zfree(sum);
-	}
-	else {
+	} else {
 		qtmp->num = sum;
 	}
 	zbitvalue(m - k - n, &qtmp->den);
@@ -1003,8 +1001,7 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 	if (zrel(q1->num, q1->den) < 0) {
 		q1tmp = qinv(q1);
 		q2tmp = qneg(q2);
-	}
-	else {
+	} else {
 		q1tmp = qlink(q1);
 		q2tmp = qlink(q2);
 	}
@@ -1031,8 +1028,7 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 			tmp2 = qmul(tmp1, &_qlge_);
 			m = qtoi(tmp2);
 		}
-	}
-	else {
+	} else {
 		if (m > 0) {
 			tmp1 = itoq(m + 1);
 			tmp2 = qmul(tmp1, q2tmp);
@@ -1070,9 +1066,9 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 		tmp2 = qexprel(tmp1, m - n + 3);
 		qfree(tmp1);
 		tmp1 = qinv(tmp2);
-	}
-	else
+	} else {
 		tmp1 = qexprel(tmp2, m - n + 3) ;
+	}
 	qfree(tmp2);
 	tmp2 = qmappr(tmp1, epsilon, 24L);
 	qfree(tmp1);
@@ -1240,9 +1236,9 @@ qcoth(NUMBER *q, NUMBER *epsilon)
 		tmp1 = qmul(&_qlge_, tmp2);
 		k = qtoi(tmp1);
 		qfree(tmp1);
-	}
-	else
+	} else {
 		k = 2 * k;
+	}
 	k = 4 - k - n;
 	if (k < 4)
 		k = 4;
@@ -1333,9 +1329,9 @@ qcsch(NUMBER *q, NUMBER *epsilon)
 		tmp2 = qmul(&_qlge_, tmp1);
 		k = qtoi(tmp2);
 		qfree(tmp2);
-	}
-	else
+	} else {
 		k = 2 * qilog2(tmp1);
+	}
 	if (k + n >= 1) {
 		qfree(tmp1);
 		return qlink(&_qzero_);
@@ -1518,6 +1514,3 @@ qacoth(NUMBER *q, NUMBER *epsilon)
 	qfree(tmp);
 	return res;
 }
-
-
-/* END CODE */

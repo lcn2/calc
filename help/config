@@ -1,10 +1,10 @@
 Configuration parameters
 
     Configuration parameters affect how the calculator performs certain
-    operations.  Among features that are controlled by these parameters
+    operations.	 Among features that are controlled by these parameters
     are the accuracy of some calculations, the displayed format of results,
     the choice from possible alternative algorithms, and whether or not
-    debugging information is displayed.  The parameters are
+    debugging information is displayed.	 The parameters are
     read or set using the "config" built-in function; they remain in effect
     until their values are changed by a config or equivalent instruction.
     The following parameters can be specified:
@@ -65,7 +65,7 @@ Configuration parameters
     It allows functions to control their configuration without impacting
     the calling function.
 
-    There are two configuration state aliases that may be set.  To
+    There are two configuration state aliases that may be set.	To
     set the backward compatible standard configuration:
 
 	    config("all", "oldstd")
@@ -105,7 +105,7 @@ Configuration parameters
     the decimal point to be printed in real or exponential mode in
     normal unformatted printing (print, strprint, fprint) or in
     formatted printing (printf, strprintf, fprintf) when precision is not
-    specified.  The initial value for oldstd is 20, for newstd 10.
+    specified.	The initial value for oldstd is 20, for newstd 10.
     The parameter may be changed to the value d by either
     config("display", d) or by display (d).  This parameter does not change
     the stored value of a number.  Where rounding is necessary to
@@ -116,7 +116,7 @@ Configuration parameters
     calculation of functions for which exact values are not possible or
     not desired.  For most functions, the
 
-	 	remainder = exact value - calculated value
+		remainder = exact value - calculated value
 
     has absolute value less than epsilon, but, except when the sign of
     the remainder is controlled by an appropriate parameter, the
@@ -133,7 +133,7 @@ Configuration parameters
     The "mode" parameter is a string specifying the mode for printing of
     numbers by the unformatted print functions, and the default
     ("%d" specifier) for formatted print functions.  The initial mode
-    is "real".  The available modes are:
+    is "real".	The available modes are:
 
 	    "frac"		decimal fractions
 	    "int"		decimal integer
@@ -152,10 +152,10 @@ Configuration parameters
     runs in a time of O(N^2).  The second method is a recursive and
     complicated method which runs in a time of O(N^1.585).  The argument
     for these parameters is the number of binary words at which the
-    second algorithm begins to be used.  The minimum value is 2, and
+    second algorithm begins to be used.	 The minimum value is 2, and
     the maximum value is very large.  If 2 is used, then the recursive
     algorithm is used all the way down to single digits, which becomes
-    slow since the recursion overhead is high.  If a number such as
+    slow since the recursion overhead is high.	If a number such as
     1000000 is used, then the recursive algorithm is never used, causing
     calculations for large numbers to slow down.  For a typical example
     on a 386, the two algorithms are about equal in speed for a value
@@ -174,9 +174,9 @@ Configuration parameters
     Redc2 specifies the sizes of numbers at which calc switches from
     its first to its second algorithm when using the REDC algorithm.
     The first algorithm performs a multiply and a modular reduction
-    together in one loop which runs in O(N^2).  The second algorithm
+    together in one loop which runs in O(N^2).	The second algorithm
     does the REDC calculation using three multiplies, and runs in
-    O(N^1.585).  The argument for redc2 is the size of the modulus at
+    O(N^1.585).	 The argument for redc2 is the size of the modulus at
     which the second algorithm begins to be used.
 
     Config("tilde") controls whether or not a leading tilde ('~') is
@@ -185,7 +185,7 @@ Configuration parameters
     specified maximum number.  The initial "tilde" value is 1.
 
     Config ("tab") controls the printing of a tab before results
-    automatically displayed when working interactively.  It does not
+    automatically displayed when working interactively.	 It does not
     affect the printing by the functions print, printf, etc.  The initial
     "tab" value is 1.
 
@@ -271,7 +271,7 @@ Configuration parameters
     The default is to print only the first 256 octets.
 
     The "blkverbose" determines if all lines, including duplicates
-    should be printed.  If TRUE, then all lines are printed.  If false,
+    should be printed.	If TRUE, then all lines are printed.  If false,
     duplicate lines are skipped and only a "*" is printed in a style
     similar to od.  This config value has not meaning if "blkfmt" is "str".
 
@@ -319,7 +319,7 @@ Configuration parameters
 
     The "calc_debug" is intended for controlling internal calc routines
     that test its operation, or collect or display information that
-    might be useful for debug purposes.  Much of the output from these
+    might be useful for debug purposes.	 Much of the output from these
     will make sense only to calc wizards.   Zero value (the default for
     both oldstd and newstd) of config("lib_calc") corresponds to switching
     off all these routines.  For nonzero value, particular bits
@@ -401,16 +401,16 @@ Configuration parameters
 
     The following are synonyms for true:
 
-	"on"   "yes"   "y"   "true"   "t"   "1"   any non-zero number
+	"on"   "yes"   "y"   "true"   "t"   "1"	  any non-zero number
 
     The following are synonyms for false:
 
-	"off"  "no"    "n"   "false"  "f"   "0"   the number zero (0)
+	"off"  "no"    "n"   "false"  "f"   "0"	  the number zero (0)
 
     Examples of setting some parameters are:
 
 	    config("mode", "exp");	    exponential output
 	    config("display", 50);	    50 digits of output
 	    epsilon(epsilon() / 8);	    3 bits more accuracy
-	    config("tilde", 0)	    	    disable roundoff tilde printing
+	    config("tilde", 0)		    disable roundoff tilde printing
 	    config("tab", "off")	    disable leading tab printing

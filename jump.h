@@ -52,7 +52,7 @@
  * that are not divisible by trivial primes.
  *
  * Instead of testing successive odd values, this system allows us to
- * skip odd values divisible by trivial primes.  This is process on the
+ * skip odd values divisible by trivial primes.	 This is process on the
  * average reduces the values we need to test by a factor of at least 2.4.
  */
 
