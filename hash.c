@@ -391,8 +391,8 @@ hash_zvalue(int type, ZVALUE zval, HASH *state)
 	 */
 	if (zval.len > full_lim) {
 		for (j=0; j < zval.len-full_lim-1; j += 2) {
-			half[j] = zval.v[full_lim+i+1];
-			half[j+1] = zval.v[full_lim+i];
+			half[j] = zval.v[full_lim+j+1];
+			half[j+1] = zval.v[full_lim+j];
 		}
 		if (j < zval.len-full_lim) {
 			half[j] = (HALF)0;
@@ -562,7 +562,7 @@ hash_complex(int type, void *c, HASH *state)
 
 
 /*
- * hash_str - hash a string
+ * hash_str - hash a null-terminated string
  *
  * given:
  *	type	- hash type (see hash.h)
@@ -598,6 +598,47 @@ hash_str(int type, char *str, HASH *state)
 	 * hash the string
 	 */
 	(state->update)(state, (USB8*)str, len);
+
+	/*
+	 * all done
+	 */
+	return state;
+}
+ 
+
+/*
+ * hash_STR - hash a STRING
+ *
+ * given:
+ *	type	- hash type (see hash.h)
+ *	str	- the STRING
+ *	state	- the state to hash or NULL
+ *
+ * returns:
+ *	the new state
+ */
+HASH *
+hash_STR(int type, STRING *str, HASH *state)
+{
+	/*
+	 * initialize if state is NULL
+	 */
+	if (state == NULL) {
+		state = hash_init(type, NULL);
+	}
+
+	/*
+	 * setup for the string hash
+	 */
+	if (!state->bytes) {
+		(state->chkpt)(state);
+		state->bytes = TRUE;
+	}
+
+	/*
+	 * hash the string
+	 */
+	(state->update)(state, (USB8*) str->s_str, (USB32) str->s_len);
 
 	/*
 	 * all done
@@ -720,7 +761,7 @@ hash_value(int type, void *v, HASH *state)
 		/* strings have no setup */
 
 		/* hash this type */
-		state = hash_str(type, value->v_str->s_str, state);
+		state = hash_STR(type, value->v_str, state);
 		break;
 
 	case V_MAT:

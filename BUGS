@@ -78,42 +78,6 @@ Known problems or mis-features:
       and not much in the way of comments.  We need some major cleanup
       and documentation.
 
-    * On Solaris cc when compile with -Xc (which results in BASEB=16
-      because it eliminates the long long type), some of the hash
-      functions fail.
-
-      NOTE: As a work-a-round, Solaris cc users should compile
-	    with -DFORCE_STDC and without -Xc.
-
-	From: "Dr.D.J.Picton" <dave@aps5.ph.bham.ac.uk>
-	Subject: Re: calc version 2.11.0t4
-	Date: Fri, 1 Oct 1999 16:12:30 +0100 (BST)
-
-	**** Non-true result (0): 7120: sha(sha(isqrt(2e1000)==0x6db8d9cf0b018b8f9cbbf5aa1edb8066d19e1bb0
-	7120 result came out as 0x2f19f0baa7824cb8da5e9908044a3f648e992
-	**** Non-true result (0): 7122: sha(sha("this is", 7^19-8, ..., "hash")) == 0x21e4...
-	7122 result came out as 0xa050ece371eda88a461afcb807091f7613aa4488
-	7123: z = sha(list(1,2,3), "curds and whey", 2^21701-1, pi());
-	**** Non-true result (0): 7124: sha(z) == 0x36dcca3e51865c30a2cf738023cda446f1368340
-	7124 result came out as 0xccaff4f97187821018d983cc0ce51787fb96a73c
-	**** Non-true result (0): 7209: sha1(sha1("this is",7^19-8,"a composit",3i+4.5,"hash")) == ...
-	7209 result came out as 0xb9631fea54a3e999521efa99745d2e2a5f65cd3b
-	7210: z = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi());
-	**** Non-true result (0): 7211: sha1(z) == 0xc19e7317675dbf71e293b4c41e117169e9da5b6f
-	7211result came out as 0xb8e5c8fdbbe4539cf601b0f6eb874f9662edb50c
-	**** Non-true result (0): 7227: sha1(sha1(isqrt(2e1000)))==0x6852a1365c51050c3d039e3c5d9cf29c12283ef4
-	7227 result came out as 0x91018a59d87c7d945451538412cadd56b7ec4681
-	**** Non-true result (0): 7310: md5(md5("this is", 7^19-8, "a composit", 3i+4.5, "hash")) == ...
-	7310 result came out as 0x65c29173098713fdec0f319551355243
-	7311: z = md5(list(1,2,3), "curds and whey", 2^21701-1, pi());
-	**** Non-true result (0): 7312: md5(z) == 0x63d2b2fccae2de265227c30b05abb6b5
-	7311 result came out as 0x1ba0c3eb5ba11dfe11394c0837f52d85
-	**** Non-true result (0): 7328: md5(md5(isqrt(2e1000))) == 0xe56ac4b8cad869e738a04fedc97058f3
-	7328 result came out as 0x5afae12a1db610da2846c35f2bf144b0
-
-	**** 9 error(s) found  \/++\/
-	9999: Ending regression tests
-
     * On a Dec Alpha, using the Dec Alpha cc (not gcc) make check for
       version 2.11.0t5.1 fails in the regression test:
 

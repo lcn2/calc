@@ -94,8 +94,3 @@ define showvalues(str) {
 		print "\t":eval(str);
 	}
 }
-
-if (config("lib_debug") >= 0) {
-	print "adder() defined";
-	print "showvalues(str) defined";
-}

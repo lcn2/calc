@@ -7010,7 +7010,7 @@ define test_bigcomb()
 {
 	local a, b, n, i, v1, v2;
 
-	print '7900: Starting test_bigcomb()';
+	print '7900: Starting test_bigcomb';
 	a = 1234/4321;
 	print				'7901: a = 1234/4321';
 	b = 3456/6543;
@@ -7033,7 +7033,7 @@ define test_bigcomb()
 	vrfy(f7900(-7/4,33/4,-2) == g7900(-7/4,33/4,-2),
 			'7913: f7900(-7/4,33/4,-2) == g7900(-7/4,33/4,-2)');
 
-	print '7914: Ending test_bigcomb()';
+	print '7914: Ending test_bigcomb';
 }
 print '186: parsed test_bigcomb()';
 
@@ -7048,7 +7048,7 @@ define test_natnumset()
 {
 	local A, B, C, D, P, P1, L1, L2;
 
-	print '8000: Starting test_natnumset()';
+	print '8000: Starting test_natnumset';
 
 	A = set(17, 2, 0, 24, 2);
 	print				'8101: A = set(17, 2, 0, 24, 2);';
@@ -7105,7 +7105,7 @@ define test_natnumset()
 	vrfy(polyvals2(L2,C,D) == set(12,16,21,27,45,55,77,91),
 		'8135: polyvals(L2,C,D) == set(12,16,21,27,45,55,77,91)');
 
-	print '8136: Ending test_natnumset()';
+	print '8136: Ending test_natnumset';
 }
 print '188: parsed test_natnumset()';
 
@@ -7115,7 +7115,7 @@ print '188: parsed test_natnumset()';
  */
 define test_somenew()
 {
-	print	'8200: Starting test_somenew()';
+	print	'8200: Starting test_somenew';
 
 	vrfy(char(-1) == char(255),	'8201: char(-1) == char(255)');
 	vrfy(char(258) == char(2),	'8202: char(258) == char(2)');
@@ -7139,7 +7139,7 @@ define test_somenew()
 	vrfy(1/(1/0) == 0,		'8215: 1/(1/0) == 0');
 	vrfy(inverse(1/0) == 0,		'8216: inverse(1/0) == 0');
 
-	print '8217: Ending test_somenew()';
+	print '8217: Ending test_somenew';
 }
 print '189: parsed test_somenew()';
 
@@ -7391,6 +7391,85 @@ print;
 return test_natnumset();
 print;
 return test_somenew();
+
+
+/*
+ * read various calc libs
+ *
+ * We read most of the calc libs shipped with the distribution.
+ * There are a few lib files that are not read:
+ *
+ *	beer.cal	- prints a bunch of things when loaded
+ *	hello.cal	- designed to go into an infinite loop
+ *	lucal.cal	- already read by this file
+ *	lucas_chk.cal	- already read by this file
+ *	lucas_tbl.cal	- duplicatres code already read by another file
+ *	regress.cal	- this file
+ *	surd.cal	- already read by this file
+ *	testXXXX.cal	- already read by this file
+ *	xx_print.cal	- prints a bunch of things when loaded
+ *
+ * We want to do this 2nd to last; ahead of any final cleanup and behind
+ * all of real actions of regress.cal.
+ */
+print;
+print	'9800: Starting read of selected calc libs';
+read -once bernoulli;
+print	'9801: read -once bernoulli';
+read -once bigprime;
+print	'9802: read -once bigprime';
+read -once chrem;
+print	'9803: read -once chrem';
+read -once deg;
+print	'9804: read -once deg';
+read -once ellip;
+print	'9805: read -once ellip';
+read -once mersenne;
+print	'9806: read -once mersenne';
+read -once mfactor;
+print	'9807: read -once mfactor';
+read -once mod;
+print	'9808: read -once mod';
+read -once natnumset;
+print	'9809: read -once natnumset';
+read -once pell;
+print	'9810: read -once pell';
+read -once pi;
+print	'9811: read -once pi';
+read -once pix;
+print	'9812: read -once pix';
+read -once pollard;
+print	'9813: read -once pollard';
+read -once poly;
+print	'9814: read -once poly';
+read -once prompt;
+print	'9815: read -once prompt';
+read -once psqrt;
+print	'9816: read -once psqrt';
+read -once quat;
+print	'9817: read -once quat';
+read -once randbitrun;
+print	'9818: read -once randbitrun';
+read -once randmprime;
+print	'9819: read -once randmprime';
+read -once randombitrun;
+print	'9820: read -once randombitrun';
+read -once randomrun;
+print	'9821: read -once randomrun';
+read -once randrun;
+print	'9822: read -once randrun';
+read -once seedrandom;
+print	'9823: read -once seedrandom';
+read -once solve;
+print	'9824: read -once solve';
+read -once sumsq;
+print	'9825: read -once sumsq';
+read -once unitfrac;
+print	'9826: read -once unitfrac';
+read -once varargs;
+print	'9827: read -once varargs';
+print	'9828: Ending read of selected calc libs';
+
 
 /*
  * cleanup and report the results

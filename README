@@ -1,73 +1,54 @@
-# Copyright (c) 1997 David I. Bell
-# Permission is granted to use, distribute, or modify this source,
-# provided that this copyright notice remains intact.
-#
-# Arbitrary precision calculator.
+Dear calc user,
 
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NOTE: This is an old historic README.  We recommend that you
-	  read README.FIRST and HOWTO.INSTALL for more info.
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+See the HOWTO.INSTALL file for information on how to build and install calc.
 
-I am allowing this calculator to be freely distributed for your enjoyment.
-Like all multi-precision programs, you should not depend absolutely on
-its results, since bugs in such programs can be insidious and only rarely
-show up.
+To be sure that your version of calc is up to date, check out:
 
--dbell-
+	http://reality.sgi.com/chongo/calc/calc-download.html
 
-p.s. By Landon Curt Noll:
+We are interested in any/all feedback on recent versions of calc.
+In particular we would like to hear about:
 
-Building calc in 3 easy steps:
+    * compiler warnings
+    * compile problems
+    * regression test problems (try: make check)
+    * special compile flags/options that you needed
+    * Makefile problems
+    * help file problems
+    * misc nits and typos
 
-    1) Look at the makefile, and adjust it to suit your needs.
+We would like to offer a clean compile across a wide verity of platforms,
+so if you can test on several, so much the better!
 
-       Here are some Makefile hints:
-
-	   In the past, some people have had to adjust the VARARG or
-	   TERMCONTROL because the Makefile cannot always guess
-	   correctly for certain systems.  You may need to play with
-	   these values if you experience problems.
-
-	   The default compiler used is 'cc'.  The default compiler flag
-	   is '-O'.  If you have gcc, or gcc v2 (or better) you should use
-	   that instead.   Some compilers allow for optimization beyond
-	   just -O (gcc v2 has -O2, mips cc has -O3).  You should select
-	   the best flag for speed optimization.  Calc can be cpu intensive
-	   so selecting a quality compiler and good optimization level can
-	   really pay off.
-
-    2) build calc:
-
-	make all
-
-    3) test calc:
-
-	make check
-
- ==>>>If you run into problems, follow the instructions in the BUGS file<<<==
+If you run into problems, see the BUGS file.
 
 =-=
 
-For further reading:
-
-    LIBRARY
-    	explains how programs can use libcalc.a to take advantage
-	of the calc multi-precision routines.
+See the file:
 
     help/todo
-	current wish list for calc
 
-    CHANGES
-	recent changes to calc
+or run:
 
-    BUGS
-	known bugs, mis-features and how to report problems
+    calc 'help todo'
 
-    help/full
-	full set of calc documentation
+for a wish/todo list.  Code contributions are welcome.
 
 =-=
 
-David I. Bell    dbell@auug.org.au
-chongo@toad.com	<Landon Curt Noll -- chongo@toad.com> /\../\
+To join the calc-tester mailing list.  Send a request to:
+
+     calc-tester-request@postofc.corp.sgi.com
+
+Your message body (not the subject) should consist of:
+
+     subscribe calc-tester address
+     end
+     name your_full_name
+
+where ``address'' is your EMail address and ``your_full_name'' is
+your full name.
+
+The calc web site is located at:
+
+	http://reality.sgi.com/chongo/calc

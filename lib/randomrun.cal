@@ -121,7 +121,3 @@ define randomrun(run_cnt)
     printf("length>%d\t\t\t\t\tcount=%d\n", MAX_RUN, long_run_cnt);
     printf("max length=%d\n", max_run);
 }
-
-if (config("lib_debug") >= 0) {
-    print "randomrun([run_length]) defined";
-}

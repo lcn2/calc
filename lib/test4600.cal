@@ -304,12 +304,3 @@ define test4600(v, tnum)
 	}
 	return tnum;
 }
-
-if (config("lib_debug") >= 0) {
-	print "stest(str [, verbose]) defined";
-	print "ttest([m, [n [,verbose]]]) defined";
-	print "sprint(x) defined";
-	print "findline(f,s) defined";
-	print "findlineold(f,s) defined";
-	print "test4600(verbose, tnum) defined";
-}

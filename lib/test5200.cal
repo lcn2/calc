@@ -30,11 +30,3 @@ static a5200 = 20;
 define f5200(x) = a5200 + x;
 define g5200(x) {global a5200 = 30; return a5200 + x;}
 define h5200(x) = a5200 + x;
-
-if (config("lib_debug") >= 0) {
-	print "global a5200";
-	print "static a5200";
-	print "f5200(x) defined";
-	print "g5200(x) defined";
-	print "h5200(x) defined";
-}

@@ -1598,6 +1598,7 @@ zsrandom1(CONST ZVALUE seed, BOOL need_ret)
 	 */
 	if (!blum.seeded) {
 		p_blum = randomcopy(&init_blum);
+		randomfree(&blum);
 		blum = *p_blum;
 		free(p_blum);
 	}
@@ -1621,9 +1622,8 @@ zsrandom1(CONST ZVALUE seed, BOOL need_ret)
 	if (ziszero(seed)) {
 
 		/* set to the default generator state */
-		zfree(blum.n);
-		zfree(blum.r);
 		p_blum = randomcopy(&init_blum);
+		randomfree(&blum);
 		blum = *p_blum;
 		free(p_blum);
 
@@ -1710,6 +1710,7 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 	 */
 	if (!blum.seeded) {
 		p_blum = randomcopy(&init_blum);
+		randomfree(&blum);
 		blum = *p_blum;
 		free(p_blum);
 	}
@@ -1868,6 +1869,7 @@ zsrandom4(CONST ZVALUE seed, CONST ZVALUE ip, CONST ZVALUE iq, long trials)
 	 */
 	if (!blum.seeded) {
 		p_blum = randomcopy(&init_blum);
+		randomfree(&blum);
 		blum = *p_blum;
 		free(p_blum);
 	}
@@ -1962,6 +1964,7 @@ zsetrandom(CONST RANDOM *state)
 	 */
 	if (!blum.seeded) {
 		p_blum = randomcopy(&init_blum);
+		randomfree(&blum);
 		blum = *p_blum;
 		free(p_blum);
 	}
@@ -2005,6 +2008,7 @@ zrandomskip(long cnt)
 	 */
 	if (!blum.seeded) {
 		p_blum = randomcopy(&init_blum);
+		randomfree(&blum);
 		blum = *p_blum;
 		free(p_blum);
 	}
@@ -2109,6 +2113,7 @@ zrandom(long cnt, ZVALUE *res)
 	 */
 	if (!blum.seeded) {
 		p_blum = randomcopy(&init_blum);
+		randomfree(&blum);
 		blum = *p_blum;
 		free(p_blum);
 	}
@@ -2390,6 +2395,9 @@ randomcopy(CONST RANDOM *state)
 /*
  * randomfree - free a Blum state
  *
+ * We avoid freeing the pre-compiled states as they were
+ * never malloced in the first place.
+ *
  * given:
  *	state - the state to free
  */
@@ -2406,11 +2414,15 @@ randomfree(RANDOM *state)
 	}
 
 	/* free the values */
-	state->seeded = 0;
-	zfree(state->n);
-	zfree(state->r);
+	if (state->n.v != h_ndefvec) {
+		zfree(state->n);
+	}
+	if (state->r.v != h_rdefvec) {
+		zfree(state->r);
+	}
 
 	/* free it if it is not pre-defined */
+	state->seeded = 0;
 	if (state != &blum) {
 		free(state);
 	}

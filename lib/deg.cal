@@ -113,11 +113,4 @@ define fixdms(a)
 
 if (config("lib_debug") >= 0) {
     print "obj dms {deg, min, sec} defined";
-    print "dms(deg, min, sec) defined";
-    print "dms_add(a, b) defined";
-    print "dms_neg(a) defined";
-    print "dms_sub(a, b) defined";
-    print "dms_mul(a, b) defined";
-    print "dms_print(a) defined";
-    print "dms_abs(a) defined";
 }

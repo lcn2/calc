@@ -931,7 +931,7 @@ C_SRC= ${LIBSRC} ${CALCSRC} ${UTIL_C_SRC}
 # These files are found (but not built) in the distribution
 #
 DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README \
-	calc.man lint.sed README.FIRST HOWTO.INSTALL ${UTIL_MISC_SRC}
+	calc.man lint.sed README.OLD HOWTO.INSTALL ${UTIL_MISC_SRC}
 
 # complete list of .o files
 #

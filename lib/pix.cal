@@ -38,7 +38,3 @@ define pi_of_x(x)
 	}
 	return primes;
 }
-
-if (config("lib_debug") >= 0) {
-	print "pi_of_x(x) defined";
-}

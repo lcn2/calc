@@ -20,7 +20,3 @@ for (i=99; i > 0;) {
 	bottles = (i!=1) ? "bottles" : "bottle";
 	print less, bottles, "of beer on the wall!\n";
 }
-
-if (config("lib_debug") >= 0) {
-	/* nothing to do! */
-}

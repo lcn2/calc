@@ -37,7 +37,7 @@
 #define	SYMBOLSIZE	256	/* maximum symbol name size */
 #define	MAXINDICES	20	/* maximum number of indices for objects */
 #define	MAXLABELS	100	/* maximum number of user labels in function */
-#define	MAXOBJECTS	10	/* maximum number of object types */
+#define	MAXOBJECTS	128	/* maximum number of object types */
 #define	MAXSTRING	1024	/* maximum size of string constant */
 #define	MAXSTACK	1000	/* maximum depth of evaluation stack */
 #define	MAXFILES	20	/* maximum number of opened files */

@@ -66,8 +66,3 @@ define pellx(D)
 	}
 	return Q1;
 }
-
-if (config("lib_debug") >= 0) {
-    print "pell(D) defined";
-    print "pellx(D) defined";
-}

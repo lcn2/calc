@@ -1,4 +1,4 @@
-# Copyright (c) 1997 David I. Bell and Landon Curt Noll
+# Copyright (c) 1999 David I. Bell and Landon Curt Noll
 # Permission is granted to use, distribute, or modify this source,
 # provided that this copyright notice remains intact.
 
@@ -8,13 +8,12 @@ them to be useful!
 
 If you write something that you think is useful, please send it to:
 
-    dbell@auug.org.au
-    chongo@toad.com                 {uunet,pyramid,sun}!hoptoad!chongo
+    calc-tester@postofc.corp.sgi.com
 
 By convention, a lib file only defines and/or initializes functions,
-objects and variables.  (The regression test is an exception.)  Also by
-convention, the a usage message regarding each important object and
-function is printed at the time of the read.
+objects and variables.  (The regress.cal and testxxx.cal regression test
+suite is an exception.)  Also by convention, an additional usage message 
+regarding important object and functions is printed.
 
 If a lib file needs to load another lib file, it should use the -once
 version of read:
@@ -45,15 +44,22 @@ global variable.  By convention, "lib_debug" has the following meanings:
 		    printed at the time of the read in addition
 		    to other debug messages
 
-To conform to the above convention, your lib files should end with
-lines of the form:
+When config("lib_debug") >= 0, function names and their arg are
+printed as they are defined.  Sometimes this printing is not enough
+information.  For example:
+
+	* useful obj definitions
+	* functions with optional args
+	* functions with optional args where the param() interface is used
+
+For these cases we suggest that you place at the bottom of your code
+something like:
 
 	if (config("lib_debug") >= 0) {
 		print "obj xyz defined";
-		print "funcA(side_a, side_b, side_c) defined";
-		print "funcB(size, mass) defined";
+		print "funcA([val1 [, val2]]) defined";
+		print "funcB(size, mass, ...) defined";
 	}
-
 
 =-=
 
@@ -100,7 +106,7 @@ deg.cal
 
 ellip.cal
 
-    factor(iN, ia, B, force)
+    efactor(iN, ia, B, force)
 
     Attempt to factor using the elliptic functions: y^2 = x^3 + a*x + b.
 
@@ -160,7 +166,7 @@ mfactor.cal
 
 mod.cal
 
-    mod(a)
+    lmod(a)
     mod_print(a)
     mod_one()
     mod_cmp(a, b)
@@ -250,7 +256,7 @@ pix.cal
 
 pollard.cal
 
-    factor(N, N, ai, af)
+    pfactor(N, N, ai, af)
 
     Factor using Pollard's p-1 method.
 
@@ -520,6 +526,20 @@ test3400.cal
     This script is used by regress.cal to test trig functions.
     containing objects.
 
+test3500.cal
+
+    global defaultverbose
+    global err
+    testfrem(x, y, verbose)
+    testgcdrem(x, y, verbose)
+    testf(str, n, verbose)
+    testg(str, n, verbose)
+    testh(str, n, N, verbose)
+    test3500(verbose, n, N)
+
+    This script is used by regress.cal to test the functions frem, 
+    fcnt, gcdrem.
+
 test4000.cal
 
     global defaultverbose
@@ -617,7 +637,7 @@ varargs.cal
 
 xx_print.cal
 
-    isoctet(a) defined
+    is_octet(a) defined
     list_print(a) defined
     mat_print (a) defined
     octet_print(a) defined

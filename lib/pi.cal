@@ -47,7 +47,3 @@ define qpi(epsilon)
 	}
 	return (bround(1/an, bits));
 }
-
-if (config("lib_debug") >= 0) {
-    print "qpi(epsilon) defined";
-}

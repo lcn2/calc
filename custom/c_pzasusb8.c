@@ -31,7 +31,6 @@ c_pzasusb8(char *name, int count, VALUE **vals)
 {
 	VALUE result;           /* what we will return */
 	ZVALUE z;		/* numerator of the value */
-	long octet_cnt;		/* number of octets in the numerator */
 	long half_cnt;		/* number of HALFs in the numerator */
 	USB8 *h;		/* octet pointer */
 	long half_len;		/* length of a half in octets */
@@ -52,7 +51,6 @@ c_pzasusb8(char *name, int count, VALUE **vals)
 	 */
 	z = vals[0]->v_num->num;
 	half_len = sizeof(HALF);
-	octet_cnt = z.len * half_len;
 	half_cnt = z.len;
 
 	/*

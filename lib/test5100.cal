@@ -48,9 +48,3 @@ define test5100(x)
 	}
 	global a5100 = a5100, b5100 = b5100;
 }
-
-if (config("lib_debug") >= 0) {
-	print "global a5100";
-	print "global b5100";
-	print "test5100(x) defined";
-}

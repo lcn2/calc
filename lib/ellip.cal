@@ -24,7 +24,7 @@
  * only an approximation, read "A Course in Number Theory and Cryptography"
  * by Neal Koblitz for a good explanation.
  *
- * factor(iN, ia, B, force)
+ * efactor(iN, ia, B, force)
  *	iN is the number to be factored.
  *	ia is the initial value of a in the equation, and each successive
  *	value of a is an independent attempt at factoring (default 1).
@@ -66,7 +66,7 @@ global	b;		/* second coefficient */
 global	f;		/* found factor */
 
 
-define factor(iN, ia, B, force)
+define efactor(iN, ia, B, force)
 {
 	local	C, x, p;
 
@@ -164,8 +164,4 @@ define point_pow(p, pow)
 			r = point_mul(&t, &r);
 	}
 	return r;
-}
-
-if (config("lib_debug") >= 0) {
-    print "factor(N, I, B, force) defined";
 }

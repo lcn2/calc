@@ -374,7 +374,3 @@ lucas_chk(high_n, quiet)
 		return 0;
 	}
 }
-
-if (config("lib_debug") >= 0) {
-    print "lucas_chk(high_n) defined";
-}

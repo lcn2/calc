@@ -60,7 +60,3 @@ define B(n)
 	Bnmax = n;
 	return Bn[n];
 }
-
-if (config("lib_debug") >= 0) {
-    print "B(n) defined";
-}

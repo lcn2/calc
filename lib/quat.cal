@@ -197,19 +197,4 @@ define quat_shift(a, b)
 
 if (config("lib_debug") >= 0) {
     print "obj quat {s, v} defined";
-    print "quat(a, b, c, d) defined";
-    print "quat_print(a) defined";
-    print "quat_norm(a) defined";
-    print "quat_abs(a, e) defined";
-    print "quat_conj(a) defined";
-    print "quat_add(a, e) defined";
-    print "quat_sub(a, e) defined";
-    print "quat_inc(a) defined";
-    print "quat_dec(a) defined";
-    print "quat_neg(a) defined";
-    print "quat_mul(a, b) defined";
-    print "quat_div(a, b) defined";
-    print "quat_inv(a) defined";
-    print "quat_scale(a, b) defined";
-    print "quat_shift(a, b) defined";
 }

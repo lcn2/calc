@@ -12,12 +12,12 @@ obj mod {a};			/* definition of the object */
 global mod_value = 100;		/* modulus value (value of N) */
 
 
-define mod(a)
+define lmod(a)
 {
 	local obj mod	x;
 
 	if (!isreal(a) || !isint(a))
-		quit "Bad argument for mod function";
+		quit "Bad argument for lmod function";
 	x.a = a % mod_value;
 	return x;
 }
@@ -34,7 +34,7 @@ define mod_print(a)
 
 define mod_one()
 {
-	return mod(1);
+	return lmod(1);
 }
 
 
@@ -51,9 +51,9 @@ define mod_cmp(a, b)
 define mod_rel(a, b)
 {
 	if (isnum(a))
-		a = mod(a);
+		a = lmod(a);
 	if (isnum(b))
-		b = mod(b);
+		b = lmod(b);
 	if (a.a < b.a)
 		return -1;
 	return a.a != b.a;
@@ -163,9 +163,9 @@ define mod_div(a, b)
 
 	obj mod x, y;
 	if (isnum(a))
-		a = mod(a);
+		a = lmod(a);
 	if (isnum(b))
-		b = mod(b);
+		b = lmod(b);
 	c = gcd(a.a, b.a);
 	x.a = a.a / c;
 	y.a = b.a / c;
@@ -191,20 +191,6 @@ define mod_pow(a, b)
 
 if (config("lib_debug") >= 0) {
     print "obj mod {a} defined";
-    print "mod(a) defined";
-    print "mod_print(a) defined";
-    print "mod_one(a) defined";
-    print "mod_cmp(a, b) defined";
-    print "mod_rel(a, b) defined";
-    print "mod_add(a, b) defined";
-    print "mod_sub(a, b) defined";
-    print "mod_mod(a, b) defined";
-    print "mod_square(a) defined";
-    print "mod_inc(a) defined";
-    print "mod_dec(a) defined";
-    print "mod_inv(a) defined";
-    print "mod_div(a, b) defined";
-    print "mod_pow(a, b) defined";
     print "mod_value defined";
     print "set mod_value as needed";
 }

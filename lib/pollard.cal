@@ -6,7 +6,7 @@
  * Factor using Pollard's p-1 method.
  */
 
-define factor(N, B, ai, af)
+define pfactor(N, B, ai, af)
 {
 	local	a, k, i, d;
 
@@ -27,8 +27,4 @@ define factor(N, B, ai, af)
 			return d;
 	}
 	return 1;
-}
-
-if (config("lib_debug") >= 0) {
-    print "factor(N, B, ai, af) defined";
 }

@@ -21,7 +21,7 @@ print "global blkmax defined, assigned value 8";
 print;
 
 B = blk();
-define isoctet(a) = istype(a, B[0]);
+define is_octet(a) = istype(a, B[0]);
 
 define list_print(a) {
 	local i;
@@ -131,7 +131,7 @@ define strchar(a) {
 	if (isstr(a))
 		a = ord(a);
 
-	else if (isoctet(a))
+	else if (is_octet(a))
 		a = a;		/* This converts octet to number */
 
 	else if (!isint(a) || a < 0 || a > 255)
@@ -269,15 +269,3 @@ define octet_print(a) {
 print "Here is the earlier block with a new octet_print()";
 print B1;
 print;
-
-if (config("lib_debug") >= 0) {
-    print "isoctet(a) defined";
-    print "list_print(a) defined";
-    print "mat_print (a) defined";
-    print "octet_print(a) defined";
-    print "blk_print(a) defined";
-    print "nblk_print (a) defined";
-    print "strchar(a) defined";
-    print "file_print(a) defined";
-    print "error_print(a) defined";
-}

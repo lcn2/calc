@@ -25,7 +25,3 @@ define bigprime(a, m, p)
 		print "	" : n;
 	}
 }
-
-if (config("lib_debug") >= 0) {
-    print "bigprime(a, m, p) defined";
-}

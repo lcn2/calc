@@ -95,7 +95,3 @@ define ckmat()
 	/* args match the matrix in the object */
 	return 1;
 }
-
-if (config("lib_debug") >= 0) {
-    /* nothing to do */
-}

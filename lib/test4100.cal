@@ -472,20 +472,3 @@ define test4100(v, tnum)
 	}
 	return tnum;
 }
-
-if (config("lib_debug") >= 0) {
-	print "global defaultverbose";
-	print "global err";
-	print "global K1";
-	print "global K2";
-	print "global BASEB";
-	print "global BASE";
-	print "rlen_4100(N) defined";
-	print "olen(N) defined";
-	print "test4101(x, y, m, k, z1, z2) defined";
-	print "testall(str, n, N, M, verbose) defined";
-	print "times(str, N, n, verbose) defined";
-	print "powtimes(str, N1, N2, n, verbose) defined";
-	print "inittimes(str, N, n, verbose) defined";
-	print "test4100(verbose, tnum) defined";
-}

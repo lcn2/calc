@@ -31,7 +31,3 @@ define mersenne(p)
 	/* 2^p-1 is prime iff u(p) = 0 mod 2^p-1 */
 	return (u == 0);
 }
-
-if (config("lib_debug") >= 0) {
-    print "mersenne(p) defined";
-}

@@ -41,7 +41,3 @@ define solve(low, high, epsilon)
 		}
 	}
 }
-
-if (config("lib_debug") >= 0) {
-    print "solve(low, high, epsilon) defined";
-}

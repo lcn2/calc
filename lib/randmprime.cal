@@ -129,7 +129,3 @@ randmprime(bits, seed, dbg)
     }
     return ret;
 }
-
-if (config("lib_debug") >= 0) {
-    print "randmprime(bits, seed [,dbg]) defined";
-}

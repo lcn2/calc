@@ -122,11 +122,3 @@ define test3300(verbose, tnum)
 	}
 	return tnum;
 }
-
-if (config("lib_debug") >= 0) {
-	print "global defaultverbose defined";
-	print "global err defined";
-	print "testi(str, n, N, verbose) defined";
-	print "testr(str, n, N, verbose) defined";
-	print "test3300(verbose, tnum) defined";
-}

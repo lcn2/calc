@@ -1029,7 +1029,3 @@ ldebug(funct, str)
 	}
 	return;
 }
-
-if (config("lib_debug") >= 0) {
-    print "lucas(h, n) defined";
-}

@@ -272,14 +272,3 @@ define test3500(verbose, tnum, n, N)
 	}
 	return tnum;
 }
-
-if (config("lib_debug") >= 0) {
-	print "global defaultverbose defined";
-	print "global err defined";
-	print "testfrem(x, y, verbose) defined";
-	print "testgcdrem(x, y, verbose) defined";
-	print "testf(str, n, verbose) defined";
-	print "testg(str, n, verbose) defined";
-	print "testh(str, n, N, verbose) defined";
-	print "test3500(verbose, n, N) defined";
-}

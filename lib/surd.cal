@@ -263,25 +263,6 @@ define surd_rel(a, b)
 
 if (config("lib_debug") >= 0) {
     print "obj surd {a, b} defined";
-    print "surd(a, b) defined";
-    print "surd_print(a) defined";
-    print "surd_conj(a) defined";
-    print "surd_norm(a) defined";
-    print "surd_value(a, xepsilon) defined";
-    print "surd_add(a, b) defined";
-    print "surd_sub(a, b) defined";
-    print "surd_inc(a) defined";
-    print "surd_dec(a) defined";
-    print "surd_neg(a) defined";
-    print "surd_mul(a, b) defined";
-    print "surd_square(a) defined";
-    print "surd_scale(a, b) defined";
-    print "surd_shift(a, b) defined";
-    print "surd_div(a, b) defined";
-    print "surd_inv(a) defined";
-    print "surd_sgn(a) defined";
-    print "surd_cmp(a, b) defined";
-    print "surd_rel(a, b) defined";
     print "surd_type defined";
     print "set surd_type as needed";
 }

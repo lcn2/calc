@@ -308,23 +308,3 @@ define test2700(verbose, tnum)
 	}
 	return tnum;
 }
-
-if (config("lib_debug") >= 0) {
-	print "global defaultverbose defined";
-	print "global err defined";
-	print "mknonnegreal() defined";
-	print "mkposreal() defined";
-	print "mkreal_2700() defined";
-	print "mknonzeroreal() defined";
-	print "mkposfrac() defined";
-	print "mkfrac() defined";
-	print "mksquarereal() defined";
-	print "mknonsquarereal() defined";
-	print "mkcomplex_2700() defined";
-	print "testcsqrt(str,n,verbose) defined";
-	print "checksqrt(x,y,z,v) defined";
-	print "checkavrem(A,B,X,eps) defined";
-	print "checkrounding(s,n,t,u,z) defined";
-	print "iscomsq(x) defined";
-	print "test2700(verbose,tnum) defined";
-}

@@ -452,32 +452,3 @@ define test4000(v, tnum)
 	}
 	return tnum;
 }
-
-
-if (config("lib_debug") >= 0) {
-	print "global defaultverbose";
-	print "global err";
-	print "global BASEB";
-	print "global BASE";
-	print "global COUNT";
-	print "global SKIP";
-	print "global RESIDUE";
-	print "global MODULUS";
-	print "global K1";
-	print "global H1";
-	print "global K2";
-	print "global H2";
-	print "global K3";
-	print "global H3";
-	print "plen(N) defined";
-	print "clen(N) defined";
-	print "ptimes(str, N, n, count, skip, verbose) defined";
-	print "ctimes(str, N, n, count, skip, verbose) defined";
-	print "crtimes(str, a, b, n, count, skip, verbose) defined";
-	print "ntimes(str, N, n, count, skip, residue, mod, verbose) defined";
-	print "testnextcand(str, N, n, cnt, skip, res, mod, verbose) defined";
-	print "testnext1(x, y, count, skip, residue, modulus) defined";;
-	print "testprevcand(str, N, n, cnt, skip, res, mod, verbose) defined";
-	print "testprev1(x, y, count, skip, residue, modulus) defined";
-	print "test4000(verbose, tnum) defined";
-}

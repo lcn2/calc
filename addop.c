@@ -237,7 +237,7 @@ rmuserfunc(char *name)
 		return;
 	freenumbers(functions[index]);
 	free(functions[index]);
-	if (!inputisterminal() && conf->lib_debug >= 0)
+	if (inputisterminal() && conf->lib_debug >= 0)
 		printf("%s() undefined\n", name);
 	functions[index] = NULL;
 }

@@ -27,8 +27,3 @@ define unitfrac(x)
 	} while ((num(x) > 1) || (x == di) || (x == 1));
 	print '  [1/1]',, x;
 }
-
-
-if (config("lib_debug") >= 0) {
-    print "unitfrac(x) defined";
-}

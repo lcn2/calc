@@ -48,8 +48,3 @@ define psqrt(u, p)
 	}
 	return min(v, p - v);
 }
-
-
-if (config("lib_debug") >= 0) {
-    print "psqrt(u, p) defined";
-}

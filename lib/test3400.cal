@@ -299,15 +299,3 @@ define test3400(verbose, tnum)
 	}
 	return tnum;
 }
-
-if (config("lib_debug") >= 0) {
-	print "global defaultverbose defined";
-	print "global err defined";
-	print "test3401(str, n, eps, verbose) defined";
-	print "test3402(str, n, eps, verbose) defined";
-	print "test3403(str, n, eps, verbose) defined";
-	print "test3404(str, n, eps, verbose) defined";
-	print "test3405(str, n, eps, verbose) defined";
-	print "test3406(str, n, eps, verbose) defined";
-	print "test3400(verbose, tnum) defined";
-}

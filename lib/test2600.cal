@@ -491,25 +491,3 @@ define test2600(verbose, tnum)
 	}
 	return tnum;
 }
-
-if (config("lib_debug") >= 0) {
-	print "global defaultverbose defined";
-	print "global err defined";
-	print "testismult(str,n,verbose) defined";
-	print "testsqrt(str,n,eps,verbose) defined";
-	print "testexp(str,n,eps,verbose) defined";
-	print "testln(str,n,eps,verbose) defined";
-	print "testpower(str,n,b,eps,verbose) defined";
-	print "testgcd(str,n,verbose) defined";
-	print "cpow(x,n,eps) defined";
-	print "cexp(x,eps) defined";
-	print "cln(x,eps) defined";
-	print "mkreal() defined";
-	print "mkcomplex() defined";
-	print "mkbigreal() defined";
-	print "mksmallreal() defined";
-	print "testappr(str,n,verbose) defined";
-	print "checkappr(x,y,z,verbose) defined";
-	print "checkresult(x,y,z,a) defined";
-	print "test2600(verbose,tnum) defined";
-}

@@ -25,10 +25,11 @@ Following is the change from calc version 2.11.0t1 to date:
     porting calc to C++!  We will NOT support C++ compilation of calc.
     Calc will written ANSI C.  We just compiled with a suggestion from
     Love-Jensen, John <jlove-jensen@globalmt.com> to make calc's version
-    of C a little more to C++ compilers.  Avoiding symbols such as new
-    or try for example.
+    of C a little more to C++ compilers.  We are simply avoiding symbols
+    such as new or try for example.
 
-    Updated README.FIRST and BUGS to reflect new URLs and addresses.
+    Renamed README to README.OLD.  Renamed README.FIRST to README.
+    Updated README, lib/README and BUGS to reflect new URLs and addresses.
 
     Added a HOWTO.INSTALL file.
 
@@ -78,15 +79,6 @@ Following is the change from calc version 2.11.0t1 to date:
 
     The custom.c file is now compiled with full ${CFLAGS}.
 
-    ### XXX - this change has been backed out:
-    #
-    # Thanks to the efforts of Ernest Bowen <ernie@neumann.une.edu.au> and
-    # Dr.D.J.Picton <dave@aps5.ph.bham.ac.uk>, a nasty endian-ness bug
-    # in the sha and sha1 hash functions that showed up on machines such
-    # as the Sparc was fixed.
-    #
-    ###
-
     Rewrote command line / argument processing code.  Calc is now
     using getopt(3) argument processing.
 
@@ -113,14 +105,12 @@ Following is the change from calc version 2.11.0t1 to date:
 
     Fixed memory leaks in zsrand() in zrand.c.
 
-    Fixed a memory leak in zsrandom1() in zrandom.c.
+    Fixed a memory leak in zsrandom1() in zrandom.c.  Fixed memory
+    leaks associated with replacing the internal random state with
+    another random state.
 
     Added seed() builtin to return a 64 bit seed for a
-    psuedo-random generator.
-
-    Added functionality from Ernest Bowen <ernie@turing.une.edu.au>
-    to give arguments as well as function names after definitions when
-    calc_debug >= 0.
+    pseudo-random generator.
 
     Added functionality from Ernest Bowen <ernie@turing.une.edu.au> to
     permit nested "= {...}" assignments for lists as well as matrices
@@ -147,6 +137,42 @@ Following is the change from calc version 2.11.0t1 to date:
 
     Added custom function custom("pzasusb8", n) and lib/pzasusb8.cal based on
     Ernest Bowen's diagnostic patch.
+
+    Thanks to the efforts of Ernest Bowen <ernie@neumann.une.edu.au> and
+    Dr.D.J.Picton <dave@aps5.ph.bham.ac.uk>, a nasty endian-ness bug
+    in the sha and sha1 hash functions that showed up on machines such
+    as the Sparc was fixed.
+
+    Added functionality from Ernest Bowen <ernie@turing.une.edu.au>
+    to give arguments as well as function names after definitions when
+    config("lib_debug") >= 0.
+
+    Removed if (config("lib_debug") >= 0) { ... } the ends of most
+    of the calc library scripts because it was redundant with the
+    new config("lib_debug") >= 0 functionality.  Some of the calc
+    library still has a partial section because some useful
+    additional information was being printed:
+
+	chrem.cal	deg.cal	     lucas_tbl.cal   randrun.cal
+	mfactor.cal	mod.cal	     poly.cal	     seedrandom.cal
+	surd.cal	varargs.cal
+
+    Fixed ellip.cal so that its defined function does not conflict with
+    the factor() builtin function.
+
+    Fixed mod.cal so that a defined function does not conflict with
+    the mod() builtin function.
+
+    The regression test suite now reads in most calc libs.  A few
+    libs are not read because they, by design, produce output
+    when read even when config("lib_debug") is set to -1.
+
+    Increased the maximum number of object types that one can define
+    from 10 to 128.
+
+    Added a patch from Ernest Bowen <ernie@turing.une.edu.au>
+    to correctly hash a V_STR value-type that has an \0 byte
+    inside it.
 
     Fixed misc compile warnings and notices.
 
