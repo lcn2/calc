@@ -1640,8 +1640,7 @@ f_avg(int count, VALUE **vals)
 		if ((*vals)->v_type == V_LIST) {
 			addlistitems((*vals)->v_list, &sum);
 			n += countlistitems((*vals++)->v_list);
-		}
-		else {
+		} else {
 			addvalue(&sum, *vals++, &tmp);
 			freevalue(&sum);
 			sum = tmp;
@@ -1690,8 +1689,7 @@ f_hmean(int count, VALUE **vals)
 		if ((*vals)->v_type == V_LIST) {
 			addlistinv((*vals)->v_list, &sum);
 			n += countlistitems((*vals++)->v_list);
-		}
-		else {
+		} else {
 			invertvalue(*vals++, &tmp1);
 			addvalue(&sum, &tmp1, &tmp2);
 			freevalue(&tmp1);
@@ -3842,9 +3840,9 @@ f_search(int count, VALUE **vals)
 			start = qlink(start);
 	}
 	if (end) {
-		if (!qispos(end))
+		if (!qispos(end)) {
 			end = qqadd(size, end);
-		else {
+		} else {
 			if (qrel(end, size) > 0)
 				end = qlink(size);
 			else
@@ -3866,8 +3864,7 @@ f_search(int count, VALUE **vals)
 			if (count == 2 || (count == 4 && end != NULL)) {
 				start = qalloc();
 				start->num = pos;
-			}
-			else {
+			} else {
 				end = qalloc();
 				end->num = pos;
 			}
@@ -4005,9 +4002,9 @@ f_rsearch(int count, VALUE **vals)
 			start = qlink(start);
 	}
 	if (end) {
-		if (!qispos(end))
+		if (!qispos(end)) {
 			end = qqadd(size, end);
-		else {
+		} else {
 			if (qrel(end, size) > 0)
 				end = qlink(size);
 			else
@@ -4029,8 +4026,7 @@ f_rsearch(int count, VALUE **vals)
 			if (count == 2 || (count == 4 && end != NULL)) {
 				start = qalloc();
 				start->num = pos;
-			}
-			else {
+			} else {
 				end = qalloc();
 				end->num = pos;
 			}
@@ -4042,8 +4038,7 @@ f_rsearch(int count, VALUE **vals)
 		if (count < 4) {
 			end = start;
 			start = NULL;
-		}
-		else {
+		} else {
 			qtmp = qsub(end, qlen);
 			qfree(end);
 			end = qtmp;
@@ -4634,9 +4629,9 @@ f_strerror(int count, VALUE **vals)
 
 	if (count > 0) {
 		vp = vals[0];
-		if (vp->v_type < 0)
+		if (vp->v_type < 0) {
 			i = (long) -vp->v_type;
-		else {
+		} else {
 			if (vp->v_type != V_NUM || qisfrac(vp->v_num))
 				return error_value(E_STRERROR1);
 			i = qtoi(vp->v_num);
@@ -4747,12 +4742,12 @@ f_error(int count, VALUE **vals)
 	if (count > 0) {
 		vp = vals[0];
 
-		if (vp->v_type <= 0)
+		if (vp->v_type <= 0) {
 			r = (long) -vp->v_type;
-		else {
-			if (vp->v_type != V_NUM || qisfrac(vp->v_num))
+		} else {
+			if (vp->v_type != V_NUM || qisfrac(vp->v_num)) {
 				r = E_ERROR1;
-			else {
+			} else {
 				r = qtoi(vp->v_num);
 				if (r < 0 || r >= 32768)
 					r = E_ERROR2;
@@ -5542,28 +5537,26 @@ f_tail(VALUE *v1, VALUE *v2)
 	res.v_type = v1->v_type;
 	switch (v1->v_type) {
 		case V_LIST:
-			if (n == 0)
+			if (n == 0) {
 				res.v_list = listalloc();
-			else if (n > 0) {
+			} else if (n > 0) {
 				res.v_list = listsegment(v1->v_list,
 					v1->v_list->l_count - n,
 					v1->v_list->l_count - 1);
-			}
-			else {
+			} else {
 				res.v_list = listsegment(v1->v_list,
 					v1->v_list->l_count - 1,
 					v1->v_list->l_count + n);
 			}
 			return res;
 		case V_STR:
-			if (n == 0)
+			if (n == 0) {
 				res.v_str = slink(&_nullstring_);
-			else if (n > 0) {
+			} else if (n > 0) {
 				res.v_str = stringsegment(v1->v_str,
 					v1->v_str->s_len - n,
 					v1->v_str->s_len - 1);
-			}
-			else {
+			} else {
 				res.v_str = stringsegment(v1->v_str,
 					v1->v_str->s_len - 1,
 					v1->v_str->s_len + n);

@@ -1157,8 +1157,7 @@ addstring(char *str, long len)
 	if (stringconstavail <= 0) {
 		if (stringconsttable == NULL) {
 			initstrings();
-		}
-		else {
+		} else {
 			sp = (STRING **) realloc((char *) stringconsttable,
 			sizeof(STRING *) * (stringconstcount + STRCONSTALLOC));
 			if (sp == NULL) {

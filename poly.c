@@ -31,20 +31,17 @@ evp(LISTELEM *cp, LISTELEM *x, VALUE *vres)
 					freevalue(&tmp1);
 					freevalue(vres);
 					*vres = tmp2;
-				}
-				else {
+				} else {
 					s = TRUE;
 					*vres = tmp1;
 				}
 			}
-		}
-		else {
+		} else {
 			if (s) {
 				addvalue(&v, vres, &tmp1);
 				freevalue(vres);
 				*vres = tmp1;
-			}
-			else {
+			} else {
 				s = TRUE;
 				copyvalue(&v, vres);
 			}
@@ -126,9 +123,9 @@ addlistinv(LIST *lp, VALUE *vres)
 	VALUE tmp1, tmp2;
 
 	for (ep = lp->l_first; ep; ep = ep->e_next) {
-		if (ep->e_value.v_type == V_LIST)
+		if (ep->e_value.v_type == V_LIST) {
 			addlistinv(ep->e_value.v_list, vres);
-		else {
+		} else {
 			invertvalue(&ep->e_value, &tmp1);
 			addvalue(vres, &tmp1, &tmp2);
 			freevalue(&tmp1);

@@ -894,15 +894,17 @@ xorvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			if (v1->v_str->s_len) {
 				vres->v_str = stringcopy(v1->v_str);
 				*vres->v_str->s_str ^= *v2->v_octet;
-			} else
+			} else {
 				vres->v_str = charstring(*v2->v_octet);
+			}
 			return;
 		case (TWOVAL(V_OCTET, V_STR)):
 			if (v2->v_str->s_len) {
 				vres->v_str = stringcopy(v2->v_str);
 				*vres->v_str->s_str ^= *v1->v_octet;
-			} else
+			} else {
 				vres->v_str = charstring(*v1->v_octet);
+			}
 			return;
 		case (TWOVAL(V_OCTET, V_OCTET)):
 			vres->v_type = V_STR;

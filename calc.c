@@ -249,9 +249,13 @@ main(int argc, char **argv)
 		fprintf(stderr, "Error in rcfiles\n");
 		if ((c_flag && !stoponerror) || stoponerror < 0) {
 			getcommands(FALSE);
-			closeinput();
-			if (inputisterminal())
+			if (inputlevel() == 0) {
+				closeinput();
+				runrcfiles();
 				run_state = RUN_PRE_CMD_ARGS;
+			} else {
+				closeinput();
+			}
 		} else {
 			if ((havecommands && !i_flag) || !stdin_tty)
 				run_state = RUN_EXIT_WITH_ERROR;
@@ -274,11 +278,9 @@ main(int argc, char **argv)
 		fprintf(stderr, "Error in commands\n");
 		if ((c_flag && !stoponerror) || stoponerror < 0) {
 			getcommands(FALSE);
-			closeinput();
-			if (inputlevel() == 0) {
-				getcommands(FALSE);
+			if (inputlevel() == 0)
 				run_state = RUN_PRE_TOP_LEVEL;
-			}
+			closeinput();
 		} else {
 			closeinput();
 			if (!stdin_tty || !i_flag || p_flag)

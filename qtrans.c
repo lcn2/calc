@@ -1022,8 +1022,7 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 			tmp1 = itoq(m);
 			tmp2 = qmul(tmp1, q2tmp);
 			m = qtoi(tmp2);
-		}
-		else {
+		} else {
 			tmp1 = qdec(q1tmp);
 			tmp2 = qqdiv(tmp1, q1tmp);
 			qfree(tmp1);
@@ -1038,8 +1037,7 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 			tmp1 = itoq(m + 1);
 			tmp2 = qmul(tmp1, q2tmp);
 			m = qtoi(tmp2);
-		}
-		else {
+		} else {
 			tmp1 = qdec(q1tmp);
 			tmp2 = qmul(tmp1, q2tmp);
 			qfree(tmp1);

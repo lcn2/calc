@@ -455,8 +455,9 @@ do_bind_line(KEY_MAP *map, char *line)
 		if (*cp == '?') {
 			key = 0177;
 			cp++;
-		} else
+		} else {
 			key = CONTROL(*cp++);
+		}
 	}
 	else if (key == '\\')
 		key = *cp++;

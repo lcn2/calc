@@ -640,8 +640,9 @@ objfree(OBJECT *op)
 	for (i = op->o_actions->count; i-- > 0; vp++) {
 		if (vp->v_type == V_NUM) {
 			qfree(vp->v_num);
-		} else
+		} else {
 			freevalue(vp);
+		}
 	}
 	if (op->o_actions->count <= USUAL_ELEMENTS)
 		free(op);
@@ -678,8 +679,9 @@ objcopy(OBJECT *op)
 		if (v1->v_type == V_NUM) {
 			v2->v_num = qlink(v1->v_num);
 			v2->v_type = V_NUM;
-		} else
+		} else {
 			copyvalue(v1, v2);
+		}
 		v2->v_subtype = V_NOSUBTYPE;
 	}
 	return np;

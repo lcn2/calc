@@ -1746,8 +1746,7 @@ zredcsquare(REDC *rp, ZVALUE z1, ZVALUE *res)
 			carry.ivalue = (FULL) sival1.sihigh
 				+ (FULL) sival2.sihigh;
 			hd++;
-		}
-		else {
+		} else {
 			muln = (HALF) (*hd * Ninv);
 			f = (muln * ((FULL) *h3++) + (FULL) *hd++) >> BASEB;
 			j = i;

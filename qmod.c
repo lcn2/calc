@@ -116,15 +116,13 @@ qquomod(NUMBER *q1, NUMBER *q2, NUMBER **retqdiv, NUMBER **retqmod)
 			zfree(tmp2);
 			qq = qlink(&_qzero_);
 			qm = qlink(q1);
-		}
-		else {
+		} else {
 			qq = qalloc();
 			qq->num = tmp1;
 			if (ziszero(tmp2)) {
 				zfree(tmp2);
 				qm = qlink(&_qzero_);
-			}
-			else {
+			} else {
 				qm = qalloc();
 				qm->num = tmp2;
 			}
@@ -141,15 +139,13 @@ qquomod(NUMBER *q1, NUMBER *q2, NUMBER **retqdiv, NUMBER **retqmod)
 			zfree(tmp4);
 			qq = qlink(&_qzero_);
 			qm = qlink(q1);
-		}
-		else {
+		} else {
 			qq = qalloc();
 			qq->num = tmp3;
 			if (ziszero(tmp4)) {
 				zfree(tmp4);
 				qm = qlink(&_qzero_);
-			}
-			else {
+			} else {
 				qm = qalloc();
 				zmul(q1->den, q2->den, &tmp1);
 				zreduce(tmp4, tmp1, &qm->num, &qm->den);

@@ -17,7 +17,7 @@ Following is the change from calc version 2.11.0t8 to date:
     Improved calc's ability to deal with and recover from errors.
 
     Added inputlevel() builtin to return the input processing level.
-    In an interact mode, inputlevel() returns 0.  When directly reading 
+    In an interact mode, inputlevel() returns 0.  When directly reading
     a calc script, inputlevel() returns 1.  When reading a script which
     in turn reads another script, inputlevel() returns 2.  etc...
 
@@ -28,15 +28,21 @@ Following is the change from calc version 2.11.0t8 to date:
 
     Added HAVE_USTAT, HAVE_GETSID, HAVE_GETPGID, HAVE_GETTIME, HAVE_GETPRID
     and HAVE_URANDOM symbols to the Makefile.  These symbols, along with
-    have_ustat.c, have_getsid.c, have_getpgid.c, have_gettime.c and 
+    have_ustat.c, have_getsid.c, have_getpgid.c, have_gettime.c and
     have_getprid.c form: have_ustat.h, have_getsid.h, have_getpgid.h,
     have_gettime.h, have_getprid.h and have_urandom.h which in turn
     are used by pseudo_seed() in seed.c to determine what types of
     system services can be used to form a pseudo-random seed.
 
+    Fixed the way calc -c will continue processing $CALCRC when errors
+    are encountered.  Unless -d is also given, calc -c will report
+    when calc is unable to open a $CALCRC file.
+
     Fixed the lower level make depend rules.
 
     Misc cleanup on the have_*.c support source files.
+
+    Misc source file cleanup for things such as } else { style consistency.
 
 
 Following is the change from calc version 2.11.0t7 to 2.11.0t7.5:

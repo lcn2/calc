@@ -719,34 +719,35 @@ runrcfiles(void)
 {
 	char path[MAX_CALCRC+1+1];	/* name being searched for */
 	char *cp;
-	char *newcp;
 	char *p;
-	int i;
 
 	/* execute each file in the list */
-	for (cp=calcrc, newcp=(char *)strchr(calcrc, LISTCHAR);
-	     cp != NULL && *cp;
-	     cp = newcp,
-		 newcp=(newcp) ? (char *)strchr(newcp+1, LISTCHAR) : NULL) {
+	while (calcrc != NULL && *calcrc) {
+		cp = calcrc;
+		calcrc = (char *) strchr(calcrc + 1, LISTCHAR);
 
 		/* load file name into the path */
-		if (newcp == NULL) {
+		if (calcrc == NULL) {
 			strcpy(path, cp);
 		} else {
-			strncpy(path, cp, newcp-cp);
-			path[newcp-cp] = '\0';
+			strncpy(path, cp, calcrc - cp);
+			path[calcrc - cp] = '\0';
 		}
 
 		/* find the start of the path */
-		p = (path[0] == ':') ? path+1 : path;
+		p = (path[0] == ':') ? path + 1 : path;
 		if (p[0] == '\0') {
 			continue;
 		}
 
 		/* process the current file in the list */
-		i = openfile(p);
-		if (i < 0)
+		if (openfile(p) < 0) {
+			/* Unable to open rcfile */
+			if (c_flag && !d_flag)
+				 fprintf(stderr,
+					"Unable to open rcfile \"%s\"\n", p);
 			continue;
+		}
 		getcommands(FALSE);
 		closeinput();
 	}

@@ -1156,9 +1156,9 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 		s = -s;
 	}
 	if (bnddencase) {
-		if (s > 0)
+		if (s > 0) {
 			useold = TRUE;
-		else {
+		} else {
 			zsub(zden, denbnd, &tmp1);
 			zquo(tmp1, oldden, &k, 1);
 			zfree(tmp1);

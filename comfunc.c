@@ -231,8 +231,7 @@ csqrt(COMPLEX *c, NUMBER *epsilon, long R)
 				return r;
 			}
 			s3 = zquo(tmp3, d, &tmp1, s2 < 0);
-		}
-		else {
+		} else {
 			s2 = zquo(tmp1, d, &tmp3, s1 ? (s1 < 0) : 16);
 			zfree(tmp1);
 			s3 = zsqrt(tmp3,&tmp1,(s1||s2) ? (s1<0 || s2<0) : 16);
@@ -288,8 +287,7 @@ csqrt(COMPLEX *c, NUMBER *epsilon, long R)
 				return r;
 			}
 			s3 = zquo(tmp3, d, &mul1, 0);
-		}
-		else {
+		} else {
 			s2 = zquo(tmp1, d, &tmp3, 0);
 			zfree(tmp1);
 			s3 = zsqrt(tmp3, &mul1, 0);

@@ -687,8 +687,7 @@ zdiv(ZVALUE z1, ZVALUE z2, ZVALUE *quo, ZVALUE *rem, long rnd)
 				}
 				s = *a + u;
 				A[m] = (HALF) (~x + !s);
-			}
-			else {
+			} else {
 				while (i--) {
 					f = (FULL) *a - u - x * *b++;
 					*a++ = (HALF) f;
@@ -708,9 +707,9 @@ done:	while (m > 0 && A[m - 1] == 0)
 		val = 0;
 		if (a1[len - 1] == 0)
 			len--;
-		if (len == 0)
+		if (len == 0) {
 			*quo = _zero_;
-		else {
+		} else {
 			quo->len = len;
 			quo->v = alloc(len);
 			memcpy(quo->v, a1, len * sizeof(HALF));
@@ -746,8 +745,7 @@ done:	while (m > 0 && A[m - 1] == 0)
 			}
 			else if (g >= BASE)
 				t = 1;
-		}
-		else {
+		} else {
 			while (--i > 0) {
 				g = (FULL) *--a - (*--b >> 1 | f);
 				if (g != 0)
@@ -973,9 +971,9 @@ zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 			*a0++ = x;
 			p--;
 		}
-		if (k == 0)
+		if (k == 0) {
 			*a0 = w * *a0;
-		else {
+		} else {
 			u = (HALF)(w * *a0) >> k;
 			x = (HALF)(((FULL) z1.v[z1.len - 1] << BASEB
 				| z1.v[z1.len - 2])
@@ -1890,8 +1888,9 @@ zshiftl(ZVALUE z, long n)
 			if (i > BASE1) {
 				mask = i >> BASEB;
 				i &= BASE1;
-			} else
+			} else {
 				mask = 0;
+			}
 			*h = (HALF) i;
 			++h;
 		}

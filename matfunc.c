@@ -1213,8 +1213,9 @@ matcopy(MATRIX *m)
 		if (v1->v_type == V_NUM) {
 			v2->v_type = V_NUM;
 			v2->v_num = qlink(v1->v_num);
-		} else
+		} else {
 			copyvalue(v1, v2);
+		}
 		v1++;
 		v2++;
 	}

@@ -2065,9 +2065,9 @@ o_isdefined(void)
 	}
 	r = 0;
  	index = getbuiltinfunc(vp->v_str->s_str);
- 	if (index >= 0)
+ 	if (index >= 0) {
  		r = 1;
- 	else {
+ 	} else {
  		index = getuserfunc(vp->v_str->s_str);
  		if (index >= 0)
  			r = 2;

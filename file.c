@@ -115,15 +115,14 @@ file_init(void)
 		 */
 		if (fstat(i, &sbuf) >= 0) {
 			fp = (FILE *) fdopen(i,"r+");	/*guess mode*/
-			if (fp)
+			if (fp) {
 				strcpy(files[idnum].mode, "r+");
-			else {
+			} else {
 				fp = (FILE *) fdopen(i, "r");
 				if (fp) {
 					strcpy(files[idnum].mode, "r");
 					files[idnum].writing = FALSE;
-				}
-				else {
+				} else {
 					fp = (FILE *) fdopen(i, "w");
 					if (fp) {
 						strcpy(files[idnum].mode, "w?");
@@ -885,13 +884,14 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 							math_str((char *)
 								 vp->v_nblock
 								 ->blk->data);
-					 } else if (printchar) {
+					} else if (printchar) {
 						if (vp->v_nblock->blk->data !=
 						    NULL)
 							math_chr(*vp->v_nblock->
 								 blk->data);
-					} else
+					} else {
 						printvalue(vp, PRINT_NORMAL);
+					}
 					break;
 				default:
 					printvalue(vp, PRINT_NORMAL);
@@ -1770,8 +1770,7 @@ showfiles(void)
 		if (fstat(fileno(fp), &sbuf) < 0) {
 			printf("Bad fstat for file %d\n", (int) fiop->id);
 			sizes[i] = -1;
-		}
-		else {
+		} else {
 			inodes[i] = sbuf.st_ino;
 			sizes[i] = (long) sbuf.st_size;
 		}
@@ -2471,9 +2470,9 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
 			}
 			(void) f_seek_set(fiop->fp, &cur);
 		}
-		if (*tmp.v)
+		if (*tmp.v) {
 			(*tmp.v)--;
-		else {
+		} else {
 			if (tmp.len == 1)
 				break;
 			k = 0;

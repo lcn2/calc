@@ -1001,8 +1001,7 @@ getoneobj(long index, int symtype)
 		if (symtype == SYM_UNDEFINED) {
 			rescantoken();
 			(void) getidexpr(TRUE, TRUE);
-		}
-		else {
+		} else {
 			symname = tokensymbol();
 			definesymbol(symname, symtype);
 			usesymbol(symname, FALSE);
@@ -1086,8 +1085,7 @@ getonematrix(int symtype)
 		if (symtype == SYM_UNDEFINED) {
 			rescantoken();
 			(void) getidexpr(FALSE, TRUE);
-		}
-		else {
+		} else {
 			name = tokensymbol();
 			definesymbol(name, symtype);
 			usesymbol(name, FALSE);
@@ -1172,9 +1170,9 @@ creatematrix(void)
 		switch (gettoken()) {
 			case T_RIGHTBRACKET:
 				addopone(OP_MATCREATE, dim);
-				if (gettoken() == T_LEFTBRACKET)
+				if (gettoken() == T_LEFTBRACKET) {
 					creatematrix();
-				else {
+				} else {
 					rescantoken();
 					addop(OP_ZERO);
 				}
@@ -1350,8 +1348,7 @@ getopassignment(void)
 			while (gettoken() == T_ASSIGN)
 				getinitlist();
 			rescantoken();
-		}
-		else {
+		} else {
 			rescantoken();
 			(void) getassignment();
 		}

@@ -269,8 +269,9 @@ zfib(ZVALUE z, ZVALUE *res)
 			fnm1 = fn;
 			fn = fnp1;
 			zadd(fnm1, fn, &fnp1);
-		} else
+		} else {
 			zsub(fnp1, fn, &fnm1);
+		}
 		i >>= (FULL)1;
 	}
 	zfree(fnm1);
@@ -889,8 +890,7 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 					*a = ~*a;
 				}
 			}
-		}
-		else {				/* abs(a - b) case */
+		} else {				/* abs(a - b) case */
 			while (i && *a++ == *b++) i--;
 			q = n - i;
 			if (m == n) {		/* a and b same length */
@@ -914,8 +914,7 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 						f = -f & BASE1;
 					}
 				}
-			}
-			else {			/* a has more digits than b */
+			} else {		/* a has more digits than b */
 				a = a0 + q;
 				b = b0 + q;
 				i = n - q;
@@ -1117,8 +1116,9 @@ zlog(ZVALUE z1, ZVALUE z2)
 				zfree(val);
 				val = temp;
 				power += worth;
-			} else
+			} else {
 				zfree(temp);
+			}
 		}
 		if (zp != squares)
 			zfree(*zp);
@@ -1170,8 +1170,9 @@ zlog10(ZVALUE z)
 				zfree(val);
 				val = temp;
 				power += worth;
-			} else
+			} else {
 				zfree(temp);
+			}
 		}
 	}
 	zfree(val);
@@ -1574,8 +1575,7 @@ zsqrt(ZVALUE z, ZVALUE *dest, long rnd)
 				x = ~x + !u;
 				if (!(x & TOPHALF))
 					a[1] -= 1;
-			}
-			else {
+			} else {
 				f = *a - x * x;
 				*a++ = (HALF)f;
 				u = -(HALF)(f >> BASEB);
@@ -1623,9 +1623,9 @@ done:	if (s == 0) {
 	}
 	if (rnd & 16) {
 		if (s == 0) {
-			if (m != n)
+			if (m != n) {
 				up = (m > n);
-			else {
+			} else {
 				i = n;
 				b = a0 + n;
 				a = A + n;
@@ -1633,13 +1633,12 @@ done:	if (s == 0) {
 					i--;
 				up = (i > 0 && *a > *b);
 			}
-		}
-		else {
+		} else {
 			while (m > 1 && A[m - 1] == BASE1)
 				m--;
-			if (m != n)
+			if (m != n) {
 				up = (m < n);
-			else {
+			} else {
 				i = n;
 				b = a0 + n;
 				a = A + n;
@@ -1660,9 +1659,9 @@ done:	if (s == 0) {
 		a = a0;
 		while (i-- && *a == BASE1)
 			*a++ = 0;
-		if (i >= 0)
+		if (i >= 0) {
 			(*a)++;
-		else {
+		} else {
 			n++;
 			*a = 1;
 		}

@@ -413,8 +413,9 @@ qprintfd(NUMBER *q, long width)
 		zquo(q->num, q->den, &z, conf->outround);
 		zprintval(z, 0L, width);
 		zfree(z);
-	} else
+	} else {
 		zprintval(q->num, 0L, width);
+	}
 }
 
 
