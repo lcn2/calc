@@ -110,7 +110,7 @@ Following is the change from calc version 2.11.0t7 to date:
 
 	calc -p 2+17 | whey
 
-     will write '19' instead of '\t17' to the whey command.
+     will write '19' instead of '\t19' to the whey command.
 
      Updated calc man page and help/usage file to reflect recent
      command line changes.
@@ -138,6 +138,10 @@ Following is the change from calc version 2.11.0t7 to date:
      Removed ${CCMAIN} as a variable from the Makefile.  Now files
      use either ${CFLAGS} for general C source and ${ICFLAGS} for
      intermediate C source (e.g., special code for building hsrc files).
+
+     The main calc URL is now:
+
+	http://reality.sgi.com/chongo/tech/comp/calc
 
      Misc calc man page fixes.
 

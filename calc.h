@@ -190,8 +190,8 @@ extern int allow_read;	/* FALSE => may not open any files for reading */
 extern int allow_write;	/* FALSE => may not open any files for writing */
 extern int allow_exec;	/* FALSE => may not execute any commands */
 
-/* 
- * calc startup and run state 
+/*
+ * calc startup and run state
  */
 typedef enum {
     RUN_UNKNOWN = -1,		/* unknown or unset start state */
@@ -204,8 +204,7 @@ typedef enum {
     RUN_NOT_TOP_LEVEL = 6,	/* running not at the top interactive level */
     RUN_STOP_ON_ERROR = 7	/* we need to stop due to errors */
 } run;
-extern run run_state;	
-
+extern run run_state;
 
 /*
  * calc version information

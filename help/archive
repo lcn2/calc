@@ -7,7 +7,7 @@ Where to get the the latest versions of calc
     Alpha test versions, complete with bugs, untested code and
     experimental features may be fetched (if you are brave) under:
 
-	http://reality.sgi.com/chongo/calc/
+	http://reality.sgi.com/chongo/tech/comp/calc/
 
     One may join the calc testing group by sending a request to:
 
@@ -21,11 +21,5 @@ Where to get the the latest versions of calc
 
     where "address" is your EMail address and "your_full_name"
     is your full name.
-
-    See:
-
-	http://prime.corp.sgi.com/csp/ioccc/noll/noll.html#calc
-
-    for details.
 
 Landon Curt Noll <chongo@toad.com> /\oo/\
