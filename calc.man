@@ -15,8 +15,8 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 .\"
-.\" @(#) $Revision: 29.6 $
-.\" @(#) $Id: calc.man,v 29.6 2001/04/10 21:48:46 chongo Exp $
+.\" @(#) $Revision: 29.7 $
+.\" @(#) $Id: calc.man,v 29.7 2001/06/01 11:26:53 chongo Exp $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -994,25 +994,58 @@ Copyright (C) 1999  Landon Curt Noll
 and is covered under version 2.1 GNU Lesser General
 Public License.
 .sp
-.SH "BUG REPORTS / BUG FIXES / ENHANCEMENTS"
+.SH "CALC MAILING LIST / CALC UPDATES / ENHANCEMENTS"
 \&
 .br
 .sp
-Send comments, suggestions, bug fixes, enhancements
+To contribute comments, suggestions, enhancements
 and interesting
 .B calc
-resource files,
-.B calc
-shell scripts that you would like you see included
-in future distributions to:
+resource files, and
+shell scripts please join the low volume calc mailing list.
+.sp
+To join the low volume calc mailing list, send EMail to:
 .sp
 .in +0.5i
 .nf
-calc-contrib at asthe dot com
+calc-tester-request at asthe dot com
 .fi
 .in -0.5i
 .sp
-Bug reports are sent to:
+Your subject must contain the words:
+.sp
+.in +0.5i
+.nf
+calc mailing list subscription
+.fi
+.in -0.5i
+.sp
+You may have additional words in your subject line.
+.sp
+Your message body must contain:
+.sp
+.in +0.5i
+.nf
+subscribe calc-tester address
+end
+name your_full_name
+.fi
+.in -0.5i
+.sp
+where
+.B address
+s your EMail address and
+.B your_full_name
+is your full name.
+Feel free to follow the
+.B name
+line with additional EMail text as desired.
+.sp
+.SH "BUG REPORTS / BUG FIXES"
+\&
+.br
+.sp
+Send bug reports and bug fixes to:
 .sp
 .in +0.5i
 .nf
@@ -1022,6 +1055,16 @@ calc-bugs at asthe dot com
 [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
 .fi
 .in -0.5i
+.sp
+Your subject must contain the words:
+.sp
+.in +0.5i
+.nf
+calc bug report
+.fi
+.in -0.5i
+.sp
+You may have additional words in your subject line.
 .sp
 See the
 .I BUGS
@@ -1037,7 +1080,7 @@ help bugs
 .sp
 for more information about bug reporting.
 .sp
-.SH "CALC WEB SITE / MAILING LIST"
+.SH "CALC WEB SITE"
 \&
 .br
 Landon Noll maintains the the
@@ -1047,31 +1090,5 @@ web site is located at:
 .in +0.5i
 http://www.isthe.com/chongo/tech/comp/calc/
 .in -0.5i
-.sp
-One may join the
-.B calc
-testing group by sending a request to:
-.sp
-.in +0.5i
-.nf
-calc-tester-request at asthe dot com
-
-[[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
-[[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
-.fi
-.in -0.5i
-.sp
-Your message body (not the subject) should consist of:
-.sp
-.in +0.5i
-.nf
-subscribe calc-tester address
-end
-name your_full_name
-.fi
-.in -0.5i
-.sp
-where "address" is your EMail address and "your_full_name"
-is your full name.
 .sp
 Share and Enjoy! :\-)

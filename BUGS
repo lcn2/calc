@@ -29,12 +29,19 @@ The calc web site is located at:
 =-=
 
 If you have tried all of the above and things still are not right,
-then it may be time to send in a bug report.  You can send bug reports to:
+then it may be time to send in a bug report.  You can send bug
+and bug fixes reports to:
 
     calc-bugs at asthe dot com
 
     [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
     [[ NOTE: The EMail address uses 'asthe', the web site URL uses 'isthe' ]]
+
+Your subject must contain the words:
+
+       calc bug report
+
+You may have additional words in your subject line.
 
 When you send your report, please include the following information:
 
@@ -54,18 +61,8 @@ When you send your report, please include the following information:
 
 Stack traces from core dumps are useful to send as well.
 
-=-=
-
-Send any comments, compiler warning messages, suggestions and most
-importantly, fixes (in the form of a context diff patch) to:
-
-    calc-bugs at asthe dot com
-
-    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
-    [[ NOTE: The EMail address uses 'asthe', the web site URL uses 'isthe' ]]
-
-You should use the above calc-bugs address for bug reports, if you are
-not currently a member of the calc-tester mailing list.
+Fell free to use the above address to send in big fixes (in the form
+of a context diff patch).
 
 =-=
 
@@ -74,8 +71,6 @@ Known bugs:
     We are sure some more bugs exist.  When you find them, please let
     us know!  See the above for details on how to report and were to
     EMail your bug reports and hopefully patches to fix them.
-
-=-=
 
 Problems with known work-a-rounds:
 
@@ -246,8 +241,8 @@ Problems with known work-a-rounds:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.10 $
-## @(#) $Id: BUGS,v 29.10 2001/04/08 11:32:52 chongo Exp $
+## @(#) $Revision: 29.12 $
+## @(#) $Id: BUGS,v 29.12 2001/06/01 11:32:01 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13

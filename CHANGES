@@ -14,6 +14,13 @@ The following are the changes from calc version 2.11.5t4.1 to date:
     Added calc builtin function: version() which returns the calc
     version string.
 
+    Added subject requirements for the calc-tester-request and
+    calc-bugs-mail EMail aliases.  See:
+
+    	http://www.isthe.com/chongo/tech/comp/calc/email.html
+
+    for details.
+
 
 The following are the changes from calc version 2.11.5t3 to 2.11.5t4:
 
@@ -5298,8 +5305,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.33 $
-## @(#) $Id: CHANGES,v 29.33 2001/05/29 00:44:57 chongo Exp $
+## @(#) $Revision: 29.34 $
+## @(#) $Id: CHANGES,v 29.34 2001/06/01 11:26:53 chongo Exp chongo $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

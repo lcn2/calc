@@ -73,12 +73,18 @@ for a wish/todo list.  Code contributions are welcome.
 
 =-=
 
-To join the calc-tester mailing list.  Send a request to:
+To join the calc-tester mailing list.  Send an EMail message to:
 
     calc-tester-request at asthe dot com
 
     [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
     [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
+
+Your subject must contain the words:
+
+    calc mailing list subscription
+
+You may have additional words in your subject line.
 
 Your message body (not the subject) should consist of:
 
@@ -89,7 +95,11 @@ Your message body (not the subject) should consist of:
 where ``address'' is your EMail address and ``your_full_name'' is
 your full name.
 
-Calc bug reports, however should be sent to:
+Feel free to follow the name line with additional EMail text as desired.
+
+=-=
+
+Send Calc bug and bug fixes to:
 
     calc-bugs at asthe dot com
 
@@ -97,6 +107,12 @@ Calc bug reports, however should be sent to:
     [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
 
 but see the BUGS file first.
+
+Your subject must contain the words:
+
+       calc bug report
+
+You may have additional words in your subject line.
 
 The calc web site is located at:
 
@@ -118,8 +134,8 @@ The calc web site is located at:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: README,v 29.2 2000/06/07 14:02:13 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: README,v 29.3 2001/06/01 11:26:53 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/README,v $
 ##
 ## Under source code control:	1995/10/25 05:27:59

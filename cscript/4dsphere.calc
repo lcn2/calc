@@ -26,8 +26,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 1.1 $
- * @(#) $Id: 4dsphere.calc,v 1.1 2001/05/28 23:05:56 chongo Exp $
+ * @(#) $Revision: 1.2 $
+ * @(#) $Id: 4dsphere.calc,v 1.2 2001/05/29 00:48:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/4dsphere.calc,v $
  *
  * Under source code control:   2001/05/03 19:02:03
@@ -82,9 +82,9 @@ print "(":x4:",":y4:",":z4:",":w4:") ":;
 print "(":x5:",":y5:",":z5:",":w5:") ":;
 
 /*
- * 
+ *
  * Given the 5 points:
- * 
+ *
  * 	(x0,y1,z1,w1)
  * 	(x1,y1,z1,w1)
  * 	(x2,y2,z2,w2)

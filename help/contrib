@@ -35,23 +35,40 @@ If your change is large, you should send entire files (either
 as a diff -c /dev/null your-file patch, or as a uuencoded and
 gziped (or compressed) tar file).
 
-You should send submissions to:
+To contribute code, scripts, resource files and/or to help please
+join the low volume calc mailing list by sending EMail to:
 
     calc-contrib at asthe dot com
 
     [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
     [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
 
+Your subject must contain the words:
+
+    calc mailing list subscription
+
+You may have additional words in your subject line.
+
+Feel free to follow the name line with additional EMail text as desired.
+
 Thanks for considering submitting code to calc.	 Calc is a collective
 work by a number of people.  It would not be what it is today without
 your efforts and submissions!
 
-Calc bug reports, however, should be sent to:
+=-=
+
+Calc bug reports and calc bug fixes should be sent to:
 
     calc-bugs at asthe dot com
 
     [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
     [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
+
+Your subject must contain the words:
+
+       calc bug report
+
+You may have additional words in your subject line.
 
 See the BUGS file or try the help command:
 
@@ -61,26 +78,10 @@ for details on bug reporting.
 
 =-=
 
-One may join the calc testing group by sending a request to:
-
-	calc-tester-request at asthe dot com
-
-    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
-    [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
-
-    Your message body (not the subject) should consist of:
-
-	subscribe calc-tester address
-	end
-	name your_full_name
-
-    where "address" is your EMail address and "your_full_name"
-    is your full name.
-
 Landon Curt Noll
 http://www.isthe.com/chongo/
 
-chongo <was here> /\../\
+chongo (share and enjoy) /\../\
 
 ## Copyright (C) 1999  Landon Curt Noll
 ##
@@ -98,8 +99,8 @@ chongo <was here> /\../\
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: contrib,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: contrib,v 29.4 2001/06/01 11:37:14 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/contrib,v $
 ##
 ## Under source code control:	1997/03/09 16:33:22
