@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: zrand.c,v 29.5 2003/01/14 00:54:24 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: zrand.c,v 29.6 2004/02/23 08:22:22 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrand.c,v $
  *
  * Under source code control:	1995/01/07 09:45:25
@@ -357,6 +357,7 @@
 
 #include "zrand.h"
 #include "have_const.h"
+#include "have_unused.h"
 
 
 /*
@@ -860,7 +861,7 @@ randreseed64(ZVALUE seed, ZVALUE *res)
 		/*
 		 * form chunk mod 2^64
 		 */
-		if (chunk.len > SHALFS) {
+		if (chunk.len > (SB32)SHALFS) {
 			/* result is too large, reduce to 64 bits */
 			v64 = alloc(SHALFS);
 			memcpy(v64, chunk.v, SHALFS*sizeof(HALF));
@@ -2104,7 +2105,7 @@ randcmp(CONST RAND *s1, CONST RAND *s2)
  */
 /*ARGSUSED*/
 void
-randprint(CONST RAND *state, int flags)
+randprint(CONST RAND UNUSED *state, int UNUSED flags)
 {
 	math_str("RAND state");
 }

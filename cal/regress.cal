@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.17 $
- * @(#) $Id: regress.cal,v 29.17 2003/06/10 21:17:55 chongo Exp $
+ * @(#) $Revision: 29.18 $
+ * @(#) $Id: regress.cal,v 29.18 2004/02/23 05:58:45 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -1002,9 +1002,9 @@ define test_functions()
 	vrfy(strpos(a, "abc") == 1,	'946: strpos(a, "abc") == 1');
 	vrfy(strpos(a, "xyz") == 0,	'947: strpos(a, "xyz") == 0');
 	vrfy(strpos(a, a) == 1,		'948: strpos(a, a) == 1');
-	if (config("windows")) {
-	    print '949: test skipped for windows systems';
-	    print '950: test skipped for windows systems';
+	if (config("windows") || config("cygwin")) {
+	    print '949: test skipped for windows or cygwin systems';
+	    print '950: test skipped for windows or cygwin systems';
 	} else {
 	    vrfy(system("") == 0,		'949: system("") == 0');
 	    vrfy(system("true") == 0,		'950: system("true") == 0');
@@ -2210,6 +2210,7 @@ print '033: read -once test2300';
 define test_xx_incdec()
 {
 	local A, B;
+	local n;
 
 	print '2300: Beginning object increment/decrement test';
 
@@ -2241,6 +2242,20 @@ define test_xx_incdec()
 				'2313: ckmat(A,1,2,3) == 1');
 	vrfy(ckmat(B,1,2,3) == 1,
 				'2314: ckmat(B,1,2,3) == 1');
+
+	n = 1;
+	print			'2315: n = 1';
+	vrfy(n + n + n + n++ == 4,
+				'2316: n + n + n + n++ == 4');
+	vrfy(n == 2,		'2317: n == 2');
+	n = 1;
+	print			'2318: n = 1';
+	vrfy(n + n + n++ == 3,	'2319: n + n + n++ == 3');
+	vrfy(n == 2,		'2320: n == 2');
+	n = 1;
+	print			'2321: n = 1';
+	vrfy(n + n++ == 2,	'2322: n + n++ == 3');
+	vrfy(n == 2,		'2323: n == 2');
 
 	print '2315: Ending object increment/decrement test';
 }

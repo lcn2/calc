@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.13 $
- * @(#) $Id: config.h,v 29.13 2003/08/26 04:36:10 chongo Exp $
+ * @(#) $Revision: 29.15 $
+ * @(#) $Id: config.h,v 29.15 2004/02/23 06:08:29 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -78,19 +78,20 @@
 #define CONFIG_MORE	25
 #define CONFIG_BLKMAXPRINT 26
 #define CONFIG_BLKVERBOSE 27
-#define CONFIG_BLKBASE 28
-#define CONFIG_BLKFMT 29
+#define CONFIG_BLKBASE	28
+#define CONFIG_BLKFMT	29
 #define CONFIG_RESOURCE_DEBUG 30
 #define CONFIG_LIB_DEBUG CONFIG_RESOURCE_DEBUG
 #define CONFIG_CALC_DEBUG 31
 #define CONFIG_USER_DEBUG 32
 #define CONFIG_VERBOSE_QUIT 33
-#define CONFIG_CTRL_D 34
-#define CONFIG_PROGRAM 35
-#define CONFIG_BASENAME 36
-#define CONFIG_VERSION 37
-#define CONFIG_WINDOWS 38
+#define CONFIG_CTRL_D	34
+#define CONFIG_PROGRAM	35
+#define CONFIG_BASENAME	36
+#define CONFIG_VERSION	37
+#define CONFIG_WINDOWS	38
 #define CONFIG_MODE2	39
+#define CONFIG_CYGWIN	40
 
 
 /*
@@ -155,6 +156,7 @@ struct config {
 	char *program;		/* our name */
 	char *base_name;	/* basename of our name */
 	BOOL windows;		/* TRUE => running under MS windows */
+	BOOL cygwin;		/* TRUE => compiled with cygwin */
 	char *version;		/* calc version string */
 };
 typedef struct config CONFIG;

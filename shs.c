@@ -31,8 +31,8 @@
  * Based on Version 2.11 (09 Mar 1995) from Landon Curt Noll's
  * (http://www.isthe.com/chongo/) shs hash program.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: shs.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: shs.c,v 29.3 2004/02/23 08:14:15 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/shs.c,v $
  *
  * This file is not covered under version 2.1 of the GNU LGPL.
@@ -286,7 +286,7 @@ shsUpdate(HASH *state, USB8 *buffer, USB32 count)
 	USB32 datalen = dig->datalen;
 	USB32 cpylen;
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
-	int i;
+	unsigned int i;
 #endif
 
 	/*
@@ -365,7 +365,7 @@ shsFinal(HASH *state)
 	USB32 highBitcount;
 	USB8 *data = (USB8 *) dig->data;
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
-	int i;
+	unsigned int i;
 #endif
 
 	/*
@@ -433,7 +433,7 @@ shs_chkpt(HASH *state)
 {
 	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
-	int i;
+	unsigned int i;
 #endif
 
 	/*
@@ -478,7 +478,7 @@ static void
 shs_note(int special, HASH *state)
 {
 	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
-	int i;
+	unsigned int i;
 
 	/*
 	 * change state to reflect a special value
@@ -509,7 +509,7 @@ static void
 shs_type(int type, HASH *state)
 {
 	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
-	int i;
+	unsigned int i;
 
 	/*
 	 * ignore NUMBER and COMPLEX

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: zrandom.c,v 29.4 2002/12/29 06:35:08 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: zrandom.c,v 29.5 2004/02/23 09:12:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrandom.c,v $
  *
  * Under source code control:	1997/02/15 04:01:56
@@ -1084,6 +1084,7 @@
 
 #include "zrandom.h"
 #include "have_const.h"
+#include "have_unused.h"
 
 
 /*
@@ -2489,7 +2490,7 @@ randomcmp(CONST RANDOM *s1, CONST RANDOM *s2)
  */
 /*ARGSUSED*/
 void
-randomprint(CONST RANDOM *state, int flags)
+randomprint(CONST RANDOM UNUSED *state, int UNUSED flags)
 {
 	math_str("RANDOM state");
 }

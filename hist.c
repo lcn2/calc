@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: hist.c,v 29.3 2001/03/17 21:31:47 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: hist.c,v 29.4 2004/02/23 07:54:24 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hist.c,v $
  *
  * Under source code control:	1993/05/02 20:09:19
@@ -66,6 +66,8 @@
 #ifdef HAVE_STRING_H
 # include <string.h>
 #endif
+
+#include "have_unused.h"
 
 #if !defined(USE_READLINE)
 
@@ -1489,7 +1491,7 @@ my_stifle_history (void)
 
 
 int
-hist_init(char *filename)
+hist_init(char UNUSED *filename)
 {
 	/* used when parsing conditionals in ~/.inputrc */
 	rl_readline_name = "calc";

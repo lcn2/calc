@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: qio.c,v 29.4 2002/12/29 09:20:25 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: qio.c,v 29.5 2004/02/23 09:10:59 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qio.c,v $
  *
  * Under source code control:	1993/07/30 19:42:46
@@ -31,6 +31,8 @@
 #include "qmath.h"
 #include "config.h"
 #include "args.h"
+
+#include "have_unused.h"
 
 
 #define PUTCHAR(ch)		math_chr(ch)
@@ -299,7 +301,7 @@ qprintff(NUMBER *q, long width, long precision)
  */
 /*ARGSUSED*/
 void
-qprintfe(NUMBER *q, long width, long precision)
+qprintfe(NUMBER *q, long UNUSED width, long precision)
 {
 	long exponent;
 	NUMBER q2;

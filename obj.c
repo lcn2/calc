@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: obj.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: obj.c,v 29.3 2004/02/23 09:13:15 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/obj.c,v $
  *
  * Under source code control:	1990/02/15 01:48:19
@@ -115,7 +115,7 @@ static struct objectinfo {
 	{1, A_VALUE, ERR_NONE,	"backslash", "unary backslash op"},
 	{2, A_VALUE, ERR_NONE,	"setminus", "binary backslash op"},
 	{1, A_VALUE, ERR_NONE,	"plus", "unary + op"},
-	{0, 0, 0, NULL}
+	{0, 0, 0, NULL, NULL}
 };
 
 

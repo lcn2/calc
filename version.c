@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.48 $
- * @(#) $Id: version.c,v 29.48 2003/08/26 04:35:32 chongo Exp $
+ * @(#) $Revision: 29.49 $
+ * @(#) $Id: version.c,v 29.49 2004/02/23 08:23:19 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
@@ -43,10 +43,12 @@ static char *program;
 # include "calc.h"
 #endif
 
+#include "have_unused.h"
+
 #define MAJOR_VER	2	/* major version */
 #define MINOR_VER	11	/* minor version */
-#define MAJOR_PATCH	8	/* patch level or 0 if no patch */
-#define MINOR_PATCH	1	/* test number or 0 if no minor patch */
+#define MAJOR_PATCH	9	/* patch level or 0 if no patch */
+#define MINOR_PATCH	0	/* test number or 0 if no minor patch */
 
 
 /*
@@ -96,8 +98,9 @@ char *Copyright = "\n"
 #if !defined(HAVE_SNPRINTF)
 /* Simulate snprintf with vsprintf, hoping that BUFSIZ is large enough.  */
 #include <stdarg.h>
+/*ARGSUSED*/
 int
-snprintf (char *buf, size_t n, const char *fmt, ...)
+snprintf (char *buf, size_t UNUSED n, const char *fmt, ...)
 {
   int retval;
   va_list arg;

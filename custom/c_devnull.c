@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: c_devnull.c,v 29.2 2000/06/07 14:03:03 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: c_devnull.c,v 29.3 2004/02/23 09:19:18 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_devnull.c,v $
  *
  * Under source code control:	1997/03/09 17:49:12
@@ -36,6 +36,8 @@
 #include "../value.h"
 #include "../custom.h"
 
+#include "../have_unused.h"
+
 
 /*
  * c_devnull - a custom function that does nothing
@@ -45,7 +47,7 @@
  */
 /*ARGSUSED*/
 VALUE
-c_devnull(char *name, int count, VALUE **vals)
+c_devnull(char UNUSED *name, int UNUSED count, VALUE UNUSED **vals)
 {
 	VALUE result;		/* what we will return */
 

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: qmath.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: qmath.c,v 29.4 2004/02/23 08:07:43 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qmath.c,v $
  *
  * Under source code control:	1990/02/15 01:48:21
@@ -1296,7 +1296,7 @@ qreli(NUMBER *q, long n)
 	if (n == 0)
 		return (q->num.sign ? -1 : 0);
 
-	if (q->num.sign != n < 0)
+	if (q->num.sign != (n < 0))
 		return ((n < 0) ? 1 : -1);
 
 	itoz(n, &z1);

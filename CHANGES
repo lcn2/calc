@@ -1,4 +1,54 @@
-The following are the changes from calc version 2.11.8.0 to date:
+The following are the changes from calc version 2.11.9 to date:
+
+    Fixed calc man page examples to move -f to the end of the line.
+    Thanks goes to Michael Somos <somos at grail dot cba dot csuohio
+    dot edu> for pointing this out.
+
+    Linux and gcc now compiled with -Wall -W -Wno-comment.
+
+    Fixed a post increment that was reported by R. Trinler <trinler at
+    web dot de> and fixed by Ernest Bowen <ernie at turing dot une dot
+    edu dot au>.
+
+    Fixed pi.cal to not depend on the buggy pre-2.11.9 post increment
+    behavior.
+
+    Added config("cygwin") to determine if calc was compiled under Cygwin.
+    The config("cygwin") is a read-only configuration value that is 1
+    when calc was compiled under Cygwin and 0 otherwise.  Regression
+    tests 949 and 950 are skipped when config("cygwin") is true.
+
+    The Makefile variable HAVE_NO_IMPLICIT is empty by default so that
+    the Makefile will test if the compiler has a -Wno-implicit flag.
+
+    Added HAVE_UNUSED Makefile variable.  If HAVE_UNUSED is empty,
+    then the Makefile will run the have_unused program to determine
+    if the unused attribute is supported.  If HAVE_UNUSED is set to
+    -DHAVE_NO_UNUSED, then the unused attribute will not be used.
+
+    The Makefile builds have_unused.h which defines, if the unused
+    attribute is supported:
+
+	#define HAVE_UNUSED /* yes */
+	#define UNUSED __attribute__((unused)) /* yes */
+
+    or defines, if the unused is not supported (or if the Makefile
+    variable is HAVE_UNUSED= -DHAVE_NO_UNUSED):
+
+	#undef HAVE_UNUSED /* no */
+	#define UNUSED /* no */
+
+    Fixed numerous warnings about comparison between signed and unsigned
+    value warnings and unused parameter warnings in version.c, zrand.c,
+    string.c, shs1.c, shs.c, qtrans.c, qmath.c, qfunc.c, md5.c, matfunc.c,
+    hist.c, file.c, const.c, blkcpy.c, seed.c, opcodes.c, func.c, qio.c,
+    zrandom.c, custom/c_argv.c, custom/c_devnull.c, custom/c_help.c,
+    custom/c_sysinfo.c, addop.c and calc.c.
+
+    Fixed some typos in this CHANGES file.
+
+
+The following are the changes from calc version 2.11.8.0 to 2.11.8.1:
 
     Updated HOWTO.INSTALL to reflect the new RPM files.
 
@@ -13,7 +63,7 @@ The following are the changes from calc version 2.11.8.0 to date:
     have not changed.  By default, NO_HASH_CPU_OPTIMIZATION is NOT defined
     and the slightly faster expression is used.
 
-    A slight modification of what was known as the "calc new stardard"
+    A slight modification of what was known as the "calc new standard"
     configuration (calc -n or config("all", "newstd")) is now the default
     calc configuration.  The flag:
 
@@ -46,8 +96,9 @@ The following are the changes from calc version 2.11.8.0 to date:
 
     Fixed a bug in the evaluation of tanh(1e-23) with an epsilon(1e-100).
     Thanks goes to Dmitry G. Baksheyev <bd at nbsp dot nsk dot su>
-    for reprting the problem, and thanks goes to Ernest Bowen
+    for reporting the problem, and thanks goes to Ernest Bowen
     <ernie at turing dot une dot edu dot au> for the fix.
+
 
 The following are the changes from calc version 2.11.7.0 to 2.11.7.1:
 
@@ -236,7 +287,7 @@ The following are the changes from calc version 2.11.5.5 to 2.11.5.9:
 
     Updated README.WINDOWS to include information on building with DJGPP.
 
-    The pld folks are building RPMs based on our calc distrbutions.
+    The pld folks are building RPMs based on our calc distributions.
     See:  ftp://ftp.pld.org.pl/dists/ra/PLD/i686/PLD/RPMS or
     http://ftp.pld.org.pl/dists/ra/PLD/i686/PLD/RPMS more information.
     We appreciate their work in this regard.  In the next release, we
@@ -318,7 +369,7 @@ The following are the changes from calc version 2.11.5t4.1 to 2.11.5t4.4:
     which calc will be installed.  The calc install is performed under $T,
     the calc build is performed under /.  The purpose for $T is to allow
     someone to install calc somewhere other than into the system area.
-    For examplewhen forming the calc rpm, the Makefile is called with
+    For example when forming the calc rpm, the Makefile is called with
     T=$RPM_BUILD_ROOT.  If $T is empty, calc is installed under /.
 
     Removed all echo_XXX rules except for echo_inst_files from lower
@@ -326,13 +377,13 @@ The following are the changes from calc version 2.11.5t4.1 to 2.11.5t4.4:
     with T=$RPM_BUILD_ROOT.
 
     Updated LIBRARY file with instructions related to -DCALC_SRC,
-    the new default include file locatin and -lcustcalc.
+    the new default include file location and -lcustcalc.
 
 
 The following are the changes from calc version 2.11.5t3 to 2.11.5t4:
 
-    The Makefile will now send both stdout and sterr to /dev/null
-    when compiling hsrc intermeriates.
+    The Makefile will now send both stdout and stderr to /dev/null
+    when compiling hsrc intermediates.
 
     The config("verbose_quit") value was restored to a default
     value of FALSE.
@@ -379,7 +430,7 @@ The following are the changes from calc version 2.11.5t3 to 2.11.5t4:
 
     The Makefile variable ${TOPDIR} is no longer used.  In some places
     it has been replaced by a new Makefile variable ${SHAREDIR}.  Some
-    of the old TOPDIR functionality has beenn replaced by ${CSHAREDIR}.
+    of the old TOPDIR functionality has been replaced by ${CSHAREDIR}.
 
     The install rules no longer remove old obsolete files.  We assume
     that these old files have long since vanished!  :-)
@@ -469,7 +520,7 @@ The following are the changes from calc version 2.11.5t0 to 2.11.5t1.1:
 
     Added HAVE_MALLOC_H, HAVE_STDLIB_H, HAVE_STRING_H, HAVE_TIMES_H,
     HAVE_SYS_TIMES_H, HAVE_TIME_H, HAVE_SYS_TIME_H, HAVE_UNISTD_H
-    and HAVE_URANDOM to the Makefile.  If these symcols are empty,
+    and HAVE_URANDOM to the Makefile.  If these symbols are empty,
     then the Makefile looks for the appropriate system include file.
     If they are YES, then the Makefile will assume they exist.
     If they are NO, then the Makefile will assume they do not exist.
@@ -490,7 +541,7 @@ The following are the changes from calc version 2.11.5t0 to 2.11.5t1.1:
     under the win32 directory.
 
     Added FPOS_POS_BITS, OFF_T_BITS, DEV_BITS and INODE_BITS Makefile
-    symbiols to allow one to force the size of a file position, file
+    symbols to allow one to force the size of a file position, file
     offset, dev and inode value.  Leaving these values blank will
     Makefile to determine their size.
 
@@ -642,7 +693,7 @@ The following are the changes from calc version 2.11.3t0 to 2.11.4:
 	    calc -q -i "define f(x) = x^2;"
 
     To achieve this, the use of getopts() in calc.c has been dropped in
-    favour of direct reading of the arguments produced by the shell.
+    favor of direct reading of the arguments produced by the shell.
     In effect, until a "--" or "-s" or a calc command (recognized
     by not starting with '-') is encountered, the quotation signs in
     command lines like the above example are ignored.  Dropping getopts()
@@ -771,7 +822,7 @@ The following are the changes from calc version 2.11.3t0 to 2.11.4:
 
     (11) The effect of config("trace", 8) which displays opcodes of
     functions as they are successfully defined has been restricted to
-    functions defioed with explicit use of "define".  Thus, it has been
+    functions defined with explicit use of "define".  Thus, it has been
     deactivated for the ephemeral functions used for evaluation of calc
     command lines or eval() functions.
 
@@ -910,7 +961,7 @@ The following are the changes from calc version 2.11.1 to 2.11.1t2.2:
 	#! files	calc shell script
 
     Renamed 'help stdlib' to 'help resource'.	The 'help stdlib' is
-    aliased to 'help resource' for ard compatibility.
+    aliased to 'help resource' for arg compatibility.
 
     Renamed config("lib_debug") to config("resource_debug").
     The config("lib_debug") will have the same effect as
@@ -940,7 +991,7 @@ The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
     Misc code cleanup.	Removed dead code.  Removed trailing whitespace.
     Fixed whitespace to make the best use of 8 character tabs.
 
-    Fixed some bugs relaing to '// and %' in combination with some
+    Fixed some bugs relating to '// and %' in combination with some
     of the the rounding modes based on a patch from Ernest Bowen
     <ernie at turing dot une dot edu dot au>.
 
@@ -950,7 +1001,7 @@ The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
 
     Minor typos fixed in regress.cal
 
-    Added 8500 test serise and test8500.cal to perform more extensive
+    Added 8500 test series and test8500.cal to perform more extensive
     tests on // and % with various rounding modes.
 
     The 'unused value ignored' messages now start with Line 999: instead
@@ -1188,7 +1239,7 @@ The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
 
 	    Quit or abort executed
 
-	when a non-interactive ABORT, QUIT or EXIT is encounted.  By default,
+	when a non-interactive ABORT, QUIT or EXIT is encountered.  By default,
 	config("verbose_quit") is TRUE and the message is printed.  If one does:
 
 	    config("verbose_quit", 0)
@@ -1327,11 +1378,11 @@ The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
     by default is /usr/local/include.  Include files previously installed
     directly under ${LIBDIR} will be removed.
 
-    Added the piforever() funcion to lib/pi.cal.  It was written by
+    Added the piforever() function to lib/pi.cal.  It was written by
     Klaus Alexander Seistrup <klaus at seistrup dot dk> and was inspired by
     an algorithm conceived by Lambert Meertens.	 (See also the ABC
     Programmer's Handbook, by Geurts, Meertens & Pemberton, published
-    by Prentice-Hall (UK) Ltd., 1990.)	The piforever() funcion prints
+    by Prentice-Hall (UK) Ltd., 1990.)	The piforever() function prints
     digits of pi for as long as your memory and system uptime allows.  :-)
 
     Fixed the URLs found thruout the source and documentation which did
@@ -1345,7 +1396,7 @@ The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
 
 	    + comma operator
 	    + separator of arguments in a function call
-	    + separator of arguments in a defintion
+	    + separator of arguments in a definition
 	    etc.
 
 	The expression (mat A[2]), B[3] returns B[3], assuming B already
@@ -1388,7 +1439,7 @@ The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
     of including longlong.h will help detect when a system can deal with
     'long long' but not '%lld' in printf.  If a system with 'long long'
     uses '%ld' to print a 64 bit value, then l_format will be > 0;
-    othewise if "%lld" is required, l_format will be < 0.
+    otherwise if "%lld" is required, l_format will be < 0.
 
     Added HAVE_STRDUP Makefile variable as well as the have_strdup.c
     program that forms the have_strdup.h file.	The have_strdup.h file
@@ -1397,7 +1448,7 @@ The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
     the real strdup() function.
 
     Calc no longer makes use of sys_errlist and sys_nerr.  Some systems
-    no longer suppor these values (even though they should from a
+    no longer support these values (even though they should from a
     legacy prospective).  Calc now relies on the fact that strerror()
     will return NULL of no such system error exists.  System errors >=
     10000 will be considered calc errors instead.  The Makefile symbol
@@ -1416,7 +1467,7 @@ The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
     to V_NOSUBTYPE thruout the source code.
 
     Established a separate calc-bugs address from the calc-tester
-    maining list.  Using anti-spam address forms in order to try and
+    mailing list.  Using anti-spam address forms in order to try and
     stay under the radar of spammers as much as one can do so.
 
 
@@ -1466,7 +1517,7 @@ The following are the changes from calc version 2.11.0t8 to 2.11.0t8.9:
 
     Misc source file cleanup for things such as } else { style consistency.
 
-    Fixed the basis for FNV-1 hashes.  Piror to this fix, the hash()
+    Fixed the basis for FNV-1 hashes.  Prior to this fix, the hash()
     builtin produced FNV hash values that did not match the FNV-1
     algorithm as specified in:
 
@@ -1489,7 +1540,7 @@ The following are the changes from calc version 2.11.0t8 to 2.11.0t8.9:
 	and:
 		{static a = 5} define f(x) = a + x;
 
-    String constants can now be concatenated.  For exmaple:
+    String constants can now be concatenated.  For example:
 
 	s = "curds" ' and ' "whey";
 
@@ -1558,7 +1609,7 @@ The following are the changes from calc version 2.11.0t8 to 2.11.0t8.9:
     an error while processing 'args' and drops into interactive mode
     without the terminal bindings being set.
 
-    Added patch from Ernest Bowen to extablish the abort command as
+    Added patch from Ernest Bowen to establish the abort command as
     well as to clarify the roles of quit and exit.  See the help/command
     file for details.
 
@@ -1705,11 +1756,11 @@ The following are the changes from calc version 2.11.0t7 to 2.11.0t7.5:
     compile is invoked.	 Only the source that must be compiled and run
     on the local machine use ${LCC}; everything else uses ${CC}.
 
-    Fixed memory buffer ovreread problem in eatstring() in token.c.
+    Fixed memory buffer related problem in eatstring() in token.c.
 
     Fixed memory leaks related to putenv().
 
-    Fixed memory leaks realted to srandom().
+    Fixed memory leaks related to srandom().
 
     Fixed compilation warnings and problems on BSDI.
 
@@ -2011,13 +2062,13 @@ The following are the changes from calc version 2.10.3t5.34 to 2.10.3t5.37:
     Fixed the order of prints in regress.cal.  By convention, a print
     of a test line happens after the test.  This is because function
     parsed messages occur after the function is parsed.	 Also the
-    boolean tesrt of vrfy happens before any print statement.
-    Therefore a non-test line is tested and printed as follows:
+    boolean test will verify before any print statements.  Therefore
+    a non-test line is tested and printed as follows:
 
 	y = sha();
 	print '7125: y = sha()';
 
-    The perm(a,b) and comb(a,b) have been extented to arbitrary real a and
+    The perm(a,b) and comb(a,b) have been extended to arbitrary real a and
     integer b.
 
     Fixed a bug in minv().
@@ -2091,7 +2142,7 @@ The following are the changes from calc version 2.10.3t5.34 to 2.10.3t5.37:
 			    A = B
 
 	results in A referring to exactly the same string as B rather than to
-	a copy of what is in B.	 Thie is like the use of character-pointers in
+	a copy of what is in B.	 This is like the use of character-pointers in
 	C, as in
 
 			    char *s1, *s2;
@@ -2304,7 +2355,7 @@ The following are the changes from calc version 2.10.3t5.34 to 2.10.3t5.37:
 	 if n is negative.   I've changed the definitions of head and tail for
 	 lists to be consistent with this interpretation of negative n.
 
-    (23) Similarly I've left strpos ezsentially as at present, but search
+    (23) Similarly I've left strpos essentially as at present, but search
 	 and rsearch have been extended to strings.  For example,
 
 		    search(A, B, m, n)
@@ -2761,16 +2812,16 @@ The following are the changes from calc version 2.10.3t5.28 to 2.10.3t5.33:
 
 	(11) storing the most recently calculated value of qpi(epsilon)i and
 	     epsilon so that when called again with the same epsilon it
-	     is copied rather than recalculateed.
+	     is copied rather than recalculated.
 
 	(12) defining trace() for square matrices
 
 	(13) expression in parentheses may now be followed by a qualifier
-	     computible with its type
+	     computable with its type
 
 	     When an expression in parentheses evaluates to an lvalue
 	     whose current value is a matrix, list or object, it may
-	     now be followed by a qualifier computible with its type.
+	     now be followed by a qualifier compatible with its type.
 
 	     For example:
 
@@ -2842,7 +2893,7 @@ The following are the changes from calc version 2.10.3t5.28 to 2.10.3t5.33:
 
 	define f(x) = 5 + x;
 
-    Fixed bug with lowhex2bin converstion in lib_util.c.  It did not
+    Fixed bug with lowhex2bin conversation in lib_util.c.  It did not
     correctly convert from hex ASCII to binary values due to a table
     loading error.
 
@@ -2905,7 +2956,7 @@ The following are the changes from calc version 2.10.3t5.11 to 2.10.3t5.27:
     blocks that have been created, blocks(id) returns the named block
     with identifying index id.
 
-    Removed the artifical limit of 20 named blocks.
+    Removed the artificial limit of 20 named blocks.
 
     Added name() builtin to return the name of a type of value
     as a string.
@@ -2968,7 +3019,7 @@ The following are the changes from calc version 2.10.3t5.11 to 2.10.3t5.27:
 
     Moved blkcpy() routines have been moved to blkcpy.[ch].
 
-    The blkcpy() & copy() builtings can not copy to/from numbers.
+    The blkcpy() & copy() builtins can not copy to/from numbers.
     For purposes of the copy, only the numerator is ignored.
 
     Resolved a number of missing symbols for libcalc users.
@@ -3114,7 +3165,7 @@ The following are the changes from calc version 2.10.3t5.1 to 2.10.3t5.10:
     surprises that C programmers may encounter.
 
     Updated the 'help', 'intro' and 'overview' to reflect the
-    full ilst of non-builtin function help files.  Reorered the
+    full list of non-builtin function help files.  Reorered the
     'full' help file.
 
     The blkalloc() builtin has been renamed blk().
@@ -3162,13 +3213,13 @@ The following are the changes from calc version 2.10.3t5.1 to 2.10.3t5.10:
 
     Added ${LD_DEBUG} Makefile variable to allow for additional
     libraries to be compiled into calc ... for debugging purposes.
-    In most cases, LD_DEBUG= is sufficent.
+    In most cases, LD_DEBUG= is sufficient.
 
     Added ${CALC_ENV} makefile variable to allow for particular
     environment variables to be supplied for make {check,chk,debug}.
-    In most cases, CALC_ENV= CALCPATH=./lib is sufficent.
+    In most cases, CALC_ENV= CALCPATH=./lib is sufficient.
 
-    Added ${CALC_LIBS} to list the libaraies created and used to
+    Added ${CALC_LIBS} to list the libraries created and used to
     build calc.	 The CALC_LIBS= custom/libcustcalc.a libcalc.a
     is standard for everyone.
 
@@ -3187,14 +3238,14 @@ The following are the changes from calc version 2.10.3t5.1 to 2.10.3t5.10:
     The *.c should do that instead where it is reasonable.
 
     To avoid symbol conflicts, *.h files produced and shipped
-    with calc are inclosed that as similar to the following:
+    with calc are enclosed that as similar to the following:
 
 	#if !defined(__CALC_H__)
 	#define __CALC_H__
 	..
 	#endif /* !__CALC_H__ */
 
-    Added memsize(x) builtin to print the best aproximation of the
+    Added memsize(x) builtin to print the best approximation of the
     size of 'x' including overhead.  The sizeof(x) builtin attempts
     to cover just the storage of the value and not the overhead.
     Because -1, 0 and 1 ZVALUES are static common values, sizeof(x)
@@ -3219,7 +3270,7 @@ The following are the changes from calc version 2.10.3t4.16 to 2.10.3t5.0:
     Added more error() and errno() regression tests.
 
     The convention of using the global variable lib_debug at the
-    end of calc librar scripts has been replaced with config("lib_debug").
+    end of calc library scripts has been replaced with config("lib_debug").
     The "lib_debug" is reserved by convention for calc library scripts.
     This config parameter takes the place of the lib_debug global variable.
     By convention, "lib_debug" has the following meanings:
@@ -3273,7 +3324,7 @@ The following are the changes from calc version 2.10.3t4.16 to 2.10.3t5.0:
 	>0	a greater degree of debugging is performed and more
 		    verbose messages are printed
 
-    Added more code that is deading with the BLOCK type.
+    Added more code related to the BLOCK type.
 
     Added blkalloc() builtin.
 
@@ -3318,14 +3369,14 @@ The following are the changes from calc version 2.10.3t4.16 to 2.10.3t5.0:
     arg is "-f", then 'no-such-file' errors are ignored.
 
     Added errcount([count]) builtin to return or set the error
-    counter.  Added errmax([limit]) to rturn or set the error
+    counter.  Added errmax([limit]) to return or set the error
     count limiter.
 
     Added -n as a calc command line option.  This has the effect
     of calling config("all", "newstd") at startup time.
 
     Added -e as a calc command line option to ignore all environment
-    varialbes at startup time.	The getenv() builtin function will
+    variables at startup time.	The getenv() builtin function will
     still return values, however.
 
     Added -i as a calc command line option.  This has the effect
@@ -3508,7 +3559,7 @@ The following are the changes from calc version 2.10.3t3 to 2.10.3t4.15:
 
     The "blkverbose" determines if all lines, including duplicates
     should be printed.	If TRUE, then all lines are printed.  If false,
-    duplicate lines are skipped and only a "*" is printed in a sytle
+    duplicate lines are skipped and only a "*" is printed in a style
     similar to od.  This config value has not meaning if "blkfmt" is
     "str".  The default value for "blkverbose" is FALSE: duplicate
     lines are not printed.
@@ -3581,7 +3632,7 @@ The following are the changes from calc version 2.10.3t0 to 2.10.3t2:
 
     A lot of work was performed on the code generation by Ernest Bowen
     <ernie at turing dot une dot edu dot au>.	 Declarations no longer
-    need to precese code:
+    need to precede code:
 
 	define f(x) {
 		local i = x^2;
@@ -3715,7 +3766,7 @@ The following are the changes from calc version 2.10.3t0 to 2.10.3t2:
     "break", "continue", or "goto", so that only one jump opcode is
     required.
 
-    A label can now be immediately by a rightbrace.  For example:
+    A label can now be immediately by a right-brace.  For example:
 
 	define test_newop3(x) {if (x < 0) goto l132; ++x; l132: return x;}
 
@@ -3973,7 +4024,7 @@ The following are the changes from calc version 2.10.2t25 to 2.10.2t32:
 	creates four static variables, the first "a" having a very short and
 	useless life.
 
-    Added new tests to verify the new assugnments above.
+    Added new tests to verify the new assignments above.
 
     Added the builtin test(x) which returns 1 or 0 according as x tests
     as true or false for conditions.
@@ -4014,7 +4065,7 @@ The following are the changes from calc version 2.10.2t4 to 2.10.2t24:
 			so that the entire make is verbose and
 			a constructed files are printed
 
-     Improved instuctions in 'BUGS' section on reporting problems.
+     Improved instructions in 'BUGS' section on reporting problems.
      In particular we made it easy for people to send in a full
      diagnostic output by sending 'debug.out' which is made as follows:
 
@@ -4029,13 +4080,13 @@ The following are the changes from calc version 2.10.2t4 to 2.10.2t24:
 
      Attempting to rewind a file this is not open generates an error.
 
-     Noted conversion problems in file.c in tripple X comments.
+     Noted conversion problems in file.c in triple X comments.
 
-     Some extremely braindead shells cannot correctly deal with if
-     cluases that do not have a non-empty else statement.  Their
+     Some extremely brain dead shells cannot correctly deal with if
+     clauses that do not have a non-empty else statement.  Their
      exit bogosity results in make problems.  As a work-a-round,
      Makefile if clauses have 'else true;' clauses for if statements
-     that previously did not have an else cluause.
+     that previously did not have an else clause.
 
      Fixed problems where the input stack depth reached the 10 levels.
 
@@ -4150,7 +4201,7 @@ The following are the changes from calc version 2.10.2t4 to 2.10.2t24:
 	A = {{1,2}, {3,4}};
 
      The config("trace", 8) causes opcodes of newly defined functions
-     are displayed.  Also show can now show the opcides for a function.
+     are displayed.  Also show can now show the opcodes for a function.
      For example:
 
 	config("trace", 8);
@@ -4256,9 +4307,9 @@ The following are the changes from calc version 2.10.2t4 to 2.10.2t24:
     Added rm("file") builtin to remove a file.
 
     The regress test sections that create files also use rm() to remove
-    them before and afterwards.
+    them before and afterward.
 
-    Added 4400-4500 set to test new mat and obj initializaion rules.
+    Added 4400-4500 set to test new mat and obj initialization rules.
 
     Added 4600 to test version file operations.
 
@@ -4274,7 +4325,7 @@ The following are the changes from calc version 2.10.2t4 to 2.10.2t24:
 
     Renumbered some of the early regress.cal test numbers to make room
     for more tests.  Fixed all out of sequence test numbers.  Fixed some
-    malformatted regression reports.
+    malformed regression reports.
 
     Renamed STSIZE_BITS to OFF_T_BITS.	Renamed SWAP_HALF_IN_STSIZE to
     SWAP_HALF_IN_OFF_T.
@@ -4365,7 +4416,7 @@ The following are the changes from calc version 2.10.2t1 to 2.10.2t3:
     tries "w" and "r", and if none work, gives up.  This avoids having
     "open" files with null fp.
 
-    The buildin rewind() calls the C rewind() function, but one may
+    The builtin rewind() calls the C rewind() function, but one may
     now rewind several files at once by a call like rewind(f1, f2).
     With no argument, rewind() rewinds all open files with id >= 3.
 
@@ -4388,7 +4439,7 @@ The following are the changes from calc version 2.10.2t1 to 2.10.2t3:
 	    y = fgetstr(f);	/* returns "Curt" */
 	    z = fgetstr(f);	/* returns "Noll" */
 
-    The buildin fgetfield() returns the next field of non-whitepsace
+    The builtin fgetfield() returns the next field of non-whitepsace
     characters.
 
     The builtins scan(), fscan(), strscan() read tokens (fields of
@@ -4412,10 +4463,10 @@ The following are the changes from calc version 2.10.2t1 to 2.10.2t3:
     or -1 if x is a file but not open.	If s is a string, size(s) returns
     characters in s.
 
-    Added buildin access("foo", "w") returns the null value if a file
-    "foo" exists and is writeable.
+    Added builtin access("foo", "w") returns the null value if a file
+    "foo" exists and is writable.
 
-    Some systems has a libc symbolc qadd() that conflicted with calc's
+    Some systems has a libc symbolic qadd() that conflicted with calc's
     qadd function.  To avoid this, qadd() has been renamed to qqadd().
 
     The calc error codes are produced from the the calcerr.tbl file.
@@ -4570,9 +4621,9 @@ The following are the changes from calc version 2.10.1t20 to 2.10.1t20:
     <ernie at turing dot une dot edu dot au>
 
     A new "bignum" algorithm for evaluating pmod(x,k,m) when
-    N >= config("pow2").  For the multiplications and squarings
+    N >= config("pow2").  For the multiplications and squaring
     modulo m, or their equivalent, when N >= config("redc2"),
-    calc has used evaluations correponding to rcout(x * y, m),
+    calc has used evaluations corresponding to rcout(x * y, m),
     for which the runtime is essentially that of three multiplications.
     <ernie at turing dot une dot edu dot au>
 
@@ -4645,7 +4696,7 @@ The following are the changes from calc version 2.10.1t11 to 2.10.1t19:
 
 	cmp(a,b) = sgn(re(a) - re(b)) + sgn(im(a) - im(b)) * 1i
 
-    The cmp help file has been uptdated.
+    The cmp help file has been updated.
 
     Change HASH type to QCKHASH.  The HASH type is a name better suited
     for the upcoming one-way hash interface.
@@ -4705,7 +4756,7 @@ The following are the changes from calc version 2.10.1t11 to 2.10.1t19:
 	prompt		"; "		(allows full line cut/paste)
 	more		";; "		(allows full line cut/paste)
 
-    The "newstd" is a (hopefully) more perferred configuration than the
+    The "newstd" is a (hopefully) more preferred configuration than the
     historic default.
 
     The fposval.h file defines DEV_BITS and INODE_BITS giving the
@@ -4724,7 +4775,7 @@ The following are the changes from calc version 2.10.1t11 to 2.10.1t19:
     state or RANDOM state.
 
     The lib/cryrand.cal library now no longer keeps the Blum prime
-    factors used to formt he Blum modulus.  The default modulus has
+    factors used to form he Blum modulus.  The default modulus has
     been expanded to 1062 bits product of two Blum primes.
 
     The function hash_init() is called to initialize the hash function
@@ -4755,7 +4806,7 @@ The following are the changes from calc version 2.10.1t11 to 2.10.1t19:
     help/poly file.  Added poly.c.  <ernie at turing dot une dot edu
     dot au>
 
-    Fixes and performance improvemtns to det().  <ernie at turing dot
+    Fixes and performance improvements to det().  <ernie at turing dot
     une dot edu dot au>
 
     Renamed atoq() and atoz() to str2q() and str2z() to avoid conflicts
@@ -4829,7 +4880,7 @@ The following are the changes from calc version 2.10.0t13 to 2.10.1t10:
     signed and unsigned values.
 
     The longbits.h will define HAVE_B64 with a 64 bit type (long or
-    longlong) is available.   If one is, then SB64 abd US64 typedefs
+    longlong) is available.   If one is, then SB64 and US64 typedefs
     are declared.
 
     The U(x) and L(x) macros only used to define 33 to 64 bit signed
@@ -4858,7 +4909,7 @@ The following are the changes from calc version 2.10.0t13 to 2.10.1t10:
 
     The CALCBINDINGS file is searched for along the CALCPATH.  The Makefile
     defines the default CALCBINDINGS is "bindings" (or "altbind") which
-    is now usualy found in ./lib or ${LIBDIR}.
+    is now usually found in ./lib or ${LIBDIR}.
 
     Per Ernest Bowen <ernie at turing dot une dot edu dot au>, an optional
     third argument was added  sqrt() so that in sqrt(x,y,z), y and z have
@@ -4866,7 +4917,7 @@ The following are the changes from calc version 2.10.0t13 to 2.10.1t10:
     what is being approximated is the sqrt of x.  Another difference is
     that two more bits of z are used in sqrt: bit 5 gives the option of
     exact results when they exist (the value of y is then ignored) and
-    bit 6 returns the nonprincipal root rather than the principal value.
+    bit 6 returns the non-principal root rather than the principal value.
 
     If commands are given on the command line, leading tabs are not
     printed in output.	Giving a command on the command line implies
@@ -4906,7 +4957,7 @@ The following are the changes from calc version 2.10.0t13 to 2.10.1t10:
 	6   do not execute any program
 	7   allow everything (default mode)
 
-    Thus if one wished to run calc from a privledged user, one might
+    Thus if one wished to run calc from a privileged user, one might
     want to use -m 0 in an effort to make calc more secure.
 
     The -m flags for reading and writing apply on open.
@@ -4922,7 +4973,7 @@ The following are the changes from calc version 2.10.0t13 to 2.10.1t10:
     The maximum command line size it MAXCMD (16384) bytes.  Calc objects to
     command lines that are longer.
 
-    The -u flag cause calc to unbuffer stdin and stdout.
+    The -u flag cause calc to un-buffer stdin and stdout.
 
     Added more help files.  Improved other help files.
 
@@ -5006,7 +5057,7 @@ The following are the changes from calc version 2.9.3t9.2+ to 2.9.3t10:
     Makefile symbol.  Removed alloc.c.
 
     Added getenv("name"), putenv("name=val") and putenv("name, "val")
-    builts for environment variable support thanks to "Dr." "D.J." Picton
+    builds for environment variable support thanks to "Dr." "D.J." Picton
     <dave at aps2 dot ph dot bham dot ac dot uk>.
 
     Added system("shell command") builtin to execute shell commands,
@@ -5051,7 +5102,7 @@ The following are the changes from calc version 2.9.3t9.2+ to 2.9.3t10:
 
     Expanded the regress.cal regression test suite.
 
-    Fixed -- and ++ with respect to objects and asignment (see the 2300
+    Fixed -- and ++ with respect to objects and assignment (see the 2300
     series in regress.cal).
 
     Added isident(m) to determine if m is an identity matrix.
@@ -5232,7 +5283,7 @@ The following are the changes from calc version 2.9.3t8 to 2.9.3t9.2:
 
     The cryrand.cal library has been modified to use the builtin
     rand() number generator.  The output of this generator is
-    different from pervious versions of this generator because
+    different from previous versions of this generator because
     the rand() builtin does not match the additive 55 / shuffle
     generators from the old cryrand.cal file.
 
@@ -5392,8 +5443,8 @@ The following are the changes from calc version 2.9.2 to 2.9.3t7:
 
 	1/4 < sup(abs(appr(x,e) - x))/e	 <= 1/2.
 
-    Here 'sup' denotes the supremum or least upper bound over values of x.
-    Previousld calc did: 1/4 <= sup(abs(appr(x,e) - x))/e  < 1.
+    Here 'sup' denotes the least upper bound over values of x (supremum).
+    Previously calc did: 1/4 <= sup(abs(appr(x,e) - x))/e  < 1.
 
     Certain 64 bit processors such as the Alpha are now supported.
 
@@ -5581,8 +5632,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
     easily extracted and used in other programs.
 
     Two new library files have been added: chrem.cal and cryrand.cal.
-    The first of these solves the chinese remainder problem for a set
-    of modulos and remainders.	The second of these implements several
+    The first of these solves the Chinese remainder problem for a set
+    of modulo's and remainders.	The second of these implements several
     very good random number generators for large numbers.
 
     A small bug which allowed division by zero was fixed.
@@ -5612,8 +5663,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.60 $
-## @(#) $Id: CHANGES,v 29.60 2003/08/26 04:35:45 chongo Exp $
+## @(#) $Revision: 29.63 $
+## @(#) $Id: CHANGES,v 29.63 2004/02/23 09:23:39 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

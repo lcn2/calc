@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.20 $
-# @(#) $Id: Makefile,v 29.20 2003/01/14 02:18:45 chongo Exp $
+# @(#) $Revision: 29.21 $
+# @(#) $Id: Makefile,v 29.21 2004/02/23 09:23:08 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -765,6 +765,7 @@ c_argv.o: ../have_memmv.h
 c_argv.o: ../have_newstr.h
 c_argv.o: ../have_stdlib.h
 c_argv.o: ../have_string.h
+c_argv.o: ../have_unused.h
 c_argv.o: ../longbits.h
 c_argv.o: ../md5.h
 c_argv.o: ../nametype.h
@@ -791,6 +792,7 @@ c_devnull.o: ../have_memmv.h
 c_devnull.o: ../have_newstr.h
 c_devnull.o: ../have_stdlib.h
 c_devnull.o: ../have_string.h
+c_devnull.o: ../have_unused.h
 c_devnull.o: ../longbits.h
 c_devnull.o: ../md5.h
 c_devnull.o: ../nametype.h
@@ -817,6 +819,7 @@ c_help.o: ../have_memmv.h
 c_help.o: ../have_newstr.h
 c_help.o: ../have_stdlib.h
 c_help.o: ../have_string.h
+c_help.o: ../have_unused.h
 c_help.o: ../longbits.h
 c_help.o: ../md5.h
 c_help.o: ../nametype.h
@@ -843,6 +846,7 @@ c_pzasusb8.o: ../have_memmv.h
 c_pzasusb8.o: ../have_newstr.h
 c_pzasusb8.o: ../have_stdlib.h
 c_pzasusb8.o: ../have_string.h
+c_pzasusb8.o: ../have_unused.h
 c_pzasusb8.o: ../longbits.h
 c_pzasusb8.o: ../md5.h
 c_pzasusb8.o: ../nametype.h
@@ -872,6 +876,7 @@ c_sysinfo.o: ../have_memmv.h
 c_sysinfo.o: ../have_newstr.h
 c_sysinfo.o: ../have_stdlib.h
 c_sysinfo.o: ../have_string.h
+c_sysinfo.o: ../have_unused.h
 c_sysinfo.o: ../hist.h
 c_sysinfo.o: ../longbits.h
 c_sysinfo.o: ../longlong.h

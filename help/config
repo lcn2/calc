@@ -49,6 +49,7 @@ Configuration parameters
 	    "program"		Read-only calc program or shell script path
 	    "basename"		Read-only basename of the program value
 	    "windows"		Read-only indicator of MS windows
+	    "cygwin"		TRUE=>calc compiled with cygwin, Read-only
 	    "version"		Read-only calc version
 
     The "all" config value allows one to save/restore the configuration
@@ -699,6 +700,16 @@ Detailed config descriptions
     Returns TRUE if you are running on a MS windows system, false if you
     are running on an operating system that does not hate you.
 
+    This config parameter is read-only and cannot be set.
+
+    =-=
+
+    config("cygwin")		<== NOTE: This is a read-only config value
+
+    Returns TRUE if you calc was compiled with cygwin, false otherwise.
+
+    This config parameter is read-only and cannot be set.
+
     =-=
 
     config("version")		<== NOTE: This is a read-only config value
@@ -725,8 +736,8 @@ Detailed config descriptions
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.7 $
-## @(#) $Id: config,v 29.7 2002/12/29 08:32:04 chongo Exp $
+## @(#) $Revision: 29.8 $
+## @(#) $Id: config,v 29.8 2004/02/23 05:59:22 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/config,v $
 ##
 ## Under source code control:	1991/07/21 04:37:17

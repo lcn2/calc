@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: file.c,v 29.7 2001/04/10 22:06:46 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: file.c,v 29.8 2004/02/23 07:53:12 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -810,7 +810,7 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 	VALUE *vp;
 	char *str;
 	int ch;
-	unsigned long len;
+	long len;
 	int oldmode, newmode;
 	long olddigits, newdigits;
 	long width, precision;

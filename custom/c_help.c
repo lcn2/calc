@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: c_help.c,v 29.2 2000/06/07 14:03:03 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: c_help.c,v 29.3 2004/02/23 09:19:18 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_help.c,v $
  *
  * Under source code control:	1997/03/09 05:25:41
@@ -35,6 +35,8 @@
 #include "../have_const.h"
 #include "../value.h"
 #include "../custom.h"
+
+#include "../have_unused.h"
 
 
 /*
@@ -56,7 +58,7 @@
  */
 /*ARGSUSED*/
 VALUE
-c_help(char *name, int count, VALUE **vals)
+c_help(char UNUSED *name, int UNUSED count, VALUE **vals)
 {
 	VALUE result;		/* what we will return */
 

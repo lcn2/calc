@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.10 $
- * @(#) $Id: config.c,v 29.10 2003/08/26 04:36:10 chongo Exp $
+ * @(#) $Revision: 29.12 $
+ * @(#) $Id: config.c,v 29.12 2004/02/23 05:59:50 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -92,6 +92,7 @@ NAMETYPE configs[] = {
 	{"program",	CONFIG_PROGRAM},
 	{"basename",	CONFIG_BASENAME},
 	{"windows",	CONFIG_WINDOWS},
+	{"cygwin",	CONFIG_CYGWIN},
 	{"version",	CONFIG_VERSION},
 	{NULL,		0}
 };
@@ -144,6 +145,11 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 #else
 	FALSE,			/* congrats, you are not using windows */
 #endif
+#if defined(__CYGWIN__)
+	TRUE,			/* compiled under cygwin */
+#else
+	FALSE,			/* not compiled with cygwin */
+#endif
 	NULL			/* version */
 };
 CONFIG newstd = {	/* new non-backward compatible configuration */
@@ -189,6 +195,11 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	TRUE,			/* running under windows */
 #else
 	FALSE,			/* congrats, you are not using windows */
+#endif
+#if defined(__CYGWIN__)
+	TRUE,			/* compiled under cygwin */
+#else
+	FALSE,			/* not compiled with cygwin */
 #endif
 	NULL			/* version */
 };
@@ -857,6 +868,10 @@ setconfig(int type, VALUE *vp)
 		math_error("The windows config parameter is read-only");
 		/*NOTREACHED*/
 
+	case CONFIG_CYGWIN:
+		math_error("The cygwin config parameter is read-only");
+		/*NOTREACHED*/
+
 	case CONFIG_VERSION:
 		math_error("The version config parameter is read-only");
 		/*NOTREACHED*/
@@ -1233,6 +1248,14 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 
 	case CONFIG_WINDOWS:
 		if (cfg->windows) {
+			vp->v_num = itoq(1);
+		} else {
+			vp->v_num = itoq(0);
+		}
+		return;
+
+	case CONFIG_CYGWIN:
+		if (cfg->cygwin) {
 			vp->v_num = itoq(1);
 		} else {
 			vp->v_num = itoq(0);

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: blkcpy.c,v 29.3 2001/04/10 22:06:46 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: blkcpy.c,v 29.4 2004/02/23 07:47:31 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/blkcpy.c,v $
  *
  * Under source code control:	1997/04/18 20:41:26
@@ -287,13 +287,13 @@ copymat2mat(MATRIX *smat, long ssi, long num, MATRIX *dmat, long dsi)
 
 	if (num < 0)
 		num = smat->m_size - ssi;
-	if ((USB32) ssi + num > smat->m_size)
+	if (ssi + num > smat->m_size)
 		return E_COPY5;
 	if (num == 0)
 		return 0;
 	if (dsi < 0)
 		dsi = 0;
-	if ((USB32) dsi + num > dmat->m_size)
+	if (dsi + num > dmat->m_size)
 		return E_COPY7;
 	vtemp = (VALUE *) malloc(num * sizeof(VALUE));
 	if (vtemp == NULL) {
@@ -335,13 +335,13 @@ copyblk2mat(BLOCK *blk, long ssi, long num, MATRIX *dmat, long dsi)
 		return E_COPY2;
 	if (num < 0)
 		num = blk->datalen - ssi;
-	if ((USB32) ssi + num > blk->datalen)
+	if (ssi + num > blk->datalen)
 		return E_COPY5;
 	if (num == 0)
 		return 0;
 	if (dsi < 0)
 		dsi = 0;
-	if ((USB32) dsi + num > dmat->m_size)
+	if (dsi + num > dmat->m_size)
 		return E_COPY7;
 	op = blk->data + ssi;
 	vtemp = (VALUE *) malloc(num * sizeof(VALUE));
@@ -389,7 +389,7 @@ copymat2blk(MATRIX *smat, long ssi, long num, BLOCK *dblk, long dsi, BOOL norelo
 		num = smat->m_size - ssi;
 	if (num == 0)
 		return 0;
-	if ((USB32) ssi + num > smat->m_size)
+	if (ssi + num > smat->m_size)
 		return E_COPY5;
 	if (dsi < 0)
 		dsi = dblk->datalen;
@@ -436,11 +436,11 @@ copymat2list(MATRIX *smat, long ssi, long num, LIST *lp, long dsi)
 		num = smat->m_size - ssi;
 	if (num == 0)
 		return 0;
-	if ((USB32) ssi + num > smat->m_size)
+	if (ssi + num > smat->m_size)
 		return E_COPY5;
 	if (dsi < 0)
 		dsi = 0;
-	if ((USB32) dsi + num > lp->l_count)
+	if (dsi + num > lp->l_count)
 		return E_COPY7;
 	vtemp = (VALUE *) malloc(num * sizeof(VALUE));
 	if (vtemp == NULL) {
@@ -484,11 +484,11 @@ copylist2mat(LIST *lp, long ssi, long num, MATRIX *dmat, long dsi)
 		num = lp->l_count - ssi;
 	if (num == 0)
 		return 0;
-	if ((USB32) ssi + num > lp->l_count)
+	if (ssi + num > lp->l_count)
 		return E_COPY5;
 	if (dsi < 0)
 		dsi = 0;
-	if ((USB32) dsi + num > dmat->m_size)
+	if (dsi + num > dmat->m_size)
 		return E_COPY7;
 	vtemp = (VALUE *) malloc(num * sizeof(VALUE));
 	if (vtemp == NULL) {
@@ -533,11 +533,11 @@ copylist2list(LIST *slp, long ssi, long num, LIST *dlp, long dsi)
 		num = slp->l_count - ssi;
 	if (num == 0)
 		return 0;
-	if ((USB32) ssi + num > slp->l_count)
+	if (ssi + num > slp->l_count)
 		return E_COPY5;
 	if (dsi < 0)
 		dsi = 0;
-	if ((USB32) dsi + num > dlp->l_count)
+	if (dsi + num > dlp->l_count)
 		return E_COPY7;
 	vtemp = (VALUE *) malloc(num * sizeof(VALUE));
 	if (vtemp == NULL) {
@@ -572,7 +572,7 @@ copyblk2file(BLOCK *sblk, long ssi, long num, FILEID id, long dsi)
 {
 	FILEIO	*fiop;
 	FILE	*fp;
-	unsigned int	numw;
+	long	numw;
 
 	if (ssi > sblk->datalen)
 		return E_COPY2;
@@ -609,7 +609,7 @@ copyfile2blk(FILEID id, long ssi, long num, BLOCK *dblk, long dsi, BOOL noreloc)
 {
 	FILEIO	*fiop;
 	FILE	*fp;
-	unsigned int	numw;
+	long	numw;
 	ZVALUE	fsize;
 	long	filelen;
 	long	newlen;
@@ -639,7 +639,7 @@ copyfile2blk(FILEID id, long ssi, long num, BLOCK *dblk, long dsi, BOOL noreloc)
 		num = filelen - ssi;
 	if (num == 0)
 		return 0;
-	if ((USB32) ssi + num > filelen)
+	if (ssi + num > filelen)
 		return E_COPY5;
 	if (fseek(fp, ssi, 0))		/* using system fseek  XXX */
 		return E_COPYF2;
@@ -677,7 +677,7 @@ copystr2file(STRING *str, long ssi, long num, FILEID id, long dsi)
 {
 	long len;
 	FILEIO *fiop;
-	unsigned int numw;
+	long numw;
 	FILE *fp;
 
 	len = str->s_len;
@@ -688,7 +688,7 @@ copystr2file(STRING *str, long ssi, long num, FILEID id, long dsi)
 		num = len - ssi;
 	if (num <= 0)			/* Nothing to be copied */
 		return 0;
-	if ((USB32) ssi + num > len)
+	if (ssi + num > len)
 		return E_COPY5;		/* Insufficient memory in str */
 	fiop = findid(id, TRUE);
 	if (fiop == NULL)
@@ -726,7 +726,7 @@ copyblk2blk(BLOCK *sblk, long ssi, long num, BLOCK *dblk, long dsi, BOOL noreloc
 		num = sblk->datalen - ssi;
 	if (num == 0)			/* Nothing to be copied */
 		return 0;
-	if ((unsigned int) ssi + num > sblk->datalen)
+	if (ssi + num > sblk->datalen)
 		return E_COPY5;
 	if (dsi < 0)
 		dsi = dblk->datalen;
@@ -888,7 +888,7 @@ copyostr2blk(char *str,long ssi,long num,BLOCK *dblk,long dsi,BOOL noreloc)
 
 	if (ssi > len)
 		return E_COPY2;
-	if (num < 0 || (unsigned long) ssi + num > len)
+	if (num < 0 || ssi + num > len)
 		num = len - ssi;
 	if (num <= 0)			/* Nothing to be copied */
 		return 0;
@@ -991,7 +991,7 @@ copynum2blk(NUMBER *snum, long ssi, long num, BLOCK *dblk, long dsi, BOOL norelo
 		num = snum->num.len - ssi;
 	if (num == 0)			/* Nothing to be copied */
 		return 0;
-	if ((unsigned long) ssi + num > snum->num.len)
+	if (ssi + num > snum->num.len)
 		return E_COPY5;
 	if (dsi < 0)
 		dsi = dblk->datalen;
@@ -1044,7 +1044,7 @@ copyblk2num(BLOCK *sblk, long ssi, long num, NUMBER *dnum, long dsi, NUMBER **re
 		num = sblk->datalen - ssi;
 	if (num == 0)			/* Nothing to be copied */
 		return 0;
-	if ((unsigned long) ssi + num > sblk->datalen)
+	if (ssi + num > sblk->datalen)
 		return E_COPY5;
 	if (dsi < 0)
 		dsi = dnum->num.len;

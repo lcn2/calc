@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: c_argv.c,v 29.2 2000/06/07 14:03:03 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: c_argv.c,v 29.3 2004/02/23 09:19:18 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_argv.c,v $
  *
  * Under source code control:	1997/03/09 20:27:37
@@ -40,6 +40,8 @@
 #include "../config.h"
 #include "../calc.h"
 
+#include "../have_unused.h"
+
 /*
  * c_argv - a custom function display info about its args
  *
@@ -51,7 +53,7 @@
  */
 /*ARGSUSED*/
 VALUE
-c_argv(char *name, int count, VALUE **vals)
+c_argv(char UNUSED *name, int count, VALUE **vals)
 {
 	VALUE result;		/* what we will return */
 	ZVALUE zfilelen;	/* length of a file as a ZVALUE */

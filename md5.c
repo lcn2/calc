@@ -10,8 +10,8 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: md5.c,v 29.1 1999/12/14 09:16:12 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: md5.c,v 29.2 2004/02/23 07:58:06 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/md5.c,v $
  *
  * This file is not covered under version 2.1 of the GNU LGPL.
@@ -432,7 +432,7 @@ static void
 MD5_note(int special, HASH *state)
 {
 	MD5_CTX *dig = &state->h_union.h_md5;	/* digest state */
-	int i;
+	unsigned int i;
 
 	/*
 	 * change state to reflect a special value
@@ -463,7 +463,7 @@ static void
 MD5_type(int type, HASH *state)
 {
 	MD5_CTX *dig = &state->h_union.h_md5;	/* digest state */
-	int i;
+	unsigned int i;
 
 	/*
 	 * ignore NUMBER and COMPLEX
@@ -531,7 +531,7 @@ MD5_final_state(HASH *state)
 {
 	MD5_CTX *dig = &state->h_union.h_md5;		/* digest state */
 	ZVALUE ret;		/* return ZVALUE of completed hash state */
-	int i;
+	unsigned int i;
 
 	/*
 	 * malloc and initialize if state is NULL
@@ -571,7 +571,7 @@ MD5_final_state(HASH *state)
 	}
 #endif
 
-	for (i=0; i < ret.len; ++i) {
+	for (i=0; i < (unsigned int)ret.len; ++i) {
 		ret.v[ret.len-i-1] = ((HALF*)dig->digest)[i];
 	}
 

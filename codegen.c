@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: codegen.c,v 29.7 2002/07/10 11:51:51 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: codegen.c,v 29.8 2004/02/23 05:39:35 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -1749,6 +1749,8 @@ getrelation(void)
 			rescantoken();
 			return type;
 	}
+	if (islvalue(type))
+		addop(OP_GETVALUE);
 	(void) getsum();
 	addop(op);
 	return EXPR_RVALUE;
@@ -1788,6 +1790,8 @@ getsum(void)
 				rescantoken();
 				return type;
 		}
+		if (islvalue(type))
+			addop(OP_GETVALUE);
 		(void) getproduct();
 		addop(op);
 		type = EXPR_RVALUE;
@@ -1817,6 +1821,8 @@ getproduct(void)
 				rescantoken();
 				return type;
 		}
+		if (islvalue(type))
+			addop(OP_GETVALUE);
 		(void) getorexpr();
 		addop(op);
 		type = EXPR_RVALUE;
@@ -1836,6 +1842,8 @@ getorexpr(void)
 
 	type = getandexpr();
 	while (gettoken() == T_OR) {
+		if (islvalue(type))
+			addop(OP_GETVALUE);
 		(void) getandexpr();
 		addop(OP_OR);
 		type = EXPR_RVALUE;
@@ -1867,6 +1875,8 @@ getandexpr(void)
 				rescantoken();
 				return type;
 		}
+		if (islvalue(type))
+			addop(OP_GETVALUE);
 		(void) getshiftexpr();
 		addop(op);
 		type = EXPR_RVALUE;
@@ -1919,6 +1929,8 @@ getshiftexpr(void)
 			rescantoken();
 			return type;
 	}
+	if (islvalue(type))
+		addop(OP_GETVALUE);
 	(void) getshiftexpr();
 	addop(op);
 	return EXPR_RVALUE;

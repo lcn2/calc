@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: c_sysinfo.c,v 29.6 2003/06/10 21:44:17 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: c_sysinfo.c,v 29.7 2004/02/23 09:19:18 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_sysinfo.c,v $
  *
  * Under source code control:	1997/03/09 23:14:40
@@ -52,6 +52,8 @@
 #include "../prime.h"
 #include "../zrand.h"
 #include "../zrandom.h"
+
+#include "../have_unused.h"
 
 
 /*
@@ -179,7 +181,7 @@ static void dump_mening_value(void);	/* custom("sysinfo", 2) */
  */
 /*ARGSUSED*/
 VALUE
-c_sysinfo(char *name, int count, VALUE **vals)
+c_sysinfo(char UNUSED *name, int count, VALUE **vals)
 {
 	VALUE result;		/* what we will return */
 	struct infoname *p;	/* current infoname */

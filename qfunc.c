@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: qfunc.c,v 29.5 2003/01/26 19:41:35 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: qfunc.c,v 29.6 2004/02/23 07:59:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:20
@@ -1740,7 +1740,7 @@ qgcdrem(NUMBER *q1, NUMBER *q2)
 NUMBER *
 qlowfactor(NUMBER *q1, NUMBER *q2)
 {
-	long count;
+	unsigned long count;
 
 	if (qisfrac(q1) || qisfrac(q2)) {
 		math_error("Non-integers for lowfactor");

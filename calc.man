@@ -15,8 +15,8 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 .\"
-.\" @(#) $Revision: 29.11 $
-.\" @(#) $Id: calc.man,v 29.11 2003/08/26 04:36:10 chongo Exp $
+.\" @(#) $Revision: 29.12 $
+.\" @(#) $Id: calc.man,v 29.12 2004/02/23 05:21:24 chongo Exp $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -54,7 +54,7 @@ calc \- arbitrary precision calculator
 .RB [ calc_cmd\ \&.\|.\|. ]
 .in -5n
 .sp
-\fI#!${BINDIR}/calc\fP\ \fB\-f\fP\ [other_flags\ \&...]
+\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-f\fP\
 .SH DESCRIPTION
 \&
 .br
@@ -588,7 +588,7 @@ as in:
 .sp 1
 .in +5n
 .nf
-\fI#!${BINDIR}/calc\fP\ \fB\-f\fP\ [other_flags\ \&...]
+\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-f\fP\
 .fi
 .in -5n
 .sp 1
@@ -634,7 +634,7 @@ the file
 .sp 1
 .in +5n
 .nf
-\fI#!${BINDIR}/calc\fP\ \fB\-f\fP\ \&\fB\-q\fP
+\fI#!${BINDIR}/calc\fP\ \&\fB\-q\fP \fB\-f\fP\
 #
 # mersenne - an example of a calc \fBshell script file\fP
 

@@ -22,8 +22,8 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: shs1.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: shs1.c,v 29.3 2004/02/23 08:15:52 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/shs1.c,v $
  *
  * This file is not covered under version 2.1 of the GNU LGPL.
@@ -261,7 +261,7 @@ shs1Update(HASH *state, USB8 *buffer, USB32 count)
 	USB32 datalen = dig->datalen;
 	USB32 cpylen;
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
-	int i;
+	unsigned int i;
 #endif
 
 	/*
@@ -341,7 +341,7 @@ shs1Final(HASH *state)
 	USB32 highBitcount;
 	USB8 *data = (USB8 *) dig->data;
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
-	int i;
+	unsigned int i;
 #endif
 
 	/* Pad to end of chunk */
@@ -411,7 +411,7 @@ shs1_chkpt(HASH *state)
 {
 	SHS1_INFO *dig = &state->h_union.h_shs1;	/* digest state */
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
-	int i;
+	unsigned int i;
 #endif
 
 	/*
@@ -455,7 +455,7 @@ static void
 shs1_note(int special, HASH *state)
 {
 	SHS1_INFO *dig = &state->h_union.h_shs1;	/* digest state */
-	int i;
+	unsigned int i;
 
 	/*
 	 * change state to reflect a special value
@@ -486,7 +486,7 @@ static void
 shs1_type(int type, HASH *state)
 {
 	SHS1_INFO *dig = &state->h_union.h_shs1;	/* digest state */
-	int i;
+	unsigned int i;
 
 	/*
 	 * ignore NUMBER and COMPLEX

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: matfunc.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: matfunc.c,v 29.3 2004/02/23 07:55:54 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/matfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:18
@@ -35,6 +35,8 @@
 #include "value.h"
 #include "zrand.h"
 #include "calcerr.h"
+
+#include "have_unused.h"
 
 extern long irand(long s);
 
@@ -853,7 +855,7 @@ matfrac(MATRIX *m)
  */
 /*ARGSUSED*/
 VALUE *
-matindex(MATRIX *mp, BOOL create, long dim, VALUE *indices)
+matindex(MATRIX *mp, BOOL UNUSED create, long dim, VALUE *indices)
 {
 	NUMBER *q;		/* index value */
 	VALUE *vp;

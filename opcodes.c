@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: opcodes.c,v 29.4 2001/04/25 07:16:26 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: opcodes.c,v 29.5 2004/02/23 07:34:08 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/opcodes.c,v $
  *
  * Under source code control:	1990/02/15 01:48:19
@@ -47,6 +47,8 @@
 #include "math_error.h"
 #include "block.h"
 #include "string.h"
+
+#include "have_unused.h"
 
 #define QUICKLOCALS	20		/* local vars to handle quickly */
 
@@ -115,7 +117,7 @@ extern void setconfig(int type, VALUE *vp);
 void
 initstack(void)
 {
-	int i;
+	unsigned int i;
 
 	/* on first init, setup the stack array */
 	if (stack == NULL) {
@@ -163,7 +165,7 @@ o_localaddr(FUNC *fp, VALUE *locals, long index)
 
 /*ARGSUSED*/
 static void
-o_globaladdr(FUNC *fp, GLOBAL *sp)
+o_globaladdr(FUNC UNUSED *fp, GLOBAL *sp)
 {
 	if (sp == NULL) {
 		math_error("Global variable \"%s\" not initialized", sp->g_name);
@@ -178,9 +180,9 @@ o_globaladdr(FUNC *fp, GLOBAL *sp)
 
 /*ARGSUSED*/
 static void
-o_paramaddr(FUNC *fp, int argcount, VALUE *args, long index)
+o_paramaddr(FUNC UNUSED *fp, int argcount, VALUE *args, long index)
 {
-	if ((unsigned long)index >= argcount) {
+	if ((long)index >= argcount) {
 		math_error("Bad parameter index");
 		/*NOTREACHED*/
 	}
@@ -210,7 +212,7 @@ o_localvalue(FUNC *fp, VALUE *locals, long index)
 
 /*ARGSUSED*/
 static void
-o_globalvalue(FUNC *fp, GLOBAL *sp)
+o_globalvalue(FUNC UNUSED *fp, GLOBAL *sp)
 {
 	if (sp == NULL) {
 		math_error("Global variable not defined");
@@ -222,9 +224,9 @@ o_globalvalue(FUNC *fp, GLOBAL *sp)
 
 /*ARGSUSED*/
 static void
-o_paramvalue(FUNC *fp, int argcount, VALUE *args, long index)
+o_paramvalue(FUNC UNUSED *fp, int argcount, VALUE *args, long index)
 {
-	if ((unsigned long)index >= argcount) {
+	if ((long)index >= argcount) {
 		math_error("Bad parameter index");
 		/*NOTREACHED*/
 	}
@@ -267,7 +269,7 @@ o_argvalue(FUNC *fp, int argcount, VALUE *args)
 
 /*ARGSUSED*/
 static void
-o_number(FUNC *fp, long arg)
+o_number(FUNC UNUSED *fp, long arg)
 {
 	NUMBER *q;
 
@@ -285,7 +287,7 @@ o_number(FUNC *fp, long arg)
 
 /*ARGSUSED*/
 static void
-o_imaginary(FUNC *fp, long arg)
+o_imaginary(FUNC UNUSED *fp, long arg)
 {
 	NUMBER *q;
 	COMPLEX *c;
@@ -312,7 +314,7 @@ o_imaginary(FUNC *fp, long arg)
 
 /*ARGSUSED*/
 static void
-o_string(FUNC *fp, long arg)
+o_string(FUNC UNUSED *fp, long arg)
 {
 	stack++;
 	stack->v_str = slink(findstring(arg));
@@ -332,7 +334,7 @@ o_undef(void)
 
 /*ARGSUSED*/
 static void
-o_matcreate(FUNC *fp, long dim)
+o_matcreate(FUNC UNUSED *fp, long dim)
 {
 	register MATRIX *mp;	/* matrix being defined */
 	NUMBER *num1;		/* first number from stack */
@@ -400,7 +402,7 @@ o_matcreate(FUNC *fp, long dim)
 
 /*ARGSUSED*/
 static void
-o_eleminit(FUNC *fp, long index)
+o_eleminit(FUNC UNUSED *fp, long index)
 {
 	VALUE *vp;
 	static VALUE *oldvp;
@@ -501,7 +503,7 @@ o_eleminit(FUNC *fp, long index)
  */
 /*ARGSUSED*/
 static void
-o_indexaddr(FUNC *fp, long dim, long writeflag)
+o_indexaddr(FUNC UNUSED *fp, long dim, long writeflag)
 {
 	int i;
 	BOOL flag;
@@ -653,7 +655,7 @@ o_indexaddr(FUNC *fp, long dim, long writeflag)
 
 /*ARGSUSED*/
 static void
-o_elemaddr(FUNC *fp, long index)
+o_elemaddr(FUNC UNUSED *fp, long index)
 {
 	VALUE *vp;
 	MATRIX *mp;
@@ -708,7 +710,7 @@ o_elemvalue(FUNC *fp, long index)
 
 /*ARGSUSED*/
 static void
-o_objcreate(FUNC *fp, long arg)
+o_objcreate(FUNC UNUSED *fp, long arg)
 {
 	stack++;
 	stack->v_type = V_OBJ;
@@ -2558,7 +2560,7 @@ o_return(void)
 
 /*ARGSUSED*/
 static void
-o_jumpz(FUNC *fp, BOOL *dojump)
+o_jumpz(FUNC UNUSED *fp, BOOL *dojump)
 {
 	VALUE *vp;
 	int i;			/* result of comparison */
@@ -2582,7 +2584,7 @@ o_jumpz(FUNC *fp, BOOL *dojump)
 
 /*ARGSUSED*/
 static void
-o_jumpnz(FUNC *fp, BOOL *dojump)
+o_jumpnz(FUNC UNUSED *fp, BOOL *dojump)
 {
 	VALUE *vp;
 	int i;			/* result of comparison */
@@ -2609,7 +2611,7 @@ o_jumpnz(FUNC *fp, BOOL *dojump)
  */
 /*ARGSUSED*/
 static void
-o_jumpnn(FUNC *fp, BOOL *dojump)
+o_jumpnn(FUNC UNUSED *fp, BOOL *dojump)
 {
 	if (stack->v_addr->v_type) {
 		*dojump = TRUE;
@@ -2620,7 +2622,7 @@ o_jumpnn(FUNC *fp, BOOL *dojump)
 
 /*ARGSUSED*/
 static void
-o_condorjump(FUNC *fp, BOOL *dojump)
+o_condorjump(FUNC UNUSED *fp, BOOL *dojump)
 {
 	VALUE *vp;
 
@@ -2646,7 +2648,7 @@ o_condorjump(FUNC *fp, BOOL *dojump)
 
 /*ARGSUSED*/
 static void
-o_condandjump(FUNC *fp, BOOL *dojump)
+o_condandjump(FUNC UNUSED *fp, BOOL *dojump)
 {
 	VALUE *vp;
 
@@ -2677,7 +2679,7 @@ o_condandjump(FUNC *fp, BOOL *dojump)
  */
 /*ARGSUSED*/
 static void
-o_casejump(FUNC *fp, BOOL *dojump)
+o_casejump(FUNC UNUSED *fp, BOOL *dojump)
 {
 	VALUE *v1, *v2;
 	int r;
@@ -2699,7 +2701,7 @@ o_casejump(FUNC *fp, BOOL *dojump)
 
 /*ARGSUSED*/
 static void
-o_jump(FUNC *fp, BOOL *dojump)
+o_jump(FUNC UNUSED *fp, BOOL *dojump)
 {
 	*dojump = TRUE;
 }
@@ -2719,7 +2721,7 @@ o_usercall(FUNC *fp, long index, long argcount)
 
 /*ARGSUSED*/
 static void
-o_call(FUNC *fp, long index, long argcount)
+o_call(FUNC UNUSED *fp, long index, long argcount)
 {
 	VALUE result;
 
@@ -3073,7 +3075,7 @@ o_rightshift(void)
 
 /*ARGSUSED*/
 static void
-o_debug(FUNC *fp, long line)
+o_debug(FUNC UNUSED *fp, long line)
 {
 	funcline = line;
 	if (abortlevel >= ABORT_STATEMENT) {
@@ -3104,7 +3106,7 @@ o_printresult(void)
 
 /*ARGSUSED*/
 static void
-o_print(FUNC *fp, long flags)
+o_print(FUNC UNUSED *fp, long flags)
 {
 	VALUE *vp;
 
@@ -3138,7 +3140,7 @@ o_printspace(void)
 
 /*ARGSUSED*/
 static void
-o_printstring(FUNC *fp, long index)
+o_printstring(FUNC UNUSED *fp, long index)
 {
 	STRING *s;
 	char *cp;
@@ -3437,7 +3439,7 @@ o_initfill(void)
 static void
 o_show(FUNC *fp, long arg)
 {
-	int size;
+	unsigned int size;
 
 	switch((int) arg) {
 		case 1: showbuiltins(); return;
@@ -3662,7 +3664,7 @@ calculate(FUNC *fp, int argcount)
 	long oldline;			/* old value of line counter */
 	unsigned int opnum;		/* current opcode number */
 	int origargcount;		/* original number of arguments */
-	int i;				/* loop counter */
+	unsigned int i;			/* loop counter */
 	BOOL dojump;			/* TRUE if jump is to occur */
 	char *oldname;			/* old function name being executed */
 	VALUE *beginstack;		/* beginning of stack frame */
@@ -3677,7 +3679,7 @@ calculate(FUNC *fp, int argcount)
 	go = TRUE;
 	++calc_depth;
 	origargcount = argcount;
-	while (argcount < fp->f_paramcount) {
+	while ((unsigned)argcount < fp->f_paramcount) {
 		stack++;
 		stack->v_type = V_NULL;
 		stack->v_subtype = V_NOSUBTYPE;

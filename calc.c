@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: calc.c,v 29.9 2003/08/26 04:36:10 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: calc.c,v 29.10 2004/02/23 09:21:35 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11
@@ -82,6 +82,8 @@
 #if !defined(HAVE_STRDUP)
 # define strdup(x) calc_strdup((CONST char *)(x))
 #endif /* HAVE_STRDUP */
+
+#include "have_unused.h"
 
 
 /*
@@ -706,7 +708,7 @@ main(int argc, char **argv)
  */
 /*ARGSUSED*/
 static void
-intint(int arg)
+intint(int UNUSED arg)
 {
 	(void) signal(SIGINT, intint);
 	if (inputwait || (++abortlevel >= ABORT_NOW)) {

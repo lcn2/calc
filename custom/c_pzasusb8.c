@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: c_pzasusb8.c,v 29.2 2000/06/07 14:03:03 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: c_pzasusb8.c,v 29.3 2004/02/23 09:19:18 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_pzasusb8.c,v $
  *
  * Under source code control:	1999/10/06 03:12:25
@@ -37,6 +37,8 @@
 #include "../custom.h"
 #include "../zmath.h"
 
+#include "../have_unused.h"
+
 /*
  * c_pzasusb8 - print numereator as a string of USB8s
  *
@@ -49,7 +51,7 @@
  */
 /*ARGSUSED*/
 VALUE
-c_pzasusb8(char *name, int count, VALUE **vals)
+c_pzasusb8(char UNUSED *name, int UNUSED count, VALUE **vals)
 {
 	VALUE result;		/* what we will return */
 	ZVALUE z;		/* numerator of the value */

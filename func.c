@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.12 $
- * @(#) $Id: func.c,v 29.12 2002/12/29 09:20:25 chongo Exp $
+ * @(#) $Revision: 29.13 $
+ * @(#) $Id: func.c,v 29.13 2004/02/23 07:25:41 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -84,6 +84,7 @@
 #endif
 
 #include "have_const.h"
+#include "have_unused.h"
 #include "calc.h"
 #include "calcerr.h"
 #include "opcodes.h"
@@ -307,7 +308,7 @@ f_display(int count, VALUE **vals)
 
 /*ARGSUSED*/
 static VALUE
-f_null(int count, VALUE **vals)
+f_null(int UNUSED count, VALUE UNUSED **vals)
 {
 	VALUE res;
 
@@ -4729,7 +4730,7 @@ f_list(int count, VALUE **vals)
 
 /*ARGSUSED*/
 static VALUE
-f_assoc(int count, VALUE **vals)
+f_assoc(int UNUSED count, VALUE UNUSED **vals)
 {
 	VALUE result;
 

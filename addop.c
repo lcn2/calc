@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: addop.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: addop.c,v 29.4 2004/02/23 07:25:16 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/addop.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -44,7 +44,7 @@
 #define OPCODEALLOCSIZE 100	/* reallocate size for opcodes in functions */
 
 
-static long maxopcodes;		/* number of opcodes available */
+static unsigned long maxopcodes;/* number of opcodes available */
 static long newindex;		/* index of new function */
 static char *newname;		/* name of new function */
 static long oldop;		/* previous opcode */
@@ -185,7 +185,7 @@ endfunc(void)
 {
 	register FUNC *fp;		/* function just finished */
 	unsigned long size;		/* size of just created function */
-	long index;
+	unsigned long index;
 
 	if (oldop != OP_RETURN) {
 		addop(OP_UNDEF);
@@ -302,7 +302,7 @@ void
 freefunc(FUNC *fp)
 {
 	long index;
-	long i;
+	unsigned long i;
 
 	if (fp == NULL)
 		return;
@@ -383,7 +383,7 @@ clearopt(void)
 FUNC *
 findfunc(long index)
 {
-	if ((unsigned long) index >= funccount) {
+	if (index >= funccount) {
 		math_error("Undefined function");
 		/*NOTREACHED*/
 	}

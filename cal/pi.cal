@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: pi.cal,v 29.2 2000/06/07 14:02:25 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: pi.cal,v 29.3 2004/02/23 06:06:38 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/pi.cal,v $
  *
  * Under source code control:	1991/05/22 21:56:37
@@ -61,7 +61,7 @@ define qpi(epsilon)
 	yn = sqrt2 - 1;
 	an = 6 - 4 * sqrt2;
 	tn = 2;
-	for (count = 0; count < niter; count++) {
+	for (count = 0; count < niter; ++count) {
 		ym = yn;
 		am = an;
 		tn *= 4;
@@ -104,7 +104,8 @@ define piforever()
 		* Next approximation
 		*/
 		p = k * k;
-		q = k + k++;
+		q = k << 1;
+		++k;
 
 		a2 = a;
 		b2 = b;

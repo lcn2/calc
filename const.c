@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: const.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: const.c,v 29.3 2004/02/23 07:50:41 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/const.c,v $
  *
  * Under source code control:	1990/02/15 01:48:14
@@ -34,7 +34,7 @@
 
 #define CONSTALLOCSIZE 400	/* number of constants to allocate */
 
-static long constcount;		/* number of constants defined */
+static unsigned long constcount;/* number of constants defined */
 static long constavail;		/* number of constants available */
 static NUMBER **consttable;	/* table of constants */
 
@@ -92,7 +92,7 @@ addqconstant(NUMBER *q)
 {
 	register NUMBER **tp;	/* pointer to current number */
 	register NUMBER *t;	/* number being tested */
-	long index;		/* index into constant table */
+	unsigned long index;	/* index into constant table */
 	long numlen;		/* numerator length */
 	long denlen;		/* denominator length */
 	HALF numlow;		/* bottom value of numerator */
@@ -221,7 +221,7 @@ trimconstants(void)
 void
 showconstants(void)
 {
-	long index;
+	unsigned long index;
 	NUMBER **qp;
 	long count;
 

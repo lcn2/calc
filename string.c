@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: string.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: string.c,v 29.3 2004/02/23 08:18:27 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/string.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -184,7 +184,7 @@ namestr(STRINGHEAD *hp, long n)
 {
 	register char *str;	/* current string */
 
-	if ((unsigned long)n >= hp->h_count)
+	if (n >= hp->h_count)
 		return "";
 	str = hp->h_list;
 	while (*str) {
