@@ -19,6 +19,13 @@ The following are the changes from calc version 2.11.0t10 to date:
     The 'unused value ignored' messages now start with Line 999: instead
     of just 999:.
 
+    Fixed some typos in the help files as reported by Klaus Alexander
+    Seistrup <klaus@seistrup.dk>.
+
+    Fixed the long standing issue first reported by Saber-C in the
+    domul() function in zmil.c thanks to a patch by Ernest Bowen
+    <ernie@turing.une.edu.au>.
+
 
 The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
 
