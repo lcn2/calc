@@ -50,6 +50,8 @@ Very High priority items:
     * Fix any 'Known bugs' as noted in the BUGS file or as
       displayed by 'calc help bugs'.
 
+    * Copyleft calc and place it under a LGPL.
+
 =-=
 
 High priority items:
@@ -79,10 +81,9 @@ High priority items:
       then a $PAGER should be forked and execed after doing things such
       as closing open file descriptors that the $PAGER does not need.
 
-    * Inspect changes made since the last major calc release (the
-      initial x.y.z version ... prior to any t sub-version) to help
-      ensure that they have not introduced new or re-introduced old bugs
-      into calc.
+    * The arg passdown to the lower level Makfiles should be reviewed
+      to determine which items really need to be passed down.  The lower
+      level Makefiles should default to the shipped values.
 
     * Consider using configure to build the calc Makefile.
 

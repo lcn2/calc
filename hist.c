@@ -31,6 +31,11 @@
 #include "terminal.h"
 #include "have_string.h"
 
+#include "have_strdup.h"
+#if !defined(HAVE_STRDUP)
+# define strdup(x) calc_strdup((CONST char *)(x))
+#endif /* HAVE_STRDUP */
+
 
 #if defined(USE_TERMIOS)
 # include <termios.h>

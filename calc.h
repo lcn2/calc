@@ -14,6 +14,8 @@
 
 #include "value.h"
 
+#include "have_const.h"
+
 
 /*
  * Configuration definitions
@@ -140,6 +142,7 @@ extern void givehelp(char *type);
 extern void libcalc_call_me_first(void);
 extern void libcalc_call_me_last(void);
 extern void showerrors(void);
+extern char *calc_strdup(CONST char *);
 
 /*
  * Initialization

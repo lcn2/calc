@@ -7339,7 +7339,7 @@ static CONST struct builtin builtins[] = {
  * See the builtin rule in the help/Makefile for details.
  */
 #if defined(FUNCLIST)
-/*ARGSUSED */
+/*ARGSUSED*/
 int
 main(int argc, char *argv[])
 {

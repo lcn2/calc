@@ -580,6 +580,16 @@ findelement(char *name)
 
 
 /*
+ * Returns the name of object type with specified index
+ */
+char *
+objtypename(unsigned long index)
+{
+	return namestr(&objectnames, (long)index);
+}
+
+
+/*
  * Return the value table offset to be used for an object element name.
  * This converts the element index from the element table into an offset
  * into the object value array.  Returns -1 if the element index is unknown.

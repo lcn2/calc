@@ -3773,10 +3773,13 @@ dumpop(unsigned long *pc)
 			return 3;
 		case OP_PRINT: case OP_JUMPZ: case OP_JUMPNZ: case OP_JUMP:
 		case OP_CONDORJUMP: case OP_CONDANDJUMP: case OP_CASEJUMP:
-		case OP_INITSTATIC: case OP_MATCREATE: case OP_OBJCREATE:
+		case OP_INITSTATIC: case OP_MATCREATE:
 		case OP_SHOW: case OP_ELEMINIT: case OP_ELEMADDR:
 		case OP_ELEMVALUE: case OP_JUMPNN:
 			printf(" %ld\n", *pc);
+			return 2;
+		case OP_OBJCREATE:
+			printf(" %s\n", objtypename(*pc));
 			return 2;
 		case OP_NUMBER: case OP_IMAGINARY:
 			qprintf(" %r", constvalue(*pc));

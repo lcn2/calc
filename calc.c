@@ -39,9 +39,6 @@
 /*
  * static definitions and functions
  */
-static char *usage = "usage: %s [-c] [-C] [-d] [-e] [-h] [-i] [-m mode]\n"
-		     "\t[-D calc_debug[:lib_debug:[user_debug]]]\n"
-		     "\t[-n] [-p] [-q] [-u] [-v] [[--] calc_cmd ...]\n";
 static void intint(int arg);	/* interrupt routine */
 
 
@@ -153,7 +150,11 @@ main(int argc, char **argv)
 			 * we are too early in processing to call
 			 * libcalc_call_me_last() - nothing to cleanup
 			 */
-			fprintf(stderr, usage, program);
+			fprintf(stderr,
+			  "usage: %s [-c] [-C] [-d] [-e] [-h] [-i] [-m mode]\n"
+			  "\t[-D calc_debug[:lib_debug:[user_debug]]]\n"
+			  "\t[-n] [-p] [-q] [-u] [-v] [[--] calc_cmd ...]\n",
+			  program);
 			exit(1);
 		}
 	}

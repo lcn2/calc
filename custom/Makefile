@@ -312,6 +312,15 @@ libcustcalc.a: ${CUSTCALC_OBJ} ${MAKE_FILE} ../Makefile
 
 ##
 #
+# Special .o files
+#
+##
+
+c_sysinfo.o: c_sysinfo.c ${MAKE_FILE}
+	${CC} ${CFLAGS} c_sysinfo.c -c
+
+##
+#
 # used by the upper level Makefile
 #
 ##

@@ -263,7 +263,7 @@ ungetfunction(void)
 				return;
 			default:
 				scanerror(T_SEMICOLON,
-					 "Non-name arg for undefine"); 
+					 "Non-name arg for undefine");
 				return;
 		}
 	}
@@ -521,11 +521,9 @@ getonevariable(int symtype)
  *	| BREAK ';'
  *	| RETURN assignment ';'
  *	| GOTO label ';'
- *	| MAT name '[' value [ ':' value ] [',' value [ ':' value ] ] ']' ';'
- *	| OBJ type '{' arg [ ',' arg ] ... '}' ] ';'
- *	| OBJ type name [ ',' name ] ';'
  *	| PRINT assignment [, assignment ] ... ';'
  *	| QUIT [ string ] ';'
+ *	| ABORT [ string ] ';'
  *	| SHOW item ';'
  *	| body
  *	| assignment ';'
@@ -707,14 +705,14 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 			}
 		}
 		if (gettoken() != T_RIGHTPAREN) {	/* have 'c' part */
-			if (label1.l_offset <= 0)
+			if (label1.l_offset < 0)
 				addoplabel(OP_JUMP, &label3);
 			setlabel(&label2);
 			contlabel = &label2;
 			rescantoken();
 			(void) getexprlist();
 			addop(OP_POP);
-			if (label1.l_offset > 0)
+			if (label1.l_offset >= 0)
 				addoplabel(OP_JUMP, &label1);
 			if (gettoken() != T_RIGHTPAREN) {
 				(void) tokenmode(oldmode);
@@ -734,15 +732,21 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 	case T_WHILE:
 		oldmode = tokenmode(TM_DEFAULT);
 		contlabel = &label1;
-		breaklabel = &label2;
 		clearlabel(contlabel);
-		clearlabel(breaklabel);
 		setlabel(contlabel);
 		getcondition();
-		addoplabel(OP_JUMPZ, breaklabel);
-		getstatement(contlabel, breaklabel, NULL_LABEL, NULL_LABEL);
-		addoplabel(OP_JUMP, contlabel);
-		setlabel(breaklabel);
+		if (gettoken() != T_SEMICOLON) {
+			breaklabel = &label2;
+			clearlabel(breaklabel);
+			addoplabel(OP_JUMPZ, breaklabel);
+			rescantoken();
+			getstatement(contlabel, breaklabel,
+				NULL_LABEL, NULL_LABEL);
+			addoplabel(OP_JUMP, contlabel);
+			setlabel(breaklabel);
+		} else {
+			addoplabel(OP_JUMPNZ, contlabel);
+		}
 		(void) tokenmode(oldmode);
 		return;
 
@@ -1053,18 +1057,14 @@ getoneobj(long index, int symtype)
 }
 
 /*
- * Routine to collect a set of variables for the specified object type
- * and initialize them as being that type of object.
- * Here
- *	objlist = name initlist [ ',' name initlist ] ... ';'.
- * If symtype is SYM_UNDEFINED, then this is an OBJ statement where the
- * values can be any variable expression, and no symbols are to be defined.
- * Otherwise this is part of a declaration, and the variables must be raw
- * symbol names which are defined with the specified symbol type.
+ * Routine to assign a specified object-type value to each of a set of
+ * variables in a "global", "local" or "static" declaration, or, if
+ * symtype is SYM_UNDEFINED, to create one object value of the specified
+ * type.
  *
  * given:
  *	name		object name
- *	symtype		type of symbol to collect for
+ *	symtype		declaration type
  */
 static void
 getobjvars(char *name, int symtype)
@@ -1078,6 +1078,8 @@ getobjvars(char *name, int symtype)
 	}
 	for (;;) {
 		getoneobj(index, symtype);
+		if (symtype == SYM_UNDEFINED)
+			return;
 		if (gettoken() != T_COMMA) {
 			rescantoken();
 			return;
@@ -1921,11 +1923,6 @@ getterm(void)
 
 		case T_MAT:
 			getonematrix(SYM_UNDEFINED);
-			while (gettoken() == T_COMMA) {
-				addop(OP_POP);
-				getonematrix(SYM_UNDEFINED);
-			}
-			rescantoken();
 			type = EXPR_ASSIGN;
 			break;
 

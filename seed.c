@@ -53,9 +53,10 @@
  */
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/resource.h>
 #include <time.h>
+#include <sys/time.h>
 #include <sys/times.h>
+#include <sys/resource.h>
 #include <setjmp.h>
 #include "qmath.h"
 #include "longbits.h"

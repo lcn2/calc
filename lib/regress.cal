@@ -1694,6 +1694,7 @@ define test_obj()
 {
 	static obj surd a;
 	static obj surd b;
+	local PP;
 
 	print '1800: Beginning object test';
 
@@ -1731,7 +1732,10 @@ define test_obj()
 	vrfy(a <= a,			'1828: a < a');
 	vrfy(isobj(a) == 1,		'1829: isobj(a) == 1');
 
-	print '1830: Ending object test';
+	obj pt {x,y}, PP = obj pair {A,B} = {obj pt, obj pt};
+	print '1830: obj pt {x,y}, PP = obj pair {A,B} = {obj pt, obj pt}';
+
+	print '1831: Ending object test';
 }
 print '028: parsed test_obj()';
 
@@ -4687,8 +4691,8 @@ define test_commaeq()
 	/*
 	 * matrix assignment
 	 */
-	mat A[3] = {1,2,3}, B[2] = {1,2};
-	print		'5625: mat A[3] = {1,2,3}, B[2] = {1,2}';
+	mat A[3] = {1,2,3}, mat B[2] = {1,2};
+	print		'5625: mat A[3] = {1,2,3}, mat B[2] = {1,2}';
 	vrfy(A[0] == 1,			  '5626: A[0] == 1');
 	vrfy(B[1] == 2,			  '5627: B[1] == 2');
 
@@ -4916,8 +4920,8 @@ define test_assign(base, work)
 	print				  base+3: ': X5800 = base+3';
 	Y5800 = base+4;
 	print				  base+4: ': Y5800 = base+4';
-	obj xy5800 A={1,2}, B={3,4};
-	print base+5: ': obj xy5800 A={1,2}, B={3,4}';
+	obj xy5800 A={1,2}, obj xy5800 B={3,4};
+	print base+5: ': obj xy5800 A={1,2}, obj xy5000 B={3,4}';
 
 	/*
 	 * test assignment
@@ -7372,7 +7376,7 @@ vrfy(X5800 == (obj xy5800 = {3,9}),
 				  '5859: X5800 == (obj xy5800 = {3,9})');
 vrfy(errno() > 0,		  '5860: errno() > 0');
 vrfy(strerror() == "Incompatible types for =",
-			'5861: strerror() == "Incompatible types for ="');
+		'5861: strerror() == "Incompatible types for ="');
 X5800 = 2;
 print				  '5862: X5800 = 2';
 vrfy(X5800 == (obj xy5800 = {2,0}),
@@ -7381,7 +7385,10 @@ X5800 = obj xy5800 = {1,2};
 print				  '5864: X5800 = obj xy5800 = {1,2}';
 vrfy(X5800 == (obj xy5800 = {1,2}),
 				  '5865: X5800 == (obj xy5800 = {1,2})');
-print '5866: End of 5800 sequence';
+define f5800(a8500 = mat[2] = {3,4}) = 5 * a8500;
+print		'5866: define f5800(a8500 = mat[2] = {3,4}) = 5 * a8500;'
+vrfy(f5800() == (mat[] = {15,20}),'5867: f5800() == (mat[] = {15,20})');
+print '5868: End of 5800 sequence';
 
 print;
 return test_is();

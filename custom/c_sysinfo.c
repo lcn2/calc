@@ -33,6 +33,7 @@
 #include "../config.h"
 #include "../calc.h"
 #include "../longbits.h"
+#define CHECK_L_FORMAT
 #include "../longlong.h"
 #include "../block.h"
 #include "../calcerr.h"
@@ -306,17 +307,33 @@ static void
 dump_name_value(void)
 {
 	struct infoname *p;	/* current infoname */
+	char *fmt;		/* printf value format */
 
 	/* dump the entire table */
 	for (p = sys_info; p->name != NULL; ++p) {
 		if (p->str == NULL) {
 #if LONG_BITS == FULL_BITS || FULL_BITS == 32 || !defined(HAVE_LONGLONG)
-			printf("%s%-23s\t%-8lu\t(0x%lx)\n",
+			fmt = "%s%-23s\t%-8lu\t(0x%lx)\n";
+			printf(fmt,
 			    (conf->tab_ok ? "\t" : ""), p->name,
 			    (unsigned long)p->nmbr,
 			    (unsigned long)p->nmbr);
 #else
-			printf("%s%-23s\t%-8llu\t(0x%llx)\n",
+			/*
+			 * Determine of %ld can print a 64 bit long long.
+			 *
+			 * Some systems that can make use of %ld to print a
+			 * a 64 bit value do not support the %lld type.
+			 * So we will only try %lld if %ld does not work.
+			 */
+			if (l_format < 0) {
+				/* %ld prints lower 32 bits only, use %lld */
+				fmt = "%s%-23s\t%-8llu\t(0x%llx)\n";
+			} else {
+				/* %ld prints all 64 bits, use %ld */
+				fmt = "%s%-23s\t%-8lu\t(0x%lx)\n";
+			}
+			printf(fmt,
 			    (conf->tab_ok ? "\t" : ""), p->name,
 			    (unsigned long long)p->nmbr,
 			    (unsigned long long)p->nmbr);
@@ -337,17 +354,33 @@ static void
 dump_mening_value(void)
 {
 	struct infoname *p;	/* current infoname */
+	char *fmt;		/* printf value format */
 
 	/* dump the entire table */
 	for (p = sys_info; p->name != NULL; ++p) {
 		if (p->str == NULL) {
 #if LONG_BITS == FULL_BITS || FULL_BITS == 32 || !defined(HAVE_LONGLONG)
-			printf("%s%-36.36s\t%-8lu\t(0x%lx)\n",
+			fmt = "%s%-36.36s\t%-8lu\t(0x%lx)\n";
+			printf(fmt,
 			    (conf->tab_ok ? "\t" : ""), p->meaning,
 			    (unsigned long)p->nmbr,
 			    (unsigned long)p->nmbr);
 #else
-			printf("%s%-36.36s\t%-8llu\t(0x%llx)\n",
+			/*
+			 * Determine of %ld can print a 64 bit long long.
+			 *
+			 * Some systems that can make use of %ld to print a
+			 * a 64 bit value do not support the %lld type.
+			 * So we will only try %lld if %ld does not work.
+			 */
+			if (l_format < 0) {
+				/* %ld prints lower 32 bits only, use %lld */
+				fmt = "%s%-36.36s\t%-8llu\t(0x%llx)\n";
+			} else {
+				/* %ld prints all 64 bits, use %ld */
+				fmt = "%s%-36.36s\t%-8lu\t(0x%lx)\n";
+			}
+			printf(fmt,
 			    (conf->tab_ok ? "\t" : ""), p->meaning,
 			    (unsigned long long)p->nmbr,
 			    (unsigned long long)p->nmbr);

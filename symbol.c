@@ -175,7 +175,10 @@ showglobals(void)
 			printf("\n");
 		}
 	}
-	printf(count ? "\n" : "No real-valued global variables\n");
+	if (count == 0) {
+		printf("No real-valued global variables\n");
+	}
+	putchar('\n');
 }
 
 

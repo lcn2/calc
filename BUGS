@@ -96,31 +96,36 @@ Known bugs:
       the terminal in a 'bad' state, as if stty -icanon -echo -echoe
       had been executed.
 
-    * Dec Alpha Linux compiling with gcc-2.95.1 (or gcc-2.95.2) and
-      -O2 fails the version 2.11.0t8.10 regression test with:
+    * Use of 'fmt' in the 2nd arg of printf() calls in c_sysinfo.c
+      cause some compilers to issue warnings.
 
-	make -s check
-	000: Beginning regression tests
-	001: Some of these tests may take a while ...
-	002: Within each section, output should be numbered sequentially
-	003: parsed global definitions
-	004: parsed vrfy()
-	005: parsed prob(str)
-	006: parsed getglobalvar()
-	007: parsed test_booleans()
-	008: parsed test_variables()
-	make: *** [check] Segmentation fault (core dumped)
+    We are sure some more bugs exist.  When you find them, please let
+    us know!  See the above for details on how to report and were to
+    EMail your bug reports and hopefully patches to fix them.
 
-      Other programs have reported problems when compiling -O2 with
-      gcc-2.95.1 on the Alpha and Mips.
+=-=
 
-      One work-a-round is to not compile with -O2 (perhaps just -O).
-      Another work-a-round is not use gcc-2.95.1.
+Other items of note:
+
+    * There is a bug in gcc-2.95 that causes calc, when compiled with -O2,
+      to fail the regression test.  The work-a-round is to compile with -O
+      or to use gcc-2.96 or later.
+
+    * There is a bug in some versions of the Dec/Compaq cc for the Alpha
+      where the following:
+
+	    #include <stdio.h>
+	    #define SVAL(a,b) (unsigned long)(0x ## a ## b ## ULL)
+	    main(){SVAL(b8a8aeb0,8168eadc);}
+
+      fails because it puts a space inside the concatenated hex.  Calc
+      has code that is affected by this bug.  This bug has been reported
+      to Compaq and may be fixed in the future.  A work-a-round is to
+      compile with cc -std0 or to use a later version of their compiler.
 
     * On a Digital UNIX V4.0F (Rev. 1229) on a 500 Mhz 21264, make check
       dies a horrible death starting in test 600 and 622 gives 100s of
-      messages for calc version 2.11.0t9.2 using the Dec's cc with -O2
-      and without -std0:
+      messages for calc version 2.11.0t9.4 using the Dec's cc with -O2:
 
 	600: Beginning test_bignums
 	601: muldivcheck 1
@@ -135,6 +140,12 @@ Known bugs:
 
 	it finally hangs at test 2000.
 
-    We are sure some more bugs exist.  When you find them, please let
-    us know!  See the above for details on how to report and were to
-    EMail your bug reports and hopefully patches to fix them.
+      The work-a-round is to compile calc without the optimizer.  If this
+      happens to you, try compiling without -O and without -O2.  I.e., in
+      the Makefile, set:
+
+	DEBUG= -g
+
+      or set:
+
+	DEBUG=

@@ -62,8 +62,8 @@
 /*
  * have the compiler try its hand with unsigned and signed long longs
  */
-unsigned long long val = 4294967297ULL;
-long long val2 = -4294967297LL;
+unsigned long long val = 0x1234567890123456ULL;
+long long val2 = -1311768467284833366LL;	/* -0x1234567890123456 */
 
 
 int
@@ -90,14 +90,20 @@ main(int argc, char **argv)
 	if (longlong_bits > 0) {
 
 		/*
-		 * if size is longer than an unsigned long, use it
+		 * if size is longer than an unsigned long,
+		 * and the negative 'long long' works, then use long long's
 		 */
-		if (longlong_bits > sizeof(unsigned long)*8) {
+		if (longlong_bits > sizeof(unsigned long)*8 && val2 < 0) {
 
 			/* use long long length */
 			printf("#define HAVE_LONGLONG\n");
 			printf("#define LONGLONG_BITS %d  /* yes */\n",
 			    longlong_bits);
+
+			printf("\n/* does %%lld work or does %%ld? */\n");
+			printf("#if defined(CHECK_L_FORMAT)\n");
+			printf("long long l_format = %ld;\n", val);
+			printf("#endif /* CHECK_L_FORMAT */\n");
 		}
 	}
 	/* exit(0); */

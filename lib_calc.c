@@ -34,6 +34,11 @@
 #include "symbol.h"
 #include "func.h"
 
+#include "have_strdup.h"
+#if !defined(HAVE_STRDUP)
+# define strdup(x) calc_strdup((CONST char *)(x))
+#endif /* HAVE_STRDUP */
+
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
@@ -339,7 +344,7 @@ initenv(void)
 
 	/* determine the $HOME value */
 	c = getenv(HOME);
-	home = ((no_env || c == NULL) ? NULL : strdup(c)); 
+	home = ((no_env || c == NULL) ? NULL : strdup(c));
 	if (home == NULL || home[0] == '\0') {
 		ent = (struct passwd *)getpwuid(geteuid());
 		if (ent == NULL) {
@@ -430,4 +435,46 @@ run_state_name(run state)
 		return "RUN_EXIT_WITH_ERROR";
 	}
 	return "RUN_invalid";
+}
+
+
+/*
+ * calc_strdup - calc interface to provide or simulate strdup()
+ */
+char *
+calc_strdup(CONST char *s1)
+{
+#if defined(HAVE_STRDUP)
+
+	return strdup(s1);
+
+#else /* HAVE_STRDUP */
+
+	char *ret;	/* return string */
+
+	/*
+	 * firewall
+	 */
+	if (s1 == NULL) {
+		return NULL;
+	}
+
+	/*
+	 * allocate duplicate storage
+	 */
+	ret = (char *)malloc(sizeof(char) * (strlen(s1)+1));
+
+	/*
+	 * if we have storage, duplicate the string
+	 */
+	if (ret != NULL) {
+		strcpy(ret, s1);
+	}
+
+	/*
+	 * return the new string, or NULL if malloc failed
+	 */
+	return ret;
+
+#endif /* HAVE_STRDUP */
 }

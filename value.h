@@ -451,6 +451,7 @@ extern int checkobject(char *name);
 extern void showobjfuncs(void);
 extern void showobjtypes(void);
 extern int findelement(char *name);
+extern char *objtypename(unsigned long index);
 extern int objoffset(OBJECT *op, long index);
 
 
