@@ -7150,7 +7150,7 @@ define test_somenew()
 
 	a = isqrt(2e1000); s = "xyz";
 	print				'8217: a = isqrt(2e1000); s = "xyz";';
-	vrfy(hash(a,s) == 2378490456,	'8218: hash(a,s) == 2378490456');
+	vrfy(hash(a,s) == 2708885378,	'8218: hash(a,s) == 2708885378');
 	vrfy(hash("curds n whey") == 2376141927,
 			'8219: hash("curds n whey") == 2376141927');
 

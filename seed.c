@@ -230,8 +230,8 @@ hash_buf(char *buf, unsigned len)
 
 	/* convert to hash64 */
 	/* hval.w32[1] = 0xffff&(val[3]<<16)+val[2]; */
-	hval.w32[1] = val[3]<<16 + val[2];
-	hval.w32[0] = val[1]<<16 + val[0];
+	hval.w32[1] = (val[3]<<16) + val[2];
+	hval.w32[0] = (val[1]<<16) + val[0];
 
 #endif /* HAVE_B64 */
 

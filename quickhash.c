@@ -56,11 +56,6 @@
 #include "zrand.h"
 #include "zrandom.h"
 
-#define ZMOST 2		/* most significant HALFs to hash */
-#define ZLEAST 2	/* least significant HALFs to hash */
-#define ZMIDDLE 4	/* HALFs in the middle to hash */
-
-
 /*
  * forward declarations
  */
@@ -71,7 +66,8 @@ static QCKHASH objhash(OBJECT *op, QCKHASH val);
 static QCKHASH randhash(RAND *r, QCKHASH val);
 static QCKHASH randomhash(RANDOM *state, QCKHASH val);
 static QCKHASH config_hash(CONFIG *cfg, QCKHASH val);
-static QCKHASH fnv_strhash(char *str, QCKHASH val);
+static QCKHASH fnv_strhash(char *ch, QCKHASH val);
+static QCKHASH fnv_STRhash(STRING *str, QCKHASH val);
 static QCKHASH fnv_fullhash(FULL *v, LEN len, QCKHASH val);
 static QCKHASH fnv_zhash(ZVALUE z, QCKHASH val);
 static QCKHASH hash_hash(HASH *hash, QCKHASH val);
@@ -167,7 +163,7 @@ hashvalue(VALUE *vp, QCKHASH val)
 		case V_COM:
 			return fnv_chash(vp->v_com, val);
 		case V_STR:
-			return fnv_strhash(vp->v_str->s_str, val);
+			return fnv_STRhash(vp->v_str, val);
 		case V_NULL:
 			return val;
 		case V_OBJ:
@@ -438,7 +434,29 @@ config_hash(CONFIG *cfg, QCKHASH val)
 
 
 /*
- * fnv_strhash - Fowler/Noll/Vo 32 bit hash of a string
+ * fnv_strhash - Fowler/Noll/Vo 32 bit hash of a null-terminated string
+ *
+ * given:
+ *	ch	the start of the string to hash
+ *	val	initial hash value
+ *
+ * returns:
+ *	a 32 bit QCKHASH value
+ */
+static QCKHASH
+fnv_strhash(char *ch, QCKHASH val)
+{
+	/*
+	 * hash each character in the string
+	 */
+	while (*ch) {
+		val = fnv(*ch++, val);
+	}
+	return val;
+}
+
+/*
+ * fnv_STRhash - Fowler/Noll/Vo 32 bit hash of a STRING
  *
  * given:
  *	str	the string to hash
@@ -448,13 +466,19 @@ config_hash(CONFIG *cfg, QCKHASH val)
  *	a 32 bit QCKHASH value
  */
 static QCKHASH
-fnv_strhash(char *str, QCKHASH val)
+fnv_STRhash(STRING *str, QCKHASH val)
 {
+	char *ch;
+	long n;
+
+	ch = str->s_str;
+	n = str->s_len;
+
 	/*
 	 * hash each character in the string
 	 */
-	while (*str) {
-		val = fnv(*str++, val);
+	while (n-- > 0) {
+		val = fnv(*ch++, val);
 	}
 	return val;
 }
@@ -497,48 +521,36 @@ fnv_fullhash(FULL *v, LEN len, QCKHASH val)
 static QCKHASH
 fnv_zhash(ZVALUE z, QCKHASH val)
 {
-	int skip;		/* HALFs to skip in the middle */
-	int i;
+	LEN n;
+	HALF *hp;
+#if BASEB == 16
+	FULL f;
+#endif
 
 	/*
-	 * hash the sign and length
+	 * hash the sign
 	 */
-	if (zisneg(z)) {
-		val = fnv(-(z.len), val+V_NUM);
-	} else {
-		val = fnv(z.len, val+V_NUM);
+	val = fnv(z.sign, val + V_NUM);
+
+	n = z.len;
+	hp = z.v;
+
+#if BASEB == 16
+	while (n > 1) {
+		f = (FULL) *hp++;
+		f |= (FULL) *hp++ << BASEB;
+		val = fnv(f, val);
+		n -= 2;
 	}
-
-	/*
-	 * if a ZVALUE is short enough, hash it all
-	 */
-	if (z.len <= ZMOST+ZLEAST+ZMIDDLE) {
-		/* hash all HALFs of a short ZVALUE */
-		for (i=0; i < z.len; ++i) {
-			val = fnv(z.v[i], val);
-		}
-
-	/*
-	 * otherwise hash the ZLEAST significant HALFs followed by
-	 * ZMIDDLE HALFs followed by the ZMOST significant HALFs.
-	 */
-	} else {
-		/* hash the ZLEAST significant HALFs */
-		for (i=0; i < ZLEAST; ++i) {
-			val = fnv(z.v[i], val);
-		}
-
-		/* hash ZMIDDLE HALFs in the middle */
-		skip = (z.len-ZLEAST-ZMOST)/(ZMIDDLE + 1);
-		for (i=ZLEAST-1+skip; i < ZLEAST-1+skip*(ZMIDDLE+1); i+=skip) {
-			val = fnv(z.v[i], val);
-		}
-
-		/* hash the ZMOST significant HALFs */
-		for (i=z.len-1-ZMOST; i < z.len; ++i) {
-			val = fnv(z.v[i], val);
-		}
+	if (n) {
+		val = fnv(*hp, val);
 	}
+#else
+	while (n--  > 0) {
+		val = fnv(*hp, val);
+		++hp;
+	}
+#endif
 	return val;
 }
 

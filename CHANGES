@@ -129,6 +129,11 @@ Following is the change from calc version 2.11.0t8 to date:
 		print "funcB(size, mass, ...) defined";
 	}
 
+    Fixed the help/custom_cal, help/new_custom, and help/copy files so
+    that they contain the correct contents instead of the 'usage' file.
+
+    Fixed misc compiler warnings.
+
 
 Following is the change from calc version 2.11.0t7 to 2.11.0t7.5:
 

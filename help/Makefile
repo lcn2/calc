@@ -258,7 +258,7 @@ calc: usage
 
 custom_cal: ../custom/CUSTOM_CAL
 	rm -f $@
-	cp usage $@
+	cp ../custom/CUSTOM_CAL $@
 	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -270,7 +270,7 @@ custom_cal: ../custom/CUSTOM_CAL
 
 new_custom: ../custom/HOW_TO_ADD
 	rm -f $@
-	cp usage $@
+	cp ../custom/HOW_TO_ADD $@
 	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -282,7 +282,7 @@ new_custom: ../custom/HOW_TO_ADD
 
 copy: blkcpy
 	rm -f $@
-	cp usage $@
+	cp blkcpy $@
 	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
