@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: hist.c,v 29.4 2004/02/23 07:54:24 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: hist.c,v 29.5 2004/02/23 10:29:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hist.c,v $
  *
  * Under source code control:	1993/05/02 20:09:19
@@ -195,8 +195,8 @@ static char	esc_map_name[] = "esc-map";
 
 
 static KEY_MAP	maps[] = {
-	{base_map_name},
-	{esc_map_name}
+	{base_map_name, {NULL, NULL}, {NULL, NULL}},
+	{esc_map_name, {NULL, NULL}, {NULL, NULL}},
 };
 
 
@@ -409,7 +409,7 @@ hist_term(void)
 static KEY_MAP *
 find_map(char *map)
 {
-	int	i;
+	unsigned int i;
 
 	for (i = 0; i < sizeof(maps) / sizeof(maps[0]); i++) {
 		if (strcmp(map, maps[i].name) == 0)

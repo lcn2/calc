@@ -45,7 +45,7 @@ The following are the changes from calc version 2.11.9 to date:
     zrandom.c, custom/c_argv.c, custom/c_devnull.c, custom/c_help.c,
     custom/c_sysinfo.c, addop.c and calc.c.
 
-    Fixed some typos in this CHANGES file.
+    Fixed some typos in this file.
 
 
 The following are the changes from calc version 2.11.8.0 to 2.11.8.1:
