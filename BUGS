@@ -96,6 +96,27 @@ Known bugs:
       the terminal in a 'bad' state, as if stty -icanon -echo -echoe
       had been executed.
 
+    * Dec Alpha Linux compiling with gcc-2.95.1 and -O2 fails the
+      regression test with:
+
+	make -s check
+	000: Beginning regression tests
+	001: Some of these tests may take a while ...
+	002: Within each section, output should be numbered sequentially
+	003: parsed global definitions
+	004: parsed vrfy()
+	005: parsed prob(str)
+	006: parsed getglobalvar()
+	007: parsed test_booleans()
+	008: parsed test_variables()
+	make: *** [check] Segmentation fault (core dumped)
+
+      Other programs have reported problems when compiling -O2 with
+      gcc-2.95.1 on the Alpha and Mips.
+
+      One work-a-round is to not compile with -O2 (perhaps just -O).
+      Another work-a-round is not use gcc-2.95.1.
+
     We are sure some more bugs exist.  When you find them, please let
     us know!  See the above for details on how to report and were to
     EMail your bug reports and hopefully patches to fix them.
