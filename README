@@ -74,7 +74,9 @@ for a wish/todo list.  Code contributions are welcome.
 
 To join the calc-tester mailing list.  Send a request to:
 
-     calc-tester-request@postofc.corp.sgi.com
+    calc-tester-request at postofc dot corp dot sgi dot com
+
+    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
 
 Your message body (not the subject) should consist of:
 
@@ -84,6 +86,14 @@ Your message body (not the subject) should consist of:
 
 where ``address'' is your EMail address and ``your_full_name'' is
 your full name.
+
+Calc bug reports, however should be sent to:
+
+    calc-bugs at postofc dot corp dot sgi dot com
+
+    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+
+but see the BUGS file first.
 
 The calc web site is located at:
 

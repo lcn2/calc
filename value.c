@@ -192,6 +192,7 @@ copyvalue(VALUE *oldvp, VALUE *newvp)
 			break;
 		case V_OCTET:
 			newvp->v_type = V_NUM;
+			newvp->v_subtype = V_NOSUBTYPE;
 			newvp->v_num = itoq((long) *oldvp->v_octet);
 			break;
 		case V_NBLOCK:
@@ -310,6 +311,7 @@ negvalue(VALUE *vp, VALUE *vres)
 			return;
 		case V_OCTET:
 			vres->v_type = V_NUM;
+			vres->v_subtype = V_NOSUBTYPE;
 			vres->v_num = itoq(- (long) *vp->v_octet);
 			return;
 
@@ -341,6 +343,7 @@ addnumeric(VALUE *v1, VALUE *v2, VALUE *vres)
 	/*
 	 * add numeric values
 	 */
+	vres->v_subtype = V_NOSUBTYPE;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
 	case TWOVAL(V_NUM, V_NUM):
 		vres->v_num = qqadd(v1->v_num, v2->v_num);
@@ -2418,9 +2421,11 @@ acceptvalue(VALUE *v1, VALUE *v2)
 	if (fp) {
 		++stack;
 		stack->v_type = V_ADDR;
+		stack->v_subtype = V_NOSUBTYPE;
 		stack->v_addr = v1;
 		++stack;
 		stack->v_type = V_ADDR;
+		stack->v_subtype = V_NOSUBTYPE;
 		stack->v_addr = v2;
 		calculate(fp, 2);
 		ret = testvalue(stack);
@@ -2445,9 +2450,11 @@ precvalue(VALUE *v1, VALUE *v2)
 	if (fp) {
 		++stack;
 		stack->v_type = V_ADDR;
+		stack->v_subtype = V_NOSUBTYPE;
 		stack->v_addr = v1;
 		++stack;
 		stack->v_type = V_ADDR;
+		stack->v_subtype = V_NOSUBTYPE;
 		stack->v_addr = v2;
 		calculate(fp, 2);
 		ret = testvalue(stack);
@@ -2630,6 +2637,7 @@ sgnvalue(VALUE *vp, VALUE *vres)
 	switch (vp->v_type) {
 		case V_NUM:
 			vres->v_num = qsign(vp->v_num);
+			vres->v_subtype = vp->v_subtype;
 			return;
 		case V_COM:
 			c = comalloc();
@@ -2639,9 +2647,11 @@ sgnvalue(VALUE *vp, VALUE *vres)
 			c->imag = qsign(vp->v_com->imag);
 			vres->v_com = c;
 			vres->v_type = V_COM;
+			vres->v_subtype = V_NOSUBTYPE;
 			return;
 		case V_OCTET:
 			vres->v_type = V_NUM;
+			vres->v_subtype = V_NOSUBTYPE;
 			vres->v_num = itoq((long) (*vp->v_octet != 0));
 			return;
 		case V_OBJ:

@@ -33,7 +33,9 @@ the calc language, and/or because the authors thought them to be useful!
 
 If you write something that you think is useful, please send it to:
 
-    calc-tester@postofc.corp.sgi.com
+    calc-tester at postofc dot corp dot sgi dot com
+
+    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
 
 By convention, a lib file only defines and/or initializes functions,
 objects and variables.  (The regress.cal and testxxx.cal regression test

@@ -80,6 +80,7 @@ associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices)
 	 */
 	if (!create) {
 		val.v_type = V_NULL;
+		val.v_subtype = V_NOSUBTYPE;
 		return &val;
 	}
 
@@ -292,6 +293,7 @@ assoccopy(ASSOC *oldap)
 			ep->e_dim = oldep->e_dim;
 			ep->e_hash = oldep->e_hash;
 			ep->e_value.v_type = V_NULL;
+			ep->e_value.v_subtype = V_NOSUBTYPE;
 			for (i = 0; i < ep->e_dim; i++)
 				copyvalue(&oldep->e_indices[i], &ep->e_indices[i]);
 			copyvalue(&oldep->e_value, &ep->e_value);

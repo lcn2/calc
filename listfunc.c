@@ -130,10 +130,12 @@ removelistfirst(LIST *lp, VALUE *vp)
 {
 	if (lp->l_count == 0) {
 		vp->v_type = V_NULL;
+		vp->v_subtype = V_NOSUBTYPE;
 		return;
 	}
 	*vp = lp->l_first->e_value;
 	lp->l_first->e_value.v_type = V_NULL;
+	lp->l_first->e_value.v_type = V_NOSUBTYPE;
 	removelistelement(lp, lp->l_first);
 }
 
@@ -151,10 +153,12 @@ removelistlast(LIST *lp, VALUE *vp)
 {
 	if (lp->l_count == 0) {
 		vp->v_type = V_NULL;
+		vp->v_subtype = V_NOSUBTYPE;
 		return;
 	}
 	*vp = lp->l_last->e_value;
 	lp->l_last->e_value.v_type = V_NULL;
+	lp->l_last->e_value.v_subtype = V_NOSUBTYPE;
 	removelistelement(lp, lp->l_last);
 }
 
@@ -181,6 +185,7 @@ removelistmiddle(LIST *lp, long index, VALUE *vp)
 	}
 	*vp = ep->e_value;
 	ep->e_value.v_type = V_NULL;
+	ep->e_value.v_subtype = V_NOSUBTYPE;
 	removelistelement(lp, ep);
 }
 

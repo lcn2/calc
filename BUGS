@@ -31,7 +31,9 @@ The calc web site is located at:
 If you have tried all of the above and things still are not right,
 then it may be time to send in a bug report.  You can send bug reports to:
 
-    calc-tester@postofc.corp.sgi.com
+    calc-bugs at postofc dot corp dot sgi dot com
+
+    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
 
 When you send your report, please include the following information:
 
@@ -62,7 +64,12 @@ Stack traces from core dumps are useful to send as well.
 Send any comments, compiler warning messages, suggestions and most
 importantly, fixes (in the form of a context diff patch) to:
 
-    calc-tester@postofc.corp.sgi.com
+    calc-tester at postofc dot corp dot sgi dot com
+
+    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+
+You should use the above calc-bugs address for bug reports, if you are
+not currently a member of the calc-tester mailing list.
 
 =-=
 
@@ -146,6 +153,7 @@ Other items of note:
 
 	DEBUG= -g
 
-      or set:
-
-	DEBUG=
+    * The sparcv9 support for 64 bit Solaris under gcc-2.96 is able
+      to compile calc, but calc dumps core very early on in startup.
+      It is said that sparcv9 support in gcc-2.96 is very unofficial.
+      There is no work-a-round for this compile problem.

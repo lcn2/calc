@@ -141,6 +141,10 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 	VALUE tmp;		/* temp value */
 	char name[SYMBOLSIZE+1];	/* full name of user routine to call */
 
+	/* initialize VALUEs */
+	val.v_subtype = V_NOSUBTYPE;
+	tmp.v_subtype = V_NOSUBTYPE;
+
 	if ((unsigned)action > OBJ_MAXFUNC) {
 		math_error("Illegal action for object call");
 		/*NOTREACHED*/
@@ -404,6 +408,7 @@ objpowi(VALUE *vp, NUMBER *q)
 			case 1:
 				res.v_obj = objcopy(vp->v_obj);
 				res.v_type = V_OBJ;
+				res.v_subtype = V_NOSUBTYPE;
 				return res;
 			case -1:
 				return objcall(OBJ_INV, vp, NULL_VALUE, NULL_VALUE);

@@ -114,6 +114,7 @@ beginfunc(char *name, BOOL newflag)
 	fp->f_localcount = 0;
 	fp->f_opcodecount = 0;
 	fp->f_savedvalue.v_type = V_NULL;
+	fp->f_savedvalue.v_subtype = V_NOSUBTYPE;
 	fp->f_name = namestr(&funcnames, newindex);
 	curfunc = fp;
 	initlocals();

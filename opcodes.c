@@ -230,6 +230,7 @@ o_argvalue(FUNC *fp, int argcount, VALUE *args)
 			qfree(stack->v_num);
 		stack->v_num = itoq((long) argcount);
 		stack->v_type = V_NUM;
+		stack->v_subtype = V_NOSUBTYPE;
 		return;
 	}
 	index = qtoi(vp->v_num) - 1;
@@ -292,6 +293,7 @@ o_string(FUNC *fp, long arg)
 	stack++;
 	stack->v_str = slink(findstring(arg));
 	stack->v_type = V_STR;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -300,6 +302,7 @@ o_undef(void)
 {
 	stack++;
 	stack->v_type = V_NULL;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -940,6 +943,7 @@ o_swap(void)
 		/*NOTREACHED*/
 	}
 	stack->v_type = V_NULL;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -958,11 +962,13 @@ o_add(void)
 		v2 = v2->v_addr;
 	if (v1->v_type == V_OCTET) {
 		w1.v_type = V_NUM;
+		w1.v_subtype = V_NOSUBTYPE;
 		w1.v_num = itoq(*v1->v_octet);
 		v1 = &w1;
 	}
 	if (v2->v_type == V_OCTET) {
 		w2.v_type = V_NUM;
+		w2.v_subtype = V_NOSUBTYPE;
 		w2.v_num = itoq(*v2->v_octet);
 		v2 = &w2;
 	}
@@ -993,11 +999,13 @@ o_sub(void)
 		v2 = v2->v_addr;
 	if (v1->v_type == V_OCTET) {
 		w1.v_type = V_NUM;
+		w1.v_subtype = V_NOSUBTYPE;
 		w1.v_num = itoq((unsigned char) *v1->v_octet);
 		v1 = &w1;
 	}
 	if (v2->v_type == V_OCTET) {
 		w2.v_type = V_NUM;
+		w2.v_subtype = V_NOSUBTYPE;
 		w2.v_num = itoq((unsigned char) *v2->v_octet);
 		v2 = &w2;
 	}
@@ -1028,11 +1036,13 @@ o_mul(void)
 		v2 = v2->v_addr;
 	if (v1->v_type == V_OCTET) {
 		w1.v_type = V_NUM;
+		w1.v_subtype = V_NOSUBTYPE;
 		w1.v_num = itoq(*v1->v_octet);
 		v1 = &w1;
 	}
 	if (v2->v_type == V_OCTET) {
 		w2.v_type = V_NUM;
+		w2.v_subtype = V_NOSUBTYPE;
 		w2.v_num = itoq(*v2->v_octet);
 		v2 = &w2;
 	}
@@ -1081,11 +1091,13 @@ o_div(void)
 		v2 = v2->v_addr;
 	if (v1->v_type == V_OCTET) {
 		w1.v_type = V_NUM;
+		w1.v_subtype = V_NOSUBTYPE;
 		w1.v_num = itoq(*v1->v_octet);
 		v1 = &w1;
 	}
 	if (v2->v_type == V_OCTET) {
 		w2.v_type = V_NUM;
+		w2.v_subtype = V_NOSUBTYPE;
 		w2.v_num = itoq(*v2->v_octet);
 		v2 = &w2;
 	}
@@ -1113,6 +1125,7 @@ o_quo(void)
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
 	null.v_type = V_NULL;
+	null.v_subtype = V_NOSUBTYPE;
 	quovalue(v1, v2, &null, &tmp);
 	freevalue(stack--);
 	freevalue(stack);
@@ -1133,6 +1146,7 @@ o_mod(void)
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
 	null.v_type = V_NULL;
+	null.v_subtype = V_NOSUBTYPE;
 	modvalue(v1, v2, &null, &tmp);
 	freevalue(stack--);
 	freevalue(stack);
@@ -1175,7 +1189,9 @@ o_quomod(void)
 	}
 
 	valquo.v_type = V_NUM;
+	valquo.v_subtype = V_NOSUBTYPE;
 	valmod.v_type = V_NUM;
+	valmod.v_subtype = V_NOSUBTYPE;
 	res = qquomod(v1->v_num, v2->v_num, &valquo.v_num, &valmod.v_num);
 	stack -= 2;
 	if (stack->v_type == V_NUM)
@@ -1185,6 +1201,7 @@ o_quomod(void)
 		qfree(stack->v_num);
 	stack->v_num = (res ? qlink(&_qone_) : qlink(&_qzero_));
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 
 	freevalue(v3);
 	freevalue(v4);
@@ -1289,6 +1306,7 @@ o_not(void)
 	freevalue(stack);
 	stack->v_num = (r ? qlink(&_qzero_) : qlink(&_qone_));
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -1335,6 +1353,7 @@ o_negate(void)
 			qfree(stack->v_num);
 		stack->v_num = q;
 		stack->v_type = V_NUM;
+		stack->v_subtype = V_NOSUBTYPE;
 		return;
 	}
 	negvalue(vp, &tmp);
@@ -1440,6 +1459,7 @@ o_abs(void)
 		qfree(stack->v_num);
 	stack->v_num = q;
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -1459,6 +1479,7 @@ o_norm(void)
 			qfree(stack->v_num);
 		stack->v_num = q;
 		stack->v_type = V_NUM;
+		stack->v_subtype = V_NOSUBTYPE;
 		return;
 	}
 	normvalue(vp, &tmp);
@@ -1483,6 +1504,7 @@ o_square(void)
 			qfree(stack->v_num);
 		stack->v_num = q;
 		stack->v_type = V_NUM;
+		stack->v_subtype = V_NOSUBTYPE;
 		return;
 	}
 	squarevalue(vp, &tmp);
@@ -1503,6 +1525,7 @@ o_test(void)
 	i = testvalue(vp);
 	freevalue(stack);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 	stack->v_num = i ? qlink(&_qone_) : qlink(&_qzero_);
 }
 
@@ -1534,6 +1557,7 @@ o_links(void)
 	if (!haveaddress)
 		links--;
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 	stack->v_num = itoq(links);
 }
 
@@ -1584,6 +1608,7 @@ o_bit (void)
 		stack->v_type = V_NUM;
 		stack->v_num = itoq(r);
 	}
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 static void
@@ -1628,6 +1653,7 @@ o_highbit (void)
 			return;
 		default:
 			stack->v_type = V_NUM;
+			stack->v_subtype = V_NOSUBTYPE;
 			stack->v_num = itoq(index);
 	}
 }
@@ -1679,6 +1705,7 @@ o_lowbit (void)
 			return;
 		default:
 			stack->v_type = V_NUM;
+			stack->v_subtype = V_NOSUBTYPE;
 			stack->v_num = itoq(index);
 	}
 }
@@ -1772,6 +1799,7 @@ o_istype(void)
 	freevalue(stack);
 	stack->v_num = itoq((long) r);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -1788,6 +1816,7 @@ o_isint(void)
 		freevalue(stack);
 		stack->v_num = qlink(&_qzero_);
 		stack->v_type = V_NUM;
+		stack->v_subtype = V_NOSUBTYPE;
 		return;
 	}
 	if (qisint(vp->v_num))
@@ -1798,6 +1827,7 @@ o_isint(void)
 		qfree(stack->v_num);
 	stack->v_num = q;
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -1822,10 +1852,12 @@ o_isnum(void)
 			freevalue(stack);
 			stack->v_num = qlink(&_qzero_);
 			stack->v_type = V_NUM;
+			stack->v_subtype = V_NOSUBTYPE;
 			return;
 	}
 	stack->v_num = qlink(&_qone_);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -1841,10 +1873,12 @@ o_ismat(void)
 		freevalue(stack);
 		stack->v_num = qlink(&_qzero_);
 		stack->v_type = V_NUM;
+		stack->v_subtype = V_NOSUBTYPE;
 		return;
 	}
 	freevalue(stack);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 	stack->v_num = qlink(&_qone_);
 }
 
@@ -1862,6 +1896,7 @@ o_islist(void)
 	freevalue(stack);
 	stack->v_num = (r ? qlink(&_qone_) : qlink(&_qzero_));
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -1878,6 +1913,7 @@ o_isobj(void)
 	freevalue(stack);
 	stack->v_num = (r ? qlink(&_qone_) : qlink(&_qzero_));
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -1894,6 +1930,7 @@ o_isstr(void)
 	freevalue(stack);
 	stack->v_num = (r ? qlink(&_qone_) : qlink(&_qzero_));
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -1910,6 +1947,7 @@ o_isfile(void)
 	freevalue(stack);
 	stack->v_num = (r ? qlink(&_qone_) : qlink(&_qzero_));
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -1926,6 +1964,7 @@ o_isrand(void)
 	freevalue(stack);
 	stack->v_num = (r ? qlink(&_qone_) : qlink(&_qzero_));
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -1942,6 +1981,7 @@ o_israndom(void)
 	freevalue(stack);
 	stack->v_num = (r ? qlink(&_qone_) : qlink(&_qzero_));
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -1958,6 +1998,7 @@ o_isconfig(void)
 	freevalue(stack);
 	stack->v_num = (r ? qlink(&_qone_) : qlink(&_qzero_));
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -1976,6 +2017,7 @@ o_ishash(void)
 	freevalue(stack);
 	stack->v_num = itoq((long) r);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -1992,6 +2034,7 @@ o_isassoc(void)
 	freevalue(stack);
 	stack->v_num = (r ? qlink(&_qone_) : qlink(&_qzero_));
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2012,6 +2055,7 @@ o_isblock(void)
 	freevalue(stack);
 	stack->v_num = itoq(r);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2028,6 +2072,7 @@ o_isoctet(void)
 	freevalue(stack);
 	stack->v_num = itoq(r);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2050,6 +2095,7 @@ o_isptr(void)
 	freevalue(stack);
 	stack->v_num = itoq(r);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2079,6 +2125,7 @@ o_isdefined(void)
 	freevalue(stack);
 	stack->v_num = itoq(r);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2099,6 +2146,7 @@ o_isobjtype(void)
 	freevalue(stack);
  	stack->v_num = itoq(index >= 0);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2122,6 +2170,7 @@ o_issimple(void)
 	freevalue(stack);
 	stack->v_num = (r ? qlink(&_qone_) : qlink(&_qzero_));
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2138,11 +2187,13 @@ o_isodd(void)
 			qfree(stack->v_num);
 		stack->v_num = qlink(&_qone_);
 		stack->v_type = V_NUM;
+		stack->v_subtype = V_NOSUBTYPE;
 		return;
 	}
 	freevalue(stack);
 	stack->v_num = qlink(&_qzero_);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2159,11 +2210,13 @@ o_iseven(void)
 			qfree(stack->v_num);
 		stack->v_num = qlink(&_qone_);
 		stack->v_type = V_NUM;
+		stack->v_subtype = V_NOSUBTYPE;
 		return;
 	}
 	freevalue(stack);
 	stack->v_num = qlink(&_qzero_);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2180,11 +2233,13 @@ o_isreal(void)
 			qfree(stack->v_num);
 		stack->v_num = qlink(&_qone_);
 		stack->v_type = V_NUM;
+		stack->v_subtype = V_NOSUBTYPE;
 		return;
 	}
 	freevalue(stack);
 	stack->v_num = qlink(&_qzero_);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2200,11 +2255,13 @@ o_isnull(void)
 		freevalue(stack);
 		stack->v_num = qlink(&_qzero_);
 		stack->v_type = V_NUM;
+		stack->v_subtype = V_NOSUBTYPE;
 		return;
 	}
 	freevalue(stack);
 	stack->v_num = qlink(&_qone_);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2221,6 +2278,7 @@ o_re(void)
 		if (stack->v_type == V_ADDR) {
 			stack->v_num = qlink(vp->v_num);
 			stack->v_type = V_NUM;
+			stack->v_subtype = V_NOSUBTYPE;
 		}
 		return;
 	}
@@ -2233,6 +2291,7 @@ o_re(void)
 		comfree(stack->v_com);
 	stack->v_num = q;
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2250,6 +2309,7 @@ o_im(void)
 			qfree(stack->v_num);
 		stack->v_num = qlink(&_qzero_);
 		stack->v_type = V_NUM;
+		stack->v_subtype = V_NOSUBTYPE;
 		return;
 	}
 	if (vp->v_type != V_COM) {
@@ -2261,6 +2321,7 @@ o_im(void)
 		comfree(stack->v_com);
 	stack->v_num = q;
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2277,6 +2338,7 @@ o_conjugate(void)
 		if (stack->v_type == V_ADDR) {
 			stack->v_num = qlink(vp->v_num);
 			stack->v_type = V_NUM;
+			stack->v_subtype = V_NOSUBTYPE;
 		}
 		return;
 	}
@@ -2382,6 +2444,7 @@ o_sgn(void)
 			qfree(vp->v_num);
 		stack->v_num = q;
 		stack->v_type = V_NUM;
+		stack->v_subtype = V_NOSUBTYPE;
 		return;
 	}
 	sgnvalue(vp, &tmp);
@@ -2410,6 +2473,7 @@ o_numerator(void)
 		qfree(stack->v_num);
 	stack->v_num = q;
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2431,6 +2495,7 @@ o_denominator(void)
 		qfree(stack->v_num);
 	stack->v_num = q;
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2687,6 +2752,7 @@ o_eq(void)
 	freevalue(stack);
 	stack->v_num = itoq((long) (r == 0));
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2707,6 +2773,7 @@ o_ne(void)
 	freevalue(stack);
 	stack->v_num = itoq((long) (r != 0));
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -2727,15 +2794,15 @@ o_le(void)
 	freevalue(stack);
 
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 	if (tmp.v_type == V_NUM) {
 		stack->v_num =  !qispos(tmp.v_num) ? qlink(&_qone_):
 				qlink(&_qzero_);
-	}
-	else if (tmp.v_type == V_COM) {
+	} else if (tmp.v_type == V_COM) {
 		stack->v_num = qlink(&_qzero_);
-	}
-	else
+	} else {
 		stack->v_type = V_NULL;
+	}
 	freevalue(&tmp);
 }
 
@@ -2756,14 +2823,13 @@ o_ge(void)
 	freevalue(stack--);
 	freevalue(stack);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 	if (tmp.v_type == V_NUM) {
 		stack->v_num =  !qisneg(tmp.v_num) ? qlink(&_qone_):
 				qlink(&_qzero_);
-	}
-	else if (tmp.v_type == V_COM) {
+	} else if (tmp.v_type == V_COM) {
 		stack->v_num = qlink(&_qzero_);
-	}
-	else {
+	} else {
 		stack->v_type = V_NULL;
 	}
 	freevalue(&tmp);
@@ -2786,15 +2852,15 @@ o_lt(void)
 	freevalue(stack--);
 	freevalue(stack);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 	if (tmp.v_type == V_NUM) {
 		stack->v_num =  qisneg(tmp.v_num) ? qlink(&_qone_):
 				qlink(&_qzero_);
-	}
-	else if (tmp.v_type == V_COM) {
+	} else if (tmp.v_type == V_COM) {
 		stack->v_num = qlink(&_qzero_);
-	}
-	else
+	} else {
 		stack->v_type = V_NULL;
+	}
 	freevalue(&tmp);
 }
 
@@ -2815,15 +2881,15 @@ o_gt(void)
 	freevalue(stack--);
 	freevalue(stack);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 	if (tmp.v_type == V_NUM) {
 		stack->v_num = qispos(tmp.v_num) ? qlink(&_qone_):
 				qlink(&_qzero_);
-	}
-	else if (tmp.v_type == V_COM) {
+	} else if (tmp.v_type == V_COM) {
 		stack->v_num = qlink(&_qzero_);
-	}
-	else
+	} else {
 		stack->v_type = V_NULL;
+	}
 	freevalue(&tmp);
 }
 
@@ -2886,6 +2952,7 @@ o_postinc(void)
 	if (stack->v_type == V_OCTET) {
 		stack[1] = stack[0];
 		stack->v_type = V_NUM;
+		stack->v_subtype = V_NOSUBTYPE;
 		stack->v_num = itoq((long) stack->v_octet[0]);
 		stack++;
 		stack->v_octet[0]++;
@@ -2938,8 +3005,8 @@ o_postdec(void)
 	freevalue(vp);
 	*vp = tmp;
 	stack->v_type = V_ADDR;
-	stack->v_addr = vp;
 	stack->v_subtype = V_NOSUBTYPE;
+	stack->v_addr = vp;
 }
 
 
@@ -3067,6 +3134,7 @@ o_zero(void)
 {
 	stack++;
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 	stack->v_num = qlink(&_qzero_);
 }
 
@@ -3076,6 +3144,7 @@ o_one(void)
 {
 	stack++;
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 	stack->v_num = qlink(&_qone_);
 }
 
@@ -3162,6 +3231,7 @@ o_getepsilon(void)
 {
 	stack++;
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 	stack->v_num = qlink(conf->epsilon);
 }
 
@@ -3185,6 +3255,7 @@ o_setepsilon(void)
 	if (stack->v_type == V_NUM)
 		qfree(newep);
 	stack->v_type = V_NUM;
+	stack->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -3254,6 +3325,7 @@ updateoldvalue(FUNC *fp)
 	freevalue(&oldvalue);
 	oldvalue = fp->f_savedvalue;
 	fp->f_savedvalue.v_type = V_NULL;
+	fp->f_savedvalue.v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -3275,6 +3347,7 @@ error_value(int e)
 		/*NOTREACHED*/
 	}
 	res.v_type = (short) -e;
+	res.v_subtype = V_NOSUBTYPE;
 	return res;
 }
 

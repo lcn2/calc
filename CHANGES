@@ -227,6 +227,13 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
     Fixed some insure code inspection tool issues that were discovered
     and investigated by Michel van der List <vanderlistmj@sbphrd.com>.
 
+    Made an effort to ensure that the v_subtype of VALUES are initialized
+    to V_NOSUBTYPE thruout the source code.
+
+    Established a separate calc-bugs address from the calc-tester
+    maining list.  Using anti-spam address forms in order to try and
+    stay under the radar of spammers as much as one can do so.
+
 
 Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:
 

@@ -330,6 +330,7 @@ copyblk2mat(BLOCK *blk, long ssi, long num, MATRIX *dmat, long dsi)
 	i = num;
 	while (i-- > 0) {
 		vp->v_type = V_NUM;
+		vp->v_subtype = V_NOSUBTYPE;
 		vp->v_num = itoq((long) *op++);
 		vp++;
 	}

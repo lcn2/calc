@@ -318,17 +318,16 @@ initenv(void)
 	char *c;
 
 	/* determine the $CALCPATH value */
-	c = getenv(CALCPATH);
-	calcpath = ((no_env || c == NULL) ? NULL : strdup(c));
+	c = (no_env ? NULL : getenv(CALCPATH));
+	calcpath = (c ? strdup(c) : NULL);
 	if (calcpath == NULL)
 		calcpath = DEFAULTCALCPATH;
 
 	/* determine the $CALCRC value */
-	c = getenv(CALCRC);
-	calcrc = ((no_env || c == NULL) ? NULL : strdup(c));
-	if (calcrc == NULL) {
+	c = (no_env ? NULL : getenv(CALCRC));
+	calcrc = (c ? strdup(c) : NULL);
+	if (calcrc == NULL)
 		calcrc = DEFAULTCALCRC;
-	}
 	if (strlen(calcrc) > MAX_CALCRC) {
 		math_error("The $CALCRC variable is longer than %d chars",
 			   MAX_CALCRC);
@@ -336,15 +335,14 @@ initenv(void)
 	}
 
 	/* determine the $CALCBINDINGS value */
-	c = getenv(CALCBINDINGS);
-	calcbindings = ((no_env || c == NULL) ? NULL : strdup(c));
-	if (calcbindings == NULL) {
+	c = (no_env ? NULL : getenv(CALCBINDINGS));
+	calcbindings = (c ? strdup(c) : NULL);
+	if (calcbindings == NULL)
 		calcbindings = DEFAULTCALCBINDINGS;
-	}
 
 	/* determine the $HOME value */
-	c = getenv(HOME);
-	home = ((no_env || c == NULL) ? NULL : strdup(c));
+	c = (no_env ? NULL : getenv(HOME));
+	home = (c ? strdup(c) : NULL);
 	if (home == NULL || home[0] == '\0') {
 		ent = (struct passwd *)getpwuid(geteuid());
 		if (ent == NULL) {
@@ -356,16 +354,15 @@ initenv(void)
 	}
 
 	/* determine the $PAGER value */
-	c = getenv(PAGER);
-	pager = ((no_env || c == NULL) ? NULL : strdup(c));
-	if (pager == NULL || *pager == '\0') {
+	c = (no_env ? NULL : getenv(PAGER));
+	pager = (c ? strdup(c) : NULL);
+	if (pager == NULL || *pager == '\0')
 		pager = DEFAULTCALCPAGER;
-	}
 
 	/* determine the $SHELL value */
-	c = getenv(SHELL);
-	shell = ((no_env || c == NULL) ? NULL : strdup(c));
-	if (shell == NULL)
+	c = (no_env ? NULL : getenv(SHELL));
+	shell = (c ? strdup(c) : NULL);
+	if (shell == NULL || *shell == '\0')
 		shell = DEFAULTSHELL;
 }
 

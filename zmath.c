@@ -733,18 +733,18 @@ done:	while (m > 0 && A[m - 1] == 0)
 		f = g = 0;
 		t = -1;
 		if (s) {
-			while (--i > 0 ) {
+			while (--i > 0) {
 				g = (FULL) *--a + (*--b >> 1 | f);
 				if (g != BASE1)
 					break;
 				f = *b & 1 ? TOPHALF : 0;
 			}
 			if (g == BASE && f == 0) {
-				while (i-- && (*a-- | *b--) == 0);
+				while ((--i > 0) && ((*--a | *--b) == 0));
 				t = (i > 0);
-			}
-			else if (g >= BASE)
+			} else if (g >= BASE) {
 				t = 1;
+			}
 		} else {
 			while (--i > 0) {
 				g = (FULL) *--a - (*--b >> 1 | f);

@@ -1000,6 +1000,7 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 	 * convert element to value
 	 */
 	vp->v_type = V_NUM;
+	vp->v_subtype = V_NOSUBTYPE;
 	switch (type) {
 	case CONFIG_ALL:
 		vp->v_type = V_CONFIG;

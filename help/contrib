@@ -36,17 +36,33 @@ gziped (or compressed) tar file).
 
 You should send submissions to:
 
-	calc-tester@postofc.corp.sgi.com
+    calc-tester at postofc dot corp dot sgi dot com
+
+    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
 
 Thanks for considering submitting code to calc.  Calc is a collective
 work by a number of people.  It would not be what it is today without
 your efforts and submissions!
 
+Calc bug reports, however, should be sent to:
+
+    calc-bugs at postofc dot corp dot sgi dot com
+
+    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+
+See the BUGS file or try the help command:
+
+    help bugs
+
+for details on bug reporting.
+
 =-=
 
 One may join the calc testing group by sending a request to:
 
-	calc-tester-request@postofc.corp.sgi.com
+	calc-tester-request at postofc dot corp dot sgi dot com
+
+	[[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
 
     Your message body (not the subject) should consist of:
 

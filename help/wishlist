@@ -4,10 +4,18 @@ Calc Enhancement Wish List:
     interesting calc scripts that you would like you see included in
     future distributions to:
 
-		calc-tester@postofc.corp.sgi.com
+	    calc-tester at postofc dot corp dot sgi dot com
+
+	    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
 
     The following items are in the calc wish list.  Programs like this
     can be extended and improved forever.
+
+    Calc bug repoers, however, should be sent to:
+
+	    calc-bugs at postofc dot corp dot sgi dot com
+
+	    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
 
     See the 'todo' help file for higher priority todo items.
 

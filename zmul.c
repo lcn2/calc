@@ -280,6 +280,8 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	baseA = v1 + shift;
 	baseB = v1;
 	/*
+	 * XXX - is this still an issue?
+	 *
 	 * Saber-C Version 3.1 says:
 	 *
 	 *    W#26, Storing a bad pointer into auto variable dmul`baseC.
@@ -296,11 +298,13 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	 *	config("mul2", 2);
 	 *	pmod(3,a-1,a);
 	 *
+	 *	[[ NOTE: The above code no longer invokes this code. ]]
+	 *
 	 * When this code is executed, shift == 6 and v2 is 3 shorts
 	 * long (size2 == 2).  This baseC points 3 shorts beyond the
 	 * allocated end of v2.
 	 *
-	 * The stack was as follows:
+	 * The stack was as follows:   [[NOTE: line numbers may have changed]]
 	 *
 	 *	domul(v1=0x2d93d8, size1=12,
 	 *	      v2=0x2ded30, size2=2, ans=0x2ee8a8) at "zmul.c":313
@@ -314,6 +318,64 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	 *	evaluate(...) at "codegen.c":170
 	 *	getcommands(...) at "codegen.c":109
 	 *	main(...) at "calc.c":167
+	 *
+	 * The final domul() call point is the next executable line below.
+	 *
+	 ****
+	 *
+	 * The insure tool also reports a problem at this position:
+	 *
+	 * [zmul.c:319] **COPY_BAD_RANGE**
+	 * >>         baseC = v2 + shift;
+	 *
+	 *   Copying pointer which is out-of-range: v2 + shift
+	 *
+	 *		[[NOTE: line numbers may have changed]]
+	 *
+	 *   Pointer      : 0x1400919cc
+	 *   Actual block : 0x140090c80 thru 0x140090def (368 bytes,92 elements)
+	 *                  hp, allocated at:
+	 *                           malloc()
+	 *                            alloc()  zmath.c, 221
+	 *                             zmul()  zmul.c, 73
+	 *                          ztenpow()  zfunc.c, 441
+	 *                            str2q()  qio.c, 537
+	 *                        addnumber()  const.c, 52
+	 *                        eatnumber()  token.c, 594
+	 *                         gettoken()  token.c, 319
+	 *                      getcallargs()  codegen.c, 2358
+	 *
+	 *   Stack trace where the error occurred:
+	 *                            domul()  zmul.c, 319
+	 *                             zmul()  zmul.c, 74
+	 *                          ztenpow()  zfunc.c, 441
+	 *                            str2q()  qio.c, 537
+	 *                        addnumber()  const.c, 52
+	 *                        eatnumber()  token.c, 594
+	 *                         gettoken()  token.c, 319
+	 *                      getcallargs()  codegen.c, 2358
+	 *                        getidexpr()  codegen.c, 1998
+	 *                          getterm()  codegen.c, 1936
+	 *                    getincdecexpr()  codegen.c, 1820
+	 *                     getreference()  codegen.c, 1804
+	 *                     getshiftexpr()  codegen.c, 1758
+	 *                       getandexpr()  codegen.c, 1704
+	 *                        getorexpr()  codegen.c, 1682
+	 *                       getproduct()  codegen.c, 1654
+	 *                           getsum()  codegen.c, 1626
+	 *                      getrelation()  codegen.c, 1585
+	 *                       getandcond()  codegen.c, 1556
+	 *                        getorcond()  codegen.c, 1532
+	 *                       getaltcond()  codegen.c, 1499
+	 *                    getassignment()  codegen.c, 1442
+	 *                  getopassignment()  codegen.c, 1352
+	 *                      getexprlist()  codegen.c, 1318
+	 *                     getstatement()  codegen.c, 921
+	 *                         evaluate()  codegen.c, 219
+	 *                      getcommands()  codegen.c, 165
+	 *                             main()  calc.c, 321
+	 *
+	 * The final domul() call point is the next executable line below.
 	 */
 	/* 	ok to ignore on name domul`baseC */
 	baseC = v2 + shift;

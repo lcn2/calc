@@ -2527,7 +2527,8 @@ random_libcalc_cleanup(void)
 static void
 zfree_random(ZVALUE z)
 {
-	if (z.v != h_ndefvec && z.v != h_rdefvec && z.v != h_rdefvec_2 &&
+	if (z.v != NULL &&
+	    z.v != h_ndefvec && z.v != h_rdefvec && z.v != h_rdefvec_2 &&
 	    z.v != h_nvec01 && z.v != h_rvec01 &&
 	    z.v != h_nvec02 && z.v != h_rvec02 &&
 	    z.v != h_nvec03 && z.v != h_rvec03 &&

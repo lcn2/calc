@@ -2,7 +2,11 @@ Credits
 
     The majority of calc was written by David I. Bell.
 
-    Calc archives and calc-tester mailing list maintained by Landon Curt Noll.
+    The Calc primary mirror, calc mailing list and calc bug report
+    processing is performed by Landon Curt Noll.
+
+    Landon Curt Noll maintains the master reference source, performs
+    release control functions as well as other calc maintenance functions.
 
     Thanks for suggestions and encouragement from Peter Miller,
     Neil Justusson, and Landon Noll.

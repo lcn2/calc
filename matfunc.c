@@ -154,6 +154,7 @@ matmul(MATRIX *m1, MATRIX *m2)
 	for (i1 = 0; i1 < max1; i1++) {
 		for (i2 = 0; i2 < max2; i2++) {
 			sum.v_type = V_NULL;
+			sum.v_subtype = V_NOSUBTYPE;
 			v1 = &m1->m_table[i1 * maxindex];
 			v2 = &m2->m_table[i2];
 			for (index = 0; index < maxindex; index++) {
@@ -202,6 +203,7 @@ matsquare(MATRIX *m)
 	for (i1 = 0; i1 < max; i1++) {
 		for (i2 = 0; i2 < max; i2++) {
 			sum.v_type = V_NULL;
+			sum.v_subtype = V_NOSUBTYPE;
 			v1 = &m->m_table[i1 * max];
 			v2 = &m->m_table[i2];
 			for (index = 0; index < max; index++) {
@@ -405,6 +407,7 @@ matscale(MATRIX *m, long n)
 	if (n == 0)
 		return matcopy(m);
 	temp.v_type = V_NUM;
+	temp.v_subtype = V_NOSUBTYPE;
 	temp.v_num = itoq(n);
 	res = matalloc(m->m_size);
 	*res = *m;
@@ -436,6 +439,7 @@ matshift(MATRIX *m, long n)
 	if (n == 0)
 		return matcopy(m);
 	temp.v_type = V_NUM;
+	temp.v_subtype = V_NOSUBTYPE;
 	temp.v_num = itoq(n);
 	res = matalloc(m->m_size);
 	*res = *m;
@@ -1062,6 +1066,7 @@ matdet(MATRIX *m)
 		while (!testvalue(val)) {
 			if (--i <= 0) {
 				tmp1.v_type = V_NUM;
+				tmp1.v_subtype = V_NOSUBTYPE;
 				tmp1.v_num = qlink(&_qzero_);
 				matfree(m);
 				return tmp1;

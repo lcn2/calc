@@ -570,7 +570,11 @@ The majority of
 was written by David I. Bell.
 .sp
 .B Calc
-archives and calc-tester mailing list maintained by Landon Curt Noll.
+The Calc primary mirror, calc mailing list and calc bug report
+processing is performed by Landon Curt Noll.
+.sp
+Landon Curt Noll maintains the master reference source, performs
+release control functions as well as other calc maintenance functions.
 .sp
 Thanks for suggestions and encouragement from Peter Miller,
 Neil Justusson, and Landon Noll.
@@ -610,8 +614,35 @@ scripts that you would like you see included
 in future distributions to:
 .sp
 .in +0.5i
-calc-tester@postofc.corp.sgi.com
+.nf
+calc-tester at postofc dot corp dot sgi dot com
+
+[[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+.fi
 .in -0.5i
+.sp
+Bug reports are sent to:
+.in +0.5i
+.nf
+calc-bugs at postofc dot corp dot sgi dot com
+
+[[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+.fi
+.in -0.5i
+.sp
+See the
+.I BUGS
+source file or use the 
+.I calc
+command:
+.sp
+.in +0.5i
+.nf
+help bugs
+.fi
+.in -0.5i
+.sp
+for more information about bug reporting.
 .sp
 Landon Noll maintains the the
 .B calc
@@ -626,7 +657,11 @@ One may join the
 testing group by sending a request to:
 .sp
 .in +0.5i
-calc-tester-request@postofc.corp.sgi.com
+.nf
+calc-tester-request at postofc dot corp dot sgi dot com
+
+[[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+.fi
 .in -0.5i
 .sp
 Your message body (not the subject) should consist of:

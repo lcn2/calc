@@ -2228,15 +2228,16 @@ freadnum(FILE *fp, VALUE *valptr)
 			ch = fgetc(fp);
 		}
 	}
-	if (ch == 'i' || ch == 'I')
+	if (ch == 'i' || ch == 'I') {
 		imag = TRUE;
-	else {
+	} else {
 		ungetc(ch, fp);
 	}
 
 	if (ziszero(num)) {
 		zfree(num);
 		val.v_type = V_NUM;
+		val.v_subtype = V_NOSUBTYPE;
 		val.v_num = qlink(&_qzero_);
 		*valptr = val;
 		return;
@@ -2281,11 +2282,11 @@ freadnum(FILE *fp, VALUE *valptr)
 		c->imag = q;
 		val.v_type = V_COM;
 		val.v_com = c;
-	}
-	else {
+	} else {
 		val.v_type = V_NUM;
 		val.v_num = q;
 	}
+	val.v_subtype = V_NOSUBTYPE;
 	*valptr = val;
 }
 

@@ -187,6 +187,7 @@ f_eval(VALUE *vp)
 		curfunc = oldfunc;
 		result = newfunc->f_savedvalue;
 		newfunc->f_savedvalue.v_type = V_NULL;
+		newfunc->f_savedvalue.v_subtype = V_NOSUBTYPE;
 		freenumbers(newfunc);
 		if (newfunc != oldfunc)
 			free(newfunc);
@@ -199,6 +200,7 @@ f_eval(VALUE *vp)
 	curfunc = oldfunc;
 	freevalue(&newfunc->f_savedvalue);
 	newfunc->f_savedvalue.v_type = V_NULL;
+	newfunc->f_savedvalue.v_subtype = V_NOSUBTYPE;
 	freenumbers(newfunc);
 	if (newfunc != oldfunc)
 		free(newfunc);
@@ -214,7 +216,10 @@ f_prompt(VALUE *vp)
 	char *newcp;
 	unsigned int len;
 
+	/* initialize VALUE */
 	result.v_type = V_STR;
+	result.v_subtype = V_NOSUBTYPE;
+
 	openterminal();
 	printvalue(vp, PRINT_SHORT);
 	math_flush();
@@ -236,7 +241,6 @@ f_prompt(VALUE *vp)
 	}
 	strcpy(newcp, cp);
 	result.v_str = makestring(newcp);
-	result.v_type = V_STR;
 	return result;
 }
 
@@ -246,6 +250,10 @@ f_display(int count, VALUE **vals)
 {
 	long oldvalue;
 	VALUE res;
+
+	/* initialize VALUE */
+	res.v_type = V_NUM;
+	res.v_subtype = V_NOSUBTYPE;
 
 	oldvalue = conf->outdigits;
 
@@ -257,7 +265,6 @@ f_display(int count, VALUE **vals)
 		else
 			conf->outdigits = qtoi(vals[0]->v_num);
 	}
-	res.v_type = V_NUM;
 	res.v_num = itoq(oldvalue);
 	return res;
 }
@@ -269,7 +276,10 @@ f_null(int count, VALUE **vals)
 {
 	VALUE res;
 
-	res.v_type = 0;
+	/* initialize VALUE */
+	res.v_type = V_NULL;
+	res.v_subtype = V_NOSUBTYPE;
+
 	return res;
 }
 
@@ -280,7 +290,10 @@ f_str(VALUE *vp)
 	VALUE result;
 	char *cp;
 
+	/* initialize VALUE */
 	result.v_type = V_STR;
+	result.v_subtype = V_NOSUBTYPE;
+
 	switch (vp->v_type) {
 		case V_STR:
 			result.v_str = stringcopy(vp->v_str);
@@ -317,7 +330,10 @@ f_name(VALUE *vp)
 	char *cp;
 	char *name;
 
+	/* initialize VALUE */
 	result.v_type = V_STR;
+	result.v_subtype = V_NOSUBTYPE;
+
 	switch (vp->v_type) {
 		case V_NBLOCK:
 			result.v_type = V_STR;
@@ -338,7 +354,6 @@ f_name(VALUE *vp)
 			return result;
 	}
 	result.v_str = makestring(cp);
-	result.v_type = V_STR;
 	return result;
 }
 
@@ -350,6 +365,10 @@ f_poly(int count, VALUE **vals)
 	VALUE *x;
 	VALUE result, tmp;
 	LIST *clist, *lp;
+
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+	tmp.v_subtype = V_NOSUBTYPE;
 
 	if (vals[0]->v_type == V_LIST) {
 		clist = vals[0]->v_list;
@@ -929,6 +948,10 @@ f_srand(int count, VALUE **vals)
 {
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_type = V_RAND;
+	result.v_subtype = V_NOSUBTYPE;
+
 	/* parse args */
 	switch (count) {
 	case 0:
@@ -972,7 +995,6 @@ f_srand(int count, VALUE **vals)
 	}
 
 	/* return the current state */
-	result.v_type = V_RAND;
 	return result;
 }
 
@@ -1077,6 +1099,10 @@ f_srandom(int count, VALUE **vals)
 {
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_type = V_RANDOM;
+	result.v_subtype = V_NOSUBTYPE;
+
 	/* parse args */
 	switch (count) {
 	case 0:		/* srandom() */
@@ -1155,7 +1181,6 @@ f_srandom(int count, VALUE **vals)
 	}
 
 	/* return the current state */
-	result.v_type = V_RANDOM;
 	return result;
 }
 
@@ -1179,6 +1204,10 @@ f_setbit(int count, VALUE **vals)
 	long index;
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_type = V_NULL;
+	result.v_subtype = V_NOSUBTYPE;
+
 	r = (count == 3) ? testvalue(vals[2]) : 1;
 
 	if (vals[1]->v_type != V_NUM || qisfrac(vals[1]->v_num))
@@ -1190,7 +1219,6 @@ f_setbit(int count, VALUE **vals)
 	index = qtoi(vals[1]->v_num);
 	if (stringsetbit(vals[0]->v_str, index, r))
 		return error_value(E_SETBIT2);
-	result.v_type = V_NULL;
 	return result;
 }
 
@@ -1264,6 +1292,7 @@ f_xor(int count, VALUE **vals)
 
 	type = vals[0]->v_type;
 	result.v_type = type;
+	result.v_subtype = vals[0]->v_subtype;
 	for (i = 1; i < count; i++) {
 		if (vals[i]->v_type != type)
 			return error_value(E_XOR1);
@@ -1303,8 +1332,11 @@ minlistitems(LIST *lp)
 	VALUE rel;
 	VALUE min;
 
+	/* initialize VALUEs */
 	min.v_type = V_NULL;
+	min.v_subtype = V_NOSUBTYPE;
 	term.v_type = V_NULL;
+	term.v_subtype = V_NOSUBTYPE;
 
 	for (ep = lp->l_first; ep; ep = ep->e_next) {
 		vp = &ep->e_value;
@@ -1353,8 +1385,11 @@ maxlistitems(LIST *lp)
 	VALUE rel;
 	VALUE max;
 
+	/* initialize VALUEs */
 	max.v_type = V_NULL;
+	max.v_subtype = V_NOSUBTYPE;
 	term.v_type = V_NULL;
+	term.v_subtype = V_NOSUBTYPE;
 
 	for (ep = lp->l_first; ep; ep = ep->e_next) {
 		vp = &ep->e_value;
@@ -1402,8 +1437,11 @@ f_min(int count, VALUE **vals)
 	VALUE *vp;
 	VALUE rel;
 
+	/* initialize VALUEs */
 	min.v_type = V_NULL;
+	min.v_subtype = V_NOSUBTYPE;
 	term.v_type = V_NULL;
+	term.v_subtype = V_NOSUBTYPE;
 
 	while (count-- > 0) {
 		vp = *vals++;
@@ -1455,8 +1493,11 @@ f_max(int count, VALUE **vals)
 	VALUE *vp;
 	VALUE rel;
 
+	/* initialize VALUEs */
 	max.v_type = V_NULL;
+	max.v_subtype = V_NOSUBTYPE;
 	term.v_type = V_NULL;
+	term.v_subtype = V_NOSUBTYPE;
 
 	while (count-- > 0) {
 		vp = *vals++;
@@ -1538,11 +1579,14 @@ f_hash(int count, VALUE **vals)
 	QCKHASH hash;
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_type = V_NUM;
+	result.v_subtype = V_NOSUBTYPE;
+
 	hash = FNV1_32_BASIS;
 	while (count-- > 0)
 		hash = hashvalue(*vals++, hash);
 	result.v_num = utoq((FULL) hash);
-	result.v_type = V_NUM;
 	return result;
 }
 
@@ -1556,8 +1600,13 @@ sumlistitems(LIST *lp)
 	VALUE tmp;
 	VALUE sum;
 
-	sum.v_type = V_NULL;
+	/* initialize VALUEs */
 	term.v_type = V_NULL;
+	term.v_subtype = V_NOSUBTYPE;
+	tmp.v_type = V_NULL;
+	tmp.v_subtype = V_NOSUBTYPE;
+	sum.v_type = V_NULL;
+	sum.v_subtype = V_NOSUBTYPE;
 
 	for (ep = lp->l_first; ep; ep = ep->e_next) {
 		vp = &ep->e_value;
@@ -1597,8 +1646,13 @@ f_sum(int count, VALUE **vals)
 	VALUE term;
 	VALUE *vp;
 
+	/* initialize VALUEs */
+	tmp.v_type = V_NULL;
+	tmp.v_subtype = V_NOSUBTYPE;
 	sum.v_type = V_NULL;
+	sum.v_subtype = V_NOSUBTYPE;
 	term.v_type = V_NULL;
+	term.v_subtype = V_NOSUBTYPE;
 
 	while (count-- > 0) {
 		vp = *vals++;
@@ -1642,7 +1696,14 @@ f_avg(int count, VALUE **vals)
 	VALUE div;
 	long n;
 
+	/* initialize VALUEs */
+	tmp.v_type = V_NULL;
+	tmp.v_subtype = V_NOSUBTYPE;
 	sum.v_type = V_NULL;
+	sum.v_subtype = V_NOSUBTYPE;
+	div.v_type = V_NULL;
+	div.v_subtype = V_NOSUBTYPE;
+
 	n = 0;
 	while (count-- > 0) {
 		if ((*vals)->v_type == V_LIST) {
@@ -1661,6 +1722,7 @@ f_avg(int count, VALUE **vals)
 		return sum;
 	div.v_num = itoq(n);
 	div.v_type = V_NUM;
+	div.v_subtype = V_NOSUBTYPE;
 	divvalue(&sum, &div, &tmp);
 	freevalue(&sum);
 	qfree(div.v_num);
@@ -1673,6 +1735,10 @@ f_fact(VALUE *vp)
 {
 	VALUE res;
 
+	/* initialize VALUE */
+	res.v_type = V_NUM;
+	res.v_subtype = V_NOSUBTYPE;
+
 	if (vp->v_type == V_OBJ) {
 		return objcall(OBJ_FACT, vp, NULL_VALUE, NULL_VALUE);
 	}
@@ -1680,7 +1746,6 @@ f_fact(VALUE *vp)
 		math_error("Non-real argument for fact()");
 		/*NOTREACHED*/
 	}
-	res.v_type = V_NUM;
 	res.v_num = qfact(vp->v_num);
 	return res;
 }
@@ -1692,7 +1757,14 @@ f_hmean(int count, VALUE **vals)
 	VALUE sum, tmp1, tmp2;
 	long n = 0;
 
+	/* initialize VALUEs */
 	sum.v_type = V_NULL;
+	sum.v_subtype = V_NOSUBTYPE;
+	tmp1.v_type = V_NULL;
+	tmp1.v_subtype = V_NOSUBTYPE;
+	tmp2.v_type = V_NULL;
+	tmp2.v_subtype = V_NOSUBTYPE;
+
 	while (count-- > 0) {
 		if ((*vals)->v_type == V_LIST) {
 			addlistinv((*vals)->v_list, &sum);
@@ -1709,6 +1781,7 @@ f_hmean(int count, VALUE **vals)
 	if (n == 0)
 		return sum;
 	tmp1.v_type = V_NUM;
+	tmp1.v_subtype = V_NOSUBTYPE;
 	tmp1.v_num = itoq(n);
 	divvalue(&tmp1, &sum, &tmp2);
 	qfree(tmp1.v_num);
@@ -1762,6 +1835,11 @@ f_ssq(int count, VALUE **vals)
 {
 	VALUE result, tmp1, tmp2;
 
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+	tmp1.v_subtype = V_NOSUBTYPE;
+	tmp2.v_subtype = V_NOSUBTYPE;
+
 	squarevalue(*vals++, &result);
 	while (--count > 0) {
 		squarevalue(*vals++, &tmp1);
@@ -1800,6 +1878,9 @@ f_exp(int count, VALUE **vals)
 	NUMBER *err;
 	COMPLEX *c;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -1834,6 +1915,9 @@ f_ln(int count, VALUE **vals)
 	VALUE result;
 	COMPLEX ctmp, *c;
 	NUMBER *err;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	err = conf->epsilon;
 	if (count == 2) {
@@ -1877,6 +1961,9 @@ f_cos(int count, VALUE **vals)
 	COMPLEX *c;
 	NUMBER *err;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -1911,6 +1998,9 @@ f_sin(int count, VALUE **vals)
 	VALUE result;
 	COMPLEX *c;
 	NUMBER *err;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	err = conf->epsilon;
 	if (count == 2) {
@@ -1947,6 +2037,11 @@ f_tan(int count, VALUE **vals)
 	VALUE tmp1, tmp2;
 	NUMBER *err;
 
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+	tmp1.v_subtype = V_NOSUBTYPE;
+	tmp2.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -1980,6 +2075,10 @@ f_sec(int count, VALUE **vals)
 	VALUE tmp;
 	NUMBER *err;
 
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+	tmp.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -2010,6 +2109,11 @@ f_cot(int count, VALUE **vals)
 	VALUE result;
 	VALUE tmp1, tmp2;
 	NUMBER *err;
+
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+	tmp1.v_subtype = V_NOSUBTYPE;
+	tmp2.v_subtype = V_NOSUBTYPE;
 
 	err = conf->epsilon;
 	if (count == 2) {
@@ -2047,6 +2151,10 @@ f_csc(int count, VALUE **vals)
 	VALUE tmp;
 	NUMBER *err;
 
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+	tmp.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -2078,6 +2186,9 @@ f_sinh(int count, VALUE **vals)
 	VALUE result;
 	NUMBER *err;
 	NUMBER *q;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	err = conf->epsilon;
 	if (count == 2) {
@@ -2112,6 +2223,9 @@ f_cosh(int count, VALUE **vals)
 	VALUE result;
 	NUMBER *err;
 	NUMBER *q;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	err = conf->epsilon;
 	if (count == 2) {
@@ -2148,6 +2262,11 @@ f_tanh(int count, VALUE **vals)
 	VALUE tmp1, tmp2;
 	NUMBER *err;
 
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+	tmp1.v_subtype = V_NOSUBTYPE;
+	tmp2.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -2181,6 +2300,11 @@ f_coth(int count, VALUE **vals)
 	VALUE result;
 	VALUE tmp1, tmp2;
 	NUMBER *err;
+
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+	tmp1.v_subtype = V_NOSUBTYPE;
+	tmp2.v_subtype = V_NOSUBTYPE;
 
 	err = conf->epsilon;
 	if (count == 2) {
@@ -2218,6 +2342,10 @@ f_sech(int count, VALUE **vals)
 	VALUE tmp;
 	NUMBER *err;
 
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+	tmp.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -2248,6 +2376,10 @@ f_csch(int count, VALUE **vals)
 	VALUE result;
 	VALUE tmp;
 	NUMBER *err;
+
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+	tmp.v_subtype = V_NOSUBTYPE;
 
 	err = conf->epsilon;
 	if (count == 2) {
@@ -2281,6 +2413,9 @@ f_atan(int count, VALUE **vals)
 	VALUE result;
 	COMPLEX *tmp;
 	NUMBER *err;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	err = conf->epsilon;
 	if (count == 2) {
@@ -2319,6 +2454,9 @@ f_acot(int count, VALUE **vals)
 	COMPLEX *tmp;
 	NUMBER *err;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -2355,6 +2493,9 @@ f_asin(int count, VALUE **vals)
 	COMPLEX *tmp;
 	NUMBER *err;
 	NUMBER *q;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	err = conf->epsilon;
 	if (count == 2) {
@@ -2399,6 +2540,9 @@ f_acos(int count, VALUE **vals)
 	NUMBER *err;
 	NUMBER *q;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -2442,6 +2586,9 @@ f_asec(int count, VALUE **vals)
 	COMPLEX *tmp;
 	NUMBER *err;
 	NUMBER *q;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	err = conf->epsilon;
 	if (count == 2) {
@@ -2493,6 +2640,9 @@ f_acsc(int count, VALUE **vals)
 	NUMBER *err;
 	NUMBER *q;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -2542,6 +2692,9 @@ f_asinh(int count, VALUE **vals)
 	COMPLEX *tmp;
 	NUMBER *err;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -2577,6 +2730,9 @@ f_acosh(int count, VALUE **vals)
 	COMPLEX *tmp;
 	NUMBER *err;
 	NUMBER *q;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	err = conf->epsilon;
 	if (count == 2) {
@@ -2621,6 +2777,9 @@ f_atanh(int count, VALUE **vals)
 	COMPLEX *tmp;
 	NUMBER *err;
 	NUMBER *q;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	err = conf->epsilon;
 	if (count == 2) {
@@ -2670,6 +2829,9 @@ f_acoth(int count, VALUE **vals)
 	NUMBER *err;
 	NUMBER *q;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -2717,6 +2879,9 @@ f_asech(int count, VALUE **vals)
 	COMPLEX *tmp;
 	NUMBER *err;
 	NUMBER *q;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	err = conf->epsilon;
 	if (count == 2) {
@@ -2768,6 +2933,9 @@ f_acsch(int count, VALUE **vals)
 	NUMBER *err;
 	NUMBER *q;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -2818,6 +2986,9 @@ f_gd(int count, VALUE **vals)
 	NUMBER *q;
 	COMPLEX *tmp;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -2864,6 +3035,9 @@ f_agd(int count, VALUE **vals)
 	NUMBER *q;
 	COMPLEX *tmp;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
@@ -2908,6 +3082,9 @@ f_arg(int count, VALUE **vals)
 	VALUE result;
 	COMPLEX *c;
 	NUMBER *err;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	err = conf->epsilon;
 	if (count == 2) {
@@ -2961,6 +3138,11 @@ f_bround(int count, VALUE **vals)
 {
 	VALUE tmp1, tmp2, res;
 
+	/* initialize VALUEs */
+	res.v_subtype = V_NOSUBTYPE;
+	tmp1.v_subtype = V_NOSUBTYPE;
+	tmp2.v_subtype = V_NOSUBTYPE;
+
 	if (count > 2)
 		tmp2 = *vals[2];
 	else
@@ -2978,6 +3160,11 @@ static VALUE
 f_appr(int count, VALUE **vals)
 {
 	VALUE tmp1, tmp2, res;
+
+	/* initialize VALUEs */
+	res.v_subtype = V_NOSUBTYPE;
+	tmp1.v_subtype = V_NOSUBTYPE;
+	tmp2.v_subtype = V_NOSUBTYPE;
 
 	if (count > 2)
 		copyvalue(vals[2], &tmp2);
@@ -2997,6 +3184,11 @@ static VALUE
 f_round(int count, VALUE **vals)
 {
 	VALUE tmp1, tmp2, res;
+
+	/* initialize VALUEs */
+	res.v_subtype = V_NOSUBTYPE;
+	tmp1.v_subtype = V_NOSUBTYPE;
+	tmp2.v_subtype = V_NOSUBTYPE;
 
 	if (count > 2)
 		tmp2 = *vals[2];
@@ -3028,6 +3220,10 @@ f_quo(int count, VALUE **vals)
 {
 	VALUE tmp, res;
 
+	/* initialize VALUEs */
+	res.v_subtype = V_NOSUBTYPE;
+	tmp.v_subtype = V_NOSUBTYPE;
+
 	if (count > 2)
 		tmp = *vals[2];
 	else
@@ -3042,6 +3238,10 @@ f_mod(int count, VALUE **vals)
 {
 	VALUE tmp, res;
 
+	/* initialize VALUEs */
+	res.v_subtype = V_NOSUBTYPE;
+	tmp.v_subtype = V_NOSUBTYPE;
+
 	if (count > 2)
 		tmp = *vals[2];
 	else
@@ -3055,6 +3255,10 @@ static VALUE
 f_mmin(VALUE *v1, VALUE *v2)
 {
 	VALUE sixteen, res;
+
+	/* initialize VALUEs */
+	sixteen.v_subtype = V_NOSUBTYPE;
+	res.v_subtype = V_NOSUBTYPE;
 
 	sixteen.v_type = V_NUM;
 	sixteen.v_num = itoq(16);
@@ -3104,6 +3308,10 @@ f_ceil(VALUE *val)
 {
 	VALUE tmp, res;
 
+	/* initialize VALUEs */
+	res.v_subtype = V_NOSUBTYPE;
+	tmp.v_subtype = V_NOSUBTYPE;
+
 	tmp.v_type = V_NUM;
 	tmp.v_num = &_qone_;
 	apprvalue(val, &tmp, &tmp, &res);
@@ -3115,6 +3323,11 @@ static VALUE
 f_floor(VALUE *val)
 {
 	VALUE tmp1, tmp2, res;
+
+	/* initialize VALUEs */
+	res.v_subtype = V_NOSUBTYPE;
+	tmp1.v_subtype = V_NOSUBTYPE;
+	tmp2.v_subtype = V_NOSUBTYPE;
 
 	tmp1.v_type = V_NUM;
 	tmp1.v_num = &_qone_;
@@ -3129,6 +3342,11 @@ static VALUE
 f_sqrt(int count, VALUE **vals)
 {
 	VALUE tmp1, tmp2, result;
+
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+	tmp1.v_subtype = V_NOSUBTYPE;
+	tmp2.v_subtype = V_NOSUBTYPE;
 
 	if (count > 2)
 		tmp2 = *vals[2];
@@ -3148,6 +3366,10 @@ f_root(int count, VALUE **vals)
 {
 	VALUE *vp, err, result;
 
+	/* initialize VALUEs */
+	err.v_subtype = V_NOSUBTYPE;
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (count > 2)
 		vp = vals[2];
 	else {
@@ -3164,6 +3386,10 @@ static VALUE
 f_power(int count, VALUE **vals)
 {
 	VALUE *vp, err, result;
+
+	/* initialize VALUEs */
+	err.v_subtype = V_NOSUBTYPE;
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (count > 2)
 		vp = vals[2];
@@ -3182,6 +3408,10 @@ f_polar(int count, VALUE **vals)
 {
 	VALUE *vp, err, result;
 	COMPLEX *c;
+
+	/* initialize VALUEs */
+	err.v_subtype = V_NOSUBTYPE;
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (count > 2)
 		vp = vals[2];
@@ -3242,6 +3472,9 @@ f_matfill(int count, VALUE **vals)
 	VALUE *v1, *v2, *v3;
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	v1 = vals[0];
 	v2 = vals[1];
 	if (v1->v_type != V_ADDR)
@@ -3275,6 +3508,9 @@ f_matsum(VALUE *vp)
 {
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	/* firewall */
 	if (vp->v_type != V_MAT)
 		return error_value(E_MATSUM);
@@ -3290,7 +3526,10 @@ f_isident(VALUE *vp)
 {
 	VALUE result;
 
+	/* initialize VALUEs */
 	result.v_type = V_NUM;
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (vp->v_type == V_MAT) {
 		result.v_num = itoq((long) matisident(vp->v_mat));
 	} else {
@@ -3313,6 +3552,9 @@ static VALUE
 f_mattrans(VALUE *vp)
 {
 	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (vp->v_type != V_MAT)
 		return error_value(E_MATTRANS1);
@@ -3346,7 +3588,9 @@ f_matdim(VALUE *vp)
 {
 	VALUE result;
 
+	/* initialize VALUEs */
 	result.v_type = V_NUM;
+	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
 		case V_OBJ:
@@ -3368,6 +3612,9 @@ f_matmin(VALUE *v1, VALUE *v2)
 	VALUE result;
 	NUMBER *q;
 	long i;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (v1->v_type != V_MAT)
 		return error_value(E_MATMIN1);
@@ -3392,6 +3639,9 @@ f_matmax(VALUE *v1, VALUE *v2)
 	NUMBER *q;
 	long i;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (v1->v_type != V_MAT)
 		return error_value(E_MATMAX1);
 	if (v2->v_type != V_NUM)
@@ -3413,6 +3663,9 @@ f_cp(VALUE *v1, VALUE *v2)
 {
 	MATRIX *m1, *m2;
 	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if ((v1->v_type != V_MAT) || (v2->v_type != V_MAT))
 		return error_value(E_CP1);
@@ -3452,6 +3705,9 @@ f_strlen(VALUE *vp)
 	long len = 0;
 	char *c;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (vp->v_type != V_STR)
 		return error_value(E_STRLEN);
 	c = vp->v_str->s_str;
@@ -3468,6 +3724,9 @@ f_strcmp(VALUE *v1, VALUE *v2)
 {
 	unsigned char *c1, *c2;
 	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (v1->v_type != V_STR || v2->v_type != V_STR)
 		return error_value(E_STRCMP);
@@ -3493,6 +3752,9 @@ f_strncmp(VALUE *v1, VALUE *v2, VALUE *v3)
 	unsigned char *c1, *c2;
 	long i;
 	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (v1->v_type != V_STR || v2->v_type != V_STR ||
 		v3->v_type != V_NUM || qisneg(v3->v_num) ||
@@ -3522,6 +3784,9 @@ f_strcat(int count, VALUE **vals)
 	int i;
 	long len;
 	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	len = 0;
 	result.v_type = V_STR;
@@ -3560,6 +3825,9 @@ f_strcpy(VALUE *v1, VALUE *v2)
 {
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (v1->v_type != V_STR || v2->v_type != V_STR)
 		return error_value(E_STRCPY);
 	result.v_str = stringcpy(v1->v_str, v2->v_str);
@@ -3573,6 +3841,9 @@ f_strncpy(VALUE *v1, VALUE *v2, VALUE *v3)
 {
 	VALUE result;
 	long num;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (v1->v_type != V_STR || v2->v_type != V_STR ||
 		v3->v_type != V_NUM || qisfrac(v3->v_num) || qisneg(v3->v_num))
@@ -3595,6 +3866,9 @@ f_substr(VALUE *v1, VALUE *v2, VALUE *v3)
 	char *cp;
 	char *ccp;
 	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (v1->v_type != V_STR)
 		return error_value(E_SUBSTR1);
@@ -3637,6 +3911,9 @@ f_char(VALUE *vp)
 	char ch;
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	switch(vp->v_type) {
 		case V_NUM:
 			if (qisfrac(vp->v_num))
@@ -3666,6 +3943,9 @@ f_ord(VALUE *vp)
 	OCTET *c;
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	switch(vp->v_type) {
 		case V_STR:
 			c = (OCTET *)vp->v_str->s_str;
@@ -3691,8 +3971,10 @@ f_protect(int count, VALUE **vals)
 	VALUE result;
 	BOOL have_nblock;
 
-	result.v_subtype = V_NOSUBTYPE;
+	/* initialize VALUE */
 	result.v_type = V_NULL;
+	result.v_subtype = V_NOSUBTYPE;
+
 	v1 = vals[0];
 	have_nblock = (v1->v_type == V_NBLOCK);
 	if (!have_nblock) {
@@ -3736,6 +4018,9 @@ f_size(VALUE *vp)
 {
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	/*
 	 * return information about the number of elements
 	 *
@@ -3761,13 +4046,16 @@ f_sizeof(VALUE *vp)
 {
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_type = V_NUM;
+	result.v_subtype = V_NOSUBTYPE;
+
 	/*
 	 * return information about memory footprint
 	 *
 	 * This is not the number of elements, see f_size() for that info.
 	 * This is not the memsize, see f_memsize() for that information.
 	 */
-	result.v_type = V_NUM;
 	result.v_num = itoq(lsizeof(vp));
 	return result;
 }
@@ -3778,13 +4066,16 @@ f_memsize(VALUE *vp)
 {
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_type = V_NUM;
+	result.v_subtype = V_NOSUBTYPE;
+
 	/*
 	 * return information about memory footprint
 	 *
 	 * This is not the number of elements, see f_size() for that info.
 	 * This is not the sizeof, see f_sizeof() for that information.
 	 */
-	result.v_type = V_NUM;
 	result.v_num = itoq(memsize(vp));
 	return result;
 }
@@ -3804,6 +4095,10 @@ f_search(int count, VALUE **vals)
 	VALUE result;
 	long l_start = 0, l_end = 0;
 	int i = 0;
+
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+	vsize.v_subtype = V_NOSUBTYPE;
 
 	v1 = *vals++;
 	v2 = *vals++;
@@ -3966,6 +4261,10 @@ f_rsearch(int count, VALUE **vals)
 	VALUE result;
 	long l_start = 0, l_end = 0;
 	int i;
+
+	/* initialize VALUEs */
+	vsize.v_subtype = V_NOSUBTYPE;
+	result.v_subtype = V_NOSUBTYPE;
 
 	v1 = *vals++;
 	v2 = *vals++;
@@ -4140,7 +4439,10 @@ f_list(int count, VALUE **vals)
 {
 	VALUE result;
 
+	/* initialize VALUE */
 	result.v_type = V_LIST;
+	result.v_subtype = V_NOSUBTYPE;
+
 	result.v_list = listalloc();
 	while (count-- > 0)
 		insertlistlast(result.v_list, *vals++);
@@ -4154,8 +4456,10 @@ f_assoc(int count, VALUE **vals)
 {
 	VALUE result;
 
+	/* initialize VALUE */
 	result.v_type = V_ASSOC;
 	result.v_subtype = V_NOSUBTYPE;
+
 	result.v_assoc = assocalloc(0L);
 	return result;
 }
@@ -4167,6 +4471,9 @@ f_listinsert(int count, VALUE **vals)
 	VALUE *v1, *v2, *v3;
 	VALUE result;
 	long pos;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	v1 = *vals++;
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
@@ -4199,6 +4506,9 @@ f_listpush(int count, VALUE **vals)
 	VALUE result;
 	VALUE *v1, *v2;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	v1 = *vals++;
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
 		return error_value(E_PUSH);
@@ -4223,6 +4533,9 @@ f_listappend(int count, VALUE **vals)
 	VALUE *v1, *v2;
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	v1 = *vals++;
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
 		return error_value(E_APPEND);
@@ -4246,6 +4559,9 @@ f_listdelete(VALUE *v1, VALUE *v2)
 {
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
 		return error_value(E_DELETE1);
 	if (v1->v_addr->v_subtype & V_NOREALLOC) {
@@ -4266,6 +4582,9 @@ f_listpop(VALUE *vp)
 {
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if ((vp->v_type != V_ADDR) || (vp->v_addr->v_type != V_LIST))
 		return error_value(E_POP);
 	if (vp->v_addr->v_subtype & V_NOREALLOC) {
@@ -4281,6 +4600,9 @@ static VALUE
 f_listremove(VALUE *vp)
 {
 	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if ((vp->v_type != V_ADDR) || (vp->v_addr->v_type != V_LIST))
 		return error_value(E_REMOVE);
@@ -4327,6 +4649,9 @@ f_ctime(void)
 	char *str;
 	VALUE res;
 
+	/* initialize VALUE */
+	res.v_subtype = V_NOSUBTYPE;
+
 	str = (char *) malloc(26);
 	if (str == NULL) {
 		math_error("No memory for ctime()");
@@ -4347,6 +4672,9 @@ f_fopen(VALUE *v1, VALUE *v2)
 	VALUE result;
 	FILEID id;
 	char *mode;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (v1->v_type != V_STR || v2->v_type != V_STR)
 		return error_value(E_FOPEN1);
@@ -4378,6 +4706,9 @@ f_freopen(int count, VALUE **vals)
 	VALUE result;
 	FILEID id;
 	char *mode;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (vals[0]->v_type != V_FILE)
 		return error_value(E_FREOPEN1);
@@ -4418,9 +4749,11 @@ f_errno(int count, VALUE **vals)
 	VALUE *vp;
 	VALUE result;
 
-	newerr = -1;
+	/* initialize VALUE */
 	result.v_type = V_NUM;
+	result.v_subtype = V_NOSUBTYPE;
 
+	newerr = -1;
 	if (count > 0) {
 		vp = vals[0];
 
@@ -4454,6 +4787,9 @@ f_errcount(int count, VALUE **vals)
 	VALUE *vp;
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	newcount = -1;
 	if (count > 0) {
 		vp = vals[0];
@@ -4481,6 +4817,9 @@ f_errmax(int count, VALUE **vals)
 	VALUE *vp;
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	oldmax = errmax;
 	if (count > 0) {
 		vp = vals[0];
@@ -4506,6 +4845,9 @@ f_stoponerror(int count, VALUE **vals)
 	VALUE *vp;
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	oldval = stoponerror;
 	if (count > 0) {
 		vp = vals[0];
@@ -4529,6 +4871,9 @@ f_fclose(int count, VALUE **vals)
 	VALUE result;
 	VALUE *vp;
 	int n, i=0;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	errno = 0;
 	if (count == 0) {
@@ -4560,6 +4905,9 @@ f_rm(int count, VALUE **vals)
 	int force;	/* TRUE -> -f was given as 1st arg */
 	int i;
 	int j;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	/*
 	 * firewall
@@ -4635,6 +4983,9 @@ f_strerror(int count, VALUE **vals)
 	long i;
 	char *cp;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	/* parse args */
 	if (count > 0) {
 		vp = vals[0];
@@ -4696,6 +5047,9 @@ f_ferror(VALUE *vp)
 	VALUE result;
 	int i;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (vp->v_type != V_FILE)
 		return error_value(E_FERROR1);
 	i = errorid(vp->v_file);
@@ -4713,6 +5067,9 @@ f_feof(VALUE *vp)
 	VALUE result;
 	int i;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (vp->v_type != V_FILE)
 		return error_value(E_FEOF1);
 	i = eofid(vp->v_file);
@@ -4729,6 +5086,9 @@ f_fflush(int count, VALUE **vals)
 {
 	VALUE result;
 	int i, n;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	i = 0;
 	errno = 0;
@@ -4783,6 +5143,9 @@ f_iserror(VALUE *vp)
 {
 	VALUE res;
 
+	/* initialize VALUE */
+	res.v_subtype = V_NOSUBTYPE;
+
 	res.v_type = V_NUM;
 	res.v_num = itoq((long)((vp->v_type < 0) ? - vp->v_type : 0));
 	return res;
@@ -4795,6 +5158,9 @@ f_fsize(VALUE *vp)
 	VALUE result;
 	ZVALUE len;		/* file length */
 	int i;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (vp->v_type != V_FILE)
 		return error_value(E_FSIZE1);
@@ -4816,6 +5182,9 @@ f_fseek(int count, VALUE **vals)
 	VALUE result;
 	int whence;
 	int i;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	/* firewalls */
 	errno = 0;
@@ -4853,6 +5222,9 @@ f_ftell(VALUE *vp)
 	ZVALUE pos;		/* current file position */
 	int i;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	errno = 0;
 	if (vp->v_type != V_FILE)
 		return error_value(E_FTELL1);
@@ -4872,6 +5244,9 @@ f_rewind(int count, VALUE **vals)
 {
 	VALUE result;
 	int n;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (count == 0)
 		rewindall();
@@ -4898,6 +5273,9 @@ f_fprintf(int count, VALUE **vals)
 	VALUE result;
 	int i;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (vals[0]->v_type != V_FILE)
 		return error_value(E_FPRINTF1);
 	if (vals[1]->v_type != V_STR)
@@ -4919,6 +5297,10 @@ strscan(char *s, int count, VALUE **vals)
 	int	n = 0;
 	VALUE	val, result;
 	VALUE	*var;
+
+	/* initialize VALUEs */
+	val.v_subtype = V_NOSUBTYPE;
+	result.v_subtype = V_NOSUBTYPE;
 
 	val.v_type = V_STR;
 	while (*s != '\0') {
@@ -4961,7 +5343,10 @@ filescan(FILEID id, int count, VALUE **vals)
 	VALUE	result;
 	VALUE	*var;
 
+	/* initialize VALUEs */
 	val.v_type = V_STR;
+	val.v_subtype = V_NOSUBTYPE;
+	result.v_subtype = V_NOSUBTYPE;
 
 	while (count-- > 0) {
 
@@ -4992,6 +5377,9 @@ f_scan(int count, VALUE **vals)
 	VALUE result;
 	int i;
 
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+
 	cp = nextline();
 	if (cp == NULL) {
 		result.v_type = V_NULL;
@@ -4999,7 +5387,6 @@ f_scan(int count, VALUE **vals)
 	}
 
 	i = strscan(cp, count, vals);
-
 	result.v_type = V_NUM;
 	result.v_num = itoq((long) i);
 	return result;
@@ -5012,6 +5399,9 @@ f_strscan(int count, VALUE **vals)
 	VALUE *vp;
 	VALUE result;
 	int i;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	vp = *vals;
 	if (vp->v_type == V_ADDR)
@@ -5033,6 +5423,9 @@ f_fscan(int count, VALUE **vals)
 	VALUE *vp;
 	VALUE result;
 	int i;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	errno = 0;
 	vp = *vals;
@@ -5061,6 +5454,9 @@ f_scanf(int count, VALUE **vals)
 	VALUE result;
 	int i;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	vp = *vals;
 	if (vp->v_type == V_ADDR)
 		vp = vp->v_addr;
@@ -5085,6 +5481,9 @@ f_strscanf(int count, VALUE **vals)
 	VALUE *vp, *vq;
 	VALUE result;
 	int i;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	errno = 0;
 	vp = vals[0];
@@ -5119,6 +5518,9 @@ f_fscanf(int count, VALUE **vals)
 	VALUE *vp, *sp;
 	VALUE result;
 	int i;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	vp = *vals++;
 	if (vp->v_type == V_ADDR)
@@ -5155,6 +5557,9 @@ f_fputc(VALUE *v1, VALUE *v2)
 	int ch;
 	int i;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (v1->v_type != V_FILE)
 		return error_value(E_FPUTC1);
 	switch (v2->v_type) {
@@ -5189,6 +5594,9 @@ f_fputs(int count, VALUE **vals)
 	VALUE result;
 	int i, err;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (vals[0]->v_type != V_FILE)
 		return error_value(E_FPUTS1);
 	for (i = 1; i < count; i++) {
@@ -5210,6 +5618,9 @@ f_fputstr(int count, VALUE **vals)
 {
 	VALUE result;
 	int i, err;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (vals[0]->v_type != V_FILE)
 		return error_value(E_FPUTSTR1);
@@ -5234,6 +5645,9 @@ f_printf(int count, VALUE **vals)
 	VALUE result;
 	int i;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (vals[0]->v_type != V_STR)
 		return error_value(E_PRINTF1);
 	i = idprintf(FILEID_STDOUT, vals[0]->v_str->s_str,
@@ -5251,6 +5665,9 @@ f_strprintf(int count, VALUE **vals)
 	VALUE result;
 	int i;
 	char *cp;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (vals[0]->v_type != V_STR)
 		return error_value(E_STRPRINTF1);
@@ -5275,6 +5692,9 @@ f_fgetc(VALUE *vp)
 	VALUE result;
 	int ch;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (vp->v_type != V_FILE)
 		return error_value(E_FGETC1);
 	ch = getcharid(vp->v_file);
@@ -5296,6 +5716,9 @@ f_ungetc(VALUE *v1, VALUE *v2)
 	NUMBER *q;
 	int ch;
 	int i;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	errno = 0;
 	if (v1->v_type != V_FILE)
@@ -5331,6 +5754,9 @@ f_fgetline(VALUE *vp)
 	char *str;
 	int i;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (vp->v_type != V_FILE)
 		return error_value(E_FGETLINE1);
 	i = readid(vp->v_file, 9, &str);
@@ -5351,6 +5777,9 @@ f_fgets(VALUE *vp)
 	VALUE result;
 	char *str;
 	int i;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (vp->v_type != V_FILE)
 		return error_value(E_FGETS1);
@@ -5373,6 +5802,9 @@ f_fgetstr(VALUE *vp)
 	char *str;
 	int i;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (vp->v_type != V_FILE)
 		return error_value(E_FGETSTR1);
 	i = readid(vp->v_file, 10, &str);
@@ -5394,6 +5826,9 @@ f_fgetfield(VALUE *vp)
 	char *str;
 	int i;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (vp->v_type != V_FILE)
 		return error_value(E_FGETWORD1);
 	i = readid(vp->v_file, 14, &str);
@@ -5412,6 +5847,9 @@ static VALUE
 f_files(int count, VALUE **vals)
 {
 	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (count == 0) {
 		result.v_type = V_NUM;
@@ -5432,6 +5870,9 @@ static VALUE
 f_reverse(VALUE *val)
 {
 	VALUE res;
+
+	/* initialize VALUE */
+	res.v_subtype = V_NOSUBTYPE;
 
 	res.v_type = val->v_type;
 	switch(val->v_type) {
@@ -5461,6 +5902,9 @@ f_sort(VALUE *val)
 {
 	VALUE res;
 
+	/* initialize VALUE */
+	res.v_subtype = V_NOSUBTYPE;
+
 	res.v_type = val->v_type;
 	switch (val->v_type) {
 		case V_MAT:
@@ -5486,6 +5930,9 @@ f_join(int count, VALUE **vals)
 	LISTELEM *ep;
 	VALUE res;
 
+	/* initialize VALUE */
+	res.v_subtype = V_NOSUBTYPE;
+
 	lp = listalloc();
 	while (count-- > 0) {
 		if (vals[0]->v_type != V_LIST) {
@@ -5509,6 +5956,9 @@ f_head(VALUE *v1, VALUE *v2)
 {
 	VALUE res;
 	long n;
+
+	/* initialize VALUE */
+	res.v_subtype = V_NOSUBTYPE;
 
 	if (v2->v_type != V_NUM || qisfrac(v2->v_num) ||
 		zge31b(v2->v_num->num))
@@ -5546,6 +5996,9 @@ f_tail(VALUE *v1, VALUE *v2)
 {
 	long n;
 	VALUE res;
+
+	/* initialize VALUE */
+	res.v_subtype = V_NOSUBTYPE;
 
 	if (v2->v_type != V_NUM || qisfrac(v2->v_num) ||
 		zge31b(v2->v_num->num))
@@ -5594,6 +6047,9 @@ f_segment(int count, VALUE **vals)
 	long n1, n2;
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	vp = vals[1];
 
 	if (vp->v_type != V_NUM || qisfrac(vp->v_num) || zge31b(vp->v_num->num))
@@ -5632,6 +6088,9 @@ f_modify(VALUE *v1, VALUE *v2)
 	long s;
 	VALUE res;
 	VALUE *vp;
+
+	/* initialize VALUE */
+	res.v_subtype = V_NOSUBTYPE;
 
 	if (v1->v_type != V_ADDR) {
 		math_error("Non-variable first argument for modify");
@@ -5684,6 +6143,10 @@ f_forall(VALUE *v1, VALUE *v2)
 	VALUE res;
 	VALUE *vp;
 
+	/* initialize VALUE */
+	res.v_type = V_NULL;
+	res.v_subtype = V_NOSUBTYPE;
+
 	if (v2->v_type != V_STR) {
 		math_error("Non-string second argument for forall");
 		/*NOTREACHED*/
@@ -5714,7 +6177,6 @@ f_forall(VALUE *v1, VALUE *v2)
 		    math_error("Non list or matrix first argument for forall");
 		    /*NOTREACHED*/
 	}
-	res.v_type = V_NULL;
 	return res;
 }
 
@@ -5726,6 +6188,10 @@ f_select(VALUE *v1, VALUE *v2)
 	LISTELEM *ep;
 	FUNC *fp;
 	VALUE res;
+
+	/* initialize VALUE */
+	res.v_type = V_LIST;
+	res.v_subtype = V_NOSUBTYPE;
 
 	if (v1->v_type != V_LIST) {
 		math_error("Non-list first argument for select");
@@ -5748,7 +6214,6 @@ f_select(VALUE *v1, VALUE *v2)
 			insertlistlast(lp, &ep->e_value);
 		freevalue(stack--);
 	}
-	res.v_type = V_LIST;
 	res.v_list = lp;
 	return res;
 }
@@ -5763,6 +6228,10 @@ f_count(VALUE *v1, VALUE *v2)
 	long n = 0;
 	VALUE res;
 	VALUE *vp;
+
+	/* initialize VALUE */
+	res.v_type = V_NUM;
+	res.v_subtype = V_NOSUBTYPE;
 
 	if (v2->v_type != V_STR) {
 		math_error("Non-string second argument for select");
@@ -5798,7 +6267,6 @@ f_count(VALUE *v1, VALUE *v2)
 			math_error("Bad argument type for count");
 			/*NOTREACHED*/
 	}
-	res.v_type = V_NUM;
 	res.v_num = itoq(n);
 	return res;
 }
@@ -5811,6 +6279,10 @@ f_makelist(VALUE *v1)
 	VALUE res;
 	long n;
 
+	/* initialize VALUE */
+	res.v_type = V_NULL;
+	res.v_subtype = V_NOSUBTYPE;
+
 	if (v1->v_type != V_NUM || qisfrac(v1->v_num) || qisneg(v1->v_num)) {
 		math_error("Bad argument for makelist");
 		/*NOTREACHED*/
@@ -5821,8 +6293,6 @@ f_makelist(VALUE *v1)
 	}
 	n = qtoi(v1->v_num);
 	lp = listalloc();
-	res.v_type = V_NULL;
-	res.v_subtype = V_NOSUBTYPE;
 	while (n-- > 0)
 		insertlistlast(lp, &res);
 	res.v_type = V_LIST;
@@ -5835,6 +6305,9 @@ static VALUE
 f_randperm(VALUE *val)
 {
 	VALUE res;
+
+	/* initialize VALUE */
+	res.v_subtype = V_NOSUBTYPE;
 
 	res.v_type = val->v_type;
 	switch (val->v_type) {
@@ -5860,9 +6333,12 @@ f_cmdbuf(void)
 	VALUE result;
         char *newcp;
 
+	/* initialize VALUE */
+        result.v_type = V_STR;
+	result.v_subtype = V_NOSUBTYPE;
+
 	newcp = (char *)malloc(strlen(cmdbuf) + 1);
 	strcpy(newcp, cmdbuf);
-        result.v_type = V_STR;
 	result.v_str = makestring(newcp);
 	return result;
 }
@@ -5873,6 +6349,9 @@ f_getenv(VALUE *v1)
 {
 	VALUE result;
 	char *str;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (v1->v_type != V_STR) {
 		math_error("Non-string argument for getenv");
@@ -5893,6 +6372,9 @@ f_isatty(VALUE *vp)
 {
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	result.v_type = V_NUM;
 	if (vp->v_type == V_FILE && isattyid(vp->v_file) == 1) {
 		result.v_num = itoq(1);
@@ -5908,7 +6390,10 @@ f_inputlevel (void)
 {
 	VALUE result;
 
+	/* initialize VALUE */
 	result.v_type = V_NUM;
+	result.v_subtype = V_NOSUBTYPE;
+
 	result.v_num = itoq((long) inputlevel());
 	return result;
 }
@@ -5919,7 +6404,10 @@ f_calclevel (void)
 {
 	VALUE result;
 
+	/* initialize VALUE */
 	result.v_type = V_NUM;
+	result.v_subtype = V_NOSUBTYPE;
+
 	result.v_num = itoq(calclevel());
 	return result;
 }
@@ -5933,6 +6421,10 @@ f_access(int count, VALUE **vals)
 	char *s, *fname;
 	VALUE result;
 	long i;
+
+	/* initialize VALUE */
+	result.v_type = V_NULL;
+	result.v_subtype = V_NOSUBTYPE;
 
 	errno = 0;
 	if (vals[0]->v_type != V_STR)
@@ -5968,7 +6460,6 @@ f_access(int count, VALUE **vals)
 	i = access(fname, m);
 	if (i)
 		return error_value(errno);
-	result.v_type = V_NULL;
 	return result;
 }
 
@@ -5978,6 +6469,10 @@ f_putenv(int count, VALUE **vals)
 {
 	VALUE result;
         char *putenv_str;
+
+	/* initialize VALUE */
+	result.v_type = V_NUM;
+	result.v_subtype = V_NOSUBTYPE;
 
 	/*
 	 * parse args
@@ -6026,7 +6521,6 @@ f_putenv(int count, VALUE **vals)
 	}
 
 	/* return putenv result */
-	result.v_type = V_NUM;
 	result.v_num = itoq((long) malloced_putenv(putenv_str));
 	return result;
 }
@@ -6039,11 +6533,14 @@ f_strpos(VALUE *haystack, VALUE *needle)
         char *cpointer;
         int cindex;
 
+	/* initialize VALUE */
+	result.v_type = V_NUM;
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (haystack->v_type != V_STR || needle->v_type != V_STR) {
 		math_error("Non-string argument for index");
 		/*NOTREACHED*/
 	}
-	result.v_type = V_NUM;
         cpointer = strstr(haystack->v_str->s_str,
 		needle->v_str->s_str);
         if (cpointer == NULL)
@@ -6060,6 +6557,10 @@ f_system(VALUE *vp)
 {
 	VALUE result;
 
+	/* initialize VALUE */
+	result.v_type = V_NUM;
+	result.v_subtype = V_NOSUBTYPE;
+
 	if (vp->v_type != V_STR) {
 		math_error("Non-string argument for system");
 		/*NOTREACHED*/
@@ -6068,7 +6569,6 @@ f_system(VALUE *vp)
 		math_error("execution disallowed by -m");
 		/*NOTREACHED*/
 	}
-	result.v_type = V_NUM;
 	if (conf->calc_debug & CALCDBG_SYSTEM) {
 		printf("%s\n", vp->v_str->s_str);
 	}
@@ -6205,8 +6705,11 @@ base_value(long mode)
 static VALUE
 f_custom(int count, VALUE **vals)
 {
-
 	VALUE result;
+
+	/* initialize VALUE */
+	result.v_type = V_NULL;
+	result.v_subtype = V_NOSUBTYPE;
 
 	/*
 	 * disable custom functions unless -C was given
@@ -6229,7 +6732,6 @@ f_custom(int count, VALUE **vals)
 	if (count <= 0) {
 		/* perform the usage function function */
 		showcustom();
-		result.v_type = V_NULL;
 	} else {
 		/* firewall */
 		if (vals[0]->v_type != V_STR) {
@@ -6257,6 +6759,10 @@ f_blk(int count, VALUE **vals)
 	int id;
 	VALUE *vp;
 	int type;
+
+	/* initialize VALUE */
+	result.v_type = V_BLOCK;
+	result.v_subtype = V_NOSUBTYPE;
 
 	vp = *vals;
 	type = 0;
@@ -6318,7 +6824,6 @@ f_blk(int count, VALUE **vals)
 
 	/* allocate block */
 	result.v_block = blkalloc(len, chunk);
-	result.v_type = V_BLOCK;
 	return result;
 }
 
@@ -6328,6 +6833,10 @@ f_blkfree(VALUE *vp)
 {
 	int id;
 	VALUE result;
+
+	/* initialize VALUE */
+	result.v_type = V_NULL;
+	result.v_subtype = V_NOSUBTYPE;
 
 	id = 0;
 	switch (vp->v_type) {
@@ -6352,7 +6861,6 @@ f_blkfree(VALUE *vp)
 	id = removenblock(id);
 	if (id)
 		return error_value(id);
-	result.v_type = V_NULL;
 	return result;
 }
 
@@ -6363,6 +6871,9 @@ f_blocks(int count, VALUE **vals)
 	NBLOCK *nblk;
 	VALUE result;
 	int id;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	if (count == 0) {
 		result.v_type = V_NUM;
@@ -6391,6 +6902,9 @@ f_free(int count, VALUE **vals)
 	VALUE result;
 	VALUE *val;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	result.v_type = V_NULL;
 	while (count-- > 0) {
 		val = *vals++;
@@ -6405,8 +6919,11 @@ f_freeglobals(void)
 {
 	VALUE result;
 
-	freeglobals();
+	/* initialize VALUE */
 	result.v_type = V_NULL;
+	result.v_subtype = V_NOSUBTYPE;
+
+	freeglobals();
 	return result;
 }
 
@@ -6414,8 +6931,12 @@ static VALUE
 f_freeredc(void)
 {
 	VALUE result;
-	freeredcdata();
+
+	/* initialize VALUE */
 	result.v_type = V_NULL;
+	result.v_subtype = V_NOSUBTYPE;
+
+	freeredcdata();
 	return result;
 }
 
@@ -6425,8 +6946,11 @@ f_freestatics(void)
 {
 	VALUE result;
 
-	freestatics();
+	/* initialize VALUE */
 	result.v_type = V_NULL;
+	result.v_subtype = V_NOSUBTYPE;
+
+	freestatics();
 	return result;
 }
 
@@ -6447,6 +6971,10 @@ f_copy(int count, VALUE **vals)
 	long dsi = -1;	/* destination start index, -1 ==> default */
 	int errtype;	/* error type if unable to perform copy */
 	VALUE result;	/* null if successful */
+
+	/* initialize VALUE */
+	result.v_type = V_NULL;
+	result.v_subtype = V_NOSUBTYPE;
 
 	/*
 	 * parse args
@@ -6504,7 +7032,6 @@ f_copy(int count, VALUE **vals)
 	errtype = copystod(vals[0], ssi, num, vals[1], dsi);
 	if (errtype > 0)
 		return error_value(errtype);
-	result.v_type = V_NULL;
 	return result;
 }
 
@@ -6522,6 +7049,9 @@ f_blkcpy(int count, VALUE **vals)
 {
 	VALUE *args[5];		/* args to re-order */
 	VALUE null_value;	/* dummy argument */
+
+	/* initialize VALUE */
+	null_value.v_subtype = V_NOSUBTYPE;
 
 	/*
 	 * parse args into f_copy order
@@ -6562,6 +7092,9 @@ f_sha(int count, VALUE **vals)
 	VALUE result;
 	HASH *state;		/* pointer to hash state to use */
 	int i;			/* vals[i] to hash */
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	state = NULL;
 
@@ -6629,6 +7162,9 @@ f_sha1(int count, VALUE **vals)
 	HASH *state;		/* pointer to hash state to use */
 	int i;			/* vals[i] to hash */
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
 	/*
 	 * arg check
 	 */
@@ -6692,6 +7228,9 @@ f_md5(int count, VALUE **vals)
 	VALUE result;
 	HASH *state;		/* pointer to hash state to use */
 	int i;			/* vals[i] to hash */
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
 
 	state = NULL;
 

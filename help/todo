@@ -5,9 +5,21 @@ Calc Todo Items:
 
     Code contributions are welcome.  Send patches to:
 
-	    calc-tester@postofc.corp.sgi.com
+	    calc-tester at postofc dot corp dot sgi dot com
+
+	    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
 
     See also the 'wishlist' help files for the calc enhancement wish list.
+
+    Calc bug reports, however, should send to:
+
+	    calc-tester at postofc dot corp dot sgi dot com
+
+	    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+
+    see the BUGS file or try the calc command:
+
+	    help bugs
 
 =-=
 
