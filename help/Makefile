@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.23 $
-# @(#) $Id: Makefile,v 29.23 2003/01/14 02:24:48 chongo Exp $
+# @(#) $Revision: 29.25 $
+# @(#) $Id: Makefile,v 29.25 2004/07/28 12:21:05 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -170,6 +170,19 @@ SORT= sort
 FMT= fmt
 CMP= cmp
 
+# Some out of date operating systems require / want an executable to
+# end with a certain file extension.  Some compile systems such as
+# Cygwin build calc as calc.exe.  The EXT variable is used to denote
+# the extension required by such.
+#
+# EXT=				# normal Un*x / Linux / GNU/Linux systems
+# EXT=.exe			# windoz / Cygwin
+#
+# If in doubt, use EXT=
+#
+EXT=
+#EXT=.exe
+
 # Standard and Builtin help files
 #
 STD_HELP_FILES_1= intro overview help
@@ -250,8 +263,8 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
 	avg base base2 bernoulli bit blk blkcpy blkfree blocks bround btrunc \
 	calc_tty calclevel catalan ceil cfappr cfsim char cmdbuf cmp comb \
 	conj cos cosh cot coth count cp csc csch ctime delete den dereference \
-	det digit digits dp epsilon errcount errmax errno error euler eval \
-	exp fact factor fclose fcnt feof ferror fflush fgetc fgetfield \
+	det digit digits display dp epsilon errcount errmax errno error euler \
+	eval exp fact factor fclose fcnt feof ferror fflush fgetc fgetfield \
 	fgetline fgets fgetstr fib files floor fopen forall fprintf fputc \
 	fputs fputstr frac free freebernoulli freeeuler freeglobals freeredc \
 	freestatics frem freopen fscan fscanf fseek fsize ftell gcd gcdrem \
@@ -534,13 +547,13 @@ builtin: builtin.top builtin.end ../func.c funclist.sed
 	${Q}echo "forming builtin help file"
 	-${Q}rm -f funclist.c
 	${Q}${SED} -n -f funclist.sed ../func.c > funclist.c
-	-${Q}rm -f funclist.o funclist
+	-${Q}rm -f funclist.o funclist${EXT}
 	${Q}${LCC} ${ICFLAGS} -DFUNCLIST -I/usr/include \
 	    -I.. funclist.c -c 2>/dev/null
-	${Q}${LCC} ${ILDFLAGS} funclist.o -o funclist
+	${Q}${LCC} ${ILDFLAGS} funclist.o -o funclist${EXT}
 	-${Q}rm -f builtin
 	${Q}cat builtin.top > builtin
-	${Q}./funclist | \
+	${Q}./funclist${EXT} | \
 	    ${SED} -e 's/^/	/' -e 's/[	 ][	 ]*$$//' >> builtin
 	${Q}cat builtin.end >> builtin
 	${Q}echo "builtin help file formed"
@@ -625,12 +638,12 @@ echo_inst_files:
 ##
 
 clean:
-	rm -f obj mkbuiltin funclist.c funclist.o funclist
+	rm -f obj mkbuiltin funclist.c funclist.o funclist${EXT}
 	rm -f COPYING COPYING-LGPL
 
 clobber:
 	rm -f ${BLT_HELP_FILES} full .all calc
-	rm -f obj mkbuiltin funclist.c funclist.o funclist
+	rm -f obj mkbuiltin funclist.c funclist.o funclist${EXT}
 	rm -f COPYING COPYING-LGPL
 	rm -f ${SINGULAR_FILES} ${DETAIL_CLONE}
 

@@ -1,7 +1,7 @@
 /*
  * c_sysinfo - names and values of selected #defines
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999,2004  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: c_sysinfo.c,v 29.7 2004/02/23 09:19:18 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: c_sysinfo.c,v 29.10 2004/03/31 05:02:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_sysinfo.c,v $
  *
  * Under source code control:	1997/03/09 23:14:40
@@ -42,7 +42,6 @@
 #include "../calc.h"
 #include "../longbits.h"
 #define CHECK_L_FORMAT
-#include "../longlong.h"
 #include "../block.h"
 #include "../calcerr.h"
 #include "../conf.h"
@@ -104,7 +103,6 @@ static struct infoname sys_info[] = {
     {"INIT_K", "initial 2nd walking a55 table index", NULL, (FULL)INIT_K},
     {"INODE_BITS", "inode number size in bits", NULL, (FULL)INODE_BITS},
     {"LITTLE_ENDIAN", "Least Significant Byte first symbol", NULL, (FULL)LITTLE_ENDIAN},
-    {"LONGLONG_BITS", "length of a long long, or 0", NULL, (FULL)LONGLONG_BITS},
     {"LONG_BITS", "bit length of a long", NULL, (FULL)LONG_BITS},
     {"MAP_POPCNT", "number of odd primes in pr_map", NULL, (FULL)MAP_POPCNT},
     {"MAX_CALCRC", "maximum allowed length of $CALCRC", NULL, (FULL)MAX_CALCRC},
@@ -317,30 +315,16 @@ dump_name_value(void)
 	/* dump the entire table */
 	for (p = sys_info; p->name != NULL; ++p) {
 		if (p->str == NULL) {
-#if LONG_BITS == FULL_BITS || FULL_BITS == 32 || !defined(HAVE_LONGLONG)
+#if LONG_BITS == FULL_BITS || FULL_BITS == 32
 			printf("%s%-23s\t%-8lu\t(0x%lx)\n",
 			    (conf->tab_ok ? "\t" : ""), p->name,
 			    (unsigned long)p->nmbr,
 			    (unsigned long)p->nmbr);
 #else
-			/*
-			 * Determine of %ld can print a 64 bit long long.
-			 *
-			 * Some systems that can make use of %ld to print a
-			 * a 64 bit value do not support the %lld type.
-			 * So we will only try %lld if %ld does not work.
-			 */
-# if defined(L64_FORMAT)
-			printf("%s%-23s\t%-8lu\t(0x%lx)\n",
-			    (conf->tab_ok ? "\t" : ""), p->name,
-			    (unsigned long long)p->nmbr,
-			    (unsigned long long)p->nmbr);
-# else /* L64_FORMAT */
 			printf("%s%-23s\t%-8llu\t(0x%llx)\n",
 			    (conf->tab_ok ? "\t" : ""), p->name,
 			    (unsigned long long)p->nmbr,
 			    (unsigned long long)p->nmbr);
-# endif /* L64_FORMAT */
 #endif
 		} else {
 			printf("%s%-23s\t\"%s\"\n",
@@ -362,25 +346,16 @@ dump_mening_value(void)
 	/* dump the entire table */
 	for (p = sys_info; p->name != NULL; ++p) {
 		if (p->str == NULL) {
-#if LONG_BITS == FULL_BITS || FULL_BITS == 32 || !defined(HAVE_LONGLONG)
+#if LONG_BITS == FULL_BITS || FULL_BITS == 32
 			printf("%s%-36.36s\t%-8lu\t(0x%lx)\n",
 			    (conf->tab_ok ? "\t" : ""), p->meaning,
 			    (unsigned long)p->nmbr,
 			    (unsigned long)p->nmbr);
 #else
-# if defined(L64_FORMAT)
-			/* %ld prints all 64 bits, use %ld */
-			printf("%s%-36.36s\t%-8lu\t(0x%lx)\n",
-			    (conf->tab_ok ? "\t" : ""), p->meaning,
-			    (unsigned long long)p->nmbr,
-			    (unsigned long long)p->nmbr);
-# else /* L64_FORMAT */
-			/* %ld prints lower 32 bits only, use %lld */
 			printf("%s%-36.36s\t%-8llu\t(0x%llx)\n",
 			    (conf->tab_ok ? "\t" : ""), p->meaning,
 			    (unsigned long long)p->nmbr,
 			    (unsigned long long)p->nmbr);
-# endif /* L64_FORMAT */
 #endif
 		} else {
 			printf("%s%-36.36s\t\"%s\"\n",

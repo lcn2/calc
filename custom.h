@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: custom.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: custom.h,v 29.3 2004/02/25 23:54:40 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/custom.h,v $
  *
  * Under source code control:	1997/03/03 04:53:08
@@ -72,7 +72,7 @@ struct custom {
  * These are the required interfaces.  The dummy.c stubs these interfaces too.
  */
 extern VALUE custom(char*, int, VALUE**);	/* master custom interface */
-extern int allow_custom;		/* TRUE => custom builtins allowed */
+extern BOOL allow_custom;		/* TRUE => custom builtins allowed */
 extern void showcustom(void);		/* print custom functions */
 extern void customhelp(char *);		/* direct custom help */
 extern CONST struct custom cust[];	/* custom interface table */

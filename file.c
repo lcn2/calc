@@ -1,7 +1,7 @@
 /*
  * file - file I/O routines callable by users
  *
- * Copyright (C) 1999  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2004  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: file.c,v 29.8 2004/02/23 07:53:12 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: file.c,v 29.9 2004/02/23 14:04:01 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56

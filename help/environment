@@ -9,11 +9,11 @@ Environment variables
 	If this variable does not exist, a compiled value
 	is used.  Typically compiled in value is:
 
-		    .:./cal:~/cal:${LIBDIR}/calc:${LIBDIR}/custom
+		    .:./cal:~/cal:${CALC_SHAREDIR}:${CUSTOMCALDIR}
 
-	where ${LIBDIR} is usually:
+	which is usually:
 
-		    /usr/local/lib/calc
+		    .:./cal:~/cal:/usr/share/calc:/usr/share/calc/custom
 
 	This value is used by the READ command.	 It is an error
 	if no such readable file is found.
@@ -30,11 +30,11 @@ Environment variables
 	If this variable does not exist, a compiled value
 	is used.  Typically compiled in value is:
 
-		    ${LIBDIR}/startup:~/.calcrc
+		    ${CALC_SHAREDIR}/startup:~/.calcrc:./.calcinit
 
-	where ${LIBDIR} is usually:
+	which is usually:
 
-		    /usr/local/lib/calc
+		    /usr/share/calc/startup:~/.calcrc:./.calcinit
 
 	Missing files along the $CALCRC path are silently ignored.
 
@@ -104,8 +104,8 @@ Environment variables
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: environment,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: environment,v 29.3 2004/07/26 07:10:43 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/environment,v $
 ##
 ## Under source code control:	1991/07/23 05:47:25

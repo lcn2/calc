@@ -10,8 +10,8 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: md5.c,v 29.2 2004/02/23 07:58:06 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: md5.c,v 29.3 2004/08/03 12:28:29 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/md5.c,v $
  *
  * This file is not covered under version 2.1 of the GNU LGPL.
@@ -194,7 +194,7 @@ MD5Update(HASH *state, USB8 *inBuf, USB32 count)
 #if CALC_BYTE_ORDER == BIG_ENDIAN
 		if (state->bytes) {
 		/* byte swap data into little endian order */
-			for (cnt=0; cnt < MD5_CHUNKWORDS; ++cnt) {
+			for (cnt=0; cnt < (int)MD5_CHUNKWORDS; ++cnt) {
 				SWAP_B8_IN_B32(md5Ctx->data + cnt,
 					md5Ctx->data + cnt);
 			}
@@ -255,7 +255,7 @@ MD5Final(HASH *state)
 #if CALC_BYTE_ORDER == BIG_ENDIAN
 	if (state->bytes) {
 		data[count] = 0x80;
-		for (i=0; i < MD5_CHUNKWORDS; ++i) {
+		for (i=0; i < (int)MD5_CHUNKWORDS; ++i) {
 			SWAP_B8_IN_B32(md5Ctx->data + i,
 				md5Ctx->data + i);
 		}
@@ -400,7 +400,7 @@ MD5_chkpt(HASH *state)
 #if CALC_BYTE_ORDER == BIG_ENDIAN
 		if (state->bytes) {
 			/* byte swap data into little endian order */
-			for (cnt=0; cnt < MD5_CHUNKWORDS; ++cnt) {
+			for (cnt=0; cnt < (int)MD5_CHUNKWORDS; ++cnt) {
 				SWAP_B8_IN_B32(dig->data + cnt,
 					dig->data + cnt);
 			}

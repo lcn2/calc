@@ -1,7 +1,7 @@
 /*
  * blkcpy - general values and related routines used by the calculator
  *
- * Copyright (C) 1999  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2004  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: blkcpy.c,v 29.4 2004/02/23 07:47:31 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: blkcpy.c,v 29.5 2004/02/23 14:04:01 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/blkcpy.c,v $
  *
  * Under source code control:	1997/04/18 20:41:26

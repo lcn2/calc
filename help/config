@@ -50,6 +50,8 @@ Configuration parameters
 	    "basename"		Read-only basename of the program value
 	    "windows"		Read-only indicator of MS windows
 	    "cygwin"		TRUE=>calc compiled with cygwin, Read-only
+	    "compile_custom"	TRUE=>calc was compiled with custom functions
+	    "allow_custom"	TRUE=>custom functions are enabled
 	    "version"		Read-only calc version
 
     The "all" config value allows one to save/restore the configuration
@@ -553,7 +555,7 @@ Detailed config descriptions
 		is displayed.
 
 	2	Show func will display more information about a functions
-		arguments as well as more argument sdummary information.
+		arguments and argument summary information.
 
 	3	During execution, allow calc standard resource files
 		to output additional debugging information.
@@ -712,6 +714,40 @@ Detailed config descriptions
 
     =-=
 
+    config("compile_custom")	<== NOTE: This is a read-only config value
+
+    Returns TRUE if you calc was compiled with -DCUSTOM.  By default,
+    the calc Makefile uses ALLOW_CUSTOM= -DCUSTOM so by default
+    config("compile_custom") is TRUE.  If, however, calc is compiled
+    without -DCUSTOM, then config("compile_custom") will be FALSE.
+
+    The config("compile_custom") value is only affected by compile
+    flags.   The calc -D runtime command line option does not change
+    the config("compile_custom") value.
+
+    See also config("allow_custom").
+
+    This config parameter is read-only and cannot be set.
+
+    =-=
+
+    config("allow_custom")	<== NOTE: This is a read-only config value
+
+    Returns TRUE if you custom functions are enabled.  To allow the use
+    of custom functions, calc must be compiled with -DCUSTOM (which it
+    is by default) AND calc run be run with the -D runtime command line
+    option (which it is not by default).
+
+    If config("allow_custom") is TRUE, then custom functions are allowed.
+    If config("allow_custom") is FALSE, then custom functions are not
+    allowed.
+
+    See also config("compile_custom").
+
+    This config parameter is read-only and cannot be set.
+
+    =-=
+
     config("version")		<== NOTE: This is a read-only config value
 
     The version string of the calc program can be obtained by:
@@ -736,8 +772,8 @@ Detailed config descriptions
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.8 $
-## @(#) $Id: config,v 29.8 2004/02/23 05:59:22 chongo Exp $
+## @(#) $Revision: 29.10 $
+## @(#) $Id: config,v 29.10 2004/07/27 23:45:52 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/config,v $
 ##
 ## Under source code control:	1991/07/21 04:37:17

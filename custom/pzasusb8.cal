@@ -1,7 +1,7 @@
 /*
  * pzasusb8 - print numereator as a string of USB8s
  *
- * Copyright (C) 1999  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2004  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: pzasusb8.cal,v 29.2 2000/06/07 14:03:03 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: pzasusb8.cal,v 29.3 2004/03/31 05:03:02 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/pzasusb8.cal,v $
  *
  * Under source code control:	1999/10/06 03:11:12
@@ -30,6 +30,15 @@
  * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+
+/*
+ * firewall
+ */
+if (config("compile_custom") == 0) {
+	quit "calc compiled without -DCUSTOM";
+} else if (config("allow_custom") == 0) {
+	quit "calc was run without the -D command line option";
+}
 
 print "p(n) prints array in which numerator of n is stored as a";
 print "sequence of 2-hex-digits representing unsigned characters.";
@@ -52,6 +61,5 @@ print "CALC_BYTE_ORDER: ", custom("sysinfo", "CALC_BYTE_ORDER");
 print "BIG_ENDIAN: ", custom("sysinfo", "BIG_ENDIAN");
 print "LITTLE_ENDIAN: ", custom("sysinfo", "LITTLE_ENDIAN");
 print "LONG_BITS: ", custom("sysinfo", "LONG_BITS");
-print "LONGLONG_BITS: ", custom("sysinfo", "LONGLONG_BITS");
 print "Calc sizes:";
 show sizes;

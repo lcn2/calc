@@ -29,7 +29,7 @@
 
 /* the default pager to use */
 #if !defined(DEFAULTCALCPAGER)
-#define DEFAULTCALCPAGER ""
+#define DEFAULTCALCPAGER "less.exe"
 #endif /* DEFAULTCALCPAGER */
 
 /* where the echo command is located */

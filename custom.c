@@ -17,9 +17,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: custom.c,v 29.3 2001/03/17 21:31:47 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/custom.c,v $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: custom.c,v 29.4 2004/02/25 23:54:40 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/custom/../RCS/custom.c,v $
  *
  * Under source code control:	1997/03/03 04:53:08
  * File existed as early as:	1997
@@ -51,7 +51,7 @@
 
 #endif /* CUSTOM */
 
-int allow_custom = FALSE;	 /* TRUE => custom builtins allowed */
+BOOL allow_custom = FALSE;	 /* TRUE => custom builtins allowed */
 
 
 /*

@@ -1,7 +1,7 @@
 /*
  * zrand - subtractive 100 shuffle generator
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999,2004  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: zrand.h,v 29.5 2001/06/08 21:00:58 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: zrand.h,v 29.7 2004/03/31 04:58:40 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrand.h,v $
  *
  * Under source code control:	1995/01/07 09:45:26
@@ -81,20 +81,6 @@
  *
  * SLEN		- length in FULLs of an subtractive 100 slot
  *
- * SVAL(a,b)	- form a 64 bit hex slot entry in the subtractive 100 table
- *		  a: up to 8 hex digits without the leading 0x (upper half)
- *		  b: up to 8 hex digits without the leading 0x (lower half)
- *
- *	NOTE: Due to a SunOS cc bug, don't put spaces in the SVAL call!
- *
- * SHVAL(a,b,c,d) - form an 64 bit array of HALFs
- *		  a: up to 4 hex digits without the leading 0x (upper half)
- *		  b: up to 4 hex digits without the leading 0x (2nd half)
- *		  c: up to 4 hex digits without the leading 0x (3rd half)
- *		  d: up to 4 hex digits without the leading 0x (lower half)
- *
- *	NOTE: Due to a SunOS cc bug, don't put spaces in the SHVAL call!
- *
  * SLOAD(s,i,z) - load table slot i from subtractive 100 state s with zvalue z
  *		  s: type RAND
  *		  i: type int, s.slot[i] slot index
@@ -140,13 +126,6 @@
 #if FULL_BITS == SBITS
 
 # define SLEN 1		/* a 64 bit slot can be held in a FULL */
-# if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
-#  define SVAL(a,b) (FULL)U(0x ## a ## b)
-#  define SHVAL(a,b,c,d) (HALF)0x ## c ## d, (HALF)0x ## a ## b
-# else
-#  define SVAL(a,b) (FULL)U(0x/**/a/**/b)
-#  define SHVAL(a,b,c,d) (HALF)0x/**/c/**/d,(HALF)0x/**/a/**/b
-# endif
 #define SLOAD(s,i,z) ((s).slot[i] = ztofull(z))
 #define SSUB(s,k,j) ((s).slot[k] -= (s).slot[j])
 #define SINDX(s,k) ((int)((s).slot[k] >> (FULL_BITS - SHUFPOW)))
@@ -164,17 +143,6 @@
 #elif 2*FULL_BITS == SBITS
 
 # define SLEN 2			/* a 64 bit slot needs 2 FULLs */
-# if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
-#  define SVAL(a,b) (FULL)0x##b, (FULL)0x##a
-#  define SHVAL(a,b,c,d) (HALF)0x##d, (HALF)0x##c, \
-			 (HALF)0x##b, (HALF)0x##a
-# else
-   /* NOTE: Due to a SunOS cc bug, don't put spaces in the SVAL call! */
-#  define SVAL(a,b) (FULL)0x/**/b, (FULL)0x/**/a
-   /* NOTE: Due to a SunOS cc bug, don't put spaces in the SHVAL call! */
-#  define SHVAL(a,b,c,d) (HALF)0x/**/d, (HALF)0x/**/c, \
-			 (HALF)0x/**/b, (HALF)0x/**/a
-# endif
 #define SLOAD(s,i,z) {(s).slot[(i)<<1] = ztofull(z); \
 		      (s).slot[1+((i)<<1)] = \
 			(((z).len <= 2) ? (FULL)0 : \

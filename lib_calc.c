@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: lib_calc.c,v 29.9 2003/08/26 04:36:10 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: lib_calc.c,v 29.10 2004/07/26 06:35:32 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.c,v $
  *
  * Under source code control:	1996/06/17 18:06:19
@@ -252,10 +252,11 @@ libcalc_call_me_first(void)
 	}
 
 	/*
-	 * -d turns off resource_debug
+	 * -d turns off resource_debug and tilde
 	 */
 	if (d_flag) {
 		conf->resource_debug = 0;
+		conf->tilde_ok = 0;
 	}
 
 	/*

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: quickhash.c,v 29.7 2003/03/01 01:21:12 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: quickhash.c,v 29.8 2004/02/25 23:55:38 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/quickhash.c,v $
  *
  * Under source code control:	1995/03/04 11:34:23
@@ -453,6 +453,14 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->ctrl_d);
 	/* program is handeled out of order */
 	/* basename is handeled out of order */
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->windows);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->cygwin);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->compile_custom);
+	if (cfg->allow_custom != NULL && *(cfg->allow_custom)) {
+		value = (((value>>5) | (value<<27)) ^ (USB32)TRUE);
+	} else {
+		value = (((value>>5) | (value<<27)) ^ (USB32)FALSE);
+	}
 	/* version is handeled out of order */
 
 	/*
@@ -462,7 +470,7 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	quasi_fnv(value, val);
 
 	/*
-	 * hash the strings if possible
+	 * hash the strings and pointers if possible
 	 */
 	if (cfg->prompt1) {
 		val = fnv_strhash(cfg->prompt1, val);

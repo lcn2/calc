@@ -8,8 +8,8 @@
 
 
 /* must we always align 32 bit accesses? */
-/* forced to not require 32 bit alignment */
-#undef MUST_ALIGN32
+/* forced to align 32 bit values */
+#define MUST_ALIGN32
 
 
 #endif /* !__MUST_ALIGN32_H__ */

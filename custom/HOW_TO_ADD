@@ -36,13 +36,15 @@ Step 1: Do some background work
     anything in Steps 2 and beyond!
 
     If you are not familiar with calc internals, we recommend that
-    you look at some examples of custom functions.  Check out
+    you look at some examples of custom functions.  Look at the
     the following source files:
 
 	custom.c
+	custom.h
 	custom/custom.h
 	custom/custtbl.c
 	custom/c_*.[ch]
+	custom/*.cal
 	help/custom		(or run:  calc help custom)
 
     You would be well advised to look at a more recent calc source
@@ -83,14 +85,15 @@ Step 3: Document your custom function
 
     Take a look at one of the example custom help files:
 
-	devnull
-	argv
-	help
-	sysinfo
+	custom/devnull
+	custom/argv
+	custom/help
+	custom/sysinfo
 
     You can save time by using one of the custom help files
     as a template.  Copy one of these files to your own help file:
 
+	cd custom
 	cp sysinfo curds
 
     and edit it accordingly.
@@ -107,15 +110,16 @@ Step 4: Write your test code
     test code will be an import part of your submission.  Your test
     code will also service as additional for your custom function.
 
-    Coops ... we said we would stop preaching, sorry about that ...
+    Oops ... we said we would stop preaching, sorry about that ...
 
     You can use one of the following as a template:
 
-	argv.cal
-	halflen.cal
+	custom/argv.cal
+	custom/halflen.cal
 
     Copy one of these to your own file:
 
+	cd custom
 	cp halflen.cal curds.cal
 
     and exit it accordingly.  In particular you will want to:
@@ -152,6 +156,7 @@ Step 5: Write your custom function
     We recommend that you use one of the c_*.c files as a template.
     Copy an appropriate file to your file:
 
+	cd custom
 	cp c_argv.c u_curds.c
 
     Before you edit it, you should note that there are several important
@@ -178,9 +183,6 @@ Step 5: Write your custom function
 		/*ARGSUSED*/
 		VALUE
 		u_curds(char *name, int count, VALUE **vals)
-
-	   The /*ARGSUSED*/ may be needed if you do not make use
-	   of all 3 function parameters.
 
 	   The 3 args are passed in by the custom interface
 	   and have the following meaning:
@@ -222,6 +224,15 @@ Step 5: Write your custom function
 			    vals[1]  points to	b
 			    vals[2]  points to	c
 
+	   NOTE: If you do not use any of the 3 function parameters,
+	   then you should declare that function parameter to be UNUSED.
+	   For example, if the count and vals parameters were not used
+	   in your custom function, then your declaraction should be:
+
+		/*ARGSUSED*/
+		VALUE
+		u_curds(char *name, int UNUSED count, VALUE UNUSED **vals)
+
 	c) The return value is the function must be a VALUE.
 
 	   The typical way to form a VALUE to return is by declaring
@@ -238,6 +249,8 @@ Step 5: Write your custom function
 		#include "../have_const.h"
 		#include "../value.h"
 		#include "custom.h"
+
+		#include "../have_unused.h"
 
 	    Typically these will be included just below any system
 	    includes and just below the #if defined(CUSTOM) line.
@@ -362,7 +375,7 @@ Step 6: Register the function in the custom interface table
 
     To allow the custom() builtin to transfer control to your function,
     you need to add an entry into the CONST struct custom cust table
-    found in custtbl.c:
+    found in custom/custtbl.c:
 
 	/*
 	 * custom interface table
@@ -482,10 +495,10 @@ Step 6: Register the function in the custom interface table
 	extern VALUE u_curds(char*, int, VALUE**);
 
 
-Step 7: Add the required information to the Makefile
+Step 7: Add the required information to the custom/Makefile
 
     The calc test script, curds.cal, should be added to the
-    CUSTOM_CALC_FILES Makefile variable:
+    CUSTOM_CALC_FILES Makefile variable found in custom/Makefile:
 
 	CUSTOM_CALC_FILES= argv.cal halflen.cal curds.cal
 
@@ -619,7 +632,7 @@ Step 12: Contribute
     and consider submitting your custom function for possible
     inclusion in later versions of calc.
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2004  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -635,8 +648,8 @@ Step 12: Contribute
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: HOW_TO_ADD,v 29.2 2000/06/07 14:03:03 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: HOW_TO_ADD,v 29.4 2004/07/29 08:38:05 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/HOW_TO_ADD,v $
 ##
 ## Under source code control:	1997/03/10 03:03:21

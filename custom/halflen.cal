@@ -1,7 +1,7 @@
 /*
  * halflen - determine the length of numeric value in HALFs
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999,2004  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: halflen.cal,v 29.2 2000/06/07 14:03:03 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: halflen.cal,v 29.3 2004/03/31 05:03:02 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/halflen.cal,v $
  *
  * Under source code control:	1997/03/08 20:51:32
@@ -34,11 +34,16 @@
  * NOTE: You must use a calc that was compiled with ALLOW_CUSTOM= -DCUSTOM
  *	 and run with a -C arg.
  */
+if (config("compile_custom") == 0) {
+	quit "calc compiled without -DCUSTOM";
+} else if (config("allow_custom") == 0) {
+	quit "calc was run without the -D command line option";
+}
 
 
 define halflen(num)
 {
-	local baseb = custom("sysinfo","BASEB");    /* bit len of a HALF */
+	local baseb;	    /* bit len of a HALF */
 
 	/*
 	 * firewall
@@ -46,6 +51,11 @@ define halflen(num)
 	if (!isnum(num)) {
 		return newerror("halflen only works on numeric values");
 	}
+
+	/*
+	 * determine baseb
+	 */
+	baseb = custom("sysinfo","BASEB");
 
 	/*
 	 * determine the HALF length of a numeric value
@@ -62,8 +72,4 @@ define halflen(num)
 	} else {
 		return newerror("halflen only works on numeric values");
 	}
-}
-
-if (config("resource_debug") >= 0) {
-    print "halflen(num) defined";
 }

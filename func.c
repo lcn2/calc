@@ -1,7 +1,7 @@
 /*
  * func - built-in functions implemented here
  *
- * Copyright (C) 1999-2002  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2004  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.13 $
- * @(#) $Id: func.c,v 29.13 2004/02/23 07:25:41 chongo Exp $
+ * @(#) $Revision: 29.15 $
+ * @(#) $Id: func.c,v 29.15 2004/07/26 05:55:37 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -8027,7 +8027,7 @@ static CONST struct builtin builtins[] = {
 	{"free", 0, IN, FA, OP_NOP, 0, f_free,
 	 "free listed or all global variables"},
 	{"freebernoulli", 0, 0, 0, OP_NOP, 0, f_freebern,
-	 "free stored Benoulli numbers"},
+	 "free stored Bernoulli numbers"},
 	{"freeeuler", 0, 0, 0, OP_NOP, 0, f_freeeuler,
 	 "free stored Euler numbers"},
 	{"freeglobals", 0, 0, 0, OP_NOP, 0, f_freeglobals,
@@ -8345,7 +8345,7 @@ static CONST struct builtin builtins[] = {
 	{"sizeof", 1, 1, 0, OP_NOP, 0, f_sizeof,
 	 "number of octets used to hold the value"},
 	{"sleep", 0, 1, 0, OP_NOP, 0, f_sleep,
-	 "suspend operatioo for a seconds"},
+	 "suspend operation for a seconds"},
 	{"sort", 1, 1, 0, OP_NOP, 0, f_sort,
 	 "sort a copy of a matrix or list"},
 	{"sqrt", 1, 3, 0, OP_NOP, 0, f_sqrt,

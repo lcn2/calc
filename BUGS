@@ -47,7 +47,7 @@ When you send your report, please include the following information:
 
     * a description of the problem
     * the version of calc you are using (if you cannot get calc
-      it to run, then send us the 4 #define lines from version.c)
+      to run, then send us the 4 #define lines from version.c)
     * if you modified calc from an official patch, send me the mods you made
     * the type of system you were using
     * the type of compiler you were using
@@ -288,8 +288,8 @@ Problems with known work-a-rounds:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.17 $
-## @(#) $Id: BUGS,v 29.17 2001/12/31 22:12:35 chongo Exp $
+## @(#) $Revision: 29.18 $
+## @(#) $Id: BUGS,v 29.18 2004/07/26 05:56:40 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13

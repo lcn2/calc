@@ -1,5 +1,5 @@
 .\"
-.\" Copyright (C) 1999	Landon Curt Noll
+.\" Copyright (C) 1999-2004	Landon Curt Noll
 .\"
 .\" Calc is open software; you can redistribute it and/or modify it under
 .\" the terms of the version 2.1 of the GNU Lesser General Public License
@@ -15,8 +15,8 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 .\"
-.\" @(#) $Revision: 29.12 $
-.\" @(#) $Id: calc.man,v 29.12 2004/02/23 05:21:24 chongo Exp $
+.\" @(#) $Revision: 29.15 $
+.\" @(#) $Id: calc.man,v 29.15 2004/08/03 05:06:22 chongo Exp $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -54,7 +54,7 @@ calc \- arbitrary precision calculator
 .RB [ calc_cmd\ \&.\|.\|. ]
 .in -5n
 .sp
-\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-f\fP\
+\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-f\fP
 .SH DESCRIPTION
 \&
 .br
@@ -119,7 +119,7 @@ as if \fBconfig("resource_debug", 0)\fP had been executed.
 For example:
 .sp 1
 .in +5n
-calc 'read qtime; qtime(2)'
+calc "read qtime; qtime(2)"
 .in -5n
 .sp 1
 will output something like:
@@ -135,7 +135,7 @@ whereas:
 .sp 1
 .in +5n
 .nf
-calc -d 'read qtime; qtime(2)'
+calc -d "read qtime; qtime(2)"
 .fi
 .in -5n
 .sp 1
@@ -327,7 +327,7 @@ For example:
 .sp 1
 .in +5n
 .nf
-calc -p '2^21701-1' | fizzbin
+calc -p "2^21701-1" | fizzbin
 .fi
 .in -5n
 .sp 1
@@ -417,7 +417,7 @@ enclosing the command between single marks as in:
 .sp 1
 .in +5n
 .nf
-calc '23 * 47'
+calc "23 * 47"
 .fi
 .in -5n
 .sp 1
@@ -425,7 +425,7 @@ and
 .sp 1
 .in +5n
 .nf
-calc 'print sqrt(2), exp(1)'
+calc "print sqrt(2), exp(1)"
 .fi
 .in -5n
 .sp
@@ -588,7 +588,7 @@ as in:
 .sp 1
 .in +5n
 .nf
-\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-f\fP\
+\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-f\fP
 .fi
 .in -5n
 .sp 1
@@ -634,7 +634,7 @@ the file
 .sp 1
 .in +5n
 .nf
-\fI#!${BINDIR}/calc\fP\ \&\fB\-q\fP \fB\-f\fP\
+\fI#!${BINDIR}/calc\fP\ \&\fB\-q\fP \fB\-f\fP
 #
 # mersenne - an example of a calc \fBshell script file\fP
 

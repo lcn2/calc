@@ -1,4 +1,96 @@
-The following are the changes from calc version 2.11.9 to date:
+The following are the changes from calc version 2.11.10 to date:
+
+    The cygwin config value is correctly tested while doing comparisons
+    between config states.
+
+    Added config("compile_custom") to determine if calc was compiled
+    with -DCUSTOM.  By default, the Makefile uses ALLOW_CUSTOM= -DCUSTOM
+    so by default, config("compile_custom") is TRUE.  If, however,
+    calc is compiled without -DCUSTOM, then config("compile_custom")
+    will be FALSE.  NOTE: The config("compile_custom") value is only
+    affected by compile flags.  The calc -D runtime command line option
+    does not change the config("compile_custom") value.  This is a
+    read-only configuration value.
+
+    Added config("allow_custom") to determine if the use of custom
+    functions are allowed.  To allow the use of custom functions, calc
+    must be compiled with -DCUSTOM (which it is by default) AND calc run
+    be run with the -D runtime command line option (which it is not by
+    default).  If config("allow_custom") is TRUE, then custom functions
+    are allowed.  If config("allow_custom") is FALSE, then custom
+    functions are not allowed.  This is a read-only configuration value.
+
+    Correctly hash config state for windows and cygwin values.  The value
+    of config("compile_custom") and config("allow_custom") also affect
+    the hash of the config state.
+
+    Fixed the custom/argv.cal test code to avoid use of a reserved
+    builtin function name.
+
+    Fixed custom/*.cal scripts to conform better with the cal/*.cal
+    resource files.
+
+    Removed the Makefile variables ${LONGLONG_BITS}, ${HAVE_LONGLONG},
+    and ${L64_FORMAT}.  Removed longlong.c and longlong.h.  The use
+    of HAVE_LONGLONG=0 was problematic.  The lack of complaints about
+    the HAVE_LONGLONG=0 shows that the 'long long' type is wide spread
+    enough to no warrent trying to support this deprecated mode.
+
+    Removed the SVAL and SHVAL macros from zrand.c, zrand.h, and zmath.h
+    as they were causing too many broken C pre-processors and C checkers
+    to become confused.
+
+    Added a 'make splint' rule to use the splint statically checking
+    tool on the calc source.
+
+    Removed support of the BSDI platform.  The BSDI platform is no longer
+    directly supported and we lost our last BSDI machine on which we
+    could test calc.  Best wishes to the former BSDI folk and thanks
+    for breaking important ground in the Open Source Movement!
+
+    Fixed several typos found in the documentation and buildin
+    function output by C Smith <smichr at hotmail dot com>.
+
+    Fixed -d so that:
+
+    	calc -d 2/3
+
+    will print 0.66666666666666666667 without the leading tilde as
+    advertised in the man page.
+
+    Added a missing help file for the display builtin function as
+    requested by Igor Furlan <primorec at sbcglobal dot net>.
+
+    Changed the "help environment" file to reflect modern default
+    values of CALCPATH and CALCRC.
+
+    Added missing variables for printing by the "make env" rule.
+
+    Added EXT Makefile variable so that Cygwin can install calc as
+    calc.exe.  By default, EXT is empty so that calc is calc on most
+    modern operating systems.  Thanks goes to Ullal Devappa Kini <wmbfqj
+    at vsnl dot net> for helping identify this problem and test our fix.
+
+    Added custom function:
+
+    	custom("pmodm127", q)
+
+    to compute 2^(2^127-1) mod q.  While currently slower than just
+    doing pmod(2,2^127-1,q), it is added to give an example of a
+    more complex custom function.  Call calc with the -C flag to
+    use custom functions.
+
+    Made slight changes to the custom/HOW_TO_ADD documentation.
+
+    Fixed some \ formatting man page problems as reported by Keh-Cheng
+    Chu <kehcheng at quake dot Stanford dot edu>.
+
+    Fixed some comparison between signed and unsigned in md5.c
+    that was reported for the PowerMac G5 2GHz MacOS 10.3 by
+    Guillaume VERGNAUD <vergnaud at via dot ecp dot fr>.
+
+
+The following are the changes from calc version 2.11.9 to 2.11.9.3:
 
     Fixed calc man page examples to move -f to the end of the line.
     Thanks goes to Michael Somos <somos at grail dot cba dot csuohio
@@ -5666,8 +5758,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.64 $
-## @(#) $Id: CHANGES,v 29.64 2004/02/23 10:57:46 chongo Exp $
+## @(#) $Revision: 29.69 $
+## @(#) $Id: CHANGES,v 29.69 2004/08/03 12:29:19 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

@@ -1,7 +1,7 @@
 /*
  * qtrans - transcendental functions for real numbers
  *
- * Copyright (C) 1999  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2004  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: qtrans.c,v 29.4 2004/02/23 08:12:43 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: qtrans.c,v 29.5 2004/02/23 14:04:01 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qtrans.c,v $
  *
  * Under source code control:	1990/02/15 01:48:22

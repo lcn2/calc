@@ -1,5 +1,5 @@
 NAME
-    freebernoulli - free stored Benoulli numbers
+    freebernoulli - free stored Bernoulli numbers
 
 SYNOPSIS
     freebernoulli()
@@ -39,8 +39,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: freebernoulli,v 29.2 2000/07/17 15:36:26 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: freebernoulli,v 29.3 2004/07/26 05:54:00 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/freebernoulli,v $
 ##
 ## Under source code control:	2000/07/13

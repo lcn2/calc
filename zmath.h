@@ -1,7 +1,7 @@
 /*
  * zmath - declarations for extended precision integer arithmetic
  *
- * Copyright (C) 1999-2002  David I. Bell
+ * Copyright (C) 1999,2002,2004  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.10 $
- * @(#) $Id: zmath.h,v 29.10 2003/01/14 00:44:39 chongo Exp $
+ * @(#) $Revision: 29.12 $
+ * @(#) $Id: zmath.h,v 29.12 2004/03/31 04:58:40 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -635,37 +635,6 @@ typedef struct {
 	int bit;	/* bit position within half of most significant bit */
 	int len;	/* length of string in bits */
 } BITSTR;
-
-
-/*
- * HVAL(a,b) - form an array of HALFs given 8 hex digits
- *		  a: up to 4 hex digits without the leading 0x (upper half)
- *		  b: up to 4 hex digits without the leading 0x (lower half)
- *
- *	NOTE: Due to a SunOS cc bug, don't put spaces in the HVAL call!
- */
-#if FULL_BITS == 64
-
-# if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
-#  define HVAL(a,b) (HALF)(0x ## a ## b)
-# else
-#  define HVAL(a,b) (HALF)(0x/**/a/**/b)
-# endif
-
-#elif 2*FULL_BITS == 64
-
-# if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
-#  define HVAL(a,b) (HALF)0x##b, (HALF)0x##a
-# else
-   /* NOTE: Due to a SunOS cc bug, don't put spaces in the HVAL call! */
-#  define HVAL(a,b) (HALF)0x/**/b, (HALF)0x/**/a
-# endif
-
-#else
-
-   /\../\	FULL_BITS must be 32 or 64	/\../\	 !!!
-
-#endif
 
 
 #endif /* !__ZMATH_H__*/

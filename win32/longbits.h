@@ -21,11 +21,14 @@ typedef short SB16;		/* signed 16 bits */
 typedef unsigned long USB32;	/* unsigned 32 bits */
 typedef long SB32;		/* signed 32 bits */
 
-#undef HAVE_B64			/* we have no USB64 and no SB64 types */
+#undef HAVE_B64
+#define HAVE_B64		/* have USB64 and SB64 types */
+typedef unsigned long long USB64;	/* unsigned 64 bits */
+typedef long long SB64;		/* signed 64 bits */
 
-/* no 64 bit constants */
-#define U(x) no 33 to 64 bit constants - do not use this macro!
-#define L(x) no 33 to 64 bit constants - do not use this macro!
+/* how to form 64 bit constants */
+#define U(x) x ## ULL
+#define L(x) x ## LL
 
 
 #endif /* !__LONGBITS_H__ */

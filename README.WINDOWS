@@ -27,7 +27,6 @@ recommends the following settings:
 	TERMCONTROL= -DUSE_TERMIOS
 	BYTE_ORDER= -DLITTLE_ENDIAN
 	LONG_BITS= 32
-	LONGLONG_BITS= 64
 	HAVE_FPOS_POS= -DHAVE_NO_FPOS_POS
 	FPOS_BITS= 32
 	OFF_T_BITS= 32
@@ -93,25 +92,29 @@ The major porting work was performed by Thomas Jones-Low
     tools. The make file provided with Calc is not compatible with
     NMAKE, so I used the Visual Studio tools to generate another one
     (not included). Calc is built in two parts, calc.dll, which is the
-    library, and calcexe.exe which is the command line interface.
+    library, and calc.exe which is the command line interface.
 
-He recommends that you generate by hand all of the header files generated
-by the make file:
+He recommended that you generate by hand all of the header files that
+by the Makefile.  This has been done for you via the makefile rule:
 
-    align32.h args.h calcerr.h conf.h endian_calc.h
-    fposval.h have_const.h have_fpos.h have_fpos_pos.h have_malloc.h
-    have_memmv.h have_newstr.h have_offscl.h have_posscl.h
-    have_stdlib.h have_string.h have_times.h have_uid_t.h
-    have_unistd.h longbits.h longlong.h terminal.h
-    have_ustat.h have_getsid.h have_getpgid.h
-    have_gettime.h have_getprid.h have_urandom.h have_rusage.h
-    have_strdup.h
+	make win32_hsrc
+
+which uses the Makefile variables in win32.mkdef to form these header
+files under win32 directory.
 
 You will find generated versions of these files located in the win32
 sub-directory.  These files may be appropriate for your Cygwin building
-needs.  Just copy the win32/*.[ch] files up into the top level calc
-source directory, edited (if needed) and build using the Cygwin GCC
-compiler.
+needs.
+
+In particular:
+
+	Just copy the win32/*.[ch] files up into the top level calc
+	source directory, edit them (if needed) and build using the
+	Cygwin GCC compiler and Cygwin build environment.
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-= calc maintenance folk =-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 People who maintain calc need to keep in mind the following:
 
@@ -155,8 +158,8 @@ was changed to:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.8 $
-## @(#) $Id: README.WINDOWS,v 29.8 2002/03/14 00:28:28 chongo Exp $
+## @(#) $Revision: 29.12 $
+## @(#) $Id: README.WINDOWS,v 29.12 2004/07/28 12:52:01 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/README.WINDOWS,v $
 ##
 ## Under source code control:	2001/02/25 14:00:05

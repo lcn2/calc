@@ -1,0 +1,78 @@
+NAME
+    pmodm127 - calculate q mod 2^(2^127-1)
+
+SYNOPSIS
+    custom("pmodm127", q)
+
+TYPES
+    q		int > 0
+
+    return	int
+
+DESCRIPTION
+
+    This custom function will return the value:
+
+    	q mod 2^(2^127-1)
+
+    This custom function serves as a demonstration of how to write
+    a custom function.  It performs the equivalent of:
+
+	pmod(2, 2^127-1, q)
+
+    The return value is integer in the half open range: [0, q).
+
+    SPECIAL NOTE:
+
+	Can you find a value, q, for which this custom function returns 1?
+	If you do, send the value of q to chongo using the EMail address
+	found at:
+
+	    http://www.isthe.com/chongo/address.html
+
+EXAMPLE
+    > custom("pmodm127", 65537)
+	    32769
+
+    > custom("pmodm127", 2^31-1)
+	    8
+
+    > custom("pmodm127", 7^51+2)
+	    11228202966269457258557496419097462731193173
+
+LIMITS
+    calc must be built with ALLOW_CUSTOM= -DCUSTOM
+    calc must be executed with a -C arg.
+    q must be an integer > 0
+
+LIBRARY
+    none
+
+SEE ALSO
+    custom
+
+## Copyright (C) 2004  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.2 $
+## @(#) $Id: pmodm127,v 29.2 2004/07/29 09:28:58 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/pmodm127,v $
+##
+## Under source code control:	2004/02/25 07:13:15
+## File existed as early as:	2004
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

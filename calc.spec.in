@@ -2,7 +2,7 @@
 #
 # calc.spec.in - template specfile for calc
 #
-# Copyright (C) 2003  Petteri Kettunen and Landon Curt Noll
+# Copyright (C) 2003-2004  Petteri Kettunen and Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.12 $
-# @(#) $Id: calc.spec.in,v 29.12 2003/04/15 03:37:59 chongo Exp $
+# @(#) $Revision: 29.13 $
+# @(#) $Id: calc.spec.in,v 29.13 2004/02/23 14:04:01 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.spec.in,v $
 #
 # Under source code control:	2003/02/16 20:21:39

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: argv.cal,v 29.2 2000/06/07 14:03:03 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: argv.cal,v 29.3 2004/03/31 05:03:02 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/argv.cal,v $
  *
  * Under source code control:	1997/03/10 00:27:17
@@ -34,9 +34,14 @@
  * NOTE: You must use a calc that was compiled with ALLOW_CUSTOM= -DCUSTOM
  *	 and run with a -C arg.
  */
+if (config("compile_custom") == 0) {
+	quit "calc compiled without -DCUSTOM";
+} else if (config("allow_custom") == 0) {
+	quit "calc was run without the -D command line option";
+}
 
 
-define argv()
+define argv_test()
 {
 	local i;	/* arg number */
 	local junk;	/* throw away value */
@@ -53,8 +58,4 @@ define argv()
 		junk = custom("argv", param(i));
 	}
 	return i-1;
-}
-
-if (config("resource_debug") >= 0) {
-    print "argv(var, ...) defined";
 }

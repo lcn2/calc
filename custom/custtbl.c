@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: custtbl.c,v 29.2 2000/06/07 14:03:03 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: custtbl.c,v 29.3 2004/07/29 08:37:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/custtbl.c,v $
  *
  * Under source code control:	1997/03/09 02:28:54
@@ -56,6 +56,7 @@ extern VALUE c_devnull(char*, int, VALUE**);
 extern VALUE c_help(char*, int, VALUE**);
 extern VALUE c_sysinfo(char*, int, VALUE**);
 extern VALUE c_pzasusb8(char*, int, VALUE**);
+extern VALUE c_pmodm127(char*, int, VALUE**);
 
 
 #endif /* CUSTOM */
@@ -107,6 +108,9 @@ CONST struct custom cust[] = {
 
 	{ "pzasusb8", "print ZCALUE as USB8",
 	 0, 1, c_pzasusb8 },
+
+	{ "pmodm127", "calculate q mod 2^(2^127-1)",
+	 1, 1, c_pmodm127 },
 
 
 #endif /* CUSTOM */

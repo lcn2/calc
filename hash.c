@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: hash.c,v 29.5 2002/12/29 09:20:25 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: hash.c,v 29.6 2004/02/25 23:55:38 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hash.c,v $
  *
  * Under source code control:	1995/11/23 05:13:11
@@ -985,6 +985,15 @@ hash_value(int type, void *v, HASH *state)
 		state = hash_int(type, value->v_config->ctrl_d, state);
 		state = hash_str(type, value->v_config->program, state);
 		state = hash_str(type, value->v_config->base_name, state);
+		state = hash_bool(type, value->v_config->windows, state);
+		state = hash_bool(type, value->v_config->cygwin, state);
+		state = hash_bool(type, value->v_config->compile_custom, state);
+		if (value->v_config->allow_custom != NULL &&
+		    *(value->v_config->allow_custom)) {
+			state = hash_bool(type, TRUE, state);
+		} else {
+			state = hash_bool(type, FALSE, state);
+		}
 		state = hash_str(type, value->v_config->version, state);
 		break;
 

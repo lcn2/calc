@@ -2,7 +2,7 @@
 #
 # custom - makefile for calc custom routines
 #
-# Copyright (C) 1999  Landon Curt Noll
+# Copyright (C) 1999,2004  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.21 $
-# @(#) $Id: Makefile,v 29.21 2004/02/23 09:23:08 chongo Exp $
+# @(#) $Revision: 29.24 $
+# @(#) $Id: Makefile,v 29.24 2004/07/29 08:38:18 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -40,13 +40,13 @@
 #
 # Put your custom calc resource files here.
 #
-CUSTOM_CALC_FILES= argv.cal halflen.cal pzasusb8.cal
+CUSTOM_CALC_FILES= argv.cal halflen.cal pzasusb8.cal pmodm127.cal
 
 # The custom help files to install
 #
 # Put your custom help files here.
 #
-CUSTOM_HELP= argv devnull help sysinfo pzasusb8
+CUSTOM_HELP= argv devnull help sysinfo pzasusb8 pmodm127
 
 # Any .h files that are needed by programs that use libcustcalc.a
 #
@@ -62,7 +62,7 @@ CUSTOM_H_SRC=
 #
 # Put your custom .c files here.
 #
-CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c c_pzasusb8.c
+CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c c_pzasusb8.c c_pmodm127.c
 
 # Any .o files that are needed by program that use libcustcalc.a.
 # Don't put ${REQUIRED_OBJ} files in this list.
@@ -71,7 +71,7 @@ CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c c_pzasusb8.c
 #
 # Put your custom .o files here.
 #
-CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o c_pzasusb8.o
+CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o c_pzasusb8.o c_pmodm127.o
 
 ##############################################################################
 #-=-=-=-=-=-=- Defaults in case you want to build from this dir -=-=-=-=-=-=-#
@@ -831,6 +831,33 @@ c_help.o: ../value.h
 c_help.o: ../win32dll.h
 c_help.o: ../zmath.h
 c_help.o: c_help.c
+c_pmodm127.o: ../alloc.h
+c_pmodm127.o: ../block.h
+c_pmodm127.o: ../byteswap.h
+c_pmodm127.o: ../calcerr.h
+c_pmodm127.o: ../cmath.h
+c_pmodm127.o: ../config.h
+c_pmodm127.o: ../custom.h
+c_pmodm127.o: ../endian_calc.h
+c_pmodm127.o: ../hash.h
+c_pmodm127.o: ../have_const.h
+c_pmodm127.o: ../have_malloc.h
+c_pmodm127.o: ../have_memmv.h
+c_pmodm127.o: ../have_newstr.h
+c_pmodm127.o: ../have_stdlib.h
+c_pmodm127.o: ../have_string.h
+c_pmodm127.o: ../have_unused.h
+c_pmodm127.o: ../longbits.h
+c_pmodm127.o: ../md5.h
+c_pmodm127.o: ../nametype.h
+c_pmodm127.o: ../qmath.h
+c_pmodm127.o: ../shs.h
+c_pmodm127.o: ../shs1.h
+c_pmodm127.o: ../string.h
+c_pmodm127.o: ../value.h
+c_pmodm127.o: ../win32dll.h
+c_pmodm127.o: ../zmath.h
+c_pmodm127.o: c_pmodm127.c
 c_pzasusb8.o: ../alloc.h
 c_pzasusb8.o: ../block.h
 c_pzasusb8.o: ../byteswap.h
@@ -879,7 +906,6 @@ c_sysinfo.o: ../have_string.h
 c_sysinfo.o: ../have_unused.h
 c_sysinfo.o: ../hist.h
 c_sysinfo.o: ../longbits.h
-c_sysinfo.o: ../longlong.h
 c_sysinfo.o: ../md5.h
 c_sysinfo.o: ../nametype.h
 c_sysinfo.o: ../prime.h

@@ -1,7 +1,7 @@
 /*
  * calc - arbitrary precision calculator
  *
- * Copyright (C) 1999  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2004  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.10 $
- * @(#) $Id: calc.c,v 29.10 2004/02/23 09:21:35 chongo Exp $
+ * @(#) $Revision: 29.11 $
+ * @(#) $Id: calc.c,v 29.11 2004/02/23 14:04:01 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11

@@ -1,0 +1,137 @@
+/*
+ * pmodm127 - test pmodm127's ability to calculate q mod 2^(2^127-1)
+ *
+ * Copyright (C) 2004  Landon Curt Noll
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: pmodm127.cal,v 29.2 2004/07/29 08:35:36 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/pmodm127.cal,v $
+ *
+ * Under source code control:	2004/02/25 14:25:32
+ * File existed as early as:	2004
+ *
+ * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ */
+
+/*
+ * This file is part of the custom sample calc files.
+ *
+ * NOTE: You must use a calc that was compiled with ALLOW_CUSTOM= -DCUSTOM
+ *	 and run with a -C arg.
+ */
+if (config("compile_custom") == 0) {
+	quit "calc compiled without -DCUSTOM";
+} else if (config("allow_custom") == 0) {
+	quit "calc was run without the -D command line option";
+}
+
+
+define pmodm127_test1(testcnt)
+{
+	local q;	/* test factor */
+	local m127;	/* 2^127-1 */
+	local i;
+
+	/*
+	 * firewall
+	 */
+	if (!isint(testcnt) || testcnt <= 0) {
+		return newerror("pmodm127_test1 must have an integer count>0");
+	}
+
+	/*
+	 * perform testcnt divisor tests for primes of form 2*k*(2^127-1)+1
+	 *
+	 * NOTE: Since this is just a test, we do not need to be optimal.
+	 */
+	m127 = 2^127 - 1;
+	q = 2*4949132165849*m127+1;
+	for (i=0; i < testcnt; ++i) {
+
+		/*
+		 * determine next prime divisor
+		 */
+		q = nextcand(q, -1, 0, 1, 2*m127);
+
+		/* compare custom function with its pmod() equivalent */
+		if (config("resource_debug") & 8) {
+			print "testing", q;
+		}
+		if (pmod(2, m127, q) != custom("pmodm127", q)) {
+			print "ERROR: pmodm127 failed for ", str(q);
+			return newerror("pmodm127 failed for " + str(q));
+		}
+	}
+
+	/* return success count */
+	if (config("resource_debug") & 8) {
+		print "passed", testcnt, "tests";
+	}
+	return testcnt;
+}
+
+define pmodm127_test2(testcnt, seed)
+{
+	local q;	/* test factor */
+	local m127;	/* 2^127-1 */
+	local i;
+
+	/*
+	 * firewall
+	 */
+	if (!isint(testcnt) || testcnt <= 0) {
+		return newerror("pmodm127_test2 must have an integer count>0");
+	}
+	if (!isint(seed)) {
+		return newerror("pmodm127_test2 must an integer seed");
+	}
+
+	/*
+	 * perform testcnt divisor tests random integers over [1e51, 1e52)
+	 *
+	 * NOTE: Since this is just a test, we do not need to be optimal.
+	 */
+	m127 = 2^127 - 1;
+	for (i=0; i < testcnt; ++i) {
+
+		/*
+		 * determine next prime divisor
+		 */
+		q = rand(1e51, 1e52) | 0x1;
+		if (config("resource_debug") & 8) {
+			print "testing", q;
+		}
+
+		/* compare custom function with its pmod() equivalent */
+		if (pmod(2, m127, q) != custom("pmodm127", q)) {
+			print "ERROR: pmodm127 failed for ", str(q);
+			print "ERROR: ", pmod(2,m127,q), " != ", custom("pmodm127", q);
+			return newerror("pmodm127 failed for " + str(q));
+		}
+	}
+
+	/* return success count */
+	if (config("resource_debug") & 8) {
+		print "passed", testcnt, "tests";
+	}
+	return testcnt;
+}
+
+if ((config("resource_debug") & 3) && !(config("resource_debug") & 8)) {
+    print "DEBUG: use config('resource_debug',", config("resource_debug")|8:") to enable more debugging";
+}

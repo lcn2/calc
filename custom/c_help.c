@@ -1,7 +1,7 @@
 /*
  * c_help - custom help function
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2004  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: c_help.c,v 29.3 2004/02/23 09:19:18 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: c_help.c,v 29.4 2004/02/23 14:04:01 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_help.c,v $
  *
  * Under source code control:	1997/03/09 05:25:41

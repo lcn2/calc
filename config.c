@@ -1,7 +1,7 @@
 /*
  * config - configuration routines
  *
- * Copyright (C) 1999-2002  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2004  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.12 $
- * @(#) $Id: config.c,v 29.12 2004/02/23 05:59:50 chongo Exp $
+ * @(#) $Revision: 29.14 $
+ * @(#) $Id: config.c,v 29.14 2004/02/25 23:56:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -38,6 +38,7 @@
 #include "nametype.h"
 #include "config.h"
 #include "string.h"
+#include "custom.h"
 
 #include "have_strdup.h"
 #if !defined(HAVE_STRDUP)
@@ -93,6 +94,8 @@ NAMETYPE configs[] = {
 	{"basename",	CONFIG_BASENAME},
 	{"windows",	CONFIG_WINDOWS},
 	{"cygwin",	CONFIG_CYGWIN},
+	{"compile_custom",	CONFIG_COMPILE_CUSTOM},
+	{"allow_custom",	CONFIG_ALLOW_CUSTOM},
 	{"version",	CONFIG_VERSION},
 	{NULL,		0}
 };
@@ -150,6 +153,12 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 #else
 	FALSE,			/* not compiled with cygwin */
 #endif
+#if defined(CUSTOM)
+	TRUE,			/* compiled with -DCUSTOM */
+#else
+	FALSE,			/* compiled without -DCUSTOM */
+#endif
+	&allow_custom,		/* *TRUE=> custom functions are enabled */
 	NULL			/* version */
 };
 CONFIG newstd = {	/* new non-backward compatible configuration */
@@ -201,6 +210,12 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 #else
 	FALSE,			/* not compiled with cygwin */
 #endif
+#if defined(CUSTOM)
+	TRUE,			/* compiled with -DCUSTOM */
+#else
+	FALSE,			/* compiled without -DCUSTOM */
+#endif
+	&allow_custom,		/* *TRUE=> custom functions are enabled */
 	NULL			/* version */
 };
 CONFIG *conf = NULL;	/* loaded in at startup - current configuration */
@@ -872,6 +887,14 @@ setconfig(int type, VALUE *vp)
 		math_error("The cygwin config parameter is read-only");
 		/*NOTREACHED*/
 
+	case CONFIG_COMPILE_CUSTOM:
+		math_error("The custom config parameter is read-only");
+		/*NOTREACHED*/
+
+	case CONFIG_ALLOW_CUSTOM:
+		math_error("The allow_custom config parameter is read-only");
+		/*NOTREACHED*/
+
 	case CONFIG_VERSION:
 		math_error("The version config parameter is read-only");
 		/*NOTREACHED*/
@@ -936,6 +959,7 @@ config_copy(CONFIG *src)
 	} else {
 		dest->base_name = strdup(src->base_name);
 	}
+	/* NOTE: allow_custom points to a global variable, so do not clone it */
 	if (src->version == NULL) {
 		dest->version = strdup(version());
 	} else {
@@ -983,6 +1007,7 @@ config_free(CONFIG *cfg)
 	if (cfg->base_name != NULL) {
 		free(cfg->base_name);
 	}
+	/* NOTE: allow_custom points to a global variable, so do not free it */
 	if (cfg->version != NULL) {
 		free(cfg->version);
 	}
@@ -1262,6 +1287,26 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		}
 		return;
 
+	case CONFIG_COMPILE_CUSTOM:
+		if (cfg->compile_custom) {
+			vp->v_num = itoq(1);
+		} else {
+			vp->v_num = itoq(0);
+		}
+		return;
+
+	case CONFIG_ALLOW_CUSTOM:
+		/* firewall */
+		if (cfg->allow_custom == NULL) {
+			cfg->allow_custom = &allow_custom;
+		}
+		if (*(cfg->allow_custom)) {
+			vp->v_num = itoq(1);
+		} else {
+			vp->v_num = itoq(0);
+		}
+		return;
+
 	case CONFIG_VERSION:
 		vp->v_type = V_STR;
 		if (cfg->version == NULL) {
@@ -1361,9 +1406,19 @@ config_cmp(CONFIG *cfg1, CONFIG *cfg2)
 	       (cfg1->base_name != NULL && cfg2->base_name != NULL &&
 		strcmp(cfg1->base_name, cfg2->base_name) != 0) ||
 
+	       cfg1->windows != cfg2->windows ||
+
+	       cfg1->cygwin != cfg2->cygwin ||
+
+	       cfg1->compile_custom != cfg2->compile_custom ||
+
+	       (cfg1->allow_custom == NULL && cfg2->allow_custom != NULL) ||
+	       (cfg1->allow_custom != NULL && cfg2->allow_custom == NULL) ||
+	       (cfg1->allow_custom != NULL && cfg2->allow_custom != NULL &&
+		*(cfg1->allow_custom) != *(cfg2->allow_custom)) ||
+
 	       (cfg1->version == NULL && cfg2->version != NULL) ||
 	       (cfg1->version != NULL && cfg2->version == NULL) ||
-	       cfg1->windows != cfg2->windows ||
 	       (cfg1->version != NULL && cfg2->version != NULL &&
 		strcmp(cfg1->version, cfg2->version) != 0);
 }

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: longbits.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: longbits.c,v 29.3 2004/03/31 04:18:19 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/longbits.c,v $
  *
  * Under source code control:	1994/03/18 03:06:18
@@ -74,11 +74,6 @@
  *	L(x)	form a 33 to 64 bit signed constant
  *	U(x)	form a 33 to 64 bit unsigned constant
  *
- * We will also note if we have a standard 64 bit type (i.e., long).  If we
- * do, we will typedef it and define HAVE_B64.	If we do not then if longlong.h
- * says we can use long long types, we will use that.  If we cannot use a
- * long long type, then HAVE_B64 will not be defined.
- *
  * We hide the comments within strings to avoid complaints from some snitty
  * compilers.  We also hide 3 X's which is the calc symbol for "something bogus
  * this way comes".  In such error cases, we add -=*#*=- to force a syntax
@@ -100,8 +95,6 @@
 #ifdef HAVE_STDLIB_H
 # include <stdlib.h>
 #endif
-
-#include "longlong.h"
 
 #if defined(__linux)
 # if !defined(isascii)
@@ -201,7 +194,6 @@ main(int argc, char **argv)
 		/*
 		 * forced forming of HAVE_B64, USB64, SB64, U(x) and L(x)
 		 */
-#if defined(HAVE_LONGLONG) && LONGLONG_BITS == 64
 		printf("#undef HAVE_B64\n");
 		printf("#define HAVE_B64\t\t/%s/\n",
 		  "* have USB64 and SB64 types *");
@@ -217,16 +209,6 @@ main(int argc, char **argv)
 #else
 		printf("#define U(x) ((unsigned long long)x)\n");
 		printf("#define L(x) ((long long)x)\n");
-#endif
-#else
-		printf("#undef HAVE_B64\t\t\t/%s/\n",
-		  "* we have no USB64 and no SB64 types *");
-		putchar('\n');
-		printf("/%s/\n", "* no 64 bit constants *");
-		printf("#define U(x) no 33 to 64 bit constants %s\n",
-		  "- do not use this macro!");
-		printf("#define L(x) no 33 to 64 bit constants %s\n",
-		  "- do not use this macro!");
 #endif
 
 		/*
@@ -333,7 +315,6 @@ main(int argc, char **argv)
 		printf("#define L(x) ((long)x)\n");
 #endif
 	} else {
-#if defined(HAVE_LONGLONG) && LONGLONG_BITS == 64
 		printf("#undef HAVE_B64\n");
 		printf("#define HAVE_B64\t\t/%s/\n",
 		  "* have USB64 and SB64 types *");
@@ -349,16 +330,6 @@ main(int argc, char **argv)
 #else
 		printf("#define U(x) ((unsigned long long)x)\n");
 		printf("#define L(x) ((long long)x)\n");
-#endif
-#else
-		printf("#undef HAVE_B64\t\t\t/%s/\n",
-		  "* we have no USB64 and no SB64 types *");
-		putchar('\n');
-		printf("/%s/\n", "* no 64 bit constants *");
-		printf("#define U(x) no 33 to 64 bit constants %s\n",
-		  "- do not use this macro!");
-		printf("#define L(x) no 33 to 64 bit constants %s\n",
-		  "- do not use this macro!");
 #endif
 	}
 
