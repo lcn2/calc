@@ -310,14 +310,17 @@ static void
 initenv(void)
 {
 	struct passwd *ent;		/* our password entry */
+	char *c;
 
 	/* determine the $CALCPATH value */
-	calcpath = (no_env ? NULL : getenv(CALCPATH));
+	c = getenv(CALCPATH);
+	calcpath = ((no_env || c == NULL) ? NULL : strdup(c));
 	if (calcpath == NULL)
 		calcpath = DEFAULTCALCPATH;
 
 	/* determine the $CALCRC value */
-	calcrc = (no_env ? NULL : getenv(CALCRC));
+	c = getenv(CALCRC);
+	calcrc = ((no_env || c == NULL) ? NULL : strdup(c));
 	if (calcrc == NULL) {
 		calcrc = DEFAULTCALCRC;
 	}
@@ -328,13 +331,15 @@ initenv(void)
 	}
 
 	/* determine the $CALCBINDINGS value */
-	calcbindings = (no_env ? NULL : getenv(CALCBINDINGS));
+	c = getenv(CALCBINDINGS);
+	calcbindings = ((no_env || c == NULL) ? NULL : strdup(c));
 	if (calcbindings == NULL) {
 		calcbindings = DEFAULTCALCBINDINGS;
 	}
 
 	/* determine the $HOME value */
-	home = (no_env ? NULL : getenv(HOME));
+	c = getenv(HOME);
+	home = ((no_env || c == NULL) ? NULL : strdup(c)); 
 	if (home == NULL || home[0] == '\0') {
 		ent = (struct passwd *)getpwuid(geteuid());
 		if (ent == NULL) {
@@ -346,13 +351,15 @@ initenv(void)
 	}
 
 	/* determine the $PAGER value */
-	pager = (no_env ? NULL : getenv(PAGER));
+	c = getenv(PAGER);
+	pager = ((no_env || c == NULL) ? NULL : strdup(c));
 	if (pager == NULL || *pager == '\0') {
 		pager = DEFAULTCALCPAGER;
 	}
 
 	/* determine the $SHELL value */
-	shell = (no_env ? NULL : getenv(SHELL));
+	c = getenv(SHELL);
+	shell = ((no_env || c == NULL) ? NULL : strdup(c));
 	if (shell == NULL)
 		shell = DEFAULTSHELL;
 }

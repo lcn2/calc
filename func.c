@@ -7334,12 +7334,33 @@ static CONST struct builtin builtins[] = {
  *
  * When FUNCLIST is defined, we are being compiled by rules from the help
  * sub-directory to form a program that will produce the main part of the
- * buiiltin help file.  These rules will convert the following function
- * name into main and remove the 'sed me out' line.
+ * buiiltin help file.
  *
  * See the builtin rule in the help/Makefile for details.
  */
-void	/* sed me out */
+#if defined(FUNCLIST)
+/*ARGSUSED */
+int
+main(int argc, char *argv[])
+{
+	CONST struct builtin *bp;	/* current function */
+
+	printf("\nName\tArgs\tDescription\n\n");
+	for (bp = builtins; bp->b_name; bp++) {
+		printf("%-9s ", bp->b_name);
+		if (bp->b_maxargs == IN)
+			printf("%d+    ", bp->b_minargs);
+		else if (bp->b_minargs == bp->b_maxargs)
+			printf("%-6d", bp->b_minargs);
+		else
+			printf("%d-%-4d", bp->b_minargs, bp->b_maxargs);
+		printf("%s\n", bp->b_desc);
+	}
+	printf("\n");
+	return 0;	/* exit(0); */
+}
+#else /* FUNCLIST */
+void
 showbuiltins(void)
 {
 	CONST struct builtin *bp;	/* current function */
@@ -7357,6 +7378,7 @@ showbuiltins(void)
 	}
 	printf("\n");
 }
+#endif /* FUNCLIST */
 
 
 #if !defined(FUNCLIST)

@@ -54,6 +54,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/resource.h>
+#include <time.h>
+#include <sys/times.h>
 #include <setjmp.h>
 #include "qmath.h"
 #include "longbits.h"
@@ -63,6 +65,7 @@
 #include "have_gettime.h"
 #include "have_getprid.h"
 #include "have_urandom.h"
+#include "have_rusage.h"
 #if defined(HAVE_USTAT)
 # include <ustat.h>
 #endif /* HAVE_USTAT */
@@ -308,9 +311,13 @@ pseudo_seed(void)
 #if defined(HAVE_GETPGID)
 	pid_t getpgid;                  /* process group ID */
 #endif /* HAVE_GETPGID */
+#if defined(HAVE_GETRUSAGE)
 	struct rusage rusage;           /* resource utilization */
 	struct rusage rusage_chld;      /* resource utilization of children */
+#endif /* HAVE_GETRUSAGE */
 	struct timeval tp2;             /* time of day again */
+	struct tms times;		/* process times */
+	time_t time;			/* local time */
 	size_t size;			/* size of this data structure */
 	jmp_buf env;			/* setjmp() context */
 	char *sdata_p;                  /* address of this structure */
@@ -377,9 +384,13 @@ pseudo_seed(void)
 #if defined(HAVE_GETPGID)
     sdata.getpgid = getpgid((pid_t)0);
 #endif /* HAVE_GETPGID */
+#if defined(HAVE_GETRUSAGE)
     (void) getrusage(RUSAGE_SELF, &sdata.rusage);
     (void) getrusage(RUSAGE_CHILDREN, &sdata.rusage_chld);
+#endif /* HAVE_GETRUSAGE */
     (void) gettimeofday(&sdata.tp2, NULL);
+    (void) times(&sdata.times);
+    sdata.time = time(NULL);
     sdata.size = sizeof(sdata);
     (void) setjmp(sdata.env);
     sdata.sdata_p = (char *)&sdata;

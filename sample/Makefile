@@ -398,11 +398,11 @@ depend:
 	else \
 		rm -f Makefile.tmp; \
 		mv Makefile Makefile.tmp; \
-		if [ -d RCS ]; then; \
+		if [ -d RCS ]; then \
 		    co -l Makefile; \
 		fi; \
 		mv Makefile.tmp Makefile; \
-		if [ -d RCS ]; then; \
+		if [ -d RCS ]; then \
 		    echo new sample Makefile formed, you need to check it in; \
 		fi; \
 	fi

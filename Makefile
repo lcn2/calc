@@ -261,6 +261,18 @@ HAVE_GETPRID=
 HAVE_URANDOM=
 #HAVE_URANDOM= -DHAVE_NO_URANDOM
 
+# Determine if we have getrusage()
+#
+# If HAVE_GETRUSAGE is empty, this makefile will run the have_memmv program
+# to determine if getrusage() is supported.  If HAVE_GETRUSAGE is set to
+# -DHAVE_NO_GETRUSAGE, then calc will use internal functions to simulate
+# the memory move function that does correct overlapping memory modes.
+#
+# If in doubt, leave HAVE_GETRUSAGE empty and this Makefile will figure it out.
+#
+HAVE_GETRUSAGE=
+#HAVE_GETRUSAGE= -DHAVE_NO_GETRUSAGE
+
 # Some architectures such as Sparc do not allow one to access 32 bit values
 # that are not alligned on a 32 bit boundary.
 #
@@ -320,7 +332,9 @@ BINDIR= /usr/local/bin
 # where to install the *.cal, *.h and *.a files
 #
 # ${TOPDIR} is the directory under which the calc directory will be placed.
-# ${LIBDIR} is where the *.cal, *.h, *.a, bindings and help dir are installed.
+# ${LIBDIR} is where the *.cal, *.a, bindings and help dir are installed.
+# ${INCDIR} is where the locally installed include files are found.
+# ${INCDIRCALC} is where the calc include files are installed.
 # ${HELPDIR} is where the help directory is installed.
 # ${CUSTOMLIBDIR} is where custom lib files are installed.
 # ${CUSTOMHELPDIR} is where custom help files are installed.
@@ -332,6 +346,8 @@ TOPDIR= /usr/local/lib
 #
 LIBDIR= ${TOPDIR}/calc
 HELPDIR= ${LIBDIR}/help
+INCDIR= /usr/local/include
+INCDIRCALC= ${INCDIR}/calc
 CUSTOMLIBDIR= ${LIBDIR}/custom
 CUSTOMHELPDIR= ${HELPDIR}/custhelp
 
@@ -438,12 +454,16 @@ CALCBINDINGS= bindings
 # If in doubt, set USE_READLINE, READLINE_LIB and READLINE_INCLUDE to nothing.
 #
 USE_READLINE=
-READLINE_LIB=
-READLINE_INCLUDE=
-#
 #USE_READLINE= -DUSE_READLINE
+#
+READLINE_LIB=
+#READLINE_LIB= -L/usr/gnu/lib -lreadline -lhistory
 #READLINE_LIB= -lreadline -lhistory
-#READLINE_INCLUDE= -I/usr/include/readline
+#READLINE_LIB= -L/usr/local/lib -lreadline -lhistory
+#
+READLINE_INCLUDE=
+#READLINE_INCLUDE= -I/usr/gnu/include
+#READLINE_INCLUDE= -I/usr/local/include
 
 # If $PAGER is not set, use this program to display a help file
 #
@@ -726,6 +746,8 @@ CC= ${PURIFY} ${LCC}
 # Warning: Some HP-UX optimizers are brain-damaged.  If 'make check' fails use:
 #     DEBUG= -g
 #
+# On a systems call the C compiler 'cchp' instead of 'cc'.
+#
 #CCWARN=
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC= +e
@@ -738,6 +760,7 @@ CC= ${PURIFY} ${LCC}
 #ILDFLAGS=
 #
 #LCC= cc
+#LCC= cchp
 #CC= ${PURIFY} ${LCC}
 #
 ###
@@ -838,6 +861,7 @@ SORT= sort
 TEE= tee
 LINT= lint
 CTAGS= ctags
+FMT= fmt
 # assume the X11 makedepend tool for the depend rule
 MAKEDEPEND= makedepend
 # echo command location
@@ -911,7 +935,7 @@ BUILD_H_SRC= align32.h args.h calcerr.h conf.h endian_calc.h \
 	have_stdlib.h have_string.h have_times.h have_uid_t.h \
 	have_unistd.h longbits.h longlong.h terminal.h calc_errno.h \
 	have_ustat.h have_getsid.h have_getpgid.h \
-	have_gettime.h have_getprid.h have_urandom.h
+	have_gettime.h have_getprid.h have_urandom.h have_rusage.h
 
 # we build these .c files during the make
 #
@@ -925,7 +949,7 @@ UTIL_C_SRC= align32.c endian.c longbits.c have_newstr.c have_uid_t.c \
 	have_const.c have_stdvs.c have_varvs.c fposval.c have_fpos.c \
 	longlong.c have_offscl.c have_posscl.c have_memmv.c calc_errno.c \
 	have_ustat.c have_getsid.c have_getpgid.c \
-	have_gettime.c have_getprid.c
+	have_gettime.c have_getprid.c have_rusage.c
 
 # these awk and sed tools are used in the process of building BUILD_H_SRC
 # and BUILD_C_SRC
@@ -941,13 +965,13 @@ UTIL_OBJS= endian.o longbits.o have_newstr.o have_uid_t.o \
 	have_const.o fposval.o have_fpos.o longlong.o try_strarg.o \
 	have_stdvs.o have_varvs.o have_posscl.o have_memmv.o calc_errno.o \
 	have_ustat.o have_getsid.o have_getpgid.o \
-	have_gettime.o have_getprid.o ver_calc.o
+	have_gettime.o have_getprid.o ver_calc.o have_rusage.o
 
 # these temp files may be created (and removed) during the build of BUILD_C_SRC
 #
 UTIL_TMP= ll_tmp fpos_tmp fposv_tmp const_tmp uid_tmp newstr_tmp vs_tmp \
 	calc_errno_tmp memmv_tmp offscl_tmp posscl_tmp newstr_tmp \
-	getsid_tmp gettime_tmp getprid_tmp
+	getsid_tmp gettime_tmp getprid_tmp rusage_tmp
 
 # these utility progs may be used in the process of building BUILD_H_SRC
 #
@@ -1020,6 +1044,31 @@ SAMPLE_PASSDOWN= Q="${Q}" \
     MAKEDEPEND=${MAKEDEPEND} \
     SORT=${SORT}
 
+# The compelte list of makefile vars passed down to help/Makefile.
+#
+HELP_PASSDOWN= Q="${Q}" \
+    TOPDIR="${TOPDIR}" \
+    LIBDIR="${LIBDIR}" \
+    HELPDIR="${HELPDIR}" \
+    CFLAGS="${CFLAGS} ${ALLOW_CUSTOM}" \
+    ICFLAGS="${ICFLAGS}" \
+    ILDFLAGS="${ILDFLAGS}" \
+    LCC="${LCC}" \
+    MAKE_FILE=${MAKE_FILE} \
+    SED=${SED} \
+    FMT=${FMT}
+
+# The compelte list of makefile vars passed down to lib/Makefile.
+#
+LIB_PASSDOWN= Q="${Q}" \
+    TOPDIR="${TOPDIR}" \
+    LIBDIR="${LIBDIR}" \
+    HELPDIR="${HELPDIR}" \
+    MAKE_FILE=${MAKE_FILE} \
+    SED=${SED} \
+    MAKEDEPEND=${MAKEDEPEND} \
+    SORT=${SORT}
+
 # complete list of .h files found (but not built) in the distribution
 #
 H_SRC= ${LIB_H_SRC}
@@ -1066,6 +1115,7 @@ libcalc.a: ${LIBOBJS} ${MAKE_FILE}
 	-rm -f libcalc.a
 	ar qc libcalc.a ${LIBOBJS}
 	${RANLIB} libcalc.a
+	chmod 0644 libcalc.a
 
 calc.1: calc.man ${MAKE_FILE}
 	-rm -f calc.1
@@ -2088,6 +2138,45 @@ have_urandom.h: ${MAKE_FILE}
 	    true; \
 	fi
 
+have_rusage.h: have_rusage.c ${MAKE_FILE}
+	-${Q}rm -f have_rusage have_rusage.o rusage_tmp have_rusage.h
+	${Q}echo 'forming have_rusage.h'
+	${Q}echo '/*' > have_rusage.h
+	${Q}echo ' * DO NOT EDIT -- generated by the Makefile' >> have_rusage.h
+	${Q}echo ' */' >> have_rusage.h
+	${Q}echo '' >> have_rusage.h
+	${Q}echo '' >> have_rusage.h
+	${Q}echo '#if !defined(__HAVE_RUSAGE_H__)' >> have_rusage.h
+	${Q}echo '#define __HAVE_RUSAGE_H__' >> have_rusage.h
+	${Q}echo '' >> have_rusage.h
+	${Q}echo '' >> have_rusage.h
+	${Q}echo '/* do we have or want getrusage()? */' >> have_rusage.h
+	-${Q}rm -f have_rusage.o have_rusage
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETRUSAGE} have_rusage.c -c 2>/dev/null; \
+	     true
+	-${Q}${LCC} ${ILDFLAGS} have_rusage.o -o have_rusage 2>/dev/null; true
+	-${Q}${SHELL} -c "./have_rusage > rusage_tmp 2>/dev/null" \
+	    >/dev/null 2>&1; true
+	-${Q}if [ -s rusage_tmp ]; then \
+	    cat rusage_tmp >> have_rusage.h; \
+	else \
+	    echo '#undef HAVE_GETRUSAGE /* no */' >> have_rusage.h; \
+	fi
+	${Q}echo '' >> have_rusage.h
+	${Q}echo '' >> have_rusage.h
+	${Q}echo '#endif /* !__HAVE_RUSAGE_H__ */' >> have_rusage.h
+	-${Q}rm -f have_rusage have_rusage.o rusage_tmp
+	${Q}echo 'have_rusage.h formed'
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= start of $@ =-=-='; \
+	    cat $@; \
+	    echo '=-=-= end of $@ =-=-='; \
+	    echo ''; \
+	else \
+	    true; \
+	fi
+
 args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
 	-${Q}rm -f args.h have_args
 	${Q}echo 'forming args.h'
@@ -2319,27 +2408,21 @@ longbits: longbits.o
 lib/.all:
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for lib =-=-=-=-='
-	cd lib; ${MAKE} -f Makefile \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} all
+	cd lib; ${MAKE} -f Makefile ${LIB_PASSDOWN} all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 help/.all:
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for help =-=-=-=-='
-	cd help; ${MAKE} -f Makefile \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} all
+	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 help/builtin: func.c help/builtin.top help/builtin.end help/funclist.sed
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking builtin rule for help =-=-=-=-='
-	cd help; ${MAKE} -f Makefile \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} builtin
+	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} builtin
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
@@ -2439,9 +2522,7 @@ bsdi: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 		echo chmod 0444 gen_h/$$i; \
 		chmod 0444 gen_h/$$i; \
 	done
-	cd help; ${MAKE} -f Makefile \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} bsdi
+	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} bsdi
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 ##
@@ -2552,23 +2633,15 @@ distlist: ${DISTLIST}
 	${Q}(for i in ${DISTLIST}; do \
 		echo $$i; \
 	done; \
-	(cd help; ${MAKE} distlist \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} SORT=${SORT}); \
-	(cd lib; ${MAKE} distlist \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} SORT=${SORT}); \
+	(cd help; ${MAKE} ${HELP_PASSDOWN} distlist); \
+	(cd lib; ${MAKE} ${LIB_PASSDOWN} distlist); \
 	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} distlist); \
 	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} distlist)) | ${SORT}
 
 distdir:
 	${Q}(echo .; \
-	(cd help; ${MAKE} distdir \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} SORT=${SORT}); \
-	(cd lib; ${MAKE} distdir \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} SORT=${SORT}); \
+	(cd help; ${MAKE} ${HELP_PASSDOWN} distdir); \
+	(cd lib; ${MAKE} ${LIB_PASSDOWN} distdir); \
 	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} distdir); \
 	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} distdir)) | ${SORT}
 
@@ -2695,6 +2768,8 @@ env:
 	@echo "REGRESS_CAL=${REGRESS_CAL}"; echo ""
 	@echo "CUSTOM_PASSDOWN=${CUSTOM_PASSDOWN}"; echo ""
 	@echo "SAMPLE_PASSDOWN=${SAMPLE_PASSDOWN}"; echo ""
+	@echo "HELP_PASSDOWN=${HELP_PASSDOWN}"; echo ""
+	@echo "LIB_PASSDOWN=${LIB_PASSDOWN}"; echo ""
 	@echo "H_SRC=${H_SRC}"; echo ""
 	@echo "C_SRC=${C_SRC}"; echo ""
 	@echo "DISTLIST=${DISTLIST}"; echo ""
@@ -2792,14 +2867,10 @@ clean:
 	-rm -f ${UTIL_PROGS}
 	-rm -f .libcustcalc_error
 	${Q}echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
-	-cd help; ${MAKE} -f Makefile \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} clean
+	-cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clean
 	${Q}echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q}echo '=-=-=-=-= Invoking $@ rule for lib =-=-=-=-='
-	-cd lib; ${MAKE} -f Makefile \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} clean
+	-cd lib; ${MAKE} -f Makefile ${LIB_PASSDOWN} clean
 	${Q}echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} clean
@@ -2807,7 +2878,6 @@ clean:
 	${V} echo '=-=-=-=-= Invoking $@ rule for sample =-=-=-=-='
 	cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} clean
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	-rm -f funclist.o funclist.c
 	${Q}echo remove files that are obsolete
 	-rm -f endian.h stdarg.h libcalcerr.a lib/obj help/obj
 	-rm -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
@@ -2830,14 +2900,10 @@ clobber: lintclean
 	-rm -f calc.pixie calc.rf calc.Counts calc.cord
 	-rm -rf gen_h skel Makefile.bak
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
-	-cd help;${MAKE} -f Makefile \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} clobber
+	-cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clobber
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for lib =-=-=-=-='
-	-cd lib; ${MAKE} -f Makefile \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} clobber
+	-cd lib; ${MAKE} -f Makefile ${LIB_PASSDOWN} clobber
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} clobber
@@ -2873,6 +2939,20 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	    true; \
 	fi
 	-chmod 0755 ${HELPDIR}
+	-${Q}if [ ! -d ${INCDIR} ]; then \
+		echo mkdir ${INCDIR}; \
+		mkdir ${INCDIR}; \
+	else \
+	    true; \
+	fi
+	-chmod 0755 ${INCDIR}
+	-${Q}if [ ! -d ${INCDIRCALC} ]; then \
+		echo mkdir ${INCDIRCALC}; \
+		mkdir ${INCDIRCALC}; \
+	else \
+	    true; \
+	fi
+	-chmod 0755 ${INCDIRCALC}
 	-${Q}if [ ! -d ${BINDIR} ]; then \
 		echo mkdir ${BINDIR}; \
 		mkdir ${BINDIR}; \
@@ -2884,14 +2964,10 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	cp calc ${BINDIR}
 	-chmod 0555 ${BINDIR}/calc
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
-	cd help; ${MAKE} -f Makefile \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} install
+	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for lib =-=-=-=-='
-	cd lib; ${MAKE} -f Makefile \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} install
+	cd lib; ${MAKE} -f Makefile ${LIB_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} install
@@ -2900,16 +2976,18 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	-rm -f ${LIBDIR}/libcalc.a
-	cp libcalc.a ${LIBDIR}/libcalc.a
-	-chmod 0644 ${LIBDIR}/libcalc.a
+	cp -f libcalc.a ${LIBDIR}/libcalc.a
 	${RANLIB} ${LIBDIR}/libcalc.a
+	-chmod 0644 ${LIBDIR}/libcalc.a
 	-${Q}for i in ${LIB_H_SRC} ${BUILD_H_SRC}; do \
 		echo rm -f ${LIBDIR}/$$i; \
 		rm -f ${LIBDIR}/$$i; \
-		echo cp $$i ${LIBDIR}; \
-		cp $$i ${LIBDIR}; \
-		echo chmod 0444 ${LIBDIR}/$$i; \
-		chmod 0444 ${LIBDIR}/$$i; \
+		echo rm -f ${INCDIRCALC}/$$i; \
+		rm -f ${INCDIRCALC}/$$i; \
+		echo cp $$i ${INCDIRCALC}; \
+		cp $$i ${INCDIRCALC}; \
+		echo chmod 0444 ${INCDIRCALC}/$$i; \
+		chmod 0444 ${INCDIRCALC}/$$i; \
 	done
 	${Q}: If lint was made, install the lint library.
 	-${Q}if [ -f llib-lcalc.ln ]; then \
@@ -3368,6 +3446,7 @@ have_newstr.o: have_newstr.c
 have_offscl.o: have_offscl.c
 have_posscl.o: have_fpos.h
 have_posscl.o: have_posscl.c
+have_rusage.o: have_rusage.c
 have_stdvs.o: have_stdvs.c
 have_stdvs.o: have_string.h
 have_stdvs.o: have_unistd.h
@@ -3445,6 +3524,7 @@ input.o: have_memmv.h
 input.o: have_newstr.h
 input.o: have_stdlib.h
 input.o: have_string.h
+input.o: have_unistd.h
 input.o: hist.h
 input.o: input.c
 input.o: longbits.h
@@ -3861,6 +3941,7 @@ seed.o: have_gettime.h
 seed.o: have_malloc.h
 seed.o: have_memmv.h
 seed.o: have_newstr.h
+seed.o: have_rusage.h
 seed.o: have_stdlib.h
 seed.o: have_string.h
 seed.o: have_urandom.h

@@ -1440,8 +1440,11 @@ quit_calc(void)
 #else /* USE_READLINE */
 
 
-#include <readline.h>
-#include <history.h>
+#define HISTORY_LEN (1024)	/* number of entries to save */
+
+
+#include <readline/readline.h>
+#include <readline/history.h>
 
 
 /*
@@ -1453,6 +1456,9 @@ quit_calc(void)
  * readline.
  */
 
+
+/* name of history file */
+char *my_calc_history = NULL;
 
 int
 hist_getline(char *prompt, char *buf, int len)
@@ -1473,30 +1479,68 @@ hist_getline(char *prompt, char *buf, int len)
 }
 
 
-int
-hist_init(char *filename)
-{
-	return HIST_SUCCESS;
-}
-
-
 void
 hist_term(void)
 {
 }
 
 
+static void
+my_stifle_history (void)
+{
+	/* only save last number of entries */
+	stifle_history(HISTORY_LEN);
+
+	if (my_calc_history)
+		write_history(my_calc_history);
+}
+
+
+int
+hist_init(char *filename)
+{
+	/* used when parsing conditionals in ~/.inputrc */
+	rl_readline_name = "calc";
+
+	/* initialize interactive variables */
+	using_history();
+
+	/* name of history file */
+	my_calc_history = tilde_expand("~/.calc_history");
+
+	/* read previous history */
+	read_history(my_calc_history);
+
+	atexit(my_stifle_history);
+
+	return HIST_SUCCESS;
+}
+
 void
 hist_saveline(char *line, int len)
 {
+	static char *prev = NULL;
+
 	if (!len)
 		return;
+
+	/* ignore if identical with previous line */
+	if (prev != NULL && strcmp(prev, line) == 0)
+		return;
+
+	free (prev);
+
+	/* fail silently */
+	prev = strdup(line);
+
 	line[len - 1] = '\0';
 	add_history(line);
 	line[len - 1] = '\n';
 }
 
+
 #endif /* USE_READLINE */
+
 
 #if defined(HIST_TEST)
 

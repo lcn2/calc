@@ -32,8 +32,8 @@ static void getfunction(void);
 static void ungetfunction(void);
 static void getbody(LABEL *contlabel, LABEL *breaklabel,
 		    LABEL *nextcaselabel, LABEL *defaultlabel);
-static void getdeclarations(int symtype);
-static void getsimpledeclaration (int symtype);
+static int getdeclarations(int symtype);
+static int getsimpledeclaration (int symtype);
 static int getonevariable (int symtype);
 static void getstatement(LABEL *contlabel, LABEL *breaklabel,
 			 LABEL *nextcaselabel, LABEL *defaultlabel);
@@ -256,8 +256,14 @@ ungetfunction(void)
 			case T_MULT:
 				rmalluserfunc();
 				continue;
-			default:
+			case T_NEWLINE:
+			case T_SEMICOLON:
+			case T_EOF:
 				rescantoken();
+				return;
+			default:
+				scanerror(T_SEMICOLON,
+					 "Non-name arg for undefine"); 
 				return;
 		}
 	}
@@ -398,9 +404,11 @@ getbody(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *defaul
  * declarations = { LOCAL | GLOBAL | STATIC } onedeclaration
  *	[ ',' onedeclaration ] ... ';'.
  */
-static void
+static int
 getdeclarations(int symtype)
 {
+	int res = 0;
+
 	while (TRUE) {
 		switch (gettoken()) {
 			case T_COMMA:
@@ -411,28 +419,31 @@ getdeclarations(int symtype)
 			case T_RIGHTBRACE:
 			case T_EOF:
 				rescantoken();
-				return;
+				return res;
 
 			case T_SYMBOL:
 				addopone(OP_DEBUG, linenumber());
 				rescantoken();
-				getsimpledeclaration(symtype);
+				if (getsimpledeclaration(symtype))
+					res = 1;
 				break;
 
 			case T_MAT:
 				addopone(OP_DEBUG, linenumber());
 				getmatdeclaration(symtype);
+				res = 1;
 				break;
 
 			case T_OBJ:
 				addopone(OP_DEBUG, linenumber());
 				getobjdeclaration(symtype);
 				addop(OP_POP);
+				res = 1;
 				break;
 
 			default:
 				scanerror(T_SEMICOLON, "Bad syntax in declaration statement");
-				return;
+				return res;
 		}
 	}
 }
@@ -444,22 +455,24 @@ getdeclarations(int symtype)
  * Subsequences end with "," or at end of line; spaces indicate
  * repeated assignment, e.g. "c d = 2" has the effect of "c = 2, d = 2".
  */
-static void
+static int
 getsimpledeclaration(int symtype)
 {
+	int res = 0;
 
 	for (;;) {
 		switch (gettoken()) {
 			case T_SYMBOL:
 				rescantoken();
-				if (getonevariable(symtype))
+				res = getonevariable(symtype);
+				if (res)
 					addop(OP_POP);
 				continue;
 			case T_COMMA:
 				continue;
 			default:
 				rescantoken();
-				return;
+				return res;
 		}
 	}
 }
@@ -541,18 +554,20 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		return;
 
 	case T_GLOBAL:
-		getdeclarations(SYM_GLOBAL);
+		(void) getdeclarations(SYM_GLOBAL);
 		break;
 
 	case T_STATIC:
 		clearlabel(&label);
 		addoplabel(OP_INITSTATIC, &label);
-		getdeclarations(SYM_STATIC);
-		setlabel(&label);
+		if (getdeclarations(SYM_STATIC))
+			setlabel(&label);
+		else
+			curfunc->f_opcodecount -= 2;
 		break;
 
 	case T_LOCAL:
-		getdeclarations(SYM_LOCAL);
+		(void) getdeclarations(SYM_LOCAL);
 		break;
 
 	case T_RIGHTBRACE:

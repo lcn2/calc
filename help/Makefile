@@ -35,13 +35,12 @@ Q=@
 
 # standard tools
 #
-NATIVE_CC= cc
-NATIVE_CFLAGS=
+LCC= cc
+ICFLAGS=
+ILDFLAGS=
 SED= sed
 SORT= sort
 FMT= fmt
-CMP= cmp
-CAT= cat
 
 # Standard and Builtin help files
 #
@@ -234,7 +233,7 @@ bugs: ../BUGS
 
 errorcodes: ../calcerr.h errorcodes.hdr errorcodes.sed
 	rm -f $@
-	${CAT} errorcodes.hdr > $@
+	cat errorcodes.hdr > $@
 	${SED} -n -f errorcodes.sed < ../calcerr.h >> $@
 	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
@@ -359,17 +358,13 @@ ${SINGULAR_FILES}: ${PLURAL_FILES}
 #
 builtin: builtin.top builtin.end ../func.c funclist.sed
 	${Q}echo "forming builtin help file"
-	-${Q}rm -f builtin
-	${Q}cat builtin.top > builtin
 	-${Q}rm -f funclist.c
 	${Q}${SED} -n -f funclist.sed ../func.c > funclist.c
-
-	-${Q}rm -f ../funclist.c ../funclist.o ../funclist funclist
-	${Q}cp funclist.c ..
-	-${Q}(cd ..; \
-	 ${NATIVE_CC} ${NATIVE_CFLAGS} -DFUNCLIST funclist.c -o funclist; \
-	 mv funclist help; \
-	 rm -f funclist.c funclist.o funclist)
+	-${Q}rm -f funclist.o funclist
+	${Q}${LCC} ${ICFLAGS} -DFUNCLIST -I/usr/include -I.. funclist.c -c
+	${Q}${LCC} ${ILDFLAGS} funclist.o -o funclist
+	-${Q}rm -f builtin
+	${Q}cat builtin.top > builtin
 	${Q}./funclist | \
 	    ${SED} -e 's/^/	/' -e 's/[	 ][	 ]*$$//' >> builtin
 	${Q}cat builtin.end >> builtin

@@ -116,6 +116,34 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
     Calc tarballs are now named calc-version.tar.gz and untar into
     a sub-directory called calc-version.
 
+    Made a small change to declarations of static variables to reduce
+    the internal opcodes needed to declare them.
+
+    Fixed a permission problem on ranlib-ed *.a files that was reported
+    by Michael Somos <somos@grail.cba.csuohio.edu>.
+
+    Added patch by Klaus Alexander Seistrup <klaus@seistrup.dk> related
+    to GNU-readline:
+
+	+ enable calc specific bindings in ~/.inputrc
+	+ save a copy of your session to disk and reload them next
+	  time you're using calc
+	+ only add a line to the history if it is different from
+	  the previous line
+
+    Added the Makefile symbol HAVE_GETRUSAGE to determine if the
+    system supports the getrusage() system call.
+
+    Fixed the make depend code in the custom and sample Makefiles.
+
+    Fixed how the help/builtin file is formed.  The help/Makefile is
+    now given the name of the native C compiler by the top level Makefile.
+
+    The include files are installed under INCDIRCALC (a new Makefile variable)
+    which by default is ${INCDIR}/calc.  The INCDIR (also a new Makefile var)
+    by default is /usr/local/include.  Include files previously installed
+    directly under ${LIBDIR} will be removed.
+
 
 Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:
 
