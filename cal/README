@@ -480,6 +480,16 @@ randrun.cal
 
     This tests the a55 generator.
 
+repeat.cal
+
+    repeat(digit_set, repeat_count)
+
+    Return the value of the digit_set repeated repeat_count times.
+    Both digit_set and repeat_count must be integers > 0.
+
+    For example repeat(423,5) returns the value 423423423423423,
+    which is the digit_set 423 repeated 5 times.
+
 
 regress.cal
 
@@ -815,8 +825,8 @@ xx_print.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.8 $
-## @(#) $Id: README,v 29.8 2001/03/31 16:26:23 chongo Exp $
+## @(#) $Revision: 29.9 $
+## @(#) $Id: README,v 29.9 2003/01/05 08:10:56 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/README,v $
 ##
 ## Under source code control:	1990/02/15 01:50:32

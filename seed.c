@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: seed.c,v 29.5 2001/05/08 06:44:29 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: seed.c,v 29.6 2003/01/14 00:51:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/seed.c,v $
  *
  * Under source code control:	1999/10/03 10:06:53
@@ -40,6 +40,11 @@
 
 #include <stdio.h>
 #include <errno.h>
+
+#include "have_stdlib.h"
+#if defined(HAVE_STDLIB_H)
+#include <stdlib.h>
+#endif
 
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)

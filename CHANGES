@@ -38,8 +38,51 @@ The following are the changes from calc version 2.11.6.0 to date:
 
     By default, base2() is disabled.  Calling base2(0) will also turn
     off the double base mode.  Thanks goes to Erik Anggard
-    <eriki dot anggardi at packetfronti dot com> for his idea and
+    <erik dot anggard at packetfront dot com> for his idea and
     his initial patch.
+
+    Added repeat.cal as a calc resource file script:
+
+	repeat(digit_set, repeat_count)
+
+	Return the value of the digit_set repeated repeat_count times.
+	Both digit_set and repeat_count must be integers > 0.
+
+	For example repeat(423,5) returns the value 423423423423423,
+	which is the digit_set 423 repeated 5 times.
+
+    Makefile no longer makes a direct reference to Red Hat 6.0.
+
+    Added missing math_setmode2() prototype to zmath.h.
+
+    Fixed some implicit declarations of functions by either making
+    them explicit or by including the proper system .h files.
+
+    Makefile no longer uses -Wno-implicit flag, by default, for
+    gcc based compiles on calc source.  Makefile now attempts to
+    compile no_implicit.c with an explicit -Wno-implicit arg in an
+    effort to determine of -Wno-implicit is a valid compiler flag.
+    If no_implicit.c is compiled with -Wno-implicit, then
+    the file no_implicit.arg is created with the contents
+    of the -Wno-implicit flag.  Otherwise no_implicit.arg
+    is created as an empty file.
+
+    Added the Makefile variable ${HAVE_NO_IMPLICIT}, which if
+    not set to YES will prevent no_implicit.c from being
+    compiled and prevent the -Wno-implicit flag from being used.
+    If ${HAVE_NO_IMPLICIT} is not YES, then an empty no_implicit.arg
+    file is created and no_implicit.c is not compiled.
+
+    The seed.c file, because the pseudo_seed() function contains
+    calls to a number of various system functions, attempts to
+    compile with the -Wno-implicit flag (if allowed by the
+    formation of the no_implicit.arg file).
+
+    Misc make depend fixes and cleanup.
+
+    Fixed formation of the custom/.all file.
+
+    Fixed repeat(1, repeat_count) bug.
 
 
 The following are the changes from calc version 2.11.5.5 to 2.11.5.9:
@@ -5465,8 +5508,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.50 $
-## @(#) $Id: CHANGES,v 29.50 2002/12/29 09:22:43 chongo Exp $
+## @(#) $Revision: 29.54 $
+## @(#) $Id: CHANGES,v 29.54 2003/01/14 04:04:26 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: zmath.h,v 29.9 2002/12/29 09:20:25 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: zmath.h,v 29.10 2003/01/14 00:44:39 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -569,6 +569,7 @@ extern DLL void math_divertio(void);
 extern DLL void math_cleardiversions(void);
 extern DLL char *math_getdivertedio(void);
 extern DLL int math_setmode(int mode);
+extern DLL int math_setmode2(int mode);
 extern DLL LEN math_setdigits(LEN digits);
 extern DLL void math_fmt(char *, ...);
 

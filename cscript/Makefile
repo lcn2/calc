@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.22 $
-# @(#) $Id: Makefile,v 29.22 2002/03/14 00:28:28 chongo Exp $
+# @(#) $Revision: 29.23 $
+# @(#) $Id: Makefile,v 29.23 2003/01/14 01:58:18 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -296,9 +296,9 @@ depend:
 	${Q}for i in ${SCRIPT} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i: $$i.calc"; \
-		echo '	rm -f $$@'; \
-		echo '	$${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!$${BINDIR}/calc:" $$?>$$@'; \
-		echo '	$${CHMOD} +x $$@'; \
+		echo '	@rm -f $$@'; \
+		echo '	@$${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!$${BINDIR}/calc:" $$?>$$@'; \
+		echo '	@$${CHMOD} +x $$@'; \
 	    fi; \
 	done >> makedep.out
 	${Q}echo sample dependency list formed
@@ -392,34 +392,34 @@ install: all
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 
 4dsphere: 4dsphere.calc
-	rm -f $@
-	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
-	${CHMOD} +x $@
+	@rm -f $@
+	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
+	@${CHMOD} +x $@
 fproduct: fproduct.calc
-	rm -f $@
-	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
-	${CHMOD} +x $@
+	@rm -f $@
+	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
+	@${CHMOD} +x $@
 mersenne: mersenne.calc
-	rm -f $@
-	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
-	${CHMOD} +x $@
+	@rm -f $@
+	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
+	@${CHMOD} +x $@
 piforever: piforever.calc
-	rm -f $@
-	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
-	${CHMOD} +x $@
+	@rm -f $@
+	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
+	@${CHMOD} +x $@
 plus: plus.calc
-	rm -f $@
-	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
-	${CHMOD} +x $@
+	@rm -f $@
+	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
+	@${CHMOD} +x $@
 powerterm: powerterm.calc
-	rm -f $@
-	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
-	${CHMOD} +x $@
+	@rm -f $@
+	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
+	@${CHMOD} +x $@
 simple: simple.calc
-	rm -f $@
-	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
-	${CHMOD} +x $@
+	@rm -f $@
+	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
+	@${CHMOD} +x $@
 square: square.calc
-	rm -f $@
-	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
-	${CHMOD} +x $@
+	@rm -f $@
+	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
+	@${CHMOD} +x $@

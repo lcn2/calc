@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.14 $
-# @(#) $Id: Makefile,v 29.14 2002/03/14 00:28:28 chongo Exp $
+# @(#) $Revision: 29.15 $
+# @(#) $Id: Makefile,v 29.15 2003/01/05 08:10:56 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
@@ -175,8 +175,8 @@ CALC_FILES= README bigprime.cal deg.cal ellip.cal lucas.cal lucas_chk.cal \
 	test2700.cal test3100.cal test3300.cal test3400.cal prompt.cal \
 	test3500.cal seedrandom.cal test4000.cal test4100.cal test4600.cal \
 	beer.cal hello.cal test5100.cal test5200.cal randombitrun.cal \
-	randomrun.cal xx_print.cal natnumset.cal qtime.cal test8400.cal \
-	test8500.cal test8600.cal chi.cal intfile.cal
+	randomrun.cal repeat.cal xx_print.cal natnumset.cal qtime.cal \
+	test8400.cal test8500.cal test8600.cal chi.cal intfile.cal
 
 # These files are found (but not built) in the distribution
 #

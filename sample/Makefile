@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.16 $
-# @(#) $Id: Makefile,v 29.16 2002/03/14 00:28:28 chongo Exp $
+# @(#) $Revision: 29.17 $
+# @(#) $Id: Makefile,v 29.17 2003/01/14 02:00:23 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/Makefile,v $
 #
 # Under source code control:	1997/04/19 22:46:49
@@ -570,7 +570,6 @@ install: all
 ##
 
 # DO NOT DELETE THIS LINE
-
 
 many_random.o: ../alloc.h
 many_random.o: ../block.h

@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.19 $
-# @(#) $Id: Makefile,v 29.19 2002/03/14 00:28:28 chongo Exp $
+# @(#) $Revision: 29.20 $
+# @(#) $Id: Makefile,v 29.20 2003/01/14 02:18:45 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -748,7 +748,6 @@ install: all
 ##
 
 # DO NOT DELETE THIS LINE
-
 
 c_argv.o: ../alloc.h
 c_argv.o: ../block.h

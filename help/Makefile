@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.22 $
-# @(#) $Id: Makefile,v 29.22 2002/12/29 08:43:37 chongo Exp $
+# @(#) $Revision: 29.23 $
+# @(#) $Id: Makefile,v 29.23 2003/01/14 02:24:48 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -535,7 +535,8 @@ builtin: builtin.top builtin.end ../func.c funclist.sed
 	-${Q}rm -f funclist.c
 	${Q}${SED} -n -f funclist.sed ../func.c > funclist.c
 	-${Q}rm -f funclist.o funclist
-	${Q}${LCC} ${ICFLAGS} -DFUNCLIST -I/usr/include -I.. funclist.c -c
+	${Q}${LCC} ${ICFLAGS} -DFUNCLIST -I/usr/include \
+	    -I.. funclist.c -c 2>/dev/null
 	${Q}${LCC} ${ILDFLAGS} funclist.o -o funclist
 	-${Q}rm -f builtin
 	${Q}cat builtin.top > builtin

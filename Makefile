@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.48 $$
-# @(#) $Id: Makefile.ship,v 29.48 2002/12/29 07:13:50 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.53 $$
+# @(#) $Id: Makefile.ship,v 29.53 2003/01/14 02:33:07 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -541,6 +541,16 @@ HAVE_UNISTD_H=
 #HAVE_UNISTD_H= YES
 #HAVE_UNISTD_H= NO
 
+# Determine if our compiler allows the -Wno-implicit flag
+#
+#    HAVE_NO_IMPLICIT=		Our compiler does not have -Wno-implicit flags
+#    HAVE_NO_IMPLICIT= NO	Our compiler does not have -Wno-implicit flags
+#    HAVE_NO_IMPLICIT= YES	Our compiler has a -Wno-implicit flag
+#
+# HAVE_NO_IMPLICIT=
+# HAVE_NO_IMPLICIT= NO
+HAVE_NO_IMPLICIT= YES
+
 # System include files
 #
 # ${INCDIR}		where the system include (.h) files are kept
@@ -955,7 +965,7 @@ ALLOW_CUSTOM= -DCUSTOM
 # For better performance, set the following above:	DEBUG= -O2 -g3
 # You might even try:					DEBUG= -O3 -g3
 #
-CCWARN= -Wall -Wno-implicit -Wno-comment
+CCWARN= -Wall -Wno-comment
 CCOPT= ${DEBUG} ${NO_SHARED}
 CCMISC=
 #
@@ -975,7 +985,7 @@ CC= ${PURIFY} ${LCC}
 # For better performance, set the following above:	DEBUG= -O2 -g3
 # You might even try:					DEBUG= -O3 -g3
 #
-#CCWARN= -Wall -Wno-implicit -Wno-comment
+#CCWARN= -Wall -Wno-comment
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC=
 #
@@ -1104,7 +1114,7 @@ CC= ${PURIFY} ${LCC}
 # For better performance, set the following above:	DEBUG= -O2 -g3
 # You might even try:					DEBUG= -O3 -g3
 #
-#CCWARN= -Wall -Wno-implicit -Wno-comment
+#CCWARN= -Wall -Wno-comment
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC=
 #
@@ -1249,7 +1259,8 @@ UTIL_C_SRC= align32.c endian.c longbits.c have_newstr.c have_uid_t.c \
 	have_const.c have_stdvs.c have_varvs.c fposval.c have_fpos.c \
 	have_fpos_pos.c longlong.c have_offscl.c have_posscl.c have_memmv.c \
 	have_ustat.c have_getsid.c have_getpgid.c \
-	have_gettime.c have_getprid.c have_rusage.c have_strdup.c
+	have_gettime.c have_getprid.c have_rusage.c have_strdup.c \
+	no_implicit.c
 
 # these awk and sed tools are used in the process of building BUILD_H_SRC
 # and BUILD_C_SRC
@@ -1265,7 +1276,8 @@ UTIL_OBJS= endian.o longbits.o have_newstr.o have_uid_t.o \
 	have_const.o fposval.o have_fpos.o have_fpos_pos.o longlong.o \
 	try_strarg.o have_stdvs.o have_varvs.o have_posscl.o have_memmv.o \
 	have_ustat.o have_getsid.o have_getpgid.o \
-	have_gettime.o have_getprid.o ver_calc.o have_rusage.o have_strdup.o
+	have_gettime.o have_getprid.o ver_calc.o have_rusage.o have_strdup.o \
+	no_implicit.o
 
 # these temp files may be created (and removed) during the build of BUILD_C_SRC
 #
@@ -1273,12 +1285,13 @@ UTIL_TMP= ll_tmp fpos_tmp fposv_tmp const_tmp uid_tmp newstr_tmp vs_tmp \
 	memmv_tmp offscl_tmp posscl_tmp newstr_tmp \
 	getsid_tmp gettime_tmp getprid_tmp rusage_tmp strdup_tmp
 
-# these utility progs may be used in the process of building BUILD_H_SRC
+# these utility progs may be created in the process of building BUILD_H_SRC
 #
 UTIL_PROGS= align32 fposval have_uid_t longlong have_const \
 	endian longbits have_newstr have_stdvs have_varvs \
 	have_ustat have_getsid have_getpgid \
-	have_gettime have_getprid ver_calc have_strdup
+	have_gettime have_getprid ver_calc have_strdup \
+	no_implicit no_implicit.arg
 
 # The complete list of Makefile vars passed down to custom/Makefile.
 #
@@ -1524,6 +1537,9 @@ hist.o: hist.c ${MAKE_FILE}
 
 func.o: func.c ${MAKE_FILE}
 	${CC} ${CFLAGS} ${ALLOW_CUSTOM} -c func.c
+
+seed.o: seed.c no_implicit.arg ${MAKE_FILE}
+	${CC} ${CFLAGS} "`cat no_implicit.arg`" -c seed.c
 
 ##
 #
@@ -2850,6 +2866,29 @@ calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE}
 	    true; \
 	fi
 
+no_implicit.arg: no_implicit.c ${MAKE_FILE}
+	-${Q}rm -f no_implicit no_implicit.o no_implicit.arg
+	${Q}echo 'forming no_implicit.arg'
+	-${Q}if [ X"${HAVE_NO_IMPLICIT}" = X"YES" ]; then \
+	    ${LCC} -Wno-implicit ${ICFLAGS} -DHAVE_NO_IMPLICIT \
+		    no_implicit.c -c >/dev/null 2>&1; \
+	    ${LCC} ${ILDFLAGS} no_implicit.o -o no_implicit >/dev/null 2>&1; \
+	    ${SHELL} -c "./no_implicit > no_implicit.arg 2>/dev/null" \
+	    	>/dev/null 2>&1; true; \
+	else \
+	    touch no_implicit.arg; \
+	fi
+	${Q}echo 'no_implicit.arg formed'
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= start of $@ =-=-='; \
+	    cat $@; \
+	    echo '=-=-= end of $@ =-=-='; \
+	    echo ''; \
+	else \
+	    true; \
+	fi
+
 ##
 #
 # Build .h files for windoz based systems
@@ -2931,6 +2970,13 @@ ${CSCRIPT_TARGETS}:
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 sample/.all: ${SAMPLE_TARGETS}
+
+custom/.all:
+	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= Invoking all rule for custom =-=-=-=-='
+	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} all
+	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 ${SAMPLE_TARGETS}: libcalc.a
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
@@ -3033,7 +3079,8 @@ depend: hsrc
 	-${Q}rm -rf skel
 	${Q}mkdir skel
 	-${Q}for i in ${C_SRC} ${BUILD_C_SRC}; do \
-		${SED} -n '/^#[	 ]*include[	 ]*"/p' "$$i" > "skel/$$i"; \
+		${SED} -n '/^#[	 ]*include[	 ]*"/p' "$$i" | \
+		    ${GREP} -v '\.\./getopt/getopt\.h' > "skel/$$i"; \
 	done
 	${Q}mkdir skel/custom
 	-${Q}for i in ${H_SRC} ${BUILD_H_SRC} custom.h /dev/null; do \
@@ -3801,7 +3848,6 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 
-
 addop.o: addop.c
 addop.o: alloc.h
 addop.o: block.h
@@ -4115,6 +4161,7 @@ custom.o: value.h
 custom.o: win32dll.h
 custom.o: zmath.h
 endian.o: endian.c
+endian.o: have_stdlib.h
 endian.o: have_unistd.h
 file.o: alloc.h
 file.o: block.h
@@ -4525,6 +4572,7 @@ md5.o: string.h
 md5.o: value.h
 md5.o: win32dll.h
 md5.o: zmath.h
+no_implicit.o: no_implicit.c
 obj.o: alloc.h
 obj.o: block.h
 obj.o: byteswap.h

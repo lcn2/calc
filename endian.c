@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: endian.c,v 29.3 2001/03/18 02:59:42 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: endian.c,v 29.4 2003/01/14 01:50:01 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/endian.c,v $
  *
  * Under source code control:	1993/11/15 04:32:58
@@ -35,6 +35,11 @@
 
 
 #include <stdio.h>
+
+#include "have_stdlib.h"
+#if defined(HAVE_STDLIB_H)
+#include <stdlib.h>
+#endif
 
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)

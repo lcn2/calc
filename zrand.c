@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: zrand.c,v 29.4 2001/05/08 06:44:29 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: zrand.c,v 29.5 2003/01/14 00:54:24 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrand.c,v $
  *
  * Under source code control:	1995/01/07 09:45:25
@@ -353,6 +353,7 @@
  * (used by more than one input seed).
  */
 
+#include <stdio.h>
 
 #include "zrand.h"
 #include "have_const.h"
