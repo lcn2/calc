@@ -462,7 +462,8 @@ addop(long op)
 				fp->f_opcodecount -= diff;
 				oldop = OP_NOP;
 				oldoldop = OP_NOP;
-				fprintf(stderr, "%ld: unused value ignored\n",
+				fprintf(stderr,
+					"Line %ld: unused value ignored\n",
 					linenumber());
 				return;
 			}

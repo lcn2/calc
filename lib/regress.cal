@@ -7389,8 +7389,8 @@ X5800 = obj xy5800 = {1,2};
 print				  '5864: X5800 = obj xy5800 = {1,2}';
 vrfy(X5800 == (obj xy5800 = {1,2}),
 				  '5865: X5800 == (obj xy5800 = {1,2})');
-define f5800(a8500 = mat[2] = {3,4}) = 5 * a8500;
-print		'5866: define f5800(a8500 = mat[2] = {3,4}) = 5 * a8500;'
+define f5800(a5800 = mat[2] = {3,4}) = 5 * a5800;
+print		'5866: define f5800(a5800 = mat[2] = {3,4}) = 5 * a5800;'
 vrfy(f5800() == (mat[] = {15,20}),'5867: f5800() == (mat[] = {15,20})');
 print '5868: End of 5800 sequence';
 
@@ -7491,6 +7491,15 @@ read -once test8400;
 print	'8404: read -once test8400';
 vrfy(test8400() == 64434,	'8405: test8400() == 64434');
 print	'8406: Ending test_quit';
+
+
+/*
+ * test_divmod - psuedo-random tests on the // and % with various rounding modes
+ */
+print;
+print '8500: Starting test_divmod'
+read -once "test8500";
+/* 85xx: Ending test_divmod is printed by test8500.cal */
 
 
 /*

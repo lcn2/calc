@@ -11,6 +11,14 @@ The following are the changes from calc version 2.11.0t10 to date:
     used in combination with the GNU-readline facility, will prevent
     it from saving empty lines.
 
+    Minor typos fixed in regress.cal
+
+    Added 8500 test serise and test8500.cal to perform more extensive
+    tests on // and % with various rounding modes.
+
+    The 'unused value ignored' messages now start with Line 999: instead
+    of just 999:.
+
 
 The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
 

@@ -38,18 +38,12 @@ then it may be time to send in a bug report.  You can send bug reports to:
 When you send your report, please include the following information:
 
     * a description of the problem
-
     * the version of calc you are using (if you cannot get calc
       it to run, then send us the 4 #define lines from version.c)
-
     * if you modified calc from an official patch, send me the mods you made
-
     * the type of system you were using
-
     * the type of compiler you were using
-
     * any compiler warnings or errors that you saw
-
     * cd to the calc source directory, and type:
 
 	make debug > debug.out 2>&1		(sh, ksh, bash users)
@@ -112,11 +106,29 @@ Known bugs:
 
 =-=
 
-Other items of note:
+Problems with known work-a-rounds:
 
     * There is a bug in gcc-2.95 that causes calc, when compiled with -O2,
       to fail the regression test.  The work-a-round is to compile with -O
       or to use gcc-2.96 or later.
+
+    * Solaris cc somtimes barfs while compiling zrand.c.  In particular, calc
+      barfs on on the SVAL macro.  The work-a-round is to use the Solaric cc
+      Makefile set sets -DFORCE_STDC.  I.e,:
+
+	    CCWARN=
+	    CCOPT= ${DEBUG} ${NO_SHARED}
+	    CCMISC= -DFORCE_STDC
+	    #
+	    CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
+	    ICFLAGS= ${CCWARN} ${CCMISC}
+	    #
+	    LCFLAGS=
+	    LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
+	    ILDFLAGS=
+	    #
+	    LCC= cc
+	    CC= ${PURIFY} ${LCC}
 
     * There is a bug in some versions of the Dec/Compaq cc for the Alpha
       where the following:
@@ -156,4 +168,4 @@ Other items of note:
     * The sparcv9 support for 64 bit Solaris under gcc-2.96 is able
       to compile calc, but calc dumps core very early on in startup.
       It is said that sparcv9 support in gcc-2.96 is very unofficial.
-      There is no work-a-round for this compile problem.
+      There is no work-a-round for this compiler problem.

@@ -44,7 +44,8 @@ CALC_FILES= README bigprime.cal deg.cal ellip.cal lucas.cal lucas_chk.cal \
 	test2700.cal test3100.cal test3300.cal test3400.cal prompt.cal \
 	test3500.cal seedrandom.cal test4000.cal test4100.cal test4600.cal \
 	beer.cal hello.cal test5100.cal test5200.cal randombitrun.cal \
-	randomrun.cal xx_print.cal natnumset.cal qtime.cal test8400.cal
+	randomrun.cal xx_print.cal natnumset.cal qtime.cal test8400.cal \
+	test8500.cal
 
 # These files are found (but not built) in the distribution
 #
