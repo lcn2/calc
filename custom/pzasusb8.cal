@@ -1,0 +1,29 @@
+/*
+ * Permission to use, copy, modify, and distribute this software and
+ * its documentation for any purpose and without fee is hereby granted.
+ *
+ *	Ernest Bowen, following Landon Curt Noll
+ */
+
+print "p(n) prints array in which numerator of n is stored as a";
+print "sequence of 2-hex-digits representing unsigned characters.";
+print "h(n) printx n in hex notation.  This should be the same as";
+print "p(n) except for (1) its leading 0x, (2) possible trailing zeros";
+print "in p(n), and (3) the order of the hex-digit pairs.";
+print "The following example show results for n = isqrt(2e100).";
+print "";
+
+define p(n) {custom("pzasusb8", n); print;}
+define h(n) = printf("%x\n", n);
+
+n = isqrt(2e100);
+print "";
+p(n);
+h(n);
+print "";
+print "BASEB: ", custom("sysinfo", "BASEB");
+print "CALC_BYTE_ORDER: ", custom("sysinfo", "CALC_BYTE_ORDER");
+print "BIG_ENDIAN: ", custom("sysinfo", "BIG_ENDIAN");
+print "LITTLE_ENDIAN: ", custom("sysinfo", "LITTLE_ENDIAN");
+print "LONG_BITS: ", custom("sysinfo", "LONG_BITS");
+print "LONGLONG_BITS: ", custom("sysinfo", "LONGLONG_BITS");

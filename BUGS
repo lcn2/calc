@@ -114,50 +114,14 @@ Known problems or mis-features:
 	**** 9 error(s) found  \/++\/
 	9999: Ending regression tests
 
-    * On a Dec Alpha, make check for version 2.11.0t1 core dumps:
+    * On a Dec Alpha, using the Dec Alpha cc (not gcc) make check for
+      version 2.11.0t5.1 fails in the regression test:
 
-	From vandermj@molbio.sbphrd.com  Fri Sep 24 06:15:28 1999
-	Subject: Re: calc version 2.11.0t1
-	Date: Fri, 24 Sep 1999 09:15:02 -0400
+	From vandermj@molbio.sbphrd.com  Tue Oct  5 04:06:52 1999
+	Subject: Re: oops, try calc version 2.10.0t5.1
+	Date: Tue, 05 Oct 1999 07:06:30 -0400
 
-	It dies as follows:
+	Regular cc on Dec alpha, 'make check' dies with:
 
-	...
-	1802: a = surd(2,3)
-	1803: a == surd(2,3)
 	1804: surd_value(a) == 2+3i
-	Segmentation fault
-
-	dbx shows:
-	signal Segmentation fault at   [objcall:155 +0xc,0x1200507b4]   index = oap->actions[action];
-	(dbx) where
-	>  0 objcall(action = 14, v1 = 0x1400203d0, v2 = 0x1400203e0, v3 = (nil)) ["obj.c":155, 0x1200507b4]
-	   1 comparevalue(v1 = 0x1400203d0, v2 = 0x1400203e0) ["value.c":2329, 0x12007f250]
-	   2 o_eq() ["opcodes.c":2659, 0x12003728c]
-	   3 calculate(fp = 0x14007fce0) ["opcodes.c":3614, 0x12003942c]
-	   4 o_usercall(fp = 0x14007fce0, index = 39, argcount = 0) ["opcodes.c":2602, 0x120037080]
-	   5 calculate(fp = 0x14003bfa0) ["opcodes.c":3622, 0x120039488]
-	   6 evaluate(nestflag = 14) ["codegen.c":210, 0x120028768]
-	   7 getcommands(toplevel = 536864560) ["codegen.c":158, 0x1200285bc]
-	   8 getcommands(toplevel = 536864560) ["codegen.c":122, 0x1200284dc]
-	   9 main() ["calc.c":279, 0x12001f61c]
-
-      Michel van der List reports that he was using the Dec compiler.
-
-      However On 25-Sep-99  9:18, Ernest Bowen wrote:
-
-	Last night I downloaded 2.11.0t1 and without changing Makefile
-	or anything else did a make and make check.  Absolutely no
-	reported errors or warnings and the check "passed all tests".
-	The machine I'm using is a Dec 20 alpha running Digitial
-	UNIX V4.0B (Rev 564).
-
-      Ernest Bowen was using gcc.
-
-      We definitely want to hunt down this Dec's cc compiler issue.  It
-      could very well be that gcc is letting something slide where as
-      Dec's cc compiler is compiling it faithfully into core dumping code.
-      The fault could very well be the calc code and not the compiler.
-
-      Any more information on calc core dumps compiled with Dec's cc compiler
-      would be most appreciated!
+	"": line 1706: Calling qfreenum with nozero links!!!

@@ -1,0 +1,50 @@
+NAME
+    pzasusb8 - print a number in hex octets
+
+SYNOPSIS
+    custom("pzasusb8", arg)
+
+TYPES
+    arg		real
+
+    return	null
+
+DESCRIPTION
+    This custom function prints out the numerator of a real value
+    in octets.  Each HALF value is printed in a separate line.
+
+    NOTE: The output will vary depending on the size of a HALF
+	  and the byte order of the system.  See:
+
+		custom("sysinfo", "BASEB")
+		custom("sysinfo", "CALC_BYTE_ORDER")
+
+    foe details.
+
+    This custom function is intented for testing of the general
+    custom interface.
+
+EXAMPLE
+    > custom("pzasusb8", 0x01020304050607080910111213141516);
+    0:      13141516
+    1:      09101112
+    2:      05060708
+    3:      01020304
+
+    > custom("pzasusb8", 10^25)
+    0:      4a000000
+    1:      16140148
+    2:      00084595
+
+    > printf("%x\n", 10^25);
+    0x84595161401484a000000
+
+LIMITS
+    calc must be built with ALLOW_CUSTOM= -DCUSTOM
+    calc must be executed with a -C arg.
+
+LIBRARY
+    none
+
+SEE ALSO
+    custom

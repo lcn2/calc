@@ -145,6 +145,9 @@ Following is the change from calc version 2.11.0t1 to date:
     freeglobals() at the end of the test suite to free storage
     consumed during the regression.
 
+    Added custom function custom("pzasusb8", n) and lib/pzasusb8.cal based on
+    Ernest Bowen's diagnostic patch.
+
     Fixed misc compile warnings and notices.
 
 

@@ -59,6 +59,7 @@ extern VALUE c_argv(char*, int, VALUE**);
 extern VALUE c_devnull(char*, int, VALUE**);
 extern VALUE c_help(char*, int, VALUE**);
 extern VALUE c_sysinfo(char*, int, VALUE**);
+extern VALUE c_pzasusb8(char*, int, VALUE**);
 
 
 #endif /* CUSTOM */
@@ -107,6 +108,9 @@ CONST struct custom cust[] = {
 
 	{ "sysinfo", "return a calc #define value",
 	 0, 1, c_sysinfo },
+
+	{ "pzasusb8", "print ZCALUE as USB8",
+	 0, 1, c_pzasusb8 },
 
 
 #endif /* CUSTOM */

@@ -41,13 +41,13 @@
 #
 # Put your custom calc library files here.
 #
-CUSTOM_CALC_FILES= argv.cal halflen.cal
+CUSTOM_CALC_FILES= argv.cal halflen.cal pzasusb8.cal
 
 # The custom help files to install
 #
 # Put your custom help files here.
 #
-CUSTOM_HELP= argv devnull help sysinfo
+CUSTOM_HELP= argv devnull help sysinfo pzasusb8
 
 # Any .h files that are needed by programs that use libcustcalc.a
 #
@@ -63,7 +63,7 @@ CUSTOM_H_SRC=
 #
 # Put your custom .c files here.
 #
-CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c
+CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c c_pzasusb8.c
 
 # Any .o files that are needed by program that use libcustcalc.a.
 # Don't put ${REQUIRED_OBJ} files in this list.
@@ -72,7 +72,7 @@ CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c
 #
 # Put your custom .o files here.
 #
-CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o
+CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o c_pzasusb8.o
 
 ##############################################################################
 #-=-=-=-=-=-=- Defaults in case you want to build from this dir -=-=-=-=-=-=-#
@@ -590,6 +590,11 @@ c_help.o: ../string.h
 c_help.o: ../value.h
 c_help.o: ../zmath.h
 c_help.o: c_help.c
+c_pzasusb8.o: ../custom.h
+c_pzasusb8.o: ../have_const.h
+c_pzasusb8.o: ../value.h
+c_pzasusb8.o: ../zmath.h
+c_pzasusb8.o: c_pzasusb8.c
 c_sysinfo.o: ../alloc.h
 c_sysinfo.o: ../block.h
 c_sysinfo.o: ../byteswap.h
