@@ -49,6 +49,7 @@ extern int isatty(int tty);	/* TRUE if fd is a tty */
 extern int p_flag;		/* TRUE => pipe mode */
 extern int q_flag;		/* TRUE => don't execute rc files */
 extern int u_flag;		/* TRUE => unbuffer stdin and stdout */
+extern int d_flag;		/* TRUE => disable heading, lib_debug == 0 */
 
 extern char *pager;		/* $PAGER or default */
 extern int stdin_tty;		/* TRUE if stdin is a tty */
@@ -63,9 +64,12 @@ extern char *version(void);	/* return version string */
  * static definitions and functions
  */
 static char *usage = "usage: %s [-C] [-e] [-h] [-i] [-m mode] [-n] [-p]\n"
-		     "\t[-q] [-u] [[--] calc_cmd ...]\n";
+		     "\t[-q] [-u] [-c] [-d] [[--] calc_cmd ...]\n";
 static void intint(int arg);	/* interrupt routine */
 
+static int havecommands;
+static int c_flag;		/* To permit continuation after error */
+static int i_flag;		/* To go interactive if permitted */
 
 /*
  * Top level calculator routine.
@@ -84,7 +88,7 @@ main(int argc, char **argv)
 	 * parse args
 	 */
 	program = argv[0];
-	while ((c = getopt(argc, argv, "Cehim:npquv")) != -1) {
+	while ((c = getopt(argc, argv, "Cehim:npquvcd")) != -1) {
 		switch (c) {
 		case 'C':
 #if defined(CUSTOM)
@@ -107,7 +111,7 @@ main(int argc, char **argv)
 			want_defhelp = 1;
 			break;
 		case 'i':
-			ign_errmax = TRUE;
+			i_flag = TRUE;
 			break;
 		case 'm':
 			if (optarg[1] == '\0' || *optarg<'0' || *optarg>'7') {
@@ -136,6 +140,12 @@ main(int argc, char **argv)
 		case 'u':
 			u_flag = TRUE;
 			break;
+		case 'c':
+			c_flag = TRUE;
+			break;
+		case 'd':
+			d_flag = TRUE;
+			break;
 		case 'v':
 			/*
 			 * we are too early in processing to call
@@ -153,6 +163,7 @@ main(int argc, char **argv)
 		}
 	}
 	interactive = (optind >= argc);
+	havecommands = !interactive;
 
 	/*
 	 * look at the length of any trailing command args
@@ -201,8 +212,7 @@ main(int argc, char **argv)
 	 * initialize
 	 */
 	libcalc_call_me_first();
-	stdin_tty = TRUE;	/* assume internactive default */
-	conf->tab_ok = TRUE;	/* assume internactive default */
+	stdin_tty = isatty(0);		/* assume stdin is on fd 0 */
 	if (want_defhelp) {
 		givehelp(DEFAULTCALCHELP);
 		libcalc_call_me_last();
@@ -212,22 +222,13 @@ main(int argc, char **argv)
 	/*
 	 * if allowed or needed, print version and setup bindings
 	 */
-	if (interactive) {
-		/*
-		 * check for pipe mode and/or non-tty stdin
-		 */
-		if (!p_flag) {
-			stdin_tty = isatty(0);	/* assume stdin is on fd 0 */
-		}
-
-		/*
-		 * if tty, setup bindings
-		 */
-		if (stdin_tty) {
+	if (!havecommands && stdin_tty) {
+		if (!d_flag) {
 			printf("%s (version %s)\n", CALC_TITLE, version());
 			printf("[%s]\n\n",
 			    "Type \"exit\" to exit, or \"help\" for help.");
-			switch (hist_init(calcbindings)) {
+		}
+		switch (hist_init(calcbindings)) {
 			case HIST_NOFILE:
 				fprintf(stderr,
 				    "%s: Cannot open bindings file \"%s\", "
@@ -240,7 +241,6 @@ main(int argc, char **argv)
 					"%s: Cannot set terminal modes, "
 					"fancy editing disabled\n", program);
 				break;
-			}
 		}
 	}
 
@@ -252,53 +252,65 @@ main(int argc, char **argv)
 		/*
 		 * reset/initialize the computing environment
 		 */
-		if (post_init) {
+		if (post_init)
 			initialize();
-		} else {
-			/* initialize already done, jmpbuf is ready */
-			post_init = TRUE;
-		}
+		post_init = TRUE;
+	}
 
-		/*
-		 * if arg mode or non-tty mode, just do the work and be gone
-		 */
-		if (!interactive || !stdin_tty) {
-			if (q_flag == FALSE && allow_read) {
-				runrcfiles();
-				q_flag = TRUE;
-			}
-			if (interactive)
-				(void) openterminal();
-			else
-				(void) openstring(cmdbuf);
-			start_done = TRUE;
+	(void) signal(SIGINT, intint);
+
+	if (start_done == 0) {
+		if (!q_flag && allow_read) {
+			start_done = 1;
+			runrcfiles();
+		}
+		start_done = 2;
+	}
+	if (start_done == 1) {
+		fprintf(stderr, "Execution error in rcfiles\n");
+		if (c_flag)
 			getcommands(FALSE);
-			libcalc_call_me_last();
-			exit(0);
+		start_done = 2;
+	}
+	if (start_done == 2) {
+		if (havecommands) {
+			start_done = 3;
+			(void) openstring(cmdbuf);
+			getcommands(FALSE);
 		}
+		start_done = 4;
 	}
-	/* if in arg mode, we should not get here */
-	if (!interactive) {
-		libcalc_call_me_last();
-		exit(1);
+	if (start_done == 3) {
+		fprintf(stderr, "Execution error in commands\n");
+		if (c_flag)
+			getcommands(FALSE);
+		else
+			closeinput();
+		start_done = 4;
 	}
-
-	/*
-	 * process commands
-	 */
-	if (!start_done) {
+	if (start_done == 4) {
+		if (stdin_tty && ((havecommands && !i_flag) || p_flag))
+			start_done = 6;
+		else
+			openterminal();
+	}
+	else if (start_done == 5) {
+		if (!stdin_tty && !c_flag) {
+			start_done = 6;
+		}
 		reinitialize();
 	}
-	(void) signal(SIGINT, intint);
-	start_done = TRUE;
-	getcommands(TRUE);
+
+	if (start_done < 6) {
+		start_done = 5;
+		getcommands(TRUE);
+	}
 
 	/*
 	 * all done
 	 */
 	libcalc_call_me_last();
-	/* exit(0); */
-	return 0;
+	return (start_done - 6) ? 1 : 0;
 }
 
 

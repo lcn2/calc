@@ -58,6 +58,8 @@
 #define ABORT_MATH	3	/* abort on any math operation */
 #define ABORT_NOW	4	/* abort right away */
 
+#define ERRMAX 20		/* default errmax value */
+
 /*
  * File ids corresponding to standard in, out, error, and when not in use.
  */
@@ -163,7 +165,7 @@ extern char *shell;		/* $SHELL or default */
 extern char *program;		/* our name (argv[0]) */
 
 extern int no_env;	/* TRUE (-e) => ignore env vars on startup */
-extern int ign_errmax;	/* TRUE (-i) => ignore when errcount exceeds errmax */
+extern int errmax;	/* if >= 0, error when errcount exceeds errmax */
 extern int new_std;	/* TRUE (-n) => use newstd configuration */
 
 extern int allow_read;	/* FALSE => may not open any files for reading */

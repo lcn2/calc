@@ -85,7 +85,7 @@
 
 
 /*
- * config defult symbols
+ * config default symbols
  */
 #define DISPLAY_DEFAULT 20	/* default digits for float display */
 #define EPSILON_DEFAULT "1e-20"	/* allowed error for float calculations */
@@ -94,8 +94,6 @@
 #define NEW_EPSILONPREC_DEFAULT 34	/* 34 ==> 2^-34 <= 1e-10 < 2^-33 */
 #define MAXPRINT_DEFAULT 16	/* default number of elements printed */
 #define MAXSCANCOUNT 20		/* default max scan errors before an abort */
-
-#define ERRMAX 20		/* default errmax value */
 
 
 /*

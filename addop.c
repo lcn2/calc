@@ -449,6 +449,11 @@ addop(long op)
 			case OP_GLOBALADDR:
 				diff = 1 + PTR_SIZE;
 				break;
+			case OP_UNDEF:
+				fp->f_opcodecount -= 1;
+				oldop = OP_NOP;
+				oldoldop = OP_NOP;
+				return;
 			default:
 				cut = FALSE;
 			}

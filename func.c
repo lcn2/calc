@@ -209,6 +209,28 @@ f_prompt(VALUE *vp)
 }
 
 
+static VALUE
+f_display(int count, VALUE **vals)
+{
+	long oldvalue;
+	VALUE res;
+
+	oldvalue = conf->outdigits;
+
+	if (count > 0) {
+		if (vals[0]->v_type != V_NUM || qisfrac(vals[0]->v_num) ||
+			qisneg(vals[0]->v_num) || zge31b(vals[0]->v_num->num))
+			fprintf(stderr,
+				 "Out-of-range arg for display ignored\n");
+		else
+			conf->outdigits = qtoi(vals[0]->v_num);
+	}
+	res.v_type = V_NUM;
+	res.v_num = itoq(oldvalue);
+	return res;
+}
+
+
 /*ARGSUSED*/
 static VALUE
 f_null(int count, VALUE **vals)
@@ -4392,11 +4414,7 @@ f_errno(int count, VALUE **vals)
 			math_error("errno argument out of range");
 			/*NOTREACHED*/
 		}
-		newerr = z1tol(vp->v_num->num);
-		if (newerr >= 32768) {
-			math_error("errno argument out of range");
-			/*NOTREACHED*/
-		}
+		newerr = (int) ztoi(vp->v_num->num);
 	}
 	olderr = set_errno(newerr);
 
@@ -4423,7 +4441,7 @@ f_errcount(int count, VALUE **vals)
 			math_error("errcount argument out of range");
 			/*NOTREACHED*/
 		}
-		newcount = z1tol(vp->v_num->num);
+		newcount = (int) ztoi(vp->v_num->num);
 	}
 	oldcount = set_errcount(newcount);
 
@@ -4436,23 +4454,21 @@ f_errcount(int count, VALUE **vals)
 static VALUE
 f_errmax(int count, VALUE **vals)
 {
-	int newmax, oldmax;
+	int oldmax;
 	VALUE *vp;
 	VALUE result;
 
-	newmax = -1;
+	oldmax = errmax;
 	if (count > 0) {
 		vp = vals[0];
 
-		/* arg must be an integer */
 		if (vp->v_type != V_NUM || qisfrac(vp->v_num) ||
-		qisneg(vp->v_num) || zge31b(vp->v_num->num)) {
-			math_error("errcount argument out of range");
-			/*NOTREACHED*/
-		}
-		newmax = z1tol(vp->v_num->num);
+				zge31b(vp->v_num->num))
+			fprintf(stderr,
+				 "Out-of-range arg for errmax ignored\n");
+		else
+			errmax = (int) ztoi(vp->v_num->num);
 	}
-	oldmax = set_errmax(newmax);
 
 	result.v_type = V_NUM;
 	result.v_num = itoq((long) oldmax);
@@ -6806,6 +6822,8 @@ static CONST struct builtin builtins[] = {
 	 "digit at specified decimal place of number"},
 	{"digits", 1, 1, 0, OP_NOP, f_digits, 0,
 	 "number of digits in number"},
+	{"display", 0, 1, 0, OP_NOP, 0, f_display,
+	 "number of decimal digits for displaying numbers"},
 	{"dp", 2, 2, 0, OP_NOP, 0, f_dp,
 	 "dot product of two vectors"},
 	{"epsilon", 0, 1, 0, OP_SETEPSILON, 0, 0,

@@ -311,6 +311,13 @@ psqrt.cal
     Calculate square roots modulo a prime
 
 
+qtime.cal
+
+    qtime(utc_hr_offset)
+
+    Print the time as English sentence given the hours offset from UTC.
+
+
 quat.cal
 
     quat(a, b, c, d)

@@ -1,4 +1,103 @@
-Following is the change from calc version 2.11.0t1 to date:
+Following is the change from calc version 2.11.0t7 to date:
+
+    Calc has some new command line flags / command line meaning:
+    (Thanks goes to Ernest Bowen <ernie@turing.une.edu.au>)
+
+	-i 	Go into interactive mode if possible.
+
+	-c	Continue reading command lines even after an execution
+		error has caused the abandonment of a line
+
+	To understand the -i and -c effects, consider the following
+	file (call it myfile.cal) which has deliberate errors in it:
+
+	    print 1;
+	    mat A[1] = {2,3};
+	    print 2;
+	    epsilon(-1);
+	    print 3;
+
+	calc read myfile
+
+	    Reports an error on the 2nd line and exits; prints 1 only.
+
+	calc -c read myfile
+
+	    Report errors on the 2nd and 4th lines and exits; prints 1,2 and 3.
+
+	calc -i read myfile
+
+	    Report errors on the 2nd and gives you a prompt; prints 1 only.
+
+	calc -i -c read myfile
+
+	    Report errors on the 2nd and 4th and gives you a prompt;
+	    prints 1, 2 and 3.
+
+	cat myfile | calc
+
+	    Reports an error on the 2nd line and exits; prints 1 only.
+
+	cat myfile | calc -c
+
+	    Report errors on the 2nd and 4th lines and exits; prints 1,2 and 3.
+
+	Note that continuation refers to command lines, not to statements.  So:
+
+	    calc -c 'print "start"; mat A[1] = {2,3}; print "end";'
+
+	since it contains no newline, the whole string is compiled,
+	but execution is abandoned when the error is encountered and
+	the string ``end'' is not printed.
+
+	You can use your shell to supply newlines in your command line
+	arguments.  For example in sh, ksh, bash:
+
+	    calc -c 'print "start";
+	    mat A[1] = {2,3};
+	    print "end";'
+
+	will print both ``start'' and ``end''.  C-shell users can do:
+
+	    calc -c 'print "start"; \
+	    mat A[1] = {2,3}; \
+	    print "end";'
+
+	however sh, ksh, bash will not see ``end'' printed because their
+	shell will remove the internal newlines.
+
+    Added display(n) builtin which does almost the same as config("display",n)
+    except that rather than causing an execution with an out-of-range or
+    bad-type argument type, it simply writes a message to stderr.  This
+    also now happens to the errmax() builtin.
+
+    Added qtime.cal to the standard calc library.
+
+    Added another command line flag to calc:
+
+	-d 	Disable display of the opening title and config("lib_debug",0)
+
+	The command:
+
+	    calc 'read qtime; qtime(2)'
+
+	will output something like:
+
+	    qtime(utc_hr_offset) defined
+	    It's nearly ten past six.
+
+	whereas:
+
+	    calc -d 'read qtime; qtime(2)'
+
+	will just say:
+
+	    It's nearly ten past six.
+
+    A call of errmax(-1) will prevent errcount from aborting calc.
+
+
+Following is the change from calc version 2.11.0t1 to 2.11.0t6.3:
 
     Removed the makefile symbol MAIN.  Now forcing all functions to correctly
     be declared main.  To satisfy some old broken compilers, a return 0;

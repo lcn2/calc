@@ -32,7 +32,6 @@ static VALUE oldvalue;			/* previous calculation value */
 static BOOL saveval = TRUE;		/* to enable or disable saving */
 static int calc_errno;			/* most recent error-number */
 static int errcount;			/* counts calls to error_value */
-static int errmax = ERRMAX;		/* maximum for errcount without abort */
 static BOOL go;
 
 /*
@@ -2467,7 +2466,7 @@ o_return(void)
 
 /*ARGSUSED*/
 static void
-o_jumpeq(FUNC *fp, BOOL *dojump)
+o_jumpz(FUNC *fp, BOOL *dojump)
 {
 	VALUE *vp;
 	int i;			/* result of comparison */
@@ -2491,7 +2490,7 @@ o_jumpeq(FUNC *fp, BOOL *dojump)
 
 /*ARGSUSED*/
 static void
-o_jumpne(FUNC *fp, BOOL *dojump)
+o_jumpnz(FUNC *fp, BOOL *dojump)
 {
 	VALUE *vp;
 	int i;			/* result of comparison */
@@ -2510,6 +2509,20 @@ o_jumpne(FUNC *fp, BOOL *dojump)
 	stack--;
 	if (i)
 		*dojump = TRUE;
+}
+
+
+/*
+ * jumpnn invokes a jump if top value points to a null value
+ */
+/*ARGSUSED*/
+static void
+o_jumpnn(FUNC *fp, BOOL *dojump)
+{
+	if (stack->v_addr->v_type) {
+		*dojump = TRUE;
+		stack--;
+	}
 }
 
 
@@ -3111,7 +3124,8 @@ o_quit(FUNC *fp, long index)
 		s = findstring(index);
 		cp = s->s_str;
 	}
-	if ((fp->f_name[0] == '*') && (fp->f_name[1] == '\0')) {
+	if (inputisterminal() && (fp->f_name[0] == '*')
+			 && (fp->f_name[1] == '\0')) {
 		if (cp)
 			printf("%s\n", cp);
 		hist_term();
@@ -3126,6 +3140,8 @@ o_quit(FUNC *fp, long index)
 		printf("%s\n", cp);
 	else
 		printf("Quit statement executed\n");
+	if (!inputisterminal() && fp->f_name[0] == '*')
+		closeinput();
 	go = FALSE;
 }
 
@@ -3243,7 +3259,7 @@ error_value(int e)
 	calc_errno = e;
 	if (e > 0)
 		errcount++;
-	if (errcount > errmax && !ign_errmax) {
+	if (errmax >= 0 && errcount > errmax) {
 		math_error("Error %d caused errcount to exceed errmax", e);
 		/*NOTREACHED*/
 	}
@@ -3277,21 +3293,6 @@ set_errcount(int e)
 	res = errcount;
 	if (e >= 0)
 		errcount = e;
-	return res;
-}
-
-
-/*
- * set_errno - return and set errno
- */
-int
-set_errmax(int e)
-{
-	int res;
-
-	res = errmax;
-	if (e >= 0)
-		errmax = e;
 	return res;
 }
 
@@ -3427,8 +3428,8 @@ static struct opcode opcodes[MAX_OPCODE+1] = {
 	{o_duplicate,	OPNUL,  "DUPLICATE"},	/* duplicate top value */
 	{o_pop,		OPNUL,  "POP"},		/* pop top value */
 	{o_return,	OPRET,  "RETURN"},	/* return value of function */
-	{o_jumpeq,	OPJMP,  "JUMPEQ"},	/* jump if value zero */
-	{o_jumpne,	OPJMP,  "JUMPNE"},	/* jump if value nonzero */
+	{o_jumpz,	OPJMP,  "JUMPZ"},	/* jump if value zero */
+	{o_jumpnz,	OPJMP,  "JUMPNZ"},	/* jump if value nonzero */
 	{o_jump,	OPJMP,  "JUMP"},	/* jump unconditionally */
 	{o_usercall,	OPTWO,  "USERCALL"},	/* call a user function */
 	{o_getvalue,	OPNUL,  "GETVALUE"},	/* convert address to value */
@@ -3531,7 +3532,8 @@ static struct opcode opcodes[MAX_OPCODE+1] = {
 	{o_hashop,	OPNUL,	"HASHOP"},	/* binary hash op */
 	{o_backslash,	OPNUL,	"BACKSLASH"},	/* unary backslash op */
 	{o_setminus,	OPNUL,	"SETMINUS"},	/* binary backslash op */
-	{o_plus,	OPNUL,	"PLUS"}		/* unary + op */
+	{o_plus,	OPNUL,	"PLUS"},	/* unary + op */
+	{o_jumpnn,	OPJMP,	"JUMPNN"}	/* jump if non-null */
 };
 
 
@@ -3695,7 +3697,8 @@ calculate(FUNC *fp, int argcount)
 		freevalue(&locals[i]);
 	if (locals != localtable)
 		free(locals);
-	printf("\t\"%s\": line %ld\n", funcname, funcline);
+	if (conf->calc_debug & 2)
+		printf("\t\"%s\": line %ld\n", funcname, funcline);
 	while (stack > beginstack)
 		freevalue(stack--);
 	funcname = oldname;
@@ -3751,11 +3754,11 @@ dumpop(unsigned long *pc)
 		case OP_INDEXADDR:
 			printf(" %ld %ld\n", pc[0], pc[1]);
 			return 3;
-		case OP_PRINT: case OP_JUMPEQ: case OP_JUMPNE: case OP_JUMP:
+		case OP_PRINT: case OP_JUMPZ: case OP_JUMPNZ: case OP_JUMP:
 		case OP_CONDORJUMP: case OP_CONDANDJUMP: case OP_CASEJUMP:
 		case OP_INITSTATIC: case OP_MATCREATE: case OP_OBJCREATE:
 		case OP_SHOW: case OP_ELEMINIT: case OP_ELEMADDR:
-		case OP_ELEMVALUE:
+		case OP_ELEMVALUE: case OP_JUMPNN:
 			printf(" %ld\n", *pc);
 			return 2;
 		case OP_NUMBER: case OP_IMAGINARY:

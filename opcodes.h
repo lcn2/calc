@@ -38,8 +38,8 @@
 #define OP_DUPLICATE	23L	/* duplicate top value on stack */
 #define OP_POP		24L	/* pop top value from stack */
 #define OP_RETURN	25L	/* return value of function */
-#define OP_JUMPEQ	26L	/* jump if top value is zero */
-#define OP_JUMPNE	27L	/* jump if top value is nonzero */
+#define OP_JUMPZ	26L	/* jump if top value is zero */
+#define OP_JUMPNZ	27L	/* jump if top value is nonzero */
 #define OP_JUMP		28L	/* jump unconditionally */
 #define OP_USERCALL	29L	/* call a user-defined function */
 #define OP_GETVALUE	30L	/* convert address to value */
@@ -143,7 +143,8 @@
 #define OP_BACKSLASH	128L	/* unary backslash */
 #define OP_SETMINUS	129L	/* binary backslash */
 #define OP_PLUS		130L	/* unary + */
-#define MAX_OPCODE	130L	/* highest legal opcode */
+#define OP_JUMPNN	131L	/* jump if top value is non-null */
+#define MAX_OPCODE	131L	/* highest legal opcode */
 
 
 /*

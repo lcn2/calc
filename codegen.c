@@ -261,6 +261,8 @@ getfunction(void)
 {
 	char *name;		/* parameter name */
 	int type;		/* type of token read */
+	LABEL label;
+	long index;
 
 	(void) tokenmode(TM_DEFAULT);
 	if (gettoken() != T_SYMBOL) {
@@ -276,9 +278,11 @@ getfunction(void)
 	beginfunc(name, FALSE);
 	enterfuncscope();
 	if (gettoken() != T_LEFTPAREN) {
-		scanerror(T_SEMICOLON, "Left parenthesis expected for function");
+		scanerror(T_SEMICOLON,
+			"Left parenthesis expected for function");
 		return;
 	}
+	index = 0;
 	for (;;) {
 		type = gettoken();
 		if (type == T_RIGHTPAREN)
@@ -292,12 +296,22 @@ getfunction(void)
 			case SYM_UNDEFINED:
 			case SYM_GLOBAL:
 			case SYM_STATIC:
-				(void) addparam(name);
+				index = addparam(name);
 				break;
 			default:
 				scanerror(T_NULL, "Parameter \"%s\" is already defined", name);
 		}
 		type = gettoken();
+		if (type == T_ASSIGN) {
+			clearlabel(&label);
+			addopone(OP_PARAMADDR, index);
+			addoplabel(OP_JUMPNN, &label);
+			getopassignment();
+			addop(OP_ASSIGNPOP);
+			setlabel(&label);
+			type = gettoken();
+		}
+
 		if (type == T_RIGHTPAREN)
 			break;
 		if (type != T_COMMA) {
@@ -598,25 +612,25 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 					scanerror(T_SEMICOLON, "CONTINUE not within FOR, WHILE, or DO");
 					return;
 				}
-				addoplabel(OP_JUMPNE, contlabel);
+				addoplabel(OP_JUMPNZ, contlabel);
 				break;
 			case T_BREAK:
 				if (breaklabel == NULL_LABEL) {
 					scanerror(T_SEMICOLON, "BREAK not within FOR, WHILE, or DO");
 					return;
 				}
-				addoplabel(OP_JUMPNE, breaklabel);
+				addoplabel(OP_JUMPNZ, breaklabel);
 				break;
 			case T_GOTO:
 				if (gettoken() != T_SYMBOL) {
 					scanerror(T_SEMICOLON, "Missing label in goto");
 					return;
 				}
-				addop(OP_JUMPNE);
+				addop(OP_JUMPNZ);
 				addlabel(tokensymbol());
 				break;
 			default:
-				addoplabel(OP_JUMPEQ, &label1);
+				addoplabel(OP_JUMPZ, &label1);
 				rescantoken();
 				getstatement(contlabel, breaklabel, NULL_LABEL, NULL_LABEL);
 				if (gettoken() != T_ELSE) {
@@ -667,7 +681,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 			contlabel = &label1;
 			rescantoken();
 			(void) getexprlist();
-			addoplabel(OP_JUMPNE, &label3);
+			addoplabel(OP_JUMPNZ, &label3);
 			addoplabel(OP_JUMP, breaklabel);
 			if (gettoken() != T_SEMICOLON) {
 				(void) tokenmode(oldmode);
@@ -708,7 +722,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		clearlabel(breaklabel);
 		setlabel(contlabel);
 		getcondition();
-		addoplabel(OP_JUMPEQ, breaklabel);
+		addoplabel(OP_JUMPZ, breaklabel);
 		getstatement(contlabel, breaklabel, NULL_LABEL, NULL_LABEL);
 		addoplabel(OP_JUMP, contlabel);
 		setlabel(breaklabel);
@@ -731,7 +745,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		}
 		setlabel(contlabel);
 		getcondition();
-		addoplabel(OP_JUMPNE, &label3);
+		addoplabel(OP_JUMPNZ, &label3);
 		setlabel(breaklabel);
 		(void) tokenmode(oldmode);
 		return;
@@ -1377,6 +1391,21 @@ getassignment (void)
 {
 	int type;		/* type of expression */
 
+	switch(gettoken()) {
+		case T_COMMA:
+		case T_SEMICOLON:
+		case T_NEWLINE:
+		case T_RIGHTPAREN:
+		case T_RIGHTBRACKET:
+		case T_RIGHTBRACE:
+		case T_EOF:
+			addop(OP_UNDEF);
+			rescantoken();
+			return EXPR_RVALUE;
+	}
+
+	rescantoken();
+
 	type = getaltcond();
 
 	switch (gettoken()) {
@@ -1441,7 +1470,7 @@ getaltcond(void)
 	}
 	clearlabel(&donelab);
 	clearlabel(&altlab);
-	addoplabel(OP_JUMPEQ, &altlab);
+	addoplabel(OP_JUMPZ, &altlab);
 	type = getaltcond();
 	if (gettoken() != T_COLON) {
 		scanerror(T_SEMICOLON, "Missing colon for conditional expression");

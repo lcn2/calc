@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997 David I. Bell
+ * Copyright (c) 1999 David I. Bell
  * Permission is granted to use, distribute, or modify this source,
  * provided that this copyright notice remains intact.
  *
@@ -12,7 +12,7 @@
 #define MAJOR_VER	2	/* major version */
 #define MINOR_VER	11	/* minor version */
 #define MAJOR_PATCH	0	/* patch level or 0 if no patch */
-#define MINOR_PATCH	"6.3"	/* test number or empty string if no patch */
+#define MINOR_PATCH	"7"	/* test number or empty string if no patch */
 
 /*
  * calc version constants

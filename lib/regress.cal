@@ -22,7 +22,7 @@ prob = 0;				/* clear problem counter */
 
 global junk;				/* throw away value */
 junk = errcount(0);			/* clear error count */
-junk = errmax(0x7fffffff);		/* set maximum error very high */
+junk = errmax(-1);			/* prevent errcount from abouting */
 
 global ecnt;				/* expected value of errcount() */
 ecnt = 0;				/* clear expected errcount() value */
@@ -7468,7 +7468,9 @@ read -once unitfrac;
 print	'9826: read -once unitfrac';
 read -once varargs;
 print	'9827: read -once varargs';
-print	'9828: Ending read of selected calc libs';
+read -once qtime;
+print	'9828: read -once qtime';
+print	'9829: Ending read of selected calc libs';
 
 
 /*

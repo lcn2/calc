@@ -213,7 +213,6 @@ extern BOOL precvalue(VALUE *v1, VALUE *v2);
 extern VALUE error_value(int e);
 extern int set_errno(int e);
 extern int set_errcount(int e);
-extern int set_errmax(int e);
 extern long countlistitems(LIST *lp);
 extern void addlistitems(LIST *lp, VALUE *vres);
 extern void addlistinv(LIST *lp, VALUE *vres);

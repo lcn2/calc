@@ -2259,11 +2259,11 @@ bsdilist: ${DISTLIST} ${BUILD_H_SRC} calc.1
 ##
 
 check: all ./lib/regress.cal ${REGRESS_CAL}
-	${CALC_ENV} ./calc -i -q read regress
+	${CALC_ENV} ./calc -d -q read regress
 
 chk: ./lib/regress.cal ${REGRESS_CAL}
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	${CALC_ENV} ./calc -i -q read regress 2>&1 | ${AWK} -f check.awk
+	${CALC_ENV} ./calc -d -q read regress 2>&1 | ${AWK} -f check.awk
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 ##

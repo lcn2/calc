@@ -82,6 +82,7 @@ int allow_exec = TRUE;	/* FALSE => may not execute any commands */
 int p_flag = FALSE;	/* TRUE => pipe mode */
 int q_flag = FALSE;	/* TRUE => don't execute rc files */
 int u_flag = FALSE;	/* TRUE => unbuffer stdin and stdout */
+int d_flag = FALSE;	/* TRUE => disable heading, lib_debug == 0 */
 
 
 /*
@@ -98,7 +99,7 @@ int interactive = FALSE; /* TRUE if interactive session (no cmd args) */
 int post_init = FALSE;	/* TRUE setjmp for math_error is readready */
 
 int no_env = FALSE;	/* TRUE (-e) => ignore env vars on startup */
-int ign_errmax = FALSE;	/* TRUE (-i) => ignore when errcount exceeds errmax */
+int errmax = ERRMAX;	/* if >= 0,  maximum value for errcount */
 
 NUMBER *epsilon_default;	/* default allowed error for float calcs */
 
@@ -153,6 +154,13 @@ libcalc_call_me_first(void)
 		conf = config_copy(&newstd);
 	} else {
 		conf = config_copy(&oldstd);
+	}
+
+	/*
+	 * -d turns off lib_debug
+	 */
+	if (d_flag) {
+		conf->lib_debug = 0;
 	}
 
 	/*
@@ -229,10 +237,6 @@ reinitialize(void)
 	math_setfp(stdout);
 	resetscopes();
 	resetinput();
-	if (q_flag == FALSE && allow_read) {
-		q_flag = TRUE;
-		runrcfiles();
-	}
 	(void) openterminal();
 }
 
