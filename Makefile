@@ -957,15 +957,6 @@ UTIL_PROGS= align32 fposval have_uid_t longlong have_const \
 	have_ustat have_getsid have_getpgid \
 	have_gettime have_getprid ver_calc have_strdup
 
-# These files are required by the regress.cal regression test.
-#
-REGRESS_CAL= ./lib/lucas_chk.cal ./lib/natnumset.cal ./lib/surd.cal \
-	./lib/test1700.cal ./lib/test2300.cal ./lib/test2600.cal \
-	./lib/test2700.cal ./lib/test3100.cal ./lib/test3300.cal \
-	./lib/test3400.cal ./lib/test3500.cal ./lib/test4000.cal \
-	./lib/test4100.cal ./lib/test4600.cal ./lib/test5100.cal \
-	./lib/test5200.cal
-
 # The complete list of makefile vars passed down to custom/Makefile.
 #
 CUSTOM_PASSDOWN= Q="${Q}" \
@@ -1057,7 +1048,12 @@ C_SRC= ${LIBSRC} ${CALCSRC} ${UTIL_C_SRC}
 # These files are found (but not built) in the distribution
 #
 DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README \
-	calc.man lint.sed HOWTO.INSTALL ${UTIL_MISC_SRC}
+	  calc.man lint.sed HOWTO.INSTALL ${UTIL_MISC_SRC}
+
+# These files are used to make (but not built) a calc .a library
+#
+CALCLIBLIST= ${LIBSRC} ${UTIL_C_SRC} ${LIB_H_SRC} ${MAKE_FILE} \
+	     ${UTIL_MISC_SRC} BUGS CHANGES LIBRARY
 
 # complete list of .o files
 #
@@ -1074,7 +1070,7 @@ PROGS= calc ${UTIL_PROGS}
 # complete list of targets
 #
 TARGETS= ${CALC_LIBS} custom/.all calc sample/sample \
-	lib/.all help/.all help/builtin calc.1
+	 lib/.all help/.all help/builtin calc.1
 
 
 ###
@@ -2559,17 +2555,29 @@ distlist: ${DISTLIST}
 	${Q}(for i in ${DISTLIST}; do \
 		echo $$i; \
 	done; \
-	(cd help; ${MAKE} ${HELP_PASSDOWN} distlist); \
-	(cd lib; ${MAKE} ${LIB_PASSDOWN} distlist); \
-	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} distlist); \
-	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} distlist)) | ${SORT}
+	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
+	(cd lib; ${MAKE} ${LIB_PASSDOWN} $@); \
+	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
+	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | ${SORT}
 
 distdir:
 	${Q}(echo .; \
-	(cd help; ${MAKE} ${HELP_PASSDOWN} distdir); \
-	(cd lib; ${MAKE} ${LIB_PASSDOWN} distdir); \
-	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} distdir); \
-	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} distdir)) | ${SORT}
+	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
+	(cd lib; ${MAKE} ${LIB_PASSDOWN} $@); \
+	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
+	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | ${SORT}
+
+calcliblist:
+	${Q}(for i in ${CALCLIBLIST}; do \
+		echo $$i; \
+	done; \
+	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
+	(cd lib; ${MAKE} ${LIB_PASSDOWN} $@); \
+	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
+	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | ${SORT}
+
+calcliblistfmt:
+	${Q}${MAKE} calcliblist | ${FMT} -64 | ${SED} -e 's/^/	/'
 
 ##
 #
@@ -2583,10 +2591,10 @@ distdir:
 #
 ##
 
-check: all ./lib/regress.cal ${REGRESS_CAL}
+check: all ./lib/regress.cal
 	${CALC_ENV} ./calc -d -q read regress
 
-chk: ./lib/regress.cal ${REGRESS_CAL}
+chk: ./lib/regress.cal
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	${CALC_ENV} ./calc -d -q read regress 2>&1 | ${AWK} -f check.awk
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
@@ -2690,7 +2698,6 @@ env:
 	@echo "UTIL_TMP=${UTIL_TMP}"; echo ""
 	@echo "UTIL_PROGS=${UTIL_PROGS}"; echo ""
 	@echo "LIB_H_SRC=${LIB_H_SRC}"; echo ""
-	@echo "REGRESS_CAL=${REGRESS_CAL}"; echo ""
 	@echo "CUSTOM_PASSDOWN=${CUSTOM_PASSDOWN}"; echo ""
 	@echo "SAMPLE_PASSDOWN=${SAMPLE_PASSDOWN}"; echo ""
 	@echo "HELP_PASSDOWN=${HELP_PASSDOWN}"; echo ""

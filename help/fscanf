@@ -16,7 +16,7 @@ DESCRIPTION
 
     Otherwise, until the terminating null character of fmt is encountered
     or end-of-file for fs is reached, characters other than '%' and white
-    space are read from fmt and compared with the corresponding chracters
+    space are read from fmt and compared with the corresponding characters
     read from fs.  If the characters match, the reading continues.  If they
     do not match, an integer value is returned and the file position for
     fs is the position of the non-matching character.  If white space
@@ -72,7 +72,7 @@ DESCRIPTION
     might be taken to suggest a number like +2345; 'r' might suggest
     a representation like -27/49; 'e' might suggest a representation like
     1.24e-7; 'f' might suggest a representation like 27.145. However, there
-    is no test that the the result conforms to the specifier.  Whatever
+    is no test that the result conforms to the specifier.  Whatever
     the specifier in these cases, the result depends on the characters read
     until a space or other exceptional character is read.  The
     characters read may include one or more occurrences of +, -, * as

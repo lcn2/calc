@@ -285,6 +285,10 @@ H_SRC= ${CUSTOM_H_SRC}
 DISTLIST= ${CUSTCALC_SRC} ${CUSTOM_CALC_FILES} ${CUSTOM_HELP} \
 	${INSTALL_H_SRC} CUSTOM_CAL HOW_TO_ADD ${MAKE_FILE}
 
+# These files are used to make (but not built) a calc .a library
+#
+CALCLIBLIST= ${CUSTCALC_SRC} ${INSTALL_H_SRC} ${MAKE_FILE} HOW_TO_ADD
+
 # complete list of targets
 #
 TARGETS= libcustcalc.a ${CUSTCALC_OBJ}
@@ -351,6 +355,13 @@ distlist: ${DISTLIST}
 
 distdir:
 	${Q}echo custom
+
+calcliblist: ${CALCLIBLIST}
+	${Q}for i in ${CALCLIBLIST} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo custom/$$i; \
+	    fi; \
+	done
 
 ##
 #

@@ -263,6 +263,10 @@ H_SRC= ${SAMPLE_H_SRC}
 #
 DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} README_SAMPLE
 
+# These files are used to make (but not built) a calc .a library
+#
+CALCLIBLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} README_SAMPLE
+
 # complete list of targets
 #
 TARGETS= many_random test_random
@@ -326,6 +330,13 @@ distlist: ${DISTLIST}
 
 distdir:
 	${Q}echo sample
+
+calcliblist:
+	${Q}for i in ${CALCLIBLIST} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo sample/$$i; \
+	    fi; \
+	done
 
 ##
 #

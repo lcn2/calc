@@ -10,7 +10,7 @@ TYPES
     return	nil
 
 DESCRIPTION
-    This function forces and buffered output to the file associated with fd.
+    This function forces a buffered output to the file associated with fd.
 
 EXAMPLE
     > fd = fopen("/tmp/file", "w")
@@ -18,7 +18,7 @@ EXAMPLE
     > fflush(fd)
 
 LIMITS
-    fd must be associaed with an open file
+    fd must be associated with an open file
 
 LIBRARY
     none

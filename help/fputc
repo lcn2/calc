@@ -22,7 +22,7 @@ EXAMPLE
 	    "c"
 
 LIMITS
-    fd must be associaed with an open file
+    fd must be associated with an open file
 
 LIBRARY
     none

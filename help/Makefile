@@ -147,6 +147,10 @@ DISTLIST= ${STD_HELP_FILES} ${DETAIL_HELP} ${MAKE_FILE} \
 	obj.file builtin.top builtin.end funclist.sed \
 	errorcodes.hdr errorcodes.sed
 
+# These files are used to make (but not built) a calc .a library
+#
+CALCLIBLIST=
+
 all: ${FULL_HELP_FILES} full ${DETAIL_HELP} ${DETAIL_CLONE} \
      ${SINGULAR_FILES} calc .all
 
@@ -394,6 +398,13 @@ distlist: ${DISTLIST}
 
 distdir:
 	${Q}echo help
+
+calcliblist:
+	${Q}for i in ${CALCLIBLIST} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo help/$$i; \
+	    fi; \
+	done
 
 # The BSDI cdrom makefile expects all help files to be pre-built.  This rule
 # creats these fils so that the release can be shipped off to BSDI.  You can

@@ -11,7 +11,7 @@ TYPES
     return	null value
 
 DESCRIPTION
-    In forall(x,y), y is to the the name of a function; that function
+    In forall(x,y), y is the name of a function; that function
     is performed in succession for all elements of x.  This is similar
     to modify(x, y) but x is not changed.
 

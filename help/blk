@@ -74,7 +74,7 @@ DESCRIPTION
     chunksize is created by C = blk(B, newlen, newchunk), only the first
     min(len, newlen) octets being copied from B; later octets are
     assigned zero value.  If omitted, newlen and newchunk default to
-    the current datalen and chunk-size for B.  The curent datalen,
+    the current datalen and chunk-size for B.  The current datalen,
     chunksize and number of allocated octets for B may be changed by:
 
 			B = blk(B, newlen, newchunk).

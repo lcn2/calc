@@ -13,7 +13,7 @@ TYPES
 DESCRIPTION
     This function opens the file named filename.  A file can be
     opened for either reading, writing, or appending.  The mode
-    is controlled by the mode flag as folllows:
+    is controlled by the mode flag as follows:
 
 	"r"	reading
 	"w"	writing

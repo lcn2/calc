@@ -1,5 +1,5 @@
 NAME
-    freeglobals - free memory used for values of global variabls
+    freeglobals - free memory used for values of global variables
 
 SYNOPSIS
     freeglobals()

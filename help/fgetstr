@@ -14,7 +14,7 @@ DESCRIPTION
 
     If the stream cannot be read, an error value is returned.
 
-    Otherwise the function retrurns the string of characters from the
+    Otherwise the function returns the string of characters from the
     current file position to the first null character ('\0') (the file
     position for further reading then being immediately after the '\0'),
     or if no null character is encountered, the string of characters to

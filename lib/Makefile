@@ -51,6 +51,10 @@ CALC_FILES= README bigprime.cal deg.cal ellip.cal lucas.cal lucas_chk.cal \
 #
 DISTLIST= ${CALC_FILES} ${MAKE_FILE}
 
+# These files are used to make (but not built) a calc .a library
+#
+CALCLIBLIST=
+
 all: ${CALC_FILES} ${MAKE_FILE} .all
 
 # used by the upper level Makefile to determine of we have done all
@@ -79,6 +83,13 @@ distlist: ${DISTLIST}
 
 distdir:
 	${Q}echo lib
+
+calcliblist:
+	${Q}for i in ${CALCLIBLIST} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo lib/$$i; \
+	    fi; \
+	done
 
 clean:
 

@@ -10,7 +10,7 @@ TYPES
     return	files, int or null
 
 DESCRIPTION
-    This function, then given the argument fnum, will use it as an
+    This function, when given the argument fnum, will use it as an
     index into an internal table of open file and return a file value.
     If that entry in the table is not in use, then the null value is
     returned instead.  When no args are given, the maximum number of

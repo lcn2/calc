@@ -14,7 +14,7 @@ DESCRIPTION
     the open file associated with fd.  Unlike fgetline, the trailing
     newline is included in the return string.
 
-    If a line is read, is returned, otherwise (EOF or ERROR) nil is returned.
+    If a line is read, it is returned, otherwise (EOF or ERROR) nil is returned.
 
 EXAMPLE
     > fd = fopen("/tmp/newfile", "w")
@@ -30,7 +30,7 @@ EXAMPLE
 	    "chongo was here"
 
 LIMITS
-    fd must be associaed with an open file
+    fd must be associated with an open file
 
 LIBRARY
     none

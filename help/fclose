@@ -20,7 +20,7 @@ DESCRIPTION
     Standard input, standard output and standard error are always opened
     and cannot be closed.
 
-    The truth value of an closed file is FALSE.
+    The truth value of a closed file is FALSE.
 
     The fclose function returns the numeric value of errno if
     there had been an error using the file, or the null value if
