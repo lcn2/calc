@@ -604,7 +604,7 @@ hash_str(int type, char *str, HASH *state)
 	 */
 	return state;
 }
- 
+
 
 /*
  * hash_STR - hash a STRING

@@ -58,7 +58,7 @@ c_pzasusb8(char *name, int count, VALUE **vals)
 	 */
 	h = (USB8 *) z.v;
 	for (i=0; i < half_cnt; ++i) {
-		printf("%d:\t", i);
+		printf("%ld:\t", i);
 		for (j=0; j < half_len; ++j) {
 			printf("%02x", (int)(*h++));
 		}

@@ -93,7 +93,7 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	FALSE,			/* skip duplicate block output lines */
 	BLK_BASE_HEX,		/* block octet print base */
 	BLK_FMT_HD_STYLE,	/* block output format */
-	0,			/* calc library debug level */
+	3,			/* calc library debug level */
 	0,			/* internal calc debug level */
 	0 			/* user defined debug level */
 };
@@ -128,7 +128,7 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	FALSE,			/* skip duplicate block output lines */
 	BLK_BASE_HEX,		/* block octet print base */
 	BLK_FMT_HD_STYLE,	/* block output format */
-	0,			/* calc library debug level */
+	3,			/* calc library debug level */
 	0,			/* internal calc debug level */
 	0 			/* user defined debug level */
 };

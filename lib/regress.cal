@@ -28,7 +28,7 @@ global ecnt;				/* expected value of errcount() */
 ecnt = 0;				/* clear expected errcount() value */
 
 initcfg = config("all", "oldstd");	/* set config to startup default */
-initcfg = config("lib_debug", -1);	/* disable lib startup messages */
+initcfg = config("lib_debug", -4);	/* disable lib startup messages */
 initcfg = config("calc_debug", 1);	/* enable more internal debugging */
 initcfg = config("all");		/* save state for later use */
 

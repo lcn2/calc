@@ -12,7 +12,7 @@ If you write something that you think is useful, please send it to:
 
 By convention, a lib file only defines and/or initializes functions,
 objects and variables.  (The regress.cal and testxxx.cal regression test
-suite is an exception.)  Also by convention, an additional usage message 
+suite is an exception.)  Also by convention, an additional usage message
 regarding important object and functions is printed.
 
 If a lib file needs to load another lib file, it should use the -once
@@ -537,7 +537,7 @@ test3500.cal
     testh(str, n, N, verbose)
     test3500(verbose, n, N)
 
-    This script is used by regress.cal to test the functions frem, 
+    This script is used by regress.cal to test the functions frem,
     fcnt, gcdrem.
 
 test4000.cal
