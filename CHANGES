@@ -50,6 +50,9 @@ The following are the changes from calc version 2.11.1 to date:
 
     Added ./.calcinit to the default calcrc.
 
+    Added cscript/README and help cscript to document the calc shell
+    script supplied with calc.
+
 
 The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
 
@@ -4715,8 +4718,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: CHANGES,v 29.4 1999/12/17 10:06:46 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: CHANGES,v 29.5 1999/12/17 10:36:02 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

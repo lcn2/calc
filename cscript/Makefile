@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.3 $
-# @(#) $Id: Makefile,v 29.3 1999/12/14 19:30:19 chongo Exp $
+# @(#) $Revision: 29.4 $
+# @(#) $Id: Makefile,v 29.4 1999/12/17 11:30:35 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -82,7 +82,7 @@ SCRIPT_SRC= mersenne.calc piforever.calc plus.calc simple.calc
 
 # These files are found (but not built) in the distribution
 #
-DISTLIST= ${SCRIPT_SRC} ${MAKE_FILE}
+DISTLIST= ${SCRIPT_SRC} ${MAKE_FILE} README
 
 # These files are used to make (but not built) a calc .a library
 #

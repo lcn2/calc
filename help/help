@@ -35,6 +35,7 @@ following topics:
     new_custom		information about how to add new custom functions
     resource		standard calc resource files
     script		using calc shell scripts
+    cscript		info on the calc shell scripts supplied with calc
 
     archive		where to get the latest versions of calc
     bugs		known bugs and mis-features
@@ -118,8 +119,8 @@ as the same effect as:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: help,v 29.1 1999/12/14 09:15:52 chongo Exp $
+## @(#) $Revision: 29.2 $
+## @(#) $Id: help,v 29.2 1999/12/17 10:33:00 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/help,v $
 ##
 ## Under source code control:	1991/07/21 04:37:20

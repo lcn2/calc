@@ -1,0 +1,64 @@
+calc shell script examples
+--------------------------
+
+These calc shell scripts are provided because they serve as examples of
+how use the calc language, and/or because the authors thought them to
+be useful!
+
+If you write something that you think is useful, please send it to:
+
+    calc-tester at postofc dot corp dot sgi dot com
+
+    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+
+For more info, see:
+
+    help script
+    help cscript
+
+=-=
+
+mersenne exp
+
+    Print the value of 2^exp-1.
+
+
+piforever
+
+    Print the value of pi forever, or as long as you cpu / memory allows.
+
+
+plus arg ...
+
+    Print the sum of 1 or more arguments.
+
+
+simple
+
+    A trivial example of a calc shell script.
+
+## Copyright (C) 1999  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.3 $
+## @(#) $Id: README,v 29.3 1999/12/17 10:34:54 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/README,v $
+##
+## Under source code control:	1999/12/17 10:23:40
+## File existed as early as:	1999
+##
+## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/

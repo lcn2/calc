@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.1 $
-# @(#) $Id: Makefile,v 29.1 1999/12/14 09:16:34 chongo Exp $
+# @(#) $Revision: 29.2 $
+# @(#) $Id: Makefile,v 29.2 1999/12/17 10:33:00 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -87,7 +87,11 @@ STD_HELP_FILES_8= operator statement
 
 BLT_HELP_FILES_9= resource
 
-STD_HELP_FILES_10= types usage script unexpected variable
+STD_HELP_FILES_10= types usage script
+
+BLT_HELP_FILES_10a= cscript
+
+STD_HELP_FILES_10b= unexpected variable
 
 BLT_HELP_FILES_11= bindings custom_cal libcalc new_custom resource
 
@@ -108,6 +112,7 @@ FULL_HELP_FILES= ${STD_HELP_FILES_1} ${STD_HELP_FILES_2} \
 		${BLT_HELP_FILES_5} ${STD_HELP_FILES_6} \
 		${SPECIAL_HELP_7} ${STD_HELP_FILES_8} \
 		${BLT_HELP_FILES_9} ${STD_HELP_FILES_10} \
+		${BLT_HELP_FILES_10a} ${STD_HELP_FILES_10b} \
 		${BLT_HELP_FILES_11} ${STD_HELP_FILES_12} \
 		${BLT_HELP_FILES_13} ${STD_HELP_FILES_14} \
 		${BLT_HELP_FILES_14} ${STD_HELP_FILES_15}
@@ -117,6 +122,7 @@ FULL_HELP_FILES= ${STD_HELP_FILES_1} ${STD_HELP_FILES_2} \
 STD_HELP_FILES= ${STD_HELP_FILES_1} ${STD_HELP_FILES_2} \
 		${STD_HELP_FILES_4} ${STD_HELP_FILES_6} \
 		${STD_HELP_FILES_8} ${STD_HELP_FILES_10} \
+		${STD_HELP_FILES_10b} \
 		${STD_HELP_FILES_12} ${STD_HELP_FILES_14} \
 		${STD_HELP_FILES_15}
 
@@ -127,6 +133,7 @@ STD_HELP_FILES= ${STD_HELP_FILES_1} ${STD_HELP_FILES_2} \
 #
 BLT_HELP_FILES= ${BLT_HELP_FILES_3} ${BLT_HELP_FILES_5} \
 		${BLT_HELP_FILES_9} \
+		${BLT_HELP_FILES_10a} \
 		${BLT_HELP_FILES_11} ${BLT_HELP_FILES_13} \
 		${BLT_HELP_FILES_14}
 
@@ -328,6 +335,18 @@ COPYING: ../COPYING
 COPYING-LGPL: ../COPYING-LGPL
 	rm -f $@
 	cp ../COPYING-LGPL $@
+	${CHMOD} 0444 $@
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo ''; \
+	else \
+	    true; \
+	fi
+
+cscript: ../cscript/README
+	rm -f $@
+	cp ../cscript/README $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
