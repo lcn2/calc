@@ -320,7 +320,7 @@ o_matcreate(FUNC *fp, long dim)
 	long tmp;		/* temporary */
 	long size;		/* size of matrix */
 
-	if ((dim <= 0) || (dim > MAXDIM)) {
+	if ((dim < 0) || (dim > MAXDIM)) {
 		math_error("Bad dimension %ld for matrix", dim);
 		/*NOTREACHED*/
 	}
@@ -489,8 +489,8 @@ o_indexaddr(FUNC *fp, long dim, long writeflag)
 	BLOCK *blk;
 
 	flag = (writeflag != 0);
-	if (dim <= 0)  {
-		math_error("Zero or negative dimensions for indexing");
+	if (dim < 0)  {
+		math_error("Negative dimension for indexing");
 		/*NOTREACHED*/
 	}
 	val = &stack[-dim];

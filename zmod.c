@@ -543,7 +543,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 		}
 
 		/* zzz */
-		for (pp = &lowpowers[2]; pp < &lowpowers[POWNUMS]; pp++) {
+		for (pp = &lowpowers[2]; pp <= &lowpowers[POWNUMS-1]; pp++) {
 			pp->len = 0;
 			pp->v = NULL;
 		}
@@ -558,16 +558,17 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 			curshift -= POWBITS;
 
 		/*
-		 * Calculate the result by examining the power POWBITS bits at a time,
-		 * and use the table of low powers at each iteration.
+		 * Calculate the result by examining the power POWBITS bits at
+		 * a time, and use the table of low powers at each iteration.
 		 */
 		for (;;) {
 			curpow = (curhalf >> curshift) & (POWNUMS - 1);
 			pp = &lowpowers[curpow];
 
 			/*
-			 * If the small power is not yet saved in the table, then
-			 * calculate it and remember it in the table for future use.
+			 * If the small power is not yet saved in the table,
+			 * then calculate it and remember it in the table for
+			 * future use.
 			 */
 			if (pp->v == NULL) {
 				if (curpow & 0x1)
@@ -575,10 +576,13 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 				else
 					modpow = _one_;
 
-				for (curbit = 0x2; curbit <= curpow; curbit *= 2) {
+				for (curbit = 0x2;
+				     curbit <= curpow;
+				     curbit *= 2) {
 					pp = &lowpowers[curbit];
 					if (pp->v == NULL) {
-						zsquare(lowpowers[curbit/2], &temp);
+						zsquare(lowpowers[curbit/2],
+							&temp);
 						zmod5(&temp);
 						zcopy(temp, pp);
 						zfree(temp);
@@ -599,8 +603,8 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 			}
 
 			/*
-			 * If the power is nonzero, then accumulate the small power
-			 * into the result.
+			 * If the power is nonzero, then accumulate the small
+			 * power into the result.
 			 */
 			if (curpow) {
 				zmul(ans, *pp, &temp);
@@ -611,20 +615,20 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 			}
 
 			/*
-			 * Select the next POWBITS bits of the power, if there is
-			 * any more to generate.
+			 * Select the next POWBITS bits of the power, if
+			 * there is any more to generate.
 			 */
 			curshift -= POWBITS;
 			if (curshift < 0) {
-				if (hp-- == z2.v)
+				if (hp == z2.v)
 					break;
-				curhalf = *hp;
+				curhalf = *--hp;
 				curshift = BASEB - POWBITS;
 			}
 
 			/*
-			 * Square the result POWBITS times to make room for the next
-			 * chunk of bits.
+			 * Square the result POWBITS times to make room for
+			 * the next chunk of bits.
 			 */
 			for (i = 0; i < POWBITS; i++) {
 				zsquare(ans, &temp);
@@ -635,7 +639,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 			}
 		}
 
-		for (pp = &lowpowers[2]; pp < &lowpowers[POWNUMS]; pp++) {
+		for (pp = &lowpowers[2]; pp <= &lowpowers[POWNUMS-1]; pp++) {
 			if (pp->v != NULL)
 				freeh(pp->v);
 		}
@@ -669,7 +673,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 	 * Modulus or power is small enough to perform the power raising
 	 * directly.  Initialize the table of powers.
 	 */
-	for (pp = &lowpowers[2]; pp < &lowpowers[POWNUMS]; pp++) {
+	for (pp = &lowpowers[2]; pp <= &lowpowers[POWNUMS-1]; pp++) {
 		pp->len = 0;
 		pp->v = NULL;
 	}
@@ -757,7 +761,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 		}
 	}
 
-	for (pp = &lowpowers[2]; pp < &lowpowers[POWNUMS]; pp++) {
+	for (pp = &lowpowers[2]; pp <= &lowpowers[POWNUMS-1]; pp++) {
 		if (pp->v != NULL)
 			freeh(pp->v);
 	}

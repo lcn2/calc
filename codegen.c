@@ -1135,6 +1135,21 @@ getonematrix(int symtype)
 	}
 	rescantoken();
 
+	if (gettoken() == T_LEFTPAREN) {
+		if (isrvalue(getexprlist())) {
+			scanerror(T_SEMICOLON, "Lvalue expected");
+			return;
+		}
+		if (gettoken() != T_RIGHTPAREN) {
+			scanerror(T_SEMICOLON, "Missing right parenthesis");
+			return;
+		}
+		getonematrix(symtype);
+		addop(OP_ASSIGN);
+		return;
+	}
+	rescantoken();
+
 	if (gettoken() != T_LEFTBRACKET) {
 		rescantoken();
 		scanerror(T_SEMICOLON, "Left-bracket expected");
@@ -1150,23 +1165,32 @@ getonematrix(int symtype)
 	 * will patch the correct value back into the opcode.
 	 */
 	if (gettoken() == T_RIGHTBRACKET) {
-		clearopt();
-		patchpc = curfunc->f_opcodecount + 1;
-		addopone(OP_NUMBER, (long) -1);
-		clearopt();
-		addop(OP_ZERO);
-		addopone(OP_MATCREATE, dim);
-		addop(OP_ZERO);
-		addop(OP_INITFILL);
-		count = 0;
-		if (gettoken() == T_ASSIGN)
+		if (gettoken() == T_ASSIGN) {
+			clearopt();
+			patchpc = curfunc->f_opcodecount + 1;
+			addopone(OP_NUMBER, (long) -1);
+			clearopt();
+			addop(OP_ZERO);
+			addopone(OP_MATCREATE, dim);
+			addop(OP_ZERO);
+			addop(OP_INITFILL);
+			count = 0;
 			count = getinitlist();
-		else
+			index = addqconstant(itoq(count));
+			if (index < 0)
+				math_error("Cannot allocate constant");
+			curfunc->f_opcodes[patchpc] = index;
+			return;
+		}
+		rescantoken();
+		addopone(OP_MATCREATE, 0);
+		if (gettoken() == T_LEFTBRACKET) {
+			creatematrix();
+		} else {
 			rescantoken();
-		index = addqconstant(itoq(count));
-		if (index < 0)
-			math_error("Cannot allocate constant");
-		curfunc->f_opcodes[patchpc] = index;
+			addop(OP_ZERO);
+		}
+		addop(OP_INITFILL);
 		return;
 	}
 
@@ -1186,41 +1210,45 @@ creatematrix(void)
 {
 	long dim;
 
-	dim = 1;
+	dim = 0;
 
-	while (TRUE) {
+	for (;;) {
+		if (gettoken() == T_RIGHTBRACKET) {
+			addopone(OP_MATCREATE, dim);
+			if (gettoken() == T_LEFTBRACKET) {
+				creatematrix();
+			} else {
+				rescantoken();
+				addop(OP_ZERO);
+			}
+			addop(OP_INITFILL);
+			return;
+		}
+		rescantoken();
+		if (++dim > MAXDIM) {
+			scanerror(T_SEMICOLON, "Only %ld dimensions allowed", MAXDIM);
+			return;
+		}
 		(void) getopassignment();
 		switch (gettoken()) {
 			case T_RIGHTBRACKET:
-			case T_COMMA:
 				rescantoken();
+			case T_COMMA:
 				addop(OP_ONE);
 				addop(OP_SUB);
 				addop(OP_ZERO);
 				break;
 			case T_COLON:
 				(void) getopassignment();
-				break;
+				switch(gettoken()) {
+					case T_RIGHTBRACKET:
+						rescantoken();
+					case T_COMMA:
+						continue;
+				}
+				/*FALLTHRU*/
 			default:
 				rescantoken();
-		}
-		switch (gettoken()) {
-			case T_RIGHTBRACKET:
-				addopone(OP_MATCREATE, dim);
-				if (gettoken() == T_LEFTBRACKET) {
-					creatematrix();
-				} else {
-					rescantoken();
-					addop(OP_ZERO);
-				}
-				addop(OP_INITFILL);
-				return;
-			case T_COMMA:
-				if (++dim <= MAXDIM)
-					break;
-				scanerror(T_SEMICOLON, "Only %ld dimensions allowed", MAXDIM);
-				return;
-			default:
 				scanerror(T_SEMICOLON, "Illegal matrix definition");
 				return;
 		}
@@ -2191,8 +2219,14 @@ getmatargs(void)
 	 * finds that the element will be referenced for writing, then
 	 * it will call writeindexop to change the flag in the opcode.
 	 */
-	dim = 1;
+	dim = 0;
+	if (gettoken() == T_RIGHTBRACKET) {
+		addoptwo(OP_INDEXADDR, (long) dim, (long) FALSE);
+		return;
+	}
+	rescantoken();
 	for (;;) {
+		++dim;
 		(void) getopassignment();
 		switch (gettoken()) {
 			case T_RIGHTBRACKET:
@@ -2200,7 +2234,6 @@ getmatargs(void)
 						(long) FALSE);
 				return;
 			case T_COMMA:
-				dim++;
 				break;
 			default:
 				rescantoken();

@@ -327,7 +327,7 @@ qfindredc(NUMBER *q)
 	/*
 	 * First try for an exact pointer match in the table.
 	 */
-	for (rcp = redc_cache; rcp < &redc_cache[MAXREDC]; rcp++) {
+	for (rcp = redc_cache; rcp <= &redc_cache[MAXREDC-1]; rcp++) {
 		if (q == rcp->rnum) {
 			rcp->age = ++redc_age;
 			return rcp->redc;
@@ -337,7 +337,7 @@ qfindredc(NUMBER *q)
 	/*
 	 * Search the table again looking for a value which matches.
 	 */
-	for (rcp = redc_cache; rcp < &redc_cache[MAXREDC]; rcp++) {
+	for (rcp = redc_cache; rcp <= &redc_cache[MAXREDC-1]; rcp++) {
 		if (rcp->age && (qcmp(q, rcp->rnum) == 0)) {
 			rcp->age = ++redc_age;
 			return rcp->redc;
@@ -355,7 +355,7 @@ qfindredc(NUMBER *q)
 	}
 
 	bestrcp = NULL;
-	for (rcp = redc_cache; rcp < &redc_cache[MAXREDC]; rcp++) {
+	for (rcp = redc_cache; rcp <= &redc_cache[MAXREDC-1]; rcp++) {
 		if ((bestrcp == NULL) || (rcp->age < bestrcp->age))
 			bestrcp = rcp;
 	}

@@ -584,8 +584,20 @@ stringsegment(STRING *s1, long n1, long n2)
 	s->s_str = c;
 	c1 = s1->s_str + n1;
 	if (n1 >= n2) {
-		while (len-- > 0)
+		/*
+		 * We prevent the c1 pointer from walking behind s1_s_str
+		 * by stopping one short of the end and running the loop one
+		 * more time.
+		 *
+		 * We could stop the loop with just len-- > 0, but stopping
+		 * short and running the loop one last time manually helps make
+		 * code checkers such as insure happy.
+		 */
+		while (len-- > 1) {
 			*c++ = *c1--;
+		}
+		/* run the loop manually one last time */
+		*c++ = *c1;
 	} else {
 		while (len-- > 0)
 			*c++ = *c1++;

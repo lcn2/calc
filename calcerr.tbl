@@ -336,3 +336,5 @@ E_STRCPY	Bad argument type for strcpy
 E_STRNCPY	Bad argument type for strncpy
 E_BACKSLASH	Bad argument type for unary backslash
 E_SETMINUS	Bad argument type for setminus
+E_INDICES1	Bad first argument type for indices
+E_INDICES2	Bad second argument for indices

@@ -91,6 +91,8 @@ extern CONST char *error_table[E__COUNT+2];	/* calc coded error messages */
 extern void matrandperm(MATRIX *M);
 extern void listrandperm(LIST *lp);
 extern int idungetc(FILEID id, int ch);
+extern LIST* associndices(ASSOC *ap, long index);
+extern LIST* matindices(MATRIX *mp, long index);
 
 extern int stoponerror;
 
@@ -3558,7 +3560,7 @@ f_mattrans(VALUE *vp)
 
 	if (vp->v_type != V_MAT)
 		return error_value(E_MATTRANS1);
-	if (vp->v_mat->m_dim != 2)
+	if (vp->v_mat->m_dim > 2)
 		return error_value(E_MATTRANS2);
 	result.v_type = V_MAT;
 	result.v_mat = mattrans(vp->v_mat);
@@ -3569,15 +3571,8 @@ f_mattrans(VALUE *vp)
 static VALUE
 f_det(VALUE *vp)
 {
-	MATRIX *m;
-
 	if (vp->v_type != V_MAT)
 		return error_value(E_DET1);
-	m = vp->v_mat;
-	if (m->m_dim != 2)
-		return error_value(E_DET2);
-	if ((m->m_max[0] - m->m_min[0]) != (m->m_max[1] - m->m_min[1]))
-		return error_value(E_DET3);
 
 	return matdet(vp->v_mat);
 }
@@ -4460,6 +4455,36 @@ f_assoc(int count, VALUE **vals)
 	result.v_subtype = V_NOSUBTYPE;
 
 	result.v_assoc = assocalloc(0L);
+	return result;
+}
+
+
+static VALUE
+f_indices(VALUE *v1, VALUE *v2)
+{
+	VALUE result;
+	LIST *lp;
+
+	if (v2->v_type != V_NUM || zge31b(v2->v_num->num))
+		return error_value(E_INDICES2);
+
+	switch (v1->v_type) {
+		case V_ASSOC:
+			lp = associndices(v1->v_assoc, qtoi(v2->v_num));
+			break;
+		case V_MAT:
+			lp = matindices(v1->v_mat, qtoi(v2->v_num));
+			break;
+		default:
+			return error_value(E_INDICES1);
+	}
+
+	result.v_type = V_NULL;
+	result.v_subtype = V_NOSUBTYPE;
+	if (lp) {
+		result.v_type = V_LIST;
+		result.v_list = lp;
+	}
 	return result;
 }
 
@@ -6763,10 +6788,9 @@ f_blk(int count, VALUE **vals)
 	result.v_type = V_BLOCK;
 	result.v_subtype = V_NOSUBTYPE;
 
-	vp = *vals;
 	type = 0;
-	result.v_subtype = V_NOSUBTYPE;
 	if (count > 0) {
+		vp = *vals;
 		type = vp->v_type;
 		if (type == V_STR || type == V_NBLOCK || type == V_BLOCK) {
 			vals++;
@@ -7552,6 +7576,8 @@ static CONST struct builtin builtins[] = {
 	 "integral log of a number base 2"},
 	{"im", 1, 1, 0, OP_IM, 0, 0,
 	 "imaginary part of complex number"},
+	{"indices", 2, 2, 0, OP_NOP, 0, f_indices,
+	 "indices of a specified assoc or mat value"},
 	{"inputlevel", 0, 0, 0, OP_NOP, 0, f_inputlevel,
 	 "current input depth"},
 	{"insert", 2, IN, FA, OP_NOP, 0, f_listinsert,

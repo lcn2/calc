@@ -26,6 +26,20 @@ The following are the changes from calc version 2.11.0t10 to date:
     domul() function in zmil.c thanks to a patch by Ernest Bowen
     <ernie@turing.une.edu.au>.
 
+    Added zero dimensional matrices.  A zero dimensional matrix is defined as:
+
+	mat A[]   or	A = mat[]
+
+    Updated the help/mat file to reflect the current status of matrices
+    including zero dimensional matrices.
+
+    Added indices() builtin function as written by Ernest Bowen
+    <ernie@turing.une.edu.au> developed from an idea of Klaus Seistrup
+    <klaus@seistrup.dk>.  See help/indices for details.
+
+    Fixed a number of insure warnings as reported by Michel van der List
+    <vanderlistmj@sbphrd.com>.
+
 
 The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
 

@@ -48,7 +48,6 @@ Very High priority items:
 	    history		command history
 	    interrupt		how interrupts are handled
 	    list		using lists
-	    mat			using matrices
 	    obj			user defined data types
 	    operator		math, relational, logic and variable access ...
 	    statement		flow control and declaration statements

@@ -1724,7 +1724,7 @@ randcopy(CONST RAND *state)
 		math_error("can't allocate RAND state");
 		/*NOTREACHED*/
 	}
-	*ret = *state;
+	memcpy(ret, state, sizeof(RAND));
 
 	/*
 	 * return copy

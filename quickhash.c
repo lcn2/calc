@@ -271,12 +271,14 @@ mathash(MATRIX *m, QCKHASH val)
 	 * hash 10 more elements if they exist
 	 */
 	i = 16;
-	vp = &m->m_table[16];
-	skip = (m->m_size / 11) + 1;
-	while (i < m->m_size) {
-		val = hashvalue(vp, val);
-		i += skip;
-		vp += skip;
+	if (i < m->m_size) {
+		vp = (VALUE *)&m->m_table[i];
+		skip = (m->m_size / 11) + 1;
+		while (i < m->m_size) {
+			val = hashvalue(vp, val);
+			i += skip;
+			vp += skip;
+		}
 	}
 	return val;
 }

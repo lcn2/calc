@@ -44,7 +44,8 @@ matadd(MATRIX *m1, MATRIX *m2)
 		max1 = m1->m_max[dim];
 		min2 = m2->m_min[dim];
 		max2 = m2->m_max[dim];
-		if ((min1 && min2 && (min1 != min2)) || ((max1-min1) != (max2-min2))) {
+		if ((min1 && min2 && (min1 != min2)) ||
+		    ((max1-min1) != (max2-min2))) {
 			math_error("Incompatible matrix bounds for add");
 			/*NOTREACHED*/
 		}
@@ -85,7 +86,8 @@ matsub(MATRIX *m1, MATRIX *m2)
 		max1 = m1->m_max[dim];
 		min2 = m2->m_min[dim];
 		max2 = m2->m_max[dim];
-		if ((min1 && min2 && (min1 != min2)) || ((max1-min1) != (max2-min2))) {
+		if ((min1 && min2 && (min1 != min2)) ||
+		    ((max1-min1) != (max2-min2))) {
 			math_error("Incompatible matrix bounds for sub");
 			/*NOTREACHED*/
 		}
@@ -131,15 +133,89 @@ matmul(MATRIX *m1, MATRIX *m2)
 {
 	register MATRIX *res;
 	long i1, i2, max1, max2, index, maxindex;
-	VALUE *v1, *v2;
+	VALUE *v1, *v2, *vres;
 	VALUE sum, tmp1, tmp2;
 
+	if (m1->m_dim == 0) {
+		i2 = m2->m_size;
+		v2 = m2->m_table;
+		res = matalloc(i2);
+		*res = *m2;
+		vres = res->m_table;
+		while (i2-- > 0)
+			mulvalue(m1->m_table, v2++, vres++);
+		return res;
+	}
+	if (m2->m_dim == 0) {
+		i1 = m1->m_size;
+		v1 = m1->m_table;
+		res = matalloc(i1);
+		*res = *m1;
+		vres = res->m_table;
+		while (i1-- > 0)
+			mulvalue(v1++, m2->m_table, vres++);
+		return res;
+	}
+	if (m1->m_dim == 1 && m2->m_dim == 1) {
+		if (m1->m_max[0]-m1->m_min[0] != m2->m_max[0]-m2->m_min[0]) {
+			math_error("Incompatible bounds for 1D * 1D  matmul");
+			/*NOTREACHED*/
+		}
+		res = matalloc(m1->m_size);
+		*res = *m1;
+		v1 = m1->m_table;
+		v2 = m2->m_table;
+		vres = res->m_table;
+		for (index = m1->m_size; index > 0; index--)
+			mulvalue(v1++, v2++, vres++);
+		return res;
+	}
+	if (m1->m_dim == 1 && m2->m_dim == 2) {
+		if (m1->m_max[0]-m1->m_min[0] != m2->m_max[0]-m2->m_min[0]) {
+			math_error("Incompatible bounds for 1D * 2D matmul");
+			/*NOTREACHED*/
+		}
+		res = matalloc(m2->m_size);
+		*res = *m2;
+		i1 = m1->m_max[0] - m1->m_min[0] + 1;
+		max2 = m2->m_max[1] - m2->m_min[1] + 1;
+		v1 = m1->m_table;
+		v2 = m2->m_table;
+		vres = res->m_table;
+		while (i1-- > 0) {
+			i2 = max2;
+			while (i2-- > 0)
+				mulvalue(v1, v2++, vres++);
+			v1++;
+		}
+		return res;
+	}
+	if (m1->m_dim == 2 && m2->m_dim == 1) {
+		if (m1->m_max[1]-m1->m_min[1] != m2->m_max[0]-m2->m_min[0]) {
+			math_error("Incompatible bounds for 2D * 1D matmul");
+			/*NOTREACHED*/
+		}
+		res = matalloc(m1->m_size);
+		*res = *m1;
+		i1 = m1->m_max[0] - m1->m_min[0] + 1;
+		max1 = m1->m_max[1] - m1->m_min[1] + 1;
+		v1 = m1->m_table;
+		vres = res->m_table;
+		while (i1-- > 0) {
+			v2 = m2->m_table;
+			i2 = max1;
+			while (i2-- > 0)
+				mulvalue(v1++, v2++, vres++);
+		}
+		return res;
+	}
+
 	if ((m1->m_dim != 2) || (m2->m_dim != 2)) {
-		math_error("Matrix dimension must be two for mul");
+		math_error("Matrix dimensions not compatible for mul");
 		/*NOTREACHED*/
 	}
-	if ((m1->m_max[1] - m1->m_min[1]) != (m2->m_max[0] - m2->m_min[0])) {
-		math_error("Incompatible bounds for matrix mul");
+	if ((m1->m_max[1]-m1->m_min[1]) != (m2->m_max[0]-m2->m_min[0])) {
+		math_error("Incompatible bounds for 2D * 2D matrix mul");
 		/*NOTREACHED*/
 	}
 	max1 = (m1->m_max[0] - m1->m_min[0] + 1);
@@ -164,7 +240,8 @@ matmul(MATRIX *m1, MATRIX *m2)
 				freevalue(&sum);
 				sum = tmp2;
 				v1++;
-				v2 += max2;
+				if (index+1 < maxindex)
+					v2 += max2;
 			}
 			index = (i1 * max2) + i2;
 			res->m_table[index] = sum;
@@ -185,8 +262,17 @@ matsquare(MATRIX *m)
 	VALUE *v1, *v2;
 	VALUE sum, tmp1, tmp2;
 
+	if (m->m_dim < 2) {
+		res = matalloc(m->m_size);
+		*res = *m;
+		v1 = m->m_table;
+		v2 = res->m_table;
+		for (index = m->m_size; index > 0; index--)
+			squarevalue(v1++, v2++);
+		return res;
+	}
 	if (m->m_dim != 2) {
-		math_error("Matrix dimension must be two for square");
+		math_error("Matrix dimension exceeds two for square");
 		/*NOTREACHED*/
 	}
 	if ((m->m_max[0] - m->m_min[0]) != (m->m_max[1] - m->m_min[1])) {
@@ -224,7 +310,8 @@ matsquare(MATRIX *m)
 
 
 /*
- * Compute the result of raising a square matrix to an integer power.
+ * Compute the result of raising a matrix to an integer power if
+ * dimension <= 2 and for dimension == 2, the matrix is square.
  * Negative powers mean the positive power of the inverse.
  * Note: This calculation could someday be improved for large powers
  * by using the characteristic polynomial of the matrix.
@@ -240,12 +327,13 @@ matpowi(MATRIX *m, NUMBER *q)
 	long power;		/* power to raise to */
 	FULL bit;		/* current bit value */
 
-	if (m->m_dim != 2) {
-		math_error("Matrix dimension must be two for power");
+	if (m->m_dim > 2) {
+		math_error("Matrix dimension greater than 2 for power");
 		/*NOTREACHED*/
 	}
-	if ((m->m_max[0] - m->m_min[0]) != (m->m_max[1] - m->m_min[1])) {
-		math_error("Raising non-square matrix to a power");
+	if (m->m_dim == 2 && (m->m_max[0] - m->m_min[0] !=
+			 m->m_max[1] - m->m_min[1])) {
+		math_error("Raising non-square 2D matrix to a power");
 		/*NOTREACHED*/
 	}
 	if (qisfrac(q)) {
@@ -544,6 +632,10 @@ mattrace(MATRIX *m)
 	VALUE tmp;
 	long i, j;
 
+	if (m->m_dim < 2) {
+		matsum(m, &sum);
+		return sum;
+	}
 	if (m->m_dim != 2)
 		return error_value(E_MATTRACE2);
 	i = (m->m_max[0] - m->m_min[0] + 1);
@@ -574,6 +666,8 @@ mattrans(MATRIX *m)
 	long row, col;			/* current row and column */
 	MATRIX *res;
 
+	if (m->m_dim < 2)
+		return matcopy(m);
 	res = matalloc(m->m_size);
 	res->m_dim = 2;
 	res->m_min[0] = m->m_min[1];
@@ -742,13 +836,15 @@ matindex(MATRIX *mp, BOOL create, long dim, VALUE *indices)
 	long offset;		/* current offset into array */
 	int i;			/* loop counter */
 
-	if (dim <= 0) {
-		math_error("Bad dimension %ld for matrix", dim);
+	if (dim < 0) {
+		math_error("Negative dimension %ld for matrix", dim);
 		/*NOTREACHED*/
 	}
 	for (;;) {
 		if (dim <  mp->m_dim) {
-			math_error("Indexing a %ldd matrix as a %ldd matrix", mp->m_dim, dim);
+			math_error(
+			    "Indexing a %ldd matrix as a %ldd matrix",
+			    mp->m_dim, dim);
 			/*NOTREACHED*/
 		}
 		offset = 0;
@@ -763,7 +859,8 @@ matindex(MATRIX *mp, BOOL create, long dim, VALUE *indices)
 				/*NOTREACHED*/
 			}
 			index = qtoi(q);
-			if (zge31b(q->num) || (index < mp->m_min[i]) || (index > mp->m_max[i])) {
+			if (zge31b(q->num) || (index < mp->m_min[i]) ||
+			    (index > mp->m_max[i])) {
 				math_error("Index out of bounds for matrix");
 				/*NOTREACHED*/
 			}
@@ -782,6 +879,36 @@ matindex(MATRIX *mp, BOOL create, long dim, VALUE *indices)
 		mp = vp->v_mat;
 	}
 	return vp;
+}
+
+
+/*
+ * Returns the list of indices for a matrix element with specified
+ * double-bracket index.
+ */
+LIST *
+matindices(MATRIX *mp, long index)
+{
+	LIST *lp;
+	int j;
+	long d;
+	VALUE val;
+
+	if (index < 0 || index >= mp->m_size)
+		return NULL;
+
+	lp = listalloc();
+	val.v_type = V_NUM;
+	j = mp->m_dim;
+
+	while (--j >= 0) {
+		d = mp->m_max[j] - mp->m_min[j] + 1;
+		val.v_num = itoq(index % d + mp->m_min[j]);
+		insertlistfirst(lp, &val);
+		qfree(val.v_num);
+		index /= d;
+	}
+	return lp;
 }
 
 
@@ -898,7 +1025,8 @@ matident(MATRIX *m)
 	MATRIX *res;		/* resulting matrix */
 
 	if (m->m_dim != 2) {
-		math_error("Matrix dimension must be two for setting to identity");
+		math_error(
+		    "Matrix dimension must be two for setting to identity");
 		/*NOTREACHED*/
 	}
 	if ((m->m_max[0] - m->m_min[0]) != (m->m_max[1] - m->m_min[1])) {
@@ -912,7 +1040,8 @@ matident(MATRIX *m)
 	for (row = 0; row < rows; row++) {
 		for (col = 0; col < rows; col++) {
 			val->v_type = V_NUM;
-			val->v_num = ((row == col) ? qlink(&_qone_) : qlink(&_qzero_));
+			val->v_num = ((row == col) ? qlink(&_qone_) :
+						     qlink(&_qzero_));
 			val++;
 		}
 	}
@@ -934,11 +1063,21 @@ matinv(MATRIX *m)
 	long cur;		/* current row being worked on */
 	long row, col;		/* temp row and column values */
 	VALUE *val;		/* current value in matrix*/
+	VALUE *vres;		/* current value in result for dim < 2 */
 	VALUE mulval;		/* value to multiply rows by */
 	VALUE tmpval;		/* temporary value */
 
+	if (m->m_dim < 2) {
+		res = matalloc(m->m_size);
+		*res = *m;
+		val = m->m_table;
+		vres = res->m_table;
+		for (cur = m->m_size; cur > 0; cur--)
+			invertvalue(val++, vres++);
+		return res;
+	}
 	if (m->m_dim != 2) {
-		math_error("Matrix dimension must be two for inverse");
+		math_error("Matrix dimension exceeds two for inverse");
 		/*NOTREACHED*/
 	}
 	if ((m->m_max[0] - m->m_min[0]) != (m->m_max[1] - m->m_min[1])) {
@@ -994,26 +1133,30 @@ matinv(MATRIX *m)
 			matswaprow(res, row, cur);
 		}
 		/*
-		 * Now for every other nonzero entry in the current column, subtract
-		 * the appropriate multiple of the current row to force that entry
-		 * to become zero.
+		 * Now for every other nonzero entry in the current column,
+		 * subtract the appropriate multiple of the current row to
+		 * force that entry to become zero.
 		 */
 		val = &m->m_table[cur];
-		/* ignore Saber-C warning #26 - storing bad pointer in val */
-		/*	  ok to ignore on name matinv`val */
-		for (row = 0; row < rows; row++, val += rows) {
-			if ((row == cur) || (testvalue(val) == 0))
+		for (row = 0; row < rows; row++) {
+			if ((row == cur) || (testvalue(val) == 0)) {
+				if (row+1 < rows)
+					val += rows;
 				continue;
+			}
 			mulvalue(val, &mulval, &tmpval);
 			matsubrow(m, row, cur, &tmpval);
 			matsubrow(res, row, cur, &tmpval);
 			freevalue(&tmpval);
+			if (row+1 < rows)
+				val += rows;
 		}
 		freevalue(&mulval);
 	}
 	/*
-	 * Now the original matrix has nonzero entries only on its main diagonal.
-	 * Scale the rows of the result matrix by the inverse of those entries.
+	 * Now the original matrix has nonzero entries only on its main
+	 * diagonal.  Scale the rows of the result matrix by the inverse
+	 * of those entries.
 	 */
 	val = m->m_table;
 	for (row = 0; row < rows; row++) {
@@ -1022,7 +1165,8 @@ matinv(MATRIX *m)
 			matmulrow(res, row, &mulval);
 			freevalue(&mulval);
 		}
-		val += (rows + 1);
+		if (row+1 < rows)
+			val += (rows + 1);
 	}
 	matfree(m);
 	return res;
@@ -1043,6 +1187,24 @@ matdet(MATRIX *m)
 	VALUE *vp, *vv;
 	VALUE tmp1, tmp2, tmp3;
 	BOOL neg;		/* whether to negate determinant */
+
+	if (m->m_dim < 2) {
+		vp = m->m_table;
+		i = m->m_size;
+		copyvalue(vp, &tmp1);
+
+		while (--i > 0) {
+			mulvalue(&tmp1, ++vp, &tmp2);
+			freevalue(&tmp1);
+			tmp1 = tmp2;
+		}
+		return tmp1;
+	}
+
+	if (m->m_dim != 2)
+		return error_value(E_DET2);
+	if ((m->m_max[0] - m->m_min[0]) != (m->m_max[1] - m->m_min[1]))
+		return error_value(E_DET3);
 
 	/*
 	 * Loop over each row, and eliminate all lower entries in the
@@ -1113,7 +1275,8 @@ matdet(MATRIX *m)
 			}
 		}
 		div = pivot;
-		pivot += n + 1;
+		if (k > 0)
+			pivot += n + 1;
 	}
 	if (neg)
 		negvalue(div, &tmp1);
@@ -1298,7 +1461,8 @@ matalloc(long size)
 
 	m = (MATRIX *) malloc(matsize(size));
 	if (m == NULL) {
-		math_error("Cannot get memory to allocate matrix of size %d", size);
+		math_error("Cannot get memory to allocate matrix of size %d",
+			   size);
 		/*NOTREACHED*/
 	}
 	m->m_size = size;
@@ -1384,7 +1548,8 @@ matcmp(MATRIX *m1, MATRIX *m2)
 	if ((m1->m_dim != m2->m_dim) || (m1->m_size != m2->m_size))
 		return TRUE;
 	for (i = 0; i < m1->m_dim; i++) {
-		if ((m1->m_max[i] - m1->m_min[i]) != (m2->m_max[i] - m2->m_min[i]))
+		if ((m1->m_max[i] - m1->m_min[i]) !=
+		    (m2->m_max[i] - m2->m_min[i]))
 		return TRUE;
 	}
 	v1 = m1->m_table;
@@ -1509,10 +1674,20 @@ matisident(MATRIX *m)
 	register VALUE *val;	/* current value */
 	long row, col;		/* row and column numbers */
 
+	val = m->m_table;
+	if (m->m_dim == 0) {
+		return (val->v_type == V_NUM && qisone(val->v_num));
+	}
+	if (m->m_dim == 1) {
+		for (row = m->m_min[0]; row <= m->m_max[0]; row++, val++) {
+			if (val->v_type != V_NUM || !qisone(val->v_num))
+				return FALSE;
+		}
+		return TRUE;
+	}
 	if ((m->m_dim != 2) ||
 		((m->m_max[0] - m->m_min[0]) != (m->m_max[1] - m->m_min[1])))
 			return FALSE;
-	val = m->m_table;
 	for (row = m->m_min[0]; row <= m->m_max[0]; row++) {
 		/*
 		 * We could use col = m->m_min[1]; col < m->m_max[1]
@@ -1558,15 +1733,22 @@ matprint(MATRIX *m, long max_print)
 		fullsize *= (m->m_max[i] - m->m_min[i] + 1);
 	}
 	msg = ((max_print > 0) ? "\nmat [" : "mat [");
-	for (i = 0; i < dim; i++) {
-		if (m->m_min[i])
-			math_fmt("%s%ld:%ld", msg, m->m_min[i], m->m_max[i]);
-		else
-			math_fmt("%s%ld", msg, m->m_max[i] + 1);
-		msg = ",";
+	if (dim) {
+		for (i = 0; i < dim; i++) {
+			if (m->m_min[i]) {
+				math_fmt("%s%ld:%ld", msg,
+					 m->m_min[i], m->m_max[i]);
+			} else {
+				math_fmt("%s%ld", msg, m->m_max[i] + 1);
+			}
+			msg = ",";
+		}
+	} else {
+		math_str("mat [");
 	}
-	if (max_print > fullsize)
+	if (max_print > fullsize) {
 		max_print = fullsize;
+	}
 	vp = m->m_table;
 	count = 0;
 	for (index = 0; index < fullsize; index++) {
@@ -1588,10 +1770,15 @@ matprint(MATRIX *m, long max_print)
 	for (index = 0; index < max_print; index++) {
 		msg = "	 [";
 		j = index;
-		for (i = 0; i < dim; i++) {
-			math_fmt("%s%ld", msg, m->m_min[i] + (j / sizes[i]));
-			j %= sizes[i];
-			msg = ",";
+		if (dim) {
+			for (i = 0; i < dim; i++) {
+				math_fmt("%s%ld", msg,
+					 m->m_min[i] + (j / sizes[i]));
+				j %= sizes[i];
+				msg = ",";
+			}
+		} else {
+			math_str(msg);
 		}
 		math_str("] = ");
 		printvalue(vp++, PRINT_SHORT | PRINT_UNAMBIG);

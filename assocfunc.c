@@ -47,8 +47,8 @@ associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices)
 	QCKHASH hash;
 	int i;
 
-	if (dim <= 0) {
-		math_error("No dimensions for indexing association");
+	if (dim < 0) {
+		math_error("Negative dimension for indexing association");
 		/*NOTREACHED*/
 	}
 
@@ -214,6 +214,27 @@ assocfindex(ASSOC *ap, long index)
 	if (ep == NULL)
 		return NULL;
 	return &ep->e_value;
+}
+
+
+/*
+ * Returns the list of indices for an association element with specified
+ * double-bracket index.
+ */
+LIST *
+associndices(ASSOC *ap, long index)
+{
+	ASSOCELEM *ep;
+	LIST *lp;
+	int i;
+
+	ep = elemindex(ap, index);
+	if (ep == NULL)
+		return NULL;
+	lp = listalloc();
+	for (i = 0; i < ep->e_dim; i++)
+		insertlistlast(lp, &ep->e_indices[i]);
+	return lp;
 }
 
 

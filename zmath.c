@@ -1618,15 +1618,14 @@ ztest(ZVALUE z)
 
 
 /*
- * Compare two numbers to see which is larger.
- * Returns -1 if first number is smaller, 0 if they are equal, and 1 if
- * first number is larger.  This is the same result as ztest(z2-z1).
+ * Return the sign of z1 - z2, i.e. 1 if the first integer is greater,
+ * 0 if they are equal, -1 otherwise.
  */
 FLAG
 zrel(ZVALUE z1, ZVALUE z2)
 {
-	register HALF *h1, *h2;
-	register FULL len1, len2;
+	HALF *h1, *h2;
+	LEN len;
 	int sign;
 
 	sign = 1;
@@ -1636,66 +1635,47 @@ zrel(ZVALUE z1, ZVALUE z2)
 		return -1;
 	if (z2.sign)
 		sign = -1;
-	len1 = z1.len;
-	len2 = z2.len;
-	h1 = z1.v + z1.len - 1;
-	h2 = z2.v + z2.len - 1;
-	while (len1 > len2) {
-		if (*h1--)
-			return sign;
-		len1--;
-	}
-	while (len2 > len1) {
-		if (*h2--)
-			return -sign;
-		len2--;
-	}
-	while (len1--) {
-		if (*h1-- != *h2--)
+	if (z1.len != z2.len)
+		return (z1.len > z2.len) ? sign : -sign;
+	len = z1.len;
+	h1 = z1.v + len;
+	h2 = z2.v + len;
+
+	while (len > 0) {
+		if (*--h1 != *--h2)
 			break;
+		len--;
 	}
-	if ((len1 = *++h1) > (len2 = *++h2))
-		return sign;
-	if (len1 < len2)
-		return -sign;
+	if (len > 0)
+		return (*h1 > *h2) ? sign : -sign;
 	return 0;
 }
 
 
 /*
- * Compare the absolute value two numbers to see which is larger.
- * Returns -1 if first number is smaller, 0 if they are equal, and 1 if
- * first number is larger.  This is the same result as ztest(abs(z2)-abs(z1))
- * or zrel(abs(z1), abs(z2)).
+ * Return the sign of abs(z1) - abs(z2), i.e. 1 if the first integer
+ * has greater absolute value, 0 is they have equal absolute value,
+ * -1 otherwise.
  */
 FLAG
 zabsrel(ZVALUE z1, ZVALUE z2)
 {
-	register HALF *h1, *h2;
-	register FULL len1, len2;
+	HALF *h1, *h2;
+	LEN len;
 
-	len1 = z1.len;
-	len2 = z2.len;
-	h1 = z1.v + z1.len - 1;
-	h2 = z2.v + z2.len - 1;
-	while (len1 > len2) {
-		if (*h1--)
-			return 1;
-		len1--;
-	}
-	while (len2 > len1) {
-		if (*h2--)
-			return -1;
-		len2--;
-	}
-	while (len1--) {
-		if (*h1-- != *h2--)
+	if (z1.len != z2.len)
+		return (z1.len > z2.len) ? 1 : -1;
+
+	len = z1.len;
+	h1 = z1.v + len;
+	h2 = z2.v + len;
+	while (len > 0) {
+		if (*--h1 != *--h2)
 			break;
+		len--;
 	}
-	if ((len1 = *++h1) > (len2 = *++h2))
-		return 1;
-	if (len1 < len2)
-		return -1;
+	if (len > 0)
+		return (*h1 > *h2) ? 1 : -1;
 	return 0;
 }
 
@@ -1715,8 +1695,8 @@ zcmp(ZVALUE z1, ZVALUE z2)
 	len = z1.len;
 	h1 = z1.v;
 	h2 = z2.v;
-	while (len-- > 0) {
-		if (*h1++ != *h2++)
+	while (--len > 0) {
+		if (*++h1 != *++h2)
 			return TRUE;
 	}
 	return FALSE;

@@ -1,0 +1,58 @@
+NAME
+    indices - indices for specified matrix or association element
+
+SYNOPSIS
+    indices(V, index)
+
+TYPES
+    V		matrix or association
+    index	integer
+
+    return	list with up to 4 elements
+
+DESCRIPTION
+    For 0 <= index < size(V), indices(V, index) returns list(i_0, i_1, ...)
+    for which V[i_0, i_1, ...] is the same lvalue as V[[index]].
+
+    For other values of index, a null value is returned.
+
+    This function can be useful for determining those elements for which
+    the indices satisfy some condition.  This is particularly so for
+    associations since these have no simple relation between the
+    double-bracket index and the single-bracket indices, which may be
+    non-integer numbers or strings or other types of value.  The
+    information provided by indices() is often required after the use
+    of search() or rsearch() which, when successful, return the
+    double-bracket index of the item found.
+
+EXAMPLE
+	> mat M[2,3,1:5]
+
+	> indices(M, 11)
+	list (3 elements, 2 nonzero):
+		[[0]] = 0
+		[[1]] = 2
+		[[2]] = 2
+
+	> A = assoc();
+
+	> A["cat", "dog"] = "fight";
+	> A[2,3,5,7] = "primes";
+	> A["square", 3] = 9
+
+	> indices(A, search(A, "primes"))
+	list (4 elements, 4 nonzero):
+		[[0]] = 2
+		[[1]] = 3
+		[[2]] = 5
+		[[3]] = 7
+
+LIMITS
+    abs(index) < 2^31
+
+LIBRARY
+    LIST* associndices(ASSOC *ap, long index)
+    LIST* matindices(MATRIX *mp, long index)
+
+SEE ALSO
+    assoc, mat

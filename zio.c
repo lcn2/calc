@@ -394,7 +394,7 @@ zprintb(ZVALUE z, long width)
 	didprint = 0;
 	PUTSTR("0b");
 	while (len-- >= 0) {
-		val = *hp--;
+		val = ((len >= 0) ? *hp-- : *hp);
 		mask = ((HALF)1 << (BASEB - 1));
 		while (mask) {
 			ch = '0' + ((mask & val) != 0);
@@ -481,15 +481,17 @@ zprinto(ZVALUE z, long width)
 		break;
 	}
 	len -= rem;
-	hp -= rem;
-	while (len > 0) {	/* finish in groups of 3 words */
-		PRINTF4("%08lo%08lo%08lo%08lo",
-		    (PRINT) ((hp[0]) >> 8),
-		    (PRINT) (((hp[0] & 0xff) << 16) + (hp[-1] >> 16)),
-		    (PRINT) (((hp[-1] & 0xffff) << 8) + (hp[-2] >> 24)),
-		    (PRINT) (hp[-2] & 0xffffff));
-		hp -= 3;
-		len -= 3;
+	if (len > 0) {
+		hp -= rem;
+		while (len > 0) {	/* finish in groups of 3 words */
+			PRINTF4("%08lo%08lo%08lo%08lo",
+			    (PRINT) ((hp[0]) >> 8),
+			    (PRINT) (((hp[0] & 0xff) << 16) + (hp[-1] >> 16)),
+			    (PRINT) (((hp[-1] & 0xffff) << 8) + (hp[-2] >> 24)),
+			    (PRINT) (hp[-2] & 0xffffff));
+			hp -= 3;
+			len -= 3;
+		}
 	}
 #else
 	switch (rem) {	/* handle odd amounts first */
@@ -513,13 +515,15 @@ zprinto(ZVALUE z, long width)
 		PRINTF1("0%lo", num2);
 	}
 	len -= rem;
-	hp -= rem;
-	while (len > 0) {	/* finish in groups of 3 halfwords */
-		PRINTF2("%08lo%08lo",
-		    ((((FULL) hp[0]) << 8) + (((FULL) hp[-1]) >> 8)),
-		    ((((FULL) (hp[-1] & 0xff)) << 16) + ((FULL) hp[-2])));
-		hp -= 3;
-		len -= 3;
+	if (len > 0) {
+		hp -= rem;
+		while (len > 0) {	/* finish in groups of 3 halfwords */
+			PRINTF2("%08lo%08lo",
+			    ((((FULL) hp[0]) << 8) + (((FULL) hp[-1]) >> 8)),
+			    ((((FULL) (hp[-1] & 0xff))<<16) + ((FULL) hp[-2])));
+			hp -= 3;
+			len -= 3;
+		}
 	}
 #endif
 }
