@@ -123,6 +123,7 @@ extern void resetinput(void);
 extern void setprompt(char *);
 extern BOOL inputisterminal(void);
 extern int inputlevel(void);
+extern long calclevel(void);
 extern char *inputname(void);
 extern long linenumber(void);
 extern void runrcfiles(void);

@@ -13,8 +13,6 @@ Calc Todo Items:
 
 Very High priority items:
 
-    * Write the help file for the inputlevel() builtin function.
-
     * Write the help file for the display() builtin function.
 
     * Write the help file for the stoponerror() builtin function.

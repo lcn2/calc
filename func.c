@@ -5894,6 +5894,17 @@ f_inputlevel (void)
 
 
 static VALUE
+f_calclevel (void)
+{
+	VALUE result;
+
+	result.v_type = V_NUM;
+	result.v_num = itoq(calclevel());
+	return result;
+}
+
+
+static VALUE
 f_access(int count, VALUE **vals)
 {
 	NUMBER *q;
@@ -6818,6 +6829,8 @@ static CONST struct builtin builtins[] = {
 	 "round value a to b number of binary places"},
 	{"btrunc", 1, 2, 0, OP_NOP, f_btrunc, 0,
 	 "truncate a to b number of binary places"},
+	{"calclevel", 0, 0, 0, OP_NOP, 0, f_calclevel,
+	 "current calculation level"},
 	{"ceil", 1, 1, 0, OP_NOP, 0, f_ceil,
 	 "smallest integer greater than or equal to number"},
 	{"cfappr", 1, 3, 0, OP_NOP, f_cfappr, 0,

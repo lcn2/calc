@@ -1,0 +1,36 @@
+NAME
+    inputlevel - current input level
+
+SYNOPSIS
+    inputlevel()   
+
+TYPES
+    return	nonnegative integer
+
+DESCRIPTION
+    This function returns the input level at which it is called.
+    When calc starts, it is at level zero.  The level is increased
+    by 1 each time execution starts of a read file command or a call to
+    eval(S) for some expression S which evaluates to a string.  It
+    decreases by 1 when a file being read reaches EOF or a string
+    being eval-ed reaches '\0', or earlier if a quit statement is
+    encountered at top calculation-level in the flle or string.  It
+    decreases to zero if an abort statement is encountered at any
+    function-level in the file or string.  If a quit or abort
+    statement is encountered at top calculation-level at top input-level,
+    calc is exited. 
+
+    Zero input level is also called top input level; greater values
+    of inputlevel() indicate reading at greater depths. 
+
+EXAMPLE
+    n/a
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    read, eval, quit, abort, calclevel

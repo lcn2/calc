@@ -965,7 +965,7 @@ define test_functions()
 	vrfy(strpos(a, a) == 1,		'948: strpos(a, a) == 1');
 	vrfy(system("") == 0,		'949: system("") == 0');
 	vrfy(system("true") == 0,	'950: system("true") == 0');
-	vrfy(isatty(files(0)) == 1,	'951: isatty(files(0)) == 1');
+	print		'951: test disabled due to stdin dependency';
 	print				'952: test removed';
 	print				'953: test removed';
 	vrfy(isstr(cmdbuf()) == 1,	'954: isstr(cmdbuf()) == 1');
@@ -5107,7 +5107,7 @@ define test_is()
 	vrfy(isatty(square) == 0,	  '5981: isatty(square) == 0');
 	vrfy(isatty(string) == 0,	  '5982: isatty(string) == 0');
 	vrfy(isatty(com) == 0,		  '5983: isatty(com) == 0');
-	vrfy(isatty(files(0)) == 1,	  '5984: isatty(files(0)) == 1');
+	print		'5984: test disabled due to stdin dependency';
 	/* if we pipe to awk (for make chk), stdout and stderr are not ttys */
 	print				  '5985: test unused';
 	print				  '5986: test unused';
@@ -7121,9 +7121,11 @@ print '188: parsed test_natnumset()';
 /*
  * test_somenew - test some new features
  */
+define func8200(x,y) {if (x>0) return calclevel()+func8200(x-1,y)-y; return 0;}
+print '189: define func8200(x,y)';
 define test_somenew()
 {
-	local a, s;
+	local a, s, y;
 
 	print	'8200: Starting test_somenew';
 
@@ -7155,9 +7157,18 @@ define test_somenew()
 	vrfy(hash("curds n whey") == 2376141927,
 			'8219: hash("curds n whey") == 2376141927');
 
-	print '8220: Ending test_somenew';
+	y = calclevel();
+	print				'8220: y = calclevel()';
+	vrfy(func8200(0,y) == 0,	'8221: func8200(0,y) == 0');
+	vrfy(func8200(1,y) == 1,	'8222: func8200(1,y) == 1');
+	vrfy(func8200(10,y) == 55,	'8223: func8200(10,y) == 55');
+	vrfy(func8200(100,y) == 5050,	'8224: func8200(100,y) == 5050');
+
+	vrfy(inputlevel() == 1,		'8225: inputlevel() == 1');
+
+	print '8226: Ending test_somenew';
 }
-print '189: parsed test_somenew()';
+print '190: parsed test_somenew()';
 
 
 /*
@@ -7175,7 +7186,7 @@ define test_quit()
 
 	/* 8400 serise continued after return, do not print end here */
 }
-print '190: parsed test_quit()';
+print '191: parsed test_quit()';
 
 
 /*

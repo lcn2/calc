@@ -1,0 +1,35 @@
+NAME
+    calclevel - current calculation level
+
+SYNOPSIS
+    calclevel()   
+
+TYPES
+    return	nonnegative integer
+
+DESCRIPTION
+    This function returns the calculation level at which it is called.
+    When a command is being read from a terminal or from a file,
+    calc is at calculation level zero.  The level is increased
+    by 1 each time calculation starts of a user-defined function 
+    or of eval(S) for some expression S which evaluates to a string.  It
+    decreases to zero if an error occurs or a quit or abort statement
+    is executed.  Otherwise, it decreases by 1 when the calculation
+    is completed.  Except when an error occurs or abort is executed,
+    the input level is not affected by changes in the calculation level.
+
+    Zero calculation level is also called top calculation level; greater
+    values of calclevel() indicate calculation is occurring at greater
+    depths.
+
+EXAMPLE
+    n/a
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    eval, read, quit, abort, inputlevel

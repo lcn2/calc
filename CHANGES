@@ -17,6 +17,14 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
     Fixed the BigEndian BASEB==16 regression bugs by correctly swapping
     16 bit HALFs in a 64 bit value (such as a 64 bit file pointer).
 
+    Added calclevel() builtin to calculation level at which it is called.
+
+    Added help/calclevel and help/inputlevel help files.
+
+    Removed regression tests 951 and 5984 so that the regress test will
+    run in non-interactively / without a TTY such as under Debian's
+    build daemon.
+
 
 Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:
 

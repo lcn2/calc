@@ -33,6 +33,7 @@ static BOOL saveval = TRUE;		/* to enable or disable saving */
 static int calc_errno;			/* most recent error-number */
 static int errcount;			/* counts calls to error_value */
 static BOOL go;
+static long calc_depth;
 
 /*
  * global symbols
@@ -106,6 +107,9 @@ initstack(void)
 			freevalue(stack--);
 		}
 	}
+	/* initialize calc_depth */
+
+	calc_depth = 0;
 }
 
 
@@ -3576,7 +3580,7 @@ calculate(FUNC *fp, int argcount)
 	funcname = fp->f_name;
 	funcline = 0;
 	go = TRUE;
-	abort_now = FALSE;
+	++calc_depth;
 	origargcount = argcount;
 	while (argcount < fp->f_paramcount) {
 		stack++;
@@ -3692,6 +3696,7 @@ calculate(FUNC *fp, int argcount)
 			}
 			funcname = oldname;
 			funcline = oldline;
+			--calc_depth;
 			return;
 
 		case OPSTI:	/* static initialization code */
@@ -3713,14 +3718,7 @@ calculate(FUNC *fp, int argcount)
 		freevalue(stack--);
 	funcname = oldname;
 	funcline = oldline;
-	if (abort_now && stack == stackarray) {
-		if (!stdin_tty)
-			run_state = RUN_EXIT;
-		else if (run_state < RUN_PRE_TOP_LEVEL)
-			run_state = RUN_PRE_TOP_LEVEL;
-		freefunc(curfunc);
-		longjmp(jmpbuf, 1);
-	}
+	--calc_depth;
 	return;
 }
 
@@ -3857,3 +3855,13 @@ freenumbers(FUNC *fp)
 	}
 	trimconstants();
 }
+
+
+long
+calclevel(void)
+{
+	return calc_depth - 1;
+}
+
+
+/* END CODE */
