@@ -212,6 +212,18 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
     is not defined, then calc will use calc_strdup() to simulate
     the real strdup() function.
 
+    Calc no longer makes use of sys_errlist and sys_nerr.  Some systems
+    no longer suppor these values (even though they should from a
+    legacy prospective).  Calc now relies on the fact that strerror()
+    will return NULL of no such system error exists.  System errors >=
+    10000 will be considered calc errors instead.  The Makefile symbol
+    ERRNO_DECL has gone away as well as calc_errno.c and calc_errno.h.
+
+    On system errors are are not known to to the libc strerror() function,
+    strerror() will now print something such as:
+
+	    Unknown error 9999
+
 
 Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:
 

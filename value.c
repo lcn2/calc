@@ -22,8 +22,6 @@
 
 #define LINELEN 80		/* length of a typical tty line */
 
-extern int sys_nerr;
-
 /*
  * Free a value and set its type to undefined.
  *
@@ -2694,7 +2692,7 @@ printvalue(VALUE *vp, int flags)
 	if (type < 0) {
 		if (userfunc("error_print", vp))
 			return;
-		if (-type >= sys_nerr)
+		if (-type >= E__BASE)
 			printf("Error %d", -type);
 		else
 			printf("System error %d", -type);

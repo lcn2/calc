@@ -2871,7 +2871,7 @@ print '053: parsed test_frem()';
  */
 define test_error()
 {
-	local strx, e99, list1, e999;
+	local strx, e99, list1, e9999;
 	local a, b, c, n, x;		/* used by newerror() */
 
 	print '3600: Beginning test_error';
@@ -3044,11 +3044,12 @@ define test_error()
 					'3710: newerror() == newerror("???")');
 	vrfy(newerror("") == newerror(),
 					'3711: newerror("") == newerror()');
-	e999 = error(999);
-	print				'3712: e999 = error(999)';
-	vrfy(errno() == 999,		'3713: errno() == 999');
-	vrfy(error() == e999,		'3714: error() == e999');
-	vrfy(strerror() == "Error 999",	'3715: strerror() == "Error 999"');
+	e9999 = error(9999);
+	print				'3712: e9999 = error(9999)';
+	vrfy(errno() == 9999,		'3713: errno() == 9999');
+	vrfy(error() == e9999,		'3714: error() == e9999');
+	vrfy(strerror() == "Unknown error 9999",
+				'3715: strerror() == "Unknown error 9999"');
 	x = newerror("Alpha");
 	print				'3716: x = newerror("Alpha")';
 	n = iserror(x);
@@ -3056,10 +3057,11 @@ define test_error()
 	vrfy(errno() == n,		'3718: errno() == n');
 	vrfy(error() == x,		'3719: error() == x');
 	vrfy(strerror() == "Alpha",	'3720: strerror() == "Alpha"');
-	vrfy(errno(999) == n,		'3721: errno() == n');
-	vrfy(errno() == 999,		'3722: errno() == 999');
-	vrfy(error() == e999,		'3723: error() == e999');
-	vrfy(strerror() == "Error 999",	'3724: strerror() == "Error 999"');
+	vrfy(errno(9999) == n,		'3721: errno() == n');
+	vrfy(errno() == 9999,		'3722: errno() == 9999');
+	vrfy(error() == e9999,		'3723: error() == e9999');
+	vrfy(strerror() == "Unknown error 9999",
+				'3724: strerror() == "Unknown error 9999"');
 	a = 1/0;
 	print				'3725: a = 1/0';
 	vrfy(strerror() == "Division by zero",

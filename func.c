@@ -10,14 +10,13 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/types.h>
+#include <errno.h>
 
 #if defined(FUNCLIST)
 
 #define CONST /* disabled for FUNCLIST in case NATIVE_CC doesn't have it */
 
 #else /* FUNCLIST */
-
-#include "calc_errno.h"
 
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
@@ -29,16 +28,24 @@
 #include <stdlib.h>
 #endif
 
+#include "have_string.h"
+#if defined(HAVE_STRING_H)
+#include <string.h>
+#endif
+
 #include "have_times.h"
 #if defined(HAVE_TIME_H)
 #include <time.h>
 #endif
+
 #if defined(HAVE_TIMES_H)
 #include <times.h>
 #endif
+
 #if defined(HAVE_SYS_TIME_H)
 #include <sys/time.h>
 #endif
+
 #if defined(HAVE_SYS_TIMES_H)
 #include <sys/times.h>
 #endif
@@ -4628,6 +4635,7 @@ f_strerror(int count, VALUE **vals)
 	long i;
 	char *cp;
 
+	/* parse args */
 	if (count > 0) {
 		vp = vals[0];
 		if (vp->v_type < 0) {
@@ -4639,36 +4647,44 @@ f_strerror(int count, VALUE **vals)
 			if (i < 0 || i > 32767)
 				return error_value(E_STRERROR2);
 		}
-	}
-	else
+	} else {
 		i = set_errno(-1);
+	}
 
+	/* setup return type */
 	result.v_type = V_STR;
 
+	/* change the meaning of error 0 */
 	if (i == 0)
 		i = E__BASE;
 
+	/* firewall - return generic error string if it is not assigned */
 	if (i >= nexterrnum || (i > E__HIGHEST && i < E_USERDEF)
-			|| (i < E__BASE && i >= sys_nerr)) {
-		cp = (char *) malloc(12);
+			|| (i < E__BASE && strerror(i) == NULL)) {
+		cp = (char *) malloc(sizeof("Error 1234567890")+1);
 		if (cp == NULL) {
 			math_error("Out of memory for strerror");
 			/*NOTREACHED*/
 		}
-		sprintf(cp, "Error %ld", i);
+		sprintf(cp, "Unknown error %ld", i);
 		result.v_str = makestring(cp);
 		return result;
 	}
 
-	if (i < E__BASE)		/* system error */
-		cp = (char *) sys_errlist[i];
+	/* system error */
+	if (i < E__BASE) {
+		cp = strerror(i);
 
-	else if (i >= E_USERDEF)	/* user-described error */
+	/* user-described error */
+	} else if (i >= E_USERDEF) {
 		cp = namestr(&newerrorstr, i - E_USERDEF);
 
-	else				/* calc-described error */
+	/* calc-described error */
+	} else {
 		cp = (char *)error_table[i - E__BASE];
+	}
 
+	/* return result as a V_STR */
 	result.v_str = makenewstring(cp);
 	return result;
 }
