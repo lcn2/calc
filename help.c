@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: help.c,v 29.6 2001/03/17 21:31:47 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: help.c,v 29.8 2001/04/08 08:29:28 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/help.c,v $
  *
  * Under source code control:	1997/09/14 10:58:30
@@ -62,6 +62,7 @@ static struct help_alias {
 	{".", "oldvalue"},
 	{"%", "mod"},
 	{"//", "quo"},
+	{"copy", "blkcpy"},
 	{"copying", "COPYING"},
 	{"copying-lgpl", "COPYING-LGPL"},
 	{"copying_lgpl", "COPYING-LGPL"},
@@ -70,6 +71,13 @@ static struct help_alias {
 	{"COPYRIGHT", "copyright"},
 	{"Copyleft", "copyright"},
 	{"COPYLEFT", "copyright"},
+	{"read", "command"},
+	{"write", "command"},
+	{"quit", "command"},
+	{"exit", "command"},
+	{"abort", "command"},
+	{"cd", "command"},
+	{"show", "command"},
 	{"stdlib", "resource"},
 	{NULL, NULL}
 };

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: config.h,v 29.6 2001/03/17 21:31:47 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: config.h,v 29.8 2001/04/08 09:08:57 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -83,6 +83,7 @@
 #define CONFIG_PROGRAM 35
 #define CONFIG_BASENAME 36
 #define CONFIG_VERSION 37
+#define CONFIG_WINDOWS 38
 
 
 /*
@@ -147,6 +148,7 @@ struct config {
 	int ctrl_d;		/* see CTRL_D_xyz below */
 	char *program;		/* our name */
 	char *base_name;	/* basename of our name */
+	BOOL windows;		/* TRUE => running under MS windows */
 	char *version;		/* calc version string */
 };
 typedef struct config CONFIG;
@@ -158,7 +160,8 @@ typedef struct config CONFIG;
 #define RSCDBG_STDIN_FUNC   (0x00000001)    /* interactive func define debug */
 #define RSCDBG_FILE_FUNC    (0x00000002)    /* file read func define debug */
 #define RSCDBG_FUNC_INFO    (0x00000004)    /* print extra info for show func */
-#define RSCDBG_MASK	    (0x00000007)
+#define RSCDBG_PRINT_DBG    (0x00000008)    /* print debug messages */
+#define RSCDBG_MASK	    (0x0000000f)
 
 
 /*

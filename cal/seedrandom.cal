@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: seedrandom.cal,v 29.2 2000/06/07 14:02:25 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: seedrandom.cal,v 29.3 2001/03/31 13:31:34 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/seedrandom.cal,v $
  *
  * Under source code control:	1996/01/01 08:21:00
@@ -115,7 +115,7 @@ define seedrandom(seed1, seed2, size, trials)
 			p = 2*fp+1;
 		} while (ptest(p,1,0) == 0);
 	} while(ptest(p, trials) == 0 || ptest(fp, trials) == 0);
-	if (config("resource_debug") & 3) {
+	if (config("resource_debug") & 8) {
 		print "/* 1st Blum prime */ p=", p;
 	}
 
@@ -129,7 +129,7 @@ define seedrandom(seed1, seed2, size, trials)
 			q = 2*fq+1;
 		} while (ptest(q,1,0) == 0);
 	} while(ptest(q, trials) == 0 || ptest(fq, trials) == 0);
-	if (config("resource_debug") & 3) {
+	if (config("resource_debug") & 8) {
 		print "/* 2nd Blum prime */ q=", q;
 	}
 
@@ -139,7 +139,7 @@ define seedrandom(seed1, seed2, size, trials)
 	n = p*q;				/* the Blum modulus */
 	binsize = highbit(n)+1;			/* smallest power of 2 > p*q */
 	r = pmod(rand(1<<ceil(binsize*4/5), 1<<(binsize-2)), 2, n);
-	if (config("resource_debug") & 3) {
+	if (config("resource_debug") & 8) {
 		print "/* seed quadratic residue */ r=", r;
 		print "/* newn", binsize, "bit quadratic residue*/ newn=", n;
 	}

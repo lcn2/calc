@@ -208,6 +208,28 @@ Problems with known work-a-rounds:
       or performance.  The work-a-round is to ignore these warnings
       under BSDI.
 
+    * The chi.cal resource file does not work well with odd degrees
+      of freedom.  Can someone improve this algorithm?
+
+    * The intfile.cal resource file reads and writes big or little Endian
+      integers to/from files the hard way.  It does NOT use blkcpy.  The
+      following code:
+
+	i = (ord("\n") << 16) | (ord("i") << 8) | ord("H")
+	b = blk()
+	copy(i, b)
+	fd = fopen("file", "w")
+	copy(b, fd);
+	fclose(fd)
+
+      will write an extra NUL octet to the file.  Where as:
+
+	read intfile
+	i = (ord("\n") << 16) | (ord("i") << 8) | ord("H")
+	be2file(i, "file2")
+
+      will not.
+
 ## Copyright (C) 1999  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
@@ -224,8 +246,8 @@ Problems with known work-a-rounds:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.9 $
-## @(#) $Id: BUGS,v 29.9 2001/03/18 03:34:41 chongo Exp $
+## @(#) $Revision: 29.10 $
+## @(#) $Id: BUGS,v 29.10 2001/04/08 11:32:52 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13

@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.18 $$
-# @(#) $Id: Makefile.ship,v 29.18 2001/03/18 03:26:52 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.19 $$
+# @(#) $Id: Makefile.ship,v 29.19 2001/04/08 10:54:22 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -2768,7 +2768,7 @@ depend: hsrc
 		echo "#if !defined($$tag)" > "skel/$$i"; \
 		echo "#define $$tag" >> "skel/$$i"; \
 		${SED} -n '/^#[	 ]*include[	 ]*"/p' "$$i" | \
-		    ${SORT} -u >> "skel/$$i"; \
+		    LANG=C ${SORT} -u >> "skel/$$i"; \
 		echo '#endif /* '"$$tag"' */' >> "skel/$$i"; \
 	done
 	-${Q}rm -f skel/makedep.out
@@ -2787,7 +2787,7 @@ depend: hsrc
 	${Q}mv Makefile Makefile.bak
 	${Q}${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
 	${Q}echo "" >> Makefile
-	${Q}${SED} -n '3,$$p' skel/makedep.out | ${SORT} -u >> Makefile
+	${Q}${SED} -n '3,$$p' skel/makedep.out | LANG=C ${SORT} -u >> Makefile
 	-${Q}rm -rf skel
 	-${Q}if cmp -s Makefile.bak Makefile; then \
 		echo 'Makefile was already up to date'; \
@@ -2822,19 +2822,23 @@ distlist: ${DISTLIST}
 	${Q}(for i in ${DISTLIST}; do \
 		echo $$i; \
 	done; \
+	for i in ${BUILD_H_SRC} ${BUILD_C_SRC}; do \
+		echo win32/$$i; \
+	done; \
 	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
 	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
 	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
 	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@); \
-	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | ${SORT}
+	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | LANG=C ${SORT}
 
 distdir:
 	${Q}(echo .; \
+	echo win32; \
 	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
 	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
 	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
 	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@); \
-	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | ${SORT}
+	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | LANG=C ${SORT}
 
 calcliblist:
 	${Q}(for i in ${CALCLIBLIST}; do \
@@ -2844,7 +2848,7 @@ calcliblist:
 	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
 	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
 	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@); \
-	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | ${SORT}
+	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | LANG=C ${SORT}
 
 calcliblistfmt:
 	${Q}${MAKE} calcliblist | ${FMT} -64 | ${SED} -e 's/^/	/'

@@ -47,6 +47,7 @@ Configuration parameters
 	    "ctrl_d"		The interactive meaning of ^D (Control D)
 	    "program"		Read-only calc program or shell script path
 	    "basename"		Read-only basename of the program value
+	    "windows"		Read-only indicator of MS windows
 	    "version"		Read-only calc version
 
     The "all" config value allows one to save/restore the configuration
@@ -539,6 +540,9 @@ Detailed config descriptions
 	2	Show func will display more information about a functions
 		arguments as well as more argument sdummary information.
 
+	3	During execution, allow calc standard resource files
+		to output additional debugging information.
+
     The value for config("resource_debug") in both oldstd and newstd is 3,
     but if calc is invoked with the -d flag, its initial value is zero.
     Thus, if calc is started without the -d flag, until config("resource_debug")
@@ -674,6 +678,13 @@ Detailed config descriptions
 
     =-=
 
+    config("windows")		<== NOTE: This is a read-only config value
+
+    Returns TRUE if you are running on a MS windows system, false if you
+    are running on an operating system that does not hate you.
+
+    =-=
+
     config("version")		<== NOTE: This is a read-only config value
 
     The version string of the calc program can be obtained by:
@@ -698,8 +709,8 @@ Detailed config descriptions
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: config,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: config,v 29.4 2001/04/08 09:08:27 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/config,v $
 ##
 ## Under source code control:	1991/07/21 04:37:17

@@ -55,8 +55,10 @@ by the make file:
     have_gettime.h have_getprid.h have_urandom.h have_rusage.h
     have_strdup.h
 
-NOTE: In a future release, a tarball of these files will be shipped with
-      calc so that you do not have to do much other than inspect them.
+You will find generated versions of these files located in the win32
+sub-directory.  These files may be appropriate for your Cygwin building
+needs.  Just copy the win32/*.[ch] files up into the mail calc 
+source directory.
 
 =-=
 
@@ -102,8 +104,8 @@ was changed to:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: README.WINDOWS,v 29.3 2001/03/17 21:31:47 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: README.WINDOWS,v 29.5 2001/04/08 10:57:56 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/README.WINDOWS,v $
 ##
 ## Under source code control:	2001/02/25 14:00:05

@@ -64,7 +64,7 @@ Zero value of config("resource_debug") means that no such information
 is displayed.  For other values, the non-zero bits which currently
 have meanings are as follows:
 
-    n	    Meaning of bit n of config("resource_debug")
+    n		Meaning of bit n of config("resource_debug")
 
     0	When a function is defined, redefined or undefined at
 	interactive level, a message saying what has been done
@@ -73,6 +73,12 @@ have meanings are as follows:
     1	When a function is defined, redefined or undefined during
 	the reading of a file, a message saying what has been done
 	is displayed.
+
+    2	Show func will display more information about a functions
+	arguments as well as more argument sdummary information.
+
+    3	During execution, allow calc standard resource files
+	to output additional debugging information.
 
 The value for config("resource_debug") in both oldstd and newstd is 3,
 but if calc is invoked with the -d flag, its initial value is zero.
@@ -95,6 +101,14 @@ either of the bottom 2 bits set:
 		print "obj xyz defined";
 		print "funcA([val1 [, val2]]) defined";
 		print "funcB(size, mass, ...) defined";
+	}
+
+If your the resource file needs to output special debugging informatin,
+we recommend that you check for bit 3 of the config("resource_debug")
+before printing the debug statement:
+
+	if (config("resource_debug") & 8) {
+		print "DEBUG: This a sample debug statement";
 	}
 
 =-=
@@ -126,6 +140,24 @@ bigprime.cal
     bigprime(a, m, p)
 
     A prime test, base a, on p*2^x+1 for even x>m.
+
+
+chi.cal
+
+    Z(x[, eps])
+    P(x[, eps])
+    chi_prob(chi_sq, v[, eps])
+
+    Computes the Probability, given the Null Hypothesis, that a given
+    Chi squared values >= chi_sq with v degrees of freedom.
+
+    The chi_prob() function does not work well with odd degrees of freedom.
+    It is reasonable with even degrees of freedom, although one must give
+    a sifficently small error term as the degress gets large (>100).
+
+    The Z(x) and P(x) are internal statistical funcions.
+
+    eps is an optional epsilon() like error term.
 
 
 chrem.cal
@@ -161,6 +193,33 @@ hello.cal
 
 	http://www.latech.edu/~acm/HelloWorld.shtml
 	http://www.latech.edu/~acm/helloworld/calc.html
+
+
+intfile.cal
+
+    file2be(filename)
+
+	Read filename and return an integer that is built from the
+	octets in that file in Big Endian order.  The first octets
+	of the file become the most significant bits of the integer.
+
+    file2le(filename)
+
+	Read filename and return an integer that is built from the
+	octets in that file in Little Endian order.  The first octets
+	of the file become the most significant bits of the integer.
+
+    be2file(v, filename)
+
+	Write the absolute value of v into filename in Big Endian order.
+	The v argument must be on integer.  The most significant bits
+	of the integer become the first octets of the file.
+
+    le2file(v, filename)
+
+	Write the absolute value of v into filename in Little Endian order.
+	The v argument must be on integer.  The least significant bits
+	of the integer become the last octets of the file.
 
 
 lucas.cal
@@ -756,8 +815,8 @@ xx_print.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: README,v 29.4 2000/12/17 12:26:04 chongo Exp $
+## @(#) $Revision: 29.8 $
+## @(#) $Id: README,v 29.8 2001/03/31 16:26:23 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/README,v $
 ##
 ## Under source code control:	1990/02/15 01:50:32

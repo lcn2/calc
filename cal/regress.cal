@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: regress.cal,v 29.6 2000/12/17 12:26:42 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: regress.cal,v 29.7 2001/04/08 10:09:39 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -411,10 +411,10 @@ define test_config()
 					'516: config("pow2") == 40');
 	vrfy(config("redc2") == 50,
 					'517: config("redc2") == 50');
-	vrfy(config("tilde") == "true",
-					'518: config("tilde") == "true"');
-	vrfy(config("tab") == "true",
-					'519: config("tab") == "true"');
+	vrfy(config("tilde"),
+					'518: config("tilde")');
+	vrfy(config("tab"),
+					'519: config("tab")');
 	vrfy(config("quomod") == 0,
 					'520: config("quomod") == 0');
 	vrfy(config("quo") == 2,
@@ -433,10 +433,10 @@ define test_config()
 					'527: config("outround") == 2');
 	vrfy(config("round") == 24,
 					'528: config("round") == 24');
-	vrfy(config("leadzero") == "false",
-					'529: config("leadzero") == "false"');
-	vrfy(config("fullzero") == "false",
-					'530: config("fullzero") == "false"');
+	vrfy(config("leadzero") == 0,
+					'529: config("leadzero") == 0');
+	vrfy(config("fullzero") == 0,
+					'530: config("fullzero") == 0');
 	vrfy(config("maxscan") == 20,
 					'531: config("maxscan") == 20');
 	vrfy(config("prompt") == "> ",
@@ -452,10 +452,10 @@ define test_config()
 	vrfy(config("quo", 0) == 2,	'536: config("quo", 0) == 2');
 	vrfy(config("outround", 24) == 2,
 					'537: config("outround", 24) == 2');
-	vrfy(config("leadzero","y") == "false",
-				'538: config("leadzero","y") == "false"');
-	vrfy(config("fullzero", 1) == "false",
-				'539: config("fullzero", 1) == "false"');
+	vrfy(config("leadzero","y") == 0,
+				'538: config("leadzero","y") == 0');
+	vrfy(config("fullzero", 1) == 0,
+				'539: config("fullzero", 1) == 0');
 	vrfy(config("prompt", "; ") == "> ",
 					'540: config("prompt", "; ") == "> "');
 	vrfy(config("more", ";; ") == ">> ",
@@ -467,14 +467,14 @@ define test_config()
 					'543: config("all",callcfg) == newcfg');
 	vrfy(config("display",2) == 20,
 					'544: config("display",2) == 20');
-	vrfy(config("fullzero",1) == "false",
-					'545: config("fullzero",1) == "false"');
+	vrfy(config("fullzero",1) == 0,
+					'545: config("fullzero",1) == 0');
 	vrfy(strprintf("%d %d %d", 0, 1, 2) == ".00 1.00 2.00",
 		'546: strprintf("%d %d %d", 0, 1, 2) == ".00 1.00 2.00"');
 	vrfy(config("display",20) == 2,
 					'547: config("display",20) == 2');
-	vrfy(config("fullzero",0) == "true",
-					'548: config("fullzero",0) == "true"');
+	vrfy(config("fullzero",0),
+					'548: config("fullzero",0)');
 	vrfy(strprintf("%d %d %d", 0, 1, 2) == "0 1 2",
 		'549: strprintf("%d %d %d", 0, 1, 2) == "0 1 2"');
 
@@ -996,8 +996,13 @@ define test_functions()
 	vrfy(strpos(a, "abc") == 1,	'946: strpos(a, "abc") == 1');
 	vrfy(strpos(a, "xyz") == 0,	'947: strpos(a, "xyz") == 0');
 	vrfy(strpos(a, a) == 1,		'948: strpos(a, a) == 1');
-	vrfy(system("") == 0,		'949: system("") == 0');
-	vrfy(system("true") == 0,	'950: system("true") == 0');
+	if (config("windows")) {
+	    print '949: test skipped for windows systems';
+	    print '950: test skipped for windows systems';
+	} else {
+	    vrfy(system("") == 0,		'949: system("") == 0');
+	    vrfy(system("true") == 0,		'950: system("true") == 0');
+	}
 	print		'951: test disabled due to stdin dependency';
 	print				'952: test removed';
 	print				'953: test removed';
@@ -5112,10 +5117,17 @@ define test_is()
 	 */
 	a = assoc();
 	print				  '5901: a = assoc()';
-	ofd = fopen("/dev/null", "r");
-	print				  '5902: ofd = fopen("/dev/null", "r")';
-	cfd = fopen("/dev/null", "r");
-	print				  '5903: cfd = fopen("/dev/null", "r")';
+	if (config("windows")) {
+	    ofd = fopen("NUL:", "r");
+	    print			  '5902: ofd = fopen("NUL:", "r")';
+	    cfd = fopen("NUL:", "r");
+	    print			  '5903: cfd = fopen("NUL:", "r")';
+	} else {
+	    ofd = fopen("/dev/null", "r");
+	    print			  '5902: ofd = fopen("/dev/null", "r")';
+	    cfd = fopen("/dev/null", "r");
+	    print			  '5903: cfd = fopen("/dev/null", "r")';
+	}
 	fclose(cfd);
 	print				  '5904: fclose(cfd)';
 	blk = blk();

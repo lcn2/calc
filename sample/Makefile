@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.4 $
-# @(#) $Id: Makefile,v 29.4 2001/03/17 21:37:54 chongo Exp $
+# @(#) $Revision: 29.5 $
+# @(#) $Id: Makefile,v 29.5 2001/04/08 10:53:52 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/Makefile,v $
 #
 # Under source code control:	1997/04/19 22:46:49
@@ -404,7 +404,8 @@ depend:
 	${Q}mv Makefile Makefile.bak
 	${Q}${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
 	${Q}echo "" >> Makefile
-	${Q}${SED} -n '3,$$p' skel/sample/makedep.out | ${SORT} -u >> Makefile
+	${Q}${SED} -n '3,$$p' skel/sample/makedep.out | \
+		LANG=C ${SORT} -u >> Makefile
 	-${Q}rm -rf skel
 	-${Q}if cmp -s Makefile.bak Makefile; then \
 		echo 'sample Makefile was already up to date'; \

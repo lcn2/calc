@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: lucas_chk.cal,v 29.2 2000/06/07 14:02:25 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: lucas_chk.cal,v 29.3 2001/03/31 13:31:34 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/lucas_chk.cal,v $
  *
  * Under source code control:	1991/01/11 05:41:43
@@ -336,7 +336,7 @@ lucas_chk(high_n, quiet)
 
 		/* skip primes where h>=2^n */
 		if (highbit(h_p[i]) >= n_p[i]) {
-			if (config("resource_debug") & 3) {
+			if (config("resource_debug") & 8) {
 				print "h>=2^n skip:", h_p[i]:"*2^":n_p[i]:"-1";
 			}
 			continue;

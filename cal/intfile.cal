@@ -1,0 +1,222 @@
+/*
+ * intfile - integer to file and file to integer conversion
+ *
+ * Copyright (C) 2001  Landon Curt Noll
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: intfile.cal,v 29.4 2001/04/08 08:13:10 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/intfile.cal,v $
+ *
+ * Under source code control:   2001/03/31 08:13:11
+ * File existed as early as:    2001
+ *
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
+ */
+
+
+/*
+ * NOTE: Because leading HALF values are trimmed from integer, a file
+ *	 that begins with lots of 0 bits (in the case of big endian)
+ *	 or that ends with lots of 0 bits (in the case of little endian)
+ *	 will be changed when the subsequent integer is written back.
+ */
+
+
+/*
+ * file2be - convert a file into an big endian integer
+ *
+ * given:
+ *	filename	filename to read
+ *
+ * returns:
+ *	integer read from its contents on big endian order
+ */
+define file2be(filename)
+{
+    local fd;	/* open file */
+    local ret;	/* integer to return */
+    local c;	/* character read from the file */
+    local i;
+
+    /*
+     * open the file for reading
+     */
+    fd = fopen(filename, "r");
+    if (!isfile(fd)) quit "file2be: cannot open file for reading";
+
+    /*
+     * read the contents of the file
+     *
+     * The first octets become the most significant bits of the integer.
+     */
+    ret = 0;
+    while (! isnull(c = fgetc(fd))) {
+	ret <<= 8;
+	ret += ord(c);
+    }
+
+    /*
+     * cleanup and return the integer
+     */
+    fclose(fd);
+    return ret;
+}
+
+
+/*
+ * file2le - convert a file into an little endian integer
+ *
+ * given:
+ *	filename	filename to read
+ *
+ * returns:
+ *	integer read from its contents on little endian order
+ */
+define file2le(filename)
+{
+    local fd;	/* open file */
+    local ret;	/* integer to return */
+    local c;	/* character read from the file */
+    local shft;	/* bit shift for the c value */
+    local i;
+
+    /*
+     * open the file for reading
+     */
+    fd = fopen(filename, "r");
+    if (!isfile(fd)) quit "file2le: cannot open file for reading";
+
+    /*
+     * read the contents of the file into a string
+     *
+     * The first octets become are the least significant bits of the integer.
+     */
+    ret = 0;
+    shft = 0;
+    while (! isnull(c = fgetc(fd))) {
+	ret |= (ord(c) << shft);
+	shft += 8;
+    }
+
+    /*
+     * cleanup and return the integer
+     */
+    fclose(fd);
+    return ret;
+}
+
+
+/*
+ * be2file - convert a big endian integer into a file
+ *
+ * given:
+ *	v		integer to write to the file
+ *	filename	filename to write
+ *
+ * returns:
+ *	The number of octets written to the file.
+ *
+ * NOTE: The absolute value of the integer is written to the file.
+ */
+define be2file(v, filename)
+{
+    local fd;		/* open file */
+    local octlen;	/* length of v in octets */
+    local i;
+
+    /*
+     * firewall
+     */
+    if (!isint(v)) {
+	quit "be2file: 1st arg not an integer";
+    }
+    v = abs(v);
+
+    /*
+     * open the file for writing
+     */
+    fd = fopen(filename, "w");
+    if (!isfile(fd)) quit "be2file: cannot open file for writing";
+
+    /*
+     * write the octets to the file
+     *
+     * The most significant bits of the integer become the first file octets.
+     */
+    octlen = int((highbit(v)+8) / 8);
+    for (i=octlen-1; i >= 0; --i) {
+    	fputc(fd, char(v >> (i*8)));
+    }
+
+    /*
+     * cleanup
+     */
+    fclose(fd);
+    return octlen;
+}
+
+
+/*
+ * le2file - convert a little endian integer into a file
+ *
+ * given:
+ *	v		integer to write to the file
+ *	filename	filename to write
+ *
+ * returns:
+ *	The number of octets written to the file.
+ *
+ * NOTE: The absolute value of the integer is written to the file.
+ */
+define le2file(v, filename)
+{
+    local fd;	/* open file */
+    local cnt;	/* octets written */
+
+    /*
+     * firewall
+     */
+    if (!isint(v)) {
+	quit "be2file: 1st arg not an integer";
+    }
+    v = abs(v);
+
+    /*
+     * open the file for writing
+     */
+    fd = fopen(filename, "w");
+    if (!isfile(fd)) quit "le2file: cannot open file for writing";
+
+    /*
+     * Write the octets to the file.
+     *
+     * The least significant bits of the integer become the first file octets.
+     */
+    cnt = 0;
+    while (v > 0) {
+	fputc(fd, char(v));
+	v >>= 8;
+	++cnt;
+    }
+
+    /*
+     * cleanup
+     */
+    fclose(fd);
+    return cnt;
+}

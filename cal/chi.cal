@@ -1,0 +1,251 @@
+/*
+ * chi - chi^2 probabilities with degrees of freedom for null hypothesis
+ *
+ * Copyright (C) 2001  Landon Curt Noll
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: chi.cal,v 29.2 2001/04/08 10:21:23 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/chi.cal,v $
+ *
+ * Under source code control:	2001/03/27 14:10:11
+ * File existed as early as:	2001
+ *
+ * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ */
+
+
+/*
+ * Z(x)
+ *
+ * From Handbook of Mathematical Functions
+ *	10th printing, Dec 1972 with corrections
+ *	National Bureau of Standards
+ *
+ * Section 26.2.1, p931.
+ */
+define Z(x, eps_term)
+{
+    local eps;		/* error term */
+
+    /* obtain the error term */
+    if (isnull(eps_term)) {
+    	eps = epsilon();
+    } else {
+	eps = eps_term;
+    }
+
+    /* compute Z(x) value */
+    return exp(-x*x/2, eps) / sqrt(2*pi(eps), eps);
+}
+
+
+/*
+ * P(x[, eps]) asymtotic P(x) expansion for x>0 to an given epsilon error term
+ *
+ * NOTE: If eps is omitted, the stored epsilon value is used.
+ *
+ * From Handbook of Mathematical Functions
+ *	10th printing, Dec 1972 with corrections
+ *	National Bureau of Standards
+ *
+ * 26.2.11, p932:
+ *
+ *	P(x) = 1/2 + Z(x) * sum(n=0; n < infinity){x^(2*n+1)/(1*3*5*...(2*n+1)};
+ *
+ * We continue the fraction until it is less than epsilon error term.
+ *
+ * Also note 26.2.5:
+ *
+ *	P(x) + Q(x) = 1
+ */
+define P(x, eps_term)
+{
+    local eps;		/* error term */
+    local s;		/* sum */
+    local x2;		/* x^2 */
+    local x_term;	/* x^(2*r+1) */
+    local odd_prod;	/* 1*3*5* ... */
+    local odd_term;	/* next odd value to multiply into odd_prod */
+    local term;		/* the recent term added to the sum */
+
+    /* obtain the error term */
+    if (isnull(eps_term)) {
+    	eps = epsilon();
+    } else {
+	eps = eps_term;
+    }
+
+    /* firewall */
+    if (x <= 0) {
+	if (x == 0) {
+	    return 0;	/* hack */
+	} else {
+	    quit "Q(x[,eps]) 1st argument must be >= 0";
+	}
+    }
+    if (eps <= 0) {
+	quit "Q(x[,eps]) 2nd argument must be > 0";
+    }
+
+    /*
+     * aproximate sum(n=0; n < infinity){x^(2*n+1)/(1*3*5*...(2*n+1)}
+     */
+    x2 = x*x;
+    x_term = x;
+    s = x_term;	/* 1st term */
+    odd_term = 1;
+    odd_prod = 1;
+    do {
+
+	/* compute the term */
+	odd_term += 2;
+	odd_prod *= odd_term;
+	x_term *= x2;
+	term = x_term / odd_prod;
+	s += term;
+
+    } while (term >= eps);
+
+    /* apply term and factor */
+    return 0.5 + Z(x,eps)*s;
+}
+
+
+/*
+ * chi_prob(chi_sq, v[, eps]) -  Prob of >= chi^2 with v degrees of freedom
+ *
+ *    Computes the Probability, given the Null Hypothesis, that a given
+ *    Chi squared values >= chi_sq with v degrees of freedom.
+ *
+ *    The chi_prob() function does not work well with odd degrees of freedom.
+ *    It is reasonable with even degrees of freedom, although one must give
+ *    a sifficently small error term as the degress gets large (>100).
+ *
+ * NOTE: This function does not work well with odd degrees of freedom.
+ *	 Can somebody help / find a bug / provide a better method of
+ *	 this odd degrees of freedom case?
+ *
+ * NOTE: This function works well with even degrees of freedom.  However
+ *	 when the even degrees gets large (say, as you approach 100), you
+ *	 need to increase your error term.
+ *
+ * From Handbook of Mathematical Functions
+ *	10th printing, Dec 1972 with corrections
+ *	National Bureau of Standards
+ *
+ * Section 26.4.4, p941:
+ *
+ *   For odd v:
+ *
+ *	Q(chi_sq, v) = 2*Q(chi) + 2*Z(chi) * (
+ *		     sum(r=1, r<=(r-1)/2) {(chi_sq^r/chi) / (1*3*5*...(2*r-1)});
+ *
+ *	chi = sqrt(chi_sq)
+ *
+ *	NOTE: Q(x) = 1-P(x)
+ *
+ * Section 26.4.5, p941.
+ *
+ *   For even v:
+ *
+ *	Q(chi_sq, v) = sqrt(2*pi()) * Z(chi) * ( 1 +
+ *		       sum(r=1, r=((v-2)/2)) { chi_sq^r / (2*4*...*(2r)) } );
+ *
+ *	chi = sqrt(chi_sq)
+ *
+ * Observe that:
+ *
+ *	Z(x) = exp(-x*x/2) / sqrt(2*pi());	(Section 26.2.1, p931)
+ *
+ * and thus:
+ *
+ *	sqrt(2*pi()) * Z(chi) =
+ *	sqrt(2*pi()) * Z(sqrt(chi_sq)) =
+ *	sqrt(2*pi()) * exp(-sqrt(chi_sq)*sqrt(chi_sq)/2) / sqrt(2*pi()) =
+ *	exp(-sqrt(chi_sq)*sqrt(chi_sq)/2) =
+ *	exp(-sqrt(-chi_sq/2)
+ *
+ * So:
+ *
+ *	Q(chi_sq, v) = exp(-sqrt(-chi_sq/2) * ( 1 + sum(....){...} );
+ */
+define chi_prob(chi_sq, v, eps_term)
+{
+    local eps;		/* error term */
+    local r;		/* index in finite sum */
+    local r_lim;	/* limit value for r */
+    local s;		/* sum */
+    local d;		/* demoninator (2*4*6*... or 1*3*5...) */
+    local chi_term;	/* chi_sq^r */
+    local ret;		/* return value */
+
+    /* obtain the error term */
+    if (isnull(eps_term)) {
+	eps = epsilon();
+    } else {
+	eps = eps_term;
+    }
+
+    /*
+     * odd degrees of freedom
+     */
+    if (isodd(v)) {
+
+	local chi;		/* sqrt(chi_sq) */
+
+	/* setup for sum */
+	s = 1;
+	d = 1;
+	chi = sqrt(abs(chi_sq), eps);
+	chi_term = chi;
+	r_lim = (v-1)/2;
+
+	/* compute sum(r=1, r=((v-1)/2)) {(chi_sq^r/chi) / (1*3*5...*(2r-1))} */
+	for (r=2; r <= r_lim; ++r) {
+	    chi_term *= chi_sq;
+	    d *= (2*r)-1;
+	    s += chi_term/d;
+	}
+
+	/* apply term and factor, Q(x) = 1-P(x) */
+	ret = 2*(1-P(chi)) + 2*Z(chi)*s;
+
+    /*
+     * even degrees of freedom
+     */
+    } else {
+
+	/* setup for sum */
+	s =1;
+	d = 1;
+	chi_term = 1;
+	r_lim = (v-2)/2;
+
+	/* compute sum(r=1, r=((v-2)/2)) { chi_sq^r / (2*4*...*(2r)) } */
+	for (r=1; r <= r_lim; ++r) {
+	    chi_term *= chi_sq;
+	    d *= r*2;
+	    s += chi_term/d;
+	}
+
+	/* apply factor - see observation in the main comment above */
+	ret = exp(-chi_sq/2, eps) * s;
+    }
+
+    return ret;
+}

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: config.c,v 29.4 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: config.c,v 29.6 2001/04/08 10:07:19 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -90,6 +90,7 @@ NAMETYPE configs[] = {
 	    {"ctrl-d",	CONFIG_CTRL_D},		/* alias for ctrl_d */
 	{"program",	CONFIG_PROGRAM},
 	{"basename",	CONFIG_BASENAME},
+	{"windows",	CONFIG_WINDOWS},
 	{"version",	CONFIG_VERSION},
 	{NULL,		0}
 };
@@ -136,6 +137,11 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	CTRL_D_VIRGIN_EOF,	/* ^D only exits on virgin lines */
 	NULL,			/* our name */
 	NULL,			/* basename of our name */
+#if defined(_WIN32)
+	TRUE,			/* running under windows */
+#else
+	FALSE,			/* congrats, you are not using windows */
+#endif
 	NULL			/* version */
 };
 CONFIG newstd = {	/* new non-backward compatible configuration */
@@ -176,6 +182,11 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	CTRL_D_VIRGIN_EOF,	/* ^D only exits on virgin lines */
 	NULL,			/* our name */
 	NULL,			/* basename of our name */
+#if defined(_WIN32)
+	TRUE,			/* running under windows */
+#else
+	FALSE,			/* congrats, you are not using windows */
+#endif
 	NULL			/* version */
 };
 CONFIG *conf = NULL;	/* loaded in at startup - current configuration */
@@ -822,11 +833,15 @@ setconfig(int type, VALUE *vp)
 		/*NOTREACHED*/
 
 	case CONFIG_BASENAME:
-		math_error("The program config parameter is read-only");
+		math_error("The basename config parameter is read-only");
+		/*NOTREACHED*/
+
+	case CONFIG_WINDOWS:
+		math_error("The windows config parameter is read-only");
 		/*NOTREACHED*/
 
 	case CONFIG_VERSION:
-		math_error("The program config parameter is read-only");
+		math_error("The version config parameter is read-only");
 		/*NOTREACHED*/
 
 	default:
@@ -1028,20 +1043,18 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		break;
 
 	case CONFIG_TILDE:
-		vp->v_type = V_STR;
 		if (cfg->tilde_ok) {
-			vp->v_str = makenewstring(TRUE_STRING);
+			vp->v_num = itoq(1);
 		} else {
-			vp->v_str = makenewstring(FALSE_STRING);
+			vp->v_num = itoq(0);
 		}
 		return;
 
 	case CONFIG_TAB:
-		vp->v_type = V_STR;
 		if (cfg->tab_ok) {
-			vp->v_str = makenewstring(TRUE_STRING);
+			vp->v_num = itoq(1);
 		} else {
-			vp->v_str = makenewstring(FALSE_STRING);
+			vp->v_num = itoq(0);
 		}
 		return;
 
@@ -1082,20 +1095,18 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		break;
 
 	case CONFIG_LEADZERO:
-		vp->v_type = V_STR;
 		if (cfg->leadzero) {
-			vp->v_str = makenewstring(TRUE_STRING);
+			vp->v_num = itoq(1);
 		} else {
-			vp->v_str = makenewstring(FALSE_STRING);
+			vp->v_num = itoq(0);
 		}
 		return;
 
 	case CONFIG_FULLZERO:
-		vp->v_type = V_STR;
 		if (cfg->fullzero) {
-			vp->v_str = makenewstring(TRUE_STRING);
+			vp->v_num = itoq(1);
 		} else {
-			vp->v_str = makenewstring(FALSE_STRING);
+			vp->v_num = itoq(0);
 		}
 		return;
 
@@ -1118,11 +1129,10 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		break;
 
 	case CONFIG_BLKVERBOSE:
-		vp->v_type = V_STR;
 		if (cfg->blkverbose) {
-			vp->v_str = makenewstring(TRUE_STRING);
+			vp->v_num = itoq(1);
 		} else {
-			vp->v_str = makenewstring(FALSE_STRING);
+			vp->v_num = itoq(0);
 		}
 		return;
 
@@ -1159,11 +1169,10 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		break;
 
 	case CONFIG_VERBOSE_QUIT:
-		vp->v_type = V_STR;
 		if (cfg->verbose_quit) {
-			vp->v_str = makenewstring(TRUE_STRING);
+			vp->v_num = itoq(1);
 		} else {
-			vp->v_str = makenewstring(FALSE_STRING);
+			vp->v_num = itoq(0);
 		}
 		return;
 
@@ -1192,6 +1201,14 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 			vp->v_str = makestring(strdup(base_name));
 		} else {
 			vp->v_str = makenewstring(cfg->base_name);
+		}
+		return;
+
+	case CONFIG_WINDOWS:
+		if (cfg->windows) {
+			vp->v_num = itoq(1);
+		} else {
+			vp->v_num = itoq(0);
 		}
 		return;
 
@@ -1295,6 +1312,7 @@ config_cmp(CONFIG *cfg1, CONFIG *cfg2)
 
 	       (cfg1->version == NULL && cfg2->version != NULL) ||
 	       (cfg1->version != NULL && cfg2->version == NULL) ||
+	       cfg1->windows != cfg2->windows ||
 	       (cfg1->version != NULL && cfg2->version != NULL &&
 		strcmp(cfg1->version, cfg2->version) != 0);
 }

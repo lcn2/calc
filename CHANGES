@@ -48,6 +48,78 @@ The following are the changes from calc version 2.11.5t0 to date:
 
     Fixed a bug in the way file offsets, device and inode values are copied.
 
+    Added chi.cal for a initial stab as a Chi^2 function.  The chi_prob()
+    function does not work well with odd degrees of freedom, however.
+
+    Added big 3 to config("resource_debug").  Calc resource file scripts
+    check for config("resource_debug") & 8 prior to printing internal debug
+    statements.  Thus by default they do not print them.
+
+    Added intfile.cal as a calc resource file script:
+
+	file2be(filename)
+
+	    Read filename and return an integer that is built from the
+	    octets in that file in Big Endian order.  The first octets
+	    of the file become the most significant bits of the integer.
+
+	file2le(filename)
+
+	    Read filename and return an integer that is built from the
+	    octets in that file in Little Endian order.  The first octets
+	    of the file become the most significant bits of the integer.
+
+	be2file(v, filename)
+
+	    Write the absolute value of v into filename in Big Endian order.
+	    The v argument must be on integer.  The most significant bits
+	    of the integer become the first octets of the file.
+
+	le2file(v, filename)
+
+	    Write the absolute value of v into filename in Little Endian order.
+	    The v argument must be on integer.  The least significant bits
+	    of the integer become the last octets of the file.
+
+    Added the following help aliases:
+
+	copy	blkcpy
+	read	command
+	write	command
+	quit	command
+	exit	command
+	abort	command
+	cd	command
+	show	command
+
+    Added the cscript:
+
+	fproduct filename term ...
+
+    to write the big Endian product of terms to a filename.  Use - for stdout.
+
+    Fixed calc path in help/script.
+
+    Added read-only parameter, config("windows") to indicate if the system
+    is MS windowz WIN32 like system.
+
+    Configuration values that used to return "true" or "false" now return
+    1 (a true value) or 0 (a false value).  Thus one can do:
+
+    	if (config("tab")) { ... } else { ... }
+
+    The configuration values that now return 1 or 0 are:
+
+	config("tilde")
+	config("tab")
+	config("leadzero")
+	config("blkverbose")
+	config("verbose_quit")
+	config("windows")
+
+    Now shipping a win32 sub-directory that contains hsrc .h files
+    that have been attempted to be built for windoz.
+
 
 The following are the changes from calc version 2.11.4t1 to date:
 
@@ -5092,8 +5164,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.22 $
-## @(#) $Id: CHANGES,v 29.22 2001/03/18 03:27:28 chongo Exp $
+## @(#) $Revision: 29.26 $
+## @(#) $Id: CHANGES,v 29.26 2001/04/08 11:03:37 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

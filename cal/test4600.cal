@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: test4600.cal,v 29.2 2000/06/07 14:02:25 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: test4600.cal,v 29.3 2001/04/08 10:09:39 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/test4600.cal,v $
  *
  * Under source code control:	1996/07/02 20:04:40
@@ -87,35 +87,68 @@ define stest(str, verbose)
 		print '**** ftell(f) != 13 failed';
 		return 1;
 	}
-	if (search(f, "and") != 109) {
-		print 'failed';
-		print '**** search(f, "and") != 109 failed';
-		return 1;
-	}
-	if (ftell(f) != 112) {
-		print 'failed';
-		print '**** ftell(f) != 112 failed';
-		return 1;
-	}
-	if (!isnull(search(f, "and"))) {
-		print 'failed';
-		print '**** !isnull(search(f, "and")) failed';
-		return 1;
-	}
-	if (ftell(f) != 172) {
-		print 'failed';
-		print '**** ftell(f) != 172 failed';
-		return 1;
-	}
-	if (rsearch(f, "and") != 109) {
-		print 'failed';
-		print '**** rsearch(f, "and") != 109 failed';
-		return 1;
-	}
-	if (ftell(f) != 111) {
-		print 'failed';
-		print '**** ftell(f) != 111 failed';
-		return 1;
+	if (config("windows")) {
+		if (search(f, "and") != 110) {
+			print 'failed';
+			print '**** search(f, "and") != 110 failed';
+			return 1;
+		}
+		if (ftell(f) != 113) {
+			print 'failed';
+			print '**** ftell(f) != 113 failed';
+			return 1;
+		}
+		if (!isnull(search(f, "and"))) {
+			print 'failed';
+			print '**** !isnull(search(f, "and")) failed';
+			return 1;
+		}
+		if (ftell(f) != 174) {
+			print 'failed';
+			print '**** ftell(f) != 174 failed';
+			return 1;
+		}
+		if (rsearch(f, "and") != 110) {
+			print 'failed';
+			print '**** rsearch(f, "and") != 110 failed';
+			return 1;
+		}
+		if (ftell(f) != 112) {
+			print 'failed';
+			print '**** ftell(f) != 112 failed';
+			return 1;
+		}
+	} else {
+		if (search(f, "and") != 109) {
+			print 'failed';
+			print '**** search(f, "and") != 109 failed';
+			return 1;
+		}
+		if (ftell(f) != 112) {
+			print 'failed';
+			print '**** ftell(f) != 112 failed';
+			return 1;
+		}
+		if (!isnull(search(f, "and"))) {
+			print 'failed';
+			print '**** !isnull(search(f, "and")) failed';
+			return 1;
+		}
+		if (ftell(f) != 172) {
+			print 'failed';
+			print '**** ftell(f) != 172 failed';
+			return 1;
+		}
+		if (rsearch(f, "and") != 109) {
+			print 'failed';
+			print '**** rsearch(f, "and") != 109 failed';
+			return 1;
+		}
+		if (ftell(f) != 111) {
+			print 'failed';
+			print '**** ftell(f) != 111 failed';
+			return 1;
+		}
 	}
 	if (iserror(fseek(f, -4, 1))) {
 		print 'failed';

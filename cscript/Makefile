@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.6 $
-# @(#) $Id: Makefile,v 29.6 2000/12/15 14:56:14 chongo Exp $
+# @(#) $Revision: 29.9 $
+# @(#) $Id: Makefile,v 29.9 2001/04/08 10:53:52 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -76,9 +76,10 @@ FMT= fmt
 #
 #		make detaillist
 #
-SCRIPT= mersenne piforever plus simple square
+SCRIPT= mersenne piforever plus simple square fproduct
 
-SCRIPT_SRC= mersenne.calc piforever.calc plus.calc simple.calc square.calc
+SCRIPT_SRC= mersenne.calc piforever.calc plus.calc simple.calc square.calc \
+	fproduct.calc
 
 # These files are found (but not built) in the distribution
 #
@@ -114,7 +115,7 @@ all: ${SCRIPT} ${SCRIPT_SRC} .all
 distlist: ${DISTLIST}
 	${Q}for i in ${DISTLIST}; do \
 		echo cscript/$$i; \
-	done | ${SORT}
+	done | LANG=C ${SORT}
 
 distdir:
 	${Q}echo cscript
@@ -131,7 +132,7 @@ detaillist:
 		else \
 		    echo $$i; \
 		fi; \
-	done | ${SORT}) | ${FMT} -70 | \
+	done | LANG=C ${SORT}) | ${FMT} -70 | \
 	    ${SED} -e '1s/xxxxxxx/SCRIPT=/' -e '2,$$s/^/	/' \
 		   -e 's/$$/ \\/' -e '$$s/ \\$$//'
 	${Q}echo
@@ -142,7 +143,7 @@ detaillist:
 		else \
 		    echo $$i.calc; \
 		fi; \
-	done | ${SORT}) | ${FMT} -70 | \
+	done | LANG=C ${SORT}) | ${FMT} -70 | \
 	    ${SED} -e '1s/xxxxxxxxxxx/SCRIPT_SRC=/' -e '2,$$s/^/	/' \
 		   -e 's/$$/ \\/' -e '$$s/ \\$$//'
 
@@ -246,6 +247,10 @@ simple: simple.calc
 	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	${CHMOD} +x $@
 square: square.calc
+	rm -f $@
+	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
+	${CHMOD} +x $@
+fproduct: fproduct.calc
 	rm -f $@
 	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	${CHMOD} +x $@

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: func.c,v 29.7 2001/03/17 21:31:47 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: func.c,v 29.8 2001/04/08 10:06:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -1225,8 +1225,10 @@ f_primetest(int count, NUMBER **vals)
 {
 	/* parse args */
 	switch (count) {
-	case 1: return itoq((long) qprimetest(vals[0], &_qone_, &_qone_));
-	case 2: return itoq((long) qprimetest(vals[0], vals[1], &_qone_));
+	case 1: return itoq((long) qprimetest(vals[0],
+			    qlink(&_qone_), qlink(&_qone_)));
+	case 2: return itoq((long) qprimetest(vals[0],
+			    vals[1], qlink(&_qone_)));
 	default: return itoq((long) qprimetest(vals[0], vals[1], vals[2]));
 	}
 }
@@ -2013,7 +2015,7 @@ f_ln(int count, VALUE **vals)
 				return result;
 			}
 			ctmp.real = vals[0]->v_num;
-			ctmp.imag = &_qzero_;
+			ctmp.imag = qlink(&_qzero_);
 			ctmp.links = 1;
 			c = cln(&ctmp, err);
 			break;
@@ -3351,7 +3353,7 @@ f_trunc(int count, NUMBER **vals)
 {
 	NUMBER *val;
 
-	val = &_qzero_;
+	val = qlink(&_qzero_);
 	if (count == 2)
 		val = vals[1];
 	return qtrunc(*vals, val);
@@ -3433,7 +3435,7 @@ f_btrunc(int count, NUMBER **vals)
 {
 	NUMBER *val;
 
-	val = &_qzero_;
+	val = qlink(&_qzero_);
 	if (count == 2)
 		val = vals[1];
 	return qbtrunc(*vals, val);
@@ -3538,7 +3540,7 @@ f_ceil(VALUE *val)
 	tmp.v_subtype = V_NOSUBTYPE;
 
 	tmp.v_type = V_NUM;
-	tmp.v_num = &_qone_;
+	tmp.v_num = qlink(&_qone_);
 	apprvalue(val, &tmp, &tmp, &res);
 	return res;
 }
@@ -3555,9 +3557,9 @@ f_floor(VALUE *val)
 	tmp2.v_subtype = V_NOSUBTYPE;
 
 	tmp1.v_type = V_NUM;
-	tmp1.v_num = &_qone_;
+	tmp1.v_num = qlink(&_qone_);
 	tmp2.v_type = V_NUM;
-	tmp2.v_num = &_qzero_;
+	tmp2.v_num = qlink(&_qzero_);
 	apprvalue(val, &tmp1, &tmp2, &res);
 	return res;
 }

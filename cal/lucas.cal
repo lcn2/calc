@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: lucas.cal,v 29.2 2000/06/07 14:02:25 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: lucas.cal,v 29.3 2001/03/31 13:31:34 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/lucas.cal,v $
  *
  * Under source code control:	1990/05/03 16:49:51
@@ -1030,7 +1030,7 @@ gen_v1(h, n)
 define
 ldebug(funct, str)
 {
-	if (config("resource_debug") & 3) {
+	if (config("resource_debug") & 8) {
 		print "DEBUG:", funct:":", str;
 	}
 	return;

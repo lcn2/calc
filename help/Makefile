@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.5 $
-# @(#) $Id: Makefile,v 29.5 2000/12/14 10:33:06 chongo Exp $
+# @(#) $Revision: 29.6 $
+# @(#) $Id: Makefile,v 29.6 2001/04/08 10:53:52 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -455,7 +455,7 @@ builtin: builtin.top builtin.end ../func.c funclist.sed
 distlist: ${DISTLIST}
 	${Q}for i in ${DISTLIST}; do \
 		echo help/$$i; \
-	done | ${SORT}
+	done | LANG=C ${SORT}
 
 distdir:
 	${Q}echo help
@@ -485,7 +485,7 @@ detaillist:
 		else \
 		    echo $$i; \
 		fi; \
-	done | ${SORT}) | ${FMT} -70 | \
+	done | LANG=C ${SORT}) | ${FMT} -70 | \
 	    ${SED} -e '1s/xxxxx/DETAIL_HELP=/' -e '2,$$s/^/	/' \
 		   -e 's/$$/ \\/' -e '$$s/ \\$$//'
 
