@@ -249,8 +249,8 @@ Calc command line
 			./myfile.cal
 			${LIBDIR}/myfile
 			${LIBDIR}/myfile.cal
-			${CUSTOMLIBDIR}/myfile
-			${CUSTOMLIBDIR}/myfile.cal
+			${CUSTOMCALDIR}/myfile
+			${CUSTOMCALDIR}/myfile.cal
 
 	  If the file is found, the search stops and the commands in
 	  the file are executed.  It is an error if no readable file
@@ -354,7 +354,7 @@ For more information use the following calc commands:
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
 ## @(#) $Revision: 29.3 $
-## @(#) $Id: usage,v 29.3 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Id: usage,v 29.3 2000/06/07 14:02:33 chongo Exp chongo $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/usage,v $
 ##
 ## Under source code control:	1991/07/21 04:37:25

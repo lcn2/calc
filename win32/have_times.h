@@ -7,7 +7,7 @@
 #define __HAVE_TIMES_H__
 
 
-/* do we have /usr/include/times.h? */
+/* do we have <times.h>? */
 #undef HAVE_TIMES_H  /* no */
 #undef HAVE_SYS_TIMES_H  /* no */
 #define HAVE_TIME_H	/* yes */

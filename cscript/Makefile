@@ -17,9 +17,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.21 $
-# @(#) $Id: Makefile,v 29.21 2002/03/12 08:36:11 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/calc/cal/../cscript/RCS/Makefile,v $
+# @(#) $Revision: 29.22 $
+# @(#) $Id: Makefile,v 29.22 2002/03/14 00:28:28 chongo Exp $
+# @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
 # File existed as early as:	1999
@@ -36,21 +36,111 @@
 SHELL= /bin/sh
 MAKE_FILE = Makefile
 
+####
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
+####
+
+# Where the system include (.h) files are kept
+#
+# For DJGPP, select:
+#
+#	INCDIR= /dev/env/DJDIR/include
+#
+# If in doubt, set:
+#
+#	INCDIR= /usr/include
+#
+
+#INCDIR= /usr/local/include
+#INCDIR= /dev/env/DJDIR/include
+INCDIR= /usr/include
+
+# where to install calc realted things
+#
+# ${BINDIR}		where to install calc binary files
+# ${LIBDIR}		where calc link library (*.a) files are installed
+# ${CALC_SHAREDIR}	where to install calc help, .cal, startup, config files
+#
+# NOTE: The install rule prepends installation paths with $T, which
+#	by default is empty.  If $T is non-empty, then installation
+#	locations will be relative to the $T directory.
+#
+# For DJGPP, select:
+#
+#	BINDIR= /dev/env/DJDIR/bin
+#	LIBDIR= /dev/env/DJDIR/lib
+#	CALC_SHAREDIR= /dev/env/DJDIR/share/calc
+#
+# If in doubt, set:
+#
+#	BINDIR= /usr/bin
+#	LIBDIR= /usr/lib
+#	CALC_SHAREDIR= /usr/share/calc
 #
 #BINDIR= /usr/local/bin
+#BINDIR= /dev/env/DJDIR/bin
 BINDIR= /usr/bin
-#BINDIR= /usr/contrib/bin
+
+#LIBDIR= /usr/local/lib
+#LIBDIR= /dev/env/DJDIR/lib
+LIBDIR= /usr/lib
+
+#CALC_SHAREDIR= /usr/local/lib/calc
+#CALC_SHAREDIR= /dev/env/DJDIR/share/calc
+CALC_SHAREDIR= /usr/share/calc
+
+# By default, these values are based CALC_SHAREDIR, INCDIR, BINDIR
+# ---------------------------------------------------------------
+# ${HELPDIR}		where the help directory is installed
+# ${CALC_INCDIR}	where the calc include files are installed
+# ${CUSTOMCALDIR}	where custom *.cal files are installed
+# ${CUSTOMHELPDIR}	where custom help files are installed
+# ${CUSTOMINCPDIR}	where custom .h files are installed
+# ${SCRIPTDIR}		where calc shell scripts are installed
 #
+# NOTE: The install rule prepends installation paths with $T, which
+#	by default is empty.  If $T is non-empty, then installation
+#	locations will be relative to the $T directory.
+#
+# If in doubt, set:
+#
+#	HELPDIR= ${CALC_SHAREDIR}/help
+#	CALC_INCDIR= ${INCDIR}/calc
+#	CUSTOMCALDIR= ${CALC_SHAREDIR}/custom
+#	CUSTOMHELPDIR= ${CALC_SHAREDIR}/custhelp
+#	CUSTOMINCDIR= ${CALC_INCDIR}/custom
+#	SCRIPTDIR= ${BINDIR}/cscript
+#
+HELPDIR= ${CALC_SHAREDIR}/help
+CALC_INCDIR= ${INCDIR}/calc
+CUSTOMCALDIR= ${CALC_SHAREDIR}/custom
+CUSTOMHELPDIR= ${CALC_SHAREDIR}/custhelp
+CUSTOMINCDIR= ${CALC_INCDIR}/custom
 SCRIPTDIR= ${BINDIR}/cscript
 
 # T - top level directory under which calc will be installed
 #
 # The calc install is performed under $T, the calc build is
-# performed under /.  The purpose for $T is to allow someone to
-# install calc somewhere other than into the system area.  For example
-# when forming the calc rpm, the Makefile is called with T=$RPM_BUILD_ROOT.
+# performed under /.	The purpose for $T is to allow someone
+# to install calc somewhere other than into the system area.
+#
+# For example, if:
+#
+#     BINDIR= /usr/bin
+#     LIBDIR= /usr/lib
+#     CALC_SHAREDIR= /usr/share/calc
+#
+# and if:
+#
+#     T= /var/tmp/testing
+#
+# Then the installation locations will be:
+#
+#     calc binary files:	/var/tmp/testing/usr/bin
+#     calc link library:	/var/tmp/testing/usr/lib
+#     calc help, .cal ...:	/var/tmp/testing/usr/share/calc
+#     ... etc ...		/var/tmp/testing/...
 #
 # If $T is empty, calc is installed under /, which is the same
 # top of tree for which it was built.  If $T is non-empty, then

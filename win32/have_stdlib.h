@@ -7,7 +7,7 @@
 #define __HAVE_STDLIB_H__
 
 
-/* do we have /usr/include/stdlib.h? */
+/* do we have <stdlib.h>? */
 #define HAVE_STDLIB_H	/* yes */
 
 

@@ -18,9 +18,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.19 $
-# @(#) $Id: Makefile,v 29.19 2002/03/12 08:39:14 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/calc/cal/../help/RCS/Makefile,v $
+# @(#) $Revision: 29.20 $
+# @(#) $Id: Makefile,v 29.20 2002/03/14 00:28:28 chongo Exp $
+# @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
 # File existed as early as:	1991
@@ -36,33 +36,111 @@
 SHELL= /bin/sh
 MAKE_FILE = Makefile
 
-# ${SHAREDIR}		where most common shared files are kept
-# ${INCDIR}		where most .h files are kept
-# ${LIBDIR}		where *.a files are installed
+####
+# Normally, the upper level makefile will set these values.  We provide
+# a default here just in case you want to build from this directory.
+####
+
+# Where the system include (.h) files are kept
 #
-# ${CSHAREDIR}		where most common shared calc files are kept
-# ${HELPDIR}		where the help directory is installed.
-# ${INCDIRCALC}		where the calc include files are installed
+# For DJGPP, select:
 #
-#SHAREDIR= /usr/local/lib
-SHAREDIR= /usr/share
+#	INCDIR= /dev/env/DJDIR/include
+#
+# If in doubt, set:
+#
+#	INCDIR= /usr/include
+#
 
 #INCDIR= /usr/local/include
+#INCDIR= /dev/env/DJDIR/include
 INCDIR= /usr/include
 
+# where to install calc realted things
+#
+# ${BINDIR}		where to install calc binary files
+# ${LIBDIR}		where calc link library (*.a) files are installed
+# ${CALC_SHAREDIR}	where to install calc help, .cal, startup, config files
+#
+# NOTE: The install rule prepends installation paths with $T, which
+#	by default is empty.  If $T is non-empty, then installation
+#	locations will be relative to the $T directory.
+#
+# For DJGPP, select:
+#
+#	BINDIR= /dev/env/DJDIR/bin
+#	LIBDIR= /dev/env/DJDIR/lib
+#	CALC_SHAREDIR= /dev/env/DJDIR/share/calc
+#
+# If in doubt, set:
+#
+#	BINDIR= /usr/bin
+#	LIBDIR= /usr/lib
+#	CALC_SHAREDIR= /usr/share/calc
+#
+#BINDIR= /usr/local/bin
+#BINDIR= /dev/env/DJDIR/bin
+BINDIR= /usr/bin
+
 #LIBDIR= /usr/local/lib
+#LIBDIR= /dev/env/DJDIR/lib
 LIBDIR= /usr/lib
 
-CSHAREDIR= ${SHAREDIR}/calc
-HELPDIR= ${CSHAREDIR}/help
-INCDIRCALC= ${INCDIR}/calc
+#CALC_SHAREDIR= /usr/local/lib/calc
+#CALC_SHAREDIR= /dev/env/DJDIR/share/calc
+CALC_SHAREDIR= /usr/share/calc
+
+# By default, these values are based CALC_SHAREDIR, INCDIR, BINDIR
+# ---------------------------------------------------------------
+# ${HELPDIR}		where the help directory is installed
+# ${CALC_INCDIR}	where the calc include files are installed
+# ${CUSTOMCALDIR}	where custom *.cal files are installed
+# ${CUSTOMHELPDIR}	where custom help files are installed
+# ${CUSTOMINCPDIR}	where custom .h files are installed
+# ${SCRIPTDIR}		where calc shell scripts are installed
+#
+# NOTE: The install rule prepends installation paths with $T, which
+#	by default is empty.  If $T is non-empty, then installation
+#	locations will be relative to the $T directory.
+#
+# If in doubt, set:
+#
+#	HELPDIR= ${CALC_SHAREDIR}/help
+#	CALC_INCDIR= ${INCDIR}/calc
+#	CUSTOMCALDIR= ${CALC_SHAREDIR}/custom
+#	CUSTOMHELPDIR= ${CALC_SHAREDIR}/custhelp
+#	CUSTOMINCDIR= ${CALC_INCDIR}/custom
+#	SCRIPTDIR= ${BINDIR}/cscript
+#
+HELPDIR= ${CALC_SHAREDIR}/help
+CALC_INCDIR= ${INCDIR}/calc
+CUSTOMCALDIR= ${CALC_SHAREDIR}/custom
+CUSTOMHELPDIR= ${CALC_SHAREDIR}/custhelp
+CUSTOMINCDIR= ${CALC_INCDIR}/custom
+SCRIPTDIR= ${BINDIR}/cscript
 
 # T - top level directory under which calc will be installed
 #
 # The calc install is performed under $T, the calc build is
-# performed under /.  The purpose for $T is to allow someone to
-# install calc somewhere other than into the system area.  For example
-# when forming the calc rpm, the Makefile is called with T=$RPM_BUILD_ROOT.
+# performed under /.	The purpose for $T is to allow someone
+# to install calc somewhere other than into the system area.
+#
+# For example, if:
+#
+#     BINDIR= /usr/bin
+#     LIBDIR= /usr/lib
+#     CALC_SHAREDIR= /usr/share/calc
+#
+# and if:
+#
+#     T= /var/tmp/testing
+#
+# Then the installation locations will be:
+#
+#     calc binary files:	/var/tmp/testing/usr/bin
+#     calc link library:	/var/tmp/testing/usr/lib
+#     calc help, .cal ...:	/var/tmp/testing/usr/share/calc
+#     ... etc ...		/var/tmp/testing/...
 #
 # If $T is empty, calc is installed under /, which is the same
 # top of tree for which it was built.  If $T is non-empty, then
@@ -267,7 +345,7 @@ changes: ../CHANGES
 libcalc: ../LIBRARY
 	rm -f $@
 	${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' \
-	       -e 's:$${INCDIRCALC}:${INCDIRCALC}:g' < ../LIBRARY > $@
+	       -e 's:$${CALC_INCDIR}:${CALC_INCDIR}:g' < ../LIBRARY > $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -556,27 +634,15 @@ clobber:
 	rm -f ${SINGULAR_FILES} ${DETAIL_CLONE}
 
 install: all
-	-${Q}if [ ! -d ${SHAREDIR} ]; then \
-	    echo mkdir $T${SHAREDIR}; \
-	    mkdir $T${SHAREDIR}; \
-	    if [ ! -d "$T${SHAREDIR}" ]; then \
-		echo mkdir -p "$T${SHAREDIR}"; \
-		mkdir -p "$T${SHAREDIR}"; \
+	-${Q}if [ ! -d $T${CALC_SHAREDIR} ]; then \
+	    echo mkdir $T${CALC_SHAREDIR}; \
+	    mkdir $T${CALC_SHAREDIR}; \
+	    if [ ! -d "$T${CALC_SHAREDIR}" ]; then \
+		echo mkdir -p "$T${CALC_SHAREDIR}"; \
+		mkdir -p "$T${CALC_SHAREDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${SHAREDIR}; \
-	    ${CHMOD} 0755 $T${SHAREDIR}; \
-	else \
-	    true; \
-	fi
-	-${Q}if [ ! -d $T${CSHAREDIR} ]; then \
-	    echo mkdir $T${CSHAREDIR}; \
-	    mkdir $T${CSHAREDIR}; \
-	    if [ ! -d "$T${CSHAREDIR}" ]; then \
-		echo mkdir -p "$T${CSHAREDIR}"; \
-		mkdir -p "$T${CSHAREDIR}"; \
-	    fi; \
-	    echo ${CHMOD} 0755 $T${CSHAREDIR}; \
-	    ${CHMOD} 0755 $T${CSHAREDIR}; \
+	    echo ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
+	    ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
 	else \
 	    true; \
 	fi

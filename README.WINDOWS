@@ -10,9 +10,68 @@ NOTE: The main developers do not have access to a Windoz based platform.
       Of course you are welcome to send us any patches that fix your
       Windoz build environment.
 
-=-=-=-=-=
-=-=-=-=-=
-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-= compiling under DJGPP =-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+You might want to try using the DJGPP system to compile calc.  See:
+
+	http://www.delorie.com/djgpp/
+
+for DJGPP details and availability.
+
+To compile with DJGPP, one needs to select a number of Makefile
+variable changes.  Eli Zaretskii <eliz at is dot elta dot co dot il>
+recommends the following settings:
+
+	TERMCONTROL= -DUSE_TERMIOS
+	BYTE_ORDER= -DLITTLE_ENDIAN
+	LONG_BITS= 32
+	LONGLONG_BITS= 64
+	HAVE_FPOS_POS= -DHAVE_NO_FPOS_POS
+	FPOS_BITS= 32
+	OFF_T_BITS= 32
+	DEV_BITS= 32
+	INODE_BITS= 32
+	HAVE_USTAT= -DHAVE_NO_USTAT
+	HAVE_GETSID= -DHAVE_NO_GETSID
+	HAVE_GETPGID= -DHAVE_NO_GETPGID
+	HAVE_GETTIME= -DHAVE_NO_GETTIME
+	HAVE_GETPRID= -DHAVE_NO_GETPRID
+	HAVE_URANDOM_H= NO
+	ALIGN32= -UMUST_ALIGN32
+	HAVE_MALLOC_H= YES
+	HAVE_STDLIB_H= YES
+	HAVE_STRING_H= YES
+	HAVE_TIMES_H= NO
+	HAVE_SYS_TIMES_H= YES
+	HAVE_TIME_H= YES
+	HAVE_SYS_TIME_H= YES
+	HAVE_UNISTD_H= YES
+	BINDIR= /dev/env/DJDIR/bin
+	INCDIR= /dev/env/DJDIR/include
+	LIBDIR= /dev/env/DJDIR/lib
+	MANDIR= /dev/env/DJDIR/man/man1
+	CATDIR= /dev/env/DJDIR/man/cat1
+	NROFF= groff
+	CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR}
+	CALCRC= ${CALC_SHAREDIR}/startup;~/.calcrc;./.calcinit
+	CALCPAGER= less.exe -ci
+	DEBUG= -O2 -gstabs+
+
+The 'Linux set' or 'gcc set' (see the Select your compiler type section)
+should work for DJGPP systems if you set the above Makefile variables.
+
+Look for Makefile comments of the form:
+
+	# Select ...something... for DJGPP.
+
+Follow those recommendations.  In cases where they conflict with
+the above Makefile list, follow the recommendation in the Makefile.
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-= compiling with Cygwin =-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 An effort is being made to allow windows users to compile calc using the
 Cygwin project (http://sources.redhat.com/cygwin/) with the GCC compiler
@@ -79,69 +138,6 @@ was changed to:
 
     DLL extern int configtype(char*);
 
-=-=-=-=-=
-=-=-=-=-=
-=-=-=-=-=
-
-There is a different approach to the Cygwin approach above
-----------------------------------------------------------
-
-You might want to try using the DJGPP system to compile calc.  See:
-
-	http://www.delorie.com/djgpp/
-
-for DJGPP details and availability.
-
-To compile with DJGPP, one needs to select a number of Makefile
-variable changes.  Eli Zaretskii <eliz at is dot elta dot co dot il>
-recommends the following settings:
-
-	TERMCONTROL= -DUSE_TERMIOS
-	BYTE_ORDER= -DLITTLE_ENDIAN
-	LONG_BITS= 32
-	LONGLONG_BITS= 64
-	HAVE_FPOS_POS= -DHAVE_NO_FPOS_POS
-	FPOS_BITS= 32
-	OFF_T_BITS= 32
-	DEV_BITS= 32
-	INODE_BITS= 32
-	HAVE_USTAT= -DHAVE_NO_USTAT
-	HAVE_GETSID= -DHAVE_NO_GETSID
-	HAVE_GETPGID= -DHAVE_NO_GETPGID
-	HAVE_GETTIME= -DHAVE_NO_GETTIME
-	HAVE_GETPRID= -DHAVE_NO_GETPRID
-	HAVE_URANDOM_H= NO
-	ALIGN32= -UMUST_ALIGN32
-	HAVE_MALLOC_H= YES
-	HAVE_STDLIB_H= YES
-	HAVE_STRING_H= YES
-	HAVE_TIMES_H= NO
-	HAVE_SYS_TIMES_H= YES
-	HAVE_TIME_H= YES
-	HAVE_SYS_TIME_H= YES
-	HAVE_UNISTD_H= YES
-	BINDIR= /dev/env/DJDIR/bin
-	SHAREDIR= /dev/env/DJDIR/share
-	INCDIR= /dev/env/DJDIR/include
-	LIBDIR= /dev/env/DJDIR/lib
-	MANDIR= /dev/env/DJDIR/man/man1
-	CATDIR= /dev/env/DJDIR/man/cat1
-	NROFF= groff
-	CALCPATH= .;./cal;~/.cal;${CSHAREDIR};${CUSTOMLIBDIR}
-	CALCRC= ${CSHAREDIR}/startup;~/.calcrc;./.calcinit
-	CALCPAGER= less.exe -ci
-	DEBUG= -O2 -gstabs+
-
-The 'Linux set' or 'gcc set' (see the Select your compiler type section)
-should work for DJGPP systems if you set the above Makefile variables.
-
-Look for Makefile comments of the form:
-
-	# Select ...something... for DJGPP.
-
-Follow those recommendations.  In cases where they conflict with
-the above Makefile list, follow the recommendation in the Makefile.
-
 
 ## Copyright (C) 2002  Landon Curt Noll and Thomas Jones-Low
 ##
@@ -159,8 +155,8 @@ the above Makefile list, follow the recommendation in the Makefile.
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.7 $
-## @(#) $Id: README.WINDOWS,v 29.7 2002/03/12 10:50:25 chongo Exp $
+## @(#) $Revision: 29.8 $
+## @(#) $Id: README.WINDOWS,v 29.8 2002/03/14 00:28:28 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/README.WINDOWS,v $
 ##
 ## Under source code control:	2001/02/25 14:00:05

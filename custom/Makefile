@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.18 $
-# @(#) $Id: Makefile,v 29.18 2002/03/12 08:30:43 chongo Exp $
+# @(#) $Revision: 29.19 $
+# @(#) $Id: Makefile,v 29.19 2002/03/14 00:28:28 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -88,40 +88,111 @@ CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o c_pzasusb8.o
 #Q=
 Q=@
 
+####
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
+####
+
+# Where the system include (.h) files are kept
 #
-# where to install things
+# For DJGPP, select:
 #
-# ${SHAREDIR}		where most common shared files are kept
-# ${INCDIR}		where most .h files are kept
+#	INCDIR= /dev/env/DJDIR/include
 #
-# ${CSHAREDIR}		where most common shared calc files are kept
-# ${HELPDIR}		where the help directory is installed.
-# ${INCDIRCALC}		where the calc include files are installed
-# ${CUSTOMLIBDIR}	where custom *.cal files & libcustcalc.a are installed.
-# ${CUSTOMHELPDIR}	where custom help files are installed.
-# ${CUSTOMINCPDIR}	where custom .h files are installed.
+# If in doubt, set:
 #
-#SHAREDIR= /usr/local/lib
-SHAREDIR= /usr/share
+#	INCDIR= /usr/include
 #
+
 #INCDIR= /usr/local/include
+#INCDIR= /dev/env/DJDIR/include
 INCDIR= /usr/include
+
+# where to install calc realted things
 #
-CSHAREDIR= ${SHAREDIR}/calc
-HELPDIR= ${CSHAREDIR}/help
-INCDIRCALC= ${INCDIR}/calc
-CUSTOMLIBDIR= ${CSHAREDIR}/custom
-CUSTOMHELPDIR= ${CSHAREDIR}/custhelp
-CUSTOMINCDIR= ${INCDIRCALC}/custom
+# ${BINDIR}		where to install calc binary files
+# ${LIBDIR}		where calc link library (*.a) files are installed
+# ${CALC_SHAREDIR}	where to install calc help, .cal, startup, config files
+#
+# NOTE: The install rule prepends installation paths with $T, which
+#	by default is empty.  If $T is non-empty, then installation
+#	locations will be relative to the $T directory.
+#
+# For DJGPP, select:
+#
+#	BINDIR= /dev/env/DJDIR/bin
+#	LIBDIR= /dev/env/DJDIR/lib
+#	CALC_SHAREDIR= /dev/env/DJDIR/share/calc
+#
+# If in doubt, set:
+#
+#	BINDIR= /usr/bin
+#	LIBDIR= /usr/lib
+#	CALC_SHAREDIR= /usr/share/calc
+#
+#BINDIR= /usr/local/bin
+#BINDIR= /dev/env/DJDIR/bin
+BINDIR= /usr/bin
+
+#LIBDIR= /usr/local/lib
+#LIBDIR= /dev/env/DJDIR/lib
+LIBDIR= /usr/lib
+
+#CALC_SHAREDIR= /usr/local/lib/calc
+#CALC_SHAREDIR= /dev/env/DJDIR/share/calc
+CALC_SHAREDIR= /usr/share/calc
+
+# By default, these values are based CALC_SHAREDIR, INCDIR, BINDIR
+# ---------------------------------------------------------------
+# ${HELPDIR}		where the help directory is installed
+# ${CALC_INCDIR}	where the calc include files are installed
+# ${CUSTOMCALDIR}	where custom *.cal files are installed
+# ${CUSTOMHELPDIR}	where custom help files are installed
+# ${CUSTOMINCPDIR}	where custom .h files are installed
+# ${SCRIPTDIR}		where calc shell scripts are installed
+#
+# NOTE: The install rule prepends installation paths with $T, which
+#	by default is empty.  If $T is non-empty, then installation
+#	locations will be relative to the $T directory.
+#
+# If in doubt, set:
+#
+#	HELPDIR= ${CALC_SHAREDIR}/help
+#	CALC_INCDIR= ${INCDIR}/calc
+#	CUSTOMCALDIR= ${CALC_SHAREDIR}/custom
+#	CUSTOMHELPDIR= ${CALC_SHAREDIR}/custhelp
+#	CUSTOMINCDIR= ${CALC_INCDIR}/custom
+#	SCRIPTDIR= ${BINDIR}/cscript
+#
+HELPDIR= ${CALC_SHAREDIR}/help
+CALC_INCDIR= ${INCDIR}/calc
+CUSTOMCALDIR= ${CALC_SHAREDIR}/custom
+CUSTOMHELPDIR= ${CALC_SHAREDIR}/custhelp
+CUSTOMINCDIR= ${CALC_INCDIR}/custom
+SCRIPTDIR= ${BINDIR}/cscript
 
 # T - top level directory under which calc will be installed
 #
 # The calc install is performed under $T, the calc build is
-# performed under /.  The purpose for $T is to allow someone to
-# install calc somewhere other than into the system area.  For example
-# when forming the calc rpm, the Makefile is called with T=$RPM_BUILD_ROOT.
+# performed under /.	The purpose for $T is to allow someone
+# to install calc somewhere other than into the system area.
+#
+# For example, if:
+#
+#     BINDIR= /usr/bin
+#     LIBDIR= /usr/lib
+#     CALC_SHAREDIR= /usr/share/calc
+#
+# and if:
+#
+#     T= /var/tmp/testing
+#
+# Then the installation locations will be:
+#
+#     calc binary files:	/var/tmp/testing/usr/bin
+#     calc link library:	/var/tmp/testing/usr/lib
+#     calc help, .cal ...:	/var/tmp/testing/usr/share/calc
+#     ... etc ...		/var/tmp/testing/...
 #
 # If $T is empty, calc is installed under /, which is the same
 # top of tree for which it was built.  If $T is non-empty, then
@@ -279,7 +350,7 @@ REQUIRED_SRC= custtbl.c
 #
 REQUIRED_OBJ= custtbl.o
 
-# These .h files are installed under ${CUSTOMLIBDIR} by the install rule.
+# These .h files are installed under ${CUSTOMCALDIR} by the install rule.
 #
 INSTALL_H_SRC= ${CUSTOM_H_SRC}
 
@@ -506,12 +577,12 @@ echo_inst_files:
 	done
 	${Q}for i in ${CUSTOM_CALC_FILES} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
-		echo __file__ ${CUSTOMLIBDIR}/$$i; \
+		echo __file__ ${CUSTOMCALDIR}/$$i; \
 	    fi; \
 	done
 	${Q}for i in ${CALC_LIBCUSTOM} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
-		echo __file__ ${CUSTOMLIBDIR}/$$i; \
+		echo __file__ ${CUSTOMCALDIR}/$$i; \
 	    fi; \
 	done
 
@@ -529,18 +600,6 @@ clobber:
 	rm -f .all Makefile.tmp Makefile.bak
 
 install: all
-	-${Q}if [ ! -d $T${SHAREDIR} ]; then \
-	    echo mkdir $T${SHAREDIR}; \
-	    mkdir $T${SHAREDIR}; \
-	    if [ ! -d "$T${SHAREDIR}" ]; then \
-		echo mkdir -p "$T${SHAREDIR}"; \
-		mkdir -p "$T${SHAREDIR}"; \
-	    fi; \
-	    echo ${CHMOD} 0755 $T${SHAREDIR}; \
-	    ${CHMOD} 0755 $T${SHAREDIR}; \
-	else \
-	    true; \
-	fi
 	-${Q}if [ ! -d $T${INCDIR} ]; then \
 	    echo mkdir $T${INCDIR}; \
 	    mkdir $T${INCDIR}; \
@@ -553,27 +612,27 @@ install: all
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${CSHAREDIR} ]; then \
-	    echo mkdir $T${CSHAREDIR}; \
-	    mkdir $T${CSHAREDIR}; \
-	    if [ ! -d "$T${CSHAREDIR}" ]; then \
-		echo mkdir -p "$T${CSHAREDIR}"; \
-		mkdir -p "$T${CSHAREDIR}"; \
+	-${Q}if [ ! -d $T${CALC_SHAREDIR} ]; then \
+	    echo mkdir $T${CALC_SHAREDIR}; \
+	    mkdir $T${CALC_SHAREDIR}; \
+	    if [ ! -d "$T${CALC_SHAREDIR}" ]; then \
+		echo mkdir -p "$T${CALC_SHAREDIR}"; \
+		mkdir -p "$T${CALC_SHAREDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${CSHAREDIR}; \
-	    ${CHMOD} 0755 $T${CSHAREDIR}; \
+	    echo ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
+	    ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${INCDIRCALC} ]; then \
-	    echo mkdir $T${INCDIRCALC}; \
-	    mkdir $T${INCDIRCALC}; \
-	    if [ ! -d "$T${INCDIRCALC}" ]; then \
-		echo mkdir -p "$T${INCDIRCALC}"; \
-		mkdir -p "$T${INCDIRCALC}"; \
+	-${Q}if [ ! -d $T${CALC_INCDIR} ]; then \
+	    echo mkdir $T${CALC_INCDIR}; \
+	    mkdir $T${CALC_INCDIR}; \
+	    if [ ! -d "$T${CALC_INCDIR}" ]; then \
+		echo mkdir -p "$T${CALC_INCDIR}"; \
+		mkdir -p "$T${CALC_INCDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${INCDIRCALC}; \
-	    ${CHMOD} 0755 $T${INCDIRCALC}; \
+	    echo ${CHMOD} 0755 $T${CALC_INCDIR}; \
+	    ${CHMOD} 0755 $T${CALC_INCDIR}; \
 	else \
 	    true; \
 	fi
@@ -589,15 +648,15 @@ install: all
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${CUSTOMLIBDIR} ]; then \
-	    echo mkdir $T${CUSTOMLIBDIR}; \
-	    mkdir $T${CUSTOMLIBDIR}; \
-	    if [ ! -d "$T${CUSTOMLIBDIR}" ]; then \
-		echo mkdir -p "$T${CUSTOMLIBDIR}"; \
-		mkdir -p "$T${CUSTOMLIBDIR}"; \
+	-${Q}if [ ! -d $T${CUSTOMCALDIR} ]; then \
+	    echo mkdir $T${CUSTOMCALDIR}; \
+	    mkdir $T${CUSTOMCALDIR}; \
+	    if [ ! -d "$T${CUSTOMCALDIR}" ]; then \
+		echo mkdir -p "$T${CUSTOMCALDIR}"; \
+		mkdir -p "$T${CUSTOMCALDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${CUSTOMLIBDIR}; \
-	    ${CHMOD} 0755 $T${CUSTOMLIBDIR}; \
+	    echo ${CHMOD} 0755 $T${CUSTOMCALDIR}; \
+	    ${CHMOD} 0755 $T${CUSTOMCALDIR}; \
 	else \
 	    true; \
 	fi
@@ -644,14 +703,14 @@ install: all
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if ${CMP} -s $$i $T${CUSTOMLIBDIR}/$$i; then \
+	    if ${CMP} -s $$i $T${CUSTOMCALDIR}/$$i; then \
 		true; \
 	    else \
-		rm -f $T${CUSTOMLIBDIR}/$$i.new; \
-		cp -f $$i $T${CUSTOMLIBDIR}/$$i.new; \
-		${CHMOD} 0444 $T${CUSTOMLIBDIR}/$$i.new; \
-		mv -f $T${CUSTOMLIBDIR}/$$i.new $T${CUSTOMLIBDIR}/$$i; \
-		echo "installed $T${CUSTOMLIBDIR}/$$i"; \
+		rm -f $T${CUSTOMCALDIR}/$$i.new; \
+		cp -f $$i $T${CUSTOMCALDIR}/$$i.new; \
+		${CHMOD} 0444 $T${CUSTOMCALDIR}/$$i.new; \
+		mv -f $T${CUSTOMCALDIR}/$$i.new $T${CUSTOMCALDIR}/$$i; \
+		echo "installed $T${CUSTOMCALDIR}/$$i"; \
 	    fi; \
 	done
 	-${Q}for i in ${CUSTOM_HELP} /dev/null; do \
@@ -669,16 +728,16 @@ install: all
 	    fi; \
 	done
 	-${Q}if [ ! -z ${ALLOW_CUSTOM} ]; then \
-	    if ${CMP} -s libcustcalc.a $T${CUSTOMLIBDIR}/libcustcalc.a; then \
+	    if ${CMP} -s libcustcalc.a $T${CUSTOMCALDIR}/libcustcalc.a; then \
 		true; \
 	    else \
-		rm -f $T${CUSTOMLIBDIR}/libcustcalc.a.new; \
-		cp -f libcustcalc.a $T${CUSTOMLIBDIR}/libcustcalc.a.new; \
-		${CHMOD} 0644 $T${CUSTOMLIBDIR}/libcustcalc.a.new; \
-		mv -f $T${CUSTOMLIBDIR}/libcustcalc.a.new \
-		      $T${CUSTOMLIBDIR}/libcustcalc.a; \
-		${RANLIB} $T${CUSTOMLIBDIR}/libcustcalc.a; \
-		echo "installed $T${CUSTOMLIBDIR}/libcustcalc.a"; \
+		rm -f $T${CUSTOMCALDIR}/libcustcalc.a.new; \
+		cp -f libcustcalc.a $T${CUSTOMCALDIR}/libcustcalc.a.new; \
+		${CHMOD} 0644 $T${CUSTOMCALDIR}/libcustcalc.a.new; \
+		mv -f $T${CUSTOMCALDIR}/libcustcalc.a.new \
+		      $T${CUSTOMCALDIR}/libcustcalc.a; \
+		${RANLIB} $T${CUSTOMCALDIR}/libcustcalc.a; \
+		echo "installed $T${CUSTOMCALDIR}/libcustcalc.a"; \
 	    fi; \
 	fi
 

@@ -7,7 +7,7 @@
 #define __HAVE_MALLOC_H__
 
 
-/* do we have /usr/include/malloc.h? */
+/* do we have <malloc.h>? */
 #define HAVE_MALLOC_H	 /* yes */
 
 

@@ -7,7 +7,7 @@
 #define __HAVE_UNISTD_H__
 
 
-/* do we have /usr/include/unistd.h? */
+/* do we have <unistd.h>? */
 #undef HAVE_UNISTD_H  /* no */
 
 

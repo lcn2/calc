@@ -1,50 +1,105 @@
 Installing calc in 4 easy steps:
 
-    1) Look at the makefile, and adjust it to suit your needs.
+    1)	Look at the makefile, and adjust it to suit your needs.
 
-       Here are some Makefile hints:
+	The Makefile, as shipped, is suitable for installation under
+	Linux and Un*x-like environments.  For the most part, the default
+	values should work.  If in doubt, follow the 'When in doubt'
+	suggestion.
 
-	   Select a compiler set by commenting in the appropriate set
-	   of cc options.  As shipped the Makefile assumes a gcc-like
-	   environment such as Linux.  If a more appropriate cc set if
-	   found below, comment out the Linux set and comment in that
-	   set or edit the gcc set or the common cc set as needed.
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	! If you are building under Windoz or a Windoz-like environment !
+	! (such as Cygwin or DJGPP), read the README.WINDOWS file.      !
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	   You may or may not need RANLIB when building libraries.
-	   As shipped the Makefile assumes RANLIB is needed.
-	   Comment the in/out the RANLIB value if ranlib does
-	   not work or does not exist.
+	You should determine if these Makefile variables are reasonable:
 
-	   You may want to change the default pager used by calc.
-	   As shipped the Makefile assumes 'more'.  On your system
-	   you may find 'less' to be a better pager.
+	    INCDIR		Where the system include (.h) files are kept.
+	    BINDIR		Where to install calc binary files.
+	    LIBDIR		Where to install calc link library (*.a) files.
+	    CALC_SHAREDIR	Where to install calc help, .cal, startup, and
+	    			config files.
 
-	   Set BINDIR to the directory where calc is installed.
-	   As shipped the Makefile assumes BINDIR is /usr/local/bin.
+	You may want to change the default installation locations for
+	these values, which are based on the 4 values listed above:
 
-	   Set SHAREDIR to the place where shared files are kept.
-	   As shipped the Makefile assumes that SHAREDIR is /usr/share.
-	   Calc places its shared files under ${SHAREDIR}/calc.
+	    HELPDIR            where the help directory is installed
+	    CALC_INCDIR        where the calc include files are installed
+	    CUSTOMCALDIR       where custom *.cal files are installed
+	    CUSTOMHELPDIR      where custom help files are installed
+	    CUSTOMINCPDIR      where custom .h files are installed
+	    SCRIPTDIR          where calc shell scripts are installed
 
-	   Set INCDIR to the place where .h header files are kept.
-	   As shipped the Makefile assumes that INCDIR is /usr/include.
-	   Calc places its .h header files under ${INCDIR}/calc.
+	If you want to install calc files under a top level directory,
+	then set the T value:
 
-	   Set LIBDIR to be the place under which help files, calc,
-	   include files and calc libs are to be installed.
-	   As shipped the Makefile assumes a LIBDIR of /usr/lib.
-	   The calc library is installed as ${LIBDIR}/libcalc.a.
+	    The calc install is performed under $T, the calc build is
+	    performed under /.	The purpose for $T is to allow someone
+	    to install calc somewhere other than into the system area.
 
-	   Some compilers (to put it mildly) have bugs.  Sometimes the
-	   DEBUG Makefile variable causes the compiler / optimizer to
-	   produce bad code.  Other compilers do just fine.  If possible
-	   try to use DEBUG=-O3 -g3 (maximum optimization and debug symbols).
-	   If the calc test fails (see step 3), try lowering either the
-	   -O value and/or the -g3.  Also try using -Osomething without -g.
+	    For example, if:
+
+	    	BINDIR= /usr/bin
+		LIBDIR= /usr/lib
+		CALC_SHAREDIR= /usr/share/calc
+
+	    and if:
+
+	    	T= /var/tmp/testing
+
+	    Then the installation locations will be:
+
+		calc binary files:	/var/tmp/testing/usr/bin
+		calc link library:	/var/tmp/testing/usr/lib
+		calc help, .cal ...:	/var/tmp/testing/usr/share/calc
+		... etc ...		/var/tmp/testing/...
+
+	    If $T is empty, calc is installed under /, which is the same
+	    top of tree for which it was built.  If $T is non-empty, then
+	    calc is installed under $T, as if one had to chroot under
+	    $T for calc to operate.
+
+	Look for the section that starts:
+
+	    ################
+	    # compiler set #
+	    ################
+
+	    Select a compiler set by commenting in the appropriate set
+	    of cc options.  As shipped the Makefile assumes a gcc-like
+	    environment such as Linux.  If a more appropriate cc set if
+	    found below, comment out the Linux set and comment in that
+	    set or edit the gcc set or the common cc set as needed.
+
+	You may want to change these Makrfile variables from their defaults:
+
+	    RANLIB
+
+		You may or may not need RANLIB when building libraries.
+		As shipped the Makefile assumes RANLIB is needed.
+		Comment the in/out the RANLIB value if ranlib does
+		not work or does not exist.
+
+	    CALCPAGER
+
+		You may want to change the default pager used by calc.
+		As shipped the Makefile assumes 'more'.  On your system
+		you may find 'less' to be a better pager.
+
+	    DEBUG
+
+	       Some compilers (to put it mildly) have bugs.  Sometimes the
+	       DEBUG Makefile variable causes the compiler / optimizer to
+	       produce bad code.  Other compilers do just fine.
+
+	       If possible try to use DEBUG=-O3 -g3 (maximum optimization
+	       and debug symbols).  If the calc test fails (see step 3),
+	       try lowering either the -O value and/or the -g3.  Also try
+	       using -Osomething without -g.
 
 	   Adjust other Makefile variables as needed.
 
-    2) build calc:
+    2)	build calc:
 
 	make all
 
@@ -52,13 +107,14 @@ Installing calc in 4 easy steps:
 	    you may find.  See the BUGS file if you find any compiler
 	    warning or errors.
 
-    3) test calc:
+    3)	test calc:
 
 	make check
 
-	==> If you run into problems, follow the BUGS file instructions.
+	==> If you run into problems, read the BUGS file and follow
+	    the instructions found in there.
 
-    4) install calc:
+    4)	install calc:
 
 	make install
 
@@ -81,8 +137,8 @@ the calc help subsystem.  See the README file for details.
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: HOWTO.INSTALL,v 29.4 2002/03/12 09:03:17 chongo Exp $
+## @(#) $Revision: 29.6 $
+## @(#) $Id: HOWTO.INSTALL,v 29.6 2002/03/14 00:28:28 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/HOWTO.INSTALL,v $
 ##
 ## Under source code control:	1999/09/27 20:48:44

@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.46 $$
-# @(#) $Id: Makefile.ship,v 29.46 2002/03/12 10:43:05 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.47 $$
+# @(#) $Id: Makefile.ship,v 29.47 2002/03/14 00:28:28 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -541,88 +541,113 @@ HAVE_UNISTD_H=
 #HAVE_UNISTD_H= YES
 #HAVE_UNISTD_H= NO
 
-# where to install the *.cal, *.h and *.a files
+# System include files
 #
-# These 4 values control where things are installed
-# -------------------------------------------------
-# ${BINDIR}		where to install binary files
-# ${SHAREDIR}		where most common shared files are kept
-# ${INCDIR}		where most .h files are kept
-# ${LIBDIR}		where *.a files are installed
+# ${INCDIR}		where the system include (.h) files are kept
 #
 # For DJGPP, select:
 #
-#	BINDIR= /dev/env/DJDIR/bin
-#	SHAREDIR= /dev/env/DJDIR/share
 #	INCDIR= /dev/env/DJDIR/include
-#	LIBDIR= /dev/env/DJDIR/lib
 #
 # If in doubt, set:
 #
-#	BINDIR= /usr/bin
-#	SHAREDIR= /usr/share
 #	INCDIR= /usr/include
-#	LIBDIR= /usr/lib
 #
-#BINDIR= /usr/local/bin
-#BINDIR= /dev/env/DJDIR/bin
-BINDIR= /usr/bin
-
-#SHAREDIR= /usr/local/lib
-#SHAREDIR= /dev/env/DJDIR/share
-SHAREDIR= /usr/share
 
 #INCDIR= /usr/local/include
 #INCDIR= /dev/env/DJDIR/include
 INCDIR= /usr/include
 
+# Where to install calc realted things
+#
+# ${BINDIR}		where to install calc binary files
+# ${LIBDIR}		where calc link library (*.a) files are installed
+# ${CALC_SHAREDIR}	where to install calc help, .cal, startup, config files
+#
+# NOTE: The install rule prepends installation paths with $T, which
+#	by default is empty.  If $T is non-empty, then installation
+#	locations will be relative to the $T directory.
+#
+# For DJGPP, select:
+#
+#	BINDIR= /dev/env/DJDIR/bin
+#	LIBDIR= /dev/env/DJDIR/lib
+#	CALC_SHAREDIR= /dev/env/DJDIR/share/calc
+#
+# If in doubt, set:
+#
+#	BINDIR= /usr/bin
+#	LIBDIR= /usr/lib
+#	CALC_SHAREDIR= /usr/share/calc
+#
+#BINDIR= /usr/local/bin
+#BINDIR= /dev/env/DJDIR/bin
+BINDIR= /usr/bin
+
 #LIBDIR= /usr/local/lib
 #LIBDIR= /dev/env/DJDIR/lib
 LIBDIR= /usr/lib
 
-# By default, these values are based on the above 4 values
-# --------------------------------------------------------
-# ${CSHAREDIR}		where most common shared calc files are kept
+#CALC_SHAREDIR= /usr/local/lib/calc
+#CALC_SHAREDIR= /dev/env/DJDIR/share/calc
+CALC_SHAREDIR= /usr/share/calc
+
+# By default, these values are based CALC_SHAREDIR, INCDIR, BINDIR
+# ---------------------------------------------------------------
 # ${HELPDIR}		where the help directory is installed
-# ${INCDIRCALC}		where the calc include files are installed
-# ${CUSTOMLIBDIR}	where custom *.cal files are installed
+# ${CALC_INCDIR}	where the calc include files are installed
+# ${CUSTOMCALDIR}	where custom *.cal files are installed
 # ${CUSTOMHELPDIR}	where custom help files are installed
 # ${CUSTOMINCPDIR}	where custom .h files are installed
 # ${SCRIPTDIR}		where calc shell scripts are installed
 #
+# NOTE: The install rule prepends installation paths with $T, which
+#	by default is empty.  If $T is non-empty, then installation
+#	locations will be relative to the $T directory.
+#
 # If in doubt, set:
 #
-#	CSHAREDIR= ${SHAREDIR}/calc
-#	HELPDIR= ${CSHAREDIR}/help
-#	INCDIRCALC= ${INCDIR}/calc
-#	CUSTOMLIBDIR= ${CSHAREDIR}/custom
-#	CUSTOMHELPDIR= ${CSHAREDIR}/custhelp
-#	CUSTOMINCDIR= ${INCDIRCALC}/custom
+#	HELPDIR= ${CALC_SHAREDIR}/help
+#	CALC_INCDIR= ${INCDIR}/calc
+#	CUSTOMCALDIR= ${CALC_SHAREDIR}/custom
+#	CUSTOMHELPDIR= ${CALC_SHAREDIR}/custhelp
+#	CUSTOMINCDIR= ${CALC_INCDIR}/custom
 #	SCRIPTDIR= ${BINDIR}/cscript
 #
-CSHAREDIR= ${SHAREDIR}/calc
-HELPDIR= ${CSHAREDIR}/help
-INCDIRCALC= ${INCDIR}/calc
-CUSTOMLIBDIR= ${CSHAREDIR}/custom
-CUSTOMHELPDIR= ${CSHAREDIR}/custhelp
-CUSTOMINCDIR= ${INCDIRCALC}/custom
+HELPDIR= ${CALC_SHAREDIR}/help
+CALC_INCDIR= ${INCDIR}/calc
+CUSTOMCALDIR= ${CALC_SHAREDIR}/custom
+CUSTOMHELPDIR= ${CALC_SHAREDIR}/custhelp
+CUSTOMINCDIR= ${CALC_INCDIR}/custom
 SCRIPTDIR= ${BINDIR}/cscript
 
 # T - top level directory under which calc will be installed
 #
 # The calc install is performed under $T, the calc build is
-# performed under /.  For example, calc is built with its help
-# directory being ${HELPDIR}.  Howeever calc help files are
-# installed under $T${HELPDIR}.
+# performed under /.	The purpose for $T is to allow someone
+# to install calc somewhere other than into the system area.
+#
+# For example, if:
+#
+#     BINDIR= /usr/bin
+#     LIBDIR= /usr/lib
+#     CALC_SHAREDIR= /usr/share/calc
+#
+# and if:
+#
+#     T= /var/tmp/testing
+#
+# Then the installation locations will be:
+#
+#     calc binary files:	/var/tmp/testing/usr/bin
+#     calc link library:	/var/tmp/testing/usr/lib
+#     calc help, .cal ...:	/var/tmp/testing/usr/share/calc
+#     ... etc ...		/var/tmp/testing/...
 #
 # If $T is empty, calc is installed under /, which is the same
 # top of tree for which it was built.  If $T is non-empty, then
 # calc is installed under $T, as if one had to chroot under
 # $T for calc to operate.
-#
-# The purpose for $T is to allow someone to install calc
-# somewhere other than into the system area.  For example when
-# forming the calc rpm, the Makefile is called with T=$RPM_BUILD_ROOT.
 #
 # If in doubt, use T=
 #
@@ -710,18 +735,18 @@ CATMODE= 0444
 # If the $CALCPATH environment variable is not defined, then the following
 # path will be search for calc resource file routines.
 #
-# Select CALCPATH= .;./cal;~/.cal;${CSHAREDIR};${CUSTOMLIBDIR} for DJGPP.
+# Select CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR} for DJGPP.
 #
-CALCPATH= .:./cal:~/.cal:${CSHAREDIR}:${CUSTOMLIBDIR}
-#CALCPATH= .;./cal;~/.cal;${CSHAREDIR};${CUSTOMLIBDIR}
+CALCPATH= .:./cal:~/.cal:${CALC_SHAREDIR}:${CUSTOMCALDIR}
+#CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR}
 
 # If the $CALCRC environment variable is not defined, then the following
 # path will be search for calc resource files.
 #
-# Select CALCRC= ${CSHAREDIR}/startup;~/.calcrc;./.calcinit for DJGPP.
+# Select CALCRC= ${CALC_SHAREDIR}/startup;~/.calcrc;./.calcinit for DJGPP.
 #
-CALCRC= ${CSHAREDIR}/startup:~/.calcrc:./.calcinit
-#CALCRC= ${CSHAREDIR}/startup;~/.calcrc;./.calcinit
+CALCRC= ${CALC_SHAREDIR}/startup:~/.calcrc:./.calcinit
+#CALCRC= ${CALC_SHAREDIR}/startup;~/.calcrc;./.calcinit
 
 # Determine of the GNU-readline facility will be used instead of the
 # built-in calc binding method.
@@ -899,7 +924,9 @@ CALC_ENV= CALCPATH=./cal
 ALLOW_CUSTOM= -DCUSTOM
 #ALLOW_CUSTOM=
 
-###
+################
+# compiler set #
+################
 #
 # Select your compiler type by commenting out one of the cc sets below:
 #
@@ -1253,14 +1280,16 @@ UTIL_PROGS= align32 fposval have_uid_t longlong have_const \
 # The complete list of Makefile vars passed down to custom/Makefile.
 #
 CUSTOM_PASSDOWN= Q="${Q}" \
-    SHAREDIR="${SHAREDIR}" \
     INCDIR="${INCDIR}" \
-    CSHAREDIR="${CSHAREDIR}" \
+    BINDIR="${BINDIR}" \
+    LIBDIR="${LIBDIR}" \
+    CALC_SHAREDIR="${CALC_SHAREDIR}" \
     HELPDIR="${HELPDIR}" \
-    INCDIRCALC="${INCDIRCALC}" \
-    CUSTOMLIBDIR="${CUSTOMLIBDIR}" \
+    CALC_INCDIR="${CALC_INCDIR}" \
+    CUSTOMCALDIR="${CUSTOMCALDIR}" \
     CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
     CUSTOMINCDIR="${CUSTOMINCDIR}" \
+    SCRIPTDIR="${SCRIPTDIR}" \
     DEBUG="${DEBUG}" \
     NO_SHARED="${NO_SHARED}" \
     RANLIB="${RANLIB}" \
@@ -1287,12 +1316,16 @@ CUSTOM_PASSDOWN= Q="${Q}" \
 # The complete list of Makefile vars passed down to sample/Makefile.
 #
 SAMPLE_PASSDOWN= Q="${Q}" \
-    BINDIR="${BINDIR}" \
-    SHAREDIR="${SHAREDIR}" \
     INCDIR="${INCDIR}" \
+    BINDIR="${BINDIR}" \
     LIBDIR="${LIBDIR}" \
-    CSHAREDIR="${CSHAREDIR}" \
+    CALC_SHAREDIR="${CALC_SHAREDIR}" \
     HELPDIR="${HELPDIR}" \
+    CALC_INCDIR="${CALC_INCDIR}" \
+    CUSTOMCALDIR="${CUSTOMCALDIR}" \
+    CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
+    CUSTOMINCDIR="${CUSTOMINCDIR}" \
+    SCRIPTDIR="${SCRIPTDIR}" \
     DEBUG="${DEBUG}" \
     NO_SHARED="${NO_SHARED}" \
     RANLIB="${RANLIB}" \
@@ -1320,12 +1353,16 @@ SAMPLE_PASSDOWN= Q="${Q}" \
 # The compelte list of Makefile vars passed down to help/Makefile.
 #
 HELP_PASSDOWN= Q="${Q}" \
-    SHAREDIR="${SHAREDIR}" \
     INCDIR="${INCDIR}" \
+    BINDIR="${BINDIR}" \
     LIBDIR="${LIBDIR}" \
-    CSHAREDIR="${CSHAREDIR}" \
+    CALC_SHAREDIR="${CALC_SHAREDIR}" \
     HELPDIR="${HELPDIR}" \
-    INCDIRCALC="${INCDIRCALC}" \
+    CALC_INCDIR="${CALC_INCDIR}" \
+    CUSTOMCALDIR="${CUSTOMCALDIR}" \
+    CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
+    CUSTOMINCDIR="${CUSTOMINCDIR}" \
+    SCRIPTDIR="${SCRIPTDIR}" \
     ICFLAGS="${ICFLAGS}" \
     ILDFLAGS="${ILDFLAGS}" \
     LCC="${LCC}" \
@@ -1340,8 +1377,16 @@ HELP_PASSDOWN= Q="${Q}" \
 # The compelte list of Makefile vars passed down to cal/Makefile.
 #
 CAL_PASSDOWN= Q="${Q}" \
-    SHAREDIR="${SHAREDIR}" \
-    CSHAREDIR="${CSHAREDIR}" \
+    INCDIR="${INCDIR}" \
+    BINDIR="${BINDIR}" \
+    LIBDIR="${LIBDIR}" \
+    CALC_SHAREDIR="${CALC_SHAREDIR}" \
+    HELPDIR="${HELPDIR}" \
+    CALC_INCDIR="${CALC_INCDIR}" \
+    CUSTOMCALDIR="${CUSTOMCALDIR}" \
+    CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
+    CUSTOMINCDIR="${CUSTOMINCDIR}" \
+    SCRIPTDIR="${SCRIPTDIR}" \
     MAKE_FILE=${MAKE_FILE} \
     CHMOD=${CHMOD} \
     CMP=${CMP} \
@@ -1351,7 +1396,15 @@ CAL_PASSDOWN= Q="${Q}" \
 # The compelte list of Makefile vars passed down to cscript/Makefile.
 #
 CSCRIPT_PASSDOWN= Q="${Q}" \
+    INCDIR="${INCDIR}" \
     BINDIR="${BINDIR}" \
+    LIBDIR="${LIBDIR}" \
+    CALC_SHAREDIR="${CALC_SHAREDIR}" \
+    HELPDIR="${HELPDIR}" \
+    CALC_INCDIR="${CALC_INCDIR}" \
+    CUSTOMCALDIR="${CUSTOMCALDIR}" \
+    CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
+    CUSTOMINCDIR="${CUSTOMINCDIR}" \
     SCRIPTDIR="${SCRIPTDIR}" \
     MAKE_FILE=${MAKE_FILE} \
     CHMOD=${CHMOD} \
@@ -1445,8 +1498,8 @@ calc.1: calc.man ${MAKE_FILE}
 	       -e 's,$${BINDIR},${BINDIR},g' \
 	       -e 's,$${CALCPATH},${CALCPATH},g' \
 	       -e 's,$${SCRIPTDIR},${SCRIPTDIR},g' \
-	       -e 's,$${INCDIRCALC},${INCDIRCALC},g' \
-	       -e 's,$${CUSTOMLIBDIR},${CUSTOMLIBDIR},g' \
+	       -e 's,$${CALC_INCDIR},${CALC_INCDIR},g' \
+	       -e 's,$${CUSTOMCALDIR},${CUSTOMCALDIR},g' \
 	       -e 's,$${CUSTOMINCDIR},${CUSTOMINCDIR},g' \
 	       -e 's,$${CUSTOMHELPDIR},${CUSTOMHELPDIR},g' \
 	       -e 's,$${CALCRC},${CALCRC},g' < calc.man > calc.1
@@ -1569,6 +1622,15 @@ endian_calc.h: endian ${MAKE_FILE}
 	    elif [ -f ${INCDIR}/sys/endian.h ]; then \
 		echo '#include <sys/endian.h>' >> endian_calc.h; \
 		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
+	    elif [ -f /usr/include/endian.h ]; then \
+		echo '#include <endian.h>' >> endian_calc.h; \
+		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
+	    elif [ -f /usr/include/machine/endian.h ]; then \
+		echo '#include <machine/endian.h>' >> endian_calc.h; \
+		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
+	    elif [ -f /usr/include/sys/endian.h ]; then \
+		echo '#include <sys/endian.h>' >> endian_calc.h; \
+		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
 	    else \
 		./endian >> endian_calc.h; \
 	    fi; \
@@ -1628,12 +1690,14 @@ have_malloc.h: ${MAKE_FILE}
 	${Q}echo '#define __HAVE_MALLOC_H__' >> have_malloc.h
 	${Q}echo '' >> have_malloc.h
 	${Q}echo '' >> have_malloc.h
-	${Q}echo '/* do we have ${INCDIR}/malloc.h? */' >> have_malloc.h
+	${Q}echo '/* do we have <malloc.h>? */' >> have_malloc.h
 	-${Q}if [ X"${HAVE_MALLOC_H}" = X"YES" ]; then \
 	    echo '#define HAVE_MALLOC_H	 /* yes */' >> have_malloc.h; \
 	elif [ X"${HAVE_MALLOC_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_MALLOC_H	/* no */' >> have_malloc.h; \
 	elif [ -f ${INCDIR}/malloc.h ]; then \
+	    echo '#define HAVE_MALLOC_H	 /* yes */' >> have_malloc.h; \
+	elif [ -f /usr/include/malloc.h ]; then \
 	    echo '#define HAVE_MALLOC_H	 /* yes */' >> have_malloc.h; \
 	else \
 	    echo '#undef HAVE_MALLOC_H	/* no */' >> have_malloc.h; \
@@ -1664,12 +1728,14 @@ have_times.h: ${MAKE_FILE}
 	${Q}echo '#define __HAVE_TIMES_H__' >> have_times.h
 	${Q}echo '' >> have_times.h
 	${Q}echo '' >> have_times.h
-	${Q}echo '/* do we have ${INCDIR}/times.h? */' >> have_times.h
+	${Q}echo '/* do we have <times.h>? */' >> have_times.h
 	-${Q}if [ X"${HAVE_TIMES_H}" = X"YES" ]; then \
 	    echo '#define HAVE_TIMES_H	/* yes */' >> have_times.h; \
 	elif [ X"${HAVE_TIMES_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_TIMES_H  /* no */' >> have_times.h; \
 	elif [ -f ${INCDIR}/times.h ]; then \
+	    echo '#define HAVE_TIMES_H	/* yes */' >> have_times.h; \
+	elif [ -f /usr/include/times.h ]; then \
 	    echo '#define HAVE_TIMES_H	/* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_TIMES_H  /* no */' >> have_times.h; \
@@ -1680,6 +1746,8 @@ have_times.h: ${MAKE_FILE}
 	    echo '#undef HAVE_SYS_TIMES_H  /* no */' >> have_times.h; \
 	elif [ -f ${INCDIR}/sys/times.h ]; then \
 	    echo '#define HAVE_SYS_TIMES_H  /* yes */' >> have_times.h; \
+	elif [ -f /usr/include/sys/times.h ]; then \
+	    echo '#define HAVE_SYS_TIMES_H  /* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_SYS_TIMES_H  /* no */' >> have_times.h; \
 	fi
@@ -1689,6 +1757,8 @@ have_times.h: ${MAKE_FILE}
 	    echo '#undef HAVE_TIME_H  /* no */' >> have_times.h; \
 	elif [ -f ${INCDIR}/time.h ]; then \
 	    echo '#define HAVE_TIME_H  /* yes */' >> have_times.h; \
+	elif [ -f /usr/include/time.h ]; then \
+	    echo '#define HAVE_TIME_H  /* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_TIME_H  /* no */' >> have_times.h; \
 	fi
@@ -1697,6 +1767,8 @@ have_times.h: ${MAKE_FILE}
 	elif [ X"${HAVE_SYS_TIME_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_SYS_TIME_H  /* no */' >> have_times.h; \
 	elif [ -f ${INCDIR}/sys/time.h ]; then \
+	    echo '#define HAVE_SYS_TIME_H  /* yes */' >> have_times.h; \
+	elif [ -f /usr/include/sys/time.h ]; then \
 	    echo '#define HAVE_SYS_TIME_H  /* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_SYS_TIME_H  /* no */' >> have_times.h; \
@@ -1727,12 +1799,14 @@ have_stdlib.h: ${MAKE_FILE}
 	${Q}echo '#define __HAVE_STDLIB_H__' >> have_stdlib.h
 	${Q}echo '' >> have_stdlib.h
 	${Q}echo '' >> have_stdlib.h
-	${Q}echo '/* do we have ${INCDIR}/stdlib.h? */' >> have_stdlib.h
+	${Q}echo '/* do we have <stdlib.h>? */' >> have_stdlib.h
 	-${Q}if [ X"${HAVE_STDLIB_H}" = X"YES" ]; then \
 	    echo '#define HAVE_STDLIB_H	/* yes */' >> have_stdlib.h; \
 	elif [ X"${HAVE_STDLIB_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_STDLIB_H  /* no */' >> have_stdlib.h; \
 	elif [ -f ${INCDIR}/stdlib.h ]; then \
+	    echo '#define HAVE_STDLIB_H	 /* yes */' >> have_stdlib.h; \
+	elif [ -f /usr/include/stdlib.h ]; then \
 	    echo '#define HAVE_STDLIB_H	 /* yes */' >> have_stdlib.h; \
 	else \
 	    echo '#undef HAVE_STDLIB_H	/* no */' >> have_stdlib.h; \
@@ -1763,12 +1837,14 @@ have_unistd.h: ${MAKE_FILE}
 	${Q}echo '#define __HAVE_UNISTD_H__' >> have_unistd.h
 	${Q}echo '' >> have_unistd.h
 	${Q}echo '' >> have_unistd.h
-	${Q}echo '/* do we have ${INCDIR}/unistd.h? */' >> have_unistd.h
+	${Q}echo '/* do we have <unistd.h>? */' >> have_unistd.h
 	-${Q}if [ X"${HAVE_UNISTD_H}" = X"YES" ]; then \
 	    echo '#define HAVE_UNISTD_H	/* yes */' >> have_unistd.h; \
 	elif [ X"${HAVE_UNISTD_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_UNISTD_H  /* no */' >> have_unistd.h; \
 	elif [ -f ${INCDIR}/unistd.h ]; then \
+	    echo '#define HAVE_UNISTD_H	 /* yes */' >> have_unistd.h; \
+	elif [ -f /usr/include/unistd.h ]; then \
 	    echo '#define HAVE_UNISTD_H	 /* yes */' >> have_unistd.h; \
 	else \
 	    echo '#undef HAVE_UNISTD_H	/* no */' >> have_unistd.h; \
@@ -1799,12 +1875,14 @@ have_string.h: ${MAKE_FILE}
 	${Q}echo '#define __HAVE_STRING_H__' >> have_string.h
 	${Q}echo '' >> have_string.h
 	${Q}echo '' >> have_string.h
-	${Q}echo '/* do we have ${INCDIR}/string.h? */' >> have_string.h
+	${Q}echo '/* do we have <string.h>? */' >> have_string.h
 	-${Q}if [ X"${HAVE_STRING_H}" = X"YES" ]; then \
 	    echo '#define HAVE_STRING_H	/* yes */' >> have_string.h; \
 	elif [ X"${HAVE_STRING_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_STRING_H  /* no */' >> have_string.h; \
 	elif [ -f ${INCDIR}/string.h ]; then \
+	    echo '#define HAVE_STRING_H	 /* yes */' >> have_string.h; \
+	elif [ -f /usr/include/string.h ]; then \
 	    echo '#define HAVE_STRING_H	 /* yes */' >> have_string.h; \
 	else \
 	    echo '#undef HAVE_STRING_H	/* no */' >> have_string.h; \
@@ -1850,6 +1928,16 @@ terminal.h: ${MAKE_FILE}
 	    echo '#undef USE_TERMIO    /* <termio.h> */' >> terminal.h; \
 	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
 	elif [ -f ${INCDIR}/termio.h ]; then \
+	    echo '/* use termio */' >> terminal.h; \
+	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> terminal.h; \
+	    echo '#define USE_TERMIO   /* <termio.h> */' >> terminal.h; \
+	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
+	elif [ -f /usr/include/termios.h ]; then \
+	    echo '/* use termios */' >> terminal.h; \
+	    echo '#define USE_TERMIOS  /* <termios.h> */' >> terminal.h; \
+	    echo '#undef USE_TERMIO    /* <termio.h> */' >> terminal.h; \
+	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
+	elif [ -f /usr/include/termio.h ]; then \
 	    echo '/* use termio */' >> terminal.h; \
 	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> terminal.h; \
 	    echo '#define USE_TERMIO   /* <termio.h> */' >> terminal.h; \
@@ -3108,11 +3196,10 @@ env:
 	@echo 'HAVE_URANDOM=${HAVE_URANDOM}'; echo ''
 	@echo 'ALIGN32=${ALIGN32}'; echo ''
 	@echo 'BINDIR=${BINDIR}'; echo ''
-	@echo 'SHAREDIR=${SHAREDIR}'; echo ''
-	@echo 'CSHAREDIR=${CSHAREDIR}'; echo ''
+	@echo 'CALC_SHAREDIR=${CALC_SHAREDIR}'; echo ''
 	@echo 'LIBDIR=${LIBDIR}'; echo ''
 	@echo 'HELPDIR=${HELPDIR}'; echo ''
-	@echo 'CUSTOMLIBDIR=${CUSTOMLIBDIR}'; echo ''
+	@echo 'CUSTOMCALDIR=${CUSTOMCALDIR}'; echo ''
 	@echo 'CUSTOMINCDIR=${CUSTOMINCDIR}'; echo ''
 	@echo 'CUSTOMHELPDIR=${CUSTOMHELPDIR}'; echo ''
 	@echo 'SCRIPTDIR=${SCRIPTDIR}'; echo ''
@@ -3260,13 +3347,12 @@ calc.spec: spec-template ${MAKE_FILE} help/Makefile cal/Makefile \
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	${Q}rm -f calc.spec calc.spec.sed
 	${Q}echo 's,$${BINDIR},${BINDIR},g' >> calc.spec.sed
-	${Q}echo 's:$${SHAREDIR}:${SHAREDIR}:g' >> calc.spec.sed
 	${Q}echo 's,$${INCDIR},${INCDIR},g' >> calc.spec.sed
 	${Q}echo 's:$${LIBDIR}:${LIBDIR}:g' >> calc.spec.sed
-	${Q}echo 's:$${CSHAREDIR}:${CSHAREDIR}:g' >> calc.spec.sed
+	${Q}echo 's:$${CALC_SHAREDIR}:${CALC_SHAREDIR}:g' >> calc.spec.sed
 	${Q}echo 's,$${HELPDIR},${HELPDIR},g' >> calc.spec.sed
-	${Q}echo 's,$${INCDIRCALC},${INCDIRCALC},g' >> calc.spec.sed
-	${Q}echo 's,$${CUSTOMLIBDIR},${CUSTOMLIBDIR},g' >> calc.spec.sed
+	${Q}echo 's,$${CALC_INCDIR},${CALC_INCDIR},g' >> calc.spec.sed
+	${Q}echo 's,$${CUSTOMCALDIR},${CUSTOMCALDIR},g' >> calc.spec.sed
 	${Q}echo 's,$${CUSTOMINCDIR},${CUSTOMINCDIR},g' >> calc.spec.sed
 	${Q}echo 's,$${CUSTOMHELPDIR},${CUSTOMHELPDIR},g' >> calc.spec.sed
 	${Q}echo 's,$${SCRIPTDIR},${SCRIPTDIR},g' >> calc.spec.sed
@@ -3312,7 +3398,7 @@ inst_files: ${MAKE_FILE} help/Makefile cal/Makefile custom/Makefile \
 	${Q}echo ${LIBDIR}/libcalc.a >> inst_files
 	${Q}for i in ${LIB_H_SRC} ${BUILD_H_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
-		echo ${INCDIRCALC}/$$i; \
+		echo ${CALC_INCDIR}/$$i; \
 	    fi; \
 	done >> inst_files
 	${Q}if [ ! -z "${MANDIR}" ]; then \
@@ -3350,7 +3436,7 @@ rpm.mk.patch: Makefile.linux ${MAKE_FILE}
 
 # The olduninstall rule will remove calc files from the older, histroic
 # locations under the /usr/local directory.  If you are using the
-# new default values for ${BINDIR}, ${SHAREDIR}, ${INCDIR} and ${LIBDIR}
+# new default values for ${BINDIR}, ${CALC_SHAREDIR}, ${INCDIR} and ${LIBDIR}
 # then you can use this rule to clean out the older calc stuff under
 # the /usr/local directory.
 #
@@ -3358,13 +3444,12 @@ olduninstall:
 	-rm -f inst_files
 	${MAKE} -f Makefile \
 		BINDIR=/usr/local/bin \
-		SHAREDIR=/usr/local/lib \
 		INCDIR=/usr/local/include \
 		LIBDIR=/usr/local/lib/calc \
-		CSHAREDIR=/usr/local/lib/calc \
+		CALC_SHAREDIR=/usr/local/lib/calc \
 		HELPDIR=/usr/local/lib/calc/help \
-		INCDIRCALC=/usr/local/include/calc \
-		CUSTOMLIBDIR=/usr/local/lib/calc/custom \
+		CALC_INCDIR=/usr/local/include/calc \
+		CUSTOMCALDIR=/usr/local/lib/calc/custom \
 		CUSTOMHELPDIR=/usr/local/lib/calc/help/custhelp \
 		CUSTOMINCDIR=/usr/local/lib/calc/custom \
 		SCRIPTDIR=/usr/local/bin/cscript \
@@ -3478,18 +3563,6 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${SHAREDIR} ]; then \
-	    echo mkdir $T${SHAREDIR}; \
-	    mkdir $T${SHAREDIR}; \
-	    if [ ! -d "$T${SHAREDIR}" ]; then \
-		echo mkdir -p "$T${SHAREDIR}"; \
-		mkdir -p "$T${SHAREDIR}"; \
-	    fi; \
-	    echo ${CHMOD} 0755 $T${SHAREDIR}; \
-	    ${CHMOD} 0755 $T${SHAREDIR}; \
-	else \
-	    true; \
-	fi
 	-${Q}if [ ! -d $T${INCDIR} ]; then \
 	    echo mkdir $T${INCDIR}; \
 	    mkdir $T${INCDIR}; \
@@ -3514,16 +3587,15 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${CSHAREDIR} ]; then \
-	    mkdir $T${CSHAREDIR}; \
-	    echo mkdir $T${CSHAREDIR}; \
-	    if [ ! -d "$T${CSHAREDIR}" ]; then \
-		echo mkdir -p "$T${CSHAREDIR}"; \
-		mkdir -p "$T${CSHAREDIR}"; \
+	-${Q}if [ ! -d $T${CALC_SHAREDIR} ]; then \
+	    mkdir $T${CALC_SHAREDIR}; \
+	    echo mkdir $T${CALC_SHAREDIR}; \
+	    if [ ! -d "$T${CALC_SHAREDIR}" ]; then \
+		echo mkdir -p "$T${CALC_SHAREDIR}"; \
+		mkdir -p "$T${CALC_SHAREDIR}"; \
 	    fi; \
-	    mkdir $T${CSHAREDIR}; \
-	    echo ${CHMOD} 0755 $T${CSHAREDIR}; \
-	    ${CHMOD} 0755 $T${CSHAREDIR}; \
+	    echo ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
+	    ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
 	else \
 	    true; \
 	fi
@@ -3539,27 +3611,27 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${INCDIRCALC} ]; then \
-	    echo mkdir $T${INCDIRCALC}; \
-	    mkdir $T${INCDIRCALC}; \
-	    if [ ! -d "$T${INCDIRCALC}" ]; then \
-		echo mkdir -p "$T${INCDIRCALC}"; \
-		mkdir -p "$T${INCDIRCALC}"; \
+	-${Q}if [ ! -d $T${CALC_INCDIR} ]; then \
+	    echo mkdir $T${CALC_INCDIR}; \
+	    mkdir $T${CALC_INCDIR}; \
+	    if [ ! -d "$T${CALC_INCDIR}" ]; then \
+		echo mkdir -p "$T${CALC_INCDIR}"; \
+		mkdir -p "$T${CALC_INCDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${INCDIRCALC}; \
-	    ${CHMOD} 0755 $T${INCDIRCALC}; \
+	    echo ${CHMOD} 0755 $T${CALC_INCDIR}; \
+	    ${CHMOD} 0755 $T${CALC_INCDIR}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${CUSTOMLIBDIR} ]; then \
-	    echo mkdir $T${CUSTOMLIBDIR}; \
-	    mkdir $T${CUSTOMLIBDIR}; \
-	    if [ ! -d "$T${CUSTOMLIBDIR}" ]; then \
-		echo mkdir -p "$T${CUSTOMLIBDIR}"; \
-		mkdir -p "$T${CUSTOMLIBDIR}"; \
+	-${Q}if [ ! -d $T${CUSTOMCALDIR} ]; then \
+	    echo mkdir $T${CUSTOMCALDIR}; \
+	    mkdir $T${CUSTOMCALDIR}; \
+	    if [ ! -d "$T${CUSTOMCALDIR}" ]; then \
+		echo mkdir -p "$T${CUSTOMCALDIR}"; \
+		mkdir -p "$T${CUSTOMCALDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${CUSTOMLIBDIR}; \
-	    ${CHMOD} 0755 $T${CUSTOMLIBDIR}; \
+	    echo ${CHMOD} 0755 $T${CUSTOMCALDIR}; \
+	    ${CHMOD} 0755 $T${CUSTOMCALDIR}; \
 	else \
 	    true; \
 	fi
@@ -3671,14 +3743,14 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	    fi; \
 	    rm -f tmp; \
 	    ${SED} -e 's/^\(#[ 	]*include[ 	][ 	]*\)"/\1"calc\//' $$i > tmp; \
-	    if ${CMP} -s tmp $T${INCDIRCALC}/$$i; then \
+	    if ${CMP} -s tmp $T${CALC_INCDIR}/$$i; then \
 		true; \
 	    else \
-		rm -f $T${INCDIRCALC}/$$i.new; \
-		cp -f tmp $T${INCDIRCALC}/$$i.new; \
-		${CHMOD} 0444 $T${INCDIRCALC}/$$i.new; \
-		mv -f $T${INCDIRCALC}/$$i.new $T${INCDIRCALC}/$$i; \
-		echo "installed $T${INCDIRCALC}/$$i"; \
+		rm -f $T${CALC_INCDIR}/$$i.new; \
+		cp -f tmp $T${CALC_INCDIR}/$$i.new; \
+		${CHMOD} 0444 $T${CALC_INCDIR}/$$i.new; \
+		mv -f $T${CALC_INCDIR}/$$i.new $T${CALC_INCDIR}/$$i; \
+		echo "installed $T${CALC_INCDIR}/$$i"; \
 	    fi; \
 	done
 	${Q}rm -f tmp

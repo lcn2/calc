@@ -36,8 +36,8 @@ HAVE_UNISTD_H=NO
 
 LIBDIR=/lib/calc
 HELPDIR=/lib/calc/help
-INCDIRCALC=/include/calc
-CUSTOMLIBDIR=/lib/calc/custom
+CALC_INCDIR=/include/calc
+CUSTOMCALDIR=/lib/calc/custom
 CUSTOMHELPDIR=/lib/calc/help/custhelp
 SCRIPTDIR=/lib/calc/cscript
 MANDIR=

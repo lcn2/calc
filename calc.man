@@ -15,8 +15,8 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 .\"
-.\" @(#) $Revision: 29.8 $
-.\" @(#) $Id: calc.man,v 29.8 2002/03/12 09:02:58 chongo Exp $
+.\" @(#) $Revision: 29.9 $
+.\" @(#) $Id: calc.man,v 29.9 2002/03/14 00:28:28 chongo Exp $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -514,8 +514,8 @@ searches in succession:
 ./myfile.cal
 ${LIBDIR}/myfile
 ${LIBDIR}/myfile.cal
-${CUSTOMLIBDIR}/myfile
-${CUSTOMLIBDIR}/myfile.cal
+${CUSTOMCALDIR}/myfile
+${CUSTOMCALDIR}/myfile.cal
 .fi
 .in -5n
 .sp 1
@@ -837,7 +837,7 @@ ${LIBDIR}/bindings
 non-GNU-readline command line editor bindings
 .sp 1
 .TP 5
-${INCDIRCALC}/*.h
+${CALC_INCDIR}/*.h
 include files for C interface use
 .sp 1
 .TP 5
@@ -849,7 +849,7 @@ ${LIBDIR}/libcustcalc.a
 custom binary link library
 .sp 1
 .TP 5
-${CUSTOMLIBDIR}/*.cal
+${CUSTOMCALDIR}/*.cal
 custom resource files
 .sp 1
 .TP 5

@@ -7,7 +7,7 @@
 #define __HAVE_STRING_H__
 
 
-/* do we have /usr/include/string.h? */
+/* do we have <string.h>? */
 #define HAVE_STRING_H	/* yes */
 
 

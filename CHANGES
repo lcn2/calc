@@ -20,6 +20,7 @@ The following are the changes from calc version 2.11.5.5 to date:
 
     Removed an obsolete reference to TOPDIR.  This was fixed thanks to
     a bug report by Clifford Kite <kite_public1 at ev1 dot net>.
+    Fixed other inconsistencies related to things like BINDIR.
 
     Fixed calc man page so that is refers to -f instead of the old -S flag.
     Fixed thanks to Clifford Kite <kite_public1 at ev1 dot net> for
@@ -50,6 +51,12 @@ The following are the changes from calc version 2.11.5.5 to date:
     We appreciate their work in this regard.  In the next release, we
     plan to also build and release our own RPMs based on their efforts.
 
+    Changed the Makefile variable CUSTOMLIBDIR to CUSTOMCALDIR.
+    Changed the Makefile variable CSHAREDIR to CALC_SHAREDIR.
+    Changed the Makefile variable INCDIRCALC to CALC_INCDIR.
+    Removed the Makefile variable SHAREDIR.
+
+    Updated the HOWTO.INSTALL and README.WINDOWS files.
 
 The following are the changes from calc version 2.11.5t4.1 to 2.11.5t4.4:
 
@@ -5411,8 +5418,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.46 $
-## @(#) $Id: CHANGES,v 29.46 2002/03/12 10:58:31 chongo Exp $
+## @(#) $Revision: 29.48 $
+## @(#) $Id: CHANGES,v 29.48 2002/03/14 00:28:28 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
