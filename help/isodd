@@ -1,0 +1,30 @@
+NAME
+    isodd - whether a value is an odd integer
+
+SYNOPSIS
+    isodd(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is an odd integer.  This function will return 1 if x is
+    odd integer, 0 otherwise.
+
+EXAMPLE
+    > print isodd(2.0), isodd(1), isodd("1")
+    0 1 0
+
+    > print isodd(2i), isodd(1e20+1), isodd(1/3)
+    0 1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    iseven, isint, isnum, isodd, isreal

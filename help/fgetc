@@ -1,0 +1,35 @@
+NAME
+    fgetc - read the next char from a file
+
+SYNOPSIS
+    fgetc(fd)
+
+TYPES
+    fd		file
+
+    return	str or nil
+
+DESCRIPTION
+    This function reads the next character from the open file
+    associated with fd.
+
+    If there is a next character, this function returns a 1
+    character string containing that character.  In the case
+    of EOF or error, nil is returned.
+
+EXAMPLE
+    > fd = fopen("/tmp/newfile", "w")
+    > fputs(fd, "chongo was here\n")
+    > fd2 = fopen("/tmp/newfile", "r")
+    > fgetc(fd2)
+	    "c"
+
+LIMITS
+    fd must be associaed with an open file
+
+LIBRARY
+    none
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt

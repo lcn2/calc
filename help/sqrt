@@ -1,0 +1,132 @@
+NAME
+    sqrt - evaluate exactly or approximate a square root
+
+SYNOPSIS
+    sqrt(x [, eps[, z]])
+
+TYPES
+    If x is an object of type tt, or if x is not an object but y
+    is an object of type tt, and the user-defined function
+    tt_round has been defined, the types for x, y, z are as
+    required for tt_round, the value returned, if any, is as
+    specified in tt_round.  For object x or y, z defaults to a
+    null value.
+
+    For other argument types:
+
+    x		real or complex
+    eps		nonzero real
+    z		integer
+
+    return	real or complex
+
+DESCRIPTION
+    For real or complex x, sqrt(x, y, z) returns either the exact
+    value of a square root of x (which is possible only if this
+    square root is rational) or a number for which the real and
+    imaginary parts are either exact or the nearest below or nearest
+    above to the exact values.
+
+    The argument, eps, specifies the epsilon/error value to be
+    used during calculations.  By default, this value is epsilon().
+
+    The seven lowest bits of z are used to control the signs of the
+    result and the type of any rounding:
+
+    z bit 6    ((z & 64) > 0)
+
+	0:	principal square root
+
+	1:	negative principal square root
+
+    z bit 5    ((z & 32) > 0)
+
+	0:	return aprox square root
+
+	1:	return exact square root when real & imaginary are rational
+
+    z bits 5-0  (z & 31)
+
+	0:	round down or up according as y is positive or negative,
+		sgn(r) = sgn(y)
+
+	1:	round up or down according as y is positive or negative,
+		sgn(r) = -sgn(y)
+
+	2:	round towards zero, sgn(r) = sgn(x)
+
+	3:	round away from zero, sgn(r) = -sgn(x)
+
+	4:	round down
+
+	5:	round up
+
+	6:	round towards or from zero according as y is positive or
+		negative, sgn(r) = sgn(x/y)
+
+	7:	round from or towards zero according as y is positive or
+		negative, sgn(r) = -sgn(x/y)
+
+	8:	a/y is even
+
+	9:	a/y is odd
+
+	10:	a/y is even or odd according as x/y is positive or negative
+
+	11:	a/y is odd or even according as x/y is positive or negative
+
+	12:	a/y is even or odd according as y is positive or negative
+
+	13:	a/y is odd or even according as y is positive or negative
+
+	14:	a/y is even or odd according as x is positive or negative
+
+	15:	a/y is odd or even according as x is positive or negative
+
+    The value of y and lowest 5 bits of z are used in the same way as
+    y and z in appr(x, y, z): for either the real or imaginary part
+    of the square root, if this is a multiple of y, it is returned
+    exactly; otherwise the value returned for the part is the
+    multiple of y nearest below or nearest above the true value.
+    For z = 0, the remainder has the sign of y;  changing bit 0
+    changes to the other possibility; for z = 2, the remainder has the
+    sign of the true value, i.e. the rounding is towards zero; for
+    z = 4, the remainder is always positive, i.e. the rounding is down;
+    for z = 8, the rounding is to the nearest even multiple of y;
+    if 16 <= z < 32, the rounding is to the nearest multiple of y when
+    this is uniquely determined and otherwise is as if z were replaced
+    by z - 16.
+
+    With the initial default values, 1e-20 for epsilon() and 24 for
+    config("sqrt"), sqrt(x) returns the principal square root with
+    real and imaginary parts rounded to 20 decimal places, the 20th
+    decimal digit being even when the part differs from a multiple
+    of 1e-20 by 1/2 * 1e-20.
+
+
+EXAMPLE
+    > eps = 1e-4
+    > print sqrt(4,eps,0), sqrt(4,eps,64), sqrt(8i,eps,0), sqrt(8i, eps, 64)
+    2 -2 2+2i -2-2i
+
+    > print sqrt(2,eps,0), sqrt(2,eps,1), sqrt(2,eps,24)
+    1.4142 1.4143 1.4142
+
+    > x = 1.2345678^2
+    > print sqrt(x,eps,24), sqrt(x,eps,32), sqrt(x,eps,96)
+    1.2346 1.2345678 -1.2345678
+
+    > print sqrt(.00005^2, eps, 24), sqrt(.00015^2, eps, 24)
+    0 .0002
+
+LIMITS
+    none
+
+LIBRARY
+    COMPLEX *csqrt(COMPLEX *x, NUMBER *ep, long z)
+    NUMBER *qisqrt(NUMBER *q)
+    NUMBER *qsqrt(NUMBER *x, NUMBER *ep, long z)
+    FLAG zsqrt(ZVALUE x, ZVALUE *result, long z)
+
+SEE ALSO
+   appr, epsilon

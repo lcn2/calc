@@ -1,0 +1,37 @@
+NAME
+    strprintf - formatted print to a string
+
+SYNOPSIS
+    strprintf(fmt, x_1, x_2, ...)
+
+TYPES
+    fmt			string
+    x_1, x_2, ...	any
+
+    return		string
+
+DESCRIPTION
+    This function returns the string formed from the characters that
+    would be printed to standard output by printf(fmt, x_1, x_2, ...).
+
+EXAMPLE
+    > strprintf("h=%d, i=%d", 2, 3);
+            "h=2, i=3"
+
+    > c = config("epsilon", 1e-6); c = config("display", 6);
+    > c = config("tilde", 1); c = config("outround", 0);
+    > c = config("fullzero", 0);
+    > fmt = "%f,%10f,%-10f,%10.4f,%.4f,%.f.\n";
+    > a = sqrt(3);
+    > strprintf(fmt,a,a,a,a,a,a);
+	    "1.732051,  1.732051,1.732051  ,   ~1.7320,~1.7320,~1.
+    "
+
+LIMITS
+    The number of arguments of strprintf() is not to exceed 100.
+
+LIBRARY
+    none
+
+SEE ALSO
+    printf, fprintf, print

@@ -1,0 +1,29 @@
+NAME
+    ltol - "leg to leg", third side of a right-angled triangle with
+		unit hypotenuse, given one other side
+
+SYNOPSIS
+    ltol(x, [,eps])
+
+TYPES
+    x		real
+    eps		nonzero real
+
+    return	real
+
+DESCRIPTION
+    Returns sqrt(1 - x^2) to the nearest multiple of eps.
+    The default value for eps is epsilon().
+
+EXAMPLE
+    > print ltol(0.4, 1e-6), hypot(0.5, 1e-6)
+    .6 .866025
+
+LIMITS
+    abs(x) <= 1
+
+LIBRARY
+    NUMBER *qlegtoleg(NUMBER *q1, *epsilon, BOOL wantneg)
+
+SEE ALSO
+    hypot

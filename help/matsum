@@ -1,0 +1,28 @@
+NAME
+    matsum - sum the elements of a matrix
+
+SYNOPSIS
+    matsum(m)
+
+TYPES
+    m		matrix with any types of elements
+
+    return	number
+
+DESCRIPTION
+    Returns the sum of the numeric (real or complex) elements of m.
+    Non-numeric elements are ignored.
+
+EXAMPLE
+    > mat A[2,2] = {1, 2, 3, list(1,2,3)}
+    print matsum(A)
+      6
+
+LIMITS
+    none
+
+LIBRARY
+    void matsum(MATRIX *m, VALUE *vres);
+
+SEE ALSO
+    XXX - fill in

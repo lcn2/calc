@@ -1,0 +1,50 @@
+NAME
+   tail - create a list of specified size from the tail of a list
+
+SYNOPSIS
+   tail(x, y)
+
+TYPES
+    x		list
+    y		int
+
+    return	list
+
+DESCRIPTION
+    If 0 <= y <= size(x) == n, tail(x,y) returns a list of size y whose
+    elements in succession have values x[[n - y]]. x[[1]], ..., x[[n - 1]].
+
+    If y > size(x), tail(x,y) is a copy of x.
+
+    If -size(x) < y < 0, tail(x,y) returns a list of size (size(x) + y)
+    whose elements in succession have values x[[-y]]. x[[-y + 1]], ...,
+    x[[size(x) - 1]], i.e. a copy of x from which the first -y members
+    have been deleted.
+
+    If y <= -size(x), tail(x,y) returns a list with no members.
+
+    For any integer y, x == join(head(x,-y), tail(x,y)).
+
+EXAMPLE
+    > A = list(2, 3, 5, 7, 11)
+    > tail(A, 2)
+
+    list (2 members, 2 nonzero):
+	  [[0]] = 7
+	  [[1]] = 11
+
+    > tail(A, -2)
+
+    list (3 members, 3 nonzero):
+	  [[0]] = 5
+	  [[1]] = 7
+	  [[2]] = 11
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    head, segment

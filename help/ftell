@@ -1,0 +1,47 @@
+NAME
+    ftell - return a file position
+
+SYNOPSIS
+    ftell(fd)
+
+TYPES
+    fd		open file stream
+
+    return	non-negative integer or error value
+
+DESCRIPTION
+    This function attempts to return the current value of the file position
+    indicator for the stream.  This is the number of characters (bytes)
+    between the beginning of the file and the position of the
+    next character for output in "w" or "w+" mode or for input.
+
+     On failure, this returns an error value.
+
+EXAMPLE
+    > fd = fopen("/tmp/curds", "w")
+    > fputs(fd, "0123456789")
+    > ftell(fd)
+	10
+    > fputs(fd, "abcdef")
+    > ftell(fd)
+	16
+    > fseek(fd, 20, 0)
+    > ftell(fd)
+	20
+    > fputs(fd, "01234")
+    > ftell(fd)
+	25
+    > freopen(fd, "r")
+    > fscanf(fd, "%*5c")
+	0
+    > ftell(fd)
+	5
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    fseek, fgetpos, fsetpos, rewind, strerror

@@ -1,0 +1,31 @@
+NAME
+    scanf - formatted scan of characters read from standard input
+
+SYNOPSIS
+    scanf(fmt, x_1, x_2, ...)
+
+TYPES
+    fmt			string
+    x_1, x_2, ...	lvalues
+
+    return	null, nonnegative integer, or error value
+
+DESCRIPTION
+    This does the same as fscanf(files(0), fmt, x_1, x_2, ...).
+    For details see fscanf.
+
+EXAMPLE
+    > global a, b, c
+    > scanf("%5c", a)
+	1
+    > a
+	"Alpha"
+
+LIMITS
+    none - XXX - is this correct?
+
+LIBRARY
+    none - XXX - is this correct?
+
+SEE ALSO
+    scan, strscan, fscanf, strscanf, scanf, printf, fprintf

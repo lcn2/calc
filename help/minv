@@ -1,0 +1,47 @@
+NAME
+    minv - inverse of an integer modulo a specified integer
+
+SYNOPSIS
+    minv(x, md)
+
+TYPES
+    x		integer
+    md    	integer
+
+    return	integer
+
+DESCRIPTION
+    If x and md are not relatively prime, zero is returned.
+    Otherwise v = minv(x, md) is the canonical residue v modulo md
+    for which v * x is congruent to 1 modulo md.   The canonical
+    residues modulo md are determined as follows by md and bits 0, 2
+    and 4 of config("mod") (other bits are ignored).
+
+		config("mod")	  md > 0	      md < 0
+
+		    0		0 < v < md	   md < v < 0
+		    1	      -md < v < 0	    0 < v < -md
+		    4		0 < v < md	    0 < v < -md
+		    5         -md < v < 0	   md < v < 0
+		   16	    -md/2 < v <= md/2   md/2 <= v < -md/2
+		   17      -md/2 <= v < md/2     md/2 < v <= -md/2
+		   20	    -md/2 < v <= md/2    md/2 < v <= -md/2
+		   21	   -md/2 <= v < md/2    md/2 <= v < -md/2
+
+EXAMPLE
+    > c = config("mod", 0)
+    > print minv(3,10), minv(-3,10), minv(3,-10), minv(-3,-10), minv(4,10)
+    7 3 -3 -7 0
+
+    > c = config("mod",16)
+    > print minv(3,10), minv(-3,10), minv(3,-10), minv(-3,-10), minv(4,10)
+    -3 3 -3 3 0
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qminv(NUMBER *x, NUMBER *md)
+
+SEE ALSO
+    mod, pmod

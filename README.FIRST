@@ -1,0 +1,52 @@
+Dear alpha tester,
+
+Thanks for taking the time to try out this alpha version of calc!  We are
+interested in any/all feedback that you may have on this version.  In
+particular we would like to hear about:
+
+    * compile problems
+    * regression test problems (try: make check)
+    * compiler warnings
+    * special compile flags/options that you needed
+    * Makefile problems
+    * help file problems
+    * misc nits and typos
+
+We would like to offer a clean compile across a wide verity of platforms,
+so if you can test on several, so much the better!
+
+Calc distributions may be obtained from:
+
+	ftp://ftp.uu.net/pub/calc
+
+If you don't have ftp access to that site, or if you do not find a more
+recent version (you may have a special pre-released version that is
+more advanced than what is in the ftp archive) send EMail to:
+
+	chongo@toad.com
+
+Indicate the version you have and that you would like a more up
+to date version.
+
+=-=
+
+Misc items TODO before Beta release:
+
+    * improve the coverage in the 'SEE ALSO' help file lists
+
+    * where reasonable, be sure that regress.cal tests builtin functions
+
+    * add the Blum-Blum-Shub random() generator code
+
+    * add code to allow of the reading, writing and processing of binary data
+
+    * add shs, shs-1 and md5 hashing functions.  Use align32.h.
+
+    * add mod h*2^n+/-1 function for integers
+
+    * be sure that CHANGES is up to date,
+      look over the help/todo file and update as needed,
+      revisit issues in the BUGS file and
+      change this file  :-)
+
+    * clean the source code and document it better

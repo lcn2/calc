@@ -1,0 +1,48 @@
+NAME
+    inverse - inverse of value
+
+SYNOPSIS
+    inverse(x)
+
+TYPES
+    If x is an object of type xx, the function xx_inv has to have
+    been defined; any conditions on x and the nature of the returned
+    value will depend on the definition of xx_inv.
+
+    For non-object x:
+
+    x		nonzero number (real or complex) or nonsingular matrix
+
+    return	number or matrix
+
+DESCRIPTION
+    For real or complex x, inverse(x) returns the value of 1/x.
+
+    If x is a nonsingular n x n matrix and its elements are numbers or
+    objects for which the required arithmetic operations are defined,
+    inverse(x) returns the matrix m for which m * x = x * m = the unit
+    n x n matrix.  The inverse m will have the same index limits as x.
+
+EXAMPLE
+    > print inverse(5/4), inverse(-2/7), inverse(3 + 4i)
+    .8 -3.5 .12-.16i
+
+    > mat A[2,2] = {2,3,5,7}
+    > print inverse(A)
+
+    mat [2,2] (4 elements, 4 nonzero):
+	[0,0] = -7
+	[0,1] = 3
+	[1,0] = 5
+	[1,1] = -2
+
+LIMITS
+    none
+
+LIBRARY
+    void invertvalue(VALUE *x, VALUE *vres)
+    NUMBER *qinv(NUMBER *x)
+    COMPLEX *cinv(COMPLEX *x)
+    MATRIX *matinv(MATRIX *x)
+
+SEE ALSO

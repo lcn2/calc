@@ -1,0 +1,51 @@
+NAME
+    fgetline - read the next line from a file, newline is tossed
+
+SYNOPSIS
+    fgetline(fd)
+
+TYPES
+    fd		file
+
+    return	str or nil
+
+DESCRIPTION
+    This function reads the next line, including any trailing newline from
+    the open file associated with fd.  Unlike fgets, the trailing
+    newline is removed from the return string.
+
+    Empty lines return the null string.  When the end of file is reached,
+    fgetline returns the null value.  (Note the distinction between a null
+    string and a null value.)
+
+    If the line contained a numeric value, then the 'eval' function can
+    then be used to convert the string to a numeric value.
+
+    If a line is read, is returned minus the trailing newline, otherwise
+    (EOF or ERROR) nil is returned.
+
+EXAMPLE
+    > fd = fopen("/tmp/newfile", "w")
+    > fputs(fd, "chongo was here\n")
+    > fputs(fd, "123\n")
+    > fd2 = fopen("/tmp/newfile", "r")
+    > fgets(fd2)
+	    "chongo was here
+    "
+
+    > fclose(fd2)
+    > fd2 = fopen("/tmp/newfile", "r")
+    > fgetline(fd2)
+	    "chongo was here"
+    > eval(fgetline(fd2))
+	    123
+
+LIMITS
+    fd must be associaed with an open file
+
+LIBRARY
+    none
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt

@@ -1,0 +1,35 @@
+NAME
+    strerror - returns a string describing an error value
+
+SYNOPSIS
+    strerror(x)
+
+TYPES
+    x		error-value or non-negative integer
+
+    return	string or error-value
+
+DESCRIPTION
+    If x is an error-value, strerror(x) returns a string describing that value.
+
+    If x is an integer within the ranges for system, builtin, and user
+    defined error codes, the string describing error(x) is returned.
+    For integers outside these ranges, an "index out of range for
+    strerror" error is returned.
+
+EXAMPLE
+    > strerror(7)
+	"Bad argument for unary -"
+
+    > x = 3 * ("a" + "b")
+    > print strerror(x)
+    Bad arguments for +
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    error, iserror, errno

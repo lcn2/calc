@@ -1,0 +1,30 @@
+NAME
+    isatty - returns 1 if fd assocatied with a tty
+
+SYNOPSIS
+    isatty(fd)
+
+TYPES
+    fd		file
+
+    return	int
+
+DESCRIPTION
+    This function returns 1 if fd is associated with a tty, 0 otherwise.
+
+
+EXAMPLE
+    > print isatty(files(0)), isatty(files(1)), isatty(files(2))
+	    1 1 1
+    > fd = fopen("/dev/null", "r")
+    > isatty(fd)
+	    0
+
+LIMITS
+    fd must be associaed with an open file
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

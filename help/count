@@ -1,0 +1,31 @@
+NAME
+    count - count elements of list or matrix satisfying a stated condition
+
+SYNOPSIS
+    count(x, y)
+
+TYPES
+    x		list or matrix
+    y		string
+
+    return	int
+
+DESCRIPTION
+    For count(x, y), y is to be the name of a user-defined function;
+    count(x,y) then returns the number of elements of x for which y
+    tests as "true".
+
+EXAMPLE
+    > define f(a) = (a < 5)
+    > A = list(1,2,7,6,4,8)
+    > count(A, "f")
+	3
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

@@ -1,0 +1,29 @@
+NAME
+    csc - trigonometric cosecant function
+
+SYNOPSIS
+    csc(x [,eps])
+
+TYPES
+    x		real
+    eps		nonzero real, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Calculate the cosecant of x to a multiple of eps, with error less
+    in absolute value than .75 * eps.
+
+EXAMPLE
+    > print csc(1, 1e-5), csc(1, 1e-10), csc(1, 1e-15), csc(1, 1e-20)
+    1.1884 1.1883951058 1.188395105778121 1.18839510577812121626
+
+LIMITS
+    unlike sin and cos, x must be real
+    eps > 0
+
+LIBRARY
+    NUMBER *qcsc(NUMBER *x, NUMBER *eps)
+
+SEE ALSO
+    sin, cos, tan, sec, cot, epsilon

@@ -1,0 +1,28 @@
+NAME
+    ishash - whether a value is a hash state
+
+SYNOPSIS
+    ishash(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is a hash state.  This function will return 1 if x is
+    a file, 0 otherwise.
+
+EXAMPLE
+    > a = shs(0)
+    > print ishash(a), ishash(0);
+    1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

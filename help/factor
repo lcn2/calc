@@ -1,0 +1,41 @@
+NAME
+    factor - smallest prime factor not exceeding specified limit
+
+SYNOPSIS
+    factor(n [, limit [, err]])
+
+TYPES
+    n		integer
+    limit	integer with abs(limit) < 2^32, defaults to 2^32 - 1
+    err		integer
+
+    return	positive integer, -1 or err
+
+DESCRIPTION
+
+    If n >= 0 and n has a prime factor less than or equal to limit,
+    factor(n, limit) returns the smallest such factor.  If n >= 0
+    and the smallest prime factor of n exceeds limit, 1 is returned.
+    In particular, if n >= 0 and limit <= 1, factor(n, limit)
+    always returns 1; factor(n,2) returns 2 if and only if n is even.
+
+    If n < 0, -1 is returned.
+
+    If abs(limit) >= 2^32, factor(n, limit) causes an error,
+    factor(n, limit, err) returns the value of err.
+
+EXAMPLE
+    > print factor(35,4), factor(35,5), factor(35), factor(-35)
+    1 5 5 -1
+
+    > print factor(2^32 + 1), factor(2^47 - 1), factor(2^59 - 1)
+    641 2351 179951
+
+LIMITS
+     none
+
+LIBRARY
+     FLAG zfactor(ZVALUE n, ZVALUE limit, ZVALUE *res)
+
+SEE ALSO
+    lfactor

@@ -1,0 +1,123 @@
+NAME
+    bround - round numbers to a specified number of binary digits
+
+SYNOPSIS
+    bround(x [,plcs [, rnd]])
+
+TYPES
+    If x is a matrix or a list, bround(x[[i]], ...) is to return
+    a value for each element x[[i]] of x; the value returned will be
+    a matrix or list with the same structure as x.
+
+    Otherwise, if x is an object of type tt, or if x is not an object or
+    number but y is an object of type tt, and the function tt_bround has
+    to be defined; the types for x, plcs, rnd, and the returned value,
+    if any, are as required for specified in tt_bround.  For the object
+    case, plcs and rnd default to the null value.
+
+    For other cases:
+
+    x		number (real or complex)
+    plcs	integer, defaults to zero
+    rnd		integer, defaults to config("round")
+
+    return	number
+
+DESCRIPTION
+    For real x, bround(x, plcs, rnd) returns x rounded to either
+    plcs significant binary digits (if rnd & 32 is nonzero) or to plcs
+    binary places (if rnd & 32 is zero).  In the significant-figure
+    case the rounding is to plcs - ilog10(x) - 1 binary places.
+    If the number of binary places is n and eps = 10^-n, the
+    result is the same as for appr(x, eps, rnd).  This will be
+    exactly x if x is a multiple of eps; otherwise rounding occurs
+    to one of the nearest multiples of eps on either side of x.  Which
+    of these multiples is returned is determined by z = rnd & 31, i.e.
+    the five low order bits of rnd, as follows:
+
+	    z = 0 or 4:		round down, i.e. towards minus infinity
+	    z = 1 or 5:		round up, i.e. towards plus infinity
+	    z = 2 or 6:		round towards zero
+	    z = 3 or 7:		round away from zero
+	    z = 8 or 12:	round to the nearest even multiple of eps
+	    z = 9 or 13:	round to the nearest odd multiple of eps
+	    z = 10 or 14:	round to nearest even or odd multiple of eps
+				    according as x > or < 0
+	    z = 11 or 15:	round to nearest odd or even multiple of eps
+				    according as x > or < 0
+	    z = 16 to 31:	round to the nearest multiple of eps when
+				    this is uniquely determined.  Otherwise
+				    rounding is as if z is replaced by z - 16
+
+    For complex x:
+
+	The real and imaginary parts are rounded as for real x; if the
+	imaginary part rounds to zero, the result is real.
+
+    For matrix or list x:
+
+	The returned values has element bround(x[[i]], plcs, rnd) in
+	the same position as x[[i]] in x.
+
+    For object x or plcs:
+
+	When bround(x, plcs, rnd) is called, x is passed by address so may be
+	changed by assignments; plcs and rnd are copied to temporary
+	variables, so their values are not changed by the call.
+
+EXAMPLES
+    > a = 7/32, b = -7/32
+
+    > print a, b
+    .21875 -.21875
+
+    > print round(a,3,0), round(a,3,1), round(a,3,2), print round(a,3,3)
+    .218, .219, .218, .219
+
+    > print round(b,3,0), round(b,3,1), round(b,3,2), print round(b,3,3)
+    -.219, -.218, -.218, -.219
+
+    > print round(a,3,16), round(a,3,17), round(a,3,18), print round(a,3,19)
+    .2188 .2188 .2188 .2188
+
+    > print round(a,4,16), round(a,4,17), round(a,4,18), print round(a,4,19)
+    .2187 .2188 .2187 .2188
+
+    > print round(a,2,8), round(a,3,8), round(a,4,8), round(a,5,8)
+    .22 .218 .2188 .21875
+
+    > print round(a,2,24), round(a,3,24), round(a,4,24), round(a,5,24)
+    .22 .219 .2188 .21875
+
+    > c = 21875
+    > print round(c,-2,0), round(c,-2,1), round(c,-3,0), round(c,-3,16)
+    21800 21900 21000 22000
+
+    > print round(c,2,32), round(c,2,33), round(c,2,56), round(c,4,56)
+    21000 22000 22000 21880
+
+    > A = list(1/8, 2/8, 3/8, 4/8, 5/8, 6/8, 7/8)
+    > print round(A,2,24)
+
+    list(7 elements, 7 nonzero):
+	[[0]] = .12
+	[[1]] = .25
+	[[3]] = .38
+	[[4]] = .5
+	[[5]] = .62
+	[[6]] = .75
+	[[7]] = .88
+
+LIMITS
+    For non-object case:
+	0 <= abs(plcs) < 2^31
+	0 <= abs(rnd) < 2^31
+
+LIBRARY
+    void broundvalue(VALUE *x, VALUE *plcs, VALUE *rnd, VALUE *result)
+    MATRIX *matbround(MATRIX *m, VALUE *plcs, VALUE *rnd);
+    LIST *listbround(LIST *m, VALUE *plcs, VALUE *rnd);
+    NUMBER *qbround(NUMBER *m, long plcs, long rnd);
+
+SEE ALSO
+    round, trunc, btrunc, int, appr

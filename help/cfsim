@@ -1,0 +1,114 @@
+NAME
+    cfsim - simplify a value using continued fractions
+
+SYNOPSIS
+    cfsim(x [,rnd])
+
+TYPES
+    x		real
+    rnd		integer, defaults to config("cfsim")
+
+    return	real
+
+DESCRIPTION
+    If x is not an integer, cfsim(x, rnd) returns either the nearest
+    above x, or the nearest below x, number with denominator less than
+    den(x).  If x is an integer, cfsim(x, rnd) returns x + 1, x - 1, or 0.
+    Which of the possible results is returned is controlled
+    by bits 0, 1, 3 and 4 of the parameter rnd.
+
+    For 0 <= rnd < 4, the sign of the remainder x - cfsim(x, rnd) is
+    as follows:
+
+		rnd		sign of x - cfsim(x, rnd)
+
+		0		+, as if rounding down
+		1		-. as if rounding up
+		2		sgn(x), as if rounding to zero
+		3		-sgn(x), as if rounding from zero
+
+    This corresponds to the use of rnd for functions like round(x, n, rnd).
+
+    If bit 3 or 4 of rnd is set, the lower order bits are ignored; bit 3
+    is ignored if bit 4 is set.  Thusi, for rnd > 3, it sufficient to
+    consider the two cases rnd = 8 and rnd = 16.
+
+    If den(x) > 2, cfsim(x, 8) returns the value of the penultimate simple
+    continued-fraction approximant to x, i.e. if:
+
+	x = a_0 + 1/(a_1 + 1/(a_2 + ... + 1/a_n) ...)),
+
+    where a_0 is an integer, a_1, ..., a_n are positive integers,
+    and a_n >= 2, the value returned is that of the continued fraction
+    obtained by dropping the last quotient 1/a_n.
+
+    If den(x) > 2, cfsim(x, 16) returns the nearest number to x with
+    denominator less than den(x).  In the continued-fraction representation
+    of x described above, this is given by replacing a_n by a_n - 1.
+
+    If den(x) = 2, the definition adopted is to round towards zero for the
+    approximant case (rnd = 8) and from zero for the "nearest" case (rnd = 16).
+
+    For integral x, cfsim(x, 8) returns zero, cfsim(x,16) returns x - sgn(x).
+
+    In summary, for cfsim(x, rnd) when rnd = 8 or 16, the results are:
+
+	rnd		integer x	half-integer x		den(x) > 2
+
+         8 		0		x - sgn(x)/2		approximant
+	16		x - sgn(x)	x + sgn(x)/2		nearest
+
+     From either cfsim(x, 0) and cfsim(x, 1), the other is easily
+     determined: if one of them has value w, the other has value
+     (num(x) - num(w))/(den(x) - den(w)).  From x and w one may find
+     other optimal rational numbers near x; for example, the smallest-
+     denominator number between x and w is (num(x) + num(w))/(den(x) + den(w)).
+
+     If x = n/d and cfsim(x, 8) = u/v, then for k * v < d, the k-th member of
+     the sequence of nearest approximations to x with decreasing denominators
+     on the other side of x is (n - k * u)/(d - k * v). This is nearer
+     to or further from x than u/v according as 2 * k * v < or > d.
+
+     Iteration of cfsim(x,8) until an integer is obtained gives a sequence of
+     "good" approximations to x with decreasing denominators and
+     correspondingly decreasing accuracy; each denominator is less than half
+     the preceding denominator.  (Unlike the "forward" sequence of
+     continued-fraction approximants these are not necessarily alternately
+     greater than and less than x.)
+
+     Some other properties:
+
+     For rnd = 0 or 1 and any x, or rnd = 8 or 16 and x with den(x) > 2:
+
+		cfsim(n + x, rnd) = n + cfsim(x, rnd).
+
+     This equation also holds for the other values of rnd if n + x and x
+     have the same sign.
+
+     For rnd = 2, 3, 8 or 16, and any x:
+
+		cfsim(-x, rnd) = -cfsim(x, rnd).
+
+     If rnd = 8 or 16, except for integer x or 1/x for rnd = 8, and
+     zero x for rnd = 16:
+
+		cfsim(1/x, rnd) = 1/cfsim(x, rnd).
+
+EXAMPLE
+    > c = config("mode", "frac");
+
+    > print cfsim(43/30, 0), cfsim(43/30, 1), cfsim(43/30, 8), cfsim(43/30,16)
+    10/7 33/23 10/7 33/23
+
+    > x = pi(1e-20); c = config("mode", "frac");
+    > while (!isint(x)) {x = cfsim(x,8); if (den(x) < 1e6) print x,:;}
+    1146408/364913 312689/99532 104348/33215 355/113 22/7 3
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qcfsim(NUMBER *x, long rnd)
+
+SEE ALSO
+    cfappr

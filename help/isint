@@ -1,0 +1,31 @@
+NAME
+    isint - whether a value is an integer
+
+SYNOPSIS
+    isint(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is an integer.  This function will return 1 if x is
+    integer, 0 otherwise.
+
+EXAMPLE
+    > print isint(2.0), isint(1), isint("0")
+    1 1 0
+
+    > print isint(2i), isint(1e20), isint(1/3)
+    0 1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    isassoc, isfile, isident, islist, ismat, isnull, isnum, isobj,
+    isreal, isstr, issimple, istype

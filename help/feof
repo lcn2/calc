@@ -1,0 +1,44 @@
+NAME
+    feof - determine if end-of-file flag is set
+
+SYNOPSIS
+    feof(fd)
+
+TYPES
+    fd		file stream open for reading
+
+    return	0 or 1
+
+DESCRIPTION
+    The function feof(fd) returns 1 or 0 according as the end-of-file flag
+    is set or clear.
+
+    The end-of-file flag for the stream fd is set if reading at the
+    end-of-file position is attempted.  The flag is cleared by
+    positioning operations (fseek, rewind, fsetpos) and by freopen.
+
+EXAMPLE
+    > fd1 = fopen("/tmp/newfile", "w")
+    > fputs(fd1, "Chongo was here\n")
+    > fflush(fd1)
+    > fd2 = fopen("/tmp/newfile", "r")
+    > feof(fd2)
+            0
+    > fgetline(fd2)
+	    "Chongo was here"
+    > feof(fd2)
+            0
+    > fgetline(fd2)
+    > feof(fd2)
+            1
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt
+

@@ -1,0 +1,42 @@
+NAME
+    quomod - assign quotient and remainder to two variables
+
+SYNOPSIS
+    quomod(x, y, q, r)
+
+TYPES
+    x		real
+    y		real
+    q		any
+    r		any
+
+    return	real
+
+DESCRIPTION
+    Returns 0 or 1 according as x is or is not a multiple of y.
+    Let  x = q * y + r  where q is an integer and 0 <= r < y
+    This function assigns the values q and r to the variables
+    Q and R.  If x >= 0, the results for Q and R are the same as
+    those given by Q = x // y, R = x % y.
+
+    XXX - need to document relationship with "quomod" config value
+
+EXAMPLE
+    > global u, v;
+    > global mat M[2];
+    > print quomod(13,5,u,v), u, v, quomod(15.6,5.2,M[0],M[1]), M[0], M[1];
+    > 1 2 3 0 3 0
+    > A = assoc();
+    > print quomod(13, 5, A[1], A[2]), A[1], A[2]
+    > 1 2 3
+
+    XXX - need examples of how the "quomod" config file changes results
+
+LIMITS
+    y > 0
+
+LIBRARY
+    BOOL qquomod(NUMBER *q1, NUMBER *q2, NUMBER **retqdiv, NUMBER **retqmod)
+
+SEE ALSO
+    //,  %

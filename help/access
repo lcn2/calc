@@ -1,0 +1,46 @@
+NAME
+    access - determine existence or accessibility of named file
+
+SYNOPSIS
+    access(name [, mode])
+
+TYPES
+    name	string
+    mode	integer or string containing only 'r', 'w', 'x' characters
+
+    return	null value or error
+
+DESCRIPTION
+    access(name) or access(name, 0) or access(name, "") returns the null
+    value if a file with this name exists.
+
+    If non-null mode is specified, the null value is returned if there
+    is a file with the specified name and accessibility indicated by the
+    bits or characters of the mode argument: 'r' or bit 2 for reading,
+    'w' or bit 1 for writing, 'x' or bit 0 for execution.
+
+EXAMPLE
+    > !rm -f junk
+    > access("junk")
+	Error 10002	XXX This number will probably be changed
+    > f = fopen("junk", "w")
+    > access("junk")
+    > fputs(f, "Now is the time");
+    > freopen(f, "r");
+    > !chmod u-w junk
+    > fgets(f)
+	"Now is the time"
+    > access("junk", "w")
+	Error 10013	XXX
+    > freopen(f, "w")
+	Error 10013	XXX
+
+LIMITS
+    none - XXX - is this correct?
+
+LIBRARY
+    none - XXX - is this correct?
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt

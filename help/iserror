@@ -1,0 +1,28 @@
+NAME
+    error - test whether a value is an error value
+
+SYNOPSIS
+    iserror(x)
+
+TYPES
+    x		any
+
+    return	zero or positive integer < 32768
+
+DESCRIPTION
+    If x is not an error value, zero is returned.
+    If x is an error value, iserror(x) returns its error type.
+
+EXAMPLE
+    > a = error(99)
+    print iserror(a), iserror(2 + a), iserror(2 + "a"), iserror(2 + 3)
+    99 99 3 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    error, errorcodes

@@ -1,0 +1,28 @@
+NAME
+    isrand - whether a value is an additive 55 state
+
+SYNOPSIS
+    isrand(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is an additive 55 pseudo-random number generator state.
+    This function will return 1 if x is a file, 0 otherwise.
+
+EXAMPLE
+    > a = srand(0)
+    > print isrand(a), isrand(0);
+    1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    rand, srand

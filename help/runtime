@@ -1,0 +1,31 @@
+NAME
+    runtime - user runtime
+
+SYNOPSIS
+    runtime()
+
+TYPES
+    return	nonnegative real
+
+DESCRIPTION
+    Returns the current user mode cpu runtime in seconds.
+
+EXAMPLE
+    The result for this example will depend on the speed and number of
+    of clock-ticks per second for the computer being used.
+    The result is a multiple of 1/CLK_TCK, where CLK_TCK is
+    usually 60.  The following is for a XXX machine.
+
+    > t = runtime();
+    > pi = pi(1e-1000);
+    > runtime() - t;
+	.2
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    ctime

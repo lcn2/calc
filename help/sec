@@ -1,0 +1,29 @@
+NAME
+    sec - trigonometric secant function
+
+SYNOPSIS
+    sec(x [,eps])
+
+TYPES
+    x		real
+    eps		nonzero real, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Calculate the secant of x to a multiple of eps, with error less
+    in absolute value than .75 * eps.
+
+EXAMPLE
+    > print sec(1, 1e-5), sec(1, 1e-10), sec(1, 1e-15), sec(1, 1e-20)
+    1.85082 1.8508157177 1.850815717680926 1.85081571768092561791
+
+LIMITS
+    unlike sin and cos, x must be real
+    eps > 0
+
+LIBRARY
+    NUMBER *qsec(NUMBER *x, NUMBER *eps)
+
+SEE ALSO
+    sin, cos, tan, csc, cot, epsilon

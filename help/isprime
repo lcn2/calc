@@ -1,0 +1,48 @@
+NAME
+    isprime - whether a small integer is prime
+
+SYNOPSIS
+    isprime(x [,err])
+
+TYPES
+    x		int
+    err		int
+
+    return	int
+
+DESCRIPTION
+    Determine if x is is a small prime.  This function will return
+    1 if x is a small prime.  If x is even, this function will
+    return 0.  If x is negative or a small composite (non-prime),
+    0 will be returned.
+
+    If x is a large positive odd value and the err argument is
+    given, this function return err.  If x is a large positive odd
+    value and the err argument is not given, an error will be
+    generated.
+
+    Note that normally this function returns the integer 0 or 1.
+    If err is given and x is a large positive odd value, then err
+    will be returned.
+
+EXAMPLE
+    > print isprime(-3), isprime(1), isprime(2)
+    0 0 1
+
+    > print isprime(21701), isprime(1234577), isprime(1234579)
+    1 1 0
+
+    > print isprime(2^31-9), isprime(2^31-1), isprime(2^31+11)
+    0 1 1
+
+    > print isprime(2^32+1, -1), isprime(3^99, 2), isprime(4^99, 2)
+    -1 2 0
+
+LIMITS
+    err not given  and  (y is even  or  y < 2^32)
+
+LIBRARY
+    FLAG zisprime(ZVALUE x)	(return 1 if prime, 0 not prime, -1 if >= 2^32)
+
+SEE ALSO
+    factor, lfactor, nextprime, prevprime, pfact, pix

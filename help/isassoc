@@ -1,0 +1,29 @@
+NAME
+    isassoc - whether a value is an association.
+
+SYNOPSIS
+    isassoc(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is an association.  This function will return 1 if x is
+    an association, 0 otherwise.
+
+EXAMPLE
+    > a = assoc()
+    > print isassoc(a), isassoc(1)
+    1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    isfile, isident, isint, islist, ismat, isnull, isnum, isobj,
+    isreal, isstr, issimple, istype

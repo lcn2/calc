@@ -1,0 +1,67 @@
+NAME
+    fseek - set a file position
+
+SYNOPSIS
+    fseek(fd, offset [, whence])
+
+TYPES
+    fd		open file stream
+    pos		integer
+    whence	0, 1 or 2, defaulting to 0
+
+    return	null or error value
+
+DESCRIPTION
+    This function sets the file position indicator for the stream by
+    adding offset to zero, the current value, or the size of the
+    file, according as whence is 0, 1 or 2.  The effect is equivalent to
+    moving the signed distance offset from the beginning, the current
+    position, or the end of the file.
+
+    The function also clears the end-of-file flag and flushes any
+    buffered data waiting to be output to the stream.
+
+    An implementation-defined error occurs if the effect would be to
+    give a negative value to the position indicator; on some systems, the
+    file position will be set to end-of-file.
+
+    The file position indicator may have a value greater than the file
+    size.  If characters are then written to the file, the gap is
+    filled by null ('\0') characters.
+
+EXAMPLE
+    > fd = fopen("/tmp/curds", "w")
+    > fputs(fd, "0123456789abcdef")
+    > freopen(fd, "r")
+    > fsize(fd)
+	16
+    > fseek(fd, 5)
+    > fgets(fd)
+	"56789abcdef"
+    > fseek(fd, 0)
+    > fscanf(fd, "%*5c")
+	0
+    > fseek(fd, 5, 1)
+    > fgets(fd)
+	"abcdef"
+    > ftell(fd)
+	16
+    > fseek(fd, -5, 2)
+    > fgets(fd)
+	"bcdef"
+    > fseek(fd, -2)
+	System error 22
+    > ftell(fd)
+	16
+
+    The results for the last four lines may be different for different systems.
+
+LIMITS
+    Some details of the operation of this function may be implementation-
+    dependent, particularly for older systems.
+
+LIBRARY
+    none
+
+SEE ALSO
+    ftell, fgetpos, fsetpos, rewind, strerror

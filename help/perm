@@ -1,0 +1,38 @@
+NAME
+    perm - permutation number
+
+SYNOPSIS
+    perm(x, y)
+
+TYPES
+    x		int
+    y		int
+
+    return	int
+
+DESCRIPTION
+    Return the permutation number P(x,y) which is defined as:
+
+	       x!
+	    --------
+	     (x-y)!
+
+    This function computes the number of permutations in which y things
+    may be chosen from x items where order in which they are chosen matters.
+
+EXAMPLE
+    > print perm(7,3), perm(7,4), perm(7,5), perm(3,0), perm(0,0)
+    210 840 2520 3 0
+
+    > print perm(2^31+1,3)
+    9903520314283042197045510144
+
+LIMITS
+    x >= y >= 0
+    y < 2^24
+
+LIBRARY
+    void zperm(NUMBER x, y, *ret)
+
+SEE ALSO
+    comb, fact

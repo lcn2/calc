@@ -1,0 +1,49 @@
+NAME
+    null - null value
+
+SYNOPSIS
+    null()
+
+TYPES
+    return	null
+
+DESCRIPTION
+    There is only one value of null type.  After x = null(), isnull(x)
+    returns 1 but isreal(x). isnum(x), etc. all return zero, and
+    x == y is true if and only if y is also null.  The null value
+    tests as false in conditions.
+
+    The null value is the value returned by some functions, e.g.
+    x = printf("%d\n", 27) assigns to x the null value.  If L is a
+    list with no elements (given by L = list()), then both pop(L)
+    and remove(L) return the null value.
+
+    The null value may be used as an argument in some operations, e.g.
+    for any x, x + null() returns x.
+
+EXAMPLE
+    In a print statement like
+
+	print 2, null(), 3;
+
+    or
+
+	printf("%d %d %d\n", 2, null(), 3);
+
+    the null value produces no output.  Both of these examples
+    print the same as both
+
+	print 2, null(), 3;
+
+    and
+
+	print "2  3";
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - missing

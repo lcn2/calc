@@ -1,0 +1,26 @@
+NAME
+    rm - remove a file
+
+SYNOPSIS
+    rm(name)
+
+TYPES
+    name	name of a file
+
+    return	nil
+
+DESCRIPTION
+    Removes a file.
+
+EXAMPLE
+    > rm("junk")
+    > rm("more/junk.cal")
+
+LIMITS
+    name must be a non-zero length string
+
+LIBRARY
+    none
+
+SEE ALSO
+    rmdir

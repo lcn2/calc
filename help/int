@@ -1,0 +1,41 @@
+NAME
+    int - return the integer part of a number or of numbers in a value
+
+SYNOPSIS
+    int(x)
+
+TYPES
+    If x is an object of type xx, int(x) requires xx_int to have been
+    defined; other conditions on x and the value returned depend on
+    the definition of xx_int.
+
+    For other x:
+
+    x		number (real or complex), matrix
+
+    return	number or matrix
+
+DESCRIPTION
+    If x is an integer, int(x) returns x.  For other real values of x,
+    int(x) returns the value of i for which x = i + f, where i is an
+    integer, sgn(f) = sgn(x) and abs(f) < 1.
+
+    If x is complex, int(x) returns int(re(x)) + int(im(x))*1i.
+
+    If x is a matrix, int(x) returns the matrix m with the same structure
+    as x in which m[[i]] = int(x[[i]]).
+
+EXAMPLE
+    > print int(3), int(22/7), int(27/7), int(-3.125), int(2.15 - 3.25i)
+    3 3 3 -3 2-3i
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qint(NUMBER *x)
+    COMPLEX *cint(COMPLEX *x)
+    MATRIX *matint(MATRIX *x)
+
+SEE ALSO
+    frac, ceil, floor, quo

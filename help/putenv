@@ -1,0 +1,48 @@
+NAME
+    putenv - set the value of an environment variable
+
+SYNOPSIS
+    putenv(env [,val])
+
+TYPES
+    env		str
+    val		str
+
+    return	int
+
+DESCRIPTION
+     This function will set or change the value of an environment variable.
+     Zero is returned if the environment variable was successfully set,
+     otherwise a non-zero result is returned.
+
+     When called with 1 arg, env must be a string of the form:
+
+	    "envname=envval"
+
+     This sets the environment variable "envname" to the value "envval".
+
+     The 2 arg form is equivalent to:
+
+	    putenv(strcat(env, "=", val))
+
+
+EXAMPLE
+    > putenv("name", "value")
+	    0
+    > getenv("name")
+	    "value"
+    > putenv("name=val2")
+	    0
+    > getenv("name")
+	    "val2"
+    > isnull(getenv("unknown"))
+	    1
+
+LIMITS
+    With 1 arg, env must contain at least 1 '=' character.
+
+LIBRARY
+    none
+
+SEE ALSO
+    getenv

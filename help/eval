@@ -1,0 +1,61 @@
+NAME
+    eval - evaluate a string
+
+SYNOPSIS
+    eval(str)
+
+TYPES
+    str		string
+
+    return	any
+
+DESCRIPTION
+   For eval(str), the value of str is to be a string that could be the body
+   of the definition of a function f().  This string may declare local
+   variables and include keywords (while, for, ...) other than the
+   reserved keywords (define, show, help, read, write, show, cd) intended
+   for interactive use or for reading from a file.
+
+   If str is the empty string "", eval(str) returns the null value.
+
+   The call to eval(str) may return a value by explicit use of a return
+   statement: "return;" returns the null value, "return expr;" returns the
+   value of expr.  If execution reaches the end of str and the
+   value on the execution stack is not null, eval(str) returns that value;
+   otherwise eval(str) returns the most recently saved value.
+
+   Each time eval(str) is called, a temporary function is compiled from
+   the commands in str, and if there are no syntax errors, this function
+   is then evaluated.  If str contains syntax errors, eval(str) displays
+   the scanerror messages and returns the value error(49).
+
+EXAMPLE
+   > str1 = "2 + 3"; print eval(str1);
+   5
+
+   > i = 10; str2 = "local i = 0; 7; while (i++ < 5) print i^2,:;"
+   > print i, eval(str2), i
+   10 1 4 9 16 25 7 10
+
+   (The print statements in str2 return the null value, so execution of
+   eval(str2) ends by returning the saved value 7.  The global variable
+   i is unchanged.)
+
+   > eval("2 + ");
+   Missing expression
+	49
+
+LIMITS
+   The string str in eval(str) should not include a call to itself as in
+
+	str = "2 + eval(str)"
+
+   For this str, eval(str) causes an "Evaluation stack depth exceeded" error.
+   Similarly, if str1 = "2 + eval(str2)", str2 should not include a call
+   to eval(str1), etc.
+
+LIBRARY
+   none
+
+SEE ALSO
+    XXX = fill in

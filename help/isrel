@@ -1,0 +1,31 @@
+NAME
+    isrel - whether two values are relatively prime
+
+SYNOPSIS
+    isrel(x, y)
+
+TYPES
+    x		int
+    y		int
+
+    return	int
+
+DESCRIPTION
+    Determine if x and y are relatively prime.  If gcd(x,y) == 1, then
+    return 1, otherwise return 0.
+
+EXAMPLE
+    > print isrel(6, 5), isrel(5, 6), isrel(-5, 6)
+    1 1 1
+
+    > print isrel(6, 2), isrel(2, 6), isrel(-2, 6)
+    0 0 0
+
+LIMITS
+    none
+
+LIBRARY
+    BOOL zrelprime(ZVALUE x, y)
+
+SEE ALSO
+    gcd, ismult, isprime, isrel, issq

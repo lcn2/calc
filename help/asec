@@ -1,0 +1,32 @@
+NAME
+    asec - inverse trigonometric secant
+
+SYNOPSIS
+    asec(x [,eps])
+
+TYPES
+    x		real, with absolute value >= 1
+    eps		nonzero real, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Returns the asec of x to a multiple of eps with error less in
+    absolute value than .75 * eps.
+
+    v = asec(x) is the number in [0, pi] for which sec(v) = x.
+
+EXAMPLE
+    > print asec(2, 1e-5), asec(2, 1e-10), asec(2, 1e-15), asec(2, 1e-20)
+    1.0472 1.0471975512 1.047197551196598 1.04719755119659774615
+
+LIMITS
+    unlike sin and cos, x must be real
+    abs(x) >= 1
+    eps > 0
+
+LIBRARY
+    NUMBER *qasec(NUMBER *x, NUMBER *eps)
+
+SEE ALSO
+    asin, acos, atan, acsc, acot, epsilon

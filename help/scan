@@ -1,0 +1,34 @@
+NAME
+   scan - scan standard input for possible assignment to variables
+
+SYNOPSIS
+   scan(x_1, x_2, ..., x_n)
+
+TYPES
+    x_1, x_2, ...	any
+
+    return		integer
+
+DESCRIPTION
+   When input is from a terminal, execution is halted and input is read
+   until a newline is entered.  Strings of non-whitespace characters
+   are evaluated in succession and if the corresponding x_i is an lvalue,
+   the resulting value is assigned to x_i.  If the number of strings
+   read exceeds n, only the first n strings are evaluated.  If the number
+   of strings is less than n, the later x_i are ignored.
+
+EXAMPLE
+    > global a, b, c, d;
+    > scan(a, 0, c, d)
+    > 2+3    b=a^2        3+4i     3+"a"
+    > print a,b,c,d
+	5 25 3+4i Error 3
+
+LIMITS
+    none - XXX - is this correct?
+
+LIBRARY
+    none - XXX - is this correct?
+
+SEE ALSO
+    fscan, strscan, fscanf, strscanf, scanf, printf, fprintf

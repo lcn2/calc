@@ -1,0 +1,90 @@
+NAME
+    cmp - compare two values
+
+SYNOPSIS
+    cmp(x, y)
+
+TYPES
+    If x is an object of type xx or x is not an object and y is an object
+    of type xx, the funcion xx_cmp has to have been defined; any
+    further conditions on x and y, and the type of the returned
+    value depends on the definition of xx_cmp.
+
+    For non-object x and y:
+
+    x		number or string
+    y		same as x
+
+    return	-1, 0, 1					(real & string)
+    		-1, 0, 1, -1+1i, 1i, 1+1i, -1-1i, -1i or 1-1i	(complex)
+
+DESCRIPTION
+    Compare two values and return a value based on their relationship.
+    Comparison by type is indicated below.  Where more than one test is
+    indicated, tests are performed in the order listed.  If the test is
+    inconclusive, the next test is performed.  If all tests are
+    inconclusive, the values are considered equivalent.
+
+    real	(returns -1, 0, or 1)
+	the greater number is greater
+
+    complex	(returns -1, 0, 1, -1+1i, 1i, 1+1i, -1-1i, -1i or 1-1i)
+	sgn(re(x) - re(y)) + sgn(im(x) - im(y)) * 1i
+
+    string	(returns -1, 0, or 1)
+	the string with the greater first different character is greater
+	the longer string is greater
+
+    object	(depends on xx_cmp)
+	the greater object as defined by xx_cmp is greater
+
+    String comparison is performed via the strcmp() libc function.
+
+    Note that this function is not a substitution for equality.  The ==
+    operator always takes epsilon() into account when comparing numeric
+    values.  For example:
+
+	> cmp(1, 1+epsilon()/2)
+		-1
+	> 1 == 1+epsilon()/2
+		0
+
+    It should be noted epsilon() is used when comparing complex values.
+
+    Properties of cmp(a,b) for real or complex a and b are:
+
+	cmp(a + c, b + c) = cmp(a,b)
+
+	cmp(a, b) == 0 if and only if a == b
+
+	cmp(b, a) = -cmp(a,b)
+
+	if c is real or pure imaginary, cmp(c * a, c * b) = c * cmp(a,b)
+
+	cmp(a,b) == cmp(b,c) if and only if b is "between" a and c
+
+    The numbers between 2 + 3i and 4 + 5i are those with real part between
+    2 and 4, imaginary part between 3 and 5; the numbers between 2 + 3i
+    and 4 + 3i are those with real part between 2 and 4, imaginary part = 3.
+
+EXAMPLE
+    > print cmp(3,4), cmp(4,3), cmp(4,4), cmp("a","b"), cmp("abcd","abc")
+    -1 1 0 -1 1
+
+    > print cmp(3,4i), cmp(4,4i), cmp(5,4i), cmp(-5,4i), cmp(-4i,5), cmp(-4i,-5)
+    1-1i 1-1i 1-1i -1-1i -1-1i 1-1i
+
+    > print cmp(3i,4i), cmp(4i,4i), cmp(5i,4i), cmp(3+4i,5), cmp(3+4i,-5)
+    -1i 0 1i -1+1i 1+1i
+
+    > print cmp(3+4i,3+4i), cmp(3+4i,3-4i), cmp(3+4i,2+3i), cmp(3+4i,-4-5i)
+    0 1i 1+1i 1+1i
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    abs, epsilon, sgn

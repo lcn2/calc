@@ -1,0 +1,27 @@
+NAME
+    pi - evaluate pi to specified accuracy
+
+SYNOPSIS
+    pi([eps])
+
+TYPES
+    eps		nonzero real, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Returns a multiple of eps differing from the true value of pi by
+    less than 0.75 eps, and in nearly all cases by less than 0.5 eps.
+
+EXAMPLE
+    > print pi(1e-5), pi(1e-10), pi(1e-15), pi(1e-20)
+    3.14159 3.1415926536 3.141592653589793 3.14159265358979323846
+
+LIMITS
+    eps > 0
+
+LIBRARY
+    NUMBER *qpi(NUMBER *eps)
+
+SEE ALSO
+    XXX - fill in

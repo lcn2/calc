@@ -1,0 +1,193 @@
+# This file is used to build calcerr.h include file.
+#
+# Lines should be of the form:
+#
+#	SYMBOL	meaning
+
+E_1OVER0	Division by zero
+E_0OVER0	Indeterminate (0/0)
+E_ADD		Bad arguments for +
+E_SUB		Bad arguments for binary -
+E_MUL		Bad arguments for *
+E_DIV		Bad arguments for /
+E_NEG		Bad argument for unary -
+E_SQUARE	Bad argument for squaring
+E_INV		Bad argument for inverse
+E_INCV		Bad argument for ++
+E_DECV		Bad argument for --
+E_INT		Bad argument for int
+E_FRAC		Bad argument for frac
+E_CONJ		Bad argument for conj
+E_APPR		Bad first argument for appr
+E_APPR2		Bad second argument for appr
+E_APPR3		Bad third argument for appr
+E_ROUND		Bad first argument for round
+E_ROUND2	Bad second argument for round
+E_ROUND3	Bad third argument for round
+E_BROUND	Bad first argument for bround
+E_BROUND2	Bad second argument for bround
+E_BROUND3	Bad third argument for bround
+E_SQRT		Bad first argument for sqrt
+E_SQRT2		Bad second argument for sqrt
+E_SQRT3		Bad third argument for sqrt
+E_ROOT		Bad first argument for root
+E_ROOT2		Bad second argument for root
+E_ROOT3		Bad third argument for root
+E_NORM		Bad argument for norm
+E_SHIFT		Bad first argument for << or >>
+E_SHIFT2	Bad second argument for << or >>
+E_SCALE		Bad first argument for scale
+E_SCALE2	Bad second argument for scale
+E_POWI		Bad first argument for ^
+E_POWI2		Bad second argument for ^
+E_POWER		Bad first argument for power
+E_POWER2	Bad second argument for power
+E_POWER3	Bad third argument for power
+E_QUO		Bad first argument for quo or //
+E_QUO2		Bad second argument for quo or //
+E_QUO3		Bad third argument for quo
+E_MOD		Bad first argument for mod or %
+E_MOD2		Bad second argument for mod or %
+E_MOD3		Bad third argument for mod
+E_SGN		Bad argument for sgn
+E_ABS		Bad first argument for abs
+E_ABS2		Bad second argument for abs
+E_EVAL		Scan error in argument for eval
+E_STR		Non-simple type for str
+E_EXP1		Non-real epsilon for exp
+E_EXP2		Bad first argument for exp
+E_FPUTC1	Non-file first argument for fputc
+E_FPUTC2	Bad second argument for fputc
+E_FPUTC3	File not open for writing for fputc
+E_FGETC1	Non-file first argument for fgetc
+E_FGETC2	File not open for reading for fgetc
+E_FOPEN1	Non-string arguments for fopen
+E_FOPEN2	Unrecognized mode for fopen
+E_FREOPEN1	Non-file first argument for freopen
+E_FREOPEN2	Non-string or unrecognized mode for freopen
+E_FREOPEN3	Non-string third argument for freopen
+E_FCLOSE1	Non-file argument for fclose
+E_FFLUSH	Non-file argument for fflush
+E_FPUTS1	Non-file first argument for fputs
+E_FPUTS2	Non-string argument after first for fputs
+E_FPUTS3	File not open for writing for fputs
+E_FGETS1	Non-file argument for fgets
+E_FGETS2	File not open for reading for fgets
+E_FPUTSTR1	Non-file first argument for fputstr
+E_FPUTSTR2	Non-string argument after first for fputstr
+E_FPUTSTR3	File not open for writing for fputstr
+E_FGETSTR1	Non-file first argument for fgetstr
+E_FGETSTR2	File not open for reading for fgetstr
+E_FGETLINE1	Non-file  argument for fgetline
+E_FGETLINE2	File not open for reading for fgetline
+E_FGETWORD1	Non-file argument for fgetword
+E_FGETWORD2	File not open for reading for fgetword
+E_REWIND1	Non-file argument for rewind
+E_FILES		Non-integer argument for files
+E_PRINTF1	Non-string fmt argument for fprint
+E_PRINTF2	Stdout not open for writing to ???
+E_FPRINTF1	Non-file first argument for fprintf
+E_FPRINTF2	Non-string second (fmt) argument for fprintf
+E_FPRINTF3	File not open for writing for fprintf
+E_STRPRINTF1	Non-string first (fmt) argument for strprintf
+E_STRPRINTF2	Error in attempting strprintf ???
+E_FSCAN1	Non-file first argument for fscan
+E_FSCAN2	File not open for reading for fscan
+E_STRSCAN	Non-string first argument for strscan
+E_FSCANF1	Non-file first argument for fscanf
+E_FSCANF2	Non-string second (fmt) argument for fscanf
+E_FSCANF3	Non-lvalue argument after second for fscanf
+E_FSCANF4	File not open for reading or other error for fscanf
+E_STRSCANF1	Non-string first argument for strscanf
+E_STRSCANF2	Non-string second (fmt) argument for strscanf
+E_STRSCANF3	Non-lvalue argument after second for strscanf
+E_STRSCANF4	Some error in attempting strscanf ???
+E_SCANF1	Non-string first (fmt) argument for scanf
+E_SCANF2	Non-lvalue argument after first for scanf
+E_SCANF3	Some error in attempting scanf ???
+E_FTELL1	Non-file argument for ftell
+E_FTELL2	File not open or other error for ftell
+E_FSEEK1	Non-file first argument for fseek
+E_FSEEK2	Non-integer or negative second argument for fseek
+E_FSEEK3	File not open or other error for fseek
+E_FSIZE1	Non-file argument for fsize
+E_FSIZE2	File not open or other error for fsize
+E_FEOF1		Non-file argument for feof
+E_FEOF2		File not open or other error for feof
+E_FERROR1	Non-file argument for ferror
+E_FERROR2	File not open or other error for ferror
+E_UNGETC1	Non-file argument for ungetc
+E_UNGETC2	File not open for reading for ungetc
+E_UNGETC3	Bad second argument or other error for ungetc
+E_BIGEXP	Exponent too big in scanning
+E_ISATTY1	Non-file argument for isatty
+E_ISATTY2	File not open for isatty
+E_ACCESS1	Non-string first argument for access
+E_ACCESS2	Bad second argument for access
+E_SEARCH1	Bad first argument for search
+E_SEARCH2	Bad second argument for search
+E_SEARCH3	Bad third argument for search
+E_RSEARCH1	Bad first argument for rsearch
+E_RSEARCH2	Bad second argument for rsearch
+E_RSEARCH3	Bad third argument for rsearch
+E_FOPEN3	Too many open files
+E_REWIND2	Attempt to rewind a file that is not open
+E_STRERROR1	Bad argument type for strerror
+E_STRERROR2	Index out of range for strerror
+E_COS1		Bad epsilon for cos
+E_COS2		Bad first argument for cos
+E_SIN1		Bad epsilon for sin
+E_SIN2		Bad first argument for sin
+E_EVAL2		Non-string argument for eval
+E_ARG1		Bad epsilon for arg
+E_ARG2		Bad first argument for arg
+E_POLAR1	Non-real argument for polar
+E_POLAR2	Bad epsilon for polar
+E_FCNT		Non-integral argument for fcnt
+E_MATFILL1	Non-variable first argument for matfill
+E_MATFILL2	Non-matrix first argument-value for matfill
+E_MATDIM	Non-matrix argument for matdim
+E_MATSUM	Non-matrix argument for matsum
+E_ISIDENT	Non-matrix argument for isident
+E_MATTRANS1	Non-matrix argument for mattrans
+E_MATTRANS2	Non-two-dimensional matrix for mattrans
+E_DET1		Non-matrix argument for det
+E_DET2		Matrix for det not of dimension 2
+E_DET3		Non-square matrix for det
+E_MATMIN1	Non-matrix first argument for matmin
+E_MATMIN2	Non-positive-integer second argument for matmin
+E_MATMIN3	Second argument for matmin exceeds dimension
+E_MATMAX1	Non-matrix first argument for matmin
+E_MATMAX2	Second argument for matmax not positive integer
+E_MATMAX3	Second argument for matmax exceeds dimension
+E_CP1		Non-matrix argument for cp
+E_CP2		Non-one-dimensional matrix for cp
+E_CP3		Matrix size not 3 for cp
+E_DP1		Non-matrix argument for dp
+E_DP2		Non-one-dimensional matrix for dp
+E_DP3		Different-size matrices for dp
+E_STRLEN	Non-string argument for strlen
+E_STRCAT	Non-string argument for strcat
+E_SUBSTR1	Non-string first argument for strcat
+E_SUBSTR2	Non-non-negative integer second argument for strcat
+E_CHAR		Bad argument for char
+E_ORD		Non-string argument for ord
+E_INSERT1	Non-list-variable first argument for insert
+E_INSERT2	Non-integral second argument for insert
+E_PUSH		Non-list-variable first argument for push
+E_APPEND	Non-list-variable first argument for append
+E_DELETE1	Non-list-variable first argument for delete
+E_DELETE2	Non-integral second argument for delete
+E_POP		Non-list-variable argument for pop
+E_REMOVE	Non-list-variable argument for remove
+E_LN1		Bad epsilon argument for ln
+E_LN2		Non-numeric first argument for ln
+E_ERROR1	Non-integer argument for error
+E_ERROR2	Argument outside range for error
+E_EVAL3		Attempt to eval at maximum input depth
+E_EVAL4		Unable to open string for reading
+E_RM1		First argument for rm is not a non-empty string
+E_RM2		Unable to remove a file
+E_RDPERM	Operation allowed because calc mode disallows read operations
+E_WRPERM	Operation allowed because calc mode disallows write operations
+E_EXPERM	Operation allowed because calc mode disallows exec operations

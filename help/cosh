@@ -1,0 +1,31 @@
+NAME
+    cosh - hyperbolic cosine
+
+SYNOPSIS
+    cosh(x [,eps])
+
+TYPES
+    x		real
+    eps		nonzero real, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Calculate the cosh of x to the nearest or next to nearest multiple of
+    epsilon, with absolute error less than .75 * abs(eps).
+
+    cosh(x) = (exp(x) + exp(-x))/2
+
+EXAMPLE
+    > print cosh(1, 1e-5), cosh(1, 1e-10), cosh(1, 1e-15), cosh(1, 1e-20)
+    1.54308 1.5430806348 1.543080634815244 1.54308063481524377848
+
+LIMITS
+    unlike sin and cos, x must be real
+    eps > 0
+
+LIBRARY
+    NUMBER *qcosh(NUMBER *x, NUMBER *eps)
+
+SEE ALSO
+    sinh, tanh, sech, csch, coth, epsilon

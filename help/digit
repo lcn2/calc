@@ -1,0 +1,38 @@
+NAME
+    digit - digit at specified position in a decimal representation
+
+SYNOPSIS
+    digit(x, y)
+
+TYPES
+    x		real
+    y		integer
+
+    return	integer
+
+DESCRIPTION
+    By extending the digits on the left, and if necessary, the digits
+    on the right, by infinite strings of zeros, abs(x) may be considered
+    to have the decimal representation:
+
+		... d_2 d_1 d_0.d_-1 d_-2 ...
+
+    digit(x,y) then returns the digit d_y.
+
+EXAMPLE
+    > x = 12.34
+    > print digit(x,2), digit(x,1), digit(x,0), digit(x,-1), digit(x,-2)
+    0 1 2 3 4
+
+    > x = 10/7
+    > print digit(x,1), digit(x,0), digit(x,-1), digit(x,-2), digit(x,-3)
+    0 1 4 2 8
+
+LIMITS
+    none
+
+LIBRARY
+    long qdigit(NUMBER *x, long y)
+
+SEE ALSO
+    bit

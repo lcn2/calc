@@ -1,0 +1,45 @@
+NAME
+    system - issue a shell command
+
+SYNOPSIS
+    system(cmd)
+
+TYPES
+    cmd		str
+
+    return	int
+
+DESCRIPTION
+    This function excutes the shell command found in the srtring, cmd.
+    The return value is system dependent.  On POSIX P1003.1 compliant
+    systems the return value is defined by the waitpid system call.
+    Typically a shell command that returns with a 0 exit status will
+    cause this function to return a 0 value.  On some systems, a shell
+    command that returns with an exit status of e will cause this
+    function to return e*256.  Core dumps, termination due to signals
+    and other waitpid values will change the return value.
+
+    On POSIX P1003.1 compliant systems, if cmd is empty then this function
+    will determine if the shell is executable.  If the shell is executable,
+    0 is returned otherwise non-zero is returned.
+
+
+EXAMPLE
+    > system("")
+	    0
+    > system("true")
+	    0
+    > system("exit 2")
+	    512
+    > system("date")
+    Sun Jul  9 03:21:48 PDT 1995
+	    0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

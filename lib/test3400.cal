@@ -1,0 +1,315 @@
+/*
+ * Copyright (c) 1996 Ernest Bowen and Landon Curt Noll
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
+ * By: Ernest Bowen and Landon Curt Noll
+ *     ernie@neumann.une.edu.au and chongo@toad.com
+ *
+ * This library is used by the 3400 series of the regress.cal test suite.
+ */
+/*
+ * tests of performance of some trigonometric functions
+ *
+ * test3401 tests abs(acot(cot(x)) - x) <= eps for x = k * eps < pi
+ * test3402 tests abs(tan(x/2) - csc(x) + cot(x)) <= eps
+ * test3403 tests abs(tan(x) - cot(x) + 2 * cot(2 * x)) <= eps
+ * test3404 tests abs(cot(x/2) - csc(x) - cot(x)) <= eps
+ * test3405 tests atan(tan(x)) == x for x = k * eps, abs(x) <= pi/2
+ * test3406 tests abs(sec(x) - sec(x + 2 * N * pi)) <= eps
+ *
+ * To run say, test1 n times give instruction test1(n, eps); eps
+ * defaults to epsilon().
+ *
+ * Here pi1k is pi to 1000 decimal places; x is a random real number
+ * except when x is described as k * eps, in which case k is a random
+ * integer such that x is in the specified range.
+ *
+ * In the last test N is a large random integer, but it is assumed
+ * that eps is large compared with N * 1e-1000.
+ *
+ * I am surprised that test3406 seems to give no errors - I had expected
+ * that the two sides might differ by eps.  [[test changed to test eps error]]
+ */
+
+global defaultverbose = 1;	/* default verbose value */
+global err;
+
+global pi1k = pi(1e-1000);
+
+define test3401(str, n, eps, verbose)
+{
+	local i, m, x, y, N;
+
+	if (isnull(verbose)) verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	if (isnull(n)) n = 250;
+	if (isnull(eps)) eps = epsilon();
+
+	m = 0;
+	N = pi(eps)/eps;
+	for (i = 0; i < n; i++) {
+		x = rand(1, N) * eps;
+		y = cot(x, eps);
+		if (verbose > 1)
+			printf("%r\n", x);
+		if (abs(acot(y, eps) - x) > eps) {
+			if (verbose > 1) {
+				printf("*** Failure for x = %r\n", x);
+			}
+			m++;
+		}
+	}
+	if (verbose > 0) {
+		if (m) {
+			printf("*** %d error(s)\n", m);
+		} else {
+			printf("no errors\n");
+		}
+	}
+	return m;
+}
+
+define test3402(str, n, eps, verbose)
+{
+	local i, m, x, y, N;
+
+	if (isnull(verbose)) verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	if (isnull(n)) n = 250;
+	if (isnull(eps)) eps = epsilon();
+
+	eps = abs(eps);
+	m = 0;
+	N = 1e10;
+	for (i = 0; i < n; i++) {
+		x = rand(-N, N)/rand(1, N);
+		y = tan(x/2, eps) - csc(x,eps) + cot(x,eps);
+		if (verbose > 1)
+			printf("%r\n", x);
+		if (abs(y) > eps) {
+			if (verbose > 1) {
+				printf("*** Failure for x = %r\n", x);
+			}
+			m++;
+		}
+	}
+	if (verbose > 0) {
+		if (m) {
+			printf("*** %d error(s)\n", m);
+		} else {
+			printf("no errors\n");
+		}
+	}
+	return m;
+}
+
+define test3403(str, n, eps, verbose)
+{
+	local i, m, x, y, N;
+
+	if (isnull(verbose)) verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	if (isnull(n)) n = 250;
+	if (isnull(eps)) eps = epsilon();
+
+	eps = abs(eps);
+	m = 0;
+	N = 1e10;
+	for (i = 0; i < n; i++) {
+		x = rand(-N, N)/rand(1, N);
+		y = tan(x, eps) - cot(x,eps) + 2 * cot(2 * x,eps);
+		if (verbose > 1)
+			printf("%r\n", x);
+		if (abs(y) > eps) {
+			m++;
+			if (verbose > 1) {
+				printf("*** Failure for x = %r\n", x);
+			}
+		}
+	}
+	if (verbose > 0) {
+		if (m) {
+			printf("*** %d error(s)\n", m);
+		} else {
+			printf("no errors\n");
+		}
+	}
+	return m;
+}
+
+define test3404(str, n, eps, verbose)
+{
+	local i, m, x, y, N;
+
+	if (isnull(verbose)) verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	if (isnull(n)) n = 250;
+	if (isnull(eps)) eps = epsilon();
+
+	eps = abs(eps);
+	m = 0;
+	N = 1e10;
+	for (i = 0; i < n; i++) {
+		x = rand(-N, N)/rand(1, N);
+		y = cot(x/2, eps) - csc(x,eps) - cot(x,eps);
+		if (verbose > 1)
+			printf("%r\n", x);
+		if (abs(y) > eps) {
+			m++;
+			if (verbose > 1) {
+				printf("*** Failure for x = %r\n", x);
+			}
+		}
+	}
+	if (verbose > 0) {
+		if (m) {
+			printf("*** %d error(s)\n", m);
+		} else {
+			printf("no errors\n");
+		}
+	}
+	return m;
+}
+
+define test3405(str, n, eps, verbose)
+{
+	local i, m, x, y, N;
+
+	if (isnull(verbose)) verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	if (isnull(n)) n = 250;
+	if (isnull(eps)) eps = epsilon();
+
+	m = 0;
+	N = pi(eps)/eps;
+	N = quo(N, 2, 0);
+	for (i = 0; i < n; i++) {
+		x = rand(-N, N) * eps;
+		y = tan(x, eps);
+		if (verbose > 1)
+			printf("%r\n", x);
+		if (atan(y, eps) != x) {
+			m++;
+			if (verbose > 1) {
+				printf("*** Failure for x = %r\n", x);
+			}
+		}
+	}
+	if (verbose > 0) {
+		if (m) {
+			printf("*** %d error(s)\n", m);
+		} else {
+			printf("no errors\n");
+		}
+	}
+	return m;
+}
+
+define test3406(str, n, eps, verbose)
+{
+	local i, m, x, y, z, N;
+
+	if (isnull(verbose)) verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	if (isnull(n)) n = 250;
+	if (isnull(eps)) eps = epsilon();
+
+	m = 0;
+	for (i = 0; i < n; i++) {
+		x = rand(-1e10, 1e10)/rand(1, 1e10);
+		N = rand(-1e10, 1e10);
+		y = sec(x, eps);
+		z = sec(x + 2 * N * pi1k, eps);
+		if (verbose > 1)
+			printf("%r, %d\n", x, N);
+		if (abs(y-z) > eps) {
+			m++;
+			if (verbose > 1) {
+				printf("*** Failure for x = %r\n", x);
+			}
+		}
+	}
+	if (verbose > 0) {
+		if (m) {
+			printf("*** %d error(s)\n", m);
+		} else {
+			printf("no errors\n");
+		}
+	}
+	return m;
+}
+
+/*
+ * test3400 - perform all of the above tests
+ */
+define test3400(verbose, tnum)
+{
+	local n;	/* test parameter */
+	local eps;	/* test parameter */
+	local i;
+
+	/*
+	 * set test parameters
+	 */
+	if (isnull(verbose)) {
+		verbose = defaultverbose;
+	}
+	n = 250;
+	eps = epsilon();
+	srand(3400e3400);
+
+	/*
+	 * test a lot of stuff
+	 */
+	err += test3401(strcat(str(tnum++), \
+		     ": acot(cot(x))"), n, eps, verbose);
+	err += test3402(strcat(str(tnum++), \
+		     ": tan(x/2)-csc(x)+cot(x)"), n, eps, verbose);
+	err += test3403(strcat(str(tnum++), \
+		     ": tan(x)-cot(x)+2*cot(2*x)"), n, eps, verbose);
+	err += test3404(strcat(str(tnum++), \
+		     ": cot(x/2)-csc(x)-cot(x)"), n, eps, verbose);
+	err += test3405(strcat(str(tnum++), \
+		     ": atan(tan(x))"), n, eps, verbose);
+	err += test3406(strcat(str(tnum++), \
+		     ": sec(x)-sec(x+2*N*pi)"), n, eps, verbose);
+
+	/*
+	 * test results
+	 */
+	if (verbose > 1) {
+		if (err) {
+			print "***", err, "error(s) found in test3400";
+		} else {
+			print "no errors in test3400";
+		}
+	}
+	return tnum;
+}
+
+global lib_debug;
+
+if (lib_debug >= 0) {
+	print "global defaultverbose defined";
+	print "global err defined";
+	print "test3401(str, n, eps, verbose) defined";
+	print "test3402(str, n, eps, verbose) defined";
+	print "test3403(str, n, eps, verbose) defined";
+	print "test3404(str, n, eps, verbose) defined";
+	print "test3405(str, n, eps, verbose) defined";
+	print "test3406(str, n, eps, verbose) defined";
+	print "test3400(verbose, tnum) defined";
+}

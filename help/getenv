@@ -1,0 +1,35 @@
+NAME
+    getenv - get an environment variable
+
+SYNOPSIS
+    getenv(env)
+
+TYPES
+    env		str
+
+    return	str or nil
+
+DESCRIPTION
+    This function returns the value of the environment variable named by
+    the string env.  If no such environment variable exists, nil is returned.
+
+EXAMPLE
+    > putenv("name", "value")
+	    0
+    > getenv("name")
+	    "value"
+    > putenv("name=val2")
+	    0
+    > getenv("name")
+	    "val2"
+    > isnull(getenv("unknown"))
+	    1
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    putenv

@@ -1,0 +1,38 @@
+NAME
+    select - form a list by selecting element-values from a given list
+
+SYNOPSIS
+    select(x, y)
+
+TYPES
+    x		list
+    y		string
+
+    return	list
+
+DESCRIPTION
+    If y is to be the name of a user-defined function, select(x, y)
+    returns a list whose members are the values z of elements of x
+    for which the function at z tests as nonzero.
+    The list x is not changed.  The order of the returned list is
+    the same as in x.
+
+
+EXAMPLE
+    > define f(x) = x > 5
+    > A = list(2,4,6,8,2,7)
+    > print select(A, "f")
+
+    list (3 elements, 3 nonzero):
+	  [[0]] = 6
+	  [[1]] = 8
+	  [[2]] = 7
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

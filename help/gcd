@@ -1,0 +1,28 @@
+NAME
+    gcd - greatest common divisor of a set of rational numbers
+
+SYNOPSIS
+    gcd(x1, x2, ...)
+
+TYPES
+    x1, x2, ...	rational number
+
+    return	rational number
+
+DESCRIPTION
+    If at least one xi is nonzero, gcd(x1, x2, ...) is the
+    greatest positive number g for which each xi is a multiple of g.
+    If all xi are zero, the gcd is zero.
+
+EXAMPLE
+    > print gcd(12, -24, 30), gcd(9/10, 11/5, 4/25), gcd(0,0,0,0,0)
+    6 .02 0
+
+LIMITS
+    The number of arguments may not to exceed 100.
+
+LIBRARY
+    NUMBER *qgcd(NUMBER *x1, NUMBER *x2)
+
+SEE ALSO
+    lcm

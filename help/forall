@@ -1,0 +1,38 @@
+NAME
+    forall - to evaluate a function for all values of a list or matrix
+
+SYNOPSIS
+    forall(x, y)
+
+TYPES
+    x		list or matrix
+    y		string
+
+    return	null value
+
+DESCRIPTION
+    In forall(x,y), y is to the the name of a function; that function
+    is performed in succession for all elements of x.  This is similar
+    to modify(x, y) but x is not changed.
+
+EXAMPLE
+    > global n = 0
+    > define s(a) {n += a;}
+    > A = list(1,2,3,4)
+    > forall(A, "s")
+    > n
+	    10
+
+    > define e(a) {if (iseven(a)) print a;}
+    > forall(A, "e")
+	    2
+	    4
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    modify

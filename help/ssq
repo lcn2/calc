@@ -1,0 +1,36 @@
+NAME
+    ssq - sum of squares
+
+SYNOPSIS
+    ssq(x1, x2, ...)
+
+TYPES
+    x1, x2, ...	any for which the required squaring and addition
+    operations are defined
+
+    return	as determined by the operations on x1, x2, ...
+
+DESCRIPTION
+    Returns the value of x1^2 + x2^2 + ...
+
+EXAMPLE
+    > print ssq(1,2,3), ssq(1+2i, 3-4i, 5 +6i)
+    14 -21+40i
+
+    > mat A[2,2] = {1,2,3,4}; mat B[2,2] = {5,6,7,8}
+    > print ssq(A, B, A + B)
+
+    mat [2,2] (4 elements, 4 nonzero):
+      [0,0] = 190
+      [0,1] = 232
+      [1,0] = 286
+      [1,1] = 352
+
+LIMITS
+    The number of arguments is not to exceed 100.
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

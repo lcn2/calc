@@ -1,0 +1,29 @@
+NAME
+    isobj - whether a value is an object
+
+SYNOPSIS
+    isobj(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is an object.  This function will return 1 if x is
+    an object, 0 otherwise.
+
+EXAMPLE
+    > obj surd {a, b} a;
+    > print isobj(a), isobj(1)
+    1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    isassoc, isfile, isident, isint, islist, ismat, isnull, isnum,
+    isreal, isstr, issimple, istype

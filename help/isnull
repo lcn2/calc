@@ -1,0 +1,29 @@
+NAME
+    isnull - whether a value is a null value
+
+SYNOPSIS
+    isnull(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is a null value.  This function will return 1 if x is
+    a null value, 0 otherwise.
+
+EXAMPLE
+    > mat a[2]
+    > print isnull(a), isnull(1)
+    1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    isassoc, isfile, isident, isint, islist, ismat, isnum, isobj,
+    isreal, isstr, issimple, istype

@@ -1,0 +1,32 @@
+NAME
+    coth - hyperbolic cotangent
+
+SYNOPSIS
+    coth(x [,eps])
+
+TYPES
+    x		nonzero real
+    eps		nonzero real, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Calculate the coth of x to a multiple of eps with error less in
+    absolute value than .75 * eps.
+
+    coth(x) = (exp(2*x) + 1)/(exp(2*x) - 1)
+
+EXAMPLE
+    > print coth(1, 1e-5), coth(1, 1e-10), coth(1, 1e-15), coth(1, 1e-20)
+    1.31304 1.3130352855 1.313035285499331 1.31303528549933130364
+
+LIMITS
+    unlike sin and cos, x must be real
+    x != 0
+    eps > 0
+
+LIBRARY
+    NUMBER *qcoth(NUMBER *x, NUMBER *eps)
+
+SEE ALSO
+    sinh, cosh, tanh, sech, csch, epsilon

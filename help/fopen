@@ -1,0 +1,75 @@
+NAME
+    fopen - open a file
+
+SYNOPSIS
+    fopen(filename, mode)
+
+TYPES
+    filename	string
+    mode	string
+
+    return	file
+
+DESCRIPTION
+    This function opens the file named filename.  A file can be
+    opened for either reading, writing, or appending.  The mode
+    is controlled by the mode flag as folllows:
+
+	"r"	reading
+	"w"	writing
+	"a"	appending
+
+    Names of files are subject to ~ expansion just like the C or
+    Korn shell.  For example, the file name:
+
+	~/lib/gleet
+
+    refers to the file 'gleet' under the directory lib located
+    in your home directory.  The file name:
+
+	~chongo/was_here
+
+    refers to the a file 'was_here' under the home directory of
+    the user 'chongo'.
+
+    If the open is successful, a value of type 'file' will be returned.
+    You can use the 'isfile' function to test the return value to see
+    if the open succeeded.  You should assign the return value of fopen
+    to a variable for later use.  File values can be copied to more than
+    one variable, and using any of the variables with the same file value
+    will produce the same results.
+
+    Standard input, standard output and standard error are always opened
+    and cannot be closed.
+
+    The truth value of an opened file is TRUE.
+
+    If the open is unsuccessful, the numeric value of errno is returned.
+    You can the errno() builtin to determine what the errno number means.
+
+EXAMPLE
+    > fd = fopen("/etc/motd", "r")
+    > print fd
+    "/etc/motd"
+    > fd
+	    FILE 3 "/etc/motd" (reading, pos 0)
+
+    > outfile = fopen("~/tmp/output", "w")
+    > print outfile
+    "~/tmp/output"
+    > outfile
+	    FILE 4 "~/tmp/output" (writing, pos 0)
+
+    > badfile = fopen("not_a_file", "r")
+    > if (!isfile(badfile)) print "error #" : badfile : ":", errno(badfile);
+    error #2: No such file or directory
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt

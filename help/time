@@ -1,0 +1,27 @@
+NAME
+    time - number of seconds since the Epoch
+
+SYNOPSIS
+    time()
+
+TYPES
+    return	int
+
+DESCRIPTION
+    The time() builtin returns the number of seconds since the Epoch,
+    which according to Posix is:
+
+	Thr Jan  1 00:00:00 UTC 1970
+
+EXAMPLE
+    > print time();
+    831081380
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    ctime, runtime

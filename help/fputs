@@ -1,0 +1,32 @@
+NAME
+    fputs - write a string to a file
+
+SYNOPSIS
+    fputs(fd, data)
+
+TYPES
+    fd		file
+    data	str
+
+    return	nil
+
+DESCRIPTION
+    This function writes the string found in data to the file
+    associated with fd.
+
+EXAMPLE
+    > fd = fopen("/tmp/newfile", "w")
+    > fputs(fd, "chongo was here\n")
+    > fd2 = fopen("/tmp/newfile", "r")
+    > fgetline(fd2)
+	    "chongo was here"
+
+LIMITS
+    fd must be associaed with an open file
+
+LIBRARY
+    none
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt

@@ -1,0 +1,29 @@
+NAME
+    lowbit - index of lowest nonzero bit in binary representation of integer
+
+SYNOPSIS
+    lowbit(x)
+
+TYPES
+    x		nonzero integer
+
+    return	integer
+
+DESCRIPTION
+    If x is a nonzero integer, lowbit(x) returns the index of the
+    lowest nonzero bit in the binary representation of abs(x).  Equivalently,
+    lowbit(x) is the greatest integer for which x/2^n is an integer;
+    the binary representation of x then ends with n zero bits.
+
+EXAMPLE
+    > print lowbit(2), lowbit(3), lowbit(4), lowbit(-15), lowbit(2^27)
+    1 0 2 0 27
+
+LIMITS
+    none
+
+LIBRARY
+    long zlowbit(ZVALUE x);
+
+SEE ALSO
+    highbit, digits

@@ -1,0 +1,46 @@
+NAME
+    segment - segment from and to specified elements of a list
+
+SYNOPSIS
+    segment(x, y, z)
+
+TYPES
+    x		list
+    y, z	int
+
+    return	list
+
+DESCRIPTION
+    For 0 <= y < size(x) and 0 <= z < size(x), segment(x, y, z)
+    returns a list for which the values of the elements are those
+    of the segment of x from x[[y]] to x[[z]].  If y < z, the
+    new list is in the same order as x; if y > z, the order is
+    reversed.
+
+    If y < z, x == join(head(x,y), segment(x,y,z), tail(x, size(x) - z - 1)).
+
+EXAMPLE
+    > A = list(2, 3, 5, 7, 11)
+    > segment(A, 1, 3)
+
+    list (3 members, 3 nonzero):
+	  [[0]] = 3
+	  [[1]] = 5
+	  [[2]] = 7
+
+    > segment(A, 3, 1)
+
+    list (3 members, 3 nonzero):
+	  [[0]] = 7
+	  [[1]] = 5
+	  [[2]] = 3
+
+LIMITS
+    0 <= y < size(x)
+    0 <= z < size(x)
+
+LIBRARY
+    none
+
+SEE ALSO
+    head, tail

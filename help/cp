@@ -1,0 +1,37 @@
+NAME
+    cp - cross product of two 3 element vectors
+
+SYNOPSIS
+    cp(x, y)
+
+TYPES
+    x, y	1-dimensional matrices with 3 elements
+
+    return	1-dimensional matrix with 3 elements
+
+DESCRIPTION
+    Calculate the product of two 3 1-dimensional matrices.
+    If x has elements (x0, x1, x2), and y has elements (y0, y1, y2),
+    cp(x,y) returns the matrix of type [0:2] with elements:
+
+	{x1 * y2 - x2 * y1, x3 * y1 - x1 * y3, x1 * y2 - x2 * y1}
+
+EXAMPLE
+    > mat x[3] = {2,3,4}
+    > mat y[3] = {3,4,5}
+    > print cp(x,y)
+
+    mat [3] (3 elements, 3 nonzero):
+      [0] = -1
+      [1] = 2
+      [2] = -1
+
+LIMITS
+    x	1-dimensional matrix with 3 elements
+    y	1-dimensional matrix with 3 elements
+
+LIBRARY
+    MATRIX *matcross(MATRIX *x, MATRIX *y)
+
+SEE ALSO
+    dp

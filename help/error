@@ -1,0 +1,28 @@
+NAME
+    error - generate a value of an error type
+
+SYNOPSIS
+    error(n)
+
+TYPES
+    n		integer less than 32768
+
+    return	null value or error value
+
+DESCRIPTION
+    If n is zero or negative, error(n) returns the null value.
+    For positive n, error(n) returns a value of error type n.
+
+EXAMPLE
+    > a = error(10009)
+    a
+	Error 10009
+
+LIMITS
+    0 <= n < 32768
+
+LIBRARY
+    none
+
+SEE ALSO
+    errorcodes, iserror

@@ -1,0 +1,129 @@
+NAME
+    ptest - probabilistic test of primality
+
+SYNOPSIS
+    ptest(n [,count [,skip]])
+
+TYPES
+    n		integer
+    count	integer with absolute value less than 2^24, defaults to 1
+    skip	integer, defaults to 1
+
+    return	0 or 1
+
+DESCRIPTION
+    In ptest(n, ...) the sign of n is ignored; here we assume n >= 0.
+
+    ptest(n, count, skip) always returns 1 if n is prime; equivalently,
+    if 0 is returned then n is not prime.
+
+    If n is even, 1 is returned only if n = 2.
+
+    If count >= 0 and n < 2^32, ptest(n,...) essentially calls isprime(n)
+    and returns 1 only if n is prime.
+
+    If count >= 0, n > 2^32, and n is divisible by a prime <= 101, then
+    ptest(n,...) returns 0.
+
+    If count is zero, and none of the above cases have resulted in 0 being
+    returned, 1 is returned.
+
+    In other cases (which includes all cases with count < 0), tests are
+    made for abs(count) bases b:  if n - 1 = 2^s * m where m is odd,
+    the test for base b of possible primality is passed if b is a
+    multiple of n or b^m = 1 (mod n) or b^(2^j * m) = n - 1 (mod n) for
+    some j where 0 <= j < s; integers that pass the test are called
+    strong probable primes for the base b; composite integers that pass
+    the test are called strong pseudoprimes for the base b; ( XXX ) Since
+    the test for base b depends on b % n, and bases 0, 1 and n - 1 are
+    trivial (n is always a strong probable prime for these bases), it
+    is sufficient to consider 1 < b < n - 1.
+
+    The bases for ptest(n, count, skip) are selected as follows:
+
+	skip = 0:	random in [2, n-2]
+	skip = 1:	successive primes 2, 3, 5, ...
+			not exceeding min(n, 65536)
+	otherwise:	successive integers skip, skip + 1, ...,
+			skip+abs(count)-1
+
+    In particular, if m > 0, ptest(n, -m, 2) == 1 shows that n is either
+    prime or a strong pseudoprime for all positive integer bases <= m + 1.
+    If 1 < b < n - 1, ptest(n, -1, b) == 1 if and only if n is
+    a strong pseudoprime for the base b.
+
+    For the random case (skip = 0), the probability that any one test
+    with random base b will return 1 if n is composite is always
+    less than 1/4, so with count = k, the probability is less
+    than 1/4^k.  For most values of n the probability is much
+    smaller, possible zero.
+
+RUNTIME
+    If n is composite, ptest(n, 1, skip) is usually faster than
+    ptest(n, -1, skip), much faster if n is divisible by a small
+    prime.  If n is prime, ptest(n, -1, skip) is usually faster than
+    ptest(n, 1, skip), possibly much faster if n < 2^32, only slightly
+    faster if n > 2^32.
+
+    If n is a large prime (say 50 or more decimal digits), the runtime
+    for ptest(n, count, skip) will usually be roughly K * abs(count) *
+    ln(n)^3 for some constant K. ( XXX )  For composite n with
+    highbit(n) = N, the compositeness is detected quickly if n is
+    divisible by a small prime and count >= 0; otherwise, if count is
+    not zero, usually only one test is required to establish
+    compositeness, so the runtime will probably be about K * N^3.   For
+    some rare values of composite n, high values of count may be
+    required to establish the compositeness.
+
+    If the word-count for n is less than conf("redc2"), REDC algorithms
+    are used in evaluating ptest(n, count, skip) when small-factor
+    cases have been eliminated.  For small word-counts (say < 10)
+    this may more than double the speed of evaluation compared with
+    the standard algorithms.
+
+EXAMPLE
+    > print ptest(103^3 * 3931, 0), ptest(4294967291,0)
+    1 1
+
+    In the first example, the first argument > 2^32; in the second the
+    first argument is the largest prime less than 2^32.
+
+    > print ptest(121,-1,2), ptest(121,-1,3), ptest(121,-2,2)
+    0 1 0
+
+    121 is the smallest strong pseudoprime to the base 3.
+
+    > x = 151 * 751 * 28351
+    > print x, ptest(x,-4,1), ptest(x,-5,1)
+    3215031751 1 0
+
+    The integer x in this example is the smallest positive integer that is
+    a strong pseudoprime to each of the first four primes 2, 3, 5, 7, but
+    not to base 11.  The probability that ptest(x,-1,0) will return 1 is
+    about .23.
+
+    > for (i = 0; i < 11; i++) print ptest(91,-1,0),:; print;
+    0 0 0 1 0 0 0 0 0 0 1
+
+    The results for this example depend on the state of the
+    random number generator; the expectation is that 1 will occur twice.
+
+    > a = 24444516448431392447461 * 48889032896862784894921;
+    > print ptest(a,11,1), ptest(a,12,1), ptest(a,20,2), ptest(a,21,2)
+    1 0 1 0
+
+    These results show that a is a strong pseudoprime for all 11 prime
+    bases less than or equal to 31, and for all positive integer bases
+    less than or equal to 21, but not for the bases 37 and 22.  The
+    probability that ptest(a,-1,0) (or ptest(a,1,0)) will return 1 is
+    about 0.19.
+
+LIMITS
+    none
+
+LIBRARY
+    BOOL qprimetest(NUMBER *n, NUMBER *count, NUMBER *skip)
+    BOOL zprimetest(ZVALUE n, long count, long skip)
+
+SEE ALSO
+    isprime, prevcand, nextcand

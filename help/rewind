@@ -1,0 +1,33 @@
+NAME
+    rewind - set position at the beginning of some or all files
+
+SYNOPSIS
+    rewind([f_1, f_2, ...])
+
+TYPES
+    f_1, f_2, ...	open file streams
+
+    return		null value or error
+
+DESCRIPTION
+    With one or more arguments f_1, ..., this function sets the
+    position for each f_i at the beginning.  With no argument,
+    this operation is applied to all user-opened files.
+
+EXAMPLE
+    > f = fopen("curds","r");
+    > x = fgetc(f);
+    > rewind(f);
+    > y = fgetc(f);
+    > print x == y
+    1
+
+LIMITS
+    none - XXX - is this correct?
+
+LIBRARY
+    none - XXX - is this correct?
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt

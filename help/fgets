@@ -1,0 +1,40 @@
+NAME
+    fgets - read the next line from a file, newline is kept
+
+SYNOPSIS
+    fgets(fd)
+
+TYPES
+    fd		file
+
+    return	str or nil
+
+DESCRIPTION
+    This function reads the next line, including any trailing newline from
+    the open file associated with fd.  Unlike fgetline, the trailing
+    newline is included in the return string.
+
+    If a line is read, is returned, otherwise (EOF or ERROR) nil is returned.
+
+EXAMPLE
+    > fd = fopen("/tmp/newfile", "w")
+    > fputs(fd, "chongo was here\n")
+    > fd2 = fopen("/tmp/newfile", "r")
+    > fgets(fd2)
+	    "chongo was here
+    "
+
+    > fclose(fd2)
+    > fd2 = fopen("/tmp/newfile", "r")
+    > fgetline(fd2)
+	    "chongo was here"
+
+LIMITS
+    fd must be associaed with an open file
+
+LIBRARY
+    none
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt

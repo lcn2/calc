@@ -1,0 +1,50 @@
+NAME
+    remove - remove the last member of a list
+
+SYNOPSIS
+    remove(lst)
+
+TYPES
+    lst		lvalue whose current value is a list
+
+    return	any
+
+DESCRIPTION
+    If lst has no members, remove(lst) returns the null value and does
+    not change lst.
+
+    If lst has n members where n > 0, remove(lst) returns the value of
+    lst[[n-1]] and deletes this value from the end of the lst, so that
+    lst now has n - 1 members and for 0 <= i < n - 1, lst[[i]] returns
+    what it would have returned before the remove operation.
+
+EXAMPLE
+    > lst = list(2,"three")
+
+    list (2 elements, 2 nonzero):
+      [[0]] = 2
+      [[1]] = "three"
+
+    > remove(lst)
+	    "three"
+    > print lst
+
+    list (1 elements, 1 nonzero):
+      [[0]] = 2
+
+    > remove(lst)
+	    2
+    > print lst
+    list (0 elements, 0 nonzero)
+    > remove(lst)
+    > print lst
+    list (0 elements, 0 nonzero)
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    append, delete, insert, islist, list, push, pop, rsearch, search, size

@@ -1,0 +1,33 @@
+NAME
+    ferror - determine if an error has occurred for file
+
+SYNOPSIS
+    ferror(fd)
+
+TYPES
+    fd		file
+
+    return	int
+
+DESCRIPTION
+    This function determines whether the error condition was detected
+    while performing some operation on the file associated with fd.
+    The error need not have been the previous file operation.
+
+    If an error was previously reported 1 will be returned, otherwise
+    0 is returned.
+
+EXAMPLE
+    > fd = fopen("/etc/motd", "r")
+    > ferror(fd)
+            0
+
+LIMITS
+    fd must be associaed with an open file
+
+LIBRARY
+    none
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt

@@ -1,0 +1,74 @@
+NAME
+    det - determinant
+
+SYNOPSIS
+    det(m)
+
+TYPES
+    m		square matrix with elements of suitable type
+
+    return	zero or value of type determined by types of elements
+
+DESCRIPTION
+    The matrix m has to be square, i.e. of dimension 2 with:
+
+	matmax(m,1) - matmin(m,1) == matmax(m,2) - matmin(m,2).
+
+    If the elements of m are numbers (real or complex), det(m)
+    returns the value of the determinant of m.
+
+    If some or all of the elements of m are not numbers, the algorithm
+    used to evaluate det(m) assumes the definitions of *, unary -, binary -,
+    being zero or nonzero, are consistent with commutative ring structure,
+    and if the m is larger than 2 x 2, division by nonzero elements is
+    consistent with integral-domain structure.
+
+    If m is a 2 x 2 matrix with elements a, b, c, d, where a tests as
+    nonzero, det(m) is evaluated by
+
+	det(m) = (a * d) - (c * b).
+
+    If a tests as zero, det(m) = - ((c * b) - (a * d)) is used.
+
+    If m is 3 * 3 with elements a, b, c, d, e, f, g, h, i, where a and
+    a * e - d * b test as nonzero, det(m) is evaluated by
+
+	det(m) = ((a * e - d * b) * (a * i - g * c)
+			- (a * h - g * b) * (a * f - d * c))/a.
+
+EXAMPLE
+    > mat A[3,3] = {2, 3, 5, 7, 11, 13, 17, 19, 23}
+    > c = config("mode", "frac")
+    > print det(A), det(A^2), det(A^3), det(A^-1)
+    -78 6084 -474552 -1/78
+
+    > obj res {r}
+    > global md
+    > define res_test(a) = !ismult(a.r, md)
+    > define res_sub(a,b) {local obj res v = {(a.r - b.r) % md}; return v;}
+    > define res_mul(a,b) {local obj res v = {(a.r * b.r) % md}; return v;}
+    > define res_neg(a) {local obj res v = {(-a.r) % md}; return v;}
+    > define res(x) {local obj res v = {x % md}; return v;}
+    > md = 0
+    > mat A[2,2] = {res(2), res(3), res(5), res(7)}
+    > md = 5
+    > print det(A)
+    obj res {4}
+    > md = 6
+    > print det(A)
+    obj res {5}
+
+    Note that if A had been a 3 x 3 or larger matrix, res_div(a,b) for
+    non-zero b would have had to be defined (assuming at least one
+    division is necessary); for consistent results when md is composite,
+    res_div(a,b) should be defined only when b and md are relatively
+    prime; there is no problem when md is prime.
+
+LIMITS
+    none
+
+LIBRARY
+    VALUE matdet(MATRIX *m)
+
+SEE ALSO
+    matdim, matmax, matmin, inverse

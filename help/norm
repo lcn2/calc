@@ -1,0 +1,37 @@
+NAME
+    norm - calculate a norm of a value
+
+SYNOPSIS
+    norm(x)
+
+TYPES
+    If x is an object of type xx, the function xx_norm has to have been
+    defined; what this does will be determined by the definition.
+
+    For non-object x:
+
+    x		number (real or complex)
+
+    return	real
+
+DESCRIPTION
+    For real x, norm(x) returns:
+
+   	 x^2.
+
+    For complex x, norm(x) returns:
+
+	re(x)^2 + im(x)^2.
+
+EXAMPLE
+    > print norm(3.4), norm(-3.4), norm(3 + 4i), norm(4 - 5i)
+    11.56 11.56 25 41
+
+LIMITS
+    none
+
+LIBRARY
+    void normvalue(VALUE *x, VALUE *result)
+
+SEE ALSO
+    cmp, epsilon, hypot, abs, near, obj

@@ -1,0 +1,40 @@
+NAME
+    sign - indicator of sign of a real or complex number
+
+SYNOPSIS
+    sgn(x)
+
+TYPES
+    x		real or complex
+
+    return	-1, 0, 1					(real)
+    		-1, 0, 1, -1+1i, 1i, 1+1i, -1-1i, -1i or 1-1i	(complex)
+
+DESCRIPTION
+    Return the value of cmp(a,0).
+
+    For real x, sgn(x) returns:
+	-1 if x < 0
+	0  if x == 9
+	1  if x > 0
+
+    For complex, sgn(x) returns:
+
+	sgn(re(x)) + sgn(im(x))*1i
+
+
+EXAMPLE
+    > print sgn(27), sgn(1e-20), sgn(0), sgn(-45)
+    1 1 0 -1
+
+    > print sgn(2+3i), sgn(6i), sgn(-7+4i), sgn(-6), sgn(-6-3i), sgn(-2i)
+    1+1i 1i -1+1i -1 -1-1i -1i
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qsign(NUMBER *x)
+
+SEE ALSO
+    abs

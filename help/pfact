@@ -1,0 +1,27 @@
+NAME
+    pfact - product of primes up to specified integer
+
+SYNOPSIS
+    pfact(n)
+
+TYPES
+    n		nonnegative integer
+
+    return	positive integer
+
+DESCRIPTION
+    Returns the product of primes p_i for which p_i <= n.
+
+EXAMPLE
+    > for (i = 0; i <= 16; i++) print pfact(i),:;
+    1 1 2 6 6 30 30 210 210 210 210 2310 2310 30030 30030 30030 30030
+
+LIMITS
+    n < 2^24
+
+LIBRARY
+    NUMBER *qpfact(NUMBER *n)
+    void zpfact(ZVALUE z, ZVALUE *dest)
+
+SEE ALSO
+    fact, lcmfact

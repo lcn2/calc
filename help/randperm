@@ -1,0 +1,44 @@
+NAME
+    randperm - randomly permute a list or matrix
+
+SYNOPSIS
+    randperm(x)
+
+TYPES
+    x		list or matrix
+
+    return	same as x
+
+DESCRIPTION
+    For a list or matrix x, randperm(x) returns a copy of x in which
+    the elements have been randomly permuted.  The value of x is not
+    changed.
+
+EXAMPLE
+    > A = list(1,2,2,3,4)
+    > randperm(A)
+
+    list (5 elements, 5 nonzero):
+	  [[0]] = 4
+	  [[1]] = 1
+	  [[2]] = 2
+	  [[3]] = 3
+	  [[4]] = 2
+
+    > randperm(A)
+
+    list (5 elements, 5 nonzero):
+	  [[0]] = 2
+	  [[1]] = 1
+	  [[2]] = 4
+	  [[3]] = 2
+	  [[4]] = 3
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

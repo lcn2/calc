@@ -1,0 +1,27 @@
+NAME
+    iroot - integer part of specified root
+
+SYNOPSIS
+    iroot(x, n)
+
+TYPES
+    x		nonnegative real
+    n		positive integer
+
+    return	nonnegative real
+
+DESCRIPTION
+    Return the greatest integer v for which v^n <= x.
+
+EXAMPLE
+    > print iroot(100,3), iroot(274,3), iroot(1,9), iroot(pi()^8,5)
+    4 6 1 6
+
+LIMITS
+    n > 0
+
+LIBRARY
+    NUMBER *qiroot(NUMBER *x, NUMBER* n)
+
+SEE ALSO
+    isqrt, sqrt

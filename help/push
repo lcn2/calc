@@ -1,0 +1,55 @@
+NAME
+    push - push one or more values into the front of a list
+
+SYNOPSIS
+    push(x, y_0, y_1, ...)
+
+TYPES
+    x		lvalue whose value is a list
+    y_0, ...	any
+
+    return	null value
+
+DESCRIPTION
+     If after evaluation of y_0, y_1, ..., x is a list with
+     contents (x_0, x_1, ...), then after push(x, y_0, y_1, ..., y_n-1),
+     x has contents (y_n-1, ..., y_1, y_0, x_0, x_1, ...), i.e. the
+     values of y_0, y_1, ... are inserted in succession at the beginning
+     of the list.
+
+     This function is equivalent to insert(x, 0, y_n-1, ..., y_1, y_0).
+
+EXAMPLE
+    > A = list(2,"three")
+    > print A
+
+    list (2 elements, 2 nonzero):
+      [[0]] = 2
+      [[1]] = "three"
+
+    > push(A, 4i, 7^2)
+    > print A
+
+    list (4 elements, 4 nonzero):
+      [[0]] = 49
+      [[1]] = 4i
+      [[2]] = 2
+      [[3]] = "three"
+
+    > push (A, pop(A), pop(A))
+    > print A
+
+    list (4 elements, 4 nonzero):
+      [[0]] = 4i
+      [[1]] = 49
+      [[2]] = 2
+      [[3]] = "three"
+
+LIMITS
+    push() can have at most 100 arguments
+
+LIBRARY
+    none
+
+SEE ALSO
+    append, delete, insert, islist, list, pop, remove, rsearch, search, size

@@ -1,0 +1,39 @@
+NAME
+    issimple - whether a value is a simple type
+
+SYNOPSIS
+    issimple(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is a simple type.  This function will return 1 if x
+    is a simple type, 0 otherwise.  Simple types are real numbers,
+    complex numbers, strings and null values.
+
+EXAMPLE
+    > print issimple(2.0), issimple(1), issimple("0")
+    1 1 1
+
+    > print issimple(2i), issimple(1e20), issimple(1/3), issimple(null())
+    1 1 1 1
+
+    > mat a[2]
+    > b = list(1,2,3)
+    > c = assoc()
+    > obj chongo {was, here} d;
+    > print issimple(a), issimple(b), issimple(c), issimple(d)
+    0 0 0 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    isassoc, isfile, isident, isint, islist, ismat, isnull, isnum, isobj,
+    isreal, isstr, istype

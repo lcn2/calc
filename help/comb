@@ -1,0 +1,39 @@
+NAME
+    comb - combinatorial number
+
+SYNOPSIS
+    comb(x, y)
+
+TYPES
+    x		int
+    y		int
+
+    return	int
+
+DESCRIPTION
+    Return the combinatorial number C(x,y) which is defined as:
+
+	       x!
+	    ---------
+	    y!*(x-y)!
+
+    This function computes the number of combinations in which y things
+    may be chosen from x items ignoring the order in which they are chosen.
+
+EXAMPLE
+    > print comb(7,3), comb(7,4), comb(7,5), comb(3,0), comb(0,0)
+    35 35 21 1 1
+
+    > print comb(2^31+1,2^31-1)
+    2305843010287435776
+
+LIMITS
+    x >= y >= 0
+    y < 2^24
+    x-y < 2^24
+
+LIBRARY
+    void zcomb(NUMBER x, y, *ret)
+
+SEE ALSO
+    fact, perm

@@ -1,0 +1,76 @@
+NAME
+    nextcand - next candidate for primeness
+
+SYNOPSIS
+    nextcand(n [,count [, skip [, residue [,modulus]]]])
+
+TYPES
+    n		integer
+    count	integer with absolute value less than 2^24, defaults to 1
+    skip	integer. defaults to 1
+    residue	integer, defaults to 0
+    modulus	integer, defaults to 1
+
+    return	integer
+
+DESCRIPTION
+    If modulus is nonzero, nextcand(n, count, skip, residue, modulus)
+    returns the least integer i greater than abs(n) expressible as
+    residue + k * modulus, where k is an integer, for which
+    ptest(i,count,skip) == 1, or if there is no such integer, zero.
+
+    If abs(n) < 2^32, count >= 0, and the returned value i is not zero, then
+    i is definitely prime.  If count is not zero and the returned
+    value i is greater than 2^32, then i is probably prime, particularly
+    if abs(count) > 1.
+
+    If skip == 0, and abs(n) >= 2^32 or count < 0, the probabilistic test with
+    random bases is used so that if n is composite the
+    probability that it passes ptest() is less than 4^-abs(count).
+    In any case, if the integer returned by nextcand() is not zero,
+    all integers between abs(n) and that integer are composite.
+
+    If skip == 1 (the default value), the bases used in the probabilistic
+    test are the first abs(count) primes 2, 3, 5, ...
+
+    For other values of skip, the bases used in the probabilistic tests
+    are the abs(count) consecutive integers, skip, skip + 1, skip + 2, ...
+
+    If modulus is zero, the value returned is that of residue if this is
+    greater than abs(n) and ptest(residue,count,skip) = 1. Otherwise
+    zero is returned.
+
+RUNTIME
+    The runtime for v = nextcand(n, ...) will depend strongly on the
+    number and nature of the integers between n and v.  If this number
+    is reasonably large the size of count is largely irrelevant as the
+    compositeness of the numbers betweeen n and v will usually be
+    determined by the test for small prime factors or one pseudoprime
+    test with some base b.  If N > 1, count should be positive so that
+    candidates divisible by small primes will be passed over quickly.
+
+    On the average for random n with large word-count N, the runtime seems
+    to be roughly K/N^3 some constant K.
+
+EXAMPLE
+    > print nextcand(50), nextcand(112140,-2), nextcand(112140,-3)
+    53 112141 112153
+
+    > print nextcand(100,1,1,1,6), nextcand(100,1,1,-1,6)
+    103 101
+
+    > print nextcand(100,1,1,2,6), nextcand(100,1,1,303,202)
+    1 101
+
+    > print nextcand(2e60, 1, 1, 31, 1e30)
+    2000000000000000000000000000053000000000000000000000000000031
+
+LIMITS
+    none
+
+LIBRARY
+    int znextcand(ZVALUE n, long count, long skip, ZVALUE res, ZVALUE mod,
+	ZVALUE *cand)
+
+SEE ALSO
+    prevcand, ptest

@@ -1,0 +1,30 @@
+NAME
+    lcm - least common multiple of a set of rational numbers
+
+SYNOPSIS
+    lcm(x1, x2, ...)
+
+TYPES
+    x1, x2, ...	rational number
+
+    return	rational number
+
+DESCRIPTION
+    Compute the least common multiple of one or more rational numbers.
+
+    If no xi is zero, lcm(x1, x2, ...) is the least positive number v
+    for which v is a multiple of each xi.  If at least one xi is zero,
+    the lcm is zero.
+
+EXAMPLE
+    > print lcm(12, -24, 30), lcm(9/10, 11/5, 4/25), lcm(2)
+    -120 79.2 2
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qlcm(NUMBER *x1, NUMBER *x2)
+
+SEE ALSO
+    gcd

@@ -1,0 +1,29 @@
+NAME
+    matmax - maximum value for specified index of matrix
+
+SYNOPSIS
+    matmax(m, i)
+
+TYPES
+    m		matrix
+    i		0, 1, 2, 3
+
+    return	integer
+
+DESCRIPTION
+    Returns the maximum value for i-th index (i counting from zero)
+    for the matrix m.
+
+EXAMPLE
+    > mat A[3]; mat B[1:3, -4:4, 5]
+    > print matmax(A,0), matmax(B,0), matmax(B,1), matmax(B,2)
+    2 3 4 4
+
+LIMITS
+    i < matdim(m)
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

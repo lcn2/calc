@@ -1,0 +1,31 @@
+NAME
+    isreal - whether a value is a real value
+
+SYNOPSIS
+    isreal(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is a real value.  This function will return 1 if x
+    is a real value, 0 otherwise.
+
+EXAMPLE
+    > print isreal(2.0), isreal(1), isreal("0")
+    1 1 0
+
+    > print isreal(2i), isreal(1e20), isreal(1/3)
+    0 1 1
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    isassoc, isfile, isident, isint, islist, ismat, isnull, isnum, isobj,
+    isstr, issimple, istype

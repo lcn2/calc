@@ -1,0 +1,38 @@
+NAME
+    substr - extract a substring of given string
+
+SYNOPSIS
+    substr(str, pos, len)
+
+TYPES
+    str		string
+    pos		nonnegative integer
+    len		nonnegative integer
+
+    return	string
+
+DESCRIPTION
+    If pos > length of str or len is zero, the null string "" is returned.
+
+    If 1 <= pos <= strlen(str), substr(str, pos, len) returns the
+    string of length min(strlen(str) - pos + 1, len) formed by
+    consecutive characters of str starting at position pos, i.e. the
+    string has length len if this is possible, otherwise it ends with
+    the last character of str.  (The first character has pos = 1, the
+    second pos = 2, etc.)
+
+    If pos = 0, the result is the same as for pos = 1.
+
+EXAMPLE
+    > A = "abcde";
+    > print substr(A,0,2), substr(A,1,2), substr(A,4,1), substr(A,3,5)
+    ab ab d cde
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

@@ -1,0 +1,29 @@
+NAME
+    =
+
+SYNOPSIS
+    a = b
+
+TYPES
+    a		lvalue
+    b		expression
+
+    return	lvalue
+
+DESCRIPTION
+    a = b evaluates b, assigns its value to a, and returns a.
+
+EXAMPLE
+    > b = 3+1
+    > a = b
+    > print a, b
+    4 4
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

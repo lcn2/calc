@@ -1,0 +1,28 @@
+NAME
+    ilog - floor of logarithm to specified integer base
+
+SYNOPSIS
+    ilog(x, b)
+
+TYPES
+    x		nonzero real
+    b		integer greater than 1
+
+    return	integer
+
+DESCRIPTION
+    Returns the greatest integer n for which b^n <= abs(x).
+
+EXAMPLE
+    > print ilog(2, 3), ilog(8, 3), ilog(8.9, 3), ilog(1/8, 3)
+    0 1 1 -2
+
+LIMITS
+    x > 0
+    b > 1
+
+LIBRARY
+    long zlog(ZVALUE x, ZVALUE b)
+
+SEE ALSO
+    ilog2, ilog10

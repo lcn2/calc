@@ -1,0 +1,39 @@
+NAME
+    join - form a list by concatenation of specified lists
+
+SYNOPSIS
+    join(x, y, ...)
+
+TYPES
+    x, y, ...	lists
+
+    return	list or null
+
+DESCRIPTION
+    For lists x, y, ..., join(x, y, ...) returns the list whose length
+    is the sum of the lengths of x, y, ..., in which the members of each
+    argument immediately follow those of the preceding argument.
+    The lists x, y, ... are not changed.
+
+    If any argument is not a list, a null value is returned.
+
+EXAMPLE
+    > A = list(1, 2, 3)
+    > B = list(4, 5)
+    > join(A, B)
+
+    list (5 elements, 5 nonzero):
+          [[0]]	= 1
+          [[1]]	= 2
+          [[2]]	= 3
+	  [[3]]	= 4
+	  [[4]]	= 5
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    reverse, sort

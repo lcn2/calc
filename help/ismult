@@ -1,0 +1,36 @@
+NAME
+    ismult - whether a value is a multiple of another
+
+SYNOPSIS
+    ismult(x, y)
+
+TYPES
+    x		real
+    y		real
+
+    return	int
+
+DESCRIPTION
+    Determine if x exactly divides y.  If there exists an integer k
+    such that:
+
+	x == y * k
+
+    then return 1, otherwise return 0.
+
+EXAMPLE
+    > print ismult(6, 2), ismult(2, 6), ismult(7.5, 2.5)
+    1 0 1
+
+    > print ismult(4^67, 2^59), ismult(13, 4/67), ismult(13, 7/56)
+    1 0 1
+
+LIMITS
+    none
+
+LIBRARY
+    BOOL qdivides(NUMBER *x, *y)
+    BOOL zdivides(ZVALUE x, y)
+
+SEE ALSO
+    ismult, isprime, isrel, issq

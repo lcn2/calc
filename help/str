@@ -1,0 +1,44 @@
+NAME
+    str - convert some types of values to strings
+
+SYNOPSIS
+    str(x)
+
+TYPES
+    x		null, string, real or complex number
+
+    return	string
+
+DESCRIPTION
+    Convert a value into a string.
+
+    If x is null, str(x) returns the string "".
+
+    If x is a string, str(x) returns x.
+
+    For real or complex x, str(x) returns the string representing x
+    in the current printing mode; configuration parameters affecting
+    this are "mode", "display", "outround", "tilde", "leadzero",
+
+EXAMPLE
+    > str("")
+	    ""
+    > str(null())
+	    ""
+    > print str(123), str("+"), str(4i), str("is the same as"), str(123+4i)
+    123 + 4i is the same as 3+4i
+
+LIMITS
+    none
+
+LIBRARY
+    void math_divertio();
+    qprintnum(NUMBER *x, int outmode);
+    char *math_getdivertedio();
+
+    math_divertio();
+    comprint(COMPLEX *x);
+    char *math_getdivertedio();
+
+SEE ALSO
+    XXX - fill in

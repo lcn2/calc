@@ -1,0 +1,31 @@
+NAME
+    fcnt - count of number of times a specified integer divides an integer
+
+SYNOPSIS
+    fcnt(x,y)
+
+TYPES
+    x		integer
+    y		integer
+
+    return	non-negative integer
+
+DESCRIPTION
+    If x is nonzero and abs(y) > 1, fcnt(x,y) returns the greatest
+    non-negative n for which y^n is a divisor of x.  In particular,
+    zero is returned if x is not divisible by y.
+
+    If x is zero or if y = -1, 0 or 1, fcnt(x,y) is defined to be zero.
+
+EXAMPLE
+    > print fcnt(7,4), fcnt(24,4), fcnt(48,4)
+    0 1 2
+
+LIMITS
+    none
+
+LIBRARY
+    long zfacrem(ZVALUE x, ZVALUE y, ZVALUE *rem)
+
+SEE ALSO
+    frem, gcdrem

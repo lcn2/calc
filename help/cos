@@ -1,0 +1,36 @@
+NAME
+    cos - cosine
+
+SYNOPSIS
+    cos(x [,eps])
+
+TYPES
+    x		number (real or complex)
+    eps		nonzero real, defaults to epsilon()
+
+    return	number
+
+DESCRIPTION
+    Calculate the cosine of x to a multiple of eps with error less in
+    absolute value than .75 * eps.
+
+EXAMPLE
+    > print cos(1, 1e-5), cos(1, 1e-10), cos(1, 1e-15), cos(1, 1e-20)
+    .5403 .5403023059 .54030230586814 .5403023058681397174
+
+    > print cos(2 +3i, 1e-5), cos(2 + 3i, 1e-10)
+    -4.18963-9.10923i -4.189625691-9.1092278938i
+
+    > pi = pi(1e-20)
+    > print cos(pi/3, 1e-10), cos(pi/2, 1e-10), cos(pi, 1e-10)
+    .5 0 -1
+
+LIMITS
+    eps > 0
+
+LIBRARY
+    NUMBER *qcos(NUMBER *x, NUMBER *eps)
+    COMPLEX *ccos(COMPLEX *x, NUMBER *eps)
+
+SEE ALSO
+    sin, tan, sec, csc, cot, epsilon

@@ -1,0 +1,35 @@
+NAME
+    polar - specify a complex number by modulus (radius) and argument (angle)
+
+SYNOPSIS
+    polar(r, t [, eps])
+
+TYPES
+    r		real
+    t 		real
+    eps		nonzero real, defaults to epsilon()
+
+    return	number (real or complex)
+
+DESCRIPTION
+    Returns the real or complex number with real and imaginary parts
+    multiples of epps nearest or next to nearest to r * cos(t) and
+    r * sin(t) respectively.  The error for each part will be less
+    than 0.75 * abs(eps), but usually less than 0.5 * abs(eps).
+
+EXAMPLE
+    > print polar(2, 0), polar(1, 2, 1e-5), polar(1, 2, 1e-10)
+    2 -.41615+.9093i -.4161468365+.9092974268i
+
+    > pi = pi(1e-10); eps = 1e-5
+    > print polar(2, pi/4, eps), polar(2, pi/2, eps), polar(2, 3*pi/4, eps)
+    1.41421+1.41421i 2i -1.414215+1.41421i
+
+LIMITS
+    none
+
+LIBRARY
+    COMPLEX * cpolar(NUMBER *r, NUMBER *t, NUMBER *eps);
+
+SEE ALSO
+    abs, arg, re, im

@@ -1,0 +1,31 @@
+NAME
+    atan - inverse trigonometric tangent
+
+SYNOPSIS
+    atan(x [,eps])
+
+TYPES
+    x		real
+    eps		nonzero real, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Returns the atan of x to a multiple of eps with error less in
+    absolute value than .75 * eps.
+
+    v = atan(x) is the number in (-p1/2, pi/2) for which tan(v) = x.
+
+EXAMPLE
+    > print atan(2, 1e-5), atan(2, 1e-10), atan(2, 1e-15), atan(2, 1e-20)
+    1.10715 1.1071487178 1.107148717794091 1.10714871779409050302
+
+LIMITS
+    unlike sin and cos, x must be real
+    eps > 0
+
+LIBRARY
+    NUMBER *qatan(NUMBER *x, NUMBER *eps)
+
+SEE ALSO
+    asin, acos, asec, acsc, acot, epsilon

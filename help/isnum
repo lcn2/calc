@@ -1,0 +1,31 @@
+NAME
+    isnum - whether a value is a numeric value
+
+SYNOPSIS
+    isnum(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is a numeric value.  This function will return 1 if x
+    is a a numeric value, 0 otherwise.
+
+EXAMPLE
+    > print isnum(2.0), isnum(1), isnum("0")
+    1 1 0
+
+    > print isnum(2i), isnum(1e20), isnum(1/3)
+    1 1 1
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    isassoc, isfile, isident, isint, islist, ismat, isnull, isobj,
+    isreal, isstr, issimple, istype

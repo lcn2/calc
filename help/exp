@@ -1,0 +1,41 @@
+NAME
+    exp	- exponential function
+
+SYNOPSIS
+    exp(x [,eps])
+
+TYPES
+    x		real or complex
+    eps		nonzero real, defaults to epsilon()
+
+    return	real or complex
+
+DESCRIPTION
+    Approximate the exponential function of x by a multiple of epsilon,
+    the error having absolute value less than 0.75 * eps.
+    If n is a positive integer, exp(x, 10^-n) will usually be
+    correct to the n-th decimal place, which, for large positive x
+    will give many significant figures.
+
+EXAMPLE
+    > print exp(2, 1e-5), exp(2,1e-10), exp(2, 1e-15), exp(2, 1e-20)
+    7.38906 7.3890560989 7.38905609893065 7.38905609893065022723
+
+    > print exp(30, 1e5), exp(30, 1), exp(30, 1e-10)
+    10686474600000 10686474581524 10686474581524.4621469905
+
+    > print exp(-20, 1e-5), exp(-20, 1e-10), exp(-20, 1e-15), exp(-20, 1e-20)
+    0 .0000000021 .000000002061154 .00000000206115362244
+
+    > print exp(1+2i, 1e-5), exp(1+2i, 1e-10)
+    -1.1312+2.47173i -1.1312043838+2.471726672i
+
+LIMITS
+    x < 100000
+
+LIBRARY
+    NUMBER *qexp(NUMBER *x, NUMBER *eps)
+    COMPLEX *cexp(COMPLEX *x, NUMBER *eps)
+
+SEE ALSO
+    ln, cosh, sinh, tanh

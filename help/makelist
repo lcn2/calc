@@ -1,0 +1,33 @@
+NAME
+    makelist - create a list with a specified number of null members
+
+SYNOPSIS
+    makelist(x)
+
+TYPES
+    x		int
+
+    return	list
+
+DESCRIPTION
+    For non-negative integer x, makelist(x) returns a list of size x
+    all members of which have null value.
+
+EXAMPLE
+    > A = makelist(4)
+    > A
+
+    list (4 members, 4 nonzero):
+	  [[0]] = NULL
+	  [[1]] = NULL
+	  [[2]] = NULL
+	  [[3]] = NULL
+
+LIMITS
+    0 <= x < 2^31
+
+LIBRARY
+    none
+
+SEE ALSO
+    modify

@@ -1,0 +1,26 @@
+NAME
+    ilog10 - floor of logarithm to base 10
+
+SYNOPSIS
+    ilog10(x)
+
+TYPES
+    x		nonzero real
+
+    return	integer
+
+DESCRIPTION
+    Returns the greatest integer n for which 10^n <= x.
+
+EXAMPLE
+    > print ilog10(7), ilog10(77.7), ilog10(777), ilog10(.00777), ilog10(-1e27)
+    0 1 2 -3 27
+
+LIMITS
+    none
+
+LIBRARY
+    long qilog10(NUMBER *q)
+
+SEE ALSO
+    ilog2, ilog

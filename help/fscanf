@@ -1,0 +1,130 @@
+NAME
+    fscanf - formatted scan of a file stream
+
+SYNOPSIS
+    fscanf(fs, fmt, x_1, x_2, ...)
+
+TYPES
+    fs			file stream open for reading
+    fmt			string
+    x_1, x_2, ...	lvalues
+
+    return	null, nonnegative integer, or error value
+
+DESCRIPTION
+    If the current position for fs is EOF, the null value is returned.
+
+    Otherwise, until the terminating null character of fmt is encountered
+    or end-of-file for fs is reached, characters other than '%' and white
+    space are read from fmt and compared with the corresponding chracters
+    read from fs.  If the characters match, the reading continues.  If they
+    do not match, an integer value is returned and the file position for
+    fs is the position of the non-matching character.  If white space
+    is encountered in fmt, any white space characters read from
+    fs are skipped until either end-of-file is reached or a non-white-space
+    character is read and comparisons continue under the control of the
+    next non-white character and following characters in fmt.
+
+    When a '%' is encountered in fmt, if this is immediately followed by
+    another '%', the pair is considered as if just one '%' were read and
+    if reading from fmt and fs continues if and only if fs has a matching
+    '%'.  A single '%' read from fmt is taken to indicate the beginning of
+    a conversion specification field consisting in succession of:
+
+    		an optional '*',
+		optional decimal digits,
+		one of 'c', 's', 'n', 'f', 'e', 'i' or a scanset specifier.
+
+    A scanset specifier starts with '[' and an optional '^', then an optional
+    ']', then optional other characters, and ends with ']'.   If any
+    other sequence of characters follows the '%', characters before the
+    first exceptional character (which could be the terminating null
+    character of the fmt string) are ignored, e.g. the sequence " %*3d " does
+    the same as " d ".  If there is no '*' at the beginning of the specifier,
+    and the list x_1, x_2, ... has not been exhausted,
+    a value will be assigned to the next lvalue in the list; if no lvalue
+    remains, the reading of fs stops and the function returns the number
+    of assignments that have been made.
+
+    Occurrence of '*' indicates that characters as specified are to be read
+    but no assignment will be made.
+
+    The digits, if any, read at this stage in the specifier are taken to
+    be decimal digits of an integer which becomes the maximum "width"
+    (i.e. for string-type values, the number of characters to be read from
+    fs); absence of digits or all zero digits in the 'c'
+    case are taken to mean width = 1.  Zero width for the other cases are
+    treated as if infinite.   Fewer characters than the specifier width
+    may be read if end-of-file is reached or in the case of scanset
+    specification, an exceptional character is encountered.
+
+    If the ending character is 'c', characters are read from fs to
+    form a string, which will be ignored or in the non-'*' case, assigned
+    to the next lvalue.
+
+    In the 's' case, reading to form the string starts at the first non-white
+    character (if any) and ceases when end-of-file or further white space
+    is encountered or the specified width has been attained.
+
+    The cases 'f', 'e', 'r', 'i' may be considered to indicate expectation of
+    floating-point, exponential, ratio, or integer representation of the
+    number to be read.  For example, 'i'
+    might be taken to suggest a number like +2345; 'r' might suggest
+    a representation like -27/49; 'e' might suggest a representation like
+    1.24e-7; 'f' might suggest a representation like 27.145. However, there
+    is no test that the the result conforms to the specifier.  Whatever
+    the specifier in these cases, the result depends on the characters read
+    until a space or other exceptional character is read.  The
+    characters read may include one or more occurrences of +, -, * as
+    well as /, interpreted in the usual way, with left-to-right associativity
+    for + and -, and for * and /.  Also acceptable is a trailing i to
+    indicate an imaginary number.  For example the expression
+
+			2+3/4*7i+3.15e7
+
+    would be interpreted as for an ordinary evaluation.  A decimal fraction
+    may have more than one dot: dots after the first, which is taken to be
+    the decimal point, are ignored.  Thus "12.3..45e6.7" is interpreted
+    as if it were "12.345e67".
+
+    For the number specifiers 'f', 'e', 'r', 'i', any specified width is
+    ignored.
+
+    For the specifier 'n', the current value of the file-position indicator
+    is assigned to the corresponding lvalue. (Any width or skip specification
+    is ignored.)
+
+
+EXAMPLE
+    > global a, b, c
+    > f = fopen("/tmp/junk", "w+")
+    > fputs(f, "Alpha Beta Gamma")
+    > rewind(f)
+    > fscanf(f, "Alpha Gamma")
+    > fgets(f)
+	"Beta Gamma"
+    > rewind(f)
+    > fscanf(f, "%5c", a)
+	1
+    > a
+	"Alpha"
+    > fgets(f)
+	" Beta Gamma"
+    > rewind(f)
+    > fscanf(f, "%3c%s%[^m]", a, b, c)
+	3
+    > print a, b
+    Alp ha
+    > print c
+    Beta Ga
+    > fgets(f)
+	"mma"
+
+LIMITS
+    none - XXX - is this correct?
+
+LIBRARY
+    none - XXX - is this correct?
+
+SEE ALSO
+    scanf, strscanf, printf, fprintf, strprintf, fscan, scan, strscan

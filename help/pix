@@ -1,0 +1,38 @@
+NAME
+    pix - number of primes not exceeding specified number
+
+SYNOPSIS
+    pix(n [,err])
+
+TYPES
+    n		real
+    err		integer
+
+    return	nonnegative integer, or err
+
+DESCRIPTION
+    If n is fractional or n >= 2^32, pix(n) causes an error,
+    pix(n, err) returns the value of err.
+
+    If n is an integer < 2^32, pix(n) returns the number of primes
+    (2, 3, 5, ...) less or equal to n.
+
+EXAMPLE
+    > for (i = 0; i <= 20; i++) print pix(i),:;
+    0 0 1 2 2 3 3 4 4 4 4 5 5 6 6 6 6 7 7 8 8
+
+    > print pix(100), pix(1000), pix(1e4), pix(1e5), pix(1e6)
+    25 168 1229 9592 78498
+
+    > print pix(2^32 - 1, -1), pix(2^32, -1)
+    203280221 -1
+
+LIMITS
+    none
+
+LIBRARY
+    long zpix(ZVALUE z)
+    FULL pix(FULL x)
+
+SEE ALSO
+    XXX - fill in

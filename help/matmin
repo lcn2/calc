@@ -1,0 +1,29 @@
+NAME
+    matmin - minimum value for specified index of matrix
+
+SYNOPSIS
+    matmin(m, i)
+
+TYPES
+    m		matrix
+    i		0, 1, 2, 3
+
+    return	integer
+
+DESCRIPTION
+    Returns the minimum value for i-th index (i counting from zero)
+    for the matrix m.
+
+EXAMPLE
+    > mat A[3]; mat B[1:3, -4:4, 5]
+    > print matmin(A,0), matmin(B,0), matmin(B,1), matmin(B,2)
+    0 1 -4 0
+
+LIMITS
+    i < matdim(m)
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

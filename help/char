@@ -1,0 +1,27 @@
+NAME
+    char - character corresponding to a value
+
+SYNOPSIS
+    char(j)
+
+TYPES
+    j		integer, 0 <= j < 256
+
+    return	string
+
+DESCRIPTION
+    For j > 0, returns a string of length 1 with a character that has
+    the same value as j.  For j = 0, returns the null string "".
+
+EXAMPLE
+    > print char(0102), char(0x6f), char(119), char(0145), char(0x6e)
+    B o w e n
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    ord

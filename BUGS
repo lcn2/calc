@@ -1,0 +1,95 @@
+If you notice something wrong, strange or broken, try rereading:
+
+   README.FIRST
+   README
+   BUGS (in particular the bottom problems or mis-features section)
+
+If that does not help, cd to the calc source directory and try:
+
+   make check
+
+Look at the end of the output, it should say something like:
+
+    9999: passed all tests  /\../\
+
+If it does not, then something is really broken!
+
+If you made and modifications to calc beyond the simple Makefile
+configuration, try backing them out and see if things get better.
+
+Check to see if the version of calc you are using is current.  Calc
+distributions may be obtained from the official calc repository:
+
+    ftp://ftp.uu.net/pub/calc
+
+If you are an alpha or beta tester, you may have a special pre-released
+version that is more advanced than what is in the ftp archive.
+
+=-=
+
+If you have tried all of the above and things still are not right,
+then it may be time to send in a bug report.  You can send bug reports to:
+
+    calc-tester@postofc.corp.sgi.com
+
+When you send your report, please include the following information:
+
+    * a description of the problem
+
+    * the version of calc you are using (if you cannot get calc
+      it to run, then send us the 4 #define lines from version.c)
+
+    * if you modified calc from an official patch, send me the mods you made
+
+    * the type of system you were using
+
+    * the type of compiler you were using
+
+    * cd to the calc source directory, and type:
+
+	make debug > debug.out 2>&1		(sh, ksh, bash users)
+	make debug >& debug.out			(csh, tcsh users)
+
+      and send the contents of the 'debug.out' file.
+
+Stack traces from core dumps are useful to send as well.
+
+=-=
+
+The official calc repository is located in:
+
+    ftp://ftp.uu.net/pub/calc
+
+If you don't have ftp access to that site, or if your version is more
+recent than what has been released to the ftp archive, you may, as a
+last resort, send EMail to:
+
+    chongo@toad.com
+
+Indicate the version you have and that you would like a more up to date version.
+
+=-=
+
+Send any comments, suggestions and most importantly, fixes (in the form
+of a context diff patch) to:
+
+    calc-tester@postofc.corp.sgi.com
+
+=-=
+
+Known problems or mis-features:
+
+    * In calc2.10.2t3, when scan() reads characters from stdin, they
+      are not echoed.  This also happens with fgets(files(0)) and
+      fgetline(files(0)).  Reports indicate that this did not happen in
+      calc.2.10.1t20 but did in 2.10.2t0.
+
+    * Many of LIBRARY, LIMITS and SEE ALSO sections of help files
+      for builtins are either inconsistent or missing information.
+
+    * The functions filepos2z() and z2filepos() do not work (or
+      worse do not compile) when FILEPOS is 64 bits long.
+
+    * There is some places in the source with obscure variable names
+      and not much in the way of comments.  We need some major cleanup
+      and documentation.

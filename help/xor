@@ -1,0 +1,39 @@
+NAME
+    xor - bitwise exclusive or of a set of integers
+
+SYNOPSIS
+    xor(x1, x2, ...)
+
+TYPES
+    x1, x2, ...	integer
+
+    return	integer
+
+DESCRIPTION
+    Compute the bitwise exclusive or of a set of integers.
+
+    For one argument xor(x1) returns x1.  For two arguments,
+    xor(x1,x2) returns the bitwise exclusive or of x1 and x2.
+    For each bit pair:
+
+	0 0 xor returns 0
+	0 1 xor returns 1
+	1 0 xor returns 1
+	1 1 xor returns 0
+
+    For more than two arguments, xor(x1,x2,x3, ..., xn) returns:
+
+	xor(...xor(xor(x1,x2), x3), ... xn)
+
+EXAMPLE
+    > print xor(2), xor(5, 3, -7, 2, 9)
+    2 10
+
+LIMITS
+    The number of arguments is not to exceed 100.
+
+LIBRARY
+    NUMBER *qxor(NUMBER *x1, NUMBER *x2)
+
+SEE ALSO
+    XXX - fill in

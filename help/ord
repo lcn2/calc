@@ -1,0 +1,26 @@
+NAME
+    ord - return integer corresponding to character value
+
+SYNOPSIS
+    ord(c)
+
+TYPES
+    c		string
+
+    return	int
+
+DESCRIPTION
+    Return the integer value of the first character of a string.
+
+EXAMPLE
+    > print ord("DBell"), ord("chongo"), ord("/\../\"), ord("!")
+    68 99 47 33
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    char

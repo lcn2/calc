@@ -1,0 +1,43 @@
+NAME
+    randbit - additive 55 shuffle pseudo-random number generator
+
+SYNOPSIS
+    randbit([x])
+
+TYPES
+    x		integer
+
+    return	integer
+
+DESCRIPTION
+    If x > 0, randbit(x) returns a pseudo-random integer in [0, 2^x),
+    i.e. the same as rand(2^x).  If the integer returned is
+
+	    b_1 * 2^(x-1) + b_2 * 2^(x-2) + ... + b_n,
+
+    where each b_i is 0 or 1, then b_1, b_2, ..., b_n may be
+    considered as a sequence of x random bits.
+
+    If x <= 0, randbit(x) causes the random-number generator to skip
+    abs(x) bits, and returns abs(x).
+
+    If x is omitted, it is assumed to have the value of 1.
+
+    See the rand help page for details on the additive 55 shuffle
+    pseudo-random number generator.
+
+EXAMPLE
+    > print srand(0), randbit(20), randbit(20), randbit(20), randbit(20)
+    RAND state 817647 476130 944201 822573
+
+    > print srand(0), randbit(-20), randbit(20), randbit(-20), randbit(20)
+    RAND state 20 476130 20 822573
+
+LIMITS
+    x != 0
+
+LIBRARY
+    void zrand(long cnt, ZVALUE *res)
+
+SEE ALSO
+    srand, randbit, isrand, random, srandom, israndom

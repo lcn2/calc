@@ -1,0 +1,33 @@
+NAME
+    arg - argument (the angle or phase) of a complex number
+
+SYNOPSIS
+    arg(x [,eps])
+
+TYPES
+    x		number
+    eps		nonzero real, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Returns the argument of x to the nearest or next to nearest multiple of
+    eps; the error will be less in absolute value than 0.75 * abs(eps),
+    but usually less than 0.5 * abs(eps).  By default, acc is epsilon().
+
+EXAMPLE
+    > print arg(2), arg(2+3i, 1e-5), arg(2+3i, 1e-10), arg(2+3i, 1e-20)
+    0 .98279 .9827937232 .98279372324732906799
+
+    > pi = pi(1e-10); deg = pi/180; eps = deg/10000
+    > print arg(2+3i, eps)/deg, arg(-1 +1i, eps)/deg, arg(-1 - 1i,eps)/deg
+    56.3099 135 -135
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    conj, im, polar, re

@@ -1,0 +1,29 @@
+NAME
+    mne - test for inequality of real numbers modulo a specifed number
+
+SYNOPSIS
+    mne(x, y, md)
+
+TYPES
+    x		real number
+    y		real number
+    md		real number
+
+    return	0 or 1
+
+DESCRIPTION
+    Returns 1 if and only if x is not congruent to y modulo md, i.e.
+    for every integer n, x - y != n * md.
+
+EXAMPLE
+    print mne(5, 33, 7), mne(5, -23, 7), mne(5, 15, 7), mne(5, 7, 0)
+    0 0 1 1
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    meq

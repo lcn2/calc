@@ -1,0 +1,56 @@
+NAME
+    power - evaluate a numerical power to specified accuracy
+
+SYNOPSIS
+    power(x, y, [, eps])
+
+TYPES
+    x		number
+    x		number
+    eps		nonzero real, defaults to epsilon()
+
+    return	number
+
+DESCRIPTION
+    For real or complex x and y, power(x,y,eps) returns a real or
+    complex number for which the real and imaginary parts are multiples
+    of epsilon differing from the true real and imaginary parts of the
+    principal y-th power of x by less than 0.75 * abs(eps), usually by
+    less than 0.5 * abs(eps).  If the principal y-th power of x is a
+    multiple of eps, it will be returned exactly.
+
+    If y is a large integer but x^y is not large, and accuracy
+    represented by eps is all that is required, power(x,y,eps) may be
+    considerably faster than appr(x^y, eps, 24), the difference between
+    the two results being probably at most abs(eps).
+
+EXAMPLE
+    > print power(1.2345, 10, 1e-5), power(1.2345, 10, 1e-10)
+    8.22074 8.2207405646
+
+    > print power(1+3i, 3, 1e-5), power(1 + 3i, 2+ 1i, 1e-5)
+    -26-18i -2.50593-1.39445i
+
+    > print power(1+ 1e-30, 1e30, 1e-20)
+    2.71828182845904523536
+
+    > print power(1i, 1i, 1e-20)
+    .20787957635076190855
+
+    > print power(exp(1, 1e-20), pi(1e-20) * 1i/2, 1e-20)
+    1i
+
+LIMITS
+    If x = 0, y in power(x,y,eps) has to have positive real part,
+    except in the case of y = 0; power(0, 0, eps) is the multiple of
+    eps nearest 1.
+
+    eps > 0
+
+LIBRARY
+    void powervalue(VALUE *x, VALUE *y, VALUE *eps, VALUE *result)
+    NUMBER *qpower(NUMBER *x, NUMBER *y, NUMBER *eps)
+    COMPLEX *cpower(COMPLEX *x, COMPLEX *y, NUMBER *eps)
+
+SEE ALSO
+    root

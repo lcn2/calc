@@ -1,0 +1,37 @@
+NAME
+    frem - remove specified integer factors from specified integer
+
+SYNOPSIS
+    frem(x,y)
+
+TYPES
+    x		integer
+    y		integer
+
+    return	non-negative integer
+
+DESCRIPTION
+    If x and y are not zero and n is the largest non-negative integer
+    for which y^n is a divisor of x, frem(x,y) returns abs(x/y^n).
+    In particular, abs(x) is returned if x is not divisible by
+    y or if abs(y) = 1.  If abs(y) > 1, frem(x,y) is the greatest
+    divisor of x not divisible by y.
+
+    For all x, frem(x,0) is defined to equal abs(x).
+
+    For all y, frem(0,y) is defined to be zero.
+
+    For all x and y, abs(x) = frem(x,y) * abs(y) ^ fcnt(x,y).
+
+EXAMPLE
+    > print frem(7,4), frem(24,4), frem(48,4), frem(-48,4)
+    7 6 3 3
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qfacrem(NUMBER *x, NUMBER *y);
+
+SEE ALSO
+    fcnt, gcdrem

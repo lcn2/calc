@@ -1,0 +1,26 @@
+NAME
+    cmdbuf - print the command buffer
+
+SYNOPSIS
+    cmdbuf()
+
+TYPES
+    return	str
+
+DESCRIPTION
+    This function returns the command string that was formed by calc based
+    on its command line arguments.  If calc was invoked without arguments,
+    this function will return an empty string.
+
+EXAMPLE
+    > cmdbuf("")
+	    ""
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

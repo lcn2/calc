@@ -1,0 +1,134 @@
+/*
+ * Copyright (c) 1995 Ernest Bowen and Landon Curt Noll
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
+ * By: Ernest Bowen and Landon Curt Noll
+ *     ernie@neumann.une.edu.au and chongo@toad.com
+ *
+ * This library is used by the 3300 series of the regress.cal test suite.
+ */
+
+global defaultverbose = 1;	/* default verbose value */
+global err;
+
+define testi(str, n, N, verbose)
+{
+	local A, t, i, j, d1, d2;
+	local m;
+
+	if (isnull(verbose)) verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	if (isnull(N))
+		N = 1e6;
+	mat A[n,n];
+	for (i = 0; i < n; i++)
+		for (j = 0; j < n; j++)
+			A[i,j] = rand(-N, N);
+	t = runtime();
+	d1 = det(A);
+	t = runtime() - t;
+	d2 = det(A^2);
+	if (d2 != d1^2) {
+		if (verbose > 0) {
+			printf("*** Failure for n=%d, N=%d, d1=%d\n", n, N, d1);
+		}
+		return 1;	/* error */
+	} else {
+		if (verbose > 0) {
+			printf("no errors\n");
+		}
+		if (verbose > 1) {
+			printf("ok: n=%d, N=%d, d1=%d, t=%d\n", n, N, d1, t);
+		}
+	}
+	return 0;	/* ok */
+}
+
+define testr(str, n, N, verbose)
+{
+	local A, t, i, j, d1, d2;
+
+	if (isnull(verbose)) verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	if (isnull(N))
+		N = 1e6;
+	mat A[n,n];
+	for (i = 0; i < n; i++)
+		for (j = 0; j < n; j++)
+			A[i,j] = rand(-(N^2), N^2)/rand(1, N);
+	t = runtime();
+	d1 = det(A);
+	t = runtime() - t;
+	d2 = det(A^2);
+	if (d2 != d1^2) {
+		if (verbose > 0) {
+			printf("*** Failure for n=%d, N=%d, d1=%d\n", n, N, d1);
+		}
+		return 1;	/* error */
+	} else {
+		if (verbose > 0) {
+			printf("no errors\n");
+		}
+		if (verbose > 1) {
+			printf("ok: n=%d, N=%d, d1=%d, t=%d\n", n, N, d1, t);
+		}
+	}
+	return 0;	/* ok */
+}
+
+/*
+ * test3300 - perform all of the above tests a bunch of times
+ */
+define test3300(verbose, tnum)
+{
+	local N;	/* test parameter */
+	local i;
+
+	/*
+	 * set test parameters
+	 */
+	if (isnull(verbose)) {
+		verbose = defaultverbose;
+	}
+	N = 1e6;
+	srand(3300e3300);
+
+	/*
+	 * test a lot of stuff
+	 */
+	for (i=0; i < 19; ++i) {
+		err += testi(strcat(str(tnum++), ": testi(", str(i), ")"), \
+			     i, N, verbose);
+	}
+	for (i=0; i < 9; ++i) {
+		err += testr(strcat(str(tnum++), ": testr(", str(i), ")"), \
+			     i, N, verbose);
+	}
+
+	/*
+	 * test results
+	 */
+	if (verbose > 1) {
+		if (err) {
+			print "***", err, "error(s) found in testall";
+		} else {
+			print "no errors in testall";
+		}
+	}
+	return tnum;
+}
+
+global lib_debug;
+
+if (lib_debug >= 0) {
+	print "global defaultverbose defined";
+	print "global err defined";
+	print "testi(str, n, N, verbose) defined";
+	print "testr(str, n, N, verbose) defined";
+	print "test3300(verbose, tnum) defined";
+}

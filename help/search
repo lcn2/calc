@@ -1,0 +1,37 @@
+NAME
+    search - search a matrix, list or association for a value
+
+SYNOPSIS
+    search(x, val [,idx])
+
+TYPES
+    x		matrix, &matrix, list, &list, assoc, &assoc
+    val		any, &any
+    idx		int
+
+    return	any
+
+DESCRIPTION
+    Searchs the matrix, list or association x for the value val.  By
+    default, the search starts at index 0.  If idx is given, the search
+    starts at index indx.
+
+    If the value is not found, this function returns nil.
+
+EXAMPLE
+    > lst = list(2,"three",4i)
+    > search(lst,"three")
+	    1
+    > search(lst,"threes")
+    > search(lst, 4i, 4)
+    > search(lst, 4i, 1)
+	    2
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    assoc, list, mat, rsearch

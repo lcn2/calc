@@ -1,0 +1,30 @@
+NAME
+    iseven - whether a value is an even integer
+
+SYNOPSIS
+    iseven(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is an even integer.  This function will return 1 if x is
+    even integer, 0 otherwise.
+
+EXAMPLE
+    > print iseven(2.0), iseven(1), iseven("0")
+    1 0 0
+
+    > print iseven(2i), iseven(1e20), iseven(1/3)
+    0 1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    iseven, isint, isnum, isodd, isreal

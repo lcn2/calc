@@ -1,0 +1,112 @@
+NAME
+    mod - compute the remainder for an integer quotient
+
+SYNOPSIS
+    mod(x, y, rnd)
+    x % y
+
+TYPES
+    If x is a matrix or list, the returned value is a matrix or list v of
+    the same structure for which each element v[[i]] = mod(x[[i]], y, rnd).
+
+    If x is an xx-object or x is not an object and y is an xx-object,
+    this function calls the user-defined function xx_mod(x, y, rnd);
+    the types of arguments and returned value are as required by the
+    definition of xx_mod().
+
+    If neither x nor y is an object, or x is not a matrix or list:
+
+    x		number (real or complex)
+    y		real
+    rnd		integer, defaults to config("mod")
+
+    return	number
+
+DESCRIPTION
+    If x is real or complex and y is zero, mod(x, y, rnd) returns x.
+
+    If x is complex, mod(x, y, rnd) returns
+		mod(re(x), y, rnd) + mod(im(x), y, rnd) * 1i.
+
+    In the following it is assumed x is real and y is nonzero.
+
+    If x/y is an integer mod(x, y, rnd) returns zero.
+
+    If x/y is not an integer, mod(x, y, rnd) returns one of the two numbers
+    r for which for some integer q, x = q * v + r and abs(r) < abs(y).
+    Which of the two numbers is returned is controlled by rnd.
+
+    If bit 4 of rnd is set (e.g. if 16 <= rnd < 32) abs(r) <= abs(y)/2;
+    this uniquely determines r if abs(r) < abs(y)/2.  If bit 4 of rnd is
+    set and abs(r) = abs(y)/2, or if bit 4 of r is not set, the result for
+    r depends on rnd as in the following table:
+
+	(Blank entries indicate that the description would be complicated
+	 and probably not of much interest.)
+
+	     rnd & 15	   sign of r   		parity of q
+
+		0	     sgn(y)
+		1           -sgn(y)
+		2	     sgn(x)
+		3	    -sgn(x)
+		4	      +
+		5	      -
+		6	     sgn(x/y)
+		7	    -sgn(x/y)
+		8				   even
+		9			 	   odd
+	       10				even if x/y > 0, otherwise odd
+	       11				odd if x/y > 0, otherwise even
+	       12				even if y > 0, otherwise odd
+	       13				odd if y > 0, otherwise even
+	       14				even if x > 0, otherwise odd
+	       15				odd if x > 0, otherwise even
+
+	This dependence on rnd is consistent with quo(x, y, rnd) and
+	appr(x, y, rnd) in that for any real x and y and any integer rnd,
+
+		x = y * quo(x, y, rnd) + mod(x, y, rnd).
+		mod(x, y, rnd) = x - appr(x, y, rnd)
+
+	If y and rnd are fixed and mod(x, y, rnd) is to be considered as
+	a canonical residue of x modulo y, bits 1 and 3 of rnd should be
+	zero: if 0 <= rnd < 32, it is only for rnd = 0, 1, 4, 5, 16, 17,
+	20, or 21, that the set of possible values for mod(x, y, rnd)
+	form an interval of length y, and for any x1, x2,
+
+		mod(x1, y, rnd) = mod(x2, y, rnd)
+
+	is equivalent to:
+
+		x1 is congruent to x2 modulo y.
+
+	This is particularly relevant when working with the ring of
+	integers modulo an integer y.
+
+EXAMPLE
+    > print mod(11,5,0), mod(11,5,1), mod(-11,5,2), mod(-11,-5,3)
+    1 -4 -1 4
+
+    > print mod(12.5,5,16), mod(12.5,5,17), mod(12.5,5,24), mod(-7.5,-5,24)
+    2.5 -2.5 2.5 2.5
+
+    > A = list(11,13,17,23,29)
+    > print mod(A,10,0)
+
+    list (5 elements, 5 nonzero):
+	[[0]] = 1
+	[[1]] = 3
+	[[2]] = 7
+	[[3]] = 3
+	[[4]] = 9
+
+LIMITS
+    none
+
+LIBRARY
+    void modvalue(VALUE *x, VALUE *y, VALUE *rnd, VALUE *result)
+    NUMBER *qmod(NUMBER *y, NUMBER *y, long rnd)
+
+SEE ALSO
+    quo, quomod, //, %

@@ -1,0 +1,38 @@
+NAME
+    hmean - harmonic mean of a number of values
+
+SYNOPSIS
+    hmean(x_1, x_2, ...)
+
+TYPES
+    x_1, ...	arithmetic or list
+
+    return	determined by types of arguments, or null
+
+DESCRIPTION
+    The null value is returned if there are no arguments.
+
+    If there are n non-list arguments x_1, x_2, ... and the
+    required operations are defined, hmean(x_1, x_2, ...) returns the
+    value of:
+
+	n/(inverse(x_1) + inverse(x_2) + ... + inverse(x_n)).
+
+    If an argument x_i is a list as defined by list(y_1, ..., y_m)
+    this is treated as if in (x_1, x_2, ...), x_i is replaced by
+    y_1, ..., y_m.
+
+
+EXAMPLE
+    > c = config("mode", "frac")
+    > print hmean(1), hmean(1,2), hmean(1,2,3), hmean(1,2,3,4), hmean(1,2,0,3)
+    1 4/3 18/11 48/25 0
+
+LIMITS
+    The number of arguments is not to exceed 100.
+
+LIBRARY
+    none
+
+SEE ALSO
+    avg

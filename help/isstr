@@ -1,0 +1,28 @@
+NAME
+    isstr - whether a value is a string
+
+SYNOPSIS
+    isstr(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is a string.  This function will return 1 if x is
+    a string, 0 otherwise.
+
+EXAMPLE
+    > print isstr("1"), isstr(1), isstr("")
+    1 0 1
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    isassoc, isfile, isident, isint, islist, ismat, isnull, isnum, isobj,
+    isreal, issimple, istype

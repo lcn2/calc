@@ -1,0 +1,32 @@
+NAME
+    atanh - inverse hyperbolic tangent
+
+SYNOPSIS
+    atanh(x [,eps])
+
+TYPES
+    x		real
+    eps		nonzero real, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Returns the atanh of x to a multiple of eps with error less in
+    absolute value than .75 * eps.
+
+    atanh(x) = ln((1 + x)/(1 - x))/2 is the real number v for whichi
+    tanh(v) = x.
+
+EXAMPLE
+    > print atanh(.5,1e-5), atanh(.5,1e-10), atanh(.5,1e-15), atanh(.5,1e-20)
+    .54931 .5493061443 .549306144334055 .5493061443340548457
+
+LIMITS
+    unlike sin and cos, x must be real
+    eps > 0
+
+LIBRARY
+    NUMBER *qatanh(NUMBER *x, NUMBER *eps)
+
+SEE ALSO
+    asinh, acosh, asech, acsch, acoth, epsilon

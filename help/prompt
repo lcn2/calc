@@ -1,0 +1,39 @@
+NAME
+    prompt - display a prompt and wait for input from terminal
+
+SYNOPSIS
+    prompt(str)
+
+TYPES
+    str		string
+
+    return	string
+
+DESCRIPTION
+   When prompt(str) is called and input is from a terminal, the string
+   str is displayed and execution is halted until a newline ends a line
+   read from the input; the string formed by the characters in the line
+   (other than the newline) is returned as the value of prompt().
+
+EXAMPLE
+    > x = prompt("? ");
+    ? 273
+    > x
+ 	"273"
+
+    > for (;;) {s = prompt("? "); if (s=="end") break; print "\t":eval(s)^2;}
+    ? 3
+ 	    9
+    ? 2 + 3
+ 	    25
+    ? end
+    >
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

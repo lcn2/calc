@@ -1,0 +1,31 @@
+NAME
+    places - return number of decimal places
+
+SYNOPSIS
+    places(x)
+
+TYPES
+    x		real
+
+    return	integer
+
+DESCRIPTION
+    If x has a finite decimal representation (with nonzero last digit),
+    places(x) returns the number of digits after the decimal point in this
+    representation; this is the least non-negative integer n for which
+    10^n * x is an integer.
+
+    If x does not have a finite decimal representation, places(x) returns -1.
+
+EXAMPLE
+    > print places(3), places(0.0123), places(3.70), places(1e-10), places(3/7)
+    0 4 1 10 -1
+
+LIMITS
+    none
+
+LIBRARY
+    long qplaces(NUMBER *x)
+
+SEE ALSO
+    digits

@@ -1,0 +1,33 @@
+NAME
+    floor - floor
+
+SYNOPSIS
+    floor(x)
+
+TYPES
+    x		real, complex, list, matrix
+
+    return	real or complex, list, matrix
+
+DESCRIPTION
+    For real x, floor(x) is the greatest integer not greater than x.
+
+    For complex, floor(x) returns the real or complex number v for
+    which re(v) = floor(re(x)), im(v) = floor(im(x)).
+
+    For list or matrix x, floor(x) returns the list or matrix of the
+    same structure as x for which each element t of x has been replaced
+    by floor(t).
+
+EXAMPLE
+    > print floor(27), floor(1.23), floor(-4.56), floor(7.8 - 9.1i)
+    27 1 -5 7-10i
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    ceil, int

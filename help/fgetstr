@@ -1,0 +1,48 @@
+NAME
+    fgetstr - read the next null-terminated string from a file
+
+SYNOPSIS
+    fgetstr(fs)
+
+TYPES
+    fs		file stream open for reading
+
+    return	string, null or error value
+
+DESCRIPTION
+    If the stream is at end of file, the null value is returned.
+
+    If the stream cannot be read, an error value is returned.
+
+    Otherwise the function retrurns the string of characters from the
+    current file position to the first null character ('\0') (the file
+    position for further reading then being immediately after the '\0'),
+    or if no null character is encountered, the string of characters to
+    the end of file (the string as usual being terminated by '\0').
+
+    If the stream being read is from stdin (i.e. files(0)), the
+    characters entered are not displayed and reading ends when a '\0' is
+    entered (on many terminals this is by ctrl-@).
+
+EXAMPLE
+    > f = fopen("/tmp/junk", "w")
+    > fputstr(f, "  Alpha    Beta ", "", "Gamma\n\tDelta")
+    > freopen(f, "r")
+    > fgetstr(f)
+	"  Alpha    Beta "
+    > fgetstr(f)
+	""
+    > fgetstr(f)
+	"Gamma
+	Delta"
+    > fgetstr(f)
+    >
+
+LIMITS
+    none - XXX - is this correct?
+
+LIBRARY
+    none - XXX - is this correct?
+
+SEE ALSO
+    fputstr, fgetword, fgets, fputs, fopen, files, fprintf

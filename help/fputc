@@ -1,0 +1,32 @@
+NAME
+    fputc - write a character to a file
+
+SYNOPSIS
+    fputc(fd, data)
+
+TYPES
+    fd		file
+    data	str
+
+    return	nil
+
+DESCRIPTION
+    This function writes the first character in data to the file
+    associated with fd.
+
+EXAMPLE
+    > fd = fopen("/tmp/newfile", "w")
+    > fputc(fd, "c")
+    > fd2 = fopen("/tmp/newfile", "r")
+    > fgetc(fd2)
+	    "c"
+
+LIMITS
+    fd must be associaed with an open file
+
+LIBRARY
+    none
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt

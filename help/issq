@@ -1,0 +1,34 @@
+NAME
+    issq - whether a value is a square
+
+SYNOPSIS
+    issq(x)
+
+TYPES
+    x		real
+
+    return	int
+
+DESCRIPTION
+    Determine if x is a square.  If there exists integers a, b such that:
+
+	x == a^2 / b^2		(b != 0)
+
+    return 1, otherwise return 0.
+
+EXAMPLE
+    > print issq(25), issq(3), issq(0)
+    1 0 1
+
+    > print issq(4/25), issq(-4/25), issq(pi())
+    1 0 0
+
+LIMITS
+    none
+
+LIBRARY
+    BOOL qissquare(NUMBER *x)
+    BOOL zissquare(ZVALUE x)
+
+SEE ALSO
+    ismult, isprime, isrel, issq

@@ -1,0 +1,29 @@
+NAME
+    islist - whether a value is a list
+
+SYNOPSIS
+    islist(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is a list.  This function will return 1 if x is
+    a list, 0 otherwise.
+
+EXAMPLE
+    > lst = list(2,3,4)
+    > print islist(lst), islist(1)
+    1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    isassoc, isfile, isident, isint, ismat, isnull, isnum, isobj,
+    isreal, isstr, issimple, istype

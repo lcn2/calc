@@ -1,0 +1,331 @@
+/*
+ * Copyright (c) 1996 Ernest Bowen and Landon Curt Noll
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
+ * By: Ernest Bowen and Landon Curt Noll
+ *     ernie@neumann.une.edu.au and chongo@toad.com
+ *
+ * This library is used by the 2700 series of the regress.cal test suite.
+ */
+/*
+ * The following script gives a severe test of sqrt(x,y,z) for
+ * all 128 values of z, randomly produced real and complex x, and randomly
+ * produced nonzero values for y.  After loading it, testcsqrt(n) will
+ * test n combinations of x and y;  testcsqrt(str,n,2) will print 1 2 3 ...
+ * indicating work in process; testcsqrt(str,n,3) will give information about
+ * errors detected and will print values of x and y used.  The
+ * number generators are essentially as in the script I sent yesterday.
+ * I've also defined a function iscomsq(x) which does for complex as well
+ * as real x what issq(x) currently does for real x.
+ */
+
+global defaultverbose = 1;
+global err;
+
+define mknonnegreal() {
+	switch(rand(8)) {
+		case 0: return rand(20);
+		case 1: return rand(20,1000);
+		case 2: return rand(1,10000)/rand(1,100);
+		case 3: return scale(mkposreal(), rand(1,100));
+		case 4: return scale(mkposreal(), -rand(1,100));
+		case 5: return rand(1, 1000) + scale(mkfrac(),-rand(1,100));
+		case 6: return mkposreal()^2;
+		case 7: return mkposreal() * (1+scale(mkfrac(),-rand(1,100)));
+	}
+}
+
+define mkposreal() {
+	local x;
+
+	x = mknonnegreal();
+	while (x == 0)
+		x = mknonnegreal();
+	return x;
+}
+
+define mkreal_2700() = rand(2) ? mknonnegreal() : -mknonnegreal();
+
+define mknonzeroreal() = rand(2) ? mkposreal() : -mkposreal();
+
+/* Number > 0 and < 1, almost uniformly distributed */
+define mkposfrac() {
+	local x,y;
+
+	x = rand(1,1000);
+	do
+		y = rand(1,1000);
+	while (y == x);
+	if (x > y)
+		swap(x,y);
+	return x/y;
+}
+
+/* Nonzero > -1 and < 1 */
+define mkfrac() = rand(2) ? mkposfrac() : -mkposfrac();
+
+define mksquarereal() = mknonnegreal()^2;
+
+/*
+ * XXX - Should be able to do better than the following.  For nonsquare
+ * positive integer less than 1e6, could use
+ *		 x = rand(1, 1000);
+ *		 return rand(x^2 + 1, (x + 1)^2);
+ * Maybe could do
+ *		do
+ *			x = mkreal_2700();
+ *		while
+ *			(issq(x));
+ * This would of course not be satisfactory for testing issq().
+ */
+
+define mknonsquarereal() = 22 * mkposreal()^2/7;
+
+define mkcomplex_2700() = mkreal_2700() + 1i * mkreal_2700();
+
+define testcsqrt(str, n, verbose)
+{
+	local x, y, z, m, i, p, v;
+
+	if (isnull(verbose))
+		verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	m = 0;
+	for (i = 1; i <= n; i++) {
+		if (verbose > 1) print i,:;
+		x = rand(3) ? mkreal_2700(): mkcomplex_2700();
+		y = scale(mknonzeroreal(), -100);
+		if (verbose > 2)
+			printf("%d: x = %d, y = %d\n", i, x, y);
+
+		for (z = 0; z < 128; z++) {
+			v = sqrt(x,y,z);
+			p = checksqrt(x,y,z,v);
+			if (p) {
+			if (verbose > 0)
+				printf(
+				 "*** Type %d failure for x = %r, y = %r, z = %d\n",
+				    p, x, y, z);
+				m++;
+			}
+		}
+	}
+	if (verbose > 0) {
+		if (m) {
+			printf("*** %d error(s)\n", m);
+		} else {
+			printf("no errors\n");
+		}
+	}
+	return m;
+}
+
+
+define checksqrt(x,y,z,v) 	/* Returns >0 if an error is detected */
+{
+	local A, B, X, Y, t1, t2, eps, u, n, f, s;
+
+	A = re(x);
+	B = im(x);
+	X = re(v);
+	Y = im(v);
+
+	/* checking signs of X and Y */
+
+	if (B == 0 && A <= 0)		/* t1 = sgn(re(tvsqrt)) */
+		t1 = 0;
+	else
+		t1 = (z & 64) ? -1 : 1;
+
+	t2 = B ? sgn(B) : (A < 0);	/* t2 = sgn(im(tvsqrt)) */
+	if (z & 64)
+		t2 = -t2;
+
+	if (t1 == 0 && X != 0)
+		return 1;
+
+	if (t2 == 0 && Y != 0) {
+		printf("x = %d, Y = %d, t2 = %d\n", x, Y, t2);
+		return 2;
+	}
+
+	if (X && sgn(X) != t1)
+		return 3;
+
+	if (Y && sgn(Y) != t2)
+		return 4;
+
+	if (z & 32 && iscomsq(x))
+		return 5 * (x != v^2);
+
+	eps = (z & 16) ? abs(y)/2 : abs(y);
+	u = sgn(y);
+
+	/* Checking X */
+
+	n = X/y;
+	if (!isint(n))
+		return 6;
+
+	if (t1) {
+		f = checkavrem(A, B, abs(X), eps);
+
+		if (z & 16 && f < 0)
+			return 7;
+		if (!(z & 16) && f <= 0)
+			return 8;
+
+		if (!(z & 16) || f == 0) {
+			s = X ? t1 * sgn(A - X^2 + B^2/4/X^2) : t1;
+			if (s && !checkrounding(s,n,t1,u,z))
+			return 9;
+		}
+	}
+
+	/* Checking Y */
+
+	n = Y/y;
+	if (!isint(n))
+		return 10;
+
+	if (t2) {
+		f = checkavrem(-A, B, abs(Y), eps);
+
+		if (z & 16 && f < 0)
+			return 11;
+		if (!(z & 16) && f <= 0)
+			return 12;
+
+		if (!(z & 16) || f == 0) {
+			s = Y ? t2 * sgn(-A - Y^2 + B^2/4/Y^2) : t2;
+			if (s && !checkrounding(s,n,t2,u,z))
+				return 13;
+		}
+	}
+	return 0;
+}
+
+/*
+ * Check that the calculated absolute value X of the real part of
+ * sqrt(A + Bi) is between (true value - eps) and (true value + eps).
+ * Returns -1 if it is outside, 0 if on boundary, 1 if between.
+ */
+
+define checkavrem(A, B, X, eps)
+{
+	local f;
+
+	f = sgn(A - (X + eps)^2 + B^2/4/(X + eps)^2);
+	if (f > 0)
+		return -1;		/* X < tv - eps */
+	if (f == 0)
+		return 0;		/* X = tv - eps */
+
+	if (X > eps) {
+		f = sgn(A - (X - eps)^2 + B^2/4/(X - eps)^2);
+
+		if (f < 0)
+			return -1;	/* X > tv + eps */
+		if (f == 0)
+			return 0;	/* X = tv + eps */
+	}
+	return 1;		/* tv - eps < X < tv + eps */
+}
+
+
+define checkrounding(s,n,t,u,z)
+{
+	local w;
+
+	switch (z & 15) {
+		case 0: w = (s == u); break;
+		case 1: w = (s == -u); break;
+		case 2: w = (s == t); break;
+		case 3: w = (s == -t); break;
+		case 4: w = (s > 0); break;
+		case 5: w = (s < 0); break;
+		case 6: w = (s == u/t); break;
+		case 7: w = (s == -u/t); break;
+		case 8: w = iseven(n); break;
+		case 9: w = isodd(n); break;
+		case 10: w = (u/t > 0) ? iseven(n) : isodd(n); break;
+		case 11: w = (u/t > 0) ? isodd(n) : iseven(n); break;
+		case 12: w = (u > 0) ? iseven(n) : isodd(n); break;
+		case 13: w = (u > 0) ? isodd(n) : iseven(n); break;
+		case 14: w = (t > 0) ? iseven(n) : isodd(n); break;
+		case 15: w = (t > 0) ? isodd(n) : iseven(n); break;
+	}
+	return w;
+}
+
+define iscomsq(x)
+{
+	local c;
+
+	if (isreal(x))
+		return issq(abs(x));
+	c = norm(x);
+	if (!issq(c))
+		return 0;
+	return issq((re(x) + sqrt(c,1,32))/2);
+}
+
+/*
+ * test2700 - perform all of the above tests a bunch of times
+ */
+define test2700(verbose, tnum)
+{
+	local n;	/* test parameter */
+	local ep;	/* test parameter */
+	local i;
+
+	/* set test parameters */
+	n = 32;		/* internal test loop count */
+	if (isnull(verbose)) {
+		verbose = defaultverbose;
+	}
+	if (isnull(tnum)) {
+		tnum = 1;	/* initial test number */
+	}
+
+	/*
+	 * test a lot of stuff
+	 */
+	srand(2700e2700);
+	for (i=0; i < n; ++i) {
+		err += testcsqrt(strcat(str(tnum++),": complex sqrt",str(i)),
+				 1, verbose);
+	}
+	if (verbose > 1) {
+		if (err) {
+			print "***", err, "error(s) found in testall";
+		} else {
+			print "no errors in testall";
+		}
+	}
+	return tnum;
+}
+
+global lib_debug;
+if (lib_debug >= 0) {
+	print "global defaultverbose defined";
+	print "global err defined";
+	print "mknonnegreal() defined";
+	print "mkposreal() defined";
+	print "mkreal_2700() defined";
+	print "mknonzeroreal() defined";
+	print "mkposfrac() defined";
+	print "mkfrac() defined";
+	print "mksquarereal() defined";
+	print "mknonsquarereal() defined";
+	print "mkcomplex_2700() defined";
+	print "testcsqrt(str,n,verbose) defined";
+	print "checksqrt(x,y,z,v) defined";
+	print "checkavrem(A,B,X,eps) defined";
+	print "checkrounding(s,n,t,u,z) defined";
+	print "iscomsq(x) defined";
+	print "test2700(verbose,tnum) defined";
+}

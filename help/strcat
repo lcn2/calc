@@ -1,0 +1,30 @@
+NAME
+    strcat - concatenate strings
+
+SYNOPSIS
+    strcat(x1, x2, ...)
+
+TYPES
+    x1, x2, ...		strings
+
+    return		string
+
+DESCRIPTION
+    strcat(x1, x2, ...) forms a string starting with a copy of
+    x1, followed by the characters in order of x2, etc.  The
+    length of the resulting string will be the sum of the lengths
+    of the component strings.
+
+EXAMPLE
+    > A = "abc"; B = "XY"; C = "  ";
+    > print strcat(A, B, C, B, A)
+    abcXY  XYabc
+
+LIMITS
+    The number of arguments may not to exceed 100.
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

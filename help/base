@@ -1,0 +1,55 @@
+NAME
+    base - set default output base
+
+SYNOPSIS
+    base([mode])
+
+TYPES
+    mode	real
+
+    return	real
+
+DESCRIPTION
+    The base function allows one to specify how numbers should be
+    printer.  The base function provides a numeric shorthand to the
+    config("mode") interface.  With no args, base() will return the
+    current mode.  With 1 arg, base(val) will set the mode according to
+    the arg and return the previous mode.
+
+    The following convention is used to declare modes:
+
+	     base        config
+	    value        string
+
+	       2	"binary"	binary fractions
+	       8	"octal"		octal fractions
+	      10	"real"		decimal floating point
+	      16	"hex"		hexadecimal fractions
+	     -10	"int"		decimal integer
+	     1/3	"frac"		decimal fractions
+	    1e20	"exp"		decimal exponential
+
+    For convenience, any non-integer value is assumed to mean "frac",
+    and any integer >= 2^64 is assumed to mean "exp".
+
+EXAMPLE
+    > base()
+	    10
+
+    > base(8)
+	    012
+
+    > print 10
+    012
+
+LIMITS
+    none
+
+LIBRARY
+    int math_setmode(int newmode)
+
+    NOTE: newmode must be one of MODE_DEFAULT, MODE_FRAC, MODE_INT,
+	  MODE_REAL, MODE_EXP, MODE_HEX, MODE_OCTAL, MODE_BINARY
+
+SEE ALSO
+    config

@@ -1,0 +1,2308 @@
+/*
+ * Copyright (c) 1996 David I. Bell
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
+ * File I/O routines callable by users.
+ */
+
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <ctype.h>
+#include "calc.h"
+#include "longbits.h"
+#include "have_fpos.h"
+#include "fposval.h"
+#include "file.h"
+
+
+#define	READSIZE	1024	/* buffer size for reading */
+
+
+/*
+ * XXX - the seek / tell stuff needs to deal with:
+ *
+ *	files larger than 2^32 bytes (at least as large as 2^40 bytes)
+ *	use Posix conventions
+ *	use Posix file position types
+ *	not assume that a 'long' can hold a file position
+ *
+ *	Should use fgetpos and fsetpos functions.
+ */
+
+/*
+ * Table of opened files.
+ * The first three entries always correspond to stdin, stdout, and stderr,
+ * and cannot be closed.  Their file ids are always 0, 1, and 2.
+ */
+static FILEIO files[MAXFILES] = {
+	{FILEID_STDIN,  NULL,  (dev_t)0, (ino_t)0,
+	 "(stdin)",  TRUE, FALSE, 'r', "r"},
+	{FILEID_STDOUT, NULL, (dev_t)0, (ino_t)0,
+	 "(stdout)", FALSE,  TRUE, 'w', "w"},
+	{FILEID_STDERR, NULL, (dev_t)0, (ino_t)0,
+	 "(stderr)", FALSE,  TRUE, 'w', "w"}
+};
+
+
+static int ioindex[MAXFILES] = {0,1,2};	/* Indices for FILEIO table */
+static FILEID lastid = FILEID_STDERR;	/* Last allocated file id */
+static int idnum = 3;			/* Number of allocated file ids */
+
+
+/* forward static declarations */
+static ZVALUE filepos2z(FILEPOS pos);
+static FILEPOS z2filepos(ZVALUE pos);
+static int set_open_pos(FILE *fp, ZVALUE zpos);
+static int get_open_pos(FILE *fp, ZVALUE *res);
+static ZVALUE stsize2z(off_t siz);
+static ZVALUE dev2z(dev_t dev);
+static ZVALUE inode2z(ino_t inode);
+static int get_open_siz(FILE *fp, ZVALUE *res);
+static FILEIO *findid(FILEID id, int mode);
+static void getscanfield(FILE *fp, BOOL skip, unsigned int width,
+			 int scannum, char *scanptr, char **strptr);
+static void getscanwhite(FILE *fp, BOOL skip, unsigned int width,
+			 int scannum, char **strptr);
+static int fscanfile(FILE *fp, char *fmt, int count, VALUE **vals);
+static void freadnum(FILE *fp, VALUE *valptr);
+static void freadsum(FILE *fp, VALUE *valptr);
+static void freadprod(FILE *fp, VALUE *valptr);
+static void fskipnum(FILE *fp);
+
+
+/*
+ * file_init - perform needed initilization work
+ *
+ * On some systems, one cannot initialize a pointer to a FILE *.
+ * This routine, called once at startup is a work-a-round for
+ * systems with such bogons.
+ *
+ * We will also probe for any open files beyond stderr and set them up.
+ */
+void
+file_init(void)
+{
+    static int done = 0;	/* 1 => routine already called */
+    struct stat sbuf;		/* file status */
+    FILEIO *fiop;
+    FILE *fp;
+    int i;
+
+    if (!done) {
+	/*
+	 * setup the default set
+	 */
+	files[0].fp = stdin;
+	files[1].fp = stdout;
+	files[2].fp = stderr;
+	for (i = 0; i < 3; ++i) {
+		if (fstat(i, &sbuf) >= 0) {
+			files[i].dev = sbuf.st_dev;
+			files[i].inode = sbuf.st_ino;
+		}
+	}
+
+	/*
+	 * note any other files that we can find
+	 */
+	fiop = &files[3];
+	for (i = 3; i < MAXFILES; fiop++, ++i) {
+		char *tname;
+
+		fiop->name = NULL;
+		files[idnum].reading = TRUE;
+		files[idnum].writing = TRUE;
+		files[idnum].action = 0;
+		/*
+		 * stat the descriptor to see what we have
+		 */
+		if (fstat(i, &sbuf) >= 0) {
+			fp = (FILE *) fdopen(i,"r+");	/*guess mode*/
+			if (fp)
+				strcpy(files[idnum].mode, "r+");
+			else {
+				fp = (FILE *) fdopen(i, "r");
+				if (fp) {
+					strcpy(files[idnum].mode, "r");
+					files[idnum].writing = FALSE;
+				}
+				else {
+					fp = (FILE *) fdopen(i, "w");
+					if (fp) {
+						strcpy(files[idnum].mode, "w?");
+						files[idnum].reading = FALSE;
+					}
+					else
+						continue;
+				}
+			}
+			tname = (char *)malloc(sizeof("descriptor[19]"));
+			if (tname == NULL) {
+				math_error("Out of memory for init_file");
+				/*NOTREACHED*/
+			}
+			sprintf(tname, "descriptor[%d]", i);
+			files[idnum].name = tname;
+			files[idnum].id = idnum;
+			files[idnum].fp = fp;
+			files[idnum].dev = sbuf.st_dev;
+			files[idnum].inode = sbuf.st_ino;
+			ioindex[idnum] = idnum;
+			idnum++;
+			lastid++;
+		}
+	}
+
+	done = 1;
+    }
+}
+
+
+/*
+ * Open the specified file name for reading or writing; mode is assumed
+ * to be one of "r", "w", "a", "r+", "w+", "a+".
+ * Returns a file id which can be used to do I/O to the file, or else
+ * FILEID_NONE if the open failed.
+ *
+ * given:
+ *	name		file name
+ *	mode		open mode
+ */
+FILEID
+openid(char *name, char *mode)
+{
+	FILEIO *fiop;		/* file structure */
+	FILEID id;		/* new file id */
+	FILE *fp;
+	struct stat sbuf;	/* file status */
+	int i;
+
+	if (idnum >= MAXFILES)
+		return -77;
+
+	fiop = &files[3];
+	for (i = 3; i < MAXFILES; fiop++,i++) {
+		if (fiop->name == NULL)
+			break;
+	}
+	if (i == MAXFILES)
+		math_error("This should not happen in openid()!!!");
+
+	fp = f_open(name, mode);
+
+	if (fp == NULL) {
+		return FILEID_NONE;
+	}
+	if (fstat(fileno(fp), &sbuf) < 0) {
+		math_error("bad fstat");
+		/*NOTREACHED*/
+	}
+
+	fiop->name = (char *)malloc(strlen(name) + 1);
+	if (fiop->name == NULL) {
+		math_error("No memory for filename");
+		/*NOTREACHED*/
+	}
+	id = ++lastid;
+	ioindex[idnum++] = i;
+
+	strcpy(fiop->name, name);
+	fiop->id = id;
+	fiop->fp = fp;
+	fiop->dev = sbuf.st_dev;
+	fiop->inode = sbuf.st_ino;
+	fiop->reading = TRUE;
+	fiop->writing = TRUE;
+	fiop->action = 0;
+	if (mode[1] == '\0') {
+		if (*mode == 'r')
+			fiop->writing = FALSE;
+		else
+			fiop->reading = FALSE;
+	}
+	strcpy(fiop->mode, mode);
+	return id;
+}
+
+
+/*
+ * reopenid - reopen a FILEID
+ *
+ * given:
+ *	id		FILEID to reopen
+ *	mode		new mode to open as
+ *	name		name of new file
+ */
+FILEID
+reopenid(FILEID id, char *mode, char *name)
+{
+	FILEIO *fiop;		/* file structure */
+	FILE *fp;
+	char *newname;
+	struct stat sbuf;
+	int i;
+
+	/* firewall */
+	if ((id == FILEID_STDIN) || (id == FILEID_STDOUT) ||
+	    (id == FILEID_STDERR)) {
+		math_error("Cannot freopen stdin, stdout, or stderr");
+		/*NOTREACHED*/
+	}
+
+	fiop = NULL;
+
+	for (i = 3; i < idnum; i++) {
+		fiop = &files[ioindex[i]];
+		if (fiop->id == id)
+			break;
+	}
+	if (i == idnum) {
+		if (name == NULL) {
+			fprintf(stderr, "File not open, need file name\n");
+			return FILEID_NONE;
+		}
+		if (idnum >= MAXFILES) {
+			fprintf(stderr, "Too many open files\n");
+			return FILEID_NONE;
+		}
+		for (fiop = &files[3], i = 3; i < MAXFILES; fiop++, i++) {
+			if (fiop->name == NULL)
+				break;
+		}
+		if (i >= MAXFILES) {
+			math_error("This should not happen in reopenid");
+			/*NOTREACHED*/
+		}
+		fp = f_open(name, mode);
+		if (fp == NULL) {
+			fprintf(stderr, "Cannot open file\n");
+			return FILEID_NONE;
+		}
+		ioindex[idnum++] = i;
+		fiop->id = id;
+	} else {
+		if (name == NULL)
+			fp = freopen(fiop->name, mode, fiop->fp);
+		else
+			fp = freopen(name, mode, fiop->fp);
+		if (fp == NULL) {
+			free(fiop->name);
+			fiop->name = NULL;
+			idnum--;
+			for (; i < idnum; i++)
+				ioindex[i] = ioindex[i + 1];
+			return FILEID_NONE;
+		}
+	}
+
+	if (fstat(fileno(fp), &sbuf) < 0) {
+		math_error("bad fstat");
+		/*NOTREACHED*/
+	}
+
+	if (name) {
+		newname = (char *)malloc(strlen(name) + 1);
+		if (newname == NULL) {
+			math_error("No memory for filename");
+			/*NOTREACHED*/
+		}
+		if (fiop->name)
+			free(fiop->name);
+		strcpy(newname, name);
+		fiop->name = newname;
+	}
+	fiop->fp = fp;
+	fiop->dev = sbuf.st_dev;
+	fiop->inode = sbuf.st_ino;
+	fiop->reading = TRUE;
+	fiop->writing = TRUE;
+	fiop->action = 0;
+	if (mode[1] == '\0') {
+		if (*mode == 'r')
+			fiop->writing = FALSE;
+		else
+			fiop->reading = FALSE;
+	}
+	strcpy(fiop->mode, mode);
+	return id;
+}
+
+
+/*
+ * Find the file I/O structure for the specified file id, and verify that
+ * it is opened in the required manner ('r' for reading or 'w' for writing).
+ * If mode is 0, then no open checks are made at all, and NULL is then
+ * returned if the id represents a closed file.
+ */
+static FILEIO *
+findid(FILEID id, int mode)
+{
+	FILEIO *fiop;		/* file structure */
+	int i;
+
+	fiop = NULL;
+
+	if ((id < 0) || (id > lastid))
+		return NULL;
+
+	for (i = 0; i < idnum; i++) {
+		fiop = &files[ioindex[i]];
+		if (fiop->id == id)
+			break;
+	}
+
+	if (i == idnum)
+		return NULL;
+
+	switch (mode) {
+		case 'r':
+			if (!fiop->reading)
+				return NULL;
+			break;
+		case 'w':
+			if (!fiop->writing)
+				return NULL;
+			break;
+		case 0:
+			break;
+		default:
+			/* This should not happen */
+			math_error("Unknown findid mode");
+			/*NOTREACHED*/
+	}
+	return fiop;
+}
+
+
+/*
+ * Return whether or not a file id is valid.  This is used for if tests.
+ */
+BOOL
+validid(FILEID id)
+{
+	return (findid(id, 0) != NULL);
+}
+
+
+/*
+ * Return the file with id = index if this is the id of a file that has been
+ * opened (it may have since been closed).  Otherwise returns FILEID_NONE.
+ */
+FILEID
+indexid(long index)
+{
+	FILEID id;
+
+	id = (FILEID) index;
+
+	if ((index < 0) || (id > lastid))
+		return FILEID_NONE;
+	return id;
+}
+
+
+
+/*
+ * Close the specified file id.  Returns TRUE if there was an error.
+ * Closing of stdin, stdout, or stderr is illegal, but closing of already
+ * closed files is allowed.
+ */
+int
+closeid(FILEID id)
+{
+	FILEIO *fiop;		/* file structure */
+	int i;
+	int err;
+
+	fiop = NULL;
+
+	/* firewall */
+	if ((id == FILEID_STDIN) || (id == FILEID_STDOUT) ||
+	    (id == FILEID_STDERR)) {
+		math_error("Cannot close stdin, stdout, or stderr");
+		/*NOTREACHED*/
+	}
+
+	/* get file structure */
+	for (i = 3; i < idnum; i++) {
+		fiop = &files[ioindex[i]];
+		if (fiop->id == id)
+			break;
+	}
+	if (i == idnum)
+		return 1;		/* File not open */
+	idnum--;
+	for (; i < idnum; i++)
+		ioindex[i] = ioindex[i + 1];
+
+	free(fiop->name);
+	fiop->name = NULL;
+
+	/* close file and note error state */
+	err = ferror(fiop->fp);
+	err |= fclose(fiop->fp);
+	fiop->fp = NULL;
+
+	/* return success or failure */
+	return (err ? EOF : 0);
+}
+
+
+int
+closeall(void)
+{
+	FILEIO *fiop;
+	int i;
+	int err;
+
+	err = 0;
+	for (i = 3; i < idnum; i++) {
+		fiop = &files[ioindex[i]];
+		if (fiop->fp) {
+			free(fiop->name);
+			fiop->name = NULL;
+			err |= fclose(fiop->fp);
+		}
+	}
+	idnum = 3;
+	return err;
+}
+
+
+/*
+ * Return whether or not an error occurred to a file.
+ */
+BOOL
+errorid(FILEID id)
+{
+	FILEIO *fiop;		/* file structure */
+
+	fiop = findid(id, 0);
+	if (fiop == NULL)
+		return EOF;
+	return (ferror(fiop->fp) != 0);
+}
+
+
+/*
+ * Return whether or not end of file occurred to a file.
+ */
+BOOL
+eofid(FILEID id)
+{
+	FILEIO *fiop;		/* file structure */
+
+	fiop = findid(id, 0);
+	if (fiop == NULL)
+		return EOF;
+	return (feof(fiop->fp) != 0);
+}
+
+
+/*
+ * Flush output to an opened file.
+ */
+int
+flushid(FILEID id)
+{
+	FILEIO *fiop;		/* file structure */
+
+	fiop = findid(id, 0);
+	if (fiop == NULL)
+		return 0;
+	if (!fiop->writing || fiop->action == 'r')
+		return 0;
+	return fflush(fiop->fp);
+}
+
+int
+flushall(void)
+{
+	FILEIO *fiop;
+	int i;
+	int err;
+
+	err = 0;
+	for (i = 3; i < idnum; i++) {
+		fiop = &files[ioindex[i]];
+		if (fiop->writing && fiop->action != 'r')
+			err |= fflush(fiop->fp);
+	}
+	return err;
+}
+
+
+/*
+ * Read the next line, string or word from an opened file.
+ * Returns a pointer to an allocated string holding a null-terminated
+ * or newline terminated string.  Where reading stops is controlled by
+ * flags:
+ *
+ *	bit 0:	at newline
+ *	bit 1:	at null character
+ *	bit 2:  at white space (also skips leading white space)
+ *
+ * If neither '\n' nor '\0' is encountered reading continues until EOF.
+ * If bit 3 is set the stop character is removed.
+ *
+ * given:
+ *	id		file to read from
+ *	flags		read flags (see above)
+ *	retptr		returned pointer to string
+ */
+int
+readid(FILEID id, int flags, char **retptr)
+{
+	FILEIO *fiop;		/* file structure */
+	FILE *fp;
+	char *str;		/* current string */
+	unsigned long n;	/* current number characters read into buf */
+	unsigned long totlen;	/* total length of string copied from buf */
+	char buf[READSIZE];	/* temporary buffer */
+	char *b;
+	int c;
+	BOOL nlstop, nullstop, wsstop, rmstop, done;
+	long fpos;
+
+	totlen = 0;
+	str = NULL;
+
+	fiop = findid(id, 'r');
+	if (fiop == NULL)
+		return 1;
+	nlstop = (flags & 1);
+	nullstop = (flags & 2);
+	wsstop = (flags & 4);
+	rmstop = (flags & 8);
+
+	fp = fiop->fp;
+
+	if (fiop->action == 'w') {
+		fpos = ftell(fp);
+		fflush(fp);
+		if (fseek(fp, fpos, 0) < 0)
+			return 3;
+	}
+	fiop->action = 'r';
+
+	if (wsstop) {
+		while (isspace(c = fgetc(fp)));
+		ungetc(c, fp);
+	}
+
+	for (;;) {
+		b = buf;
+		n = 0;
+		do {
+			c = fgetc(fp);
+			if (c == EOF)
+				break;
+			n++;
+			if (nlstop && c == '\n')
+				break;
+			if (nullstop && c == '\0')
+				break;
+			if (wsstop && isspace(c))
+				break;
+			*b++ = c;
+		} while (n < READSIZE);
+		done = ((nlstop && c == '\n') || (nullstop && c == '\0') ||
+			(wsstop && isspace(c)) || c == EOF);
+		if (done && rmstop && c != EOF)
+			n--;
+		if (totlen)
+			str = (char *)realloc(str, totlen + n + 1);
+		else
+			str = (char *)malloc(n + 1);
+		if (str == NULL) {
+			math_error("Out of memory for readid");
+			/*NOTREACHED*/
+		}
+		if (n > 0)
+			memcpy(&str[totlen], buf, n);
+		totlen += n;
+		if (done)
+			break;
+	}
+	if (totlen == 0 && c == EOF) {
+		free(str);
+		return EOF;
+	}
+	if ((nlstop && c == '\n') && !rmstop)
+		str[totlen - 1] = '\n';
+	if ((nullstop && c == '\0') && !rmstop)
+		str[totlen - 1] = '\0';
+	str[totlen] = '\0';
+	*retptr = str;
+	return 0;
+}
+
+
+/*
+ * Return the next character from an opened file.
+ * Returns EOF if there was an error or end of file.
+ */
+int
+getcharid(FILEID id)
+{
+	FILEIO *fiop;
+	long fpos;
+
+	fiop = findid(id, 'r');
+	if (fiop == NULL)
+		return -2;
+	if (fiop->action == 'w') {
+		fpos = ftell(fiop->fp);
+		fflush(fiop->fp);
+		if (fseek(fiop->fp, fpos, SEEK_SET) < 0)
+			return -3;
+	}
+	fiop->action = 'r';
+
+	return fgetc(fiop->fp);
+}
+
+
+/*
+ * Print out the name of an opened file.
+ * If the file has been closed, a null name is printed.
+ * If flags contain PRINT_UNAMBIG then extra information is printed
+ * identifying the output as a file and some data about it.
+ */
+int
+printid(FILEID id, int flags)
+{
+	FILEIO *fiop;		/* file structure */
+	FILE *fp;
+	ZVALUE pos;		/* file position */
+
+	/*
+	 * filewall - file is closed
+	 */
+	fiop = findid(id, 0);
+	if (fiop == NULL) {
+		if (flags & PRINT_UNAMBIG)
+			math_fmt("FILE %d closed", id);
+		else
+			math_str("\"\"");
+		return 1;
+	}
+
+	/*
+	 * print quoted filename and mode
+	 */
+	if ((flags & PRINT_UNAMBIG) == 0) {
+		math_chr('"');
+		math_str(fiop->name);
+		math_chr('"');
+		return 0;
+	}
+	math_fmt("FILE %d \"%s\" (%s, ", id, fiop->name,  fiop->mode);
+
+	/*
+	 * print file position
+	 */
+
+	fp = fiop->fp;
+
+	if (get_open_pos(fp, &pos) < 0) {
+	    math_str("Error while determining file position!)");
+	    return 0;
+	}
+
+	math_str("pos ");
+	zprintval(pos, 0, 0);
+	zfree(pos);
+
+	/*
+	 * report special status
+	 */
+	if (ferror(fp))
+		math_str(", error");
+	if (feof(fp))
+		math_str(", eof");
+	math_chr(')');
+
+	printf(" fileno: %d ", fileno(fp));
+	return 0;
+}
+
+
+/*
+ * Print a formatted string similar to printf.  Various formats of output
+ * are possible, depending on the format string AND the actual types of the
+ * values.  Mismatches do not cause errors, instead something reasonable is
+ * printed instead.  The output goes to the file with the specified id.
+ *
+ * given:
+ *	id		file id to print to
+ *	count		print count
+ *	fmt		standard format string
+ *	vals		table of values to print
+ */
+int
+idprintf(FILEID id, char *fmt, int count, VALUE **vals)
+{
+	FILEIO *fiop;
+	VALUE *vp;
+	char *str;
+	int ch;
+	unsigned long len;
+	int oldmode, newmode;
+	long olddigits, newdigits;
+	long width, precision;
+	BOOL didneg, didprecision;
+	long fpos;
+
+	fiop = findid(id, 'w');
+	if (fiop == NULL)
+		return 1;
+	if (fiop->action == 'r') {
+		fpos = ftell(fiop->fp);
+		if (fseek(fiop->fp, fpos, SEEK_SET) < 0)
+			return 3;
+	}
+
+	fiop->action = 'w';
+
+
+	math_setfp(fiop->fp);
+
+	while ((ch = *fmt++) != '\0') {
+		if (ch != '%') {
+			math_chr(ch);
+			continue;
+		}
+
+		/*
+		 * Here to handle formats.
+		 */
+		didneg = FALSE;
+		didprecision = FALSE;
+		width = 0;
+		precision = 0;
+
+		ch = *fmt++;
+		if (ch == '-') {
+			didneg = TRUE;
+			ch = *fmt++;
+		}
+		while ((ch >= '0') && (ch <= '9')) {
+			width = width * 10 + (ch - '0');
+			ch = *fmt++;
+		}
+		if (ch == '.') {
+			didprecision = TRUE;
+			ch = *fmt++;
+			while ((ch >= '0') && (ch <= '9')) {
+				precision = precision * 10 + (ch - '0');
+				ch = *fmt++;
+			}
+		}
+		if (ch == 'l')
+			ch = *fmt++;
+
+		oldmode = conf->outmode;
+		newmode = oldmode;
+		olddigits = conf->outdigits;
+		newdigits = olddigits;
+		if (didprecision)
+			newdigits = precision;
+
+		switch (ch) {
+			case 'd':
+			case 's':
+			case 'c':
+				break;
+			case 'f':
+				newmode = MODE_REAL;
+				break;
+			case 'e':
+				newmode = MODE_EXP;
+				break;
+			case 'r':
+				newmode = MODE_FRAC;
+				break;
+			case 'o':
+				newmode = MODE_OCTAL;
+				break;
+			case 'x':
+				newmode = MODE_HEX;
+				break;
+			case 'b':
+				newmode = MODE_BINARY;
+				break;
+			case 0:
+				math_setfp(stdout);
+				return 0;
+			default:
+				math_chr(ch);
+				continue;
+		}
+
+		if (--count < 0) {
+			while (width-- > 0)
+				math_chr(' ');
+			continue;
+		}
+		vp = *vals++;
+
+		math_setdigits(newdigits);
+		math_setmode(newmode);
+
+		/*
+		 * If there is no width specification, or if the type of
+		 * value requires multiple lines, then just output the
+		 * value directly.
+		 */
+		if ((width == 0) ||
+			(vp->v_type == V_MAT) || (vp->v_type == V_LIST))
+		{
+			printvalue(vp, PRINT_NORMAL);
+			math_setmode(oldmode);
+			math_setdigits(olddigits);
+			continue;
+		}
+
+		/*
+		 * There is a field width.  Collect the output in a string,
+		 * print it padded appropriately with spaces, and free it.
+		 * However, if the output contains a newline, then ignore
+		 * the field width.
+		 */
+		math_divertio();
+		printvalue(vp, PRINT_NORMAL);
+		str = math_getdivertedio();
+		if (strchr(str, '\n'))
+			width = 0;
+		len = strlen(str);
+		while (!didneg && (width > len)) {
+			width--;
+			math_chr(' ');
+		}
+		math_str(str);
+		free(str);
+		while (didneg && (width > len)) {
+			width--;
+			math_chr(' ');
+		}
+		math_setmode(oldmode);
+		math_setdigits(olddigits);
+	}
+	math_setfp(stdout);
+	return 0;
+}
+
+
+/*
+ * Write a character to a file.
+ *
+ * given:
+ *	id		file id to print to
+ *	ch		character to write
+ */
+int
+idfputc(FILEID id, int ch)
+{
+	FILEIO *fiop;
+	long fpos;
+
+	/* get the file info pointer */
+	fiop = findid(id, 'w');
+	if (fiop == NULL)
+		return 1;
+	if (fiop->action == 'r') {
+		fpos = ftell(fiop->fp);
+		if (fseek(fiop->fp, fpos, SEEK_SET))
+			return 2;
+	}
+
+	fiop->action = 'w';
+
+	/* set output to file */
+	math_setfp(fiop->fp);
+
+	/* write char */
+	math_chr(ch);
+
+	/* restore output to stdout */
+	math_setfp(stdout);
+	return 0;
+}
+
+
+/*
+ * Unget a character read from a file.
+ *
+ * given:
+ *	id		file id to print to
+ *	ch		character to write
+ */
+int
+idungetc(FILEID id, int ch)
+{
+	FILEIO *fiop;
+
+	fiop = findid(id, 'r');
+	if (fiop == NULL)
+		return -2;
+	if (fiop->action != 'r')
+		return -2;
+	return ungetc(ch, fiop->fp);
+}
+
+
+/*
+ * Write a string to a file.
+ *
+ * given:
+ *	id		file id to print to
+ *	str		string to write
+ */
+int
+idfputs(FILEID id, char *str)
+{
+	FILEIO *fiop;
+	long fpos;
+
+	/* get the file info pointer */
+	fiop = findid(id, 'w');
+	if (fiop == NULL)
+		return 1;
+
+	if (fiop->action == 'r') {
+		fpos = ftell(fiop->fp);
+		if (fseek(fiop->fp, fpos, SEEK_SET))
+			return 2;
+	}
+
+	fiop->action = 'w';
+
+	/* set output to file */
+	math_setfp(fiop->fp);
+
+	/* write the string */
+	math_str(str);
+
+	/* restore output to stdout */
+	math_setfp(stdout);
+	return 0;
+}
+
+/*
+ * Same as idfputs but writes a terminating null character
+ *
+ * given:
+ *	id			file id to print to
+ *	str			string to write
+ */
+int
+idfputstr(FILEID id, char *str)
+{
+	FILEIO *fiop;
+	long fpos;
+
+	/* get the file info pointer */
+	fiop = findid(id, 'w');
+	if (fiop == NULL)
+		return 1;
+
+	if (fiop->action == 'r') {
+		fpos = ftell(fiop->fp);
+		if (fseek(fiop->fp, fpos, SEEK_SET))
+			return 2;
+	}
+
+	fiop->action = 'w';
+
+	/* set output to file */
+	math_setfp(fiop->fp);
+
+	/* write the string */
+	math_str(str);
+
+	math_chr('\0');
+
+	/* restore output to stdout */
+	math_setfp(stdout);
+	return 0;
+}
+
+int
+rewindid(FILEID id)
+{
+	FILEIO *fiop;
+	fiop = findid(id, 0);
+	if (fiop == NULL)
+		return 1;
+	rewind(fiop->fp);
+	fiop->action = 0;
+	return 0;
+}
+
+void
+rewindall(void)
+{
+	FILEIO *fiop;
+	int i;
+
+	for (i = 3; i < idnum; i++) {
+		fiop = &files[ioindex[i]];
+		if (fiop != NULL) {
+			(void) rewind(fiop->fp);
+			fiop->action = 0;
+		}
+	}
+}
+
+
+/*
+ * filepos2z - convert a positive file position into a ZVALUE
+ *
+ * given:
+ *	pos		file position
+ *
+ * returns:
+ *	file position as a ZVALUE
+ *
+ * NOTE: Does not support negative file positions.
+ */
+static ZVALUE
+filepos2z(FILEPOS pos)
+{
+	ZVALUE ret;		/* ZVALUE file position to return */
+
+	/*
+	 * store FILEPOS in a ZVALUE as a positive value
+	 */
+	ret.len = FILEPOS_BITS/BASEB;
+	ret.v = alloc(ret.len);
+	zclearval(ret);
+	SWAP_HALF_IN_FILEPOS(ret.v, &pos);
+	ret.sign = 0;
+	ztrim(&ret);
+
+	/*
+	 * return our result
+	 */
+	return ret;
+}
+
+
+/*
+ * z2filepos - convert a positive ZVALUE file position to a FILEPOS
+ *
+ * given:
+ *	zpos		file position as a ZVALUE
+ *
+ * returns:
+ *	file position as a FILEPOS
+ *
+ * NOTE: Does not support negative file positions.
+ */
+static FILEPOS
+z2filepos(ZVALUE zpos)
+{
+#if FILEPOS_BITS > FULL_BITS
+	FILEPOS tmp;		/* temp file position as a FILEPOS */
+#endif
+	FILEPOS ret;		/* file position as a FILEPOS */
+	FULL pos;		/* zpos as a FULL */
+
+	/*
+	 * firewall
+	 */
+	zpos.sign = 0;	/* deal only with the absolue value */
+
+	/*
+	 * quick return if the position can fit into a long
+	 */
+#if FILEPOS_BITS <= FULL_BITS
+	/* ztofull puts the value into native byte order */
+	pos = ztofull(zpos);
+	/* on some hosts, FILEPOS is not a scalar */
+	memset(&ret, 0, sizeof(FILEPOS));
+	memcpy((void *)&ret, (void *)&pos, sizeof(FILEPOS));
+	return ret;
+#else /* FILEPOS_BITS <= FULL_BITS */
+	if (!zgtmaxfull(zpos)) {
+		/* ztofull puts the value into native byte order */
+		pos = ztofull(zpos);
+		ret = pos;
+		return ret;
+	}
+
+	/*
+	 * copy (and swap if needed) lower part of the ZVALUE as needed
+	 */
+	if (zpos.len >= FILEPOS_BITS/BASEB) {
+		/* copy the lower FILEPOS_BITS of the ZVALUE */
+		memcpy(&tmp, zpos.v, sizeof(FILEPOS));
+	} else {
+		/* copy what bits we can into the temp value */
+		tmp = 0;
+		memcpy(&tmp, zpos.v, zpos.len*BASEB/8);
+	}
+	/* swap into native byte order */
+	SWAP_HALF_IN_FILEPOS(&ret, &tmp);
+
+	/*
+	 * return our result
+	 */
+	return ret;
+#endif /* FILEPOS_BITS <= FULL_BITS */
+}
+
+
+/*
+ * get_open_pos - get a an open file position
+ *
+ * given:
+ *	fp		open file stream
+ *	res		where to place the file position (ZVALUE)
+ *
+ * returns:
+ *	0		res points to the file position
+ *	-1		error
+ */
+static int
+get_open_pos(FILE *fp, ZVALUE *res)
+{
+	FILEPOS pos;		/* current file position */
+
+	/*
+	 * get the file position
+	 */
+#if defined(HAVE_FPOS)
+	if (fgetpos(fp, (FILEPOS *)&pos) < 0) {
+	    /* cannot get file position, return -1 */
+	    return -1;
+	}
+#else
+	pos = ftell(fp);
+	if (pos < 0) {
+	    /* cannot get file position, return -1 */
+	    return -1;
+	}
+#endif
+
+	/*
+	 * update file position and return success
+	 */
+	*res = filepos2z(pos);
+	return 0;
+}
+
+
+/*
+ * getloc - get the current position of the file
+ *
+ * given:
+ *	id	file id of the file
+ *	loc	pointer to result
+ *
+ * returns:
+ *	0	able to get file position
+ *	-1	unable to get file position
+ */
+int
+getloc(FILEID id, ZVALUE *res)
+{
+	FILEIO *fiop;		/* file structure */
+	FILE *fp;
+
+	/*
+	 * convert id to stream
+	 */
+	fiop = findid(id, 0);
+	if (fiop == NULL) {
+	  	/* file not open */
+		return -1;
+	}
+	fp = fiop->fp;
+	if (fp == NULL) {
+		math_error("Bogus internal file pointer!");
+		/*NOTREACHED*/
+	}
+
+	/*
+	 * return result
+	 */
+	return get_open_pos(fp, res);
+}
+
+long
+ftellid(FILEID id)
+{
+	FILEIO *fiop;
+
+	fiop = findid(id, 0);
+	if (fiop == NULL)
+		return -2L;
+	return ftell(fiop->fp);
+}
+
+
+long
+fseekid(FILEID id, long offset, int whence)
+{
+	FILEIO *fiop;
+	long i = 0;
+
+	fiop = findid(id, 0);
+	if (fiop == NULL)
+		return -2;
+	switch (whence) {
+		case 0:
+			i = fseek(fiop->fp, offset, SEEK_SET);
+			break;
+		case 1:
+			i = fseek(fiop->fp, offset, SEEK_CUR);
+			break;
+		case 2:
+			i = fseek(fiop->fp, offset, SEEK_END);
+			break;
+		default:
+			math_error("This should not happen in fseekid");
+			/*NOTREACHED*/
+	}
+	return i;
+}
+
+
+/*
+ * set_open_pos - set a an open file position
+ *
+ * given:
+ *	fp		open file stream
+ *	zpos		file position (ZVALUE) to set
+ *
+ * returns:
+ *	0		res points to the file position
+ *	-1		error
+ *
+ * NOTE: Due to fsetpos limitation, position is set relative to only
+ *	 the beginning of the file.
+ */
+static int
+set_open_pos(FILE *fp, ZVALUE zpos)
+{
+	FILEPOS pos;		/* current file position */
+
+	/*
+	 * convert ZVALUE to file position
+	 */
+	pos = z2filepos(zpos);
+
+	/*
+	 * set the file position
+	 */
+#if defined(HAVE_FPOS)
+	if (fsetpos(fp, (FILEPOS *)&pos) < 0) {
+	    /* cannot set file position, return -1 */
+	    return -1;
+	}
+#else
+	if (fseek(fp, pos, 0) < 0) {
+	    /* cannot set file position, return -1 */
+	    return -1;
+	}
+#endif
+
+	/*
+	 * return sucess
+	 */
+	return 0;
+}
+
+
+/*
+ * setloc - set the current position of the file
+ *
+ * given:
+ *	id	file id of the file
+ *	zpos	file position (ZVALUE) to set
+ *
+ * returns:
+ *	0	able to set file position
+ *	-1	unable to set file position
+ *
+ * NOTE: Due to fsetpos limitation, position is set relative to only
+ *	 the beginning of the file.
+ */
+int
+setloc(FILEID id, ZVALUE zpos)
+{
+	FILEIO *fiop;		/* file structure */
+	FILE *fp;
+
+	/*
+	 * firewall
+	 */
+	if ((id == FILEID_STDIN) || (id == FILEID_STDOUT) ||
+	    (id == FILEID_STDERR)) {
+		math_error("Cannot fseek stdin, stdout, or stderr");
+		/*NOTREACHED*/
+	}
+
+	/*
+	 * convert id to stream
+	 */
+	fiop = findid(id, 0);
+	if (fiop == NULL) {
+	  	/* file not open */
+		return -1;
+	}
+	fp = fiop->fp;
+	if (fp == NULL) {
+		math_error("Bogus internal file pointer!");
+		/*NOTREACHED*/
+	}
+
+	fiop->action = 0;
+
+	/*
+	 * return result
+	 */
+	return set_open_pos(fp, zpos);
+}
+
+
+/*
+ * stsize2z - convert a file size into a ZVALUE
+ *
+ * given:
+ *	siz		file size
+ *
+ * returns:
+ *	file size as a ZVALUE
+ */
+static ZVALUE
+stsize2z(off_t siz)
+{
+	ZVALUE ret;		/* ZVALUE file size to return */
+
+	/*
+	 * store off_t in a ZVALUE as a positive value
+	 */
+	ret.len = STSIZE_BITS/BASEB;
+	ret.v = alloc(ret.len);
+	zclearval(ret);
+	SWAP_HALF_IN_STSIZE(ret.v, &siz);
+	ret.sign = 0;
+	ztrim(&ret);
+
+	/*
+	 * return our result
+	 */
+	return ret;
+}
+
+
+/*
+ * dev2z - convert a stat.st_dev into a ZVALUE
+ *
+ * given:
+ *	dev		device
+ *
+ * returns:
+ *	file size as a ZVALUE
+ */
+static ZVALUE
+dev2z(dev_t dev)
+{
+	ZVALUE ret;		/* ZVALUE file size to return */
+
+	/*
+	 * store off_t in a ZVALUE as a positive value
+	 */
+	ret.len = DEV_BITS/BASEB;
+	ret.v = alloc(ret.len);
+	zclearval(ret);
+	SWAP_HALF_IN_DEV(ret.v, &dev);
+	ret.sign = 0;
+	ztrim(&ret);
+
+	/*
+	 * return our result
+	 */
+	return ret;
+}
+
+
+/*
+ * inode2z - convert a stat.st_ino into a ZVALUE
+ *
+ * given:
+ *	inode		file size
+ *
+ * returns:
+ *	file size as a ZVALUE
+ */
+static ZVALUE
+inode2z(ino_t inode)
+{
+	ZVALUE ret;		/* ZVALUE file size to return */
+
+	/*
+	 * store off_t in a ZVALUE as a positive value
+	 */
+	ret.len = INODE_BITS/BASEB;
+	ret.v = alloc(ret.len);
+	zclearval(ret);
+	SWAP_HALF_IN_INODE(ret.v, &inode);
+	ret.sign = 0;
+	ztrim(&ret);
+
+	/*
+	 * return our result
+	 */
+	return ret;
+}
+
+
+/*
+ * get_open_siz - get a an open file size
+ *
+ * given:
+ *	fp		open file stream
+ *	res		where to place the file size (ZVALUE)
+ *
+ * returns:
+ *	0		res points to the file size
+ *	-1		error
+ */
+static int
+get_open_siz(FILE *fp, ZVALUE *res)
+{
+	struct stat buf;	/* file status */
+
+	/*
+	 * get the file size
+	 */
+	if (fstat(fileno(fp), &buf) < 0) {
+		/* stat error */
+		return -1;
+	}
+
+	/*
+	 * update file size and return success
+	 */
+	*res = stsize2z(buf.st_size);
+	return 0;
+}
+
+
+/*
+ * getsize - get the current size of the file
+ *
+ * given:
+ *	id	file id of the file
+ *	siz	pointer to result
+ *
+ * returns:
+ *	0	able to get file size
+ *	-1	unable to get file size
+ */
+int
+getsize(FILEID id, ZVALUE *res)
+{
+	FILEIO *fiop;		/* file structure */
+	FILE *fp;
+
+	/*
+	 * convert id to stream
+	 */
+	fiop = findid(id, 0);
+	if (fiop == NULL) {
+	  	/* file not open */
+		return -1;
+	}
+	fp = fiop->fp;
+	if (fp == NULL) {
+		return -2;
+	}
+
+	/*
+	 * return result
+	 */
+	return get_open_siz(fp, res);
+}
+
+
+/*
+ * getdevice - get the device of the file
+ *
+ * given:
+ *	id	file id of the file
+ *	dev	pointer to the result
+ *
+ * returns:
+ *	0	able to get device
+ *	-1	unable to get device
+ */
+int
+get_device(FILEID id, ZVALUE *dev)
+{
+	FILEIO *fiop;		/* file structure */
+
+	/*
+	 * convert id to stream
+	 */
+	fiop = findid(id, 0);
+	if (fiop == NULL) {
+	  	/* file not open */
+		return -1;
+	}
+
+	/*
+	 * return result
+	 */
+	*dev = dev2z(fiop->dev);
+	return 0;
+}
+
+
+/*
+ * getinode - get the inode of the file
+ *
+ * given:
+ *	id	file id of the file
+ *	inode	pointer to the result
+ *
+ * returns:
+ *	0	able to get inode
+ *	-1	unable to get inode
+ */
+int
+get_inode(FILEID id, ZVALUE *inode)
+{
+	FILEIO *fiop;		/* file structure */
+
+	/*
+	 * convert id to stream
+	 */
+	fiop = findid(id, 0);
+	if (fiop == NULL) {
+	  	/* file not open */
+		return -1;
+	}
+
+	/*
+	 * return result
+	 */
+	*inode = inode2z(fiop->inode);
+	return 0;
+}
+
+/* deal with file sizes > long */
+long
+filesize(FILEID id)
+{
+	FILEIO *fiop;
+	struct stat sbuf;
+
+	fiop = findid(id, 0);
+	if (fiop == NULL)
+		return -1;
+
+	if (fstat(fileno(fiop->fp), &sbuf) < 0) {
+		math_error("bad fstat");
+		/*NOTREACHED*/
+	}
+
+	return (long) sbuf.st_size;
+}
+
+void
+showfiles(void)
+{
+	BOOL listed[MAXFILES];
+	FILEIO *fiop;
+	FILE *fp;
+	struct stat sbuf;
+	ino_t inodes[MAXFILES];
+	long sizes[MAXFILES];
+	int i, j;
+
+	for (i = 0; i < idnum; i++) {
+		listed[i] = FALSE;
+		fiop = &files[ioindex[i]];
+		fp = fiop->fp;
+		if (fstat(fileno(fp), &sbuf) < 0) {
+			printf("Bad fstat for file %d\n", (int) fiop->id);
+			sizes[i] = -1;
+		}
+		else {
+			inodes[i] = sbuf.st_ino;
+			sizes[i] = (long) sbuf.st_size;
+		}
+	}
+	for (i = 0; i < idnum; i++) {
+		if (listed[i])
+			continue;
+		fiop = &files[ioindex[i]];
+		printf("\t");
+		printid(fiop->id, PRINT_UNAMBIG);
+		if (sizes[i] == -1) {
+			math_chr('\n');
+			continue;
+		}
+		printf(" size = %ld\n", sizes[i]);
+		for (j = i + 1; j < idnum; j++) {
+			if (listed[j] || sizes[j] == -1)
+				continue;
+			if (inodes[j] == inodes[i]) {
+				listed[j] = TRUE;
+				fiop = &files[ioindex[j]];
+				printf("\t  = ");
+				printid(fiop->id, PRINT_UNAMBIG);
+				printf("\n");
+			}
+		}
+	}
+	printf("\tNumber open = %d\n", idnum);
+	printf("\tLastid = %d\n", (int) lastid);
+}
+
+
+/*
+ * getscanfield - scan a field separated by some characters
+ *
+ * given:
+ *	fp		FILEID to scan
+ *	skip
+ *	width		max field width
+ *	scannum		Number of characters in scanset
+ *	scanptr		string of characters considered separators
+ *	strptr		pointer to where the new field pointer may be found
+ */
+static void
+getscanfield(FILE *fp, BOOL skip, unsigned int width, int scannum, char *scanptr, char **strptr)
+{
+	char *str;		/* current string */
+	unsigned long len;	/* current length of string */
+	unsigned long totlen;	/* total length of string */
+	char buf[READSIZE];	/* temporary buffer */
+	int c;
+	char *b;
+	BOOL comp;		/* Use complement of scanset */
+	unsigned int chnum;
+
+	totlen = 0;
+	str = NULL;
+
+	comp = (scannum < 0);
+	if (comp)
+		scannum = -scannum;
+
+	chnum = 0;
+
+	for (;;) {
+		len = 0;
+		b = buf;
+		for(;;) {
+			c = fgetc(fp);
+			if (c == EOF || c == '\0')
+				break;
+			chnum++;
+			if(scannum && (memchr(scanptr,c,scannum)==NULL) ^ comp)
+				break;
+			if (!skip) {
+				*b++ = c;
+				len++;
+				if (len >= READSIZE)
+					break;
+			}
+			if (chnum == width)
+				break;
+		}
+		if (!skip) {
+			if (totlen)
+				str = (char *) realloc(str, totlen + len + 1);
+			else
+				str = (char *) malloc(len + 1);
+			if (str == NULL) {
+				math_error("Out of memory for scanning");
+				/*NOTREACHED*/
+			}
+			if (len)
+				memcpy(&str[totlen], buf, len);
+			totlen += len;
+		}
+		if (len < READSIZE)
+			break;
+	}
+
+	if (!(width && chnum == width) && c != '\0')
+		ungetc(c, fp);
+
+	if (!skip) {
+		str[totlen] = '\0';
+		*strptr = str;
+	}
+}
+
+
+/*
+ * getscanwhite - scan a field separated by whitespace
+ *
+ * given:
+ *	fp		FILEID to scan
+ *	skip
+ *	width		max field width
+ *	scannum		Number of characters in scanset
+ *	strptr		pointer to where the new field pointer may be found
+ */
+static void
+getscanwhite(FILE *fp, BOOL skip, unsigned int width, int scannum, char **strptr)
+{
+	char *str;		/* current string */
+	unsigned long len;	/* current length of string */
+	unsigned long totlen;	/* total length of string */
+	char buf[READSIZE];	/* temporary buffer */
+	int c;
+	char *b;
+	BOOL comp;		/* Use complement of scanset */
+	unsigned int chnum;
+
+	totlen = 0;
+	str = NULL;
+
+	comp = (scannum < 0);
+	if (comp)
+		scannum = -scannum;
+
+	chnum = 0;
+
+	for (;;) {
+		len = 0;
+		b = buf;
+		for(;;) {
+			c = fgetc(fp);
+			if (c == EOF || c == '\0')
+				break;
+			chnum++;
+			if(scannum && !isspace(c) ^ comp)
+				break;
+			if (!skip) {
+				*b++ = c;
+				len++;
+				if (len >= READSIZE)
+					break;
+			}
+			if (chnum == width)
+				break;
+		}
+		if (!skip) {
+			if (totlen)
+				str = (char *) realloc(str, totlen + len + 1);
+			else
+				str = (char *) malloc(len + 1);
+			if (str == NULL) {
+				math_error("Out of memory for scanning");
+				/*NOTREACHED*/
+			}
+			if (len)
+				memcpy(&str[totlen], buf, len);
+			totlen += len;
+		}
+		if (len < READSIZE)
+			break;
+	}
+
+	if (!(width && chnum == width) && c != '\0')
+		ungetc(c, fp);
+
+	if (!skip) {
+		str[totlen] = '\0';
+		*strptr = str;
+	}
+}
+
+static int
+fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
+{
+	int assnum;	/* Number of assignments made */
+	int c;		/* Character read from file */
+	char f;		/* Character read from format string */
+	int scannum;	/* Number of characters in scanlist */
+	char *scanptr;	/* Start of scanlist */
+	char *str;
+	BOOL comp;	/* True scanset is complementary */
+	BOOL skip;	/* True if string to be skipped rather than read */
+	int width;
+	VALUE *var;	/* lvalue to be assigned to */
+
+	if (feof(fp))
+		return EOF;
+
+	assnum = 0;
+
+	for (;;) {
+		for (;;) {
+			f = *fmt++;
+			if (isspace(f)) {
+				getscanwhite(fp,1,0,6,NULL);
+				do {
+					f = *fmt++;
+				} while (isspace(f));
+			}
+			c = fgetc(fp);
+			if (c == EOF)
+				return assnum;
+			if (f == '%') {
+				f = *fmt++;
+				if (f != '%' && f != '\0')
+					break;
+			}
+			if (f != c || f == '\0') {
+				ungetc(c, fp);
+				return assnum;
+			}
+		}
+		ungetc(c, fp);
+		skip = (f == '*');
+		if (!skip && count == 0) {
+			return assnum;
+		}
+		if (skip)
+			f = *fmt++;
+		width = 0;
+		while (f >= '0' && f <= '9') {
+			width = 10 * width + f - '0';
+			f = *fmt++;
+		}
+		switch (f) {
+			case 'c':
+				if (width == 0)
+					width = 1;
+				getscanfield(fp,skip,width,0,NULL,&str);
+				break;
+			case 's':
+				getscanwhite(fp,1,0,6,NULL);
+				if (feof(fp))
+					return assnum;
+				getscanwhite(fp,skip,width,-6,&str);
+				break;
+			case '[':
+				f = *fmt;
+				comp = (f == '^');
+				if (comp)
+					f = *++fmt;
+				scanptr = fmt;
+				if (f == '\0')
+					return assnum;
+				fmt = strchr((f == ']' ? fmt + 1 : fmt), ']');
+				if (fmt == NULL)
+					return assnum;
+				scannum = fmt - scanptr;
+				if (comp)
+					scannum = -scannum;
+				fmt++;
+				getscanfield(fp,skip,
+					 width,scannum,scanptr,&str);
+				break;
+			case 'f':
+			case 'e':
+			case 'r':
+			case 'i':
+				getscanwhite(fp,1,0,6, NULL);
+				if (feof(fp))
+					return assnum;
+				if (skip) {
+					fskipnum(fp);
+					continue;
+				}
+				assnum++;
+				var = *vals++;
+				if (var->v_type != V_ADDR)
+				math_error("This should not happen!!");
+				var = var->v_addr;
+				count--;
+				freadsum(fp, var);
+				continue;
+			case 'n':
+				assnum++;
+				var = *vals++;
+				count--;
+				if (var->v_type != V_ADDR)
+					math_error("This should not happen!!");
+				var = var->v_addr;
+				var->v_type = V_NUM;
+				var->v_num = itoq(ftell(fp));
+				continue;
+			default:
+				fprintf(stderr, "Unsupported scan specifier");
+				return assnum;
+		}
+		if (!skip) {
+			assnum++;
+			var = *vals++;
+			count--;
+			if (var->v_type != V_ADDR)
+				math_error("Assigning to nonvariable XXX");
+			var = var->v_addr;
+			var->v_type = V_STR;
+			var->v_subtype = V_STRALLOC;
+			var->v_str = str;
+		}
+	}
+}
+
+int
+fscanfid(FILEID id, char *fmt, int count, VALUE **vals)
+{
+	FILEIO *fiop;
+	FILE *fp;
+	long fpos;
+
+	fiop = findid(id, 'r');
+	if (fiop == NULL)
+		return -2;
+
+	fp = fiop->fp;
+
+	if (fiop->action == 'w') {
+		fpos = ftell(fp);
+		fflush(fp);
+		if (fseek(fp, fpos, 0) < 0)
+			return -4;
+	}
+	fiop->action = 'r';
+
+	return fscanfile(fp, fmt, count, vals);
+}
+
+
+int
+scanfstr(char *str, char *fmt, int count, VALUE **vals)
+{
+	FILE *fp;
+	int i;
+
+	fp = tmpfile();
+	if (fp == NULL)
+		return EOF;
+	fputs(str, fp);
+	rewind(fp);
+	i = fscanfile(fp, fmt, count, vals);
+	fclose(fp);
+	return i;
+}
+
+
+/*
+ * Read a number in floating-point format from a file.  The first dot,
+ * if any, is considered as the decimal point; later dots are ignored.
+ * For example, -23.45..67. is interpreted as -23.4567
+ * An optional 'e' or 'E' indicates multiplication by a power or 10,
+ * e.g. -23.45e-6 has the effect of -23.45 * 10^-6.  The reading
+ * ceases when a character other than a digit, a leading sign,
+ * a sign immediately following 'e' or 'E', or a dot is encountered.
+ * Absence of digits is interpreted as zero.
+ */
+static void
+freadnum(FILE *fp, VALUE *valptr)
+{
+	ZVALUE num, den, newnum, newden, div, tmp;
+	NUMBER *q;
+	COMPLEX *c;
+	VALUE val;
+	char ch;
+	LEN i;
+	HALF *a;
+	FULL f;
+	long decimals, exp;
+	BOOL sign, negexp, havedp, imag, exptoobig;
+
+	decimals = 0;
+	exp = 0;
+	sign = FALSE;
+	negexp = FALSE;
+	havedp = FALSE;
+	imag = FALSE;
+	exptoobig = FALSE;
+
+	ch = fgetc(fp);
+	if (ch == '+' || ch == '-') {
+		if (ch == '-')
+			sign = TRUE;
+		ch = fgetc(fp);
+	}
+	num.v = alloc(1);
+	*num.v = 0;
+	num.len = 1;
+	num.sign = sign;
+	for (;;) {
+		if (ch >= '0' && ch <= '9') {
+			f = (FULL) (ch - '0');
+			a = num.v;
+			i = num.len;
+			while (i-- > 0) {
+				f = 10 * (FULL) *a + f;
+				*a++ = (HALF) f;
+				f >>= BASEB;
+			}
+			if (f) {
+				a = alloc(num.len + 1);
+				memcpy(a, num.v, num.len * sizeof(HALF));
+				a[num.len] = (HALF) f;
+				num.len++;
+				freeh(num.v);
+				num.v = a;
+			}
+			if (havedp)
+				decimals++;
+		}
+		else if (ch == '.')
+			havedp = TRUE;
+		else
+			break;
+		ch = fgetc(fp);
+	}
+	if (ch == 'e' || ch == 'E') {
+		ch = fgetc(fp);
+		if (ch == '+' || ch == '-') {
+			if (ch == '-')
+				negexp = TRUE;
+			ch = fgetc(fp);
+		}
+		while (ch >= '0' && ch <= '9') {
+			if (!exptoobig) {
+				exp = (exp * 10) + ch - '0';
+				if (exp > 1000000)
+					exptoobig = TRUE;
+			}
+			ch = fgetc(fp);
+		}
+	}
+	if (ch == 'i' || ch == 'I')
+		imag = TRUE;
+	else {
+		ungetc(ch, fp);
+	}
+
+	if (ziszero(num)) {
+		zfree(num);
+		val.v_type = V_NUM;
+		val.v_num = qlink(&_qzero_);
+		*valptr = val;
+		return;
+	}
+	if (exptoobig) {
+		zfree(num);
+		*valptr = error_value(E_BIGEXP);
+		return;
+	}
+	ztenpow(decimals, &den);
+	if (exp) {
+		ztenpow(exp, &tmp);
+		if (negexp) {
+			zmul(den, tmp, &newden);
+			zfree(den);
+			den = newden;
+		} else {
+			zmul(num, tmp, &newnum);
+			zfree(num);
+			num = newnum;
+		}
+		zfree(tmp);
+	}
+	if (!zisunit(num) && !zisunit(den)) {
+		zgcd(num, den, &div);
+		if (!zisunit(div)) {
+			zequo(num, div, &newnum);
+			zfree(num);
+			zequo(den, div, &newden);
+			zfree(den);
+			num = newnum;
+			den = newden;
+		}
+	}
+	q = qalloc();
+	q->num = num;
+	q->den = den;
+	if (imag) {
+		c = comalloc();
+		c->imag = q;
+		val.v_type = V_COM;
+		val.v_com = c;
+	}
+	else {
+		val.v_type = V_NUM;
+		val.v_num = q;
+	}
+	*valptr = val;
+}
+
+static void
+freadsum(FILE *fp, VALUE *valptr)
+{
+	VALUE v1, v2, v3;
+	char ch;
+
+
+	freadprod(fp, &v1);
+
+	ch = fgetc(fp);
+	while (ch == '+' || ch == '-') {
+		freadprod(fp, &v2);
+		if (ch == '+')
+			addvalue(&v1, &v2, &v3);
+		else
+			subvalue(&v1, &v2, &v3);
+		freevalue(&v1);
+		freevalue(&v2);
+		v1 = v3;
+		ch = fgetc(fp);
+	}
+	ungetc(ch, fp);
+	*valptr = v1;
+}
+
+
+static void
+freadprod(FILE *fp, VALUE *valptr)
+{
+	VALUE v1, v2, v3;
+	char ch;
+
+	freadnum(fp, &v1);
+	ch = fgetc(fp);
+	while (ch == '*' || ch == '/') {
+		freadnum(fp, &v2);
+		if (ch == '*')
+			mulvalue(&v1, &v2, &v3);
+		else
+			divvalue(&v1, &v2, &v3);
+		freevalue(&v1);
+		freevalue(&v2);
+		v1 = v3;
+		ch = fgetc(fp);
+	}
+	ungetc(ch, fp);
+	*valptr = v1;
+}
+
+static void
+fskipnum(FILE *fp)
+{
+	char ch;
+
+	do {
+		ch = fgetc(fp);
+		if (ch == '+' || ch == '-')
+			ch = fgetc(fp);
+		while ((ch >= '0' && ch <= '9') || ch == '.')
+			ch = fgetc(fp);
+		if (ch == 'e' || ch == 'E') {
+			ch = fgetc(fp);
+			if (ch == '+' || ch == '-')
+				ch = fgetc(fp);
+			while (ch >= '0' && ch <= '9')
+				ch = fgetc(fp);
+		}
+		if (ch == 'i' || ch == 'I')
+			ch = fgetc(fp);
+	} while (ch == '/' || ch == '*' || ch == '+' || ch == '-');
+
+	ungetc(ch, fp);
+}
+
+int
+isattyid(FILEID id)
+{
+	FILEIO *fiop;
+
+	fiop = findid(id, 0);
+	if (fiop == NULL)
+		return -2;
+	return isatty(fileno(fiop->fp));
+}
+
+long
+fsearch(FILEID id, char *str, long pos)
+{
+	FILEIO *fiop;
+	FILE *fp;
+	long len, n, i;
+	char c;
+	char *s;
+
+	fiop = findid(id, 'r');
+	if (fiop == NULL)
+		return -2;
+	fp = fiop->fp;
+	if (pos < 0)
+		pos = ftell(fp);
+	if (fiop->action == 'w')
+		fflush(fp);
+	fseek(fp, pos, SEEK_SET);
+	len = (long)strlen(str);
+	if (len == 0)
+		return pos;
+	c = *str++;
+	n = filesize(id) -  pos - len;
+	while (n-- >= 0) {
+		if ((char) fgetc(fp) == c) {
+			s = str;
+			i = len;
+			while (--i > 0  && (char) fgetc(fp) == *s++);
+			if (i == 0)
+				return pos;
+			fseek(fp, pos + 1, SEEK_SET);
+		}
+		pos++;
+	}
+	return -1;
+}
+
+
+long
+frsearch(FILEID id, char *str, long pos)
+{
+	FILEIO *fiop;
+	FILE *fp;
+	long len, n, i;
+	char c;
+	char *s;
+
+	fiop = findid(id, 'r');
+	if (fiop == NULL)
+		return -2;
+	fp = fiop->fp;
+	if (pos < 0)
+		pos = ftell(fp);
+	if (fiop->action == 'w')
+		fflush(fp);
+	n = filesize(id);
+	if (pos > n)
+		pos = n;
+	len = (long)strlen(str);
+	if (pos < len) {
+		fseek(fp, pos, SEEK_SET);
+		return -1;
+	}
+	pos -= len;
+	if (len == 0)
+		return pos;
+	c = *str++;
+	while (pos >= 0) {
+		fseek(fp, pos, SEEK_SET);
+		if ((char) fgetc(fp) == c) {
+			s = str;
+			i = len;
+			while (--i > 0 && (char) fgetc(fp) == *s++);
+			if (i == 0)
+				return pos;
+		}
+		pos--;
+	}
+	fseek(fp, 0, SEEK_SET);
+	return -1;
+}

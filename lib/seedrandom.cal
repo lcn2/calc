@@ -1,0 +1,136 @@
+/*
+ * Copyright (c) 1996 Landon Curt Noll
+ *
+ * Permission to use, copy, modify, and distribute this software and
+ * its documentation for any purpose and without fee is hereby granted,
+ * provided that the above copyright, this permission notice and text
+ * this comment, and the disclaimer below appear in all of the following:
+ *
+ *	supporting documentation
+ *	source copies
+ *	source works derived from this source
+ *	binaries derived from this source or from derived source
+ *
+ * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+ * EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+ * USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+ * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ * PERFORMANCE OF THIS SOFTWARE.
+ *
+ * chongo was here	/\../\		chongo@toad.com
+ */
+
+global lib_debug;	/* 1 => print debug statements */
+
+/*
+ * seedrandom - seed the cryptographically strong Blum generator
+ *
+ * This function will seed the random() generator using a method
+ * similar to method suggested for the paranoid in the zrand.c source
+ * file and random help file.
+ *
+ * given:
+ *	seed1 - a large random value (at least 10^20 and perhaps < 10^93)
+ *	seed2 - a large random value (at least 10^20 and perhaps < 10^93)
+ *	size - min Blum modulus as a power of 2 (at least 100, perhaps > 1024)
+ *	trials - number of ptest() trials (default 25)
+ *
+ * returns:
+ *	the previous random state
+ *
+ * NOTE: The [10^20, 10^93) range comes from [2^64, 2^64*fact(55)) range
+ *	 where seeds are effective for srand().  All we really need to
+ *	 do is to insist that a seed is > 2^64, which the 10^20 limit does.
+ */
+define seedrandom(seed1, seed2, size, trials)
+{
+	local p;		/* first Blum prime */
+	local fp;		/* prime co-factor of p-1 */
+	local sp;	 	/* min bit size of p */
+	local q;		/* second Blum prime */
+	local fq;		/* prime co-factor of q-1 */
+	local sq;	 	/* min bit size of q */
+	local n;		/* Blum modulus */
+	local binsize;		/* smallest power of 2 > n=p*q */
+	local r;		/* initial quadratic residue */
+	local rand_state;	/* the initial rand state */
+	local rand_junk;	/* rand state that is not needed */
+	local old_state;	/* old random state to return */
+	local random_cfg;	/* old srandom configuration value */
+
+	/*
+	 * firewall
+	 */
+	if (!isint(seed1)) {
+		quit "1st arg (seed1) is not an int";
+	}
+	if (!isint(seed2)) {
+		quit "2nd arg (seed2) is not an int";
+	}
+	if (!isint(size)) {
+		quit "3rd arg (size) is not an int";
+	}
+	if (!isint(trials)) {
+		trials = 25;
+	}
+	if (digits(seed1) <= 20) {
+		quit "1st arg (seed1) must be > 10^20 and perhaps < 10^93";
+	}
+	if (digits(seed2) <= 20) {
+		quit "2nd arg (seed2) must be > 10^20 and perhaps < 10^93";
+	}
+	if (size < 100) {
+		/* 3% of 100 is 2.97 < 3 whereas 3% of 100 is 3 */
+		quit "3rd arg (size) needs to be > 66 (perhaps >= 1024)";
+	}
+	if (trials < 1) {
+		quit "4th arg (trials) must be > 0";
+	}
+
+	/*
+	 * determine the search parameters
+	 */
+	++size;		/* convert power of 2 to bit length */
+	sp = int((size/2)-(size*0.03)+1);
+	sq = size - sp;
+
+	/*
+	 * find the first Blum prime
+	 */
+	rand_state = srand(seed1);
+	do {
+		fp = nextcand(2^sp+randbit(sp), trials, 0, 3, 4);
+		p = 2*fp+1;
+	} while (ptest(p,trials) == 0);
+
+	/*
+	 * find the 2nd Blum prime
+	 */
+	rand_junk = srand(seed2);
+	do {
+		fq = nextcand(2^sq+randbit(sq), trials, 0, 3, 4);
+		q = 2*fq+1;
+	} while (ptest(q,trials) == 0);
+
+	/*
+	 * seed the Blum generator
+	 */
+	n = p*q;				/* the Blum modulus */
+ 	binsize = higbbit(n)+1;			/* smallest power of 2 > p*q */
+	r = pmod(rand(1<<ceil(binsize*4/5), 1<<(binsize-2)), 2, n);
+	random_cfg = config("srandom", 0);	/* no checks are needed */
+	old_state = srandom(r, n);
+
+	/*
+	 * restore other states that we altered
+	 */
+	rand_junk = srand(rand_state);
+	rand_junk = config("srandom", random_cfg);
+
+	/*
+	 * return the previous random state
+	 */
+	return old_state;
+}

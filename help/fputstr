@@ -1,0 +1,40 @@
+NAME
+    fputstr - send one or more null-terminated strings to a file
+
+SYNOPSIS
+    fputstr(fs, s_1, s_2, ...)
+
+TYPES
+    fs		file stream open for writing
+    s_1, ...    string
+
+    return	null or error value
+
+DESCRIPTION
+    If the stream cannot be written to or an argument is of the wrong
+    type, an error value is returned.
+
+    Otherwise the strings s_1, s_2, ..., including the terminating
+    null characters ('\0') are written to the file stream fs.
+
+EXAMPLE
+    > f = fopen("/tmp/junk", "w")
+    > fputstr(f, "Alpha", "Beta")
+    > freopen(f, "r")
+    > fgetstr(f)
+    	"Alpha"
+    > fgetstr(f)
+    	"Beta"
+    > fgetstr(f)
+    >
+    > fputstr(f, "Gamma")
+	Error 72
+
+LIMITS
+    none - XXX - is this correct?
+
+LIBRARY
+    none - XXX - is this correct?
+
+SEE ALSO
+    fgetstr, fgetfield, fgets, fputs, fopen, files, fprintf

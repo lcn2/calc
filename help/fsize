@@ -1,0 +1,30 @@
+NAME
+    fsize - return the file size
+
+SYNOPSIS
+    fsize(fd)
+
+TYPES
+    fd		file
+
+    return	int
+
+DESCRIPTION
+    This function returns the number of bytes in a file.  When at
+    the end of file, ftell returns a value which is 1 greater than
+    the file size as reported by fsize.
+
+EXAMPLE
+    > fd = fopen("/etc/motd", "r")
+    > fsize(fd)
+	    784
+
+LIMITS
+    fd must be associaed with an open file
+
+LIBRARY
+    none
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt

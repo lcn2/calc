@@ -1,0 +1,50 @@
+NAME
+    pmod - integral power of an integer modulo a specified integer
+
+SYNOPSIS
+    pmod(x, n, md)
+
+TYPES
+    x		integer
+    n		nonnegative integer
+    md		integer
+
+    return	integer
+
+DESCRIPTION
+    pmod(x, n, md) returns the integer value of the canonical residue
+    of x^n modulo md, where the set of canonical residues is determined
+    by md and bits 0, 2, and 4 of config("mod") (other bits are ignored).
+
+    If md is zero, the value is simply x^n.
+
+    For nonzero md, the canonical residues v modulo md are as follows:
+
+		config("mod")	  md > 0	      md < 0
+
+		    0		0 < v < md	   md < v < 0
+		    1	      -md < v < 0	    0 < v < -md
+		    4		0 < v < md	    0 < v < -md
+		    5         -md < v < 0	   md < v < 0
+		   16	    -md/2 < v <= md/2   md/2 <= v < -md/2
+		   17      -md/2 <= v < md/2     md/2 < v <= -md/2
+		   20	    -md/2 < v <= md/2    md/2 < v <= -md/2
+		   21	   -md/2 <= v < md/2    md/2 <= v < -md/2
+
+EXAMPLE
+    > c = config("mod",0)
+    > print pmod(2,3,10), pmod(2,5,10), pmod(2,3,-10), pod(2,5,-10)
+    8 2 -2 -8
+
+    > c = config("mod",16)
+    > print pmod(2,3,10), pmod(2,5,10), pmod(2,3,-10), pmod(2,5,-10)
+    -2 2 -2 2
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qpowermod(NUMBER *x, NUMBER *n, NUMBER *md)
+
+SEE ALSO
+    mod, minv

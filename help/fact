@@ -1,0 +1,33 @@
+NAME
+    fact - factorial
+
+SYNOPSIS
+    fact(x)
+
+TYPES
+    x		int
+
+    return	int
+
+DESCRIPTION
+    Return the factorial of a number.  Factorial is defined as:
+
+	   x! = 1 * 2 * 3 * ... * x-1 * x
+	   0! = 1
+
+EXAMPLE
+    > print fact(10), fact(5), fact(2), fact(1), fact(0)
+    3628800 120 2 1 1
+
+    > print fact(40)
+    815915283247897734345611269596115894272000000000
+
+LIMITS
+    2^24 > x >= 0
+    y < 2^24
+
+LIBRARY
+    void zfact(NUMBER x, *ret)
+
+SEE ALSO
+    comb, perm

@@ -1,0 +1,26 @@
+NAME
+    max - maximum of a set of rational numbers
+
+SYNOPSIS
+    max(x1, x2, ...)
+
+TYPES
+    x1, x2, ...	rational number
+
+    return	rational number
+
+DESCRIPTION
+    Compute the maximum value of a set of rational numbers.
+
+EXAMPLE
+    > print max(2), max(5, 3, 7, 2, 9), max(3.2, -0.5, 8.7, -1.2, 2.5)
+    2 9 8.7
+
+LIMITS
+    The number of arguments may not to exceed 100.
+
+LIBRARY
+    NUMBER *qmax(NUMBER *x1, NUMBER *x2)
+
+SEE ALSO
+    min

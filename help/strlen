@@ -1,0 +1,26 @@
+NAME
+    strlen - number of characters in a string
+
+SYNOPSIS
+    strlen(x)
+
+TYPES
+    x		string
+
+    return	integer
+
+DESCRIPTION
+    strlen(x) returns the number of characters in x
+
+EXAMPLE
+    > print strlen(""), strlen("abc"), strlen("a b\tc\\d")
+    0 3 7
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

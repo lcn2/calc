@@ -1,0 +1,26 @@
+NAME
+    isident - returns 1 if matrix is an identity matrix
+
+SYNOPSIS
+    isident(m)
+
+TYPES
+    m		mat
+
+    return	int
+
+DESCRIPTION
+    This function returns 1 if m is an identity matrix, 0 otherwise.
+
+EXAMPLE
+    XXX - fill in
+
+LIMITS
+    m must be a 2 dimensional matrix
+
+LIBRARY
+    none
+
+SEE ALSO
+    isassoc, isfile, isint, islist, ismat, isnull, isnum, isobj,
+    isreal, isstr, issimple, istype

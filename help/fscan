@@ -1,0 +1,39 @@
+NAME
+   fscan - scan a file for possible assignment to variables
+
+SYNOPSIS
+   fscan(fs, x_1, x_2, ..., x_n)
+
+TYPES
+    fs			file stream open for reading
+    x_1, x_2, ...	any
+
+    return		integer
+
+DESCRIPTION
+   Starting at the current position on fs and while values remain in the
+   x_i arguments, fields of non-whitespace characters are read and evaluated
+   in succession and if the corresponding x_i is an lvalue, the value of
+   the field is assigned to x_i.  Scanning ceases when no x_i remain or
+   when the stream reaches end-of-file.
+
+   The function returns the number of fields evaluated.
+
+EXAMPLE
+    > global a, b, c, d;
+    > f = fopen("/tmp/junk", "w+");
+    > fputs(f, "\t3+4\t\ta-2i  d=a^2   'word'")
+    > rewind(f)
+    > fscan(f, a, b, , c)
+	4
+    > print a, b, c, d
+    7 a-2i word 49
+
+LIMITS
+    none - XXX - is this correct?
+
+LIBRARY
+    none - XXX - is this correct?
+
+SEE ALSO
+    scan, strscan, fscanf, scanf, strscanf, printf, fprintf, strprintf

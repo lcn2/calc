@@ -1,0 +1,37 @@
+NAME
+    mmin - least-absolute-value residues modulo a specified number
+
+SYNOPSIS
+    mmin(x, md)
+
+TYPES
+    x		number (real or complex), matrix, list, object
+    md    	real
+
+    return	real
+
+DESCRIPTION
+    If x is real and md is nonzero, mmin(x, md) returns the real
+    number v congruent to x modulo md for which abs(v) <= md/2
+    and if abs(v) = md/2, then v = md/2.
+
+    If x is real and md is zero, mmin(x, md) returns x.
+
+    For complex, matrix, list or object x, see the help file for mod: for
+    all x and md, mmin(x, md) returns the same as mod(x, md, 16).
+
+EXAMPLE
+    > print mmin(3,6), mmin(4,6), mmin(5,6), mmin(6,6), mmin(7,6)
+    3 -2 -1 0 1
+
+    > print mmin(1.25, 2.5), mmin(-1.25,2.5), mmin(1.25, -2.5)
+    1.25 1.25 -1.25
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    mod

@@ -1,0 +1,28 @@
+NAME
+    fflush - flush output to file
+
+SYNOPSIS
+    fflush(fd)
+
+TYPES
+    fd		file
+
+    return	nil
+
+DESCRIPTION
+    This function forces and buffered output to the file associated with fd.
+
+EXAMPLE
+    > fd = fopen("/tmp/file", "w")
+    > fputc(fd, "@");
+    > fflush(fd)
+
+LIMITS
+    fd must be associaed with an open file
+
+LIBRARY
+    none
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt

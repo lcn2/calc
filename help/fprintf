@@ -1,0 +1,55 @@
+NAME
+    fprintf - formatted print to a file
+
+SYNOPSIS
+    fprintf(fd, fmt, x_1, x_2, ...)
+
+TYPES
+    fd			file
+    fmt			string
+    x_1, x_2, ...	any
+
+    return		null
+
+DESCRIPTION
+    This prints to the file fd exactly what would be printed to
+	the standard output by printf(fmt, x_1, x_2, ...).
+
+EXAMPLE
+    > fprintf(files(1), "h=%d, i=%d\n", 2, 3);
+    h=2, i=3
+
+    > c = config("epsilon", 1e-6); c = config("display", 6);
+    > c = config("tilde", 1); c = config("outround", 0);
+    > c = config("fullzero", 0);
+    > fmt = "%f,%10f,%-10f,%10.4f,%.4f,%.f.\n";
+    > a = sqrt(3);
+    > fprintf(files(2), fmt,a,a,a,a,a,a);
+    1.732051,  1.732051,1.732051  ,   ~1.7320,~1.7320,~1.
+
+    > file = fopen("/tmp/foo", "w");
+    > mat A[4] = {sqrt(2), 3/7, "undefined", null()};
+    > fprintf(file, "%f%r",A,A);
+    > fclose(file);
+    > !cat /tmp/foo
+
+    mat [4] (4 elements, 4 nonzero):
+      [0] = 1.4142135623730950488
+      [1] = ~.42857142857142857142
+      [2] = "undefined"
+      [3] = NULL
+
+    mat [4] (4 elements, 4 nonzero):
+      [0] = 1767766952966368811/1250000000000000000
+      [1] = 3/7
+      [2] = "undefined"
+      [3] = NULL
+
+LIMITS
+    The number of arguments of fprintf() is not to exceed 100.
+
+LIBRARY
+    none
+
+SEE ALSO
+    printf, strprintf, print

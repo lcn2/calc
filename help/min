@@ -1,0 +1,26 @@
+NAME
+    min - minimum of a set of rational numbers
+
+SYNOPSIS
+    min(x1, x2, ...)
+
+TYPES
+    x1, x2, ...	rational number
+
+    return	rational number
+
+DESCRIPTION
+    Compute the minimum value of a set of rational numbers.
+
+EXAMPLE
+    > print min(2), min(5, 3, 7, 2, 9), min(3.2, -0.5, 8.7, -1.2, 2.5)
+    2 2 -1.2
+
+LIMITS
+    The number of arguments may not to exceed 100.
+
+LIBRARY
+    NUMBER *qmin(NUMBER *x1, NUMBER *x2)
+
+SEE ALSO
+    max

@@ -1,0 +1,31 @@
+NAME
+    acot - inverse trigonometric cotangent
+
+SYNOPSIS
+    acot(x [,eps])
+
+TYPES
+    x		real
+    eps		nonzero real, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Returns the acot of x to a multiple of eps with error less in
+    absolute value than .75 * eps.
+
+    v = acot(x) is the number in (0, pi) for which cot(v) = x.
+
+EXAMPLE
+    > print acot(2, 1e-5),  acot(2, 1e-10), acot(2, 1e-15), acot(2, 1e-20)
+    .46365 .463647609 .463647609000806 .46364760900080611621
+
+LIMITS
+    unlike sin and cos, x must be real
+    eps > 0
+
+LIBRARY
+    NUMBER *qacot(NUMBER *x, NUMBER *eps)
+
+SEE ALSO
+    asin, acos, atan, asec, acsc, epsilon

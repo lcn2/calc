@@ -1,0 +1,34 @@
+NAME
+    lfactor - smallest prime factor in first specified number of primes
+
+SYNOPSIS
+    lfactor(n, m)
+
+TYPES
+    n		integer
+    m		nonnegative integer <= 203280221 (= number of primes < 2^32)
+
+    return	positive integer
+
+DESCRIPTION
+    If n >= 0 and n has a prime factor in the first m primes,
+    lfactor(n, m) returns the smallest such factor.
+
+    If n < 0, -1 is returned.
+
+EXAMPLE
+    > print lfactor(35,2), lfactor(35,3), lfactor(-35, 3)
+    1 5 -1
+
+    > print lfactor(2^32+1,115), lfactor(2^32+1,116), lfactor(2^59-1,1e5)
+    1 641 179951
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qlowfactor(NUMBER *n, NUMBER *count)
+    FULL zlowfactor(ZVALUE z, long count)
+
+SEE ALSO
+    factor

@@ -1,0 +1,73 @@
+NAME
+    rcin - encode for REDC algorithms
+
+SYNOPSIS
+    rcin(x, m)
+
+TYPES
+    x		integer
+    m		odd positive integer
+
+    return	integer v, 0 <= v < m.
+
+DESCRIPTION
+    Let B be the base calc uses for representing integers internally
+    (B = 2^16 for 32-bit machines, 2^32 for 64-bit machines) and N the
+    number of words (base-B digits) in the representation of m.  Then
+    rcin(x,m) returns the value of B^N * x % m, where the modulus
+    operator % here gives the least nonnegative residue.
+
+    If y = rcin(x,m), x % m may be evaluated by x % m = rcout(y, m).
+
+    The "encoding" method of using rcmul(), rcsq(), and rcpow() for
+    evaluating products, squares and powers modulo m correspond to the
+    formulae:
+
+	    rcin(x * y, m) = rcmul(rcin(x,m), rcin(y,m), m);
+
+	    rcin(x^2, m) = rcsq(rcin(x,m), m);
+
+	    rcin(x^k, m) = rcpow(rcin(x,m), k, m).
+
+    Here k is any nonnegative integer.  Using these formulae may be
+    faster than direct evaluation of x * y % m, x^2 % m, x^k % m.
+    Some encoding and decoding may be bypassed by formulae like:
+
+	    x * y % m = rcin(rcmul(x, y, m), m).
+
+    If m is a divisor of B^N - h for some integer h, rcin(x,m) may be
+    computed by using rcin(x,m) = h * x % m.  In particular, if
+    m is a divisor of B^N - 1 and 0 <= x < m, then rcin(x,m) = x.
+    For example if B = 2^16 or 2^32, this is so for m = (B^N - 1)/d
+    for the divisors d = 3, 5, 15, 17, ...
+
+RUNTIME
+    The first time a particular value for m is used in rcin(x, m),
+    the information required for the REDC algorithms is
+    calculated and stored for future use in a table covering up to
+    5 (i.e. MAXREDC) values of m.  The runtime required for this is about
+    two that required for multiplying two N-word integers.
+
+    Two algorithms are available for evaluating rcin(x, m), the one
+    which is usually faster for small N is used when N <
+    config("pow2"); the other is usually faster for larger N. If
+    config("pow2") is set at about 200 and x has both been reduced
+    modulo m, the runtime required for rcin(x, m) is at most about f
+    times the runtime required for an N-word by N-word multiplication,
+    where f increases from about 1.3 for N = 1 to near 2 for N > 200.
+    More runtime may be required if x has to be reduced modulo m.
+
+EXAMPLE
+    Using a 64-bit machine with B = 2^32:
+
+    > for (i = 0; i < 9; i++) print rcin(x, 9),:; print;
+    0 4 8 3 7 2 6 1 5
+
+LIMITS
+    none
+
+LIBRARY
+    void zredcencode(REDC *rp, ZVALUE z1, ZVALUE *res)
+
+SEE ALSO
+   rcout, rcmul, rcsq, rcpow

@@ -1,0 +1,29 @@
+NAME
+    isfile - whether a value is a file
+
+SYNOPSIS
+    isfile(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is a file.  This function will return 1 if x is
+    a file, 0 otherwise.
+
+EXAMPLE
+    > a = files(0)
+    > print isfile(a), isfile(files(1)), isfile(1)
+    1 1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    isassoc, isident, isint, islist, ismat, isnull, isnum, isobj,
+    isreal, isstr, issimple, istype

@@ -1,0 +1,31 @@
+NAME
+    sech - hyperbolic secant
+
+SYNOPSIS
+    sech(x [,eps])
+
+TYPES
+    x		real
+    eps		nonzero real, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Calculate the sech of x to the nearest or next to nearest multiple of
+    epsilon, with absolute error less than .75 * abs(eps).
+
+    sech(x) = 2/(exp(x) + exp(-x))
+
+EXAMPLE
+    > print sech(1, 1e-5), sech(1, 1e-10), sech(1, 1e-15), sech(1, 1e-20)
+    .64805 .6480542737 .648054273663885 .64805427366388539958
+
+LIMITS
+    unlike sin and cos, x must be real
+    eps > 0
+
+LIBRARY
+    NUMBER *qsech(NUMBER *x, NUMBER *eps)
+
+SEE ALSO
+    sinh, cosh, tanh, csch, coth, epsilon

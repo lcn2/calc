@@ -1,0 +1,59 @@
+NAME
+    insert - insert one or more elements into a list at a given position
+
+SYNOPSIS
+    insert(x, y, z_0, z_1, ...)
+
+TYPES
+    x		lvalue whose value is a list
+    y		int
+    z_0, ...	any
+
+    return	null value
+
+DESCRIPTION
+     If after evaluation of z_0, z_1, ..., x is a list with contents
+     (x_0, x_1, ..., x_y-1, x_y, ..., x_n-1), then after insert(),
+     x has contents (x_0, x_1, ..., x_y-1, z_0, z_1, ..., x_y, ..., x_n-1),
+     i.e. z_0, z_1, ... are inserted in order immediately before the
+     element with index y (so that z_0 is now x[[y]]), or if y = n,
+     after the last element x_n-1.  An error occurs if y > n.
+
+EXAMPLE
+    > A = list(2,3,4)
+    > print A
+
+    list (3 elements, 3 nonzero):
+      [[0]] = 2
+      [[1]] = 3
+      [[2]] = 4
+
+    > insert(A, 1, 5, 6)
+    > print A
+
+    list (5 elements, 5 nonzero):
+      [[0]] = 1
+      [[1]] = 5
+      [[2]] = 6
+      [[3]] = 3
+      [[4]] = 4
+
+    > insert(A, 2, remove(A))
+    > print A
+
+    list (5 elements, 5 nonzero):
+      [[0]] = 1
+      [[1]] = 5
+      [[2]] = 4
+      [[3]] = 6
+      [[4]] = 3
+
+LIMITS
+    insert() can have at most 100 arguments
+    o <= y <= size(x)
+
+LIBRARY
+    none
+
+SEE ALSO
+    append, delete, islist, list, pop, push, remove, rsearch, search, size

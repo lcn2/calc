@@ -1,0 +1,29 @@
+NAME
+    tan - trigonometric tangent
+
+SYNOPSIS
+    tan(x [,eps])
+
+TYPES
+    x		real
+    eps		nonzero real, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Calculate the tangent of x to a multiple of eps, with error less
+    in absolute value than .75 * eps.
+
+EXAMPLE
+    > print tan(1, 1e-5), tan(1, 1e-10), tan(1, 1e-15), tan(1, 1e-20)
+    1.55741 1.5574077247 1.557407724654902 1.55740772465490223051
+
+LIMITS
+    unlike sin and cos, x must be real
+    eps > 0
+
+LIBRARY
+    NUMBER *qtan(NUMBER *x, NUMBER *eps)
+
+SEE ALSO
+    sin, cos, sec, csc, cot, epsilon

@@ -1,0 +1,36 @@
+NAME
+   strscan - scan a string for possible assignment to variables
+
+SYNOPSIS
+   strscan(str, x_1, x_2, ..., x_n)
+
+TYPES
+    str			string
+    x_1, x_2, ...	any
+
+    return		integer
+
+DESCRIPTION
+   Successive fields of str separated by white space are read and
+   evaluated so long as values remain in the x_i arguments;  when the
+   x_i corresponding to the field is an lvalue the value obtained for the
+   i-th field is assigned to x_i.
+
+   The function returns the number of fields evaluated.
+
+EXAMPLE
+    global a,b
+    > strscan(" 2+3  a^2  print(b)", a, b, 0);
+    25
+	3
+    > print a,b
+    5 25
+
+LIMITS
+    none - XXX - is this correct?
+
+LIBRARY
+    none - XXX - is this correct?
+
+SEE ALSO
+    scan, fscan, fscanf, strscanf, scanf, printf, fprintf

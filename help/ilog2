@@ -1,0 +1,26 @@
+NAME
+    ilog2 - floor of logarithm to base 2
+
+SYNOPSIS
+    ilog2(x)
+
+TYPES
+    x		nonzero real
+
+    return	integer
+
+DESCRIPTION
+    Returns the greatest integer n for which 2^n <= abs(x).
+
+EXAMPLE
+    > print ilog2(1), ilog2(2), ilog2(3), ilog2(4), ilog(1/15)
+    0 1 1 2 -4
+
+LIMITS
+    none
+
+LIBRARY
+    long qilog2(NUMBER *q)
+
+SEE ALSO
+    ilog10, ilog

@@ -1,0 +1,39 @@
+NAME
+    param - value of argument in a user-function call
+
+SYNOPSIS
+    param(n)
+
+TYPES
+    n		nonnegative integer
+
+    return	any
+
+DESCRIPTION
+    The function param(n) can be used only within the body of the
+    definition of a function.  If that function is f() (which may
+    have been defined with named arguments as in f(x,y,z)) and
+    either the number of arguments or the value of an argument
+    in an anticipated call to f() is to be used, the number of
+    arguments in that call will then be returned by param(0), and
+    the value of the n-th argument by param(n).
+
+EXAMPLE
+    > define f() {
+    >>	local n, v = 0;
+    >>	for (n = 1; n <= param(0); n++)
+    >>		v += param(n)^2;
+    >>	return v;
+    >> }
+
+    > print f(), f(1), f(1,2), f(1,2,3)
+    0 1 5 14
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - missing

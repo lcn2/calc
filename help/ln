@@ -1,0 +1,35 @@
+NAME
+    ln	-  logarithm function
+
+SYNOPSIS
+    ln(x [,eps])
+
+TYPES
+    x		nonzero real or complex
+    eps		nonzero real, defaults to epsilon()
+
+    return	real or complex
+
+DESCRIPTION
+    Approximate the natural logarithm function of x by a multiple of
+    epsilon, the error having absolute value less than 0.75 * eps.
+    If n is a positive integer, ln(x, 10^-n) will usually be correct
+    to the n-th decimal place.
+
+EXAMPLE
+    > print ln(10, 1e-5), ln(10, 1e-10), ln(10, 1e-15), ln(10, 1e-20)
+    2.30259 2.302585093 2.302585092994046 2.30258509299404568402
+
+    > print ln(2+3i, 1e-5), ln(2+3i, 1e-10)
+    1.28247+.98279i 1.2824746787+.9827937232i
+
+LIMITS
+    x != 0
+    eps > 0
+
+LIBRARY
+    NUMBER *qln(NUMBER *x, NUMBER *eps)
+    COMPLEX *cln(COMPLEX *x, NUMBER *eps)
+
+SEE ALSO
+    exp, acosh, asinh, atanh

@@ -1,0 +1,157 @@
+/*
+ * Copyright (c) 1996 Landon Curt Noll
+ *
+ * Permission to use, copy, modify, and distribute this software and
+ * its documentation for any purpose and without fee is hereby granted,
+ * provided that the above copyright, this permission notice and text
+ * this comment, and the disclaimer below appear in all of the following:
+ *
+ *	supporting documentation
+ *	source copies
+ *	source works derived from this source
+ *	binaries derived from this source or from derived source
+ *
+ * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+ * EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+ * USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+ * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ * PERFORMANCE OF THIS SOFTWARE.
+ *
+ * chongo was here	/\../\		chongo@toad.com
+ */
+
+
+/*
+ * mfactor - find a factor of a Mersenne Number
+ *
+ * Mersenne numbers are numbers of the form:
+ *
+ *	2^n-1	for integer n > 0
+ *
+ * We know that factors of a Mersenne number are of the form:
+ *
+ *	2*k*n+1   and   +/- 1 mod 8
+ *
+ * given:
+ *	n		attempt to factor M(n) = 2^n-1
+ *	start_k		the value k in 2*k*n+1 to start the search
+ *	rept_loop	loop cycle reporting, 0 => none
+ *
+ * returns:
+ *	factor of M(n)
+ */
+define mfactor(n, start_k, rept_loop)
+{
+	local q;	/* test factor 2*k*n+1 */
+	local k;	/* k in 2*k*n+1 */
+	local step2;	/* 2*n */
+	local step6;	/* 6*n */
+	local mod8;	/* q mod 8 */
+	local loop;	/* report loop count */
+
+	/*
+	 * firewall
+	 */
+	if (!isint(n) || n <= 0) {
+		quit "n must be an integer > 0";
+	}
+	if (isnull(start_k)) {
+		start_k = 1;
+	} else if (!isint(start_k) || start_k <= 0) {
+		quit "start_k must be an integer > 0";
+	}
+	if (!isint(rept_loop)) {
+		rept_loop = 0;
+	}
+
+	/*
+	 * setup
+	 */
+	step2 = 2*n;
+	step6 = 6*n;
+	k = start_k - 1;
+	q = 2*k*n+1;
+	/* step2 to the first factor candidate */
+	do {
+		q += step2;
+		mod8 = mod(q,8);
+		++k;
+	} while (mod8 != 1 && mod8 != 7);
+
+	/*
+	 * At this point we are at either at the first or second
+	 * of two consequtive factor candidates depending on if
+	 * the next to k values are 1 and 7 mod 8.
+	 *
+	 * The loops below assume that we will test, bump k by 1
+	 * (move to the 2nd consequtive factor candidate), test and
+	 * bump k by 3 (move to the first of the next consequtive
+	 * factor candidate pair).
+	 *
+	 * In order to prepair, we need to move to the first of
+	 * a consequtive factor candidate pair.  If we happen to
+	 * be on a the 2nd of a pair, we will test it outside
+	 * of the loop and bump to the first of the next pair.
+	 */
+	mod8 = mod(q+step2,8);
+	if (mod8 != 1 && mod8 != 7) {
+		/*
+		 * q is the 2nd of a consequtive factor candidate pair
+		 * so we test q now and bump k by 3.
+		 */
+		if (pmod(2,n,q) == 1) {
+			/* q was a factor afterall, no need to do more! */
+			return q;
+		}
+		q += step6;
+		k += 3;
+	}
+
+	/*
+	 * look for a factor
+	 */
+	loop = k;
+	while (pmod(2,n,q) != 1) {
+
+		/*
+		 * determine if we need to report
+		 */
+		if (rept_loop > 0) {
+			if (rept_loop <= ++loop) {
+				/* report this loop */
+				printf("at 2*%d*%d+1, cpu: %f\n",
+					k, n, runtime());
+				fflush(files(1));
+				loop = 0;
+			}
+			k += 4;
+		}
+
+		/* 
+		 * 1st of a consequtive factor candidate pair is not
+		 * a factor, try the 2nd of that pair
+		 */
+		q += step2;
+		if (pmod(2,n,q) == 1) {
+			break; 	/* factor found */
+		}
+
+		/*
+		 * 2nd of a consequtive factor candidate pair is not
+		 * a factor, try the next pair
+		 */
+		q += step6;
+	}
+
+	/*
+	 * return the factor found
+	 */
+	return q;
+}
+
+global lib_debug;
+if (lib_debug >= 0) {
+    print "mfactor(n [, start_k [, rept_loop]])"
+}

@@ -1,0 +1,33 @@
+NAME
+    ceil - ceiling
+
+SYNOPSIS
+    ceil(x)
+
+TYPES
+    x		real, complex, list, matrix
+
+    return	real or complex, list, matrix
+
+DESCRIPTION
+    For real x, ceil(x) is the least integer not less than x.
+
+    For complex, ceil(x) returns the real or complex number v for
+    which re(v) = ceil(re(x)), im(v) = ceil(im(x)).
+
+    For list or matrix x, ceil(x) returns the list or matrix of the
+    same structure as x for which each element t of x has been replaced
+    by ceil(t).
+
+EXAMPLE
+    > print ceil(27), ceil(1.23), ceil(-4.56), ceil(7.8 - 9.1i)
+    27 2 -4 8-9i
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    floor, int

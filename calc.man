@@ -1,0 +1,423 @@
+.\"
+.\" Copyright (c) 1994 David I. Bell and Landon Curt Noll
+.\" Permission is granted to use, distribute, or modify this source,
+.\" provided that this copyright notice remains intact.
+.\"
+.\" calculator by David I. Bell
+.\" man page by Landon Noll
+.TH calc 1 "^..^" "15nov93"
+.SH NAME
+calc \- arbitrary precision calculator
+.SH SYNOPSIS
+\fIcalc\fP
+[\fI\-h\fP]
+[\fI\-m mode\fP]
+[\fI\-p\fP]
+[\fI\-q\fP]
+[\fI\-u\fP]
+[\fI\-v\fP]
+[\fIcalc_cmd \&.\|.\|.\fp]
+.SH DESCRIPTION
+\&
+.br
+CALC COMMAND LINE
+.PP
+.TP
+\fI\-h\fP
+Print a help message.
+This option implies \fI \-q\fP.
+This is equivalent to the calc command \fIhelp help\fP.
+The help facility is disabled unless the \fImode\fP is 5 or 7.
+See \fI\-m\fP below.
+.sp
+.TP
+\fI\-m mode\fP
+This flag sets the permission mode of calc.
+It controls the ability for \fIcalc\fP to open files
+and execute programs.
+\fIMode\fP may be a number from 0 to 7.
+.sp
+The \fImode\fP value is interpreted in a way similar
+to that of the \fRchmod(1)\fP octal mode:
+.sp
+.in +0.5i
+.nf
+0   do not open any file, do not execute progs
+1   do not open any file
+2   do not open files for reading, do not execute progs
+3   do not open files for reading
+4   do not open files for writing, do not execute progs
+5   do not open files for writing
+6   do not execute any program
+7   allow everything (default mode)
+.fi
+.in -0.5i
+.sp
+If one wished to run calc from a privledged user, one might
+want to use \fI\-m 0\fP in an effort to make calc more secure.
+.sp
+\fIMode\fP bits for reading and writing apply only on an open.
+Files already open are not effected.
+Thus if one wanted to use the \fI\-m 0\fP in an effort to make
+\fIcalc\fP more secure, but still wanted to read and write a specific
+file, one might want to do:
+.sp
+.in +0.5i
+.nf
+\fRcalc \-m 0 3<a.file\fP
+.fi
+.in -0.5i
+.sp
+Files presented to \fIcalc\fP in this way are opened in an unknown mode.
+\fICalc\fP will attempt to read or write them if directed.
+.sp
+If the \fImode\fP disables opening of files for reading, then
+the startup library scripts are disabled as of \fI\-q\fP was given.
+The reading of key bindings is also disabled when the \fImode\fP
+disables opening of files for reading.
+.TP
+\fI \-p\fP
+Pipe processing is enabled by use of \-p.  For example:
+.sp
+.in +0.5i
+.nf
+\fRecho "print 2^21701\-1, 2^23209\-1" | calc \-p | fizzbin\fP
+.fi
+.in -0.5i
+.sp
+In pipe mode, \fIcalc\fP does not prompt, does not print leading tabs
+and does not print the initial header.
+.TP
+\fI \-q\fP
+Disable the use of the \fI$CALCRC\fP startup scripts.
+.TP
+\fI \-u\fP
+Disable buffering of stdin and stdout.
+.TP
+\fI \-v\fP
+Print the version and exit.
+.PP
+Without \fIcalc_cmd\fPs, \fIcalc\fP operates interactively.
+If one or more \fIcalc_cmd\fPs are given on the command line,
+\fIcalc\fP will execute them and exit.
+The printing of leading tabs on output is disabled
+as if \fIconfig("tab",0)\fP had been executed.
+.PP
+Normally on startup, \fIcalc\fP attempts to execute a collection
+of library scripts.
+The environment variable \fI$CALCRC\fP (if non-existent then
+a compiled in value) contains a \fI:\fP separated list of
+startup library scripts.
+No error conditions are produced if these startup library scripts
+are not found.
+.PP
+If the \fImode\fP disables opening of files for reading, then
+the startup library scripts are disabled as of \fI\-q\fP was given
+and \fI$CALCRC\fP as well as the default compiled in value are ignored.
+.PP
+Filenames are subject to ``~'' expansion (see below).
+The environment variable \fI$CALCPATH\fP (if non-existent then
+a compiled in value) contains a \fI:\fP separated list of search
+directories.
+If a file does not begin with \fI/\fP, \fI~\fP or \fI./\fP,
+then it is searched for under each directory listed in the \fI$CALCPATH\fP.
+It is an error if no such readable file is found.
+.PP
+Calc treats all open files, other than stdin, stdout and stderr
+as files available for reading and writing.
+One may present calc with an already open file in the following way:
+.sp
+.in +0.5i
+.nf
+\fRcalc 3<open_file 4<open_file2\fP
+.fi
+.in -0.5i
+.PP
+For more information use the following calc commands:
+.PP
+.in 1.0i
+help usage
+.br
+help help
+.br
+help environment
+.in -1.0i
+.PP
+OVERVIEW
+.PP
+\fICalc\fP is arbitrary precision arithmetic system that uses
+a C-like language.
+\fICalc\fP is useful as a calculator, an algorithm prototyped
+and as a mathematical research tool.
+More importantly, \fIcalc\fP provides one with a machine
+independent means of computation.
+.PP
+\fICalc\fP comes with a rich set of builtin mathematical
+and programmatic functions.
+.PP
+\fICalc\fP is distributed with library of scripts.
+Written in the same C-like language, library scripts may be
+read in and executed during a \fIcalc\fP session.
+These library scripts are also provided because they are
+useful and to serve as examples of the \fIcalc\fP language.
+One may further extend \fIcalc\fP thru the
+use of user defined scripts.
+.PP
+Internally calc represents numeric values as fractions reduced to their
+lowest terms.
+The numerators and denominators of these factions may grow to
+arbitrarily large values.
+Numeric values read in are automatically converted into rationals.
+The user need not be aware of this internal representation.
+.PP
+For more information use the following calc commands:
+.PP
+.in 1.0i
+help intro
+.br
+help builtin
+.br
+help stdlib
+.br
+help define
+.br
+show builtins
+.br
+show functions
+.in -1.0i
+.PP
+DATA TYPES
+.PP
+Fundamental builtin data types include integers, real numbers,
+rational numbers, complex numbers and strings.
+.PP
+By use of an object, one may define an arbitrarily complex
+data types.
+One may define how such objects behave a wide range of
+operations such as addition, subtraction,
+multiplication, division, negation, squaring, modulus,
+rounding, exponentiation, equality, comparison, printing
+and so on.
+.PP
+For more information use the following calc commands:
+.PP
+.in 1.0i
+help types
+.br
+help obj
+.br
+show objfuncs
+.in -1.0i
+.PP
+VARIABLES
+.PP
+Variables in \fIcalc\fP are typeless.
+In other words, the fundamental type of a variable is determined by its content.
+Before a variable is assigned a value it has the value of zero.
+.PP
+The scope of a variable may be global, local to a file, or local to a
+procedure.
+Values may be grouped together in a matrix, or into a
+a list that permits stack and queue style operations.
+.PP
+For more information use the following calc commands:
+.PP
+.in 1.0i
+help variable
+.br
+help mat
+.br
+help list
+.br
+show globals
+.in -1.0i
+.PP
+INPUT/OUTPUT
+.PP
+A leading ``0x'' implies a hexadecimal value,
+a leading ``0b'' implies a binary value,
+and a ``0'' followed by a digit implies an octal value.
+Complex numbers are indicated by a trailing ``i'' such as in ``3+4i''.
+Strings may be delimited by either a pair of single or double quotes.
+By default, \fIcalc\fP prints values as if they were floating point numbers.
+One may change the default to print values in a number of modes
+including fractions, integers and exponentials.
+.PP
+A number of stdio-like file I/O operations are provided.
+One may open, read, write, seek and close files.
+Filenames are subject to ``\~'' expansion to home directories
+in a way similar to that of the Korn or C-Shell.
+.PP
+For example:
+.PP
+.in 1.0i
+~/.calcrc
+.br
+~chongo/lib/fft_multiply.cal
+.in -1.0i
+.PP
+For more information use the following calc command:
+.PP
+.in 1.0i
+help file
+.in -1.0i
+.PP
+CALC LANGUAGE
+.PP
+The \fIcalc\fP language is a C-like language.
+The language includes commands such as variable declarations,
+expressions, tests, labels, loops, file operations, function calls.
+These commands are very similar to their counterparts in C.
+.PP
+The language also include a number of commands particular
+to \fIcalc\fP itself.
+These include commands such as function definition, help,
+reading in library scripts, dump files to a file, error notification,
+configuration control and status.
+.PP
+For more information use the following calc command:
+.PP
+.in 1.0i
+help command
+.br
+help statement
+.br
+help expression
+.br
+help operator
+.br
+help config
+.in -1.0i
+.PP
+.SH FILES
+\&
+.br
+.PD 0
+.TP 20
+${LIBDIR}/*.cal
+library scripts shipped with calc
+.br
+.sp
+.TP 20
+${LIBDIR}/help/*
+help files
+.br
+.sp
+.TP 20
+${LIBDIR}/bindings
+command line editor bindings
+.sp
+.SH ENVIRONMENT
+\&
+.br
+.PD 0
+.TP 5
+CALCPATH
+A :-separated list of directories used to search for
+scripts filenames that do not begin with /, ./ or ~.
+.br
+.sp
+Default value: .:./lib:~/lib:${LIBDIR}
+.br
+.sp
+.TP 5
+CALCRC
+On startup (unless \-h or \-q was given on the command
+line), calc searches for files along this :-separated
+environment variable.
+.br
+.sp
+Default value: ${LIBDIR}/startup:~/.calcrc
+.br
+.sp
+.TP 5
+CALCBINDINGS
+On startup (unless \fI\-h\fP or \fI\-q\fP was given on the command
+line, or \fI\-m\fP disallows opening files for reading), calc reads
+key bindings from the filename specified
+by this environment variable.
+.br
+.sp
+Default value: ${LIBDIR}/bindings
+.sp
+.SH CREDIT
+\&
+.br
+The majority of calc was written by David I. Bell.
+.sp
+Calc archives and calc-tester mailing list maintained by Landon Curt Noll.
+.sp
+Thanks for suggestions and encouragement from Peter Miller,
+Neil Justusson, and Landon Noll.
+.sp
+Thanks to Stephen Rothwell for writing the original version of
+hist.c which is used to do the command line editing.
+.sp
+Thanks to Ernest W. Bowen for supplying many improvements in
+accuracy and generality for some numeric functions.  Much of
+this was in terms of actual code which I gratefully accepted.
+Ernest also supplied the original text for many of the help files.
+.sp
+Portions of this program are derived from an earlier set of
+public domain arbitrarily precision routines which was posted
+to the net around 1984.  By now, there is almost no recognizable
+code left from that original source.
+.sp
+Most of this source and binary has one of the following copyrights:
+.sp
+.in +0.5i
+Copyright (c) 19xx David I. Bell
+.br
+Copyright (c) 19xx David I. Bell and Landon Curt Noll
+.br
+Copyright (c) 19xx Landon Curt Noll
+.br
+Copyright (c) 19xx Ernest Bowen and Landon Curt Noll
+.in -0.5i
+.sp
+Permission is granted to use, distribute, or modify this source,
+provided that this copyright notice remains intact.
+.sp
+Send calc comments, suggestions, bug fixes, enhancements
+and interesting calc scripts that you would like you see included
+in future distributions to:
+.sp
+.in +0.5i
+dbell@auug.org.au
+.br
+chongo@toad.com
+.in -0.5i
+.sp
+Landon Noll maintains the official calc ftp archive at:
+.sp
+.in +0.5i
+ftp://ftp.uu.net/pub/calc
+.in -0.5i
+.sp
+Alpha test versions, complete with bugs, untested code and
+experimental features may be fetched (if you are brave) under:
+.sp
+.in +0.5i
+http://reality.sgi.com/chongo/calc/
+.in -0.5i
+.sp
+One may join the calc testing group by sending a request to:
+.sp
+.in +0.5i
+calc-tester-request@postofc.corp.sgi.com
+.in -0.5i
+.sp
+Your message body (not the subject) should consist of:
+.sp
+.in +0.5i
+subscribe calc-tester address
+.br
+end
+.br
+name your_full_name
+.sp
+where "address" is your EMail address and "your_full_name"
+is your full name.
+.in -0.5i
+.sp
+Enjoy!

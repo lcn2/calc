@@ -1,0 +1,33 @@
+NAME
+    meq - test for equality modulo a specifed number
+
+SYNOPSIS
+    meq(x, y, md)
+
+TYPES
+    x		real
+    y		real
+    md		real
+
+    return	0 or 1
+
+DESCRIPTION
+    Returns 1 if and only if for some integer n, x - y = n * md, i.e.
+    x is congruent to y modulo md.
+
+    If md = 0, this is equivalent to x == y.
+
+    For any x, y, md, meq(x, y, md) = ismult(x - y, md).
+
+EXAMPLE
+    > print meq(5, 33, 7), meq(.05, .33, -.07), meq(5, 32, 7)
+    1 1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    mne, ismult

@@ -1,0 +1,62 @@
+NAME
+    jacobi - Jacobi symbol function
+
+SYNOPSIS
+    jacobi(x, y)
+
+TYPES
+    x		integer
+    y		integer
+
+    return	1, -1, or 0
+
+DESCRIPTION
+    If y is a positive odd prime and x is an integer not divisible
+    by y, jacobi(x,y) returns the Legendre symbol function, usually
+    denoted by (x/y) as if x/y were a fraction; this has the value
+    1 or -1 according as x is or is not a quadratic residue modulo y.
+    x is a quadratic residue modulo y if for some integer u,
+    x = u^2 (mod y); if for all integers u, x != u^2 (mod y), x
+    is said to be a quadratic nonresidue modulo y.
+
+    If y is a positive odd prime and x is divisible by y, jacobi(x,y)
+    returns the value 1.  (This differs from the zero value usually
+    given in number theory books for (x/y) when x and y
+    are not relatively prime.)
+    assigned to (x/y) O
+
+    If y is an odd positive integer equal to p_1 * p_2 * ... * p_k,
+    where the p_i are primes, not necessarily distinct, the
+    jacobi symbol function is given by
+
+		jacobi(x,y)  =  (x/p_1) * (x/p_2) * ... * (x/p_k).
+
+    where the functions on the right are Legendre symbol functions.
+
+    This is also often usually by (x/y).
+
+    If jacobi(x,y) = -1, then x is a quadratic nonresidue modulo y.
+    Equivalently, if x is a quadratic residue modulo y, then
+    jacobi(x,y) = 1.
+
+    If jacobi(x,y) = 1 and y is composite, x may be either a quadratic
+    residue or a quadratic nonresidue modulo y.
+
+    If y is even or negative, jacobi(x,y) as defined by calc returns
+    the value 0.
+
+EXAMPLE
+    > print jacobi(2,3), jacobi(2,5), jacobi(2,15)
+    -1 -1 1
+
+    > print jacobi(80,199)
+    1
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qjacobi(NUMBER *x, NUMBER *y)
+    FLAG zjacobi(ZVALUE z1, ZVALUE z2)
+
+SEE ALSO

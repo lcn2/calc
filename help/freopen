@@ -1,0 +1,42 @@
+NAME
+    freopen - close (if necessary) and reopen a filestream
+
+SYNOPSIS
+    freopen(fs, mode) or freopen(fs, mode, filename)
+
+TYPES
+    fs		open or closed file stream
+    mode	one of the strings "r", "w", "a", "r+", "w+, "a+"
+    filename	string
+
+    return	null or error value
+
+DESCRIPTION
+    With two arguments, this function closes the file stream fs and
+    attempts to reopen it with the specified mode.  A non-null value
+    is returned only if the attempt fails.
+
+    With three arguments, fs, if open, is closed, and an attempt is made to
+    open the file with the specified name and assign it to the stream
+    fs.  A non-null value is returned only if the attempt fails.
+
+EXAMPLE
+
+    > f = fopen("/tmp/junk", "w")
+    > fputs(f, "Leonard Euler")
+    > freopen(f, "r")
+    > fgets(f)
+	    "Leonard Euler"
+    > !chmod u-w /tmp/junk
+    > freopen(f, "w")
+	    Error 10013
+
+LIMITS
+    none - XXX - is this correct?
+
+LIBRARY
+    none - XXX - is this correct?
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt

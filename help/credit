@@ -1,0 +1,62 @@
+Credits
+
+    The majority of calc was written by David I. Bell.
+
+    Calc archives and calc-tester mailing list maintained by Landon Curt Noll.
+
+    Thanks for suggestions and encouragement from Peter Miller,
+    Neil Justusson, and Landon Noll.
+
+    Thanks to Stephen Rothwell for writing the original version of
+    hist.c which is used to do the command line editing.
+
+    Thanks to Ernest W. Bowen for supplying many improvements in
+    accuracy and generality for some numeric functions.  Much of
+    this was in terms of actual code which I gratefully accepted.
+    Ernest also supplied the original text for many of the help files.
+
+    Portions of this program are derived from an earlier set of
+    public domain arbitrarily precision routines which was posted
+    to the net around 1984.  By now, there is almost no recognizable
+    code left from that original source.
+
+    Most of this source and binary has one of the following copyrights:
+
+	    Copyright (c) 19xx David I. Bell
+	    Copyright (c) 19xx David I. Bell and Landon Curt Noll
+	    Copyright (c) 19xx Landon Curt Noll
+	    Copyright (c) 19xx Ernest Bowen and Landon Curt Noll
+
+    Permission is granted to use, distribute, or modify this source,
+    provided that this copyright notice remains intact.
+
+    Send calc comments, suggestions, bug fixes, enhancements and
+    interesting calc scripts that you would like you see included in
+    future distributions to:
+
+	    dbell@auug.org.au
+	    chongo@toad.com
+
+    Landon Noll maintains the official calc ftp archive at:
+
+	ftp://ftp.uu.net/pub/calc
+
+    Alpha test versions, complete with bugs, untested code and
+    experimental features may be fetched (if you are brave) under:
+
+	http://reality.sgi.com/chongo/calc/
+
+    One may join the calc testing group by sending a request to:
+
+	calc-tester-request@postofc.corp.sgi.com
+
+    Your message body (not the subject) should consist of:
+
+	subscribe calc-tester address
+	end
+	name your_full_name
+
+    where "address" is your EMail address and "your_full_name"
+    is your full name.
+
+    Enjoy!

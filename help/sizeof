@@ -1,0 +1,74 @@
+NAME
+    sizeof - number of bytes required for value
+
+SYNOPSIS
+    sizeof(x)
+
+TYPES
+    x		any
+
+    return	integer
+
+DESCRIPTION
+    This is analogous to the C operator sizeof.  It attempts to assess
+    the number of bytes in memory used to store a value and all its
+    components.
+
+    The number returned by sizeof(x) may be less than the actual number
+    used because, for example, more memory may have been allocated for
+    a string than is used: only the characters up to and including the
+    first '\0' are counted in calculating the contribution of the
+    string to sizeof(x).
+
+    The number returned by sizeof(x) may be greater (and indeed
+    substantially greater) than the number of bytes actually used.
+    For example, after:
+
+		a = sqrt(2);
+		mat A[3] = {a, a, a};
+
+    the numerical information for a, A[0], A[1], A[2] are stored in the
+    same memory, so the memory used for A is the same as if
+    its 3 elements were null values.  The value returned by
+    sizeof(A) is calculated as A were defined by:
+
+		mat A[3] = {sqrt(2), sqrt(2), sqrt(2)}.
+
+    Similar sharing of memory occurs with literal strings.
+
+    The minimum value for sizeof(x) occurs for the null and error values.
+
+EXAMPLES
+
+    The results for examples like these will depend to some extent on
+    the system being used.  The following were for an SGI R4k machine
+    in 32-bit mode:
+
+    > print sizeof(null()), sizeof(0), sizeof(3), sizeof(2^32 - 1), sizeof(2^32)
+    8 68 68 68 72
+
+    > x = sqrt(2, 1e-100); print sizeof(x), sizeof(num(x)), sizeof(den(x))
+    148 108 108
+
+    > print sizeof(list()), sizeof(list(1)), sizeof(list(1,2))
+    28 104 180
+
+    > print sizeof(list()),sizeof(list(1)),sizeof(list(1,2)),sizeof(list(1,2,3))
+    28 104 180 256
+
+    > mat A[] = {1}; mat B[] = {1,2}; mat C[] = {1,2,3}; mat D[100,100];
+    > print sizeof(A), sizeof(B), sizeof(C), sizeof(D)
+    124 192 260 680056
+
+    > obj point {x,y,z}
+    > obj point P = {1,2,3}; print sizeof(P)
+    274
+
+LIMITS
+    It is assumed sizeof(x) will fit into a system long integer.
+
+LIBRARY
+    none
+
+SEE ALSO
+    size, fsize, strlen, digits

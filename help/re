@@ -1,0 +1,26 @@
+NAME
+    re - real part of a real or complex number
+
+SYNOPSIS
+    re(x)
+
+TYPES
+    x		real or complex
+
+    return	real
+
+DESCRIPTION
+    If x = u + v * 1i where u and v are real, re(x) returns u.
+
+EXAMPLE
+    > print re(2), re(2 + 3i), re(-4.25 - 7i)
+    2 2 -4.25
+
+LIMITS
+    none
+
+LIBRARY
+    COMPLEX *cimag(COMPLEX *x)
+
+SEE ALSO
+    im

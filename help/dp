@@ -1,0 +1,38 @@
+NAME
+    dp - dot product of two vectors
+
+SYNOPSIS
+    dp(x, y)
+
+TYPES
+    x, y	1-dimensional matrices with the same number of elements
+
+    return	depends on the nature of the elements of x and y
+
+DESCRIPTION
+    Compute the dot product of two 1-dimensional matrices.
+
+    Let:
+
+	x = {x0, x1, ... xn}
+	y = {y0, y1, ... yn}
+
+    Then dp(x,y) returns the result of the calculation:
+
+	x0*y0 + x1*y1 + ... + xn*yn
+
+EXAMPLE
+    > mat x[3] = {2,3,4}
+    > mat y[3] = {3,4,5}
+    > print dp(x,y)
+    38
+
+LIMITS
+    x and y are 1-dimensional matrices
+    x and y have the same number of elements
+
+LIBRARY
+    VALUE matdot(MATRIX *x, MATRIX *y)
+
+SEE ALSO
+    cp

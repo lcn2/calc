@@ -1,0 +1,30 @@
+NAME
+    israndom - whether a value is a Blum generator state
+
+SYNOPSIS
+    israndom(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is a Blum-Blum-Shub pseudo-random number generator state.
+    This function will return 1 if x is a file, 0 otherwise.
+
+    XXX - the interface to the Blum generator has not been not written.
+
+EXAMPLE
+    > a = srandom(0)
+    > print israndom(a), israndom(0);
+    1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    XXX - fill in

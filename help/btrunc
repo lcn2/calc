@@ -1,0 +1,36 @@
+NAME
+    btrunc - truncate a value to a number of binary places
+
+SYNOPSIS
+    btrunc(x [,j])
+
+TYPES
+    x		real
+    j		int
+
+    return	real
+
+DESCRIPTION
+    Truncate x to j binary places.  If j is omitted, 0 places is assumed.
+    Specifying zero places makes the result identical to int().
+
+    Truncation of a non-integer prodcues values nearer to zero.
+
+EXAMPLE
+    > print btrunc(pi()), btrunc(pi(), 10)
+    3 3.140625
+
+    > print btrunc(3.3), btrunc(3.7), btrunc(3.3, 2), btrunc(3.7, 2)
+    3 3 3.25 3.5
+
+    > print btrunc(-3.3), btrunc(-3.7), btrunc(-3.3, 2), btrunc(-3.7, 2)
+    -3 -3 -3.25 -3.5
+
+LIMITS
+    0 <= j < 2^31
+
+LIBRARY
+    NUMBER *qbtrunc(NUMBER *x, *j)
+
+SEE ALSO
+    bround, int, round, trunc

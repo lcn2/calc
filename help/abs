@@ -1,0 +1,41 @@
+NAME
+    abs - absolute value
+
+SYNOPSIS
+    abs(x [,eps])
+
+TYPES
+    If x is an object of type xx, the function xx_abs has to have
+	been defined; this will determine the types for x, eps and
+	the returned value.
+
+    For non-object x and eps:
+
+    x		number (real or complex)
+    eps		ignored if x is real, nonzero real for complex x,
+		defaults to epsilon().
+
+    return	real
+
+DESCRIPTION
+    If x is real, returns x if x is positive or zero, -x if x is negative.
+
+    For complex x, returns the multiple of eps nearest or next to nearest
+    to the absolute value of x.  The result usually has error less in
+    absolute value than abs(eps), but should not exceed 0.75 * abs(eps).
+
+EXAMPLE
+    > print abs(3.4), abs(-3.4)
+    3.4 3.4
+
+    > print abs(3+4i, 1e-5), abs(4+5i, 1e-5), abs(4+5i, 1e-10)
+    5 6.40312 6.4031242374
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    cmp, epsilon, hypot, norm, near, obj

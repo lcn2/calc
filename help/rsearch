@@ -1,0 +1,38 @@
+NAME
+    rsearch - reverse search a matrix, list or association for a value
+
+SYNOPSIS
+    rsearch(x, val [,idx])
+
+TYPES
+    x		matrix, &matrix, list, &list, assoc, &assoc
+    val		any, &any
+    idx		int
+
+    return	any
+
+DESCRIPTION
+    Reverse search the matrix, list or association x for the value
+    val.  By default, the search starts at the end.  If idx is given,
+    the reverse search starts at index indx.
+
+    If the value is not found, this function returns nil.
+
+EXAMPLE
+    > lst = list(2,"three",4i)
+    > rsearch(lst,"three")
+	    1
+    > rsearch(lst,"threes")
+    > rsearch(lst, 4i, 4)
+    > rsearch(lst, 4i, 1)
+    > rsearch(lst, 4i, 3)
+	    2
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    assoc, list, mat, search

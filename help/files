@@ -1,0 +1,69 @@
+NAME
+    files - return a file or the maximum number of open files
+
+SYNOPSIS
+    files([fnum])
+
+TYPES
+    fnum	int
+
+    return	files, int or null
+
+DESCRIPTION
+    This function, then given the argument fnum, will use it as an
+    index into an internal table of open file and return a file value.
+    If that entry in the table is not in use, then the null value is
+    returned instead.  When no args are given, the maximum number of
+    open files is returned.
+
+    If you overwrite a variable containing a file value or don't save the
+    result of an 'fopen', the opened file still remains open.  Such 'lost'
+    files can be recovered by using the 'files' function.
+
+    The first 3 file entries always refer to standard input, output
+    and error respectively.  (see the example below)  These three
+    files are already open by the calculator and cannot be closed.
+
+    When calc starts up, it scans for open file descriptors above
+    stderr (2) and below MAXFILES (20).  Any open descriptor found
+    is assumed to be an open file opened in an unknown mode.  Calc
+    will try to read and write to this file when directed.
+
+    Consider the following commands:
+
+	$ echo "A line of text in the file on descriptor 5" > datafile
+	$ calc 5<datafile
+
+    then one could do the following:
+
+	> files(5)
+		FILE 5 "descriptor[5]" (unknown_mode, pos 0)
+	> fgetline(files(5))
+		"A line of text in the file on descriptor 5"
+
+EXAMPLE
+    > fd = fopen("/etc/motd", "r")
+    > fd
+	    FILE 3 "/etc/motd" (reading, pos 0)
+    > files(3)
+	    FILE 3 "/etc/motd" (reading, pos 0)
+
+    > if (isnull(files(4))) print "not open"
+    not open
+
+    > stdin = files(0)
+    > stdout = files(1)
+    > stderr = files(2)
+
+    > print files()
+    20
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt

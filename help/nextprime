@@ -1,0 +1,36 @@
+NAME
+    nextprime - nearest prime greater than specified number
+
+SYNOPSIS
+    nextprime(n [,err])
+
+TYPES
+    n		real
+    err		integer
+
+    return	positive integer or err
+
+DESCRIPTION
+    If n is an integer less than 2^32, nextprime(n) returns the
+    first prime greater than n.
+
+    If n <= 2 or >= 2^32 or n is fractional, prevprime(n, err)
+    returns the value of err.
+
+    Other cases cause a runtime error.
+
+EXAMPLE
+    > print nextprime(10), nextprime(100), nextprime(1e6)
+    11 101 1000003
+
+    > print nextprime(3/2,-99), nextprime(2^32-1,-99), nextprime(2^32,-99)
+    -99 4294967311 -99
+
+LIMITS
+    none
+
+LIBRARY
+    FULL znprime(ZVALUE z)
+
+SEE ALSO
+    prevprime

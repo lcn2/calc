@@ -1,0 +1,151 @@
+NAME
+    srand - seed the additive 55 shuffle pseudo-random number generator
+
+SYNOPSIS
+    srand([seed])
+
+TYPES
+    seed	integer, matrix of integers or rand state
+
+    return	rand state
+
+DESCRIPTION
+    See the pseudo-random number using an additive 55 shuffle generator.
+
+    For integer seed != 0:
+
+	Any buffered rand generator bits are flushed.  The additive table
+	for the rand generator is loaded with the default additive table.
+	The low order 64 bits of seed is xor-ed against each table value.
+	The additive table is shuffled according to seed/2^64.
+
+	The following calc code produces the same effect on the internal
+	additive table:
+
+	    /* reload default additive table xored with low 64 seed bits */
+	    seed_xor = seed & ((1<<64)-1);
+	    for (i=0; i < 55; ++i) {
+	        additive[i] = xor(default_additive[i], seed_xor);
+	    }
+
+	    /* shuffle the additive table */
+	    seed >>= 64;
+	    for (i=55; seed > 0 && i > 0; --i) {
+	        quomod(seed, i+1, seed, j);
+	        swap(additive[i], additive[j]);
+	    }
+
+	Seed must be >= 0.  All seed values < 0 are reserved for future use.
+
+	The additive table pointers are reset to additive[23] and additive[54].
+	Last the shuffle table is loaded with successive values from the
+	additive 55 generator.
+
+	There is no limit on the size of a seed.  On the other hand,
+	extremely large seeds require large tables and long seed times.
+	Using a seed in the range of [2^64, 2^64 * 55!) should be
+	sufficient for most purposes.  An easy way to stay within this
+	range to to use seeds that are between 21 and 93 digits, or
+	64 to 308 bits long.
+
+	To help make the generator produced by seed S, significantly
+	different from S+1, seeds are scrambled prior to use.  The
+	internal function randreseed64 maps [0,2^64) into [0,2^64) in a
+	1-to-1 and onto fashion for every 64 bits of S.
+
+	The purpose of the randreseed64() is not to add security.  It
+	simply helps remove the human perception of the relationship
+	between the seed and the production of the generator.
+
+	The randreseed64 process does not reduce the security of the
+	rand genertator.  Every seed is converted into a different
+	unique seed.  No seed is ignored or favored.  See the rand
+	help file for details.
+
+    For integer seed == 0:
+
+	Restore the initial state and modulus of the rand generator.
+	After this call, the rand generator is restored to its initial
+	state after calc started.
+
+	The additive 55 pointers are reset to additive[23] and additive[54].
+	Last the shuffle table is loaded with successive values from the
+	additive 55 generator.
+
+	The call:
+
+	    srand(0)
+
+	restores the rand generator to the initial conditions at calc startup.
+
+    For matrix arg:
+
+	Any buffered random bits are flushed.  The additive table with the
+	first 55 entries of the martix mod 2^64.
+
+	The additive 55 pointers are reset to additive[23] and additive[54].
+	Last the shuffle table is loaded with successive values from the
+	additive 55 generator.
+
+	This form allows one to load the internal additive 55 generator
+	with user supplied values.
+
+	The randreseed64 process is NOT applied to the matrix values.
+
+    For rand state arg:
+
+	Restore the rand state and return the previous state.  Note that
+	the argument state is a rand state value (isrand(state) is true).
+	Any internally buffered random bits are restored.
+
+	All calls to srand(seed) return the previous state or current
+	state in case of srand().  Their return value can be supplied
+	to srand in restore the generator to that previous state:
+
+	     state = srand(123456789);
+	     newstate = srand();	/* save state */
+
+	     x = rand();
+	     ...
+	     srand(newstate);	/* restore state to after srand(123456789) */
+	     x1 = rand();	/* produces the same value as x */
+	     ...
+	     srand(state);	/* restore original state */
+
+    For no arg given:
+
+	Return current a55 generator state.  This call does not alter
+	the generator state.
+
+	This call allows one to take a snapshot of the current generator state.
+
+    See the rand help file for details on the generator.
+
+EXAMPLE
+    > srand(0x8d2dcb2bed3212844f4ad31)
+	    RAND state
+    > state = srand();
+    > print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
+    32 60 67 71 1 77
+    > print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
+    52 72 110 15 69 58
+    > state2 = srand(state);
+    > print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
+    32 60 67 71 1 77
+    > print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
+    52 72 110 15 69 58
+    > state3 = srand();
+    > print state3 == state2;
+    1
+    > print rand();
+    641407694185874626
+
+LIMITS
+    for matrix arg, the matrix must have at least 55 integers
+
+LIBRARY
+    RAND *zsrand(ZVALUE *pseed, MATRIX *pmat55)
+    RAND *zsetrand(RAND *state)
+
+SEE ALSO
+    srand, randbit, isrand, random, srandom, israndom

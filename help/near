@@ -1,0 +1,31 @@
+NAME
+    near - compare nearness of two numbers with a standard
+
+SYNOPSIS
+    near(x, y [,eps])
+
+TYPES
+    x		real
+    y		real
+    eps		real, defaults to epsilon()
+
+    return	-1, 0 or 1
+
+DESCRIPTION
+    Returns:
+	-1	if abs(x - y) < abs(eps)
+	0	if abs(x - y) = abs(eps)
+	1	if abs(x - y) > abs(eps)
+
+EXAMPLE
+    > print near(22/7, 3.15, .01), near(22/7, 3.15, .005)
+    -1 1
+
+LIMITS
+    eps >= 0
+
+LIBRARY
+    FLAG qnear(NUMBER *x, NUMBER *y, NUMBER *eps)
+
+SEE ALSO
+    epsilon, abs

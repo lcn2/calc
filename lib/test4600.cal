@@ -1,0 +1,311 @@
+/*
+ * Copyright (c) 1996 Ernest Bowen and Landon Curt Noll
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
+ * By: Ernest Bowen and Landon Curt Noll
+ *     ernie@neumann.une.edu.au and chongo@toad.com
+ *
+ * This library is used by the 4600 series of the regress.cal test suite.
+ */
+
+
+global defaultverbose = 1		/* default verbose value */
+global err;
+
+/*
+ * test globals
+ */
+global A, f, pos;
+
+define stest(str, verbose)
+{
+	local x;
+
+	/* setup */
+	if (isnull(verbose))
+		verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	x = rm("junk4600");
+
+	/*
+	 * do file operations
+	 */
+	f = fopen("junk4600", "w");
+	if (iserror(f)) {
+		print 'failed';
+		print '**** fopen("junk4600", "w") failed';
+		return 1;
+	}
+	if (iserror(fputs(f,
+	 "Fourscore and seven years ago our fathers brought forth\n",
+	 "on this continent a new nation, conceived in liberty and dedicated\n",
+	 "to the proposition that all men are created equal.\n"))) {
+		print 'failed';
+		print '**** fputs(f, "Fourscore ... failed';
+		return 1;
+	}
+	if (iserror(freopen(f, "r"))) {
+		print 'failed';
+		print '**** iserror(freopen(f, "r")) failed';
+		return 1;
+	}
+	if (iserror(rewind(f))) {
+		print 'failed';
+		print '**** iserror(rewind(f)) failed';
+		return 1;
+	}
+	if (search(f, "and") != 10) {
+		print 'failed';
+		print '**** search(f, "and") != 10 failed';
+		return 1;
+	}
+	if (ftell(f) != 13) {
+		print 'failed';
+		print '**** ftell(f) != 13 failed';
+		return 1;
+	}
+	if (search(f, "and") != 109) {
+		print 'failed';
+		print '**** search(f, "and") != 109 failed';
+		return 1;
+	}
+	if (ftell(f) != 112) {
+		print 'failed';
+		print '**** ftell(f) != 112 failed';
+		return 1;
+	}
+	if (!isnull(search(f, "and"))) {
+		print 'failed';
+		print '**** !isnull(search(f, "and")) failed';
+		return 1;
+	}
+	if (ftell(f) != 172) {
+		print 'failed';
+		print '**** ftell(f) != 172 failed';
+		return 1;
+	}
+	if (rsearch(f, "and") != 109) {
+		print 'failed';
+		print '**** rsearch(f, "and") != 109 failed';
+		return 1;
+	}
+	if (ftell(f) != 112) {
+		print 'failed';
+		print '**** ftell(f) != 112 failed';
+		return 1;
+	}
+	if (iserror(fseek(f, -1, 1))) {
+		print 'failed';
+		print '**** iserror(fseek(f, -1, 1)) failed';
+		return 1;
+	}
+	if (rsearch(f, "and") != 10) {
+		print 'failed';
+		print '**** rsearch(f, "and") != 10 failed';
+		return 1;
+	}
+	if (ftell(f) != 13) {
+		print 'failed';
+		print '**** ftell(f) != 13 failed';
+		return 1;
+	}
+	if (iserror(fseek(f, -1, 1))) {
+		print 'failed';
+		print '**** iserror(fseek(f, -1, 1)) failed';
+		return 1;
+	}
+	if (!isnull(rsearch(f, "and"))) {
+		print 'failed';
+		print '**** !isnull(rsearch(f, "and")) failed';
+		return 1;
+	}
+	if (ftell(f) != 0) {
+		print 'failed';
+		print '**** ftell(f) != 0 failed';
+		return 1;
+	}
+	if (iserror(fclose(f))) {
+		print 'failed';
+		print '**** iserror(fclose(f)) failed';
+		return 1;
+	}
+
+	/*
+	 * cleanup
+	 */
+	x = rm("junk4600");
+	if (verbose > 0) {
+		printf("passed\n");
+	}
+	return 0;
+}
+
+define ttest(str, m, n, verbose)
+{
+	local a, s, i, j;
+
+	if (isnull(verbose))
+		verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	i = rm("junk4600");
+	f = fopen("junk4600", "w");
+
+	if (isnull(n))
+		n = 4;
+	if (isnull(m))
+		m = 4;
+
+	mat A[m];
+	mat pos[m + 1];
+
+	pos[0] = 0;
+	for (i = 0; i < m; i++) {
+		j = 1 + randbit(n);
+		a = "";
+		while (j-- > 0)
+			a = strcat(a, char(rand(1, 256)));
+		A[i] = a;
+		fputs(f, a);
+		pos[i+1] = ftell(f);
+		if (verbose > 1)
+			printf("A[%d] has length %d\n", i, strlen(a));
+	}
+	if (verbose > 1)
+		printf("File has size %d\n", pos[i]);
+	freopen(f, "r");
+	if (size(f) != pos[i]) {
+		print 'failed';
+		printf("**** Failure 1 for file size\n");
+		return 1;
+	}
+	for (i = 0; i < m; i++) {
+		rewind(f);
+		for (;;) {
+			j = search(f, A[i]);
+			if (isnull(j) || j > pos[i]) {
+				print 'failed';
+				printf("**** Failure 2 for i = %d\n", i);
+				return 1;
+			}
+			if (j == pos[i])
+				break;
+			fseek(f, j + 1, 0);
+
+		}
+		if (ftell(f) != pos[i + 1]) {
+			print 'failed';
+			printf("**** Failure 3 for i = %d\n", i);
+			return 1;
+		}
+	}
+	for (i = m - 1; i >= 0; i--) {
+		fseek(f, 0, 2);
+		for (;;) {
+			j = rsearch(f, A[i]);
+			if (isnull(j) || j < pos[i]) {
+				print 'failed';
+				printf("**** Failure 4 for i = %d\n", i);
+				return 1;
+			}
+			if (j == pos[i])
+				break;
+			fseek(f, -1, 1);
+		}
+		if (ftell(f) != pos[i + 1]) {
+			print 'failed';
+			printf("**** Failure 5 for i = %d\n", i);
+			return 1;
+		}
+	}
+	i = rm("junk4600");
+	if (verbose > 0) {
+		printf("passed\n");
+	}
+	return 0;
+}
+
+define sprint(x)
+{
+	local i, n;
+
+	n = strlen(x);
+	for (i = 1; i <= n; i++) print ord(substr(x, i, 1)),;
+	print;
+}
+
+define findline(f,s)
+{
+
+	if (!isfile(f))
+		quit "First argument to be a file";
+	if (!isstr(s))
+		quit "Second argument to be a string";
+	if (!isnull(search(f,s))) {
+		rsearch(f, "\n");
+		print fgetline(f);
+	}
+}
+
+define findlineold(f,s)
+{
+	local str;
+
+	if (!isfile(f))
+		quit "First argument to be a file";
+	if (!isstr(s))
+		quit "Second argument to be a string";
+
+	while (!isnull(str = fgetline(f)) && strpos(str, s) == 0);
+		print str;
+}
+
+/*
+ * test4600 - perform all of the above tests a bunch of times
+ */
+define test4600(v, tnum)
+{
+	local n;	/* test parameter */
+	local i;
+
+	/*
+	 * set test parameters
+	 */
+	srand(4600e4600);
+
+	/*
+	 * test a lot of stuff
+	 */
+	for (i=0; i < 10; ++i) {
+		err += ttest(strcat(str(tnum++),
+			     ": ttest(",str(i),",",str(i),")"), i, i, v);
+		err += stest(strcat(str(tnum++), ": stest()"), v);
+	}
+
+	/*
+	 * report results
+	 */
+	if (v > 1) {
+		if (err) {
+			print "****", err, "error(s) found in testall";
+		} else {
+			print "no errors in testall";
+		}
+	}
+	return tnum;
+}
+
+global lib_debug;
+
+if (lib_debug >= 0) {
+	print "stest(str [, verbose]) defined";
+	print "ttest([m, [n [,verbose]]]) defined";
+	print "sprint(x) defined";
+	print "findline(f,s) defined";
+	print "findlineold(f,s) defined";
+	print "test4600(verbose, tnum) defined";
+}

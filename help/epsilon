@@ -1,0 +1,34 @@
+NAME
+    epsilon - set or read the stored epsilon value
+
+SYNOPSIS
+    epsilon([eps])
+
+TYPES
+    eps		real number greater than 0 and less than 1
+
+    return	real number greater than 0 and less than 1
+
+DESCRIPTION
+    Without args, epsilon() returns the current epsilon value.
+
+    With one arg, epsilon(eps) returns the current epsilon value
+    and sets the stored epsilon value to eps.
+
+    The stored epsilon value is used as default value for eps in
+    the functions appr(x, eps, rnd), sqrt(x, eps, rnd), etc.
+
+EXAMPLE
+    > oldeps = epsilon(1e-6)
+    > print epsilon(), sqrt(2), epsilon(1e-4), sqrt(2), epsilon(oldeps)
+    > .000001 1.414214 .000001 1.4142 .0001
+
+LIMITS
+    0 < eps < 1
+
+LIBRARY
+    void setepsilon(NUMBER *eps)
+    NUMBER *_epsilon_
+
+SEE ALSO
+    XXX - fill in

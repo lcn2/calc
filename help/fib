@@ -1,0 +1,28 @@
+NAME
+    fib - Fibonacci number
+
+SYNOPSIS
+    fib(n)
+
+TYPES
+    n		integer
+
+    return	integer
+
+DESCRIPTION
+    For any integer n, fib(n) returns the Fibonacci number with index n.
+    This may be defined by fib(0) = 0, fib(1) = 1 and for any n (positive
+    or negative) fib(n) = fib(n-1) + fib(n-2).
+
+EXAMPLE
+    > print fib(-2), fib(-1), fib(0), fib(1), fib(2), fib(3), fib(4), fib(5)
+    -1 1 0 1 1 2 3 5 -8
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qfib(NUMBER *n)
+
+SEE ALSO
+    XXX - fill in

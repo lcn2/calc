@@ -1,0 +1,26 @@
+NAME
+    im - imaginary part of a real or complex number
+
+SYNOPSIS
+    im(x)
+
+TYPES
+    x		real or complex
+
+    return	real
+
+DESCRIPTION
+    If x = u + v * 1i where u and v are real, im(x) returns v.
+
+EXAMPLE
+    > print im(2), im(2 + 3i), im(-4.25 - 7i)
+    0 3 -7
+
+LIMITS
+    none
+
+LIBRARY
+    COMPLEX *cimag(COMPLEX *x)
+
+SEE ALSO
+    re

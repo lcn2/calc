@@ -1,0 +1,26 @@
+NAME
+    hash - hash value
+
+SYNOPSIS
+    hash(x_1 [, x_2, x_3, ...])
+
+TYPES
+    x_1, x_1, ...	any
+
+    return		integer v, 0 <= v < 2^32
+
+DESCRIPTION
+    Returns a hash value for one or more values of arbitrary types.
+
+EXAMPLE
+    > a = isqrt(2e1000); s = "xyz";
+    > hash(a,s)
+	    870000771
+
+LIMITS
+    The number of arguments is not to exceed 100.
+
+LIBRARY
+    none
+
+SEE ALSO

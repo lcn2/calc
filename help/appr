@@ -1,0 +1,146 @@
+NAME
+    appr - approximate numbers by multiples of a specified number
+
+SYNOPSIS
+    appr(x [,y [,z]])
+
+TYPES
+    x		real, complex, matrix, list
+    y		real
+    z		integer
+
+    return	same type as x except that complex x may return a real number
+
+DESCRIPTION
+    Return the approximate value of x as specified by a specific error
+    (epsilon) and config ("appr") value.
+
+    The default value for y is epsilon().  The default value for z is
+    the current value of the "appr" configuration parameter.
+
+    If y is zero or x is a multiple of y, appr(x,y,z) returns x.  I.e.,
+    there is no "approximation" - the result represents x exactly.
+
+    In the following it is assumed y is nonzero and x is not a multiple of y.
+    For Real x:
+
+	appr(x,y,z) is either the nearest multiple of y greater
+	than x or the nearest multiple of y less than x.  Thus, if
+	we write a = appr(x,y,z) and r = x - a, then a/y is an integer
+	and abs(r) < abs(y).  If r > 0, we say x has been "rounded down"
+	to a; if r < 0, the rounding is "up".  For particular x and y,
+	whether the rounding is down or up is determined by z.
+
+	Only the 5 lowest bits of z are used, so we may assume z has been
+	replaced by its value modulo 32.  The type of rounding depends on
+	z as follows:
+
+	z = 0	round down or up according as y is positive or negative,
+		sgn(r) = sgn(y)
+
+	z = 1	round up or down according as y is positive or negative,
+		sgn(r) = -sgn(y)
+
+	z = 2	round towards zero, sgn(r) = sgn(x)
+
+	z = 3	round away from zero, sgn(r) = -sgn(x)
+
+	z = 4	round down
+
+	z = 5	round up
+
+	z = 6	round towards or from zero according as y is positive or
+		negative, sgn(r) = sgn(x/y)
+
+	z = 7	round from or towards zero according as y is positive or
+		negative, sgn(r) = -sgn(x/y)
+
+	z = 8	a/y is even
+
+	z = 9	a/y is odd
+
+	z = 10	a/y is even or odd according as x/y is positive or negative
+
+	z = 11	a/y is odd or even according as x/y is positive or negative
+
+	z = 12	a/y is even or odd according as y is positive or negative
+
+	z = 13	a/y is odd or even according as y is positive or negative
+
+	z = 14	a/y is even or odd according as x is positive or negative
+
+	z = 15	a/y is odd or even according as x is positive or negative
+
+	z = 16 to 31	abs(r) <= abs(y)/2; if there is a unique multiple
+		of y that is nearest x, appr(x,y,z) is that multiple of y
+		and then abs(r) < abs(y)/2.  If x is midway between
+		successive multiples of y, then abs(r) = abs(y)/2 and
+		the value of a is as given by appr(x, y, z-16).
+
+    Matrix or List x:
+
+	appr(x,y,z) returns the matrix or list indexed in the same way as x,
+	in which each element t has been replaced by appr(t,y,z).
+
+    XXX - complex x needs to be documented
+
+PROPERTIES
+	If appr(x,y,z) != x, then abs(x - appr(x,y,z)) < abs(y).
+
+	If appr(x,y,z) != x and 16 <= z <= 31, abs(x - appr(x,y,z)) <= abs(y)/2.
+
+	For z = 0, 1, 4, 5, 16, 17, 20 or 21, and any integer n,
+		appr(x + n*y, y, z) = appr(x, y, z) + n * y.
+
+	If y is nonzero, appr(x,y,8)/y = an odd integer n only if x = n * y.
+
+EXAMPLES
+    > print appr(-5.44,0.1,0), appr(5.44,0.1,0), appr(5.7,1,0), appr(-5.7,1,0)
+    -5.5 5.4 5 -6
+
+    > print appr(-5.44,-.1,0), appr(5.44,-.1,0), appr(5.7,-1,0), appr(-5.7,-1,0)
+    -5.4 5.5 6 -5
+
+    > print appr(-5.44,0.1,3), appr(5.44,0.1,3), appr(5.7,1,3), appr(-5.7,1,3)
+    -5.5 5.5 6 -6
+
+    > print appr(-5.44,0.1,4), appr(5.44,0.1,4), appr(5.7,1,4), appr(-5.7,1,4)
+    -5.5 5.4 5 -6
+
+    > print appr(-5.44,0.1,6), appr(5.44,0.1,6), appr(5.7,1,6), appr(-5.7,1,6)
+    -5.4 5.4 6 -5
+
+    > print appr(-5.44,-.1,6), appr(5.44,-.1,6), appr(5.7,-1,6), appr(-5.7,-1,6)
+    -5.5 5.5 6 -6
+
+    > print appr(-5.44,0.1,9), appr(5.44,0.1,9), appr(5.7,1,9), appr(-5.7,1,9)
+    -5.5 5.5 5 -5
+
+    > print appr(-.44,0.1,11), appr(.44,0.1,11), appr(5.7,1,11), appr(-5.7,1,11)
+    -.4 .5 5 -6
+
+    > print appr(-.44,-.1,11),appr(.44,-.1,11),appr(5.7,-1,11),appr(-5.7,-1,11)
+    -.5 .4 6 -5
+
+    > print appr(-.44,0.1,12), appr(.44,0.1,12), appr(5.7,1,12), appr(-5.7,1,12)
+    -.4 .5 5 -6
+
+    > print appr(-.44,-.1,12),appr(.44,-.1,12),appr(5.7,-1,12),appr(-5.7,-1,12)
+    -.5 .4 6 -5
+
+    > print appr(-.44,0.1,15), appr(.44,0.1,15), appr(5.7,1,15), appr(-5.7,1,15)
+    -.4 .5 5 -6
+
+    > print appr(-.44,-.1,15),appr(.44,-.1,15),appr(5.7,-1,15),appr(-5.7,-1,15)
+    -.4 .5 5 -6
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qmappr(NUMBER *q, NUMBER *e, long R);
+    LIST *listappr(LIST *oldlp, VALUE *v2, VALUE *v3);
+    MATRIX *matappr(MATRIX *m, VALUE *v2, VALUE *v3);
+
+SEE ALSO
+    round, bround, cfappr, cfsim

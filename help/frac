@@ -1,0 +1,42 @@
+NAME
+    frac - return the fractional part of a number or of numbers in a value
+
+SYNOPSIS
+    frac(x)
+
+TYPES
+    If x is an object of type xx, frac(x) requires xx_frac to have been
+    defined; other conditions on x and the value returned depend on
+    the definition of xx_frac.
+
+    For other x:
+
+    x		number (real or complex), matrix
+
+    return	number or matrix
+
+DESCRIPTION
+    If x is an integer, frac(x) returns zero.  For other real values of x,
+    frac(x) returns the real number f for which x = i + f, where i is an
+    integer, sgn(f) = sgn(x), and abs(f) < 1.
+
+    If x is complex, frac(x) returns frac(re(x)) + frac(im(x))*1i.
+
+    If x is a matrix, frac(x) returns the matrix m with the same structure
+    as x in which m[[i]] = frac(x[[i]]).
+
+EXAMPLE
+    > c = config("mode", "frac")
+    > print frac(3), frac(22/7), frac(27/7), frac(-3.125), frac(2.15 - 3.25i)
+    0 1/7 6/7 -1/8 3/20-1i/4
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qfrac(NUMBER *x)
+    COMPLEX *cfrac(COMPLEX *x)
+    MATRIX *matfrac(MATRIX *x)
+
+SEE ALSO
+    int, ceil, floor

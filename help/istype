@@ -1,0 +1,39 @@
+NAME
+    istype - whether the type of a value is the same as another
+
+SYNOPSIS
+    istype(x, y)
+
+TYPES
+    x		any, &any
+    y		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x has the same type as y.  This function will return 1
+    if x and y are of the same type, 0 otherwise.
+
+EXAMPLE
+    > print istype(2, 3), istype(2, 3.0), istype(2, 2.3)
+    1 1 1
+
+    > print istype(2, 3i), istype(2, "2"), istype(2, null())
+    0 0 0
+
+    > mat a[2]
+    > b = list(1,2,3)
+    > c = assoc()
+    > obj chongo {was, here} d;
+    > print istype(a,b), istype(b,c), istype(c,d)
+    0 0 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    isassoc, isfile, isident, isint, islist, ismat, isnull, isnum, isobj,
+    isreal, isstr, issimple

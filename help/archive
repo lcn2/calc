@@ -1,0 +1,25 @@
+Where to get the the latest versions of calc
+
+    Landon Noll maintains the official calc ftp archive at:
+
+	ftp://ftp.uu.net/pub/calc
+
+    Alpha test versions, complete with bugs, untested code and
+    experimental features may be fetched (if you are brave) under:
+
+	http://reality.sgi.com/chongo/calc/
+
+    One may join the calc testing group by sending a request to:
+
+	calc-tester-request@postofc.corp.sgi.com
+
+    Your message body (not the subject) should consist of:
+
+	subscribe calc-tester address
+	end
+	name your_full_name
+
+    where "address" is your EMail address and "your_full_name"
+    is your full name.
+
+    Landon Curt Noll <chongo@toad.com> /\oo/\

@@ -1,0 +1,29 @@
+NAME
+    ismat - whether a value is a matrix
+
+SYNOPSIS
+    ismat(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is a matrix.  This function will return 1 if x is
+    a matrix, 0 otherwise.
+
+EXAMPLE
+    > mat a[2]
+    > print ismat(a), ismat(1)
+    1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    isassoc, isfile, isident, isint, islist, isnull, isnum, isobj,
+    isreal, isstr, issimple, istype

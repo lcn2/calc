@@ -1,0 +1,28 @@
+NAME
+    isconfig - whether a value is a configuration state
+
+SYNOPSIS
+    isrand(x)
+
+TYPES
+    x		any, &any
+
+    return	int
+
+DESCRIPTION
+    Determine if x is a configuration state.  This function will return
+    1 if x is a file, 0 otherwise.
+
+EXAMPLE
+    > a = config("all")
+    > print isconfig(a), isconfig(0);
+    1 0
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    config

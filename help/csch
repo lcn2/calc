@@ -1,0 +1,32 @@
+NAME
+    csch - hyperbolic cosecant
+
+SYNOPSIS
+    csch(x [,eps])
+
+TYPES
+    x		nonzero real
+    eps		nonzero real, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Calculate the csch of x to a multiple of epsilon, with error less in
+    absolute value than .75 * eps.
+
+    csch(x) = 2/(exp(x) - exp(-x))
+
+EXAMPLE
+    > print csch(1, 1e-5), csch(1, 1e-10), csch(1, 1e-15), csch(1, 1e-20)
+    .85092 .8509181282 .850918128239322 .85091812823932154513
+
+LIMITS
+    unlike sin and cos, x must be real
+    x != 0
+    eps > 0
+
+LIBRARY
+    NUMBER *qcsch(NUMBER *x, NUMBER *eps)
+
+SEE ALSO
+    sinh, cosh, tanh, sech, coth, epsilon

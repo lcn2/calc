@@ -1,0 +1,39 @@
+NAME
+    prevprime - nearest prime less than specified number
+
+SYNOPSIS
+    prevprime(n [,err])
+
+TYPES
+    n		real
+    err		integer
+
+    return	positive integer or err
+
+DESCRIPTION
+    If n is an integer and 2 < n < 2^32, prevprime(n) returns the
+    nearest prime less than n.
+
+    If n <= 2 or >= 2^32 or n is fractional, prevprime(n, err)
+    returns the value of err.
+
+    Other cases cause a runtime error.
+
+EXAMPLE
+    > print prevprime(10), prevprime(100), prevprime(1e6)
+    7 97 999983
+
+    > print prevprime(2,-99), prevprime(2^32,-99)
+    -99 -99
+
+    > print prevprime(2)
+    pprime arg 1 is <= 2
+
+LIMITS
+    none
+
+LIBRARY
+    FULL zpprime(ZVALUE z)
+
+SEE ALSO
+    nextprime

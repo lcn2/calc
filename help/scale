@@ -1,0 +1,38 @@
+NAME
+    scale - scale a number or numbers in a value by a power of 2
+
+SYNOPSIS
+    scale(x, n)
+
+TYPES
+    If x is an xx-object, scale(x, n) requires xx_scale() to have been
+    defined; conditions on x and n and the type of value returned are
+    determined by the definition of xx_scale().
+
+    For other x:
+
+    x		number (real or complex) or matrix
+    n		integer
+
+    return	same type as x
+
+DESCRIPTION
+    Returns the value of 2^n * x.
+
+    scale(x,n) returns the same as x << n and x >> -n if x is an integer
+    for which 2^n * x is an integer.
+
+EXAMPLE
+    > print scale(3, 2), scale(3,1), scale(3,0), scale(3,-1), scale(3,-2)
+    12 6 3 1.5 .75
+
+LIMITS
+    For non-object x, abs(n) < 2^31
+
+LIBRARY
+    NUMBER *qscale(NUMBER *x, long n)
+    COMPLEX *cscale(COMPLEX *x, long n)
+    MATRIX *matscale(MATRIX *x, long n)
+
+SEE ALSO
+    XXX - fill in

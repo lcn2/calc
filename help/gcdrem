@@ -1,0 +1,54 @@
+NAME
+    gcdrem - result of removing factors of integer common to a specified integer
+
+SYNOPSIS
+    gcdrem(x, y)
+
+TYPES
+    x		integer
+    y		integer
+
+    return	non-negative integer
+
+DESCRIPTION
+
+    If x and y are not zero, gcdrem(x, y) returns the greatest integer
+    divisor d of x relatively prime to y, i.e. for which gcd(d,y) = 1.
+    In particular, gcdrem(x,y) = abs(x) if x and y are relatively
+    prime.
+
+    For all x, gcdrem(x, 0) = 1.
+
+    For all nonzero y, gcdrem(0, y) = 0.
+
+PROPERTIES
+    gcdrem(x,y) = gcd(abs(x), abs(y)).
+
+    If x is not zero, gcdrem(x,y) = gcdrem(x, gcd(x,y)) = gcdrem(x, y % x).
+
+    For fixed nonzero x, gcdrem(x,y) is periodic with period abs(x).
+
+    gcdrem(x,y) = 1 if and only if every prime divisor of x
+	is a divisor of y.
+
+    If x is not zero, gcdrem(x,y) == abs(x) if and only if gcd(x,y) = 1.
+
+    If y is not zero and p_1, p_2, ..., p_k are the prime divisors of y,
+
+	gcdrem(x,y) = frem(...(frem(frem(x,p_1),p_2)...,p_k)
+
+EXAMPLE
+    > print gcdrem(6,15), gcdrem(15,6), gcdrem(72,6), gcdrem(6,72)
+    2 5 1 1
+
+    > print gcdrem(630,6), gcdrem(6,630)
+    35 1
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qgcdrem(NUMBER *x, NUMBER *y)
+
+SEE ALSO
+    gcd, frem, isrel

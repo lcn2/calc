@@ -1,0 +1,38 @@
+NAME
+    errno - return a system error message
+
+SYNOPSIS
+    errno(errnum)
+
+TYPES
+    errnum	int
+
+    return	string
+
+DESCRIPTION
+    If a file builtin function such as fopen() encounters an error,
+    it will return an errno number.  This function will convert this
+    number into a somewhat more meaningful string.
+
+    Note that errno() may return different strings on different systems.
+
+EXAMPLE
+    > badfile = fopen("not_a_file", "r")
+    > if (!isfile(badfile)) print "error #" : badfile : ":", errno(badfile);
+    error #2: No such file or directory
+
+    > print errno(13)
+    Permission denied
+
+    > errno(31)
+	    "Too many links"
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, files, fopen,
+    fprintf, isfile, printf, prompt

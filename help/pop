@@ -1,0 +1,46 @@
+NAME
+    pop - pop a value from front of a list
+
+SYNOPSIS
+    pop(lst)
+
+TYPES
+    lst		list, &list
+
+    return	any
+
+DESCRIPTION
+     This function removes index 0 and returns it.
+
+     This function is equivalent to calling delete(lst, 0).
+
+EXAMPLE
+    > lst = list(2,"three")
+
+    list (2 elements, 2 nonzero):
+      [[0]] = 2
+      [[1]] = "three"
+
+    > pop(lst)
+	    2
+    > print lst
+
+    list (1 elements, 1 nonzero):
+      [[0]] = "three"
+
+    > pop(lst)
+	    "three"
+    > print lst
+    list (0 elements, 0 nonzero)
+    > pop(lst)
+    > print lst
+    list (0 elements, 0 nonzero)
+
+LIMITS
+    none
+
+LIBRARY
+    none
+
+SEE ALSO
+    append, delete, insert, islist, list, push, remove, rsearch, search, size

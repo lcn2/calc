@@ -1,0 +1,78 @@
+NAME
+    quo - compute integer quotient of a value by a real number
+
+SYNOPSIS
+    quo(x, y, rnd) or x // y
+
+TYPES
+    If x is a matrix or list, the returned value is a matrix or list v of
+    the same structure for which each element v[[i]] = quo(x[[i]], y, rnd).
+
+    If x is an xx-object or x is not an object and y is an xx-object,
+    this function calls the user-defined function xx_quo(x, y, rnd);
+    the types of arguments and returned value are as required by the
+    definition of xx_quo().
+
+    If neither x nor y is an object, and x is not a matrix or list:
+
+    x		number (real or complex)
+    y		real
+    rnd		integer, defaults to config("quo")
+
+    return	number
+
+DESCRIPTION
+    If x is real or complex and y is zero, quo(x, y, rnd) returns zero.
+
+    If x is complex, quo(x, y, rnd) returns
+		 quo(re(x), y, rnd) + quo(im(x), y, rnd) * 1i.
+
+    In the following it is assumed that x is real and y is nonzero.
+
+    If x/y is an integer quo(x, y, rnd) returns x/y.
+
+    If x is real, y nonzero and x/y is not an integer, x // y returns
+       one of the two integers v for which abs(x/y - v) < 1.  Which
+       integer is returned is controlled by rnd as follows:
+
+		rnd	sign of x/y - v         Description of rounding
+
+		0	      + 	 	down, towards minus infinity
+		1             - 		up, towards infinity
+		2	    sgn(x/y)		towards zero
+		3	   -sgn(x/y)		from zero
+		4	    sgn(y)
+		5	   -sgn(y)
+		6	    sgn(x)
+		7	   -sgn(x)
+		8				to nearest even integer
+		9				to nearest odd integer
+	       10				even if x/y > 0, otherwise odd
+	       11				odd if x/y > 0, otherwise even
+	       12				even if y > 0, otherwise odd
+	       13				odd if y > 0, otherwise even
+	       14				even if x > 0, otherwise odd
+	       15				odd if x > 0, otherwise even
+
+	     16-31				to nearest integer when this
+						is uniquely determined;
+						otherwise, when x/y is a
+						half-integer, as if
+						rnd replaced by rnd & 15
+
+EXAMPLE
+    print quo(11,5,0), quo(11,5,1), quo(-11,5,2), quo(-11,-5,3)
+    2 3 -2 3
+
+    print quo(12.5,5,16), quo(12.5,5,17), quo(12.5,5,24), quo(-7.5,-5,24)
+    2 3 2 2
+
+LIMITS
+    none
+
+LIBRARY
+    void quovalue(VALUE *x, VALUE *y, VALUE *rnd, VALUE *result)
+    NUMBER *qquo(NUMBER *x, NUMBER *y, long rnd)
+
+SEE ALSO
+    mod, quomod, //, %

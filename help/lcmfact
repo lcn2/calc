@@ -1,0 +1,27 @@
+NAME
+    lcmfact - lcm of positive integers up to specified integer
+
+SYNOPSIS
+    lcmfact(n)
+
+TYPES
+    n		positive integer
+
+    return	positive integer
+
+DESCRIPTION
+    Returns the lcm of the integers 1, 2, ..., n.
+
+EXAMPLE
+    > for (i = 1; i <= 15; i++) print lcmfact(i),:;
+    1 2 6 12 60 60 420 840 2520 2520 27720 27720 360360 360360 360360
+
+LIMITS
+    n < 2^24
+
+LIBRARY
+    NUMBER *qlcmfact(NUMBER *n)
+    void zlcmfact(ZVALUE z, ZVALUE *dest)
+
+SEE ALSO
+    lcm, fact

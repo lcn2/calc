@@ -1,0 +1,127 @@
+NAME
+    printf - formatted print to standard output
+
+SYNOPSIS
+    printf(fmt, x_1, x_2, ...)
+
+TYPES
+    fmt			string
+    x_1, x_2, ...	any
+
+    return		null
+
+DESCRIPTION
+    The function printf() is similar to the C function with the same name.
+    The most significant difference is that there is no requirement
+    that the types of values of the arguments x_i match the
+    corresponding format specifier in fmt.  Thus, whatver the
+    format specifier, a number is printed as a number, a string as
+    a string, a list as a list, a matrix as a matrix, an xx-object
+    as an xx-object, etc.
+
+    Except when a '%' is encountered, characters of the string fmt are
+    printed in succession to the standard output.  Occurrence of
+    a '%' indicates the intention to build a format specifier.
+    This is completed by a succession of characters as follows:
+
+	    an optional '-'
+	    zero or more decimal digits
+	    an optional '. followed by zero or more decimal deigits
+	    an optional 'l'
+	    one of the letters: d, s, c, f, e, r, o, x, b,
+
+    If any other character is read, the '%' and any characters
+    between '%' and the character are ignored and no specifier is
+    formed.  E.g. "%+f" prints as if only "f" were read; "% 10s"
+    prints as "10s", "%X" prints as "X", "%%" prints as "%".
+
+    The characters in a format specifier are interpreted as follows:
+
+	    a minus sign sets the right-pad flag;
+	    the first group of digits determines the width w;
+		    w = 0 if there are no digits
+	    a dot indicates the precision is to be read from the
+		    following digits; if there is no dot,
+		    precision = config("display").
+	    any digits following the . determines the precision p;
+		    p = 0 if there are no digits
+	    any 'l' before the final letter is ignored
+	    the final letter determines the mode as follows:
+
+	    d, s, c		current config("mode")
+	    f		real (decimal, floating point)
+	    e		exponential
+	    r		fractional
+	    o		octal
+	    x		hexadecimal
+	    b		binary
+
+    If the number of arguments after fmt is less than the
+    number of format specifiers in fmt, the "missing" arguments
+    may be taken to be null values - these contribute nothing to the
+    output; if a positive width w has been specified, the effect is
+    to produce w spaces, e.g. printf("abc%6dxyz") prints "abc      xyz".
+
+    If i <= the number of specifiers in fmt, the value of argument x_i
+    is printed in the format specified by the i-th specifier.
+    If a positive width w has been specified and normal printing of x_i
+    does not include a '\n' character, what is printed will if necessary
+    be padded with spaces so that the length of the printed output
+    is at least the w.  Note that control
+    characters like '\t', '\b' each count as one character.  If
+    the 'right-pad' flag has been set, the padding is on the right;
+    otherwise it is on the left.
+
+    If i > the number of specifiers in fmt, the value of argument x_i
+    does not contribute to the printing.  However, as all arguments
+    are evaluated before printing occurs, side-effects of the
+    evaluation of x_i might affect the result.
+
+    If the i-th specifier is of numerical type, any numbers in the
+    printing of x_i will be printed in the specified format, unless
+    this is modified by the printing procedure for x_i's type.  Any
+    specified precision will be ignored except for floating-point
+    mode.
+
+    In the case of floating-point (f) format the precision determines
+    the maximum number of decimal places to be
+    displayed.  Other aspects of this printing may be affected by the
+    configuration parameters "outround", "tilde", "fullzero", "leadzero".
+
+EXAMPLE
+    > c = config("epsilon", 1e-6); c = config("display", 6);
+    > c = config("tilde", 1); c = config("outround", 0);
+    > c = config("fullzero", 0);
+    > fmt = "%f,%10f,%-10f,%10.4f,%.4f,%.f.\n";
+    > a = sqrt(3);
+    > printf(fmt,a,a,a,a,a,a);
+    1.732051,  1.732051,1.732051  ,   ~1.7320,~1.7320,~1.
+
+    > c = config("tilde", 0); c = config("outround",24);
+    > c = config("fullzero", 1);
+    > printf(fmt,a,a,a,a,a,a);
+    1.732051,  1.732051,1.732051  ,    1.7321,1.7321,2.
+
+    > mat A[4] = {sqrt(2), 3/7, "undefined", null()};
+    > printf("%f%r",A,A);
+    mat [4] (4 elements, 4 nonzero):
+      [0] = 1.414214
+      [1] = .428571
+      [2] = "undefined"
+      [3] = NULL
+
+    mat [4] (4 elements, 4 nonzero):
+      [0] = 707107/500000
+      [1] = 3/7
+      [2] = "undefined"
+      [3] = NULL
+
+
+LIMITS
+    The number of arguments of printf() is not to exceed 100.
+
+LIBRARY
+    none
+
+SEE ALSO
+    fprintf, strprintf, print

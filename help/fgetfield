@@ -1,0 +1,52 @@
+NAME
+    fgetfield - read the next word from a file
+
+SYNOPSIS
+    fgetfield(fs)
+
+TYPES
+    fs		file stream open for reading
+
+    return	string, null or error value
+
+DESCRIPTION
+    If characters cannot be read from the file, an error value is returned.
+
+    Otherwise starting at the current file position, any whitespace
+    characters are skipped.  If the reading reaches end-of-file, the
+    null value is returned.  If non-whitespace is encountered, formation
+    of a string begins, continuing until whitespace of '\0' or end-of-file
+    is reached.  The returned value is this string (terminated as usual
+    by a null character).  After the operation, the file position will
+    be immediately after the first whitespace character of '\0' or at
+    end-of-file.
+
+EXAMPLE
+
+    > f = fopen("/tmp/junk", "w")
+    > fputs(f, " Alpha Beta \n")
+    > freopen(f, "r")
+    > fgetfield(f)
+	"Alpha"
+    > fgetfield(f)
+	"Beta"
+    > fgetfield(f)
+    >
+    > freopen(f, "w")
+    > fputstr(f, " Alpha  ", "Beta")
+    > freopen(f, "r")
+    > fgetfield(f)
+	"Alpha"
+    > fgetfield(f)
+	""
+    > fgetfield(f)
+	"Beta"
+
+LIMITS
+    none - XXX - is this correct?
+
+LIBRARY
+    none - XXX - is this correct?
+
+SEE ALSO
+    fgetstr, fputstr, fgets, fputs, fopen, files, fprintf

@@ -1,0 +1,36 @@
+NAME
+    trunc - truncate a value to a number of decimal places
+
+SYNOPSIS
+    trunc(x [,j])
+
+TYPES
+    x		real
+    j		int
+
+    return	real
+
+DESCRIPTION
+    Truncate x to j decimal places.  If j is omitted, 0 places is assumed.
+    Specifying zero places makes the result identical to int().
+
+    Truncation of a non-integer prodcues values nearer to zero.
+
+EXAMPLE
+    > print trunc(pi()), trunc(pi(), 5)
+    3 3.14159
+
+    > print trunc(3.333), trunc(3.789), trunc(3.333, 2), trunc(3.789, 2)
+    3 3 3.33 3.78
+
+    > print trunc(-3.333), trunc(-3.789), trunc(-3.333, 2), trunc(-3.789, 2)
+    -3 -3 -3.33 -3.78
+
+LIMITS
+    0 <= j < 2^31
+
+LIBRARY
+    NUMBER *qtrunc(NUMBER *x, *j)
+
+SEE ALSO
+    bround, btrunc, int, round

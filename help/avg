@@ -1,0 +1,50 @@
+NAME
+    avg - average (arithmetic) mean of values
+
+SYNOPSIS
+    avg(x_1, x_2, ...)
+
+TYPES
+    x_1, ...	arithmetic or list
+
+    return	as determined by types of items averaged
+
+DESCRIPTION
+    If there are n non-list arguments x_1, x_2, ..., x_n,
+    for which the required additions and division by n are defined,
+    avg(x_1, x_2, ..., x_n) returns the value of:
+
+	(x_1 + x_2 + ... + x_n)/n.
+
+    If the x_i are real, the result will be a real number; if the
+    x_i are real or complex numbers, the result will be a real or complex
+    number.  If the x_i are summable matrices the result will be a matrix
+    of the same size (e.g. if the x_i are all 3 x 4 matrices with real
+    entries, the result will be a 3 x 4 matrix with real entries).
+
+    If an argument x_i is list-valued, e.g. list(y_1, y_2, ...), this
+    is treated as contributing y_1, y_2, ... to the list of items to
+    be averaged.
+
+EXAMPLE
+    > print avg(1,2,3,4,5), avg(list(1,2,3,4,5)), avg(1,2,list(3,4,5))
+    3 3 3
+
+    > mat x[2,2] = {1,2,3,4}
+    > mat y[2,2] = {1,2,4,8}
+    > avg(x,y)
+
+    mat [2,2] (4 elements, 4 nonzero):
+      [0,0] = 1
+      [0,1] = 2
+      [1,0] = 3.5
+      [1,1] = 6
+
+LIMITS
+   The number of arguments is not to exceed 100.
+
+LIBRARY
+    none
+
+SEE ALSO
+    hmean

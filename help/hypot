@@ -1,0 +1,28 @@
+NAME
+    hypot - hypotenuse of a right-angled triangle given the other sides
+
+SYNOPSIS
+    hypot(x, y [,eps])
+
+TYPES
+    x, y	real
+    eps		nonzero real
+
+    return	real
+
+DESCRIPTION
+    Returns sqrt(x^2 + y^2) to the nearest multiple of eps.
+    The default value for eps is epsilon().
+
+EXAMPLE
+    > print hypot(3, 4, 1e-6), hypot(2, -3, 1e-6)
+    5 3.605551
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qhypot(NUMBER *q1, *q2, *epsilon)
+
+SEE ALSO
+    ltol

@@ -1,0 +1,62 @@
+NAME
+    rcmul - REDC multiplication
+
+SYNOPSIS
+    rcmul(x, y, m)
+
+TYPES
+    x		integer
+    y		integer
+    m		odd positive integer
+
+    return	integer v, 0 <= v < m.
+
+DESCRIPTION
+    Let B be the base calc uses for representing integers internally
+    (B = 2^16 for 32-bit machines, 2^32 for 64-bit machines)
+    and N the number of words (base-B digits) in the representation
+    of m.  Then rcmul(x,y,m) returns the value of B^-N * x * y % m,
+    where the inverse implicit in B^-N is modulo m
+    and the modulus operator % gives the least non-negative residue.
+
+    The normal use of rcmul() may be said to be that of multiplying modulo m
+    values encoded by rcin() and REDC functions, as in:
+
+	    rcin(x * y, m) = rcmul(rcin(x,m), rcin(y,m), m),
+
+    or with only one factor encoded:
+
+	    x * y % m = rcmul(rcin(x,m), y, m).
+
+RUNTIME
+    If the value of m in rcmul(x,y,m) is being used for the first time
+    in a REDC function, the information required for the REDC
+    algorithms is calculated and stored for future use, possibly
+    replacing an already stored valued, in a table covering up to 5
+    (i.e. MAXREDC) values of m.  The runtime required for this is about
+    two times that required for multiplying two N-word integers.
+
+    Two algorithms are available for evaluating rcmul(x,y,m), the one
+    which is usually faster for small N is used when N <
+    config("redc2"); the other is usually faster for larger N. If
+    config("redc2") is set at about 90 and x and y have both been
+    reduced modulo m, the runtime required for rcmul(x,y,m) is at most
+    about f times the runtime required for an N-word by N-word
+    multiplication, where f increases from about 1.3 for N = 1 to near
+    3 for N > 90.  More runtime may be required if x and y have to be
+    reduced modulo m.
+
+EXAMPLE
+    Using a 64-bit machine with B = 2^32:
+
+    > print rcin(4 * 5, 9), rcmul(rcin(4,9), rcin(5,9), 9), rcout(8, 9);
+    8 8 2
+
+LIMITS
+    none
+
+LIBRARY
+    void zredcmul(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
+
+SEE ALSO
+    rcin, rcout, rcsq, rcpow

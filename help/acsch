@@ -1,0 +1,33 @@
+NAME
+    acsch - inverse hyperbolic cosecant
+
+SYNOPSIS
+    acsch(x [,eps])
+
+TYPES
+    x		nonzero real
+    eps		nonzero real, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Returns the acsch of x to a multiple of eps with error less in
+    absolute value than .75 * eps.
+
+    acsch(x) = ln((1 + sqrt(1 + x^2))/x) is the real number v for
+    which csch(v) = x.
+
+EXAMPLE
+    > print acsch(2, 1e-5), acsch(2, 1e-10), acsch(2, 1e-15), acsch(2, 1e-20)
+    .48121 .4812118251 .481211825059603 .4812118250596034475
+
+LIMITS
+    unlike sin and cos, x must be real
+    x != 0
+    eps > 0
+
+LIBRARY
+    NUMBER *qacsch(NUMBER *x, NUMBER *eps)
+
+SEE ALSO
+    asinh, acosh, atanh, asech, acoth, epsilon

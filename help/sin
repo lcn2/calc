@@ -1,0 +1,36 @@
+NAME
+    sin - trigonometric sine
+
+SYNOPSIS
+    sin(x [,eps])
+
+TYPES
+    x		number (real or complex)
+    eps		nonzero real, defaults to epsilon()
+
+    return	number
+
+DESCRIPTION
+    Calculate the sine of x to a multiple of eps with error less in
+    absolute value than .75 * eps.
+
+EXAMPLE
+    > print sin(1, 1e-5), sin(1, 1e-10), sin(1, 1e-15), sin(1, 1e-20)
+    .84147 .8414709848 .841470984807896 .84147098480789650665
+
+    > print sin(2 + 3i, 1e-5), sin(2 + 3i, 1e-10)
+    9.1545-4.16891i 9.1544991469-4.16890696i
+
+    > pi = pi(1e-20)
+    > print sin(pi/6, 1e-10), sin(pi/2, 1e-10), sin(pi, 1e-10)
+    .5 1 0
+
+LIMITS
+    eps > 0
+
+LIBRARY
+    NUMBER *qsin(NUMBER *x, NUMBER *eps)
+    COMPLEX *csin(COMPLEX *x, NUMBER *eps)
+
+SEE ALSO
+    cos, tan, sec, csc, cot, epsilon

@@ -1,0 +1,52 @@
+NAME
+    fclose - close a file
+
+SYNOPSIS
+    fclose(fd)
+
+TYPES
+    fd		file
+
+    return	nul or int
+
+DESCRIPTION
+    This function closes the open file associated with the descriptor fd.
+    When this is done, the file value associated with the file remains
+    a file value, but appears 'closed', and cannot be used in further
+    file-related calls (except fclose) without causing errors.  This same
+    action occurs to all copies of the file value.  You do not need to
+    explicitly close all the copies of a file value.
+
+    Standard input, standard output and standard error are always opened
+    and cannot be closed.
+
+    The truth value of an closed file is FALSE.
+
+    The fclose function returns the numeric value of errno if
+    there had been an error using the file, or the null value if
+    there was no error.
+
+    Closing a closed file is permitted.  Fclose returns null in
+    this case.
+
+EXAMPLE
+    > fd = fopen("/etc/motd", "r")
+    > if (fd) print "file is open";
+    file is open
+
+    > err = fclose(fd);
+    > if (isnull(err)) print "close successful"; else errno(err);
+    close successful
+
+    > if (!fd) print "file is closed";
+    file is closed
+
+LIMITS
+    fd != files(0) && fd != files(1) && fd != files(2)
+
+LIBRARY
+    none
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt

@@ -1,0 +1,38 @@
+NAME
+    den - denominator of a real number
+
+SYNOPSIS
+    den(x)
+
+TYPES
+    x		real
+
+    return	integer
+
+DESCRIPTION
+    For real x, den(x) returns the denominator of x.  In calc,
+    real values are actually rational values.  Each calc real
+    value can be uniquely expressed as:
+
+	n / d
+
+    where:
+
+	n and d are integers
+	gcd(n,d) == 1
+	d > 0
+
+    If x = n/x, then den(x) == d.
+
+EXAMPLE
+    > print den(7), den(-1.25), den(121/33)
+    1 4 3
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *qden(NUMBER *x)
+
+SEE ALSO
+    num

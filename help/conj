@@ -1,0 +1,35 @@
+NAME
+    conj - complex conjugate
+
+SYNOPSIS
+    conj(x)
+
+TYPES
+    If x is an object of type xx, conj(x) calls xx_conj(x).
+
+    For non-object x:
+
+    x		real, complex, or matrix
+
+    return	real, complex, or matrix
+
+DESCRIPTION
+    For real x, conj(x) returns x.
+
+    For complex x, conj(x) returns re(x) - im(x) * 1i.
+
+    For matrix x, conj(x) returns a matrix of the same structure as x
+    in which each element t of x has been replaced by conj(t).
+
+EXAMPLE
+    > print conj(3), conj(3 + 4i)
+    3 3-4i
+
+LIMITS
+    none
+
+LIBRARY
+    void conjvalue(VALUE *x, *res)
+
+SEE ALSO
+    norm, abs, arg
