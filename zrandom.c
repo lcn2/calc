@@ -1572,6 +1572,12 @@ static RANDOM random_pregen[BLUM_PREGEN] = {
 
 
 /*
+ * forward static declarations
+ */
+static void zfree_random(ZVALUE z);
+
+
+/*
  * zsrandom1 - seed the Blum generator 1 arg style
  *
  * We will seed the Blum generator according 2 argument
@@ -1647,7 +1653,7 @@ zsrandom1(CONST ZVALUE seed, BOOL need_ret)
 		do {
 			/* free temp storage */
 			if (last_r.v != NULL) {
-				zfree(last_r);
+				zfree_random(last_r);
 			}
 
 			/*
@@ -1657,10 +1663,10 @@ zsrandom1(CONST ZVALUE seed, BOOL need_ret)
 			last_r = r;
 			zsquaremod(last_r, blum.n, &r);
 		} while (zrel(r, last_r) > 0);
-		zfree(blum.r);
+		zfree_random(blum.r);
 		blum.r = r;
 		/* free temp storage */
-		zfree(last_r);
+		zfree_random(last_r);
 
 	/*
 	 * reserved seed
@@ -1741,7 +1747,7 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 			math_error("srandom small newn must be [1,20]");
 			/*NOTREACHED*/
 		}
-		zfree(blum.n);
+		zfree_random(blum.n);
 		zcopy(random_pregen[set-1].n, &blum.n);
 		blum.loglogn = random_pregen[set-1].loglogn;
 		blum.mask = random_pregen[set-1].mask;
@@ -1750,7 +1756,7 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 		 * reset initial seed as well if seed is 0
 		 */
 		if (ziszero(seed)) {
-			zfree(blum.r);
+			zfree_random(blum.r);
 			zcopy(random_pregen[set-1].r, &blum.r);
 
 		/*
@@ -1785,7 +1791,7 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 		 * of two primes.
 		 */
 		/* load modulus */
-		zfree(blum.n);
+		zfree_random(blum.n);
 		zcopy(newn, &blum.n);
 
 		/*
@@ -1894,11 +1900,11 @@ zsrandom4(CONST ZVALUE seed, CONST ZVALUE ip, CONST ZVALUE iq, long trials)
 	/*
 	 * form the Blum modulus
 	 */
-	zfree(blum.n);
+	zfree_random(blum.n);
 	zmul(p, q, &blum.n);
 	/* free temp storage */
-	zfree(p);
-	zfree(q);
+	zfree_random(p);
+	zfree_random(q);
 
 	/*
 	 * form the loglogn and mask
@@ -2045,7 +2051,7 @@ zrandomskip(long cnt)
 
 		/* turn the Blum-Blum-Shub crank */
 		zsquaremod(blum.r, blum.n, &new_r);
-		zfree(blum.r);
+		zfree_random(blum.r);
 		blum.r = new_r;
 		cnt -= blum.loglogn;
 	}
@@ -2057,7 +2063,7 @@ zrandomskip(long cnt)
 
 		/* turn the Blum-Blum-Shub crank */
 		zsquaremod(blum.r, blum.n, &new_r);
-		zfree(blum.r);
+		zfree_random(blum.r);
 		blum.r = new_r;
 
 		/* fill the buffer with the unused bits */
@@ -2197,7 +2203,7 @@ zrandom(long cnt, ZVALUE *res)
 		 * turn the Blum-Blum-Shub crank
 		 */
 		zsquaremod(blum.r, blum.n, &new_r);
-		zfree(blum.r);
+		zfree_random(blum.r);
 		blum.r = new_r;
 		/* peal off the bottom loglogn bits */
 		blum.buffer = (blum.r.v[0] & mask);
@@ -2228,7 +2234,7 @@ zrandom(long cnt, ZVALUE *res)
 	 */
 	/* turn the Blum-Blum-Shub crank */
 	zsquaremod(blum.r, blum.n, &new_r);
-	zfree(blum.r);
+	zfree_random(blum.r);
 	blum.r = new_r;
 	/* peal off the bottom loglogn bits */
 	blum.buffer = (blum.r.v[0] & mask);
@@ -2282,13 +2288,13 @@ zrandomrange(CONST ZVALUE low, CONST ZVALUE high, ZVALUE *res)
 	 */
 	zsub(high, low, &range);
 	if (zisone(range)) {
-		zfree(range);
+		zfree_random(range);
 		*res = low;
 		return;
 	}
 	zsub(range, _one_, &rangem1);
 	bitlen = 1+zhighbit(rangem1);
-	zfree(rangem1);
+	zfree_random(rangem1);
 
 	/*
 	 * generate a random value between [0, diff)
@@ -2302,7 +2308,7 @@ zrandomrange(CONST ZVALUE low, CONST ZVALUE high, ZVALUE *res)
 	rval.v = NULL;
 	do {
 		if (rval.v != NULL) {
-			zfree(rval);
+			zfree_random(rval);
 		}
 		zrandom(bitlen, &rval);
 	} while (zrel(rval, range) >= 0);
@@ -2312,8 +2318,8 @@ zrandomrange(CONST ZVALUE low, CONST ZVALUE high, ZVALUE *res)
 	 * which is the range [low, high)
 	 */
 	zadd(rval, low, res);
-	zfree(rval);
-	zfree(range);
+	zfree_random(rval);
+	zfree_random(range);
 }
 
 
@@ -2341,8 +2347,8 @@ irandom(long s)
 	itoz(s, &z1);
 	zrandomrange(_zero_, z1, &z2);
 	res = ztoi(z2);
-	zfree(z1);
-	zfree(z2);
+	zfree_random(z1);
+	zfree_random(z2);
 	return res;
 }
 
@@ -2377,12 +2383,20 @@ randomcopy(CONST RANDOM *state)
 	if (state->r.v == NULL) {
 		ret->r.v = NULL;
 	} else {
-		zcopy(state->r, &ret->r);
+		if (state->r.v == h_rdefvec) {
+			ret->r.v = state->r.v;
+		} else {
+			zcopy(state->r, &ret->r);
+		}
 	}
 	if (state->n.v == NULL) {
 		ret->n.v = NULL;
 	} else {
-		zcopy(state->n, &ret->n);
+		if (state->n.v == h_ndefvec) {
+			ret->n.v = state->n.v;
+		} else {
+			zcopy(state->n, &ret->n);
+		}
 	}
 
 	/*
@@ -2414,12 +2428,8 @@ randomfree(RANDOM *state)
 	}
 
 	/* free the values */
-	if (state->n.v != h_ndefvec) {
-		zfree(state->n);
-	}
-	if (state->r.v != h_rdefvec) {
-		zfree(state->r);
-	}
+	zfree_random(state->n);
+	zfree_random(state->r);
 
 	/* free it if it is not pre-defined */
 	state->seeded = 0;
@@ -2505,9 +2515,43 @@ randomprint(CONST RANDOM *state, int flags)
 void
 random_libcalc_cleanup(void)
 {
-	/* free if we are seeded now */
-	if (blum.seeded) {
-		randomfree(&blum);
+	/* free our state - let zfree_random protect the default state */
+	randomfree(&blum);
+	return;
+}
+
+
+/*
+ * zfree_random - perform a zfree if we are not trying to free static data
+ *
+ * given:
+ *	z	the ZVALUE to zfree(z) if not pointing to static data
+ */
+static void
+zfree_random(ZVALUE z)
+{
+	if (z.v != h_ndefvec && z.v != h_rdefvec && z.v != h_rdefvec_2 &&
+	    z.v != h_nvec01 && z.v != h_rvec01 &&
+	    z.v != h_nvec02 && z.v != h_rvec02 &&
+	    z.v != h_nvec03 && z.v != h_rvec03 &&
+	    z.v != h_nvec04 && z.v != h_rvec04 &&
+	    z.v != h_nvec05 && z.v != h_rvec05 &&
+	    z.v != h_nvec06 && z.v != h_rvec06 &&
+	    z.v != h_nvec07 && z.v != h_rvec07 &&
+	    z.v != h_nvec08 && z.v != h_rvec08 &&
+	    z.v != h_nvec09 && z.v != h_rvec09 &&
+	    z.v != h_nvec10 && z.v != h_rvec10 &&
+	    z.v != h_nvec11 && z.v != h_rvec11 &&
+	    z.v != h_nvec12 && z.v != h_rvec12 &&
+	    z.v != h_nvec13 && z.v != h_rvec13 &&
+	    z.v != h_nvec14 && z.v != h_rvec14 &&
+	    z.v != h_nvec15 && z.v != h_rvec15 &&
+	    z.v != h_nvec16 && z.v != h_rvec16 &&
+	    z.v != h_nvec17 && z.v != h_rvec17 &&
+	    z.v != h_nvec18 && z.v != h_rvec18 &&
+	    z.v != h_nvec19 && z.v != h_rvec19 &&
+	    z.v != h_nvec20 && z.v != h_rvec20) {
+		zfree(z);
 	}
 	return;
 }

@@ -458,6 +458,7 @@ eatstring(int quotechar)
 		}
 		memcpy(str + totlen, buf, len);
 		totlen += len;
+		len = 0;
 	    }
 	}
   	curtoken.t_strindex = addstring(str, totlen + len);

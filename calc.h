@@ -127,7 +127,6 @@ extern long linenumber(void);
 extern void runrcfiles(void);
 extern void closeinput(void);
 
-
 /*
  * Other routines.
  */
@@ -140,7 +139,6 @@ extern void givehelp(char *type);
 extern void libcalc_call_me_first(void);
 extern void libcalc_call_me_last(void);
 extern void showerrors(void);
-
 
 /*
  * Initialization

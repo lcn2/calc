@@ -72,6 +72,7 @@ static int strscan(char *s, int count, VALUE **vals);
 static int filescan(FILEID id, int count, VALUE **vals);
 static VALUE f_eval(VALUE *vp);
 static VALUE f_fsize(VALUE *vp);
+static int malloced_putenv(char *str);
 
 
 
@@ -85,6 +86,19 @@ extern void listrandperm(LIST *lp);
 extern int idungetc(FILEID id, int ch);
 
 extern int stoponerror;
+
+
+/*
+ * malloced environment storage
+ */
+#define ENV_POOL_CHUNK 10	/* env_pool elements to allocate at a time */
+struct env_pool {
+    char *getenv;	/* what getenv() would return, NULL => unused */
+    char *putenv;	/* pointer given to putenv() */
+};
+static int env_pool_cnt = 0;	/* number of env_pool elements in use */
+static int env_pool_max = 0;	/* number of env_pool elements allocated */
+static struct env_pool *e_pool = NULL;	/* env_pool elements */
 
 
 /*
@@ -5977,8 +5991,7 @@ f_putenv(int count, VALUE **vals)
 
 	/* return putenv result */
 	result.v_type = V_NUM;
-	result.v_num = itoq((long) putenv(putenv_str));
-	free(putenv_str);
+	result.v_num = itoq((long) malloced_putenv(putenv_str));
 	return result;
 }
 
@@ -7519,6 +7532,147 @@ showerrors(void)
 	for (i = E_USERDEF; i < nexterrnum; i++)
 		printf("%d: %s\n", i,
 			namestr(&newerrorstr, i - E_USERDEF));
+}
+
+
+/*
+ * malloced_putenv - Keep track of malloced environment variable storage
+ *
+ * given:
+ *	str	a malloced string which will be given to putenv
+ *
+ * returns:
+ *	putenv() return value
+ *
+ * NOTE: The caller MUST pass a string that the caller has previously malloced.
+ */
+static int
+malloced_putenv(char *str)
+{
+	char *value;	/* location of the value part of the str argument */
+	char *old_val;	/* previously stored (or inherited) env value */
+	int found_cnt;	/* number of active env_pool entries found */
+	struct env_pool *new;	/* new e_pool */
+	int i;
+
+	/*
+	 * firewall
+	 */
+	if (str == NULL) {
+		math_error("malloced_putenv given a NULL pointer!!");
+		/*NOTREACHED*/
+	}
+	if (str[0] == '=') {
+		math_error("malloced_putenv = is first character in string!!");
+		/*NOTREACHED*/
+	}
+
+	/*
+	 * determine the place where getenv would return
+	 */
+	value = strchr(str, '=');
+	if (value == NULL) {
+		math_error("malloced_putenv = not found in string!!");
+		/*NOTREACHED*/
+	}
+	++value;
+
+	/*
+	 * lookup for an existing environment value
+	 */
+	*(value-1) = '\0';
+	old_val = getenv(str);
+	*(value-1) = '=';
+
+	/*
+	 * If we have the value in our environment, look for a
+	 * previously malloced string and free it
+	 */
+	if (old_val != NULL && env_pool_cnt > 0) {
+		for (i=0, found_cnt=0;
+		     i < env_pool_max && found_cnt < env_pool_cnt;
+		     ++i) {
+
+			/* skip an unused entry */
+			if (e_pool[i].getenv == NULL) {
+			    continue;
+			}
+			++found_cnt;
+
+			/* look for the 1st match */
+			if (e_pool[i].getenv == value) {
+
+				/* found match, free the storage */
+				if (e_pool[i].putenv != NULL) {
+					free(e_pool[i].putenv);
+				}
+				e_pool[i].getenv = NULL;
+				--env_pool_cnt;
+				break;
+			}
+		}
+	}
+
+	/*
+	 * ensure that we have room in the e_pool
+	 */
+	if (env_pool_max == 0) {
+
+		/* allocate an initial pool (with one extra guard value) */
+		new = (struct env_pool *)malloc((ENV_POOL_CHUNK+1) *
+						sizeof(struct env_pool));
+		if (new == NULL) {
+			math_error("malloced_putenv malloc failed");
+			/*NOTREACHED*/
+		}
+		e_pool = new;
+		env_pool_max = ENV_POOL_CHUNK;
+		for (i=0; i <= ENV_POOL_CHUNK; ++i) {
+			e_pool[i].getenv = NULL;
+		}
+
+	} else if (env_pool_cnt >= env_pool_max) {
+
+		/* expand the current pool (with one extra guard value) */
+		new = (struct env_pool *)realloc(e_pool,
+					     (env_pool_max+ENV_POOL_CHUNK+1) *
+					     sizeof(struct env_pool));
+		if (new == NULL) {
+			math_error("malloced_putenv realloc failed");
+			/*NOTREACHED*/
+		}
+		e_pool = new;
+		for (i=env_pool_max; i <= env_pool_max + ENV_POOL_CHUNK; ++i) {
+			e_pool[i].getenv = NULL;
+		}
+		env_pool_max += ENV_POOL_CHUNK;
+	}
+
+	/*
+	 * store our data into the first e_pool entry
+	 */
+	for (i=0; i < env_pool_max; ++i) {
+
+		/* skip used entries */
+		if (e_pool[i].getenv != NULL) {
+			continue;
+		}
+
+		/* store in this free entry and stop looping */
+		e_pool[i].getenv = value;
+		e_pool[i].putenv = str;
+		++env_pool_cnt;
+		break;
+	}
+	if (i >= env_pool_max) {
+		math_error("malloced_putenv missed unused entry!!");
+		/*NOTREACHED*/
+	}
+
+	/*
+	 * finally, do the putenv action
+	 */
+	return putenv(str);
 }
 
 

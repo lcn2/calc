@@ -118,6 +118,21 @@ Following is the change from calc version 2.11.0t7 to date:
      Converted start_done into a general calc run state enum called
      run_state within the calc source.
 
+     Removed README.OLD.
+
+     Added the Makefile variable ${LCC} to invoke the local c compiler.
+     By default, ${CC} also run the ${LCC} compiler.  The distinction is
+     useful when using something such as purify.  In the case of ${LCC},
+     only the local C compiler is invoked.  In the case of ${CC} a purify
+     compile is invoked.  Only the source that must be compiled and run
+     on the local machine use ${LCC}; everything else uses ${CC}.
+
+     Fixed memory buffer ovreread problem in eatstring() in token.c.
+
+     Fixed memory leaks related to putenv().
+
+     Fixed memory leaks realted to srandom().
+
      Misc calc man page fixes.
 
 

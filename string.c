@@ -1142,7 +1142,7 @@ initstrings(void)
 
 /*
  * addstring is called only from token.c
- * When called, len is length if string including '\0'
+ * When called, len is length of string including '\0'
  */
 long
 addstring(char *str, long len)

@@ -4223,7 +4223,7 @@ define test_random()
 
 	/* test range interface some more */
 	tmp = srandom(state1);
-	print				  '5369: tmp = srandom(0)';
+	print				  '5369: tmp = srandom(state1)';
 	vrfy(random(-46,46) == -0x7,	  '5370: random(-46,46) == -0x7');
 	vrfy(random(21701,23209) == 23061,
 		'5371: random(21701,23209) == 23061');
