@@ -1,4 +1,4 @@
-#!/usr/local/src/cmd/calc/calc -S
+#!/usr/local/src/cmd/calc/calc -q -f
 #
 # piforever - print digits of pi forever (or as long as your mem/cpu allow)
 #
@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.2 $
-# @(#) $Id: piforever.calc,v 29.2 2000/06/07 14:02:59 chongo Exp $
+# @(#) $Revision: 29.3 $
+# @(#) $Id: piforever.calc,v 29.3 2000/12/15 14:56:54 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/piforever.calc,v $
 #
 # Under source code control:	1999/11/30 00:11:36

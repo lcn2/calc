@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: func.c,v 29.3 2000/06/07 14:02:13 chongo Exp chongo $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: func.c,v 29.5 2000/12/04 19:32:33 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -162,7 +162,7 @@ static STRINGHEAD newerrorstr;
 /*
  * arg count definitions
  */
-#define IN 100		/* maximum number of arguments */
+#define IN 1024		/* maximum number of arguments */
 #define FE 0x01		/* flag to indicate default epsilon argument */
 #define FA 0x02		/* preserve addresses of variables */
 

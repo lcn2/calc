@@ -1,27 +1,27 @@
 NAME
-    freebernoulli - free stored Benoulli numbers
+    freeeuler - free stored Euler numbers
 
 SYNOPSIS
-    freebernoulli()
+    freeeuler()
 
 TYPES
     return	none
 
 DESCRIPTION
-    The memory used to store calculated bernoulli numbers is freed by
-    freebernoulli().
+    The memory used to store calculated Euler numbers is freed by
+    freeeuler().
 
 EXAMPLE
-    > freebernoulli();
+    > freeeuler();
 
 LIMITS
     none
 
 LINK LIBRARY
-    void qfreebern(void);
+    void qfreeeuler(void);
 
 SEE ALSO
-    bernoulli
+    euler, bernoulli, freebernoulli
 
 ## Copyright (C) 2000  Ernest Bowen
 ##
@@ -39,11 +39,11 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: freebernoulli,v 29.2 2000/07/17 15:36:26 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/freebernoulli,v $
+## @(#) $Revision: 29.1 $
+## @(#) $Id: freeeuler,v 29.1 2000/12/14 10:31:45 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/freeeuler,v $
 ##
-## Under source code control:	2000/07/13
+## Under source code control:	2000/12/14 01:33:00
 ## File existed as early as:	2000
 ##
 ## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

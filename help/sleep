@@ -1,27 +1,46 @@
 NAME
-    freebernoulli - free stored Benoulli numbers
+    sleep - suspend operation for a specified time
 
 SYNOPSIS
-    freebernoulli()
+    sleep([n])
 
 TYPES
-    return	none
+    n		non-negative real, defaults to 1
+
+    return	integer or null value
 
 DESCRIPTION
-    The memory used to store calculated bernoulli numbers is freed by
-    freebernoulli().
+    This uses the C-library sleep (if n is integral) or usleep (for
+    non-integral n) to suspend operation for n seconds.  If n is an
+    integer and the sleep is stopped by an interruption, the number
+    of seconds remaining is returned.
+
+    One kind of use is to slow down output to permit easier reading of
+    results, as in:
+
+	> for (i = 0; i < 100; i++) {
+		print sqrt(i);
+		sleep(1/2);
+	}
+
+    The following illustrates what happens if ctrl-C is hit 5 seconds
+    after the first command:
+	
+	> print sleep(20)
+
+	[Abort level 1]
+	15
+	>
 
 EXAMPLE
-    > freebernoulli();
+    > sleep(1/3);
+    > sleep(20);
 
-LIMITS
+LIBRARY
     none
 
-LINK LIBRARY
-    void qfreebern(void);
-
 SEE ALSO
-    bernoulli
+    none
 
 ## Copyright (C) 2000  Ernest Bowen
 ##
@@ -39,11 +58,11 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: freebernoulli,v 29.2 2000/07/17 15:36:26 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/freebernoulli,v $
+## @(#) $Revision: 29.1 $
+## @(#) $Id: sleep,v 29.1 2000/12/14 10:31:45 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/sleep,v $
 ##
-## Under source code control:	2000/07/13
+## Under source code control:	2000/12/14 01:33:00
 ## File existed as early as:	2000
 ##
 ## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

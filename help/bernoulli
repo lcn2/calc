@@ -22,7 +22,7 @@ DESCRIPTION
 
     Considerable runtime and memory are required for calculating
     bernoulli(n) for large even n.  For n = 1000, the numerator has
-    1779 digits, the denominator 9 digits.
+    1779 digits, the denominator 9 digits.  
 
     The memory used to store calculated bernoulli numbers is freed by
     freebernoulli().
@@ -35,11 +35,11 @@ EXAMPLE
 LIMITS
     n < 2^31-1
 
-LINK LIBRARY
+LIBRARY
     NUMBER *qbernoulli(long n)
 
 SEE ALSO
-    euler, freebernoulli, catalan, comb, fact, perm
+    euler, catalan, comb, fact, perm
 
 ## Copyright (C) 2000  Ernest Bowen
 ##
@@ -57,11 +57,11 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: sin,v 29.2 2000/06/07 14:02:33 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/sin,v $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: bernoulli,v 29.3 2000/12/14 10:32:24 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/bernoulli,v $
 ##
-## Under source code control:	2000/07/13
+## Under source code control:	2000/07/13 01:33:00
 ## File existed as early as:	2000
 ##
 ## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

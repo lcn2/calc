@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: regress.cal,v 29.3 2000/06/07 14:02:25 chongo Exp chongo $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: regress.cal,v 29.5 2000/12/04 20:00:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -7536,6 +7536,15 @@ print;
 print '8500: Starting test_divmod'
 read -once "test8500";
 /* 85xx: Ending test_divmod is printed by test8500.cal */
+
+
+/*
+ * test_maxargs - test up to 1024 args being passed to a builtin function
+ */
+print;
+print '8600: Starting test_1024args'
+read -once "test8600";
+/* 86xx: Ending test_1024args is printed by test8600.cal */
 
 
 /*

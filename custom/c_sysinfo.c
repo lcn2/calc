@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: c_sysinfo.c,v 29.3 2000/06/07 14:03:03 chongo Exp chongo $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: c_sysinfo.c,v 29.4 2000/07/17 15:37:12 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_sysinfo.c,v $
  *
  * Under source code control:	1997/03/09 23:14:40

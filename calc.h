@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: calc.h,v 29.3 2000/06/07 14:02:13 chongo Exp chongo $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: calc.h,v 29.5 2000/12/04 19:32:33 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -62,7 +62,7 @@
 #define SYMBOLSIZE	256	/* maximum symbol name size */
 #define MAXLABELS	100	/* maximum number of user labels in function */
 #define MAXSTRING	1024	/* maximum size of string constant */
-#define MAXSTACK	1000	/* maximum depth of evaluation stack */
+#define MAXSTACK	2048	/* maximum depth of evaluation stack */
 #define MAXFILES	20	/* maximum number of opened files */
 #define PROMPT1		"> "	/* default normal prompt*/
 #define PROMPT2		">> "	/* default prompt inside multi-line input */

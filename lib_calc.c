@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: lib_calc.c,v 29.3 2000/06/07 14:02:13 chongo Exp chongo $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: lib_calc.c,v 29.4 2000/07/17 15:35:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.c,v $
  *
  * Under source code control:	1996/06/17 18:06:19

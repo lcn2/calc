@@ -1,27 +1,30 @@
 NAME
-    freebernoulli - free stored Benoulli numbers
+    calc_tty - restore normal input conditions for interactive use
 
 SYNOPSIS
-    freebernoulli()
+    calc_tty()
 
 TYPES
-    return	none
+    return	none if appears to be successful, error-value otherwise
 
 DESCRIPTION
-    The memory used to store calculated bernoulli numbers is freed by
-    freebernoulli().
+    This may enable a return to normal operation if abnormal activity
+    results from a change of one or more terminal characteristics, as
+    may occur when activity is resumed by an fg command after a ctrl-Z
+    interrupt, or by any of the three commands:
+
+		> !stty echo
+		> !stty -cbreak
+		> !stty echo -cbreak
 
 EXAMPLE
-    > freebernoulli();
+    > calc_tty();
 
-LIMITS
+LIBRARY
     none
 
-LINK LIBRARY
-    void qfreebern(void);
-
 SEE ALSO
-    bernoulli
+    none
 
 ## Copyright (C) 2000  Ernest Bowen
 ##
@@ -39,11 +42,11 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: freebernoulli,v 29.2 2000/07/17 15:36:26 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/freebernoulli,v $
+## @(#) $Revision: 29.1 $
+## @(#) $Id: calc_tty,v 29.1 2000/12/14 10:31:45 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/calc_tty,v $
 ##
-## Under source code control:	2000/07/13
+## Under source code control:	2000/12/14 01:33:00
 ## File existed as early as:	2000
 ##
 ## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

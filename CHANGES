@@ -1,4 +1,25 @@
-The following are the changes from calc version 2.11.3t0 to date:
+The following are the changes from calc version 2.11.4t1 to date:
+
+    Added missing test8600.cal test file.
+
+    Fixes cscript files to deal with the -S flag being replaced by
+    -f and possibly other flags.
+
+
+The following are the changes from calc version 2.11.3t0 to 2.11.4:
+
+    Increased the maximum number of args for functions from 100 to 1024.
+    Increased calc's internal evaluation stack from 1024 to 2048 args.
+    Added test8600.cal to the regression suite to test these new limits.
+
+    Updated and fixed misc typos in calc/README.
+
+    Clarified in the COPYING file that ALL calc source files, both
+    LGPL covered and exceptions to the LGPL files may be freely used
+    and distributed.
+
+    Added help files or updated for: bernoulli, calc_tty, catalan,
+    digit, digits, euler, freeeuler, places and sleep.
 
     A collection of 18 patches from Ernest Bowen
     <ernie at turing dot une dot edu dot au>:
@@ -167,7 +188,7 @@ The following are the changes from calc version 2.11.3t0 to date:
     size of n in digit(x, n, b), for example, digit(1/7, -1e100) which
     would not work before can now be handled.
 
-    (13) The function, digits(x)m which returns the number of decimal
+    (13) The function, digits(x), which returns the number of decimal
     digits in the integer part of x has been changed so that if abs(x) <
     1, it returns 0 rather than 1.  This also now applies to digits(x,b).
 
@@ -4998,8 +5019,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.11 $
-## @(#) $Id: CHANGES,v 29.11 2000/06/07 15:51:35 chongo Exp chongo $
+## @(#) $Revision: 29.14 $
+## @(#) $Id: CHANGES,v 29.14 2000/12/15 14:58:20 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

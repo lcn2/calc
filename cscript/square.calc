@@ -1,8 +1,8 @@
 #!/usr/local/src/cmd/calc/calc -q -f
 #
-# simple - an example of a simple calc shell script
+# sqaure - print the squares of input values
 #
-# Copyright (C) 1999  Landon Curt Noll
+# Copyright (C) 2000  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,18 +18,18 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.3 $
-# @(#) $Id: simple.calc,v 29.3 2000/12/15 14:56:54 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/simple.calc,v $
+# @(#) $Revision: 29.1 $
+# @(#) $Id: square.calc,v 29.1 2000/12/15 14:55:59 chongo Exp $
+# @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/square.calc,v $
 #
-# Under source code control:	1999/11/29 10:22:37
-# File existed as early as:	1999
+# Under source code control:	2000/12/15 06:52:01
+# File existed as early as:	2000
 #
-# chongo <was here> /\oo/\	http://www.isthe.com/chongo/
 # Share and enjoy!  :-) http://www.isthe.com/chongo/tech/comp/calc/
 
+# usage:
+#	mersenne exp
 
-/*
- * This is an example of a simple calc shell script.
- */
-print "This simple calc shell script works!"
+global s;
+while ((s = prompt("")))
+	print "\t":eval(s)^2;
