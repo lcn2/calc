@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: seed.c,v 29.3 2001/02/25 22:07:36 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: seed.c,v 29.4 2001/03/17 21:31:47 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/seed.c,v $
  *
  * Under source code control:	1999/10/03 10:06:53
@@ -47,9 +47,9 @@
 #endif
 
 #if defined(_WIN32)
-#include <process.h>
-#define pid_t int
-#endif /* Windoz */
+# include <process.h>
+# define pid_t int
+#endif
 
 /*
  * PORTING NOTE:
@@ -75,8 +75,8 @@
 #include <sys/times.h>
 #endif
 #if !defined(_WIN32)
-#include <sys/resource.h>
-#endif /* Windoz free systems */
+# include <sys/resource.h>
+#endif
 #include <setjmp.h>
 #include "qmath.h"
 #include "longbits.h"
@@ -308,7 +308,9 @@ pseudo_seed(void)
 	struct timeval tp;		/* time of day */
 #endif
 	pid_t getpid;			/* process ID */
+#if !defined(_WIN32)
 	pid_t getppid;			/* parent process ID */
+#endif
 #if defined(HAVE_UID_T)
 	uid_t getuid;			/* real user ID */
 	uid_t geteuid;			/* effective user ID */
@@ -387,7 +389,9 @@ pseudo_seed(void)
     (void) gettimeofday(&sdata.tp, NULL);
 #endif
     sdata.getpid = getpid();
+#if !defined(_WIN32)
     sdata.getppid = getppid();
+#endif
 #if defined(HAVE_UID_T)
     sdata.getuid = getuid();
     sdata.geteuid = geteuid();

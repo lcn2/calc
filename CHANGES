@@ -1,6 +1,6 @@
 The following are the changes from calc version 2.11.5t0 to date:
 
-    Fixed a compile problem with Linux 2.4 / Debian.  Thanks goes 
+    Fixed a compile problem with Linux 2.4 / Debian.  Thanks goes
     to Martin Buck <m at rtin-buck dot de> for help with this issue.
 
     Fixed a bug in how L64_FORMAT (it determined if "%ld" or "%lld"
@@ -10,10 +10,43 @@ The following are the changes from calc version 2.11.5t0 to date:
 
     An effort was made to make calc easier to build under Windoz
     using the Cygwin project (http://sources.redhat.com/cygwin/).
-    Thanks to the work of Thomas Jones-Low (tjoneslo and softstart 
+    Thanks to the work of Thomas Jones-Low (tjoneslo and softstart
     dot com), a number of #if defined(_WIN32)'s have been added
     to calc source.  These changes should not effect Windoz
     free system such as GNU/Linux, Solaris, POSIX-like, etc ...
+
+    Added windll.h to deal with Windoz related DLL issues.
+    Using the convention of 'extern DLL' instead of 'DLL extern'
+    to deal with symbols that export to or import from a DLL.
+
+    Added HAVE_MALLOC_H, HAVE_STDLIB_H, HAVE_STRING_H, HAVE_TIMES_H,
+    HAVE_SYS_TIMES_H, HAVE_TIME_H, HAVE_SYS_TIME_H, HAVE_UNISTD_H
+    and HAVE_URANDOM to the Makefile.  If these symcols are empty,
+    then the Makefile looks for the appropriate system include file.
+    If they are YES, then the Makefile will assume they exist.
+    If they are NO, then the Makefile will assume they do not exist.
+
+    Changed HAVE_URANDOM to match the empty, YES, NO values.
+    If HAVE_URANDOM is empty, then the Makefile will look for /dev/urandom.
+    If HAVE_URANDOM is YES, then the Makefile will assume /dev/urandom exists.
+    If HAVE_URANDOM is NO, then the Makefile will assume /dev/urandom does
+    not exist.
+
+    If TERMCONTROL is -DUSE_WIN32, then the Windoz terminal control
+    (no TERMIOS, no TERMIO, no SGTTY) will be assumed.
+
+    Added a win32_hsrc Makefile rule to create hsrc files appropriate
+    for a Windoz system using Cygwin gcc environment.  Added win32.mkdef
+    which is used by the win32_hsrc rule to set the Windoz specific
+    Makefile values to build hsrc files.  The hsrc files are built
+    under the win32 directory.
+
+    Added FPOS_POS_BITS, OFF_T_BITS, DEV_BITS and INODE_BITS Makefile
+    symbiols to allow one to force the size of a file position, file
+    offset, dev and inode value.  Leaving these values blank will
+    Makefile to determine their size.
+
+    Fixed a bug in the way file offsets, device and inode values are copied.
 
 
 The following are the changes from calc version 2.11.4t1 to date:
@@ -5059,8 +5092,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.20 $
-## @(#) $Id: CHANGES,v 29.20 2001/02/25 22:07:36 chongo Exp $
+## @(#) $Revision: 29.22 $
+## @(#) $Id: CHANGES,v 29.22 2001/03/18 03:27:28 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

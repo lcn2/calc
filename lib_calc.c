@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: lib_calc.c,v 29.5 2001/02/25 22:07:36 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: lib_calc.c,v 29.6 2001/03/17 21:31:47 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.c,v $
  *
  * Under source code control:	1996/06/17 18:06:19
@@ -32,7 +32,10 @@
 #include <stdio.h>
 #include <setjmp.h>
 #include <signal.h>
-#include <pwd.h>
+
+#if !defined(_WIN32)
+# include <pwd.h>
+#endif
 
 #include "calc.h"
 #include "zmath.h"
@@ -63,7 +66,7 @@
 # include <termios.h>
 typedef struct termios ttystruct;
 
-#elif defined(USE_TERMIOS)
+#elif defined(USE_TERMIO)
 
 # include <termio.h>
 typedef struct termio ttystruct;
@@ -73,12 +76,20 @@ typedef struct termio ttystruct;
 # include <sys/ioctl.h>
 typedef struct sgttyb ttystruct;
 
-#elif !defined(_WIN32)
+#else
+
+typedef struct {int fd;} ttystruct;
+
+#endif
+
+#if !defined(_WIN32)
+# if !defined(USE_SGTTY) && !defined (USE_TERMIOS) && !defined(USE_TERMIO)
 
 -=*#*=- A Windoz free system without termio, termios or sgtty!!! -=*#*=-
 -=*#*=- We do not know how to compile for such a host, sorry!!!! -=*#*=-
 
-#endif
+# endif
+#endif /* Windoz */
 
 /*
  * in case we do not have certain .h files
@@ -199,7 +210,7 @@ libcalc_call_me_first(void)
 	 */
 #if !defined(_WIN32)
 	(void) signal(SIGPIPE, SIG_IGN);
-#endif /* Windoz free systems */
+#endif
 
 	/*
 	 * determine the basename
@@ -382,7 +393,7 @@ initenv(void)
 {
 #if !defined(_WIN32)
 	struct passwd *ent;		/* our password entry */
-#endif /* Windoz free systems */
+#endif
 	char *c;
 
 	/* determine the $CALCPATH value */
@@ -742,7 +753,7 @@ calc_tty(int fd)
 		printf("calc_tty: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
 		       "VMIN=1 VTIME=0: fd %d\n", fd);
 
-#else /* assume USE_SGTTY */
+#elif defined (USE_SGTTY)/* assume USE_SGTTY */
 
 	/*
 	 * assume USE_SGTTY tty state method
@@ -768,6 +779,10 @@ calc_tty(int fd)
 	if (conf->calc_debug & CALCDBG_TTY)
 		printf("calc_tty: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
 		       "VMIN=1 VTIME=0: fd %d\n", fd);
+
+#else /* Using none of the above */
+	fd_cur[slot] = fd_orig[slot];
+
 #endif
 
 	/*
@@ -833,7 +848,7 @@ orig_tty(int fd)
 	if (conf->calc_debug & CALCDBG_TTY)
 		printf("orig_tty: TCSETAW restored fd %d\n", fd);
 
-#else /* assume USE_SGTTY */
+#elif defined (USE_SGTTY)/* assume USE_SGTTY */
 
 	/*
 	 * assume USE_SGTTY tty state method
@@ -841,6 +856,12 @@ orig_tty(int fd)
 	(void) tcsetattr(fd, TCSANOW, fd_orig+slot);
 	if (conf->calc_debug & CALCDBG_TTY)
 		printf("orig_tty: TCSANOW restored fd %d\n", fd);
+
+#else /* nothing assigned */
+
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf ("orig_tty: nothing restored to fd %d\n", fd);
+
 #endif
 
 	/*

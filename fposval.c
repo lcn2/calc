@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: fposval.c,v 29.5 2001/02/25 21:01:34 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: fposval.c,v 29.6 2001/03/18 03:01:41 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/fposval.c,v $
  *
  * Under source code control:	1994/11/05 03:19:52
@@ -87,7 +87,11 @@ main(int argc, char **argv)
 #if defined(HAVE_FPOS_POS)
 	fileposlen = FPOS_POS_BITS;
 #else /* ! HAVE_FPOS_POS */
+# if defined(FPOS_BITS)
+	fileposlen = FPOS_BITS;
+# else
 	fileposlen = sizeof(FILEPOS)*8;
+# endif
 #endif /* ! HAVE_FPOS_POS */
 	printf("#undef FILEPOS_BITS\n");
 	printf("#define FILEPOS_BITS %d\n", fileposlen);
@@ -127,7 +131,11 @@ main(int argc, char **argv)
 	/*
 	 * print the stat file size information
 	 */
+#if defined(OFF_T_BITS)
+	stsizelen = OFF_T_BITS;
+#else
 	stsizelen = sizeof(buf.st_size)*8;
+#endif
 	printf("#undef OFF_T_BITS\n");
 	printf("#define OFF_T_BITS %d\n", stsizelen);
 #if CALC_BYTE_ORDER == BIG_ENDIAN
@@ -161,7 +169,7 @@ main(int argc, char **argv)
 	 * systems, a off_t is not a scalar hince we must memcpy.
 	 */
 	printf("#define SWAP_HALF_IN_OFF_T(dest, src)\t%s%d%s\n",
-	    "memcpy((void *)(dest), (void *)(src), sizeof(",stsizelen,"))");
+	    "memcpy((void *)(dest), (void *)(src), ", stsizelen/8, ")");
 #endif /* HAVE_OFF_T_SCALAR */
 #endif /* CALC_BYTE_ORDER == BIG_ENDIAN */
 	putchar('\n');
@@ -169,7 +177,11 @@ main(int argc, char **argv)
 	/*
 	 * print the dev_t size
 	 */
+#if defined(DEV_BITS)
+	devlen = DEV_BITS;
+#else
 	devlen = sizeof(buf.st_dev)*8;
+#endif
 	printf("#undef DEV_BITS\n");
 	printf("#define DEV_BITS %d\n", devlen);
 #if CALC_BYTE_ORDER == BIG_ENDIAN
@@ -198,14 +210,18 @@ main(int argc, char **argv)
 	 * systems, a DEV is not a scalar hince we must memcpy.
 	 */
 	printf("#define SWAP_HALF_IN_DEV(dest, src)\t%s%d%s\n",
-	    "memcpy((void *)(dest), (void *)(src), sizeof(",devlen,"))");
+	    "memcpy((void *)(dest), (void *)(src), ", devlen/8, ")");
 #endif /* CALC_BYTE_ORDER == BIG_ENDIAN */
 	putchar('\n');
 
 	/*
 	 * print the ino_t size
 	 */
+#if defined(INODE_BITS)
+	inodelen = INODE_BITS;
+#else
 	inodelen = sizeof(buf.st_ino)*8;
+#endif
 	printf("#undef INODE_BITS\n");
 	printf("#define INODE_BITS %d\n", inodelen);
 #if CALC_BYTE_ORDER == BIG_ENDIAN
@@ -234,7 +250,7 @@ main(int argc, char **argv)
 	 * systems, a INODE is not a scalar hince we must memcpy.
 	 */
 	printf("#define SWAP_HALF_IN_INODE(dest, src)\t%s%d%s\n",
-	    "memcpy((void *)(dest), (void *)(src), sizeof(",inodelen,"))");
+	    "memcpy((void *)(dest), (void *)(src), ", inodelen/8, ")");
 #endif /* CALC_BYTE_ORDER == BIG_ENDIAN */
 	/* exit(0); */
 	return 0;

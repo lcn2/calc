@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: codegen.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: codegen.c,v 29.4 2001/03/17 21:31:47 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -44,6 +44,10 @@
 #include "string.h"
 #include "func.h"
 #include "conf.h"
+
+#if defined(_WIN32)
+# include <direct.h>
+#endif
 
 static BOOL rdonce;	/* TRUE => do not reread this file */
 

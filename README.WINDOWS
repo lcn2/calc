@@ -64,7 +64,7 @@ People who maintain calc need to keep in mind the following:
 
 The following was added to opcodes.h, config.h, zmath.h and value.h:
 
-	#if defined (_WIN32)
+	#if defined(_WIN32)
 	#ifdef _EXPORTING
 	  #define DLL	__declspec(dllexport)
 	#else
@@ -102,8 +102,8 @@ was changed to:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: README.WINDOWS,v 29.2 2001/02/25 22:20:38 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: README.WINDOWS,v 29.3 2001/03/17 21:31:47 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/README.WINDOWS,v $
 ##
 ## Under source code control:	2001/02/25 14:00:05

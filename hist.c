@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: hist.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: hist.c,v 29.3 2001/03/17 21:31:47 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hist.c,v $
  *
  * Under source code control:	1993/05/02 20:09:19
@@ -40,7 +40,9 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#include <pwd.h>
+#if !defined(_WIN32)
+# include <pwd.h>
+#endif
 
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)

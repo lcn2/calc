@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.14 $$
-# @(#) $Id: Makefile.ship,v 29.14 2001/02/25 22:07:36 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.18 $$
+# @(#) $Id: Makefile.ship,v 29.18 2001/03/18 03:26:52 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -46,6 +46,7 @@ MAKEFILE_REV= $$Revision: 29.14 $$
 #	-DUSE_TERMIOS	  use struct termios from <termios.h>
 #	-DUSE_TERMIO	  use struct termios from <termio.h>
 #	-DUSE_SGTTY	  use struct sgttyb from <sys/ioctl.h>
+#	-DUSE_NOTHING	  windoz system, don't use any of them
 #
 # If in doubt, leave TERMCONTROL empty.
 #
@@ -53,6 +54,7 @@ TERMCONTROL=
 #TERMCONTROL= -DUSE_TERMIOS
 #TERMCONTROL= -DUSE_TERMIO
 #TERMCONTROL= -DUSE_SGTTY
+#TERMCONTROL= -DUSE_WIN32
 
 # If your system does not have a vsprintf() function, you could be in trouble.
 #
@@ -81,14 +83,14 @@ HAVE_VSPRINTF=
 # If in doubt, leave BYTE_ORDER empty.	This Makefile will attempt to
 # use BYTE_ORDER in <machine/endian.h> or it will attempt to run
 # the endian program.  If you get syntax errors when you compile,
-# try forcing the value to be BIG_ENDIAN and run the calc regression
+# try forcing the value to be -DBIG_ENDIAN and run the calc regression
 # tests. (see the README file)	If the calc regression tests fail, do
-# a make clobber and try LITTLE_ENDIAN.	 If that fails, ask a wizard
+# a make clobber and try -DLITTLE_ENDIAN.   If that fails, ask a wizard
 # for help.
 #
 BYTE_ORDER=
-#BYTE_ORDER= BIG_ENDIAN
-#BYTE_ORDER= LITTLE_ENDIAN
+#BYTE_ORDER= -DBIG_ENDIAN
+#BYTE_ORDER= -DLITTLE_ENDIAN
 
 # Determine the number of bits in a long
 #
@@ -143,7 +145,67 @@ HAVE_FPOS=
 # If in doubt, leave HAVE_FPOS_POS empty and this Makefile will figure it out.
 #
 HAVE_FPOS_POS=
-#HAVE_FPOS= -DHAVE_NO_FPOS_POS
+#HAVE_FPOS_POS= -DHAVE_NO_FPOS_POS
+
+# Determine the size of the __pos element in fpos_t, if it exists.
+#
+# If FPOS_POS_BITS is empty, then the Makefile will determine the size of
+# the file position value of the __pos element.
+#
+# If in doubt, leave FPOS_POS_BITS empty and this Makefile will figure it out.
+#
+# If there is no __pos element in fpos_t (say because fpos_t is a scalar),
+# leave FPOS_POS_BITS blank.
+#
+FPOS_POS_BITS=
+#FPOS_POS_BITS= 32
+#FPOS_POS_BITS= 64
+
+# Determine the size of a file position value.
+#
+# If FPOS_BITS is empty, then the Makefile will determine the size of
+# the file position value.
+#
+# If in doubt, leave FPOS_BITS empty and this Makefile will figure it out.
+#
+FPOS_BITS=
+#FPOS_BITS= 32
+#FPOS_BITS= 64
+
+# Determine the size of the off_t file offset element
+#
+# If OFF_T_BITS is empty, then the Makefile will determine the size of
+# the file offset value.
+#
+# If in doubt, leave OFF_T_BITS empty and this Makefile will figure it out.
+#
+OFF_T_BITS=
+#OFF_T_BITS= 32
+#OFF_T_BITS= 64
+
+# Determine the size of the dev_t device value
+#
+# If DEV_BITS is empty, then the Makefile will determine the size of
+# the dev_t device value
+#
+# If in doubt, leave DEV_BITS empty and this Makefile will figure it out.
+#
+DEV_BITS=
+#DEV_BITS= 16
+#DEV_BITS= 32
+#DEV_BITS= 64
+
+# Determine the size of the ino_t device value
+#
+# If INODE_BITS is empty, then the Makefile will determine the size of
+# the ino_t inode value
+#
+# If in doubt, leave INODE_BITS empty and this Makefile will figure it out.
+#
+INODE_BITS=
+#INODE_BITS= 16
+#INODE_BITS= 32
+#INODE_BITS= 64
 
 # Determine if we have an off_t which one can perform arithmetic operations,
 # assignments and comparisons.	On some systems off_t is some sort of union
@@ -283,17 +345,17 @@ HAVE_GETTIME=
 HAVE_GETPRID=
 #HAVE_GETPRID= -DHAVE_NO_GETPRID
 
-# Determine if we have /dev/urandom
+# Determine if we have the /dev/urandom
 #
-# If HAVE_URANDOM is empty, this Makefile will run the have_memmv program
-# to determine if /dev/urandom is supported.  If HAVE_URANDOM is set to
-# -DHAVE_NO_URANDOM, then calc will use internal functions to simulate
-# the memory move function that does correct overlapping memory modes.
+#    HAVE_URANDOM_H=		let the Makefile look /dev/urandom
+#    HAVE_URANDOM_H= YES	assume that /dev/urandom exists
+#    HAVE_URANDOM_H= NO		assume that /dev/urandom does not exist
 #
-# If in doubt, leave HAVE_URANDOM empty and this Makefile will figure it out.
+# When in doubt, leave HAVE_URANDOM_H empty.
 #
-HAVE_URANDOM=
-#HAVE_URANDOM= -DHAVE_NO_URANDOM
+HAVE_URANDOM_H=
+#HAVE_URANDOM_H= YES
+#HAVE_URANDOM_H= NO
 
 # Determine if we have getrusage()
 #
@@ -335,6 +397,102 @@ HAVE_STRDUP=
 #ALIGN32=
 ALIGN32= -DMUST_ALIGN32
 #ALIGN32= -UMUST_ALIGN32
+
+# Determine if we have the <malloc.h> include file.
+#
+#    HAVE_MALLOC_H=		let the Makefile look for the include file
+#    HAVE_MALLOC_H= YES		assume that the include file exists
+#    HAVE_MALLOC_H= NO		assume that the include file does not exist
+#
+# When in doubt, leave HAVE_MALLOC_H empty.
+#
+HAVE_MALLOC_H=
+#HAVE_MALLOC_H= YES
+#HAVE_MALLOC_H= NO
+
+# Determine if we have the <stdlib.h> include file.
+#
+#    HAVE_STDLIB_H=		let the Makefile look for the include file
+#    HAVE_STDLIB_H= YES		assume that the include file exists
+#    HAVE_STDLIB_H= NO		assume that the include file does not exist
+#
+# When in doubt, leave HAVE_STDLIB_H empty.
+#
+HAVE_STDLIB_H=
+#HAVE_STDLIB_H= YES
+#HAVE_STDLIB_H= NO
+
+# Determine if we have the <string.h> include file.
+#
+#    HAVE_STRING_H=		let the Makefile look for the include file
+#    HAVE_STRING_H= YES		assume that the include file exists
+#    HAVE_STRING_H= NO		assume that the include file does not exist
+#
+# When in doubt, leave HAVE_STRING_H empty.
+#
+HAVE_STRING_H=
+#HAVE_STRING_H= YES
+#HAVE_STRING_H= NO
+
+# Determine if we have the <times.h> include file.
+#
+#    HAVE_TIMES_H=		let the Makefile look for the include file
+#    HAVE_TIMES_H= YES		assume that the include file exists
+#    HAVE_TIMES_H= NO		assume that the include file does not exist
+#
+# When in doubt, leave HAVE_TIMES_H empty.
+#
+HAVE_TIMES_H=
+#HAVE_TIMES_H= YES
+#HAVE_TIMES_H= NO
+
+# Determine if we have the <sys/times.h> include file.
+#
+#    HAVE_SYS_TIMES_H=		let the Makefile look for the include file
+#    HAVE_SYS_TIMES_H= YES	assume that the include file exists
+#    HAVE_SYS_TIMES_H= NO	assume that the include file does not exist
+#
+# When in doubt, leave HAVE_SYS_TIMES_H empty.
+#
+HAVE_SYS_TIMES_H=
+#HAVE_SYS_TIMES_H= YES
+#HAVE_SYS_TIMES_H= NO
+
+# Determine if we have the <time.h> include file.
+#
+#    HAVE_TIME_H=		let the Makefile look for the include file
+#    HAVE_TIME_H= YES		assume that the include file exists
+#    HAVE_TIME_H= NO		assume that the include file does not exist
+#
+# When in doubt, leave HAVE_TIME_H empty.
+#
+HAVE_TIME_H=
+#HAVE_TIME_H= YES
+#HAVE_TIME_H= NO
+
+# Determine if we have the <sys/time.h> include file.
+#
+#    HAVE_SYS_TIME_H=		let the Makefile look for the include file
+#    HAVE_SYS_TIME_H= YES	assume that the include file exists
+#    HAVE_SYS_TIME_H= NO	assume that the include file does not exist
+#
+# When in doubt, leave HAVE_SYS_TIME_H empty.
+#
+HAVE_SYS_TIME_H=
+#HAVE_SYS_TIME_H= YES
+#HAVE_SYS_TIME_H= NO
+
+# Determine if we have the <unistd.h> include file.
+#
+#    HAVE_UNISTD_H=		let the Makefile look for the include file
+#    HAVE_UNISTD_H= YES		assume that the include file exists
+#    HAVE_UNISTD_H= NO		assume that the include file does not exist
+#
+# When in doubt, leave HAVE_UNISTD_H empty.
+#
+HAVE_UNISTD_H=
+#HAVE_UNISTD_H= YES
+#HAVE_UNISTD_H= NO
 
 # where to install the *.cal, *.h and *.a files
 #
@@ -891,7 +1049,7 @@ LIB_H_SRC= alloc.h blkcpy.h block.h byteswap.h calc.h cmath.h \
 	config.h custom.h file.h func.h hash.h hist.h jump.h \
 	label.h lib_util.h math_error.h md5.h nametype.h \
 	opcodes.h prime.h qmath.h shs.h shs1.h string.h \
-	symbol.h token.h value.h zmath.h zrand.h zrandom.h
+	symbol.h token.h value.h win32dll.h zmath.h zrand.h zrandom.h
 
 # we build these .h files during the make
 #
@@ -1225,7 +1383,7 @@ endian_calc.h: endian ${MAKE_FILE}
 		./endian >> endian_calc.h; \
 	    fi; \
 	else \
-	    echo "#define CALC_BYTE_ORDER ${BYTE_ORDER}" >> endian_calc.h; \
+	    ./endian >> endian_calc.h; \
 	fi
 	${Q}echo '' >> endian_calc.h
 	${Q}echo '' >> endian_calc.h
@@ -1281,7 +1439,11 @@ have_malloc.h: ${MAKE_FILE}
 	${Q}echo '' >> have_malloc.h
 	${Q}echo '' >> have_malloc.h
 	${Q}echo '/* do we have /usr/include/malloc.h? */' >> have_malloc.h
-	-${Q}if [ -f /usr/include/malloc.h ]; then \
+	-${Q}if [ X"${HAVE_MALLOC_H}" = X"YES" ]; then \
+	    echo '#define HAVE_MALLOC_H	 /* yes */' >> have_malloc.h; \
+	elif [ X"${HAVE_MALLOC_H}" = X"NO" ]; then \
+	    echo '#undef HAVE_MALLOC_H	/* no */' >> have_malloc.h; \
+	elif [ -f /usr/include/malloc.h ]; then \
 	    echo '#define HAVE_MALLOC_H	 /* yes */' >> have_malloc.h; \
 	else \
 	    echo '#undef HAVE_MALLOC_H	/* no */' >> have_malloc.h; \
@@ -1313,22 +1475,38 @@ have_times.h: ${MAKE_FILE}
 	${Q}echo '' >> have_times.h
 	${Q}echo '' >> have_times.h
 	${Q}echo '/* do we have /usr/include/times.h? */' >> have_times.h
-	-${Q}if [ -f /usr/include/times.h ]; then \
+	-${Q}if [ X"${HAVE_TIMES_H}" = X"YES" ]; then \
+	    echo '#define HAVE_TIMES_H	/* yes */' >> have_times.h; \
+	elif [ X"${HAVE_TIMES_H}" = X"NO" ]; then \
+	    echo '#undef HAVE_TIMES_H  /* no */' >> have_times.h; \
+	elif [ -f /usr/include/times.h ]; then \
 	    echo '#define HAVE_TIMES_H	/* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_TIMES_H  /* no */' >> have_times.h; \
 	fi
-	-${Q}if [ -f /usr/include/sys/times.h ]; then \
+	-${Q}if [ X"${HAVE_SYS_TIMES_H}" = X"YES" ]; then \
+	    echo '#define HAVE_SYS_TIMES_H	/* yes */' >> have_times.h; \
+	elif [ X"${HAVE_SYS_TIMES_H}" = X"NO" ]; then \
+	    echo '#undef HAVE_SYS_TIMES_H  /* no */' >> have_times.h; \
+	elif [ -f /usr/include/sys/times.h ]; then \
 	    echo '#define HAVE_SYS_TIMES_H  /* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_SYS_TIMES_H  /* no */' >> have_times.h; \
 	fi
-	-${Q}if [ -f /usr/include/time.h ]; then \
+	-${Q}if [ X"${HAVE_TIME_H}" = X"YES" ]; then \
+	    echo '#define HAVE_TIME_H	/* yes */' >> have_times.h; \
+	elif [ X"${HAVE_TIME_H}" = X"NO" ]; then \
+	    echo '#undef HAVE_TIME_H  /* no */' >> have_times.h; \
+	elif [ -f /usr/include/time.h ]; then \
 	    echo '#define HAVE_TIME_H  /* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_TIME_H  /* no */' >> have_times.h; \
 	fi
-	-${Q}if [ -f /usr/include/sys/time.h ]; then \
+	-${Q}if [ X"${HAVE_SYS_TIME_H}" = X"YES" ]; then \
+	    echo '#define HAVE_SYS_TIME_H	/* yes */' >> have_times.h; \
+	elif [ X"${HAVE_SYS_TIME_H}" = X"NO" ]; then \
+	    echo '#undef HAVE_SYS_TIME_H  /* no */' >> have_times.h; \
+	elif [ -f /usr/include/sys/time.h ]; then \
 	    echo '#define HAVE_SYS_TIME_H  /* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_SYS_TIME_H  /* no */' >> have_times.h; \
@@ -1360,7 +1538,11 @@ have_stdlib.h: ${MAKE_FILE}
 	${Q}echo '' >> have_stdlib.h
 	${Q}echo '' >> have_stdlib.h
 	${Q}echo '/* do we have /usr/include/stdlib.h? */' >> have_stdlib.h
-	-${Q}if [ -f /usr/include/stdlib.h ]; then \
+	-${Q}if [ X"${HAVE_STDLIB_H}" = X"YES" ]; then \
+	    echo '#define HAVE_STDLIB_H	/* yes */' >> have_stdlib.h; \
+	elif [ X"${HAVE_STDLIB_H}" = X"NO" ]; then \
+	    echo '#undef HAVE_STDLIB_H  /* no */' >> have_stdlib.h; \
+	elif [ -f /usr/include/stdlib.h ]; then \
 	    echo '#define HAVE_STDLIB_H	 /* yes */' >> have_stdlib.h; \
 	else \
 	    echo '#undef HAVE_STDLIB_H	/* no */' >> have_stdlib.h; \
@@ -1392,7 +1574,11 @@ have_unistd.h: ${MAKE_FILE}
 	${Q}echo '' >> have_unistd.h
 	${Q}echo '' >> have_unistd.h
 	${Q}echo '/* do we have /usr/include/unistd.h? */' >> have_unistd.h
-	-${Q}if [ -f /usr/include/unistd.h ]; then \
+	-${Q}if [ X"${HAVE_UNISTD_H}" = X"YES" ]; then \
+	    echo '#define HAVE_UNISTD_H	/* yes */' >> have_unistd.h; \
+	elif [ X"${HAVE_UNISTD_H}" = X"NO" ]; then \
+	    echo '#undef HAVE_UNISTD_H  /* no */' >> have_unistd.h; \
+	elif [ -f /usr/include/unistd.h ]; then \
 	    echo '#define HAVE_UNISTD_H	 /* yes */' >> have_unistd.h; \
 	else \
 	    echo '#undef HAVE_UNISTD_H	/* no */' >> have_unistd.h; \
@@ -1424,7 +1610,11 @@ have_string.h: ${MAKE_FILE}
 	${Q}echo '' >> have_string.h
 	${Q}echo '' >> have_string.h
 	${Q}echo '/* do we have /usr/include/string.h? */' >> have_string.h
-	-${Q}if [ -f /usr/include/string.h ]; then \
+	-${Q}if [ X"${HAVE_STRING_H}" = X"YES" ]; then \
+	    echo '#define HAVE_STRING_H	/* yes */' >> have_string.h; \
+	elif [ X"${HAVE_STRING_H}" = X"NO" ]; then \
+	    echo '#undef HAVE_STRING_H  /* no */' >> have_string.h; \
+	elif [ -f /usr/include/string.h ]; then \
 	    echo '#define HAVE_STRING_H	 /* yes */' >> have_string.h; \
 	else \
 	    echo '#undef HAVE_STRING_H	/* no */' >> have_string.h; \
@@ -1459,15 +1649,23 @@ terminal.h: ${MAKE_FILE}
 	${Q}echo '#if !defined(USE_TERMIOS)' >> terminal.h
 	${Q}echo '#if !defined(USE_TERMIO)' >> terminal.h
 	${Q}echo '#if !defined(USE_SGTTY)' >> terminal.h
-	-${Q}if [ -f /usr/include/termios.h ]; then \
+	-${Q}if [ X"${TERMCONTROL}" = X"-DUSE_WIN32" ]; then \
+	    echo '/* windoz, use none of these modes */' >> terminal.h; \
+	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> terminal.h; \
+	    echo '#undef USE_TERMIO    /* <termio.h> */' >> terminal.h; \
+	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
+	elif [ -f /usr/include/termios.h ]; then \
+	    echo '/* use termios */' >> terminal.h; \
 	    echo '#define USE_TERMIOS  /* <termios.h> */' >> terminal.h; \
 	    echo '#undef USE_TERMIO    /* <termio.h> */' >> terminal.h; \
 	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
 	elif [ -f /usr/include/termio.h ]; then \
+	    echo '/* use termio */' >> terminal.h; \
 	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> terminal.h; \
 	    echo '#define USE_TERMIO   /* <termio.h> */' >> terminal.h; \
 	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
 	else \
+	    echo '/* use sgtty */' >> terminal.h; \
 	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> terminal.h; \
 	    echo '#undef USE_TERMIO    /* <termio.h> */' >> terminal.h; \
 	    echo '#define USE_SGTTY    /* <sys/ioctl.h> */' >> terminal.h; \
@@ -1586,8 +1784,8 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
 	${Q}echo '/* do we have fgetpos & fsetpos functions? */' \
 		>> have_fpos_pos.h
 	-${Q}rm -f have_fpos_pos.o have_fpos_pos
-	-${Q}${LCC} ${HAVE_FPOS_POS} ${ICFLAGS} have_fpos_pos.c -c \
-		2>/dev/null; true
+	-${Q}${LCC} ${HAVE_FPOS} ${HAVE_FPOS_POS} \
+		    ${ICFLAGS} have_fpos_pos.c -c 2>/dev/null; true
 	-${Q}${LCC} ${ILDFLAGS} have_fpos_pos.o -o have_fpos_pos \
 		2>/dev/null; true
 	-${Q}${SHELL} -c "./have_fpos_pos > fpos_tmp 2>/dev/null" \
@@ -1629,7 +1827,8 @@ fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	${Q}echo '' >> fposval.h
 	${Q}echo '/* what are our file position & size types? */' >> fposval.h
 	-${Q}rm -f fposval.o fposval
-	-${Q}${LCC} ${ICFLAGS} fposval.c -c 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${FPOS_BITS} ${OFF_T_BITS} \
+		    ${DEV_BITS} ${INODE_BITS} fposval.c -c 2>/dev/null; true
 	-${Q}${LCC} ${ILDFLAGS} fposval.o -o fposval 2>/dev/null; true
 	${Q}${SHELL} -c "./fposval fposv_tmp >> fposval.h 2>/dev/null" \
 	    >/dev/null 2>&1; true
@@ -2139,7 +2338,11 @@ have_urandom.h: ${MAKE_FILE}
 	${Q}echo '' >> have_urandom.h
 	${Q}echo '' >> have_urandom.h
 	${Q}echo '/* do we have /dev/urandom? */' >> have_urandom.h
-	-${Q}if [ -e /dev/urandom ] 2>/dev/null; then \
+	-${Q}if [ X"${HAVE_URANDOM_H}" = X"YES" ]; then \
+	    echo '#define HAVE_URANDOM_H	/* yes */' >> have_urandom.h; \
+	elif [ X"${HAVE_URANDOM_H}" = X"NO" ]; then \
+	    echo '#undef HAVE_URANDOM_H  /* no */' >> have_urandom.h; \
+	elif [ -e /dev/urandom ] 2>/dev/null; then \
 	    echo '#define HAVE_URANDOM_H  /* yes */' >> have_urandom.h; \
 	else \
 	    echo '#undef HAVE_URANDOM_H	 /* no */' >> have_urandom.h; \
@@ -2349,12 +2552,37 @@ calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE}
 
 ##
 #
+# Build .h files for windoz based systems
+#
+# This is really a internal utility rule that is used to create the
+# win32 sub-directory for distribution.
+#
+##
+
+win32_hsrc: ${MAKE_FILE} win32.mkdef
+	${Q}echo 'forming win32 directory'
+	${Q}rm -rf win32
+	${Q}mkdir win32
+	${Q}cp ${UTIL_C_SRC} win32
+	${Q}cp ${UTIL_MISC_SRC} win32.mkdef Makefile win32
+	${Q}(cd win32; \
+	 echo "cd win32"; \
+	 echo "$(MAKE) hsrc `cat win32.mkdef`"; \
+	 $(MAKE) hsrc `cat win32.mkdef`; \
+	 rm -f ${UTIL_C_SRC}; \
+	 rm -f ${UTIL_MISC_SRC}; \
+	 rm -f Makefile endian longbits endian.o longbits.o)
+	${Q}echo 'win32 directory formed'
+
+
+##
+#
 # These rules are used in the process of building the BUILD_H_SRC.
 #
 ##
 
 endian.o: endian.c have_unistd.h
-	${LCC} ${ICFLAGS} endian.c -c
+	${LCC} ${ICFLAGS} ${BYTE_ORDER} endian.c -c
 
 endian: endian.o
 	${LCC} ${ICFLAGS} endian.o -o endian
@@ -2892,6 +3120,7 @@ clobber:
 	-rm -rf lib
 	-rm -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
 	-rm -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
+	-rm -rf win32
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
@@ -3023,12 +3252,13 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 
+
 addop.o: addop.c
 addop.o: alloc.h
 addop.o: block.h
 addop.o: byteswap.h
-addop.o: calc.h
 addop.o: calcerr.h
+addop.o: calc.h
 addop.o: cmath.h
 addop.o: config.h
 addop.o: endian_calc.h
@@ -3046,12 +3276,13 @@ addop.o: md5.h
 addop.o: nametype.h
 addop.o: opcodes.h
 addop.o: qmath.h
-addop.o: shs.h
 addop.o: shs1.h
+addop.o: shs.h
 addop.o: string.h
 addop.o: symbol.h
 addop.o: token.h
 addop.o: value.h
+addop.o: win32dll.h
 addop.o: zmath.h
 align32.o: align32.c
 align32.o: have_unistd.h
@@ -3074,18 +3305,19 @@ assocfunc.o: longbits.h
 assocfunc.o: md5.h
 assocfunc.o: nametype.h
 assocfunc.o: qmath.h
-assocfunc.o: shs.h
 assocfunc.o: shs1.h
+assocfunc.o: shs.h
 assocfunc.o: string.h
 assocfunc.o: value.h
+assocfunc.o: win32dll.h
 assocfunc.o: zmath.h
 blkcpy.o: alloc.h
 blkcpy.o: blkcpy.c
 blkcpy.o: blkcpy.h
 blkcpy.o: block.h
 blkcpy.o: byteswap.h
-blkcpy.o: calc.h
 blkcpy.o: calcerr.h
+blkcpy.o: calc.h
 blkcpy.o: cmath.h
 blkcpy.o: config.h
 blkcpy.o: endian_calc.h
@@ -3102,10 +3334,11 @@ blkcpy.o: longbits.h
 blkcpy.o: md5.h
 blkcpy.o: nametype.h
 blkcpy.o: qmath.h
-blkcpy.o: shs.h
 blkcpy.o: shs1.h
+blkcpy.o: shs.h
 blkcpy.o: string.h
 blkcpy.o: value.h
+blkcpy.o: win32dll.h
 blkcpy.o: zmath.h
 block.o: alloc.h
 block.o: block.c
@@ -3125,10 +3358,11 @@ block.o: longbits.h
 block.o: md5.h
 block.o: nametype.h
 block.o: qmath.h
-block.o: shs.h
 block.o: shs1.h
+block.o: shs.h
 block.o: string.h
 block.o: value.h
+block.o: win32dll.h
 block.o: zmath.h
 byteswap.o: alloc.h
 byteswap.o: byteswap.c
@@ -3142,14 +3376,18 @@ byteswap.o: have_stdlib.h
 byteswap.o: have_string.h
 byteswap.o: longbits.h
 byteswap.o: qmath.h
+byteswap.o: win32dll.h
 byteswap.o: zmath.h
+calcerr.o: calcerr.c
+calcerr.o: calcerr.h
+calcerr.o: have_const.h
 calc.o: alloc.h
 calc.o: args.h
 calc.o: block.h
 calc.o: byteswap.h
 calc.o: calc.c
-calc.o: calc.h
 calc.o: calcerr.h
+calc.o: calc.h
 calc.o: cmath.h
 calc.o: conf.h
 calc.o: config.h
@@ -3174,21 +3412,19 @@ calc.o: md5.h
 calc.o: nametype.h
 calc.o: opcodes.h
 calc.o: qmath.h
-calc.o: shs.h
 calc.o: shs1.h
+calc.o: shs.h
 calc.o: string.h
 calc.o: symbol.h
 calc.o: token.h
 calc.o: value.h
+calc.o: win32dll.h
 calc.o: zmath.h
-calcerr.o: calcerr.c
-calcerr.o: calcerr.h
-calcerr.o: have_const.h
 codegen.o: alloc.h
 codegen.o: block.h
 codegen.o: byteswap.h
-codegen.o: calc.h
 codegen.o: calcerr.h
+codegen.o: calc.h
 codegen.o: cmath.h
 codegen.o: codegen.c
 codegen.o: conf.h
@@ -3209,12 +3445,13 @@ codegen.o: md5.h
 codegen.o: nametype.h
 codegen.o: opcodes.h
 codegen.o: qmath.h
-codegen.o: shs.h
 codegen.o: shs1.h
+codegen.o: shs.h
 codegen.o: string.h
 codegen.o: symbol.h
 codegen.o: token.h
 codegen.o: value.h
+codegen.o: win32dll.h
 codegen.o: zmath.h
 comfunc.o: alloc.h
 comfunc.o: byteswap.h
@@ -3230,6 +3467,7 @@ comfunc.o: have_string.h
 comfunc.o: longbits.h
 comfunc.o: nametype.h
 comfunc.o: qmath.h
+comfunc.o: win32dll.h
 comfunc.o: zmath.h
 commath.o: alloc.h
 commath.o: byteswap.h
@@ -3243,12 +3481,13 @@ commath.o: have_stdlib.h
 commath.o: have_string.h
 commath.o: longbits.h
 commath.o: qmath.h
+commath.o: win32dll.h
 commath.o: zmath.h
 config.o: alloc.h
 config.o: block.h
 config.o: byteswap.h
-config.o: calc.h
 config.o: calcerr.h
+config.o: calc.h
 config.o: cmath.h
 config.o: config.c
 config.o: config.h
@@ -3265,18 +3504,19 @@ config.o: longbits.h
 config.o: md5.h
 config.o: nametype.h
 config.o: qmath.h
-config.o: shs.h
 config.o: shs1.h
+config.o: shs.h
 config.o: string.h
 config.o: token.h
 config.o: value.h
+config.o: win32dll.h
 config.o: zmath.h
 config.o: zrand.h
 const.o: alloc.h
 const.o: block.h
 const.o: byteswap.h
-const.o: calc.h
 const.o: calcerr.h
+const.o: calc.h
 const.o: cmath.h
 const.o: config.h
 const.o: const.c
@@ -3292,16 +3532,17 @@ const.o: longbits.h
 const.o: md5.h
 const.o: nametype.h
 const.o: qmath.h
-const.o: shs.h
 const.o: shs1.h
+const.o: shs.h
 const.o: string.h
 const.o: value.h
+const.o: win32dll.h
 const.o: zmath.h
 custom.o: alloc.h
 custom.o: block.h
 custom.o: byteswap.h
-custom.o: calc.h
 custom.o: calcerr.h
+custom.o: calc.h
 custom.o: cmath.h
 custom.o: config.h
 custom.o: custom.c
@@ -3318,18 +3559,19 @@ custom.o: longbits.h
 custom.o: md5.h
 custom.o: nametype.h
 custom.o: qmath.h
-custom.o: shs.h
 custom.o: shs1.h
+custom.o: shs.h
 custom.o: string.h
 custom.o: value.h
+custom.o: win32dll.h
 custom.o: zmath.h
 endian.o: endian.c
 endian.o: have_unistd.h
 file.o: alloc.h
 file.o: block.h
 file.o: byteswap.h
-file.o: calc.h
 file.o: calcerr.h
+file.o: calc.h
 file.o: cmath.h
 file.o: config.h
 file.o: endian_calc.h
@@ -3345,14 +3587,16 @@ file.o: have_memmv.h
 file.o: have_newstr.h
 file.o: have_stdlib.h
 file.o: have_string.h
+file.o: have_unistd.h
 file.o: longbits.h
 file.o: md5.h
 file.o: nametype.h
 file.o: qmath.h
-file.o: shs.h
 file.o: shs1.h
+file.o: shs.h
 file.o: string.h
 file.o: value.h
+file.o: win32dll.h
 file.o: zmath.h
 fposval.o: endian_calc.h
 fposval.o: fposval.c
@@ -3363,8 +3607,8 @@ fposval.o: have_posscl.h
 func.o: alloc.h
 func.o: block.h
 func.o: byteswap.h
-func.o: calc.h
 func.o: calcerr.h
+func.o: calc.h
 func.o: cmath.h
 func.o: config.h
 func.o: custom.h
@@ -3390,20 +3634,21 @@ func.o: nametype.h
 func.o: opcodes.h
 func.o: prime.h
 func.o: qmath.h
-func.o: shs.h
 func.o: shs1.h
+func.o: shs.h
 func.o: string.h
 func.o: symbol.h
 func.o: token.h
 func.o: value.h
+func.o: win32dll.h
 func.o: zmath.h
 func.o: zrand.h
 func.o: zrandom.h
 hash.o: alloc.h
 hash.o: block.h
 hash.o: byteswap.h
-hash.o: calc.h
 hash.o: calcerr.h
+hash.o: calc.h
 hash.o: cmath.h
 hash.o: config.h
 hash.o: endian_calc.h
@@ -3419,10 +3664,11 @@ hash.o: longbits.h
 hash.o: md5.h
 hash.o: nametype.h
 hash.o: qmath.h
-hash.o: shs.h
 hash.o: shs1.h
+hash.o: shs.h
 hash.o: string.h
 hash.o: value.h
+hash.o: win32dll.h
 hash.o: zmath.h
 hash.o: zrand.h
 hash.o: zrandom.h
@@ -3454,8 +3700,8 @@ have_varvs.o: have_varvs.c
 help.o: alloc.h
 help.o: block.h
 help.o: byteswap.h
-help.o: calc.h
 help.o: calcerr.h
+help.o: calc.h
 help.o: cmath.h
 help.o: conf.h
 help.o: config.h
@@ -3473,16 +3719,17 @@ help.o: longbits.h
 help.o: md5.h
 help.o: nametype.h
 help.o: qmath.h
-help.o: shs.h
 help.o: shs1.h
+help.o: shs.h
 help.o: string.h
 help.o: value.h
+help.o: win32dll.h
 help.o: zmath.h
 hist.o: alloc.h
 hist.o: block.h
 hist.o: byteswap.h
-hist.o: calc.h
 hist.o: calcerr.h
+hist.o: calc.h
 hist.o: cmath.h
 hist.o: config.h
 hist.o: endian_calc.h
@@ -3501,16 +3748,17 @@ hist.o: longbits.h
 hist.o: md5.h
 hist.o: nametype.h
 hist.o: qmath.h
-hist.o: shs.h
 hist.o: shs1.h
+hist.o: shs.h
 hist.o: string.h
 hist.o: value.h
+hist.o: win32dll.h
 hist.o: zmath.h
 input.o: alloc.h
 input.o: block.h
 input.o: byteswap.h
-input.o: calc.h
 input.o: calcerr.h
+input.o: calc.h
 input.o: cmath.h
 input.o: conf.h
 input.o: config.h
@@ -3529,10 +3777,11 @@ input.o: longbits.h
 input.o: md5.h
 input.o: nametype.h
 input.o: qmath.h
-input.o: shs.h
 input.o: shs1.h
+input.o: shs.h
 input.o: string.h
 input.o: value.h
+input.o: win32dll.h
 input.o: zmath.h
 jump.o: have_const.h
 jump.o: jump.c
@@ -3540,8 +3789,8 @@ jump.o: jump.h
 label.o: alloc.h
 label.o: block.h
 label.o: byteswap.h
-label.o: calc.h
 label.o: calcerr.h
+label.o: calc.h
 label.o: cmath.h
 label.o: config.h
 label.o: endian_calc.h
@@ -3560,17 +3809,18 @@ label.o: md5.h
 label.o: nametype.h
 label.o: opcodes.h
 label.o: qmath.h
-label.o: shs.h
 label.o: shs1.h
+label.o: shs.h
 label.o: string.h
 label.o: token.h
 label.o: value.h
+label.o: win32dll.h
 label.o: zmath.h
 lib_calc.o: alloc.h
 lib_calc.o: block.h
 lib_calc.o: byteswap.h
-lib_calc.o: calc.h
 lib_calc.o: calcerr.h
+lib_calc.o: calc.h
 lib_calc.o: cmath.h
 lib_calc.o: conf.h
 lib_calc.o: config.h
@@ -3591,13 +3841,14 @@ lib_calc.o: longbits.h
 lib_calc.o: md5.h
 lib_calc.o: nametype.h
 lib_calc.o: qmath.h
-lib_calc.o: shs.h
 lib_calc.o: shs1.h
+lib_calc.o: shs.h
 lib_calc.o: string.h
 lib_calc.o: symbol.h
 lib_calc.o: terminal.h
 lib_calc.o: token.h
 lib_calc.o: value.h
+lib_calc.o: win32dll.h
 lib_calc.o: zmath.h
 lib_calc.o: zrandom.h
 lib_util.o: alloc.h
@@ -3611,6 +3862,7 @@ lib_util.o: have_string.h
 lib_util.o: lib_util.c
 lib_util.o: lib_util.h
 lib_util.o: longbits.h
+lib_util.o: win32dll.h
 lib_util.o: zmath.h
 listfunc.o: alloc.h
 listfunc.o: block.h
@@ -3631,10 +3883,11 @@ listfunc.o: longbits.h
 listfunc.o: md5.h
 listfunc.o: nametype.h
 listfunc.o: qmath.h
-listfunc.o: shs.h
 listfunc.o: shs1.h
+listfunc.o: shs.h
 listfunc.o: string.h
 listfunc.o: value.h
+listfunc.o: win32dll.h
 listfunc.o: zmath.h
 listfunc.o: zrand.h
 longbits.o: have_stdlib.h
@@ -3663,18 +3916,19 @@ matfunc.o: matfunc.c
 matfunc.o: md5.h
 matfunc.o: nametype.h
 matfunc.o: qmath.h
-matfunc.o: shs.h
 matfunc.o: shs1.h
+matfunc.o: shs.h
 matfunc.o: string.h
 matfunc.o: value.h
+matfunc.o: win32dll.h
 matfunc.o: zmath.h
 matfunc.o: zrand.h
 math_error.o: alloc.h
 math_error.o: args.h
 math_error.o: block.h
 math_error.o: byteswap.h
-math_error.o: calc.h
 math_error.o: calcerr.h
+math_error.o: calc.h
 math_error.o: cmath.h
 math_error.o: config.h
 math_error.o: endian_calc.h
@@ -3691,10 +3945,11 @@ math_error.o: math_error.h
 math_error.o: md5.h
 math_error.o: nametype.h
 math_error.o: qmath.h
-math_error.o: shs.h
 math_error.o: shs1.h
+math_error.o: shs.h
 math_error.o: string.h
 math_error.o: value.h
+math_error.o: win32dll.h
 math_error.o: zmath.h
 md5.o: align32.h
 md5.o: alloc.h
@@ -3715,16 +3970,17 @@ md5.o: md5.c
 md5.o: md5.h
 md5.o: nametype.h
 md5.o: qmath.h
-md5.o: shs.h
 md5.o: shs1.h
+md5.o: shs.h
 md5.o: string.h
 md5.o: value.h
+md5.o: win32dll.h
 md5.o: zmath.h
 obj.o: alloc.h
 obj.o: block.h
 obj.o: byteswap.h
-obj.o: calc.h
 obj.o: calcerr.h
+obj.o: calc.h
 obj.o: cmath.h
 obj.o: config.h
 obj.o: endian_calc.h
@@ -3743,17 +3999,18 @@ obj.o: nametype.h
 obj.o: obj.c
 obj.o: opcodes.h
 obj.o: qmath.h
-obj.o: shs.h
 obj.o: shs1.h
+obj.o: shs.h
 obj.o: string.h
 obj.o: symbol.h
 obj.o: value.h
+obj.o: win32dll.h
 obj.o: zmath.h
 opcodes.o: alloc.h
 opcodes.o: block.h
 opcodes.o: byteswap.h
-opcodes.o: calc.h
 opcodes.o: calcerr.h
+opcodes.o: calc.h
 opcodes.o: cmath.h
 opcodes.o: config.h
 opcodes.o: custom.h
@@ -3777,11 +4034,12 @@ opcodes.o: nametype.h
 opcodes.o: opcodes.c
 opcodes.o: opcodes.h
 opcodes.o: qmath.h
-opcodes.o: shs.h
 opcodes.o: shs1.h
+opcodes.o: shs.h
 opcodes.o: string.h
 opcodes.o: symbol.h
 opcodes.o: value.h
+opcodes.o: win32dll.h
 opcodes.o: zmath.h
 opcodes.o: zrand.h
 opcodes.o: zrandom.h
@@ -3798,6 +4056,7 @@ pix.o: longbits.h
 pix.o: pix.c
 pix.o: prime.h
 pix.o: qmath.h
+pix.o: win32dll.h
 pix.o: zmath.h
 poly.o: alloc.h
 poly.o: block.h
@@ -3817,10 +4076,11 @@ poly.o: md5.h
 poly.o: nametype.h
 poly.o: poly.c
 poly.o: qmath.h
-poly.o: shs.h
 poly.o: shs1.h
+poly.o: shs.h
 poly.o: string.h
 poly.o: value.h
+poly.o: win32dll.h
 poly.o: zmath.h
 prime.o: alloc.h
 prime.o: byteswap.h
@@ -3836,6 +4096,7 @@ prime.o: longbits.h
 prime.o: prime.c
 prime.o: prime.h
 prime.o: qmath.h
+prime.o: win32dll.h
 prime.o: zmath.h
 qfunc.o: alloc.h
 qfunc.o: byteswap.h
@@ -3852,6 +4113,7 @@ qfunc.o: nametype.h
 qfunc.o: prime.h
 qfunc.o: qfunc.c
 qfunc.o: qmath.h
+qfunc.o: win32dll.h
 qfunc.o: zmath.h
 qio.o: alloc.h
 qio.o: args.h
@@ -3867,6 +4129,7 @@ qio.o: longbits.h
 qio.o: nametype.h
 qio.o: qio.c
 qio.o: qmath.h
+qio.o: win32dll.h
 qio.o: zmath.h
 qmath.o: alloc.h
 qmath.o: byteswap.h
@@ -3881,6 +4144,7 @@ qmath.o: longbits.h
 qmath.o: nametype.h
 qmath.o: qmath.c
 qmath.o: qmath.h
+qmath.o: win32dll.h
 qmath.o: zmath.h
 qmod.o: alloc.h
 qmod.o: byteswap.h
@@ -3895,6 +4159,7 @@ qmod.o: longbits.h
 qmod.o: nametype.h
 qmod.o: qmath.h
 qmod.o: qmod.c
+qmod.o: win32dll.h
 qmod.o: zmath.h
 qtrans.o: alloc.h
 qtrans.o: byteswap.h
@@ -3907,6 +4172,7 @@ qtrans.o: have_string.h
 qtrans.o: longbits.h
 qtrans.o: qmath.h
 qtrans.o: qtrans.c
+qtrans.o: win32dll.h
 qtrans.o: zmath.h
 quickhash.o: alloc.h
 quickhash.o: block.h
@@ -3927,10 +4193,11 @@ quickhash.o: md5.h
 quickhash.o: nametype.h
 quickhash.o: qmath.h
 quickhash.o: quickhash.c
-quickhash.o: shs.h
 quickhash.o: shs1.h
+quickhash.o: shs.h
 quickhash.o: string.h
 quickhash.o: value.h
+quickhash.o: win32dll.h
 quickhash.o: zmath.h
 quickhash.o: zrand.h
 quickhash.o: zrandom.h
@@ -3947,36 +4214,16 @@ seed.o: have_newstr.h
 seed.o: have_rusage.h
 seed.o: have_stdlib.h
 seed.o: have_string.h
+seed.o: have_times.h
+seed.o: have_uid_t.h
+seed.o: have_unistd.h
 seed.o: have_urandom.h
 seed.o: have_ustat.h
 seed.o: longbits.h
 seed.o: qmath.h
 seed.o: seed.c
+seed.o: win32dll.h
 seed.o: zmath.h
-shs.o: align32.h
-shs.o: alloc.h
-shs.o: block.h
-shs.o: byteswap.h
-shs.o: calcerr.h
-shs.o: cmath.h
-shs.o: config.h
-shs.o: endian_calc.h
-shs.o: hash.h
-shs.o: have_malloc.h
-shs.o: have_memmv.h
-shs.o: have_newstr.h
-shs.o: have_stdlib.h
-shs.o: have_string.h
-shs.o: longbits.h
-shs.o: md5.h
-shs.o: nametype.h
-shs.o: qmath.h
-shs.o: shs.c
-shs.o: shs.h
-shs.o: shs1.h
-shs.o: string.h
-shs.o: value.h
-shs.o: zmath.h
 shs1.o: align32.h
 shs1.o: alloc.h
 shs1.o: block.h
@@ -3995,12 +4242,38 @@ shs1.o: longbits.h
 shs1.o: md5.h
 shs1.o: nametype.h
 shs1.o: qmath.h
-shs1.o: shs.h
 shs1.o: shs1.c
 shs1.o: shs1.h
+shs1.o: shs.h
 shs1.o: string.h
 shs1.o: value.h
+shs1.o: win32dll.h
 shs1.o: zmath.h
+shs.o: align32.h
+shs.o: alloc.h
+shs.o: block.h
+shs.o: byteswap.h
+shs.o: calcerr.h
+shs.o: cmath.h
+shs.o: config.h
+shs.o: endian_calc.h
+shs.o: hash.h
+shs.o: have_malloc.h
+shs.o: have_memmv.h
+shs.o: have_newstr.h
+shs.o: have_stdlib.h
+shs.o: have_string.h
+shs.o: longbits.h
+shs.o: md5.h
+shs.o: nametype.h
+shs.o: qmath.h
+shs.o: shs1.h
+shs.o: shs.c
+shs.o: shs.h
+shs.o: string.h
+shs.o: value.h
+shs.o: win32dll.h
+shs.o: zmath.h
 size.o: alloc.h
 size.o: block.h
 size.o: byteswap.h
@@ -4019,19 +4292,20 @@ size.o: longbits.h
 size.o: md5.h
 size.o: nametype.h
 size.o: qmath.h
-size.o: shs.h
 size.o: shs1.h
+size.o: shs.h
 size.o: size.c
 size.o: string.h
 size.o: value.h
+size.o: win32dll.h
 size.o: zmath.h
 size.o: zrand.h
 size.o: zrandom.h
 string.o: alloc.h
 string.o: block.h
 string.o: byteswap.h
-string.o: calc.h
 string.o: calcerr.h
+string.o: calc.h
 string.o: cmath.h
 string.o: config.h
 string.o: endian_calc.h
@@ -4046,17 +4320,18 @@ string.o: longbits.h
 string.o: md5.h
 string.o: nametype.h
 string.o: qmath.h
-string.o: shs.h
 string.o: shs1.h
+string.o: shs.h
 string.o: string.c
 string.o: string.h
 string.o: value.h
+string.o: win32dll.h
 string.o: zmath.h
 symbol.o: alloc.h
 symbol.o: block.h
 symbol.o: byteswap.h
-symbol.o: calc.h
 symbol.o: calcerr.h
+symbol.o: calc.h
 symbol.o: cmath.h
 symbol.o: config.h
 symbol.o: endian_calc.h
@@ -4074,20 +4349,21 @@ symbol.o: md5.h
 symbol.o: nametype.h
 symbol.o: opcodes.h
 symbol.o: qmath.h
-symbol.o: shs.h
 symbol.o: shs1.h
+symbol.o: shs.h
 symbol.o: string.h
 symbol.o: symbol.c
 symbol.o: symbol.h
 symbol.o: token.h
 symbol.o: value.h
+symbol.o: win32dll.h
 symbol.o: zmath.h
 token.o: alloc.h
 token.o: args.h
 token.o: block.h
 token.o: byteswap.h
-token.o: calc.h
 token.o: calcerr.h
+token.o: calc.h
 token.o: cmath.h
 token.o: config.h
 token.o: endian_calc.h
@@ -4103,18 +4379,19 @@ token.o: math_error.h
 token.o: md5.h
 token.o: nametype.h
 token.o: qmath.h
-token.o: shs.h
 token.o: shs1.h
+token.o: shs.h
 token.o: string.h
 token.o: token.c
 token.o: token.h
 token.o: value.h
+token.o: win32dll.h
 token.o: zmath.h
 value.o: alloc.h
 value.o: block.h
 value.o: byteswap.h
-value.o: calc.h
 value.o: calcerr.h
+value.o: calc.h
 value.o: cmath.h
 value.o: config.h
 value.o: endian_calc.h
@@ -4134,20 +4411,21 @@ value.o: md5.h
 value.o: nametype.h
 value.o: opcodes.h
 value.o: qmath.h
-value.o: shs.h
 value.o: shs1.h
+value.o: shs.h
 value.o: string.h
 value.o: symbol.h
 value.o: value.c
 value.o: value.h
+value.o: win32dll.h
 value.o: zmath.h
 value.o: zrand.h
 value.o: zrandom.h
 version.o: alloc.h
 version.o: block.h
 version.o: byteswap.h
-version.o: calc.h
 version.o: calcerr.h
+version.o: calc.h
 version.o: cmath.h
 version.o: config.h
 version.o: endian_calc.h
@@ -4162,11 +4440,12 @@ version.o: longbits.h
 version.o: md5.h
 version.o: nametype.h
 version.o: qmath.h
-version.o: shs.h
 version.o: shs1.h
+version.o: shs.h
 version.o: string.h
 version.o: value.h
 version.o: version.c
+version.o: win32dll.h
 version.o: zmath.h
 zfunc.o: alloc.h
 zfunc.o: byteswap.h
@@ -4177,6 +4456,7 @@ zfunc.o: have_newstr.h
 zfunc.o: have_stdlib.h
 zfunc.o: have_string.h
 zfunc.o: longbits.h
+zfunc.o: win32dll.h
 zfunc.o: zfunc.c
 zfunc.o: zmath.h
 zio.o: alloc.h
@@ -4192,6 +4472,7 @@ zio.o: have_string.h
 zio.o: longbits.h
 zio.o: nametype.h
 zio.o: qmath.h
+zio.o: win32dll.h
 zio.o: zio.c
 zio.o: zmath.h
 zmath.o: alloc.h
@@ -4203,6 +4484,7 @@ zmath.o: have_newstr.h
 zmath.o: have_stdlib.h
 zmath.o: have_string.h
 zmath.o: longbits.h
+zmath.o: win32dll.h
 zmath.o: zmath.c
 zmath.o: zmath.h
 zmod.o: alloc.h
@@ -4217,6 +4499,7 @@ zmod.o: have_string.h
 zmod.o: longbits.h
 zmod.o: nametype.h
 zmod.o: qmath.h
+zmod.o: win32dll.h
 zmod.o: zmath.h
 zmod.o: zmod.c
 zmul.o: alloc.h
@@ -4231,6 +4514,7 @@ zmul.o: have_string.h
 zmul.o: longbits.h
 zmul.o: nametype.h
 zmul.o: qmath.h
+zmul.o: win32dll.h
 zmul.o: zmath.h
 zmul.o: zmul.c
 zprime.o: alloc.h
@@ -4253,10 +4537,11 @@ zprime.o: md5.h
 zprime.o: nametype.h
 zprime.o: prime.h
 zprime.o: qmath.h
-zprime.o: shs.h
 zprime.o: shs1.h
+zprime.o: shs.h
 zprime.o: string.h
 zprime.o: value.h
+zprime.o: win32dll.h
 zprime.o: zmath.h
 zprime.o: zprime.c
 zprime.o: zrand.h
@@ -4276,15 +4561,6 @@ zrand.o: have_stdlib.h
 zrand.o: have_string.h
 zrand.o: longbits.h
 zrand.o: md5.h
-zrand.o: nametype.h
-zrand.o: qmath.h
-zrand.o: shs.h
-zrand.o: shs1.h
-zrand.o: string.h
-zrand.o: value.h
-zrand.o: zmath.h
-zrand.o: zrand.c
-zrand.o: zrand.h
 zrandom.o: alloc.h
 zrandom.o: block.h
 zrandom.o: byteswap.h
@@ -4303,10 +4579,21 @@ zrandom.o: longbits.h
 zrandom.o: md5.h
 zrandom.o: nametype.h
 zrandom.o: qmath.h
-zrandom.o: shs.h
 zrandom.o: shs1.h
+zrandom.o: shs.h
 zrandom.o: string.h
 zrandom.o: value.h
+zrandom.o: win32dll.h
 zrandom.o: zmath.h
 zrandom.o: zrandom.c
 zrandom.o: zrandom.h
+zrand.o: nametype.h
+zrand.o: qmath.h
+zrand.o: shs1.h
+zrand.o: shs.h
+zrand.o: string.h
+zrand.o: value.h
+zrand.o: win32dll.h
+zrand.o: zmath.h
+zrand.o: zrand.c
+zrand.o: zrand.h

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: config.h,v 29.5 2001/02/25 22:07:36 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: config.h,v 29.6 2001/03/17 21:31:47 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -35,20 +35,7 @@
 #define __CONFIG_H__
 
 
-#if defined (_WIN32)
-#ifdef _EXPORTING
-  #define DLL	__declspec(dllexport)
-#else
-  #define DLL	__declspec(dllimport)
-#endif
-
-#else /* Windoz free systems */
-
-  #define DLL
-
-#endif /* Windoz free systems */
-
-
+#include "win32dll.h"
 #include "nametype.h"
 #include "qmath.h"
 
@@ -196,23 +183,23 @@ typedef struct config CONFIG;
 /*
  * global configuration states and aliases
  */
-extern CONFIG *conf;		/* current configuration */
-extern CONFIG oldstd;		/* backward compatible standard configuration */
-extern CONFIG newstd;		/* new non-backward compatible configuration */
-extern char *calc_debug;	/* !=NULL => value of config("calc_debug") */
-extern char *resource_debug;	/* !=NULL => config("resource_debug") value */
-extern char *user_debug;	/* !=NULL => value of config("user_debug") */
+extern DLL CONFIG *conf;	/* current configuration */
+extern DLL CONFIG oldstd;	/* backward compatible standard configuration */
+extern DLL CONFIG newstd;	/* new non-backward compatible configuration */
+extern DLL char *calc_debug;	/* !=NULL => value of config("calc_debug") */
+extern DLL char *resource_debug; /* !=NULL => config("resource_debug") value */
+extern DLL char *user_debug;	/* !=NULL => value of config("user_debug") */
 
 
 /*
  * configuration externals
  */
-DLL extern CONFIG *config_copy(CONFIG *src);
-DLL extern void config_free(CONFIG *cfg);
-DLL extern void config_print(CONFIG *cfg);
-DLL extern int configtype(char*);
-DLL extern void config_print(CONFIG*);
-DLL extern BOOL config_cmp(CONFIG*, CONFIG*);
+extern DLL CONFIG *config_copy(CONFIG *src);
+extern DLL void config_free(CONFIG *cfg);
+extern DLL void config_print(CONFIG *cfg);
+extern DLL int configtype(char*);
+extern DLL void config_print(CONFIG*);
+extern DLL BOOL config_cmp(CONFIG*, CONFIG*);
 
 
 #endif /* !__CONFIG_H__ */

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: func.c,v 29.6 2001/02/25 22:07:36 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: func.c,v 29.7 2001/03/17 21:31:47 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -36,9 +36,9 @@
 #include <errno.h>
 
 #if defined(_WIN32)
-#include <io.h>
-#define _access access
-#endif /* Windoz */
+# include <io.h>
+# define _access access
+#endif
 
 #if defined(FUNCLIST)
 
@@ -6894,7 +6894,16 @@ f_system(VALUE *vp)
 	if (conf->calc_debug & CALCDBG_SYSTEM) {
 		printf("%s\n", vp->v_str->s_str);
 	}
-	result.v_num = itoq((long) system(vp->v_str->s_str));
+#if defined(_WIN32)
+	/* if the execute length is 0 then use NULL in system call */
+	if (strlen(vp->v_str->s_str) == 0) {
+		result.v_num = itoq((long)system(NULL));
+	} else {
+		result.v_num = itoq((long)system(vp->v_str->s_str));
+	}
+#else /* Windoz free systems */
+	result.v_num = itoq((long)system(vp->v_str->s_str));
+#endif /* Windoz free systems */
 	return result;
 }
 
@@ -6907,6 +6916,7 @@ f_sleep(int count, VALUE **vals)
 	NUMBER *q1, *q2;
 
 	res.v_type = V_NULL;
+#if !defined(_WIN32)
 	if (count > 0) {
 		if (vals[0]->v_type != V_NUM || qisneg(vals[0]->v_num))
 				return error_value(E_SLEEP);
@@ -6937,6 +6947,7 @@ f_sleep(int count, VALUE **vals)
 		res.v_type = V_NUM;
 		res.v_num = itoq(time);
 	}
+#endif /* Windoz free systems */
 	return res;
 }
 

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: hist.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: hist.h,v 29.3 2001/03/17 21:31:47 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hist.h,v $
  *
  * Under source code control:	1993/05/02 20:09:20
@@ -64,10 +64,10 @@
 #define HIST_NOTTY	3	/* terminal modes could not be set */
 
 
-extern	int	hist_init(char *filename);
-extern	void	hist_term(void);
-extern	int	hist_getline(char *prompt, char *buf, int len);
-extern	void	hist_saveline(char *line, int len);
+extern DLL	int	hist_init(char *filename);
+extern DLL	void	hist_term(void);
+extern DLL	int	hist_getline(char *prompt, char *buf, int len);
+extern DLL	void	hist_saveline(char *line, int len);
 
 
 #endif /* !__HIST_H__ */

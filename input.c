@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: input.c,v 29.4 2001/02/25 22:07:36 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: input.c,v 29.5 2001/03/17 21:31:47 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/input.c,v $
  *
  * Under source code control:	1990/02/15 01:48:16
@@ -36,8 +36,8 @@
 #include <stdio.h>
 #include <ctype.h>
 #if !defined(_WIN32)
-#include <pwd.h>
-#endif /* Windoz free systems */
+# include <pwd.h>
+#endif
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -259,7 +259,7 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 static char *
 homeexpand(char *name)
 {
-#if defined (_WIN32)
+#if defined(_WIN32)
 
 	return NULL;
 
@@ -804,6 +804,15 @@ runrcfiles(void)
  * This function returns the index of the readset element that matches
  * a given device/inode, -1 otherwise.
  *
+ *
+ * WIN32 NOTE:
+ *
+ *	This function does not work under WIN32. The sbuf->st_ino is always
+ *	zero because the FAT and NTFS filesystems do not support inodes.
+ *	They also don't support links, which is why you need this function
+ *	under UNIX. For WIN32, use _fullpath() to determine if you have
+ *	already opened a file.
+ *
  * given:
  *	sbuf		stat of the inode in question
  */
@@ -811,6 +820,9 @@ static int
 isinoderead(struct stat *sbuf)
 {
 	int i;
+#if defined(_WIN32)
+	char fullpathname[_MAX_PATH];
+#endif
 
 	/* deal with the empty case */
 	if (readset == NULL || maxreadset <= 0) {
@@ -820,12 +832,22 @@ isinoderead(struct stat *sbuf)
 
 	/* scan the entire readset */
 	for (i=0; i < maxreadset; ++i) {
+#if defined(_WIN32)
+		if (readset[i].active &&
+		    strcmp(readset[i].path,
+		    	   _fullpath(fullpathname,cip->i_name,
+			   _MAX_PATH)) == 0) {
+			/* found a match */
+			return i;
+		}
+#else /* Windoz free systems */
 		if (readset[i].active &&
 		    sbuf->st_dev == readset[i].inode.st_dev &&
 		    sbuf->st_ino == readset[i].inode.st_ino) {
 			/* found a match */
 			return i;
 		}
+#endif /* Windoz free systems */
 	}
 
 	/* no match found */
@@ -932,11 +954,21 @@ addreadset(char *name, char *path, struct stat *sbuf)
 		return -1;
 	}
 	strcpy(readset[ret].name, name);
+#if defined(_WIN32)
+	/*
+	 * For WIN32, _fullpath expands the path to a fully qualified
+	 * path name, which under WIN32 FAT and NTFS is unique, just
+	 * like UNIX inodes. _fullpath also allocated the memory for
+	 * this new longer path name.
+	 */
+	readset[ret].path = _fullpath(NULL, path, 0);
+#else /* Windoz free systems */
 	readset[ret].path = (char *)malloc(strlen(path)+1);
 	if (readset[ret].path == NULL) {
 		return -1;
 	}
 	strcpy(readset[ret].path, path);
+#endif /* Windoz free systems */
 	readset[ret].inode = *sbuf;
 	readset[ret].active = 1;
 

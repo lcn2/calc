@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: file.c,v 29.5 2001/02/25 22:07:36 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: file.c,v 29.6 2001/03/17 21:31:47 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -37,7 +37,7 @@
 #include <stdlib.h>
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
-#include <unistd.h>
+# include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <ctype.h>
 #include "calc.h"
@@ -47,6 +47,10 @@
 #include "fposval.h"
 #include "file.h"
 #include "calcerr.h"
+
+#if defined(_WIN32)
+# include <io.h>
+#endif
 
 #define READSIZE	1024	/* buffer size for reading */
 
@@ -540,6 +544,7 @@ flushid(FILEID id)
 }
 
 
+#if !defined(_WIN32)
 int
 flushall(void)
 {
@@ -555,6 +560,7 @@ flushall(void)
 	}
 	return err;
 }
+#endif /* Windoz free systems */
 
 
 /*

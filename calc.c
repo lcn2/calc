@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: calc.c,v 29.6 2001/02/25 22:07:36 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: calc.c,v 29.7 2001/03/17 21:31:47 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11
@@ -32,20 +32,25 @@
 
 #include <stdio.h>
 #include <signal.h>
-#include <pwd.h>
+
+#if !defined (_WIN32)
+# include <pwd.h>
+#endif
+
 #include <sys/types.h>
 #include <ctype.h>
 
-#if defined (_WIN32)
-#include <io.h>
-/* 
- * getopt.h file is from the Cygwin GNU library 
+#if defined(_WIN32)
+# include <io.h>
+/*
+ * getopt.h file is from the Cygwin GNU library
  *
  * See:
  *	http://sources.redhat.com/cygwin/
  */
-#include "../getopt/getopt.h"	
-#define strdup _strdup
+# include "../getopt/getopt.h"
+# define strdup _strdup
+# define isatty _isatty
 #endif /* Windoz */
 
 #define CALC_C
@@ -61,6 +66,7 @@
 #include "custom.h"
 #include "math_error.h"
 #include "args.h"
+#include "zmath.h"
 
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)

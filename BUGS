@@ -108,6 +108,25 @@ Problems with known work-a-rounds:
         int remsign;
         BOOL up, onebit;
         ZVALUE sqrt;
+*** zmath.c	2000/06/07 14:02:13	29.2
+--- zmath.c	2001/03/13 19:47:03
+***************
+*** 1608,1614 ****
+  void
+  zbitvalue(long n, ZVALUE *res)
+  {
+! 	ZVALUE z;
+
+  	if (n < 0) n = 0;
+  	z.sign = 0;
+--- 1608,1614 ----
+  void
+  zbitvalue(long n, ZVALUE *res)
+  {
+! 	volatile ZVALUE z;
+
+  	if (n < 0) n = 0;
+  	z.sign = 0;
 
     * Solaris cc somtimes barfs while compiling zrand.c.  In particular, calc
       barfs on on the SVAL macro.  The work-a-round is to use the Solaric cc
@@ -205,8 +224,8 @@ Problems with known work-a-rounds:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.7 $
-## @(#) $Id: BUGS,v 29.7 2001/02/25 21:01:52 chongo Exp $
+## @(#) $Revision: 29.9 $
+## @(#) $Id: BUGS,v 29.9 2001/03/18 03:34:41 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13

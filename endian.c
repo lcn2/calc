@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: endian.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: endian.c,v 29.3 2001/03/18 02:59:42 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/endian.c,v $
  *
  * Under source code control:	1993/11/15 04:32:58
@@ -48,8 +48,10 @@ char byte[8] = { (char)0x12, (char)0x36, (char)0x48, (char)0x59,
 int
 main(void)
 {
+#if !defined(LITTLE_ENDIAN) && !defined(BIG_ENDIAN)
 	/* pointers into the byte order array */
 	int *intp = (int *)byte;
+#endif
 #if defined(DEBUG)
 	short *shortp = (short *)byte;
 	long *longp = (long *)byte;
@@ -69,6 +71,11 @@ main(void)
 	printf("#define BIG_ENDIAN\t4321\n");
 	printf("#define LITTLE_ENDIAN\t1234\n");
 
+#if defined(LITTLE_ENDIAN)
+	printf("#define CALC_BYTE_ORDER\tLITTLE_ENDIAN\n");
+#elif defined(BIG_ENDIAN)
+	printf("#define CALC_BYTE_ORDER\tBIG_ENDIAN\n");
+#else
 	/* Determine byte order */
 	if (intp[0] == 0x12364859) {
 	    /* Most Significant Byte first */
@@ -81,6 +88,7 @@ main(void)
 		"Unknown int Byte Order, set CALC_BYTE_ORDER in Makefile\n");
 	    exit(1);
 	}
+#endif
 	/* exit(0); */
 	return 0;
 }

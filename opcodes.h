@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: opcodes.h,v 29.3 2001/02/25 22:07:36 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: opcodes.h,v 29.4 2001/03/17 21:31:47 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/opcodes.h,v $
  *
  * Under source code control:	1990/02/15 01:48:35
@@ -32,18 +32,7 @@
 #define __OPCODES_H__
 
 
-#if defined (_WIN32)
-#ifdef _EXPORTING
-  #define DLL	__declspec(dllexport)
-#else
-  #define DLL	__declspec(dllimport)
-#endif
-
-#else /* Windoz free systems */
-
-  #define DLL
-
-#endif /* Windoz free systems */
+#include "win32dll.h"
 
 
 /*
@@ -188,8 +177,8 @@
 /*
  * external declarations
  */
-extern char *funcname;			/* function being executed */
-extern long funcline;			/* function line being executed */
+extern DLL char *funcname;		/* function being executed */
+extern DLL long funcline;		/* function line being executed */
 
 
 #endif /* !__OPCODES_H__ */

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: help.c,v 29.5 2001/02/25 22:07:36 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: help.c,v 29.6 2001/03/17 21:31:47 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/help.c,v $
  *
  * Under source code control:	1997/09/14 10:58:30
@@ -40,6 +40,11 @@
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
+#endif
+
+#if defined(_WIN32)
+# define popen _popen
+# define pclose _pclose
 #endif
 
 

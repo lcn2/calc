@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: have_fpos_pos.c,v 29.1 2000/12/17 11:25:22 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: have_fpos_pos.c,v 29.2 2001/03/18 03:00:11 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/have_fpos_pos.c,v $
  *
  * Under source code control:	2000/12/17 01:23
@@ -51,8 +51,17 @@ main(void)
 	printf("#define HAVE_FPOS_POS 1  /* yes */\n\n");
 
 	/* determine __pos element size */
-	printf("#undef FPOS_POS_BITS\n");
+	printf("#undef FPOS_POS_BITS\t/* no */\n");
+# if defined(FPOS_POS_BITS)
+	printf("#define FPOS_POS_BITS %d\n\n", FPOS_POS_BITS);
+# else
 	printf("#define FPOS_POS_BITS %d\n\n", sizeof(pos.__pos)*8);
+# endif
+
+#else
+	/* we have no __pos element */
+	printf("#undef HAVE_FPOS_POS\t/* no */\n");
+	printf("#undef FPOS_POS_BITS\n");
 #endif
 	/* exit(0); */
 	return 0;
