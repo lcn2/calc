@@ -1,34 +1,13 @@
 .\"
-.\" Copyright (C) 1999	Landon Curt Noll
-.\"
-.\" Calc is open software; you can redistribute it and/or modify it under
-.\" the terms of the version 2.1 of the GNU Lesser General Public License
-.\" as published by the Free Software Foundation.
-.\"
-.\" Calc is distributed in the hope that it will be useful, but WITHOUT
-.\" ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-.\" or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
-.\" Public License for more details.
-.\"
-.\" A copy of version 2.1 of the GNU Lesser General Public License is
-.\" distributed with calc under the filename COPYING-LGPL.  You should have
-.\" received a copy with calc; if not, write to Free Software Foundation, Inc.
-.\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
-.\"
-.\" @(#) $Revision: 29.1 $
-.\" @(#) $Id: calc.man,v 29.1 1999/12/14 09:15:35 chongo Exp $
-.\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
-.\"
-.\" Under source code control:	    1991/07/23 05:48:26
-.\" File existed as early as:	    1991
-.\"
-.\" chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-.\" Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+.\" Copyright (c) 1993 David I. Bell and Landon Curt Noll
+.\" Original man page dated 15nov93
+.\" Copyright (c) 1999 David I. Bell and Landon Curt Noll
+.\" Permission is granted to use, distribute, or modify this source,
+.\" provided that this copyright notice remains intact.
 .\"
 .\" calculator by David I. Bell
 .\" man page by Landon Noll
-.\"
-.TH calc 1 "^..^" "1999-11-30"
+.TH calc 1 "^..^" "15Oct1999"
 .SH NAME
 calc \- arbitrary precision calculator
 .SH SYNOPSIS
@@ -36,7 +15,7 @@ calc \- arbitrary precision calculator
 .RB [ \-c ]
 .RB [ \-C ]
 .RB [ \-d ]
-.RB [ -D\ \&calc_debug[:resource_debug:[user_debug]] ]
+.RB [ -D\ \&calc_debug[:lib_debug:[user_debug]] ]
 .br
 .in +5n
 .RB [ \-e ]
@@ -46,18 +25,15 @@ calc \- arbitrary precision calculator
 .RB [ \-n ]
 .RB [ \-p ]
 .RB [ \-q ]
-.RB [ \-s ]
 .RB [ \-u ]
 .RB [ \-v ]
 .br
 .RB [ calc_cmd\ \&.\|.\|. ]
 .in -5n
-.sp
-\fI#!${BINDIR}/calc\fP\ \fB\-S\fP\ [\-other_flags\ \&...]
 .SH DESCRIPTION
 \&
 .br
-CALC OPTIONS
+CALC COMMAND LINE
 .PP
 
 .TP
@@ -89,17 +65,16 @@ cause
 to try to process each line being read
 despite the errors that it encounters.
 .sp 1
-By default, calc startup resource files ($CALCRC) are silently
+By default, calc startup scripts ($CALCRC) are silently
 ignored if not found.
 This flag will report missing
-startup resource files unless
+startup scripts unless
 .B \-d
 is also given.
 
 .TP
 .B \-C
-Permit the execution of custom builtin functions.
-Without
+Permit the execution of custom builtin functions.  Without
 this flag, calling the custom() builtin function will
 simply generate an error.
 .sp 1
@@ -112,8 +87,8 @@ functions are disabled by default for this reason.
 .TP
 .B \-d
 Disable the printing of the opening title.  The printing
-of resource file debug and informational messages is also disabled
-as if \fBconfig("resource_debug", 0)\fP had been executed.
+of library debug and informational messages is also disabled
+as if \fBconfig("lib_debug", 0)\fP had been executed.
 .sp 1
 For example:
 .sp 1
@@ -147,12 +122,12 @@ It's nearly ten past six.
 .in -5n
 .sp 1
 This flag disables the reporting of missing calc
-startup resource files ($CALCRC).
+startup scripts ($CALCRC).
 
 .TP
-.BR -D " calc_debug[:resource_debug:[user_debug]]"
+.BR -D " calc_debug[:lib_debug:[user_debug]]"
 Force the initial value of config("calc_debug"),
-config("resource_debug") and config("user_debug").
+config("lib_debug") and config("user_debug").
 .sp 1
 The : separated strings are interpreted as signed 32 bit values.
 After an optional leading sign a leading zero indicates octal
@@ -162,9 +137,9 @@ conversion.  Otherwise, decimal conversion is assumed.
 By default,
 .I calc_debug
 is 0,
-.I resource_debug
+.I lib_debug
 is 3 and
-.I user_debug
+.I lib_debug
 is 0.
 .sp 1
 For more information use the following
@@ -294,7 +269,7 @@ unknown mode.
 will attempt to read or write them if directed.
 .sp 1
 If the mode disables opening of files for reading, then
-the startup resource files are disabled as of
+the startup library scripts are disabled as of
 .B \-q
 was given.
 The reading of key bindings is also disabled
@@ -330,15 +305,7 @@ flag overrides
 
 .TP
 .B \-q
-Disable the use of the $CALCRC startup resource files.
-
-.TP
-.B \-s
-By default, all
-.I calc_cmd
-args are evaluated and executed.
-This flag will disable their evaluation and instead make
-them available as strings for the argv() builtin function.
+Disable the use of the $CALCRC startup scripts.
 
 .TP
 .B \-u
@@ -350,23 +317,15 @@ Print the
 .B calc
 version number and exit.
 .PP
-
-\&
-.br
-CALC COMMAND LINE
-.PP
 Without
 .IR calc_cmd ,
 .B calc
 operates interactively.
 If one or more
 .I calc_cmd
-are given on the command line and
-.B \-s
-is NOT given, then
+are given on the command line,
 .B calc
-will evaluate and execute them and then exit.
-.sp
+will execute them and exit.
 If
 .B \-i
 is given,
@@ -375,28 +334,19 @@ will attempt to become interactive
 even of one or more
 .I calc_cmd
 are given on the command line.
-.sp
-If
-.B \-s
-is given,
-.B calc
-will not evaluate any
-.I calc_cmd
-arguments but instead make them available
-as strings to the argv() builtin function.
 .PP
 Normally on startup,
 .B calc
 attempts to execute a collection of
-startup resource files.
+library scripts.
 The environment variable $CALCRC (if non-existent
 then a compiled in value) contains a :	separated list of startup
-resource files.
+library scripts.
 No error conditions are produced if these startup
-resource files are not found.
+library scripts are not found.
 .PP
 If the mode disables opening of files for reading, then the startup
-resource files are disabled as of
+library scripts are disabled as of
 .B \-q
 was given and $CALCRC as well
 as the default compiled in value are ignored.
@@ -442,129 +392,6 @@ help config
 .in -5n
 .sp 1
 .PP
-
-\&
-.br
-SHELL SCRIPT MODE
-.PP
-If an executable file begins with:
-.sp 1
-.in +5n
-.nf
-\fI#!${BINDIR}/calc\fP\ \fB\-S\fP\ [\-other_flags\ \&...]
-.fi
-.in -5n
-.sp 1
-the rest of the file will be processed in
-.BR "shell script mode" .
-Note that
-.B \-S
-(UPPER CASE
-.BR \-S )
-must be the first \-flag on the ``#!'' line.
-Any other optional ``\-other_flags'' must come after
-the
-.BR \-S .
-.sp 1
-In
-.B "shell script mode"
-the contents of the file
-are evaluated and executed as if they were processed
-by the
-.B read
-command.
-Any optional ``\-other_flags'' will by parsed first
-followed by any arguments given shell script itself.
-.sp 1
-In
-.BR "shell script mode" ,
-.B \-s
-(lower case
-.BR \-s )
-is always assumed.
-In addition,
-.B \-d
-and
-.B \-p
-are automatically set if
-.B \-i
-is not given.
-.sp 1
-For example, if
-the file
-.BR /tmp/mersenne :
-.sp 1
-.in +5n
-.nf
-\fI#!${BINDIR}/calc\fP\ \fB\-S\fP\ \&\fB\-q\fP
-#
-# mersenne - an example of a calc \fBshell script file\fP
-
-/* parse args */
-if (argv() != 1) {
-    fprintf(files(2), "usage: %s exp\\n", config("program"));
-    abort "must give one exponent arg";
-}
-
-/* print the mersenne number */
-print "2^": argv(0) : "-1 =", 2^eval(argv(0))-1;
-.fi
-.in -5n
-.sp 1
-is made an executable file by:
-.sp 1
-.in +5n
-.nf
-chmod +x /tmp/mersenne
-.fi
-.in -5n
-.sp 1
-then the command line:
-.sp 1
-.in +5n
-.nf
-/tmp/mersenne 127
-.fi
-.in -5n
-.sp 1
-will print:
-.sp 1
-.in +5n
-.nf
-2^127-1 = 170141183460469231731687303715884105727
-.fi
-.in -5n
-.sp 1
-Note that because
-.B \-s
-is assumed in
-.B "shell script mode"
-and non-dashed args are made available as
-strings via the
-.BR argv ()
-builtin function.
-Therefore:
-.sp 1
-.in +5n
-.nf
-2^eval(argv(0))-1
-.fi
-.in -5n
-.sp 1
-will print the decimal value of 2^n-1
-but
-.sp 1
-.in +5n
-.nf
-2^argv(0)-1
-.fi
-.in -5n
-.sp 1
-will not.
-.PP
-
-\&
-.br
 DATA TYPES
 .PP
 Fundamental builtin data types include integers, real numbers,
@@ -590,9 +417,6 @@ help obj
 show objfuncs
 .in -1.0i
 .PP
-
-\&
-.br
 VARIABLES
 .PP
 Variables in \fIcalc\fP are typeless.
@@ -618,9 +442,6 @@ help list
 show globals
 .in -1.0i
 .PP
-
-\&
-.br
 INPUT/OUTPUT
 .PP
 A leading ``0x'' implies a hexadecimal value,
@@ -653,9 +474,6 @@ command:
 help file
 .in -1.0i
 .PP
-
-\&
-.br
 CALC LANGUAGE
 .PP
 The \fIcalc\fP language is a C-like language.
@@ -666,7 +484,7 @@ These commands are very similar to their counterparts in C.
 The language also include a number of commands particular
 to \fIcalc\fP itself.
 These include commands such as function definition, help,
-reading in resource files, dump files to a file, error notification,
+reading in library scripts, dump files to a file, error notification,
 configuration control and status.
 .PP
 For more information use the following
@@ -689,54 +507,29 @@ help config
 \&
 .br
 .PD 0
-.TP 5
-${BINDIR}/calc
-calc binary
-.sp 1
-.TP 5
-${SCRIPTDIR}/*
-calc shell scripts
-.sp 1
-.TP 5
+.TP 20
 ${LIBDIR}/*.cal
-calc standard resource files
-.sp 1
-.TP 5
+library scripts shipped with
+.B calc
+.br
+.sp
+.TP 20
 ${LIBDIR}/help/*
 help files
-.sp 1
-.TP 5
+.br
+.sp
+.TP 20
 ${LIBDIR}/bindings
-non-GNU-readline command line editor bindings
-.sp 1
-.TP 5
-${INCDIRCALC}/*.h
-include files for C interface use
-.sp 1
-.TP 5
-${LIBDIR}/libcalc.a
-calc binary link library
-.sp 1
-.TP 5
-${LIBDIR}/libcustcalc.a
-custom binary link library
-.sp 1
-.TP 5
-${CUSTOMLIBDIR}/*.cal
-custom resource files
-.sp 1
-.TP 5
-${CUSTOMHELPDIR}/*
-custom help files
-.sp 1
+command line editor bindings
+.sp
 .SH ENVIRONMENT
 \&
 .br
 .PD 0
 .TP 5
 CALCPATH
-A :-separated list of directories used to search for calc
-resource filenames that do not begin with /, ./ or ~.
+A :-separated list of directories used to search for
+scripts filenames that do not begin with /, ./ or ~.
 .br
 .sp
 Default value: ${CALCPATH}
@@ -773,13 +566,12 @@ In that case, the standard readline mechanisms (see readline(3)) are used.
 .SH CREDIT
 \&
 .br
-The main chunk of
+The majority of
 .B calc
 was written by David I. Bell.
 .sp
-The
-.B calc
-primary mirror, calc mailing list and calc bug report
+.B Calc
+The Calc primary mirror, calc mailing list and calc bug report
 processing is performed by Landon Curt Noll.
 .sp
 Landon Curt Noll maintains the master reference source, performs
@@ -798,83 +590,28 @@ Ernest also supplied the original text for many of the help files.
 .sp
 Portions of this program are derived from an earlier set of
 public domain arbitrarily precision routines which was posted
-to the net around 1984.
-By now, there is almost no recognizable
+to the net around 1984.	 By now, there is almost no recognizable
 code left from that original source.
 .sp
-.SH "COPYING / CALC GNU LESSER GENERAL PUBLIC LICENSE"
-\&
-.sp
-Calc is open software, and is
-covered under version 2.1 of the GNU Lesser General Public License.
-You are
-welcome to change it and/or distribute copies of it under certain
-conditions.
-The calc commands:
+Most of this source and binary has one of the following copyrights:
 .sp
 .in +0.5i
-.nf
-help copyright
-help copying
-help copying-lgpl
-.fi
-.in -0.5i
-.sp
-should display the contents of the COPYING and COPYING-LGPL files.
-Those files contain information about the calc's GNU Lesser General
-Public License, and in particular the conditions under which you
-are allowed to change it and/or distribute copies of it.
-.sp
-You should have received a copy of the version 2.1 of the GNU Lesser General
-Public License.
-If you do not have these files, write to:
-.sp
-.in +0.5i
-.nf
-Free Software Foundation, Inc.
-59 Temple Place
-Suite 330
-Boston, MA  02111-1307
-USA
-.fi
-.in -0.5i
-.sp
-Calc is copyrighted in several different ways.
-These ways include:
-.sp
-.in +0.5i
-.nf
-Copyright (C) year  David I. Bell
-Copyright (C) year  David I. Bell and Landon Curt Noll
-Copyright (C) year  David I. Bell and Ernest Bowen
-Copyright (C) year  David I. Bell, Landon Curt Noll and Ernest Bowen
-Copyright (C) year  Landon Curt Noll
-Copyright (C) year  Ernest Bowen and Landon Curt Noll
-Copyright (C) year  Ernest Bowen
-.fi
-.in -0.5i
-.sp
-This man page is:
-.sp
-.in +0.5i
-.nf
-Copyright (C) 1999  Landon Curt Noll
-.fi
-.in -0.5i
-.sp
-and is covered under version 2.1 GNU Lesser General
-Public License.
-.sp
-.SH "BUG REPORTS / BUG FIXES / ENHANCEMENTS"
-\&
+Copyright (c) 19xx David I. Bell
 .br
+Copyright (c) 19xx David I. Bell and Landon Curt Noll
+.br
+Copyright (c) 19xx Landon Curt Noll
+.br
+Copyright (c) 19xx Ernest Bowen and Landon Curt Noll
+.in -0.5i
+.sp
+Permission is granted to use, distribute, or modify this source,
+provided that this copyright notice remains intact.
 .sp
 Send comments, suggestions, bug fixes, enhancements
 and interesting
 .B calc
-resource files,
-.B calc
-shell scripts that you would like you see included
+scripts that you would like you see included
 in future distributions to:
 .sp
 .in +0.5i
@@ -886,7 +623,6 @@ calc-tester at postofc dot corp dot sgi dot com
 .in -0.5i
 .sp
 Bug reports are sent to:
-.sp
 .in +0.5i
 .nf
 calc-bugs at postofc dot corp dot sgi dot com
@@ -909,9 +645,6 @@ help bugs
 .sp
 for more information about bug reporting.
 .sp
-.SH "CALC WEB SITE / MAILING LIST"
-\&
-.br
 Landon Noll maintains the the
 .B calc
 web site is located at:

@@ -1,32 +1,9 @@
 /*
- * token - read input file characters into tokens
+ * Copyright (c) 1997 David I. Bell
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
  *
- * Copyright (C) 1999  David I. Bell and Ernest Bowen
- *
- * Primary author:  David I. Bell
- *
- * Calc is open software; you can redistribute it and/or modify it under
- * the terms of the version 2.1 of the GNU Lesser General Public License
- * as published by the Free Software Foundation.
- *
- * Calc is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
- * Public License for more details.
- *
- * A copy of version 2.1 of the GNU Lesser General Public License is
- * distributed with calc under the filename COPYING-LGPL.  You should have
- * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
- *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: token.c,v 29.1 1999/12/14 09:16:16 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/token.c,v $
- *
- * Under source code control:	1990/02/15 01:48:25
- * File existed as early as:	before 1990
- *
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * Read input file characters into tokens
  */
 
 
@@ -113,7 +90,6 @@ static struct keyword keywords[] = {
 
 static void eatcomment(void);
 static void eatstring(int quotechar);
-static void eatline(void);
 static int eatsymbol(void);
 static int eatnumber(void);
 
@@ -178,8 +154,7 @@ gettoken(void)
 	type = T_NULL;
 	while (type == T_NULL) {
 		ch = nextchar();
-		if (allsyms && ((ch!=' ') &&
-		    (ch!=';') && (ch!='"') && (ch!='\n'))) {
+		if (allsyms && ((ch!=' ') && (ch!=';') && (ch!='"') && (ch!='\n'))) {
 			reread();
 			type = eatsymbol();
 			break;
@@ -244,10 +219,8 @@ gettoken(void)
 				case '=': type = T_MULTEQUALS; break;
 				case '*':
 					switch (nextchar()) {
-					    case '=':
-						type = T_POWEREQUALS; break;
-					    default:
-						type = T_POWER; reread();
+						case '=': type = T_POWEREQUALS; break;
+						default: type = T_POWER; reread();
 					}
 					break;
 				default: type = T_MULT; reread();
@@ -257,13 +230,8 @@ gettoken(void)
 			switch (nextchar()) {
 				case '/':
 					switch (nextchar()) {
-						case '=':
-						    type = T_SLASHSLASHEQUALS;
-						    break;
-						default:
-						    reread();
-						    type = T_SLASHSLASH;
-						    break;
+						case '=': type = T_SLASHSLASHEQUALS; break;
+						default: reread(); type = T_SLASHSLASH; break;
 					}
 					break;
 				case '=': type = T_DIVEQUALS; break;
@@ -282,13 +250,8 @@ gettoken(void)
 				case '=': type = T_LE; break;
 				case '<':
 					switch (nextchar()) {
-						case '=':
-							type = T_LSHIFTEQUALS;
-							break;
-						default:
-							reread();
-							type = T_LEFTSHIFT;
-							break;
+						case '=': type = T_LSHIFTEQUALS; break;
+						default:  reread(); type = T_LEFTSHIFT; break;
 					}
 					break;
 				default: type = T_LT; reread();
@@ -299,13 +262,8 @@ gettoken(void)
 				case '=': type = T_GE; break;
 				case '>':
 					switch (nextchar()) {
-						case '=':
-							type = T_RSHIFTEQUALS;
-							break;
-						default:
-							reread();
-							type = T_RIGHTSHIFT;
-							break;
+						case '=': type = T_RSHIFTEQUALS; break;
+						default:  reread(); type = T_RIGHTSHIFT; break;
 					}
 					break;
 				default: type = T_GT; reread();
@@ -334,12 +292,6 @@ gettoken(void)
 		case '#':
 			switch(nextchar()) {
 				case '=': type = T_HASHEQUALS; break;
-				case '!': type = T_POUNDBANG; eatline(); break;
-				case ' ': type = T_POUNDCOMMENT; eatline();
-					  break;
-				case '\t': type = T_POUNDCOMMENT; eatline();
-					  break;
-				case '\n': type = T_POUNDCOMMENT; break;
 				default: type = T_HASH; reread();
 			}
 			break;
@@ -403,23 +355,6 @@ eatcomment(void)
 
 
 /*
- * Continue to eat up a the current line
- * Typically a #! will require the rest of the line to be eaten as if
- * it were a comment.
- */
-static void
-eatline(void)
-{
-	int ch;		/* chars being eaten */
-
-	do {
-		ch = nextchar();
-	} while (ch != '\n' && ch != EOF && ch != '\0');
-	reread();
-}
-
-
-/*
  * Read in a string and add it to the literal string pool.
  * The leading single or double quote has been read in at this point.
  */
@@ -450,8 +385,7 @@ eatstring(int quotechar)
 					break;
 			case EOF:
 				reread();
-				scanerror(T_NULL,
-					  "Unterminated string constant");
+				scanerror(T_NULL, "Unterminated string constant");
 				done = TRUE;
 				ch = '\0';
 				break;
@@ -769,3 +703,5 @@ scanerror(int skip, char *fmt, ...)
 			}
 	}
 }
+
+/* END CODE */

@@ -1,0 +1,40 @@
+/*
+ * Here is an iterative method of finding the number of primes less than
+ * or equal to a given number.	This method is from "Computer Recreations"
+ * June 1996 issue of Scientific American.
+ *
+ * NOTE: For reasonable values of x, the builtin function pix(x) is
+ *	 much faster.  This code is provided because the method
+ *	 is interesting.
+ */
+
+define pi_of_x(x)
+{
+	local An;	/* A(n) */
+	local An1;	/* A(n-1) */
+	local An2;	/* A(n-2) */
+	local An3;	/* A(n-3) */
+	local primes;	/* number of primes found */
+	local n;	/* loop counter */
+
+	/*
+	 * setup
+	 */
+	An1 = 2;
+	An2 = 0;
+	An3 = 3;
+	primes = 1;
+
+	/*
+	 * main A(n+1)=A(n-1)+A(n-2) sequence loop
+	 */
+	for (n = 3; n < x; ++n) {
+		An = An2 + An3;
+		An3 = An2;
+		An2 = An1;
+		An1 = An;
+		if (An % n == 0)
+			++primes;
+	}
+	return primes;
+}

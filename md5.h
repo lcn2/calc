@@ -1,3 +1,4 @@
+/* @(#)md5.h	12.1 17 Nov 1995 04:22:35 */
 /*
  * md5 - RSA Data Security, Inc. MD5 Message-Digest Algorithm
  *
@@ -9,12 +10,6 @@
  * USE,	 DATA  OR  PROFITS, WHETHER IN AN ACTION OF CONTRACT,
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: md5.h,v 29.1 1999/12/14 09:16:12 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/md5.h,v $
- *
- * This file is not covered under version 2.1 of the GNU LGPL.
  */
 
 /*

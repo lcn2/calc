@@ -3,7 +3,7 @@
  *
  * Written 2 September 1992, Peter C. Gutmann.
  *
- * This file has been extensively modified by:
+ * This file was Modified/Re-written by:
  *
  *	Landon Curt Noll
  *	http://reality.sgi.com/chongo/
@@ -21,14 +21,7 @@
  * USE,	 DATA  OR  PROFITS, WHETHER IN AN ACTION OF CONTRACT,
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: shs1.c,v 29.1 1999/12/14 09:16:15 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/shs1.c,v $
- *
- * This file is not covered under version 2.1 of the GNU LGPL.
  */
-
 
 #include <stdio.h>
 #include "longbits.h"

@@ -1,0 +1,19 @@
+/*
+ * Copyright (c) 1995 Ernest Bowen and Landon Curt Noll
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
+ * By: Ernest Bowen and Landon Curt Noll
+ *     ernie@neumann.une.edu.au and http://reality.sgi.com/chongo/
+ *
+ * This library is used by the 3100 series of the regress.cal test suite.
+ */
+
+obj res {r};
+global md;
+define res_test(a) = !ismult(a.r, md);
+define res_sub(a,b) {local obj res v = {(a.r - b.r) % md}; return v;};
+define res_mul(a,b) {local obj res v = {(a.r * b.r) % md}; return v;};
+define res_neg(a) {local obj res v = {(-a.r) % md}; return v;};
+define res_inv(a) {local obj res v = {minv(a.r, md)}; return v;};
+define res(x) {local obj res v = {x % md}; return v;};

@@ -1,33 +1,24 @@
 /*
- * hash - one-way hash routines
+ * Copyright (c) 1997 by Landon Curt Noll.  All Rights Reserved.
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Permission to use, copy, modify, and distribute this software and
+ * its documentation for any purpose and without fee is hereby granted,
+ * provided that the above copyright, this permission notice and text
+ * this comment, and the disclaimer below appear in all of the following:
  *
- * Calc is open software; you can redistribute it and/or modify it under
- * the terms of the version 2.1 of the GNU Lesser General Public License
- * as published by the Free Software Foundation.
+ *	supporting documentation
+ *	source copies
+ *	source works derived from this source
+ *	binaries derived from this source or from derived source
  *
- * Calc is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
- * Public License for more details.
- *
- * A copy of version 2.1 of the GNU Lesser General Public License is
- * distributed with calc under the filename COPYING-LGPL.  You should have
- * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
- *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: hash.c,v 29.2 1999/12/14 19:37:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/hash.c,v $
- *
- * Under source code control:	1995/11/23 05:13:11
- * File existed as early as:	1995
- *
- * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+ * EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+ * USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+ * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ * PERFORMANCE OF THIS SOFTWARE.
  */
-
 
 #include <stdio.h>
 #include <string.h>
@@ -974,16 +965,13 @@ hash_value(int type, void *v, HASH *state)
 		state = hash_int(type, value->v_config->blkbase, state);
 		state = hash_int(type, value->v_config->blkfmt, state);
 		state = hash_long(type,
-			(long)value->v_config->resource_debug, state);
+			(long)value->v_config->lib_debug, state);
 		state = hash_long(type,
 			(long)value->v_config->calc_debug, state);
 		state = hash_long(type,
 			(long)value->v_config->user_debug, state);
 		state = hash_bool(type, value->v_config->verbose_quit, state);
 		state = hash_int(type, value->v_config->ctrl_d, state);
-		state = hash_str(type, value->v_config->program, state);
-		state = hash_str(type, value->v_config->base_name, state);
-		state = hash_str(type, value->v_config->version, state);
 		break;
 
 	case V_HASH:

@@ -1,35 +1,10 @@
 /*
+ * Copyright (c) 1999 David I. Bell
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
  * version - determine the version of calc
- *
- * Copyright (C) 1999  David I. Bell and Landon Curt Noll
- *
- * Primary author:  David I. Bell
- *
- * Calc is open software; you can redistribute it and/or modify it under
- * the terms of the version 2.1 of the GNU Lesser General Public License
- * as published by the Free Software Foundation.
- *
- * Calc is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
- * Public License for more details.
- *
- * A copy of version 2.1 of the GNU Lesser General Public License is
- * distributed with calc under the filename COPYING-LGPL.  You should have
- * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
- *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: version.c,v 29.2 1999/12/14 19:37:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $
- *
- * Under source code control:	1990/05/22 11:00:58
- * File existed as early as:	1990
- *
- * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
  */
-
 
 #include <stdio.h>
 #if defined(CALC_VER)
@@ -42,8 +17,8 @@ static char *program;
 
 #define MAJOR_VER	2	/* major version */
 #define MINOR_VER	11	/* minor version */
-#define MAJOR_PATCH	1	/* patch level or 0 if no patch */
-#define MINOR_PATCH	"0"	/* test number or empty string if no patch */
+#define MAJOR_PATCH	0	/* patch level or 0 if no patch */
+#define MINOR_PATCH  "10.5.1"	/* test number or empty string if no patch */
 
 /*
  * calc version constants
@@ -58,35 +33,6 @@ char *calc_minor_patch = MINOR_PATCH;
  * stored version
  */
 static char *stored_version = NULL;	/* version formed if != NULL */
-
-
-/*
- * stored license info - has a side effect of copyrighting the binary
- */
-char *Copyright = "\n"
-  "calc - arbitrary precision calculator\n"
-  "\n"
-  "@(#) Copyright (C) 1999  David I. Bell, Landon Curt Noll and Ernest Bowen\n"
-  "\n"
-  "Primary author:  David I. Bell\n"
-  "\n"
-  "Calc is open software; you can redistribute it and/or modify it under\n"
-  "the terms of the version 2.1 of the GNU Lesser General Public License\n"
-  "as published by the Free Software Foundation.\n"
-  "\n"
-  "Calc is distributed in the hope that it will be useful, but WITHOUT\n"
-  "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY\n"
-  "or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General\n"
-  "Public License for more details.\n"
-  "\n"
-  "A copy of version 2.1 of the GNU Lesser General Public License is\n"
-  "distributed with calc under the filename COPYING-LGPL.  You should have\n"
-  "received a copy with calc; if not, write to Free Software Foundation, Inc.\n"
-  "59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.\n"
-  "\n"
-  "@(#) For license details use the command:\thelp copying\n"
-  "The COPYING-LGPL file may be viewed with:\thelp copying-lgpl\n"
-  "\n";
 
 
 /*

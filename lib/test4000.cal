@@ -1,0 +1,454 @@
+/*
+ * Copyright (c) 1996 Ernest Bowen and Landon Curt Noll
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
+ * By: Ernest Bowen and Landon Curt Noll
+ *     ernie@neumann.une.edu.au and http://reality.sgi.com/chongo/
+ *
+ * This library is used by the 4000 series of the regress.cal test suite.
+ */
+/*
+ * Functions for testing and timing ptest, nextcand, prevcand.
+ *
+ * rlen(N) for N > 0 generates a random N-word positive integer.
+ *
+ * plen(N) for N > 0 generates an almost certainly prime positive
+ *	integer whose word-count is about N.
+ *
+ * clen(N) for N > 0 generates a composite odd N-word integer.
+ *
+ * ptimes(str, N [, n [, count [, skip, [, verbose]]]])
+ *	tests, and finds the runtime, for
+ *	ptest(x, count, skip) for n random almost certainly prime integers x
+ *	with word-count about N; n defaults to ceil(K1/abs(count)/(H1 + N^3)),
+ *	count to COUNT, skip to SKIP.
+ *
+ * ctimes(str, N [, n [, count [, skip, [, verbose]]]])
+ *	tests, and finds the runtime, for
+ *	ptest(x, count, skip) for n random composite integers x with word-count
+ *	about N; n defaults to ceil(K2/(H2 + N^3)), count to COUNT, skip
+ *	to SKIP.
+ *
+ * crtimes(str,a,b,n, [,count [, skip, [, verbose]]])
+ *	tests, and finds the runtime,
+ *	for ptest(x, count, skip) for n random integers x between a and b;
+ *	count defaults to COUNT, skip to SKIP.
+ *
+ * ntimes (str, N [,n, [, count [, skip [, residue [, modulus[,verb]]]]]]) tests
+ *	and finds the runtime for nextcand(...) and prevcand (...) for
+ *	n integers x with word-count about N, etc. n defaults to
+ *	ceil(K3/(H3 + N^3));
+ *
+ * testnextcand(str, N [, n [, count [, skip [, residue [, modulus [, verb]]]]])
+ *	performs tests of nextcand(x, count, skip, residue, modulus)
+ *	for n values of x with word-count N; n defaults to
+ *	ceil(K3/(H3 + N^3)), count to COUNT, skip to SKIP, residue to 0,
+ *	modulus to 1.
+ *
+ * testprevcand(str, N [, n [, count [, skip [, residue [, modulus [, verb]]]]])
+ *	performs tests of prevcand(x, count, skip, residue, modulus)
+ *	for n values of x with word-count N; n defaults to
+ *	ceil(K3/(H3 + N^3)), count to COUNT, skip to SKIP, residue to 0,
+ *	modulus to 1.
+ */
+
+global defaultverbose = 1;	/* default verbose value */
+global err;
+
+/*
+ * test defaults
+ */
+global BASEB = 32;
+global BASE = 2^BASEB;
+global COUNT = 5;
+global SKIP = 0;
+global RESIDUE = 0;
+global MODULUS = 1;
+
+/*
+ * internal test constants
+ */
+global K1 = 2^15;
+global H1 = 40;
+global K2 = 2^17;
+global H2 = 40;
+global K3 = 2^10;
+global H3 = 10;
+
+
+define rlen(N)
+{
+
+	if (!isint(N) || N <= 0)
+		quit "Bad argument for rlen";
+	return rand(BASE^(N-1), BASE^N);
+}
+
+define plen(N) = nextcand(rlen(N), 10, 0);
+
+define clen(N)
+{
+	local n, v;
+
+	do {
+		v = rlen(N);
+		if (iseven(v))
+			v++;
+	}
+	while
+		(ptest(v, 10, 0));
+	return v;
+}
+
+define ptimes(str, N, n, count, skip, verbose)
+{
+	local A, i, t, p, m;
+
+	if (isnull(verbose))
+		verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	m = 0;
+	if (isnull(count))
+		count = COUNT;
+	if (isnull(n)) {
+		n = ceil(K1/abs(count)/(H1 + N^3));
+		if (verbose > 1) {
+			print "n =",n;
+		}
+	}
+	if (isnull(skip))
+		skip = SKIP;
+	mat A[n];
+	for (i = 0; i < n; i++)
+		A[i] = plen(N);
+	t = runtime();
+	for (i = 0; i < n; i++) {
+		p = ptest(A[i], count, skip);
+		if (!p) {
+			if (verbose > 0) {
+				printf("*** Error for x = %d\n", A[i]);
+				m++;
+			}
+		}
+	}
+	if (verbose > 0) {
+		if (m) {
+			printf("*** %d error(s)\n", m);
+		} else {
+			t = round(runtime() - t, 4);
+			if (verbose > 1) {
+				printf("%d probable primes: time = %d\n", n, t);
+			} else {
+				printf("%d probable primes: passed\n", n);
+			}
+		}
+	}
+	return m;
+}
+
+define ctimes(str, N, n, count, skip, verbose)
+{
+	local A, i, r, t, p, m;
+
+
+	if (isnull(verbose))
+		verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	m = 0;
+	if (isnull(count))
+		count = COUNT;
+	if (isnull(n)) {
+		n = ceil(K2/(H2 + N^3));
+		if (verbose > 1) {
+			print "n =",n;
+		}
+	}
+	if (isnull(skip))
+		skip = SKIP;
+	mat A[n];
+	for (i = 0; i < n; i++)
+		A[i] = clen(N);
+	t = runtime();
+	for (i = 0; i < n; i++) {
+		p = ptest(A[i], count, skip);
+		if (p) {
+			if (verbose > 0) {
+				printf("*** Error, what should be rare has occurred for x = %d \n", A[i]);
+				m++;
+			}
+		}
+	}
+	if (verbose > 0) {
+		if (m) {
+			printf("*** %d error(s)\n", m);
+		} else {
+			t = round(runtime() - t, 4);
+			if (verbose > 1) {
+				printf("%d probable primes: time = %d\n", n, t);
+			} else {
+				printf("%d probable primes: passed\n", n);
+			}
+		}
+	}
+	return m;
+}
+
+define crtimes(str, a, b, n, count, skip, verbose)
+{
+	local A, P, i, t, p, m;
+
+	if (isnull(verbose))
+		verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	m = 0;
+	if (b < a)
+		swap(a,b);
+	b++;
+	if (isnull(count))
+		count = COUNT;
+	if (isnull(skip))
+		skip = SKIP;
+	mat A[n];
+	mat P[n];
+	for (i = 0; i < n; i++) {
+		A[i] = rand(a,b);
+		P[i] = ptest(A[i], 20, 0);
+	}
+	t = runtime();
+	for (i = 0; i < n; i++) {
+		p = ptest(A[i], count, skip);
+		if (p != P[i]) {
+			if (verbose > 0) {
+				printf("*** Apparent error for %s x = %d\n",
+					P[i] ? "prime" : "composite", A[i]);
+				++m;
+			}
+		}
+	}
+	if (verbose > 0) {
+		if (m) {
+			printf("*** %d error(s)?\n", m);
+		} else {
+			t = round(runtime() - t, 4);
+			if (verbose > 1) {
+				printf("%d probable primes: time = %d\n", n, t);
+			} else {
+				printf("%d probable primes: passed\n", n);
+			}
+		}
+	}
+	return m;
+}
+
+define ntimes(str, N, n, count, skip, residue, modulus, verbose)
+{
+	local A, i, t, p, tnext, tprev;
+
+	if (isnull(verbose))
+		verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	if (isnull(count))
+		count = COUNT;
+	if (isnull(n)) {
+		n = ceil(K3/(H3 + N^3));
+		if (verbose > 1) {
+			print "n =",n;
+		}
+	}
+	if (isnull(skip))
+		skip = SKIP;
+	if (isnull(residue))
+		residue = RESIDUE;
+	if (isnull(modulus))
+		modulus = MODULUS;
+
+	mat A[n];
+	for (i = 0; i < n; i++)
+		A[i] = rlen(N);
+	t = runtime();
+	for (i = 0; i < n; i++) {
+		p = nextcand(A[i], count, skip, residue, modulus);
+	}
+	tnext = round(runtime() - t, 4);
+	t = runtime();
+	for (i = 0; i < n; i++) {
+		p = prevcand(A[i], count, skip, residue, modulus);
+	}
+	tprev = round(runtime() - t, 4);
+	if (verbose > 0) {
+		printf("%d evaluations, nextcand: %d, prevcand: %d\n", n, tnext, tprev);
+	}
+}
+
+define testnextcand(str, N, n, count, skip, residue, modulus, verbose)
+{
+	local p, x, y, i, m;
+
+	if (isnull(verbose))
+		verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	m = 0;
+	if (isnull(count))
+		count = COUNT;
+	if (isnull(n)) {
+		n = ceil(K3/(H3 + N^3));
+		print "n =",n;
+	}
+	if (isnull(skip))
+		skip = SKIP;
+	if (isnull(residue))
+		residue = RESIDUE;
+	if (isnull(modulus))
+		modulus = MODULUS;
+	for (i = 0; i < n; i++) {
+		x = rlen(N);
+		y = nextcand(x, count, skip, residue, modulus);
+		p = testnext1(x, y, count, skip, residue, modulus);
+		if (p) {
+			m++;
+			if (verbose > 1) {
+				printf("*** Failure %d for x = %d\n", p, x);
+			}
+		}
+	}
+	if (verbose > 0) {
+		if (m) {
+			printf("*** %d error(s)?\n", m);
+		} else {
+			printf("%d successful tests\n", n);
+		}
+	}
+	return m;
+}
+
+define testnext1(x, y, count, skip, residue, modulus)
+{
+	if (y <= x)
+		return 1;
+	if (!ptest(y, count, skip))
+		return 2;
+	if (mne(y, residue, modulus))
+		return 3;
+	return 0;
+}
+
+define testprevcand(str, N, n, count, skip, residue, modulus, verbose)
+{
+	local p, x, y, i, m;
+
+	if (isnull(verbose))
+		verbose = defaultverbose;
+	if (verbose > 0) {
+		print str:":",:;
+	}
+	m = 0;
+	if (isnull(count))
+		count = COUNT;
+	if (isnull(n)) {
+		n = ceil(K3/(H3 + N^3));
+		print "n =",n;
+	}
+	if (isnull(skip))
+		skip = SKIP;
+	if (isnull(residue))
+		residue = RESIDUE;
+	if (isnull(modulus))
+		modulus = MODULUS;
+	for (i = 0; i < n; i++) {
+		x = rlen(N);
+		y = prevcand(x, count, skip, residue, modulus);
+		p = testprev1(x, y, count, skip, residue, modulus);
+		if (p) {
+			m++;
+			if (verbose > 1) {
+				printf("*** Failure %d for x = %d\n", p, x);
+			}
+		}
+	}
+	if (verbose > 0) {
+		if (m) {
+			printf("*** %d error(s)?\n", m);
+		} else {
+			printf("%d successful tests\n", n);
+		}
+	}
+	return m;
+}
+
+
+define testprev1(x, y, count, skip, residue, modulus)
+{
+	if (y >= x)
+		return 1;
+	if (!ptest(y, count, skip))
+		return 2;
+	if (mne(y, residue, modulus))
+		return 3;
+	return 0;
+}
+
+/*
+ * test4000 - perform all of the above tests a bunch of times
+ */
+define test4000(v, tnum)
+{
+	local n;	/* test parameter */
+
+	/*
+	 * set test parameters
+	 */
+	srand(4000e4000);
+
+	/*
+	 * test a lot of stuff
+	 */
+	err += ptimes(strcat(str(tnum++),": ptimes(1,250)"), 1, 250,,,v);
+	err += ptimes(strcat(str(tnum++),": ptimes(3,50)"), 3, 50,,,v);
+	err += ptimes(strcat(str(tnum++),": ptimes(5,20)"), 5, 20,,,v);
+
+	err += ctimes(strcat(str(tnum++),": ctimes(1,7500)"), 1, 7500,,,v);
+	err += ctimes(strcat(str(tnum++),": ctimes(3,500)"), 3, 500,,,v);
+	err += ctimes(strcat(str(tnum++),": ctimes(5,200)"), 5, 200,,,v);
+
+	err += crtimes(strcat(str(tnum++),": crtimes(2^30,2^31,2500)"),
+		2^30, 2^31, 2500,,,v);
+	err += crtimes(strcat(str(tnum++),": crtimes(2^300,2^301,75)"),
+		2^300, 2^301, 75,,,v);
+
+	err += testprevcand(strcat(str(tnum++),": testprevcand(1,250)"),
+		1, 250, ,,,,v);
+	err += testprevcand(strcat(str(tnum++),": testprevcand(3,25)"),
+		3, 25, ,,,,v);
+	err += testprevcand(strcat(str(tnum++),": testprevcand(5,10)"),
+		5, 10, ,,,,v);
+
+	err += testnextcand(strcat(str(tnum++),": testnextcand(1,250)"),
+		1, 250, ,,,,v);
+	err += testnextcand(strcat(str(tnum++),": testnextcand(3,25)"),
+		3, 25, ,,,,v);
+	err += testnextcand(strcat(str(tnum++),": testnextcand(5,10)"),
+		5, 10, ,,,,v);
+
+	/*
+	 * report results
+	 */
+	if (v > 1) {
+		if (err) {
+			print "***", err, "error(s) found in testall";
+		} else {
+			print "no errors in testall";
+		}
+	}
+	return tnum;
+}

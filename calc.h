@@ -1,30 +1,9 @@
 /*
- * calc - definitions for calculator program
+ * Copyright (c) 1997 David I. Bell
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
  *
- * Copyright (C) 1999  David I. Bell
- *
- * Calc is open software; you can redistribute it and/or modify it under
- * the terms of the version 2.1 of the GNU Lesser General Public License
- * as published by the Free Software Foundation.
- *
- * Calc is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
- * Public License for more details.
- *
- * A copy of version 2.1 of the GNU Lesser General Public License is
- * distributed with calc under the filename COPYING-LGPL.  You should have
- * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
- *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: calc.h,v 29.2 1999/12/14 19:37:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
- *
- * Under source code control:	1990/02/15 01:48:31
- * File existed as early as:	before 1990
- *
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * Definitions for calculator program.
  */
 
 
@@ -163,11 +142,8 @@ extern void getcommands(BOOL toplevel);
 extern void givehelp(char *type);
 extern void libcalc_call_me_first(void);
 extern void libcalc_call_me_last(void);
-extern BOOL calc_tty(int fd);
-extern BOOL orig_tty(int fd);
 extern void showerrors(void);
 extern char *calc_strdup(CONST char *);
-extern void getshellfile(char *shellfile);
 
 /*
  * Initialization
@@ -188,21 +164,16 @@ extern jmp_buf jmpbuf;		/* for errors */
 extern int p_flag;		/* TRUE => pipe mode */
 extern int q_flag;		/* TRUE => don't execute rc files */
 extern int u_flag;		/* TRUE => unbuffer stdin and stdout */
-extern int d_flag;		/* TRUE => disable heading, resource_debug */
+extern int d_flag;		/* TRUE => disable heading, lib_debug == 0 */
 extern int c_flag;		/* TRUE => continue after error if permitted */
 extern int i_flag;		/* TRUE => try to go interactive after error */
-extern int s_flag;		/* TRUE => keep args as strings for argv() */
 extern int stoponerror;		/* >0 => stop, <0 => continue, ==0 => use -c */
 extern BOOL abort_now;		/* TRUE => try to go interactive */
-
-extern int argc_value;		/* count of argv[] strings for argv() builtin */
-extern char **argv_value;	/* argv[] strings for argv() builtin */
 
 extern char *pager;		/* $PAGER or default */
 extern int stdin_tty;		/* TRUE if stdin is a tty */
 extern int havecommands;	/* TRUE if have cmd args) */
 extern char *program;		/* our name */
-extern char *base_name;		/* basename of our name */
 extern char cmdbuf[];		/* command line expression */
 
 extern int abortlevel;		/* current level of aborts */
@@ -250,8 +221,7 @@ extern int calc_major_ver;
 extern int calc_minor_ver;
 extern int calc_major_patch;
 extern char *calc_minor_patch;
-extern char *Copyright;
-extern char *version(void);
+extern char *version(void);	/* return version string */
 
 
 #endif /* !__CALC_H__ */

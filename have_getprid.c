@@ -1,34 +1,6 @@
 /*
- * have_getprid - determine if we have getprid()
+ * have_getprid - Determine if we getprid()
  *
- * Copyright (C) 1999  Landon Curt Noll
- *
- * Calc is open software; you can redistribute it and/or modify it under
- * the terms of the version 2.1 of the GNU Lesser General Public License
- * as published by the Free Software Foundation.
- *
- * Calc is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
- * Public License for more details.
- *
- * A copy of version 2.1 of the GNU Lesser General Public License is
- * distributed with calc under the filename COPYING-LGPL.  You should have
- * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
- *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: have_getprid.c,v 29.1 1999/12/14 09:15:39 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/have_getprid.c,v $
- *
- * Under source code control:	1999/10/20 23:43:42
- * File existed as early as:	1999
- *
- * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
- */
-
-/*
  * usage:
  *	have_getprid
  *
@@ -41,7 +13,29 @@
  *		defined ==> use getprid()
  *		undefined ==> do not or cannot call getprid()
  */
-
+/*
+ * Copyright (c) 1999 by Landon Curt Noll.  All Rights Reserved.
+ *
+ * Permission to use, copy, modify, and distribute this software and
+ * its documentation for any purpose and without fee is hereby granted,
+ * provided that the above copyright, this permission notice and text
+ * this comment, and the disclaimer below appear in all of the following:
+ *
+ *	supporting documentation
+ *	source copies
+ *	source works derived from this source
+ *	binaries derived from this source or from derived source
+ *
+ * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+ * EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+ * USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+ * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ * PERFORMANCE OF THIS SOFTWARE.
+ *
+ * chongo was here	/\../\
+ */
 
 #include <sys/types.h>
 #include <unistd.h>

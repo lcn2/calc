@@ -1,0 +1,22 @@
+/*
+ * 99 bottles of beer
+ *
+ * See:
+ *	http://www.ionet.net/~timtroyr/funhouse/beer.html#calc
+ */
+
+for (i=99; i > 0;) {
+	/* current wall state */
+	some_bottles = (i != 1) ? "bottles" : "bottle";
+	print i, some_bottles, "of beer on the wall,",;
+	print i, some_bottles, "of beer!";
+
+	/* glug, glug */
+	--i;
+	print "Take one down and pass it around,",;
+
+	/* new wall state */
+	less = (i > 0) ? i : "no";
+	bottles = (i!=1) ? "bottles" : "bottle";
+	print less, bottles, "of beer on the wall!\n";
+}

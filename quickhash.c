@@ -1,34 +1,33 @@
 /*
- * quickhash - quickly hash a calc value using a partial Fowler/Noll/Vo hash
+ * Copyright (c) 1997 by Landon Curt Noll.  All Rights Reserved.
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Permission to use, copy, modify, and distribute this software and
+ * its documentation for any purpose and without fee is hereby granted,
+ * provided that the above copyright, this permission notice and text
+ * this comment, and the disclaimer below appear in all of the following:
  *
- * Calc is open software; you can redistribute it and/or modify it under
- * the terms of the version 2.1 of the GNU Lesser General Public License
- * as published by the Free Software Foundation.
+ *	supporting documentation
+ *	source copies
+ *	source works derived from this source
+ *	binaries derived from this source or from derived source
  *
- * Calc is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
- * Public License for more details.
+ * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+ * EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+ * USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+ * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ * PERFORMANCE OF THIS SOFTWARE.
  *
- * A copy of version 2.1 of the GNU Lesser General Public License is
- * distributed with calc under the filename COPYING-LGPL.  You should have
- * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo/
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: quickhash.c,v 29.2 1999/12/14 19:37:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/quickhash.c,v $
- *
- * Under source code control:	1995/03/04 11:34:23
- * File existed as early as:	1995
- *
- * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ *	chongo <was here> /\../\
  */
 
 /*
+ * quickhash - quickly hash a calc value using a partial Fowler/Noll/Vo hash
+ *
  * NOTE: This file does not contain a hash interface.  It is used by
  *	 associative arrays and other internal processes.
  *
@@ -52,7 +51,6 @@
  *
  * for information on 32bit and 64bit Fowler/Noll/Vo hashs.
  */
-
 
 #include "value.h"
 #include "zrand.h"
@@ -411,13 +409,10 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->blkbase);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->blkfmt);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->calc_debug);
-	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->resource_debug);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->lib_debug);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->user_debug);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->verbose_quit);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->ctrl_d);
-	/* program is handeled out of order */
-	/* basename is handeled out of order */
-	/* version is handeled out of order */
 
 	/*
 	 * hash the built up scalar
@@ -432,15 +427,6 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	}
 	if (cfg->prompt2) {
 		val = fnv_strhash(cfg->prompt2, val);
-	}
-	if (cfg->program) {
-		val = fnv_strhash(cfg->program, val);
-	}
-	if (cfg->base_name) {
-		val = fnv_strhash(cfg->base_name, val);
-	}
-	if (cfg->version) {
-		val = fnv_strhash(cfg->version, val);
 	}
 
 	/*

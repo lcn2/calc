@@ -24,29 +24,25 @@ following topics:
     obj			user defined data types
     operator		math, relational, logic and variable access operators
     statement		flow control and declaration statements
+    stdlib		description of some lib files shipped with calc
     types		builtin data types
     unexpected		unexpected syntax/usage surprises for C programmers
     usage		how to invoke the calc command
     variable		variables and variable declarations
 
     bindings		input & history character bindings
-    custom_cal		information about custom calc resource files
+    custom_cal		information about custom calc library files
     libcalc		using the arbitrary precision routines in a C program
     new_custom		information about how to add new custom functions
-    resource		standard calc resource files
-    script		using calc shell scripts
+    stdlib		standard calc library files and standards
 
     archive		where to get the latest versions of calc
     bugs		known bugs and mis-features
     changes		recent changes to calc
     contrib		how to contribute scripts, code or custom functions
+    credit		who wrote calc and who helped
     todo		list of priority action items for calc
     wishlist		wish list of future enhancements of calc
-
-    credit		who wrote calc and who helped
-    copyright		calc copyright and the GNU LGPL
-    copying		details on the Calc GNU Lesser General Public License
-    copying-lgpl	calc GNU Lesser General Public License text
 
     full		all of the above (in the above order)
 
@@ -101,29 +97,3 @@ As a hack, the following:
 as the same effect as:
 
     custom("help", "anything");
-
-## Copyright (C) 1999  Landon Curt Noll
-##
-## Calc is open software; you can redistribute it and/or modify it under
-## the terms of the version 2.1 of the GNU Lesser General Public License
-## as published by the Free Software Foundation.
-##
-## Calc is distributed in the hope that it will be useful, but WITHOUT
-## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
-## Public License for more details.
-##
-## A copy of version 2.1 of the GNU Lesser General Public License is
-## distributed with calc under the filename COPYING-LGPL.  You should have
-## received a copy with calc; if not, write to Free Software Foundation, Inc.
-## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
-##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: help,v 29.1 1999/12/14 09:15:52 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/help,v $
-##
-## Under source code control:	1991/07/21 04:37:20
-## File existed as early as:	1991
-##
-## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/

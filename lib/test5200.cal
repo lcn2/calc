@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 1996 Ernest Bowen and Landon Curt Noll
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
+ * By: Ernest Bowen and Landon Curt Noll
+ *     ernie@neumann.une.edu.au and http://reality.sgi.com/chongo/
+ *
+ * This library is used by the 5200 series of the regress.cal test suite.
+ */
+
+global defaultverbose = 1;	/* default verbose value */
+global err;
+
+/*
+ * test the fix of a global/static bug
+ *
+ * Given the following:
+ *
+ *	global a = 10;
+ *	static a = 20;
+ *	define f(x) = a + x;
+ *	define g(x) {global a = 30; return a + x;}
+ *	define h(x) = a + x;
+ *
+ * Older versions of
+ */
+global a5200 = 10;
+static a5200 = 20;
+define f5200(x) = a5200 + x;
+define g5200(x) {global a5200 = 30; return a5200 + x;}
+define h5200(x) = a5200 + x;

@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 1995 David I. Bell
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
+ * Factor using Pollard's p-1 method.
+ */
+
+define pfactor(N, B, ai, af)
+{
+	local	a, k, i, d;
+
+	if (isnull(B))
+		B = 1000;
+	if (isnull(ai))
+		ai = 2;
+	if (isnull(af))
+		af = ai + 20;
+	k = lcmfact(B);
+	d = lfactor(N, B);
+	if (d > 1)
+		return d;
+	for (a = ai; a <= af; a++) {
+		i = pmod(a, k, N);
+		d = gcd(i - 1, N);
+		if ((d > 1) && (d != N))
+			return d;
+	}
+	return 1;
+}

@@ -1,33 +1,26 @@
 /*
- * prime - quickly determine if a small number is prime
+ * Copyright (c) 1995 by Landon Curt Noll.  All Rights Reserved.
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Permission to use, copy, modify, and distribute this software and
+ * its documentation for any purpose and without fee is hereby granted,
+ * provided that the above copyright, this permission notice and text
+ * this comment, and the disclaimer below appear in all of the following:
  *
- * Calc is open software; you can redistribute it and/or modify it under
- * the terms of the version 2.1 of the GNU Lesser General Public License
- * as published by the Free Software Foundation.
+ *	supporting documentation
+ *	source copies
+ *	source works derived from this source
+ *	binaries derived from this source or from derived source
  *
- * Calc is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
- * Public License for more details.
+ * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+ * EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+ * USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+ * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ * PERFORMANCE OF THIS SOFTWARE.
  *
- * A copy of version 2.1 of the GNU Lesser General Public License is
- * distributed with calc under the filename COPYING-LGPL.  You should have
- * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
- *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: prime.c,v 29.1 1999/12/14 09:16:12 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/prime.c,v $
- *
- * Under source code control:	1994/06/04 03:26:14
- * File existed as early as:	1994
- *
- * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * chongo was here	/\../\
  */
-
 
 #include "qmath.h"
 #include "prime.h"
@@ -41,7 +34,7 @@
  * pr_map[i] & (1<<j) == 1  ==>	 i*16 + j*2 + 1 is prime
  *			 0  ==>	 i*16 + j*2 + 1 is not prime
  *
- * This table is useful to quickly determine if a 16 bit odd number
+ * This table is useful to quickly determining if a 16 bit odd number
  * is prime.  Use the prime[] array to quickly walk thru the 16 bit
  * off primes.
  */

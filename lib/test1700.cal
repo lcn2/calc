@@ -1,0 +1,14 @@
+/*
+ * Copyright (c) 1995 Landon Curt Noll
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
+ * By:	Landon Curt Noll
+ *	http://reality.sgi.com/chongo/
+ *
+ *	chongo <was here> /\../\
+ *
+ * This library is used by the 1700 series of the regress.cal test suite.
+ */
+
+++value;

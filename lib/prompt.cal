@@ -1,0 +1,96 @@
+/*
+ * Copyright (c) 1995 Ernest Bowen
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
+ * By: Ernest Bowen <ernie@neumann.une.edu.au>
+ */
+/*
+ * Demonstration of some uses of prompt() and eval().
+ *
+ * adder() simulates a simple adding machine: starting with sum = 0,
+ * each number entered in response to the ? prompt is added to sum
+ * and the result displayed.  Operation of adder() is ended by
+ * entering "end", "exit" or "quit"; "end" returns to the level from
+ * which adder() is called, e.g. with:
+ *
+ *		for (;;) adder()
+ *
+ * entering "end" would start a new edition with sum = 0; "quit" and
+ * "exit" return to the top level.
+ *
+ * Each response to ? is read as
+ * a string terminated by a newline; the statements and expressions
+ * in this string are compiled and evaluated as in function evaluation;
+ * thus the string may include variables, assignments, functions, etc.
+ * as in:
+ *
+ *		2 + 3
+ *		x = 2 + 3, x^3
+ *		x^2
+ *		local x = 2; while (x < 100) x *= 2; x % 100
+ *		x
+ *		exp(2, 1e-5)
+ *		sum
+ *		print sum^2;
+ *		3; print sum^2;
+ *
+ * (Here the second line creates x as a global variable; the local
+ * variable x in the fourth line has no effect on the global x.	 In
+ * the last three lines, sum is the sum of numbers already entered, so
+ * the third last line doubles the value of sum.  The value returned
+ * by "print sum^2;" is the null value, so the second last line adds
+ * nothing to sum.  The last line returns the value 3, i.e. the last
+ * non-null value found for the expressions separated by semicolons,
+ * so sum will be increased by 3 after the "print sum^2;" command
+ * is executed.	 xxx The terminating semicolon is essential in the
+ * last two lines.  A command like eval("print 7;") is acceptable to
+ * calc but eval("print 7") causes an exit from calc. xxx)
+ *
+ * If the value returned is not a number (e.g. the name of a list or matrix,
+ * or if the string has syntax errors as in "2 + ", in which case the
+ * value returned is an error value), the compile error messages and a
+ * request for another number are displayed.
+ *
+ * Calling showvalues(str) assumes str defines a function of x as in:
+ *
+ *	"sin(x)", "x^2 + 3*x", "exp(x, 1e-5)".
+ *
+ * Values of the function so defined are returned for values of x
+ * entered in reponse to the ? prompt.	Operation is terminated by
+ * entering "end", "exit" or "quit".
+ */
+
+define adder() {
+	global sum = 0;
+	local s, t;
+	for (;;) {
+		s = prompt("? ");
+		if (s == "end")
+			break;
+		t = eval(s);
+		if (!isnum(t)) {
+			print "Please enter a number";
+			continue;
+		}
+		sum += t;
+		print "\t":sum;
+	}
+}
+
+global x;
+
+define showvalues(str) {
+	local s;
+	for (;;) {
+		s = prompt("? ");
+		if (s == "end")
+			break;
+		x = eval(s);
+		if (!isnum(x)) {
+			print "Please enter a number";
+			continue;
+		}
+		print "\t":eval(str);
+	}
+}

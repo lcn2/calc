@@ -1,0 +1,33 @@
+/*
+ * Copyright (c) 1997 David I. Bell
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
+ * Perform a primality test of 2^p-1, for prime p>1.
+ */
+
+define mersenne(p)
+{
+	local u, i, p_mask;
+
+	/* firewall */
+	if (! isint(p))
+		quit "p is not an integer";
+
+	/* two is a special case */
+	if (p == 2)
+		return 1;
+
+	/* if p is not prime, then 2^p-1 is not prime */
+	if (! ptest(p,1))
+		return 0;
+
+	/* lltest: u(i+1) = u(i)^2 - 2 mod 2^p-1 */
+	u = 4;
+	for (i = 2; i < p; ++i) {
+		u = hnrmod(u^2 - 2, 1, p, -1);
+	}
+
+	/* 2^p-1 is prime iff u(p) = 0 mod 2^p-1 */
+	return (u == 0);
+}

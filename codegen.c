@@ -1,34 +1,10 @@
 /*
- * codegen - module to generate opcodes from the input tokens
+ * Copyright (c) 1997 David I. Bell
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
  *
- * Copyright (C) 1999  David I. Bell and Ernest Bowen
- *
- * Primary author:  David I. Bell
- *
- * Calc is open software; you can redistribute it and/or modify it under
- * the terms of the version 2.1 of the GNU Lesser General Public License
- * as published by the Free Software Foundation.
- *
- * Calc is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
- * Public License for more details.
- *
- * A copy of version 2.1 of the GNU Lesser General Public License is
- * distributed with calc under the filename COPYING-LGPL.  You should have
- * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
- *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: codegen.c,v 29.1 1999/12/14 09:15:35 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
- *
- * Under source code control:	1990/02/15 01:48:13
- * File existed as early as:	before 1990
- *
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * Module to generate opcodes from the input tokens.
  */
-
 
 #include <stdio.h>
 #include "have_unistd.h"
@@ -156,8 +132,7 @@ getcommands(BOOL toplevel)
 				/* previously read and -once was given */
 				break;
 			case -2:
-				scanerror(T_NULL,
-					  "Maximum input depth reached");
+				scanerror(T_NULL, "Maximum input depth reached");
 				break;
 			default:
 				scanerror(T_NULL, "Cannot open \"%s\"\n", name);
@@ -174,8 +149,7 @@ getcommands(BOOL toplevel)
 				break;
 			}
 			if (writeglobals(name))
-				scanerror(T_NULL,
-					  "Error writing \"%s\"\n", name);
+				scanerror(T_NULL, "Error writing \"%s\"\n", name);
 			break;
 
 		case T_CD:
@@ -183,8 +157,6 @@ getcommands(BOOL toplevel)
 			break;
 		case T_NEWLINE:
 		case T_SEMICOLON:
-		case T_POUNDBANG:
-		case T_POUNDCOMMENT:
 			break;
 
 		default:
@@ -346,9 +318,7 @@ getfunction(void)
 				index = addparam(name);
 				break;
 			default:
-				scanerror(T_NULL,
-					  "Parameter \"%s\" is already defined",
-					  name);
+				scanerror(T_NULL, "Parameter \"%s\" is already defined", name);
 		}
 		type = gettoken();
 		if (type == T_ASSIGN) {
@@ -378,8 +348,7 @@ getfunction(void)
 			break;
 		default:
 			scanerror(T_NULL,
-				"Left brace or equals sign "
-				"expected for function");
+				"Left brace or equals sign expected for function");
 			return;
 	}
 	endfunc();
@@ -424,8 +393,7 @@ getbody(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *defaul
 
 		default:
 			rescantoken();
-			getstatement(contlabel, breaklabel,
-				     nextcaselabel, defaultlabel);
+			getstatement(contlabel, breaklabel, nextcaselabel, defaultlabel);
 		}
 	}
 }
@@ -474,8 +442,7 @@ getdeclarations(int symtype)
 				break;
 
 			default:
-				scanerror(T_SEMICOLON,
-					 "Bad syntax in declaration statement");
+				scanerror(T_SEMICOLON, "Bad syntax in declaration statement");
 				return res;
 		}
 	}
@@ -607,8 +574,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 
 	case T_CONTINUE:
 		if (contlabel == NULL_LABEL) {
-			scanerror(T_SEMICOLON,
-				  "CONTINUE not within FOR, WHILE, or DO");
+			scanerror(T_SEMICOLON, "CONTINUE not within FOR, WHILE, or DO");
 			return;
 		}
 		addoplabel(OP_JUMP, contlabel);
@@ -616,8 +582,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 
 	case T_BREAK:
 		if (breaklabel == NULL_LABEL) {
-			scanerror(T_SEMICOLON,
-				  "BREAK not within FOR, WHILE, or DO");
+			scanerror(T_SEMICOLON, "BREAK not within FOR, WHILE, or DO");
 			return;
 		}
 		addoplabel(OP_JUMP, breaklabel);
@@ -659,26 +624,21 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		switch(gettoken()) {
 			case T_CONTINUE:
 				if (contlabel == NULL_LABEL) {
-					scanerror(T_SEMICOLON,
-						  "CONTINUE not within FOR, "
-						  "WHILE, or DO");
+					scanerror(T_SEMICOLON, "CONTINUE not within FOR, WHILE, or DO");
 					return;
 				}
 				addoplabel(OP_JUMPNZ, contlabel);
 				break;
 			case T_BREAK:
 				if (breaklabel == NULL_LABEL) {
-					scanerror(T_SEMICOLON,
-						  "BREAK not within FOR, "
-						  "WHILE, or DO");
+					scanerror(T_SEMICOLON, "BREAK not within FOR, WHILE, or DO");
 					return;
 				}
 				addoplabel(OP_JUMPNZ, breaklabel);
 				break;
 			case T_GOTO:
 				if (gettoken() != T_SYMBOL) {
-					scanerror(T_SEMICOLON,
-						  "Missing label in goto");
+					scanerror(T_SEMICOLON, "Missing label in goto");
 					return;
 				}
 				addop(OP_JUMPNZ);
@@ -687,8 +647,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 			default:
 				addoplabel(OP_JUMPZ, &label1);
 				rescantoken();
-				getstatement(contlabel, breaklabel,
-					     NULL_LABEL, NULL_LABEL);
+				getstatement(contlabel, breaklabel, NULL_LABEL, NULL_LABEL);
 				if (gettoken() != T_ELSE) {
 					setlabel(&label1);
 					rescantoken();
@@ -696,8 +655,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 				}
 				addoplabel(OP_JUMP, &label2);
 				setlabel(&label1);
-				getstatement(contlabel, breaklabel,
-					     NULL_LABEL, NULL_LABEL);
+				getstatement(contlabel, breaklabel, NULL_LABEL, NULL_LABEL);
 				setlabel(&label2);
 				return;
 		}
@@ -758,8 +716,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 				addoplabel(OP_JUMP, &label1);
 			if (gettoken() != T_RIGHTPAREN) {
 				(void) tokenmode(oldmode);
-				scanerror(T_SEMICOLON,
-					  "Right parenthesis expected");
+				scanerror(T_SEMICOLON, "Right parenthesis expected");
 				return;
 			}
 		}
@@ -804,8 +761,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		getstatement(contlabel, breaklabel, NULL_LABEL, NULL_LABEL);
 		if (gettoken() != T_WHILE) {
 			(void) tokenmode(oldmode);
-			scanerror(T_SEMICOLON,
-				  "WHILE keyword expected for DO statement");
+			scanerror(T_SEMICOLON, "WHILE keyword expected for DO statement");
 			return;
 		}
 		setlabel(contlabel);
@@ -826,14 +782,12 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		getcondition();
 		if (gettoken() != T_LEFTBRACE) {
 			(void) tokenmode(oldmode);
-			scanerror(T_SEMICOLON,
-				  "Missing left brace for switch statement");
+			scanerror(T_SEMICOLON, "Missing left brace for switch statement");
 			return;
 		}
 		addoplabel(OP_JUMP, nextcaselabel);
 		rescantoken();
-		getstatement(contlabel, breaklabel,
-			     nextcaselabel, defaultlabel);
+		getstatement(contlabel, breaklabel, nextcaselabel, defaultlabel);
 		addoplabel(OP_JUMP, breaklabel);
 		setlabel(nextcaselabel);
 		if (defaultlabel->l_offset > 0)
@@ -846,8 +800,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 
 	case T_CASE:
 		if (nextcaselabel == NULL_LABEL) {
-			scanerror(T_SEMICOLON,
-				  "CASE not within SWITCH statement");
+			scanerror(T_SEMICOLON, "CASE not within SWITCH statement");
 			return;
 		}
 		clearlabel(&label1);
@@ -856,30 +809,25 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		clearlabel(nextcaselabel);
 		(void) getexprlist();
 		if (gettoken() != T_COLON) {
-			scanerror(T_SEMICOLON,
-				  "Colon expected after CASE expression");
+			scanerror(T_SEMICOLON, "Colon expected after CASE expression");
 			return;
 		}
 		addoplabel(OP_CASEJUMP, nextcaselabel);
 		setlabel(&label1);
-		getstatement(contlabel, breaklabel,
-			     nextcaselabel, defaultlabel);
+		getstatement(contlabel, breaklabel, nextcaselabel, defaultlabel);
 		return;
 
 	case T_DEFAULT:
 		if (gettoken() != T_COLON) {
-			scanerror(T_SEMICOLON,
-				  "Colon expected after DEFAULT keyword");
+			scanerror(T_SEMICOLON, "Colon expected after DEFAULT keyword");
 			return;
 		}
 		if (defaultlabel == NULL_LABEL) {
-			scanerror(T_SEMICOLON,
-				  "DEFAULT not within SWITCH statement");
+			scanerror(T_SEMICOLON, "DEFAULT not within SWITCH statement");
 			return;
 		}
 		if (defaultlabel->l_offset > 0) {
-			scanerror(T_SEMICOLON,
-				  "Multiple DEFAULT clauses in SWITCH");
+			scanerror(T_SEMICOLON, "Multiple DEFAULT clauses in SWITCH");
 			return;
 		}
 		clearlabel(&label1);
@@ -887,8 +835,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		setlabel(defaultlabel);
 		addop(OP_POP);
 		setlabel(&label1);
-		getstatement(contlabel, breaklabel,
-			     nextcaselabel, defaultlabel);
+		getstatement(contlabel, breaklabel, nextcaselabel, defaultlabel);
 		return;
 
 	case T_ELSE:
@@ -1043,18 +990,14 @@ getobjdeclaration(int symtype)
 		switch (gettoken()) {
 			case T_SYMBOL:
 				if (count == MAXINDICES) {
-					scanerror(T_SEMICOLON,
-						  "Too many elements in OBJ "
-						  "statement");
+					scanerror(T_SEMICOLON, "Too many elements in OBJ statement");
 					(void) tokenmode(oldmode);
 					return;
 				}
 				index = addelement(tokensymbol());
 				for (i = 0; i < count; i++) {
 					if (indices[i] == index) {
-						scanerror(T_SEMICOLON,
-						  "Duplicate element name "
-						  "\"%s\"", tokensymbol());
+						scanerror(T_SEMICOLON, "Duplicate element name \"%s\"", tokensymbol());
 						(void) tokenmode(oldmode);
 						return;
 					}
@@ -1064,8 +1007,7 @@ getobjdeclaration(int symtype)
 					continue;
 				rescantoken();
 				if (gettoken() != T_RIGHTBRACE) {
-					scanerror(T_SEMICOLON,
-						  "Bad object type definition");
+					scanerror(T_SEMICOLON, "Bad object type definition");
 					(void) tokenmode(oldmode);
 					return;
 				}
@@ -1082,8 +1024,7 @@ getobjdeclaration(int symtype)
 			case T_NEWLINE:
 				continue;
 			default:
-				scanerror(T_SEMICOLON,
-					  "Bad object type definition");
+				scanerror(T_SEMICOLON, "Bad object type definition");
 				(void) tokenmode(oldmode);
 				return;
 		}
@@ -1132,8 +1073,7 @@ getobjvars(char *name, int symtype)
 
 	index = checkobject(name);
 	if (index < 0) {
-		scanerror(T_SEMICOLON,
-			  "Object %s has not been defined yet", name);
+		scanerror(T_SEMICOLON, "Object %s has not been defined yet", name);
 		return;
 	}
 	for (;;) {
@@ -1286,8 +1226,7 @@ creatematrix(void)
 		}
 		rescantoken();
 		if (++dim > MAXDIM) {
-			scanerror(T_SEMICOLON,
-				  "Only %ld dimensions allowed", MAXDIM);
+			scanerror(T_SEMICOLON, "Only %ld dimensions allowed", MAXDIM);
 			return;
 		}
 		(void) getopassignment();
@@ -1310,8 +1249,7 @@ creatematrix(void)
 				/*FALLTHRU*/
 			default:
 				rescantoken();
-				scanerror(T_SEMICOLON,
-					  "Illegal matrix definition");
+				scanerror(T_SEMICOLON, "Illegal matrix definition");
 				return;
 		}
 	}
@@ -1366,8 +1304,7 @@ getinitlist(void)
 				return index;
 
 			default:
-				scanerror(T_SEMICOLON,
-					  "Bad initialization list");
+				scanerror(T_SEMICOLON, "Bad initialization list");
 				(void) tokenmode(oldmode);
 				return -1;
 		}
@@ -1383,14 +1320,12 @@ static void
 getcondition(void)
 {
 	if (gettoken() != T_LEFTPAREN) {
-		scanerror(T_SEMICOLON,
-			  "Missing left parenthesis for condition");
+		scanerror(T_SEMICOLON, "Missing left parenthesis for condition");
 		return;
 	}
 	(void) getexprlist();
 	if (gettoken() != T_RIGHTPAREN) {
-		scanerror(T_SEMICOLON,
-			  "Missing right parenthesis for condition");
+		scanerror(T_SEMICOLON, "Missing right parenthesis for condition");
 		return;
 	}
 }
@@ -1599,8 +1534,7 @@ getaltcond(void)
 	addoplabel(OP_JUMPZ, &altlab);
 	type = getaltcond();
 	if (gettoken() != T_COLON) {
-		scanerror(T_SEMICOLON,
-			  "Missing colon for conditional expression");
+		scanerror(T_SEMICOLON, "Missing colon for conditional expression");
 		return EXPR_RVALUE;
 	}
 	addoplabel(OP_JUMP, &donelab);
@@ -2011,8 +1945,7 @@ getterm(void)
 			oldmode = tokenmode(TM_DEFAULT);
 			type = getexprlist();
 			if (gettoken() != T_RIGHTPAREN)
-				scanerror(T_SEMICOLON,
-					  "Missing right parenthesis");
+				scanerror(T_SEMICOLON, "Missing right parenthesis");
 			(void) tokenmode(oldmode);
 			break;
 
@@ -2041,8 +1974,7 @@ getterm(void)
 
 		default:
 			if (iskeyword(type)) {
-				scanerror(T_NULL,
-				    "Expression contains reserved keyword");
+				scanerror(T_NULL, "Expression contains reserved keyword");
 				break;
 			}
 			rescantoken();
@@ -2061,9 +1993,7 @@ getterm(void)
 					type = 0;
 					break;
 				case T_LEFTPAREN:
-					scanerror(T_NULL,
-						  "Function calls not allowed "
-						  "as expressions");
+					scanerror(T_NULL, "Function calls not allowed as expressions");
 				default:
 					rescantoken();
 				return type;
@@ -2125,9 +2055,7 @@ getidexpr(BOOL okmat, BOOL autodef)
 				type = 0;
 				break;
 			case T_LEFTPAREN:
-				scanerror(T_NULL,
-					  "Function calls not allowed "
-					  "as expressions");
+				scanerror(T_NULL, "Function calls not allowed as expressions");
 			default:
 				rescantoken();
 				return type;
@@ -2225,31 +2153,11 @@ getshowstatement(void)
 		case T_SYMBOL:
 			strncpy(name, tokensymbol(), 4);
 			name[4] = '\0';
-			/* Yuck! */
-			arg = stringindex("buil\000"
-					  "real\000"
-					  "func\000"
-					  "objf\000"
-					  "conf\000"
-					  "objt\000"
-					  "file\000"
-					  "size\000"
-					  "erro\000"
-					  "cust\000"
-					  "bloc\000"
-					  "cons\000"
-					  "glob\000"
-					  "stat\000"
-					  "numb\000"
-					  "redc\000"
-					  "stri\000"
-					  "lite\000"
-					  "opco\000", name);
+			arg = stringindex("buil\000real\000func\000objf\000conf\000objt\000file\000size\000erro\000cust\000bloc\000cons\000glob\000stat\000numb\000redc\000stri\000lite\000opco\000", name);
 			if (arg == 19) {
 				if (gettoken() != T_SYMBOL) {
 					rescantoken();
-					scanerror(T_SEMICOLON,
-						  "Function name expected");
+					scanerror(T_SEMICOLON, "Function name expected");
 					return;
 				}
 				index = adduserfunc(tokensymbol());
@@ -2266,11 +2174,9 @@ getshowstatement(void)
 			printf("four letters of one of:\n");
 			printf("\tblocks, builtin, config, constants, ");
 			printf("custom, errors, files, functions,\n");
-			printf("\tglobaltypes, objfunctions, objtypes, "
-			       "opcodes, sizes, ");
+			printf("\tglobaltypes, objfunctions, objtypes, opcodes, sizes, ");
 			printf("realglobals,\n");
-			printf("\tstatics, numbers, redcdata, "
-			       "strings, literals\n");
+			printf("\tstatics, numbers, redcdata, strings, literals\n");
 			rescantoken();
 			return;
 
@@ -2331,9 +2237,7 @@ getmatargs(void)
 				break;
 			default:
 				rescantoken();
-				scanerror(T_NULL,
-					  "Missing right bracket in "
-					  "array reference");
+				scanerror(T_NULL, "Missing right bracket in array reference");
 				return;
 		}
 	}
@@ -2417,8 +2321,7 @@ definesymbol(char *name, int symtype)
 				return;
 			/*FALLTHRU*/
 		case SYM_PARAM:
-			scanerror(T_COMMA,
-				  "Variable \"%s\" is already defined", name);
+			scanerror(T_COMMA, "Variable \"%s\" is already defined", name);
 			return;
 	}
 
@@ -2528,9 +2431,7 @@ getcallargs(char *name)
 			case T_COMMA:
 				break;
 			default:
-				scanerror(T_SEMICOLON,
-					  "Missing right parenthesis "
-					  "in function call");
+				scanerror(T_SEMICOLON, "Missing right parenthesis in function call");
 				return;
 		}
 	}
@@ -2574,25 +2475,4 @@ do_changedir(void)
 }
 
 
-/*
- * getshellfile - process the contents of a shellfile
- */
-void
-getshellfile(char *shellfile)
-{
-	/*
-	 * treat the calc shell script as if we were reading it
-	 */
-	if (!allow_read) {
-		scanerror(T_NULL,
-		    "reading of calc shell script \"%s\" "
-		    "dislloaed by -m mode\n", shellfile);
-	} else if (opensearchfile(shellfile, NULL, NULL, FALSE) == 0) {
-		getcommands(FALSE);
-		closeinput();
-	} else {
-		scanerror(T_NULL,
-			  "Cannot open calc shell script \"%s\"\n", shellfile);
-	}
-	return;
-}
+/* END CODE */

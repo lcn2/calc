@@ -1,0 +1,706 @@
+To load a library, try:
+
+    read filename
+
+You do not need to add the .cal extension to the filename.  Calc
+will search along the $CALCPATH (see ``help environment'').
+
+Normally a library will simply define some functions.  By default,
+most libraries will print out a short message when they are read.
+For example:
+
+    > read lucas
+    lucas(h,n) defined
+    gen_u0(h,n,v1) defined
+    gen_v1(h,n) defined
+    ldebug(funct,str) defined
+
+will cause calc to load and execute the 'lucas.cal' library.
+Executing the library will cause several functions to be defined.
+Executing the lucas function:
+
+    > lucas(149,60)
+	    1
+    > lucas(146,61)
+	    0
+
+shows that 149*2^60-1 is prime whereas 146*2^61-1 is not.
+
+=-=
+
+Calc library files are provided because they serve as examples of how use
+the calc language, and/or because the authors thought them to be useful!
+
+If you write something that you think is useful, please send it to:
+
+    calc-tester at postofc dot corp dot sgi dot com
+
+    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+
+By convention, a lib file only defines and/or initializes functions,
+objects and variables.	(The regress.cal and testxxx.cal regression test
+suite is an exception.)	 Also by convention, an additional usage message
+regarding important object and functions is printed.
+
+If a lib file needs to load another lib file, it should use the -once
+version of read:
+
+    /* pull in needed library files */
+    read -once "surd"
+    read -once "lucas"
+
+This will cause the needed library files to be read once.  If these
+files have already been read, the read -once will act as a noop.
+
+The "lib_debug" parameter is intended for controlling the possible
+display of special information relating to functions, objects, and
+other structures created by instructions in calc scripts.
+Zero value of config("lib_debug") means that no such information
+is displayed.  For other values, the non-zero bits which currently
+have meanings are as follows:
+
+    n	    Meaning of bit n of config("lib_debug")
+
+    0	When a function is defined, redefined or undefined at
+	interactive level, a message saying what has been done
+	is displayed.
+
+    1	When a function is defined, redefined or undefined during
+	the reading of a file, a message saying what has been done
+	is displayed.
+
+The value for config("lib_debug") in both oldstd and newstd is 3,
+but if calc is invoked with the -d flag, its initial value is zero.
+Thus, if calc is started without the -d flag, until config("lib_debug")
+is changed, a message will be output when a function is defined
+either interactively or during the reading of a file.
+
+Sometimes the information printed is not enough.  In addition to the
+standard information, one might want to print:
+
+	* useful obj definitions
+	* functions with optional args
+	* functions with optional args where the param() interface is used
+
+For these cases we suggest that you place at the bottom of your code
+something that prints extra information if config("lib_debug") has
+either of the bottom 2 bits set:
+
+	if (config("lib_debug") & 3) {
+		print "obj xyz defined";
+		print "funcA([val1 [, val2]]) defined";
+		print "funcB(size, mass, ...) defined";
+	}
+
+=-=
+
+The following is a brief description of some of the calc library files
+that are shipped with calc.  See above for example of how to read in
+and execute these files.
+
+beer.cal
+
+    Calc's contribution to the 99 Bottles of Beer web page:
+
+	http://www.ionet.net/~timtroyr/funhouse/beer.html#calc
+
+
+bernoulli.cal
+
+    B(n)
+
+    Calculate the nth Bernoulli number.
+
+
+bigprime.cal
+
+    bigprime(a, m, p)
+
+    A prime test, base a, on p*2^x+1 for even x>m.
+
+
+chrem.cal
+
+    chrem(r1,m1 [,r2,m2, ...])
+    chrem(rlist, mlist)
+
+    Chinese remainder theorem/problem solver.
+
+
+deg.cal
+
+    dms(deg, min, sec)
+    dms_add(a, b)
+    dms_neg(a)
+    dms_sub(a, b)
+    dms_mul(a, b)
+    dms_print(a)
+
+    Calculate in degrees, minutes, and seconds.
+
+
+ellip.cal
+
+    efactor(iN, ia, B, force)
+
+    Attempt to factor using the elliptic functions: y^2 = x^3 + a*x + b.
+
+
+hello.cal
+
+    Calc's contribution to the Hello World! page:
+
+	http://www.latech.edu/~acm/HelloWorld.shtml
+	http://www.latech.edu/~acm/helloworld/calc.html
+
+
+lucas.cal
+
+    lucas(h, n)
+
+    Perform a primality test of h*2^n-1, with 1<=h<2*n.
+
+
+lucas_chk.cal
+
+    lucas_chk(high_n)
+
+    Test all primes of the form h*2^n-1, with 1<=h<200 and n <= high_n.
+    Requires lucas.cal to be loaded.  The highest useful high_n is 1000.
+
+    Used by regress.cal during the 2100 test set.
+
+
+lucas_tbl.cal
+
+    Lucasian criteria for primality tables.
+
+
+mersenne.cal
+
+    mersenne(p)
+
+    Perform a primality test of 2^p-1, for prime p>1.
+
+
+mfactor.cal
+
+    mfactor(n [, start_k=1 [, rept_loop=10000 [, p_elim=17]]])
+
+    Return the lowest factor of 2^n-1, for n > 0.  Starts looking for factors
+    at 2*start_k*n+1.  Skips values that are multiples of primes <= p_elim.
+    By default, start_k == 1, rept_loop = 10000 and p_elim = 17.
+
+    The p_elim == 17 overhead takes ~3 minutes on an 200 Mhz r4k CPU and
+    requires about ~13 Megs of memory.	The p_elim == 13 overhead
+    takes about 3 seconds and requires ~1.5 Megs of memory.
+
+    The value p_elim == 17 is best for long factorizations.  It is the
+    fastest even thought the initial startup overhead is larger than
+    for p_elim == 13.
+
+mod.cal
+
+    lmod(a)
+    mod_print(a)
+    mod_one()
+    mod_cmp(a, b)
+    mod_rel(a, b)
+    mod_add(a, b)
+    mod_sub(a, b)
+    mod_neg(a)
+    mod_mul(a, b)
+    mod_square(a)
+    mod_inc(a)
+    mod_dec(a)
+    mod_inv(a)
+    mod_div(a, b)
+    mod_pow(a, b)
+
+    Routines to handle numbers modulo a specified number.
+
+
+natnumset.cal
+
+    isset(a)
+    setbound(n)
+    empty()
+    full()
+    isin(a, b)
+    addmember(a, n)
+    rmmember(a, n)
+    set()
+    mkset(s)
+    primes(a, b)
+    set_max(a)
+    set_min(a)
+    set_not(a)
+    set_cmp(a, b)
+    set_rel(a, b)
+    set_or(a, b)
+    set_and(a, b)
+    set_comp(a)
+    set_setminus(a, b)
+    set_diff(a,b)
+    set_content(a)
+    set_add(a, b)
+    set_sub(a, b)
+    set_mul(a, b)
+    set_square(a)
+    set_pow(a, n)
+    set_sum(a)
+    set_plus(a)
+    interval(a, b)
+    isinterval(a)
+    set_mod(a, b)
+    randset(n, a, b)
+    polyvals(L, A)
+    polyvals2(L, A, B)
+    set_print(a)
+
+    Demonstration of how the string operators and functions may be used
+    for defining and working with sets of natural numbers not exceeding a
+    user-specified bound.
+
+
+pell.cal
+
+    pellx(D)
+    pell(D)
+
+    Solve Pell's equation; Returns the solution X to: X^2 - D * Y^2 = 1.
+    Type the solution to pells equation for a particular D.
+
+
+pi.cal
+
+    qpi(epsilon)
+    piforever()
+
+    The qpi() calculate pi within the specified epsilon using the quartic
+    convergence iteration.
+
+    The piforever() prints digits of pi, nicely formatted, for as long
+    as your free memory space and system up time allows.
+
+    The piforever() funcion (written by Klaus Alexander Seistrup
+    <klaus@seistrup.dk>) was inspired by an algorithm conceived by
+    Lambert Meertens.  See also the ABC Programmer's Handbook, by Geurts,
+    Meertens & Pemberton, published by Prentice-Hall (UK) Ltd., 1990.
+
+pix.cal
+
+    pi_of_x(x)
+
+    Calculate the number of primes < x using A(n+1)=A(n-1)+A(n-2).  This
+    is a SLOW painful method ... the builtin pix(x) is much faster.
+    Still, this method is interesting.
+
+
+pollard.cal
+
+    pfactor(N, N, ai, af)
+
+    Factor using Pollard's p-1 method.
+
+
+poly.cal
+
+    Calculate with polynomials of one variable.	 There are many functions.
+    Read the documentation in the library file.
+
+
+prompt.cal
+
+    adder()
+    showvalues(str)
+
+    Demonstration of some uses of prompt() and eval().
+
+
+psqrt.cal
+
+    psqrt(u, p)
+
+    Calculate square roots modulo a prime
+
+
+qtime.cal
+
+    qtime(utc_hr_offset)
+
+    Print the time as English sentence given the hours offset from UTC.
+
+
+quat.cal
+
+    quat(a, b, c, d)
+    quat_print(a)
+    quat_norm(a)
+    quat_abs(a, e)
+    quat_conj(a)
+    quat_add(a, b)
+    quat_sub(a, b)
+    quat_inc(a)
+    quat_dec(a)
+    quat_neg(a)
+    quat_mul(a, b)
+    quat_div(a, b)
+    quat_inv(a)
+    quat_scale(a, b)
+    quat_shift(a, b)
+
+    Calculate using quaternions of the form: a + bi + cj + dk.	In these
+    functions, quaternians are manipulated in the form: s + v, where
+    s is a scalar and v is a vector of size 3.
+
+
+randbitrun.cal
+
+    randbitrun([run_cnt])
+
+    Using randbit(1) to generate a sequence of random bits, determine if
+    the number and length of identical bits runs match what is expected.
+    By default, run_cnt is to test the next 65536 random values.
+
+    This tests the a55 generator.
+
+
+randmprime.cal
+
+    randmprime(bits, seed [,dbg])
+
+    Find a prime of the form h*2^n-1 >= 2^bits for some given x.  The initial
+    search points for 'h' and 'n' are selected by a cryptographic pseudo-random
+    number generator.  The optional argument, dbg, if set to 1, 2 or 3
+    turn on various debugging print statements.
+
+
+randombitrun.cal
+
+    randombitrun([run_cnt])
+
+    Using randombit(1) to generate a sequence of random bits, determine if
+    the number and kength of identical bits runs match what is expected.
+    By default, run_cnt is to test the next 65536 random values.
+
+    This tests the Blum-Blum-Shub generator.
+
+
+randomrun.cal
+
+    randomrun([run_cnt])
+
+    Perform the "G. Run test" (pp. 65-68) as found in Knuth's "Art of
+    Computer Programming - 2nd edition", Volume 2, Section 3.3.2 on
+    the builtin rand() function.  This function will generate run_cnt
+    64 bit values.  By default, run_cnt is to test the next 65536
+    random values.
+
+    This tests the Blum-Blum-Shub generator.
+
+
+randrun.cal
+
+    randrun([run_cnt])
+
+    Perform the "G. Run test" (pp. 65-68) as found in Knuth's "Art of
+    Computer Programming - 2nd edition", Volume 2, Section 3.3.2 on
+    the builtin rand() function.  This function will generate run_cnt
+    64 bit values.  By default, run_cnt is to test the next 65536
+    random values.
+
+    This tests the a55 generator.
+
+
+regress.cal
+
+    Test the correct execution of the calculator by reading this library file.
+    Errors are reported with '****' messages, or worse.	:-)
+
+
+seedrandom.cal
+
+    seedrandom(seed1, seed2, bitsize [,trials])
+
+    Given:
+	seed1 - a large random value (at least 10^20 and perhaps < 10^93)
+	seed2 - a large random value (at least 10^20 and perhaps < 10^93)
+	size - min Blum modulus as a power of 2 (at least 100, perhaps > 1024)
+	trials - number of ptest() trials (default 25) (optional arg)
+
+    Returns:
+	the previous random state
+
+    Seed the cryptographically strong Blum generator.  This functions allows
+    one to use the raw srandom() without the burden of finding appropriate
+    Blum primes for the modulus.
+
+
+solve.cal
+
+    solve(low, high, epsilon)
+
+    Solve the equation f(x) = 0 to within the desired error value for x.
+    The function 'f' must be defined outside of this routine, and the low
+    and high values are guesses which must produce values with opposite signs.
+
+
+sumsq.cal
+
+    ss(p)
+
+    Determine the unique two positive integers whose squares sum to the
+    specified prime.  This is always possible for all primes of the form
+    4N+1, and always impossible for primes of the form 4N-1.
+
+
+surd.cal
+
+    surd(a, b)
+    surd_print(a)
+    surd_conj(a)
+    surd_norm(a)
+    surd_value(a, xepsilon)
+    surd_add(a, b)
+    surd_sub(a, b)
+    surd_inc(a)
+    surd_dec(a)
+    surd_neg(a)
+    surd_mul(a, b)
+    surd_square(a)
+    surd_scale(a, b)
+    surd_shift(a, b)
+    surd_div(a, b)
+    surd_inv(a)
+    surd_sgn(a)
+    surd_cmp(a, b)
+    surd_rel(a, b)
+
+    Calculate using quadratic surds of the form: a + b * sqrt(D).
+
+
+test1700.cal
+
+    value
+
+    This script is used by regress.cal to test the read and use keywords.
+
+
+test2600.cal
+
+    global defaultverbose
+    global err
+    testismult(str, n, verbose)
+    testsqrt(str, n, eps, verbose)
+    testexp(str, n, eps, verbose)
+    testln(str, n, eps, verbose)
+    testpower(str, n, b, eps, verbose)
+    testgcd(str, n, verbose)
+    cpow(x, n, eps)
+    cexp(x, eps)
+    cln(x, eps)
+    mkreal()
+    mkcomplex()
+    mkbigreal()
+    mksmallreal()
+    testappr(str, n, verbose)
+    checkappr(x, y, z, verbose)
+    checkresult(x, y, z, a)
+    test2600(verbose, tnum)
+
+    This script is used by regress.cal to test some of builtin functions
+    in terms of accuracy and roundoff.
+
+
+test2700.cal
+
+    global defaultverbose
+    mknonnegreal()
+    mkposreal()
+    mkreal_2700()
+    mknonzeroreal()
+    mkposfrac()
+    mkfrac()
+    mksquarereal()
+    mknonsquarereal()
+    mkcomplex_2700()
+    testcsqrt(str, n, verbose)
+    checksqrt(x, y, z, v)
+    checkavrem(A, B, X, eps)
+    checkrounding(s, n, t, u, z)
+    iscomsq(x)
+    test2700(verbose, tnum)
+
+    This script is used by regress.cal to test sqrt() for real and complex
+    values.
+
+
+test3100.cal
+
+    obj res
+    global md
+    res_test(a)
+    res_sub(a, b)
+    res_mul(a, b)
+    res_neg(a)
+    res_inv(a)
+    res(x)
+
+    This script is used by regress.cal to test determinants of a matrix
+
+
+test3300.cal
+
+    global defaultverbose
+    global err
+    testi(str, n, N, verbose)
+    testr(str, n, N, verbose)
+    test3300(verbose, tnum)
+
+    This script is used by regress.cal to provide for more determinant tests.
+
+
+test3400.cal
+
+    global defaultverbose
+    global err
+    test1(str, n, eps, verbose)
+    test2(str, n, eps, verbose)
+    test3(str, n, eps, verbose)
+    test4(str, n, eps, verbose)
+    test5(str, n, eps, verbose)
+    test6(str, n, eps, verbose)
+    test3400(verbose, tnum)
+
+    This script is used by regress.cal to test trig functions.
+    containing objects.
+
+test3500.cal
+
+    global defaultverbose
+    global err
+    testfrem(x, y, verbose)
+    testgcdrem(x, y, verbose)
+    testf(str, n, verbose)
+    testg(str, n, verbose)
+    testh(str, n, N, verbose)
+    test3500(verbose, n, N)
+
+    This script is used by regress.cal to test the functions frem,
+    fcnt, gcdrem.
+
+test4000.cal
+
+    global defaultverbose
+    global err
+    global BASEB
+    global BASE
+    global COUNT
+    global SKIP
+    global RESIDUE
+    global MODULUS
+    global K1
+    global H1
+    global K2
+    global H2
+    global K3
+    global H3
+    plen(N) defined
+    rlen(N) defined
+    clen(N) defined
+    ptimes(str, N, n, count, skip, verbose) defined
+    ctimes(str, N, n, count, skip, verbose) defined
+    crtimes(str, a, b, n, count, skip, verbose) defined
+    ntimes(str, N, n, count, skip, residue, mod, verbose) defined
+    testnextcand(str, N, n, cnt, skip, res, mod, verbose) defined
+    testnext1(x, y, count, skip, residue, modulus) defined
+    testprevcand(str, N, n, cnt, skip, res, mod, verbose) defined
+    testprev1(x, y, count, skip, residue, modulus) defined
+    test4000(verbose, tnum) defined
+
+    This script is used by regress.cal to test ptest, nextcand and
+    prevcand buildins.
+
+test4100.cal
+
+    global defaultverbose
+    global err
+    global K1
+    global K2
+    global BASEB
+    global BASE
+    rlen_4100(N) defined
+    olen(N) defined
+    test1(x, y, m, k, z1, z2) defined
+    testall(str, n, N, M, verbose) defined
+    times(str, N, n, verbose) defined
+    powtimes(str, N1, N2, n, verbose) defined
+    inittimes(str, N, n, verbose) defined
+    test4100(verbose, tnum) defined
+
+    This script is used by regress.cal to test REDC operations.
+
+test4600.cal
+
+    stest(str [, verbose]) defined
+    ttest([m, [n [,verbose]]]) defined
+    sprint(x) defined
+    findline(f,s) defined
+    findlineold(f,s) defined
+    test4600(verbose, tnum) defined
+
+    This script is used by regress.cal to test searching in files.
+
+test5100.cal
+
+    global a5100
+    global b5100
+    test5100(x) defined
+
+    This script is used by regress.cal to test the new code generator
+    declaration scope and order.
+
+test5200.cal
+
+    global a5200
+    static a5200
+    f5200(x) defined
+    g5200(x) defined
+    h5200(x) defined
+
+    This script is used by regress.cal to test the fix of a global/static bug.
+
+unitfrac.cal
+
+    unitfrac(x)
+
+    Represent a fraction as sum of distinct unit fractions.
+
+
+varargs.cal
+
+    sc(a, b, ...)
+
+    Example program to use 'varargs'.  Program to sum the cubes of all
+    the specified numbers.
+
+xx_print.cal
+
+    is_octet(a) defined
+    list_print(a) defined
+    mat_print (a) defined
+    octet_print(a) defined
+    blk_print(a) defined
+    nblk_print (a) defined
+    strchar(a) defined
+    file_print(a) defined
+    error_print(a) defined
+
+    Demo for the xx_print object routines.
+
+=-=
+
+# Copyright (c) 1999 David I. Bell and Landon Curt Noll
+# Permission is granted to use, distribute, or modify this source,
+# provided that this copyright notice remains intact.

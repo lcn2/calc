@@ -1,35 +1,14 @@
-#!/bin/make
 #
 # help - makefile for calc help files
 #
-# Copyright (C) 1999  Landon Curt Noll
+# Copyright (c) 1994 David I. Bell and Landon Curt Noll
+# Permission is granted to use, distribute, or modify this source,
+# provided that this copyright notice remains intact.
 #
-# Calc is open software; you can redistribute it and/or modify it under
-# the terms of the version 2.1 of the GNU Lesser General Public License
-# as published by the Free Software Foundation.
+# Arbitrary precision calculator.
 #
-# Calc is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.	See the GNU Lesser General
-# Public License for more details.
-#
-# A copy of version 2.1 of the GNU Lesser General Public License is
-# distributed with calc under the filename COPYING-LGPL.  You should have
-# received a copy with calc; if not, write to Free Software Foundation, Inc.
-# 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
-#
-# @(#) $Revision: 29.1 $
-# @(#) $Id: Makefile,v 29.1 1999/12/14 09:16:34 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
-#
-# Under source code control:	1991/07/23 06:47:57
-# File existed as early as:	1991
-#
-# chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-# Share and enjoy!  :-) http://reality.sgi.com/chongo/tech/comp/calc/
-#
-# calculator by David I. Bell with help/mods from others
-# Makefile by Landon Curt Noll
+# calculator by David I. Bell
+# makefile by Landon Curt Noll
 
 # required vars
 #
@@ -59,7 +38,6 @@ Q=@
 LCC= cc
 ICFLAGS=
 ILDFLAGS=
-CHMOD= chmod
 SED= sed
 SORT= sort
 FMT= fmt
@@ -85,21 +63,17 @@ SPECIAL_HELP_7= obj.file
 
 STD_HELP_FILES_8= operator statement
 
-BLT_HELP_FILES_9= resource
+BLT_HELP_FILES_9= stdlib
 
-STD_HELP_FILES_10= types usage script unexpected variable
+STD_HELP_FILES_10= types usage unexpected variable
 
-BLT_HELP_FILES_11= bindings custom_cal libcalc new_custom resource
+BLT_HELP_FILES_11= bindings custom_cal libcalc new_custom stdlib
 
 STD_HELP_FILES_12= archive
 
 BLT_HELP_FILES_13= bugs changes
 
-STD_HELP_FILES_14= contrib credit
-
-BLT_HELP_FILES_14= COPYING COPYING-LGPL
-
-STD_HELP_FILES_15= wishlist todo
+STD_HELP_FILES_14= contrib credit wishlist todo
 
 # These files are used in the following order to construct full
 #
@@ -109,16 +83,14 @@ FULL_HELP_FILES= ${STD_HELP_FILES_1} ${STD_HELP_FILES_2} \
 		${SPECIAL_HELP_7} ${STD_HELP_FILES_8} \
 		${BLT_HELP_FILES_9} ${STD_HELP_FILES_10} \
 		${BLT_HELP_FILES_11} ${STD_HELP_FILES_12} \
-		${BLT_HELP_FILES_13} ${STD_HELP_FILES_14} \
-		${BLT_HELP_FILES_14} ${STD_HELP_FILES_15}
+		${BLT_HELP_FILES_13} ${STD_HELP_FILES_14}
 
 # These full files are those who are not built or constrcuted
 #
 STD_HELP_FILES= ${STD_HELP_FILES_1} ${STD_HELP_FILES_2} \
 		${STD_HELP_FILES_4} ${STD_HELP_FILES_6} \
 		${STD_HELP_FILES_8} ${STD_HELP_FILES_10} \
-		${STD_HELP_FILES_12} ${STD_HELP_FILES_14} \
-		${STD_HELP_FILES_15}
+		${STD_HELP_FILES_12} ${STD_HELP_FILES_14}
 
 # These full files are those who are built by this Makefile
 #
@@ -127,30 +99,29 @@ STD_HELP_FILES= ${STD_HELP_FILES_1} ${STD_HELP_FILES_2} \
 #
 BLT_HELP_FILES= ${BLT_HELP_FILES_3} ${BLT_HELP_FILES_5} \
 		${BLT_HELP_FILES_9} \
-		${BLT_HELP_FILES_11} ${BLT_HELP_FILES_13} \
-		${BLT_HELP_FILES_14}
+		${BLT_HELP_FILES_11} ${BLT_HELP_FILES_13}
 
 # This list is prodiced by the detaillist rule when no WARNINGS are detected.
 #
 DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
-	appr arg argv arrow asec asech asin asinh assign atan atan2 atanh \
-	avg base bit blk blkcpy blkfree blocks bround btrunc calclevel ceil \
-	cfappr cfsim char cmdbuf cmp comb conj cos cosh cot coth count cp \
-	csc csch ctime delete den dereference det digit digits dp epsilon \
-	errcount errmax errno error eval exp fact factor fclose fcnt feof \
-	ferror fflush fgetc fgetfield fgetline fgets fgetstr fib files floor \
-	fopen forall fprintf fputc fputs fputstr frac free freeglobals \
-	freeredc freestatics frem freopen fscan fscanf fseek fsize ftell \
-	gcd gcdrem gd getenv hash head highbit hmean hnrmod hypot ilog \
-	ilog10 ilog2 im indices inputlevel insert int inverse iroot isassoc \
-	isatty isblk isconfig isdefined iserror iseven isfile ishash isident \
-	isint islist ismat ismult isnull isnum isobj isobjtype isodd isprime \
-	isptr isqrt isrand israndom isreal isrel issimple issq isstr istype \
-	jacobi join lcm lcmfact lfactor ln lowbit ltol makelist matdim \
-	matfill matmax matmin matsum mattrace mattrans max md5 memsize meq \
-	min minv mmin mne mod modify name near newerror nextcand nextprime \
-	norm null num oldvalue ord param perm pfact pi pix places pmod polar \
-	poly pop popcnt power prevcand prevprime printf prompt protect ptest \
+	appr arg arrow asec asech asin asinh assign atan atan2 atanh avg base \
+	bit blk blkcpy blkfree blocks bround btrunc calclevel ceil cfappr \
+	cfsim char cmdbuf cmp comb conj cos cosh cot coth count cp csc csch \
+	ctime delete den dereference det digit digits dp epsilon errcount \
+	errmax errno error eval exp fact factor fclose fcnt feof ferror \
+	fflush fgetc fgetfield fgetline fgets fgetstr fib files floor fopen \
+	forall fprintf fputc fputs fputstr frac free freeglobals freeredc \
+	freestatics frem freopen fscan fscanf fseek fsize ftell gcd gcdrem \
+	gd getenv hash head highbit hmean hnrmod hypot ilog ilog10 ilog2 \
+	im indices inputlevel insert int inverse iroot isassoc isatty isblk \
+	isconfig isdefined iserror iseven isfile ishash isident isint islist \
+	ismat ismult isnull isnum isobj isobjtype isodd isprime isptr isqrt \
+	isrand israndom isreal isrel issimple issq isstr istype jacobi join \
+	lcm lcmfact lfactor ln lowbit ltol makelist matdim matfill matmax \
+	matmin matsum mattrace mattrans max md5 memsize meq min minv mmin \
+	mne mod modify name near newerror nextcand nextprime norm null \
+	num oldvalue ord param perm pfact pi pix places pmod polar poly \
+	pop popcnt power prevcand prevprime printf prompt protect ptest \
 	push putenv quo quomod rand randbit random randombit randperm rcin \
 	rcmul rcout rcpow rcsq re remove reverse rewind rm root round rsearch \
 	runtime saveval scale scan scanf search sec sech seed segment select \
@@ -176,7 +147,7 @@ DISTLIST= ${STD_HELP_FILES} ${DETAIL_HELP} ${MAKE_FILE} \
 	obj.file builtin.top builtin.end funclist.sed \
 	errorcodes.hdr errorcodes.sed
 
-# These files are used to make (but not built) a calc .a link library
+# These files are used to make (but not built) a calc .a library
 #
 CALCLIBLIST=
 
@@ -192,10 +163,10 @@ all: ${FULL_HELP_FILES} full ${DETAIL_HELP} ${DETAIL_CLONE} \
 	rm -f .all
 	touch .all
 
-bindings: ../cal/bindings
+bindings: ../lib/bindings
 	rm -f $@
-	cp ../cal/bindings $@
-	${CHMOD} 0444 $@
+	cp ../lib/bindings $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -204,10 +175,10 @@ bindings: ../cal/bindings
 	    true; \
 	fi
 
-resource: ../cal/README
+stdlib: ../lib/README
 	rm -f $@
-	cp ../cal/README $@
-	${CHMOD} 0444 $@
+	cp ../lib/README $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -219,7 +190,7 @@ resource: ../cal/README
 changes: ../CHANGES
 	rm -f $@
 	cp ../CHANGES $@
-	${CHMOD} 0444 $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -231,7 +202,7 @@ changes: ../CHANGES
 libcalc: ../LIBRARY
 	rm -f $@
 	${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' < ../LIBRARY > $@
-	${CHMOD} 0444 $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -243,7 +214,7 @@ libcalc: ../LIBRARY
 bugs: ../BUGS
 	rm -f $@
 	cp ../BUGS $@
-	${CHMOD} 0444 $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -256,7 +227,7 @@ errorcodes: ../calcerr.h errorcodes.hdr errorcodes.sed
 	rm -f $@
 	cat errorcodes.hdr > $@
 	${SED} -n -f errorcodes.sed < ../calcerr.h >> $@
-	${CHMOD} 0444 $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -268,7 +239,7 @@ errorcodes: ../calcerr.h errorcodes.hdr errorcodes.sed
 calc: usage
 	rm -f $@
 	cp usage $@
-	${CHMOD} 0444 $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -280,7 +251,7 @@ calc: usage
 custom_cal: ../custom/CUSTOM_CAL
 	rm -f $@
 	cp ../custom/CUSTOM_CAL $@
-	${CHMOD} 0444 $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -292,7 +263,7 @@ custom_cal: ../custom/CUSTOM_CAL
 new_custom: ../custom/HOW_TO_ADD
 	rm -f $@
 	cp ../custom/HOW_TO_ADD $@
-	${CHMOD} 0444 $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -304,31 +275,7 @@ new_custom: ../custom/HOW_TO_ADD
 copy: blkcpy
 	rm -f $@
 	cp blkcpy $@
-	${CHMOD} 0444 $@
-	-@if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
-	    echo ''; \
-	else \
-	    true; \
-	fi
-
-COPYING: ../COPYING
-	rm -f $@
-	cp ../COPYING $@
-	${CHMOD} 0444 $@
-	-@if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
-	    echo ''; \
-	else \
-	    true; \
-	fi
-
-COPYING-LGPL: ../COPYING-LGPL
-	rm -f $@
-	cp ../COPYING-LGPL $@
-	${CHMOD} 0444 $@
+	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -471,12 +418,10 @@ detaillist:
 
 clean:
 	rm -f obj mkbuiltin funclist.c funclist.o funclist
-	rm -f COPYING COPYING-LGPL
 
 clobber:
 	rm -f ${BLT_HELP_FILES} full .all calc
 	rm -f obj mkbuiltin funclist.c funclist.o funclist
-	rm -f COPYING COPYING-LGPL
 	rm -f ${SINGULAR_FILES} ${DETAIL_CLONE}
 
 install: all
@@ -504,12 +449,11 @@ install: all
 		rm -f ${HELPDIR}/$$i; \
 		echo cp $$i ${HELPDIR}; \
 		cp $$i ${HELPDIR}; \
-		echo ${CHMOD} 0444 ${HELPDIR}/$$i; \
-		${CHMOD} 0444 ${HELPDIR}/$$i; \
+		echo chmod 0444 ${HELPDIR}/$$i; \
+		chmod 0444 ${HELPDIR}/$$i; \
 	done
 	rm -f ${HELPDIR}/obj
 	cp obj.file ${HELPDIR}/obj
-	${CHMOD} 0444 ${HELPDIR}/obj
-	${Q}echo remove files that are obsolete
-	-rm -f rmblk block stdlib
-	-rm -f ${HELPDIR}/rmblk ${HELPDIR}/block ${HELPDIR}/stdlib
+	chmod 0444 ${HELPDIR}/obj
+	# remove dead files
+	-@rm -f rmblk block

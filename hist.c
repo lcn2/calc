@@ -1,33 +1,8 @@
 /*
- * hist - interactive readline module
+ * Copyright (c) 1997 David I. Bell
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
  *
- * Copyright (C) 1999  David I. Bell
- *
- * Calc is open software; you can redistribute it and/or modify it under
- * the terms of the version 2.1 of the GNU Lesser General Public License
- * as published by the Free Software Foundation.
- *
- * Calc is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
- * Public License for more details.
- *
- * A copy of version 2.1 of the GNU Lesser General Public License is
- * distributed with calc under the filename COPYING-LGPL.  You should have
- * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
- *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: hist.c,v 29.1 1999/12/14 09:16:10 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/hist.c,v $
- *
- * Under source code control:	1993/05/02 20:09:19
- * File existed as early as:	1993
- *
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
- */
-
-/*
  * Adapted from code written by Stephen Rothwell.
  *
  * GNU readline support added by Martin Buck <mbuck@debian.org>
@@ -36,7 +11,6 @@
  * while using emacs-like editing commands within a command stack.
  * The key bindings for the editing commands are (slightly) configurable.
  */
-
 
 #include <stdio.h>
 #include <ctype.h>
@@ -54,12 +28,28 @@
 
 #include "calc.h"
 #include "hist.h"
+#include "terminal.h"
 #include "have_string.h"
 
 #include "have_strdup.h"
 #if !defined(HAVE_STRDUP)
 # define strdup(x) calc_strdup((CONST char *)(x))
 #endif /* HAVE_STRDUP */
+
+
+#if defined(USE_TERMIOS)
+# include <termios.h>
+# define TTYSTRUCT	struct	termios
+#else /* USE_SGTTY */
+# if defined(USE_TERMIO)
+#  include <termio.h>
+#  define TTYSTRUCT	struct	termio
+# else /* USE_TERMIO */
+   /* assume USE_SGTTY */
+#  include <sys/ioctl.h>
+#  define TTYSTRUCT	struct	sgttyb
+# endif /* USE_TERMIO */
+#endif /* USE_SGTTY */
 
 #ifdef HAVE_STRING_H
 # include <string.h>
@@ -214,6 +204,7 @@ static	int		canedit;
 static	int		histused;
 static	int		key_count;
 static	int		save_len;
+static	TTYSTRUCT	oldtty;
 static	KEY_MAP		*cur_map;
 static	KEY_MAP		*base_map;
 static	KEY_ENT		key_table[MAX_KEYS];
@@ -325,12 +316,14 @@ hist_getline(char *prompt, char *buf, int len)
 int
 hist_init(char *filename)
 {
+	TTYSTRUCT	newtty;
+
 	/*
 	 * prevent multiple initializations
 	 */
 	if (inited) {
 		if (conf->calc_debug & CALCDBG_TTY)
-			printf("hist_init: inited already set\n");
+			printf("DEBUG: inited already set in hist_init\n");
 		return HIST_INITED;
 	}
 
@@ -340,7 +333,7 @@ hist_init(char *filename)
 	inited = 1;
 	canedit = 0;
 	if (conf->calc_debug & CALCDBG_TTY)
-		printf("hist_init: Set inited, cleared canedit\n");
+		printf("DEBUG: Set inited, cleared canedit in hist_init\n");
 
 	/*
 	 * open the bindings file
@@ -361,16 +354,77 @@ hist_init(char *filename)
 	 */
 	closeinput();
 
-	/*
-	 * setup the calc TTY on STDIN
-	 */
-	if (!calc_tty(STDIN)) {
+#ifdef	USE_SGTTY
+	if (ioctl(STDIN, TIOCGETP, &oldtty) < 0) {
+		if (conf->calc_debug & CALCDBG_TTY)
+			printf("DEBUG: Cannot TIOCGETP stdin in hist_init\n");
 		return HIST_NOTTY;
 	}
 
+	newtty = oldtty;
+	newtty.sg_flags &= ~ECHO;
+	newtty.sg_flags |= CBREAK;
+
+	if (ioctl(STDIN, TIOCSETP, &newtty) < 0) {
+		if (conf->calc_debug & CALCDBG_TTY)
+			printf("DEBUG: Cannot TIOCSETP stdin in hist_init\n");
+		return HIST_NOTTY;
+	}
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: stty -ECHO +CBREAK in hist_init\n");
+#endif
+
+#ifdef	USE_TERMIO
+	if (ioctl(STDIN, TCGETA, &oldtty) < 0) {
+		if (conf->calc_debug & CALCDBG_TTY)
+			printf("DEBUG: Cannot TCGETA stdin in hist_init\n");
+		return HIST_NOTTY;
+	}
+
+	newtty = oldtty;
+	newtty.c_lflag &= ~(ECHO | ECHOE | ECHOK);
+	newtty.c_iflag |= ISTRIP;
+	newtty.c_lflag &= ~ICANON;
+	newtty.c_cc[VMIN] = 1;
+	newtty.c_cc[VTIME] = 0;
+
+	if (ioctl(STDIN, TCSETAW, &newtty) < 0) {
+		if (conf->calc_debug & CALCDBG_TTY)
+			printf("DEBUG: Cannot TCSETAW stdin in hist_init\n");
+		return HIST_NOTTY;
+	}
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
+		       "VMIN=1 VTIME=0 in hist_init\n");
+#endif
+
+#ifdef	USE_TERMIOS
+	if (tcgetattr(STDIN, &oldtty) < 0) {
+		if (conf->calc_debug & CALCDBG_TTY)
+			printf("DEBUG: Cannot tcgetattr stdin in hist_init\n");
+		return HIST_NOTTY;
+	}
+
+	newtty = oldtty;
+	newtty.c_lflag &= ~(ECHO | ECHOE | ECHOK);
+	newtty.c_iflag |= ISTRIP;
+	newtty.c_lflag &= ~ICANON;
+	newtty.c_cc[VMIN] = 1;
+	newtty.c_cc[VTIME] = 0;
+
+	if (tcsetattr(STDIN, TCSANOW, &newtty) < 0) {
+		if (conf->calc_debug & CALCDBG_TTY)
+			printf("DEBUG: Cannot tcsetattr stdin in hist_init\n");
+		return HIST_NOTTY;
+	}
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
+		       "VMIN=1 VTIME=0 in hist_init\n");
+#endif
+
 	canedit = 1;
 	if (conf->calc_debug & CALCDBG_TTY)
-		printf("hist_init: Set canedit\n");
+		printf("DEBUG: Set canedit in hist_init\n");
 
 	return HIST_SUCCESS;
 }
@@ -385,20 +439,35 @@ hist_term(void)
 	if (!inited || !canedit) {
 		if (conf->calc_debug & CALCDBG_TTY) {
 			if (!inited)
-				printf("hist_term: inited already cleared\n");
+				printf("DEBUG: inited already cleared "
+				       "in hist_term\n");
 			if (!canedit)
-				printf("hist_term: canedit already cleared\n");
+				printf("DEBUG: canedit already cleared "
+				       "in hist_term\n");
 		}
 		inited = 0;
 		if (conf->calc_debug & CALCDBG_TTY)
-			printf("hist_term: Cleared inited\n");
+			printf("DEBUG: Cleared inited in hist_term\n");
 		return;
 	}
 
-	/*
-	 * restore orignal tty state
-	 */
-	(void) orig_tty(STDIN);
+#ifdef	USE_SGTTY
+	(void) ioctl(STDIN, TIOCSETP, &oldtty);
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: TIOCSETP restored stdin in hist_term\n");
+#endif
+
+#ifdef	USE_TERMIO
+	(void) ioctl(STDIN, TCSETAW, &oldtty);
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: TCSETAW restored stdin in hist_term\n");
+#endif
+
+#ifdef	USE_TERMIOS
+	(void) tcsetattr(STDIN, TCSANOW, &oldtty);
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: TCSANOW restored stdin in hist_term\n");
+#endif
 }
 
 

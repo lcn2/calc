@@ -1,31 +1,37 @@
 /*
- * zrandom - Blum-Blum-Shub pseudo-random generator
+ * Copyright (c) 1997 by Landon Curt Noll.  All Rights Reserved.
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Permission to use, copy, modify, and distribute this software and
+ * its documentation for any purpose and without fee is hereby granted,
+ * provided that the above copyright, this permission notice and text
+ * this comment, and the disclaimer below appear in all of the following:
  *
- * Calc is open software; you can redistribute it and/or modify it under
- * the terms of the version 2.1 of the GNU Lesser General Public License
- * as published by the Free Software Foundation.
+ *	supporting documentation
+ *	source copies
+ *	source works derived from this source
+ *	binaries derived from this source or from derived source
  *
- * Calc is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
- * Public License for more details.
+ * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+ * EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+ * USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+ * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ * PERFORMANCE OF THIS SOFTWARE.
  *
- * A copy of version 2.1 of the GNU Lesser General Public License is
- * distributed with calc under the filename COPYING-LGPL.  You should have
- * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * Prior to calc 2.9.3t9, these routines existed as a calc library called
+ * cryrand.cal.	 They have been rewritten in C for performance as well
+ * as to make them available directly from libcalc.a.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: zrandom.c,v 29.1 1999/12/14 09:16:18 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrandom.c,v $
+ * Comments, suggestions, bug fixes and questions about these routines
+ * are welcome.	 Send EMail to the address given below.
  *
- * Under source code control:	1997/02/15 04:01:56
- * File existed as early as:	1997
+ * Happy bit twiddling,
  *
- * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo/
+ *
+ * chongo <was here> /\../\
  */
 
 /*
@@ -206,7 +212,7 @@
  *	the current Blum modulus.  We will successively square mod Blum
  *	modulus until we get a smaller value (modulus wrap).
  *
- *	The follow calc resource file produces an equivalent effect:
+ *	The follow calc script produces an equivalent effect:
  *
  *	  n = default_modulus;		(* n is the new Blum modulus *)
  *	  r = seed;
@@ -232,7 +238,7 @@
  *	have not been disclosed, use srandom(seed, newn) with the
  *	appropriate args as noted below.
  *
- *	The follow calc resource file produces an equivalent effect:
+ *	The follow calc script produces an equivalent effect:
  *
  *	  n = default_modulus;	(* as used by the initial state *)
  *	  r = default_residue;	(* as used by the initial state *)
@@ -266,7 +272,7 @@
  *	We will successively square it mod Blum modulus until we get
  *	a smaller value (modulus wrap).
  *
- *	The follow calc resource file produces an equivalent effect:
+ *	The follow calc script produces an equivalent effect:
  *
  *	  if (newn % 4 == 1) {
  *	      n = newn;			(* n is the new Blum modulus *)
@@ -291,7 +297,7 @@
  *	The initial quadratic residue will be as if the default initial
  *	quadratic residue arg was given.
  *
- *	The follow calc resource file produces an equivalent effect:
+ *	The follow calc script produces an equivalent effect:
  *
  *	  srandom(default_residue, newn)
  *
@@ -326,7 +332,7 @@
  *	We will successively square it mod Blum modulus until we get
  *	a smaller value (modulus wrap).
  *
- *	The follow calc resource file produces an equivalent effect:
+ *	The follow calc script produces an equivalent effect:
  *
  *	  n = n[newn];		(* n is new Blum modulus, see below *)
  *	  r = seed;
@@ -345,7 +351,7 @@
  *	The new quadratic residue will also be set to one of
  *	the pre-defined quadratic residues.
  *
- *	The follow calc resource file produces an equivalent effect:
+ *	The follow calc script produces an equivalent effect:
  *
  *	  srandom(r[newn], n[newn])
  *
@@ -652,7 +658,7 @@
  *	We will successively square it mod Blum modulus until we get
  *	a smaller value (modulus wrap).
  *
- *	The follow calc resource file produces an equivalent effect:
+ *	The follow calc script produces an equivalent effect:
  *
  *	  p = nextcand(ip-2, trials, 0, 3, 4);	  (* find the 1st Blum prime *)
  *	  q = nextcand(iq-2, trials, 0, 3, 4);	  (* find the 2nd Blum prime *)
@@ -680,7 +686,7 @@
  *	The initial quadratic residue will be as if the default initial
  *	quadratic residue arg was given.
  *
- *	The follow calc resource file produces an equivalent effect:
+ *	The follow calc script produces an equivalent effect:
  *
  *	  srandom(default_residue, ip, iq, trials)
  *
@@ -760,7 +766,7 @@
  * the "Blum-Blum-Shub generator" section above.
  *
  * A final "truth in advertising" issue deals with how the magic numbers
- * found in this file were generated.  Detains can be found in the
+ * found in this library were generated.  Detains can be found in the
  * various functions, while a overview can be found in the "SOURCE FOR
  * MAGIC NUMBERS" section below.
  */
@@ -856,8 +862,8 @@
  *		q = 2*fq+1;
  *	} while (ptest(q, 25) == 0);
  *
- * The above resource file produces the Blum probable primes and initial
- * quadratic residue (line wrapped for readability):
+ * The above script produces the Blum probable primes and initial quadratic
+ * residue (line wrapped for readability):
  *
  *	    p= 0x798ac934c7a3318ad446190f3474e57
  *
@@ -912,7 +918,7 @@
  *	lambda(n) = lcm(factors of p-1 & q-1)
  *
  * since 'p' and 'q' are both odd, 'p-1' and 'q-1' have 2 as
- * a factor.  The calc resource file above ensures that '(p-1)/2' and
+ * a factor.  The calc script above ensures that '(p-1)/2' and
  * '(q-1)/2' are probable prime, thus maximizing the period
  * of the default generator to:
  *
@@ -962,7 +968,7 @@
  *
  ***
  *
- * One could take issue with the above resource file that produced a 260 bit
+ * One could take issue with the above script that produced a 260 bit
  * Blum modulus.  So if that bothers you, then seed your generator
  * with your own Blum modulus and initial quadratic residue.  And
  * if you are truly paranoid, why would you want to use the default seed,

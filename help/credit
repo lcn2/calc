@@ -9,7 +9,7 @@ Credits
     release control functions as well as other calc maintenance functions.
 
     Thanks for suggestions and encouragement from Peter Miller,
-    Neil Justusson, Ernest W. Bowen and Landon Noll.
+    Neil Justusson, and Landon Noll.
 
     Thanks to Stephen Rothwell for writing the original version of
     hist.c which is used to do the command line editing.
@@ -26,67 +26,10 @@ Credits
 
     Most of this source and binary has one of the following copyrights:
 
-	    Copyright (C) year David I. Bell
-	    Copyright (C) year David I. Bell and Landon Curt Noll
-	    Copyright (C) year David I. Bell and Ernest Bowen
-	    Copyright (C) year David I. Bell, Landon Curt Noll and Ernest Bowen
-	    Copyright (C) year Landon Curt Noll
-	    Copyright (C) year Ernest Bowen and Landon Curt Noll
-	    Copyright (C) year Ernest Bowen
+	    Copyright (c) year David I. Bell
+	    Copyright (c) year David I. Bell and Landon Curt Noll
+	    Copyright (c) year Landon Curt Noll
+	    Copyright (c) year Ernest Bowen and Landon Curt Noll
 
-
-Copying / Calc GNU Lesser General Public License
-
-    Calc is open software, and is covered under version 2.1 of the GNU
-    Lesser General Public License.  You are welcome to change it and/or
-    distribute copies of it under certain conditions.  The calc commands:
-
-	help copying
-	help copying-lgpl
-
-    should display the contents of the COPYING and COPYING-LGPL files.
-    Those files contain information about the calc's GNU Lesser General
-    Public License, and in particular the conditions under which you
-    are allowed to change it and/or distribute copies of it.
-
-    You should have received a copy of the version 2.1 GNU
-    Lesser General Public License.  If you do not have these
-    files, write to:
-
-	Free Software Foundation, Inc.
-	59 Temple Place
-	Suite 330
-	Boston, MA  02111-1307
-	USA
-
-See also:
-
-    help copyright
-    help copying
-    help copying-lgpl
-
-## Copyright (C) 1999  Landon Curt Noll
-##
-## Calc is open software; you can redistribute it and/or modify it under
-## the terms of the version 2.1 of the GNU Lesser General Public License
-## as published by the Free Software Foundation.
-##
-## Calc is distributed in the hope that it will be useful, but WITHOUT
-## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
-## Public License for more details.
-##
-## A copy of version 2.1 of the GNU Lesser General Public License is
-## distributed with calc under the filename COPYING-LGPL.  You should have
-## received a copy with calc; if not, write to Free Software Foundation, Inc.
-## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
-##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: credit,v 29.1 1999/12/14 09:15:46 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/credit,v $
-##
-## Under source code control:	1991/07/23 05:47:24
-## File existed as early as:	1991
-##
-## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+    Permission is granted to use, distribute, or modify this source,
+    provided that this copyright notice remains intact.

@@ -1,39 +1,11 @@
 /*
- * qtrans - transcendental functions for real numbers
+ * Copyright (c) 1995 David I. Bell
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
  *
- * Copyright (C) 1999  David I. Bell and Ernest Bowen
- *
- * Primary author:  David I. Bell
- *
- * Calc is open software; you can redistribute it and/or modify it under
- * the terms of the version 2.1 of the GNU Lesser General Public License
- * as published by the Free Software Foundation.
- *
- * Calc is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
- * Public License for more details.
- *
- * A copy of version 2.1 of the GNU Lesser General Public License is
- * distributed with calc under the filename COPYING-LGPL.  You should have
- * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
- *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: qtrans.c,v 29.1 1999/12/14 09:16:14 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/qtrans.c,v $
- *
- * Under source code control:	1990/02/15 01:48:22
- * File existed as early as:	before 1990
- *
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
- */
-
-/*
  * Transcendental functions for real numbers.
  * These are sin, cos, exp, ln, power, cosh, sinh.
  */
-
 
 #include "qmath.h"
 
@@ -173,7 +145,7 @@ qcos(NUMBER *q, NUMBER *epsilon)
 		/*NOTREACHED*/
 	}
 	if (qiszero(q))
-		return qlink(&_qone_);
+		return qmappr(&_qone_, epsilon, 24);
 	n = -qilog2(epsilon);
 	if (n < 0)
 		return qlink(&_qzero_);
@@ -311,7 +283,7 @@ qsec(NUMBER *q, NUMBER *epsilon)
 		/*NOTREACHED*/
 	}
 	if (qiszero(q))
-		return qlink(&_qone_);
+		return qmappr(&_qone_, epsilon, 24);
 	n = qilog2(epsilon);
 	k = (n > 0) ? 4 + n/2 : 4;
 	for (;;) {
@@ -781,22 +753,17 @@ qexp(NUMBER *q, NUMBER *epsilon)
 		/*NOTREACHED*/
 	}
 	if (qiszero(q))
-		return qlink(&_qone_);
+		return qmappr(&_qone_, epsilon, 24);
 	tmp1 = qmul(q, &_qlge_);
-	m = qtoi(tmp1);		/* exp(q) < 2^(m+1) or m == MAXLONG */
+	m = qtoi(tmp1) + 1;	/* exp(q) < 2^m */
 	qfree(tmp1);
-
-	if (m > (1 << 30))
-		return NULL;
 
 	n = qilog2(epsilon);	/* 2^n <= epsilon < 2^(n+1) */
 	if (m < n)
 		return qlink(&_qzero_);
 	tmp1 = qqabs(q);
-	tmp2 = qexprel(tmp1, m - n + 1);
+	tmp2 = qexprel(tmp1, m - n + 2);
 	qfree(tmp1);
-	if (tmp2 == NULL)
-		return NULL;
 	if (qisneg(q)) {
 		tmp1 = qinv(tmp2);
 		qfree(tmp2);
@@ -812,7 +779,6 @@ qexp(NUMBER *q, NUMBER *epsilon)
  * Calculate the exponential function with relative error corresponding
  * to a specified number of significant bits
  * Requires *q >= 0, bitnum >= 0.
- * This returns NULL if more than 2^30 working bits would be required.
  */
 static NUMBER *
 qexprel(NUMBER *q, long bitnum)
@@ -838,8 +804,6 @@ qexprel(NUMBER *q, long bitnum)
 		s = -h;
 	n = h + s;	/* n is number of squarings that will be required */
 	m = bitnum + n;
-	if (m > (1 << 30))
-		return NULL;
 	while (s > 0) {		/* increasing m by ilog2(s) */
 		s >>= 1;
 		m++;
@@ -1022,16 +986,18 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 		math_error("Negative power of zero");
 		/*NOTREACHED*/
 	}
-	if (qiszero(q2) || qisone(q1))
-		return qlink(&_qone_);
+	if (qiszero(q2) || qisone(q1)) {
+		return qmappr(&_qone_, epsilon, 24L);
+	}
 	if (qiszero(q1))
 		return qlink(&_qzero_);
 	if (qisneg(q1)) {
 		math_error("Negative base for qpower");
 		/*NOTREACHED*/
 	}
-	if (qisone(q2))
-		return qmappr(q1, epsilon, 24);
+	if (qisone(q2)) {
+		return qmappr(q1, epsilon, 24L);
+	}
 	if (zrel(q1->num, q1->den) < 0) {
 		q1tmp = qinv(q1);
 		q2tmp = qneg(q2);
@@ -1040,10 +1006,11 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 		q2tmp = qlink(q2);
 	}
 	if (qisone(q2tmp)) {
+		tmp1 = q1tmp;
 		qfree(q2tmp);
-		q2tmp = qmappr(q1tmp, epsilon, 24);
-		qfree(q1tmp);
-		return q2tmp;
+		tmp2 = qmappr(tmp1, epsilon, 24L);
+		qfree(tmp1);
+		return tmp2;
 	}
 	m = qilog2(q1tmp);
 	n = qilog2(epsilon);
@@ -1076,11 +1043,6 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 	}
 	qfree(tmp1);
 	qfree(tmp2);
-	if (m > (1 << 30)) {
-		qfree(q1tmp);
-		qfree(q2tmp);
-		return NULL;
-	}
 	m += 1;
 	if (m < n) {
 		qfree(q1tmp);
@@ -1102,18 +1064,10 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 		tmp1 = qneg(tmp2);
 		qfree(tmp2);
 		tmp2 = qexprel(tmp1, m - n + 3);
-		if (tmp2 == NULL) {
-			qfree(tmp1);
-			return NULL;
-		}
 		qfree(tmp1);
 		tmp1 = qinv(tmp2);
 	} else {
 		tmp1 = qexprel(tmp2, m - n + 3) ;
-		if (tmp1 == NULL) {
-			qfree(tmp2);
-			return NULL;
-		}
 	}
 	qfree(tmp2);
 	tmp2 = qmappr(tmp1, epsilon, 24L);
@@ -1154,8 +1108,6 @@ qroot(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 	tmp2 = qinv(q2);
 	tmp1 = qpower(q1, tmp2, epsilon);
 	qfree(tmp2);
-	if (tmp1 == NULL)
-		return NULL;
 	if (neg) {
 		tmp2 = qneg(tmp1);
 		qfree(tmp1);
@@ -1179,8 +1131,6 @@ qcosh(NUMBER *q, NUMBER *epsilon)
 	tmp2 = qexp(tmp1, epsilon1);
 	qfree(tmp1);
 	qfree(epsilon1);
-	if (tmp2 == NULL)
-		return NULL;
 	tmp1 = qinv(tmp2);
 	tmp3 = qqadd(tmp1, tmp2);
 	qfree(tmp1)
@@ -1210,8 +1160,6 @@ qsinh(NUMBER *q, NUMBER *epsilon)
 	tmp2 = qexp(tmp1, epsilon1);
 	qfree(tmp1);
 	qfree(epsilon1);
-	if (tmp2 == NULL)
-		return NULL;
 	tmp1 = qinv(tmp2);
 	tmp3 = qispos(q) ? qsub(tmp2, tmp1) : qsub(tmp1, tmp2);
 	qfree(tmp1)
@@ -1227,46 +1175,29 @@ qsinh(NUMBER *q, NUMBER *epsilon)
 /*
  * Calculate the hyperbolic tangent to the nearest or next to nearest
  * multiple of epsilon.
- * This is calculated using the formulae:
- *	tanh(x) = 1 or -1 for very large abs(x)
- *	tanh(x) = (+ or -)(1 - 2 * exp(2 * x))	for large abx(x)
- *	tanh(x) = (exp(2*x) - 1)/(exp(2*x) + 1) otherwise
+ * This is calculated using the formula:
+ *	tanh(x) = (exp(2*x) - 1)/(exp(2*x) + 1).
  */
 NUMBER *
 qtanh(NUMBER *q, NUMBER *epsilon)
 {
 	NUMBER *tmp1, *tmp2, *tmp3;
-	long n, m;
+	long n;
 
 	n = qilog2(epsilon);
 	if (n > 0 || qiszero(q))
 		return qlink(&_qzero_);
-	n = -n;
 	tmp1 = qqabs(q);
-	tmp2 = qmul(tmp1, &_qlge_);
-	m = qtoi(tmp2);		/* exp(|q|) < 2^(m+1) or m == MAXLONG */
-	qfree(tmp2);
-	if (m > 1 + n/2) {
-		qfree(tmp1);
-		return q->num.sign ? qlink(&_qnegone_) : qlink(&_qone_);
-	}
 	tmp2 = qscale(tmp1, 1);
 	qfree(tmp1);
-	tmp1 = qexprel(tmp2, 2 + n);
+	tmp1 = qexprel(tmp2, 2 - n);
 	qfree(tmp2);
-	if (m > 1 + n/4) {
-		tmp2 = qqdiv(&_qtwo_, tmp1);
-		qfree(tmp1);
-		tmp1 = qsub(&_qone_, tmp2);
-		qfree(tmp2);
-	} else {
-		tmp2 = qdec(tmp1);
-		tmp3 = qinc(tmp1);
-		qfree(tmp1);
-		tmp1 = qqdiv(tmp2, tmp3);
-		qfree(tmp2);
-		qfree(tmp3);
-	}
+	tmp2 = qdec(tmp1);
+	tmp3 = qinc(tmp1);
+	qfree(tmp1);
+	tmp1 = qqdiv(tmp2, tmp3);
+	qfree(tmp2);
+	qfree(tmp3);
 	tmp2 = qmappr(tmp1, epsilon, 24L);
 	qfree(tmp1);
 	if (qisneg(q)) {
@@ -1347,7 +1278,7 @@ qsech(NUMBER *q, NUMBER *epsilon)
 		/*NOTREACHED*/
 	}
 	if (qiszero(q))
-		return qlink(&_qone_);
+		return qmappr(&_qone_, epsilon, 24L);
 
 	tmp1 = qqabs(q);
 	k = 0;

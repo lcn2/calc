@@ -1,11 +1,11 @@
 	USING THE ARBITRARY PRECISION ROUTINES IN A C PROGRAM
 
-Part of the calc release consists of an arbitrary precision math link library.
-This link library is used by the calc program to perform its own calculations.
+Part of the calc release consists of an arbitrary precision math library.
+This library is used by the calc program to perform its own calculations.
 If you wish, you can ignore the calc program entirely and call the arbitrary
 precision math routines from your own C programs.
 
-The link library is called libcalc.a, and provides routines to handle arbitrary
+The library is called libcalc.a, and provides routines to handle arbitrary
 precision arithmetic with integers, rational numbers, or complex numbers.
 There are also many numeric functions such as factorial and gcd, along
 with some transcendental functions such as sin and exp.
@@ -49,7 +49,8 @@ to see if it really does what you think it does.  I won't guarantee that
 obscure internal routines won't change or disappear in future releases!
 
 When calc is installed, all of the include files needed to build
-libcalc.a along with the link library itself are installed into ${LIBDIR}.
+libcalc.a along with the library itself (and the lint library
+llib-lcalc.ln, if made) are installed into ${LIBDIR}.
 
 External programs may want to compile with:
 
@@ -76,9 +77,9 @@ level in your program, and use longjmp in the math_error routine to return
 to that level and so recover from the error.  This is what the calc program
 does.
 
-For convenience, the link library libcalc.a contains a math_error routine.
+For convenience, the library libcalc.a contains a math_error routine.
 By default, this routine simply prints a message to stderr and then exits.
-By simply linking in this link library, any calc errors will result in a
+By simply linking in this library, any calc errors will result in a
 error message on stderr followed by an exit.
 
 External programs that wish to use this math_error may want to compile with:
@@ -116,7 +117,7 @@ For example:
 OUTPUT ROUTINES
 ---------------
 
-The output from the routines in the link library normally goes to stdout.  You
+The output from the routines in the library normally goes to stdout.  You
 can divert that output to either another FILE handle, or else to a string.
 Read the routines in zio.c to see what is available.  Diversions can be
 nested.
@@ -327,13 +328,13 @@ Examples of these are qnum to return the numerator, qden to return the
 denominator, qint to return the integer part of, qfrac to return the
 fractional part of, and qinv to invert a fraction.
 
-There are some transcendental functions in the link library, such as sin
-and cos.  These cannot be evaluated exactly as fractions.  Therefore,
-they accept another argument which tells how accurate you want the result.
-This is an "epsilon" value, and the returned value will be within that
-quantity of the correct value.	This is usually an absolute difference,
-but for some functions (such as exp), this is a relative difference.
-For example, to calculate sin(0.5) to 100 decimal places, you could do:
+There are some transcendental functions in the library, such as sin and cos.
+These cannot be evaluated exactly as fractions.	 Therefore, they accept
+another argument which tells how accurate you want the result.	This is an
+"epsilon" value, and the returned value will be within that quantity of
+the correct value.  This is usually an absolute difference, but for some
+functions (such as exp), this is a relative difference.	 For example, to
+calculate sin(0.5) to 100 decimal places, you could do:
 
 	NUMBER *q, *ans, *epsilon;
 
@@ -454,29 +455,3 @@ call.  This is not required, but is does bring things to a closure.
 
 The function libcalc_call_me_last() takes no args and returns void.  You
 need call libcalc_call_me_last() only once.
-
-## Copyright (C) 1999  David I. Bell and Landon Curt Noll
-##
-## Calc is open software; you can redistribute it and/or modify it under
-## the terms of the version 2.1 of the GNU Lesser General Public License
-## as published by the Free Software Foundation.
-##
-## Calc is distributed in the hope that it will be useful, but WITHOUT
-## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
-## Public License for more details.
-##
-## A copy of version 2.1 of the GNU Lesser General Public License is
-## distributed with calc under the filename COPYING-LGPL.  You should have
-## received a copy with calc; if not, write to Free Software Foundation, Inc.
-## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
-##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: LIBRARY,v 29.1 1999/12/14 09:15:29 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/RCS/LIBRARY,v $
-##
-## Under source code control:	1993/07/30 19:44:49
-## File existed as early as:	1993
-##
-## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/

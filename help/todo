@@ -60,13 +60,15 @@ Very High priority items:
     * Fix any 'Known bugs' as noted in the BUGS file or as
       displayed by 'calc help bugs'.
 
+    * Copyleft calc and place it under a LGPL.
+
 =-=
 
 High priority items:
 
     * Verify, complete or fix the 'SEE ALSO' help file sections.
 
-    * Verify, complete or fix the 'LINK LIBRARY' help file sections.
+    * Verify, complete or fix the 'LIBRARY' help file sections.
 
     * Verify, complete or fix the 'LIMITS' help file sections.
 
@@ -81,6 +83,19 @@ High priority items:
 
     * Address, if possible and reasonable, any Calc Mis-features
       as noted in the BUGS file or as displayed by 'calc help bugs'.
+
+    * The shell script that is currently constructed to display a help
+      file (in help.c) is a gross hack.	 That code should be replaced
+      with code that looks for the help file in the pre-defined help
+      directories.  When the specific help file is found and opened,
+      then a $PAGER should be forked and execed after doing things such
+      as closing open file descriptors that the $PAGER does not need.
+
+    * The arg passdown to the lower level Makfiles should be reviewed
+      to determine which items really need to be passed down.  The lower
+      level Makefiles should default to the shipped values.
+
+    * Consider using configure to build the calc Makefile.
 
 =-=
 
@@ -115,31 +130,3 @@ Medium priority items:
 
     * Add a builtin function to access the 64 bit FNV hash which
       is currently being used internally in seed.c.
-
-    * Consider using configure to build the calc Makefile.
-
-## Copyright (C) 1999  Landon Curt Noll
-##
-## Calc is open software; you can redistribute it and/or modify it under
-## the terms of the version 2.1 of the GNU Lesser General Public License
-## as published by the Free Software Foundation.
-##
-## Calc is distributed in the hope that it will be useful, but WITHOUT
-## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
-## Public License for more details.
-##
-## A copy of version 2.1 of the GNU Lesser General Public License is
-## distributed with calc under the filename COPYING-LGPL.  You should have
-## received a copy with calc; if not, write to Free Software Foundation, Inc.
-## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
-##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: todo,v 29.1 1999/12/14 09:16:09 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/todo,v $
-##
-## Under source code control:	1999/10/20 07:42:55
-## File existed as early as:	1999
-##
-## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
