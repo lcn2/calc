@@ -35,8 +35,9 @@ Following is the change from calc version 2.11.0t1 to date:
 
     Reordered cc Makefile variable sets in the main Makefile.
 
-    Fixed a bug and applied a fix that was reported by Ernest Bowen
-    <ernie@turing.une.edu.au>.  Added regression tests 1103 to 1112.
+    Fixed a bug in hnrmod() and applied a fix that was reported by Ernest
+    Bowen <ernie@turing.une.edu.au>.  Added regression tests 1103 to
+    1112 to confirm the fix.
 
     Fixed a bug in version.c related to MINOR_PATCHs in both the
     empty and non-empty MINOR_PATCH cases.
