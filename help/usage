@@ -2,7 +2,22 @@ Calc command line
 
     Calc has the following command line:
 
-	calc [-C] [-e] [-h] [-i] [-m mode] [-n] [-p] [-q] [-u] [calc_cmd ...]
+	calc [-c] [-C] [-d] [-e] [-h] [-i] [-m mode]
+	     [-n] [-p] [-q] [-u] [-v] [calc_cmd ...]
+
+	-c  Continue reading command lines even after an execution
+	    error has caused the abandonment of a line.
+
+	    For example:
+
+		calc read many_errors.cal
+
+	    will cause calc to abort on the first error, whereas:
+
+		calc -c read many_errors.cal
+
+	    will cause calc to try to process each line being read
+	    despite the errors that it encounters.
 
 	-C  Permit the execution of custom builtin functions.  Without
 	    this flag, calling the custom() builtin function will
@@ -12,6 +27,27 @@ Calc command line
 	    are non-standard and that are not portable.  Custom builtin
 	    functions are disabled by default for this reason.
 
+	-d  Disable the printing of the opening title.  The printing
+	    of library debug and informational messages is also disabled
+	    as if config("lib_debug",0) had been executed.
+
+	    For example:
+
+		calc 'read qtime; qtime(2)'
+
+	    will output something like:
+
+		qtime(utc_hr_offset) defined
+		It's nearly ten past six.
+
+	    whereas:
+
+		calc -d 'read qtime; qtime(2)'
+
+	    will just say:
+
+		It's nearly ten past six.
+
 	-e  Ignore any environment variables on startup.  The
 	    getenv() builtin will still return values, however.
 
@@ -19,7 +55,21 @@ Calc command line
 	    is equivalent to the calc command help help.  The help
 	    facility is disabled unless the mode is 5 or 7.  See -m.
 
-	-i  Do not about if the error count exceeds maxerr().
+	-i  Become interactive if possible.  Be default, if calc_cmd
+	    args are given, calc will execute them and exit.  This flag
+	    will cause calc to drop into interactive mode after the
+	    commands are executed.
+
+	    For example:
+
+		calc 2+5
+
+	    will print the value 7 and exit whereas:
+
+		calc -i 2+5
+
+	    will print the value 7 and prompt the user for more
+	    calc commands.
 
 	-m mode
 	   This flag sets the permission mode of calc.  It
@@ -38,7 +88,7 @@ Calc command line
 		6  do not execute any program
 		7  allow everything (default mode)
 
-	   If one wished to run calc from a privledged user, one
+	   If one wished to run calc from a privileged user, one
 	   might want to use -m 0 in an effort to make calc more
 	   secure.
 
@@ -46,7 +96,7 @@ Calc command line
 	   open.  Files already open are not effected. Thus if one
 	   wanted to use the -m 0 in an effort to make calc more
 	   secure, but still wanted to read and write a specific
-	   file, one might want to do:
+	   file, one might want to do in sh, ksh, bash-like shells:
 
 		     calc -m 0 3<a.file
 
@@ -59,25 +109,28 @@ Calc command line
 	   given.  The reading of key bindings is also disabled
 	   when the mode disables opening of files for reading.
 
-	-n  Use the new configutation defaults instead of the old
+	-n  Use the new configuration defaults instead of the old
 	    default classic defaults.  This flag as the same effect
 	    as executing config("all", "newcfg") at startup time.
 
 	-p  Pipe processing is enabled by use of -p.  For example:
 
-		     echo "print 2^21701-1, 2^23209-1" | calc -p | fizzbin
+		     calc -p '2^21701-1' | fizzbin
 
-	    In pipe mode, calc does not prompt, does not print
-	    leading tabs and does not print the initial header.
+	    In pipe mode, calc does not prompt, does not print leading
+	    tabs and does not print the initial header.  The -p flag
+	    overrides -i.
 
 	-q  Disable the use of the $CALCRC startup scripts.
 
 	-u  Disable buffering of stdin and stdout.
 
+	-v  Print calc version number and exit.
+
     Without `calc_cmd', calc operates interactively.  If one or more
     `calc_cmd' are given on the command line, calc will execute them and
-    exit.  The printing of leading tabs on output is disabled as if
-    config("tab",0) had been executed.
+    exit.  If -i is given, calc will attempt to become interactive
+    even of one or more `calc_cmd' are given on the command line.
 
     Normally on startup, calc attempts to execute a collection of
     library scripts.  The environment variable $CALCRC (if non-existent
@@ -98,7 +151,8 @@ Calc command line
 
     Calc treats all open files, other than stdin, stdout and
     stderr as files available for reading and writing. One may
-    present calc with an already open file in the following way:
+    present calc with an already open file using sh, ksh or bash-like
+    shells is to:
 
         calc 3<open_file 4<open_file2
 

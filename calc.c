@@ -11,7 +11,6 @@
 #include <pwd.h>
 #include <sys/types.h>
 #include <ctype.h>
-#include <setjmp.h>
 
 #define CALC_C
 #include "calc.h"
@@ -37,40 +36,13 @@
 #include <stdlib.h>
 #endif
 
-
-/*
- * external definitions and functions
- */
-extern int abortlevel;		/* current level of aborts */
-extern BOOL inputwait;		/* TRUE if in a terminal input wait */
-extern jmp_buf jmpbuf;		/* for errors */
-extern int isatty(int tty);	/* TRUE if fd is a tty */
-
-extern int p_flag;		/* TRUE => pipe mode */
-extern int q_flag;		/* TRUE => don't execute rc files */
-extern int u_flag;		/* TRUE => unbuffer stdin and stdout */
-extern int d_flag;		/* TRUE => disable heading, lib_debug == 0 */
-extern int stoponerror;		/* >0 => stop, <0 => continue, ==0 => use -c */
-
-extern char *pager;		/* $PAGER or default */
-extern int stdin_tty;		/* TRUE if stdin is a tty */
-extern int interactive;		/* TRUE if interactive session (no cmd args) */
-extern char *program;		/* our name */
-extern char cmdbuf[];		/* command line expression */
-
-extern char *version(void);	/* return version string */
-
-
 /*
  * static definitions and functions
  */
-static char *usage = "usage: %s [-C] [-e] [-h] [-i] [-m mode] [-n] [-p]\n"
-		     "\t[-q] [-u] [-c] [-d] [[--] calc_cmd ...]\n";
+static char *usage = "usage: %s [-c] [-C] [-d] [-e] [-h] [-i] [-m mode]\n"
+		     "\t[-n] [-p] [-q] [-u] [-v] [[--] calc_cmd ...]\n";
 static void intint(int arg);	/* interrupt routine */
 
-static int havecommands;
-static int c_flag;		/* To permit continuation after error */
-static int i_flag;		/* To go interactive if permitted */
 
 /*
  * Top level calculator routine.
@@ -163,8 +135,7 @@ main(int argc, char **argv)
 			exit(1);
 		}
 	}
-	interactive = (optind >= argc);
-	havecommands = !interactive;
+	havecommands = (optind < argc);
 
 	/*
 	 * look at the length of any trailing command args
@@ -258,69 +229,73 @@ main(int argc, char **argv)
 		post_init = TRUE;
 	}
 
+	/*
+	 * (re)establish the interrupt handler
+	 */
 	(void) signal(SIGINT, intint);
 
-	if (start_done == 0) {
+	/*
+	 * execute calc code based on the run state
+	 */
+	if (run_state == RUN_PRE_BEGIN) {
 		if (!q_flag && allow_read) {
-			start_done = 1;
+			run_state = RUN_PRE_RCFILES;
 			runrcfiles();
 		}
-		start_done = 2;
+		run_state = RUN_POST_RCFILES;
 	}
-	if (start_done == 1) {
+	if (run_state == RUN_PRE_RCFILES) {
 		fprintf(stderr, "Execution error in rcfiles\n");
 		if ((c_flag && !stoponerror) || stoponerror < 0) {
 			getcommands(FALSE);
-			start_done = 2;
+			run_state = RUN_POST_RCFILES;
 		} else {
 			if ((havecommands && !i_flag) || !stdin_tty)
-				start_done = 7;
+				run_state = RUN_STOP_ON_ERROR;
 			else if (havecommands)
-				start_done = 4;
+				run_state = RUN_POST_CMD_ARGS;
 			else
-				start_done = 2;
+				run_state = RUN_POST_RCFILES;
 		}
 	}
-	if (start_done == 2) {
+	if (run_state == RUN_POST_RCFILES) {
 		if (havecommands) {
-			start_done = 3;
+			run_state = RUN_PRE_CMD_ARGS;
 			(void) openstring(cmdbuf);
 			getcommands(FALSE);
 		}
-		start_done = 4;
+		run_state = RUN_POST_CMD_ARGS;
 	}
-	if (start_done == 3) {
+	if (run_state == RUN_PRE_CMD_ARGS) {
 		fprintf(stderr, "Execution error in commands\n");
 		if ((c_flag && !stoponerror) || stoponerror < 0) {
 			getcommands(FALSE);
-			start_done = 4;
-		}
-		else {
+			run_state = RUN_POST_CMD_ARGS;
+		} else {
 			closeinput();
 			if (!stdin_tty || !i_flag)
-				start_done = 7;
+				run_state = RUN_STOP_ON_ERROR;
 			else
-				start_done = 4;
+				run_state = RUN_POST_CMD_ARGS;
 		}
 	}
-	if (start_done == 4) {
+	if (run_state == RUN_POST_CMD_ARGS) {
 		if (stdin_tty && ((havecommands && !i_flag) || p_flag))
-			start_done = 6;
+			run_state = RUN_NOT_TOP_LEVEL;
 		else
 			openterminal();
-	}
-	else if (start_done == 5) {
-		if (!stdin_tty && (!c_flag || stoponerror) && stoponerror >= 0) {
-			start_done = 7;
-		}
-		else if ((c_flag && !stoponerror) || stoponerror < 0)
+	} else if (run_state == RUN_TOP_LEVEL) {
+		if (!stdin_tty && (!c_flag || stoponerror) &&
+		    stoponerror >= 0) {
+			run_state = RUN_STOP_ON_ERROR;
+		} else if ((c_flag && !stoponerror) || stoponerror < 0)
 			getcommands(FALSE);
 		else
 			reinitialize();
 	}
 
-	if (start_done < 6) {
-		start_done = 5;
+	if (run_state < RUN_NOT_TOP_LEVEL) {
+		run_state = RUN_TOP_LEVEL;
 		getcommands(TRUE);
 	}
 
@@ -328,7 +303,8 @@ main(int argc, char **argv)
 	 * all done
 	 */
 	libcalc_call_me_last();
-	return (start_done - 6) ? 1 : 0;
+	return (run_state == RUN_STOP_ON_ERROR ||
+		run_state == RUN_UNKNOWN) ? 1 : 0;
 }
 
 

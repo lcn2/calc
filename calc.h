@@ -10,6 +10,7 @@
 #if !defined(__CALC_H__)
 #define	__CALC_H__
 
+#include <setjmp.h>
 
 #include "value.h"
 
@@ -146,15 +147,34 @@ extern void showerrors(void);
  */
 extern void initialize(void);
 extern void reinitialize(void);
-
+extern int isatty(int tty);	/* TRUE if fd is a tty */
+extern char *version(void);	/* return version string */
+extern int post_init;		/* TRUE => setjmp for math_error is ready */
 
 /*
- * Global data definitions.
+ * global flags and definitions
  */
 extern int abortlevel;		/* current level of aborts */
 extern BOOL inputwait;		/* TRUE if in a terminal input wait */
+extern jmp_buf jmpbuf;		/* for errors */
+
+extern int p_flag;		/* TRUE => pipe mode */
+extern int q_flag;		/* TRUE => don't execute rc files */
+extern int u_flag;		/* TRUE => unbuffer stdin and stdout */
+extern int d_flag;		/* TRUE => disable heading, lib_debug == 0 */
+extern int c_flag;		/* TRUE => continue after error if permitted */
+extern int i_flag;		/* TRUE => try to go interactive after error */
+extern int stoponerror;		/* >0 => stop, <0 => continue, ==0 => use -c */
+
+extern char *pager;		/* $PAGER or default */
+extern int stdin_tty;		/* TRUE if stdin is a tty */
+extern int havecommands;	/* TRUE if have cmd args) */
+extern char *program;		/* our name */
+extern char cmdbuf[];		/* command line expression */
+
+extern int abortlevel;		/* current level of aborts */
+extern BOOL inputwait;		/* TRUE if in a terminal input wait */
 extern VALUE *stack;		/* execution stack */
-extern int start_done;		/* TRUE => start up processing finished */
 extern int dumpnames;		/* TRUE => dump names rather than indices */
 
 extern char *calcpath;		/* $CALCPATH or default */
@@ -172,7 +192,21 @@ extern int allow_read;	/* FALSE => may not open any files for reading */
 extern int allow_write;	/* FALSE => may not open any files for writing */
 extern int allow_exec;	/* FALSE => may not execute any commands */
 
-extern int post_init;	/* TRUE => setjmp for math_error is ready */
+/* 
+ * calc startup and run state 
+ */
+typedef enum {
+    RUN_UNKNOWN = -1,		/* unknown or unset start state */
+    RUN_PRE_BEGIN = 0,		/* pre-startup state, calc execution started */
+    RUN_PRE_RCFILES = 1,	/* rc files about to or are being evaluated */
+    RUN_POST_RCFILES = 2,	/* rc files have been evaluated */
+    RUN_PRE_CMD_ARGS = 3,	/* cmd_args about to or are being evaluated */
+    RUN_POST_CMD_ARGS = 4,	/* cmd_args have been evaluated */
+    RUN_TOP_LEVEL = 5,		/* running at the top interactive level */
+    RUN_NOT_TOP_LEVEL = 6,	/* running not at the top interactive level */
+    RUN_STOP_ON_ERROR = 7	/* we need to stop due to errors */
+} run;
+extern run run_state;	
 
 
 /*

@@ -643,6 +643,10 @@ scanerror(int skip, char *fmt, ...)
 	va_end(ap);
 	fprintf(stderr, "%s\n", buf);
 
+	/* bail out if continuation not permitted */
+	if ((!c_flag && !stoponerror) || stoponerror > 0)
+		longjmp(jmpbuf, 1);
+
 	/* bail out if too many errors */
 	if (conf->maxscancount > 0 && errorcount > conf->maxscancount) {
 		fputs("Too many scan errors, compilation aborted.\n", stderr);

@@ -311,7 +311,7 @@ f_open(char *name, char *mode)
 	 */
 	if (!allow_read && !allow_write) {
 		/* no reads and no writes means no opens! */
-		if (start_done) {
+		if (run_state > RUN_PRE_BEGIN) {
 			fprintf(stderr,
 				"open of %s mode %s - %s\n", name, mode,
 				"open for read or write disallowed by -m\n");
@@ -319,7 +319,7 @@ f_open(char *name, char *mode)
 		return NULL;
 	} else if (!allow_read && strchr(mode, 'r') != NULL) {
 		/* reading new files disallowed */
-		if (start_done) {
+		if (run_state > RUN_PRE_BEGIN) {
 			fprintf(stderr,
 				"open of %s mode %s - %s\n", name, mode,
 				"open for read disallowed by -m\n");
@@ -330,7 +330,7 @@ f_open(char *name, char *mode)
 		    strchr(mode, 'a') != NULL ||
 		    strchr(mode, '+') != NULL)) {
 		/* writing new files disallowed */
-		if (start_done) {
+		if (run_state > RUN_PRE_BEGIN) {
 			fprintf(stderr,
 				"open of %s mode %s - %s\n", name, mode,
 				"open for write disallowed by -m\n");

@@ -77,15 +77,3 @@ Known problems or mis-features:
     * There is some places in the source with obscure variable names
       and not much in the way of comments.  We need some major cleanup
       and documentation.
-
-    * On a Dec Alpha, using the Dec Alpha cc (not gcc) make check for
-      version 2.11.0t5.1 fails in the regression test:
-
-	From vandermj@molbio.sbphrd.com  Tue Oct  5 04:06:52 1999
-	Subject: Re: oops, try calc version 2.10.0t5.1
-	Date: Tue, 05 Oct 1999 07:06:30 -0400
-
-	Regular cc on Dec alpha, 'make check' dies with:
-
-	1804: surd_value(a) == 2+3i
-	"": line 1706: Calling qfreenum with nozero links!!!

@@ -1,190 +1,356 @@
 .\"
-.\" Copyright (c) 1994 David I. Bell and Landon Curt Noll
+.\" Copyright (c) 1993 David I. Bell and Landon Curt Noll
+.\" Original man page dated 15nov93
+.\" Copyright (c) 1999 David I. Bell and Landon Curt Noll
 .\" Permission is granted to use, distribute, or modify this source,
 .\" provided that this copyright notice remains intact.
 .\"
 .\" calculator by David I. Bell
 .\" man page by Landon Noll
-.TH calc 1 "^..^" "15nov93"
+.TH calc 1 "^..^" "15Oct1999"
 .SH NAME
 calc \- arbitrary precision calculator
 .SH SYNOPSIS
 \fIcalc\fP
-[\fI\-h\fP]
-[\fI\-m mode\fP]
-[\fI\-p\fP]
-[\fI\-q\fP]
-[\fI\-u\fP]
-[\fI\-v\fP]
-[\fIcalc_cmd \&.\|.\|.\fp]
+.RB [ \-c ]
+.RB [ \-C ]
+.RB [ \-d ]
+.RB [ \-e ]
+.RB [ \-h ]
+.RB [ \-i ]
+.RB [ \-m\ \&mode ]
+.br
+.in +5n
+.RB [ \-n ]
+.RB [ \-p ]
+.RB [ \-q ]
+.RB [ \-u ]
+.RB [ \-v ]
+.RB [ calc_cmd\ \&.\|.\|. ]
+.in -5n
 .SH DESCRIPTION
 \&
 .br
 CALC COMMAND LINE
 .PP
+
 .TP
-\fI\-h\fP
-Print a help message.
-This option implies \fI \-q\fP.
-This is equivalent to the calc command \fIhelp help\fP.
-The help facility is disabled unless the \fImode\fP is 5 or 7.
-See \fI\-m\fP below.
-.sp
-.TP
-\fI\-m mode\fP
-This flag sets the permission mode of calc.
-It controls the ability for \fIcalc\fP to open files
-and execute programs.
-\fIMode\fP may be a number from 0 to 7.
-.sp
-The \fImode\fP value is interpreted in a way similar
-to that of the \fRchmod(1)\fP octal mode:
-.sp
-.in +0.5i
+.B \-c
+Continue reading command lines even after an execution
+error has caused the abandonment of a line.
+.sp 1
+For example:
+.sp 1
+.in +5n
 .nf
-0   do not open any file, do not execute progs
-1   do not open any file
-2   do not open files for reading, do not execute progs
-3   do not open files for reading
-4   do not open files for writing, do not execute progs
-5   do not open files for writing
-6   do not execute any program
-7   allow everything (default mode)
+calc read many_errors.cal
 .fi
-.in -0.5i
-.sp
-If one wished to run calc from a privledged user, one might
-want to use \fI\-m 0\fP in an effort to make calc more secure.
-.sp
-\fIMode\fP bits for reading and writing apply only on an open.
+.in -5n
+.sp 1
+will cause
+.B calc
+to abort on the first error, whereas:
+.sp 1
+.in +5n
+.nf
+calc -c read many_errors.cal
+.fi
+.in -5n
+.sp 1
+will
+cause
+.B calc
+to try to process each line being read
+despite the errors that it encounters.
+
+.TP
+.B \-C
+Permit the execution of custom builtin functions.  Without
+this flag, calling the custom() builtin function will
+simply generate an error.
+.sp 1
+Use if this flag may cause
+.B calc
+to execute functions that
+are non-standard and that are not portable.  Custom builtin
+functions are disabled by default for this reason.
+
+.TP
+.B \-d
+Disable the printing of the opening title.  The printing
+of library debug and informational messages is also disabled
+as if \fBconfig("lib_debug", 0)\fP had been executed.
+.sp 1
+For example:
+.sp 1
+.in +5n
+calc 'read qtime; qtime(2)'
+.in -5n
+.sp 1
+will output something like:
+.sp 1
+.in +5n
+.nf
+qtime(utc_hr_offset) defined
+It's nearly ten past six.
+.fi
+.in -5n
+.sp 1
+whereas:
+.sp 1
+.in +5n
+.nf
+calc -d 'read qtime; qtime(2)'
+.fi
+.in -5n
+.sp 1
+will just say:
+.sp 1
+.in +5n
+.nf
+It's nearly ten past six.
+.fi
+.in -5n
+.sp 1
+
+.TP
+.B \-e
+Ignore any environment variables on startup.
+The getenv() builtin will still return values, however.
+
+.TP
+.B \-h
+Print a help message.  This option implies
+.BR \-q .
+This
+is equivalent to the
+.B calc
+command help help.
+The help facility is disabled unless the mode is 5 or 7.
+See
+.BR \-m .
+
+.TP
+.B \-i
+Become interactive if possible.
+Be default, if
+.I calc_cmd
+args are given,
+.B calc
+will execute them and exit.
+This flag args are given,
+.B calc
+will execute them and exit.
+This flag will cause
+.B calc
+to drop into interactive mode after the
+commands are executed.
+.sp 1
+For example:
+.sp 1
+.in +5n
+.nf
+calc 2+5
+.fi
+.in -5n
+.sp 1
+will print the value 7 and exit whereas:
+.sp 1
+.in +5n
+.nf
+calc -i 2+5
+.fi
+.in -5n
+.sp 1
+will print the value 7 and prompt the user for more
+.B calc
+commands.
+
+.TP
+.BR \-m " mode"
+This flag sets the permission mode of
+.BR calc .
+It controls the ability for
+.B calc
+to open files and execute programs.
+Mode may be a number from 0 to 7.
+.sp 1
+The mode value is interpreted in a way similar to that
+of the
+.BR chmod (1)
+octal mode:
+.sp 1
+.in +5n
+.nf
+0  do not open any file, do not execute progs
+1  do not open any file
+2  do not open files for reading, do not execute progs
+3  do not open files for reading
+4  do not open files for writing, do not execute progs
+5  do not open files for writing
+6  do not execute any program
+7  allow everything (default mode)
+.fi
+.in -5n
+.sp 1
+If one wished to run
+.B calc
+from a privileged user, one might want to use
+.B \-m
+0 in an effort to make
+.B calc
+somewhat more secure.
+.sp 1
+Mode bits for reading and writing apply only on an
+open.
 Files already open are not effected.
-Thus if one wanted to use the \fI\-m 0\fP in an effort to make
-\fIcalc\fP more secure, but still wanted to read and write a specific
-file, one might want to do:
-.sp
-.in +0.5i
+Thus if one wanted to use the
+.B \-m
+0 in an effort to make
+.B calc
+somewhat more secure, but still wanted to read and write a specific
+file, one might want to do in
+.BR sh (1),
+.BR ksh (1),
+.BR bash (1)-like
+shells:
+.sp 1
+.in +5n
 .nf
-\fRcalc \-m 0 3<a.file\fP
+calc -m 0 3<a.file
 .fi
-.in -0.5i
-.sp
-Files presented to \fIcalc\fP in this way are opened in an unknown mode.
-\fICalc\fP will attempt to read or write them if directed.
-.sp
-If the \fImode\fP disables opening of files for reading, then
-the startup library scripts are disabled as of \fI\-q\fP was given.
-The reading of key bindings is also disabled when the \fImode\fP
-disables opening of files for reading.
+.in -5n
+.sp 1
+Files presented to
+.B calc
+in this way are opened in an
+unknown mode.
+.B Calc
+will attempt to read or write them if directed.
+.sp 1
+If the mode disables opening of files for reading, then
+the startup library scripts are disabled as of
+.B \-q
+was given.
+The reading of key bindings is also disabled
+when the mode disables opening of files for reading.
+
 .TP
-\fI \-p\fP
-Pipe processing is enabled by use of \-p.  For example:
-.sp
-.in +0.5i
+.B \-n
+Use the new configuration defaults instead of the old
+default classic defaults.
+This flag as the same effect
+as executing \fBconfig("all", "newcfg")\fP at startup time.
+
+.TP
+.B \-p
+Pipe processing is enabled by use of
+.BR \-p .
+For example:
+.sp 1
+.in +5n
 .nf
-\fRecho "print 2^21701\-1, 2^23209\-1" | calc \-p | fizzbin\fP
+calc -p '2^21701-1' | fizzbin
 .fi
-.in -0.5i
-.sp
-In pipe mode, \fIcalc\fP does not prompt, does not print leading tabs
-and does not print the initial header.
+.in -5n
+.sp 1
+In pipe mode,
+.B calc
+does not prompt, does not print leading
+tabs and does not print the initial header.
+The
+.B \-p
+flag overrides
+.BR \-i .
+
 .TP
-\fI \-q\fP
-Disable the use of the \fI$CALCRC\fP startup scripts.
+.B \-q
+Disable the use of the $CALCRC startup scripts.
+
 .TP
-\fI \-u\fP
+.B \-u
 Disable buffering of stdin and stdout.
+
 .TP
-\fI \-v\fP
-Print the version and exit.
+.B \-v
+Print the
+.B calc
+version number and exit.
 .PP
-Without \fIcalc_cmd\fPs, \fIcalc\fP operates interactively.
-If one or more \fIcalc_cmd\fPs are given on the command line,
-\fIcalc\fP will execute them and exit.
-The printing of leading tabs on output is disabled
-as if \fIconfig("tab",0)\fP had been executed.
+Without
+.IR calc_cmd ,
+.B calc
+operates interactively.
+If one or more
+.I calc_cmd
+are given on the command line,
+.B calc
+will execute them and exit.
+If
+.B \-i
+is given,
+.B calc
+will attempt to become interactive
+even of one or more
+.I calc_cmd
+are given on the command line.
 .PP
-Normally on startup, \fIcalc\fP attempts to execute a collection
-of library scripts.
-The environment variable \fI$CALCRC\fP (if non-existent then
-a compiled in value) contains a \fI:\fP separated list of
-startup library scripts.
-No error conditions are produced if these startup library scripts
-are not found.
+Normally on startup,
+.B calc
+attempts to execute a collection of
+library scripts.
+The environment variable $CALCRC (if non-existent
+then a compiled in value) contains a :  separated list of startup
+library scripts.
+No error conditions are produced if these startup
+library scripts are not found.
 .PP
-If the \fImode\fP disables opening of files for reading, then
-the startup library scripts are disabled as of \fI\-q\fP was given
-and \fI$CALCRC\fP as well as the default compiled in value are ignored.
+If the mode disables opening of files for reading, then the startup
+library scripts are disabled as of
+.B \-q
+was given and $CALCRC as well
+as the default compiled in value are ignored.
 .PP
 Filenames are subject to ``~'' expansion (see below).
-The environment variable \fI$CALCPATH\fP (if non-existent then
-a compiled in value) contains a \fI:\fP separated list of search
-directories.
-If a file does not begin with \fI/\fP, \fI~\fP or \fI./\fP,
-then it is searched for under each directory listed in the \fI$CALCPATH\fP.
-It is an error if no such readable file is found.
+The
+environment variable $CALCPATH (if non-existent then a compiled in
+value) contains a : separated list of search directories.
+If a
+file does not begin with /, ~ or ./, then it is searched for under
+each directory listed in the $CALCPATH.
+It is an error if no such
+readable file is found.
 .PP
-Calc treats all open files, other than stdin, stdout and stderr
-as files available for reading and writing.
-One may present calc with an already open file in the following way:
-.sp
-.in +0.5i
+.B Calc
+treats all open files, other than stdin, stdout and
+stderr as files available for reading and writing.
+One may
+present
+.B calc
+with an already open file using
+.BR sh (1),
+.BR ksh (1),
+.BR bash (1)-like
+shells is to:
+.sp 1
+.in +5n
+calc 3<open_file 4<open_file2
+.in -5n
+.sp 1
+For more information use the following
+.B calc
+commands:
+.sp 1
+.in +5n
 .nf
-\fRcalc 3<open_file 4<open_file2\fP
-.fi
-.in -0.5i
-.PP
-For more information use the following calc commands:
-.PP
-.in 1.0i
-help usage
-.br
 help help
-.br
+help overview
+help usage
 help environment
-.in -1.0i
-.PP
-OVERVIEW
-.PP
-\fICalc\fP is arbitrary precision arithmetic system that uses
-a C-like language.
-\fICalc\fP is useful as a calculator, an algorithm prototyped
-and as a mathematical research tool.
-More importantly, \fIcalc\fP provides one with a machine
-independent means of computation.
-.PP
-\fICalc\fP comes with a rich set of builtin mathematical
-and programmatic functions.
-.PP
-\fICalc\fP is distributed with library of scripts.
-Written in the same C-like language, library scripts may be
-read in and executed during a \fIcalc\fP session.
-These library scripts are also provided because they are
-useful and to serve as examples of the \fIcalc\fP language.
-One may further extend \fIcalc\fP thru the
-use of user defined scripts.
-.PP
-Internally calc represents numeric values as fractions reduced to their
-lowest terms.
-The numerators and denominators of these factions may grow to
-arbitrarily large values.
-Numeric values read in are automatically converted into rationals.
-The user need not be aware of this internal representation.
-.PP
-For more information use the following calc commands:
-.PP
-.in 1.0i
-help intro
-.br
-help builtin
-.br
-help stdlib
-.br
-help define
-.br
-show builtins
-.br
-show functions
-.in -1.0i
+help config
+.fi
+.in -5n
+.sp 1
 .PP
 DATA TYPES
 .PP
@@ -199,7 +365,9 @@ multiplication, division, negation, squaring, modulus,
 rounding, exponentiation, equality, comparison, printing
 and so on.
 .PP
-For more information use the following calc commands:
+For more information use the following
+.B calc
+commands:
 .PP
 .in 1.0i
 help types
@@ -220,7 +388,9 @@ procedure.
 Values may be grouped together in a matrix, or into a
 a list that permits stack and queue style operations.
 .PP
-For more information use the following calc commands:
+For more information use the following
+.B calc
+commands:
 .PP
 .in 1.0i
 help variable
@@ -256,7 +426,9 @@ For example:
 ~chongo/lib/fft_multiply.cal
 .in -1.0i
 .PP
-For more information use the following calc command:
+For more information use the following
+.B calc
+command:
 .PP
 .in 1.0i
 help file
@@ -275,7 +447,9 @@ These include commands such as function definition, help,
 reading in library scripts, dump files to a file, error notification,
 configuration control and status.
 .PP
-For more information use the following calc command:
+For more information use the following
+.B calc
+command:
 .PP
 .in 1.0i
 help command
@@ -295,7 +469,8 @@ help config
 .PD 0
 .TP 20
 ${LIBDIR}/*.cal
-library scripts shipped with calc
+library scripts shipped with
+.B calc
 .br
 .sp
 .TP 20
@@ -323,7 +498,9 @@ Default value: ${CALCPATH}
 .TP 5
 CALCRC
 On startup (unless \-h or \-q was given on the command
-line), calc searches for files along this :-separated
+line),
+.B calc
+searches for files along this :-separated
 environment variable.
 .br
 .sp
@@ -333,7 +510,9 @@ Default value: ${CALCRC}
 .TP 5
 CALCBINDINGS
 On startup (unless \fI\-h\fP or \fI\-q\fP was given on the command
-line, or \fI\-m\fP disallows opening files for reading), calc reads
+line, or \fI\-m\fP disallows opening files for reading),
+.B calc
+reads
 key bindings from the filename specified
 by this environment variable.
 .br
@@ -343,9 +522,12 @@ Default value: ${CALCBINDINGS}
 .SH CREDIT
 \&
 .br
-The majority of calc was written by David I. Bell.
+The majority of
+.B calc
+was written by David I. Bell.
 .sp
-Calc archives and calc-tester mailing list maintained by Landon Curt Noll.
+.B Calc
+archives and calc-tester mailing list maintained by Landon Curt Noll.
 .sp
 Thanks for suggestions and encouragement from Peter Miller,
 Neil Justusson, and Landon Noll.
@@ -378,30 +560,27 @@ Copyright (c) 19xx Ernest Bowen and Landon Curt Noll
 Permission is granted to use, distribute, or modify this source,
 provided that this copyright notice remains intact.
 .sp
-Send calc comments, suggestions, bug fixes, enhancements
-and interesting calc scripts that you would like you see included
+Send comments, suggestions, bug fixes, enhancements
+and interesting
+.B calc
+scripts that you would like you see included
 in future distributions to:
 .sp
 .in +0.5i
-dbell@auug.org.au
-.br
-chongo@toad.com
+calc-tester-request@postofc.corp.sgi.com
 .in -0.5i
 .sp
-Landon Noll maintains the official calc ftp archive at:
+Landon Noll maintains the the
+.B calc
+web site is located at:
 .sp
 .in +0.5i
-ftp://ftp.uu.net/pub/calc
+http://reality.sgi.com/chongo/calc
 .in -0.5i
 .sp
-Alpha test versions, complete with bugs, untested code and
-experimental features may be fetched (if you are brave) under:
-.sp
-.in +0.5i
-http://reality.sgi.com/chongo/calc/
-.in -0.5i
-.sp
-One may join the calc testing group by sending a request to:
+One may join the
+.B calc
+testing group by sending a request to:
 .sp
 .in +0.5i
 calc-tester-request@postofc.corp.sgi.com
@@ -410,14 +589,14 @@ calc-tester-request@postofc.corp.sgi.com
 Your message body (not the subject) should consist of:
 .sp
 .in +0.5i
+.nf
 subscribe calc-tester address
-.br
 end
-.br
 name your_full_name
+.fi
+.in -0.5i
 .sp
 where "address" is your EMail address and "your_full_name"
 is your full name.
-.in -0.5i
 .sp
-Enjoy!
+Share and Enjoy! :\-)

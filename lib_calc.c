@@ -63,8 +63,8 @@ int new_std = FALSE;	/* TRUE (-n) => use newstd configuration */
 int abortlevel;		/* current level of aborts */
 BOOL inputwait;		/* TRUE if in a terminal input wait */
 jmp_buf jmpbuf;		/* for errors */
-int start_done = FALSE;	/* TRUE => start up processing finished */
-char *program = "calc";	/* our name */
+run run_state = RUN_UNKNOWN;	/* calc startup and run state */
+char *program = "calc";		/* our name */
 char cmdbuf[MAXCMD+1+1+1];	/* command line expression + "\n\0" + guard */
 
 
@@ -83,8 +83,8 @@ int p_flag = FALSE;	/* TRUE => pipe mode */
 int q_flag = FALSE;	/* TRUE => don't execute rc files */
 int u_flag = FALSE;	/* TRUE => unbuffer stdin and stdout */
 int d_flag = FALSE;	/* TRUE => disable heading, lib_debug == 0 */
-
-int stoponerror = FALSE;	/* >0 => stop, <0 => continue on error */
+int c_flag = FALSE;	/* TRUE => continue on error if permitted */
+int i_flag = FALSE;	/* TRUE => go interactive if permitted */
 
 /*
  * global values
@@ -96,8 +96,9 @@ char *home;		/* $HOME or default */
 char *pager;		/* $PAGER or default */
 char *shell;		/* $SHELL or default */
 int stdin_tty = FALSE;	/* TRUE if stdin is a tty */
-int interactive = FALSE; /* TRUE if interactive session (no cmd args) */
-int post_init = FALSE;	/* TRUE setjmp for math_error is readready */
+int havecommands = FALSE;	/* TRUE if have one or more cmd args */
+int stoponerror = FALSE;	/* >0 => stop, <0 => continue on error */
+int post_init = FALSE;	/* TRUE setjmp for math_error is ready */
 
 int no_env = FALSE;	/* TRUE (-e) => ignore env vars on startup */
 int errmax = ERRMAX;	/* if >= 0,  maximum value for errcount */
@@ -165,6 +166,13 @@ libcalc_call_me_first(void)
 	}
 
 	/*
+	 * -p turns off tab
+	 */
+	if (p_flag) {
+		conf->tab_ok = 0;
+	}
+
+	/*
 	 * initialize
 	 */
 	initialize();
@@ -172,6 +180,7 @@ libcalc_call_me_first(void)
 	/*
 	 * ready to rock & roll ..
 	 */
+	run_state = RUN_PRE_BEGIN;
 	init_done = 1;
 	return;
 }
