@@ -1114,8 +1114,7 @@ custom.o: custom.c ${MAKE_FILE}
 	${CC} ${CFLAGS} ${ALLOW_CUSTOM} -c custom.c
 
 hist.o: hist.c ${MAKE_FILE}
-	${CC} ${CFLAGS} ${TERMCONTROL} ${USE_READLINE} ${READLINE_INCLUDE} \
-	    -c hist.c
+	${CC} ${CFLAGS} ${TERMCONTROL} ${USE_READLINE} ${READLINE_INCLUDE} -c hist.c
 
 func.o: func.c ${MAKE_FILE}
 	${CC} ${CFLAGS} ${ALLOW_CUSTOM} -c func.c
