@@ -598,7 +598,7 @@ shs_final_state(HASH *state)
 	/*
 	 * load ZVALUE
 	 */
-#if BASEB == 16
+#if BASEB == 16 && CALC_BYTE_ORDER == LITTLE_ENDIAN
 	for (i=0; i < ret.len; i+=2) {
 		ret.v[ret.len-i-1] = ((HALF*)dig->digest)[i+1];
 		ret.v[ret.len-i-2] = ((HALF*)dig->digest)[i];

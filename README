@@ -4,6 +4,11 @@
 #
 # Arbitrary precision calculator.
 
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    NOTE: This is an old historic README.  We recommend that you
+	  read README.FIRST and HOWTO.INSTALL for more info.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 I am allowing this calculator to be freely distributed for your enjoyment.
 Like all multi-precision programs, you should not depend absolutely on
 its results, since bugs in such programs can be insidious and only rarely

@@ -1,12 +1,17 @@
-Dear alpha tester,
+Dear calc user,
 
-Thanks for taking the time to try out this alpha version of calc!  We are
-interested in any/all feedback that you may have on this version.  In
-particular we would like to hear about:
+See the HOWTO.INSTALL file for information on how to build and install calc.
 
+To be sure that your version of calc is up to date, check out:
+
+	http://reality.sgi.com/chongo/calc/calc-download.html
+
+We are interested in any/all feedback on recent versions of calc.
+In particular we would like to hear about:
+
+    * compiler warnings
     * compile problems
     * regression test problems (try: make check)
-    * compiler warnings
     * special compile flags/options that you needed
     * Makefile problems
     * help file problems
@@ -15,38 +20,35 @@ particular we would like to hear about:
 We would like to offer a clean compile across a wide verity of platforms,
 so if you can test on several, so much the better!
 
-Calc distributions may be obtained from:
-
-	ftp://ftp.uu.net/pub/calc
-
-If you don't have ftp access to that site, or if you do not find a more
-recent version (you may have a special pre-released version that is
-more advanced than what is in the ftp archive) send EMail to:
-
-	chongo@toad.com
-
-Indicate the version you have and that you would like a more up
-to date version.
+If you run into problems, see the BUGS file.
 
 =-=
 
-Misc items TODO before Beta release:
+See the file:
 
-    * improve the coverage in the 'SEE ALSO' help file lists
+    help/todo
 
-    * where reasonable, be sure that regress.cal tests builtin functions
+or run:
 
-    * add the Blum-Blum-Shub random() generator code
+    calc 'help todo'
 
-    * add code to allow of the reading, writing and processing of binary data
+for a wish/todo list.  Code contributions are welcome.
 
-    * add shs, shs-1 and md5 hashing functions.  Use align32.h.
+=-=
 
-    * add mod h*2^n+/-1 function for integers
+To join the calc-tester mailing list.  Send a request to:
 
-    * be sure that CHANGES is up to date,
-      look over the help/todo file and update as needed,
-      revisit issues in the BUGS file and
-      change this file  :-)
+     calc-tester-request@postofc.corp.sgi.com
 
-    * clean the source code and document it better
+Your message body (not the subject) should consist of:
+
+     subscribe calc-tester address
+     end
+     name your_full_name
+
+where ``address'' is your EMail address and ``your_full_name'' is
+your full name.
+
+The calc web site is located at:
+
+	http://reality.sgi.com/chongo/calc

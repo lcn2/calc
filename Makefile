@@ -314,7 +314,8 @@ CATEXT= 1
 #     The cat page is not built or installed
 #
 # If in doubt and you don't want to fool with man pages, set MANDIR
-# and CATDIR to empty and ignore the lines below.
+# and CATDIR to empty and ignore the NROFF, NROFF_ARG and MANMAKE
+# lines below.
 #
 NROFF= nroff
 #NROFF=
@@ -526,9 +527,37 @@ ALLOW_CUSTOM= -DCUSTOM
 #
 ###
 #
-# common cc set
+# Linux set
 #
-#CCWARN=
+# Tested on Red Hat 6.0 Linux but should run on almost any Linux release.
+#
+# for better performance, set the following above:
+#     DEBUG= -O2
+#
+CCWARN= -Wall -Wno-implicit -Wno-comment
+CCOPT= ${DEBUG} ${NO_SHARED}
+CCMISC=
+#
+CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
+ICFLAGS= ${CCWARN} ${CCMISC}
+#
+CCMAIN= ${ICFLAGS}
+CCSHS= ${CFLAGS}
+#
+LCFLAGS=
+LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
+ILDFLAGS=
+#
+CC= ${PURIFY} gcc
+#
+###
+#
+# gcc set	(some call it gcc2, some call it gcc)
+#
+# for better performance, set the following above:
+#     DEBUG= -O2
+#
+#CCWARN= -Wall -Wno-implicit -Wno-comment
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC=
 #
@@ -542,26 +571,16 @@ ALLOW_CUSTOM= -DCUSTOM
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
 #
-#CC= ${PURIFY} cc
+#CC= ${PURIFY} gcc
+#CC= ${PURIFY} gcc2
 #
 ###
 #
-# SGI IRIX5.3 (or earlier) -o32 C Compiler
+# common cc set
 #
-# You must set above:
-#	RANLIB=:
-#	LONGLONG_BITS= 0
-#
-# for better performance, set the following above:
-#	DEBUG= -O2 -g3
-#
-# If you have the directory /usr/lib/nonshared, then set the following above:
-#	NO_SHARED= -non_shared
-#	LD_NO_SHARED= -Wl,-rdata_shared
-#
-#CCWARN= -fullwarn -woff 835
+#CCWARN=
 #CCOPT= ${DEBUG} ${NO_SHARED}
-#CCMISC= -use_readonly_const
+#CCMISC=
 #
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
@@ -678,30 +697,7 @@ ALLOW_CUSTOM= -DCUSTOM
 #
 ###
 #
-# Red Hat Linux 6.0 and BSDI's BSD/OS 4.0 (or later) set
-#
-# for better performance, set the following above:
-#     DEBUG= -O2
-#
-CCWARN= -Wall -Wno-implicit -Wno-comment
-CCOPT= ${DEBUG} ${NO_SHARED}
-CCMISC=
-#
-CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-ICFLAGS= ${CCWARN} ${CCMISC}
-#
-CCMAIN= ${ICFLAGS}
-CCSHS= ${CFLAGS}
-#
-LCFLAGS=
-LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
-ILDFLAGS=
-#
-CC= ${PURIFY} gcc
-#
-###
-#
-# gcc set	(some call it gcc2, some call it gcc)
+# BSDI's BSD/OS 4.0 (or later) set
 #
 # for better performance, set the following above:
 #     DEBUG= -O2
@@ -721,7 +717,6 @@ CC= ${PURIFY} gcc
 #ILDFLAGS=
 #
 #CC= ${PURIFY} gcc
-#CC= ${PURIFY} gcc2
 
 ##############################################################################
 #-=-=-=-=-=-=-=-=- Be careful if you change something below -=-=-=-=-=-=-=-=-#
@@ -920,7 +915,7 @@ C_SRC= ${LIBSRC} ${CALCSRC} ${UTIL_C_SRC}
 # These files are found (but not built) in the distribution
 #
 DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README \
-	calc.man lint.sed README.FIRST ${UTIL_MISC_SRC}
+	calc.man lint.sed README.FIRST HOWTO.INSTALL ${UTIL_MISC_SRC}
 
 # complete list of .o files
 #

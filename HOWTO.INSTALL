@@ -1,0 +1,53 @@
+Installing calc in 4 easy steps:
+
+    1) Look at the makefile, and adjust it to suit your needs.
+
+       Here are some Makefile hints:
+
+	   Select a compiler set by commenting in the appropriate
+	   set of cc options.  As shipped the Makefile assumes
+	   a gcc-like environment such as Linux.  
+	   
+	   If a more appropriate cc set if found below, comment 
+	   out the Linux set and comment in that set or edit
+	   the gcc set or the common cc set as needed.
+
+	   You may or may not need RANLIB when building libraries.
+	   As shipped the Makefile assumes RANLIB is needed.
+	   Comment the in/out the RANLIB value if ranlib does
+	   not work or does not exist.
+
+	   You may want to change the default pager used by calc.
+	   As shipped the Makefile assumes 'more'.  On your system
+	   you may find 'less' to be a better pager.
+
+	   The CALCBINDINGS is matter of personal taste.  As shipped
+	   the Makefile assumes a default quasi-emacs-like command
+	   line editor.  Changing CALCBINDINGS= altbind will cause ^D
+	   to end calc in a fashion similar to that of the bc(1) command.
+
+	   Set TOPDIR to be the place under which help files, calc,
+	   include files and calc libs are to be installed.  As shipped
+	   the Makefile assumes a TOPDIR of /usr/local/lib.
+
+	   Set BINDIR to the place where calc is installed.  As shipped
+	   the Makefile assumes a BINDIR /usr/local/bin.
+
+	   Adjust other Makefile variables as needed.
+
+    2) build calc:
+
+	make all
+
+	==> We are interested in any compiler warnings (and errors) that
+	    you may find.  See the BUGS file if you find any.
+
+    3) test calc:
+
+	make check
+
+	==> If you run into problems, follow the instructions in the BUGS file
+
+    4) install calc:
+
+	make install

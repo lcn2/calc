@@ -1,8 +1,8 @@
 If you notice something wrong, strange or broken, try rereading:
 
    README.FIRST
-   README
-   BUGS (in particular the bottom problems or mis-features section)
+   HOWTO.INSTALL
+   BUGS (this file)
 
 If that does not help, cd to the calc source directory and try:
 
@@ -18,13 +18,13 @@ If it does not, then something is really broken!
 If you made and modifications to calc beyond the simple Makefile
 configuration, try backing them out and see if things get better.
 
-Check to see if the version of calc you are using is current.  Calc
-distributions may be obtained from the official calc repository:
+To be sure that your version of calc is up to date, check out:
 
-    ftp://ftp.uu.net/pub/calc
+	http://reality.sgi.com/chongo/calc/calc-download.html
 
-If you are an alpha or beta tester, you may have a special pre-released
-version that is more advanced than what is in the ftp archive.
+The calc web site is located at:
+
+	http://reality.sgi.com/chongo/calc
 
 =-=
 
@@ -46,6 +46,8 @@ When you send your report, please include the following information:
 
     * the type of compiler you were using
 
+    * any compiler warnings or erros that you saw
+
     * cd to the calc source directory, and type:
 
 	make debug > debug.out 2>&1		(sh, ksh, bash users)
@@ -57,22 +59,8 @@ Stack traces from core dumps are useful to send as well.
 
 =-=
 
-The official calc repository is located in:
-
-    ftp://ftp.uu.net/pub/calc
-
-If you don't have ftp access to that site, or if your version is more
-recent than what has been released to the ftp archive, you may, as a
-last resort, send EMail to:
-
-    chongo@toad.com
-
-Indicate the version you have and that you would like a more up to date version.
-
-=-=
-
-Send any comments, suggestions and most importantly, fixes (in the form
-of a context diff patch) to:
+Send any comments, compiler warning messages, suggestions and most
+importantly, fixes (in the form of a context diff patch) to:
 
     calc-tester@postofc.corp.sgi.com
 
@@ -118,103 +106,45 @@ Known problems or mis-features:
 	   8 getcommands(toplevel = 536864560) ["codegen.c":122, 0x1200284dc]
 	   9 main() ["calc.c":279, 0x12001f61c]
 
-	However On 25-Sep-99  9:18, Ernest Bowen wrote:
+      Michel van der List reports that he was using the Dec compiler.
 
-	    Last night I downloaded 2.11.0t1 and without changing Makefile
-	    or anything else did a make and make check.  Absolutely no
-	    reported errors or warnings and the check "passed all tests".
-	    The machine I'm using is a Dec 20 alpha running Digitial
-	    UNIX V4.0B (Rev 564).
+      However On 25-Sep-99  9:18, Ernest Bowen wrote:
 
-	Any ideas on how to reconcile these different results?
+	Last night I downloaded 2.11.0t1 and without changing Makefile
+	or anything else did a make and make check.  Absolutely no
+	reported errors or warnings and the check "passed all tests".
+	The machine I'm using is a Dec 20 alpha running Digitial
+	UNIX V4.0B (Rev 564).
 
-    * On Sun SPARCstation running Solaris 2.5.1 compiling with
-      cc version 4.0 with -Xc option 'make check' fails on the hash
-      functions.  However when compiled with gcc everything seems to
-      work just fine.
+      Ernest Bowen was using gcc.
 
-	From: "Dr.D.J.Picton" <dave@aps5.ph.bham.ac.uk>
-	Date: Fri, 8 May 1998 10:54:43 +0100
+      We definitely want to hunt down this Dec's cc compiler issue.  It
+      could very well be that gcc is letting something slide where as
+      Dec's cc compiler is compiling it faithfully into core dumping code.
+      The fault could very well be the calc code and not the compiler.
 
-	Platform: Sun SPARCstation
+      Any more information on calc core dumps compiled with Dec's cc compiler
+      would be most appreciated!
 
-	Operating system: Solaris 2.5.1
+    * To compile calc using the Solaris cc, the -Xc flag is required.
+      Unfortunately this change results in the loss of 'long long' and
+      the resulting code runs slower.
 
-	Compiler: cc version 4.0 with -Xc option.
+      Dr.D.J.Picton <dave@aps5.ph.bham.ac.uk> reports that -Xc is
+      required for at compiling zrand.c.
 
-	The code compiled OK but the sha() and sha1() functions give errors with
-	make check.   These functions clearly are broken.  For example,
-	sha(sha()) gives
+   * Calc compiled with Solaris cc -Xc results in some test failures:
 
-	0xea19f96cdd568ad1084a17acc6103d92c0ef7708   not
-	0xf96cea198ad1dd5617ac084a3d92c6107708c0ef
+	CALCPATH=./lib ./calc -i -q read regress 2>&1 | nawk -f check.awk
+	**** Non-true result (0): 7120: sha(sha(isqrt(2e1000)==0x6db8d9cf0b018b8f9cbbf5aa1edb8066d19e1bb0
+	**** Non-true result (0): 7122: sha(sha("this is", 7^19-8, ..., "hash")) == 0x21e4...
+	**** Non-true result (0): 7124: sha(z) == 0x36dcca3e51865c30a2cf738023cda446f1368340
+	**** Non-true result (0): 7209: sha1(sha1("this is",7^19-8,"a composit",3i+4.5,"hash")) == ...
+	**** Non-true result (0): 7211: sha1(z) == 0xc19e7317675dbf71e293b4c41e117169e9da5b6f
+	**** Non-true result (0): 7227: sha1(sha1(isqrt(2e1000)))==0x6852a1365c51050c3d039e3c5d9cf29c12283ef4
+	**** Non-true result (0): 7310: md5(md5("this is", 7^19-8, "a composit", 3i+4.5, "hash")) == ...
+	**** Non-true result (0): 7312: md5(z) == 0x63d2b2fccae2de265227c30b05abb6b5
+	**** Non-true result (0): 7328: md5(md5(isqrt(2e1000))) == 0xe56ac4b8cad869e738a04fedc97058f3
 
-	Interestingly, the consistency checks work OK e.g.
-	>B = blk() = {"a", "b", "c"};
-	>sha(B) == sha("abc");
-		1
-
-	**** Non-true result (0): 7108: sha(sha()) ==
-	0xf96cea198ad1dd5617ac084a3d92c6107708c0ef
-	**** Non-true result (0): 7109:
-	sha(sha("a"))==0x37f297772fae4cb1ba39b6cf9cf0381180bd62f2
-	**** Non-true result (0): 7110:
-	sha(sha("ab"))==0x488373d362684af3d3f7a6a408b59dfe85419e09
-	**** Non-true result (0): 7111:
-	sha(sha("abc"))==0x0164b8a914cd2a5e74c4f7ff082c4d97f1edf880
-	**** Non-true result (0): 7112:
-	sha(sha("abcd"))==0x082c73b06f71185d840fb4b28eb3abade67714bc
-	**** Non-true result (0): 7113:
-	sha(sha("abcde"))==0xd624e34951bb800f0acae773001df8cffe781ba8
-	**** Non-true result (0): 7114:
-	sha(sha("abcdef"))==0x2a589f7750598dc0ea0a608719e04327f609279a
-	**** Non-true result (0): 7115:
-	sha(sha("abcdefg"))==0x5bdf01f9298e9d19d3f8d15520fd74eed600b497
-	**** Non-true result (0): 7116:
-	sha(sha("abcdefgh"))==0x734ba8b31975d0dbae4d6e249f4e8da270796c94
-	**** Non-true result (0): 7117: sha(sha(1)) ==
-	0x864c8d09e828c7c31d62693736a5a9302c282777
-	**** Non-true result (0): 7118: sha(sha(2)) ==
-	0x2c0b59c512cb20fad6bb0883b69c9f5a46545808
-	**** Non-true result (0): 7119:
-	sha(sha(22/7)==0x7ddb7f8a7e9d70757f157744fddea7a6c6a6bcc6
-	**** Non-true result (0): 7120:
-	sha(sha(isqrt(2e1000)==0x6db8d9cf0b018b8f9cbbf5aa1edb8066d19e1bb0
-	7121: sha("x", "y", "z") == sha("xyz")
-	**** Non-true result (0): 7122: sha(sha("this is", 7^19-8, ..., "hash")) ==
-	0x21e4...
-	7123: z = sha(list(1,2,3), "curds and whey", 2^21701-1, pi());
-	**** Non-true result (0): 7124: sha(z) ==
-	0x36dcca3e51865c30a2cf738023cda446f1368340
-
-	**** Non-true result (0): 7207: sha1(sha1()) ==
-	0xda39a3ee5e6b4b0d3255bfef95601890afd80709
-	7208: sha1("x", "y", "z") == sha1("xyz")
-	**** Non-true result (0): 7209: sha1(sha1("this is",7^19-8,"a
-	composit",3i+4.5,"hash")) == ...
-	7210: z = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi());
-	**** Non-true result (0): 7211: sha1(z) ==
-	0xc19e7317675dbf71e293b4c41e117169e9da5b6f
-
-	**** Non-true result (0): 7217:
-	sha1(sha1("a"))==0x86f7e437faa5a7fce15d1ddcb9eaeaea377667b8
-	**** Non-true result (0): 7218:
-	sha1(sha1("ab"))==0xda23614e02469a0d7c7bd1bdab5c9c474b1904dc
-	**** Non-true result (0): 7219:
-	sha1(sha1("abc"))==0xa9993e364706816aba3e25717850c26c9cd0d89d
-	**** Non-true result (0): 7220:
-	sha1(sha1("abcd"))==0x81fe8bfe87576c3ecb22426f8e57847382917acf
-	**** Non-true result (0): 7221:
-	sha1(sha1("abcde"))==0x03de6c570bfe24bfc328ccd7ca46b76eadaf4334
-	**** Non-true result (0): 7222:
-	sha1(sha1("abcdef"))==0x1f8ac10f23c5b5bc1167bda84b833e5c057a77d2
-	**** Non-true result (0): 7223:
-	sha1(sha1("abcdefg"))==0x2fb5e13419fc89246865e7a324f476ec624e8740
-	**** Non-true result (0): 7224:
-	sha1(sha1("abcdefgh"))==0x425af12a0743502b322e93a015bcf868e324d56a
-	**** Non-true result (0): 7225:
-	sha1(sha1(1))==0x53dd4e1734ad47d45e41c23e4ce42d7f1f98c1e8
-	**** Non-true result (0): 7226:
-	sha1(sha1(22/7))==0xf8e2510f85f7b9bf088b321188e9f70620f44246
-	**** Non-true result (0): 7227:
-	sha1(sha1(isqrt(2e1000)))==0x6852a1365c51050c3d039e3c5d9cf29c12283ef4
+	**** 9 error(s) found  \/++\/
+	9999: Ending regression tests

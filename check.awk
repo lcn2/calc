@@ -71,5 +71,9 @@ END {
     if (error > 0 && havebuf0) {
 	print buf0;
     }
-    exit (error > 0);
+    if (error > 0) {
+	exit(1);
+    } else {
+	exit(0);
+    }
 }

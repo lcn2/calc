@@ -147,13 +147,13 @@ hash_free(HASH *state)
 HASH *
 hash_copy(HASH *state)
 {
-	HASH *new;		/* copy of state */
+	HASH *hnew;		/* copy of state */
 
 	/*
 	 * malloc new state
 	 */
-	new = (HASH *)malloc(sizeof(HASH));
-	if (new == NULL) {
+	hnew = (HASH *)malloc(sizeof(HASH));
+	if (hnew == NULL) {
 		math_error("hash_init: cannot malloc HASH");
 		/*NOTREACHED*/
 	}
@@ -161,8 +161,8 @@ hash_copy(HASH *state)
 	/*
 	 * duplicate state
 	 */
-	memcpy((void *)new, (void *)state, sizeof(HASH));
-	return new;
+	memcpy((void *)hnew, (void *)state, sizeof(HASH));
+	return hnew;
 }
 
 

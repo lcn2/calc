@@ -1683,7 +1683,7 @@ done:	if (s == 0) {
 void
 zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest)
 {
-	ZVALUE try, quo, old, temp, temp2;
+	ZVALUE ztry, quo, old, temp, temp2;
 	ZVALUE k1;			/* holds k - 1 */
 	int sign;
 	long i;
@@ -1733,12 +1733,12 @@ zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest)
 	 * is unimportant.
 	 */
 	highbit = (highbit + k - 1) / k;
-	try.len = (highbit / BASEB) + 1;
-	try.v = alloc(try.len);
-	zclearval(try);
-	try.v[try.len-1] = ((HALF)1 << (highbit % BASEB));
-	try.sign = 0;
-	old.v = alloc(try.len);
+	ztry.len = (highbit / BASEB) + 1;
+	ztry.v = alloc(ztry.len);
+	zclearval(ztry);
+	ztry.v[ztry.len-1] = ((HALF)1 << (highbit % BASEB));
+	ztry.sign = 0;
+	old.v = alloc(ztry.len);
 	old.len = 1;
 	zclearval(old);
 	old.sign = 0;
@@ -1746,10 +1746,10 @@ zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest)
 	 * Main divide and average loop
 	 */
 	for (;;) {
-		zpowi(try, k1, &temp);
+		zpowi(ztry, k1, &temp);
 		zquo(z1, temp, &quo, 0);
 		zfree(temp);
-		i = zrel(try, quo);
+		i = zrel(ztry, quo);
 		if (i <= 0) {
 			/*
 			 * Current try is less than or equal to the root since it is
@@ -1758,24 +1758,24 @@ zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest)
 			 * we are done since no improvement occurred.
 			 * If not, save the improved value and loop some more.
 			 */
-			if ((i == 0) || (zcmp(old, try) == 0)) {
+			if ((i == 0) || (zcmp(old, ztry) == 0)) {
 				zfree(quo);
 				zfree(old);
-				try.sign = (BOOL)((HALF)sign);
-				zquicktrim(try);
-				*dest = try;
+				ztry.sign = (BOOL)((HALF)sign);
+				zquicktrim(ztry);
+				*dest = ztry;
 				return;
 			}
-			old.len = try.len;
-			zcopyval(try, old);
+			old.len = ztry.len;
+			zcopyval(ztry, old);
 		}
 		/* average current try and quotent for the new try */
-		zmul(try, k1, &temp);
-		zfree(try);
+		zmul(ztry, k1, &temp);
+		zfree(ztry);
 		zadd(quo, temp, &temp2);
 		zfree(temp);
 		zfree(quo);
-		zquo(temp2, z2, &try, 0);
+		zquo(temp2, z2, &ztry, 0);
 		zfree(temp2);
 	}
 }

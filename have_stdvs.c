@@ -54,7 +54,7 @@ char buf[BUFSIZ];
 
 
 void
-try(char *fmt, ...)
+try_this(char *fmt, ...)
 {
 	va_list ap;
 
@@ -79,7 +79,7 @@ main(void)
 	/*
 	 * test variable args and vsprintf/sprintf
 	 */
-	try("@%d:%s:%d@", 1, "hi", 2);
+	try_this("@%d:%s:%d@", 1, "hi", 2);
 	if (strcmp(buf, "@1:hi:2@") != 0) {
 #if !defined(DONT_HAVE_VSPRINTF)
 	    /* <stdarg.h> with vsprintf() didn't work */
@@ -88,7 +88,7 @@ main(void)
 #endif
 	    exit(1);
 	}
-	try("%s %d%s%d%d %s",
+	try_this("%s %d%s%d%d %s",
 	    "Landon Noll 1st proved that", 2, "^", 23209, -1, "was prime");
 	if (strcmp(buf,
 		   "Landon Noll 1st proved that 2^23209-1 was prime") != 0) {

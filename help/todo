@@ -235,3 +235,11 @@ Needed enhancements
       One should make available a the fundimental math operations
       on ZVALUE, NUMBER and perhaps COMPLEX (without all of the
       other stuff) in a separate library.
+
+    * improve the coverage in the 'SEE ALSO' help file lists
+
+    * where reasonable, be sure that regress.cal tests builtin functions
+
+    * add mod h*2^n+/-1 function for integers
+
+    * clean the source code and document it better

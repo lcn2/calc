@@ -71,7 +71,7 @@ static void blkchk(BLOCK*);
 BLOCK *
 blkalloc(int len, int chunk)
 {
-	BLOCK *new;	/* new block allocated */
+	BLOCK *nblk;	/* new block allocated */
 
 	/*
 	 * firewall
@@ -84,8 +84,8 @@ blkalloc(int len, int chunk)
 	/*
 	 * allocate BLOCK
 	 */
-	new = (BLOCK *)malloc(sizeof(BLOCK));
-	if (new == NULL) {
+	nblk = (BLOCK *)malloc(sizeof(BLOCK));
+	if (nblk == NULL) {
 		math_error("cannot allocate block");
 		/*NOTREACHED*/
 	}
@@ -93,23 +93,23 @@ blkalloc(int len, int chunk)
 	/*
 	 * initialize BLOCK
 	 */
-	new->blkchunk = chunk;
-	new->maxsize = ((len+chunk)/chunk)*chunk;
-	new->data = (USB8*)malloc(new->maxsize);
-	if (new->data == NULL) {
+	nblk->blkchunk = chunk;
+	nblk->maxsize = ((len+chunk)/chunk)*chunk;
+	nblk->data = (USB8*)malloc(nblk->maxsize);
+	if (nblk->data == NULL) {
 		math_error("cannot allocate block data storage");
 		/*NOTREACHED*/
 	}
-	memset(new->data, 0, new->maxsize);
-	new->datalen = len;
+	memset(nblk->data, 0, nblk->maxsize);
+	nblk->datalen = len;
 
 	/*
 	 * return BLOCK
 	 */
 	if (conf->calc_debug > 0) {
-		blkchk(new);
+		blkchk(nblk);
 	}
-	return new;
+	return nblk;
 }
 
 
@@ -227,7 +227,7 @@ blkchk(BLOCK *blk)
 BLOCK *
 blkrealloc(BLOCK *blk, int newlen, int newchunk)
 {
-	USB8 *new;	/* realloced storage */
+	USB8 *nblk;	/* realloced storage */
 	int newmax;	/* new maximum stoage size */
 
 	/*
@@ -258,20 +258,20 @@ blkrealloc(BLOCK *blk, int newlen, int newchunk)
 	if (newmax != blk->maxsize) {
 
 		/* reallocate new storage */
-		new = (USB8*)realloc(blk->data, newmax);
-		if (new == NULL) {
+		nblk = (USB8*)realloc(blk->data, newmax);
+		if (nblk == NULL) {
 			math_error("cannot reallocate block storage");
 			/*NOTREACHED*/
 		}
 
 		/* clear any new storage */
 		if (newmax > blk->maxsize) {
-			memset(new + blk->maxsize, 0, (newmax - blk->maxsize));
+			memset(nblk+blk->maxsize, 0, (newmax-blk->maxsize));
 		}
 		blk->maxsize = newmax;
 
 		/* restore the data pointers */
-		blk->data = new;
+		blk->data = nblk;
 	}
 
 	/*
@@ -391,13 +391,13 @@ blktrunc(BLOCK *blk)
 BLOCK *
 blk_copy(BLOCK *blk)
 {
-	BLOCK *new;		/* copy of blk */
+	BLOCK *nblk;		/* copy of blk */
 
 	/*
 	 * malloc new block
 	 */
-	new = (BLOCK *)malloc(sizeof(BLOCK));
-	if (new == NULL) {
+	nblk = (BLOCK *)malloc(sizeof(BLOCK));
+	if (nblk == NULL) {
 		math_error("blk_copy: cannot malloc BLOCK");
 		/*NOTREACHED*/
 	}
@@ -405,18 +405,18 @@ blk_copy(BLOCK *blk)
 	/*
 	 * duplicate most of the block
 	 */
-	*new = *blk;
+	*nblk = *blk;
 
 	/*
 	 * duplicate block data
 	 */
-	new->data = (USB8 *)malloc(blk->maxsize);
-	if (new->data == NULL) {
+	nblk->data = (USB8 *)malloc(blk->maxsize);
+	if (nblk->data == NULL) {
 		math_error("blk_copy: cannot duplicate block data");
 		/*NOTREACHED*/
 	}
-	memcpy(new->data, blk->data, blk->maxsize);
-	return new;
+	memcpy(nblk->data, blk->data, blk->maxsize);
+	return nblk;
 }
 
 
