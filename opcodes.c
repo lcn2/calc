@@ -33,6 +33,7 @@ static BOOL saveval = TRUE;		/* to enable or disable saving */
 static int calc_errno;			/* most recent error-number */
 static int errcount;			/* counts calls to error_value */
 static BOOL go;
+static BOOL abort_now;
 
 /*
  * global symbols
@@ -3139,10 +3140,18 @@ o_quit(FUNC *fp, long index)
 	if (cp)
 		printf("%s\n", cp);
 	else
-		printf("Quit statement executed\n");
+		printf("Quit or abort executed\n");
 	if (!inputisterminal() && fp->f_name[0] == '*')
 		closeinput();
 	go = FALSE;
+}
+
+
+static void
+o_abort(FUNC *fp, long index)
+{
+	abort_now = TRUE;
+	o_quit(fp, index);
 }
 
 
@@ -3533,7 +3542,8 @@ static struct opcode opcodes[MAX_OPCODE+1] = {
 	{o_backslash,	OPNUL,	"BACKSLASH"},	/* unary backslash op */
 	{o_setminus,	OPNUL,	"SETMINUS"},	/* binary backslash op */
 	{o_plus,	OPNUL,	"PLUS"},	/* unary + op */
-	{o_jumpnn,	OPJMP,	"JUMPNN"}	/* jump if non-null */
+	{o_jumpnn,	OPJMP,	"JUMPNN"},	/* jump if non-null */
+	{o_abort,	OPONE,	"ABORT"}	/* abort operation */
 };
 
 
@@ -3567,6 +3577,7 @@ calculate(FUNC *fp, int argcount)
 	funcname = fp->f_name;
 	funcline = 0;
 	go = TRUE;
+	abort_now = FALSE;
 	origargcount = argcount;
 	while (argcount < fp->f_paramcount) {
 		stack++;
@@ -3703,6 +3714,13 @@ calculate(FUNC *fp, int argcount)
 		freevalue(stack--);
 	funcname = oldname;
 	funcline = oldline;
+	if (abort_now) {
+		if (!stdin_tty)
+			run_state = RUN_EXIT;
+		else if (run_state < RUN_PRE_TOP_LEVEL)
+			run_state = RUN_PRE_TOP_LEVEL;
+		longjmp(jmpbuf, 1);
+	}
 	return;
 }
 
@@ -3748,8 +3766,10 @@ dumpop(unsigned long *pc)
 		case OP_PRINTSTRING: case OP_STRING:
 			printf(" \"%s\"\n", findstring((long)(*pc))->s_str);
 			return 2;
-		case OP_QUIT:
-			printf(" \"%s\"\n", findstring((long)(*pc))->s_str);
+		case OP_QUIT: case OP_ABORT:
+			if ((long)(*pc) >= 0)
+			    printf(" \"%s\"", findstring((long)(*pc))->s_str);
+			putchar('\n');
 			return 2;
 		case OP_INDEXADDR:
 			printf(" %ld %ld\n", pc[0], pc[1]);

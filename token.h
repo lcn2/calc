@@ -110,6 +110,7 @@
 #define T_PRINT			124	/* print keyword */
 #define T_CD			125	/* change directory keyword */
 #define T_UNDEFINE		126	/* undefine keyword */
+#define T_ABORT			127	/* abort operation */
 
 
 #define iskeyword(n) ((n) > 100)	/* TRUE if token is a keyword */

@@ -85,6 +85,10 @@ Command sequence
 	    This leaves the calculator, when given as a top-level
 	    command.
 
+    ABORT
+	    Forces an immediate quit regardless calc command line
+	    flags and termina state.
+
     CD
 	    Change the current directory to the home directory, if $HOME
 	    is set in the environment.

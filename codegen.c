@@ -862,6 +862,17 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		}
 		break;
 
+	case T_ABORT:
+		switch (gettoken()) {
+			case T_STRING:
+				addopone(OP_ABORT, tokenstring());
+				break;
+			default:
+				addopone(OP_ABORT, -1);
+				rescantoken();
+		}
+		break;
+
 	case T_SYMBOL:
 		if (nextchar() == ':') {	/****HACK HACK ****/
 			definelabel(tokensymbol());

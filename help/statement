@@ -208,6 +208,9 @@ Statements
 
 	    Exit is an alias for quit.
 
+    ABORT
+	    Forces an immediate quit regardless calc command line
+	    flags and termina state.
 
     PRINT exprs
 	    For interactive expression evaluation, the values of all

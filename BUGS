@@ -68,17 +68,6 @@ importantly, fixes (in the form of a context diff patch) to:
 
 Known bugs:
 
-    * calc -i ignores quit binding or EOF input in some cases.  For example:
-
-	echo 'define f(x) { ' > myfile
-	calc -i read myfile
-	"./myfile", line 2: End-of-file in function body
-	Error in commands
-	>
-
-      At this point, calc will re-prompt if you give it an EOF, or
-      type ^D while using lib/altbind or while ^D is bound to quit.
-
     * When compiled on some Big Endian machines with BASEB forced to
       be 16 (by setting LONGLONG_BITS= 0 in the Makefile), calc fails
       a number of regression tests:

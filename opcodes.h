@@ -144,7 +144,8 @@
 #define OP_SETMINUS	129L	/* binary backslash */
 #define OP_PLUS		130L	/* unary + */
 #define OP_JUMPNN	131L	/* jump if top value is non-null */
-#define MAX_OPCODE	131L	/* highest legal opcode */
+#define OP_ABORT	132L	/* abort operation */
+#define MAX_OPCODE	132L	/* highest legal opcode */
 
 
 /*

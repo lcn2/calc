@@ -83,6 +83,7 @@ static struct keyword keywords[] = {
 	{"print",	T_PRINT},
 	{"cd",		T_CD},
 	{"undefine",	T_UNDEFINE},
+	{"abort",	T_ABORT},
 	{NULL,		0}
 };
 

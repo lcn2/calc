@@ -242,7 +242,7 @@ int
 hist_getline(char *prompt, char *buf, int len)
 {
 	if (!inited)
-		(void) hist_init((char *) NULL);
+		(void) hist_init(calcbindings);
 
 	HS.prompt = prompt;
 	HS.bufsize = len - 2;

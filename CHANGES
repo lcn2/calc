@@ -132,6 +132,10 @@ Following is the change from calc version 2.11.0t8 to date:
     Fixed the help/custom_cal, help/new_custom, and help/copy files so
     that they contain the correct contents instead of the 'usage' file.
 
+    Fixed problem with loss of bindings when .calc -i args runs into
+    an error while processing 'args' and drops into interactive mode
+    without the terminal bindings being set.
+
     Fixed misc compiler warnings.
 
 

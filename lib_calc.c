@@ -89,19 +89,19 @@ int i_flag = FALSE;	/* TRUE => go interactive if permitted */
 /*
  * global values
  */
-char *calcpath;		/* $CALCPATH or default */
-char *calcrc;		/* $CALCRC or default */
-char *calcbindings;	/* $CALCBINDINGS or default */
-char *home;		/* $HOME or default */
-char *pager;		/* $PAGER or default */
-char *shell;		/* $SHELL or default */
-int stdin_tty = FALSE;	/* TRUE if stdin is a tty */
+char *calcpath = NULL;		/* $CALCPATH or default */
+char *calcrc = NULL;		/* $CALCRC or default */
+char *calcbindings = NULL;	/* $CALCBINDINGS or default */
+char *home = NULL;		/* $HOME or default */
+char *pager = NULL;		/* $PAGER or default */
+char *shell = NULL;		/* $SHELL or default */
+int stdin_tty = FALSE;		/* TRUE if stdin is a tty */
 int havecommands = FALSE;	/* TRUE if have one or more cmd args */
 int stoponerror = FALSE;	/* >0 => stop, <0 => continue on error */
-int post_init = FALSE;	/* TRUE setjmp for math_error is ready */
+int post_init = FALSE;		/* TRUE setjmp for math_error is ready */
 
-int no_env = FALSE;	/* TRUE (-e) => ignore env vars on startup */
-int errmax = ERRMAX;	/* if >= 0,  maximum value for errcount */
+int no_env = FALSE;		/* TRUE (-e) => ignore env vars on startup */
+int errmax = ERRMAX;		/* if >= 0,  maximum value for errcount */
 
 NUMBER *epsilon_default;	/* default allowed error for float calcs */
 
