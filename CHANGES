@@ -1,7 +1,54 @@
+The following are the changes from calc version 2.11.7.0 to date:
+
+    Added support to build calc RPMs thanks to Petteri Kettunen
+    <petterik at users dot sourceforge dot net>.
+
+    Added rpm rule to Makefile to build rpm set.  The rpm rule
+    uses the rpm.mk Makefile and the calc.spec.in spec template.
+
+    The default Makefile is now the Makefile used during rpm
+    creation.  This Makefile assumes that system has readline,
+    ncurses (-lreadline -lhistory -lncurses), and less.
+    It compiled with a high gcc optimization level (-O3 -g3).
+    The Makefile used during rpm creation is the Makefile
+    that appears in the calc-src rpm as well.
+
+    The Makefile shipped with the old style gziped tarball
+    is still the same generic Makefile.
+
+    The Makefile now uses ${MKDIR} ${MKDIR_ARG} when creating
+    directories during installation.  By default, it does
+    a mkdir -p when forming directories.
+
+    Fixed attributes on include and lib calc-devel files.
+
+    Adjusted the interaction between rpm.mk, and the calc.spec.in.
+    Release number now comes from calc.spec.in only.
+
+    Renamed calc and calc-devel RPMs to use .i686 instead of .i386.
+
+
 The following are the changes from calc version 2.11.6.3 to date:
 
     Fixed a bug in deg.cal where fixdms() was being called with
     the wrong type of argument.
+
+    Changed the value of digits(1) and digits(0) to be 1.  Now digits()
+    returns number of digits in the standard base-b representation
+    when x is truncated to an integer and the sign is ignored.
+    To be more precise: when abs(int(x)) > 0, this function returns
+    the value 1 + ilog(x, b).  When abs(int(x)) == 0, then this
+    function returns the value 1.
+
+    As the result of the above digits() change, the repeat.cal
+    resource file script was modified to remove the special
+    case for repeating a value of 1.  Also the regress tests
+    #715, #977 and #978 were changed.
+
+    Made a minor improvement to the "help places" documentation.
+
+    Fixed dms_neg(a) in deg.cal thanks to a bug report by kaa
+    <kaa76 at pochtamt dot ru>.
 
 
 The following are the changes from calc version 2.11.6.0 to 2.11.6.2:
@@ -5514,8 +5561,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.55 $
-## @(#) $Id: CHANGES,v 29.55 2003/01/21 11:14:15 chongo Exp $
+## @(#) $Revision: 29.59 $
+## @(#) $Id: CHANGES,v 29.59 2003/02/26 17:17:12 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

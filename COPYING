@@ -12,8 +12,8 @@ This file is Copyrighted
 	Everyone is permitted to copy and distribute verbatim copies
 	of this license document, but changing it is not allowed.
 
-    # @(#) $Revision: 29.6 $
-    # @(#) $Id: COPYING,v 29.6 2001/06/01 11:26:53 chongo Exp $
+    # @(#) $Revision: 29.7 $
+    # @(#) $Id: COPYING,v 29.7 2003/02/26 16:54:59 chongo Exp $
     # @(#) $Source: /usr/local/src/cmd/calc/RCS/COPYING,v $
 
 =-=
@@ -164,6 +164,7 @@ Calc copyrights and exception files
 	Copyright (C) year  Landon Curt Noll
 	Copyright (C) year  Ernest Bowen and Landon Curt Noll
 	Copyright (C) year  Ernest Bowen
+	Copyright (C) year  Petteri Kettunen and Landon Curt Noll
 
     These files are not covered under one of the Copyrights listed above:
 

@@ -1,7 +1,7 @@
 /*
  * regress - calc regression and correctness test suite
  *
- * Copyright (C) 1999-2002  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2003  David I. Bell and Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.14 $
- * @(#) $Id: regress.cal,v 29.14 2002/12/29 09:16:07 chongo Exp $
+ * @(#) $Revision: 29.15 $
+ * @(#) $Id: regress.cal,v 29.15 2003/01/26 19:42:03 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -759,7 +759,7 @@ define test_functions()
 	vrfy(den(17) == 1,		'712: den(17) == 1');
 	vrfy(den(3/7) == 7,		'713: den(3/7) == 7');
 	vrfy(den(-2/3) == 3,		'714: den(-2/3) == 3');
-	vrfy(digits(0) == 0,		'715: digits(0) == 0');
+	vrfy(digits(0) == 1,		'715: digits(0) == 1');
 	vrfy(digits(9) == 1,		'716: digits(9) == 1');
 	vrfy(digits(10) == 2,		'717: digits(10) == 2');
 	vrfy(digits(-691) == 3,		'718: digits(-691) == 3');
@@ -1038,8 +1038,8 @@ define test_functions()
 	vrfy(digit(a,-1) == 4,		'974: digit(a,-1) == 4');
 	vrfy(digit(a,-2) == 2,		'975: digit(a,-2) == 2');
 	vrfy(digit(a,-3) == 8,		'976: digit(a,-3) == 8');
-	vrfy(digits(0) == 0,		'977: digits(0) == 0');
-	vrfy(digits(0.0123) == 0,	'978: digits(0.0123) == 0');
+	vrfy(digits(0) == 1,		'977: digits(0) == 1');
+	vrfy(digits(0.0123) == 1,	'978: digits(0.0123) == 1');
 	vrfy(digits(3.7) == 1,		'979: digits(3.7) == 1');
 	vrfy(digits(-27) == 2,		'980: digits(-27) == 2');
 	vrfy(digits(-99.7) == 2,	'981: digits(-99.7) == 2');

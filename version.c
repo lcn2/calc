@@ -1,7 +1,7 @@
 /*
  * version - determine the version of calc
  *
- * Copyright (C) 1999-2002  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2003  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.44 $
- * @(#) $Id: version.c,v 29.44 2003/01/21 11:14:15 chongo Exp $
+ * @(#) $Revision: 29.46 $
+ * @(#) $Id: version.c,v 29.46 2003/02/25 20:28:42 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
@@ -45,8 +45,8 @@ static char *program;
 
 #define MAJOR_VER	2	/* major version */
 #define MINOR_VER	11	/* minor version */
-#define MAJOR_PATCH	6	/* patch level or 0 if no patch */
-#define MINOR_PATCH	3	/* test number or 0 if no minor patch */
+#define MAJOR_PATCH	7	/* patch level or 0 if no patch */
+#define MINOR_PATCH	0	/* test number or 0 if no minor patch */
 
 
 /*

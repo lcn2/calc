@@ -4,7 +4,13 @@
 #
 # (Generic calc makefile)
 #
-# Copyright (C) 1999  Landon Curt Noll
+#  NOTE: This is NOT the calc rpm Makefile.  This Makefile is a generic
+#	 Makefile for the people who build calc from the gziped tarball.
+#	 Without modification, it not assume the system has readline, ncurses
+#	 or less.  It compiles with gcc -O2 -g as well.  You can change all
+#	 this by modifying the Makefile variables below.
+#
+# Copyright (C) 1999-2003  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -20,8 +26,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.53 $$
-# @(#) $Id: Makefile.ship,v 29.53 2003/01/14 02:33:07 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.62 $$
+# @(#) $Id: Makefile.ship,v 29.62 2003/02/25 17:38:22 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -937,6 +943,20 @@ CALC_ENV= CALCPATH=./cal
 ALLOW_CUSTOM= -DCUSTOM
 #ALLOW_CUSTOM=
 
+# The install rule uses:
+#
+#	${MKDIR} ${MKDIR_ARG}
+#
+# to create directorties.  Normall this amounts to usins mkdir -p dir ...
+# Some older systems may not have mkdir -p.  If you system does not
+# make mkdir -p, then set MKDIR_ARG to empty.
+#
+# MKDIR_ARG= -p			# use mkdir -p when creating paths
+# MKDIR_ARG=			# use if system does not understand mkdir -p
+#
+MKDIR_ARG= -p
+#MKDIR_ARG=
+
 ################
 # compiler set #
 ################
@@ -1166,9 +1186,9 @@ CHMOD= chmod
 FMT= fmt
 XARGS= xargs
 CMP= cmp
+MKDIR= mkdir
 # assume the X11 makedepend tool for the depend rule
 MAKEDEPEND= makedepend
-
 # echo command location
 #
 # Select ECHO= echo for DJGPP.
@@ -1446,7 +1466,8 @@ LICENSE= COPYING COPYING-LGPL
 # These files are found (but not built) in the distribution
 #
 DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README \
-	  README.WINDOWS calc.man HOWTO.INSTALL ${UTIL_MISC_SRC} ${LICENSE}
+	  README.WINDOWS calc.man HOWTO.INSTALL ${UTIL_MISC_SRC} ${LICENSE} \
+	  calc.spec.in rpm.mk
 
 # These files are used to make (but not built) a calc .a link library
 #
@@ -1475,11 +1496,6 @@ SAMPLE_TARGETS= sample/test_random sample/many_random
 #
 CSCRIPT_TARGETS= cscript/mersenne cscript/piforever cscript/plus \
 		 cscript/square cscript/fproduct cscript/powerterm
-
-# List of miscellaneous files NOT shipped with calc
-#
-NO_SHIP= Makefile.linux calc.spec inst_files spec-template \
-	 rpm.mk.patch rpm.release
 
 # complete list of progs built
 #
@@ -2901,7 +2917,7 @@ no_implicit.arg: no_implicit.c ${MAKE_FILE}
 win32_hsrc: ${MAKE_FILE} win32.mkdef
 	${Q}echo 'forming win32 directory'
 	${Q}rm -rf win32
-	${Q}mkdir win32
+	${Q}${MKDIR} win32
 	${Q}cp ${UTIL_C_SRC} win32
 	${Q}cp ${UTIL_MISC_SRC} Makefile win32
 	${Q}(cd win32; \
@@ -3032,8 +3048,8 @@ custom/libcustcalc.a:
 bsdi: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	-${Q}if [ ! -d gen_h ]; then \
-		echo mkdir gen_h; \
-		mkdir gen_h; \
+		echo ${MKDIR} gen_h; \
+		${MKDIR} gen_h; \
 	else \
 	    true; \
 	fi
@@ -3077,12 +3093,12 @@ depend: hsrc
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q}echo forming skel
 	-${Q}rm -rf skel
-	${Q}mkdir skel
+	${Q}${MKDIR} skel
 	-${Q}for i in ${C_SRC} ${BUILD_C_SRC}; do \
 		${SED} -n '/^#[	 ]*include[	 ]*"/p' "$$i" | \
 		    ${GREP} -v '\.\./getopt/getopt\.h' > "skel/$$i"; \
 	done
-	${Q}mkdir skel/custom
+	${Q}${MKDIR} skel/custom
 	-${Q}for i in ${H_SRC} ${BUILD_H_SRC} custom.h /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
@@ -3382,49 +3398,23 @@ dbx:
 gdb:
 	${CALC_ENV} gdb ./calc
 
+
 ##
 #
 # rpm rules
 #
 ##
 
-# create an rpm spec file from the spec-template
+rpm: clobber rpm.mk calc.spec.in
+	rm -rf /var/tmp/redhat
+	${MAKE} -f rpm.mk RHDIR=/var/tmp/redhat TMPDIR=/var/tmp/redhat
+
+
+##
 #
-# This file is linked to calc-version-rel.spec before the rpm is built.
+# Utility rules
 #
-calc.spec: spec-template ${MAKE_FILE} help/Makefile cal/Makefile \
-	   custom/Makefile cscript/Makefile ver_calc rpm.release
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	${Q}rm -f calc.spec calc.spec.sed
-	${Q}echo 's,$${BINDIR},${BINDIR},g' >> calc.spec.sed
-	${Q}echo 's,$${INCDIR},${INCDIR},g' >> calc.spec.sed
-	${Q}echo 's:$${LIBDIR}:${LIBDIR}:g' >> calc.spec.sed
-	${Q}echo 's:$${CALC_SHAREDIR}:${CALC_SHAREDIR}:g' >> calc.spec.sed
-	${Q}echo 's,$${HELPDIR},${HELPDIR},g' >> calc.spec.sed
-	${Q}echo 's,$${CALC_INCDIR},${CALC_INCDIR},g' >> calc.spec.sed
-	${Q}echo 's,$${CUSTOMCALDIR},${CUSTOMCALDIR},g' >> calc.spec.sed
-	${Q}echo 's,$${CUSTOMINCDIR},${CUSTOMINCDIR},g' >> calc.spec.sed
-	${Q}echo 's,$${CUSTOMHELPDIR},${CUSTOMHELPDIR},g' >> calc.spec.sed
-	${Q}echo 's,$${SCRIPTDIR},${SCRIPTDIR},g' >> calc.spec.sed
-	${Q}echo 's,$${MANDIR},${MANDIR},g' >> calc.spec.sed
-	${Q}echo 's,$${LIB_H_SRC},${LIB_H_SRC},g' >> calc.spec.sed
-	${Q}echo 's,$${BUILD_H_SRC},${BUILD_H_SRC},g' >> calc.spec.sed
-	${Q}echo 's,$${ALLOW_CUSTOM},${ALLOW_CUSTOM},g' >> calc.spec.sed
-	${Q}if [ -z "${RANLIB}" ]; then \
-	    echo 's,$${RANLIB},:,g' >> calc.spec.sed; \
-	else \
-	    echo 's,$${RANLIB},${RANLIB},g' >> calc.spec.sed; \
-	fi
-	${Q}echo 's,$${MANMAKE},${MANMAKE},g' >> calc.spec.sed
-	${Q}echo 's,$${MANMODE},${MANMODE},g' >> calc.spec.sed
-	${Q}echo 's,$${MANEXT},${MANEXT},g' >> calc.spec.sed
-	${Q}echo 's,$${CHMOD},${CHMOD},g' >> calc.spec.sed
-	${Q}echo 's,$${DATE},'`LANG=C date +"%a %b %d %Y"`',g' >> calc.spec.sed
-	${Q}echo 's,$${VERSION},'`./ver_calc`',g' >> calc.spec.sed
-	${Q}echo 's,$${REL},'`./ver_calc -R rpm.release`',g' >> calc.spec.sed
-	${Q}${SED} -f calc.spec.sed < spec-template > calc.spec
-	${Q}rm -f calc.spec.sed
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+##
 
 # Form the installed file list
 #
@@ -3456,33 +3446,6 @@ inst_files: ${MAKE_FILE} help/Makefile cal/Makefile custom/Makefile \
 	fi >> inst_files
 	${Q}LANG=C ${SORT} -u inst_files -o inst_files
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
-
-# We make a small patch to effectively move Makefile.linux into Makefile.
-#
-rpm.mk.patch: Makefile.linux ${MAKE_FILE}
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	${Q}rm -f $@
-	${Q}rm -rf tmp.patch
-	${Q}mkdir -p tmp.patch
-	${Q}if [ -e Makefile.ship ]; then \
-	    cp Makefile.ship tmp.patch/Makefile; \
-	else \
-	    cp Makefile tmp.patch/Makefile; \
-	fi
-	${Q}cp Makefile.linux tmp.patch
-	${Q}-cd tmp.patch; \
-	    ${DIFF} -c Makefile Makefile.linux > $@; \
-	    true
-	${Q}cp tmp.patch/$@ $@
-	${Q}${CHMOD} 0444 $@
-	${Q}rm -rf tmp.patch
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
-
-##
-#
-# Utility rules
-#
-##
 
 # The olduninstall rule will remove calc files from the older, histroic
 # locations under the /usr/local directory.  If you are using the
@@ -3583,7 +3546,7 @@ clobber:
 	${V} echo remove files that are obsolete
 	-rm -rf lib
 	-rm -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
-	-rm -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
+	-rm -f have_vs.c std_arg.h try_stdarg.c fnvhash.c calc.spec
 	-rm -rf win32
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
@@ -3591,131 +3554,87 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	-${Q}if [ ! -z "$T" ]; then \
 	    if [ ! -d $T ]; then \
-		echo mkdir $T; \
-		mkdir $T; \
-		if [ ! -d "$T" ]; then \
-		    echo mkdir -p "$T"; \
-		    mkdir -p "$T"; \
-		fi; \
+		echo ${MKDIR} ${MKDIR_ARG} $T; \
+		${MKDIR} ${MKDIR_ARG} $T; \
 		echo ${CHMOD} 0755 $T; \
 		${CHMOD} 0755 $T; \
 	    fi; \
 	fi
 	-${Q}if [ ! -d $T${BINDIR} ]; then \
-	    echo mkdir $T${BINDIR}; \
-	    mkdir $T${BINDIR}; \
-	    if [ ! -d "$T${BINDIR}" ]; then \
-		echo mkdir -p "$T${BINDIR}"; \
-		mkdir -p "$T${BINDIR}"; \
-	    fi; \
+	    echo ${MKDIR} ${MKDIR_ARG} $T${BINDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} $T${BINDIR}; \
 	    echo ${CHMOD} 0755 $T${BINDIR}; \
 	    ${CHMOD} 0755 $T${BINDIR}; \
 	else \
 	    true; \
 	fi
 	-${Q}if [ ! -d $T${INCDIR} ]; then \
-	    echo mkdir $T${INCDIR}; \
-	    mkdir $T${INCDIR}; \
-	    if [ ! -d "$T${INCDIR}" ]; then \
-		echo mkdir -p "$T${INCDIR}"; \
-		mkdir -p "$T${INCDIR}"; \
-	    fi; \
+	    echo ${MKDIR} ${MKDIR_ARG} $T${INCDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} $T${INCDIR}; \
 	    echo ${CHMOD} 0755 $T${INCDIR}; \
 	    ${CHMOD} 0755 $T${INCDIR}; \
 	else \
 	    true; \
 	fi
 	-${Q}if [ ! -d $T${LIBDIR} ]; then \
-	    echo mkdir $T${LIBDIR}; \
-	    mkdir $T${LIBDIR}; \
-	    if [ ! -d "$T${LIBDIR}" ]; then \
-		echo mkdir -p "$T${LIBDIR}"; \
-		mkdir -p "$T${LIBDIR}"; \
-	    fi; \
+	    echo ${MKDIR} ${MKDIR_ARG} $T${LIBDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} $T${LIBDIR}; \
 	    echo ${CHMOD} 0755 $T${LIBDIR}; \
 	    ${CHMOD} 0755 $T${LIBDIR}; \
 	else \
 	    true; \
 	fi
 	-${Q}if [ ! -d $T${CALC_SHAREDIR} ]; then \
-	    mkdir $T${CALC_SHAREDIR}; \
-	    echo mkdir $T${CALC_SHAREDIR}; \
-	    if [ ! -d "$T${CALC_SHAREDIR}" ]; then \
-		echo mkdir -p "$T${CALC_SHAREDIR}"; \
-		mkdir -p "$T${CALC_SHAREDIR}"; \
-	    fi; \
+	    ${MKDIR} ${MKDIR_ARG} $T${CALC_SHAREDIR}; \
+	    echo ${MKDIR} ${MKDIR_ARG} $T${CALC_SHAREDIR}; \
 	    echo ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
 	    ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
 	else \
 	    true; \
 	fi
 	-${Q}if [ ! -d $T${HELPDIR} ]; then \
-	    echo mkdir $T${HELPDIR}; \
-	    mkdir $T${HELPDIR}; \
-	    if [ ! -d "$T${HELPDIR}" ]; then \
-		echo mkdir -p "$T${HELPDIR}"; \
-		mkdir -p "$T${HELPDIR}"; \
-	    fi; \
+	    echo ${MKDIR} ${MKDIR_ARG} $T${HELPDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} $T${HELPDIR}; \
 	    echo ${CHMOD} 0755 $T${HELPDIR}; \
 	    ${CHMOD} 0755 $T${HELPDIR}; \
 	else \
 	    true; \
 	fi
 	-${Q}if [ ! -d $T${CALC_INCDIR} ]; then \
-	    echo mkdir $T${CALC_INCDIR}; \
-	    mkdir $T${CALC_INCDIR}; \
-	    if [ ! -d "$T${CALC_INCDIR}" ]; then \
-		echo mkdir -p "$T${CALC_INCDIR}"; \
-		mkdir -p "$T${CALC_INCDIR}"; \
-	    fi; \
+	    echo ${MKDIR} ${MKDIR_ARG} $T${CALC_INCDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} $T${CALC_INCDIR}; \
 	    echo ${CHMOD} 0755 $T${CALC_INCDIR}; \
 	    ${CHMOD} 0755 $T${CALC_INCDIR}; \
 	else \
 	    true; \
 	fi
 	-${Q}if [ ! -d $T${CUSTOMCALDIR} ]; then \
-	    echo mkdir $T${CUSTOMCALDIR}; \
-	    mkdir $T${CUSTOMCALDIR}; \
-	    if [ ! -d "$T${CUSTOMCALDIR}" ]; then \
-		echo mkdir -p "$T${CUSTOMCALDIR}"; \
-		mkdir -p "$T${CUSTOMCALDIR}"; \
-	    fi; \
+	    echo ${MKDIR} ${MKDIR_ARG} $T${CUSTOMCALDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} $T${CUSTOMCALDIR}; \
 	    echo ${CHMOD} 0755 $T${CUSTOMCALDIR}; \
 	    ${CHMOD} 0755 $T${CUSTOMCALDIR}; \
 	else \
 	    true; \
 	fi
 	-${Q}if [ ! -d $T${CUSTOMHELPDIR} ]; then \
-	    echo mkdir $T${CUSTOMHELPDIR}; \
-	    mkdir $T${CUSTOMHELPDIR}; \
-	    if [ ! -d "$T${CUSTOMHELPDIR}" ]; then \
-		echo mkdir -p "$T${CUSTOMHELPDIR}"; \
-		mkdir -p "$T${CUSTOMHELPDIR}"; \
-	    fi; \
+	    echo ${MKDIR} ${MKDIR_ARG} $T${CUSTOMHELPDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} $T${CUSTOMHELPDIR}; \
 	    echo ${CHMOD} 0755 $T${CUSTOMHELPDIR}; \
 	    ${CHMOD} 0755 $T${CUSTOMHELPDIR}; \
 	else \
 	    true; \
 	fi
 	-${Q}if [ ! -d $T${CUSTOMINCDIR} ]; then \
-	    echo mkdir $T${CUSTOMINCDIR}; \
-	    mkdir $T${CUSTOMINCDIR}; \
-	    if [ ! -d "$T${CUSTOMINCDIR}" ]; then \
-		echo mkdir -p "$T${CUSTOMINCDIR}"; \
-		mkdir -p "$T${CUSTOMINCDIR}"; \
-	    fi; \
+	    echo ${MKDIR} ${MKDIR_ARG} $T${CUSTOMINCDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} $T${CUSTOMINCDIR}; \
 	    echo ${CHMOD} 0755 $T${CUSTOMINCDIR}; \
 	    ${CHMOD} 0755 $T${CUSTOMINCDIR}; \
 	else \
 	    true; \
 	fi
 	-${Q}if [ ! -d $T${SCRIPTDIR} ]; then \
-	    echo mkdir $T${SCRIPTDIR}; \
-	    mkdir $T${SCRIPTDIR}; \
-	    if [ ! -d "$T${SCRIPTDIR}" ]; then \
-		echo mkdir -p "$T${SCRIPTDIR}"; \
-		mkdir -p "$T${SCRIPTDIR}"; \
-	    fi; \
+	    echo ${MKDIR} ${MKDIR_ARG} $T${SCRIPTDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} $T${SCRIPTDIR}; \
 	    echo ${CHMOD} 0755 $T${SCRIPTDIR}; \
 	    ${CHMOD} 0755 $T${SCRIPTDIR}; \
 	else \
@@ -3723,12 +3642,8 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	fi
 	-${Q}if [ ! -z "${MANDIR}" ]; then \
 	    if [ ! -d $T${MANDIR} ]; then \
-		echo mkdir $T${MANDIR}; \
-		mkdir $T${MANDIR}; \
-		if [ ! -d "$T${MANDIR}" ]; then \
-		    echo mkdir -p "$T${MANDIR}"; \
-		    mkdir -p "$T${MANDIR}"; \
-		fi; \
+		echo ${MKDIR} ${MKDIR_ARG} $T${MANDIR}; \
+		${MKDIR} ${MKDIR_ARG} $T${MANDIR}; \
 		echo ${CHMOD} 0755 $T${MANDIR}; \
 		${CHMOD} 0755 $T${MANDIR}; \
 	    else \
@@ -3739,12 +3654,8 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	fi
 	-${Q}if [ ! -z "${CATDIR}" ]; then \
 	    if [ ! -d $T${CATDIR} ]; then \
-		echo mkdir $T${CATDIR}; \
-		mkdir $T${CATDIR}; \
-		if [ ! -d "$T${CATDIR}" ]; then \
-		    echo mkdir -p "$T${CATDIR}"; \
-		    mkdir -p "$T${CATDIR}"; \
-		fi; \
+		echo ${MKDIR} ${MKDIR_ARG} $T${CATDIR}; \
+		${MKDIR} ${MKDIR_ARG} $T${CATDIR}; \
 		echo ${CHMOD} 0755 $T${CATDIR}; \
 		${CHMOD} 0755 $T${CATDIR}; \
 	    else \

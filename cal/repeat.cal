@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: repeat.cal,v 29.3 2003/01/14 04:03:20 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: repeat.cal,v 29.4 2003/01/26 19:42:03 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/repeat.cal,v $
  *
  * Under source code control:	2003/01/05 00:00:01
@@ -48,6 +48,6 @@ define repeat(digit_set, repeat_count)
     }
 
     /* return repeated set of digits */
-    digit_count = max(digits(digit_set), 1);
+    digit_count = digits(digit_set);
     return digit_set * (10^(digit_count*repeat_count)-1) / (10^digit_count-1);
 }

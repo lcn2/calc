@@ -11,23 +11,38 @@ TYPES
     return	integer
 
 DESCRIPTION
-    Returns the least non-negative integer n for which abs(x) < b^n.
+    Returns number of digits in the standard base-b representation
+    when x is truncated to an integer and the sign is ignored.
 
-    digits(x, b) = 0  if and only if abs(x) <= 1.
+    To be more precise: when abs(int(x)) > 0, this function returns
+    the value 1 + ilog(x, b).  When abs(int(x)) == 0, then this
+    function returns the value 1.
 
-    For real x with absolute value > 1, digits(x, b) is the number
-    of digits in the standard base-b "decimal" representation of int(abs(x));
-    this is also given by  1 + ilog(x, b).
+    If omitted, b is assumed to be 10.  If given, b must be an
+    integer > 1.
 
-    NOTE: both digits(0) and digits(1) return the value of 1.
-    This is not a bug, it is a feature of the above equation.  :-)
+    One should remember these special cases:
+
+	digits(12.3456) == 2    computes with the integer part only
+	digits(-1234) == 4      computes with the absolute value only
+	digits(0) == 1          specical case
+	digits(-0.123) == 1     combination of all of the above
 
 EXAMPLE
-    > print digits(0), digits(0.0123), digits(3.7), digits(-27), digits(-99.7)
-    0 0 1 2 2
+    > print digits(100), digits(23209), digits(2^72)
+    3 5 22
+
+    > print digits(0), digits(1), digits(-1)
+    1 1 1
+
+    > print digits(-1234), digits(12.3456), digits(107.207)
+    4 2 3
+
+    > print digits(17^463-1, 17), digits(10000, 100), digits(21701, 2)
+    3, 15 14
 
 LIMITS
-    none
+    b > 1
 
 LINK LIBRARY
     long qdigits(NUMBER *q, ZVALUE base)
@@ -51,8 +66,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: digits,v 29.4 2003/01/14 04:09:35 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: digits,v 29.5 2003/01/26 19:41:35 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/digits,v $
 ##
 ## Under source code control:	1995/10/03 10:40:01

@@ -1,0 +1,116 @@
+#****h* calc/calc.spec.in
+#
+# calc.spec.in - template specfile for calc
+#
+# Copyright (C) 2003  Petteri Kettunen and Landon Curt Noll
+#
+# Calc is open software; you can redistribute it and/or modify it under
+# the terms of the version 2.1 of the GNU Lesser General Public License
+# as published by the Free Software Foundation.
+#
+# Calc is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+# Public License for more details.
+#
+# A copy of version 2.1 of the GNU Lesser General Public License is
+# distributed with calc under the filename COPYING-LGPL.  You should have
+# received a copy with calc; if not, write to Free Software Foundation, Inc.
+# 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+#
+# @(#) $Revision: 29.11 $
+# @(#) $Id: calc.spec.in,v 29.11 2003/02/26 17:59:01 chongo Exp $
+# @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.spec.in,v $
+#
+# Under source code control:	2003/02/16 20:21:39
+# File existed as early as:	2003
+#
+# calculator by David I. Bell with help/mods from others
+# Makefile by Petteri Kettunen with modifications from Landon Curt Noll
+
+# BUGS
+#  - Uninstalling calc and calc-devel leaves empty dirs /usr/include/calc
+#    and /usr/share/calc and its subdird. In case e.g. %{_includedir}/calc
+#    is defined in `%files devel' section, then rpmbuild complains that
+#    header files are defined twice - rpmbuild bug or bug in specfile conf???
+
+Summary: Arbitrary precision calculator.
+Name: calc
+Version: <<<PROJECT_VERSION>>>
+Release: 2
+Copyright: LGPL
+Group: Applications/Engineering
+Source: %{name}-%{version}.tar.gz
+URL: http://www.isthe.com/chongo/tech/comp/calc/index.html
+Requires: ncurses >= 5.2-26, readline >= 4.2, less >= 358
+BuildRequires: ncurses-devel >= 5.2-26, readline-devel >= 4.2
+BuildRoot: %{_tmppath}/%{name}-root
+
+%description
+Calc is arbitrary precision C-like arithmetic system that is a
+calculator, an algorithm prototyper and mathematical research
+tool. Calc comes with a rich set of builtin mathematical and
+programmatic functions.
+
+For the latest calc release, see the project home page:
+
+    http://www.isthe.com/chongo/tech/comp/calc/index.html
+
+%package devel
+Summary: Development files and documentation for calc.
+Group: Development/Libraries
+PreReq: %{name} = %{version}-%{release}
+
+%description devel
+This package contains the header files and static libraries for developing
+calc (arbitrary precision calculator).
+
+For the latest calc release, see the project home page:
+
+    http://www.isthe.com/chongo/tech/comp/calc/index.html
+
+%prep
+%setup -q
+
+%build
+make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 all chk
+
+%install
+rm -rf %{buildroot}
+mkdir -p %{buildroot}
+make T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 install
+
+%clean
+rm -rf %{buildroot}
+
+%files
+%defattr(-, root, root)
+%doc BUGS CHANGES COPYING COPYING-LGPL
+%{_bindir}/*
+%{_mandir}/man1/*
+%{_datadir}/%{name}/*/*
+%{_datadir}/%{name}/bindings
+%{_datadir}/%{name}/README
+%{_datadir}/%{name}/*.cal
+
+%files devel
+%defattr(-, root, root)
+%doc BUGS COPYING COPYING-LGPL LIBRARY
+%attr(644, root, root) %{_includedir}/calc/*
+%attr(644, root, root) %{_libdir}/*.a
+
+%changelog
+* Wed Feb 26 2003 Landon Curt Noll http://www.isthe.com/chongo
+- Release of calc-2.11.7-2
+- Fixed attributes on include and lib calc-devel files
+- Added BUGS to calc-devel as well as calc
+* Tue Feb 25 2003 Landon Curt Noll http://www.isthe.com/chongo
+- Release of calc-2.11.7-1
+- Require ncurses, readline and less to install.
+- Require ncurses-devel and readline-devel to build.
+* Tue Feb 18 2003 Landon Curt Noll http://www.isthe.com/chongo
+- Misc changes to fit local directory setup
+* Sun Feb 16 2003 Petteri Kettunen <petterik@users.sourceforge.net>
+- initial RPM build
+
+#****

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: qfunc.c,v 29.4 2000/12/17 13:07:32 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: qfunc.c,v 29.5 2003/01/26 19:41:35 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:20
@@ -623,7 +623,15 @@ qilog(NUMBER *q, ZVALUE base)
 /*
  * Return the number of digits in the representation to a specified
  * base of the integral part of a number.
+ *
  * Examples: qdigits(3456,10) = 4, qdigits(-23.45, 10) = 2.
+ *
+ * One should remember these special cases:
+ *
+ *	digits(12.3456) == 2    computes with the integer part only
+ *	digits(-1234) == 4      computes with the absolute value only
+ *	digits(0) == 1          specical case
+ *	digits(-0.123) == 1     combination of all of the above
  *
  * given:
  *	q		number to count digits of
@@ -634,8 +642,8 @@ qdigits(NUMBER *q, ZVALUE base)
 	long n;			/* number of digits */
 	ZVALUE temp;		/* temporary value */
 
-	if (zabsrel(q->num, q->den) < 1)
-		return 0;
+	if (zabsrel(q->num, q->den) < 0)
+		return 1;
 	if (qisint(q))
 		return 1 + zlog(q->num, base);
 	zquo(q->num, q->den, &temp, 2);
