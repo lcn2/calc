@@ -15,9 +15,39 @@ DESCRIPTION
     opened for either reading, writing, or appending.  The mode
     is controlled by the mode flag as follows:
 
-	"r"	reading
-	"w"	writing
-	"a"	appending
+		 allow	  allow    file is   positioned	  file(*)
+       mode	reading	 writing  truncated      at	  mode
+       ----	-------  -------  ---------  ---------	  ----
+	r	   Y	    N	      N      beginning	  text
+	rb	   Y	    N	      N      beginning	  binary
+	r+	   Y	    N	      N      beginning	  text
+	r+b	   Y	    N	      N      beginning	  binary
+	rb+	   Y	    N	      N      beginning	  binary
+
+	w	   N	    Y	      Y      beginning	  text
+	wb	   N	    Y	      Y      beginning	  binary
+	w+	   Y	    Y	      Y      beginning	  text
+	w+b	   Y	    Y	      Y      beginning	  binary
+	wb+	   Y	    Y	      Y      beginning	  binary
+
+	a	   N	    Y	      Y         end	  text
+	ab	   N	    Y	      Y         end	  binary
+	a+	   Y	    Y	      Y         end	  text
+	a+b	   Y	    Y	      Y         end	  binary
+	ab+	   Y	    Y	      Y         end	  binary
+
+    (*) NOTE on 'b' / binary/text mode:
+
+    	The 'b' or fopen binary mode has no effect on POSIX / Linux
+	/ Un*x-like systems.  On those systems a text file is the
+	same as a binary file (as it should be for any modern-day
+	operating system).  Adding 'b' to an fopen has no effect
+	and is ignored.
+
+	Some non-POSIX systems sucn as MS Windoz treat text files
+	and binary files differently.  In text mode MS Windoz consider
+	"\r\n" and end-of-line character.  On an Apple MAC, the
+	text mode end-of-line character is "\r".
 
     Names of files are subject to ~ expansion just like the C or
     Korn shell.	 For example, the file name:
@@ -90,8 +120,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: fopen,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: fopen,v 29.3 2001/04/10 21:46:45 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/fopen,v $
 ##
 ## Under source code control:	1994/10/27 03:04:17

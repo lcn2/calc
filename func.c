@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: func.c,v 29.8 2001/04/08 10:06:56 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: func.c,v 29.9 2001/04/10 22:06:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -4987,24 +4987,31 @@ f_fopen(VALUE *v1, VALUE *v2)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/* check for a valid mode [rwa][b+\0][b+\0] */
 	if (v1->v_type != V_STR || v2->v_type != V_STR)
 		return error_value(E_FOPEN1);
 	mode = v2->v_str->s_str;
-
 	if ((*mode != 'r') && (*mode != 'w') && (*mode != 'a'))
 		return error_value(E_FOPEN2);
 	if (mode[1] != '\0') {
-		if (mode[1] != '+')
+		if (mode[1] != '+' && mode[1] != 'b')
 			return error_value(E_FOPEN2);
-		if (mode[2] != '\0')
-			return error_value(E_FOPEN2);
+		if (mode[2] != '\0') {
+			if ((mode[2] != '+' && mode[2] != 'b') ||
+			    mode[1] == mode[2])
+				return error_value(E_FOPEN2);
+			if (mode[3] != '\0')
+				return error_value(E_FOPEN2);
+		}
 	}
+
+	/* try to open */
 	errno = 0;
 	id = openid(v1->v_str->s_str, v2->v_str->s_str);
 	if (id == FILEID_NONE)
 		return error_value(errno);
 	if (id < 0)
-		return error_value(E_FOPEN3);
+		return error_value(-id);
 	result.v_type = V_FILE;
 	result.v_file = id;
 	return result;
@@ -5021,21 +5028,27 @@ f_freopen(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/* check for a valid mode [rwa][b+\0][b+\0] */
 	if (vals[0]->v_type != V_FILE)
 		return error_value(E_FREOPEN1);
 	if (vals[1]->v_type != V_STR)
 		return error_value(E_FREOPEN2);
-
 	mode = vals[1]->v_str->s_str;
-
 	if ((*mode != 'r') && (*mode != 'w') && (*mode != 'a'))
 		return error_value(E_FREOPEN2);
 	if (mode[1] != '\0') {
-		if (mode[1] != '+')
+		if (mode[1] != '+' && mode[1] != 'b')
 			return error_value(E_FREOPEN2);
-		if (mode[2] != '\0')
-			return error_value(E_FREOPEN2);
+		if (mode[2] != '\0') {
+			if ((mode[2] != '+' && mode[2] != 'b') ||
+			    mode[1] == mode[2])
+				return error_value(E_FOPEN2);
+			if (mode[3] != '\0')
+				return error_value(E_FREOPEN2);
+		}
 	}
+
+	/* try to reopen */
 	errno = 0;
 	if (count == 2) {
 		id = reopenid(vals[0]->v_file, mode, NULL);
@@ -6141,10 +6154,10 @@ f_fgetfield(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vp->v_type != V_FILE)
-		return error_value(E_FGETWORD1);
+		return error_value(E_FGETFIELD1);
 	i = readid(vp->v_file, 14, &str);
 	if (i > 0)
-		return error_value(E_FGETWORD2);
+		return error_value(E_FGETFIELD2);
 	result.v_type = V_NULL;
 	if (i == 0) {
 		result.v_type = V_STR;

@@ -15,8 +15,8 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 .\"
-.\" @(#) $Revision: 29.5 $
-.\" @(#) $Id: calc.man,v 29.5 2000/06/07 14:02:13 chongo Exp $
+.\" @(#) $Revision: 29.6 $
+.\" @(#) $Id: calc.man,v 29.6 2001/04/10 21:48:46 chongo Exp $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -36,20 +36,21 @@ calc \- arbitrary precision calculator
 .RB [ \-c ]
 .RB [ \-C ]
 .RB [ \-d ]
-.RB [ -D\ \&calc_debug[:resource_debug[:user_debug]] ]
 .br
 .in +5n
+.RB [ -D\ \&calc_debug[:resource_debug[:user_debug]] ]
+.br
 .RB [ \-e ]
 .RB [ \-h ]
 .RB [ \-i ]
 .RB [ \-m\ \&mode ]
 .RB [ \-n ]
+.br
 .RB [ \-p ]
 .RB [ \-q ]
 .RB [ \-s ]
 .RB [ \-u ]
 .RB [ \-v ]
-.br
 .RB [ calc_cmd\ \&.\|.\|. ]
 .in -5n
 .sp

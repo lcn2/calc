@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: blkcpy.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: blkcpy.c,v 29.3 2001/04/10 22:06:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/blkcpy.c,v $
  *
  * Under source code control:	1997/04/18 20:41:26
@@ -581,7 +581,7 @@ copyblk2file(BLOCK *sblk, long ssi, long num, FILEID id, long dsi)
 	if (num == 0)
 		return 0;
 
-	fiop = findid(id, 'w');
+	fiop = findid(id, TRUE);
 	if (fiop == NULL)
 		return E_COPYF1;
 	fp = fiop->fp;
@@ -618,7 +618,7 @@ copyfile2blk(FILEID id, long ssi, long num, BLOCK *dblk, long dsi, BOOL noreloc)
 
 	if (id < 3)			/* excludes copying from stdin */
 		return E_COPYF1;
-	fiop = findid(id, 'r');
+	fiop = findid(id, FALSE);
 	if (fiop == NULL)
 		return E_COPYF1;
 
@@ -690,7 +690,7 @@ copystr2file(STRING *str, long ssi, long num, FILEID id, long dsi)
 		return 0;
 	if ((USB32) ssi + num > len)
 		return E_COPY5;		/* Insufficient memory in str */
-	fiop = findid(id, 'w');
+	fiop = findid(id, TRUE);
 	if (fiop == NULL)
 		return E_COPYF1;
 	fp = fiop->fp;

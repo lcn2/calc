@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: file.c,v 29.6 2001/03/17 21:31:47 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: file.c,v 29.7 2001/04/10 22:06:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -158,7 +158,7 @@ file_init(void)
 				} else {
 					fp = (FILE *) fdopen(i, "w");
 					if (fp) {
-						strcpy(files[idnum].mode, "w?");
+						strcpy(files[idnum].mode, "w");
 						files[idnum].reading = FALSE;
 					}
 					else
@@ -207,7 +207,7 @@ openid(char *name, char *mode)
 	int i;
 
 	if (idnum >= MAXFILES)
-		return -77;
+		return -E_FOPEN3;
 
 	fiop = &files[3];
 	for (i = 3; i < MAXFILES; fiop++,i++) {
@@ -243,11 +243,32 @@ openid(char *name, char *mode)
 	fiop->reading = TRUE;
 	fiop->writing = TRUE;
 	fiop->action = 0;
-	if (mode[1] == '\0') {
-		if (*mode == 'r')
+
+	/*
+	 * determine file open mode
+	 *
+	 * While a leading 'r' is for reading and a leading 'w' is
+	 * for writing, the presense of a '+' in the string means
+	 * both reading and writing.  A leading 'a' means append
+	 * which is writing.
+	 */
+	if (mode[0] == 'r') {
+		fiop->reading = TRUE;
+		if (strchr(mode, '+') == NULL) {
 			fiop->writing = FALSE;
-		else
+		} else {
+			fiop->writing = TRUE;
+		}
+	} else if (mode[0] == 'w' || mode[0] == 'a') {
+		fiop->writing = TRUE;
+		if (strchr(mode, '+') == NULL) {
 			fiop->reading = FALSE;
+		} else {
+			fiop->reading = TRUE;
+		}
+	} else {
+		fiop->reading = FALSE;
+		fiop->writing = FALSE;
 	}
 	strcpy(fiop->mode, mode);
 	return id;
@@ -346,11 +367,32 @@ reopenid(FILEID id, char *mode, char *name)
 	fiop->reading = TRUE;
 	fiop->writing = TRUE;
 	fiop->action = 0;
-	if (mode[1] == '\0') {
-		if (*mode == 'r')
+
+	/*
+	 * determine file open mode
+	 *
+	 * While a leading 'r' is for reading and a leading 'w' is
+	 * for writing, the presense of a '+' in the string means
+	 * both reading and writing.  A leading 'a' means append
+	 * which is writing.
+	 */
+	if (mode[0] == 'r') {
+		fiop->reading = TRUE;
+		if (strchr(mode, '+') == NULL) {
 			fiop->writing = FALSE;
-		else
+		} else {
+			fiop->writing = TRUE;
+		}
+	} else if (mode[0] == 'w' || mode[0] == 'a') {
+		fiop->writing = TRUE;
+		if (strchr(mode, '+') == NULL) {
 			fiop->reading = FALSE;
+		} else {
+			fiop->reading = TRUE;
+		}
+	} else {
+		fiop->reading = FALSE;
+		fiop->writing = FALSE;
 	}
 	strcpy(fiop->mode, mode);
 	return id;
@@ -358,13 +400,13 @@ reopenid(FILEID id, char *mode, char *name)
 
 
 /*
- * Find the file I/O structure for the specified file id, and verify that
- * it is opened in the required manner ('r' for reading or 'w' for writing).
- * If mode is 0, then no open checks are made at all, and NULL is then
+ * Find the file I/O structure for the specified file id, and verifies that
+ * it is opened in the required manner (0 for reading or 1 for writing).
+ * If writable is -1, then no open checks are made at all and NULL is then
  * returned if the id represents a closed file.
  */
 FILEIO *
-findid(FILEID id, int mode)
+findid(FILEID id, int writable)
 {
 	FILEIO *fiop;		/* file structure */
 	int i;
@@ -383,21 +425,11 @@ findid(FILEID id, int mode)
 	if (i == idnum)
 		return NULL;
 
-	switch (mode) {
-		case 'r':
-			if (!fiop->reading)
-				return NULL;
-			break;
-		case 'w':
-			if (!fiop->writing)
-				return NULL;
-			break;
-		case 0:
-			break;
-		default:
-			/* This should not happen */
-			math_error("Unknown findid mode");
-			/*NOTREACHED*/
+	if (writable >= 0) {
+		if ((writable && !fiop->writing) ||
+		    (!writable && !fiop->reading)) {
+			return NULL;
+		}
 	}
 	return fiop;
 }
@@ -409,7 +441,7 @@ findid(FILEID id, int mode)
 BOOL
 validid(FILEID id)
 {
-	return (findid(id, 0) != NULL);
+	return (findid(id, -1) != NULL);
 }
 
 
@@ -505,7 +537,7 @@ errorid(FILEID id)
 {
 	FILEIO *fiop;		/* file structure */
 
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 	if (fiop == NULL)
 		return EOF;
 	return (ferror(fiop->fp) != 0);
@@ -520,7 +552,7 @@ eofid(FILEID id)
 {
 	FILEIO *fiop;		/* file structure */
 
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 	if (fiop == NULL)
 		return EOF;
 	return (feof(fiop->fp) != 0);
@@ -535,7 +567,7 @@ flushid(FILEID id)
 {
 	FILEIO *fiop;		/* file structure */
 
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 	if (fiop == NULL)
 		return 0;
 	if (!fiop->writing || fiop->action == 'r')
@@ -598,7 +630,7 @@ readid(FILEID id, int flags, char **retptr)
 	totlen = 0;
 	str = NULL;
 
-	fiop = findid(id, 'r');
+	fiop = findid(id, FALSE);
 	if (fiop == NULL)
 		return 1;
 	nlstop = (flags & 1);
@@ -679,7 +711,7 @@ getcharid(FILEID id)
 	FILEIO *fiop;
 	FILEPOS fpos;
 
-	fiop = findid(id, 'r');
+	fiop = findid(id, FALSE);
 	if (fiop == NULL)
 		return -2;
 	if (fiop->action == 'w') {
@@ -710,7 +742,7 @@ printid(FILEID id, int flags)
 	/*
 	 * filewall - file is closed
 	 */
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 	if (fiop == NULL) {
 		if (flags & PRINT_UNAMBIG)
 			math_fmt("FILE %d closed", id);
@@ -787,7 +819,7 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 	BOOL printstring;
 	BOOL printchar;
 
-	fiop = findid(id, 'w');
+	fiop = findid(id, TRUE);
 	if (fiop == NULL)
 		return 1;
 	if (fiop->action == 'r') {
@@ -1014,7 +1046,7 @@ idfputc(FILEID id, int ch)
 	FILEPOS fpos;
 
 	/* get the file info pointer */
-	fiop = findid(id, 'w');
+	fiop = findid(id, TRUE);
 	if (fiop == NULL)
 		return 1;
 	if (fiop->action == 'r') {
@@ -1049,7 +1081,7 @@ idungetc(FILEID id, int ch)
 {
 	FILEIO *fiop;
 
-	fiop = findid(id, 'r');
+	fiop = findid(id, FALSE);
 	if (fiop == NULL)
 		return -2;
 	if (fiop->action != 'r')
@@ -1072,7 +1104,7 @@ idfputs(FILEID id, char *str)
 	FILEPOS fpos;
 
 	/* get the file info pointer */
-	fiop = findid(id, 'w');
+	fiop = findid(id, TRUE);
 	if (fiop == NULL)
 		return 1;
 
@@ -1110,7 +1142,7 @@ idfputstr(FILEID id, char *str)
 	FILEPOS fpos;
 
 	/* get the file info pointer */
-	fiop = findid(id, 'w');
+	fiop = findid(id, TRUE);
 	if (fiop == NULL)
 		return 1;
 
@@ -1140,7 +1172,7 @@ int
 rewindid(FILEID id)
 {
 	FILEIO *fiop;
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 	if (fiop == NULL)
 		return 1;
 	rewind(fiop->fp);
@@ -1328,7 +1360,7 @@ getloc(FILEID id, ZVALUE *res)
 	/*
 	 * convert id to stream
 	 */
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 	if (fiop == NULL) {
 		/* file not open */
 		return -1;
@@ -1353,7 +1385,7 @@ ftellid(FILEID id, ZVALUE *res)
 	FILEPOS fpos;		/* current file position */
 
 	/* get FILEIO */
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 	if (fiop == NULL)
 		return -2;
 
@@ -1376,7 +1408,7 @@ fseekid(FILEID id, ZVALUE offset, int whence)
 	int ret = 0;		/* return code */
 
 	/* setup */
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 	if (fiop == NULL)
 		return -2;
 
@@ -1501,7 +1533,7 @@ setloc(FILEID id, ZVALUE zpos)
 	/*
 	 * convert id to stream
 	 */
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 	if (fiop == NULL) {
 		/* file not open */
 		return -1;
@@ -1669,7 +1701,7 @@ getsize(FILEID id, ZVALUE *res)
 	/*
 	 * convert id to stream
 	 */
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 	if (fiop == NULL) {
 		/* file not open */
 		return 1;
@@ -1705,7 +1737,7 @@ get_device(FILEID id, ZVALUE *dev)
 	/*
 	 * convert id to stream
 	 */
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 	if (fiop == NULL) {
 		/* file not open */
 		return -1;
@@ -1738,7 +1770,7 @@ get_inode(FILEID id, ZVALUE *inode)
 	/*
 	 * convert id to stream
 	 */
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 	if (fiop == NULL) {
 		/* file not open */
 		return -1;
@@ -1774,7 +1806,7 @@ zfilesize(FILEID id)
 	ZVALUE ret;		/* file size as a ZVALUE return value */
 
 	/* file FILEIO */
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 	if (fiop == NULL) {
 		/* return neg value for non-file error */
 		itoz(-1, &ret);
@@ -2144,7 +2176,7 @@ fscanfid(FILEID id, char *fmt, int count, VALUE **vals)
 	FILE *fp;
 	FILEPOS fpos;
 
-	fiop = findid(id, 'r');
+	fiop = findid(id, FALSE);
 	if (fiop == NULL)
 		return -2;
 
@@ -2408,7 +2440,7 @@ isattyid(FILEID id)
 {
 	FILEIO *fiop;
 
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 	if (fiop == NULL)
 		return -2;
 	return isatty(fileno(fiop->fp));
@@ -2445,7 +2477,7 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
 	long k = 0;
 
 	/* get FILEIO */
-	fiop = findid(id, 'r');
+	fiop = findid(id, FALSE);
 	if (fiop == NULL)
 		return -2;
 
@@ -2564,7 +2596,7 @@ frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res)
 	char *s;		/* str comparison pointer */
 
 	/* get FILEIO */
-	fiop = findid(id, 'r');
+	fiop = findid(id, FALSE);
 	if (fiop == NULL)
 		return -2;
 
@@ -2641,7 +2673,7 @@ findfname(FILEID id)
 {
 	FILEIO *fiop;
 
-	fiop = findid(id, 0);
+	fiop = findid(id, -1);
 
 	if (fiop == NULL)
 		return NULL;

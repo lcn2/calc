@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: calc.c,v 29.7 2001/03/17 21:31:47 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: calc.c,v 29.8 2001/04/10 22:03:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11
@@ -625,9 +625,18 @@ main(int argc, char **argv)
 			if (!p_flag && i_flag && !stdin_tty) {
 				closeinput();
 				if(!freopen("/dev/tty", "r", stdin)) {
+#if defined (_WIN32)
+					fprintf(stderr,
+						"/dev/tty does not exist on "
+						"this operating system.  "
+						"Change operating systems\n"
+						"or don't use this calc mode "
+						"in the future, sorry!\n");
+#else /* Windoz free systems */
 					fprintf(stderr,
 						"Unable to associate stdin"
 						" with /dev/tty");
+#endif /* Windoz free systems */
 					set_run_state(RUN_EXIT_WITH_ERROR);
 					break;
 				}
@@ -646,9 +655,18 @@ main(int argc, char **argv)
 					!p_flag && (!havecommands||i_flag)) {
 				closeinput();
 				if(!freopen("/dev/tty", "r", stdin)) {
+#if defined (_WIN32)
+					fprintf(stderr,
+						"/dev/tty does not exist on "
+						"this operating system.  "
+						"Change operating systems\n"
+						"or don't use this calc mode "
+						"in the future, sorry!\n");
+#else /* Windoz free systems */
 					fprintf(stderr,
 						"Unable to associate stdin"
 						" with /dev/tty");
+#endif /* Windoz free systems */
 					set_run_state(RUN_EXIT_WITH_ERROR);
 					break;
 				}

@@ -5,6 +5,33 @@ The following are the changes from calc version 2.11.5t2 to date:
     interactive mode.  Fixed a bug that sometimes left the terminal
     in a non-echoing state when calc exited.
 
+    Renamed error codes E_FGETWORD1 and E_FGETWORD2 symbols to
+    E_FGETFIELD1 and E_FGETFIELD2.
+
+    Made a minor format change to the top of the calc man page.
+
+    The findid() function in file.c 2nd argument changed.  The argument
+    is now mostly a writable flag.  This function now finds the file
+    I/O structure for the specified file id, and verifies that
+    it is opened in the required manner (0 for reading or 1 for writing).
+    If the 2nd argument is -1, then no open checks are made at all and
+    NULL is then returned if the id represents a closed file.
+
+    The calc builtin function, fopen(), now allows one to specify
+    opening files in binary modes.  On POSIX / Linux / Un*x-like systems,
+    text file is the same as a binary file and so 'b' to an fopen has
+    no effect and is ignored.  However on systems such as MS Windoz
+    the 'b' / binary mode has meaning.  See 'help fopen' for details.
+
+    On systems (such as MS Windoz), calc will produce a different error
+    message when it attempts to open /dev/tty.  This will condition
+    will occur in things like calc scripts when they switch from ``batch
+    processing'' commands from and want to start interactive mode.
+
+    Regression tests fopen in binary mode in a few places where a
+    difference between text and binary string lengths matter.
+    The intfile calc resource file also uses binary mode.
+
 
 The following are the changes from calc version 2.11.5t0 to date:
 
@@ -5172,8 +5199,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.27 $
-## @(#) $Id: CHANGES,v 29.27 2001/04/08 22:05:40 chongo Exp $
+## @(#) $Revision: 29.28 $
+## @(#) $Id: CHANGES,v 29.28 2001/04/10 22:13:40 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

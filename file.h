@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: file.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: file.h,v 29.3 2001/04/10 22:06:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.h,v $
  *
  * Under source code control:	1996/05/24 05:55:58
@@ -50,7 +50,7 @@ typedef struct {
 	BOOL reading;		/* TRUE if opened for reading */
 	BOOL writing;		/* TRUE if opened for writing */
 	char action;		/* most recent use for 'r', 'w' or 0 */
-	char mode[3];		/* open mode */
+	char mode[sizeof("rb+")];/* open mode */
 } FILEIO;
 
 
@@ -85,7 +85,7 @@ typedef struct {
 /*
  * external functions
  */
-extern FILEIO * findid(FILEID id, int mode);
+extern FILEIO * findid(FILEID id, int writable);
 extern int fgetposid(FILEID id, FILEPOS *ptr);
 extern int fsetposid(FILEID id, FILEPOS *ptr);
 extern int get_open_siz(FILE *fp, ZVALUE *res);

@@ -87,8 +87,8 @@
 #define E_FGETSTR2	10074	/* File not open for reading for fgetstr */
 #define E_FGETLINE1	10075	/* Non-file argument for fgetline */
 #define E_FGETLINE2	10076	/* File not open for reading for fgetline */
-#define E_FGETWORD1	10077	/* Non-file argument for fgetword */
-#define E_FGETWORD2	10078	/* File not open for reading for fgetword */
+#define E_FGETFIELD1	10077	/* Non-file argument for fgetfield */
+#define E_FGETFIELD2	10078	/* File not open for reading for fgetfield */
 #define E_REWIND1	10079	/* Non-file argument for rewind */
 #define E_FILES		10080	/* Non-integer argument for files */
 #define E_PRINTF1	10081	/* Non-string fmt argument for fprint */

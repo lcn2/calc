@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: intfile.cal,v 29.4 2001/04/08 08:13:10 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: intfile.cal,v 29.5 2001/04/10 22:09:34 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/intfile.cal,v $
  *
  * Under source code control:   2001/03/31 08:13:11
@@ -56,7 +56,7 @@ define file2be(filename)
     /*
      * open the file for reading
      */
-    fd = fopen(filename, "r");
+    fd = fopen(filename, "rb");
     if (!isfile(fd)) quit "file2be: cannot open file for reading";
 
     /*
@@ -98,7 +98,7 @@ define file2le(filename)
     /*
      * open the file for reading
      */
-    fd = fopen(filename, "r");
+    fd = fopen(filename, "rb");
     if (!isfile(fd)) quit "file2le: cannot open file for reading";
 
     /*
@@ -150,7 +150,7 @@ define be2file(v, filename)
     /*
      * open the file for writing
      */
-    fd = fopen(filename, "w");
+    fd = fopen(filename, "wb");
     if (!isfile(fd)) quit "be2file: cannot open file for writing";
 
     /*
@@ -199,7 +199,7 @@ define le2file(v, filename)
     /*
      * open the file for writing
      */
-    fd = fopen(filename, "w");
+    fd = fopen(filename, "wb");
     if (!isfile(fd)) quit "le2file: cannot open file for writing";
 
     /*

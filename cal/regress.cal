@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: regress.cal,v 29.7 2001/04/08 10:09:39 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: regress.cal,v 29.8 2001/04/10 22:08:20 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -5118,15 +5118,15 @@ define test_is()
 	a = assoc();
 	print				  '5901: a = assoc()';
 	if (config("windows")) {
-	    ofd = fopen("NUL:", "r");
-	    print			  '5902: ofd = fopen("NUL:", "r")';
-	    cfd = fopen("NUL:", "r");
-	    print			  '5903: cfd = fopen("NUL:", "r")';
+	    ofd = fopen("NUL:", "rb");
+	    print			  '5902: ofd = fopen("NUL:", "rb")';
+	    cfd = fopen("NUL:", "rb");
+	    print			  '5903: cfd = fopen("NUL:", "rb")';
 	} else {
-	    ofd = fopen("/dev/null", "r");
-	    print			  '5902: ofd = fopen("/dev/null", "r")';
-	    cfd = fopen("/dev/null", "r");
-	    print			  '5903: cfd = fopen("/dev/null", "r")';
+	    ofd = fopen("/dev/null","rb");
+	    print			  '5902: ofd = fopen("/dev/null","rb")';
+	    cfd = fopen("/dev/null","rb");
+	    print			  '5903: cfd = fopen("/dev/null","rb")';
 	}
 	fclose(cfd);
 	print				  '5904: fclose(cfd)';
@@ -6305,8 +6305,8 @@ define test_blkcpy()
 
 	/* blkcpy the last 5 octets of B1 to a new block C */
 
-	blkcpy(C = blk(), B1, 5, ,100);
-	print				  '6821: blkcpy(C = blk(), B1, 5, ,100);';
+	blkcpy(C = blk(), B1,5,,100);
+	print				  '6821: blkcpy(C = blk(), B1,5,,100);';
 	vrfy(C == A,			  '6822: C == A');
 
 	/* blkcpy to and from a file */
@@ -6322,8 +6322,8 @@ define test_blkcpy()
 	blkcpy(fs, A, ,100);
 	print				  '6828: blkcpy(fs, A, ,100);';
 	vrfy(size(fs) == 105,		  '6829: size(f) == 105');
-	blkcpy(C = blk(), fs, 2, ,100);
-	print				  '6830: blkcpy(C = blk(), fs, 2, ,100)';
+	blkcpy(C = blk(), fs,2,,100);
+	print				  '6830: blkcpy(C = blk(), fs,2,,100)';
 	vrfy(C == (blk() = {1,2}),	  '6831: C == (blk() = {1,2}');
 
 	/* blkcpy string to a block */

@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.3 $
-# @(#) $Id: calcerr.tbl,v 29.3 2000/07/17 15:35:49 chongo Exp $
+# @(#) $Revision: 29.4 $
+# @(#) $Id: calcerr.tbl,v 29.4 2001/04/10 22:06:46 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/calcerr.tbl,v $
 #
 # Under source code control:	1996/05/23 17:38:44
@@ -108,8 +108,8 @@ E_FGETSTR1	Non-file first argument for fgetstr
 E_FGETSTR2	File not open for reading for fgetstr
 E_FGETLINE1	Non-file  argument for fgetline
 E_FGETLINE2	File not open for reading for fgetline
-E_FGETWORD1	Non-file argument for fgetword
-E_FGETWORD2	File not open for reading for fgetword
+E_FGETFIELD1	Non-file argument for fgetfield
+E_FGETFIELD2	File not open for reading for fgetfield
 E_REWIND1	Non-file argument for rewind
 E_FILES		Non-integer argument for files
 E_PRINTF1	Non-string fmt argument for fprint

@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.19 $$
-# @(#) $Id: Makefile.ship,v 29.19 2001/04/08 10:54:22 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.21 $$
+# @(#) $Id: Makefile.ship,v 29.21 2001/04/10 22:52:05 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -1080,7 +1080,7 @@ UTIL_C_SRC= align32.c endian.c longbits.c have_newstr.c have_uid_t.c \
 # and BUILD_C_SRC
 #
 UTIL_MISC_SRC= calcerr_h.sed calcerr_h.awk calcerr_c.sed calcerr_c.awk \
-	calcerr.tbl check.awk
+	calcerr.tbl check.awk win32.mkdef
 
 # these .o files may get built in the process of building BUILD_H_SRC
 #
@@ -2564,7 +2564,7 @@ win32_hsrc: ${MAKE_FILE} win32.mkdef
 	${Q}rm -rf win32
 	${Q}mkdir win32
 	${Q}cp ${UTIL_C_SRC} win32
-	${Q}cp ${UTIL_MISC_SRC} win32.mkdef Makefile win32
+	${Q}cp ${UTIL_MISC_SRC} Makefile win32
 	${Q}(cd win32; \
 	 echo "cd win32"; \
 	 echo "$(MAKE) hsrc `cat win32.mkdef`"; \
