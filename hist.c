@@ -283,11 +283,16 @@ hist_init(char *filename)
 {
 	TTYSTRUCT	newtty;
 
-	if (inited)
+	if (inited) {
+		if (conf->calc_debug & CALCDBG_TTY)
+			printf("DEBUG: inited already set in hist_init\n");
 		return HIST_INITED;
+	}
 
 	inited = 1;
 	canedit = 0;
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: Set inited, cleared canedit in hist_init\n");
 
 	/*
 	 * open the bindings file
@@ -309,20 +314,31 @@ hist_init(char *filename)
 	closeinput();
 
 #ifdef	USE_SGTTY
-	if (ioctl(STDIN, TIOCGETP, &oldtty) < 0)
+	if (ioctl(STDIN, TIOCGETP, &oldtty) < 0) {
+		if (conf->calc_debug & CALCDBG_TTY)
+			printf("DEBUG: Cannot TIOCGETP stdin in hist_init\n");
 		return HIST_NOTTY;
+	}
 
 	newtty = oldtty;
 	newtty.sg_flags &= ~ECHO;
 	newtty.sg_flags |= CBREAK;
 
-	if (ioctl(STDIN, TIOCSETP, &newtty) < 0)
+	if (ioctl(STDIN, TIOCSETP, &newtty) < 0) {
+		if (conf->calc_debug & CALCDBG_TTY)
+			printf("DEBUG: Cannot TIOCSETP stdin in hist_init\n");
 		return HIST_NOTTY;
+	}
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: stty -ECHO +CBREAK in hist_init\n");
 #endif
 
 #ifdef	USE_TERMIO
-	if (ioctl(STDIN, TCGETA, &oldtty) < 0)
+	if (ioctl(STDIN, TCGETA, &oldtty) < 0) {
+		if (conf->calc_debug & CALCDBG_TTY)
+			printf("DEBUG: Cannot TCGETA stdin in hist_init\n");
 		return HIST_NOTTY;
+	}
 
 	newtty = oldtty;
 	newtty.c_lflag &= ~(ECHO | ECHOE | ECHOK);
@@ -331,13 +347,22 @@ hist_init(char *filename)
 	newtty.c_cc[VMIN] = 1;
 	newtty.c_cc[VTIME] = 0;
 
-	if (ioctl(STDIN, TCSETAW, &newtty) < 0)
+	if (ioctl(STDIN, TCSETAW, &newtty) < 0) {
+		if (conf->calc_debug & CALCDBG_TTY)
+			printf("DEBUG: Cannot TCSETAW stdin in hist_init\n");
 		return HIST_NOTTY;
+	}
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
+		       "VMIN=1 VTIME=0 in hist_init\n");
 #endif
 
 #ifdef	USE_TERMIOS
-	if (tcgetattr(STDIN, &oldtty) < 0)
+	if (tcgetattr(STDIN, &oldtty) < 0) {
+		if (conf->calc_debug & CALCDBG_TTY)
+			printf("DEBUG: Cannot tcgetattr stdin in hist_init\n");
 		return HIST_NOTTY;
+	}
 
 	newtty = oldtty;
 	newtty.c_lflag &= ~(ECHO | ECHOE | ECHOK);
@@ -346,11 +371,19 @@ hist_init(char *filename)
 	newtty.c_cc[VMIN] = 1;
 	newtty.c_cc[VTIME] = 0;
 
-	if (tcsetattr(STDIN, TCSANOW, &newtty) < 0)
+	if (tcsetattr(STDIN, TCSANOW, &newtty) < 0) {
+		if (conf->calc_debug & CALCDBG_TTY)
+			printf("DEBUG: Cannot tcsetattr stdin in hist_init\n");
 		return HIST_NOTTY;
+	}
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
+		       "VMIN=1 VTIME=0 in hist_init\n");
 #endif
 
 	canedit = 1;
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: Set canedit in hist_init\n");
 
 	return HIST_SUCCESS;
 }
@@ -363,20 +396,36 @@ void
 hist_term(void)
 {
 	if (!inited || !canedit) {
+		if (conf->calc_debug & CALCDBG_TTY) {
+			if (!inited)
+				printf("DEBUG: inited already cleared "
+				       "in hist_term\n");
+			if (!canedit)
+				printf("DEBUG: canedit already cleared "
+				       "in hist_term\n");
+		}
 		inited = 0;
+		if (conf->calc_debug & CALCDBG_TTY)
+			printf("DEBUG: Cleared inited in hist_term\n");
 		return;
 	}
 
 #ifdef	USE_SGTTY
 	(void) ioctl(STDIN, TIOCSETP, &oldtty);
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: TIOCSETP restored stdin in hist_term\n");
 #endif
 
 #ifdef	USE_TERMIO
 	(void) ioctl(STDIN, TCSETAW, &oldtty);
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: TCSETAW restored stdin in hist_term\n");
 #endif
 
 #ifdef	USE_TERMIOS
 	(void) tcsetattr(STDIN, TCSANOW, &oldtty);
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: TCSANOW restored stdin in hist_term\n");
 #endif
 }
 

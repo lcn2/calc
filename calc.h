@@ -208,6 +208,7 @@ typedef enum {
     RUN_EXIT_WITH_ERROR = 7	/* exit with error */
 } run;
 extern run run_state;
+extern char *run_state_name(run state);
 
 /*
  * calc version information

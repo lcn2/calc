@@ -63,9 +63,9 @@ int new_std = FALSE;	/* TRUE (-n) => use newstd configuration */
 int abortlevel;		/* current level of aborts */
 BOOL inputwait;		/* TRUE if in a terminal input wait */
 jmp_buf jmpbuf;		/* for errors */
-run run_state = RUN_UNKNOWN;	/* calc startup and run state */
 char *program = "calc";		/* our name */
 char cmdbuf[MAXCMD+1+1+1];	/* command line expression + "\n\0" + guard */
+run run_state = RUN_UNKNOWN;	/* calc startup and run state */
 
 
 /*
@@ -86,6 +86,7 @@ int d_flag = FALSE;	/* TRUE => disable heading, lib_debug == 0 */
 int c_flag = FALSE;	/* TRUE => continue on error if permitted */
 int i_flag = FALSE;	/* TRUE => go interactive if permitted */
 
+
 /*
  * global values
  */
@@ -105,6 +106,10 @@ int no_env = FALSE;		/* TRUE (-e) => ignore env vars on startup */
 int errmax = ERRMAX;		/* if >= 0,  maximum value for errcount */
 
 NUMBER *epsilon_default;	/* default allowed error for float calcs */
+
+char *calc_debug = NULL;	/* !=NULL => value of config("calc_debug") */
+char *lib_debug = NULL;		/* !=NULL => value of config("lib_debug") */
+char *user_debug = NULL;	/* !=NULL => value of config("user_debug") */
 
 
 /*
@@ -174,6 +179,19 @@ libcalc_call_me_first(void)
 	}
 
 	/*
+	 * -D flags can change calc_debug, lib_debug of user_debug
+	 */
+	if (calc_debug) {
+		conf->calc_debug = strtol(calc_debug, NULL, 0);
+	}
+	if (lib_debug) {
+		conf->lib_debug = strtol(lib_debug, NULL, 0);
+	}
+	if (user_debug) {
+		conf->user_debug = strtol(user_debug, NULL, 0);
+	}
+
+	/*
 	 * initialize
 	 */
 	initialize();
@@ -181,6 +199,11 @@ libcalc_call_me_first(void)
 	/*
 	 * ready to rock & roll ..
 	 */
+	if (conf->calc_debug & CALCDBG_RUNSTATE) {
+		printf("DEBUG: run_state from %s to %s\n",
+		    run_state_name(run_state),
+		    run_state_name(RUN_BEGIN));
+	}
 	run_state = RUN_BEGIN;
 	init_done = 1;
 	return;
@@ -370,4 +393,34 @@ libcalc_call_me_last(void)
 	 */
 	init_done = 0;
 	return;
+}
+
+
+/*
+ * run_state_name - return a constant string given a run_state
+ */
+char *
+run_state_name(run state)
+{
+	switch (state) {
+	case RUN_UNKNOWN:
+		return "RUN_UNKNOWN";
+	case RUN_BEGIN:
+		return "RUN_BEGIN";
+	case RUN_RCFILES:
+		return "RUN_RCFILES";
+	case RUN_PRE_CMD_ARGS:
+		return "RUN_PRE_CMD_ARGS";
+	case RUN_CMD_ARGS:
+		return "RUN_CMD_ARGS";
+	case RUN_PRE_TOP_LEVEL:
+		return "RUN_PRE_TOP_LEVEL";
+	case RUN_TOP_LEVEL:
+		return "RUN_TOP_LEVEL";
+	case RUN_EXIT:
+		return "RUN_EXIT";
+	case RUN_EXIT_WITH_ERROR:
+		return "RUN_EXIT_WITH_ERROR";
+	}
+	return "RUN_invalid";
 }

@@ -40,6 +40,7 @@
  * static definitions and functions
  */
 static char *usage = "usage: %s [-c] [-C] [-d] [-e] [-h] [-i] [-m mode]\n"
+		     "\t[-D calc_debug[:lib_debug:[user_debug]]]\n"
 		     "\t[-n] [-p] [-q] [-u] [-v] [[--] calc_cmd ...]\n";
 static void intint(int arg);	/* interrupt routine */
 
@@ -55,13 +56,14 @@ main(int argc, char **argv)
 	extern char *optarg;	/* option argument */
 	extern int optind;	/* option index */
 	int c;			/* option */
+	char *p;
 	long i;
 
 	/*
 	 * parse args
 	 */
 	program = argv[0];
-	while ((c = getopt(argc, argv, "Cehim:npquvcd")) != -1) {
+	while ((c = getopt(argc, argv, "Cehim:npquvcdD:")) != -1) {
 		switch (c) {
 		case 'C':
 #if defined(CUSTOM)
@@ -126,6 +128,26 @@ main(int argc, char **argv)
 			 */
 			printf("%s (version %s)\n", CALC_TITLE, version());
 			exit(0);
+		case 'D':
+			/*
+			 * parse the -D optarg
+			 *
+			 * Could be calc_debug
+			 *	 or calc_debug:lib_debug
+			 *	 or calc_debug:lib_debug:user_debug
+			 */
+			calc_debug = optarg;
+			p = strchr(optarg, ':');
+			if (p != NULL) {
+				*p = '\0';
+				lib_debug = p+1;
+				p = strchr(lib_debug, ':');
+				if (p != NULL) {
+					*p = '\0';
+					user_debug = p+1;
+				}
+			}
+			break;
 		default:
 			/*
 			 * we are too early in processing to call
@@ -185,6 +207,8 @@ main(int argc, char **argv)
 	 */
 	libcalc_call_me_first();
 	stdin_tty = isatty(0);		/* assume stdin is on fd 0 */
+	if (conf->calc_debug & CALCDBG_TTY)
+		printf("DEBUG: stdin_tty is %d\n", stdin_tty);
 	if (want_defhelp) {
 		givehelp(DEFAULTCALCHELP);
 		libcalc_call_me_last();
@@ -239,9 +263,17 @@ main(int argc, char **argv)
 	 */
 	if (run_state == RUN_BEGIN) {
 		if (!q_flag && allow_read) {
+			if (conf->calc_debug & CALCDBG_RUNSTATE)
+				printf("DEBUG: run_state from %s to %s\n",
+				    run_state_name(run_state),
+				    run_state_name(RUN_RCFILES));
 			run_state = RUN_RCFILES;
 			runrcfiles();
 		}
+		if (conf->calc_debug & CALCDBG_RUNSTATE)
+			printf("DEBUG: run_state from %s to %s\n",
+			    run_state_name(run_state),
+			    run_state_name(RUN_PRE_CMD_ARGS));
 		run_state = RUN_PRE_CMD_ARGS;
 	}
 
@@ -252,25 +284,46 @@ main(int argc, char **argv)
 			if (inputlevel() == 0) {
 				closeinput();
 				runrcfiles();
+				if (conf->calc_debug & CALCDBG_RUNSTATE)
+				    printf("DEBUG: run_state from %s to %s\n",
+					run_state_name(run_state),
+					run_state_name(RUN_PRE_CMD_ARGS));
 				run_state = RUN_PRE_CMD_ARGS;
 			} else {
 				closeinput();
 			}
 		} else {
-			if ((havecommands && !i_flag) || !stdin_tty)
+			if ((havecommands && !i_flag) || !stdin_tty) {
+				if (conf->calc_debug & CALCDBG_RUNSTATE)
+				    printf("DEBUG: run_state from %s to %s\n",
+					run_state_name(run_state),
+					run_state_name(RUN_EXIT_WITH_ERROR));
 				run_state = RUN_EXIT_WITH_ERROR;
-			else
+			} else {
+				if (conf->calc_debug & CALCDBG_RUNSTATE)
+				    printf("DEBUG: run_state from %s to %s\n",
+					run_state_name(run_state),
+					run_state_name(RUN_PRE_CMD_ARGS));
 				run_state = RUN_PRE_CMD_ARGS;
+			}
 		}
 	}
 
 	if (run_state == RUN_PRE_CMD_ARGS) {
 		if (havecommands) {
+			if (conf->calc_debug & CALCDBG_RUNSTATE)
+				printf("DEBUG: run_state from %s to %s\n",
+				    run_state_name(run_state),
+				    run_state_name(RUN_CMD_ARGS));
 			run_state = RUN_CMD_ARGS;
 			(void) openstring(cmdbuf, (long) strlen(cmdbuf));
 			getcommands(FALSE);
 			closeinput();
 		}
+		if (conf->calc_debug & CALCDBG_RUNSTATE)
+			printf("DEBUG: run_state from %s to %s\n",
+			    run_state_name(run_state),
+			    run_state_name(RUN_PRE_TOP_LEVEL));
 		run_state = RUN_PRE_TOP_LEVEL;
 	}
 
@@ -279,19 +332,36 @@ main(int argc, char **argv)
 		if ((c_flag && !stoponerror) || stoponerror < 0) {
 			getcommands(FALSE);
 			if (inputlevel() == 0)
+				if (conf->calc_debug & CALCDBG_RUNSTATE)
+				    printf("DEBUG: run_state from %s to %s\n",
+					run_state_name(run_state),
+					run_state_name(RUN_PRE_TOP_LEVEL));
 				run_state = RUN_PRE_TOP_LEVEL;
 			closeinput();
 		} else {
 			closeinput();
-			if (!stdin_tty || !i_flag || p_flag)
+			if (!stdin_tty || !i_flag || p_flag) {
+				if (conf->calc_debug & CALCDBG_RUNSTATE)
+				    printf("DEBUG: run_state from %s to %s\n",
+					run_state_name(run_state),
+					run_state_name(RUN_EXIT_WITH_ERROR));
 				run_state = RUN_EXIT_WITH_ERROR;
-			else
+			} else {
+				if (conf->calc_debug & CALCDBG_RUNSTATE)
+				    printf("DEBUG: run_state from %s to %s\n",
+					run_state_name(run_state),
+					run_state_name(RUN_PRE_TOP_LEVEL));
 				run_state = RUN_PRE_TOP_LEVEL;
+			}
 		}
 	}
 
 	if (run_state == RUN_PRE_TOP_LEVEL) {
 		if (stdin_tty && ((havecommands && !i_flag) || p_flag)) {
+			if (conf->calc_debug & CALCDBG_RUNSTATE)
+				printf("DEBUG: run_state from %s to %s\n",
+				    run_state_name(run_state),
+				    run_state_name(RUN_EXIT));
 			run_state = RUN_EXIT;
 		} else {
 			if (stdin_tty) {
@@ -300,6 +370,10 @@ main(int argc, char **argv)
 				resetinput();
 				openterminal();
 			}
+			if (conf->calc_debug & CALCDBG_RUNSTATE)
+				printf("DEBUG: run_state from %s to %s\n",
+				    run_state_name(run_state),
+				    run_state_name(RUN_TOP_LEVEL));
 			run_state = RUN_TOP_LEVEL;
 			getcommands(TRUE);
 		}
@@ -315,6 +389,10 @@ main(int argc, char **argv)
 				reinitialize();
 				getcommands(TRUE);
 			} else {
+				if (conf->calc_debug & CALCDBG_RUNSTATE)
+				    printf("DEBUG: run_state from %s to %s\n",
+					run_state_name(run_state),
+					run_state_name(RUN_EXIT_WITH_ERROR));
 			 	run_state = RUN_EXIT_WITH_ERROR;
 			}
 		}

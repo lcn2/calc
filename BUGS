@@ -96,8 +96,8 @@ Known bugs:
       the terminal in a 'bad' state, as if stty -icanon -echo -echoe
       had been executed.
 
-    * Dec Alpha Linux compiling with gcc-2.95.1 and -O2 fails the
-      regression test with:
+    * Dec Alpha Linux compiling with gcc-2.95.1 (or gcc-2.95.2) and
+      -O2 fails the regression test with:
 
 	make -s check
 	000: Beginning regression tests

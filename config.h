@@ -135,9 +135,9 @@ struct config {
 	BOOL blkverbose;	/* TRUE => print all lines if a block */
 	int blkbase;		/* block output base */
 	int blkfmt;		/* block output style */
-	int lib_debug;		/* library debug, see LIB_DEBUG_XXX below */
-	int calc_debug;		/* internal debug, see CALC_DEBUG_XXX below */
-	int user_debug;		/* user defined debug value: 0 default */
+	long calc_debug;	/* internal debug, see CALC_DEBUG_XXX below */
+	long lib_debug;		/* library debug, see LIB_DEBUG_XXX below */
+	long user_debug;	/* user defined debug value: 0 default */
 	BOOL verbose_quit;	/* TRUE => print Quit or abort executed msg */
 };
 typedef	struct config CONFIG;
@@ -158,7 +158,9 @@ typedef	struct config CONFIG;
 #define CALCDBG_FUNC_QUIT   (0x00000002)    /* active functions when quit */
 #define CALCDBG_HASH_STATE  (0x00000004)    /* hash state details */
 #define CALCDBG_BLOCK	    (0x00000008)    /* block debug */
-#define CALCDBG_MASK	    (0x0000000f)
+#define CALCDBG_TTY	    (0x00000010)    /* report TTY state changes */
+#define CALCDBG_RUNSTATE    (0x00000020)    /* report run_state changes */
+#define CALCDBG_MASK	    (0x0000003f)
 
 
 /*
@@ -167,6 +169,9 @@ typedef	struct config CONFIG;
 extern CONFIG *conf;		/* current configuration */
 extern CONFIG oldstd;		/* backward compatible standard configuration */
 extern CONFIG newstd;		/* new non-backward compatible configuration */
+extern char *calc_debug;	/* !=NULL => value of config("calc_debug") */
+extern char *lib_debug;		/* !=NULL => value of config("lib_debug") */
+extern char *user_debug;	/* !=NULL => value of config("user_debug") */
 
 
 /*

@@ -15,17 +15,19 @@ calc \- arbitrary precision calculator
 .RB [ \-c ]
 .RB [ \-C ]
 .RB [ \-d ]
+.RB [ -D\ \&calc_debug[:lib_debug:[user_debug]] ]
+.br
+.in +5n
 .RB [ \-e ]
 .RB [ \-h ]
 .RB [ \-i ]
 .RB [ \-m\ \&mode ]
-.br
-.in +5n
 .RB [ \-n ]
 .RB [ \-p ]
 .RB [ \-q ]
 .RB [ \-u ]
 .RB [ \-v ]
+.br
 .RB [ calc_cmd\ \&.\|.\|. ]
 .in -5n
 .SH DESCRIPTION
@@ -123,6 +125,34 @@ This flag disables the reporting of missing calc
 startup scripts ($CALCRC).
 
 .TP
+.BR -D " calc_debug[:lib_debug:[user_debug]]"
+Force the initial value of config("calc_debug"),
+config("lib_debug") and config("user_debug").
+.sp 1
+The : separated strings are interpreted as signed 32 bit values.
+After an optional leading sign a leading zero indicates octal
+conversion, and a leading ``0x'' or ``0X'' hexadecimal
+conversion.  Otherwise, decimal conversion is assumed.
+.sp 1
+By default,
+.I calc_debug
+is 0,
+.I lib_debug
+is 3 and
+.I lib_debug
+is 0.
+.sp 1
+For more information use the following
+.B calc
+command:
+.sp 1
+.in +5n
+.nf
+help config
+.fi
+.in -5n
+
+.TP
 .B \-e
 Ignore any environment variables on startup.
 The getenv() builtin will still return values, however.
@@ -182,7 +212,8 @@ This flag sets the permission mode of
 It controls the ability for
 .B calc
 to open files and execute programs.
-Mode may be a number from 0 to 7.
+.I Mode 
+may be a number from 0 to 7.
 .sp 1
 The mode value is interpreted in a way similar to that
 of the
@@ -205,8 +236,8 @@ octal mode:
 If one wished to run
 .B calc
 from a privileged user, one might want to use
-.B \-m
-0 in an effort to make
+.BR \-m " 0"
+in an effort to make
 .B calc
 somewhat more secure.
 .sp 1
@@ -214,8 +245,8 @@ Mode bits for reading and writing apply only on an
 open.
 Files already open are not effected.
 Thus if one wanted to use the
-.B \-m
-0 in an effort to make
+.BR \-m " 0"
+in an effort to make
 .B calc
 somewhat more secure, but still wanted to read and write a specific
 file, one might want to do in

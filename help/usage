@@ -2,8 +2,8 @@ Calc command line
 
     Calc has the following command line:
 
-	calc [-c] [-C] [-d] [-e] [-h] [-i] [-m mode]
-	     [-n] [-p] [-q] [-u] [-v] [calc_cmd ...]
+	calc [-c] [-C] [-d] [-D calc_debug[:lib_debug:[user_debug]]]
+	     [-e] [-h] [-i] [-m mode] [-n] [-p] [-q] [-u] [-v] [calc_cmd ...]
 
 	-c  Continue reading command lines even after an execution
 	    error has caused the abandonment of a line.
@@ -54,6 +54,22 @@ Calc command line
 
 	    This flag disables the reporting of missing calc
 	    startup scripts ($CALCRC).
+
+	-D calc_debug[:lib_debug:[user_debug]]
+
+	    Force the initial value of config("calc_debug"),
+	    config("lib_debug") and config("user_debug").
+
+	    The : separated strings are interpreted as signed 32 bit values.
+	    After an optional leading sign a leading zero indicates octal
+	    conversion, and a leading ``0x'' or ``0X'' hexadecimal
+	    conversion.  Otherwise, decimal conversion is assumed.
+
+	    By default, calc_debug is 0, lib_debug is 3 and lib_debug is 0.
+
+	    For more information use the following calc command:
+
+		help config
 
 	-e  Ignore any environment variables on startup.  The
 	    getenv() builtin will still return values, however.

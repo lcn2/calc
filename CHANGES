@@ -28,11 +28,10 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
     The eval(str) builtin will return an error-value rather than cause
     an execution error str has a scan-error.
 
-    Declaration are permitted to end with EOF as well as a newline or ';'.
+    Declarations are permitted to end with EOF as well as a newline or ';'.
 
-    When prompt() occurs in reading a file, it will take inout from
-    the terminal rather than taking it from a file.  For example,
-    this script, when read, now works:
+    When prompt() occurs while reading a file, it will take input from
+    the terminal rather than taking it from a file.  For example:
 
 	/* This demonstrates the use of prompt() and some other things  */
 	config("verbose_quit", 0);
@@ -52,17 +51,38 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
 	}
 	print "Good bye";
 
-    Comments entered at inputisterminal level may be spread over several
+    Comments entered at input terminal level may be spread over several
     lines.  For example:
 
 	/*
-	 * These commands work given the file: comment.cal
-	 *
+	 * Assume that this calc script is called: comment.cal
+	 * Then these commands now work:
 	 *	cat comment.cal | calc
 	 *	calc < comment.cal
 	 */
 	print "Hello";
 
+    Added:
+
+	-D calc_debug[:lib_debug:[user_debug]]
+
+    to set the initial value of config("calc_debug"), config("lib_debug")
+    and config("user_debug").
+
+    The : separated strings of -D are interpreted as signed 32 bit values.
+    After an optional leading sign a leading zero indicates octal
+    conversion, and a leading ``0x'' or ``0X'' hexadecimal conversion.
+    Otherwise, decimal conversion is assumed.
+
+    Reordered the config structure moving calc_debug ahead of lib_debug.
+
+    Added bits 4 and 5 to config("calc_debug"):
+
+	4	Report on changes to the state of stdin as well as changes
+		to internal variables that control the setting and restoring
+		of stdin.
+
+	5	Report on changes to the run state of calc.
 
 
 Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:

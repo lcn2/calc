@@ -94,8 +94,8 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	FALSE,			/* skip duplicate block output lines */
 	BLK_BASE_HEX,		/* block octet print base */
 	BLK_FMT_HD_STYLE,	/* block output format */
-	3,			/* calc library debug level */
 	0,			/* internal calc debug level */
+	3,			/* calc library debug level */
 	0, 			/* user defined debug level */
 	TRUE			/* print Quit or abort executed messages */
 };
@@ -130,8 +130,8 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	FALSE,			/* skip duplicate block output lines */
 	BLK_BASE_HEX,		/* block octet print base */
 	BLK_FMT_HD_STYLE,	/* block output format */
-	3,			/* calc library debug level */
 	0,			/* internal calc debug level */
+	3,			/* calc library debug level */
 	0, 			/* user defined debug level */
 	TRUE			/* print Quit or abort executed messages */
 };
@@ -809,20 +809,6 @@ setconfig(int type, VALUE *vp)
 		conf->blkfmt = temp;
 		break;
 
-	case CONFIG_LIB_DEBUG:
-		if (vp->v_type != V_NUM) {
-			math_error("Non numeric for lib_debug");
-			/*NOTREACHED*/
-		}
-		q = vp->v_num;
-		temp = qtoi(q);
-		if (qisfrac(q) || !zistiny(q->num)) {
-			math_error("Illegal lib_debug parameter value");
-			/*NOTREACHED*/
-		}
-		conf->lib_debug = temp;
-		break;
-
 	case CONFIG_CALC_DEBUG:
 		if (vp->v_type != V_NUM) {
 			math_error("Non numeric for calc_debug");
@@ -835,6 +821,20 @@ setconfig(int type, VALUE *vp)
 			/*NOTREACHED*/
 		}
 		conf->calc_debug = temp;
+		break;
+
+	case CONFIG_LIB_DEBUG:
+		if (vp->v_type != V_NUM) {
+			math_error("Non numeric for lib_debug");
+			/*NOTREACHED*/
+		}
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || !zistiny(q->num)) {
+			math_error("Illegal lib_debug parameter value");
+			/*NOTREACHED*/
+		}
+		conf->lib_debug = temp;
 		break;
 
 	case CONFIG_USER_DEBUG:
@@ -1125,12 +1125,12 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		i = cfg->blkfmt;
 		break;
 
-	case CONFIG_LIB_DEBUG:
-		i = cfg->lib_debug;
-		break;
-
 	case CONFIG_CALC_DEBUG:
 		i = cfg->calc_debug;
+		break;
+
+	case CONFIG_LIB_DEBUG:
+		i = cfg->lib_debug;
 		break;
 
 	case CONFIG_USER_DEBUG:
@@ -1214,8 +1214,8 @@ config_cmp(CONFIG *cfg1, CONFIG *cfg2)
 	       cfg1->blkverbose != cfg2->blkverbose ||
 	       cfg1->blkbase != cfg2->blkbase ||
 	       cfg1->blkfmt != cfg2->blkfmt ||
-	       cfg1->lib_debug != cfg2->lib_debug ||
 	       cfg1->calc_debug != cfg2->calc_debug ||
+	       cfg1->lib_debug != cfg2->lib_debug ||
 	       cfg1->user_debug != cfg2->user_debug ||
 	       cfg1->verbose_quit != cfg2->verbose_quit;
 }
