@@ -517,7 +517,6 @@ ALLOW_CUSTOM= -DCUSTOM
 # ICFLAGS are given to ${CC} for intermediate progs
 #
 # CCMAIN are flags for ${CC} when files with main() instead of CFLAGS
-# CCSHS are flags given to ${CC} for compiling shs.c & shs1.c instead of CFLAGS
 #
 # LCFLAGS are CC-style flags for ${LINT}
 # LDFLAGS are flags given to ${CC} for linking .o files
@@ -542,7 +541,6 @@ CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 ICFLAGS= ${CCWARN} ${CCMISC}
 #
 CCMAIN= ${ICFLAGS}
-CCSHS= ${CFLAGS}
 #
 LCFLAGS=
 LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
@@ -565,7 +563,6 @@ CC= ${PURIFY} gcc
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
 #CCMAIN= ${ICFLAGS}
-#CCSHS= ${CFLAGS}
 #
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
@@ -586,7 +583,6 @@ CC= ${PURIFY} gcc
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
 #CCMAIN= ${ICFLAGS}
-#CCSHS= ${CFLAGS}
 #
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
@@ -618,7 +614,6 @@ CC= ${PURIFY} gcc
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
 #CCMAIN= ${ICFLAGS}
-#CCSHS=
 #
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
@@ -644,7 +639,6 @@ CC= ${PURIFY} gcc
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
 #CCMAIN= ${ICFLAGS}
-#CCSHS= ${CFLAGS}
 #
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
@@ -664,7 +658,6 @@ CC= ${PURIFY} gcc
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
 #CCMAIN= ${ICFLAGS}
-#CCSHS= ${CFLAGS}
 #
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
@@ -674,20 +667,22 @@ CC= ${PURIFY} gcc
 #
 ###
 #
-# Solaris 2.x Sun cc compiler
+# Solaris Sun cc compiler set
 #
 # for better performance, set the following above:
 #     DEBUG= -O
 #
+# We need -DFORCE_STDC to make use of ANSI-C like features and
+# to avoid the use of -Xc (which as a lose performance wise).
+#
 #CCWARN=
 #CCOPT= ${DEBUG} ${NO_SHARED}
-#CCMISC=-Xc
+#CCMISC= -DFORCE_STDC
 #
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
 #CCMAIN= ${ICFLAGS}
-#CCSHS= ${CFLAGS}
 #
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
@@ -710,13 +705,34 @@ CC= ${PURIFY} gcc
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
 #CCMAIN= ${ICFLAGS}
-#CCSHS= ${CFLAGS}
 #
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
 #
 #CC= ${PURIFY} gcc
+#
+###
+#
+# Dec Alpha / Compaq Tru64 cc (non-gnu) compiler set
+#
+# for better performance, set the following above:
+#     DEBUG= -O2
+#
+#CCWARN=
+#CCOPT= ${DEBUG} ${NO_SHARED}
+#CCMISC=
+#
+#CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
+#ICFLAGS= ${CCWARN} ${CCMISC}
+#
+#CCMAIN= ${ICFLAGS}
+#
+#LCFLAGS=
+#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
+#ILDFLAGS=
+#
+#CC= ${PURIFY} cc
 
 ##############################################################################
 #-=-=-=-=-=-=-=-=- Be careful if you change something below -=-=-=-=-=-=-=-=-#
@@ -968,16 +984,10 @@ calc.o: calc.c ${MAKE_FILE}
 	${CC} ${CCMAIN} ${CCOPT} ${ALLOW_CUSTOM} -c calc.c
 
 custom.o: custom.c ${MAKE_FILE}
-	${CC} ${CCOPT} ${ALLOW_CUSTOM} -c custom.c
+	${CC} ${CFLAGS} ${ALLOW_CUSTOM} -c custom.c
 
 hist.o: hist.c ${MAKE_FILE}
 	${CC} ${CFLAGS} ${TERMCONTROL} -c hist.c
-
-shs.o: shs.c ${MAKE_FILE}
-	${CC} ${CCSHS} -c shs.c
-
-shs1.o: shs1.c ${MAKE_FILE}
-	${CC} ${CCSHS} -c shs1.c
 
 func.o: func.c ${MAKE_FILE}
 	${CC} ${CFLAGS} ${ALLOW_CUSTOM} -c func.c
@@ -2323,7 +2333,6 @@ env:
 	@echo "CFLAGS=${CFLAGS}"; echo ""
 	@echo "ICFLAGS=${ICFLAGS}"; echo ""
 	@echo "CCMAIN=${CCMAIN}"; echo ""
-	@echo "CCSHS=${CCSHS}"; echo ""
 	@echo "LCFLAGS=${LCFLAGS}"; echo ""
 	@echo "LDFLAGS=${LDFLAGS}"; echo ""
 	@echo "ILDFLAGS=${ILDFLAGS}"; echo ""

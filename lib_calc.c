@@ -65,7 +65,7 @@ BOOL inputwait;		/* TRUE if in a terminal input wait */
 jmp_buf jmpbuf;		/* for errors */
 int start_done = FALSE;	/* TRUE => start up processing finished */
 char *program = "calc";	/* our name */
-char cmdbuf[MAXCMD+1];	/* command line expression */
+char cmdbuf[MAXCMD+1+1];	/* command line expression */
 
 
 /*
@@ -280,6 +280,11 @@ initenv(void)
 	calcrc = (no_env ? NULL : getenv(CALCRC));
 	if (calcrc == NULL) {
 		calcrc = DEFAULTCALCRC;
+	}
+	if (strlen(calcrc) > MAX_CALCRC) {
+		math_error("The $CALCRC variable is longer than %d chars",
+			   MAX_CALCRC);
+		/*NOTREACHED*/
 	}
 
 	/* determine the $CALCBINDINGS value */

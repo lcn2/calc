@@ -21,8 +21,6 @@ NUMBER _qnegone_ =	{ { _oneval_, 1, 1 }, { _oneval_, 1, 0 }, 1, NULL };
 NUMBER _qonehalf_ =	{ { _oneval_, 1, 0 }, { _twoval_, 1, 0 }, 1, NULL };
 NUMBER _qonesqbase_ =	{ { _oneval_, 1, 0 }, { _sqbaseval_, 2, 0 }, 1, NULL };
 
-#define INITCONSTCOUNT 8
-
 NUMBER * initnumbs[INITCONSTCOUNT] = {&_qzero_, &_qone_, &_qtwo_, &_qthree_,
 	&_qfour_, &_qten_, &_qnegone_, &_qonehalf_};
 
@@ -1365,8 +1363,8 @@ qcmpi(NUMBER *q, long n)
 #define	NNALLOC	1000
 
 
-static NUMBER	*freeNum;
-static NUMBER	**firstNums;
+static NUMBER	*freeNum = NULL;
+static NUMBER	**firstNums = NULL;
 static long	blockcount = 0;
 
 
@@ -1389,8 +1387,12 @@ qalloc(void)
 			temp->links = 0;
 		}
 		blockcount++;
-		newfn = (NUMBER **)
-			realloc(firstNums, blockcount * sizeof(NUMBER *));
+		if (firstNums == NULL) {
+		    newfn = (NUMBER **) malloc(blockcount * sizeof(NUMBER *));
+		} else {
+		    newfn = (NUMBER **)
+			    realloc(firstNums, blockcount * sizeof(NUMBER *));
+		}
 		if (newfn == NULL) {
 			math_error("Cannot allocate new number block");
 			/*NOTREACHED*/

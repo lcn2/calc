@@ -1117,7 +1117,7 @@ zmodi(ZVALUE z, long n)
 	val = 0;
 	while (len--)
 		val = ((val << BASEB) + ((FULL) *h1--)) % n;
-	if (z.sign)
+	if (val && z.sign)
 		val = n - val;
 	return (long)val;
 }

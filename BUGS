@@ -125,26 +125,3 @@ Known problems or mis-features:
 
       Any more information on calc core dumps compiled with Dec's cc compiler
       would be most appreciated!
-
-    * To compile calc using the Solaris cc, the -Xc flag is required.
-      Unfortunately this change results in the loss of 'long long' and
-      the resulting code runs slower.
-
-      Dr.D.J.Picton <dave@aps5.ph.bham.ac.uk> reports that -Xc is
-      required for at compiling zrand.c.
-
-   * Calc compiled with Solaris cc -Xc results in some test failures:
-
-	CALCPATH=./lib ./calc -i -q read regress 2>&1 | nawk -f check.awk
-	**** Non-true result (0): 7120: sha(sha(isqrt(2e1000)==0x6db8d9cf0b018b8f9cbbf5aa1edb8066d19e1bb0
-	**** Non-true result (0): 7122: sha(sha("this is", 7^19-8, ..., "hash")) == 0x21e4...
-	**** Non-true result (0): 7124: sha(z) == 0x36dcca3e51865c30a2cf738023cda446f1368340
-	**** Non-true result (0): 7209: sha1(sha1("this is",7^19-8,"a composit",3i+4.5,"hash")) == ...
-	**** Non-true result (0): 7211: sha1(z) == 0xc19e7317675dbf71e293b4c41e117169e9da5b6f
-	**** Non-true result (0): 7227: sha1(sha1(isqrt(2e1000)))==0x6852a1365c51050c3d039e3c5d9cf29c12283ef4
-	**** Non-true result (0): 7310: md5(md5("this is", 7^19-8, "a composit", 3i+4.5, "hash")) == ...
-	**** Non-true result (0): 7312: md5(z) == 0x63d2b2fccae2de265227c30b05abb6b5
-	**** Non-true result (0): 7328: md5(md5(isqrt(2e1000))) == 0xe56ac4b8cad869e738a04fedc97058f3
-
-	**** 9 error(s) found  \/++\/
-	9999: Ending regression tests

@@ -206,7 +206,7 @@ main(int argc, char **argv)
 		  '/', "* signed 64 bits *", '/');
 		putchar('\n');
 		printf("%c%s%c\n", '/',"* how to form 64 bit constants *",'/');
-#if defined(__STDC__) && __STDC__ != 0
+#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
 		printf("#define U(x) x ## ULL\n");
 		printf("#define L(x) x ## LL\n");
 #else
@@ -322,7 +322,7 @@ main(int argc, char **argv)
 		  '/', "* signed 64 bits *", '/');
 		putchar('\n');
 		printf("%c%s%c\n", '/',"* how to form 64 bit constants *",'/');
-#if defined(__STDC__) && __STDC__ != 0
+#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
 		printf("#define U(x) x ## UL\n");
 		printf("#define L(x) x ## L\n");
 #else
@@ -341,7 +341,7 @@ main(int argc, char **argv)
 		  '/', "* signed 64 bits *", '/');
 		putchar('\n');
 		printf("%c%s%c\n", '/',"* how to form 64 bit constants *",'/');
-#if defined(__STDC__) && __STDC__ != 0
+#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
 		printf("#define U(x) x ## ULL\n");
 		printf("#define L(x) x ## LL\n");
 #else

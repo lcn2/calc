@@ -2337,7 +2337,7 @@ zhnrmod(ZVALUE v, ZVALUE zh, ZVALUE zn, ZVALUE zr, ZVALUE *res)
 	/* ret = ((ret < 0) ? ret+modlus : ((ret == modulus) ? 0 : ret)); */
 	if (ret.sign) {
 		zadd(ret, modulus, &t);
-		zfree(t);
+		zfree(ret);
 		ret = t;
 	} else if (zrelval == 0) {
 		zfree(ret);

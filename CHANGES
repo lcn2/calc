@@ -1,7 +1,7 @@
 Following is the change from calc version 2.11.0t1 to date:
 
-    Removed the makefile symbol MAIN.  Now forcing all funcions to correctly
-    be reclared main.  To passify some old broken compilers, a return 0;
+    Removed the makefile symbol MAIN.  Now forcing all functions to correctly
+    be declared main.  To satisfy some old broken compilers, a return 0;
     (instead of an exit(0);) is used at the end of main().
 
     A few of files that were added to calc used 4 character indentation
@@ -38,6 +38,47 @@ Following is the change from calc version 2.11.0t1 to date:
     Added a HOWTO.INSTALL file.
 
     Reordered cc Makefile variable sets in the main Makefile.
+
+    Fixed a bug and applied a fix that was reported by Ernest Bowen
+    <ernie@turing.une.edu.au>.  Added regression tests 1103 to 1112.
+
+    Fixed a bug in version.c related to MINOR_PATCHs in both the
+    empty and non-empty MINOR_PATCH cases.
+
+    Fixed malloc and bad storage issues reported by Michel van der List
+    <vanderlistmj@sbphrd.com>.
+
+    Fixed some problems related to path processing while opening files.
+    Under extreme cases, an excessively long filename or CALCPATH value
+    could create problems.  Placed guards in opensearchfile() function
+    in input.c to catch these cases.  
+
+    Fixed cases were malloc failures were silently ignored in input.c.
+
+    Eliminated the PATHSIZE limit and the PATHSIZE symbol.
+
+    Added MAX_CALCRC to limit the length of the $CALCRC environment
+    variable to 1024 chars.
+
+    Fixed the magic number relating to the initial number of constants
+    declared by initconstants().  It is now related to the length
+    of the initnumbs[] NUMBER array.
+
+    Added a 'Dec Alpha / Compaq Tru64 cc (non-gnu) compiler set'
+    section to the main Makefile.
+
+    Fixed a string handling bug discovered by Dr.D.J.Picton 
+    <dave@aps5.ph.bham.ac.uk> in the custom demo code.
+
+    Added FORCE_STDC symbol.  When defined it will force __STDC__ like
+    conditions.  Thus for compilers with as the Solaris cc compiler
+    that are ANSI-like but still define __STDC__ as 0, one can use
+    -DFORCE_STDC and make use of ANSI-like features.
+
+    Removed the CCSHS symbol from the Makefile.  The shs.c and shs1.c
+    files are now compiled with full ${CFLAGS}.
+
+    The custom.c file is now compiled with full ${CFLAGS}.
 
     Fixed misc compile warnings and notices.
 

@@ -212,7 +212,7 @@ main(int argc, char **argv)
 	/*
 	 * if allowed or needed, print version and setup bindings
 	 */
-	if (*str == '\0') {
+	if (str >= cmdbuf+MAXCMD || *str == '\0') {
 		/*
 		 * check for pipe mode and/or non-tty stdin
 		 */
@@ -349,7 +349,8 @@ math_error(char *fmt, ...)
 	if (post_init) {
 		longjmp(jmpbuf, 1);
 	} else {
-		fprintf(stderr, "no jmpbuf jumpback point - ABORTING!!!\n");
+		fprintf(stderr, "It is too early provide a command line prompt "
+				"so we must simply exit.  Sorry!\n");
 		/*
 		 * don't call libcalc_call_me_last() -- we might loop
 		 * and besides ... this is an unusual internal error case

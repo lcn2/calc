@@ -13,6 +13,8 @@
 
 #include "zmath.h"
 
+#define INITCONSTCOUNT 8    /* number of initnumbs[] pre-defined constants */
+
 
 /*
  * Rational arithmetic definitions.

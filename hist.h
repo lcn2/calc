@@ -30,7 +30,6 @@
 #define DOTCHAR		'.'	/* char which indicates current directory */
 #define	PATHCHAR	'/'	/* char which separates path components */
 #define	LISTCHAR	':'	/* char which separates paths in a list */
-#define	PATHSIZE	1024	/* maximum length of path name */
 
 
 /*

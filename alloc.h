@@ -17,7 +17,7 @@
 #ifdef HAVE_MALLOC_H
 # include <malloc.h>
 #else
-# if defined(__STDC__) && __STDC__ != 0
+#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
    extern void *malloc();
    extern void *realloc();
    extern void free();
@@ -36,7 +36,7 @@
 # if defined(HAVE_NEWSTR)
 extern void *memcpy();
 extern void *memset();
-#  if defined(__STDC__) && __STDC__ != 0
+#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
 extern size_t strlen();
 #  else
 extern long strlen();
@@ -65,7 +65,7 @@ extern int strcmp();
 
 #if !defined(HAVE_MEMMOVE)
 # undef CALC_SIZE_T
-# if defined(__STDC__) && __STDC__ != 0
+#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
 #  define CALC_SIZE_T size_t
 # else
 #  define CALC_SIZE_T long

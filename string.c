@@ -960,8 +960,8 @@ stringrsearch(STRING *s1, STRING *s2, long start, long end, ZVALUE *index)
 #define	STRALLOC	100
 
 
-static STRING	*freeStr;
-static STRING	**firstStrs;
+static STRING	*freeStr = NULL;
+static STRING	**firstStrs = NULL;
 static long	blockcount = 0;
 
 
@@ -984,8 +984,12 @@ stralloc(void)
 			temp->s_links = 0;
 		}
 		blockcount++;
-		newfn = (STRING **)
-			realloc(firstStrs, blockcount * sizeof(STRING *));
+		if (firstStrs == NULL) {
+		    newfn = (STRING **) malloc( blockcount * sizeof(STRING *));
+		} else {
+		    newfn = (STRING **)
+			    realloc(firstStrs, blockcount * sizeof(STRING *));
+		}
 		if (newfn == NULL) {
 			math_error("Cannot allocate new string block");
 			/*NOTREACHED*/

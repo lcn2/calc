@@ -12,7 +12,7 @@
 #define MAJOR_VER	2	/* major version */
 #define MINOR_VER	11	/* minor version */
 #define MAJOR_PATCH	0	/* patch level or 0 if no patch */
-#define MINOR_PATCH	"3"	/* test number or empty string if no patch */
+#define MINOR_PATCH	"4"	/* test number or empty string if no patch */
 
 /*
  * calc version constants
@@ -35,7 +35,7 @@ static char *stored_version = NULL;	/* version formed if != NULL */
  * This function returns a malloced version string.  This version
  * string does not contain the title, just:
  *
- *		x.y.ztsomething
+ *		x.y.ztw
  *		x.y.z
  *		x.y
  */
@@ -56,17 +56,17 @@ version(void)
 	 */
 	if (sizeof(MINOR_PATCH) > 1) {
 	    sprintf(verbuf,
-		"%d.%d.%d%s", calc_major_ver, calc_minor_ver,
+		"%d.%d.%dt%s", calc_major_ver, calc_minor_ver,
 		 calc_major_patch, calc_minor_patch);
 	} else if (MAJOR_PATCH > 0) {
 	    sprintf(verbuf,
-		"%d.%d.%s", calc_major_ver, calc_minor_ver, calc_minor_patch);
+		"%d.%d.%d", calc_major_ver, calc_minor_ver, calc_major_patch);
 	} else {
 	    sprintf(verbuf, "%d.%d", calc_major_ver, calc_minor_ver);
 	}
 
 	/*
-	 * same the versions string into a newly malloced buffer
+	 * save the versions string into a newly malloced buffer
 	 */
 	stored_version = (char *)malloc(strlen(verbuf)+1);
 	if (stored_version == NULL) {

@@ -27,10 +27,11 @@ initconstants(void)
 		math_error("Unable to allocate constant table");
 		/*NOTREACHED*/
 	}
-	for (i = 0; i < 8; i++)
+	for (i = 0; i < INITCONSTCOUNT; i++)
 		consttable[i] = initnumbs[i];
-	constcount = 8;
-	constavail = CONSTALLOCSIZE - 8;
+	consttable[INITCONSTCOUNT] = NULL;	/* firewall */
+	constcount = INITCONSTCOUNT;
+	constavail = CONSTALLOCSIZE - INITCONSTCOUNT;
 }
 
 
@@ -187,10 +188,9 @@ freeconstant(unsigned long index)
 void
 trimconstants(void)
 {
-	NUMBER **qp;
-
-	qp = &consttable[constcount];
-	while (constcount > 0 && (*--qp)->links == 0) {
+	while (constcount > 0 &&
+	       (consttable[constcount-1] == NULL ||
+		consttable[constcount-1]->links == 0)) {
 		constcount--;
 		constavail++;
 	}

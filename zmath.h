@@ -577,7 +577,7 @@ typedef struct {
  */
 #if FULL_BITS == 64
 
-# if (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
+# if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
 #  define HVAL(a,b) (HALF)(0x ## a ## b)
 # else
 #  define HVAL(a,b) (HALF)(0x/**/a/**/b)
@@ -585,7 +585,7 @@ typedef struct {
 
 #elif 2*FULL_BITS == 64
 
-# if (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
+# if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
 #  define HVAL(a,b) (HALF)0x##b, (HALF)0x##a
 # else
    /* NOTE: Due to a SunOS cc bug, don't put spaces in the HVAL call! */

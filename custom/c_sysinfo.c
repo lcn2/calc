@@ -99,6 +99,7 @@ static struct infoname sys_info[] = {
     {"LONGLONG_BITS", "length of a long long, or 0", NULL, (FULL)LONGLONG_BITS},
     {"LONG_BITS", "bit length of a long", NULL, (FULL)LONG_BITS},
     {"MAP_POPCNT", "number of odd primes in pr_map", NULL, (FULL)MAP_POPCNT},
+    {"MAX_CALCRC", "maximum allowed length of $CALCRC", NULL, (FULL)MAX_CALCRC},
     {"MAXCMD", "max length of command invocation", NULL, (FULL)MAXCMD},
     {"MAXDIM", "max number of dimensions in matrices", NULL, (FULL)MAXDIM},
     {"MAXERROR", "max length of error message string", NULL, (FULL)MAXERROR},
@@ -128,8 +129,6 @@ static struct infoname sys_info[] = {
     {"NXT_MAP_PRIME", "smallest odd prime not in pr_map", NULL, (FULL)NXT_MAP_PRIME},
     {"NXT_PFACT_VAL", "next prime for higher pfact values", NULL, (FULL)NXT_PFACT_VAL},
     {"OFF_T_BITS", "file offset size in bits", NULL, (FULL)OFF_T_BITS},
-    {"PATHSIZE", "max length of path name", NULL, (FULL)PATHSIZE},
-    {"PATHSIZE", "max length of path name", NULL, (FULL)PATHSIZE},
     {"PIX_32B", "max pix() value", NULL, (FULL)PIX_32B},
     {"POW_ALG2", "default size for using REDC for powers", NULL, (FULL)POW_ALG2},
     {"REDC_ALG2", "default size using alternative REDC alg", NULL, (FULL)REDC_ALG2},
@@ -238,8 +237,9 @@ c_sysinfo(char *name, int count, VALUE **vals)
 	} else if (vals[0]->v_type == V_STR) {
 
 		/* convert vals[0] to upper case string */
-		buf = (char *)malloc(strlen((char *)vals[0]->v_str)+1);
-		for (q = (char *)vals[0]->v_str, r = buf; *q; ++q, ++r) {
+		buf = (char *)malloc(strlen((char *)vals[0]->v_str->s_str)+1);
+		for (q = (char *)vals[0]->v_str->s_str, r = buf; *q; ++q, ++r)
+		{
 			if (isascii(*q) && islower(*q)) {
 				*r = *q - 'a' + 'A';
 			} else {
@@ -262,7 +262,7 @@ c_sysinfo(char *name, int count, VALUE **vals)
 					/* return value as string */
 					result.v_type = V_STR;
 					result.v_subtype = V_NOSUBTYPE;
-					result.v_str = (STRING *)p->str;
+					result.v_str = makestring(p->str);
 				}
 
 				/* return found infotype as value */

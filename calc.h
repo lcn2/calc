@@ -26,7 +26,7 @@
 #define DEFAULTCALCHELP	"help"		/* help file that -h prints */
 #define DEFAULTSHELL	"sh"		/* default shell to use */
 #define	CALCEXT		".cal"	/* extension for files read in */
-#define	PATHSIZE	1024	/* maximum length of path name */
+#define	MAX_CALCRC	1024	/* maximum length of $CALCRC */
 #define	HOMECHAR	'~'	/* char which indicates home directory */
 #define DOTCHAR		'.'	/* char which indicates current directory */
 #define	PATHCHAR	'/'	/* char which separates path components */

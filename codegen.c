@@ -81,8 +81,13 @@ static long getinitlist(void);
 void
 getcommands(BOOL toplevel)
 {
-	char name[PATHSIZE+1];	/* program name */
+	char name[MAXCMD+1+1];	/* program name */
 
+	/* firewall */
+	name[0] = '\0';
+	name[MAXCMD+1] = '\0';
+
+	/* getcommands */
 	if (!toplevel)
 		enterfilescope();
 	for (;;) {

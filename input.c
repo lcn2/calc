@@ -91,20 +91,51 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 {
 	int i;
 	char *cp;
-	char path[PATHSIZE+1];	/* name being searched for */
+	char *path;		/* name being searched for */
 	struct stat statbuf;	/* stat of the path */
+	unsigned long namelen;	/* length of name */
+	unsigned long extlen;	/* length of the extension if non-NULL or 0 */
+	unsigned long pathlen;	/* length of the pathlist if non-NULL or 0 */
+
+	/*
+	 * allocate storage for the longest name being searched for
+	 *
+	 * We will allocate more than we could ever want/need.
+	 * The longest we could ever need would be:
+	 *
+	 *	pathlist (as a single long string)
+	 *	/
+	 *	name
+	 *	.
+	 *	extenstion
+	 *	\0
+	 *	guard byte
+	 */
+	namelen = strlen(name);
+	if (extension != NULL) {
+	    extlen = strlen(extension);
+	} else {
+	    extlen = 0;
+	}
+	if (pathlist != NULL) {
+	    pathlen = strlen(pathlist);
+	} else {
+	    pathlen = 0;
+	}
+	path = malloc(pathlen+1 + 1 + namelen+1 + extlen+1 + 1 + 1);
+	if (path == NULL) {
+		math_error("Cannot allocate filename path buffer");
+		/*NOTREACHED*/
+	}
 
 	/*
 	 * Don't try the extension if the filename already contains it.
 	 */
-	if (extension) {
-		unsigned long namelen = strlen(name);
-		unsigned long extlen = strlen(extension);
-
-		if (namelen >= extlen &&
-		    strcmp(&name[namelen-extlen], extension) == 0)
-			extension = NULL;
+	if (extension != NULL && namelen >= extlen &&
+	    strcmp(&name[namelen-extlen], extension) == 0) {
+		extension = NULL;
 	}
+
 	/*
 	 * If the name is absolute, or if there is no path list, then
 	 * make one which just searches for the name straight.  Then
@@ -127,21 +158,26 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 			*cp++ = PATHCHAR;
 		strcpy(cp, name);
 		i = openfile(path);
-		if ((i < 0) && (extension != NULL && extension[0] != '\0')) {
+		if ((i < 0) &&
+		    (extension != NULL && extension[0] != '\0')) {
 			strcat(path, extension);
 			i = openfile(path);
 		}
 	} while ((i < 0) && *pathlist);
 
 	/* examine what our search produced */
-	if (i < 0)
+	if (i < 0) {
+		free(path);
 		return i;
+	}
 	if (cip->i_fp == NULL) {
 		/* cannot find a file to open */
+		free(path);
 		return -3;
 	}
 	if (fstat(fileno(cip->i_fp), &statbuf) < 0) {
 		/* unable to fstat the open file */
+		free(path);
 		return -4;
 	}
 
@@ -149,6 +185,7 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 	if (rd_once == TRUE && isinoderead(&statbuf) >= 0) {
 		/* file is in readset and reopen is false */
 		closeinput();
+		free(path);
 		return 1;
 	}
 
@@ -156,10 +193,12 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 	if (addreadset(name, path, &statbuf) < 0) {
 		/* cannot add to readset */
 		closeinput();
+		free(path);
 		return -1;
 	}
 
 	/* file was added to/updated in readset */
+	free(path);
 	return 0;
 }
 
@@ -189,7 +228,7 @@ homeexpand(char *name)
 	char *home2;		/* fullpath of the home directory */
 	char *fullpath;		/* the malloced expanded path */
 	char *after;		/* after the ~user or ~ */
-	char username[PATHSIZE+1];	/* extratced username */
+	char *username;		/* extratced username */
 
 	/* firewall */
 	if (name[0] != HOMECHAR)
@@ -217,11 +256,15 @@ homeexpand(char *name)
 			}
 			/* just malloc the home directory and return it */
 			fullpath = (char *)malloc(strlen(ent->pw_dir)+1);
+			if (fullpath == NULL) {
+				return NULL;
+			}
 			strcpy(fullpath, ent->pw_dir);
 			return fullpath;
 		}
-		if (after-name > PATHSIZE+1) {
-			/* username is too big */
+		username = (char *) malloc(after-name + 1 + 1);
+		if (username == NULL) {
+			/* failed to malloc username */
 			return NULL;
 		}
 		strncpy(username, name+1, after-name-1);
@@ -229,6 +272,7 @@ homeexpand(char *name)
 
 		/* get that user's home directory */
 		ent = (struct passwd *)getpwnam(username);
+		free(username);
 		if (ent == NULL) {
 			/* unknown user */
 			return NULL;
@@ -241,6 +285,9 @@ homeexpand(char *name)
 	 * build the fullpath given the home directory
 	 */
 	fullpath = (char *)malloc(strlen(home2)+strlen(after)+1);
+	if (fullpath == NULL) {
+		return NULL;
+	}
 	sprintf(fullpath, "%s%s", home2, after);
 	return fullpath;
 }
@@ -333,6 +380,9 @@ openfile(char *name)
 	cip->i_fp = fp;
 	cip->i_line = 1;
 	cip->i_name = (char *)malloc(strlen(name) + 1);
+	if (cip->i_name == NULL) {
+		 return -1;
+	}
 	strcpy(cip->i_name, name);
 	return 0;
 }
@@ -658,7 +708,7 @@ reread(void)
 void
 runrcfiles(void)
 {
-	char path[PATHSIZE+1];	/* name being searched for */
+	char path[MAX_CALCRC+1+1];	/* name being searched for */
 	char *cp;
 	char *newcp;
 	char *p;

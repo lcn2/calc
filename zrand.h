@@ -142,7 +142,7 @@
 #if FULL_BITS == SBITS
 
 # define SLEN 1		/* a 64 bit slot can be held in a FULL */
-# if (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
+# if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
 #  define SVAL(a,b) (FULL)U(0x ## a ## b)
 #  define SHVAL(a,b,c,d) (HALF)0x ## c ## d, (HALF)0x ## a ## b
 # else
@@ -166,7 +166,7 @@
 #elif 2*FULL_BITS == SBITS
 
 # define SLEN 2			/* a 64 bit slot needs 2 FULLs */
-# if (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
+# if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
 #  define SVAL(a,b) (FULL)0x##b, (FULL)0x##a
 #  define SHVAL(a,b,c,d) (HALF)0x##d, (HALF)0x##c, \
 			 (HALF)0x##b, (HALF)0x##a
