@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.13 $
-# @(#) $Id: Makefile,v 29.13 2001/05/28 23:54:53 chongo Exp $
+# @(#) $Revision: 29.15 $
+# @(#) $Id: Makefile,v 29.15 2001/06/06 10:06:48 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -468,27 +468,27 @@ depend:
 #
 ##
 
-echo_INSTALL_H_SRC: ${MAKE_FILE}
-	@echo ${INSTALL_H_SRC}
+echo_INSTALL_H_SRC:
+	${Q}echo __file__ ${INSTALL_H_SRC}
 
-echo_CUSTOM_CALC_FILES: ${MAKE_FILE}
-	@echo ${CUSTOM_CALC_FILES}
+echo_CUSTOM_CALC_FILES:
+	${Q}echo __file__ ${CUSTOM_CALC_FILES}
 
-echo_CUSTOM_HELP: ${MAKE_FILE}
-	@echo ${CUSTOM_HELP}
+echo_CUSTOM_HELP:
+	${Q}echo __file__ ${CUSTOM_HELP}
 
-echo_install.list: ${MAKE_FILE}
-	@for i in ${INSTALL_H_SRC}; do \
-	    echo ${CUSTOMINCDIR}/$$i; \
+echo_inst_files:
+	${Q}for i in ${INSTALL_H_SRC}; do \
+	    echo __file__ ${CUSTOMINCDIR}/$$i; \
 	done
-	@for i in ${CUSTOM_HELP}; do \
-	    echo ${CUSTOMHELPDIR}/$$i; \
+	${Q}for i in ${CUSTOM_HELP}; do \
+	    echo __file__ ${CUSTOMHELPDIR}/$$i; \
 	done
-	@for i in ${CUSTOM_CALC_FILES}; do \
-	    echo ${CUSTOMLIBDIR}/$$i; \
+	${Q}for i in ${CUSTOM_CALC_FILES}; do \
+	    echo __file__ ${CUSTOMLIBDIR}/$$i; \
 	done
-	@for i in ${CALC_LIBCUSTOM}; do \
-	    echo ${CUSTOMLIBDIR}/$$i; \
+	${Q}for i in ${CALC_LIBCUSTOM}; do \
+	    echo __file__ ${CUSTOMLIBDIR}/$$i; \
 	done
 
 ##
@@ -575,7 +575,7 @@ install: all
 	    if ${CMP} -s tmp ${CUSTOMINCDIR}/$$i; then \
 		true; \
 	    else \
-		rm -f ${CUSTOMINCDIR}/$$i; \
+		rm -f ${CUSTOMINCDIR}/$$i.new; \
 		cp -f tmp ${INCDIRCALC}/$$i.new; \
 		cp -f $$i ${CUSTOMINCDIR}/$$i.new; \
 		${CHMOD} 0444 ${CUSTOMINCDIR}/$$i.new; \
@@ -588,8 +588,8 @@ install: all
 	    if ${CMP} -s $$i ${CUSTOMLIBDIR}/$$i; then \
 		true; \
 	    else \
-		rm -f ${CUSTOMLIBDIR}/$$i; \
-		cp -f $$i ${CUSTOMLIBDIR}/$$i; \
+		rm -f ${CUSTOMLIBDIR}/$$i.new; \
+		cp -f $$i ${CUSTOMLIBDIR}/$$i.new; \
 		${CHMOD} 0444 ${CUSTOMLIBDIR}/$$i.new; \
 		mv -f ${CUSTOMLIBDIR}/$$i.new ${CUSTOMLIBDIR}/$$i; \
 		echo "installed ${CUSTOMLIBDIR}/$$i"; \
@@ -599,7 +599,7 @@ install: all
 	    if ${CMP} -s $$i ${CUSTOMHELPDIR}/$$i; then \
 		true; \
 	    else \
-		rm -f ${CUSTOMHELPDIR}/$$i; \
+		rm -f ${CUSTOMHELPDIR}/$$i.new; \
 		cp -f $$i ${CUSTOMHELPDIR}/$$i.new; \
 		${CHMOD} 0444 ${CUSTOMHELPDIR}/$$i.new; \
 		mv -f ${CUSTOMHELPDIR}/$$i.new ${CUSTOMHELPDIR}/$$i; \
@@ -612,7 +612,7 @@ install: all
 	    else \
 		rm -f ${CUSTOMLIBDIR}/libcustcalc.a.new; \
 		cp -f libcustcalc.a ${CUSTOMLIBDIR}/libcustcalc.a.new; \
-		${CHMOD} 0644 ${CUSTOMLIBDIR}/libcustcalc.a; \
+		${CHMOD} 0644 ${CUSTOMLIBDIR}/libcustcalc.a.new; \
 		mv -f ${CUSTOMLIBDIR}/libcustcalc.a.new \
 		      ${CUSTOMLIBDIR}/libcustcalc.a; \
 		${RANLIB} ${CUSTOMLIBDIR}/libcustcalc.a; \

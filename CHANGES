@@ -36,6 +36,20 @@ The following are the changes from calc version 2.11.5t4.1 to date:
     If you are using the GNU readline then the Makefile recommends that
     you link with the ncurses library.
 
+    Applied Makefile, cscript/Makefile and custom/Makefile patches to
+    fix install mode problems, to deal with sorting and dates in I18n
+    environments (such as Japanese), to fix some problems with calc.spec
+    and to fix the cscript #! header lines.  Thanks goes to KAWAMURA Masao
+    (kawamura at mlb.co.jp) for the bug report and patch!
+
+    Fixed headers on fproduct.calc powerterm.calc 4dsphere.calc so
+    that they are correcly changed on installation.
+
+    Added ${GREP} Makefile variable.
+
+    The top level Makefile now sets LANG=C and passes it down to
+    lower level Makefiles.
+
 
 The following are the changes from calc version 2.11.5t3 to 2.11.5t4:
 
@@ -5320,8 +5334,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.35 $
-## @(#) $Id: CHANGES,v 29.35 2001/06/01 21:44:44 chongo Exp $
+## @(#) $Revision: 29.38 $
+## @(#) $Id: CHANGES,v 29.38 2001/06/06 10:06:48 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

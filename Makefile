@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.31 $$
-# @(#) $Id: Makefile.ship,v 29.31 2001/06/01 21:44:44 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.33 $$
+# @(#) $Id: Makefile.ship,v 29.33 2001/06/06 10:06:48 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -997,9 +997,11 @@ CC= ${PURIFY} ${LCC}
 # standard utilities used during make
 #
 SHELL= /bin/sh
+LANG= C
 MAKE= make
 AWK= awk
 SED= sed
+GREP= egrep
 SORT= sort
 TEE= tee
 CTAGS= ctags
@@ -1156,7 +1158,8 @@ CUSTOM_PASSDOWN= Q="${Q}" \
     CHMOD=${CHMOD} \
     CMP=${CMP} \
     MAKEDEPEND=${MAKEDEPEND} \
-    SORT=${SORT}
+    SORT=${SORT} \
+    LANG=${LANG}
 
 # The complete list of Makefile vars passed down to sample/Makefile.
 #
@@ -1187,7 +1190,8 @@ SAMPLE_PASSDOWN= Q="${Q}" \
     CHMOD=${CHMOD} \
     CMP=${CMP} \
     MAKEDEPEND=${MAKEDEPEND} \
-    SORT=${SORT}
+    SORT=${SORT} \
+    LANG=${LANG}
 
 # The compelte list of Makefile vars passed down to help/Makefile.
 #
@@ -1202,7 +1206,8 @@ HELP_PASSDOWN= Q="${Q}" \
     SED=${SED} \
     CHMOD=${CHMOD} \
     CMP=${CMP} \
-    FMT=${FMT}
+    FMT=${FMT} \
+    LANG=${LANG}
 
 # The compelte list of Makefile vars passed down to cal/Makefile.
 #
@@ -1211,7 +1216,8 @@ CAL_PASSDOWN= Q="${Q}" \
     CSHAREDIR="${CSHAREDIR}" \
     MAKE_FILE=${MAKE_FILE} \
     CHMOD=${CHMOD} \
-    CMP=${CMP}
+    CMP=${CMP} \
+    LANG=${LANG}
 
 # The compelte list of Makefile vars passed down to cscript/Makefile.
 #
@@ -1223,7 +1229,8 @@ CSCRIPT_PASSDOWN= Q="${Q}" \
     SED=${SED} \
     FMT=${FMT} \
     SORT=${SORT} \
-    CMP=${CMP}
+    CMP=${CMP} \
+    LANG=${LANG}
 
 # complete list of .h files found (but not built) in the distribution
 #
@@ -2993,6 +3000,8 @@ env:
 	@echo 'MAKE=${MAKE}'; echo ''
 	@echo 'AWK=${AWK}'; echo ''
 	@echo 'SED=${SED}'; echo ''
+	@echo 'GREP=${GREP}'; echo ''
+	@echo 'LANG=${LANG}'; echo ''
 	@echo 'SORT=${SORT}'; echo ''
 	@echo 'TEE=${TEE}'; echo ''
 	@echo 'CTAGS=${CTAGS}'; echo ''
@@ -3100,10 +3109,10 @@ calc.spec: spec-template ${MAKE_FILE} help/Makefile cal/Makefile \
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	${Q}rm -f calc.spec calc.spec.sed
 	${Q}echo 's,$${BINDIR},${BINDIR},g' >> calc.spec.sed
-	${Q}echo 's:$${SHAREDIR}:${SHAREDIR}:g' > calc.spec.sed
+	${Q}echo 's:$${SHAREDIR}:${SHAREDIR}:g' >> calc.spec.sed
 	${Q}echo 's,$${INCDIR},${INCDIR},g' >> calc.spec.sed
 	${Q}echo 's:$${LIBDIR}:${LIBDIR}:g' >> calc.spec.sed
-	${Q}echo 's:$${CSHAREDIR}:${CSHAREDIR}:g' > calc.spec.sed
+	${Q}echo 's:$${CSHAREDIR}:${CSHAREDIR}:g' >> calc.spec.sed
 	${Q}echo 's,$${HELPDIR},${HELPDIR},g' >> calc.spec.sed
 	${Q}echo 's,$${INCDIRCALC},${INCDIRCALC},g' >> calc.spec.sed
 	${Q}echo 's,$${CUSTOMLIBDIR},${CUSTOMLIBDIR},g' >> calc.spec.sed
@@ -3123,51 +3132,51 @@ calc.spec: spec-template ${MAKE_FILE} help/Makefile cal/Makefile \
 	${Q}echo 's,$${MANMODE},${MANMODE},g' >> calc.spec.sed
 	${Q}echo 's,$${MANEXT},${MANEXT},g' >> calc.spec.sed
 	${Q}echo 's,$${CHMOD},${CHMOD},g' >> calc.spec.sed
-	${Q}cd help; \
+	${Q}cd help; LANG=C \
 	    ${MAKE} -f Makefile ${HELP_PASSDOWN} echo_STD_HELP_FILES | \
-	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${GREP} '__file__..' | ${SED} -e s'/.*__file__ //' | \
 	    ${SED} -e 's/^/s,$${STD_HELP_FILES},/' \
 	    	   -e 's/$$/,g/' >> ../calc.spec.sed
-	${Q}cd help; \
+	${Q}cd help; LANG=C \
 	    ${MAKE} -f Makefile ${HELP_PASSDOWN} echo_BLT_HELP_FILES | \
-	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${GREP} '__file__..' | ${SED} -e s'/.*__file__ //' | \
 	    ${SED} -e 's/^/s,$${BLT_HELP_FILES},/' \
 		   -e 's/$$/,g/' >> ../calc.spec.sed
-	${Q}cd help; \
+	${Q}cd help; LANG=C \
 	    ${MAKE} -f Makefile ${HELP_PASSDOWN} echo_DETAIL_HELP | \
-	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${GREP} '__file__..' | ${SED} -e s'/.*__file__ //' | \
 	    ${SED} -e 's/^/s,$${DETAIL_HELP},/' \
 	    	   -e 's/$$/,g/' >> ../calc.spec.sed
-	${Q}cd help; \
+	${Q}cd help; LANG=C \
 	    ${MAKE} -f Makefile ${HELP_PASSDOWN} echo_SINGULAR_FILES | \
-	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${GREP} '__file__..' | ${SED} -e s'/.*__file__ //' | \
 	    ${SED} -e 's/^/s,$${SINGULAR_FILES},/' \
 	    	   -e 's/$$/,g/' >> ../calc.spec.sed
-	${Q}cd cal; \
+	${Q}cd cal; LANG=C \
 	    ${MAKE} -f Makefile ${CAL_PASSDOWN} echo_CALC_FILES | \
-	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${GREP} '__file__..' | ${SED} -e s'/.*__file__ //' | \
 	    ${SED} -e 's/^/s,$${CALC_FILES},/' \
 	    	   -e 's/$$/,g/' >> ../calc.spec.sed
-	${Q}cd custom; \
+	${Q}cd custom; LANG=C \
 	    ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} echo_INSTALL_H_SRC | \
-	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${GREP} '__file__..' | ${SED} -e s'/.*__file__ //' | \
 	    ${SED} -e 's/^/s,$${INSTALL_H_SRC},/' \
 	    	   -e 's/$$/,g/' >> ../calc.spec.sed
-	${Q}cd custom; \
+	${Q}cd custom; LANG=C \
 	    ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} echo_CUSTOM_CALC_FILES | \
-	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${GREP} '__file__..' | ${SED} -e s'/.*__file__ //' | \
 	    ${SED} -e 's/^/s,$${CUSTOM_CALC_FILES},/' \
 	    	   -e 's/$$/,g/' >> ../calc.spec.sed
-	${Q}cd custom; \
+	${Q}cd custom; LANG=C \
 	    ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} echo_CUSTOM_HELP | \
-	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${GREP} '__file__..' | ${SED} -e s'/.*__file__ //' | \
 	    ${SED} -e 's/^/s,$${CUSTOM_HELP},/' \
 	    	   -e 's/$$/,g/' >> ../calc.spec.sed
-	${Q}cd cscript; \
+	${Q}cd cscript; LANG=C \
 	    ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} echo_SCRIPT | \
-	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${GREP} '__file__..' | ${SED} -e s'/.*__file__ //' | \
 	    ${SED} -e 's/^/s,$${SCRIPT},/' -e 's/$$/,g/' >> ../calc.spec.sed
-	${Q}echo 's,$${DATE},'`date +"%a %b %d %Y"`',g' >> calc.spec.sed
+	${Q}echo 's,$${DATE},'`LANG=C date +"%a %b %d %Y"`',g' >> calc.spec.sed
 	${Q}echo 's,$${VER_CALC},'`./ver_calc`',g' >> calc.spec.sed
 	${Q}echo 's,$${VERSION},'`./ver_calc -v`',g' >> calc.spec.sed
 	${Q}echo 's,$${RELEASE},'`./ver_calc -r`',g' >> calc.spec.sed
@@ -3177,31 +3186,31 @@ calc.spec: spec-template ${MAKE_FILE} help/Makefile cal/Makefile \
 
 # Form the installed file list
 #
-install.list: ${MAKE_FILE} help/Makefile cal/Makefile custom/Makefile \
+inst_files: ${MAKE_FILE} help/Makefile cal/Makefile custom/Makefile \
 	   cscript/Makefile ver_calc
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	${Q}rm -f install.list
-	${Q}echo ${BINDIR}/calc > install.list
-	${Q}cd help; \
-	    ${MAKE} -f Makefile ${HELP_PASSDOWN} echo_install.list | \
-	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' >> ../install.list
-	${Q}cd cal; \
-	    ${MAKE} -f Makefile ${CAL_PASSDOWN} echo_install.list | \
-	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' >> ../install.list
-	${Q}cd custom; \
-	    ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} echo_install.list | \
-	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' >> ../install.list
-	${Q}cd cscript; \
-	    ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} echo_install.list | \
-	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' >> ../install.list
-	${Q}echo ${LIBDIR}/libcalc.a >> install.list
+	${Q}rm -f inst_files
+	${Q}echo ${BINDIR}/calc > inst_files
+	${Q}cd help; LANG=C \
+	    ${MAKE} -f Makefile ${HELP_PASSDOWN} echo_inst_files | \
+	    ${GREP} '__file__..' | ${SED} -e s'/.*__file__ //' >> ../inst_files
+	${Q}cd cal; LANG=C \
+	    ${MAKE} -f Makefile ${CAL_PASSDOWN} echo_inst_files | \
+	    ${GREP} '__file__..' | ${SED} -e s'/.*__file__ //' >> ../inst_files
+	${Q}cd custom; LANG=C \
+	    ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} echo_inst_files | \
+	    ${GREP} '__file__..' | ${SED} -e s'/.*__file__ //' >> ../inst_files
+	${Q}cd cscript; LANG=C \
+	    ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} echo_inst_files | \
+	    ${GREP} '__file__..' | ${SED} -e s'/.*__file__ //' >> ../inst_files
+	${Q}echo ${LIBDIR}/libcalc.a >> inst_files
 	${Q}for i in ${LIB_H_SRC} ${BUILD_H_SRC}; do \
 	    echo ${INCDIRCALC}/$$i; \
-	done >> install.list
+	done >> inst_files
 	${Q}if [ ! -z "${MANDIR}" ]; then \
 	    echo ${MANDIR}/calc.${MANEXT}; \
-	fi >> install.list
-	${Q}LANG=C ${SORT} -u install.list -o install.list
+	fi >> inst_files
+	${Q}LANG=C ${SORT} -u inst_files -o inst_files
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 ##
@@ -3217,7 +3226,7 @@ install.list: ${MAKE_FILE} help/Makefile cal/Makefile custom/Makefile \
 # the /usr/local directory.
 #
 olduninstall:
-	-rm -f install.list
+	-rm -f inst_files
 	${MAKE} -f Makefile \
 		BINDIR=/usr/local/bin \
 		SHAREDIR=/usr/local/lib \
@@ -3231,19 +3240,19 @@ olduninstall:
 		CUSTOMINCDIR=/usr/local/lib/calc/custom \
 		SCRIPTDIR=/usr/local/bin/cscript \
 		MANDIR=/usr/local/man/man1 \
-		install.list
-	-${XARGS} rm -f < install.list
+		inst_files
+	-${XARGS} rm -f < inst_files
 	-rmdir /usr/local/lib/calc/help/custhelp
 	-rmdir /usr/local/lib/calc/help
 	-rmdir /usr/local/lib/calc/custom
 	-rmdir /usr/local/lib/calc
 	-rmdir /usr/local/include/calc
 	-rmdir /usr/local/bin/cscript
-	-rm -f install.list
+	-rm -f inst_files
 
 tags: ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} ${MAKE_FILE}
 	-${CTAGS} ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} 2>&1 | \
-	    egrep -v 'Duplicate entry|Second entry ignored'
+	    ${GREP} -v 'Duplicate entry|Second entry ignored'
 
 clean:
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
@@ -3291,7 +3300,7 @@ clobber:
 	-rm -f have_args *.u
 	-rm -f calc.pixie calc.rf calc.Counts calc.cord
 	-rm -rf gen_h skel Makefile.bak
-	-rm -f calc.spec install.list tmp
+	-rm -f calc.spec inst_files tmp
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	-cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clobber
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='

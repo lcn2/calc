@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.13 $
-# @(#) $Id: Makefile,v 29.13 2001/05/29 00:41:11 chongo Exp $
+# @(#) $Revision: 29.14 $
+# @(#) $Id: Makefile,v 29.14 2001/06/06 10:06:48 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -497,24 +497,24 @@ detaillist:
 #
 ##
 
-echo_STD_HELP_FILES: ${MAKE_FILE}
-	@echo ${STD_HELP_FILES}
+echo_STD_HELP_FILES:
+	${Q}echo __file__ ${STD_HELP_FILES}
 
-echo_BLT_HELP_FILES: ${MAKE_FILE}
-	@echo ${BLT_HELP_FILES}
+echo_BLT_HELP_FILES:
+	${Q}echo __file__ ${BLT_HELP_FILES}
 
-echo_DETAIL_HELP: ${MAKE_FILE}
-	@echo ${DETAIL_HELP}
+echo_DETAIL_HELP:
+	${Q}echo __file__ ${DETAIL_HELP}
 
-echo_SINGULAR_FILES: ${MAKE_FILE}
-	@echo ${SINGULAR_FILES}
+echo_SINGULAR_FILES:
+	${Q}echo __file__ ${SINGULAR_FILES}
 
-echo_install.list: ${MAKE_FILE}
-	@for i in ${STD_HELP_FILES} full ${BLT_HELP_FILES} \
+echo_inst_files:
+	${Q}for i in ${STD_HELP_FILES} full ${BLT_HELP_FILES} \
 		  builtin ${DETAIL_HELP} ${SINGULAR_FILES}; do \
-	    echo ${HELPDIR}/$$i; \
+	    echo __file__ ${HELPDIR}/$$i; \
 	done
-	@echo ${HELPDIR}/obj
+	${Q}echo __file__ ${HELPDIR}/obj
 
 ##
 #

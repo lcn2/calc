@@ -1,4 +1,4 @@
-#!/usr/local/bin/calc -q -s -f
+#!/usr/local/src/cmd/calc/calc -q -s -f
 /*
  * fproduct - write the big Endian product of terms to a file
  *
@@ -24,8 +24,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: fproduct.calc,v 29.1 2001/04/08 08:25:15 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: fproduct.calc,v 29.2 2001/06/06 09:06:29 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/fproduct.calc,v $
  *
  * Under source code control:   2001/04/07 20:13:11

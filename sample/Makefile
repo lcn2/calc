@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.11 $
-# @(#) $Id: Makefile,v 29.11 2001/05/28 23:54:53 chongo Exp $
+# @(#) $Revision: 29.12 $
+# @(#) $Id: Makefile,v 29.12 2001/06/06 10:06:48 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/Makefile,v $
 #
 # Under source code control:	1997/04/19 22:46:49
@@ -445,7 +445,7 @@ depend:
 #
 ##
 
-echo_install.list: Makefile
+echo_inst_files: Makefile
 
 
 ##

@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.9 $
-# @(#) $Id: Makefile,v 29.9 2001/05/28 21:56:08 chongo Exp $
+# @(#) $Revision: 29.10 $
+# @(#) $Id: Makefile,v 29.10 2001/06/06 10:06:48 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
@@ -124,12 +124,12 @@ calcliblist:
 #
 ##
 
-echo_CALC_FILES: ${MAKE_FILE}
-	@echo ${CALC_FILES}
+echo_CALC_FILES:
+	${Q}echo __file__ ${CALC_FILES}
 
-echo_install.list: ${MAKE_FILE}
-	@for i in ${CALC_FILES}; do \
-	    echo ${CSHAREDIR}/$$i; \
+echo_inst_files:
+	${Q}for i in ${CALC_FILES}; do \
+	    echo __file__ ${CSHAREDIR}/$$i; \
 	done
 
 ##
