@@ -1523,7 +1523,7 @@ hist_saveline(char *line, int len)
 {
 	static char *prev = NULL;
 
-	if (!len)
+	if (len <= 1)
 		return;
 
 	/* ignore if identical with previous line */

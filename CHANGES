@@ -3,6 +3,14 @@ The following are the changes from calc version 2.11.0t10 to date:
     Misc code cleanup.  Removed dead code.  Removed trailing whitespace.
     Fixed whitespace to make the best use of 8 character tabs.
 
+    Fixed some bugs relaing to '// and %' in combination with some
+    of the the rounding modes based on a patch from Ernest Bowen
+    <ernie@turing.une.edu.au>.
+
+    A patch from Klaus Alexander Seistrup <klaus@seistrup.dk>, when
+    used in combination with the GNU-readline facility, will prevent
+    it from saving empty lines.
+
 
 The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
 

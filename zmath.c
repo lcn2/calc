@@ -735,9 +735,9 @@ done:	while (m > 0 && A[m - 1] == 0)
 		if (s) {
 			while (--i > 0) {
 				g = (FULL) *--a + (*--b >> 1 | f);
+				f = *b & 1 ? TOPHALF : 0;
 				if (g != BASE1)
 					break;
-				f = *b & 1 ? TOPHALF : 0;
 			}
 			if (g == BASE && f == 0) {
 				while ((--i > 0) && ((*--a | *--b) == 0));
@@ -748,9 +748,9 @@ done:	while (m > 0 && A[m - 1] == 0)
 		} else {
 			while (--i > 0) {
 				g = (FULL) *--a - (*--b >> 1 | f);
+				f = *b & 1 ? TOPHALF : 0;
 				if (g != 0)
 					break;
-				f = *b & 1 ? TOPHALF : 0;
 			}
 			if (g > 0 && g < BASE)
 				t = 1;
