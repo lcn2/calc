@@ -471,8 +471,9 @@ define plist(s) {
 define deg(a) = size(a.p) - 1;
 
 define polydiv(a,b) {
-	local q, r, d, u, i, m, n, sa, sb, sq;
-	obj poly q, r;
+	local d, u, i, m, n, sa, sb, sq;
+	local obj poly q;
+	local obj poly r;
 	sa=findlist(a); sb = findlist(b); sq = list();
 	m=size(sa)-1; n=size(sb)-1;
 	if (n<0) quit "Zero divisor";

@@ -159,9 +159,9 @@ define mod_inv(a)
 
 define mod_div(a, b)
 {
-	local c, x, y;
-
-	obj mod x, y;
+	local c;
+	local obj mod x;
+	local obj mod y;
 	if (isnum(a))
 		a = lmod(a);
 	if (isnum(b))
