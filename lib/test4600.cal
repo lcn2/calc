@@ -223,6 +223,11 @@ define ttest(str, m, n, verbose)
 			return 1;
 		}
 	}
+	if (iserror(fclose(f))) {
+		print 'failed';
+		printf("**** Failure 6 for i = %d\n", i);
+		return 1;
+	}
 	i = rm("junk4600");
 	if (verbose > 0) {
 		printf("passed\n");

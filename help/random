@@ -154,4 +154,4 @@ LIBRARY
     long irandom(long max)
 
 SEE ALSO
-    srand, randbit, isrand, rand, srandom, israndom
+    seed, srand, randbit, isrand, rand, srandom, israndom

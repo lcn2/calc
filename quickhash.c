@@ -23,7 +23,7 @@
  */
 
 /*
- * quickhash - qickly hash a calc value using a partial Fowler/Noll/Vo hash
+ * quickhash - quickly hash a calc value using a partial Fowler/Noll/Vo hash
  *
  * NOTE: This file does not contain a hash interface.  It is used by
  *	 associative arrays and other internal processes.
@@ -40,6 +40,13 @@
  * quick and dirty job of hashing on a part of a calc value,
  * combined with using a reasonable hash function will result
  * acceptable associative array performance.
+ *
+ * See:
+ *	http://reality.sgi.com/chongo/src/fnv/fnv_hash.tar.gz
+ *	http://reality.sgi.com/chongo/src/fnv/h32.c
+ *	http://reality.sgi.com/chongo/src/fnv/h64.c
+ *
+ * for information on 32bit and 64bit Fowler/Noll/Vo hashs.
  */
 
 #include "value.h"
@@ -80,6 +87,11 @@ static QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
  * The magic lies in the constant 16777619, which for 32 bit hashing
  * is able to process 234936 words from the web2 dictionary without
  * any collisions.
+ *
+ * See:
+ *	http://reality.sgi.com/chongo/src/fnv/fnv_hash.tar.gz
+ *	http://reality.sgi.com/chongo/src/fnv/h32.c
+ *	http://reality.sgi.com/chongo/src/fnv/h64.c
  *
  * given:
  *	x	the value to hash (must not be longer than 32 bits)

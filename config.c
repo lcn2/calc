@@ -890,7 +890,7 @@ config_copy(CONFIG *src)
 	/*
 	 * copy over the values
 	 */
-	*dest = *src;
+	memcpy((void *)dest, (void *)src, sizeof(CONFIG));
 
 	/*
 	 * clone the pointer values

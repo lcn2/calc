@@ -2271,6 +2271,7 @@ freadnum(FILE *fp, VALUE *valptr)
 			num = newnum;
 			zden = newden;
 		}
+		zfree(div);
 	}
 	q = qalloc();
 	q->num = num;

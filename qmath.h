@@ -201,6 +201,12 @@ extern NUMBER *qpi(NUMBER *epsilon);
 
 
 /*
+ * pseudo-seed generator
+ */
+extern NUMBER *pseudo_seed(void);
+
+
+/*
  * external swap functions
  */
 extern NUMBER *swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all);

@@ -230,33 +230,34 @@ f_str(VALUE *vp)
 	switch (vp->v_type) {
 		case V_STR:
 			result.v_str = stringcopy(vp->v_str);
-			return result;
+			break;
 		case V_NULL:
 			result.v_str = slink(&_nullstring_);
-			return result;
+			break;
 		case V_OCTET:
 			result.v_str = charstring(*vp->v_octet);
-			return result;
+			break;
 		case V_NUM:
 			math_divertio();
 			qprintnum(vp->v_num, MODE_DEFAULT);
 			cp = math_getdivertedio();
+			result.v_str = makestring(cp);
 			break;
 		case V_COM:
 			math_divertio();
 			comprint(vp->v_com);
 			cp = math_getdivertedio();
+			result.v_str = makestring(cp);
 			break;
 		default:
 			return error_value(E_STR);
 	}
-	result.v_str = makestring(cp);
 	return result;
 }
 
 
 static VALUE
-f_name (VALUE *vp)
+f_name(VALUE *vp)
 {
 	VALUE result;
 	char *cp;
@@ -768,6 +769,13 @@ f_nextcand(int count, NUMBER **vals)
 
 
 static NUMBER *
+f_seed(void)
+{
+	return pseudo_seed();
+}
+
+
+static NUMBER *
 f_rand(int count, NUMBER **vals)
 {
 	NUMBER *ans;
@@ -1242,6 +1250,7 @@ minlistitems(LIST *lp)
 	VALUE min;
 
 	min.v_type = V_NULL;
+	term.v_type = V_NULL;
 
 	for (ep = lp->l_first; ep; ep = ep->e_next) {
 		vp = &ep->e_value;
@@ -1291,6 +1300,7 @@ maxlistitems(LIST *lp)
 	VALUE max;
 
 	max.v_type = V_NULL;
+	term.v_type = V_NULL;
 
 	for (ep = lp->l_first; ep; ep = ep->e_next) {
 		vp = &ep->e_value;
@@ -1339,6 +1349,8 @@ f_min(int count, VALUE **vals)
 	VALUE rel;
 
 	min.v_type = V_NULL;
+	term.v_type = V_NULL;
+
 	while (count-- > 0) {
 		vp = *vals++;
 		switch(vp->v_type) {
@@ -1390,6 +1402,7 @@ f_max(int count, VALUE **vals)
 	VALUE rel;
 
 	max.v_type = V_NULL;
+	term.v_type = V_NULL;
 
 	while (count-- > 0) {
 		vp = *vals++;
@@ -1494,6 +1507,7 @@ sumlistitems(LIST *lp)
 	VALUE sum;
 
 	sum.v_type = V_NULL;
+	term.v_type = V_NULL;
 
 	for (ep = lp->l_first; ep; ep = ep->e_next) {
 		vp = &ep->e_value;
@@ -1534,6 +1548,8 @@ f_sum(int count, VALUE **vals)
 	VALUE *vp;
 
 	sum.v_type = V_NULL;
+	term.v_type = V_NULL;
+
 	while (count-- > 0) {
 		vp = *vals++;
 		switch(vp->v_type) {
@@ -5169,11 +5185,14 @@ f_strprintf(int count, VALUE **vals)
 	math_divertio();
 	i = idprintf(FILEID_STDOUT, vals[0]->v_str->s_str,
 		 count - 1, vals + 1);
-	if (i)
+	if (i) {
+		free(math_getdivertedio());
 		return error_value(E_STRPRINTF2);
+	}
 	cp = math_getdivertedio();
 	result.v_type = V_STR;
 	result.v_str = makenewstring(cp);
+	free(cp);
 	return result;
 }
 
@@ -5917,6 +5936,7 @@ f_putenv(int count, VALUE **vals)
 	/* return putenv result */
 	result.v_type = V_NUM;
 	result.v_num = itoq((long) putenv(putenv_str));
+	free(putenv_str);
 	return result;
 }
 
@@ -7136,6 +7156,8 @@ static CONST struct builtin builtins[] = {
 	 "sec of a within accuracy b"},
 	{"sech", 1, 2, 0, OP_NOP, 0, f_sech,
 	 "hyperbolic secant of a within accuracy b"},
+	{"seed", 0, 0, 0, OP_NOP, f_seed, 0,
+	 "return a 64 bit seed for a psuedo-random generator"},
 	{"segment", 2, 3, 0, OP_NOP, 0, f_segment,
 	 "specified segment of specified list"},
 	{"select", 2, 2, 0, OP_NOP, 0, f_select,

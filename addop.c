@@ -135,6 +135,7 @@ endfunc(void)
 {
 	register FUNC *fp;		/* function just finished */
 	unsigned long size;		/* size of just created function */
+	long index;
 
 	if (oldop != OP_RETURN) {
 		addop(OP_UNDEF);
@@ -163,14 +164,22 @@ endfunc(void)
 			size += dumpop(&fp->f_opcodes[size]);
 		}
 	}
+	if (inputisterminal() || conf->lib_debug >= 0) {
+		printf("%s(", fp->f_name);
+		for (index = 0; index <  fp->f_paramcount; index++) {
+			if (index)
+				putchar(',');
+			printf("%s", paramname(index));
+		}
+		printf(") ");
+		if (functions[newindex])
+			printf("re");
+		printf("defined\n");
+	}
 	if (functions[newindex]) {
 		freenumbers(functions[newindex]);
 		free(functions[newindex]);
-		if (inputisterminal() || conf->lib_debug >= 0)
-			printf("%s() redefined\n", fp->f_name);
 	}
-	else if (inputisterminal() || conf->lib_debug >= 0)
-		printf("%s() defined\n", fp->f_name);
 	functions[newindex] = fp;
 	objuncache();
 }

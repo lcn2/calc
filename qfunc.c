@@ -521,12 +521,12 @@ qilog2(NUMBER *q)
 	else if (n > 0) {
 		zshift(q->den, n, &tmp2);
 		c = zrel(tmp1, tmp2);
+		zfree(tmp2);
 	} else {
 		zshift(tmp1, -n, &tmp2);
 		c = zrel(tmp2, q->den);
-	}
-	if (n)
 		zfree(tmp2);
+	}
 	if (c < 0)
 		n--;
 	return n;

@@ -775,7 +775,7 @@ LIBSRC= addop.c assocfunc.c blkcpy.c block.c byteswap.c \
 	file.c func.c hash.c help.c hist.c input.c jump.c label.c \
 	lib_calc.c lib_util.c listfunc.c matfunc.c math_error.c \
 	md5.c obj.c opcodes.c pix.c poly.c prime.c qfunc.c qio.c \
-	qmath.c qmod.c qtrans.c quickhash.c shs.c shs1.c size.c \
+	qmath.c qmod.c qtrans.c quickhash.c seed.c shs.c shs1.c size.c \
 	string.c symbol.c token.c value.c version.c zfunc.c zio.c \
 	zmath.c zmod.c zmul.c zprime.c zrand.c zrandom.c
 
@@ -789,7 +789,7 @@ LIBOBJS= addop.o assocfunc.o blkcpy.o block.o byteswap.o calcerr.o \
 	file.o func.o hash.o help.o hist.o input.o jump.o label.o \
 	lib_calc.o lib_util.o listfunc.o matfunc.o math_error.o \
 	md5.o obj.o opcodes.o pix.o poly.o prime.o qfunc.o qio.o \
-	qmath.o qmod.o qtrans.o quickhash.o shs.o shs1.o size.o \
+	qmath.o qmod.o qtrans.o quickhash.o seed.o shs.o shs1.o size.o \
 	string.o symbol.o token.o value.o version.o zfunc.o zio.o \
 	zmath.o zmod.o zmul.o zprime.o zrand.o zrandom.o
 
@@ -2749,6 +2749,7 @@ byteswap.o: longbits.h
 byteswap.o: qmath.h
 byteswap.o: zmath.h
 calc.o: alloc.h
+calc.o: args.h
 calc.o: block.h
 calc.o: byteswap.h
 calc.o: calc.c
@@ -2784,6 +2785,7 @@ calc.o: symbol.h
 calc.o: token.h
 calc.o: value.h
 calc.o: zmath.h
+calc_errno.o: calc_errno.c
 calcerr.o: calcerr.c
 calcerr.o: calcerr.h
 calcerr.o: have_const.h
@@ -2961,6 +2963,7 @@ func.o: alloc.h
 func.o: block.h
 func.o: byteswap.h
 func.o: calc.h
+func.o: calc_errno.h
 func.o: calcerr.h
 func.o: cmath.h
 func.o: config.h
@@ -3327,7 +3330,6 @@ obj.o: symbol.h
 obj.o: value.h
 obj.o: zmath.h
 opcodes.o: alloc.h
-opcodes.o: args.h
 opcodes.o: block.h
 opcodes.o: byteswap.h
 opcodes.o: calc.h
@@ -3512,6 +3514,18 @@ quickhash.o: value.h
 quickhash.o: zmath.h
 quickhash.o: zrand.h
 quickhash.o: zrandom.h
+seed.o: alloc.h
+seed.o: byteswap.h
+seed.o: endian_calc.h
+seed.o: have_malloc.h
+seed.o: have_memmv.h
+seed.o: have_newstr.h
+seed.o: have_stdlib.h
+seed.o: have_string.h
+seed.o: longbits.h
+seed.o: qmath.h
+seed.o: seed.c
+seed.o: zmath.h
 shs.o: align32.h
 shs.o: alloc.h
 shs.o: block.h

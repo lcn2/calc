@@ -4,13 +4,11 @@ Installing calc in 4 easy steps:
 
        Here are some Makefile hints:
 
-	   Select a compiler set by commenting in the appropriate
-	   set of cc options.  As shipped the Makefile assumes
-	   a gcc-like environment such as Linux.  
-	   
-	   If a more appropriate cc set if found below, comment 
-	   out the Linux set and comment in that set or edit
-	   the gcc set or the common cc set as needed.
+	   Select a compiler set by commenting in the appropriate set
+	   of cc options.  As shipped the Makefile assumes a gcc-like
+	   environment such as Linux.  If a more appropriate cc set if
+	   found below, comment out the Linux set and comment in that
+	   set or edit the gcc set or the common cc set as needed.
 
 	   You may or may not need RANLIB when building libraries.
 	   As shipped the Makefile assumes RANLIB is needed.
@@ -40,13 +38,14 @@ Installing calc in 4 easy steps:
 	make all
 
 	==> We are interested in any compiler warnings (and errors) that
-	    you may find.  See the BUGS file if you find any.
+	    you may find.  See the BUGS file if you find any compiler
+	    warning or errors.
 
     3) test calc:
 
 	make check
 
-	==> If you run into problems, follow the instructions in the BUGS file
+	==> If you run into problems, follow the BUGS file instructions.
 
     4) install calc:
 

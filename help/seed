@@ -1,0 +1,52 @@
+NAME
+    seed - return a value that may be used to seed a pseudo-random generator
+
+SYNOPSIS
+    seed()
+
+TYPES
+    return	integer
+
+DESCRIPTION
+    Generate a pseudo-random seed based on a collection of system and process
+    information.  The seed() builtin function returns a value:
+
+		0 <= seed < 2^64
+
+    IMPORTANT WARNING:
+
+	It should be pointed out that the information collected by seed
+	is almost certainly non-chaotic.  This function is likely not
+	suitable for applications (such as cryptographic applications)
+	where the unpredictability of seeds is critical.  For such critical
+	applications, lavarand should be used.  Seed:
+
+		http://lavarand.sgi.com
+
+	for information about seeding a pseudo-random number generator
+	(such as rand() or random()) with the cryptographic hash of the
+	digitization of chaotic system.
+
+    Given the above warning, this builtin function produces a seed that is
+    suitable for most applications that desire a different pseudo-random
+    sequence each time they are run.
+
+    The return value of this builtin function should NOT be considered
+    a random or pseudo-random value.  The return value should be used
+    as an argument to a seed function such as srand() or srandom().
+
+EXAMPLE
+    > print srand(seed())
+    RAND state
+
+    > print srandom(seed())
+    RAND state
+
+LIMITS
+    none
+
+LIBRARY
+    NUMBER *pseudo_seed(void)
+
+SEE ALSO
+    seed, srand, randbit, isrand, rand, random, srandom, israndom

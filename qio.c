@@ -558,6 +558,7 @@ str2q(char *s)
 			q->num = newnum;
 			q->den = newden;
 		}
+		zfree(div);
 	}
 	return q;
 }

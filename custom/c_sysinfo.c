@@ -240,7 +240,7 @@ c_sysinfo(char *name, int count, VALUE **vals)
 		buf = (char *)malloc(strlen((char *)vals[0]->v_str->s_str)+1);
 		for (q = (char *)vals[0]->v_str->s_str, r = buf; *q; ++q, ++r)
 		{
-			if (isascii(*q) && islower(*q)) {
+			if (isascii((int)*q) && islower((int)*q)) {
 				*r = *q - 'a' + 'A';
 			} else {
 				*r = *q;

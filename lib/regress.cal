@@ -1555,7 +1555,12 @@ define test_rand()
 	vrfy(randbit() == 1,		  '1567: randbit() == 1');
 	vrfy(randbit() == 0,		  '1568: randbit() == 0');
 
-	print '1569: Ending rand test';
+	/* test seed() as best as we can */
+	vrfy(seed() >= 0,		  '1569: seed() >= 0');
+	vrfy(seed() < 2^64,		  '1570: seed() < 2^64');
+	vrfy(isrand(srand(seed())),	  '1571: isrand(srand(seed()))');
+
+	print '1572: Ending rand test';
 }
 print '025: parsed test_rand()';
 
@@ -4410,7 +4415,12 @@ define test_random()
 	vrfy(randombit(123) == 0x2058f802dd42b3aee4e734eacc13057, \
 		  '5463: randombit(123) == 0x2058f802dd42b3aee4e734eacc13057');
 
-	print '5464: Ending test_random';
+	/* test seed() as best as we can */
+	vrfy(seed() >= 0,		  '5464: seed() >= 0');
+	vrfy(seed() < 2^64,		  '5465: seed() < 2^64');
+	vrfy(israndom(srandom(seed())),	  '5466: israndom(srandom(seed()))');
+
+	print '5467: Ending test_random';
 }
 print '137: parsed test_random()';
 
@@ -5907,8 +5917,10 @@ define test_is()
 	 */
 	blkfree("blk5900");
 	print				  '6663: blkfree("blk5900")';
+	fclose(ofd);
+	print				  '6664: fclose(ofd)';
 
-	print '6664: Ending test_is';
+	print '6665: Ending test_is';
 }
 print '168: test_is()';
 
@@ -7144,7 +7156,7 @@ print '200: Reserved for top level test use';
 define count_errors()
 {
 	if (prob  ==  0) {
-		print "9998: passed all tests  /\\../\\";
+		print "9997: passed all tests  /\\../\\";
 	} else {
 		print "****", prob, "error(s) found  \\/++\\/";
 	}
@@ -7380,6 +7392,15 @@ return test_natnumset();
 print;
 return test_somenew();
 
+/*
+ * cleanup and report the results
+ */
 print;
+freeredc();
+print '9995: freeredc()';
+freestatics();
+print '9996: freestatics()';
 return count_errors();
+freeglobals();
+print '9998: freeglobals()';
 print '9999: Ending regression tests';

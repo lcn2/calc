@@ -142,7 +142,6 @@ protectall(VALUE *vp, int sts)
 void
 copyvalue(VALUE *oldvp, VALUE *newvp)
 {
-
 	newvp->v_type = oldvp->v_type;
 	if (oldvp->v_type >= 0) {
 		switch (oldvp->v_type) {
@@ -205,7 +204,7 @@ copyvalue(VALUE *oldvp, VALUE *newvp)
 			/*NOTREACHED*/
 		}
 	}
-	newvp->v_subtype |= oldvp->v_subtype;
+	newvp->v_subtype = oldvp->v_subtype;
 }
 
 

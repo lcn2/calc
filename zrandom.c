@@ -1623,7 +1623,9 @@ zsrandom1(CONST ZVALUE seed, BOOL need_ret)
 		/* set to the default generator state */
 		zfree(blum.n);
 		zfree(blum.r);
-		blum = *randomcopy(&init_blum);
+		p_blum = randomcopy(&init_blum);
+		blum = *p_blum;
+		free(p_blum);
 
 	/*
 	 * srandom(seed >= 2^32)
@@ -2398,7 +2400,8 @@ randomfree(RANDOM *state)
 	if (state == &init_blum) {
 		return;
 	}
-	if (state >= random_pregen && state < random_pregen+BLUM_PREGEN) {
+	if (state >= &random_pregen[0] &&
+	    state <= &random_pregen[BLUM_PREGEN-1]) {
 		return;
 	}
 

@@ -230,4 +230,4 @@ LIBRARY
     long irand(long max)
 
 SEE ALSO
-    srand, randbit, isrand, random, srandom, israndom
+    seed, srand, randbit, isrand, random, srandom, israndom

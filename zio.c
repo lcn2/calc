@@ -238,6 +238,7 @@ math_getdivertedio(void)
 	outbufused = sp->outbufused;
 	outbuf = sp->outbuf;
 	outputisstring = sp->outputisstring;
+	free(sp);
 	return cp;
 }
 
@@ -394,7 +395,7 @@ zprintb(ZVALUE z, long width)
 	PUTSTR("0b");
 	while (len-- >= 0) {
 		val = *hp--;
-		mask = (1 << (BASEB - 1));
+		mask = ((HALF)1 << (BASEB - 1));
 		while (mask) {
 			ch = '0' + ((mask & val) != 0);
 			if (didprint || (ch != '0')) {

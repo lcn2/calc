@@ -40,4 +40,4 @@ LIBRARY
     void zrand(long cnt, ZVALUE *res)
 
 SEE ALSO
-    srand, randbit, isrand, random, srandom, israndom
+    seed, srand, randbit, isrand, random, srandom, israndom

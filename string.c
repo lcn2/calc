@@ -1195,8 +1195,7 @@ addstring(char *str, long len)
 	}
 	s->s_str = c;
 	s->s_len = len;
-	while (len-- >= 0)
-		*c++ = *str++;
+	memcpy(s->s_str, str, len+1);
 	if (havefirst) {
 		stringconsttable[first] = s;
 		return first;

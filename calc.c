@@ -39,7 +39,7 @@
 
 
 /*
- * external and static definitions
+ * external definitions and functions
  */
 extern int abortlevel;		/* current level of aborts */
 extern BOOL inputwait;		/* TRUE if in a terminal input wait */
@@ -52,6 +52,7 @@ extern int u_flag;		/* TRUE => unbuffer stdin and stdout */
 
 extern char *pager;		/* $PAGER or default */
 extern int stdin_tty;		/* TRUE if stdin is a tty */
+extern int interactive;		/* TRUE if interactive session (no cmd args) */
 extern char *program;		/* our name */
 extern char cmdbuf[];		/* command line expression */
 
@@ -59,8 +60,10 @@ extern char *version(void);	/* return version string */
 
 
 /*
- * forward static functions
+ * static definitions and functions
  */
+static char *usage = "usage: %s [-C] [-e] [-h] [-i] [-m mode] [-n] [-p]\n"
+		     "\t[-q] [-u] [[--] calc_cmd ...]\n";
 static void intint(int arg);	/* interrupt routine */
 
 
@@ -70,124 +73,121 @@ static void intint(int arg);	/* interrupt routine */
 int
 main(int argc, char **argv)
 {
-	static char *str;	/* current option string or expression */
 	int want_defhelp = 0;	/* 1=> we only want the default help */
+	int cmdlen;		/* length of the command string */
+	extern char *optarg;	/* option argument */
+	extern int optind;	/* option index */
+	int c;			/* option */
 	long i;
-	char *p;
 
 	/*
 	 * parse args
 	 */
 	program = argv[0];
-	argc--;
-	argv++;
-	while ((argc > 0) && (**argv == '-')) {
-		for (str = &argv[0][1]; *str; str++) switch (*str) {
-			case 'C':
+	while ((c = getopt(argc, argv, "Cehim:npquv")) != -1) {
+		switch (c) {
+		case 'C':
 #if defined(CUSTOM)
-				allow_custom = TRUE;
-				break;
-#else
-				fprintf(stderr,
-				    "Calc was built with custom functions "
-				    "disabled, -C usage is disallowed\n");
-				/*
-				 * we are too early in processing to call
-				 * libcalc_call_me_last() - nothing to cleanup
-				 */
-				exit(1);
-#endif /* CUSTOM */
-			case 'e':
-				no_env = TRUE;
-				break;
-			case 'h':
-				want_defhelp = 1;
-				break;
-			case 'i':
-				ign_errmax = TRUE;
-				break;
-			case 'm':
-				if (argv[0][2]) {
-					p = &argv[0][2];
-				} else if (argc > 1) {
-					p = argv[1];
-					argc--;
-					argv++;
-				} else {
-					fprintf(stderr, "-m requires an arg\n");
-					/*
-					 * we are too early in processing to
-					 * call libcalc_call_me_last()
-					 * nothing to cleanup
-					 */
-					exit(1);
-				}
-				if (p[1] != '\0' || *p < '0' || *p > '7') {
-					fprintf(stderr, "unknown -m arg\n");
-					/*
-					 * we are too early in processing to
-					 * call libcalc_call_me_last()
-					 * nothing to cleanup
-					 */
-					exit(1);
-				}
-				allow_read = (((*p-'0') & 04) > 0);
-				allow_write = (((*p-'0') & 02) > 0);
-				allow_exec = (((*p-'0') & 01) > 0);
-				break;
-			case 'n':
-				new_std = TRUE;
-				break;
-			case 'p':
-				p_flag = TRUE;
-				break;
-			case 'q':
-				q_flag = TRUE;
-				break;
-			case 'u':
-				u_flag = TRUE;
-				break;
-			case 'v':
-				printf("%s (version %s)\n",
-				    CALC_TITLE, version());
-				/*
-				 * we are too early in processing to call
-				 * libcalc_call_me_last() - nothing to cleanup
-				 */
-				exit(0);
-			default:
-				fprintf(stderr,
-			"usage: %s [-C] [-e] [-h] [-i] [-m mode] [-n] [-p]\n",
-				    program);
-				fprintf(stderr, "\t[-q] [-u] [calc_cmd ...]\n");
-				/*
-				 * we are too early in processing to call
-				 * libcalc_call_me_last() - nothing to cleanup
-				 */
-				exit(1);
-		}
-		argc--;
-		argv++;
-	}
-	cmdbuf[0] = '\0';
-	str = cmdbuf;
-	while (--argc >= 0) {
-		i = (long)strlen(*argv);
-		if (i+3 >= MAXCMD) {
-			fprintf(stderr, "command in arg list too long\n");
+			allow_custom = TRUE;
+			break;
+#else /* CUSTOM */
 			/*
 			 * we are too early in processing to call
 			 * libcalc_call_me_last() - nothing to cleanup
 			 */
+			fprintf(stderr,
+			    "%s: calc was built with custom functions "
+			    "disabled, -C usage is disallowed\n", program);
+			exit(1);
+#endif /* CUSTOM */
+		case 'e':
+			no_env = TRUE;
+			break;
+		case 'h':
+			want_defhelp = 1;
+			break;
+		case 'i':
+			ign_errmax = TRUE;
+			break;
+		case 'm':
+			if (optarg[1] == '\0' || *optarg<'0' || *optarg>'7') {
+				/*
+				 * we are too early in processing to
+				 * call libcalc_call_me_last()
+				 * nothing to cleanup
+				 */
+				fprintf(stderr,
+					"%s: unknown -m arg\n", program);
+				exit(1);
+			}
+			allow_read = (((*optarg-'0') & 04) > 0);
+			allow_write = (((*optarg-'0') & 02) > 0);
+			allow_exec = (((*optarg-'0') & 01) > 0);
+			break;
+		case 'n':
+			new_std = TRUE;
+			break;
+		case 'p':
+			p_flag = TRUE;
+			break;
+		case 'q':
+			q_flag = TRUE;
+			break;
+		case 'u':
+			u_flag = TRUE;
+			break;
+		case 'v':
+			/*
+			 * we are too early in processing to call
+			 * libcalc_call_me_last() - nothing to cleanup
+			 */
+			printf("%s (version %s)\n", CALC_TITLE, version());
+			exit(0);
+		default:
+			/*
+			 * we are too early in processing to call
+			 * libcalc_call_me_last() - nothing to cleanup
+			 */
+			fprintf(stderr, usage, program);
 			exit(1);
 		}
-		*str++ = ' ';
-		strcpy(str, *argv++);
-		str += i;
-		str[0] = '\n';
-		str[1] = '\0';
 	}
-	str = cmdbuf;
+	interactive = (optind >= argc);
+
+	/*
+	 * look at the length of any trailing command args
+	 *
+	 * We make room for the trailing '\0\n' as well as an extra guard byte.
+	 */
+	for (cmdlen=0, i=optind; i < argc; ++i) {
+		/* argument + space separator */
+		cmdlen += strlen(argv[i]) + 1;
+	}
+	if (i > MAXCMD) {
+		/*
+		 * we are too early in processing to call
+		 * libcalc_call_me_last() - nothing to cleanup
+		 */
+		fprintf(stderr,
+			"%s: command in arg list is too long\n", program);
+		exit(1);
+	}
+
+	/*
+	 * We will form a command the remaining args separated by spaces.
+	 */
+	cmdbuf[0] = '\0';
+	if (optind < argc) {
+		strcpy(cmdbuf, argv[optind]);
+		cmdlen = strlen(argv[optind]);
+		for (i=optind+1; i < argc; ++i) {
+			cmdbuf[cmdlen++] = ' ';
+			strcpy(cmdbuf+cmdlen, argv[i]);
+			cmdlen += strlen(argv[i]);
+		}
+		cmdbuf[cmdlen++] = '\n';
+		cmdbuf[cmdlen] = '\0';
+	}
 
 	/*
 	 * unbuffered mode
@@ -212,18 +212,13 @@ main(int argc, char **argv)
 	/*
 	 * if allowed or needed, print version and setup bindings
 	 */
-	if (str >= cmdbuf+MAXCMD || *str == '\0') {
+	if (interactive) {
 		/*
 		 * check for pipe mode and/or non-tty stdin
 		 */
 		if (!p_flag) {
 			stdin_tty = isatty(0);	/* assume stdin is on fd 0 */
 		}
-
-		/*
-		 * empty string arg is no string
-		 */
-		str = NULL;
 
 		/*
 		 * if tty, setup bindings
@@ -235,14 +230,15 @@ main(int argc, char **argv)
 			switch (hist_init(calcbindings)) {
 			case HIST_NOFILE:
 				fprintf(stderr,
-				    "Cannot open bindings file \"%s\", %s.\n",
-				     calcbindings, "fancy editing disabled");
+				    "%s: Cannot open bindings file \"%s\", "
+				    "fancy editing disabled.\n",
+				     program, calcbindings);
 				break;
 
 			case HIST_NOTTY:
 				fprintf(stderr,
-					"Cannot set terminal modes, %s.\n",
-					"fancy editing disabled");
+					"%s: Cannot set terminal modes, "
+					"fancy editing disabled\n", program);
 				break;
 			}
 		}
@@ -260,21 +256,21 @@ main(int argc, char **argv)
 			initialize();
 		} else {
 			/* initialize already done, jmpbuf is ready */
-			post_init = TRUE;	
+			post_init = TRUE;
 		}
 
 		/*
 		 * if arg mode or non-tty mode, just do the work and be gone
 		 */
-		if (str || !stdin_tty) {
+		if (!interactive || !stdin_tty) {
 			if (q_flag == FALSE && allow_read) {
 				runrcfiles();
 				q_flag = TRUE;
 			}
-			if (str)
-				(void) openstring(str);
-			else
+			if (interactive)
 				(void) openterminal();
+			else
+				(void) openstring(cmdbuf);
 			start_done = TRUE;
 			getcommands(FALSE);
 			libcalc_call_me_last();
@@ -282,7 +278,7 @@ main(int argc, char **argv)
 		}
 	}
 	/* if in arg mode, we should not get here */
-	if (str) {
+	if (!interactive) {
 		libcalc_call_me_last();
 		exit(1);
 	}
@@ -339,7 +335,8 @@ math_error(char *fmt, ...)
 
 	if (funcname && (*funcname != '*'))
 		fprintf(stderr, "\"%s\": ", funcname);
-	if (funcline && ((funcname && (*funcname != '*')) || !inputisterminal()))
+	if (funcline && ((funcname && (*funcname != '*')) ||
+	    !inputisterminal()))
 		fprintf(stderr, "line %ld: ", funcline);
 	va_start(ap, fmt);
 	vsprintf(buf, fmt, ap);

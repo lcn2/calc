@@ -816,6 +816,7 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat55)
 	RAND *ret;		/* previous a55 state */
 	CONST VALUE *v;		/* value from a passed matrix */
 	ZVALUE zscram;		/* scrambled 64 bit seed */
+	ZVALUE ztmp;		/* temp holding value for zscram */
 	ZVALUE seed;		/* to hold *pseed */
 	FULL shufxor[SLEN];	/* zshufxor as an 64 bit array of FULLs */
 	long indx;		/* index to shuffle slots for seeding */
@@ -938,7 +939,9 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat55)
         	for (i=A55-1; i > 0 && !zislezero(zscram); --i) {
 
         		/* determine what we will swap with */
-        		indx = zdivi(zscram, i+1, &zscram);
+        		indx = zdivi(zscram, i+1, &ztmp);
+			zfree(zscram);
+			zscram = ztmp;
 
         		/* do nothing if swap with itself */
         		if (indx == i) {
@@ -948,6 +951,8 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat55)
         		/* swap slot[i] with slot[indx] */
         		SSWAP(a55, i, indx);
         	}
+        	zfree(zscram);
+	} else if (pseed != NULL) {
         	zfree(zscram);
         }
 

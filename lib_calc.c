@@ -65,7 +65,7 @@ BOOL inputwait;		/* TRUE if in a terminal input wait */
 jmp_buf jmpbuf;		/* for errors */
 int start_done = FALSE;	/* TRUE => start up processing finished */
 char *program = "calc";	/* our name */
-char cmdbuf[MAXCMD+1+1];	/* command line expression */
+char cmdbuf[MAXCMD+1+1+1];	/* command line expression + "\n\0" + guard */
 
 
 /*
@@ -94,6 +94,7 @@ char *home;		/* $HOME or default */
 char *pager;		/* $PAGER or default */
 char *shell;		/* $SHELL or default */
 int stdin_tty = FALSE;	/* TRUE if stdin is a tty */
+int interactive = FALSE; /* TRUE if interactive session (no cmd args) */
 int post_init = FALSE;	/* TRUE setjmp for math_error is readready */
 
 int no_env = FALSE;	/* TRUE (-e) => ignore env vars on startup */

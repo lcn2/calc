@@ -337,4 +337,4 @@ LIBRARY
     RAND *zsetrandom(RAND *state)
 
 SEE ALSO
-    srand, randbit, isrand, random, srandom, israndom
+    seed, srand, randbit, isrand, random, srandom, israndom

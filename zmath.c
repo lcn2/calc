@@ -741,7 +741,7 @@ done:	while (m > 0 && A[m - 1] == 0)
 				f = *b & 1 ? TOPHALF : 0;
 			}
 			if (g == BASE && f == 0) {
-				while (i-- && (*--a | *--b) == 0);
+				while (i-- && (*a-- | *b--) == 0);
 				t = (i > 0);
 			}
 			else if (g >= BASE)
@@ -903,8 +903,9 @@ zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	n = z2.len - o;
 	len = m - n + 1;		/* Maximum length of quotient */
 	v = *B;
-	A = alloc(len);
+	A = alloc(len+1);
 	memcpy(A, z1.v + o, len * sizeof(HALF));
+	A[len] = 0;
 	if (n == 1) {
 		if (v > 1) {
 			a = A + len;
@@ -916,8 +917,7 @@ zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 				f %= v;
 			}
 		}
-	}
-	else {
+	} else {
 		k = 0;
 		while (!(v & 1)) {
 			k++;

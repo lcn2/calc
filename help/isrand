@@ -25,7 +25,7 @@ LIBRARY
     none
 
 SEE ALSO
-    rand, srand, randbit,
+    seed, rand, srand, randbit,
     isassoc, isatty, isblk, isconfig, isdefined, iserror, iseven, isfile,
     ishash, isident, isint, islist, ismat, ismult, isnull, isnum, isobj,
     isobjtype, isodd, isprime, israndom, isreal, isrel,

@@ -480,6 +480,7 @@ qatan(NUMBER *q, NUMBER *epsilon)
 		zsqrt(ztmp2, &ztmp1, 24L);
 		zfree(ztmp2);
 		zadd(ztmp1, D, &ztmp2);
+		zfree(ztmp1);
 		zshift(X, m, &ztmp1);
 		zfree(X);
 		zquo(ztmp1, ztmp2, &X, 24L);
@@ -726,6 +727,7 @@ qpi(NUMBER *epsilon)
 		zfree(tmp2);
 		shift += 12;
 	} while ((shift - t) < bits);
+	zfree(comb);
 	qtmp.num = _one_;
 	qtmp.den = sum;
 	t1 = qscale(&qtmp, shift);

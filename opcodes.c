@@ -640,9 +640,8 @@ o_elemaddr(FUNC *fp, long index)
 				math_error("Non-existent element for matrix");
 				/*NOTREACHED*/
 			}
-			stack->v_type = V_ADDR;
-			stack->v_addr = &mp->m_table[index];
-			return;
+			vp = &mp->m_table[index];
+			break;
 		case V_OBJ:
 			op = vp->v_obj;
 			offset = objoffset(op, index);
@@ -650,13 +649,21 @@ o_elemaddr(FUNC *fp, long index)
 				math_error("Non-existent element for object");
 				/*NOTREACHED*/
 			}
-			stack->v_type = V_ADDR;
-			stack->v_addr = &op->o_table[offset];
-			return;
+			vp = &op->o_table[offset];
+			break;
+		case V_LIST:
+			vp = listfindex(vp->v_list, index);
+			if (vp == NULL) {
+				math_error("Index out of bounds for list");
+				/*NOTREACHED*/
+			}
+			break;
 		default:
-			math_error("Not indexing matrix or object");
+			math_error("Not initializing matrix, object or list");
 			/*NOTREACHED*/
 	}
+	stack->v_type = V_ADDR;
+	stack->v_addr = vp;
 
 }
 
@@ -746,8 +753,10 @@ o_assign(void)
 			math_error("No-assign-from source for assign");
 			/*NOTREACHED*/
 		}
+		tmp.v_subtype = V_NOSUBTYPE;
 		copyvalue(vp, &tmp);
 	} else if (vp->v_type == V_OCTET) {
+		tmp.v_subtype = V_NOSUBTYPE;
 		copyvalue(vp, &tmp);
 	} else {
 		tmp = *vp;

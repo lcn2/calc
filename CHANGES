@@ -23,15 +23,10 @@ Following is the change from calc version 2.11.0t1 to date:
 
     Made some of the source a little more ++ friendly.  We are NOT
     porting calc to C++!  We will NOT support C++ compilation of calc.
-    Calc will written ANSI C.  We just compiled with a suggestion from 
-    Love-Jensen, John <jlove-jensen@globalmt.com> to make calc's version 
+    Calc will written ANSI C.  We just compiled with a suggestion from
+    Love-Jensen, John <jlove-jensen@globalmt.com> to make calc's version
     of C a little more to C++ compilers.  Avoiding symbols such as new
     or try for example.
-
-    Thanks to the efforts of Ernest Bowen <ernie@neumann.une.edu.au> and
-    Dr.D.J.Picton <dave@aps5.ph.bham.ac.uk>, a nasty endian-ness bug
-    in the sha and sha1 hash functions that showed up on machines such
-    as the Sparc was fixed.
 
     Updated README.FIRST and BUGS to reflect new URLs and addresses.
 
@@ -51,7 +46,7 @@ Following is the change from calc version 2.11.0t1 to date:
     Fixed some problems related to path processing while opening files.
     Under extreme cases, an excessively long filename or CALCPATH value
     could create problems.  Placed guards in opensearchfile() function
-    in input.c to catch these cases.  
+    in input.c to catch these cases.
 
     Fixed cases were malloc failures were silently ignored in input.c.
 
@@ -67,8 +62,11 @@ Following is the change from calc version 2.11.0t1 to date:
     Added a 'Dec Alpha / Compaq Tru64 cc (non-gnu) compiler set'
     section to the main Makefile.
 
-    Fixed a string handling bug discovered by Dr.D.J.Picton 
+    Fixed a string handling bug discovered by Dr.D.J.Picton
     <dave@aps5.ph.bham.ac.uk> in the custom demo code.
+
+    Fixed a bug in the hnrmod() builtin that was discovered by
+    Ernest Bowen <ernie@neumann.une.edu.au>.
 
     Added FORCE_STDC symbol.  When defined it will force __STDC__ like
     conditions.  Thus for compilers with as the Solaris cc compiler
@@ -79,6 +77,73 @@ Following is the change from calc version 2.11.0t1 to date:
     files are now compiled with full ${CFLAGS}.
 
     The custom.c file is now compiled with full ${CFLAGS}.
+
+    ### XXX - this change has been backed out:
+    #
+    # Thanks to the efforts of Ernest Bowen <ernie@neumann.une.edu.au> and
+    # Dr.D.J.Picton <dave@aps5.ph.bham.ac.uk>, a nasty endian-ness bug
+    # in the sha and sha1 hash functions that showed up on machines such
+    # as the Sparc was fixed.
+    #
+    ###
+
+    Rewrote command line / argument processing code.  Calc is now
+    using getopt(3) argument processing.
+
+    Fixed a memory leak related to converting strings to numbers
+    in the str2q() function in qio.c.
+
+    Fixed a problem with reading uninitialized memory in the
+    v_subtype of a VALUE in the copyvalue() function in value.c.
+
+    Fixed problems in func.c where temporary VALUEs were not
+    having their v_type elements initialized.
+
+    Fixed a memory leak in qpi() in qtrans.c.
+
+    Fixed a memory leak in math_getdivertedio() in zio.c.
+
+    Fixed a problem with points going beyond the end of allocated
+    memory in addstring() in string.c.
+
+    Fixed a memory leak in zgcdrem(), f_putenv(), zlog() and
+    zlog10() in zfunc.c.
+
+    Fixed a memory leak in zdiv() and zshift() in zmath.c.
+
+    Fixed memory leaks in zsrand() in zrand.c.
+
+    Fixed a memory leak in zsrandom1() in zrandom.c.
+
+    Added seed() builtin to return a 64 bit seed for a
+    psuedo-random generator.
+
+    Added functionality from Ernest Bowen <ernie@turing.une.edu.au>
+    to give arguments as well as function names after definitions when
+    calc_debug >= 0.
+
+    Added functionality from Ernest Bowen <ernie@turing.une.edu.au> to
+    permit nested "= {...}" assignments for lists as well as matrices
+    and objects.  Now one can have a list, matrix or object, some of
+    whose elements are lists, matrices or objects, to any depth of
+    recursion, and assign values to any number of particular elements
+    by an appropriate "initialization" expression.  For example:
+
+	A = mat[2] = {list(1,2), list(3,4,list(5,6))};
+
+    and then assign values to the 6 number elements by:
+
+	A = {{7,8}, {9,10,{11,12}}};
+
+    Closed files that were previously left open from test4600.cal
+    as executed by regress.cal and from opening /dev/null by
+    regress.cal itself.
+
+    Fixed memory leaks from f_strprintf() and f_putenv() in func.c.
+
+    The regress.cal test suite calls freeredc(), freestatics() and
+    freeglobals() at the end of the test suite to free storage
+    consumed during the regression.
 
     Fixed misc compile warnings and notices.
 

@@ -124,7 +124,7 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
 	pmod polar poly pop popcnt power prevcand prevprime printf prompt \
 	protect ptest push putenv quo quomod rand randbit random randombit \
 	randperm rcin rcmul rcout rcpow rcsq re remove reverse rewind rm root \
-	round rsearch runtime saveval scale scan scanf search sec sech \
+	round rsearch runtime saveval scale scan scanf search sec sech seed \
 	segment select sgn sha sha1 sin sinh size sizeof sort sqrt srand \
 	srandom ssq str strcat strerror strlen strpos strprintf strscan \
 	strscanf substr sum swap system tail tan tanh test time trunc xor

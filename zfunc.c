@@ -1123,6 +1123,7 @@ zlog(ZVALUE z1, ZVALUE z2)
 		if (zp != squares)
 			zfree(*zp);
 	}
+	zfree(val);
 	return power;
 }
 
@@ -1173,6 +1174,7 @@ zlog10(ZVALUE z)
 				zfree(temp);
 		}
 	}
+	zfree(val);
 	return power;
 }
 
@@ -1323,6 +1325,7 @@ zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 		res->v = alloc(z1.len);
 		res->sign = 0;
 		zcopyval(z1, *res);
+		zfree(tmp1);
 		return;
 	}
 	zequo(z1, tmp1, &tmp2);
@@ -1340,6 +1343,7 @@ zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 		zfree(z2);
 		z2 = tmp1;
 	}
+	zfree(z2);
 	*res = z1;
 }
 
