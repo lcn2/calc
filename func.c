@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: func.c,v 29.9 2001/04/10 22:06:46 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: func.c,v 29.10 2001/05/29 00:41:22 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -7303,6 +7303,7 @@ f_free(int count, VALUE **vals)
 	return result;
 }
 
+
 static VALUE
 f_freeglobals(void)
 {
@@ -7315,6 +7316,7 @@ f_freeglobals(void)
 	freeglobals();
 	return result;
 }
+
 
 static VALUE
 f_freeredc(void)
@@ -7719,6 +7721,20 @@ f_argv(int count, VALUE **vals)
 	}
 
 	/* return the result */
+	return result;
+}
+
+
+static VALUE
+f_version(void)
+{
+	VALUE result;
+
+	/* return the calc verstion string */
+	result.v_type = V_STR;
+	result.v_subtype = V_NOSUBTYPE;
+	result.v_str = makestring(strdup(version()));
+
 	return result;
 }
 
@@ -8325,6 +8341,8 @@ static CONST struct builtin builtins[] = {
 	 "truncate a to b number of decimal places"},
 	{"ungetc", 2, 2, 0, OP_NOP, 0, f_ungetc,
 	 "unget char read from file"},
+	{"version", 0, 0, 0, OP_NOP, 0, f_version,
+	 "calc version string"},
 	{"xor", 1, IN, 0, OP_NOP, 0, f_xor,
 	 "logical xor"},
 

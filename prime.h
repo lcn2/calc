@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: prime.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: prime.h,v 29.3 2001/05/29 00:16:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/prime.h,v $
  *
  * Under source code control:	1994/06/04 03:26:15
@@ -33,8 +33,13 @@
 #define __PRIME_H__
 
 
-#include "qmath.h"
-#include "have_const.h"
+#if defined(SRC)	/* if we are building from the calc source tree */
+# include "qmath.h"
+# include "have_const.h"
+#else
+# include <calc/math.h>
+# include <calc/have_const.h>
+#endif
 
 
 #define MAX_MAP_PRIME ((FULL)65521)	   /* (2^16-15) larest prime in prmap */

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: value.h,v 29.5 2001/03/17 21:31:47 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: value.h,v 29.6 2001/05/29 00:16:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -32,15 +32,28 @@
 #define __VALUE_H__
 
 
-#include "win32dll.h"
-#include "cmath.h"
-#include "config.h"
-#include "shs.h"
-#include "calcerr.h"
-#include "hash.h"
-#include "block.h"
-#include "nametype.h"
-#include "string.h"
+#if defined(SRC)	/* if we are building from the calc source tree */
+# include "win32dll.h"
+# include "cmath.h"
+# include "config.h"
+# include "shs.h"
+# include "calcerr.h"
+# include "hash.h"
+# include "block.h"
+# include "nametype.h"
+# include "string.h"
+#else
+# include <calc/win32dll.h>
+# include <calc/cmath.h>
+# include <calc/config.h>
+# include <calc/shs.h>
+# include <calc/calcerr.h>
+# include <calc/hash.h>
+# include <calc/block.h>
+# include <calc/nametype.h>
+# include <calc/string.h>
+#endif
+
 
 #define MAXDIM		4	/* maximum number of dimensions in matrices */
 #define USUAL_ELEMENTS	4	/* usual number of elements for objects */

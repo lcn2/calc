@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: hash.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: hash.h,v 29.3 2001/05/29 00:16:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hash.h,v $
  *
  * Under source code control:	1995/11/14 23:57:45
@@ -33,10 +33,17 @@
 #define __HASH_H__
 
 
-#include "shs.h"
-#include "shs1.h"
-#include "md5.h"
-#include "zmath.h"
+#if defined(SRC)	/* if we are building from the calc source tree */
+# include "shs.h"
+# include "shs1.h"
+# include "md5.h"
+# include "zmath.h"
+#else
+# include <calc/shs.h>
+# include <calc/shs1.h>
+# include <calc/md5.h>
+# include <calc/zmath.h>
+#endif
 
 
 /* MAX_CHUNKSIZE is the largest chunksize of any hash */

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: qmath.h,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: qmath.h,v 29.4 2001/05/29 00:16:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -32,7 +32,12 @@
 #define __QMATH_H__
 
 
-#include "zmath.h"
+#if defined(SRC)	/* if we are building from the calc source tree */
+# include "zmath.h"
+#else
+# include <calc/zmath.h>
+#endif
+
 
 #define INITCONSTCOUNT 9    /* number of initnumbs[] pre-defined constants */
 

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: file.h,v 29.3 2001/04/10 22:06:46 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: file.h,v 29.4 2001/05/29 00:16:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.h,v $
  *
  * Under source code control:	1996/05/24 05:55:58
@@ -35,7 +35,11 @@
 #define __FILE_H__
 
 
-#include "have_fpos.h"
+#if defined(SRC)	/* if we are building from the calc source tree */
+# include "have_fpos.h"
+#else
+# include <calc/have_fpos.h>
+#endif
 
 
 /*

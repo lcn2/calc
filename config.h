@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: config.h,v 29.9 2001/04/14 22:47:21 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: config.h,v 29.10 2001/05/29 00:16:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -35,9 +35,15 @@
 #define __CONFIG_H__
 
 
-#include "win32dll.h"
-#include "nametype.h"
-#include "qmath.h"
+#if defined(SRC)	/* if we are building from the calc source tree */
+# include "win32dll.h"
+# include "nametype.h"
+# include "qmath.h"
+#else
+# include <calc/win32dll.h>
+# include <calc/nametype.h>
+# include <calc/qmath.h>
+#endif
 
 
 /*

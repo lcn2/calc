@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: string.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: string.h,v 29.3 2001/05/29 00:16:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/string.h,v $
  *
  * Under source code control:	1990/02/15 01:48:36
@@ -32,7 +32,11 @@
 #define __CALCSTRING_H__
 
 
-#include "zmath.h"
+#if defined(SRC)	/* if we are building from the calc source tree */
+# include "zmath.h"
+#else
+# include <calc/zmath.h>
+#endif
 
 
 struct string {

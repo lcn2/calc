@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: zmath.h,v 29.5 2001/03/17 21:31:47 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: zmath.h,v 29.6 2001/05/29 00:16:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -38,13 +38,21 @@
 #define __ZMATH_H__
 
 
-#include "win32dll.h"
-#include "alloc.h"
-#include "endian_calc.h"
-#include "longbits.h"
-#include "byteswap.h"
-
-#include "have_stdlib.h"
+#if defined(SRC)	/* if we are building from the calc source tree */
+# include "win32dll.h"
+# include "alloc.h"
+# include "endian_calc.h"
+# include "longbits.h"
+# include "byteswap.h"
+# include "have_stdlib.h"
+#else
+# include <calc/win32dll.h>
+# include <calc/alloc.h>
+# include <calc/endian_calc.h>
+# include <calc/longbits.h>
+# include <calc/byteswap.h>
+# include <calc/have_stdlib.h>
+#endif
 #ifdef HAVE_STDLIB_H
 # include <stdlib.h>
 #endif

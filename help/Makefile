@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.12 $
-# @(#) $Id: Makefile,v 29.12 2001/05/28 22:36:28 chongo Exp $
+# @(#) $Revision: 29.13 $
+# @(#) $Id: Makefile,v 29.13 2001/05/29 00:41:11 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -166,7 +166,7 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
 	runtime saveval scale scan scanf search sec sech seed segment select \
 	sgn sha sha1 sin sinh size sizeof sleep sort sqrt srand srandom \
 	ssq str strcat strerror strlen strpos strprintf strscan strscanf \
-	substr sum swap system tail tan tanh test time trunc xor
+	substr sum swap system tail tan tanh test time trunc version xor
 
 # This list is of files that are clones of DETAIL_HELP files.  They are
 # built from DETAIL_HELP files.

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: byteswap.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: byteswap.h,v 29.3 2001/05/29 00:16:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/byteswap.h,v $
  *
  * Under source code control:	1995/10/11 04:44:01
@@ -33,7 +33,11 @@
 #define __BYTESWAP_H__
 
 
-#include "longbits.h"
+#if defined(SRC)	/* if we are building from the calc source tree */
+# include "longbits.h"
+#else
+# include <calc/longbits.h>
+#endif
 
 
 /*

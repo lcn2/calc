@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: math_error.h,v 29.3 2001/03/17 21:31:47 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: math_error.h,v 29.4 2001/05/29 00:16:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/math_error.h,v $
  *
  * Under source code control:	1997/03/23 18:37:10
@@ -33,7 +33,11 @@
 #define __MATH_ERROR_H__
 
 
-#include "win32dll.h"
+#if defined(SRC)	/* if we are building from the calc source tree */
+# include "win32dll.h"
+#else
+# include <calc/win32dll.h>
+#endif
 
 
 /*

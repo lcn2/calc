@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: jump.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: jump.h,v 29.3 2001/05/29 00:16:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/jump.h,v $
  *
  * Under source code control:	1994/06/29 04:03:55
@@ -65,7 +65,13 @@
 #if !defined(__JUMP_H__)
 #define __JUMP_H__
 
-#include "have_const.h"
+
+#if defined(SRC)	/* if we are building from the calc source tree */
+# include "have_const.h"
+#else
+# include <calc/have_const.h>
+#endif
+
 
 /*
  * trivial prime CONSTants

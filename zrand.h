@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: zrand.h,v 29.3 2001/04/14 22:47:21 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: zrand.h,v 29.4 2001/05/29 00:16:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrand.h,v $
  *
  * Under source code control:	1995/01/07 09:45:26
@@ -37,8 +37,13 @@
 #define __ZRAND_H__
 
 
-#include "value.h"
-#include "have_const.h"
+#if defined(SRC)	/* if we are building from the calc source tree */
+# include "value.h"
+# include "have_const.h"
+#else
+# include <calc/value.h>
+# include <calc/have_const.h>
+#endif
 
 
 /*

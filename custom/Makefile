@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.11 $
-# @(#) $Id: Makefile,v 29.11 2001/05/28 22:23:56 chongo Exp $
+# @(#) $Revision: 29.13 $
+# @(#) $Id: Makefile,v 29.13 2001/05/28 23:54:53 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -434,7 +434,7 @@ depend:
 	${Q}echo forming custom dependency list
 	${Q}echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
 	    skel/custom/makedep.out
-	${Q}cd skel/custom; ${MAKEDEPEND} -w 1 -m -f makedep.out ${C_SRC}
+	${Q}cd skel/custom; ${MAKEDEPEND} -w 1 -f makedep.out ${C_SRC}
 	-${Q}for i in ${C_SRC}; do \
 		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
 	done >> skel/custom/makedep.out
@@ -632,9 +632,8 @@ install: all
 c_argv.o: ../alloc.h
 c_argv.o: ../block.h
 c_argv.o: ../byteswap.h
-c_argv.o: ../calcerr.h
 c_argv.o: ../calc.h
-c_argv.o: c_argv.c
+c_argv.o: ../calcerr.h
 c_argv.o: ../cmath.h
 c_argv.o: ../config.h
 c_argv.o: ../custom.h
@@ -650,17 +649,17 @@ c_argv.o: ../longbits.h
 c_argv.o: ../md5.h
 c_argv.o: ../nametype.h
 c_argv.o: ../qmath.h
-c_argv.o: ../shs1.h
 c_argv.o: ../shs.h
+c_argv.o: ../shs1.h
 c_argv.o: ../string.h
 c_argv.o: ../value.h
 c_argv.o: ../win32dll.h
 c_argv.o: ../zmath.h
+c_argv.o: c_argv.c
 c_devnull.o: ../alloc.h
 c_devnull.o: ../block.h
 c_devnull.o: ../byteswap.h
 c_devnull.o: ../calcerr.h
-c_devnull.o: c_devnull.c
 c_devnull.o: ../cmath.h
 c_devnull.o: ../config.h
 c_devnull.o: ../custom.h
@@ -676,17 +675,17 @@ c_devnull.o: ../longbits.h
 c_devnull.o: ../md5.h
 c_devnull.o: ../nametype.h
 c_devnull.o: ../qmath.h
-c_devnull.o: ../shs1.h
 c_devnull.o: ../shs.h
+c_devnull.o: ../shs1.h
 c_devnull.o: ../string.h
 c_devnull.o: ../value.h
 c_devnull.o: ../win32dll.h
 c_devnull.o: ../zmath.h
+c_devnull.o: c_devnull.c
 c_help.o: ../alloc.h
 c_help.o: ../block.h
 c_help.o: ../byteswap.h
 c_help.o: ../calcerr.h
-c_help.o: c_help.c
 c_help.o: ../cmath.h
 c_help.o: ../config.h
 c_help.o: ../custom.h
@@ -702,19 +701,19 @@ c_help.o: ../longbits.h
 c_help.o: ../md5.h
 c_help.o: ../nametype.h
 c_help.o: ../qmath.h
-c_help.o: ../shs1.h
 c_help.o: ../shs.h
+c_help.o: ../shs1.h
 c_help.o: ../string.h
 c_help.o: ../value.h
 c_help.o: ../win32dll.h
 c_help.o: ../zmath.h
+c_help.o: c_help.c
 c_pzasusb8.o: ../alloc.h
 c_pzasusb8.o: ../block.h
 c_pzasusb8.o: ../byteswap.h
 c_pzasusb8.o: ../calcerr.h
 c_pzasusb8.o: ../cmath.h
 c_pzasusb8.o: ../config.h
-c_pzasusb8.o: c_pzasusb8.c
 c_pzasusb8.o: ../custom.h
 c_pzasusb8.o: ../endian_calc.h
 c_pzasusb8.o: ../hash.h
@@ -728,21 +727,21 @@ c_pzasusb8.o: ../longbits.h
 c_pzasusb8.o: ../md5.h
 c_pzasusb8.o: ../nametype.h
 c_pzasusb8.o: ../qmath.h
-c_pzasusb8.o: ../shs1.h
 c_pzasusb8.o: ../shs.h
+c_pzasusb8.o: ../shs1.h
 c_pzasusb8.o: ../string.h
 c_pzasusb8.o: ../value.h
 c_pzasusb8.o: ../win32dll.h
 c_pzasusb8.o: ../zmath.h
+c_pzasusb8.o: c_pzasusb8.c
 c_sysinfo.o: ../alloc.h
 c_sysinfo.o: ../block.h
 c_sysinfo.o: ../byteswap.h
-c_sysinfo.o: ../calcerr.h
 c_sysinfo.o: ../calc.h
+c_sysinfo.o: ../calcerr.h
 c_sysinfo.o: ../cmath.h
 c_sysinfo.o: ../conf.h
 c_sysinfo.o: ../config.h
-c_sysinfo.o: c_sysinfo.c
 c_sysinfo.o: ../custom.h
 c_sysinfo.o: ../endian_calc.h
 c_sysinfo.o: ../fposval.h
@@ -760,14 +759,15 @@ c_sysinfo.o: ../md5.h
 c_sysinfo.o: ../nametype.h
 c_sysinfo.o: ../prime.h
 c_sysinfo.o: ../qmath.h
-c_sysinfo.o: ../shs1.h
 c_sysinfo.o: ../shs.h
+c_sysinfo.o: ../shs1.h
 c_sysinfo.o: ../string.h
 c_sysinfo.o: ../value.h
 c_sysinfo.o: ../win32dll.h
 c_sysinfo.o: ../zmath.h
 c_sysinfo.o: ../zrand.h
 c_sysinfo.o: ../zrandom.h
+c_sysinfo.o: c_sysinfo.c
 custtbl.o: ../alloc.h
 custtbl.o: ../block.h
 custtbl.o: ../byteswap.h
@@ -775,7 +775,6 @@ custtbl.o: ../calcerr.h
 custtbl.o: ../cmath.h
 custtbl.o: ../config.h
 custtbl.o: ../custom.h
-custtbl.o: custtbl.c
 custtbl.o: ../endian_calc.h
 custtbl.o: ../hash.h
 custtbl.o: ../have_const.h
@@ -788,9 +787,10 @@ custtbl.o: ../longbits.h
 custtbl.o: ../md5.h
 custtbl.o: ../nametype.h
 custtbl.o: ../qmath.h
-custtbl.o: ../shs1.h
 custtbl.o: ../shs.h
+custtbl.o: ../shs1.h
 custtbl.o: ../string.h
 custtbl.o: ../value.h
 custtbl.o: ../win32dll.h
 custtbl.o: ../zmath.h
+custtbl.o: custtbl.c

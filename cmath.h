@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: cmath.h,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: cmath.h,v 29.4 2001/05/29 00:16:53 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/cmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:45
@@ -32,7 +32,11 @@
 #define __CMATH_H__
 
 
-#include "qmath.h"
+#if defined(SRC)	/* if we are building from the calc source tree */
+# include "qmath.h"
+#else
+# include <calc/qmath.h>
+#endif
 
 
 /*

@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.13 $
-# @(#) $Id: Makefile,v 29.13 2001/05/13 14:43:56 chongo Exp chongo $
+# @(#) $Revision: 29.14 $
+# @(#) $Id: Makefile,v 29.14 2001/05/28 23:08:22 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -77,10 +77,11 @@ CMP= cmp
 #
 #		make detaillist
 #
-SCRIPT= mersenne piforever plus simple square fproduct powerterm
+SCRIPT= 4dsphere fproduct mersenne piforever plus powerterm simple \
+	square
 
-SCRIPT_SRC= mersenne.calc piforever.calc plus.calc simple.calc square.calc \
-	fproduct.calc powerterm.calc
+SCRIPT_SRC= 4dsphere.calc fproduct.calc mersenne.calc piforever.calc \
+	plus.calc powerterm.calc simple.calc square.calc
 
 # These files are found (but not built) in the distribution
 #
@@ -266,6 +267,14 @@ install: all
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 
+4dsphere: 4dsphere.calc
+	rm -f $@
+	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
+	${CHMOD} +x $@
+fproduct: fproduct.calc
+	rm -f $@
+	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
+	${CHMOD} +x $@
 mersenne: mersenne.calc
 	rm -f $@
 	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
@@ -278,19 +287,15 @@ plus: plus.calc
 	rm -f $@
 	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	${CHMOD} +x $@
+powerterm: powerterm.calc
+	rm -f $@
+	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
+	${CHMOD} +x $@
 simple: simple.calc
 	rm -f $@
 	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	${CHMOD} +x $@
 square: square.calc
-	rm -f $@
-	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
-	${CHMOD} +x $@
-fproduct: fproduct.calc
-	rm -f $@
-	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
-	${CHMOD} +x $@
-powerterm: powerterm.calc
 	rm -f $@
 	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	${CHMOD} +x $@

@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.9 $
-# @(#) $Id: Makefile,v 29.9 2001/05/28 22:27:15 chongo Exp $
+# @(#) $Revision: 29.11 $
+# @(#) $Id: Makefile,v 29.11 2001/05/28 23:54:53 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/Makefile,v $
 #
 # Under source code control:	1997/04/19 22:46:49
@@ -411,7 +411,7 @@ depend:
 	${Q}echo forming sample dependency list
 	${Q}echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
 	    skel/sample/makedep.out
-	${Q}cd skel/sample; ${MAKEDEPEND} -w 1 -m -f makedep.out -I.. ${C_SRC}
+	${Q}cd skel/sample; ${MAKEDEPEND} -w 1 -f makedep.out -I.. ${C_SRC}
 	-${Q}for i in ${C_SRC}; do \
 		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
 	done >> skel/sample/makedep.out
@@ -479,8 +479,8 @@ install: all
 many_random.o: ../alloc.h
 many_random.o: ../block.h
 many_random.o: ../byteswap.h
-many_random.o: ../calcerr.h
 many_random.o: ../calc.h
+many_random.o: ../calcerr.h
 many_random.o: ../cmath.h
 many_random.o: ../config.h
 many_random.o: ../endian_calc.h
@@ -493,22 +493,22 @@ many_random.o: ../have_stdlib.h
 many_random.o: ../have_string.h
 many_random.o: ../lib_util.h
 many_random.o: ../longbits.h
-many_random.o: many_random.c
 many_random.o: ../md5.h
 many_random.o: ../nametype.h
 many_random.o: ../qmath.h
-many_random.o: ../shs1.h
 many_random.o: ../shs.h
+many_random.o: ../shs1.h
 many_random.o: ../string.h
 many_random.o: ../value.h
 many_random.o: ../win32dll.h
 many_random.o: ../zmath.h
 many_random.o: ../zrandom.h
+many_random.o: many_random.c
 test_random.o: ../alloc.h
 test_random.o: ../block.h
 test_random.o: ../byteswap.h
-test_random.o: ../calcerr.h
 test_random.o: ../calc.h
+test_random.o: ../calcerr.h
 test_random.o: ../cmath.h
 test_random.o: ../config.h
 test_random.o: ../endian_calc.h
@@ -524,11 +524,11 @@ test_random.o: ../longbits.h
 test_random.o: ../md5.h
 test_random.o: ../nametype.h
 test_random.o: ../qmath.h
-test_random.o: ../shs1.h
 test_random.o: ../shs.h
+test_random.o: ../shs1.h
 test_random.o: ../string.h
-test_random.o: test_random.c
 test_random.o: ../value.h
 test_random.o: ../win32dll.h
 test_random.o: ../zmath.h
 test_random.o: ../zrandom.h
+test_random.o: test_random.c

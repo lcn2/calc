@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.28 $$
-# @(#) $Id: Makefile.ship,v 29.28 2001/05/28 22:44:50 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.30 $$
+# @(#) $Id: Makefile.ship,v 29.30 2001/05/29 00:16:53 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -812,8 +812,8 @@ CCWARN= -Wall -Wno-implicit -Wno-comment
 CCOPT= ${DEBUG} ${NO_SHARED}
 CCMISC=
 #
-CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-ICFLAGS= ${CCWARN} ${CCMISC}
+CFLAGS= -DSRC ${CCWARN} ${CCOPT} ${CCMISC}
+ICFLAGS= -DSRC ${CCWARN} ${CCMISC}
 #
 LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 ILDFLAGS=
@@ -832,8 +832,8 @@ CC= ${PURIFY} ${LCC}
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC=
 #
-#CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= ${CCWARN} ${CCMISC}
+#CFLAGS= -DSRC ${CCWARN} ${CCOPT} ${CCMISC}
+#ICFLAGS= -DSRC ${CCWARN} ${CCMISC}
 #
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
@@ -853,8 +853,8 @@ CC= ${PURIFY} ${LCC}
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC=
 #
-#CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= ${CCWARN} ${CCMISC}
+#CFLAGS= -DSRC ${CCWARN} ${CCOPT} ${CCMISC}
+#ICFLAGS= -DSRC ${CCWARN} ${CCMISC}
 #
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
@@ -880,8 +880,8 @@ CC= ${PURIFY} ${LCC}
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC= -rdata_shared
 #
-#CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= ${CCWARN} ${CCMISC}
+#CFLAGS= -DSRC ${CCWARN} ${CCOPT} ${CCMISC}
+#ICFLAGS= -DSRC ${CCWARN} ${CCMISC}
 #
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
@@ -902,8 +902,8 @@ CC= ${PURIFY} ${LCC}
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC= +e
 #
-#CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= ${CCWARN} ${CCMISC}
+#CFLAGS= -DSRC ${CCWARN} ${CCOPT} ${CCMISC}
+#ICFLAGS= -DSRC ${CCWARN} ${CCMISC}
 #
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
@@ -919,8 +919,8 @@ CC= ${PURIFY} ${LCC}
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC= -qlanglvl=ansi
 #
-#CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= ${CCWARN} ${CCMISC}
+#CFLAGS= -DSRC ${CCWARN} ${CCOPT} ${CCMISC}
+#ICFLAGS= -DSRC ${CCWARN} ${CCMISC}
 #
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
@@ -941,8 +941,8 @@ CC= ${PURIFY} ${LCC}
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC= -DFORCE_STDC
 #
-#CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= ${CCWARN} ${CCMISC}
+#CFLAGS= -DSRC ${CCWARN} ${CCOPT} ${CCMISC}
+#ICFLAGS= -DSRC ${CCWARN} ${CCMISC}
 #
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
@@ -961,8 +961,8 @@ CC= ${PURIFY} ${LCC}
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC=
 #
-#CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= ${CCWARN} ${CCMISC} -Wno-unused
+#CFLAGS= -DSRC ${CCWARN} ${CCOPT} ${CCMISC}
+#ICFLAGS= -DSRC ${CCWARN} ${CCMISC} -Wno-unused
 #
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
@@ -980,8 +980,8 @@ CC= ${PURIFY} ${LCC}
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC=
 #
-#CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= ${CCWARN} ${CCMISC} -Wno-unused
+#CFLAGS= -DSRC ${CCWARN} ${CCOPT} ${CCMISC}
+#ICFLAGS= -DSRC ${CCWARN} ${CCMISC} -Wno-unused
 #
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
@@ -2814,7 +2814,7 @@ depend: hsrc
 	${Q}echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
 	    skel/makedep.out
 	${Q}cd skel; \
-	    ${MAKEDEPEND} -w 1 -m -f makedep.out ${C_SRC} ${BUILD_C_SRC}
+	    ${MAKEDEPEND} -w 1 -f makedep.out ${C_SRC} ${BUILD_C_SRC}
 	-${Q}for i in ${C_SRC} ${BUILD_C_SRC}; do \
 		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
 	done >> skel/makedep.out
@@ -3524,8 +3524,8 @@ addop.o: addop.c
 addop.o: alloc.h
 addop.o: block.h
 addop.o: byteswap.h
-addop.o: calcerr.h
 addop.o: calc.h
+addop.o: calcerr.h
 addop.o: cmath.h
 addop.o: config.h
 addop.o: endian_calc.h
@@ -3543,8 +3543,8 @@ addop.o: md5.h
 addop.o: nametype.h
 addop.o: opcodes.h
 addop.o: qmath.h
-addop.o: shs1.h
 addop.o: shs.h
+addop.o: shs1.h
 addop.o: string.h
 addop.o: symbol.h
 addop.o: token.h
@@ -3572,8 +3572,8 @@ assocfunc.o: longbits.h
 assocfunc.o: md5.h
 assocfunc.o: nametype.h
 assocfunc.o: qmath.h
-assocfunc.o: shs1.h
 assocfunc.o: shs.h
+assocfunc.o: shs1.h
 assocfunc.o: string.h
 assocfunc.o: value.h
 assocfunc.o: win32dll.h
@@ -3583,8 +3583,8 @@ blkcpy.o: blkcpy.c
 blkcpy.o: blkcpy.h
 blkcpy.o: block.h
 blkcpy.o: byteswap.h
-blkcpy.o: calcerr.h
 blkcpy.o: calc.h
+blkcpy.o: calcerr.h
 blkcpy.o: cmath.h
 blkcpy.o: config.h
 blkcpy.o: endian_calc.h
@@ -3601,8 +3601,8 @@ blkcpy.o: longbits.h
 blkcpy.o: md5.h
 blkcpy.o: nametype.h
 blkcpy.o: qmath.h
-blkcpy.o: shs1.h
 blkcpy.o: shs.h
+blkcpy.o: shs1.h
 blkcpy.o: string.h
 blkcpy.o: value.h
 blkcpy.o: win32dll.h
@@ -3625,8 +3625,8 @@ block.o: longbits.h
 block.o: md5.h
 block.o: nametype.h
 block.o: qmath.h
-block.o: shs1.h
 block.o: shs.h
+block.o: shs1.h
 block.o: string.h
 block.o: value.h
 block.o: win32dll.h
@@ -3645,16 +3645,13 @@ byteswap.o: longbits.h
 byteswap.o: qmath.h
 byteswap.o: win32dll.h
 byteswap.o: zmath.h
-calcerr.o: calcerr.c
-calcerr.o: calcerr.h
-calcerr.o: have_const.h
 calc.o: alloc.h
 calc.o: args.h
 calc.o: block.h
 calc.o: byteswap.h
 calc.o: calc.c
-calc.o: calcerr.h
 calc.o: calc.h
+calc.o: calcerr.h
 calc.o: cmath.h
 calc.o: conf.h
 calc.o: config.h
@@ -3679,19 +3676,22 @@ calc.o: md5.h
 calc.o: nametype.h
 calc.o: opcodes.h
 calc.o: qmath.h
-calc.o: shs1.h
 calc.o: shs.h
+calc.o: shs1.h
 calc.o: string.h
 calc.o: symbol.h
 calc.o: token.h
 calc.o: value.h
 calc.o: win32dll.h
 calc.o: zmath.h
+calcerr.o: calcerr.c
+calcerr.o: calcerr.h
+calcerr.o: have_const.h
 codegen.o: alloc.h
 codegen.o: block.h
 codegen.o: byteswap.h
-codegen.o: calcerr.h
 codegen.o: calc.h
+codegen.o: calcerr.h
 codegen.o: cmath.h
 codegen.o: codegen.c
 codegen.o: conf.h
@@ -3712,8 +3712,8 @@ codegen.o: md5.h
 codegen.o: nametype.h
 codegen.o: opcodes.h
 codegen.o: qmath.h
-codegen.o: shs1.h
 codegen.o: shs.h
+codegen.o: shs1.h
 codegen.o: string.h
 codegen.o: symbol.h
 codegen.o: token.h
@@ -3753,8 +3753,8 @@ commath.o: zmath.h
 config.o: alloc.h
 config.o: block.h
 config.o: byteswap.h
-config.o: calcerr.h
 config.o: calc.h
+config.o: calcerr.h
 config.o: cmath.h
 config.o: config.c
 config.o: config.h
@@ -3771,8 +3771,8 @@ config.o: longbits.h
 config.o: md5.h
 config.o: nametype.h
 config.o: qmath.h
-config.o: shs1.h
 config.o: shs.h
+config.o: shs1.h
 config.o: string.h
 config.o: token.h
 config.o: value.h
@@ -3782,8 +3782,8 @@ config.o: zrand.h
 const.o: alloc.h
 const.o: block.h
 const.o: byteswap.h
-const.o: calcerr.h
 const.o: calc.h
+const.o: calcerr.h
 const.o: cmath.h
 const.o: config.h
 const.o: const.c
@@ -3799,8 +3799,8 @@ const.o: longbits.h
 const.o: md5.h
 const.o: nametype.h
 const.o: qmath.h
-const.o: shs1.h
 const.o: shs.h
+const.o: shs1.h
 const.o: string.h
 const.o: value.h
 const.o: win32dll.h
@@ -3808,8 +3808,8 @@ const.o: zmath.h
 custom.o: alloc.h
 custom.o: block.h
 custom.o: byteswap.h
-custom.o: calcerr.h
 custom.o: calc.h
+custom.o: calcerr.h
 custom.o: cmath.h
 custom.o: config.h
 custom.o: custom.c
@@ -3826,8 +3826,8 @@ custom.o: longbits.h
 custom.o: md5.h
 custom.o: nametype.h
 custom.o: qmath.h
-custom.o: shs1.h
 custom.o: shs.h
+custom.o: shs1.h
 custom.o: string.h
 custom.o: value.h
 custom.o: win32dll.h
@@ -3837,8 +3837,8 @@ endian.o: have_unistd.h
 file.o: alloc.h
 file.o: block.h
 file.o: byteswap.h
-file.o: calcerr.h
 file.o: calc.h
+file.o: calcerr.h
 file.o: cmath.h
 file.o: config.h
 file.o: endian_calc.h
@@ -3859,8 +3859,8 @@ file.o: longbits.h
 file.o: md5.h
 file.o: nametype.h
 file.o: qmath.h
-file.o: shs1.h
 file.o: shs.h
+file.o: shs1.h
 file.o: string.h
 file.o: value.h
 file.o: win32dll.h
@@ -3874,8 +3874,8 @@ fposval.o: have_posscl.h
 func.o: alloc.h
 func.o: block.h
 func.o: byteswap.h
-func.o: calcerr.h
 func.o: calc.h
+func.o: calcerr.h
 func.o: cmath.h
 func.o: config.h
 func.o: custom.h
@@ -3901,8 +3901,8 @@ func.o: nametype.h
 func.o: opcodes.h
 func.o: prime.h
 func.o: qmath.h
-func.o: shs1.h
 func.o: shs.h
+func.o: shs1.h
 func.o: string.h
 func.o: symbol.h
 func.o: token.h
@@ -3914,8 +3914,8 @@ func.o: zrandom.h
 hash.o: alloc.h
 hash.o: block.h
 hash.o: byteswap.h
-hash.o: calcerr.h
 hash.o: calc.h
+hash.o: calcerr.h
 hash.o: cmath.h
 hash.o: config.h
 hash.o: endian_calc.h
@@ -3931,8 +3931,8 @@ hash.o: longbits.h
 hash.o: md5.h
 hash.o: nametype.h
 hash.o: qmath.h
-hash.o: shs1.h
 hash.o: shs.h
+hash.o: shs1.h
 hash.o: string.h
 hash.o: value.h
 hash.o: win32dll.h
@@ -3967,8 +3967,8 @@ have_varvs.o: have_varvs.c
 help.o: alloc.h
 help.o: block.h
 help.o: byteswap.h
-help.o: calcerr.h
 help.o: calc.h
+help.o: calcerr.h
 help.o: cmath.h
 help.o: conf.h
 help.o: config.h
@@ -3986,8 +3986,8 @@ help.o: longbits.h
 help.o: md5.h
 help.o: nametype.h
 help.o: qmath.h
-help.o: shs1.h
 help.o: shs.h
+help.o: shs1.h
 help.o: string.h
 help.o: value.h
 help.o: win32dll.h
@@ -3995,8 +3995,8 @@ help.o: zmath.h
 hist.o: alloc.h
 hist.o: block.h
 hist.o: byteswap.h
-hist.o: calcerr.h
 hist.o: calc.h
+hist.o: calcerr.h
 hist.o: cmath.h
 hist.o: config.h
 hist.o: endian_calc.h
@@ -4015,8 +4015,8 @@ hist.o: longbits.h
 hist.o: md5.h
 hist.o: nametype.h
 hist.o: qmath.h
-hist.o: shs1.h
 hist.o: shs.h
+hist.o: shs1.h
 hist.o: string.h
 hist.o: value.h
 hist.o: win32dll.h
@@ -4024,8 +4024,8 @@ hist.o: zmath.h
 input.o: alloc.h
 input.o: block.h
 input.o: byteswap.h
-input.o: calcerr.h
 input.o: calc.h
+input.o: calcerr.h
 input.o: cmath.h
 input.o: conf.h
 input.o: config.h
@@ -4044,8 +4044,8 @@ input.o: longbits.h
 input.o: md5.h
 input.o: nametype.h
 input.o: qmath.h
-input.o: shs1.h
 input.o: shs.h
+input.o: shs1.h
 input.o: string.h
 input.o: value.h
 input.o: win32dll.h
@@ -4056,8 +4056,8 @@ jump.o: jump.h
 label.o: alloc.h
 label.o: block.h
 label.o: byteswap.h
-label.o: calcerr.h
 label.o: calc.h
+label.o: calcerr.h
 label.o: cmath.h
 label.o: config.h
 label.o: endian_calc.h
@@ -4076,8 +4076,8 @@ label.o: md5.h
 label.o: nametype.h
 label.o: opcodes.h
 label.o: qmath.h
-label.o: shs1.h
 label.o: shs.h
+label.o: shs1.h
 label.o: string.h
 label.o: token.h
 label.o: value.h
@@ -4086,8 +4086,8 @@ label.o: zmath.h
 lib_calc.o: alloc.h
 lib_calc.o: block.h
 lib_calc.o: byteswap.h
-lib_calc.o: calcerr.h
 lib_calc.o: calc.h
+lib_calc.o: calcerr.h
 lib_calc.o: cmath.h
 lib_calc.o: conf.h
 lib_calc.o: config.h
@@ -4108,8 +4108,8 @@ lib_calc.o: longbits.h
 lib_calc.o: md5.h
 lib_calc.o: nametype.h
 lib_calc.o: qmath.h
-lib_calc.o: shs1.h
 lib_calc.o: shs.h
+lib_calc.o: shs1.h
 lib_calc.o: string.h
 lib_calc.o: symbol.h
 lib_calc.o: terminal.h
@@ -4150,8 +4150,8 @@ listfunc.o: longbits.h
 listfunc.o: md5.h
 listfunc.o: nametype.h
 listfunc.o: qmath.h
-listfunc.o: shs1.h
 listfunc.o: shs.h
+listfunc.o: shs1.h
 listfunc.o: string.h
 listfunc.o: value.h
 listfunc.o: win32dll.h
@@ -4183,8 +4183,8 @@ matfunc.o: matfunc.c
 matfunc.o: md5.h
 matfunc.o: nametype.h
 matfunc.o: qmath.h
-matfunc.o: shs1.h
 matfunc.o: shs.h
+matfunc.o: shs1.h
 matfunc.o: string.h
 matfunc.o: value.h
 matfunc.o: win32dll.h
@@ -4194,8 +4194,8 @@ math_error.o: alloc.h
 math_error.o: args.h
 math_error.o: block.h
 math_error.o: byteswap.h
-math_error.o: calcerr.h
 math_error.o: calc.h
+math_error.o: calcerr.h
 math_error.o: cmath.h
 math_error.o: config.h
 math_error.o: endian_calc.h
@@ -4212,8 +4212,8 @@ math_error.o: math_error.h
 math_error.o: md5.h
 math_error.o: nametype.h
 math_error.o: qmath.h
-math_error.o: shs1.h
 math_error.o: shs.h
+math_error.o: shs1.h
 math_error.o: string.h
 math_error.o: value.h
 math_error.o: win32dll.h
@@ -4237,8 +4237,8 @@ md5.o: md5.c
 md5.o: md5.h
 md5.o: nametype.h
 md5.o: qmath.h
-md5.o: shs1.h
 md5.o: shs.h
+md5.o: shs1.h
 md5.o: string.h
 md5.o: value.h
 md5.o: win32dll.h
@@ -4246,8 +4246,8 @@ md5.o: zmath.h
 obj.o: alloc.h
 obj.o: block.h
 obj.o: byteswap.h
-obj.o: calcerr.h
 obj.o: calc.h
+obj.o: calcerr.h
 obj.o: cmath.h
 obj.o: config.h
 obj.o: endian_calc.h
@@ -4266,8 +4266,8 @@ obj.o: nametype.h
 obj.o: obj.c
 obj.o: opcodes.h
 obj.o: qmath.h
-obj.o: shs1.h
 obj.o: shs.h
+obj.o: shs1.h
 obj.o: string.h
 obj.o: symbol.h
 obj.o: value.h
@@ -4276,8 +4276,8 @@ obj.o: zmath.h
 opcodes.o: alloc.h
 opcodes.o: block.h
 opcodes.o: byteswap.h
-opcodes.o: calcerr.h
 opcodes.o: calc.h
+opcodes.o: calcerr.h
 opcodes.o: cmath.h
 opcodes.o: config.h
 opcodes.o: custom.h
@@ -4301,8 +4301,8 @@ opcodes.o: nametype.h
 opcodes.o: opcodes.c
 opcodes.o: opcodes.h
 opcodes.o: qmath.h
-opcodes.o: shs1.h
 opcodes.o: shs.h
+opcodes.o: shs1.h
 opcodes.o: string.h
 opcodes.o: symbol.h
 opcodes.o: value.h
@@ -4343,8 +4343,8 @@ poly.o: md5.h
 poly.o: nametype.h
 poly.o: poly.c
 poly.o: qmath.h
-poly.o: shs1.h
 poly.o: shs.h
+poly.o: shs1.h
 poly.o: string.h
 poly.o: value.h
 poly.o: win32dll.h
@@ -4460,8 +4460,8 @@ quickhash.o: md5.h
 quickhash.o: nametype.h
 quickhash.o: qmath.h
 quickhash.o: quickhash.c
-quickhash.o: shs1.h
 quickhash.o: shs.h
+quickhash.o: shs1.h
 quickhash.o: string.h
 quickhash.o: value.h
 quickhash.o: win32dll.h
@@ -4491,31 +4491,6 @@ seed.o: qmath.h
 seed.o: seed.c
 seed.o: win32dll.h
 seed.o: zmath.h
-shs1.o: align32.h
-shs1.o: alloc.h
-shs1.o: block.h
-shs1.o: byteswap.h
-shs1.o: calcerr.h
-shs1.o: cmath.h
-shs1.o: config.h
-shs1.o: endian_calc.h
-shs1.o: hash.h
-shs1.o: have_malloc.h
-shs1.o: have_memmv.h
-shs1.o: have_newstr.h
-shs1.o: have_stdlib.h
-shs1.o: have_string.h
-shs1.o: longbits.h
-shs1.o: md5.h
-shs1.o: nametype.h
-shs1.o: qmath.h
-shs1.o: shs1.c
-shs1.o: shs1.h
-shs1.o: shs.h
-shs1.o: string.h
-shs1.o: value.h
-shs1.o: win32dll.h
-shs1.o: zmath.h
 shs.o: align32.h
 shs.o: alloc.h
 shs.o: block.h
@@ -4534,13 +4509,38 @@ shs.o: longbits.h
 shs.o: md5.h
 shs.o: nametype.h
 shs.o: qmath.h
-shs.o: shs1.h
 shs.o: shs.c
 shs.o: shs.h
+shs.o: shs1.h
 shs.o: string.h
 shs.o: value.h
 shs.o: win32dll.h
 shs.o: zmath.h
+shs1.o: align32.h
+shs1.o: alloc.h
+shs1.o: block.h
+shs1.o: byteswap.h
+shs1.o: calcerr.h
+shs1.o: cmath.h
+shs1.o: config.h
+shs1.o: endian_calc.h
+shs1.o: hash.h
+shs1.o: have_malloc.h
+shs1.o: have_memmv.h
+shs1.o: have_newstr.h
+shs1.o: have_stdlib.h
+shs1.o: have_string.h
+shs1.o: longbits.h
+shs1.o: md5.h
+shs1.o: nametype.h
+shs1.o: qmath.h
+shs1.o: shs.h
+shs1.o: shs1.c
+shs1.o: shs1.h
+shs1.o: string.h
+shs1.o: value.h
+shs1.o: win32dll.h
+shs1.o: zmath.h
 size.o: alloc.h
 size.o: block.h
 size.o: byteswap.h
@@ -4559,8 +4559,8 @@ size.o: longbits.h
 size.o: md5.h
 size.o: nametype.h
 size.o: qmath.h
-size.o: shs1.h
 size.o: shs.h
+size.o: shs1.h
 size.o: size.c
 size.o: string.h
 size.o: value.h
@@ -4571,8 +4571,8 @@ size.o: zrandom.h
 string.o: alloc.h
 string.o: block.h
 string.o: byteswap.h
-string.o: calcerr.h
 string.o: calc.h
+string.o: calcerr.h
 string.o: cmath.h
 string.o: config.h
 string.o: endian_calc.h
@@ -4587,8 +4587,8 @@ string.o: longbits.h
 string.o: md5.h
 string.o: nametype.h
 string.o: qmath.h
-string.o: shs1.h
 string.o: shs.h
+string.o: shs1.h
 string.o: string.c
 string.o: string.h
 string.o: value.h
@@ -4597,8 +4597,8 @@ string.o: zmath.h
 symbol.o: alloc.h
 symbol.o: block.h
 symbol.o: byteswap.h
-symbol.o: calcerr.h
 symbol.o: calc.h
+symbol.o: calcerr.h
 symbol.o: cmath.h
 symbol.o: config.h
 symbol.o: endian_calc.h
@@ -4616,8 +4616,8 @@ symbol.o: md5.h
 symbol.o: nametype.h
 symbol.o: opcodes.h
 symbol.o: qmath.h
-symbol.o: shs1.h
 symbol.o: shs.h
+symbol.o: shs1.h
 symbol.o: string.h
 symbol.o: symbol.c
 symbol.o: symbol.h
@@ -4629,8 +4629,8 @@ token.o: alloc.h
 token.o: args.h
 token.o: block.h
 token.o: byteswap.h
-token.o: calcerr.h
 token.o: calc.h
+token.o: calcerr.h
 token.o: cmath.h
 token.o: config.h
 token.o: endian_calc.h
@@ -4646,8 +4646,8 @@ token.o: math_error.h
 token.o: md5.h
 token.o: nametype.h
 token.o: qmath.h
-token.o: shs1.h
 token.o: shs.h
+token.o: shs1.h
 token.o: string.h
 token.o: token.c
 token.o: token.h
@@ -4657,8 +4657,8 @@ token.o: zmath.h
 value.o: alloc.h
 value.o: block.h
 value.o: byteswap.h
-value.o: calcerr.h
 value.o: calc.h
+value.o: calcerr.h
 value.o: cmath.h
 value.o: config.h
 value.o: endian_calc.h
@@ -4678,8 +4678,8 @@ value.o: md5.h
 value.o: nametype.h
 value.o: opcodes.h
 value.o: qmath.h
-value.o: shs1.h
 value.o: shs.h
+value.o: shs1.h
 value.o: string.h
 value.o: symbol.h
 value.o: value.c
@@ -4691,8 +4691,8 @@ value.o: zrandom.h
 version.o: alloc.h
 version.o: block.h
 version.o: byteswap.h
-version.o: calcerr.h
 version.o: calc.h
+version.o: calcerr.h
 version.o: cmath.h
 version.o: config.h
 version.o: endian_calc.h
@@ -4707,8 +4707,8 @@ version.o: longbits.h
 version.o: md5.h
 version.o: nametype.h
 version.o: qmath.h
-version.o: shs1.h
 version.o: shs.h
+version.o: shs1.h
 version.o: string.h
 version.o: value.h
 version.o: version.c
@@ -4804,8 +4804,8 @@ zprime.o: md5.h
 zprime.o: nametype.h
 zprime.o: prime.h
 zprime.o: qmath.h
-zprime.o: shs1.h
 zprime.o: shs.h
+zprime.o: shs1.h
 zprime.o: string.h
 zprime.o: value.h
 zprime.o: win32dll.h
@@ -4828,6 +4828,16 @@ zrand.o: have_stdlib.h
 zrand.o: have_string.h
 zrand.o: longbits.h
 zrand.o: md5.h
+zrand.o: nametype.h
+zrand.o: qmath.h
+zrand.o: shs.h
+zrand.o: shs1.h
+zrand.o: string.h
+zrand.o: value.h
+zrand.o: win32dll.h
+zrand.o: zmath.h
+zrand.o: zrand.c
+zrand.o: zrand.h
 zrandom.o: alloc.h
 zrandom.o: block.h
 zrandom.o: byteswap.h
@@ -4846,21 +4856,11 @@ zrandom.o: longbits.h
 zrandom.o: md5.h
 zrandom.o: nametype.h
 zrandom.o: qmath.h
-zrandom.o: shs1.h
 zrandom.o: shs.h
+zrandom.o: shs1.h
 zrandom.o: string.h
 zrandom.o: value.h
 zrandom.o: win32dll.h
 zrandom.o: zmath.h
 zrandom.o: zrandom.c
 zrandom.o: zrandom.h
-zrand.o: nametype.h
-zrand.o: qmath.h
-zrand.o: shs1.h
-zrand.o: shs.h
-zrand.o: string.h
-zrand.o: value.h
-zrand.o: win32dll.h
-zrand.o: zmath.h
-zrand.o: zrand.c
-zrand.o: zrand.h
