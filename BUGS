@@ -89,3 +89,132 @@ Known problems or mis-features:
     * There is some places in the source with obscure variable names
       and not much in the way of comments.  We need some major cleanup
       and documentation.
+
+    * On a Dec Alpha, make check for version 2.11.0t1 core dumps:
+
+	From vandermj@molbio.sbphrd.com  Fri Sep 24 06:15:28 1999
+	Subject: Re: calc version 2.11.0t1
+	Date: Fri, 24 Sep 1999 09:15:02 -0400
+
+	It dies as follows:
+
+	...
+	1802: a = surd(2,3)
+	1803: a == surd(2,3)
+	1804: surd_value(a) == 2+3i
+	Segmentation fault
+
+	dbx shows:
+	signal Segmentation fault at   [objcall:155 +0xc,0x1200507b4]   index = oap->actions[action];
+	(dbx) where
+	>  0 objcall(action = 14, v1 = 0x1400203d0, v2 = 0x1400203e0, v3 = (nil)) ["obj.c":155, 0x1200507b4]
+	   1 comparevalue(v1 = 0x1400203d0, v2 = 0x1400203e0) ["value.c":2329, 0x12007f250]
+	   2 o_eq() ["opcodes.c":2659, 0x12003728c]
+	   3 calculate(fp = 0x14007fce0) ["opcodes.c":3614, 0x12003942c]
+	   4 o_usercall(fp = 0x14007fce0, index = 39, argcount = 0) ["opcodes.c":2602, 0x120037080]
+	   5 calculate(fp = 0x14003bfa0) ["opcodes.c":3622, 0x120039488]
+	   6 evaluate(nestflag = 14) ["codegen.c":210, 0x120028768]
+	   7 getcommands(toplevel = 536864560) ["codegen.c":158, 0x1200285bc]
+	   8 getcommands(toplevel = 536864560) ["codegen.c":122, 0x1200284dc]
+	   9 main() ["calc.c":279, 0x12001f61c]
+
+	However On 25-Sep-99  9:18, Ernest Bowen wrote:
+
+	    Last night I downloaded 2.11.0t1 and without changing Makefile
+	    or anything else did a make and make check.  Absolutely no
+	    reported errors or warnings and the check "passed all tests".
+	    The machine I'm using is a Dec 20 alpha running Digitial
+	    UNIX V4.0B (Rev 564).
+
+	Any ideas on how to reconcile these different results?
+
+    * On Sun SPARCstation running Solaris 2.5.1 compiling with
+      cc version 4.0 with -Xc option 'make check' fails on the hash
+      functions.  However when compiled with gcc everything seems to
+      work just fine.
+
+	From: "Dr.D.J.Picton" <dave@aps5.ph.bham.ac.uk>
+	Date: Fri, 8 May 1998 10:54:43 +0100
+
+	Platform: Sun SPARCstation
+
+	Operating system: Solaris 2.5.1
+
+	Compiler: cc version 4.0 with -Xc option.
+
+	The code compiled OK but the sha() and sha1() functions give errors with
+	make check.   These functions clearly are broken.  For example,
+	sha(sha()) gives
+
+	0xea19f96cdd568ad1084a17acc6103d92c0ef7708   not
+	0xf96cea198ad1dd5617ac084a3d92c6107708c0ef
+
+	Interestingly, the consistency checks work OK e.g.
+	>B = blk() = {"a", "b", "c"};
+	>sha(B) == sha("abc");
+		1
+
+	**** Non-true result (0): 7108: sha(sha()) ==
+	0xf96cea198ad1dd5617ac084a3d92c6107708c0ef
+	**** Non-true result (0): 7109:
+	sha(sha("a"))==0x37f297772fae4cb1ba39b6cf9cf0381180bd62f2
+	**** Non-true result (0): 7110:
+	sha(sha("ab"))==0x488373d362684af3d3f7a6a408b59dfe85419e09
+	**** Non-true result (0): 7111:
+	sha(sha("abc"))==0x0164b8a914cd2a5e74c4f7ff082c4d97f1edf880
+	**** Non-true result (0): 7112:
+	sha(sha("abcd"))==0x082c73b06f71185d840fb4b28eb3abade67714bc
+	**** Non-true result (0): 7113:
+	sha(sha("abcde"))==0xd624e34951bb800f0acae773001df8cffe781ba8
+	**** Non-true result (0): 7114:
+	sha(sha("abcdef"))==0x2a589f7750598dc0ea0a608719e04327f609279a
+	**** Non-true result (0): 7115:
+	sha(sha("abcdefg"))==0x5bdf01f9298e9d19d3f8d15520fd74eed600b497
+	**** Non-true result (0): 7116:
+	sha(sha("abcdefgh"))==0x734ba8b31975d0dbae4d6e249f4e8da270796c94
+	**** Non-true result (0): 7117: sha(sha(1)) ==
+	0x864c8d09e828c7c31d62693736a5a9302c282777
+	**** Non-true result (0): 7118: sha(sha(2)) ==
+	0x2c0b59c512cb20fad6bb0883b69c9f5a46545808
+	**** Non-true result (0): 7119:
+	sha(sha(22/7)==0x7ddb7f8a7e9d70757f157744fddea7a6c6a6bcc6
+	**** Non-true result (0): 7120:
+	sha(sha(isqrt(2e1000)==0x6db8d9cf0b018b8f9cbbf5aa1edb8066d19e1bb0
+	7121: sha("x", "y", "z") == sha("xyz")
+	**** Non-true result (0): 7122: sha(sha("this is", 7^19-8, ..., "hash")) ==
+	0x21e4...
+	7123: z = sha(list(1,2,3), "curds and whey", 2^21701-1, pi());
+	**** Non-true result (0): 7124: sha(z) ==
+	0x36dcca3e51865c30a2cf738023cda446f1368340
+
+	**** Non-true result (0): 7207: sha1(sha1()) ==
+	0xda39a3ee5e6b4b0d3255bfef95601890afd80709
+	7208: sha1("x", "y", "z") == sha1("xyz")
+	**** Non-true result (0): 7209: sha1(sha1("this is",7^19-8,"a
+	composit",3i+4.5,"hash")) == ...
+	7210: z = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi());
+	**** Non-true result (0): 7211: sha1(z) ==
+	0xc19e7317675dbf71e293b4c41e117169e9da5b6f
+
+	**** Non-true result (0): 7217:
+	sha1(sha1("a"))==0x86f7e437faa5a7fce15d1ddcb9eaeaea377667b8
+	**** Non-true result (0): 7218:
+	sha1(sha1("ab"))==0xda23614e02469a0d7c7bd1bdab5c9c474b1904dc
+	**** Non-true result (0): 7219:
+	sha1(sha1("abc"))==0xa9993e364706816aba3e25717850c26c9cd0d89d
+	**** Non-true result (0): 7220:
+	sha1(sha1("abcd"))==0x81fe8bfe87576c3ecb22426f8e57847382917acf
+	**** Non-true result (0): 7221:
+	sha1(sha1("abcde"))==0x03de6c570bfe24bfc328ccd7ca46b76eadaf4334
+	**** Non-true result (0): 7222:
+	sha1(sha1("abcdef"))==0x1f8ac10f23c5b5bc1167bda84b833e5c057a77d2
+	**** Non-true result (0): 7223:
+	sha1(sha1("abcdefg"))==0x2fb5e13419fc89246865e7a324f476ec624e8740
+	**** Non-true result (0): 7224:
+	sha1(sha1("abcdefgh"))==0x425af12a0743502b322e93a015bcf868e324d56a
+	**** Non-true result (0): 7225:
+	sha1(sha1(1))==0x53dd4e1734ad47d45e41c23e4ce42d7f1f98c1e8
+	**** Non-true result (0): 7226:
+	sha1(sha1(22/7))==0xf8e2510f85f7b9bf088b321188e9f70620f44246
+	**** Non-true result (0): 7227:
+	sha1(sha1(isqrt(2e1000)))==0x6852a1365c51050c3d039e3c5d9cf29c12283ef4

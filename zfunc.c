@@ -1522,7 +1522,7 @@ zsqrt(ZVALUE z, ZVALUE *dest, long rnd)
 	u = (HALF)(s ? BASE1 : 0);
 	if (k < BASEB) {
 		A[m1 - 1] = (HALF)(e >> (BASEB - 1));
-		A[m1 - 2] = (HALF)(e << 1 | (s > 0));
+		A[m1 - 2] = ((HALF)(e << 1) | (HALF)(s > 0));
 		A[m1 - 3] = (HALF)(f >> BASEB);
 		A[m1 - 4] = (HALF)f;
 		m = m1 - 2;
@@ -1531,7 +1531,7 @@ zsqrt(ZVALUE z, ZVALUE *dest, long rnd)
 	else {
 		A[m1 - 1] = 1;
 		A[m1 - 2] = (HALF)(e >> (BASEB - 1));
-		A[m1 - 3] = (HALF)(e << 1 | (s > 0));
+		A[m1 - 3] = ((HALF)(e << 1) | (HALF)(s > 0));
 		A[m1 - 4] = u;
 		A[m1 - 5] = (HALF)(f >> BASEB);
 		A[m1 - 6] = (HALF)f;
@@ -1585,7 +1585,7 @@ zsqrt(ZVALUE z, ZVALUE *dest, long rnd)
 				if (x & TOPHALF)
 					a[1] |= 1;
 			}
-			*a = (HALF)((x << 1) | (u > 0));
+			*a = ((HALF)(x << 1) | (HALF)(u > 0));
 		}
 		else
 			*a = u;

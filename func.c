@@ -10,14 +10,14 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/types.h>
-#include <errno.h>
 
 #if defined(FUNCLIST)
 
-#include <stdio.h>
 #define CONST /* disabled for FUNCLIST in case NATIVE_CC doesn't have it */
 
 #else /* FUNCLIST */
+
+#include "calc_errno.h"
 
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)

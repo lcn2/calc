@@ -1284,7 +1284,7 @@ qcfsim(NUMBER *q, long rnd)
 	zmodinv(q->num, q->den, &den1);
 	if (s >= 0) {
 		zsub(q->den, den1, &den2);
-		if (s > 0 || ((zrel(den1, den2) < 0) ^ !(rnd & 16))) {
+		if (s > 0 || ((zrel(den1, den2) < 0) ^ (!(rnd & 16)))) {
 			zfree(den1);
 			res->den = den2;
 			zmul(den2, q->num, &tmp1);

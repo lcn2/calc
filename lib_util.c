@@ -241,8 +241,8 @@ convhex2z(char *hex)
 		/* slen is even now */
 
 		/* eat two hex chars at a time until the HALF is full */
-		for (; (slen % (BASEB/4)) != 0; slen -= 2) {
-			*hp = ((*hp<<8) | hex2bin(*sp++, *sp++));
+		for (; (slen % (BASEB/4)) != 0; slen -= 2, sp += 2) {
+			*hp = ((*hp<<8) | hex2bin(sp[0], sp[1]));
 		}
 
 		/* move on to the next HALF */

@@ -1733,7 +1733,7 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 			math_error("srandom newn == 0 reserved for future use");
 			/*NOTREACHED*/
 		}
-		set = z1tol(newn);
+		set = (HALF)z1tol(newn);
 		if (!zistiny(newn) || set > BLUM_PREGEN) {
 			math_error("srandom small newn must be [1,20]");
 			/*NOTREACHED*/

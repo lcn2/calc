@@ -1,7 +1,5 @@
 Following is the change from calc version 2.11.0t1 to date:
 
-    Fixed BSDI compile problems related to sys_errlist.
-
     Removed the makefile symbol MAIN.  Now forcing all funcions to correctly
     be reclared main.  To passify some old broken compilers, a return 0;
     (instead of an exit(0);) is used at the end of main().
@@ -11,6 +9,17 @@ Following is the change from calc version 2.11.0t1 to date:
     sources have been changed to conform better with the calc style.
 
     Fixed misc compile warnings.
+
+    Added the program calc_errno.c and the Makefile symbol ERRNO_DECL.
+    If ERRNO_DECL is empty, calc_errno.c will try various ways to
+    declare errno, sys_errlist and sys_nerr.  On success or when
+    it gives up, calc_errno will output the middle of the calc_errno.h
+    header file.  If ERRNO_DECL is  -DERRNO_NO_DECL, or -DERRNO_STD_DECL
+    or -DERRNO_OLD_DECL then the Makefile will build the middle
+    of the calc_errno.h header file without calc_errno.c's help.
+
+    The func.c file now includes the constructed header file calc_errno.h
+    to ensure that errno, sys_errlist and sys_nerr are declared correctly.
 
 
 Following is the change from calc version 2.10.3t5.38 to 2.11.0t0:

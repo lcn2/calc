@@ -1141,6 +1141,7 @@ rewindall(void)
  *
  * NOTE: Does not support negative file positions.
  */
+/*ARGSUSED*/
 static ZVALUE
 filepos2z(FILEPOS pos)
 {
@@ -1493,6 +1494,7 @@ setloc(FILEID id, ZVALUE zpos)
  * returns:
  *	file size as a ZVALUE
  */
+/*ARGSUSED*/
 static ZVALUE
 off_t2z(off_t siz)
 {
@@ -1555,6 +1557,7 @@ dev2z(dev_t dev)
  * returns:
  *	file size as a ZVALUE
  */
+/*ARGSUSED*/
 static ZVALUE
 inode2z(ino_t inode)
 {
@@ -1841,7 +1844,8 @@ getscanfield(FILE *fp, BOOL skip, unsigned int width, int scannum, char *scanptr
 			if (c == EOF || c == '\0')
 				break;
 			chnum++;
-			if(scannum && (memchr(scanptr,c,scannum)==NULL) ^ comp)
+			if(scannum &&
+			   ((memchr(scanptr,c,scannum)==NULL) ^ comp))
 				break;
 			if (!skip) {
 				*b++ = c;
@@ -1918,7 +1922,7 @@ getscanwhite(FILE *fp, BOOL skip, unsigned int width, int scannum, char **strptr
 			if (c == EOF || c == '\0')
 				break;
 			chnum++;
-			if(scannum && !isspace(c) ^ comp)
+			if(scannum && (!isspace(c) ^ comp))
 				break;
 			if (!skip) {
 				*b++ = c;

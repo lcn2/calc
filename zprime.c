@@ -778,8 +778,8 @@ small_factor(ZVALUE z, FULL limit)
 #if BASEB == 32
 		div.v[0] = (HALF)factor;
 #else
-		div.v[0] = (factor & BASE1);
-		div.v[1] = (factor >> BASEB);
+		div.v[0] = (HALF)(factor & BASE1);
+		div.v[1] = (HALF)(factor >> BASEB);
 #endif
 
 		if (zdivides(z, div))
@@ -1483,8 +1483,8 @@ zlowfactor(ZVALUE z, long count)
 #if BASEB == 32
 		div.v[0] = (HALF)factor;
 #else
-		div.v[0] = (factor & BASE1);
-		div.v[1] = (factor >> BASEB);
+		div.v[0] = (HALF)(factor & BASE1);
+		div.v[1] = (HALF)(factor >> BASEB);
 #endif
 
 		if (zdivides(z, div))
