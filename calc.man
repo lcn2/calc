@@ -15,8 +15,8 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 .\"
-.\" @(#) $Revision: 29.9 $
-.\" @(#) $Id: calc.man,v 29.9 2002/03/14 00:28:28 chongo Exp $
+.\" @(#) $Revision: 29.10 $
+.\" @(#) $Id: calc.man,v 29.10 2003/01/18 21:19:21 chongo Exp $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -1086,7 +1086,7 @@ Landon Noll maintains the the
 web site is located at:
 .sp
 .in +0.5i
-http://www.isthe.com/chongo/tech/comp/calc/
+www.isthe.com/chongo/tech/comp/calc/
 .in -0.5i
 .sp
 Share and Enjoy! :\-)

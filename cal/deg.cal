@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: deg.cal,v 29.2 2000/06/07 14:02:25 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: deg.cal,v 29.3 2003/01/21 11:12:37 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/deg.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:33
@@ -42,7 +42,7 @@ define dms(deg, min, sec)
 	ans.deg = deg;
 	ans.min = min;
 	ans.sec = sec;
-	fixdms(&ans);
+	fixdms(ans);
 	return ans;
 }
 
@@ -66,7 +66,7 @@ define dms_add(a, b)
 		ans.sec += b.sec;
 	} else
 		ans.deg += b;
-	fixdms(&ans);
+	fixdms(ans);
 	return ans;
 }
 
@@ -103,7 +103,7 @@ define dms_mul(a, b)
 		ans.min = b.min * a;
 		ans.sec = b.sec * a;
 	}
-	fixdms(&ans);
+	fixdms(ans);
 	return ans;
 }
 
