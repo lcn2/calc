@@ -69,6 +69,16 @@ not currently a member of the calc-tester mailing list.
 
 Known bugs:
 
+    * On AlphaLinux with gcc-2.96, calc 2.11.1 with patches to compile
+      correctly dies in the regression:
+
+	    4408: Q == (mat[2]={5+3i,17+4i})
+	    4409: R = {M2,M3}
+	    4410: norm(R) == M4
+	    "": line 78: Function "surd_sqrt" is undefined
+	    Error in commands
+	    make: *** [chk] Error 1
+
     We are sure some more bugs exist.  When you find them, please let
     us know!  See the above for details on how to report and were to
     EMail your bug reports and hopefully patches to fix them.
@@ -177,8 +187,8 @@ Problems with known work-a-rounds:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: BUGS,v 29.1 1999/12/14 09:15:29 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: BUGS,v 29.3 1999/12/14 19:41:07 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13

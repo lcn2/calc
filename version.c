@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: version.c,v 29.1 1999/12/14 09:16:17 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: version.c,v 29.2 1999/12/14 19:37:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
@@ -43,7 +43,7 @@ static char *program;
 #define MAJOR_VER	2	/* major version */
 #define MINOR_VER	11	/* minor version */
 #define MAJOR_PATCH	1	/* patch level or 0 if no patch */
-#define MINOR_PATCH	""	/* test number or empty string if no patch */
+#define MINOR_PATCH	"0"	/* test number or empty string if no patch */
 
 /*
  * calc version constants
@@ -84,12 +84,8 @@ char *Copyright = "\n"
   "received a copy with calc; if not, write to Free Software Foundation, Inc.\n"
   "59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.\n"
   "\n"
-  "For license details use the command:\t\t\thelp copying\n"
-  "The COPYING-LGPL file may be viewed with the command:\thelp copying-lgpl\n"
-  "\n"
-  "@(#) $Revision: 29.1 $\n"
-  "@(#) $Id: version.c,v 29.1 1999/12/14 09:16:17 chongo Exp $\n"
-  "@(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $\n"
+  "@(#) For license details use the command:\thelp copying\n"
+  "The COPYING-LGPL file may be viewed with:\thelp copying-lgpl\n"
   "\n";
 
 

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: quickhash.c,v 29.1 1999/12/14 09:16:14 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: quickhash.c,v 29.2 1999/12/14 19:37:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/quickhash.c,v $
  *
  * Under source code control:	1995/03/04 11:34:23
@@ -436,8 +436,8 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	if (cfg->program) {
 		val = fnv_strhash(cfg->program, val);
 	}
-	if (cfg->basename) {
-		val = fnv_strhash(cfg->basename, val);
+	if (cfg->base_name) {
+		val = fnv_strhash(cfg->base_name, val);
 	}
 	if (cfg->version) {
 		val = fnv_strhash(cfg->version, val);

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: config.h,v 29.1 1999/12/14 09:15:35 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: config.h,v 29.2 1999/12/14 19:37:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -145,7 +145,7 @@ struct config {
 	BOOL verbose_quit;	/* TRUE => print Quit or abort executed msg */
 	int ctrl_d;		/* see CTRL_D_xyz below */
 	char *program;		/* our name */
-	char *basename;		/* basename of our name */
+	char *base_name;	/* basename of our name */
 	char *version;		/* calc version string */
 };
 typedef struct config CONFIG;

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: config.c,v 29.1 1999/12/14 09:15:35 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: config.c,v 29.2 1999/12/14 19:37:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -960,10 +960,10 @@ config_copy(CONFIG *src)
 	} else {
 		dest->program = strdup(src->program);
 	}
-	if (src->basename == NULL) {
-		dest->basename = strdup(basename);
+	if (src->base_name == NULL) {
+		dest->base_name = strdup(base_name);
 	} else {
-		dest->basename = strdup(src->basename);
+		dest->base_name = strdup(src->base_name);
 	}
 	if (src->version == NULL) {
 		dest->version = strdup(version());
@@ -1009,8 +1009,8 @@ config_free(CONFIG *cfg)
 	if (cfg->program != NULL) {
 		free(cfg->program);
 	}
-	if (cfg->basename != NULL) {
-		free(cfg->basename);
+	if (cfg->base_name != NULL) {
+		free(cfg->base_name);
 	}
 	if (cfg->version != NULL) {
 		free(cfg->version);
@@ -1255,7 +1255,7 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 
 	case CONFIG_PROGRAM:
 		vp->v_type = V_STR;
-		if (cfg->basename == NULL) {
+		if (cfg->base_name == NULL) {
 			vp->v_str = makestring(strdup(program));
 		} else {
 			vp->v_str = makenewstring(cfg->program);
@@ -1264,10 +1264,10 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 
 	case CONFIG_BASENAME:
 		vp->v_type = V_STR;
-		if (cfg->basename == NULL) {
-			vp->v_str = makestring(strdup(basename));
+		if (cfg->base_name == NULL) {
+			vp->v_str = makestring(strdup(base_name));
 		} else {
-			vp->v_str = makenewstring(cfg->basename);
+			vp->v_str = makenewstring(cfg->base_name);
 		}
 		return;
 
@@ -1364,10 +1364,10 @@ config_cmp(CONFIG *cfg1, CONFIG *cfg2)
 	       (cfg1->program != NULL && cfg2->program != NULL &&
 		strcmp(cfg1->program, cfg2->program) != 0) ||
 
-	       (cfg1->basename == NULL && cfg2->basename != NULL) ||
-	       (cfg1->basename != NULL && cfg2->basename == NULL) ||
-	       (cfg1->basename != NULL && cfg2->basename != NULL &&
-		strcmp(cfg1->basename, cfg2->basename) != 0) ||
+	       (cfg1->base_name == NULL && cfg2->base_name != NULL) ||
+	       (cfg1->base_name != NULL && cfg2->base_name == NULL) ||
+	       (cfg1->base_name != NULL && cfg2->base_name != NULL &&
+		strcmp(cfg1->base_name, cfg2->base_name) != 0) ||
 
 	       (cfg1->version == NULL && cfg2->version != NULL) ||
 	       (cfg1->version != NULL && cfg2->version == NULL) ||

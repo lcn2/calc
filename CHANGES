@@ -39,6 +39,11 @@ The following are the changes from calc version 2.11.1 to date:
     now uses ./cal:~/cal (instead of ./lib:~/lib).  Changed LIB_PASSDOWN
     Makefile variable to CAL_PASSDOWN.
 
+    Fixed misc compile warnings and bugs.
+
+    Fixed problem of incorrect paths in the formation of installed
+    calc shell scripts.
+
 
 The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
 
@@ -4703,8 +4708,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: CHANGES,v 29.1 1999/12/14 09:15:29 chongo Exp $
+## @(#) $Revision: 29.2 $
+## @(#) $Id: CHANGES,v 29.2 1999/12/14 19:40:18 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: lib_calc.c,v 29.1 1999/12/14 09:16:11 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: lib_calc.c,v 29.2 1999/12/14 19:37:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.c,v $
  *
  * Under source code control:	1996/06/17 18:06:19
@@ -95,7 +95,7 @@ int abortlevel;		/* current level of aborts */
 BOOL inputwait;		/* TRUE if in a terminal input wait */
 jmp_buf jmpbuf;		/* for errors */
 char *program = "calc";		/* our name */
-char *basename = "calc";	/* basename of our name */
+char *base_name = "calc";	/* basename of our name */
 char cmdbuf[MAXCMD+1+1+1];	/* command line expression + "\n\0" + guard */
 run run_state = RUN_UNKNOWN;	/* calc startup and run state */
 
@@ -200,9 +200,9 @@ libcalc_call_me_first(void)
 	if (program != NULL) {
 		p = strrchr(program, '/');
 		if (p == NULL) {
-			basename = program;
+			base_name = program;
 		} else {
-			basename = p+1;
+			base_name = p+1;
 		}
 	}
 
@@ -211,7 +211,7 @@ libcalc_call_me_first(void)
 	 */
 	oldstd.epsilon = &_qonesqbase_; /* magic to fake early str2q() */
 	oldstd.program = strdup(program);
-	oldstd.basename = strdup(basename);
+	oldstd.base_name = strdup(base_name);
 	oldstd.version = strdup(version());
 	conf = config_copy(&oldstd); /* more magic to fake early str2q() */
 	conf->tab_ok = FALSE;

@@ -18,7 +18,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.1 $
- * @(#) $Id: c_sysinfo.c,v 29.1 1999/12/14 09:15:37 chongo Exp $
+ * @(#) $Id: c_sysinfo.c,v 29.1 1999/12/14 09:15:37 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_sysinfo.c,v $
  *
  * Under source code control:	1997/03/09 23:14:40
@@ -319,8 +319,7 @@ dump_name_value(void)
 	for (p = sys_info; p->name != NULL; ++p) {
 		if (p->str == NULL) {
 #if LONG_BITS == FULL_BITS || FULL_BITS == 32 || !defined(HAVE_LONGLONG)
-			fmt = "%s%-23s\t%-8lu\t(0x%lx)\n";
-			printf(fmt,
+			printf("%s%-23s\t%-8lu\t(0x%lx)\n",
 			    (conf->tab_ok ? "\t" : ""), p->name,
 			    (unsigned long)p->nmbr,
 			    (unsigned long)p->nmbr);
@@ -333,7 +332,7 @@ dump_name_value(void)
 			 * So we will only try %lld if %ld does not work.
 			 */
 # if defined(L64_FORMAT)
-			printf("%s%-23s\t%-8lu\t(0x%lx)\n".
+			printf("%s%-23s\t%-8lu\t(0x%lx)\n",
 			    (conf->tab_ok ? "\t" : ""), p->name,
 			    (unsigned long long)p->nmbr,
 			    (unsigned long long)p->nmbr);

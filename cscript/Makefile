@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.1 $
-# @(#) $Id: Makefile,v 29.1 1999/12/14 09:15:35 chongo Exp $
+# @(#) $Revision: 29.3 $
+# @(#) $Id: Makefile,v 29.3 1999/12/14 19:30:19 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -173,7 +173,7 @@ depend:
 	${Q}for i in ${SCRIPT}; do \
 		echo "$$i: $$i.calc"; \
 		echo '	rm -f $$@'; \
-		echo '	$${SED} -e 1s:^#!/usr/local/src/cmd/calc/calc:#!$${SCRIPTDIR}/calc: $$?>$$@'; \
+		echo '	$${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!$${BINDIR}/calc:" $$?>$$@'; \
 		echo '	$${CHMOD} +x $$@'; \
 	done >> makedep.out
 	${Q}echo sample dependency list formed
@@ -231,17 +231,17 @@ install: all
 
 mersenne: mersenne.calc
 	rm -f $@
-	${SED} -e 1s:^#!/usr/local/src/cmd/calc/calc:#!${SCRIPTDIR}/calc: $?>$@
+	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	${CHMOD} +x $@
 piforever: piforever.calc
 	rm -f $@
-	${SED} -e 1s:^#!/usr/local/src/cmd/calc/calc:#!${SCRIPTDIR}/calc: $?>$@
+	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	${CHMOD} +x $@
 plus: plus.calc
 	rm -f $@
-	${SED} -e 1s:^#!/usr/local/src/cmd/calc/calc:#!${SCRIPTDIR}/calc: $?>$@
+	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	${CHMOD} +x $@
 simple: simple.calc
 	rm -f $@
-	${SED} -e 1s:^#!/usr/local/src/cmd/calc/calc:#!${SCRIPTDIR}/calc: $?>$@
+	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	${CHMOD} +x $@

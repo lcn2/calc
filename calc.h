@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: calc.h,v 29.1 1999/12/14 09:15:34 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: calc.h,v 29.2 1999/12/14 19:37:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -202,7 +202,7 @@ extern char *pager;		/* $PAGER or default */
 extern int stdin_tty;		/* TRUE if stdin is a tty */
 extern int havecommands;	/* TRUE if have cmd args) */
 extern char *program;		/* our name */
-extern char *basename;		/* basename of our name */
+extern char *base_name;		/* basename of our name */
 extern char cmdbuf[];		/* command line expression */
 
 extern int abortlevel;		/* current level of aborts */
