@@ -20,7 +20,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.12 $
- * @(#) $Id: config.h,v 29.12 2002/12/29 09:20:25 chongo Exp $
+ * @(#) $Id: config.h,v 29.12 2002/12/29 09:20:25 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -99,8 +99,6 @@
 #define DISPLAY_DEFAULT 20	/* default digits for float display */
 #define EPSILON_DEFAULT "1e-20" /* allowed error for float calculations */
 #define EPSILONPREC_DEFAULT 67	/* 67 ==> 2^-67 <= EPSILON_DEFAULT < 2^-66 */
-#define NEW_EPSILON_DEFAULT "1e-10"	/* newstd EPSILON_DEFAULT */
-#define NEW_EPSILONPREC_DEFAULT 34	/* 34 ==> 2^-34 <= 1e-10 < 2^-33 */
 #define MAXPRINT_DEFAULT 16	/* default number of elements printed */
 #define MAXSCANCOUNT 20		/* default max scan errors before an abort */
 
@@ -196,8 +194,8 @@ typedef struct config CONFIG;
  * global configuration states and aliases
  */
 extern DLL CONFIG *conf;	/* current configuration */
-extern DLL CONFIG oldstd;	/* backward compatible standard configuration */
-extern DLL CONFIG newstd;	/* new non-backward compatible configuration */
+extern DLL CONFIG oldstd;	/* old classic standard configuration */
+extern DLL CONFIG newstd;	/* default compatible configuration */
 extern DLL char *calc_debug;	/* !=NULL => value of config("calc_debug") */
 extern DLL char *resource_debug; /* !=NULL => config("resource_debug") value */
 extern DLL char *user_debug;	/* !=NULL => value of config("user_debug") */

@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.11 $
-# @(#) $Id: calc.spec.in,v 29.11 2003/02/26 17:59:01 chongo Exp $
+# @(#) $Revision: 29.12 $
+# @(#) $Id: calc.spec.in,v 29.12 2003/04/15 03:37:59 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.spec.in,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -37,7 +37,7 @@
 Summary: Arbitrary precision calculator.
 Name: calc
 Version: <<<PROJECT_VERSION>>>
-Release: 2
+Release: 0
 Copyright: LGPL
 Group: Applications/Engineering
 Source: %{name}-%{version}.tar.gz

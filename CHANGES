@@ -1,4 +1,51 @@
-The following are the changes from calc version 2.11.7.0 to date:
+The following are the changes from calc version 2.11.8.0 to date:
+
+    Updated HOWTO.INSTALL to reflect the new RPM files.
+
+    Clarify that the internal hash as well as the hash builtin
+    function used by calc, while based on the Fowler/Noll/Vo
+    hash is NOT an FNV hash.
+
+    Made slight performance improvements to calc by an optimization of how
+    calc's internal hash is computed.  The "make chk" regression test
+    runs about 1.5% faster (when compiled with -O3 on an AMD Athlon)
+    NO_HASH_CPU_OPTIMIZATION is not defined.  Calc's internal hash values
+    have not changed.  By default, NO_HASH_CPU_OPTIMIZATION is NOT defined
+    and the slightly faster expression is used.
+
+    A slight modification of what was known as the "calc new stardard"
+    configuration (calc -n or config("all", "newstd")) is now the default
+    calc configuration.  The flag:
+
+    	calc -O
+
+    was added to get the old classic calc configuration.  The flag command
+    line flag, -n, now does nothing.  Use of -n is deprecated and may go
+    away / be used for something else in the future.
+
+    The following table gives the summary of these changes:
+
+	     pre v2.11.8		     v2.11.8
+	     default         pre v2.11.8     -O & oldstd      v2.11.8
+	     and oldstd	     -n & newstd     classic cfg      default
+	     --------------------------------------------------------
+    epsilon	1e-20		1e-10		1e-20		1e-20
+    quo	    	2		2		2		2
+    outround	2		24		2		24
+    leadzero	0		1		0		1
+    fullzero	0		1		0		0
+    prompt	>		;		>		;
+    more	>>		;;		>>		;;
+
+    With the exception of epsilon being 1e-20, and fullzero being unset,
+    the new default calc config is like it was (pre-2.11.8) with calc -n /
+    config("all", "newstd").
+
+    The new default config is the old classic config with outround being
+    24, leadzero being set, and the prompts being ;'s.
+
+
+The following are the changes from calc version 2.11.7.0 to 2.11.7.1:
 
     Added support to build calc RPMs thanks to Petteri Kettunen
     <petterik at users dot sourceforge dot net>.
@@ -5562,7 +5609,7 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
 ## @(#) $Revision: 29.59 $
-## @(#) $Id: CHANGES,v 29.59 2003/02/26 17:17:12 chongo Exp $
+## @(#) $Id: CHANGES,v 29.59 2003/02/26 17:17:12 chongo Exp chongo $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

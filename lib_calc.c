@@ -18,7 +18,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.8 $
- * @(#) $Id: lib_calc.c,v 29.8 2002/03/12 09:40:57 chongo Exp $
+ * @(#) $Id: lib_calc.c,v 29.8 2002/03/12 09:40:57 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.c,v $
  *
  * Under source code control:	1996/06/17 18:06:19
@@ -106,10 +106,10 @@ extern uid_t geteuid();
 /*
  * Common definitions
  */
-int new_std = FALSE;	/* TRUE (-n) => use newstd configuration */
-int abortlevel;		/* current level of aborts */
-BOOL inputwait;		/* TRUE if in a terminal input wait */
-jmp_buf jmpbuf;		/* for errors */
+int use_old_std = FALSE;	/* TRUE => use old classic configuration */
+int abortlevel;			/* current level of aborts */
+BOOL inputwait;			/* TRUE if in a terminal input wait */
+jmp_buf jmpbuf;			/* for errors */
 char *program = "calc";		/* our name */
 char *base_name = "calc";	/* basename of our name */
 char cmdbuf[MAXCMD+1+1+1];	/* command line expression + "\n\0" + guard */
@@ -232,23 +232,23 @@ libcalc_call_me_first(void)
 	/*
 	 * initialize old and new configuration values
 	 */
-	oldstd.epsilon = &_qonesqbase_; /* magic to fake early str2q() */
-	oldstd.program = strdup(program);
-	oldstd.base_name = strdup(base_name);
-	oldstd.version = strdup(version());
-	conf = config_copy(&oldstd); /* more magic to fake early str2q() */
+	newstd.epsilon = &_qonesqbase_; /* magic to fake early str2q() */
+	newstd.program = strdup(program);
+	newstd.base_name = strdup(base_name);
+	newstd.version = strdup(version());
+	conf = config_copy(&newstd); /* more magic to fake early str2q() */
 	conf->tab_ok = FALSE;
+	newstd.epsilon = str2q(EPSILON_DEFAULT);
 	oldstd.epsilon = str2q(EPSILON_DEFAULT);
-	newstd.epsilon = str2q(NEW_EPSILON_DEFAULT);
 
 	/*
-	 * make oldstd our default config
+	 * make newstd our default config, unless -O
 	 */
 	config_free(conf);
-	if (new_std) {
-		conf = config_copy(&newstd);
-	} else {
+	if (use_old_std) {
 		conf = config_copy(&oldstd);
+	} else {
+		conf = config_copy(&newstd);
 	}
 
 	/*

@@ -1,5 +1,5 @@
 NAME
-    hash - FNV-1 hash value
+    hash - return the calc hash value
 
 SYNOPSIS
     hash(x_1 [, x_2, x_3, ...])
@@ -12,27 +12,16 @@ TYPES
 DESCRIPTION
     Returns a hash value for one or more values of arbitrary types.
 
-    The basis of this hash algorithm was taken from an idea sent
-    as reviewer comments to the IEEE POSIX P1003.2 committee by:
+    The calc hash value is based on the core Fowler/Noll/Vo hash
+    known as FNV-1.  The return value, however, cannot be used
+    as an FNV hash value because calc's internal function also
+    takes into account more abstract concepts such as data types.
 
-	 Phong Vo (http://www.research.att.com/info/kpv/)
-	 Glenn Fowler (http://www.research.att.com/~gsf/)
-
-    In a subsequent ballot round:
-
-	 Landon Curt Noll (http://www.isthe.com/chongo/)
-
-    improved on their algorithm.  Some people tried this hash
-    and found that it worked rather well.  In an EMail message
-    to Landon, they named it ``Fowler/Noll/Vo'' or the FNV hash.
-
-    FNV hashes are architected to be fast while maintaining a low
-    collision rate. The FNV speed allows one to quickly hash lots
-    of data while maintaining a reasonable collision rate.  See:
+    See:
 
 	 http://www.isthe.com/chongo/tech/comp/fnv/
 
-    for more details as well as other forms of the FNV hash.
+    information about the Fowler/Noll/Vo (FNV) hash.
 
 EXAMPLE
     > a = isqrt(2e1000); s = "xyz";
@@ -48,7 +37,7 @@ LINK LIBRARY
 SEE ALSO
     sha, sha1, md5
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2003  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -64,8 +53,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: hash,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: hash,v 29.3 2003/03/01 01:16:02 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/hash,v $
 ##
 ## Under source code control:	1996/03/12 23:10:01

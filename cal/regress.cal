@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.15 $
- * @(#) $Id: regress.cal,v 29.15 2003/01/26 19:42:03 chongo Exp $
+ * @(#) $Revision: 29.17 $
+ * @(#) $Id: regress.cal,v 29.17 2003/06/10 21:17:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -52,7 +52,8 @@ errmax(-1),;				/* prevent errcount from abouting */
 global ecnt;				/* expected value of errcount() */
 ecnt = 0;				/* clear expected errcount() value */
 
-initcfg = config("all", "oldstd");	/* set config to startup default */
+initcfg = config("all", "newstd");	/* set config to startup default */
+defcfg = config("all");			/* capture the default config */
 config("resource_debug", 0),;		/* disable resource startup messages */
 config("calc_debug", 0),;		/* disable internal debugging */
 config("verbose_quit", 0),;		/* disable quit messages */
@@ -380,19 +381,19 @@ define test_config()
 	/* check the set and return of all config */
 	callcfg = config("all");
 	print				'501: callcfg = config("all")';
+	vrfy(callcfg == startcfg,	'502: callcfg == startcfg');
+
 	callcfg = config("all", "oldstd");
-	print				'502: callcfg = config("all","oldstd")';
-	oldcfg = config("all", "newstd");
-	print				'503: oldcfg = config("all","newstd")';
+	print				'503: callcfg = config("all","oldstd")';
 	vrfy(callcfg == startcfg,	'504: callcfg == startcfg');
-	newcfg = config("all");
-	print				'505: newcfg = config("all")';
-	vrfy(config("all") == newcfg,	'506: config("all") == newcfg');
-	vrfy(config("all", oldcfg) == newcfg,
-					'507: config("all", oldcfg) == newcfg');
+	oldcfg = config("all");
+	print				'505: oldcfg = config("all");';
+	vrfy(config("all") == oldcfg,	'506: config("all") == oldcfg');
+	vrfy(oldcfg==config("all","newstd"),
+					'507: oldcfg==config("all","newstd")');
+	vrfy(defcfg == config("all"),	'508: defcfg == config("all")');
 
 	/* vrfy the state of the default config */
-	vrfy(config("all") == oldcfg,	'508: config("all") == oldcfg');
 	vrfy(config("mode") == "real",
 					'509: config("mode") == "real"');
 	vrfy(config("display") == 20,
@@ -429,58 +430,59 @@ define test_config()
 					'525: config("cfappr") == 0');
 	vrfy(config("cfsim") == 8,
 					'526: config("cfsim") == 8');
-	vrfy(config("outround") == 2,
-					'527: config("outround") == 2');
+	vrfy(config("outround") == 24,
+					'527: config("outround") == 24');
 	vrfy(config("round") == 24,
 					'528: config("round") == 24');
-	vrfy(config("leadzero") == 0,
-					'529: config("leadzero") == 0');
+	vrfy(config("leadzero") == 1,
+					'529: config("leadzero") == 1');
 	vrfy(config("fullzero") == 0,
 					'530: config("fullzero") == 0');
 	vrfy(config("maxscan") == 20,
 					'531: config("maxscan") == 20');
-	vrfy(config("prompt") == "> ",
-					'532: config("prompt") == "> "');
-	vrfy(config("more") == ">> ",
-					'533: config("more") == ">> "');
+	vrfy(config("prompt") == "; ",
+					'532: config("prompt") == "; "');
+	vrfy(config("more") == ";; ",
+					'533: config("more") == ";; "');
 
-	/* convert to "newstd" config by individual changes */
-	vrfy(config("display", 10) == 20,
-					'534: config("display") == 20');
-	vrfy(config("epsilon",1e-10)==1e-20,
-					'535: config("epsilon",1e-10)==1e-20');
-	vrfy(config("quo", 0) == 2,	'536: config("quo", 0) == 2');
-	vrfy(config("outround", 24) == 2,
-					'537: config("outround", 24) == 2');
-	vrfy(config("leadzero","y") == 0,
-				'538: config("leadzero","y") == 0');
-	vrfy(config("fullzero", 1) == 0,
-				'539: config("fullzero", 1) == 0');
-	vrfy(config("prompt", "; ") == "> ",
-					'540: config("prompt", "; ") == "> "');
-	vrfy(config("more", ";; ") == ">> ",
-					'541: config("more", ";; ") == ">> "');
-	vrfy(config("all") == newcfg,	'542: config("all") == newcfg');
+	/* convert to "oldstd" config by individual changes */
+	print				'534: test unused';
+	vrfy(config("outround", 2) == 24,
+					'535: config("outround", 2) == 24');
+	vrfy(config("leadzero","n") == 1,
+					'536: config("leadzero","n") == 1');
+	print				'537: test unused';
+	vrfy(config("prompt", "> ") == "; ",
+					'538: config("prompt", "> ") == "; "');
+	vrfy(config("more", ">> ") == ";; ",
+					'539: config("more", ">> ") == ";; "');
+	vrfy(config("all") == oldcfg,	'540: config("all") == oldcfg');
 
-	/* check on the new config("fullzero") effect */
-	vrfy(config("all","oldstd") == newcfg,
-					'543: config("all",callcfg) == newcfg');
+	/* restore the configation at the start of this function */
+	vrfy(config("all",callcfg) == oldcfg,
+					'541: config("all",callcfg) == oldcfg');
+
+	/* display and fullzero tests */
 	vrfy(config("display",2) == 20,
-					'544: config("display",2) == 20');
+					'542: config("display",2) == 20');
+	vrfy(config("leadzero",0) == 1,
+					'543: config("leadzero",0) == 1');
 	vrfy(config("fullzero",1) == 0,
-					'545: config("fullzero",1) == 0');
+					'544: config("fullzero",1) == 0');
 	vrfy(strprintf("%d %d %d", 0, 1, 2) == ".00 1.00 2.00",
-		'546: strprintf("%d %d %d", 0, 1, 2) == ".00 1.00 2.00"');
+		'545: strprintf("%d %d %d", 0, 1, 2) == ".00 1.00 2.00"');
 	vrfy(config("display",20) == 2,
-					'547: config("display",20) == 2');
-	vrfy(config("fullzero",0),
-					'548: config("fullzero",0)');
+					'546: config("display",20) == 2');
+	vrfy(config("leadzero",1) == 0,
+					'547: config("leadzero",1) == 0');
+	vrfy(config("fullzero",0) == 1,
+					'548: config("fullzero",0) == 1');
 	vrfy(strprintf("%d %d %d", 0, 1, 2) == "0 1 2",
 		'549: strprintf("%d %d %d", 0, 1, 2) == "0 1 2"');
 
 	/* restore calling config */
-	vrfy(config("all",callcfg) == oldcfg,
-					'550: config("all",callcfg) == oldcfg');
+	vrfy(config("all",callcfg) == startcfg,
+		'550: config("all",callcfg) == startcfg');
 	vrfy(config("all") == callcfg,	'551: config("all") == callcfg');
 	vrfy(config("all") == startcfg, '552: config("all") == startcfg');
 

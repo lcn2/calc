@@ -20,7 +20,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.8 $
- * @(#) $Id: calc.c,v 29.8 2001/04/10 22:03:13 chongo Exp $
+ * @(#) $Id: calc.c,v 29.8 2001/04/10 22:03:13 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11
@@ -214,7 +214,13 @@ main(int argc, char **argv)
 					havearg = TRUE;
 					break;
 				case 'n':
-					new_std = TRUE;
+					/*
+					 * -n is deprecated and may be reused
+					 * for another purpose in the future
+					 */
+					break;
+				case 'O':
+					use_old_std = TRUE;
 					break;
 				case 'p':
 					p_flag = TRUE;
@@ -425,7 +431,7 @@ main(int argc, char **argv)
 					fprintf(stderr,
 		"usage: %s [-a] [-c] [-C] [-d] [-e] [-h] [-i] [-m mode]\n"
 		"\t[-D calc_debug[:resource_debug[:user_debug]]]\n"
-		"\t[-n] [-p] [-q] [-u] [-v] "
+		"\t[-O] [-p] [-q] [-u] [-v] "
 		"[--] [calc_cmd ...]\n",
 		program);
 					exit(1);

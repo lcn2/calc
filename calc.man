@@ -16,7 +16,7 @@
 .\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 .\"
 .\" @(#) $Revision: 29.10 $
-.\" @(#) $Id: calc.man,v 29.10 2003/01/18 21:19:21 chongo Exp $
+.\" @(#) $Id: calc.man,v 29.10 2003/01/18 21:19:21 chongo Exp chongo $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -44,7 +44,7 @@ calc \- arbitrary precision calculator
 .RB [ \-h ]
 .RB [ \-i ]
 .RB [ \-m\ \&mode ]
-.RB [ \-n ]
+.RB [ \-O ]
 .br
 .RB [ \-p ]
 .RB [ \-q ]
@@ -302,11 +302,22 @@ The reading of key bindings is also disabled
 when the mode disables opening of files for reading.
 
 .TP
-.B \-n
-Use the new configuration defaults instead of the old
-default classic defaults.
+.B \-O
+Use the old classic defaults instead of the
+default configuration.
 This flag as the same effect
-as executing \fBconfig("all", "newcfg")\fP at startup time.
+as executing \fBconfig("all", "oldcfg")\fP at startup time.
+.sp 1
+NOTE: Older versions of calc used
+.B \-n
+to setup a modified form of the default calc configuration.
+The
+.B \-n
+flag currently does nothing.
+Use of the
+.B \-n
+flag is now deprecated and may be used for
+something else in the future.
 
 .TP
 .B \-p

@@ -18,7 +18,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.10 $
- * @(#) $Id: calc.h,v 29.10 2002/03/12 09:40:57 chongo Exp $
+ * @(#) $Id: calc.h,v 29.10 2002/03/12 09:40:57 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -232,7 +232,7 @@ extern DLL char *program;	/* our name (argv[0]) */
 
 extern DLL int no_env;		/* TRUE (-e) => ignore env vars on startup */
 extern DLL int errmax;	/* if >= 0, error when errcount exceeds errmax */
-extern DLL int new_std;		/* TRUE (-n) => use newstd configuration */
+extern DLL int use_old_std;	/* TRUE (-O) => use classic configuration */
 
 extern DLL int allow_read;	/* FALSE => dont open any files for reading */
 extern DLL int allow_write; 	/* FALSE => dont open any files for writing */

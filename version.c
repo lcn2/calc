@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.46 $
- * @(#) $Id: version.c,v 29.46 2003/02/25 20:28:42 chongo Exp $
+ * @(#) $Revision: 29.47 $
+ * @(#) $Id: version.c,v 29.47 2003/06/10 19:23:33 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
@@ -45,7 +45,7 @@ static char *program;
 
 #define MAJOR_VER	2	/* major version */
 #define MINOR_VER	11	/* minor version */
-#define MAJOR_PATCH	7	/* patch level or 0 if no patch */
+#define MAJOR_PATCH	8	/* patch level or 0 if no patch */
 #define MINOR_PATCH	0	/* test number or 0 if no minor patch */
 
 
@@ -70,7 +70,7 @@ static char *stored_version = NULL;	/* version formed if != NULL */
 char *Copyright = "\n"
   "calc - arbitrary precision calculator\n"
   "\n"
-  "@(#) Copyright (C) 1999  David I. Bell, Landon Curt Noll and Ernest Bowen\n"
+  "@(#) Copyright (C) 2003  David I. Bell, Landon Curt Noll and Ernest Bowen\n"
   "\n"
   "Primary author:  David I. Bell\n"
   "\n"

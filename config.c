@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: config.c,v 29.8 2002/12/29 09:20:25 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: config.c,v 29.9 2003/04/15 03:37:16 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -149,9 +149,9 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 CONFIG newstd = {	/* new non-backward compatible configuration */
 	MODE_INITIAL,		/* current output mode */
 	MODE2_INITIAL,		/* current output mode */
-	10,			/* current output digits for float or exp */
+	20,			/* current output digits for float or exp */
 	NULL,	/* loaded in at startup - default error for real functions */
-	NEW_EPSILONPREC_DEFAULT,	/* binary precision of epsilon */
+	EPSILONPREC_DEFAULT,	/* binary precision of epsilon */
 	FALSE,			/* tracing flags */
 	MAXPRINT_DEFAULT,	/* number of elements to print */
 	MUL_ALG2,		/* size of number to use multiply alg 2 */
@@ -161,7 +161,7 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	TRUE,			/* ok to print a tilde on approximations */
 	TRUE,			/* ok to print tab before numeric values */
 	0,			/* quomod() default rounding mode */
-	0,			/* quotient // default rounding mode */
+	2,			/* quotient // default rounding mode */
 	0,			/* mod % default rounding mode */
 	24,			/* sqrt() default rounding mode */
 	24,			/* appr() default rounding mode */
@@ -170,7 +170,7 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	24,			/* output default rounding mode */
 	24,			/* round()/bround() default rounding mode */
 	TRUE,			/* ok to print leading 0 before decimal pt */
-	1,			/* ok to print trailing 0's */
+	0,			/* ok to print trailing 0's */
 	MAXSCANCOUNT,		/* max scan errors before abort */
 	"; ",			/* normal prompt */
 	";; ",			/* prompt when inside multi-line input */

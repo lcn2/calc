@@ -1,5 +1,5 @@
 /*
- * quickhash - quickly hash a calc value using a partial Fowler/Noll/Vo hash
+ * quickhash - quickly hash a calc value using a quasi Fowler/Noll/Vo hash
  *
  * Copyright (C) 1999-2002  Landon Curt Noll
  *
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: quickhash.c,v 29.5 2002/12/29 09:20:25 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: quickhash.c,v 29.7 2003/03/01 01:21:12 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/quickhash.c,v $
  *
  * Under source code control:	1995/03/04 11:34:23
@@ -31,26 +31,6 @@
 /*
  * NOTE: This file does not contain a hash interface.  It is used by
  *	 associative arrays and other internal processes.
- *
- * We will compute a hash value for any type of calc value
- * for use in associative arrays and the hash() builtin.
- * Hash speed is of primary importance to make associative
- * arrays work at a reasonable speed.  For this reason, we
- * cut corners by hashing only a small part of a calc value.
- *
- * The Fowler/Noll/Vo hash does a very good job in producing
- * a 32 bit hash from ASCII strings in a short amount of time.
- * It is not bad for hashing calc data as well.	 So doing a
- * quick and dirty job of hashing on a part of a calc value,
- * combined with using a reasonable hash function will result
- * acceptable associative array performance.
- *
- * See:
- *	http://www.isthe.com/chongo/src/fnv/fnv_hash.tar.gz
- *	http://www.isthe.com/chongo/src/fnv/hash_32.c
- *	http://www.isthe.com/chongo/src/fnv/hash_64.c
- *
- * for information on 32bit and 64bit Fowler/Noll/Vo hashs.
  */
 
 
@@ -77,7 +57,7 @@ static QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
 
 
 /*
- * FNV-0 - Fowler/Noll/Vo-0 32 bit hash
+ * quasi_fnv - quasi Fowler/Noll/Vo-0 32 bit hash
  *
  * The basis of this hash algorithm was taken from an idea sent
  * as reviewer comments to the IEEE POSIX P1003.2 committee by:
@@ -97,7 +77,7 @@ static QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
  * collision rate. The FNV speed allows one to quickly hash lots
  * of data while maintaining a reasonable collision rate.  See:
  *
- *	http://www.isthe.com/chongo/tech/comp/fnv/
+ *	http://www.isthe.com/chongo/tech/comp/fnv/index.html
  *
  * for more details as well as other forms of the FNV hash.
  *
@@ -107,8 +87,55 @@ static QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
  *
  * returns:
  *	the next 32 bit QCKHASH
+ *
+ * Example:
+ * 	QCKHASH val;
+ * 	int x;
+ *
+ * 	quasi_fnv(x, val);
+ *
+ * NOTE: The (x) argument may be an expression such as something with
+ * 	 a ++ or --.  The macro must only use (x) once.
+ *
+ * NOTE: The (val) argument just be a lvalue / something to which
+ * 	 a value can be assigned.
+ *
+ * The careful observer will note that (x) need not be a simple
+ * octet.  This is not a bug, but a feature.  The FNV hash was
+ * designed to operate on octets, not abstract objects such
+ * as associations, file descriptors and PRNG states.
+ * You will also notice that we sometimes add values directly
+ * to the (val) hash state.  This is a simulation of hashing
+ * a variable type.
+ *
+ * The Fowler/Noll/Vo hash does a very good job in producing
+ * a 32 bit hash arrays of octets in a short amount of time.
+ * It is not bad for hashing calc data as well.	 So doing a
+ * quick and dirty job of hashing on a part of a calc value
+ * is all that calc really needs.
+ *
+ * The core of the of the FNV hash has been adopted as the calc
+ * quick hash with the provision that it operates on 32 bit
+ * objects instead of octets.  For calc's internal purposes,
+ * this is sufficent.  For general FNV hashing, this is not
+ * recommended.
+ *
+ * It has been observed that gcc, when using -O, -O2, -O3 or
+ * better on an AMD or AMD-like processor (such as i686) will
+ * produce slightly faster code when using the shift/add
+ * expression than when performing a multiply with a constant.
  */
-#define fnv(x,val) (((QCKHASH)(val)*(QCKHASH)16777619) ^ ((QCKHASH)(x)))
+#if defined(NO_HASH_CPU_OPTIMIZATION)
+#define quasi_fnv(x,val) \
+    ((val) = (((QCKHASH)(val)*(QCKHASH)16777619) ^ ((QCKHASH)(x))))
+#else
+#define quasi_fnv(x,val) ( \
+    ((val) += (((QCKHASH)(val)<<1) + ((QCKHASH)(val)<<4) + \
+	       ((QCKHASH)(val)<<7) + ((QCKHASH)(val)<<8) + \
+	       ((QCKHASH)(val)<<24))), \
+    ((val) ^= (QCKHASH)(x)) \
+)
+#endif
 
 
 /*
@@ -159,7 +186,8 @@ hashvalue(VALUE *vp, QCKHASH val)
 {
 	switch (vp->v_type) {
 		case V_INT:
-			return fnv(vp->v_int, V_NUM+val);
+			val += V_NUM;
+			return quasi_fnv(vp->v_int, val);
 		case V_NUM:
 			return fnv_qhash(vp->v_num, val);
 		case V_COM:
@@ -177,7 +205,8 @@ hashvalue(VALUE *vp, QCKHASH val)
 		case V_MAT:
 			return mathash(vp->v_mat, val);
 		case V_FILE:
-			return fnv(vp->v_file, V_FILE+val);
+			val += V_FILE;
+			return quasi_fnv(vp->v_file, val);
 		case V_RAND:
 			return randhash(vp->v_rand, val);
 		case V_RANDOM:
@@ -189,7 +218,8 @@ hashvalue(VALUE *vp, QCKHASH val)
 		case V_BLOCK:
 			return blk_hash(vp->v_block, val);
 		case V_OCTET:
-			return fnv((int)*vp->v_octet, V_OCTET+val);
+			val += V_OCTET;
+			return quasi_fnv((int)*vp->v_octet, val);
 		case V_NBLOCK:
 			return blk_hash(vp->v_nblock->blk, val);
 		default:
@@ -207,7 +237,8 @@ static QCKHASH
 assochash(ASSOC *ap, QCKHASH val)
 {
 	/* XXX - hash the first and last values??? */
-	return fnv(ap->a_count, V_ASSOC+val);
+        val += V_ASSOC;
+	return quasi_fnv(ap->a_count, val);
 }
 
 
@@ -250,15 +281,16 @@ mathash(MATRIX *m, QCKHASH val)
 	/*
 	 * hash size parts of the matrix
 	 */
-	val = fnv(m->m_dim, V_MAT+val);
-	val = fnv(m->m_size, val);
+	val += V_MAT;
+	quasi_fnv(m->m_dim, val);
+	quasi_fnv(m->m_size, val);
 
 	/*
 	 * hash the matrix index bounds
 	 */
 	for (i = m->m_dim - 1; i >= 0; i--) {
-		val = fnv(m->m_min[i], val);
-		val = fnv(m->m_max[i], val);
+		quasi_fnv(m->m_min[i], val);
+		quasi_fnv(m->m_max[i], val);
 	}
 
 	/*
@@ -294,7 +326,7 @@ objhash(OBJECT *op, QCKHASH val)
 {
 	int i;
 
-	val = fnv(op->o_actions->oa_index, val);
+	quasi_fnv(op->o_actions->oa_index, val);
 
 	i = op->o_actions->oa_count;
 	while (--i >= 0)
@@ -323,10 +355,11 @@ randhash(RAND *r, QCKHASH val)
 		return V_RAND+val;
 	} else {
 		/* hash control values */
-		val = fnv(r->j, V_RAND+val);
-		val = fnv(r->k, val);
-		val = fnv(r->bits, val);
-		val = fnv(r->need_to_skip, val);
+	    	val += V_RAND;
+		quasi_fnv(r->j, val);
+		quasi_fnv(r->k, val);
+		quasi_fnv(r->bits, val);
+		quasi_fnv(r->need_to_skip, val);
 
 		/* hash the state arrays */
 		return fnv_fullhash(&r->buffer[0], SLEN+SCNT+SHUFLEN, val);
@@ -356,7 +389,8 @@ randomhash(RANDOM *state, QCKHASH val)
 	/*
 	 * hash a seeded RANDOM state
 	 */
-	val = fnv(state->buffer+state->bits, V_RANDOM+val);
+	val += V_RANDOM;
+	quasi_fnv(state->buffer+state->bits, val);
 	if (state->r.v != NULL) {
 		val = fnv_zhash(state->r, val);
 	}
@@ -424,7 +458,8 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	/*
 	 * hash the built up scalar
 	 */
-	val = fnv(value, V_CONFIG+val);
+	val += V_CONFIG;
+	quasi_fnv(value, val);
 
 	/*
 	 * hash the strings if possible
@@ -472,7 +507,7 @@ fnv_strhash(char *ch, QCKHASH val)
 	 * hash each character in the string
 	 */
 	while (*ch) {
-		val = fnv(*ch++, val);
+		quasi_fnv(*ch++, val);
 	}
 	return val;
 }
@@ -500,7 +535,7 @@ fnv_STRhash(STRING *str, QCKHASH val)
 	 * hash each character in the string
 	 */
 	while (n-- > 0) {
-		val = fnv(*ch++, val);
+		quasi_fnv(*ch++, val);
 	}
 	return val;
 }
@@ -524,7 +559,7 @@ fnv_fullhash(FULL *v, LEN len, QCKHASH val)
 	 * hash each character in the string
 	 */
 	while (len-- > 0) {
-		val = fnv(*v++, val);
+		quasi_fnv(*v++, val);
 	}
 	return val;
 }
@@ -552,7 +587,8 @@ fnv_zhash(ZVALUE z, QCKHASH val)
 	/*
 	 * hash the sign
 	 */
-	val = fnv(z.sign, val + V_NUM);
+	val += V_NUM;
+	quasi_fnv(z.sign, val);
 
 	n = z.len;
 	hp = z.v;
@@ -561,15 +597,15 @@ fnv_zhash(ZVALUE z, QCKHASH val)
 	while (n > 1) {
 		f = (FULL) *hp++;
 		f |= (FULL) *hp++ << BASEB;
-		val = fnv(f, val);
+		quasi_fnv(f, val);
 		n -= 2;
 	}
 	if (n) {
-		val = fnv(*hp, val);
+		quasi_fnv(*hp, val);
 	}
 #else
 	while (n--  > 0) {
-		val = fnv(*hp, val);
+		quasi_fnv(*hp, val);
 		++hp;
 	}
 #endif
@@ -596,7 +632,7 @@ hash_hash(HASH *hash, QCKHASH val)
 	 * hash each USB8 in the BLOCK
 	 */
 	for (i=0; i < hash->unionsize; ++i) {
-		val = fnv(hash->h_union.data[i], val);
+		quasi_fnv(hash->h_union.data[i], val);
 	}
 	return val;
 }
@@ -625,7 +661,7 @@ blk_hash(BLOCK *blk, QCKHASH val)
 	 */
 	if (blk->datalen > 0) {
 		for (i=0; i < blk->datalen; ++i) {
-			val = fnv(blk->data[i], val);
+			quasi_fnv(blk->data[i], val);
 		}
 	}
 	return val;

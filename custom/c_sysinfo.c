@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: c_sysinfo.c,v 29.5 2001/04/14 23:04:17 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: c_sysinfo.c,v 29.6 2003/06/10 21:44:17 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_sysinfo.c,v $
  *
  * Under source code control:	1997/03/09 23:14:40
@@ -128,8 +128,6 @@ static struct infoname sys_info[] = {
     {"MAX_SM_PRIME", "larest 32 bit prime", NULL, (FULL)MAX_SM_PRIME},
     {"MAX_SM_VAL", "larest 32 bit value", NULL, (FULL)MAX_SM_VAL},
     {"MUL_ALG2", "default size for alternative multiply", NULL, (FULL)MUL_ALG2},
-    {"NEW_EPSILONPREC_DEFAULT", "2^-EPSILON_DEFAULT <= EPSILON_DEFAULT", NULL, (FULL)NEW_EPSILONPREC_DEFAULT},
-    {"NEW_EPSILON_DEFAULT", "newstd EPSILON_DEFAULT", NEW_EPSILON_DEFAULT, (FULL)0},
     {"NXT_MAP_PRIME", "smallest odd prime not in pr_map", NULL, (FULL)NXT_MAP_PRIME},
     {"NXT_PFACT_VAL", "next prime for higher pfact values", NULL, (FULL)NXT_PFACT_VAL},
     {"OFF_T_BITS", "file offset size in bits", NULL, (FULL)OFF_T_BITS},

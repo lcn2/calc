@@ -148,10 +148,14 @@ Calc command line
 	       when the mode disables opening of files for reading.
 
 
-	  -n   Use the new configuration defaults instead of the old
-	       default classic defaults.  This flag as the same effect
-	       as executing config("all", "newcfg") at startup time.
+	  -O   Use the old classic defaults instead of the default
+	       configuration.  This flag as the same effect as executing
+	       config("all", "oldcfg") at startup time.
 
+	       NOTE: Older versions of calc used -n to setup a modified
+	       form of the default calc configuration.  The -n flag
+	       currently does  nothing.   Use of the -n flag is now
+	       deprecated and may used for something else in the future.
 
 	  -p   Pipe processing is enabled by use of -p.	 For example:
 
@@ -353,8 +357,8 @@ For more information use the following calc commands:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: usage,v 29.4 2002/07/10 11:47:04 chongo Exp $
+## @(#) $Revision: 29.6 $
+## @(#) $Id: usage,v 29.6 2003/06/10 21:39:34 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/usage,v $
 ##
 ## Under source code control:	1991/07/21 04:37:25
