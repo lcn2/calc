@@ -7165,6 +7165,9 @@ print '189: parsed test_somenew()';
  */
 define test_quit()
 {
+	local x8400 = 23209;	/* watch for lost memory */
+	static s8400 = 21701;	/* watch for lost memory */
+
 	print '8400: Starting test_quit';
 
 	quit;
@@ -7464,8 +7467,9 @@ print	'8310: Ending define tests';
 print;
 return test_quit();
 read -once test8400;
-print	'8402: read -once test8400';
-print	'8403: Ending test_quit';
+print	'8404: read -once test8400';
+vrfy(test8400() == 64434,	'8405: test8400() == 64434');
+print	'8406: Ending test_quit';
 
 
 /*

@@ -12,5 +12,19 @@
  */
 
 print "8401: in test8400.cal";
+
+/*
+ * test8400 - dummy function to allow a check of quit-based memory leaks
+ */
+define test8400()
+{
+    local x8401 = 19937;    /* watch for lost memory */
+    static s8401 = 44497;   /* watch for lost memory */
+
+    return x8401+s8401;
+}
+print "8402: parsed test8400()";
+vrfy(test8400() == 64434,	    '8403: test8400() == 64434');
+
 quit;
 prob('quit did not end test8400.cal');

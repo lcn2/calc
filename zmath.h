@@ -72,7 +72,7 @@ typedef SB16 SHALF;			/* signed HALF */
 typedef USB32 FULL;			/* double unit of number storage */
 typedef SB32 SFULL;			/* signed FULL */
 
-#define SWAP_HALF_IN_B64(dest, src)	SWAP_B32_IN_B64(dest, src)
+#define SWAP_HALF_IN_B64(dest, src)	SWAP_B16_IN_B64(dest, src)
 #define SWAP_HALF_IN_B32(dest, src)	SWAP_B16_IN_B32(dest, src)
 #define SWAP_HALF_IN_FULL(dest, src)	SWAP_B16_IN_B32(dest, src)
 #define SWAP_HALF_IN_HASH(dest, src)	SWAP_B16_IN_HASH(dest, src)

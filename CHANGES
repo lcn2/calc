@@ -1,4 +1,24 @@
-Following is the change from calc version 2.11.0t8 to date:
+Following is the change from calc version 2.11.0t8.9.1 to date:
+
+    The config("verbose_quit") will control the printing of the message:
+
+	Quit or abort executed
+
+    when a non-interactive ABORT, QUIT or EXIT is encounted.  By default,
+    config("verbose_quit") is TRUE and the message is printed.  If one does:
+
+	config("verbose_quit", 0)
+
+    the message is disabled.
+
+    Added 8400 regression test set and test8400.cal to test the new
+    quit and config("verbose_quit") functionality.
+
+    Fixed the BigEndian BASEB==16 regression bugs by correctly swapping
+    16 bit HALFs in a 64 bit value (such as a 64 bit file pointer).
+
+
+Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:
 
     Moved 'wishlist' enhancements from the help/todo file to a new
     help/wishlist file.  Ordered, by priority, help/todo items into
@@ -150,20 +170,6 @@ Following is the change from calc version 2.11.0t8 to date:
 
     Fixed a bug, reported by Michael Somos <somos@grail.cba.csuohio.edu>,
     which prevented calc -m from being used.
-
-    The config("verbose_quit") will control the printing of the message:
-
-	Quit or abort executed
-
-    when a non-interactive ABORT, QUIT or EXIT is encounted.  By default,
-    config("verbose_quit") is TRUE and the message is printed.  If one does:
-
-	config("verbose_quit", 0)
-
-    the message is disabled.
-
-    Added 8400 regression test set and test8400.cal to test the new
-    quit and config("verbose_quit") functionality.
 
     Fixed misc compiler warnings.
 
