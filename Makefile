@@ -7,10 +7,17 @@
 #  NOTE: This is NOT the calc rpm Makefile.  This Makefile is a generic
 #	 Makefile for the people who build calc from the gziped tarball.
 #	 Without modification, it not assume the system has readline, ncurses
-#	 or less.  It compiles with gcc -O2 -g as well.  You can change all
+#	 or less.  It compiles with gcc -O3 -g3 as well.  You can change all
 #	 this by modifying the Makefile variables below.
 #
-# Copyright (C) 1999-2003  Landon Curt Noll
+#  NOTE: You might want use the READLINE facility and the less pager if
+#	 your system supports them.  To do this, set:
+#
+#	 USE_READLINE= -DUSE_READLINE
+#	 READLINE_LIB= -lreadline -lhistory -lncurses
+#	 CALCPAGER= less
+#
+# Copyright (C) 1999-2004  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -26,8 +33,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.68 $$
-# @(#) $Id: Makefile.ship,v 29.68 2004/02/23 09:30:32 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.69 $$
+# @(#) $Id: Makefile.ship,v 29.69 2004/02/23 10:57:05 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -838,14 +845,14 @@ CALCPAGER= more
 #DEBUG= -O1 -g3
 #
 #DEBUG= -O2
-DEBUG= -O2 -g
+#DEBUG= -O2 -g
 #DEBUG= -O2 -g3
 #DEBUG= -O2 -ipa
 #DEBUG= -O2 -g3 -ipa
 #
 #DEBUG= -O3
 #DEBUG= -O3 -g
-#DEBUG= -O3 -g3
+DEBUG= -O3 -g3
 #DEBUG= -O3 -ipa
 #DEBUG= -O3 -g3 -ipa
 #
@@ -997,9 +1004,6 @@ MKDIR_ARG= -p
 #
 # Tested on Red Hat 6.0 Linux but should run on almost any Linux release.
 #
-# For better performance, set the following above:	DEBUG= -O2 -g3
-# You might even try:					DEBUG= -O3 -g3
-#
 CCWARN= -Wall -W -Wno-comment
 CCOPT= ${DEBUG} ${NO_SHARED}
 CCMISC=
@@ -1016,9 +1020,6 @@ CC= ${PURIFY} ${LCC}
 ###
 #
 # gcc set	(some call it gcc2, some call it gcc)
-#
-# For better performance, set the following above:	DEBUG= -O2 -g3
-# You might even try:					DEBUG= -O3 -g3
 #
 #CCWARN= -Wall -W -Wno-comment
 #CCOPT= ${DEBUG} ${NO_SHARED}
@@ -1038,8 +1039,8 @@ CC= ${PURIFY} ${LCC}
 #
 # common cc set
 #
-# For better performance, set the following above:	DEBUG= -O2 -g3
-# Or if -O2 -g3 are not supported try:			DEBUG= -O -g
+# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
+# If -O2 -g is not supported try:			DEBUG= -O -g
 #
 #CCWARN=
 #CCOPT= ${DEBUG} ${NO_SHARED}
@@ -1060,7 +1061,8 @@ CC= ${PURIFY} ${LCC}
 #
 # You must set above:					RANLIB=:
 #
-# For better performance, set the following above:	DEBUG= -O2 -g3
+# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
+# If -O2 -g is not supported try:			DEBUG= -O -g
 #
 # If you have the directory /usr/lib32/nonshared, then set the following above:
 #	NO_SHARED= -non_shared
@@ -1085,7 +1087,8 @@ CC= ${PURIFY} ${LCC}
 #
 # HP-UX set
 #
-# For better performance, set the following above:	DEBUG= -O -g
+# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
+# If -O2 -g is not supported try:			DEBUG= -O -g
 #
 # Warning: Some HP-UX optimizers are brain-damaged.
 # If 'make check' fails use:				DEBUG= -g
@@ -1107,6 +1110,9 @@ CC= ${PURIFY} ${LCC}
 #
 # AIX RS/6000 set
 #
+# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
+# If -O2 -g is not supported try:			DEBUG= -O -g
+#
 #CCWARN=
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC= -qlanglvl=ansi
@@ -1124,7 +1130,8 @@ CC= ${PURIFY} ${LCC}
 #
 # Solaris Sun cc compiler set
 #
-# For better performance, set the following above:	DEBUG= -O -g
+# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
+# If -O2 -g is not supported try:			DEBUG= -O -g
 #
 # We need -DFORCE_STDC to make use of ANSI-C like features and
 # to avoid the use of -Xc (which as a lose performance wise).
