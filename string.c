@@ -1086,9 +1086,8 @@ makenewstring(char *str)
 	s = stralloc();
 	s->s_str = c;
 	s->s_len = len;
-	while (len-- > 0)
-		*c++ = *str++;
-	*c = '\0';
+	memcpy(c, str, len);
+	c[len] = '\0';
 	return s;
 }
 
@@ -1097,7 +1096,7 @@ STRING *
 stringcopy (STRING *s1)
 {
 	STRING *s;
-	char *c, *c1;
+	char *c;
 	long len;
 
 	len = s1->s_len;
@@ -1111,10 +1110,8 @@ stringcopy (STRING *s1)
 	s = stralloc();
 	s->s_len = len;
 	s->s_str = c;
-	c1 = s1->s_str;
-	while (len-- > 0)
-		*c++ = *c1++;
-	*c = '\0';
+	memcpy(c, s1->s_str, len);
+	c[len] = '\0';
 	return s;
 }
 

@@ -44,7 +44,7 @@
  */
 typedef struct {
 	char *name;	/* name of configuration string */
-	int type;	/* type for configuration */
+	long type;	/* type for configuration */
 } NAMETYPE;
 
 

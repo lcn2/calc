@@ -67,7 +67,7 @@ BLT_HELP_FILES_9= stdlib
 
 STD_HELP_FILES_10= types usage unexpected variable
 
-BLT_HELP_FILES_11= altbind bindings custom_cal libcalc new_custom stdlib
+BLT_HELP_FILES_11= bindings custom_cal libcalc new_custom stdlib
 
 STD_HELP_FILES_12= archive
 
@@ -166,18 +166,6 @@ all: ${FULL_HELP_FILES} full ${DETAIL_HELP} ${DETAIL_CLONE} \
 bindings: ../lib/bindings
 	rm -f $@
 	cp ../lib/bindings $@
-	chmod 0444 $@
-	-@if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
-	    echo ''; \
-	else \
-	    true; \
-	fi
-
-altbind: ../lib/altbind
-	rm -f $@
-	cp ../lib/altbind $@
 	chmod 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \

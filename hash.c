@@ -40,6 +40,15 @@ extern void MD5_init_state(HASH*);
 
 
 /*
+ * hash_long can deal with BOOL's, int's, FLAGS's and LEN's
+ */
+#define hash_bool(type, val, state) (hash_long((type), (long)(val), (state)))
+#define hash_int(type, val, state) (hash_long((type), (long)(val), (state)))
+#define hash_flag(type, val, state) (hash_long((type), (long)(val), (state)))
+#define hash_len(type, val, state) (hash_long((type), (long)(val), (state)))
+
+
+/*
  * hash_setup - setup the hash state for a given hash
  */
 static struct hash_setup {
@@ -257,6 +266,9 @@ hash_final(HASH *state)
  * This function will hash a long value as if it were a 64 bit value.
  * The input is a long.	 If a long is smaller than 64 bits, we will
  * hash a final 32 bits of zeros.
+ *
+ * This function is OK to hash BOOL's, unslogned long's, unsigned int's
+ * signed int's as well as FLAG's and LEN's.
  */
 HASH *
 hash_long(int type, long longval, HASH *state)
@@ -734,11 +746,10 @@ hash_value(int type, void *v, HASH *state)
 		(state->type)(value->v_type, state);
 
 		/* hash as if we have a 64 bit value */
-		state = hash_long(type, (long)value->v_int, state);
+		state = hash_int(type, value->v_int, state);
 		break;
 
 	case V_NUM:
-
 		/* hash this type */
 		state = hash_number(type, value->v_num, state);
 		break;
@@ -884,12 +895,12 @@ hash_value(int type, void *v, HASH *state)
 		(state->type)(value->v_type, state);
 
 		/* hash the RAND state */
-		state = hash_long(type, (long)value->v_rand->seeded, state);
-		state = hash_long(type, (long)value->v_rand->bits, state);
+		state = hash_int(type, value->v_rand->seeded, state);
+		state = hash_int(type, value->v_rand->bits, state);
 		(state->update)(state,
 			(USB8 *)value->v_rand->buffer, SLEN*FULL_BITS/8);
-		state = hash_long(type, (long)value->v_rand->j, state);
-		state = hash_long(type, (long)value->v_rand->k, state);
+		state = hash_int(type, value->v_rand->j, state);
+		state = hash_int(type, value->v_rand->k, state);
 		(state->update)(state,
 			(USB8 *)value->v_rand->slot, SCNT*FULL_BITS/8);
 		(state->update)(state,
@@ -903,8 +914,8 @@ hash_value(int type, void *v, HASH *state)
 		(state->type)(value->v_type, state);
 
 		/* hash the RANDOM state */
-		state = hash_long(type, (long)value->v_random->seeded, state);
-		state = hash_long(type, (long)value->v_random->bits, state);
+		state = hash_int(type, value->v_random->seeded, state);
+		state = hash_int(type, value->v_random->bits, state);
 		(state->update)(state,
 			(USB8 *)&(value->v_random->buffer), BASEB/8);
 		state = hash_zvalue(type, value->v_random->r, state);
@@ -918,20 +929,19 @@ hash_value(int type, void *v, HASH *state)
 		(state->type)(value->v_type, state);
 
 		/* hash the CONFIG state */
-		state = hash_long(type, (long)value->v_config->outmode, state);
+		state = hash_int(type, value->v_config->outmode, state);
 		state = hash_long(type,(long)value->v_config->outdigits, state);
 		state = hash_number(type, value->v_config->epsilon, state);
 		state = hash_long(type,
 			(long)value->v_config->epsilonprec, state);
-		state = hash_long(type,
-			(long)value->v_config->traceflags, state);
+		state = hash_flag(type, value->v_config->traceflags, state);
 		state = hash_long(type, (long)value->v_config->maxprint, state);
-		state = hash_long(type, (long)value->v_config->mul2, state);
-		state = hash_long(type, (long)value->v_config->sq2, state);
-		state = hash_long(type, (long)value->v_config->pow2, state);
-		state = hash_long(type, (long)value->v_config->redc2, state);
-		state = hash_long(type, (long)value->v_config->tilde_ok, state);
-		state = hash_long(type, (long)value->v_config->tab_ok, state);
+		state = hash_len(type, value->v_config->mul2, state);
+		state = hash_len(type, value->v_config->sq2, state);
+		state = hash_len(type, value->v_config->pow2, state);
+		state = hash_len(type, value->v_config->redc2, state);
+		state = hash_bool(type, value->v_config->tilde_ok, state);
+		state = hash_bool(type, value->v_config->tab_ok, state);
 		state = hash_long(type, (long)value->v_config->quomod, state);
 		state = hash_long(type, (long)value->v_config->quo, state);
 		state = hash_long(type, (long)value->v_config->mod, state);
@@ -941,28 +951,26 @@ hash_value(int type, void *v, HASH *state)
 		state = hash_long(type, (long)value->v_config->cfsim, state);
 		state = hash_long(type, (long)value->v_config->outround, state);
 		state = hash_long(type, (long)value->v_config->round, state);
-		state = hash_long(type, (long)value->v_config->leadzero, state);
-		state = hash_long(type, (long)value->v_config->fullzero, state);
+		state = hash_bool(type, value->v_config->leadzero, state);
+		state = hash_bool(type, value->v_config->fullzero, state);
 		state = hash_long(type,
 			(long)value->v_config->maxscancount, state);
 		state = hash_str(type, value->v_config->prompt1, state);
 		state->bytes = FALSE;	/* as if just read words */
 		state = hash_str(type, value->v_config->prompt2, state);
 		state->bytes = FALSE;	/* as if just read words */
-		state = hash_long(type,
-			(long)value->v_config->blkmaxprint, state);
-		state = hash_long(type,
-			(long)value->v_config->blkverbose, state);
-		state = hash_long(type,
-			(long)value->v_config->blkbase, state);
-		state = hash_long(type,
-			(long)value->v_config->blkfmt, state);
+		state = hash_int(type, value->v_config->blkmaxprint, state);
+		state = hash_bool(type, value->v_config->blkverbose, state);
+		state = hash_int(type, value->v_config->blkbase, state);
+		state = hash_int(type, value->v_config->blkfmt, state);
 		state = hash_long(type,
 			(long)value->v_config->lib_debug, state);
 		state = hash_long(type,
 			(long)value->v_config->calc_debug, state);
 		state = hash_long(type,
 			(long)value->v_config->user_debug, state);
+		state = hash_bool(type, value->v_config->verbose_quit, state);
+		state = hash_int(type, value->v_config->ctrl_d, state);
 		break;
 
 	case V_HASH:
@@ -971,11 +979,11 @@ hash_value(int type, void *v, HASH *state)
 		(state->type)(value->v_type, state);
 
 		/* hash the HASH state */
-		state = hash_long(type, (long)value->v_hash->type, state);
-		state = hash_long(type, (long)value->v_hash->bytes,state);
-		state = hash_long(type, (long)value->v_hash->base, state);
-		state = hash_long(type, (long)value->v_hash->chunksize, state);
-		state = hash_long(type, (long)value->v_hash->unionsize, state);
+		state = hash_int(type, value->v_hash->type, state);
+		state = hash_bool(type, value->v_hash->bytes,state);
+		state = hash_int(type, value->v_hash->base, state);
+		state = hash_int(type, value->v_hash->chunksize, state);
+		state = hash_int(type, value->v_hash->unionsize, state);
 		(state->update)(state,
 		    value->v_hash->h_union.data, state->unionsize);
 		state->bytes = FALSE;	/* as if reading words */

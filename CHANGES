@@ -44,7 +44,66 @@ The following are the changes from calc version 2.11.0t10 to date:
 
     Added calcliblist and calcliblistfmt utility Makefile rules to allow
     one to print the list of distribution files that are used (but not
-    built) to form a .a calc library.
+    built) to form either the libcalc.a or the libcustcalc.a library.
+
+    Added a patch from Randall.Gray@marine.csiro.au to make ^D terminate,
+    but *only* if the line it is on is completely empty.  Removed lib/altbind
+    and removed the CALCBINDINGS Makefile variable.
+
+    A new config("ctrl_d") value controls how the ``delete_char'', which
+    by default is bound to ^D (Control D), will or will not exit calc:
+
+	config("ctrl_d", "virgin_eof")
+
+	    If ^D is the only character that has been typed on a line,
+	    then calc will exit.  Otherwise ^D will act according to the
+	    calc binding, which by default is a Emacs-style delete-char.
+
+	    This is the default mode.
+
+	config("ctrl_d", "never_eof")
+
+	    The ^D never exits calc and only acts according calc binding,
+	    which by default is a Emacs-style delete-char.
+
+	    Emacs purists may want to set this in their ~/.calcrc startup file.
+
+	config("ctrl_d", "empty_eof")
+
+	    The ^D always exits calc if typed on an empty line.  This
+	    condition occurs when ^D either the first character typed,
+	    or when all other characters on the line have been removed
+	    (say by deleting them).
+
+	    Users who always want to exit when ^D is typed at the beginning
+	    of a line may want to set this in their ~/.calcrc startup file.
+
+	Note that config("ctrl_d") apples to the character bound to each
+	and every ``delete_char''.  So if an alternate binding it setup,
+	then those char(s) will have this functionality.
+
+    Updated help/config and help/mode, improved the readability and
+    fixed a few typos.  Documented modes, block formats and block bases
+    ("mode", "blkfmt" & "blkbase") that were previously left off out of
+    the documentation.
+
+    The config("blkbase") and config("blkfmt") values return strings
+    instead of returning integers.  One cannot use integers to set
+    these values, so returning integers was useless.
+
+    The following config values return "on" or "off" strings:
+
+	    tilde  tab  leadzero  fullzero  blkverbose  verbose_quit
+
+	These config values can still be set with same boolean strings
+	("on", "off", "true", "false", "t", ...) as well as via the
+	numerical values 0 (for "off") and non-0 (for "on"), however.
+
+    Applied the dangling name fix from Ernest Bowen <ernie@turing.une.edu.au>.
+
+    Show func prints function on order of their indices, and with
+    config("lib_debug") & 4 == 4  some more details about the functions
+    are displayed.
 
 
 The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:

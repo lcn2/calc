@@ -76,6 +76,7 @@ static	struct {
 	int	linelen;
 	int	histcount;
 	int	curhist;
+	BOOL	virgin_line;	/* 1 => never typed chars, 0 => chars typed */
 } HS;
 
 
@@ -250,9 +251,15 @@ static	void	insert_string(char *str, int len);
 int
 hist_getline(char *prompt, char *buf, int len)
 {
+	/*
+	 * initialize if we have not already done so
+	 */
 	if (!inited)
 		(void) hist_init(calcbindings);
 
+	/*
+	 * establish the beginning of a line condition
+	 */
 	HS.prompt = prompt;
 	HS.bufsize = len - 2;
 	HS.buf = buf;
@@ -260,19 +267,38 @@ hist_getline(char *prompt, char *buf, int len)
 	HS.end = buf;
 	HS.mark = NULL;
 	HS.linelen = -1;
+	HS.virgin_line = TRUE;
 
+	/*
+	 * prep the I/O
+	 */
 	fputs(prompt, stdout);
 	fflush(stdout);
 
+	/*
+	 * special case: non-interactive editing
+	 */
 	if (!canedit) {
 		if (fgets(buf, len, stdin) == NULL)
 			return 0;
 		return strlen(buf);
 	}
 
-	while (HS.linelen < 0)
+	/*
+	 * get the line
+	 */
+	while (HS.linelen < 0) {
+
+		/* get the next char */
 		read_key();
 
+		/* chars typed, no longer virgin */
+		HS.virgin_line = FALSE;
+	}
+
+	/*
+	 * return the line
+	 */
 	return HS.linelen;
 }
 
@@ -292,12 +318,18 @@ hist_init(char *filename)
 {
 	TTYSTRUCT	newtty;
 
+	/*
+	 * prevent multiple initializations
+	 */
 	if (inited) {
 		if (conf->calc_debug & CALCDBG_TTY)
 			printf("DEBUG: inited already set in hist_init\n");
 		return HIST_INITED;
 	}
 
+	/*
+	 * setup
+	 */
 	inited = 1;
 	canedit = 0;
 	if (conf->calc_debug & CALCDBG_TTY)
@@ -984,6 +1016,21 @@ forward_kill_char(void)
 static void
 delete_char(void)
 {
+	/*
+	 * quit delete_char (usually ^D) is at start of line and we are allowed
+	 *
+	 * We exit of start of line and config("ctrl_d", "empty") or
+	 * if config("ctrl_d", "virgin") and we have never typed on the line.
+	 */
+	if ((HS.end == HS.buf) &&
+	    (conf->ctrl_d == CTRL_D_EOF ||
+	     (conf->ctrl_d == CTRL_D_VIRGIN && HS.virgin_line == TRUE))) {
+		quit_calc();
+	}
+
+	/*
+	 * normal case: just forward_kill_char
+	 */
 	if (HS.end > HS.buf)
 		forward_kill_char();
 }

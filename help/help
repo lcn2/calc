@@ -30,7 +30,6 @@ following topics:
     usage		how to invoke the calc command
     variable		variables and variable declarations
 
-    altbind		alternative input & history character bindings
     bindings		input & history character bindings
     custom_cal		information about custom calc library files
     libcalc		using the arbitrary precision routines in a C program

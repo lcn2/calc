@@ -56,6 +56,8 @@ NAMETYPE configs[] = {
 	{"calc_debug",	CONFIG_CALC_DEBUG},
 	{"user_debug",	CONFIG_USER_DEBUG},
 	{"verbose_quit",CONFIG_VERBOSE_QUIT},
+	{"ctrl_d",	CONFIG_CTRL_D},
+	    {"ctrl-d",	CONFIG_CTRL_D},		/* alias for ctrl_d */
 	{NULL,		0}
 };
 
@@ -97,7 +99,8 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	0,			/* internal calc debug level */
 	3,			/* calc library debug level */
 	0,			/* user defined debug level */
-	TRUE			/* print Quit or abort executed messages */
+	TRUE,			/* print Quit or abort executed messages */
+	CTRL_D_VIRGIN		/* ^D only exits on virgin lines */
 };
 CONFIG newstd = {	/* new non-backward compatible configuration */
 	MODE_INITIAL,		/* current output mode */
@@ -133,7 +136,8 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	0,			/* internal calc debug level */
 	3,			/* calc library debug level */
 	0,			/* user defined debug level */
-	TRUE			/* print Quit or abort executed messages */
+	TRUE,			/* print Quit or abort executed messages */
+	CTRL_D_VIRGIN		/* ^D only exits on virgin lines */
 };
 CONFIG *conf = NULL;	/* loaded in at startup - current configuration */
 
@@ -142,11 +146,15 @@ CONFIG *conf = NULL;	/* loaded in at startup - current configuration */
  * Possible output modes.
  */
 static NAMETYPE modes[] = {
+	{"fraction",	MODE_FRAC},
 	{"frac",	MODE_FRAC},
-	{"decimal",	MODE_FRAC},
-	{"dec",		MODE_FRAC},
+	{"integer",	MODE_INT},
 	{"int",		MODE_INT},
 	{"real",	MODE_REAL},
+	{"float",	MODE_REAL},
+	{"default",	MODE_INITIAL},	/* MODE_REAL */
+	{"scientific",	MODE_EXP},
+	{"sci",		MODE_EXP},
 	{"exp",		MODE_EXP},
 	{"hexadecimal", MODE_HEX},
 	{"hex",		MODE_HEX},
@@ -159,33 +167,12 @@ static NAMETYPE modes[] = {
 
 
 /*
- * Possible binary config state values
- */
-static NAMETYPE truth[] = {
-	{"y",		TRUE},
-	{"n",		FALSE},
-	{"yes",		TRUE},
-	{"no",		FALSE},
-	{"set",		TRUE},
-	{"unset",	FALSE},
-	{"on",		TRUE},
-	{"off",		FALSE},
-	{"true",	TRUE},
-	{"false",	FALSE},
-	{"t",		TRUE},
-	{"f",		FALSE},
-	{"1",		TRUE},
-	{"0",		FALSE},
-	{NULL,		0}
-};
-
-
-/*
  * Possible block base output modes
  */
 static NAMETYPE blk_base[] = {
 	{"hexadecimal", BLK_BASE_HEX},
 	{"hex",		BLK_BASE_HEX},
+	{"default",	BLK_BASE_HEX},
 	{"octal",	BLK_BASE_OCT},
 	{"oct",		BLK_BASE_OCT},
 	{"character",	BLK_BASE_CHAR},
@@ -202,17 +189,60 @@ static NAMETYPE blk_base[] = {
  * Possible block output formats
  */
 static NAMETYPE blk_fmt[] = {
-	{"line",	BLK_FMT_LINE},
 	{"lines",	BLK_FMT_LINE},
-	{"str",		BLK_FMT_STRING},
-	{"string",	BLK_FMT_STRING},
+	{"line",	BLK_FMT_LINE},
 	{"strings",	BLK_FMT_STRING},
-	{"od",		BLK_FMT_OD_STYLE},
-	{"odstyle",	BLK_FMT_OD_STYLE},
+	{"string",	BLK_FMT_STRING},
+	{"str",		BLK_FMT_STRING},
 	{"od_style",	BLK_FMT_OD_STYLE},
-	{"hd",		BLK_FMT_HD_STYLE},
-	{"hdstyle",	BLK_FMT_HD_STYLE},
+	{"odstyle",	BLK_FMT_OD_STYLE},
+	{"od",		BLK_FMT_OD_STYLE},
 	{"hd_style",	BLK_FMT_HD_STYLE},
+	{"hdstyle",	BLK_FMT_HD_STYLE},
+	{"hd",		BLK_FMT_HD_STYLE},
+	{"default",	BLK_FMT_HD_STYLE},
+	{NULL,		0}
+};
+
+
+/*
+ * Possible ctrl_d styles
+ */
+static NAMETYPE ctrl_d[] = {
+	{"virgin_eof",	CTRL_D_VIRGIN},
+	{"virgineof",	CTRL_D_VIRGIN},
+	{"virgin",	CTRL_D_VIRGIN},
+	{"default",	CTRL_D_VIRGIN},
+	{"never_eof",	CTRL_D_EMACS},
+	{"nevereof",	CTRL_D_EMACS},
+	{"never",	CTRL_D_EMACS},
+	{"empty_eof",	CTRL_D_EOF},
+	{"emptyeof",	CTRL_D_EOF},
+	{"empty",	CTRL_D_EOF},
+	{NULL,		0}
+};
+
+
+/*
+ * Possible binary config state values
+ */
+#define TRUE_STRING	"on"
+#define FALSE_STRING	"off"
+static NAMETYPE truth[] = {
+	{TRUE_STRING,	TRUE},
+	{"true",	TRUE},
+	{"t",		TRUE},
+	{"yes",		TRUE},
+	{"y",		TRUE},
+	{"set",		TRUE},
+	{"1",		TRUE},
+	{FALSE_STRING,	FALSE},
+	{"false",	FALSE},
+	{"f",		FALSE},
+	{"no",		FALSE},
+	{"n",		FALSE},
+	{"unset",	FALSE},
+	{"0",		FALSE},
 	{NULL,		0}
 };
 
@@ -220,11 +250,8 @@ static NAMETYPE blk_fmt[] = {
 /*
  * declate static functions
  */
-static int modetype(char *name);
-static int blkbase(char *name);
-static int blkfmt(char *name);
-static int truthtype(char *name);
-static char *modename(int type);
+static long lookup_long(NAMETYPE *set, char *name);
+static char *lookup_name(NAMETYPE *set, long val);
 
 
 /*
@@ -249,18 +276,21 @@ configtype(char *name)
 
 
 /*
- * Given the name of a mode, convert it to the internal format.
- * Returns -1 if the string is unknown.
+ * lookup_long - given a name and a NAMETYPE, return the int
  *
  * given:
- *	name			mode name
+ *	set		the NAMESET array of name/int pairs
+ *	name		mode name
+ *
+ * returns:
+ *	numeric value of the name or -1 if not found
  */
-static int
-modetype(char *name)
+static long
+lookup_long(NAMETYPE *set, char *name)
 {
 	NAMETYPE *cp;		/* current config pointer */
 
-	for (cp = modes; cp->name; cp++) {
+	for (cp = set; cp->name; cp++) {
 		if (strcmp(cp->name, name) == 0)
 			return cp->type;
 	}
@@ -269,78 +299,22 @@ modetype(char *name)
 
 
 /*
- * Given the name of a block output base, convert it to the internal format.
- * Returns -1 if the string is unknown.
+ * lookup_name - given numeric value and a NAMETYPE, return the name
  *
  * given:
- *	name			mode name
- */
-static int
-blkbase(char *name)
-{
-	NAMETYPE *cp;		/* current config pointer */
-
-	for (cp = blk_base; cp->name; cp++) {
-		if (strcmp(cp->name, name) == 0)
-			return cp->type;
-	}
-	return -1;
-}
-
-
-/*
- * Given the name of a block output format, convert it to the internal format.
- * Returns -1 if the string is unknown.
+ *	set		the NAMESET array of name/int pairs
+ *	val		numeric value to lookup
  *
- * given:
- *	name			mode name
- */
-static int
-blkfmt(char *name)
-{
-	NAMETYPE *cp;		/* current config pointer */
-
-	for (cp = blk_fmt; cp->name; cp++) {
-		if (strcmp(cp->name, name) == 0)
-			return cp->type;
-	}
-	return -1;
-}
-
-
-/*
- * Given the name of a truth value, convert it to a BOOL or -1.
- * Returns -1 if the string is unknown.
- *
- * given:
- *	name			mode name
- */
-static int
-truthtype(char *name)
-{
-	NAMETYPE *cp;		/* current config pointer */
-
-	for (cp = truth; cp->name; cp++) {
-		if (strcmp(cp->name, name) == 0)
-			return cp->type;
-	}
-	return -1;
-}
-
-
-/*
- * Given the mode type, convert it to a string representing that mode.
- * Where there are multiple strings representing the same mode, the first
- * one in the table is used.  Returns NULL if the node type is unknown.
- * The returned string cannot be modified.
+ * returns:
+ *	name of the value found of NULL
  */
 static char *
-modename(int type)
+lookup_name(NAMETYPE *set, long val)
 {
 	NAMETYPE *cp;		/* current config pointer */
 
-	for (cp = modes; cp->name; cp++) {
-		if (type == cp->type)
+	for (cp = set; cp->name; cp++) {
+		if (val == cp->type)
 			return cp->name;
 	}
 	return NULL;
@@ -417,7 +391,7 @@ setconfig(int type, VALUE *vp)
 			math_error("Non-string for mode");
 			/*NOTREACHED*/
 		}
-		temp = modetype(vp->v_str->s_str);
+		temp = lookup_long(modes, vp->v_str->s_str);
 		if (temp < 0) {
 			math_error("Unknown mode \"%s\"", vp->v_str);
 			/*NOTREACHED*/
@@ -526,7 +500,7 @@ setconfig(int type, VALUE *vp)
 			q = vp->v_num;
 			conf->tilde_ok = !qiszero(q);
 		} else if (vp->v_type == V_STR) {
-			temp = truthtype(vp->v_str->s_str);
+			temp = lookup_long(truth, vp->v_str->s_str);
 			if (temp < 0) {
 				math_error("Illegal truth value for tilde");
 				/*NOTREACHED*/
@@ -540,7 +514,7 @@ setconfig(int type, VALUE *vp)
 			q = vp->v_num;
 			conf->tab_ok = !qiszero(q);
 		} else if (vp->v_type == V_STR) {
-			temp = truthtype(vp->v_str->s_str);
+			temp = lookup_long(truth, vp->v_str->s_str);
 			if (temp < 0) {
 				math_error("Illegal truth value for tab");
 				/*NOTREACHED*/
@@ -680,7 +654,7 @@ setconfig(int type, VALUE *vp)
 			q = vp->v_num;
 			conf->leadzero = !qiszero(q);
 		} else if (vp->v_type == V_STR) {
-			temp = truthtype(vp->v_str->s_str);
+			temp = lookup_long(truth, vp->v_str->s_str);
 			if (temp < 0) { {
 				math_error("Illegal truth value for leadzero");
 				/*NOTREACHED*/
@@ -695,7 +669,7 @@ setconfig(int type, VALUE *vp)
 			q = vp->v_num;
 			conf->fullzero = !qiszero(q);
 		} else if (vp->v_type == V_STR) {
-			temp = truthtype(vp->v_str->s_str);
+			temp = lookup_long(truth, vp->v_str->s_str);
 			if (temp < 0) { {
 				math_error("Illegal truth value for fullzero");
 				/*NOTREACHED*/
@@ -772,7 +746,7 @@ setconfig(int type, VALUE *vp)
 			q = vp->v_num;
 			conf->blkverbose = !qiszero(q);
 		} else if (vp->v_type == V_STR) {
-			temp = truthtype(vp->v_str->s_str);
+			temp = lookup_long(truth, vp->v_str->s_str);
 			if (temp < 0) {
 			    math_error("Illegal truth value for blkverbose");
 			    /*NOTREACHED*/
@@ -786,7 +760,7 @@ setconfig(int type, VALUE *vp)
 			math_error("Non-string for blkbase");
 			/*NOTREACHED*/
 		}
-		temp = blkbase(vp->v_str->s_str);
+		temp = lookup_long(blk_base, vp->v_str->s_str);
 		if (temp < 0) {
 			math_error("Unknown mode \"%s\" for blkbase",
 			    vp->v_str->s_str);
@@ -800,7 +774,7 @@ setconfig(int type, VALUE *vp)
 			math_error("Non-string for blkfmt");
 			/*NOTREACHED*/
 		}
-		temp = blkfmt(vp->v_str->s_str);
+		temp = lookup_long(blk_fmt, vp->v_str->s_str);
 		if (temp < 0) {
 			math_error("Unknown mode \"%s\" for blkfmt",
 			    vp->v_str->s_str);
@@ -856,14 +830,28 @@ setconfig(int type, VALUE *vp)
 			q = vp->v_num;
 			conf->verbose_quit = !qiszero(q);
 		} else if (vp->v_type == V_STR) {
-			temp = truthtype(vp->v_str->s_str);
+			temp = lookup_long(truth, vp->v_str->s_str);
 			if (temp < 0) {
-				math_error("Illegal truth value"
+				math_error("Illegal truth value "
 					   "for verbose_quit");
 				/*NOTREACHED*/
 			}
 			conf->verbose_quit = (int)temp;
 		}
+		break;
+
+	case CONFIG_CTRL_D:
+		if (vp->v_type != V_STR) {
+			math_error("Non-string for ctrl_d");
+			/*NOTREACHED*/
+		}
+		temp = lookup_long(ctrl_d, vp->v_str->s_str);
+		if (temp < 0) {
+			math_error("Unknown mode \"%s\" for ctrl_d",
+			    vp->v_str->s_str);
+			/*NOTREACHED*/
+		}
+		conf->ctrl_d = temp;
 		break;
 
 	default:
@@ -986,6 +974,7 @@ void
 config_value(CONFIG *cfg, int type, VALUE *vp)
 {
 	long i=0;
+	char *p;
 
 	/*
 	 * firewall
@@ -1017,7 +1006,12 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 
 	case CONFIG_MODE:
 		vp->v_type = V_STR;
-		vp->v_str = makenewstring(modename(cfg->outmode));
+		p = lookup_name(modes, cfg->outmode);
+		if (p == NULL) {
+			math_error("invalid output mode: %d", cfg->outmode);
+			/*NOTREACHED*/
+		}
+		vp->v_str = makenewstring(p);
 		return;
 
 	case CONFIG_EPSILON:
@@ -1045,12 +1039,22 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		break;
 
 	case CONFIG_TILDE:
-		i = cfg->tilde_ok;
-		break;
+		vp->v_type = V_STR;
+		if (cfg->tilde_ok) {
+			vp->v_str = makenewstring(TRUE_STRING);
+		} else {
+			vp->v_str = makenewstring(FALSE_STRING);
+		}
+		return;
 
 	case CONFIG_TAB:
-		i = cfg->tab_ok;
-		break;
+		vp->v_type = V_STR;
+		if (cfg->tab_ok) {
+			vp->v_str = makenewstring(TRUE_STRING);
+		} else {
+			vp->v_str = makenewstring(FALSE_STRING);
+		}
+		return;
 
 	case CONFIG_QUOMOD:
 		i = cfg->quomod;
@@ -1089,12 +1093,22 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		break;
 
 	case CONFIG_LEADZERO:
-		i = cfg->leadzero;
-		break;
+		vp->v_type = V_STR;
+		if (cfg->leadzero) {
+			vp->v_str = makenewstring(TRUE_STRING);
+		} else {
+			vp->v_str = makenewstring(FALSE_STRING);
+		}
+		return;
 
 	case CONFIG_FULLZERO:
-		i = cfg->fullzero;
-		break;
+		vp->v_type = V_STR;
+		if (cfg->fullzero) {
+			vp->v_str = makenewstring(TRUE_STRING);
+		} else {
+			vp->v_str = makenewstring(FALSE_STRING);
+		}
+		return;
 
 	case CONFIG_MAXSCAN:
 		i = cfg->maxscancount;
@@ -1115,16 +1129,33 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		break;
 
 	case CONFIG_BLKVERBOSE:
-		i = cfg->blkverbose;
-		break;
+		vp->v_type = V_STR;
+		if (cfg->blkverbose) {
+			vp->v_str = makenewstring(TRUE_STRING);
+		} else {
+			vp->v_str = makenewstring(FALSE_STRING);
+		}
+		return;
 
 	case CONFIG_BLKBASE:
-		i = cfg->blkbase;
-		break;
+		vp->v_type = V_STR;
+		p = lookup_name(blk_base, cfg->blkbase);
+		if (p == NULL) {
+			math_error("invalid block base: %d", cfg->blkbase);
+			/*NOTREACHED*/
+		}
+		vp->v_str = makenewstring(p);
+		return;
 
 	case CONFIG_BLKFMT:
-		i = cfg->blkfmt;
-		break;
+		vp->v_type = V_STR;
+		p = lookup_name(blk_fmt, cfg->blkfmt);
+		if (p == NULL) {
+			math_error("invalid block format: %d", cfg->blkfmt);
+			/*NOTREACHED*/
+		}
+		vp->v_str = makenewstring(p);
+		return;
 
 	case CONFIG_CALC_DEBUG:
 		i = cfg->calc_debug;
@@ -1139,8 +1170,23 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		break;
 
 	case CONFIG_VERBOSE_QUIT:
-		i = cfg->verbose_quit;
-		break;
+		vp->v_type = V_STR;
+		if (cfg->verbose_quit) {
+			vp->v_str = makenewstring(TRUE_STRING);
+		} else {
+			vp->v_str = makenewstring(FALSE_STRING);
+		}
+		return;
+
+	case CONFIG_CTRL_D:
+		vp->v_type = V_STR;
+		p = lookup_name(ctrl_d, cfg->ctrl_d);
+		if (p == NULL) {
+			math_error("invalid Control-D: %d", cfg->ctrl_d);
+			/*NOTREACHED*/
+		}
+		vp->v_str = makenewstring(p);
+		return;
 
 	default:
 		math_error("Getting illegal CONFIG element");
@@ -1218,5 +1264,6 @@ config_cmp(CONFIG *cfg1, CONFIG *cfg2)
 	       cfg1->calc_debug != cfg2->calc_debug ||
 	       cfg1->lib_debug != cfg2->lib_debug ||
 	       cfg1->user_debug != cfg2->user_debug ||
-	       cfg1->verbose_quit != cfg2->verbose_quit;
+	       cfg1->verbose_quit != cfg2->verbose_quit ||
+	       cfg1->ctrl_d != cfg2->ctrl_d;
 }

@@ -2827,7 +2827,8 @@ config_print(CONFIG *cfg)
 	for (cp = configs; cp->name; cp++) {
 
 		/* skip if special all or duplicate maxerr value */
-		if (cp->type == CONFIG_ALL || strcmp(cp->name, "maxerr") == 0)
+		if (cp->type == CONFIG_ALL || strcmp(cp->name, "maxerr") == 0 ||
+		    strcmp(cp->name, "ctrl-d") == 0)
 			continue;
 
 		/* print tab if allowed */

@@ -555,9 +555,10 @@ line, or \fI\-m\fP disallows opening files for reading),
 reads
 key bindings from the filename specified
 by this environment variable.
-.br
+The key binding file is searched for along the $CALCPATH list
+of directories.
 .sp
-Default value: ${CALCBINDINGS}
+Default value: binding
 .sp
 This variable is not used if calc was compiled with GNU-readline support.
 In that case, the standard readline mechanisms (see readline(3)) are used.

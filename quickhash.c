@@ -410,6 +410,7 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->lib_debug);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->user_debug);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->verbose_quit);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->ctrl_d);
 
 	/*
 	 * hash the built up scalar

@@ -6781,14 +6781,14 @@ f_blk(int count, VALUE **vals)
 	int chunk;		/* block chunk size */
 	VALUE result;
 	int id;
-	VALUE *vp;
+	VALUE *vp = NULL;
 	int type;
 
 	/* initialize VALUE */
 	result.v_type = V_BLOCK;
 	result.v_subtype = V_NOSUBTYPE;
 
-	type = 0;
+	type = V_NULL;
 	if (count > 0) {
 		vp = *vals;
 		type = vp->v_type;

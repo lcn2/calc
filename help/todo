@@ -39,7 +39,6 @@ Very High priority items:
 	    overview		overview of calc
 	    assoc		using associations
 	    command		top level commands
-	    config		configuration parameters
 	    define		how to define functions
 	    environment		how environment variables effect calc
 	    errorcodes		calc generated error codes

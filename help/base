@@ -18,19 +18,46 @@ DESCRIPTION
 
     The following convention is used to declare modes:
 
-	     base	 config
-	    value	 string
+	     base	equivalent
+		      config("mode")'s
 
-	       2	"binary"	binary fractions
-	       8	"octal"		octal fractions
-	      10	"real"		decimal floating point
-	      16	"hex"		hexadecimal fractions
-	     -10	"int"		decimal integer
-	     1/3	"frac"		decimal fractions
-	    1e20	"exp"		decimal exponential
+	       2	"binary"	base 2 fractions
+			"bin"
 
-    For convenience, any non-integer value is assumed to mean "frac",
-    and any integer >= 2^64 is assumed to mean "exp".
+	       8	"octal"		base 8 fractions
+			"oct"
+
+	      10	"real"		base 10 floating point
+			"float"
+			"default"
+
+	     -10	"integer"	base 10 integers
+			"int"
+
+	      16	"hexadecimal"	base 16 fractions
+			"hex"
+
+	     1/3	"fraction"	base 10 fractions
+			"frac"
+
+	    1e20	"scientific"	base 10 scientific notation
+			"sci"
+			"exp"
+
+    For convenience, any non-integer value is assumed to mean base 10
+    fractions and any integer >= 2^64 is assumed to mean base 10
+    scientific notation.
+
+    These base() calls have the same meaning as config("mode", "fraction"):
+
+	base(1/3)	base(0.1415)	base(16/37)
+
+    These base() calls have the same meaning as config("mode", "scientific"):
+
+	base(1e20)	base(2^64)	base(2^8191-1)
+
+    However the base() function will only return one of the base values
+    lised in the table above.
 
 EXAMPLE
     > base()

@@ -81,6 +81,7 @@
 #define CONFIG_CALC_DEBUG 31
 #define CONFIG_USER_DEBUG 32
 #define CONFIG_VERBOSE_QUIT 33
+#define CONFIG_CTRL_D 34
 
 
 /*
@@ -102,7 +103,9 @@
  *
  *	quickhash.c	- config_hash()
  *	hash.c		- hash_value()
- *	config.c	- setconfig(), config_value(), config_cmp()
+ *	config.c	- configs[], oldstd, newstd, setconfig(),
+ *			  config_value(), config_cmp()
+ *	config.h	- CONFIG_XYZ_SYMBOL (see above)
  */
 struct config {
 	int outmode;		/* current output mode */
@@ -139,6 +142,7 @@ struct config {
 	long lib_debug;		/* library debug, see LIB_DEBUG_XXX below */
 	long user_debug;	/* user defined debug value: 0 default */
 	BOOL verbose_quit;	/* TRUE => print Quit or abort executed msg */
+	int ctrl_d;		/* see CTRL_D_xyz below */
 };
 typedef struct config CONFIG;
 
@@ -148,7 +152,8 @@ typedef struct config CONFIG;
  */
 #define LIBDBG_STDIN_FUNC   (0x00000001)    /* interactive func define debug */
 #define LIBDBG_FILE_FUNC    (0x00000002)    /* file read func define debug */
-#define LIBDBG_MASK	    (0x00000003)
+#define LIBDBG_FUNC_INFO    (0x00000004)    /* print extra info for show func */
+#define LIBDBG_MASK	    (0x00000007)
 
 
 /*
@@ -161,6 +166,13 @@ typedef struct config CONFIG;
 #define CALCDBG_TTY	    (0x00000010)    /* report TTY state changes */
 #define CALCDBG_RUNSTATE    (0x00000020)    /* report run_state changes */
 #define CALCDBG_MASK	    (0x0000003f)
+
+/*
+ * ctrl-d meanings
+ */
+#define CTRL_D_VIRGIN	(0)	/* ^D only exits on virgin command lines */
+#define CTRL_D_EMACS	(1)	/* ^D never exits, emacs binding meaning only */
+#define CTRL_D_EOF	(2)	/* ^D always exits at start of line */
 
 
 /*

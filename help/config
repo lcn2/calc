@@ -44,7 +44,7 @@ Configuration parameters
 	    "lib_debug"		controls library script debug information
 	    "user_debug"	for user defined debug information
 	    "verbose_quit"	TRUE=>print message on empty quit or abort
-
+	    "ctrl_d"		The interactive meaning of ^D (Control D)
 
     The "all" config value allows one to save/restore the configuration
     set of values.  The return of:
@@ -82,6 +82,43 @@ Configuration parameters
     startup files; newstd may also be established by invoking calc
     with the flag -n.
 
+    The following are synonyms for true:
+
+	    "on"
+	    "true"
+	    "t"
+	    "yes"
+	    "y"
+	    "set"
+	    "1"
+	    any non-zero number
+
+    The following are synonyms for false:
+
+	    "off"
+	    "false"
+	    "f"
+	    "no"
+	    "n"
+	    "unset"
+	    "0"
+	    the number zero (0)
+
+    Examples of setting some parameters are:
+
+	    config("mode", "exp");	    exponential output
+	    config("display", 50);	    50 digits of output
+	    epsilon(epsilon() / 8);	    3 bits more accuracy
+	    config("tilde", 0)		    disable roundoff tilde printing
+	    config("tab", "off")	    disable leading tab printing
+
+
+Detailed config descriptions
+
+    =-=
+
+    config("trace", bitflag)
+
     When nonzero, the "trace" parameter activates one or more features
     that may be useful for debugging.  These features correspond to
     powers of 2 which contribute additively to config("trace"):
@@ -101,6 +138,10 @@ Configuration parameters
 
     See also lib_debug, calc_debug and user_debug below for more debug levels.
 
+    =-=
+
+    config("display", int)
+
     The "display" parameter specifies the maximum number of digits after
     the decimal point to be printed in real or exponential mode in
     normal unformatted printing (print, strprint, fprint) or in
@@ -111,6 +152,11 @@ Configuration parameters
     the stored value of a number.  Where rounding is necessary to
     display up to d decimal places, the type of rounding to be used is
     controlled by config("outround").
+
+    =-=
+
+    config("epsilon", real)
+    epsilon(real)
 
     The "epsilon" parameter specifies the default accuracy for the
     calculation of functions for which exact values are not possible or
@@ -130,21 +176,57 @@ Configuration parameters
     For the transcendental functions and the functions sqrt() and
     appr(), the calculated value is always a multiple of epsilon.
 
+    =-=
+
+    config("mode", "mode_string")
+
     The "mode" parameter is a string specifying the mode for printing of
     numbers by the unformatted print functions, and the default
     ("%d" specifier) for formatted print functions.  The initial mode
     is "real".	The available modes are:
 
-	    "frac"		decimal fractions
-	    "int"		decimal integer
-	    "real"		decimal floating point
-	    "exp"		decimal exponential
-	    "hex"		hex fractions
-	    "oct"		octal fractions
-	    "bin"		binary fractions
+	  config("mode")	meaning				equivalent
+	      string						base() call
+
+	    "binary"		base 2 fractions		base(2)
+	    "bin"
+
+	    "octal"		base 8 fractions		base(8)
+	    "oct"
+
+	    "real"		base 10 floating point		base(10)
+	    "float"
+	    "default"
+
+	    "integer"		base 10 integer			base(-10)
+	    "int"
+
+	    "hexadecimal"	base 16 fractions		base(16)
+	    "hex"
+
+	    "fraction"		base 10 fractions		base(1/3)
+	    "frac"
+
+	    "scientific"	base 10 scientific notation	base(1e20)
+	    "sci"
+	    "exp"
+
+    Where multiple strings are given, the first string listed is what
+    config("mode") will return.
+
+    The default "mode" is "real".
+
+    =-=
+
+    config("maxprint", int)
 
     The "maxprint" parameter specifies the maximum number of elements to
     be displayed when a matrix or list is printed.  The initial value is 16.
+
+    =-=
+
+    config("mul2", int)
+    config("sq2", int)
 
     Mul2 and sq2 specify the sizes of numbers at which calc switches
     from its first to its second algorithm for multiplying and squaring.
@@ -163,6 +245,10 @@ Configuration parameters
     the parameter back to its default value.  Usually there is no need
     to change these parameters.
 
+    =-=
+
+    config("pow2", int)
+
     Pow2 specifies the sizes of numbers at which calc switches from
     its first to its second algorithm for calculating powers modulo
     another number.  The first algorithm for calculating modular powers
@@ -170,6 +256,10 @@ Configuration parameters
     The second method uses the REDC algorithm given by Peter Montgomery
     which avoids divisions.  The argument for pow2 is the size of the
     modulus at which the second algorithm begins to be used.
+
+    =-=
+
+    config("redc2", int)
 
     Redc2 specifies the sizes of numbers at which calc switches from
     its first to its second algorithm when using the REDC algorithm.
@@ -179,15 +269,35 @@ Configuration parameters
     O(N^1.585).	 The argument for redc2 is the size of the modulus at
     which the second algorithm begins to be used.
 
+    =-=
+
+    config("tilde", boolean)
+
     Config("tilde") controls whether or not a leading tilde ('~') is
     printed to indicate that a number has not been printed exactly
     because the number of decimal digits required would exceed the
     specified maximum number.  The initial "tilde" value is 1.
 
+    =-=
+
+    config("tab", boolean)
+
     Config ("tab") controls the printing of a tab before results
     automatically displayed when working interactively.	 It does not
     affect the printing by the functions print, printf, etc.  The initial
     "tab" value is 1.
+
+    =-=
+
+    config("quomod", bitflag)
+    config("quo", bitflag)
+    config("mod", bitflag)
+    config("sqrt", bitflag)
+    config("appr", bitflag)
+    config("cfappr", bitflag)
+    config("cfsim", bitflag)
+    config("outround", bitflag)
+    config("round", bitflag)
 
     The "quomod", "quo", "mod", "sqrt", "appr", "cfappr", "cfsim", and
     "round" control the way in which any necessary rounding occurs.
@@ -234,10 +344,18 @@ Configuration parameters
     by the various kinds of printing to the output: bits 0, 1, 3 and 4
     are used in the same way as for the functions round and bround.
 
+    =-=
+
+    config("leadzero", bool)
+
     The "leadzero" parameter controls whether or not a 0 is printed
     before the decimal point in non-zero fractions with absolute value
     less than 1, e.g. whether 1/2 is printed as 0.5 or .5.   The
     initial value is 0, corresponding to the printing .5.
+
+    =-=
+
+    config("fullzero", bool)
 
     The "fullzero" parameter controls whether or not in decimal floating-
     point printing, the digits are padded with zeros to reach the
@@ -246,9 +364,17 @@ Configuration parameters
     parameter is 0, so that, for example, if config("display") >= 2,
     5/4 will print in "real" mode as 1.25.
 
+    =-=
+
+    config("maxscan", int)
+
     The maxscan value controls how many scan errors are allowed
     before the compiling phase of a computation is aborted.  The initial
     value of "maxscan" is 20.  Setting maxscan to 0 disables this feature.
+
+    =-=
+
+    config("prompt", str)
 
     The default prompt when in interactive mode is "> ".  One may change
     this prompt to a more cut-and-paste friendly prompt by:
@@ -259,16 +385,28 @@ Configuration parameters
     cut/copy an input line and paste it directly into input.  The
     leading ';' will be ignored.
 
+    =-=
+
+    config("more", str)
+
     When inside multi-line input, the more prompt is used.  One may
     change it by:
 
 	    config("more", ";; ")
+
+    =-=
+
+    config("blkmaxprint", int)
 
     The "blkmaxprint" config value limits the number of octets to print
     for a block.  A "blkmaxprint" of 0 means to print all octets of a
     block, regardless of size.
 
     The default is to print only the first 256 octets.
+
+    =-=
+
+    config("blkverbose", bool)
 
     The "blkverbose" determines if all lines, including duplicates
     should be printed.	If TRUE, then all lines are printed.  If false,
@@ -278,11 +416,16 @@ Configuration parameters
     The default value for "blkverbose" is FALSE: duplicate lines are
     not printed.
 
+    =-=
+
+    config("blkbase", "blkbase_string")
+
     The "blkbase" determines the base in which octets of a block
     are printed.  Possible values are:
 
 	"hexadecimal"		Octets printed in 2 digit hex
 	"hex"
+	"default"
 
 	"octal"			Octets printed in 3 digit octal
 	"oct"
@@ -296,26 +439,41 @@ Configuration parameters
 	"raw"			Octets printed as is, i.e. raw binary
 	"none"
 
-    The default "blkbase" is "hex".
+    Where multiple strings are given, the first string listed is what
+    config("blkbase") will return.
+
+    The default "blkbase" is "hexadecimal".
+
+    =-=
+
+    config("blkfmt", "blkfmt_string")
 
     The "blkfmt" determines for format of how block are printed:
 
-	"line"		print in lines of up to 79 chars + newline
-	"lines"
+	"lines"		print in lines of up to 79 chars + newline
+	"line"
 
-	"str"		print as one long string
+	"strings"	print as one long string
 	"string"
-	"strings"
+	"str"
 
-	"od"		print in od-like format, with leading offset,
+	"od_style"	print in od-like format, with leading offset,
 	"odstyle"	   followed by octets in the given base
-	"od_style"
+	"od"
 
-	"hd"		print in hex dump format, with leading offset,
+	"hd_style"	print in hex dump format, with leading offset,
 	"hdstyle"	   followed by octets in the given base, followed
-	"hd_style"	   by chars or '.' if no-printable or blank
+	"hd"		   by chars or '.' if no-printable or blank
+	"default"
 
-    The default "blkfmt" is "hd".
+    Where multiple strings are given, the first string listed is what
+    config("blkfmt") will return.
+
+    The default "blkfmt" is "hd_style".
+
+    =-=
+
+    config("calc_debug", bitflag)
 
     The "calc_debug" is intended for controlling internal calc routines
     that test its operation, or collect or display information that
@@ -352,6 +510,10 @@ Configuration parameters
     By default, "calc_debug" is 0.  The initial value may be overridden
     by the -D command line option.
 
+    =-=
+
+    config("lib_debug", bitflag)
+
     The "lib_debug" parameter is intended for controlling the possible
     display of special information relating to functions, objects, and
     other structures created by instructions in calc scripts.
@@ -369,6 +531,9 @@ Configuration parameters
 		the reading of a file, a message saying what has been done
 		is displayed.
 
+	2	Show func will display more information about a functions
+		arguments as well as more argument sdummary information.
+
     The value for config("lib_debug") in both oldstd and newstd is 3,
     but if calc is invoked with the -d flag, its initial value is zero.
     Thus, if calc is started without the -d flag, until config("lib_debug")
@@ -377,6 +542,10 @@ Configuration parameters
 
     By default, "lib_debug" is 3.  The -d flag changes this default to 0.
     The initial value may be overridden by the -D command line option.
+
+    =-=
+
+    config("user_debug", int)
 
     The "user_debug" is provided for use by users.  Calc ignores this value
     other than to set it to 0 by default (for both "oldstd" and "newstd").
@@ -391,26 +560,44 @@ Configuration parameters
     By default, "user_debug" is 0.  The initial value may be overridden
     by the -D command line option.
 
+    =-=
+
+    config("verbose_quit", bool)
+
     The "verbose_quit" controls the print of the message:
 
 	Quit or abort executed
 
-    when a non-interactive quit or abort without an argument is encounted.
+    when a non-interactive quit or abort without an argument is encountered.
     A quit of abort without an argument does not display a message when
     invoked at the interactive level.
 
-    The following are synonyms for true:
+    =-=
 
-	"on"   "yes"   "y"   "true"   "t"   "1"	  any non-zero number
+    config("ctrl_d", "ctrl_d_string")
 
-    The following are synonyms for false:
+    The "ctrl_d" controls the interactive meaning of ^D (Control D):
 
-	"off"  "no"    "n"   "false"  "f"   "0"	  the number zero (0)
+	"virgin_eof"	If ^D is the only character that has been typed
+	"virgineof"	on a line, then calc will exit.  Otherwise ^D
+	"virgin"	will act according to the calc binding, which
+	"default"	by default is a Emacs-style delete-char.
 
-    Examples of setting some parameters are:
+	"never_eof"	The ^D never exits calc and only acts according
+	"nevereof"	calc binding, which by default is a Emacs-style
+	"never"		delete-char.
 
-	    config("mode", "exp");	    exponential output
-	    config("display", 50);	    50 digits of output
-	    epsilon(epsilon() / 8);	    3 bits more accuracy
-	    config("tilde", 0)		    disable roundoff tilde printing
-	    config("tab", "off")	    disable leading tab printing
+	"empty_eof"	The ^D always exits calc if typed on an empty line.
+	"emptyeof"	This condition occurs when ^D either the first
+	"empty"		character typed, or when all other characters on
+			the line have been removed (say by deleting them).
+
+    Where multiple strings are given, the first string listed is what
+    config("ctrl_d") will return.
+
+    Note that config("ctrl_d") actually controls each and every character
+    that is bound to ``delete_char''.  By default, ``delete_char'' is
+    Control D.  Any character(s) bound to ``delete_char'' will cause calc
+    to exit (or not exit) as directed by config("ctrl_d").
+
+    The default "ctrl_d" is "virgin_eof".

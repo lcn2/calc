@@ -22,10 +22,11 @@
  */
 #define CALCPATH	"CALCPATH"	/* environment variable for files */
 #define CALCRC		"CALCRC"	/* environment variable for startup */
-#define CALCBINDINGS	"CALCBINDINGS"	/* environment variable for hist bindings */
+#define CALCBINDINGS	"CALCBINDINGS"	/* env variable for hist bindings */
 #define HOME		"HOME"		/* environment variable for home dir */
 #define PAGER		"PAGER"		/* environment variable for help */
 #define SHELL		"SHELL"		/* environment variable for shell */
+#define DEFAULTCALCBINDINGS "bindings"	/* default calc bindings file */
 #define DEFAULTCALCHELP "help"		/* help file that -h prints */
 #define DEFAULTSHELL	"sh"		/* default shell to use */
 #define CALCEXT		".cal"	/* extension for files read in */

@@ -436,12 +436,10 @@ zsub(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	len1 = z1.len;
 	len2 = z2.len;
 	if (len1 == len2) {
-		h1 = z1.v + len1 - 1;
-		h2 = z2.v + len2 - 1;
-		while ((len1 > 0) && ((FULL)*h1 == (FULL)*h2)) {
+		h1 = z1.v + len1;
+		h2 = z2.v + len2;
+		while ((len1 > 0) && ((FULL)*--h1 == (FULL)*--h2)) {
 			len1--;
-			h1--;
-			h2--;
 		}
 		if (len1 == 0) {
 			*res = _zero_;
@@ -633,10 +631,12 @@ zdiv(ZVALUE z1, ZVALUE z2, ZVALUE *quo, ZVALUE *rem, long rnd)
 	A[m + 1] = 0;
 	len = m - n + 1;	/* quotient length will be len or len +/- 1 */
 	a1 = A + n;		/* start of digits for quotient */
-	b0 = B - 1;
+	b0 = B;
 	p = n;
-	while (!*++b0)		/* b0: working start for divisor */
-		p--;
+	while (!*b0) {		/* b0: working start for divisor */
+		++b0;
+		--p;
+	}
 	if (p == 1) {
 		u = *b0;
 		if (u == 1) {
@@ -893,10 +893,12 @@ zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 		math_error("Bad call to zequo");
 		/*NOTREACHED*/
 	}
-	B = z2.v - 1;
+	B = z2.v;
 	o = 0;
-	while (!*++B)
-		o++;
+	while (!*B) {
+		++B;
+		++o;
+	}
 	m = z1.len - o;
 	n = z2.len - o;
 	len = m - n + 1;		/* Maximum length of quotient */
@@ -1047,12 +1049,12 @@ zdivi(ZVALUE z, long n, ZVALUE *res)
 	dest.sign = z.sign;
 	dest.len = len;
 	dest.v = alloc(len);
-	h1 = z.v + len - 1;
-	sd = dest.v + len - 1;
+	h1 = z.v + len;
+	sd = dest.v + len;
 	val = 0;
 	while (len--) {
-		val = ((val << BASEB) + ((FULL) *h1--));
-		*sd-- = (HALF)(val / n);
+		val = ((val << BASEB) + ((FULL) *--h1));
+		*--sd = (HALF)(val / n);
 		val %= n;
 	}
 	zquicktrim(dest);
@@ -1111,10 +1113,10 @@ zmodi(ZVALUE z, long n)
 	 * The modulus is by a small number, so we can do this quickly.
 	 */
 	len = z.len;
-	h1 = z.v + len - 1;
+	h1 = z.v + len;
 	val = 0;
-	while (len--)
-		val = ((val << BASEB) + ((FULL) *h1--)) % n;
+	while (len-- > 0)
+		val = ((val << BASEB) + ((FULL) *--h1)) % n;
 	if (val && z.sign)
 		val = n - val;
 	return (long)val;
@@ -1784,13 +1786,12 @@ zshiftr(ZVALUE z, long n)
 	}
 	if (n) {
 		len = z.len;
-		h = z.v + len - 1;
+		h = z.v + len;
 		mask = 0;
 		while (len--) {
-			maskt = (((FULL) *h) << (BASEB - n)) & BASE1;
+			maskt = (((FULL) *--h) << (BASEB - n)) & BASE1;
 			*h = ((*h >> n) | (HALF)mask);
 			mask = maskt;
-			--h;
 		}
 	}
 }

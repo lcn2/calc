@@ -402,23 +402,11 @@ CALCPATH= .:./lib:~/lib:${LIBDIR}:${CUSTOMLIBDIR}
 #
 CALCRC= ${LIBDIR}/startup:~/.calcrc
 
-# If the $CALCBINDINGS environment variable is not defined, then the following
-# file will be used for the command line and edit history key bindings.
-# The $CALCPATH will be used to search for this file.
-#
-#	${LIBDIR}/bindings	uses ^D for editing
-#	${LIBDIR}/altbind	uses ^D for EOF
-#
-# NOTE: This facility is disabled if USE_READLINE is set to -DUSE_READLINE.
-#
-CALCBINDINGS= bindings
-#CALCBINDINGS= altbind
-
 # Determine of the GNU-readline facility will be used instead of the
-# built-in CALCBINDINGS above.
+# built-in calc binding method.
 #
-# USE_READLINE=			    Do not use GNU-readline, use CALCBINDINGS
-# USE_READLINE= -DUSE_READLINE	    Use GNU-readline, do not use CALCBINDINGS
+# USE_READLINE=			    Do not use GNU-readline, use calc bindings
+# USE_READLINE= -DUSE_READLINE	    Use GNU-readline, do not use calc bindings
 #
 # NOTE: If you select the 'USE_READLINE= -DUSE_READLINE' mode, you must set:
 #
@@ -1094,8 +1082,7 @@ calc.1: calc.man ${MAKE_FILE}
 	-rm -f calc.1
 	${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' \
 	       -e 's,$${CALCPATH},${CALCPATH},g' \
-	       -e 's,$${CALCRC},${CALCRC},g' \
-	       -e 's,$${CALCBINDINGS},${CALCBINDINGS},g' < calc.man > calc.1
+	       -e 's,$${CALCRC},${CALCRC},g' < calc.man > calc.1
 
 ##
 #
@@ -1158,11 +1145,6 @@ conf.h: ${MAKE_FILE}
 	${Q}echo '#ifndef DEFAULTCALCRC' >> conf.h
 	${Q}echo '#define DEFAULTCALCRC "${CALCRC}"' >> conf.h
 	${Q}echo '#endif /* DEFAULTCALCRC */' >> conf.h
-	${Q}echo '' >> conf.h
-	${Q}echo '/* the default key bindings file */' >> conf.h
-	${Q}echo '#ifndef DEFAULTCALCBINDINGS' >> conf.h
-	${Q}echo '#define DEFAULTCALCBINDINGS "${CALCBINDINGS}"' >> conf.h
-	${Q}echo '#endif /* DEFAULTCALCBINDINGS */' >> conf.h
 	${Q}echo '' >> conf.h
 	${Q}echo '/* the location of the help directory */' >> conf.h
 	${Q}echo '#ifndef HELPDIR' >> conf.h
@@ -2652,7 +2634,6 @@ env:
 	@echo "MANMAKE=${MANMAKE}"; echo ""
 	@echo "CALCPATH=${CALCPATH}"; echo ""
 	@echo "CALCRC=${CALCRC}"; echo ""
-	@echo "CALCBINDINGS=${CALCBINDINGS}"; echo ""
 	@echo "CALCPAGER=${CALCPAGER}"; echo ""
 	@echo "DEBUG=${DEBUG}"; echo ""
 	@echo "NO_SHARED=${NO_SHARED}"; echo ""
@@ -2964,6 +2945,7 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	-rm -f ${LIBDIR}/libcalcerr.a libcalcerr.a
 	-rm -f ${LIBDIR}/calc_errno.h calc_errno.h ${INCDIRCALC}/calc_errno.h
 	-rm -f calc_errno.c calc_errno.o calc_errno
+	-rm -f ${LIBDIR}/altbind ${HELPDIR}/altbind
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 ##

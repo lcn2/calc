@@ -48,8 +48,6 @@ Environment variables
 	Typically compiled in value is:
 
 		    bindings
-	or:
-		    altbind		(bindings where ^D means exit)
 
 	The bindings file is searched along the CALCPATH.  Unlike
 	the READ command, a .cal extension is not added.

@@ -22,6 +22,7 @@
 
 static long maxopcodes;		/* number of opcodes available */
 static long newindex;		/* index of new function */
+static char *newname;		/* name of new function */
 static long oldop;		/* previous opcode */
 static long oldoldop;		/* opcode before previous opcode */
 static long debugline;		/* line number of latest debug opcode */
@@ -61,26 +62,49 @@ initfunctions(void)
 void
 showfunctions(void)
 {
-	FUNC **fpp;		/* pointer into function table */
 	FUNC *fp;		/* current function */
 	long count;
+	long index;
 
 	count = 0;
 	if (funccount > 0) {
-		for (fpp = &functions[funccount - 1]; fpp >= functions; fpp--) {
-			fp = *fpp;
-			if (fp == NULL)
-				continue;
-			if (count++ == 0) {
-				printf("Name Arguments\n---- ---------\n");
+		if (conf->lib_debug & LIBDBG_FUNC_INFO)
+			math_str("Index\tName        \tArgs\tOpcodes\n"
+				 "-----\t------     \t---- \t------\n");
+		else
+			math_str("Name\tArguments\n"
+				 "----\t---------\n");
+		for (index = 0; index < funccount; index++) {
+			fp = functions[index];
+			if (conf->lib_debug & LIBDBG_FUNC_INFO) {
+
+				math_fmt("%5ld\t%-12s\t", index,
+					namestr(&funcnames,index));
+				if (fp) {
+					count++;
+					math_fmt("%-5d\t%-5ld\n",
+					 fp->f_paramcount, fp->f_opcodecount);
+				} else {
+					math_str("null\t0\n");
+				}
+			} else {
+				if (fp == NULL)
+					continue;
+				count++;
+				math_fmt("%-12s\t%-2d\n", namestr(&funcnames,
+					index), fp->f_paramcount);
 			}
-			printf("%-12s %-2d\n", fp->f_name, fp->f_paramcount);
 		}
 	}
-	if (count > 0) {
-		printf("\nNumber: %ld\n", count);
+	if (conf->lib_debug & LIBDBG_FUNC_INFO) {
+		math_fmt("\nNumber non-null: %ld\n", count);
+		math_fmt("Number null: %ld\n", funccount - count);
+		math_fmt("Total number: %ld\n", funccount);
 	} else {
-		printf("No user functions defined\n");
+		if (count > 0)
+			math_fmt("\nNumber: %ld\n", count);
+		else
+			math_str("No user functions defined\n");
 	}
 }
 
@@ -115,7 +139,8 @@ beginfunc(char *name, BOOL newflag)
 	fp->f_opcodecount = 0;
 	fp->f_savedvalue.v_type = V_NULL;
 	fp->f_savedvalue.v_subtype = V_NOSUBTYPE;
-	fp->f_name = namestr(&funcnames, newindex);
+	newname = namestr(&funcnames, newindex);
+	fp->f_name = newname;
 	curfunc = fp;
 	initlocals();
 	initlabels();
@@ -142,10 +167,11 @@ endfunc(void)
 		addop(OP_UNDEF);
 		addop(OP_RETURN);
 	}
+
 	checklabels();
+
 	if (errorcount) {
-		freefunc(curfunc);
-		printf("\"%s\": %ld error%s\n", curfunc->f_name, errorcount,
+		printf("\"%s\": %ld error%s\n", newname, errorcount,
 			((errorcount == 1) ? "" : "s"));
 		return;
 	}
@@ -167,7 +193,7 @@ endfunc(void)
 	}
 	if ((inputisterminal() && conf->lib_debug & LIBDBG_STDIN_FUNC) ||
 		(!inputisterminal() && conf->lib_debug & LIBDBG_FILE_FUNC)) {
-		printf("%s(", fp->f_name);
+		printf("%s(", newname);
 		for (index = 0; index <	 fp->f_paramcount; index++) {
 			if (index)
 				putchar(',');
@@ -231,7 +257,7 @@ rmuserfunc(char *name)
 
 	index = findstr(&funcnames, name);
 	if (index < 0) {
-		printf("%s() has never been defined\n",
+		fprintf(stderr, "%s() has never been defined\n",
 			name);
 		return;
 	}
@@ -252,12 +278,25 @@ rmuserfunc(char *name)
 void
 freefunc(FUNC *fp)
 {
+	long index;
 	long i;
 
 	if (fp == NULL)
 		return;
+	if (fp == curfunc) {
+		index = newindex;
+	} else {
+		for (index = 0; index < funccount; index++) {
+			if (functions[index] == fp)
+				break;
+		}
+		if (index == funccount) {
+			math_error("Bad call to freefunc!!!");
+			/*NOTREACHED*/
+		}
+	}
 	if (conf->traceflags & TRACE_FNCODES) {
-		printf("Freeing function \"%s\"\n", fp->f_name);
+		printf("Freeing function \"%s\"\n",namestr(&funcnames,index));
 		dumpnames = FALSE;
 		for (i = 0; i < fp->f_opcodecount; ) {
 			printf("%ld: ", i);
@@ -273,12 +312,14 @@ freefunc(FUNC *fp)
 void
 rmalluserfunc(void)
 {
-	FUNC **fpp;
+	FUNC *fp;
+	long index;
 
-	for (fpp = functions; fpp < &functions[funccount]; fpp++) {
-		if (*fpp) {
-			freefunc(*fpp);
-			*fpp = NULL;
+	for (index = 0; index < funccount; index++) {
+		fp = functions[index];
+		if (fp) {
+			freefunc(fp);
+			functions[index] = NULL;
 		}
 	}
 }

@@ -39,7 +39,7 @@ CALC_FILES= README bigprime.cal deg.cal ellip.cal lucas.cal lucas_chk.cal \
 	lucas_tbl.cal mersenne.cal mod.cal pell.cal pi.cal pix.cal \
 	pollard.cal poly.cal psqrt.cal quat.cal regress.cal solve.cal \
 	sumsq.cal surd.cal unitfrac.cal varargs.cal chrem.cal mfactor.cal \
-	bindings altbind randmprime.cal test1700.cal randrun.cal \
+	bindings randmprime.cal test1700.cal randrun.cal \
 	randbitrun.cal bernoulli.cal test2300.cal test2600.cal \
 	test2700.cal test3100.cal test3300.cal test3400.cal prompt.cal \
 	test3500.cal seedrandom.cal test4000.cal test4100.cal test4600.cal \
