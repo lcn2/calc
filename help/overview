@@ -44,7 +44,7 @@
 
     for and overview of the help system.  The command:
 
-	    help builtins
+	    help builtin
 
     provides information on built-in mathematical functions, whereas:
 
@@ -66,6 +66,10 @@
 
     It contains information about differences between C and calc
     that may surprize you.
+
+    To learn about calc library files that are shipped with calc, try:
+
+	    help stdlib
 
     A full and extensive overview of calc may be obtained by:
 

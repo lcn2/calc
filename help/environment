@@ -8,7 +8,7 @@ Environment variables
 	If this variable does not exist, a compiled value
 	is used.  Typically compiled in value is:
 
-		    .:./lib:~/lib:${LIBDIR}/calc
+		    .:./lib:~/lib:${LIBDIR}/calc:${LIBDIR}/custom
 
 	where ${LIBDIR} is usually:
 

@@ -1,10 +1,35 @@
-# Copyright (c) 1999 David I. Bell and Landon Curt Noll
-# Permission is granted to use, distribute, or modify this source,
-# provided that this copyright notice remains intact.
+To load a library, try:
 
-The following calc library files are provided because they serve as
-examples of how use the calc language, and/or because the authors thought
-them to be useful!
+    read filename
+
+You to not need to add the .cal extension to the filename.  Calc
+will search along the $CALCPATH (see ``help environment'').
+
+Normally a library will simply define some functions.  By default,
+most libraries will print out a short message when thei are read.
+For example:
+
+    > read lucas
+    lucas(h,n) defined
+    gen_u0(h,n,v1) defined
+    gen_v1(h,n) defined
+    ldebug(funct,str) defined
+
+will cause calc to load and execute the 'lucas.cal' library.
+Executing the library will cause several functions to be defined.
+Executing the lucas function
+
+    > lucas(149,60)
+	    1
+    > lucas(146,61)
+	    0
+
+shows that 149*2^60-1 is prime whereas 146*2^61-1 is not.
+
+=-=
+
+Calc library files are provided because they serve as examples of how use
+the calc language, and/or because the authors thought them to be useful!
 
 If you write something that you think is useful, please send it to:
 
@@ -62,6 +87,10 @@ something like:
 	}
 
 =-=
+
+The following is a brief description of some of the calc library files
+that are shipped with calc.  See above for example of how to read in
+and execute these files.
 
 beer.cal
 
@@ -648,3 +677,9 @@ xx_print.cal
     error_print(a) defined
 
     Demo for the xx_print object routines.
+
+=-=
+
+# Copyright (c) 1999 David I. Bell and Landon Curt Noll
+# Permission is granted to use, distribute, or modify this source,
+# provided that this copyright notice remains intact.

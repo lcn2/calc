@@ -50,3 +50,6 @@ Installing calc in 4 easy steps:
     4) install calc:
 
 	make install
+
+We suggest that you might want to read the README file and look at
+the calc help subsystem.  See the README file for details.
