@@ -50,37 +50,41 @@ version of read:
 This will cause the needed library files to be read once.  If these
 files have already been read, the read -once will act as a noop.
 
-By convention, the config parameter "lib_debug"  is used to control
-the verbosity of debug information printed by lib files.  By default,
-the "lib_debug" has a value of 0.
+The "lib_debug" parameter is intended for controlling the possible
+display of special information relating to functions, objects, and
+other structures created by instructions in calc scripts.
+Zero value of config("lib_debug") means that no such information
+is displayed.  For other values, the non-zero bits which currently
+have meanings are as follows:
 
-The "lib_debug" config parameter takes the place of the lib_debug
-global variable.  By convention, "lib_debug" has the following meanings:
+    n	    Meaning of bit n of config("lib_debug")
 
-	<-1	no debug messages are printed though some internal
-		    debug actions and information may be collected
+    0	When a function is defined, redefined or undefined at
+	interactive level, a message saying what has been done
+	is displayed.
 
-	-1	no debug messages are printed, no debug actions will be taken
+    1	When a function is defined, redefined or undefined during
+	the reading of a file, a message saying what has been done
+	is displayed.
 
-	0	only usage message regarding each important object are
-		    printed at the time of the read (default)
+The value for config("lib_debug") in both oldstd and newstd is 3,
+but if calc is invoked with the -d flag, its initial value is zero.
+Thus, if calc is started without the -d flag, until config("lib_debug")
+is changed, a message will be output when a function is defined
+either interactively or during the reading of a file.
 
-	>0	messages regarding each important object are
-		    printed at the time of the read in addition
-		    to other debug messages
-
-When config("lib_debug") >= 0, function names and their arg are
-printed as they are defined.  Sometimes this printing is not enough
-information.  For example:
+Sometimes the information printed is not enough.  In addition to the
+standard information, one might want to print:
 
 	* useful obj definitions
 	* functions with optional args
 	* functions with optional args where the param() interface is used
 
 For these cases we suggest that you place at the bottom of your code
-something like:
+something that prints extra information if config("lib_debug") has
+either of the bottom 2 bits set:
 
-	if (config("lib_debug") >= 0) {
+	if (config("lib_debug") & 3) {
 		print "obj xyz defined";
 		print "funcA([val1 [, val2]]) defined";
 		print "funcB(size, mass, ...) defined";

@@ -28,8 +28,8 @@ global ecnt;				/* expected value of errcount() */
 ecnt = 0;				/* clear expected errcount() value */
 
 initcfg = config("all", "oldstd");	/* set config to startup default */
-initcfg = config("lib_debug", -4);	/* disable lib startup messages */
-initcfg = config("calc_debug", 1);	/* enable more internal debugging */
+initcfg = config("lib_debug", 0);	/* disable lib startup messages */
+initcfg = config("calc_debug", 0);	/* disable internal debugging */
 initcfg = config("all");		/* save state for later use */
 
 print '003: parsed global definitions';
@@ -7150,9 +7150,11 @@ define test_somenew()
 
 	a = isqrt(2e1000); s = "xyz";
 	print				'8217: a = isqrt(2e1000); s = "xyz";';
-	vrfy(hash(a,s) == 1916476840,	'8218: hash(a,s) == 1916476840');
+	vrfy(hash(a,s) == 2378490456,	'8218: hash(a,s) == 2378490456');
+	vrfy(hash("curds n whey") == 2376141927,
+			'8219: hash("curds n whey") == 2376141927');
 
-	print '8219: Ending test_somenew';
+	print '8220: Ending test_somenew';
 }
 print '189: parsed test_somenew()';
 

@@ -12,6 +12,12 @@
 #include <pwd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#include "have_unistd.h"
+#if defined(HAVE_UNISTD_H)
+#include <unistd.h>
+#endif
+
 #include "calc.h"
 #include "conf.h"
 #include "hist.h"
@@ -633,6 +639,9 @@ ttychar(void)
 		if (*cmd == '\0' || *cmd == '\n')
 			cmd = shell;
 		if (allow_exec) {
+			if (conf->calc_debug & CALCDBG_SYSTEM) {
+				printf("%s\n", cmd);
+			}
 			system(cmd);
 		} else {
 			fprintf(stderr, "execution disallowed by -m flag\n");

@@ -71,6 +71,64 @@ Following is the change from calc version 2.11.0t8 to date:
 
 	s = "curds" ' and ' "whey";
 
+    Added FNV hash to the regression test suite.
+
+    Added Ernest Bowen's <ernie@turing.une.edu.au> fix for the
+    FNV regression test of the hash() builtin function.
+
+    Added Ernest Bowen's <ernie@turing.une.edu.au> patch to improve
+    the way config("calc_debug").  Now the lower 4 bits of the
+    config("calc_debug") parameter have the following meaning:
+
+       n               Meaning of bit n of config("calc_debug")
+
+       0       Outputs shell commands prior to execution.
+
+       1       Outputs currently active functions when a quit instruction
+               is executed.
+
+       2       Some details of shs, shs1 and md5 hash states are included
+               in the output when these are printed.
+
+       3       When a function constructs a block value, tests are
+               made that the result has the properties required for use of
+               that block, e.g. that the pointer to the start of the
+               block is not NULL, and that its "length" is not negative.
+               A failure will result in a runtime error.
+
+    Changed the meaning of (config("calc_debug") & 1) from only printing
+    the shell commands (and pausing) while displaying help files into
+    the printing of any shell command prior to execution.
+
+    Documented the meaning of config("lib_debug"):
+
+	n               Meaning of bit n of config("lib_debug")
+
+	0       When a function is defined, redefined or undefined at
+		interactive level, a message saying what has been done
+		is displayed.
+
+	1       When a function is defined, redefined or undefined during
+		the reading of a file, a message saying what has been done
+		is displayed.
+
+	The value for config("lib_debug") in both oldstd and newstd is
+	3, but if calc is invoked with the -d flag, its initial value
+	is zero.  Thus, if calc is started without the -d flag, until
+	config("lib_debug") is changed, a message will be output when a
+	function is defined either interactively or during the reading
+	of a file.
+
+    Changed the calc lib files to reflect the new config("lib_debug")
+    bit field meaning.  Calc lib files that need to print extra information
+    should now do something such as:
+
+	if (config("lib_debug") & 3) {
+		print "obj xyz defined";
+		print "funcA([val1 [, val2]]) defined";
+		print "funcB(size, mass, ...) defined";
+	}
+
 
 Following is the change from calc version 2.11.0t7 to 2.11.0t7.5:
 

@@ -134,11 +134,29 @@ struct config {
 	int blkverbose;		/* TRUE => print all lines if a block */
 	int blkbase;		/* block output base */
 	int blkfmt;		/* block output style */
-	int lib_debug;		/* library debug: <0 none, 0 default, >0 more */
-	int calc_debug;		/* internal debug: <0 none, 0 default,>0 more */
+	int lib_debug;		/* library debug, see LIB_DEBUG_XXX below */
+	int calc_debug;		/* internal debug, see CALC_DEBUG_XXX below */
 	int user_debug;		/* user defined debug value: 0 default */
 };
 typedef	struct config CONFIG;
+
+
+/*
+ * lib_debug bit masks
+ */
+#define LIBDBG_STDIN_FUNC   (0x00000001)    /* interactive func define debug */
+#define LIBDBG_FILE_FUNC    (0x00000002)    /* file read func define debug */
+#define LIBDBG_MASK	    (0x00000003)
+
+
+/*
+ * calc_debug bit masks
+ */
+#define CALCDBG_SYSTEM	    (0x00000001)    /* print system cmd prior to exec */
+#define CALCDBG_FUNC_QUIT   (0x00000002)    /* active functions when quit */
+#define CALCDBG_HASH_STATE  (0x00000004)    /* hash state details */
+#define CALCDBG_BLOCK	    (0x00000008)    /* block debug */
+#define CALCDBG_MASK	    (0x0000000f)
 
 
 /*

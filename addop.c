@@ -164,8 +164,8 @@ endfunc(void)
 			size += dumpop(&fp->f_opcodes[size]);
 		}
 	}
-	if ((inputisterminal() && conf->lib_debug & 1) ||
-		(!inputisterminal() && conf->lib_debug & 2)) {
+	if ((inputisterminal() && conf->lib_debug & LIBDBG_STDIN_FUNC) ||
+		(!inputisterminal() && conf->lib_debug & LIBDBG_FILE_FUNC)) {
 		printf("%s(", fp->f_name);
 		for (index = 0; index <  fp->f_paramcount; index++) {
 			if (index)
@@ -238,8 +238,8 @@ rmuserfunc(char *name)
 		return;
 	freenumbers(functions[index]);
 	free(functions[index]);
-	if ((inputisterminal() && conf->lib_debug & 1) ||
-			(!inputisterminal() && conf->lib_debug & 2))
+	if ((inputisterminal() && conf->lib_debug & LIBDBG_STDIN_FUNC) ||
+		    (!inputisterminal() && conf->lib_debug & LIBDBG_FILE_FUNC))
 		printf("%s() undefined\n", name);
 	functions[index] = NULL;
 }

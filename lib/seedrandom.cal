@@ -113,7 +113,7 @@ define seedrandom(seed1, seed2, size, trials)
 			p = 2*fp+1;
 		} while (ptest(p,1,0) == 0);
 	} while(ptest(p, trials) == 0 || ptest(fp, trials) == 0);
-	if (config("lib_debug") > 0) {
+	if (config("lib_debug") & 3) {
 		print "/* 1st Blum prime */ p=", p;
 	}
 
@@ -127,7 +127,7 @@ define seedrandom(seed1, seed2, size, trials)
 			q = 2*fq+1;
 		} while (ptest(q,1,0) == 0);
 	} while(ptest(q, trials) == 0 || ptest(fq, trials) == 0);
-	if (config("lib_debug") > 0) {
+	if (config("lib_debug") & 3) {
 		print "/* 2nd Blum prime */ q=", q;
 	}
 
@@ -137,7 +137,7 @@ define seedrandom(seed1, seed2, size, trials)
 	n = p*q;				/* the Blum modulus */
  	binsize = highbit(n)+1;			/* smallest power of 2 > p*q */
 	r = pmod(rand(1<<ceil(binsize*4/5), 1<<(binsize-2)), 2, n);
-	if (config("lib_debug") >= 0) {
+	if (config("lib_debug") & 3) {
 		print "/* seed quadratic residue */ r=", r;
 		print "/* newn", binsize, "bit quadratic residue*/ newn=", n;
 	}
@@ -154,6 +154,6 @@ define seedrandom(seed1, seed2, size, trials)
 	return old_state;
 }
 
-if (config("lib_debug") >= 0) {
+if (config("lib_debug") & 3) {
     print "seedrandom(seed1, seed2, size [, trials]) defined";
 }

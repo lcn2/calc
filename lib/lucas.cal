@@ -1027,7 +1027,7 @@ gen_v1(h, n)
 define
 ldebug(funct, str)
 {
-	if (config("lib_debug") > 0) {
+	if (config("lib_debug") & 3) {
 		print "DEBUG:", funct:":", str;
 	}
 	return;

@@ -179,37 +179,3 @@ Calc Enhancement Wish List:
 
     *  Add read -once -try "filename" which would do nothing
        if "filename" was not a readable file.
-
-    * Blocks should have the following features:
-
-        + read/write to/from files (ala fread/fwrite)
-
-	+ misc memory functions (ala memcpy, memcmp, memset,
-	  memchr, etc.)
-
-	+ scatter and gather functions (to send every n-th octet
-	  to another block and to copy from n blocks, the 1st
-	  then 2nd then 3rd ... octets)
-
-    * Printing of blocks should be under the control of the
-      config() interface.  This should allow one to select
-      from any of the following formats:
-
-	+ as one long string
-
-	+ as a series of lines (< 80 chars wide)
-
-	+ in od command style (offset: value value value ...)
-
-	+ in hex dump style (offset: val val val val ...  3hf.Uas.c)
-
-    * In addition one should be able to control the following
-      aspects of printing blocks via the config() interface:
-
-	+ base (hex, octal, char, base 2)
-
-	+ amount of data (the first n octets or the entire block)
-
-	+ skipping printing of duplicate print lines (ala od)
-
-	+ have the ability to print the block as raw data

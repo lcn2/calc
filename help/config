@@ -40,9 +40,9 @@ Configuration parameters
 	    "blkverbose"	TRUE=>print all lines, FALSE=>skip duplicates
 	    "blkbase"		block output base
 	    "blkfmt"		block output format
-	    "lib_debug"		calc library script debug level
-	    "calc_debug"	internal calc debug level
-	    "user_debug"	user defined debug level
+	    "lib_debug"		controls library script debug information
+	    "calc_debug"	controls internal calc debug information
+	    "user_debug"	for user defined debug information
 
 
     The "all" config value allows one to save/restore the configuration
@@ -78,7 +78,8 @@ Configuration parameters
     The "newstd" is not backward compatible with the historic
     configuration.  Even so, some people prefer this configuration
     and place the config("all", "newstd") command in their CALCRC
-    startup files.
+    startup files; newstd may also be established by invoking calc
+    with the flag -n.
 
     When nonzero, the "trace" parameter activates one or more features
     that may be useful for debugging.  These features correspond to
@@ -103,9 +104,12 @@ Configuration parameters
     the decimal point to be printed in real or exponential mode in
     normal unformatted printing (print, strprint, fprint) or in
     formatted printing (printf, strprintf, fprintf) when precision is not
-    specified.  The initial value is 20.  This parameter does not change
-    the stored value of a number.  Where rounding is necessary, the type
-    of rounding to be used is controlled by "outround".
+    specified.  The initial value for oldstd is 20, for newstd 10.
+    The parameter may be changed to the value d by either
+    config("display", d) or by display (d).  This parameter does not change
+    the stored value of a number.  Where rounding is necessary to
+    display up to d decimal places, the type of rounding to be used is
+    controlled by config("outround").
 
     The "epsilon" parameter specifies the default accuracy for the
     calculation of functions for which exact values are not possible or
@@ -118,9 +122,10 @@ Configuration parameters
     absolute value of the remainder usually does not exceed epsilon/2.
     Functions which require an epsilon value accept an
     optional argument which overrides this default epsilon value for
-    that single call.  (The value v can be assigned to the "epsilon"
-    parameter by epsilon(v) as well as by config("epsilon", v), and the
-    current value obtained by epsilon() as well as by config("epsilon").)
+    that single call.  The value v can be assigned to the "epsilon"
+    parameter by either config("epsilon", v) or epsilon(v); each of
+    these functions return the current epsilon value; config("epsilon")
+    or epsilon() returns but does not change the epsilon value.
     For the transcendental functions and the functions sqrt() and
     appr(), the calculated value is always a multiple of epsilon.
 
@@ -311,67 +316,64 @@ Configuration parameters
 
     The default "blkfmt" is "hd".
 
-    With regards to "lib_debug", "calc_debug" and "user_debug":
-    higher absolute values result in more detailed debugging and
-    more verbose debug messages.  The default value is 0 in which
-    a very amount of debugging will be performed with nil messages.
-    The -1 value is reserved for no debugging or messages.  Any
-    value <-1 will perform debugging silently (presumably collecting
-    data to be displayed at a later time).  Values >0 result in a
-    greater degree of debugging and more verbose messages.
+    The "lib_debug" parameter is intended for controlling the possible
+    display of special information relating to functions, objects, and
+    other structures created by instructions in calc scripts.
+    Zero value of config("lib_debug") means that no such information
+    is displayed.  For other values, the non-zero bits which currently
+    have meanings are as follows:
 
-    The "lib_debug" is reserved by convention for calc library scripts.
-    This config parameter takes the place of the lib_debug global variable.
-    By convention, "lib_debug" has the following meanings:
+	n		Meaning of bit n of config("lib_debug")
 
-	<-1	no debug messages are printed though some internal
-		    debug actions and information may be collected
+	0	When a function is defined, redefined or undefined at
+		interactive level, a message saying what has been done
+		is displayed.
 
-	-1	no debug messages are printed, no debug actions will be taken
+	1	When a function is defined, redefined or undefined during
+		the reading of a file, a message saying what has been done
+		is displayed.
 
-	0	only usage message regarding each important object are
-		    printed at the time of the read (default)
+    The value for config("lib_debug") in both oldstd and newstd is 3,
+    but if calc is invoked with the -d flag, its initial value is zero.
+    Thus, if calc is started without the -d flag, until config("lib_debug")
+    is changed, a message will be output when a function is defined
+    either interactively or during the reading of a file.
 
-	>0	messages regarding each important object are
-		    printed at the time of the read in addition
-		    to other debug messages
+    The "calc_debug" is intended for controlling internal calc routines
+    that test its operation, or collect or display information that
+    might be useful for debug purposes.  Much of the output from these
+    will make sense only to calc wizards.   Zero value (the default for
+    both oldstd and newstd) of config("lib_calc") corresponds to switching
+    off all these routines.  For nonzero value, particular bits
+    currently have the following meanings:
 
-    The "calc_debug" is reserved by convention for internal calc routines.
-    The output of "calc_debug" will change from release to release.
-    Generally this value is used by calc wizards and by the regress.cal
-    routine (make check).  By convention, "calc_debug" has the following
-    meanings:
+	n		Meaning of bit n of config("calc_debug")
 
-	<-1	reserved for future use
+	0	outputs shell commands prior to execution
 
-	-1	no debug messages are printed, no debug actions will be taken
+	1	outputs currently active functions when a quit instruction
+		is executed
 
-	0	very little, if any debugging is performed (and then mostly
-		    in alpha test code).  The only output is as a result of
-		    internal fatal errors (typically either math_error() or
-		    exit() will be called). (default)
+	2	some details of shs, shs1 and md5 hash states are included
+		in the output when these are printed
 
-	>0	a greater degree of debugging is performed and more
-		    verbose messages are printed (regress.cal uses 1).
+	3	when a function constructs a block value, tests are
+		made that the result has the properties required for use of
+		that block, e.g. that the pointer to the start of the
+		block is not NULL, and that its "length" is not negative.
+		A failure will result in a runtime error.
+
+    Bits >= 4 are reserved for future use and should not be used at this time.
 
     The "user_debug" is provided for use by users.  Calc ignores this value
     other than to set it to 0 by default (for both "oldstd" and "newstd").
-    No calc code or shipped library will change this value other than
-    during startup or during a config("all", xyz) call.
-
-    The following is suggested as a convention for use of "user_debug".
-    These are only suggestions: feel free to use it as you like:
-
-	<-1	no debug messages are printed though some internal
-		    debug actions and information may be collected
-
-	-1	no debug messages are printed, no debug actions will be taken
-
-	0	very little, if any debugging is performed.  The only output
-		    are from fatal errors. (default)
-
-	>0	a greater degree of debugging is performed and more
-		    verbose messages are printed
+    No calc code or shipped library should change this value.  Users
+    should feel free to use it in any way.   In particular they may
+    use particular bits for special purposes as with "calc_debug", or
+    they may use it to indicate a debug level with larger values
+    indicating more stringent and more informative tests with presumably
+    slower operation or more memory usage, and a particular value (like
+    -1 or 0) corresponding to "no tests".
 
     The following are synonyms for true:
 

@@ -174,7 +174,7 @@ define chrem()
     }
 }
 
-if (config("lib_debug") >= 0) {
+if (config("lib_debug") & 3) {
     print "chrem(r1,m1 [,r2,m2 ...]) defined";
     print "chrem(rlist [,mlist]) defined";
 }

@@ -1524,16 +1524,12 @@ static VALUE
 f_hash(int count, VALUE **vals)
 {
 	QCKHASH hash;
-	long lhash;
 	VALUE result;
 
 	hash = FNV1_32_BASIS;
 	while (count-- > 0)
 		hash = hashvalue(*vals++, hash);
-	lhash = (long) hash;
-	if (lhash < 0)
-		lhash = -lhash;
-	result.v_num = itoq(lhash);
+	result.v_num = utoq((FULL) hash);
 	result.v_type = V_NUM;
 	return result;
 }
@@ -6041,6 +6037,9 @@ f_system(VALUE *vp)
 		/*NOTREACHED*/
 	}
 	result.v_type = V_NUM;
+	if (conf->calc_debug & CALCDBG_SYSTEM) {
+		printf("%s\n", vp->v_str->s_str);
+	}
 	result.v_num = itoq((long) system(vp->v_str->s_str));
 	return result;
 }

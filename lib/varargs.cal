@@ -23,6 +23,6 @@ define sc()
 	return s;
 }
 
-if (config("lib_debug") >= 0) {
+if (config("lib_debug") & 3) {
     print "sc(a, b, ...) defined";
 }

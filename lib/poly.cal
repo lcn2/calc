@@ -687,6 +687,6 @@ a=pol(1,4,4,2,3,1);
 b=pol(5,16,8,1);
 c=pol(1+2i,3+4i,5+6i);
 
-if (config("lib_debug") >= 0) {
+if (config("lib_debug") & 3) {
 	print "obj poly {p} defined";
 }

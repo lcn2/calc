@@ -331,7 +331,7 @@ lucas_chk(high_n, quiet)
 
 		/* skip primes where h>=2^n */
 		if (highbit(h_p[i]) >= n_p[i]) {
-			if (config("lib_debug") > 0) {
+			if (config("lib_debug") & 3) {
 				print "h>=2^n skip:", h_p[i]:"*2^":n_p[i]:"-1";
 			}
 			continue;

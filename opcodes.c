@@ -3697,7 +3697,7 @@ calculate(FUNC *fp, int argcount)
 		freevalue(&locals[i]);
 	if (locals != localtable)
 		free(locals);
-	if (conf->calc_debug & 2)
+	if (conf->calc_debug & CALCDBG_FUNC_QUIT)
 		printf("\t\"%s\": line %ld\n", funcname, funcline);
 	while (stack > beginstack)
 		freevalue(stack--);

@@ -21,9 +21,6 @@ Very High priority items:
 
     * Update the errmax about the meaning of errmax(-1).
 
-    * Document the new meanings for bit values and the sign of
-      of config("lib_debug") in the appropriate help file(s).
-
     * Fix any 'Known bugs' as noted in the BUGS file or as
       displayed by 'calc help bugs'.
 
@@ -61,6 +58,8 @@ High priority items:
       ensure that they have not introduced new or re-introduced old bugs
       into calc.
 
+    * Consider using configure to build the calc Makefile.
+
 =-=
 
 Medium priority items:
@@ -91,3 +90,6 @@ Medium priority items:
       other stuff) in a separate library.
 
     * Clean the source code and document it better.
+
+    * Add a builtin function to access the 64 bit FNV hash which
+      is currently being used internally in seed.c.

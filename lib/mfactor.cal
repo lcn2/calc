@@ -312,6 +312,6 @@ define mfactor(n, start_k, rept_loop, p_elim)
 	return q;
 }
 
-if (config("lib_debug") >= 0) {
+if (config("lib_debug") & 3) {
 	print "mfactor(n [, start_k=1 [, rept_loop=10000 [, p_elim=17]]])"
 }

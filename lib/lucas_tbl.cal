@@ -152,7 +152,7 @@ d_val[97]=1045;  a_val[97]=33;  b_val[97]=1;  r_val[97]=44;
 d_val[99]=9797;  a_val[99]=97;  b_val[99]=1;  r_val[99]=388;
 d_val[100]=  51; a_val[100]= 7; b_val[100]=1; r_val[100]=2;
 
-if (config("lib_debug") >= 0) {
+if (config("lib_debug") & 3) {
     print "d_val[100] defined";
     print "a_val[100] defined";
     print "b_val[100] defined";

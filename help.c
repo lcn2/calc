@@ -121,9 +121,8 @@ givehelp(char *type)
 	    "else %s no such help, try: help help;fi",
 	    HELPDIR, type, pager, HELPDIR, type,
 	    CUSTOMHELPDIR, type, pager, CUSTOMHELPDIR, type, ECHO);
-	if (conf->calc_debug > 0) {
+	if (conf->calc_debug & CALCDBG_SYSTEM) {
 		printf("%s\n", helpcmd);
-		sleep(3);
 	}
 
 	/* execute the help command */

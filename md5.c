@@ -656,7 +656,7 @@ MD5_print(HASH *state)
 	/*
 	 * form the hash value
 	 */
-	if (conf->calc_debug > 0) {
+	if (conf->calc_debug & CALCDBG_HASH_STATE) {
 		char buf[DEBUG_SIZE+1];	/* hash value buffer */
 
 		/*

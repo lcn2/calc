@@ -87,7 +87,7 @@ typedef struct s_hash64 hash64;
 
 
 /*
- * FNV-1 basis
+ * FNV-1 initial basis
  *
  * We start the hash at a non-zero value at the beginning so that
  * hashing blocks of data with all 0 bits do not map onto the same
@@ -131,7 +131,7 @@ typedef struct s_hash64 hash64;
 
 
 /*
- * hash_buf - perform a 64 bit Fowler/Noll/Vo hash on a buffer
+ * hash_buf - perform a Fowler/Noll/Vo-1 64 bit hash
  *
  * input:
  *	buf	- start of buffer to hash
@@ -152,20 +152,29 @@ hash_buf(char *buf, unsigned len)
 	char *buf_end = buf+len;	/* beyond end of hash area */
 
 	/*
-	 * Fowler/Noll/Vo hash - hash each character in the string
+	 * FNV-1 - Fowler/Noll/Vo-1 64 bit hash
 	 *
-	 * The basis of the hash algorithm was taken from an idea
-	 * sent by Email to the IEEE POSIX P1003.2 mailing list from
-	 * Phong Vo (kpv@research.att.com) and Glenn Fowler
-	 * (gsf@research.att.com).
-	 *
-	 * See:
-	 *	http://reality.sgi.com/chongo/tech/comp/fnv/index.html
-	 *
-	 * for information on 32bit and 64bit Fowler/Noll/Vo hashes.
-	 *
-	 * Landon Curt Noll (http://reality.sgi.com/chongo) later improved
-	 * on their algorithm to come up with Fowler/Noll/Vo hash.
+         * The basis of this hash algorithm was taken from an idea sent
+         * as reviewer comments to the IEEE POSIX P1003.2 committee by:
+         *
+         *      Phong Vo (http://www.research.att.com/info/kpv)
+         *      Glenn Fowler (http://www.research.att.com/~gsf/)
+         *
+         * In a subsequent ballot round:
+         *
+         *      Landon Curt Noll (http://reality.sgi.com/chongo)
+         *
+         * improved on their algorithm.  Some people tried this hash
+         * and found that it worked rather well.  In an EMail message
+         * to Landon, they named it ``Fowler/Noll/Vo'' or the FNV hash.
+         *
+         * FNV hashes are architected to be fast while maintaining a low
+         * collision rate. The FNV speed allows one to quickly hash lots
+         * of data while maintaining a reasonable collision rate.  See:
+         *
+         *      http://reality.sgi.com/chongo/tech/comp/fnv/
+         *
+         * for more details as well as other forms of the FNV hash.
 	 */
 #if defined(HAVE_B64)
 	/* hash each octet of the buffer */

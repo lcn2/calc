@@ -104,7 +104,7 @@ blkalloc(int len, int chunk)
 	/*
 	 * return BLOCK
 	 */
-	if (conf->calc_debug > 0) {
+	if (conf->calc_debug & CALCDBG_BLOCK) {
 		blkchk(nblk);
 	}
 	return nblk;
@@ -145,12 +145,10 @@ blk_free(BLOCK *blk)
  * debug time, we plan to call this function often.  Once we are satisfied,
  * we will normally call this code only in a few places.
  *
- * This function is normally called whenever the following builtins are called:
+ * If "calc_debug" has the bit corresponding to CALCDBG_BLOCK set, this
+ * function is called during execution of the following builtins:
  *
  *	alloc(), realloc(), free()
- *
- * unless the "calc_debug" is set to -1.  If "calc_debug" is > 0, then
- * most blk builtins will call this function.
  *
  * given:
  *	blk	- the BLOCK to check
@@ -166,7 +164,7 @@ blkchk(BLOCK *blk)
 	/*
 	 * firewall - general sanity check
 	 */
-	if (conf->calc_debug == -1) {
+	if ((conf->calc_debug & CALCDBG_BLOCK) == 0) {
 		/* do nothing when debugging is disabled */
 		return;
 	}
@@ -231,7 +229,7 @@ blkrealloc(BLOCK *blk, int newlen, int newchunk)
 	/*
 	 * firewall
 	 */
-	if (conf->calc_debug != -1) {
+	if (conf->calc_debug & CALCDBG_BLOCK) {
 		blkchk(blk);
 	}
 
@@ -290,7 +288,7 @@ blkrealloc(BLOCK *blk, int newlen, int newchunk)
 			memset(blk->data, 0, blk->maxsize);
 		}
 		blk->datalen = 0;
-		if (conf->calc_debug > 0) {
+		if (conf->calc_debug & CALCDBG_BLOCK) {
 			blkchk(blk);
 		}
 		return blk;
@@ -321,7 +319,7 @@ blkrealloc(BLOCK *blk, int newlen, int newchunk)
 	/*
 	 * return realloced type
 	 */
-	if (conf->calc_debug > 0) {
+	if (conf->calc_debug & CALCDBG_BLOCK) {
 		blkchk(blk);
 	}
 	return blk;
@@ -349,7 +347,7 @@ blktrunc(BLOCK *blk)
 	/*
 	 * firewall
 	 */
-	if (conf->calc_debug != -1) {
+	if (conf->calc_debug & CALCDBG_BLOCK) {
 		blkchk(blk);
 	}
 
@@ -370,7 +368,7 @@ blktrunc(BLOCK *blk)
 		/*NOTREACHED*/
 	}
 	blk->data[0] = (USB8)0;
-	if (conf->calc_debug > 0) {
+	if (conf->calc_debug & CALCDBG_BLOCK) {
 		blkchk(blk);
 	}
 	return;

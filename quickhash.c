@@ -79,22 +79,29 @@ static QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
 
 
 /*
- * fnv - compute the next Fowler/Noll/Vo hash given a variable
+ * FNV-0 - Fowler/Noll/Vo-0 32 bit hash
  *
- * The basis of the hash algorithm was taken from an idea
- * sent by Email to the IEEE Posix P1003.2 mailing list from
- * Phong Vo (kpv@research.att.com) and Glenn Fowler (gsf@research.att.com).
- * Landon Curt Noll (http://reality.sgi.com/chongo) later improved on there
- * algorithm to come up with Fowler/Noll/Vo hash.
+ * The basis of this hash algorithm was taken from an idea sent
+ * as reviewer comments to the IEEE POSIX P1003.2 committee by:
  *
- * The magic lies in the constant 16777619, which for 32 bit hashing
- * is able to process 234936 words from the web2 dictionary without
- * any collisions.
+ *      Phong Vo (http://www.research.att.com/info/kpv)
+ *      Glenn Fowler (http://www.research.att.com/~gsf/)
  *
- * See:
- *	http://reality.sgi.com/chongo/src/fnv/fnv_hash.tar.gz
- *	http://reality.sgi.com/chongo/src/fnv/h32.c
- *	http://reality.sgi.com/chongo/src/fnv/h64.c
+ * In a subsequent ballot round:
+ *
+ *      Landon Curt Noll (http://reality.sgi.com/chongo)
+ *
+ * improved on their algorithm.  Some people tried this hash
+ * and found that it worked rather well.  In an EMail message
+ * to Landon, they named it ``Fowler/Noll/Vo'' or the FNV hash.
+ *
+ * FNV hashes are architected to be fast while maintaining a low
+ * collision rate. The FNV speed allows one to quickly hash lots
+ * of data while maintaining a reasonable collision rate.  See:
+ *
+ *      http://reality.sgi.com/chongo/tech/comp/fnv/
+ *
+ * for more details as well as other forms of the FNV hash.
  *
  * given:
  *	x	the value to hash (must not be longer than 32 bits)

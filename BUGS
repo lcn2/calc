@@ -79,6 +79,11 @@ Known bugs:
       At this point, calc will re-prompt if you give it an EOF, or
       type ^D while using lib/altbind or while ^D is bound to quit.
 
+    * When compiled on Solaris with the Solaris cc using -Xc option
+      (which forces BASEB=16) and without -DFORCE_STDC, calc fails
+      regression test #8218 because hash(a,s), where a = isqrt(2e1000)
+      and s = "xyz", returns 1418255679 instead of 2378490456.
+
     We are sure some more bugs exist.  When you find them, please let
     us know!  See the above for details on how to report and were to
     EMail your bug reports and hopefully patches to fix them.
