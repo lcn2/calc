@@ -12,8 +12,7 @@ DESCRIPTION
 
     Calc version strings can be of the form:
 
-    	x.y.ztw.v
-    	x.y.ztw
+    	x.y.z.w
     	x.y.z
     	x.y
 
@@ -22,7 +21,7 @@ DESCRIPTION
 
 EXAMPLE
     > version()
-    	    "2.11.5t4.1"
+    	    "2.11.5.4"
 
 LIMITS
     none
@@ -49,8 +48,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: version,v 29.2 2001/05/29 00:43:54 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: version,v 29.3 2001/06/09 23:32:45 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/version,v $
 ##
 ## Under source code control:	2001/05/28 17:38:01

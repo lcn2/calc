@@ -26,6 +26,13 @@ Installing calc in 4 easy steps:
 	   Set BINDIR to the place where calc is installed.  As shipped
 	   the Makefile assumes a BINDIR /usr/local/bin.
 
+	   Some compilers (to put it mildly) have bugs.  Sometimes the
+	   DEBUG Makefile variable causes the compiler / optimizer to
+	   produce bad code.  Other compilers do just fine.  If possible
+	   try to use DEBUG=-O3 -g3 (maximum optimization and debug symbols).
+	   If the calc test fails (see step 3), try lowering either the
+	   -O value and/or the -g3.  Also try using -Osomething without -g.
+
 	   Adjust other Makefile variables as needed.
 
     2) build calc:
@@ -65,8 +72,8 @@ the calc help subsystem.  See the README file for details.
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: HOWTO.INSTALL,v 29.2 2000/06/07 14:02:13 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: HOWTO.INSTALL,v 29.3 2001/12/11 02:51:00 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/HOWTO.INSTALL,v $
 ##
 ## Under source code control:	1999/09/27 20:48:44

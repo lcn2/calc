@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.18 $
-# @(#) $Id: Makefile,v 29.18 2001/06/08 22:38:53 chongo Exp $
+# @(#) $Revision: 29.20 $
+# @(#) $Id: Makefile,v 29.20 2001/06/10 19:35:02 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -93,11 +93,11 @@ CMP= cmp
 #
 #		make detaillist
 #
-SCRIPT= 4dsphere fproduct mersenne piforever plus powerterm simple \
-	square
+SCRIPT= 4dsphere fproduct mersenne piforever plus powerterm \
+	simple square
 
-SCRIPT_SRC= 4dsphere.calc fproduct.calc mersenne.calc piforever.calc \
-	plus.calc powerterm.calc simple.calc square.calc
+SCRIPT_SRC= 4dsphere.calc fproduct.calc mersenne.calc \
+	piforever.calc plus.calc powerterm.calc simple.calc square.calc
 
 # These files are found (but not built) in the distribution
 #

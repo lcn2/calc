@@ -21,14 +21,14 @@ For more info, see:
 
 4dsphere
 
-    determine if 6 points lie on the surface of a sphere in R^4
+    Determine if 6 points lie on the surface of a 4-dimensional sphere in R^4.
 
-     usage: 4dsphere x0 y0 z0 w0 x1 y1 z1 w1 ... x5 y5 z5 w5
+    4dsphere x0 y0 z0 w0   x1 y1 z1 w1   ...   x5 y5 z5 w5
 
-        x0 y0 z0 w0     point 0 in R^4
-        x1 y1 z1 w1     point 1 in R^4
-        ...             ...
-        x5 y5 z5 w5     point 5 in R^4
+	x0 y0 z0 w0     point 0 in R^4
+	x1 y1 z1 w1     point 1 in R^4
+	...             ...
+	x5 y5 z5 w5     point 5 in R^4
 
 
 fproduct filename term ...
@@ -77,8 +77,8 @@ simple
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.7 $
-## @(#) $Id: README,v 29.7 2001/05/28 23:08:22 chongo Exp $
+## @(#) $Revision: 29.10 $
+## @(#) $Id: README,v 29.10 2001/06/10 19:34:40 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/README,v $
 ##
 ## Under source code control:	1999/12/17 10:23:40

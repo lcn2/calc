@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: calc.h,v 29.8 2001/06/08 21:00:58 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: calc.h,v 29.9 2001/12/11 02:28:47 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -258,7 +258,7 @@ extern DLL char *run_state_name(run state);
 extern int calc_major_ver;
 extern int calc_minor_ver;
 extern int calc_major_patch;
-extern char *calc_minor_patch;
+extern int calc_minor_patch;
 extern char *Copyright;
 extern DLL char *version(void);
 

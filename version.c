@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.31 $
- * @(#) $Id: version.c,v 29.31 2001/06/08 22:32:42 chongo Exp $
+ * @(#) $Revision: 29.34 $
+ * @(#) $Id: version.c,v 29.34 2001/12/11 02:54:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
@@ -32,6 +32,9 @@
 
 
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
+
 #if defined(CALC_VER)
 #include <stdlib.h>
 #include <unistd.h>
@@ -43,7 +46,8 @@ static char *program;
 #define MAJOR_VER	2	/* major version */
 #define MINOR_VER	11	/* minor version */
 #define MAJOR_PATCH	5	/* patch level or 0 if no patch */
-#define MINOR_PATCH	"4.5"	/* test number or empty string if no patch */
+#define MINOR_PATCH	5	/* test number or 0 if no minor patch */
+
 
 /*
  * calc version constants
@@ -51,7 +55,7 @@ static char *program;
 int calc_major_ver = MAJOR_VER;
 int calc_minor_ver = MINOR_VER;
 int calc_major_patch = MAJOR_PATCH;
-char *calc_minor_patch = MINOR_PATCH;
+int calc_minor_patch = MINOR_PATCH;
 
 
 /*
@@ -95,7 +99,7 @@ char *Copyright = "\n"
  * This function returns a malloced version string.  This version
  * string does not contain the title, just:
  *
- *		x.y.ztw
+ *		x.y.z.w
  *		x.y.z
  *		x.y
  */
@@ -114,15 +118,17 @@ version(void)
 	/*
 	 * form the version buffer
 	 */
-	if (sizeof(MINOR_PATCH) > 1) {
-	    sprintf(verbuf,
-		"%d.%d.%dt%s", calc_major_ver, calc_minor_ver,
-		 calc_major_patch, calc_minor_patch);
+	if (MINOR_PATCH > 0) {
+		snprintf(verbuf, BUFSIZ,
+		    "%d.%d.%d.%d", calc_major_ver, calc_minor_ver,
+		     calc_major_patch, calc_minor_patch);
 	} else if (MAJOR_PATCH > 0) {
-	    sprintf(verbuf,
-		"%d.%d.%d", calc_major_ver, calc_minor_ver, calc_major_patch);
+		snprintf(verbuf, BUFSIZ,
+		    "%d.%d.%d", calc_major_ver,
+		    calc_minor_ver, calc_major_patch);
 	} else {
-	    sprintf(verbuf, "%d.%d", calc_major_ver, calc_minor_ver);
+		snprintf(verbuf, BUFSIZ,
+		    "%d.%d", calc_major_ver, calc_minor_ver);
 	}
 
 	/*
@@ -131,7 +137,7 @@ version(void)
 	stored_version = (char *)malloc(strlen(verbuf)+1);
 	if (stored_version == NULL) {
 		fprintf(stderr, "%s: version formation value\n", program);
-		exit(2);
+		exit(1);
 	}
 	strcpy(stored_version, verbuf);
 
@@ -146,76 +152,123 @@ version(void)
 
 
 /*
- * print_rpm_version_release - print the rpm style version-release
+ * print_rpm_version - print just the version string, rpm style
  *
- * This function prints a version-release string, rpm style:
+ * This function prints a version string, rpm style:
  *
- *		x.y.z-w
- *		x.y.z-0
- *		x.y-0
+ *		x.y.z.w-r
+ *		x.y.z-r
+ *		x.y-r
+ *
+ * where 'r' comes from the content of the release file.
  */
 void
-print_rpm_version_release(void)
+print_rpm_version(char *release)
 {
+	FILE *file;		/* open file */
+	char buf[BUFSIZ+1];	/* release file buffer */
+	char *p;
+
+	/*
+	 * obtain the release
+	 */
+	file = fopen(release, "r");
+	if (file == NULL) {
+		fprintf(stderr, "%s: cannot open %s: %s\n",
+		    program, release, strerror(errno));
+		exit(2);
+	}
+	buf[BUFSIZ] = '\0';
+	if (fgets(buf, BUFSIZ, file) == NULL) {
+		fprintf(stderr, "%s: cannot read %s: %s\n",
+		    program, release, strerror(errno));
+		exit(3);
+	}
+	p = strchr(buf, '\n');
+	if (p != NULL) {
+		*p = '\0';
+	}
+
 	/*
 	 * form the version buffer
 	 */
-	if (sizeof(MINOR_PATCH) > 1) {
-	    printf("%d.%d.%d-%s\n", calc_major_ver, calc_minor_ver,
-		 		  calc_major_patch, calc_minor_patch);
+	if (MINOR_PATCH > 0) {
+		printf("%d.%d.%d.%d-%s\n", calc_major_ver, calc_minor_ver,
+				      calc_major_patch, calc_minor_patch, buf);
 	} else if (MAJOR_PATCH > 0) {
-	    printf("%d.%d.%d-0\n", calc_major_ver, calc_minor_ver,
-	    			 calc_major_patch);
+		printf("%d.%d.%d-%s\n", calc_major_ver, calc_minor_ver,
+				     calc_major_patch, buf);
 	} else {
-	    printf("%d.%d-0\n", calc_major_ver, calc_minor_ver);
+		printf("%d.%d-%s\n", calc_major_ver, calc_minor_ver, buf);
 	}
 	return;
 }
 
 
 /*
- * print_rpm_version - print just the version string, rpm style
+ * print_rpm_major - print just the major part version string
  *
- * This function prints a version string, rpm style:
+ * This function prints the major part version string:
  *
  *		x.y.z
  *		x.y
  */
 void
-print_rpm_version(void)
+print_rpm_major(void)
 {
 	/*
 	 * form the version buffer
 	 */
 	if (MAJOR_PATCH > 0) {
-	    printf("%d.%d.%d\n", calc_major_ver, calc_minor_ver,
-	    			 calc_major_patch);
+		printf("%d.%d.%d\n", calc_major_ver, calc_minor_ver,
+				     calc_major_patch);
 	} else {
-	    printf("%d.%d\n", calc_major_ver, calc_minor_ver);
+		printf("%d.%d\n", calc_major_ver, calc_minor_ver);
 	}
 	return;
 }
 
 
 /*
- * print_rpm_release - print just the release string, rpm style
+ * print_rpm_release - print just the rpm release
  *
- * This function prints a release string, rpm style:
+ * This function prints the rpm release:
  *
- *		w
- *		0
+ *		r
+ *
+ * where 'r' comes from the content of the release file.
  */
 void
-print_rpm_release(void)
+print_rpm_release(char *release)
 {
+	FILE *file;		/* open file */
+	char buf[BUFSIZ+1];	/* release file buffer */
+	char *p;
+
+	/*
+	 * obtain the release
+	 */
+	file = fopen(release, "r");
+	if (file == NULL) {
+		fprintf(stderr, "%s: cannot open %s: %s\n",
+		    program, release, strerror(errno));
+		exit(2);
+	}
+	buf[BUFSIZ] = '\0';
+	if (fgets(buf, BUFSIZ, file) == NULL) {
+		fprintf(stderr, "%s: cannot read %s: %s\n",
+		    program, release, strerror(errno));
+		exit(3);
+	}
+	p = strchr(buf, '\n');
+	if (p != NULL) {
+		*p = '\0';
+	}
+
 	/*
 	 * form the version buffer
 	 */
-	if (sizeof(MINOR_PATCH) > 1) {
-	    printf("%s\n", calc_minor_patch);
-	} else {
-	    printf("0\n");
-	}
+	printf("%s\n", buf);
 	return;
 }
 
@@ -227,17 +280,26 @@ print_rpm_release(void)
 int
 main(int argc, char *argv[])
 {
-    program = argv[0];
-    if (argc == 2 && strcmp(argv[1], "-R") == 0) {
-	print_rpm_version_release();
-    } else if (argc == 2 && strcmp(argv[1], "-v") == 0) {
-	print_rpm_version();
-    } else if (argc == 2 && strcmp(argv[1], "-r") == 0) {
-	print_rpm_release();
-    } else {
-	printf("%s\n", version());
-    }
-    return 0;
+	program = argv[0];
+	if (argc == 3 && strcmp(argv[1], "-r") == 0) {
+		print_rpm_version(argv[2]);
+
+	} else if (argc == 3 && strcmp(argv[1], "-R") == 0) {
+		print_rpm_release(argv[2]);
+
+	} else if (argc == 2 && strcmp(argv[1], "-V") == 0) {
+		print_rpm_major();
+
+	} else if (argc == 1) {
+		printf("%s\n", version());
+
+	} else {
+		fprintf(stderr,
+		    "usage: %s [-V] [-R release_file] [-r release_file]\n",
+		    program);
+		exit(4);
+	}
+	return 0;
 }
 
 #endif /* CALC_VER */

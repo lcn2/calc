@@ -1,4 +1,26 @@
-The following are the changes from calc version 2.11.5t4.1 to date:
+The following are the changes from calc version 2.11.5.5 to date:
+
+    Now using version numbers of one of these forms:
+
+    	x.y.z.w
+    	x.y.z
+    	x.y
+
+    Changed the READLINE_LIB Makefile variable to not link with -lreadline
+    by default.  If you do have readline, we recommend that you use it.
+    If you can install the GNU readline:
+
+	http://freshmeat.net/projects/gnureadline/
+    	http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html
+
+    we recommend it.  But if not, you should set the USE_READLINE,
+    READLINE_LIB, and READLINE_INCLUDE Makefile variables to empty.
+
+    Calc compiles without -g or -g3 by default use to recent gcc
+    bugs related to -O* and -g*.  *sigh*
+
+
+The following are the changes from calc version 2.11.5t4.1 to 2.11.5t4.4:
 
     Updated dependency rules in Makefiles.
 
@@ -60,9 +82,9 @@ The following are the changes from calc version 2.11.5t4.1 to date:
     Makefile has not changed.  The Makefile.linux only in minor ways
     needed to build calc rpms.
 
-    Added $T Makefile variable, top level directory under which calc
-    will be installed.  The calc install is performed under $T, the
-    calc build is performed under /.  The purpose for $T is to allow
+    Added $T Makefile variable.  $T is the top level directory under
+    which calc will be installed.  The calc install is performed under $T,
+    the calc build is performed under /.  The purpose for $T is to allow
     someone to install calc somewhere other than into the system area.
     For examplewhen forming the calc rpm, the Makefile is called with
     T=$RPM_BUILD_ROOT.  If $T is empty, calc is installed under /.
@@ -204,7 +226,7 @@ The following are the changes from calc version 2.11.5t0 to 2.11.5t1.1:
 
     An effort was made to make calc easier to build under Windoz
     using the Cygwin project (http://sources.redhat.com/cygwin/).
-    Thanks to the work of Thomas Jones-Low (tjoneslo and softstart
+    Thanks to the work of Thomas Jones-Low (tjoneslo at softstart
     dot com), a number of #if defined(_WIN32)'s have been added
     to calc source.  These changes should not effect Windoz
     free system such as GNU/Linux, Solaris, POSIX-like, etc ...
@@ -5358,8 +5380,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.39 $
-## @(#) $Id: CHANGES,v 29.39 2001/06/08 22:32:42 chongo Exp $
+## @(#) $Revision: 29.42 $
+## @(#) $Id: CHANGES,v 29.42 2001/12/11 02:51:00 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

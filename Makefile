@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.36 $$
-# @(#) $Id: Makefile.ship,v 29.36 2001/06/08 23:00:19 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.38 $$
+# @(#) $Id: Makefile.ship,v 29.38 2001/12/11 02:35:43 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -672,8 +672,8 @@ CALCRC= ${CSHAREDIR}/startup:~/.calcrc:./.calcinit
 USE_READLINE=
 #USE_READLINE= -DUSE_READLINE
 #
-#READLINE_LIB=
-READLINE_LIB= -lreadline -lhistory -lncurses
+READLINE_LIB=
+#READLINE_LIB= -lreadline -lhistory -lncurses
 #READLINE_LIB= -L/usr/gnu/lib -lreadline -lhistory -lncurses
 #READLINE_LIB= -L/usr/local/lib -lreadline -lhistory -lncurses
 #
@@ -700,9 +700,9 @@ CALCPAGER= more
 #DEBUG= -O1 -g
 #DEBUG= -O1 -g3
 #
-#DEBUG= -O2
+DEBUG= -O2
 #DEBUG= -O2 -g
-DEBUG= -O2 -g3
+#DEBUG= -O2 -g3
 #DEBUG= -O2 -ipa
 #DEBUG= -O2 -g3 -ipa
 #
@@ -1322,9 +1322,10 @@ SAMPLE_TARGETS= sample/test_random sample/many_random
 CSCRIPT_TARGETS= cscript/mersenne cscript/piforever cscript/plus \
 		 cscript/square cscript/fproduct cscript/powerterm
 
-# List of miscellaneous files shipped with calc
+# List of miscellaneous files NOT shipped with calc
 #
-MISC= Makefile.linux calc.spec inst_files spec-template rpm.mk.patch
+NO_SHIP= Makefile.linux calc.spec inst_files spec-template \
+	 rpm.mk.patch rpm.release
 
 # complete list of progs built
 #
@@ -1333,7 +1334,7 @@ PROGS= calc ${UTIL_PROGS}
 # complete list of targets
 #
 TARGETS= ${LICENSE} ${CALC_LIBS} custom/.all calc sample/.all \
-	 cal/.all help/.all help/builtin cscript/.all calc.1 ${MISC}
+	 cal/.all help/.all help/builtin cscript/.all calc.1
 
 
 ###
@@ -2919,9 +2920,6 @@ distlist: ${DISTLIST}
 	for i in ${BUILD_H_SRC} ${BUILD_C_SRC}; do \
 		echo win32/$$i; \
 	done; \
-	for i in ${MISC}; do \
-		echo $$i; \
-	done; \
 	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
 	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
 	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
@@ -3086,11 +3084,12 @@ env:
 	@echo 'TARGETS=${TARGETS}'; echo ''
 	@echo '=-=-=-=-= end of major make variable dump =-=-=-=-='
 
-mkdebug: env version.c
+mkdebug: env version.c rpm.release
 	@echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= Determining the source version =-=-=-=-='
 	@${MAKE} -f Makefile Q= V=@ ver_calc
 	-@./ver_calc
+	-@./ver_calc -r rpm.release
 	@echo '=-=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ all =-=-=-=-='
 	@${MAKE} -f Makefile Q= V=@ all
 	@echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
@@ -3099,7 +3098,7 @@ mkdebug: env version.c
 	@echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
-debug: env
+debug: env rpm.release
 	@echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ clobber =-=-=-=-='
 	@${MAKE} -f Makefile Q= V=@ clobber
@@ -3107,6 +3106,7 @@ debug: env
 	@echo '=-=-=-=-= Determining the source version =-=-=-=-='
 	@${MAKE} -f Makefile Q= V=@ ver_calc
 	-@./ver_calc
+	-@./ver_calc -r rpm.release
 	@echo '=-=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ all =-=-=-=-='
 	@${MAKE} -f Makefile Q= V=@ all
 	@echo '=-=-=-=-= Determining the binary version =-=-=-=-='
@@ -3157,7 +3157,7 @@ gdb:
 # This file is linked to calc-version-rel.spec before the rpm is built.
 #
 calc.spec: spec-template ${MAKE_FILE} help/Makefile cal/Makefile \
-	   custom/Makefile cscript/Makefile ver_calc
+	   custom/Makefile cscript/Makefile ver_calc rpm.release
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	${Q}rm -f calc.spec calc.spec.sed
 	${Q}echo 's,$${BINDIR},${BINDIR},g' >> calc.spec.sed
@@ -3185,9 +3185,8 @@ calc.spec: spec-template ${MAKE_FILE} help/Makefile cal/Makefile \
 	${Q}echo 's,$${MANEXT},${MANEXT},g' >> calc.spec.sed
 	${Q}echo 's,$${CHMOD},${CHMOD},g' >> calc.spec.sed
 	${Q}echo 's,$${DATE},'`LANG=C date +"%a %b %d %Y"`',g' >> calc.spec.sed
-	${Q}echo 's,$${VER_CALC},'`./ver_calc`',g' >> calc.spec.sed
-	${Q}echo 's,$${VERSION},'`./ver_calc -v`',g' >> calc.spec.sed
-	${Q}echo 's,$${RELEASE},'`./ver_calc -r`',g' >> calc.spec.sed
+	${Q}echo 's,$${VERSION},'`./ver_calc`',g' >> calc.spec.sed
+	${Q}echo 's,$${REL},'`./ver_calc -R rpm.release`',g' >> calc.spec.sed
 	${Q}${SED} -f calc.spec.sed < spec-template > calc.spec
 	${Q}rm -f calc.spec.sed
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
