@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: calc.h,v 29.7 2001/05/29 00:16:53 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: calc.h,v 29.8 2001/06/08 21:00:58 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -32,7 +32,7 @@
 #define __CALC_H__
 
 #include <setjmp.h>
-#if defined(SRC)	/* if we are building from the calc source tree */
+#if defined(CALC_SRC)	/* if we are building from the calc source tree */
 # include "win32dll.h"
 # include "value.h"
 # include "have_const.h"

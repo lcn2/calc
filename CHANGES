@@ -2,13 +2,16 @@ The following are the changes from calc version 2.11.5t4.1 to date:
 
     Updated dependency rules in Makefiles.
 
+    NOTE: -DSRC, as used in 2.11.5t4.1 was renamed -DCALC_SRC
+    in a later version.
+
     Calc include files use #include "foo.h" to include other calc
-    header files if -DSRC.  Otherwise they use <calc/foo.h>.
-    The -DSRC symbol is defined by default in calc's Makefile
+    header files if -DCALC_SRC.  Otherwise they use <calc/foo.h>.
+    The -DCALC_SRC symbol is defined by default in calc's Makefile
     and so it uses the header files from within the calc src tree.
     If an external non-calc program includes an installed calc
     header file (from under /usr/include), and it does NOT define
-    SRC, then it will obtain the calc header files from the
+    CALC_SRC, then it will obtain the calc header files from the
     correct system location (such as /usr/include/calc/foo.h).
 
     Added calc builtin function: version() which returns the calc
@@ -49,6 +52,27 @@ The following are the changes from calc version 2.11.5t4.1 to date:
 
     The top level Makefile now sets LANG=C and passes it down to
     lower level Makefiles.
+
+    Updated URLs in cal/lucas.cal comments.
+
+    Now shipping calc.spec, inst_files, spec-template and Makefile.linux
+    with the standard calc source distribution.  Note that the standard
+    Makefile has not changed.  The Makefile.linux only in minor ways
+    needed to build calc rpms.
+
+    Added $T Makefile variable, top level directory under which calc
+    will be installed.  The calc install is performed under $T, the
+    calc build is performed under /.  The purpose for $T is to allow
+    someone to install calc somewhere other than into the system area.
+    For examplewhen forming the calc rpm, the Makefile is called with
+    T=$RPM_BUILD_ROOT.  If $T is empty, calc is installed under /.
+
+    Removed all echo_XXX rules except for echo_inst_files from lower
+    level makefile.  The calc.spec will use a make install rule
+    with T=$RPM_BUILD_ROOT.
+
+    Updated LIBRARY file with instructions related to -DCALC_SRC,
+    the new default include file locatin and -lcustcalc.
 
 
 The following are the changes from calc version 2.11.5t3 to 2.11.5t4:
@@ -5334,8 +5358,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.38 $
-## @(#) $Id: CHANGES,v 29.38 2001/06/06 10:06:48 chongo Exp $
+## @(#) $Revision: 29.39 $
+## @(#) $Id: CHANGES,v 29.39 2001/06/08 22:32:42 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

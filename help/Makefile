@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.14 $
-# @(#) $Id: Makefile,v 29.14 2001/06/06 10:06:48 chongo Exp $
+# @(#) $Revision: 29.18 $
+# @(#) $Id: Makefile,v 29.18 2001/06/08 22:57:54 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -37,15 +37,41 @@ SHELL= /bin/sh
 MAKE_FILE = Makefile
 
 # ${SHAREDIR}		where most common shared files are kept
+# ${INCDIR}		where most .h files are kept
+# ${LIBDIR}		where *.a files are installed
 #
 # ${CSHAREDIR}		where most common shared calc files are kept
 # ${HELPDIR}		where the help directory is installed.
+# ${INCDIRCALC}		where the calc include files are installed
 #
 #SHAREDIR= /usr/local/lib
 SHAREDIR= /usr/share
 
+#INCDIR= /usr/local/include
+INCDIR= /usr/include
+
+#LIBDIR= /usr/local/lib
+LIBDIR= /usr/lib
+
 CSHAREDIR= ${SHAREDIR}/calc
 HELPDIR= ${CSHAREDIR}/help
+INCDIRCALC= ${INCDIR}/calc
+
+# T - top level directory under which calc will be installed
+#
+# The calc install is performed under $T, the calc build is
+# performed under /.  The purpose for $T is to allow someone to
+# install calc somewhere other than into the system area.  For example
+# when forming the calc rpm, the Makefile is called with T=$RPM_BUILD_ROOT.
+#
+# If $T is empty, calc is installed under /, which is the same
+# top of tree for which it was built.  If $T is non-empty, then
+# calc is installed under $T, as if one had to chroot under
+# $T for calc to operate.
+#
+# If in doubt, use T=
+#
+T=
 
 # Makefile debug
 #
@@ -240,7 +266,8 @@ changes: ../CHANGES
 
 libcalc: ../LIBRARY
 	rm -f $@
-	${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' < ../LIBRARY > $@
+	${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' \
+	       -e 's:$${INCDIRCALC}:${INCDIRCALC}:g' < ../LIBRARY > $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -497,18 +524,6 @@ detaillist:
 #
 ##
 
-echo_STD_HELP_FILES:
-	${Q}echo __file__ ${STD_HELP_FILES}
-
-echo_BLT_HELP_FILES:
-	${Q}echo __file__ ${BLT_HELP_FILES}
-
-echo_DETAIL_HELP:
-	${Q}echo __file__ ${DETAIL_HELP}
-
-echo_SINGULAR_FILES:
-	${Q}echo __file__ ${SINGULAR_FILES}
-
 echo_inst_files:
 	${Q}for i in ${STD_HELP_FILES} full ${BLT_HELP_FILES} \
 		  builtin ${DETAIL_HELP} ${SINGULAR_FILES}; do \
@@ -534,47 +549,59 @@ clobber:
 
 install: all
 	-${Q}if [ ! -d ${SHAREDIR} ]; then \
-		echo mkdir ${SHAREDIR}; \
-		mkdir ${SHAREDIR}; \
-		echo ${CHMOD} 0755 ${SHAREDIR}; \
-		${CHMOD} 0755 ${SHAREDIR}; \
+	    echo mkdir $T${SHAREDIR}; \
+	    mkdir $T${SHAREDIR}; \
+	    if [ ! -d "$T${SHAREDIR}" ]; then \
+		echo mkdir -p "$T${SHAREDIR}"; \
+		mkdir -p "$T${SHAREDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${SHAREDIR}; \
+	    ${CHMOD} 0755 $T${SHAREDIR}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d ${CSHAREDIR} ]; then \
-		echo mkdir ${CSHAREDIR}; \
-		mkdir ${CSHAREDIR}; \
-		echo ${CHMOD} 0755 ${CSHAREDIR}; \
-		${CHMOD} 0755 ${CSHAREDIR}; \
+	-${Q}if [ ! -d $T${CSHAREDIR} ]; then \
+	    echo mkdir $T${CSHAREDIR}; \
+	    mkdir $T${CSHAREDIR}; \
+	    if [ ! -d "$T${CSHAREDIR}" ]; then \
+		echo mkdir -p "$T${CSHAREDIR}"; \
+		mkdir -p "$T${CSHAREDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${CSHAREDIR}; \
+	    ${CHMOD} 0755 $T${CSHAREDIR}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d ${HELPDIR} ]; then \
-		echo mkdir ${HELPDIR}; \
-		mkdir ${HELPDIR}; \
-		echo ${CHMOD} 0755 ${HELPDIR}; \
-		${CHMOD} 0755 ${HELPDIR}; \
+	-${Q}if [ ! -d $T${HELPDIR} ]; then \
+	    echo mkdir $T${HELPDIR}; \
+	    mkdir $T${HELPDIR}; \
+	    if [ ! -d "$T${HELPDIR}" ]; then \
+		echo mkdir -p "$T${HELPDIR}"; \
+		mkdir -p "$T${HELPDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${HELPDIR}; \
+	    ${CHMOD} 0755 $T${HELPDIR}; \
 	else \
 	    true; \
 	fi
 	-${Q}for i in ${STD_HELP_FILES} ${BLT_HELP_FILES} builtin \
 		  full ${DETAIL_HELP} ${SINGULAR_FILES}; do \
-	    if ${CMP} -s $$i ${HELPDIR}/$$i; then \
+	    if ${CMP} -s $$i $T${HELPDIR}/$$i; then \
 		true; \
 	    else \
-		rm -f ${HELPDIR}/$$i.new; \
-		cp -f $$i ${HELPDIR}/$$i.new; \
-		${CHMOD} 0444 ${HELPDIR}/$$i.new; \
-		mv -f ${HELPDIR}/$$i.new ${HELPDIR}/$$i; \
-		echo "installed ${HELPDIR}/$$i"; \
+		rm -f $T${HELPDIR}/$$i.new; \
+		cp -f $$i $T${HELPDIR}/$$i.new; \
+		${CHMOD} 0444 $T${HELPDIR}/$$i.new; \
+		mv -f $T${HELPDIR}/$$i.new $T${HELPDIR}/$$i; \
+		echo "installed $T${HELPDIR}/$$i"; \
 	    fi; \
 	done
-	-${Q}if ${CMP} -s obj.file ${HELPDIR}/obj; then \
+	-${Q}if ${CMP} -s obj.file $T${HELPDIR}/obj; then \
 	    true; \
 	else \
-	    rm -f ${HELPDIR}/obj.new; \
-	    cp -f obj.file ${HELPDIR}/obj.new; \
-	    ${CHMOD} 0444 ${HELPDIR}/obj.new; \
-	    mv -f ${HELPDIR}/obj.new ${HELPDIR}/obj; \
-	    echo "installed ${HELPDIR}/obj"; \
+	    rm -f $T${HELPDIR}/obj.new; \
+	    cp -f obj.file $T${HELPDIR}/obj.new; \
+	    ${CHMOD} 0444 $T${HELPDIR}/obj.new; \
+	    mv -f $T${HELPDIR}/obj.new $T${HELPDIR}/obj; \
+	    echo "installed $T${HELPDIR}/obj"; \
 	fi

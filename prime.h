@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: prime.h,v 29.3 2001/05/29 00:16:53 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: prime.h,v 29.4 2001/06/08 21:00:58 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/prime.h,v $
  *
  * Under source code control:	1994/06/04 03:26:15
@@ -33,7 +33,7 @@
 #define __PRIME_H__
 
 
-#if defined(SRC)	/* if we are building from the calc source tree */
+#if defined(CALC_SRC)	/* if we are building from the calc source tree */
 # include "qmath.h"
 # include "have_const.h"
 #else

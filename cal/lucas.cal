@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: lucas.cal,v 29.3 2001/03/31 13:31:34 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: lucas.cal,v 29.5 2001/06/08 20:07:29 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/lucas.cal,v $
  *
  * Under source code control:	1990/05/03 16:49:51
@@ -26,6 +26,16 @@
  *
  * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
  * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ */
+
+/*
+ * NOTE: This is a standard calc resource file.  For information on calc see:
+ *
+ *	http://www.isthe.com/chongo/tech/comp/calc/index.html
+ *
+ * To obtain your own copy of calc, see:
+ *
+ *	http://www.isthe.com/chongo/tech/comp/calc/calc-download.html
  */
 
 /*
@@ -52,12 +62,19 @@
  *
  * At the time of discovery, this was the largest known twin prime pair.
  *
+ * See:
+ *
+ *	http://www.isthe.com/chongo/tech/math/prime/amdahl6.html
+ *
+ * for more information on the Amdahl 6 group.
+ *
  * NOTE: Both largest known and largest known twin prime records have been
  *	 broken.  Rather than update this file each time, I'll just
  *	 congratulate the finders and encourage others to try for
  *	 larger finds.	Records were made to be broken afterall!
- *
- * ON GAINING A WORLD RECORD:
+ */
+
+/* ON GAINING A WORLD RECORD:
  *
  * The routines in calc were designed to be portable, and to work on
  * numbers of 'sane' size.  The Amdahl 6 team used a 'ultra-high speed

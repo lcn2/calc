@@ -1,10 +1,10 @@
 Summary: C-style arbitrary precision calculator
 Name: calc
-Version: ${VERSION}
-Release: ${RELEASE}
+Version: 2.11.5
+Release: 4.5
 Copyright: LGPL
 Group: Applications/Engineering
-Source: http://www.isthe.com/chongo/src/calc/calc-${VER_CALC}.tar.gz
+Source: http://www.isthe.com/chongo/src/calc/calc-2.11.5t4.5.tar.gz
 Patch0: rpm.mk.patch
 BuildRoot: /var/tmp/%{name}-buildroot
 
@@ -42,13 +42,13 @@ make -f Makefile.linux install RPM_OPT_FLAGS="$RPM_OPT_FLAGS" T="$RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 
 %files -f install.list
-%dir ${CSHAREDIR}
-%dir ${HELPDIR}
-%dir ${INCDIRCALC}
-%dir ${CUSTOMLIBDIR}
-%dir ${CUSTOMHELPDIR}
-%dir ${CUSTOMINCDIR}
-%dir ${SCRIPTDIR}
+%dir /usr/share/calc
+%dir /usr/share/calc/help
+%dir /usr/include/calc
+%dir /usr/share/calc/custom
+%dir /usr/share/calc/custhelp
+%dir /usr/include/calc/custom
+%dir /usr/bin/cscript
 %defattr(-,root,root)
 %doc BUGS README COPYING COPYING-LGPL HOWTO.INSTALL
 %doc README LIBRARY README.WINDOWS calc.1
@@ -56,5 +56,5 @@ rm -rf $RPM_BUILD_ROOT
 %doc help/cscript help/full
 
 %changelog
-* ${DATE} Landon Curt Noll <http://www.isthe.com/chongo/index.html>
-- calc version ${VER_CALC}
+* Fri Jun 08 2001 Landon Curt Noll <http://www.isthe.com/chongo/index.html>
+- calc version 2.11.5t4.5

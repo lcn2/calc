@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.10 $
-# @(#) $Id: Makefile,v 29.10 2001/06/06 10:06:48 chongo Exp $
+# @(#) $Revision: 29.12 $
+# @(#) $Id: Makefile,v 29.12 2001/06/08 22:38:53 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
@@ -46,6 +46,22 @@ SHAREDIR= /usr/share
 #SHAREDIR= /usr/libdata
 
 CSHAREDIR= ${SHAREDIR}/calc
+
+# T - top level directory under which calc will be installed
+#
+# The calc install is performed under $T, the calc build is
+# performed under /.  The purpose for $T is to allow someone to
+# install calc somewhere other than into the system area.  For example
+# when forming the calc rpm, the Makefile is called with T=$RPM_BUILD_ROOT.
+#
+# If $T is empty, calc is installed under /, which is the same
+# top of tree for which it was built.  If $T is non-empty, then
+# calc is installed under $T, as if one had to chroot under
+# $T for calc to operate.
+#
+# If in doubt, use T=
+#
+T=
 
 # Makefile debug
 #
@@ -124,9 +140,6 @@ calcliblist:
 #
 ##
 
-echo_CALC_FILES:
-	${Q}echo __file__ ${CALC_FILES}
-
 echo_inst_files:
 	${Q}for i in ${CALC_FILES}; do \
 	    echo __file__ ${CSHAREDIR}/$$i; \
@@ -144,30 +157,38 @@ clobber:
 	rm -f .all
 
 install: all
-	-${Q}if [ ! -d ${SHAREDIR} ]; then \
-		echo mkdir ${SHAREDIR}; \
-		mkdir ${SHAREDIR}; \
-		echo ${CHMOD} 0755 ${SHAREDIR}; \
-		${CHMOD} 0755 ${SHAREDIR}; \
+	-${Q}if [ ! -d $T${SHAREDIR} ]; then \
+	    echo mkdir $T${SHAREDIR}; \
+	    mkdir $T${SHAREDIR}; \
+	    if [ ! -d "$T${SHAREDIR}" ]; then \
+		echo mkdir -p "$T${SHAREDIR}"; \
+		mkdir -p "$T${SHAREDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${SHAREDIR}; \
+	    ${CHMOD} 0755 $T${SHAREDIR}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d ${CSHAREDIR} ]; then \
-		echo mkdir ${CSHAREDIR}; \
-		mkdir ${CSHAREDIR}; \
-		echo ${CHMOD} 0755 ${CSHAREDIR}; \
-		${CHMOD} 0755 ${CSHAREDIR}; \
+	-${Q}if [ ! -d $T${CSHAREDIR} ]; then \
+	    echo mkdir $T${CSHAREDIR}; \
+	    mkdir $T${CSHAREDIR}; \
+	    if [ ! -d "$T${CSHAREDIR}" ]; then \
+		echo mkdir -p "$T${CSHAREDIR}"; \
+		mkdir -p "$T${CSHAREDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${CSHAREDIR}; \
+	    ${CHMOD} 0755 $T${CSHAREDIR}; \
 	else \
 	    true; \
 	fi
 	${Q}for i in ${CALC_FILES}; do \
-	    if ${CMP} -s $$i ${CSHAREDIR}/$$i; then \
+	    if ${CMP} -s $$i $T${CSHAREDIR}/$$i; then \
 		true; \
 	    else \
-		rm -f ${CSHAREDIR}/$$i.new; \
-		cp -f $$i ${CSHAREDIR}/$$i.new; \
-		${CHMOD} 0444 ${CSHAREDIR}/$$i.new; \
-		mv -f ${CSHAREDIR}/$$i.new ${CSHAREDIR}/$$i; \
-		echo "installed ${CSHAREDIR}/$$i"; \
+		rm -f $T${CSHAREDIR}/$$i.new; \
+		cp -f $$i $T${CSHAREDIR}/$$i.new; \
+		${CHMOD} 0444 $T${CSHAREDIR}/$$i.new; \
+		mv -f $T${CSHAREDIR}/$$i.new $T${CSHAREDIR}/$$i; \
+		echo "installed $T${CSHAREDIR}/$$i"; \
 	    fi; \
 	done

@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.16 $
-# @(#) $Id: Makefile,v 29.16 2001/06/06 10:06:48 chongo Exp $
+# @(#) $Revision: 29.18 $
+# @(#) $Id: Makefile,v 29.18 2001/06/08 22:38:53 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -44,6 +44,22 @@ BINDIR= /usr/bin
 #BINDIR= /usr/contrib/bin
 #
 SCRIPTDIR= ${BINDIR}/cscript
+
+# T - top level directory under which calc will be installed
+#
+# The calc install is performed under $T, the calc build is
+# performed under /.  The purpose for $T is to allow someone to
+# install calc somewhere other than into the system area.  For example
+# when forming the calc rpm, the Makefile is called with T=$RPM_BUILD_ROOT.
+#
+# If $T is empty, calc is installed under /, which is the same
+# top of tree for which it was built.  If $T is non-empty, then
+# calc is installed under $T, as if one had to chroot under
+# $T for calc to operate.
+#
+# If in doubt, use T=
+#
+T=
 
 # Makefile debug
 #
@@ -216,9 +232,6 @@ depend:
 #
 ##
 
-echo_SCRIPT:
-	${Q}echo __file__ ${SCRIPT}
-
 echo_inst_files:
 	${Q}for i in ${SCRIPT}; do \
 	    echo __file__ ${SCRIPTDIR}/$$i; \
@@ -237,31 +250,39 @@ clobber:
 	-rm -f ${TARGETS}
 
 install: all
-	-${Q}if [ ! -d ${BINDIR} ]; then \
-	    echo mkdir ${BINDIR}; \
-	    mkdir ${BINDIR}; \
-	    echo ${CHMOD} 0755 ${BINDIR}; \
-	    ${CHMOD} 0755 ${BINDIR}; \
+	-${Q}if [ ! -d $T${BINDIR} ]; then \
+	    echo mkdir $T${BINDIR}; \
+	    mkdir $T${BINDIR}; \
+	    if [ ! -d "$T${BINDIR}" ]; then \
+		echo mkdir -p "$T${BINDIR}"; \
+		mkdir -p "$T${BINDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${BINDIR}; \
+	    ${CHMOD} 0755 $T${BINDIR}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d ${SCRIPTDIR} ]; then \
-	    echo mkdir ${SCRIPTDIR}; \
-	    mkdir ${SCRIPTDIR}; \
-	    echo ${CHMOD} 0755 ${SCRIPTDIR}; \
-	    ${CHMOD} 0755 ${SCRIPTDIR}; \
+	-${Q}if [ ! -d $T${SCRIPTDIR} ]; then \
+	    echo mkdir $T${SCRIPTDIR}; \
+	    mkdir $T${SCRIPTDIR}; \
+	    if [ ! -d "$T${SCRIPTDIR}" ]; then \
+		echo mkdir -p "$T${SCRIPTDIR}"; \
+		mkdir -p "$T${SCRIPTDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${SCRIPTDIR}; \
+	    ${CHMOD} 0755 $T${SCRIPTDIR}; \
 	else \
 	    true; \
 	fi
 	${Q}for i in ${SCRIPT}; do \
-	    if ${CMP} -s $$i ${SCRIPTDIR}/$$i; then \
+	    if ${CMP} -s $$i $T${SCRIPTDIR}/$$i; then \
 		true; \
 	    else \
-		rm -f ${SCRIPTDIR}/$$i.new; \
-		cp -f $$i ${SCRIPTDIR}/$$i.new; \
-		${CHMOD} 0555 ${SCRIPTDIR}/$$i.new; \
-		mv -f ${SCRIPTDIR}/$$i.new ${SCRIPTDIR}/$$i; \
-		echo "installed ${SCRIPTDIR}/$$i"; \
+		rm -f $T${SCRIPTDIR}/$$i.new; \
+		cp -f $$i $T${SCRIPTDIR}/$$i.new; \
+		${CHMOD} 0555 $T${SCRIPTDIR}/$$i.new; \
+		mv -f $T${SCRIPTDIR}/$$i.new $T${SCRIPTDIR}/$$i; \
+		echo "installed $T${SCRIPTDIR}/$$i"; \
 	    fi; \
 	done
 

@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.12 $
-# @(#) $Id: Makefile,v 29.12 2001/06/06 10:06:48 chongo Exp $
+# @(#) $Revision: 29.14 $
+# @(#) $Id: Makefile,v 29.14 2001/06/08 22:38:53 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/Makefile,v $
 #
 # Under source code control:	1997/04/19 22:46:49
@@ -103,6 +103,22 @@ LIBDIR= /usr/lib
 
 CSHAREDIR= ${SHAREDIR}/calc
 HELPDIR= ${LIBDIR}/help
+
+# T - top level directory under which calc will be installed
+#
+# The calc install is performed under $T, the calc build is
+# performed under /.  The purpose for $T is to allow someone to
+# install calc somewhere other than into the system area.  For example
+# when forming the calc rpm, the Makefile is called with T=$RPM_BUILD_ROOT.
+#
+# If $T is empty, calc is installed under /, which is the same
+# top of tree for which it was built.  If $T is non-empty, then
+# calc is installed under $T, as if one had to chroot under
+# $T for calc to operate.
+#
+# If in doubt, use T=
+#
+T=
 
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.

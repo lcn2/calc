@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.15 $
-# @(#) $Id: Makefile,v 29.15 2001/06/06 10:06:48 chongo Exp $
+# @(#) $Revision: 29.17 $
+# @(#) $Id: Makefile,v 29.17 2001/06/08 22:38:53 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -115,6 +115,22 @@ INCDIRCALC= ${INCDIR}/calc
 CUSTOMLIBDIR= ${CSHAREDIR}/custom
 CUSTOMHELPDIR= ${CSHAREDIR}/custhelp
 CUSTOMINCDIR= ${INCDIRCALC}/custom
+
+# T - top level directory under which calc will be installed
+#
+# The calc install is performed under $T, the calc build is
+# performed under /.  The purpose for $T is to allow someone to
+# install calc somewhere other than into the system area.  For example
+# when forming the calc rpm, the Makefile is called with T=$RPM_BUILD_ROOT.
+#
+# If $T is empty, calc is installed under /, which is the same
+# top of tree for which it was built.  If $T is non-empty, then
+# calc is installed under $T, as if one had to chroot under
+# $T for calc to operate.
+#
+# If in doubt, use T=
+#
+T=
 
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
@@ -468,15 +484,6 @@ depend:
 #
 ##
 
-echo_INSTALL_H_SRC:
-	${Q}echo __file__ ${INSTALL_H_SRC}
-
-echo_CUSTOM_CALC_FILES:
-	${Q}echo __file__ ${CUSTOM_CALC_FILES}
-
-echo_CUSTOM_HELP:
-	${Q}echo __file__ ${CUSTOM_HELP}
-
 echo_inst_files:
 	${Q}for i in ${INSTALL_H_SRC}; do \
 	    echo __file__ ${CUSTOMINCDIR}/$$i; \
@@ -505,118 +512,147 @@ clobber:
 	rm -f .all Makefile.tmp Makefile.bak
 
 install: all
-	-${Q}if [ ! -d ${SHAREDIR} ]; then \
-		echo mkdir ${SHAREDIR}; \
-		mkdir ${SHAREDIR}; \
-		echo ${CHMOD} 0755 ${SHAREDIR}; \
-		${CHMOD} 0755 ${SHAREDIR}; \
+	-${Q}if [ ! -d $T${SHAREDIR} ]; then \
+	    echo mkdir $T${SHAREDIR}; \
+	    mkdir $T${SHAREDIR}; \
+	    if [ ! -d "$T${SHAREDIR}" ]; then \
+		echo mkdir -p "$T${SHAREDIR}"; \
+		mkdir -p "$T${SHAREDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${SHAREDIR}; \
+	    ${CHMOD} 0755 $T${SHAREDIR}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d ${INCDIR} ]; then \
-		echo mkdir ${INCDIR}; \
-		mkdir ${INCDIR}; \
-		echo ${CHMOD} 0755 ${INCDIR}; \
-		${CHMOD} 0755 ${INCDIR}; \
+	-${Q}if [ ! -d $T${INCDIR} ]; then \
+	    echo mkdir $T${INCDIR}; \
+	    mkdir $T${INCDIR}; \
+	    if [ ! -d "$T${INCDIR}" ]; then \
+		echo mkdir -p "$T${INCDIR}"; \
+		mkdir -p "$T${INCDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${INCDIR}; \
+	    ${CHMOD} 0755 $T${INCDIR}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d ${CSHAREDIR} ]; then \
-		echo mkdir ${CSHAREDIR}; \
-		mkdir ${CSHAREDIR}; \
-		echo ${CHMOD} 0755 ${CSHAREDIR}; \
-		${CHMOD} 0755 ${CSHAREDIR}; \
+	-${Q}if [ ! -d $T${CSHAREDIR} ]; then \
+	    echo mkdir $T${CSHAREDIR}; \
+	    mkdir $T${CSHAREDIR}; \
+	    if [ ! -d "$T${CSHAREDIR}" ]; then \
+		echo mkdir -p "$T${CSHAREDIR}"; \
+		mkdir -p "$T${CSHAREDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${CSHAREDIR}; \
+	    ${CHMOD} 0755 $T${CSHAREDIR}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d ${INCDIRCALC} ]; then \
-		echo mkdir ${INCDIRCALC}; \
-		mkdir ${INCDIRCALC}; \
-		echo ${CHMOD} 0755 ${INCDIRCALC}; \
-		${CHMOD} 0755 ${INCDIRCALC}; \
+	-${Q}if [ ! -d $T${INCDIRCALC} ]; then \
+	    echo mkdir $T${INCDIRCALC}; \
+	    mkdir $T${INCDIRCALC}; \
+	    if [ ! -d "$T${INCDIRCALC}" ]; then \
+		echo mkdir -p "$T${INCDIRCALC}"; \
+		mkdir -p "$T${INCDIRCALC}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${INCDIRCALC}; \
+	    ${CHMOD} 0755 $T${INCDIRCALC}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d ${HELPDIR} ]; then \
-		echo mkdir ${HELPDIR}; \
-		mkdir ${HELPDIR}; \
-		echo ${CHMOD} 0755 ${HELPDIR}; \
-		${CHMOD} 0755 ${HELPDIR}; \
+	-${Q}if [ ! -d $T${HELPDIR} ]; then \
+	    echo mkdir $T${HELPDIR}; \
+	    mkdir $T${HELPDIR}; \
+	    if [ ! -d "$T${HELPDIR}" ]; then \
+		echo mkdir -p "$T${HELPDIR}"; \
+		mkdir -p "$T${HELPDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${HELPDIR}; \
+	    ${CHMOD} 0755 $T${HELPDIR}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d ${CUSTOMLIBDIR} ]; then \
-		echo mkdir ${CUSTOMLIBDIR}; \
-		mkdir ${CUSTOMLIBDIR}; \
-		echo ${CHMOD} 0755 ${CUSTOMLIBDIR}; \
-		${CHMOD} 0755 ${CUSTOMLIBDIR}; \
+	-${Q}if [ ! -d $T${CUSTOMLIBDIR} ]; then \
+	    echo mkdir $T${CUSTOMLIBDIR}; \
+	    mkdir $T${CUSTOMLIBDIR}; \
+	    if [ ! -d "$T${CUSTOMLIBDIR}" ]; then \
+		echo mkdir -p "$T${CUSTOMLIBDIR}"; \
+		mkdir -p "$T${CUSTOMLIBDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${CUSTOMLIBDIR}; \
+	    ${CHMOD} 0755 $T${CUSTOMLIBDIR}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d ${CUSTOMHELPDIR} ]; then \
-		echo mkdir ${CUSTOMHELPDIR}; \
-		mkdir ${CUSTOMHELPDIR}; \
-		echo ${CHMOD} 0755 ${CUSTOMHELPDIR}; \
-		${CHMOD} 0755 ${CUSTOMHELPDIR}; \
+	-${Q}if [ ! -d $T${CUSTOMHELPDIR} ]; then \
+	    echo mkdir $T${CUSTOMHELPDIR}; \
+	    mkdir $T${CUSTOMHELPDIR}; \
+	    if [ ! -d "$T${CUSTOMHELPDIR}" ]; then \
+		echo mkdir -p "$T${CUSTOMHELPDIR}"; \
+		mkdir -p "$T${CUSTOMHELPDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${CUSTOMHELPDIR}; \
+	    ${CHMOD} 0755 $T${CUSTOMHELPDIR}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d ${CUSTOMINCDIR} ]; then \
-		echo mkdir ${CUSTOMINCDIR}; \
-		mkdir ${CUSTOMINCDIR}; \
-		echo ${CHMOD} 0755 ${CUSTOMINCDIR}; \
-		${CHMOD} 0755 ${CUSTOMINCDIR}; \
+	-${Q}if [ ! -d $T${CUSTOMINCDIR} ]; then \
+	    echo mkdir $T${CUSTOMINCDIR}; \
+	    mkdir $T${CUSTOMINCDIR}; \
+	    if [ ! -d "$T${CUSTOMINCDIR}" ]; then \
+		echo mkdir -p "$T${CUSTOMINCDIR}"; \
+		mkdir -p "$T${CUSTOMINCDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 $T${CUSTOMINCDIR}; \
+	    ${CHMOD} 0755 $T${CUSTOMINCDIR}; \
 	else \
 	    true; \
 	fi
 	-${Q}for i in ${INSTALL_H_SRC}; do \
-	    rm -f tmp; \
-	    ${SED} -e 's/^\(#[ 	]*include[ 	][ 	]*\)"/\1"calc\//' $$i > tmp; \
-	    if ${CMP} -s tmp ${CUSTOMINCDIR}/$$i; then \
+	    if ${CMP} -s tmp $T${CUSTOMINCDIR}/$$i; then \
 		true; \
 	    else \
-		rm -f ${CUSTOMINCDIR}/$$i.new; \
-		cp -f tmp ${INCDIRCALC}/$$i.new; \
-		cp -f $$i ${CUSTOMINCDIR}/$$i.new; \
-		${CHMOD} 0444 ${CUSTOMINCDIR}/$$i.new; \
-		mv -f ${CUSTOMINCDIR}/$$i.new ${CUSTOMINCDIR}/$$i; \
-		echo "installed ${CUSTOMINCDIR}/$$i"; \
+		rm -f $T${CUSTOMINCDIR}/$$i.new; \
+		cp -f $$i $T${CUSTOMINCDIR}/$$i.new; \
+		${CHMOD} 0444 $T${CUSTOMINCDIR}/$$i.new; \
+		mv -f $T${CUSTOMINCDIR}/$$i.new $T${CUSTOMINCDIR}/$$i; \
+		echo "installed $T${CUSTOMINCDIR}/$$i"; \
 	    fi; \
 	done
 	-${Q}rm -f tmp
 	-${Q}for i in ${CUSTOM_CALC_FILES}; do \
-	    if ${CMP} -s $$i ${CUSTOMLIBDIR}/$$i; then \
+	    if ${CMP} -s $$i $T${CUSTOMLIBDIR}/$$i; then \
 		true; \
 	    else \
-		rm -f ${CUSTOMLIBDIR}/$$i.new; \
-		cp -f $$i ${CUSTOMLIBDIR}/$$i.new; \
-		${CHMOD} 0444 ${CUSTOMLIBDIR}/$$i.new; \
-		mv -f ${CUSTOMLIBDIR}/$$i.new ${CUSTOMLIBDIR}/$$i; \
-		echo "installed ${CUSTOMLIBDIR}/$$i"; \
+		rm -f $T${CUSTOMLIBDIR}/$$i.new; \
+		cp -f $$i $T${CUSTOMLIBDIR}/$$i.new; \
+		${CHMOD} 0444 $T${CUSTOMLIBDIR}/$$i.new; \
+		mv -f $T${CUSTOMLIBDIR}/$$i.new $T${CUSTOMLIBDIR}/$$i; \
+		echo "installed $T${CUSTOMLIBDIR}/$$i"; \
 	    fi; \
 	done
 	-${Q}for i in ${CUSTOM_HELP}; do \
-	    if ${CMP} -s $$i ${CUSTOMHELPDIR}/$$i; then \
+	    if ${CMP} -s $$i $T${CUSTOMHELPDIR}/$$i; then \
 		true; \
 	    else \
-		rm -f ${CUSTOMHELPDIR}/$$i.new; \
-		cp -f $$i ${CUSTOMHELPDIR}/$$i.new; \
-		${CHMOD} 0444 ${CUSTOMHELPDIR}/$$i.new; \
-		mv -f ${CUSTOMHELPDIR}/$$i.new ${CUSTOMHELPDIR}/$$i; \
-		echo "installed ${CUSTOMHELPDIR}/$$i"; \
+		rm -f $T${CUSTOMHELPDIR}/$$i.new; \
+		cp -f $$i $T${CUSTOMHELPDIR}/$$i.new; \
+		${CHMOD} 0444 $T${CUSTOMHELPDIR}/$$i.new; \
+		mv -f $T${CUSTOMHELPDIR}/$$i.new $T${CUSTOMHELPDIR}/$$i; \
+		echo "installed $T${CUSTOMHELPDIR}/$$i"; \
 	    fi; \
 	done
 	-${Q}if [ ! -z ${ALLOW_CUSTOM} ]; then \
-	    if ${CMP} -s libcustcalc.a ${CUSTOMLIBDIR}/libcustcalc.a; then \
+	    if ${CMP} -s libcustcalc.a $T${CUSTOMLIBDIR}/libcustcalc.a; then \
 		true; \
 	    else \
-		rm -f ${CUSTOMLIBDIR}/libcustcalc.a.new; \
-		cp -f libcustcalc.a ${CUSTOMLIBDIR}/libcustcalc.a.new; \
-		${CHMOD} 0644 ${CUSTOMLIBDIR}/libcustcalc.a.new; \
-		mv -f ${CUSTOMLIBDIR}/libcustcalc.a.new \
-		      ${CUSTOMLIBDIR}/libcustcalc.a; \
-		${RANLIB} ${CUSTOMLIBDIR}/libcustcalc.a; \
-		echo "installed ${CUSTOMLIBDIR}/libcustcalc.a"; \
+		rm -f $T${CUSTOMLIBDIR}/libcustcalc.a.new; \
+		cp -f libcustcalc.a $T${CUSTOMLIBDIR}/libcustcalc.a.new; \
+		${CHMOD} 0644 $T${CUSTOMLIBDIR}/libcustcalc.a.new; \
+		mv -f $T${CUSTOMLIBDIR}/libcustcalc.a.new \
+		      $T${CUSTOMLIBDIR}/libcustcalc.a; \
+		${RANLIB} $T${CUSTOMLIBDIR}/libcustcalc.a; \
+		echo "installed $T${CUSTOMLIBDIR}/libcustcalc.a"; \
 	    fi; \
 	fi
 

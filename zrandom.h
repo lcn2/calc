@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: zrandom.h,v 29.3 2001/05/29 00:16:53 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: zrandom.h,v 29.4 2001/06/08 21:00:58 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrandom.h,v $
  *
  * Under source code control:	1997/02/15 04:01:56
@@ -33,7 +33,7 @@
 #define __ZRANDOM_H__
 
 
-#if defined(SRC)	/* if we are building from the calc source tree */
+#if defined(CALC_SRC)	/* if we are building from the calc source tree */
 # include "value.h"
 # include "have_const.h"
 #else

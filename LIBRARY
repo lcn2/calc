@@ -48,12 +48,30 @@ convenient for outside use.  So you should read the source for a routine
 to see if it really does what you think it does.  I won't guarantee that
 obscure internal routines won't change or disappear in future releases!
 
-When calc is installed, all of the include files needed to build
-libcalc.a along with the link library itself are installed into ${LIBDIR}.
+When calc is installed, all of libraries are installed into ${LIBDIR}.
+All of the calc header files are installed under ${INCDIRCALC}.
+
+If CALC_SRC is defined, then the calc header files will assume that
+they are in or under the current directory.  However, most external
+programs most likely will not be located under calc'c source tree.
+External programs most likely want to use the installed calc header
+files under ${INCDIRCALC}.  External programs most likely NOT want
+to define CALC_SRC.
 
 External programs may want to compile with:
 
-	-I${LIBDIR} -L${LIBDIR} -lcalc
+	-L${LIBDIR} -lcalc
+
+If custom functions are also used, they may want to compile with:
+
+	-L${LIBDIR} -lcalc -lcustcalc
+
+The CALC_SRC symbol should NOT be defined by default.  However if you are
+feeling pedantic you may want to force CALC_SRC to be undefined:
+
+	-UCALC_SRC
+
+as well.
 
 --------------
 ERROR HANDLING
@@ -471,8 +489,8 @@ need call libcalc_call_me_last() only once.
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: LIBRARY,v 29.2 2000/06/07 14:02:13 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: LIBRARY,v 29.5 2001/06/08 22:57:35 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/LIBRARY,v $
 ##
 ## Under source code control:	1993/07/30 19:44:49
