@@ -1,3 +1,11 @@
+The following are the changes from calc version 2.11.5t2 to date:
+
+    Fixed a bug, reported by Ernest Bowen <ernie at turing dot
+    une dot edu dot au> that caused command lines to be echoed in
+    interactive mode.  Fixed a bug that sometimes left the terminal
+    in a non-echoing state when calc exited.
+
+
 The following are the changes from calc version 2.11.5t0 to date:
 
     Fixed a compile problem with Linux 2.4 / Debian.  Thanks goes
@@ -5164,8 +5172,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.26 $
-## @(#) $Id: CHANGES,v 29.26 2001/04/08 11:03:37 chongo Exp $
+## @(#) $Revision: 29.27 $
+## @(#) $Id: CHANGES,v 29.27 2001/04/08 22:05:40 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

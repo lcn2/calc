@@ -57,8 +57,9 @@ by the make file:
 
 You will find generated versions of these files located in the win32
 sub-directory.  These files may be appropriate for your Cygwin building
-needs.  Just copy the win32/*.[ch] files up into the mail calc 
-source directory.
+needs.  Just copy the win32/*.[ch] files up into the top level calc
+source directory, edited (if needed) and build using the Cygwin GCC
+compiler.
 
 =-=
 
@@ -104,8 +105,8 @@ was changed to:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.5 $
-## @(#) $Id: README.WINDOWS,v 29.5 2001/04/08 10:57:56 chongo Exp $
+## @(#) $Revision: 29.6 $
+## @(#) $Id: README.WINDOWS,v 29.6 2001/04/08 22:13:38 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/README.WINDOWS,v $
 ##
 ## Under source code control:	2001/02/25 14:00:05

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: lib_calc.c,v 29.6 2001/03/17 21:31:47 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: lib_calc.c,v 29.7 2001/04/08 22:05:40 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.c,v $
  *
  * Under source code control:	1996/06/17 18:06:19
@@ -753,10 +753,10 @@ calc_tty(int fd)
 		printf("calc_tty: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
 		       "VMIN=1 VTIME=0: fd %d\n", fd);
 
-#elif defined (USE_SGTTY)/* assume USE_SGTTY */
+#elif defined (USE_TERMIOS)
 
 	/*
-	 * assume USE_SGTTY tty state method
+	 * USE_TERMIOS tty state method
 	 */
 	if (fd_setup[slot] < 0 && tcgetattr(fd, fd_orig+slot) < 0) {
 		if (conf->calc_debug & CALCDBG_TTY)
@@ -848,7 +848,7 @@ orig_tty(int fd)
 	if (conf->calc_debug & CALCDBG_TTY)
 		printf("orig_tty: TCSETAW restored fd %d\n", fd);
 
-#elif defined (USE_SGTTY)/* assume USE_SGTTY */
+#elif defined (USE_TERMIOS)
 
 	/*
 	 * assume USE_SGTTY tty state method
