@@ -1,6 +1,34 @@
 /*
  * longbits - Determine the number if bits in a char, short, int or long
  *
+ * Copyright (C) 1999  Landon Curt Noll
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: longbits.c,v 29.1 1999/12/14 09:16:12 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/longbits.c,v $
+ *
+ * Under source code control:	1994/03/18 03:06:18
+ * File existed as early as:	1994
+ *
+ * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ */
+
+/*
  * usage:
  *	longbits [long_bit_size]
  *
@@ -58,29 +86,7 @@
  *
  * We will exit 0 if all is well, non-zero with an error to stderr otherwise.
  */
-/*
- * Copyright (c) 1995 by Landon Curt Noll.  All Rights Reserved.
- *
- * Permission to use, copy, modify, and distribute this software and
- * its documentation for any purpose and without fee is hereby granted,
- * provided that the above copyright, this permission notice and text
- * this comment, and the disclaimer below appear in all of the following:
- *
- *	supporting documentation
- *	source copies
- *	source works derived from this source
- *	binaries derived from this source or from derived source
- *
- * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
- * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
- * EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
- * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
- * USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
- * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
- * PERFORMANCE OF THIS SOFTWARE.
- *
- * chongo was here	/\../\
- */
+
 
 #include <stdio.h>
 #include <ctype.h>
@@ -146,8 +152,8 @@ main(int argc, char **argv)
 	 * report size of long
 	 */
 	printf("#undef LONG_BITS\n");
-	printf("#define LONG_BITS %d\t\t%c%s%c\n",
-	  long_bits, '/', "* bit length of a long *", '/');
+	printf("#define LONG_BITS %d\t\t/%s/\n",
+	  long_bits, "* bit length of a long *");
 	putchar('\n');
 
 	/*
@@ -160,36 +166,36 @@ main(int argc, char **argv)
 		/*
 		 * note that the size was forced
 		 */
-		printf("%c%s%c\n\n", '/', "* size of long was forced *", '/');
+		printf("/%s/\n\n", "* size of long was forced *");
 
 		/*
 		 * forced forming of USB8, SB8, USB16 and SB16
 		 */
-		printf("typedef unsigned char USB8;\t%c%s%c\n",
-		    '/', "* unsigned 8 bits *", '/');
-		printf("typedef signed char SB8;\t%c%s%c\n\n",
-		    '/', "* signed 8 bits *", '/');
+		printf("typedef unsigned char USB8;\t/%s/\n",
+		    "* unsigned 8 bits *");
+		printf("typedef signed char SB8;\t/%s/\n\n",
+		    "* signed 8 bits *");
 
-		printf("typedef unsigned short USB16;\t%c%s%c\n",
-		    '/', "* unsigned 16 bits *", '/');
-		printf("typedef short SB16;\t\t%c%s%c\n\n",
-		    '/', "* signed 16 bits *", '/');
+		printf("typedef unsigned short USB16;\t/%s/\n",
+		    "* unsigned 16 bits *");
+		printf("typedef short SB16;\t\t/%s/\n\n",
+		    "* signed 16 bits *");
 
 		/*
 		 * forced forming of USB32 and SB32
 		 */
 		if (long_bits == 32) {
 			/* forced 32 bit long mode assumptions */
-			printf("typedef unsigned long USB32;\t%c%s%c\n",
-			    '/', "* unsigned 32 bits *", '/');
-			printf("typedef long SB32;\t\t%c%s%c\n\n",
-			    '/', "* signed 32 bits *", '/');
+			printf("typedef unsigned long USB32;\t/%s/\n",
+			    "* unsigned 32 bits *");
+			printf("typedef long SB32;\t\t/%s/\n\n",
+			    "* signed 32 bits *");
 		} else {
 			/* forced 64 bit long mode assumptions */
-			printf("typedef unsigned int USB32;\t%c%s%c\n",
-			    '/', "* unsigned 32 bits *", '/');
-			printf("typedef int SB32;\t\t%c%s%c\n\n",
-			    '/', "* signed 32 bits *", '/');
+			printf("typedef unsigned int USB32;\t/%s/\n",
+			    "* unsigned 32 bits *");
+			printf("typedef int SB32;\t\t/%s/\n\n",
+			    "* signed 32 bits *");
 		}
 
 		/*
@@ -197,15 +203,14 @@ main(int argc, char **argv)
 		 */
 #if defined(HAVE_LONGLONG) && LONGLONG_BITS == 64
 		printf("#undef HAVE_B64\n");
-		printf("#define HAVE_B64\t\t%c%s%c\n",
-		  '/', "* have USB64 and SB64 types *", '/');
-		printf("#define BOOL_B64 TRUE\n");
-		printf("typedef unsigned long long USB64;\t%c%s%c\n",
-		  '/', "* unsigned 64 bits *", '/');
-		printf("typedef long long SB64;\t\t%c%s%c\n",
-		  '/', "* signed 64 bits *", '/');
+		printf("#define HAVE_B64\t\t/%s/\n",
+		  "* have USB64 and SB64 types *");
+		printf("typedef unsigned long long USB64;\t/%s/\n",
+		  "* unsigned 64 bits *");
+		printf("typedef long long SB64;\t\t/%s/\n",
+		  "* signed 64 bits *");
 		putchar('\n');
-		printf("%c%s%c\n", '/',"* how to form 64 bit constants *",'/');
+		printf("/%s/\n","* how to form 64 bit constants *");
 #if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
 		printf("#define U(x) x ## ULL\n");
 		printf("#define L(x) x ## LL\n");
@@ -214,11 +219,10 @@ main(int argc, char **argv)
 		printf("#define L(x) ((long long)x)\n");
 #endif
 #else
-		printf("#undef HAVE_B64\t\t\t%c%s%c\n",
-		  '/', "* we have no USB64 and no SB64 types *", '/');
-		printf("#define BOOL_B64 FALSE\n");
+		printf("#undef HAVE_B64\t\t\t/%s/\n",
+		  "* we have no USB64 and no SB64 types *");
 		putchar('\n');
-		printf("%c%s%c\n", '/', "* no 64 bit constants *", '/');
+		printf("/%s/\n", "* no 64 bit constants *");
 		printf("#define U(x) no 33 to 64 bit constants %s\n",
 		  "- do not use this macro!");
 		printf("#define L(x) no 33 to 64 bit constants %s\n",
@@ -240,25 +244,25 @@ main(int argc, char **argv)
 		  "%s: OUCH!!! - char is not a single byte!\n", program);
 		fprintf(stderr,
 		  "%s: fix the USB8 typedef by hand\n", program);
-		printf("typedef unsigned char USB8;\t%c* XX%s%c -=*#*=-\n",
-		  '/', "X - should be 8 unsigned bits but is not *", '/');
+		printf("typedef unsigned char USB8;\t/* XX%s/ -=*#*=-\n",
+		  "X - should be 8 unsigned bits but is not *");
 		if (value < 1) {
-			printf("typedef char SB8;\t%c* XX%s%c -=*#*=-\n",
-			  '/', "X - should be 8 signed bits but is not *", '/');
+			printf("typedef char SB8;\t/* XX%s/ -=*#*=-\n",
+			  "X - should be 8 signed bits but is not *");
 		} else {
-			printf("typedef signed char SB8;\t%c* XX%s%c -=*#*=-\n",
-			  '/', "X - should be 8 signed bits but is not *", '/');
+			printf("typedef signed char SB8;\t/* XX%s/ -=*#*=-\n",
+			  "X - should be 8 signed bits but is not *");
 		}
 		exitcode = 3;
 	} else {
-		printf("typedef unsigned char USB8;\t%c%s%c\n",
-		  '/', "* unsigned 8 bits *", '/');
+		printf("typedef unsigned char USB8;\t/%s/\n",
+		  "* unsigned 8 bits *");
 		if (value < 1) {
-			printf("typedef char SB8;\t%c%s%c\n",
-			  '/', "* signed 8 bits *", '/');
+			printf("typedef char SB8;\t/%s/\n",
+			  "* signed 8 bits *");
 		} else {
-			printf("typedef signed char SB8;\t%c%s%c\n",
-			  '/', "* signed 8 bits *", '/');
+			printf("typedef signed char SB8;\t/%s/\n",
+			  "* signed 8 bits *");
 		}
 	}
 	putchar('\n');
@@ -271,16 +275,16 @@ main(int argc, char **argv)
 		  "%s: OUCH!!! - short is not a 2 bytes!\n", program);
 		fprintf(stderr,
 		  "%s: fix the USB16 typedef by hand\n", program);
-		printf("typedef unsigned short USB16;\t%c* XX%s%c -=*#*=-\n",
-		  '/', "X - should be 16 unsigned bits but is not *", '/');
-		printf("typedef signed char SB16;\t%c* XX%s%c -=*#*=-\n",
-		  '/', "X - should be 16 signed bits but is not *", '/');
+		printf("typedef unsigned short USB16;\t/* XX%s/ -=*#*=-\n",
+		  "X - should be 16 unsigned bits but is not *");
+		printf("typedef signed char SB16;\t/* XX%s/ -=*#*=-\n",
+		  "X - should be 16 signed bits but is not *");
 		exitcode = 4;
 	} else {
-		printf("typedef unsigned short USB16;\t%c%s%c\n",
-		  '/', "* unsigned 16 bits *", '/');
-		printf("typedef short SB16;\t\t%c%s%c\n",
-		  '/', "* signed 16 bits *", '/');
+		printf("typedef unsigned short USB16;\t/%s/\n",
+		  "* unsigned 16 bits *");
+		printf("typedef short SB16;\t\t/%s/\n",
+		  "* signed 16 bits *");
 	}
 	putchar('\n');
 
@@ -288,22 +292,22 @@ main(int argc, char **argv)
 	 * look for 32 bit values
 	 */
 	if (sizeof(long) == 4) {
-		printf("typedef unsigned long USB32;\t%c%s%c\n",
-		  '/', "* unsigned 32 bits *", '/');
-		printf("typedef long SB32;\t\t%c%s%c\n",
-		  '/', "* signed 32 bits *", '/');
+		printf("typedef unsigned long USB32;\t/%s/\n",
+		  "* unsigned 32 bits *");
+		printf("typedef long SB32;\t\t/%s/\n",
+		  "* signed 32 bits *");
 	} else if (sizeof(int) == 4) {
-		printf("typedef unsigned int USB32;\t%c%s%c\n",
-		  '/', "* unsigned 32 bits *", '/');
-		printf("typedef int SB32;\t\t%c%s%c\n",
-		  '/', "* signed 32 bits *", '/');
+		printf("typedef unsigned int USB32;\t/%s/\n",
+		  "* unsigned 32 bits *");
+		printf("typedef int SB32;\t\t/%s/\n",
+		  "* signed 32 bits *");
 	} else {
 		fprintf(stderr,
 		  "%s: OUCH!!! - neither int nor long are 4 bytes!\n", program);
-		printf("typedef unsigned int USB32;\t%c* XX%s%c -=*#*=-\n",
-		  '/', "X - should be 32 unsigned bits but is not *", '/');
-		printf("typedef signed int SB32;\t%c* XX%s%c -=*#*=-\n",
-		  '/', "X - should be 32 signed bits but is not *", '/');
+		printf("typedef unsigned int USB32;\t/* XX%s/ -=*#*=-\n",
+		  "X - should be 32 unsigned bits but is not *");
+		printf("typedef signed int SB32;\t/* XX%s/ -=*#*=-\n",
+		  "X - should be 32 signed bits but is not *");
 		exitcode = 5;
 	}
 	putchar('\n');
@@ -313,15 +317,14 @@ main(int argc, char **argv)
 	 */
 	if (sizeof(long) == 8) {
 		printf("#undef HAVE_B64\n");
-		printf("#define HAVE_B64\t\t%c%s%c\n",
-		  '/', "* have USB64 and SB64 types *", '/');
-		printf("#define BOOL_B64 TRUE\n");
-		printf("typedef unsigned long USB64;\t%c%s%c\n",
-		  '/', "* unsigned 64 bits *", '/');
-		printf("typedef long SB64;\t\t%c%s%c\n",
-		  '/', "* signed 64 bits *", '/');
+		printf("#define HAVE_B64\t\t/%s/\n",
+		  "* have USB64 and SB64 types *");
+		printf("typedef unsigned long USB64;\t/%s/\n",
+		  "* unsigned 64 bits *");
+		printf("typedef long SB64;\t\t/%s/\n",
+		  "* signed 64 bits *");
 		putchar('\n');
-		printf("%c%s%c\n", '/',"* how to form 64 bit constants *",'/');
+		printf("/%s/\n","* how to form 64 bit constants *");
 #if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
 		printf("#define U(x) x ## UL\n");
 		printf("#define L(x) x ## L\n");
@@ -332,15 +335,14 @@ main(int argc, char **argv)
 	} else {
 #if defined(HAVE_LONGLONG) && LONGLONG_BITS == 64
 		printf("#undef HAVE_B64\n");
-		printf("#define HAVE_B64\t\t%c%s%c\n",
-		  '/', "* have USB64 and SB64 types *", '/');
-		printf("#define BOOL_B64 TRUE\n");
-		printf("typedef unsigned long long USB64;\t%c%s%c\n",
-		  '/', "* unsigned 64 bits *", '/');
-		printf("typedef long long SB64;\t\t%c%s%c\n",
-		  '/', "* signed 64 bits *", '/');
+		printf("#define HAVE_B64\t\t/%s/\n",
+		  "* have USB64 and SB64 types *");
+		printf("typedef unsigned long long USB64;\t/%s/\n",
+		  "* unsigned 64 bits *");
+		printf("typedef long long SB64;\t\t/%s/\n",
+		  "* signed 64 bits *");
 		putchar('\n');
-		printf("%c%s%c\n", '/',"* how to form 64 bit constants *",'/');
+		printf("/%s/\n","* how to form 64 bit constants *");
 #if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
 		printf("#define U(x) x ## ULL\n");
 		printf("#define L(x) x ## LL\n");
@@ -349,11 +351,10 @@ main(int argc, char **argv)
 		printf("#define L(x) ((long long)x)\n");
 #endif
 #else
-		printf("#undef HAVE_B64\t\t\t%c%s%c\n",
-		  '/', "* we have no USB64 and no SB64 types *", '/');
-		printf("#define BOOL_B64 FALSE\n");
+		printf("#undef HAVE_B64\t\t\t/%s/\n",
+		  "* we have no USB64 and no SB64 types *");
 		putchar('\n');
-		printf("%c%s%c\n", '/', "* no 64 bit constants *", '/');
+		printf("/%s/\n", "* no 64 bit constants *");
 		printf("#define U(x) no 33 to 64 bit constants %s\n",
 		  "- do not use this macro!");
 		printf("#define L(x) no 33 to 64 bit constants %s\n",

@@ -1,43 +1,44 @@
+#!/bin/make
 #
 # custom - makefile for calc custom routines
 #
-# Copyright (c) 1997 Landon Curt Noll
+# Copyright (C) 1999  Landon Curt Noll
 #
-# Permission to use, copy, modify, and distribute this software and
-# its documentation for any purpose and without fee is hereby granted,
-# provided that the above copyright, this permission notice and text
-# this comment, and the disclaimer below appear in all of the following:
+# Calc is open software; you can redistribute it and/or modify it under
+# the terms of the version 2.1 of the GNU Lesser General Public License
+# as published by the Free Software Foundation.
 #
-#	supporting documentation
-#	source copies
-#	source works derived from this source
-#	binaries derived from this source or from derived source
+# Calc is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.	See the GNU Lesser General
+# Public License for more details.
 #
-# LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
-# EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-# CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
-# USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-# OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-# PERFORMANCE OF THIS SOFTWARE.
+# A copy of version 2.1 of the GNU Lesser General Public License is
+# distributed with calc under the filename COPYING-LGPL.  You should have
+# received a copy with calc; if not, write to Free Software Foundation, Inc.
+# 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# Comments, suggestions, bug fixes and questions about these routines
-# are welcome.	Send EMail to the address given below.
+# @(#) $Revision: 29.1 $
+# @(#) $Id: Makefile,v 29.1 1999/12/14 09:15:36 chongo Exp $
+# @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
-# Happy bit twiddling,
+# Under source code control:	1997/03/09 02:28:54
+# File existed as early as:	1997
 #
-#      Landon Curt Noll
-#      http://reality.sgi.com/chongo/
+# chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+# Share and enjoy!  :-) http://reality.sgi.com/chongo/tech/comp/calc/
 #
-# chongo <was here> /\../\
+# calculator by David I. Bell with help/mods from others
+# Makefile by Landon Curt Noll
+
 
 ##############################################################################
 #-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
 ##############################################################################
 
-# The custom calc library files to install
+# The custom calc resource files to install
 #
-# Put your custom calc library files here.
+# Put your custom calc resource files here.
 #
 CUSTOM_CALC_FILES= argv.cal halflen.cal pzasusb8.cal
 
@@ -158,7 +159,7 @@ NO_SHARED=
 # a default here just in case you want to build from this directory.
 #
 # Some systems require one to use ranlib to add a symbol table to
-# a *.a library.  Set RANLIB to the utility that performs this action.
+# a *.a link library.  Set RANLIB to the utility that performs this action.
 # Set RANLIB to : if your system does not need such a utility.
 #
 #RANLIB=ranlib
@@ -217,7 +218,6 @@ ALLOW_CUSTOM= -DCUSTOM
 # CFLAGS are all flags given to ${CC} [[often includes CCOPT, CCWARN, CCMISC]]
 # ICFLAGS are given to ${CC} for intermediate progs
 #
-# LCFLAGS are CC-style flags for ${LINT}
 # LDFLAGS are flags given to ${CC} for linking .o files
 # ILDFLAGS are flags given to ${CC} for linking .o files for intermediate progs
 #
@@ -234,7 +234,6 @@ CCMISC=
 CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC} ${ALLOW_CUSTOM}
 ICFLAGS= ${CCWARN} ${CCMISC}
 #
-LCFLAGS=
 LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 ILDFLAGS=
 #
@@ -285,7 +284,7 @@ H_SRC= ${CUSTOM_H_SRC}
 DISTLIST= ${CUSTCALC_SRC} ${CUSTOM_CALC_FILES} ${CUSTOM_HELP} \
 	${INSTALL_H_SRC} CUSTOM_CAL HOW_TO_ADD ${MAKE_FILE}
 
-# These files are used to make (but not built) a calc .a library
+# These files are used to make (but not built) a calc .a link library
 #
 CALCLIBLIST= ${CUSTCALC_SRC} ${INSTALL_H_SRC} ${MAKE_FILE} HOW_TO_ADD
 
@@ -295,9 +294,14 @@ TARGETS= libcustcalc.a ${CUSTCALC_OBJ}
 
 # required vars
 #
-SHELL = /bin/sh
+SHELL= /bin/sh
+MAKE_FILE= Makefile
+
+# standard tools
+#
 SED= sed
 MAKEDEPEND= makedepend
+CHMOD= chmod
 SORT= sort
 
 ##
@@ -492,32 +496,32 @@ install: all
 		rm -f ${CUSTOMLIBDIR}/$$i; \
 		echo cp $$i ${CUSTOMLIBDIR}; \
 		cp $$i ${CUSTOMLIBDIR}; \
-		echo chmod 0444 ${CUSTOMLIBDIR}/$$i; \
-		chmod 0444 ${CUSTOMLIBDIR}/$$i; \
+		echo ${CHMOD} 0444 ${CUSTOMLIBDIR}/$$i; \
+		${CHMOD} 0444 ${CUSTOMLIBDIR}/$$i; \
 	done
 	${Q}for i in ${CUSTOM_CALC_FILES}; do \
 		echo rm -f ${CUSTOMLIBDIR}/$$i; \
 		rm -f ${CUSTOMLIBDIR}/$$i; \
 		echo cp $$i ${CUSTOMLIBDIR}; \
 		cp $$i ${CUSTOMLIBDIR}; \
-		echo chmod 0444 ${CUSTOMLIBDIR}/$$i; \
-		chmod 0444 ${CUSTOMLIBDIR}/$$i; \
+		echo ${CHMOD} 0444 ${CUSTOMLIBDIR}/$$i; \
+		${CHMOD} 0444 ${CUSTOMLIBDIR}/$$i; \
 	done
 	${Q}for i in ${CUSTOM_HELP}; do \
 		echo rm -f ${CUSTOMHELPDIR}/$$i; \
 		rm -f ${CUSTOMHELPDIR}/$$i; \
 		echo cp $$i ${CUSTOMHELPDIR}; \
 		cp $$i ${CUSTOMHELPDIR}; \
-		echo chmod 0444 ${CUSTOMHELPDIR}/$$i; \
-		chmod 0444 ${CUSTOMHELPDIR}/$$i; \
+		echo ${CHMOD} 0444 ${CUSTOMHELPDIR}/$$i; \
+		${CHMOD} 0444 ${CUSTOMHELPDIR}/$$i; \
 	done
 	-${Q}if [ ! -z ${ALLOW_CUSTOM} ]; then \
 		echo "rm -f ${CUSTOMLIBDIR}/libcustcalc.a"; \
 		rm -f ${CUSTOMLIBDIR}/libcustcalc.a; \
 		echo "cp libcustcalc.a ${CUSTOMLIBDIR}/libcustcalc.a"; \
 		cp libcustcalc.a ${CUSTOMLIBDIR}/libcustcalc.a; \
-		echo "chmod 0644 ${CUSTOMLIBDIR}/libcustcalc.a"; \
-		chmod 0644 ${CUSTOMLIBDIR}/libcustcalc.a; \
+		echo "${CHMOD} 0644 ${CUSTOMLIBDIR}/libcustcalc.a"; \
+		${CHMOD} 0644 ${CUSTOMLIBDIR}/libcustcalc.a; \
 		echo "${RANLIB} ${CUSTOMLIBDIR}/libcustcalc.a"; \
 		${RANLIB} ${CUSTOMLIBDIR}/libcustcalc.a; \
 	fi

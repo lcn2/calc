@@ -1,15 +1,38 @@
 #!/bin/make
 #
+# calc - arbitrary precision calculator
+#
 # (Generic calc makefile)
 #
-# Copyright (c) 1995 David I. Bell and Landon Curt Noll
-# Permission is granted to use, distribute, or modify this source,
-# provided that this copyright notice remains intact.
+# Copyright (C) 1999  Landon Curt Noll
 #
-# Arbitrary precision calculator.
+# Calc is open software; you can redistribute it and/or modify it under
+# the terms of the version 2.1 of the GNU Lesser General Public License
+# as published by the Free Software Foundation.
+#
+# Calc is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+# Public License for more details.
+#
+# A copy of version 2.1 of the GNU Lesser General Public License is
+# distributed with calc under the filename COPYING-LGPL.  You should have
+# received a copy with calc; if not, write to Free Software Foundation, Inc.
+# 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+#
+# @(#) $Revision: 29.4 $
+# @(#) $Id: Makefile.ship,v 29.4 1999/12/15 08:54:07 chongo Exp $
+# @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
+#
+# Under source code control:	1990/02/15 01:48:41
+# File existed as early as:	before 1990
+#
+# chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+# Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
 #
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
+
 
 ##############################################################################
 #-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
@@ -302,21 +325,21 @@ HAVE_STRDUP=
 ALIGN32= -DMUST_ALIGN32
 #ALIGN32= -UMUST_ALIGN32
 
-# where to install binary files
+# where to install the *.cal, *.h and *.a files
+#
+# ${BINDIR}	where to install binary files
+# ${TOPDIR}	the directory under which the calc directory will be placed.
+# ${LIBDIR}	where the *.cal, *.a, bindings and help dir are installed.
+# ${INCDIR}		where the locally installed include files are found.
+# ${INCDIRCALC}		where the calc include files are installed.
+# ${HELPDIR}		where the help directory is installed.
+# ${CUSTOMLIBDIR}	where custom *.cal files are installed.
+# ${CUSTOMHELPDIR}	where custom help files are installed.
+# ${SCRIPTDIR}		where calc shell scripts are installed.
 #
 BINDIR= /usr/local/bin
 #BINDIR= /usr/bin
 #BINDIR= /usr/contrib/bin
-
-# where to install the *.cal, *.h and *.a files
-#
-# ${TOPDIR} is the directory under which the calc directory will be placed.
-# ${LIBDIR} is where the *.cal, *.a, bindings and help dir are installed.
-# ${INCDIR} is where the locally installed include files are found.
-# ${INCDIRCALC} is where the calc include files are installed.
-# ${HELPDIR} is where the help directory is installed.
-# ${CUSTOMLIBDIR} is where custom lib files are installed.
-# ${CUSTOMHELPDIR} is where custom help files are installed.
 #
 TOPDIR= /usr/local/lib
 #TOPDIR= /usr/lib
@@ -329,6 +352,7 @@ INCDIR= /usr/local/include
 INCDIRCALC= ${INCDIR}/calc
 CUSTOMLIBDIR= ${LIBDIR}/custom
 CUSTOMHELPDIR= ${HELPDIR}/custhelp
+SCRIPTDIR= ${BINDIR}/cscript
 
 # where man pages are installed
 #
@@ -391,14 +415,15 @@ NROFF_ARG= -man
 #NROFF_ARG= -mandoc
 MANMAKE= /usr/local/bin/manmake
 #MANMAKE= manmake
+MANMODE= 0444
 
 # If the $CALCPATH environment variable is not defined, then the following
-# path will be search for calc lib routines.
+# path will be search for calc resource file routines.
 #
-CALCPATH= .:./lib:~/lib:${LIBDIR}:${CUSTOMLIBDIR}
+CALCPATH= .:./cal:~/cal:${LIBDIR}:${CUSTOMLIBDIR}
 
 # If the $CALCRC environment variable is not defined, then the following
-# path will be search for calc lib routines.
+# path will be search for calc resource files.
 #
 CALCRC= ${LIBDIR}/startup:~/.calcrc
 
@@ -411,11 +436,11 @@ CALCRC= ${LIBDIR}/startup:~/.calcrc
 # NOTE: If you select the 'USE_READLINE= -DUSE_READLINE' mode, you must set:
 #
 #	READLINE_LIB		The flags needed to link in the readline
-#				and history libs
+#				and history link libraries
 #	READLINE_INCLUDE	Where the readline include files reside
 #
 # NOTE: The GNU-readline code is not shipped with calc.	 You must have
-#	the appropriate headers and libs installed on your system in
+#	the appropriate headers and link libs installed on your system in
 #	order to use it.
 #
 # If in doubt, set USE_READLINE, READLINE_LIB and READLINE_INCLUDE to nothing.
@@ -441,30 +466,37 @@ CALCPAGER= more
 
 # Debug/Optimize options for ${CC} and ${LCC}
 #
+#DEBUG=
+#
 #DEBUG= -O
 #DEBUG= -O -g
 #DEBUG= -O -g3
+#
 #DEBUG= -O1
 #DEBUG= -O1 -g
 #DEBUG= -O1 -g3
+#
 #DEBUG= -O2
 #DEBUG= -O2 -g
-#DEBUG= -O2 -g3
+DEBUG= -O2 -g3
 #DEBUG= -O2 -ipa
 #DEBUG= -O2 -g3 -ipa
+#
 #DEBUG= -O3
 #DEBUG= -O3 -g
 #DEBUG= -O3 -g3
 #DEBUG= -O3 -ipa
 #DEBUG= -O3 -g3 -ipa
+#
+#DEBUG= -std0 -fast -O4 -static
+#
 #DEBUG= -g
-DEBUG= -g3
+#DEBUG= -g3
 #DEBUG= -gx
 #DEBUG= -WM,-g
-#DEBUG=
 
-# On systems that have dynamic shared libs, you may want want to disable them
-# for faster calc startup.
+# On systems that have dynamic shared link libs, you may want want to disable
+# them for faster calc startup.
 #
 #    System type    NO_SHARED recommendation
 #
@@ -479,7 +511,7 @@ NO_SHARED=
 #NO_SHARED= -dn
 #NO_SHARED= -non_shared
 
-# On some systems where you are disabling dynamic shared libs, you may
+# On some systems where you are disabling dynamic shared link libs, you may
 # need to pass a special flag to ${CC} and ${LCC} during linking stage.
 #
 #    System type			    NO_SHARED recommendation
@@ -494,40 +526,11 @@ LD_NO_SHARED=
 #LD_NO_SHARED= -Wl,-rdata_shared
 
 # Some systems require one to use ranlib to add a symbol table to
-# a *.a library.  Set RANLIB to the utility that performs this action.
-# Set RANLIB to : if your system does not need such a utility.
+# a *.a link library.  Set RANLIB to the utility that performs this
+# action.  Set RANLIB to : if your system does not need such a utility.
 #
 RANLIB=ranlib
 #RANLIB=:
-
-# Some systems are able to form lint libs.  How it is formed depends
-# on your system.  If you do not care about lint, use : as the
-# LINTLIB value.
-#
-#    System type    LINTLIB recommendation
-#
-#	BSD	    ${LINT} ${LCFLAGS} ${LINTFLAGS} -u -Ccalc
-#	SYSV	    ${LINT} ${LCFLAGS} ${LINTFLAGS} -u -o calc
-#	disable	    :
-#
-# If in doubt and you don't care about lint, use LINTLIB= :
-#
-#LINTLIB= ${LINT} ${LCFLAGS} ${LINTFLAGS} -u -Ccalc
-#LINTLIB= ${LINT} ${LCFLAGS} ${LINTFLAGS} -u -o calc
-LINTLIB= :
-
-# The lint flags vary from system to system.  Some systems have the
-# opposite meaning for the flags below.	 Other systems change flag
-# meaning altogether.
-#
-#	System	  LINTFLAGS recommendation
-#
-#	SunOs	  -a -h -v -z
-#
-# If in doubt and you don't care about lint, set LINTFLAGS to empty.
-#
-#LINTFLAGS= -a -h -v -z
-LINTFLAGS=
 
 # Normally certain files depend on the Makefile.  If the Makefile is
 # changed, then certain steps should be redone.	 If MAKE_FILE is
@@ -548,9 +551,9 @@ MAKE_FILE= Makefile
 #PURIFY= purify -logfile=pure.out
 #PURIFY= purify -m71-engine -logfile=pure.out
 
-# If you want to use a debugging library such as a malloc debug library,
-# or need to add special ld flags after the calc libraries are included,
-# set ${LD_DEBUG} below.
+# If you want to use a debugging link library such as a malloc debug link
+# library, or need to add special ld flags after the calc link libraries
+# are included, set ${LD_DEBUG} below.
 #
 # If in doubt, set LD_DEBUG to empty.
 #
@@ -564,18 +567,18 @@ LD_DEBUG=
 #	make debug
 #
 # the ${CALC_ENV} is used to supply the proper environment variables
-# to calc.  Most people will simply need 'CALCPATH=./lib' to ensure
-# that these debug rules will only use calc lib files under the
+# to calc.  Most people will simply need 'CALCPATH=./cal' to ensure
+# that these debug rules will only use calc resource files under the
 # local source directory.  The longer lines (with MALLOC_VERBOSE=1 ...)
 # are useful for SGI IRIX people who have 'WorkShop Performance Tools'
 # and who also set 'LD_DEBUG= -lmalloc_cv' above.
 #
-# If in doubt, use CALC_ENV= CALCPATH=./lib.
+# If in doubt, use CALC_ENV= CALCPATH=./cal.
 #
-CALC_ENV= CALCPATH=./lib
-#CALC_ENV= CALCPATH=./lib MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
+CALC_ENV= CALCPATH=./cal
+#CALC_ENV= CALCPATH=./cal MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
 #	  MALLOC_FASTCHK=1 MALLOC_FULLWARN=1
-#CALC_ENV= CALCPATH=./lib MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
+#CALC_ENV= CALCPATH=./cal MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
 #	  MALLOC_FASTCHK=1 MALLOC_FULLWARN=1 MALLOC_CLEAR_FREE=1 \
 #	  MALLOC_CLEAR_MALLOC=1
 
@@ -603,7 +606,6 @@ ALLOW_CUSTOM= -DCUSTOM
 # CFLAGS are all flags given to ${CC} [[often includes CCOPT, CCWARN, CCMISC]]
 # ICFLAGS are given to ${CC} for intermediate progs
 #
-# LCFLAGS are CC-style flags for ${LINT}
 # LDFLAGS are flags given to ${CC} for linking .o files
 # ILDFLAGS are flags given to ${CC} for linking .o files for intermediate progs
 #
@@ -616,8 +618,8 @@ ALLOW_CUSTOM= -DCUSTOM
 #
 # Tested on Red Hat 6.0 Linux but should run on almost any Linux release.
 #
-# for better performance, set the following above:
-#     DEBUG= -O2
+# For better performance, set the following above:	DEBUG= -O2 -g3
+# You might even try:					DEBUG= -O3 -g3
 #
 CCWARN= -Wall -Wno-implicit -Wno-comment
 CCOPT= ${DEBUG} ${NO_SHARED}
@@ -626,7 +628,6 @@ CCMISC=
 CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 ICFLAGS= ${CCWARN} ${CCMISC}
 #
-LCFLAGS=
 LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 ILDFLAGS=
 #
@@ -637,8 +638,8 @@ CC= ${PURIFY} ${LCC}
 #
 # gcc set	(some call it gcc2, some call it gcc)
 #
-# for better performance, set the following above:
-#     DEBUG= -O2
+# For better performance, set the following above:	DEBUG= -O2 -g3
+# You might even try:					DEBUG= -O3 -g3
 #
 #CCWARN= -Wall -Wno-implicit -Wno-comment
 #CCOPT= ${DEBUG} ${NO_SHARED}
@@ -647,7 +648,6 @@ CC= ${PURIFY} ${LCC}
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
 #
@@ -659,6 +659,9 @@ CC= ${PURIFY} ${LCC}
 #
 # common cc set
 #
+# For better performance, set the following above:	DEBUG= -O2 -g3
+# Or if -O2 -g3 are not supported try:			DEBUG= -O -g
+#
 #CCWARN=
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC=
@@ -666,7 +669,6 @@ CC= ${PURIFY} ${LCC}
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
 #
@@ -677,11 +679,9 @@ CC= ${PURIFY} ${LCC}
 #
 # SGI IRIX6.2 (or later) -n32 (v7.1 or later) Compiler
 #
-# You must set above:
-#	RANLIB=:
+# You must set above:					RANLIB=:
 #
-# for better performance, set the following above:
-#	DEBUG= -O2 -g3
+# For better performance, set the following above:	DEBUG= -O2 -g3
 #
 # If you have the directory /usr/lib32/nonshared, then set the following above:
 #	NO_SHARED= -non_shared
@@ -696,7 +696,6 @@ CC= ${PURIFY} ${LCC}
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
 #
@@ -707,11 +706,10 @@ CC= ${PURIFY} ${LCC}
 #
 # HP-UX set
 #
-# for better performance, try set the following above:
-#     DEBUG= -O
+# For better performance, set the following above:	DEBUG= -O -g
 #
-# Warning: Some HP-UX optimizers are brain-damaged.  If 'make check' fails use:
-#     DEBUG= -g
+# Warning: Some HP-UX optimizers are brain-damaged.
+# If 'make check' fails use:				DEBUG= -g
 #
 #CCWARN=
 #CCOPT= ${DEBUG} ${NO_SHARED}
@@ -720,7 +718,6 @@ CC= ${PURIFY} ${LCC}
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
 #
@@ -738,7 +735,6 @@ CC= ${PURIFY} ${LCC}
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
 #
@@ -749,8 +745,7 @@ CC= ${PURIFY} ${LCC}
 #
 # Solaris Sun cc compiler set
 #
-# for better performance, set the following above:
-#     DEBUG= -O
+# For better performance, set the following above:	DEBUG= -O -g
 #
 # We need -DFORCE_STDC to make use of ANSI-C like features and
 # to avoid the use of -Xc (which as a lose performance wise).
@@ -762,7 +757,6 @@ CC= ${PURIFY} ${LCC}
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
 #
@@ -773,8 +767,8 @@ CC= ${PURIFY} ${LCC}
 #
 # BSDI's BSD/OS 4.0 (or later) set
 #
-# for better performance, set the following above:
-#     DEBUG= -O2
+# For better performance, set the following above:	DEBUG= -O2 -g3
+# You might even try:					DEBUG= -O3 -g3
 #
 #CCWARN= -Wall -Wno-implicit -Wno-comment
 #CCOPT= ${DEBUG} ${NO_SHARED}
@@ -783,7 +777,6 @@ CC= ${PURIFY} ${LCC}
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC} -Wno-unused
 #
-#LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
 #
@@ -794,8 +787,7 @@ CC= ${PURIFY} ${LCC}
 #
 # Dec Alpha / Compaq Tru64 cc (non-gnu) compiler set
 #
-# for better performance, set the following above:
-#     DEBUG= -O2
+# For better performance, set the following:	DEBUG= -std0 -fast -O4 -static
 #
 #CCWARN=
 #CCOPT= ${DEBUG} ${NO_SHARED}
@@ -804,7 +796,6 @@ CC= ${PURIFY} ${LCC}
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC} -Wno-unused
 #
-#LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
 #
@@ -823,8 +814,8 @@ AWK= awk
 SED= sed
 SORT= sort
 TEE= tee
-LINT= lint
 CTAGS= ctags
+CHMOD= chmod
 FMT= fmt
 # assume the X11 makedepend tool for the depend rule
 MAKEDEPEND= makedepend
@@ -844,7 +835,7 @@ Q=@
 V=@:
 #V=@
 
-# the source files which are built into a math library
+# the source files which are built into a math link library
 #
 # There MUST be a .o for every .c in LIBOBJS
 #
@@ -857,7 +848,7 @@ LIBSRC= addop.c assocfunc.c blkcpy.c block.c byteswap.c \
 	string.c symbol.c token.c value.c version.c zfunc.c zio.c \
 	zmath.c zmod.c zmul.c zprime.c zrand.c zrandom.c
 
-# the object files which are built into a math library
+# the object files which are built into a math link library
 #
 # There MUST be a .o for every .c in LIBSRC plus calcerr.o
 # which is built via this Makefile.
@@ -963,13 +954,13 @@ CUSTOM_PASSDOWN= Q="${Q}" \
     CCMISC="${CCMISC}" \
     CFLAGS="${CFLAGS} ${ALLOW_CUSTOM}" \
     ICFLAGS="${ICFLAGS}" \
-    LCFLAGS="${LCFLAGS}" \
     LDFLAGS="${LDFLAGS}" \
     ILDFLAGS="${ILDFLAGS}" \
     LCC="${LCC}" \
     CC="${CC}" \
     MAKE_FILE=${MAKE_FILE} \
     SED=${SED} \
+    CHMOD=${CHMOD} \
     MAKEDEPEND=${MAKEDEPEND} \
     SORT=${SORT}
 
@@ -989,7 +980,6 @@ SAMPLE_PASSDOWN= Q="${Q}" \
     CCMISC="${CCMISC}" \
     CFLAGS="${CFLAGS} ${ALLOW_CUSTOM}" \
     ICFLAGS="${ICFLAGS}" \
-    LCFLAGS="${LCFLAGS}" \
     LDFLAGS="${LDFLAGS}" \
     ILDFLAGS="${ILDFLAGS}" \
     CALC_LIBS="../libcalc.a ../custom/libcustcalc.a ${READLINE_LIB}" \
@@ -998,6 +988,7 @@ SAMPLE_PASSDOWN= Q="${Q}" \
     MAKE_FILE=${MAKE_FILE} \
     SED=${SED} \
     MAKEDEPEND=${MAKEDEPEND} \
+    CHMOD=${CHMOD} \
     SORT=${SORT}
 
 # The compelte list of makefile vars passed down to help/Makefile.
@@ -1006,23 +997,31 @@ HELP_PASSDOWN= Q="${Q}" \
     TOPDIR="${TOPDIR}" \
     LIBDIR="${LIBDIR}" \
     HELPDIR="${HELPDIR}" \
-    CFLAGS="${CFLAGS} ${ALLOW_CUSTOM}" \
     ICFLAGS="${ICFLAGS}" \
     ILDFLAGS="${ILDFLAGS}" \
     LCC="${LCC}" \
     MAKE_FILE=${MAKE_FILE} \
     SED=${SED} \
+    CHMOD=${CHMOD} \
     FMT=${FMT}
 
-# The compelte list of makefile vars passed down to lib/Makefile.
+# The compelte list of makefile vars passed down to cal/Makefile.
 #
-LIB_PASSDOWN= Q="${Q}" \
+CAL_PASSDOWN= Q="${Q}" \
     TOPDIR="${TOPDIR}" \
     LIBDIR="${LIBDIR}" \
-    HELPDIR="${HELPDIR}" \
     MAKE_FILE=${MAKE_FILE} \
+    CHMOD=${CHMOD}
+
+# The compelte list of makefile vars passed down to cscript/Makefile.
+#
+CSCRIPT_PASSDOWN= Q="${Q}" \
+    BINDIR="${BINDIR}" \
+    SCRIPTDIR="${SCRIPTDIR}" \
+    MAKE_FILE=${MAKE_FILE} \
+    CHMOD=${CHMOD} \
     SED=${SED} \
-    MAKEDEPEND=${MAKEDEPEND} \
+    FMT=${FMT} \
     SORT=${SORT}
 
 # complete list of .h files found (but not built) in the distribution
@@ -1033,12 +1032,16 @@ H_SRC= ${LIB_H_SRC}
 #
 C_SRC= ${LIBSRC} ${CALCSRC} ${UTIL_C_SRC}
 
+# The list of files that describe calc's GNU Lesser General Public License
+#
+LICENSE= COPYING COPYING-LGPL
+
 # These files are found (but not built) in the distribution
 #
 DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README \
-	  calc.man lint.sed HOWTO.INSTALL ${UTIL_MISC_SRC}
+	  calc.man HOWTO.INSTALL ${UTIL_MISC_SRC} ${LICENSE}
 
-# These files are used to make (but not built) a calc .a library
+# These files are used to make (but not built) a calc .a link library
 #
 CALCLIBLIST= ${LIBSRC} ${UTIL_C_SRC} ${LIB_H_SRC} ${MAKE_FILE} \
 	     ${UTIL_MISC_SRC} BUGS CHANGES LIBRARY
@@ -1057,8 +1060,8 @@ PROGS= calc ${UTIL_PROGS}
 
 # complete list of targets
 #
-TARGETS= ${CALC_LIBS} custom/.all calc sample/sample \
-	 lib/.all help/.all help/builtin calc.1
+TARGETS= ${LICENSE} ${CALC_LIBS} custom/.all calc sample/sample \
+	 cal/.all help/.all help/builtin cscript/.all calc.1
 
 
 ###
@@ -1076,12 +1079,17 @@ libcalc.a: ${LIBOBJS} ${MAKE_FILE}
 	-rm -f libcalc.a
 	ar qc libcalc.a ${LIBOBJS}
 	${RANLIB} libcalc.a
-	chmod 0644 libcalc.a
+	${CHMOD} 0644 libcalc.a
 
 calc.1: calc.man ${MAKE_FILE}
 	-rm -f calc.1
 	${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' \
+	       -e 's,$${BINDIR},${BINDIR},g' \
 	       -e 's,$${CALCPATH},${CALCPATH},g' \
+	       -e 's,$${SCRIPTDIR},${SCRIPTDIR},g' \
+	       -e 's,$${INCDIRCALC},${INCDIRCALC},g' \
+	       -e 's,$${CUSTOMLIBDIR},${CUSTOMLIBDIR},g' \
+	       -e 's,$${CUSTOMHELPDIR},${CUSTOMHELPDIR},g' \
 	       -e 's,$${CALCRC},${CALCRC},g' < calc.man > calc.1
 
 ##
@@ -1137,34 +1145,34 @@ conf.h: ${MAKE_FILE}
 	${Q}echo '' >> conf.h
 	${Q}echo '' >> conf.h
 	${Q}echo '/* the default :-separated search path */' >> conf.h
-	${Q}echo '#ifndef DEFAULTCALCPATH' >> conf.h
+	${Q}echo '#if !defined(DEFAULTCALCPATH)' >> conf.h
 	${Q}echo '#define DEFAULTCALCPATH "${CALCPATH}"' >> conf.h
 	${Q}echo '#endif /* DEFAULTCALCPATH */' >> conf.h
 	${Q}echo '' >> conf.h
 	${Q}echo '/* the default :-separated startup file list */' >> conf.h
-	${Q}echo '#ifndef DEFAULTCALCRC' >> conf.h
+	${Q}echo '#if !defined(DEFAULTCALCRC)' >> conf.h
 	${Q}echo '#define DEFAULTCALCRC "${CALCRC}"' >> conf.h
 	${Q}echo '#endif /* DEFAULTCALCRC */' >> conf.h
 	${Q}echo '' >> conf.h
 	${Q}echo '/* the location of the help directory */' >> conf.h
-	${Q}echo '#ifndef HELPDIR' >> conf.h
+	${Q}echo '#if !defined(HELPDIR)' >> conf.h
 	${Q}echo '#define HELPDIR "${HELPDIR}"' >> conf.h
 	${Q}echo '#endif /* HELPDIR */' >> conf.h
 	${Q}echo '' >> conf.h
 	${Q}echo '/* the location of the custom help directory */' >> conf.h
-	${Q}echo '#ifndef CUSTOMHELPDIR' >> conf.h
+	${Q}echo '#if !defined(CUSTOMHELPDIR)' >> conf.h
 	${Q}echo '#define CUSTOMHELPDIR "${CUSTOMHELPDIR}"' >> conf.h
 	${Q}echo '#endif /* CUSTOMHELPDIR */' >> conf.h
 	${Q}echo '' >> conf.h
 	${Q}echo '/* the default pager to use */' >> conf.h
-	${Q}echo '#ifndef DEFAULTCALCPAGER' >> conf.h
+	${Q}echo '#if !defined(DEFAULTCALCPAGER)' >> conf.h
 	${Q}echo '#define DEFAULTCALCPAGER "${CALCPAGER}"' >> conf.h
 	${Q}echo '#endif /* DEFAULTCALCPAGER */' >> conf.h
 	${Q}echo '' >> conf.h
 	${Q}echo '/* where the echo command is located */' >> conf.h
-	${Q}echo '#ifndef ECHO' >> conf.h
-	${Q}echo '#define ECHO "${ECHO}"' >> conf.h
-	${Q}echo '#endif /* ECHO */' >> conf.h
+	${Q}echo '#if !defined(ECHO_PROG)' >> conf.h
+	${Q}echo '#define ECHO_PROG "${ECHO}"' >> conf.h
+	${Q}echo '#endif /* ECHO_PROG */' >> conf.h
 	${Q}echo '' >> conf.h
 	${Q}echo '' >> conf.h
 	${Q}echo '#endif /* !__CONF_H__ */' >> conf.h
@@ -1491,10 +1499,10 @@ longlong.h: longlong.c have_stdlib.h have_string.h ${MAKE_FILE}
 	-${Q}if [ -s ll_tmp ]; then \
 	    cat ll_tmp >> longlong.h; \
 	else \
+	    echo '/* no long long type */'; \
 	    echo '#undef HAVE_LONGLONG' >> longlong.h; \
 	    echo '#define LONGLONG_BITS 0  /* no */' >> longlong.h; \
-	    echo '#undef LL_FORMAT' >> longlong.h; \
-	    echo '#undef L_FORMAT' >> longlong.h; \
+	    echo '#undef L64_FORMAT' >> longlong.h; \
 	fi
 	${Q}echo '' >> longlong.h
 	${Q}echo '' >> longlong.h
@@ -2309,10 +2317,10 @@ longbits: longbits.o
 #
 ##
 
-lib/.all:
+cal/.all:
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= Invoking all rule for lib =-=-=-=-='
-	cd lib; ${MAKE} -f Makefile ${LIB_PASSDOWN} all
+	${V} echo '=-=-=-=-= Invoking all rule for cal =-=-=-=-='
+	cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
@@ -2327,6 +2335,13 @@ help/builtin: func.c help/builtin.top help/builtin.end help/funclist.sed
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking builtin rule for help =-=-=-=-='
 	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} builtin
+	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+
+cscript/.all:
+	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= Invoking all rule for cscript =-=-=-=-='
+	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
@@ -2423,28 +2438,11 @@ bsdi: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 		rm -f gen_h/$$i; \
 		echo cp $$i gen_h; \
 		cp $$i gen_h; \
-		echo chmod 0444 gen_h/$$i; \
-		chmod 0444 gen_h/$$i; \
+		echo ${CHMOD} 0444 gen_h/$$i; \
+		${CHMOD} 0444 gen_h/$$i; \
 	done
 	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} bsdi
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
-
-##
-#
-# These rules help with linting.  Adjust ${LINT}, ${LINTLIB}, ${LINTFLAGS}
-# and the lint.sed file as needed for your system.
-#
-##
-
-llib-lcalc.ln: ${BUILD_H_SRC} ${LIBSRC} ${MAKE_FILE}
-	-rm -f llib-lcalc.ln llib.out
-	-touch llib-lcalc.ln
-	${LINTLIB} ${LIBSRC} 2>&1 | ${SED} -f lint.sed | ${TEE} llib.out
-
-lint: ${BUILD_H_SRC} ${CALCSRC} llib-lcalc.ln lint.sed ${MAKE_FILE}
-	-rm -f lint.out
-	${LINT} ${LINTFLAGS} ${LCFLAGS} llib-lcalc.ln ${CALCSRC} 2>&1 | \
-	    ${SED} -f lint.sed | ${TEE} lint.out
 
 ##
 #
@@ -2538,15 +2536,17 @@ distlist: ${DISTLIST}
 		echo $$i; \
 	done; \
 	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
-	(cd lib; ${MAKE} ${LIB_PASSDOWN} $@); \
+	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
 	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
+	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@); \
 	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | ${SORT}
 
 distdir:
 	${Q}(echo .; \
 	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
-	(cd lib; ${MAKE} ${LIB_PASSDOWN} $@); \
+	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
 	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
+	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@); \
 	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | ${SORT}
 
 calcliblist:
@@ -2554,8 +2554,9 @@ calcliblist:
 		echo $$i; \
 	done; \
 	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
-	(cd lib; ${MAKE} ${LIB_PASSDOWN} $@); \
+	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
 	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
+	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@); \
 	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | ${SORT}
 
 calcliblistfmt:
@@ -2573,10 +2574,10 @@ calcliblistfmt:
 #
 ##
 
-check: all ./lib/regress.cal
+check: all ./cal/regress.cal
 	${CALC_ENV} ./calc -d -q read regress
 
-chk: ./lib/regress.cal
+chk: ./cal/regress.cal
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	${CALC_ENV} ./calc -d -q read regress 2>&1 | ${AWK} -f check.awk
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
@@ -2625,6 +2626,7 @@ env:
 	@echo "HELPDIR=${HELPDIR}"; echo ""
 	@echo "CUSTOMLIBDIR=${CUSTOMLIBDIR}"; echo ""
 	@echo "CUSTOMHELPDIR=${CUSTOMHELPDIR}"; echo ""
+	@echo "SCRIPTDIR=${SCRIPTDIR}"; echo ""
 	@echo "MANDIR=${MANDIR}"; echo ""
 	@echo "CATDIR=${CATDIR}"; echo ""
 	@echo "MANEXT=${MANEXT}"; echo ""
@@ -2639,8 +2641,6 @@ env:
 	@echo "NO_SHARED=${NO_SHARED}"; echo ""
 	@echo "LD_NO_SHARED=${LD_NO_SHARED}"; echo ""
 	@echo "RANLIB=${RANLIB}"; echo ""
-	@echo "LINTLIB=${LINTLIB}"; echo ""
-	@echo "LINTFLAGS=${LINTFLAGS}"; echo ""
 	@echo "MAKE_FILE=${MAKE_FILE}"; echo ""
 	@echo "PURIFY=${PURIFY}"; echo ""
 	@echo "LD_DEBUG=${LD_DEBUG}"; echo ""
@@ -2651,7 +2651,6 @@ env:
 	@echo "CCMISC=${CCMISC}"; echo ""
 	@echo "CFLAGS=${CFLAGS}"; echo ""
 	@echo "ICFLAGS=${ICFLAGS}"; echo ""
-	@echo "LCFLAGS=${LCFLAGS}"; echo ""
 	@echo "LDFLAGS=${LDFLAGS}"; echo ""
 	@echo "ILDFLAGS=${ILDFLAGS}"; echo ""
 	@echo "LCC=${LCC}"; echo ""
@@ -2662,7 +2661,6 @@ env:
 	@echo "SED=${SED}"; echo ""
 	@echo "SORT=${SORT}"; echo ""
 	@echo "TEE=${TEE}"; echo ""
-	@echo "LINT=${LINT}"; echo ""
 	@echo "CTAGS=${CTAGS}"; echo ""
 	@echo "MAKEDEPEND=${MAKEDEPEND}"; echo ""
 	@echo "Q=${Q}"; echo ""
@@ -2682,7 +2680,8 @@ env:
 	@echo "CUSTOM_PASSDOWN=${CUSTOM_PASSDOWN}"; echo ""
 	@echo "SAMPLE_PASSDOWN=${SAMPLE_PASSDOWN}"; echo ""
 	@echo "HELP_PASSDOWN=${HELP_PASSDOWN}"; echo ""
-	@echo "LIB_PASSDOWN=${LIB_PASSDOWN}"; echo ""
+	@echo "CAL_PASSDOWN=${CAL_PASSDOWN}"; echo ""
+	@echo "CSCRIPT_PASSDOWN=${CSCRIPT_PASSDOWN}"; echo ""
 	@echo "H_SRC=${H_SRC}"; echo ""
 	@echo "C_SRC=${C_SRC}"; echo ""
 	@echo "DISTLIST=${DISTLIST}"; echo ""
@@ -2768,9 +2767,6 @@ tags: ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} ${MAKE_FILE}
 	-${CTAGS} ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} 2>&1 | \
 	    egrep -v 'Duplicate entry|Second entry ignored'
 
-lintclean:
-	-rm -f llib-lcalc.ln llib.out lint.out
-
 clean:
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	-rm -f ${LIBOBJS}
@@ -2782,8 +2778,8 @@ clean:
 	${Q}echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	-cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clean
 	${Q}echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${Q}echo '=-=-=-=-= Invoking $@ rule for lib =-=-=-=-='
-	-cd lib; ${MAKE} -f Makefile ${LIB_PASSDOWN} clean
+	${Q}echo '=-=-=-=-= Invoking $@ rule for cal =-=-=-=-='
+	-cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} clean
 	${Q}echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} clean
@@ -2791,12 +2787,16 @@ clean:
 	${V} echo '=-=-=-=-= Invoking $@ rule for sample =-=-=-=-='
 	cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} clean
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
+	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} clean
+	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q}echo remove files that are obsolete
-	-rm -f endian.h stdarg.h libcalcerr.a lib/obj help/obj
+	-rm -rf lib
+	-rm -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
 	-rm -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
-clobber: lintclean
+clobber:
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	-rm -f ${LIBOBJS}
 	-rm -f ${CALCOBJS}
@@ -2815,8 +2815,8 @@ clobber: lintclean
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	-cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clobber
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= Invoking $@ rule for lib =-=-=-=-='
-	-cd lib; ${MAKE} -f Makefile ${LIB_PASSDOWN} clobber
+	${V} echo '=-=-=-=-= Invoking $@ rule for cal =-=-=-=-='
+	-cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} clobber
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} clobber
@@ -2824,8 +2824,12 @@ clobber: lintclean
 	${V} echo '=-=-=-=-= Invoking $@ rule for sample =-=-=-=-='
 	cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} clobber
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
+	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} clobber
+	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo remove files that are obsolete
-	-rm -f endian.h stdarg.h libcalcerr.a lib/obj help/obj
+	-rm -rf lib
+	-rm -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
 	-rm -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
@@ -2837,50 +2841,57 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	else \
 	    true; \
 	fi
-	-chmod 0755 ${TOPDIR}
+	-${CHMOD} 0755 ${TOPDIR}
 	-${Q}if [ ! -d ${LIBDIR} ]; then \
 		echo mkdir ${LIBDIR}; \
 		mkdir ${LIBDIR}; \
 	else \
 	    true; \
 	fi
-	-chmod 0755 ${LIBDIR}
+	-${CHMOD} 0755 ${LIBDIR}
 	-${Q}if [ ! -d ${HELPDIR} ]; then \
 		echo mkdir ${HELPDIR}; \
 		mkdir ${HELPDIR}; \
 	else \
 	    true; \
 	fi
-	-chmod 0755 ${HELPDIR}
+	-${CHMOD} 0755 ${HELPDIR}
+	-${Q}if [ ! -d ${SCRIPTDIR} ]; then \
+		echo mkdir ${SCRIPTDIR}; \
+		mkdir ${SCRIPTDIR}; \
+	else \
+	    true; \
+	fi
+	-${CHMOD} 0755 ${SCRIPTDIR}
 	-${Q}if [ ! -d ${INCDIR} ]; then \
 		echo mkdir ${INCDIR}; \
 		mkdir ${INCDIR}; \
 	else \
 	    true; \
 	fi
-	-chmod 0755 ${INCDIR}
+	-${CHMOD} 0755 ${INCDIR}
 	-${Q}if [ ! -d ${INCDIRCALC} ]; then \
 		echo mkdir ${INCDIRCALC}; \
 		mkdir ${INCDIRCALC}; \
 	else \
 	    true; \
 	fi
-	-chmod 0755 ${INCDIRCALC}
+	-${CHMOD} 0755 ${INCDIRCALC}
 	-${Q}if [ ! -d ${BINDIR} ]; then \
 		echo mkdir ${BINDIR}; \
 		mkdir ${BINDIR}; \
 	else \
 	    true; \
 	fi
-	-chmod 0755 ${BINDIR}
+	-${CHMOD} 0755 ${BINDIR}
 	-rm -f ${BINDIR}/calc
 	cp calc ${BINDIR}
-	-chmod 0555 ${BINDIR}/calc
+	-${CHMOD} 0555 ${BINDIR}/calc
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= Invoking $@ rule for lib =-=-=-=-='
-	cd lib; ${MAKE} -f Makefile ${LIB_PASSDOWN} install
+	${V} echo '=-=-=-=-= Invoking $@ rule for cal =-=-=-=-='
+	cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} install
@@ -2888,10 +2899,13 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	${V} echo '=-=-=-=-= Invoking $@ rule for sample =-=-=-=-='
 	cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
+	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} install
+	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	-rm -f ${LIBDIR}/libcalc.a
 	cp -f libcalc.a ${LIBDIR}/libcalc.a
 	${RANLIB} ${LIBDIR}/libcalc.a
-	-chmod 0644 ${LIBDIR}/libcalc.a
+	-${CHMOD} 0444 ${LIBDIR}/libcalc.a
 	-${Q}for i in ${LIB_H_SRC} ${BUILD_H_SRC}; do \
 		echo rm -f ${LIBDIR}/$$i; \
 		rm -f ${LIBDIR}/$$i; \
@@ -2899,20 +2913,9 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 		rm -f ${INCDIRCALC}/$$i; \
 		echo cp $$i ${INCDIRCALC}; \
 		cp $$i ${INCDIRCALC}; \
-		echo chmod 0444 ${INCDIRCALC}/$$i; \
-		chmod 0444 ${INCDIRCALC}/$$i; \
+		echo ${CHMOD} 0444 ${INCDIRCALC}/$$i; \
+		${CHMOD} 0444 ${INCDIRCALC}/$$i; \
 	done
-	${Q}: If lint was made, install the lint library.
-	-${Q}if [ -f llib-lcalc.ln ]; then \
-		echo rm -f ${LIBDIR}/llib-lcalc.ln; \
-		rm -f ${LIBDIR}/llib-lcalc.ln; \
-		echo cp llib-lcalc.ln ${LIBDIR}; \
-		cp llib-lcalc.ln ${LIBDIR}; \
-		echo chmod 0444 ${LIBDIR}/llib-lcalc.ln; \
-		chmod 0444 ${LIBDIR}/llib-lcalc.ln; \
-	else \
-	    true; \
-	fi
 	-${Q}if [ -z "${MANDIR}" ]; then \
 	    echo '$${MANDIR} is empty, calc man page will not be installed'; \
 	else \
@@ -2920,8 +2923,8 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	    rm -f ${MANDIR}/calc.${MANEXT}; \
 	    echo "cp calc.1 ${MANDIR}/calc.${MANEXT}"; \
 	    cp calc.1 ${MANDIR}/calc.${MANEXT}; \
-	    echo "chmod 0444 ${MANDIR}/calc.${MANEXT}"; \
-	    chmod 0444 ${MANDIR}/calc.${MANEXT}; \
+	    echo "${CHMOD} 0444 ${MANDIR}/calc.${MANEXT}"; \
+	    ${CHMOD} 0444 ${MANDIR}/calc.${MANEXT}; \
 	fi
 	-${Q}if [ -z "${CATDIR}" ]; then \
 	    echo '$${CATDIR} is empty, calc cat page will not be installed'; \
@@ -2934,8 +2937,8 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 		rm -f ${CATDIR}/calc.${CATEXT}; \
 		echo "${NROFF} ${NROFF_ARG} calc.1 > ${CATDIR}/calc.${CATEXT}";\
 		${NROFF} ${NROFF_ARG} calc.1 > ${CATDIR}/calc.${CATEXT}; \
-		echo "chmod ${MANMODE} ${MANDIR}/calc.${MANEXT}"; \
-		chmod ${MANMODE} ${MANDIR}/calc.${MANEXT}; \
+		echo "${CHMOD} ${MANMODE} ${MANDIR}/calc.${MANEXT}"; \
+		${CHMOD} ${MANMODE} ${MANDIR}/calc.${MANEXT}; \
 	    fi; \
 	fi
 	${Q}echo remove files that are obsolete
@@ -2944,8 +2947,11 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	-rm -f ${LIBDIR}/prototype.h prototype.h
 	-rm -f ${LIBDIR}/libcalcerr.a libcalcerr.a
 	-rm -f ${LIBDIR}/calc_errno.h calc_errno.h ${INCDIRCALC}/calc_errno.h
-	-rm -f calc_errno.c calc_errno.o calc_errno
-	-rm -f ${LIBDIR}/altbind ${HELPDIR}/altbind
+	-rm -f calc_errno.c calc_errno.o calc_errno lint.sed
+	-rm -f alloc.c alloc.o have_vs.c have_vs.o have_vs io.c io.o
+	-rm -f std_arg.h try_stdarg.c try_stdarg.o try_stdarg
+	-rm -f ${LIBDIR}/altbind ${HELPDIR}/altbind cal/altbind
+	-rm -f ${LIBDIR}/llib-lcalc.ln
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 ##
@@ -3192,6 +3198,7 @@ config.o: have_malloc.h
 config.o: have_memmv.h
 config.o: have_newstr.h
 config.o: have_stdlib.h
+config.o: have_strdup.h
 config.o: have_string.h
 config.o: longbits.h
 config.o: md5.h
@@ -3430,7 +3437,6 @@ hist.o: qmath.h
 hist.o: shs.h
 hist.o: shs1.h
 hist.o: string.h
-hist.o: terminal.h
 hist.o: value.h
 hist.o: zmath.h
 input.o: alloc.h
@@ -3522,6 +3528,7 @@ lib_calc.o: shs.h
 lib_calc.o: shs1.h
 lib_calc.o: string.h
 lib_calc.o: symbol.h
+lib_calc.o: terminal.h
 lib_calc.o: token.h
 lib_calc.o: value.h
 lib_calc.o: zmath.h

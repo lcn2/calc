@@ -69,43 +69,6 @@ not currently a member of the calc-tester mailing list.
 
 Known bugs:
 
-    * Calc does not support the #! exec method.	 For example of the
-      following is placed in an executable file (assume the path to
-      calc is correct) called /tmp/xyzzy:
-
-	    #!/usr/local/bin/calc
-	    /*
-	     * comment
-	     */
-	    print 2+3;
-
-      Will result in '"tmp" is undefined' and '"xyzzy" is undefined'
-      error messages because calc considers $0 as an expression to
-      evaluate.
-
-    * The following file:
-
-	    /* this is bugdemo.cal */
-	    x = eval(prompt(">>> "));
-	    print x;
-
-      when executed as:
-
-	    calc read bugdemo.cal
-
-      will obtain a prompt from the terminal, print the value but leave
-      the terminal in a 'bad' state, as if stty -icanon -echo -echoe
-      had been executed.
-
-    * Use of 'fmt' in the 2nd arg of printf() calls in c_sysinfo.c
-      cause some compilers to issue warnings.
-
-    * The builtin function exp(x) will return 0 when x is a large value
-      in certain cases such as exp(2^32).
-
-    * The builtin function power(x,y) will return 0 in certain cases
-      such as power(pi(),2^32).
-
     We are sure some more bugs exist.  When you find them, please let
     us know!  See the above for details on how to report and were to
     EMail your bug reports and hopefully patches to fix them.
@@ -172,8 +135,8 @@ Problems with known work-a-rounds:
 	DEBUG= -g
 
     * There are problems compiling calc on the sparcv9 under 64 bit
-      Solaris.  On that platform, gcc-2.96 is able to compile calc, but
-      calc dumps core very early on in startup.  It is said that sparcv9
+      Solaris.	On that platform, gcc-2.96 is able to compile calc, but
+      calc dumps core very early on in startup.	 It is said that sparcv9
       support in gcc-2.96 is very unofficial and thus there is no
       work-a-round for gcc-2-96.
 
@@ -185,3 +148,41 @@ Problems with known work-a-rounds:
 	    LCC="cc -xarch=v9"
 	    CCWARN="-DFORCE_STDC -w"
 	    DEBUG="-fast -xarch=v9"
+
+    * Under BSDI v4, the warnings of the form:
+
+	/usr/include/ctype.h:147: warning: `__runetype' defined but not used
+	/usr/include/ctype.h:161: warning: `__isctype' defined but not used
+	/usr/include/ctype.h:170: warning: `toupper' defined but not used
+	/usr/include/ctype.h:177: warning: `tolower' defined but not used
+
+      are seen.	 These warnings are the result of mis-features in BSDI
+      include files.  They do not have an impact on the operation
+      or performance.  The work-a-round is to ignore these warnings
+      under BSDI.
+
+## Copyright (C) 1999  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.4 $
+## @(#) $Id: BUGS,v 29.4 1999/12/15 09:13:29 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/RCS/BUGS,v $
+##
+## Under source code control:	1994/03/18 14:06:13
+## File existed as early as:	1994
+##
+## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/

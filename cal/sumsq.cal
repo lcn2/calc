@@ -1,0 +1,65 @@
+/*
+ * sumsq - find unique two positive integers whose squares sum to a given prime
+ *
+ * Copyright (C) 1999  David I. Bell
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: sumsq.cal,v 29.1 1999/12/14 09:15:33 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/sumsq.cal,v $
+ *
+ * Under source code control:	1990/02/15 01:50:37
+ * File existed as early as:	before 1990
+ *
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ */
+
+/*
+ * Determine the unique two positive integers whose squares sum to the
+ * specified prime.  This is always possible for all primes of the form
+ * 4N+1, and always impossible for primes of the form 4N-1.
+ */
+
+
+define ss(p)
+{
+	local a, b, i, p4;
+
+	if (p == 2) {
+		print "1^2 + 1^2 = 2";
+		return;
+	}
+	if ((p % 4) != 1) {
+		print p, "is not of the form 4N+1";
+		return;
+	}
+	if (!ptest(p, min(p-2, 10))) {
+		print p, "is not a prime";
+		return;
+	}
+	p4 = (p - 1) / 4;
+	i = 2;
+	do {
+		a = pmod(i++, p4, p);
+	} while ((a^2 % p) == 1);
+	b = p;
+	while (b^2 > p) {
+		i = b % a;
+		b = a;
+		a = i;
+	}
+	print a : "^2 +" , b : "^2 =" , a^2 + b^2;
+}

@@ -1,8 +1,35 @@
 /*
- * Copyright (c) 1997 David I. Bell
- * Permission is granted to use, distribute, or modify this source,
- * provided that this copyright notice remains intact.
+ * zmod - modulo arithmetic routines
  *
+ * Copyright (C) 1999  David I. Bell, Landon Curt Noll and Ernest Bowen
+ *
+ * Primary author:  David I. Bell
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: zmod.c,v 29.1 1999/12/14 09:16:17 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmod.c,v $
+ *
+ * Under source code control:	1991/05/22 23:03:55
+ * File existed as early as:	1991
+ *
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ */
+
+/*
  * Routines to do modulo arithmetic both normally and also using the REDC
  * algorithm given by Peter L. Montgomery in Mathematics of Computation,
  * volume 44, number 170 (April, 1985).	 For multiple multiplies using
@@ -1850,7 +1877,7 @@ zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
  *
  *	Therefore, v mod h*2^n+r == (2^n)*(b mod h) + a - r*int(b/h).
  *
- * The above proof leads to the following calc script which computes
+ * The above proof leads to the following calc resource file which computes
  * the value z mod h*2^n+r:
  *
  *    define hnrmod(v,h,n,r)
@@ -1918,7 +1945,7 @@ zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
  *	return ret;
  *    }
  *
- * This function implements the above calc script.
+ * This function implements the above calc resource file.
  *
  * given:
  *	v		take mod of this value, v >= 0

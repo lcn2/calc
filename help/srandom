@@ -63,7 +63,7 @@ DESCRIPTION
 	The seed value is used to compute the new quadratic residue.
 	The seed passed will be successively squared mod the Blum
 	modulus until we get a smaller value (modulus wrap).  The
-	calc script produces an equivalent effect:
+	calc resource file produces an equivalent effect:
 
 		/* assume n is the current Blum modulus */
 		r = seed;
@@ -120,7 +120,7 @@ DESCRIPTION
 
 	    lcm(factors of p-1 and q-1) == lcm(2,fp,2,fq) = 2*fp*fq = ~n/2
 
-	The following calc script:
+	The following calc resource file:
 
 	    /* find first Blum prime: p */
 	    fp = int((ip-1)/2);
@@ -159,11 +159,11 @@ DESCRIPTION
 		number of pseudo prime tests that a candidate must pass
 		before being considered a probable prime (must be >0, try 25)
 
-	The calc library script seedrandom.cal will produce a seed a
-	generator.  If the global value lib_debug is 0 or 1, then
-	the selected Blum modulus and quadratic residue will be printed.
-	If the global value is 1, then p and q are also printed.
-	The script defines the function:
+	The calc standard resource file seedrandom.cal will produce a
+	seed a generator.  If the config value custom("resource_debug")
+	is 0 or 1, then the selected Blum modulus and quadratic residue
+	will be printed.  If the global value is 1, then p and q are
+	also printed.  The resource file defines the function:
 
 		seedrandom(seed1, seed2, size [, trials])
 
@@ -189,11 +189,11 @@ DESCRIPTION
 	If you don't want to use a pre-compiled in Blum moduli you can
 	compute your own values ahead of time.	This can be done by a
 	method of your own choosing, or by using the seedrandom.cal
-	script in the following way:
+	resource file in the following way:
 
-	    1) calc			# run calc
-	    2) read seedrandom		# load seedrandom
-	    3) lib_debug=0		# we want the modulus and quad res only
+	    1) calc			   # run calc
+	    2) read seedrandom		   # load seedrandom
+	    3) config("resource_debug",0)  # we want the modulus & quad res only
 	    4) seedrandom( ~pound out 20-93 random digits on the keyboard~,
 			   ~pound out 20-93 random digits on the keyboard~,
 			   512 )
@@ -331,9 +331,35 @@ LIMITS
     ip >= 2^16
     iq >= 2^16
 
-LIBRARY
+LINK LIBRARY
     RAND *zsrandom(ZVALUE *pseed, MATRIX *pmat55)
     RAND *zsetrandom(RAND *state)
 
 SEE ALSO
     seed, srand, randbit, isrand, random, srandom, israndom
+
+## Copyright (C) 1999  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.1 $
+## @(#) $Id: srandom,v 29.1 1999/12/14 09:16:07 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/srandom,v $
+##
+## Under source code control:	1997/02/17 01:18:22
+## File existed as early as:	1997
+##
+## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/

@@ -1,10 +1,32 @@
 /*
- * Copyright (c) 1997 David I. Bell
- * Permission is granted to use, distribute, or modify this source,
- * provided that this copyright notice remains intact.
+ * value - generic value manipulation routines
  *
- * Generic value manipulation routines.
+ * Copyright (C) 1999  David I. Bell
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: value.c,v 29.1 1999/12/14 09:16:16 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.c,v $
+ *
+ * Under source code control:	1990/02/15 01:48:25
+ * File existed as early as:	before 1990
+ *
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
  */
+
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -1603,11 +1625,10 @@ sqrtvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 void
 rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 {
-	NUMBER *q1, *q2;
-	COMPLEX *ctmp;
+	NUMBER *q2, *q3;
+	COMPLEX ctmp;
 	COMPLEX *c;
 
-	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type < 0) {
 		copyvalue(v1, vres);
@@ -1617,8 +1638,8 @@ rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		*vres = error_value(E_ROOT2);
 		return;
 	}
-	q1 = v2->v_num;
-	if (qisneg(q1) || qiszero(q1) || qisfrac(q1)) {
+	q2 = v2->v_num;
+	if (qisneg(q2) || qiszero(q2) || qisfrac(q2)) {
 		*vres = error_value(E_ROOT2);
 		return;
 	}
@@ -1626,22 +1647,23 @@ rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		*vres = error_value(E_ROOT3);
 		return;
 	}
-	q2 = v3->v_num;
+	q3 = v3->v_num;
 	switch (v1->v_type) {
 		case V_NUM:
-			if (!qisneg(v1->v_num) || zisodd(q1->num)) {
-				vres->v_num = qroot(v1->v_num, q1, q2);
+			if (!qisneg(v1->v_num)) {
+				vres->v_num = qroot(v1->v_num, q2, q3);
+				if (vres->v_num == NULL)
+					*vres = error_value(E_ROOT4);
+				vres->v_type = V_NUM;
 				return;
 			}
-			ctmp = comalloc();
-			qfree(ctmp->real);
-			ctmp->real = v1->v_num;
-			vres->v_com = croot(ctmp, q1, q2);
-			comfree(ctmp);
-			vres->v_type = V_COM;
+			ctmp.real = v1->v_num;
+			ctmp.imag = &_qzero_;
+			ctmp.links = 1;
+			c = croot(&ctmp, q2, q3);
 			break;
 		case V_COM:
-			vres->v_com = croot(v1->v_com, q1, q2);
+			c = croot(v1->v_com, q2, q3);
 			break;
 		case V_OBJ:
 			*vres = objcall(OBJ_ROOT, v1, v2, v3);
@@ -1650,7 +1672,12 @@ rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 			*vres = error_value(E_ROOT);
 			return;
 	}
-	c = vres->v_com;
+	if (c == NULL) {
+		*vres = error_value(E_ROOT4);
+		return;
+	}
+	vres->v_com = c;
+	vres->v_type = V_COM;
 	if (cisreal(c)) {
 		vres->v_num = qlink(c->real);
 		vres->v_type = V_NUM;
@@ -1952,7 +1979,7 @@ void
 powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 {
 	NUMBER *epsilon;
-	COMPLEX *c, ctmp;
+	COMPLEX *c, ctmp1, ctmp2;
 
 	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type < 0) {
@@ -1973,25 +2000,37 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		return;
 	}
 	epsilon = v3->v_num;
-	vres->v_type = v1->v_type;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
 		case TWOVAL(V_NUM, V_NUM):
+			if (qisneg(v1->v_num)) {
+				ctmp1.real = v1->v_num;
+				ctmp1.imag = &_qzero_;
+				ctmp1.links = 1;
+				ctmp2.real = v2->v_num;
+				ctmp2.imag = &_qzero_;
+				ctmp2.links = 1;
+				c = cpower(&ctmp1, &ctmp2, epsilon);
+				break;
+			}
 			vres->v_num = qpower(v1->v_num, v2->v_num, epsilon);
+			vres->v_type = V_NUM;
+			if (vres->v_num == NULL)
+				*vres = error_value(E_POWER4);
 			return;
 		case TWOVAL(V_NUM, V_COM):
-			ctmp.real = v1->v_num;
-			ctmp.imag = &_qzero_;
-			ctmp.links = 1;
-			vres->v_com = cpower(&ctmp, v2->v_com, epsilon);
+			ctmp1.real = v1->v_num;
+			ctmp1.imag = &_qzero_;
+			ctmp1.links = 1;
+			c = cpower(&ctmp1, v2->v_com, epsilon);
 			break;
 		case TWOVAL(V_COM, V_NUM):
-			ctmp.real = v2->v_num;
-			ctmp.imag = &_qzero_;
-			ctmp.links = 1;
-			vres->v_com = cpower(v1->v_com, &ctmp, epsilon);
+			ctmp2.real = v2->v_num;
+			ctmp2.imag = &_qzero_;
+			ctmp2.links = 1;
+			c = cpower(v1->v_com, &ctmp2, epsilon);
 			break;
 		case TWOVAL(V_COM, V_COM):
-			vres->v_com = cpower(v1->v_com, v2->v_com, epsilon);
+			c = cpower(v1->v_com, v2->v_com, epsilon);
 			break;
 		default:
 			*vres = error_value(E_POWER);
@@ -2001,12 +2040,12 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	 * Here for any complex result.
 	 */
 	vres->v_type = V_COM;
-	c = vres->v_com;
-	if (!cisreal(c))
-		return;
-	vres->v_num = qlink(c->real);
-	vres->v_type = V_NUM;
-	comfree(c);
+	vres->v_com = c;
+	if (cisreal(c)) {
+		vres->v_num = qlink(c->real);
+		vres->v_type = V_NUM;
+		comfree(c);
+	}
 }
 
 

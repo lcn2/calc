@@ -2,187 +2,313 @@ Calc command line
 
     Calc has the following command line:
 
-	calc [-c] [-C] [-d] [-D calc_debug[:lib_debug:[user_debug]]]
-	     [-e] [-h] [-i] [-m mode] [-n] [-p] [-q] [-u] [-v] [calc_cmd ...]
+	calc [-c] [-C] [-d] [-D calc_debug[:resource_debug:[user_debug]]]
+	     [-e] [-h] [-i] [-m mode] [-n] [-p] [-q] [-s] [-u] [-v]
+	     [calc_cmd ...]
 
-	-c  Continue reading command lines even after an execution
-	    error has caused the abandonment of a line.
+	#!/usr/local/bin/calc -S [-other_flags ...]
 
-	    For example:
+	  -c   Continue reading command lines even after an execution
+	       error has caused the abandonment of a line.
 
-		calc read many_errors.cal
+	       For example:
 
-	    will cause calc to abort on the first error, whereas:
+		    calc read many_errors.cal
 
-		calc -c read many_errors.cal
+	       will cause calc to abort on the first error, whereas:
 
-	    will cause calc to try to process each line being read
-	    despite the errors that it encounters.
+		    calc -c read many_errors.cal
 
-	    By default, calc startup scripts ($CALCRC) are silently
-	    ignored if not found.  This flag will report missing
-	    startup scripts unless -d is also given.
+	       will cause calc to try to process each line being read
+	       despite the errors that it encounters.
 
-	-C  Permit the execution of custom builtin functions.  Without
-	    this flag, calling the custom() builtin function will
-	    simply generate an error.
+	       By default, calc startup resource files ($CALCRC) are
+	       silently ignored if not found.  This flag will report
+	       missing startup scripts unless -d is also given.
 
-	    Use if this flag may cause calc to execute functions that
-	    are non-standard and that are not portable.	 Custom builtin
-	    functions are disabled by default for this reason.
 
-	-d  Disable the printing of the opening title.	The printing
-	    of library debug and informational messages is also disabled
-	    as if config("lib_debug",0) had been executed.
+	  -C   Permit the execution of custom builtin functions.
+	       Without this flag, calling the custom() builtin
+	       function will simply generate an error.
 
-	    For example:
+	       Use if this flag may cause calc to execute functions
+	       that are non-standard and that are not portable.
+	       Custom builtin functions are disabled by default for
+	       this reason.
 
-		calc 'read qtime; qtime(2)'
 
-	    will output something like:
+	  -d   Disable the printing of the opening title.  The
+	       printing of resource file debug and informational messages is
+	       also disabled as if config("resource_debug", 0) had been
+	       executed.
 
-		qtime(utc_hr_offset) defined
-		It's nearly ten past six.
+	       For example:
 
-	    whereas:
+		    calc 'read qtime; qtime(2)'
 
-		calc -d 'read qtime; qtime(2)'
+	       will output something like:
 
-	    will just say:
+		    qtime(utc_hr_offset) defined
+		    It's nearly ten past six.
 
-		It's nearly ten past six.
+	       whereas:
 
-	    This flag disables the reporting of missing calc
-	    startup scripts ($CALCRC).
+		    calc -d 'read qtime; qtime(2)'
 
-	-D calc_debug[:lib_debug:[user_debug]]
+	       will just say:
 
-	    Force the initial value of config("calc_debug"),
-	    config("lib_debug") and config("user_debug").
+		    It's nearly ten past six.
 
-	    The : separated strings are interpreted as signed 32 bit values.
-	    After an optional leading sign a leading zero indicates octal
-	    conversion, and a leading ``0x'' or ``0X'' hexadecimal
-	    conversion.	 Otherwise, decimal conversion is assumed.
+	       This flag disables the reporting of missing calc
+	       startup scripts ($CALCRC).
 
-	    By default, calc_debug is 0, lib_debug is 3 and lib_debug is 0.
 
-	    For more information use the following calc command:
+	  -D calc_debug[:resource_debug:[user_debug]]
+	       Force the initial value of config("calc_debug"),
+	       config("resource_debug") and config("user_debug").
 
-		help config
+	       The : separated strings are interpreted as signed 32
+	       bit values.  After an optional leading sign a leading
+	       zero indicates octal conversion, and a leading ``0x''
+	       or ``0X'' hexadecimal conversion.  Otherwise, decimal
+	       conversion is assumed.
 
-	-e  Ignore any environment variables on startup.  The
-	    getenv() builtin will still return values, however.
+	       By default, calc_debug is 0, resource_debug is 3 and
+	       user_debug is 0.
 
-	-h  Print a help message.  This option implies	-q.  This
-	    is equivalent to the calc command help help.  The help
-	    facility is disabled unless the mode is 5 or 7.  See -m.
+	       For more information use the following calc command:
 
-	-i  Become interactive if possible.  Be default, if calc_cmd
-	    args are given, calc will execute them and exit.  This flag
-	    will cause calc to drop into interactive mode after the
-	    commands are executed.
+		    help config
 
-	    For example:
 
-		calc 2+5
+	  -e   Ignore any environment variables on startup.  The
+	       getenv() builtin will still return values, however.
 
-	    will print the value 7 and exit whereas:
 
-		calc -i 2+5
+	  -h   Print a help message.  This option implies -q.  This is
+	       equivalent to the calc command help help.  The help
+	       facility is disabled unless the mode is 5 or 7.	See
+	       -m.
 
-	    will print the value 7 and prompt the user for more
-	    calc commands.
 
-	-m mode
-	   This flag sets the permission mode of calc.	It
-	   controls the ability for calc to open files and execute
-	   programs. Mode may be a number from 0 to 7.
+	  -i   Become interactive if possible.	Be default, if
+	       calc_cmd args are given, calc will execute them and
+	       exit.  This flag args are given, calc will execute them
+	       and exit.  This flag will cause calc to drop into
+	       interactive mode after the commands are executed.
 
-	   The mode value is interpreted in a way similar to that
-	   of the chmod(1) octal mode:
+	       For example:
 
-		0  do not open any file, do not execute progs
-		1  do not open any file
-		2  do not open files for reading, do not execute progs
-		3  do not open files for reading
-		4  do not open files for writing, do not execute progs
-		5  do not open files for writing
-		6  do not execute any program
-		7  allow everything (default mode)
+		    calc 2+5
 
-	   If one wished to run calc from a privileged user, one
-	   might want to use -m 0 in an effort to make calc more
-	   secure.
+	       will print the value 7 and exit whereas:
 
-	   Mode bits for reading and writing apply only on an
-	   open.  Files already open are not effected. Thus if one
-	   wanted to use the -m 0 in an effort to make calc more
-	   secure, but still wanted to read and write a specific
-	   file, one might want to do in sh, ksh, bash-like shells:
+		    calc -i 2+5
 
-		     calc -m 0 3<a.file
+	       will print the value 7 and prompt the user for more
+	       calc commands.
 
-	   Files presented to calc in this way are opened in an
-	   unknown mode. Calc will attempt to read or write them
-	   if directed.
 
-	   If the mode disables opening of files for reading, then
-	   the startup library scripts are disabled as of -q was
-	   given.  The reading of key bindings is also disabled
-	   when the mode disables opening of files for reading.
+	  -m mode
+	       This flag sets the permission mode of calc.  It
+	       controls the ability for calc to open files and execute
+	       programs.  Mode may be a number from 0 to 7.
 
-	-n  Use the new configuration defaults instead of the old
-	    default classic defaults.  This flag as the same effect
-	    as executing config("all", "newcfg") at startup time.
+	       The mode value is interpreted in a way similar to that
+	       of the chmod(1) octal mode:
 
-	-p  Pipe processing is enabled by use of -p.  For example:
+		    0  do not open any file, do not execute progs
+		    1  do not open any file
+		    2  do not open files for reading, do not execute progs
+		    3  do not open files for reading
+		    4  do not open files for writing, do not execute progs
+		    5  do not open files for writing
+		    6  do not execute any program
+		    7  allow everything (default mode)
 
-		     calc -p '2^21701-1' | fizzbin
+	       If one wished to run calc from a privileged user, one
+	       might want to use -m 0 in an effort to make calc
+	       somewhat more secure.
 
-	    In pipe mode, calc does not prompt, does not print leading
-	    tabs and does not print the initial header.	 The -p flag
-	    overrides -i.
+	       Mode bits for reading and writing apply only on an
+	       open.  Files already open are not effected.  Thus if
+	       one wanted to use the -m 0 in an effort to make calc
+	       somewhat more secure, but still wanted to read and
+	       write a specific file, one might want to do in sh(1),
+	       ksh(1), bash(1)-like shells:
 
-	-q  Disable the use of the $CALCRC startup scripts.
+		    calc -m 0 3<a.file
 
-	-u  Disable buffering of stdin and stdout.
+	       Files presented to calc in this way are opened in an
+	       unknown mode.  Calc will attempt to read or write them
+	       if directed.
 
-	-v  Print calc version number and exit.
+	       If the mode disables opening of files for reading, then
+	       the startup resource files are disabled as of -q was
+	       given.  The reading of key bindings is also disabled
+	       when the mode disables opening of files for reading.
 
-    Without `calc_cmd', calc operates interactively.  If one or more
-    `calc_cmd' are given on the command line, calc will execute them and
-    exit.  If -i is given, calc will attempt to become interactive
-    even of one or more `calc_cmd' are given on the command line.
 
-    Normally on startup, calc attempts to execute a collection of
-    library scripts.  The environment variable $CALCRC (if non-existent
-    then a compiled in value) contains a :  separated list of startup
-    library scripts.  No error conditions are produced if these startup
-    library scripts are not found.
+	  -n   Use the new configuration defaults instead of the old
+	       default classic defaults.  This flag as the same effect
+	       as executing config("all", "newcfg") at startup time.
 
-    If the mode disables opening of files for reading, then the startup
-    library scripts are disabled as of -q was given and $CALCRC as well
-    as the default compiled in value are ignored.
 
-    Filenames are subject to ``~'' expansion (see below).  The
-    environment variable $CALCPATH (if non-existent then a compiled in
-    value) contains a : separated list of search directories.  If a
-    file does not begin with /, ~ or ./, then it is searched for under
-    each directory listed in the $CALCPATH.  It is an error if no such
-    readable file is found.
+	  -p   Pipe processing is enabled by use of -p.	 For example:
 
-    Calc treats all open files, other than stdin, stdout and
-    stderr as files available for reading and writing. One may
-    present calc with an already open file using sh, ksh or bash-like
-    shells is to:
+		    calc -p '2^21701-1' | fizzbin
 
-	calc 3<open_file 4<open_file2
+	       In pipe mode, calc does not prompt, does not print
+	       leading tabs and does not print the initial header.
+	       The -p flag overrides -i.
 
-    For more information use the following calc commands:
 
-       help help
-       help overview
-       help usage
-       help environment
-       help config
+	  -q   Disable the use of the $CALCRC startup scripts.
+
+
+	  -s   By default, all calc_cmd args are evaluated and
+	       executed.  This flag will disable their evaluation and
+	       instead make them available as strings for the argv()
+	       builtin function.
+
+
+	  -u   Disable buffering of stdin and stdout.
+
+
+	  -v   Print the calc version number and exit.
+
+
+	  CALC COMMAND LINE
+
+	  Without calc_cmd, calc operates interactively.  If one or
+	  more calc_cmd are given on the command line and -s is NOT
+	  given, then calc will evaluate and execute them and then
+	  exit.
+
+	  If -i is given, calc will attempt to become interactive even
+	  of one or more calc_cmd are given on the command line.
+
+	  If -s is given, calc will not evaluate any calc_cmd
+	  arguments but instead make them available as strings to the
+	  argv() builtin function.
+
+	  Normally on startup, calc attempts to execute a collection
+	  of resource files.  The environment variable $CALCRC (if
+	  non-existent then a compiled in value) contains a
+	  :  separated list of startup resource files.	No error
+	  conditions are produced if these startup resource file are
+	  not found.
+
+	  If the mode disables opening of files for reading, then the
+	  startup resource files are disabled as of -q was given and
+	  $CALCRC as well as the default compiled in value are
+	  ignored.
+
+	  Filenames are subject to ``~'' expansion (see below).	 The
+	  environment variable $CALCPATH (if non-existent then a
+	  compiled in value) contains a : separated list of search
+	  directories.	If a file does not begin with /, ~ or ./, then
+	  it is searched for under each directory listed in the
+	  $CALCPATH.  It is an error if no such readable file is
+	  found.
+
+	  Calc treats all open files, other than stdin, stdout and
+	  stderr as files available for reading and writing.  One may
+	  present calc with an already open file using sh(1), ksh(1),
+	  bash(1)-like shells is to:
+
+	       calc 3<open_file 4<open_file2
+
+
+	  SHELL SCRIPT MODE
+
+	  If an executable file begins with:
+
+	       #!/usr/local/bin/calc -S [-other_flags ...]
+
+	  the rest of the file will be processed in shell script mode.
+	  Note that -S (UPPER CASE -S) must be the first -flag on the
+	  ``#!'' line.	Any other optional ``-other_flags'' must come
+	  after the -S.
+
+	  In shell script mode the contents of the file are evaluated
+	  and executed as if they were processed by the read command.
+	  Any optional ``-other_flags'' will by parsed first followed
+	  by any arguments given shell script itself.
+
+	  In shell script mode, -s (lower case -s) is always assumed.
+	  In addition, -d and -p are automatically set if -i is not
+	  given.
+
+	  For example, if the file /tmp/mersenne:
+
+	       #!/usr/local/bin/calc -S -q
+	       #
+	       # mersenne - an example of a calc shell script file
+
+	       /* parse args */
+	       if (argv() != 1) {
+		   fprintf(files(2), "usage: %s exp\n", config("program"));
+		   abort "must give one exponent arg";
+	       }
+
+	       /* print the mersenne number */
+	       print "2^": argv(0) : "-1 =", 2^eval(argv(0))-1;
+
+	  is made an executable file by:
+
+	       chmod +x /tmp/mersenne
+
+	  then the command line:
+
+	       /tmp/mersenne 127
+
+	  will print:
+
+	       2^127-1 = 170141183460469231731687303715884105727
+
+	  Note that because -s is assumed in shell script mode and
+	  non-dashed args are made available as strings via the argv()
+	  builtin function.  Therefore:
+
+	       2^eval(argv(0))-1
+
+	  will print the decimal value of 2^n-1 but
+
+	       2^argv(0)-1
+
+	  will not.
+
+For more information use the following calc commands:
+
+   help help
+   help overview
+   help config
+   help argv
+   help environment
+
+## Copyright (C) 1999  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.1 $
+## @(#) $Id: usage,v 29.1 1999/12/14 09:16:10 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/usage,v $
+##
+## Under source code control:	1991/07/21 04:37:25
+## File existed as early as:	1991
+##
+## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/

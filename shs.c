@@ -31,6 +31,12 @@
  * Based on Version 2.11 (09 Mar 1995) from Landon Curt Noll's
  * (http://reality.sgi.com/chongo/) shs hash program.
  *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: shs.c,v 29.1 1999/12/14 09:16:15 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/shs.c,v $
+ *
+ * This file is not covered under version 2.1 of the GNU LGPL.
+ *
  ****
  *
  * The SHS algorithm hashes 32 bit unsigned values, 16 at a time.

@@ -1,37 +1,33 @@
 /*
- * Copyright (c) 1997 by Landon Curt Noll.  All Rights Reserved.
+ * config - configuration routines
  *
- * Permission to use, copy, modify, and distribute this software and
- * its documentation for any purpose and without fee is hereby granted,
- * provided that the above copyright, this permission notice and text
- * this comment, and the disclaimer below appear in all of the following:
+ * Copyright (C) 1999  Landon Curt Noll and David I. Bell
  *
- *	supporting documentation
- *	source copies
- *	source works derived from this source
- *	binaries derived from this source or from derived source
+ * Primary author:  Landon Curt Noll
  *
- * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
- * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
- * EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
- * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
- * USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
- * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
- * PERFORMANCE OF THIS SOFTWARE.
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
  *
- * Prior to calc 2.9.3t9, these routines existed as a calc library called
- * cryrand.cal.	 They have been rewritten in C for performance as well
- * as to make them available directly from libcalc.a.
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
  *
- * Comments, suggestions, bug fixes and questions about these routines
- * are welcome.	 Send EMail to the address given below.
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * Happy bit twiddling,
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: config.h,v 29.2 1999/12/14 19:37:46 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
- *	Landon Curt Noll
- *	http://reality.sgi.com/chongo/
+ * Under source code control:	1995/11/01 22:20:17
+ * File existed as early as:	1995
  *
- * chongo <was here> /\../\
+ * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
  */
 
 
@@ -77,11 +73,15 @@
 #define CONFIG_BLKVERBOSE 27
 #define CONFIG_BLKBASE 28
 #define CONFIG_BLKFMT 29
-#define CONFIG_LIB_DEBUG 30
+#define CONFIG_RESOURCE_DEBUG 30
+#define CONFIG_LIB_DEBUG CONFIG_RESOURCE_DEBUG
 #define CONFIG_CALC_DEBUG 31
 #define CONFIG_USER_DEBUG 32
 #define CONFIG_VERBOSE_QUIT 33
 #define CONFIG_CTRL_D 34
+#define CONFIG_PROGRAM 35
+#define CONFIG_BASENAME 36
+#define CONFIG_VERSION 37
 
 
 /*
@@ -104,7 +104,8 @@
  *	quickhash.c	- config_hash()
  *	hash.c		- hash_value()
  *	config.c	- configs[], oldstd, newstd, setconfig(),
- *			  config_value(), config_cmp()
+ *			  config_value(), config_cmp(),
+ *			  and perhaps config_copy(), config_free()
  *	config.h	- CONFIG_XYZ_SYMBOL (see above)
  */
 struct config {
@@ -139,21 +140,24 @@ struct config {
 	int blkbase;		/* block output base */
 	int blkfmt;		/* block output style */
 	long calc_debug;	/* internal debug, see CALC_DEBUG_XXX below */
-	long lib_debug;		/* library debug, see LIB_DEBUG_XXX below */
+	long resource_debug;	/* resource debug, see RSCDBG_XXX below */
 	long user_debug;	/* user defined debug value: 0 default */
 	BOOL verbose_quit;	/* TRUE => print Quit or abort executed msg */
 	int ctrl_d;		/* see CTRL_D_xyz below */
+	char *program;		/* our name */
+	char *base_name;	/* basename of our name */
+	char *version;		/* calc version string */
 };
 typedef struct config CONFIG;
 
 
 /*
- * lib_debug bit masks
+ * resource_debug bit masks
  */
-#define LIBDBG_STDIN_FUNC   (0x00000001)    /* interactive func define debug */
-#define LIBDBG_FILE_FUNC    (0x00000002)    /* file read func define debug */
-#define LIBDBG_FUNC_INFO    (0x00000004)    /* print extra info for show func */
-#define LIBDBG_MASK	    (0x00000007)
+#define RSCDBG_STDIN_FUNC   (0x00000001)    /* interactive func define debug */
+#define RSCDBG_FILE_FUNC    (0x00000002)    /* file read func define debug */
+#define RSCDBG_FUNC_INFO    (0x00000004)    /* print extra info for show func */
+#define RSCDBG_MASK	    (0x00000007)
 
 
 /*
@@ -182,7 +186,7 @@ extern CONFIG *conf;		/* current configuration */
 extern CONFIG oldstd;		/* backward compatible standard configuration */
 extern CONFIG newstd;		/* new non-backward compatible configuration */
 extern char *calc_debug;	/* !=NULL => value of config("calc_debug") */
-extern char *lib_debug;		/* !=NULL => value of config("lib_debug") */
+extern char *resource_debug;	/* !=NULL => config("resource_debug") value */
 extern char *user_debug;	/* !=NULL => value of config("user_debug") */
 
 

@@ -41,10 +41,13 @@ Configuration parameters
 	    "blkbase"		block output base
 	    "blkfmt"		block output format
 	    "calc_debug"	controls internal calc debug information
-	    "lib_debug"		controls library script debug information
+	    "resource_debug"	controls resource file debug information
 	    "user_debug"	for user defined debug information
 	    "verbose_quit"	TRUE=>print message on empty quit or abort
 	    "ctrl_d"		The interactive meaning of ^D (Control D)
+	    "program"		Read-only calc program or shell script path
+	    "basename"		Read-only basename of the program value
+	    "version"		Read-only calc version
 
     The "all" config value allows one to save/restore the configuration
     set of values.  The return of:
@@ -136,7 +139,8 @@ Detailed config descriptions
 	8: the opcodes for a new functions are displayed when the function
 	   is successfully defined.
 
-    See also lib_debug, calc_debug and user_debug below for more debug levels.
+    See also resource_debug, calc_debug and user_debug below for more
+    debug levels.
 
     =-=
 
@@ -479,9 +483,9 @@ Detailed config descriptions
     that test its operation, or collect or display information that
     might be useful for debug purposes.	 Much of the output from these
     will make sense only to calc wizards.   Zero value (the default for
-    both oldstd and newstd) of config("lib_calc") corresponds to switching
-    off all these routines.  For nonzero value, particular bits
-    currently have the following meanings:
+    both oldstd and newstd) of config("resource_debug") corresponds to
+    switching off all these routines.  For nonzero value, particular
+    bits currently have the following meanings:
 
 	n		Meaning of bit n of config("calc_debug")
 
@@ -512,16 +516,17 @@ Detailed config descriptions
 
     =-=
 
+    config("resource_debug", bitflag)
     config("lib_debug", bitflag)
 
-    The "lib_debug" parameter is intended for controlling the possible
+    The "resource_debug" parameter is intended for controlling the possible
     display of special information relating to functions, objects, and
     other structures created by instructions in calc scripts.
-    Zero value of config("lib_debug") means that no such information
+    Zero value of config("resource_debug") means that no such information
     is displayed.  For other values, the non-zero bits which currently
     have meanings are as follows:
 
-	n		Meaning of bit n of config("lib_debug")
+	n		Meaning of bit n of config("resource_debug")
 
 	0	When a function is defined, redefined or undefined at
 		interactive level, a message saying what has been done
@@ -534,13 +539,16 @@ Detailed config descriptions
 	2	Show func will display more information about a functions
 		arguments as well as more argument sdummary information.
 
-    The value for config("lib_debug") in both oldstd and newstd is 3,
+    The value for config("resource_debug") in both oldstd and newstd is 3,
     but if calc is invoked with the -d flag, its initial value is zero.
-    Thus, if calc is started without the -d flag, until config("lib_debug")
+    Thus, if calc is started without the -d flag, until config("resource_debug")
     is changed, a message will be output when a function is defined
     either interactively or during the reading of a file.
 
-    By default, "lib_debug" is 3.  The -d flag changes this default to 0.
+    The name config("lib_debug") is equivalent to config("resource_debug")
+    and is included for backward compatibility.
+
+    By default, "resource_debug" is 3.	The -d flag changes this default to 0.
     The initial value may be overridden by the -D command line option.
 
     =-=
@@ -549,7 +557,7 @@ Detailed config descriptions
 
     The "user_debug" is provided for use by users.  Calc ignores this value
     other than to set it to 0 by default (for both "oldstd" and "newstd").
-    No calc code or shipped library should change this value.  Users
+    No calc code or standard resource should change this value.	 Users
     should feel free to use it in any way.   In particular they may
     use particular bits for special purposes as with "calc_debug", or
     they may use it to indicate a debug level with larger values
@@ -637,3 +645,65 @@ Detailed config descriptions
 	config("ctrl_d", "never_eof"),;
 
     to their ~/.calcrc startup file to prevent ^D from causing calc to exit.
+
+    =-=
+
+    config("program")		<== NOTE: This is a read-only config value
+
+    The full path to the calc program, or the calc shell script can be
+    obtained by:
+
+	config("program")
+
+    This config parameter is read-only and cannot be set.
+
+    =-=
+
+    config("basename")		<== NOTE: This is a read-only config value
+
+    The calc program, or the calc shell script basename can be obtained by:
+
+	config("basename")
+
+    The config("basename") is the config("program") without any leading
+    path.  If config("program") has a / in it, config("basename") is
+    everything after the last /, otherwise config("basename") is the
+    same as config("program").
+
+    This config parameter is read-only and cannot be set.
+
+    =-=
+
+    config("version")		<== NOTE: This is a read-only config value
+
+    The version string of the calc program can be obtained by:
+
+	config("version")
+
+    This config parameter is read-only and cannot be set.
+
+## Copyright (C) 1999  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.1 $
+## @(#) $Id: config,v 29.1 1999/12/14 09:15:44 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/config,v $
+##
+## Under source code control:	1991/07/21 04:37:17
+## File existed as early as:	1991
+##
+## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/

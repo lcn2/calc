@@ -27,6 +27,12 @@
  * USE,	 DATA  OR  PROFITS, WHETHER IN AN ACTION OF CONTRACT,
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: shs.h,v 29.1 1999/12/14 09:16:15 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/shs.h,v $
+ *
+ * This file is not covered under version 2.1 of the GNU LGPL.
  */
 
 
