@@ -37,9 +37,10 @@ be useful!
 
 If you write something that you think is useful, please send it to:
 
-    calc-tester at postofc dot corp dot sgi dot com
+    calc-contrib at asthe dot com
 
-    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
 
 By convention, a resource file only defines and/or initializes functions,
 objects and variables.	(The regress.cal and testxxx.cal regression test
@@ -722,12 +723,12 @@ xx_print.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: README,v 29.1 1999/12/14 09:15:30 chongo Exp $
+## @(#) $Revision: 29.2 $
+## @(#) $Id: README,v 29.2 2000/06/07 14:02:25 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/README,v $
 ##
 ## Under source code control:	1990/02/15 01:50:32
 ## File existed as early as:	before 1990
 ##
-## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

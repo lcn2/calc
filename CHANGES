@@ -1,4 +1,39 @@
-The following are the changes from calc version 2.11.1 to date:
+The following are the changes from calc version 2.11.2t0 to date:
+
+    Fixed a bug whereby help files are not displayed correctly on
+    systems such as NetBSD 1.4.1.  Thanks to a fix from Jakob Naumann.
+
+    Changed EMail addresses to use asthe.com.  Changed URLs to use
+    www.isthe.com.  NOTE: The EMail address uses 'asthe' and the web
+    site URL uses 'isthe'.
+
+    Using calc-bugs at asthe dot com for calc bug reports,
+    calc-contrib at asthe dot com for calc contributions,
+    calc-tester-request at asthe dot com for requests to join calc-tester and
+    calc-tester at asthe dot com for the calc tester mailing list.
+
+    Replaced explicit EMail addresses found this file with the <user at
+    site dot domain> notation to reduce the potential for those folks
+    to be spammed.
+
+    The Makefile attempts to detect the existence of /dev/urandom with -e
+    instead of the less portable -c.
+
+    Misc Makefile fixes.
+
+
+The following are the changes from calc version 2.11.1t3 to 2.11.1t4:
+
+    Removed non-portable strerror() tests (3715, 3724 and 3728) from
+    calc/regress.cal.
+
+    Fixed missing strdup() from func.c problem.
+
+    Fixed a problem that would have come up on a very long #! command line
+    if the system permitted it.
+
+
+The following are the changes from calc version 2.11.1 to 2.11.1t2.2:
 
     Placed calc under version 2.1 of the GNU Lesser General Public License.
 
@@ -61,9 +96,9 @@ The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
 
     Fixed some bugs relaing to '// and %' in combination with some
     of the the rounding modes based on a patch from Ernest Bowen
-    <ernie@turing.une.edu.au>.
+    <ernie at turing dot une dot edu dot au>.
 
-    A patch from Klaus Alexander Seistrup <klaus@seistrup.dk>, when
+    A patch from Klaus Alexander Seistrup <klaus at seistrup dot dk>, when
     used in combination with the GNU-readline facility, will prevent
     it from saving empty lines.
 
@@ -77,7 +112,7 @@ The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
 
     Fixed the long standing issue first reported by Saber-C in the
     domul() function in zmil.c thanks to a patch by Ernest Bowen
-    <ernie@turing.une.edu.au>.
+    <ernie at turing dot une dot edu dot au>.
 
     Added zero dimensional matrices.  A zero dimensional matrix is defined as:
 
@@ -86,15 +121,15 @@ The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
     Updated the help/mat file to reflect the current status of matrices
     including zero dimensional matrices.
 
-    Added indices() builtin function as written by Ernest Bowen
-    <ernie@turing.une.edu.au> developed from an idea of Klaus Seistrup
-    <klaus@seistrup.dk>.  See help/indices for details.
+    Added indices() builtin function as written by Ernest Bowen <ernie
+    at turing dot une dot edu dot au> developed from an idea of Klaus
+    Seistrup <klaus at seistrup dot dk>.  See help/indices for details.
 
     Fixed a number of insure warnings as reported by Michel van der List
-    <vanderlistmj@sbphrd.com>.
+    <vanderlistmj at sbphrd dot com>.
 
     Fixed a number of help file typos discovered by Klaus Alexander
-    Seistrup <klaus@seistrup.dk>.
+    Seistrup <klaus at seistrup dot .dk>.
 
     Removed REGRESS_CAL as a Makefile variable.
 
@@ -102,9 +137,9 @@ The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
     one to print the list of distribution files that are used (but not
     built) to form either the libcalc.a or the libcustcalc.a library.
 
-    Added a patch from Randall.Gray@marine.csiro.au to make ^D terminate,
-    but *only* if the line it is on is completely empty.  Removed lib/altbind
-    and removed the CALCBINDINGS Makefile variable.
+    Added a patch from <Randall.Gray at marine dot csiro dot au> to make
+    ^D terminate, but *only* if the line it is on is completely empty.
+    Removed lib/altbind and removed the CALCBINDINGS Makefile variable.
 
     A new config("ctrl_d") value controls how the ``delete_char'', which
     by default is bound to ^D (Control D), will or will not exit calc:
@@ -147,7 +182,8 @@ The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
     instead of returning integers.  One cannot use integers to set
     these values, so returning integers was useless.
 
-    Applied the dangling name fix from Ernest Bowen <ernie@turing.une.edu.au>.
+    Applied the dangling name fix from Ernest Bowen
+    <ernie at turing dot une dot edu dot au>.
 
     Show func prints function on order of their indices, and with
     config("lib_debug") & 4 == 4  some more details about the functions
@@ -168,7 +204,7 @@ The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
     hash(X) and hash(Y).
 
     Added support for config("ctrl_d") to the GNU-readline interface
-    as written by Klaus Alexander Seistrup <klaus@seistrup.dk>.
+    as written by Klaus Alexander Seistrup <klaus at seistrup dot dk>.
 
 	Currently, the config("ctrl_d", "virgin_eof") is not fully
 	supported.  Under GNU-readline, it acts the same way as
@@ -186,8 +222,8 @@ The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
 
     Fixed the make depend rule.
 
-    Applied Ernest Bowen's <ernie@turing.une.edu.au> complex function
-    power(), exp() and transcendental function patch:
+    Applied Ernest Bowen's <ernie at turing dot une dot edu dot au>
+    complex function power(), exp() and transcendental function patch:
 
 	Calc will return a "too-large argument" error-value for exp(x,
 	epsilon) if re(x) >= 2^30 or if an estimate indicates that the
@@ -388,12 +424,12 @@ The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
 
     Fixed portability issue in seed.c relating to /dev/urandom and ustat.
 
-    Added a fix from Martin Buck <mb@netwings.ch> to detect when
+    Added a fix from Martin Buck <mb at netwings dot ch> to detect when
     calc aborts early instead of completing the regression test.
     Now 'make chk' will require the last line of calc output to
     end in the string ``Ending regression tests''.
 
-    Added a patch from Martin Buck <mb@netwings.ch> to allow use of
+    Added a patch from Martin Buck <mb at netwings dot ch> to allow use of
     GNU-readline.  Note that GNU-readline is not shipped with calc.
     His patch only provides the hooks to use it.  One must comment out:
 
@@ -421,10 +457,10 @@ The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
     the internal opcodes needed to declare them.
 
     Fixed a permission problem on ranlib-ed *.a files that was reported
-    by Michael Somos <somos@grail.cba.csuohio.edu>.
+    by Michael Somos <somos at grail dot cba dot csuohio dot edu>.
 
-    Added patch by Klaus Alexander Seistrup <klaus@seistrup.dk> related
-    to GNU-readline:
+    Added patch by Klaus Alexander Seistrup <klaus at seistrup dot dk>
+    related to GNU-readline:
 
 	+ enable calc specific bindings in ~/.inputrc
 	+ save a copy of your session to disk and reload them next
@@ -446,7 +482,7 @@ The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
     directly under ${LIBDIR} will be removed.
 
     Added the piforever() funcion to lib/pi.cal.  It was written by
-    Klaus Alexander Seistrup <klaus@seistrup.dk> and was inspired by
+    Klaus Alexander Seistrup <klaus at seistrup dot dk> and was inspired by
     an algorithm conceived by Lambert Meertens.	 (See also the ABC
     Programmer's Handbook, by Geurts, Meertens & Pemberton, published
     by Prentice-Hall (UK) Ltd., 1990.)	The piforever() funcion prints
@@ -528,7 +564,7 @@ The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
 	    Unknown error 9999
 
     Fixed some insure code inspection tool issues that were discovered
-    and investigated by Michel van der List <vanderlistmj@sbphrd.com>.
+    and investigated by Michel van der List <vanderlistmj at sbphrd dot com>.
 
     Made an effort to ensure that the v_subtype of VALUES are initialized
     to V_NOSUBTYPE thruout the source code.
@@ -550,7 +586,7 @@ The following are the changes from calc version 2.11.0t8 to 2.11.0t8.9:
     Improved how calc internally dealt with reading EOF or '\0' characters.
 
     Calc now allows multiple defines to occur on the same line:
-    (Thanks goes to Ernest Bowen <ernie@turing.une.edu.au>)
+    (Thanks goes to Ernest Bowen <ernie at turing dot une dot edu dot au>)
 
 	define f8300(x) = x^2; define g8300(x) = 1 - x;
 
@@ -588,7 +624,7 @@ The following are the changes from calc version 2.11.0t8 to 2.11.0t8.9:
     builtin produced FNV hash values that did not match the FNV-1
     algorithm as specified in:
 
-	http://reality.sgi.com/chongo/tech/comp/fnv/index.html
+	http://www.isthe.com/chongo/tech/comp/fnv/index.html
 
     Removed an unused argument in the function getbody() in codegen.c.
 
@@ -613,11 +649,11 @@ The following are the changes from calc version 2.11.0t8 to 2.11.0t8.9:
 
     Added FNV hash to the regression test suite.
 
-    Added Ernest Bowen's <ernie@turing.une.edu.au> fix for the
+    Added Ernest Bowen's <ernie at turing dot une dot edu dot au> fix for the
     FNV regression test of the hash() builtin function.
 
-    Added Ernest Bowen's <ernie@turing.une.edu.au> patch to improve
-    the way config("calc_debug").  Now the lower 4 bits of the
+    Added Ernest Bowen's <ernie at turing dot une dot edu dot au> patch to
+    improve the way config("calc_debug").  Now the lower 4 bits of the
     config("calc_debug") parameter have the following meaning:
 
        n	       Meaning of bit n of config("calc_debug")
@@ -688,8 +724,8 @@ The following are the changes from calc version 2.11.0t8 to 2.11.0t8.9:
     Updated calc man page and help/usage file to reflect recent
     command line changes.
 
-    Fixed a bug, reported by Michael Somos <somos@grail.cba.csuohio.edu>,
-    which prevented calc -m from being used.
+    Fixed a bug, reported by Michael Somos <somos at grail dot cba dot
+    csuohio dot edu>, which prevented calc -m from being used.
 
     Fixed misc compiler warnings.
 
@@ -697,7 +733,7 @@ The following are the changes from calc version 2.11.0t8 to 2.11.0t8.9:
 The following are the changes from calc version 2.11.0t7 to 2.11.0t7.5:
 
     Calc has some new command line flags / command line meaning:
-    (Thanks goes to Ernest Bowen <ernie@turing.une.edu.au>)
+    (Thanks goes to Ernest Bowen <ernie at turing dot une dot edu dot au>)
 
 	-i	Go into interactive mode if possible.
 
@@ -837,7 +873,7 @@ The following are the changes from calc version 2.11.0t7 to 2.11.0t7.5:
 
     The main calc URL is now:
 
-	http://reality.sgi.com/chongo/tech/comp/calc/
+	http://www.isthe.com/chongo/tech/comp/calc/
 
     Misc calc man page fixes.
 
@@ -868,7 +904,7 @@ The following are the changes from calc version 2.11.0t1 to 2.11.0t6.3:
     Made some of the source a little more ++ friendly.	We are NOT
     porting calc to C++!  We will NOT support C++ compilation of calc.
     Calc will written ANSI C.  We just compiled with a suggestion from
-    Love-Jensen, John <jlove-jensen@globalmt.com> to make calc's version
+    Love-Jensen, John <jlove-jensen at globalmt dot com> to make calc's version
     of C a little more to C++ compilers.  We are simply avoiding symbols
     such as new or try for example.
 
@@ -880,14 +916,14 @@ The following are the changes from calc version 2.11.0t1 to 2.11.0t6.3:
     Reordered cc Makefile variable sets in the main Makefile.
 
     Fixed a bug in hnrmod() and applied a fix that was reported by Ernest
-    Bowen <ernie@turing.une.edu.au>.  Added regression tests 1103 to
-    1112 to confirm the fix.
+    Bowen <ernie at turing dot une dot edu dot au>.  Added regression tests
+    1103 to 1112 to confirm the fix.
 
     Fixed a bug in version.c related to MINOR_PATCHs in both the
     empty and non-empty MINOR_PATCH cases.
 
     Fixed malloc and bad storage issues reported by Michel van der List
-    <vanderlistmj@sbphrd.com>.
+    <vanderlistmj at sbphrd dot com>.
 
     Fixed some problems related to path processing while opening files.
     Under extreme cases, an excessively long filename or CALCPATH value
@@ -909,10 +945,10 @@ The following are the changes from calc version 2.11.0t1 to 2.11.0t6.3:
     section to the main Makefile.
 
     Fixed a string handling bug discovered by Dr.D.J.Picton
-    <dave@aps5.ph.bham.ac.uk> in the custom demo code.
+    <dave at aps5 dot ph dot bham dot ac dot uk> in the custom demo code.
 
     Fixed a bug in the hnrmod() builtin that was discovered by
-    Ernest Bowen <ernie@neumann.une.edu.au>.
+    Ernest Bowen <ernie at turing dot une dot edu dot au>.
 
     Added FORCE_STDC symbol.  When defined it will force __STDC__ like
     conditions.	 Thus for compilers with as the Solaris cc compiler
@@ -957,11 +993,11 @@ The following are the changes from calc version 2.11.0t1 to 2.11.0t6.3:
     Added seed() builtin to return a 64 bit seed for a
     pseudo-random generator.
 
-    Added functionality from Ernest Bowen <ernie@turing.une.edu.au> to
-    permit nested "= {...}" assignments for lists as well as matrices
-    and objects.  Now one can have a list, matrix or object, some of
-    whose elements are lists, matrices or objects, to any depth of
-    recursion, and assign values to any number of particular elements
+    Added functionality from Ernest Bowen <ernie at turing dot une dot
+    edu dot au> to permit nested "= {...}" assignments for lists as well
+    as matrices and objects.  Now one can have a list, matrix or object,
+    some of whose elements are lists, matrices or objects, to any depth
+    of recursion, and assign values to any number of particular elements
     by an appropriate "initialization" expression.  For example:
 
 	A = mat[2] = {list(1,2), list(3,4,list(5,6))};
@@ -983,14 +1019,14 @@ The following are the changes from calc version 2.11.0t1 to 2.11.0t6.3:
     Added custom function custom("pzasusb8", n) and lib/pzasusb8.cal based on
     Ernest Bowen's diagnostic patch.
 
-    Thanks to the efforts of Ernest Bowen <ernie@neumann.une.edu.au> and
-    Dr.D.J.Picton <dave@aps5.ph.bham.ac.uk>, a nasty endian-ness bug
-    in the sha and sha1 hash functions that showed up on machines such
-    as the Sparc was fixed.
+    Thanks to the efforts of Ernest Bowen <ernie at turing dot une dot
+    edu dot au> and Dr.D.J.Picton <dave at aps5 dot ph dot bham dot ac
+    dot uk>, a nasty endian-ness bug in the sha and sha1 hash functions
+    that showed up on machines such as the Sparc was fixed.
 
-    Added functionality from Ernest Bowen <ernie@turing.une.edu.au>
-    to give arguments as well as function names after definitions when
-    config("lib_debug") >= 0.
+    Added functionality from Ernest Bowen <ernie at turing dot une
+    dot edu dot au> to give arguments as well as function names after
+    definitions when config("lib_debug") >= 0.
 
     Removed if (config("lib_debug") >= 0) { ... } the ends of most
     of the calc library scripts because it was redundant with the
@@ -1015,12 +1051,12 @@ The following are the changes from calc version 2.11.0t1 to 2.11.0t6.3:
     Increased the maximum number of object types that one can define
     from 10 to 128.
 
-    Added a patch from Ernest Bowen <ernie@turing.une.edu.au>
-    to correctly hash a V_STR value-type that has an \0 byte
+    Added a patch from Ernest Bowen <ernie at turing dot une dot edu
+    dot au> to correctly hash a V_STR value-type that has an \0 byte
     inside it.
 
-    A patch from Ernest Bowen <ernie@turing.une.edu.au> now defines
-    special meaning to the first 2 bits of config("lib_debug"):
+    A patch from Ernest Bowen <ernie at turing dot une dot edu dot au> now
+    defines special meaning to the first 2 bits of config("lib_debug"):
 
 	bit 0 set => messages printed when inputisterminal
 	bit 1 set => messages printed when reading from a file
@@ -1062,10 +1098,11 @@ The following are the changes from calc version 2.10.3t5.38 to 2.11.3t5.46:
     Fixed previously reported bug in popcnt() in relation to . values.
 
     Calc man page changes per suggestion from Martin Buck
-    <Martin-2.Buck@student.uni-ulm.de>.	 The calc man page is
+    <Martin-2.Buck at student dot uni-ulm dot de>.  The calc man page is
     edited with a few more parameters from the Makefile.
 
-    Misc Makefile changes per Martin Buck <Martin-2.Buck@student.uni-ulm.de>.
+    Misc Makefile changes per Martin Buck <Martin-2.Buck at student dot
+    uni-ulm dot de>.
 
     Removed trailing blanks from files.
 
@@ -1123,7 +1160,7 @@ The following are the changes from calc version 2.10.3t5.34 to 2.10.3t5.37:
     Since "make chk" pipes the regression output to awk, we cannot
     assume that stdout and stderr are ttys.  Tests #5985 and #5986
     have been removed for this reason.	(thanks to Martin Buck
-    <Martin-2.Buck@student.uni-ulm.de> for this report)
+    <Martin-2.Buck at student dot uni-ulm dot de> for this report)
 
     Fixed the order of prints in regress.cal.  By convention, a print
     of a test line happens after the test.  This is because function
@@ -1147,8 +1184,8 @@ The following are the changes from calc version 2.10.3t5.34 to 2.10.3t5.37:
 
     Removed trailing blanks from files.
 
-    Ernest Bowen <ernie@turing.une.edu.au> sent in the following patch
-    which is described in the next 34 points:
+    Ernest Bowen <ernie at turing dot une dot edu dot au> sent in the
+    following patch which is described in the next 34 points:
 
     (0) In the past:
 
@@ -2697,7 +2734,8 @@ The following are the changes from calc version 2.10.3t0 to 2.10.3t2:
     Fixed a casting problem in label.c.
 
     A lot of work was performed on the code generation by Ernest Bowen
-    <ernie@neumann.une.edu.au>.	 Declarations no longer need to precese code:
+    <ernie at turing dot une dot edu dot au>.	 Declarations no longer
+    need to precese code:
 
 	define f(x) {
 		local i = x^2;
@@ -2854,8 +2892,8 @@ The following are the changes from calc version 2.10.2t33 to 2.10.2t34:
 
     Fixed a bug related to fact().
 
-    Thanks to Ernest Bowen <ernie@neumann.une.edu.au>, for two or three
-    arguments,
+    Thanks to Ernest Bowen <ernie at turing dot une dot edu dot au>,
+    for two or three arguments,
 
 	    search(x, val, start);
 	    rsearch(x, val, start);
@@ -2963,7 +3001,7 @@ The following are the changes from calc version 2.10.2t25 to 2.10.2t32:
     Added pix.cal, a slow painful but interesting way to compute pix(x).
 
     Confusion over the scope of static and global values has been reduced
-    by a patch from Ernest Bowen <ernie@neumann.une.edu.au>.
+    by a patch from Ernest Bowen <ernie at turing dot une dot edu dot au>.
 
 	The change introduced by the following patch terminates the
 	scope of a static variable at any static declaration with the
@@ -3161,10 +3199,10 @@ The following are the changes from calc version 2.10.2t4 to 2.10.2t24:
 	> demo()
 
      Added a new trace option for display of links to real and complex
-     numbers.  This is activated by config("trace", 4).	 The printing
-     of a real number is immediately followed by "#" and the number of
-     links to that number; complex numbers are printed in the same
-     except for having "##" instead of "#".  <ernie@neumann.une.edu.au>
+     numbers.  This is activated by config("trace", 4).  The printing of
+     a real number is immediately followed by "#" and the number of links
+     to that number; complex numbers are printed in the same except for
+     having "##" instead of "#".  <ernie at turing dot une dot edu dot au>
 
      The number of links for a number value is essentially the number of value
      locations at which it is either stored or deemed to be stored.  Here a
@@ -3584,9 +3622,9 @@ The following are the changes from calc version 2.10.1t21 to 2.10.2t0:
 
     All builtin functions have help files!  While a number need cleanup
     and some of the LIMITS, LIBRARY and SEE ALSO sections need fixing
-    (or are missing), most of it is there.  A Big round of thanks goes
-    to <ernie@neumann.une.edu.au> for his efforts in initial write-ups
-    for many of these files!
+    (or are missing), most of it is there.  A Big round of thanks goes to
+    <ernie at turing dot une dot edu dot au> for his efforts in initial
+    write-ups for many of these files!
 
     The recognition of '\' as an escape character in the format argument
     of printf() has been dropped.  Thus:
@@ -3594,7 +3632,7 @@ The following are the changes from calc version 2.10.1t21 to 2.10.2t0:
 	printf("\\n");
 
     will print the two-character string "\n" rather than the a
-    one-character carriage return.  <ernie@neumann.une.edu.au>
+    one-character carriage return.  <ernie at turing dot une dot edu dot au>
 
     Missing args to printf-like functions will be treated as null values.
 
@@ -3614,10 +3652,10 @@ The following are the changes from calc version 2.10.1t21 to 2.10.2t0:
 	b = "print 27+"
 	eval(b)
 
-    has been fixed.  <ernie@neumann.une.edu.au>
+    has been fixed.  <ernie at turing dot une dot edu dot au>
 
     Fixed bugs in zio.c which caused eval(str(x)) == x to fail
-    in non-real modes such as "oct".  <ernie@neumann.une.edu.au>
+    in non-real modes such as "oct".  <ernie at turing dot une dot edu dot au>
 
     The following:
 
@@ -3628,12 +3666,12 @@ The following are the changes from calc version 2.10.1t21 to 2.10.2t0:
 	for (i = 1; i < 10; i++) print i^2,;
 
     The show globals will print '...' in the middle of large values.
-    <ernie@neumann.une.edu.au>
+    <ernie at turing dot une dot edu dot au>
 
     The param(n) builtin, then n > 0, returns the address rather than
     the value of the n-th argument to save time and memory usage.  This
     is useful when a matrix with big number entries is passed as an arg.
-    <ernie@neumann.une.edu.au>
+    <ernie at turing dot une dot edu dot au>
 
     The param(n) builtin, then n > 0, may be used as an lvalue:
 
@@ -3658,7 +3696,7 @@ The following are the changes from calc version 2.10.1t20 to 2.10.1t20:
 
     Changes made in preparation for Blum Blum Shub random number generator.
 
-    REDC bug fixes: <ernie@neumann.une.edu.au>
+    REDC bug fixes: <ernie at turing dot une dot edu dot au>
 
 	Fixed yet another bug in zdiv which occasionally caused the "top digit"
 	of a nonzero quotient to be zero.
@@ -3666,29 +3704,31 @@ The following are the changes from calc version 2.10.1t20 to 2.10.1t20:
 	Fixed a bug in zredcmul() where a rarely required "topdigit" is
 	sometimes lost rather than added to the appropriate carry.
 
-    A new function zredcmodinv(ZVALUE z, ZVALUE *res) has been defined for
-    evaluating rp->inv in zredcalloc().	 <ernie@neumann.une.edu.au>
+    A new function zredcmodinv(ZVALUE z, ZVALUE *res) has been defined
+    for evaluating rp->inv in zredcalloc().  <ernie at turing dot une
+    dot edu dot au>
 
-    New functions zmod5(ZVALUE *zp) and zmod6(ZVALUE z, ZVALUE *res) have
-    been defined to give O(N^1.585)-runtime evaluation of z % m for
-    large N-word m.  These require m and BASE^(2*N) // m to have been
-    stored at named locations lastmod, lastmodinv.  zmod5() is essentially
-    for internal use by zmod6() and zpowermod().  <ernie@neumann.une.edu.au>
+    New functions zmod5(ZVALUE *zp) and zmod6(ZVALUE z, ZVALUE *res)
+    have been defined to give O(N^1.585)-runtime evaluation of z % m
+    for large N-word m.  These require m and BASE^(2*N) // m to have
+    been stored at named locations lastmod, lastmodinv.  zmod5() is
+    essentially for internal use by zmod6() and zpowermod().  <ernie at
+    turing dot une dot edu dot au>
 
     Changes to rcmul(x,y,m) so that the result is always in [0, m-1].
-    <ernie@neumann.une.edu.au>
+    <ernie at turing dot une dot edu dot au>
 
     Changes to some of the detail of zredcmul() so that it should run slightly
     faster.  Also changes to zredcsq() in the hope that it might achieve
     something like the improvement in speed of x^2 compared with x * x.
-    <ernie@neumann.une.edu.au>
+    <ernie at turing dot une dot edu dot au>
 
     A new "bignum" algorithm for evaluating pmod(x,k,m) when
     N >= config("pow2").  For the multiplications and squarings
     modulo m, or their equivalent, when N >= config("redc2"),
     calc has used evaluations correponding to rcout(x * y, m),
     for which the runtime is essentially that of three multiplications.
-    <ernie@neumann.une.edu.au>
+    <ernie at turing dot une dot edu dot au>
 
     Yet more additions to the regress.cal test suite.
 
@@ -3697,24 +3737,24 @@ The following are the changes from calc version 2.10.1t20 to 2.10.1t20:
     Plugs some potential memory leaks in definitions in func.c.
     Expressions such as qlink(vals[2]) in some circumstances are
     neither qfreed nor returned as function values.
-    <ernie@neumann.une.edu.au>
+    <ernie at turing dot une dot edu dot au>
 
     The nextcand() and prevcand() functions handle modval, modulus
     and skip by using ZVALUE rather than ZVALUE * and dropping
-    the long modulus, etc.  <ernie@neumann.une.edu.au>
+    the long modulus, etc.  <ernie at turing dot une dot edu dot au>
 
     Changed a couple of occurrences of itoq(1) or itoq(0) to &_qone_
-    and &_qzero_.  <ernie@neumann.une.edu.au>
+    and &_qzero_.  <ernie at turing dot une dot edu dot au>
 
     In definition of f_primetest, changed ztolong(q2->num) to ztoi(q2->num)
     so that the sign of count in ptest(n, count, skip) is not lost; and
     ztolong(q3->num) to q3->num so that skip can be any integer.
-    <ernie@neumann.une.edu.au>
+    <ernie at turing dot une dot edu dot au>
 
     In zprime.c, in definition of small_factor(), adds "&& *tp != 1" to
     the exit condition in the for loop so that searching for a factor
     will continue beyond the table of primes, as required for e.g.
-    factor(2^59 - 1).  <ernie@neumann.une.edu.au>
+    factor(2^59 - 1).  <ernie at turing dot une dot edu dot au>
 
     Changed zprimetest() so that skip in ptest(n, count, skip)
     determines the way bases for the tests are selected.  Neg values of
@@ -3728,23 +3768,24 @@ The following are the changes from calc version 2.10.1t20 to 2.10.1t20:
     to 3/4 as 6/8 or 9/12, etc.	 A simple summary of the way negative n
     is treated is "the sign is ignored". E.g. isprime(-97) and
     nextprime(-97) now return the same as isprime(97) and nextprime(97).
-    <ernie@neumann.une.edu.au>
+    <ernie at turing dot une dot edu dot au>
 
 
 The following are the changes from calc version 2.10.1t11 to 2.10.1t19:
 
     Added many more regression tests to lib/regress.cal.  Some
-    due to <ernie@neumann.une.edu.au>.
+    due to <ernie at turing dot une dot edu dot au>.
 
-    Added many help files, most due to <ernie@neumann.une.edu.au>.
+    Added many help files, most due to <ernie at turing dot une dot edu dot au>.
 
-    Fixed exp() and ln() so that when they return a complex value with a
-    zero imaginary component, isreal() is true.	 <ernie@neumann.une.edu.au>
+    Fixed exp() and ln() so that when they return a complex value with
+    a zero imaginary component, isreal() is true.  <ernie at turing dot
+    une dot edu dot au>
 
-    Fixed cast problem in byteswap.c.  <ernie@neumann.une.edu.au>
+    Fixed cast problem in byteswap.c.  <ernie at turing dot une dot edu dot au>
 
     Fixed memory leak problem where repeated assignments did not
-    free the previous value.  <ernie@neumann.une.edu.au>
+    free the previous value.  <ernie at turing dot une dot edu dot au>
 
     Complex number ordering/comparison has been changed such that:
 
@@ -3799,11 +3840,12 @@ The following are the changes from calc version 2.10.1t11 to 2.10.1t19:
     Added quo(x,y,rnd) and mod(x,y,rnd) to give function interfaces
     to // and % with rounding mode arguments.  Extended these functions
     to work for list-values, complex numbers and matrices.
-    <ernie@neumann.une.edu.au>
+    <ernie at turing dot une dot edu dot au>
 
-    For integer x, cfsim(x,8) returns 0.  <ernie@neumann.une.edu.au>
+    For integer x, cfsim(x,8) returns 0.
+    <ernie at turing dot une dot edu dot au>
 
-    Fixed config("leadzero").  <ernie@neumann.une.edu.au>
+    Fixed config("leadzero").  <ernie at turing dot une dot edu dot au>
 
     Set config("cfsim",8) by default (in "oldstd").  Setup initial idea for
     config("all", "newstd") to be the default with the following changes:
@@ -3825,7 +3867,8 @@ The following are the changes from calc version 2.10.1t11 to 2.10.1t19:
     SWAP_HALF_IN_DEV and SWAP_HALF_IN_STSIZE.
 
     Added sec(), csc(), cot(), sech(), csch(), coth(), asec(), acsc(),
-    acot(), asech(), acsch() and acoth() builtins. <ernie@neumann.une.edu.au>
+    acot(), asech(), acsch() and acoth() builtins. <ernie at turing dot
+    une dot edu dot au>
 
     The initmasks() call is no longer needed.  The bitmask[] array
     is a compiled into zmath.c directly.
@@ -3862,10 +3905,12 @@ The following are the changes from calc version 2.10.1t11 to 2.10.1t19:
 		/*NOTREACHED*/
 	}
 
-    The ploy() function can take a list of coefficients.  See
-    the help/poly file.	 Added poly.c.	<ernie@neumann.une.edu.au>
+    The ploy() function can take a list of coefficients.  See the
+    help/poly file.  Added poly.c.  <ernie at turing dot une dot edu
+    dot au>
 
-    Fixes and performance improvemtns to det().	 <ernie@neumann.une.edu.au>
+    Fixes and performance improvemtns to det().  <ernie at turing dot
+    une dot edu dot au>
 
     Renamed atoq() and atoz() to str2q() and str2z() to avoid conflicts
     with libc function names.
@@ -3876,7 +3921,7 @@ The following are the changes from calc version 2.10.1t11 to 2.10.1t19:
     long long or with LONGLONG_BITS=0.
 
     Added error() and iserror() to generate a value of a given error type.
-    See help/error for details.	 <ernie@neumann.une.edu.au>
+    See help/error for details.	 <ernie at turing dot une dot edu dot au>
 
     Added singular forms of help files.	 For example one can now get
     help for binding, bug, change, errorcode and type.
@@ -3885,22 +3930,23 @@ The following are the changes from calc version 2.10.1t11 to 2.10.1t19:
     mod(x, md, 16).  The old mmin(x, md) required md to be a positive
     integer and x to be an integer.  Now md can be any real number; x
     can be real, complex, or a matrix or list with real elements, etc.
-    <ernie@neumann.une.edu.au>
+    <ernie at turing dot une dot edu dot au>
 
     The builtin avg(x_1, x_2, ...) has been changed to accept list-valued
-    arguments:	a list x_i contributes its elements to the list of items to
-    be averaged.  E.g. avg(list(1,2,list(3,4)),5) is treated as if it were
-    avg(1,2,3,4,5).  If an error value is encountered in the items to be
-    averaged, the first such value is returned.	 If the number of items to be
-    averaged is zero, the null value is returned.  <ernie@neumann.une.edu.au>
+    arguments:	a list x_i contributes its elements to the list of
+    items to be averaged.  E.g. avg(list(1,2,list(3,4)),5) is treated
+    as if it were avg(1,2,3,4,5).  If an error value is encountered in
+    the items to be averaged, the first such value is returned.  If the
+    number of items to be averaged is zero, the null value is returned.
+    <ernie at turing dot une dot edu dot au>
 
     The builtin hmean(x_1, x_2, ...) has been changed to admit types
     other than real for x_1, x_2, ...; list arguments are treated in
-    the same way as in avg().  <ernie@neumann.une.edu.au>
+    the same way as in avg().  <ernie at turing dot une dot edu dot au>
 
     The builtin eval(str) has been changed so that when str has a
     syntax error, instead of call to math_error(), an error value is
-    returned.  <ernie@neumann.une.edu.au>
+    returned.  <ernie at turing dot une dot edu dot au>
 
     The old frem(x,y) builtin returned the wrong value when y was a power of
     2 greater than 2, e.g. f(8,4) is returned as 4 when its value should be 2.
@@ -3911,8 +3957,7 @@ The following are the changes from calc version 2.10.1t11 to 2.10.1t19:
     Both frem(x,y) and gcdrem(x,y) now reject y = -1, 0 or 1 as errors.	 For
     nonzero x, and y == -1 or 1, defining frem(x,y) and gcdrem(x,y) to equal
     abs(x) is almost as natural as defining x^0 to be 1.  Similarly, if x is
-    not zero then gcdrem(x,0) == 1.
-    <ernie@neumann.une.edu.au>
+    not zero then gcdrem(x,0) == 1.  <ernie at turing dot une dot edu dot au>
 
     Plugged some more memory leaks.
 
@@ -3928,7 +3973,7 @@ The following are the changes from calc version 2.10.1t11 to 2.10.1t19:
 
     Fixed bug that would put calc into an infinite loop if it is ran
     with errors in startup files (calc/startup, .calcrc).
-    Ha Lam <hl@kuhep5.phsx.ukans.edu>
+    Ha Lam <hl at kuhep5 dot phsx dot ukans dot edu>
 
 
 The following are the changes from calc version 2.10.0t13 to 2.10.1t10:
@@ -3969,13 +4014,13 @@ The following are the changes from calc version 2.10.0t13 to 2.10.1t10:
     defines the default CALCBINDINGS is "bindings" (or "altbind") which
     is now usualy found in ./lib or ${LIBDIR}.
 
-    Per Ernest Bowen <ernie@neumann.une.edu.au>, an optional third argument
-    was added  sqrt() so that in sqrt(x,y,z), y and z have essentially the
-    same role as in appr(x,y,z) except that of course what is being
-    approximated is the sqrt of x.  Another difference is that two more
-    bits of z are used in sqrt: bit 5 gives the option of exact results
-    when they exist (the value of y is then ignored) and bit 6 returns
-    the nonprincipal root rather than the principal value.
+    Per Ernest Bowen <ernie at turing dot une dot edu dot au>, an optional
+    third argument was added  sqrt() so that in sqrt(x,y,z), y and z have
+    essentially the same role as in appr(x,y,z) except that of course
+    what is being approximated is the sqrt of x.  Another difference is
+    that two more bits of z are used in sqrt: bit 5 gives the option of
+    exact results when they exist (the value of y is then ignored) and
+    bit 6 returns the nonprincipal root rather than the principal value.
 
     If commands are given on the command line, leading tabs are not
     printed in output.	Giving a command on the command line implies
@@ -4116,20 +4161,21 @@ The following are the changes from calc version 2.9.3t9.2+ to 2.9.3t10:
 
     Added getenv("name"), putenv("name=val") and putenv("name, "val")
     builts for environment variable support thanks to "Dr." "D.J." Picton
-    <dave@aps2.ph.bham.ac.uk>.
+    <dave at aps2 dot ph dot bham dot ac dot uk>.
 
     Added system("shell command") builtin to execute shell commands,
-    thanks to "Dr." "D.J." Picton <dave@aps2.ph.bham.ac.uk>.
+    thanks to "Dr." "D.J." Picton <dave at aps2 dot ph dot bham dot ac dot uk>.
 
     Added isatty(fd) builtin to determine if fd is attached to a tty
-    thanks to "Dr." "D.J." Picton <dave@aps2.ph.bham.ac.uk>.
+    thanks to "Dr." "D.J." Picton <dave at aps2 dot ph dot bham dot ac dot uk>.
 
     Added cmdbuf() builtin to return the command line executed by calc's
-    command line args thanks to "Dr." "D.J." Picton <dave@aps2.ph.bham.ac.uk>.
+    command line args thanks to "Dr." "D.J." Picton <dave at aps2 dot
+    ph dot bham dot ac dot uk>.
 
     Added strpos(str1,str2) builtin to determine the first position where
     str2 is found in str1 thanks to "Dr." "D.J." Picton
-    <dave@aps2.ph.bham.ac.uk>.
+    <dave at aps2 dot ph dot bham dot ac dot uk>.
 
     Fixed bug that caused:
 
@@ -4148,10 +4194,10 @@ The following are the changes from calc version 2.9.3t9.2+ to 2.9.3t10:
     do the same thing.
 
     Added show config to print the config values and parameters thanks
-    to Ernest Bowen <ernie@neumann.une.edu.au>.
+    to Ernest Bowen <ernie at turing dot une dot edu dot au>.
 
     Added show objtypes to print the defined objects thanks to Ernest Bowen
-    <ernie@neumann.une.edu.au>.
+    <ernie at turing dot une dot edu dot au>.
 
     Added more builtin function help files.
 
@@ -4168,13 +4214,14 @@ The following are the changes from calc version 2.9.3t9.2+ to 2.9.3t10:
     1 to 100 values to a list.
 
     Added reverse() and join() builtins to reverse and join lists
-    thanks to Ernest Bowen <ernie@neumann.une.edu.au>.
+    thanks to Ernest Bowen <ernie at turing dot une dot edu dot au>.
 
     Added sort() builtin to sort lists thanks to Ernest Bowen
-    <ernie@neumann.une.edu.au>.
+    <ernie at turing dot une dot edu dot au>.
 
-    Added head(), segment() and tail() builtins to return the head, middle or
-    tail of lists thanks to Ernest Bowen <ernie@neumann.une.edu.au>.
+    Added head(), segment() and tail() builtins to return the head,
+    middle or tail of lists thanks to Ernest Bowen <ernie at turing dot
+    une dot edu dot au>.
 
     Added more and fixed some help files.
 
@@ -4362,8 +4409,8 @@ The following are the changes from calc version 2.9.3t8 to 2.9.3t9.2:
 
     Added matsum() to sum all numeric values in a matrix.
 
-    The following code now works, thanks to a fix by ernie@neumann.une.edu.au
-    (Ernest Bowen):
+    The following code now works, thanks to a fix by <ernie at turing
+    dot une dot edu dot au> (Ernest Bowen):
 
 		mat A[3] = {1, 2, 3};
 		A[0] = A;
@@ -4421,14 +4468,14 @@ The following are the changes from calc version 2.9.3t7 to 2.9.3t7:
 
     The 'show' command by itself will issue an error message
     that will remind one of the possible show arguments.
-    (thanks to Ha S. Lam <hl@kuhep4.phsx.ukans.edu>)
+    (thanks to Ha S. Lam <hl at kuhep4 dot phsx dot ukans dot edu>)
 
     Fixed an ANSI-C related problem with the use of stringindex()
     by the show command.  ANSI-C interprets "bar\0foo..." as if
     it were "bar\017oo...".
 
     Added a cd command to change the current directory.
-    (thanks to Ha S. Lam <hl@kuhep4.phsx.ukans.edu>)
+    (thanks to Ha S. Lam <hl at kuhep4 dot phsx dot ukans dot edu>)
 
     Calc will not output the initial version string, startup
     message and command prompt if stdin is not a tty.  Thus
@@ -4436,7 +4483,8 @@ The following are the changes from calc version 2.9.3t7 to 2.9.3t7:
 
 	echo "fact(100)" | calc
 
-    only prints the result.  (thanks to Ha S. Lam <hl@kuhep4.phsx.ukans.edu>)
+    only prints the result.  (thanks to Ha S. Lam <hl at kuhep4 dot phsx
+    dot ukans dot edu>)
 
     The zmath.h macro zisbig() macro was replaced with zlt16b(),
     zge24b(), zge31b(), zge32b() and zgtmaxfull() which are
@@ -4454,12 +4502,12 @@ The following are the changes from calc version 2.9.3t7 to 2.9.3t7:
     a value to 2^31 decimal digit places.  One cannot compute
     the Fibonacci number F(2^31).
 
-    Andy Fingerhut <jaf@dworkin.wustl.edu> (thanks!) supplied a fix to
-    a subtle bug in the code generation routines.  The basic problem was
-    that addop() is sometimes used to add a label to the opcode table
-    of a function.  The addop() function did some optimization tricks,
-    and if one of these labels happens to be an opcode that triggers
-    optimization, incorrect opcodes were generated.
+    Andy Fingerhut <jaf at dworkin dot wustl dot edu> (thanks!) supplied
+    a fix to a subtle bug in the code generation routines.  The basic
+    problem was that addop() is sometimes used to add a label to
+    the opcode table of a function.  The addop() function did some
+    optimization tricks, and if one of these labels happens to be an
+    opcode that triggers optimization, incorrect opcodes were generated.
 
     Added utoz(), ztou() to zmath.c, and utoq(), qtou() to qmath.c
     in preparation for 2.9.3t9 mods.
@@ -4718,12 +4766,12 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.5 $
-## @(#) $Id: CHANGES,v 29.5 1999/12/17 10:36:02 chongo Exp $
+## @(#) $Revision: 29.11 $
+## @(#) $Id: CHANGES,v 29.11 2000/06/07 15:51:35 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
 ## File existed as early as:	1989
 ##
-## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

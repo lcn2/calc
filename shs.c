@@ -12,7 +12,7 @@
  * This file was Modified/Re-written by:
  *
  *	Landon Curt Noll
- *	http://reality.sgi.com/chongo/
+ *	http://www.isthe.com/chongo/
  *
  *	chongo <was here> /\../\
  *
@@ -29,10 +29,10 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
  * Based on Version 2.11 (09 Mar 1995) from Landon Curt Noll's
- * (http://reality.sgi.com/chongo/) shs hash program.
+ * (http://www.isthe.com/chongo/) shs hash program.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: shs.c,v 29.1 1999/12/14 09:16:15 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: shs.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/shs.c,v $
  *
  * This file is not covered under version 2.1 of the GNU LGPL.

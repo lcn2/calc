@@ -19,15 +19,15 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: version.c,v 29.5 1999/12/17 10:36:02 chongo Exp $
+ * @(#) $Revision: 29.13 $
+ * @(#) $Id: version.c,v 29.13 2000/06/07 16:12:19 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
  * File existed as early as:	1990
  *
- * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -42,8 +42,8 @@ static char *program;
 
 #define MAJOR_VER	2	/* major version */
 #define MINOR_VER	11	/* minor version */
-#define MAJOR_PATCH	1	/* patch level or 0 if no patch */
-#define MINOR_PATCH	"2.1"	/* test number or empty string if no patch */
+#define MAJOR_PATCH	2	/* patch level or 0 if no patch */
+#define MINOR_PATCH	"1.0"	/* test number or empty string if no patch */
 
 /*
  * calc version constants

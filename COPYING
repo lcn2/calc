@@ -12,8 +12,8 @@ This file is Copyrighted
 	Everyone is permitted to copy and distribute verbatim copies
 	of this license document, but changing it is not allowed.
 
-    # @(#) $Revision: 29.1 $
-    # @(#) $Id: COPYING,v 29.1 1999/12/14 09:15:29 chongo Exp $
+    # @(#) $Revision: 29.2 $
+    # @(#) $Id: COPYING,v 29.2 2000/06/07 14:02:13 chongo Exp $
     # @(#) $Source: /usr/local/src/cmd/calc/RCS/COPYING,v $
 
 =-=
@@ -55,16 +55,28 @@ Calc is covered by the GNU Lesser General Public License
 
     The contact addresses for calc is as follows:
 
-	Web:	http://reality.sgi.com/chongo/tech/comp/calc/index.html
-		http://www.isthe.com/chongo/tech/comp/calc/index.html
+	Web:	http://www.isthe.com/chongo/tech/comp/calc/index.html
+	EMail:	calc-contrib at asthe dot com
 
-	EMail:	calc-tester at postofc dot corp dot sgi dot com
-		calc-tester at isthe dot com
+    To join the calc-tester mailing list.  Send a request to:
 
-		[[ Replace 'at' with @, 'dot' is with . and remove spaces ]]
+	calc-tester-request at asthe dot com
 
-    The 2nd address set is provided in case the 1st address set no
-    longer functions.
+    Your message body (not the subject) should consist of:
+
+	 subscribe calc-tester address
+	 end
+	 name your_full_name
+
+    where ``address'' is your EMail address and ``your_full_name'' is
+    your full name.
+
+    Calc bug reports, however should be sent to:
+
+	calc-bugs at asthe dot com
+
+    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
 
 =-=
 

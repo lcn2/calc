@@ -11,11 +11,11 @@ recent version of calc.
 
 Landon Noll maintains the official calc home page at:
 
-	http://reality.sgi.com/chongo/tech/comp/calc/
+	http://www.isthe.com/chongo/tech/comp/calc/
 
 See:
 
-	http://reality.sgi.com/chongo/tech/comp/calc/calc-download.html
+	http://www.isthe.com/chongo/tech/comp/calc/calc-download.html
 
 for information on how to obtain up a recent version of calc.
 
@@ -37,9 +37,10 @@ gziped (or compressed) tar file).
 
 You should send submissions to:
 
-    calc-tester at postofc dot corp dot sgi dot com
+    calc-contrib at asthe dot com
 
-    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
 
 Thanks for considering submitting code to calc.	 Calc is a collective
 work by a number of people.  It would not be what it is today without
@@ -47,9 +48,10 @@ your efforts and submissions!
 
 Calc bug reports, however, should be sent to:
 
-    calc-bugs at postofc dot corp dot sgi dot com
+    calc-bugs at asthe dot com
 
-    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
 
 See the BUGS file or try the help command:
 
@@ -61,9 +63,10 @@ for details on bug reporting.
 
 One may join the calc testing group by sending a request to:
 
-	calc-tester-request at postofc dot corp dot sgi dot com
+	calc-tester-request at asthe dot com
 
-	[[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
 
     Your message body (not the subject) should consist of:
 
@@ -75,7 +78,7 @@ One may join the calc testing group by sending a request to:
     is your full name.
 
 Landon Curt Noll
-http://reality.sgi.com/chongo/
+http://www.isthe.com/chongo/
 
 chongo <was here> /\../\
 
@@ -95,12 +98,12 @@ chongo <was here> /\../\
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: contrib,v 29.1 1999/12/14 09:15:45 chongo Exp $
+## @(#) $Revision: 29.2 $
+## @(#) $Id: contrib,v 29.2 2000/06/07 14:02:33 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/contrib,v $
 ##
 ## Under source code control:	1997/03/09 16:33:22
 ## File existed as early as:	1997
 ##
-## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

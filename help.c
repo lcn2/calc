@@ -17,15 +17,15 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: help.c,v 29.2 1999/12/17 09:22:03 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: help.c,v 29.4 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/help.c,v $
  *
  * Under source code control:	1997/09/14 10:58:30
  * File existed as early as:	1997
  *
- * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -136,8 +136,12 @@ page_file(FILE *stream)
 
 		/*
 		 * write the line to pager, if possible
+		 *
+		 * We have to use fprintf() instead of fputs() because
+		 * on NetBSD, fputs() function returns 0 on success and
+		 # EOF on error.  *sigh*
 		 */
-	} while(fputs(buf, cmd) > 0);
+	}  while (fprintf(cmd, "%s", buf) > 0);
 
 	/*
 	 * all done, EOF or error, so just clean up

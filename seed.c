@@ -17,15 +17,15 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: seed.c,v 29.1 1999/12/14 09:16:15 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: seed.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/seed.c,v $
  *
  * Under source code control:	1999/10/03 10:06:53
  * File existed as early as:	1999
  *
- * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
@@ -168,7 +168,7 @@ hash_buf(char *buf, unsigned len)
 	 *
 	 * In a subsequent ballot round:
 	 *
-	 *	Landon Curt Noll (http://reality.sgi.com/chongo/)
+	 *	Landon Curt Noll (http://www.isthe.com/chongo/)
 	 *
 	 * improved on their algorithm.	 Some people tried this hash
 	 * and found that it worked rather well.  In an EMail message
@@ -178,7 +178,7 @@ hash_buf(char *buf, unsigned len)
 	 * collision rate. The FNV speed allows one to quickly hash lots
 	 * of data while maintaining a reasonable collision rate.  See:
 	 *
-	 *	http://reality.sgi.com/chongo/tech/comp/fnv/
+	 *	http://www.isthe.com/chongo/tech/comp/fnv/
 	 *
 	 * for more details as well as other forms of the FNV hash.
 	 */

@@ -5,21 +5,20 @@ Calc Todo Items:
 
     Code contributions are welcome.  Send patches to:
 
-	    calc-tester at postofc dot corp dot sgi dot com
-
-	    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
-
-    See also the 'wishlist' help files for the calc enhancement wish list.
+	    calc-contrib at asthe dot com
 
     Calc bug reports, however, should send to:
 
-	    calc-tester at postofc dot corp dot sgi dot com
+	    calc-bugs at asthe dot com
 
-	    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
 
-    see the BUGS file or try the calc command:
+    See the BUGS file or try the calc command:
 
 	    help bugs
+
+    See also the 'wishlist' help files for the calc enhancement wish list.
 
 =-=
 
@@ -134,12 +133,12 @@ Medium priority items:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: todo,v 29.1 1999/12/14 09:16:09 chongo Exp $
+## @(#) $Revision: 29.2 $
+## @(#) $Id: todo,v 29.2 2000/06/07 14:02:33 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/todo,v $
 ##
 ## Under source code control:	1999/10/20 07:42:55
 ## File existed as early as:	1999
 ##
-## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

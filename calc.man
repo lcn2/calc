@@ -15,15 +15,15 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 .\"
-.\" @(#) $Revision: 29.4 $
-.\" @(#) $Id: calc.man,v 29.4 1999/12/17 10:06:31 chongo Exp $
+.\" @(#) $Revision: 29.5 $
+.\" @(#) $Id: calc.man,v 29.5 2000/06/07 14:02:13 chongo Exp $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
 .\" File existed as early as:	    1991
 .\"
-.\" chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-.\" Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+.\" chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+.\" Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
 .\"
 .\" calculator by David I. Bell
 .\" man page by Landon Noll
@@ -1007,9 +1007,7 @@ in future distributions to:
 .sp
 .in +0.5i
 .nf
-calc-tester at postofc dot corp dot sgi dot com
-
-[[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+calc-contrib at asthe dot com
 .fi
 .in -0.5i
 .sp
@@ -1017,9 +1015,10 @@ Bug reports are sent to:
 .sp
 .in +0.5i
 .nf
-calc-bugs at postofc dot corp dot sgi dot com
+calc-bugs at asthe dot com
 
-[[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+[[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+[[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
 .fi
 .in -0.5i
 .sp
@@ -1045,7 +1044,7 @@ Landon Noll maintains the the
 web site is located at:
 .sp
 .in +0.5i
-http://reality.sgi.com/chongo/tech/comp/calc/
+http://www.isthe.com/chongo/tech/comp/calc/
 .in -0.5i
 .sp
 One may join the
@@ -1054,9 +1053,10 @@ testing group by sending a request to:
 .sp
 .in +0.5i
 .nf
-calc-tester-request at postofc dot corp dot sgi dot com
+calc-tester-request at asthe dot com
 
-[[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+[[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+[[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
 .fi
 .in -0.5i
 .sp

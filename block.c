@@ -19,15 +19,15 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: block.c,v 29.1 1999/12/14 09:15:29 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: block.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/block.c,v $
  *
  * Under source code control:	1997/02/27 00:29:40
  * File existed as early as:	1997
  *
- * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 

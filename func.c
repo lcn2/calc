@@ -19,14 +19,14 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: func.c,v 29.1 1999/12/14 09:15:38 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: func.c,v 29.3 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
  * File existed as early as:	before 1990
  *
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -71,6 +71,11 @@
 
 #if defined(HAVE_SYS_TIMES_H)
 #include <sys/times.h>
+#endif
+
+#include "have_strdup.h"
+#if !defined(HAVE_STRDUP)
+# define strdup(x) calc_strdup((CONST char *)(x))
 #endif
 
 #include "have_const.h"

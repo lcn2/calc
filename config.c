@@ -19,14 +19,14 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: config.c,v 29.2 1999/12/14 19:37:46 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: config.c,v 29.3 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
  * File existed as early as:	1991
  *
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 

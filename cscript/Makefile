@@ -17,15 +17,15 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.4 $
-# @(#) $Id: Makefile,v 29.4 1999/12/17 11:30:35 chongo Exp $
+# @(#) $Revision: 29.5 $
+# @(#) $Id: Makefile,v 29.5 2000/06/07 14:02:59 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
 # File existed as early as:	1999
 #
-# chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-# Share and enjoy!  :-) http://reality.sgi.com/chongo/tech/comp/calc/
+# chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+# Share and enjoy!  :-) http://www.isthe.com/chongo/tech/comp/calc/
 #
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll

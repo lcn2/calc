@@ -7,15 +7,15 @@
  *	utc_hr_offset	Offset from UTC in hours.
  *
  * Written by: Klaus Alexander Seistrup <kseis@magnetic-ink.dk>
- * With minor mods by: Landon Curt Noll <http://reality.sgi.com/chongo/>
+ * With minor mods by: Landon Curt Noll <http://www.isthe.com/chongo/>
  *
  * See:
  *	http://www.magnetic-ink.dk/download/qtime.html
  *
  * for examples of qtime() written on other languages.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: qtime.cal,v 29.1 1999/12/14 09:15:32 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: qtime.cal,v 29.2 2000/06/07 14:02:25 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/qtime.cal,v $
  *
  * This file is not covered under version 2.1 of the GNU LGPL.

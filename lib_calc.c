@@ -17,15 +17,15 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: lib_calc.c,v 29.2 1999/12/14 19:37:46 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: lib_calc.c,v 29.3 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.c,v $
  *
  * Under source code control:	1996/06/17 18:06:19
  * File existed as early as:	1996
  *
- * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 

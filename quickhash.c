@@ -17,15 +17,15 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: quickhash.c,v 29.2 1999/12/14 19:37:46 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: quickhash.c,v 29.3 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/quickhash.c,v $
  *
  * Under source code control:	1995/03/04 11:34:23
  * File existed as early as:	1995
  *
- * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
@@ -46,9 +46,9 @@
  * acceptable associative array performance.
  *
  * See:
- *	http://reality.sgi.com/chongo/src/fnv/fnv_hash.tar.gz
- *	http://reality.sgi.com/chongo/src/fnv/h32.c
- *	http://reality.sgi.com/chongo/src/fnv/h64.c
+ *	http://www.isthe.com/chongo/src/fnv/fnv_hash.tar.gz
+ *	http://www.isthe.com/chongo/src/fnv/hash_32.c
+ *	http://www.isthe.com/chongo/src/fnv/hash_64.c
  *
  * for information on 32bit and 64bit Fowler/Noll/Vo hashs.
  */
@@ -87,7 +87,7 @@ static QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
  *
  * In a subsequent ballot round:
  *
- *	Landon Curt Noll (http://reality.sgi.com/chongo/)
+ *	Landon Curt Noll (http://www.isthe.com/chongo/)
  *
  * improved on their algorithm.	 Some people tried this hash
  * and found that it worked rather well.  In an EMail message
@@ -97,7 +97,7 @@ static QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
  * collision rate. The FNV speed allows one to quickly hash lots
  * of data while maintaining a reasonable collision rate.  See:
  *
- *	http://reality.sgi.com/chongo/tech/comp/fnv/
+ *	http://www.isthe.com/chongo/tech/comp/fnv/
  *
  * for more details as well as other forms of the FNV hash.
  *

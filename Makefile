@@ -20,15 +20,15 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.5 $
-# @(#) $Id: Makefile.ship,v 29.5 1999/12/17 09:07:35 chongo Exp $
+# @(#) $Revision: 29.9 $
+# @(#) $Id: Makefile.ship,v 29.9 2000/06/07 15:50:19 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
 # File existed as early as:	before 1990
 #
-# chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-# Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+# chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+# Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
 #
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
@@ -2084,7 +2084,7 @@ have_urandom.h: ${MAKE_FILE}
 	${Q}echo '' >> have_urandom.h
 	${Q}echo '' >> have_urandom.h
 	${Q}echo '/* do we have /dev/urandom? */' >> have_urandom.h
-	-${Q}if [ -c /dev/urandom ]; then \
+	-${Q}if [ -e /dev/urandom ] 2>/dev/null; then \
 	    echo '#define HAVE_URANDOM_H  /* yes */' >> have_urandom.h; \
 	else \
 	    echo '#undef HAVE_URANDOM_H	 /* no */' >> have_urandom.h; \
@@ -2397,7 +2397,11 @@ sample/sample:
 	    status="$$?"; \
 	    if [ "$$status" -ne 0 ]; then \
 		echo "$$status" > ../.sample_error; \
+	    else \
+	        true ; \
 	    fi; \
+	else \
+	    true ; \
 	fi
 	${Q}if [ -f .sample_error ]; then \
 	    echo "sample make failed, code: `cat .sample_error`" 1>&2; \
@@ -3316,6 +3320,7 @@ func.o: have_malloc.h
 func.o: have_memmv.h
 func.o: have_newstr.h
 func.o: have_stdlib.h
+func.o: have_strdup.h
 func.o: have_string.h
 func.o: have_times.h
 func.o: have_unistd.h

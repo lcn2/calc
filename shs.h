@@ -12,7 +12,7 @@
  * This file was Modified by:
  *
  *	Landon Curt Noll
- *	http://reality.sgi.com/chongo/
+ *	http://www.isthe.com/chongo/
  *
  *	chongo <was here> /\../\
  *
@@ -28,8 +28,8 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: shs.h,v 29.1 1999/12/14 09:16:15 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: shs.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/shs.h,v $
  *
  * This file is not covered under version 2.1 of the GNU LGPL.

@@ -17,14 +17,14 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: zio.c,v 29.1 1999/12/14 09:16:17 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: zio.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zio.c,v $
  *
  * Under source code control:	1993/07/30 19:42:48
  * File existed as early as:	1993
  *
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 

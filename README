@@ -4,7 +4,7 @@ See the HOWTO.INSTALL file for information on how to build and install calc.
 
 To be sure that your version of calc is up to date, check out:
 
-	http://reality.sgi.com/chongo/tech/comp/calc/calc-download.html
+	http://www.isthe.com/chongo/tech/comp/calc/calc-download.html
 
 We are interested in any/all feedback on recent versions of calc.
 In particular we would like to hear about:
@@ -75,9 +75,10 @@ for a wish/todo list.  Code contributions are welcome.
 
 To join the calc-tester mailing list.  Send a request to:
 
-    calc-tester-request at postofc dot corp dot sgi dot com
+    calc-tester-request at asthe dot com
 
-    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
 
 Your message body (not the subject) should consist of:
 
@@ -90,15 +91,16 @@ your full name.
 
 Calc bug reports, however should be sent to:
 
-    calc-bugs at postofc dot corp dot sgi dot com
+    calc-bugs at asthe dot com
 
-    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
 
 but see the BUGS file first.
 
 The calc web site is located at:
 
-	http://reality.sgi.com/chongo/tech/comp/calc/
+	http://www.isthe.com/chongo/tech/comp/calc/
 
 ## Copyright (C) 1999  Landon Curt Noll
 ##
@@ -116,12 +118,12 @@ The calc web site is located at:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: README,v 29.1 1999/12/14 09:15:29 chongo Exp $
+## @(#) $Revision: 29.2 $
+## @(#) $Id: README,v 29.2 2000/06/07 14:02:13 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/README,v $
 ##
 ## Under source code control:	1995/10/25 05:27:59
 ## File existed as early as:	1995
 ##
-## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

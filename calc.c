@@ -19,14 +19,14 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: calc.c,v 29.2 1999/12/17 09:21:45 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: calc.c,v 29.4 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11
  * File existed as early as:	before 1990
  *
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
@@ -233,7 +233,7 @@ main(int argc, char **argv)
 			/* argument + space separator */
 			cmdlen += strlen(argv[i]) + 1;
 		}
-		if (i > MAXCMD) {
+		if (cmdlen > MAXCMD) {
 			/*
 			 * we are too early in processing to call
 			 * libcalc_call_me_last() - nothing to cleanup

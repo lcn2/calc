@@ -20,20 +20,21 @@ configuration, try backing them out and see if things get better.
 
 To be sure that your version of calc is up to date, check out:
 
-	http://reality.sgi.com/chongo/tech/comp/calc/calc-download.html
+	http://www.isthe.com/chongo/tech/comp/calc/calc-download.html
 
 The calc web site is located at:
 
-	http://reality.sgi.com/chongo/tech/comp/calc/index.html
+	http://www.isthe.com/chongo/tech/comp/calc/index.html
 
 =-=
 
 If you have tried all of the above and things still are not right,
 then it may be time to send in a bug report.  You can send bug reports to:
 
-    calc-bugs at postofc dot corp dot sgi dot com
+    calc-bugs at asthe dot com
 
-    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: The EMail address uses 'asthe', the web site URL uses 'isthe' ]]
 
 When you send your report, please include the following information:
 
@@ -58,9 +59,10 @@ Stack traces from core dumps are useful to send as well.
 Send any comments, compiler warning messages, suggestions and most
 importantly, fixes (in the form of a context diff patch) to:
 
-    calc-tester at postofc dot corp dot sgi dot com
+    calc-bugs at asthe dot com
 
-    [[ Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
+    [[ NOTE: The EMail address uses 'asthe', the web site URL uses 'isthe' ]]
 
 You should use the above calc-bugs address for bug reports, if you are
 not currently a member of the calc-tester mailing list.
@@ -177,12 +179,12 @@ Problems with known work-a-rounds:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: BUGS,v 29.4 1999/12/15 09:13:29 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: BUGS,v 29.5 2000/06/07 14:02:13 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13
 ## File existed as early as:	1994
 ##
-## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
-## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

@@ -17,14 +17,14 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: c_pzasusb8.c,v 29.1 1999/12/14 09:15:37 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: c_pzasusb8.c,v 29.2 2000/06/07 14:03:03 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_pzasusb8.c,v $
  *
  * Under source code control:	1999/10/06 03:12:25
  * File existed as early as:	1999
  *
- * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
