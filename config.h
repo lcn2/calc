@@ -1,7 +1,7 @@
 /*
  * config - configuration routines
  *
- * Copyright (C) 1999  Landon Curt Noll and David I. Bell
+ * Copyright (C) 1999-2002  Landon Curt Noll and David I. Bell
  *
  * Primary author:  Landon Curt Noll
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.11 $
- * @(#) $Id: config.h,v 29.11 2001/06/08 21:00:58 chongo Exp $
+ * @(#) $Revision: 29.12 $
+ * @(#) $Id: config.h,v 29.12 2002/12/29 09:20:25 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -90,6 +90,7 @@
 #define CONFIG_BASENAME 36
 #define CONFIG_VERSION 37
 #define CONFIG_WINDOWS 38
+#define CONFIG_MODE2	39
 
 
 /*
@@ -118,6 +119,7 @@
  */
 struct config {
 	int outmode;		/* current output mode */
+	int outmode2;		/* current secondary output mode */
 	LEN outdigits;		/* current output digits for float or exp */
 	NUMBER *epsilon;	/* default error for real functions */
 	    long epsilonprec;	/* epsilon binary precision (tied to epsilon) */

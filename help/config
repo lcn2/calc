@@ -16,6 +16,7 @@ Configuration parameters
 	    "epsilon"		sets error value for transcendentals.
 	    "maxprint"		sets maximum number of elements printed.
 	    "mode"		sets printout mode.
+	    "mode2"		sets 2nd base printout mode.
 	    "mul2"		sets size for alternative multiply.
 	    "sq2"		sets size for alternative squaring.
 	    "pow2"		sets size for alternate powering.
@@ -184,6 +185,7 @@ Detailed config descriptions
     =-=
 
     config("mode", "mode_string")
+    config("mode2", "mode_string")
 
     The "mode" parameter is a string specifying the mode for printing of
     numbers by the unformatted print functions, and the default
@@ -219,7 +221,17 @@ Detailed config descriptions
     Where multiple strings are given, the first string listed is what
     config("mode") will return.
 
-    The default "mode" is "real".
+    The "mode2" controls the double base output.  When set to a value
+    other than "off", calc outputs files in both the "base" mode as
+    well as the "base2" mode.  The "mode2" value may be any of the
+    "mode" values with the addition of:
+
+	    "off"		disable 2nd base output mode	base2(0)
+
+    The base() builtin function sets and returns the "mode" value.
+    The base2() builtin function sets and returns the "mode2" value.
+
+    The default "mode" is "real".  The default "mode2" is "off".
 
     =-=
 
@@ -713,8 +725,8 @@ Detailed config descriptions
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.6 $
-## @(#) $Id: config,v 29.6 2001/04/25 07:17:38 chongo Exp $
+## @(#) $Revision: 29.7 $
+## @(#) $Id: config,v 29.7 2002/12/29 08:32:04 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/config,v $
 ##
 ## Under source code control:	1991/07/21 04:37:17

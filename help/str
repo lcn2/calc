@@ -18,7 +18,7 @@ DESCRIPTION
 
     For real or complex x, str(x) returns the string representing x
     in the current printing mode; configuration parameters affecting
-    this are "mode", "display", "outround", "tilde", "leadzero",
+    this are "mode", "mode2", "display", "outround", "tilde", "leadzero",
 
 EXAMPLE
     > str("")
@@ -27,6 +27,10 @@ EXAMPLE
 	    ""
     > print str(123), str("+"), str(4i), str("is the same as"), str(123+4i)
     123 + 4i is the same as 3+4i
+
+    > base2(16),
+    > print str(23209)
+    23209 /* 0x5aa9 */
 
 LIMITS
     none
@@ -41,9 +45,9 @@ LINK LIBRARY
     char *math_getdivertedio();
 
 SEE ALSO
-    XXX - fill in
+    base, base2, config
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2002  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -59,8 +63,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: str,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: str,v 29.3 2002/12/29 09:19:56 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/str,v $
 ##
 ## Under source code control:	1995/10/05 04:52:27

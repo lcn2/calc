@@ -1,4 +1,48 @@
-The following are the changes from calc version 2.11.5.5 to date:
+The following are the changes from calc version 2.11.6.0 to date:
+
+    Clarified remark in lucas.cal about use of n mod 2^n == 0.
+
+    Fixed help typos reported by Marc Mezzarobba <mm at mm dot ovh dot org>.
+
+    Forced system("") to return 0 under windoz.
+
+    The direct.h include file is not used when compiling under Cygwin.
+
+    Fixed bug where random(10,11) caused calc to dump core when issued
+    the 2nd time.
+
+    Moved the setting of the Makefile variable ${CALC_INCDIR} to
+    the section where things like ${BINDIR} and ${LIBDIR} are set.
+    Idea from Clifford Kite <kite_public1 at ev1 dot net>.
+
+    The Makefile is shipped mode 0644 since a number of folks
+    edit it (to build and check calc) as a non-root user and later
+    on su to root to install.  Idea from Clifford Kite <kite_public1
+    at ev1 dot net>.
+
+    Added base2() builtin function to calc.  Normally calc prints
+    values according to base().  Frequently some users want to see
+    a value in two bases.  Flipping back and forth between to bases
+    is a bit of a pain.  With base2(), calc will output a value twice:
+
+	; 234567
+		234567
+	; base2(16),
+	; 234567
+		234567 /* 0x39447 */
+	; 131072
+		131072 /* 0x20000 */
+	; base2(0),
+	; 131072
+        131072
+
+    By default, base2() is disabled.  Calling base2(0) will also turn
+    off the double base mode.  Thanks goes to Erik Anggard
+    <eriki dot anggardi at packetfronti dot com> for his idea and
+    his initial patch.
+
+
+The following are the changes from calc version 2.11.5.5 to 2.11.5.9:
 
     Now using version numbers of one of these forms:
 
@@ -57,6 +101,9 @@ The following are the changes from calc version 2.11.5.5 to date:
     Removed the Makefile variable SHAREDIR.
 
     Updated the HOWTO.INSTALL and README.WINDOWS files.
+
+    Fixed definition of MAXUFULL.  Thanks to a bus report from
+    Jill Poland <jpoland at cadence dot com>.
 
 The following are the changes from calc version 2.11.5t4.1 to 2.11.5t4.4:
 
@@ -5418,8 +5465,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.48 $
-## @(#) $Id: CHANGES,v 29.48 2002/03/14 00:28:28 chongo Exp $
+## @(#) $Revision: 29.50 $
+## @(#) $Id: CHANGES,v 29.50 2002/12/29 09:22:43 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

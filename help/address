@@ -23,7 +23,7 @@ DESCRIPTION
     0 <= i < sizeof(B).	 &B[i] then returns the address at which this
     octet is located until the block is freed or relocated.  Freeing
     of an unnamed block B occurs when a new value is assigned to B or
-    when B ceases to exist; a named block B is freed by blkfree(B().
+    when B ceases to exist; a named block B is freed by blkfree(B).
     A block is relocated when an operation like copying to B requires
     a change of sizeof(B).
 
@@ -70,18 +70,18 @@ DESCRIPTION
 			> p = &"abc"
 			> A = "abc"
 
-    The address &*A of the value of A will be equal to p.
+    the address &*A of the value of A will be equal to p.
 
     Except in cases like strcat(A, "") when *A identified with a literal
     string as above, definitions of string values using strcat() or substr()
     will copy the relevant strings to newly allocated addresses which will
     be useable only while the variables retain these defined values.
-    For example,
+    For example, after
 
 			> B = C = strcat("a", "bc");
 
     &*B and &*C will be different.  If p is defined by p = &*B, p should
-    not be used after a mew value is assigned to B, or B ceases to exist,
+    not be used after a new value is assigned to B, or B ceases to exist,
     etc.
 
     When compilation of a function encounters for the first time a particular
@@ -117,7 +117,7 @@ DESCRIPTION
 
 		> A = B = C = f(2);
 
-    which, not only performs the addition n f() only once, but stores the
+    which, not only performs the addition in f() only once, but stores the
     number values for A, B and C at the same address.
 
     Whether a value V is a pointer and if so, its type, is indicated by the
@@ -176,8 +176,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: address,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: address,v 29.3 2002/07/10 11:47:04 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/address,v $
 ##
 ## Under source code control:	1997/09/06 20:03:34

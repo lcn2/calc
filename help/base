@@ -57,7 +57,7 @@ DESCRIPTION
 	base(1e20)	base(2^64)	base(2^8191-1)
 
     However the base() function will only return one of the base values
-    lised in the table above.
+    listed in the table above.
 
 EXAMPLE
     > base()
@@ -79,7 +79,7 @@ LINK LIBRARY
 	  MODE_REAL, MODE_EXP, MODE_HEX, MODE_OCTAL, MODE_BINARY
 
 SEE ALSO
-    config
+    base2, config, str
 
 ## Copyright (C) 1999  Landon Curt Noll
 ##
@@ -97,8 +97,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: base,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: base,v 29.5 2002/12/29 09:17:54 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/base,v $
 ##
 ## Under source code control:	1994/09/30 00:09:39

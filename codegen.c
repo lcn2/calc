@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: codegen.c,v 29.6 2001/05/08 06:29:24 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: codegen.c,v 29.7 2002/07/10 11:51:51 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -45,7 +45,7 @@
 #include "func.h"
 #include "conf.h"
 
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(__CYGWIN__)
 # include <direct.h>
 #endif
 

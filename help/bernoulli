@@ -15,7 +15,7 @@ DESCRIPTION
 
 		t/(exp(t) - 1) = Sum B_n * t^n/n!
 
-    bernouuli(n) is zero both for n < 0 and for n odd and > 2.
+    bernoulli(n) is zero both for n < 0 and for n odd and > 2.
     When bernoulli(n) is computed for positive even n, the values for
     n and smaller positive even indices are stored in a table so that
     a later call to bernoulli(k) with 0 <= k < n will be executed quickly.
@@ -57,8 +57,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: bernoulli,v 29.4 2000/12/17 12:27:58 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: bernoulli,v 29.5 2002/07/10 11:47:04 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/bernoulli,v $
 ##
 ## Under source code control:	2000/07/13 01:33:00

@@ -32,10 +32,9 @@ DESCRIPTION
     may have different numbers (between 1 and 4 inclusive) of indices,
     and these indices need not be integers in specified ranges.
 
-    Assignments of a null value
-    to an element of an association does not delete the element, but
-    a later reference to that element will return the null value as if
-    the element is undefined.
+    Assignment of a null value to an element of an association does not
+    delete the element, but a later reference to that element will return
+    the null value as if the element is undefined.
 
     The elements of an association are stored in a hash table for
     quick access.  The index values are hashed to select the correct
@@ -99,8 +98,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: assoc,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: assoc,v 29.3 2002/07/10 11:47:04 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/assoc,v $
 ##
 ## Under source code control:	1994/09/25 20:22:31

@@ -122,7 +122,7 @@ DESCRIPTION
     Named blocks are assigned index numbers 0, 1, 2, ..., in the order
     of their creation.	The block with index id is returned by blocks(id).
     With no argument, blocks() returns the number of current unfreed
-    named blocks.  A named block may be used
+    named blocks.
 
     The memory allocated to a named block is freed by the blkfree()
     function with argument the named block, its name, or its id number.
@@ -234,8 +234,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: blk,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: blk,v 29.3 2002/07/10 11:47:04 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/blk,v $
 ##
 ## Under source code control:	1997/04/05 13:07:13

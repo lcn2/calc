@@ -2,7 +2,7 @@
 #
 # help - makefile for calc help files
 #
-# Copyright (C) 1999  Landon Curt Noll
+# Copyright (C) 1999-2002  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.20 $
-# @(#) $Id: Makefile,v 29.20 2002/03/14 00:28:28 chongo Exp $
+# @(#) $Revision: 29.22 $
+# @(#) $Id: Makefile,v 29.22 2002/12/29 08:43:37 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -246,11 +246,11 @@ BLT_HELP_FILES= ${BLT_HELP_FILES_3} ${BLT_HELP_FILES_5} \
 # This list is prodiced by the detaillist rule when no WARNINGS are detected.
 #
 DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
-	appr arg argv arrow asec asech asin asinh assign atan atan2 atanh avg \
-	base bernoulli bit blk blkcpy blkfree blocks bround btrunc calc_tty \
-	calclevel catalan ceil cfappr cfsim char cmdbuf cmp comb conj cos \
-	cosh cot coth count cp csc csch ctime delete den dereference det \
-	digit digits dp epsilon errcount errmax errno error euler eval \
+	appr arg argv arrow asec asech asin asinh assign atan atan2 atanh \
+	avg base base2 bernoulli bit blk blkcpy blkfree blocks bround btrunc \
+	calc_tty calclevel catalan ceil cfappr cfsim char cmdbuf cmp comb \
+	conj cos cosh cot coth count cp csc csch ctime delete den dereference \
+	det digit digits dp epsilon errcount errmax errno error euler eval \
 	exp fact factor fclose fcnt feof ferror fflush fgetc fgetfield \
 	fgetline fgets fgetstr fib files floor fopen forall fprintf fputc \
 	fputs fputstr frac free freebernoulli freeeuler freeglobals freeredc \

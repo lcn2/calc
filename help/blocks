@@ -1,5 +1,5 @@
 NAME
-    blocks - return a named file or number of unfreed named blocks
+    blocks - return a named block or number of unfreed named blocks
 
 SYNOPSIS
     blocks([id])
@@ -58,8 +58,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: blocks,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: blocks,v 29.3 2002/07/10 11:47:04 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/blocks,v $
 ##
 ## Under source code control:	1997/04/05 13:07:13

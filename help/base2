@@ -1,0 +1,120 @@
+NAME
+    base2 - set 2nd output base
+
+SYNOPSIS
+    base2([mode])
+
+TYPES
+    mode	real
+
+    return	real
+
+DESCRIPTION
+    By default, calc will output values according to the default base
+    as controlled by the base() builtin function.
+
+    The base2() builtin function, if given a non-zero argument, enables
+    double base output mode.  In double base output mode, calc values
+    are displayed twice, once according to base() and again according
+    to base2().  In double base output mode, the second time a value is
+    displayed, it is displayed within comments:
+
+	21701 /* 0x54c5 */
+
+    The arguments for base2() are identical to base() with the addition
+    of the 0 value:
+
+	     base2	equivalent
+		      config("mode2")'s
+
+	       2	"binary"	base 2 fractions
+			"bin"
+
+	       8	"octal"		base 8 fractions
+			"oct"
+
+	      10	"real"		base 10 floating point
+			"float"
+			"default"
+
+	     -10	"integer"	base 10 integers
+			"int"
+
+	      16	"hexadecimal"	base 16 fractions
+			"hex"
+
+	     1/3	"fraction"	base 10 fractions
+			"frac"
+
+	    1e20	"scientific"	base 10 scientific notation
+			"sci"
+			"exp"
+
+	       0	"off"		disable double base output
+
+    For convenience, any non-integer non-zero value is assumed to mean
+    base 10 fractions and any integer >= 2^64 is assumed to mean base 10
+    scientific notation.
+
+    These base2() calls have the same meaning as config("mode2", "fraction"):
+
+	base2(1/3)	base2(0.1415)	base2(16/37)
+
+    These base2() calls have the same meaning as config("mode2", "scientific"):
+
+	base2(1e20)	base2(2^64)	base2(2^8191-1)
+
+    However the base2() function will only return one of the base values
+    listed in the table above.
+
+EXAMPLE
+    > base2()
+	    0
+    > base2(8)
+	    0 /* 0 */
+    > print 10
+    10 /* 012 */
+    > base2(16),
+    > 131072
+    	131072 /* 0x20000 */
+    > 2345
+	2345 /* 0x929 */
+
+LIMITS
+    none
+
+LINK LIBRARY
+    int math_setmode2(int newmode)
+
+    NOTE: newmode must be one of MODE_DEFAULT, MODE_FRAC, MODE_INT,
+	  MODE_REAL, MODE_EXP, MODE_HEX, MODE_OCTAL, MODE_BINARY,
+	  MODE2_OFF
+
+SEE ALSO
+    base, config, str
+
+## Copyright (C) 2002  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 1.3 $
+## @(#) $Id: base2,v 1.3 2002/12/29 09:17:54 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/base2,v $
+##
+## Under source code control:	2002/12/29 00:21:07
+## File existed as early as:	2002
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

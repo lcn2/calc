@@ -1,7 +1,7 @@
 /*
  * zmath - declarations for extended precision integer arithmetic
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2002  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: zmath.h,v 29.7 2001/06/08 21:00:58 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: zmath.h,v 29.9 2002/12/29 09:20:25 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -131,7 +131,7 @@ typedef SB32 SFULL;			/* signed FULL */
 
 #define TOPFULL ((FULL)1 << (FULL_BITS-1))	/* highest bit in FULL */
 #define MAXFULL (TOPFULL - (FULL)1)		/* largest SFULL value */
-#define MAXUFULL (MAXFULL | TOPHALF)		/* largest FULL value */
+#define MAXUFULL (MAXFULL | TOPFULL)		/* largest FULL value */
 
 #define TOPLONG ((unsigned long)1 << (LONG_BITS-1))	/* top long bit */
 #define MAXLONG ((long) (TOPLONG - (unsigned long)1))	/* largest long val */
@@ -552,8 +552,10 @@ extern DLL void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 #define MODE_OCTAL	6
 #define MODE_BINARY	7
 #define MODE_MAX	7
+#define MODE2_OFF	(MODE_MAX+1)
 
 #define MODE_INITIAL	MODE_REAL
+#define MODE2_INITIAL	MODE2_OFF
 
 
 /*

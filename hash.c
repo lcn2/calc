@@ -1,7 +1,7 @@
 /*
  * hash - one-way hash routines
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2002  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: hash.c,v 29.4 2001/04/14 22:47:21 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: hash.c,v 29.5 2002/12/29 09:20:25 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hash.c,v $
  *
  * Under source code control:	1995/11/23 05:13:11
@@ -941,6 +941,7 @@ hash_value(int type, void *v, HASH *state)
 
 		/* hash the CONFIG state */
 		state = hash_int(type, value->v_config->outmode, state);
+		state = hash_int(type, value->v_config->outmode2, state);
 		state = hash_long(type,(long)value->v_config->outdigits, state);
 		state = hash_number(type, value->v_config->epsilon, state);
 		state = hash_long(type,

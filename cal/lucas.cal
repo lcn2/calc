@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: lucas.cal,v 29.5 2001/06/08 20:07:29 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: lucas.cal,v 29.6 2002/07/10 09:43:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/lucas.cal,v $
  *
  * Under source code control:	1990/05/03 16:49:51
@@ -90,7 +90,7 @@
  *
  *	test numbers of the form h*2^n-1
  *	fix a value of n and vary the value h
- *	n mod 128 == 0
+ *	n mod 2^x == 0  for some value of x, say > 7 or more
  *	h*2^n-1 is not divisible by any small prime < 2^40
  *	0 < h < 2^39
  *	h*2^n+1 is not divisible by any small prime < 2^40

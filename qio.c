@@ -1,7 +1,7 @@
 /*
  * qio - scanf and printf routines for arbitrary precision rational numbers
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2002  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: qio.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: qio.c,v 29.4 2002/12/29 09:20:25 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qio.c,v $
  *
  * Under source code control:	1993/07/30 19:42:46
@@ -180,9 +180,12 @@ qprintnum(NUMBER *q, int outmode)
 {
 	NUMBER tmpval;
 	long prec, exp;
+	int outmode2 = MODE2_OFF;
 
-	if (outmode == MODE_DEFAULT)
+	if (outmode == MODE_DEFAULT) {
 		outmode = conf->outmode;
+		outmode2 = conf->outmode2;
+	}
 	switch (outmode) {
 		case MODE_INT:
 			if (conf->tilde_ok && qisfrac(q))
@@ -247,6 +250,12 @@ qprintnum(NUMBER *q, int outmode)
 		default:
 			math_error("Bad mode for print");
 			/*NOTREACHED*/
+	}
+
+	if (outmode2 != MODE2_OFF) {
+		PUTSTR(" /* ");
+		qprintnum(q, outmode2);
+		PUTSTR(" */");
 	}
 }
 

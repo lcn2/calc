@@ -1,7 +1,7 @@
 /*
  * config - configuration routines
  *
- * Copyright (C) 1999  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2002  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: config.c,v 29.7 2001/04/25 07:15:22 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: config.c,v 29.8 2002/12/29 09:20:25 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -51,6 +51,7 @@
 NAMETYPE configs[] = {
 	{"all",		CONFIG_ALL},
 	{"mode",	CONFIG_MODE},
+	{"mode2",	CONFIG_MODE2},
 	{"display",	CONFIG_DISPLAY},
 	{"epsilon",	CONFIG_EPSILON},
 	/*epsilonprec -- tied to epsilon not a configuration type*/
@@ -101,6 +102,7 @@ NAMETYPE configs[] = {
  */
 CONFIG oldstd = {	/* backward compatible standard configuration */
 	MODE_INITIAL,		/* current output mode */
+	MODE2_INITIAL,		/* current secondary output mode */
 	20,			/* current output digits for float or exp */
 	NULL,	/* loaded in at startup - default error for real functions */
 	EPSILONPREC_DEFAULT,	/* binary precision of epsilon */
@@ -146,6 +148,7 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 };
 CONFIG newstd = {	/* new non-backward compatible configuration */
 	MODE_INITIAL,		/* current output mode */
+	MODE2_INITIAL,		/* current output mode */
 	10,			/* current output digits for float or exp */
 	NULL,	/* loaded in at startup - default error for real functions */
 	NEW_EPSILONPREC_DEFAULT,	/* binary precision of epsilon */
@@ -212,6 +215,7 @@ static NAMETYPE modes[] = {
 	{"oct",		MODE_OCTAL},
 	{"binary",	MODE_BINARY},
 	{"bin",		MODE_BINARY},
+	{"off",		MODE2_OFF},
 	{NULL,		0}
 };
 
@@ -465,6 +469,19 @@ setconfig(int type, VALUE *vp)
 			/*NOTREACHED*/
 		}
 		math_setmode((int) temp);
+		break;
+
+	case CONFIG_MODE2:
+		if (vp->v_type != V_STR) {
+			math_error("Non-string for mode");
+			/*NOTREACHED*/
+		}
+		temp = lookup_long(modes, vp->v_str->s_str);
+		if (temp < 0) {
+			math_error("Unknown mode \"%s\"", vp->v_str);
+			/*NOTREACHED*/
+		}
+		math_setmode2((int) temp);
 		break;
 
 	case CONFIG_EPSILON:
@@ -1018,6 +1035,16 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		vp->v_str = makenewstring(p);
 		return;
 
+	case CONFIG_MODE2:
+		vp->v_type = V_STR;
+		p = lookup_name(modes, cfg->outmode2);
+		if (p == NULL) {
+			math_error("invalid secondary output mode: %d", cfg->outmode2);
+			/*NOTREACHED*/
+		}
+		vp->v_str = makenewstring(p);
+		return;
+
 	case CONFIG_EPSILON:
 		vp->v_num = qlink(cfg->epsilon);
 		return;
@@ -1267,6 +1294,7 @@ config_cmp(CONFIG *cfg1, CONFIG *cfg2)
 	return cfg1->traceflags != cfg2->traceflags ||
 	       cfg1->outdigits != cfg2->outdigits ||
 	       cfg1->outmode != cfg2->outmode ||
+	       cfg1->outmode2 != cfg2->outmode2 ||
 	       qcmp(cfg1->epsilon, cfg2->epsilon) ||
 	       cfg1->epsilonprec != cfg2->epsilonprec ||
 	       cfg1->maxprint != cfg2->maxprint ||

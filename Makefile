@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.47 $$
-# @(#) $Id: Makefile.ship,v 29.47 2002/03/14 00:28:28 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.48 $$
+# @(#) $Id: Makefile.ship,v 29.48 2002/12/29 07:13:50 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -563,6 +563,7 @@ INCDIR= /usr/include
 # ${BINDIR}		where to install calc binary files
 # ${LIBDIR}		where calc link library (*.a) files are installed
 # ${CALC_SHAREDIR}	where to install calc help, .cal, startup, config files
+# ${CALC_INCDIR}	where the calc include files are installed
 #
 # NOTE: The install rule prepends installation paths with $T, which
 #	by default is empty.  If $T is non-empty, then installation
@@ -592,10 +593,13 @@ LIBDIR= /usr/lib
 #CALC_SHAREDIR= /dev/env/DJDIR/share/calc
 CALC_SHAREDIR= /usr/share/calc
 
+#CALC_INCDIR= /usr/local/include/calc
+#CALC_INCDIR= /dev/env/DJDIR/include/calc
+CALC_INCDIR= ${INCDIR}/calc
+
 # By default, these values are based CALC_SHAREDIR, INCDIR, BINDIR
 # ---------------------------------------------------------------
 # ${HELPDIR}		where the help directory is installed
-# ${CALC_INCDIR}	where the calc include files are installed
 # ${CUSTOMCALDIR}	where custom *.cal files are installed
 # ${CUSTOMHELPDIR}	where custom help files are installed
 # ${CUSTOMINCPDIR}	where custom .h files are installed
@@ -615,7 +619,6 @@ CALC_SHAREDIR= /usr/share/calc
 #	SCRIPTDIR= ${BINDIR}/cscript
 #
 HELPDIR= ${CALC_SHAREDIR}/help
-CALC_INCDIR= ${INCDIR}/calc
 CUSTOMCALDIR= ${CALC_SHAREDIR}/custom
 CUSTOMHELPDIR= ${CALC_SHAREDIR}/custhelp
 CUSTOMINCDIR= ${CALC_INCDIR}/custom

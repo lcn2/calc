@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: zrandom.c,v 29.3 2001/05/08 06:44:29 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: zrandom.c,v 29.4 2002/12/29 06:35:08 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrandom.c,v $
  *
  * Under source code control:	1997/02/15 04:01:56
@@ -2280,7 +2280,7 @@ zrandomrange(CONST ZVALUE low, CONST ZVALUE high, ZVALUE *res)
 	zsub(high, low, &range);
 	if (zisone(range)) {
 		zfree_random(range);
-		*res = low;
+		zcopy(low, res);
 		return;
 	}
 	zsub(range, _one_, &rangem1);

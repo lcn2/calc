@@ -1,7 +1,7 @@
 /*
  * quickhash - quickly hash a calc value using a partial Fowler/Noll/Vo hash
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2002  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: quickhash.c,v 29.4 2001/04/14 22:47:21 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: quickhash.c,v 29.5 2002/12/29 09:20:25 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/quickhash.c,v $
  *
  * Under source code control:	1995/03/04 11:34:23
@@ -382,6 +382,7 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	 */
 	value = cfg->outmode;
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->outmode);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->outmode2);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->outdigits);
 	/* epsilon is handeled out of order */
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->epsilonprec);

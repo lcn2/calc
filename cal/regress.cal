@@ -1,7 +1,7 @@
 /*
  * regress - calc regression and correctness test suite
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2002  David I. Bell and Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.10 $
- * @(#) $Id: regress.cal,v 29.10 2001/04/14 22:53:57 chongo Exp $
+ * @(#) $Revision: 29.14 $
+ * @(#) $Id: regress.cal,v 29.14 2002/12/29 09:16:07 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -492,7 +492,11 @@ define test_config()
 	vrfy(strlen(config("version")) > 0,
 					'555: strlen(config("version")) > 0');
 
-	print '556: Ending test_config';
+	/* mode2 is off by default */
+	vrfy(config("mode2") == "off",
+					'556: config("mode2") == "off"');
+
+	print '557: Ending test_config';
 }
 print '010: parsed test_config()';
 
@@ -1793,7 +1797,23 @@ define test_mode()
 	vrfy(str(3e9) == "3000000000", \
 		'1650: str(3e9) == \"3000000000\"');
 
-	print '1651: Ending mode/base test';
+	/* test base2() functionality */
+	vrfy(base2() == 0,		'1651: base2() == 0');
+	vrfy(base2(0) == 0,		'1652: base2(0) == 0');
+	vrfy(base2() == 0,		'1653: base2() == 0');
+	vrfy(base2(16) == 0,		'1654: base2(16) == 0');
+	vrfy(base2() == 16,		'1655: base2() == 16');
+	vrfy(str(3e9) == "3000000000 /* 0xb2d05e00 */",
+		'1656: str(3e9) == "3000000000 /* 0xb2d05e00 */"');
+	vrfy(base2(1/3) == 16,		'1657: base2(16) == 16');
+	vrfy(str(23209) == "23209 /* 23209 */",
+		'1658: str(23209) == "23209 /* 23209 */"');
+	vrfy(str(3/2) == "1.5 /* 3/2 */",
+		'1659: str(3/2) == "1.5 /* 3/2 */"');
+	vrfy(base() == 10,		'1660: base() == 10');
+	vrfy(base2(0) == 1/3,		'1661: base2(0) == 1/3');
+
+	print '1662: Ending mode/base test';
 }
 print '026: parsed test_mode()';
 
@@ -4547,7 +4567,14 @@ define test_random()
 	vrfy(seed() < 2^64,		  '5465: seed() < 2^64');
 	vrfy(israndom(srandom(seed())),	  '5466: israndom(srandom(seed()))');
 
-	print '5467: Ending test_random';
+	/* verify random(10,11) double bug fix */
+	vrfy(random(10,11) == 10,	  '5467: random(10,11) == 10');
+	vrfy(random(10,11) == 10,	  '5468: random(10,11) == 10');
+	vrfy(random(10,11) == 10,	  '5469: random(10,11) == 10');
+	vrfy(random(0,1) == 0,		  '5470: random(0,1) == 0');
+	vrfy(random(0,1) == 0,		  '5471: random(0,1) == 0');
+
+	print '5472: Ending test_random';
 }
 print '137: parsed test_random()';
 

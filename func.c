@@ -1,7 +1,7 @@
 /*
  * func - built-in functions implemented here
  *
- * Copyright (C) 1999  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2002  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.10 $
- * @(#) $Id: func.c,v 29.10 2001/05/29 00:41:22 chongo Exp $
+ * @(#) $Revision: 29.12 $
+ * @(#) $Id: func.c,v 29.12 2002/12/29 09:20:25 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -107,7 +107,7 @@
 /*
  * forward declarations
  */
-static NUMBER *base_value(long mode);
+static NUMBER *base_value(long mode, int defval);
 static int strscan(char *s, int count, VALUE **vals);
 static int filescan(FILEID id, int count, VALUE **vals);
 static VALUE f_eval(VALUE *vp);
@@ -6910,9 +6910,9 @@ f_system(VALUE *vp)
 		printf("%s\n", vp->v_str->s_str);
 	}
 #if defined(_WIN32)
-	/* if the execute length is 0 then use NULL in system call */
+	/* if the execute length is 0 then just return 0 */
 	if (strlen(vp->v_str->s_str) == 0) {
-		result.v_num = itoq((long)system(NULL));
+		result.v_num = itoq((long)0);
 	} else {
 		result.v_num = itoq((long)system(vp->v_str->s_str));
 	}
@@ -6978,15 +6978,15 @@ f_base(int count, NUMBER **vals)
 
 	/* deal with just a query */
 	if (count != 1) {
-		return base_value(conf->outmode);
+		return base_value(conf->outmode, conf->outmode);
 	}
 
 	/* deal with the specal modes first */
 	if (qisfrac(vals[0])) {
-		return base_value(math_setmode(MODE_FRAC));
+		return base_value(math_setmode(MODE_FRAC), conf->outmode);
 	}
 	if (vals[0]->num.len > 64/BASEB) {
-		return base_value(math_setmode(MODE_EXP));
+		return base_value(math_setmode(MODE_EXP), conf->outmode);
 	}
 
 	/* set the base, if possible */
@@ -7014,7 +7014,61 @@ f_base(int count, NUMBER **vals)
 	}
 
 	/* return the old base */
-	return base_value(oldbase);
+	return base_value(oldbase, conf->outmode);
+}
+
+
+/*
+ * set the default secondary output base/mode
+ */
+static NUMBER *
+f_base2(int count, NUMBER **vals)
+{
+	long base;	/* output base/mode */
+	long oldbase=0; /* output base/mode */
+
+	/* deal with just a query */
+	if (count != 1) {
+		return base_value(conf->outmode2, conf->outmode2);
+	}
+
+	/* deal with the specal modes first */
+	if (qisfrac(vals[0])) {
+		return base_value(math_setmode2(MODE_FRAC), conf->outmode2);
+	}
+	if (vals[0]->num.len > 64/BASEB) {
+		return base_value(math_setmode2(MODE_EXP), conf->outmode2);
+	}
+
+	/* set the base, if possible */
+	base = qtoi(vals[0]);
+	switch (base) {
+	case 0:
+		oldbase = math_setmode2(MODE2_OFF);
+		break;
+	case -10:
+		oldbase = math_setmode2(MODE_INT);
+		break;
+	case 2:
+		oldbase = math_setmode2(MODE_BINARY);
+		break;
+	case 8:
+		oldbase = math_setmode2(MODE_OCTAL);
+		break;
+	case 10:
+		oldbase = math_setmode2(MODE_REAL);
+		break;
+	case 16:
+		oldbase = math_setmode2(MODE_HEX);
+		break;
+	default:
+		math_error("Unsupported base");
+		/*NOTREACHED*/
+		break;
+	}
+
+	/* return the old base */
+	return base_value(oldbase, conf->outmode2);
 }
 
 
@@ -7022,14 +7076,14 @@ f_base(int count, NUMBER **vals)
  * return a numerical 'value' of the mode/base
  */
 static NUMBER *
-base_value(long mode)
+base_value(long mode, int defval)
 {
 	NUMBER *result;
 
 	/* return the old base */
 	switch (mode) {
 	case MODE_DEFAULT:
-		switch (conf->outmode) {
+		switch (defval) {
 		case MODE_DEFAULT:
 			result = itoq(10);
 			break;
@@ -7055,6 +7109,9 @@ base_value(long mode)
 			break;
 		case MODE_BINARY:
 			result = itoq(2);
+			break;
+		case MODE2_OFF:
+			result = itoq(0);
 			break;
 		default:
 			result = itoq(0);
@@ -7083,6 +7140,9 @@ base_value(long mode)
 		break;
 	case MODE_BINARY:
 		result = itoq(2);
+		break;
+	case MODE2_OFF:
+		result = itoq(0);
 		break;
 	default:
 		result = itoq(0);
@@ -7825,6 +7885,8 @@ static CONST struct builtin builtins[] = {
 	 "arithmetic mean of values"},
 	{"base", 0, 1, 0, OP_NOP, f_base, 0,
 	 "set default output base"},
+	{"base2", 0, 1, 0, OP_NOP, f_base2, 0,
+	 "set default secondary output base"},
 	{"bernoulli", 1, 1, 0, OP_NOP, 0, f_bern,
 	 "Bernoulli number for index a"},
 	{"bit", 2, 2, 0, OP_BIT, 0, 0,

@@ -1,7 +1,7 @@
 /*
  * zio - scanf and printf routines for arbitrary precision integers
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2002  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: zio.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: zio.c,v 29.4 2002/12/29 09:20:25 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zio.c,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -52,6 +52,7 @@ struct iostate {
 	IOSTATE *oldiostates;		/* previous saved state */
 	long outdigits;			/* digits for output */
 	int outmode;			/* output mode */
+	int outmode2;			/* secondary output mode */
 	FILE *outfp;			/* file unit for output (if any) */
 	char *outbuf;			/* output string buffer (if any) */
 	long outbufsize;		/* current size of string buffer */
@@ -214,6 +215,7 @@ math_divertio(void)
 	sp->oldiostates = oldiostates;
 	sp->outdigits = conf->outdigits;
 	sp->outmode = conf->outmode;
+	sp->outmode2 = conf->outmode2;
 	sp->outfp = outfp;
 	sp->outbuf = outbuf;
 	sp->outbufsize = outbufsize;
@@ -254,6 +256,7 @@ math_getdivertedio(void)
 	oldiostates = sp->oldiostates;
 	conf->outdigits = sp->outdigits;
 	conf->outmode = sp->outmode;
+	conf->outmode2 = sp->outmode2;
 	outfp = sp->outfp;
 	outbuf = sp->outbuf;
 	outbufsize = sp->outbufsize;
@@ -310,6 +313,25 @@ math_setmode(int newmode)
 	}
 	oldmode = conf->outmode;
 	conf->outmode = newmode;
+	return oldmode;
+}
+
+
+/*
+ * Set the secondary output mode for numeric output.
+ * This also returns the previous mode.
+ */
+int
+math_setmode2(int newmode)
+{
+	int oldmode;
+
+	if (newmode != MODE2_OFF && ((newmode <= MODE_DEFAULT) || (newmode > MODE_MAX))) {
+		math_error("Setting illegal secondary output mode");
+		/*NOTREACHED*/
+	}
+	oldmode = conf->outmode2;
+	conf->outmode2 = newmode;
 	return oldmode;
 }
 
