@@ -133,6 +133,12 @@ Following is the change from calc version 2.11.0t7 to date:
 
      Fixed memory leaks realted to srandom().
 
+     Fixed compilation warnings and problems on BSDI.
+
+     Removed ${CCMAIN} as a variable from the Makefile.  Now files
+     use either ${CFLAGS} for general C source and ${ICFLAGS} for
+     intermediate C source (e.g., special code for building hsrc files).
+
      Misc calc man page fixes.
 
 

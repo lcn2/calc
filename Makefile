@@ -516,8 +516,6 @@ ALLOW_CUSTOM= -DCUSTOM
 # CFLAGS are all flags given to ${CC} [[often includes CCOPT, CCWARN, CCMISC]]
 # ICFLAGS are given to ${CC} for intermediate progs
 #
-# CCMAIN are flags for ${CC} when files with main() instead of CFLAGS
-#
 # LCFLAGS are CC-style flags for ${LINT}
 # LDFLAGS are flags given to ${CC} for linking .o files
 # ILDFLAGS are flags given to ${CC} for linking .o files for intermediate progs
@@ -541,8 +539,6 @@ CCMISC=
 CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 ICFLAGS= ${CCWARN} ${CCMISC}
 #
-CCMAIN= ${ICFLAGS}
-#
 LCFLAGS=
 LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 ILDFLAGS=
@@ -564,8 +560,6 @@ CC= ${PURIFY} ${LCC}
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#CCMAIN= ${ICFLAGS}
-#
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
@@ -584,8 +578,6 @@ CC= ${PURIFY} ${LCC}
 #
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
-#
-#CCMAIN= ${ICFLAGS}
 #
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
@@ -617,8 +609,6 @@ CC= ${PURIFY} ${LCC}
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#CCMAIN= ${ICFLAGS}
-#
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
@@ -643,8 +633,6 @@ CC= ${PURIFY} ${LCC}
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#CCMAIN= ${ICFLAGS}
-#
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
@@ -662,8 +650,6 @@ CC= ${PURIFY} ${LCC}
 #
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
-#
-#CCMAIN= ${ICFLAGS}
 #
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
@@ -689,8 +675,6 @@ CC= ${PURIFY} ${LCC}
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#CCMAIN= ${ICFLAGS}
-#
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
@@ -710,9 +694,7 @@ CC= ${PURIFY} ${LCC}
 #CCMISC=
 #
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= ${CCWARN} ${CCMISC}
-#
-#CCMAIN= ${ICFLAGS}
+#ICFLAGS= ${CCWARN} ${CCMISC} -Wno-unused
 #
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
@@ -733,9 +715,7 @@ CC= ${PURIFY} ${LCC}
 #CCMISC=
 #
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= ${CCWARN} ${CCMISC}
-#
-#CCMAIN= ${ICFLAGS}
+#ICFLAGS= ${CCWARN} ${CCMISC} -Wno-unused
 #
 #LCFLAGS=
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
@@ -920,7 +900,6 @@ SAMPLE_PASSDOWN= Q="${Q}" \
     CCMISC="${CCMISC}" \
     CFLAGS="${CFLAGS} ${ALLOW_CUSTOM}" \
     ICFLAGS="${ICFLAGS}" \
-    CCMAIN="${CCMAIN}" \
     LCFLAGS="${LCFLAGS}" \
     LDFLAGS="${LDFLAGS}" \
     ILDFLAGS="${ILDFLAGS}" \
@@ -993,7 +972,7 @@ calc.1: calc.man ${MAKE_FILE}
 ##
 
 calc.o: calc.c ${MAKE_FILE}
-	${CC} ${CCMAIN} ${CCOPT} ${ALLOW_CUSTOM} -c calc.c
+	${CC} ${CFLAGS} ${CCOPT} ${ALLOW_CUSTOM} -c calc.c
 
 custom.o: custom.c ${MAKE_FILE}
 	${CC} ${CFLAGS} ${ALLOW_CUSTOM} -c custom.c
@@ -1391,7 +1370,7 @@ longlong.h: longlong.c have_stdlib.h have_string.h ${MAKE_FILE}
 	${Q}echo '' >> longlong.h
 	${Q}echo '/* do we have/want to use a long long type? */' >> longlong.h
 	-${Q}rm -f longlong.o longlong
-	-${Q}${LCC} ${CCMAIN} longlong.c -c 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} longlong.c -c 2>/dev/null; true
 	-${Q}${LCC} ${ILDFLAGS} longlong.o -o longlong 2>/dev/null; true
 	-${Q}${SHELL} -c "./longlong ${LONGLONG_BITS} > ll_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
@@ -1430,7 +1409,7 @@ have_fpos.h: have_fpos.c ${MAKE_FILE}
 	${Q}echo '' >> have_fpos.h
 	${Q}echo '/* do we have fgetpos & fsetpos functions? */' >> have_fpos.h
 	-${Q}rm -f have_fpos.o have_fpos
-	-${Q}${LCC} ${HAVE_FPOS} ${CCMAIN} have_fpos.c -c 2>/dev/null; true
+	-${Q}${LCC} ${HAVE_FPOS} ${ICFLAGS} have_fpos.c -c 2>/dev/null; true
 	-${Q}${LCC} ${ILDFLAGS} have_fpos.o -o have_fpos 2>/dev/null; true
 	-${Q}${SHELL} -c "./have_fpos > fpos_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
@@ -1471,7 +1450,7 @@ fposval.h: fposval.c have_fpos.h have_offscl.h have_posscl.h \
 	${Q}echo '' >> fposval.h
 	${Q}echo '/* what are our file position & size types? */' >> fposval.h
 	-${Q}rm -f fposval.o fposval
-	-${Q}${LCC} ${CCMAIN} fposval.c -c 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} fposval.c -c 2>/dev/null; true
 	-${Q}${LCC} ${ILDFLAGS} fposval.o -o fposval 2>/dev/null; true
 	${Q}${SHELL} -c "./fposval fposv_tmp >> fposval.h 2>/dev/null" \
 	    >/dev/null 2>&1; true
@@ -1504,7 +1483,7 @@ have_const.h: have_const.c ${MAKE_FILE}
 	${Q}echo '' >> have_const.h
 	${Q}echo '/* do we have or want const? */' >> have_const.h
 	-${Q}rm -f have_const.o have_const
-	-${Q}${LCC} ${CCMAIN} ${HAVE_CONST} have_const.c -c 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_CONST} have_const.c -c 2>/dev/null; true
 	-${Q}${LCC} ${ILDFLAGS} have_const.o -o have_const 2>/dev/null; true
 	-${Q}${SHELL} -c "./have_const > const_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
@@ -1543,7 +1522,7 @@ have_offscl.h: have_offscl.c ${MAKE_FILE}
 	${Q}echo '' >> have_offscl.h
 	${Q}echo '' >> have_offscl.h
 	-${Q}rm -f have_offscl.o have_offscl
-	-${Q}${LCC} ${CCMAIN} ${HAVE_OFFSCL} have_offscl.c -c 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_OFFSCL} have_offscl.c -c 2>/dev/null; true
 	-${Q}${LCC} ${ILDFLAGS} have_offscl.o -o have_offscl 2>/dev/null; true
 	-${Q}${SHELL} -c "./have_offscl > offscl_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
@@ -1581,7 +1560,7 @@ have_posscl.h: have_posscl.c have_fpos.h ${MAKE_FILE}
 	${Q}echo '' >> have_posscl.h
 	${Q}echo '' >> have_posscl.h
 	-${Q}rm -f have_posscl.o have_posscl
-	-${Q}${LCC} ${CCMAIN} ${HAVE_POSSCL} have_posscl.c -c 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_POSSCL} have_posscl.c -c 2>/dev/null; true
 	-${Q}${LCC} ${ILDFLAGS} have_posscl.o -o have_posscl 2>/dev/null; true
 	-${Q}${SHELL} -c "./have_posscl > posscl_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
@@ -1633,7 +1612,7 @@ align32.h: align32.c longbits.h have_unistd.h ${MAKE_FILE}
 	fi
 	-${Q}if [ X = X${ALIGN32} ]; then \
 	    rm -f align32.o align32; \
-	    ${LCC} ${CCMAIN} ${ALIGN32} align32.c -c 2>/dev/null; \
+	    ${LCC} ${ICFLAGS} ${ALIGN32} align32.c -c 2>/dev/null; \
 	    ${LCC} ${ILDFLAGS} align32.o -o align32 2>/dev/null; \
 	    ${SHELL} -c "./align32 >align32_tmp 2>/dev/null" >/dev/null 2>&1; \
 	    if [ -s align32_tmp ]; then \
@@ -1674,7 +1653,7 @@ have_uid_t.h: have_uid_t.c have_unistd.h ${MAKE_FILE}
 	${Q}echo '' >> have_uid_t.h
 	${Q}echo '/* do we have or want uid_t? */' >> have_uid_t.h
 	-${Q}rm -f have_uid_t.o have_uid_t
-	-${Q}${LCC} ${CCMAIN} ${HAVE_UID_T} have_uid_t.c -c 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_UID_T} have_uid_t.c -c 2>/dev/null; true
 	-${Q}${LCC} ${ILDFLAGS} have_uid_t.o -o have_uid_t 2>/dev/null; true
 	-${Q}${SHELL} -c "./have_uid_t > uid_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
@@ -1713,7 +1692,7 @@ have_newstr.h: have_newstr.c ${MAKE_FILE}
 	${Q}echo '/* do we have or want memcpy(), memset() & strchr()? */' \
 							>> have_newstr.h
 	-${Q}rm -f have_newstr.o have_newstr
-	-${Q}${LCC} ${CCMAIN} ${HAVE_NEWSTR} have_newstr.c -c 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_NEWSTR} have_newstr.c -c 2>/dev/null; true
 	-${Q}${LCC} ${ILDFLAGS} have_newstr.o -o have_newstr 2>/dev/null; true
 	-${Q}${SHELL} -c "./have_newstr > newstr_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
@@ -1751,7 +1730,7 @@ have_memmv.h: have_memmv.c ${MAKE_FILE}
 	${Q}echo '' >> have_memmv.h
 	${Q}echo '/* do we have or want memmove()? */' >> have_memmv.h
 	-${Q}rm -f have_memmv.o have_memmv
-	-${Q}${LCC} ${CCMAIN} ${HAVE_MEMMOVE} have_memmv.c -c 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_MEMMOVE} have_memmv.c -c 2>/dev/null; true
 	-${Q}${LCC} ${ILDFLAGS} have_memmv.o -o have_memmv 2>/dev/null; true
 	-${Q}${SHELL} -c "./have_memmv > newstr_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
@@ -1788,7 +1767,8 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
 	${Q}echo '' >> args.h
 	${Q}echo '' >> args.h
 	-${Q}rm -f have_stdvs.o have_stdvs
-	-${Q}${LCC} ${CCMAIN} ${HAVE_VSPRINTF} have_stdvs.c -c 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_VSPRINTF} have_stdvs.c -c \
+		2>/dev/null; true
 	-${Q}${LCC} ${ILDFLAGS} have_stdvs.o -o have_stdvs 2>/dev/null; true
 	-${Q}if ./have_stdvs >>args.h 2>/dev/null; then \
 	    touch have_args; \
@@ -1797,7 +1777,8 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
 	fi
 	-${Q}if [ ! -f have_args ] && [ X"${HAVE_VSPRINTF}" = X ]; then \
 	    rm -f have_stdvs.o have_stdvs have_varvs.o have_varvs; \
-	    ${LCC} ${CCMAIN} -DDONT_HAVE_VSPRINTF have_varvs.c -c 2>/dev/null; \
+	    ${LCC} ${ICFLAGS} -DDONT_HAVE_VSPRINTF have_varvs.c -c \
+		    2>/dev/null; \
 	    ${LCC} ${ILDFLAGS} have_varvs.o -o have_varvs 2>/dev/null; \
 	    if ./have_varvs >>args.h 2>/dev/null; then \
 		touch have_args; \
@@ -1877,17 +1858,17 @@ calc_errno.h: calc_errno.c ${MAKE_FILE}
 	    echo 'extern int sys_nerr;		' \
 		 '/* number of system errors */' >> calc_errno.h; \
 	else \
-	    ${LCC} ${CCMAIN} -DTRY_ERRNO_NO_DECL \
+	    ${LCC} ${ICFLAGS} -DTRY_ERRNO_NO_DECL \
 		  calc_errno.c -o calc_errno 2>calc_errno_tmp; \
 	    if [ -x ./calc_errno ]; then \
 		./calc_errno >> calc_errno.h; \
 	    else \
-		${LCC} ${CCMAIN} -DTRY_ERRNO_STD_DECL \
+		${LCC} ${ICFLAGS} -DTRY_ERRNO_STD_DECL \
 		      calc_errno.c -o calc_errno 2>calc_errno_tmp; \
 		if [ -x ./calc_errno ]; then \
 		    ./calc_errno >> calc_errno.h; \
 		else \
-		    ${LCC} ${CCMAIN} -DTRY_ERRNO_OLD_DECL \
+		    ${LCC} ${ICFLAGS} -DTRY_ERRNO_OLD_DECL \
 			  calc_errno.c -o calc_errno 2>calc_errno_tmp; \
 		    if [ -x ./calc_errno ]; then \
 			./calc_errno >> calc_errno.h; \
@@ -1983,16 +1964,16 @@ calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE}
 ##
 
 endian.o: endian.c have_unistd.h
-	${LCC} ${CCMAIN} endian.c -c
+	${LCC} ${ICFLAGS} endian.c -c
 
 endian: endian.o
-	${LCC} ${ILDFLAGS} endian.o -o endian
+	${LCC} ${ICFLAGS} endian.o -o endian
 
 longbits.o: longbits.c longlong.h have_unistd.h
-	${LCC} ${CCMAIN} longbits.c -c
+	${LCC} ${ICFLAGS} longbits.c -c
 
 longbits: longbits.o
-	${LCC} ${ILDFLAGS} longbits.o -o longbits
+	${LCC} ${ICFLAGS} longbits.o -o longbits
 
 ##
 #
@@ -2344,7 +2325,6 @@ env:
 	@echo "CCMISC=${CCMISC}"; echo ""
 	@echo "CFLAGS=${CFLAGS}"; echo ""
 	@echo "ICFLAGS=${ICFLAGS}"; echo ""
-	@echo "CCMAIN=${CCMAIN}"; echo ""
 	@echo "LCFLAGS=${LCFLAGS}"; echo ""
 	@echo "LDFLAGS=${LDFLAGS}"; echo ""
 	@echo "ILDFLAGS=${ILDFLAGS}"; echo ""

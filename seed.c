@@ -52,7 +52,9 @@
 #include <sys/stat.h>
 #include <sys/resource.h>
 #include <setjmp.h>
+#if !defined(__bsdi)
 #include <ustat.h>
+#endif /* __bsdi */
 #if defined(__linux)
 # include <fcntl.h>
 # define DEV_URANDOM "/dev/urandom"
@@ -214,8 +216,6 @@ pseudo_seed(void)
 	char urandom_pool[DEV_URANDOM_POOL];	/* /dev/urandom data pool */
 #endif /* __linux */
 	struct timeval tp;              /* time of day */
-	pid_t getsid;                   /* session ID */
-	pid_t getpgid;                  /* process group ID */
 	pid_t getpid;                   /* process ID */
 	pid_t getppid;                  /* parent process ID */
 	uid_t getuid;                   /* real user ID */
@@ -229,6 +229,7 @@ pseudo_seed(void)
 	struct stat fstat_stdin;        /* stat of stdin */
 	struct stat fstat_stdout;       /* stat of stdout */
 	struct stat fstat_stderr;       /* stat of stderr */
+#if !defined(__bsdi)
 	struct ustat ustat_dot;         /* usage stat of "." */
 	struct ustat ustat_dotdot;      /* usage stat of ".." */
 	struct ustat ustat_tmp;         /* usage stat of "/tmp" */
@@ -236,6 +237,9 @@ pseudo_seed(void)
 	struct ustat ustat_stdin;       /* usage stat of stdin */
 	struct ustat ustat_stdout;      /* usage stat of stdout */
 	struct ustat ustat_stderr;      /* usage stat of stderr */
+	pid_t getsid;                   /* session ID */
+	pid_t getpgid;                  /* process group ID */
+#endif /* __bsdi */
 	struct rusage rusage;           /* resource utilization */
 	struct rusage rusage_chld;      /* resource utilization of children */
 	struct timeval tp2;             /* time of day again */
@@ -271,8 +275,6 @@ pseudo_seed(void)
     }
 #endif /* __linux */
     (void) gettimeofday(&sdata.tp, NULL);
-    sdata.getsid = getsid((pid_t)0);
-    sdata.getpgid = getpgid((pid_t)0);
     sdata.getpid = getpid();
     sdata.getppid = getppid();
     sdata.getuid = getuid();
@@ -286,6 +288,7 @@ pseudo_seed(void)
     (void) fstat(0, &sdata.fstat_stdin);
     (void) fstat(1, &sdata.fstat_stdout);
     (void) fstat(2, &sdata.fstat_stderr);
+#if !defined(__bsdi)
     (void) ustat(sdata.stat_dotdot.st_dev, &sdata.ustat_dotdot);
     (void) ustat(sdata.stat_dot.st_dev, &sdata.ustat_dot);
     (void) ustat(sdata.stat_tmp.st_dev, &sdata.ustat_tmp);
@@ -293,6 +296,9 @@ pseudo_seed(void)
     (void) ustat(sdata.fstat_stdin.st_dev, &sdata.ustat_stdin);
     (void) ustat(sdata.fstat_stdout.st_dev, &sdata.ustat_stdout);
     (void) ustat(sdata.fstat_stderr.st_dev, &sdata.ustat_stderr);
+    sdata.getsid = getsid((pid_t)0);
+    sdata.getpgid = getpgid((pid_t)0);
+#endif /* __bsdi */
     (void) getrusage(RUSAGE_SELF, &sdata.rusage);
     (void) getrusage(RUSAGE_CHILDREN, &sdata.rusage_chld);
     (void) gettimeofday(&sdata.tp2, NULL);

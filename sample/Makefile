@@ -208,11 +208,6 @@ CALC_LIBS= ../libcalc.a ../custom/libcustcalc.a
 
 ###
 #
-# Normally, the upper level makefile will set these values.  We provide
-# a default here just in case you want to build from this directory.
-#
-# Select your compiler type by commenting out one of the cc sets below:
-#
 # CCOPT are flags given to ${CC} for optimization
 # CCWARN are flags given to ${CC} for warning message control
 # CCMISC are misc flags given to ${CC}
@@ -220,32 +215,36 @@ CALC_LIBS= ../libcalc.a ../custom/libcustcalc.a
 # CFLAGS are all flags given to ${CC} [[often includes CCOPT, CCWARN, CCMISC]]
 # ICFLAGS are given to ${CC} for intermediate progs
 #
-# CCMAIN are flags for ${CC} when files with main() instead of CFLAGS
-#
 # LCFLAGS are CC-style flags for ${LINT}
 # LDFLAGS are flags given to ${CC} for linking .o files
 # ILDFLAGS are flags given to ${CC} for linking .o files for intermediate progs
 #
-# CC is how the the C compiler is invoked
+# LCC how the the C compiler is invoked on locally executed intermediate progs
+# CC is how the the C compiler is invoked (with an optional Purify)
 #
 ###
 #
-# common cc set
+# default set
 #
-CCWARN=
+# Normally these values are passed in from the upper level Makefile.
+# Change these as needed if you intend to build directly in this directory.
+#
+# for better performance, set the following above:
+#     DEBUG= -O2
+#
+CCWARN= -Wall -Wno-implicit -Wno-comment
 CCOPT= ${DEBUG} ${NO_SHARED}
 CCMISC=
 #
-CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC} ${ALLOW_CUSTOM}
+CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 ICFLAGS= ${CCWARN} ${CCMISC}
-#
-CCMAIN= ${ICFLAGS}
 #
 LCFLAGS=
 LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 ILDFLAGS=
 #
-CC= ${PURIFY} cc
+LCC= gcc
+CC= ${PURIFY} ${LCC}
 
 ##############################################################################
 #-=-=-=-=-=-=-=-=- Be careful if you change something below -=-=-=-=-=-=-=-=-#
@@ -286,13 +285,13 @@ SORT= sort
 all: ${TARGETS} .all
 
 test_random.o: test_random.c
-	${CC} ${CCMAIN} ${CCOPT} ${ALLOW_CUSTOM} test_random.c -c
+	${CC} ${CFLAGS} ${ALLOW_CUSTOM} test_random.c -c
 
 test_random: test_random.o ../libcalc.a
 	${CC} ${LDFLAGS} test_random.o ${CALC_LIBS} ${LD_DEBUG} -o test_random
 
 many_random.o: many_random.c
-	${CC} ${CCMAIN} ${CCOPT} ${ALLOW_CUSTOM} many_random.c -c
+	${CC} ${CFLAGS} ${ALLOW_CUSTOM} many_random.c -c
 
 many_random: many_random.o ../libcalc.a
 	${CC} ${LDFLAGS} many_random.o ${CALC_LIBS} ${LD_DEBUG} -o many_random
