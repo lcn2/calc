@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.3 $
-# @(#) $Id: Makefile,v 29.3 2000/06/07 14:02:33 chongo Exp $
+# @(#) $Revision: 29.5 $
+# @(#) $Id: Makefile,v 29.5 2000/12/14 10:33:06 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -140,30 +140,31 @@ BLT_HELP_FILES= ${BLT_HELP_FILES_3} ${BLT_HELP_FILES_5} \
 # This list is prodiced by the detaillist rule when no WARNINGS are detected.
 #
 DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
-	appr arg argv arrow asec asech asin asinh assign atan atan2 atanh \
-	avg base bit blk blkcpy blkfree blocks bround btrunc calclevel ceil \
-	cfappr cfsim char cmdbuf cmp comb conj cos cosh cot coth count cp \
-	csc csch ctime delete den dereference det digit digits dp epsilon \
-	errcount errmax errno error eval exp fact factor fclose fcnt feof \
-	ferror fflush fgetc fgetfield fgetline fgets fgetstr fib files floor \
-	fopen forall fprintf fputc fputs fputstr frac free freeglobals \
-	freeredc freestatics frem freopen fscan fscanf fseek fsize ftell \
-	gcd gcdrem gd getenv hash head highbit hmean hnrmod hypot ilog \
-	ilog10 ilog2 im indices inputlevel insert int inverse iroot isassoc \
-	isatty isblk isconfig isdefined iserror iseven isfile ishash isident \
-	isint islist ismat ismult isnull isnum isobj isobjtype isodd isprime \
-	isptr isqrt isrand israndom isreal isrel issimple issq isstr istype \
-	jacobi join lcm lcmfact lfactor ln lowbit ltol makelist matdim \
-	matfill matmax matmin matsum mattrace mattrans max md5 memsize meq \
-	min minv mmin mne mod modify name near newerror nextcand nextprime \
-	norm null num oldvalue ord param perm pfact pi pix places pmod polar \
-	poly pop popcnt power prevcand prevprime printf prompt protect ptest \
+	appr arg argv arrow asec asech asin asinh assign atan atan2 atanh avg \
+	base bernoulli bit blk blkcpy blkfree blocks bround btrunc calc_tty \
+	calclevel catalan ceil cfappr cfsim char cmdbuf cmp comb conj cos \
+	cosh cot coth count cp csc csch ctime delete den dereference det \
+	digit digits dp epsilon errcount errmax errno error euler eval \
+	exp fact factor fclose fcnt feof ferror fflush fgetc fgetfield \
+	fgetline fgets fgetstr fib files floor fopen forall fprintf fputc \
+	fputs fputstr frac free freebernoulli freeeuler freeglobals freeredc \
+	freestatics frem freopen fscan fscanf fseek fsize ftell gcd gcdrem \
+	gd getenv hash head highbit hmean hnrmod hypot ilog ilog10 ilog2 \
+	im indices inputlevel insert int inverse iroot isassoc isatty isblk \
+	isconfig isdefined iserror iseven isfile ishash isident isint islist \
+	ismat ismult isnull isnum isobj isobjtype isodd isprime isptr isqrt \
+	isrand israndom isreal isrel issimple issq isstr istype jacobi join \
+	lcm lcmfact lfactor ln lowbit ltol makelist matdim matfill matmax \
+	matmin matsum mattrace mattrans max md5 memsize meq min minv mmin \
+	mne mod modify name near newerror nextcand nextprime norm null \
+	num oldvalue ord param perm pfact pi pix places pmod polar poly \
+	pop popcnt power prevcand prevprime printf prompt protect ptest \
 	push putenv quo quomod rand randbit random randombit randperm rcin \
 	rcmul rcout rcpow rcsq re remove reverse rewind rm root round rsearch \
 	runtime saveval scale scan scanf search sec sech seed segment select \
-	sgn sha sha1 sin sinh size sizeof sort sqrt srand srandom ssq str \
-	strcat strerror strlen strpos strprintf strscan strscanf substr \
-	sum swap system tail tan tanh test time trunc xor
+	sgn sha sha1 sin sinh size sizeof sleep sort sqrt srand srandom \
+	ssq str strcat strerror strlen strpos strprintf strscan strscanf \
+	substr sum swap system tail tan tanh test time trunc xor
 
 # This list is of files that are clones of DETAIL_HELP files.  They are
 # built from DETAIL_HELP files.

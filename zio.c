@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: zio.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: zio.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zio.c,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -318,10 +318,10 @@ math_setmode(int newmode)
  * Set the number of digits for float or exponential output.
  * This also returns the previous number of digits.
  */
-long
-math_setdigits(long newdigits)
+LEN
+math_setdigits(LEN newdigits)
 {
-	long olddigits;
+	LEN olddigits;
 
 	if (newdigits < 0) {
 		math_error("Setting illegal number of digits");

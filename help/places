@@ -1,34 +1,41 @@
 NAME
-    places - return number of decimal places
+    places - return number of "decimal" places in a fractional part
 
 SYNOPSIS
-    places(x)
+    places(x [,b])
 
 TYPES
     x		real
+    b		integer >= 2, defaults to 10
 
     return	integer
 
 DESCRIPTION
-    If x has a finite decimal representation (with nonzero last digit),
-    places(x) returns the number of digits after the decimal point in this
-    representation; this is the least non-negative integer n for which
-    10^n * x is an integer.
+    Returns the least non-negative integer n for which  b^n * x  is an
+    integer, or -1 if there is no such integer.
 
-    If x does not have a finite decimal representation, places(x) returns -1.
+    places(x,b) = 0 if and only if x is an integer.
+
+    places(x,b) = n > 0 if and only if the fractional part of abs(x)
+    has a finite base-b "decimal" representation with n digits of which
+    the last digit is nonzero.  This occurs if and only if every prime
+    factor of den(x) is a factor of b.
 
 EXAMPLE
     > print places(3), places(0.0123), places(3.70), places(1e-10), places(3/7)
     0 4 1 10 -1
 
+    > print places(0.0123, 2), places(.625, 2), places(.625, 8)
+    -1 3 1
+
 LIMITS
     none
 
 LINK LIBRARY
-    long qplaces(NUMBER *x)
+    long qplaces(NUMBER *q, ZVALUE base)
 
 SEE ALSO
-    digits
+    digit, digits
 
 ## Copyright (C) 1999  Landon Curt Noll
 ##
@@ -46,8 +53,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: places,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: places,v 29.4 2000/12/17 12:27:58 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/places,v $
 ##
 ## Under source code control:	1995/10/03 10:40:02

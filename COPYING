@@ -12,8 +12,8 @@ This file is Copyrighted
 	Everyone is permitted to copy and distribute verbatim copies
 	of this license document, but changing it is not allowed.
 
-    # @(#) $Revision: 29.2 $
-    # @(#) $Id: COPYING,v 29.2 2000/06/07 14:02:13 chongo Exp $
+    # @(#) $Revision: 29.3 $
+    # @(#) $Id: COPYING,v 29.3 2000/12/14 09:18:06 chongo Exp $
     # @(#) $Source: /usr/local/src/cmd/calc/RCS/COPYING,v $
 
 =-=
@@ -166,6 +166,12 @@ Calc copyrights and exception files
     This file, COPYING, is distributed under the Copyright found at the
     top of this file.  It is important to note that you may distribute
     verbatim copies of this file but you may not modify this file.
+
+    Some of these exception files are in the public domain.  Other
+    exception files have non-LGPL Copyrights.  In all cases one may
+    use and distribute these exception files freely.  And because one
+    may freely distribute the LGPL covered files, the entire calc
+    source may be freely used and distributed.
 
 =-=
 

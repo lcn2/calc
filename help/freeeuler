@@ -1,0 +1,49 @@
+NAME
+    freeeuler - free stored Euler numbers
+
+SYNOPSIS
+    freeeuler()
+
+TYPES
+    return	none
+
+DESCRIPTION
+    The memory used to store calculated Euler numbers is freed by
+    freeeuler().
+
+EXAMPLE
+    > freeeuler();
+
+LIMITS
+    none
+
+LINK LIBRARY
+    void qfreeeuler(void);
+
+SEE ALSO
+    euler, bernoulli, freebernoulli
+
+## Copyright (C) 2000  Ernest Bowen
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.1 $
+## @(#) $Id: freeeuler,v 29.1 2000/12/14 10:31:45 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/freeeuler,v $
+##
+## Under source code control:	2000/12/14 01:33:00
+## File existed as early as:	2000
+##
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

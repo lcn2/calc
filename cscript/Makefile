@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.5 $
-# @(#) $Id: Makefile,v 29.5 2000/06/07 14:02:59 chongo Exp $
+# @(#) $Revision: 29.6 $
+# @(#) $Id: Makefile,v 29.6 2000/12/15 14:56:14 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -65,7 +65,7 @@ FMT= fmt
 #
 # The ${SCRIPT_SRC} is built from ${SCRIPT} and has the .calc extensions.
 #
-# This list is prodiced by the detaillist rule when no WARNINGS are detected.
+# This list is produced by the detaillist rule when no WARNINGS are detected.
 # To add a script:
 #
 #	1) Name the file with a .calc filename extension
@@ -76,15 +76,15 @@ FMT= fmt
 #
 #		make detaillist
 #
-SCRIPT= mersenne piforever plus simple
+SCRIPT= mersenne piforever plus simple square
 
-SCRIPT_SRC= mersenne.calc piforever.calc plus.calc simple.calc
+SCRIPT_SRC= mersenne.calc piforever.calc plus.calc simple.calc square.calc
 
 # These files are found (but not built) in the distribution
 #
 DISTLIST= ${SCRIPT_SRC} ${MAKE_FILE} README
 
-# These files are used to make (but not built) a calc .a library
+# These files are used to make (but not build) a calc .a library
 #
 CALCLIBLIST=
 
@@ -92,10 +92,10 @@ CALCLIBLIST=
 #
 all: ${SCRIPT} ${SCRIPT_SRC} .all
 
-# used by the upper level Makefile to determine of we have done all
+# used by the upper level Makefile to determine if we have done all
 #
 # NOTE: Due to bogus shells found on one common system we must have
-#	an non-emoty else clause for every if condition.  *sigh*
+#	a non-empty else clause for every if condition.  *sigh*
 #
 .all:
 	rm -f .all
@@ -242,6 +242,10 @@ plus: plus.calc
 	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	${CHMOD} +x $@
 simple: simple.calc
+	rm -f $@
+	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
+	${CHMOD} +x $@
+square: square.calc
 	rm -f $@
 	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	${CHMOD} +x $@

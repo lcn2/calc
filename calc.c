@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: calc.c,v 29.4 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: calc.c,v 29.5 2000/07/17 15:35:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11
@@ -70,8 +70,8 @@
  * static definitions and functions
  */
 static void intint(int arg);	/* interrupt routine */
-static int script_args(int argc,char ***argv,char **shellfile,char **program);
-
+static int nextcp(char **cpp, int *ip, int argc, char **argv, BOOL haveendstr);
+static void set_run_state(run state);
 
 /*
  * Top level calculator routine.
@@ -81,186 +81,376 @@ main(int argc, char **argv)
 {
 	int want_defhelp = 0;	/* 1=> we only want the default help */
 	int cmdlen;		/* length of the command string */
-	char *shellfile = NULL; /* != NULL ==> name of calc shell script */
-	extern char *optarg;	/* option argument */
-	extern int optind;	/* option index */
+	int newcmdlen;
 	int c;			/* option */
-	char *p;
-	long i;
+	int index;
+	int maxindex;
+	char *cp;
+	char *endcp;
+	char *bp;
+	BOOL done = FALSE;
+	BOOL havearg;
+	BOOL haveendstr;
+	int len;
 
 	/*
 	 * parse args
 	 */
 	program = argv[0];
-	/* catch the case of a leading -S option */
-	if (argc > 2 && strncmp(argv[1], "-S", 2) == 0) {
-		/* convert the calc shell options into command line options */
-		argc = script_args(argc, &argv, &shellfile, &program);
-		/* -S implies -s */
-		s_flag = TRUE;
-	}
-	/* process command line options */
-	while ((c = getopt(argc, argv, "Cehim:npquvcdD:s")) != -1) {
-		switch (c) {
-		case 'C':
-#if defined(CUSTOM)
-			allow_custom = TRUE;
-			break;
-#else /* CUSTOM */
-			/*
-			 * we are too early in processing to call
-			 * libcalc_call_me_last() - nothing to cleanup
-			 */
-			fprintf(stderr,
-			    "%s: calc was built with custom functions "
-			    "disabled, -C usage is disallowed\n", program);
-			exit(1);
-#endif /* CUSTOM */
-		case 'e':
-			no_env = TRUE;
-			break;
-		case 'h':
-			want_defhelp = 1;
-			break;
-		case 'i':
-			i_flag = TRUE;
-			break;
-		case 'm':
-			if (optarg[1] != '\0' || *optarg<'0' || *optarg>'7') {
-				/*
-				 * we are too early in processing to
-				 * call libcalc_call_me_last()
-				 * nothing to cleanup
-				 */
-				fprintf(stderr,
-					"%s: unknown -m arg\n", program);
-				exit(1);
-			}
-			allow_read = (((*optarg-'0') & 04) > 0);
-			allow_write = (((*optarg-'0') & 02) > 0);
-			allow_exec = (((*optarg-'0') & 01) > 0);
-			break;
-		case 'n':
-			new_std = TRUE;
-			break;
-		case 'p':
-			p_flag = TRUE;
-			break;
-		case 'q':
-			q_flag = TRUE;
-			break;
-		case 'u':
-			u_flag = TRUE;
-			break;
-		case 'c':
-			c_flag = TRUE;
-			break;
-		case 'd':
-			d_flag = TRUE;
-			break;
-		case 'v':
-			/*
-			 * we are too early in processing to call
-			 * libcalc_call_me_last() - nothing to cleanup
-			 */
-			printf("%s (version %s)\n", CALC_TITLE, version());
-			exit(0);
-		case 'D':
-			/*
-			 * parse the -D optarg
-			 *
-			 * Could be calc_debug
-			 *	 or calc_debug:resource_debug
-			 *	 or calc_debug:resource_debug:user_debug
-			 */
-			calc_debug = optarg;
-			p = strchr(optarg, ':');
-			if (p != NULL) {
-				*p = '\0';
-				resource_debug = p+1;
-				p = strchr(resource_debug, ':');
-				if (p != NULL) {
-					*p = '\0';
-					user_debug = p+1;
-				}
-			}
-			break;
-		case 's':
-			s_flag = TRUE;
-			break;
-		case 'S':
-			/*FALLTHRU*/
-		default:
-			/*
-			 * we are too early in processing to call
-			 * libcalc_call_me_last() - nothing to cleanup
-			 */
-			fprintf(stderr,
-			  "usage: %s [-c] [-C] [-d] [-e] [-h] [-i] [-m mode]\n"
-			  "\t[-D calc_debug[:resource_debug[:user_debug]]]\n"
-			  "\t[-n] [-p] [-q] [-s] [-u] [-v] "
-			  "[[--] calc_cmd ...]\n",
-			  program);
-			exit(1);
-		}
-	}
 
-	/*
-	 * If -S was given via a calc shell script, imply -p and -d
-	 * unless -i was also given.
-	 */
-	if (shellfile != NULL && !i_flag) {
-		p_flag = TRUE;
-		d_flag = TRUE;
-	}
-
-	/*
-	 * look at the length of any trailing command args
-	 *
-	 * We make room for the trailing '\0\n' as well as an extra guard byte.
-	 *
-	 * However, if -S is in effect, we will pretend that we have no
-	 * command args and allow the argv() builtin access to the strings.
-	 */
 	cmdbuf[0] = '\0';
-	if (s_flag) {
-		havecommands = FALSE;
-		argc_value = argc - optind;
-		argv_value = argv + optind;
-	} else {
-		havecommands = (optind < argc);
-		for (cmdlen=0, i=optind; i < argc; ++i) {
-			/* argument + space separator */
-			cmdlen += strlen(argv[i]) + 1;
+	cmdlen = 0;
+
+	/* process command line options */
+
+	index = 1;
+	cp = endcp = NULL;
+	maxindex = argc;
+	havecommands = FALSE;
+	while (index < maxindex && !done) {
+		cp = argv[index];
+		if (*cp == '\0') {
+			index++;
+			continue;
 		}
-		if (cmdlen > MAXCMD) {
-			/*
-			 * we are too early in processing to call
-			 * libcalc_call_me_last() - nothing to cleanup
-			 */
+		for (;;) {
+			havearg = FALSE;
+			if (*cp != '-') {
+				done = TRUE;
+				break;
+			}
+			++cp;
+			if (*cp == '-') {
+				cp++;
+				while (*cp == ' ')
+					++cp;
+				done = TRUE;
+				break;
+			}
+
+			for (;;) {
+				c = *cp;
+				if (c == '\0' || c == ' ')
+					break;
+				switch (c) {
+				case 'C':
+#if defined(CUSTOM)
+					allow_custom = TRUE;
+					break;
+#else /* CUSTOM */
+					/*
+					 * we are too early in processing to
+					 * call libcalc_call_me_last() -
+					 * nothing to cleanup
+					 */
+					fprintf(stderr,
+					    "%s: calc was built with custom"
+					    " functions disabled, -C usage is"
+					    " disallowed\n", program);
+					exit(1);
+#endif /* CUSTOM */
+				case 'e':
+					no_env = TRUE;
+					break;
+				case 'h':
+					want_defhelp = 1;
+					break;
+				case 'i':
+					i_flag = TRUE;
+					break;
+				case 'm':
+					cp++;
+					while (*cp == ' ' || *cp == '\t')
+						cp++;
+					if (*cp == '\0') {
+						index++;
+						if (index >= argc) {
+							fprintf(stderr,
+								"-m expects"
+								" argument");
+							exit (1);
+						}
+						cp = argv[index];
+					}
+
+					if (*cp < '0' || *cp > '7') {
+						/*
+						 * we are too early in
+						 * processing to call
+						 * libcalc_call_me_last()
+						 * nothing to cleanup
+						 */
+						fprintf(stderr,
+							"%s: unknown -m arg\n",
+							program);
+						exit(1);
+					}
+					allow_read = (((*cp-'0') & 04) > 0);
+					allow_write = (((*cp-'0') & 02) > 0);
+					allow_exec = (((*cp-'0') & 01) > 0);
+					cp++;
+					if (*cp != ' ' && *cp != '\0') {
+						fprintf(stderr, "??? m-arg");
+						exit(1);
+					}
+					havearg = TRUE;
+					break;
+				case 'n':
+					new_std = TRUE;
+					break;
+				case 'p':
+					p_flag = TRUE;
+					break;
+				case 'q':
+					q_flag = TRUE;
+					break;
+				case 'u':
+					u_flag = TRUE;
+					break;
+				case 'c':
+					c_flag = TRUE;
+					break;
+				case 'd':
+					d_flag = TRUE;
+					break;
+				case 'v':
+					/*
+					 * we are too early in processing to
+					 * call libcalc_call_me_last() -
+					 * nothing to cleanup
+					 */
+					printf("%s (version %s)\n",
+					       CALC_TITLE, version());
+					exit(0);
+				case 'D':
+					/*
+					 * parse the -D arg
+					 *
+					 * Could be:
+					 *
+					 * calc_debug
+					 * calc_debug:resource_debug
+					 * calc_debug:resource_debug:user_debug
+					 */
+					if (nextcp(&cp, &index, argc, argv,
+						   FALSE)) {
+					    fprintf(stderr,
+					    	    "-D expects argument\n");
+					    exit (1);
+					}
+					havearg = TRUE;
+					if (*cp != ':') {
+						if (*cp < '0' || *cp > '9') {
+						    fprintf(stderr,
+						    	    "-D expects"
+							    " integer\n");
+						    exit (1);
+						}
+						calc_debug = cp;
+						(void) strtol(cp, &endcp, 10);
+						cp = endcp;
+						if (*cp != '\0' &&
+						    *cp != ' ' && *cp != ':') {
+						    fprintf(stderr,
+						    	    "Bad syntax im -D"
+							    " arg\n");
+						    exit (1);
+						}
+						if (*cp != ':') {
+						    if (nextcp(&cp, &index,
+						    	       argc, argv,
+							       FALSE)
+								|| *cp != ':')
+							break;
+						}
+					}
+					if (nextcp(&cp, &index, argc, argv,
+						   FALSE)) {
+						fprintf(stderr,
+							"-D : expects"
+							" argument\n");
+						exit (1);
+					}
+					if (*cp != ':') {
+						if (*cp < '0' || *cp > '9') {
+						    fprintf(stderr,
+						    	    "-D : expects"
+							    " integer\n");
+						    exit (1);
+						}
+						resource_debug = cp;
+						(void) strtol(cp, &endcp, 10);
+						cp = endcp;
+						if (*cp != '\0' &&
+						    *cp != ' ' && *cp != ':') {
+						    fprintf(stderr,
+						    	    "Bad syntax im -D"
+							    " : arg\n");
+						    exit (1);
+						}
+						if (*cp != ':') {
+							if (nextcp(&cp, &index,
+						    	           argc, argv,
+							           FALSE)
+							    || *cp != ':') {
+								break;
+							}
+						}
+					}
+					if (nextcp(&cp, &index, argc, argv,
+						   FALSE)) {
+					    fprintf(stderr, "-D : : expects"
+					    	    " argument\n");
+					    exit (1);
+					}
+					if (*cp < '0' || *cp > '9') {
+					    fprintf(stderr, "-D :: expects"
+					    	    " integer\n");
+					    exit (1);
+					}
+					user_debug = cp;
+					(void) strtol(cp, &endcp, 10);
+					cp = endcp;
+					if (*cp != '\0' && *cp != ' ') {
+						fprintf(stderr, "Bad syntax in"
+							" -D : : arg\n");
+						exit (1);
+					}
+					break;
+				case 'f':
+					haveendstr = (cp[1] == '\0');
+					if (nextcp(&cp, &index, argc, argv,
+						   haveendstr)) {
+					    fprintf(stderr, "-f expects"
+						    " filename\n");
+					    exit (1);
+					}
+					if (*cp == ';') {
+						fprintf(stderr,
+							"-f expects"
+							" filename\n");
+						exit (1);
+					}
+					havearg = TRUE;
+					if (cmdlen > 0)
+						cmdbuf[cmdlen++] = ' ';
+					strcpy(cmdbuf + cmdlen, "read ");
+					cmdlen += 5;
+					if (strncmp(cp, "-once", 5) == 0 &&
+					    (cp[5] == '\0' || cp[5] == ' ')) {
+						cp += 5;
+						haveendstr = (*cp == '\0');
+						strcpy(cmdbuf+cmdlen, "-once ");
+						cmdlen += 6;
+						if (nextcp(&cp, &index, argc,
+							   argv, haveendstr)) {
+						    fprintf(stderr, "-f -once"
+						    	    " expects"
+							    " filename\n");
+						    exit (1);
+						}
+					}
+					bp = cmdbuf + cmdlen;
+					if (haveendstr) {
+						len = strlen(cp);
+						if (len == 0) {
+							fprintf(stderr,
+								"Null"
+								" filename!");
+							exit (1);
+						}
+						if (cmdlen + len + 2 > MAXCMD) {
+							fprintf(stderr,
+								"Commands too"
+								" long");
+							exit (1);
+						}
+						/* XXX What if *cp = '\''? */
+						*bp++ = '\'';
+						strcpy(bp, cp);
+						bp += len;
+						*bp++ = '\'';
+						cp += len;
+						cmdlen += len + 2;
+					} else {
+						do {
+							if (cmdlen > MAXCMD) {
+								fprintf(stderr,
+								   "Commands"
+								   " too long");
+								exit (1);
+							}
+							*bp++ =  *cp++;
+							cmdlen++;
+						} while (*cp != '\0' &&
+							 *cp != ';' &&
+							 *cp != ' ');
+					}
+					if (*cp == ';')
+						cp++;
+					*bp++ = ';';
+					cmdlen++;
+					break;
+
+				case 's':
+					s_flag = TRUE;
+					maxindex = index + 1;
+					break;
+				default:
+					/*
+					 * we are too early in processing to
+					 * call libcalc_call_me_last() -
+					 * nothing to cleanup
+					 */
+					fprintf(stderr, "Illegal option -%c\n",
+							c);
+					fprintf(stderr,
+		"usage: %s [-a] [-c] [-C] [-d] [-e] [-h] [-i] [-m mode]\n"
+		"\t[-D calc_debug[:resource_debug[:user_debug]]]\n"
+		"\t[-n] [-p] [-q] [-u] [-v] "
+		"[--] [calc_cmd ...]\n",
+		program);
+					exit(1);
+			}
+			if (havearg)
+				break;
+			cp++;
+			}
+			while (*cp == ' ')
+				cp++;
+			if (*cp == '\0') {
+				index++;
+				break;
+			}
+		}
+	}
+
+	while (index < maxindex) {
+		if (cmdlen > 0)
+			cmdbuf[cmdlen++] = ' ';
+		newcmdlen = cmdlen + strlen(cp);
+		if (newcmdlen > MAXCMD) {
 			fprintf(stderr,
-				"%s: command in arg list is too long\n",
+				"%s: commands too long\n",
 				program);
 			exit(1);
 		}
-
-		/*
-		 * Form a command the remaining args separated by spaces.
-		 */
-		if (optind < argc) {
-			strcpy(cmdbuf, argv[optind]);
-			cmdlen = strlen(argv[optind]);
-			for (i=optind+1; i < argc; ++i) {
-				cmdbuf[cmdlen++] = ' ';
-				strcpy(cmdbuf+cmdlen, argv[i]);
-				cmdlen += strlen(argv[i]);
-			}
-			cmdbuf[cmdlen++] = '\n';
-			cmdbuf[cmdlen] = '\0';
-		}
-		argc_value = 0;
-		argv_value = argv+argc;
+		strcpy(cmdbuf + cmdlen, cp);
+		cmdlen = newcmdlen;
+		index++;
+		if (index < maxindex)
+			cp = argv[index];
 	}
+
+	havecommands = (cmdlen > 0);
+
+	if (havecommands) {
+		cmdbuf[cmdlen++] = '\n';
+		cmdbuf[cmdlen] = '\0';
+	}
+
+	argc_value = argc - maxindex;
+	argv_value = argv + maxindex;
 
 	/*
 	 * unbuffered mode
@@ -269,6 +459,7 @@ main(int argc, char **argv)
 		setbuf(stdin, NULL);
 		setbuf(stdout, NULL);
 	}
+
 
 	/*
 	 * initialize
@@ -295,18 +486,18 @@ main(int argc, char **argv)
 			    "Type \"exit\" to exit, or \"help\" for help.");
 		}
 		switch (hist_init(calcbindings)) {
-			case HIST_NOFILE:
-				fprintf(stderr,
-				    "%s: Cannot open bindings file \"%s\", "
-				    "fancy editing disabled.\n",
-				     program, calcbindings);
-				break;
+		case HIST_NOFILE:
+			fprintf(stderr,
+			    "%s: Cannot open bindings file \"%s\", "
+			    "fancy editing disabled.\n",
+			     program, calcbindings);
+			break;
 
-			case HIST_NOTTY:
-				fprintf(stderr,
-					"%s: Cannot set terminal modes, "
-					"fancy editing disabled\n", program);
-				break;
+		case HIST_NOTTY:
+			fprintf(stderr,
+				"%s: Cannot set terminal modes, "
+				"fancy editing disabled\n", program);
+			break;
 		}
 	}
 
@@ -333,18 +524,10 @@ main(int argc, char **argv)
 	 */
 	if (run_state == RUN_BEGIN) {
 		if (!q_flag && allow_read) {
-			if (conf->calc_debug & CALCDBG_RUNSTATE)
-				printf("main: run_state from %s to %s\n",
-				    run_state_name(run_state),
-				    run_state_name(RUN_RCFILES));
-			run_state = RUN_RCFILES;
+			set_run_state(RUN_RCFILES);
 			runrcfiles();
 		}
-		if (conf->calc_debug & CALCDBG_RUNSTATE)
-			printf("main: run_state from %s to %s\n",
-			    run_state_name(run_state),
-			    run_state_name(RUN_PRE_CMD_ARGS));
-		run_state = RUN_PRE_CMD_ARGS;
+		set_run_state(RUN_PRE_CMD_ARGS);
 	}
 
 	while (run_state == RUN_RCFILES) {
@@ -354,55 +537,27 @@ main(int argc, char **argv)
 			if (inputlevel() == 0) {
 				closeinput();
 				runrcfiles();
-				if (conf->calc_debug & CALCDBG_RUNSTATE)
-				    printf("main: run_state from %s to %s\n",
-					run_state_name(run_state),
-					run_state_name(RUN_PRE_CMD_ARGS));
-				run_state = RUN_PRE_CMD_ARGS;
+				set_run_state(RUN_PRE_CMD_ARGS);
 			} else {
 				closeinput();
 			}
 		} else {
 			if ((havecommands && !i_flag) || !stdin_tty) {
-				if (conf->calc_debug & CALCDBG_RUNSTATE)
-				    printf("main: run_state from %s to %s\n",
-					run_state_name(run_state),
-					run_state_name(RUN_EXIT_WITH_ERROR));
-				run_state = RUN_EXIT_WITH_ERROR;
+				set_run_state(RUN_EXIT_WITH_ERROR);
 			} else {
-				if (conf->calc_debug & CALCDBG_RUNSTATE)
-				    printf("main: run_state from %s to %s\n",
-					run_state_name(run_state),
-					run_state_name(RUN_PRE_CMD_ARGS));
-				run_state = RUN_PRE_CMD_ARGS;
+				set_run_state(RUN_PRE_CMD_ARGS);
 			}
 		}
 	}
 
 	if (run_state == RUN_PRE_CMD_ARGS) {
 		if (havecommands) {
-			if (conf->calc_debug & CALCDBG_RUNSTATE)
-				printf("main: run_state from %s to %s\n",
-				    run_state_name(run_state),
-				    run_state_name(RUN_CMD_ARGS));
-			run_state = RUN_CMD_ARGS;
+			set_run_state(RUN_CMD_ARGS);
 			(void) openstring(cmdbuf, (long) strlen(cmdbuf));
 			getcommands(FALSE);
 			closeinput();
-		} else if (shellfile != NULL) {
-			/* XXX - shellfile stuff needs it own run_state name */
-			if (conf->calc_debug & CALCDBG_RUNSTATE)
-				printf("main: run_state from %s to %s\n",
-				    run_state_name(run_state),
-				    run_state_name(RUN_CMD_ARGS));
-			run_state = RUN_CMD_ARGS;
-			getshellfile(shellfile);
 		}
-		if (conf->calc_debug & CALCDBG_RUNSTATE)
-			printf("main: run_state from %s to %s\n",
-			    run_state_name(run_state),
-			    run_state_name(RUN_PRE_TOP_LEVEL));
-		run_state = RUN_PRE_TOP_LEVEL;
+		set_run_state(RUN_PRE_TOP_LEVEL);
 	}
 
 	while (run_state == RUN_CMD_ARGS) {
@@ -410,38 +565,22 @@ main(int argc, char **argv)
 		if ((c_flag && !stoponerror) || stoponerror < 0) {
 			getcommands(FALSE);
 			if (inputlevel() == 0)
-				if (conf->calc_debug & CALCDBG_RUNSTATE)
-				    printf("main: run_state from %s to %s\n",
-					run_state_name(run_state),
-					run_state_name(RUN_PRE_TOP_LEVEL));
-				run_state = RUN_PRE_TOP_LEVEL;
+				set_run_state(RUN_PRE_TOP_LEVEL);
 			closeinput();
 		} else {
 			closeinput();
 			if (!stdin_tty || !i_flag || p_flag) {
-				if (conf->calc_debug & CALCDBG_RUNSTATE)
-				    printf("main: run_state from %s to %s\n",
-					run_state_name(run_state),
-					run_state_name(RUN_EXIT_WITH_ERROR));
-				run_state = RUN_EXIT_WITH_ERROR;
+				set_run_state(RUN_EXIT_WITH_ERROR);
 			} else {
-				if (conf->calc_debug & CALCDBG_RUNSTATE)
-				    printf("main: run_state from %s to %s\n",
-					run_state_name(run_state),
-					run_state_name(RUN_PRE_TOP_LEVEL));
-				run_state = RUN_PRE_TOP_LEVEL;
+				set_run_state(RUN_PRE_TOP_LEVEL);
 			}
 		}
 	}
 
 	if (run_state == RUN_PRE_TOP_LEVEL) {
 		if (stdin_tty &&
-		    (((havecommands || shellfile) && !i_flag) || p_flag)) {
-			if (conf->calc_debug & CALCDBG_RUNSTATE)
-				printf("main: run_state from %s to %s\n",
-				    run_state_name(run_state),
-				    run_state_name(RUN_EXIT));
-			run_state = RUN_EXIT;
+		    (((havecommands) && !i_flag) || p_flag)) {
+			set_run_state(RUN_EXIT);
 		} else {
 			if (stdin_tty) {
 				reinitialize();
@@ -449,40 +588,71 @@ main(int argc, char **argv)
 				resetinput();
 				openterminal();
 			}
-			if (conf->calc_debug & CALCDBG_RUNSTATE)
-				printf("main: run_state from %s to %s\n",
-				    run_state_name(run_state),
-				    run_state_name(RUN_TOP_LEVEL));
-			run_state = RUN_TOP_LEVEL;
+			set_run_state(RUN_TOP_LEVEL);
 			getcommands(TRUE);
 		}
+		if (p_flag || (!i_flag && havecommands))
+			set_run_state(RUN_EXIT);
 	}
 
 	while (run_state == RUN_TOP_LEVEL) {
+		if (conf->calc_debug & CALCDBG_RUNSTATE)
+			printf("main: run_state = TOP_LEVEL\n");
 		if ((c_flag && !stoponerror) || stoponerror < 0) {
 			getcommands(TRUE);
-			if (!inputisterminal())
+			if (!inputisterminal()) {
 				closeinput();
+				continue;
+			}
+			if (!p_flag && i_flag && !stdin_tty) {
+				closeinput();
+				if(!freopen("/dev/tty", "r", stdin)) {
+					fprintf(stderr,
+						"Unable to associate stdin"
+						" with /dev/tty");
+					set_run_state(RUN_EXIT_WITH_ERROR);
+					break;
+				}
+
+				stdin_tty = TRUE;
+				if (conf->calc_debug & CALCDBG_TTY)
+					printf("main: stdin_tty is %d\n",
+					       stdin_tty);
+				reinitialize();
+			}
 		} else {
 			if (stdin_tty) {
 				reinitialize();
 				getcommands(TRUE);
+			} else if (inputisterminal() &&
+					!p_flag && (!havecommands||i_flag)) {
+				closeinput();
+				if(!freopen("/dev/tty", "r", stdin)) {
+					fprintf(stderr,
+						"Unable to associate stdin"
+						" with /dev/tty");
+					set_run_state(RUN_EXIT_WITH_ERROR);
+					break;
+				}
+				stdin_tty = TRUE;
+				if (conf->calc_debug & CALCDBG_TTY)
+					printf("main: stdin_tty is %d\n",
+					       stdin_tty);
+				reinitialize();
 			} else {
-				if (conf->calc_debug & CALCDBG_RUNSTATE)
-				    printf("main: run_state from %s to %s\n",
-					run_state_name(run_state),
-					run_state_name(RUN_EXIT_WITH_ERROR));
-				run_state = RUN_EXIT_WITH_ERROR;
+				set_run_state(RUN_EXIT_WITH_ERROR);
 			}
 		}
 	}
+	if (conf->calc_debug & CALCDBG_RUNSTATE)
+		printf("main: run_state = %s\n", run_state_name(run_state));
 
 	/*
 	 * all done
 	 */
 	libcalc_call_me_last();
 	return (run_state == RUN_EXIT_WITH_ERROR ||
-		run_state == RUN_UNKNOWN) ? 1 : 0;
+		run_state == RUN_ZERO) ? 1 : 0;
 }
 
 
@@ -540,183 +710,52 @@ math_error(char *fmt, ...)
 	}
 }
 
-
-/*
- * script_args - concert shell script options into command line form
- *
- * When a calc shell script is executed, the args are presented to calc
- * in a different form.	 Consider the a calc shell script called /tmp/calcit:
- *
- *	#!/usr/local/bin/calc -S -q -p
- *	a=eval(prompt("Enter a: "));
- *	b=eval(prompt("Enter b: "));
- *	print a+b;
- *
- * When it is executed as:
- *
- *	/tmp/calcit -D 31
- *
- * then calc will receive the following as args to main():
- *
- *	argc:	  5
- *	argv[0]:  "/usr/local/bin/calc"
- *	argv[1]:  "-S -q -p -e"
- *	argv[2]:  "/tmp/calcit"
- *	argv[3]:  "-D"
- *	argv[4]:  "31"
- *	argv[5]:  NULL
- *
- * NOTE: The user MUST put -S as the first characters on the calc shell
- *	 script #! line, right after the calc binary path.
- *
- * NOTE: The arg supplied on the #! calc shell script line are returned
- *	 as a single string.  All tabs are converted into spaces.
- *
- * We must remember the calc script filename, break apart the #! args
- * and remove the -S argument.	In the above case we would return:
- *
- *	argc:	  6
- *	argv[0]:  "/usr/local/bin/calc"
- *	argv[1]:  "-q"
- *	argv[2]:  "-p"
- *	argv[3]:  "-e"
- *	argv[4]:  "-D"
- *	argv[5]:  "31"
- *	argv[6]:  NULL
- *
- *	shellfile: "/tmp/calcit"
- *	s_flag:	   TRUE
- */
 static int
-script_args(int argc, char ***argv_p, char **shellfile_p, char **program_p)
+nextcp(char **cpp, int *ip, int argc, char **argv, BOOL haveendstr)
 {
-	char **argv;		/* new argv to return */
-	char *shellfile;	/* shell file pathname to return */
-	int delta;		/* the change needed in argc */
-	int i;
-	int j;
-	char *p;
-	char *q;
+	char *cp;
+	int index;
 
-	/*
-	 * must have at least 3 args and the 2nd must start with -S
-	 */
-	argv = *argv_p;
-	if (argc < 3 || strncmp(argv[1], "-S", 2) != 0) {
-		/*
-		 * we are too early in processing to call
-		 * libcalc_call_me_last() - nothing to cleanup
-		 */
-		fprintf(stderr,
-		    "%s: FATAL: bad args passed to script_args\n", program);
-		exit(1);
-	}
-	shellfile = argv[2];
+	cp = *cpp;
+	index = *ip;
 
-	/*
-	 * count the additional args beyond the -S
-	 */
-	if (argv[1][2] == ' ') {
 
-		/*
-		 * process args beyond -S on the #!/usr/local/bin line
-		 */
-		p = argv[1]+3 + strspn(argv[1]+3," ");
-		q = p;
-		if (q == '\0') {
-
-			/* only trailing spaces after -S, ignore them */
-			for (i = 3; i <= argc; ++i) {
-				argv[i-2] = argv[i];
-			}
-			argc -= 2;
-
-		} else {
-
-			/* count the space separated strings that follow -S */
-			for (delta = -1; p != NULL && *p;
-			     p = strchr(p+1,' '), ++delta) {
-				/* skip multiple spaces in a row */
-				p += strspn(p, " ");
-			}
-
-			/* allocate the new set of argv pointers */
-			argv = (char **)malloc(sizeof(char *) * argc+delta);
-			if (argv == NULL) {
-				/*
-				 * we are too early in processing to call
-				 * libcalc_call_me_last() - nothing to cleanup
-				 */
-				fprintf(stderr,
-				    "%s: failed to malloc %d pointers\n",
-				    shellfile, argc+delta);
-				exit(1);
-			}
-
-			/* we have the same 0th arg */
-			argv[0] = (*argv_p)[0];
-
-			/* args may be read-only, so duplicate 1st arg */
-			p = strdup(q);
-			if (p == NULL) {
-				/*
-				 * we are too early in processing to call
-				 * libcalc_call_me_last() - nothing to cleanup
-				 */
-				fprintf(stderr,
-				    "%s: failed to duplicate 1st arg\n",
-				    shellfile);
-				exit(1);
-			}
-
-			/* tokenize the 1st arg */
-			for (p=strtok(q," "), i=1; p != NULL;
-			     p=strtok(NULL," "), ++i) {
-				argv[i] = p;
-			}
-
-			/* save the 3rd and later args */
-			for (j=3; (*argv_p)[j] != NULL; ++j, ++i) {
-				argv[i] = (*argv_p)[j];
-			}
-			argv[i] = NULL;
-
-			/* set argc */
-			argc = i;
-		}
-
-	/*
-	 * catch the case of #!/usr/local/bin -Stuff_not_extra_args
-	 */
-	} else if (argv[1][2] != '\0') {
-
-		/*
-		 * we are too early in processing to call
-		 * libcalc_call_me_last() - nothing to cleanup
-		 */
-		fprintf(stderr,
-		    "%s: malformed #! line, -S must be "
-		    "followed by space or newline\n",
-		    shellfile);
-		exit(1);
-
-	/*
-	 * Only -S was given in the #!/usr/local/bin line, so we just
-	 * toss the 2nd and 3rd args
-	 */
-	} else {
-		for (i = 3; i <= argc; ++i) {
-			argv[i-2] = argv[i];
-		}
-		argc -= 2;
+	if (haveendstr) {
+		index++;
+		*ip = index;
+		if (index >= argc)
+			return 1;
+		*cpp = argv[index];
+		return 0;
 	}
 
-	/*
-	 * return and set the argc, argv, shellfile_p and s_flag values
-	 */
-	*argv_p = argv;
-	*shellfile_p = shellfile;
-	*program_p = shellfile;
-	s_flag = TRUE;
-	return argc;
+	if (*cp != '\0')
+		cp++;
+	for (;;) {
+		if (*cp == '\0') {
+			index++;
+			*ip = index;
+			if (index >= argc)
+				return 1;
+			cp = argv[index];
+		}
+		while (*cp == ' ')
+			cp++;
+		if (*cp != '\0')
+			break;
+	}
+	*cpp = cp;
+	return 0;
 }
+
+
+static void
+set_run_state(run state)
+{
+	if (conf->calc_debug & CALCDBG_RUNSTATE)
+		printf("main: run_state from %s to %s\n",
+			    run_state_name(run_state),
+			    run_state_name(state));
+	run_state = state;
+}
+

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: token.c,v 29.3 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: token.c,v 29.4 2000/07/17 15:35:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/token.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -178,8 +178,8 @@ gettoken(void)
 	type = T_NULL;
 	while (type == T_NULL) {
 		ch = nextchar();
-		if (allsyms && ((ch!=' ') &&
-		    (ch!=';') && (ch!='"') && (ch!='\n'))) {
+		if (allsyms && ch!=' ' && ch!=';' && ch!='"' &&
+				ch!='\'' && ch!='\n' && ch!=EOF) {
 			reread();
 			type = eatsymbol();
 			break;
@@ -566,10 +566,11 @@ eatsymbol(void)
 	if (allsyms) {
 		for (;;) {
 			ch = nextchar();
-			if ((ch == ' ') || (ch == ';') || (ch == '\n'))
+			if (ch == ' ' || ch == ';' ||
+					 ch == '\n' || ch == EOF)
 				break;
 			if (cc-- > 0)
-				*cp++ = (char)ch;
+				*cp++ = (char) ch;
 		}
 		reread();
 		*cp = '\0';

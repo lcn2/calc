@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: file.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: file.c,v 29.3 2000/12/17 12:24:42 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -40,6 +40,7 @@
 #include "calc.h"
 #include "longbits.h"
 #include "have_fpos.h"
+#include "have_fpos_pos.h"
 #include "fposval.h"
 #include "file.h"
 #include "calcerr.h"
@@ -1239,7 +1240,8 @@ z2filepos(ZVALUE zpos)
 	if (!zgtmaxfull(zpos)) {
 		/* ztofull puts the value into native byte order */
 		pos = ztofull(zpos);
-		ret = pos;
+		memset(&ret, 0, sizeof(FILEPOS));
+		memcpy((void *)&ret, (void *)&pos, sizeof(pos));
 		return ret;
 	}
 
@@ -1251,7 +1253,7 @@ z2filepos(ZVALUE zpos)
 		memcpy(&tmp, zpos.v, sizeof(FILEPOS));
 	} else {
 		/* copy what bits we can into the temp value */
-		tmp = 0;
+		memset(&tmp, 0, sizeof(FILEPOS));
 		memcpy(&tmp, zpos.v, zpos.len*BASEB/8);
 	}
 	/* swap into native byte order */

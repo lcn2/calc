@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: fposval.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: fposval.c,v 29.3 2000/12/17 12:25:36 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/fposval.c,v $
  *
  * Under source code control:	1994/11/05 03:19:52
@@ -63,6 +63,7 @@
 #include "endian_calc.h"
 #include "have_offscl.h"
 #include "have_posscl.h"
+#include "have_fpos_pos.h"
 
 char *program;			/* our name */
 
@@ -83,9 +84,14 @@ main(int argc, char **argv)
 	/*
 	 * print the file position information
 	 */
+#if defined(HAVE_FPOS_POS)
+	printf("#undef FILEPOS_BITS\n");
+	printf("#define FILEPOS_BITS %d\n", FPOS_POS_BITS);
+#else /* ! HAVE_FPOS_POS */
 	fileposlen = sizeof(FILEPOS)*8;
 	printf("#undef FILEPOS_BITS\n");
 	printf("#define FILEPOS_BITS %d\n", fileposlen);
+#endif /* ! HAVE_FPOS_POS */
 #if CALC_BYTE_ORDER == BIG_ENDIAN
 	/*
 	 * Big Endian
@@ -113,8 +119,8 @@ main(int argc, char **argv)
 	 * Normally a "(*(dest) = *(src))" would do, but on some
 	 * systems a FILEPOS is not a scalar hince we must memcpy.
 	 */
-	printf("#define SWAP_HALF_IN_FILEPOS(dest, src)\t%s%d%s\n",
-	    "memcpy((void *)(dest), (void *)(src), sizeof(",fileposlen,"))");
+	printf("#define SWAP_HALF_IN_FILEPOS(dest, src)\t%s\n",
+	    "memcpy((void *)(dest), (void *)(src), sizeof(FPOS_POS_BITS))");
 #endif /* HAVE_FILEPOS_SCALAR */
 #endif /* CALC_BYTE_ORDER == BIG_ENDIAN */
 	putchar('\n');

@@ -1,7 +1,7 @@
 /*
  * bernoulli - clculate the Nth Bernoulli number B(n)
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 2000  David I. Bell and Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: bernoulli.cal,v 29.2 2000/06/07 14:02:25 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: bernoulli.cal,v 29.3 2000/12/17 12:26:04 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/bernoulli.cal,v $
  *
  * Under source code control:	1991/09/30 11:18:41
@@ -29,12 +29,16 @@
 
 /*
  * Calculate the Nth Bernoulli number B(n).
- * This uses the following symbolic formula to calculate B(n):
+ *
+ * NOTE: This is now a bulitin function.
+ *
+ * The non-buildin code used the following symbolic formula to calculate B(n):
  *
  *	(b+1)^(n+1) - b^(n+1) = 0
  *
  * where b is a dummy value, and each power b^i gets replaced by B(i).
  * For example, for n = 3:
+ *
  *	(b+1)^4 - b^4 = 0
  *	b^4 + 4*b^3 + 6*b^2 + 4*b + 1 - b^4 = 0
  *	4*b^3 + 6*b^2 + 4*b + 1 = 0
@@ -48,11 +52,14 @@
  */
 
 
+/*
 static Bnmax;
 static mat Bn[1001];
+*/
 
 define B(n)
 {
+/*
 	local	nn, np1, i, sum, mulval, divval, combval;
 
 	if (!isint(n) || (n < 0))
@@ -85,4 +92,6 @@ define B(n)
 	}
 	Bnmax = n;
 	return Bn[n];
+*/
+	return bernoulli(n);
 }

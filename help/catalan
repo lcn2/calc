@@ -1,0 +1,63 @@
+NAME
+    catalan - Catalan number
+
+SYNOPSIS
+    catalan(n)
+
+TYPES
+    n		integer
+
+    return	integer
+
+DESCRIPTION
+    If n >= 0, this returns the Catalan number for index n:
+
+	catalan(n) = comb(2*n,n)/(n + 1)
+
+    Zero is returned for negative n.
+
+    The Catalan numbers occur in solutions of several elementary
+    combinatorial problems, e.g. for n >= 1, catalan(n) is the number of
+    ways of using parentheses to express a product of n + 1 letters in
+    terms of binary products; it is the number of ways of dissecting a
+    convex polygon with n + 2 sides into triangles by nonintersecting
+    diagonals; it is the number of integer-component-incrementing paths
+    from (x,y) = (0,0) to (x,y) = (n,n) for which always y <= x.
+
+EXAMPLE
+    > print catalan(2), catalan(3), catalan(4), catalan(20)
+    2 5 14 6564120420
+
+LIMITS
+    none
+
+LINK LIBRARY
+    NUMBER *qcatalan(NUMBER *n)
+
+SEE ALSO
+    comb, fact, perm
+
+## Copyright (C) 2000  Ernest Bowen
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.2 $
+## @(#) $Id: catalan,v 29.2 2000/12/17 12:27:58 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/catalan,v $
+##
+## Under source code control:	2000/12/14 01:33:00
+## File existed as early as:	2000
+##
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: lib_calc.c,v 29.3 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: lib_calc.c,v 29.4 2000/07/17 15:35:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.c,v $
  *
  * Under source code control:	1996/06/17 18:06:19
@@ -97,7 +97,7 @@ jmp_buf jmpbuf;		/* for errors */
 char *program = "calc";		/* our name */
 char *base_name = "calc";	/* basename of our name */
 char cmdbuf[MAXCMD+1+1+1];	/* command line expression + "\n\0" + guard */
-run run_state = RUN_UNKNOWN;	/* calc startup and run state */
+run run_state = RUN_ZERO;	/* calc startup run state */
 
 
 /*
@@ -165,7 +165,7 @@ static int init_done = 0;		/* 1 => we already initialized */
 static int *fd_setup = NULL;		/* fd's setup for interaction or -1 */
 static int fd_setup_len = 0;		/* number of fd's in fd_setup */
 static ttystruct *fd_orig = NULL;	/* fd original state */
-static ttystruct *fd_cur = NULL;	/* fd current atate */
+static ttystruct *fd_cur = NULL;	/* fd current state */
 static void initenv(void);		/* setup calc environment */
 static int find_tty_state(int fd);	/* find slot for saved tty state */
 
@@ -314,7 +314,7 @@ initialize(void)
 	math_cleardiversions();
 	math_setfp(stdout);
 	math_setmode(MODE_INITIAL);
-	math_setdigits((long)DISPLAY_DEFAULT);
+	math_setdigits(DISPLAY_DEFAULT);
 	conf->maxprint = MAXPRINT_DEFAULT;
 }
 
@@ -431,7 +431,7 @@ initenv(void)
  *
  * Anything that uses libcalc.a can call this function after they are
  * completely finished with libcalc.a processing.  The only effect of
- * this funcion is to free storage that might otherwise go unused.
+ * this function is to free storage that might otherwise go unused.
  *
  * NOTE: If, for any reason, you need to do more libcalc.a processing,
  *	 then you will need to call libcalc_call_me_first() again.
@@ -461,15 +461,13 @@ libcalc_call_me_last(void)
 	/*
 	 * restore all changed descriptor states
 	 */
-	if (fd_setup_len > 0) {
-		for (i=0; i < fd_setup_len; ++i) {
-			if (fd_setup[i] >= 0) {
-				if (conf->calc_debug & CALCDBG_TTY)
-					printf("libcalc_call_me_last: fd %d "
-					       "not in original state, "
-					       "restoring it", fd_setup[i]);
-				orig_tty(fd_setup[i]);
-			}
+	for (i=0; i < fd_setup_len; ++i) {
+		if (fd_setup[i] >= 0) {
+			if (conf->calc_debug & CALCDBG_TTY)
+				printf("libcalc_call_me_last: fd %d "
+				       "not in original state, "
+				       "restoring it", fd_setup[i]);
+			orig_tty(fd_setup[i]);
 		}
 	}
 
@@ -488,24 +486,24 @@ char *
 run_state_name(run state)
 {
 	switch (state) {
-	case RUN_UNKNOWN:
-		return "RUN_UNKNOWN";
+	case RUN_ZERO:
+		return "ZERO";
 	case RUN_BEGIN:
-		return "RUN_BEGIN";
+		return "BEGIN";
 	case RUN_RCFILES:
-		return "RUN_RCFILES";
+		return "RCFILES";
 	case RUN_PRE_CMD_ARGS:
-		return "RUN_PRE_CMD_ARGS";
+		return "PRE_CMD_ARGS";
 	case RUN_CMD_ARGS:
-		return "RUN_CMD_ARGS";
+		return "CMD_ARGS";
 	case RUN_PRE_TOP_LEVEL:
-		return "RUN_PRE_TOP_LEVEL";
+		return "PRE_TOP_LEVEL";
 	case RUN_TOP_LEVEL:
-		return "RUN_TOP_LEVEL";
+		return "TOP_LEVEL";
 	case RUN_EXIT:
-		return "RUN_EXIT";
+		return "EXIT";
 	case RUN_EXIT_WITH_ERROR:
-		return "RUN_EXIT_WITH_ERROR";
+		return "EXIT_WITH_ERROR";
 	}
 	return "RUN_invalid";
 }
@@ -579,7 +577,7 @@ find_tty_state(int fd)
 	}
 
 	/*
-	 * case: need to initlally malloc some state
+	 * case: need to initially malloc some state
 	 */
 	if (fd_setup_len <= 0 || fd_setup == NULL || fd_orig == NULL) {
 
@@ -835,8 +833,8 @@ orig_tty(int fd)
 	fd_cur[slot] = fd_orig[slot];
 
 	/*
-	 * Since current state is the orignal state, we can free up
-	 * this slot.  This also prevents functins such as the
+	 * Since current state is the original state, we can free up
+	 * this slot.  This also prevents functions such as the
 	 * libcalc_call_me_last() function from re-restoring it.
 	 */
 	fd_setup[slot] = -1;

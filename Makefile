@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.9 $
-# @(#) $Id: Makefile.ship,v 29.9 2000/06/07 15:50:19 chongo Exp $
+# @(#) $Revision: 29.10 $
+# @(#) $Id: Makefile.ship,v 29.10 2000/12/17 12:23:29 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -42,7 +42,7 @@
 #
 #	value		  meaning
 #	--------	  -------
-#	(nothing)	  let the makefile guess at what you need
+#	(nothing)	  let the Makefile guess at what you need
 #	-DUSE_TERMIOS	  use struct termios from <termios.h>
 #	-DUSE_TERMIO	  use struct termios from <termio.h>
 #	-DUSE_SGTTY	  use struct sgttyb from <sys/ioctl.h>
@@ -63,7 +63,7 @@ TERMCONTROL=
 # If you do not have vsprintf(), then calc will try sprintf() and hope
 # for the best.
 #
-# If HAVE_VSPRINTF is empty, this makefile will run the have_stdvs.c and/or
+# If HAVE_VSPRINTF is empty, this Makefile will run the have_stdvs.c and/or
 # have_varvs.c program to determine if vsprintf() is supported.	 If
 # HAVE_VSPRINTF is set to -DDONT_HAVE_VSPRINTF then calc will hope that
 # sprintf() will work.
@@ -78,7 +78,7 @@ HAVE_VSPRINTF=
 #    Big Endian:	Amdahl, 68k, Pyramid, Mips, Sparc, ...
 #    Little Endian:	Vax, 32k, Spim (Dec Mips), i386, i486, ...
 #
-# If in doubt, leave BYTE_ORDER empty.	This makefile will attempt to
+# If in doubt, leave BYTE_ORDER empty.	This Makefile will attempt to
 # use BYTE_ORDER in <machine/endian.h> or it will attempt to run
 # the endian program.  If you get syntax errors when you compile,
 # try forcing the value to be BIG_ENDIAN and run the calc regression
@@ -92,7 +92,7 @@ BYTE_ORDER=
 
 # Determine the number of bits in a long
 #
-# If in doubt, leave LONG_BITS empty.  This makefile will run
+# If in doubt, leave LONG_BITS empty.  This Makefile will run
 # the longbits program to determine the length.
 #
 # In order to avoid make brain damage in some systems, we avoid placing
@@ -125,7 +125,7 @@ LONGLONG_BITS=
 # Determine if we have the ANSI C fgetpos and fsetpos alternate interface
 # to the ftell() and fseek() (with whence set to SEEK_SET) functions.
 #
-# If HAVE_FPOS is empty, this makefile will run the have_fpos program
+# If HAVE_FPOS is empty, this Makefile will run the have_fpos program
 # to determine if there is are fgetpos and fsetpos functions.  If HAVE_FPOS
 # is set to -DHAVE_NO_FPOS, then calc will use ftell() and fseek().
 #
@@ -134,11 +134,22 @@ LONGLONG_BITS=
 HAVE_FPOS=
 #HAVE_FPOS= -DHAVE_NO_FPOS
 
+# Determine if we have an __pos element of a file position (fpos_t) structure.
+#
+# If HAVE_FPOS_POS is empty, this Makefile will run the have_fpos_pos program
+# to determine if fpos_t has a __pos structure element.  If HAVE_FPOS_POS
+# is set to -DHAVE_NO_FPOS_POS, then calc assume there is no __pos element.
+#
+# If in doubt, leave HAVE_FPOS_POS empty and this Makefile will figure it out.
+#
+HAVE_FPOS_POS=
+#HAVE_FPOS= -DHAVE_NO_FPOS_POS
+
 # Determine if we have an off_t which one can perform arithmetic operations,
 # assignments and comparisons.	On some systems off_t is some sort of union
 # or struct.
 #
-# If HAVE_OFFSCL is empty, this makefile will run the have_offscl program
+# If HAVE_OFFSCL is empty, this Makefile will run the have_offscl program
 # to determine if off_t is a scalar.  If HAVE_OFFSCL is set to the value
 # -DOFF_T_NON_SCALAR when calc will assume that off_t some sort of
 # union or struct which.
@@ -153,7 +164,7 @@ HAVE_OFFSCL=
 # or struct.  Some systems do not have an fpos_t and long is as a file
 # offset instead.
 #
-# If HAVE_POSSCL is empty, this makefile will run the have_offscl program
+# If HAVE_POSSCL is empty, this Makefile will run the have_offscl program
 # to determine if off_t is a scalar, or if there is no off_t and long
 # (a scalar) should be used instead.  If HAVE_POSSCL is set to the value
 # -DFILEPOS_NON_SCALAR when calc will assume that fpos_t exists and is
@@ -166,7 +177,7 @@ HAVE_POSSCL=
 
 # Determine if we have ANSI C const.
 #
-# If HAVE_CONST is empty, this makefile will run the have_const program
+# If HAVE_CONST is empty, this Makefile will run the have_const program
 # to determine if const is supported.  If HAVE_CONST is set to -DHAVE_NO_CONST,
 # then calc will not use const.
 #
@@ -177,7 +188,7 @@ HAVE_CONST=
 
 # Determine if we have uid_t
 #
-# If HAVE_UID_T is empty, this makefile will run the have_uid_t program
+# If HAVE_UID_T is empty, this Makefile will run the have_uid_t program
 # to determine if const is supported.  If HAVE_UID_T is set to -DHAVE_NO_UID_T,
 # then calc will treat uid_t as an unsigned short.  This only matters if
 # $HOME is not set and calc must look up the home directory in /etc/passwd.
@@ -189,7 +200,7 @@ HAVE_UID_T=
 
 # Determine if we have memcpy(), memset() and strchr()
 #
-# If HAVE_NEWSTR is empty, this makefile will run the have_newstr program
+# If HAVE_NEWSTR is empty, this Makefile will run the have_newstr program
 # to determine if memcpy(), memset() and strchr() are supported.  If
 # HAVE_NEWSTR is set to -DHAVE_NO_NEWSTR, then calc will use bcopy() instead
 # of memcpy(), use bfill() instead of memset(), and use index() instead of
@@ -202,7 +213,7 @@ HAVE_NEWSTR=
 
 # Determine if we have memmove()
 #
-# If HAVE_MEMMOVE is empty, this makefile will run the have_memmv program
+# If HAVE_MEMMOVE is empty, this Makefile will run the have_memmv program
 # to determine if memmove() is supported.  If HAVE_MEMMOVE is set to
 # -DHAVE_NO_MEMMOVE, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
@@ -214,7 +225,7 @@ HAVE_MEMMOVE=
 
 # Determine if we have ustat()
 #
-# If HAVE_USTAT is empty, this makefile will run the have_memmv program
+# If HAVE_USTAT is empty, this Makefile will run the have_memmv program
 # to determine if ustat() is supported.	 If HAVE_USTAT is set to
 # -DHAVE_NO_USTAT, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
@@ -226,7 +237,7 @@ HAVE_USTAT=
 
 # Determine if we have getsid()
 #
-# If HAVE_GETSID is empty, this makefile will run the have_memmv program
+# If HAVE_GETSID is empty, this Makefile will run the have_memmv program
 # to determine if getsid() is supported.  If HAVE_GETSID is set to
 # -DHAVE_NO_GETSID, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
@@ -238,7 +249,7 @@ HAVE_GETSID=
 
 # Determine if we have getpgid()
 #
-# If HAVE_GETPGID is empty, this makefile will run the have_memmv program
+# If HAVE_GETPGID is empty, this Makefile will run the have_memmv program
 # to determine if getpgid() is supported.  If HAVE_GETPGID is set to
 # -DHAVE_NO_GETPGID, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
@@ -250,7 +261,7 @@ HAVE_GETPGID=
 
 # Determine if we have clock_gettime()
 #
-# If HAVE_GETTIME is empty, this makefile will run the have_memmv program
+# If HAVE_GETTIME is empty, this Makefile will run the have_memmv program
 # to determine if clock_gettime() is supported.	 If HAVE_GETTIME is set to
 # -DHAVE_NO_GETTIME, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
@@ -262,7 +273,7 @@ HAVE_GETTIME=
 
 # Determine if we have getprid()
 #
-# If HAVE_GETPRID is empty, this makefile will run the have_memmv program
+# If HAVE_GETPRID is empty, this Makefile will run the have_memmv program
 # to determine if getprid() is supported.  If HAVE_GETPRID is set to
 # -DHAVE_NO_GETPRID, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
@@ -274,7 +285,7 @@ HAVE_GETPRID=
 
 # Determine if we have /dev/urandom
 #
-# If HAVE_URANDOM is empty, this makefile will run the have_memmv program
+# If HAVE_URANDOM is empty, this Makefile will run the have_memmv program
 # to determine if /dev/urandom is supported.  If HAVE_URANDOM is set to
 # -DHAVE_NO_URANDOM, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
@@ -286,7 +297,7 @@ HAVE_URANDOM=
 
 # Determine if we have getrusage()
 #
-# If HAVE_GETRUSAGE is empty, this makefile will run the have_memmv program
+# If HAVE_GETRUSAGE is empty, this Makefile will run the have_memmv program
 # to determine if getrusage() is supported.  If HAVE_GETRUSAGE is set to
 # -DHAVE_NO_GETRUSAGE, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
@@ -298,7 +309,7 @@ HAVE_GETRUSAGE=
 
 # Determine if we have strdup()
 #
-# If HAVE_STRDUP is empty, this makefile will run the have_memmv program
+# If HAVE_STRDUP is empty, this Makefile will run the have_memmv program
 # to determine if strdup() is supported.  If HAVE_STRDUP is set to
 # -DHAVE_NO_STRDUP, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
@@ -824,8 +835,8 @@ ECHO= /bin/echo
 
 # Makefile debug
 #
-# Q=@	do not echo internal makefile actions (quiet mode)
-# Q=	echo internal makefile actions (debug / verbose mode)
+# Q=@	do not echo internal Makefile actions (quiet mode)
+# Q=	echo internal Makefile actions (debug / verbose mode)
 #
 # V=@:	do not echo debug statements (quiet mode)
 # V=@	do echo debug statements (debug / verbose mode)
@@ -885,7 +896,7 @@ LIB_H_SRC= alloc.h blkcpy.h block.h byteswap.h calc.h cmath.h \
 # we build these .h files during the make
 #
 BUILD_H_SRC= align32.h args.h calcerr.h conf.h endian_calc.h \
-	fposval.h have_const.h have_fpos.h have_malloc.h \
+	fposval.h have_const.h have_fpos.h have_fpos_pos.h have_malloc.h \
 	have_memmv.h have_newstr.h have_offscl.h have_posscl.h \
 	have_stdlib.h have_string.h have_times.h have_uid_t.h \
 	have_unistd.h longbits.h longlong.h terminal.h \
@@ -903,7 +914,7 @@ BUILD_C_SRC= calcerr.c
 #
 UTIL_C_SRC= align32.c endian.c longbits.c have_newstr.c have_uid_t.c \
 	have_const.c have_stdvs.c have_varvs.c fposval.c have_fpos.c \
-	longlong.c have_offscl.c have_posscl.c have_memmv.c \
+	have_fpos_pos.c longlong.c have_offscl.c have_posscl.c have_memmv.c \
 	have_ustat.c have_getsid.c have_getpgid.c \
 	have_gettime.c have_getprid.c have_rusage.c have_strdup.c
 
@@ -918,8 +929,8 @@ UTIL_MISC_SRC= calcerr_h.sed calcerr_h.awk calcerr_c.sed calcerr_c.awk \
 # There MUST be a .o for every .c in UTIL_C_SRC.
 #
 UTIL_OBJS= endian.o longbits.o have_newstr.o have_uid_t.o \
-	have_const.o fposval.o have_fpos.o longlong.o try_strarg.o \
-	have_stdvs.o have_varvs.o have_posscl.o have_memmv.o \
+	have_const.o fposval.o have_fpos.o have_fpos_pos.o longlong.o \
+	try_strarg.o have_stdvs.o have_varvs.o have_posscl.o have_memmv.o \
 	have_ustat.o have_getsid.o have_getpgid.o \
 	have_gettime.o have_getprid.o ver_calc.o have_rusage.o have_strdup.o
 
@@ -936,7 +947,7 @@ UTIL_PROGS= align32 fposval have_uid_t longlong have_const \
 	have_ustat have_getsid have_getpgid \
 	have_gettime have_getprid ver_calc have_strdup
 
-# The complete list of makefile vars passed down to custom/Makefile.
+# The complete list of Makefile vars passed down to custom/Makefile.
 #
 CUSTOM_PASSDOWN= Q="${Q}" \
     TOPDIR="${TOPDIR}" \
@@ -964,7 +975,7 @@ CUSTOM_PASSDOWN= Q="${Q}" \
     MAKEDEPEND=${MAKEDEPEND} \
     SORT=${SORT}
 
-# The complete list of makefile vars passed down to sample/Makefile.
+# The complete list of Makefile vars passed down to sample/Makefile.
 #
 SAMPLE_PASSDOWN= Q="${Q}" \
     TOPDIR="${TOPDIR}" \
@@ -991,7 +1002,7 @@ SAMPLE_PASSDOWN= Q="${Q}" \
     CHMOD=${CHMOD} \
     SORT=${SORT}
 
-# The compelte list of makefile vars passed down to help/Makefile.
+# The compelte list of Makefile vars passed down to help/Makefile.
 #
 HELP_PASSDOWN= Q="${Q}" \
     TOPDIR="${TOPDIR}" \
@@ -1005,7 +1016,7 @@ HELP_PASSDOWN= Q="${Q}" \
     CHMOD=${CHMOD} \
     FMT=${FMT}
 
-# The compelte list of makefile vars passed down to cal/Makefile.
+# The compelte list of Makefile vars passed down to cal/Makefile.
 #
 CAL_PASSDOWN= Q="${Q}" \
     TOPDIR="${TOPDIR}" \
@@ -1013,7 +1024,7 @@ CAL_PASSDOWN= Q="${Q}" \
     MAKE_FILE=${MAKE_FILE} \
     CHMOD=${CHMOD}
 
-# The compelte list of makefile vars passed down to cscript/Makefile.
+# The compelte list of Makefile vars passed down to cscript/Makefile.
 #
 CSCRIPT_PASSDOWN= Q="${Q}" \
     BINDIR="${BINDIR}" \
@@ -1559,7 +1570,51 @@ have_fpos.h: have_fpos.c ${MAKE_FILE}
 	    true; \
 	fi
 
-fposval.h: fposval.c have_fpos.h have_offscl.h have_posscl.h \
+have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
+	-${Q}rm -f have_fpos_pos have_fpos_pos.o fpos_tmp have_fpos_pos.h
+	${Q}echo 'forming have_fpos_pos.h'
+	${Q}echo '/*' > have_fpos_pos.h
+	${Q}echo ' * DO NOT EDIT -- generated by the Makefile' \
+		>> have_fpos_pos.h
+	${Q}echo ' */' >> have_fpos_pos.h
+	${Q}echo '' >> have_fpos_pos.h
+	${Q}echo '' >> have_fpos_pos.h
+	${Q}echo '#if !defined(__HAVE_FPOS_POS_H__)' >> have_fpos_pos.h
+	${Q}echo '#define __HAVE_FPOS_POS_H__' >> have_fpos_pos.h
+	${Q}echo '' >> have_fpos_pos.h
+	${Q}echo '' >> have_fpos_pos.h
+	${Q}echo '/* do we have fgetpos & fsetpos functions? */' \
+		>> have_fpos_pos.h
+	-${Q}rm -f have_fpos_pos.o have_fpos_pos
+	-${Q}${LCC} ${HAVE_FPOS_POS} ${ICFLAGS} have_fpos_pos.c -c \
+		2>/dev/null; true
+	-${Q}${LCC} ${ILDFLAGS} have_fpos_pos.o -o have_fpos_pos \
+		2>/dev/null; true
+	-${Q}${SHELL} -c "./have_fpos_pos > fpos_tmp 2>/dev/null" \
+	    >/dev/null 2>&1; true
+	-${Q}if [ -s fpos_tmp ]; then \
+	    cat fpos_tmp >> have_fpos_pos.h; \
+	else \
+	    echo '#undef HAVE_FPOS_POS  /* no */' >> have_fpos_pos.h; \
+	    echo '' >> have_fpos_pos.h; \
+	    echo '#undef FPOS_POS_BITS' >> have_fpos_pos.h; \
+	fi
+	${Q}echo '' >> have_fpos_pos.h
+	${Q}echo '' >> have_fpos_pos.h
+	${Q}echo '#endif /* !__HAVE_FPOS_POS_H__ */' >> have_fpos_pos.h
+	-${Q}rm -f have_fpos_pos have_fpos_pos.o fpos_tmp
+	${Q}echo 'have_fpos_pos.h formed'
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= start of $@ =-=-='; \
+	    cat $@; \
+	    echo '=-=-= end of $@ =-=-='; \
+	    echo ''; \
+	else \
+	    true; \
+	fi
+
+fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	   endian_calc.h ${MAKE_FILE}
 	-${Q}rm -f fposv_tmp fposval fposval.o fposval.h
 	${Q}echo 'forming fposval.h'
@@ -2423,7 +2478,7 @@ sample/all:
 
 ##
 #
-# The BSDI cdrom makefile expects certain files to be pre-built in a sub-dir
+# The BSDI cdrom Makefile expects certain files to be pre-built in a sub-dir
 # called gen_h.	 This rule creats this sub-directory so that the release can
 # be shipped off to BSDI.  You can ignore this rule.
 #
@@ -2591,15 +2646,15 @@ chk: ./cal/regress.cal
 # debug
 #
 # make env:
-#	* print major makefile variables
+#	* print major Makefile variables
 #
 # make mkdebug:
-#	* print major makefile variables
+#	* print major Makefile variables
 #	* build anything not yet built
 #
 # make debug:
 #	* remove everything that was previously built
-#	* print major makefile variables
+#	* print major Makefile variables
 #	* make everything
 #	* run the regression tests
 ##
@@ -2612,6 +2667,7 @@ env:
 	@echo "LONG_BITS=${LONG_BITS}"; echo ""
 	@echo "LONGLONG_BITS=${LONGLONG_BITS}"; echo ""
 	@echo "HAVE_FPOS=${HAVE_FPOS}"; echo ""
+	@echo "HAVE_FPOS_POS=${HAVE_FPOS_POS}"; echo ""
 	@echo "HAVE_OFFSCL=${HAVE_OFFSCL}"; echo ""
 	@echo "HAVE_POSSCL=${HAVE_POSSCL}"; echo ""
 	@echo "HAVE_CONST=${HAVE_CONST}"; echo ""
@@ -3282,6 +3338,7 @@ file.o: fposval.h
 file.o: hash.h
 file.o: have_const.h
 file.o: have_fpos.h
+file.o: have_fpos_pos.h
 file.o: have_malloc.h
 file.o: have_memmv.h
 file.o: have_newstr.h
@@ -3299,6 +3356,7 @@ file.o: zmath.h
 fposval.o: endian_calc.h
 fposval.o: fposval.c
 fposval.o: have_fpos.h
+fposval.o: have_fpos_pos.h
 fposval.o: have_offscl.h
 fposval.o: have_posscl.h
 func.o: alloc.h
@@ -3369,6 +3427,9 @@ hash.o: zrand.h
 hash.o: zrandom.h
 have_const.o: have_const.c
 have_fpos.o: have_fpos.c
+have_fpos_pos.o: have_fpos.h
+have_fpos_pos.o: have_fpos_pos.c
+have_fpos_pos.o: have_posscl.h
 have_getpgid.o: have_getpgid.c
 have_getprid.o: have_getprid.c
 have_getsid.o: have_getsid.c

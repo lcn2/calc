@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: zmod.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: zmod.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmod.c,v $
  *
  * Under source code control:	1991/05/22 23:03:55
@@ -544,10 +544,9 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 		*res = _zero_;
 		return;
 	}
-	if (zisone(z1) && ziseven(z2)) {
+	if (zisone(z1)) {
 		if (ztmp.len)
 			zfree(ztmp);
-		zfree(z1);
 		*res = _one_;
 		return;
 	}

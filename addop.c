@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: addop.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: addop.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/addop.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -208,7 +208,7 @@ endfunc(void)
 	memcpy((char *) fp, (char *) curfunc, size);
 	if (curfunc != functemplate)
 		free(curfunc);
-	if (conf->traceflags & TRACE_FNCODES) {
+	if (newname[0] != '*' && (conf->traceflags & TRACE_FNCODES)) {
 		dumpnames = TRUE;
 		for (size = 0; size < fp->f_opcodecount; ) {
 			printf("%ld: ", (long)size);
@@ -318,7 +318,7 @@ freefunc(FUNC *fp)
 			/*NOTREACHED*/
 		}
 	}
-	if (conf->traceflags & TRACE_FNCODES) {
+	if (newname[0] != '*' && (conf->traceflags & TRACE_FNCODES)) {
 		printf("Freeing function \"%s\"\n",namestr(&funcnames,index));
 		dumpnames = FALSE;
 		for (i = 0; i < fp->f_opcodecount; ) {

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: regress.cal,v 29.3 2000/06/07 14:02:25 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: regress.cal,v 29.6 2000/12/17 12:26:42 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -755,7 +755,7 @@ define test_functions()
 	vrfy(den(17) == 1,		'712: den(17) == 1');
 	vrfy(den(3/7) == 7,		'713: den(3/7) == 7');
 	vrfy(den(-2/3) == 3,		'714: den(-2/3) == 3');
-	vrfy(digits(0) == 1,		'715: digits(0) == 1');
+	vrfy(digits(0) == 0,		'715: digits(0) == 0');
 	vrfy(digits(9) == 1,		'716: digits(9) == 1');
 	vrfy(digits(10) == 2,		'717: digits(10) == 2');
 	vrfy(digits(-691) == 3,		'718: digits(-691) == 3');
@@ -1029,8 +1029,8 @@ define test_functions()
 	vrfy(digit(a,-1) == 4,		'974: digit(a,-1) == 4');
 	vrfy(digit(a,-2) == 2,		'975: digit(a,-2) == 2');
 	vrfy(digit(a,-3) == 8,		'976: digit(a,-3) == 8');
-	vrfy(digits(0) == 1,		'977: digits(0) == 1');
-	vrfy(digits(0.0123) == 1,	'978: digits(0.0123) == 1');
+	vrfy(digits(0) == 0,		'977: digits(0) == 0');
+	vrfy(digits(0.0123) == 0,	'978: digits(0.0123) == 0');
 	vrfy(digits(3.7) == 1,		'979: digits(3.7) == 1');
 	vrfy(digits(-27) == 2,		'980: digits(-27) == 2');
 	vrfy(digits(-99.7) == 2,	'981: digits(-99.7) == 2');
@@ -1223,7 +1223,85 @@ define test_functions()
 	vrfy(hnrmod(21<<500+7,3,500,-1) == (21<<500+7)%(3<<500-1),
 		'1112: hnrmod(21<<500+7,3,500,-1) == (21<<500+7)%(3<<500-1)');
 
-	print '1113: Ending test_functions';
+	/*
+	 * catalan testing
+	 */
+	vrfy(catalan(2) == 2,		'1113: catalan(2) == 2');
+	vrfy(catalan(3) == 5,		'1114: catalan(3) == 5');
+	vrfy(catalan(4) == 14,		'1115: catalan(4) == 14');
+	vrfy(catalan(20) == 6564120420,	'1116: catalan(20) == 6564120420');
+
+	/*
+	 * bernoulli builtin function testing
+	 */
+	vrfy(bernoulli(0) == 1,		'1117: bernoulli(0) == 1');
+	vrfy(bernoulli(1) == -1/2,	'1118: bernoulli(1) == -1/2');
+	vrfy(bernoulli(2) == 1/6,	'1119: bernoulli(2) == 1/6');
+	vrfy(bernoulli(3) == 0,		'1120: bernoulli(3) == 0');
+	vrfy(bernoulli(4) == -1/30,	'1121: bernoulli(4) == -1/30');
+	vrfy(bernoulli(5) == 0,		'1122: bernoulli(5) == 0');
+	vrfy(bernoulli(6) == 1/42,	'1123: bernoulli(6) == 1/42');
+	vrfy(bernoulli(32) == -7709321041217/510,
+		    '1124: bernoulli(32) == -7709321041217/510');
+
+	/*
+	 * euler function testing
+	 */
+	vrfy(euler(0) == 1,		'1125: euler(0) == 1');
+	vrfy(euler(1) == 0,		'1126: euler(1) == 0');
+	vrfy(euler(2) == -1,		'1127: euler(2) == -1');
+	vrfy(euler(3) == 0,		'1128: euler(3) == 0');
+	vrfy(freeeuler() == null(),	'1129: freeeuler() == null()');
+	vrfy(euler(4) == 5,		'1130: euler(4) == 5');
+	vrfy(euler(5) == 0,		'1131: euler(5) == 0');
+	vrfy(euler(6) == -61,		'1132: euler(6) == -61');
+	vrfy(euler(32) == 177519391579539289436664789665,
+		    '1130: euler(32) == 177519391579539289436664789665');
+	vrfy(freeeuler() == null(),	'1133: freeeuler() == null()');
+
+	/*
+	 * digit with non-10 base
+	 */
+        a = 123456.789;
+	print				'1134: a = 123456.789';
+	vrfy(digit(a, 6, 100) == 0,	'1135: digit(a, 6, 100) == 0');
+	vrfy(digit(a, 5, 100) == 0,	'1136: digit(a, 5, 100) == 0');
+	vrfy(digit(a, 4, 100) == 0,	'1137: digit(a, 4, 100) == 0');
+	vrfy(digit(a, 3, 100) == 0,	'1138: digit(a, 3, 100) == 0');
+	vrfy(digit(a, 2, 100) == 12,	'1139: digit(a, 2, 100) == 12');
+	vrfy(digit(a, 1, 100) == 34,	'1140: digit(a, 1, 100) == 34');
+	vrfy(digit(a, 0, 100) == 56,	'1141: digit(a, 0, 100) == 56');
+	vrfy(digit(a, -1, 100) == 78,	'1142: digit(a, -1, 100) == 78');
+	vrfy(digit(a, -2, 100) == 90,	'1143: digit(a, -2, 100) == 90');
+	vrfy(digit(a, -3, 100) == 0,	'1144: digit(a, -3, 100) == 0');
+	vrfy(digit(a, -4, 100) == 0,	'1145: digit(a, -4, 100) == 0');
+	vrfy(digit(a, -5, 100) == 0,	'1146: digit(a, -5, 100) == 0');
+	vrfy(digit(a, -6, 100) == 0,	'1146: digit(a, -6, 100) == 0');
+
+	/*
+	 * digits with a non-10 base
+	 */
+	vrfy(digits(a, 100) == 3,	'1147: digits(a, 100) == 3');
+	vrfy(digits(2^256-1, 256) == 32,'1148: digits(2^256-1, 256) == 32');
+
+	/*
+	 * places with a non-10 base
+	 */
+	vrfy(places(0.0123, 2) == -1,	'1149: places(0.0123, 2) == -1');
+	vrfy(places(0.625, 2) == 3,	'1150: places(0.625, 2) == 3');
+	vrfy(places(0.625, 8) == 1,	'1151: places(0.625, 8) == 1');
+	vrfy(places(171/2^712, 2) == 712,
+				'1152: places(171/2^7120.625, 2) == 712');
+	vrfy(places(171/2^712, 64) == 119,
+				'1152: places(171/2^7120.625, 64) == 119');
+
+	/*
+	 * verify sleep
+	 */
+	vrfy(sleep(1/5) == null(),	'1153: sleep(1/5) == null()');
+	vrfy(sleep(1) == null(),	'1154: sleep(1) == null()');
+
+	print '1155: Ending test_functions';
 }
 print '017: parsed test_functions()';
 
@@ -2987,7 +3065,7 @@ define test_error()
 	vrfy(root(3,2,0) == error(10029),
 				    '3644: root(3,2,0) == error(10029)');
 	vrfy(norm("x") == error(10030), '3645: norm("x") == error(10030)');
-	vrfy(null() << 2 == error(10031),'3646: null() << 2 == error(10031)');
+	vrfy(list() << 2 == error(10031),'3646: list() << 2 == error(10031)');
 	vrfy(1.5 << 2 == error(10031),	'3647: 1.5 << 2 == error(10031)');
 	vrfy(3 << "x" == error(10032),	'3648: 3 << "x" == error(10032)');
 	vrfy(3 << 1.5 == error(10032),	'3649: 3 << 1.5 == error(10032)');
@@ -7536,6 +7614,15 @@ print;
 print '8500: Starting test_divmod'
 read -once "test8500";
 /* 85xx: Ending test_divmod is printed by test8500.cal */
+
+
+/*
+ * test_maxargs - test up to 1024 args being passed to a builtin function
+ */
+print;
+print '8600: Starting test_1024args'
+read -once "test8600";
+/* 86xx: Ending test_1024args is printed by test8600.cal */
 
 
 /*

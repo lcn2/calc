@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.2 $
-# @(#) $Id: Makefile,v 29.2 2000/06/07 14:02:54 chongo Exp $
+# @(#) $Revision: 29.3 $
+# @(#) $Id: Makefile,v 29.3 2000/12/17 12:28:31 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/Makefile,v $
 #
 # Under source code control:	1997/04/19 22:46:49
@@ -378,7 +378,10 @@ depend:
 		fi; \
 	done
 	${Q}(cd ..; ${MAKE} hsrc)
-	${Q}for i in `cd ..; ${MAKE} h_list`; do \
+	${Q}for i in `cd ..; ${MAKE} h_list 2>&1 | \
+			     ${SED} -e '/Entering directory/d' \
+				    -e '/Nothing to be done/d' \
+				    -e '/Leaving directory/d'`; do \
 		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
 		echo "#if !defined($$tag)" > "skel/$$i"; \
 		echo "#define $$tag" >> "skel/$$i"; \

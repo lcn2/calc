@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: qfunc.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: qfunc.c,v 29.4 2000/12/17 13:07:32 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:20
@@ -34,10 +34,17 @@
 #include "config.h"
 #include "prime.h"
 
+static NUMBER **B_table;
+static long B_num;
+static long B_allocnum;
+static NUMBER **E_table;
+static long E_num;
+
+#define QALLOCNUM 64
 
 /*
- * Set the default precision for real calculations.
- * The precision must be between zero and one.
+ * Set the default epsilon for approximate calculations.
+ * This must be greater than zero.
  *
  * given:
  *	q		number to be set as the new epsilon
@@ -47,8 +54,8 @@ setepsilon(NUMBER *q)
 {
 	NUMBER *old;
 
-	if (qisneg(q) || qiszero(q) || (qreli(q, 1L) >= 0)) {
-		math_error("Epsilon value must be between zero and one");
+	if (qisneg(q) || qiszero(q)) {
+		math_error("Epsilon value must be greater than zero");
 		/*NOTREACHED*/
 	}
 	old = conf->epsilon;
@@ -234,7 +241,7 @@ qpowi(NUMBER *q1, NUMBER *q2)
 
 
 /*
- * Given the legs of a right triangle, compute its hypothenuse within
+ * Given the legs of a right triangle, compute its hypotenuse within
  * the specified error.	 This is sqrt(a^2 + b^2).
  */
 NUMBER *
@@ -262,7 +269,7 @@ qhypot(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 
 
 /*
- * Given one leg of a right triangle with unit hypothenuse, calculate
+ * Given one leg of a right triangle with unit hypotenuse, calculate
  * the other leg within the specified error.  This is sqrt(1 - a^2).
  * If the wantneg flag is nonzero, then negative square root is returned.
  */
@@ -557,12 +564,11 @@ qilog10(NUMBER *q)
 	 * The number is not an integer.
 	 * Compute the result if the number is greater than one.
 	 */
-	if ((q->num.len > q->den.len) ||
-		((q->num.len == q->den.len) && (zrel(tmp1, q->den) > 0))) {
-			zquo(tmp1, q->den, &tmp2, 0);
-			n = zlog10(tmp2);
-			zfree(tmp2);
-			return n;
+	if (zrel(tmp1, q->den) > 0) {
+		zquo(tmp1, q->den, &tmp2, 0);
+		n = zlog10(tmp2);
+		zfree(tmp2);
+		return n;
 	}
 	/*
 	 * Here if the number is less than one.
@@ -583,104 +589,162 @@ qilog10(NUMBER *q)
  * Return the integer floor of the logarithm of a number relative to
  * a specified integral base.
  */
-long
-qilog(NUMBER *q1, NUMBER *q2)
+NUMBER *
+qilog(NUMBER *q, ZVALUE base)
 {
 	long n;
 	ZVALUE tmp1, tmp2;
 
-	if (qiszero(q1)) {
-		math_error("Zero argument for ilog");
-		/*NOTREACHED*/
-	}
-	if (qisfrac(q2) || zrel(q2->num, _one_) <= 0) {
-		math_error("Base for ilog non-integral or less than 2");
-		/*NOTREACHED*/
-	}
-	if (qisunit(q1))
-		return 0;
-	tmp1 = q1->num;
+	if (qiszero(q))
+		return NULL;
+
+	if (qisunit(q))
+		return qlink(&_qzero_);
+	if (qisint(q))
+		return itoq(zlog(q->num, base));
+	tmp1 = q->num;
 	tmp1.sign = 0;
-	if (qisint(q1))
-		return zlog(tmp1, q2->num);
-	if (zrel(tmp1, q1->den) > 0) {
-		zquo(tmp1, q1->den, &tmp2, 0);
-		n = zlog(tmp2, q2->num);
+	if (zrel(tmp1, q->den) > 0) {
+		zquo(tmp1, q->den, &tmp2, 0);
+		n = zlog(tmp2, base);
 		zfree(tmp2);
-		return n;
+		return itoq(n);
 	}
 	if (zisunit(tmp1))
-		zsub(q1->den, _one_, &tmp2);
+		zsub(q->den, _one_, &tmp2);
 	else
-		zquo(q1->den, tmp1, &tmp2, 0);
-	n = -zlog(tmp2, q2->num) - 1;
+		zquo(q->den, tmp1, &tmp2, 0);
+	n = -zlog(tmp2, base) - 1;
 	zfree(tmp2);
-	return n;
+	return itoq(n);
 }
 
+
 /*
- * Return the number of digits in a number, ignoring the sign.
- * For fractions, this is the number of digits of its greatest integer.
- * Examples: qdigits(3456) = 4, qdigits(-23.45) = 2, qdigits(.0120) = 1.
+ * Return the number of digits in the representation to a specified
+ * base of the integral part of a number.
+ * Examples: qdigits(3456,10) = 4, qdigits(-23.45, 10) = 2.
  *
  * given:
  *	q		number to count digits of
  */
 long
-qdigits(NUMBER *q)
+qdigits(NUMBER *q, ZVALUE base)
 {
 	long n;			/* number of digits */
 	ZVALUE temp;		/* temporary value */
 
+	if (zabsrel(q->num, q->den) < 1)
+		return 0;
 	if (qisint(q))
-		return zdigits(q->num);
+		return 1 + zlog(q->num, base);
 	zquo(q->num, q->den, &temp, 2);
-	n = zdigits(temp);
+	n = 1 + zlog(temp, base);
 	zfree(temp);
 	return n;
 }
 
 
 /*
- * Return the digit at the specified decimal place of a number represented
- * in floating point.  The lowest digit of the integral part of a number
- * is the zeroth decimal place.	 Negative decimal places indicate digits
- * to the right of the decimal point.  Examples: qdigit(1234.5678, 1) = 3,
- * qdigit(1234.5678, -3) = 7.
+ * Return the digit at the specified place in the expansion to specified
+ * base of a rational number.  The places specified by dpos are numbered from
+ * the "units" place just before the "decimal" point, so that negative
+ * dpos indicates the (-dpos)th place to the right of the point.
+ * Examples: qdigit(1234.5678, 1, 10) = 3, qdigit(1234.5678, -3, 10) = 7.
+ * The signs of the number and the base are ignored.
  */
-long
-qdigit(NUMBER *q, long n)
+NUMBER *
+qdigit(NUMBER *q, ZVALUE dpos, ZVALUE base)
 {
-	ZVALUE tenpow, tmp1, tmp2;
-	long res;
+	ZVALUE N, D;
+	ZVALUE K;
+	long k;
+	ZVALUE A, B, C;		/* temporary integers */
+	NUMBER *res;
 
 	/*
-	 * Zero number or negative decimal place of integer is trivial.
+	 * In the first stage, q is expressed as base^k * N/D where
+	 *	gcd(D, base) = 1
+  	 * K is k as a ZVALUE
 	 */
-	if (qiszero(q) || (qisint(q) && (n < 0)))
-		return 0;
-	/*
-	 * For non-negative decimal places, answer is easy.
-	 */
-	if (n >= 0) {
-		if (qisint(q))
-			return zdigit(q->num, n);
-		zquo(q->num, q->den, &tmp1, 2);
-		res = zdigit(tmp1, n);
-		zfree(tmp1);
-		return res;
+	base.sign = 0;
+	if (ziszero(base) || zisunit(base))
+			return NULL;
+	if (qiszero(q) || (qisint(q) && zisneg(dpos)) ||
+			(zge31b(dpos) && !zisneg(dpos)))
+		return qlink(&_qzero_);
+	k = zfacrem(q->num, base, &N);
+	if (k == 0) {
+		k = zgcdrem(q->den, base, &D);
+		if (k > 0) {
+			zequo(q->den, D, &A);
+			itoz(k, &K);
+			zpowi(base, K, &B);
+			zfree(K);
+			zequo(B, A, &C);
+			zfree(A);
+			zfree(B);
+			zmul(C, q->num, &N);
+			zfree(C);
+			k = -k;
+		}
+		else
+			N = q->num;
 	}
-	/*
-	 * Fractional value and want negative digit, must work harder.
-	 */
-	ztenpow(-n, &tenpow);
-	zmul(q->num, tenpow, &tmp1);
-	zfree(tenpow);
-	zquo(tmp1, q->den, &tmp2, 2);
-	tmp2.sign = 0;
-	res = zmodi(tmp2, 10L);
-	zfree(tmp1);
-	zfree(tmp2);
+	if (k >= 0)
+		D = q->den;
+
+	itoz(k, &K);
+	if (zrel(dpos, K) >= 0) {
+		zsub(dpos, K, &A);
+		zfree(K);
+		zpowi(base, A, &B);
+		zfree(A);
+		zmul(D, B, &A);
+		zfree(B);
+		zquo(N, A, &B, 0);
+	} else {
+		if (zisunit(D)) {
+			if (k != 0)
+				zfree(N);
+			zfree(K);
+			if (k < 0)
+				zfree(D);
+			return qlink(&_qzero_);
+		}
+		zsub(K, dpos, &A);
+		zfree(K);
+		zpowermod(base, A, D, &C);
+		zfree(A);
+		zmod(N, D, &A, 0);
+		zmul(C, A, &B);
+		zfree(A);
+		zfree(C);
+		zmod(B, D, &A, 0);
+		zfree(B);
+		zmodinv(D, base, &B);
+		zsub(base, B, &C);
+		zfree(B);
+		zmul(C, A, &B);
+		zfree(C);
+	}
+	zfree(A);
+	if (k != 0)
+		zfree(N);
+	if (k < 0)
+		zfree(D);
+	zmod(B, base, &A, 0);
+	zfree(B);
+	if (ziszero(A)) {
+		zfree(A);
+		return qlink(&_qzero_);
+	}
+	if (zisone(A)) {
+		zfree(A);
+		return qlink(&_qone_);
+	}
+	res = qalloc();
+	res->num = A;
 	return res;
 }
 
@@ -848,66 +912,254 @@ qperm(NUMBER *q1, NUMBER *q2)
 
 
 /*
- * Compute the combinatorial function  q1 * (q1-1) * ... * (q1-q2+1)/q2!
+ * Compute the combinatorial function  q(q - 1) ...(q - n + 1)/n!
+ * n is to be a nonnegative integer
  */
 NUMBER *
-qcomb(NUMBER *q1, NUMBER *q2)
+qcomb(NUMBER *q, NUMBER *n)
 {
 	NUMBER *r;
-	NUMBER *qtmp1, *qtmp2;
+	NUMBER *q1, *q2;
 	long i, j;
+	ZVALUE z;
 
-	if (qisfrac(q2)) {
-		math_error("Non-integral second argument for comb");
+	if (!qisint(n) || qisneg(n)) {
+		math_error("Bad second arg in call to qcomb!");
 		/*NOTREACHED*/
 	}
-	if (qisneg(q2))
-		return qlink(&_qzero_);
-	if (qiszero(q2) || qcmp(q1, q2) == 0)
-		return qlink(&_qone_);
-	if (qisone(q2))
-		return qlink(q1);
-	if (qisint(q1)) {
-		if (qisneg(q1)) {
-			qtmp1 = qsub(q2, q1);
-			qtmp2 = qdec(qtmp1);
-			qfree(qtmp1);
-			r = qalloc();
-			zcomb(qtmp2->num, q2->num, &r->num);
-			qfree(qtmp2);
-			if (qiseven(q2))
+	if (qisint(q)) {
+		switch (zcomb(q->num, n->num, &z)) {
+			case 0:
+				return qlink(&_qzero_);
+			case 1:
+				return qlink(&_qone_);
+			case -1:
+				return qlink(&_qnegone_);
+			case 2:
+				return qlink(q);
+			case -2:
+				return NULL;
+			default:
+				r = qalloc();
+				r->num = z;
 				return r;
-			qtmp2 = qneg(r);
-			qfree(r);
-			return qtmp2;
 		}
-		if (qrel(q2, q1) > 0)
-			return qlink(&_qzero_);
-		r = qalloc();
-		zcomb(q1->num, q2->num, &r->num);
-		return r;
 	}
-	if (zge31b(q2->num)) {
-		math_error("Too large second argument for comb");
-		/*NOTREACHED*/
-	}
-	i = qtoi(q2);
-	q1 = qlink(q1);
-	r = qlink(q1);
+	if (zge31b(n->num))
+		return NULL;
+	i = ztoi(n->num);
+	q = qlink(q);
+	r = qlink(q);
 	j = 1;
 	while (--i > 0) {
-		qtmp1 = qdec(q1);
-		qfree(q1);
-		q1 = qtmp1;
-		qtmp2 = qmul(r, q1);
+		q1 = qdec(q);
+		qfree(q);
+		q = q1;
+		q2 = qmul(r, q);
 		qfree(r);
-		r = qdivi(qtmp2, ++j);
-		qfree(qtmp2);
+		r = qdivi(q2, ++j);
+		qfree(q2);
 	}
-	qfree(q1);
+	qfree(q);
 	return r;
 }
 
+
+/*
+ * Compute the Bernoulli number with index n
+ * For even positive n, newly calculated values for all even indices up
+ * to n are stored in table at B_table.
+ */
+NUMBER *
+qbern(ZVALUE z)
+{
+	long n, i, k, m, nn, dd;
+	NUMBER **p;
+	NUMBER *s, *s1, *c, *c1, *t;
+	size_t sz;
+
+	if (zisone(z))
+		return qlink(&_qneghalf_);
+
+	if (zisodd(z) || z.sign)
+		return qlink(&_qzero_);
+
+	if (zge31b(z))
+		return NULL;
+
+	n = ztoi(z);
+
+	if (n == 0)
+
+		return qlink(&_qone_);
+
+	m = (n >> 1) - 1;
+
+	if (m < B_num)
+		return qlink(B_table[m]);
+
+	if (m >= B_allocnum) {
+		k = (m/QALLOCNUM + 1) * QALLOCNUM;
+		sz = k * sizeof(NUMBER *);
+		if (sz < (size_t) k)
+			return NULL;
+		if (B_allocnum == 0)
+			p = (NUMBER **) malloc(sz);
+		else
+			p = (NUMBER **) realloc(B_table, sz);
+		if (p == NULL)
+			return NULL;
+		B_allocnum = k;
+		B_table = p;
+	}
+	for (k = B_num; k <= m; k++) {
+		nn = 2 * k + 3;
+		dd = 1;
+		c1 = itoq(nn);
+		c = qinv(c1);
+		qfree(c1);
+		s = qsub(&_qonehalf_, c);
+		i = k;
+		for (i = 0; i < k; i++) {
+			c1 = qmuli(c, nn--);
+			qfree(c);
+			c = qdivi(c1, dd++);
+			qfree(c1);
+			c1 = qmuli(c, nn--);
+			qfree(c);
+			c = qdivi(c1, dd++);
+			qfree(c1);
+			t = qmul(c, B_table[i]);
+			s1 = qsub(s, t);
+			qfree(t);
+			qfree(s);
+			s = s1;
+		}
+		B_table[k] = s;
+		qfree(c);
+	}
+	B_num = k;
+	return qlink(B_table[m]);
+}
+
+
+void
+qfreebern(void)
+{
+	long k;
+
+	if (B_num > 0) {
+		for (k = 0; k < B_num; k++)
+			qfree(B_table[k]);
+		free(B_table);
+	}
+	B_table = NULL;
+	B_allocnum = 0;
+	B_num = 0;
+}
+
+
+/*
+ * Compute the Euler number with index n = z
+ * For even positive n, newly calculated values with all even indices up
+ * to n are stored in E_table for later quick access.
+ */
+NUMBER *
+qeuler(ZVALUE z)
+{
+	long i, k, m, n, nn, dd;
+	NUMBER **p;
+	NUMBER *s, *s1, *c, *c1, *t;
+	size_t sz;
+
+
+	if (ziszero(z))
+		return qlink(&_qone_);
+	if (zisodd(z) || zisneg(z))
+		return qlink(&_qzero_);
+	if (zge31b(z))
+		return NULL;
+	n = ztoi(z);
+	m = (n >> 1) - 1;
+	if (m < E_num)
+		return qlink(E_table[m]);
+	sz = (m + 1) * sizeof(NUMBER *);
+	if (sz < (size_t) m + 1)
+		return NULL;
+	if (E_num)
+		p = (NUMBER **) realloc(E_table, sz);
+	else
+		p = (NUMBER **) malloc(sz);
+	if (p == NULL)
+		return NULL;
+	E_table = p;
+	for (k = E_num; k <= m; k++) {
+		nn = 2 * k + 2;
+		dd = 1;
+		c = qlink(&_qone_);
+		s = qlink(&_qnegone_);
+		i = k;
+		for (i = 0; i < k; i++) {
+			c1 = qmuli(c, nn--);
+			qfree(c);
+			c = qdivi(c1, dd++);
+			qfree(c1);
+			c1 = qmuli(c, nn--);
+			qfree(c);
+			c = qdivi(c1, dd++);
+			qfree(c1);
+			t = qmul(c, E_table[i]);
+			s1 = qsub(s, t);
+			qfree(t);
+			qfree(s);
+			s = s1;
+		}
+		E_table[k] = s;
+		qfree(c);
+	}
+	E_num = k;
+	return qlink(E_table[m]);
+}
+
+
+void
+qfreeeuler(void)
+{
+	long k;
+
+	if (E_num > 0) {
+		for (k = 0; k < E_num; k++)
+			qfree(E_table[k]);
+		free(E_table);
+	}
+	E_table = NULL;
+	E_num = 0;
+}
+
+
+/*
+ * Catalan numbers: catalan(n) = comb(2*n, n)/(n+1)
+ * To be called only with integer q
+ */
+NUMBER *
+qcatalan(NUMBER *q)
+{
+	NUMBER *A, *B;
+	NUMBER *res;
+
+	if (qisneg(q))
+		return qlink(&_qzero_);
+	A = qscale(q, 1);
+	B = qcomb(A, q);
+	if (B == NULL)
+		return NULL;
+	qfree(A);
+	A = qinc(q);
+	res = qqdiv(B, A);
+	qfree(A);
+	qfree(B);
+	return res;
+}
 
 /*
  * Compute the Jacobi function (a / b).
@@ -1236,7 +1488,7 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 /*
  * Calculate the nearest-above, or nearest-below, or nearest, number
  * with denominator less than the given number, the choice between
- * possibilities being dertermined by the parameter rnd.
+ * possibilities being determined by the parameter rnd.
  */
 NUMBER *
 qcfsim(NUMBER *q, long rnd)
@@ -1405,7 +1657,7 @@ qlcm(NUMBER *q1, NUMBER *q2)
 
 
 /*
- * Remove all occurences of the specified factor from a number.
+ * Remove all occurrences of the specified factor from a number.
  * Returned number is always positive or zero.
  */
 NUMBER *
@@ -1456,7 +1708,8 @@ qgcdrem(NUMBER *q1, NUMBER *q2)
 		return qlink(&_qone_);
 	if (qiszero(q1))
 		return qlink(&_qzero_);
-	zgcdrem(q1->num, q2->num, &tmp);
+	if (zgcdrem(q1->num, q2->num, &tmp) == 0)
+		return qqabs(q1);
 	if (zisunit(tmp)) {
 		zfree(tmp);
 		return qlink(&_qone_);
@@ -1493,15 +1746,14 @@ qlowfactor(NUMBER *q1, NUMBER *q2)
 	return utoq(zlowfactor(q1->num, count));
 }
 
-
 /*
  * Return the number of places after the decimal point needed to exactly
  * represent the specified number as a real number.  Integers return zero,
  * and non-terminating decimals return minus one.  Examples:
- *	qplaces(1/7)=-1, qplaces(3/10)= 1, qplaces(1/8)=3, qplaces(4)=0.
+ * qdecplaces(1.23) = 2, qdecplaces(3) = 0, qdecplaces(1/7) = -1.
  */
 long
-qplaces(NUMBER *q)
+qdecplaces(NUMBER *q)
 {
 	long twopow, fivepow;
 	HALF fiveval[2];
@@ -1529,6 +1781,39 @@ qplaces(NUMBER *q)
 	if (twopow < fivepow)
 		twopow = fivepow;
 	return twopow;
+}
+
+
+/*
+ * Return, if possible, the minimum number of places after the decimal
+ * point needed to exactly represent q with the specified base.
+ * Integers return 0 and numbers with non-terminating expansions -1.
+ * Returns -2 if base inadmissible
+ */
+long
+qplaces(NUMBER *q, ZVALUE base)
+{
+	long count;
+	ZVALUE tmp;
+
+	if (base.len == 1 && base.v[0] == 10)
+		return qdecplaces(q);
+	if (ziszero(base) || zisunit(base))
+			return -2;
+	if (qisint(q))
+		return 0;
+	if (zisonebit(base)) {
+		if (!zisonebit(q->den))
+			return -1;
+		return 1 + (zlowbit(q->den) - 1)/zlowbit(base);
+	}
+	count = zgcdrem(q->den, base, &tmp);
+	if (count == 0)
+		return -1;
+	if (!zisunit(tmp))
+		count = -1;
+	zfree(tmp);
+	return count;
 }
 
 
