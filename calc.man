@@ -15,8 +15,8 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 .\"
-.\" @(#) $Revision: 29.15 $
-.\" @(#) $Id: calc.man,v 29.15 2004/08/03 05:06:22 chongo Exp $
+.\" @(#) $Revision: 29.17 $
+.\" @(#) $Id: calc.man,v 29.17 2004/10/23 00:58:33 chongo Exp $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -182,6 +182,80 @@ help config
 .B \-e
 Ignore any environment variables on startup.
 The getenv() builtin will still return values, however.
+
+.TP
+.B \-f
+This flag is required when using calc in
+.BR "shell script mode" .
+It must be at the end of the initial
+.B #!
+line of the script.
+.sp 1
+This flag is normally only at the end of a calc shell script.
+If the first line of an executable file begins
+.B #!
+followed by the absolute pathname of the
+.B calc
+program and the flag
+.B \-f
+as in:
+.sp 1
+.in +5n
+.nf
+\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-f\fP
+.fi
+.in -5n
+.sp 1
+the rest of the file will be processed in
+.BR "shell script mode" .
+See
+.B "SHELL SCRIPT MODE"
+section of this man page
+below for details.
+.sp 1
+The actual form of this flag is:
+.sp 1
+.in +5n
+.B \-f
+filename
+.in -5n
+.sp 1
+On systems that treat an executable that begins with
+.B #!
+as a script, the path of the execurable is appended by the kernel
+as the final argument to the exec() system call.
+This is why the
+.B \-f
+flag at the very end of the
+.B #!
+line.
+.sp 1
+It is possible use
+.B \-f\ filename
+on the command line:
+.sp 1
+.in +5n
+.nf
+\fIcalc\fP\ [other_flags\ \&...] \fB\-f\fP filename
+.fi
+.in -5n
+.sp 1
+This will cause calc to process lines in
+.B filename
+in
+.BR "shell script mode" .
+.sp 1
+Use of
+.B \-f
+implies
+.BR \-s .
+In addition,
+.B \-d
+and
+.B \-p
+are implied if
+.B \-i
+is not given.
 
 .TP
 .B \-h
@@ -578,7 +652,7 @@ help config
 .br
 SHELL SCRIPT MODE
 .PP
-If first line of an executable file begins
+If the first line of an executable file begins
 .B #!
 followed by the absolute pathname of the
 .B calc
@@ -596,10 +670,10 @@ the rest of the file will be processed in
 .BR "shell script mode" .
 Note that
 .B \-f
-must be the first \-flag on the ``#!'' line.
+must at the end of the intiial ``#!'' line.
 Any other optional
 .B "other_flags"
-must come after
+must come before
 the
 .BR \-f .
 .sp 1
@@ -617,8 +691,6 @@ the later lines within the script itself.
 In
 .BR "shell script mode" ,
 .B \-s
-(lower case
-.BR \-s )
 is always assumed.
 In addition,
 .B \-d

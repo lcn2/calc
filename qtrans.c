@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: qtrans.c,v 29.5 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: qtrans.c,v 29.6 2004/10/23 00:58:59 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qtrans.c,v $
  *
  * Under source code control:	1990/02/15 01:48:22
@@ -987,16 +987,20 @@ qln(NUMBER *q, NUMBER *epsilon)
 	}
 	zfree(pow);
 	zfree(mul);
+	qtmp = qalloc();	/* qtmp is to be 2^n * sum / 2^m */
 	k = zlowbit(sum);
-	qtmp = qalloc();
 	sum.sign = neg;
-	if (k) {
-		zshift(sum, -k, &qtmp->num);
-		zfree(sum);
+	if (k + n >= m) {
+		zshift(sum, n - m, &qtmp->num);
 	} else {
-		qtmp->num = sum;
+		if (k) {
+			zshift(sum, -k, &qtmp->num);
+			zfree(sum);
+		} else {
+			qtmp->num = sum;
+		}
+		zbitvalue(m - k - n, &qtmp->den);
 	}
-	zbitvalue(m - k - n, &qtmp->den);
 	res = qmappr(qtmp, epsilon, 24L);
 	qfree(qtmp);
 	return res;

@@ -146,12 +146,18 @@ Calc shell scripts
     interpreter.  Assuming the full path for calc is
     /usr/local/bin/calc, one could use the file addall3 with contents
 
-	    #!/usr/local/bin/calc -q -s -f
+	    #!/usr/bin/calc -q -s -f
 	    global i, n, s;
 	    n = argv();
 	    for (i = 1; i <= n; i++)
 		    s += eval(argv(i));
 	    print "sum =", s;
+
+	IMPORTANT NOTE:
+
+	    The -f flag must be at the very end of the #! line.
+	    The #! line must be the first line of the exeuctable file.
+	    The path after the #! must be the full path to the calc executable.
 
     After the command:
 
@@ -283,8 +289,8 @@ For more information use the following calc commands:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.5 $
-## @(#) $Id: script,v 29.5 2001/04/08 07:56:32 chongo Exp $
+## @(#) $Revision: 29.7 $
+## @(#) $Id: script,v 29.7 2004/10/23 00:41:11 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/script,v $
 ##
 ## Under source code control:	1999/11/30 05:29:48

@@ -72,7 +72,62 @@ Known bugs:
     us know!  See the above for details on how to report and were to
     EMail your bug reports and hopefully patches to fix them.
 
-Problems with known work-a-rounds:
+    * The following command:
+
+	calc 'read ellip; efactor(13*17*19)'
+
+      will generate the following error:
+
+	efactor(iN,ia,B,force) defined
+	point_print(p) defined
+	point_mul(p1,p2) defined
+	point_square(p) defined
+	point_pow(p,pow) defined
+	A = 1
+	2 (1,1)
+	"point_square": line 165: Not initializing matrix, object or list
+	Error in commands
+
+     This is not an error in the ellip standard calc resource files.
+     It is a bug inside calc.  Versions going back as far as version
+     2.11.4t2 in the year 2000 (and perhaps even further) alll have
+     this bug.
+
+     Anyone want to track down and fix this bug?
+
+=-=
+
+mis-features in calc:
+
+    Some problems are not bugs but rarther mis-features / things that could
+    work better.  The following is a list of mis-features that should be
+    addressed and improved someday.
+
+    * The chi.cal resource file does not work well with odd degrees
+      of freedom.  Can someone improve this algorithm?
+
+    * The intfile.cal resource file reads and writes big or little Endian
+      integers to/from files the hard way.  It does NOT use blkcpy.  The
+      following code:
+
+	i = (ord("\n") << 16) | (ord("i") << 8) | ord("H")
+	b = blk()
+	copy(i, b)
+	fd = fopen("file", "w")
+	copy(b, fd);
+	fclose(fd)
+
+      will write an extra NUL octet to the file.  Where as:
+
+	read intfile
+	i = (ord("\n") << 16) | (ord("i") << 8) | ord("H")
+	be2file(i, "file2")
+
+      will not.
+
+=-=
+
+Problems with old systems that have known work-a-rounds:
 
     * The gcc as shipped with Redhat 7 perhaps other Linux distributions
       has a bug causes calc to dump core on startup when calc is:
@@ -86,7 +141,9 @@ Problems with known work-a-rounds:
 	  	AND
 
 	  when calc is compiled with readline (see USE_READLINE,
-	    READLINE_LIB and READLINE_INCLUDE in the Makefile)
+	  READLINE_LIB and READLINE_INCLUDE in the Makefile)
+
+      This is known as the Redhat 7 readlne problem.
 
       On Redhat, the gcc -v which has this problem is:
 
@@ -250,28 +307,6 @@ Problems with known work-a-rounds:
       or performance.  The work-a-round is to ignore these warnings
       under BSDI.
 
-    * The chi.cal resource file does not work well with odd degrees
-      of freedom.  Can someone improve this algorithm?
-
-    * The intfile.cal resource file reads and writes big or little Endian
-      integers to/from files the hard way.  It does NOT use blkcpy.  The
-      following code:
-
-	i = (ord("\n") << 16) | (ord("i") << 8) | ord("H")
-	b = blk()
-	copy(i, b)
-	fd = fopen("file", "w")
-	copy(b, fd);
-	fclose(fd)
-
-      will write an extra NUL octet to the file.  Where as:
-
-	read intfile
-	i = (ord("\n") << 16) | (ord("i") << 8) | ord("H")
-	be2file(i, "file2")
-
-      will not.
-
 ## Copyright (C) 1999  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
@@ -288,8 +323,8 @@ Problems with known work-a-rounds:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.18 $
-## @(#) $Id: BUGS,v 29.18 2004/07/26 05:56:40 chongo Exp $
+## @(#) $Revision: 29.21 $
+## @(#) $Id: BUGS,v 29.21 2004/10/23 01:13:51 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13

@@ -1,4 +1,31 @@
-The following are the changes from calc version 2.11.10 to date:
+The following are the changes from calc version 2.11.10.1 to date:
+
+    Fixed a bug reported by the sourceforge user: cedars where:
+
+    	ln(exp(6)) == 3		/* WRONG!!! */
+
+    incorrectly returned 1.  This bug was fixed by Ernest Bowen
+    <ernie at turing dot une dot edu dot au>.  The regression test
+    was expanded to cover this issue.
+
+    Added minor improvements to hash regression testing of pi().
+
+    Fixed "help script" and the calc man page regarding the requirement
+    of -f to be the last -flag in shell script mode.  Further clarified
+    the meaning and placement of the -f flag.
+
+    Moved issues with chi.cal intfile.cal into a "mis-features" section
+    of the BUGS file.  See "help bugs" or the BUGS source file for details.
+
+    Added the bug about:
+
+	calc 'read ellip; efactor(13*17*19)'
+
+    to the BUGS file.  See "help bugs" or the BUGS source file for details.
+    Anyone want to track down and fix this bug?
+
+
+The following are the changes from calc version 2.11.10 to 2.11.10:
 
     The cygwin config value is correctly tested while doing comparisons
     between config states.
@@ -34,7 +61,7 @@ The following are the changes from calc version 2.11.10 to date:
     and ${L64_FORMAT}.  Removed longlong.c and longlong.h.  The use
     of HAVE_LONGLONG=0 was problematic.  The lack of complaints about
     the HAVE_LONGLONG=0 shows that the 'long long' type is wide spread
-    enough to no warrent trying to support this deprecated mode.
+    enough warrent not trying to support compilers without 'long long'.
 
     Removed the SVAL and SHVAL macros from zrand.c, zrand.h, and zmath.h
     as they were causing too many broken C pre-processors and C checkers
@@ -69,7 +96,7 @@ The following are the changes from calc version 2.11.10 to date:
     Added EXT Makefile variable so that Cygwin can install calc as
     calc.exe.  By default, EXT is empty so that calc is calc on most
     modern operating systems.  Thanks goes to Ullal Devappa Kini <wmbfqj
-    at vsnl dot net> for helping identify this problem and test our fix.
+    at vsnl dot net> for helping identify this problem and testing our fix.
 
     Added custom function:
 
@@ -5758,8 +5785,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.69 $
-## @(#) $Id: CHANGES,v 29.69 2004/08/03 12:29:19 chongo Exp $
+## @(#) $Revision: 29.70 $
+## @(#) $Id: CHANGES,v 29.70 2004/10/23 01:16:23 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

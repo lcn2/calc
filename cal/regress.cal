@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.19 $
- * @(#) $Id: regress.cal,v 29.19 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.20 $
+ * @(#) $Id: regress.cal,v 29.20 2004/10/22 23:51:26 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -2570,6 +2570,33 @@ define test_2600()
 
 	i = config("sqrt", i);
 	print tnum++: ': i = config("sqrt", i)';
+
+	i = epsilon(1e-100),;
+	print tnum++: ': i = epsilon(1e-100),;';
+	vrfy(ln(exp(6)) == 6,
+				strcat(str(tnum++), ': ln(exp(6)) == 6'));
+	vrfy(ln(exp(4)^4) == 16,
+				strcat(str(tnum++), ': ln(exp(4)^4) == 16'));
+	vrfy(ln(exp(6.5)^8) == 52,
+				strcat(str(tnum++), ': ln(exp(6.5)^8) == 52'));
+	vrfy(ln(exp(5)^16) == 80,
+				strcat(str(tnum++), ': ln(exp(5)^16) == 80'));
+	vrfy(ln(exp(4.5)^4) == 18,
+				strcat(str(tnum++), ': ln(exp(4.5)^4) == 18'));
+	vrfy(ln(exp(4)^8) == 32,
+				strcat(str(tnum++), ': ln(exp(4)^8) == 32'));
+	vrfy(ln(exp(60/11)^11) == 60,
+			    strcat(str(tnum++), ': ln(exp(60/11)^11) == 60'));
+	vrfy(ln(exp(6)^15) == 90,
+			    strcat(str(tnum++), ': ln(exp(6)^11) == 90'));
+	vrfy(ln(exp(80/17)^17) == 80,
+			    strcat(str(tnum++), ': ln(exp(80/17)^17) == 80'));
+	vrfy(ln(exp(6)^15) == 90,
+			    strcat(str(tnum++), ': ln(exp(6)^15) == 90'));
+	vrfy(ln(exp(5)^18) == 90,
+			    strcat(str(tnum++), ': ln(exp(5)^18) == 90'));
+        epsilon(i),;
+	print tnum++: ': epsilon(i),;';
 
 	print tnum: ': Ending extensive numeric function test';
 }
@@ -6605,10 +6632,10 @@ define test_sha()
 	    0x21e42319a26787046c2b28b7ae70f1b54bf0ba2a,
 		'7122: sha(sha("this is", 7^19-8, ..., "hash")) == 0x21e4...');
 
-	z = sha(list(1,2,3), "curds and whey", 2^21701-1, pi());
-	print '7123: z = sha(list(1,2,3), "curds and whey", 2^21701-1, pi());';
-	vrfy(sha(z) == 0x36dcca3e51865c30a2cf738023cda446f1368340,
-		'7124: sha(z) == 0x36dcca3e51865c30a2cf738023cda446f1368340');
+	z = sha(list(1,2,3), "curds and whey", 2^21701-1, pi(1e-100));
+	print '7123: z = sha(list(1,2,3), "curds and whey", 2^21701-1, pi(1e-100));';
+	vrfy(sha(z) == 257075527903934749824451356785709876382198951165,
+		'7124: sha(z) == 257075527903934749824451356785709876382198951165');
 
 	y = sha();
 	print '7125: y = sha()';
@@ -6616,8 +6643,8 @@ define test_sha()
 	print '7126: y = sha(y, list(1,2,3), "curds and whey")';
 	y = sha(y, 2^21701-1);
 	print '7127: y = sha(y, 2^21701-1)';
-	y = sha(y, pi());
-	print '7128: y = sha(y, pi())';
+	y = sha(y, pi(1e-100));
+	print '7128: y = sha(y, pi(1e-100))';
 	vrfy(y == z,			'7129: y == z');
 
 	B = blk() = {"a", "b", "c"};
@@ -6676,10 +6703,10 @@ define test_sha1()
 	'7209: sha1(sha1("this is",7^19-8,"a composit",3i+4.5,"hash")) == ...');
 
 
-	z = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi());
-	print '7210: z = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi());';
-	vrfy(sha1(z) == 0xc19e7317675dbf71e293b4c41e117169e9da5b6f,
-		'7211: sha1(z) == 0xc19e7317675dbf71e293b4c41e117169e9da5b6f');
+	z = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi(1e-100));
+	print '7210: z = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi(1e-100));';
+	vrfy(sha1(z) == 0x158cc87deeb9dd478ca14e3ab359205b0fb15b83,
+		'7211: sha1(z) == 0x158cc87deeb9dd478ca14e3ab359205b0fb15b83');
 
 	y = sha1();
 	print '7212: y = sha1();';
@@ -6687,8 +6714,8 @@ define test_sha1()
 	print '7213: y = sha1(y, list(1,2,3), "curds and whey");';
 	y = sha1(y, 2^21701-1);
 	print '7214: y = sha1(y, 2^21701-1);';
-	y = sha1(y, pi());
-	print '7215: y = sha1(y, pi());';
+	y = sha1(y, pi(1e-100));
+	print '7215: y = sha1(y, pi(1e-100));';
 	vrfy(y == z, '7216: y == z');
 
 	vrfy(sha1(sha1("a"))==0x86f7e437faa5a7fce15d1ddcb9eaeaea377667b8,
@@ -6764,18 +6791,18 @@ define test_md5()
     '7310: md5(md5("this is", 7^19-8, "a composit", 3i+4.5, "hash")) == ...');
 
 
-	z = md5(list(1,2,3), "curds and whey", 2^21701-1, pi());
-	print '7311: z = md5(list(1,2,3), "curds and whey", 2^21701-1, pi());';
-	vrfy(md5(z) == 0x63d2b2fccae2de265227c30b05abb6b5,
-		'7312: md5(z) == 0x63d2b2fccae2de265227c30b05abb6b5');
+	z = md5(list(1,2,3), "curds and whey", 2^21701-1, pi(1e-100));
+	print '7311: z = md5(list(1,2,3), "curds and whey", 2^21701-1, pi(1e-100));';
+	vrfy(md5(z) == 0x487462e577eabef0302dd13af6632546,
+		'7312: md5(z) == 0x487462e577eabef0302dd13af6632546');
 	y = md5();
 	print		'7313: y = md5();';
 	y = md5(y, list(1,2,3), "curds and whey");
 	print		'7314: y = md5(y, list(1,2,3), "curds and whey")';
 	y = md5(y, 2^21701-1);
 	print		'7315: y = md5(y, 2^21701-1);';
-	y = md5(y, pi());
-	print		'7316: y = md5(y, pi());';
+	y = md5(y, pi(1e-100));
+	print		'7316: y = md5(y, pi(1e-100));';
 	vrfy(y == z,	'7317: y == z');
 
 	vrfy(md5(md5("a")) == 0x0cc175b9c0f1b6a831c399e269772661,
