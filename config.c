@@ -55,6 +55,7 @@ NAMETYPE configs[] = {
 	{"lib_debug",	CONFIG_LIB_DEBUG},
 	{"calc_debug",	CONFIG_CALC_DEBUG},
 	{"user_debug",	CONFIG_USER_DEBUG},
+	{"verbose_quit",CONFIG_VERBOSE_QUIT},
 	{NULL,		0}
 };
 
@@ -95,7 +96,8 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	BLK_FMT_HD_STYLE,	/* block output format */
 	3,			/* calc library debug level */
 	0,			/* internal calc debug level */
-	0 			/* user defined debug level */
+	0, 			/* user defined debug level */
+	TRUE			/* print Quit or abort executed messages */
 };
 CONFIG newstd = {	/* new non-backward compatible configuration */
 	MODE_INITIAL,		/* current output mode */
@@ -130,7 +132,8 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	BLK_FMT_HD_STYLE,	/* block output format */
 	3,			/* calc library debug level */
 	0,			/* internal calc debug level */
-	0 			/* user defined debug level */
+	0, 			/* user defined debug level */
+	TRUE			/* print Quit or abort executed messages */
 };
 CONFIG *conf = NULL;	/* loaded in at startup - current configuration */
 
@@ -848,6 +851,21 @@ setconfig(int type, VALUE *vp)
 		conf->user_debug = temp;
 		break;
 
+	case CONFIG_VERBOSE_QUIT:
+		if (vp->v_type == V_NUM) {
+			q = vp->v_num;
+			conf->verbose_quit = !qiszero(q);
+		} else if (vp->v_type == V_STR) {
+			temp = truthtype(vp->v_str->s_str);
+			if (temp < 0) {
+				math_error("Illegal truth value"
+					   "for verbose_quit");
+				/*NOTREACHED*/
+			}
+			conf->verbose_quit = (int)temp;
+		}
+		break;
+
 	default:
 		math_error("Setting illegal config parameter");
 		/*NOTREACHED*/
@@ -1119,6 +1137,10 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		i = cfg->user_debug;
 		break;
 
+	case CONFIG_VERBOSE_QUIT:
+		i = cfg->verbose_quit;
+		break;
+
 	default:
 		math_error("Getting illegal CONFIG element");
 		/*NOTREACHED*/
@@ -1194,5 +1216,6 @@ config_cmp(CONFIG *cfg1, CONFIG *cfg2)
 	       cfg1->blkfmt != cfg2->blkfmt ||
 	       cfg1->lib_debug != cfg2->lib_debug ||
 	       cfg1->calc_debug != cfg2->calc_debug ||
-	       cfg1->user_debug != cfg2->user_debug;
+	       cfg1->user_debug != cfg2->user_debug ||
+	       cfg1->verbose_quit != cfg2->verbose_quit;
 }

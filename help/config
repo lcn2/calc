@@ -43,6 +43,7 @@ Configuration parameters
 	    "lib_debug"		controls library script debug information
 	    "calc_debug"	controls internal calc debug information
 	    "user_debug"	for user defined debug information
+	    "verbose_quit"	TRUE=>print message on empty quit or abort
 
 
     The "all" config value allows one to save/restore the configuration
@@ -374,6 +375,14 @@ Configuration parameters
     indicating more stringent and more informative tests with presumably
     slower operation or more memory usage, and a particular value (like
     -1 or 0) corresponding to "no tests".
+
+    The "verbose_quit" controls the print of the message:
+
+	Quit or abort executed
+
+    when a non-interactive quit or abort without an argument is encounted.
+    A quit of abort without an argument does not display a message when
+    invoked at the interactive level.
 
     The following are synonyms for true:
 

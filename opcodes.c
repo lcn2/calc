@@ -3138,7 +3138,7 @@ o_quit(FUNC *fp, long index)
 	}
 	if (cp)
 		printf("%s\n", cp);
-	else
+	else if (conf->verbose_quit)
 		printf("Quit or abort executed\n");
 	if (!inputisterminal() && fp->f_name[0] == '*')
 		closeinput();

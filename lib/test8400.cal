@@ -1,0 +1,16 @@
+/*
+ * Copyright (c) 1999 Landon Curt Noll
+ * Permission is granted to use, distribute, or modify this source,
+ * provided that this copyright notice remains intact.
+ *
+ * By:  Landon Curt Noll
+ *      http://reality.sgi.com/chongo
+ *
+ *      chongo <was here> /\../\
+ *
+ * This library is used by the 8400 series of the regress.cal test suite.
+ */
+
+print "8401: in test8400.cal";
+quit;
+prob('quit did not end test8400.cal');

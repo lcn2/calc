@@ -80,6 +80,7 @@
 #define CONFIG_LIB_DEBUG 30
 #define CONFIG_CALC_DEBUG 31
 #define CONFIG_USER_DEBUG 32
+#define CONFIG_VERBOSE_QUIT 33
 
 
 /*
@@ -114,8 +115,8 @@ struct config {
 	LEN sq2;		/* size of number to use square algorithm 2 */
 	LEN pow2;		/* size of modulus to use REDC for powers */
 	LEN redc2;		/* size of modulus to use REDC algorithm 2 */
-	int tilde_ok;		/* ok to print a tilde on aproximations */
-	int tab_ok;		/* ok to print tab before numeric values */
+	BOOL tilde_ok;		/* ok to print a tilde on aproximations */
+	BOOL tab_ok;		/* ok to print tab before numeric values */
 	long quomod;		/* quomod() default rounding mode */
 	long quo;		/* quotent // default rounding mode */
 	long mod;		/* mod % default rounding mode */
@@ -125,18 +126,19 @@ struct config {
 	long cfsim;		/* cfsim() default rounding mode */
 	long outround;		/* output default rounding mode */
 	long round;		/* round()/bround() default rounding mode */
-	int leadzero;		/* ok to print leading 0 before decimal pt */
-	int fullzero;		/* ok to print trailing 0's */
+	BOOL leadzero;		/* ok to print leading 0 before decimal pt */
+	BOOL fullzero;		/* ok to print trailing 0's */
 	long maxscancount;	/* max scan errors before abort */
 	char *prompt1;		/* normal prompt */
 	char *prompt2;		/* prompt when inside multi-line input */
 	int blkmaxprint;	/* octets of a block to print, 0 => all */
-	int blkverbose;		/* TRUE => print all lines if a block */
+	BOOL blkverbose;	/* TRUE => print all lines if a block */
 	int blkbase;		/* block output base */
 	int blkfmt;		/* block output style */
 	int lib_debug;		/* library debug, see LIB_DEBUG_XXX below */
 	int calc_debug;		/* internal debug, see CALC_DEBUG_XXX below */
 	int user_debug;		/* user defined debug value: 0 default */
+	BOOL verbose_quit;	/* TRUE => print Quit or abort executed msg */
 };
 typedef	struct config CONFIG;
 

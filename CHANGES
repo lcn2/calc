@@ -151,6 +151,20 @@ Following is the change from calc version 2.11.0t8 to date:
     Fixed a bug, reported by Michael Somos <somos@grail.cba.csuohio.edu>,
     which prevented calc -m from being used.
 
+    The config("verbose_quit") will control the printing of the message:
+
+	Quit or abort executed
+
+    when a non-interactive ABORT, QUIT or EXIT is encounted.  By default,
+    config("verbose_quit") is TRUE and the message is printed.  If one does:
+
+	config("verbose_quit", 0)
+
+    the message is disabled.
+
+    Added 8400 regression test set and test8400.cal to test the new
+    quit and config("verbose_quit") functionality.
+
     Fixed misc compiler warnings.
 
 

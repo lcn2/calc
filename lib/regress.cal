@@ -30,6 +30,7 @@ ecnt = 0;				/* clear expected errcount() value */
 initcfg = config("all", "oldstd");	/* set config to startup default */
 initcfg = config("lib_debug", 0);	/* disable lib startup messages */
 initcfg = config("calc_debug", 0);	/* disable internal debugging */
+initcnf = config("verbose_quit", 0);	/* disable quit messages */
 initcfg = config("all");		/* save state for later use */
 
 print '003: parsed global definitions';
@@ -7160,6 +7161,21 @@ print '189: parsed test_somenew()';
 
 
 /*
+ * test_quit - test the QUIT functionality
+ */
+define test_quit()
+{
+	print '8400: Starting test_quit';
+
+	quit;
+	prob('quit did not end the test_quit() function');
+
+	/* 8400 serise continued after return, do not print end here */
+}
+print '190: parsed test_quit()';
+
+
+/*
  * Reserved for top level test use
  */
 print '200: Reserved for top level test use';
@@ -7443,6 +7459,16 @@ print	'8310: Ending define tests';
 
 
 /*
+ * quit tests
+ */
+print;
+return test_quit();
+read -once test8400;
+print	'8402: read -once test8400';
+print	'8403: Ending test_quit';
+
+
+/*
  * read various calc libs
  *
  * We read most of the calc libs shipped with the distribution.
@@ -7455,7 +7481,7 @@ print	'8310: Ending define tests';
  *	lucas_tbl.cal	- duplicatres code already read by another file
  *	regress.cal	- this file
  *	surd.cal	- already read by this file
- *	testXXXX.cal	- already read by this file
+ *	test9999.cal	- files of this form are already read by this file
  *	xx_print.cal	- prints a bunch of things when loaded
  *
  * We want to do this 2nd to last; ahead of any final cleanup and behind
