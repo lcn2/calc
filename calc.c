@@ -67,7 +67,7 @@ static void intint(int arg);	/* interrupt routine */
 /*
  * Top level calculator routine.
  */
-MAIN
+int
 main(int argc, char **argv)
 {
 	static char *str;	/* current option string or expression */
@@ -301,8 +301,8 @@ main(int argc, char **argv)
 	 * all done
 	 */
 	libcalc_call_me_last();
-	exit(0);
-	/*NOTREACHED*/
+	/* exit(0); */
+	return 0;
 }
 
 

@@ -60,7 +60,7 @@
 
 char *program;			/* our name */
 
-MAIN
+int
 main(int argc, char **argv)
 {
 	int stsizelen;		/* bit length of st_size in buf */
@@ -225,5 +225,6 @@ main(int argc, char **argv)
 	printf("#define SWAP_HALF_IN_INODE(dest, src)\t%s%d%s\n",
 	    "memcpy((void *)(dest), (void *)(src), sizeof(",inodelen,"))");
 #endif /* CALC_BYTE_ORDER == BIG_ENDIAN */
-	exit(0);
+	/* exit(0); */
+	return 0;
 }

@@ -47,7 +47,7 @@
 #include <sys/types.h>
 #endif /* ! HAVE_NO_UID_T */
 
-MAIN
+int
 main(void)
 {
 #if defined(HAVE_NO_UID_T)
@@ -60,5 +60,6 @@ main(void)
 
 	printf("#define HAVE_UID_T /* yes */\n");
 #endif /* HAVE_NO_UID_T */
-	exit(0);
+	/* exit(0); */
+	return 0;
 }

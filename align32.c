@@ -30,7 +30,7 @@
 static void buserr(void);	/* catch alignment errors */
 
 
-MAIN
+int
 main(void)
 {
 	char byte[2*sizeof(USB32)];	/* mis-alignment buffer */
@@ -58,7 +58,8 @@ main(void)
 	   '/', '/');
 
 #endif
-	exit(0);
+	/* exit(0); */
+	return 0;
 }
 
 

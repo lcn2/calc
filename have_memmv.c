@@ -44,7 +44,7 @@
 char src[] = "chongo was here";
 char dest[MOVELEN+1];
 
-MAIN
+int
 main(void)
 {
 #if defined(HAVE_NO_MEMMOVE)
@@ -54,5 +54,6 @@ main(void)
 
 	printf("#define HAVE_MEMMOVE /* yes */\n");
 #endif /* HAVE_NO_MEMMOVE */
-	exit(0);
+	/* exit(0); */
+	return 0;
 }

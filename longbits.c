@@ -105,7 +105,7 @@
 
 char *program;		/* our name */
 
-MAIN
+int
 main(int argc, char **argv)
 {
 	int exitcode = 0;	/* how we will exit */
@@ -124,7 +124,7 @@ main(int argc, char **argv)
 	case 2:
 		/* ignore empty or leading space args */
 		if (argv[1][0] == '\0' ||
-		    (isascii(argv[1][0]) && isspace(argv[1][0]))) {
+		    (isascii((int)argv[1][0]) && isspace((int)argv[1][0]))) {
 			long_bits = sizeof(long)*8;
 		/* process the forced size arg */
 		} else {
@@ -362,5 +362,6 @@ main(int argc, char **argv)
 	}
 
 	/* all done */
-	exit(exitcode);
+	/* exit(exitcode); */
+	return exitcode;
 }

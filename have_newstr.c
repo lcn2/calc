@@ -46,7 +46,7 @@
 char src[] = "chongo was here";
 char dest[MOVELEN+1];
 
-MAIN
+int
 main(void)
 {
 #if defined(HAVE_NO_NEWSTR)
@@ -58,5 +58,6 @@ main(void)
 
 	printf("#define HAVE_NEWSTR /* yes */\n");
 #endif /* HAVE_NO_NEWSTR */
-	exit(0);
+	/* exit(0); */
+	return 0;
 }

@@ -206,18 +206,6 @@ HAVE_MEMMOVE=
 ALIGN32= -DMUST_ALIGN32
 #ALIGN32= -UMUST_ALIGN32
 
-# The return value type of main() differs from platform to platform.
-# In some cases, a compiler warning is issued because main() does
-# or does not return a value.
-#
-# MAIN= -DMAIN=void	main() is of type void
-# MAIN= -DMAIN=int	main() is of type int
-#
-# When in doubt, try MAIN= -DMAIN=int.  If you get a warning try the other.
-#
-#MAIN= -DMAIN=void
-MAIN= -DMAIN=int
-
 # where to install binary files
 #
 BINDIR= /usr/local/bin
@@ -514,7 +502,7 @@ ALLOW_CUSTOM= -DCUSTOM
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#CCMAIN= ${ICFLAGS} ${MAIN}
+#CCMAIN= ${ICFLAGS}
 #CCSHS= ${CFLAGS}
 #
 #LCFLAGS=
@@ -545,7 +533,7 @@ ALLOW_CUSTOM= -DCUSTOM
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#CCMAIN= ${ICFLAGS} ${MAIN}
+#CCMAIN= ${ICFLAGS}
 #CCSHS= ${CFLAGS}
 #
 #LCFLAGS=
@@ -577,7 +565,7 @@ ALLOW_CUSTOM= -DCUSTOM
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#CCMAIN= ${ICFLAGS} ${MAIN}
+#CCMAIN= ${ICFLAGS}
 #CCSHS=
 #
 #LCFLAGS=
@@ -603,7 +591,7 @@ ALLOW_CUSTOM= -DCUSTOM
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#CCMAIN= ${ICFLAGS} ${MAIN}
+#CCMAIN= ${ICFLAGS}
 #CCSHS= ${CFLAGS}
 #
 #LCFLAGS=
@@ -623,7 +611,7 @@ ALLOW_CUSTOM= -DCUSTOM
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#CCMAIN= ${ICFLAGS} ${MAIN}
+#CCMAIN= ${ICFLAGS}
 #CCSHS= ${CFLAGS}
 #
 #LCFLAGS=
@@ -646,7 +634,7 @@ ALLOW_CUSTOM= -DCUSTOM
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#CCMAIN= ${ICFLAGS} ${MAIN}
+#CCMAIN= ${ICFLAGS}
 #CCSHS= ${CFLAGS}
 #
 #LCFLAGS=
@@ -669,7 +657,7 @@ ALLOW_CUSTOM= -DCUSTOM
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#CCMAIN= ${ICFLAGS} ${MAIN}
+#CCMAIN= ${ICFLAGS}
 #CCSHS= ${CFLAGS}
 #
 #LCFLAGS=
@@ -692,7 +680,7 @@ CCMISC=
 CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 ICFLAGS= ${CCWARN} ${CCMISC}
 #
-CCMAIN= ${ICFLAGS} ${MAIN}
+CCMAIN= ${ICFLAGS}
 CCSHS= ${CFLAGS}
 #
 LCFLAGS=
@@ -715,7 +703,7 @@ CC= ${PURIFY} gcc
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#CCMAIN= ${ICFLAGS} ${MAIN}
+#CCMAIN= ${ICFLAGS}
 #CCSHS= ${CFLAGS}
 #
 #LCFLAGS=
@@ -889,7 +877,6 @@ SAMPLE_PASSDOWN= Q="${Q}" \
     TOPDIR="${TOPDIR}" \
     LIBDIR="${LIBDIR}" \
     HELPDIR="${HELPDIR}" \
-    MAIN="${MAIN}" \
     DEBUG="${DEBUG}" \
     NO_SHARED="${NO_SHARED}" \
     RANLIB="${RANLIB}" \
@@ -2203,7 +2190,6 @@ env:
 	@echo "HAVE_UID_T=${HAVE_UID_T}"; echo ""
 	@echo "HAVE_NEWSTR=${HAVE_NEWSTR}"; echo ""
 	@echo "ALIGN32=${ALIGN32}"; echo ""
-	@echo "MAIN=${MAIN}"; echo ""
 	@echo "BINDIR=${BINDIR}"; echo ""
 	@echo "TOPDIR=${TOPDIR}"; echo ""
 	@echo "LIBDIR=${LIBDIR}"; echo ""

@@ -56,84 +56,86 @@ char buf[BUFSIZ];
 void
 try(char *fmt, ...)
 {
-    va_list ap;
+	va_list ap;
 
-    va_start(ap, fmt);
+	va_start(ap, fmt);
 #if !defined(DONT_HAVE_VSPRINTF)
-    vsprintf(buf, fmt, ap);
+	vsprintf(buf, fmt, ap);
 #else
-    sprintf(buf, fmt, ap);
+	sprintf(buf, fmt, ap);
 #endif
-    va_end(ap);
+	va_end(ap);
 }
 
 
-MAIN
+int
 main(void)
 {
-    /*
-     * setup
-     */
-    buf[0] = '\0';
+	/*
+	 * setup
+	 */
+	buf[0] = '\0';
 
-    /*
-     * test variable args and vsprintf/sprintf
-     */
-    try("@%d:%s:%d@", 1, "hi", 2);
-    if (strcmp(buf, "@1:hi:2@") != 0) {
+	/*
+	 * test variable args and vsprintf/sprintf
+	 */
+	try("@%d:%s:%d@", 1, "hi", 2);
+	if (strcmp(buf, "@1:hi:2@") != 0) {
 #if !defined(DONT_HAVE_VSPRINTF)
-	/* <stdarg.h> with vsprintf() didn't work */
+	    /* <stdarg.h> with vsprintf() didn't work */
 #else
-	/* <stdarg.h> with sprintf() simulating vsprintf() didn't work */
+	    /* <stdarg.h> with sprintf() simulating vsprintf() didn't work */
 #endif
-	exit(1);
-    }
-    try("%s %d%s%d%d %s",
-	"Landon Noll 1st proved that", 2, "^", 23209, -1, "was prime");
-    if (strcmp(buf, "Landon Noll 1st proved that 2^23209-1 was prime") != 0) {
+	    exit(1);
+	}
+	try("%s %d%s%d%d %s",
+	    "Landon Noll 1st proved that", 2, "^", 23209, -1, "was prime");
+	if (strcmp(buf,
+		   "Landon Noll 1st proved that 2^23209-1 was prime") != 0) {
 #if !defined(DONT_HAVE_VSPRINTF)
-	/* <stdarg.h> with vsprintf() didn't work */
+	    /* <stdarg.h> with vsprintf() didn't work */
 #else
-	/* <stdarg.h> with sprintf() simulating vsprintf() didn't work */
+	    /* <stdarg.h> with sprintf() simulating vsprintf() didn't work */
 #endif
-	exit(1);
-    }
+	    exit(1);
+	}
 
-    /*
-     * report the result
-     */
-    puts("/* what type of variable args do we have? */");
+	/*
+	 * report the result
+	 */
+	puts("/* what type of variable args do we have? */");
 #if defined(DONT_HAVE_VSPRINTF)
-    puts("/*");
-    puts(" * SIMULATE_STDARG");
-    puts(" *");
-    puts(" * WARNING: This type of stdarg makes assumptions about the stack");
-    puts(" * 	    that may not be true on your system.  You may want to");
-    puts(" *	    define STDARG (if using ANSI C) or VARARGS.");
-    puts(" */");
-    puts("typedef char *va_list;");
-    puts("#define va_start(ap,parmn) (void)((ap) = (char*)(&(parmn) + 1))");
-    puts("#define va_end(ap) (void)((ap) = 0)");
-    puts("#define va_arg(ap, type) \\");
-    puts("        (((type*)((ap) = ((ap) + sizeof(type))))[-1])");
-    puts("#define SIMULATE_STDARG /* use std_arg.h to simulate <stdarg.h> */");
+	puts("/*");
+	puts(" * SIMULATE_STDARG");
+	puts(" *");
+	puts(" * WARNING: This type of stdarg makes assumptions about the stack");
+	puts(" * 	    that may not be true on your system.  You may want to");
+	puts(" *	    define STDARG (if using ANSI C) or VARARGS.");
+	puts(" */");
+	puts("typedef char *va_list;");
+	puts("#define va_start(ap,parmn) (void)((ap) = (char*)(&(parmn) + 1))");
+	puts("#define va_end(ap) (void)((ap) = 0)");
+	puts("#define va_arg(ap, type) \\");
+	puts("        (((type*)((ap) = ((ap) + sizeof(type))))[-1])");
+	puts("#define SIMULATE_STDARG /* use std_arg.h to simulate <stdarg.h> */");
 #else
-    puts("#define STDARG /* use <stdarg.h> */");
-    puts("#include <stdarg.h>");
+	puts("#define STDARG /* use <stdarg.h> */");
+	puts("#include <stdarg.h>");
 #endif
-    puts("\n/* should we use vsprintf()? */");
+	puts("\n/* should we use vsprintf()? */");
 #if !defined(DONT_HAVE_VSPRINTF)
-    puts("#define HAVE_VS /* yes */");
+	puts("#define HAVE_VS /* yes */");
 #else
-    puts("/*");
-    puts(" * Hack aleart!!!");
-    puts(" *");
-    puts(" * Systems that do not have vsprintf() need something.  In some");
-    puts(" * cases the sprintf function will deal correctly with the");
-    puts(" * va_alist 3rd arg.  Hope for the best!");
-    puts(" */");
-    puts("#define vsprintf sprintf");
-    puts("#undef HAVE_VS");
+	puts("/*");
+	puts(" * Hack aleart!!!");
+	puts(" *");
+	puts(" * Systems that do not have vsprintf() need something.  In some");
+	puts(" * cases the sprintf function will deal correctly with the");
+	puts(" * va_alist 3rd arg.  Hope for the best!");
+	puts(" */");
+	puts("#define vsprintf sprintf");
+	puts("#undef HAVE_VS");
 #endif
-    exit(0);
+	/* exit(0); */
+	return 0;
 }

@@ -46,7 +46,7 @@
 #include <sys/stat.h>
 #include "have_fpos.h"
 
-MAIN
+int
 main(void)
 {
 #if !defined(FILEPOS_NON_SCALAR)
@@ -80,5 +80,6 @@ main(void)
 #else
 	printf("#undef HAVE_FILEPOS_SCALAR /* FILEPOS is not a simple value */\n");
 #endif
-	exit(0);
+	/* exit(0); */
+	return 0;
 }

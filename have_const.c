@@ -42,7 +42,7 @@
 
 #include <stdio.h>
 
-MAIN
+int
 main(void)
 {
 #if defined(HAVE_NO_CONST)
@@ -56,5 +56,6 @@ main(void)
 	printf("#undef CONST\n");
 	printf("#define CONST %s /* yes */\n", str);
 #endif /* HAVE_NO_CONST */
-	exit(0);
+	/* exit(0); */
+	return 0;
 }

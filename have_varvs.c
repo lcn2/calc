@@ -76,56 +76,58 @@ try(char *a, int b, char *c, int d)
 #endif
 
 
-MAIN
+int
 main(void)
 {
-    /*
-     * setup
-     */
-    buf[0] = '\0';
+	/*
+	 * setup
+	 */
+	buf[0] = '\0';
 
-    /*
-     * test variable args and vsprintf/sprintf
-     */
-    try("@%d:%s:%d@", 1, "hi", 2);
-    if (strcmp(buf, "@1:hi:2@") != 0) {
+	/*
+	 * test variable args and vsprintf/sprintf
+	 */
+	try("@%d:%s:%d@", 1, "hi", 2);
+	if (strcmp(buf, "@1:hi:2@") != 0) {
 #if !defined(DONT_HAVE_VSPRINTF)
-	/* <varargs.h> with vsprintf() didn't work */
+	    /* <varargs.h> with vsprintf() didn't work */
 #else
-	/* <varargs.h> with sprintf() simulating vsprintf() didn't work */
+	    /* <varargs.h> with sprintf() simulating vsprintf() didn't work */
 #endif
-	exit(1);
-    }
-    try("%s %d%s%d%d %s",
-	"Landon Noll 1st proved that", 2, "^", 23209, -1, "was prime");
-    if (strcmp(buf, "Landon Noll 1st proved that 2^23209-1 was prime") != 0) {
+	    exit(1);
+	}
+	try("%s %d%s%d%d %s",
+	    "Landon Noll 1st proved that", 2, "^", 23209, -1, "was prime");
+	if (strcmp(buf,
+		   "Landon Noll 1st proved that 2^23209-1 was prime") != 0) {
 #if !defined(DONT_HAVE_VSPRINTF)
-	/* <stdarg.h> with vsprintf() didn't work */
+	    /* <stdarg.h> with vsprintf() didn't work */
 #else
-	/* <stdarg.h> with sprintf() simulating vsprintf() didn't work */
+	    /* <stdarg.h> with sprintf() simulating vsprintf() didn't work */
 #endif
-	exit(1);
-    }
+	    exit(1);
+	}
 
-    /*
-     * report the result
-     */
-    puts("/* what type of variable args do we have? */");
-    puts("#define VARARGS /* use <varargs.h> */");
-    puts("#include <varargs.h>");
-    puts("\n/* should we use vsprintf()? */");
+	/*
+	 * report the result
+	 */
+	puts("/* what type of variable args do we have? */");
+	puts("#define VARARGS /* use <varargs.h> */");
+	puts("#include <varargs.h>");
+	puts("\n/* should we use vsprintf()? */");
 #if !defined(DONT_HAVE_VSPRINTF)
-    puts("#define HAVE_VS /* yes */");
+	puts("#define HAVE_VS /* yes */");
 #else
-    puts("/*");
-    puts(" * Hack aleart!!!");
-    puts(" *");
-    puts(" * Systems that do not have vsprintf() need something.  In some");
-    puts(" * cases the sprintf function will deal correctly with the");
-    puts(" * va_alist 3rd arg.  Hope for the best!");
-    puts(" */");
-    puts("#define vsprintf sprintf");
-    puts("#undef HAVE_VS");
+	puts("/*");
+	puts(" * Hack aleart!!!");
+	puts(" *");
+	puts(" * Systems that do not have vsprintf() need something.  In some");
+	puts(" * cases the sprintf function will deal correctly with the");
+	puts(" * va_alist 3rd arg.  Hope for the best!");
+	puts(" */");
+	puts("#define vsprintf sprintf");
+	puts("#undef HAVE_VS");
 #endif
-    exit(0);
+	/* exit(0); */
+	return 0;
 }

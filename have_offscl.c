@@ -45,7 +45,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-MAIN
+int
 main(void)
 {
 #if !defined(OFF_T_NON_SCALAR)
@@ -79,5 +79,6 @@ main(void)
 #else
 	printf("#undef HAVE_OFF_T_SCALAR /* off_t is not a simple value */\n");
 #endif
-	exit(0);
+	/* exit(0); */
+	return 0;
 }

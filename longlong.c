@@ -66,7 +66,7 @@ unsigned long long val = 4294967297ULL;
 long long val2 = -4294967297LL;
 
 
-MAIN
+int
 main(int argc, char **argv)
 {
 	int longlong_bits;	/* bits in a long long, or <=0 => dont use */
@@ -100,5 +100,6 @@ main(int argc, char **argv)
 			    longlong_bits);
 		}
 	}
-	exit(0);
+	/* exit(0); */
+	return 0;
 }

@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/types.h>
+#include <errno.h>
 
 #if defined(FUNCLIST)
 
@@ -77,9 +78,6 @@ static VALUE f_fsize(VALUE *vp);
 /*
  * external declarations
  */
-extern int errno;                             /* last system error */
-extern const char *const sys_errlist[];       /* system error messages */
-extern int sys_nerr;                          /* number of system errors */
 extern char cmdbuf[];				/* command line expression */
 extern CONST char *error_table[E__COUNT+2];	/* calc coded error messages */
 extern void matrandperm(MATRIX *M);
@@ -4838,14 +4836,14 @@ strscan(char *s, int count, VALUE **vals)
 	while (*s != '\0') {
 		s--;
 		while ((ch = *++s)) {
-			if (!isspace(ch))
+			if (!isspace((int)ch))
 				break;
 		}
 		if (ch == '\0' || count-- == 0)
 			return n;
 		s0 = s;
 		while ((ch = *++s)) {
-			if (isspace(ch))
+			if (isspace((int)ch))
 				break;
 		}
 		chtmp = ch;

@@ -57,7 +57,7 @@ typedef struct {
 extern char *program;	/* our name */
 
 
-MAIN
+int
 main(int argc, char **argv)
 {
 	RANDOM *prev_state;	/* previous random number state */
@@ -121,5 +121,6 @@ main(int argc, char **argv)
 	/*
 	 * all done
 	 */
-	exit(0);
+	/* exit(0); */
+	return 0;
 }

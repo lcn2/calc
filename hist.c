@@ -421,12 +421,12 @@ do_map_line(char *line)
 	char	*map_name;
 
 	cp = line;
-	while (isspace(*cp))
+	while (isspace((int)*cp))
 		cp++;
 	if (*cp == '\0')
 		return NULL;
 	map_name = cp;
-	while ((*cp != '\0') && !isspace(*cp))
+	while ((*cp != '\0') && !isspace((int)*cp))
 		cp++;
 	*cp = '\0';
 	return find_map(map_name);
@@ -461,7 +461,7 @@ do_bind_line(KEY_MAP *map, char *line)
 	else if (key == '\\')
 		key = *cp++;
 
-	while (isspace(*cp))
+	while (isspace((int)*cp))
 		cp++;
 	if (*cp == '\0') {
 		unbind_key(map, key);
@@ -469,11 +469,11 @@ do_bind_line(KEY_MAP *map, char *line)
 	}
 
 	func_name = cp;
-	while ((*cp != '\0') && !isspace(*cp))
+	while ((*cp != '\0') && !isspace((int)*cp))
 		cp++;
 	if (*cp) {
 		*cp++ = '\0';
-		while (isspace(*cp))
+		while (isspace((int)*cp))
 			cp++;
 	}
 	func = find_func(func_name);
@@ -488,11 +488,11 @@ do_bind_line(KEY_MAP *map, char *line)
 			next = base_map;
 	} else {
 		next_name = cp;
-		while ((*cp != '\0') && !isspace(*cp))
+		while ((*cp != '\0') && !isspace((int)*cp))
 			cp++;
 		if (*cp) {
 			*cp++ = '\0';
-			while (isspace(*cp))
+			while (isspace((int)*cp))
 				cp++;
 		}
 		next = find_map(next_name);
@@ -515,18 +515,18 @@ do_default_line(KEY_MAP *map, char *line)
 	if (map == NULL)
 		return;
 	cp = line;
-	while (isspace(*cp))
+	while (isspace((int)*cp))
 		cp++;
 	if (*cp == '\0')
 		return;
 
 	func_name = cp;
-	while ((*cp != '\0') && !isspace(*cp))
+	while ((*cp != '\0') && !isspace((int)*cp))
 		cp++;
 	if (*cp != '\0')
 	{
 		*cp++ = '\0';
-		while (isspace(*cp))
+		while (isspace((int)*cp))
 			cp++;
 	}
 	func = find_func(func_name);
@@ -538,12 +538,12 @@ do_default_line(KEY_MAP *map, char *line)
 	else
 	{
 		next_name = cp;
-		while ((*cp != '\0') && !isspace(*cp))
+		while ((*cp != '\0') && !isspace((int)*cp))
 			cp++;
 		if (*cp != '\0')
 		{
 			*cp++ = '\0';
-			while (isspace(*cp))
+			while (isspace((int)*cp))
 				cp++;
 		}
 		next = find_map(next_name);
@@ -577,7 +577,7 @@ read_bindings(FILE *fp)
 
 	while (fgets(line, sizeof(line) - 1, fp)) {
 		cp = line;
-		while (isspace(*cp))
+		while (isspace((int)*cp))
 			cp++;
 
 		if ((*cp == '\0') || (*cp == '#') || (*cp == '\n'))

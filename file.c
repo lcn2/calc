@@ -1980,11 +1980,11 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
 	for (;;) {
 		for (;;) {
 			f = *fmt++;
-			if (isspace(f)) {
+			if (isspace((int)f)) {
 				getscanwhite(fp,1,0,6,NULL);
 				do {
 					f = *fmt++;
-				} while (isspace(f));
+				} while (isspace((int)f));
 			}
 			c = fgetc(fp);
 			if (c == EOF)

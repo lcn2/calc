@@ -32,22 +32,23 @@
 
 #include <stdio.h>
 
-MAIN
+int
 main(void)
 {
 #if !defined(HAVE_NO_FPOS)
-    fpos_t pos;		/* file position */
+	fpos_t pos;		/* file position */
 
-    /* get the current position */
-    (void) fgetpos(stdin, &pos);
+	/* get the current position */
+	(void) fgetpos(stdin, &pos);
 
-    /* set the current position */
-    (void) fsetpos(stdin, &pos);
+	/* set the current position */
+	(void) fsetpos(stdin, &pos);
 
-    /* print a have_fpos.h body that says we have the functions */
-    printf("#undef HAVE_FPOS\n");
-    printf("#define HAVE_FPOS 1  /* yes */\n\n");
-    printf("typedef fpos_t FILEPOS;\n");
+	/* print a have_fpos.h body that says we have the functions */
+	printf("#undef HAVE_FPOS\n");
+	printf("#define HAVE_FPOS 1  /* yes */\n\n");
+	printf("typedef fpos_t FILEPOS;\n");
 #endif
-    exit(0);
+	/* exit(0); */
+	return 0;
 }

@@ -1,4 +1,24 @@
-Following is the change from calc version 2.10.3t5.38 to date:
+Following is the change from calc version 2.11.0t1 to date:
+
+    Fixed BSDI compile problems related to sys_errlist.
+
+    Removed the makefile symbol MAIN.  Now forcing all funcions to correctly
+    be reclared main.  To passify some old broken compilers, a return 0;
+    (instead of an exit(0);) is used at the end of main().
+
+    A few of files that were added to calc used 4 character indentation
+    whereas most of calc uses 8 character indentation.  These imported
+    sources have been changed to conform better with the calc style.
+
+    Fixed misc compile warnings.
+
+
+Following is the change from calc version 2.10.3t5.38 to 2.11.0t0:
+
+    Fixed a few compile problems found under Red Hat 6.0 Linux.
+
+
+Following is the change from calc version 2.10.3t5.38 to 2.11.3t5.46:
 
     Fixed a bug discovered by Ernest Bowen related to matrix-to-matrix copies.
 

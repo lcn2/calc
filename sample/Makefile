@@ -95,18 +95,6 @@ TOPDIR= /usr/local/lib
 LIBDIR= ${TOPDIR}/calc
 HELPDIR= ${LIBDIR}/help
 
-# The return value type of main() differs from platform to platform.
-# In some cases, a compiler warning is issued because main() does
-# or does not return a value.
-#
-# MAIN= -DMAIN=void     main() is of type void
-# MAIN= -DMAIN=int      main() is of type int
-#
-# When in doubt, try MAIN= -DMAIN=void.  If you get a warning try the other.
-#
-MAIN= -DMAIN=void
-#MAIN= -DMAIN=int
-
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
 #
@@ -251,7 +239,7 @@ CCMISC=
 CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC} ${ALLOW_CUSTOM}
 ICFLAGS= ${CCWARN} ${CCMISC}
 #
-CCMAIN= ${ICFLAGS} ${MAIN}
+CCMAIN= ${ICFLAGS}
 #
 LCFLAGS=
 LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
