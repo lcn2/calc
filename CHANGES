@@ -32,6 +32,21 @@ The following are the changes from calc version 2.11.5t2 to date:
     difference between text and binary string lengths matter.
     The intfile calc resource file also uses binary mode.
 
+    Changed the rand() builtin and its related functions srand() and
+    randbit() to use the Subtractive 100 generator instead of the
+    additive 55 generator.  This generator as improved random properties.
+    As a result, of this change, the values produced by rand(),
+    rand() and randbit() are now different.
+
+    Updated regression tests for new rand() and randbit() output.
+
+    Applied a bug fix from Ernest Bowen <ernie at turing dot une dot
+    edu dot au> dealing with one-line "static" declaration like:
+
+    	static a = 1, b;
+
+    Added regression test 8310 to test for the static bug fix.
+
 
 The following are the changes from calc version 2.11.5t0 to date:
 
@@ -5199,8 +5214,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.28 $
-## @(#) $Id: CHANGES,v 29.28 2001/04/10 22:13:40 chongo Exp $
+## @(#) $Revision: 29.29 $
+## @(#) $Id: CHANGES,v 29.29 2001/04/14 22:56:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

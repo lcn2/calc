@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: config.h,v 29.8 2001/04/08 09:08:57 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: config.h,v 29.9 2001/04/14 22:47:21 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -173,7 +173,8 @@ typedef struct config CONFIG;
 #define CALCDBG_BLOCK	    (0x00000008)    /* block debug */
 #define CALCDBG_TTY	    (0x00000010)    /* report TTY state changes */
 #define CALCDBG_RUNSTATE    (0x00000020)    /* report run_state changes */
-#define CALCDBG_MASK	    (0x0000003f)
+#define CALCDBG_RAND	    (0x00000040)    /* report rand() activity */
+#define CALCDBG_MASK	    (0x0000007f)
 
 /*
  * ctrl-d meanings

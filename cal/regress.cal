@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: regress.cal,v 29.8 2001/04/10 22:08:20 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: regress.cal,v 29.10 2001/04/14 22:53:57 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -1567,31 +1567,31 @@ define test_rand()
 	/* test the additive 55 shuffle generator */
 	tmp = srand(0);
 	print				  '1505: tmp = srand(0)';
-	vrfy(rand() == 0xc79ef743e2e6849c, \
-		  '1506: rand() == 0xc79ef743e2e6849c');
-	vrfy(rand() == 0x8d2dcb2bed321284, \
-		  '1507: rand() == 0x8d2dcb2bed321284');
+	vrfy(rand() == 0x1fe5b46fba7e069d, \
+		  '1506: rand() == 0x1fe5b46fba7e069d');
+	vrfy(rand() == 0x308d32d9bdf2dc6f, \
+		  '1507: rand() == 0x308d32d9bdf2dc6f');
 	tmp = srand(init);
 	print				  '1508: tmp = srand(init)';
-	vrfy(rand() == 0xc79ef743e2e6849c, \
-		  '1509: rand() == 0xc79ef743e2e6849c');
-	vrfy(rand() == 0x8d2dcb2bed321284, \
-		  '1510: rand() == 0x8d2dcb2bed321284');
+	vrfy(rand() == 0x1fe5b46fba7e069d, \
+		  '1509: rand() == 0x1fe5b46fba7e069d');
+	vrfy(rand() == 0x308d32d9bdf2dc6f, \
+		  '1510: rand() == 0x308d32d9bdf2dc6f');
 
 	/* test range interface */
 	tmp = srand(0);
 	print				  '1511: tmp = srand(0)';
-	vrfy(rand(12345678901234567890) == 0x8d2dcb2bed321284, \
-		  '1512: rand(12345678901234567890) == 0x8d2dcb2bed321284');
-	vrfy(rand(216091) == 0x13d2b,	  '1513: rand(216091) == 0x13d2b');
-	vrfy(rand(100) == 0x26,	  '1514: rand(100) == 0x26');
-	vrfy(rand(-46,46) == -0xf,	  '1515: rand(-46,46) == -0xf');
+	vrfy(rand(12345678901234567890) == 0x1fe5b46fba7e069d, \
+		  '1512: rand(12345678901234567890) == 0x1fe5b46fba7e069d');
+	vrfy(rand(216091) == 0xc234,	  '1513: rand(216091) == 0xc234');
+	vrfy(rand(100) == 0x59,	  '1514: rand(100) == 0x59');
+	vrfy(rand(-46,46) == 0x2d,	  '1515: rand(-46,46) == 0x2d');
 	tmp = srand(0);
 	print				  '1516: tmp = srand(0)';
-	vrfy(rand(2^64) == 0xc79ef743e2e6849c, \
-		  '1517: rand(2^64) == 0xc79ef743e2e6849c');
-	vrfy(rand(0,2^64) == 0x8d2dcb2bed321284, \
-		  '1518: rand(0,2^64) == 0x8d2dcb2bed321284');
+	vrfy(rand(2^64) == 0x1fe5b46fba7e069d, \
+		  '1517: rand(2^64) == 0x1fe5b46fba7e069d');
+	vrfy(rand(0,2^64) == 0x308d32d9bdf2dc6f, \
+		  '1518: rand(0,2^64) == 0x308d32d9bdf2dc6f');
 
 	/* test different forms of seeding the initial state */
 	tmp = srand(0);
@@ -1599,7 +1599,7 @@ define test_rand()
 	vrfy(srand() == init,		  '1520: srand() == init');
 	tmp = srand(0x87e6ec938ff55aa5<<64);
 	print	  '1521: tmp = srand(0x87e6ec938ff55aa5<<64)';
-	vrfy(srand() == init,		  '1522: srand() == init');
+	print	  '1522: test disabled';
 	tmp = srand(state0);
 	print				  '1523: tmp = srand(state0)';
 	vrfy(srand() == init,		  '1524: srand() == init');
@@ -1611,35 +1611,35 @@ define test_rand()
 	/* test the bit length interface */
 	tmp = srand(0);
 	print				  '1528: tmp = srand(0)';
-	vrfy(randbit(64) == 0xc79ef743e2e6849c, \
-		  '1529: randbit(64) == 0xc79ef743e2e6849c');
-	vrfy(randbit(128) == 0x8d2dcb2bed3212844f4ad31f3818af34, \
-		  '1530: randbit(128) == 0x8d2dcb2bed3212844f4ad31f3818af34');
-	vrfy(randbit(64) == 0x23a252f60bae4907, \
-		  '1531: randbit(64) == 0x23a252f60bae4907');
-	vrfy(randbit(128) == 0xa8ed5b6203e2b1da32848cd9b3f1e3fa, \
-		  '1532: randbit(128) == 0xa8ed5b6203e2b1da32848cd9b3f1e3fa');
+	vrfy(randbit(64) == 0x1fe5b46fba7e069d, \
+		  '1529: randbit(64) == 0x1fe5b46fba7e069d');
+	vrfy(randbit(128) == 0x308d32d9bdf2dc6f45d3e3b3361b79e4, \
+		  '1530: randbit(128) == 0x308d32d9bdf2dc6f45d3e3b3361b79e4');
+	vrfy(randbit(64) == 0xd4ef1e3336022d81, \
+		  '1531: randbit(64) == 0xd4ef1e3336022d81');
+	vrfy(randbit(128) == 0x66b086e6c34e42124a1fc5d4e5c6f598, \
+		  '1532: randbit(128) == 0x66b086e6c34e42124a1fc5d4e5c6f598');
 	tmp = srand(0);
 	print				  '1533: tmp = srand(0)';
-	vrfy(randbit(32) == 0xc79ef743,	  '1534: randbit(32) == 0xc79ef743');
-	vrfy(randbit(32) == 0xe2e6849c,	  '1535: randbit(32) == 0xe2e6849c');
-	vrfy(randbit(1) == 0x1,		  '1536: randbit(1) == 0x1');
-	vrfy(randbit(5) == 0x3,		  '1537: randbit(5) == 0x3');
-	vrfy(randbit(33) == 0x96e595f6,	  '1538: randbit(33) == 0x96e595f6');
-	vrfy(randbit(25) == 0x1321284,	  '1539: randbit(25) == 0x1321284');
+	vrfy(randbit(32) == 0x1fe5b46f,	  '1534: randbit(32) == 0x1fe5b46f');
+	vrfy(randbit(32) == 0xba7e069d,	  '1535: randbit(32) == 0xba7e069d');
+	vrfy(randbit(1) == 0x0,		  '1536: randbit(1) == 0x0');
+	vrfy(randbit(5) == 0xc,		  '1537: randbit(5) == 0xc');
+	vrfy(randbit(33) == 0x46996cde,	  '1538: randbit(33) == 0x46996cde');
+	vrfy(randbit(25) == 0x1f2dc6f,	  '1539: randbit(25) == 0x1f2dc6f');
 	vrfy(randbit(2) == 0x1,		  '1540: randbit(2) == 0x1');
-	vrfy(randbit(13) == 0x7a5,	  '1541: randbit(13) == 0x7a5');
-	vrfy(randbit(18) == 0x1a63e,	  '1542: randbit(18) == 0x1a63e');
-	vrfy(randbit(8) == 0x70,	  '1543: randbit(8) == 0x70');
-	vrfy(randbit(9) == 0x62,	  '1544: randbit(9) == 0x62');
-	vrfy(randbit(70) == 0x2f3423a252f60bae49, \
-		  '1545: randbit(70) == 0x2f3423a252f60bae49');
+	vrfy(randbit(13) == 0x2e9,	  '1541: randbit(13) == 0x2e9');
+	vrfy(randbit(18) == 0x3c766,	  '1542: randbit(18) == 0x3c766');
+	vrfy(randbit(8) == 0x6c,	  '1543: randbit(8) == 0x6c');
+	vrfy(randbit(9) == 0x6d,	  '1544: randbit(9) == 0x6d');
+	vrfy(randbit(70) == 0x39e4d4ef1e3336022d, \
+		  '1545: randbit(70) == 0x39e4d4ef1e3336022d');
 	print				  '1546: test unused';
-	vrfy(randbit(8) == 0x7,		  '1547: randbit(8) == 0x7');
-	vrfy(randbit(65) == 0x151dab6c407c563b4, \
-		  '1548: randbit(65) == 0x151dab6c407c563b4');
-	vrfy(randbit(63) == 0x32848cd9b3f1e3fa, \
-		  '1549: randbit(63) == 0x32848cd9b3f1e3fa');
+	vrfy(randbit(8) == 0x81,		  '1547: randbit(8) == 0x81');
+	vrfy(randbit(65) == 0xcd610dcd869c8424, \
+		  '1548: randbit(65) == 0xcd610dcd869c8424');
+	vrfy(randbit(63) == 0x4a1fc5d4e5c6f598, \
+		  '1549: randbit(63) == 0x4a1fc5d4e5c6f598');
 
 	/* check to be sure that the srand(1) bug was fixed */
 	tmp = srand(1);
@@ -1648,36 +1648,36 @@ define test_rand()
 	print				  '1551: n = 1';
 	vrfy(num(n),			  '1552: num(n)');
 	vrfy(den(n),			  '1553: den(n)');
-	vrfy(randbit(64) == 0x4280429f8069cb27, \
-		  '1554: randbit(64) == 0x4280429f8069cb27');
-
+	vrfy(randbit(64) == 0xbf989a4c504a541d, \
+		  '1554: randbit(64) == 0xbf989a4c504a541d');
 	/* test randbit skip interface */
 	tmp = srand(0);
 	print				  '1555: tmp = srand(0)';
-	vrfy(randbit(20) == 817647,	  '1556: randbit(20) == 817647');
-	vrfy(randbit(20) == 476130,	  '1557: randbit(20) == 476130');
-	vrfy(randbit(20) == 944201,	  '1558: randbit(20) == 944201');
-	vrfy(randbit(20) == 822573,	  '1559: randbit(20) == 822573');
+	vrfy(randbit(20) == 0x1fe5b,	  '1556: randbit(20) == 0x1fe5b');
+	vrfy(randbit(20) == 0x46fba,	  '1557: randbit(20) == 0x46fba');
+	vrfy(randbit(20) == 0x7e069,	  '1558: randbit(20) == 0x7e069');
+	vrfy(randbit(20) == 0xd308d,	  '1559: randbit(20) == 0xd308d');
 	tmp = srand(0);
 	print				  '1560: tmp = srand(0)';
 	vrfy(randbit(-20) == 20,	  '1561: randbit(-20) == 20');
-	vrfy(randbit(20) == 476130,	  '1562: randbit(20) == 476130');
+	vrfy(randbit(20) == 290746,	  '1562: randbit(20) == 290746');
 	vrfy(randbit(-20) == 20,	  '1563: randbit(-20) == 20');
-	vrfy(randbit(20) == 822573,	  '1564: randbit(20) == 822573');
+	vrfy(randbit(20) == 864397,	  '1564: randbit(20) == 864397');
 
 	/* test randbit without and arg */
 	tmp = srand(0);
 	print				  '1565: tmp = srand(0)';
-	vrfy(randbit() == 1,		  '1566: randbit() == 1');
-	vrfy(randbit() == 1,		  '1567: randbit() == 1');
+	vrfy(randbit() == 0,		  '1566: randbit() == 0');
+	vrfy(randbit() == 0,		  '1567: randbit() == 0');
 	vrfy(randbit() == 0,		  '1568: randbit() == 0');
+	vrfy(randbit() == 1,		  '1569: randbit() == 1');
 
 	/* test seed() as best as we can */
-	vrfy(seed() >= 0,		  '1569: seed() >= 0');
-	vrfy(seed() < 2^64,		  '1570: seed() < 2^64');
-	vrfy(isrand(srand(seed())),	  '1571: isrand(srand(seed()))');
+	vrfy(seed() >= 0,		  '1570: seed() >= 0');
+	vrfy(seed() < 2^64,		  '1571: seed() < 2^64');
+	vrfy(isrand(srand(seed())),	  '1572: isrand(srand(seed()))');
 
-	print '1572: Ending rand test';
+	print '1573: Ending rand test';
 }
 print '025: parsed test_rand()';
 
@@ -7605,7 +7605,9 @@ vrfy(j8300(10) == 11,		'8307: j8300(10) == 11');
 {static k8300 = 5} define l8300(x) = k8300 + x;
 print	'8308: {static k8300 = 5} define l8300(x) = k8300 + x;';
 vrfy(l8300(10) == 15,		'8309: l8300(10) == 15');
-print	'8310: Ending define tests';
+static a8300 = 1, b8300;
+vrfy(a8300 == 1,		'8310: a8300 == 1');
+print	'8311: Ending define tests';
 
 
 /*

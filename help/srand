@@ -1,5 +1,5 @@
 NAME
-    srand - seed the additive 55 shuffle pseudo-random number generator
+    srand - seed the subtractive 100 shuffle pseudo-random number generator
 
 SYNOPSIS
     srand([seed])
@@ -10,43 +10,43 @@ TYPES
     return	rand state
 
 DESCRIPTION
-    Seed the pseudo-random number using an additive 55 shuffle generator.
+    Seed the pseudo-random number using an subtractive 100 shuffle generator.
 
     For integer seed != 0:
 
-	Any buffered rand generator bits are flushed.  The additive table
-	for the rand generator is loaded with the default additive table.
+	Any buffered rand generator bits are flushed.  The subtractive table
+	for the rand generator is loaded with the default subtractive table.
 	The low order 64 bits of seed is xor-ed against each table value.
-	The additive table is shuffled according to seed/2^64.
+	The subtractive table is shuffled according to seed/2^64.
 
 	The following calc code produces the same effect on the internal
-	additive table:
+	subtractive table:
 
-	    /* reload default additive table xor-ed with low 64 seed bits */
+	    /* reload default subtractive table xor-ed with low 64 seed bits */
 	    seed_xor = seed & ((1<<64)-1);
-	    for (i=0; i < 55; ++i) {
-		additive[i] = xor(default_additive[i], seed_xor);
+	    for (i=0; i < 100; ++i) {
+		subtractive[i] = xor(default_subtractive[i], seed_xor);
 	    }
 
-	    /* shuffle the additive table */
+	    /* shuffle the subtractive table */
 	    seed >>= 64;
-	    for (i=55; seed > 0 && i > 0; --i) {
+	    for (i=100; seed > 0 && i > 0; --i) {
 		quomod(seed, i+1, seed, j);
-		swap(additive[i], additive[j]);
+		swap(subtractive[i], subtractive[j]);
 	    }
 
 	Seed must be >= 0.  All seed values < 0 are reserved for future use.
 
-	The additive table pointers are reset to additive[23] and additive[54].
-	Last the shuffle table is loaded with successive values from the
-	additive 55 generator.
+	The subtractive table pointers are reset to subtractive[36]
+	and subtractive[99].  Last the shuffle table is loaded with
+	successive values from the subtractive 100 generator.
 
 	There is no limit on the size of a seed.  On the other hand,
 	extremely large seeds require large tables and long seed times.
-	Using a seed in the range of [2^64, 2^64 * 55!) should be
+	Using a seed in the range of [2^64, 2^64 * 100!) should be
 	sufficient for most purposes.  An easy way to stay within this
-	range to to use seeds that are between 21 and 93 digits, or
-	64 to 308 bits long.
+	range to to use seeds that are between 21 and 178 digits, or
+	64 to 588 bits long.
 
 	To help make the generator produced by seed S, significantly
 	different from S+1, seeds are scrambled prior to use.  The
@@ -68,9 +68,9 @@ DESCRIPTION
 	After this call, the rand generator is restored to its initial
 	state after calc started.
 
-	The additive 55 pointers are reset to additive[23] and additive[54].
-	Last the shuffle table is loaded with successive values from the
-	additive 55 generator.
+	The subtractive 100 pointers are reset to subtractive[36]
+	and subtractive[99].  Last the shuffle table is loaded with
+	successive values from the subtractive 100 generator.
 
 	The call:
 
@@ -80,14 +80,14 @@ DESCRIPTION
 
     For matrix arg:
 
-	Any buffered random bits are flushed.  The additive table with the
-	first 55 entries of the matrix mod 2^64.
+	Any buffered random bits are flushed.  The subtractive table with the
+	first 100 entries of the matrix mod 2^64.
 
-	The additive 55 pointers are reset to additive[23] and additive[54].
-	Last the shuffle table is loaded with successive values from the
-	additive 55 generator.
+	The subtractive 100 pointers are reset to subtractive[36]
+	and subtractive[99].  Last the shuffle table is loaded with
+	successive values from the subtractive 100 generator.
 
-	This form allows one to load the internal additive 55 generator
+	This form allows one to load the internal subtractive 100 generator
 	with user supplied values.
 
 	The randreseed64 process is NOT applied to the matrix values.
@@ -114,7 +114,7 @@ DESCRIPTION
 
     For no arg given:
 
-	Return current a55 generator state.  This call does not alter
+	Return current s100 generator state.  This call does not alter
 	the generator state.
 
 	This call allows one to take a snapshot of the current generator state.
@@ -126,25 +126,25 @@ EXAMPLE
 	    RAND state
     > state = srand();
     > print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
-    32 60 67 71 1 77
+    80 95 41 78 100 27
     > print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
-    52 72 110 15 69 58
+    122 109 12 95 80 32
     > state2 = srand(state);
     > print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
-    32 60 67 71 1 77
+    80 95 41 78 100 27
     > print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
-    52 72 110 15 69 58
+    122 109 12 95 80 32
     > state3 = srand();
     > print state3 == state2;
     1
     > print rand();
-    641407694185874626
+    10710588361472584495
 
 LIMITS
-    for matrix arg, the matrix must have at least 55 integers
+    for matrix arg, the matrix must have at least 100 integers
 
 LINK LIBRARY
-    RAND *zsrand(ZVALUE *pseed, MATRIX *pmat55)
+    RAND *zsrand(ZVALUE *pseed, MATRIX *pmat100)
     RAND *zsetrand(RAND *state)
 
 SEE ALSO
@@ -166,8 +166,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: srand,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: srand,v 29.3 2001/04/14 22:46:33 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/srand,v $
 ##
 ## Under source code control:	1996/01/01 04:19:07

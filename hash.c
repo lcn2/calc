@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: hash.c,v 29.3 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: hash.c,v 29.4 2001/04/14 22:47:21 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hash.c,v $
  *
  * Under source code control:	1995/11/23 05:13:11
@@ -911,6 +911,7 @@ hash_value(int type, void *v, HASH *state)
 			(USB8 *)value->v_rand->buffer, SLEN*FULL_BITS/8);
 		state = hash_int(type, value->v_rand->j, state);
 		state = hash_int(type, value->v_rand->k, state);
+		state = hash_int(type, value->v_rand->need_to_skip, state);
 		(state->update)(state,
 			(USB8 *)value->v_rand->slot, SCNT*FULL_BITS/8);
 		(state->update)(state,

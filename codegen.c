@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: codegen.c,v 29.4 2001/03/17 21:31:47 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: codegen.c,v 29.5 2001/04/14 22:55:39 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -522,9 +522,10 @@ getsimpledeclaration(int symtype)
 		switch (gettoken()) {
 			case T_SYMBOL:
 				rescantoken();
-				res = getonevariable(symtype);
-				if (res)
+				if (getonevariable(symtype)) {
+					res = 1;
 					addop(OP_POP);
+				}
 				continue;
 			case T_COMMA:
 				continue;

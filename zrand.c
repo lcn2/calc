@@ -1,5 +1,5 @@
 /*
- * zrand - additive 55 shuffle generator
+ * zrand - subtractive 100 shuffle generator
  *
  * Copyright (C) 1999  Landon Curt Noll
  *
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: zrand.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: zrand.c,v 29.3 2001/04/14 22:47:21 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrand.c,v $
  *
  * Under source code control:	1995/01/07 09:45:25
@@ -31,34 +31,38 @@
 /*
  * AN OVERVIEW OF THE FUNCTIONS:
  *
- * This module contains an Additive 55 shuffle generator wrapped inside
+ * This module contains an Subtractive 100 shuffle generator wrapped inside
  * of a shuffle generator.
  *
- *	We refer to this generator as the a55 generator.
+ *	We refer to this generator as the s100 generator.
  *
- *	rand	- a55 shuffle generator
- *	srand	- seed the a55 shuffle generator
+ *	rand	- s100 shuffle generator
+ *	srand	- seed the s100 shuffle generator
  *
- *	This generator has two distinct parts, the a55 generator
+ *	This generator has two distinct parts, the s100 generator
  *	and the shuffle generator.
  *
- *	The additive 55 generator is described in Knuth's "The Art of
- *	Computer Programming - Seminumerical Algorithms", Vol 2, 2nd edition
- *	(1981), Section 3.2.2, page 27, Algorithm A.
+ *	The subtractive 100 generator is described in Knuth's "The Art of
+ *	Computer Programming - Seminumerical Algorithms", Vol 2, 3rd edition
+ *	(1998), Section 3.6, page 186, formula (2).
+ *
+ *	The "use only the first 100 our of every 1009" is described in
+ *	Knuth's "The Art of Computer Programming - Seminumerical Algorithms",
+ *	Vol 2, 3rd edition (1998), Section 3.6, page 188".
  *
  *	The period and other properties of this generator make it very
  *	useful to 'seed' other generators.
  *
  *	The shuffle generator is described in Knuth's "The Art of Computer
- *	Programming - Seminumerical Algorithms", Vol 2, 2nd edition (1981),
- *	Section 3.2.2, page 32, Algorithm B.
+ *	Programming - Seminumerical Algorithms", Vol 2, 3rd edition (1998),
+ *	Section 3.2.2, page 34, Algorithm B.
  *
  *	The shuffle generator is fast and serves as a fairly good standard
  *	pseudo-random generator.   If you need a fast generator and do not
  *	need a cryptographically strong one, this generator is likely to do
  *	the job.
  *
- *	The shuffle generator is feed values by the additive 55 process.
+ *	The shuffle generator is feed values by the subtractive 100 process.
  *
  ******************************************************************************
  *
@@ -97,31 +101,31 @@
 /*
  * ON THE GENERATORS:
  *
- * The additive 55 generator has a good period, and is fast.  It is
+ * The subtractive 100 generator has a good period, and is fast.  It is
  * reasonable as generators go, though there are better ones available.
  * The shuffle generator has a very good period, and is fast.  It is
  * fairly good as generators go, particularly when it is feed reasonably
- * random numbers.  Because of this, we use feed values from the additive
- * 55 process into the shuffle generator.
+ * random numbers.  Because of this, we use feed values from the subtractive
+ * 100 process into the shuffle generator.
  *
- * The a55 generator uses 2 tables:
+ * The s100 generator uses 2 tables:
  *
- *	additive table - 55 entries of 64 bits used by the additive 55
- *			 part of the a55 generator
+ *	subtractive table - 100 entries of 64 bits used by the subtractive 100
+ *			    part of the s100 generator
  *
  *	shuffle table - 256 entries of 64 bits used by the shuffle
- *			part of the a55 generator and feed by the
- *			additive table.
+ *			part of the s100 generator and feed by the
+ *			subtractive table.
  *
  * Casual direct use of the shuffle generator may be acceptable.  If one
  * desires cryptographically strong random numbers, or if one is paranoid,
  * one should use the Blum generator instead (see zrandom.c).
  *
- * The a55 generator as the following calc interfaces:
+ * The s100 generator as the following calc interfaces:
  *
  *   rand(min,max)		(where min < max)
  *
- *	Print an a55 generator random value over interval [a,b).
+ *	Print an s100 generator random value over interval [a,b).
  *
  *   rand()
  *
@@ -146,22 +150,22 @@
  * All generators come already seeded with precomputed initial constants.
  * Thus, it is not required to seed a generator before using it.
  *
- * The a55 generator may be initialized and seeded via srand().
+ * The s100 generator may be initialized and seeded via srand().
  *
  * Using a seed of '0' will reload generators with their initial states.
  *
- *	srand(0)	restore additive 55 generator to the initial state
+ *	srand(0)	restore subtractive 100 generator to the initial state
  *
  * The above single arg calls are fairly fast.
  *
- * Optimal seed range for the a55 generator:
+ * Optimal seed range for the s100 generator:
  *
  *	There is no limit on the size of a seed.  On the other hand,
  *	extremely large seeds require large tables and long seed times.
- *	Using a seed in the range of [2^64, 2^64 * 55!) should be
+ *	Using a seed in the range of [2^64, 2^64 * 100!) should be
  *	sufficient for most purposes.  An easy way to stay within this
- *	range to to use seeds that are between 21 and 93 digits, or
- *	64 to 308 bits long.
+ *	range to to use seeds that are between 21 and 178 digits, or
+ *	64 to 588 bits long.
  *
  *	To help make the generator produced by seed S, significantly
  *	different from S+1, seeds are scrambled prior to use.  The
@@ -180,75 +184,75 @@
  *
  * srand(seed)
  *
- *    Seed the a55 generator.
+ *    Seed the s100 generator.
  *
  *    seed != 0:
  *    ---------
- *	Any buffered random bits are flushed.  The additive table is loaded
- *	with the default additive table.  The low order 64 bits of seed is
- *	xor-ed against each table value.  The additive table is shuffled
+ *	Any buffered random bits are flushed.  The subtractive table is loaded
+ *	with the default subtractive table.  The low order 64 bits of seed is
+ *	xor-ed against each table value.  The subtractive table is shuffled
  *	according to seed/2^64.
  *
  *	The following calc code produces the same effect:
  *
- *	    (* reload default additive table xored with low 64 seed bits *)
+ *	    (* reload default subtractive table xored with low 64 seed bits *)
  *	    seed_xor = seed & ((1<<64)-1);
- *	    for (i=0; i < 55; ++i) {
- *		additive[i] = xor(default_additive[i], seed_xor);
+ *	    for (i=0; i < 100; ++i) {
+ *		subtractive[i] = xor(default_subtractive[i], seed_xor);
  *	    }
  *
- *	    (* shuffle the additive table *)
+ *	    (* shuffle the subtractive table *)
  *	    seed >>= 64;
- *	    for (i=55; seed > 0 && i > 0; --i) {
+ *	    for (i=100; seed > 0 && i > 0; --i) {
  *		quomod(seed, i+1, seed, j);
- *		swap(additive[i], additive[j]);
+ *		swap(subtractive[i], subtractive[j]);
  *	    }
  *
  *	Seed must be >= 0.  All seed values < 0 are reserved for future use.
  *
- *	The additive 55 pointers are reset to additive[23] and additive[54].
- *	Last the shuffle table is loaded with successive values from the
- *	additive 55 generator.
+ *	The subtractive 100 pointers are reset to subtractive[36] and
+ *	subtractive[99].  Last the shuffle table is loaded with successive
+ *	values from the	subtractive 100 generator.
  *
  *    seed == 0:
  *    ---------
- *	Restore the initial state and modulus of the a55 generator.
- *	After this call, the a55 generator is restored to its initial
+ *	Restore the initial state and modulus of the s100 generator.
+ *	After this call, the s100 generator is restored to its initial
  *	state after calc started.
  *
- *	The additive 55 pointers are reset to additive[23] and additive[54].
- *	Last the shuffle table is loaded with successive values from the
- *	additive 55 generator.
+ *	The subtractive 100 pointers are reset to subtractive[36] and
+ *	subtractive[99].  Last the shuffle table is loaded with successive
+ *	values from the	subtractive 100 generator.
  *
  ******************************************************************************
  *
- * srand(mat55)
+ * srand(mat100)
  *
- *    Seed the a55 generator.
+ *    Seed the s100 generator.
  *
- *    Any buffered random bits are flushed.  The additive table with the
- *    first 55 entries of the array mat55, mod 2^64.
+ *    Any buffered random bits are flushed.  The subtractive table with the
+ *    first 100 entries of the array mat100, mod 2^64.
  *
- *    The additive 55 pointers are reset to additive[23] and additive[54].
- *    Last the shuffle table is loaded with successive values from the
- *    additive 55 generator.
+ *    The subtractive 100 pointers are reset to subtractive[36] and
+ *    subtractive[99].  Last the shuffle table is loaded with successive
+ *    values from the subtractive 100 generator.
  *
  ******************************************************************************
  *
  * srand()
  *
- *    Return current a55 generator state.  This call does not alter
+ *    Return current s100 generator state.  This call does not alter
  *    the generator state.
  *
  ******************************************************************************
  *
  * srand(state)
  *
- *    Restore the a55 state and return the previous state.  Note that
+ *    Restore the s100 state and return the previous state.  Note that
  *    the argument state is a rand state value (isrand(state) is true).
  *    Any internally buffered random bits are restored.
  *
- *    The states of the a55 generators can be saved by calling the seed
+ *    The states of the s100 generators can be saved by calling the seed
  *    function with no arguments, and later restored by calling the seed
  *    functions with that same return value.
  *
@@ -280,16 +284,13 @@
  * SOURCE OF MAGIC NUMBERS:
  *
  * Most of the magic constants used on this file ultimately are
- * based on the Rand Book of Random Numbers.  The Rand Book of Random
- * Numbers contains 10^6 decimal digits, generated by a physical process.
- * This book, produced by the Rand corporation in the 1950's is considered
- * a standard against which other generators may be measured.
+ * based on SGI Lavarand.  SGI Lavarand produced a 5-way cryprographic
+ * of the digitization of chaotic system that consisted of a noisy
+ * digital camera and 6 Lava Lite(R) lamps.
  *
- * The Rand Book of Random Numbers was read groups of 20 digits.
- * The first 55 groups < 2^64 were used to initialize init_a55.slot.
- * The size of 20 digits was used because 2^64 is 20 digits long.
- * The restriction of < 2^64 was used to prevent modulus biasing.
- * (see the note on  modulus biasing in rand()).
+ * 	BTW: Lava Lite(R) is a trademark of Haggerty Enterprises, Inc.
+ *
+ * The first 100 groups of 64 bit bits were used to initialize init_s100.slot.
  *
  * The function, randreseed64(), uses 2 primes to scramble 64 bits
  * into 64 bits.  These primes were also extracted from the Rand
@@ -297,15 +298,15 @@
  *
  * The shuffle table size is longer than the 100 entries recommended
  * by Knuth.  We use a power of 2 shuffle table length so that the
- * shuffle process can select a table entry from a new additive 55
+ * shuffle process can select a table entry from a new subtractive 100
  * value by extracting its low order bits.  The value 256 is convenient
  * in that it is the size of a byte which allows for easy extraction.
  *
- * We use the upper byte of the additive 55 value to select the shuffle
+ * We use the upper byte of the subtractive 100 value to select the shuffle
  * table entry because it allows all of 64 bits to play a part in the
  * entry selection.  If we were to select a lower 8 bits in the 64 bit
  * value, carries that propagate above our 8 bits would not impact the
- * a55 generator output.
+ * s100 generator output.
  *
  ******************************************************************************
  *
@@ -313,8 +314,11 @@
  *
  * The truly paranoid might suggest that my claims in the MAGIC NUMBERS
  * section are a lie intended to entrap people.	 Well they are not, but
- * you need not take my word for it.
+ * if you that paranoid why would you use a non-cryprographically strong
+ * pseudo-random number generator in the first place?  You would be
+ * better off using the random() builtin function.
  *
+ * The two constants that were picked from the Rand Book of Random Numbers
  * The random numbers from the Rand Book of Random Numbers can be
  * verified by anyone who obtains the book.  As these numbers were
  * created before I (Landon Curt Noll) was born (you can look up
@@ -326,14 +330,14 @@
  * from the printed text.  I am willing to provide access to this
  * electronic copy should anyone wants to compare it to the printed text.
  *
- * When using the a55 generator, one may select your own 55 additive
+ * When using the s100 generator, one may select your own 100 subtractive
  * values by calling:
  *
- *	srand(mat55)
+ *	srand(mat100)
  *
  * and avoid using my magic numbers.  The randreseed64 process is NOT
- * applied to the matrix values. Of course, you must pick good additive
- * 55 values yourself!
+ * applied to the matrix values. Of course, you must pick good subtractive
+ * 100 values yourself!
  *
  * One might object to the complexity of the seed scramble/mapping
  * via the randreseed64() function.  The randreseed64() function maps:
@@ -355,12 +359,12 @@
 
 
 /*
- * default a55 generator state
+ * default s100 generator state
  *
- * This is the state of the a55 generator after initialization, or srand(0),
- * or srand(0) is called.  The init_a55 value is never changed, only copied.
+ * This is the state of the s100 generator after initialization, or srand(0),
+ * or srand(0) is called.  The init_s100 value is never changed, only copied.
  */
-static CONST RAND init_a55 = {
+static CONST RAND init_s100 = {
 	1,		/* seeded */
 	0,		/* no buffered bits */
 #if FULL_BITS == SBITS		/* buffer */
@@ -370,152 +374,256 @@ static CONST RAND init_a55 = {
 #else
    /\../\	BASEB is assumed to be 16 or 32		/\../\	 !!!
 #endif
-	3,		/* j */
-	34,		/* k */
+	INIT_J,			/* j */
+	INIT_K,			/* k */
+	RAND_CONSEQ_USE,	/* use this many before skipping values */
 	/* NOTE: Due to a SunOS cc bug, don't put spaces in the SVAL call! */
-	{		/* additive 55 table */
-  SVAL(23a252f6,0bae4907), SVAL(4f4ad31f,3818af34), SVAL(689806c4,03319a17),
-  SVAL(e6354a5d,cee6bf3b), SVAL(3893b3e6,e012a049), SVAL(e39d8c36,8506bdaf),
-  SVAL(e16a0aa7,982d6183), SVAL(5a3826bd,fe1de81a), SVAL(ced972b3,bed35fcd),
-  SVAL(8e903ee9,116918a8), SVAL(756befb5,7b299d56), SVAL(98cb4420,76a5f6c5),
-  SVAL(d310cd35,0ba6974e), SVAL(d1b647f8,e6380d89), SVAL(b5ea8137,6f5ae1dd),
-  SVAL(cf52ec42,dc76ca61), SVAL(ee2a9fd2,f2f53952), SVAL(02068a04,8cbb4a4f),
-  SVAL(2795a393,91e5aa61), SVAL(50094e9e,362288a0), SVAL(557a341d,1a05658b),
-  SVAL(0974456c,230c81d0), SVAL(e4b28a42,2c257199), SVAL(8bd702b6,6b28872c),
-  SVAL(b8a8aeb0,8168eadc), SVAL(231435e7,032dce9f), SVAL(330005e6,cfcf3824),
-  SVAL(ecf49311,56732afe), SVAL(fa2bed49,9a7244cd), SVAL(847c40e5,213a970a),
-  SVAL(c685f1a0,b28f5cd8), SVAL(7b097038,1d22ad26), SVAL(ce00b094,05b5d608),
-  SVAL(a3572534,b519bc02), SVAL(74cbc38f,e7cd0932), SVAL(165c0566,4f19607e),
-  SVAL(a459c365,1778672b), SVAL(fd38ee3c,8cf74e30), SVAL(834380f7,447e23f3),
-  SVAL(ec47e111,98d1f52d), SVAL(43089001,90fb27a0), SVAL(e0decf74,00327bc7),
-  SVAL(912114f1,8ede5d9c), SVAL(32848cd9,b3f1e3fa), SVAL(37dbc32b,9b57118d),
-  SVAL(6086ea0a,1f29cff6), SVAL(b8b022ea,7985e577), SVAL(b54f7270,d5a7acd4),
-  SVAL(26514f0a,905fd370), SVAL(c6cc93de,0b040350), SVAL(e531c4a7,f0bccac2),
-  SVAL(e7354f4b,9d73756e), SVAL(5101eb63,ba39250c), SVAL(d62ac371,46f578aa),
-  SVAL(55c023d0,ece39b11)
+	{		/* subtractive 100 table */
+	    SVAL(c8c0370c,7db7dc19), SVAL(738e33b9,40a06fbb),
+	    SVAL(481abb76,a859ed2b), SVAL(74106bb3,9ccdccb5),
+	    SVAL(05a8eeb5,c3173bfc), SVAL(efd5100d,5a02e577),
+	    SVAL(a69271f7,4030b24a), SVAL(641282fc,16fe22c5),
+	    SVAL(7aa7267c,40438da3), SVAL(1fdf4abd,c2d878d1),
+	    SVAL(d9899e7a,95702379), SVAL(5ea8e217,d02d7f08),
+	    SVAL(770587fe,4d47a353), SVAL(de7d1bdd,0a33a2b8),
+	    SVAL(4378c3c5,900e7c45), SVAL(77c94478,19a514f9),
+	    SVAL(fc5edb22,843d1d32), SVAL(4fc42ce5,e8ee5e6e),
+	    SVAL(c938713c,8488013e), SVAL(6a318f03,20ab0cac),
+	    SVAL(73e6d1a3,ffc8bff3), SVAL(0cd3232a,8ca96aa7),
+	    SVAL(605c8036,905f770d), SVAL(4d037b00,8b8d04a2),
+	    SVAL(1ed81965,cb277294), SVAL(408d9c47,7a254ff3),
+	    SVAL(8b68587a,e26c7377), SVAL(cff191a4,8a48832f),
+	    SVAL(12d3df1d,8aeb6fe6), SVAL(b2bf907e,1feda37a),
+	    SVAL(4e5f7719,3bb5f39f), SVAL(33ebcf6f,8f5d1581),
+	    SVAL(203c8e48,d33654eb), SVAL(68d3656e,f19c8a4e),
+	    SVAL(3ec20b04,986eb2af), SVAL(5d73a03b,062c3841),
+	    SVAL(836ce709,5d4e49eb), SVAL(2310bc40,c3f49221),
+	    SVAL(3868ee48,a6d0cbf6), SVAL(67578aa6,4a43deb1),
+	    SVAL(6e3426c1,150dfc26), SVAL(c541ccaa,3131be30),
+	    SVAL(f7e57432,cec7aab2), SVAL(2b35de99,8cb3c873),
+	    SVAL(7b9f7764,8663a5d7), SVAL(23b00e6a,a771e5a6),
+	    SVAL(859c775c,a9985d05), SVAL(99636ea1,6b692f1f),
+	    SVAL(8700ac70,3730800d), SVAL(46142502,4298a753),
+	    SVAL(ea4a411b,809e955f), SVAL(3119ad40,33709dfb),
+	    SVAL(b76a6c6e,5f01cb7c), SVAL(6109dc8a,15984eaf),
+	    SVAL(5d686db9,a5ca9505), SVAL(8e80d761,3b7e6add),
+	    SVAL(79cbd718,de6f6fd3), SVAL(40e9cd15,1da0f699),
+	    SVAL(e82158ba,b24f312d), SVAL(79a4c927,f5e5c36b),
+	    SVAL(c25247c9,a0039333), SVAL(93687116,1766d81d),
+	    SVAL(3c6a03b4,a6741327), SVAL(c8a7b6e8,c002f29a),
+	    SVAL(0e2a67c6,7bbd5ea3), SVAL(0929042d,441eabc1),
+	    SVAL(7dbe232a,25e82085), SVAL(8cfb26e5,44fbac3d),
+	    SVAL(8e40384d,388ab983), SVAL(48dc1230,554632f8),
+	    SVAL(ab405048,ab492397), SVAL(21c9e2f5,a118e387),
+	    SVAL(484d1a8c,343b61b5), SVAL(d49e3dec,ab256f26),
+	    SVAL(e615c7fd,78f2d2e3), SVAL(8442cc33,ce6cc2ed),
+	    SVAL(0a3b93d8,44d4bbf6), SVAL(2d7e4efe,9301de77),
+	    SVAL(33711b76,d8790d8a), SVAL(c07dc30e,44df77e7),
+	    SVAL(b9132ed0,9ddd508f), SVAL(45d06cf8,c6fb43cc),
+	    SVAL(22bed18a,d585dd7b), SVAL(61c6cced,10799ffa),
+	    SVAL(d7f2393b,e4bd9aa9), SVAL(706753fb,cfd55094),
+	    SVAL(f65a6713,ede6e446), SVAL(8bf6dfae,47c0d5c3),
+	    SVAL(fb4dfc17,9f7927d6), SVAL(12ebbc16,e212c297),
+	    SVAL(43c71283,a00a954c), SVAL(8957087a,e7bd40a5),
+	    SVAL(b0859d71,08344837), SVAL(fbf4b9a3,aeb313f5),
+	    SVAL(5e66e5be,ce81823a), SVAL(09a11c6e,58ad6da1),
+	    SVAL(c76f4316,c608054f), SVAL(b5821361,46084099),
+	    SVAL(4210008f,17a725ed), SVAL(e5ff8912,d347c481)
 	},
 	/* NOTE: Due to a SunOS cc bug, don't put spaces in the SVAL call! */
 	{		/* shuffle table */
-  SVAL(04635952,eab4809d), SVAL(1e191dc1,e2d8859c), SVAL(f466739b,a78cc47e),
-  SVAL(bcb4460e,4cc9518b), SVAL(bb371472,5471ebc2), SVAL(13dca6fe,88234953),
-  SVAL(5c92d8e1,3cd3d726), SVAL(3680546b,49af9c38), SVAL(0db16bc0,b8a095f8),
-  SVAL(7eebfd03,b38af9e6), SVAL(d9bf3100,0c89b56f), SVAL(9c8b73a7,143d7ea2),
-  SVAL(c486b166,388f9925), SVAL(c4989f42,ae295fc5), SVAL(6d5578e9,1dd0107c),
-  SVAL(a56f369e,3b91befa), SVAL(9751ca45,397d0ee8), SVAL(edc2461a,688373d7),
-  SVAL(d357ea0d,4934c3c8), SVAL(6437bab1,dcaf0dbc), SVAL(132d70f5,d1676791),
-  SVAL(bdbf7ed9,3e8f804b), SVAL(f22da061,3e19870b), SVAL(a813fb55,a103e02f),
-  SVAL(3063a143,6c357c03), SVAL(36e17210,72a5e5bf), SVAL(4f52d0b2,244f26fa),
-  SVAL(ffc8c6e8,a26881eb), SVAL(bc44fe26,6f2d154f), SVAL(a66945a3,cab1b17b),
-  SVAL(2431ffa7,f9a6d522), SVAL(09e7d9c8,e1cf82eb), SVAL(6d0471fb,73dda812),
-  SVAL(80e5d3c7,72108856), SVAL(cecfc4ca,eafe3c51), SVAL(9256bed4,c3b3c9b0),
-  SVAL(3e5826a6,2674112f), SVAL(bd25eeb0,d169ae1d), SVAL(cd15809d,2abdf0a3),
-  SVAL(c907ba35,357c1077), SVAL(d7e19227,1e7843ee), SVAL(12ccb231,683a3d9c),
-  SVAL(9272228b,66b9cd03), SVAL(105612d6,300166b0), SVAL(c2659fe8,b8b93dae),
-  SVAL(e10ac791,5abd4030), SVAL(0d347031,b03724a9), SVAL(1f8afbee,41e2a46d),
-  SVAL(4db3ca0b,727008e0), SVAL(78412641,654ecdfd), SVAL(34077f49,5f96bcaf),
-  SVAL(d862b34a,21fe900e), SVAL(708c906d,48e05f2b), SVAL(2da50dd6,b87027b0),
-  SVAL(8c2c1537,34b0ec0d), SVAL(34c6fa96,56e9fca0), SVAL(54fa8fd2,557e6b5b),
-  SVAL(43b9444d,cbdbeb78), SVAL(bc7d0cf6,ef31d376), SVAL(777c1298,c39f0111),
-  SVAL(ba45eca2,52d4face), SVAL(80c4d889,367aac48), SVAL(40682e34,2b7f1f23),
-  SVAL(7ab5ddbc,2c7e3e0a), SVAL(ffd1d0cb,259b823c), SVAL(a88ef5ca,f787f1c0),
-  SVAL(2ee2327b,d7f14852), SVAL(02ded80c,5f03aa54), SVAL(81be8df3,7f930de2),
-  SVAL(3a6af986,488e011f), SVAL(6e76f0d3,710dcf71), SVAL(6f335c6c,57f552d6),
-  SVAL(008ef84b,d0bdb173), SVAL(65ca0c98,afee90cb), SVAL(748dcd88,0cb0746c),
-  SVAL(d59310de,8a20a53f), SVAL(9eca466a,994cc07b), SVAL(ff621092,ee50abb4),
-  SVAL(c79ef743,e2e6849c), SVAL(7e176b4e,dea584e3), SVAL(af229851,d7f4b3bc),
-  SVAL(835a4ffb,83e5e3a9), SVAL(d82b7a32,c46711f9), SVAL(2cd18e93,b80d747a),
-  SVAL(d40e537a,8321d92b), SVAL(b05e14df,2e57c12f), SVAL(3eaed45f,38b97f8b),
-  SVAL(c1ff01cd,c95c136d), SVAL(c49f1815,3dec73ce), SVAL(8b4cd1c1,da300fc7),
-  SVAL(09d2d16d,8752cac1), SVAL(f89e1348,79490bfd), SVAL(3deac73a,07e45a65),
-  SVAL(0d7daed1,563d0fc6), SVAL(43bd97f1,61fa4e81), SVAL(d7b362f2,4413c62a),
-  SVAL(bb5ba7fc,5fc22f5c), SVAL(c1545507,3eab1555), SVAL(1334eae2,8f051104),
-  SVAL(44242ddc,384c4b90), SVAL(1b75c117,a34b414f), SVAL(7bab6105,2144f41a),
-  SVAL(8ebe585a,99d7f743), SVAL(4e42c257,432dba53), SVAL(de0b32da,153d5ec8),
-  SVAL(a8954cd1,6c47311b), SVAL(adf5c428,ac1f354d), SVAL(0f56d6d7,e22d1fa6),
-  SVAL(2d071e69,a6c0d364), SVAL(53cb0c7b,179770a9), SVAL(b2de65e5,358f8183),
-  SVAL(041d2824,2d731f17), SVAL(c7139449,4fc1cf21), SVAL(94a88729,b398e56f),
-  SVAL(a44da12c,7bac758b), SVAL(8e54401c,d5f6d3f9), SVAL(3122ed68,64d26d77),
-  SVAL(7f170293,64389eae), SVAL(3cb4df89,f5da5177), SVAL(c470e8e0,6387f60a),
-  SVAL(33dbc78c,d1b80187), SVAL(38b503e9,5f441313), SVAL(fb7ceb54,d84cb651),
-  SVAL(bfa9552d,87776847), SVAL(47e8a857,9ecb10e5), SVAL(b23488c4,d3081df2),
-  SVAL(46e6bf5e,9c091900), SVAL(bbeaa048,307fe0cf), SVAL(271e619f,ee99a620),
-  SVAL(87c2b86a,9bb58570), SVAL(19b73eba,c26cf0cf), SVAL(ba400782,3c9801ca),
-  SVAL(7b0d7198,0f959fce), SVAL(565d4f9e,7cbe7bdf), SVAL(cc5a2da6,21d33f36),
-  SVAL(8d2dcb2b,ed321284), SVAL(2bef9ccc,f02d14c4), SVAL(86213e5b,70864746),
-  SVAL(3c28656b,9a3a9420), SVAL(011571e4,29e2ac8f), SVAL(0429215a,45ef31d8),
-  SVAL(f18d3a44,6e49010e), SVAL(c61c29f1,f6cf3284), SVAL(8bb2ac5e,8dae42ef),
-  SVAL(1ff558eb,8dc8f536), SVAL(ae20729a,02ff404c), SVAL(86f25365,4f3fdff6),
-  SVAL(6f0db4a2,6cb6c7dc), SVAL(8c94b164,ba75ae74), SVAL(8072777b,57d49ff8),
-  SVAL(9c244bd2,a79bbc34), SVAL(ef376f89,317a30e3), SVAL(fa0958f0,9def2868),
-  SVAL(0eb1d637,6751c755), SVAL(03cd8309,bfc3b3d7), SVAL(635e696f,42165234),
-  SVAL(2ddfe9c9,f44d120c), SVAL(d5a517b9,35e11043), SVAL(0a2d629f,73ad9b22),
-  SVAL(0529947a,03d704e8), SVAL(3058053c,07fcb68b), SVAL(c7ad02e3,6e8c261c),
-  SVAL(c996de5a,1ec52170), SVAL(a8149001,b6567332), SVAL(aa285c19,9455ec88),
-  SVAL(7f38938b,5762c0b9), SVAL(914af350,1aa5319b), SVAL(f3033116,3feee3e5),
-  SVAL(1ac9c585,241f2cb5), SVAL(e0760698,15e709ab), SVAL(8f69b200,ffd98088),
-  SVAL(354c0ec2,aac19f4f), SVAL(70a43cd7,d2819fbc), SVAL(02d1097b,eca983fb),
-  SVAL(5023953e,f13638f9), SVAL(53d12078,5f80f6bd), SVAL(e6d57683,6243535f),
-  SVAL(826f3eba,278c9647), SVAL(2eb709cf,f42e3023), SVAL(d47d59bc,5940bf59),
-  SVAL(32a70040,2adcbdea), SVAL(e30b0b31,43a4d534), SVAL(ab220fd1,61fa11b2),
-  SVAL(2127ba90,8c88ce88), SVAL(96748ea2,03074cc5), SVAL(1d84c1c4,8230a4a6),
-  SVAL(1d9e70f1,7eae53fe), SVAL(a8ed5b62,03e2b1da), SVAL(2c026757,b29f8c22),
-  SVAL(d6879045,9580da58), SVAL(92575fa5,f109176c), SVAL(5c47a208,f829cb4f),
-  SVAL(4dce413e,df126d62), SVAL(05bf43c5,b8ffb590), SVAL(a92a01e5,e0391fc1),
-  SVAL(ae517d73,da451e60), SVAL(70c5cdcf,c5abc1c7), SVAL(57671d42,1174641f),
-  SVAL(7eb5dd74,cd9d26d4), SVAL(3abf1e70,b1e821eb), SVAL(8e967932,18e649f7),
-  SVAL(165c0566,4f19607e), SVAL(a459c365,1778672b), SVAL(fd38ee3c,8cf74e30),
-  SVAL(834380f7,447e23f3), SVAL(ec47e111,98d1f52d), SVAL(43089001,90fb27a0),
-  SVAL(e0decf74,00327bc7), SVAL(912114f1,8ede5d9c), SVAL(32848cd9,b3f1e3fa),
-  SVAL(37dbc32b,9b57118d), SVAL(6086ea0a,1f29cff6), SVAL(b8b022ea,7985e577),
-  SVAL(b54f7270,d5a7acd4), SVAL(26514f0a,905fd370), SVAL(c6cc93de,0b040350),
-  SVAL(e531c4a7,f0bccac2), SVAL(e7354f4b,9d73756e), SVAL(5101eb63,ba39250c),
-  SVAL(d62ac371,46f578aa), SVAL(55c023d0,ece39b11), SVAL(23a252f6,0bae4907),
-  SVAL(4f4ad31f,3818af34), SVAL(689806c4,03319a17), SVAL(e6354a5d,cee6bf3b),
-  SVAL(3893b3e6,e012a049), SVAL(e39d8c36,8506bdaf), SVAL(e16a0aa7,982d6183),
-  SVAL(5a3826bd,fe1de81a), SVAL(ced972b3,bed35fcd), SVAL(8e903ee9,116918a8),
-  SVAL(756befb5,7b299d56), SVAL(98cb4420,76a5f6c5), SVAL(d310cd35,0ba6974e),
-  SVAL(d1b647f8,e6380d89), SVAL(b5ea8137,6f5ae1dd), SVAL(cf52ec42,dc76ca61),
-  SVAL(ee2a9fd2,f2f53952), SVAL(02068a04,8cbb4a4f), SVAL(2795a393,91e5aa61),
-  SVAL(50094e9e,362288a0), SVAL(557a341d,1a05658b), SVAL(0974456c,230c81d0),
-  SVAL(e4b28a42,2c257199), SVAL(8bd702b6,6b28872c), SVAL(b8a8aeb0,8168eadc),
-  SVAL(231435e7,032dce9f), SVAL(330005e6,cfcf3824), SVAL(ecf49311,56732afe),
-  SVAL(fa2bed49,9a7244cd), SVAL(847c40e5,213a970a), SVAL(c685f1a0,b28f5cd8),
-  SVAL(7b097038,1d22ad26), SVAL(ce00b094,05b5d608), SVAL(a3572534,b519bc02),
-  SVAL(74cbc38f,e7cd0932)
+	    SVAL(69a2296c,ec8abd57), SVAL(867e1869,99a6df81),
+	    SVAL(c05ab96b,d849a48a), SVAL(7eb3ce0c,fa00554b),
+	    SVAL(520d01f6,5a5a9acd), SVAL(d4ef1e33,36022d81),
+	    SVAL(af44772b,c6f84f70), SVAL(647e85a6,a7c55173),
+	    SVAL(26746cf1,959df8d1), SVAL(98681a90,4db28abd),
+	    SVAL(b146c969,744c5cd2), SVAL(8ce69d1f,706f88c2),
+	    SVAL(fd12eac4,21b4a748), SVAL(f12e70fe,2710eea5),
+	    SVAL(0b8f7805,5901f2b5), SVAL(48860a76,4f2c115e),
+	    SVAL(0edf6d2a,30767e2c), SVAL(8a6d7dc5,fce2713b),
+	    SVAL(46a362ea,4e0e2346), SVAL(6c369a0a,359f5aa7),
+	    SVAL(dfca81fe,41def54e), SVAL(4b733819,96c2bc4e),
+	    SVAL(659e8b99,6f3f14f9), SVAL(8b97b934,93d47e6f),
+	    SVAL(a73a8704,dfa10a55), SVAL(8d9eafe9,b06503da),
+	    SVAL(2556fb88,f32336b0), SVAL(e71e9f75,1002a161),
+	    SVAL(27a7be6e,200af907), SVAL(1b9b734e,d028e9a3),
+	    SVAL(950cfeed,4c0be0d3), SVAL(f4c41694,2536d275),
+	    SVAL(f05a58e8,5687b76e), SVAL(ba53ac01,71a62d54),
+	    SVAL(4b14cbcb,285adc96), SVAL(fdf66edd,b00a5557),
+	    SVAL(bb43d58d,185b6ea1), SVAL(905db9cd,f355c9a6),
+	    SVAL(fc3a07fc,04429c8a), SVAL(65d7e365,aa3a4f7e),
+	    SVAL(2d284c18,b243ac65), SVAL(72fba65d,44e417fd),
+	    SVAL(422d50b4,5c934805), SVAL(b62a6053,d1587441),
+	    SVAL(a5e71ce9,6f7ae035), SVAL(93abca2e,595c8dd8),
+	    SVAL(534231af,e39afad5), SVAL(08d26cac,12eaad56),
+	    SVAL(ec18bf8d,7fb1b1c2), SVAL(3d28ea16,faf6f09b),
+	    SVAL(ea357a78,16697dd6), SVAL(51471ea1,420f3f51),
+	    SVAL(5e051aeb,7f8946b4), SVAL(881be097,0cf0524c),
+	    SVAL(d558b25b,1b31489e), SVAL(707d1a94,3a8b065c),
+	    SVAL(37017e66,568ff836), SVAL(b9cd627c,24c2f747),
+	    SVAL(1485549f,fb1d9ff6), SVAL(308d32d9,bdf2dc6f),
+	    SVAL(4d4142ca,d543818a), SVAL(5d9c7aee,87ebba43),
+	    SVAL(81c5bdd8,e17adb2f), SVAL(3dc9752e,c8d8677a),
+	    SVAL(66b086e6,c34e4212), SVAL(3af7a90d,c62b25e3),
+	    SVAL(f8349f79,35539315), SVAL(6bcfd9d5,a22917f0),
+	    SVAL(8639bb76,5f5ee517), SVAL(d3c5e369,8095b092),
+	    SVAL(8a33851e,7eb44748), SVAL(5e29d443,ea54bbcf),
+	    SVAL(0f84651f,4d59a834), SVAL(85040bea,f1a5f951),
+	    SVAL(3dba1c74,98002078), SVAL(5d70712b,f0b2cc15),
+	    SVAL(fa3af8eb,cce8e5a7), SVAL(fb3e2237,04bba57d),
+	    SVAL(5d3b8785,8a950434), SVAL(ce3112bd,ba3f8dcf),
+	    SVAL(44904f55,860d3051), SVAL(cec8fed4,4ed3e98b),
+	    SVAL(4581698d,25d01ea4), SVAL(11eb6828,9a9548e0),
+	    SVAL(796cb4c6,e911fac8), SVAL(2164cf26,b5fd813e),
+	    SVAL(4ac8e0f5,d5de640f), SVAL(e9e757d7,8802ab4e),
+	    SVAL(3c97de26,f49dfcbd), SVAL(c604881b,6ee6dbe6),
+	    SVAL(a7c22a6e,57d6154e), SVAL(234e2370,877b3cc7),
+	    SVAL(c0bdb72b,df1f8358), SVAL(6522e0fc,a95b7b55),
+	    SVAL(ba174c90,22344162), SVAL(712c9b2d,75d48867),
+	    SVAL(240f7e92,e59f3700), SVAL(e83cc2d4,ad95d763),
+	    SVAL(8509445a,4336d717), SVAL(f1e572c5,dfff1804),
+	    SVAL(ed10eb5d,623232dd), SVAL(9205ea1b,d4f957e8),
+	    SVAL(4973a54f,2ff062f5), SVAL(26b018f1,e8c48cd5),
+	    SVAL(56908401,d1c7ed9f), SVAL(2e48937b,df89a247),
+	    SVAL(9d53069b,2be47129), SVAL(98069e3b,c048a2b0),
+	    SVAL(f25b7d65,1cd83f93), SVAL(2b004e6c,e6f886c8),
+	    SVAL(f618442a,5c635935), SVAL(a502ab5c,7198e052),
+	    SVAL(c14241a4,a6c41b0b), SVAL(720e845a,7db9b18e),
+	    SVAL(2abb13e9,4b713918), SVAL(90fc0c20,7f52467d),
+	    SVAL(799c8ccd,7868d348), SVAL(f4817ced,912a0ea4),
+	    SVAL(d68c0f4c,c4903a57), SVAL(a3171f29,e2b7934c),
+	    SVAL(b1158baa,0b4ccc22), SVAL(f5d85553,49a29eda),
+	    SVAL(59d1a078,959442ef), SVAL(db9b4a96,a67fd518),
+	    SVAL(cc7ca9ee,d2870636), SVAL(548f021c,ecf59920),
+	    SVAL(25b7f4b6,571bc8c5), SVAL(4fa52747,3a44f536),
+	    SVAL(b246845f,df0ebdc2), SVAL(dd8d68ae,42058793),
+	    SVAL(3ba13328,9f6c39fb), SVAL(8bfdfbf3,7b6b42af),
+	    SVAL(fb34c5ca,7fb2b3b0), SVAL(2345dcec,d428e32a),
+	    SVAL(6891e850,ad42b63e), SVAL(930642c8,362c1381),
+	    SVAL(13871e9b,1886aff5), SVAL(d0cf2407,482bda55),
+	    SVAL(125b5fc9,5069bc31), SVAL(9b71d0a9,f07dfa5d),
+	    SVAL(55c044cc,6712e524), SVAL(f0377358,bb601978),
+	    SVAL(152ad5f8,7fa51e8b), SVAL(e5ebf478,9fcdd9af),
+	    SVAL(3d78e18c,66ebce7e), SVAL(8246db72,f36aa83f),
+	    SVAL(cc6ddc6d,2c64c0a3), SVAL(a758d687,0d91851e),
+	    SVAL(24b20a6f,9488ee36), SVAL(be11ccdf,09798197),
+	    SVAL(11aca015,99c1f4e3), SVAL(40e89e36,6437ac05),
+	    SVAL(c8bfc762,5af675f8), SVAL(6367c578,b577e759),
+	    SVAL(00380346,615f0b74), SVAL(ee964cc4,8de07d81),
+	    SVAL(17f6ac16,859d9261), SVAL(092f4a17,3a6e2f6c),
+	    SVAL(79981a3d,b9024b95), SVAL(36db1660,04f7f540),
+	    SVAL(c36252cf,65a2f1c8), SVAL(705b6fde,124c9bd2),
+	    SVAL(31e58dda,85db40ce), SVAL(6342b1a5,9f5e8d6d),
+	    SVAL(5c2c67d0,bd6d1d4d), SVAL(1fe5b46f,ba7e069d),
+	    SVAL(21c46c6c,ac72e13c), SVAL(b80c5fd5,9eb8f52a),
+	    SVAL(56c3aebf,a74c92bc), SVAL(c1aff1fc,bf8c4196),
+	    SVAL(2b1df645,754ad208), SVAL(5c734600,d46eeb50),
+	    SVAL(e0ff1b12,6a70a765), SVAL(d5416497,7a94547c),
+	    SVAL(67b59d7c,4ea35206), SVAL(53be7146,779203b4),
+	    SVAL(6b589fe5,414026b8), SVAL(9e81016c,3083bfee),
+	    SVAL(b23526b9,3b4b7671), SVAL(4fa9ffb1,7ee300ba),
+	    SVAL(6217e212,ad05fb21), SVAL(f5b3fcd3,b294e6c2),
+	    SVAL(ac040bbe,216beb2a), SVAL(1f8d8a54,71d0e78c),
+	    SVAL(b6d15b41,9cfec96b), SVAL(c5477845,d0508c78),
+	    SVAL(5b486e81,b4bba621), SVAL(90c35c94,ef4c4121),
+	    SVAL(efce7346,f6a6bc55), SVAL(a27828d9,25bdb9bb),
+	    SVAL(e3a53095,a1f0b205), SVAL(1bfa6093,d9f208ab),
+	    SVAL(fb078f6a,6842cdf4), SVAL(07806d72,97133a38),
+	    SVAL(2c6c901b,a3ce9592), SVAL(1f0ab2cf,ebc1b789),
+	    SVAL(2ce81415,e2d03d5e), SVAL(7da45d5b,aa9f2417),
+	    SVAL(3be4f76d,dd800682), SVAL(dbf4e4a3,364d72d3),
+	    SVAL(b538cccf,4fc59da5), SVAL(b0aa39d5,487f66ec),
+	    SVAL(2fd28dfd,87927d3d), SVAL(d14e77f0,5900c6b1),
+	    SVAL(2523fad2,5330c7b4), SVAL(991b5938,d82368a4),
+	    SVAL(b7c11443,2b9c1302), SVAL(db842db6,1394b116),
+	    SVAL(3641548d,78ed26d8), SVAL(274fa8ef,0a61dacf),
+	    SVAL(a554ba63,112df6f1), SVAL(7b7fe985,6b50438d),
+	    SVAL(c9fa0042,bb63bbad), SVAL(3abf45d0,e27f00da),
+	    SVAL(d95faa15,9f87aabb), SVAL(4a95012e,3488e7ae),
+	    SVAL(1be2bdb9,0c642d04), SVAL(145c8881,8b4abf3e),
+	    SVAL(7f9fb635,544cf17f), SVAL(b8ab2f62,cc78db70),
+	    SVAL(8ee64bcd,b4242f9a), SVAL(abd52858,95dad129),
+	    SVAL(be722c2f,ccf31141), SVAL(7c330703,575e26a9),
+	    SVAL(45d3e3b3,361b79e4), SVAL(241163a7,54b2e6a6),
+	    SVAL(8f678d7d,f7cacb77), SVAL(988a68a4,83211d19),
+	    SVAL(79599598,ba7836f6), SVAL(4850c887,eeda68bf),
+	    SVAL(afa69a71,8052ce25), SVAL(8b21efc6,bdd73573),
+	    SVAL(89dbae18,d0972493), SVAL(560776bf,537d9454),
+	    SVAL(3c009f78,165310f2), SVAL(a3680021,0160c3af),
+	    SVAL(3353ec3c,a643bd40), SVAL(7e593f99,911dab02),
+	    SVAL(72d1ddd9,4f676e89), SVAL(fd18b8bd,6b43c0ea),
+	    SVAL(43cacef2,ddbd697d), SVAL(2868a4d0,acefe884),
+	    SVAL(5f377b63,a506f013), SVAL(eaa0975e,05ca662b),
+	    SVAL(3740e6b8,eb433931), SVAL(ce85df00,08557948),
+	    SVAL(784745fb,547e33f9), SVAL(4a1fc5d4,e5c6f598),
+	    SVAL(85fa6fec,768430a7), SVAL(990d0c24,d2332a51),
+	    SVAL(55245c2c,33b676d5), SVAL(b1091519,e2bcfa71),
+	    SVAL(38521478,d23a28d8), SVAL(9b794f89,9a573010),
+	    SVAL(61d225e8,699bb486), SVAL(21476d24,1c2158b0)
 	}
 };
 
 /*
- * default additive 55 table
+ * default subtractive 100 table
  *
- * The additive 55 table in init_a55 has been processed 256 times in order
+ * The subtractive 100 table in init_s100 has been processed 256 times in order
  * to preload the shuffle table.  The array below is the table before
- * this processing.  These values have came from the Rand Book of Random
- * Numbers.  See " SOURCE OF MAGIC NUMBERS" above.
+ * this processing.  These values have came from Lavarand.
  *
  * This array is never changed, only copied.
  */
-static CONST FULL additive[SCNT] = {
+static CONST FULL def_subtract[SCNT] = {
  /* NOTE: Due to a SunOS cc bug, don't put spaces in the SVAL call! */
- SVAL(8c20e7e5,8c4caa12), SVAL(74e36781,06254c77), SVAL(8220c179,faf7f81d),
- SVAL(b1bf27df,ef95b553), SVAL(a8eaced0,37c8387d), SVAL(1c78f31a,d6da0de2),
- SVAL(30fbd3f5,529499ea), SVAL(bec61787,279b7382), SVAL(f26c9cd7,e907360e),
- SVAL(c7a3b243,6e54caa9), SVAL(c56bc944,a4fba0b4), SVAL(9a0b31be,9a3ed149),
- SVAL(64058973,199388ce), SVAL(d6c04cb7,3cc1bc11), SVAL(ea18e829,beb6447b),
- SVAL(3e5c3521,ce8fc4e0), SVAL(b4b4c4e9,0cd2ebaa), SVAL(dd713b28,f6b87567),
- SVAL(18685941,e53d4031), SVAL(1560704f,c6d789a8), SVAL(4a0a3031,01a25097),
- SVAL(8a6866cd,c974215c), SVAL(1fdac9ac,989e4aaa), SVAL(d0721d52,6248e6fa),
- SVAL(91f835dc,568bdb8a), SVAL(7f830c1a,a1677807), SVAL(3a938494,51d1596e),
- SVAL(0977ec92,64dc366f), SVAL(6af1d82e,505b10d6), SVAL(4019e5c6,65f9c944),
- SVAL(05848075,f71b024e), SVAL(4eeb5439,91052276), SVAL(8c7f602b,ca83c3d8),
- SVAL(121b7ebc,9e34eac6), SVAL(d71faa62,6f41ddee), SVAL(2a7b7fa7,9e50c7dc),
- SVAL(609315cf,9495d6f7), SVAL(96952c31,e10e546b), SVAL(bb564e74,7cdb7a7f),
- SVAL(58f59523,6aed4a08), SVAL(390d8131,5bb0882d), SVAL(f5e6aee4,527c4e61),
- SVAL(4bcf616f,f771cd8b), SVAL(fdcd00a6,0a8fdde9), SVAL(73b54ea8,3ced2fb4),
- SVAL(67c53993,74a565af), SVAL(883931a9,08659585), SVAL(5ff183f1,09ec9509),
- SVAL(a4e93c34,1c1a0a35), SVAL(cfcfc497,82e7aef3), SVAL(c5354254,5097287d),
- SVAL(b2cd1194,0a50dee0), SVAL(3b776d75,7a56a0a5), SVAL(e41819e1,93ad0bde),
- SVAL(33f13c00,886b99a3)
+	    SVAL(c8c0370c,7db7dc19), SVAL(738e33b9,40a06fbb),
+	    SVAL(481abb76,a859ed2b), SVAL(74106bb3,9ccdccb5),
+	    SVAL(05a8eeb5,c3173bfc), SVAL(efd5100d,5a02e577),
+	    SVAL(a69271f7,4030b24a), SVAL(641282fc,16fe22c5),
+	    SVAL(7aa7267c,40438da3), SVAL(1fdf4abd,c2d878d1),
+	    SVAL(d9899e7a,95702379), SVAL(5ea8e217,d02d7f08),
+	    SVAL(770587fe,4d47a353), SVAL(de7d1bdd,0a33a2b8),
+	    SVAL(4378c3c5,900e7c45), SVAL(77c94478,19a514f9),
+	    SVAL(fc5edb22,843d1d32), SVAL(4fc42ce5,e8ee5e6e),
+	    SVAL(c938713c,8488013e), SVAL(6a318f03,20ab0cac),
+	    SVAL(73e6d1a3,ffc8bff3), SVAL(0cd3232a,8ca96aa7),
+	    SVAL(605c8036,905f770d), SVAL(4d037b00,8b8d04a2),
+	    SVAL(1ed81965,cb277294), SVAL(408d9c47,7a254ff3),
+	    SVAL(8b68587a,e26c7377), SVAL(cff191a4,8a48832f),
+	    SVAL(12d3df1d,8aeb6fe6), SVAL(b2bf907e,1feda37a),
+	    SVAL(4e5f7719,3bb5f39f), SVAL(33ebcf6f,8f5d1581),
+	    SVAL(203c8e48,d33654eb), SVAL(68d3656e,f19c8a4e),
+	    SVAL(3ec20b04,986eb2af), SVAL(5d73a03b,062c3841),
+	    SVAL(836ce709,5d4e49eb), SVAL(2310bc40,c3f49221),
+	    SVAL(3868ee48,a6d0cbf6), SVAL(67578aa6,4a43deb1),
+	    SVAL(6e3426c1,150dfc26), SVAL(c541ccaa,3131be30),
+	    SVAL(f7e57432,cec7aab2), SVAL(2b35de99,8cb3c873),
+	    SVAL(7b9f7764,8663a5d7), SVAL(23b00e6a,a771e5a6),
+	    SVAL(859c775c,a9985d05), SVAL(99636ea1,6b692f1f),
+	    SVAL(8700ac70,3730800d), SVAL(46142502,4298a753),
+	    SVAL(ea4a411b,809e955f), SVAL(3119ad40,33709dfb),
+	    SVAL(b76a6c6e,5f01cb7c), SVAL(6109dc8a,15984eaf),
+	    SVAL(5d686db9,a5ca9505), SVAL(8e80d761,3b7e6add),
+	    SVAL(79cbd718,de6f6fd3), SVAL(40e9cd15,1da0f699),
+	    SVAL(e82158ba,b24f312d), SVAL(79a4c927,f5e5c36b),
+	    SVAL(c25247c9,a0039333), SVAL(93687116,1766d81d),
+	    SVAL(3c6a03b4,a6741327), SVAL(c8a7b6e8,c002f29a),
+	    SVAL(0e2a67c6,7bbd5ea3), SVAL(0929042d,441eabc1),
+	    SVAL(7dbe232a,25e82085), SVAL(8cfb26e5,44fbac3d),
+	    SVAL(8e40384d,388ab983), SVAL(48dc1230,554632f8),
+	    SVAL(ab405048,ab492397), SVAL(21c9e2f5,a118e387),
+	    SVAL(484d1a8c,343b61b5), SVAL(d49e3dec,ab256f26),
+	    SVAL(e615c7fd,78f2d2e3), SVAL(8442cc33,ce6cc2ed),
+	    SVAL(0a3b93d8,44d4bbf6), SVAL(2d7e4efe,9301de77),
+	    SVAL(33711b76,d8790d8a), SVAL(c07dc30e,44df77e7),
+	    SVAL(b9132ed0,9ddd508f), SVAL(45d06cf8,c6fb43cc),
+	    SVAL(22bed18a,d585dd7b), SVAL(61c6cced,10799ffa),
+	    SVAL(d7f2393b,e4bd9aa9), SVAL(706753fb,cfd55094),
+	    SVAL(f65a6713,ede6e446), SVAL(8bf6dfae,47c0d5c3),
+	    SVAL(fb4dfc17,9f7927d6), SVAL(12ebbc16,e212c297),
+	    SVAL(43c71283,a00a954c), SVAL(8957087a,e7bd40a5),
+	    SVAL(b0859d71,08344837), SVAL(fbf4b9a3,aeb313f5),
+	    SVAL(5e66e5be,ce81823a), SVAL(09a11c6e,58ad6da1),
+	    SVAL(c76f4316,c608054f), SVAL(b5821361,46084099),
+	    SVAL(4210008f,17a725ed), SVAL(e5ff8912,d347c481)
 };
 
 
@@ -535,9 +643,9 @@ static CONST ZVALUE c_val = {(HALF *)c_vec, SHALFS, 0};
 
 
 /*
- * current a55 generator state
+ * current s100 generator state
  */
-static RAND a55;
+static RAND s100;
 
 
 /*
@@ -622,7 +730,7 @@ static void slotcp64(BITSTR *bitstr, FULL *src);
  * We will obtain the values 'a' and 'c for our generator from the
  * Rand Book of Random Numbers.	 Because m=2^64 is 20 decimal digits long,
  * we will search the Rand Book of Random Numbers 20 at a time.	 We will
- * skip any of the 55 values that were used to initialize the additive 55
+ * skip any of the 100 values that were used to initialize the subtractive 100
  * generators.	The values obtained from the Rand Book of Random Numbers are:
  *
  *		a = 6316878969928993981
@@ -675,7 +783,7 @@ static void slotcp64(BITSTR *bitstr, FULL *src);
  * to obtain reasonably different sequences from the generators below.
  *
  * NOTE: This is NOT a pseudo random number generator.	This function is
- *	 intended to be used internally by sa55rand() and sshufrand().
+ *	 intended to be used internally by ss100rand() and sshufrand().
  */
 static void
 randreseed64(ZVALUE seed, ZVALUE *res)
@@ -793,19 +901,19 @@ randreseed64(ZVALUE seed, ZVALUE *res)
 
 
 /*
- * zsrand - seed the a55 generator
+ * zsrand - seed the s100 generator
  *
  * given:
  *	pseed	- ptr to seed of the generator or NULL
- *	pmat55	- additive 55 state table or NULL
+ *	pmat100	- subtractive 100 state table or NULL
  *
  * returns:
- *	previous a55 state
+ *	previous s100 state
  */
 RAND *
-zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat55)
+zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat100)
 {
-	RAND *ret;		/* previous a55 state */
+	RAND *ret;		/* previous s100 state */
 	CONST VALUE *v;		/* value from a passed matrix */
 	ZVALUE zscram;		/* scrambled 64 bit seed */
 	ZVALUE ztmp;		/* temp holding value for zscram */
@@ -825,8 +933,8 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat55)
 	/*
 	 * initialize state if first call
 	 */
-	if (!a55.seeded) {
-		a55 = init_a55;
+	if (!s100.seeded) {
+		s100 = init_s100;
 	}
 
 	/*
@@ -837,51 +945,51 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat55)
 		math_error("cannot allocate RAND state");
 		/*NOTREACHED*/
 	}
-	*ret = a55;
+	*ret = s100;
 
 	/*
 	 * if call was srand(), just return current state
 	 */
-	if (pseed == NULL && pmat55 == NULL) {
+	if (pseed == NULL && pmat100 == NULL) {
 		return ret;
 	}
 
 	/*
 	 * if call is srand(0), initialize and return quickly
 	 */
-	if (pmat55 == NULL && ziszero(*pseed)) {
-		a55 = init_a55;
+	if (pmat100 == NULL && ziszero(*pseed)) {
+		s100 = init_s100;
 		return ret;
 	}
 
 	/*
 	 * clear buffered bits, initialize pointers
 	 */
-	a55.seeded = 0; /* not seeded now */
-	a55.j = INIT_J-1;
-	a55.k = INIT_K-1;
-	a55.bits = 0;
-	memset(a55.buffer, 0, sizeof(a55.buffer));
+	s100.seeded = 0; /* not seeded now */
+	s100.j = INIT_J;
+	s100.k = INIT_K;
+	s100.bits = 0;
+	memset(s100.buffer, 0, sizeof(s100.buffer));
 
 	/*
-	 * load additive table
+	 * load subtractive table
 	 *
-	 * We will load the default additive table unless we are passed a
-	 * matrix.  If we are passed a matrix, we will load the first 55
+	 * We will load the default subtractive table unless we are passed a
+	 * matrix.  If we are passed a matrix, we will load the first 100
 	 * values mod 2^64 instead.
 	 */
-	if (pmat55 == NULL) {
-		memcpy(a55.slot, additive, sizeof(additive));
+	if (pmat100 == NULL) {
+		memcpy(s100.slot, def_subtract, sizeof(def_subtract));
 	} else {
 
 		/*
-		 * use the first 55 entries from the matrix arg
+		 * use the first 100 entries from the matrix arg
 		 */
-		if (pmat55->m_size < A55) {
-			math_error("matrix for srand has < 55 elements");
+		if (pmat100->m_size < S100) {
+			math_error("matrix for srand has < 100 elements");
 			/*NOTREACHED*/
 		}
-		for (v=pmat55->m_table, i=0; i < A55; ++i, ++v) {
+		for (v=pmat100->m_table, i=0; i < S100; ++i, ++v) {
 
 			/* reject if not integer */
 			if (v->v_type != V_NUM || qisfrac(v->v_num)) {
@@ -890,7 +998,7 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat55)
 			}
 
 			/* load table element from matrix element mod 2^64 */
-			SLOAD(a55, i, v->v_num->num);
+			SLOAD(s100, i, v->v_num->num);
 		}
 	}
 
@@ -907,28 +1015,28 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat55)
 	}
 
 	/*
-	 * xor additive table with the rehashed lower 64 bits of seed
+	 * xor subtractive table with the rehashed lower 64 bits of seed
 	 */
 	if (pseed != NULL && !ziszero(zscram)) {
 
-		/* xor additive table with lower 64 bits of seed */
+		/* xor subtractive table with lower 64 bits of seed */
 		SMOD64(shufxor, zscram);
-		for (i=0; i < A55; ++i) {
-			SXOR(a55, i, shufxor);
+		for (i=0; i < S100; ++i) {
+			SXOR(s100, i, shufxor);
 		}
 	}
 
 	/*
-	 * shuffle additive 55 table according to seed, if passed
+	 * shuffle subtractive 100 table according to seed, if passed
 	 */
 	if (pseed != NULL && zge64b(zscram)) {
 
-		/* prepare the seed for additive slot shuffling */
+		/* prepare the seed for subtractive slot shuffling */
 		zshiftr(zscram, 64);
 		ztrim(&zscram);
 
-		/* shuffle additive table */
-		for (i=A55-1; i > 0 && !zislezero(zscram); --i) {
+		/* shuffle subtractive table */
+		for (i=S100-1; i > 0 && !zislezero(zscram); --i) {
 
 			/* determine what we will swap with */
 			indx = zdivi(zscram, i+1, &ztmp);
@@ -941,7 +1049,7 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat55)
 			}
 
 			/* swap slot[i] with slot[indx] */
-			SSWAP(a55, i, indx);
+			SSWAP(s100, i, indx);
 		}
 		zfree(zscram);
 	} else if (pseed != NULL) {
@@ -951,30 +1059,69 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat55)
 	/*
 	 * load the shuffle table
 	 *
-	 * We will generate SHUFCNT entries from the additive 55 slots
+	 * We will generate SHUFCNT entries from the subtractive 100 slots
 	 * and fill the shuffle table in consecutive order.
 	 */
 	for (i=0; i < SHUFCNT; ++i) {
 
-		/* bump j and k */
-		if (++a55.j >= A55) {
-			a55.j = 0;
-		}
-		if (++a55.k >= A55) {
-			a55.k = 0;
+		/*
+		 * skip values if required
+		 *
+		 * See:
+		 *	Knuth's "The Art of Computer Programming -
+		 *	Seminumerical Algorithms", Vol 2, 3rd edition (1998),
+		 *	Section 3.6, page 188".
+		 */
+		if (s100.need_to_skip <= 0) {
+			int sk;
+
+			/* skip the require number of values */
+			for (sk=0; sk < RAND_SKIP; ++sk) {
+
+				/* bump j and k */
+				if (++s100.j >= S100) {
+					s100.j = 0;
+				}
+				if (++s100.k >= S100) {
+					s100.k = 0;
+				}
+
+				/* slot[k] -= slot[j] */
+				SSUB(s100, s100.k, s100.j);
+
+				/* NOTE: don't shuffle, no shuffle table yet */
+			}
+
+			/* reset the skip count */
+			s100.need_to_skip = RAND_CONSEQ_USE;
+			if (conf->calc_debug & CALCDBG_RAND) {
+			    printf("rand: skipped %d states\n", RAND_SKIP);
+			}
+
+		/* no skip, just descrment use counter */
+		} else {
+			--s100.need_to_skip;
 		}
 
-		/* slot[k] += slot[j] */
-		SADD(a55, a55.k, a55.j);
+		/* bump j and k */
+		if (++s100.j >= S100) {
+			s100.j = 0;
+		}
+		if (++s100.k >= S100) {
+			s100.k = 0;
+		}
+
+		/* slot[k] -= slot[j] */
+		SSUB(s100, s100.k, s100.j);
 
 		/* shuf[i] = slot[k] */
-		SSHUF(a55, i, a55.k);
+		SSHUF(s100, i, s100.k);
 	}
 
 	/*
 	 * note that we are seeded
 	 */
-	a55.seeded = 1;
+	s100.seeded = 1;
 
 	/*
 	 * return the previous state
@@ -984,35 +1131,35 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat55)
 
 
 /*
- * zsetrand - set the a55 generator state
+ * zsetrand - set the s100 generator state
  *
  * given:
  *	state - the state to copy
  *
  * returns:
- *	previous a55 state
+ *	previous s100 state
  */
 RAND *
 zsetrand(CONST RAND *state)
 {
-	RAND *ret;		/* previous a55 state */
+	RAND *ret;		/* previous s100 state */
 
 	/*
 	 * initialize state if first call
 	 */
-	if (!a55.seeded) {
-		a55 = init_a55;
+	if (!s100.seeded) {
+		s100 = init_s100;
 	}
 
 	/*
 	 * save the current state to return later
 	 */
-	ret = randcopy(&a55);
+	ret = randcopy(&s100);
 
 	/*
 	 * load the new state
 	 */
-	a55 = *state;
+	s100 = *state;
 
 	/*
 	 * return the previous state
@@ -1293,7 +1440,7 @@ slotcp64(BITSTR *bitstr, FULL *src)
 
 
 /*
- * zrandskip - skip s a55 bits
+ * zrandskip - skip s s100 bits
  *
  * given:
  *	count - number of bits to be skipped
@@ -1306,37 +1453,37 @@ zrandskip(long cnt)
 	/*
 	 * initialize state if first call
 	 */
-	if (!a55.seeded) {
-		a55 = init_a55;
+	if (!s100.seeded) {
+		s100 = init_s100;
 	}
 
 	/*
 	 * skip required bits in the buffer
 	 */
-	if (a55.bits > 0 && a55.bits <= cnt) {
+	if (s100.bits > 0 && s100.bits <= cnt) {
 
 		/* just toss the buffer bits */
-		cnt -= a55.bits;
-		a55.bits = 0;
-		memset(a55.buffer, 0, sizeof(a55.buffer));
+		cnt -= s100.bits;
+		s100.bits = 0;
+		memset(s100.buffer, 0, sizeof(s100.buffer));
 
-	} else if (a55.bits > 0 && a55.bits > cnt) {
+	} else if (s100.bits > 0 && s100.bits > cnt) {
 
 		/* buffer contains more bits than we need to toss */
 #if FULL_BITS == SBITS
-		a55.buffer[0] <<= cnt;
+		s100.buffer[0] <<= cnt;
 #else
 		if (cnt >= FULL_BITS) {
-			a55.buffer[SLEN-1] = (a55.buffer[0] << cnt);
-			a55.buffer[0] = 0;
+			s100.buffer[SLEN-1] = (s100.buffer[0] << cnt);
+			s100.buffer[0] = 0;
 		} else {
-			a55.buffer[SLEN-1] =
-			    ((a55.buffer[SLEN-1] << cnt) |
-			     (a55.buffer[0] >> (FULL_BITS-cnt)));
-			a55.buffer[0] <<= cnt;
+			s100.buffer[SLEN-1] =
+			    ((s100.buffer[SLEN-1] << cnt) |
+			     (s100.buffer[0] >> (FULL_BITS-cnt)));
+			s100.buffer[0] <<= cnt;
 		}
 #endif
-		a55.bits -= cnt;
+		s100.bits -= cnt;
 		return; /* skip need satisfied */
 	}
 
@@ -1345,23 +1492,66 @@ zrandskip(long cnt)
 	 */
 	while (cnt >= SBITS) {
 
+		/*
+		 * skip values if required
+		 *
+		 * NOTE: This skip loop is part of the algorithm, not part
+		 *	 of the builtin function request.
+		 *
+		 * See:
+		 *	Knuth's "The Art of Computer Programming -
+		 *	Seminumerical Algorithms", Vol 2, 3rd edition (1998),
+		 *	Section 3.6, page 188".
+		 */
+		if (s100.need_to_skip <= 0) {
+			int sk;
+
+			/* skip the require number of values */
+			for (sk=0; sk < RAND_SKIP; ++sk) {
+				/* bump j and k */
+				if (++s100.j >= S100) {
+					s100.j = 0;
+				}
+				if (++s100.k >= S100) {
+					s100.k = 0;
+				}
+
+				/* slot[k] -= slot[j] */
+				SSUB(s100, s100.k, s100.j);
+
+				/* store s100.k into s100.slot[indx] */
+				indx = SINDX(s100, s100.k);
+				SSHUF(s100, indx, s100.k);
+			}
+
+			/* reset the skip count */
+			s100.need_to_skip = RAND_CONSEQ_USE;
+			if (conf->calc_debug & CALCDBG_RAND) {
+			    printf("rand: skipped %d states\n", RAND_SKIP);
+			}
+
+		/* no skip, just descrment use counter */
+		} else {
+			--s100.need_to_skip;
+		}
+
 		/* bump j and k */
-		if (++a55.j >= A55) {
-			a55.j = 0;
+		if (++s100.j >= S100) {
+			s100.j = 0;
 		}
-		if (++a55.k >= A55) {
-			a55.k = 0;
+		if (++s100.k >= S100) {
+			s100.k = 0;
 		}
 
-		/* slot[k] += slot[j] */
-		SADD(a55, a55.k, a55.j);
+		/* slot[k] -= slot[j] */
+		SSUB(s100, s100.k, s100.j);
 
-		/* we will ignore the output value of a55.slot[indx] */
-		indx = SINDX(a55, a55.k);
+		/* we will ignore the output value of s100.slot[indx] */
+		indx = SINDX(s100, s100.k);
 		cnt -= SBITS;
 
-		/* store a55.k into a55.slot[indx] */
-		SSHUF(a55, indx, a55.k);
+		/* store s100.k into s100.slot[indx] */
+		SSHUF(s100, indx, s100.k);
 	}
 
 	/*
@@ -1369,55 +1559,99 @@ zrandskip(long cnt)
 	 */
 	if (cnt > 0) {
 
+		/*
+		 * skip values if required
+		 *
+		 * NOTE: This skip loop is part of the algorithm, not part
+		 *	 of the builtin function request.
+		 *
+		 * See:
+		 *	Knuth's "The Art of Computer Programming -
+		 *	Seminumerical Algorithms", Vol 2, 3rd edition (1998),
+		 *	Section 3.6, page 188".
+		 */
+		if (s100.need_to_skip <= 0) {
+			int sk;
+
+			/* skip the require number of values */
+			for (sk=0; sk < RAND_SKIP; ++sk) {
+
+				/* bump j and k */
+				if (++s100.j >= S100) {
+					s100.j = 0;
+				}
+				if (++s100.k >= S100) {
+					s100.k = 0;
+				}
+
+				/* slot[k] -= slot[j] */
+				SSUB(s100, s100.k, s100.j);
+
+				/* store s100.k into s100.slot[indx] */
+				indx = SINDX(s100, s100.k);
+				SSHUF(s100, indx, s100.k);
+			}
+
+			/* reset the skip count */
+			s100.need_to_skip = RAND_CONSEQ_USE;
+			if (conf->calc_debug & CALCDBG_RAND) {
+			    printf("rand: skipped %d states\n", RAND_SKIP);
+			}
+
+		/* no skip, just descrment use counter */
+		} else {
+			--s100.need_to_skip;
+		}
+
 		/* bump j and k */
-		if (++a55.j >= A55) {
-			a55.j = 0;
+		if (++s100.j >= S100) {
+			s100.j = 0;
 		}
-		if (++a55.k >= A55) {
-			a55.k = 0;
+		if (++s100.k >= S100) {
+			s100.k = 0;
 		}
 
-		/* slot[k] += slot[j] */
-		SADD(a55, a55.k, a55.j);
+		/* slot[k] -= slot[j] */
+		SSUB(s100, s100.k, s100.j);
 
-		/* we will ignore the output value of a55.slot[indx] */
-		indx = SINDX(a55, a55.k);
+		/* we will ignore the output value of s100.slot[indx] */
+		indx = SINDX(s100, s100.k);
 
 		/*
 		 * We know the buffer is empty, so fill it
 		 * with any unused bits.  Copy SBITS-trans bits
 		 * from slot[indx] into buffer.
 		 */
-		a55.bits = (int)(SBITS-cnt);
-		memcpy(a55.buffer, &a55.shuf[indx*SLEN],
-		       sizeof(a55.buffer));
+		s100.bits = (int)(SBITS-cnt);
+		memcpy(s100.buffer, &s100.shuf[indx*SLEN],
+		       sizeof(s100.buffer));
 
 		/*
 		 * shift the buffer bits all the way up to
 		 * the most significant bit
 		 */
 #if FULL_BITS == SBITS
-		a55.buffer[0] <<= cnt;
+		s100.buffer[0] <<= cnt;
 #else
 		if (cnt >= FULL_BITS) {
-			a55.buffer[SLEN-1] = (a55.buffer[0] << cnt);
-			a55.buffer[0] = 0;
+			s100.buffer[SLEN-1] = (s100.buffer[0] << cnt);
+			s100.buffer[0] = 0;
 		} else {
-			a55.buffer[SLEN-1] =
-			    ((a55.buffer[SLEN-1] << cnt) |
-			     (a55.buffer[0] >> (FULL_BITS-cnt)));
-			a55.buffer[0] <<= cnt;
+			s100.buffer[SLEN-1] =
+			    ((s100.buffer[SLEN-1] << cnt) |
+			     (s100.buffer[0] >> (FULL_BITS-cnt)));
+			s100.buffer[0] <<= cnt;
 		}
 #endif
 
-		/* store a55.k into a55.slot[indx] */
-		SSHUF(a55, indx, a55.k);
+		/* store s100.k into s100.slot[indx] */
+		SSHUF(s100, indx, s100.k);
 	}
 }
 
 
 /*
- * zrand - crank the a55 generator for some bits
+ * zrand - crank the s100 generator for some bits
  *
  * We will load the ZVALUE with random bits starting from the
  * most significant and ending with the lowest bit in the
@@ -1456,8 +1690,8 @@ zrand(long cnt, ZVALUE *res)
 	/*
 	 * initialize state if first call
 	 */
-	if (!a55.seeded) {
-		a55 = init_a55;
+	if (!s100.seeded) {
+		s100 = init_s100;
 	}
 
 	/*
@@ -1477,67 +1711,110 @@ zrand(long cnt, ZVALUE *res)
 	/*
 	 * load from buffer first
 	 */
-	if (a55.bits > 0) {
+	if (s100.bits > 0) {
 
 		/*
-		 * We know there are only a55.bits in the buffer, so
+		 * We know there are only s100.bits in the buffer, so
 		 * transfer as much as we can (treating it as a slot)
 		 * and return the bit transfer count.
 		 */
-		trans = slotcp(&dest, a55.buffer, a55.bits);
+		trans = slotcp(&dest, s100.buffer, s100.bits);
 
 		/*
 		 * If we need to keep bits in the buffer,
 		 * shift the buffer bits all the way up to
 		 * the most significant unused bit.
 		 */
-		if (trans < a55.bits) {
+		if (trans < s100.bits) {
 #if FULL_BITS == SBITS
-			a55.buffer[0] <<= trans;
+			s100.buffer[0] <<= trans;
 #else
 			if (trans >= FULL_BITS) {
-				a55.buffer[SLEN-1] =
-				    (a55.buffer[0] << (trans-FULL_BITS));
-				a55.buffer[0] = 0;
+				s100.buffer[SLEN-1] =
+				    (s100.buffer[0] << (trans-FULL_BITS));
+				s100.buffer[0] = 0;
 			} else {
-				a55.buffer[SLEN-1] =
-				    ((a55.buffer[SLEN-1] << trans) |
-				     (a55.buffer[0] >> (FULL_BITS-trans)));
-				a55.buffer[0] <<= trans;
+				s100.buffer[SLEN-1] =
+				    ((s100.buffer[SLEN-1] << trans) |
+				     (s100.buffer[0] >> (FULL_BITS-trans)));
+				s100.buffer[0] <<= trans;
 			}
 #endif
 		}
 		/* note that we have fewer bits in the buffer */
-		a55.bits -= trans;
+		s100.bits -= trans;
 	}
 
 	/*
 	 * spin the generator until we need less than 64 bits
 	 *
 	 * The buffer did not contain enough bits, so we crank the
-	 * a55 generator and load then 64 bits at a time.
+	 * s100 generator and load then 64 bits at a time.
 	 */
 	while (dest.len >= SBITS) {
 
-		/* bump j and k */
-		if (++a55.j >= A55) {
-			a55.j = 0;
-		}
-		if (++a55.k >= A55) {
-			a55.k = 0;
+		/*
+		 * skip values if required
+		 *
+		 * See:
+		 *	Knuth's "The Art of Computer Programming -
+		 *	Seminumerical Algorithms", Vol 2, 3rd edition (1998),
+		 *	Section 3.6, page 188".
+		 */
+		if (s100.need_to_skip <= 0) {
+			int sk;
+
+			/* skip the require number of values */
+			for (sk=0; sk < RAND_SKIP; ++sk) {
+
+				/* bump j and k */
+				if (++s100.j >= S100) {
+					s100.j = 0;
+				}
+				if (++s100.k >= S100) {
+					s100.k = 0;
+				}
+
+				/* slot[k] -= slot[j] */
+				SSUB(s100, s100.k, s100.j);
+
+				/* select slot index to output */
+				indx = SINDX(s100, s100.k);
+
+				/* store s100.k into s100.slot[indx] */
+				SSHUF(s100, indx, s100.k);
+			}
+
+			/* reset the skip count */
+			s100.need_to_skip = RAND_CONSEQ_USE;
+			if (conf->calc_debug & CALCDBG_RAND) {
+			    printf("rand: skipped %d states\n", RAND_SKIP);
+			}
+
+		/* no skip, just descrment use counter */
+		} else {
+			--s100.need_to_skip;
 		}
 
-		/* slot[k] += slot[j] */
-		SADD(a55, a55.k, a55.j);
+		/* bump j and k */
+		if (++s100.j >= S100) {
+			s100.j = 0;
+		}
+		if (++s100.k >= S100) {
+			s100.k = 0;
+		}
+
+		/* slot[k] -= slot[j] */
+		SSUB(s100, s100.k, s100.j);
 
 		/* select slot index to output */
-		indx = SINDX(a55, a55.k);
+		indx = SINDX(s100, s100.k);
 
 		/* move up to 64 bits from slot[indx] to dest */
-		slotcp64(&dest, &a55.shuf[indx*SLEN]);
+		slotcp64(&dest, &s100.shuf[indx*SLEN]);
 
-		/* store a55.k into a55.slot[indx] */
-		SSHUF(a55, indx, a55.k);
+		/* store s100.k into s100.slot[indx] */
+		SSHUF(s100, indx, s100.k);
 	}
 
 	/*
@@ -1545,22 +1822,64 @@ zrand(long cnt, ZVALUE *res)
 	 */
 	if (dest.len > 0) {
 
-		/* bump j and k */
-		if (++a55.j >= A55) {
-			a55.j = 0;
-		}
-		if (++a55.k >= A55) {
-			a55.k = 0;
+		/*
+		 * skip values if required
+		 *
+		 * See:
+		 *	Knuth's "The Art of Computer Programming -
+		 *	Seminumerical Algorithms", Vol 2, 3rd edition (1998),
+		 *	Section 3.6, page 188".
+		 */
+		if (s100.need_to_skip <= 0) {
+			int sk;
+
+			/* skip the require number of values */
+			for (sk=0; sk < RAND_SKIP; ++sk) {
+				/* bump j and k */
+				if (++s100.j >= S100) {
+					s100.j = 0;
+				}
+				if (++s100.k >= S100) {
+					s100.k = 0;
+				}
+
+				/* slot[k] -= slot[j] */
+				SSUB(s100, s100.k, s100.j);
+
+				/* select slot index to output */
+				indx = SINDX(s100, s100.k);
+
+				/* store s100.k into s100.slot[indx] */
+				SSHUF(s100, indx, s100.k);
+			}
+
+			/* reset the skip count */
+			s100.need_to_skip = RAND_CONSEQ_USE;
+			if (conf->calc_debug & CALCDBG_RAND) {
+			    printf("rand: skipped %d states\n", RAND_SKIP);
+			}
+
+		/* no skip, just descrment use counter */
+		} else {
+			--s100.need_to_skip;
 		}
 
-		/* slot[k] += slot[j] */
-		SADD(a55, a55.k, a55.j);
+		/* bump j and k */
+		if (++s100.j >= S100) {
+			s100.j = 0;
+		}
+		if (++s100.k >= S100) {
+			s100.k = 0;
+		}
+
+		/* slot[k] -= slot[j] */
+		SSUB(s100, s100.k, s100.j);
 
 		/* select slot index to output */
-		indx = SINDX(a55, a55.k);
+		indx = SINDX(s100, s100.k);
 
 		/* move up to 64 bits from slot[indx] to dest */
-		trans = slotcp(&dest, &a55.shuf[indx*SLEN], dest.len);
+		trans = slotcp(&dest, &s100.shuf[indx*SLEN], dest.len);
 
 		/* buffer up unused bits if we are done */
 		if (trans != SBITS) {
@@ -1570,32 +1889,32 @@ zrand(long cnt, ZVALUE *res)
 			 * with any unused bits.  Copy SBITS-trans bits
 			 * from slot[indx] into buffer.
 			 */
-			a55.bits = SBITS-trans;
-			memcpy(a55.buffer, &a55.shuf[indx*SLEN],
-			       sizeof(a55.buffer));
+			s100.bits = SBITS-trans;
+			memcpy(s100.buffer, &s100.shuf[indx*SLEN],
+			       sizeof(s100.buffer));
 
 			/*
 			 * shift the buffer bits all the way up to
 			 * the most significant bit
 			 */
 #if FULL_BITS == SBITS
-			a55.buffer[0] <<= trans;
+			s100.buffer[0] <<= trans;
 #else
 			if (trans >= FULL_BITS) {
-				a55.buffer[SLEN-1] =
-				    (a55.buffer[0] << (trans-FULL_BITS));
-				a55.buffer[0] = 0;
+				s100.buffer[SLEN-1] =
+				    (s100.buffer[0] << (trans-FULL_BITS));
+				s100.buffer[0] = 0;
 			} else {
-				a55.buffer[SLEN-1] =
-				    ((a55.buffer[SLEN-1] << trans) |
-				     (a55.buffer[0] >> (FULL_BITS-trans)));
-				a55.buffer[0] <<= trans;
+				s100.buffer[SLEN-1] =
+				    ((s100.buffer[SLEN-1] << trans) |
+				     (s100.buffer[0] >> (FULL_BITS-trans)));
+				s100.buffer[0] <<= trans;
 			}
 #endif
 		}
 
-		/* store a55.k into a55.slot[indx] */
-		SSHUF(a55, indx, a55.k);
+		/* store s100.k into s100.slot[indx] */
+		SSHUF(s100, indx, s100.k);
 	}
 	res->sign = 0;
 	ztrim(res);
@@ -1603,7 +1922,7 @@ zrand(long cnt, ZVALUE *res)
 
 
 /*
- * zrandrange - generate an a55 random value in the range [low, high)
+ * zrandrange - generate an s100 random value in the range [low, high)
  *
  * given:
  *	low - low value of range
@@ -1667,7 +1986,7 @@ zrandrange(CONST ZVALUE low, CONST ZVALUE high, ZVALUE *res)
 
 
 /*
- * irand - generate an a55 random long in the range [0, s)
+ * irand - generate an s100 random long in the range [0, s)
  *
  * given:
  *	s - limit of the range
@@ -1697,7 +2016,7 @@ irand(long s)
 
 
 /*
- * randcopy - make a copy of an a55 state
+ * randcopy - make a copy of an s100 state
  *
  * given:
  *	state - the state to copy
@@ -1728,7 +2047,7 @@ randcopy(CONST RAND *state)
 
 
 /*
- * randfree - free an a55 state
+ * randfree - free an s100 state
  *
  * given:
  *	state - the state to free
@@ -1742,7 +2061,7 @@ randfree(RAND *state)
 
 
 /*
- * randcmp - compare two a55 states
+ * randcmp - compare two s100 states
  *
  * given:
  *	s1 - first state to compare
@@ -1763,11 +2082,11 @@ randcmp(CONST RAND *s1, CONST RAND *s2)
 			return FALSE;
 		} else {
 			/* uninitialized only equals default state */
-			return randcmp(s2, &init_a55);
+			return randcmp(s2, &init_s100);
 		}
 	} else if (!s2->seeded) {
 		/* uninitialized only equals default state */
-		return randcmp(s1, &init_a55);
+		return randcmp(s1, &init_s100);
 	}
 
 	/* compare states */
@@ -1776,7 +2095,7 @@ randcmp(CONST RAND *s1, CONST RAND *s2)
 
 
 /*
- * randprint - print an a55 state
+ * randprint - print an s100 state
  *
  * given:
  *	state - state to print

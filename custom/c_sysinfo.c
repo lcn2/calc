@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: c_sysinfo.c,v 29.4 2000/07/17 15:37:12 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: c_sysinfo.c,v 29.5 2001/04/14 23:04:17 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_sysinfo.c,v $
  *
  * Under source code control:	1997/03/09 23:14:40
@@ -64,7 +64,7 @@ struct infoname {
 	FULL nmbr;	/* if str==NULL ==> value fo #define as a FULL */
 };
 static struct infoname sys_info[] = {
-    {"A55", "slots in an additive 55 table", NULL, (FULL)A55},
+    {"S100", "slots in an subtractive 100 table", NULL, (FULL)S100},
     {"BASE", "base for calculations", NULL, (FULL)BASE},
     {"BASE1", "one less than base", NULL, (FULL)BASE},
     {"BASEB", "bits in the calculation base", NULL, (FULL)BASEB},

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: quickhash.c,v 29.3 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: quickhash.c,v 29.4 2001/04/14 22:47:21 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/quickhash.c,v $
  *
  * Under source code control:	1995/03/04 11:34:23
@@ -304,7 +304,7 @@ objhash(OBJECT *op, QCKHASH val)
 
 
 /*
- * randhash - return a trivial hash for an a55 state
+ * randhash - return a trivial hash for an s100 state
  *
  * given:
  *	state - state to hash
@@ -326,6 +326,7 @@ randhash(RAND *r, QCKHASH val)
 		val = fnv(r->j, V_RAND+val);
 		val = fnv(r->k, val);
 		val = fnv(r->bits, val);
+		val = fnv(r->need_to_skip, val);
 
 		/* hash the state arrays */
 		return fnv_fullhash(&r->buffer[0], SLEN+SCNT+SHUFLEN, val);

@@ -1,5 +1,5 @@
 NAME
-    rand - additive 55 shuffle pseudo-random number generator
+    rand - subtractive 100 shuffle pseudo-random number generator
 
 SYNOPSIS
     rand([[min, ] max])
@@ -11,7 +11,7 @@ TYPES
     return	integer
 
 DESCRIPTION
-    Generate a pseudo-random number using an additive 55 shuffle generator.
+    Generate a pseudo-random number using an subtractive 100 shuffle generator.
     We return a pseudo-random number over the half closed interval [min,max).
     By default, min is 0 and max is 2^64.
 
@@ -38,36 +38,40 @@ DESCRIPTION
 
     when seeded with the same seed.
 
-    The rand generator has two distinct parts, the additive 55 method
-    and the shuffle method.  The additive 55 method is described in:
+    The rand generator has two distinct parts, the subtractive 100 method
+    and the shuffle method.  The subtractive 100 method is described in:
 
-	"The Art of Computer Programming - Seminumerical Algorithms"
-	by Knuth, Vol 2, 2nd edition (1981), Section 3.2.2, page 27,
-	Algorithm A.
+	"The Art of Computer Programming - Seminumerical Algorithms",
+	Vol 2, 3rd edition (1998), Section 3.6, page 186, formula (2).
 
-    The period and other properties of the additive 55 method
+    The "use only the first 100 our of every 1009" is described in
+    Knuth's "The Art of Computer Programming - Seminumerical Algorithms",
+    Vol 2, 3rd edition (1998), Section 3.6, page 188".
+
+    The period and other properties of the subtractive 100 method
     make it very useful to 'seed' other generators.
 
-    The shuffle method is feed values by the additive 55 method.
+    The shuffle method is feed values by the subtractive 100 method.
     The shuffle method is described in:
 
-	"The Art of Computer Programming - Seminumerical Algorithms"
-	by Knuth, Vol 2, 2nd edition (1981), Section 3.2.2, page 32,
-	Algorithm B.
+	"The Art of Computer Programming - Seminumerical Algorithms",
+	Vol 2, 3rd edition (1998), Section 3.2.2, page 34, Algorithm B.
 
     The rand generator has a good period, and is fast.	It is reasonable as
     generators go, though there are better ones available.  The shuffle
     method has a very good period, and is fast.	 It is fairly good as
     generators go, particularly when it is feed reasonably random
-    numbers.  Because of this, we use feed values from the additive 55
+    numbers.  Because of this, we use feed values from the subtractive 100
     method into the shuffle method.
 
     The rand generator uses two internal tables:
 
-	additive table - 55 entries of 64 bits used by the additive 55 method
+	additive table - 100 entries of 64 bits used by the subtractive
+			 100 method
 
 	shuffle table - 256 entries of 64 bits used by the shuffle method
-			feed by the additive 55 method from the additive table
+			feed by the subtractive 100 method from the
+			subtractive table
 
     The goals of this generator are:
 
@@ -95,21 +99,21 @@ DESCRIPTION
     a standard against which other generators may be measured.
 
     The Rand book of numbers was groups into groups of 20 digits.  The
-    first 55 groups < 2^64 were used to initialize the default additive
+    first 100 groups < 2^64 were used to initialize the default additive
     table.  The size of 20 digits was used because 2^64 is 20 digits
     long.  The restriction of < 2^64 was used to prevent modulus biasing.
 
     The shuffle table size is longer than the 100 entries recommended
     by Knuth.  We use a power of 2 shuffle table length so that the
-    shuffle process can select a table entry from a new additive 55
+    shuffle process can select a table entry from a new subtractive 100
     value by extracting its low order bits.  The value 256 is convenient
     in that it is the size of a byte which allows for easy extraction.
 
-    We use the upper byte of the additive 55 value to select the
+    We use the upper byte of the subtractive 100 value to select the
     shuffle table entry because it allows all of 64 bits to play a part
     in the entry selection.  If we were to select a lower 8 bits in the
     64 bit value, carries that propagate above our 8 bits would not
-    impact the additive 55 generator output.
+    impact the subtractive 100 generator output.
 
     It is 'nice' when a seed of "n" produces a 'significantly different'
     sequence than a seed of "n+1".  Generators, by convention, assign
@@ -161,7 +165,7 @@ DESCRIPTION
     The values 'a' and 'c for randreseed64 are taken from the Rand book
     of numbers.	 Because m=2^64 is 20 decimal digits long, we will
     search the Rand book of numbers 20 at a time.  We will skip any of
-    the 55 values that were used to initialize the additive 55
+    the 100 values that were used to initialize the subtractive 100
     generators.	 The values obtained from the Rand book are:
 
 	a = 6316878969928993981
@@ -190,36 +194,40 @@ DESCRIPTION
 
     The truly paranoid might suggest that my claims in the MAGIC NUMBERS
     section are a lie intended to entrap people.  Well they are not, but
-    you need not take my (Landon Curt Noll) word for it.
+    if you that paranoid why would you use a non-cryprographically strong
+    pseudo-random number generator in the first place?  You would be
+    better off using the random() builtin function.
 
-    The random numbers from the Rand book of random numbers can be
+    The two constants that were picked from the Rand Book of Random Numbers
+    The random numbers from the Rand Book of Random Numbers can be
     verified by anyone who obtains the book.  As these numbers were
-    created before I (Landon Curt Noll) was born (you can look up my
-    birth record if you want), I claim to have no possible influence on
-    their generation.
+    created before I (Landon Curt Noll) was born (you can look up
+    my birth record if you want), I claim to have no possible influence
+    on their generation.
 
     There is a very slight chance that the electronic copy of the
-    Rand book that I was given access to differs from the printed text.
-    I am willing to provide access to this electronic copy should
-    anyone wants to compare it to the printed text.
+    Rand Book of Random Numbers that I was given access to differs
+    from the printed text.  I am willing to provide access to this
+    electronic copy should anyone wants to compare it to the printed text.
 
-    When using the a55 generator, one may select your own 55 additive
+    When using the s100 generator, one may select your own 100 subtractive
     values by calling:
 
-	srand(mat55)
+         srand(mat100)
 
-    and avoid using my magic numbers.  Of course, you must pick good
-    additive 55 values yourself!
+    and avoid using my magic numbers.  The randreseed64 process is NOT
+    applied to the matrix values. Of course, you must pick good subtractive
+    100 values yourself!
 
 EXAMPLE
     > print srand(0), rand(), rand(), rand()
-    RAND state 14384206130809570460 10173010522823332484 5713611208311484212
+    RAND state 2298441576805697181 3498508396312845423 5031615567549397476
 
     > print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123)
-    17 104 74 47 48 46
+    106 59 99 99 25 88
 
     > print rand(2,12), rand(2^50,3^50), rand(0,2), rand(-400000, 120000)
-    11 170570393286648531699560 1 -96605
+    2 658186291252503497642116 1 -324097
 
 LIMITS
     min < max
@@ -248,8 +256,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: rand,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: rand,v 29.3 2001/04/14 22:46:33 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/rand,v $
 ##
 ## Under source code control:	1996/01/01 02:16:09

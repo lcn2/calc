@@ -1,5 +1,5 @@
 /*
- * zrand - additive 55 shuffle generator
+ * zrand - subtractive 100 shuffle generator
  *
  * Copyright (C) 1999  Landon Curt Noll
  *
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: zrand.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: zrand.h,v 29.3 2001/04/14 22:47:21 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrand.h,v $
  *
  * Under source code control:	1995/01/07 09:45:26
@@ -42,19 +42,19 @@
 
 
 /*
- * a55 generator defines
+ * s100 generator defines
  *
  * NOTE: SBITS must be a power of two to make the (&= (SBITS-1))
  *	 in slotcp() to work.
  */
-#define SBITS (64)	 /* size of additive or shuffle entry in bits */
-#define SBYTES (SBITS/8) /* size of additive or shuffle entry in bytes */
+#define SBITS (64)	 /* size of subtractive or shuffle entry in bits */
+#define SBYTES (SBITS/8) /* size of subtractive or shuffle entry in bytes */
 #define SHALFS (SBYTES/sizeof(HALF))	/* size in HALFs */
 
 /*
  * seed defines
  */
-#define SEEDXORBITS 64		/* low bits of a55 seed devoted to xor */
+#define SEEDXORBITS 64		/* low bits of s100 seed devoted to xor */
 
 /*
  * shuffle table defines
@@ -65,18 +65,18 @@
 #define SHUFMASK (SHUFLEN-1)	/* mask for shuffle table entry selection */
 
 /*
- * additive 55 constants
+ * subtractive 100 constants
  */
-#define A55 55		/* slots in an additive 55 table */
-#define INIT_J 23	/* initial first walking table index */
-#define INIT_K 54	/* initial second walking table index */
+#define S100 100	/* slots in an subtractive 100 table */
+#define INIT_J 36	/* initial first walking table index */
+#define INIT_K 99	/* initial second walking table index */
 
 /*
- * additive 55 table defines
+ * subtractive 100 table defines
  *
- * SLEN		- length in FULLs of an additive 55 slot
+ * SLEN		- length in FULLs of an subtractive 100 slot
  *
- * SVAL(a,b)	- form a 64 bit hex slot entry in the additive 55 table
+ * SVAL(a,b)	- form a 64 bit hex slot entry in the subtractive 100 table
  *		  a: up to 8 hex digits without the leading 0x (upper half)
  *		  b: up to 8 hex digits without the leading 0x (lower half)
  *
@@ -90,12 +90,12 @@
  *
  *	NOTE: Due to a SunOS cc bug, don't put spaces in the SHVAL call!
  *
- * SLOAD(s,i,z) - load table slot i from additive 55 state s with zvalue z
+ * SLOAD(s,i,z) - load table slot i from subtractive 100 state s with zvalue z
  *		  s: type RAND
  *		  i: type int, s.slot[i] slot index
  *		  z: type ZVALUE, what to load into s.slot[i]
  *
- * SADD(s,k,j)	- slot[k] += slot[j]
+ * SSUB(s,k,j)	- slot[k] -= slot[j]
  *		  s: type RAND
  *		  k: type int, s.slot[k] slot index, what to gets changed
  *		  j: type int, s.slot[j] slot index, what to add to s.slot[k]
@@ -106,7 +106,7 @@
  *		  k: type int, s.slot[k] slot index, selects shuffle entry
  *		  result type int, refers to s.shuf[SINDX(s,k)]
  *
- * SBUFFER(s,t) - load a55 buffer with t
+ * SBUFFER(s,t) - load s100 buffer with t
  *		  s: type RAND
  *		  t: type int, s.shuf[t] entry index, replace buffer with it
  *
@@ -130,7 +130,7 @@
  *		  i: type int, s.slot[i] slot index, what gets xored
  *		  v: type FULL*, 64 bit value to xor into s.slot[i]
  *
- * SCNT		- length of an additive 55 table in FULLs
+ * SCNT		- length of an subtractive 100 table in FULLs
  */
 #if FULL_BITS == SBITS
 
@@ -143,7 +143,7 @@
 #  define SHVAL(a,b,c,d) (HALF)0x/**/c/**/d,(HALF)0x/**/a/**/b
 # endif
 #define SLOAD(s,i,z) ((s).slot[i] = ztofull(z))
-#define SADD(s,k,j) ((s).slot[k] += (s).slot[j])
+#define SSUB(s,k,j) ((s).slot[k] -= (s).slot[j])
 #define SINDX(s,k) ((int)((s).slot[k] >> (FULL_BITS - SHUFPOW)))
 #define SBUFFER(s,t) {(s).buffer[0] = ((s).shuf[t] & BASE1); \
 		      (s).buffer[1] = ((s).shuf[t] >> BASEB); \
@@ -176,9 +176,9 @@
 			 (((z).len == 3) ? (FULL)((z).v[2]) : \
 			  ((FULL)((z).v[2]) + ((FULL)((z).v[3]) << BASEB)))); \
 		     }
-#define SADD(s,k,j) {FULL tmp = (s).slot[(k)<<1]; \
-		     (s).slot[(k)<<1] += (s).slot[(j)<<1]; \
-		     (s).slot[1+((k)<<1)] += ((tmp <= (s).slot[(k)<<1]) ? \
+#define SSUB(s,k,j) {FULL tmp = (s).slot[(k)<<1]; \
+		     (s).slot[(k)<<1] -= (s).slot[(j)<<1]; \
+		     (s).slot[1+((k)<<1)] -= ((tmp <= (s).slot[(k)<<1]) ? \
 					       (s).slot[1+((j)<<1)] : \
 					       (s).slot[1+((j)<<1)] + 1); \
 		    }
@@ -213,11 +213,14 @@
 
 #endif
 
-#define SCNT (SLEN*A55)	 /* length of additive 55 table in FULLs */
+#define SCNT (SLEN*S100)	/* length of subtractive 100 table in FULLs */
+
+#define RAND_CONSEQ_USE (100)		  /* use this many before skipping */
+#define RAND_SKIP (1009-RAND_CONSEQ_USE)  /* skip this many after use */
 
 
 /*
- * a55 generator state
+ * s100 generator state
  */
 struct rand {
 	int seeded;		/* 1 => state has been seeded */
@@ -225,15 +228,16 @@ struct rand {
 	FULL buffer[SLEN];	/* unused random bits from last call */
 	int j;			/* first walking table index */
 	int k;			/* second walking table index */
-	FULL slot[SCNT];	/* additive 55 table */
+	int need_to_skip;	/* 1 => skip the next 909 values */
+	FULL slot[SCNT];	/* subtractive 100 table */
 	FULL shuf[SHUFLEN];	/* shuffle table entries */
 };
 
 
 /*
- * a55 generator function declarations
+ * s100 generator function declarations
  */
-extern RAND *zsrand(CONST ZVALUE *seed, CONST MATRIX *pmat55);
+extern RAND *zsrand(CONST ZVALUE *seed, CONST MATRIX *pmat100);
 extern RAND *zsetrand(CONST RAND *state);
 extern void zrandskip(long count);
 extern void zrand(long count, ZVALUE *res);
