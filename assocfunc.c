@@ -57,7 +57,7 @@ associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices)
 	 * so that we can first select the correct hash chain, and
 	 * also so we can quickly compare each element for a match.
 	 */
-	hash = (QCKHASH)0;
+	hash = FNV1_32_BASIS;
 	for (i = 0; i < dim; i++)
 		hash = hashvalue(&indices[i], hash);
 

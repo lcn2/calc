@@ -1527,7 +1527,7 @@ f_hash(int count, VALUE **vals)
 	long lhash;
 	VALUE result;
 
-	hash = (QCKHASH)0;
+	hash = FNV1_32_BASIS;
 	while (count-- > 0)
 		hash = hashvalue(*vals++, hash);
 	lhash = (long) hash;

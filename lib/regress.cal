@@ -7115,6 +7115,8 @@ print '188: parsed test_natnumset()';
  */
 define test_somenew()
 {
+	local a, s;
+
 	print	'8200: Starting test_somenew';
 
 	vrfy(char(-1) == char(255),	'8201: char(-1) == char(255)');
@@ -7139,7 +7141,11 @@ define test_somenew()
 	vrfy(1/(1/0) == 0,		'8215: 1/(1/0) == 0');
 	vrfy(inverse(1/0) == 0,		'8216: inverse(1/0) == 0');
 
-	print '8217: Ending test_somenew';
+	a = isqrt(2e1000); s = "xyz";
+	print				'8217: a = isqrt(2e1000); s = "xyz";';
+	vrfy(hash(a,s) == 1916476840,	'8218: hash(a,s) == 1916476840');
+
+	print '8219: Ending test_somenew';
 }
 print '189: parsed test_somenew()';
 

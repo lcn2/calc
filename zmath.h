@@ -145,6 +145,43 @@ typedef SB32 LEN;			/* unit of length storage */
 
 
 /*
+ * FNV-1 basis
+ *
+ * We start the hash at a non-zero value at the beginning so that
+ * hashing blocks of data with all 0 bits do not map onto the same
+ * 0 hash value.  The virgin value that we use below is the hash value
+ * that we would get from following 32 ASCII characters:
+ *
+ *              chongo <Landon Curt Noll> /\../\
+ *
+ * Note that the \'s above are not back-slashing escape characters.
+ * They are literal ASCII  backslash 0x5c characters.
+ *
+ * The effect of this virgin initial value is the same as starting
+ * with 0 and pre-pending those 32 characters onto the data being
+ * hashed.
+ *
+ * Yes, even with this non-zero virgin value there is a set of data
+ * that will result in a zero hash value.  Worse, appending any
+ * about of zero bytes will continue to produce a zero hash value.
+ * But that would happen with any initial value so long as the
+ * hash of the initial was the `inverse' of the virgin prefix string.
+ *
+ * But then again for any hash function, there exists sets of data
+ * which that the hash of every member is the same value.  That is
+ * life with many to few mapping functions.  All we do here is to
+ * prevent sets whose members consist of 0 or more bytes of 0's from
+ * being such an awkward set.
+ *
+ * And yes, someone can figure out what the magic 'inverse' of the
+ * 32 ASCII character are ... but this hash function is NOT intended
+ * to be a cryptographic hash function, just a fast and reasonably
+ * good hash function.
+ */
+#define FNV1_32_BASIS ((QCKHASH)(0x811c9dc5))
+
+
+/*
  * The largest power of 10 we will compute for our decimal conversion
  * internal constants is: 10^(2^TEN_MAX).
  */

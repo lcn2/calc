@@ -87,6 +87,50 @@ typedef struct s_hash64 hash64;
 
 
 /*
+ * FNV-1 basis
+ *
+ * We start the hash at a non-zero value at the beginning so that
+ * hashing blocks of data with all 0 bits do not map onto the same
+ * 0 hash value.  The virgin value that we use below is the hash value
+ * that we would get from following 32 ASCII characters:
+ *
+ *              chongo <Landon Curt Noll> /\../\
+ *
+ * Note that the \'s above are not back-slashing escape characters.
+ * They are literal ASCII  backslash 0x5c characters.
+ *
+ * The effect of this virgin initial value is the same as starting
+ * with 0 and pre-pending those 32 characters onto the data being
+ * hashed.
+ *
+ * Yes, even with this non-zero virgin value there is a set of data
+ * that will result in a zero hash value.  Worse, appending any
+ * about of zero bytes will continue to produce a zero hash value.
+ * But that would happen with any initial value so long as the
+ * hash of the initial was the `inverse' of the virgin prefix string.
+ *
+ * But then again for any hash function, there exists sets of data
+ * which that the hash of every member is the same value.  That is
+ * life with many to few mapping functions.  All we do here is to
+ * prevent sets whose members consist of 0 or more bytes of 0's from
+ * being such an awkward set.
+ *
+ * And yes, someone can figure out what the magic 'inverse' of the
+ * 32 ASCII character are ... but this hash function is NOT intended
+ * to be a cryptographic hash function, just a fast and reasonably
+ * good hash function.
+ */
+#if defined(HAVE_B64)
+# define FNV1_64_BASIS ((hash64)(0xcbf29ce484222325ULL))
+#else
+# define FNV1_64_BASIS_0 ((USB32)0x2325)
+# define FNV1_64_BASIS_1 ((USB32)0x8422)
+# define FNV1_64_BASIS_2 ((USB32)0x9ce4)
+# define FNV1_64_BASIS_3 ((USB32)0xcbf2)
+#endif
+
+
+/*
  * hash_buf - perform a 64 bit Fowler/Noll/Vo hash on a buffer
  *
  * input:
@@ -116,24 +160,16 @@ hash_buf(char *buf, unsigned len)
 	 * (gsf@research.att.com).
 	 *
 	 * See:
-	 *	http://reality.sgi.com/chongo/src/fnv/fnv_hash.tar.gz
-	 *	http://reality.sgi.com/chongo/src/fnv/h32.c
-	 *	http://reality.sgi.com/chongo/src/fnv/h64.c
+	 *	http://reality.sgi.com/chongo/tech/comp/fnv/index.html
 	 *
 	 * for information on 32bit and 64bit Fowler/Noll/Vo hashes.
 	 *
 	 * Landon Curt Noll (http://reality.sgi.com/chongo) later improved
 	 * on their algorithm to come up with Fowler/Noll/Vo hash.
-	 *
-	 * The 32 hash was able to process 234936 words from the web2 dictionary
-	 * without any 32 bit collisions using a constant of
-	 * 16777619 = 0x1000193.
-	 *
-	 * The 64 bit hash uses 1099511628211 = 0x100000001b3 instead.
 	 */
 #if defined(HAVE_B64)
 	/* hash each octet of the buffer */
-	for (hval = (hash64)0ULL; buf < buf_end; ++buf) {
+	for (hval = FNV1_64_BASIS; buf < buf_end; ++buf) {
 
 	    /* multiply by 1099511628211ULL mod 2^64 using 64 bit longs */
 	    hval *= (hash64)1099511628211ULL;
@@ -145,7 +181,11 @@ hash_buf(char *buf, unsigned len)
 #else /* HAVE_B64 */
 
 	/* hash each octet of the buffer */
-	for (val[0]=val[1]=val[2]=val[3]=0; buf < buf_end; ++buf) {
+	val[0] = FNV1_64_BASIS_0;
+	val[1] = FNV1_64_BASIS_1;
+	val[2] = FNV1_64_BASIS_2;
+	val[3] = FNV1_64_BASIS_3;
+	for (; buf < buf_end; ++buf) {
 
 	    /*
 	     * multiply by 1099511628211 mod 2^64 using 32 bit longs
@@ -167,7 +207,7 @@ hash_buf(char *buf, unsigned len)
 	    val[0] = tmp[0] & 0xffff;
 	    tmp[2] += (tmp[1] >> 16);
 	    val[1] = tmp[1] & 0xffff;
-	    val[3] += (tmp[2] >> 16);
+	    val[3] = tmp[3] + (tmp[2] >> 16);
 	    val[2] = tmp[2] & 0xffff;
 	    /*
 	     * Doing a val[3] &= 0xffff; is not really needed since it simply

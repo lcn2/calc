@@ -44,6 +44,12 @@ Following is the change from calc version 2.11.0t8 to date:
 
     Misc source file cleanup for things such as } else { style consistency.
 
+    Fixed the basis for FNV-1 hashes.  Piror to this fix, the hash()
+    builtin produced FNV hash values that did not match the FNV-1
+    algorithm as specified in:
+
+	http://reality.sgi.com/chongo/tech/comp/fnv/index.html
+
 
 Following is the change from calc version 2.11.0t7 to 2.11.0t7.5:
 
