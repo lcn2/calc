@@ -13,14 +13,11 @@ TYPES
 DESCRIPTION
     Returns the least non-negative integer n for which abs(x) < b^n.
 
-    digits(x, b) = 0  if and only if abs(x) <= 1.
+    digits(x, b) = 0  if and only if abs(x) < 1.
 
-    For real x with absolute value > 1, digits(x, b) is the number
+    For real x with absolute value >= 1, digits(x, b) is the number
     of digits in the standard base-b "decimal" representation of int(abs(x));
     this is also given by  1 + ilog(x, b).
-
-    NOTE: both digits(0) and digits(1) return the value of 1.
-    This is not a bug, it is a feature of the above equation.  :-)
 
 EXAMPLE
     > print digits(0), digits(0.0123), digits(3.7), digits(-27), digits(-99.7)
@@ -35,7 +32,7 @@ LINK LIBRARY
 SEE ALSO
     digit, places
 
-## Copyright (C) 1999-2003  Landon Curt Noll
+## Copyright (C) 1999  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -51,8 +48,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: digits,v 29.4 2003/01/14 04:09:35 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: digits,v 29.3 2000/12/14 10:32:24 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/digits,v $
 ##
 ## Under source code control:	1995/10/03 10:40:01

@@ -82,8 +82,6 @@ The following are the changes from calc version 2.11.6.0 to date:
 
     Fixed formation of the custom/.all file.
 
-    Fixed repeat(1, repeat_count) bug.
-
 
 The following are the changes from calc version 2.11.5.5 to 2.11.5.9:
 
@@ -5508,8 +5506,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.54 $
-## @(#) $Id: CHANGES,v 29.54 2003/01/14 04:04:26 chongo Exp $
+## @(#) $Revision: 29.53 $
+## @(#) $Id: CHANGES,v 29.53 2003/01/14 02:33:58 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
