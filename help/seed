@@ -19,9 +19,9 @@ DESCRIPTION
 	is almost certainly non-chaotic.  This function is likely not
 	suitable for applications (such as cryptographic applications)
 	where the unpredictability of seeds is critical.  For such critical
-	applications, lavarand should be used.	See the URL:
+	applications, LavaRnd should be used.	See the URL:
 
-		http://lavarand.sgi.com/index.html
+		http://www.LavaRnd.org/
 
 	for information about seeding a pseudo-random number generator
 	(such as rand() or random()) with the cryptographic hash of the
@@ -67,8 +67,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: seed,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: seed,v 29.3 2001/05/13 13:26:26 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/seed,v $
 ##
 ## Under source code control:	1999/10/03 10:04:29

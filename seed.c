@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: seed.c,v 29.4 2001/03/17 21:31:47 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: seed.c,v 29.5 2001/05/08 06:44:29 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/seed.c,v $
  *
  * Under source code control:	1999/10/03 10:06:53
@@ -31,10 +31,10 @@
 /*
  * Generate a quasi-random seed based on system and process information.
  *
- * NOTE: This is not a good source of chaotic data.  The lavarand
+ * NOTE: This is not a good source of chaotic data.  The LavaRnd
  *	 system does a much better job of that.	 See:
  *
- *		http://lavarand.sgi.com/index.html
+ *		http://www.LavaRnd.org/
  */
 
 
@@ -270,10 +270,10 @@ hash_buf(char *buf, unsigned len)
  *
  * Generate a quasi-random seed based on system and process information.
  *
- * NOTE: This is not a good source of chaotic data.  The lavarand
+ * NOTE: This is not a good source of chaotic data.  The LavaRnd
  *	 system does a much better job of that.	 See:
  *
- *		http://lavarand.sgi.com/index.html
+ *		http://www.LavaRnd.org/
  *
  * PORTING NOTE:
  *    If when porting this code to your system and something

@@ -1,4 +1,71 @@
-The following are the changes from calc version 2.11.5t2 to date:
+The following are the changes from calc version 2.11.5t3 to date:
+
+    The Makefile will now send both stdout and sterr to /dev/null
+    when compiling hsrc intermeriates.
+
+    The config("verbose_quit") value was restored to a default
+    value of FALSE.
+
+    Added the cscript:
+
+	powerterm [base_limit] value
+
+    to write the value as the sum (or difference) of powers <= base_limit
+    where base_limit by default is 10000.
+
+    Applied a bug fix by Dr.D.J.Picton <dave at aps5.ph.bham.ac.uk>
+    to have help with no args print the default help file.
+
+    Renamed lavarand to LavaRnd.
+
+    Added rules to build a calc rpm.
+
+    All installed files are first formed as foo.new, and then moved
+    into place as foo via a atomic rename.
+
+    During installation, only files that are different are installed.
+    If the built file and the installed file are the same, no
+    installation is performed.
+
+    Calc has new default installation locations:
+
+    Makefile var   old location			      new location
+    ------------   ------------			      ------------
+    TOPDIR	   /usr/local/lib		        <<no longer used>>
+    BINDIR	   /usr/local/bin		      /usr/bin
+    SHAREDIR	      <<not set>>		      /usr/share
+    INCDIR	   /usr/local/include		      /usr/include
+    LIBDIR	   /usr/local/lib/calc		      /usr/lib
+    CSHAREDIR	      <<not set>>		      /usr/share/calc
+    HELPDIR	   /usr/local/lib/calc/help           /usr/share/calc/help
+    INCDIRCALC	   /usr/local/include/calc	      /usr/include/calc
+    CUSTOMLIBDIR   /usr/local/lib/calc/custom	      /usr/share/calc/custom
+    CUSTOMHELPDIR  /usr/local/lib/calc/help/custhelp  /usr/share/calc/custhelp
+    CUSTOMINCDIR     <<not set>>		      /usr/include/calc/custom
+    SCRIPTDIR	   /usr/local/bin/cscript	      /usr/bin/cscript
+    MANDIR	     <<not set>>		      /usr/share/man/man1
+    CATDIR	     <<not set>>		        <<not set>>
+
+    The Makefile variable ${TOPDIR} is no longer used.  In some places
+    it has been replaced by a new Makefile variable ${SHAREDIR}.  Some
+    of the old TOPDIR functionality has beenn replaced by ${CSHAREDIR}.
+
+    The install rules no longer remove old obsolete files.  We assume
+    that these old files have long since vanished!  :-)
+
+    Reduced the amount of output when doing a make all where nothing
+    needs to be made.
+
+    Reduced the amount of output when doing a make install where nothing
+    needs to be installed.
+
+    If you install using the new default locations, you can remove
+    old calc files installed in the old default location by doing:
+
+	make olduninstall
+
+
+The following are the changes from calc version 2.11.5t2 to 2.11.5t2.1:
 
     Fixed a bug, reported by Ernest Bowen <ernie at turing dot
     une dot edu dot au> that caused command lines to be echoed in
@@ -48,7 +115,7 @@ The following are the changes from calc version 2.11.5t2 to date:
     Added regression test 8310 to test for the static bug fix.
 
 
-The following are the changes from calc version 2.11.5t0 to date:
+The following are the changes from calc version 2.11.5t0 to 2.11.5t1.1:
 
     Fixed a compile problem with Linux 2.4 / Debian.  Thanks goes
     to Martin Buck <m at rtin-buck dot de> for help with this issue.
@@ -171,7 +238,7 @@ The following are the changes from calc version 2.11.5t0 to date:
     that have been attempted to be built for windoz.
 
 
-The following are the changes from calc version 2.11.4t1 to date:
+The following are the changes from calc version 2.11.4t1 to 2.11.4t2:
 
     Added missing test8600.cal test file.
 
@@ -5198,7 +5265,7 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 
     A small bug in the library file regress.cal was fixed.
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 2001  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -5214,8 +5281,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.29 $
-## @(#) $Id: CHANGES,v 29.29 2001/04/14 22:56:46 chongo Exp $
+## @(#) $Revision: 29.32 $
+## @(#) $Id: CHANGES,v 29.32 2001/05/28 21:59:59 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: opcodes.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: opcodes.c,v 29.4 2001/04/25 07:16:26 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/opcodes.c,v $
  *
  * Under source code control:	1990/02/15 01:48:19
@@ -3234,7 +3234,7 @@ o_quit(FUNC *fp, long index)
 	if (cp)
 		printf("%s\n", cp);
 	else if (conf->verbose_quit)
-		printf("Quit or abort executed\n");
+		printf("quit or abort executed\n");
 	if (!inputisterminal() && !strcmp(fp->f_name, "*"))
 		closeinput();
 	go = FALSE;

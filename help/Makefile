@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.6 $
-# @(#) $Id: Makefile,v 29.6 2001/04/08 10:53:52 chongo Exp $
+# @(#) $Revision: 29.12 $
+# @(#) $Id: Makefile,v 29.12 2001/05/28 22:36:28 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -36,15 +36,16 @@
 SHELL= /bin/sh
 MAKE_FILE = Makefile
 
-# Normally, the upper level makefile will set these values.  We provide
-# a default here just in case you want to build from this directory.
+# ${SHAREDIR}		where most common shared files are kept
 #
-TOPDIR= /usr/local/lib
-#TOPDIR= /usr/lib
-#TOPDIR= /usr/libdata
+# ${CSHAREDIR}		where most common shared calc files are kept
+# ${HELPDIR}		where the help directory is installed.
+#
+#SHAREDIR= /usr/local/lib
+SHAREDIR= /usr/share
 
-LIBDIR= ${TOPDIR}/calc
-HELPDIR= ${LIBDIR}/help
+CSHAREDIR= ${SHAREDIR}/calc
+HELPDIR= ${CSHAREDIR}/help
 
 # Makefile debug
 #
@@ -63,6 +64,7 @@ CHMOD= chmod
 SED= sed
 SORT= sort
 FMT= fmt
+CMP= cmp
 
 # Standard and Builtin help files
 #
@@ -489,6 +491,37 @@ detaillist:
 	    ${SED} -e '1s/xxxxx/DETAIL_HELP=/' -e '2,$$s/^/	/' \
 		   -e 's/$$/ \\/' -e '$$s/ \\$$//'
 
+##
+#
+# rpm rules
+#
+##
+
+echo_STD_HELP_FILES: ${MAKE_FILE}
+	@echo ${STD_HELP_FILES}
+
+echo_BLT_HELP_FILES: ${MAKE_FILE}
+	@echo ${BLT_HELP_FILES}
+
+echo_DETAIL_HELP: ${MAKE_FILE}
+	@echo ${DETAIL_HELP}
+
+echo_SINGULAR_FILES: ${MAKE_FILE}
+	@echo ${SINGULAR_FILES}
+
+echo_install.list: ${MAKE_FILE}
+	@for i in ${STD_HELP_FILES} full ${BLT_HELP_FILES} \
+		  builtin ${DETAIL_HELP} ${SINGULAR_FILES}; do \
+	    echo ${HELPDIR}/$$i; \
+	done
+	@echo ${HELPDIR}/obj
+
+##
+#
+# Utility rules
+#
+##
+
 clean:
 	rm -f obj mkbuiltin funclist.c funclist.o funclist
 	rm -f COPYING COPYING-LGPL
@@ -500,36 +533,48 @@ clobber:
 	rm -f ${SINGULAR_FILES} ${DETAIL_CLONE}
 
 install: all
-	-${Q}if [ ! -d ${TOPDIR} ]; then \
-		echo mkdir ${TOPDIR}; \
-		mkdir ${TOPDIR}; \
+	-${Q}if [ ! -d ${SHAREDIR} ]; then \
+		echo mkdir ${SHAREDIR}; \
+		mkdir ${SHAREDIR}; \
+		echo ${CHMOD} 0755 ${SHAREDIR}; \
+		${CHMOD} 0755 ${SHAREDIR}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d ${LIBDIR} ]; then \
-		echo mkdir ${LIBDIR}; \
-		mkdir ${LIBDIR}; \
+	-${Q}if [ ! -d ${CSHAREDIR} ]; then \
+		echo mkdir ${CSHAREDIR}; \
+		mkdir ${CSHAREDIR}; \
+		echo ${CHMOD} 0755 ${CSHAREDIR}; \
+		${CHMOD} 0755 ${CSHAREDIR}; \
 	else \
 	    true; \
 	fi
 	-${Q}if [ ! -d ${HELPDIR} ]; then \
 		echo mkdir ${HELPDIR}; \
 		mkdir ${HELPDIR}; \
+		echo ${CHMOD} 0755 ${HELPDIR}; \
+		${CHMOD} 0755 ${HELPDIR}; \
 	else \
 	    true; \
 	fi
-	${Q}for i in ${STD_HELP_FILES} ${BLT_HELP_FILES} builtin \
+	-${Q}for i in ${STD_HELP_FILES} ${BLT_HELP_FILES} builtin \
 		  full ${DETAIL_HELP} ${SINGULAR_FILES}; do \
-		echo rm -f ${HELPDIR}/$$i; \
-		rm -f ${HELPDIR}/$$i; \
-		echo cp $$i ${HELPDIR}; \
-		cp $$i ${HELPDIR}; \
-		echo ${CHMOD} 0444 ${HELPDIR}/$$i; \
-		${CHMOD} 0444 ${HELPDIR}/$$i; \
+	    if ${CMP} -s $$i ${HELPDIR}/$$i; then \
+		true; \
+	    else \
+		rm -f ${HELPDIR}/$$i.new; \
+		cp -f $$i ${HELPDIR}/$$i.new; \
+		${CHMOD} 0444 ${HELPDIR}/$$i.new; \
+		mv -f ${HELPDIR}/$$i.new ${HELPDIR}/$$i; \
+		echo "installed ${HELPDIR}/$$i"; \
+	    fi; \
 	done
-	rm -f ${HELPDIR}/obj
-	cp obj.file ${HELPDIR}/obj
-	${CHMOD} 0444 ${HELPDIR}/obj
-	${Q}echo remove files that are obsolete
-	-rm -f rmblk block stdlib
-	-rm -f ${HELPDIR}/rmblk ${HELPDIR}/block ${HELPDIR}/stdlib
+	-${Q}if ${CMP} -s obj.file ${HELPDIR}/obj; then \
+	    true; \
+	else \
+	    rm -f ${HELPDIR}/obj.new; \
+	    cp -f obj.file ${HELPDIR}/obj.new; \
+	    ${CHMOD} 0444 ${HELPDIR}/obj.new; \
+	    mv -f ${HELPDIR}/obj.new ${HELPDIR}/obj; \
+	    echo "installed ${HELPDIR}/obj"; \
+	fi

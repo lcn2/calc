@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.24 $
- * @(#) $Id: version.c,v 29.24 2001/04/14 22:56:46 chongo Exp $
+ * @(#) $Revision: 29.26 $
+ * @(#) $Id: version.c,v 29.26 2001/05/28 22:00:22 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
@@ -43,7 +43,7 @@ static char *program;
 #define MAJOR_VER	2	/* major version */
 #define MINOR_VER	11	/* minor version */
 #define MAJOR_PATCH	5	/* patch level or 0 if no patch */
-#define MINOR_PATCH	"3"	/* test number or empty string if no patch */
+#define MINOR_PATCH	"4"	/* test number or empty string if no patch */
 
 /*
  * calc version constants
@@ -144,6 +144,82 @@ version(void)
 
 #if defined(CALC_VER)
 
+
+/*
+ * print_rpm_version_release - print the rpm style version-release
+ *
+ * This function prints a version-release string, rpm style:
+ *
+ *		x.y.z-w
+ *		x.y.z-0
+ *		x.y-0
+ */
+void
+print_rpm_version_release(void)
+{
+	/*
+	 * form the version buffer
+	 */
+	if (sizeof(MINOR_PATCH) > 1) {
+	    printf("%d.%d.%d-%s\n", calc_major_ver, calc_minor_ver,
+		 		  calc_major_patch, calc_minor_patch);
+	} else if (MAJOR_PATCH > 0) {
+	    printf("%d.%d.%d-0\n", calc_major_ver, calc_minor_ver,
+	    			 calc_major_patch);
+	} else {
+	    printf("%d.%d-0\n", calc_major_ver, calc_minor_ver);
+	}
+	return;
+}
+
+
+/*
+ * print_rpm_version - print just the version string, rpm style
+ *
+ * This function prints a version string, rpm style:
+ *
+ *		x.y.z
+ *		x.y
+ */
+void
+print_rpm_version(void)
+{
+	/*
+	 * form the version buffer
+	 */
+	if (MAJOR_PATCH > 0) {
+	    printf("%d.%d.%d\n", calc_major_ver, calc_minor_ver,
+	    			 calc_major_patch);
+	} else {
+	    printf("%d.%d\n", calc_major_ver, calc_minor_ver);
+	}
+	return;
+}
+
+
+/*
+ * print_rpm_release - print just the release string, rpm style
+ *
+ * This function prints a release string, rpm style:
+ *
+ *		w
+ *		0
+ */
+void
+print_rpm_release(void)
+{
+	/*
+	 * form the version buffer
+	 */
+	if (sizeof(MINOR_PATCH) > 1) {
+	    printf("%s\n", calc_minor_patch);
+	} else {
+	    printf("0\n");
+	}
+	return;
+}
+
+
 /*
  * version - print the calc version
  */
@@ -152,7 +228,15 @@ int
 main(int argc, char *argv[])
 {
     program = argv[0];
-    printf("%s\n", version());
+    if (argc == 2 && strcmp(argv[1], "-R") == 0) {
+	print_rpm_version_release();
+    } else if (argc == 2 && strcmp(argv[1], "-v") == 0) {
+	print_rpm_version();
+    } else if (argc == 2 && strcmp(argv[1], "-r") == 0) {
+	print_rpm_release();
+    } else {
+	printf("%s\n", version());
+    }
     return 0;
 }
 

@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.5 $
-# @(#) $Id: Makefile,v 29.5 2001/04/08 10:53:52 chongo Exp $
+# @(#) $Revision: 29.9 $
+# @(#) $Id: Makefile,v 29.9 2001/05/28 22:27:15 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/Makefile,v $
 #
 # Under source code control:	1997/04/19 22:46:49
@@ -78,18 +78,30 @@ Q=@
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
 #
-# where to install things
+# where things go
 #
-# ${TOPDIR} is the directory under which the calc directory will be placed.
-# ${LIBDIR} is where the *.cal, *.h, *.a, bindings and help dir are installed.
-# ${HELPDIR} is where the help directory is installed.
+# ${BINDIR}		where to install binary files
+# ${SHAREDIR}		where most common shared files are kept
+# ${INCDIR}		where most .h files are kept
+# ${LIBDIR}		where *.a files are installed
 #
-TOPDIR= /usr/local/lib
-#TOPDIR= /usr/lib
-#TOPDIR= /usr/libdata
-#TOPDIR= /usr/contrib/lib
+# ${CSHAREDIR}		where most common shared calc files are kept
+# ${HELPDIR}		where the help directory is installed.
 #
-LIBDIR= ${TOPDIR}/calc
+#BINDIR= /usr/local/bin
+BINDIR= /usr/bin
+#BINDIR= /usr/contrib/bin
+#
+#SHAREDIR= /usr/local/lib
+SHAREDIR= /usr/share
+#
+#INCDIR= /usr/local/include
+INCDIR= /usr/include
+#
+#LIBDIR= /usr/local/lib
+LIBDIR= /usr/lib
+
+CSHAREDIR= ${SHAREDIR}/calc
 HELPDIR= ${LIBDIR}/help
 
 # Normally, the upper level makefile will set these values.  We provide
@@ -266,12 +278,15 @@ CALCLIBLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} README_SAMPLE
 
 # complete list of targets
 #
-TARGETS= many_random test_random
+# NOTE: This list MUST be co-ordinated with the ${SAMPLE_TARGETS} variable
+#	in the upper level ../Makefile
+#
+SAMPLE_TARGETS= many_random test_random
+TARGETS= ${SAMPLE_TARGETS}
 
 # required vars
 #
 SHELL= /bin/sh
-MAKE_FILE= Makefile
 
 # standard tools
 #
@@ -279,6 +294,7 @@ SED= sed
 MAKEDEPEND= makedepend
 CHMOD= chmod
 SORT= sort
+CMP= cmp
 
 ##
 #
@@ -287,6 +303,7 @@ SORT= sort
 ##
 
 all: ${TARGETS} .all
+	@true
 
 test_random.o: test_random.c
 	${CC} ${CFLAGS} ${ALLOW_CUSTOM} test_random.c -c
@@ -407,7 +424,7 @@ depend:
 	${Q}${SED} -n '3,$$p' skel/sample/makedep.out | \
 		LANG=C ${SORT} -u >> Makefile
 	-${Q}rm -rf skel
-	-${Q}if cmp -s Makefile.bak Makefile; then \
+	-${Q}if ${CMP} -s Makefile.bak Makefile; then \
 		echo 'sample Makefile was already up to date'; \
 		mv -f Makefile.bak Makefile; \
 	else \
@@ -424,6 +441,15 @@ depend:
 
 ##
 #
+# rpm rules
+#
+##
+
+echo_install.list: Makefile
+
+
+##
+#
 # Utility rules
 #
 ##
@@ -437,7 +463,9 @@ clobber:
 	rm -f .all Makefile.tmp sample
 
 # for right now we will not install anything
+#
 install: all
+	@true
 
 ##
 #

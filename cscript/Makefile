@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.9 $
-# @(#) $Id: Makefile,v 29.9 2001/04/08 10:53:52 chongo Exp $
+# @(#) $Revision: 29.13 $
+# @(#) $Id: Makefile,v 29.13 2001/05/13 14:43:56 chongo Exp chongo $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -39,8 +39,8 @@ MAKE_FILE = Makefile
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
 #
-BINDIR= /usr/local/bin
-#BINDIR= /usr/bin
+#BINDIR= /usr/local/bin
+BINDIR= /usr/bin
 #BINDIR= /usr/contrib/bin
 #
 SCRIPTDIR= ${BINDIR}/cscript
@@ -59,6 +59,7 @@ CHMOD= chmod
 SED= sed
 SORT= sort
 FMT= fmt
+CMP= cmp
 
 # The ${SCRIPT} list is the list of calc shell script files (without the .calc
 # extension) which will be installed.
@@ -76,10 +77,10 @@ FMT= fmt
 #
 #		make detaillist
 #
-SCRIPT= mersenne piforever plus simple square fproduct
+SCRIPT= mersenne piforever plus simple square fproduct powerterm
 
 SCRIPT_SRC= mersenne.calc piforever.calc plus.calc simple.calc square.calc \
-	fproduct.calc
+	fproduct.calc powerterm.calc
 
 # These files are found (but not built) in the distribution
 #
@@ -89,9 +90,17 @@ DISTLIST= ${SCRIPT_SRC} ${MAKE_FILE} README
 #
 CALCLIBLIST=
 
+# complete list of targets
+#
+# NOTE: This list MUST be co-ordinated with the ${CSCRIPT_TARGETS} variable
+#	in the upper level ../Makefile
+#
+CSCRIPT_TARGETS= ${SCRIPT}
+TARGETS= ${CSCRIPT_TARGETS}
+
 # The reason for this Makefile
 #
-all: ${SCRIPT} ${SCRIPT_SRC} .all
+all: ${TARGETS} .all
 
 # used by the upper level Makefile to determine if we have done all
 #
@@ -185,7 +194,7 @@ depend:
 	${Q}echo "" >> Makefile
 	${Q}${SED} -n '3,$$p' makedep.out >> Makefile
 	-${Q}rm -f makedep.out
-	-${Q}if cmp -s Makefile.bak Makefile; then \
+	-${Q}if ${CMP} -s Makefile.bak Makefile; then \
 		echo 'sample Makefile was already up to date'; \
 		mv -f Makefile.bak Makefile; \
 	else \
@@ -200,32 +209,59 @@ depend:
 		fi; \
 	fi
 
+##
+#
+# rpm rules
+#
+##
+
+echo_SCRIPT: ${MAKE_FILE}
+	@echo ${SCRIPT}
+
+
+echo_install.list: ${MAKE_FILE}
+	@for i in ${SCRIPT}; do \
+	    echo ${SCRIPTDIR}/$$i; \
+	done
+##
+#
+# Utility rules
+#
+##
+
 clean:
 	-rm -f makedep.out
 
 clobber:
-	-rm -f ${SCRIPT}
+	-rm -f ${TARGETS}
 
 install: all
 	-${Q}if [ ! -d ${BINDIR} ]; then \
-		echo mkdir ${BINDIR}; \
-		mkdir ${BINDIR}; \
+	    echo mkdir ${BINDIR}; \
+	    mkdir ${BINDIR}; \
+	    echo ${CHMOD} 0755 ${BINDIR}; \
+	    ${CHMOD} 0755 ${BINDIR}; \
 	else \
 	    true; \
 	fi
 	-${Q}if [ ! -d ${SCRIPTDIR} ]; then \
-		echo mkdir ${SCRIPTDIR}; \
-		mkdir ${SCRIPTDIR}; \
+	    echo mkdir ${SCRIPTDIR}; \
+	    mkdir ${SCRIPTDIR}; \
+	    echo ${CHMOD} 0755 ${SCRIPTDIR}; \
+	    ${CHMOD} 0755 ${SCRIPTDIR}; \
 	else \
 	    true; \
 	fi
 	${Q}for i in ${SCRIPT}; do \
-		echo rm -f ${SCRIPTDIR}/$$i; \
-		rm -f ${SCRIPTDIR}/$$i; \
-		echo cp $$i ${SCRIPTDIR}; \
-		cp $$i ${SCRIPTDIR}; \
-		echo ${CHMOD} 0555 ${SCRIPTDIR}/$$i; \
+	    if ${CMP} -s $$i ${SCRIPTDIR}/$$i; then \
+		true; \
+	    else \
+		rm -f ${SCRIPTDIR}/$$i.new; \
+		cp -f $$i ${SCRIPTDIR}/$$i.new; \
 		${CHMOD} 0555 ${SCRIPTDIR}/$$i; \
+		mv -f ${SCRIPTDIR}/$$i.new ${SCRIPTDIR}/$$i; \
+		echo "installed ${SCRIPTDIR}/$$i"; \
+	    fi; \
 	done
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
@@ -251,6 +287,10 @@ square: square.calc
 	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	${CHMOD} +x $@
 fproduct: fproduct.calc
+	rm -f $@
+	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
+	${CHMOD} +x $@
+powerterm: powerterm.calc
 	rm -f $@
 	${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	${CHMOD} +x $@

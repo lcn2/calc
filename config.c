@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: config.c,v 29.6 2001/04/08 10:07:19 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: config.c,v 29.7 2001/04/25 07:15:22 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -133,7 +133,7 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	0,			/* internal calc debug level */
 	3,			/* calc resource file debug level */
 	0,			/* user defined debug level */
-	TRUE,			/* print Quit or abort executed messages */
+	FALSE,			/* print Quit or abort executed messages */
 	CTRL_D_VIRGIN_EOF,	/* ^D only exits on virgin lines */
 	NULL,			/* our name */
 	NULL,			/* basename of our name */
@@ -178,7 +178,7 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	0,			/* internal calc debug level */
 	3,			/* calc resource file debug level */
 	0,			/* user defined debug level */
-	TRUE,			/* print Quit or abort executed messages */
+	FALSE,			/* print Quit or abort executed messages */
 	CTRL_D_VIRGIN_EOF,	/* ^D only exits on virgin lines */
 	NULL,			/* our name */
 	NULL,			/* basename of our name */

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: zrand.c,v 29.3 2001/04/14 22:47:21 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: zrand.c,v 29.4 2001/05/08 06:44:29 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrand.c,v $
  *
  * Under source code control:	1995/01/07 09:45:25
@@ -284,7 +284,7 @@
  * SOURCE OF MAGIC NUMBERS:
  *
  * Most of the magic constants used on this file ultimately are
- * based on SGI Lavarand.  SGI Lavarand produced a 5-way cryprographic
+ * based on LavaRnd.  LavaRnd produced them via a cryprographic
  * of the digitization of chaotic system that consisted of a noisy
  * digital camera and 6 Lava Lite(R) lamps.
  *
@@ -568,7 +568,7 @@ static CONST RAND init_s100 = {
  *
  * The subtractive 100 table in init_s100 has been processed 256 times in order
  * to preload the shuffle table.  The array below is the table before
- * this processing.  These values have came from Lavarand.
+ * this processing.  These values have came from LavaRnd.
  *
  * This array is never changed, only copied.
  */

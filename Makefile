@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.21 $$
-# @(#) $Id: Makefile.ship,v 29.21 2001/04/10 22:52:05 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.28 $$
+# @(#) $Id: Makefile.ship,v 29.28 2001/05/28 22:44:50 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -496,41 +496,51 @@ HAVE_UNISTD_H=
 
 # where to install the *.cal, *.h and *.a files
 #
-# ${BINDIR}	where to install binary files
-# ${TOPDIR}	the directory under which the calc directory will be placed.
-# ${LIBDIR}	where the *.cal, *.a, bindings and help dir are installed.
-# ${INCDIR}		where the locally installed include files are found.
-# ${INCDIRCALC}		where the calc include files are installed.
-# ${HELPDIR}		where the help directory is installed.
-# ${CUSTOMLIBDIR}	where custom *.cal files are installed.
-# ${CUSTOMHELPDIR}	where custom help files are installed.
-# ${SCRIPTDIR}		where calc shell scripts are installed.
+# These 4 values control where things are installed
+# -------------------------------------------------
+# ${BINDIR}		where to install binary files
+# ${SHAREDIR}		where most common shared files are kept
+# ${INCDIR}		where most .h files are kept
+# ${LIBDIR}		where *.a files are installed
 #
-BINDIR= /usr/local/bin
-#BINDIR= /usr/bin
-#BINDIR= /usr/contrib/bin
+#BINDIR= /usr/local/bin
+BINDIR= /usr/bin
+
+#SHAREDIR= /usr/local/lib
+SHAREDIR= /usr/share
+
+#INCDIR= /usr/local/include
+INCDIR= /usr/include
+
+#LIBDIR= /usr/local/lib
+LIBDIR= /usr/lib
+
+# By default, these values are based on the above 4 values
+# --------------------------------------------------------
+# ${CSHAREDIR}		where most common shared calc files are kept
+# ${HELPDIR}		where the help directory is installed
+# ${INCDIRCALC}		where the calc include files are installed
+# ${CUSTOMLIBDIR}	where custom *.cal files are installed
+# ${CUSTOMHELPDIR}	where custom help files are installed
+# ${CUSTOMINCPDIR}	where custom .h files are installed
+# ${SCRIPTDIR}		where calc shell scripts are installed
 #
-TOPDIR= /usr/local/lib
-#TOPDIR= /usr/lib
-#TOPDIR= /usr/libdata
-#TOPDIR= /usr/contrib/lib
-#
-LIBDIR= ${TOPDIR}/calc
-HELPDIR= ${LIBDIR}/help
-INCDIR= /usr/local/include
+CSHAREDIR= ${SHAREDIR}/calc
+HELPDIR= ${CSHAREDIR}/help
 INCDIRCALC= ${INCDIR}/calc
-CUSTOMLIBDIR= ${LIBDIR}/custom
-CUSTOMHELPDIR= ${HELPDIR}/custhelp
+CUSTOMLIBDIR= ${CSHAREDIR}/custom
+CUSTOMHELPDIR= ${CSHAREDIR}/custhelp
+CUSTOMINCDIR= ${INCDIRCALC}/custom
 SCRIPTDIR= ${BINDIR}/cscript
 
 # where man pages are installed
 #
 # Use MANDIR= to disable installation of the calc man (source) page.
 #
-MANDIR=
+#MANDIR=
 #MANDIR= /usr/local/man/man1
 #MANDIR= /usr/man/man1
-#MANDIR= /usr/share/man/man1
+MANDIR= /usr/share/man/man1
 #MANDIR= /usr/man/u_man/man1
 #MANDIR= /usr/contrib/man/man1
 
@@ -543,6 +553,7 @@ CATDIR=
 #CATDIR= /usr/local/catman/cat1
 #CATDIR= /usr/man/cat1
 #CATDIR= /usr/share/man/cat1
+#CATDIR= /var/cache/man/cat1
 #CATDIR= /usr/man/u_man/cat1
 #CATDIR= /usr/contrib/man/cat1
 
@@ -558,33 +569,40 @@ MANEXT= 1
 # This is ignored if CATDIR is empty.
 #
 CATEXT= 1
+#CATEXT= 1.gz
 #CATEXT= 0
 #CATEXT= l
 
 # how to format a man page
 #
 # If CATDIR is non-empty, then
+#
 #     If NROFF is non-empty, then
+#
 #	  ${NROFF} ${NROFF_ARG} calc.1 > ${CATDIR}/calc.${CATEXT}
-#	  is used to built and install the cat page
+#	  	   is used to built and install the cat page
+#
 #     else (NROFF is empty)
+#
 #	  ${MANMAKE} calc.1 ${CATDIR}
-#	  is used to built and install the cat page
+#	  	     is used to built and install the cat page
 # else
+#
 #     The cat page is not built or installed
 #
 # If in doubt and you don't want to fool with man pages, set MANDIR
 # and CATDIR to empty and ignore the NROFF, NROFF_ARG and MANMAKE
 # lines below.
 #
-NROFF= nroff
-#NROFF=
+#NROFF= nroff
+NROFF=
 #NROFF= groff
 NROFF_ARG= -man
 #NROFF_ARG= -mandoc
 MANMAKE= /usr/local/bin/manmake
 #MANMAKE= manmake
 MANMODE= 0444
+CATMODE= 0444
 
 # If the $CALCPATH environment variable is not defined, then the following
 # path will be search for calc resource file routines.
@@ -986,6 +1004,8 @@ TEE= tee
 CTAGS= ctags
 CHMOD= chmod
 FMT= fmt
+XARGS= xargs
+CMP= cmp
 # assume the X11 makedepend tool for the depend rule
 MAKEDEPEND= makedepend
 # echo command location
@@ -1108,11 +1128,14 @@ UTIL_PROGS= align32 fposval have_uid_t longlong have_const \
 # The complete list of Makefile vars passed down to custom/Makefile.
 #
 CUSTOM_PASSDOWN= Q="${Q}" \
-    TOPDIR="${TOPDIR}" \
-    LIBDIR="${LIBDIR}" \
+    SHAREDIR="${SHAREDIR}" \
+    INCDIR="${INCDIR}" \
+    CSHAREDIR="${CSHAREDIR}" \
     HELPDIR="${HELPDIR}" \
+    INCDIRCALC="${INCDIRCALC}" \
     CUSTOMLIBDIR="${CUSTOMLIBDIR}" \
     CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
+    CUSTOMINCDIR="${CUSTOMINCDIR}" \
     DEBUG="${DEBUG}" \
     NO_SHARED="${NO_SHARED}" \
     RANLIB="${RANLIB}" \
@@ -1130,14 +1153,18 @@ CUSTOM_PASSDOWN= Q="${Q}" \
     MAKE_FILE=${MAKE_FILE} \
     SED=${SED} \
     CHMOD=${CHMOD} \
+    CMP=${CMP} \
     MAKEDEPEND=${MAKEDEPEND} \
     SORT=${SORT}
 
 # The complete list of Makefile vars passed down to sample/Makefile.
 #
 SAMPLE_PASSDOWN= Q="${Q}" \
-    TOPDIR="${TOPDIR}" \
+    BINDIR="${BINDIR}" \
+    SHAREDIR="${SHAREDIR}" \
+    INCDIR="${INCDIR}" \
     LIBDIR="${LIBDIR}" \
+    CSHAREDIR="${CSHAREDIR}" \
     HELPDIR="${HELPDIR}" \
     DEBUG="${DEBUG}" \
     NO_SHARED="${NO_SHARED}" \
@@ -1156,15 +1183,16 @@ SAMPLE_PASSDOWN= Q="${Q}" \
     CC="${CC}" \
     MAKE_FILE=${MAKE_FILE} \
     SED=${SED} \
-    MAKEDEPEND=${MAKEDEPEND} \
     CHMOD=${CHMOD} \
+    CMP=${CMP} \
+    MAKEDEPEND=${MAKEDEPEND} \
     SORT=${SORT}
 
 # The compelte list of Makefile vars passed down to help/Makefile.
 #
 HELP_PASSDOWN= Q="${Q}" \
-    TOPDIR="${TOPDIR}" \
-    LIBDIR="${LIBDIR}" \
+    SHAREDIR="${SHAREDIR}" \
+    CSHAREDIR="${CSHAREDIR}" \
     HELPDIR="${HELPDIR}" \
     ICFLAGS="${ICFLAGS}" \
     ILDFLAGS="${ILDFLAGS}" \
@@ -1172,15 +1200,17 @@ HELP_PASSDOWN= Q="${Q}" \
     MAKE_FILE=${MAKE_FILE} \
     SED=${SED} \
     CHMOD=${CHMOD} \
+    CMP=${CMP} \
     FMT=${FMT}
 
 # The compelte list of Makefile vars passed down to cal/Makefile.
 #
 CAL_PASSDOWN= Q="${Q}" \
-    TOPDIR="${TOPDIR}" \
-    LIBDIR="${LIBDIR}" \
+    SHAREDIR="${SHAREDIR}" \
+    CSHAREDIR="${CSHAREDIR}" \
     MAKE_FILE=${MAKE_FILE} \
-    CHMOD=${CHMOD}
+    CHMOD=${CHMOD} \
+    CMP=${CMP}
 
 # The compelte list of Makefile vars passed down to cscript/Makefile.
 #
@@ -1191,7 +1221,8 @@ CSCRIPT_PASSDOWN= Q="${Q}" \
     CHMOD=${CHMOD} \
     SED=${SED} \
     FMT=${FMT} \
-    SORT=${SORT}
+    SORT=${SORT} \
+    CMP=${CMP}
 
 # complete list of .h files found (but not built) in the distribution
 #
@@ -1223,13 +1254,28 @@ OBJS= ${LIBOBJS} ${CALCOBJS} ${UTIL_OBJS}
 #
 CALC_LIBS= libcalc.a custom/libcustcalc.a
 
+# list of sample programs to that need to be built to satisfy sample/.all
+#
+# NOTE: This list MUST be co-ordinated with the ${SAMPLE_TARGETS} variable
+#	in the sample/Makefile
+#
+SAMPLE_TARGETS= sample/test_random sample/many_random
+
+# list of cscript programs to that need to be built to satisfy cscript/.all
+#
+# NOTE: This list MUST be co-ordinated with the ${CSCRIPT_TARGETS} variable
+#	in the cscript/Makefile
+#
+CSCRIPT_TARGETS= cscript/mersenne cscript/piforever cscript/plus \
+		 cscript/square cscript/fproduct cscript/powerterm
+
 # complete list of progs built
 #
 PROGS= calc ${UTIL_PROGS}
 
 # complete list of targets
 #
-TARGETS= ${LICENSE} ${CALC_LIBS} custom/.all calc sample/sample \
+TARGETS= ${LICENSE} ${CALC_LIBS} custom/.all calc sample/.all \
 	 cal/.all help/.all help/builtin cscript/.all calc.1
 
 
@@ -1258,6 +1304,7 @@ calc.1: calc.man ${MAKE_FILE}
 	       -e 's,$${SCRIPTDIR},${SCRIPTDIR},g' \
 	       -e 's,$${INCDIRCALC},${INCDIRCALC},g' \
 	       -e 's,$${CUSTOMLIBDIR},${CUSTOMLIBDIR},g' \
+	       -e 's,$${CUSTOMINCDIR},${CUSTOMINCDIR},g' \
 	       -e 's,$${CUSTOMHELPDIR},${CUSTOMHELPDIR},g' \
 	       -e 's,$${CALCRC},${CALCRC},g' < calc.man > calc.1
 
@@ -1701,8 +1748,8 @@ longlong.h: longlong.c have_stdlib.h have_string.h ${MAKE_FILE}
 	${Q}echo '' >> longlong.h
 	${Q}echo '/* do we have/want to use a long long type? */' >> longlong.h
 	-${Q}rm -f longlong.o longlong
-	-${Q}${LCC} ${ICFLAGS} longlong.c -c 2>/dev/null; true
-	-${Q}${LCC} ${ILDFLAGS} longlong.o -o longlong 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} longlong.c -c >/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} longlong.o -o longlong >/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./longlong ${LONGLONG_BITS} > ll_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s ll_tmp ]; then \
@@ -1742,8 +1789,8 @@ have_fpos.h: have_fpos.c ${MAKE_FILE}
 	${Q}echo '' >> have_fpos.h
 	${Q}echo '/* do we have fgetpos & fsetpos functions? */' >> have_fpos.h
 	-${Q}rm -f have_fpos.o have_fpos
-	-${Q}${LCC} ${HAVE_FPOS} ${ICFLAGS} have_fpos.c -c 2>/dev/null; true
-	-${Q}${LCC} ${ILDFLAGS} have_fpos.o -o have_fpos 2>/dev/null; true
+	-${Q}${LCC} ${HAVE_FPOS} ${ICFLAGS} have_fpos.c -c >/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_fpos.o -o have_fpos >/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_fpos > fpos_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s fpos_tmp ]; then \
@@ -1785,9 +1832,9 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
 		>> have_fpos_pos.h
 	-${Q}rm -f have_fpos_pos.o have_fpos_pos
 	-${Q}${LCC} ${HAVE_FPOS} ${HAVE_FPOS_POS} \
-		    ${ICFLAGS} have_fpos_pos.c -c 2>/dev/null; true
+		    ${ICFLAGS} have_fpos_pos.c -c >/dev/null 2>&1; true
 	-${Q}${LCC} ${ILDFLAGS} have_fpos_pos.o -o have_fpos_pos \
-		2>/dev/null; true
+		>/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_fpos_pos > fpos_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s fpos_tmp ]; then \
@@ -1828,8 +1875,8 @@ fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	${Q}echo '/* what are our file position & size types? */' >> fposval.h
 	-${Q}rm -f fposval.o fposval
 	-${Q}${LCC} ${ICFLAGS} ${FPOS_BITS} ${OFF_T_BITS} \
-		    ${DEV_BITS} ${INODE_BITS} fposval.c -c 2>/dev/null; true
-	-${Q}${LCC} ${ILDFLAGS} fposval.o -o fposval 2>/dev/null; true
+		    ${DEV_BITS} ${INODE_BITS} fposval.c -c >/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} fposval.o -o fposval >/dev/null 2>&1; true
 	${Q}${SHELL} -c "./fposval fposv_tmp >> fposval.h 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	${Q}echo '' >> fposval.h
@@ -1861,8 +1908,9 @@ have_const.h: have_const.c ${MAKE_FILE}
 	${Q}echo '' >> have_const.h
 	${Q}echo '/* do we have or want const? */' >> have_const.h
 	-${Q}rm -f have_const.o have_const
-	-${Q}${LCC} ${ICFLAGS} ${HAVE_CONST} have_const.c -c 2>/dev/null; true
-	-${Q}${LCC} ${ILDFLAGS} have_const.o -o have_const 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_CONST} have_const.c -c \
+		>/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_const.o -o have_const >/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_const > const_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s const_tmp ]; then \
@@ -1900,8 +1948,10 @@ have_offscl.h: have_offscl.c ${MAKE_FILE}
 	${Q}echo '' >> have_offscl.h
 	${Q}echo '' >> have_offscl.h
 	-${Q}rm -f have_offscl.o have_offscl
-	-${Q}${LCC} ${ICFLAGS} ${HAVE_OFFSCL} have_offscl.c -c 2>/dev/null; true
-	-${Q}${LCC} ${ILDFLAGS} have_offscl.o -o have_offscl 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_OFFSCL} have_offscl.c -c \
+		>/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_offscl.o -o have_offscl \
+		>/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_offscl > offscl_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s offscl_tmp ]; then \
@@ -1938,8 +1988,10 @@ have_posscl.h: have_posscl.c have_fpos.h ${MAKE_FILE}
 	${Q}echo '' >> have_posscl.h
 	${Q}echo '' >> have_posscl.h
 	-${Q}rm -f have_posscl.o have_posscl
-	-${Q}${LCC} ${ICFLAGS} ${HAVE_POSSCL} have_posscl.c -c 2>/dev/null; true
-	-${Q}${LCC} ${ILDFLAGS} have_posscl.o -o have_posscl 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_POSSCL} have_posscl.c -c \
+		>/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_posscl.o -o have_posscl \
+		>/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_posscl > posscl_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s posscl_tmp ]; then \
@@ -1990,8 +2042,8 @@ align32.h: align32.c longbits.h have_unistd.h ${MAKE_FILE}
 	fi
 	-${Q}if [ X = X${ALIGN32} ]; then \
 	    rm -f align32.o align32; \
-	    ${LCC} ${ICFLAGS} ${ALIGN32} align32.c -c 2>/dev/null; \
-	    ${LCC} ${ILDFLAGS} align32.o -o align32 2>/dev/null; \
+	    ${LCC} ${ICFLAGS} ${ALIGN32} align32.c -c >/dev/null 2>&1; \
+	    ${LCC} ${ILDFLAGS} align32.o -o align32 >/dev/null 2>&1; \
 	    ${SHELL} -c "./align32 >align32_tmp 2>/dev/null" >/dev/null 2>&1; \
 	    if [ -s align32_tmp ]; then \
 		cat align32_tmp >> align32.h; \
@@ -2031,8 +2083,9 @@ have_uid_t.h: have_uid_t.c have_unistd.h ${MAKE_FILE}
 	${Q}echo '' >> have_uid_t.h
 	${Q}echo '/* do we have or want uid_t? */' >> have_uid_t.h
 	-${Q}rm -f have_uid_t.o have_uid_t
-	-${Q}${LCC} ${ICFLAGS} ${HAVE_UID_T} have_uid_t.c -c 2>/dev/null; true
-	-${Q}${LCC} ${ILDFLAGS} have_uid_t.o -o have_uid_t 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_UID_T} have_uid_t.c -c \
+		>/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_uid_t.o -o have_uid_t >/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_uid_t > uid_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s uid_tmp ]; then \
@@ -2070,8 +2123,10 @@ have_newstr.h: have_newstr.c ${MAKE_FILE}
 	${Q}echo '/* do we have or want memcpy(), memset() & strchr()? */' \
 							>> have_newstr.h
 	-${Q}rm -f have_newstr.o have_newstr
-	-${Q}${LCC} ${ICFLAGS} ${HAVE_NEWSTR} have_newstr.c -c 2>/dev/null; true
-	-${Q}${LCC} ${ILDFLAGS} have_newstr.o -o have_newstr 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_NEWSTR} have_newstr.c -c \
+		>/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_newstr.o -o have_newstr \
+		>/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_newstr > newstr_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s newstr_tmp ]; then \
@@ -2108,8 +2163,10 @@ have_memmv.h: have_memmv.c ${MAKE_FILE}
 	${Q}echo '' >> have_memmv.h
 	${Q}echo '/* do we have or want memmove()? */' >> have_memmv.h
 	-${Q}rm -f have_memmv.o have_memmv
-	-${Q}${LCC} ${ICFLAGS} ${HAVE_MEMMOVE} have_memmv.c -c 2>/dev/null; true
-	-${Q}${LCC} ${ILDFLAGS} have_memmv.o -o have_memmv 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_MEMMOVE} have_memmv.c -c \
+		>/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_memmv.o -o have_memmv \
+		>/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_memmv > memmv_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s memmv_tmp ]; then \
@@ -2146,8 +2203,10 @@ have_ustat.h: have_ustat.c ${MAKE_FILE}
 	${Q}echo '' >> have_ustat.h
 	${Q}echo '/* do we have or want ustat()? */' >> have_ustat.h
 	-${Q}rm -f have_ustat.o have_ustat
-	-${Q}${LCC} ${ICFLAGS} ${HAVE_USTAT} have_ustat.c -c 2>/dev/null; true
-	-${Q}${LCC} ${ILDFLAGS} have_ustat.o -o have_ustat 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_USTAT} have_ustat.c -c \
+		>/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_ustat.o -o have_ustat \
+		>/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_ustat > ustat_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s ustat_tmp ]; then \
@@ -2184,8 +2243,10 @@ have_getsid.h: have_getsid.c ${MAKE_FILE}
 	${Q}echo '' >> have_getsid.h
 	${Q}echo '/* do we have or want getsid()? */' >> have_getsid.h
 	-${Q}rm -f have_getsid.o have_getsid
-	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETSID} have_getsid.c -c 2>/dev/null; true
-	-${Q}${LCC} ${ILDFLAGS} have_getsid.o -o have_getsid 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETSID} have_getsid.c -c \
+		>/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_getsid.o -o have_getsid \
+		>/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_getsid > getsid_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s getsid_tmp ]; then \
@@ -2222,9 +2283,10 @@ have_getpgid.h: have_getpgid.c ${MAKE_FILE}
 	${Q}echo '' >> have_getpgid.h
 	${Q}echo '/* do we have or want getpgid()? */' >> have_getpgid.h
 	-${Q}rm -f have_getpgid.o have_getpgid
-	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETPGID} have_getpgid.c -c 2>/dev/null; \
-	     true
-	-${Q}${LCC} ${ILDFLAGS} have_getpgid.o -o have_getpgid 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETPGID} have_getpgid.c -c \
+		>/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_getpgid.o -o have_getpgid \
+		>/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_getpgid > getpgid_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s getpgid_tmp ]; then \
@@ -2261,9 +2323,10 @@ have_gettime.h: have_gettime.c ${MAKE_FILE}
 	${Q}echo '' >> have_gettime.h
 	${Q}echo '/* do we have or want clock_gettime()? */' >> have_gettime.h
 	-${Q}rm -f have_gettime.o have_gettime
-	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETTIME} have_gettime.c -c 2>/dev/null; \
-	     true
-	-${Q}${LCC} ${ILDFLAGS} have_gettime.o -o have_gettime 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETTIME} have_gettime.c -c \
+		>/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_gettime.o -o have_gettime \
+		>/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_gettime > gettime_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s gettime_tmp ]; then \
@@ -2300,9 +2363,10 @@ have_getprid.h: have_getprid.c ${MAKE_FILE}
 	${Q}echo '' >> have_getprid.h
 	${Q}echo '/* do we have or want getprid()? */' >> have_getprid.h
 	-${Q}rm -f have_getprid.o have_getprid
-	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETPRID} have_getprid.c -c 2>/dev/null; \
-	     true
-	-${Q}${LCC} ${ILDFLAGS} have_getprid.o -o have_getprid 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETPRID} have_getprid.c -c \
+		>/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_getprid.o -o have_getprid \
+		>/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_getprid > getprid_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s getprid_tmp ]; then \
@@ -2375,9 +2439,10 @@ have_rusage.h: have_rusage.c ${MAKE_FILE}
 	${Q}echo '' >> have_rusage.h
 	${Q}echo '/* do we have or want getrusage()? */' >> have_rusage.h
 	-${Q}rm -f have_rusage.o have_rusage
-	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETRUSAGE} have_rusage.c -c 2>/dev/null; \
-	     true
-	-${Q}${LCC} ${ILDFLAGS} have_rusage.o -o have_rusage 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETRUSAGE} have_rusage.c -c \
+		>/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_rusage.o -o have_rusage \
+		>/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_rusage > rusage_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s rusage_tmp ]; then \
@@ -2414,9 +2479,10 @@ have_strdup.h: have_strdup.c ${MAKE_FILE}
 	${Q}echo '' >> have_strdup.h
 	${Q}echo '/* do we have or want getstrdup()? */' >> have_strdup.h
 	-${Q}rm -f have_strdup.o have_strdup
-	-${Q}${LCC} ${ICFLAGS} ${HAVE_STRDUP} have_strdup.c -c 2>/dev/null; \
-	     true
-	-${Q}${LCC} ${ILDFLAGS} have_strdup.o -o have_strdup 2>/dev/null; true
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_STRDUP} have_strdup.c -c \
+		>/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_strdup.o -o have_strdup \
+		>/dev/null 2>&1; true
 	-${Q}${SHELL} -c "./have_strdup > strdup_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
 	-${Q}if [ -s strdup_tmp ]; then \
@@ -2453,8 +2519,8 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
 	${Q}echo '' >> args.h
 	-${Q}rm -f have_stdvs.o have_stdvs
 	-${Q}${LCC} ${ICFLAGS} ${HAVE_VSPRINTF} have_stdvs.c -c \
-		2>/dev/null; true
-	-${Q}${LCC} ${ILDFLAGS} have_stdvs.o -o have_stdvs 2>/dev/null; true
+		>/dev/null 2>&1; true
+	-${Q}${LCC} ${ILDFLAGS} have_stdvs.o -o have_stdvs >/dev/null 2>&1; true
 	-${Q}if ./have_stdvs >>args.h 2>/dev/null; then \
 	    touch have_args; \
 	else \
@@ -2621,10 +2687,21 @@ help/builtin: func.c help/builtin.top help/builtin.end help/funclist.sed
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
-cscript/.all:
+cscript/.all: ${CSCRIPT_TARGETS}
+
+${CSCRIPT_TARGETS}:
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for cscript =-=-=-=-='
 	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} all
+	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+
+sample/.all: ${SAMPLE_TARGETS}
+
+${SAMPLE_TARGETS}: libcalc.a
+	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= Invoking all rule for cscript =-=-=-=-='
+	cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
@@ -2660,47 +2737,7 @@ custom/libcustcalc:
 custom/libcustcalc.a:
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for custom =-=-=-=-='
-	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} all
-	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
-
-# This is a special rule that first tries to determine of a lower level
-# make is needed, and it so a make will be performed.  Because it is
-# triggered as a dependent of the all rule, it will ensure the sample
-# routines get built.
-#
-sample/sample:
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= Invoking all rule for sample =-=-=-=-='
-	-${Q}rm -f .sample_error
-	-${Q}NEED="`cd sample; ${MAKE} -n -f Makefile all`"; \
-	 if [ ! -z "$$NEED" ]; then \
-	    echo "	cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} all";\
-	    cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} all; \
-	    status="$$?"; \
-	    if [ "$$status" -ne 0 ]; then \
-		echo "$$status" > ../.sample_error; \
-	    else \
-	        true ; \
-	    fi; \
-	else \
-	    true ; \
-	fi
-	${Q}if [ -f .sample_error ]; then \
-	    echo "sample make failed, code: `cat .sample_error`" 1>&2; \
-	    exit "`cat .sample_error`"; \
-	else \
-	    true ; \
-	fi
-	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
-
-# This is the real sample/all rule.
-#
-sample/all:
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= Invoking all rule for sample =-=-=-=-='
-	cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} all
+	${Q}cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
@@ -2789,7 +2826,7 @@ depend: hsrc
 	${Q}echo "" >> Makefile
 	${Q}${SED} -n '3,$$p' skel/makedep.out | LANG=C ${SORT} -u >> Makefile
 	-${Q}rm -rf skel
-	-${Q}if cmp -s Makefile.bak Makefile; then \
+	-${Q}if ${CMP} -s Makefile.bak Makefile; then \
 		echo 'Makefile was already up to date'; \
 		mv -f Makefile.bak Makefile; \
 	else \
@@ -2825,6 +2862,7 @@ distlist: ${DISTLIST}
 	for i in ${BUILD_H_SRC} ${BUILD_C_SRC}; do \
 		echo win32/$$i; \
 	done; \
+	echo spec-template; \
 	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
 	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
 	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
@@ -2914,10 +2952,12 @@ env:
 	@echo 'HAVE_URANDOM=${HAVE_URANDOM}'; echo ''
 	@echo 'ALIGN32=${ALIGN32}'; echo ''
 	@echo 'BINDIR=${BINDIR}'; echo ''
-	@echo 'TOPDIR=${TOPDIR}'; echo ''
+	@echo 'SHAREDIR=${SHAREDIR}'; echo ''
+	@echo 'CSHAREDIR=${CSHAREDIR}'; echo ''
 	@echo 'LIBDIR=${LIBDIR}'; echo ''
 	@echo 'HELPDIR=${HELPDIR}'; echo ''
 	@echo 'CUSTOMLIBDIR=${CUSTOMLIBDIR}'; echo ''
+	@echo 'CUSTOMINCDIR=${CUSTOMINCDIR}'; echo ''
 	@echo 'CUSTOMHELPDIR=${CUSTOMHELPDIR}'; echo ''
 	@echo 'SCRIPTDIR=${SCRIPTDIR}'; echo ''
 	@echo 'MANDIR=${MANDIR}'; echo ''
@@ -2987,11 +3027,10 @@ env:
 mkdebug: env version.c
 	@echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= Determining the source version =-=-=-=-='
-	@${SED} -n '/^#[	 ]*define/p' version.c
+	@${MAKE} -f Makefile Q= V=@ ver_calc
+	-@./ver_calc
 	@echo '=-=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ all =-=-=-=-='
-	@${MAKE} -f Makefile \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} Q= V=@ all
+	@${MAKE} -f Makefile Q= V=@ all
 	@echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= Determining the binary version =-=-=-=-='
 	-@./calc -e -q -v
@@ -3001,24 +3040,19 @@ mkdebug: env version.c
 debug: env
 	@echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ clobber =-=-=-=-='
-	@${MAKE} -f Makefile \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} Q= V=@ clobber
+	@${MAKE} -f Makefile Q= V=@ clobber
 	@echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= Determining the source version =-=-=-=-='
-	@${SED} -n '/^#[	 ]*define/p' version.c
+	@${MAKE} -f Makefile Q= V=@ ver_calc
+	-@./ver_calc
 	@echo '=-=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ all =-=-=-=-='
-	@${MAKE} -f Makefile \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} Q= V=@ all
+	@${MAKE} -f Makefile Q= V=@ all
 	@echo '=-=-=-=-= Determining the binary version =-=-=-=-='
 	-@./calc -e -q -v
 	@echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ chk =-=-=-=-='
 	@echo '=-=-=-=-= this may take a while =-=-=-=-='
-	@${MAKE} -f Makefile \
-	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} Q= V=@ chk
+	@${MAKE} -f Makefile Q= V=@ chk
 	@echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
@@ -3052,9 +3086,159 @@ gdb:
 
 ##
 #
+# rpm rules
+#
+##
+
+# create an rpm spec file from the spec-template
+#
+# This file is linked to calc-version-rel.spec before the rpm is built.
+#
+calc.spec: spec-template ${MAKE_FILE} help/Makefile cal/Makefile \
+	   custom/Makefile cscript/Makefile ver_calc
+	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+	${Q}rm -f calc.spec calc.spec.sed
+	${Q}echo 's,$${BINDIR},${BINDIR},g' >> calc.spec.sed
+	${Q}echo 's:$${SHAREDIR}:${SHAREDIR}:g' > calc.spec.sed
+	${Q}echo 's,$${INCDIR},${INCDIR},g' >> calc.spec.sed
+	${Q}echo 's:$${LIBDIR}:${LIBDIR}:g' >> calc.spec.sed
+	${Q}echo 's:$${CSHAREDIR}:${CSHAREDIR}:g' > calc.spec.sed
+	${Q}echo 's,$${HELPDIR},${HELPDIR},g' >> calc.spec.sed
+	${Q}echo 's,$${INCDIRCALC},${INCDIRCALC},g' >> calc.spec.sed
+	${Q}echo 's,$${CUSTOMLIBDIR},${CUSTOMLIBDIR},g' >> calc.spec.sed
+	${Q}echo 's,$${CUSTOMINCDIR},${CUSTOMINCDIR},g' >> calc.spec.sed
+	${Q}echo 's,$${CUSTOMHELPDIR},${CUSTOMHELPDIR},g' >> calc.spec.sed
+	${Q}echo 's,$${SCRIPTDIR},${SCRIPTDIR},g' >> calc.spec.sed
+	${Q}echo 's,$${MANDIR},${MANDIR},g' >> calc.spec.sed
+	${Q}echo 's,$${LIB_H_SRC},${LIB_H_SRC},g' >> calc.spec.sed
+	${Q}echo 's,$${BUILD_H_SRC},${BUILD_H_SRC},g' >> calc.spec.sed
+	${Q}echo 's,$${ALLOW_CUSTOM},${ALLOW_CUSTOM},g' >> calc.spec.sed
+	${Q}if [ -z "${RANLIB}" ]; then \
+	    echo 's,$${RANLIB},:,g' >> calc.spec.sed; \
+	else \
+	    echo 's,$${RANLIB},${RANLIB},g' >> calc.spec.sed; \
+	fi
+	${Q}echo 's,$${MANMAKE},${MANMAKE},g' >> calc.spec.sed
+	${Q}echo 's,$${MANMODE},${MANMODE},g' >> calc.spec.sed
+	${Q}echo 's,$${MANEXT},${MANEXT},g' >> calc.spec.sed
+	${Q}echo 's,$${CHMOD},${CHMOD},g' >> calc.spec.sed
+	${Q}cd help; \
+	    ${MAKE} -f Makefile ${HELP_PASSDOWN} echo_STD_HELP_FILES | \
+	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${SED} -e 's/^/s,$${STD_HELP_FILES},/' \
+	    	   -e 's/$$/,g/' >> ../calc.spec.sed
+	${Q}cd help; \
+	    ${MAKE} -f Makefile ${HELP_PASSDOWN} echo_BLT_HELP_FILES | \
+	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${SED} -e 's/^/s,$${BLT_HELP_FILES},/' \
+		   -e 's/$$/,g/' >> ../calc.spec.sed
+	${Q}cd help; \
+	    ${MAKE} -f Makefile ${HELP_PASSDOWN} echo_DETAIL_HELP | \
+	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${SED} -e 's/^/s,$${DETAIL_HELP},/' \
+	    	   -e 's/$$/,g/' >> ../calc.spec.sed
+	${Q}cd help; \
+	    ${MAKE} -f Makefile ${HELP_PASSDOWN} echo_SINGULAR_FILES | \
+	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${SED} -e 's/^/s,$${SINGULAR_FILES},/' \
+	    	   -e 's/$$/,g/' >> ../calc.spec.sed
+	${Q}cd cal; \
+	    ${MAKE} -f Makefile ${CAL_PASSDOWN} echo_CALC_FILES | \
+	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${SED} -e 's/^/s,$${CALC_FILES},/' \
+	    	   -e 's/$$/,g/' >> ../calc.spec.sed
+	${Q}cd custom; \
+	    ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} echo_INSTALL_H_SRC | \
+	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${SED} -e 's/^/s,$${INSTALL_H_SRC},/' \
+	    	   -e 's/$$/,g/' >> ../calc.spec.sed
+	${Q}cd custom; \
+	    ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} echo_CUSTOM_CALC_FILES | \
+	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${SED} -e 's/^/s,$${CUSTOM_CALC_FILES},/' \
+	    	   -e 's/$$/,g/' >> ../calc.spec.sed
+	${Q}cd custom; \
+	    ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} echo_CUSTOM_HELP | \
+	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${SED} -e 's/^/s,$${CUSTOM_HELP},/' \
+	    	   -e 's/$$/,g/' >> ../calc.spec.sed
+	${Q}cd cscript; \
+	    ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} echo_SCRIPT | \
+	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' | \
+	    ${SED} -e 's/^/s,$${SCRIPT},/' -e 's/$$/,g/' >> ../calc.spec.sed
+	${Q}echo 's,$${DATE},'`date +"%a %b %d %Y"`',g' >> calc.spec.sed
+	${Q}echo 's,$${VER_CALC},'`./ver_calc`',g' >> calc.spec.sed
+	${Q}echo 's,$${VERSION},'`./ver_calc -v`',g' >> calc.spec.sed
+	${Q}echo 's,$${RELEASE},'`./ver_calc -r`',g' >> calc.spec.sed
+	${Q}${SED} -f calc.spec.sed < spec-template > calc.spec
+	${Q}rm -f calc.spec.sed
+	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+
+# Form the installed file list
+#
+install.list: ${MAKE_FILE} help/Makefile cal/Makefile custom/Makefile \
+	   cscript/Makefile ver_calc
+	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+	${Q}rm -f install.list
+	${Q}echo ${BINDIR}/calc > install.list
+	${Q}cd help; \
+	    ${MAKE} -f Makefile ${HELP_PASSDOWN} echo_install.list | \
+	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' >> ../install.list
+	${Q}cd cal; \
+	    ${MAKE} -f Makefile ${CAL_PASSDOWN} echo_install.list | \
+	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' >> ../install.list
+	${Q}cd custom; \
+	    ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} echo_install.list | \
+	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' >> ../install.list
+	${Q}cd cscript; \
+	    ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} echo_install.list | \
+	    grep -v '^make\[[0-9][0-9]*\]: .*ing directory ' >> ../install.list
+	${Q}echo ${LIBDIR}/libcalc.a >> install.list
+	${Q}for i in ${LIB_H_SRC} ${BUILD_H_SRC}; do \
+	    echo ${INCDIRCALC}/$$i; \
+	done >> install.list
+	${Q}if [ ! -z "${MANDIR}" ]; then \
+	    echo ${MANDIR}/calc.${MANEXT}; \
+	fi >> install.list
+	${Q}LANG=C ${SORT} -u install.list -o install.list
+	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+
+##
+#
 # Utility rules
 #
 ##
+
+# The olduninstall rule will remove calc files from the older, histroic
+# locations under the /usr/local directory.  If you are using the
+# new default values for ${BINDIR}, ${SHAREDIR}, ${INCDIR} and ${LIBDIR}
+# then you can use this rule to clean out the older calc stuff under
+# the /usr/local directory.
+#
+olduninstall:
+	-rm -f install.list
+	${MAKE} -f Makefile \
+		BINDIR=/usr/local/bin \
+		SHAREDIR=/usr/local/lib \
+		INCDIR=/usr/local/include \
+		LIBDIR=/usr/local/lib/calc \
+		CSHAREDIR=/usr/local/lib/calc \
+		HELPDIR=/usr/local/lib/calc/help \
+		INCDIRCALC=/usr/local/include/calc \
+		CUSTOMLIBDIR=/usr/local/lib/calc/custom \
+		CUSTOMHELPDIR=/usr/local/lib/calc/help/custhelp \
+		CUSTOMINCDIR=/usr/local/lib/calc/custom \
+		SCRIPTDIR=/usr/local/bin/cscript \
+		MANDIR=/usr/local/man/man1 \
+		install.list
+	-${XARGS} rm -f < install.list
+	-rmdir /usr/local/lib/calc/help/custhelp
+	-rmdir /usr/local/lib/calc/help
+	-rmdir /usr/local/lib/calc/custom
+	-rmdir /usr/local/lib/calc
+	-rmdir /usr/local/include/calc
+	-rmdir /usr/local/bin/cscript
+	-rm -f install.list
 
 tags: ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} ${MAKE_FILE}
 	-${CTAGS} ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} 2>&1 | \
@@ -3068,6 +3252,7 @@ clean:
 	-rm -f ${UTIL_TMP}
 	-rm -f ${UTIL_PROGS}
 	-rm -f .libcustcalc_error
+	-rm -f calc.spec.sed
 	${Q}echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	-cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clean
 	${Q}echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
@@ -3105,6 +3290,7 @@ clobber:
 	-rm -f have_args *.u
 	-rm -f calc.pixie calc.rf calc.Counts calc.cord
 	-rm -rf gen_h skel Makefile.bak
+	-rm -f calc.spec install.list tmp
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	-cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clobber
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
@@ -3129,123 +3315,200 @@ clobber:
 
 install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	-${Q}if [ ! -d ${TOPDIR} ]; then \
-		echo mkdir ${TOPDIR}; \
-		mkdir ${TOPDIR}; \
-	else \
-	    true; \
-	fi
-	-${CHMOD} 0755 ${TOPDIR}
-	-${Q}if [ ! -d ${LIBDIR} ]; then \
-		echo mkdir ${LIBDIR}; \
-		mkdir ${LIBDIR}; \
-	else \
-	    true; \
-	fi
-	-${CHMOD} 0755 ${LIBDIR}
-	-${Q}if [ ! -d ${HELPDIR} ]; then \
-		echo mkdir ${HELPDIR}; \
-		mkdir ${HELPDIR}; \
-	else \
-	    true; \
-	fi
-	-${CHMOD} 0755 ${HELPDIR}
-	-${Q}if [ ! -d ${SCRIPTDIR} ]; then \
-		echo mkdir ${SCRIPTDIR}; \
-		mkdir ${SCRIPTDIR}; \
-	else \
-	    true; \
-	fi
-	-${CHMOD} 0755 ${SCRIPTDIR}
-	-${Q}if [ ! -d ${INCDIR} ]; then \
-		echo mkdir ${INCDIR}; \
-		mkdir ${INCDIR}; \
-	else \
-	    true; \
-	fi
-	-${CHMOD} 0755 ${INCDIR}
-	-${Q}if [ ! -d ${INCDIRCALC} ]; then \
-		echo mkdir ${INCDIRCALC}; \
-		mkdir ${INCDIRCALC}; \
-	else \
-	    true; \
-	fi
-	-${CHMOD} 0755 ${INCDIRCALC}
 	-${Q}if [ ! -d ${BINDIR} ]; then \
 		echo mkdir ${BINDIR}; \
 		mkdir ${BINDIR}; \
+		echo ${CHMOD} 0755 ${BINDIR}; \
+		${CHMOD} 0755 ${BINDIR}; \
+	else \
+		true; \
+	fi
+	-${Q}if [ ! -d ${SHAREDIR} ]; then \
+		echo mkdir ${SHAREDIR}; \
+		mkdir ${SHAREDIR}; \
+		echo ${CHMOD} 0755 ${SHAREDIR}; \
+		${CHMOD} 0755 ${SHAREDIR}; \
+	else \
+		true; \
+	fi
+	-${Q}if [ ! -d ${INCDIR} ]; then \
+		echo mkdir ${INCDIR}; \
+		mkdir ${INCDIR}; \
+		echo ${CHMOD} 0755 ${INCDIR}; \
+		${CHMOD} 0755 ${INCDIR}; \
+	else \
+		true; \
+	fi
+	-${Q}if [ ! -d ${LIBDIR} ]; then \
+		echo mkdir ${LIBDIR}; \
+		mkdir ${LIBDIR}; \
+		echo ${CHMOD} 0755 ${LIBDIR}; \
+		${CHMOD} 0755 ${LIBDIR}; \
+	else \
+		true; \
+	fi
+	-${Q}if [ ! -d ${CSHAREDIR} ]; then \
+		echo mkdir ${CSHAREDIR}; \
+		mkdir ${CSHAREDIR}; \
+		echo ${CHMOD} 0755 ${CSHAREDIR}; \
+		${CHMOD} 0755 ${CSHAREDIR}; \
+	else \
+		true; \
+	fi
+	-${Q}if [ ! -d ${HELPDIR} ]; then \
+		echo mkdir ${HELPDIR}; \
+		mkdir ${HELPDIR}; \
+		echo ${CHMOD} 0755 ${HELPDIR}; \
+		${CHMOD} 0755 ${HELPDIR}; \
+	else \
+		true; \
+	fi
+	-${Q}if [ ! -d ${INCDIRCALC} ]; then \
+		echo mkdir ${INCDIRCALC}; \
+		mkdir ${INCDIRCALC}; \
+		echo ${CHMOD} 0755 ${INCDIRCALC}; \
+		${CHMOD} 0755 ${INCDIRCALC}; \
+	else \
+		true; \
+	fi
+	-${Q}if [ ! -d ${CUSTOMLIBDIR} ]; then \
+		echo mkdir ${CUSTOMLIBDIR}; \
+		mkdir ${CUSTOMLIBDIR}; \
+		echo ${CHMOD} 0755 ${CUSTOMLIBDIR}; \
+		${CHMOD} 0755 ${CUSTOMLIBDIR}; \
+	else \
+		true; \
+	fi
+	-${Q}if [ ! -d ${CUSTOMHELPDIR} ]; then \
+		echo mkdir ${CUSTOMHELPDIR}; \
+		mkdir ${CUSTOMHELPDIR}; \
+		echo ${CHMOD} 0755 ${CUSTOMHELPDIR}; \
+		${CHMOD} 0755 ${CUSTOMHELPDIR}; \
+	else \
+		true; \
+	fi
+	-${Q}if [ ! -d ${CUSTOMINCDIR} ]; then \
+		echo mkdir ${CUSTOMINCDIR}; \
+		mkdir ${CUSTOMINCDIR}; \
+		echo ${CHMOD} 0755 ${CUSTOMINCDIR}; \
+		${CHMOD} 0755 ${CUSTOMINCDIR}; \
+	else \
+		true; \
+	fi
+	-${Q}if [ ! -d ${SCRIPTDIR} ]; then \
+		echo mkdir ${SCRIPTDIR}; \
+		mkdir ${SCRIPTDIR}; \
+		echo ${CHMOD} 0755 ${SCRIPTDIR}; \
+		${CHMOD} 0755 ${SCRIPTDIR}; \
 	else \
 	    true; \
 	fi
-	-${CHMOD} 0755 ${BINDIR}
-	-rm -f ${BINDIR}/calc
-	cp calc ${BINDIR}
-	-${CHMOD} 0555 ${BINDIR}/calc
+	-${Q}if [ ! -z "${MANDIR}" ]; then \
+	    if [ ! -d ${MANDIR} ]; then \
+		echo mkdir ${MANDIR}; \
+		mkdir ${MANDIR}; \
+		echo ${CHMOD} 0755 ${MANDIR}; \
+		${CHMOD} 0755 ${MANDIR}; \
+	    else \
+		true; \
+	    fi; \
+	else \
+	    true; \
+	fi
+	-${Q}if [ ! -z "${CATDIR}" ]; then \
+	    if [ ! -d ${CATDIR} ]; then \
+		echo mkdir ${CATDIR}; \
+		mkdir ${CATDIR}; \
+		echo ${CHMOD} 0755 ${CATDIR}; \
+		${CHMOD} 0755 ${CATDIR}; \
+	    else \
+		true; \
+	    fi; \
+	else \
+	    true; \
+	fi
+	-${Q}if ${CMP} -s calc ${BINDIR}/calc; then \
+		true; \
+	else \
+		rm -f ${BINDIR}/calc.new; \
+		cp -f calc ${BINDIR}/calc.new; \
+		${CHMOD} 0555 ${BINDIR}/calc.new; \
+		mv -f ${BINDIR}/calc.new ${BINDIR}/calc; \
+		echo "installed ${BINDIR}/calc"; \
+	fi
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
-	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} install
+	${Q}cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cal =-=-=-=-='
-	cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} install
+	${Q}cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
-	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} install
+	${Q}cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for sample =-=-=-=-='
-	cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} install
+	${Q}cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
-	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} install
+	${Q}cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	-rm -f ${LIBDIR}/libcalc.a
-	cp -f libcalc.a ${LIBDIR}/libcalc.a
-	${RANLIB} ${LIBDIR}/libcalc.a
-	-${CHMOD} 0444 ${LIBDIR}/libcalc.a
-	-${Q}for i in ${LIB_H_SRC} ${BUILD_H_SRC}; do \
-		echo rm -f ${LIBDIR}/$$i; \
-		rm -f ${LIBDIR}/$$i; \
-		echo rm -f ${INCDIRCALC}/$$i; \
-		rm -f ${INCDIRCALC}/$$i; \
-		echo cp $$i ${INCDIRCALC}; \
-		cp $$i ${INCDIRCALC}; \
-		echo ${CHMOD} 0444 ${INCDIRCALC}/$$i; \
-		${CHMOD} 0444 ${INCDIRCALC}/$$i; \
-	done
-	-${Q}if [ -z "${MANDIR}" ]; then \
-	    echo '$${MANDIR} is empty, calc man page will not be installed'; \
+	-${Q}if ${CMP} -s libcalc.a ${LIBDIR}/libcalc.a; then \
+		true; \
 	else \
-	    echo "rm -f ${MANDIR}/calc.${MANEXT}"; \
-	    rm -f ${MANDIR}/calc.${MANEXT}; \
-	    echo "cp calc.1 ${MANDIR}/calc.${MANEXT}"; \
-	    cp calc.1 ${MANDIR}/calc.${MANEXT}; \
-	    echo "${CHMOD} 0444 ${MANDIR}/calc.${MANEXT}"; \
-	    ${CHMOD} 0444 ${MANDIR}/calc.${MANEXT}; \
+		rm -f ${LIBDIR}/libcalc.a.new; \
+		cp -f libcalc.a ${LIBDIR}/libcalc.a.new; \
+		mv -f ${LIBDIR}/libcalc.a.new ${LIBDIR}/libcalc.a; \
+		${RANLIB} ${LIBDIR}/libcalc.a; \
+		${CHMOD} 0444 ${LIBDIR}/libcalc.a; \
+		echo "installed ${LIBDIR}/libcalc.a"; \
 	fi
-	-${Q}if [ -z "${CATDIR}" ]; then \
-	    echo '$${CATDIR} is empty, calc cat page will not be installed'; \
-	else \
-	    if [ -z "${NROFF}" ]; then \
-		echo "${MANMAKE} calc.1 ${CATDIR}"; \
-		${MANMAKE} calc.1 ${CATDIR}; \
+	-${Q}for i in ${LIB_H_SRC} ${BUILD_H_SRC}; do \
+	    rm -f tmp; \
+	    ${SED} -e 's/^\(#[ 	]*include[ 	][ 	]*\)"/\1"calc\//' $$i > tmp; \
+	    if ${CMP} -s tmp ${INCDIRCALC}/$$i; then \
+		true; \
 	    else \
-		echo "rm -f ${CATDIR}/calc.${CATEXT}"; \
-		rm -f ${CATDIR}/calc.${CATEXT}; \
-		echo "${NROFF} ${NROFF_ARG} calc.1 > ${CATDIR}/calc.${CATEXT}";\
-		${NROFF} ${NROFF_ARG} calc.1 > ${CATDIR}/calc.${CATEXT}; \
-		echo "${CHMOD} ${MANMODE} ${MANDIR}/calc.${MANEXT}"; \
-		${CHMOD} ${MANMODE} ${MANDIR}/calc.${MANEXT}; \
+		rm -f ${INCDIRCALC}/$$i.new; \
+		cp -f tmp ${INCDIRCALC}/$$i.new; \
+		${CHMOD} 0444 ${INCDIRCALC}/$$i.new; \
+		mv -f ${INCDIRCALC}/$$i.new ${INCDIRCALC}/$$i; \
+		echo "installed ${INCDIRCALC}/$$i"; \
+	    fi; \
+	done
+	${Q}rm -f tmp
+	-${Q}if [ -z "${MANDIR}" ]; then \
+	    true; \
+	else \
+	    if ${CMP} -s calc.1 ${MANDIR}/calc.${MANEXT}; then \
+		true; \
+	    else \
+		rm -f ${MANDIR}/calc.${MANEXT}.new; \
+		cp -f calc.1 ${MANDIR}/calc.${MANEXT}.new; \
+		${CHMOD} 0444 ${MANDIR}/calc.${MANEXT}.new; \
+		mv -f ${MANDIR}/calc.${MANEXT}.new \
+		      ${MANDIR}/calc.${MANEXT}; \
+		echo "installed ${MANDIR}/calc.${MANEXT}"; \
 	    fi; \
 	fi
-	${Q}echo remove files that are obsolete
-	-rm -f ${LIBDIR}/endian.h endian.h
-	-rm -f ${LIBDIR}/stdarg.h stdarg.h
-	-rm -f ${LIBDIR}/prototype.h prototype.h
-	-rm -f ${LIBDIR}/libcalcerr.a libcalcerr.a
-	-rm -f ${LIBDIR}/calc_errno.h calc_errno.h ${INCDIRCALC}/calc_errno.h
-	-rm -f calc_errno.c calc_errno.o calc_errno lint.sed
-	-rm -f alloc.c alloc.o have_vs.c have_vs.o have_vs io.c io.o
-	-rm -f std_arg.h try_stdarg.c try_stdarg.o try_stdarg
-	-rm -f ${LIBDIR}/altbind ${HELPDIR}/altbind cal/altbind
-	-rm -f ${LIBDIR}/llib-lcalc.ln
+	-${Q}if [ -z "${CATDIR}" ]; then \
+	    true; \
+	else \
+	    if ${CMP} -s calc.1 ${MANDIR}/calc.${MANEXT}; then \
+		true; \
+	    else \
+		if [ -z "${NROFF}" ]; then \
+		    echo "${MANMAKE} calc.1 ${CATDIR}"; \
+		    ${MANMAKE} calc.1 ${CATDIR}; \
+		else \
+		    rm -f ${CATDIR}/calc.${CATEXT}.new; \
+		    ${NROFF} ${NROFF_ARG} calc.1 > \
+			     ${CATDIR}/calc.${CATEXT}.new; \
+		    ${CHMOD} ${MANMODE} ${MANDIR}/calc.${CATEXT}.new; \
+		    mv -f ${CATDIR}/calc.${CATEXT}.new \
+			  ${CATDIR}/calc.${CATEXT}; \
+		    echo "installed ${CATDIR}/calc.${CATEXT}"; \
+		fi; \
+	    fi; \
+	fi
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 ##

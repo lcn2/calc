@@ -1,0 +1,185 @@
+#!/usr/local/bin/calc -q -s -f
+/*
+ * powerterm - print the argument as a sum of powers of integers
+ *
+ * usage:
+ *      powerterm [base_limit] value
+ *
+ *	base_limit	largest base we will consider (def: 10000)
+ *      value		value to convert into sums of powers of integers
+ *
+ * Copyright (C) 2001  Landon Curt Noll
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the powerterm of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: powerterm.calc,v 29.5 2001/04/25 08:41:36 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/powerterm.calc,v $
+ *
+ * Under source code control:   2001/04/24 23:49:11
+ * File existed as early as:    2001
+ *
+ * chongo <was here> /\oo/\     http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)        http://www.isthe.com/chongo/tech/comp/calc/
+ */
+
+
+/*
+ * parse args
+ */
+config("verbose_quit", 0),;
+base_lim = 10000;		/* default: highest base we will consider */
+if (argv() < 2 || argv() > 3) {
+    fprintf(files(2), "usage: %s [base_limit] value\n", argv(0));
+    exit;
+}
+if (argv() == 3) {
+    x = eval(argv(2));
+    base_lim = eval(argv(1));
+} else {
+    x = eval(argv(1));
+}
+if (! isint(x)) {
+    fprintf(files(2), "%s: value must be an integer\n");
+    exit;
+}
+if (! isint(base_lim)) {
+    fprintf(files(2), "%s: base limit must be an integer\n");
+    exit;
+}
+if (base_lim <= 1) {
+    fprintf(files(2), "%s: base limit is too small\n");
+    exit;
+}
+++base_lim;
+
+/*
+ * setup loop variables
+ */
+term = 0;			/* number of powerterm found */
+
+/*
+ * log constants
+ */
+if (base_lim <= 2^20+1) {		/* 2^20 requires ~96 Megs of memory */
+    mat lni[base_lim];			/* log of integers */
+    for (i=2; i < base_lim; ++i) {
+	lni[i] = ln(i);
+    }
+    have_lni = 1;			/* have lni[x] array */
+} else {
+    mat lni[1];				/* not used */
+    have_lni = 0;			/* base_lim too large for array */
+}
+
+/*
+ * remove nestest powers
+ */
+while (abs(x) >= base_lim) {
+
+    /*
+     * look for the nearest power
+     */
+    lnx = ln(abs(x));			/* log of the remaining co-factor */
+    closest = 0.5;
+    base = 1;
+    exponent = 0;
+    if (have_lni) {
+
+	/*
+	 * use pre-calculated log array when looking for the nearest power
+	 */
+	for (i = 2; i < base_lim; ++i) {
+
+	    /*
+	     * determine exponent closeness to an integer
+	     */
+	    ex = lnx / lni[i];
+	    power = int(ex + 0.5);
+	    diff = ex - power;
+
+	    /*
+	     * look for a closer power
+	     */
+	    if (abs(diff) < closest) {
+		closest = abs(diff);
+		base = i;
+		exponent = power;
+	    }
+	}
+
+    } else {
+
+	/*
+	 * re-calculate logs when looking for the nearest power
+	 */
+	for (i = 2; i < base_lim; ++i) {
+
+	    /*
+	     * determine exponent closeness to an integer
+	     */
+	    ex = lnx / ln(i);
+	    power = int(ex + 0.5);
+	    diff = ex - power;
+
+	    /*
+	     * look for a closer power
+	     */
+	    if (abs(diff) < closest) {
+		closest = abs(diff);
+		base = i;
+		exponent = power;
+	    }
+	}
+    }
+
+    /*
+     * output current term and then subtract it
+     */
+    if (x != 0) {
+	if (x < 0) {
+	    print "-",;
+	} else if (term > 0) {
+	    print "+",;
+	}
+	if (exponent > 1) {
+	    print base: "^": exponent,;
+	} else {
+	    print base,;
+	}
+    }
+
+    /*
+     * subtract (or add) this near power
+     */
+    if (x < 0) {
+	x = x + base^exponent;
+    } else {
+	x = x - base^exponent;
+    }
+    ++term;
+}
+
+/*
+ * print the final term
+ */
+if (x < 0) {
+    print "-", -x;
+} else if (x > 0) {
+    print "+", x;
+} else {
+    print "";
+}
+exit;

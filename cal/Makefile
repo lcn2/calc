@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.5 $
-# @(#) $Id: Makefile,v 29.5 2001/03/31 16:24:17 chongo Exp $
+# @(#) $Revision: 29.9 $
+# @(#) $Id: Makefile,v 29.9 2001/05/28 21:56:08 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
@@ -40,11 +40,12 @@ MAKE_FILE = Makefile
 # a default here just in case you want to build from this directory.
 #
 # where to install things
-TOPDIR= /usr/local/lib
-#TOPDIR= /usr/lib
-#TOPDIR= /usr/libdata
+#SHAREDIR= /usr/local/lib
+#SHAREDIR= /usr/lib
+SHAREDIR= /usr/share
+#SHAREDIR= /usr/libdata
 
-LIBDIR= ${TOPDIR}/calc
+CSHAREDIR= ${SHAREDIR}/calc
 
 # Makefile debug
 #
@@ -57,6 +58,7 @@ Q=@
 # standard tools
 #
 CHMOD= chmod
+CMP= cmp
 
 # The calc files to install
 #
@@ -116,34 +118,56 @@ calcliblist:
 	    fi; \
 	done
 
+##
+#
+# rpm rules
+#
+##
+
+echo_CALC_FILES: ${MAKE_FILE}
+	@echo ${CALC_FILES}
+
+echo_install.list: ${MAKE_FILE}
+	@for i in ${CALC_FILES}; do \
+	    echo ${CSHAREDIR}/$$i; \
+	done
+
+##
+#
+# Utility rules
+#
+##
+
 clean:
 
 clobber:
 	rm -f .all
 
 install: all
-	-${Q}if [ ! -d ${TOPDIR} ]; then \
-		echo mkdir ${TOPDIR}; \
-		mkdir ${TOPDIR}; \
+	-${Q}if [ ! -d ${SHAREDIR} ]; then \
+		echo mkdir ${SHAREDIR}; \
+		mkdir ${SHAREDIR}; \
+		echo ${CHMOD} 0755 ${SHAREDIR}; \
+		${CHMOD} 0755 ${SHAREDIR}; \
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d ${LIBDIR} ]; then \
-		echo mkdir ${LIBDIR}; \
-		mkdir ${LIBDIR}; \
+	-${Q}if [ ! -d ${CSHAREDIR} ]; then \
+		echo mkdir ${CSHAREDIR}; \
+		mkdir ${CSHAREDIR}; \
+		echo ${CHMOD} 0755 ${CSHAREDIR}; \
+		${CHMOD} 0755 ${CSHAREDIR}; \
 	else \
 	    true; \
 	fi
 	${Q}for i in ${CALC_FILES}; do \
-		echo rm -f ${LIBDIR}/$$i; \
-		rm -f ${LIBDIR}/$$i; \
-		echo cp $$i ${LIBDIR}; \
-		cp $$i ${LIBDIR}; \
-		echo ${CHMOD} 0444 ${LIBDIR}/$$i; \
-		${CHMOD} 0444 ${LIBDIR}/$$i; \
+	    if ${CMP} -s $$i ${CSHAREDIR}/$$i; then \
+		true; \
+	    else \
+		rm -f ${CSHAREDIR}/$$i.new; \
+		cp -f $$i ${CSHAREDIR}/$$i.new; \
+		${CHMOD} 0444 ${CSHAREDIR}/$$i.new; \
+		mv -f ${CSHAREDIR}/$$i.new ${CSHAREDIR}/$$i; \
+		echo "installed ${CSHAREDIR}/$$i"; \
+	    fi; \
 	done
-	${Q}echo remove files that are obsolete
-	-rm -f nextprime.cal nextprim.cal
-	-rm -f test1000.cal test2000.cal ${LIBDIR}/test2000.cal
-	-rm -f ${LIBDIR}/nextprime.cal ${LIBDIR}/nextprim.cal
-	-rm -f ${LIBDIR}/test1000.cal ${LIBDIR}/cryrand.cal

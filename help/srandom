@@ -220,11 +220,11 @@ DESCRIPTION
 	Blum moduli.
 
 	The pre-defined Blum moduli and quadratic residues were selected
-	by lavarand, a hardware random number generator.  See the URL:
+	by LavaRnd, a hardware random number generator.  See the URL:
 
-	    http://lavarand.sgi.com/index.html
+	    http://www.LavaRnd.org/
 
-	for an explanation of how the lavarand random number generator works.
+	for an explanation of how the LavaRnd random number generator works.
 	For more information, see the comments at the top of the calc
 	source file, zrandom.c.
 
@@ -354,8 +354,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: srandom,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: srandom,v 29.3 2001/05/13 13:26:26 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/srandom,v $
 ##
 ## Under source code control:	1997/02/17 01:18:22

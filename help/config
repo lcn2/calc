@@ -580,11 +580,13 @@ Detailed config descriptions
 
     The "verbose_quit" controls the print of the message:
 
-	Quit or abort executed
+	quit or abort executed
 
     when a non-interactive quit or abort without an argument is encountered.
     A quit of abort without an argument does not display a message when
     invoked at the interactive level.
+
+    By deafult, "verbose_quit" is false.
 
     =-=
 
@@ -711,8 +713,8 @@ Detailed config descriptions
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.5 $
-## @(#) $Id: config,v 29.5 2001/04/14 22:46:33 chongo Exp $
+## @(#) $Revision: 29.6 $
+## @(#) $Id: config,v 29.6 2001/04/25 07:17:38 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/config,v $
 ##
 ## Under source code control:	1991/07/21 04:37:17

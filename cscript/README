@@ -39,6 +39,12 @@ plus arg ...
     Print the sum of 1 or more arguments.
 
 
+powerterm [base_limit] value
+
+    Print the value as a sum (or difference) of powers of integers up
+    to and including powers <= base_limit.  By default, base_limit is 10000.
+
+
 simple
 
     A trivial example of a calc shell script.
@@ -59,8 +65,8 @@ simple
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.5 $
-## @(#) $Id: README,v 29.5 2001/04/08 08:24:40 chongo Exp $
+## @(#) $Revision: 29.6 $
+## @(#) $Id: README,v 29.6 2001/04/25 07:26:12 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/README,v $
 ##
 ## Under source code control:	1999/12/17 10:23:40
