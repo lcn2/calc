@@ -25,6 +25,45 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
     run in non-interactively / without a TTY such as under Debian's
     build daemon.
 
+    The eval(str) builtin will return an error-value rather than cause
+    an execution error str has a scan-error.
+
+    Declaration are permitted to end with EOF as well as a newline or ';'.
+
+    When prompt() occurs in reading a file, it will take inout from
+    the terminal rather than taking it from a file.  For example,
+    this script, when read, now works:
+
+	/* This demonstrates the use of prompt() and some other things  */
+	config("verbose_quit", 0);
+	define getnumber() {
+	    local x;
+	    for (;;) {
+		x = eval(prompt(">>> "));
+		if (isnum(x))
+		    return x;
+		print "Not a number! Try again";
+	    }
+	}
+	print "This will display the sqrt of each number you enter";
+	print "Enter quit to stop";
+	for (;;) {
+	    print sqrt(getnumber());
+	}
+	print "Good bye";
+
+    Comments entered at inputisterminal level may be spread over several
+    lines.  For example:
+
+	/*
+	 * These commands work given the file: comment.cal
+	 *
+	 *	cat comment.cal | calc
+	 *	calc < comment.cal
+	 */
+	print "Hello";
+
+
 
 Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:
 

@@ -3128,8 +3128,7 @@ o_quit(FUNC *fp, long index)
 		s = findstring(index);
 		cp = s->s_str;
 	}
-	if (inputisterminal() && (fp->f_name[0] == '*')
-			 && (fp->f_name[1] == '\0')) {
+	if (inputisterminal() && !strcmp(fp->f_name, "*")) {
 		if (cp)
 			printf("%s\n", cp);
 		hist_term();
@@ -3144,7 +3143,7 @@ o_quit(FUNC *fp, long index)
 		printf("%s\n", cp);
 	else if (conf->verbose_quit)
 		printf("Quit or abort executed\n");
-	if (!inputisterminal() && fp->f_name[0] == '*')
+	if (!inputisterminal() && !strcmp(fp->f_name, "*"))
 		closeinput();
 	go = FALSE;
 }

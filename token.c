@@ -335,22 +335,22 @@ static void
 eatcomment(void)
 {
 	int ch;
-
+	setprompt(conf->prompt2);
 	for (;;) {
 		ch = nextchar();
 		if (ch == '*') {
 			ch = nextchar();
 			if (ch == '/')
-				return;
+				break;
 			reread();
 		}
-		if ((ch == EOF) || (ch == '\0') ||
-			(newlines && (ch == '\n') && inputisterminal())) {
-				reread();
-				scanerror(T_NULL, "Unterminated comment");
-				return;
+		if (ch == EOF || ch == '\0') {
+			fprintf(stderr, "Unterminated comment ignored\n");
+			reread();
+			break;
 		}
 	}
+	setprompt(conf->prompt1);
 }
 
 

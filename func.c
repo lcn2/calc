@@ -155,6 +155,7 @@ f_eval(VALUE *vp)
 	VALUE	result;
 	char	*str;
 	long	num;
+	int	temp;
 
 	if (vp->v_type != V_STR)
 		return error_value(E_EVAL2);
@@ -168,7 +169,10 @@ f_eval(VALUE *vp)
 	}
 	oldfunc = curfunc;
 	enterfilescope();
+	temp = stoponerror;
+	stoponerror = -1;
 	if (evaluate(TRUE)) {
+		stoponerror = temp;
 		closeinput();
 		exitfilescope();
 		freevalue(stack--);
@@ -181,6 +185,7 @@ f_eval(VALUE *vp)
 			free(newfunc);
 		return result;
 	}
+	stoponerror = temp;
 	closeinput();
 	exitfilescope();
 	newfunc = curfunc;
@@ -203,11 +208,11 @@ f_prompt(VALUE *vp)
 	unsigned int len;
 
 	result.v_type = V_STR;
-	if (inputisterminal()) {
-		printvalue(vp, PRINT_SHORT);
-		math_flush();
-	}
+	openterminal();
+	printvalue(vp, PRINT_SHORT);
+	math_flush();
 	cp = nextline();
+	closeinput();
 	if (cp == NULL) {
 		math_error("End of file while prompting");
 		/*NOTREACHED*/

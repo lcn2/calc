@@ -409,6 +409,7 @@ getdeclarations(int symtype)
 			case T_NEWLINE:
 			case T_SEMICOLON:
 			case T_RIGHTBRACE:
+			case T_EOF:
 				rescantoken();
 				return;
 

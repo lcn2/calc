@@ -68,32 +68,6 @@ importantly, fixes (in the form of a context diff patch) to:
 
 Known bugs:
 
-    None.   :-)
-
-    We are sure some more bugs exist.  When you find them, please let
-    us know!  See the above for details on how to report and were to
-    EMail your bug reports and hopefully patches to fix them.
-
-=-=
-
-Calc Mis-features:
-
-    * The following shell command (written in sh,ksh,bash-like form) works:
-
-	    calc '/*
-		   * comment
-		   */
-		  print 2+3;'
-
-      However this (also written in sh,ksh,bash-like form) does not work:
-
-	    echo '/*
-		   * comment
-		   */
-		  print 2+3;' | calc
-
-      The 2nd example will result in an 'Unterminated comment' error.
-
     * Calc does not support the #! exec method.  For example of the
       following is placed in an executable file (assume the path to
       calc is correct) called /tmp/xyzzy:
@@ -107,3 +81,21 @@ Calc Mis-features:
       Will result in '"tmp" is undefined' and '"xyzzy" is undefined'
       error messages because calc considers $0 as an expression to
       evaluate.
+
+    * The following file:
+
+	    /* this is bugdemo.cal */
+	    x = eval(prompt(">>> "));
+	    print x;
+
+      when executed as:
+
+	    calc read bugdemo.cal
+
+      will obtain a prompt from the terminal, print the value but leave
+      the terminal in a 'bad' state, as if stty -icanon -echo -echoe
+      had been executed.
+
+    We are sure some more bugs exist.  When you find them, please let
+    us know!  See the above for details on how to report and were to
+    EMail your bug reports and hopefully patches to fix them.
