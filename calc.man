@@ -15,8 +15,8 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 .\"
-.\" @(#) $Revision: 29.7 $
-.\" @(#) $Id: calc.man,v 29.7 2001/06/01 11:26:53 chongo Exp $
+.\" @(#) $Revision: 29.8 $
+.\" @(#) $Id: calc.man,v 29.8 2002/03/12 09:02:58 chongo Exp $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -54,7 +54,7 @@ calc \- arbitrary precision calculator
 .RB [ calc_cmd\ \&.\|.\|. ]
 .in -5n
 .sp
-\fI#!${BINDIR}/calc\fP\ \fB\-S\fP\ [other_flags\ \&...]
+\fI#!${BINDIR}/calc\fP\ \fB\-f\fP\ [other_flags\ \&...]
 .SH DESCRIPTION
 \&
 .br
@@ -572,27 +572,25 @@ If first line of an executable file begins
 followed by the absolute pathname of the
 .B calc
 program and the flag
-.B \-S
+.B \-f
 as in:
 .sp 1
 .in +5n
 .nf
-\fI#!${BINDIR}/calc\fP\ \fB\-S\fP\ [other_flags\ \&...]
+\fI#!${BINDIR}/calc\fP\ \fB\-f\fP\ [other_flags\ \&...]
 .fi
 .in -5n
 .sp 1
 the rest of the file will be processed in
 .BR "shell script mode" .
 Note that
-.B \-S
-(UPPER CASE
-.BR \-S )
+.B \-f
 must be the first \-flag on the ``#!'' line.
 Any other optional
 .B "other_flags"
 must come after
 the
-.BR \-S .
+.BR \-f .
 .sp 1
 In
 .B "shell script mode"
@@ -625,7 +623,7 @@ the file
 .sp 1
 .in +5n
 .nf
-\fI#!${BINDIR}/calc\fP\ \fB\-S\fP\ \&\fB\-q\fP
+\fI#!${BINDIR}/calc\fP\ \fB\-f\fP\ \&\fB\-q\fP
 #
 # mersenne - an example of a calc \fBshell script file\fP
 

@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.17 $
-# @(#) $Id: Makefile,v 29.17 2001/06/08 22:38:53 chongo Exp $
+# @(#) $Revision: 29.18 $
+# @(#) $Id: Makefile,v 29.18 2002/03/12 08:30:43 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -381,8 +381,10 @@ c_sysinfo.o: c_sysinfo.c ${MAKE_FILE}
 ##
 
 distlist: ${DISTLIST}
-	${Q}for i in ${DISTLIST}; do \
+	${Q}for i in ${DISTLIST} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo custom/$$i; \
+	    fi; \
 	done
 
 distdir:
@@ -418,11 +420,13 @@ depend:
 	-${Q}rm -rf skel
 	${Q}mkdir skel
 	${Q}mkdir skel/custom
-	-${Q}for i in ${C_SRC}; do \
+	-${Q}for i in ${C_SRC} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		${SED} -n '/^#[	 ]*include[	 ]*"/p' \
 		    "$$i" > "skel/custom/$$i"; \
+	    fi; \
 	done
-	-${Q}for i in /dev/null ${H_SRC}; do \
+	-${Q}for i in ${H_SRC} /dev/null; do \
 		if [ "$$i" = "/dev/null" ]; then \
 		    continue; \
 		fi; \
@@ -437,7 +441,10 @@ depend:
 	${Q}for i in `cd ..; ${MAKE} h_list 2>&1 | \
 			     ${SED} -e '/Entering directory/d' \
 				    -e '/Nothing to be done/d' \
-				    -e '/Leaving directory/d'`; do \
+				    -e '/Leaving directory/d'` /dev/null; do \
+		if [ "$$i" = "/dev/null" ]; then \
+		    continue; \
+		fi; \
 		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
 		echo "#if !defined($$tag)" > "skel/$$i"; \
 		echo "#define $$tag" >> "skel/$$i"; \
@@ -451,8 +458,10 @@ depend:
 	${Q}echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
 	    skel/custom/makedep.out
 	${Q}cd skel/custom; ${MAKEDEPEND} -w 1 -f makedep.out ${C_SRC}
-	-${Q}for i in ${C_SRC}; do \
+	-${Q}for i in ${C_SRC} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
+	    fi; \
 	done >> skel/custom/makedep.out
 	${Q}echo custom dependency list formed
 	${Q}echo forming new custom/Makefile
@@ -485,17 +494,25 @@ depend:
 ##
 
 echo_inst_files:
-	${Q}for i in ${INSTALL_H_SRC}; do \
-	    echo __file__ ${CUSTOMINCDIR}/$$i; \
+	${Q}for i in ${INSTALL_H_SRC} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo __file__ ${CUSTOMINCDIR}/$$i; \
+	    fi; \
 	done
-	${Q}for i in ${CUSTOM_HELP}; do \
-	    echo __file__ ${CUSTOMHELPDIR}/$$i; \
+	${Q}for i in ${CUSTOM_HELP} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo __file__ ${CUSTOMHELPDIR}/$$i; \
+	    fi; \
 	done
-	${Q}for i in ${CUSTOM_CALC_FILES}; do \
-	    echo __file__ ${CUSTOMLIBDIR}/$$i; \
+	${Q}for i in ${CUSTOM_CALC_FILES} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo __file__ ${CUSTOMLIBDIR}/$$i; \
+	    fi; \
 	done
-	${Q}for i in ${CALC_LIBCUSTOM}; do \
-	    echo __file__ ${CUSTOMLIBDIR}/$$i; \
+	${Q}for i in ${CALC_LIBCUSTOM} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo __file__ ${CUSTOMLIBDIR}/$$i; \
+	    fi; \
 	done
 
 ##
@@ -608,7 +625,10 @@ install: all
 	else \
 	    true; \
 	fi
-	-${Q}for i in ${INSTALL_H_SRC}; do \
+	-${Q}for i in ${INSTALL_H_SRC} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
 	    if ${CMP} -s tmp $T${CUSTOMINCDIR}/$$i; then \
 		true; \
 	    else \
@@ -620,7 +640,10 @@ install: all
 	    fi; \
 	done
 	-${Q}rm -f tmp
-	-${Q}for i in ${CUSTOM_CALC_FILES}; do \
+	-${Q}for i in ${CUSTOM_CALC_FILES} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
 	    if ${CMP} -s $$i $T${CUSTOMLIBDIR}/$$i; then \
 		true; \
 	    else \
@@ -631,7 +654,10 @@ install: all
 		echo "installed $T${CUSTOMLIBDIR}/$$i"; \
 	    fi; \
 	done
-	-${Q}for i in ${CUSTOM_HELP}; do \
+	-${Q}for i in ${CUSTOM_HELP} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
 	    if ${CMP} -s $$i $T${CUSTOMHELPDIR}/$$i; then \
 		true; \
 	    else \

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: calc.h,v 29.9 2001/12/11 02:28:47 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: calc.h,v 29.10 2002/03/12 09:40:57 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -60,7 +60,11 @@
 #define HOMECHAR	'~'	/* char which indicates home directory */
 #define DOTCHAR		'.'	/* char which indicates current directory */
 #define PATHCHAR	'/'	/* char which separates path components */
+#if defined(__MSDOS__) || defined(__WIN32)
+#define LISTCHAR	';'	/* char which separates paths in a list */
+#else
 #define LISTCHAR	':'	/* char which separates paths in a list */
+#endif
 #define MAXCMD		16384	/* maximum length of command invocation */
 #define MAXERROR	512	/* maximum length of error message string */
 

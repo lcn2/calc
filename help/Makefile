@@ -18,9 +18,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.18 $
-# @(#) $Id: Makefile,v 29.18 2001/06/08 22:57:54 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
+# @(#) $Revision: 29.19 $
+# @(#) $Id: Makefile,v 29.19 2002/03/12 08:39:14 chongo Exp $
+# @(#) $Source: /usr/local/src/cmd/calc/cal/../help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
 # File existed as early as:	1991
@@ -418,11 +418,13 @@ full: ${FULL_HELP_FILES} ${MAKE_FILE}
 # Singular files are the same files as their plural form.
 #
 ${SINGULAR_FILES}: ${PLURAL_FILES}
-	${Q}for i in ${SINGULAR_FILES}; do \
-	    echo "rm -f $${i}"; \
-	    rm -f $${i}; \
-	    echo "cp $${i}s $${i}"; \
-	    cp $${i}s $${i}; \
+	${Q}for i in ${SINGULAR_FILES} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo "rm -f $${i}"; \
+		rm -f $${i}; \
+		echo "cp $${i}s $${i}"; \
+		cp $${i}s $${i}; \
+	    fi; \
 	done
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -482,8 +484,10 @@ builtin: builtin.top builtin.end ../func.c funclist.sed
 ##
 
 distlist: ${DISTLIST}
-	${Q}for i in ${DISTLIST}; do \
+	${Q}for i in ${DISTLIST} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo help/$$i; \
+	    fi; \
 	done | LANG=C ${SORT}
 
 distdir:
@@ -508,12 +512,14 @@ bsdi: all
 #
 detaillist:
 	${Q}-(echo "xxxxx"; \
-	   for i in ${DETAIL_HELP}; do \
+	   for i in ${DETAIL_HELP} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		if [ ! -f RCS/$$i,v ]; then \
 		    echo "WARNING: $$i not under RCS control" 1>&2; \
 		else \
 		    echo $$i; \
 		fi; \
+	    fi; \
 	done | LANG=C ${SORT}) | ${FMT} -70 | \
 	    ${SED} -e '1s/xxxxx/DETAIL_HELP=/' -e '2,$$s/^/	/' \
 		   -e 's/$$/ \\/' -e '$$s/ \\$$//'
@@ -526,8 +532,10 @@ detaillist:
 
 echo_inst_files:
 	${Q}for i in ${STD_HELP_FILES} full ${BLT_HELP_FILES} \
-		  builtin ${DETAIL_HELP} ${SINGULAR_FILES}; do \
-	    echo __file__ ${HELPDIR}/$$i; \
+		  builtin ${DETAIL_HELP} ${SINGULAR_FILES} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo __file__ ${HELPDIR}/$$i; \
+	    fi; \
 	done
 	${Q}echo __file__ ${HELPDIR}/obj
 
@@ -585,7 +593,10 @@ install: all
 	    true; \
 	fi
 	-${Q}for i in ${STD_HELP_FILES} ${BLT_HELP_FILES} builtin \
-		  full ${DETAIL_HELP} ${SINGULAR_FILES}; do \
+		  full ${DETAIL_HELP} ${SINGULAR_FILES} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
 	    if ${CMP} -s $$i $T${HELPDIR}/$$i; then \
 		true; \
 	    else \

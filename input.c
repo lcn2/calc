@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: input.c,v 29.5 2001/03/17 21:31:47 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: input.c,v 29.6 2002/03/12 09:40:57 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/input.c,v $
  *
  * Under source code control:	1990/02/15 01:48:16
@@ -44,6 +44,12 @@
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
+#endif
+
+#if defined(__MSDOS__)
+#include <limits.h>
+#define _fullpath(f,n,s) (_fixpath(n,f),f)
+#define _MAX_PATH PATH_MAX
 #endif
 
 #include "calc.h"
@@ -816,11 +822,12 @@ runrcfiles(void)
  * given:
  *	sbuf		stat of the inode in question
  */
+
 static int
 isinoderead(struct stat *sbuf)
 {
 	int i;
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(__MSDOS__)
 	char fullpathname[_MAX_PATH];
 #endif
 
@@ -832,11 +839,11 @@ isinoderead(struct stat *sbuf)
 
 	/* scan the entire readset */
 	for (i=0; i < maxreadset; ++i) {
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(__MSDOS__)
 		if (readset[i].active &&
-		    strcmp(readset[i].path,
-		    	   _fullpath(fullpathname,cip->i_name,
-			   _MAX_PATH)) == 0) {
+		    strcasecmp(readset[i].path,
+		    	       _fullpath(fullpathname,cip->i_name,
+			       _MAX_PATH)) == 0) {
 			/* found a match */
 			return i;
 		}
@@ -954,14 +961,18 @@ addreadset(char *name, char *path, struct stat *sbuf)
 		return -1;
 	}
 	strcpy(readset[ret].name, name);
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(__MSDOS__)
 	/*
 	 * For WIN32, _fullpath expands the path to a fully qualified
 	 * path name, which under WIN32 FAT and NTFS is unique, just
 	 * like UNIX inodes. _fullpath also allocated the memory for
 	 * this new longer path name.
 	 */
-	readset[ret].path = _fullpath(NULL, path, 0);
+ 	 {
+	 	char fullpathname[_MAX_PATH];
+
+		readset[ret].path = _fullpath(fullpathname, path, _MAX_PATH);
+	 }
 #else /* Windoz free systems */
 	readset[ret].path = (char *)malloc(strlen(path)+1);
 	if (readset[ret].path == NULL) {

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: hist.h,v 29.3 2001/03/17 21:31:47 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: hist.h,v 29.4 2002/03/12 09:40:57 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hist.h,v $
  *
  * Under source code control:	1993/05/02 20:09:20
@@ -50,7 +50,11 @@
 #define HOMECHAR	'~'	/* char which indicates home directory */
 #define DOTCHAR		'.'	/* char which indicates current directory */
 #define PATHCHAR	'/'	/* char which separates path components */
+#if defined(__MSDOS__) || defined(__WIN32)
+#define LISTCHAR	';'	/* char which separates paths in a list */
+#else
 #define LISTCHAR	':'	/* char which separates paths in a list */
+#endif
 
 
 /*

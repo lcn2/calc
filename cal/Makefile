@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.12 $
-# @(#) $Id: Makefile,v 29.12 2001/06/08 22:38:53 chongo Exp $
+# @(#) $Revision: 29.13 $
+# @(#) $Id: Makefile,v 29.13 2002/03/12 08:32:35 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
@@ -120,8 +120,10 @@ all: ${CALC_FILES} ${MAKE_FILE} .all
 ##
 
 distlist: ${DISTLIST}
-	${Q}for i in ${DISTLIST}; do \
+	${Q}for i in ${DISTLIST} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo cal/$$i; \
+	    fi; \
 	done
 
 distdir:
@@ -141,8 +143,10 @@ calcliblist:
 ##
 
 echo_inst_files:
-	${Q}for i in ${CALC_FILES}; do \
-	    echo __file__ ${CSHAREDIR}/$$i; \
+	${Q}for i in ${CALC_FILES} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo __file__ ${CSHAREDIR}/$$i; \
+	    fi; \
 	done
 
 ##
@@ -181,7 +185,10 @@ install: all
 	else \
 	    true; \
 	fi
-	${Q}for i in ${CALC_FILES}; do \
+	${Q}for i in ${CALC_FILES} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
 	    if ${CMP} -s $$i $T${CSHAREDIR}/$$i; then \
 		true; \
 	    else \

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: cmath.h,v 29.5 2001/06/08 21:00:58 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: cmath.h,v 29.6 2002/03/12 09:38:26 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/cmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:45
@@ -62,6 +62,7 @@ extern void cprintfr(COMPLEX *c);
 /*
  * Basic numeric routines.
  */
+
 extern COMPLEX *cadd(COMPLEX *c1, COMPLEX *c2);
 extern COMPLEX *csub(COMPLEX *c1, COMPLEX *c2);
 extern COMPLEX *cmul(COMPLEX *c1, COMPLEX *c2);
@@ -74,8 +75,8 @@ extern COMPLEX *cscale(COMPLEX *c, long i);
 extern COMPLEX *cshift(COMPLEX *c, long i);
 extern COMPLEX *csquare(COMPLEX *c);
 extern COMPLEX *cconj(COMPLEX *c);
-extern COMPLEX *creal(COMPLEX *c);
-extern COMPLEX *cimag(COMPLEX *c);
+extern COMPLEX *c_real(COMPLEX *c);
+extern COMPLEX *c_imag(COMPLEX *c);
 extern COMPLEX *cneg(COMPLEX *c);
 extern COMPLEX *cinv(COMPLEX *c);
 extern COMPLEX *cint(COMPLEX *c);

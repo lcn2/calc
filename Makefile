@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.41 $$
-# @(#) $Id: Makefile.ship,v 29.41 2001/12/31 22:12:35 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.46 $$
+# @(#) $Id: Makefile.ship,v 29.46 2002/03/12 10:43:05 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -46,6 +46,8 @@ MAKEFILE_REV= $$Revision: 29.41 $$
 #	-DUSE_TERMIO	  use struct termios from <termio.h>
 #	-DUSE_SGTTY	  use struct sgttyb from <sys/ioctl.h>
 #	-DUSE_NOTHING	  windoz system, don't use any of them
+#
+# Select TERMCONTROL= -DUSE_TERMIOS for DJGPP.
 #
 # If in doubt, leave TERMCONTROL empty.
 #
@@ -87,6 +89,8 @@ HAVE_VSPRINTF=
 # a make clobber and try -DLITTLE_ENDIAN.   If that fails, ask a wizard
 # for help.
 #
+# Select BYTE_ORDER= -DLITTLE_ENDIAN for DJGPP.
+#
 BYTE_ORDER=
 #BYTE_ORDER= -DBIG_ENDIAN
 #BYTE_ORDER= -DLITTLE_ENDIAN
@@ -99,9 +103,11 @@ BYTE_ORDER=
 # In order to avoid make brain damage in some systems, we avoid placing
 # a space after the ='s below.
 #
+# Select LONG_BITS= 32 for DJGPP.
+#
 LONG_BITS=
-#LONG_BITS=32
-#LONG_BITS=64
+#LONG_BITS= 32
+#LONG_BITS= 64
 
 # Determine if your compiler supports the long long type and if so, its length
 #
@@ -118,6 +124,8 @@ LONG_BITS=
 #
 # If in doubt, try to leave LONGLONG_BITS empty.  Do a 'make check'
 # and change to 'LONGLONG_BITS= 0' if you encounter problems.
+#
+# Select LONGLONG_BITS= 64 for DJGPP.
 #
 #LONGLONG_BITS= 0
 LONGLONG_BITS=
@@ -141,6 +149,8 @@ HAVE_FPOS=
 # to determine if fpos_t has a __pos structure element.  If HAVE_FPOS_POS
 # is set to -DHAVE_NO_FPOS_POS, then calc assume there is no __pos element.
 #
+# Select HAVE_FPOS_POS= -DHAVE_NO_FPOS_POS for DJGPP.
+#
 # If in doubt, leave HAVE_FPOS_POS empty and this Makefile will figure it out.
 #
 HAVE_FPOS_POS=
@@ -151,10 +161,10 @@ HAVE_FPOS_POS=
 # If FPOS_POS_BITS is empty, then the Makefile will determine the size of
 # the file position value of the __pos element.
 #
-# If in doubt, leave FPOS_POS_BITS empty and this Makefile will figure it out.
-#
 # If there is no __pos element in fpos_t (say because fpos_t is a scalar),
 # leave FPOS_POS_BITS blank.
+#
+# If in doubt, leave FPOS_POS_BITS empty and this Makefile will figure it out.
 #
 FPOS_POS_BITS=
 #FPOS_POS_BITS= 32
@@ -164,6 +174,8 @@ FPOS_POS_BITS=
 #
 # If FPOS_BITS is empty, then the Makefile will determine the size of
 # the file position value.
+#
+# Select FPOS_BITS= 32 for DJGPP.
 #
 # If in doubt, leave FPOS_BITS empty and this Makefile will figure it out.
 #
@@ -176,6 +188,8 @@ FPOS_BITS=
 # If OFF_T_BITS is empty, then the Makefile will determine the size of
 # the file offset value.
 #
+# Select OFF_T_BITS= 32 for DJGPP.
+#
 # If in doubt, leave OFF_T_BITS empty and this Makefile will figure it out.
 #
 OFF_T_BITS=
@@ -186,6 +200,8 @@ OFF_T_BITS=
 #
 # If DEV_BITS is empty, then the Makefile will determine the size of
 # the dev_t device value
+#
+# Select DEV_BITS= 32 for DJGPP.
 #
 # If in doubt, leave DEV_BITS empty and this Makefile will figure it out.
 #
@@ -198,6 +214,8 @@ DEV_BITS=
 #
 # If INODE_BITS is empty, then the Makefile will determine the size of
 # the ino_t inode value
+#
+# Select INODE_BITS= 32 for DJGPP.
 #
 # If in doubt, leave INODE_BITS empty and this Makefile will figure it out.
 #
@@ -291,6 +309,8 @@ HAVE_MEMMOVE=
 # -DHAVE_NO_USTAT, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
 #
+# Select HAVE_USTAT= -DHAVE_NO_USTAT for DJGPP.
+#
 # If in doubt, leave HAVE_USTAT empty and this Makefile will figure it out.
 #
 HAVE_USTAT=
@@ -302,6 +322,8 @@ HAVE_USTAT=
 # to determine if getsid() is supported.  If HAVE_GETSID is set to
 # -DHAVE_NO_GETSID, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
+#
+# Select HAVE_GETSID= -DHAVE_NO_GETSID for DJGPP.
 #
 # If in doubt, leave HAVE_GETSID empty and this Makefile will figure it out.
 #
@@ -315,6 +337,8 @@ HAVE_GETSID=
 # -DHAVE_NO_GETPGID, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
 #
+# Select HAVE_GETPGID= -DHAVE_NO_GETPGID for DJGPP.
+#
 # If in doubt, leave HAVE_GETPGID empty and this Makefile will figure it out.
 #
 HAVE_GETPGID=
@@ -326,6 +350,8 @@ HAVE_GETPGID=
 # to determine if clock_gettime() is supported.	 If HAVE_GETTIME is set to
 # -DHAVE_NO_GETTIME, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
+#
+# Select HAVE_GETTIME= -DHAVE_NO_GETTIME for DJGPP.
 #
 # If in doubt, leave HAVE_GETTIME empty and this Makefile will figure it out.
 #
@@ -339,6 +365,8 @@ HAVE_GETTIME=
 # -DHAVE_NO_GETPRID, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
 #
+# Select HAVE_GETPRID= -DHAVE_NO_GETPRID for DJGPP.
+#
 # If in doubt, leave HAVE_GETPRID empty and this Makefile will figure it out.
 #
 HAVE_GETPRID=
@@ -349,6 +377,8 @@ HAVE_GETPRID=
 #    HAVE_URANDOM_H=		let the Makefile look /dev/urandom
 #    HAVE_URANDOM_H= YES	assume that /dev/urandom exists
 #    HAVE_URANDOM_H= NO		assume that /dev/urandom does not exist
+#
+# Select HAVE_URANDOM_H= NO for DJGPP.
 #
 # When in doubt, leave HAVE_URANDOM_H empty.
 #
@@ -391,10 +421,12 @@ HAVE_STRDUP=
 # ALIGN32= -DMUST_ALIGN32    force 32 bit alignment
 # ALIGN32= -UMUST_ALIGN32    allow non-alignment of 32 bit accesses
 #
+# Select ALIGN32= -UMUST_ALIGN32 for DJGPP.
+#
 # When in doubt, be safe and pick ALIGN32=-DMUST_ALIGN32.
 #
-#ALIGN32=
-ALIGN32= -DMUST_ALIGN32
+ALIGN32=
+#ALIGN32= -DMUST_ALIGN32
 #ALIGN32= -UMUST_ALIGN32
 
 # Determine if we have the <malloc.h> include file.
@@ -402,6 +434,8 @@ ALIGN32= -DMUST_ALIGN32
 #    HAVE_MALLOC_H=		let the Makefile look for the include file
 #    HAVE_MALLOC_H= YES		assume that the include file exists
 #    HAVE_MALLOC_H= NO		assume that the include file does not exist
+#
+# Select HAVE_MALLOC_H= YES for DJGPP.
 #
 # When in doubt, leave HAVE_MALLOC_H empty.
 #
@@ -415,6 +449,8 @@ HAVE_MALLOC_H=
 #    HAVE_STDLIB_H= YES		assume that the include file exists
 #    HAVE_STDLIB_H= NO		assume that the include file does not exist
 #
+# Select HAVE_STDLIB_H= YES for DJGPP.
+#
 # When in doubt, leave HAVE_STDLIB_H empty.
 #
 HAVE_STDLIB_H=
@@ -426,6 +462,8 @@ HAVE_STDLIB_H=
 #    HAVE_STRING_H=		let the Makefile look for the include file
 #    HAVE_STRING_H= YES		assume that the include file exists
 #    HAVE_STRING_H= NO		assume that the include file does not exist
+#
+# Select HAVE_STRING_H= YES for DJGPP.
 #
 # When in doubt, leave HAVE_STRING_H empty.
 #
@@ -439,6 +477,8 @@ HAVE_STRING_H=
 #    HAVE_TIMES_H= YES		assume that the include file exists
 #    HAVE_TIMES_H= NO		assume that the include file does not exist
 #
+# Select HAVE_TIMES_H= NO for DJGPP.
+#
 # When in doubt, leave HAVE_TIMES_H empty.
 #
 HAVE_TIMES_H=
@@ -450,6 +490,8 @@ HAVE_TIMES_H=
 #    HAVE_SYS_TIMES_H=		let the Makefile look for the include file
 #    HAVE_SYS_TIMES_H= YES	assume that the include file exists
 #    HAVE_SYS_TIMES_H= NO	assume that the include file does not exist
+#
+# Select HAVE_SYS_TIMES_H= YES for DJGPP.
 #
 # When in doubt, leave HAVE_SYS_TIMES_H empty.
 #
@@ -463,6 +505,8 @@ HAVE_SYS_TIMES_H=
 #    HAVE_TIME_H= YES		assume that the include file exists
 #    HAVE_TIME_H= NO		assume that the include file does not exist
 #
+# Select HAVE_TIME_H= YES for DJGPP.
+#
 # When in doubt, leave HAVE_TIME_H empty.
 #
 HAVE_TIME_H=
@@ -475,6 +519,8 @@ HAVE_TIME_H=
 #    HAVE_SYS_TIME_H= YES	assume that the include file exists
 #    HAVE_SYS_TIME_H= NO	assume that the include file does not exist
 #
+# Select HAVE_SYS_TIME_H= YES for DJGPP.
+#
 # When in doubt, leave HAVE_SYS_TIME_H empty.
 #
 HAVE_SYS_TIME_H=
@@ -486,6 +532,8 @@ HAVE_SYS_TIME_H=
 #    HAVE_UNISTD_H=		let the Makefile look for the include file
 #    HAVE_UNISTD_H= YES		assume that the include file exists
 #    HAVE_UNISTD_H= NO		assume that the include file does not exist
+#
+# Select HAVE_UNISTD_H= YES for DJGPP.
 #
 # When in doubt, leave HAVE_UNISTD_H empty.
 #
@@ -502,6 +550,13 @@ HAVE_UNISTD_H=
 # ${INCDIR}		where most .h files are kept
 # ${LIBDIR}		where *.a files are installed
 #
+# For DJGPP, select:
+#
+#	BINDIR= /dev/env/DJDIR/bin
+#	SHAREDIR= /dev/env/DJDIR/share
+#	INCDIR= /dev/env/DJDIR/include
+#	LIBDIR= /dev/env/DJDIR/lib
+#
 # If in doubt, set:
 #
 #	BINDIR= /usr/bin
@@ -510,15 +565,19 @@ HAVE_UNISTD_H=
 #	LIBDIR= /usr/lib
 #
 #BINDIR= /usr/local/bin
+#BINDIR= /dev/env/DJDIR/bin
 BINDIR= /usr/bin
 
 #SHAREDIR= /usr/local/lib
+#SHAREDIR= /dev/env/DJDIR/share
 SHAREDIR= /usr/share
 
 #INCDIR= /usr/local/include
+#INCDIR= /dev/env/DJDIR/include
 INCDIR= /usr/include
 
 #LIBDIR= /usr/local/lib
+#LIBDIR= /dev/env/DJDIR/lib
 LIBDIR= /usr/lib
 
 # By default, these values are based on the above 4 values
@@ -571,16 +630,21 @@ T=
 
 # where man pages are installed
 #
+# Select MANDIR= /dev/env/DJDIR/man/man1 for DJGPP.
+#
 # Use MANDIR= to disable installation of the calc man (source) page.
 #
 #MANDIR=
 #MANDIR= /usr/local/man/man1
 #MANDIR= /usr/man/man1
 MANDIR= /usr/share/man/man1
+#MANDIR= /dev/env/DJDIR/man/man1
 #MANDIR= /usr/man/u_man/man1
 #MANDIR= /usr/contrib/man/man1
 
 # where cat (formatted man) pages are installed
+#
+# Select CATDIR= /dev/env/DJDIR/man/cat1 for DJGPP.
 #
 # Use CATDIR= to disable installation of the calc cat (formatted) page.
 #
@@ -589,6 +653,7 @@ CATDIR=
 #CATDIR= /usr/local/catman/cat1
 #CATDIR= /usr/man/cat1
 #CATDIR= /usr/share/man/cat1
+#CATDIR= /dev/env/DJDIR/man/cat1
 #CATDIR= /var/cache/man/cat1
 #CATDIR= /usr/man/u_man/cat1
 #CATDIR= /usr/contrib/man/cat1
@@ -626,6 +691,8 @@ CATEXT= 1
 #
 #     The cat page is not built or installed
 #
+# Select NROFF= groff for DJGPP.
+#
 # If in doubt and you don't want to fool with man pages, set MANDIR
 # and CATDIR to empty and ignore the NROFF, NROFF_ARG and MANMAKE
 # lines below.
@@ -643,12 +710,18 @@ CATMODE= 0444
 # If the $CALCPATH environment variable is not defined, then the following
 # path will be search for calc resource file routines.
 #
+# Select CALCPATH= .;./cal;~/.cal;${CSHAREDIR};${CUSTOMLIBDIR} for DJGPP.
+#
 CALCPATH= .:./cal:~/.cal:${CSHAREDIR}:${CUSTOMLIBDIR}
+#CALCPATH= .;./cal;~/.cal;${CSHAREDIR};${CUSTOMLIBDIR}
 
 # If the $CALCRC environment variable is not defined, then the following
 # path will be search for calc resource files.
 #
+# Select CALCRC= ${CSHAREDIR}/startup;~/.calcrc;./.calcinit for DJGPP.
+#
 CALCRC= ${CSHAREDIR}/startup:~/.calcrc:./.calcinit
+#CALCRC= ${CSHAREDIR}/startup;~/.calcrc;./.calcinit
 
 # Determine of the GNU-readline facility will be used instead of the
 # built-in calc binding method.
@@ -683,12 +756,17 @@ READLINE_INCLUDE=
 
 # If $PAGER is not set, use this program to display a help file
 #
+# Select CALCPAGER= less.exe -ci for DJGPP.
+#
 CALCPAGER= more
 #CALCPAGER= pg
 #CALCPAGER= cat
 #CALCPAGER= less
+#CALCPAGER= less.exe -ci
 
 # Debug/Optimize options for ${CC} and ${LCC}
+#
+# Select DEBUG= -O2 -gstabs+ for DJGPP.
 #
 #DEBUG=
 #
@@ -718,6 +796,8 @@ DEBUG= -O2 -g
 #DEBUG= -g3
 #DEBUG= -gx
 #DEBUG= -WM,-g
+#
+#DEBUG= -O2 -gstabs+
 
 # On systems that have dynamic shared link libs, you may want want to disable
 # them for faster calc startup.
@@ -759,7 +839,7 @@ RANLIB=ranlib
 # Normally certain files depend on the Makefile.  If the Makefile is
 # changed, then certain steps should be redone.	 If MAKE_FILE is
 # set to Makefile, then these files will depend on Makefile.  If
-# MAKE_FILE is empty, they they wont.
+# MAKE_FILE is empty, then they wont.
 #
 # If in doubt, set MAKE_FILE to Makefile
 #
@@ -1048,8 +1128,13 @@ XARGS= xargs
 CMP= cmp
 # assume the X11 makedepend tool for the depend rule
 MAKEDEPEND= makedepend
+
 # echo command location
+#
+# Select ECHO= echo for DJGPP.
+#
 ECHO= /bin/echo
+#ECHO= echo
 
 # Makefile debug
 #
@@ -1475,13 +1560,13 @@ endian_calc.h: endian ${MAKE_FILE}
 	${Q}echo '' >> endian_calc.h
 	${Q}echo '/* what byte order are we? */' >> endian_calc.h
 	-${Q}if [ X"${BYTE_ORDER}" = X ]; then \
-	    if [ -f /usr/include/endian.h ]; then \
+	    if [ -f ${INCDIR}/endian.h ]; then \
 		echo '#include <endian.h>' >> endian_calc.h; \
 		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
-	    elif [ -f /usr/include/machine/endian.h ]; then \
+	    elif [ -f ${INCDIR}/machine/endian.h ]; then \
 		echo '#include <machine/endian.h>' >> endian_calc.h; \
 		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
-	    elif [ -f /usr/include/sys/endian.h ]; then \
+	    elif [ -f ${INCDIR}/sys/endian.h ]; then \
 		echo '#include <sys/endian.h>' >> endian_calc.h; \
 		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
 	    else \
@@ -1543,12 +1628,12 @@ have_malloc.h: ${MAKE_FILE}
 	${Q}echo '#define __HAVE_MALLOC_H__' >> have_malloc.h
 	${Q}echo '' >> have_malloc.h
 	${Q}echo '' >> have_malloc.h
-	${Q}echo '/* do we have /usr/include/malloc.h? */' >> have_malloc.h
+	${Q}echo '/* do we have ${INCDIR}/malloc.h? */' >> have_malloc.h
 	-${Q}if [ X"${HAVE_MALLOC_H}" = X"YES" ]; then \
 	    echo '#define HAVE_MALLOC_H	 /* yes */' >> have_malloc.h; \
 	elif [ X"${HAVE_MALLOC_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_MALLOC_H	/* no */' >> have_malloc.h; \
-	elif [ -f /usr/include/malloc.h ]; then \
+	elif [ -f ${INCDIR}/malloc.h ]; then \
 	    echo '#define HAVE_MALLOC_H	 /* yes */' >> have_malloc.h; \
 	else \
 	    echo '#undef HAVE_MALLOC_H	/* no */' >> have_malloc.h; \
@@ -1579,12 +1664,12 @@ have_times.h: ${MAKE_FILE}
 	${Q}echo '#define __HAVE_TIMES_H__' >> have_times.h
 	${Q}echo '' >> have_times.h
 	${Q}echo '' >> have_times.h
-	${Q}echo '/* do we have /usr/include/times.h? */' >> have_times.h
+	${Q}echo '/* do we have ${INCDIR}/times.h? */' >> have_times.h
 	-${Q}if [ X"${HAVE_TIMES_H}" = X"YES" ]; then \
 	    echo '#define HAVE_TIMES_H	/* yes */' >> have_times.h; \
 	elif [ X"${HAVE_TIMES_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_TIMES_H  /* no */' >> have_times.h; \
-	elif [ -f /usr/include/times.h ]; then \
+	elif [ -f ${INCDIR}/times.h ]; then \
 	    echo '#define HAVE_TIMES_H	/* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_TIMES_H  /* no */' >> have_times.h; \
@@ -1593,7 +1678,7 @@ have_times.h: ${MAKE_FILE}
 	    echo '#define HAVE_SYS_TIMES_H	/* yes */' >> have_times.h; \
 	elif [ X"${HAVE_SYS_TIMES_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_SYS_TIMES_H  /* no */' >> have_times.h; \
-	elif [ -f /usr/include/sys/times.h ]; then \
+	elif [ -f ${INCDIR}/sys/times.h ]; then \
 	    echo '#define HAVE_SYS_TIMES_H  /* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_SYS_TIMES_H  /* no */' >> have_times.h; \
@@ -1602,7 +1687,7 @@ have_times.h: ${MAKE_FILE}
 	    echo '#define HAVE_TIME_H	/* yes */' >> have_times.h; \
 	elif [ X"${HAVE_TIME_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_TIME_H  /* no */' >> have_times.h; \
-	elif [ -f /usr/include/time.h ]; then \
+	elif [ -f ${INCDIR}/time.h ]; then \
 	    echo '#define HAVE_TIME_H  /* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_TIME_H  /* no */' >> have_times.h; \
@@ -1611,7 +1696,7 @@ have_times.h: ${MAKE_FILE}
 	    echo '#define HAVE_SYS_TIME_H	/* yes */' >> have_times.h; \
 	elif [ X"${HAVE_SYS_TIME_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_SYS_TIME_H  /* no */' >> have_times.h; \
-	elif [ -f /usr/include/sys/time.h ]; then \
+	elif [ -f ${INCDIR}/sys/time.h ]; then \
 	    echo '#define HAVE_SYS_TIME_H  /* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_SYS_TIME_H  /* no */' >> have_times.h; \
@@ -1642,12 +1727,12 @@ have_stdlib.h: ${MAKE_FILE}
 	${Q}echo '#define __HAVE_STDLIB_H__' >> have_stdlib.h
 	${Q}echo '' >> have_stdlib.h
 	${Q}echo '' >> have_stdlib.h
-	${Q}echo '/* do we have /usr/include/stdlib.h? */' >> have_stdlib.h
+	${Q}echo '/* do we have ${INCDIR}/stdlib.h? */' >> have_stdlib.h
 	-${Q}if [ X"${HAVE_STDLIB_H}" = X"YES" ]; then \
 	    echo '#define HAVE_STDLIB_H	/* yes */' >> have_stdlib.h; \
 	elif [ X"${HAVE_STDLIB_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_STDLIB_H  /* no */' >> have_stdlib.h; \
-	elif [ -f /usr/include/stdlib.h ]; then \
+	elif [ -f ${INCDIR}/stdlib.h ]; then \
 	    echo '#define HAVE_STDLIB_H	 /* yes */' >> have_stdlib.h; \
 	else \
 	    echo '#undef HAVE_STDLIB_H	/* no */' >> have_stdlib.h; \
@@ -1678,12 +1763,12 @@ have_unistd.h: ${MAKE_FILE}
 	${Q}echo '#define __HAVE_UNISTD_H__' >> have_unistd.h
 	${Q}echo '' >> have_unistd.h
 	${Q}echo '' >> have_unistd.h
-	${Q}echo '/* do we have /usr/include/unistd.h? */' >> have_unistd.h
+	${Q}echo '/* do we have ${INCDIR}/unistd.h? */' >> have_unistd.h
 	-${Q}if [ X"${HAVE_UNISTD_H}" = X"YES" ]; then \
 	    echo '#define HAVE_UNISTD_H	/* yes */' >> have_unistd.h; \
 	elif [ X"${HAVE_UNISTD_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_UNISTD_H  /* no */' >> have_unistd.h; \
-	elif [ -f /usr/include/unistd.h ]; then \
+	elif [ -f ${INCDIR}/unistd.h ]; then \
 	    echo '#define HAVE_UNISTD_H	 /* yes */' >> have_unistd.h; \
 	else \
 	    echo '#undef HAVE_UNISTD_H	/* no */' >> have_unistd.h; \
@@ -1714,12 +1799,12 @@ have_string.h: ${MAKE_FILE}
 	${Q}echo '#define __HAVE_STRING_H__' >> have_string.h
 	${Q}echo '' >> have_string.h
 	${Q}echo '' >> have_string.h
-	${Q}echo '/* do we have /usr/include/string.h? */' >> have_string.h
+	${Q}echo '/* do we have ${INCDIR}/string.h? */' >> have_string.h
 	-${Q}if [ X"${HAVE_STRING_H}" = X"YES" ]; then \
 	    echo '#define HAVE_STRING_H	/* yes */' >> have_string.h; \
 	elif [ X"${HAVE_STRING_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_STRING_H  /* no */' >> have_string.h; \
-	elif [ -f /usr/include/string.h ]; then \
+	elif [ -f ${INCDIR}/string.h ]; then \
 	    echo '#define HAVE_STRING_H	 /* yes */' >> have_string.h; \
 	else \
 	    echo '#undef HAVE_STRING_H	/* no */' >> have_string.h; \
@@ -1759,12 +1844,12 @@ terminal.h: ${MAKE_FILE}
 	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> terminal.h; \
 	    echo '#undef USE_TERMIO    /* <termio.h> */' >> terminal.h; \
 	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
-	elif [ -f /usr/include/termios.h ]; then \
+	elif [ -f ${INCDIR}/termios.h ]; then \
 	    echo '/* use termios */' >> terminal.h; \
 	    echo '#define USE_TERMIOS  /* <termios.h> */' >> terminal.h; \
 	    echo '#undef USE_TERMIO    /* <termio.h> */' >> terminal.h; \
 	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
-	elif [ -f /usr/include/termio.h ]; then \
+	elif [ -f ${INCDIR}/termio.h ]; then \
 	    echo '/* use termio */' >> terminal.h; \
 	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> terminal.h; \
 	    echo '#define USE_TERMIO   /* <termio.h> */' >> terminal.h; \
@@ -2815,13 +2900,15 @@ bsdi: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	else \
 	    true; \
 	fi
-	-${Q}for i in ${LIB_H_SRC} ${BUILD_H_SRC}; do \
+	-${Q}for i in ${LIB_H_SRC} ${BUILD_H_SRC} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo rm -f gen_h/$$i; \
 		rm -f gen_h/$$i; \
 		echo cp $$i gen_h; \
 		cp $$i gen_h; \
 		echo ${CHMOD} 0444 gen_h/$$i; \
 		${CHMOD} 0444 gen_h/$$i; \
+	    fi; \
 	done
 	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} bsdi
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
@@ -2858,13 +2945,15 @@ depend: hsrc
 		${SED} -n '/^#[	 ]*include[	 ]*"/p' "$$i" > "skel/$$i"; \
 	done
 	${Q}mkdir skel/custom
-	-${Q}for i in ${H_SRC} ${BUILD_H_SRC} custom.h; do \
+	-${Q}for i in ${H_SRC} ${BUILD_H_SRC} custom.h /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
 		echo "#if !defined($$tag)" > "skel/$$i"; \
 		echo "#define $$tag" >> "skel/$$i"; \
 		${SED} -n '/^#[	 ]*include[	 ]*"/p' "$$i" | \
 		    LANG=C ${SORT} -u >> "skel/$$i"; \
 		echo '#endif /* '"$$tag"' */' >> "skel/$$i"; \
+	    fi; \
 	done
 	-${Q}rm -f skel/makedep.out
 	${Q}echo skel formed
@@ -2873,8 +2962,10 @@ depend: hsrc
 	    skel/makedep.out
 	${Q}cd skel; \
 	    ${MAKEDEPEND} -w 1 -f makedep.out ${C_SRC} ${BUILD_C_SRC}
-	-${Q}for i in ${C_SRC} ${BUILD_C_SRC}; do \
+	-${Q}for i in ${C_SRC} ${BUILD_C_SRC} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
+	    fi; \
 	done >> skel/makedep.out
 	${Q}echo dependency list formed
 	${Q}echo forming new Makefile
@@ -2894,8 +2985,10 @@ depend: hsrc
 # generate the list of h files for lower level depend use
 #
 h_list:
-	-${Q}for i in ${H_SRC} ${BUILD_H_SRC}; do \
+	-${Q}for i in ${H_SRC} ${BUILD_H_SRC} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo $$i; \
+	    fi; \
 	done
 
 # print the calc version
@@ -2914,11 +3007,15 @@ ver_calc: version.c
 ##
 
 distlist: ${DISTLIST}
-	${Q}(for i in ${DISTLIST}; do \
+	${Q}(for i in ${DISTLIST} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo $$i; \
+	    fi; \
 	done; \
-	for i in ${BUILD_H_SRC} ${BUILD_C_SRC}; do \
+	for i in ${BUILD_H_SRC} ${BUILD_C_SRC} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo win32/$$i; \
+	    fi; \
 	done; \
 	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
 	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
@@ -2936,8 +3033,10 @@ distdir:
 	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | LANG=C ${SORT}
 
 calcliblist:
-	${Q}(for i in ${CALCLIBLIST}; do \
+	${Q}(for i in ${CALCLIBLIST} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo $$i; \
+	    fi; \
 	done; \
 	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
 	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
@@ -3211,8 +3310,10 @@ inst_files: ${MAKE_FILE} help/Makefile cal/Makefile custom/Makefile \
 	    ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} echo_inst_files | \
 	    ${GREP} '__file__..' | ${SED} -e s'/.*__file__ //' >> ../inst_files
 	${Q}echo ${LIBDIR}/libcalc.a >> inst_files
-	${Q}for i in ${LIB_H_SRC} ${BUILD_H_SRC}; do \
-	    echo ${INCDIRCALC}/$$i; \
+	${Q}for i in ${LIB_H_SRC} ${BUILD_H_SRC} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo ${INCDIRCALC}/$$i; \
+	    fi; \
 	done >> inst_files
 	${Q}if [ ! -z "${MANDIR}" ]; then \
 	    echo ${MANDIR}/calc.${MANEXT}; \
@@ -3564,7 +3665,10 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 		${CHMOD} 0444 $T${LIBDIR}/libcalc.a; \
 		echo "installed $T${LIBDIR}/libcalc.a"; \
 	fi
-	-${Q}for i in ${LIB_H_SRC} ${BUILD_H_SRC}; do \
+	-${Q}for i in ${LIB_H_SRC} ${BUILD_H_SRC} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
 	    rm -f tmp; \
 	    ${SED} -e 's/^\(#[ 	]*include[ 	][ 	]*\)"/\1"calc\//' $$i > tmp; \
 	    if ${CMP} -s tmp $T${INCDIRCALC}/$$i; then \

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: commath.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: commath.c,v 29.3 2002/03/12 09:38:26 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/commath.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -381,7 +381,7 @@ cconj(COMPLEX *c)
  * Return the real part of a complex number.
  */
 COMPLEX *
-creal(COMPLEX *c)
+c_real(COMPLEX *c)
 {
 	COMPLEX *r;
 
@@ -400,7 +400,7 @@ creal(COMPLEX *c)
  * Return the imaginary part of a complex number as a real.
  */
 COMPLEX *
-cimag(COMPLEX *c)
+c_imag(COMPLEX *c)
 {
 	COMPLEX *r;
 

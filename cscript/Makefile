@@ -17,9 +17,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.20 $
-# @(#) $Id: Makefile,v 29.20 2001/06/10 19:35:02 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
+# @(#) $Revision: 29.21 $
+# @(#) $Id: Makefile,v 29.21 2002/03/12 08:36:11 chongo Exp $
+# @(#) $Source: /usr/local/src/cmd/calc/cal/../cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
 # File existed as early as:	1999
@@ -139,8 +139,10 @@ all: ${TARGETS} .all
 ##
 
 distlist: ${DISTLIST}
-	${Q}for i in ${DISTLIST}; do \
+	${Q}for i in ${DISTLIST} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo cscript/$$i; \
+	    fi; \
 	done | LANG=C ${SORT}
 
 distdir:
@@ -152,23 +154,27 @@ calcliblist:
 #
 detaillist:
 	${Q}-(echo "xxxxxxx"; \
-	   for i in ${SCRIPT}; do \
+	   for i in ${SCRIPT} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		if [ ! -f RCS/$$i.calc,v ]; then \
 		    echo "WARNING: $$i.calc not under RCS control" 1>&2; \
 		else \
 		    echo $$i; \
 		fi; \
+	    fi; \
 	done | LANG=C ${SORT}) | ${FMT} -70 | \
 	    ${SED} -e '1s/xxxxxxx/SCRIPT=/' -e '2,$$s/^/	/' \
 		   -e 's/$$/ \\/' -e '$$s/ \\$$//'
 	${Q}echo
 	${Q}-(echo "xxxxxxxxxxx"; \
-	   for i in ${SCRIPT}; do \
+	   for i in ${SCRIPT} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		if [ ! -f RCS/$$i.calc,v ]; then \
 		    echo "WARNING: $$i.calc not under RCS control" 1>&2; \
 		else \
 		    echo $$i.calc; \
 		fi; \
+	    fi; \
 	done | LANG=C ${SORT}) | ${FMT} -70 | \
 	    ${SED} -e '1s/xxxxxxxxxxx/SCRIPT_SRC=/' -e '2,$$s/^/	/' \
 		   -e 's/$$/ \\/' -e '$$s/ \\$$//'
@@ -197,11 +203,13 @@ depend:
 	${Q}echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
 		makedep.out
 	${Q}echo "" >> makedep.out
-	${Q}for i in ${SCRIPT}; do \
+	${Q}for i in ${SCRIPT} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i: $$i.calc"; \
 		echo '	rm -f $$@'; \
 		echo '	$${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!$${BINDIR}/calc:" $$?>$$@'; \
 		echo '	$${CHMOD} +x $$@'; \
+	    fi; \
 	done >> makedep.out
 	${Q}echo sample dependency list formed
 	${Q}echo forming new cscript/Makefile
@@ -233,8 +241,10 @@ depend:
 ##
 
 echo_inst_files:
-	${Q}for i in ${SCRIPT}; do \
-	    echo __file__ ${SCRIPTDIR}/$$i; \
+	${Q}for i in ${SCRIPT} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo __file__ ${SCRIPTDIR}/$$i; \
+	    fi; \
 	done
 
 ##
@@ -274,7 +284,10 @@ install: all
 	else \
 	    true; \
 	fi
-	${Q}for i in ${SCRIPT}; do \
+	${Q}for i in ${SCRIPT} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
 	    if ${CMP} -s $$i $T${SCRIPTDIR}/$$i; then \
 		true; \
 	    else \
