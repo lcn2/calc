@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: c_sysinfo.c,v 29.4 2000/07/17 15:37:12 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: c_sysinfo.c,v 29.3 2000/06/07 14:03:03 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_sysinfo.c,v $
  *
  * Under source code control:	1997/03/09 23:14:40
@@ -112,6 +112,7 @@ static struct infoname sys_info[] = {
     {"MAXFILES", "max number of opened files", NULL, (FULL)MAXFILES},
     {"MAXFULL", "largest SFULL value", NULL, (FULL)MAXFULL},
     {"MAXHALF", "largest SHALF value", NULL, (FULL)MAXHALF},
+    {"MAXINDICES", "max number of indices for objects", NULL, (FULL)MAXINDICES},
     {"MAXLABELS", "max number of user labels in function", NULL, (FULL)MAXLABELS},
     {"MAXLEN", "longest storage size allowed", NULL, (FULL)MAXLEN},
     {"MAXLONG", "largest long val", NULL, (FULL)MAXLONG},

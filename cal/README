@@ -1,7 +1,7 @@
 Calc standard resource files
 ----------------------------
 
-To load a resource file, try:
+To load a reosurce file, try:
 
     read filename
 
@@ -59,7 +59,7 @@ files have already been read, the read -once will act as a noop.
 
 The "resource_debug" parameter is intended for controlling the possible
 display of special information relating to functions, objects, and
-other structures created by instructions in calc resource files.
+other structures created by instructions in calc resoure files.
 Zero value of config("resource_debug") means that no such information
 is displayed.  For other values, the non-zero bits which currently
 have meanings are as follows:
@@ -274,7 +274,7 @@ pell.cal
     pell(D)
 
     Solve Pell's equation; Returns the solution X to: X^2 - D * Y^2 = 1.
-    Type the solution to Pell's equation for a particular D.
+    Type the solution to pells equation for a particular D.
 
 
 pi.cal
@@ -288,7 +288,7 @@ pi.cal
     The piforever() prints digits of pi, nicely formatted, for as long
     as your free memory space and system up time allows.
 
-    The piforever() function (written by Klaus Alexander Seistrup
+    The piforever() funcion (written by Klaus Alexander Seistrup
     <klaus@seistrup.dk>) was inspired by an algorithm conceived by
     Lambert Meertens.  See also the ABC Programmer's Handbook, by Geurts,
     Meertens & Pemberton, published by Prentice-Hall (UK) Ltd., 1990.
@@ -356,7 +356,7 @@ quat.cal
     quat_shift(a, b)
 
     Calculate using quaternions of the form: a + bi + cj + dk.	In these
-    functions, quaternions are manipulated in the form: s + v, where
+    functions, quaternians are manipulated in the form: s + v, where
     s is a scalar and v is a vector of size 3.
 
 
@@ -386,7 +386,7 @@ randombitrun.cal
     randombitrun([run_cnt])
 
     Using randombit(1) to generate a sequence of random bits, determine if
-    the number and length of identical bits runs match what is expected.
+    the number and kength of identical bits runs match what is expected.
     By default, run_cnt is to test the next 65536 random values.
 
     This tests the Blum-Blum-Shub generator.
@@ -489,7 +489,7 @@ test1700.cal
 
     value
 
-    This resource files is used by regress.cal to test the read and use keywords.
+    This resoure files is used by regress.cal to test the read and use keywords.
 
 
 test2600.cal
@@ -514,7 +514,7 @@ test2600.cal
     checkresult(x, y, z, a)
     test2600(verbose, tnum)
 
-    This resource files is used by regress.cal to test some of builtin functions
+    This resoure files is used by regress.cal to test some of builtin functions
     in terms of accuracy and roundoff.
 
 
@@ -537,7 +537,7 @@ test2700.cal
     iscomsq(x)
     test2700(verbose, tnum)
 
-    This resource files is used by regress.cal to test sqrt() for real and
+    This resoure files is used by regress.cal to test sqrt() for real and
     complex values.
 
 
@@ -625,7 +625,7 @@ test4000.cal
     test4000(verbose, tnum) defined
 
     This resource file is used by regress.cal to test ptest, nextcand and
-    prevcand builtins.
+    prevcand buildins.
 
 test4100.cal
 
@@ -677,35 +677,6 @@ test5200.cal
     This resource file is used by regress.cal to test the fix of a
     global/static bug.
 
-test8400.cal
-
-    test8400() defined
-
-    This resource file is used by regress.cal to check for quit-based 
-    memory leaks.
-
-test8500.cal
-
-    global err_8500
-    global L_8500
-    global ver_8500
-    global old_seed_8500
-    global cfg_8500
-    onetest_8500(a,b,rnd) defined
-    divmod_8500(N, M1, M2, testnum) defined
-
-    This resource file is used by regress.cal to the // and % operators.
-
-test8600.cal
-
-    global min_8600
-    global max_8600
-    global hash_8600
-    global hmean_8600
- 
-    This resource file is used by regress.cal to test a change of
-    allowing up to 1024 args to be passed to a builtin function.
-
 unitfrac.cal
 
     unitfrac(x)
@@ -734,7 +705,7 @@ xx_print.cal
 
     Demo for the xx_print object routines.
 
-## Copyright (C) 2000  David I. Bell and Landon Curt Noll
+## Copyright (C) 1999  David I. Bell and Landon Curt Noll
 ##
 ## Primary author: Landon Curt Noll
 ##
@@ -752,8 +723,8 @@ xx_print.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: README,v 29.3 2000/12/04 20:11:52 chongo Exp $
+## @(#) $Revision: 29.2 $
+## @(#) $Id: README,v 29.2 2000/06/07 14:02:25 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/README,v $
 ##
 ## Under source code control:	1990/02/15 01:50:32

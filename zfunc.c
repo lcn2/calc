@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: zfunc.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: zfunc.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:27
@@ -51,7 +51,7 @@ zfact(ZVALUE z, ZVALUE *dest)
 		math_error("Negative argument for factorial");
 		/*NOTREACHED*/
 	}
-	if (zge31b(z)) {
+	if (zge24b(z)) {
 		math_error("Very large factorial");
 		/*NOTREACHED*/
 	}
@@ -108,7 +108,7 @@ zperm(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 		math_error("Second arg larger than first in permutation");
 		/*NOTREACHED*/
 	}
-	if (zge31b(z2)) {
+	if (zge24b(z2)) {
 		math_error("Very large permutation");
 		/*NOTREACHED*/
 	}
@@ -127,104 +127,58 @@ zperm(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	*res = ans;
 }
 
+
 /*
- * docomb evaluates binomial coefficient when z1 >= 0, z2 >= 0
+ * Compute the combinatorial function  M! / ( N! * (M - N)! ).
  */
-static int
-docomb(ZVALUE z1, ZVALUE z2, ZVALUE *res)
+void
+zcomb(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
 	ZVALUE ans;
 	ZVALUE mul, div, temp;
 	FULL count, i;
-#if BASEB == 16
 	HALF dh[2];
-#else
-	HALF dh[1];
-#endif
 
-	if (zrel(z2, z1) > 0)
-		return 0;
-	zsub(z1, z2, &temp);
-
-	if (zge31b(z2) && zge31b(temp)) {
-		zfree(temp);
-		return -2;
+	if (zisneg(z1) || zisneg(z2)) {
+		math_error("Negative argument for combinatorial");
+		/*NOTREACHED*/
 	}
-	if (zrel(temp, z2) < 0)
-		count = ztofull(temp);
-	else
-		count = ztofull(z2);
+	zsub(z1, z2, &temp);
+	if (zisneg(temp)) {
+		zfree(temp);
+		math_error("Second arg larger than first for combinatorial");
+		/*NOTREACHED*/
+	}
+	if (zge24b(z2) && zge24b(temp)) {
+		zfree(temp);
+		math_error("Very large combinatorial");
+		/*NOTREACHED*/
+	}
+	count = ztofull(z2);
+	i = ztofull(temp);
+	if (zge24b(z2) || (!zge24b(temp) && (i < count)))
+		count = i;
 	zfree(temp);
-	if (count == 0)
-		return 1;
-	if (count == 1)
-		return 2;
+	mul = z1;
 	div.sign = 0;
 	div.v = dh;
-	div.len = 1;
-	zcopy(z1, &mul);
-	zcopy(z1, &ans);
-	for (i = 2; i <= count; i++) {
-#if BASEB == 16
+	ans = _one_;
+	for (i = 1; i <= count; i++) {
 		dh[0] = (HALF)(i & BASE1);
 		dh[1] = (HALF)(i >> BASEB);
 		div.len = 1 + (dh[1] != 0);
-#else
-		dh[0] = (HALF) i;
-#endif
-		zsub(mul, _one_, &temp);
-		zfree(mul);
-		mul = temp;
 		zmul(ans, mul, &temp);
 		zfree(ans);
 		zquo(temp, div, &ans, 0);
 		zfree(temp);
+		zsub(mul, _one_, &temp);
+		if (mul.v != z1.v)
+			zfree(mul);
+		mul = temp;
 	}
-	zfree(mul);
+	if (mul.v != z1.v)
+		zfree(mul);
 	*res = ans;
-	return 3;
-}
-
-/*
- * Compute the combinatorial function  M! / ( N! * (M - N)! ).
- * Returns 0 if result is 0
-*	   1      1
-*	   2      z1
-*	  -1	  -1
-*	  -2	if too complicated
-*	   3	result stored at res
- */
-int
-zcomb(ZVALUE z1, ZVALUE z2, ZVALUE *res)
-{
-	ZVALUE z3, z4;
-	int r;
-
-	if (z2.sign || (!z1.sign && zrel(z2, z1) > 0))
-		return 0;
-	if (zisone(z2))
-		return 2;
-	if (z1.sign) {
-		z1.sign = 0;
-		zsub(z1, _one_, &z3);
-		zadd(z3, z2, &z4);
-		zfree(z3);
-		r = docomb(z4, z2, res);
-		if (r == 2) {
-			*res = z4;
-			r = 3;
-		}
-		else
-			zfree(z4);
-		if (z2.v[0] & 1) {
-			if (r == 1)
-				r = -1;
-			if (r == 3)
-				res->sign = 1;
-		}
-		return r;
-	}
-	return docomb(z1, z2, res);
 }
 
 
@@ -520,7 +474,7 @@ ztenpow(long power, ZVALUE *res)
 
 /*
  * Calculate modular inverse suppressing unnecessary divisions.
- * This is based on the Euclidean algorithm for large numbers.
+ * This is based on the Euclidian algorithm for large numbers.
  * (Algorithm X from Knuth Vol 2, section 4.5.2. and exercise 17)
  * Returns TRUE if there is no solution because the numbers
  * are not relatively prime.
@@ -1067,76 +1021,108 @@ zrelprime(ZVALUE z1, ZVALUE z2)
 
 
 /*
- * Compute the integer floor of the log of an integer to a specified base.
- * The signs of the integers and base are ignored.
+ * Compute the log of one number base another, to the closest integer.
+ * This is the largest integer which when the second number is raised to it,
+ * the resulting value is less than or equal to the first number.
  * Example:  zlog(123456, 10) = 5.
  */
 long
-zlog(ZVALUE z, ZVALUE base)
+zlog(ZVALUE z1, ZVALUE z2)
 {
-	ZVALUE *zp;			/* current square */
+	register ZVALUE *zp;		/* current square */
 	long power;			/* current power */
+	long worth;			/* worth of current square */
+	ZVALUE val;			/* current value of power */
 	ZVALUE temp;			/* temporary */
 	ZVALUE squares[32];		/* table of squares of base */
 
-	/* ignore signs */
-
-	z.sign = 0;
-	base.sign = 0;
-
 	/*
-	 * Make sure that the numbers are nonzero and the base is > 1
+	 * Make sure that the numbers are > 0 and the base is > 1
 	 */
-	if (ziszero(z) || ziszero(base) || zisone(base)) {
-		math_error("Zero or too small argument argument for zlog!!!");
+	if (zislezero(z1) || zisleone(z2)) {
+		math_error("Bad arguments for log");
 		/*NOTREACHED*/
 	}
 
 	/*
-	 * Some trivial cases.
+	 * Reject trivial cases.
 	 */
-	power = zrel(z, base);
+	if (z1.len < z2.len)
+		return 0;
+	if ((z1.len == z2.len) && (z1.v[z1.len-1] < z2.v[z2.len-1]))
+		return 0;
+	power = zrel(z1, z2);
 	if (power <= 0)
 		return (power + 1);
-
-	/* base - power of two */
-	if (zisonebit(base))
-		return (zhighbit(z) / zlowbit(base));
-
-	/* base = 10 */
-	if (base.len == 1 && base.v[0] == 10)
-		return zlog10(z);
+	/*
+	 * Handle any power of two special.
+	 */
+	if (zisonebit(z2))
+		return (zhighbit(z1) / zlowbit(z2));
+	/*
+	 * Handle base 10 special
+	 */
+	if ((z2.len == 1) && (*z2.v == 10))
+		return zlog10(z1);
 	/*
 	 * Now loop by squaring the base each time, and see whether or
 	 * not each successive square is still smaller than the number.
 	 */
+	worth = 1;
 	zp = &squares[0];
-	*zp = base;
-	while (zp->len * 2 - 1 <= z.len  && zrel(z, *zp) > 0) {
-		/* while square not too large */
+	*zp = z2;
+	while (((zp->len * 2) - 1) <= z1.len) { /* while square not too large */
 		zsquare(*zp, zp + 1);
 		zp++;
+		worth *= 2;
 	}
+	/*
+	 * Now back down the squares, and multiply them together to see
+	 * exactly how many times the base can be raised by.
+	 */
+	val = _one_;
+	power = 0;
 
 	/*
-	 * Now back down the squares,
+	 * We prevent the zp pointer from walking behind squares
+	 * by stopping one short of the end and running the loop one
+	 * more time.
+	 *
+	 * We could stop the loop with just zp >= squares, but stopping
+	 * short and running the loop one last time manually helps make
+	 * code checkers such as insure happy.
 	 */
-	power = 0;
-	for (; zp > squares; zp--) {
-		if (zrel(z, *zp) >= 0) {
-			zquo(z, *zp, &temp, 0);
-			if (power)
-				zfree(z);
-			z = temp;
-			power++;
+	for (; zp > squares; zp--, worth /= 2) {
+		if ((val.len + zp->len - 1) <= z1.len) {
+			zmul(val, *zp, &temp);
+			if (zrel(z1, temp) >= 0) {
+				zfree(val);
+				val = temp;
+				power += worth;
+			} else {
+				zfree(temp);
+			}
 		}
-		zfree(*zp);
-		power <<= 1;
+		if (zp != squares)
+			zfree(*zp);
 	}
-	if (zrel(z, *zp) >= 0)
-		power++;
-	if (power > 1)
-		zfree(z);
+	/* run the loop manually one last time */
+	if (zp == squares) {
+		if ((val.len + zp->len - 1) <= z1.len) {
+			zmul(val, *zp, &temp);
+			if (zrel(z1, temp) >= 0) {
+				zfree(val);
+				val = temp;
+				power += worth;
+			} else {
+				zfree(temp);
+			}
+		}
+		if (zp != squares)
+			zfree(*zp);
+	}
+
+	zfree(val);
 	return power;
 }
 
@@ -1149,50 +1135,70 @@ zlog10(ZVALUE z)
 {
 	register ZVALUE *zp;		/* current square */
 	long power;			/* current power */
+	long worth;			/* worth of current square */
+	ZVALUE val;			/* current value of power */
 	ZVALUE temp;			/* temporary */
 
-	if (ziszero(z)) {
-		math_error("Zero argument argument for zlog10");
+	if (!zispos(z)) {
+		math_error("Non-positive number for log10");
 		/*NOTREACHED*/
 	}
-	/* Ignore sign of z */
-	z.sign = 0;
-
 	/*
 	 * Loop by squaring the base each time, and see whether or
 	 * not each successive square is still smaller than the number.
 	 */
+	worth = 1;
 	zp = &_tenpowers_[0];
 	*zp = _ten_;
 	while (((zp->len * 2) - 1) <= z.len) {	/* while square not too large */
-		if (zp >= &_tenpowers_[TEN_MAX]) {
-			math_error("Maximum storable power of 10 reached!");
-			/*NOTREACHED*/
-		}
 		if (zp[1].len == 0)
 			zsquare(*zp, zp + 1);
 		zp++;
+		worth *= 2;
 	}
 	/*
 	 * Now back down the squares, and multiply them together to see
 	 * exactly how many times the base can be raised by.
 	 */
+	val = _one_;
 	power = 0;
 
-	for (; zp > _tenpowers_; zp--) {
-		if (zrel(z, *zp) >= 0) {
-			zquo(z, *zp, &temp, 0);
-			if (power)
-				zfree(z);
-			z = temp;
-			power++;
+	/*
+	 * We prevent the zp pointer from walking behind _tenpowers_
+	 * by stopping one short of the end and running the loop one
+	 * more time.
+	 *
+	 * We could stop the loop with just zp >= _tenpowers_, but stopping
+	 * short and running the loop one last time manually helps make
+	 * code checkers such as insure happy.
+	 */
+	for (; zp > _tenpowers_; zp--, worth /= 2) {
+		if ((val.len + zp->len - 1) <= z.len) {
+			zmul(val, *zp, &temp);
+			if (zrel(z, temp) >= 0) {
+				zfree(val);
+				val = temp;
+				power += worth;
+			} else {
+				zfree(temp);
+			}
 		}
-		power <<= 1;
 	}
-	if (zrel(z, *zp) >= 0)
-		power++;
-	if (power > 1)
-		zfree(z);
+	/* run the loop manually one last time */
+	if (zp == _tenpowers_) {
+		if ((val.len + zp->len - 1) <= z.len) {
+			zmul(val, *zp, &temp);
+			if (zrel(z, temp) >= 0) {
+				zfree(val);
+				val = temp;
+				power += worth;
+			} else {
+				zfree(temp);
+			}
+		}
+	}
+
+	zfree(val);
 	return power;
 }
 
@@ -1217,7 +1223,7 @@ zdivcount(ZVALUE z1, ZVALUE z2)
 
 
 /*
- * Remove all occurrences of the specified factor from a number.
+ * Remove all occurences of the specified factor from a number.
  * Also returns the number of factors removed as a function return value.
  * Example:  zfacrem(540, 3, &x) returns 3 and sets x to 20.
  */
@@ -1351,47 +1357,29 @@ zfacrem(ZVALUE z1, ZVALUE z2, ZVALUE *rem)
 
 /*
  * Keep dividing a number by the gcd of it with another number until the
- * result is relatively prime to the second number.  Returns the number
- * of divisions made, and if this is positive, stores result at res.
+ * result is relatively prime to the second number.
  */
-long
+void
 zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
 	ZVALUE tmp1, tmp2;
-	long count, onecount;
-	long sh;
 
-	if (ziszero(z1) || ziszero(z2)) {
-		math_error("Zero argument in call to zgcdrem!!!");
-		/*NOTREACHED*/
-	}
 	/*
 	 * Begin by taking the gcd for the first time.
 	 * If the number is already relatively prime, then we are done.
 	 */
 	z1.sign = 0;
 	z2.sign = 0;
-	if (zisone(z2))
-		return 0;
-	if (zisonebit(z2)) {
-		sh = zlowbit(z1);
-		if (sh == 0)
-			return 0;
-		zshift(z1, -sh, res);
-		return 1 + (sh - 1)/zlowbit(z2);
-	}
-	if (zisonebit(z1)) {
-		if (zisodd(z2))
-			return 0;
-		*res = _one_;
-		return zlowbit(z1);
-	}
-
 	zgcd(z1, z2, &tmp1);
-	if (zisunit(tmp1) || ziszero(tmp1))
-		return 0;
+	if (zisunit(tmp1) || ziszero(tmp1)) {
+		res->len = z1.len;
+		res->v = alloc(z1.len);
+		res->sign = 0;
+		zcopyval(z1, *res);
+		zfree(tmp1);
+		return;
+	}
 	zequo(z1, tmp1, &tmp2);
-	count = 1;
 	z1 = tmp2;
 	z2 = tmp1;
 	/*
@@ -1399,18 +1387,15 @@ zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	 * the gcd becomes one.
 	 */
 	while (!zisunit(z2)) {
-		onecount = zfacrem(z1, z2, &tmp1);
-		if (onecount) {
-			count += onecount;
-			zfree(z1);
-			z1 = tmp1;
-		}
+		(void) zfacrem(z1, z2, &tmp1);
+		zfree(z1);
+		z1 = tmp1;
 		zgcd(z1, z2, &tmp1);
 		zfree(z2);
 		z2 = tmp1;
 	}
+	zfree(z2);
 	*res = z1;
-	return count;
 }
 
 
@@ -1835,7 +1820,7 @@ zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest)
 			old.len = ztry.len;
 			zcopyval(ztry, old);
 		}
-		/* average current try and quotient for the new try */
+		/* average current try and quotent for the new try */
 		zmul(ztry, k1, &temp);
 		zfree(ztry);
 		zadd(quo, temp, &temp2);

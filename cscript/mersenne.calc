@@ -1,4 +1,4 @@
-#!/usr/local/src/cmd/calc/calc -q -s -f
+#!/usr/local/src/cmd/calc/calc -S
 #
 # mersenne - print the value of a mersenne number
 #
@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.3 $
-# @(#) $Id: mersenne.calc,v 29.3 2000/12/15 14:56:54 chongo Exp $
+# @(#) $Revision: 29.2 $
+# @(#) $Id: mersenne.calc,v 29.2 2000/06/07 14:02:59 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/mersenne.calc,v $
 #
 # Under source code control:	1999/11/30 00:09:01;
@@ -35,19 +35,13 @@
 /*
  * parse args
  */
-if (argv() != 2) {
+if (argv() != 1) {
 	/* we include the name of this script in the error message */
 	fprintf(files(2), "usage: %s exp\n", config("program"));
 	abort "wrong number of args";
 }
 
-global n = eval(argv(1));
-
-if (!isint(n) || n <= 0) {
-	quit "Argument to be a positive integer";
-}
-
 /*
  * print the decimal value of 2^n-1
  */
-print "2^": n : "-1 =", 2^n-1;
+print "2^": argv(0) : "-1 =", 2^eval(argv(0))-1;

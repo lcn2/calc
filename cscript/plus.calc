@@ -1,4 +1,4 @@
-#!/usr/local/src/cmd/calc/calc -q -s -f
+#!/usr/local/src/cmd/calc/calc -S
 #
 # plus - add two or more arguments together
 #
@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.3 $
-# @(#) $Id: plus.calc,v 29.3 2000/12/15 14:56:54 chongo Exp $
+# @(#) $Revision: 29.2 $
+# @(#) $Id: plus.calc,v 29.2 2000/06/07 14:02:59 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/plus.calc,v $
 #
 # Under source code control:	1999/11/29 10:22:37
@@ -35,19 +35,19 @@
 /*
  * parse args
  */
-if (argv() < 2) {
+if (argv() < 1) {
 	/* we include the name of this script in the error message */
 	fprintf(files(2), "usage: %s value ...\n", config("program"));
 	abort "not enough args";
 }
 
 /*
- * print the sum of the args
+ * print the sum of the 2 args
  *
  * Since args are strings, we must eval them before using them numerically.
  */
 sum = 0;
-for (i=1; i < argv(); ++i) {
+for (i=0; i < argv(); ++i) {
 	sum += eval(argv(i));
 }
 print sum;

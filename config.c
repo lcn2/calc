@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: config.c,v 29.4 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: config.c,v 29.3 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -109,10 +109,10 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	SQ_ALG2,		/* size of number to use square alg 2 */
 	POW_ALG2,		/* size of modulus to use REDC for powers */
 	REDC_ALG2,		/* size of modulus to use REDC algorithm 2 */
-	TRUE,			/* ok to print a tilde on approximations */
+	TRUE,			/* ok to print a tilde on aproximations */
 	TRUE,			/* ok to print tab before numeric values */
 	0,			/* quomod() default rounding mode */
-	2,			/* quotient // default rounding mode */
+	2,			/* quotent // default rounding mode */
 	0,			/* mod % default rounding mode */
 	24,			/* sqrt() default rounding mode */
 	24,			/* appr() default rounding mode */
@@ -149,10 +149,10 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	SQ_ALG2,		/* size of number to use square alg 2 */
 	POW_ALG2,		/* size of modulus to use REDC for powers */
 	REDC_ALG2,		/* size of modulus to use REDC algorithm 2 */
-	TRUE,			/* ok to print a tilde on approximations */
+	TRUE,			/* ok to print a tilde on aproximations */
 	TRUE,			/* ok to print tab before numeric values */
 	0,			/* quomod() default rounding mode */
-	0,			/* quotient // default rounding mode */
+	0,			/* quotent // default rounding mode */
 	0,			/* mod % default rounding mode */
 	24,			/* sqrt() default rounding mode */
 	24,			/* appr() default rounding mode */
@@ -287,11 +287,10 @@ static NAMETYPE truth[] = {
 
 
 /*
- * declare static functions
+ * declate static functions
  */
 static long lookup_long(NAMETYPE *set, char *name);
 static char *lookup_name(NAMETYPE *set, long val);
-static int getlen(VALUE *vp, LEN *lp);
 
 
 /*
@@ -362,26 +361,6 @@ lookup_name(NAMETYPE *set, long val)
 
 
 /*
- * Check whether VALUE at vp is a LEN (32-bit signed integer) and if so,
- * copy that integer to lp.
- * Return: 1, 2, 0, or -1 XXX
- */
-
-static int
-getlen(VALUE *vp, LEN *lp)
-{
-	if (vp->v_type != V_NUM || !qisint(vp->v_num))
-		return 1;
-	if (zge31b(vp->v_num->num))
-		return 2;
-	*lp = ztoi(vp->v_num->num);
-	if (*lp < 0)
-		return -1;
-	return 0;
-}
-
-
-/*
  * Set the specified configuration type to the specified value.
  * An error is generated if the type number or value is illegal.
  */
@@ -391,7 +370,6 @@ setconfig(int type, VALUE *vp)
 	NUMBER *q;
 	CONFIG *newconf;	/* new configuration to set */
 	long temp;
-	LEN len;
 	char *p;
 
 	switch (type) {
@@ -436,11 +414,15 @@ setconfig(int type, VALUE *vp)
 		break;
 
 	case CONFIG_DISPLAY:
-		if (getlen(vp, &len)) {
-			math_error("Bad value for display");
+		if (vp->v_type != V_NUM) {
+			math_error("Non-numeric for display");
 			/*NOTREACHED*/
 		}
-		math_setdigits(len);
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q) || !zistiny(q->num))
+			temp = -1;
+		math_setdigits(temp);
 		break;
 
 	case CONFIG_MODE:
@@ -465,51 +447,91 @@ setconfig(int type, VALUE *vp)
 		break;
 
 	case CONFIG_MAXPRINT:
-		if (getlen(vp, &len)) {
-			math_error("Bad value for maxprint");
+		if (vp->v_type != V_NUM) {
+			math_error("Non-numeric for maxprint");
 			/*NOTREACHED*/
 		}
-		conf->maxprint = len;
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q) || !zistiny(q->num))
+			temp = -1;
+		if (temp < 0) {
+			math_error("Maxprint value is out of range");
+			/*NOTREACHED*/
+		}
+		conf->maxprint = temp;
 		break;
 
 	case CONFIG_MUL2:
-		if (getlen(vp, &len)) {
-			math_error("Bad value for mul2");
+		if (vp->v_type != V_NUM) {
+			math_error("Non-numeric for mul2");
 			/*NOTREACHED*/
 		}
-		if (len == 0)
-			len = MUL_ALG2;
-		conf->mul2 = len;
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q))
+			temp = -1;
+		if (temp == 0)
+			temp = MUL_ALG2;
+		if (temp < 2) {
+			math_error("Illegal mul2 value");
+			/*NOTREACHED*/
+		}
+		conf->mul2 = (int)temp;
 		break;
 
 	case CONFIG_SQ2:
-		if (getlen(vp, &len)) {
-			math_error("Bad value for sq2");
+		if (vp->v_type != V_NUM) {
+			math_error("Non-numeric for sq2");
 			/*NOTREACHED*/
 		}
-		if (len == 0)
-			len = SQ_ALG2;
-		conf->sq2 = len;
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q))
+			temp = -1;
+		if (temp == 0)
+			temp = SQ_ALG2;
+		if (temp < 2) {
+			math_error("Illegal sq2 value");
+			/*NOTREACHED*/
+		}
+		conf->sq2 = (int)temp;
 		break;
 
 	case CONFIG_POW2:
-		if (getlen(vp, &len)) {
-			math_error("Bad value for pow2");
+		if (vp->v_type != V_NUM) {
+			math_error("Non-numeric for pow2");
 			/*NOTREACHED*/
 		}
-		if (len == 0)
-			len = POW_ALG2;
-		conf->pow2 = len;
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q))
+			temp = -1;
+		if (temp == 0)
+			temp = POW_ALG2;
+		if (temp < 1) {
+			math_error("Illegal pow2 value");
+			/*NOTREACHED*/
+		}
+		conf->pow2 = (int)temp;
 		break;
 
 	case CONFIG_REDC2:
-		if (getlen(vp, &len)) {
-			math_error("Bad value for redc2");
+		if (vp->v_type != V_NUM) {
+			math_error("Non-numeric for redc2");
 			/*NOTREACHED*/
 		}
-		if (len == 0)
-			len = REDC_ALG2;
-		conf->redc2 = len;
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q))
+			temp = -1;
+		if (temp == 0)
+			temp = REDC_ALG2;
+		if (temp < 1) {
+			math_error("Illegal redc2 value");
+			/*NOTREACHED*/
+		}
+		conf->redc2 = (int)temp;
 		break;
 
 	case CONFIG_TILDE:
@@ -541,75 +563,129 @@ setconfig(int type, VALUE *vp)
 		break;
 
 	case CONFIG_QUOMOD:
-		if (getlen(vp, &len)) {
-			math_error("Illegal value for quomod");
+		if (vp->v_type != V_NUM) {
+			math_error("Non numeric for quomod");
 			/*NOTREACHED*/
 		}
-		conf->quomod = len;
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q) || !zistiny(q->num)) {
+			math_error("Illegal quomod parameter value");
+			/*NOTREACHED*/
+		}
+		conf->quomod = temp;
 		break;
 
 	case CONFIG_QUO:
-		if (getlen(vp, &len)) {
-			math_error("Illegal value for quo");
+		if (vp->v_type != V_NUM) {
+			math_error("Non numeric for quo");
 			/*NOTREACHED*/
 		}
-		conf->quo = len;
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q) || !zistiny(q->num)) {
+			math_error("Illegal quo parameter value");
+			/*NOTREACHED*/
+		}
+		conf->quo = temp;
 		break;
 
 	case CONFIG_MOD:
-		if (getlen(vp, &len)) {
-			math_error("Illegal value for mod");
+		if (vp->v_type != V_NUM) {
+			math_error("Non numeric for mod");
 			/*NOTREACHED*/
 		}
-		conf->mod = len;
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q) || !zistiny(q->num)) {
+			math_error("Illegal mod parameter value");
+			/*NOTREACHED*/
+		}
+		conf->mod = temp;
 		break;
 
 	case CONFIG_SQRT:
-		if (getlen(vp, &len)) {
-			math_error("Illegal value for sqrt");
+		if (vp->v_type != V_NUM) {
+			math_error("Non numeric for sqrt");
 			/*NOTREACHED*/
 		}
-		conf->sqrt = len;
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q) || !zistiny(q->num)) {
+			math_error("Illegal sqrt parameter value");
+			/*NOTREACHED*/
+		}
+		conf->sqrt = temp;
 		break;
 
 	case CONFIG_APPR:
-		if (getlen(vp, &len)) {
-			math_error("Illegal value for appr");
+		if (vp->v_type != V_NUM) {
+			math_error("Non numeric for appr");
 			/*NOTREACHED*/
 		}
-		conf->appr = len;
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q) || !zistiny(q->num)) {
+			math_error("Illegal appr parameter value");
+			/*NOTREACHED*/
+		}
+		conf->appr = temp;
 		break;
 
 	case CONFIG_CFAPPR:
-		if (getlen(vp, &len)) {
-			math_error("Illegal value for cfappr");
+		if (vp->v_type != V_NUM) {
+			math_error("Non numeric for cfappr");
 			/*NOTREACHED*/
 		}
-		conf->cfappr = len;
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q) || !zistiny(q->num)) {
+			math_error("Illegal cfappr parameter value");
+			/*NOTREACHED*/
+		}
+		conf->cfappr = temp;
 		break;
 
 	case CONFIG_CFSIM:
-		if (getlen(vp, &len)) {
-			math_error("Illegal value for cfsim");
+		if (vp->v_type != V_NUM) {
+			math_error("Non numeric for cfsim");
 			/*NOTREACHED*/
 		}
-		conf->cfsim = len;
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q) || !zistiny(q->num)) {
+			math_error("Illegal cfsim parameter value");
+			/*NOTREACHED*/
+		}
+		conf->cfsim = temp;
 		break;
 
 	case CONFIG_OUTROUND:
-		if (getlen(vp, &len)) {
-			math_error("Illegal value for outround");
+		if (vp->v_type != V_NUM) {
+			math_error("Non numeric for outround");
 			/*NOTREACHED*/
 		}
-		conf->outround = len;
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q) || !zistiny(q->num)) {
+			math_error("Illegal output parameter value");
+			/*NOTREACHED*/
+		}
+		conf->outround = temp;
 		break;
 
 	case CONFIG_ROUND:
-		if (getlen(vp, &len)) {
-			math_error("Illegal value for round");
+		if (vp->v_type != V_NUM) {
+			math_error("Non numeric for round");
 			/*NOTREACHED*/
 		}
-		conf->round = len;
+		q = vp->v_num;
+		temp = qtoi(q);
+		if (qisfrac(q) || qisneg(q) || !zistiny(q->num)) {
+			math_error("Illegal output parameter value");
+			/*NOTREACHED*/
+		}
+		conf->round = temp;
 		break;
 
 	case CONFIG_LEADZERO:
@@ -1235,12 +1311,12 @@ config_cmp(CONFIG *cfg1, CONFIG *cfg2)
 	 */
 	if (cfg1 == NULL || cfg1->epsilon == NULL || cfg1->prompt1 == NULL ||
 	    cfg1->prompt2 == NULL) {
-		math_error("CONFIG #1 value is invalid");
+		math_error("CONFIG #1 value is invaid");
 		/*NOTREACHED*/
 	}
 	if (cfg2 == NULL || cfg2->epsilon == NULL || cfg2->prompt1 == NULL ||
 	    cfg2->prompt2 == NULL) {
-		math_error("CONFIG #2 value is invalid");
+		math_error("CONFIG #2 value is invaid");
 		/*NOTREACHED*/
 	}
 

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: qmath.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: qmath.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qmath.c,v $
  *
  * Under source code control:	1990/02/15 01:48:21
@@ -43,12 +43,10 @@ NUMBER _qfour_ =	{ { _fourval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
 NUMBER _qten_ =		{ { _tenval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
 NUMBER _qnegone_ =	{ { _oneval_, 1, 1 }, { _oneval_, 1, 0 }, 1, NULL };
 NUMBER _qonehalf_ =	{ { _oneval_, 1, 0 }, { _twoval_, 1, 0 }, 1, NULL };
-NUMBER _qneghalf_ = 	{ { _oneval_, 1, 1 }, { _twoval_, 1, 0 }, 1, NULL };
 NUMBER _qonesqbase_ =	{ { _oneval_, 1, 0 }, { _sqbaseval_, 2, 0 }, 1, NULL };
 
 NUMBER * initnumbs[INITCONSTCOUNT] = {&_qzero_, &_qone_, &_qtwo_, &_qthree_,
-	&_qfour_, &_qten_, &_qnegone_, &_qonehalf_, &_qneghalf_};
-
+	&_qfour_, &_qten_, &_qnegone_, &_qonehalf_};
 
 /*
  * Create another copy of a number.

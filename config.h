@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: config.h,v 29.4 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: config.h,v 29.3 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -110,26 +110,26 @@
  */
 struct config {
 	int outmode;		/* current output mode */
-	LEN outdigits;		/* current output digits for float or exp */
+	long outdigits;		/* current output digits for float or exp */
 	NUMBER *epsilon;	/* default error for real functions */
 	    long epsilonprec;	/* epsilon binary precision (tied to epsilon) */
 	FLAG traceflags;	/* tracing flags */
-	LEN maxprint;		/* number of elements to print */
+	long maxprint;		/* number of elements to print */
 	LEN mul2;		/* size of number to use multiply algorithm 2 */
 	LEN sq2;		/* size of number to use square algorithm 2 */
 	LEN pow2;		/* size of modulus to use REDC for powers */
 	LEN redc2;		/* size of modulus to use REDC algorithm 2 */
 	BOOL tilde_ok;		/* ok to print a tilde on aproximations */
 	BOOL tab_ok;		/* ok to print tab before numeric values */
-	LEN quomod;		/* quomod() default rounding mode */
-	LEN quo;		/* quotient // default rounding mode */
-	LEN mod;		/* mod % default rounding mode */
-	LEN sqrt;		/* sqrt() default rounding mode */
-	LEN appr;		/* appr() default rounding mode */
-	LEN cfappr;		/* cfappr() default rounding mode */
-	LEN cfsim;		/* cfsim() default rounding mode */
-	LEN outround;		/* output default rounding mode */
-	LEN round;		/* round()/bround() default rounding mode */
+	long quomod;		/* quomod() default rounding mode */
+	long quo;		/* quotent // default rounding mode */
+	long mod;		/* mod % default rounding mode */
+	long sqrt;		/* sqrt() default rounding mode */
+	long appr;		/* appr() default rounding mode */
+	long cfappr;		/* cfappr() default rounding mode */
+	long cfsim;		/* cfsim() default rounding mode */
+	long outround;		/* output default rounding mode */
+	long round;		/* round()/bround() default rounding mode */
 	BOOL leadzero;		/* ok to print leading 0 before decimal pt */
 	BOOL fullzero;		/* ok to print trailing 0's */
 	long maxscancount;	/* max scan errors before abort */

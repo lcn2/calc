@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: zmath.h,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: zmath.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -332,7 +332,7 @@ extern void zlcm(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 extern void zreduce(ZVALUE z1, ZVALUE z2, ZVALUE *z1res, ZVALUE *z2res);
 extern void zfact(ZVALUE z, ZVALUE *dest);
 extern void zperm(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern int zcomb(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern void zcomb(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 extern FLAG zjacobi(ZVALUE z1, ZVALUE z2);
 extern void zfib(ZVALUE z, ZVALUE *res);
 extern void zpowi(ZVALUE z1, ZVALUE z2, ZVALUE *res);
@@ -344,7 +344,7 @@ extern long zlog(ZVALUE z1, ZVALUE z2);
 extern long zlog10(ZVALUE z);
 extern long zdivcount(ZVALUE z1, ZVALUE z2);
 extern long zfacrem(ZVALUE z1, ZVALUE z2, ZVALUE *rem);
-extern long zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+extern void zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 extern long zdigits(ZVALUE z1);
 extern long zdigit(ZVALUE z1, long n);
 extern FLAG zsqrt(ZVALUE z1, ZVALUE *dest, long R);
@@ -558,7 +558,7 @@ extern void math_divertio(void);
 extern void math_cleardiversions(void);
 extern char *math_getdivertedio(void);
 extern int math_setmode(int mode);
-extern LEN math_setdigits(LEN digits);
+extern long math_setdigits(long digits);
 extern void math_fmt(char *, ...);
 
 

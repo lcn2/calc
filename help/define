@@ -1,197 +1,121 @@
-NAME
-    define - command keyword to start a function definition
+Function definitions
 
-SYNTAX
-    define fname([param_1 [= default_1], ...]) = [expr]
-    define fname([param_1 [= default_1], ...]) { [statement_1 ... ] }
+    Function definitions are introduced by the 'define' keyword.
+    Other than this, the basic structure of an ordinary definition
+    is like in that in C: parameters are specified for the function
+    within parenthesis, the function body is introduced by a left brace,
+    variables may declared for the function, statements implementing the
+    function may follow, any value to be returned by the function is specified
+    by a return statement, and the function definition is ended with a
+    right brace.
 
-TYPES
-    fname		identifier, not a builtin function name
-    param_1, ...	identifiers, no two the same
-    default_1, ...	expressions
-    expr		expression
-    statement_1, ...	statements
+    There are some subtle differences, however.	 The types of parameters
+    and variables are not defined at compile time, and may vary during
+    execution and be different in different calls to the function.  For
+    example, a two-argument function add may be defined by
 
-DESCRIPTION
-    The intention of a function definition is that the identifier fname
-    becomes the name of a function which may be called by an expression
-    of the form  fname(arg_1, arg_2, ...), where arg_1, arg_2, ... are
-    expressions (including possibly blanks, which are treated as
-    null values).  Evaluation of the function begins with evaluation
-    of arg_1, arg_2, ...; then, in increasing order of i, if arg_i is
-    null-valued and  "= default_i" has been included in the definition,
-    default_i is evaluated and its value becomes the value of arg_i.
-    The instructions in expr or the listed statements are then executed
-    with each occurrence of param_i replaced by the value obtained
-    for arg_i.
+		define add(a,b) {
+			return a + b;
+		}
 
-    In a call, arg_i may be preceded by a backquote (`)  to indicate that
-    evaluation of arg_i is not to include a final evaluation of an lvalue.
-    For example, suppose a function f and a global variable A have been
-    defined by:
+    and be called with integer, fractional, or complex number values for a
+    and b, or, under some compatibility conditions, matrices or objects.
+    Any variable, not already defined as global, used in a definition has
+    to be declared as local, global or static, and retains this character
+    until its scope is terminated by the end of the definition, the end of
+    the file being read or some other condition (see help variable for
+    details).
 
-		define f(x) = (x = 3);
-		global mat A[3];
+    For example, the following function computes the factorial of n, where
+    we may suppose it is to be called only with positive integral values
+    for n:
 
-    If g() is  a function that evaluates to 2:
+	    define factorial(n)
+	    {
+		    local	ans;
 
-		f(A[g()]);
+		    ans = 1;
+		    while (n > 1)
+			    ans *= n--;
+		    return ans;
+	    }
 
-    assigns the value of A[2] to the parameter x and then assigns the
-    value 3 to x:
+    (In calc, this definition is unncessary since there is a built-in
+    function fact(n), also expressible as n!, which returns the factorial
+    of n.)
 
-		f(`A[g()]);
+    Any functions used in the body of the definition need not have already
+    been defined; it is sufficient that they have been defined when they are
+    encountered during evaluation when the function is called.
 
-    has essentially the effect of assigning A[2] as an lvalue to x and
-    then assigning the value 3 to A[2].  (Very old versions of calc
-    achieved the same result by using '&' as in  f(&A[g()]).)
+    If a function definition is sufficiently simple and does not require
+    local or static variables, it may be defined in shortened manner by
+    using an equals sign following by an expression involving some or all
+    of the parameters and already existing global variables.
 
-    The number of arguments arg_1, arg_2, ... in a call need not equal the
-    number of parameters.  If there are fewer arguments than parameters,
-    the "missing" values are assigned the null value.
+    In this case, the definition is terminated by a newline character
+    (which may be preceded by a semicolon), and the value the function
+    returns when called will be determined by the specified expression.
+    Loops and "if" statements are not allowed (but ? : expressions and the
+    logical operators ||, && and !  are permitted).  As an example, the
+    average of two numbers could be defined as:
 
-    In the definition of a function, the builtin function param(n)
-    provides a way of referring to the parameters.  If n (which may
-    result from evaluating an expreession) is zero, it returns the number
-    of arguments in a call to the function, and if 1 <= n <= param(0),
-    param(n) refers to the parameter with index n.
+	    define average(a, b) = (a + b) / 2;
 
-    If no error occurs and no quit statement or abort statement is
-    encountered during evaluation of the expression or the statements,
-    the function call returns a value.  In the expression form, this is
-    simply the value of the expression.
+    (Again, this function is not necessary, as the same result is
+    returned by the builtin function avg() when called with the
+    two arguments a, b.)
 
-    In the statement form, if a return statement is encountered,
-    the "return" keyword is to be either immediately followed by an
-    expression or by a statement terminator (semicolon or rightbrace);
-    in the former case, the expression is evaluated, evaluation of
-    the function ceases, and the value obtained for the expression is
-    returned as the "value of the function";  in the no-expression case,
-    evaluation ceases immediately and the null-value is returned.
+    Function definitions can be very complicated.  Functions may be
+    defined on the command line if desired, but editing of partial
+    functions is not possible past a single line.  If an error is made
+    on a previous line, then the function must be finished (with probable
+    errors) and reentered from the beginning.  Thus for complicated
+    functions, it is best to use an editor to create the definition in a
+    file, and then enter the calculator and read in the file containing
+    the definition.
 
-    In the expression form of definition, the end of the expression expr
-    is to be indicated by either a semicolon or a newline not within
-    a part enclosed by parentheses; the definition may extend over
-    several physical lines by ending each line with a '\' character or by
-    enclosing the expression in parentheses.  In interactive mode, that
-    a definition has not been completed is indicated by the continuation
-    prompt.   A ctrl-C interrupt at this stage will abort the definition.
+    The parameters of a function can be referenced by name, as in
+    normal C usage, or by using the 'param' function.  This function
+    returns the specified parameter of the function it is in, where
+    the parameters are numbered starting from 1.  The total number
+    of parameters to the function is returned by using 'param(0)'.
+    Using this function allows you to implement varargs-like routines
+    which can handle up to 100 calling parameters.  For example:
 
-    If the expr is omitted from an expression definition, as in:
+	    define sc()
+	    {
+		    local s, i;
 
-		define h() = ;
+		    s = 0;
+		    for (i = 1; i <= param(0); i++)
+			    s += param(i)^3;
+		    return s;
+	    }
 
-    any call to the function will evaluate the arguments and return the
-    null value.
+    defines a function which returns the sum of the cubes of all its
+    parameters.
 
-    In the statement form, the definition ends when a matching right
-    brace completes the "block" started by the initial left brace.
-    Newlines within the block are treated as white space; statements
-    within the block end with a ';' or a '}' matching an earlier '{'.
+    Any identifier other than a reserved word (if, for, etc.) and the
+    name of a builtin function (abs, fact, sin, etc.) can be used when
+    defining a new function or redefining an existing function.
 
-    If a function with name fname had been defined earlier, the old
-    definition has no effect on the new definition, but if the definition
-    is completed successfully, the new definition replaces the old one;
-    otherwise the old definition is retained.  The number of parameters
-    and their names in the new definiton may be quite different from
-    those in the old definition.
+    An indication of how a user-defined function is stored may be obtained
+    by using the "show opcodes" command.  For example:
 
-    An attempt at a definition may fail because of scanerrors as the
-    definition is compiled.  Common causes of these are: bad syntax,
-    using identifiers as names of variables not yet defined.  It is
-    not a fault to have in the definition a call to a function that has
-    not yet been defined; it is sufficient that the function has been
-    defined when a call is made to the function.
+		> global alpha
+		> define f(x) = 5 + alpha * x
+		"f" defined
+		> show opcodes f
+		0: NUMBER 5
+		2: GLOBALADDR alpha
+		4: PARAMADDR 0
+		6: MUL
+		7: ADD
+		8: RETURN
 
-    After fname has been defined, the definition may be removed by the command:
 
-		undefine fname
-
-    The definitions of all user-defined functions may be removed by:
-
-		undefine *
-
-    If bit 0 of config("resource_debug") is set and the define command is
-    at interactive level, a message saying that fname has been defined
-    or redefined is displayed.  The same message is displayed if bit 1
-    of config("resource_debug") is set and the define command is read
-    from a file.
-
-    The identifiers used for the parameters in a function definition do
-    not form part of the completed definition.  For example,
-
-	define f(a,b) = a + b;
-	define g(alpha, beta) = alpha + beta;
-
-    result in identical code for the functions f, g.
-
-    If config("trace") & 8 is nonzero, the opcodes of a newly defined
-    function are displayed on completion of its definition, parameters
-    being specified by names used in the definition.  For example:
-
-	> config("trace", 8),
-	> define f(a,b) = a + b
-	0: PARAMADDR a
-	2: PARAMADDR b
-	4: ADD
-	5: RETURN
-	f(a,b) defined
-
-    The opcodes may also be displayed later using the show opcodes command;
-    parameters will be specified by indices instead of by names.  For example:
-
-	> show opco f
-	0: PARAMADDR 0
-	2: PARAMADDR 1
-	4: ADD
-	5: RETURN
-
-    When a function is defined by the statement mode, the opcodes normally
-    include DEBUG opcodes which specify statement boundaries at which
-    SIGINT interruptions are likely to be least risky.  Inclusion of
-    the DEBUG opcodes is disabled if config("trace") & 2 is nonzero.
-    For details, see help interrupt.
-
-    While config("trace") & 1 is nonzero, the opcodes are displayed as
-    they are being evaluated.  The current function is identified by its
-    name, or "*" in the case of a command-line and "**" in the case of
-    an eval(str) evaluation.
-
-    When a function is called, argument values may be of any type for
-    which the operations and any functions used within the body of the
-    definition can be executed.  For example, whatever the intention at
-    the time they were defined, the functions f1(), f2() defined above
-    may be called with integer, fractional, or complex-number values, or
-    with both arguments strings, or under some compatibility conditions,
-    matrices or objects.
-
-EXAMPLE
-    > define f(a,b) = 2*a + b;
-    > define g(alpha, beta)
-    >> {
-    >>	   local a, pi2;
-    >>
-    >>	   pi2 = 2 * pi();
-    >>	   a = sin(alpha % pi2);
-    >>	   if (a > 0.0) {
-    >>	       return a*beta;
-    >>	   }
-    >>	   if (beta > 0.0) {
-    >>	       a *= cos(-beta % pi2);
-    >>	   }
-    >>	   return a;
-    >> }
-
-LIMITS
-    The number of arguments in a function-call cannot exceed 100.
-
-LIBRARY
-    none
-
-SEE ALSO
-    param, variable, undefine, show
-
-## Copyright (C) 2000  David I. Bell, Landon Curt Noll and Ernest Bowen
+## Copyright (C) 1999  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -207,10 +131,9 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: define,v 29.3 2000/07/17 15:36:26 chongo Exp $
+## @(#) $Revision: 29.2 $
+## @(#) $Id: define,v 29.2 2000/06/07 14:02:33 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/define,v $
-##
 ##
 ## Under source code control:	1991/07/21 04:37:18
 ## File existed as early as:	1991

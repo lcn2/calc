@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: value.h,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: value.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -191,6 +191,7 @@ extern void freevalue(VALUE *vp);
 extern void copyvalue(VALUE *vp, VALUE *vres);
 extern void negvalue(VALUE *vp, VALUE *vres);
 extern void addvalue(VALUE *v1, VALUE *v2, VALUE *vres);
+extern void addnumeric(VALUE *v1, VALUE *v2, VALUE *vres);
 extern void subvalue(VALUE *v1, VALUE *v2, VALUE *vres);
 extern void mulvalue(VALUE *v1, VALUE *v2, VALUE *vres);
 extern void orvalue(VALUE *v1, VALUE *v2, VALUE *vres);

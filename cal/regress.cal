@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: regress.cal,v 29.5 2000/12/04 20:00:53 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: regress.cal,v 29.3 2000/06/07 14:02:25 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -755,7 +755,7 @@ define test_functions()
 	vrfy(den(17) == 1,		'712: den(17) == 1');
 	vrfy(den(3/7) == 7,		'713: den(3/7) == 7');
 	vrfy(den(-2/3) == 3,		'714: den(-2/3) == 3');
-	vrfy(digits(0) == 0,		'715: digits(0) == 0');
+	vrfy(digits(0) == 1,		'715: digits(0) == 1');
 	vrfy(digits(9) == 1,		'716: digits(9) == 1');
 	vrfy(digits(10) == 2,		'717: digits(10) == 2');
 	vrfy(digits(-691) == 3,		'718: digits(-691) == 3');
@@ -1029,8 +1029,8 @@ define test_functions()
 	vrfy(digit(a,-1) == 4,		'974: digit(a,-1) == 4');
 	vrfy(digit(a,-2) == 2,		'975: digit(a,-2) == 2');
 	vrfy(digit(a,-3) == 8,		'976: digit(a,-3) == 8');
-	vrfy(digits(0) == 0,		'977: digits(0) == 0');
-	vrfy(digits(0.0123) == 0,	'978: digits(0.0123) == 0');
+	vrfy(digits(0) == 1,		'977: digits(0) == 1');
+	vrfy(digits(0.0123) == 1,	'978: digits(0.0123) == 1');
 	vrfy(digits(3.7) == 1,		'979: digits(3.7) == 1');
 	vrfy(digits(-27) == 2,		'980: digits(-27) == 2');
 	vrfy(digits(-99.7) == 2,	'981: digits(-99.7) == 2');
@@ -2987,7 +2987,7 @@ define test_error()
 	vrfy(root(3,2,0) == error(10029),
 				    '3644: root(3,2,0) == error(10029)');
 	vrfy(norm("x") == error(10030), '3645: norm("x") == error(10030)');
-	vrfy(list() << 2 == error(10031),'3646: list() << 2 == error(10031)');
+	vrfy(null() << 2 == error(10031),'3646: null() << 2 == error(10031)');
 	vrfy(1.5 << 2 == error(10031),	'3647: 1.5 << 2 == error(10031)');
 	vrfy(3 << "x" == error(10032),	'3648: 3 << "x" == error(10032)');
 	vrfy(3 << 1.5 == error(10032),	'3649: 3 << 1.5 == error(10032)');
@@ -7536,15 +7536,6 @@ print;
 print '8500: Starting test_divmod'
 read -once "test8500";
 /* 85xx: Ending test_divmod is printed by test8500.cal */
-
-
-/*
- * test_maxargs - test up to 1024 args being passed to a builtin function
- */
-print;
-print '8600: Starting test_1024args'
-read -once "test8600";
-/* 86xx: Ending test_1024args is printed by test8600.cal */
 
 
 /*

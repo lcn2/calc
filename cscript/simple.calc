@@ -1,4 +1,4 @@
-#!/usr/local/src/cmd/calc/calc -q -f
+#!/usr/local/src/cmd/calc/calc -S
 #
 # simple - an example of a simple calc shell script
 #
@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.3 $
-# @(#) $Id: simple.calc,v 29.3 2000/12/15 14:56:54 chongo Exp $
+# @(#) $Revision: 29.2 $
+# @(#) $Id: simple.calc,v 29.2 2000/06/07 14:02:59 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/simple.calc,v $
 #
 # Under source code control:	1999/11/29 10:22:37
@@ -32,4 +32,4 @@
 /*
  * This is an example of a simple calc shell script.
  */
-print "This simple calc shell script works!"
+print "The simple calc shell script works!"
