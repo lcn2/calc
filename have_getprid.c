@@ -1,22 +1,20 @@
 /*
- * have_newstr - Determine if we have a system without ANSI C string functions
+ * have_getprid - Determine if we getprid()
  *
  * usage:
- *	have_newstr
+ *	have_getprid
  *
- * Not all systems support all ANSI C string functions, so this may not
+ * Not all systems have the getprid() function, so this may not
  * compile on your system.
  *
  * This prog outputs several defines:
  *
- *	HAVE_NEWSTR
- *		defined ==> use memcpy(), memset(), strchr()
- *		undefined ==> use bcopy() instead of memcpy(),
- *			      use bfill() instead of memset(),
- *			      use index() instead of strchr()
+ *	HAVE_GETPRID
+ *		defined ==> use getprid()
+ *		undefined ==> do not or cannot call getprid()
  */
 /*
- * Copyright (c) 1995 by Landon Curt Noll.  All Rights Reserved.
+ * Copyright (c) 1999 by Landon Curt Noll.  All Rights Reserved.
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby granted,
@@ -39,29 +37,22 @@
  * chongo was here	/\../\
  */
 
-#include <stdio.h>
-
-#define MOVELEN 3
-
-char src[] = "chongo was here";
-char dest[MOVELEN+1];
+#include <sys/types.h>
+#include <unistd.h>
 
 int
 main(void)
 {
-#if defined(HAVE_NO_NEWSTR)
+#if defined(HAVE_NO_GETPRID)
 
-	printf("#undef HAVE_NEWSTR /* no */\n");
+	printf("#undef HAVE_GETPRID /* no */\n");
 
-#else /* HAVE_NO_NEWSTR */
+#else /* HAVE_NO_GETPRID */
 
-	(void) memcpy(dest, src, MOVELEN);
-	(void) memset(dest, 0, MOVELEN);
-	(void) strchr(src, 'e');
+	(void) getprid();
+	printf("#define HAVE_GETPRID /* yes */\n");
 
-	printf("#define HAVE_NEWSTR /* yes */\n");
-
-#endif /* HAVE_NO_NEWSTR */
+#endif /* HAVE_NO_GETPRID */
 
 	/* exit(0); */
 	return 0;

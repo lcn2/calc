@@ -1,22 +1,20 @@
 /*
- * have_newstr - Determine if we have a system without ANSI C string functions
+ * have_getpgid - Determine if we getpgid()
  *
  * usage:
- *	have_newstr
+ *	have_getpgid
  *
- * Not all systems support all ANSI C string functions, so this may not
+ * Not all systems have the getpgid() function, so this may not
  * compile on your system.
  *
  * This prog outputs several defines:
  *
- *	HAVE_NEWSTR
- *		defined ==> use memcpy(), memset(), strchr()
- *		undefined ==> use bcopy() instead of memcpy(),
- *			      use bfill() instead of memset(),
- *			      use index() instead of strchr()
+ *	HAVE_GETPGID
+ *		defined ==> use getpgid()
+ *		undefined ==> do not or cannot call getpgid()
  */
 /*
- * Copyright (c) 1995 by Landon Curt Noll.  All Rights Reserved.
+ * Copyright (c) 1999 by Landon Curt Noll.  All Rights Reserved.
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby granted,
@@ -39,29 +37,23 @@
  * chongo was here	/\../\
  */
 
-#include <stdio.h>
-
-#define MOVELEN 3
-
-char src[] = "chongo was here";
-char dest[MOVELEN+1];
+#include <sys/types.h>
+#include <unistd.h>
 
 int
 main(void)
 {
-#if defined(HAVE_NO_NEWSTR)
+#if defined(HAVE_NO_GETPGID)
 
-	printf("#undef HAVE_NEWSTR /* no */\n");
+	printf("#undef HAVE_GETPGID /* no */\n");
 
-#else /* HAVE_NO_NEWSTR */
+#else /* HAVE_NO_GETPGID */
 
-	(void) memcpy(dest, src, MOVELEN);
-	(void) memset(dest, 0, MOVELEN);
-	(void) strchr(src, 'e');
+	(void) getpgid((pid_t)0);
 
-	printf("#define HAVE_NEWSTR /* yes */\n");
+	printf("#define HAVE_GETPGID /* yes */\n");
 
-#endif /* HAVE_NO_NEWSTR */
+#endif /* HAVE_NO_GETPGID */
 
 	/* exit(0); */
 	return 0;

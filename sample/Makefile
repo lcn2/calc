@@ -402,9 +402,13 @@ depend:
 	else \
 		rm -f Makefile.tmp; \
 		mv Makefile Makefile.tmp; \
-		sccs edit Makefile; \
+		if [ -d RCS ]; then; \
+		    co -l Makefile; \
+		fi; \
 		mv Makefile.tmp Makefile; \
-		echo new 'sample Makefile formed -- you need to check it in'; \
+		if [ -d RCS ]; then; \
+		    echo new sample Makefile formed, you need to check it in; \
+		fi; \
 	fi
 
 ##

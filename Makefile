@@ -106,7 +106,7 @@ LONGLONG_BITS=
 # to determine if there is are fgetpos and fsetpos functions.  If HAVE_FPOS
 # is set to -DHAVE_NO_FPOS, then calc will use ftell() and fseek().
 #
-# If in doubt, leave HAVE_FPOS empty.
+# If in doubt, leave HAVE_FPOS empty and this Makefile will figure it out.
 #
 HAVE_FPOS=
 #HAVE_FPOS= -DHAVE_NO_FPOS
@@ -120,7 +120,7 @@ HAVE_FPOS=
 # -DOFF_T_NON_SCALAR when calc will assume that off_t some sort of
 # union or struct which.
 #
-# If in doubt, leave HAVE_OFFSCL empty.
+# If in doubt, leave HAVE_OFFSCL empty and this Makefile will figure it out.
 #
 HAVE_OFFSCL=
 #HAVE_OFFSCL= -DOFF_T_NON_SCALAR
@@ -136,7 +136,7 @@ HAVE_OFFSCL=
 # -DFILEPOS_NON_SCALAR when calc will assume that fpos_t exists and is
 # some sort of union or struct which.
 #
-# If in doubt, leave HAVE_POSSCL empty.
+# If in doubt, leave HAVE_POSSCL empty and this Makefile will figure it out.
 #
 HAVE_POSSCL=
 #HAVE_POSSCL= -DFILEPOS_NON_SCALAR
@@ -147,7 +147,7 @@ HAVE_POSSCL=
 # to determine if const is supported.  If HAVE_CONST is set to -DHAVE_NO_CONST,
 # then calc will not use const.
 #
-# If in doubt, leave HAVE_CONST empty.
+# If in doubt, leave HAVE_CONST empty and this Makefile will figure it out.
 #
 HAVE_CONST=
 #HAVE_CONST= -DHAVE_NO_CONST
@@ -159,7 +159,7 @@ HAVE_CONST=
 # then calc will treat uid_t as an unsigned short.  This only matters if
 # $HOME is not set and calc must look up the home directory in /etc/passwd.
 #
-# If in doubt, leave HAVE_UID_T empty.
+# If in doubt, leave HAVE_UID_T empty and this Makefile will figure it out.
 #
 HAVE_UID_T=
 #HAVE_UID_T= -DHAVE_NO_UID_T
@@ -172,7 +172,7 @@ HAVE_UID_T=
 # of memcpy(), use bfill() instead of memset(), and use index() instead of
 # strchr().
 #
-# If in doubt, leave HAVE_NEWSTR empty.
+# If in doubt, leave HAVE_NEWSTR empty and this Makefile will figure it out.
 #
 HAVE_NEWSTR=
 #HAVE_NEWSTR= -DHAVE_NO_NEWSTR
@@ -184,10 +184,82 @@ HAVE_NEWSTR=
 # -DHAVE_NO_MEMMOVE, then calc will use internal functions to simulate
 # the memory move function that does correct overlapping memory modes.
 #
-# If in doubt, leave HAVE_MEMMOVE empty.
+# If in doubt, leave HAVE_MEMMOVE empty and this Makefile will figure it out.
 #
 HAVE_MEMMOVE=
 #HAVE_MEMMOVE= -DHAVE_NO_MEMMOVE
+
+# Determine if we have ustat()
+#
+# If HAVE_USTAT is empty, this makefile will run the have_memmv program
+# to determine if ustat() is supported.  If HAVE_USTAT is set to
+# -DHAVE_NO_USTAT, then calc will use internal functions to simulate
+# the memory move function that does correct overlapping memory modes.
+#
+# If in doubt, leave HAVE_USTAT empty and this Makefile will figure it out.
+#
+HAVE_USTAT=
+#HAVE_USTAT= -DHAVE_NO_USTAT
+
+# Determine if we have getsid()
+#
+# If HAVE_GETSID is empty, this makefile will run the have_memmv program
+# to determine if getsid() is supported.  If HAVE_GETSID is set to
+# -DHAVE_NO_GETSID, then calc will use internal functions to simulate
+# the memory move function that does correct overlapping memory modes.
+#
+# If in doubt, leave HAVE_GETSID empty and this Makefile will figure it out.
+#
+HAVE_GETSID=
+#HAVE_GETSID= -DHAVE_NO_GETSID
+
+# Determine if we have getpgid()
+#
+# If HAVE_GETPGID is empty, this makefile will run the have_memmv program
+# to determine if getpgid() is supported.  If HAVE_GETPGID is set to
+# -DHAVE_NO_GETPGID, then calc will use internal functions to simulate
+# the memory move function that does correct overlapping memory modes.
+#
+# If in doubt, leave HAVE_GETPGID empty and this Makefile will figure it out.
+#
+HAVE_GETPGID=
+#HAVE_GETPGID= -DHAVE_NO_GETPGID
+
+# Determine if we have clock_gettime()
+#
+# If HAVE_GETTIME is empty, this makefile will run the have_memmv program
+# to determine if clock_gettime() is supported.  If HAVE_GETTIME is set to
+# -DHAVE_NO_GETTIME, then calc will use internal functions to simulate
+# the memory move function that does correct overlapping memory modes.
+#
+# If in doubt, leave HAVE_GETTIME empty and this Makefile will figure it out.
+#
+HAVE_GETTIME=
+#HAVE_GETTIME= -DHAVE_NO_GETTIME
+
+# Determine if we have getprid()
+#
+# If HAVE_GETPRID is empty, this makefile will run the have_memmv program
+# to determine if getprid() is supported.  If HAVE_GETPRID is set to
+# -DHAVE_NO_GETPRID, then calc will use internal functions to simulate
+# the memory move function that does correct overlapping memory modes.
+#
+# If in doubt, leave HAVE_GETPRID empty and this Makefile will figure it out.
+#
+HAVE_GETPRID=
+#HAVE_GETPRID= -DHAVE_NO_GETPRID
+
+# Determine if we have /dev/urandom
+#
+# If HAVE_URANDOM is empty, this makefile will run the have_memmv program
+# to determine if /dev/urandom is supported.  If HAVE_URANDOM is set to
+# -DHAVE_NO_URANDOM, then calc will use internal functions to simulate
+# the memory move function that does correct overlapping memory modes.
+#
+# If in doubt, leave HAVE_URANDOM empty and this Makefile will figure it out.
+#
+HAVE_URANDOM=
+#HAVE_URANDOM= -DHAVE_NO_URANDOM
 
 # Some architectures such as Sparc do not allow one to access 32 bit values
 # that are not alligned on a 32 bit boundary.
@@ -809,7 +881,9 @@ BUILD_H_SRC= align32.h args.h calcerr.h conf.h endian_calc.h \
 	fposval.h have_const.h have_fpos.h have_malloc.h \
 	have_memmv.h have_newstr.h have_offscl.h have_posscl.h \
 	have_stdlib.h have_string.h have_times.h have_uid_t.h \
-	have_unistd.h longbits.h longlong.h terminal.h calc_errno.h
+	have_unistd.h longbits.h longlong.h terminal.h calc_errno.h \
+	have_ustat.h have_getsid.h have_getpgid.h \
+	have_gettime.h have_getprid.h have_urandom.h
 
 # we build these .c files during the make
 #
@@ -821,7 +895,9 @@ BUILD_C_SRC= calcerr.c
 #
 UTIL_C_SRC= align32.c endian.c longbits.c have_newstr.c have_uid_t.c \
 	have_const.c have_stdvs.c have_varvs.c fposval.c have_fpos.c \
-	longlong.c have_offscl.c have_posscl.c have_memmv.c calc_errno.c
+	longlong.c have_offscl.c have_posscl.c have_memmv.c calc_errno.c \
+	have_ustat.c have_getsid.c have_getpgid.c \
+	have_gettime.c have_getprid.c
 
 # these awk and sed tools are used in the process of building BUILD_H_SRC
 # and BUILD_C_SRC
@@ -835,17 +911,22 @@ UTIL_MISC_SRC= calcerr_h.sed calcerr_h.awk calcerr_c.sed calcerr_c.awk \
 #
 UTIL_OBJS= endian.o longbits.o have_newstr.o have_uid_t.o \
 	have_const.o fposval.o have_fpos.o longlong.o try_strarg.o \
-	have_stdvs.o have_varvs.o have_posscl.o have_memmv.o calc_errno.o
+	have_stdvs.o have_varvs.o have_posscl.o have_memmv.o calc_errno.o \
+	have_ustat.o have_getsid.o have_getpgid.o \
+	have_gettime.o have_getprid.o
 
-# these temp files may be created  (and removed) during the build of BUILD_C_SRC
+# these temp files may be created (and removed) during the build of BUILD_C_SRC
 #
 UTIL_TMP= ll_tmp fpos_tmp fposv_tmp const_tmp uid_tmp newstr_tmp vs_tmp \
-	calc_errno_tmp
+	calc_errno_tmp memmv_tmp offscl_tmp posscl_tmp newstr_tmp \
+	getsid_tmp gettime_tmp getprid_tmp
 
 # these utility progs may be used in the process of building BUILD_H_SRC
 #
 UTIL_PROGS= align32 fposval have_uid_t longlong have_const \
-	endian longbits have_newstr have_stdvs have_varvs calc_errno
+	endian longbits have_newstr have_stdvs have_varvs calc_errno \
+	have_ustat have_getsid have_getpgid \
+	have_gettime have_getprid
 
 # These files are required by the regress.cal regression test.
 #
@@ -1717,7 +1798,7 @@ have_newstr.h: have_newstr.c ${MAKE_FILE}
 	fi
 
 have_memmv.h: have_memmv.c ${MAKE_FILE}
-	-${Q}rm -f have_memmv have_memmv.o newstr_tmp have_memmv.h
+	-${Q}rm -f have_memmv have_memmv.o memmv_tmp have_memmv.h
 	${Q}echo 'forming have_memmv.h'
 	${Q}echo '/*' > have_memmv.h
 	${Q}echo ' * DO NOT EDIT -- generated by the Makefile' >> have_memmv.h
@@ -1732,18 +1813,243 @@ have_memmv.h: have_memmv.c ${MAKE_FILE}
 	-${Q}rm -f have_memmv.o have_memmv
 	-${Q}${LCC} ${ICFLAGS} ${HAVE_MEMMOVE} have_memmv.c -c 2>/dev/null; true
 	-${Q}${LCC} ${ILDFLAGS} have_memmv.o -o have_memmv 2>/dev/null; true
-	-${Q}${SHELL} -c "./have_memmv > newstr_tmp 2>/dev/null" \
+	-${Q}${SHELL} -c "./have_memmv > memmv_tmp 2>/dev/null" \
 	    >/dev/null 2>&1; true
-	-${Q}if [ -s newstr_tmp ]; then \
-	    cat newstr_tmp >> have_memmv.h; \
+	-${Q}if [ -s memmv_tmp ]; then \
+	    cat memmv_tmp >> have_memmv.h; \
 	else \
 	    echo '#undef HAVE_MEMMOVE /* no */' >> have_memmv.h; \
 	fi
 	${Q}echo '' >> have_memmv.h
 	${Q}echo '' >> have_memmv.h
 	${Q}echo '#endif /* !__HAVE_MEMMV_H__ */' >> have_memmv.h
-	-${Q}rm -f have_memmv have_memmv.o newstr_tmp
+	-${Q}rm -f have_memmv have_memmv.o memmv_tmp
 	${Q}echo 'have_memmv.h formed'
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= start of $@ =-=-='; \
+	    cat $@; \
+	    echo '=-=-= end of $@ =-=-='; \
+	    echo ''; \
+	else \
+	    true; \
+	fi
+
+have_ustat.h: have_ustat.c ${MAKE_FILE}
+	-${Q}rm -f have_ustat have_ustat.o ustat_tmp have_ustat.h
+	${Q}echo 'forming have_ustat.h'
+	${Q}echo '/*' > have_ustat.h
+	${Q}echo ' * DO NOT EDIT -- generated by the Makefile' >> have_ustat.h
+	${Q}echo ' */' >> have_ustat.h
+	${Q}echo '' >> have_ustat.h
+	${Q}echo '' >> have_ustat.h
+	${Q}echo '#if !defined(__HAVE_USTAT_H__)' >> have_ustat.h
+	${Q}echo '#define __HAVE_USTAT_H__' >> have_ustat.h
+	${Q}echo '' >> have_ustat.h
+	${Q}echo '' >> have_ustat.h
+	${Q}echo '/* do we have or want ustat()? */' >> have_ustat.h
+	-${Q}rm -f have_ustat.o have_ustat
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_USTAT} have_ustat.c -c 2>/dev/null; true
+	-${Q}${LCC} ${ILDFLAGS} have_ustat.o -o have_ustat 2>/dev/null; true
+	-${Q}${SHELL} -c "./have_ustat > ustat_tmp 2>/dev/null" \
+	    >/dev/null 2>&1; true
+	-${Q}if [ -s ustat_tmp ]; then \
+	    cat ustat_tmp >> have_ustat.h; \
+	else \
+	    echo '#undef HAVE_USTAT /* no */' >> have_ustat.h; \
+	fi
+	${Q}echo '' >> have_ustat.h
+	${Q}echo '' >> have_ustat.h
+	${Q}echo '#endif /* !__HAVE_USTAT_H__ */' >> have_ustat.h
+	-${Q}rm -f have_ustat have_ustat.o ustat_tmp
+	${Q}echo 'have_ustat.h formed'
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= start of $@ =-=-='; \
+	    cat $@; \
+	    echo '=-=-= end of $@ =-=-='; \
+	    echo ''; \
+	else \
+	    true; \
+	fi
+
+have_getsid.h: have_getsid.c ${MAKE_FILE}
+	-${Q}rm -f have_getsid have_getsid.o getsid_tmp have_getsid.h
+	${Q}echo 'forming have_getsid.h'
+	${Q}echo '/*' > have_getsid.h
+	${Q}echo ' * DO NOT EDIT -- generated by the Makefile' >> have_getsid.h
+	${Q}echo ' */' >> have_getsid.h
+	${Q}echo '' >> have_getsid.h
+	${Q}echo '' >> have_getsid.h
+	${Q}echo '#if !defined(__HAVE_GETSID_H__)' >> have_getsid.h
+	${Q}echo '#define __HAVE_GETSID_H__' >> have_getsid.h
+	${Q}echo '' >> have_getsid.h
+	${Q}echo '' >> have_getsid.h
+	${Q}echo '/* do we have or want getsid()? */' >> have_getsid.h
+	-${Q}rm -f have_getsid.o have_getsid
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETSID} have_getsid.c -c 2>/dev/null; true
+	-${Q}${LCC} ${ILDFLAGS} have_getsid.o -o have_getsid 2>/dev/null; true
+	-${Q}${SHELL} -c "./have_getsid > getsid_tmp 2>/dev/null" \
+	    >/dev/null 2>&1; true
+	-${Q}if [ -s getsid_tmp ]; then \
+	    cat getsid_tmp >> have_getsid.h; \
+	else \
+	    echo '#undef HAVE_GETSID /* no */' >> have_getsid.h; \
+	fi
+	${Q}echo '' >> have_getsid.h
+	${Q}echo '' >> have_getsid.h
+	${Q}echo '#endif /* !__HAVE_GETSID_H__ */' >> have_getsid.h
+	-${Q}rm -f have_getsid have_getsid.o getsid_tmp
+	${Q}echo 'have_getsid.h formed'
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= start of $@ =-=-='; \
+	    cat $@; \
+	    echo '=-=-= end of $@ =-=-='; \
+	    echo ''; \
+	else \
+	    true; \
+	fi
+
+have_getpgid.h: have_getpgid.c ${MAKE_FILE}
+	-${Q}rm -f have_getpgid have_getpgid.o getpgid_tmp have_getpgid.h
+	${Q}echo 'forming have_getpgid.h'
+	${Q}echo '/*' > have_getpgid.h
+	${Q}echo ' * DO NOT EDIT -- generated by the Makefile' >> have_getpgid.h
+	${Q}echo ' */' >> have_getpgid.h
+	${Q}echo '' >> have_getpgid.h
+	${Q}echo '' >> have_getpgid.h
+	${Q}echo '#if !defined(__HAVE_GETPGID_H__)' >> have_getpgid.h
+	${Q}echo '#define __HAVE_GETPGID_H__' >> have_getpgid.h
+	${Q}echo '' >> have_getpgid.h
+	${Q}echo '' >> have_getpgid.h
+	${Q}echo '/* do we have or want getpgid()? */' >> have_getpgid.h
+	-${Q}rm -f have_getpgid.o have_getpgid
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETPGID} have_getpgid.c -c 2>/dev/null; \
+	     true
+	-${Q}${LCC} ${ILDFLAGS} have_getpgid.o -o have_getpgid 2>/dev/null; true
+	-${Q}${SHELL} -c "./have_getpgid > getpgid_tmp 2>/dev/null" \
+	    >/dev/null 2>&1; true
+	-${Q}if [ -s getpgid_tmp ]; then \
+	    cat getpgid_tmp >> have_getpgid.h; \
+	else \
+	    echo '#undef HAVE_GETPGID /* no */' >> have_getpgid.h; \
+	fi
+	${Q}echo '' >> have_getpgid.h
+	${Q}echo '' >> have_getpgid.h
+	${Q}echo '#endif /* !__HAVE_GETPGID_H__ */' >> have_getpgid.h
+	-${Q}rm -f have_getpgid have_getpgid.o getpgid_tmp
+	${Q}echo 'have_getpgid.h formed'
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= start of $@ =-=-='; \
+	    cat $@; \
+	    echo '=-=-= end of $@ =-=-='; \
+	    echo ''; \
+	else \
+	    true; \
+	fi
+
+have_gettime.h: have_gettime.c ${MAKE_FILE}
+	-${Q}rm -f have_gettime have_gettime.o gettime_tmp have_gettime.h
+	${Q}echo 'forming have_gettime.h'
+	${Q}echo '/*' > have_gettime.h
+	${Q}echo ' * DO NOT EDIT -- generated by the Makefile' >> have_gettime.h
+	${Q}echo ' */' >> have_gettime.h
+	${Q}echo '' >> have_gettime.h
+	${Q}echo '' >> have_gettime.h
+	${Q}echo '#if !defined(__HAVE_GETTIME_H__)' >> have_gettime.h
+	${Q}echo '#define __HAVE_GETTIME_H__' >> have_gettime.h
+	${Q}echo '' >> have_gettime.h
+	${Q}echo '' >> have_gettime.h
+	${Q}echo '/* do we have or want clock_gettime()? */' >> have_gettime.h
+	-${Q}rm -f have_gettime.o have_gettime
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETTIME} have_gettime.c -c 2>/dev/null; \
+	     true
+	-${Q}${LCC} ${ILDFLAGS} have_gettime.o -o have_gettime 2>/dev/null; true
+	-${Q}${SHELL} -c "./have_gettime > gettime_tmp 2>/dev/null" \
+	    >/dev/null 2>&1; true
+	-${Q}if [ -s gettime_tmp ]; then \
+	    cat gettime_tmp >> have_gettime.h; \
+	else \
+	    echo '#undef HAVE_GETTIME /* no */' >> have_gettime.h; \
+	fi
+	${Q}echo '' >> have_gettime.h
+	${Q}echo '' >> have_gettime.h
+	${Q}echo '#endif /* !__HAVE_GETTIME_H__ */' >> have_gettime.h
+	-${Q}rm -f have_gettime have_gettime.o gettime_tmp
+	${Q}echo 'have_gettime.h formed'
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= start of $@ =-=-='; \
+	    cat $@; \
+	    echo '=-=-= end of $@ =-=-='; \
+	    echo ''; \
+	else \
+	    true; \
+	fi
+
+have_getprid.h: have_getprid.c ${MAKE_FILE}
+	-${Q}rm -f have_getprid have_getprid.o getprid_tmp have_getprid.h
+	${Q}echo 'forming have_getprid.h'
+	${Q}echo '/*' > have_getprid.h
+	${Q}echo ' * DO NOT EDIT -- generated by the Makefile' >> have_getprid.h
+	${Q}echo ' */' >> have_getprid.h
+	${Q}echo '' >> have_getprid.h
+	${Q}echo '' >> have_getprid.h
+	${Q}echo '#if !defined(__HAVE_GETPRID_H__)' >> have_getprid.h
+	${Q}echo '#define __HAVE_GETPRID_H__' >> have_getprid.h
+	${Q}echo '' >> have_getprid.h
+	${Q}echo '' >> have_getprid.h
+	${Q}echo '/* do we have or want getprid()? */' >> have_getprid.h
+	-${Q}rm -f have_getprid.o have_getprid
+	-${Q}${LCC} ${ICFLAGS} ${HAVE_GETPRID} have_getprid.c -c 2>/dev/null; \
+	     true
+	-${Q}${LCC} ${ILDFLAGS} have_getprid.o -o have_getprid 2>/dev/null; true
+	-${Q}${SHELL} -c "./have_getprid > getprid_tmp 2>/dev/null" \
+	    >/dev/null 2>&1; true
+	-${Q}if [ -s getprid_tmp ]; then \
+	    cat getprid_tmp >> have_getprid.h; \
+	else \
+	    echo '#undef HAVE_GETPRID /* no */' >> have_getprid.h; \
+	fi
+	${Q}echo '' >> have_getprid.h
+	${Q}echo '' >> have_getprid.h
+	${Q}echo '#endif /* !__HAVE_GETPRID_H__ */' >> have_getprid.h
+	-${Q}rm -f have_getprid have_getprid.o getprid_tmp
+	${Q}echo 'have_getprid.h formed'
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= start of $@ =-=-='; \
+	    cat $@; \
+	    echo '=-=-= end of $@ =-=-='; \
+	    echo ''; \
+	else \
+	    true; \
+	fi
+
+have_urandom.h: ${MAKE_FILE}
+	-${Q}rm -f have_urandom.h
+	${Q}echo 'forming have_urandom.h'
+	${Q}echo '/*' > have_urandom.h
+	${Q}echo ' * DO NOT EDIT -- generated by the Makefile' >> have_urandom.h
+	${Q}echo ' */' >> have_urandom.h
+	${Q}echo '' >> have_urandom.h
+	${Q}echo '' >> have_urandom.h
+	${Q}echo '#if !defined(__HAVE_URANDOM_H__)' >> have_urandom.h
+	${Q}echo '#define __HAVE_URANDOM_H__' >> have_urandom.h
+	${Q}echo '' >> have_urandom.h
+	${Q}echo '' >> have_urandom.h
+	${Q}echo '/* do we have /dev/urandom? */' >> have_urandom.h
+	-${Q}if [ -c /dev/urandom ]; then \
+	    echo '#define HAVE_URANDOM_H  /* yes */' >> have_urandom.h; \
+	else \
+	    echo '#undef HAVE_URANDOM_H  /* no */' >> have_urandom.h; \
+	fi
+	${Q}echo '' >> have_urandom.h
+	${Q}echo '' >> have_urandom.h
+	${Q}echo '#endif /* !__HAVE_URANDOM_H__ */' >> have_urandom.h
+	${Q}echo 'have_urandom.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -2290,6 +2596,12 @@ env:
 	@echo "HAVE_CONST=${HAVE_CONST}"; echo ""
 	@echo "HAVE_UID_T=${HAVE_UID_T}"; echo ""
 	@echo "HAVE_NEWSTR=${HAVE_NEWSTR}"; echo ""
+	@echo "HAVE_USTAT=${HAVE_USTAT}"; echo ""
+	@echo "HAVE_GETSID=${HAVE_GETSID}"; echo ""
+	@echo "HAVE_GETPGID=${HAVE_GETPGID}"; echo ""
+	@echo "HAVE_GETTIME=${HAVE_GETTIME}"; echo ""
+	@echo "HAVE_GETPRID=${HAVE_GETPRID}"; echo ""
+	@echo "HAVE_URANDOM=${HAVE_URANDOM}"; echo ""
 	@echo "ALIGN32=${ALIGN32}"; echo ""
 	@echo "ERRNO_DECL=${ERRNO_DECL}"; echo ""
 	@echo "BINDIR=${BINDIR}"; echo ""
@@ -3020,6 +3332,10 @@ hash.o: zrand.h
 hash.o: zrandom.h
 have_const.o: have_const.c
 have_fpos.o: have_fpos.c
+have_getpgid.o: have_getpgid.c
+have_getprid.o: have_getprid.c
+have_getsid.o: have_getsid.c
+have_gettime.o: have_gettime.c
 have_memmv.o: have_memmv.c
 have_newstr.o: have_newstr.c
 have_offscl.o: have_offscl.c
@@ -3030,6 +3346,7 @@ have_stdvs.o: have_string.h
 have_stdvs.o: have_unistd.h
 have_uid_t.o: have_uid_t.c
 have_uid_t.o: have_unistd.h
+have_ustat.o: have_ustat.c
 have_varvs.o: have_string.h
 have_varvs.o: have_unistd.h
 have_varvs.o: have_varvs.c
@@ -3510,11 +3827,17 @@ quickhash.o: zrandom.h
 seed.o: alloc.h
 seed.o: byteswap.h
 seed.o: endian_calc.h
+seed.o: have_getpgid.h
+seed.o: have_getprid.h
+seed.o: have_getsid.h
+seed.o: have_gettime.h
 seed.o: have_malloc.h
 seed.o: have_memmv.h
 seed.o: have_newstr.h
 seed.o: have_stdlib.h
 seed.o: have_string.h
+seed.o: have_urandom.h
+seed.o: have_ustat.h
 seed.o: longbits.h
 seed.o: qmath.h
 seed.o: seed.c

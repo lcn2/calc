@@ -419,9 +419,13 @@ depend:
 	else \
 		rm -f Makefile.tmp; \
 		mv Makefile Makefile.tmp; \
-		sccs edit Makefile; \
+		if [ -d RCS ]; then; \
+		    co -l Makefile; \
+		fi ;\
 		mv Makefile.tmp Makefile; \
-		echo new 'custom Makefile formed -- you need to check it in'; \
+		if [ -d RCS ]; then; \
+		echo new custom Makefile formed '--' you need to check it in'; \
+		fi; \
 	fi
 
 ##
@@ -588,8 +592,28 @@ c_help.o: ../string.h
 c_help.o: ../value.h
 c_help.o: ../zmath.h
 c_help.o: c_help.c
+c_pzasusb8.o: ../alloc.h
+c_pzasusb8.o: ../block.h
+c_pzasusb8.o: ../byteswap.h
+c_pzasusb8.o: ../calcerr.h
+c_pzasusb8.o: ../cmath.h
+c_pzasusb8.o: ../config.h
 c_pzasusb8.o: ../custom.h
+c_pzasusb8.o: ../endian_calc.h
+c_pzasusb8.o: ../hash.h
 c_pzasusb8.o: ../have_const.h
+c_pzasusb8.o: ../have_malloc.h
+c_pzasusb8.o: ../have_memmv.h
+c_pzasusb8.o: ../have_newstr.h
+c_pzasusb8.o: ../have_stdlib.h
+c_pzasusb8.o: ../have_string.h
+c_pzasusb8.o: ../longbits.h
+c_pzasusb8.o: ../md5.h
+c_pzasusb8.o: ../nametype.h
+c_pzasusb8.o: ../qmath.h
+c_pzasusb8.o: ../shs.h
+c_pzasusb8.o: ../shs1.h
+c_pzasusb8.o: ../string.h
 c_pzasusb8.o: ../value.h
 c_pzasusb8.o: ../zmath.h
 c_pzasusb8.o: c_pzasusb8.c

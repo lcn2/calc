@@ -46,16 +46,21 @@ int
 main(void)
 {
 #if defined(HAVE_NO_CONST)
+
 	printf("#undef HAVE_CONST /* no */\n");
 	printf("#undef CONST\n");
 	printf("#define CONST /* no */\n");
+
 #else /* HAVE_NO_CONST */
+
 	const char * const str = "const";
 
 	printf("#define HAVE_CONST /* yes */\n");
 	printf("#undef CONST\n");
 	printf("#define CONST %s /* yes */\n", str);
+
 #endif /* HAVE_NO_CONST */
+
 	/* exit(0); */
 	return 0;
 }

@@ -1,22 +1,22 @@
 /*
- * have_newstr - Determine if we have a system without ANSI C string functions
+ * have_gettime - Determine if we clock_gettime()
  *
  * usage:
- *	have_newstr
+ *	have_gettime
  *
- * Not all systems support all ANSI C string functions, so this may not
+ * Not all systems have the clock_gettime() function, so this may not
  * compile on your system.
  *
  * This prog outputs several defines:
  *
- *	HAVE_NEWSTR
- *		defined ==> use memcpy(), memset(), strchr()
- *		undefined ==> use bcopy() instead of memcpy(),
- *			      use bfill() instead of memset(),
- *			      use index() instead of strchr()
+ *	HAVE_GETTIME
+ *		defined ==> use clock_gettime() for either CLOCK_SGI_CYCLE
+ *			    and/or CLOCK_REALTIME
+ *		undefined ==> clock_gettime() is not available for both
+ *			      CLOCK_SGI_CYCLE and CLOCK_REALTIME
  */
 /*
- * Copyright (c) 1995 by Landon Curt Noll.  All Rights Reserved.
+ * Copyright (c) 1999 by Landon Curt Noll.  All Rights Reserved.
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby granted,
@@ -39,30 +39,36 @@
  * chongo was here	/\../\
  */
 
-#include <stdio.h>
-
-#define MOVELEN 3
-
-char src[] = "chongo was here";
-char dest[MOVELEN+1];
+#include <time.h>
 
 int
 main(void)
 {
-#if defined(HAVE_NO_NEWSTR)
+#if defined(HAVE_NO_GETTIME)
 
-	printf("#undef HAVE_NEWSTR /* no */\n");
+	printf("#undef HAVE_GETTIME /* no */\n");
 
-#else /* HAVE_NO_NEWSTR */
+#else /* HAVE_NO_GETTIME */
 
-	(void) memcpy(dest, src, MOVELEN);
-	(void) memset(dest, 0, MOVELEN);
-	(void) strchr(src, 'e');
+# if defined(CLOCK_SGI_CYCLE)
 
-	printf("#define HAVE_NEWSTR /* yes */\n");
+	struct timespec sgi_cycle;	/* SGI hardware clock */
+	(void) clock_gettime(CLOCK_SGI_CYCLE, &sgi_cycle);
+	printf("#define HAVE_GETTIME /* yes - w/CLOCK_SGI_CYCLE */\n");
 
-#endif /* HAVE_NO_NEWSTR */
+# elif defined(CLOCK_REALTIME)
 
+	struct timespec realtime;	/* POSIX realtime clock */
+	(void) clock_gettime(CLOCK_REALTIME, &realtime);
+	printf("#define HAVE_GETTIME /* yes - CLOCK_REALTIME only */\n");
+
+# else
+
+	printf("#undef HAVE_GETTIME /* no - no SGI_CYCLE and no REALTIME */\n");
+
+# endif /* CLOCK_REALTIME */
+
+#endif /* HAVE_NO_GETTIME */
 	/* exit(0); */
 	return 0;
 }

@@ -57,11 +57,13 @@ try_this(char *fmt, ...)
     va_list ap;
 
     va_start(ap);
+
 #if !defined(DONT_HAVE_VSPRINTF)
     vsprintf(buf, fmt, ap);
 #else
     sprintf(buf, fmt, ap);
 #endif
+
     va_end(ap);
 }
 

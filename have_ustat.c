@@ -1,22 +1,20 @@
 /*
- * have_newstr - Determine if we have a system without ANSI C string functions
+ * have_ustat - Determine if we ustat()
  *
  * usage:
- *	have_newstr
+ *	have_ustat
  *
- * Not all systems support all ANSI C string functions, so this may not
+ * Not all systems have the ustat() function, so this may not
  * compile on your system.
  *
  * This prog outputs several defines:
  *
- *	HAVE_NEWSTR
- *		defined ==> use memcpy(), memset(), strchr()
- *		undefined ==> use bcopy() instead of memcpy(),
- *			      use bfill() instead of memset(),
- *			      use index() instead of strchr()
+ *	HAVE_USTAT
+ *		defined ==> use ustat()
+ *		undefined ==> do not call or cannot call ustat()
  */
 /*
- * Copyright (c) 1995 by Landon Curt Noll.  All Rights Reserved.
+ * Copyright (c) 1999 by Landon Curt Noll.  All Rights Reserved.
  *
  * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose and without fee is hereby granted,
@@ -39,29 +37,28 @@
  * chongo was here	/\../\
  */
 
-#include <stdio.h>
-
-#define MOVELEN 3
-
-char src[] = "chongo was here";
-char dest[MOVELEN+1];
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <ustat.h>
 
 int
 main(void)
 {
-#if defined(HAVE_NO_NEWSTR)
+#if defined(HAVE_NO_USTAT)
 
-	printf("#undef HAVE_NEWSTR /* no */\n");
+	printf("#undef HAVE_USTAT /* no */\n");
 
-#else /* HAVE_NO_NEWSTR */
+#else /* HAVE_NO_USTAT */
 
-	(void) memcpy(dest, src, MOVELEN);
-	(void) memset(dest, 0, MOVELEN);
-	(void) strchr(src, 'e');
+	struct stat stat_dot;           /* stat of "." */
+	struct ustat ustat_dot;         /* usage stat of "." */
 
-	printf("#define HAVE_NEWSTR /* yes */\n");
+	(void) stat(".", &stat_dot);
+	(void) ustat(stat_dot.st_dev, &ustat_dot);
 
-#endif /* HAVE_NO_NEWSTR */
+	printf("#define HAVE_USTAT /* yes */\n");
+
+#endif /* HAVE_NO_USTAT */
 
 	/* exit(0); */
 	return 0;

@@ -65,6 +65,12 @@
 #endif /* __linux */
 #include "qmath.h"
 #include "longbits.h"
+#include "have_ustat.h"
+#include "have_getsid.h"
+#include "have_getpgid.h"
+#include "have_gettime.h"
+#include "have_getprid.h"
+#include "have_urandom.h"
 
 
 /*
@@ -208,16 +214,22 @@ NUMBER *
 pseudo_seed(void)
 {
     struct {			/* data used for quasi-random seed */
-#if defined(__sgi)
+#if defined(HAVE_GETTIME)
+# if defined(CLOCK_SGI_CYCLE)
 	struct timespec sgi_cycle;      /* SGI hardware clock */
-	prid_t getprid;                 /* project ID */
+# endif /* CLOCK_SGI_CYCLE */
+# if defined(CLOCK_REALTIME)
 	struct timespec realtime;	/* POSIX realtime clock */
-#endif /* __sgi */
-#if defined(__linux)
+# endif /* CLOCK_REALTIME */
+#endif /* HAVE_GETTIME */
+#if defined(HAVE_GETPRID)
+	prid_t getprid;                 /* project ID */
+#endif /* HAVE_GETPRID */
+#if defined(HAVE_URANDOM)
 	int urandom_fd;			/* open scriptor for /dev/urandom */
 	int urandom_ret;		/* read() of /dev/random */
 	char urandom_pool[DEV_URANDOM_POOL];	/* /dev/urandom data pool */
-#endif /* __linux */
+#endif /* HAVE_URANDOM */
 	struct timeval tp;              /* time of day */
 	pid_t getpid;                   /* process ID */
 	pid_t getppid;                  /* parent process ID */
@@ -232,7 +244,7 @@ pseudo_seed(void)
 	struct stat fstat_stdin;        /* stat of stdin */
 	struct stat fstat_stdout;       /* stat of stdout */
 	struct stat fstat_stderr;       /* stat of stderr */
-#if !defined(__bsdi)
+#if defined(HAVE_USTAT)
 	struct ustat ustat_dot;         /* usage stat of "." */
 	struct ustat ustat_dotdot;      /* usage stat of ".." */
 	struct ustat ustat_tmp;         /* usage stat of "/tmp" */
@@ -240,9 +252,13 @@ pseudo_seed(void)
 	struct ustat ustat_stdin;       /* usage stat of stdin */
 	struct ustat ustat_stdout;      /* usage stat of stdout */
 	struct ustat ustat_stderr;      /* usage stat of stderr */
+#endif /* HAVE_USTAT */
+#if defined(HAVE_GETSID)
 	pid_t getsid;                   /* session ID */
+#endif /* HAVE_GETSID */
+#if defined(HAVE_GETPGID)
 	pid_t getpgid;                  /* process group ID */
-#endif /* __bsdi */
+#endif /* HAVE_GETPGID */
 	struct rusage rusage;           /* resource utilization */
 	struct rusage rusage_chld;      /* resource utilization of children */
 	struct timeval tp2;             /* time of day again */
@@ -261,12 +277,18 @@ pseudo_seed(void)
      *    We do care (that much) if these calls fail.  We do not
      *	  need to process any data in the 'sdata' structure.
      */
-#if defined(__sgi)
+#if defined(HAVE_GETTIME)
+# if defined(CLOCK_SGI_CYCLE)
     (void) clock_gettime(CLOCK_SGI_CYCLE, &sdata.sgi_cycle);
-    sdata.getprid = getprid();
+# endif /* CLOCK_SGI_CYCLE */
+# if defined(CLOCK_REALTIME)
     (void) clock_gettime(CLOCK_REALTIME, &sdata.realtime);
-#endif /* __sgi */
-#if defined(__linux)
+# endif /* CLOCK_REALTIME */
+#endif /* HAVE_GETTIME */
+#if defined(HAVE_GETPRID)
+    sdata.getprid = getprid();
+#endif /* HAVE_GETPRID */
+#if defined(HAVE_URANDOM)
     sdata.urandom_fd = open(DEV_URANDOM, O_NONBLOCK|O_RDONLY);
     if (sdata.urandom_fd >= 0) {
 	sdata.urandom_ret = read(sdata.urandom_fd,
@@ -276,7 +298,7 @@ pseudo_seed(void)
 	memset(&sdata.urandom_pool, EOF, DEV_URANDOM_POOL);
 	sdata.urandom_ret = EOF;
     }
-#endif /* __linux */
+#endif /* HAVE_URANDOM */
     (void) gettimeofday(&sdata.tp, NULL);
     sdata.getpid = getpid();
     sdata.getppid = getppid();
@@ -291,7 +313,7 @@ pseudo_seed(void)
     (void) fstat(0, &sdata.fstat_stdin);
     (void) fstat(1, &sdata.fstat_stdout);
     (void) fstat(2, &sdata.fstat_stderr);
-#if !defined(__bsdi)
+#if defined(HAVE_USTAT)
     (void) ustat(sdata.stat_dotdot.st_dev, &sdata.ustat_dotdot);
     (void) ustat(sdata.stat_dot.st_dev, &sdata.ustat_dot);
     (void) ustat(sdata.stat_tmp.st_dev, &sdata.ustat_tmp);
@@ -299,9 +321,13 @@ pseudo_seed(void)
     (void) ustat(sdata.fstat_stdin.st_dev, &sdata.ustat_stdin);
     (void) ustat(sdata.fstat_stdout.st_dev, &sdata.ustat_stdout);
     (void) ustat(sdata.fstat_stderr.st_dev, &sdata.ustat_stderr);
+#endif /* HAVE_USTAT */
+#if defined(HAVE_GETSID)
     sdata.getsid = getsid((pid_t)0);
+#endif /* HAVE_GETSID */
+#if defined(HAVE_GETPGID)
     sdata.getpgid = getpgid((pid_t)0);
-#endif /* __bsdi */
+#endif /* HAVE_GETPGID */
     (void) getrusage(RUSAGE_SELF, &sdata.rusage);
     (void) getrusage(RUSAGE_CHILDREN, &sdata.rusage_chld);
     (void) gettimeofday(&sdata.tp2, NULL);

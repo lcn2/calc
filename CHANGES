@@ -26,6 +26,18 @@ Following is the change from calc version 2.11.0t8 to date:
 
     Fixed some of the old EMail addresses found in calc documentation.
 
+    Added HAVE_USTAT, HAVE_GETSID, HAVE_GETPGID, HAVE_GETTIME, HAVE_GETPRID
+    and HAVE_URANDOM symbols to the Makefile.  These symbols, along with
+    have_ustat.c, have_getsid.c, have_getpgid.c, have_gettime.c and 
+    have_getprid.c form: have_ustat.h, have_getsid.h, have_getpgid.h,
+    have_gettime.h, have_getprid.h and have_urandom.h which in turn
+    are used by pseudo_seed() in seed.c to determine what types of
+    system services can be used to form a pseudo-random seed.
+
+    Fixed the lower level make depend rules.
+
+    Misc cleanup on the have_*.c support source files.
+
 
 Following is the change from calc version 2.11.0t7 to 2.11.0t7.5:
 

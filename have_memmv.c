@@ -2,7 +2,7 @@
  * have_memmv - Determine if we memmove()
  *
  * usage:
- *	have_newstr
+ *	have_memmv
  *
  * Not all systems with memcpy() have memmove() functions, so this may not
  * compile on your system.
@@ -48,12 +48,17 @@ int
 main(void)
 {
 #if defined(HAVE_NO_MEMMOVE)
+
 	printf("#undef HAVE_MEMMOVE /* no */\n");
+
 #else /* HAVE_NO_MEMMOVE */
+
 	(void) memmove(dest, src, MOVELEN);
 
 	printf("#define HAVE_MEMMOVE /* yes */\n");
+
 #endif /* HAVE_NO_MEMMOVE */
+
 	/* exit(0); */
 	return 0;
 }

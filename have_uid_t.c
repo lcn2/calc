@@ -51,15 +51,20 @@ int
 main(void)
 {
 #if defined(HAVE_NO_UID_T)
+
 	printf("#undef HAVE_UID_T /* no */\n");
+
 #else /* HAVE_NO_UID_T */
+
 	uid_t curds;
 	extern uid_t geteuid();
 
 	curds = geteuid();
 
 	printf("#define HAVE_UID_T /* yes */\n");
+
 #endif /* HAVE_NO_UID_T */
+
 	/* exit(0); */
 	return 0;
 }
