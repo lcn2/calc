@@ -16,7 +16,7 @@
  * Happy bit twiddling,
  *
  *      Landon Curt Noll
- *      http://reality.sgi.com/chongo
+ *      http://reality.sgi.com/chongo/
  *
  * chongo <was here> /\../\
  */

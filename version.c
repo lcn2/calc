@@ -7,12 +7,18 @@
  */
 
 #include <stdio.h>
-#include "calc.h"
+#if defined(CALC_VER)
+#include <stdlib.h>
+#include <unistd.h>
+static char *program;
+#else
+# include "calc.h"
+#endif
 
 #define MAJOR_VER	2	/* major version */
 #define MINOR_VER	11	/* minor version */
 #define MAJOR_PATCH	0	/* patch level or 0 if no patch */
-#define MINOR_PATCH	"9.4"	/* test number or empty string if no patch */
+#define MINOR_PATCH	"9.4.1"	/* test number or empty string if no patch */
 
 /*
  * calc version constants
@@ -83,8 +89,6 @@ version(void)
 
 
 #if defined(CALC_VER)
-
-char *program;		/* our name */
 
 /*
  * version - print the calc version

@@ -47,3 +47,75 @@ define qpi(epsilon)
 	}
 	return (bround(1/an, bits));
 }
+
+
+/*
+ * Print digits of PI forever, neatly formatted, using calc.
+ *
+ * Written by Klaus Alexander Seistrup <klaus@seistrup.dk>
+ * on a dull Friday evening in November 1999.
+ *
+ * Inspired by an algorithm conceived by Lambert Meertens.
+ *
+ * See also the ABC Programmer's Handbook, by Geurts, Meertens & Pemberton,
+ * published by Prentice-Hall (UK) Ltd., 1990.
+ *
+ */
+
+define piforever()
+{
+	local k = 2;
+	local a = 4;
+	local b = 1;
+	local a1 = 12;
+	local b1 = 4;
+	local a2, b2, p, q, d, d1;
+	local stdout = files(1);
+	local first = 1, row = -1, col = 0;
+
+	while (1) {
+		/*
+		* Next approximation
+		*/
+		p = k * k;
+		q = k + k++;
+
+		a2 = a;
+		b2 = b;
+
+		a = a1;
+		a1 = p * a2 + q * a1;
+		b = b1;
+		b1 = p * b2 + q * b1;
+
+		/*
+		* Print common digits
+		*/
+		d = a // b;
+		d1 = a1 // b1;
+
+		while (d == d1) {
+			if (first) {
+				printf("%d.", d);
+				first = 0;
+			} else {
+				if (!(col % 50)) {
+					printf("\n");
+					col = 0;
+					if (!(++row % 20)) {
+						printf("\n");
+						row = 0;
+					}
+				}
+				printf("%d", d);
+				if (!(++col % 10))
+					printf(" ");
+			}
+			a = 10 * (a % b);
+			a1 = 10 * (a1 % b1);
+			d = a // b;
+			d1 = a1 // b1;
+		}
+		fflush(stdout);
+	}
+}

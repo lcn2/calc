@@ -19,9 +19,9 @@ DESCRIPTION
 	is almost certainly non-chaotic.  This function is likely not
 	suitable for applications (such as cryptographic applications)
 	where the unpredictability of seeds is critical.  For such critical
-	applications, lavarand should be used.  Seed:
+	applications, lavarand should be used.  See the URL:
 
-		http://lavarand.sgi.com
+		http://lavarand.sgi.com/index.html
 
 	for information about seeding a pseudo-random number generator
 	(such as rand() or random()) with the cryptographic hash of the

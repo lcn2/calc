@@ -20,7 +20,7 @@
  * PERFORMANCE OF THIS SOFTWARE.
  *
  *      Landon Curt Noll
- *      http://reality.sgi.com/chongo
+ *      http://reality.sgi.com/chongo/
  *
  *      chongo <was here> /\../\
  */
@@ -80,12 +80,12 @@ static QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
  * The basis of this hash algorithm was taken from an idea sent
  * as reviewer comments to the IEEE POSIX P1003.2 committee by:
  *
- *      Phong Vo (http://www.research.att.com/info/kpv)
+ *      Phong Vo (http://www.research.att.com/info/kpv/)
  *      Glenn Fowler (http://www.research.att.com/~gsf/)
  *
  * In a subsequent ballot round:
  *
- *      Landon Curt Noll (http://reality.sgi.com/chongo)
+ *      Landon Curt Noll (http://reality.sgi.com/chongo/)
  *
  * improved on their algorithm.  Some people tried this hash
  * and found that it worked rather well.  In an EMail message

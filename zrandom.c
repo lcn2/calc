@@ -29,7 +29,7 @@
  * Happy bit twiddling,
  *
  *	Landon Curt Noll
- *	http://reality.sgi.com/chongo
+ *	http://reality.sgi.com/chongo/
  *
  * chongo <was here> /\../\
  */
@@ -365,8 +365,7 @@
  *	were selected by lavarand, a hardware random number generator.
  *	See the URL:
  *
- *	    http://lavarand.sgi.com
- *	    XXX - This URL is not available on 17Feb97 ... but will be soon.
+ *	    http://lavarand.sgi.com/index.html
  *
  *	for an explination of how the lavarand random number generator works.
  *

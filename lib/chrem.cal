@@ -86,7 +86,7 @@
  *	i.e., any value that is 301 mod 420.
  *
  * Written by: Ernest W Bowen <ernie@neumann.une.edu.au>
- * Interface by: Landon Curt Noll http://reality.sgi.com/chongo
+ * Interface by: Landon Curt Noll http://reality.sgi.com/chongo/
  */
 
 static defaultmlist = list(2,3,5,7,11,13,17,19); /* The first eight primes */

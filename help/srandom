@@ -222,8 +222,7 @@ DESCRIPTION
 	The pre-defined Blum moduli and quadratic residues were selected
 	by lavarand, a hardware random number generator.  See the URL:
 
-	    http://lavarand.sgi.com
-	    XXX - This URL is not available on 17Feb97 ... but will be soon.
+	    http://lavarand.sgi.com/index.html
 
 	for an explanation of how the lavarand random number generator works.
 	For more information, see the comments at the top of the calc

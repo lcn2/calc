@@ -144,6 +144,16 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
     by default is /usr/local/include.  Include files previously installed
     directly under ${LIBDIR} will be removed.
 
+    Added the piforever() funcion to lib/pi.cal.  It was written by
+    Klaus Alexander Seistrup <klaus@seistrup.dk> and was inspired by
+    an algorithm conceived by Lambert Meertens.  (See also the ABC
+    Programmer's Handbook, by Geurts, Meertens & Pemberton, published
+    by Prentice-Hall (UK) Ltd., 1990.)  The piforever() funcion prints
+    digits of pi for as long as your memory and system uptime allows.  :-)
+
+    Fixed the URLs found thruout the source and documentation which did
+    not and in /, but should for performance and server load reasons.
+
 
 Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:
 
@@ -444,7 +454,7 @@ Following is the change from calc version 2.11.0t7 to 2.11.0t7.5:
 
     The main calc URL is now:
 
-	http://reality.sgi.com/chongo/tech/comp/calc
+	http://reality.sgi.com/chongo/tech/comp/calc/
 
     Misc calc man page fixes.
 

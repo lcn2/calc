@@ -746,8 +746,6 @@ CC= ${PURIFY} ${LCC}
 # Warning: Some HP-UX optimizers are brain-damaged.  If 'make check' fails use:
 #     DEBUG= -g
 #
-# On a systems call the C compiler 'cchp' instead of 'cc'.
-#
 #CCWARN=
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC= +e
@@ -760,7 +758,6 @@ CC= ${PURIFY} ${LCC}
 #ILDFLAGS=
 #
 #LCC= cc
-#LCC= cchp
 #CC= ${PURIFY} ${LCC}
 #
 ###

@@ -6,7 +6,7 @@
  * NOTE: This is not a good source of chaotic data.  The lavarand
  *	 system does a much better job of that.  See:
  *
- *		http://lavarand.sgi.com
+ *		http://lavarand.sgi.com/index.html
  *
  * Copyright (c) 1999 by Landon Curt Noll.  All Rights Reserved.
  *
@@ -29,7 +29,7 @@
  * PERFORMANCE OF THIS SOFTWARE.
  *
  *      Landon Curt Noll
- *      http://reality.sgi.com/chongo
+ *      http://reality.sgi.com/chongo/
  *
  *      chongo <was here> /\../\
  *
@@ -160,12 +160,12 @@ hash_buf(char *buf, unsigned len)
          * The basis of this hash algorithm was taken from an idea sent
          * as reviewer comments to the IEEE POSIX P1003.2 committee by:
          *
-         *      Phong Vo (http://www.research.att.com/info/kpv)
+         *      Phong Vo (http://www.research.att.com/info/kpv/)
          *      Glenn Fowler (http://www.research.att.com/~gsf/)
          *
          * In a subsequent ballot round:
          *
-         *      Landon Curt Noll (http://reality.sgi.com/chongo)
+         *      Landon Curt Noll (http://reality.sgi.com/chongo/)
          *
          * improved on their algorithm.  Some people tried this hash
          * and found that it worked rather well.  In an EMail message
@@ -251,7 +251,7 @@ hash_buf(char *buf, unsigned len)
  * NOTE: This is not a good source of chaotic data.  The lavarand
  *	 system does a much better job of that.  See:
  *
- *		http://lavarand.sgi.com
+ *		http://lavarand.sgi.com/index.html
  *
  * PORTING NOTE:
  *    If when porting this code to your system and something

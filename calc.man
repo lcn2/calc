@@ -618,7 +618,7 @@ Landon Noll maintains the the
 web site is located at:
 .sp
 .in +0.5i
-http://reality.sgi.com/chongo/tech/comp/calc
+http://reality.sgi.com/chongo/tech/comp/calc/
 .in -0.5i
 .sp
 One may join the
