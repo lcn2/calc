@@ -2,11 +2,11 @@ To load a library, try:
 
     read filename
 
-You to not need to add the .cal extension to the filename.  Calc
+You do not need to add the .cal extension to the filename.  Calc
 will search along the $CALCPATH (see ``help environment'').
 
 Normally a library will simply define some functions.  By default,
-most libraries will print out a short message when thei are read.
+most libraries will print out a short message when they are read.
 For example:
 
     > read lucas
@@ -360,7 +360,7 @@ randbitrun.cal
     randbitrun([run_cnt])
 
     Using randbit(1) to generate a sequence of random bits, determine if
-    the number and kength of identical bits runs match what is expected.
+    the number and length of identical bits runs match what is expected.
     By default, run_cnt is to test the next 65536 random values.
 
     This tests the a55 generator.
@@ -416,7 +416,7 @@ randrun.cal
 regress.cal
 
     Test the correct execution of the calculator by reading this library file.
-    Errors are reported with '****' mssages, or worse.	:-)
+    Errors are reported with '****' messages, or worse.	:-)
 
 
 seedrandom.cal
