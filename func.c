@@ -77,9 +77,9 @@ static VALUE f_fsize(VALUE *vp);
 /*
  * external declarations
  */
-extern int errno;				/* last system error */
-extern char *sys_errlist[];			/* system error messages */
-extern int sys_nerr;				/* number of system errors */
+extern int errno;                             /* last system error */
+extern const char *const sys_errlist[];       /* system error messages */
+extern int sys_nerr;                          /* number of system errors */
 extern char cmdbuf[];				/* command line expression */
 extern CONST char *error_table[E__COUNT+2];	/* calc coded error messages */
 extern void matrandperm(MATRIX *M);

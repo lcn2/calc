@@ -97,6 +97,12 @@
 
 #include "longlong.h"
 
+#if defined(__linux)
+# if !defined(isascii)
+   extern int isascii(int c);
+# endif /* !isascii */
+#endif /* __linux */
+
 char *program;		/* our name */
 
 MAIN

@@ -10,9 +10,9 @@
 #include "calc.h"
 
 #define MAJOR_VER	2	/* major version */
-#define MINOR_VER	10	/* minor version */
-#define MAJOR_PATCH	3	/* patch level or 0 if no patch */
-#define MINOR_PATCH	"t5.46"	/* test number or empty string if no patch */
+#define MINOR_VER	11	/* minor version */
+#define MAJOR_PATCH	0	/* patch level or 0 if no patch */
+#define MINOR_PATCH	"0"	/* test number or empty string if no patch */
 
 /*
  * calc version constants

@@ -213,10 +213,10 @@ ALIGN32= -DMUST_ALIGN32
 # MAIN= -DMAIN=void	main() is of type void
 # MAIN= -DMAIN=int	main() is of type int
 #
-# When in doubt, try MAIN= -DMAIN=void.  If you get a warning try the other.
+# When in doubt, try MAIN= -DMAIN=int.  If you get a warning try the other.
 #
-MAIN= -DMAIN=void
-#MAIN= -DMAIN=int
+#MAIN= -DMAIN=void
+MAIN= -DMAIN=int
 
 # where to install binary files
 #
@@ -332,7 +332,7 @@ CALCPAGER= more
 
 # Debug/Optimize options for ${CC}
 #
-DEBUG= -O
+#DEBUG= -O
 #DEBUG= -O -g
 #DEBUG= -O -g3
 #DEBUG= -O1
@@ -340,7 +340,7 @@ DEBUG= -O
 #DEBUG= -O1 -g3
 #DEBUG= -O2
 #DEBUG= -O2 -g
-#DEBUG= -O2 -g3
+DEBUG= -O2 -g3
 #DEBUG= -O2 -ipa
 #DEBUG= -O2 -g3 -ipa
 #DEBUG= -O3
@@ -388,8 +388,8 @@ LD_NO_SHARED=
 # a *.a library.  Set RANLIB to the utility that performs this action.
 # Set RANLIB to : if your system does not need such a utility.
 #
-#RANLIB=ranlib
-RANLIB=:
+RANLIB=ranlib
+#RANLIB=:
 
 # Some systems are able to form lint libs.  How it is formed depends
 # on your system.  If you do not care about lint, use : as the
@@ -507,21 +507,21 @@ ALLOW_CUSTOM= -DCUSTOM
 #
 # common cc set
 #
-CCWARN=
-CCOPT= ${DEBUG} ${NO_SHARED}
-CCMISC=
+#CCWARN=
+#CCOPT= ${DEBUG} ${NO_SHARED}
+#CCMISC=
 #
-CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-ICFLAGS= ${CCWARN} ${CCMISC}
+#CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
+#ICFLAGS= ${CCWARN} ${CCMISC}
 #
-CCMAIN= ${ICFLAGS} ${MAIN}
-CCSHS= ${CFLAGS}
+#CCMAIN= ${ICFLAGS} ${MAIN}
+#CCSHS= ${CFLAGS}
 #
-LCFLAGS=
-LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
-ILDFLAGS=
+#LCFLAGS=
+#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
+#ILDFLAGS=
 #
-CC= ${PURIFY} cc
+#CC= ${PURIFY} cc
 #
 ###
 #
@@ -680,61 +680,37 @@ CC= ${PURIFY} cc
 #
 ###
 #
-# gcc set
+# Red Hat Linux 6.0
 #
 # for better performance, set the following above:
-#     DEBUG= -O
+#     DEBUG= -O2
 #
-#CCWARN= -Wall
-#CCOPT= ${DEBUG} ${NO_SHARED}
-#CCMISC= -ansi
+CCWARN= -Wall -Wno-implicit -Wno-comment
+CCOPT= ${DEBUG} ${NO_SHARED}
+CCMISC=
 #
-#CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= ${CCWARN} ${CCMISC}
+CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
+ICFLAGS= ${CCWARN} ${CCMISC}
 #
-#CCMAIN= ${ICFLAGS} ${MAIN}
-#CCSHS= ${CFLAGS}
+CCMAIN= ${ICFLAGS} ${MAIN}
+CCSHS= ${CFLAGS}
 #
-#LCFLAGS=
-#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
-#ILDFLAGS=
+LCFLAGS=
+LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
+ILDFLAGS=
 #
-#CC= ${PURIFY} gcc
+CC= ${PURIFY} gcc
 #
 ###
 #
-# gcc1 set	(some call it gcc1, some call it gcc)
-#
-# for better performance, set the following above:
-#     DEBUG= -O
-#
-#CCWARN= -Wall
-#CCOPT= ${DEBUG} ${NO_SHARED}
-#CCMISC= -ansi
-#
-#CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= ${CCWARN} ${CCMISC}
-#
-#CCMAIN= ${ICFLAGS} ${MAIN}
-#CCSHS= ${CFLAGS}
-#
-#LCFLAGS=
-#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
-#ILDFLAGS=
-#
-#CC= ${PURIFY} gcc1
-#CC= ${PURIFY} gcc
-#
-###
-#
-# gcc2 set	(some call it gcc2, some call it gcc)
+# gcc set	(some call it gcc2, some call it gcc)
 #
 # for better performance, set the following above:
 #     DEBUG= -O2
 #
 #CCWARN= -Wall -Wno-implicit -Wno-comment
 #CCOPT= ${DEBUG} ${NO_SHARED}
-#CCMISC= -ansi
+#CCMISC=
 #
 #CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= ${CCWARN} ${CCMISC}
@@ -746,8 +722,8 @@ CC= ${PURIFY} cc
 #LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 #ILDFLAGS=
 #
-#CC= ${PURIFY} gcc2
 #CC= ${PURIFY} gcc
+#CC= ${PURIFY} gcc2
 
 ##############################################################################
 #-=-=-=-=-=-=-=-=- Be careful if you change something below -=-=-=-=-=-=-=-=-#
