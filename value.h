@@ -446,7 +446,7 @@ extern VALUE objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3);
 extern void objfree(OBJECT *op);
 extern void objuncache(void);
 extern int addelement(char *name);
-extern void defineobject(char *name, int indices[], int count);
+extern int defineobject(char *name, int indices[], int count);
 extern int checkobject(char *name);
 extern void showobjfuncs(void);
 extern void showobjtypes(void);

@@ -212,7 +212,7 @@ This flag sets the permission mode of
 It controls the ability for
 .B calc
 to open files and execute programs.
-.I Mode 
+.I Mode
 may be a number from 0 to 7.
 .sp 1
 The mode value is interpreted in a way similar to that
@@ -558,6 +558,9 @@ by this environment variable.
 .br
 .sp
 Default value: ${CALCBINDINGS}
+.sp
+This variable is not used if calc was compiled with GNU-readline support.
+In that case, the standard readline mechanisms (see readline(3)) are used.
 .sp
 .SH CREDIT
 \&

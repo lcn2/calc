@@ -97,7 +97,7 @@ Known bugs:
       had been executed.
 
     * Dec Alpha Linux compiling with gcc-2.95.1 (or gcc-2.95.2) and
-      -O2 fails the regression test with:
+      -O2 fails the version 2.11.0t8.10 regression test with:
 
 	make -s check
 	000: Beginning regression tests
@@ -116,6 +116,24 @@ Known bugs:
 
       One work-a-round is to not compile with -O2 (perhaps just -O).
       Another work-a-round is not use gcc-2.95.1.
+
+    * On a Digital UNIX V4.0F (Rev. 1229) on a 500 Mhz 21264, make check
+      dies a horrible death starting in test 600 and 622 gives 100s of
+      messages for calc version 2.11.0t9.2 using the Dec's cc with -O2
+      and without -std0:
+
+	600: Beginning test_bignums
+	601: muldivcheck 1
+	**** abc != acb: 602: muldivcheck 2
+	**** acb != bac: 602: muldivcheck 2
+	...
+	**** t4 != a4: 622: algcheck 1
+	**** t5 != a5: 622: algcheck 1
+	**** t6 != a6: 622: algcheck 1
+	**** t4 != a4: 622: algcheck 1
+	...
+
+	it finally hangs at test 2000.
 
     We are sure some more bugs exist.  When you find them, please let
     us know!  See the above for details on how to report and were to

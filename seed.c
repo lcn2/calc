@@ -55,14 +55,6 @@
 #include <sys/stat.h>
 #include <sys/resource.h>
 #include <setjmp.h>
-#if !defined(__bsdi)
-#include <ustat.h>
-#endif /* __bsdi */
-#if defined(__linux)
-# include <fcntl.h>
-# define DEV_URANDOM "/dev/urandom"
-# define DEV_URANDOM_POOL 128
-#endif /* __linux */
 #include "qmath.h"
 #include "longbits.h"
 #include "have_ustat.h"
@@ -71,6 +63,14 @@
 #include "have_gettime.h"
 #include "have_getprid.h"
 #include "have_urandom.h"
+#if defined(HAVE_USTAT)
+# include <ustat.h>
+#endif /* HAVE_USTAT */
+#if defined(HAVE_URANDOM)
+# include <fcntl.h>
+# define DEV_URANDOM "/dev/urandom"
+# define DEV_URANDOM_POOL 16
+#endif /* HAVE_URANDOM */
 
 
 /*

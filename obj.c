@@ -96,8 +96,10 @@ static struct objectinfo {
 
 static STRINGHEAD objectnames;	/* names of objects */
 static STRINGHEAD elements;	/* element names for parts of objects */
-static OBJECTACTIONS *objects[MAXOBJECTS]; /* table of actions for objects */
+static OBJECTACTIONS **objects; /* table of actions for objects */
 
+#define OBJALLOC 16
+static long maxobjcount = 0;
 
 static VALUE objpowi(VALUE *vp, NUMBER *q);
 static BOOL objtest(OBJECT *op);
@@ -456,11 +458,12 @@ objpowi(VALUE *vp, NUMBER *q)
  *	indices		table of indices for elements
  *	count		number of elements defined for the object
  */
-void
+int
 defineobject(char *name, int indices[], int count)
 {
 	OBJECTACTIONS *oap;	/* object definition structure */
 	STRINGHEAD *hp;
+	OBJECTACTIONS **newobjects;
 	int index;
 
 	hp = &objectnames;
@@ -476,21 +479,32 @@ defineobject(char *name, int indices[], int count)
 		if (oap->count == count) {
 			for (index = 0; ; index++) {
 				if (index >= count)
-					return;
+					return 0;
 				if (oap->elements[index] != indices[index])
 					break;
 			}
 		}
-		math_error("Object type \"%s\" is already defined", name);
-		/*NOTREACHED*/
+		return 1;
 	}
 
-	if (hp->h_count >= MAXOBJECTS) {
-		math_error("Too many object types in use");
-		/*NOTREACHED*/
+	if (hp->h_count >= maxobjcount) {
+		if (maxobjcount == 0) {
+			newobjects = (OBJECTACTIONS **) malloc(
+			 	OBJALLOC * sizeof(OBJECTACTIONS *));
+			maxobjcount = OBJALLOC;
+		} else {
+			maxobjcount += OBJALLOC;
+			newobjects = (OBJECTACTIONS **) realloc(objects,
+				maxobjcount * sizeof(OBJECTACTIONS *));
+		}
+		if (newobjects == NULL) {
+			math_error("Allocation failure for new object type");
+			/*NOTREACHED*/
+		}
+		objects = newobjects;
 	}
+
 	oap = (OBJECTACTIONS *) malloc(objectactionsize(count));
-	if (oap)
 		name = addstr(hp, name);
 	if ((oap == NULL) || (name == NULL)) {
 		math_error("Cannot allocate object type");
@@ -504,7 +518,7 @@ defineobject(char *name, int indices[], int count)
 		oap->elements[index] = indices[index];
 	index = findstr(hp, name);
 	objects[index] = oap;
-	return;
+	return 0;
 }
 
 
@@ -596,7 +610,7 @@ objalloc(long index)
 	VALUE *vp;
 	int i;
 
-	if ((unsigned) index >= MAXOBJECTS) {
+	if (index < 0 || index > maxobjcount) {
 		math_error("Allocating bad object index");
 		/*NOTREACHED*/
 	}

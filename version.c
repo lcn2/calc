@@ -12,7 +12,7 @@
 #define MAJOR_VER	2	/* major version */
 #define MINOR_VER	11	/* minor version */
 #define MAJOR_PATCH	0	/* patch level or 0 if no patch */
-#define MINOR_PATCH	"9.2"	/* test number or empty string if no patch */
+#define MINOR_PATCH	"9.3.1"	/* test number or empty string if no patch */
 
 /*
  * calc version constants
@@ -80,3 +80,22 @@ version(void)
 	 */
 	return stored_version;
 }
+
+
+#if defined(CALC_VER)
+
+char *program;		/* our name */
+
+/*
+ * version - print the calc version
+ */
+/*ARGSUSED*/
+int
+main(int argc, char *argv[])
+{
+    program = argv[0];
+    printf("%s\n", version());
+    return 0;
+}
+
+#endif /* CALC_VER */

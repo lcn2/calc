@@ -1,4 +1,8 @@
 # Default key bindings for calc line editing functions
+#
+# NOTE: This facility is ignored if calc was compiled with GNU-readline.
+#	In that case, the standard readline mechanisms (see readline(3))
+#	are used in place of those found below.
 
 map	base-map
 default	insert-char

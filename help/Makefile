@@ -394,15 +394,11 @@ builtin: builtin.top builtin.end ../func.c funclist.sed
 
 distlist: ${DISTLIST}
 	${Q}for i in ${DISTLIST}; do \
-		echo calc/help/$$i; \
+		echo help/$$i; \
 	done | ${SORT}
 
-# The bsdi distribution has generated files as well as distributed files.
-#
-bsdilist: ${DISTLIST} ${BLT_HELP_FILES}
-	${Q}for i in ${DISTLIST} ${BLT_HELP_FILES}; do \
-		echo calc/help/$$i; \
-	done | ${SORT}
+distdir:
+	${Q}echo help
 
 # The BSDI cdrom makefile expects all help files to be pre-built.  This rule
 # creats these fils so that the release can be shipped off to BSDI.  You can

@@ -84,6 +84,38 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
 
 	5	Report on changes to the run state of calc.
 
+    Fixed portability issue in seed.c relating to /dev/urandom and ustat.
+
+    Added a fix from Martin Buck <mb@netwings.ch> to detect when
+    calc aborts early instead of completing the regression test.
+    Now 'make chk' will require the last line of calc output to
+    end in the string ``Ending regression tests''.
+
+    Added a patch from Martin Buck <mb@netwings.ch> to allow use of
+    GNU-readline.  Note that GNU-readline is not shipped with calc.
+    His patch only provides the hooks to use it.  One must comment out:
+
+	USE_READLINE=
+	READLINE_LIB=
+	READLINE_INCLUDE=
+
+    and comment in:
+
+	USE_READLINE= -DUSE_READLINE
+	READLINE_LIB= -lreadline -lhistory
+	READLINE_INCLUDE= -I/usr/include/readline
+
+    in addition to pre-installing GNU-readline in your system to use
+    this facility.
+
+    Changed the "object already defined" math_error message to a
+    scanerror message.
+
+    Removed the limit on the number of object types.
+
+    Calc tarballs are now named calc-version.tar.gz and untar into
+    a sub-directory called calc-version.
+
 
 Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:
 

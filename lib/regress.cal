@@ -20,18 +20,17 @@ print '002: Within each section, output should be numbered sequentially';
 global prob;				/* libregress.cal problem counter */
 prob = 0;				/* clear problem counter */
 
-global junk;				/* throw away value */
-junk = errcount(0);			/* clear error count */
-junk = errmax(-1);			/* prevent errcount from abouting */
+errcount(0),;				/* clear error count */
+errmax(-1),;				/* prevent errcount from abouting */
 
 global ecnt;				/* expected value of errcount() */
 ecnt = 0;				/* clear expected errcount() value */
 
 initcfg = config("all", "oldstd");	/* set config to startup default */
-initcfg = config("lib_debug", 0);	/* disable lib startup messages */
-initcfg = config("calc_debug", 0);	/* disable internal debugging */
-initcnf = config("verbose_quit", 0);	/* disable quit messages */
-initcfg = config("all");		/* save state for later use */
+config("lib_debug", 0),;		/* disable lib startup messages */
+config("calc_debug", 0),;		/* disable internal debugging */
+config("verbose_quit", 0),;		/* disable quit messages */
+startcfg = config("all");		/* save state for later use */
 
 print '003: parsed global definitions';
 
@@ -359,7 +358,7 @@ define test_config()
 	print 				'502: callcfg = config("all","oldstd")';
 	oldcfg = config("all", "newstd");
 	print 				'503: oldcfg = config("all","newstd")';
-	vrfy(callcfg == initcfg,	'504: callcfg == initcfg');
+	vrfy(callcfg == startcfg,	'504: callcfg == startcfg');
 	newcfg = config("all");
 	print 				'505: newcfg = config("all")';
 	vrfy(config("all") == newcfg,	'506: config("all") == newcfg');
@@ -457,7 +456,7 @@ define test_config()
 	vrfy(config("all",callcfg) == oldcfg,
 					'550: config("all",callcfg) == oldcfg');
 	vrfy(config("all") == callcfg,  '551: config("all") == callcfg');
-	vrfy(config("all") == initcfg,	'552: config("all") == initcfg');
+	vrfy(config("all") == startcfg,	'552: config("all") == startcfg');
 
 	print '553: Ending test_config';
 }

@@ -73,15 +73,11 @@ all: ${CALC_FILES} ${MAKE_FILE} .all
 
 distlist: ${DISTLIST}
 	${Q}for i in ${DISTLIST}; do \
-		echo calc/lib/$$i; \
+		echo lib/$$i; \
 	done
 
-# The bsdi distribution has generated files as well as distributed files.
-#
-bsdilist: ${DISTLIST}
-	${Q}for i in ${DISTLIST}; do \
-		echo calc/lib/$$i; \
-	done
+distdir:
+	${Q}echo lib
 
 clean:
 

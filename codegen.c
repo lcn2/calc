@@ -382,7 +382,7 @@ getbody(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *defaul
 			return;
 
 		case T_EOF:
-			scanerror(T_SEMICOLON, "End-of-file in function body");
+			scanerror(T_NULL, "End-of-file in function body");
 			return;
 
 		default:
@@ -995,7 +995,11 @@ getobjdeclaration(int symtype)
 				/*FALLTHRU*/
 			case T_RIGHTBRACE:
 				(void) tokenmode(oldmode);
-				(void) defineobject(name, indices, count);
+				if (defineobject(name, indices, count)) {
+					scanerror(T_NULL,
+				"Object type \"%s\" is already defined", name);
+					return;
+				}
 				getobjvars(name, symtype);
 				return;
 			case T_NEWLINE:
@@ -1350,7 +1354,7 @@ getopassignment(void)
 			return type;
 	}
 	if (isrvalue(type)) {
-		scanerror(T_NULL, "Illegal assignment in getopassignment");
+		scanerror(T_NULL, "Illegal assignment");
 		(void) getopassignment();
 		return (EXPR_RVALUE | EXPR_ASSIGN);
 	}
@@ -1443,7 +1447,7 @@ getassignment (void)
 			return type;
 	}
 	if (isrvalue(type)) {
-		scanerror(T_SEMICOLON, "Illegal assignment in getassignment");
+		scanerror(T_SEMICOLON, "Illegal assignment");
 		(void) getassignment();
 		return (EXPR_RVALUE | EXPR_ASSIGN);
 	}

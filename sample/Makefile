@@ -321,15 +321,11 @@ many_random: many_random.o ../libcalc.a
 
 distlist: ${DISTLIST}
 	${Q}for i in ${DISTLIST}; do \
-		echo calc/sample/$$i; \
+		echo sample/$$i; \
 	done
 
-# The bsdi distribution has generated files as well as distributed files.
-#
-bsdilist: ${DISTLIST}
-	${Q}for i in ${DISTLIST}; do \
-		echo calc/sample/$$i; \
-	done
+distdir:
+	${Q}echo sample
 
 ##
 #

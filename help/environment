@@ -58,6 +58,10 @@ Environment variables
 	a terminal, then calc will still run, but fancy command line
 	editing is disabled.
 
+	NOTE: If calc was compiled with GNU-readline support, the
+	      CALCBINDINGS facility is ignored and the standard
+	      readline mechanisms (see readline(3)) are used.
+
     HOME
 
 	This value is taken to be the home directory of the

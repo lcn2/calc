@@ -5,6 +5,8 @@
  *
  * Adapted from code written by Stephen Rothwell.
  *
+ * GNU readline support added by Martin Buck <mbuck@debian.org>
+ *
  * Interactive readline module.  This is called to read lines of input,
  * while using emacs-like editing commands within a command stack.
  * The key bindings for the editing commands are (slightly) configurable.
@@ -47,6 +49,8 @@
 #ifdef HAVE_STRING_H
 # include <string.h>
 #endif
+
+#if !defined(USE_READLINE)
 
 extern FILE *curstream(void);
 
@@ -1433,8 +1437,68 @@ quit_calc(void)
 	exit(0);
 }
 
+#else /* USE_READLINE */
 
-#ifdef	HIST_TEST
+
+#include <readline.h>
+#include <history.h>
+
+
+/*
+ * The readline/history libs do most of the dirty work for us, so we can
+ * replace hist_init() and hist_term() with dummies when using readline.
+ * For hist_getline() we have to add a newline that readline removed but
+ * calc expects. For hist_saveline(), we have to undo this.  hist_getline()
+ * also has to cope with the different memory management schemes of calc and
+ * readline.
+ */
+
+
+int
+hist_getline(char *prompt, char *buf, int len)
+{
+	char *line;
+
+	buf[0] = '\0';
+	line = readline(prompt);
+	if (!line)
+		return 0;
+	strncpy(buf, line, len - 1);
+	buf[len - 2] = '\0';
+	len = strlen(buf);
+	buf[len] = '\n';
+	buf[len + 1] = '\0';
+	free(line);
+	return len + 1;
+}
+
+
+int
+hist_init(char *filename)
+{
+	return HIST_SUCCESS;
+}
+
+
+void
+hist_term(void)
+{
+}
+
+
+void
+hist_saveline(char *line, int len)
+{
+	if (!len)
+		return;
+	line[len - 1] = '\0';
+	add_history(line);
+	line[len - 1] = '\n';
+}
+
+#endif /* USE_READLINE */
+
+#if defined(HIST_TEST)
 
 /*
  * Main routine to test history.
@@ -1475,6 +1539,5 @@ main(int argc, char **argv)
 	hist_term();
 	exit(0);
 }
-#endif
 
-/* END CODE */
+#endif /* HIST_TEST */

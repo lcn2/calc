@@ -108,7 +108,6 @@ static struct infoname sys_info[] = {
     {"MAXLABELS", "max number of user labels in function", NULL, (FULL)MAXLABELS},
     {"MAXLEN", "longest storage size allowed", NULL, (FULL)MAXLEN},
     {"MAXLONG", "largest long val", NULL, (FULL)MAXLONG},
-    {"MAXOBJECTS", "max number of object types", NULL, (FULL)MAXOBJECTS},
     {"MAXPRINT_DEFAULT", "default number of elements printed", NULL, (FULL)MAXPRINT_DEFAULT},
     {"MAXREDC", "number of entries in REDC cache", NULL, (FULL)MAXREDC},
     {"MAXSCANCOUNT", "default max scan errors before an abort", NULL, (FULL)MAXSCANCOUNT},

@@ -337,15 +337,11 @@ libcustcalc.a: ${CUSTCALC_OBJ} ${MAKE_FILE} ../Makefile
 
 distlist: ${DISTLIST}
 	${Q}for i in ${DISTLIST}; do \
-		echo calc/custom/$$i; \
+		echo custom/$$i; \
 	done
 
-# The bsdi distribution has generated files as well as distributed files.
-#
-bsdilist: ${DISTLIST}
-	${Q}for i in ${DISTLIST}; do \
-		echo calc/custom/$$i; \
-	done
+distdir:
+	${Q}echo custom
 
 ##
 #

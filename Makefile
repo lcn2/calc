@@ -414,8 +414,36 @@ CALCRC= ${LIBDIR}/startup:~/.calcrc
 #	${LIBDIR}/bindings	uses ^D for editing
 #	${LIBDIR}/altbind	uses ^D for EOF
 #
+# NOTE: This facility is disabled if USE_READLINE is set to -DUSE_READLINE.
+#
 CALCBINDINGS= bindings
 #CALCBINDINGS= altbind
+
+# Determine of the GNU-readline facility will be used instead of the
+# built-in CALCBINDINGS above.
+#
+# USE_READLINE=			    Do not use GNU-readline, use CALCBINDINGS
+# USE_READLINE= -DUSE_READLINE	    Use GNU-readline, do not use CALCBINDINGS
+#
+# NOTE: If you select the 'USE_READLINE= -DUSE_READLINE' mode, you must set:
+#
+#	READLINE_LIB		The flags needed to link in the readline
+#				and history libs
+#	READLINE_INCLUDE	Where the readline include files reside
+#
+# NOTE: The GNU-readline code is not shipped with calc.  You must have
+# 	the appropriate headers and libs installed on your system in
+#	order to use it.
+#
+# If in doubt, set USE_READLINE, READLINE_LIB and READLINE_INCLUDE to nothing.
+#
+USE_READLINE=
+READLINE_LIB=
+READLINE_INCLUDE=
+#
+#USE_READLINE= -DUSE_READLINE
+#READLINE_LIB= -lreadline -lhistory
+#READLINE_INCLUDE= -I/usr/include/readline
 
 # If $PAGER is not set, use this program to display a help file
 #
@@ -913,7 +941,7 @@ UTIL_OBJS= endian.o longbits.o have_newstr.o have_uid_t.o \
 	have_const.o fposval.o have_fpos.o longlong.o try_strarg.o \
 	have_stdvs.o have_varvs.o have_posscl.o have_memmv.o calc_errno.o \
 	have_ustat.o have_getsid.o have_getpgid.o \
-	have_gettime.o have_getprid.o
+	have_gettime.o have_getprid.o ver_calc.o
 
 # these temp files may be created (and removed) during the build of BUILD_C_SRC
 #
@@ -926,7 +954,7 @@ UTIL_TMP= ll_tmp fpos_tmp fposv_tmp const_tmp uid_tmp newstr_tmp vs_tmp \
 UTIL_PROGS= align32 fposval have_uid_t longlong have_const \
 	endian longbits have_newstr have_stdvs have_varvs calc_errno \
 	have_ustat have_getsid have_getpgid \
-	have_gettime have_getprid
+	have_gettime have_getprid ver_calc
 
 # These files are required by the regress.cal regression test.
 #
@@ -984,7 +1012,7 @@ SAMPLE_PASSDOWN= Q="${Q}" \
     LCFLAGS="${LCFLAGS}" \
     LDFLAGS="${LDFLAGS}" \
     ILDFLAGS="${ILDFLAGS}" \
-    CALC_LIBS="../libcalc.a ../custom/libcustcalc.a" \
+    CALC_LIBS="../libcalc.a ../custom/libcustcalc.a ${READLINE_LIB}" \
     LCC="${LCC}" \
     CC="${CC}" \
     MAKE_FILE=${MAKE_FILE} \
@@ -1032,7 +1060,7 @@ TARGETS= ${CALC_LIBS} custom/.all calc sample/sample \
 all: .hsrc ${TARGETS}
 
 calc: .hsrc ${CALC_LIBS} ${CALCOBJS}
-	${CC} ${LDFLAGS} ${CALCOBJS} ${CALC_LIBS} ${LD_DEBUG} -o calc
+	${CC} ${LDFLAGS} ${CALCOBJS} ${CALC_LIBS} ${LD_DEBUG} ${READLINE_LIB} -o calc
 
 libcalc.a: ${LIBOBJS} ${MAKE_FILE}
 	-rm -f libcalc.a
@@ -1059,7 +1087,7 @@ custom.o: custom.c ${MAKE_FILE}
 	${CC} ${CFLAGS} ${ALLOW_CUSTOM} -c custom.c
 
 hist.o: hist.c ${MAKE_FILE}
-	${CC} ${CFLAGS} ${TERMCONTROL} -c hist.c
+	${CC} ${CFLAGS} ${TERMCONTROL} ${USE_READLINE} ${READLINE_INCLUDE} -c hist.c
 
 func.o: func.c ${MAKE_FILE}
 	${CC} ${CFLAGS} ${ALLOW_CUSTOM} -c func.c
@@ -2505,6 +2533,12 @@ h_list:
 		echo $$i; \
 	done
 
+# print the calc version
+#
+ver_calc: version.c
+	-rm -f $@
+	${LCC} ${ICFLAGS} -DCALC_VER ${ILDFLAGS} version.c -o $@
+
 ##
 #
 # File distribution list generation.  You can ignore this section.
@@ -2516,34 +2550,27 @@ h_list:
 
 distlist: ${DISTLIST}
 	${Q}(for i in ${DISTLIST}; do \
-		echo calc/$$i; \
+		echo $$i; \
 	done; \
 	(cd help; ${MAKE} distlist \
 	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
 	    HELPDIR=${HELPDIR} SORT=${SORT}); \
 	(cd lib; ${MAKE} distlist \
 	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} SORT=${SORT}) ) | ${SORT}; \
+	    HELPDIR=${HELPDIR} SORT=${SORT}); \
 	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} distlist); \
-	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} distlist) | ${SORT}
+	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} distlist)) | ${SORT}
 
-# The bsdi distribution has generated files as well as distributed files.
-# The the .h files are placed under calc/gen_h.
-#
-bsdilist: ${DISTLIST} ${BUILD_H_SRC} calc.1
-	${Q}(for i in ${DISTLIST}; do \
-		echo calc/$$i; \
-	done; \
-	for i in ${BUILD_H_SRC}; do \
-		echo calc/gen_h/$$i; \
-	done; \
-	echo calc/calc.1; \
-	(cd help; ${MAKE} bsdilist \
+distdir:
+	${Q}(echo .; \
+	(cd help; ${MAKE} distdir \
 	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
 	    HELPDIR=${HELPDIR} SORT=${SORT}); \
-	(cd lib; ${MAKE} bsdilist \
+	(cd lib; ${MAKE} distdir \
 	    MAKE_FILE=${MAKE_FILE} TOPDIR=${TOPDIR} LIBDIR=${LIBDIR} \
-	    HELPDIR=${HELPDIR} SORT=${SORT}) ) | ${SORT}
+	    HELPDIR=${HELPDIR} SORT=${SORT}); \
+	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} distdir); \
+	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} distdir)) | ${SORT}
 
 ##
 #

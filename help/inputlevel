@@ -2,7 +2,7 @@ NAME
     inputlevel - current input level
 
 SYNOPSIS
-    inputlevel()   
+    inputlevel()
 
 TYPES
     return	nonnegative integer
@@ -18,10 +18,10 @@ DESCRIPTION
     decreases to zero if an abort statement is encountered at any
     function-level in the file or string.  If a quit or abort
     statement is encountered at top calculation-level at top input-level,
-    calc is exited. 
+    calc is exited.
 
     Zero input level is also called top input level; greater values
-    of inputlevel() indicate reading at greater depths. 
+    of inputlevel() indicate reading at greater depths.
 
 EXAMPLE
     n/a

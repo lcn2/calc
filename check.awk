@@ -11,6 +11,7 @@ BEGIN {
     havebuf2=0;
     buf2=0;
     error = 0;
+    end_seen = 0;
 }
 
 NF == 0 {
@@ -27,6 +28,10 @@ NF == 0 {
     buf0 = $0;
     havebuf0 = 1;
     next;
+}
+
+/: Ending regression tests$/ {
+    end_seen = 1;
 }
 
 $1 ~ /^[0-9]+:/ {
@@ -71,7 +76,7 @@ END {
     if (error > 0 && havebuf0) {
 	print buf0;
     }
-    if (error > 0) {
+    if (error > 0 || !end_seen) {
 	exit(1);
     } else {
 	exit(0);
