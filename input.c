@@ -1,5 +1,5 @@
 /*
- * input - nsted input source file reader
+ * input - nested input source file reader
  *
  * Copyright (C) 1999  David I. Bell
  *
@@ -18,7 +18,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.2 $
- * @(#) $Id: input.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Id: input.c,v 29.2 2000/06/07 14:02:13 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/input.c,v $
  *
  * Under source code control:	1990/02/15 01:48:16
@@ -140,7 +140,7 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 	 *	/
 	 *	name
 	 *	.
-	 *	extenstion
+	 *	extension
 	 *	\0
 	 *	guard byte
 	 */
@@ -261,7 +261,7 @@ homeexpand(char *name)
 	char *home2;		/* fullpath of the home directory */
 	char *fullpath;		/* the malloced expanded path */
 	char *after;		/* after the ~user or ~ */
-	char *username;		/* extratced username */
+	char *username;		/* extracted username */
 
 	/* firewall */
 	if (name[0] != HOMECHAR)
@@ -873,7 +873,7 @@ findfreeread(void)
 	}
 	maxreadset += READSET_ALLOC;
 
-	/* return the furst newly allocated free entry */
+	/* return the first newly allocated free entry */
 	return maxreadset-READSET_ALLOC;
 }
 

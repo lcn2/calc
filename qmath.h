@@ -18,7 +18,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.2 $
- * @(#) $Id: qmath.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Id: qmath.h,v 29.2 2000/06/07 14:02:13 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -34,8 +34,7 @@
 
 #include "zmath.h"
 
-#define INITCONSTCOUNT 8    /* number of initnumbs[] pre-defined constants */
-
+#define INITCONSTCOUNT 9    /* number of initnumbs[] pre-defined constants */
 
 /*
  * Rational arithmetic definitions.
@@ -157,14 +156,15 @@ extern BOOL qprimetest(NUMBER *q1, NUMBER *q2, NUMBER *q3);
 extern BOOL qissquare(NUMBER *q);
 extern long qilog2(NUMBER *q);
 extern long qilog10(NUMBER *q);
-extern long qilog(NUMBER *q1, NUMBER *q2);
+extern NUMBER *qilog(NUMBER *q, ZVALUE base);
 extern BOOL qcmpmod(NUMBER *q1, NUMBER *q2, NUMBER *q3);
 extern BOOL qquomod(NUMBER *q1, NUMBER *q2, NUMBER **retdiv, NUMBER **retmod);
 extern FLAG qnear(NUMBER *q1, NUMBER *q2, NUMBER *epsilon);
-extern long qdigit(NUMBER *q, long i);
+extern NUMBER *qdigit(NUMBER *q, ZVALUE dpos, ZVALUE base);
 extern long qprecision(NUMBER *q);
-extern long qplaces(NUMBER *q);
-extern long qdigits(NUMBER *q);
+extern long qplaces(NUMBER *q, ZVALUE base);
+extern long qdecplaces(NUMBER *q);
+extern long qdigits(NUMBER *q, ZVALUE base);
 extern void setepsilon(NUMBER *q);
 extern NUMBER *qbitvalue(long i);
 extern NUMBER *qtenpow(long i);
@@ -208,6 +208,11 @@ extern NUMBER *qacsch(NUMBER *q, NUMBER *epsilon);
 extern NUMBER *qacoth(NUMBER *q, NUMBER *epsilon);
 extern NUMBER *qlegtoleg(NUMBER *q, NUMBER *epsilon, BOOL wantneg);
 extern NUMBER *qpi(NUMBER *epsilon);
+extern NUMBER *qcatalan(NUMBER *);
+extern NUMBER *qbern(ZVALUE z);
+extern void qfreebern(void);
+extern NUMBER *qeuler(ZVALUE z);
+extern void qfreeeuler(void);
 
 
 /*
@@ -258,7 +263,7 @@ extern NUMBER *swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all);
 /*
  * constants used often by the arithmetic routines
  */
-extern NUMBER _qzero_, _qone_, _qnegone_, _qonehalf_, _qonesqbase_;
+extern NUMBER _qzero_, _qone_, _qnegone_, _qonehalf_, _qneghalf_, _qonesqbase_;
 extern NUMBER _qtwo_, _qthree_, _qfour_;
 extern NUMBER * initnumbs[];
 

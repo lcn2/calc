@@ -18,7 +18,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.2 $
- * @(#) $Id: qio.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Id: qio.c,v 29.2 2000/06/07 14:02:13 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qio.c,v $
  *
  * Under source code control:	1993/07/30 19:42:46
@@ -191,7 +191,7 @@ qprintnum(NUMBER *q, int outmode)
 			break;
 
 		case MODE_REAL:
-			prec = qplaces(q);
+			prec = qdecplaces(q);
 			if ((prec < 0) || (prec > conf->outdigits)) {
 				if (conf->tilde_ok)
 				    PUTCHAR('~');
@@ -629,7 +629,7 @@ qparse(char *cp, int flags)
 
 /*
  * Print an integer which is guaranteed to fit in the specified number
- * of columns, using imbedded '...' characters if numerator and/or
+ * of columns, using embedded '...' characters if numerator and/or
  * denominator is too large.
  */
 void

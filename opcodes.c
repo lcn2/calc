@@ -20,7 +20,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.2 $
- * @(#) $Id: opcodes.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Id: opcodes.c,v 29.2 2000/06/07 14:02:13 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/opcodes.c,v $
  *
  * Under source code control:	1990/02/15 01:48:19
@@ -225,7 +225,7 @@ static void
 o_paramvalue(FUNC *fp, int argcount, VALUE *args, long index)
 {
 	if ((unsigned long)index >= argcount) {
-		math_error("Bad paramaeter index");
+		math_error("Bad parameter index");
 		/*NOTREACHED*/
 	}
 	args += index;
@@ -896,7 +896,7 @@ o_deref(void)
 		return;
 	}
 	if (stack->v_type != V_ADDR) {
-		math_error("Deferencing a non-variable");
+		math_error("Dereferencing a non-variable");
 		/*NOTREACHED*/
 	}
 	vp = vp->v_addr;
@@ -3228,8 +3228,8 @@ o_quit(FUNC *fp, long index)
 			freevalue(stack--);
 		}
 		freevalue(stackarray);
-		libcalc_call_me_last();
-		exit(0);
+		run_state = RUN_EXIT;
+		longjmp(jmpbuf, 1);
 	}
 	if (cp)
 		printf("%s\n", cp);
@@ -3512,10 +3512,10 @@ static struct opcode opcodes[MAX_OPCODE+1] = {
 	{o_nop,		OPNUL,	"NOP"},		/* no operation */
 	{o_localaddr,	OPLOC,	"LOCALADDR"},	/* address of local variable */
 	{o_globaladdr,	OPGLB,	"GLOBALADDR"},	/* address of global variable */
-	{o_paramaddr,	OPPAR,	"PARAMADDR"},	/* address of paramater variable */
+	{o_paramaddr,	OPPAR,	"PARAMADDR"},	/* address of parameter variable */
 	{o_localvalue,	OPLOC,	"LOCALVALUE"},	/* value of local variable */
 	{o_globalvalue, OPGLB,	"GLOBALVALUE"}, /* value of global variable */
-	{o_paramvalue,	OPPAR,	"PARAMVALUE"},	/* value of paramater variable */
+	{o_paramvalue,	OPPAR,	"PARAMVALUE"},	/* value of parameter variable */
 	{o_number,	OPONE,	"NUMBER"},	/* constant real numeric value */
 	{o_indexaddr,	OPTWO,	"INDEXADDR"},	/* array index address */
 	{o_printresult, OPNUL,	"PRINTRESULT"}, /* print result of top-level expression */

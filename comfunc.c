@@ -20,7 +20,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.2 $
- * @(#) $Id: comfunc.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Id: comfunc.c,v 29.2 2000/06/07 14:02:13 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/comfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -1007,7 +1007,7 @@ cpolar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 	long m, n;
 
 	if (qiszero(epsilon)) {
-		math_error("Zero epsilson for cpolar");
+		math_error("Zero epsilon for cpolar");
 		/*NOTREACHED*/
 	}
 	if (qiszero(q1))
@@ -1161,4 +1161,28 @@ cprintfr(COMPLEX *c)
 		math_chr('/');
 		zprintval(i->den, 0L, 0L);
 	}
+}
+
+
+NUMBER *
+cilog(COMPLEX *c, ZVALUE base)
+{
+	NUMBER *qr, *qi;
+
+	qr = qilog(c->real, base);
+	qi = qilog(c->imag, base);
+
+	if (qr == NULL) {
+		if (qi == NULL)
+			return NULL;
+		return qi;
+	}
+	if (qi == NULL)
+		return qr;
+	if (qrel(qr, qi) >= 0) {
+		qfree(qi);
+		return qr;
+	}
+	qfree(qr);
+	return qi;
 }

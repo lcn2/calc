@@ -15,10 +15,13 @@ Interrupts
 	    [Abort level n]
 
     where n ranges from 1 to 3.	 For n equal to 1, the calculator will
-    abort calculations at the next statement boundary.	For n equal to 2,
-    the calculator will abort calculations at the next opcode boundary.
-    For n equal to 3, the calculator will abort calculations at the next
-    lowest level arithmetic operation boundary.
+    abort calculations at the next statement boundary specified by an
+    ABORT opcode as described below.  For n equal to 2, the calculator
+    will abort calculations at the next opcode boundary.  For n equal to 3,
+    the calculator will abort calculations at the next attempt to allocate
+    memory for the result of an integer arithmetic operation; this
+    level may be appropriate for stopping a builtin operation like
+    inversion of a large matrix.
 
     If a final interrupt is given when n is 3, the calculator will
     immediately abort the current calculation and longjmp back to the
@@ -27,8 +30,77 @@ Interrupts
     be done as a last resort.  You are advised to quit the calculator
     after this has been done.
 
-## Copyright (C) 1999  Landon Curt Noll
-##
+ABORT opcodes
+
+    If config("trace") & 2 is zero, ABORT opcodes are introduced at
+    various places in the opcodes for evaluation of command lines
+    and functions defined by "define ... { ... }" commands.  In the
+    following, config("trace") has been set equal to 8 so that opcodes
+    are displayed when a function is defined.   The function f(x) 
+    evaluates x + (x - 1) + (x - 2) + ... until a zero term is
+    encountered.  If f() is called with a negative or fractional x,
+    the calculation is never completed and to stop it, an interruption
+    (on many systems, by ctrl-C) will be necessary.
+
+	> config("trace", 8),
+	> define f(x) {local s; while (x) {s += x--} return s}
+	0: DEBUG line 2
+	2: PARAMADDR x
+	4: JUMPZ 19
+	6: DEBUG line 2
+	8: LOCALADDR s
+	10: DUPLICATE
+	11: PARAMADDR x
+	13: POSTDEC
+	14: POP
+	15: ADD
+	16: ASSIGNPOP
+	17: JUMP 2
+	19: DEBUG line 2
+	21: LOCALADDR s
+	23: RETURN
+	f(x) defined
+
+    (The line number following DEBUG refers to the line in the file
+    from which the definition is read.)   If an attempt is made to
+    evaluate f(-1), the effect of the DEBUG at opcode 6 ensures that
+    a single SIGINT will stop the calculation at a start of  
+    {s += x--} loop.  In interactive mode, with ^C indicating
+    input of ctrl-C, the displayed output is as in:
+
+	> f(-1)
+	^C
+	[Abort level 1]
+	"f": line 2: Calculation aborted at statement boundary
+
+    The DEBUG opcodes are disabled by nonzero config("trace") & 2.
+    Changing config("trace") to achieve this, and defining g(x) with
+    the same definition as for f(x) gives:
+
+	> define g(x) {local s; while (x) {s += x--} return s}
+	0: PARAMADDR x
+	2: JUMPZ 15
+	4: LOCALADDR s
+	6: DUPLICATE
+	7: PARAMADDR x
+	9: POSTDEC
+	10: POP
+	11: ADD
+	12: ASSIGNPOP
+	13: JUMP 0
+	15: LOCALADDR s
+	17: RETURN
+	g(x) defined
+
+    If g(-1) is called, two interrupts are necessary, as in:
+
+	> g(-1)
+	^C
+	[Abort level 1]
+	^C
+	[Abort level 2]
+	"g": Calculation aborted in opcode
+
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
 ## as published by the Free Software Foundation.
@@ -44,7 +116,7 @@ Interrupts
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
 ## @(#) $Revision: 29.2 $
-## @(#) $Id: interrupt,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Id: interrupt,v 29.2 2000/06/07 14:02:33 chongo Exp chongo $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/interrupt,v $
 ##
 ## Under source code control:	1991/07/21 04:37:21

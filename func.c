@@ -20,7 +20,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.3 $
- * @(#) $Id: func.c,v 29.3 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Id: func.c,v 29.3 2000/06/07 14:02:13 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -160,7 +160,7 @@ static STRINGHEAD newerrorstr;
 
 
 /*
- * arg count definitons
+ * arg count definitions
  */
 #define IN 100		/* maximum number of arguments */
 #define FE 0x01		/* flag to indicate default epsilon argument */
@@ -256,8 +256,8 @@ f_prompt(VALUE *vp)
 	cp = nextline();
 	closeinput();
 	if (cp == NULL) {
-		math_error("End of file while prompting");
-		/*NOTREACHED*/
+		result.v_type = V_NULL;
+		return result;
 	}
 	if (*cp == '\0') {
 		result.v_str = slink(&_nullstring_);
@@ -278,7 +278,7 @@ f_prompt(VALUE *vp)
 static VALUE
 f_display(int count, VALUE **vals)
 {
-	long oldvalue;
+	LEN oldvalue;
 	VALUE res;
 
 	/* initialize VALUE */
@@ -293,9 +293,9 @@ f_display(int count, VALUE **vals)
 			fprintf(stderr,
 			       "Out-of-range arg for display ignored\n");
 		else
-			conf->outdigits = qtoi(vals[0]->v_num);
+			conf->outdigits = (LEN) qtoi(vals[0]->v_num);
 	}
-	res.v_num = itoq(oldvalue);
+	res.v_num = itoq((long) oldvalue);
 	return res;
 }
 
@@ -1012,7 +1012,7 @@ f_srand(int count, VALUE **vals)
 			break;
 
 		default:
-			math_error("illegal type of arg passsed to srand()");
+			math_error("illegal type of arg passed to srand()");
 			/*NOTREACHED*/
 			break;
 		}
@@ -1158,7 +1158,7 @@ f_srandom(int count, VALUE **vals)
 			break;
 
 		default:
-			math_error("illegal type of arg passsed to srandom()");
+			math_error("illegal type of arg passed to srandom()");
 			/*NOTREACHED*/
 			break;
 		}
@@ -1253,37 +1253,76 @@ f_setbit(int count, VALUE **vals)
 }
 
 
-static NUMBER *
-f_digit(NUMBER *val1, NUMBER *val2)
+static VALUE
+f_digit(int count, VALUE **vals)
 {
-	if (qisfrac(val2)) {
-		math_error("Non-integral digit position");
-		/*NOTREACHED*/
+	VALUE res;
+	ZVALUE base;
+
+	if (vals[0]->v_type != V_NUM)
+		return error_value(E_DGT1);
+
+	if (vals[1]->v_type != V_NUM || qisfrac(vals[1]->v_num))
+		return error_value(E_DGT2);
+
+	if (count == 3) {
+		if (vals[2]->v_type != V_NUM || qisfrac(vals[2]->v_num))
+			return error_value(E_DGT3);
+		base = vals[2]->v_num->num;
+	} else {
+		base = _ten_;
 	}
-	if (qiszero(val1) || (qisint(val1) && qisneg(val2)))
-		return qlink(&_qzero_);
-	if (zge31b(val2->num)) {
-		if (qisneg(val2)) {
-			math_error("Very large digit position");
-			/*NOTREACHED*/
-		}
-		return qlink(&_qzero_);
-	}
-	return itoq((long) qdigit(val1, qtoi(val2)));
+	res.v_type = V_NUM;
+	res.v_num = qdigit(vals[0]->v_num, vals[1]->v_num->num, base);
+	if (res.v_num == NULL)
+		return error_value(E_DGT3);
+
+	return res;
 }
 
 
-static NUMBER *
-f_digits(NUMBER *val)
+static VALUE
+f_digits(int count, VALUE **vals)
 {
-	return itoq((long) qdigits(val));
+	ZVALUE base;
+	VALUE res;
+
+	if (vals[0]->v_type != V_NUM)
+		return error_value(E_DGTS1);
+	if (count > 1) {
+		if (vals[1]->v_type != V_NUM || qisfrac(vals[1]->v_num)
+			|| qiszero(vals[1]->v_num) || qisunit(vals[1]->v_num))
+			return error_value(E_DGTS2);
+		base = vals[1]->v_num->num;
+	} else {
+		base = _ten_;
+	}
+	res.v_type = V_NUM;
+	res.v_num = itoq(qdigits(vals[0]->v_num, base));
+	return res;
 }
 
 
-static NUMBER *
-f_places(NUMBER *val)
+static VALUE
+f_places(int count, VALUE **vals)
 {
-	return itoq((long) qplaces(val));
+	long places;
+	VALUE res;
+
+	if (vals[0]->v_type != V_NUM)
+		return error_value(E_PLCS1);
+	if (count > 1) {
+		if (vals[1]->v_type != V_NUM || qisfrac(vals[1]->v_num))
+			return error_value(E_PLCS2);
+		places = qplaces(vals[0]->v_num, vals[1]->v_num->num);
+		if (places == -2)
+			return error_value(E_PLCS2);
+	} else
+		places = qdecplaces(vals[0]->v_num);
+
+	res.v_type = V_NUM;
+	res.v_num = itoq(places);
+	return res;
 }
 
 
@@ -3129,6 +3168,135 @@ f_agd(int count, VALUE **vals)
 
 
 static VALUE
+f_comb(VALUE *v1, VALUE *v2)
+{
+	long n;
+	VALUE result;
+	VALUE tmp1, tmp2, div;
+
+	if (v2->v_type != V_NUM || qisfrac(v2->v_num))
+		return error_value(E_COMB1);
+	result.v_subtype = V_NOSUBTYPE;
+	result.v_type = V_NUM;
+	if (qisneg(v2->v_num)) {
+		result.v_num = qlink(&_qzero_);
+		return result;
+	}
+	if (qiszero(v2->v_num)) {
+		result.v_num = qlink(&_qone_);
+		return result;
+	}
+	if (qisone(v2->v_num)) {
+		copyvalue(v1, &result);
+		return result;
+	}
+	if (v1->v_type == V_NUM) {
+		result.v_num = qcomb(v1->v_num, v2->v_num);
+		if (result.v_num == NULL)
+			return error_value(E_COMB2);
+		return result;
+	}
+	if (zge24b(v2->v_num->num))
+		return error_value(E_COMB2);
+	n = qtoi(v2->v_num);
+	copyvalue(v1, &result);
+	decvalue(v1, &tmp1);
+	div.v_type = V_NUM;
+	div.v_num = qlink(&_qtwo_);
+	n--;
+	for (;;) {
+		mulvalue(&result, &tmp1, &tmp2);
+		freevalue(&result);
+		divvalue(&tmp2, &div, &result);
+		freevalue(&tmp2);
+		if (--n == 0 || !testvalue(&result) || result.v_type < 0) {
+			freevalue(&tmp1);
+			freevalue(&div);
+			return result;
+		}
+		decvalue(&tmp1, &tmp2);
+		freevalue(&tmp1);
+		tmp1 = tmp2;
+		incvalue(&div, &tmp2);
+		freevalue(&div);
+		div = tmp2;
+	}
+}
+
+
+static VALUE
+f_bern(VALUE *vp)
+{
+	VALUE res;
+
+	if (vp->v_type != V_NUM || qisfrac(vp->v_num))
+		return error_value(E_BERN);
+
+	res.v_subtype = V_NOSUBTYPE;
+	res.v_type = V_NUM;
+	res.v_num = qbern(vp->v_num->num);
+	if (res.v_num == NULL)
+		return error_value(E_BERN);
+	return res;
+}
+
+
+static VALUE
+f_freebern(void)
+{
+	VALUE res;
+
+	qfreebern();
+	res.v_type = V_NULL;
+	res.v_subtype = V_NOSUBTYPE;
+	return res;
+}
+
+
+static VALUE
+f_euler(VALUE *vp)
+{
+	VALUE res;
+
+	if (vp->v_type!=V_NUM || qisfrac(vp->v_num))
+		return error_value(E_EULER);
+	res.v_subtype = V_NOSUBTYPE;
+	res.v_type = V_NUM;
+	res.v_num = qeuler(vp->v_num->num);
+	if (res.v_num == NULL)
+		return error_value(E_EULER);
+	return res;
+}
+
+
+static VALUE
+f_freeeuler(void)
+{
+	VALUE res;
+
+	qfreeeuler();
+	res.v_type = V_NULL;
+	res.v_subtype = V_NOSUBTYPE;
+	return res;
+}
+
+
+static VALUE
+f_catalan(VALUE *vp)
+{
+	VALUE res;
+
+	if (vp->v_type!=V_NUM || qisfrac(vp->v_num) || zge31b(vp->v_num->num))
+		return error_value(E_CTLN);
+	res.v_type = V_NUM;
+	res.v_subtype = V_NOSUBTYPE;
+	res.v_num = qcatalan(vp->v_num);
+	if (res.v_num == NULL)
+		return error_value(E_CTLN);
+	return res;
+}
+
+static VALUE
 f_arg(int count, VALUE **vals)
 {
 	VALUE result;
@@ -3488,24 +3656,82 @@ f_polar(int count, VALUE **vals)
 }
 
 
-static NUMBER *
-f_ilog(NUMBER *val1, NUMBER *val2)
+static VALUE
+f_ilog(VALUE *v1, VALUE *v2)
 {
-	return itoq(qilog(val1, val2));
+	VALUE res;
+
+	if (v2->v_type != V_NUM || qisfrac(v2->v_num) || qiszero(v2->v_num) ||
+			qisunit(v2->v_num))
+		return error_value(E_ILOGB);
+
+	switch(v1->v_type) {
+	case V_NUM:
+		res.v_num = qilog(v1->v_num, v2->v_num->num);
+		break;
+	case V_COM:
+		res.v_num = cilog(v1->v_com, v2->v_num->num);
+		break;
+	default:
+		return error_value(E_ILOG);
+	}
+
+	if (res.v_num == NULL)
+		return error_value(E_LOGINF);
+
+	res.v_type = V_NUM;
+	res.v_subtype = V_NOSUBTYPE;
+	return res;
 }
 
 
-static NUMBER *
-f_ilog2(NUMBER *val)
+static VALUE
+f_ilog2(VALUE *vp)
 {
-	return itoq(qilog2(val));
+	VALUE res;
+
+	switch(vp->v_type) {
+	case V_NUM:
+		res.v_num = qilog(vp->v_num, _two_);
+		break;
+	case V_COM:
+		res.v_num = cilog(vp->v_com, _two_);
+		break;
+	default:
+		return error_value(E_ILOG2);
+	}
+
+	if (res.v_num == NULL)
+		return error_value(E_LOGINF);
+
+	res.v_type = V_NUM;
+	res.v_subtype = V_NOSUBTYPE;
+	return res;
 }
 
 
-static NUMBER *
-f_ilog10(NUMBER *val)
+static VALUE
+f_ilog10(VALUE *vp)
 {
-	return itoq(qilog10(val));
+	VALUE res;
+
+	switch(vp->v_type) {
+		case V_NUM:
+			res.v_num = qilog(vp->v_num, _ten_);
+			break;
+		case V_COM:
+			res.v_num = cilog(vp->v_com, _ten_);
+			break;
+		default:
+			return error_value(E_ILOG10);
+	}
+
+	if (res.v_num == NULL)
+		return error_value(E_LOGINF);
+
+	res.v_type = V_NUM;
+	res.v_subtype = V_NOSUBTYPE;
+	return res;
 }
 
 
@@ -6460,6 +6686,19 @@ f_isatty(VALUE *vp)
 
 
 static VALUE
+f_calc_tty(void)
+{
+	VALUE res;
+
+	if (!calc_tty(FILEID_STDIN))
+		return error_value(E_TTY);
+	res.v_type = V_NULL;
+	res.v_subtype = V_NOSUBTYPE;
+	return res;
+}
+
+
+static VALUE
 f_inputlevel (void)
 {
 	VALUE result;
@@ -6648,6 +6887,48 @@ f_system(VALUE *vp)
 	}
 	result.v_num = itoq((long) system(vp->v_str->s_str));
 	return result;
+}
+
+
+static VALUE
+f_sleep(int count, VALUE **vals)
+{
+	long time;
+	VALUE res;
+	NUMBER *q1, *q2;
+
+	res.v_type = V_NULL;
+	if (count > 0) {
+		if (vals[0]->v_type != V_NUM || qisneg(vals[0]->v_num))
+				return error_value(E_SLEEP);
+		if (qisint(vals[0]->v_num)) {
+			if (zge31b(vals[0]->v_num->num))
+				return error_value(E_SLEEP);
+			time = ztoi(vals[0]->v_num->num);
+			time = sleep(time);
+		}
+		else {
+			q1 = qscale(vals[0]->v_num, 20);
+			q2 = qint(q1);
+			qfree(q1);
+			if (zge31b(q2->num)) {
+				qfree(q2);
+				return error_value(E_SLEEP);
+			}
+			time = ztoi(q2->num);
+			qfree(q2);
+				/* BSD 4.3 usleep has void return */
+			usleep(time);
+			return res;
+		}
+	} else {
+		time = sleep(1);
+	}
+	if (time) {
+		res.v_type = V_NUM;
+		res.v_num = itoq(time);
+	}
+	return res;
 }
 
 
@@ -7493,6 +7774,8 @@ static CONST struct builtin builtins[] = {
 	 "arithmetic mean of values"},
 	{"base", 0, 1, 0, OP_NOP, f_base, 0,
 	 "set default output base"},
+	{"bernoulli", 1, 1, 0, OP_NOP, 0, f_bern,
+	 "Bernoulli number for index a"},
 	{"bit", 2, 2, 0, OP_BIT, 0, 0,
 	 "whether bit b in value a is set"},
 	{"blk", 0, 3, 0, OP_NOP, 0, f_blk,
@@ -7509,6 +7792,10 @@ static CONST struct builtin builtins[] = {
 	 "truncate a to b number of binary places"},
 	{"calclevel", 0, 0, 0, OP_NOP, 0, f_calclevel,
 	 "current calculation level"},
+	{"calc_tty", 0, 0, 0, OP_NOP, 0, f_calc_tty,
+	 "set tty for interactivity"},
+	{"catalan", 1, 1, 0, OP_NOP, 0, f_catalan,
+	 "catalan number for index a"},
 	{"ceil", 1, 1, 0, OP_NOP, 0, f_ceil,
 	 "smallest integer greater than or equal to number"},
 	{"cfappr", 1, 3, 0, OP_NOP, f_cfappr, 0,
@@ -7521,7 +7808,7 @@ static CONST struct builtin builtins[] = {
 	 "command buffer"},
 	{"cmp", 2, 2, 0, OP_CMP, 0, 0,
 	 "compare values returning -1, 0, or 1"},
-	{"comb", 2, 2, 0, OP_NOP, qcomb, 0,
+	{"comb", 2, 2, 0, OP_NOP, 0, f_comb,
 	 "combinatorial number a!/b!(a-b)!"},
 	{"config", 1, 2, 0, OP_SETCONFIG, 0, 0,
 	 "set or read configuration value"},
@@ -7555,10 +7842,10 @@ static CONST struct builtin builtins[] = {
 	 "denominator of fraction"},
 	{"det", 1, 1, 0, OP_NOP, 0, f_det,
 	 "determinant of matrix"},
-	{"digit", 2, 2, 0, OP_NOP, f_digit, 0,
+	{"digit", 2, 3, 0, OP_NOP, 0, f_digit,
 	 "digit at specified decimal place of number"},
-	{"digits", 1, 1, 0, OP_NOP, f_digits, 0,
-	 "number of digits in number"},
+	{"digits", 1, 2, 0, OP_NOP, 0, f_digits,
+	 "number of digits in base b representation of a"},
 	{"display", 0, 1, 0, OP_NOP, 0, f_display,
 	 "number of decimal digits for displaying numbers"},
 	{"dp", 2, 2, 0, OP_NOP, 0, f_dp,
@@ -7573,6 +7860,8 @@ static CONST struct builtin builtins[] = {
 	 "set or read calc_errno"},
 	{"error", 0, 1, 0, OP_NOP, 0, f_error,
 	 "generate error value"},
+	{"euler", 1, 1, 0, OP_NOP, 0, f_euler,
+	 "Euler number"},
 	{"eval", 1, 1, 0, OP_NOP, 0, f_eval,
 	 "evaluate expression from string to value"},
 	{"exp", 1, 2, 0, OP_NOP, 0, f_exp,
@@ -7623,6 +7912,10 @@ static CONST struct builtin builtins[] = {
 	 "write one or more null-terminated strings to a file"},
 	{"free", 0, IN, FA, OP_NOP, 0, f_free,
 	 "free listed or all global variables"},
+	{"freebernoulli", 0, 0, 0, OP_NOP, 0, f_freebern,
+	 "free stored Benoulli numbers"},
+	{"freeeuler", 0, 0, 0, OP_NOP, 0, f_freeeuler,
+	 "free stored Euler numbers"},
 	{"freeglobals", 0, 0, 0, OP_NOP, 0, f_freeglobals,
 	 "free all global and visible static variables"},
 	{"freeredc", 0, 0, 0, OP_NOP, 0, f_freeredc,
@@ -7663,11 +7956,11 @@ static CONST struct builtin builtins[] = {
 	 "v mod h*2^n+r, h>0, n>0, r = -1, 0 or 1"},
 	{"hypot", 2, 3, FE, OP_NOP, qhypot, 0,
 	 "hypotenuse of right triangle within accuracy c"},
-	{"ilog", 2, 2, 0, OP_NOP, f_ilog, 0,
-	 "integral log of one number with another"},
-	{"ilog10", 1, 1, 0, OP_NOP, f_ilog10, 0,
+	{"ilog", 2, 2, 0, OP_NOP, 0, f_ilog,
+	 "integral log of a to integral base b"},
+	{"ilog10", 1, 1, 0, OP_NOP, 0, f_ilog10,
 	 "integral log of a number base 10"},
-	{"ilog2", 1, 1, 0, OP_NOP, f_ilog2, 0,
+	{"ilog2", 1, 1, 0, OP_NOP, 0, f_ilog2,
 	 "integral log of a number base 2"},
 	{"im", 1, 1, 0, OP_IM, 0, 0,
 	 "imaginary part of complex number"},
@@ -7833,8 +8126,8 @@ static CONST struct builtin builtins[] = {
 	 "value of pi accurate to within epsilon"},
 	{"pix", 1, 2, 0, OP_NOP, f_pix, 0,
 	 "number of primes <= a < 2^32, return b if error"},
-	{"places", 1, 1, 0, OP_NOP, f_places, 0,
-	 "places after decimal point (-1 if infinite)"},
+	{"places", 1, 2, 0, OP_NOP, 0, f_places,
+	 "places after \"decimal\" point (-1 if infinite)"},
 	{"pmod", 3, 3, 0, OP_NOP, qpowermod,0,
 	 "mod of a power (a ^ b (mod c))"},
 	{"polar", 2, 3, 0, OP_NOP, 0, f_polar,
@@ -7937,6 +8230,8 @@ static CONST struct builtin builtins[] = {
 	 "total number of elements in value"},
 	{"sizeof", 1, 1, 0, OP_NOP, 0, f_sizeof,
 	 "number of octets used to hold the value"},
+	{"sleep", 0, 1, 0, OP_NOP, 0, f_sleep,
+	 "suspend operatioo for a seconds"},
 	{"sort", 1, 1, 0, OP_NOP, 0, f_sort,
 	 "sort a copy of a matrix or list"},
 	{"sqrt", 1, 3, 0, OP_NOP, 0, f_sqrt,

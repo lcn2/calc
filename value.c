@@ -18,7 +18,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.2 $
- * @(#) $Id: value.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Id: value.c,v 29.2 2000/06/07 14:02:13 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -57,10 +57,10 @@ freevalue(VALUE *vp)
 
 	type = vp->v_type;
 	vp->v_type = V_NULL;
-	if (type < 0)
+	vp->v_subtype = V_NOSUBTYPE;
+	if (type <= 0)
 		return;
 	switch (type) {
-		case V_NULL:
 		case V_ADDR:
 		case V_OCTET:
 		case V_NBLOCK:
@@ -111,7 +111,6 @@ freevalue(VALUE *vp)
 			math_error("Freeing unknown value type");
 			/*NOTREACHED*/
 	}
-	vp->v_subtype = V_NOSUBTYPE;
 }
 
 
@@ -341,81 +340,11 @@ negvalue(VALUE *vp, VALUE *vres)
 			*vres = objcall(OBJ_NEG, vp, NULL_VALUE, NULL_VALUE);
 			return;
 		default:
-			if (vp->v_type < 0)
+			if (vp->v_type <= 0)
 				return;
 			*vres = error_value(E_NEG);
 			return;
 	}
-}
-
-
-/*
- * addnumeric - add two numeric values togethter
- *
- * If either value is not real or complex, it is assumed to have
- * a value of 0.
- *
- * Result is placed in the indicated location.
- */
-void
-addnumeric(VALUE *v1, VALUE *v2, VALUE *vres)
-{
-	COMPLEX *c;
-
-	/*
-	 * add numeric values
-	 */
-	vres->v_subtype = V_NOSUBTYPE;
-	switch (TWOVAL(v1->v_type, v2->v_type)) {
-	case TWOVAL(V_NUM, V_NUM):
-		vres->v_num = qqadd(v1->v_num, v2->v_num);
-		vres->v_type = V_NUM;
-		return;
-	case TWOVAL(V_COM, V_NUM):
-		vres->v_com = caddq(v1->v_com, v2->v_num);
-		vres->v_type = V_COM;
-		return;
-	case TWOVAL(V_NUM, V_COM):
-		vres->v_com = caddq(v2->v_com, v1->v_num);
-		vres->v_type = V_COM;
-		return;
-	case TWOVAL(V_COM, V_COM):
-		vres->v_com = cadd(v1->v_com, v2->v_com);
-		vres->v_type = V_COM;
-		c = vres->v_com;
-		if (!cisreal(c))
-			return;
-		vres->v_num = qlink(c->real);
-		vres->v_type = V_NUM;
-		comfree(c);
-		return;
-	}
-
-	/*
-	 * assume zero if a value is not numeric
-	 */
-	if (v1->v_type == V_NUM) {
-		/* v1 + 0 == v1 */
-		vres->v_type = v1->v_type;
-		vres->v_num = qlink(v1->v_num);
-	} else if (v1->v_type == V_COM) {
-		/* v1 + 0 == v1 */
-		vres->v_type = v1->v_type;
-		vres->v_com = clink(v1->v_com);
-	} else if (v2->v_type == V_NUM) {
-		/* v2 + 0 == v2 */
-		vres->v_type = v2->v_type;
-		vres->v_num = qlink(v2->v_num);
-	} else if (v2->v_type == V_COM) {
-		/* v2 + 0 == v2 */
-		vres->v_type = v2->v_type;
-		vres->v_com = clink(v2->v_com);
-	} else {
-		/* 0 + 0 = 0 */
-		vres->v_type = V_NUM;
-		vres->v_num = qlink(&_qzero_);
-	}
-	return;
 }
 
 
@@ -502,15 +431,12 @@ addvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			return;
 		default:
 			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
-				if (v1->v_type < 0) {
-					copyvalue(v1, vres);
+				if (v1->v_type < 0)
 					return;
-				}
-				if (v2->v_type < 0) {
-					copyvalue(v2, vres);
-					return;
-				}
-				*vres = error_value(E_ADD);
+				if (v2->v_type > 0)
+					*vres = error_value(E_ADD);
+				else
+					vres->v_type = v2->v_type;
 				return;
 			}
 			*vres = objcall(OBJ_ADD, v1, v2, NULL_VALUE);
@@ -592,12 +518,10 @@ subvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			return;
 		default:
 			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
-				if (v1->v_type < 0) {
-					copyvalue(v1, vres);
+				if (v1->v_type <= 0)
 					return;
-				}
-				if (v2->v_type < 0) {
-					copyvalue(v2, vres);
+				if (v2->v_type <= 0) {
+					vres->v_type = v2->v_type;
 					return;
 				}
 				*vres = error_value(E_SUB);
@@ -659,12 +583,10 @@ mulvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			return;
 		default:
 			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
-				if (v1->v_type < 0) {
-					copyvalue(v1, vres);
+				if (v1->v_type <= 0)
 					return;
-				}
-				if (v2->v_type < 0) {
-					copyvalue(v2, vres);
+				if (v2->v_type <= 0) {
+					vres->v_type = v2->v_type;
 					return;
 				}
 				*vres = error_value(E_MUL);
@@ -713,8 +635,8 @@ squarevalue(VALUE *vp, VALUE *vres)
 			*vres = objcall(OBJ_SQUARE, vp, NULL_VALUE, NULL_VALUE);
 			return;
 		default:
-			if (vp->v_type < 0) {
-				copyvalue(vp, vres);
+			if (vp->v_type <= 0) {
+				vres->v_type = vp->v_type;
 				return;
 			}
 			*vres = error_value(E_SQUARE);
@@ -767,10 +689,8 @@ invertvalue(VALUE *vp, VALUE *vres)
 				vres->v_num = qlink(&_qzero_);
 				return;
 			}
-			if (vp->v_type < 0) {
-				copyvalue(vp, vres);
+			if (vp->v_type <= 0)
 				return;
-			}
 			*vres = error_value(E_INV);
 			return;
 	}
@@ -819,12 +739,10 @@ andvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			return;
 		default:
 			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
-				if (v1->v_type < 0) {
-					copyvalue(v1, vres);
+				if (v1->v_type < 0)
 					return;
-				}
 				if (v2->v_type < 0) {
-					copyvalue(v2, vres);
+					vres->v_type = v2->v_type;
 					return;
 				}
 				*vres = error_value(E_AND);
@@ -877,12 +795,10 @@ orvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			return;
 		default:
 			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
-				if (v1->v_type < 0) {
-					copyvalue(v1, vres);
+				if (v1->v_type < 0)
 					return;
-				}
 				if (v2->v_type < 0) {
-					copyvalue(v2, vres);
+					vres->v_type = v2->v_type;
 					return;
 				}
 				*vres = error_value(E_OR);
@@ -1097,10 +1013,9 @@ apprvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
-	if (v1->v_type < 0) {
-		copyvalue(v1, vres);
+	if (v1->v_type <= 0)
 		return;
-	}
+
 	e = NULL;
 	switch(v2->v_type) {
 		case V_NUM:	e = v2->v_num;
@@ -1239,10 +1154,8 @@ roundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 			vres->v_com = c;
 			return;
 		default:
-			if (v1->v_type < 0) {
-				copyvalue(v1, vres);
+			if (v1->v_type <= 0)
 				return;
-			}
 			*vres = error_value(E_ROUND);
 			return;
 	}
@@ -1327,10 +1240,8 @@ broundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 			vres->v_com = c;
 			return;
 		default:
-			if (v1->v_type < 0) {
-				copyvalue(v1, vres);
+			if (v1->v_type <= 0)
 				return;
-			}
 			*vres = error_value(E_BROUND);
 			return;
 	}
@@ -1374,10 +1285,8 @@ intvalue(VALUE *vp, VALUE *vres)
 			*vres = objcall(OBJ_INT, vp, NULL_VALUE, NULL_VALUE);
 			return;
 		default:
-			if (vp->v_type < 0) {
-				copyvalue(vp, vres);
+			if (vp->v_type <= 0)
 				return;
-			}
 			*vres = error_value(E_INT);
 			return;
 	}
@@ -1423,10 +1332,8 @@ fracvalue(VALUE *vp, VALUE *vres)
 			*vres = objcall(OBJ_FRAC, vp, NULL_VALUE, NULL_VALUE);
 			return;
 		default:
-			if (vp->v_type < 0) {
-				copyvalue(vp, vres);
+			if (vp->v_type < 0)
 				return;
-			}
 			*vres = error_value(E_FRAC);
 			return;
 	}
@@ -1461,7 +1368,7 @@ incvalue(VALUE *vp, VALUE *vres)
 			vres->v_addr = vp->v_addr + 1;
 			break;
 		default:
-			if (vp->v_type >= 0)
+			if (vp->v_type > 0)
 				*vres = error_value(E_INCV);
 			break;
 	}
@@ -1533,8 +1440,8 @@ conjvalue(VALUE *vp, VALUE *vres)
 			*vres = objcall(OBJ_CONJ, vp, NULL_VALUE, NULL_VALUE);
 			return;
 		default:
-			if (vp->v_type < 0) {
-				copyvalue(vp, vres);
+			if (vp->v_type <= 0) {
+				vres->v_type = vp->v_type;
 				return;
 			}
 			*vres = error_value(E_CONJ);
@@ -1560,8 +1467,8 @@ sqrtvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	}
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
-	if (v1->v_type < 0) {
-		copyvalue(v1, vres);
+	if (v1->v_type <= 0) {
+		vres->v_type = v1->v_type;
 		return;
 	}
 	if (v2->v_type == V_NULL) {
@@ -1630,8 +1537,8 @@ rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	COMPLEX *c;
 
 	vres->v_subtype = V_NOSUBTYPE;
-	if (v1->v_type < 0) {
-		copyvalue(v1, vres);
+	if (v1->v_type <= 0) {
+		vres->v_type = v1->v_type;
 		return;
 	}
 	if (v2->v_type != V_NUM) {
@@ -1700,8 +1607,8 @@ absvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		return;
 	}
 	vres->v_subtype = V_NOSUBTYPE;
-	if (v1->v_type < 0) {
-		copyvalue(v1, vres);
+	if (v1->v_type <= 0) {
+		vres->v_type = v1->v_type;
 		return;
 	}
 	switch (v1->v_type) {
@@ -1739,8 +1646,8 @@ normvalue(VALUE *vp, VALUE *vres)
 
 	vres->v_type = vp->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
-	if (vp->v_type < 0) {
-		copyvalue(vp, vres);
+	if (vp->v_type <= 0) {
+		vres->v_type = vp->v_type;
 		return;
 	}
 	switch (vp->v_type) {
@@ -1786,8 +1693,8 @@ shiftvalue(VALUE *v1, VALUE *v2, BOOL rightshift, VALUE *vres)
 	VALUE tmp;
 
 	vres->v_subtype = V_NOSUBTYPE;
-	if (v1->v_type < 0) {
-		copyvalue(v1, vres);
+	if (v1->v_type <= 0) {
+		vres->v_type = v1->v_type;
 		return;
 	}
 	if ((v2->v_type != V_NUM) || (qisfrac(v2->v_num))) {
@@ -1872,8 +1779,8 @@ scalevalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	long n = 0;
 
 	vres->v_subtype = V_NOSUBTYPE;
-	if (v1->v_type < 0) {
-		copyvalue(v1, vres);
+	if (v1->v_type <= 0) {
+		vres->v_type = v1->v_type;
 		return;
 	}
 	if ((v2->v_type != V_NUM) || qisfrac(v2->v_num)) {
@@ -1924,9 +1831,9 @@ powivalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	}
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
-	if (v1->v_type < 0 && v1->v_type != -E_1OVER0)
+	if (v1->v_type <= 0 && v1->v_type != -E_1OVER0)
 		return;
-	if (v2->v_type < 0) {
+	if (v2->v_type <= 0) {
 		vres->v_type = v2->v_type;
 		return;
 	}
@@ -1982,8 +1889,8 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	COMPLEX *c, ctmp1, ctmp2;
 
 	vres->v_subtype = V_NOSUBTYPE;
-	if (v1->v_type < 0) {
-		copyvalue(v1, vres);
+	if (v1->v_type <= 0) {
+		vres->v_type = v1->v_type;
 		return;
 	}
 	if (v1->v_type != V_NUM && v1->v_type != V_COM) {
@@ -2063,9 +1970,9 @@ divvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
-	if (v1->v_type < 0)
+	if (v1->v_type <= 0)
 		return;
-	if (v2->v_type < 0) {
+	if (v2->v_type <= 0) {
 		if (testvalue(v1) && v2->v_type == -E_1OVER0) {
 			vres->v_type = V_NUM;
 			vres->v_num = qlink(&_qzero_);
@@ -2146,10 +2053,9 @@ quovalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
-	if (v1->v_type < 0) {
-		copyvalue(v1, vres);
+	if (v1->v_type <= 0)
 		return;
-	}
+
 	if (v1->v_type == V_MAT) {
 		vres->v_mat = matquoval(v1->v_mat, v2, v3);
 		return;
@@ -2162,8 +2068,8 @@ quovalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		*vres = objcall(OBJ_QUO, v1, v2, v3);
 		return;
 	}
-	if (v2->v_type < 0) {
-		copyvalue(v2, vres);
+	if (v2->v_type <= 0) {
+		vres->v_type = v2->v_type;
 		return;
 	}
 	if (v2->v_type != V_NUM) {
@@ -2224,12 +2130,11 @@ modvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	NUMBER *q1, *q2;
 	long rnd;
 
-	vres->v_subtype = V_NOSUBTYPE;
-	if (v1->v_type < 0) {
-		copyvalue(v1, vres);
-		return;
-	}
 	vres->v_type = v1->v_type;
+	vres->v_subtype = V_NOSUBTYPE;
+	if (v1->v_type <= 0)
+		return;
+
 	if (v1->v_type == V_MAT) {
 		vres->v_mat = matmodval(v1->v_mat, v2, v3);
 		return;
@@ -2242,8 +2147,8 @@ modvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		*vres = objcall(OBJ_MOD, v1, v2, v3);
 		return;
 	}
-	if (v2->v_type < 0) {
-		copyvalue(v2, vres);
+	if (v2->v_type <= 0) {
+		vres->v_type = v2->v_type;
 		return;
 	}
 	if (v2->v_type != V_NUM) {
@@ -2387,7 +2292,7 @@ comparevalue(VALUE *v1, VALUE *v2)
 		return comparevalue(v2, v1);
 	if (v1->v_type != v2->v_type)
 		return TRUE;
-	if (v1->v_type < 0)
+	if (v1->v_type <= 0)
 		return FALSE;
 	switch (v1->v_type) {
 		case V_NUM:
@@ -2407,8 +2312,6 @@ comparevalue(VALUE *v1, VALUE *v2)
 			break;
 		case V_ASSOC:
 			r = assoccmp(v1->v_assoc, v2->v_assoc);
-			break;
-		case V_NULL:
 			break;
 		case V_FILE:
 			r = (v1->v_file != v2->v_file);
@@ -2697,11 +2600,8 @@ sgnvalue(VALUE *vp, VALUE *vres)
 			*vres = objcall(OBJ_SGN, vp, NULL_VALUE, NULL_VALUE);
 			return;
 		default:
-			if (vp->v_type < 0) {
-				copyvalue(vp, vres);
-				return;
-			}
-			*vres = error_value(E_SGN);
+			if (vp->v_type > 0)
+				*vres = error_value(E_SGN);
 			return;
 	}
 }
@@ -2855,7 +2755,7 @@ config_print(CONFIG *cfg)
 	 */
 	if (cfg == NULL || cfg->epsilon == NULL || cfg->prompt1 == NULL ||
 	    cfg->prompt2 == NULL) {
-		math_error("CONFIG value is invaid");
+		math_error("CONFIG value is invalid");
 		/*NOTREACHED*/
 	}
 

@@ -18,7 +18,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.3 $
- * @(#) $Id: calc.h,v 29.3 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Id: calc.h,v 29.3 2000/06/07 14:02:13 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -60,7 +60,6 @@
 #define MAXERROR	512	/* maximum length of error message string */
 
 #define SYMBOLSIZE	256	/* maximum symbol name size */
-#define MAXINDICES	20	/* maximum number of indices for objects */
 #define MAXLABELS	100	/* maximum number of user labels in function */
 #define MAXSTRING	1024	/* maximum size of string constant */
 #define MAXSTACK	1000	/* maximum depth of evaluation stack */
@@ -167,7 +166,6 @@ extern BOOL calc_tty(int fd);
 extern BOOL orig_tty(int fd);
 extern void showerrors(void);
 extern char *calc_strdup(CONST char *);
-extern void getshellfile(char *shellfile);
 
 /*
  * Initialization
@@ -229,15 +227,15 @@ extern int allow_exec;	/* FALSE => may not execute any commands */
  * calc startup and run state
  */
 typedef enum {
-    RUN_UNKNOWN = -1,		/* unknown or unset start state */
-    RUN_BEGIN = 0,		/* calc execution starts */
-    RUN_RCFILES = 1,		/* rc files being evaluated */
-    RUN_PRE_CMD_ARGS = 2,	/* prepare to evaluate cmd args */
-    RUN_CMD_ARGS = 3,		/* cmd args being evaluated */
-    RUN_PRE_TOP_LEVEL = 4,	/* prepare to start top level activity */
-    RUN_TOP_LEVEL = 5,		/* running at top level */
-    RUN_EXIT = 6,		/* normal exit from calc */
-    RUN_EXIT_WITH_ERROR = 7	/* exit with error */
+    RUN_ZERO,			/* unknown or unset start state */
+    RUN_BEGIN,			/* calc execution starts */
+    RUN_RCFILES,		/* rc files being evaluated */
+    RUN_PRE_CMD_ARGS,		/* prepare to evaluate cmd args */
+    RUN_CMD_ARGS,		/* cmd args being evaluated */
+    RUN_PRE_TOP_LEVEL,		/* prepare to start top level activity */
+    RUN_TOP_LEVEL,		/* running at top level */
+    RUN_EXIT,			/* normal exit from calc */
+    RUN_EXIT_WITH_ERROR		/* exit with error */
 } run;
 extern run run_state;
 extern char *run_state_name(run state);

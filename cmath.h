@@ -18,7 +18,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.2 $
- * @(#) $Id: cmath.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Id: cmath.h,v 29.2 2000/06/07 14:02:13 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/cmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:45
@@ -83,6 +83,7 @@ extern BOOL ccmp(COMPLEX *c1, COMPLEX *c2);
  * More complicated functions.
  */
 extern COMPLEX *cpowi(COMPLEX *c, NUMBER *q);
+extern NUMBER *cilog(COMPLEX *c, ZVALUE base);
 
 
 /*

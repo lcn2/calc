@@ -1,4 +1,236 @@
-The following are the changes from calc version 2.11.2t0 to date:
+The following are the changes from calc version 2.11.3t0 to date:
+
+    A collection of 18 patches from Ernest Bowen
+    <ernie at turing dot une dot edu dot au>:
+
+    (1)  A new flag -f has been defined which has the effect of a read
+    command without the need to terminate the file name with a semicolon
+    or newline.  Thus:
+
+	    calc "read alpha; read beta;"
+
+    may be replaced by:
+
+	    calc -f alpha -f beta
+
+    Quotations marks are recognized in a command like
+
+	    calc -f 'alpha beta'
+
+    in which the name of the file to be read includes a space.
+
+    (2) Flags are interpreted even if they are in a string, as in:
+
+	    calc "-q -i define f(x) = x^2;"
+
+    which has the effect of:
+
+	    calc -q -i "define f(x) = x^2;"
+
+    To achieve this, the use of getopts() in calc.c has been dropped in
+    favour of direct reading of the arguments produced by the shell.
+    In effect, until a "--" or "-s" or a calc command (recognized
+    by not starting with '-') is encountered, the quotation signs in
+    command lines like the above example are ignored.  Dropping getopts()
+    permits calc to specify completely the syntax rules calc will apply
+    to whatever it is given by the shell being used.
+
+    (3) For executable script (also called interpreter) files with first
+    line starting with "#!", the starting of options with -S has been
+    replaced by ending the options with -f.  For example, the first line:
+
+	    #! full_pathname_for_calc -S -q -i
+
+    is to be replaced by:
+
+	    #! full_pathname_for_calc -q -i -f
+
+    Thus, if the pathname is /usr/bin/calc and myfile contains:
+
+	    #!/usr/bin/calc -q -i -f
+	    global deg = pi()/180;
+	    define Sin(x) = sin(x * deg);
+
+    and has been made executable by:
+
+	    chmod u+x myfile
+
+    myfile would be like a version of calc that ignored any startup
+    files and had an already defined global variable deg and a function
+    Sin(x) which will return an approximation to the sine of x degrees.
+    The invocation of myfile may be followed by other options (since
+    the first line in the script has only flagged options) and/or calc
+    commands as in:
+
+	    ./myfile -c read alpha '; define f(x) = Sin(x)^2'
+
+    (The quotation marks avoid shell interpretation of the semicolon and
+    parentheses.)
+
+    (4) The old -S syntax for executable scripts implied the -s flag so that
+    arguments in an invocation like
+
+	    ./myfile alpha beta
+
+    are passed to calc; in this example argv(0) = 'alpha', argv(1) =
+    'beta'.  This has been changed in two ways: an explicit -s is required
+    in the first line of the script and then the arguments passed in the
+    above example are argv(0) = 'myfile', argv(1) = 'alpha', argv(1) = 'beta'.
+
+    In an ordinary command line, "-s" indicates that the shell words
+    after the one in which "-s" occurred are to be passed as arguments
+    rather than commands or options.  For example:
+
+	    calc "-q -s A = 27;" alpha beta
+
+    invokes calc with the q-flag set, one command "A = 27;", and two arguments.
+
+    (5) Piping to calc may be followed by calc becoming interactive.
+    This should occur if there is no -p flag but -i is specified, e.g.:
+
+	    cat beta | calc -i -f alpha
+
+    which will do essentially the same as:
+
+	    calc -i -f alpha -f beta
+
+    (6) The read and help commands have been  changed so that several
+    files may be referred to in succession by separating their names
+    by whitespace.  For example:
+
+	    > read alpha beta gamma;
+
+    does essentially the same as:
+
+	    > read alpha; read beta; read gamma;
+
+    This is convenient for commands like:
+
+	    calc read file?.cal
+
+    when file?.cal expands to something like file1.cal file2.cal file3.cal:
+
+	    myfiles='alpha beta gamma'
+	    calc read $myfiles
+
+    or for C-shell users:
+
+	    set myfiles=(alpha beta gamma)
+	    calc read $myfiles
+
+
+    (7) The -once option for read has been extended to -f.  For example,
+
+	    calc -f -once alpha
+
+    will ignore alpha if alpha has been read in the startup files.  In a
+    multiple read statement, -once applies only to the next named file.
+    For example
+
+	    > read -once alpha beta -once gamma;
+
+    will read alpha and gamma only if they have not already been read,
+    but in any case, will read beta.
+
+    (8) A fault in the programming for the cd command has been corrected
+    so that specifying a directory by a string constant will work.  E.g:
+
+	    > cd "my work"
+
+    should work if the current directory has a directory with name "my work".
+
+    (9) new functions bernoulli(n) and euler(n) have been defined to
+    return the Bernoulli number and the Euler number with index n.
+    After evaluation for an even positive n, this value and these for
+    smaller positive even n are stored in a table from which the values
+    can be reread when required.  The memory used for the stored values
+    can be freed by calling the function freebernoulli() or freeeuler().
+
+    The function catalan(n) returns the catalan number with index n.
+    This is evaluated using essentially comb(2*n, n)/(n+1).
+
+    (10) A function sleep(n) has been defined which for positive n calls
+    the system function sleep(n) if n is an integer, usleep(n) for other
+    real n.  This suspends operation for n seconds and returns the null
+    value except when n is integral and the sleep is interrupted by a
+    SIGINT, in which case the remaining number of seconds is returned.
+
+    (11) The effect of config("trace", 8) which displays opcodes of
+    functions as they are successfully defined has been restricted to
+    functions defioed with explicit use of "define".  Thus, it has been
+    deactivated for the ephemeral functions used for evaluation of calc
+    command lines or eval() functions.
+
+    (12) The functions digit(), digits(), places() have been extended to
+    admit an optional additional argument for an integral greater-than-one
+    base which defaults to 10.  There is now no builtin limit on the
+    size of n in digit(x, n, b), for example, digit(1/7, -1e100) which
+    would not work before can now be handled.
+
+    (13) The function, digits(x)m which returns the number of decimal
+    digits in the integer part of x has been changed so that if abs(x) <
+    1, it returns 0 rather than 1.  This also now applies to digits(x,b).
+
+    (14) Some programming in value.c has been improved.  In particular,
+    several occurrences of:
+
+	    vres->v_type = v1->v_type;
+	    ...
+	    if (v1->v_type < 0) {
+		    copyvalue(v1, vres);
+		    return;
+	    }
+
+    have been replaced by code that achieves exactly the same result:
+
+	    vres->v_type = v1->v_type;
+	    ...
+	    if (v1->v_type < 0)
+		    return;
+
+    (15) Some operations and functions involving null-valued arguments
+    have been changed so that they return null-value rather than "bad
+    argument-type" error-value.  E.g. null() << 2 is now null-valued
+    rather than a "bad argument for <<" error-value.
+
+    (16) "global" and "local" may now be used in expressions.  For example:
+
+	    > for (local i = 0; i < 5; i++) print i^2;
+
+    is now acceptable, as is:
+
+	    > define f(x = global x) = (global x = x)^2;
+
+    which breaks wise programming rules and would probably better be handled
+    by something like:
+
+	    > global x
+	    > define f(t = x) = (x = t)^2;
+
+    Both definitions produce the same code for f.  For non-null t, f(t)
+    returns t^2 and assigns the value of t to x;  f() and f(t) with null t
+    return x^2.
+
+    Within expressions, "global" and "local" are to be followed by just one
+    identifier.  In "(global a = 2, b)" the comma is a comma-operator; the
+    global variable a is created if necessary and assigned the value 2, the
+    variable b has to already exist.   The statement "global a = 2, b" is
+    a declaration of global variables and creates both a and b if they
+    don't already exist.
+
+    (18) In a config object, several components have been changed from
+    long to LEN so that they will now be 32 bit integers for machines with
+    either 32 or 64-bit longs.  In setting such components, the arguments
+    are now to less than 2^31.  Before this change:
+
+	    > config("mul2", 2^32 + 3)
+
+    would be accepted on a 64-bit machine but result in the same as:
+
+	    > config("mul2", 3)
+
+
+The following are the changes from calc version 2.11.2t0 to 2.11.2t1.0:
 
     Fixed a bug whereby help files are not displayed correctly on
     systems such as NetBSD 1.4.1.  Thanks to a fix from Jakob Naumann.
@@ -4767,7 +4999,7 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
 ## @(#) $Revision: 29.11 $
-## @(#) $Id: CHANGES,v 29.11 2000/06/07 15:51:35 chongo Exp $
+## @(#) $Id: CHANGES,v 29.11 2000/06/07 15:51:35 chongo Exp chongo $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

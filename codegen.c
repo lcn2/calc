@@ -20,7 +20,7 @@
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
  * @(#) $Revision: 29.2 $
- * @(#) $Id: codegen.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Id: codegen.c,v 29.2 2000/06/07 14:02:13 chongo Exp chongo $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -49,7 +49,7 @@ static BOOL rdonce;	/* TRUE => do not reread this file */
 
 FUNC *curfunc;
 
-static BOOL getfilename(char *name, BOOL msg_ok, BOOL *once);
+static int getfilename(char *name, BOOL *once);
 static BOOL getid(char *buf);
 static void getshowstatement(void);
 static void getfunction(void);
@@ -71,7 +71,7 @@ static void getsimplebody(void);
 static void getcondition(void);
 static void getmatargs(void);
 static void getelement(void);
-static void usesymbol(char *name, BOOL autodef);
+static void usesymbol(char *name, int autodef);
 static void definesymbol(char *name, int symtype);
 static void getcallargs(char *name);
 static void do_changedir(void);
@@ -90,8 +90,15 @@ static int getshiftexpr(void);
 static int getreference(void);
 static int getincdecexpr(void);
 static int getterm(void);
-static int getidexpr(BOOL okmat, BOOL autodef);
+static int getidexpr(BOOL okmat, int autodef);
 static long getinitlist(void);
+
+#define INDICALLOC 8
+
+static int quickindices[INDICALLOC];
+static int * newindices;
+static int * indices;
+static int maxindices;
 
 
 /*
@@ -133,49 +140,62 @@ getcommands(BOOL toplevel)
 			return;
 
 		case T_HELP:
-			if (!getfilename(name, FALSE, NULL)) {
-				strcpy(name, DEFAULTCALCHELP);
+			for (;;) {
+				switch(getfilename(name, NULL)) {
+				case 1:
+					strcpy(name, DEFAULTCALCHELP);
+				case 0:
+					givehelp(name);
+					continue;
+				default:
+					break;
+				}
+				break;
 			}
-			givehelp(name);
 			break;
 
 		case T_READ:
-			if (!getfilename(name, TRUE, &rdonce))
-				break;
 			if (!allow_read) {
 				scanerror(T_NULL,
 				    "read command disallowed by -m mode\n");
 				break;
 			}
-			switch (opensearchfile(name,calcpath,CALCEXT,rdonce)) {
-			case 0:
-				getcommands(FALSE);
-				closeinput();
-				break;
-			case 1:
-				/* previously read and -once was given */
-				break;
-			case -2:
-				scanerror(T_NULL,
-					  "Maximum input depth reached");
-				break;
-			default:
-				scanerror(T_NULL, "Cannot open \"%s\"\n", name);
+			for (;;) {
+				if (getfilename(name, &rdonce))
+				switch (opensearchfile(name,calcpath,
+						       CALCEXT,rdonce)) {
+				case 0:
+					getcommands(FALSE);
+					closeinput();
+					continue;
+				case 1:
+					/* prev read and -once was given */
+					continue;
+				case -2:
+					scanerror(T_NULL,
+						 "Maximum input depth reached");
+					break;
+				default:
+					scanerror(T_NULL,
+						  "Cannot open \"%s\"", name);
+					continue;
+				}
 				break;
 			}
 			break;
 
 		case T_WRITE:
-			if (!getfilename(name, TRUE, NULL))
-				break;
 			if (!allow_write) {
 				scanerror(T_NULL,
 				    "write command disallowed by -m mode\n");
 				break;
 			}
-			if (writeglobals(name))
+			if (getfilename(name, NULL))
+				break;
+			if (writeglobals(name)) {
 				scanerror(T_NULL,
 					  "Error writing \"%s\"\n", name);
+			}
 			break;
 
 		case T_CD:
@@ -529,7 +549,7 @@ getonevariable(int symtype)
 			res = getonevariable(symtype);
 			definesymbol(name, symtype);
 			if (res) {
-				usesymbol(name, FALSE);
+				usesymbol(name, 0);
 				addop(OP_ASSIGNBACK);
 			}
 			return res;
@@ -892,7 +912,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		return;
 
 	case T_ELSE:
-		scanerror(T_SEMICOLON, "ELSE without preceeding IF");
+		scanerror(T_SEMICOLON, "ELSE without preceding IF");
 		return;
 
 	case T_SHOW:
@@ -1021,7 +1041,6 @@ getobjdeclaration(int symtype)
 	int count;			/* number of elements */
 	int index;			/* current index */
 	int i;				/* loop counter */
-	int indices[MAXINDICES];	/* indices for elements */
 	int oldmode;
 
 	if (gettoken() != T_SYMBOL) {
@@ -1038,57 +1057,88 @@ getobjdeclaration(int symtype)
 	 * Read in the definition of the elements of the object.
 	 */
 	count = 0;
+	indices = quickindices;
+	maxindices = INDICALLOC;
+
 	oldmode = tokenmode(TM_DEFAULT);
+
 	for (;;) {
 		switch (gettoken()) {
-			case T_SYMBOL:
-				if (count == MAXINDICES) {
-					scanerror(T_SEMICOLON,
-						  "Too many elements in OBJ "
-						  "statement");
-					(void) tokenmode(oldmode);
-					return;
-				}
-				index = addelement(tokensymbol());
-				for (i = 0; i < count; i++) {
-					if (indices[i] == index) {
-						scanerror(T_SEMICOLON,
-						  "Duplicate element name "
-						  "\"%s\"", tokensymbol());
+		case T_SYMBOL:
+			if (count == maxindices) {
+				if (maxindices == INDICALLOC) {
+					maxindices += INDICALLOC;
+					newindices = (int *) malloc(maxindices *
+						sizeof(int));
+					if (newindices == NULL) {
+						scanerror(T_SEMICOLON, "Out of memory for indices malloc");
 						(void) tokenmode(oldmode);
 						return;
 					}
+					memcpy(newindices, quickindices,
+						INDICALLOC * sizeof(int));
+					indices = newindices;
+				} else {
+					maxindices += INDICALLOC;
+					newindices = (int *) realloc(indices,
+						maxindices * sizeof(int));
+					if (newindices == NULL) {
+						free(indices);
+						scanerror(T_SEMICOLON, "Out of memory for indices realloc");
+						(void) tokenmode(oldmode);
+						return;
+					}
+					indices = newindices;
 				}
-				indices[count++] = index;
-				if (gettoken() == T_COMMA)
-					continue;
-				rescantoken();
-				if (gettoken() != T_RIGHTBRACE) {
-					scanerror(T_SEMICOLON,
-						  "Bad object type definition");
+			}
+			index = addelement(tokensymbol());
+			for (i = 0; i < count; i++) {
+				if (indices[i] == index) {
+					if (indices != quickindices)
+						free(indices);
+					scanerror(T_SEMICOLON, "Duplicate element name \"%s\"", tokensymbol());
 					(void) tokenmode(oldmode);
 					return;
 				}
-				/*FALLTHRU*/
-			case T_RIGHTBRACE:
-				(void) tokenmode(oldmode);
-				if (defineobject(name, indices, count)) {
-					scanerror(T_NULL,
-				"Object type \"%s\" is already defined", name);
-					return;
-				}
-				getobjvars(name, symtype);
-				return;
-			case T_NEWLINE:
+			}
+			indices[count++] = index;
+			if (gettoken() == T_COMMA)
 				continue;
-			default:
-				scanerror(T_SEMICOLON,
-					  "Bad object type definition");
+			rescantoken();
+			if (gettoken() != T_RIGHTBRACE) {
+				if (indices != quickindices)
+					free(indices);
+				scanerror(T_SEMICOLON, "Bad object type definition");
 				(void) tokenmode(oldmode);
 				return;
+			}
+			/*FALLTHRU*/
+		case T_RIGHTBRACE:
+			(void) tokenmode(oldmode);
+			if (defineobject(name, indices, count)) {
+				if (indices != quickindices)
+					free(indices);
+				scanerror(T_NULL,
+				"Object type \"%s\" is already defined", name);
+				return;
+			}
+			if (indices != quickindices)
+				free(indices);
+			getobjvars(name, symtype);
+			return;
+		case T_NEWLINE:
+			continue;
+		default:
+			if (indices != quickindices)
+				free(indices);
+			scanerror(T_SEMICOLON, "Bad object type definition");
+				(void) tokenmode(oldmode);
+			return;
+
 		}
 	}
 }
+
 
 static void
 getoneobj(long index, int symtype)
@@ -1098,11 +1148,11 @@ getoneobj(long index, int symtype)
 	if (gettoken() == T_SYMBOL) {
 		if (symtype == SYM_UNDEFINED) {
 			rescantoken();
-			(void) getidexpr(TRUE, TRUE);
+			(void) getidexpr(TRUE, 1);
 		} else {
 			symname = tokensymbol();
 			definesymbol(symname, symtype);
-			usesymbol(symname, FALSE);
+			usesymbol(symname, 0);
 		}
 		getoneobj(index, symtype);
 		addop(OP_ASSIGN);
@@ -1181,11 +1231,11 @@ getonematrix(int symtype)
 	if (gettoken() == T_SYMBOL) {
 		if (symtype == SYM_UNDEFINED) {
 			rescantoken();
-			(void) getidexpr(FALSE, TRUE);
+			(void) getidexpr(FALSE, 1);
 		} else {
 			name = tokensymbol();
 			definesymbol(name, symtype);
-			usesymbol(name, FALSE);
+			usesymbol(name, 0);
 		}
 		while (gettoken() == T_COMMA);
 		rescantoken();
@@ -2028,7 +2078,25 @@ getterm(void)
 
 		case T_SYMBOL:
 			rescantoken();
-			type = getidexpr(TRUE, FALSE);
+			type = getidexpr(TRUE, 0);
+			break;
+
+		case T_GLOBAL:
+			if (gettoken() != T_SYMBOL) {
+				scanerror(T_NULL, "Global id expected");
+				break;
+			}
+			rescantoken();
+			type = getidexpr(TRUE, T_GLOBAL);
+			break;
+
+		case T_LOCAL:
+			if (gettoken() != T_SYMBOL) {
+				scanerror(T_NULL, "Local id expected");
+				break;
+			}
+			rescantoken();
+			type = getidexpr(TRUE, T_LOCAL);
 			break;
 
 		case T_LEFTBRACKET:
@@ -2077,11 +2145,11 @@ getterm(void)
 /*
  * Read in an identifier expressions.
  * This is a symbol name followed by parenthesis, or by square brackets or
- * element refernces.  The symbol can be a global or a local variable name.
+ * element references.  The symbol can be a global or a local variable name.
  * Returns the type of expression found.
  */
 static int
-getidexpr(BOOL okmat, BOOL autodef)
+getidexpr(BOOL okmat, int autodef)
 {
 	int type;
 	char name[SYMBOLSIZE+1];	/* symbol name */
@@ -2091,18 +2159,19 @@ getidexpr(BOOL okmat, BOOL autodef)
 	if (!getid(name))
 		return type;
 	switch (gettoken()) {
-		case T_LEFTPAREN:
-			oldmode = tokenmode(TM_DEFAULT);
-			getcallargs(name);
-			(void) tokenmode(oldmode);
-			type = 0;
-			break;
-		case T_ASSIGN:
-			autodef = TRUE;
-			/* fall into default case */
-		default:
-			rescantoken();
-			usesymbol(name, autodef);
+	case T_LEFTPAREN:
+		oldmode = tokenmode(TM_DEFAULT);
+		getcallargs(name);
+		(void) tokenmode(oldmode);
+		type = 0;
+		break;
+	case T_ASSIGN:
+		if (autodef != T_GLOBAL && autodef != T_LOCAL)
+			autodef = 1;
+		/* fall into default case */
+	default:
+		rescantoken();
+		usesymbol(name, autodef);
 	}
 	/*
 	 * Now collect as many element references and matrix index operations
@@ -2110,27 +2179,27 @@ getidexpr(BOOL okmat, BOOL autodef)
 	 */
 	for (;;) {
 		switch (gettoken()) {
-			case T_LEFTBRACKET:
-				rescantoken();
-				if (!okmat)
-					return type;
-				getmatargs();
-				type = 0;
-				break;
-			case T_ARROW:
-				addop(OP_DEREF);
-				/*FALLTHRU*/
-			case T_PERIOD:
-				getelement();
-				type = 0;
-				break;
-			case T_LEFTPAREN:
-				scanerror(T_NULL,
-					  "Function calls not allowed "
-					  "as expressions");
-			default:
-				rescantoken();
+		case T_LEFTBRACKET:
+			rescantoken();
+			if (!okmat)
 				return type;
+			getmatargs();
+			type = 0;
+			break;
+		case T_ARROW:
+			addop(OP_DEREF);
+			/*FALLTHRU*/
+		case T_PERIOD:
+			getelement();
+			type = 0;
+			break;
+		case T_LEFTPAREN:
+			scanerror(T_NULL,
+				  "Function calls not allowed "
+				  "as expressions");
+		default:
+			rescantoken();
+			return type;
 		}
 	}
 }
@@ -2144,71 +2213,37 @@ getidexpr(BOOL okmat, BOOL autodef)
  *
  * given:
  *	name		filename to read
- *	msg_ok		TRUE => ok to print error messages
  *	once		non-NULL => set to TRUE of -once read
  */
-static BOOL
-getfilename(char *name, BOOL msg_ok, BOOL *once)
+static int
+getfilename(char *name, BOOL *once)
 {
 	STRING *s;
+	int i;
 
-	/* look at the next token */
 	(void) tokenmode(TM_NEWLINES | TM_ALLSYMS);
-	switch (gettoken()) {
-		case T_STRING:
-			s = findstring(tokenstring());
-			strcpy(name, s->s_str);
-			sfree(s);
-			break;
-		case T_SYMBOL:
-			strcpy(name, tokensymbol());
-			break;
-		default:
-			if (msg_ok)
-				scanerror(T_SEMICOLON, "Filename expected");
-			return FALSE;
-	}
-
-	/* determine if we care about a possible -once option */
-	if (once != NULL) {
-		/* we care about a possible -once option */
-		if (strcmp(name, "-once") == 0) {
-			/* -once option found */
-			*once = TRUE;
-			/* look for the filename */
-			switch (gettoken()) {
-				case T_STRING:
-					s = findstring(tokenstring());
-					strcpy(name, s->s_str);
-					sfree(s);
-					break;
-				case T_SYMBOL:
-					strcpy(name, tokensymbol());
-					break;
-				default:
-					if (msg_ok)
-						scanerror(T_SEMICOLON,
-						    "Filename expected");
-					return FALSE;
-			}
-		} else {
-			*once = FALSE;
+	for (i = 2; i > 0; i--) {
+		switch (gettoken()) {
+			case T_STRING:
+				s = findstring(tokenstring());
+				strcpy(name, s->s_str);
+				sfree(s);
+				break;
+			case T_SYMBOL:
+				strcpy(name, tokensymbol());
+				break;
+			default:
+				rescantoken();
+				return -1;
 		}
-	}
 
-	/* look at the next token */
-	switch (gettoken()) {
-		case T_SEMICOLON:
-		case T_NEWLINE:
-		case T_EOF:
-			break;
-		default:
-			if (msg_ok)
-				scanerror(T_SEMICOLON,
-				    "Missing semicolon after filename");
-			return FALSE;
+		if (i == 2 && once != NULL) {
+			if ((*once = !strcmp(name, "-once")))
+				continue;
+		}
+		break;
 	}
-	return TRUE;
+	return 0;
 }
 
 
@@ -2433,11 +2468,26 @@ definesymbol(char *name, int symtype)
  *
  * given:
  *	name		symbol name to be checked
- *	autodef		TRUE => define is symbol is not known
+ *	autodef		1 => define if symbol is not known
+ *			T_GLOBAL => get global, define if necessary
  */
 static void
-usesymbol(char *name, BOOL autodef)
+usesymbol(char *name, int autodef)
 {
+
+	if (autodef == T_GLOBAL) {
+			addopptr(OP_GLOBALADDR, (char *) addglobal(name, FALSE));
+			return;
+	}
+	if (autodef == T_LOCAL) {
+			if (symboltype(name) == SYM_PARAM) {
+				scanerror(T_COMMA,
+				  "Variable \"%s\" is already defined", name);
+				return;
+			}
+			addopone(OP_LOCALADDR, addlocal(name));
+			return;
+	}
 	switch (symboltype(name)) {
 		case SYM_LOCAL:
 			addopone(OP_LOCALADDR, (long) findlocal(name));
@@ -2544,24 +2594,25 @@ static void
 do_changedir(void)
 {
 	char *p;
+	STRING *s;
 
 	/* look at the next token */
 	(void) tokenmode(TM_NEWLINES | TM_ALLSYMS);
 
 	/* determine the new directory */
+	s = NULL;
 	switch (gettoken()) {
-	case T_NULL:
-	case T_NEWLINE:
-	case T_SEMICOLON:
-		p = home;
-		break;
-	default:
-		p = tokensymbol(); /* This is not enough XXX */
-		if (p == NULL) {
+		case T_STRING:
+			s = findstring(tokenstring());
+			p = s->s_str;
+			break;
+		case T_SYMBOL:
+			p = tokensymbol();
+			break;
+		default:
 			p = home;
-		}
-		break;
 	}
+
 	if (p == NULL) {
 		fprintf(stderr, "Cannot determine HOME directory\n");
 	}
@@ -2570,29 +2621,8 @@ do_changedir(void)
 	if (chdir(p)) {
 		perror(p);
 	}
-	return;
+	if (s != NULL)
+		sfree(s);
 }
 
 
-/*
- * getshellfile - process the contents of a shellfile
- */
-void
-getshellfile(char *shellfile)
-{
-	/*
-	 * treat the calc shell script as if we were reading it
-	 */
-	if (!allow_read) {
-		scanerror(T_NULL,
-		    "reading of calc shell script \"%s\" "
-		    "dislloaed by -m mode\n", shellfile);
-	} else if (opensearchfile(shellfile, NULL, NULL, FALSE) == 0) {
-		getcommands(FALSE);
-		closeinput();
-	} else {
-		scanerror(T_NULL,
-			  "Cannot open calc shell script \"%s\"\n", shellfile);
-	}
-	return;
-}

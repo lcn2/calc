@@ -18,7 +18,7 @@
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
 # @(#) $Revision: 29.2 $
-# @(#) $Id: calcerr.tbl,v 29.2 2000/06/07 14:02:13 chongo Exp $
+# @(#) $Id: calcerr.tbl,v 29.2 2000/06/07 14:02:13 chongo Exp chongo $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/calcerr.tbl,v $
 #
 # Under source code control:	1996/05/23 17:38:44
@@ -375,3 +375,21 @@ E_GD3		Infinite or too-large result for gd
 E_AGD3		Infinite or too-large result for agd
 E_POWER4	Too-large value for power
 E_ROOT4		Too-large value for root
+E_DGT1		Non-real first arg for digit
+E_DGT2		Non-integral second arg for digit
+E_DGT3		Bad third arg for digit
+E_PLCS1		Bad first argument for places
+E_PLCS2		Bad second argument for places
+E_DGTS1		Bad first argument for digits
+E_DGTS2		Bad second argument for digits
+E_ILOG		Bad first argument for ilog
+E_ILOGB		Bad second argument for ilog
+E_ILOG10	Bad argument for ilog10
+E_ILOG2		Bad argument for ilog2
+E_COMB1		Non-integer second arg for comb
+E_COMB2		Too-large second arg for comb
+E_CTLN		Bad argument for catalan
+E_BERN		Bad argument for bern
+E_EULER		Bad argument for euler
+E_SLEEP		Bad argument for sleep
+E_TTY		calc_tty failure
