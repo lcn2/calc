@@ -270,7 +270,7 @@ pseudo_seed(void)
 	sdata.urandom_ret = EOF;
     }
 #endif /* __linux */
-    (void) gettimeofday(&sdata.tp);
+    (void) gettimeofday(&sdata.tp, NULL);
     sdata.getsid = getsid((pid_t)0);
     sdata.getpgid = getpgid((pid_t)0);
     sdata.getpid = getpid();
@@ -295,7 +295,7 @@ pseudo_seed(void)
     (void) ustat(sdata.fstat_stderr.st_dev, &sdata.ustat_stderr);
     (void) getrusage(RUSAGE_SELF, &sdata.rusage);
     (void) getrusage(RUSAGE_CHILDREN, &sdata.rusage_chld);
-    (void) gettimeofday(&sdata.tp2);
+    (void) gettimeofday(&sdata.tp2, NULL);
     sdata.size = sizeof(sdata);
     (void) setjmp(sdata.env);
     sdata.sdata_p = (char *)&sdata;
