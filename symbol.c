@@ -345,13 +345,29 @@ freeglobals(void)
 	GLOBAL *sp;		/* current global symbol pointer */
 	long count;		/* number of global variables freed */
 
+	/*
+	 * We prevent the hp pointer from walking behind globalhash
+	 * by stopping one short of the end and running the loop one
+	 * more time.
+	 *
+	 * We could stop the loop with just hp >= globalhash, but stopping
+	 * short and running the loop one last time manually helps make 
+	 * code checkers such as insure happy.
+	 */
 	count = 0;
-	for (hp = &globalhash[HASHSIZE-1]; hp >= globalhash; hp--) {
+	for (hp = &globalhash[HASHSIZE-1]; hp > globalhash; hp--) {
 		for (sp = *hp; sp; sp = sp->g_next) {
 			if (sp->g_value.v_type != V_NULL) {
 				freevalue(&sp->g_value);
 				count++;
 			}
+		}
+	}
+	/* run the loop manually one last time */
+	for (sp = *hp; sp; sp = sp->g_next) {
+		if (sp->g_value.v_type != V_NULL) {
+			freevalue(&sp->g_value);
+			count++;
 		}
 	}
 }
@@ -542,14 +558,22 @@ unscope(void)
 	register GLOBAL *sp;		/* current global symbol pointer */
 	GLOBAL *prevsp;			/* previous kept symbol pointer */
 
-	for (hp = &globalhash[HASHSIZE-1]; hp >= globalhash; hp--) {
+	/*
+	 * We prevent the hp pointer from walking behind globalhash
+	 * by stopping one short of the end and running the loop one
+	 * more time.
+	 *
+	 * We could stop the loop with just hp >= globalhash, but stopping
+	 * short and running the loop one last time manually helps make 
+	 * code checkers such as insure happy.
+	 */
+	for (hp = &globalhash[HASHSIZE-1]; hp > globalhash; hp--) {
 		prevsp = NULL;
 		for (sp = *hp; sp; sp = sp->g_next) {
 			if ((sp->g_filescope == SCOPE_GLOBAL) ||
 				(sp->g_filescope < filescope) ||
 				((sp->g_filescope == filescope) &&
-					(sp->g_funcscope <= funcscope)))
-			{
+					(sp->g_funcscope <= funcscope))) {
 				prevsp = sp;
 				continue;
 			}
@@ -563,6 +587,26 @@ unscope(void)
 			else
 				*hp = sp->g_next;
 		}
+	}
+	/* run the loop manually one last time */
+	prevsp = NULL;
+	for (sp = *hp; sp; sp = sp->g_next) {
+		if ((sp->g_filescope == SCOPE_GLOBAL) ||
+			(sp->g_filescope < filescope) ||
+			((sp->g_filescope == filescope) &&
+				(sp->g_funcscope <= funcscope))) {
+			prevsp = sp;
+			continue;
+		}
+
+		/*
+		 * This symbol needs removing.
+		 */
+		addstatic(sp);
+		if (prevsp)
+			prevsp->g_next = sp->g_next;
+		else
+			*hp = sp->g_next;
 	}
 }
 

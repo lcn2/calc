@@ -1382,10 +1382,23 @@ qalloc(void)
 		}
 		freeNum[NNALLOC - 1].next = NULL;
 		freeNum[NNALLOC - 1].links = 0;
-		for (temp = freeNum + NNALLOC - 2; temp >= freeNum; --temp) {
+
+		/*
+		 * We prevent the temp pointer from walking behind freeNum
+		 * by stopping one short of the end and running the loop one
+		 * more time.
+		 *
+		 * We would stop the loop with just temp >= freeNum, but
+		 * doing this helps make code checkers such as insure happy.
+		 */
+		for (temp = freeNum + NNALLOC - 2; temp > freeNum; --temp) {
 			temp->next = temp + 1;
 			temp->links = 0;
 		}
+		/* run the loop manually one last time */
+		temp->next = temp + 1;
+		temp->links = 0;
+
 		blockcount++;
 		if (firstNums == NULL) {
 		    newfn = (NUMBER **) malloc(blockcount * sizeof(NUMBER *));

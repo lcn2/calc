@@ -979,10 +979,23 @@ stralloc(void)
 		}
 		freeStr[STRALLOC - 1].s_next = NULL;
 		freeStr[STRALLOC - 1].s_links = 0;
-		for (temp = freeStr + STRALLOC - 2; temp >= freeStr; --temp) {
+
+		/*
+		 * We prevent the temp pointer from walking behind freeStr
+		 * by stopping one short of the end and running the loop one
+		 * more time.
+		 *
+		 * We would stop the loop with just temp >= freeStr, but
+		 * doing this helps make code checkers such as insure happy.
+		 */
+		for (temp = freeStr + STRALLOC - 2; temp > freeStr; --temp) {
 			temp->s_next = temp + 1;
 			temp->s_links = 0;
 		}
+		/* run the loop manually one last time */
+		temp->s_next = temp + 1;
+		temp->s_links = 0;
+
 		blockcount++;
 		if (firstStrs == NULL) {
 		    newfn = (STRING **) malloc( blockcount * sizeof(STRING *));

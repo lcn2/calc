@@ -224,6 +224,9 @@ Following is the change from calc version 2.11.0t8.9.1 to date:
 
 	    Unknown error 9999
 
+    Fixed some insure code inspection tool issues that were discovered
+    and investigated by Michel van der List <vanderlistmj@sbphrd.com>.
+
 
 Following is the change from calc version 2.11.0t8 to 2.11.0t8.9:
 

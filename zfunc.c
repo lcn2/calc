@@ -1109,7 +1109,17 @@ zlog(ZVALUE z1, ZVALUE z2)
 	 */
 	val = _one_;
 	power = 0;
-	for (; zp >= squares; zp--, worth /= 2) {
+
+	/*
+	 * We prevent the zp pointer from walking behind squares
+	 * by stopping one short of the end and running the loop one
+	 * more time.
+	 *
+	 * We could stop the loop with just zp >= squares, but stopping
+	 * short and running the loop one last time manually helps make 
+	 * code checkers such as insure happy.
+	 */
+	for (; zp > squares; zp--, worth /= 2) {
 		if ((val.len + zp->len - 1) <= z1.len) {
 			zmul(val, *zp, &temp);
 			if (zrel(z1, temp) >= 0) {
@@ -1123,6 +1133,22 @@ zlog(ZVALUE z1, ZVALUE z2)
 		if (zp != squares)
 			zfree(*zp);
 	}
+	/* run the loop manually one last time */
+	if (zp == squares) {
+		if ((val.len + zp->len - 1) <= z1.len) {
+			zmul(val, *zp, &temp);
+			if (zrel(z1, temp) >= 0) {
+				zfree(val);
+				val = temp;
+				power += worth;
+			} else {
+				zfree(temp);
+			}
+		}
+		if (zp != squares)
+			zfree(*zp);
+	}
+
 	zfree(val);
 	return power;
 }
@@ -1163,7 +1189,17 @@ zlog10(ZVALUE z)
 	 */
 	val = _one_;
 	power = 0;
-	for (; zp >= _tenpowers_; zp--, worth /= 2) {
+
+	/*
+	 * We prevent the zp pointer from walking behind _tenpowers_
+	 * by stopping one short of the end and running the loop one
+	 * more time.
+	 *
+	 * We could stop the loop with just zp >= _tenpowers_, but stopping
+	 * short and running the loop one last time manually helps make 
+	 * code checkers such as insure happy.
+	 */
+	for (; zp > _tenpowers_; zp--, worth /= 2) {
 		if ((val.len + zp->len - 1) <= z.len) {
 			zmul(val, *zp, &temp);
 			if (zrel(z, temp) >= 0) {
@@ -1175,6 +1211,20 @@ zlog10(ZVALUE z)
 			}
 		}
 	}
+	/* run the loop manually one last time */
+	if (zp == _tenpowers_) {
+		if ((val.len + zp->len - 1) <= z.len) {
+			zmul(val, *zp, &temp);
+			if (zrel(z, temp) >= 0) {
+				zfree(val);
+				val = temp;
+				power += worth;
+			} else {
+				zfree(temp);
+			}
+		}
+	}
+
 	zfree(val);
 	return power;
 }
@@ -1281,11 +1331,21 @@ zfacrem(ZVALUE z1, ZVALUE z2, ZVALUE *rem)
 		worth *= 2;
 		count += worth;
 	}
+
 	/*
 	 * Now back down the list of squares, and see if the lower powers
 	 * will divide any more times.
 	 */
-	for (; zp >= squares; zp--, worth /= 2) {
+	/*
+	 * We prevent the zp pointer from walking behind squares
+	 * by stopping one short of the end and running the loop one
+	 * more time.
+	 *
+	 * We could stop the loop with just zp >= squares, but stopping
+	 * short and running the loop one last time manually helps make 
+	 * code checkers such as insure happy.
+	 */
+	for (; zp > squares; zp--, worth /= 2) {
 		if (zp->len <= z1.len) {
 			zdiv(z1, *zp, &temp1, &temp2, 0);
 			if (ziszero(temp2)) {
@@ -1300,6 +1360,23 @@ zfacrem(ZVALUE z1, ZVALUE z2, ZVALUE *rem)
 		if (zp != squares)
 			zfree(*zp);
 	}
+	/* run the loop manually one last time */
+	if (zp == squares) {
+		if (zp->len <= z1.len) {
+			zdiv(z1, *zp, &temp1, &temp2, 0);
+			if (ziszero(temp2)) {
+				temp3 = z1;
+				z1 = temp1;
+				temp1 = temp3;
+				count += worth;
+			}
+			zfree(temp1);
+			zfree(temp2);
+		}
+		if (zp != squares)
+			zfree(*zp);
+	}
+
 	*rem = z1;
 	return count;
 }
