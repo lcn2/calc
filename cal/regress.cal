@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: regress.cal,v 29.1 1999/12/14 09:15:32 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: regress.cal,v 29.2 1999/12/19 03:16:54 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -3085,8 +3085,7 @@ define test_error()
 	print				'3712: e9999 = error(9999)';
 	vrfy(errno() == 9999,		'3713: errno() == 9999');
 	vrfy(error() == e9999,		'3714: error() == e9999');
-	vrfy(substr(strerror(), strpos(strerror(),"9999"), 4) == "9999",
-	    '3715: substr(strerror(), strpos(strerror(),"9999"), 4) == "9999"');
+	/* test 3715 removed due to non-portable strerror() output */
 	x = newerror("Alpha");
 	print				'3716: x = newerror("Alpha")';
 	n = iserror(x);
@@ -3097,16 +3096,14 @@ define test_error()
 	vrfy(errno(9999) == n,		'3721: errno() == n');
 	vrfy(errno() == 9999,		'3722: errno() == 9999');
 	vrfy(error() == e9999,		'3723: error() == e9999');
-	vrfy(substr(strerror(), strpos(strerror(),"9999"), 4) == "9999",
-	    '3724: substr(strerror(), strpos(strerror(),"9999"), 4) == "9999"');
+	/* test 3724 removed due to non-portable strerror() output */
 	a = 1/0;
 	print				'3725: a = 1/0';
 	vrfy(strerror() == "Division by zero",
 				'3726: strerror() == "Division by zero"');
 	n = 8191;
 	print				'3727: n = 8191';
-	vrfy(substr(strerror(8191),strpos(strerror(n),"8191"), 4) == "8191",
-	    '3728: substr(strerror(n),strpos(strerror(n),"8191"),4) == "8191"');
+	/* test 3728 removed due to non-portable strerror() output */
 
 	/* errmax and errcount should be bumped up the 148 errors above */
 	vrfy(errcount() == ecnt,	'3729: errcount() == ecnt');
