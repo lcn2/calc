@@ -1,13 +1,38 @@
 /*
- * Copyright (c) 1997 David I. Bell
- * Permission is granted to use, distribute, or modify this source,
- * provided that this copyright notice remains intact.
+ * help - display help for calc
  *
- * Arbitrary precision calculator.
+ * Copyright (C) 1999  Landon Curt Noll
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: help.c,v 29.1 1999/12/14 09:15:40 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/help.c,v $
+ *
+ * Under source code control:	1997/09/14 10:58:30
+ * File existed as early as:	1997
+ *
+ * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
  */
+
 
 #include <stdio.h>
 #include <ctype.h>
+#include <sys/types.h>
+#include <signal.h>
 
 #include "calc.h"
 #include "conf.h"
@@ -32,6 +57,15 @@ static struct help_alias {
 	{".", "oldvalue"},
 	{"%", "mod"},
 	{"//", "quo"},
+	{"copying", "COPYING"},
+	{"copying-lgpl", "COPYING-LGPL"},
+	{"copying_lgpl", "COPYING-LGPL"},
+	{"COPYING_LGPL", "COPYING-LGPL"},
+	{"Copyright", "copyright"},
+	{"COPYRIGHT", "copyright"},
+	{"Copyleft", "copyright"},
+	{"COPYLEFT", "copyright"},
+	{"stdlib", "resource"},
 	{NULL, NULL}
 };
 
@@ -40,6 +74,80 @@ static struct help_alias {
  * external values
  */
 extern char *pager;		/* $PAGER or default */
+
+
+/*
+ * page_file - output an open file thru a pager
+ *
+ * The popen() below is fairly safe.  The $PAGER environment variable
+ * (supplied by the user) is the command we need to run without args.
+ * True, the user could set $PAGER is a bogus prog ... but if -m is
+ * 5 or 7 (read and exec allowed), then the calc is given ``permission''
+ * to open the help file for reading as well as to exec the pager!
+ *
+ * given:
+ *	stream	open file stream of the file to send to the pager
+ */
+static void
+page_file(FILE *stream)
+{
+	FILE *cmd;		/* pager command */
+	char buf[BUFSIZ+1];	/* I/O buffer */
+	char *fgets_ret;	/* fgets() return value */
+
+	/*
+	 * flush any pending I/O
+	 */
+	fflush(stderr);
+	fflush(stdout);
+	fflush(stdin);
+
+	/*
+	 * form a write pipe to a pager
+	 */
+	cmd = popen(pager, "w");
+	if (cmd == NULL) {
+		fprintf(stderr, "unable form pipe to pager: %s", pager);
+		return;
+	}
+
+	/*
+	 * read the help file and send non-## lines to the pager
+	 * until EOF or error
+	 */
+	buf[BUFSIZ] = '\0';
+	do {
+
+		/*
+		 * read the next line that does not begin with ##
+		 */
+		buf[0] = '\0';
+		while ((fgets_ret = fgets(buf, BUFSIZ, stream)) != NULL &&
+		       buf[0] == '#' && buf[1] == '#') {
+		}
+
+		/*
+		 * stop reading when we reach EOF (or error) on help file
+		 */
+		if (fgets_ret == NULL) {
+			fflush(cmd);
+			break;
+		}
+
+		/*
+		 * write the line to pager, if possible
+		 */
+	} while(fputs(buf, cmd) > 0);
+
+	/*
+	 * all done, EOF or error, so just clean up
+	 */
+	(void) pclose(cmd);
+	fflush(stderr);
+	fflush(stdout);
+	fflush(stdin);
+	return;
+}
 
 
 /*
@@ -52,7 +160,8 @@ void
 givehelp(char *type)
 {
 	struct help_alias *p;	/* help alias being considered */
-	char *helpcmd;		/* what to execute to print help */
+	FILE *stream;		/* help file stream */
+	char *helppath;		/* path to the help file */
 	char *c;
 
 	/*
@@ -104,29 +213,65 @@ givehelp(char *type)
 		}
 	}
 
-
-	/* form the help command name */
-	helpcmd = (char *)malloc(
-		sizeof("if [ ! -r \"")+sizeof(HELPDIR)+1+strlen(type)+
-		sizeof("\" ];then ")+
-		strlen(pager)+1+1+sizeof(HELPDIR)+1+strlen(type)+1+1+
-		sizeof("elif [ ! -r \"")+sizeof(CUSTOMHELPDIR)+1+strlen(type)+
-		sizeof("\" ];then ")+
-		strlen(pager)+1+1+sizeof(CUSTOMHELPDIR)+1+strlen(type)+1+1+
-		sizeof(";else ")+sizeof(ECHO)+
-		sizeof("echo no such help, try: help help;fi")+1);
-	sprintf(helpcmd,
-	    "if [ -r \"%s/%s\" ];then %s \"%s/%s\";"
-	    "elif [ -r \"%s/%s\" ];then %s \"%s/%s\";"
-	    "else %s no such help, try: help help;fi",
-	    HELPDIR, type, pager, HELPDIR, type,
-	    CUSTOMHELPDIR, type, pager, CUSTOMHELPDIR, type, ECHO);
-	if (conf->calc_debug & CALCDBG_SYSTEM) {
-		printf("%s\n", helpcmd);
+	/*
+	 * special case for Copyright and Copyleft
+	 */
+	if (strcmp(type, "copyright") == 0) {
+		fputs(Copyright, stdout);
+		fflush(stdout);
+		return;
 	}
 
-	/* execute the help command */
-	system(helpcmd);
-	free(helpcmd);
-}
+	/*
+	 * open the helpfile (looking in HELPDIR first)
+	 */
+	if (sizeof(CUSTOMHELPDIR) > sizeof(HELPDIR)) {
+		helppath = (char *)malloc(sizeof(CUSTOMHELPDIR)+1+strlen(type));
+	} else {
+		helppath = (char *)malloc(sizeof(HELPDIR)+1+strlen(type));
+	}
+	if (helppath == NULL) {
+		fprintf(stderr, "malloc failure in givehelp()\n");
+		return;
+	}
+	sprintf(helppath, "%s/%s", HELPDIR, type);
+	stream = fopen(helppath, "r");
+	if (stream != NULL) {
 
+		/*
+		 * we have the help file open, now display it
+		 */
+		page_file(stream);
+		(void) fclose(stream);
+
+	/*
+	 * open the the helpfile (looking in CUSTOMHELPDIR last)
+	 */
+	} else {
+
+		sprintf(helppath, "%s/%s", CUSTOMHELPDIR, type);
+		stream = fopen(helppath, "r");
+		if (stream == NULL) {
+
+			/*
+			 * we have the help file open, now display it
+			 */
+			page_file(stream);
+			(void) fclose(stream);
+
+		/*
+		 * no such help file
+		 */
+		} else {
+			fprintf(stderr,
+				"%s: no such help file, try: help help\n",
+				type);
+		}
+	}
+
+	/*
+	 * cleanup
+	 */
+	free(helppath);
+	return;
+}

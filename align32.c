@@ -1,25 +1,33 @@
 /*
  * align32 - determine if 32 bit accesses must be aligned
  *
- * This file was written by:
+ * Copyright (C) 1999  Landon Curt Noll
  *
- *	Landon Curt Noll
- *	http://reality.sgi.com/chongo/
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
  *
- *	chongo <was here> /\../\
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
  *
- * This code has been placed in the public domain.  Please do not
- * copyright this code.
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH  REGARD  TO
- * THIS	 SOFTWARE,  INCLUDING  ALL IMPLIED WARRANTIES OF MER-
- * CHANTABILITY AND FITNESS.  IN NO EVENT SHALL	 LANDON	 CURT
- * NOLL	 BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
- * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  LOSS  OF
- * USE,	 DATA  OR  PROFITS, WHETHER IN AN ACTION OF CONTRACT,
- * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
- * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: align32.c,v 29.1 1999/12/14 09:15:29 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/align32.c,v $
+ *
+ * Under source code control:	1995/11/23 05:18:06
+ * File existed as early as:	1995
+ *
+ * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
  */
+
 
 #include <stdio.h>
 #include <signal.h>

@@ -1,9 +1,32 @@
 /*
- * Copyright (c) 1997 David I. Bell
- * Permission is granted to use, distribute, or modify this source,
- * provided that this copyright notice remains intact.
+ * func - built-in functions implemented here
  *
- * Built-in functions implemented here
+ * Copyright (C) 1999  David I. Bell, Landon Curt Noll and Ernest Bowen
+ *
+ * Primary author:  David I. Bell
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: func.c,v 29.1 1999/12/14 09:15:38 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
+ *
+ * Under source code control:	1990/02/15 01:48:15
+ * File existed as early as:	before 1990
+ *
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
  */
 
 
@@ -263,7 +286,7 @@ f_display(int count, VALUE **vals)
 		if (vals[0]->v_type != V_NUM || qisfrac(vals[0]->v_num) ||
 			qisneg(vals[0]->v_num) || zge31b(vals[0]->v_num->num))
 			fprintf(stderr,
-				 "Out-of-range arg for display ignored\n");
+			       "Out-of-range arg for display ignored\n");
 		else
 			conf->outdigits = qtoi(vals[0]->v_num);
 	}
@@ -479,7 +502,7 @@ f_nprime(int count, NUMBER **vals)
 	/* determine the way we report problems */
 	if (count == 2) {
 		if (qisfrac(vals[1])) {
-			math_error("2nd nprime arg must be an integer");
+			math_error("2nd nextprime arg must be an integer");
 			/*NOTREACHED*/
 		}
 		err = vals[1];
@@ -492,7 +515,7 @@ f_nprime(int count, NUMBER **vals)
 		if (err) {
 			return qlink(err);
 		}
-		math_error("non-integral arg 1 for builtin function nprime");
+		math_error("non-integral arg 1 for builtin function nextprime");
 		/*NOTREACHED*/
 	}
 
@@ -507,7 +530,7 @@ f_nprime(int count, NUMBER **vals)
 
 	/* error return */
 	if (!err) {
-		math_error("nprime arg 1 is >= 2^32");
+		math_error("nextprime arg 1 is >= 2^32");
 		/*NOTREACHED*/
 	}
 	return qlink(err);
@@ -523,7 +546,7 @@ f_pprime(int count, NUMBER **vals)
 	/* determine the way we report problems */
 	if (count == 2) {
 		if (qisfrac(vals[1])) {
-			math_error("2nd pprime arg must be an integer");
+			math_error("2nd prevprime arg must be an integer");
 			/*NOTREACHED*/
 		}
 		err = vals[1];
@@ -536,7 +559,7 @@ f_pprime(int count, NUMBER **vals)
 		if (err) {
 			return qlink(err);
 		}
-		math_error("non-integral arg 1 for builtin function pprime");
+		math_error("non-integral arg 1 for builtin function prevprime");
 		/*NOTREACHED*/
 	}
 
@@ -551,10 +574,10 @@ f_pprime(int count, NUMBER **vals)
 	/* error return */
 	if (!err) {
 		if (prev_prime == 0) {
-			math_error("pprime arg 1 is <= 2");
+			math_error("prevprime arg 1 is <= 2");
 			/*NOTREACHED*/
 		} else {
-			math_error("pprime arg 1 is >= 2^32");
+			math_error("prevprime arg 1 is >= 2^32");
 			/*NOTREACHED*/
 		}
 	}
@@ -1877,25 +1900,31 @@ static VALUE
 f_exp(int count, VALUE **vals)
 {
 	VALUE result;
-	NUMBER *err;
+	NUMBER *eps;
+	NUMBER *q;
 	COMPLEX *c;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
-	err = conf->epsilon;
+	eps = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
 			return error_value(E_EXP1);
-		err = vals[1]->v_num;
+		eps = vals[1]->v_num;
 	}
 	switch (vals[0]->v_type) {
 		case V_NUM:
-			result.v_num = qexp(vals[0]->v_num, err);
+			q = qexp(vals[0]->v_num, eps);
+			if (q == NULL)
+				return error_value(E_EXP3);
+			result.v_num = q;
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			c = cexp(vals[0]->v_com, err);
+			c = cexp(vals[0]->v_com, eps);
+			if (c == NULL)
+				return error_value(E_EXP3);
 			result.v_com = c;
 			result.v_type = V_COM;
 			if (cisreal(c)) {
@@ -1961,24 +1990,26 @@ f_cos(int count, VALUE **vals)
 {
 	VALUE result;
 	COMPLEX *c;
-	NUMBER *err;
+	NUMBER *eps;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
-	err = conf->epsilon;
+	eps = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
 			return error_value(E_COS1);
-		err = vals[1]->v_num;
+		eps = vals[1]->v_num;
 	}
 	switch (vals[0]->v_type) {
 		case V_NUM:
-			result.v_num = qcos(vals[0]->v_num, err);
+			result.v_num = qcos(vals[0]->v_num, eps);
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			c = ccos(vals[0]->v_com, err);
+			c = ccos(vals[0]->v_com, eps);
+			if (c == NULL)
+				return error_value(E_COS3);
 			result.v_com = c;
 			result.v_type = V_COM;
 			if (cisreal(c)) {
@@ -1999,24 +2030,26 @@ f_sin(int count, VALUE **vals)
 {
 	VALUE result;
 	COMPLEX *c;
-	NUMBER *err;
+	NUMBER *eps;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
-	err = conf->epsilon;
+	eps = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
-			return error_value(E_COS1);
-		err = vals[1]->v_num;
+			return error_value(E_SIN1);
+		eps = vals[1]->v_num;
 	}
 	switch (vals[0]->v_type) {
 		case V_NUM:
-			result.v_num = qsin(vals[0]->v_num, err);
+			result.v_num = qsin(vals[0]->v_num, eps);
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			c = csin(vals[0]->v_com, err);
+			c = csin(vals[0]->v_com, eps);
+			if (c == NULL)
+				return error_value(E_SIN3);
 			result.v_com = c;
 			result.v_type = V_COM;
 			if (cisreal(c)) {
@@ -2026,7 +2059,7 @@ f_sin(int count, VALUE **vals)
 			}
 			break;
 		default:
-			return error_value(E_COS2);
+			return error_value(E_SIN2);
 	}
 	return result;
 }
@@ -2186,30 +2219,36 @@ static VALUE
 f_sinh(int count, VALUE **vals)
 {
 	VALUE result;
-	NUMBER *err;
+	NUMBER *eps;
 	NUMBER *q;
+	COMPLEX *c;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
-	err = conf->epsilon;
+	eps = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
 			return error_value(E_SINH1);
-		err = vals[1]->v_num;
+		eps = vals[1]->v_num;
 	}
 	switch (vals[0]->v_type) {
 		case V_NUM:
-			result.v_num = qsinh(vals[0]->v_num, err);
+			q = qsinh(vals[0]->v_num, eps);
+			if (q == NULL)
+				return error_value(E_SINH3);
+			result.v_num = q;
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			result.v_com = csinh(vals[0]->v_com, err);
+			c = csinh(vals[0]->v_com, eps);
+			if (c == NULL)
+				return error_value(E_SINH3);
+			result.v_com = c;
 			result.v_type = V_COM;
-			if (cisreal(result.v_com)) {
-				q = qlink(result.v_com->real);
-				comfree(result.v_com);
-				result.v_num = q;
+			if (cisreal(c)) {
+				result.v_num = qlink(c->real);
+				comfree(c);
 				result.v_type = V_NUM;
 			}
 			break;
@@ -2223,30 +2262,36 @@ static VALUE
 f_cosh(int count, VALUE **vals)
 {
 	VALUE result;
-	NUMBER *err;
+	NUMBER *eps;
 	NUMBER *q;
+	COMPLEX *c;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
-	err = conf->epsilon;
+	eps = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
 			return error_value(E_COSH1);
-		err = vals[1]->v_num;
+		eps = vals[1]->v_num;
 	}
 	switch (vals[0]->v_type) {
 		case V_NUM:
-			result.v_num = qcosh(vals[0]->v_num, err);
+			q = qcosh(vals[0]->v_num, eps);
+			if (q == NULL)
+				return error_value(E_COSH3);
+			result.v_num = q;
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			result.v_com = ccosh(vals[0]->v_com, err);
+			c = ccosh(vals[0]->v_com, eps);
+			if (c == NULL)
+				return error_value(E_COSH3);
+			result.v_com = c;
 			result.v_type = V_COM;
-			if (cisreal(result.v_com)) {
-				q = qlink(result.v_com->real);
-				comfree(result.v_com);
-				result.v_num = q;
+			if (cisreal(c)) {
+				result.v_num = qlink(c->real);
+				comfree(c);
 				result.v_type = V_NUM;
 			}
 			break;
@@ -2984,18 +3029,18 @@ static VALUE
 f_gd(int count, VALUE **vals)
 {
 	VALUE result;
-	NUMBER *err;
+	NUMBER *eps;
 	NUMBER *q;
 	COMPLEX *tmp;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
-	err = conf->epsilon;
+	eps = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
 			return error_value(E_GD1);
-		err = vals[1]->v_num;
+		eps = vals[1]->v_num;
 	}
 	result.v_type = V_COM;
 	switch (vals[0]->v_type) {
@@ -3008,17 +3053,17 @@ f_gd(int count, VALUE **vals)
 			tmp = comalloc();
 			qfree(tmp->real);
 			tmp->real = qlink(vals[0]->v_num);
-			result.v_com = cgd(tmp, err);
+			result.v_com = cgd(tmp, eps);
 			comfree(tmp);
 			break;
 		case V_COM:
-			result.v_com = cgd(vals[0]->v_com, err);
+			result.v_com = cgd(vals[0]->v_com, eps);
 			break;
 		default:
 			return error_value(E_GD2);
 	}
 	if (result.v_com == NULL)
-		return error_value(E_LOGINF);
+		return error_value(E_GD3);
 	if (cisreal(result.v_com)) {
 		q = qlink(result.v_com->real);
 		comfree(result.v_com);
@@ -3033,18 +3078,18 @@ static VALUE
 f_agd(int count, VALUE **vals)
 {
 	VALUE result;
-	NUMBER *err;
+	NUMBER *eps;
 	NUMBER *q;
 	COMPLEX *tmp;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
-	err = conf->epsilon;
+	eps = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
 			return error_value(E_AGD1);
-		err = vals[1]->v_num;
+		eps = vals[1]->v_num;
 	}
 	result.v_type = V_COM;
 	switch (vals[0]->v_type) {
@@ -3057,17 +3102,17 @@ f_agd(int count, VALUE **vals)
 			tmp = comalloc();
 			qfree(tmp->real);
 			tmp->real = qlink(vals[0]->v_num);
-			result.v_com = cagd(tmp, err);
+			result.v_com = cagd(tmp, eps);
 			comfree(tmp);
 			break;
 		case V_COM:
-			result.v_com = cagd(vals[0]->v_com, err);
+			result.v_com = cagd(vals[0]->v_com, eps);
 			break;
 		default:
 			return error_value(E_AGD2);
 	}
 	if (result.v_com == NULL)
-			return error_value(E_LOGINF);
+			return error_value(E_AGD3);
 	if (cisreal(result.v_com)) {
 		q = qlink(result.v_com->real);
 		comfree(result.v_com);
@@ -3589,7 +3634,7 @@ f_matdim(VALUE *vp)
 
 	switch(vp->v_type) {
 		case V_OBJ:
-			result.v_num = itoq(vp->v_obj->o_actions->count);
+			result.v_num = itoq(vp->v_obj->o_actions->oa_count);
 			break;
 		case V_MAT:
 			result.v_num = itoq((long) vp->v_mat->m_dim);
@@ -7314,6 +7359,49 @@ f_md5(int count, VALUE **vals)
 }
 
 
+static VALUE
+f_argv(int count, VALUE **vals)
+{
+	int arg;		/* the argv_value string index */
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * arg check
+	 */
+	if (count == 0) {
+
+		/* return the argc count */
+		result.v_type = V_NUM;
+		result.v_num = itoq((long) argc_value);
+
+	} else {
+
+		/* firewall */
+		if (vals[0]->v_type != V_NUM || qisfrac(vals[0]->v_num) ||
+			qisneg(vals[0]->v_num) || zge31b(vals[0]->v_num->num)) {
+
+			math_error("argv argument must be a integer [0,2^31)");
+			/*NOTREACHED*/
+		}
+
+		/* return the n-th argv string */
+		arg = qtoi(vals[0]->v_num);
+		if (arg < argc_value && argv_value[arg] != NULL) {
+			result.v_type = V_STR;
+			result.v_str = makestring(strdup(argv_value[arg]));
+		} else {
+			result.v_type = V_NULL;
+		}
+	}
+
+	/* return the result */
+	return result;
+}
+
+
 #endif /* !FUNCLIST */
 
 
@@ -7378,6 +7466,8 @@ static CONST struct builtin builtins[] = {
 	 "approximate a by multiple of b using rounding c"},
 	{"arg", 1, 2, 0, OP_NOP, 0, f_arg,
 	 "argument (the angle) of complex number"},
+	{"argv", 0, 1, 0, OP_NOP, 0, f_argv,
+	 "calc argc or argv string"},
 	{"asec", 1, 2, 0, OP_NOP, 0, f_asec,
 	 "arcsecant of a within accuracy b"},
 	{"asech", 1, 2, 0, OP_NOP, 0, f_asech,

@@ -1,10 +1,34 @@
 /*
- * Copyright (c) 1993 David I. Bell
- * Permission is granted to use, distribute, or modify this source,
- * provided that this copyright notice remains intact.
+ * comfunc - extended precision complex arithmetic non-primitive routines
  *
- * Extended precision complex arithmetic non-primitive routines
+ * Copyright (C) 1999  David I. Bell and Ernest Bowen
+ *
+ * Primary author:  David I. Bell
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: comfunc.c,v 29.1 1999/12/14 09:15:35 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/comfunc.c,v $
+ *
+ * Under source code control:	1990/02/15 01:48:13
+ * File existed as early as:	before 1990
+ *
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
  */
+
 
 #include "config.h"
 #include "cmath.h"
@@ -354,9 +378,12 @@ croot(COMPLEX *c, NUMBER *q, NUMBER *epsilon)
 	if (qistwo(q))
 		return csqrt(c, epsilon, 24L);
 	if (cisreal(c) && !qisneg(c->real)) {
+		tmp1 = qroot(c->real, q, epsilon);
+		if (tmp1 == NULL)
+			return NULL;
 		r = comalloc();
 		qfree(r->real);
-		r->real = qroot(c->real, q, epsilon);
+		r->real = tmp1;
 		return r;
 	}
 	/*
@@ -375,12 +402,14 @@ croot(COMPLEX *c, NUMBER *q, NUMBER *epsilon)
 	root = qroot(a2pb2, tmp1, epsilon2);
 	qfree(a2pb2);
 	qfree(tmp1);
+	qfree(epsilon2);
+	if (root == NULL)
+		return NULL;
 	m = qilog2(root);
 	if (m < n) {
 		qfree(root);
 		return clink(&_czero_);
 	}
-	qfree(epsilon2);
 	epsilon2 = qbitvalue(n - m - 4);
 	tmp1 = qatan2(c->imag, c->real, epsilon2);
 	qfree(epsilon2);
@@ -410,6 +439,9 @@ cexp(COMPLEX *c, NUMBER *epsilon)
 		/*NOTREACHED*/
 	}
 	if (cisreal(c)) {
+		tmp1 = qexp(c->real, epsilon);
+		if (tmp1 == NULL)
+			return NULL;
 		r = comalloc();
 		qfree(r->real);
 		r->real = qexp(c->real, epsilon);
@@ -419,6 +451,8 @@ cexp(COMPLEX *c, NUMBER *epsilon)
 	epsilon1 = qbitvalue(n - 2);
 	tmp1 = qexp(c->real, epsilon1);
 	qfree(epsilon1);
+	if (tmp1 == NULL)
+		return NULL;
 	if (qiszero(tmp1)) {
 		qfree(tmp1);
 		return clink(&_czero_);
@@ -514,6 +548,8 @@ ccos(COMPLEX *c, NUMBER *epsilon)
 	ctmp2 = cexp(ctmp1, epsilon1);
 	comfree(ctmp1);
 	qfree(epsilon1);
+	if (ctmp2 == NULL)
+		return NULL;
 	if (ciszero(ctmp2)) {
 		comfree(ctmp2);
 		return clink(&_czero_);
@@ -564,6 +600,8 @@ csin(COMPLEX *c, NUMBER *epsilon)
 	ctmp2 = cexp(ctmp1, epsilon1);
 	comfree(ctmp1);
 	qfree(epsilon1);
+	if (ctmp2 == NULL)
+		return NULL;
 	if (ciszero(ctmp2)) {
 		comfree(ctmp2);
 		return clink(&_czero_);
@@ -594,9 +632,13 @@ ccosh(COMPLEX *c, NUMBER *epsilon)
 	COMPLEX *tmp1, *tmp2, *tmp3;
 
 	tmp1 = cexp(c, epsilon);
+	if (tmp1 == NULL)
+		return NULL;
 	tmp2 = cneg(c);
 	tmp3 = cexp(tmp2, epsilon);
 	comfree(tmp2);
+	if (tmp3 == NULL)
+		return NULL;
 	tmp2 = cadd(tmp1, tmp3);
 	comfree(tmp1);
 	comfree(tmp3);
@@ -612,9 +654,13 @@ csinh(COMPLEX *c, NUMBER *epsilon)
 	COMPLEX *tmp1, *tmp2, *tmp3;
 
 	tmp1 = cexp(c, epsilon);
+	if (tmp1 == NULL)
+		return NULL;
 	tmp2 = cneg(c);
 	tmp3 = cexp(tmp2, epsilon);
 	comfree(tmp2);
+	if (tmp3 == NULL)
+		return NULL;
 	tmp2 = csub(tmp1, tmp3);
 	comfree(tmp1);
 	comfree(tmp3);
@@ -904,6 +950,8 @@ cgd(COMPLEX *c, NUMBER *epsilon)
 	tmp1 = neg ? cneg(c) : clink(c);
 	tmp2 = cexp(tmp1, epsilon);
 	comfree(tmp1);
+	if (tmp2 == NULL)
+		return NULL;
 	tmp1 = cmul(&_conei_, tmp2);
 	tmp3 = cadd(&_conei_, tmp2);
 	comfree(tmp2);
@@ -963,11 +1011,11 @@ cpolar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 		/*NOTREACHED*/
 	}
 	if (qiszero(q1))
-		return qlink(&_czero_);
+		return clink(&_czero_);
 	m = qilog2(q1) + 1;
 	n = qilog2(epsilon);
 	if (m < n)
-		return qlink(&_czero_);
+		return clink(&_czero_);
 	r = comalloc();
 	if (qiszero(q2)) {
 		qfree(r->real);

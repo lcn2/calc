@@ -1,4 +1,5 @@
 Guidelines for adding custom functions
+--------------------------------------
 
 Step 0: Determine if is should it be done?
 
@@ -17,9 +18,9 @@ Step 0: Determine if is should it be done?
 
     So before you go to step 1, ask yourself:
 
-	+ Can I implement this as a calc library script?
+	+ Can I implement this as a calc resource file or calc shell script?
 
-	    If Yes, write the script and be done with it.
+	    If Yes, write the shell script or resource file and be done with it.
 	    If No, continue to the next question ...
 
 	+ Does it require the use of non-portable features,
@@ -617,3 +618,29 @@ Step 12: Contribute
 
     and consider submitting your custom function for possible
     inclusion in later versions of calc.
+
+## Copyright (C) 1999  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.1 $
+## @(#) $Id: HOW_TO_ADD,v 29.1 1999/12/14 09:15:36 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/HOW_TO_ADD,v $
+##
+## Under source code control:	1997/03/10 03:03:21
+## File existed as early as:	1997
+##
+## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/

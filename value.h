@@ -1,9 +1,30 @@
 /*
- * Copyright (c) 1997 David I. Bell
- * Permission is granted to use, distribute, or modify this source,
- * provided that this copyright notice remains intact.
+ * value - definitions of general values  and related routines used by calc
  *
- * Definitions of general values and related routines used by the calculator.
+ * Copyright (C) 1999  David I. Bell
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: value.h,v 29.1 1999/12/14 09:16:17 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.h,v $
+ *
+ * Under source code control:	1993/07/30 19:42:47
+ * File existed as early as:	1993
+ *
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
  */
 
 
@@ -416,10 +437,10 @@ extern VALUE *associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices);
  * This is actually a varying sized structure.
  */
 typedef struct {
-	char *name;			/* name of object */
-	int count;			/* number of elements defined */
-	long actions[OBJ_MAXFUNC+1];	/* function indices for actions */
-	int elements[1];		/* element indexes (MUST BE LAST) */
+	int oa_index;			/* index of object type */
+	int oa_count;			/* number of elements defined */
+	long oa_indices[OBJ_MAXFUNC+1]; /* function indices for actions */
+	int oa_elements[1];		/* element indices (MUST BE LAST) */
 } OBJECTACTIONS;
 
 #define objectactionsize(elements) \
@@ -444,7 +465,6 @@ extern OBJECT *objcopy(OBJECT *op);
 extern OBJECT *objalloc(long index);
 extern VALUE objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3);
 extern void objfree(OBJECT *op);
-extern void objuncache(void);
 extern int addelement(char *name);
 extern int defineobject(char *name, int indices[], int count);
 extern int checkobject(char *name);

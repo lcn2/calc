@@ -1,9 +1,30 @@
 /*
- * Copyright (c) 1997 David I. Bell
- * Permission is granted to use, distribute, or modify this source,
- * provided that this copyright notice remains intact.
+ * size - size and sizeof functions are implemented here
  *
- * Size and sizeof functions are implemented here
+ * Copyright (C) 1999  David I. Bell
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: size.c,v 29.1 1999/12/14 09:16:15 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/size.c,v $
+ *
+ * Under source code control:	1997/03/10 01:56:51
+ * File existed as early as:	1997
+ *
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
  */
 
 
@@ -68,7 +89,7 @@ elm_count(VALUE *vp)
 		result = vp->v_assoc->a_count;
 		break;
 	case V_OBJ:
-		result = vp->v_obj->o_actions->count;
+		result = vp->v_obj->o_actions->oa_count;
 		break;
 	case V_STR:
 		result = vp->v_str->s_len;
@@ -261,7 +282,7 @@ lsizeof(VALUE *vp)
 			break;
 		case V_OBJ:
 			oap = vp->v_obj->o_actions;
-			i = oap->count;
+			i = oap->oa_count;
 			p = vp->v_obj->o_table;
 			while (i-- > 0)
 				s += lsizeof(p++);
@@ -381,9 +402,8 @@ memsize(VALUE *vp)
 		case V_OBJ:
 			s = sizeof(OBJECT);
 			oap = vp->v_obj->o_actions;
-			s += (long)strlen(oap->name) + 1;
-			i = oap->count;
-			s += (i + 2) * sizeof(int);
+			i = oap->oa_count;
+			s += (i + 3) * sizeof(int);
 			p = vp->v_obj->o_table;
 			while (i-- > 0)
 				s += memsize(p++);

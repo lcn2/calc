@@ -1,10 +1,32 @@
 /*
- * Copyright (c) 1993 David I. Bell
- * Permission is granted to use, distribute, or modify this source,
- * provided that this copyright notice remains intact.
+ * commath - extended precision complex arithmetic primitive routines
  *
- * Extended precision complex arithmetic primitive routines
+ * Copyright (C) 1999  David I. Bell
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: commath.c,v 29.1 1999/12/14 09:15:35 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/commath.c,v $
+ *
+ * Under source code control:	1990/02/15 01:48:10
+ * File existed as early as:	before 1990
+ *
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
  */
+
 
 #include "cmath.h"
 
@@ -605,5 +627,3 @@ comfree(COMPLEX *c)
 	qfree(c->imag);
 	free(c);
 }
-
-/* END CODE */

@@ -1,10 +1,34 @@
 /*
- * Copyright (c) 1997 David I. Bell
- * Permission is granted to use, distribute, or modify this source,
- * provided that this copyright notice remains intact.
+ * config - configuration routines
  *
- * Configuration routines.
+ * Copyright (C) 1999  David I. Bell and Landon Curt Noll
+ *
+ * Primary author:  David I. Bell
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: config.c,v 29.1 1999/12/14 09:15:35 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
+ *
+ * Under source code control:	1991/07/20 00:21:56
+ * File existed as early as:	1991
+ *
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
  */
+
 
 #include <stdio.h>
 #include "calc.h"
@@ -14,6 +38,11 @@
 #include "nametype.h"
 #include "config.h"
 #include "string.h"
+
+#include "have_strdup.h"
+#if !defined(HAVE_STRDUP)
+# define strdup(x) calc_strdup((CONST char *)(x))
+#endif /* HAVE_STRDUP */
 
 
 /*
@@ -52,12 +81,16 @@ NAMETYPE configs[] = {
 	{"blkverbose",	CONFIG_BLKVERBOSE},
 	{"blkbase",	CONFIG_BLKBASE},
 	{"blkfmt",	CONFIG_BLKFMT},
-	{"lib_debug",	CONFIG_LIB_DEBUG},
+	{"resource_debug", CONFIG_RESOURCE_DEBUG},
+	{"lib_debug",	CONFIG_RESOURCE_DEBUG},
 	{"calc_debug",	CONFIG_CALC_DEBUG},
 	{"user_debug",	CONFIG_USER_DEBUG},
 	{"verbose_quit",CONFIG_VERBOSE_QUIT},
 	{"ctrl_d",	CONFIG_CTRL_D},
 	    {"ctrl-d",	CONFIG_CTRL_D},		/* alias for ctrl_d */
+	{"program",	CONFIG_PROGRAM},
+	{"basename",	CONFIG_BASENAME},
+	{"version",	CONFIG_VERSION},
 	{NULL,		0}
 };
 
@@ -97,10 +130,13 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	BLK_BASE_HEX,		/* block octet print base */
 	BLK_FMT_HD_STYLE,	/* block output format */
 	0,			/* internal calc debug level */
-	3,			/* calc library debug level */
+	3,			/* calc resource file debug level */
 	0,			/* user defined debug level */
 	TRUE,			/* print Quit or abort executed messages */
-	CTRL_D_VIRGIN		/* ^D only exits on virgin lines */
+	CTRL_D_VIRGIN_EOF,	/* ^D only exits on virgin lines */
+	NULL,			/* our name */
+	NULL,			/* basename of our name */
+	NULL			/* version */
 };
 CONFIG newstd = {	/* new non-backward compatible configuration */
 	MODE_INITIAL,		/* current output mode */
@@ -134,10 +170,13 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	BLK_BASE_HEX,		/* block octet print base */
 	BLK_FMT_HD_STYLE,	/* block output format */
 	0,			/* internal calc debug level */
-	3,			/* calc library debug level */
+	3,			/* calc resource file debug level */
 	0,			/* user defined debug level */
 	TRUE,			/* print Quit or abort executed messages */
-	CTRL_D_VIRGIN		/* ^D only exits on virgin lines */
+	CTRL_D_VIRGIN_EOF,	/* ^D only exits on virgin lines */
+	NULL,			/* our name */
+	NULL,			/* basename of our name */
+	NULL			/* version */
 };
 CONFIG *conf = NULL;	/* loaded in at startup - current configuration */
 
@@ -209,16 +248,16 @@ static NAMETYPE blk_fmt[] = {
  * Possible ctrl_d styles
  */
 static NAMETYPE ctrl_d[] = {
-	{"virgin_eof",	CTRL_D_VIRGIN},
-	{"virgineof",	CTRL_D_VIRGIN},
-	{"virgin",	CTRL_D_VIRGIN},
-	{"default",	CTRL_D_VIRGIN},
-	{"never_eof",	CTRL_D_EMACS},
-	{"nevereof",	CTRL_D_EMACS},
-	{"never",	CTRL_D_EMACS},
-	{"empty_eof",	CTRL_D_EOF},
-	{"emptyeof",	CTRL_D_EOF},
-	{"empty",	CTRL_D_EOF},
+	{"virgin_eof",	CTRL_D_VIRGIN_EOF},
+	{"virgineof",	CTRL_D_VIRGIN_EOF},
+	{"virgin",	CTRL_D_VIRGIN_EOF},
+	{"default",	CTRL_D_VIRGIN_EOF},
+	{"never_eof",	CTRL_D_NEVER_EOF},
+	{"nevereof",	CTRL_D_NEVER_EOF},
+	{"never",	CTRL_D_NEVER_EOF},
+	{"empty_eof",	CTRL_D_EMPTY_EOF},
+	{"emptyeof",	CTRL_D_EMPTY_EOF},
+	{"empty",	CTRL_D_EMPTY_EOF},
 	{NULL,		0}
 };
 
@@ -226,19 +265,19 @@ static NAMETYPE ctrl_d[] = {
 /*
  * Possible binary config state values
  */
-#define TRUE_STRING	"on"
-#define FALSE_STRING	"off"
+#define TRUE_STRING	"true"
+#define FALSE_STRING	"false"
 static NAMETYPE truth[] = {
 	{TRUE_STRING,	TRUE},
-	{"true",	TRUE},
 	{"t",		TRUE},
+	{"on",		TRUE},
 	{"yes",		TRUE},
 	{"y",		TRUE},
 	{"set",		TRUE},
 	{"1",		TRUE},
 	{FALSE_STRING,	FALSE},
-	{"false",	FALSE},
 	{"f",		FALSE},
+	{"off",		FALSE},
 	{"no",		FALSE},
 	{"n",		FALSE},
 	{"unset",	FALSE},
@@ -797,18 +836,18 @@ setconfig(int type, VALUE *vp)
 		conf->calc_debug = temp;
 		break;
 
-	case CONFIG_LIB_DEBUG:
+	case CONFIG_RESOURCE_DEBUG:
 		if (vp->v_type != V_NUM) {
-			math_error("Non numeric for lib_debug");
+			math_error("Non numeric for resource_debug");
 			/*NOTREACHED*/
 		}
 		q = vp->v_num;
 		temp = qtoi(q);
 		if (qisfrac(q) || !zistiny(q->num)) {
-			math_error("Illegal lib_debug parameter value");
+			math_error("Illegal resource_debug parameter value");
 			/*NOTREACHED*/
 		}
-		conf->lib_debug = temp;
+		conf->resource_debug = temp;
 		break;
 
 	case CONFIG_USER_DEBUG:
@@ -853,6 +892,18 @@ setconfig(int type, VALUE *vp)
 		}
 		conf->ctrl_d = temp;
 		break;
+
+	case CONFIG_PROGRAM:
+		math_error("The program config parameter is read-only");
+		/*NOTREACHED*/
+
+	case CONFIG_BASENAME:
+		math_error("The program config parameter is read-only");
+		/*NOTREACHED*/
+
+	case CONFIG_VERSION:
+		math_error("The program config parameter is read-only");
+		/*NOTREACHED*/
 
 	default:
 		math_error("Setting illegal config parameter");
@@ -902,18 +953,23 @@ config_copy(CONFIG *src)
 	 * clone the pointer values
 	 */
 	dest->epsilon = qlink(src->epsilon);
-	dest->prompt1 = (char *)malloc(strlen(src->prompt1)+1);
-	if (dest->prompt1 == NULL) {
-		math_error("cannot dup prompt1 for new CONFIG value");
-		/*NOTREACHED*/
+	dest->prompt1 = strdup(src->prompt1);
+	dest->prompt2 = strdup(src->prompt2);
+	if (src->program == NULL) {
+		dest->program = strdup(program);
+	} else {
+		dest->program = strdup(src->program);
 	}
-	strcpy(dest->prompt1, src->prompt1);
-	dest->prompt2 = (char *)malloc(strlen(src->prompt2)+1);
-	if (dest->prompt2 == NULL) {
-		math_error("cannot dup prompt2 for new CONFIG value");
-		/*NOTREACHED*/
+	if (src->basename == NULL) {
+		dest->basename = strdup(basename);
+	} else {
+		dest->basename = strdup(src->basename);
 	}
-	strcpy(dest->prompt2, src->prompt2);
+	if (src->version == NULL) {
+		dest->version = strdup(version());
+	} else {
+		dest->version = strdup(src->version);
+	}
 
 	/*
 	 * return the new value
@@ -949,6 +1005,15 @@ config_free(CONFIG *cfg)
 	}
 	if (cfg->prompt2 != NULL) {
 		free(cfg->prompt2);
+	}
+	if (cfg->program != NULL) {
+		free(cfg->program);
+	}
+	if (cfg->basename != NULL) {
+		free(cfg->basename);
+	}
+	if (cfg->version != NULL) {
+		free(cfg->version);
 	}
 
 	/*
@@ -1161,8 +1226,8 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		i = cfg->calc_debug;
 		break;
 
-	case CONFIG_LIB_DEBUG:
-		i = cfg->lib_debug;
+	case CONFIG_RESOURCE_DEBUG:
+		i = cfg->resource_debug;
 		break;
 
 	case CONFIG_USER_DEBUG:
@@ -1186,6 +1251,33 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 			/*NOTREACHED*/
 		}
 		vp->v_str = makenewstring(p);
+		return;
+
+	case CONFIG_PROGRAM:
+		vp->v_type = V_STR;
+		if (cfg->basename == NULL) {
+			vp->v_str = makestring(strdup(program));
+		} else {
+			vp->v_str = makenewstring(cfg->program);
+		}
+		return;
+
+	case CONFIG_BASENAME:
+		vp->v_type = V_STR;
+		if (cfg->basename == NULL) {
+			vp->v_str = makestring(strdup(basename));
+		} else {
+			vp->v_str = makenewstring(cfg->basename);
+		}
+		return;
+
+	case CONFIG_VERSION:
+		vp->v_type = V_STR;
+		if (cfg->version == NULL) {
+			vp->v_str = makestring(strdup(version()));
+		} else {
+			vp->v_str = makenewstring(cfg->version);
+		}
 		return;
 
 	default:
@@ -1262,8 +1354,23 @@ config_cmp(CONFIG *cfg1, CONFIG *cfg2)
 	       cfg1->blkbase != cfg2->blkbase ||
 	       cfg1->blkfmt != cfg2->blkfmt ||
 	       cfg1->calc_debug != cfg2->calc_debug ||
-	       cfg1->lib_debug != cfg2->lib_debug ||
+	       cfg1->resource_debug != cfg2->resource_debug ||
 	       cfg1->user_debug != cfg2->user_debug ||
 	       cfg1->verbose_quit != cfg2->verbose_quit ||
-	       cfg1->ctrl_d != cfg2->ctrl_d;
+	       cfg1->ctrl_d != cfg2->ctrl_d ||
+
+	       (cfg1->program == NULL && cfg2->program != NULL) ||
+	       (cfg1->program != NULL && cfg2->program == NULL) ||
+	       (cfg1->program != NULL && cfg2->program != NULL &&
+		strcmp(cfg1->program, cfg2->program) != 0) ||
+
+	       (cfg1->basename == NULL && cfg2->basename != NULL) ||
+	       (cfg1->basename != NULL && cfg2->basename == NULL) ||
+	       (cfg1->basename != NULL && cfg2->basename != NULL &&
+		strcmp(cfg1->basename, cfg2->basename) != 0) ||
+
+	       (cfg1->version == NULL && cfg2->version != NULL) ||
+	       (cfg1->version != NULL && cfg2->version == NULL) ||
+	       (cfg1->version != NULL && cfg2->version != NULL &&
+		strcmp(cfg1->version, cfg2->version) != 0);
 }

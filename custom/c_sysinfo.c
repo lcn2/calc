@@ -1,25 +1,33 @@
 /*
- * Permission to use, copy, modify, and distribute this software and
- * its documentation for any purpose and without fee is hereby granted.
+ * c_sysinfo - names and values of selected #defines
  *
- * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
- * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
- * EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
- * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
- * USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
- * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
- * PERFORMANCE OF THIS SOFTWARE.
+ * Copyright (C) 1999  Landon Curt Noll
  *
- * Comments, suggestions, bug fixes and questions about these routines
- * are welcome.	 Send EMail to the address given below.
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
  *
- * Happy bit twiddling,
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
  *
- *	Landon Curt Noll
- *	http://reality.sgi.com/chongo/
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * chongo <was here> /\../\
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: c_sysinfo.c,v 29.1 1999/12/14 09:15:37 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_sysinfo.c,v $
+ *
+ * Under source code control:	1997/03/09 23:14:40
+ * File existed as early as:	1997
+ *
+ * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
  */
+
 
 #if defined(CUSTOM)
 
@@ -65,7 +73,6 @@ static struct infoname sys_info[] = {
     {"BLK_CHUNKSIZE", "default allocation chunk size for blocks", NULL, (FULL)BLK_CHUNKSIZE},
     {"BLK_DEF_MAXPRINT", "default block octets to print", NULL, (FULL)BLK_DEF_MAXPRINT},
     {"BLUM_PREGEN", "non-default predefined Blum generators", NULL, (FULL)BLUM_PREGEN},
-    {"BOOL_B64", "if we have 64 bit type (TRUE or FALSE)", NULL, (FULL)BOOL_B64},
     {"CALCEXT", "extension for files read in", CALCEXT, (FULL)0},
     {"CALC_BYTE_ORDER", "Byte order (LITTLE_ENDIAN or BIG_ENDIAN)", NULL, (FULL)CALC_BYTE_ORDER},
     {"CUSTOMHELPDIR", "location of the custom help directory", CUSTOMHELPDIR, (FULL)0},
@@ -77,7 +84,7 @@ static struct infoname sys_info[] = {
     {"DEFAULTSHELL", "default shell to use", DEFAULTSHELL, (FULL)0},
     {"DEV_BITS", "device number size in bits", NULL, (FULL)DEV_BITS},
     {"DISPLAY_DEFAULT", "default digits for float display", NULL, (FULL)DISPLAY_DEFAULT},
-    {"ECHO", "where the echo command is located", ECHO, (FULL)0},
+    {"ECHO_PROG", "where the echo command is located", ECHO_PROG, (FULL)0},
     {"EPSILONPREC_DEFAULT", "2^-EPSILON_DEFAULT <= EPSILON_DEFAULT", NULL, (FULL)EPSILONPREC_DEFAULT},
     {"EPSILON_DEFAULT", "allowed error for float calculations", EPSILON_DEFAULT, (FULL)0},
     {"ERRMAX", "default errmax value", NULL, (FULL)ERRMAX},
@@ -307,7 +314,6 @@ static void
 dump_name_value(void)
 {
 	struct infoname *p;	/* current infoname */
-	char *fmt;		/* printf value format */
 
 	/* dump the entire table */
 	for (p = sys_info; p->name != NULL; ++p) {
@@ -326,17 +332,17 @@ dump_name_value(void)
 			 * a 64 bit value do not support the %lld type.
 			 * So we will only try %lld if %ld does not work.
 			 */
-			if (l_format < 0) {
-				/* %ld prints lower 32 bits only, use %lld */
-				fmt = "%s%-23s\t%-8llu\t(0x%llx)\n";
-			} else {
-				/* %ld prints all 64 bits, use %ld */
-				fmt = "%s%-23s\t%-8lu\t(0x%lx)\n";
-			}
-			printf(fmt,
+# if defined(L64_FORMAT)
+			printf("%s%-23s\t%-8lu\t(0x%lx)\n".
 			    (conf->tab_ok ? "\t" : ""), p->name,
 			    (unsigned long long)p->nmbr,
 			    (unsigned long long)p->nmbr);
+# else /* L64_FORMAT */
+			printf("%s%-23s\t%-8llu\t(0x%llx)\n",
+			    (conf->tab_ok ? "\t" : ""), p->name,
+			    (unsigned long long)p->nmbr,
+			    (unsigned long long)p->nmbr);
+# endif /* L64_FORMAT */
 #endif
 		} else {
 			printf("%s%-23s\t\"%s\"\n",
@@ -354,36 +360,29 @@ static void
 dump_mening_value(void)
 {
 	struct infoname *p;	/* current infoname */
-	char *fmt;		/* printf value format */
 
 	/* dump the entire table */
 	for (p = sys_info; p->name != NULL; ++p) {
 		if (p->str == NULL) {
 #if LONG_BITS == FULL_BITS || FULL_BITS == 32 || !defined(HAVE_LONGLONG)
-			fmt = "%s%-36.36s\t%-8lu\t(0x%lx)\n";
-			printf(fmt,
+			printf("%s%-36.36s\t%-8lu\t(0x%lx)\n",
 			    (conf->tab_ok ? "\t" : ""), p->meaning,
 			    (unsigned long)p->nmbr,
 			    (unsigned long)p->nmbr);
 #else
-			/*
-			 * Determine of %ld can print a 64 bit long long.
-			 *
-			 * Some systems that can make use of %ld to print a
-			 * a 64 bit value do not support the %lld type.
-			 * So we will only try %lld if %ld does not work.
-			 */
-			if (l_format < 0) {
-				/* %ld prints lower 32 bits only, use %lld */
-				fmt = "%s%-36.36s\t%-8llu\t(0x%llx)\n";
-			} else {
-				/* %ld prints all 64 bits, use %ld */
-				fmt = "%s%-36.36s\t%-8lu\t(0x%lx)\n";
-			}
-			printf(fmt,
+# if defined(L64_FORMAT)
+			/* %ld prints all 64 bits, use %ld */
+			printf("%s%-36.36s\t%-8lu\t(0x%lx)\n",
 			    (conf->tab_ok ? "\t" : ""), p->meaning,
 			    (unsigned long long)p->nmbr,
 			    (unsigned long long)p->nmbr);
+# else /* L64_FORMAT */
+			/* %ld prints lower 32 bits only, use %lld */
+			printf("%s%-36.36s\t%-8llu\t(0x%llx)\n",
+			    (conf->tab_ok ? "\t" : ""), p->meaning,
+			    (unsigned long long)p->nmbr,
+			    (unsigned long long)p->nmbr);
+# endif /* L64_FORMAT */
 #endif
 		} else {
 			printf("%s%-36.36s\t\"%s\"\n",

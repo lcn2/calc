@@ -1,6 +1,34 @@
 /*
- * longlong - Determine the number if bits in a long long, if is exists
+ * longlong - determine the number of bits in a long long, if is exists
  *
+ * Copyright (C) 1999  Landon Curt Noll
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: longlong.c,v 29.1 1999/12/14 09:16:12 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/longlong.c,v $
+ *
+ * Under source code control:	1994/08/05 01:09:19
+ * File existed as early as:	1994
+ *
+ * chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ */
+
+/*
  * usage:
  *	longlong [bits]
  *
@@ -20,29 +48,6 @@
  *	LONGLONG_BITS
  *		0 ==> do not use long long, even if they exist
  *		!= 0 ==> bits in an unsigned long long
- */
-/*
- * Copyright (c) 1995 by Landon Curt Noll.  All Rights Reserved.
- *
- * Permission to use, copy, modify, and distribute this software and
- * its documentation for any purpose and without fee is hereby granted,
- * provided that the above copyright, this permission notice and text
- * this comment, and the disclaimer below appear in all of the following:
- *
- *	supporting documentation
- *	source copies
- *	source works derived from this source
- *	binaries derived from this source or from derived source
- *
- * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
- * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
- * EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
- * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
- * USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
- * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
- * PERFORMANCE OF THIS SOFTWARE.
- *
- * chongo was here	/\../\
  */
 
 
@@ -70,6 +75,7 @@ int
 main(int argc, char **argv)
 {
 	int longlong_bits;	/* bits in a long long, or <=0 => dont use */
+	char buf[BUFSIZ+1];	/* scan buffer */
 
 	/*
 	 * parse args
@@ -100,10 +106,38 @@ main(int argc, char **argv)
 			printf("#define LONGLONG_BITS %d  /* yes */\n",
 			    longlong_bits);
 
-			printf("\n/* does %%lld work or does %%ld? */\n");
-			printf("#if defined(CHECK_L_FORMAT)\n");
-			printf("long long l_format = %ld;\n", val);
-			printf("#endif /* CHECK_L_FORMAT */\n");
+			printf("\n/*\n");
+			printf(" * how should 64 bit values be formatted?\n");
+			printf(" *\n");
+
+			/* it is OK to get a printf format type warning here */
+			sprintf(buf, "%ld", val);
+
+			printf(" * sprintf \"%%ld\" of 0x1234567890123456ULL "
+			       "is %s\n", buf);
+			printf(" *\n");
+			printf(" * if defined(L64_FORMAT), ok to use %%ld\n");
+			printf(" * if !defined(L64_FORMAT), use %%lld\n");
+			printf(" */\n");
+			if (buf[0] == '-') {
+				printf("#undef L64_FORMAT\n");
+			} else {
+				printf("#define L64_FORMAT\n");
+			}
+
+		/*
+		 * We have no useful 64 bit values
+		 */
+		} else {
+			if (longlong_bits <= sizeof(unsigned long)*8) {
+				printf("/* long long size <= long size */\n");
+			} else {
+				printf("/* unsigned long long constants "
+				       "don't work */\n");
+			}
+			printf("#undef HAVE_LONGLONG\n");
+			printf("#define LONGLONG_BITS 0\t/%s/\n", "* no *");
+			printf("#undef L64_FORMAT\n");
 		}
 	}
 	/* exit(0); */

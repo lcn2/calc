@@ -1,0 +1,226 @@
+/*
+ * quat - alculate using quaternions of the form: a + bi + cj + dk
+ *
+ * Copyright (C) 1999  David I. Bell
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: quat.cal,v 29.1 1999/12/14 09:15:32 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/quat.cal,v $
+ *
+ * Under source code control:	1990/02/15 01:50:35
+ * File existed as early as:	before 1990
+ *
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ */
+
+/*
+ * Routines to handle quaternions of the form:
+ *	a + bi + cj + dk
+ *
+ * Note: In this module, quaternians are manipulated in the form:
+ *	s + v
+ * Where s is a scalar and v is a vector of size 3.
+ */
+
+
+obj quat {s, v};		/* definition of the quaternion object */
+
+
+define quat(a,b,c,d)
+{
+	local obj quat	x;
+
+	x.s = isnull(a) ? 0 : a;
+	mat x.v[3];
+	x.v[0] = isnull(b) ? 0 : b;
+	x.v[1] = isnull(c) ? 0 : c;
+	x.v[2] = isnull(d) ? 0 : d;
+	return x;
+}
+
+
+define quat_print(a)
+{
+	print "quat(" : a.s : ", " : a.v[0] : ", " : a.v[1] : ", " : a.v[2] : ")" :;
+}
+
+
+define quat_norm(a)
+{
+	return a.s^2 + dp(a.v, a.v);
+}
+
+
+define quat_abs(a, e)
+{
+	return sqrt(a.s^2 + dp(a.v, a.v), e);
+}
+
+
+define quat_conj(a)
+{
+	local obj quat	x;
+
+	x.s = a.s;
+	x.v = -a.v;
+	return x;
+}
+
+
+define quat_add(a, b)
+{
+	local obj quat	x;
+
+	if (!istype(b, x)) {
+		x.s = a.s + b;
+		x.v = a.v;
+		return x;
+	}
+	if (!istype(a, x)) {
+		x.s = a + b.s;
+		x.v = b.v;
+		return x;
+	}
+	x.s = a.s + b.s;
+	x.v = a.v + b.v;
+	if (x.v)
+		return x;
+	return x.s;
+}
+
+
+define quat_sub(a, b)
+{
+	local obj quat	x;
+
+	if (!istype(b, x)) {
+		x.s = a.s - b;
+		x.v = a.v;
+		return x;
+	}
+	if (!istype(a, x)) {
+		x.s = a - b.s;
+		x.v = -b.v;
+		return x;
+	}
+	x.s = a.s - b.s;
+	x.v = a.v - b.v;
+	if (x.v)
+		return x;
+	return x.s;
+}
+
+
+define quat_inc(a)
+{
+	local	x;
+
+	x = a;
+	x.s++;
+	return x;
+}
+
+
+define quat_dec(a)
+{
+	local	x;
+
+	x = a;
+	x.s--;
+	return x;
+}
+
+
+define quat_neg(a)
+{
+	local obj quat	x;
+
+	x.s = -a.s;
+	x.v = -a.v;
+	return x;
+}
+
+
+define quat_mul(a, b)
+{
+	local obj quat	x;
+
+	if (!istype(b, x)) {
+		x.s = a.s * b;
+		x.v = a.v * b;
+	} else if (!istype(a, x)) {
+		x.s = b.s * a;
+		x.v = b.v * a;
+	} else {
+		x.s = a.s * b.s - dp(a.v, b.v);
+		x.v = a.s * b.v + b.s * a.v + cp(a.v, b.v);
+	}
+	if (x.v)
+		return x;
+	return x.s;
+}
+
+
+define quat_div(a, b)
+{
+	local obj quat	x;
+
+	if (!istype(b, x)) {
+		x.s = a.s / b;
+		x.v = a.v / b;
+		return x;
+	}
+	return a * quat_inv(b);
+}
+
+
+define quat_inv(a)
+{
+	local	x, q2;
+
+	obj quat x;
+	q2 = a.s^2 + dp(a.v, a.v);
+	x.s = a.s / q2;
+	x.v = a.v / (-q2);
+	return x;
+}
+
+
+define quat_scale(a, b)
+{
+	local obj quat	x;
+
+	x.s = scale(a.s, b);
+	x.v = scale(a.v, b);
+	return x;
+}
+
+
+define quat_shift(a, b)
+{
+	local obj quat	x;
+
+	x.s = a.s << b;
+	x.v = a.v << b;
+	if (x.v)
+		return x;
+	return x.s;
+}
+
+if (config("resource_debug") & 3) {
+    print "obj quat {s, v} defined";
+}

@@ -1,6 +1,48 @@
-The following are the changes from calc version 2.11.0t10 to date:
+The following are the changes from calc version 2.11.1 to date:
 
-    Misc code cleanup.  Removed dead code.  Removed trailing whitespace.
+    Placed calc under version 2.1 of the GNU Lesser General Public License.
+
+	The calc commands:
+
+	    help copyright
+	    help copying
+	    help copying-lgpl
+
+	should display the generic calc copyright as well as the contents
+	of the COPYING and COPYING-LGPL files.
+
+	Those files contain information about the calc's GNU Lesser General
+	Public License, and in particular the conditions under which you
+	are allowed to change it and/or distribute copies of it.
+
+    Removed the lint facility from the Makefile.  Eliminated Makefile
+    variables: ${LCFLAGS}, ${LINT}, ${LINTLIB} and ${LINTFLAGS}.
+    Removed the lint.sed file.
+
+    Cleaned up help display system.  Help file lines that begin with
+    '##' are not displayed.
+
+    Calc source and documentation now uses the the these terms:
+
+	*.cal files	calc resource file
+	*.a files	calc binary link library
+	#! files	calc shell script
+
+    Renamed 'help stdlib' to 'help resource'.	The 'help stdlib' is
+    aliased to 'help resource' for ard compatibility.
+
+    Renamed config("lib_debug") to config("resource_debug").
+    The config("lib_debug") will have the same effect as
+    config("resource_debug") for backward compatibility.
+
+    Renamed the source sub-directory lib to cal.  The default $CALCPATH
+    now uses ./cal:~/cal (instead of ./lib:~/lib).  Changed LIB_PASSDOWN
+    Makefile variable to CAL_PASSDOWN.
+
+
+The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
+
+    Misc code cleanup.	Removed dead code.  Removed trailing whitespace.
     Fixed whitespace to make the best use of 8 character tabs.
 
     Fixed some bugs relaing to '// and %' in combination with some
@@ -25,7 +67,7 @@ The following are the changes from calc version 2.11.0t10 to date:
 
     Added zero dimensional matrices.  A zero dimensional matrix is defined as:
 
-	mat A[]   or	A = mat[]
+	mat A[]	  or	A = mat[]
 
     Updated the help/mat file to reflect the current status of matrices
     including zero dimensional matrices.
@@ -70,7 +112,7 @@ The following are the changes from calc version 2.11.0t10 to date:
 
 	config("ctrl_d", "empty_eof")
 
-	    The ^D always exits calc if typed on an empty line.  This
+	    The ^D always exits calc if typed on an empty line.	 This
 	    condition occurs when ^D either the first character typed,
 	    or when all other characters on the line have been removed
 	    (say by deleting them).
@@ -83,7 +125,7 @@ The following are the changes from calc version 2.11.0t10 to date:
 	then those char(s) will have this functionality.
 
     Updated help/config and help/mode, improved the readability and
-    fixed a few typos.  Documented modes, block formats and block bases
+    fixed a few typos.	Documented modes, block formats and block bases
     ("mode", "blkfmt" & "blkbase") that were previously left off out of
     the documentation.
 
@@ -91,19 +133,156 @@ The following are the changes from calc version 2.11.0t10 to date:
     instead of returning integers.  One cannot use integers to set
     these values, so returning integers was useless.
 
-    The following config values return "on" or "off" strings:
-
-	    tilde  tab  leadzero  fullzero  blkverbose  verbose_quit
-
-	These config values can still be set with same boolean strings
-	("on", "off", "true", "false", "t", ...) as well as via the
-	numerical values 0 (for "off") and non-0 (for "on"), however.
-
     Applied the dangling name fix from Ernest Bowen <ernie@turing.une.edu.au>.
 
     Show func prints function on order of their indices, and with
     config("lib_debug") & 4 == 4  some more details about the functions
     are displayed.
+
+    Fixed another ``dangling name'' bug for when the object types list
+    exceeded 2000.
+
+    Fixed a bug related to opening to a calc session:
+
+	define res_add(a,b) = obj res {r} = {a.r + b.r};
+	...
+	obj res A = {1,2}. obj res B = {3,4}
+
+    A hash of an object takes into account the object type.  If X and Y
+    are different kinds of objects but have the same component values,
+    they will probably return different rather than the same values for
+    hash(X) and hash(Y).
+
+    Added support for config("ctrl_d") to the GNU-readline interface
+    as written by Klaus Alexander Seistrup <klaus@seistrup.dk>.
+
+	Currently, the config("ctrl_d", "virgin_eof") is not fully
+	supported.  Under GNU-readline, it acts the same way as
+	config("ctrl_d", "empty_eof").	Emacs users may find this
+	objectionable as ``hi^A^D^D^D'' will cause calc to exit due to
+	the issuing of one too many ^D's.
+
+	Emacs users may want to put:
+
+	    config("ctrl_d", "never_eof"),;
+
+	into their ~/.calcrc startup files to avoid this problem.
+
+    Made misc documentation fixes.
+
+    Fixed the make depend rule.
+
+    Applied Ernest Bowen's <ernie@turing.une.edu.au> complex function
+    power(), exp() and transcendental function patch:
+
+	Calc will return a "too-large argument" error-value for exp(x,
+	epsilon) if re(x) >= 2^30 or if an estimate indicates that the
+	result will have absolute value greater than 2^2^30 * epsilon.
+	Otherwise the evaluation will be attempted but may fail due to
+	shortage of memory or may require a long runtime if the result
+	will be very large.
+
+	The power(a, b, epsilon) builtin will return a "too-large result"
+	if an estimate indicates that the result will have absolute value
+	> 2^2^30 * epsilon.  Otherwise the evaluation will be attempted
+	but may fail due to shortage of memory or may require a long
+	runtime if the result will be very large.
+
+	Changes have been made to the algorithms used for some special
+	functions sinh(), cosh(), tanh(), sin(), cos(), etc., that make
+	use of exp().  In particular  tanh(x)  is now much faster and
+	doesn't run out of memory when x is very large - the value to
+	be returned is then 1 to a high degree of accuracy.
+
+	When the true value of a transcendental function is 1, as is
+	cos(x) for x == 0, calc's version of the function will now return
+	1 rather than the nearest multiple of epsilon.	E.g. cos(0, 3/8)
+	no longer returns 9/8.
+
+	The restriction of abs(n) < 1000000 on scale(x, n) has been
+	removed.  The only condition n now has to satisfy for calc to
+	attempt the operation is  n < 2^31, the same as for calc to
+	attempt x << n and x^n.
+
+	Changed root(x,n) so that when x is negative and n is odd it
+	returns the principal complex n-th root of x rather than -1, e.g.
+	root(-1,3) now returns -.5+.8660...i.
+
+	Changed power(a,b) to permit a to be negative when b is real.
+	E.g. power(-2,3) will now return 8 rather than cause a "negative
+	base" error.
+
+	Fixed several improper free and link problems in the comfunc.c code.
+
+    Removed BOOL_B64 symbol from Makefile.
+
+    The following config values return "true" or "false" strings:
+
+	    tilde  tab	leadzero  fullzero  blkverbose	verbose_quit
+
+	These config values can still be set with same boolean strings
+	("on", "off", "true", "false", "t", ...) as well as via the
+	numerical values 0 (for "false") and non-0 (for "true"), however.
+
+    Added -s to the calc command line.	The -s flag will cause unused
+    args (args after all of the -options on the command line) to remain
+    as unevaluated strings.
+
+    If calc is called with -s, then the new function argv() will return
+    the number of strings on the command line.	Also argv(n) will return
+    the n-th such string or null is no such string exists.
+
+    Calc now handles calc shell scripts.  A calc shell script is an
+    executable file that starts with:
+
+	    #!/usr/local/bin/calc -S
+
+	Where ``/usr/local/bin/calc'' is the path to the calc binary.
+	Additional -options may be added to the line, but it MUST
+	start with -S.	For example, the the executable file ``plus''
+	contain the following:
+
+	    #!/usr/local/bin/calc -S -e
+	    /*
+	     * This is a simple calc shell script to add two values
+	     */
+	    print eval(argv(0)) + eval(argv(1));
+
+	then the following command:
+
+	    ./plus 23 'pi(1e-5)'
+
+	will print:
+
+	    26.14159
+
+    If calc is called with -S as the first arg, then calc will assume that
+    it is being called from a #! calc shell script file.  The -S implies
+    the -s flag.  If -i is not given, -S also implies -d and -p.
+
+    Fixed the problem with non-literal string type checking for the
+    C printf-like functions.  Able to determine if "%ld" or "%lld"
+    is appropriate for printing of 64 bit long longs by way of the C
+    symbol L64_FORMAT in the longlong.h header file.
+
+    The following lines are treated as comments by calc:
+
+	#! this is a comment
+	# this is a comment
+	#	this is a comment
+	#
+	# The lone # above was also a comment
+
+    Improved how calc makes changes to file descriptor interactive state.
+    Moved state changing code to calc_tty() and orig_tty() in lib_calc.c.
+    The libcalc_call_me_last() function will restore all changed descriptor
+    states that have not already been restored.
+
+    Added the following read-only config values:
+
+	config("program")	path to calc program or calc shell script
+	config("basename")	basename of config("program")
+	config("version")	calc version string
 
 
 The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
@@ -4507,3 +4686,29 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
     was fixed.
 
     A small bug in the library file regress.cal was fixed.
+
+## Copyright (C) 1999  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.1 $
+## @(#) $Id: CHANGES,v 29.1 1999/12/14 09:15:29 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
+##
+## Under source code control:	1993/06/02 18:12:57
+## File existed as early as:	1989
+##
+## chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+## Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/

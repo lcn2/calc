@@ -1,35 +1,34 @@
 #
 # sample - makefile for calc sample programs
 #
-# Copyright (c) 1997 Landon Curt Noll
+# Copyright (C) 1999  Landon Curt Noll
 #
-# Permission to use, copy, modify, and distribute this software and
-# its documentation for any purpose and without fee is hereby granted,
-# provided that the above copyright, this permission notice and text
-# this comment, and the disclaimer below appear in all of the following:
+# Calc is open software; you can redistribute it and/or modify it under
+# the terms of the version 2.1 of the GNU Lesser General Public License
+# as published by the Free Software Foundation.
 #
-#	supporting documentation
-#	source copies
-#	source works derived from this source
-#	binaries derived from this source or from derived source
+# Calc is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.	See the GNU Lesser General
+# Public License for more details.
 #
-# LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
-# EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-# CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
-# USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-# OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-# PERFORMANCE OF THIS SOFTWARE.
+# A copy of version 2.1 of the GNU Lesser General Public License is
+# distributed with calc under the filename COPYING-LGPL.  You should have
+# received a copy with calc; if not, write to Free Software Foundation, Inc.
+# 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# Comments, suggestions, bug fixes and questions about these routines
-# are welcome.	Send EMail to the address given below.
+# @(#) $Revision: 29.1 $
+# @(#) $Id: Makefile,v 29.1 1999/12/14 09:16:15 chongo Exp $
+# @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/Makefile,v $
 #
-# Happy bit twiddling,
+# Under source code control:	1997/04/19 22:46:49
+# File existed as early as:	1997
 #
-#      Landon Curt Noll
-#      http://reality.sgi.com/chongo/
+# chongo <was here> /\oo/\	http://reality.sgi.com/chongo/
+# Share and enjoy!  :-)		http://reality.sgi.com/chongo/tech/comp/calc/
 #
-# chongo <was here> /\../\
+# calculator by David I. Bell with help/mods from others
+# Makefile by Landon Curt Noll
 
 ##############################################################################
 #-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
@@ -143,7 +142,7 @@ NO_SHARED=
 # a default here just in case you want to build from this directory.
 #
 # Some systems require one to use ranlib to add a symbol table to
-# a *.a library.  Set RANLIB to the utility that performs this action.
+# a *.a link library.  Set RANLIB to the utility that performs this action.
 # Set RANLIB to : if your system does not need such a utility.
 #
 #RANLIB=ranlib
@@ -192,7 +191,7 @@ ALLOW_CUSTOM= -DCUSTOM
 # a default here just in case you want to build from this directory.
 #
 # The sample routines need to be compiled with libcalc.a.  The ${CALC_LIBS}
-# variable tells where this library may be found
+# variable tells where this link library may be found
 #
 # CALC_LIBS= ../libcalc.a ...	       # compile with libcalc.a in dir above
 # CALC_LIBS= ${LIBDIR}/libcalc.a ...   # compile the installed libcalc.a
@@ -213,7 +212,6 @@ CALC_LIBS= ../libcalc.a ../custom/libcustcalc.a
 # CFLAGS are all flags given to ${CC} [[often includes CCOPT, CCWARN, CCMISC]]
 # ICFLAGS are given to ${CC} for intermediate progs
 #
-# LCFLAGS are CC-style flags for ${LINT}
 # LDFLAGS are flags given to ${CC} for linking .o files
 # ILDFLAGS are flags given to ${CC} for linking .o files for intermediate progs
 #
@@ -237,7 +235,6 @@ CCMISC=
 CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
 ICFLAGS= ${CCWARN} ${CCMISC}
 #
-LCFLAGS=
 LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 ILDFLAGS=
 #
@@ -263,7 +260,7 @@ H_SRC= ${SAMPLE_H_SRC}
 #
 DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} README_SAMPLE
 
-# These files are used to make (but not built) a calc .a library
+# These files are used to make (but not built) a calc .a link library
 #
 CALCLIBLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} README_SAMPLE
 
@@ -273,9 +270,14 @@ TARGETS= many_random test_random
 
 # required vars
 #
-SHELL = /bin/sh
+SHELL= /bin/sh
+MAKE_FILE= Makefile
+
+# standard tools
+#
 SED= sed
 MAKEDEPEND= makedepend
+CHMOD= chmod
 SORT= sort
 
 ##
@@ -362,13 +364,13 @@ depend:
 	${Q}mkdir skel
 	${Q}mkdir skel/sample
 	-${Q}for i in ${C_SRC}; do \
-		${SED} -n '/^#[	 ]*include[	]*"/p' \
+		${SED} -n '/^#[	 ]*include[	 ]*"/p' \
 		    "$$i" > "skel/sample/$$i"; \
 	done
 	-${Q}for i in ${H_SRC} /dev/null; do \
 		if [ X"$$i" != X"/dev/null" ]; then \
 		    tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
-		    echo "#ifndef $$tag" > "skel/sample/$$i"; \
+		    echo "#if !defined($$tag)" > "skel/sample/$$i"; \
 		    echo "#define $$tag" >> "skel/sample/$$i"; \
 		    ${SED} -n '/^#[	 ]*include[	 ]*"/p' "$$i" \
 			>> "skel/sample/$$i"; \
@@ -378,7 +380,7 @@ depend:
 	${Q}(cd ..; ${MAKE} hsrc)
 	${Q}for i in `cd ..; ${MAKE} h_list`; do \
 		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
-		echo "#ifndef $$tag" > "skel/$$i"; \
+		echo "#if !defined($$tag)" > "skel/$$i"; \
 		echo "#define $$tag" >> "skel/$$i"; \
 		${SED} -n '/^#[	 ]*include[	 ]*"/p' "../$$i" \
 		    >> "skel/$$i"; \
@@ -391,10 +393,8 @@ depend:
 	    skel/sample/makedep.out
 	${Q}cd skel/sample; ${MAKEDEPEND} -w 1 -m -f makedep.out -I.. ${C_SRC}
 	-${Q}for i in ${C_SRC}; do \
-		echo "$$i" | \
-		    ${SED} 's/^\(.*\)\.c/\1.o: \1.c/' \
-		    >> skel/sample/makedep.out; \
-	done
+		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
+	done >> skel/sample/makedep.out
 	${Q}echo sample dependency list formed
 	${Q}echo forming new sample/Makefile
 	-${Q}rm -f Makefile.bak

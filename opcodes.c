@@ -1,10 +1,34 @@
 /*
- * Copyright (c) 1997 David I. Bell
- * Permission is granted to use, distribute, or modify this source,
- * provided that this copyright notice remains intact.
+ * opcodes - opcode execution module
  *
- * Opcode execution module
+ * Copyright (C) 1999  David I. Bell and Ernest Bowen
+ *
+ * Primary author:  David I. Bell
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: opcodes.c,v 29.1 1999/12/14 09:16:12 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/opcodes.c,v $
+ *
+ * Under source code control:	1990/02/15 01:48:19
+ * File existed as early as:	before 1990
+ *
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
  */
+
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -398,7 +422,7 @@ o_eleminit(FUNC *fp, long index)
 			oldvp = &vp->v_mat->m_table[index];
 			break;
 		case V_OBJ:
-			if (index < 0 || index >= vp->v_obj->o_actions->count) {
+			if (index < 0 || index >= vp->v_obj->o_actions->oa_count) {
 				math_error("Too many initializer values");
 				/*NOTREACHED*/
 			}
@@ -2381,7 +2405,7 @@ o_fiaddr(void)
 	vp = vp->v_addr;
 	switch (vp->v_type) {
 		case V_OBJ:
-			if (index >= vp->v_obj->o_actions->count) {
+			if (index >= vp->v_obj->o_actions->oa_count) {
 				math_error("Index out of bounds for object");
 				/*NOTREACHED*/
 			}

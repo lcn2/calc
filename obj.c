@@ -1,12 +1,37 @@
 /*
- * Copyright (c) 1997 David I. Bell
- * Permission is granted to use, distribute, or modify this source,
- * provided that this copyright notice remains intact.
+ * obj - object handling primitives
  *
+ * Copyright (C) 1999  David I. Bell
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: obj.c,v 29.1 1999/12/14 09:16:12 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/obj.c,v $
+ *
+ * Under source code control:	1990/02/15 01:48:19
+ * File existed as early as:	before 1990
+ *
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
+ */
+/*
  * "Object" handling primitives.
  * This simply means that user-specified routines are called to perform
  * the indicated operations.
  */
+
 
 #include <stdio.h>
 #include "calc.h"
@@ -158,16 +183,16 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 		math_error("Object routine called with non-object");
 		/*NOTREACHED*/
 	}
-	index = oap->actions[action];
-	if (index == 0) {
-		strcpy(name, oap->name);
+	index = oap->oa_indices[action];
+	if (index < 0) {
+		strcpy(name, namestr(&objectnames, oap->oa_index));
 		strcat(name, "_");
 		strcat(name, oip->name);
 		index = adduserfunc(name);
-		oap->actions[action] = index;
+		oap->oa_indices[action] = index;
 	}
 	fp = NULL;
-	if (index > 0)
+	if (index >= 0)
 		fp = findfunc(index);
 	if (fp == NULL) {
 		switch (oip->error) {
@@ -286,27 +311,6 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 
 
 /*
- * Routine called to clear the cache of known undefined functions for
- * the objects.	 This changes negative indices back into positive ones
- * so that they will all be checked for existence again.
- */
-void
-objuncache(void)
-{
-	register long *ip;
-	long i, j;
-
-	i = objectnames.h_count;
-	while (--i >= 0) {
-		ip = objects[i]->actions;
-		for (j = OBJ_MAXFUNC; j-- >= 0; ip++)
-			if (*ip < 0)
-				*ip = -*ip;
-	}
-}
-
-
-/*
  * Print the elements of an object in short and unambiguous format.
  * This is the default routine if the user's is not defined.
  *
@@ -319,8 +323,8 @@ objprint(OBJECT *op)
 	int count;		/* number of elements */
 	int i;			/* index */
 
-	count = op->o_actions->count;
-	math_fmt("obj %s {", op->o_actions->name);
+	count = op->o_actions->oa_count;
+	math_fmt("obj %s {", namestr(&objectnames, op->o_actions->oa_index));
 	for (i = 0; i < count; i++) {
 		if (i)
 			math_str(", ");
@@ -340,7 +344,7 @@ objtest(OBJECT *op)
 {
 	int i;			/* loop counter */
 
-	i = op->o_actions->count;
+	i = op->o_actions->oa_count;
 	while (--i >= 0) {
 		if (testvalue(&op->o_table[i]))
 			return TRUE;
@@ -361,7 +365,7 @@ objcmp(OBJECT *op1, OBJECT *op2)
 
 	if (op1->o_actions != op2->o_actions)
 		return TRUE;
-	i = op1->o_actions->count;
+	i = op1->o_actions->oa_count;
 	while (--i >= 0) {
 		if (comparevalue(&op1->o_table[i], &op2->o_table[i]))
 			return TRUE;
@@ -481,11 +485,11 @@ defineobject(char *name, int indices[], int count)
 		 * new definition is exactly the same as the old one.
 		 */
 		oap = objects[index];
-		if (oap->count == count) {
+		if (oap->oa_count == count) {
 			for (index = 0; ; index++) {
 				if (index >= count)
 					return 0;
-				if (oap->elements[index] != indices[index])
+				if (oap->oa_elements[index] != indices[index])
 					break;
 			}
 		}
@@ -510,18 +514,18 @@ defineobject(char *name, int indices[], int count)
 	}
 
 	oap = (OBJECTACTIONS *) malloc(objectactionsize(count));
-		name = addstr(hp, name);
+	name = addstr(hp, name);
 	if ((oap == NULL) || (name == NULL)) {
 		math_error("Cannot allocate object type");
 		/*NOTREACHED*/
 	}
-	oap->name = name;
-	oap->count = count;
+	oap->oa_count = count;
 	for (index = OBJ_MAXFUNC; index >= 0; index--)
-		oap->actions[index] = 0;
+		oap->oa_indices[index] = -1;
 	for (index = 0; index < count; index++)
-		oap->elements[index] = indices[index];
+		oap->oa_elements[index] = indices[index];
 	index = findstr(hp, name);
+	oap->oa_index = index;
 	objects[index] = oap;
 	return 0;
 }
@@ -606,8 +610,8 @@ objoffset(OBJECT *op, long index)
 	int offset;			/* offset into value array */
 
 	oap = op->o_actions;
-	for (offset = oap->count - 1; offset >= 0; offset--) {
-		if (oap->elements[offset] == index)
+	for (offset = oap->oa_count - 1; offset >= 0; offset--) {
+		if (oap->oa_elements[offset] == index)
 			return offset;
 	}
 	return -1;
@@ -634,7 +638,7 @@ objalloc(long index)
 		math_error("Object type not defined");
 		/*NOTREACHED*/
 	}
-	i = oap->count;
+	i = oap->oa_count;
 	if (i < USUAL_ELEMENTS)
 		i = USUAL_ELEMENTS;
 	if (i == USUAL_ELEMENTS)
@@ -647,7 +651,7 @@ objalloc(long index)
 	}
 	op->o_actions = oap;
 	vp = op->o_table;
-	for (i = oap->count; i-- > 0; vp++) {
+	for (i = oap->oa_count; i-- > 0; vp++) {
 		vp->v_num = qlink(&_qzero_);
 		vp->v_type = V_NUM;
 		vp->v_subtype = V_NOSUBTYPE;
@@ -666,14 +670,14 @@ objfree(OBJECT *op)
 	int i;
 
 	vp = op->o_table;
-	for (i = op->o_actions->count; i-- > 0; vp++) {
+	for (i = op->o_actions->oa_count; i-- > 0; vp++) {
 		if (vp->v_type == V_NUM) {
 			qfree(vp->v_num);
 		} else {
 			freevalue(vp);
 		}
 	}
-	if (op->o_actions->count <= USUAL_ELEMENTS)
+	if (op->o_actions->oa_count <= USUAL_ELEMENTS)
 		free(op);
 	else
 		free((char *) op);
@@ -690,7 +694,7 @@ objcopy(OBJECT *op)
 	OBJECT *np;
 	int i;
 
-	i = op->o_actions->count;
+	i = op->o_actions->oa_count;
 	if (i < USUAL_ELEMENTS)
 		i = USUAL_ELEMENTS;
 	if (i == USUAL_ELEMENTS)
@@ -704,7 +708,7 @@ objcopy(OBJECT *op)
 	np->o_actions = op->o_actions;
 	v1 = op->o_table;
 	v2 = np->o_table;
-	for (i = op->o_actions->count; i-- > 0; v1++, v2++) {
+	for (i = op->o_actions->oa_count; i-- > 0; v1++, v2++) {
 		if (v1->v_type == V_NUM) {
 			v2->v_num = qlink(v1->v_num);
 			v2->v_type = V_NUM;
@@ -736,10 +740,10 @@ showobjtypes(void)
 	}
 	for (index = 0; index < hp->h_count; index++) {
 		oap = objects[index];
-		printf("\t%s\t{", oap->name);
-		for (i = 0; i < oap->count; i++) {
+		printf("\t%s\t{", namestr(&objectnames, index));
+		for (i = 0; i < oap->oa_count; i++) {
 			if (i) printf(",");
-			printf("%s", namestr(ep, oap->elements[i]));
+			printf("%s", namestr(ep, oap->oa_elements[i]));
 		}
 		printf("}\n");
 	}

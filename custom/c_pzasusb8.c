@@ -1,9 +1,32 @@
 /*
- * Permission to use, copy, modify, and distribute this software and
- * its documentation for any purpose and without fee is hereby granted.
+ * c_pzasusb8 - print numereator as a string of USB8s
  *
- *	      Ernest Bowen, following Landon Curt Noll
+ * Copyright (C) 1999  Ernest Bowen
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: c_pzasusb8.c,v 29.1 1999/12/14 09:15:37 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_pzasusb8.c,v $
+ *
+ * Under source code control:	1999/10/06 03:12:25
+ * File existed as early as:	1999
+ *
+ * Share and enjoy!  :-)	http://reality.sgi.com/chongo/tech/comp/calc/
  */
+
 
 #if defined(CUSTOM)
 
@@ -15,8 +38,7 @@
 #include "../zmath.h"
 
 /*
- * c_pzasusb8 - print numereator of real as if its array of HALFs were
- *    a string of USB8s
+ * c_pzasusb8 - print numereator as a string of USB8s
  *
  * given:
  *    count = 1;
