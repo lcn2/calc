@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.38 $$
-# @(#) $Id: Makefile.ship,v 29.38 2001/12/11 02:35:43 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.41 $$
+# @(#) $Id: Makefile.ship,v 29.41 2001/12/31 22:12:35 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -700,8 +700,8 @@ CALCPAGER= more
 #DEBUG= -O1 -g
 #DEBUG= -O1 -g3
 #
-DEBUG= -O2
-#DEBUG= -O2 -g
+#DEBUG= -O2
+DEBUG= -O2 -g
 #DEBUG= -O2 -g3
 #DEBUG= -O2 -ipa
 #DEBUG= -O2 -g3 -ipa

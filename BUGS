@@ -75,9 +75,18 @@ Known bugs:
 Problems with known work-a-rounds:
 
     * The gcc as shipped with Redhat 7 perhaps other Linux distributions
-      has a bug causes calc to dump core on startup of it is
-      compiled BOTH optimized (-O, -O1, -O2 or -O3) as well as
-      with debugging (-g or -g3.
+      has a bug causes calc to dump core on startup when calc is:
+
+	  compiled optimized (-O, -O1, -O2 or -O3)
+
+	  	AND
+
+      	  compiled with debugging (-g or -g3)
+
+	  	AND
+
+	  when calc is compiled with readline (see USE_READLINE,
+	    READLINE_LIB and READLINE_INCLUDE in the Makefile)
 
       On Redhat, the gcc -v which has this problem is:
 
@@ -85,12 +94,32 @@ Problems with known work-a-rounds:
 
       there may be other gcc versions that also suffer this fate.
 
-      The work-a-round is to change the DEBUG Makefile variable to either:
+      The readlines associated with problem are:
 
-	compile for speed:  -O3
-	compile to debug:   -g3
+	readline-4.1-5
+	readline2.2.1-2.2.1-2
+	readline-devel-4.1-5
+
+      One work-a-round is to compile calc WITHOUT readline.  In the
+      Makefile be sure that:
+
+	USE_READLINE=
+	READLINE_LIB=
+	READLINE_INCLUDE=
+
+      i.e., these Makefile vars are empty.
+
+      If you must use readline, then an alternate work-a-round is to
+      change the DEBUG Makefile variable to either:
+
+	compile for speed:  -O3		(or -O2 if you do not have -O3)
+	compile to debug:   -g3		(or -g if you do not have -g3)
 
       but not both.
+
+      See RH bug #57889 for details:
+
+	http://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=57889
 
     * There is a bug in gcc-2.95 that causes calc, when compiled with -O2,
       to fail the regression test.  The work-a-round is to compile with -O
@@ -259,8 +288,8 @@ Problems with known work-a-rounds:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.14 $
-## @(#) $Id: BUGS,v 29.14 2001/12/11 03:18:21 chongo Exp $
+## @(#) $Revision: 29.17 $
+## @(#) $Id: BUGS,v 29.17 2001/12/31 22:12:35 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13
