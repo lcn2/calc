@@ -74,7 +74,7 @@ STD_HELP_FILES_12= archive
 
 BLT_HELP_FILES_13= bugs changes
 
-STD_HELP_FILES_14= contrib credit todo
+STD_HELP_FILES_14= contrib credit wishlist todo
 
 # These files are used in the following order to construct full
 #

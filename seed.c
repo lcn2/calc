@@ -28,7 +28,10 @@
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  *
- * chongo was here      /\../\		{chongo,noll}@{toad,sgi}.com
+ *      Landon Curt Noll
+ *      http://reality.sgi.com/chongo
+ *
+ *      chongo <was here> /\../\
  *
  * Share and enjoy! :-)
  */
@@ -113,8 +116,8 @@ hash_buf(char *buf, unsigned len)
 	 *
 	 * for information on 32bit and 64bit Fowler/Noll/Vo hashes.
 	 *
-	 * Landon Curt Noll (chongo@toad.com) later improved on their
-	 * algorithm to come up with Fowler/Noll/Vo hash.
+	 * Landon Curt Noll (http://reality.sgi.com/chongo) later improved
+	 * on their algorithm to come up with Fowler/Noll/Vo hash.
 	 *
 	 * The 32 hash was able to process 234936 words from the web2 dictionary
 	 * without any 32 bit collisions using a constant of

@@ -24,12 +24,10 @@
  *
  * Happy bit twiddling,
  *
- *			Landon Curt Noll
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo
  *
- *			chongo@toad.com
- *			...!{pyramid,sun,uunet}!hoptoad!chongo
- *
- * chongo was here	/\../\
+ * chongo <was here> /\../\
  */
 
 /* these include files are needed regardless of CUSTOM */

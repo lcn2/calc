@@ -113,7 +113,7 @@ extern void trimconstants(void);
 /*
  * Input routines.
  */
-extern int openstring(char *str);
+extern int openstring(char *str, long num);
 extern int openterminal(void);
 extern int opensearchfile(char *name, char *pathlist, char *exten, int reopen_ok);
 extern char *nextline(void);
@@ -122,6 +122,7 @@ extern void reread(void);
 extern void resetinput(void);
 extern void setprompt(char *);
 extern BOOL inputisterminal(void);
+extern int inputlevel(void);
 extern char *inputname(void);
 extern long linenumber(void);
 extern void runrcfiles(void);
@@ -195,14 +196,14 @@ extern int allow_exec;	/* FALSE => may not execute any commands */
  */
 typedef enum {
     RUN_UNKNOWN = -1,		/* unknown or unset start state */
-    RUN_PRE_BEGIN = 0,		/* pre-startup state, calc execution started */
-    RUN_PRE_RCFILES = 1,	/* rc files about to or are being evaluated */
-    RUN_POST_RCFILES = 2,	/* rc files have been evaluated */
-    RUN_PRE_CMD_ARGS = 3,	/* cmd_args about to or are being evaluated */
-    RUN_POST_CMD_ARGS = 4,	/* cmd_args have been evaluated */
-    RUN_TOP_LEVEL = 5,		/* running at the top interactive level */
-    RUN_NOT_TOP_LEVEL = 6,	/* running not at the top interactive level */
-    RUN_STOP_ON_ERROR = 7	/* we need to stop due to errors */
+    RUN_BEGIN = 0,		/* calc execution starts */
+    RUN_RCFILES = 1,		/* rc files being evaluated */
+    RUN_PRE_CMD_ARGS = 2,	/* prepare to evaluate cmd args */
+    RUN_CMD_ARGS = 3,		/* cmd args being evaluated */
+    RUN_PRE_TOP_LEVEL = 4,	/* prepare to start top level activity */
+    RUN_TOP_LEVEL = 5,		/* running at top level */
+    RUN_EXIT = 6,		/* normal exit from calc */
+    RUN_EXIT_WITH_ERROR = 7	/* exit with error */
 } run;
 extern run run_state;
 

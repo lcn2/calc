@@ -33,8 +33,9 @@ typedef struct {
 	int i_state;		/* state (read, reread) */
 	int i_char;		/* currently read char */
 	long i_line;		/* line number */
-	char *i_str;		/* current string for input (if not NULL) */
-	char *i_origstr;	/* original string so it can be freed */
+	char *i_cp;		/* pointer to string character to be read */
+	char *i_str;		/* start of string copy to be read, or NULL */
+	long i_num;		/* number of string characters remaining */
 	char *i_ttystr;		/* current character of tty line (or NULL) */
 	FILE *i_fp;		/* current file for input (if not NULL) */
 	char *i_name;		/* file name if known */
@@ -311,7 +312,7 @@ f_open(char *name, char *mode)
 	 */
 	if (!allow_read && !allow_write) {
 		/* no reads and no writes means no opens! */
-		if (run_state > RUN_PRE_BEGIN) {
+		if (run_state > RUN_BEGIN) {
 			fprintf(stderr,
 				"open of %s mode %s - %s\n", name, mode,
 				"open for read or write disallowed by -m\n");
@@ -319,7 +320,7 @@ f_open(char *name, char *mode)
 		return NULL;
 	} else if (!allow_read && strchr(mode, 'r') != NULL) {
 		/* reading new files disallowed */
-		if (run_state > RUN_PRE_BEGIN) {
+		if (run_state > RUN_BEGIN) {
 			fprintf(stderr,
 				"open of %s mode %s - %s\n", name, mode,
 				"open for read disallowed by -m\n");
@@ -330,7 +331,7 @@ f_open(char *name, char *mode)
 		    strchr(mode, 'a') != NULL ||
 		    strchr(mode, '+') != NULL)) {
 		/* writing new files disallowed */
-		if (run_state > RUN_PRE_BEGIN) {
+		if (run_state > RUN_BEGIN) {
 			fprintf(stderr,
 				"open of %s mode %s - %s\n", name, mode,
 				"open for write disallowed by -m\n");
@@ -375,7 +376,6 @@ openfile(char *name)
 	cip->i_state = IS_READ;
 	cip->i_char = '\0';
 	cip->i_str = NULL;
-	cip->i_origstr = NULL;
 	cip->i_ttystr = NULL;
 	cip->i_fp = fp;
 	cip->i_line = 1;
@@ -401,7 +401,7 @@ curstream(void)
 
 
 /*
- * Open a string for scanning. String is ended by a null character.
+ * Open a string for scanning, num characters to be read.
  * String is copied into local memory so it can be trashed afterwards.
  * Returns -1 if cannot open string.
  *
@@ -409,21 +409,22 @@ curstream(void)
  *	str		string to be opened
  */
 int
-openstring(char *str)
+openstring(char *str, long num)
 {
 	char *cp;		/* copied string */
 
 	if ((depth >= MAXDEPTH) || (str == NULL))
 		 return -2;
-	cp = (char *)malloc(strlen(str) + 1);
+	cp = (char *) malloc(num + 1);
 	if (cp == NULL)
 		 return -1;
 	strcpy(cp, str);
 	cip = inputs + depth++;
 	cip->i_state = IS_READ;
 	cip->i_char = '\0';
+	cip->i_cp = cp;
 	cip->i_str = cp;
-	cip->i_origstr = cp;
+	cip->i_num = num;
 	cip->i_fp = NULL;
 	cip->i_name = NULL;
 	cip->i_ttystr = NULL;
@@ -445,7 +446,6 @@ openterminal(void)
 	cip->i_state = IS_READ;
 	cip->i_char = '\0';
 	cip->i_str = NULL;
-	cip->i_origstr = NULL;
 	cip->i_ttystr = NULL;
 	cip->i_fp = NULL;
 	cip->i_name = NULL;
@@ -462,8 +462,8 @@ closeinput(void)
 {
 	if (depth <= 0)
 		return;
-	if (cip->i_origstr)
-		free(cip->i_origstr);
+	if (cip->i_str)
+		free(cip->i_str);
 	if (cip->i_fp)
 		fclose(cip->i_fp);
 	if (cip->i_name)
@@ -515,8 +515,11 @@ nextchar(void)
 		 return ch;
 	}
 	if (cip->i_str) {		/* from string */
-		ch = chartoint(*cip->i_str++);
-		if (ch == '\0')
+		if (cip->i_num) {
+			ch = chartoint(*cip->i_cp++);
+			cip->i_num--;
+		}
+		else
 			ch = EOF;
 	} else if (cip->i_fp) {		/* from file */
 		ch = fgetc(cip->i_fp);
@@ -524,10 +527,6 @@ nextchar(void)
 		ch = fgetc(stdin);
 	} else {			/* from terminal */
 		ch = ttychar();
-	}
-	if (ch == EOF) {		/* fix up end of file */
-		closeinput();
-		ch = EOF;
 	}
 	if (depth > 0)
 		cip->i_char = ch;	/* save for rereads */
@@ -664,6 +663,16 @@ inputisterminal(void)
 
 
 /*
+ * Return depth of current input source
+ */
+int
+inputlevel(void)
+{
+	return depth - 1;
+}
+
+
+/*
  * Return the name of the current input file.
  * Returns NULL for terminal or strings.
  */
@@ -739,6 +748,7 @@ runrcfiles(void)
 		if (i < 0)
 			continue;
 		getcommands(FALSE);
+		closeinput();
 	}
 }
 

@@ -3,7 +3,10 @@
  *
  * This file was written by:
  *
- *	 Landon Curt Noll  (chongo@toad.com)	chongo <was here> /\../\
+ *	Landon Curt Noll
+ *	http://reality.sgi.com/chongo
+ *
+ *	chongo <was here> /\../\
  *
  * This code has been placed in the public domain.  Please do not
  * copyright this code.

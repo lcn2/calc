@@ -19,7 +19,10 @@
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  *
- * chongo was here	/\../\		chongo@toad.com
+ *      Landon Curt Noll
+ *      http://reality.sgi.com/chongo
+ *
+ *      chongo <was here> /\../\
  */
 /*
  * primes of the form h*2^n-1 for 1<=h<200 and 1<=n<1000

@@ -7394,6 +7394,23 @@ return test_somenew();
 
 
 /*
+ * misc define tests
+ */
+print;
+print	'8300: Starting define tests';
+define f8300(x) = x^2; define g8300(x) = 1 - x;
+print	'8301: define f8300(x) = x^2; define g8300(x) = 1 - x;';
+vrfy(f8300(10) == 100,		'8302: f8300(10) == 100');
+vrfy(g8300(10) == -9,		'8303: g8300(10) == -9');
+define h8300(x)=x^3;define i8300(x)=x-1;define j8300(x)=x+1;
+print	'8304: define h8300(x)=x^3;define i8300(x)=x-1;define j8300(x)=x+1;';
+vrfy(h8300(10) == 1000,		'8305: h8300(10) == 1000');
+vrfy(i8300(10) == 9,		'8306: i8300(10) == 9');
+vrfy(j8300(10) == 11,		'8307: j8300(10) == 11');
+print	'8308: Ending define tests';
+
+
+/*
  * read various calc libs
  *
  * We read most of the calc libs shipped with the distribution.

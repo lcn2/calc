@@ -1,183 +1,71 @@
-Needed enhancements
+Calc Todo Items:
 
-    Send calc comments, suggestions, bug fixes, enhancements and
-    interesting calc scripts that you would like you see included in
-    future distributions to:
+    The following items should be addressed sometime in the short to
+    medium term future, if not before the next release.
 
-	    dbell@auug.org.au
-	    chongo@toad.com
+    Code contributions are welcome.  Send patches to:
 
-    The following items are in the calc wish list.  Programs like this
-    can be extended and improved forever.
+	    calc-tester@postofc.corp.sgi.com
 
-    *  In general use faster algorithms for large numbers when they
-       become known.  In particular, look at better algorithms for
-       very large numbers -- multiply, square and mod in particular.
+    See also the 'wishlist' help files for the calc enhancement wish list.
 
-    *  Implement an autoload feature.  Associate a calc library filename
-       with a function or global variable.  On the first reference of
-       such item, perform an automatic load of that file.
+=-=
 
-    *  Add error handling statements, so that QUITs, errors from the
-       'eval' function, division by zeroes, and so on can be caught.
-       This should be done using syntax similar to:
+Very High priority items:
 
-		ONERROR statement DO statement;
+    * Write the help file for the inputlevel() builtin function.
 
-       Something like signal isn't versatile enough.
+    * Write the help file for the display() builtin function.
 
-    *  Add a debugging capability so that functions can be single stepped,
-       breakpoints inserted, variables displayed, and so on.
+    * Write the help file for the stoponerror() builtin function.
 
-    *  Figure out how to write all variables out to a file, including
-       deeply nested arrays, lists, and objects.
+    * Update the errmax about the meaning of errmax(-1).
 
-       Add the ability to read and write a value in some binary form.
-       Clearly this is easy for non-neg integers.  The question of
-       everything else is worth pondering.
+    * Document the new meanings for bit values and the sign of
+      of config("lib_debug") in the appropriate help file(s).
 
-    *  Eliminate the need for the define keyword by doing smarter parsing.
+    * Fix any 'Known bugs' as noted in the BUGS file or as
+      displayed by 'calc help bugs'.
 
-    *  Allow results of a command (or all commands) to be re-directed to a
-       file or piped into a command.
+=-=
 
-    *  Add some kind of #include and #define facility.  Perhaps use
-       the C pre-processor itself?
+High priority items:
 
-    *  Support a more general input and output base mode other than
-       just dec, hex or octal.
+    * Verify, complete or fix the 'SEE ALSO' help file sections.
 
-    *  Implement a form of symbolic algebra.  Work on this has already
-       begun.  This will use backquotes to define expressions, and new
-       functions will be able to act on expressions.  For example:
+    * Verify, complete or fix the 'LIBRARY' help file sections.
 
-	    x = `hello * strlen(mom)`;
-	    x = sub(x, `hello`, `hello + 1`);
-	    x = sub(x, `hello`, 10, `mom`, "curds");
-	    eval(x);
+    * Verify, complete or fix the 'LIMITS' help file sections.
 
-       prints 55.
+    * Verify, complete or fix the 'SYNOPSIS' and 'TYPES' help file sections.
 
-    *  Place the results of previous commands into a parallel history list.
-       Add a binding that returns the saved result of the command so
-       that one does not need to re-execute a previous command simply
-       to obtain its value.
+    * Where reasonable, be sure that regress.cal tests builtin functions.
 
-       If you have a command that takes a very long time to execute,
-       it would be nice if you could get at its result without having
-       to spend the time to reexecute it.
+    * Perform a code coverage analysis of the 'make check' action
+      and improve the coverage (within reason) of the regress.cal suite.
 
-    *  Add a binding to delete a value from the history list.
+    * Create a Linux rpm (Red Hat Package Manager) package for calc.
 
-       One may need to remove a large value from the history list if
-       it is very large.  Deleting the value would replace the history
-       entry with a null value.
+    * Address, if possible and reasonable, any Calc Mis-features
+      as noted in the BUGS file or as displayed by 'calc help bugs'.
 
-    *  Add a binding to delete a command from the history list.
+    * The shell script that is currently constructed to display a help
+      file (in help.c) is a gross hack.  That code should be replaced
+      with code that looks for the help file in the pre-defined help
+      directories.  When the specific help file is found and opened,
+      then a $PAGER should be forked and execed after doing things such
+      as closing open file descriptors that the $PAGER does not need.
 
-       Since you can delete values, you might as well be able to
-       delete commands.
+    * Inspect changes made since the last major calc release (the
+      initial x.y.z version ... prior to any t sub-version) to help
+      ensure that they have not introduced new or re-introduced old bugs
+      into calc.
 
-    *  All one to alter the size of the history list thru config().
+=-=
 
-       In some cases, 256 values is too small, in others it is too large.
+Medium priority items:
 
-    *  Add a builtin that returns a value from the history list.
-       As an example:
-
-	    histval(-10)
-
-       returns the 10th value on the history value list, if such
-       a value is in the history list (null otherwise).  And:
-
-	    histval(23)
-
-       return the value of the 23rd command given to calc, if
-       such a value is in the history list (null otherwise).
-
-       It would be very helpful to use the history values in
-       subsequent equations.
-
-    *  Add a builtin that returns command as a string from the
-       history list.  As an example:
-
-	    history(-10)
-
-       returns a string containing the 10th command on the
-       history list, if a such a value is in the history list
-       (empty string otherwise).  And:
-
-	    history(23)
-
-       return the string containing the 23rd command given to calc, if
-       such a value is in the history list (empty string otherwise).
-
-       One could use the eval() function to re-evaluate the command.
-
-    *  Allow one to optionally restore the command number to calc
-       prompts.  When going back in the history list, indicate the
-       command number that is being examined.
-
-       The command number was a useful item.  When one is scanning the
-       history list, knowing where you are is hard without it.  It can
-       get confusing when the history list wraps or when you use
-       search bindings.  Command numbers would be useful in
-       conjunction with positive args for the history() and histval()
-       functions as suggested above.
-
-    *  Add a builtin that returns the current command number.
-       For example:
-
-	    cmdnum()
-
-       returns the current command number.
-
-       This would allow one to tag a value in the history list.  One
-       could save the result of cmdnum() in a variable and later use
-       it as an arg to the histval() or history() functions.
-
-    *  Add a factoring builtin functions.  Provide functions that perform
-       multiple polynomial quadratic sieves, elliptic curve, difference
-       of two squares, N-1 factoring as so on.  Provide a easy general
-       factoring builtin (say factor(foo)) that would attempt to apply
-       whatever process was needed based on the value.
-
-       Factoring builtins would return a matrix of factors.
-
-       It would be handy to configure, via config(), the maximum time
-       that one should try to factor a number.  By default the time
-       should be infinite.  If one set the time limit to a finite
-       value and the time limit was exceeded, the factoring builtin
-       would return whatever if had found thus far, even if no new
-       factors had been found.
-
-       Another factoring configuration interface, via config(), that
-       is needed would be to direct the factoring builtins to return
-       as soon as a factor was found.
-
-    *  Allow one to config calc break up long output lines.
-
-       The command:  calc '2^100000'  will produce one very long
-       line.  Many times this is reasonable.  Long output lines
-       are a problem for some utilities.  It would be nice if one
-       could configure, via config(), calc to fold long lines.
-
-       By default, calc should continue to produce long lines.
-
-       One option to config should be to specify the length to
-       fold output.  Another option should be to append a trailing
-       \ on folded lines (as some symbolic packages use).
-
-    *  Allow one to use the READ and WRITE commands inside a function.
-
-    *  Remove or increase limits on factor(), lfactor(), isprime(),
-       nextprime(), and prevprime().  Currently these functions cannot
-       search for factors > 2^32.
-
-    *  Add read -once -try "filename" which would do nothing
-       if "filename" was not a readable file.
-
-    *  Complete the use of CONST where appropirate:
+    * Complete the use of CONST where appropriate:
 
 	CONST is beginning to be used with read-only tables and some
 	function arguments.  This allows certain compilers to better
@@ -196,48 +84,10 @@ Needed enhancements
 	at by 'fizbin' and the HALF array pointer at by 'data' should be
 	treated as read-only.
 
-    * Blocks should have the following features:
-
-        + read/write to/from files (ala fread/fwrite)
-
-	+ misc memory functions (ala memcpy, memcmp, memset,
-	  memchr, etc.)
-
-	+ scatter and gather functions (to send every n-th octet
-	  to another block and to copy from n blocks, the 1st
-	  then 2nd then 3rd ... octets)
-
-    * Printing of blocks should be under the control of the
-      config() interface.  This should allow one to select
-      from any of the following formats:
-
-	+ as one long string
-
-	+ as a series of lines (< 80 chars wide)
-
-	+ in od command style (offset: value value value ...)
-
-	+ in hex dump style (offset: val val val val ...  3hf.Uas.c)
-
-    * In addition one should be able to control the following
-      aspects of printing blocks via the config() interface:
-
-	+ base (hex, octal, char, base 2)
-
-	+ amount of data (the first n octets or the entire block)
-
-	+ skipping printing of duplicate print lines (ala od)
-
-	+ have the ability to print the block as raw data
-
     * It is overkill to have nearly everything wind up in libcalc.a.
 
-      One should make available a the fundimental math operations
+      One should make available a the fundamental math operations
       on ZVALUE, NUMBER and perhaps COMPLEX (without all of the
       other stuff) in a separate library.
 
-    * improve the coverage in the 'SEE ALSO' help file lists
-
-    * where reasonable, be sure that regress.cal tests builtin functions
-
-    * clean the source code and document it better
+    * Clean the source code and document it better.

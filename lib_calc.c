@@ -180,7 +180,7 @@ libcalc_call_me_first(void)
 	/*
 	 * ready to rock & roll ..
 	 */
-	run_state = RUN_PRE_BEGIN;
+	run_state = RUN_BEGIN;
 	init_done = 1;
 	return;
 }
@@ -247,6 +247,7 @@ reinitialize(void)
 	math_setfp(stdout);
 	resetscopes();
 	resetinput();
+	inittokens();
 	(void) openterminal();
 }
 

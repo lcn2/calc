@@ -34,12 +34,12 @@ Credits
     interesting calc scripts that you would like you see included in
     future distributions to:
 
-	    dbell@auug.org.au
-	    chongo@toad.com
+	calc-tester@postofc.corp.sgi.com
 
-    Landon Noll maintains the official calc ftp archive at:
+    Landon Noll maintains the official calc http/ftp archive at:
 
-	ftp://ftp.uu.net/pub/calc
+	ftp://reality.sgi.com/users/chongo/src/calc
+	http://reality.sgi.com/chongo/src/calc/
 
     Alpha test versions, complete with bugs, untested code and
     experimental features may be fetched (if you are brave) under:

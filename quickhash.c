@@ -19,7 +19,10 @@
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  *
- * chongo was here	/\../\
+ *      Landon Curt Noll
+ *      http://reality.sgi.com/chongo
+ *
+ *      chongo <was here> /\../\
  */
 
 /*
@@ -81,7 +84,7 @@ static QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
  * The basis of the hash algorithm was taken from an idea
  * sent by Email to the IEEE Posix P1003.2 mailing list from
  * Phong Vo (kpv@research.att.com) and Glenn Fowler (gsf@research.att.com).
- * Landon Curt Noll (chongo@toad.com) later improved on there
+ * Landon Curt Noll (http://reality.sgi.com/chongo) later improved on there
  * algorithm to come up with Fowler/Noll/Vo hash.
  *
  * The magic lies in the constant 16777619, which for 32 bit hashing

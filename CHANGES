@@ -1,4 +1,33 @@
-Following is the change from calc version 2.11.0t7 to date:
+Following is the change from calc version 2.11.0t8 to date:
+
+    Moved 'wishlist' enhancements from the help/todo file to a new
+    help/wishlist file.  Ordered, by priority, help/todo items into
+    Very High, High and Medium priority items.
+
+    The BUGS file now has a 'bugs' section as well as a 'mis-features'
+    section.
+
+    Improved how calc internally dealt with reading EOF or '\0' characters.
+
+    Calc now allows multiple defines to occur on the same line:
+    (Thanks goes to Ernest Bowen <ernie@turing.une.edu.au>)
+
+	define f8300(x) = x^2; define g8300(x) = 1 - x;
+
+    Improved calc's ability to deal with and recover from errors.
+
+    Added inputlevel() builtin to return the input processing level.
+    In an interact mode, inputlevel() returns 0.  When directly reading 
+    a calc script, inputlevel() returns 1.  When reading a script which
+    in turn reads another script, inputlevel() returns 2.  etc...
+
+    If $CALCRC has more than one file as in file1:file2 and an error
+    occurs in file1, then calc -c will not read file2.
+
+    Fixed some of the old EMail addresses found in calc documentation.
+
+
+Following is the change from calc version 2.11.0t7 to 2.11.0t7.5:
 
     Calc has some new command line flags / command line meaning:
     (Thanks goes to Ernest Bowen <ernie@turing.une.edu.au>)
@@ -110,40 +139,40 @@ Following is the change from calc version 2.11.0t7 to date:
 
 	calc -p 2+17 | whey
 
-     will write '19' instead of '\t19' to the whey command.
+    will write '19' instead of '\t19' to the whey command.
 
-     Updated calc man page and help/usage file to reflect recent
-     command line changes.
+    Updated calc man page and help/usage file to reflect recent
+    command line changes.
 
-     Converted start_done into a general calc run state enum called
-     run_state within the calc source.
+    Converted start_done into a general calc run state enum called
+    run_state within the calc source.
 
-     Removed README.OLD.
+    Removed README.OLD.
 
-     Added the Makefile variable ${LCC} to invoke the local c compiler.
-     By default, ${CC} also run the ${LCC} compiler.  The distinction is
-     useful when using something such as purify.  In the case of ${LCC},
-     only the local C compiler is invoked.  In the case of ${CC} a purify
-     compile is invoked.  Only the source that must be compiled and run
-     on the local machine use ${LCC}; everything else uses ${CC}.
+    Added the Makefile variable ${LCC} to invoke the local c compiler.
+    By default, ${CC} also run the ${LCC} compiler.  The distinction is
+    useful when using something such as purify.  In the case of ${LCC},
+    only the local C compiler is invoked.  In the case of ${CC} a purify
+    compile is invoked.  Only the source that must be compiled and run
+    on the local machine use ${LCC}; everything else uses ${CC}.
 
-     Fixed memory buffer ovreread problem in eatstring() in token.c.
+    Fixed memory buffer ovreread problem in eatstring() in token.c.
 
-     Fixed memory leaks related to putenv().
+    Fixed memory leaks related to putenv().
 
-     Fixed memory leaks realted to srandom().
+    Fixed memory leaks realted to srandom().
 
-     Fixed compilation warnings and problems on BSDI.
+    Fixed compilation warnings and problems on BSDI.
 
-     Removed ${CCMAIN} as a variable from the Makefile.  Now files
-     use either ${CFLAGS} for general C source and ${ICFLAGS} for
-     intermediate C source (e.g., special code for building hsrc files).
+    Removed ${CCMAIN} as a variable from the Makefile.  Now files
+    use either ${CFLAGS} for general C source and ${ICFLAGS} for
+    intermediate C source (e.g., special code for building hsrc files).
 
-     The main calc URL is now:
+    The main calc URL is now:
 
 	http://reality.sgi.com/chongo/tech/comp/calc
 
-     Misc calc man page fixes.
+    Misc calc man page fixes.
 
 
 Following is the change from calc version 2.11.0t1 to 2.11.0t6.3:
@@ -3719,9 +3748,6 @@ Following is the change from calc version 2.9.3t8 to 2.9.3t9.2:
 
 Following is the change from calc version 2.9.3t7 to 2.9.3t7:
 
-    WARNING: This patch is an beta test patch by chongo@toad.com
-	     (Landon Curt Noll).
-
     The 'show' command by itself will issue an error message
     that will remind one of the possible show arguments.
     (thanks to Ha S. Lam <hl@kuhep4.phsx.ukans.edu>)
@@ -3768,9 +3794,6 @@ Following is the change from calc version 2.9.3t7 to 2.9.3t7:
     in preparation for 2.9.3t9 mods.
 
 Following is the change from calc version 2.9.2 to 2.9.3t7:
-
-    WARNING: This patch is an beta test patch by chongo@toad.com
-	     (Landon Curt Noll).
 
     Calc can now compile on OSF/1, SGI and IBM RS6000 systems.
 

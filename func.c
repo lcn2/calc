@@ -153,12 +153,14 @@ f_eval(VALUE *vp)
 	FUNC	*oldfunc;
 	FUNC	*newfunc;
 	VALUE	result;
-	char	*cp;
+	char	*str;
+	long	num;
 
 	if (vp->v_type != V_STR)
 		return error_value(E_EVAL2);
-	cp = vp->v_str->s_str;
-	switch (openstring(cp)) {
+	str = vp->v_str->s_str;
+	num = vp->v_str->s_len;
+	switch (openstring(str, num)) {
 		case -2:
 			return error_value(E_EVAL3);
 		case -1:
@@ -167,6 +169,7 @@ f_eval(VALUE *vp)
 	oldfunc = curfunc;
 	enterfilescope();
 	if (evaluate(TRUE)) {
+		closeinput();
 		exitfilescope();
 		freevalue(stack--);
 		newfunc = curfunc;
@@ -178,6 +181,7 @@ f_eval(VALUE *vp)
 			free(newfunc);
 		return result;
 	}
+	closeinput();
 	exitfilescope();
 	newfunc = curfunc;
 	curfunc = oldfunc;
@@ -5890,6 +5894,17 @@ f_isatty(VALUE *vp)
 
 
 static VALUE
+f_inputlevel (void)
+{
+	VALUE result;
+
+	result.v_type = V_NUM;
+	result.v_num = itoq((long) inputlevel());
+	return result;
+}
+
+
+static VALUE
 f_access(int count, VALUE **vals)
 {
 	NUMBER *q;
@@ -6973,6 +6988,8 @@ static CONST struct builtin builtins[] = {
 	 "integral log of a number base 2"},
 	{"im", 1, 1, 0, OP_IM, 0, 0,
 	 "imaginary part of complex number"},
+	{"inputlevel", 0, 0, 0, OP_NOP, 0, f_inputlevel,
+	 "current input depth"},
 	{"insert", 2, IN, FA, OP_NOP, 0, f_listinsert,
 	 "insert values c ... into list a at position b"},
 	{"int", 1, 1, 0, OP_INT, qint, 0,

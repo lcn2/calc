@@ -237,73 +237,92 @@ main(int argc, char **argv)
 	/*
 	 * execute calc code based on the run state
 	 */
-	if (run_state == RUN_PRE_BEGIN) {
+	if (run_state == RUN_BEGIN) {
 		if (!q_flag && allow_read) {
-			run_state = RUN_PRE_RCFILES;
+			run_state = RUN_RCFILES;
 			runrcfiles();
 		}
-		run_state = RUN_POST_RCFILES;
-	}
-	if (run_state == RUN_PRE_RCFILES) {
-		fprintf(stderr, "Execution error in rcfiles\n");
-		if ((c_flag && !stoponerror) || stoponerror < 0) {
-			getcommands(FALSE);
-			run_state = RUN_POST_RCFILES;
-		} else {
-			if ((havecommands && !i_flag) || !stdin_tty)
-				run_state = RUN_STOP_ON_ERROR;
-			else if (havecommands)
-				run_state = RUN_POST_CMD_ARGS;
-			else
-				run_state = RUN_POST_RCFILES;
-		}
-	}
-	if (run_state == RUN_POST_RCFILES) {
-		if (havecommands) {
-			run_state = RUN_PRE_CMD_ARGS;
-			(void) openstring(cmdbuf);
-			getcommands(FALSE);
-		}
-		run_state = RUN_POST_CMD_ARGS;
-	}
-	if (run_state == RUN_PRE_CMD_ARGS) {
-		fprintf(stderr, "Execution error in commands\n");
-		if ((c_flag && !stoponerror) || stoponerror < 0) {
-			getcommands(FALSE);
-			run_state = RUN_POST_CMD_ARGS;
-		} else {
-			closeinput();
-			if (!stdin_tty || !i_flag)
-				run_state = RUN_STOP_ON_ERROR;
-			else
-				run_state = RUN_POST_CMD_ARGS;
-		}
-	}
-	if (run_state == RUN_POST_CMD_ARGS) {
-		if (stdin_tty && ((havecommands && !i_flag) || p_flag))
-			run_state = RUN_NOT_TOP_LEVEL;
-		else
-			openterminal();
-	} else if (run_state == RUN_TOP_LEVEL) {
-		if (!stdin_tty && (!c_flag || stoponerror) &&
-		    stoponerror >= 0) {
-			run_state = RUN_STOP_ON_ERROR;
-		} else if ((c_flag && !stoponerror) || stoponerror < 0)
-			getcommands(FALSE);
-		else
-			reinitialize();
+		run_state = RUN_PRE_CMD_ARGS;
 	}
 
-	if (run_state < RUN_NOT_TOP_LEVEL) {
-		run_state = RUN_TOP_LEVEL;
-		getcommands(TRUE);
+	while (run_state == RUN_RCFILES) {
+		fprintf(stderr, "Error in rcfiles\n");
+		if ((c_flag && !stoponerror) || stoponerror < 0) {
+			getcommands(FALSE);
+			closeinput();
+			if (inputisterminal())
+				run_state = RUN_PRE_CMD_ARGS;
+		} else {
+			if ((havecommands && !i_flag) || !stdin_tty)
+				run_state = RUN_EXIT_WITH_ERROR;
+			else
+				run_state = RUN_PRE_CMD_ARGS;
+		}
+	}
+
+	if (run_state == RUN_PRE_CMD_ARGS) {
+		if (havecommands) {
+			run_state = RUN_CMD_ARGS;
+			(void) openstring(cmdbuf, (long) strlen(cmdbuf));
+			getcommands(FALSE);
+			closeinput();
+		}
+		run_state = RUN_PRE_TOP_LEVEL;
+	}
+
+	while (run_state == RUN_CMD_ARGS) {
+		fprintf(stderr, "Error in commands\n");
+		if ((c_flag && !stoponerror) || stoponerror < 0) {
+			getcommands(FALSE);
+			closeinput();
+			if (inputlevel() == 0) {
+				getcommands(FALSE);
+				run_state = RUN_PRE_TOP_LEVEL;
+			}
+		} else {
+			closeinput();
+			if (!stdin_tty || !i_flag || p_flag)
+				run_state = RUN_EXIT_WITH_ERROR;
+			else
+				run_state = RUN_PRE_TOP_LEVEL;
+		}
+	}
+
+	if (run_state == RUN_PRE_TOP_LEVEL) {
+		if (stdin_tty && ((havecommands && !i_flag) || p_flag)) {
+			run_state = RUN_EXIT;
+		} else {
+			if (stdin_tty) {
+				reinitialize();
+			} else {
+				resetinput();
+				openterminal();
+			}
+			run_state = RUN_TOP_LEVEL;
+			getcommands(TRUE);
+		}
+	}
+
+	while (run_state == RUN_TOP_LEVEL) {
+		if ((c_flag && !stoponerror) || stoponerror < 0) {
+			getcommands(TRUE);
+			if (!inputisterminal())
+				closeinput();
+		} else {
+			if (stdin_tty) {
+				reinitialize();
+				getcommands(TRUE);
+			} else {
+			 	run_state = RUN_EXIT_WITH_ERROR;
+			}
+		}
 	}
 
 	/*
 	 * all done
 	 */
 	libcalc_call_me_last();
-	return (run_state == RUN_STOP_ON_ERROR ||
+	return (run_state == RUN_EXIT_WITH_ERROR ||
 		run_state == RUN_UNKNOWN) ? 1 : 0;
 }
 

@@ -11,7 +11,10 @@
  *
  * This file was Modified/Re-written by:
  *
- *	 Landon Curt Noll  (chongo@toad.com)	chongo <was here> /\../\
+ *      Landon Curt Noll
+ *      http://reality.sgi.com/chongo
+ *
+ *      chongo <was here> /\../\
  *
  * This code has been placed in the public domain.  Please do not
  * copyright this code.
@@ -26,7 +29,7 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
  * Based on Version 2.11 (09 Mar 1995) from Landon Curt Noll's
- * (chongo@toad.com) shs hash program.
+ * (http://reality.sgi.com/chongo) shs hash program.
  *
  ****
  *

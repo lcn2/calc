@@ -125,6 +125,7 @@ getcommands(BOOL toplevel)
 			switch (opensearchfile(name,calcpath,CALCEXT,rdonce)) {
 			case 0:
 				getcommands(FALSE);
+				closeinput();
 				break;
 			case 1:
 				/* previously read and -once was given */
@@ -354,10 +355,6 @@ getsimplebody(void)
 	(void) tokenmode(TM_NEWLINES);
 	(void) getexprlist();
 	addop(OP_RETURN);
-	if (gettoken() != T_SEMICOLON)
-		rescantoken();
-	if (gettoken() != T_NEWLINE)
-		scanerror(T_NULL, "Illegal function definition");
 }
 
 

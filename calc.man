@@ -567,7 +567,7 @@ scripts that you would like you see included
 in future distributions to:
 .sp
 .in +0.5i
-calc-tester-request@postofc.corp.sgi.com
+calc-tester@postofc.corp.sgi.com
 .in -0.5i
 .sp
 Landon Noll maintains the the

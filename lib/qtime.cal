@@ -7,7 +7,7 @@
  *	utc_hr_offset	Offset from UTC in hours.
  *
  * Written by: Klaus Alexander Seistrup <kseis@magnetic-ink.dk>
- * With minor mods by: Landon Curt Noll <chongo@toad.com>
+ * With minor mods by: Landon Curt Noll <http://reality.sgi.com/chongo>
  *
  * See:
  *	http://www.magnetic-ink.dk/download/qtime.html

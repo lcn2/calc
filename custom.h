@@ -28,14 +28,11 @@
  *
  * Happy bit twiddling,
  *
- *			Landon Curt Noll
+ *      Landon Curt Noll
+ *      http://reality.sgi.com/chongo
  *
- *			chongo@toad.com
- *			...!{pyramid,sun,uunet}!hoptoad!chongo
- *
- * chongo was here	/\../\
+ * chongo <was here> /\../\
  */
-
 
 /*
  * Be careful what you put in this file, upper .c files include

@@ -60,10 +60,12 @@ Calc is shipped with a library of calc scripts.  For a list see:
 See the file:
 
     help/todo
+    help/wishlist
 
 or run:
 
-    calc 'help todo'
+    calc help todo
+    calc help wishlist
 
 for a wish/todo list.  Code contributions are welcome.
 
