@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: token.c,v 29.1 1999/12/14 09:16:16 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: token.c,v 29.2 1999/12/17 09:22:38 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/token.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -335,10 +335,11 @@ gettoken(void)
 			switch(nextchar()) {
 				case '=': type = T_HASHEQUALS; break;
 				case '!': type = T_POUNDBANG; eatline(); break;
-				case ' ': type = T_POUNDCOMMENT; eatline();
-					  break;
-				case '\t': type = T_POUNDCOMMENT; eatline();
-					  break;
+				case '#':
+				case ' ':
+				case '\t':
+					type = T_POUNDCOMMENT; eatline();
+					break;
 				case '\n': type = T_POUNDCOMMENT; break;
 				default: type = T_HASH; reread();
 			}

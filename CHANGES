@@ -46,6 +46,10 @@ The following are the changes from calc version 2.11.1 to date:
 
     Changed the recommended Comqaq cc compile to be -std0 -fast -O4 -static.
 
+    Fixed a problem related to asking for help for a non-existent file.
+
+    Added ./.calcinit to the default calcrc.
+
 
 The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
 
@@ -279,6 +283,7 @@ The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
 	#	this is a comment
 	#
 	# The lone # above was also a comment
+	## is also a comment
 
     Improved how calc makes changes to file descriptor interactive state.
     Moved state changing code to calc_tty() and orig_tty() in lib_calc.c.
@@ -4710,8 +4715,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: CHANGES,v 29.3 1999/12/15 09:13:45 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: CHANGES,v 29.4 1999/12/17 10:06:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

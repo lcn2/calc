@@ -20,8 +20,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.4 $
-# @(#) $Id: Makefile.ship,v 29.4 1999/12/15 08:54:07 chongo Exp $
+# @(#) $Revision: 29.5 $
+# @(#) $Id: Makefile.ship,v 29.5 1999/12/17 09:07:35 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -425,7 +425,7 @@ CALCPATH= .:./cal:~/cal:${LIBDIR}:${CUSTOMLIBDIR}
 # If the $CALCRC environment variable is not defined, then the following
 # path will be search for calc resource files.
 #
-CALCRC= ${LIBDIR}/startup:~/.calcrc
+CALCRC= ${LIBDIR}/startup:~/.calcrc:./.calcinit
 
 # Determine of the GNU-readline facility will be used instead of the
 # built-in calc binding method.

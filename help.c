@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.1 $
- * @(#) $Id: help.c,v 29.1 1999/12/14 09:15:40 chongo Exp $
+ * @(#) $Revision: 29.2 $
+ * @(#) $Id: help.c,v 29.2 1999/12/17 09:22:03 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/help.c,v $
  *
  * Under source code control:	1997/09/14 10:58:30
@@ -253,19 +253,15 @@ givehelp(char *type)
 		stream = fopen(helppath, "r");
 		if (stream == NULL) {
 
-			/*
-			 * we have the help file open, now display it
-			 */
-			page_file(stream);
-			(void) fclose(stream);
-
-		/*
-		 * no such help file
-		 */
-		} else {
+			/* no such help file */
 			fprintf(stderr,
 				"%s: no such help file, try: help help\n",
 				type);
+		} else {
+
+			/* we have the help file open, now display it */
+			page_file(stream);
+			(void) fclose(stream);
 		}
 	}
 

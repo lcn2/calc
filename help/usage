@@ -2,11 +2,11 @@ Calc command line
 
     Calc has the following command line:
 
-	calc [-c] [-C] [-d] [-D calc_debug[:resource_debug:[user_debug]]]
+	calc [-c] [-C] [-d] [-D calc_debug[:resource_debug[:user_debug]]]
 	     [-e] [-h] [-i] [-m mode] [-n] [-p] [-q] [-s] [-u] [-v]
 	     [calc_cmd ...]
 
-	#!/usr/local/bin/calc -S [-other_flags ...]
+	#!/usr/local/bin/calc -S [other_flags]
 
 	  -c   Continue reading command lines even after an execution
 	       error has caused the abandonment of a line.
@@ -22,7 +22,7 @@ Calc command line
 	       will cause calc to try to process each line being read
 	       despite the errors that it encounters.
 
-	       By default, calc startup resource files ($CALCRC) are
+	       By default, calc startup resource files are
 	       silently ignored if not found.  This flag will report
 	       missing startup scripts unless -d is also given.
 
@@ -31,7 +31,7 @@ Calc command line
 	       Without this flag, calling the custom() builtin
 	       function will simply generate an error.
 
-	       Use if this flag may cause calc to execute functions
+	       Use of this flag may cause calc to execute functions
 	       that are non-standard and that are not portable.
 	       Custom builtin functions are disabled by default for
 	       this reason.
@@ -60,7 +60,7 @@ Calc command line
 		    It's nearly ten past six.
 
 	       This flag disables the reporting of missing calc
-	       startup scripts ($CALCRC).
+	       startup scripts.
 
 
 	  -D calc_debug[:resource_debug:[user_debug]]
@@ -68,7 +68,7 @@ Calc command line
 	       config("resource_debug") and config("user_debug").
 
 	       The : separated strings are interpreted as signed 32
-	       bit values.  After an optional leading sign a leading
+	       bit integers.  After an optional leading sign a leading
 	       zero indicates octal conversion, and a leading ``0x''
 	       or ``0X'' hexadecimal conversion.  Otherwise, decimal
 	       conversion is assumed.
@@ -91,11 +91,10 @@ Calc command line
 	       -m.
 
 
-	  -i   Become interactive if possible.	Be default, if
-	       calc_cmd args are given, calc will execute them and
-	       exit.  This flag args are given, calc will execute them
-	       and exit.  This flag will cause calc to drop into
-	       interactive mode after the commands are executed.
+	  -i   Become interactive if possible.	If calc_cmd args are given,
+   	       by default, calc will execute them and exit.  This flag causes
+	       calc to drop into interactive mode after the commands are
+	       executed.
 
 	       For example:
 
@@ -144,7 +143,7 @@ Calc command line
 	       if directed.
 
 	       If the mode disables opening of files for reading, then
-	       the startup resource files are disabled as of -q was
+	       the startup resource files are disabled as if -q was
 	       given.  The reading of key bindings is also disabled
 	       when the mode disables opening of files for reading.
 
@@ -163,7 +162,7 @@ Calc command line
 	       The -p flag overrides -i.
 
 
-	  -q   Disable the use of the $CALCRC startup scripts.
+	  -q   Disable the reading of the startup scripts.
 
 
 	  -s   By default, all calc_cmd args are evaluated and
@@ -178,39 +177,87 @@ Calc command line
 	  -v   Print the calc version number and exit.
 
 
-	  CALC COMMAND LINE
+	  CALC COMMAND ARGUMENTS
 
-	  Without calc_cmd, calc operates interactively.  If one or
-	  more calc_cmd are given on the command line and -s is NOT
-	  given, then calc will evaluate and execute them and then
-	  exit.
-
-	  If -i is given, calc will attempt to become interactive even
-	  of one or more calc_cmd are given on the command line.
+	  With no calc_cmd arguments, calc operates interactively.  If one
+	  or more arguments are given on the command line and -s is NOT
+	  given, then calc will read and execute them and either attempt
+	  to go interactive according as the -i flag was present or absent.
 
 	  If -s is given, calc will not evaluate any calc_cmd
 	  arguments but instead make them available as strings to the
 	  argv() builtin function.
 
-	  Normally on startup, calc attempts to execute a collection
-	  of resource files.  The environment variable $CALCRC (if
-	  non-existent then a compiled in value) contains a
-	  :  separated list of startup resource files.	No error
-	  conditions are produced if these startup resource file are
-	  not found.
+	  Sufficiently simple commands with no no characters like
+	  parentheses, brackets, semicolons, '*', which have special
+	  interpretations in UNIX commands may be entered, possibly with
+	  spaces, until the terminating newline.  For example:
 
-	  If the mode disables opening of files for reading, then the
-	  startup resource files are disabled as of -q was given and
-	  $CALCRC as well as the default compiled in value are
-	  ignored.
+			calc 23 + 47
 
-	  Filenames are subject to ``~'' expansion (see below).	 The
-	  environment variable $CALCPATH (if non-existent then a
-	  compiled in value) contains a : separated list of search
-	  directories.	If a file does not begin with /, ~ or ./, then
-	  it is searched for under each directory listed in the
-	  $CALCPATH.  It is an error if no such readable file is
-	  found.
+	  should respond with display of 70, but:
+
+			calc 23 * 47
+
+	  may fail.  Such cases can usually be made to work as expected by
+	  enclosing the command between single quotation marks as in:
+
+			calc '23 * 47'
+
+	  and
+
+			calc 'print sqrt(2), exp(1)'
+
+	  If '!' is to be used to indicate the factorial function, for
+	  shells like csh for which '!' followed by a non-space character
+	  is used for history substitution, it may be necessary to
+	  include a space or use a backslash to escape the special
+	  meaning of '!'.  For example, the command "print 27!^2" may have
+	  to be replaced by "print 27! ^2" or "print 27\!^2".
+
+
+	  CALC STARTUP FILES
+
+	  Normally on startup, if the environment variable $CALCRC is
+	  undefined and calc is invoked without the -q flag, or if
+	  $CALCRC is defined and calc is invoked with -e, calc looks
+	  for a file "startup" in the calc resource directory, .calcrc in
+	  the user's home directory, and .calcinit in the current directory.
+	  If one or more of these are found, they are read in succession
+	  as calc scripts and their commands executed.  When defined,
+	  $CALCRC is to contain a ':' separated list of names of files,
+	  and if calc is then invoked without either the -q or -e flags,
+	  these files are read in succession and their commands executed.
+	  No error condition is produced if a listed file is not found.
+
+	  If the mode specified by -m disables opening of files for
+	  reading, then the reading of startup files is also disabled
+	  as if -q was given.
+
+
+	  CALC FILE SEARCH PATH
+
+	  If the environment variable $CALCPATH is undefined, or if it
+	  is defined and calc is invoked with the -e flag, when a file
+	  name not beginning with /, ~ or ./, is specified as in:
+
+			calc read myfile
+
+	  calc searches in succession:
+
+			./myfile
+			./myfile.cal
+			${LIBDIR}/myfile
+			${LIBDIR}/myfile.cal
+			${CUSTOMLIBDIR}/myfile
+			${CUSTOMLIBDIR}/myfile.cal
+
+	  If the file is found, the search stops and the commands in
+	  the file are executed.  It is an error if no readable file
+	  with the specified name is found.  An alternative search
+	  path can be specified by defining $CALCPATH in the same way
+	  as PATH is defined, as a ':' separated list of directories,
+	  and then invoking calc without the -e flag.
 
 	  Calc treats all open files, other than stdin, stdout and
 	  stderr as files available for reading and writing.  One may
@@ -222,21 +269,24 @@ Calc command line
 
 	  SHELL SCRIPT MODE
 
-	  If an executable file begins with:
+	  If first line of an executable file begins #! followed by the
+	  absolute pathname of the calc program and the flag -S as in
 
-	       #!/usr/local/bin/calc -S [-other_flags ...]
+	       #!/usr/local/bin/calc -S [other_flags]
 
 	  the rest of the file will be processed in shell script mode.
-	  Note that -S (UPPER CASE -S) must be the first -flag on the
-	  ``#!'' line.	Any other optional ``-other_flags'' must come
-	  after the -S.
+	  Note that -S (UPPER CASE S) must be the first -flag on the
+	  ``#!'' line.	Any optional ``other_flags'' must come after
+	  the -S.
 
-	  In shell script mode the contents of the file are evaluated
-	  and executed as if they were processed by the read command.
-	  Any optional ``-other_flags'' will by parsed first followed
-	  by any arguments given shell script itself.
+	  In shell script mode the contents of the file are read and
+	  executed as if they were in a file being processed by a read
+	  command, except that a "command" beginning with '#' followed by
+	  whitespace and ending at the next newline is treated as a comment.
+	  Any optional ``other_flags'' will be parsed first followed by
+	  the later lines within the script itself.
 
-	  In shell script mode, -s (lower case -s) is always assumed.
+	  In shell script mode, -s (lower case s) is always assumed.
 	  In addition, -d and -p are automatically set if -i is not
 	  given.
 
@@ -303,8 +353,8 @@ For more information use the following calc commands:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: usage,v 29.1 1999/12/14 09:16:10 chongo Exp $
+## @(#) $Revision: 29.2 $
+## @(#) $Id: usage,v 29.2 1999/12/17 10:05:20 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/usage,v $
 ##
 ## Under source code control:	1991/07/21 04:37:25

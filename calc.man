@@ -15,8 +15,8 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 .\"
-.\" @(#) $Revision: 29.1 $
-.\" @(#) $Id: calc.man,v 29.1 1999/12/14 09:15:35 chongo Exp $
+.\" @(#) $Revision: 29.4 $
+.\" @(#) $Id: calc.man,v 29.4 1999/12/17 10:06:31 chongo Exp $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -36,7 +36,7 @@ calc \- arbitrary precision calculator
 .RB [ \-c ]
 .RB [ \-C ]
 .RB [ \-d ]
-.RB [ -D\ \&calc_debug[:resource_debug:[user_debug]] ]
+.RB [ -D\ \&calc_debug[:resource_debug[:user_debug]] ]
 .br
 .in +5n
 .RB [ \-e ]
@@ -53,7 +53,7 @@ calc \- arbitrary precision calculator
 .RB [ calc_cmd\ \&.\|.\|. ]
 .in -5n
 .sp
-\fI#!${BINDIR}/calc\fP\ \fB\-S\fP\ [\-other_flags\ \&...]
+\fI#!${BINDIR}/calc\fP\ \fB\-S\fP\ [other_flags\ \&...]
 .SH DESCRIPTION
 \&
 .br
@@ -89,7 +89,7 @@ cause
 to try to process each line being read
 despite the errors that it encounters.
 .sp 1
-By default, calc startup resource files ($CALCRC) are silently
+By default, calc startup resource files are silently
 ignored if not found.
 This flag will report missing
 startup resource files unless
@@ -103,10 +103,10 @@ Without
 this flag, calling the custom() builtin function will
 simply generate an error.
 .sp 1
-Use if this flag may cause
+Use of this flag may cause
 .B calc
-to execute functions that
-are non-standard and that are not portable.  Custom builtin
+to execute functions
+that are non-standard and that are not portable.  Custom builtin
 functions are disabled by default for this reason.
 
 .TP
@@ -147,14 +147,14 @@ It's nearly ten past six.
 .in -5n
 .sp 1
 This flag disables the reporting of missing calc
-startup resource files ($CALCRC).
+startup resource files.
 
 .TP
-.BR -D " calc_debug[:resource_debug:[user_debug]]"
+.BR -D " calc_debug[:resource_debug[:user_debug]]"
 Force the initial value of config("calc_debug"),
 config("resource_debug") and config("user_debug").
 .sp 1
-The : separated strings are interpreted as signed 32 bit values.
+The : separated strings are interpreted as signed 32 bit integers.
 After an optional leading sign a leading zero indicates octal
 conversion, and a leading ``0x'' or ``0X'' hexadecimal
 conversion.  Otherwise, decimal conversion is assumed.
@@ -197,14 +197,14 @@ See
 .TP
 .B \-i
 Become interactive if possible.
-Be default, if
+If
 .I calc_cmd
 args are given,
 .B calc
-will execute them and exit.
-This flag args are given,
+by default, calc will execute them and exit.
+This flag causes
 .B calc
-will execute them and exit.
+to drop into interactive mode after the commands are executed.
 This flag will cause
 .B calc
 to drop into interactive mode after the
@@ -294,7 +294,7 @@ unknown mode.
 will attempt to read or write them if directed.
 .sp 1
 If the mode disables opening of files for reading, then
-the startup resource files are disabled as of
+the startup resource files are disabled as if
 .B \-q
 was given.
 The reading of key bindings is also disabled
@@ -330,7 +330,7 @@ flag overrides
 
 .TP
 .B \-q
-Disable the use of the $CALCRC startup resource files.
+Disable the reading of the startup scripts.
 
 .TP
 .B \-s
@@ -355,26 +355,20 @@ version number and exit.
 .br
 CALC COMMAND LINE
 .PP
-Without
-.IR calc_cmd ,
+With no
+.I calc_cmd
+arguments,
 .B calc
 operates interactively.
 If one or more
-.I calc_cmd
-are given on the command line and
+arguments are given on the command line and
 .B \-s
 is NOT given, then
 .B calc
-will evaluate and execute them and then exit.
-.sp
-If
+will read and execute them and either attempt
+to go interactive according as the
 .B \-i
-is given,
-.B calc
-will attempt to become interactive
-even of one or more
-.I calc_cmd
-are given on the command line.
+flag was present or absent.
 .sp
 If
 .B \-s
@@ -384,32 +378,157 @@ will not evaluate any
 .I calc_cmd
 arguments but instead make them available
 as strings to the argv() builtin function.
+
+Sufficiently simple commands with no no characters like
+parentheses, brackets, semicolons, '*', which have special
+interpretations in UNIX shells may be entered, possibly with
+spaces, until the terminating newline.
+For example:
+.sp 1
+.in +5n
+.nf
+calc 23 + 47
+.fi
+.in -5n
+.sp 1
+should respond with display of 70, but
+.sp 1
+.in +5n
+.nf
+calc 23 * 47
+.fi
+.in -5n
+.sp 1
+may fail.
+Such cases can usually be made to work as expected by
+enclosing the command between single marks as in:
+.sp 1
+.in +5n
+.nf
+calc '23 * 47'
+.fi
+.in -5n
+.sp 1
+and
+.sp 1
+.in +5n
+.nf
+calc 'print sqrt(2), exp(1)'
+.fi
+.in -5n
+.sp
+If '!' is to be used to indicate the factorial function, for
+shells like
+.BI csh (1)
+for which '!' followed by a non-space character
+is used for history substitution, it may be necessary to
+include a space or use a backslash to escape the special
+meaning of '!'.
+For example, the command:
+.sp 1
+.in +5n
+.nf
+print 27!^2
+.fi
+.in -5n
+.sp 1
+may have to be replaced by:
+.sp 1
+.in +5n
+.nf
+print 27! ^2	or	print 27\!^2
+.fi
+.in -5n
+
+\&
+.br
+CALC STARTUP FILES
 .PP
 Normally on startup,
+if the environment variable
+.B $CALCRC
+is undefined and
 .B calc
-attempts to execute a collection of
-startup resource files.
-The environment variable $CALCRC (if non-existent
-then a compiled in value) contains a :	separated list of startup
-resource files.
-No error conditions are produced if these startup
-resource files are not found.
-.PP
-If the mode disables opening of files for reading, then the startup
-resource files are disabled as of
+is invoked without the
 .B \-q
-was given and $CALCRC as well
-as the default compiled in value are ignored.
+flag, or if
+.B $CALCRC
+is defined and calc is invoked with
+.BR \-e ,
+.B calc
+looks for a file "startup" in the calc resource directory
+.B .calcrc
+in the user's home directory, and
+.B .calcinit in the current directory.
+If one or more of these are found, they are read in succession as
+.B calc
+scripts and their commands executed.
+When defined,
+.B $CALCRC
+is to contain a ':' separated list of names of files,
+and if calc is then invoked without either the
+.B \-q
+or
+.B \-e
+flags, these files are read in succession and their commands executed.
+No error condition is produced if a listed file is not found.
+.sp
+If the mode specified by
+.B \-m
+disables opening of files for reading, then the reading of startup
+files is also disabled as if
+.B \-q
+was given.
+
+\&
+.br
+CALC FILE SEARCH PATH
 .PP
-Filenames are subject to ``~'' expansion (see below).
-The
-environment variable $CALCPATH (if non-existent then a compiled in
-value) contains a : separated list of search directories.
-If a
-file does not begin with /, ~ or ./, then it is searched for under
-each directory listed in the $CALCPATH.
-It is an error if no such
-readable file is found.
+If the environment variable
+.B $CALCPATH
+is undefined, or if it
+is defined and
+.B calc
+is invoked with the
+.B \-e
+flag, when a file name not beginning with
+.BR / ,
+.B ~
+or
+.BR ./ ,
+is specified as in:
+.sp 1
+.in +5n
+.nf
+calc read myfile
+.fi
+.in -5n
+.sp 1
+.B calc
+searches in succession:
+.sp 1
+.in +5n
+.nf
+./myfile
+./myfile.cal
+${LIBDIR}/myfile
+${LIBDIR}/myfile.cal
+${CUSTOMLIBDIR}/myfile
+${CUSTOMLIBDIR}/myfile.cal
+.fi
+.in -5n
+.sp 1
+If the file is found, the
+search stops and the commands in the file are executed.
+It is an error if no readable file with the specified name is found.
+An alternative search path can be specified by defining
+.B $CALCPATH
+in the same way as PATH is defined, as a ':' separated
+list of directories, and then invoking
+.B calc
+without the
+.B \-e
+flag.
 .PP
 .B Calc
 treats all open files, other than stdin, stdout and
@@ -447,11 +566,17 @@ help config
 .br
 SHELL SCRIPT MODE
 .PP
-If an executable file begins with:
+If first line of an executable file begins
+.B #!
+followed by the absolute pathname of the
+.B calc
+program and the flag
+.B \-S
+as in:
 .sp 1
 .in +5n
 .nf
-\fI#!${BINDIR}/calc\fP\ \fB\-S\fP\ [\-other_flags\ \&...]
+\fI#!${BINDIR}/calc\fP\ \fB\-S\fP\ [other_flags\ \&...]
 .fi
 .in -5n
 .sp 1
@@ -462,19 +587,22 @@ Note that
 (UPPER CASE
 .BR \-S )
 must be the first \-flag on the ``#!'' line.
-Any other optional ``\-other_flags'' must come after
+Any other optional
+.B "other_flags"
+must come after
 the
 .BR \-S .
 .sp 1
 In
 .B "shell script mode"
-the contents of the file
-are evaluated and executed as if they were processed
-by the
-.B read
-command.
-Any optional ``\-other_flags'' will by parsed first
-followed by any arguments given shell script itself.
+the contents of the file are read and
+executed as if they were in a file being processed by a read
+command, except that a "command" beginning with '#' followed by
+whitespace and ending at the next newline is treated as a comment.
+Any optional
+.B "other_flags"
+will be parsed first followed by
+the later lines within the script itself.
 .sp 1
 In
 .BR "shell script mode" ,
