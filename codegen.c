@@ -31,7 +31,7 @@ static void getshowstatement(void);
 static void getfunction(void);
 static void ungetfunction(void);
 static void getbody(LABEL *contlabel, LABEL *breaklabel,
-		    LABEL *nextcaselabel, LABEL *defaultlabel, BOOL toplevel);
+		    LABEL *nextcaselabel, LABEL *defaultlabel);
 static void getdeclarations(int symtype);
 static void getsimpledeclaration (int symtype);
 static int getonevariable (int symtype);
@@ -190,22 +190,26 @@ evaluate(BOOL nestflag)
 
 	funcname = (nestflag ? "**" : "*");
 	beginfunc(funcname, nestflag);
-	if (nestflag)
-		(void) tokenmode(TM_DEFAULT);
-	while (loop) {
-		switch (gettoken()) {
-			case T_SEMICOLON:
-				break;
+	if (gettoken() == T_LEFTBRACE) {
+		getbody(NULL_LABEL, NULL_LABEL, NULL_LABEL, NULL_LABEL);
+	} else {
+		if (nestflag)
+			(void) tokenmode(TM_DEFAULT);
+		rescantoken();
+		while (loop) {
+			switch (gettoken()) {
+				case T_SEMICOLON:
+					break;
+				case T_NEWLINE:
+				case T_EOF:
+					loop = 0;
+					break;
 
-			case T_NEWLINE:
-			case T_EOF:
-				loop = 0;
-				break;
-
-			default:
-				rescantoken();
-				getstatement(NULL_LABEL, NULL_LABEL,
-					NULL_LABEL, NULL_LABEL);
+				default:
+					rescantoken();
+					getstatement(NULL_LABEL, NULL_LABEL,
+						NULL_LABEL, NULL_LABEL);
+			}
 		}
 	}
 	addop(OP_UNDEF);
@@ -322,13 +326,11 @@ getfunction(void)
 	}
 	switch (gettoken()) {
 		case T_ASSIGN:
-			rescantoken();
 			getsimplebody();
 			break;
 		case T_LEFTBRACE:
-			rescantoken();
 			getbody(NULL_LABEL, NULL_LABEL, NULL_LABEL,
-				NULL_LABEL, TRUE);
+				NULL_LABEL);
 			break;
 		default:
 			scanerror(T_NULL,
@@ -347,11 +349,6 @@ getfunction(void)
 static void
 getsimplebody(void)
 {
-	if (gettoken() != T_ASSIGN) {
-		scanerror(T_SEMICOLON,
-		    "Missing equals for simple function body");
-		return;
-	}
 	(void) tokenmode(TM_NEWLINES);
 	(void) getexprlist();
 	addop(OP_RETURN);
@@ -365,19 +362,19 @@ getsimplebody(void)
  */
 /*ARGSUSED*/
 static void
-getbody(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *defaultlabel, BOOL toplevel)
+getbody(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *defaultlabel)
 {
 	int oldmode;
 
-	if (gettoken() != T_LEFTBRACE) {
-		scanerror(T_SEMICOLON, "Missing left brace for function body");
-		return;
-	}
 	oldmode = tokenmode(TM_DEFAULT);
 	while (TRUE) {
 		switch (gettoken()) {
 		case T_RIGHTBRACE:
 			(void) tokenmode(oldmode);
+			return;
+
+		case T_EOF:
+			scanerror(T_SEMICOLON, "End-of-file in function body");
 			return;
 
 		default:
@@ -595,8 +592,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		break;
 
 	case T_LEFTBRACE:
-		rescantoken();
-		getbody(contlabel, breaklabel, nextcaselabel, defaultlabel, FALSE);
+		getbody(contlabel, breaklabel, nextcaselabel, defaultlabel);
 		return;
 
 	case T_IF:

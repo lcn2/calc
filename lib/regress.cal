@@ -6861,7 +6861,7 @@ print '181: parsed test_ptr()';
  */
 define test_newstring()
 {
-	local A, B, C, D, S, p;
+	local A, B, C, D, S, p, q;
 
 	print '7700: Beginning test_newstring';
 
@@ -6953,7 +6953,14 @@ define test_newstring()
 	print				'7762: setbit(A, 16, 0);';
 	vrfy(A == "A\255fdef",		'7763: A == "A\255fdef"');
 
-	print '7764: Ending test_newstring';
+	q = "curds" " and " "whey";
+	print				'7764: q = "curds" " and " "whey"';
+	vrfy(q == "curds and whey",	'7765: q == "curds and whey"');
+	q = "chongo" ' was ' "here";
+	print				'7766: q = "chongo" \' was \' "here"';
+	vrfy(q == "chongo was here",	'7767: q == "chongo was here"');
+
+	print '7768: Ending test_newstring';
 }
 print '182: parsed test_newstring()';
 
@@ -7201,16 +7208,27 @@ print '1700: Beginning read test';
 value = 0;
 vrfy(value == 0,		  '1701: value == 0');
 read "test1700";
-vrfy(value == 1,		  '1702: value == 1');
-read -once "test1700";
+print				  '1702: read "test1700";';
 vrfy(value == 1,		  '1703: value == 1');
+read -once "test1700";
+print				  '1704: read -once "test1700";';
+vrfy(value == 1,		  '1705: value == 1');
 read "test1700.cal";
-vrfy(value == 2,		  '1704: value == 2');
+print				  '1706: read "test1700.cal";';
+vrfy(value == 2,		  '1707: value == 2');
 read -once "test1700.cal";
-vrfy(value == 2,		  '1705: value == 2');
+print				  '1708: read -once "test1700.cal";';
+vrfy(value == 2,		  '1709: value == 2');
 read "test1700.cal";
-vrfy(value == 3,		  '1706: value == 3');
-print '1707: Ending read test';
+print				  '1710: read "test1700.cal";';
+vrfy(value == 3,		  '1711: value == 3');
+{++value;} read "test1700.cal";
+print				  '1712: {++value;} read "test1700.cal";';
+vrfy(value == 5,		  '1713: value == 5');
+{++value;} read -once "test1700.cal";
+print				  '1714: {++value;} read -once "test1700.cal";';
+vrfy(value == 6,		  '1715: value == 6');
+print '1716: Ending read test';
 
 print;
 return test_obj();
@@ -7285,6 +7303,9 @@ print;
 return test_size();
 print;
 
+/*
+ * 5800 assignment tests
+ */
 return test_assign(5800, 1);
 define xy5800_assign(a,b) { };
 print '5812: define xy5800_assign(a,b) { }';
@@ -7329,7 +7350,7 @@ X5800 = obj xy5800 = {1,2};
 print				  '5864: X5800 = obj xy5800 = {1,2}';
 vrfy(X5800 == (obj xy5800 = {1,2}),
 				  '5865: X5800 == (obj xy5800 = {1,2})');
-print '5899: End of 5800 sequence';
+print '5866: End of 5800 sequence';
 
 print;
 return test_is();
@@ -7413,7 +7434,10 @@ print	'8304: define h8300(x)=x^3;define i8300(x)=x-1;define j8300(x)=x+1;';
 vrfy(h8300(10) == 1000,		'8305: h8300(10) == 1000');
 vrfy(i8300(10) == 9,		'8306: i8300(10) == 9');
 vrfy(j8300(10) == 11,		'8307: j8300(10) == 11');
-print	'8308: Ending define tests';
+{static k8300 = 5} define l8300(x) = k8300 + x;
+print	'8308: {static k8300 = 5} define l8300(x) = k8300 + x;';
+vrfy(l8300(10) == 15,		'8309: l8300(10) == 15');
+print	'8310: Ending define tests';
 
 
 /*

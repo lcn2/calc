@@ -438,6 +438,18 @@ eatstring(int quotechar)
 			case '"':
 			case '\'':
 				if (ch == quotechar) {
+					for (;;) {
+						ch = nextchar();
+						if (ch != ' ' && ch != '\t' &&
+							(ch != '\n' ||
+								newlines))
+							break;
+					}
+					if (ch == '"' || ch == '\'') {
+						quotechar = ch;
+						continue;
+					}
+					reread();
 					done = TRUE;
 					ch = '\0';
 				}

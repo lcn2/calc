@@ -50,6 +50,27 @@ Following is the change from calc version 2.11.0t8 to date:
 
 	http://reality.sgi.com/chongo/tech/comp/fnv/index.html
 
+    Removed an unused argument in the function getbody() in codegen.c.
+
+    Encountering of EOF in getbody() will cause a scanerror rather then
+    stop activity.  This will now result in a scanerror:
+
+	echo 'define f(x) { ' > myfile
+	calc -i read myfile
+
+    A '{' at the start of a command and a later matching '}' surrounding zero
+    or more statements (and possibly newlines) results in a function body to
+    be "evaluated".   This permits another command to follow on the same
+    line as the '}' as in:
+
+		{display(5)} read something;
+	and:
+		{static a = 5} define f(x) = a + x;
+
+    String constants can now be concatenated.  For exmaple:
+
+	s = "curds" ' and ' "whey";
+
 
 Following is the change from calc version 2.11.0t7 to 2.11.0t7.5:
 
