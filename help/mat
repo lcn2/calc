@@ -1,185 +1,200 @@
 NAME
-   mat - keyword to create a matrix value
+    mat - keyword to create a matrix value
 
 SYNOPSIS
-   mat [index-range-list] [ = {value_0. ...} ]
-   mat [] [= {value_0, ...}]
-   mat variable_1 ... [index-range-list] [ = {value_0, ...} ]
-   mat variable_1 ... [] [ = {value_0, ...} ]
+    mat [index-range-list] [ = {value_0. ...} ]
+    mat [] [= {value_0, ...}]
+    mat variable_1 ... [index-range-list] [ = {value_0, ...} ]
+    mat variable_1 ... [] [ = {value_0, ...} ]
 
-   mat [index-range-list_1[index-ranges-list_2] ... [ = { { ...} ...}  ]
+    mat [index-range-list_1[index-ranges-list_2] ... [ = { { ...} ...}  ]
 
-   decl id_1 id_2 ... [index-range-list] ...
+    decl id_1 id_2 ... [index-range-list] ...
 
 TYPES
-   index-range-list	range_1 [, range_2, ...]  up to 4 ranges
-   range_1, ...		integer, or integer_1 : integer_2
-   value, value_1, ...	any
-   variable_1 ...	lvalue
-   decl			declarator = global, static or local
-   id_1, ...		identifier
+    index-range-list	range_1 [, range_2, ...]  up to 4 ranges
+    range_1, ...		integer, or integer_1 : integer_2
+    value, value_1, ...	any
+    variable_1 ...	lvalue
+    decl			declarator = global, static or local
+    id_1, ...		identifier
 
 DESCRIPTION
-   The expression  mat [index-range-list]  returns a matrix value.
-   This may be assigned to one or more lvalues A, B, ... by either
+    The expression  mat [index-range-list]  returns a matrix value.
+    This may be assigned to one or more lvalues A, B, ... by either
 
 	mat A B ... [index-range-list]
 
-   or
+    or
 
 	A = B = ... = mat[index-range-list]
 
-   If a variable is specified by an expression that is not a symbol with
-   possibly object element specifiers, the expression should be enclosed
-   in parentheses.  For example, parentheses are required in
-   mat (A[2]) [3]  and	mat (*p) [3]  but  mat P.x [3] is acceptable.
+    If a variable is specified by an expression that is not a symbol with
+    possibly object element specifiers, the expression should be enclosed
+    in parentheses.  For example, parentheses are required in
+    mat (A[2]) [3]  and	mat (*p) [3]  but  mat P.x [3] is acceptable.
 
-   When an index-range is specified as integer_1 : integer_2, where
-   integer_1 and integer_2 are expressions which evaluate to integers,
-   the index-range consists of all integers from the minimum of the
-   two integers to the maximum of the two integers.  For example,
-   mat[2:5, 0:4] and mat[5:2, 4:0] return the same matrix value.
+    When an index-range is specified as integer_1 : integer_2, where
+    integer_1 and integer_2 are expressions which evaluate to integers,
+    the index-range consists of all integers from the minimum of the
+    two integers to the maximum of the two integers.  For example,
+    mat[2:5, 0:4] and mat[5:2, 4:0] return the same matrix value.
 
-   If an index-range is an expression which evaluates to an integer,
-   the range is as if specified by 0 : integer - 1.  For example,
-   mat[4] and mat[0:3] return the same 4-element matrix; mat[-2] and
-   mat[-3:0] return the same 4-element matrix.
+    If an index-range is an expression which evaluates to an integer,
+    the range is as if specified by 0 : integer - 1.  For example,
+    mat[4] and mat[0:3] return the same 4-element matrix; mat[-2] and
+    mat[-3:0] return the same 4-element matrix.
 
-   If the variable A has a matrix value, then for integer indices
-   i_1, i_2, ..., equal in number to the number of ranges specified at
-   its creation, and such that each index is in the corresponding range,
-   the matrix element associated with those index list is given as an
-   lvalue by the expressions A[i_1, i_2, ...].
+    If the variable A has a matrix value, then for integer indices
+    i_1, i_2, ..., equal in number to the number of ranges specified at
+    its creation, and such that each index is in the corresponding range,
+    the matrix element associated with those index list is given as an
+    lvalue by the expressions A[i_1, i_2, ...].
 
-   The elements of the matrix are stored internally as a linear array
-   in which locations are arranged in order of increasing indices.
-   For example, in order of location, the six element of A = mat [2,3]
-   are
+    The elements of the matrix are stored internally as a linear array
+    in which locations are arranged in order of increasing indices.
+    For example, in order of location, the six element of A = mat [2,3]
+    are
 
 	A[0,0], A[0,1], A[0,2], A[1,0], A[1,,1], A[1,2].
 
-   These elements may also be specified using the double-bracket operator
-   with a single integer index as in A[[0]], A[[1]], ..., A[[5]].
-   If p is assigned the value &A[0.0], the address of A[[i]] for 0 <= i < 6
-   is p + i as long as A exists and a new value is not assigned to A.
+    These elements may also be specified using the double-bracket operator
+    with a single integer index as in A[[0]], A[[1]], ..., A[[5]].
+    If p is assigned the value &A[0.0], the address of A[[i]] for 0 <= i < 6
+    is p + i as long as A exists and a new value is not assigned to A.
 
-   When a matrix is created, each element is initially assigned the
-   value zero.	Other values may be assigned then or later using the
-   "= {...}" assignment operation.  Thus
+    When a matrix is created, each element is initially assigned the
+    value zero.	Other values may be assigned then or later using the
+    "= {...}" assignment operation.  Thus
 
 	A = {value_0, value_1, ...}
 
-   assigns the values value_0, value_1, ... to the elements A[[0]],
-   A[[1]], ...	Any blank "value" is passed over.  For example,
+    assigns the values value_0, value_1, ... to the elements A[[0]],
+    A[[1]], ...	Any blank "value" is passed over.  For example,
 
 	A = {1, , 2}
 
-   will assign the value 1 to A[[0]], 2 to A[[2]] and leave all other
-   elements unchanged.	Values may also be assigned to elements by
-   simple assignments, as in A[0,0] = 1, A[0,2] = 2;
+    will assign the value 1 to A[[0]], 2 to A[[2]] and leave all other
+    elements unchanged.	Values may also be assigned to elements by
+    simple assignments, as in A[0,0] = 1, A[0,2] = 2;
 
-   If the index-range is left blank but an initializer list is specified
-   as in
+    If the index-range is left blank but an initializer list is specified
+    as in
 
 	mat A[] = {1, 2 }
 	B = mat[] = {1, , 3, }
 
-   the matrix created is one-dimensional.  If the list contains a
-   positive number n of values or blanks, the result is as if the
-   range were specified by [n], i.e. the range of indices is from
-   0 to n - 1.	In the above examples, A is of size 2 with A[0] = 1
-   and A[1] = 2;  B is of size 4 with B[0] = 1, B[1] = B[3] = 0,
-   B[2] = 3.  The specification mat[] = { } creates the same as mat[1].
+    the matrix created is one-dimensional.  If the list contains a
+    positive number n of values or blanks, the result is as if the
+    range were specified by [n], i.e. the range of indices is from
+    0 to n - 1.	In the above examples, A is of size 2 with A[0] = 1
+    and A[1] = 2;  B is of size 4 with B[0] = 1, B[1] = B[3] = 0,
+    B[2] = 3.  The specification mat[] = { } creates the same as mat[1].
 
-   If the index-range is left blank and no initializer list is specified,
-   as in  mat C[]  or  C = mat[], the matrix assigned to C has zero
-   dimension; this has one element C[].	 To assign a value using "= { ...}"
-   at the same time as creating C, parentheses are required as in
-   (mat[]) = {value}  or  (mat C[]) = {value}.	Later a value may be
-   assigned to C[] by  C[] = value  or	C = {value}.
+    If the index-range is left blank and no initializer list is specified,
+    as in  mat C[]  or  C = mat[], the matrix assigned to C has zero
+    dimension; this has one element C[].	 To assign a value using "= { ...}"
+    at the same time as creating C, parentheses are required as in
+    (mat[]) = {value}  or  (mat C[]) = {value}.	Later a value may be
+    assigned to C[] by  C[] = value  or	C = {value}.
 
-   The value assigned at any time to any element of a matrix can be of
-   any type - number, string, list, matrix, object of previously specified
-   type, etc.  For some matrix operations there are of course conditions
-   that elements may have to satisfy: for example, addition of matrices
-   requires that addition of corresponding elements be possible.
-   If an element of a matrix is a structure for which indices or an
-   object element specifier is required, an element of that structure is
-   referred to by appropriate uses of [ ] or ., and so on if an element
-   of that element is required.	 For example, one may have an expressions
-   like
+    The value assigned at any time to any element of a matrix can be of
+    any type - number, string, list, matrix, object of previously specified
+    type, etc.  For some matrix operations there are of course conditions
+    that elements may have to satisfy: for example, addition of matrices
+    requires that addition of corresponding elements be possible.
+    If an element of a matrix is a structure for which indices or an
+    object element specifier is required, an element of that structure is
+    referred to by appropriate uses of [ ] or ., and so on if an element
+    of that element is required.	 For example, one may have an expressions
+    like
 
 		A[1,2][3].alpha[2];
 
-   if A[1,2][3].alpha is a list with at least three elements, A[1,2][3] is
-   an object of a type like  obj {alpha, beta}, A[1,2] is a matrix of
-   type mat[4] and A is a mat[2,3] matrix.  When an element of a matrix
-   is a matrix and the total number of indices does not exceed 4, the
-   indices can be combined into one list, e.g. the A[1,2][3] in the
-   above example can be shortened to A[1,2,3].	(Unlike C, A[1,2] cannot
-   be expressed as A[1][2].)
+    if A[1,2][3].alpha is a list with at least three elements, A[1,2][3] is
+    an object of a type like  obj {alpha, beta}, A[1,2] is a matrix of
+    type mat[4] and A is a mat[2,3] matrix.  When an element of a matrix
+    is a matrix and the total number of indices does not exceed 4, the
+    indices can be combined into one list, e.g. the A[1,2][3] in the
+    above example can be shortened to A[1,2,3].	(Unlike C, A[1,2] cannot
+    be expressed as A[1][2].)
 
-   The function ismat(V) returns 1 if V is a matrix, 0 otherwise.
+    The function ismat(V) returns 1 if V is a matrix, 0 otherwise.
 
-   isident(V) returns 1 if V is a square matrix with diagonal elements 1,
-   off-diagonal elements zero, or a zero- or one-dimensional matrix with
-   every element 1; otherwise zero is returned.	 Thus  isident(V) = 1
-   indicates that for  V * A  and  A * V  where A is any matrix of
-   for which either product is defined and the elements of A are real
-   or complex numbers, that product will equal A.
+    isident(V) returns 1 if V is a square matrix with diagonal elements 1,
+    off-diagonal elements zero, or a zero- or one-dimensional matrix with
+    every element 1; otherwise zero is returned.	 Thus  isident(V) = 1
+    indicates that for  V * A  and  A * V  where A is any matrix of
+    for which either product is defined and the elements of A are real
+    or complex numbers, that product will equal A.
 
-   If V is matrix-valued, test(V) returns 0 if every element of V tests
-   as zero; otherwise 1 is returned.
+    If V is matrix-valued, test(V) returns 0 if every element of V tests
+    as zero; otherwise 1 is returned.
 
-   The dimension of a matrix A, i.e. the number of index-ranges in the
-   initial creation of the matrix, is returned by the function matdim(A).
-   For 1 <= i <= matdim(A), the minimum and maximum values for the i-th
-   index range are returned by matmin(A, i) and matmax(A,i), respectively.
-   The total number of elements in the matrix is returned by size(A).
-   The sum of the elements in the matrix is returned by matsum(A).
+    The dimension of a matrix A, i.e. the number of index-ranges in the
+    initial creation of the matrix, is returned by the function matdim(A).
+    For 1 <= i <= matdim(A), the minimum and maximum values for the i-th
+    index range are returned by matmin(A, i) and matmax(A,i), respectively.
+    The total number of elements in the matrix is returned by size(A).
+    The sum of the elements in the matrix is returned by matsum(A).
 
-   The default method of printing matrices is to give a line of information
-   about the matrix, and to list on separate lines up to 15 elements,
-   the indices and either the value (for numbers, strings, objects) or
-   some descriptive information for lists or matrices, etc.
-   Numbers are displayed in the current number-printing mode.
-   The maximum number of elements to be printed can be assigned
-   any nonnegative integer value m by config("maxprint", m).
+    The default method of printing matrices is to give a line of information
+    about the matrix, and to list on separate lines up to 15 elements,
+    the indices and either the value (for numbers, strings, objects) or
+    some descriptive information for lists or matrices, etc.
+    Numbers are displayed in the current number-printing mode.
+    The maximum number of elements to be printed can be assigned
+    any nonnegative integer value m by config("maxprint", m).
 
-   Users may define another method of printing matrices by defining a
-   function mat_print(M); for example, for a not too big 2-dimensional
-   matrix A it is a common practice to use a loop like:
+    Users may define another method of printing matrices by defining a
+    function mat_print(M); for example, for a not too big 2-dimensional
+    matrix A it is a common practice to use a loop like:
+
+	define mat_print(A) {
+		local i,j;
 
 		for (i = matmin(A,1); i <= matmax(A,1); i++) {
+			if (i != matmin(A,1))
+				printf("\t");
 			for (j = matmin(A,2); j <= matmax(A,2); j++)
-				printf("%8d", A[i,j];
-			print;
-		}
+				printf(" [%d,%d]: %e", i, j, A[i,j]);
+			if (i != matmax(A,1))
+				printf("\n");
+	 	}
+	}
 
-   The default printing may be restored by
+    So that when one defines a 2D matrix such as:
+
+	mat X[2,3] = {1,2,3,4,5,6}
+
+    then printing X results in:
+
+	[0,0]: 1 [0,1]: 2 [0,2]: 3
+	[1,0]: 4 [1,1]: 5 [1,2]: 6
+
+    The default printing may be restored by
 
 		undefine mat_print;
 
-
-   The keyword "mat" followed by two or more index-range-lists returns a
-   matrix with indices specified by the first list, whose elements are
-   matrices as determined by the later index-range-lists.  For
-   example  mat[2][3]  is a 2-element matrix, each of whose elements has
-   as its value a 3-element matrix.  Values may be assigned to the
-   elements of the innermost matrices by nested	 = {...} operations as in
+    The keyword "mat" followed by two or more index-range-lists returns a
+    matrix with indices specified by the first list, whose elements are
+    matrices as determined by the later index-range-lists.  For
+    example  mat[2][3]  is a 2-element matrix, each of whose elements has
+    as its value a 3-element matrix.  Values may be assigned to the
+    elements of the innermost matrices by nested	 = {...} operations as in
 
 		mat [2][3] = {{1,2,3},{4,5,6}}
 
-   An example of the use of mat with a declarator is
+    An example of the use of mat with a declarator is
 
 		global mat A B [2,3], C [4]
 
-   This creates, if they do not already exist, three global variables with
-   names A, B, C, and assigns to A and B the value mat[2,3] and to C mat[4].
+    This creates, if they do not already exist, three global variables with
+    names A, B, C, and assigns to A and B the value mat[2,3] and to C mat[4].
 
-   Some operations are defined for matrices.
+    Some operations are defined for matrices.
 
-   A == B
+    A == B
 	Returns 1 if A and B are of the same "shape" and "corresponding"
 	elements are equal; otherwise 0 is returned.  Being of the same
 	shape means they have the same dimension d, and for each i <= d,
@@ -191,14 +206,14 @@ DESCRIPTION
 	double-bracket indices; thus A == B implies that A[[i]] == B[[i]]
 	for 0 <= i < size(A) == size(B).
 
-   A + B
-   A - B
+    A + B
+    A - B
 	These are defined A and B have the same shape, the element
 	with double-bracket index j being evaluated by A[[j]] + B[[j]] and
 	A[[j]] - B[[j]], respectively.	The index-ranges for the results
 	are those for the matrix A.
 
-   A[i,j]
+    A[i,j]
 	If A is two-dimensional, it is customary to speak of the indices
 	i, j in A[i,j] as referring to rows and columns;  the number of
 	rows is matmax(A,1) - matmin(A,1) + 1; the number of columns if
@@ -206,7 +221,7 @@ DESCRIPTION
 	if it is two-dimensional and the number of rows is equal to the
 	number of columns.
 
-   A * B
+    A * B
 	Multiplication is defined provided certain conditions by the
 	dimensions and shapes of A and B are satisfied.	 If both have
 	dimension 2 and the column-index-list for A is the same as
@@ -263,7 +278,7 @@ DESCRIPTION
 	a matrix indexed in the same way as A with each element inverted.
 
 
-   The following functions are defined to return matrices with the same
+    The following functions are defined to return matrices with the same
 	index-ranges as A and the specified operations performed on all
 	elements of A.	Here num is an arbitrary complex number (nonzero
 	when it is a divisor), int an integer, rnd a rounding-type
@@ -285,52 +300,52 @@ DESCRIPTION
 		A % real
 		A ^ int
 
-   If A and B are one-dimensional of the same size dp(A, B) returns
+    If A and B are one-dimensional of the same size dp(A, B) returns
 	their dot-product, i.e. the sum of the products of corresponding
 	elements.
 
-   If A and B are one-dimension and of size 3, cp(A, B) returns their
+    If A and B are one-dimension and of size 3, cp(A, B) returns their
 	cross-product.
 
-   randperm(A) returns a matrix indexed the same as A in which the elements
+    randperm(A) returns a matrix indexed the same as A in which the elements
 	of A have been randomly permuted.
 
-   sort(A) returns a matrix indexed the same as A in which the elements
+    sort(A) returns a matrix indexed the same as A in which the elements
 	of A have been sorted.
 
-   If A is an lvalue whose current value is a matrix, matfill(A, v)
+    If A is an lvalue whose current value is a matrix, matfill(A, v)
 	assigns the value v to every element of A, and if also, A is
 	square, matfill(A, v1, v2) assigns v1 to the off-diagonal elements,
 	v2 to the diagonal elements.  To create and assign to A the unit
 	n * n matrix, one may use matfill(mat A[n,n], 0, 1).
 
-   For a square matrix A, mattrace(A) returns the trace of A, i.e. the
+    For a square matrix A, mattrace(A) returns the trace of A, i.e. the
 	sum of the diagonal elements.  For zero- or one-dimensional A,
 	mattrace(A) returns the sum of the elements of A.
 
-   For a two-dimensional matrix A, mattrans(A) returns the transpose
+    For a two-dimensional matrix A, mattrans(A) returns the transpose
 	of A, i.e. if A is mat[m,n], it returns a mat[n,m] matrix with
 	[i,j] element equal to A[j,i].	For zero- or one-dimensional A,
 	mattrace(A) returns a matrix with the same value as A.
 
-   The functions search(A, value, start, end]) and
-   rsearch(A, value, start, end]) return the first or last index i
-   for which A[[i]] == value and start <= i < end, or if there is
-   no such index, the null value.   For further information on default
-   values and the use of an "accept" function, see the help files for
-   search and rsearch.
+    The functions search(A, value, start, end]) and
+    rsearch(A, value, start, end]) return the first or last index i
+    for which A[[i]] == value and start <= i < end, or if there is
+    no such index, the null value.   For further information on default
+    values and the use of an "accept" function, see the help files for
+    search and rsearch.
 
-   reverse(A) returns a matrix with the same index-lists as A but the
-   elements in reversed order.
+    reverse(A) returns a matrix with the same index-lists as A but the
+    elements in reversed order.
 
-   The copy and blkcpy functions may be used to copy data to a matrix from
-   a matrix or list, or from a matrix to a list.  In copying from a
-   matrix to a matrix the matrices need not have the same dimension;
-   in effect they are treated as linear arrays.
+    The copy and blkcpy functions may be used to copy data to a matrix from
+    a matrix or list, or from a matrix to a list.  In copying from a
+    matrix to a matrix the matrices need not have the same dimension;
+    in effect they are treated as linear arrays.
 
 EXAMPLE
 	> obj point {x,y}
-	> mat A[5] = {1, 2+3i, "ab", mat[2] = {4,5}. obj point = {6,7}}
+	> mat A[5] = {1, 2+3i, "ab", mat[2] = {4,5}, obj point = {6,7}}
 	> A
 	mat [5] (5 elements, 5 nonzero):
 	  [0] = 1
@@ -381,20 +396,20 @@ EXAMPLE
 	  [3] = 4
 
 LIMITS
-   The theoretical upper bound for the absolute values of indices is
-   2^31 - 1, but the size of matrices that can be handled in practice will
-   be limited by the availability of memory and what is an acceptable
-   runtime.  For example, although it may take only a fraction of a
-   second to invert a 10 * 10 matrix, it will probably take about 1000
-   times as long to invert a 100 * 100 matrix.
+    The theoretical upper bound for the absolute values of indices is
+    2^31 - 1, but the size of matrices that can be handled in practice will
+    be limited by the availability of memory and what is an acceptable
+    runtime.  For example, although it may take only a fraction of a
+    second to invert a 10 * 10 matrix, it will probably take about 1000
+    times as long to invert a 100 * 100 matrix.
 
 LINK LIBRARY
-   n/a
+    n/a
 
 SEE ALSO
-   ismat, matdim, matmax, matmin, mattrans, mattrace, matsum, det, inverse,
-   isident, test, config, search, rsearch, reverse, copy, blkcpy, dp, cp,
-   randperm, sort
+    ismat, matdim, matmax, matmin, mattrans, mattrace, matsum, det, inverse,
+    isident, test, config, search, rsearch, reverse, copy, blkcpy, dp, cp,
+    randperm, sort
 
 ## Copyright (C) 1999  Landon Curt Noll
 ##
@@ -412,8 +427,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: mat,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: mat,v 29.4 2005/10/18 10:08:45 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/mat,v $
 ##
 ## Under source code control:	1991/07/21 04:37:22

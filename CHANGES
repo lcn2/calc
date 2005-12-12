@@ -24,6 +24,33 @@ The following are the changes from calc version 2.11.10.1 to date:
     to the BUGS file.  See "help bugs" or the BUGS source file for details.
     Anyone want to track down and fix this bug?
 
+    Fixed typo in the "help mat" example and improved the mat_print example.
+
+    Renamed most COMPLEX C function names to start with c_ to avoid
+    conflicts with new C standard functions.  Note that the calc
+    builtin function names remain the same.   The C function names
+    inside the C source that calc is written in changed.  This means
+    that code that linked to libcalc.a will need to change in order
+    to call calc's functions instead of the C standard functions.
+    See cmath.h, comfunc.c, and commath.c for details.  See also
+    http://www.opengroup.org/onlinepubs/009695399/basedefs/complex.h.html
+    for names of the new C standard functions.
+
+    Changed the calc man page to note that using -- in the command will
+    separate calc options from arguments as in:
+
+	calc -p -- -1 - -7
+
+    Noted how Apple OS X can make use of readline in the Makefile.
+    In particular:
+
+	# For Apple OS X: install fink from http://fink.sourceforge.net
+	#                 and then do a 'fink install readline' and then use:
+	#
+	READLINE_LIB= -L/sw/lib -lreadline -lhistory -lncurses
+
+    Added linear.cal as a calc standard resource file.
+
 
 The following are the changes from calc version 2.11.10 to 2.11.10:
 
@@ -5785,8 +5812,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.70 $
-## @(#) $Id: CHANGES,v 29.70 2004/10/23 01:16:23 chongo Exp $
+## @(#) $Revision: 29.71 $
+## @(#) $Id: CHANGES,v 29.71 2005/12/12 06:47:21 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

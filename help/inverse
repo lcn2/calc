@@ -42,7 +42,7 @@ LIMITS
 LINK LIBRARY
     void invertvalue(VALUE *x, VALUE *vres)
     NUMBER *qinv(NUMBER *x)
-    COMPLEX *cinv(COMPLEX *x)
+    COMPLEX *c_inv(COMPLEX *x)
     MATRIX *matinv(MATRIX *x)
 
 SEE ALSO
@@ -63,8 +63,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: inverse,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: inverse,v 29.3 2005/10/18 10:48:29 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/inverse,v $
 ##
 ## Under source code control:	1996/03/12 23:10:01

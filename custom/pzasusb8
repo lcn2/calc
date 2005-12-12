@@ -19,7 +19,7 @@ DESCRIPTION
 		custom("sysinfo", "BASEB")
 		custom("sysinfo", "CALC_BYTE_ORDER")
 
-    foe details.
+    for details.
 
     This custom function is intented for testing of the general
     custom interface.
@@ -65,8 +65,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: pzasusb8,v 29.2 2000/06/07 14:03:03 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: pzasusb8,v 29.3 2005/10/18 11:18:34 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/pzasusb8,v $
 ##
 ## Under source code control:	1999/10/06 04:05:43

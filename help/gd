@@ -45,7 +45,7 @@ LIMITS
     none
 
 LINK LIBRARY
-    COMPLEX *cgd(COMPLEX *x, NUMBER *eps)
+    COMPLEX *c_gd(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
     agd, exp, ln, sin, sinh, etc.
@@ -66,8 +66,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: gd,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: gd,v 29.3 2005/10/18 10:48:29 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/gd,v $
 ##
 ## Under source code control:	1997/09/06 20:03:35

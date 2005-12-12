@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: cmath.h,v 29.6 2002/03/12 09:38:26 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: cmath.h,v 29.7 2005/10/18 10:43:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/cmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:45
@@ -63,63 +63,63 @@ extern void cprintfr(COMPLEX *c);
  * Basic numeric routines.
  */
 
-extern COMPLEX *cadd(COMPLEX *c1, COMPLEX *c2);
-extern COMPLEX *csub(COMPLEX *c1, COMPLEX *c2);
-extern COMPLEX *cmul(COMPLEX *c1, COMPLEX *c2);
-extern COMPLEX *cdiv(COMPLEX *c1, COMPLEX *c2);
-extern COMPLEX *caddq(COMPLEX *c, NUMBER *q);
-extern COMPLEX *csubq(COMPLEX *c, NUMBER *q);
-extern COMPLEX *cmulq(COMPLEX *c, NUMBER *q);
-extern COMPLEX *cdivq(COMPLEX *c, NUMBER *q);
-extern COMPLEX *cscale(COMPLEX *c, long i);
-extern COMPLEX *cshift(COMPLEX *c, long i);
-extern COMPLEX *csquare(COMPLEX *c);
-extern COMPLEX *cconj(COMPLEX *c);
+extern COMPLEX *c_add(COMPLEX *c1, COMPLEX *c2);
+extern COMPLEX *c_sub(COMPLEX *c1, COMPLEX *c2);
+extern COMPLEX *c_mul(COMPLEX *c1, COMPLEX *c2);
+extern COMPLEX *c_div(COMPLEX *c1, COMPLEX *c2);
+extern COMPLEX *c_addq(COMPLEX *c, NUMBER *q);
+extern COMPLEX *c_subq(COMPLEX *c, NUMBER *q);
+extern COMPLEX *c_mulq(COMPLEX *c, NUMBER *q);
+extern COMPLEX *c_divq(COMPLEX *c, NUMBER *q);
+extern COMPLEX *c_scale(COMPLEX *c, long i);
+extern COMPLEX *c_shift(COMPLEX *c, long i);
+extern COMPLEX *c_square(COMPLEX *c);
+extern COMPLEX *c_conj(COMPLEX *c);
 extern COMPLEX *c_real(COMPLEX *c);
 extern COMPLEX *c_imag(COMPLEX *c);
-extern COMPLEX *cneg(COMPLEX *c);
-extern COMPLEX *cinv(COMPLEX *c);
-extern COMPLEX *cint(COMPLEX *c);
-extern COMPLEX *cfrac(COMPLEX *c);
-extern BOOL ccmp(COMPLEX *c1, COMPLEX *c2);
+extern COMPLEX *c_neg(COMPLEX *c);
+extern COMPLEX *c_inv(COMPLEX *c);
+extern COMPLEX *c_int(COMPLEX *c);
+extern COMPLEX *c_frac(COMPLEX *c);
+extern BOOL c_cmp(COMPLEX *c1, COMPLEX *c2);
 
 
 /*
  * More complicated functions.
  */
-extern COMPLEX *cpowi(COMPLEX *c, NUMBER *q);
-extern NUMBER *cilog(COMPLEX *c, ZVALUE base);
+extern COMPLEX *c_powi(COMPLEX *c, NUMBER *q);
+extern NUMBER *c_ilog(COMPLEX *c, ZVALUE base);
 
 
 /*
  * Transcendental routines.  These all take an epsilon argument to
  * specify how accurately these are to be calculated.
  */
-extern COMPLEX *cpower(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon);
-extern COMPLEX *csqrt(COMPLEX *c, NUMBER *epsilon, long R);
-extern COMPLEX *croot(COMPLEX *c, NUMBER *q, NUMBER *epsilon);
-extern COMPLEX *cexp(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *cln(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *ccos(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *csin(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *ccosh(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *csinh(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *cpolar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon);
-extern COMPLEX *crel(COMPLEX *c1, COMPLEX *c2);
-extern COMPLEX *casin(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *cacos(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *catan(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *cacot(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *casec(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *cacsc(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *casinh(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *cacosh(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *catanh(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *cacoth(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *casech(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *cacsch(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *cgd(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *cagd(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon);
+extern COMPLEX *c_sqrt(COMPLEX *c, NUMBER *epsilon, long R);
+extern COMPLEX *c_root(COMPLEX *c, NUMBER *q, NUMBER *epsilon);
+extern COMPLEX *c_exp(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_ln(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_cos(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_sin(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_cosh(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_sinh(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_polar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon);
+extern COMPLEX *c_rel(COMPLEX *c1, COMPLEX *c2);
+extern COMPLEX *c_asin(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acos(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_atan(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acot(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_asec(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acsc(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_asinh(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acosh(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_atanh(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acoth(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_asech(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_acsch(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_gd(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_agd(COMPLEX *c, NUMBER *epsilon);
 
 
 

@@ -90,7 +90,7 @@ Known bugs:
 
      This is not an error in the ellip standard calc resource files.
      It is a bug inside calc.  Versions going back as far as version
-     2.11.4t2 in the year 2000 (and perhaps even further) alll have
+     2.11.4t2 in the year 2000 (and perhaps even further) all have
      this bug.
 
      Anyone want to track down and fix this bug?
@@ -323,8 +323,8 @@ Problems with old systems that have known work-a-rounds:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.21 $
-## @(#) $Id: BUGS,v 29.21 2004/10/23 01:13:51 chongo Exp $
+## @(#) $Revision: 29.22 $
+## @(#) $Id: BUGS,v 29.22 2004/10/23 02:25:02 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13

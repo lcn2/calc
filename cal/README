@@ -222,6 +222,14 @@ intfile.cal
 	of the integer become the last octets of the file.
 
 
+linear.cal
+
+    linear(x0, y0, x1, y1, x)
+
+    Returns the value y such that (x,y) in on the line (x0,y0), (x1,y1).
+    Requires x0 != y0.
+
+
 lucas.cal
 
     lucas(h, n)
@@ -825,8 +833,8 @@ xx_print.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.9 $
-## @(#) $Id: README,v 29.9 2003/01/05 08:10:56 chongo Exp $
+## @(#) $Revision: 29.10 $
+## @(#) $Id: README,v 29.10 2005/12/12 06:39:18 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/README,v $
 ##
 ## Under source code control:	1990/02/15 01:50:32

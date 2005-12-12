@@ -41,7 +41,6 @@ Step 1: Do some background work
 
 	custom.c
 	custom.h
-	custom/custom.h
 	custom/custtbl.c
 	custom/c_*.[ch]
 	custom/*.cal
@@ -648,8 +647,8 @@ Step 12: Contribute
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: HOW_TO_ADD,v 29.4 2004/07/29 08:38:05 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: HOW_TO_ADD,v 29.5 2005/10/18 11:18:34 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/HOW_TO_ADD,v $
 ##
 ## Under source code control:	1997/03/10 03:03:21

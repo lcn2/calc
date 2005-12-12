@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: value.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: value.c,v 29.4 2005/10/18 10:43:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -320,7 +320,7 @@ negvalue(VALUE *vp, VALUE *vres)
 			vres->v_num = qneg(vp->v_num);
 			return;
 		case V_COM:
-			vres->v_com = cneg(vp->v_com);
+			vres->v_com = c_neg(vp->v_com);
 			return;
 		case V_MAT:
 			vres->v_mat = matneg(vp->v_mat);
@@ -386,14 +386,14 @@ addvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			vres->v_num = qqadd(v1->v_num, v2->v_num);
 			return;
 		case TWOVAL(V_COM, V_NUM):
-			vres->v_com = caddq(v1->v_com, v2->v_num);
+			vres->v_com = c_addq(v1->v_com, v2->v_num);
 			return;
 		case TWOVAL(V_NUM, V_COM):
-			vres->v_com = caddq(v2->v_com, v1->v_num);
+			vres->v_com = c_addq(v2->v_com, v1->v_num);
 			vres->v_type = V_COM;
 			return;
 		case TWOVAL(V_COM, V_COM):
-			vres->v_com = cadd(v1->v_com, v2->v_com);
+			vres->v_com = c_add(v1->v_com, v2->v_com);
 			c = vres->v_com;
 			if (!cisreal(c))
 				return;
@@ -463,16 +463,16 @@ subvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			vres->v_num = qsub(v1->v_num, v2->v_num);
 			return;
 		case TWOVAL(V_COM, V_NUM):
-			vres->v_com = csubq(v1->v_com, v2->v_num);
+			vres->v_com = c_subq(v1->v_com, v2->v_num);
 			return;
 		case TWOVAL(V_NUM, V_COM):
-			c = csubq(v2->v_com, v1->v_num);
+			c = c_subq(v2->v_com, v1->v_num);
 			vres->v_type = V_COM;
-			vres->v_com = cneg(c);
+			vres->v_com = c_neg(c);
 			comfree(c);
 			return;
 		case TWOVAL(V_COM, V_COM):
-			vres->v_com = csub(v1->v_com, v2->v_com);
+			vres->v_com = c_sub(v1->v_com, v2->v_com);
 			c = vres->v_com;
 			if (!cisreal(c))
 				return;
@@ -549,14 +549,14 @@ mulvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			vres->v_num = qmul(v1->v_num, v2->v_num);
 			return;
 		case TWOVAL(V_COM, V_NUM):
-			vres->v_com = cmulq(v1->v_com, v2->v_num);
+			vres->v_com = c_mulq(v1->v_com, v2->v_num);
 			break;
 		case TWOVAL(V_NUM, V_COM):
-			vres->v_com = cmulq(v2->v_com, v1->v_num);
+			vres->v_com = c_mulq(v2->v_com, v1->v_num);
 			vres->v_type = V_COM;
 			break;
 		case TWOVAL(V_COM, V_COM):
-			vres->v_com = cmul(v1->v_com, v2->v_com);
+			vres->v_com = c_mul(v1->v_com, v2->v_com);
 			break;
 		case TWOVAL(V_MAT, V_MAT):
 			vres->v_mat = matmul(v1->v_mat, v2->v_mat);
@@ -620,7 +620,7 @@ squarevalue(VALUE *vp, VALUE *vres)
 			vres->v_num = qsquare(vp->v_num);
 			return;
 		case V_COM:
-			vres->v_com = csquare(vp->v_com);
+			vres->v_com = c_square(vp->v_com);
 			c = vres->v_com;
 			if (!cisreal(c))
 				return;
@@ -664,7 +664,7 @@ invertvalue(VALUE *vp, VALUE *vres)
 				vres->v_num = qinv(vp->v_num);
 			return;
 		case V_COM:
-			vres->v_com = cinv(vp->v_com);
+			vres->v_com = c_inv(vp->v_com);
 			return;
 		case V_MAT:
 			vres->v_mat = matinv(vp->v_mat);
@@ -1270,7 +1270,7 @@ intvalue(VALUE *vp, VALUE *vres)
 				vres->v_com = clink(vp->v_com);
 				return;
 			}
-			vres->v_com = cint(vp->v_com);
+			vres->v_com = c_int(vp->v_com);
 			c = vres->v_com;
 			if (cisreal(c)) {
 				vres->v_num = qlink(c->real);
@@ -1317,7 +1317,7 @@ fracvalue(VALUE *vp, VALUE *vres)
 				vres->v_type = V_NUM;
 				return;
 			}
-			vres->v_com = cfrac(vp->v_com);
+			vres->v_com = c_frac(vp->v_com);
 			c = vres->v_com;
 			if (cisreal(c)) {
 				vres->v_num = qlink(c->real);
@@ -1353,7 +1353,7 @@ incvalue(VALUE *vp, VALUE *vres)
 			vres->v_num = qinc(vp->v_num);
 			break;
 		case V_COM:
-			vres->v_com = caddq(vp->v_com, &_qone_);
+			vres->v_com = c_addq(vp->v_com, &_qone_);
 			break;
 		case V_OBJ:
 			*vres = objcall(OBJ_INC, vp, NULL_VALUE, NULL_VALUE);
@@ -1389,7 +1389,7 @@ decvalue(VALUE *vp, VALUE *vres)
 			vres->v_num = qdec(vp->v_num);
 			break;
 		case V_COM:
-			vres->v_com = caddq(vp->v_com, &_qnegone_);
+			vres->v_com = c_addq(vp->v_com, &_qnegone_);
 			break;
 		case V_OBJ:
 			*vres = objcall(OBJ_DEC, vp, NULL_VALUE, NULL_VALUE);
@@ -1504,7 +1504,7 @@ sqrtvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 			vres->v_type = V_COM;
 			break;
 		case V_COM:
-			vres->v_com = csqrt(v1->v_com, q, R);
+			vres->v_com = c_sqrt(v1->v_com, q, R);
 			break;
 		default:
 			*vres = error_value(E_SQRT);
@@ -1567,10 +1567,10 @@ rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 			ctmp.real = v1->v_num;
 			ctmp.imag = &_qzero_;
 			ctmp.links = 1;
-			c = croot(&ctmp, q2, q3);
+			c = c_root(&ctmp, q2, q3);
 			break;
 		case V_COM:
-			c = croot(v1->v_com, q2, q3);
+			c = c_root(v1->v_com, q2, q3);
 			break;
 		case V_OBJ:
 			*vres = objcall(OBJ_ROOT, v1, v2, v3);
@@ -1725,7 +1725,7 @@ shiftvalue(VALUE *v1, VALUE *v2, BOOL rightshift, VALUE *vres)
 				*vres = error_value(E_SHIFT);
 				return;
 			}
-			c = cshift(v1->v_com, n);
+			c = c_shift(v1->v_com, n);
 			if (!cisreal(c)) {
 				vres->v_com = c;
 				return;
@@ -1800,7 +1800,7 @@ scalevalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			vres->v_num = qscale(v1->v_num, n);
 			return;
 		case V_COM:
-			vres->v_com = cscale(v1->v_com, n);
+			vres->v_com = c_scale(v1->v_com, n);
 			return;
 		case V_MAT:
 			vres->v_mat = matscale(v1->v_mat, n);
@@ -1860,7 +1860,7 @@ powivalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			vres->v_num = qpowi(v1->v_num, q);
 			return;
 		case V_COM:
-			vres->v_com = cpowi(v1->v_com, q);
+			vres->v_com = c_powi(v1->v_com, q);
 			c = vres->v_com;
 			if (!cisreal(c))
 				return;
@@ -1916,7 +1916,7 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 				ctmp2.real = v2->v_num;
 				ctmp2.imag = &_qzero_;
 				ctmp2.links = 1;
-				c = cpower(&ctmp1, &ctmp2, epsilon);
+				c = c_power(&ctmp1, &ctmp2, epsilon);
 				break;
 			}
 			vres->v_num = qpower(v1->v_num, v2->v_num, epsilon);
@@ -1928,16 +1928,16 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 			ctmp1.real = v1->v_num;
 			ctmp1.imag = &_qzero_;
 			ctmp1.links = 1;
-			c = cpower(&ctmp1, v2->v_com, epsilon);
+			c = c_power(&ctmp1, v2->v_com, epsilon);
 			break;
 		case TWOVAL(V_COM, V_NUM):
 			ctmp2.real = v2->v_num;
 			ctmp2.imag = &_qzero_;
 			ctmp2.links = 1;
-			c = cpower(v1->v_com, &ctmp2, epsilon);
+			c = c_power(v1->v_com, &ctmp2, epsilon);
 			break;
 		case TWOVAL(V_COM, V_COM):
-			c = cpower(v1->v_com, v2->v_com, epsilon);
+			c = c_power(v1->v_com, v2->v_com, epsilon);
 			break;
 		default:
 			*vres = error_value(E_POWER);
@@ -1994,7 +1994,7 @@ divvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			vres->v_num = qqdiv(v1->v_num, v2->v_num);
 			return;
 		case TWOVAL(V_COM, V_NUM):
-			vres->v_com = cdivq(v1->v_com, v2->v_num);
+			vres->v_com = c_divq(v1->v_com, v2->v_num);
 			return;
 		case TWOVAL(V_NUM, V_COM):
 			if (qiszero(v1->v_num)) {
@@ -2004,11 +2004,11 @@ divvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			ctmp.real = v1->v_num;
 			ctmp.imag = &_qzero_;
 			ctmp.links = 1;
-			vres->v_com = cdiv(&ctmp, v2->v_com);
+			vres->v_com = c_div(&ctmp, v2->v_com);
 			vres->v_type = V_COM;
 			return;
 		case TWOVAL(V_COM, V_COM):
-			vres->v_com = cdiv(v1->v_com, v2->v_com);
+			vres->v_com = c_div(v1->v_com, v2->v_com);
 			c = vres->v_com;
 			if (cisreal(c)) {
 				vres->v_num = qlink(c->real);
@@ -2299,7 +2299,7 @@ comparevalue(VALUE *v1, VALUE *v2)
 			r = qcmp(v1->v_num, v2->v_num);
 			break;
 		case V_COM:
-			r = ccmp(v1->v_com, v2->v_com);
+			r = c_cmp(v1->v_com, v2->v_com);
 			break;
 		case V_STR:
 			r = stringcmp(v1->v_str, v2->v_str);

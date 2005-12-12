@@ -2,7 +2,7 @@
 #
 # calc.spec.in - template specfile for calc
 #
-# Copyright (C) 2003-2004  Petteri Kettunen and Landon Curt Noll
+# Copyright (C) 2003-2005  Petteri Kettunen and Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.13 $
-# @(#) $Id: calc.spec.in,v 29.13 2004/02/23 14:04:01 chongo Exp $
+# @(#) $Revision: 29.14 $
+# @(#) $Id: calc.spec.in,v 29.14 2005/12/12 06:57:27 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.spec.in,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -30,7 +30,7 @@
 
 # BUGS
 #  - Uninstalling calc and calc-devel leaves empty dirs /usr/include/calc
-#    and /usr/share/calc and its subdird. In case e.g. %{_includedir}/calc
+#    and /usr/share/calc and its subdirs. In case e.g. %{_includedir}/calc
 #    is defined in `%files devel' section, then rpmbuild complains that
 #    header files are defined twice - rpmbuild bug or bug in specfile conf???
 
@@ -48,11 +48,11 @@ BuildRoot: %{_tmppath}/%{name}-root
 
 %description
 Calc is arbitrary precision C-like arithmetic system that is a
-calculator, an algorithm prototyper and mathematical research
+calculator, an algorithm prototype and mathematical research
 tool. Calc comes with a rich set of builtin mathematical and
 programmatic functions.
 
-For the latest calc release, see the project home page:
+For the latest calc release, see the calc project home page:
 
     http://www.isthe.com/chongo/tech/comp/calc/index.html
 
@@ -100,6 +100,9 @@ rm -rf %{buildroot}
 %attr(644, root, root) %{_libdir}/*.a
 
 %changelog
+* Sun Dec 11 2006 Landon Curt Noll http://www.isthe.com/chongo
+- Release of calc-2.11.11
+- Fixed description in spec file
 * Wed Feb 26 2003 Landon Curt Noll http://www.isthe.com/chongo
 - Release of calc-2.11.7-2
 - Fixed attributes on include and lib calc-devel files

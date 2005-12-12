@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.14 $
- * @(#) $Id: config.c,v 29.14 2004/02/25 23:56:13 chongo Exp $
+ * @(#) $Revision: 29.15 $
+ * @(#) $Id: config.c,v 29.15 2005/12/12 06:45:41 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -432,7 +432,7 @@ setconfig(int type, VALUE *vp)
 	NUMBER *q;
 	CONFIG *newconf;	/* new configuration to set */
 	long temp;
-	LEN len;
+	LEN len = 0;
 	char *p;
 
 	switch (type) {

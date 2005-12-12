@@ -1,0 +1,26 @@
+/*
+ * linear - perform a simple two point 2D linear interpolation
+ *
+ * given:
+ *	x0, y0		first known point on the line
+ *	x1, y1		second knonw point on the line
+ *	x		a given point to interpolate on
+ *
+ * returns:
+ *	y such that (x,y) is on the line defined by (x0,y0) and (x1,y1)
+ *
+ * NOTE: The line cannot be vertical.  So x0 != y0.
+ */
+define linear(x0, y0, x1, y1, x)
+{
+    /* firewall */
+    if (!isnum(x0) || ! isnum(y0) || !isnum(x1) || ! isnum(y1) || !isnum(x)) {
+	quit "non-numeric argument passed to linear";
+    }
+    if (x0 == x1) {
+	quit "linear given a line with an infinite slope";
+    }
+
+    /* return y = y0 + (delta_Y/delta_X) * (x - x0) */
+    return y0 + (((y1-y0)/(x1-x0)) * (x - x0));
+}

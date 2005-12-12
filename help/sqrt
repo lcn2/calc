@@ -123,7 +123,7 @@ LIMITS
     none
 
 LINK LIBRARY
-    COMPLEX *csqrt(COMPLEX *x, NUMBER *ep, long z)
+    COMPLEX *c_sqrt(COMPLEX *x, NUMBER *ep, long z)
     NUMBER *qisqrt(NUMBER *q)
     NUMBER *qsqrt(NUMBER *x, NUMBER *ep, long z)
     FLAG zsqrt(ZVALUE x, ZVALUE *result, long z)
@@ -147,8 +147,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: sqrt,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: sqrt,v 29.3 2005/10/18 10:48:29 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/sqrt,v $
 ##
 ## Under source code control:	1995/09/18 03:54:32

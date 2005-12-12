@@ -51,7 +51,7 @@ LIMITS
     none
 
 LINK LIBRARY
-    COMPLEX *cagd(COMPLEX *x, NUMBER *eps)
+    COMPLEX *c_agd(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
     gd, exp, ln, sin, sinh, etc.
@@ -72,8 +72,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: agd,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: agd,v 29.3 2005/10/18 10:48:29 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/agd,v $
 ##
 ## Under source code control:	1997/09/06 20:03:34

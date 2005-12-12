@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: custtbl.c,v 29.3 2004/07/29 08:37:53 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: custtbl.c,v 29.4 2005/02/05 06:16:19 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/custtbl.c,v $
  *
  * Under source code control:	1997/03/09 02:28:54
@@ -106,7 +106,7 @@ CONST struct custom cust[] = {
 	{ "sysinfo", "return a calc #define value",
 	 0, 1, c_sysinfo },
 
-	{ "pzasusb8", "print ZCALUE as USB8",
+	{ "pzasusb8", "print ZVALUE as USB8",
 	 0, 1, c_pzasusb8 },
 
 	{ "pmodm127", "calculate q mod 2^(2^127-1)",

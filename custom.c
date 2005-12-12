@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 29.4 $
  * @(#) $Id: custom.c,v 29.4 2004/02/25 23:54:40 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/custom/../RCS/custom.c,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/custom.c,v $
  *
  * Under source code control:	1997/03/03 04:53:08
  * File existed as early as:	1997

@@ -35,7 +35,7 @@ LIMITS
 
 LINK LIBRARY
     NUMBER *qexp(NUMBER *x, NUMBER *eps)
-    COMPLEX *cexp(COMPLEX *x, NUMBER *eps)
+    COMPLEX *c_exp(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
     ln, cosh, sinh, tanh
@@ -56,8 +56,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: exp,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: exp,v 29.3 2005/10/18 10:48:29 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/exp,v $
 ##
 ## Under source code control:	1995/10/11 04:41:26

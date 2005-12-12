@@ -50,7 +50,7 @@ LIMITS
 LINK LIBRARY
     void powervalue(VALUE *x, VALUE *y, VALUE *eps, VALUE *result)
     NUMBER *qpower(NUMBER *x, NUMBER *y, NUMBER *eps)
-    COMPLEX *cpower(COMPLEX *x, COMPLEX *y, NUMBER *eps)
+    COMPLEX *c_power(COMPLEX *x, COMPLEX *y, NUMBER *eps)
 
 SEE ALSO
     root
@@ -71,8 +71,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: power,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: power,v 29.3 2005/10/18 10:48:29 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/power,v $
 ##
 ## Under source code control:	1995/10/25 04:03:46

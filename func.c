@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.15 $
- * @(#) $Id: func.c,v 29.15 2004/07/26 05:55:37 chongo Exp $
+ * @(#) $Revision: 29.16 $
+ * @(#) $Id: func.c,v 29.16 2005/10/18 10:43:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -1974,7 +1974,7 @@ f_exp(int count, VALUE **vals)
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			c = cexp(vals[0]->v_com, eps);
+			c = c_exp(vals[0]->v_com, eps);
 			if (c == NULL)
 				return error_value(E_EXP3);
 			result.v_com = c;
@@ -2018,10 +2018,10 @@ f_ln(int count, VALUE **vals)
 			ctmp.real = vals[0]->v_num;
 			ctmp.imag = qlink(&_qzero_);
 			ctmp.links = 1;
-			c = cln(&ctmp, err);
+			c = c_ln(&ctmp, err);
 			break;
 		case V_COM:
-			c = cln(vals[0]->v_com, err);
+			c = c_ln(vals[0]->v_com, err);
 			break;
 		default:
 			return error_value(E_LN2);
@@ -2059,7 +2059,7 @@ f_cos(int count, VALUE **vals)
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			c = ccos(vals[0]->v_com, eps);
+			c = c_cos(vals[0]->v_com, eps);
 			if (c == NULL)
 				return error_value(E_COS3);
 			result.v_com = c;
@@ -2099,7 +2099,7 @@ f_sin(int count, VALUE **vals)
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			c = csin(vals[0]->v_com, eps);
+			c = c_sin(vals[0]->v_com, eps);
 			if (c == NULL)
 				return error_value(E_SIN3);
 			result.v_com = c;
@@ -2142,9 +2142,9 @@ f_tan(int count, VALUE **vals)
 			break;
 		case V_COM:
 			tmp1.v_type = V_COM;
-			tmp1.v_com = csin(vals[0]->v_com, err);
+			tmp1.v_com = c_sin(vals[0]->v_com, err);
 			tmp2.v_type = V_COM;
-			tmp2.v_com = ccos(vals[0]->v_com, err);
+			tmp2.v_com = c_cos(vals[0]->v_com, err);
 			divvalue(&tmp1, &tmp2, &result);
 			comfree(tmp1.v_com);
 			comfree(tmp2.v_com);
@@ -2179,7 +2179,7 @@ f_sec(int count, VALUE **vals)
 			break;
 		case V_COM:
 			tmp.v_type = V_COM;
-			tmp.v_com = ccos(vals[0]->v_com, err);
+			tmp.v_com = c_cos(vals[0]->v_com, err);
 			invertvalue(&tmp, &result);
 			comfree(tmp.v_com);
 			break;
@@ -2217,9 +2217,9 @@ f_cot(int count, VALUE **vals)
 			break;
 		case V_COM:
 			tmp1.v_type = V_COM;
-			tmp1.v_com = ccos(vals[0]->v_com, err);
+			tmp1.v_com = c_cos(vals[0]->v_com, err);
 			tmp2.v_type = V_COM;
-			tmp2.v_com = csin(vals[0]->v_com, err);
+			tmp2.v_com = c_sin(vals[0]->v_com, err);
 			divvalue(&tmp1, &tmp2, &result);
 			comfree(tmp1.v_com);
 			comfree(tmp2.v_com);
@@ -2257,7 +2257,7 @@ f_csc(int count, VALUE **vals)
 			break;
 		case V_COM:
 			tmp.v_type = V_COM;
-			tmp.v_com = csin(vals[0]->v_com, err);
+			tmp.v_com = c_sin(vals[0]->v_com, err);
 			invertvalue(&tmp, &result);
 			comfree(tmp.v_com);
 			break;
@@ -2293,7 +2293,7 @@ f_sinh(int count, VALUE **vals)
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			c = csinh(vals[0]->v_com, eps);
+			c = c_sinh(vals[0]->v_com, eps);
 			if (c == NULL)
 				return error_value(E_SINH3);
 			result.v_com = c;
@@ -2336,7 +2336,7 @@ f_cosh(int count, VALUE **vals)
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			c = ccosh(vals[0]->v_com, eps);
+			c = c_cosh(vals[0]->v_com, eps);
 			if (c == NULL)
 				return error_value(E_COSH3);
 			result.v_com = c;
@@ -2379,9 +2379,9 @@ f_tanh(int count, VALUE **vals)
 			break;
 		case V_COM:
 			tmp1.v_type = V_COM;
-			tmp1.v_com = csinh(vals[0]->v_com, err);
+			tmp1.v_com = c_sinh(vals[0]->v_com, err);
 			tmp2.v_type = V_COM;
-			tmp2.v_com = ccosh(vals[0]->v_com, err);
+			tmp2.v_com = c_cosh(vals[0]->v_com, err);
 			divvalue(&tmp1, &tmp2, &result);
 			comfree(tmp1.v_com);
 			comfree(tmp2.v_com);
@@ -2420,9 +2420,9 @@ f_coth(int count, VALUE **vals)
 			break;
 		case V_COM:
 			tmp1.v_type = V_COM;
-			tmp1.v_com = ccosh(vals[0]->v_com, err);
+			tmp1.v_com = c_cosh(vals[0]->v_com, err);
 			tmp2.v_type = V_COM;
-			tmp2.v_com = csinh(vals[0]->v_com, err);
+			tmp2.v_com = c_sinh(vals[0]->v_com, err);
 			divvalue(&tmp1, &tmp2, &result);
 			comfree(tmp1.v_com);
 			comfree(tmp2.v_com);
@@ -2458,7 +2458,7 @@ f_sech(int count, VALUE **vals)
 			break;
 		case V_COM:
 			tmp.v_type = V_COM;
-			tmp.v_com = ccosh(vals[0]->v_com, err);
+			tmp.v_com = c_cosh(vals[0]->v_com, err);
 			invertvalue(&tmp, &result);
 			comfree(tmp.v_com);
 			break;
@@ -2495,7 +2495,7 @@ f_csch(int count, VALUE **vals)
 			break;
 		case V_COM:
 			tmp.v_type = V_COM;
-			tmp.v_com = csinh(vals[0]->v_com, err);
+			tmp.v_com = c_sinh(vals[0]->v_com, err);
 			invertvalue(&tmp, &result);
 			comfree(tmp.v_com);
 			break;
@@ -2528,7 +2528,7 @@ f_atan(int count, VALUE **vals)
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			tmp = catan(vals[0]->v_com, err);
+			tmp = c_atan(vals[0]->v_com, err);
 			if (tmp == NULL)
 				return error_value(E_LOGINF);
 			result.v_type = V_COM;
@@ -2568,7 +2568,7 @@ f_acot(int count, VALUE **vals)
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			tmp = cacot(vals[0]->v_com, err);
+			tmp = c_acot(vals[0]->v_com, err);
 			if (tmp == NULL)
 				return error_value(E_LOGINF);
 			result.v_type = V_COM;
@@ -2611,12 +2611,12 @@ f_asin(int count, VALUE **vals)
 				qfree(tmp->real);
 				tmp->real = qlink(vals[0]->v_num);
 				result.v_type = V_COM;
-				result.v_com = casin(tmp, err);
+				result.v_com = c_asin(tmp, err);
 				comfree(tmp);
 			}
 			break;
 		case V_COM:
-			result.v_com = casin(vals[0]->v_com, err);
+			result.v_com = c_asin(vals[0]->v_com, err);
 			result.v_type = V_COM;
 			break;
 		default:
@@ -2657,12 +2657,12 @@ f_acos(int count, VALUE **vals)
 				qfree(tmp->real);
 				tmp->real = qlink(vals[0]->v_num);
 				result.v_type = V_COM;
-				result.v_com = cacos(tmp, err);
+				result.v_com = c_acos(tmp, err);
 				comfree(tmp);
 			}
 			break;
 		case V_COM:
-			result.v_com = cacos(vals[0]->v_com, err);
+			result.v_com = c_acos(vals[0]->v_com, err);
 			result.v_type = V_COM;
 			break;
 		default:
@@ -2705,13 +2705,13 @@ f_asec(int count, VALUE **vals)
 				tmp = comalloc();
 				qfree(tmp->real);
 				tmp->real = qlink(vals[0]->v_num);
-				result.v_com = casec(tmp, err);
+				result.v_com = c_asec(tmp, err);
 				result.v_type = V_COM;
 				comfree(tmp);
 			}
 			break;
 		case V_COM:
-			result.v_com = casec(vals[0]->v_com, err);
+			result.v_com = c_asec(vals[0]->v_com, err);
 			result.v_type = V_COM;
 			break;
 		default:
@@ -2758,13 +2758,13 @@ f_acsc(int count, VALUE **vals)
 				tmp = comalloc();
 				qfree(tmp->real);
 				tmp->real = qlink(vals[0]->v_num);
-				result.v_com = cacsc(tmp, err);
+				result.v_com = c_acsc(tmp, err);
 				result.v_type = V_COM;
 				comfree(tmp);
 			}
 			break;
 		case V_COM:
-			result.v_com = cacsc(vals[0]->v_com, err);
+			result.v_com = c_acsc(vals[0]->v_com, err);
 			result.v_type = V_COM;
 			break;
 		default:
@@ -2806,7 +2806,7 @@ f_asinh(int count, VALUE **vals)
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			tmp = casinh(vals[0]->v_com, err);
+			tmp = c_asinh(vals[0]->v_com, err);
 			result.v_type = V_COM;
 			result.v_com = tmp;
 			if (cisreal(tmp)) {
@@ -2847,13 +2847,13 @@ f_acosh(int count, VALUE **vals)
 				tmp = comalloc();
 				qfree(tmp->real);
 				tmp->real = qlink(vals[0]->v_num);
-				result.v_com = cacosh(tmp, err);
+				result.v_com = c_acosh(tmp, err);
 				result.v_type = V_COM;
 				comfree(tmp);
 			}
 			break;
 		case V_COM:
-			result.v_com = cacosh(vals[0]->v_com, err);
+			result.v_com = c_acosh(vals[0]->v_com, err);
 			result.v_type = V_COM;
 			break;
 		default:
@@ -2894,13 +2894,13 @@ f_atanh(int count, VALUE **vals)
 				tmp = comalloc();
 				qfree(tmp->real);
 				tmp->real = qlink(vals[0]->v_num);
-				result.v_com = catanh(tmp, err);
+				result.v_com = c_atanh(tmp, err);
 				result.v_type = V_COM;
 				comfree(tmp);
 			}
 			break;
 		case V_COM:
-			result.v_com = catanh(vals[0]->v_com, err);
+			result.v_com = c_atanh(vals[0]->v_com, err);
 			result.v_type = V_COM;
 			break;
 		default:
@@ -2945,13 +2945,13 @@ f_acoth(int count, VALUE **vals)
 				tmp = comalloc();
 				qfree(tmp->real);
 				tmp->real = qlink(vals[0]->v_num);
-				result.v_com = cacoth(tmp, err);
+				result.v_com = c_acoth(tmp, err);
 				result.v_type = V_COM;
 				comfree(tmp);
 			}
 			break;
 		case V_COM:
-			result.v_com = cacoth(vals[0]->v_com, err);
+			result.v_com = c_acoth(vals[0]->v_com, err);
 			result.v_type = V_COM;
 			break;
 		default:
@@ -2998,13 +2998,13 @@ f_asech(int count, VALUE **vals)
 				tmp = comalloc();
 				qfree(tmp->real);
 				tmp->real = qlink(vals[0]->v_num);
-				result.v_com = casech(tmp, err);
+				result.v_com = c_asech(tmp, err);
 				result.v_type = V_COM;
 				comfree(tmp);
 			}
 			break;
 		case V_COM:
-			result.v_com = casech(vals[0]->v_com, err);
+			result.v_com = c_asech(vals[0]->v_com, err);
 			result.v_type = V_COM;
 			break;
 		default:
@@ -3051,13 +3051,13 @@ f_acsch(int count, VALUE **vals)
 				tmp = comalloc();
 				qfree(tmp->real);
 				tmp->real = qlink(vals[0]->v_num);
-				result.v_com = cacsch(tmp, err);
+				result.v_com = c_acsch(tmp, err);
 				result.v_type = V_COM;
 				comfree(tmp);
 			}
 			break;
 		case V_COM:
-			result.v_com = cacsch(vals[0]->v_com, err);
+			result.v_com = c_acsch(vals[0]->v_com, err);
 			result.v_type = V_COM;
 			break;
 		default:
@@ -3105,11 +3105,11 @@ f_gd(int count, VALUE **vals)
 			tmp = comalloc();
 			qfree(tmp->real);
 			tmp->real = qlink(vals[0]->v_num);
-			result.v_com = cgd(tmp, eps);
+			result.v_com = c_gd(tmp, eps);
 			comfree(tmp);
 			break;
 		case V_COM:
-			result.v_com = cgd(vals[0]->v_com, eps);
+			result.v_com = c_gd(vals[0]->v_com, eps);
 			break;
 		default:
 			return error_value(E_GD2);
@@ -3154,11 +3154,11 @@ f_agd(int count, VALUE **vals)
 			tmp = comalloc();
 			qfree(tmp->real);
 			tmp->real = qlink(vals[0]->v_num);
-			result.v_com = cagd(tmp, eps);
+			result.v_com = c_agd(tmp, eps);
 			comfree(tmp);
 			break;
 		case V_COM:
-			result.v_com = cagd(vals[0]->v_com, eps);
+			result.v_com = c_agd(vals[0]->v_com, eps);
 			break;
 		default:
 			return error_value(E_AGD2);
@@ -3652,7 +3652,7 @@ f_polar(int count, VALUE **vals)
 		return error_value(E_POLAR1);
 	if ((vp->v_type != V_NUM) || qisneg(vp->v_num) || qiszero(vp->v_num))
 		return error_value(E_POLAR2);
-	c = cpolar(vals[0]->v_num, vals[1]->v_num, vp->v_num);
+	c = c_polar(vals[0]->v_num, vals[1]->v_num, vp->v_num);
 	result.v_com = c;
 	result.v_type = V_COM;
 	if (cisreal(c)) {
@@ -3678,7 +3678,7 @@ f_ilog(VALUE *v1, VALUE *v2)
 		res.v_num = qilog(v1->v_num, v2->v_num->num);
 		break;
 	case V_COM:
-		res.v_num = cilog(v1->v_com, v2->v_num->num);
+		res.v_num = c_ilog(v1->v_com, v2->v_num->num);
 		break;
 	default:
 		return error_value(E_ILOG);
@@ -3703,7 +3703,7 @@ f_ilog2(VALUE *vp)
 		res.v_num = qilog(vp->v_num, _two_);
 		break;
 	case V_COM:
-		res.v_num = cilog(vp->v_com, _two_);
+		res.v_num = c_ilog(vp->v_com, _two_);
 		break;
 	default:
 		return error_value(E_ILOG2);
@@ -3728,7 +3728,7 @@ f_ilog10(VALUE *vp)
 			res.v_num = qilog(vp->v_num, _ten_);
 			break;
 		case V_COM:
-			res.v_num = cilog(vp->v_com, _ten_);
+			res.v_num = c_ilog(vp->v_com, _ten_);
 			break;
 		default:
 			return error_value(E_ILOG10);

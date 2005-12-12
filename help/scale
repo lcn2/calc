@@ -31,7 +31,7 @@ LIMITS
 
 LINK LIBRARY
     NUMBER *qscale(NUMBER *x, long n)
-    COMPLEX *cscale(COMPLEX *x, long n)
+    COMPLEX *c_scale(COMPLEX *x, long n)
     MATRIX *matscale(MATRIX *x, long n)
 
 SEE ALSO
@@ -53,8 +53,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: scale,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: scale,v 29.3 2005/10/18 10:48:29 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/scale,v $
 ##
 ## Under source code control:	1995/12/18 12:34:58

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: commath.c,v 29.3 2002/03/12 09:38:26 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: commath.c,v 29.4 2005/10/18 10:43:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/commath.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -42,7 +42,7 @@ static COMPLEX _cnegone_ =	{ &_qnegone_, &_qzero_, 1 };
  * Add two complex numbers.
  */
 COMPLEX *
-cadd(COMPLEX *c1, COMPLEX *c2)
+c_add(COMPLEX *c1, COMPLEX *c2)
 {
 	COMPLEX *r;
 
@@ -67,7 +67,7 @@ cadd(COMPLEX *c1, COMPLEX *c2)
  * Subtract two complex numbers.
  */
 COMPLEX *
-csub(COMPLEX *c1, COMPLEX *c2)
+c_sub(COMPLEX *c1, COMPLEX *c2)
 {
 	COMPLEX *r;
 
@@ -98,7 +98,7 @@ csub(COMPLEX *c1, COMPLEX *c2)
  * Then (a+bi) * (c+di) = (q2 - q3) + (q1 - q2 - q3)i.
  */
 COMPLEX *
-cmul(COMPLEX *c1, COMPLEX *c2)
+c_mul(COMPLEX *c1, COMPLEX *c2)
 {
 	COMPLEX *r;
 	NUMBER *q1, *q2, *q3, *q4;
@@ -110,9 +110,9 @@ cmul(COMPLEX *c1, COMPLEX *c2)
 	if (cisone(c2))
 		return clink(c1);
 	if (cisreal(c2))
-		return cmulq(c1, c2->real);
+		return c_mulq(c1, c2->real);
 	if (cisreal(c1))
-		return cmulq(c2, c1->real);
+		return c_mulq(c2, c1->real);
 	/*
 	 * Need to do the full calculation.
 	 */
@@ -141,7 +141,7 @@ cmul(COMPLEX *c1, COMPLEX *c2)
  * Square a complex number.
  */
 COMPLEX *
-csquare(COMPLEX *c)
+c_square(COMPLEX *c)
 {
 	COMPLEX *r;
 	NUMBER *q1, *q2;
@@ -183,7 +183,7 @@ csquare(COMPLEX *c)
  * Divide two complex numbers.
  */
 COMPLEX *
-cdiv(COMPLEX *c1, COMPLEX *c2)
+c_div(COMPLEX *c1, COMPLEX *c2)
 {
 	COMPLEX *r;
 	NUMBER *q1, *q2, *q3, *den;
@@ -254,7 +254,7 @@ cdiv(COMPLEX *c1, COMPLEX *c2)
  * Invert a complex number.
  */
 COMPLEX *
-cinv(COMPLEX *c)
+c_inv(COMPLEX *c)
 {
 	COMPLEX *r;
 	NUMBER *q1, *q2, *den;
@@ -296,7 +296,7 @@ cinv(COMPLEX *c)
  * Negate a complex number.
  */
 COMPLEX *
-cneg(COMPLEX *c)
+c_neg(COMPLEX *c)
 {
 	COMPLEX *r;
 
@@ -320,7 +320,7 @@ cneg(COMPLEX *c)
  * This means take the integer part of both components.
  */
 COMPLEX *
-cint(COMPLEX *c)
+c_int(COMPLEX *c)
 {
 	COMPLEX *r;
 
@@ -340,7 +340,7 @@ cint(COMPLEX *c)
  * This means take the fractional part of both components.
  */
 COMPLEX *
-cfrac(COMPLEX *c)
+c_frac(COMPLEX *c)
 {
 	COMPLEX *r;
 
@@ -360,7 +360,7 @@ cfrac(COMPLEX *c)
  * This negates the complex part.
  */
 COMPLEX *
-cconj(COMPLEX *c)
+c_conj(COMPLEX *c)
 {
 	COMPLEX *r;
 
@@ -417,7 +417,7 @@ c_imag(COMPLEX *c)
  * Add a real number to a complex number.
  */
 COMPLEX *
-caddq(COMPLEX *c, NUMBER *q)
+c_addq(COMPLEX *c, NUMBER *q)
 {
 	COMPLEX *r;
 
@@ -436,7 +436,7 @@ caddq(COMPLEX *c, NUMBER *q)
  * Subtract a real number from a complex number.
  */
 COMPLEX *
-csubq(COMPLEX *c, NUMBER *q)
+c_subq(COMPLEX *c, NUMBER *q)
 {
 	COMPLEX *r;
 
@@ -456,7 +456,7 @@ csubq(COMPLEX *c, NUMBER *q)
  * number of bits.  Negative values shift to the right.
  */
 COMPLEX *
-cshift(COMPLEX *c, long n)
+c_shift(COMPLEX *c, long n)
 {
 	COMPLEX *r;
 
@@ -475,7 +475,7 @@ cshift(COMPLEX *c, long n)
  * Scale a complex number by a power of two.
  */
 COMPLEX *
-cscale(COMPLEX *c, long n)
+c_scale(COMPLEX *c, long n)
 {
 	COMPLEX *r;
 
@@ -494,7 +494,7 @@ cscale(COMPLEX *c, long n)
  * Multiply a complex number by a real number.
  */
 COMPLEX *
-cmulq(COMPLEX *c, NUMBER *q)
+c_mulq(COMPLEX *c, NUMBER *q)
 {
 	COMPLEX *r;
 
@@ -503,7 +503,7 @@ cmulq(COMPLEX *c, NUMBER *q)
 	if (qisone(q))
 		return clink(c);
 	if (qisnegone(q))
-		return cneg(c);
+		return c_neg(c);
 	r = comalloc();
 	qfree(r->real);
 	qfree(r->imag);
@@ -517,7 +517,7 @@ cmulq(COMPLEX *c, NUMBER *q)
  * Divide a complex number by a real number.
  */
 COMPLEX *
-cdivq(COMPLEX *c, NUMBER *q)
+c_divq(COMPLEX *c, NUMBER *q)
 {
 	COMPLEX *r;
 
@@ -528,7 +528,7 @@ cdivq(COMPLEX *c, NUMBER *q)
 	if (qisone(q))
 		return clink(c);
 	if (qisnegone(q))
-		return cneg(c);
+		return c_neg(c);
 	r = comalloc();
 	qfree(r->real);
 	qfree(r->imag);
@@ -564,7 +564,7 @@ qqtoc(NUMBER *q1, NUMBER *q2)
  * and TRUE if they differ.
  */
 BOOL
-ccmp(COMPLEX *c1, COMPLEX *c2)
+c_cmp(COMPLEX *c1, COMPLEX *c2)
 {
 	BOOL i;
 
@@ -581,7 +581,7 @@ ccmp(COMPLEX *c1, COMPLEX *c2)
  * imaginary parts of the two numbers.
  */
 COMPLEX *
-crel(COMPLEX *c1, COMPLEX *c2)
+c_rel(COMPLEX *c1, COMPLEX *c2)
 {
 	COMPLEX *c;
 

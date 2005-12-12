@@ -33,8 +33,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.73 $$
-# @(#) $Id: Makefile.ship,v 29.73 2004/07/28 12:52:37 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.74 $$
+# @(#) $Id: Makefile.ship,v 29.74 2005/10/18 11:53:37 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -793,6 +793,11 @@ READLINE_LIB=
 #READLINE_LIB= -lreadline -lhistory -lncurses
 #READLINE_LIB= -L/usr/gnu/lib -lreadline -lhistory -lncurses
 #READLINE_LIB= -L/usr/local/lib -lreadline -lhistory -lncurses
+#
+# For Apple OS X: install fink from http://fink.sourceforge.net
+#		  and then do a 'fink install readline' and then use:
+#
+#READLINE_LIB= -L/sw/lib -lreadline -lhistory -lncurses
 #
 READLINE_INCLUDE=
 #READLINE_INCLUDE= -I/usr/gnu/include
