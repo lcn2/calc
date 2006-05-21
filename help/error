@@ -22,13 +22,13 @@ EXAMPLE
     Note that by default, errmax() is 0 so unless errmax() is
     increased you will get:
 
-    > ba = error(10009)
+    ; ba = error(10009)
     Error 10009 caused errcount to exceed errmax
 
-    > errmax(errcount()+1)
+    ; errmax(errcount()+1)
 	   0
-    > a = error(10009)
-    > a
+    ; a = error(10009)
+    ; a
 	   Error 10009
 
 LIMITS
@@ -38,9 +38,10 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    errcount, errmax, errorcodes, iserror, errno, strerror, newerror
+    errcount, errmax, errorcodes, iserror, errno, strerror, newerror,
+    stoponerror
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -56,8 +57,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: error,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: error,v 29.4 2006/05/21 07:31:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/error,v $
 ##
 ## Under source code control:	1995/12/18 03:30:59

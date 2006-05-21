@@ -15,7 +15,7 @@ DESCRIPTION
      the value of this element.
 
 EXAMPLE
-    > lst = list(2,3,4,5)
+    ; lst = list(2,3,4,5)
 
     list (4 elements, 4 nonzero):
       [[0]] = 2
@@ -23,9 +23,9 @@ EXAMPLE
       [[2]] = 4
       [[3]] = 5
 
-    > delete(lst, 2)
+    ; delete(lst, 2)
 	    4
-    > print lst
+    ; print lst
 
     list (3 elements, 3 nonzero):
       [[0]] = 2
@@ -57,8 +57,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: delete,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: delete,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/delete,v $
 ##
 ## Under source code control:	1994/03/19 03:13:18

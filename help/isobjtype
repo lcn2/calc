@@ -14,11 +14,11 @@ DESCRIPTION
     str has been defined or not defined.
 
 EXAMPLE
-    > isobjtype("xy")
+    ; isobjtype("xy")
 	0
 
-    > obj xy {x, y}
-    > isobjtype("xy")
+    ; obj xy {x, y}
+    ; isobjtype("xy")
 	1
 
 LIMITS
@@ -50,8 +50,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: isobjtype,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: isobjtype,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/isobjtype,v $
 ##
 ## Under source code control:	1997/04/05 14:10:17

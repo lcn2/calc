@@ -24,8 +24,8 @@ DESCRIPTION
 
 
 EXAMPLE
-    > c = config("mode", "frac")
-    > print hmean(1), hmean(1,2), hmean(1,2,3), hmean(1,2,3,4), hmean(1,2,0,3)
+    ; c = config("mode", "frac")
+    ; print hmean(1), hmean(1,2), hmean(1,2,3), hmean(1,2,3,4), hmean(1,2,0,3)
     1 4/3 18/11 48/25 0
 
 LIMITS
@@ -53,8 +53,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: hmean,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: hmean,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/hmean,v $
 ##
 ## Under source code control:	1995/12/18 03:30:59

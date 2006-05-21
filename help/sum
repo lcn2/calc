@@ -31,23 +31,23 @@ DESCRIPTION
     the sum of the arguments.
 
 EXAMPLE
-    > print sum(2), sum(5, 3, 7, 2, 9), sum(3.2, -0.5, 8.7, -1.2, 2.5)
+    ; print sum(2), sum(5, 3, 7, 2, 9), sum(3.2, -0.5, 8.7, -1.2, 2.5)
     2 26 12.7
 
-    > print sum(list(3,5), 7, list(6, list(7,8), 2))
+    ; print sum(list(3,5), 7, list(6, list(7,8), 2))
     38
 
 
-    > obj point {x, y}
-    > define point_add(a,b) = obj point = {a.x + b.x, a.y + b.y}
-    > obj point A = {1, 5}
-    > obj point B = {1, 4}
-    > obj point C = {3, 3}
-    > print sum(A, B, C)
+    ; obj point {x, y}
+    ; define point_add(a,b) = obj point = {a.x + b.x, a.y + b.y}
+    ; obj point A = {1, 5}
+    ; obj point B = {1, 4}
+    ; obj point C = {3, 3}
+    ; print sum(A, B, C)
     obj point {5, 12}
 
-    > define point_sum(a) = a.x
-    > print sum(A, B, C)
+    ; define point_sum(a) = a.x
+    ; print sum(A, B, C)
     5
 
 LIMITS
@@ -75,8 +75,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: sum,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: sum,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/sum,v $
 ##
 ## Under source code control:	1997/03/10 03:59:59

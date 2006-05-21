@@ -20,7 +20,7 @@ DESCRIPTION
     t is the the liternal character 't'.
 
 EXAMPLE
-    > version()
+    ; version()
     	    "2.11.5.4"
 
 LIMITS
@@ -48,8 +48,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: version,v 29.3 2001/06/09 23:32:45 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: version,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/version,v $
 ##
 ## Under source code control:	2001/05/28 17:38:01

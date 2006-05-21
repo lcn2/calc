@@ -10,14 +10,13 @@
 #	 or less.  It compiles with gcc -O3 -g3 as well.  You can change all
 #	 this by modifying the Makefile variables below.
 #
-#  NOTE: You might want use the READLINE facility and the less pager if
-#	 your system supports them.  To do this, set:
+#  NOTE: You might want use the READLINE facility if  your system
+#	 has the GNU readline headers and libaraies:
 #
 #	 USE_READLINE= -DUSE_READLINE
 #	 READLINE_LIB= -lreadline -lhistory -lncurses
-#	 CALCPAGER= less
 #
-# Copyright (C) 1999-2004  Landon Curt Noll
+# Copyright (C) 1999-2006  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -33,8 +32,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.74 $$
-# @(#) $Id: Makefile.ship,v 29.74 2005/10/18 11:53:37 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.75 $$
+# @(#) $Id: Makefile.ship,v 29.75 2006/05/19 13:54:05 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -807,10 +806,10 @@ READLINE_INCLUDE=
 #
 # Select CALCPAGER= less.exe -ci for DJGPP.
 #
-CALCPAGER= more
+#CALCPAGER= more
 #CALCPAGER= pg
 #CALCPAGER= cat
-#CALCPAGER= less
+CALCPAGER= less
 #CALCPAGER= less.exe -ci
 
 # Debug/Optimize options for ${CC} and ${LCC}
@@ -983,6 +982,9 @@ EXT=
 #
 # CCOPT are flags given to ${CC} for optimization
 # CCWARN are flags given to ${CC} for warning message control
+# CCWERR are flags given to ${CC} to make warnings fatal errors
+#	NOTE: CCWERR is only set in development Makefiles and must
+#	      only be used with ${CC}, not ${LCC}.
 # CCMISC are misc flags given to ${CC}
 #
 # CFLAGS are all flags given to ${CC} [[often includes CCOPT, CCWARN, CCMISC]]
@@ -1001,6 +1003,7 @@ EXT=
 # Tested on Red Hat 6.0 Linux but should run on almost any Linux release.
 #
 CCWARN= -Wall -W -Wno-comment
+CCWERR=
 CCOPT= ${DEBUG} ${NO_SHARED}
 CCMISC=
 #
@@ -1011,13 +1014,14 @@ LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
 ILDFLAGS=
 #
 LCC= gcc
-CC= ${PURIFY} ${LCC}
+CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 ###
 #
-# gcc set	(some call it gcc2, some call it gcc)
+# gcc set
 #
 #CCWARN= -Wall -W -Wno-comment
+#CCWERR=
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC=
 #
@@ -1028,8 +1032,7 @@ CC= ${PURIFY} ${LCC}
 #ILDFLAGS=
 #
 #LCC= gcc
-#LCC= gcc2
-#CC= ${PURIFY} ${LCC}
+#CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 ###
 #
@@ -1039,6 +1042,7 @@ CC= ${PURIFY} ${LCC}
 # If -O2 -g is not supported try:			DEBUG= -O -g
 #
 #CCWARN=
+#CCWERR=
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC=
 #
@@ -1049,7 +1053,7 @@ CC= ${PURIFY} ${LCC}
 #ILDFLAGS=
 #
 #LCC= cc
-#CC= ${PURIFY} ${LCC}
+#CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 ###
 #
@@ -1067,6 +1071,7 @@ CC= ${PURIFY} ${LCC}
 # woff 1209: cancel 'controlling expression is constant' warnings
 #
 #CCWARN= -fullwarn -woff 1209
+#CCWERR=
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC= -rdata_shared
 #
@@ -1077,7 +1082,7 @@ CC= ${PURIFY} ${LCC}
 #ILDFLAGS=
 #
 #LCC= cc -n32 -xansi
-#CC= ${PURIFY} ${LCC}
+#CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 ###
 #
@@ -1090,6 +1095,7 @@ CC= ${PURIFY} ${LCC}
 # If 'make check' fails use:				DEBUG= -g
 #
 #CCWARN=
+#CCWERR=
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC= +e
 #
@@ -1100,7 +1106,7 @@ CC= ${PURIFY} ${LCC}
 #ILDFLAGS=
 #
 #LCC= cc
-#CC= ${PURIFY} ${LCC}
+#CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 ###
 #
@@ -1110,6 +1116,7 @@ CC= ${PURIFY} ${LCC}
 # If -O2 -g is not supported try:			DEBUG= -O -g
 #
 #CCWARN=
+#CCWERR=
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC= -qlanglvl=ansi
 #
@@ -1120,7 +1127,7 @@ CC= ${PURIFY} ${LCC}
 #ILDFLAGS=
 #
 #LCC= cc
-#CC= ${PURIFY} ${LCC}
+#CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 ###
 #
@@ -1133,6 +1140,7 @@ CC= ${PURIFY} ${LCC}
 # to avoid the use of -Xc (which as a lose performance wise).
 #
 #CCWARN=
+#CCWERR=
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC= -DFORCE_STDC
 #
@@ -1143,7 +1151,7 @@ CC= ${PURIFY} ${LCC}
 #ILDFLAGS=
 #
 #LCC= cc
-#CC= ${PURIFY} ${LCC}
+#CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 ###
 #
@@ -1152,6 +1160,7 @@ CC= ${PURIFY} ${LCC}
 # For better performance, set the following:	DEBUG= -std0 -fast -O4 -static
 #
 #CCWARN=
+#CCWERR=
 #CCOPT= ${DEBUG} ${NO_SHARED}
 #CCMISC=
 #
@@ -1162,7 +1171,7 @@ CC= ${PURIFY} ${LCC}
 #ILDFLAGS=
 #
 #LCC= cc
-#CC= ${PURIFY} ${LCC}
+#CC= ${PURIFY} ${LCC} ${CCWERR}
 
 ##############################################################################
 #-=-=-=-=-=-=-=-=- Be careful if you change something below -=-=-=-=-=-=-=-=-#

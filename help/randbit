@@ -27,10 +27,10 @@ DESCRIPTION
     pseudo-random number generator.
 
 EXAMPLE
-    > print srand(0), randbit(20), randbit(20), randbit(20), randbit(20)
+    ; print srand(0), randbit(20), randbit(20), randbit(20), randbit(20)
     RAND state 817647 476130 944201 822573
 
-    > print srand(0), randbit(-20), randbit(20), randbit(-20), randbit(20)
+    ; print srand(0), randbit(-20), randbit(20), randbit(-20), randbit(20)
     RAND state 20 476130 20 822573
 
 LIMITS
@@ -58,8 +58,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: randbit,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: randbit,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/randbit,v $
 ##
 ## Under source code control:	1996/01/01 03:17:22

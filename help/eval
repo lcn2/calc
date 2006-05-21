@@ -30,18 +30,18 @@ DESCRIPTION
    the scanerror messages and returns the value error(49).
 
 EXAMPLE
-   > str1 = "2 + 3"; print eval(str1);
+   ; str1 = "2 + 3"; print eval(str1);
    5
 
-   > i = 10; str2 = "local i = 0; 7; while (i++ < 5) print i^2,:;"
-   > print i, eval(str2), i
+   ; i = 10; str2 = "local i = 0; 7; while (i++ < 5) print i^2,:;"
+   ; print i, eval(str2), i
    10 1 4 9 16 25 7 10
 
    (The print statements in str2 return the null value, so execution of
    eval(str2) ends by returning the saved value 7.  The global variable
    i is unchanged.)
 
-   > eval("2 + ");
+   ; eval("2 + ");
    Missing expression
 	49
 
@@ -76,8 +76,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: eval,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: eval,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/eval,v $
 ##
 ## Under source code control:	1995/12/18 03:30:59

@@ -15,15 +15,15 @@ DESCRIPTION
     would be printed to standard output by printf(fmt, x_1, x_2, ...).
 
 EXAMPLE
-    > strprintf("h=%d, i=%d", 2, 3);
+    ; strprintf("h=%d, i=%d", 2, 3);
 	    "h=2, i=3"
 
-    > c = config("epsilon", 1e-6); c = config("display", 6);
-    > c = config("tilde", 1); c = config("outround", 0);
-    > c = config("fullzero", 0);
-    > fmt = "%f,%10f,%-10f,%10.4f,%.4f,%.f.\n";
-    > a = sqrt(3);
-    > strprintf(fmt,a,a,a,a,a,a);
+    ; c = config("epsilon", 1e-6); c = config("display", 6);
+    ; c = config("tilde", 1); c = config("outround", 0);
+    ; c = config("fullzero", 0);
+    ; fmt = "%f,%10f,%-10f,%10.4f,%.4f,%.f.\n";
+    ; a = sqrt(3);
+    ; strprintf(fmt,a,a,a,a,a,a);
 	    "1.732051,	1.732051,1.732051  ,   ~1.7320,~1.7320,~1.
     "
 
@@ -52,8 +52,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: strprintf,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: strprintf,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/strprintf,v $
 ##
 ## Under source code control:	1996/03/12 22:50:41

@@ -76,32 +76,32 @@ DESCRIPTION
 
 
 EXAMPLE
-    > b = 3+1
-    > a = b
-    > print a, b
+    ; b = 3+1
+    ; a = b
+    ; print a, b
     4 4
 
-    > obj point {x,y}
-    > mat A[3] = {1, list(2,3), obj point = {4,5}}
+    ; obj point {x,y}
+    ; mat A[3] = {1, list(2,3), obj point = {4,5}}
 
-    > A[1][[0]] = 6; A[2].x = 7
-    > print A[1]
+    ; A[1][[0]] = 6; A[2].x = 7
+    ; print A[1]
 
     list (2 elements, 2 nonzero):
 	[[0]] = 6
 	[[1]] = 3
 
-    > print A[2]
+    ; print A[2]
     obj point {7, 5}
 
-    > A = {A[2], , {9,10}}
-    > print A[0]
+    ; A = {A[2], , {9,10}}
+    ; print A[0]
     obj point {7, 5}
 
-    > print A[2]
+    ; print A[2]
     obj point {9, 10}
 
-    > A = {, {2}}
+    ; A = {, {2}}
     print A[1]
 
     list (2 elements, 2 nonzero):
@@ -133,8 +133,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: assign,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: assign,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/assign,v $
 ##
 ## Under source code control:	1995/05/11 21:03:23

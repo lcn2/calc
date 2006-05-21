@@ -1,0 +1,44 @@
+NAME
+    strncmp - compare two strings up to a specified number of characters 
+
+SYNOPSIS
+    strncmp(s1, s2, n)
+
+TYPES
+    s1		string
+    s2		string
+    n		nonnegative integer
+
+    return	integer (1, 0 or -1)
+
+DESCRIPTION
+    Let n1 = size(s1), n2 = size(s2) and m = min(n1, n2, n).
+    This function compares up to m values of consecutive characters
+    in the strings s1 and s2. If an inequality is encountered, the
+    function returns 1 or -1 according as the greater character is
+    in s1 or s2. If there has been no inequality, the function
+    returns 1, 0, or -1 according as min(n1, n) is greater than, equal
+    to, or less than min(n2, n); in particular, if n1 and n2 are
+    both greater than equal to n, 0 is returned.
+ 
+
+EXAMPLE
+strncmp("abc", "xyz", 0) == 0
+strncmp("abc", "xyz", 1) == -1
+strncmp("abc", "", 1) == 1
+strncmp("a", "b", 2) == -1
+strncmp("ab", "ac", 2) == -1
+strncmp("\0ac", "\0b", 2) == -1
+strncmp("ab", "abc", 2) == 0
+strncmp("abc", "abd", 2) == 0
+
+
+LIMITS
+    none
+
+LINK LIBRARY
+    This function uses FLAG stringrel(STRING *s1, STRING *s2),
+    temporarily replacing the string sizes by min(n1,n) and min(n2,n).
+
+SEE ALSO
+    strcmp

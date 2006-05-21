@@ -1,0 +1,41 @@
+NAME
+    strcpy - copy head or all of a string to head or all of a string
+
+SYNOPSIS
+    strcpy(s1, s2)
+
+TYPES
+    s1		string
+    s2		string
+
+    return	string
+
+DESCRIPTION
+    Let n1 = size(s1), n2 = size(n2), and m = min(n1, n2).
+    This function replaces the first m characters of s1 by the first
+    m characters of s2, and if m < n1, replaces the next character of
+    s1 by '\0'. The size of s1 and any later characters of s1 are unchanged.
+    s1, with its new value, is returned.
+    Unlike the C Library function with the same name, this function does
+    not require n1 to be greater than or equal to n2, but if this is so,
+    normal printing of the returned value will give the same result as
+    normal printing of s2.
+ 
+EXAMPLE
+    strcpy("", "xyz") == ""
+    strcpy("a", "xyz") == "x"
+    strcpy("ab", "xyz") == "xy"
+    strcpy("abc", "xyz") == "xyz"
+    strcpy("abcd", "xyz") == "xyz\0"
+    strcpy("abcde", "xyz") == "xyz\0e"
+    strcpy("abcdef", "xyz") == "xyz\0ef"
+    strcpy("abc", "") == "\0bc"
+
+LIMITS
+    none
+
+LINK LIBRARY
+    STRING* stringcpy(STRING *s1, STRING *s2)
+
+SEE ALSO
+    strncpy

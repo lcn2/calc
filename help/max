@@ -40,25 +40,25 @@ DESCRIPTION
     other relations, it may be difficult to predict the result.
 
 EXAMPLE
-    > print max(2), max(5, 3, 7, 2, 9), max(3.2, -0.5, 8.7, -1.2, 2.5)
+    ; print max(2), max(5, 3, 7, 2, 9), max(3.2, -0.5, 8.7, -1.2, 2.5)
     2 9 8.7
 
-    > print max(list(3,5), 7, list(6, list(7,8), 2))
+    ; print max(list(3,5), 7, list(6, list(7,8), 2))
     8
 
-    > print max("one", "two", "three", "four")
+    ; print max("one", "two", "three", "four")
     two
 
-    > obj point {x, y}
-    > define point_rel(a,b) = sgn(a.x - b.x)
-    > obj point A = {1, 5}
-    > obj point B = {1, 4}
-    > obj point C = {3, 3}
-    > print max(A, B, C)
+    ; obj point {x, y}
+    ; define point_rel(a,b) = sgn(a.x - b.x)
+    ; obj point A = {1, 5}
+    ; obj point B = {1, 4}
+    ; obj point C = {3, 3}
+    ; print max(A, B, C)
     obj point {3, 3}
 
-    > define point_max(a) = a.x
-    > print max(A, B, C)
+    ; define point_max(a) = a.x
+    ; print max(A, B, C)
     3
 
 LIMITS
@@ -86,8 +86,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: max,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: max,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/max,v $
 ##
 ## Under source code control:	1995/10/05 04:52:27

@@ -110,11 +110,11 @@ DESCRIPTION
 	poly(clist, x_0, x_1, x_2, x_3, x_4, x_5).
 
 EXAMPLE
-    > print poly(2, 3, 5, 7), poly(list(5, 3, 2), 7), 5 + 3 * 7 + 2 * 7^2
+    ; print poly(2, 3, 5, 7), poly(list(5, 3, 2), 7), 5 + 3 * 7 + 2 * 7^2
     124 124 124
 
-    > mat A[2,2] = {1,2,3,4}
-    > mat I[2,2] = {1,0,0,1}
+    ; mat A[2,2] = {1,2,3,4}
+    ; mat I[2,2] = {1,0,0,1}
     print poly(2 * I, 3 * I, 5 * I, A)
 
     mat [2,2] (4 elements, 4 nonzero)
@@ -123,8 +123,8 @@ EXAMPLE
       [1,0] = 39
       [1,1] = 61
 
-    > P = list(list(0,0,1), list(0,2), 3); x = 4; y = 5
-    > print poly(P,x,y), poly(P, list(x,y)), y^2 + 2 * y * x + 3 * x^2
+    ; P = list(list(0,0,1), list(0,2), 3); x = 4; y = 5
+    ; print poly(P,x,y), poly(P, list(x,y)), y^2 + 2 * y * x + 3 * x^2
     113 113 113
 
 LIMITS
@@ -152,8 +152,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: poly,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: poly,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/poly,v $
 ##
 ## Under source code control:	1995/12/02 02:40:43

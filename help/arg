@@ -16,11 +16,11 @@ DESCRIPTION
     but usually less than 0.5 * abs(eps).
 
 EXAMPLE
-    > print arg(2), arg(2+3i, 1e-5), arg(2+3i, 1e-10), arg(2+3i, 1e-20)
+    ; print arg(2), arg(2+3i, 1e-5), arg(2+3i, 1e-10), arg(2+3i, 1e-20)
     0 .98279 .9827937232 .98279372324732906799
 
-    > pi = pi(1e-10); deg = pi/180; eps = deg/10000
-    > print arg(2+3i, eps)/deg, arg(-1 +1i, eps)/deg, arg(-1 - 1i,eps)/deg
+    ; pi = pi(1e-10); deg = pi/180; eps = deg/10000
+    ; print arg(2+3i, eps)/deg, arg(-1 +1i, eps)/deg, arg(-1 - 1i,eps)/deg
     56.3099 135 -135
 
 LIMITS
@@ -48,8 +48,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: arg,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: arg,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/arg,v $
 ##
 ## Under source code control:	1994/09/25 20:22:31

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: qtrans.c,v 29.6 2004/10/23 00:58:59 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: qtrans.c,v 29.7 2006/05/07 13:04:18 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qtrans.c,v $
  *
  * Under source code control:	1990/02/15 01:48:22
@@ -40,6 +40,12 @@
 HALF _qlgenum_[] = { 36744 };
 HALF _qlgeden_[] = { 25469 };
 NUMBER _qlge_ = { { _qlgenum_, 1, 0 }, { _qlgeden_, 1, 0 }, 1, NULL };
+
+/*
+ * cache the natural logarithm of 10
+ */
+static NUMBER *ln_10 = NULL;
+static NUMBER *ln_10_epsilon = NULL;
 
 static NUMBER *pivalue[2];
 static NUMBER *qexprel(NUMBER *q, long bitnum);
@@ -910,7 +916,7 @@ qln(NUMBER *q, NUMBER *epsilon)
 	BOOL neg;
 
 	if (qiszero(q) || qiszero(epsilon)) {
-		math_error("Zero argument for qln");
+		math_error("logarithm of 0");
 		/*NOTREACHED*/
 	}
 	if (qisunit(q))
@@ -1004,6 +1010,83 @@ qln(NUMBER *q, NUMBER *epsilon)
 	res = qmappr(qtmp, epsilon, 24L);
 	qfree(qtmp);
 	return res;
+}
+
+
+/*
+ * Calculate the base 10 logarithm
+ *
+ *	log(q) = ln(q) / ln(10)
+ */
+NUMBER *
+qlog(NUMBER *q, NUMBER *epsilon)
+{
+	int need_new_ln_10 = TRUE;	/* FALSE => use cached ln_10 value */
+	NUMBER *ln_q;			/* ln(x) */
+	NUMBER *ret;			/* base 10 logarithm of x */
+
+	/* firewall */
+	if (qiszero(q) || qiszero(epsilon)) {
+		math_error("logarithm of 0");
+		/*NOTREACHED*/
+	}
+
+	/*
+	 * shortcut for small integer powers of 10
+	 */
+	if (qisint(q) && qispos(q) && !zge8192b(q->num) && ziseven(q->num)) {
+		BOOL is_10_power;	/* TRUE ==> q is a power of 10 */
+		long ilog_10;		/* integer log base 10 */
+
+		/* try for a quick small power of 10 log */
+		ilog_10 = zlog10(q->num, &is_10_power );
+		if (is_10_power == TRUE) {
+			/* is small power of 10, return log */
+			return itoq(ilog_10);
+		}
+		/* q is an even integer that is not a power of 10 */
+	}
+
+	/*
+	 * compute ln(c) first
+	 */
+	ln_q = qln(q, epsilon);
+	/* log(1) == 0 */
+	if (qiszero(ln_q)) {
+		return ln_q;
+	}
+
+	/*
+	 * save epsilon for ln(10) if needed
+	 */
+	if (ln_10_epsilon == NULL) {
+		/* first time call */
+		ln_10_epsilon = qcopy(epsilon);
+	} else if (qcmp(ln_10_epsilon, epsilon) == FALSE) {
+		/* replaced cacheed value with epsilon arg */
+		qfree(ln_10_epsilon);
+		ln_10_epsilon = qcopy(epsilon);
+	} else if (ln_10 != NULL) {
+		/* the previously computed ln(2) is OK to use */
+		need_new_ln_10 = FALSE;
+	}
+
+	/*
+	 * compute ln(10) if needed
+	 */
+	if (need_new_ln_10 == TRUE) {
+		if (ln_10 != NULL) {
+			qfree(ln_10);
+		}
+		ln_10 = qln(&_qten_, ln_10_epsilon);
+	}
+
+	/*
+	 * return ln(q) / ln(10)
+	 */
+	ret = qqdiv(ln_q, ln_10);
+	qfree(ln_q);
+	return ret;
 }
 
 

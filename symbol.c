@@ -1,7 +1,7 @@
 /*
  * symbol - global and local symbol routines
  *
- * Copyright (C) 1999  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2006  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: symbol.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: symbol.c,v 29.5 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/symbol.c,v $
  *
  * Under source code control:	1990/02/15 01:48:23
@@ -94,7 +94,7 @@ addglobal(char *name, BOOL isstatic)
 {
 	GLOBAL *sp;		/* current symbol pointer */
 	GLOBAL **hp;		/* hash table head address */
-	int len;		/* length of string */
+	size_t len;		/* length of string */
 	int newfilescope;	/* file scope being looked for */
 	int newfuncscope;	/* function scope being looked for */
 
@@ -104,7 +104,7 @@ addglobal(char *name, BOOL isstatic)
 		newfilescope = filescope;
 		newfuncscope = funcscope;
 	}
-	len = (int)strlen(name);
+	len = strlen(name);
 	if (len <= 0)
 		return NULL;
 	hp = &globalhash[HASHSYM(name, len)];
@@ -140,10 +140,10 @@ findglobal(char *name)
 {
 	GLOBAL *sp;		/* current symbol pointer */
 	GLOBAL *bestsp;		/* found symbol with highest scope */
-	long len;		/* length of string */
+	size_t len;		/* length of string */
 
 	bestsp = NULL;
-	len = (long) strlen(name);
+	len = strlen(name);
 	for (sp = globalhash[HASHSYM(name, len)]; sp; sp = sp->g_next) {
 		if ((sp->g_len == len) && !strcmp(sp->g_name, name)) {
 			if ((bestsp == NULL) ||
@@ -243,76 +243,76 @@ printtype(VALUE *vp)
 		return;
 	}
 	switch (type) {
-		case V_NUM:
-			printf("real = ");
-			fitprint(vp->v_num, 32);
-			return;
-		case V_COM:
-			printf("complex = ");
-			fitprint(vp->v_com->real, 8);
-			if (!vp->v_com->imag->num.sign)
-				printf("+");
-			fitprint(vp->v_com->imag, 8);
-			printf("i");
-			return;
-		case V_STR:
-			printf("string = \"");
-			fitstring(vp->v_str->s_str, vp->v_str->s_len, 50);
-			printf("\"");
-			return;
-		case V_NULL:
-			s = "null";
-			break;
-		case V_MAT:
-			s = "matrix";
-			break;
-		case V_LIST:
-			s = "list";
-			break;
-		case V_ASSOC:
-			s = "association";
-			break;
-		case V_OBJ:
-			printf("%s ", objtypename(
-				vp->v_obj->o_actions->oa_index));
-			s = "object";
-			break;
-		case V_FILE:
-			s = "file id";
-			break;
-		case V_RAND:
-			s = "additive 55 random state";
-			break;
-		case V_RANDOM:
-			s = "Blum random state";
-			break;
-		case V_CONFIG:
-			s = "config state";
-			break;
-		case V_HASH:
-			s = "hash state";
-			break;
-		case V_BLOCK:
-			s = "unnamed block";
-			break;
-		case V_NBLOCK:
-			s = "named block";
-			break;
-		case V_VPTR:
-			s = "value pointer";
-			break;
-		case V_OPTR:
-			s = "octet pointer";
-			break;
-		case V_SPTR:
-			s = "string pointer";
-			break;
-		case V_NPTR:
-			s = "number pointer";
-			break;
-		default:
-			s = "???";
-			break;
+	case V_NUM:
+		printf("real = ");
+		fitprint(vp->v_num, 32);
+		return;
+	case V_COM:
+		printf("complex = ");
+		fitprint(vp->v_com->real, 8);
+		if (!vp->v_com->imag->num.sign)
+			printf("+");
+		fitprint(vp->v_com->imag, 8);
+		printf("i");
+		return;
+	case V_STR:
+		printf("string = \"");
+		fitstring(vp->v_str->s_str, vp->v_str->s_len, 50);
+		printf("\"");
+		return;
+	case V_NULL:
+		s = "null";
+		break;
+	case V_MAT:
+		s = "matrix";
+		break;
+	case V_LIST:
+		s = "list";
+		break;
+	case V_ASSOC:
+		s = "association";
+		break;
+	case V_OBJ:
+		printf("%s ", objtypename(
+			vp->v_obj->o_actions->oa_index));
+		s = "object";
+		break;
+	case V_FILE:
+		s = "file id";
+		break;
+	case V_RAND:
+		s = "additive 55 random state";
+		break;
+	case V_RANDOM:
+		s = "Blum random state";
+		break;
+	case V_CONFIG:
+		s = "config state";
+		break;
+	case V_HASH:
+		s = "hash state";
+		break;
+	case V_BLOCK:
+		s = "unnamed block";
+		break;
+	case V_NBLOCK:
+		s = "named block";
+		break;
+	case V_VPTR:
+		s = "value pointer";
+		break;
+	case V_OPTR:
+		s = "octet pointer";
+		break;
+	case V_SPTR:
+		s = "string pointer";
+		break;
+	case V_NPTR:
+		s = "number pointer";
+		break;
+	default:
+		s = "???";
+		break;
 	}
 	printf("%s", s);
 }
@@ -339,12 +339,12 @@ writeglobals(char *name)
 	for (hp = &globalhash[HASHSIZE-1]; hp >= globalhash; hp--) {
 		for (sp = *hp; sp; sp = sp->g_next) {
 			switch (sp->g_value.v_type) {
-				case V_NUM:
-				case V_COM:
-				case V_STR:
-					break;
-				default:
-					continue;
+			case V_NUM:
+			case V_COM:
+			case V_STR:
+				break;
+			default:
+				continue;
 			}
 			math_fmt("%s = ", sp->g_name);
 			savemode = math_setmode(MODE_HEX);
@@ -496,7 +496,7 @@ endscope(char *name, BOOL isglobal)
 	GLOBAL *sp;
 	GLOBAL *prevsp;
 	GLOBAL **hp;
-	int len;
+	size_t len;
 
 	len = strlen(name);
 	prevsp = NULL;

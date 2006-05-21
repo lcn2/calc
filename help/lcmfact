@@ -13,7 +13,7 @@ DESCRIPTION
     Returns the lcm of the integers 1, 2, ..., n.
 
 EXAMPLE
-    > for (i = 1; i <= 15; i++) print lcmfact(i),:;
+    ; for (i = 1; i <= 15; i++) print lcmfact(i),:;
     1 2 6 12 60 60 420 840 2520 2520 27720 27720 360360 360360 360360
 
 LIMITS
@@ -42,8 +42,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: lcmfact,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: lcmfact,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/lcmfact,v $
 ##
 ## Under source code control:	1995/12/18 12:34:57

@@ -95,13 +95,13 @@ DESCRIPTION
 		cfsim(1/x, rnd) = 1/cfsim(x, rnd).
 
 EXAMPLE
-    > c = config("mode", "frac");
+    ; c = config("mode", "frac");
 
-    > print cfsim(43/30, 0), cfsim(43/30, 1), cfsim(43/30, 8), cfsim(43/30,16)
+    ; print cfsim(43/30, 0), cfsim(43/30, 1), cfsim(43/30, 8), cfsim(43/30,16)
     10/7 33/23 10/7 33/23
 
-    > x = pi(1e-20); c = config("mode", "frac");
-    > while (!isint(x)) {x = cfsim(x,8); if (den(x) < 1e6) print x,:;}
+    ; x = pi(1e-20); c = config("mode", "frac");
+    ; while (!isint(x)) {x = cfsim(x,8); if (den(x) < 1e6) print x,:;}
     1146408/364913 312689/99532 104348/33215 355/113 22/7 3
 
 LIMITS
@@ -129,8 +129,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: cfsim,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: cfsim,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/cfsim,v $
 ##
 ## Under source code control:	1994/09/30 01:29:45

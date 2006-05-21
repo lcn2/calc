@@ -29,16 +29,16 @@ DESCRIPTION
 	digits(-0.123) == 1     combination of all of the above
 
 EXAMPLE
-    > print digits(100), digits(23209), digits(2^72)
+    ; print digits(100), digits(23209), digits(2^72)
     3 5 22
 
-    > print digits(0), digits(1), digits(-1)
+    ; print digits(0), digits(1), digits(-1)
     1 1 1
 
-    > print digits(-1234), digits(12.3456), digits(107.207)
+    ; print digits(-1234), digits(12.3456), digits(107.207)
     4 2 3
 
-    > print digits(17^463-1, 17), digits(10000, 100), digits(21701, 2)
+    ; print digits(17^463-1, 17), digits(10000, 100), digits(21701, 2)
     3, 15 14
 
 LIMITS
@@ -66,8 +66,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.5 $
-## @(#) $Id: digits,v 29.5 2003/01/26 19:41:35 chongo Exp $
+## @(#) $Revision: 29.6 $
+## @(#) $Id: digits,v 29.6 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/digits,v $
 ##
 ## Under source code control:	1995/10/03 10:40:01

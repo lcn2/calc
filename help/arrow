@@ -23,21 +23,21 @@ DESCRIPTION
     Spaces or tabs on either side of -> are optional.
 
 EXAMPLES
-    > obj pair {one, two}
-    > obj pair A, B
-    > p = &A
-    > p->one = 1; p->two = 2
-    > A
+    ; obj pair {one, two}
+    ; obj pair A, B
+    ; p = &A
+    ; p->one = 1; p->two = 2
+    ; A
 	    obj pair {1, 2}
 
-    > A->two = &B
-    > p->two->one = 3; p->two->two = 4
+    ; A->two = &B
+    ; p->two->one = 3; p->two->two = 4
 
-    > *p->ptwo
+    ; *p->ptwo
 	    obj pair {3, 4}
 
-    > B = {5,6}
-    > *p->two
+    ; B = {5,6}
+    ; *p->two
 	    obj pair {5, 6}
 
 
@@ -66,8 +66,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: arrow,v 29.3 2002/07/10 11:47:04 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: arrow,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/arrow,v $
 ##
 ## Under source code control:	1997/09/06 20:03:34

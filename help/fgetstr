@@ -25,17 +25,17 @@ DESCRIPTION
     entered (on many terminals this is by ctrl-@).
 
 EXAMPLE
-    > f = fopen("/tmp/junk", "w")
-    > fputstr(f, "  Alpha    Beta ", "", "Gamma\n\tDelta")
-    > freopen(f, "r")
-    > fgetstr(f)
+    ; f = fopen("/tmp/junk", "w")
+    ; fputstr(f, "  Alpha    Beta ", "", "Gamma\n\tDelta")
+    ; freopen(f, "r")
+    ; fgetstr(f)
 	"  Alpha    Beta "
-    > fgetstr(f)
+    ; fgetstr(f)
 	""
-    > fgetstr(f)
+    ; fgetstr(f)
 	"Gamma
 	Delta"
-    > fgetstr(f)
+    ; fgetstr(f)
     >
 
 LIMITS
@@ -63,8 +63,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: fgetstr,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: fgetstr,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/fgetstr,v $
 ##
 ## Under source code control:	1996/04/30 03:05:17

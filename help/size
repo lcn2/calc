@@ -30,22 +30,22 @@ DESCRIPTION
 	named block	numer of octets of data it currently holds
 
 EXAMPLE
-    > print size(null()), size(3), size(2 - 7i), size("abc")
+    ; print size(null()), size(3), size(2 - 7i), size("abc")
     0 1 1 1
 
-    > mat M[2,3]
-    > print size(M), size(list()), size(list(2,3,4))
+    ; mat M[2,3]
+    ; print size(M), size(list()), size(list(2,3,4))
     6 0 3
 
-    > A = assoc()
-    > A[1] = 3, A[1,2] = 6, A["three"] = 5
-    > print size(A)
+    ; A = assoc()
+    ; A[1] = 3, A[1,2] = 6, A["three"] = 5
+    ; print size(A)
     3
 
-    > obj point {x,y}
-    > obj point P = {4,-5}
-    > define point_size(a) = abs(a.x) + abs(a.y)
-    > print size(P)
+    ; obj point {x,y}
+    ; obj point P = {4,-5}
+    ; define point_size(a) = abs(a.x) + abs(a.y)
+    ; print size(P)
     9
 
 LIMITS
@@ -73,8 +73,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: size,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: size,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/size,v $
 ##
 ## Under source code control:	1994/03/19 03:13:22

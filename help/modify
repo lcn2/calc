@@ -2,29 +2,43 @@ NAME
     modify - modify a list or matrix by changing the values of its elements
 
 SYNOPSIS
-    modify(x, y)
+    modify(A, fname)
 
 TYPES
-    x		lvalue with list or matrix value
-    y		string
+    A		lvalue with list, matrix or objectvalue
+    fname	string, the name of a user-defined function
 
-    return	null value
+    return	null value if successful, otherwise an error value
 
 DESCRIPTION
-    For modify(x, y), y is to be the name fname of a user-defined function.
-    The value of each element of x is replaced by the value of the
-    function at that value, i.e.  if fname = "f", the value of x[[i]]
-    is changed to f(x[[i]]).
+    The value of each element of A is replaced by the value at that
+    value of the user-defined function with name fname. Thus,
+    modify(A, "f") has the effect of
 
-    As the name indicates, modify(x) usually changes x values of elements
-    in x.  To obtain a modified copy of x without changing values in x,
-    one may xmod = x; modify(xmod, y) or more simply (xmod = x, y).
+	for (i = 0; i < size(A); i++) A[[i]] = f(A[[i]]);
+
+    An error value is returned if A is not of acceptable type, if A has
+    no-change protection, or if there is no user-defined function with
+    name fname. The assignments are executed even if the protection
+    status of some elements A[[i]] would normally prevent the
+    assignment of f(A[[i]]) to A[[i]]. The modified elements retain
+    whatever kinds of protection they had as well as gaining any
+    other kinds of protection in the values returned by the function.
+
+    To obtain a modified copy of A without changing values in A,
+    one may use
+
+	Amod = A; modify(A, fname)
+
+    or more simply
+
+	modify(Amod = A, fname).
 
 EXAMPLE
-    > define f(x) = x^2
-    > A = list(2,4,6)
-    > modify(A, "f")
-    > print A
+    ; define f(x) = x^2
+    ; A = list(2,4,6)
+    ; modify(A, "f")
+    ; print A
 
     list (3 elements, 3 nonzero):
 	  [[0]] = 4
@@ -56,8 +70,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: modify,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: modify,v 29.4 2006/05/19 15:12:57 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/modify,v $
 ##
 ## Under source code control:	1995/07/10 02:09:31

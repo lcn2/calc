@@ -27,12 +27,12 @@ DESCRIPTION
     be averaged.
 
 EXAMPLE
-    > print avg(1,2,3,4,5), avg(list(1,2,3,4,5)), avg(1,2,list(3,4,5))
+    ; print avg(1,2,3,4,5), avg(list(1,2,3,4,5)), avg(1,2,list(3,4,5))
     3 3 3
 
-    > mat x[2,2] = {1,2,3,4}
-    > mat y[2,2] = {1,2,4,8}
-    > avg(x,y)
+    ; mat x[2,2] = {1,2,3,4}
+    ; mat y[2,2] = {1,2,4,8}
+    ; avg(x,y)
 
     mat [2,2] (4 elements, 4 nonzero):
       [0,0] = 1
@@ -65,8 +65,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: avg,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: avg,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/avg,v $
 ##
 ## Under source code control:	1994/09/25 20:22:31

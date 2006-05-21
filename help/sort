@@ -207,8 +207,8 @@ DESCRIPTION
 	1			The order of the elements is reversed
 
 EXAMPLES
-    > A = list(1, 7, 2, 4, 2)
-    > print sort(A)
+    ; A = list(1, 7, 2, 4, 2)
+    ; print sort(A)
 
     list (5 elements, 5 nonzero):
 	  [[0]] = 1
@@ -217,8 +217,8 @@ EXAMPLES
 	  [[3]] = 4
 	  [[4]] = 7
 
-    > B = list("pear", 2, null(), -3, "orange", null(), "apple", 0)
-    > print sort(B)
+    ; B = list("pear", 2, null(), -3, "orange", null(), "apple", 0)
+    ; print sort(B)
 
     list (8 elements, 7 nonzero):
 	  [[0]] = NULL
@@ -230,8 +230,8 @@ EXAMPLES
 	  [[6]] = "orange"
 	  [[7]] = "pear"
 
-    > define precedes(a,b) = (iseven(a) && isodd(b))
-    > print sort(A)
+    ; define precedes(a,b) = (iseven(a) && isodd(b))
+    ; print sort(A)
 
     list (5 elements, 5 nonzero):
 	  [[0]] = 2
@@ -265,8 +265,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: sort,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: sort,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/sort,v $
 ##
 ## Under source code control:	1995/07/09 19:41:26

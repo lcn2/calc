@@ -25,19 +25,19 @@ DESCRIPTION
     the two results being probably at most abs(eps).
 
 EXAMPLE
-    > print power(1.2345, 10, 1e-5), power(1.2345, 10, 1e-10)
+    ; print power(1.2345, 10, 1e-5), power(1.2345, 10, 1e-10)
     8.22074 8.2207405646
 
-    > print power(1+3i, 3, 1e-5), power(1 + 3i, 2+ 1i, 1e-5)
+    ; print power(1+3i, 3, 1e-5), power(1 + 3i, 2+ 1i, 1e-5)
     -26-18i -2.50593-1.39445i
 
-    > print power(1+ 1e-30, 1e30, 1e-20)
+    ; print power(1+ 1e-30, 1e30, 1e-20)
     2.71828182845904523536
 
-    > print power(1i, 1i, 1e-20)
+    ; print power(1i, 1i, 1e-20)
     .20787957635076190855
 
-    > print power(exp(1, 1e-20), pi(1e-20) * 1i/2, 1e-20)
+    ; print power(exp(1, 1e-20), pi(1e-20) * 1i/2, 1e-20)
     1i
 
 LIMITS
@@ -71,8 +71,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: power,v 29.3 2005/10/18 10:48:29 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: power,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/power,v $
 ##
 ## Under source code control:	1995/10/25 04:03:46

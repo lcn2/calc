@@ -14,7 +14,7 @@ DESCRIPTION
     less than 0.75 eps, and in nearly all cases by less than 0.5 eps.
 
 EXAMPLE
-    > print pi(1e-5), pi(1e-10), pi(1e-15), pi(1e-20)
+    ; print pi(1e-5), pi(1e-10), pi(1e-15), pi(1e-20)
     3.14159 3.1415926536 3.141592653589793 3.14159265358979323846
 
 LIMITS
@@ -42,8 +42,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: pi,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: pi,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/pi,v $
 ##
 ## Under source code control:	1995/10/25 04:03:46

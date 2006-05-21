@@ -1,7 +1,7 @@
 /*
  * longbits - Determine the number if bits in a char, short, int or long
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2006  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: longbits.c,v 29.3 2004/03/31 04:18:19 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: longbits.c,v 29.5 2006/05/19 15:26:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/longbits.c,v $
  *
  * Under source code control:	1994/03/18 03:06:18
@@ -108,7 +108,7 @@ int
 main(int argc, char **argv)
 {
 	int exitcode = 0;	/* how we will exit */
-	int long_bits = 0;	/* bit length of a long */
+	size_t long_bits = 0;	/* bit length of a long */
 	int forced_size = 0;	/* 1 => size of long was forced via arg */
 	char value;		/* signed or maybe unsigned character */
 
@@ -229,10 +229,10 @@ main(int argc, char **argv)
 		printf("typedef unsigned char USB8;\t/* XX%s/ -=*#*=-\n",
 		  "X - should be 8 unsigned bits but is not *");
 		if (value < 1) {
-			printf("typedef char SB8;\t/* XX%s/ -=*#*=-\n",
+			printf("typedef char SB8;\t\t/* XX%s/ -=*#*=-\n",
 			  "X - should be 8 signed bits but is not *");
 		} else {
-			printf("typedef signed char SB8;\t/* XX%s/ -=*#*=-\n",
+			printf("typedef signed char SB8;\t\t/* XX%s/ -=*#*=-\n",
 			  "X - should be 8 signed bits but is not *");
 		}
 		exitcode = 3;
@@ -240,10 +240,10 @@ main(int argc, char **argv)
 		printf("typedef unsigned char USB8;\t/%s/\n",
 		  "* unsigned 8 bits *");
 		if (value < 1) {
-			printf("typedef char SB8;\t/%s/\n",
+			printf("typedef char SB8;\t\t/%s/\n",
 			  "* signed 8 bits *");
 		} else {
-			printf("typedef signed char SB8;\t/%s/\n",
+			printf("typedef signed char SB8;\t\t/%s/\n",
 			  "* signed 8 bits *");
 		}
 	}

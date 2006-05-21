@@ -100,6 +100,7 @@ extern COMPLEX *c_sqrt(COMPLEX *c, NUMBER *epsilon, long R);
 extern COMPLEX *c_root(COMPLEX *c, NUMBER *q, NUMBER *epsilon);
 extern COMPLEX *c_exp(COMPLEX *c, NUMBER *epsilon);
 extern COMPLEX *c_ln(COMPLEX *c, NUMBER *epsilon);
+extern COMPLEX *c_log(COMPLEX *c, NUMBER *epsilon);
 extern COMPLEX *c_cos(COMPLEX *c, NUMBER *epsilon);
 extern COMPLEX *c_sin(COMPLEX *c, NUMBER *epsilon);
 extern COMPLEX *c_cosh(COMPLEX *c, NUMBER *epsilon);

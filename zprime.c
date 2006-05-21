@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: zprime.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: zprime.c,v 29.3 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zprime.c,v $
  *
  * Under source code control:	1994/05/29 04:34:36
@@ -1002,27 +1002,27 @@ zprimetest(ZVALUE z, long count, ZVALUE skip)
 	pr = prime;
 	for (i = 0; i < count; i++) {
 		switch (type) {
-			case 0:
-				zfree(zbase);
-				zrandrange(_two_, zm1, &zbase);
+		case 0:
+			zfree(zbase);
+			zrandrange(_two_, zm1, &zbase);
+			break;
+		case 1:
+			if (i == 0)
 				break;
-			case 1:
-				if (i == 0)
-					break;
-				zfree(zbase);
-				if (*pr == 1 || (long)*pr >= limit) {
-					zfree(z1);
-					zfree(zm1);
-					return TRUE;
-				}
-				itoz((long) *pr++, &zbase);
+			zfree(zbase);
+			if (*pr == 1 || (long)*pr >= limit) {
+				zfree(z1);
+				zfree(zm1);
+				return TRUE;
+			}
+			itoz((long) *pr++, &zbase);
+			break;
+		default:
+			if (i == 0)
 				break;
-			default:
-				if (i == 0)
-					break;
-				zadd(zbase, _one_, &z3);
-				zfree(zbase);
-				zbase = z3;
+			zadd(zbase, _one_, &z3);
+			zfree(zbase);
+			zbase = z3;
 		}
 
 		ij = 0;
@@ -1107,43 +1107,43 @@ zredcprimetest(ZVALUE z, long count, ZVALUE skip)
 
 	for (i = 0; i < count; i++) {
 		switch (type) {
-			case 0:
-				do {
-					zfree(zbase);
-					zrandrange(_one_, z, &zbase);
-				}
-				while (!zcmp(zbase, rp->one) ||
-						!zcmp(zbase, zredcm1));
-				break;
-			case 1:
-				if (i == 0) {
-					break;
-				}
+		case 0:
+			do {
 				zfree(zbase);
-				if (*pr == 1 || (long)*pr >= limit) {
-					zfree(z1);
-					zfree(zm1);
-					if (z.len < conf->redc2) {
-						zredcfree(rp);
-						zfree(zredcm1);
-					}
-					return TRUE;
-				}
-				itoz((long) *pr++, &z3);
-				zredcencode(rp, z3, &zbase);
-				zfree(z3);
+				zrandrange(_one_, z, &zbase);
+			}
+			while (!zcmp(zbase, rp->one) ||
+					!zcmp(zbase, zredcm1));
+			break;
+		case 1:
+			if (i == 0) {
 				break;
-			default:
-				if (i == 0)
-					break;
-				zadd(zbase, rp->one, &z3);
+			}
+			zfree(zbase);
+			if (*pr == 1 || (long)*pr >= limit) {
+				zfree(z1);
+				zfree(zm1);
+				if (z.len < conf->redc2) {
+					zredcfree(rp);
+					zfree(zredcm1);
+				}
+				return TRUE;
+			}
+			itoz((long) *pr++, &z3);
+			zredcencode(rp, z3, &zbase);
+			zfree(z3);
+			break;
+		default:
+			if (i == 0)
+				break;
+			zadd(zbase, rp->one, &z3);
+			zfree(zbase);
+			zbase = z3;
+			if (zrel(zbase, z) >= 0) {
+				zsub(zbase, z, &z3);
 				zfree(zbase);
 				zbase = z3;
-				if (zrel(zbase, z) >= 0) {
-					zsub(zbase, z, &z3);
-					zfree(zbase);
-					zbase = z3;
-				}
+			}
 		}
 
 		ij = 0;

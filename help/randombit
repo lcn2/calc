@@ -27,9 +27,9 @@ DESCRIPTION
     pseudo-random number generator.
 
 EXAMPLE
-    > print srandom(0), randombit(20), randombit(20), randombit(20)
+    ; print srandom(0), randombit(20), randombit(20), randombit(20)
     RANDOM state 523139 567456 693508
-    > print srandom(0), randombit(-20), randombit(20), randombit(-20)
+    ; print srandom(0), randombit(-20), randombit(20), randombit(-20)
     RANDOM state 20 567456 20
 
 LIMITS
@@ -57,8 +57,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: randombit,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: randombit,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/randombit,v $
 ##
 ## Under source code control:	1997/02/17 01:18:22

@@ -26,14 +26,14 @@ DESCRIPTION
     For any integer y, x == join(head(x,-y), tail(x,y)).
 
 EXAMPLE
-    > A = list(2, 3, 5, 7, 11)
-    > tail(A, 2)
+    ; A = list(2, 3, 5, 7, 11)
+    ; tail(A, 2)
 
     list (2 members, 2 nonzero):
 	  [[0]] = 7
 	  [[1]] = 11
 
-    > tail(A, -2)
+    ; tail(A, -2)
 
     list (3 members, 3 nonzero):
 	  [[0]] = 5
@@ -65,8 +65,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: tail,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: tail,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/tail,v $
 ##
 ## Under source code control:	1995/07/10 02:09:30

@@ -16,17 +16,17 @@ DESCRIPTION
     found at the beginning of s, 1 is returned.
 
 EXAMPLE
-    > strpos("abcdefg", "c")
+    ; strpos("abcdefg", "c")
 	    3
-    > strpos("abcdefg", "def")
+    ; strpos("abcdefg", "def")
 	    4
-    > strpos("abcdefg", "defg")
+    ; strpos("abcdefg", "defg")
 	    4
-    > strpos("abcdefg", "defgh")
+    ; strpos("abcdefg", "defgh")
 	    0
-    > strpos("abcdefg", "abc")
+    ; strpos("abcdefg", "abc")
 	    1
-    > strpos("abcdefg", "xyz")
+    ; strpos("abcdefg", "xyz")
 	    0
 
 
@@ -55,8 +55,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: strpos,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: strpos,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/strpos,v $
 ##
 ## Under source code control:	1995/07/09 03:48:57

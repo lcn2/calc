@@ -26,7 +26,7 @@ DESCRIPTION
     as x in which m[[i]] = int(x[[i]]).
 
 EXAMPLE
-    > print int(3), int(22/7), int(27/7), int(-3.125), int(2.15 - 3.25i)
+    ; print int(3), int(22/7), int(27/7), int(-3.125), int(2.15 - 3.25i)
     3 3 3 -3 2-3i
 
 LIMITS
@@ -56,8 +56,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: int,v 29.3 2005/10/18 10:48:29 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: int,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/int,v $
 ##
 ## Under source code control:	1994/09/30 00:57:18

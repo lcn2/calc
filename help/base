@@ -60,13 +60,13 @@ DESCRIPTION
     listed in the table above.
 
 EXAMPLE
-    > base()
+    ; base()
 	    10
 
-    > base(8)
+    ; base(8)
 	    012
 
-    > print 10
+    ; print 10
     012
 
 LIMITS
@@ -97,8 +97,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.5 $
-## @(#) $Id: base,v 29.5 2002/12/29 09:17:54 chongo Exp $
+## @(#) $Revision: 29.6 $
+## @(#) $Id: base,v 29.6 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/base,v $
 ##
 ## Under source code control:	1994/09/30 00:09:39

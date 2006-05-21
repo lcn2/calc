@@ -23,7 +23,7 @@ DESCRIPTION
     for which 2^n * x is an integer.
 
 EXAMPLE
-    > print scale(3, 2), scale(3,1), scale(3,0), scale(3,-1), scale(3,-2)
+    ; print scale(3, 2), scale(3,1), scale(3,0), scale(3,-1), scale(3,-2)
     12 6 3 1.5 .75
 
 LIMITS
@@ -53,8 +53,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: scale,v 29.3 2005/10/18 10:48:29 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: scale,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/scale,v $
 ##
 ## Under source code control:	1995/12/18 12:34:58

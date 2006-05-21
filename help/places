@@ -25,10 +25,10 @@ DESCRIPTION
     factor of den(x) is a factor of b.
 
 EXAMPLE
-    > print places(3), places(0.0123), places(3.70), places(1e-10), places(3/7)
+    ; print places(3), places(0.0123), places(3.70), places(1e-10), places(3/7)
     0 4 1 10 -1
 
-    > print places(0.0123, 2), places(.625, 2), places(.625, 8)
+    ; print places(0.0123, 2), places(.625, 2), places(.625, 8)
     -1 3 1
 
 LIMITS
@@ -56,8 +56,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.5 $
-## @(#) $Id: places,v 29.5 2003/01/26 19:43:45 chongo Exp $
+## @(#) $Revision: 29.6 $
+## @(#) $Id: places,v 29.6 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/places,v $
 ##
 ## Under source code control:	1995/10/03 10:40:02

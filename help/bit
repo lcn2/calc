@@ -20,17 +20,17 @@ DESCRIPTION
     return 1, otherwise return 0.
 
 EXAMPLE
-    > print bit(9,0), bit(9,1), bit(9,2), bit(9,3)
+    ; print bit(9,0), bit(9,1), bit(9,2), bit(9,3)
     1 0 0 1
 
-    > print bit(9,4), bit(0,0), bit(9,-1)
+    ; print bit(9,4), bit(0,0), bit(9,-1)
     0 0 0
 
-    > print bit(1.25, -2), bit(1.25, -1), bit(1.25, 0)
+    ; print bit(1.25, -2), bit(1.25, -1), bit(1.25, 0)
     1 0 1
 
-    > p = pi()
-    > print bit(p, 1), bit(p, -2), bit(p, -3)
+    ; p = pi()
+    ; print bit(p, 1), bit(p, -2), bit(p, -3)
     1 0 1
 
 LIMITS
@@ -58,8 +58,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: bit,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: bit,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/bit,v $
 ##
 ## Under source code control:	1994/10/21 02:21:30

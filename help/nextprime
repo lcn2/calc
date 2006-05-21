@@ -20,10 +20,10 @@ DESCRIPTION
     Other cases cause a runtime error.
 
 EXAMPLE
-    > print nextprime(10), nextprime(100), nextprime(1e6)
+    ; print nextprime(10), nextprime(100), nextprime(1e6)
     11 101 1000003
 
-    > print nextprime(3/2,-99), nextprime(2^32-1,-99), nextprime(2^32,-99)
+    ; print nextprime(3/2,-99), nextprime(2^32-1,-99), nextprime(2^32,-99)
     -99 4294967311 -99
 
 LIMITS
@@ -51,8 +51,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: nextprime,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: nextprime,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/nextprime,v $
 ##
 ## Under source code control:	1995/12/18 12:34:57

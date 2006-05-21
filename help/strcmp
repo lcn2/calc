@@ -1,0 +1,40 @@
+NAME
+    strcmp - compare two strings in the customary ordering of strings
+
+SYNOPSIS
+    strcmp(s1, s2)
+
+TYPES
+    s1		string
+    s2		string
+
+    return	integer (1, 0 or -1)
+
+DESCRIPTION
+    Let n1 = size(s1), n2 = size(s2) and m = min(n1, n2).
+    This function compares up to m values of consecutive characters
+    in the strings s1 and s2. If an inequality is encountered, the
+    function returns 1 or -1 according as the greater character is
+    in s1 or s2. If there has been no inequality, the function
+    returns 1, 0, or -1 according as n1 is greater than, equal to,
+    or less than n2.
+    Note that null characters within the strings are included in the
+    comparison. 
+
+EXAMPLE
+    strcmp("ab", "abc") == -1
+    strcmp("abc", "abb") == 1
+    strcmp("abc", "abc") == 0
+    strcmp("abc", "abd") == -1
+    strcmp("abc\0", "abc") == 1
+    strcmp("a\0b", "a\0c") == -1
+
+
+LIMITS
+    none
+
+LINK LIBRARY
+    FLAG stringrel(STRING *s1, STRING *s2)
+
+SEE ALSO
+    strncmp

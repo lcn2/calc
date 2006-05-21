@@ -1,7 +1,7 @@
 /*
  * size - size and sizeof functions are implemented here
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2006  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: size.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: size.c,v 29.4 2006/05/19 15:26:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/size.c,v $
  *
  * Under source code control:	1997/03/10 01:56:51
@@ -37,11 +37,11 @@
 /*
  * forward declarations
  */
-static long zsize(ZVALUE);
-static long qsize(NUMBER*);
-static long csize(COMPLEX*);
-static long memzsize(ZVALUE);
-static long memqsize(NUMBER*);
+static size_t zsize(ZVALUE);
+static size_t qsize(NUMBER*);
+static size_t csize(COMPLEX*);
+static size_t memzsize(ZVALUE);
+static size_t memqsize(NUMBER*);
 
 
 /*
@@ -124,14 +124,14 @@ elm_count(VALUE *vp)
  * returns:
  *	value size
  */
-static long
+static size_t
 zsize(ZVALUE z)
 {
 	/* ignore the size of 0, 1 and -1 */
 	if (z.v != _zeroval_ && z.v != _oneval_ && !zisunit(z) && !ziszero(z)) {
-		return (long)z.len * (long)sizeof(HALF);
+		return z.len * sizeof(HALF);
 	} else {
-		return (long)0;
+		return (size_t)0;
 	}
 }
 
@@ -148,7 +148,7 @@ zsize(ZVALUE z)
  * returns:
  *	value size
  */
-static long
+static size_t
 qsize(NUMBER *q)
 {
 	/* ingore denominator parts of integers */
@@ -173,7 +173,7 @@ qsize(NUMBER *q)
  * returns:
  *	value size
  */
-static long
+static size_t
 csize(COMPLEX *c)
 {
 	/* ingore denominator parts of integers */
@@ -194,10 +194,10 @@ csize(COMPLEX *c)
  * returns:
  *	memory footprint
  */
-static long
+static size_t
 memzsize(ZVALUE z)
 {
-	return (long)sizeof(ZVALUE) + ((long)z.len * (long)sizeof(HALF));
+	return sizeof(ZVALUE) + (z.len * sizeof(HALF));
 }
 
 
@@ -210,10 +210,10 @@ memzsize(ZVALUE z)
  * returns:
  *	memory footprint
  */
-static long
+static size_t
 memqsize(NUMBER *q)
 {
-	return (long)sizeof(NUMBER) + memzsize(q->num) + memzsize(q->den);
+	return sizeof(NUMBER) + memzsize(q->num) + memzsize(q->den);
 }
 
 
@@ -226,7 +226,7 @@ memqsize(NUMBER *q)
  * returns:
  *	memory footprint
  */
-long
+size_t
 lsizeof(VALUE *vp)
 {
 	VALUE *p;
@@ -234,7 +234,7 @@ lsizeof(VALUE *vp)
 	OBJECTACTIONS *oap;
 	ASSOCELEM *aep;
 	ASSOCELEM **ept;
-	long s;
+	size_t s;
 	long i;
 
 	/*
@@ -294,20 +294,20 @@ lsizeof(VALUE *vp)
 			s = sizeof(RAND);
 			break;
 		case V_RANDOM:
-			s = (long)sizeof(RANDOM) +
+			s = sizeof(RANDOM) +
 				zsize(vp->v_random->n) +
 				zsize(vp->v_random->r);
 			break;
 		case V_CONFIG:
-			s = (long)sizeof(CONFIG) +
-				(long)strlen(vp->v_config->prompt1) +
-				(long)strlen(vp->v_config->prompt2) + 2;
+			s = sizeof(CONFIG) +
+				strlen(vp->v_config->prompt1) +
+				strlen(vp->v_config->prompt2) + 2;
 			break;
 		case V_HASH:
 			/* ignore the unused part of the union */
-			s = (long)sizeof(HASH) +
+			s = sizeof(HASH) +
 				vp->v_hash->unionsize -
-				(long)sizeof(vp->v_hash->h_union);
+				sizeof(vp->v_hash->h_union);
 			break;
 		case V_BLOCK:
 			s = vp->v_block->maxsize;
@@ -333,10 +333,10 @@ lsizeof(VALUE *vp)
  * returns:
  *	memory footprint including overhead
  */
-long
+size_t
 memsize(VALUE *vp)
 {
-	long s;
+	size_t s;
 	long i, j;
 	VALUE *p;
 	LISTELEM *ep;
@@ -351,7 +351,7 @@ memsize(VALUE *vp)
 	 * This is not the number of elements, see elm_count() for that info.
 	 */
 	i = j = 0;
-	s = (long) sizeof(VALUE);
+	s = sizeof(VALUE);
 	if (vp->v_type > 0) {
 		switch(vp->v_type) {
 		case V_INT:
@@ -362,12 +362,12 @@ memsize(VALUE *vp)
 			s = memqsize(vp->v_num);
 			break;
 		case V_COM:
-			s = (long)sizeof(COMPLEX) +
+			s = sizeof(COMPLEX) +
 				memqsize(vp->v_com->real) +
 				memqsize(vp->v_com->imag);
 			break;
 		case V_STR:
-			s = (long)sizeof(STRING) + vp->v_str->s_len + 1;
+			s = sizeof(STRING) + vp->v_str->s_len + 1;
 			break;
 		case V_MAT:
 			s = sizeof(MATRIX);
@@ -415,25 +415,25 @@ memsize(VALUE *vp)
 			s = sizeof(RAND);
 			break;
 		case V_RANDOM:
-			s = (long)sizeof(RANDOM) +
+			s = sizeof(RANDOM) +
 				memzsize(vp->v_random->n) +
 				memzsize(vp->v_random->r);
 			break;
 		case V_CONFIG:
-			s = (long)sizeof(CONFIG) + 2 +
-				(long)strlen(vp->v_config->prompt1) +
-				(long)strlen(vp->v_config->prompt2);
+			s = sizeof(CONFIG) + 2 +
+				strlen(vp->v_config->prompt1) +
+				strlen(vp->v_config->prompt2);
 			break;
 		case V_HASH:
 			s = sizeof(HASH);
 			break;
 		case V_BLOCK:
-			s = (long)sizeof(BLOCK) + vp->v_block->maxsize;
+			s = sizeof(BLOCK) + vp->v_block->maxsize;
 			break;
 		case V_NBLOCK:
-			s = (long)sizeof(NBLOCK) + (long)sizeof(BLOCK) +
+			s = sizeof(NBLOCK) + sizeof(BLOCK) +
 				vp->v_nblock->blk->maxsize +
-				(long)strlen(vp->v_nblock->name) + 1;
+				strlen(vp->v_nblock->name) + 1;
 			break;
 		default:
 			math_error("memsize not defined for value type");

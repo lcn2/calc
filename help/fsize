@@ -15,8 +15,8 @@ DESCRIPTION
     the file size as reported by fsize.
 
 EXAMPLE
-    > fd = fopen("/etc/motd", "r")
-    > fsize(fd)
+    ; fd = fopen("/etc/motd", "r")
+    ; fsize(fd)
 	    784
 
 LIMITS
@@ -45,8 +45,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: fsize,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: fsize,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/fsize,v $
 ##
 ## Under source code control:	1995/03/04 11:33:20

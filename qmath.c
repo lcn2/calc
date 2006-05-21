@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: qmath.c,v 29.5 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: qmath.c,v 29.6 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qmath.c,v $
  *
  * Under source code control:	1990/02/15 01:48:21
@@ -105,12 +105,12 @@ itoq(long i)
 
 	if ((i >= -1) && (i <= 10)) {
 		switch ((int) i) {
-			case 0: q = &_qzero_; break;
-			case 1: q = &_qone_; break;
-			case 2: q = &_qtwo_; break;
-			case 10: q = &_qten_; break;
-			case -1: q = &_qnegone_; break;
-			default: q = NULL;
+		case 0: q = &_qzero_; break;
+		case 1: q = &_qone_; break;
+		case 2: q = &_qtwo_; break;
+		case 10: q = &_qten_; break;
+		case -1: q = &_qnegone_; break;
+		default: q = NULL;
 		}
 		if (q)
 			return qlink(q);
@@ -151,11 +151,11 @@ utoq(FULL i)
 
 	if (i <= 10) {
 		switch ((int) i) {
-			case 0: q = &_qzero_; break;
-			case 1: q = &_qone_; break;
-			case 2: q = &_qtwo_; break;
-			case 10: q = &_qten_; break;
-			default: q = NULL;
+		case 0: q = &_qzero_; break;
+		case 1: q = &_qone_; break;
+		case 2: q = &_qtwo_; break;
+		case 10: q = &_qten_; break;
+		default: q = NULL;
 		}
 		if (q)
 			return qlink(q);

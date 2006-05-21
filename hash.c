@@ -1,7 +1,7 @@
 /*
  * hash - one-way hash routines
  *
- * Copyright (C) 1999-2002  Landon Curt Noll
+ * Copyright (C) 1999-2006  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: hash.c,v 29.6 2004/02/25 23:55:38 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: hash.c,v 29.8 2006/05/19 15:26:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hash.c,v $
  *
  * Under source code control:	1995/11/23 05:13:11
@@ -596,7 +596,7 @@ hash_complex(int type, void *c, HASH *state)
 HASH *
 hash_str(int type, char *str, HASH *state)
 {
-	USB32 len;		/* string length */
+	size_t len;		/* string length */
 
 	/*
 	 * initialize if state is NULL

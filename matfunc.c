@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: matfunc.c,v 29.4 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: matfunc.c,v 29.6 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/matfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:18
@@ -379,29 +379,29 @@ matpowi(MATRIX *m, NUMBER *q)
 	 */
 	if ((power <= 4) && (power >= -2)) {
 		switch ((int) power) {
-			case 0:
-				return matident(m);
-			case 1:
-				return matcopy(m);
-			case -1:
-				return matinv(m);
-			case 2:
-				return matsquare(m);
-			case -2:
-				tmp = matinv(m);
-				res = matsquare(tmp);
-				matfree(tmp);
-				return res;
-			case 3:
-				tmp = matsquare(m);
-				res = matmul(m, tmp);
-				matfree(tmp);
-				return res;
-			case 4:
-				tmp = matsquare(m);
-				res = matsquare(tmp);
-				matfree(tmp);
-				return res;
+		case 0:
+			return matident(m);
+		case 1:
+			return matcopy(m);
+		case -1:
+			return matinv(m);
+		case 2:
+			return matsquare(m);
+		case -2:
+			tmp = matinv(m);
+			res = matsquare(tmp);
+			matfree(tmp);
+			return res;
+		case 3:
+			tmp = matsquare(m);
+			res = matmul(m, tmp);
+			matfree(tmp);
+			return res;
+		case 4:
+			tmp = matsquare(m);
+			res = matsquare(tmp);
+			matfree(tmp);
+			return res;
 		}
 	}
 	if (power < 0) {
@@ -1405,12 +1405,7 @@ matcopy(MATRIX *m)
 	v2 = res->m_table;
 	i = m->m_size;
 	while (i-- > 0) {
-		if (v1->v_type == V_NUM) {
-			v2->v_type = V_NUM;
-			v2->v_num = qlink(v1->v_num);
-		} else {
-			copyvalue(v1, v2);
-		}
+		copyvalue(v1, v2);
 		v1++;
 		v2++;
 	}

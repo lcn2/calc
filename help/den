@@ -26,7 +26,7 @@ DESCRIPTION
     The denominator for this n/d is d.
 
 EXAMPLE
-    > print den(7), den(-1.25), den(121/33)
+    ; print den(7), den(-1.25), den(121/33)
     1 4 3
 
 LIMITS
@@ -54,8 +54,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: den,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: den,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/den,v $
 ##
 ## Under source code control:	1995/10/05 04:52:26

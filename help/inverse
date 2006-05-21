@@ -24,11 +24,11 @@ DESCRIPTION
     n x n matrix.  The inverse m will have the same index limits as x.
 
 EXAMPLE
-    > print inverse(5/4), inverse(-2/7), inverse(3 + 4i)
+    ; print inverse(5/4), inverse(-2/7), inverse(3 + 4i)
     .8 -3.5 .12-.16i
 
-    > mat A[2,2] = {2,3,5,7}
-    > print inverse(A)
+    ; mat A[2,2] = {2,3,5,7}
+    ; print inverse(A)
 
     mat [2,2] (4 elements, 4 nonzero):
 	[0,0] = -7
@@ -63,8 +63,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: inverse,v 29.3 2005/10/18 10:48:29 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: inverse,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/inverse,v $
 ##
 ## Under source code control:	1996/03/12 23:10:01

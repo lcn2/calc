@@ -1,7 +1,7 @@
 /*
  * custom - interface for custom software and hardware interfaces
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2006  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: custom.c,v 29.4 2004/02/25 23:54:40 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: custom.c,v 29.6 2006/05/19 15:26:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/custom.c,v $
  *
  * Under source code control:	1997/03/03 04:53:08
@@ -189,7 +189,7 @@ customhelp(char *name)
 	/*
 	 * form the custom help name
 	 */
-	customname = (char *)malloc(sizeof("custhelp")+strlen(name)+1);
+	customname = (char *)malloc(sizeof("custhelp")+1+strlen(name)+1);
 	if (customname == NULL) {
 		math_error("bad malloc of customname");
 		/*NOTREACHED*/

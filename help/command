@@ -18,6 +18,7 @@ Command sequence
     -----------------
     define function(params) { body }
     define function(params) = expression
+
 	    This first form defines a full function which can consist
 	    of declarations followed by many statements which implement
 	    the function.
@@ -42,16 +43,30 @@ Command sequence
 
     read calc commands
     ------------------
+    read $var
+    read -once $var
     read filename
     read -once filename
+
 	    This reads definitions from the specified calc resource filename.
 
-	    The name can be quoted if desired.	The calculator uses the
-	    CALCPATH environment variable to search through the specified
-	    directories for the filename, similarly to the use of the
-	    PATH environment variable.	If CALCPATH is not defined,
-	    then a default path which is usually ":/usr/local/lib/calc"
-	    is used.
+	    In the 1st and 2nd forms, if var is a global variable string
+	    value, then the value of that variable is used as a filename.
+
+	    The following is equivalent to read lucas.cal or read "lucas.cal":
+
+	    	global var = "lucas.cal";
+		read $var;
+
+	    In the 3rd or 4th forms, the filename argument is treated
+	    as a literal string, not a variable.  In these forms, the
+	    name can be quoted if desired.
+
+	    The calculator uses the CALCPATH environment variable to
+	    search through the specified directories for the filename,
+	    similarly to the use of the PATH environment variable.
+	    If CALCPATH is not defined, then a default path which is
+	    usually ":/usr/local/lib/calc" is used.
 
 	    The ".cal" extension is defaulted for input files, so that
 	    if "filename" is not found, then "filename.cal" is then
@@ -76,7 +91,9 @@ Command sequence
 
     write calc commands
     -------------------
+    write $var
     write filename
+
 	    This writes the values of all global variables to the
 	    specified filename, in such a way that the file can be
 	    later read in order to recreate the variable values.
@@ -84,6 +101,19 @@ Command sequence
 	    This command currently only saves simple types, so that
 	    matrices, lists, and objects are not saved.	 Function
 	    definitions are also not saved.
+
+	    In the 1st form, if var is a global variable string
+	    value, then the value of that variable is used as a filename.
+
+	    The following is equivalent to write dump.out or
+	    write "dump.out":
+
+	    	global var = "dump.out";
+		write $var;
+
+	    In the 2nd form, the filename argument is treated as a literal
+	    string, not a variable.  In this form, the name can be quoted
+	    if desired.
 
 	    If the -m mode disallows opening of files for writing,
 	    this command will be disabled.
@@ -95,6 +125,7 @@ Command sequence
     quit string
     exit
     exit string
+
 	    The action of these commands depends on where they are used.
 	    At the interactive level, they will cause calc it edit.
 	    This is the normal way to leave the calculator.  In any
@@ -131,6 +162,7 @@ Command sequence
     -----
     abort
     abort string
+
 	    This command behaves like QUIT except that it will attempt
 	    to return to the interactive level if permitted, otherwise
 	    calc exit.
@@ -143,6 +175,7 @@ Command sequence
     ------------------------
     cd
     cd dir
+
 	    Change the current directory to 'dir'.  If 'dir' is ommitted,
 	    change the current directory to the home directory, if $HOME
 	    is set in the environment.
@@ -151,6 +184,7 @@ Command sequence
     show information
     ----------------
     show item
+
 	    This command displays some information where 'item' is
 	    one of the following:
 
@@ -185,10 +219,23 @@ Command sequence
 
     calc help
     ---------
-    help
+    help $var
     help name
+
 	    This displays a help related to 'name' or general
 	    help of none is given.
+
+	    In the 1st form, if var is a global variable string
+	    value, then the value of that variable is used as a name.
+
+	    The following is equivalent to help command or help "command":
+
+	    	global var = "command";
+		help $var;
+
+	    In the 2nd form, the filename argument is treated as a literal
+	    string, not a variable.  In this form, the name can be quoted
+	    if desired.
 
 
     =-=
@@ -323,8 +370,8 @@ Command sequence
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: command,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: command,v 29.3 2006/05/20 10:01:33 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/command,v $
 ##
 ## Under source code control:	1991/07/21 04:37:17

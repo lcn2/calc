@@ -15,14 +15,14 @@ DESCRIPTION
     absolute value than .75 * eps.
 
 EXAMPLE
-    > print sin(1, 1e-5), sin(1, 1e-10), sin(1, 1e-15), sin(1, 1e-20)
+    ; print sin(1, 1e-5), sin(1, 1e-10), sin(1, 1e-15), sin(1, 1e-20)
     .84147 .8414709848 .841470984807896 .84147098480789650665
 
-    > print sin(2 + 3i, 1e-5), sin(2 + 3i, 1e-10)
+    ; print sin(2 + 3i, 1e-5), sin(2 + 3i, 1e-10)
     9.1545-4.16891i 9.1544991469-4.16890696i
 
-    > pi = pi(1e-20)
-    > print sin(pi/6, 1e-10), sin(pi/2, 1e-10), sin(pi, 1e-10)
+    ; pi = pi(1e-20)
+    ; print sin(pi/6, 1e-10), sin(pi/2, 1e-10), sin(pi, 1e-10)
     .5 1 0
 
 LIMITS
@@ -51,8 +51,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: sin,v 29.3 2005/10/18 10:48:29 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: sin,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/sin,v $
 ##
 ## Under source code control:	1994/03/19 01:40:28

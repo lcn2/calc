@@ -1,7 +1,7 @@
 /*
  * calc - arbitrary precision calculator
  *
- * Copyright (C) 1999-2004  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2006  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.11 $
- * @(#) $Id: calc.c,v 29.11 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.13 $
+ * @(#) $Id: calc.c,v 29.13 2006/05/19 15:26:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11
@@ -111,7 +111,7 @@ main(int argc, char **argv)
 	BOOL done = FALSE;
 	BOOL havearg;
 	BOOL haveendstr;
-	int len;
+	size_t len;
 
 	/*
 	 * parse args
@@ -393,7 +393,7 @@ main(int argc, char **argv)
 						}
 						/* XXX What if *cp = '\''? */
 						*bp++ = '\'';
-						strcpy(bp, cp);
+						strncpy(bp, cp, len+1);
 						bp += len;
 						*bp++ = '\'';
 						cp += len;
@@ -452,16 +452,19 @@ main(int argc, char **argv)
 	}
 
 	while (index < maxindex) {
+		size_t cplen;
+
 		if (cmdlen > 0)
 			cmdbuf[cmdlen++] = ' ';
-		newcmdlen = cmdlen + strlen(cp);
+		cplen = strlen(cp);
+		newcmdlen = cmdlen + cplen;
 		if (newcmdlen > MAXCMD) {
 			fprintf(stderr,
 				"%s: commands too long\n",
 				program);
 			exit(1);
 		}
-		strcpy(cmdbuf + cmdlen, cp);
+		strncpy(cmdbuf + cmdlen, cp, cplen+1);
 		cmdlen = newcmdlen;
 		index++;
 		if (index < maxindex)
@@ -579,7 +582,7 @@ main(int argc, char **argv)
 	if (run_state == RUN_PRE_CMD_ARGS) {
 		if (havecommands) {
 			set_run_state(RUN_CMD_ARGS);
-			(void) openstring(cmdbuf, (long) strlen(cmdbuf));
+			(void) openstring(cmdbuf, strlen(cmdbuf));
 			getcommands(FALSE);
 			closeinput();
 		}

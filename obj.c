@@ -1,7 +1,7 @@
 /*
  * obj - object handling primitives
  *
- * Copyright (C) 1999-2004  David I. Bell
+ * Copyright (C) 1999-2006  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: obj.c,v 29.4 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: obj.c,v 29.8 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/obj.c,v $
  *
  * Under source code control:	1990/02/15 01:48:19
@@ -164,7 +164,10 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 	long index;		/* index of function (negative if undefined) */
 	VALUE val;		/* return value */
 	VALUE tmp;		/* temp value */
-	char name[SYMBOLSIZE+1];	/* full name of user routine to call */
+	char name[SYMBOLSIZE+1+1];	/* full name of user routine to call */
+	size_t namestr_len;	/* length of the namestr() return string */
+	char *namestr_ret;	/* namestr() return string */
+	size_t opi_name_len;	/* length of the oip name */
 
 	/* initialize VALUEs */
 	val.v_subtype = V_NOSUBTYPE;
@@ -185,9 +188,21 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 	}
 	index = oap->oa_indices[action];
 	if (index < 0) {
-		strcpy(name, namestr(&objectnames, oap->oa_index));
+		namestr_ret = namestr(&objectnames, oap->oa_index);
+		if (namestr_ret == NULL) {
+			math_error("namestr returned NULL!!!");
+			/*NOTREACHED*/
+		}
+		namestr_len = strlen(namestr_ret);
+		opi_name_len = strlen(oip->name);
+		if (namestr_len > (size_t)SYMBOLSIZE-1-opi_name_len) {
+			math_error("namestr returned a strong too long!!!");
+			/*NOTREACHED*/
+		}
+		name[0] = '\0';
+		strncpy(name, namestr_ret, namestr_len+1);
 		strcat(name, "_");
-		strcat(name, oip->name);
+		strncat(name, oip->name, opi_name_len+1);
 		index = adduserfunc(name);
 		oap->oa_indices[action] = index;
 	}
@@ -196,115 +211,115 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 		fp = findfunc(index);
 	if (fp == NULL) {
 		switch (oip->error) {
-			case ERR_PRINT:
-				objprint(v1->v_obj);
-				val.v_type = V_NULL;
-				break;
-			case ERR_CMP:
-				val.v_type = V_INT;
-				if (v1->v_type != v2->v_type) {
-					val.v_int = 1;
-					return val;
-				}
-				val.v_int = objcmp(v1->v_obj, v2->v_obj);
-				break;
-			case ERR_TEST:
-				val.v_type = V_INT;
-				val.v_int = objtest(v1->v_obj);
-				break;
-			case ERR_POW:
-				if (v2->v_type != V_NUM) {
-					math_error("Non-real power");
-					/*NOTREACHED*/
-				}
-				val = objpowi(v1, v2->v_num);
-				break;
-			case ERR_ONE:
-				val.v_type = V_NUM;
-				val.v_num = qlink(&_qone_);
-				break;
-			case ERR_INC:
-				tmp.v_type = V_NUM;
-				tmp.v_num = &_qone_;
-				val = objcall(OBJ_ADD, v1, &tmp, NULL_VALUE);
-				break;
-			case ERR_DEC:
-				tmp.v_type = V_NUM;
-				tmp.v_num = &_qone_;
-				val = objcall(OBJ_SUB, v1, &tmp, NULL_VALUE);
-				break;
-			case ERR_SQUARE:
-				val = objcall(OBJ_MUL, v1, v1, NULL_VALUE);
-				break;
-			case ERR_VALUE:
-				copyvalue(v1, &val);
-				break;
-			case ERR_ASSIGN:
-				copyvalue(v2, &tmp);
-				tmp.v_subtype = v1->v_subtype;
-				freevalue(v1);
-				*v1 = tmp;
-				val.v_type = V_NULL;
-				break;
-			default:
-				math_error("Function \"%s\" is undefined", namefunc(index));
+		case ERR_PRINT:
+			objprint(v1->v_obj);
+			val.v_type = V_NULL;
+			break;
+		case ERR_CMP:
+			val.v_type = V_INT;
+			if (v1->v_type != v2->v_type) {
+				val.v_int = 1;
+				return val;
+			}
+			val.v_int = objcmp(v1->v_obj, v2->v_obj);
+			break;
+		case ERR_TEST:
+			val.v_type = V_INT;
+			val.v_int = objtest(v1->v_obj);
+			break;
+		case ERR_POW:
+			if (v2->v_type != V_NUM) {
+				math_error("Non-real power");
 				/*NOTREACHED*/
+			}
+			val = objpowi(v1, v2->v_num);
+			break;
+		case ERR_ONE:
+			val.v_type = V_NUM;
+			val.v_num = qlink(&_qone_);
+			break;
+		case ERR_INC:
+			tmp.v_type = V_NUM;
+			tmp.v_num = &_qone_;
+			val = objcall(OBJ_ADD, v1, &tmp, NULL_VALUE);
+			break;
+		case ERR_DEC:
+			tmp.v_type = V_NUM;
+			tmp.v_num = &_qone_;
+			val = objcall(OBJ_SUB, v1, &tmp, NULL_VALUE);
+			break;
+		case ERR_SQUARE:
+			val = objcall(OBJ_MUL, v1, v1, NULL_VALUE);
+			break;
+		case ERR_VALUE:
+			copyvalue(v1, &val);
+			break;
+		case ERR_ASSIGN:
+			copyvalue(v2, &tmp);
+			tmp.v_subtype |= v1->v_subtype;
+			freevalue(v1);
+			*v1 = tmp;
+			val.v_type = V_NULL;
+			break;
+		default:
+			math_error("Function \"%s\" is undefined", namefunc(index));
+			/*NOTREACHED*/
 		}
 		return val;
 	}
 	switch (oip->args) {
-		case 0:
-			break;
-		case 1:
-			++stack;
-			stack->v_addr = v1;
-			stack->v_type = V_ADDR;
-			break;
-		case 2:
-			++stack;
-			stack->v_addr = v1;
-			stack->v_type = V_ADDR;
-			++stack;
-			stack->v_addr = v2;
-			stack->v_type = V_ADDR;
-			break;
-		case 3:
-			++stack;
-			stack->v_addr = v1;
-			stack->v_type = V_ADDR;
-			++stack;
-			stack->v_addr = v2;
-			stack->v_type = V_ADDR;
-			++stack;
-			stack->v_addr = v3;
-			stack->v_type = V_ADDR;
-			break;
-		default:
-			math_error("Bad number of args to calculate");
-			/*NOTREACHED*/
+	case 0:
+		break;
+	case 1:
+		++stack;
+		stack->v_addr = v1;
+		stack->v_type = V_ADDR;
+		break;
+	case 2:
+		++stack;
+		stack->v_addr = v1;
+		stack->v_type = V_ADDR;
+		++stack;
+		stack->v_addr = v2;
+		stack->v_type = V_ADDR;
+		break;
+	case 3:
+		++stack;
+		stack->v_addr = v1;
+		stack->v_type = V_ADDR;
+		++stack;
+		stack->v_addr = v2;
+		stack->v_type = V_ADDR;
+		++stack;
+		stack->v_addr = v3;
+		stack->v_type = V_ADDR;
+		break;
+	default:
+		math_error("Bad number of args to calculate");
+		/*NOTREACHED*/
 	}
 	calculate(fp, oip->args);
 	switch (oip->retval) {
-		case A_VALUE:
-			return *stack--;
-		case A_UNDEF:
-			freevalue(stack--);
-			val.v_type = V_NULL;
-			break;
-		case A_INT:
-			if ((stack->v_type != V_NUM) || qisfrac(stack->v_num)) {
-				math_error("Integer return value required");
-				/*NOTREACHED*/
-			}
-			index = qtoi(stack->v_num);
-			qfree(stack->v_num);
-			stack--;
-			val.v_type = V_INT;
-			val.v_int = index;
-			break;
-		default:
-			math_error("Bad object return");
+	case A_VALUE:
+		return *stack--;
+	case A_UNDEF:
+		freevalue(stack--);
+		val.v_type = V_NULL;
+		break;
+	case A_INT:
+		if ((stack->v_type != V_NUM) || qisfrac(stack->v_num)) {
+			math_error("Integer return value required");
 			/*NOTREACHED*/
+		}
+		index = qtoi(stack->v_num);
+		qfree(stack->v_num);
+		stack--;
+		val.v_type = V_INT;
+		val.v_int = index;
+		break;
+	default:
+		math_error("Bad object return");
+		/*NOTREACHED*/
 	}
 	return val;
 }
@@ -407,17 +422,17 @@ objpowi(VALUE *vp, NUMBER *q)
 	 */
 	if ((power <= 2) && (power >= -2)) {
 		switch ((int) power) {
-			case 0:
-				return objcall(OBJ_ONE, vp, NULL_VALUE, NULL_VALUE);
-			case 1:
-				res.v_obj = objcopy(vp->v_obj);
-				res.v_type = V_OBJ;
-				res.v_subtype = V_NOSUBTYPE;
-				return res;
-			case -1:
-				return objcall(OBJ_INV, vp, NULL_VALUE, NULL_VALUE);
-			case 2:
-				return objcall(OBJ_SQUARE, vp, NULL_VALUE, NULL_VALUE);
+		case 0:
+			return objcall(OBJ_ONE, vp, NULL_VALUE, NULL_VALUE);
+		case 1:
+			res.v_obj = objcopy(vp->v_obj);
+			res.v_type = V_OBJ;
+			res.v_subtype = V_NOSUBTYPE;
+			return res;
+		case -1:
+			return objcall(OBJ_INV, vp, NULL_VALUE, NULL_VALUE);
+		case 2:
+			return objcall(OBJ_SQUARE, vp, NULL_VALUE, NULL_VALUE);
 		}
 	}
 	if (power < 0)
@@ -709,13 +724,7 @@ objcopy(OBJECT *op)
 	v1 = op->o_table;
 	v2 = np->o_table;
 	for (i = op->o_actions->oa_count; i-- > 0; v1++, v2++) {
-		if (v1->v_type == V_NUM) {
-			v2->v_num = qlink(v1->v_num);
-			v2->v_type = V_NUM;
-		} else {
-			copyvalue(v1, v2);
-		}
-		v2->v_subtype = V_NOSUBTYPE;
+		copyvalue(v1, v2);
 	}
 	return np;
 }

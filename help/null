@@ -43,15 +43,15 @@ DESCRIPTION
     without printing the current mode or changing the stored oldvalue.
 
 EXAMPLE
-    > L = list(-1,0,1,2);
-    > while (!isnull(x = pop(L)) print x,; print
+    ; L = list(-1,0,1,2);
+    ; while (!isnull(x = pop(L)) print x,; print
     -1 0 1 2
 
-    > printf("%d %d %d\n", 2, , 3);
+    ; printf("%d %d %d\n", 2, , 3);
     2  3
 
-    > L = list(,1,,2,)
-    > print L
+    ; L = list(,1,,2,)
+    ; print L
 
     list (5 elements, 5 nonzero):
 	[[0]] = NULL
@@ -60,9 +60,9 @@ EXAMPLE
 	[[3]] = 2
 	[[4]] = NULL
 
-    > a = 27
-    > null(pi = pi(1e-1000))
-    > .
+    ; a = 27
+    ; null(pi = pi(1e-1000))
+    ; .
 	27
 
 LIMITS
@@ -90,8 +90,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: null,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: null,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/null,v $
 ##
 ## Under source code control:	1996/03/12 23:10:01

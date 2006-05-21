@@ -29,12 +29,12 @@ DESCRIPTION
 		   21	   -md/2 <= v < md/2	md/2 <= v < -md/2
 
 EXAMPLE
-    > c = config("mod", 0)
-    > print minv(3,10), minv(-3,10), minv(3,-10), minv(-3,-10), minv(4,10)
+    ; c = config("mod", 0)
+    ; print minv(3,10), minv(-3,10), minv(3,-10), minv(-3,-10), minv(4,10)
     7 3 -3 -7 0
 
-    > c = config("mod",16)
-    > print minv(3,10), minv(-3,10), minv(3,-10), minv(-3,-10), minv(4,10)
+    ; c = config("mod",16)
+    ; print minv(3,10), minv(-3,10), minv(3,-10), minv(-3,-10), minv(4,10)
     -3 3 -3 3 0
 
 LIMITS
@@ -62,8 +62,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: minv,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: minv,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/minv,v $
 ##
 ## Under source code control:	1995/11/09 03:27:51

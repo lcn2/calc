@@ -105,18 +105,18 @@ DESCRIPTION
 
 
 EXAMPLE
-    > eps = 1e-4
-    > print sqrt(4,eps,0), sqrt(4,eps,64), sqrt(8i,eps,0), sqrt(8i, eps, 64)
+    ; eps = 1e-4
+    ; print sqrt(4,eps,0), sqrt(4,eps,64), sqrt(8i,eps,0), sqrt(8i, eps, 64)
     2 -2 2+2i -2-2i
 
-    > print sqrt(2,eps,0), sqrt(2,eps,1), sqrt(2,eps,24)
+    ; print sqrt(2,eps,0), sqrt(2,eps,1), sqrt(2,eps,24)
     1.4142 1.4143 1.4142
 
-    > x = 1.2345678^2
-    > print sqrt(x,eps,24), sqrt(x,eps,32), sqrt(x,eps,96)
+    ; x = 1.2345678^2
+    ; print sqrt(x,eps,24), sqrt(x,eps,32), sqrt(x,eps,96)
     1.2346 1.2345678 -1.2345678
 
-    > print sqrt(.00005^2, eps, 24), sqrt(.00015^2, eps, 24)
+    ; print sqrt(.00005^2, eps, 24), sqrt(.00015^2, eps, 24)
     0 .0002
 
 LIMITS
@@ -147,8 +147,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: sqrt,v 29.3 2005/10/18 10:48:29 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: sqrt,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/sqrt,v $
 ##
 ## Under source code control:	1995/09/18 03:54:32

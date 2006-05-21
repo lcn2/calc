@@ -14,10 +14,10 @@ DESCRIPTION
     is a a numeric value, 0 otherwise.
 
 EXAMPLE
-    > print isnum(2.0), isnum(1), isnum("0")
+    ; print isnum(2.0), isnum(1), isnum("0")
     1 1 0
 
-    > print isnum(2i), isnum(1e20), isnum(1/3)
+    ; print isnum(2i), isnum(1e20), isnum(1/3)
     1 1 1
 
 LIMITS
@@ -48,8 +48,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: isnum,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: isnum,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/isnum,v $
 ##
 ## Under source code control:	1994/10/21 02:21:28

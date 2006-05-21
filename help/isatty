@@ -14,10 +14,10 @@ DESCRIPTION
 
 
 EXAMPLE
-    > print isatty(files(0)), isatty(files(1)), isatty(files(2))
+    ; print isatty(files(0)), isatty(files(1)), isatty(files(2))
 	    1 1 1
-    > fd = fopen("/dev/null", "r")
-    > isatty(fd)
+    ; fd = fopen("/dev/null", "r")
+    ; isatty(fd)
 	    0
 
 LIMITS
@@ -50,8 +50,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: isatty,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: isatty,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/isatty,v $
 ##
 ## Under source code control:	1995/07/09 03:49:34

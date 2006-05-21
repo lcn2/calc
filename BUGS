@@ -68,32 +68,13 @@ of a context diff patch).
 
 Known bugs:
 
+    The stoponerror() facility does not seem to work, or perhaps
+    the stoponerror help file is incorrect.  The stoponerror help file
+    lacks examples because of this problem.
+
     We are sure some more bugs exist.  When you find them, please let
     us know!  See the above for details on how to report and were to
     EMail your bug reports and hopefully patches to fix them.
-
-    * The following command:
-
-	calc 'read ellip; efactor(13*17*19)'
-
-      will generate the following error:
-
-	efactor(iN,ia,B,force) defined
-	point_print(p) defined
-	point_mul(p1,p2) defined
-	point_square(p) defined
-	point_pow(p,pow) defined
-	A = 1
-	2 (1,1)
-	"point_square": line 165: Not initializing matrix, object or list
-	Error in commands
-
-     This is not an error in the ellip standard calc resource files.
-     It is a bug inside calc.  Versions going back as far as version
-     2.11.4t2 in the year 2000 (and perhaps even further) all have
-     this bug.
-
-     Anyone want to track down and fix this bug?
 
 =-=
 
@@ -128,55 +109,6 @@ mis-features in calc:
 =-=
 
 Problems with old systems that have known work-a-rounds:
-
-    * The gcc as shipped with Redhat 7 perhaps other Linux distributions
-      has a bug causes calc to dump core on startup when calc is:
-
-	  compiled optimized (-O, -O1, -O2 or -O3)
-
-	  	AND
-
-      	  compiled with debugging (-g or -g3)
-
-	  	AND
-
-	  when calc is compiled with readline (see USE_READLINE,
-	  READLINE_LIB and READLINE_INCLUDE in the Makefile)
-
-      This is known as the Redhat 7 readlne problem.
-
-      On Redhat, the gcc -v which has this problem is:
-
-	gcc version 2.96 20000731 (Red Hat Linux 7.1 2.96-85)
-
-      there may be other gcc versions that also suffer this fate.
-
-      The readlines associated with problem are:
-
-	readline-4.1-5
-	readline2.2.1-2.2.1-2
-	readline-devel-4.1-5
-
-      One work-a-round is to compile calc WITHOUT readline.  In the
-      Makefile be sure that:
-
-	USE_READLINE=
-	READLINE_LIB=
-	READLINE_INCLUDE=
-
-      i.e., these Makefile vars are empty.
-
-      If you must use readline, then an alternate work-a-round is to
-      change the DEBUG Makefile variable to either:
-
-	compile for speed:  -O3		(or -O2 if you do not have -O3)
-	compile to debug:   -g3		(or -g if you do not have -g3)
-
-      but not both.
-
-      See RH bug #57889 for details:
-
-	http://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=57889
 
     * There is a bug in gcc-2.95 that causes calc, when compiled with -O2,
       to fail the regression test.  The work-a-round is to compile with -O
@@ -227,59 +159,6 @@ Problems with old systems that have known work-a-rounds:
   	if (n < 0) n = 0;
   	z.sign = 0;
 
-    * Solaris cc somtimes barfs while compiling zrand.c.  In particular, calc
-      barfs on on the SVAL macro.  The work-a-round is to use the Solaric cc
-      Makefile set sets -DFORCE_STDC.  I.e,:
-
-	    CCWARN=
-	    CCOPT= ${DEBUG} ${NO_SHARED}
-	    CCMISC= -DFORCE_STDC
-	    #
-	    CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC}
-	    ICFLAGS= ${CCWARN} ${CCMISC}
-	    #
-	    LCFLAGS=
-	    LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
-	    ILDFLAGS=
-	    #
-	    LCC= cc
-	    CC= ${PURIFY} ${LCC}
-
-    * There is a bug in some versions of the Dec/Compaq cc for the Alpha
-      where the following:
-
-	    #include <stdio.h>
-	    #define SVAL(a,b) (unsigned long)(0x ## a ## b ## ULL)
-	    main(){SVAL(b8a8aeb0,8168eadc);}
-
-      fails because it puts a space inside the concatenated hex.  Calc
-      has code that is affected by this bug.  This bug has been reported
-      to Compaq and may be fixed in the future.	 A work-a-round is to
-      compile with cc -std0 or to use a later version of their compiler.
-
-    * On a Digital UNIX V4.0F (Rev. 1229) on a 500 Mhz 21264, make check
-      dies a horrible death starting in test 600 and 622 gives 100s of
-      messages for calc version 2.11.0t9.4 using the Dec's cc with -O2:
-
-	600: Beginning test_bignums
-	601: muldivcheck 1
-	**** abc != acb: 602: muldivcheck 2
-	**** acb != bac: 602: muldivcheck 2
-	...
-	**** t4 != a4: 622: algcheck 1
-	**** t5 != a5: 622: algcheck 1
-	**** t6 != a6: 622: algcheck 1
-	**** t4 != a4: 622: algcheck 1
-	...
-
-	it finally hangs at test 2000.
-
-      The work-a-round is to compile calc without the optimizer.  If this
-      happens to you, try compiling without -O and without -O2.	 I.e., in
-      the Makefile, set:
-
-	DEBUG= -g
-
     * There are problems compiling calc on the sparcv9 under 64 bit
       Solaris.	On that platform, gcc-2.96 is able to compile calc, but
       calc dumps core very early on in startup.	 It is said that sparcv9
@@ -295,19 +174,7 @@ Problems with old systems that have known work-a-rounds:
 	    CCWARN="-DFORCE_STDC -w"
 	    DEBUG="-fast -xarch=v9"
 
-    * Under BSDI v4, the warnings of the form:
-
-	/usr/include/ctype.h:147: warning: `__runetype' defined but not used
-	/usr/include/ctype.h:161: warning: `__isctype' defined but not used
-	/usr/include/ctype.h:170: warning: `toupper' defined but not used
-	/usr/include/ctype.h:177: warning: `tolower' defined but not used
-
-      are seen.	 These warnings are the result of mis-features in BSDI
-      include files.  They do not have an impact on the operation
-      or performance.  The work-a-round is to ignore these warnings
-      under BSDI.
-
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -323,8 +190,8 @@ Problems with old systems that have known work-a-rounds:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.22 $
-## @(#) $Id: BUGS,v 29.22 2004/10/23 02:25:02 chongo Exp $
+## @(#) $Revision: 29.24 $
+## @(#) $Id: BUGS,v 29.24 2006/05/21 07:54:13 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13

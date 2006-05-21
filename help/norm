@@ -24,7 +24,7 @@ DESCRIPTION
 	re(x)^2 + im(x)^2.
 
 EXAMPLE
-    > print norm(3.4), norm(-3.4), norm(3 + 4i), norm(4 - 5i)
+    ; print norm(3.4), norm(-3.4), norm(3 + 4i), norm(4 - 5i)
     11.56 11.56 25 41
 
 LIMITS
@@ -52,8 +52,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: norm,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: norm,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/norm,v $
 ##
 ## Under source code control:	1995/10/25 04:03:46

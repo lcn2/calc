@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: zfunc.c,v 29.4 2003/08/26 04:35:11 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: zfunc.c,v 29.7 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:27
@@ -33,6 +33,9 @@
 #include "zmath.h"
 
 ZVALUE _tenpowers_[TEN_MAX+1];		/* table of 10^2^n */
+
+static long *power10 = NULL;
+static int max_power10_exp = 0;
 
 
 /*
@@ -402,27 +405,27 @@ zpowi(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	 */
 	if (power <= 4) {
 		switch ((int) power) {
-			case 1:
-				ans.len = z1.len;
-				ans.v = alloc(ans.len);
-				zcopyval(z1, ans);
-				ans.sign = (BOOL)sign;
-				*res = ans;
-				return;
-			case 2:
-				zsquare(z1, res);
-				return;
-			case 3:
-				zsquare(z1, &temp);
-				zmul(z1, temp, res);
-				zfree(temp);
-				res->sign = (BOOL)sign;
-				return;
-			case 4:
-				zsquare(z1, &temp);
-				zsquare(temp, res);
-				zfree(temp);
-				return;
+		case 1:
+			ans.len = z1.len;
+			ans.v = alloc(ans.len);
+			zcopyval(z1, ans);
+			ans.sign = (BOOL)sign;
+			*res = ans;
+			return;
+		case 2:
+			zsquare(z1, res);
+			return;
+		case 3:
+			zsquare(z1, &temp);
+			zmul(z1, temp, res);
+			zfree(temp);
+			res->sign = (BOOL)sign;
+			return;
+		case 4:
+			zsquare(z1, &temp);
+			zsquare(temp, res);
+			zfree(temp);
+			return;
 		}
 	}
 	/*
@@ -1113,7 +1116,7 @@ zlog(ZVALUE z, ZVALUE base)
 
 	/* base = 10 */
 	if (base.len == 1 && base.v[0] == 10)
-		return zlog10(z);
+		return zlog10(z, NULL);
 	/*
 	 * Now loop by squaring the base each time, and see whether or
 	 * not each successive square is still smaller than the number.
@@ -1151,20 +1154,71 @@ zlog(ZVALUE z, ZVALUE base)
 
 /*
  * Return the integral log base 10 of a number.
+ *
+ * If was_10_power != NULL, then this flag is set to TRUE if the
+ * value was a power of 10, FALSE otherwise.
  */
 long
-zlog10(ZVALUE z)
+zlog10(ZVALUE z, BOOL *was_10_power)
 {
-	register ZVALUE *zp;		/* current square */
+	ZVALUE *zp;			/* current square */
 	long power;			/* current power */
 	ZVALUE temp;			/* temporary */
+	ZVALUE pow10;			/* power of 10 */
+	FLAG rel;			/* relationship */
+	int i;
 
 	if (ziszero(z)) {
 		math_error("Zero argument argument for zlog10");
 		/*NOTREACHED*/
 	}
+
 	/* Ignore sign of z */
 	z.sign = 0;
+
+	/* preload power10 table if missing */
+	if (power10 == NULL) {
+		long v;
+
+		/* determine power10 table size */
+		for (v=1, max_power10_exp=0;
+		     v <= (long)(MAXLONG/10L);
+		     v *= 10L, ++max_power10_exp) {
+		}
+
+		/* create power10 table */
+		power10 = malloc(sizeof(long) * (max_power10_exp+1));
+		if (power10 == NULL) {
+			math_error("cannot malloc power10 table");
+			/*NOTREACHED*/
+		}
+
+		/* load power10 table */
+		for (i=0, v = 1L; i <= max_power10_exp; ++i, v *= 10L) {
+			power10[i] = v;
+		}
+	}
+
+	/* assume not a power of ten unless we find out otherwise */
+	if (was_10_power != NULL) {
+		*was_10_power = FALSE;
+	}
+
+	/* quick exit for small values */
+	if (! zgtmaxlong(z)) {
+		long value = ztolong(z);
+
+		for (i=0; i <= max_power10_exp; ++i) {
+			if (value == power10[i]) {
+				if (was_10_power != NULL) {
+					*was_10_power = TRUE;
+				}
+				return i;
+			} else if (value < power10[i]) {
+				return i-1;
+			}
+		}
+	}
 
 	/*
 	 * Loop by squaring the base each time, and see whether or
@@ -1181,26 +1235,56 @@ zlog10(ZVALUE z)
 			zsquare(*zp, zp + 1);
 		zp++;
 	}
+
 	/*
 	 * Now back down the squares, and multiply them together to see
 	 * exactly how many times the base can be raised by.
 	 */
-	power = 0;
-
-	for (; zp > _tenpowers_; zp--) {
-		if (zrel(z, *zp) >= 0) {
-			zquo(z, *zp, &temp, 0);
-			if (power)
-				zfree(z);
-			z = temp;
-			power++;
+	/* find the tenpower table entry < z */
+	do {
+		rel = zrel(*zp, z);
+		if (rel == 0) {
+			/* quick exit - we match a tenpower entry */
+			if (was_10_power != NULL) {
+				*was_10_power = TRUE;
+			}
+			return (1L << (zp - _tenpowers_));
 		}
-		power <<= 1;
+	} while (rel > 0 && --zp >= _tenpowers_);
+	if (zp < _tenpowers_) {
+		math_error("fell off bottom of tenpower table!");
+		/*NOTREACHED*/
 	}
-	if (zrel(z, *zp) >= 0)
-		power++;
-	if (power > 1)
-		zfree(z);
+
+	/* the tenpower value is now our starting comparison value */
+	zcopy(*zp, &pow10);
+	power = (1L << (zp - _tenpowers_));
+
+	/* try to build up a power of 10 from tenpower table entries */
+	while (--zp >= _tenpowers_) {
+
+		/* try the next lower tenpower value */
+		zmul(pow10, *zp, &temp);
+		rel = zrel(temp, z);
+		if (rel == 0) {
+			/* exact power of 10 match */
+			power += (1L << (zp - _tenpowers_));
+			if (was_10_power != NULL) {
+				*was_10_power = TRUE;
+			}
+			return power;
+
+		/* ignore this entry if we went too large */
+		} else if (rel > 0) {
+			zfree(temp);
+
+		/* otherwise increase power and keep going */
+		} else {
+			power += (1L << (zp - _tenpowers_));
+			zfree(pow10);
+			pow10 = temp;
+		}
+	}
 	return power;
 }
 
@@ -1440,7 +1524,7 @@ zdigits(ZVALUE z1)
 		}
 		return count;
 	}
-	return (zlog10(z1) + 1);
+	return (zlog10(z1, NULL) + 1);
 }
 
 

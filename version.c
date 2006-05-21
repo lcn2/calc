@@ -1,7 +1,7 @@
 /*
  * version - determine the version of calc
  *
- * Copyright (C) 1999-2004  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2006  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.55 $
- * @(#) $Id: version.c,v 29.55 2005/12/12 06:47:21 chongo Exp $
+ * @(#) $Revision: 29.57 $
+ * @(#) $Id: version.c,v 29.57 2006/05/21 06:04:01 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
@@ -46,8 +46,8 @@ static char *program;
 #include "have_unused.h"
 
 #define MAJOR_VER	2	/* major version */
-#define MINOR_VER	11	/* minor version */
-#define MAJOR_PATCH	11	/* patch level or 0 if no patch */
+#define MINOR_VER	12	/* minor version */
+#define MAJOR_PATCH	0	/* patch level or 0 if no patch */
 #define MINOR_PATCH	0	/* test number or 0 if no minor patch */
 
 
@@ -72,7 +72,7 @@ static char *stored_version = NULL;	/* version formed if != NULL */
 char *Copyright = "\n"
   "calc - arbitrary precision calculator\n"
   "\n"
-  "@(#) Copyright (C) 2003  David I. Bell, Landon Curt Noll and Ernest Bowen\n"
+  "@(#) Copyright (C) 2006  David I. Bell, Landon Curt Noll and Ernest Bowen\n"
   "\n"
   "Primary author:  David I. Bell\n"
   "\n"
@@ -102,13 +102,13 @@ char *Copyright = "\n"
 int
 snprintf (char *buf, size_t UNUSED n, const char *fmt, ...)
 {
-  int retval;
-  va_list arg;
+	int retval;
+	va_list arg;
 
-  va_start (arg, fmt);
-  retval = vsprintf (buf, fmt, arg);
-  va_end (arg);
-  return retval;
+	va_start (arg, fmt);
+	retval = vsprintf (buf, fmt, arg);
+	va_end (arg);
+	return retval;
 }
 #endif
 
@@ -141,13 +141,10 @@ version(void)
 		snprintf(verbuf, BUFSIZ,
 		    "%d.%d.%d.%d", calc_major_ver, calc_minor_ver,
 		     calc_major_patch, calc_minor_patch);
-	} else if (MAJOR_PATCH > 0) {
+	} else {
 		snprintf(verbuf, BUFSIZ,
 		    "%d.%d.%d", calc_major_ver,
 		    calc_minor_ver, calc_major_patch);
-	} else {
-		snprintf(verbuf, BUFSIZ,
-		    "%d.%d", calc_major_ver, calc_minor_ver);
 	}
 
 	/*
@@ -177,7 +174,6 @@ version(void)
  *
  *		x.y.z.w-r
  *		x.y.z-r
- *		x.y-r
  *
  * where 'r' comes from the content of the release file.
  */
@@ -214,11 +210,9 @@ print_rpm_version(char *release)
 	if (MINOR_PATCH > 0) {
 		printf("%d.%d.%d.%d-%s\n", calc_major_ver, calc_minor_ver,
 				      calc_major_patch, calc_minor_patch, buf);
-	} else if (MAJOR_PATCH > 0) {
+	} else {
 		printf("%d.%d.%d-%s\n", calc_major_ver, calc_minor_ver,
 				     calc_major_patch, buf);
-	} else {
-		printf("%d.%d-%s\n", calc_major_ver, calc_minor_ver, buf);
 	}
 	return;
 }
@@ -230,7 +224,6 @@ print_rpm_version(char *release)
  * This function prints the major part version string:
  *
  *		x.y.z
- *		x.y
  */
 void
 print_rpm_major(void)
@@ -238,12 +231,8 @@ print_rpm_major(void)
 	/*
 	 * form the version buffer
 	 */
-	if (MAJOR_PATCH > 0) {
-		printf("%d.%d.%d\n", calc_major_ver, calc_minor_ver,
-				     calc_major_patch);
-	} else {
-		printf("%d.%d\n", calc_major_ver, calc_minor_ver);
-	}
+	printf("%d.%d.%d\n", calc_major_ver, calc_minor_ver,
+			     calc_major_patch);
 	return;
 }
 

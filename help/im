@@ -13,7 +13,7 @@ DESCRIPTION
     If x = u + v * 1i where u and v are real, im(x) returns v.
 
 EXAMPLE
-    > print im(2), im(2 + 3i), im(-4.25 - 7i)
+    ; print im(2), im(2 + 3i), im(-4.25 - 7i)
     0 3 -7
 
 LIMITS
@@ -41,8 +41,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: im,v 29.3 2002/03/12 09:38:26 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: im,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/im,v $
 ##
 ## Under source code control:	1995/10/05 04:52:26

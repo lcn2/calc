@@ -14,7 +14,7 @@ DESCRIPTION
     If x is an error value, iserror(x) returns its error type.
 
 EXAMPLE
-    > a = error(99)
+    ; a = error(99)
     print iserror(a), iserror(2 + a), iserror(2 + "a"), iserror(2 + 3)
     99 99 3 0
 
@@ -25,13 +25,13 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    error, errorcodes,
+    error, errorcodes, stoponerror,
     isassoc, isatty, isblk, isconfig, isdefined, iseven, isfile,
     ishash, isident, isint, islist, ismat, ismult, isnull, isnum, isobj,
     isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
     issimple, issq, isstr, istype
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -47,8 +47,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: iserror,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: iserror,v 29.4 2006/05/21 07:31:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/iserror,v $
 ##
 ## Under source code control:	1995/12/18 03:30:59

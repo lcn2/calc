@@ -13,7 +13,7 @@ DESCRIPTION
     Returns the greatest integer n for which 2^n <= abs(x).
 
 EXAMPLE
-    > print ilog2(1), ilog2(2), ilog2(3), ilog2(4), ilog(1/15)
+    ; print ilog2(1), ilog2(2), ilog2(3), ilog2(4), ilog(1/15)
     0 1 1 2 -4
 
 LIMITS
@@ -41,8 +41,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: ilog2,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: ilog2,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/ilog2,v $
 ##
 ## Under source code control:	1995/10/03 10:40:02

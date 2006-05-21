@@ -1,7 +1,7 @@
 /*
  * c_argv - a custom function display info about its args
  *
- * Copyright (C) 1999-2004  Landon Curt Noll
+ * Copyright (C) 1999-2006  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: c_argv.c,v 29.4 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: c_argv.c,v 29.6 2006/05/19 15:26:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_argv.c,v $
  *
  * Under source code control:	1997/03/09 20:27:37
@@ -152,9 +152,9 @@ c_argv(char UNUSED *name, int count, VALUE **vals)
 				/* getsize error */
 				printf("\tsize=unknown");
 			}
-			printf("\tsizeof=%ld\n", lsizeof(vals[i]));
+			printf("\tsizeof=%u\n", lsizeof(vals[i]));
 		} else {
-			printf("\tsize=%ld\tsizeof=%ld\n",
+			printf("\tsize=%ld\tsizeof=%u\n",
 			    elm_count(vals[i]), lsizeof(vals[i]));
 		}
 	}

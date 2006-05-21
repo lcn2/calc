@@ -1,7 +1,7 @@
 /*
  * zio - scanf and printf routines for arbitrary precision integers
  *
- * Copyright (C) 1999-2002  David I. Bell
+ * Copyright (C) 1999-2006  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: zio.c,v 29.4 2002/12/29 09:20:25 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: zio.c,v 29.6 2006/05/19 15:26:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zio.c,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -55,8 +55,8 @@ struct iostate {
 	int outmode2;			/* secondary output mode */
 	FILE *outfp;			/* file unit for output (if any) */
 	char *outbuf;			/* output string buffer (if any) */
-	long outbufsize;		/* current size of string buffer */
-	long outbufused;		/* space used in string buffer */
+	size_t outbufsize;		/* current size of string buffer */
+	size_t outbufused;		/* space used in string buffer */
 	BOOL outputisstring;		/* TRUE if output is to string buffer */
 };
 
@@ -65,8 +65,8 @@ static IOSTATE	*oldiostates = NULL;	/* list of saved output states */
 static FILE	*outfp = NULL;		/* file unit for output */
 static char	*outbuf = NULL;		/* current diverted buffer */
 static BOOL	outputisstring = FALSE;
-static long	outbufsize;
-static long	outbufused;
+static size_t	outbufsize;
+static size_t	outbufused;
 
 
 /*
@@ -122,13 +122,13 @@ void
 math_str(char *str)
 {
 	char	*cp;
-	long	len;
+	size_t	len;
 
 	if (!outputisstring) {
 		fputs(str, outfp);
 		return;
 	}
-	len = (long)strlen(str);
+	len = strlen(str);
 	if ((outbufused + len) > outbufsize) {
 		cp = (char *)realloc(outbuf, outbufsize + len + OUTBUFSIZE + 1);
 		if (cp == NULL) {
@@ -155,12 +155,12 @@ void
 math_fill(char *str, long width)
 {
 	if (width > 0) {
-		width -= strlen(str);
+		width -= (long)strlen(str);
 		while (width-- > 0)
 			PUTCHAR(' ');
 		PUTSTR(str);
 	} else {
-		width += strlen(str);
+		width += (long)strlen(str);
 		PUTSTR(str);
 		while (width++ < 0)
 			PUTCHAR(' ');

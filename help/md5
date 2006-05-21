@@ -49,35 +49,35 @@ DESCRIPTION
 	  MD5 Message-Digest Algorithm".
 
 EXAMPLE
-    > base(16)
+    ; base(16)
 	    0xa
 
-    > md5()
+    ; md5()
 	    md5 hash state
-    > md5(md5())
+    ; md5(md5())
 	    0xd41d8cd98f00b204e9800998ecf8427e
 
-    > md5("x", "y", "z") == md5("xyz")
+    ; md5("x", "y", "z") == md5("xyz")
 	    1
-    > md5("x", "y", "z") == md5("xy")
+    ; md5("x", "y", "z") == md5("xy")
 	    0
 
-    > md5(md5("this is", 7^19-8, "a composit", 3i+4.5, "hash"))
+    ; md5(md5("this is", 7^19-8, "a composit", 3i+4.5, "hash"))
 	    0x5a90d942335b0dbbdce38d90e7cb6dac
 
-    > x = md5(list(1,2,3), "curds and whey", 2^21701-1, pi())
-    > x
+    ; x = md5(list(1,2,3), "curds and whey", 2^21701-1, pi())
+    ; x
 	    md5 hash state
-    > md5(x)
+    ; md5(x)
 	    0x88790b3ea9eb0128134c103ac9b683ed
 
-    > y = md5()
-    > y = md5(y, list(1,2,3), "curds and whey")
-    > y = md5(y, 2^21701-1)
-    > y = md5(y, pi())
-    > y
+    ; y = md5()
+    ; y = md5(y, list(1,2,3), "curds and whey")
+    ; y = md5(y, 2^21701-1)
+    ; y = md5(y, pi())
+    ; y
 	    md5 hash state
-    > md5(y)
+    ; md5(y)
 	    0x88790b3ea9eb0128134c103ac9b683ed
 
 LIMITS
@@ -117,8 +117,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: md5,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: md5,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/md5,v $
 ##
 ## Under source code control:	1997/04/06 19:45:54

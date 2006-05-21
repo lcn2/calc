@@ -1,7 +1,7 @@
 /*
  * input - nested input source file reader
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2006  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: input.c,v 29.6 2002/03/12 09:40:57 chongo Exp $
+ * @(#) $Revision: 29.11 $
+ * @(#) $Id: input.c,v 29.11 2006/05/19 15:26:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/input.c,v $
  *
  * Under source code control:	1990/02/15 01:48:16
@@ -114,8 +114,12 @@ static char *homeexpand(char *name);
 /*
  * Open an input file by possibly searching through a path list
  * and also possibly applying the specified extension.	For example:
- * opensearchfile("barf", ".:/tmp", ".c", once) searches in order
- * for the files "./barf", "./barf.c", "/tmp/barf", and "/tmp/barf.c".
+ *
+ *	opensearchfile("barf", ".:/tmp", ".c", rd_once)
+ *
+ * searches in order for the files:
+ *
+ *	"./barf", "./barf.c", "/tmp/barf", and "/tmp/barf.c".
  *
  * Returns -1 if we could not open a file or error.
  * Returns 1 if file was opened and added to/updated in the readset
@@ -134,9 +138,29 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 	char *cp;
 	char *path;		/* name being searched for */
 	struct stat statbuf;	/* stat of the path */
-	unsigned long namelen;	/* length of name */
-	unsigned long extlen;	/* length of the extension if non-NULL or 0 */
-	unsigned long pathlen;	/* length of the pathlist if non-NULL or 0 */
+	size_t namelen;	/* length of name */
+	size_t extlen;	/* length of the extension if non-NULL or 0 */
+	size_t pathlen;	/* length of the pathlist if non-NULL or 0 */
+
+	/* firewall */
+	if (name == NULL) {
+		math_error("NULL name given to opensearchfile");
+		/*NOTREACHED*/
+	}
+
+	/*
+	 * We ignore the pathlist of the file is absolute, dot-relative
+	 * or tilde-relative or if there is no search path.
+	 */
+	if (name[0] == PATHCHAR ||
+	    name[0] == HOMECHAR ||
+	    (name[0] == DOTCHAR && name[1] == '\0') ||
+	    (name[0] == DOTCHAR && name[1] == DOTCHAR && name[2] == '\0') ||
+	    (name[0] == DOTCHAR && name[1] == PATHCHAR) ||
+	    (name[0] == DOTCHAR && name[1] == DOTCHAR && name[2] == PATHCHAR) ||
+	    pathlist == NULL) {
+		pathlist = "";
+	}
 
 	/*
 	 * allocate storage for the longest name being searched for
@@ -158,11 +182,7 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 	} else {
 	    extlen = 0;
 	}
-	if (pathlist != NULL) {
-	    pathlen = strlen(pathlist);
-	} else {
-	    pathlen = 0;
-	}
+	pathlen = strlen(pathlist);
 	path = malloc(pathlen+1 + 1 + namelen+1 + extlen+1 + 1 + 1);
 	if (path == NULL) {
 		math_error("Cannot allocate filename path buffer");
@@ -178,17 +198,8 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 	}
 
 	/*
-	 * If the name is absolute, or if there is no path list, then
-	 * make one which just searches for the name straight.	Then
-	 * search through the path list for the file, without and with
-	 * the specified extension.
+	 * Search through the path list for the file
 	 */
-	if (name[0] == PATHCHAR ||
-	    name[0] == HOMECHAR ||
-	    (name[0] == DOTCHAR && name[1] == PATHCHAR) ||
-	    pathlist == NULL) {
-		pathlist = "";
-	}
 	pathlist--;
 	do {
 		pathlist++;
@@ -197,7 +208,7 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 			*cp++ = *pathlist++;
 		if (cp != path)
 			*cp++ = PATHCHAR;
-		strcpy(cp, name);
+		strncpy(cp, name, namelen+1);
 		i = openfile(path);
 		if ((i < 0) &&
 		    (extension != NULL && extension[0] != '\0')) {
@@ -245,6 +256,123 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 
 
 /*
+ * f_pathopen - open an absolute filename, or a relative filename along a search path
+ *
+ * Open a file by possibly searching through a path list.  For example:
+ *
+ *	f_pathopen("curds", ".:/tmp:~/pub", "r", NULL)
+ *
+ * searches in order for a file that it can open for reading:
+ *
+ *	"./curds", "/tmp/curds", "~/pub/curds"
+ *
+ * 	NOTE: ~ is expanded accordingly (see homeexpand() below).
+ *
+ * However is the file is /absolue/path/name or a ./dot/relative/name, or
+ * a ~/home/dir/name, or a ~user/home/name, then the pathlist is ignored
+ * we just attempt to open name.
+ *
+ * and opens the first one that exists and allows the mode.
+ *
+ *	name		file name to be read
+ *	mode		fopen() mode argument (one of "r", "w", "a", "r+", "w+", "a+")
+ *	pathlist	list of colon separated paths (or NULL)
+ *	openpath	if non-NULL, and file was opened, set to malloced path used to open
+ *
+ * returns:
+ *	open file stream, NULL ==> file was not found or error
+ *	If file was open and openpath was non-NULL, changed to point to path used to open
+ */
+FILE *
+f_pathopen(char *name, char *mode, char *pathlist, char **openpath)
+{
+	char *cp;
+	char *path;		/* name being searched for */
+	size_t namelen;		/* length of name */
+	size_t pathlen;		/* length of the pathlist if non-NULL or 0 */
+	FILE *ret;		/* return open stream or NULL */
+
+	/* firewall */
+	if (name == NULL) {
+		math_error("NULL name given to f_pathopen");
+		/*NOTREACHED*/
+	}
+	if (mode == NULL) {
+		math_error("NULL mode given to f_pathopen");
+		/*NOTREACHED*/
+	}
+
+	/*
+	 * We ignore the pathlist of the file is absolute, dot-relative
+	 * or tilde-relative or if there is no search path.
+	 */
+	if (name[0] == PATHCHAR ||
+	    name[0] == HOMECHAR ||
+	    (name[0] == DOTCHAR && name[1] == '\0') ||
+	    (name[0] == DOTCHAR && name[1] == DOTCHAR && name[2] == '\0') ||
+	    (name[0] == DOTCHAR && name[1] == PATHCHAR) ||
+	    (name[0] == DOTCHAR && name[1] == DOTCHAR && name[2] == PATHCHAR) ||
+	    pathlist == NULL) {
+		pathlist = "";
+	}
+
+	/*
+	 * allocate storage for the longest name being searched for
+	 *
+	 * We will allocate more than we could ever want/need.
+	 * The longest we could ever need would be:
+	 *
+	 *	pathlist (as a single long string)
+	 *	/
+	 *	name
+	 *	\0
+	 *	guard byte
+	 */
+	namelen = strlen(name);
+	pathlen = strlen(pathlist);
+	path = malloc(pathlen+1 + 1 + namelen+1 + 1 + 1);
+	if (path == NULL) {
+		math_error("Cannot allocate f_pathopen buffer");
+		/*NOTREACHED*/
+	}
+
+	/*
+	 * Search through the path list for the file
+	 */
+	pathlist--;
+	do {
+		pathlist++;
+		cp = path;
+		while (*pathlist && (*pathlist != LISTCHAR))
+			*cp++ = *pathlist++;
+		if (cp != path)
+			*cp++ = PATHCHAR;
+		strncpy(cp, name, namelen+1);
+		ret = f_open(path, mode);
+	} while ((ret == NULL) && *pathlist);
+
+	/* if caller wants to know the path, malloc it and return it */
+	if (openpath != NULL && ret != NULL) {
+		if (path[0] == HOMECHAR) {
+			*openpath = homeexpand(path);
+		} else {
+			*openpath = strdup(path);
+		}
+		if (*openpath == NULL) {
+			free(path);
+			fclose(ret);
+			math_error("cannot malloc return openpath buffer");
+			/*NOTREACHED*/
+		}
+	}
+	free(path);
+
+	/* return open file or NULL */
+	return ret;
+}
+
+
+/*
  * Given a filename with a leading ~, expand it into a home directory for
  * that user.  This function will malloc the space for the expanded path.
  *
@@ -276,6 +404,7 @@ homeexpand(char *name)
 	char *fullpath;		/* the malloced expanded path */
 	char *after;		/* after the ~user or ~ */
 	char *username;		/* extracted username */
+	size_t fullpath_len;	/* length of fullpath */
 
 	/* firewall */
 	if (name[0] != HOMECHAR)
@@ -302,11 +431,12 @@ homeexpand(char *name)
 				return NULL;
 			}
 			/* just malloc the home directory and return it */
-			fullpath = (char *)malloc(strlen(ent->pw_dir)+1);
+			fullpath_len = strlen(ent->pw_dir);
+			fullpath = (char *)malloc(fullpath_len+1);
 			if (fullpath == NULL) {
 				return NULL;
 			}
-			strcpy(fullpath, ent->pw_dir);
+			strncpy(fullpath, ent->pw_dir, fullpath_len+1);
 			return fullpath;
 		}
 		username = (char *) malloc(after-name + 1 + 1);
@@ -346,7 +476,7 @@ homeexpand(char *name)
  *
  * given:
  *	name		the filename to open
- 7	mode		the fopen mode to use
+ *	mode		fopen() mode argument (one of "r", "w", "a", "r+", "w+", "a+")
  */
 FILE *
 f_open(char *name, char *mode)
@@ -413,6 +543,7 @@ static int
 openfile(char *name)
 {
 	FILE *fp;		/* open file descriptor */
+	size_t namelen;
 
 	if (depth >= MAXDEPTH)
 		 return -2;
@@ -426,11 +557,12 @@ openfile(char *name)
 	cip->i_ttystr = NULL;
 	cip->i_fp = fp;
 	cip->i_line = 1;
-	cip->i_name = (char *)malloc(strlen(name) + 1);
+	namelen = strlen(name);
+	cip->i_name = (char *)malloc(namelen+1);
 	if (cip->i_name == NULL) {
 		 return -1;
 	}
-	strcpy(cip->i_name, name);
+	strncpy(cip->i_name, name, namelen+1);
 	return 0;
 }
 
@@ -454,9 +586,10 @@ curstream(void)
  *
  * given:
  *	str		string to be opened
+ *	num		lengh of string to open
  */
 int
-openstring(char *str, long num)
+openstring(char *str, size_t num)
 {
 	char *cp;		/* copied string */
 
@@ -465,7 +598,8 @@ openstring(char *str, long num)
 	cp = (char *) malloc(num + 1);
 	if (cp == NULL)
 		 return -1;
-	strcpy(cp, str);
+	strncpy(cp, str, num);
+	cp[num] = '\0';	/* firewall */
 	cip = inputs + depth++;
 	cip->i_state = IS_READ;
 	cip->i_char = '\0';
@@ -778,7 +912,7 @@ runrcfiles(void)
 
 		/* load file name into the path */
 		if (calcrc == NULL) {
-			strcpy(path, cp);
+			strncpy(path, cp, MAX_CALCRC+1);
 		} else {
 			strncpy(path, cp, calcrc - cp);
 			path[calcrc - cp] = '\0';
@@ -935,6 +1069,8 @@ static int
 addreadset(char *name, char *path, struct stat *sbuf)
 {
 	int ret;		/* index to return */
+	size_t name_len;	/* length of read set name */
+	size_t path_len;	/* length of path to read set name */
 
 	/* find the inode */
 	ret = isinoderead(sbuf);
@@ -956,11 +1092,12 @@ addreadset(char *name, char *path, struct stat *sbuf)
 	}
 
 	/* load our information into the readset entry */
-	readset[ret].name = (char *)malloc(strlen(name)+1);
+	name_len = strlen(name);
+	readset[ret].name = (char *)malloc(name_len+1);
 	if (readset[ret].name == NULL) {
 		return -1;
 	}
-	strcpy(readset[ret].name, name);
+	strncpy(readset[ret].name, name, name_len+1);
 #if defined(_WIN32) || defined(__MSDOS__)
 	/*
 	 * For WIN32, _fullpath expands the path to a fully qualified
@@ -974,11 +1111,12 @@ addreadset(char *name, char *path, struct stat *sbuf)
 		readset[ret].path = _fullpath(fullpathname, path, _MAX_PATH);
 	 }
 #else /* Windoz free systems */
-	readset[ret].path = (char *)malloc(strlen(path)+1);
+	path_len = strlen(path);
+	readset[ret].path = (char *)malloc(path_len+1);
 	if (readset[ret].path == NULL) {
 		return -1;
 	}
-	strcpy(readset[ret].path, path);
+	strncpy(readset[ret].path, path, path_len+1);
 #endif /* Windoz free systems */
 	readset[ret].inode = *sbuf;
 	readset[ret].active = 1;

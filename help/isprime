@@ -26,16 +26,16 @@ DESCRIPTION
     will be returned.
 
 EXAMPLE
-    > print isprime(-3), isprime(1), isprime(2)
+    ; print isprime(-3), isprime(1), isprime(2)
     0 0 1
 
-    > print isprime(21701), isprime(1234577), isprime(1234579)
+    ; print isprime(21701), isprime(1234577), isprime(1234579)
     1 1 0
 
-    > print isprime(2^31-9), isprime(2^31-1), isprime(2^31+11)
+    ; print isprime(2^31-9), isprime(2^31-1), isprime(2^31+11)
     0 1 1
 
-    > print isprime(2^32+1, -1), isprime(3^99, 2), isprime(4^99, 2)
+    ; print isprime(2^32+1, -1), isprime(3^99, 2), isprime(4^99, 2)
     -1 2 0
 
 LIMITS
@@ -67,8 +67,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: isprime,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: isprime,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/isprime,v $
 ##
 ## Under source code control:	1994/10/21 02:21:29

@@ -14,7 +14,7 @@ TYPES
 
 DESCRIPTION
     With only integer arguments, blk(len, chunk) attempts to
-    allocate a block of memory consisting of N octets (unsigned 8-bit
+    allocate a block of memory consisting of len octets (unsigned 8-bit
     bytes).  Allocation is always done in multiples of chunk
     octets, so the actual allocation size of len rounded up
     to the next multiple of chunk.
@@ -26,7 +26,7 @@ DESCRIPTION
     ... , B[len-1], these all initially having zero value.
 
     The octets B[i] for i >= len always have zero value.  If B[i] with
-    some i >= len is referenced, len is increased by 1.	 For example:
+    some i >= len is referenced, size(B) is increased to i + 1.	For example:
 
 			B[i] = x
 
@@ -56,7 +56,7 @@ DESCRIPTION
     will append one octet to B and increment size(B).
 
     The builtin test(B) returns 1 or 0 according as at least one octet
-    is zero or all octets are zero.  If B1 and B2 are blocks, they are
+    is nonzero or all octets are zero.  If B1 and B2 are blocks, they are
     considered equal (B1 == B2) if they have the same length and the
     same data, i.e.  B1[i] == B2[i] for 0 <= i < len.  Chunksizes
     and maxsizes are ignored.
@@ -107,7 +107,7 @@ DESCRIPTION
 
     will give a second variable B referring to the same block as A.
     Either  A[i] = x  or  B[i] = x  may then be used to assign a value
-    to an octet in the book.   Its length or chunksize may be changed by
+    to an octet in the block.  Its length or chunksize may be changed by
     instructions like:
 
 			blk(A, len, chunk);
@@ -154,55 +154,55 @@ DESCRIPTION
 
 EXAMPLE
 
-    > B = blk(15,10)
+    ; B = blk(15,10)
 
-    > B[7] = 0xff
-    > B
+    ; B[7] = 0xff
+    ; B
 	chunksize = 10, maxsize = 20, datalen = 15
 	00000000000000ff00000000000000
 
-    > B[18] = 127
-    > B
+    ; B[18] = 127
+    ; B
 	chunksize = 10, maxsize = 20, datalen = 18
 	00000000000000ff0000000000000000007f
 
-    > B[20] = 2
+    ; B[20] = 2
     Index out of bounds for block
 
-    > print size(B), sizeof(B)
+    ; print size(B), sizeof(B)
     18 20
 
-    > B = blk(B, 100, 20)
-    > B
+    ; B = blk(B, 100, 20)
+    ; B
 	chunksize = 20, maxsize = 120, datalen = 100
 	00000000000000ff0000000000000000007f000000000000000000000000...
 
-    > C = blk(B, 10} = {1,2,3}
-    > C
+    ; C = blk(B, 10} = {1,2,3}
+    ; C
 	chunksize = 20, maxsize = 20, datalen = 10
 	01020300000000ff0000
 
-    > A1 = blk("alpha")
-    > A1
+    ; A1 = blk("alpha")
+    ; A1
 	block 0: alpha
 	chunksize = 256, maxsize = 256, datalen = 0
 
-    > A1[7] = 0xff
-    > A2 = A1
-    > A2[17] = 127
-    > A1
+    ; A1[7] = 0xff
+    ; A2 = A1
+    ; A2[17] = 127
+    ; A1
 	block 0: alpha
 	chunksize = 256, maxsize = 256, datalen = 18
 	00000000000000ff0000000000000000007f
 
-    > A1 = blk(A1, 1000)
-    > A1
+    ; A1 = blk(A1, 1000)
+    ; A1
 	block 0: alpha
 	chunksize = 256, maxsize = 1024, datalen = 1000
 	00000000000000ff0000000000000000007f000000000000000000000000...
 
-    > A1 = blk(A1, , 16)
-    > A1
+    ; A1 = blk(A1, , 16)
+    ; A1
 	block 0: alpha
 	chunksize = 16, maxsize = 1008, datalen = 1000
 	00000000000000ff0000000000000000007f000000000000000000000000...
@@ -234,8 +234,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: blk,v 29.3 2002/07/10 11:47:04 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: blk,v 29.4 2006/05/07 07:16:42 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/blk,v $
 ##
 ## Under source code control:	1997/04/05 13:07:13

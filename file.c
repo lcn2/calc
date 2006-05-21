@@ -1,7 +1,7 @@
 /*
  * file - file I/O routines callable by users
  *
- * Copyright (C) 1999-2004  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2006  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: file.c,v 29.9 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.14 $
+ * @(#) $Id: file.c,v 29.14 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -68,11 +68,11 @@ extern FILE *f_open(char *name, char *mode);
  */
 static FILEIO files[MAXFILES] = {
 	{FILEID_STDIN,	NULL,  (dev_t)0, (ino_t)0,
-	 "(stdin)",  TRUE, FALSE, 'r', "r"},
+	 "(stdin)",  TRUE, FALSE, FALSE, FALSE, 'r', "r"},
 	{FILEID_STDOUT, NULL, (dev_t)0, (ino_t)0,
-	 "(stdout)", FALSE,  TRUE, 'w', "w"},
+	 "(stdout)", FALSE,  TRUE, FALSE, FALSE, 'w', "w"},
 	{FILEID_STDERR, NULL, (dev_t)0, (ino_t)0,
-	 "(stderr)", FALSE,  TRUE, 'w', "w"}
+	 "(stderr)", FALSE,  TRUE, FALSE, FALSE, 'w', "w"}
 };
 
 
@@ -188,14 +188,141 @@ file_init(void)
 
 
 /*
- * Open the specified file name for reading or writing; mode is assumed
- * to be one of "r", "w", "a", "r+", "w+", "a+".
- * Returns a file id which can be used to do I/O to the file, or else
- * FILEID_NONE if the open failed.
+ * init_fileio - initialize a FILEIO structure
+ *
+ * This function initializes a calc FILEIO structure.  It will optionally
+ * malloc the filename string if given an non-NULL associated filename.
+ * It will canonicalize the file open mode string.
+ *
+ * given:
+ *	fiop	pointer to FILEIO structure to initialize
+ *	name	associated filename (NULL => caller will setup filename)
+ *	mode	open mode (one of {r,w,a}{,b}{,+})
+ *	sbufp	pointer to stat of open file
+ *	id	calc file ID
+ *	fp	open file stream
+ */
+static void
+init_fileio(FILEIO *fiop, char *name, char *mode,
+	    struct stat *sbufp, FILEID id, FILE *fp)
+{
+	char modestr[sizeof(fiop->mode)];	/* mode [rwa]b?\+? */
+	size_t namelen;				/* length of name */
+
+	/* allocate filename if requested */
+	if (name != NULL) {
+		namelen = strlen(name);
+		fiop->name = (char *)malloc(namelen + 1);
+		if (fiop->name == NULL) {
+			math_error("No memory for filename");
+			/*NOTREACHED*/
+		}
+	}
+
+	/* initialize FILEIO structure */
+	if (name != NULL) {
+		strncpy(fiop->name, name, namelen+1);
+	}
+	fiop->id = id;
+	fiop->fp = fp;
+	fiop->dev = sbufp->st_dev;
+	fiop->inode = sbufp->st_ino;
+	fiop->reading = FALSE;
+	fiop->writing = FALSE;
+	fiop->appending = FALSE;
+	fiop->binary = FALSE;
+	fiop->action = 0;
+	fiop->mode[0] = '\0';
+
+	/*
+	 * determine file open mode
+	 *
+	 * While a leading 'r' is for reading and a leading 'w' is
+	 * for writing, the presense of a '+' in the string means
+	 * both reading and writing.  A leading 'a' means append
+	 * which is writing.
+	 */
+	/* canonicalize read modes */
+	if (mode[0] == 'r') {
+
+		/* note read mode */
+		strcpy(modestr, "r");
+		fiop->reading = TRUE;
+
+		/* note binary mode even though mode is not used / ignored */
+		if (strchr(mode, 'b') != NULL) {
+		    strcat(modestr, "b");
+		}
+
+		/* note if reading and writing */
+		if (strchr(mode, '+') != NULL) {
+			fiop->writing = TRUE;
+			strcat(modestr, "+");
+		}
+
+	/* canonicalize write modes */
+	} else if (mode[0] == 'w') {
+
+		/* note write mode */
+		strcpy(modestr, "w");
+		fiop->writing = TRUE;
+
+		/* note binary mode even though mode is not used / ignored */
+		if (strchr(mode, 'b') != NULL) {
+		    strcat(modestr, "b");
+		}
+
+		/* note if reading and writing */
+		if (strchr(mode, '+') != NULL) {
+			fiop->reading = TRUE;
+			strcat(modestr, "+");
+		}
+
+	/* canonicalize append modes */
+	} else if (mode[0] == 'a') {
+
+		/* note append mode */
+		strcpy(modestr, "a");
+		fiop->writing = TRUE;
+		fiop->appending = TRUE;
+
+		/* note binary mode even though mode is not used / ignored */
+		if (strchr(mode, 'b') != NULL) {
+		    strcat(modestr, "b");
+		}
+
+		/* note if reading and writing */
+		if (strchr(mode, '+') != NULL) {
+			fiop->reading = TRUE;
+			strcat(modestr, "+");
+		}
+
+	/* canonicalize no I/O modes */
+	} else {
+		modestr[0] = '\0';
+	}
+	modestr[sizeof(modestr)-1] = '\0';	/* firewall */
+
+	/* record canonical open mode string */
+	strncpy(fiop->mode, modestr, sizeof(fiop->mode));
+}
+
+
+/*
+ * openid - open the specified file name for reading or writing
  *
  * given:
  *	name		file name
- *	mode		open mode
+ *	mode		open mode (one of {r,w,a}{,b}{,+})
+ *
+ * returns:
+ *	>=3 FILEID which can be used to do I/O to the file
+ *	<0 if the open failed
+ *
+ * NOTE: This function will not return 0, 1 or 2 since they are
+ *	 reserved for stdin, stdout, stderr.  In fact, it must not
+ *	 return 0, 1, or 2 because it will confuse those who call
+ *	 the opensearchfiile() function
  */
 FILEID
 openid(char *name, char *mode)
@@ -206,9 +333,9 @@ openid(char *name, char *mode)
 	struct stat sbuf;	/* file status */
 	int i;
 
+	/* find the next open slot in the files array */
 	if (idnum >= MAXFILES)
-		return -E_FOPEN3;
-
+		return -E_MANYOPEN;
 	fiop = &files[3];
 	for (i = 3; i < MAXFILES; fiop++,i++) {
 		if (fiop->name == NULL)
@@ -217,8 +344,8 @@ openid(char *name, char *mode)
 	if (i == MAXFILES)
 		math_error("This should not happen in openid()!!!");
 
+	/* open the file */
 	fp = f_open(name, mode);
-
 	if (fp == NULL) {
 		return FILEID_NONE;
 	}
@@ -227,50 +354,88 @@ openid(char *name, char *mode)
 		/*NOTREACHED*/
 	}
 
-	fiop->name = (char *)malloc(strlen(name) + 1);
-	if (fiop->name == NULL) {
-		math_error("No memory for filename");
-		/*NOTREACHED*/
-	}
+	/* get a new FILEID */
 	id = ++lastid;
 	ioindex[idnum++] = i;
 
-	strcpy(fiop->name, name);
-	fiop->id = id;
-	fiop->fp = fp;
-	fiop->dev = sbuf.st_dev;
-	fiop->inode = sbuf.st_ino;
-	fiop->reading = TRUE;
-	fiop->writing = TRUE;
-	fiop->action = 0;
+	/* initialize FILEIO structure */
+	init_fileio(fiop, name, mode, &sbuf, id, fp);
 
-	/*
-	 * determine file open mode
-	 *
-	 * While a leading 'r' is for reading and a leading 'w' is
-	 * for writing, the presense of a '+' in the string means
-	 * both reading and writing.  A leading 'a' means append
-	 * which is writing.
-	 */
-	if (mode[0] == 'r') {
-		fiop->reading = TRUE;
-		if (strchr(mode, '+') == NULL) {
-			fiop->writing = FALSE;
-		} else {
-			fiop->writing = TRUE;
-		}
-	} else if (mode[0] == 'w' || mode[0] == 'a') {
-		fiop->writing = TRUE;
-		if (strchr(mode, '+') == NULL) {
-			fiop->reading = FALSE;
-		} else {
-			fiop->reading = TRUE;
-		}
-	} else {
-		fiop->reading = FALSE;
-		fiop->writing = FALSE;
+	/* return calc open file ID */
+	return id;
+}
+
+
+/*
+ * openpathid - open the specified abse filename, or relative filename along a search path
+ *
+ * given:
+ *	name		file name
+ *	mode		open mode (one of {r,w,a}{,b}{,+})
+ *	pathlist	list of colon separated paths (or NULL)
+ *
+ * returns:
+ *	>=3 FILEID which can be used to do I/O to the file
+ *	<0 if the open failed
+ *
+ * NOTE: This function will not return 0, 1 or 2 since they are
+ *	 reserved for stdin, stdout, stderr.  In fact, it must not
+ *	 return 0, 1, or 2 because it will confuse those who call
+ *	 the opensearchfiile() function
+ */
+FILEID
+openpathid(char *name, char *mode, char *pathlist)
+{
+	FILEIO *fiop;		/* file structure */
+	FILEID id;		/* new file id */
+	FILE *fp;
+	struct stat sbuf;	/* file status */
+	char *openpath;		/* malloc copy of path that was opened */
+	int i;
+
+	/* find the next open slot in the files array */
+	if (idnum >= MAXFILES)
+		return -E_MANYOPEN;
+	fiop = &files[3];
+	for (i = 3; i < MAXFILES; fiop++,i++) {
+		if (fiop->name == NULL)
+			break;
 	}
-	strcpy(fiop->mode, mode);
+	if (i == MAXFILES)
+		math_error("This should not happen in openpathid()!!!");
+
+	/* open a file - searching along a path */
+	openpath = NULL;
+	fp = f_pathopen(name, mode, pathlist, &openpath);
+	if (fp == NULL) {
+		if (openpath != NULL) {
+			/* should not happen, but just in case */
+			free(openpath);
+		}
+		return FILEID_NONE;
+	}
+	if (fstat(fileno(fp), &sbuf) < 0) {
+		if (openpath != NULL) {
+			free(openpath);
+		}
+		math_error("bad fstat");
+		/*NOTREACHED*/
+	}
+	if (openpath == NULL) {
+		fclose(fp);
+		math_error("bad openpath");
+		/*NOTREACHED*/
+	}
+
+	/* get a new FILEID */
+	id = ++lastid;
+	ioindex[idnum++] = i;
+
+	/* initialize FILEIO structure */
+	init_fileio(fiop, NULL, mode, &sbuf, id, fp);
+	fiop->name = openpath;	/* already malloced by f_pathopen */
+
+	/* return calc open file ID */
 	return id;
 }
 
@@ -279,16 +444,20 @@ openid(char *name, char *mode)
  * reopenid - reopen a FILEID
  *
  * given:
- *	id		FILEID to reopen
- *	mode		new mode to open as
- *	name		name of new file
+ *	id	FILEID to reopen
+ *	mode	new mode to open as
+ *	mode	new mode to open as (one of "r", "w", "a", "r+", "w+", "a+")
+ *	name	name of new file
+ *
+ * returns:
+ *	FILEID which can be used to do I/O to the file
+ *	<0 if the open failed
  */
 FILEID
 reopenid(FILEID id, char *mode, char *name)
 {
 	FILEIO *fiop;		/* file structure */
 	FILE *fp;
-	char *newname;
 	struct stat sbuf;
 	int i;
 
@@ -299,8 +468,8 @@ reopenid(FILEID id, char *mode, char *name)
 		/*NOTREACHED*/
 	}
 
+	/* reopen the file */
 	fiop = NULL;
-
 	for (i = 3; i < idnum; i++) {
 		fiop = &files[ioindex[i]];
 		if (fiop->id == id)
@@ -344,57 +513,23 @@ reopenid(FILEID id, char *mode, char *name)
 			return FILEID_NONE;
 		}
 	}
-
 	if (fstat(fileno(fp), &sbuf) < 0) {
 		math_error("bad fstat");
 		/*NOTREACHED*/
 	}
 
-	if (name) {
-		newname = (char *)malloc(strlen(name) + 1);
-		if (newname == NULL) {
-			math_error("No memory for filename");
-			/*NOTREACHED*/
+	/* initialize FILEIO structure */
+	if (name == NULL) {
+		if (fiop->name == NULL) {
+			math_error("old and new reopen filenames are NULL");
 		}
-		if (fiop->name)
-			free(fiop->name);
-		strcpy(newname, name);
-		fiop->name = newname;
+	} else if (fiop->name != NULL) {
+		free(fiop->name);
+		fiop->name = NULL;
 	}
-	fiop->fp = fp;
-	fiop->dev = sbuf.st_dev;
-	fiop->inode = sbuf.st_ino;
-	fiop->reading = TRUE;
-	fiop->writing = TRUE;
-	fiop->action = 0;
+	init_fileio(fiop, name, mode, &sbuf, id, fp);
 
-	/*
-	 * determine file open mode
-	 *
-	 * While a leading 'r' is for reading and a leading 'w' is
-	 * for writing, the presense of a '+' in the string means
-	 * both reading and writing.  A leading 'a' means append
-	 * which is writing.
-	 */
-	if (mode[0] == 'r') {
-		fiop->reading = TRUE;
-		if (strchr(mode, '+') == NULL) {
-			fiop->writing = FALSE;
-		} else {
-			fiop->writing = TRUE;
-		}
-	} else if (mode[0] == 'w' || mode[0] == 'a') {
-		fiop->writing = TRUE;
-		if (strchr(mode, '+') == NULL) {
-			fiop->reading = FALSE;
-		} else {
-			fiop->reading = TRUE;
-		}
-	} else {
-		fiop->reading = FALSE;
-		fiop->writing = FALSE;
-	}
-	strcpy(fiop->mode, mode);
+	/* return calc open file ID */
 	return id;
 }
 
@@ -810,7 +945,7 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 	VALUE *vp;
 	char *str;
 	int ch;
-	long len;
+	size_t len;
 	int oldmode, newmode;
 	long olddigits, newdigits;
 	long width, precision;
@@ -877,36 +1012,36 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 			newdigits = precision;
 
 		switch (ch) {
-			case 's':
-				printstring = TRUE;
-			case 'c':
-				printchar = TRUE;
-			case 'd':
-				break;
-			case 'f':
-				newmode = MODE_REAL;
-				break;
-			case 'e':
-				newmode = MODE_EXP;
-				break;
-			case 'r':
-				newmode = MODE_FRAC;
-				break;
-			case 'o':
-				newmode = MODE_OCTAL;
-				break;
-			case 'x':
-				newmode = MODE_HEX;
-				break;
-			case 'b':
-				newmode = MODE_BINARY;
-				break;
-			case 0:
-				math_setfp(stdout);
-				return 0;
-			default:
-				math_chr(ch);
-				continue;
+		case 's':
+			printstring = TRUE;
+		case 'c':
+			printchar = TRUE;
+		case 'd':
+			break;
+		case 'f':
+			newmode = MODE_REAL;
+			break;
+		case 'e':
+			newmode = MODE_EXP;
+			break;
+		case 'r':
+			newmode = MODE_FRAC;
+			break;
+		case 'o':
+			newmode = MODE_OCTAL;
+			break;
+		case 'x':
+			newmode = MODE_HEX;
+			break;
+		case 'b':
+			newmode = MODE_BINARY;
+			break;
+		case 0:
+			math_setfp(stdout);
+			return 0;
+		default:
+			math_chr(ch);
+			continue;
 		}
 
 		if (--count < 0) {
@@ -927,41 +1062,41 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 		if ((width == 0) ||
 			(vp->v_type == V_MAT) || (vp->v_type == V_LIST)) {
 			switch(vp->v_type) {
-				case V_OCTET:
-					if (printstring)
-						math_str((char *)vp->v_octet);
-					else if (printchar)
-						math_chr(*vp->v_octet);
-					else
-						printvalue(vp, PRINT_NORMAL);
-					break;
-				case V_BLOCK:
-					if (printstring)
-						math_str((char *)
-							 vp->v_block->data);
-					else if (printchar)
-						math_chr(*vp->v_block->data);
-					else
-						printvalue(vp, PRINT_NORMAL);
-					break;
-				case V_NBLOCK:
-					if (printstring) {
-						if (vp->v_nblock->blk->data !=
-						    NULL)
-							math_str((char *)
-								 vp->v_nblock
-								 ->blk->data);
-					} else if (printchar) {
-						if (vp->v_nblock->blk->data !=
-						    NULL)
-							math_chr(*vp->v_nblock->
-								 blk->data);
-					} else {
-						printvalue(vp, PRINT_NORMAL);
-					}
-					break;
-				default:
+			case V_OCTET:
+				if (printstring)
+					math_str((char *)vp->v_octet);
+				else if (printchar)
+					math_chr(*vp->v_octet);
+				else
 					printvalue(vp, PRINT_NORMAL);
+				break;
+			case V_BLOCK:
+				if (printstring)
+					math_str((char *)
+						 vp->v_block->data);
+				else if (printchar)
+					math_chr(*vp->v_block->data);
+				else
+					printvalue(vp, PRINT_NORMAL);
+				break;
+			case V_NBLOCK:
+				if (printstring) {
+					if (vp->v_nblock->blk->data !=
+					    NULL)
+						math_str((char *)
+							 vp->v_nblock
+							 ->blk->data);
+				} else if (printchar) {
+					if (vp->v_nblock->blk->data !=
+					    NULL)
+						math_chr(*vp->v_nblock->
+							 blk->data);
+				} else {
+					printvalue(vp, PRINT_NORMAL);
+				}
+				break;
+			default:
+				printvalue(vp, PRINT_NORMAL);
 			}
 
 			math_setmode(oldmode);
@@ -1014,13 +1149,13 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 		if (strchr(str, '\n'))
 			width = 0;
 		len = strlen(str);
-		while (!didneg && (width > len)) {
+		while (!didneg && ((size_t)width > len)) {
 			width--;
 			math_chr(' ');
 		}
 		math_str(str);
 		free(str);
-		while (didneg && (width > len)) {
+		while (didneg && ((size_t)width > len)) {
 			width--;
 			math_chr(' ');
 		}
@@ -1414,52 +1549,52 @@ fseekid(FILEID id, ZVALUE offset, int whence)
 
 	/* seek depending on whence */
 	switch (whence) {
-		case 0:
-			/* construct seek position, off = offset */
-			if (zisneg(offset))
-				return -3;
-			off = z2filepos(offset);
+	case 0:
+		/* construct seek position, off = offset */
+		if (zisneg(offset))
+			return -3;
+		off = z2filepos(offset);
 
-			/* seek there */
-			ret = f_seek_set(fiop->fp, &off);
-			break;
+		/* seek there */
+		ret = f_seek_set(fiop->fp, &off);
+		break;
 
-		case 1:
-			/* construct seek position, off = cur+offset */
-			f_tell(fiop->fp, &off);
-			cur = filepos2z(off);
-			zadd(cur, offset, &tmp);
-			zfree(cur);
-			if (zisneg(tmp)) {
-				zfree(tmp);
-				return -3;
-			}
-			off = z2filepos(tmp);
+	case 1:
+		/* construct seek position, off = cur+offset */
+		f_tell(fiop->fp, &off);
+		cur = filepos2z(off);
+		zadd(cur, offset, &tmp);
+		zfree(cur);
+		if (zisneg(tmp)) {
 			zfree(tmp);
+			return -3;
+		}
+		off = z2filepos(tmp);
+		zfree(tmp);
 
-			/* seek there */
-			ret = f_seek_set(fiop->fp, &off);
-			break;
+		/* seek there */
+		ret = f_seek_set(fiop->fp, &off);
+		break;
 
-		case 2:
-			/* construct seek position, off = len+offset */
-			if (get_open_siz(fiop->fp, &cur) < 0)
-				return -4;
-			zadd(cur, offset, &tmp);
-			zfree(cur);
-			if (zisneg(tmp)) {
-				zfree(tmp);
-				return -3;
-			}
-			off = z2filepos(tmp);
+	case 2:
+		/* construct seek position, off = len+offset */
+		if (get_open_siz(fiop->fp, &cur) < 0)
+			return -4;
+		zadd(cur, offset, &tmp);
+		zfree(cur);
+		if (zisneg(tmp)) {
 			zfree(tmp);
+			return -3;
+		}
+		off = z2filepos(tmp);
+		zfree(tmp);
 
-			/* seek there */
-			ret = f_seek_set(fiop->fp, &off);
-			break;
+		/* seek there */
+		ret = f_seek_set(fiop->fp, &off);
+		break;
 
-		default:
-			return -5;
+	default:
+		return -5;
 	}
 	return ret;
 }
@@ -1828,7 +1963,7 @@ showfiles(void)
 	FILE *fp;
 	struct stat sbuf;
 	ino_t inodes[MAXFILES];
-	long sizes[MAXFILES];
+	off_t sizes[MAXFILES];
 	int i, j;
 
 	for (i = 0; i < idnum; i++) {
@@ -1840,7 +1975,7 @@ showfiles(void)
 			sizes[i] = -1;
 		} else {
 			inodes[i] = sbuf.st_ino;
-			sizes[i] = (long) sbuf.st_size;
+			sizes[i] = sbuf.st_size;
 		}
 	}
 	for (i = 0; i < idnum; i++) {
@@ -2040,7 +2175,7 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
 	BOOL skip;	/* True if string to be skipped rather than read */
 	int width;
 	VALUE *var;	/* lvalue to be assigned to */
-	short subtype;	/* for var->v_subtype */
+	unsigned short subtype;	/* for var->v_subtype */
 	FILEPOS cur;	/* current location */
 
 	if (feof(fp))
@@ -2083,75 +2218,75 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
 			f = *fmt++;
 		}
 		switch (f) {
-			case 'c':
-				if (width == 0)
-					width = 1;
-				getscanfield(fp,skip,width,0,NULL,&str);
-				break;
-			case 's':
-				getscanwhite(fp,1,0,6,NULL);
-				if (feof(fp))
-					return assnum;
-				getscanwhite(fp,skip,width,-6,&str);
-				break;
-			case '[':
-				f = *fmt;
-				comp = (f == '^');
-				if (comp)
-					f = *++fmt;
-				scanptr = fmt;
-				if (f == '\0')
-					return assnum;
-				fmt = strchr((f == ']' ? fmt + 1 : fmt), ']');
-				if (fmt == NULL)
-					return assnum;
-				scannum = fmt - scanptr;
-				if (comp)
-					scannum = -scannum;
-				fmt++;
-				getscanfield(fp,skip,
-					 width,scannum,scanptr,&str);
-				break;
-			case 'f':
-			case 'e':
-			case 'r':
-			case 'i':
-				getscanwhite(fp,1,0,6, NULL);
-				if (feof(fp))
-					return assnum;
-				if (skip) {
-					fskipnum(fp);
-					continue;
-				}
-				assnum++;
-				var = *vals++;
-				if (var->v_type != V_ADDR)
-				math_error("This should not happen!!");
-				var = var->v_addr;
-				subtype = var->v_subtype;
-				freevalue(var);
-				count--;
-				freadsum(fp, var);
-				var->v_subtype = subtype;
-				continue;
-			case 'n':
-				assnum++;
-				var = *vals++;
-				count--;
-				if (var->v_type != V_ADDR)
-					math_error("This should not happen!!");
-				var = var->v_addr;
-				subtype = var->v_subtype;
-				freevalue(var);
-				var->v_type = V_NUM;
-				var->v_num = qalloc();
-				f_tell(fp, &cur);
-				var->v_num->num = filepos2z(cur);
-				var->v_subtype = subtype;
-				continue;
-			default:
-				fprintf(stderr, "Unsupported scan specifier");
+		case 'c':
+			if (width == 0)
+				width = 1;
+			getscanfield(fp,skip,width,0,NULL,&str);
+			break;
+		case 's':
+			getscanwhite(fp,1,0,6,NULL);
+			if (feof(fp))
 				return assnum;
+			getscanwhite(fp,skip,width,-6,&str);
+			break;
+		case '[':
+			f = *fmt;
+			comp = (f == '^');
+			if (comp)
+				f = *++fmt;
+			scanptr = fmt;
+			if (f == '\0')
+				return assnum;
+			fmt = strchr((f == ']' ? fmt + 1 : fmt), ']');
+			if (fmt == NULL)
+				return assnum;
+			scannum = fmt - scanptr;
+			if (comp)
+				scannum = -scannum;
+			fmt++;
+			getscanfield(fp,skip,
+				 width,scannum,scanptr,&str);
+			break;
+		case 'f':
+		case 'e':
+		case 'r':
+		case 'i':
+			getscanwhite(fp,1,0,6, NULL);
+			if (feof(fp))
+				return assnum;
+			if (skip) {
+				fskipnum(fp);
+				continue;
+			}
+			assnum++;
+			var = *vals++;
+			if (var->v_type != V_ADDR)
+			math_error("This should not happen!!");
+			var = var->v_addr;
+			subtype = var->v_subtype;
+			freevalue(var);
+			count--;
+			freadsum(fp, var);
+			var->v_subtype = subtype;
+			continue;
+		case 'n':
+			assnum++;
+			var = *vals++;
+			count--;
+			if (var->v_type != V_ADDR)
+				math_error("This should not happen!!");
+			var = var->v_addr;
+			subtype = var->v_subtype;
+			freevalue(var);
+			var->v_type = V_NUM;
+			var->v_num = qalloc();
+			f_tell(fp, &cur);
+			var->v_num->num = filepos2z(cur);
+			var->v_subtype = subtype;
+			continue;
+		default:
+			fprintf(stderr, "Unsupported scan specifier");
+			return assnum;
 		}
 		if (!skip) {
 			assnum++;

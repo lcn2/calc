@@ -46,10 +46,10 @@ DESCRIPTION
     the value 0.
 
 EXAMPLE
-    > print jacobi(2,3), jacobi(2,5), jacobi(2,15)
+    ; print jacobi(2,3), jacobi(2,5), jacobi(2,15)
     -1 -1 1
 
-    > print jacobi(80,199)
+    ; print jacobi(80,199)
     1
 
 LIMITS
@@ -77,8 +77,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: jacobi,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: jacobi,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/jacobi,v $
 ##
 ## Under source code control:	1995/12/18 12:34:57

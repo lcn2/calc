@@ -26,8 +26,8 @@ DESCRIPTION
     as x in which m[[i]] = frac(x[[i]]).
 
 EXAMPLE
-    > c = config("mode", "frac")
-    > print frac(3), frac(22/7), frac(27/7), frac(-3.125), frac(2.15 - 3.25i)
+    ; c = config("mode", "frac")
+    ; print frac(3), frac(22/7), frac(27/7), frac(-3.125), frac(2.15 - 3.25i)
     0 1/7 6/7 -1/8 3/20-1i/4
 
 LIMITS
@@ -57,8 +57,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: frac,v 29.3 2005/10/18 10:48:29 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: frac,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/frac,v $
 ##
 ## Under source code control:	1995/12/18 03:30:59

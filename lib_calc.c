@@ -1,7 +1,7 @@
 /*
  * lib_calc - calc link library initialization and shutdown routines
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2006  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.10 $
- * @(#) $Id: lib_calc.c,v 29.10 2004/07/26 06:35:32 chongo Exp $
+ * @(#) $Revision: 29.14 $
+ * @(#) $Id: lib_calc.c,v 29.14 2006/05/21 07:28:54 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.c,v $
  *
  * Under source code control:	1996/06/17 18:06:19
@@ -147,7 +147,7 @@ char *pager = NULL;		/* $PAGER or default */
 char *shell = NULL;		/* $SHELL or default */
 int stdin_tty = FALSE;		/* TRUE if stdin is a tty */
 int havecommands = FALSE;	/* TRUE if have one or more cmd args */
-int stoponerror = FALSE;	/* >0 => stop, <0 => continue on error */
+long stoponerror = 0;		/* >0 => stop, <0 => continue, ==0 => use -c */
 int post_init = FALSE;		/* TRUE setjmp for math_error is ready */
 BOOL abort_now = FALSE;		/* TRUE => go interactive now, if permitted */
 
@@ -155,7 +155,7 @@ int argc_value = 0;		/* count of argv[] strings for argv() builtin */
 char **argv_value = NULL;	/* argv[] strings for argv() builtin */
 
 int no_env = FALSE;		/* TRUE (-e) => ignore env vars on startup */
-int errmax = ERRMAX;		/* if >= 0,  maximum value for errcount */
+long errmax = ERRMAX;		/* if >= 0,  maximum value for errcount */
 
 NUMBER *epsilon_default;	/* default allowed error for float calcs */
 
@@ -435,13 +435,15 @@ initenv(void)
 	}
 #else /* Windoz free systems */
 	if (home == NULL || home[0] == '\0') {
+		size_t pw_dir_len;
 		ent = (struct passwd *)getpwuid(geteuid());
 		if (ent == NULL) {
 			/* just assume . is home if all else fails */
 			home = ".";
 		}
-		home = (char *)malloc(strlen(ent->pw_dir)+1);
-		strcpy(home, ent->pw_dir);
+		pw_dir_len = strlen(ent->pw_dir);
+		home = (char *)malloc(pw_dir_len+1);
+		strncpy(home, ent->pw_dir, pw_dir_len+1);
 	}
 #endif /* Windoz free systems */
 
@@ -555,6 +557,7 @@ calc_strdup(CONST char *s1)
 #else /* HAVE_STRDUP */
 
 	char *ret;	/* return string */
+	size_t s1_len; 	/* length of string to duplicate */
 
 	/*
 	 * firewall
@@ -566,13 +569,14 @@ calc_strdup(CONST char *s1)
 	/*
 	 * allocate duplicate storage
 	 */
-	ret = (char *)malloc(sizeof(char) * (strlen(s1)+1));
+	s1_len = strlen(s1);
+	ret = (char *)malloc(s1_len+1);
 
 	/*
 	 * if we have storage, duplicate the string
 	 */
 	if (ret != NULL) {
-		strcpy(ret, s1);
+		strncpy(ret, s1, s1_len+1);
 	}
 
 	/*

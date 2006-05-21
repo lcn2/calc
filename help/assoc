@@ -60,12 +60,12 @@ DESCRIPTION
     and are illegal.
 
 EXAMPLE
-    > A = assoc(); print A
+    ; A = assoc(); print A
      assoc (0 elements):
 
-    > A["zero"] = 0; A["one"] = 1; A["two"] = 2; A["three"] = 3;
-    > A["smallest", "prime"] = 2;
-    > print A
+    ; A["zero"] = 0; A["one"] = 1; A["two"] = 2; A["three"] = 3;
+    ; A["smallest", "prime"] = 2;
+    ; print A
     assoc (5 elements);
     ["two"] = 2
     ["three"] = 3
@@ -98,8 +98,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: assoc,v 29.3 2002/07/10 11:47:04 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: assoc,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/assoc,v $
 ##
 ## Under source code control:	1994/09/25 20:22:31

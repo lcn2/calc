@@ -24,11 +24,39 @@ Calc Todo Items:
 
 Very High priority items:
 
-    * Write the help file for the display() builtin function.
+    * Consider using GNU autoconf / configure to build calc.
 
-    * Write the help file for the stoponerror() builtin function.
+    * Internationalize calc by converting calc error messages and
+      text strings (e.g., calc startup banner, show output, etc.)
+      into calls to the GNU gettext internationalization facility.
+      If somebody translated these strings into another language,
+      setting $LANG would allow calc to produce error messages
+      and text strings in that language.
 
-    * Update the errmax about the meaning of errmax(-1).
+    * Fix any 'Known bugs' as noted in the BUGS file or as
+      displayed by 'calc help bugs'.
+
+=-=
+
+High priority items:
+
+    * Verify, complete or fix the 'SEE ALSO' help file sections.
+
+    * Verify, complete or fix the 'LINK LIBRARY' help file sections.
+
+    * Verify, complete or fix the 'LIMITS' help file sections.
+
+    * Verify, complete or fix the 'SYNOPSIS' and 'TYPES' help file sections.
+
+    * Perform a code coverage analysis of the 'make check' action
+      and improve the coverage (within reason) of the regress.cal suite.
+
+    * Address, if possible and reasonable, any Calc Mis-features
+      as noted in the BUGS file or as displayed by 'calc help bugs'.
+
+=-=
+
+Medium priority items:
 
     * Review and if needed, correct/update the help topics:
 
@@ -55,42 +83,6 @@ Very High priority items:
 	    libcalc		using the arbitrary precision routines in ...
 	    bugs		known bugs and mis-features
 	    wishlist		wish list of future enhancements of calc
-
-    * Fix any 'Known bugs' as noted in the BUGS file or as
-      displayed by 'calc help bugs'.
-
-    * Internationalize calc by converting calc error messages and
-      text strings (e.g., calc startup banner, show output, etc.)
-      into calls to the GNU gettext internationalization facility.
-      If somebody translated these strings into another language,
-      setting $LANG would allow calc to produce error messages
-      and text strings in that language.
-
-    * Consider using GNU autoconf / configure to build the calc Makefile.
-
-=-=
-
-High priority items:
-
-    * Verify, complete or fix the 'SEE ALSO' help file sections.
-
-    * Verify, complete or fix the 'LINK LIBRARY' help file sections.
-
-    * Verify, complete or fix the 'LIMITS' help file sections.
-
-    * Verify, complete or fix the 'SYNOPSIS' and 'TYPES' help file sections.
-
-    * Where reasonable, be sure that regress.cal tests builtin functions.
-
-    * Perform a code coverage analysis of the 'make check' action
-      and improve the coverage (within reason) of the regress.cal suite.
-
-    * Address, if possible and reasonable, any Calc Mis-features
-      as noted in the BUGS file or as displayed by 'calc help bugs'.
-
-=-=
-
-Medium priority items:
 
     * Complete the use of CONST where appropriate:
 
@@ -122,7 +114,7 @@ Medium priority items:
     * Add a builtin function to access the 64 bit FNV hash which
       is currently being used internally in seed.c.
 
-## Copyright (C) 1999-2003  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -138,8 +130,8 @@ Medium priority items:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.5 $
-## @(#) $Id: todo,v 29.5 2003/02/25 20:26:17 chongo Exp $
+## @(#) $Revision: 29.8 $
+## @(#) $Id: todo,v 29.8 2006/05/21 07:50:11 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/todo,v $
 ##
 ## Under source code control:	1999/10/20 07:42:55

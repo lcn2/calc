@@ -20,17 +20,17 @@ DESCRIPTION
 
 EXAMPLE
 
-    > A = blk("alpha")
-    > B = blk("beta") = {1,2,3}
-    > blocks()
+    ; A = blk("alpha")
+    ; B = blk("beta") = {1,2,3}
+    ; blocks()
 	2
-    > blocks(1)
+    ; blocks(1)
 	block 1: beta
 	chunksize = 256, maxsize = 256, datalen = 3
 	010203
-    > blocks(2)
+    ; blocks(2)
 	Error 10211
-    > strerror()
+    ; strerror()
 	"Non-allocated index number for blocks"
 
 LIMITS
@@ -58,8 +58,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: blocks,v 29.3 2002/07/10 11:47:04 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: blocks,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/blocks,v $
 ##
 ## Under source code control:	1997/04/05 13:07:13

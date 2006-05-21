@@ -12,8 +12,8 @@ This file is Copyrighted
 	Everyone is permitted to copy and distribute verbatim copies
 	of this license document, but changing it is not allowed.
 
-    # @(#) $Revision: 29.7 $
-    # @(#) $Id: COPYING,v 29.7 2003/02/26 16:54:59 chongo Exp $
+    # @(#) $Revision: 29.8 $
+    # @(#) $Id: COPYING,v 29.8 2006/05/01 19:16:57 chongo Exp $
     # @(#) $Source: /usr/local/src/cmd/calc/RCS/COPYING,v $
 
 =-=
@@ -170,7 +170,7 @@ Calc copyrights and exception files
 
 	    shs1.c	    shs1.h	 shs.c		shs.h
 	    md5.c	    md5.h	 COPYING	COPYING-LGPL
-	    cal/qtime.cal
+	    cal/qtime.cal   cal/screen.cal
 
     The file COPYING-LGPL, which contains a copy of the version 2.1
     GNU Lesser General Public License, is itself Copyrighted by the

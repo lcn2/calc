@@ -15,17 +15,17 @@ DESCRIPTION
     if x and y are of the same type, 0 otherwise.
 
 EXAMPLE
-    > print istype(2, 3), istype(2, 3.0), istype(2, 2.3)
+    ; print istype(2, 3), istype(2, 3.0), istype(2, 2.3)
     1 1 1
 
-    > print istype(2, 3i), istype(2, "2"), istype(2, null())
+    ; print istype(2, 3i), istype(2, "2"), istype(2, null())
     0 0 0
 
-    > mat a[2]
-    > b = list(1,2,3)
-    > c = assoc()
-    > obj chongo {was, here} d;
-    > print istype(a,b), istype(b,c), istype(c,d)
+    ; mat a[2]
+    ; b = list(1,2,3)
+    ; c = assoc()
+    ; obj chongo {was, here} d;
+    ; print istype(a,b), istype(b,c), istype(c,d)
     0 0 0
 
 LIMITS
@@ -56,8 +56,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: istype,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: istype,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/istype,v $
 ##
 ## Under source code control:	1994/10/21 02:21:31

@@ -25,13 +25,13 @@ DESCRIPTION
 
 
 EXAMPLE
-    > system("")
+    ; system("")
 	    0
-    > system("true")
+    ; system("true")
 	    0
-    > system("exit 2")
+    ; system("exit 2")
 	    512
-    > system("date")
+    ; system("date")
     Sun Jul  9 03:21:48 PDT 1995
 	    0
 
@@ -60,8 +60,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: system,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: system,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/system,v $
 ##
 ## Under source code control:	1995/07/09 03:48:57

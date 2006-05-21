@@ -22,24 +22,24 @@ DESCRIPTION
 
 EXAMPLE
     System error messages may be different for different systems.
-    > errmax(errcount()+3)
+    ; errmax(errcount()+3)
 	    0
-    > strerror(2)
+    ; strerror(2)
 	"No such file or directory"
 
-    > x = 3 * ("a" + "b")
-    > print strerror(x)
+    ; x = 3 * ("a" + "b")
+    ; print strerror(x)
     Bad arguments for +
 
-    > a = newerror("alpha")
-    > print strerror(a)
+    ; a = newerror("alpha")
+    ; print strerror(a)
     alpha
 
-    > print strerror(999)
+    ; print strerror(999)
     Error 999
 
-    > a = 1/0
-    > print strerror()
+    ; a = 1/0
+    ; print strerror()
     Division by zero
 
 LIMITS
@@ -49,9 +49,10 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    errcount, errmax, error, iserror, errno, newerror, errorcodes
+    errcount, errmax, error, iserror, errno, newerror, errorcodes,
+    stoponerror
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -67,8 +68,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: strerror,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: strerror,v 29.4 2006/05/21 07:31:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/strerror,v $
 ##
 ## Under source code control:	1996/04/30 03:05:18

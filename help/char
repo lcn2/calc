@@ -14,7 +14,7 @@ DESCRIPTION
     the same value as j.  For j = 0, returns the null string "".
 
 EXAMPLE
-    > print char(0102), char(0x6f), char(119), char(0145), char(0x6e)
+    ; print char(0102), char(0x6f), char(119), char(0145), char(0x6e)
     B o w e n
 
 LIMITS
@@ -42,8 +42,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: char,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: char,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/char,v $
 ##
 ## Under source code control:	1994/09/30 01:45:45

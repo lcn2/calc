@@ -15,14 +15,14 @@ DESCRIPTION
     absolute value than .75 * eps.
 
 EXAMPLE
-    > print cos(1, 1e-5), cos(1, 1e-10), cos(1, 1e-15), cos(1, 1e-20)
+    ; print cos(1, 1e-5), cos(1, 1e-10), cos(1, 1e-15), cos(1, 1e-20)
     .5403 .5403023059 .54030230586814 .5403023058681397174
 
-    > print cos(2 + 3i, 1e-5), cos(2 + 3i, 1e-10)
+    ; print cos(2 + 3i, 1e-5), cos(2 + 3i, 1e-10)
     -4.18963-9.10923i -4.189625691-9.1092278938i
 
-    > pi = pi(1e-20)
-    > print cos(pi/3, 1e-10), cos(pi/2, 1e-10), cos(pi, 1e-10)
+    ; pi = pi(1e-20)
+    ; print cos(pi/3, 1e-10), cos(pi/2, 1e-10), cos(pi, 1e-10)
     .5 0 -1
 
 LIMITS
@@ -51,8 +51,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: cos,v 29.3 2005/10/18 10:48:29 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: cos,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/cos,v $
 ##
 ## Under source code control:	1994/03/19 01:40:27

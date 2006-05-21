@@ -14,10 +14,10 @@ DESCRIPTION
     even integer, 0 otherwise.
 
 EXAMPLE
-    > print iseven(2.0), iseven(1), iseven("0")
+    ; print iseven(2.0), iseven(1), iseven("0")
     1 0 0
 
-    > print iseven(2i), iseven(1e20), iseven(1/3)
+    ; print iseven(2i), iseven(1e20), iseven(1/3)
     0 1 0
 
 LIMITS
@@ -48,8 +48,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: iseven,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: iseven,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/iseven,v $
 ##
 ## Under source code control:	1994/10/21 02:21:27

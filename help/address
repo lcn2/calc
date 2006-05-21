@@ -134,21 +134,21 @@ DESCRIPTION
 EXAMPLE
     Addresses for particular systems may differ from those displayed here.
 
-    > mat A[3]
-    > B = blk()
+    ; mat A[3]
+    ; B = blk()
 
-    > print &A, &A[0], &A[1]
+    ; print &A, &A[0], &A[1]
     v-ptr: 1400470d0 v-ptr: 140044b70 v-ptr: 140044b80
 
-    > print &B, &B[0], &B[1]
+    ; print &B, &B[0], &B[1]
     v-ptr: 140047130 o-ptr: 140044d00 o-ptr: 140044d01
 
-    > a = A[0] = 27
-    > print &*a, &*A[0]. &27
+    ; a = A[0] = 27
+    ; print &*a, &*A[0]. &27
     n_ptr: 14003a850 n_ptr: 14003a850 n_ptr: 14003a850
 
-    > a = A[0] = "abc"
-    > print &*a, &*A[0], &"abc"
+    ; a = A[0] = "abc"
+    ; print &*a, &*A[0], &"abc"
     s_ptr: 14004cae0 s_ptr: 14004cae0 s_ptr: 14004cae0
 
 LIMITS
@@ -176,8 +176,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: address,v 29.3 2002/07/10 11:47:04 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: address,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/address,v $
 ##
 ## Under source code control:	1997/09/06 20:03:34

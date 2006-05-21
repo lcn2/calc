@@ -21,15 +21,15 @@ DESCRIPTION
     this are "mode", "mode2", "display", "outround", "tilde", "leadzero",
 
 EXAMPLE
-    > str("")
+    ; str("")
 	    ""
-    > str(null())
+    ; str(null())
 	    ""
-    > print str(123), str("+"), str(4i), str("is the same as"), str(123+4i)
+    ; print str(123), str("+"), str(4i), str("is the same as"), str(123+4i)
     123 + 4i is the same as 3+4i
 
-    > base2(16),
-    > print str(23209)
+    ; base2(16),
+    ; print str(23209)
     23209 /* 0x5aa9 */
 
 LIMITS
@@ -63,8 +63,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: str,v 29.3 2002/12/29 09:19:56 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: str,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/str,v $
 ##
 ## Under source code control:	1995/10/05 04:52:27

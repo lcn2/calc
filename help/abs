@@ -29,10 +29,10 @@ DESCRIPTION
     the result will be the absolute value correct to n decimal places.
 
 EXAMPLE
-    > print abs(3.4), abs(-3.4)
+    ; print abs(3.4), abs(-3.4)
     3.4 3.4
 
-    > print abs(3+4i, 1e-5), abs(4+5i, 1e-5), abs(4+5i, 1e-10)
+    ; print abs(3+4i, 1e-5), abs(4+5i, 1e-5), abs(4+5i, 1e-10)
     5 6.40312 6.4031242374
 
 LIMITS
@@ -60,8 +60,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: abs,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: abs,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/abs,v $
 ##
 ## Under source code control:	1994/03/19 01:40:22

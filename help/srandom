@@ -306,22 +306,22 @@ DESCRIPTION
     See the random help file for details on the generator.
 
 EXAMPLE
-    > srandom(0x8d2dcb2bed3212844f4ad31)
+    ; srandom(0x8d2dcb2bed3212844f4ad31)
 	    RANDOM state
-    > state = srandom();
-    > print random(123), random(123), random(123), random(123), random(123)
+    ; state = srandom();
+    ; print random(123), random(123), random(123), random(123), random(123)
     42 58 57 82 15
-    > print random(123), random(123), random(123), random(123), random(123)
+    ; print random(123), random(123), random(123), random(123), random(123)
     90 121 109 114 80
-    > state2 = srandom(state);
-    > print random(123), random(123), random(123), random(123), random(123)
+    ; state2 = srandom(state);
+    ; print random(123), random(123), random(123), random(123), random(123)
     42 58 57 82 15
-    > print random(123), random(123), random(123), random(123), random(123)
+    ; print random(123), random(123), random(123), random(123), random(123)
     90 121 109 114 80
-    > state3 = srandom();
-    > print state3 == state2;
+    ; state3 = srandom();
+    ; print state3 == state2;
     1
-    > print random();
+    ; print random();
     2101582493746841221
 
 LIMITS
@@ -354,8 +354,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: srandom,v 29.3 2001/05/13 13:26:26 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: srandom,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/srandom,v $
 ##
 ## Under source code control:	1997/02/17 01:18:22

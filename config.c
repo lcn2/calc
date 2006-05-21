@@ -1,7 +1,7 @@
 /*
  * config - configuration routines
  *
- * Copyright (C) 1999-2004  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2006  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.15 $
- * @(#) $Id: config.c,v 29.15 2005/12/12 06:45:41 chongo Exp $
+ * @(#) $Revision: 29.17 $
+ * @(#) $Id: config.c,v 29.17 2006/05/19 15:26:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -722,7 +722,7 @@ setconfig(int type, VALUE *vp)
 			math_error("Cannot duplicate new prompt");
 			/*NOTREACHED*/
 		}
-		strcpy(p, vp->v_str->s_str);
+		strncpy(p, vp->v_str->s_str, vp->v_str->s_len + 1);
 		free(conf->prompt1);
 		conf->prompt1 = p;
 		break;
@@ -737,7 +737,7 @@ setconfig(int type, VALUE *vp)
 			math_error("Cannot duplicate new more prompt");
 			/*NOTREACHED*/
 		}
-		strcpy(p, vp->v_str->s_str);
+		strncpy(p, vp->v_str->s_str, vp->v_str->s_len + 1);
 		free(conf->prompt2);
 		conf->prompt2 = p;
 		break;

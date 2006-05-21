@@ -16,7 +16,7 @@ DESCRIPTION
     representation of x then has n + 1 digits.
 
 EXAMPLE
-    > print highbit(2), highbit(3), highbit(4), highbit(-15), highbit(2^27)
+    ; print highbit(2), highbit(3), highbit(4), highbit(-15), highbit(2^27)
     1 1 2 3 27
 
 LIMITS
@@ -44,8 +44,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: highbit,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: highbit,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/highbit,v $
 ##
 ## Under source code control:	1995/10/03 10:40:02

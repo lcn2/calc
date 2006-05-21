@@ -35,16 +35,16 @@ DESCRIPTION
 
 
 EXAMPLE
-    > print agd(1, 1e-5), agd(1, 1e-10), agd(1, 1e-15)
+    ; print agd(1, 1e-5), agd(1, 1e-10), agd(1, 1e-15)
     1.22619 1.2261911709 1.226191170883517
 
-    > print agd(2, 1e-5), agd(2, 1e-10)
+    ; print agd(2, 1e-5), agd(2, 1e-10)
     1.52345-3.14159i 1.5234524436-3.1415926536i
 
-    > print agd(5, 1e-5), agd(5, 1e-10), agd(5, 1e-15)
+    ; print agd(5, 1e-5), agd(5, 1e-10), agd(5, 1e-15)
     -1.93237 -1.9323667197 -1.932366719745925
 
-    > print agd(1+2i, 1e-5), agd(1+2i, 1e-10)
+    ; print agd(1+2i, 1e-5), agd(1+2i, 1e-10)
     .22751+1.42291i .2275106584+1.4229114625i
 
 LIMITS
@@ -72,8 +72,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: agd,v 29.3 2005/10/18 10:48:29 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: agd,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/agd,v $
 ##
 ## Under source code control:	1997/09/06 20:03:34

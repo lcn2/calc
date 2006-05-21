@@ -1,7 +1,7 @@
 /*
  * zmath - declarations for extended precision integer arithmetic
  *
- * Copyright (C) 1999,2002,2004  David I. Bell
+ * Copyright (C) 1999-2006  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.12 $
- * @(#) $Id: zmath.h,v 29.12 2004/03/31 04:58:40 chongo Exp $
+ * @(#) $Revision: 29.15 $
+ * @(#) $Id: zmath.h,v 29.15 2006/05/21 07:10:22 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -350,7 +350,7 @@ extern DLL void zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res);
 extern DLL BOOL zmodinv(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 extern DLL BOOL zrelprime(ZVALUE z1, ZVALUE z2);
 extern DLL long zlog(ZVALUE z1, ZVALUE z2);
-extern DLL long zlog10(ZVALUE z);
+extern DLL long zlog10(ZVALUE z, BOOL *was_10_power);
 extern DLL long zdivcount(ZVALUE z1, ZVALUE z2);
 extern DLL long zfacrem(ZVALUE z1, ZVALUE z2, ZVALUE *rem);
 extern DLL long zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res);
@@ -424,14 +424,15 @@ extern DLL void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 /*
  * macro expansions to speed this thing up
  */
-#define ziseven(z)	(!(*(z).v & 01))
-#define zisodd(z)	(*(z).v & 01)
+#define ziseven(z)	(!(*(z).v & 0x1))
+#define zisodd(z)	(*(z).v & 0x1)
 #define ziszero(z)	((*(z).v == 0) && ((z).len == 1))
 #define zisneg(z)	((z).sign)
 #define zispos(z)	(((z).sign == 0) && (*(z).v || ((z).len > 1)))
 #define zisunit(z)	((*(z).v == 1) && ((z).len == 1))
 #define zisone(z)	((*(z).v == 1) && ((z).len == 1) && !(z).sign)
 #define zisnegone(z)	((*(z).v == 1) && ((z).len == 1) && (z).sign)
+#define zltnegone(z)	(zisneg(z) && (((z).len > 1) || *(z).v > 1))
 #define zistwo(z)	((*(z).v == 2) && ((z).len == 1) && !(z).sign)
 #define zisabstwo(z)	((*(z).v == 2) && ((z).len == 1))
 #define zisabsleone(z)	((*(z).v <= 1) && ((z).len == 1))
@@ -479,6 +480,13 @@ extern DLL void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
  *	zge31b(z)	TRUE if abs(z) >= 2^31
  *	zge32b(z)	TRUE if abs(z) >= 2^32
  *	zge64b(z)	TRUE if abs(z) >= 2^64
+ *	zge128b(z)	TRUE if abs(z) >= 2^128
+ *	zge256b(z)	TRUE if abs(z) >= 2^256
+ *	zge512b(z)	TRUE if abs(z) >= 2^512
+ *	zge1024b(z)	TRUE if abs(z) >= 2^1024
+ *	zge2048b(z)	TRUE if abs(z) >= 2^2048
+ *	zge4096b(z)	TRUE if abs(z) >= 2^4096
+ *	zge8192b(z)	TRUE if abs(z) >= 2^8192
  */
 #if BASEB == 32
 
@@ -487,6 +495,13 @@ extern DLL void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 #define zge31b(z)	(!zistiny(z) || (((SHALF)(z).v[0]) < 0))
 #define zge32b(z)	(!zistiny(z))
 #define zge64b(z)	((z).len > 2)
+#define zge128b(z)	((z).len > 4)
+#define zge256b(z)	((z).len > 8)
+#define zge512b(z)	((z).len > 16)
+#define zge1024b(z)	((z).len > 32)
+#define zge2048b(z)	((z).len > 64)
+#define zge4096b(z)	((z).len > 128)
+#define zge8192b(z)	((z).len > 256)
 
 #else
 
@@ -495,6 +510,13 @@ extern DLL void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 #define zge31b(z)	(((z).len > 2) || (((z).len == 2) && (((SHALF)(z).v[1]) < 0)))
 #define zge32b(z)	((z).len > 2)
 #define zge64b(z)	((z).len > 4)
+#define zge128b(z)	((z).len > 8)
+#define zge256b(z)	((z).len > 16)
+#define zge512b(z)	((z).len > 32)
+#define zge1024b(z)	((z).len > 64)
+#define zge2048b(z)	((z).len > 128)
+#define zge4096b(z)	((z).len > 256)
+#define zge8192b(z)	((z).len > 512)
 
 #endif
 

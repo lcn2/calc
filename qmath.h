@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: qmath.h,v 29.5 2001/06/08 21:00:58 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: qmath.h,v 29.6 2006/05/07 13:04:18 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -187,6 +187,7 @@ extern NUMBER *qcos(NUMBER *q, NUMBER *epsilon);
 extern NUMBER *qsin(NUMBER *q, NUMBER *epsilon);
 extern NUMBER *qexp(NUMBER *q, NUMBER *epsilon);
 extern NUMBER *qln(NUMBER *q, NUMBER *epsilon);
+extern NUMBER *qlog(NUMBER *q, NUMBER *epsilon);
 extern NUMBER *qtan(NUMBER *q, NUMBER *epsilon);
 extern NUMBER *qsec(NUMBER *q, NUMBER *epsilon);
 extern NUMBER *qcot(NUMBER *q, NUMBER *epsilon);
@@ -269,7 +270,7 @@ extern NUMBER *swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all);
  * constants used often by the arithmetic routines
  */
 extern NUMBER _qzero_, _qone_, _qnegone_, _qonehalf_, _qneghalf_, _qonesqbase_;
-extern NUMBER _qtwo_, _qthree_, _qfour_;
+extern NUMBER _qtwo_, _qthree_, _qfour_, _qten_;
 extern NUMBER * initnumbs[];
 
 

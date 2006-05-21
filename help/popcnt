@@ -17,10 +17,10 @@ DESCRIPTION
     The popcnt function is equivalent to #x when x is an integer.
 
 EXAMPLE
-    > print popcnt(32767), popcnt(3/2), popcnt(pi(),0), popcnt(pi(),1)
+    ; print popcnt(32767), popcnt(3/2), popcnt(pi(),0), popcnt(pi(),1)
     15 3 69 65
 
-    > print popcnt(randombit(128), 0), popcnt(randombit(128), 1)
+    ; print popcnt(randombit(128), 0), popcnt(randombit(128), 1)
     61 64
 
 LIMITS
@@ -48,8 +48,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: popcnt,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: popcnt,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/popcnt,v $
 ##
 ## Under source code control:	1997/09/11 04:20:02

@@ -26,24 +26,24 @@ EXAMPLE
     Note that by default, errmax() is 0 so unless errmax() is
     increased you will get:
 
-    > ba = newerror("curds n' whey");
+    ; ba = newerror("curds n' whey");
     Error 20000 caused errcount to exceed errmax
 
-    > errmax(errcount()+5)
+    ; errmax(errcount()+5)
 	    0
-    > e1 = newerror("triangle side length <= 0")
-    > iserror(e1)
+    ; e1 = newerror("triangle side length <= 0")
+    ; iserror(e1)
 	    20000
-    > error(20000)
+    ; error(20000)
 	    Error 20000
-    > strerror(error(20000))
+    ; strerror(error(20000))
 	    "triangle side length <= 0"
-    > strerror(e1);
+    ; strerror(e1);
 	    "triangle side length <= 0"
-    > strerror(error(iserror(e1)))
+    ; strerror(error(iserror(e1)))
 	    "triangle side length <= 0"
 
-    > define area(a,b,c) {
+    ; define area(a,b,c) {
     >>	local s;
     >>	if (!(a > 0) || !(b > 0) || !(c > 0)) return e1;
     >>	s = (a + b + c)/2;
@@ -52,12 +52,12 @@ EXAMPLE
     >> }
     "area" defined
 
-    > A = area(8,2,5);
-    > if (iserror(A)) print strerror(A) : ":", iserror(A);
+    ; A = area(8,2,5);
+    ; if (iserror(A)) print strerror(A) : ":", iserror(A);
     Non-triangle sides: 20001
 
-    > A = area(-3,4,5)
-    > if (iserror(A)) print strerror(A) : ":", iserror(A);
+    ; A = area(-3,4,5)
+    ; if (iserror(A)) print strerror(A) : ":", iserror(A);
     triangle side length <= 0: 20000
 
 LIMITS
@@ -67,9 +67,10 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    errmax, errcount, error, strerror, iserror, errno, errorcodes
+    errmax, errcount, error, strerror, iserror, errno, errorcodes,
+    stoponerror
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -85,8 +86,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: newerror,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: newerror,v 29.4 2006/05/21 07:31:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/newerror,v $
 ##
 ## Under source code control:	1996/04/30 03:39:56

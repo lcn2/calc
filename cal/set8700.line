@@ -1,0 +1,405 @@
+##
+## set8700 - dotest line tests for the 8700 set of regress.cal
+##
+## Copyright (C) 2006  Ernest Bowen and Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.1 $
+## @(#) $Id: set8700.line,v 29.1 2006/05/20 19:35:33 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/set8700.line,v $
+##
+## Under source code control:	2006/05/20 14:10:11
+## File existed as early as:	2006
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+
+
+strcpy("", "") == ""
+strcpy("", "xyz") == ""
+strcpy("a", "xyz") == "x"
+strcpy("ab", "xyz") == "xy"
+strcpy("abc", "xyz") == "xyz"
+strcpy("abcd", "xyz") == "xyz\0"  ## Result will print as "xyz"
+strcpy("abcde", "xyz") == "xyz\0e"
+strcpy("abcdef", "xyz") == "xyz\0ef"
+strcpy("abcdef", "x\0z") == "x\0z\0ef" ## Note z is copied
+strcpy("abc", "") == "\0bc"
+
+strncpy("abcdef", "xyz", 0) == "abcdef" ## No characters copied
+strncpy("abcdef", "xyz", 1) == "xbcdef" ## One character copied, no '\0'
+strncpy("abcdef", "xyz", 2) == "xycdef"
+strncpy("abcdef", "xyz", 3) == "xyzdef"
+strncpy("abcdef", "xyz", 4) == "xyz\0ef"
+strncpy("abcdef", "xyz", 5) == "xyz\0\0f" ## Two nulls as in C
+strncpy("abcdef", "xyz", 6) == "xyz\0\0\0"
+strncpy("abcdef", "xyz", 7) == "xyz\0\0\0" ## Size of first string unchanged
+strncpy("a\0cdef", "\0yz", 4) == "\0yz\0ef"
+strncpy("ab", "xyz", 3) == "xy"
+
+strcmp("", "") == 0
+strcmp("", "a") == -1
+strcmp("\n", "\n") == 0
+strcmp("\0", "") == 1		## '\0' treated like other characters
+strcmp("ab", "") == 1
+strcmp("ab", "a") == 1
+strcmp("ab", "ab") == 0
+strcmp("ab", "abc") == -1
+strcmp("abc", "abb") == 1
+strcmp("abc", "abc") == 0
+strcmp("abc", "abd") == -1
+strcmp("abc\0", "abc") == 1
+
+strncmp("abc", "xyz", 0) == 0
+strncmp("abc", "xyz", 1) == -1
+strncmp("abc", "", 1) == 1
+strncmp("abc", "a", 1) == 0
+strncmp("", "", 2) == 0
+strncmp("a", "a", 2) == 0
+strncmp("a", "b", 2) == -1
+strncmp("ab", "ab", 2) == 0
+strncmp("ab", "ac", 2) == -1
+strncmp("\0ac", "\0b", 2) == -1
+strncmp("ab", "abc", 2) == 0
+strncmp("abc", "abd", 2) == 0
+strncmp("a", "a\0", 2) == -1
+strncmp("a", "a", 3) == 0
+strncmp("abc", "abd", 3) == -1
+strncmp("\0\0\n", "\0\0\t", 3) == 1
+
+str("abc") == "abc"
+str("ab\0") == "ab"
+str("a\0c") == "a"
+str("\0bc") == ""
+
+size("") == 0
+size("a") == 1
+size("\0") == 1
+size("a\0") == 2
+size("a\0b") == 3
+
+strlen("\0") == 0
+strlen("a\0") == 1
+strlen("a\0b") == 1
+
+0 * "abc" == ""
+1 * "abc" == "abc"
+2 * "abc" == "abcabc"
+3 * "abc" == "abcabcabc"
+1 * "" == ""
+-1 * "abc" == "cba"
+-2 * "abc" == "cbacba"
+"abc" + "xyz" == "abcxyz"
+"abc" - "xyz" == "abczyx"
+
+
+substr("abcd",0,0) == ""
+substr("abcd",0,1) == "a"
+substr("abcd",0,2) == "ab"
+substr("abcd",1,0) == ""
+substr("abcd",1,1) == "a"
+substr("abcd",1,2) == "ab"
+substr("abcd",2,0) == ""
+substr("abcd",2,1) == "b"
+substr("abcd",2,2) == "bc";
+substr("abcd",2,3) == "bcd";
+substr("abcd",2,4) == "bcd";
+substr("abcd",2,5) == "bcd"; ## substr stops at end of string
+substr("abcd",4,0) == ""
+substr("abcd",4,1) == "d"
+substr("abcd",4,2) == "d"
+substr("abcd",4,3) == "d"
+substr("abcd",5,0) == ""
+substr("abcd",5,1) == ""
+substr("a\0c\0",2,2) == "\0c"  ## '\0' treated like other characters
+substr("a\0c\0",2,3) == "\0c\0"
+
+#"" == 0	## # operator counts number of bits
+#"\0" == 0
+# "a" == 3
+   #	  "ab" == 6	## white space ignored
+# "abc" == 10
+# 27 == 4
+# 0b1010111011 == 7
+
+7 # 9 == 2		## 7 # 9 = abs(7 - 9)
+3/4 # 2/3 == 1/12
+
+a = 5, a #= 2, a == 3
+a #= 4, a == 1
+
+## Binary # operator not defined for strings
+
+global set8700_A; protect(set8700_A) == 0
+## Testing with one lvalue
+isnull(protect(set8700_A,65))
+protect(set8700_A) == 65
+isnull(protect(set8700_A, -1))
+protect(set8700_A) == 64
+protect(set8700_A,-2), protect(set8700_A) == 64
+protect(set8700_A,5), protect(set8700_A) == 69
+protect(set8700_A,-4), protect(set8700_A) == 65
+protect(set8700_A,0), protect(set8700_A) == 0
+protect(set8700_A,1234), protect(set8700_A) == 1234
+protect(set8700_A,-1234), protect(set8700_A) == 0
+protect(set8700_A,65535), protect(set8700_A) == 65535
+protect(set8700_A,-65535), protect(set8700_A) == 0
+
+## Simple assignments
+set8700_A = 42, protect(set8700_A,1024), set8700_B = set8700_A, protect(set8700_B) == 1024
+set8700_A = 6 * 7, protect(set8700_A) == 1024
+set8700_A == set8700_B
+
+## Testing matrix protectioon
+set8700_A = mat [3] = {1, 2, list(3,4)}; 1
+protect(set8700_A, 65, 1), protect(set8700_A) == 1089
+protect(set8700_A[0]) == 65
+protect(set8700_A[2]) == 65
+protect(set8700_A[2][1]) == 0
+protect(set8700_A, 65, 2), protect(set8700_A[2][1]) == 65
+protect(set8700_A,-1024), protect(set8700_A) == 65
+protect(set8700_A, -1, 1), protect(set8700_A) == 64
+protect(set8700_A[1]) == 64
+protect(set8700_A[2]) == 64
+protect(set8700_A[2][0]) == 65
+protect(set8700_A,0), protect(set8700_A) == 0
+protect(set8700_A[1]) == 64
+protect(set8700_A, 0, 2), protect(set8700_A) == 0
+protect(set8700_A[1]) == 0
+protect(set8700_A[2][1]) == 0
+protect(set8700_A,1024, 2), protect(set8700_A) == 1024
+protect(set8700_A[2]) == 1024
+protect(set8700_A[2][0], 512), protect(set8700_A[2][0]) == 1536
+
+## Testing simple assignment of matrix
+set8700_B = set8700_A, protect(set8700_B) == 1024	## protect(set8700_A) copied
+protect(set8700_B[2]) == 1024		## protect(set8700_A[2]) copied
+protect(set8700_B[2][0]) == 1536	## protect(set8700_A[2][0]) copied
+
+## copying matrix to list
+set8700_B = list(5,6,7), protect(set8700_B) == 1024
+protect(set8700_B[0]) == 0
+protect(set8700_B[2]) == 0
+protect(set8700_A,0), protect(set8700_A) == 0
+copy(set8700_A,set8700_B), set8700_B[0] == 1 && set8700_B[1] == 2
+set8700_B[2] == list(3,4)
+protect(set8700_B) == 1024		## protect(set8700_A) not copied
+protect(set8700_B[0]) == 1024		## protect(set8700_A[0]) copied
+protect(set8700_B[2][0]) == 1536	## protect(set8700_A[2][0]) copied
+
+## copying matrix to matrix
+set8700_B = mat[3], protect(set8700_B) == 1024
+protect(set8700_B[2]) == 0
+copy(set8700_A,set8700_B), set8700_B[0] == 1 && set8700_B[1] == 2
+set8700_B[2] == list(3,4)
+protect(set8700_B) == 1024		## protect(set8700_A) not copied
+protect(set8700_B[0]) == 1024		## protect(set8700_A[0]) copied
+protect(set8700_B[2][0]) == 1536	## protect(set8700_A[2][0]) copied
+
+## Testing list protection
+set8700_A = list(1, 2, list(3,4)), 1
+protect(set8700_A,1024, 2), protect(set8700_A) == 1024
+protect(set8700_A[2]) == 1024
+protect(set8700_A[2][0], 512), protect(set8700_A[2][0]) == 1536
+
+## Simple assignment of list
+set8700_B = set8700_A, protect(set8700_B) == 1024	## protect(set8700_A) copied
+protect(set8700_B[2]) == 1024		## protect(set8700_A[2]) copied
+protect(set8700_B[2][0]) == 1536	## protect(set8700_A[2][0]) copied
+
+## Copying list to list
+set8700_B = list(5,6,7), protect(set8700_B) == 1024
+protect(set8700_B[2]) == 0
+copy(set8700_A,set8700_B), set8700_B[0] == 1 && set8700_B[1] == 2
+set8700_B[2] == list(3,4)
+protect(set8700_B) == 1024		## protect(set8700_A) not copied
+protect(set8700_B[0]) == 1024		## protect(set8700_A[0]) copied
+protect(set8700_B[2][0]) == 1536	## protect(set8700_A[2][0]) copied
+
+## Copying list to matrix
+set8700_B = mat[3], protect(set8700_B) == 1024
+protect(set8700_B[2]) == 0
+copy(set8700_A,set8700_B), set8700_B[0] == 1 && set8700_B[1] == 2
+set8700_B[2] == list(3,4)
+protect(set8700_B) == 1024
+protect(set8700_B[0]) == 1024		## protect(set8700_A[0]) copied
+protect(set8700_B[2][0]) == 1536	## protect(set8700_A[2][0]) copied
+
+## Protecting one element of a list
+set8700_A = list(1,4,3,2), protect(set8700_A[1]) == 0
+protect(set8700_A[1], 1024), protect(set8700_A[1]) == 1024
+
+## Testing sort
+set8700_A = sort(set8700_A), set8700_A == list(1,2,3,4)
+protect(set8700_A[1]) == 0
+protect(set8700_A[3]) == 1024		## status of 4
+
+## Testings reverse
+set8700_A = reverse(set8700_A), set8700_A == list(4,3,2,1)
+protect(set8700_A[0]) == 1024		## status of 4
+
+## Testing swap
+swap(set8700_A[0], set8700_A[1]), set8700_A == list(3,4,2,1)
+protect(set8700_A[0]) == 0		## status moved
+protect(set8700_A[1]) == 1024		## 4 retains protection
+
+## Testing list with protected list argument
+protect(set8700_A, 0), protect(set8700_A) == 0
+protect(set8700_A, 512), protect(set8700_A) == 512
+protect(set8700_A[1]) == 1024
+set8700_L = list(1,set8700_A,3), protect(set8700_L) == 0
+protect(set8700_L[0]) == 0
+protect(set8700_L[1]) == 512		## protect(set8700_A) copied
+protect(set8700_L[1][1]) == 1024	## protect(set8700_A[1]) copied
+
+## Testing list with "intialization"
+set8700_L = list(1,2,3), protect(set8700_L) == 0
+protect(set8700_L[0]) | protect(set8700_L[1]) | protect(set8700_L[2]) == 0	## All zero
+set8700_L = {1,set8700_A}, set8700_L[1] == set8700_A
+protect(set8700_L[1]) == 512		## protect(set8700_A) copied
+protect(set8700_L[1][1]) == 1024	## protect(set8700_A[1]) copied
+set8700_L[1] = 2, protect(set8700_L[1]) == 512	## Not changed
+
+## Testing matrix with "initialization"
+set8700_M = mat[3] = {1,set8700_A}, protect(set8700_M) == 0
+protect(set8700_M[0]) == 0
+protect(set8700_M[1]) == 512		## protect(set8700_A) copied
+protect(set8700_M[2]) == 0
+protect(set8700_M[1][1]) == 1024	## protect(set8700_A[1]) copied
+
+## Testing push, pop, append, remove
+set8700_A = list(1,2), protect(set8700_A,0,1), protect(set8700_A[0]) == 0
+protect(set8700_A[0], 256), protect(set8700_A[0]) == 256
+protect(set8700_A[1]) == 0
+append(set8700_A, pop(set8700_A)), protect(set8700_A[0]) ==  0
+protect(set8700_A[1]) == 256
+push(set8700_A, remove(set8700_A)), protect(set8700_A[0]) == 256
+protect(set8700_A[1]) == 0
+
+## Testing operation-assignments
+set8700_A = 5, protect(set8700_A,1024), protect(set8700_A) == 1024
+protect(set8700_A, 1024), set8700_A = 7, protect(set8700_A) == 1024
+protect(set8700_A,1024), set8700_A += 2, protect(set8700_A) == 1024
+protect(set8700_A,1024), set8700_A *= 2, protect(set8700_A) == 1024
+protect(set8700_A,1024), set8700_A |= 2, protect(set8700_A) == 1024
+protect(set8700_A,1024), set8700_A &= 2, protect(set8700_A) == 1024
+protect(set8700_A,1024), set8700_A ^= 2, protect(set8700_A) == 1024
+
+protect(set8700_B,0), set8700_B = set8700_getA1(), protect(set8700_B) == 1024
+protect(set8700_B,0), set8700_B = set8700_getA2(), protect(set8700_B) == 1024
+set8700_B = set8700_getvar(), protect(set8700_B) == 1024 + 256
+
+global set8700_x, set8700_y; set8700_x = 7,  protect(set8700_x) == 0
+protect(7,2) == error(10234)
+protect(set8700_x,2.5) == error(10235)
+protect(set8700_x,"abc") == error(10235)
+protect(set8700_x, 1e6) == error(10235)
+protect(set8700_x,1), (set8700_x = 2) == error(10366)
+(set8700_x = 3 + 4) == error(10366)
+
+protect(set8700_x,2), protect(set8700_x) == 3
+protect(set8700_x,-1), protect(set8700_x) == 2
+(set8700_x = 2) == error(10368)
+(set8700_x = 3 + 4) == 7
+protect(set8700_x,2), ++set8700_x == error(10379)
+set8700_x == 7
+--set8700_x == error(10382)
+set8700_x == 7
+set8700_x++ == error(10385)
+set8700_x == 7
+set8700_x-- == error(10388)
+
+global set8700_A, set8700_B; 1
+protect(set8700_A,0), protect(set8700_A,16), 1
+set8700_A = "abcdef", protect(set8700_A) == 16		## No copy to set8700_A
+protect(set8700_B,0), set8700_B = "xyz", protect(set8700_B) == 0
+copy(set8700_B, set8700_A) == error(10226)
+set8700_A == "abcdef"				## set8700_A not changed
+protect(set8700_A,0), copy(set8700_B,set8700_A), set8700_A == "xyzdef"
+protect(set8700_B,128), protect(set8700_B) == 128	## No copy from set8700_B
+copy(set8700_B,set8700_A,,,3) == error(10225)
+set8700_A == "xyzdef"
+protect(set8700_B,0), copy(set8700_B,set8700_A,,,3), set8700_A == "xyzxyz"
+
+set8700_A = "abcdef", protect(set8700_A, 16), swap(set8700_A[0], set8700_A[5]) == error(10371)
+set8700_A == "abcdef"
+protect(set8700_A,0), isnull(swap(set8700_A[0], set8700_A[5]))
+set8700_A == "fbcdea"
+protect(set8700_A,2), ++set8700_A[0] == error(10377)
+--set8700_A[1] == error(10380)
+set8700_A[2]++ == error(10383)
+set8700_A[3]-- == error(10386)
+set8700_A == "fbcdea"
+protect(set8700_A,0), ++set8700_A[0] == 'g'
+--set8700_A[1] == 'a'
+set8700_A[2]++ == ord('c')
+set8700_A[3]-- == ord('d')
+set8700_A == "gadcea"
+
+protect(set8700_x,0), protect(set8700_y,0), protect(set8700_x,256), protect(set8700_y,512),1
+quomod(11,4,set8700_x,set8700_y), set8700_x == 2 && set8700_y == 3
+protect(set8700_x) == 256
+protect(set8700_y) == 512
+
+set8700_A = mat[3]; protect(set8700_A[0], 1024); protect(set8700_A[0]) == 1024
+set8700_x = 7, protect(set8700_x,0), protect(set8700_x, 512), 1
+set8700_A = {set8700_x,,set8700_x}, protect(set8700_A[0]) == 1536
+protect(set8700_A[1]) == 0
+protect(set8700_A[2]) == 512
+protect(set8700_A,16), protect(set8700_A) == 16		## No copy to
+set8700_A == (mat[3] = {7,0,7})
+set8700_A = {1,2,3}, errno() == 10390;
+set8700_A == (mat[3] = {7,0,7})
+
+protect(set8700_A,0), set8700_A = {1,2,3}, set8700_A == (mat[3] = {1,2,3})
+protect(set8700_A[1],1), protect(set8700_A[1]) == 1
+set8700_A = {4,5,6}, errno() == 10394
+set8700_A == (mat[3] = {4,2,6})
+modify(7, "set8700_f") == error(10405)
+set8700_A = list(2,3,5), modify(set8700_A, 7) == error(10406)
+protect(set8700_A,2), modify(set8700_A, "set8700_f") == error(10407)
+protect(set8700_A,0), modify(set8700_A, "h") == error(10408)
+set8700_B = 42, protect(set8700_B,0), modify(set8700_B, "set8700_f") == error(10409)
+set8700_A == list(2,3,5)		## set8700_A not affected by failures
+protect(set8700_A,0,1), modify(set8700_A, "set8700_f") == null()
+set8700_A == list(4,9,25)
+modify(set8700_A,"set8700_g") == null()
+protect(set8700_A[0]) == 0
+protect(set8700_A[1]) == 256 && protect(set8700_A[2]) == 256
+
+set8700_A = 0, protect(set8700_A,0), set8700_A = pop(2), set8700_A == error(10181)
+set8700_A = pop(list(1,2,3)), set8700_A == error(10181)
+set8700_B = set8700_A = pop(2), set8700_B == error(10181)
+set8700_A = 32, protect(set8700_A,8), (set8700_A = pop(2)) == error(10370)
+set8700_A == 32
+set8700_B = set8700_A = pop(2), set8700_B == error(10370)
+## Testing copying of protected elements and initialization
+set8700_M1 = mat[3], protect(set8700_M1,0), protect(set8700_M1[1],1), protect(set8700_M1[1]) == 1
+set8700_M2 = mat[3], protect(set8700_M2,0), protect(set8700_M2[2],4), protect(set8700_M2[2]) == 4
+set8700_L = list(set8700_M1, set8700_M2), protect(set8700_L[0][1]) == 1 && protect(set8700_L[1][2]) == 4
+set8700_L = {{1,2,3},{'a','b','c'}}, set8700_L[0] == (mat[3] = {1,0,3})
+set8700_L[1] == (mat[3] = {'a','b',0})
+set8700_M = mat[2], protect(set8700_M,0), set8700_M = {1,2,3,4}, set8700_M == (mat[2] = {1,2})
+set8700_x = 5, set8700_M = {set8700_x++, set8700_x++, set8700_x++, set8700_x++, set8700_x++}, set8700_M == (mat[2] = {5,6})
+set8700_x == 10		## All initialization terms evaluated
+set8700_S = "   ", set8700_S = {'a','b','c','d'}, set8700_S == "abc"
+
+set8700_P = obj set8700_point = {1,2,3,4}, set8700_P.set8700_x == 1 && set8700_P.set8700_y == 2 && set8700_P.set8700_z == 3
+protect(set8700_P,16), set8700_Q = set8700_P, set8700_Q = {5,6,7}, set8700_Q == set8700_P
+set8700_P == (obj set8700_point = {1,2,3})
+set8700_L = list(mat[1] = {set8700_P}), protect(set8700_L[0][0]) == 16
+set8700_L = {{{4,5,6}}}, set8700_L[0][0] == set8700_P
+protect(set8700_L,0,2), set8700_L = {{{4,5,6}}}, set8700_L[0][0] == (obj set8700_point = {4,5,6})

@@ -17,8 +17,8 @@ DESCRIPTION
 		m[0,0] + m{1,1] + ... + m[N-1,N-1]
 
 EXAMPLE
-    > mat m[2,2] = {1,2,3,4}
-    > print mattrace(m), mattrace(m^2)
+    ; mat m[2,2] = {1,2,3,4}
+    ; print mattrace(m), mattrace(m^2)
     5 29
 
 LIMITS
@@ -46,8 +46,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: mattrace,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: mattrace,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/mattrace,v $
 ##
 ## Under source code control:	1997/09/06 20:03:35

@@ -220,13 +220,13 @@ DESCRIPTION
     100 values yourself!
 
 EXAMPLE
-    > print srand(0), rand(), rand(), rand()
+    ; print srand(0), rand(), rand(), rand()
     RAND state 2298441576805697181 3498508396312845423 5031615567549397476
 
-    > print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123)
+    ; print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123)
     106 59 99 99 25 88
 
-    > print rand(2,12), rand(2^50,3^50), rand(0,2), rand(-400000, 120000)
+    ; print rand(2,12), rand(2^50,3^50), rand(0,2), rand(-400000, 120000)
     2 658186291252503497642116 1 -324097
 
 LIMITS
@@ -256,8 +256,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: rand,v 29.3 2001/04/14 22:46:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: rand,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/rand,v $
 ##
 ## Under source code control:	1996/01/01 02:16:09

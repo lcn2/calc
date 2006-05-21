@@ -18,23 +18,23 @@ DESCRIPTION
      On failure, this returns an error value.
 
 EXAMPLE
-    > fd = fopen("/tmp/curds", "w")
-    > fputs(fd, "0123456789")
-    > ftell(fd)
+    ; fd = fopen("/tmp/curds", "w")
+    ; fputs(fd, "0123456789")
+    ; ftell(fd)
 	10
-    > fputs(fd, "abcdef")
-    > ftell(fd)
+    ; fputs(fd, "abcdef")
+    ; ftell(fd)
 	16
-    > fseek(fd, 20, 0)
-    > ftell(fd)
+    ; fseek(fd, 20, 0)
+    ; ftell(fd)
 	20
-    > fputs(fd, "01234")
-    > ftell(fd)
+    ; fputs(fd, "01234")
+    ; ftell(fd)
 	25
-    > freopen(fd, "r")
-    > fscanf(fd, "%*5c")
+    ; freopen(fd, "r")
+    ; fscanf(fd, "%*5c")
 	0
-    > ftell(fd)
+    ; ftell(fd)
 	5
 
 LIMITS
@@ -62,8 +62,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: ftell,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: ftell,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/ftell,v $
 ##
 ## Under source code control:	1995/03/04 11:33:21

@@ -58,9 +58,9 @@ RUNTIME
 EXAMPLE
     Using a 64-bit machine with B = 2^32:
 
-    > m = 1234567;
-    > x = 15;
-    > print rcout(rcpow((rcin(x,m), m - 1, m), m), pmod(x, m-1, m)
+    ; m = 1234567;
+    ; x = 15;
+    ; print rcout(rcpow((rcin(x,m), m - 1, m), m), pmod(x, m-1, m)
     783084 783084
 
 LIMITS
@@ -88,8 +88,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: rcpow,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: rcpow,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/rcpow,v $
 ##
 ## Under source code control:	1996/02/25 02:22:21

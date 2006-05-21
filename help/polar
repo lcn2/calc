@@ -18,11 +18,11 @@ DESCRIPTION
     than 0.75 * abs(eps), but usually less than 0.5 * abs(eps).
 
 EXAMPLE
-    > print polar(2, 0), polar(1, 2, 1e-5), polar(1, 2, 1e-10)
+    ; print polar(2, 0), polar(1, 2, 1e-5), polar(1, 2, 1e-10)
     2 -.41615+.9093i -.4161468365+.9092974268i
 
-    > pi = pi(1e-10); eps = 1e-5
-    > print polar(2, pi/4, eps), polar(2, pi/2, eps), polar(2, 3*pi/4, eps)
+    ; pi = pi(1e-10); eps = 1e-5
+    ; print polar(2, pi/4, eps), polar(2, pi/2, eps), polar(2, 3*pi/4, eps)
     1.41421+1.41421i 2i -1.414215+1.41421i
 
 LIMITS
@@ -50,8 +50,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: polar,v 29.3 2005/10/18 10:48:29 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: polar,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/polar,v $
 ##
 ## Under source code control:	1995/10/25 04:03:46

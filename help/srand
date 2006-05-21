@@ -122,22 +122,22 @@ DESCRIPTION
     See the rand help file for details on the generator.
 
 EXAMPLE
-    > srand(0x8d2dcb2bed3212844f4ad31)
+    ; srand(0x8d2dcb2bed3212844f4ad31)
 	    RAND state
-    > state = srand();
-    > print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
+    ; state = srand();
+    ; print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
     80 95 41 78 100 27
-    > print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
+    ; print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
     122 109 12 95 80 32
-    > state2 = srand(state);
-    > print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
+    ; state2 = srand(state);
+    ; print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
     80 95 41 78 100 27
-    > print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
+    ; print rand(123), rand(123), rand(123), rand(123), rand(123), rand(123);
     122 109 12 95 80 32
-    > state3 = srand();
-    > print state3 == state2;
+    ; state3 = srand();
+    ; print state3 == state2;
     1
-    > print rand();
+    ; print rand();
     10710588361472584495
 
 LIMITS
@@ -166,8 +166,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: srand,v 29.3 2001/04/14 22:46:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: srand,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/srand,v $
 ##
 ## Under source code control:	1996/01/01 04:19:07

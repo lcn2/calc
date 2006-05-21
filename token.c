@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: token.c,v 29.4 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: token.c,v 29.6 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/token.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -214,147 +214,143 @@ gettoken(void)
 			break;
 		case '^':
 			switch (nextchar()) {
-				case '=': type = T_POWEREQUALS; break;
-				default: type = T_POWER; reread();
+			case '=': type = T_POWEREQUALS; break;
+			default: type = T_POWER; reread();
 			}
 			break;
 		case '=':
 			switch (nextchar()) {
-				case '=': type = T_EQ; break;
-				default: type = T_ASSIGN; reread();
+			case '=': type = T_EQ; break;
+			default: type = T_ASSIGN; reread();
 			}
 			break;
 		case '+':
 			switch (nextchar()) {
-				case '+': type = T_PLUSPLUS; break;
-				case '=': type = T_PLUSEQUALS; break;
-				default: type = T_PLUS; reread();
+			case '+': type = T_PLUSPLUS; break;
+			case '=': type = T_PLUSEQUALS; break;
+			default: type = T_PLUS; reread();
 			}
 			break;
 		case '-':
 			switch (nextchar()) {
-				case '-': type = T_MINUSMINUS; break;
-				case '=': type = T_MINUSEQUALS; break;
-				case '>': type = T_ARROW; break;
-				default: type = T_MINUS; reread();
+			case '-': type = T_MINUSMINUS; break;
+			case '=': type = T_MINUSEQUALS; break;
+			case '>': type = T_ARROW; break;
+			default: type = T_MINUS; reread();
 			}
 			break;
 		case '*':
 			switch (nextchar()) {
-				case '=': type = T_MULTEQUALS; break;
-				case '*':
-					switch (nextchar()) {
-					    case '=':
-						type = T_POWEREQUALS; break;
-					    default:
-						type = T_POWER; reread();
-					}
-					break;
-				default: type = T_MULT; reread();
+			case '=': type = T_MULTEQUALS; break;
+			case '*':
+				switch (nextchar()) {
+				case '=':
+					type = T_POWEREQUALS; break;
+				default:
+					type = T_POWER; reread();
+				}
+				break;
+			default: type = T_MULT; reread();
 			}
 			break;
 		case '/':
 			switch (nextchar()) {
-				case '/':
-					switch (nextchar()) {
-						case '=':
-						    type = T_SLASHSLASHEQUALS;
-						    break;
-						default:
-						    reread();
-						    type = T_SLASHSLASH;
-						    break;
-					}
+			case '/':
+				switch (nextchar()) {
+				case '=':
+					type = T_SLASHSLASHEQUALS;
 					break;
-				case '=': type = T_DIVEQUALS; break;
-				case '*': eatcomment(); break;
-				default: type = T_DIV; reread();
+				default:
+					reread();
+					type = T_SLASHSLASH;
+					break;
+				}
+				break;
+			case '=': type = T_DIVEQUALS; break;
+			case '*': eatcomment(); break;
+			default: type = T_DIV; reread();
 			}
 			break;
 		case '%':
 			switch (nextchar()) {
-				case '=': type = T_MODEQUALS; break;
-				default: type = T_MOD; reread();
+			case '=': type = T_MODEQUALS; break;
+			default: type = T_MOD; reread();
 			}
 			break;
 		case '<':
 			switch (nextchar()) {
-				case '=': type = T_LE; break;
-				case '<':
-					switch (nextchar()) {
-						case '=':
-							type = T_LSHIFTEQUALS;
-							break;
-						default:
-							reread();
-							type = T_LEFTSHIFT;
-							break;
-					}
+			case '=': type = T_LE; break;
+			case '<':
+				switch (nextchar()) {
+				case '=':
+					type = T_LSHIFTEQUALS;
 					break;
-				default: type = T_LT; reread();
+				default:
+					reread();
+					type = T_LEFTSHIFT;
+					break;
+				}
+				break;
+			default: type = T_LT; reread();
 			}
 			break;
 		case '>':
 			switch (nextchar()) {
-				case '=': type = T_GE; break;
-				case '>':
-					switch (nextchar()) {
-						case '=':
-							type = T_RSHIFTEQUALS;
-							break;
-						default:
-							reread();
-							type = T_RIGHTSHIFT;
-							break;
-					}
+			case '=': type = T_GE; break;
+			case '>':
+				switch (nextchar()) {
+				case '=':
+					type = T_RSHIFTEQUALS;
 					break;
-				default: type = T_GT; reread();
+				default:
+					reread();
+					type = T_RIGHTSHIFT;
+					break;
+				}
+				break;
+			default: type = T_GT; reread();
 			}
 			break;
 		case '&':
 			switch (nextchar()) {
-				case '&': type = T_ANDAND; break;
-				case '=': type = T_ANDEQUALS; break;
-				default: type = T_AND; reread(); break;
+			case '&': type = T_ANDAND; break;
+			case '=': type = T_ANDEQUALS; break;
+			default: type = T_AND; reread(); break;
 			}
 			break;
 		case '|':
 			switch (nextchar()) {
-				case '|': type = T_OROR; break;
-				case '=': type = T_OREQUALS; break;
-				default: type = T_OR; reread(); break;
+			case '|': type = T_OROR; break;
+			case '=': type = T_OREQUALS; break;
+			default: type = T_OR; reread(); break;
 			}
 			break;
 		case '!':
 			switch (nextchar()) {
-				case '=': type = T_NE; break;
-				default: type = T_NOT; reread(); break;
+			case '=': type = T_NE; break;
+			default: type = T_NOT; reread(); break;
 			}
 			break;
 		case '#':
 			switch(nextchar()) {
-				case '=': type = T_HASHEQUALS; break;
-				case '!': type = T_POUNDBANG; eatline(); break;
-				case '#':
-				case ' ':
-				case '\t':
-					type = T_POUNDCOMMENT; eatline();
-					break;
-				case '\n': type = T_POUNDCOMMENT; break;
-				default: type = T_HASH; reread();
+			case '=': type = T_HASHEQUALS; break;
+			case '!':
+			case '#': eatline(); break;
+			case '\n': reread(); break;
+			default: type = T_HASH; reread();
 			}
 			break;
 		case '~':
 			switch (nextchar()) {
-				case '=': type = T_TILDEEQUALS; break;
-				default: type = T_TILDE; reread();
+			case '=': type = T_TILDEEQUALS; break;
+			default: type = T_TILDE; reread();
 			}
 			break;
 		case '\\':
 			switch (nextchar()) {
-				case '\n': setprompt(conf->prompt2); break;
-				case '=': type = T_BACKSLASHEQUALS; break;
-				default: type = T_BACKSLASH; reread();
+			case '\n': setprompt(conf->prompt2); break;
+			case '=': type = T_BACKSLASHEQUALS; break;
+			default: type = T_BACKSLASH; reread();
 			}
 			break;
 		default:
@@ -446,82 +442,82 @@ eatstring(int quotechar)
 	    while (!done && len < STRBUFSIZE) {
 		ch = nextchar();
 		switch (ch) {
-			case '\n':
-				if (!newlines)
+		case '\n':
+			if (!newlines)
+				break;
+		case EOF:
+			reread();
+			scanerror(T_NULL,
+				  "Unterminated string constant");
+			done = TRUE;
+			ch = '\0';
+			break;
+
+		case '\\':
+			ch = nextchar();
+			if (isoctal(ch)) {
+			    ch = ch - '0';
+			    for (i = 2; i > 0; i--) {
+				cch = nextchar();
+				if (!isoctal(cch))
 					break;
+				ch = 8 * ch + cch - '0';
+			    }
+			    ch &= 0xff;
+			    if (i > 0)
+				reread();
+			    break;
+			}
+			switch (ch) {
+			case 'n': ch = '\n'; break;
+			case 'r': ch = '\r'; break;
+			case 't': ch = '\t'; break;
+			case 'b': ch = '\b'; break;
+			case 'f': ch = '\f'; break;
+			case 'v': ch = '\v'; break;
+			case 'a': ch = '\007'; break;
+			case 'e': ch = '\033'; break;
+			case '\n':
+				setprompt(conf->prompt2);
+				continue;
 			case EOF:
 				reread();
-				scanerror(T_NULL,
-					  "Unterminated string constant");
+				continue;
+			case 'x':
+				ch = 0;
+				for (i = 2; i > 0; i--) {
+					cch = nextchar();
+					if (isdigit(cch))
+						ch = 16 * ch + cch - '0';
+					else if (cch >= 'a' && cch <= 'f')
+						ch = 16 * ch + 10 + cch - 'a';
+					else if (cch >= 'A' && cch <= 'F')
+						ch = 16 * ch + 10 + cch - 'A';
+					else break;
+				}
+				if (i > 0)
+					reread();
+			}
+			break;
+		case '"':
+		case '\'':
+			if (ch == quotechar) {
+				for (;;) {
+					ch = nextchar();
+					if (ch != ' ' && ch != '\t' &&
+						(ch != '\n' ||
+							newlines))
+						break;
+				}
+				if (ch == '"' || ch == '\'') {
+					quotechar = ch;
+					continue;
+				}
+				reread();
 				done = TRUE;
 				ch = '\0';
-				break;
-
-			case '\\':
-				ch = nextchar();
-				if (isoctal(ch)) {
-				    ch = ch - '0';
-				    for (i = 2; i > 0; i--) {
-					cch = nextchar();
-					if (!isoctal(cch))
-						break;
-					ch = 8 * ch + cch - '0';
-				    }
-				    ch &= 0xff;
-				    if (i > 0)
-					reread();
-				    break;
-				}
-				switch (ch) {
-				    case 'n': ch = '\n'; break;
-				    case 'r': ch = '\r'; break;
-				    case 't': ch = '\t'; break;
-				    case 'b': ch = '\b'; break;
-				    case 'f': ch = '\f'; break;
-				    case 'v': ch = '\v'; break;
-				    case 'a': ch = '\007'; break;
-				    case 'e': ch = '\033'; break;
-				    case '\n':
-					setprompt(conf->prompt2);
-					continue;
-				    case EOF:
-					reread();
-					continue;
-				    case 'x':
-					ch = 0;
-					for (i = 2; i > 0; i--) {
-					    cch = nextchar();
-					    if (isdigit(cch))
-						ch = 16 * ch + cch - '0';
-					    else if (cch >= 'a' && cch <= 'f')
-						ch = 16 * ch + 10 + cch - 'a';
-					    else if (cch >= 'A' && cch <= 'F')
-						ch = 16 * ch + 10 + cch - 'A';
-					    else break;
-					}
-					if (i > 0)
-					    reread();
-				}
-				break;
-			case '"':
-			case '\'':
-				if (ch == quotechar) {
-					for (;;) {
-						ch = nextchar();
-						if (ch != ' ' && ch != '\t' &&
-							(ch != '\n' ||
-								newlines))
-							break;
-					}
-					if (ch == '"' || ch == '\'') {
-						quotechar = ch;
-						continue;
-					}
-					reread();
-					done = TRUE;
-					ch = '\0';
-				}
-				break;
+			}
+			break;
 		    }
 
 		*cp++ = (char) ch;
@@ -738,36 +734,38 @@ scanerror(int skip, char *fmt, ...)
 
 	/* post-error report processing */
 	switch (skip) {
-		case T_NULL:
-			return;
-		case T_COMMA:
-			rescan = TRUE;
-			for (;;) {
-				switch (gettoken()) {
-				case T_NEWLINE:
-				case T_SEMICOLON:
-				case T_LEFTBRACE:
-				case T_RIGHTBRACE:
-				case T_EOF:
-				case T_COMMA:
-					rescan = TRUE;
-					return;
-				}
+	case T_NULL:
+		return;
+	case T_COMMA:
+		rescan = TRUE;
+		for (;;) {
+			switch (gettoken()) {
+			case T_NEWLINE:
+			case T_SEMICOLON:
+			case T_LEFTBRACE:
+			case T_RIGHTBRACE:
+			case T_EOF:
+			case T_COMMA:
+				rescan = TRUE;
+				return;
 			}
-		default:
-			fprintf(stderr, "Unknown skip token for scanerror\n");
-			/* fall into semicolon case */
-			/*FALLTHRU*/
-		case T_SEMICOLON:
-			rescan = TRUE;
-			for (;;) switch (gettoken()) {
-				case T_NEWLINE:
-				case T_SEMICOLON:
-				case T_LEFTBRACE:
-				case T_RIGHTBRACE:
-				case T_EOF:
-					rescan = TRUE;
-					return;
+		}
+	default:
+		fprintf(stderr, "Unknown skip token for scanerror\n");
+		/* fall into semicolon case */
+		/*FALLTHRU*/
+	case T_SEMICOLON:
+		rescan = TRUE;
+		for (;;) {
+			switch (gettoken()) {
+			case T_NEWLINE:
+			case T_SEMICOLON:
+			case T_LEFTBRACE:
+			case T_RIGHTBRACE:
+			case T_EOF:
+				rescan = TRUE;
+				return;
 			}
+		}
 	}
 }

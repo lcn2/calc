@@ -18,10 +18,10 @@ DESCRIPTION
    of strings is less than n, the later x_i are ignored.
 
 EXAMPLE
-    > global a, b, c, d;
-    > scan(a, 0, c, d)
-    > 2+3    b=a^2	  3+4i	   3+"a"
-    > print a,b,c,d
+    ; global a, b, c, d;
+    ; scan(a, 0, c, d)
+    ; 2+3    b=a^2	  3+4i	   3+"a"
+    ; print a,b,c,d
 	5 25 3+4i Error 3
 
 LIMITS
@@ -49,8 +49,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: scan,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: scan,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/scan,v $
 ##
 ## Under source code control:	1996/04/30 03:05:18

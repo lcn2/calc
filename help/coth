@@ -17,7 +17,7 @@ DESCRIPTION
     coth(x) = (exp(2*x) + 1)/(exp(2*x) - 1)
 
 EXAMPLE
-    > print coth(1, 1e-5), coth(1, 1e-10), coth(1, 1e-15), coth(1, 1e-20)
+    ; print coth(1, 1e-5), coth(1, 1e-10), coth(1, 1e-15), coth(1, 1e-20)
     1.31304 1.3130352855 1.313035285499331 1.31303528549933130364
 
 LIMITS
@@ -45,8 +45,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: coth,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: coth,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/coth,v $
 ##
 ## Under source code control:	1995/11/13 03:49:00

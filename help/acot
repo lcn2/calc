@@ -17,7 +17,7 @@ DESCRIPTION
     v = acot(x) is the number in (0, pi) for which cot(v) = x.
 
 EXAMPLE
-    > print acot(2, 1e-5),  acot(2, 1e-10), acot(2, 1e-15), acot(2, 1e-20)
+    ; print acot(2, 1e-5),  acot(2, 1e-10), acot(2, 1e-15), acot(2, 1e-20)
     .46365 .463647609 .463647609000806 .46364760900080611621
 
 LIMITS
@@ -45,8 +45,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: acot,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: acot,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/acot,v $
 ##
 ## Under source code control:	1995/11/13 03:49:00

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: qfunc.c,v 29.7 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: qfunc.c,v 29.9 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:20
@@ -559,14 +559,14 @@ qilog10(NUMBER *q)
 	tmp1 = q->num;
 	tmp1.sign = 0;
 	if (qisint(q))
-		return zlog10(tmp1);
+		return zlog10(tmp1, NULL);
 	/*
 	 * The number is not an integer.
 	 * Compute the result if the number is greater than one.
 	 */
 	if (zrel(tmp1, q->den) > 0) {
 		zquo(tmp1, q->den, &tmp2, 0);
-		n = zlog10(tmp2);
+		n = zlog10(tmp2, NULL);
 		zfree(tmp2);
 		return n;
 	}
@@ -580,7 +580,7 @@ qilog10(NUMBER *q)
 		zsub(q->den, _one_, &tmp2);
 	else
 		zquo(q->den, tmp1, &tmp2, 0);
-	n = -zlog10(tmp2) - 1;
+	n = -zlog10(tmp2, NULL) - 1;
 	zfree(tmp2);
 	return n;
 }
@@ -937,20 +937,20 @@ qcomb(NUMBER *q, NUMBER *n)
 	}
 	if (qisint(q)) {
 		switch (zcomb(q->num, n->num, &z)) {
-			case 0:
-				return qlink(&_qzero_);
-			case 1:
-				return qlink(&_qone_);
-			case -1:
-				return qlink(&_qnegone_);
-			case 2:
-				return qlink(q);
-			case -2:
-				return NULL;
-			default:
-				r = qalloc();
-				r->num = z;
-				return r;
+		case 0:
+			return qlink(&_qzero_);
+		case 1:
+			return qlink(&_qone_);
+		case -1:
+			return qlink(&_qnegone_);
+		case 2:
+			return qlink(q);
+		case -2:
+			return NULL;
+		default:
+			r = qalloc();
+			r->num = z;
+			return r;
 		}
 	}
 	if (zge31b(n->num))

@@ -14,8 +14,8 @@ DESCRIPTION
     a matrix, 0 otherwise.
 
 EXAMPLE
-    > mat a[2]
-    > print ismat(a), ismat(1)
+    ; mat a[2]
+    ; print ismat(a), ismat(1)
     1 0
 
 LIMITS
@@ -47,8 +47,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: ismat,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: ismat,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/ismat,v $
 ##
 ## Under source code control:	1994/10/21 02:21:28

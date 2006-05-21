@@ -93,17 +93,17 @@ DESCRIPTION
 
 
 EXAMPLE
-    > global a, b, c, d
-    > A = "abc xyz 234.6 alpha"
-    > strscanf(A, "%s%*[^0123456789]%f%n", a, b, c)
+    ; global a, b, c, d
+    ; A = "abc xyz 234.6 alpha"
+    ; strscanf(A, "%s%*[^0123456789]%f%n", a, b, c)
 	3
-    > print a, b, c
-    > abc 234.6 13
+    ; print a, b, c
+    ; abc 234.6 13
 
-    > strscanf(A, "%*13c%s", d);
+    ; strscanf(A, "%*13c%s", d);
 	1
-    > print d
-    > alpha
+    ; print d
+    ; alpha
 
 LIMITS
     none - XXX - is this correct?
@@ -130,8 +130,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: strscanf,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: strscanf,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/strscanf,v $
 ##
 ## Under source code control:	1996/04/30 03:05:18

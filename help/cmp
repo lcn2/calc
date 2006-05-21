@@ -92,16 +92,16 @@ DESCRIPTION
     for example, cmp(2, "2"), returns the null value.
 
 EXAMPLE
-    > print cmp(3,4), cmp(4,3), cmp(4,4), cmp("a","b"), cmp("abcd","abc")
+    ; print cmp(3,4), cmp(4,3), cmp(4,4), cmp("a","b"), cmp("abcd","abc")
     -1 1 0 -1 1
 
-    > print cmp(3,4i), cmp(4,4i), cmp(5,4i), cmp(-5,4i), cmp(-4i,5), cmp(-4i,-5)
+    ; print cmp(3,4i), cmp(4,4i), cmp(5,4i), cmp(-5,4i), cmp(-4i,5), cmp(-4i,-5)
     1-1i 1-1i 1-1i -1-1i -1-1i 1-1i
 
-    > print cmp(3i,4i), cmp(4i,4i), cmp(5i,4i), cmp(3+4i,5), cmp(3+4i,-5)
+    ; print cmp(3i,4i), cmp(4i,4i), cmp(5i,4i), cmp(3+4i,5), cmp(3+4i,-5)
     -1i 0 1i -1+1i 1+1i
 
-    > print cmp(3+4i,3+4i), cmp(3+4i,3-4i), cmp(3+4i,2+3i), cmp(3+4i,-4-5i)
+    ; print cmp(3+4i,3+4i), cmp(3+4i,3-4i), cmp(3+4i,2+3i), cmp(3+4i,-4-5i)
     0 1i 1+1i 1+1i
 
 LIMITS
@@ -130,8 +130,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: cmp,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: cmp,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/cmp,v $
 ##
 ## Under source code control:	1994/10/20 02:52:30

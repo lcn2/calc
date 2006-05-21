@@ -28,12 +28,12 @@ DESCRIPTION
     errcount.
 
 EXAMPLE
-    > errmax(10)
+    ; errmax(10)
 	    0
-    > errcount()
+    ; errcount()
 	    0
-    > a = 1/0; b = 2 + ""; c = error(27); d = newerror("a");
-    > print errcount(), a, errcount(), errmax();
+    ; a = 1/0; b = 2 + ""; c = error(27); d = newerror("a");
+    ; print errcount(), a, errcount(), errmax();
     4 Error 10001 4 10
 
 LIMITS
@@ -43,9 +43,10 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    errmax, error, strerror, iserror, errno, newerror, errorcodes
+    errmax, error, strerror, iserror, errno, newerror, errorcodes,
+    stoponerror
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -61,8 +62,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: errcount,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: errcount,v 29.4 2006/05/21 07:31:35 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/errcount,v $
 ##
 ## Under source code control:	1997/03/08 08:51:14

@@ -136,13 +136,13 @@ DESCRIPTION
 
 
 EXAMPLE
-    > print srandom(0), random(), random(), random()
+    ; print srandom(0), random(), random(), random()
     RANDOM state 9203168135432720454 13391974640168007611 13954330032848846793
 
-    > print random(123), random(123), random(123), random(123), random(123)
+    ; print random(123), random(123), random(123), random(123), random(123)
     22 83 66 88 67
 
-    > print random(2,12), random(2^50,3^50), random(0,2), random(-400000,120000)
+    ; print random(2,12), random(2^50,3^50), random(0,2), random(-400000,120000)
     10 483381144668580304003305 0 -70235
 
 LIMITS
@@ -172,8 +172,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: random,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: random,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/random,v $
 ##
 ## Under source code control:	1997/02/17 01:18:22

@@ -13,9 +13,9 @@ DESCRIPTION
     The oldvalue (.) is not freed by this function.
 
 EXAMPLE
-    > global a = 1, b = list(2,3,4), c = mat[3]
-    > static a = 2
-    > show globals
+    ; global a = 1, b = list(2,3,4), c = mat[3]
+    ; static a = 2
+    ; show globals
 
     Name    Level    Type
     ----    -----    -----
@@ -25,8 +25,8 @@ EXAMPLE
     c	       0     matrix
 
     Number: 4
-    > freeglobals()
-    > show globals
+    ; freeglobals()
+    ; show globals
 
     Name    Level    Type
     ----    -----    -----
@@ -62,8 +62,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: freeglobals,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: freeglobals,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/freeglobals,v $
 ##
 ## Under source code control:	1997/09/06 20:03:35

@@ -23,25 +23,25 @@ DESCRIPTION
     A null value may be assigned to . by . = null() or free(.).
 
 EXAMPLE
-    > saveval(1);
-    > a = 2
-    > .
+    ; saveval(1);
+    ; a = 2
+    ; .
 	    2
-    > . += 3; b = . + 4
-    > print ., b
+    ; . += 3; b = . + 4
+    ; print ., b
     9 9
-    > . += 3; b = . + 4; null()
-    > print ., b
+    ; . += 3; b = . + 4; null()
+    ; print ., b
     12 16
-    > list(a, b, a + b)
+    ; list(a, b, a + b)
 
     list (3 elements, 3 nonzero):
 	    [[0]] = 2
 	    [[1]] = 16
 	    [[2]] = 18
 
-    > saveval(0)
-    > print pop(.), .[[1]]
+    ; saveval(0)
+    ; print pop(.), .[[1]]
     2 18
 
 LIMITS
@@ -69,8 +69,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: oldvalue,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: oldvalue,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/oldvalue,v $
 ##
 ## Under source code control:	1997/09/06 20:03:35

@@ -18,7 +18,7 @@ DESCRIPTION
 		> !stty echo -cbreak
 
 EXAMPLE
-    > calc_tty();
+    ; calc_tty();
 
 LIBRARY
     none
@@ -42,8 +42,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: calc_tty,v 29.1 2000/12/14 10:31:45 chongo Exp $
+## @(#) $Revision: 29.2 $
+## @(#) $Id: calc_tty,v 29.2 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/calc_tty,v $
 ##
 ## Under source code control:	2000/12/14 01:33:00

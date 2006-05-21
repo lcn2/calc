@@ -54,16 +54,16 @@ RUNTIME
     to be roughly K/N^3 some constant K.
 
 EXAMPLE
-    > print nextcand(50), nextcand(112140,-2), nextcand(112140,-3)
+    ; print nextcand(50), nextcand(112140,-2), nextcand(112140,-3)
     53 112141 112153
 
-    > print nextcand(100,1,1,1,6), nextcand(100,1,1,-1,6)
+    ; print nextcand(100,1,1,1,6), nextcand(100,1,1,-1,6)
     103 101
 
-    > print nextcand(100,1,1,2,6), nextcand(100,1,1,303,202)
+    ; print nextcand(100,1,1,2,6), nextcand(100,1,1,303,202)
     1 101
 
-    > print nextcand(2e60, 1, 1, 31, 1e30)
+    ; print nextcand(2e60, 1, 1, 31, 1e30)
     2000000000000000000000000000053000000000000000000000000000031
 
 LIMITS
@@ -92,8 +92,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: nextcand,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: nextcand,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/nextcand,v $
 ##
 ## Under source code control:	1996/02/25 00:27:43

@@ -15,7 +15,7 @@ DESCRIPTION
     in absolute value than .75 * eps.
 
 EXAMPLE
-    > print csc(1, 1e-5), csc(1, 1e-10), csc(1, 1e-15), csc(1, 1e-20)
+    ; print csc(1, 1e-5), csc(1, 1e-10), csc(1, 1e-15), csc(1, 1e-20)
     1.1884 1.1883951058 1.188395105778121 1.18839510577812121626
 
 LIMITS
@@ -43,8 +43,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: csc,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: csc,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/csc,v $
 ##
 ## Under source code control:	1995/11/13 03:49:00

@@ -28,16 +28,16 @@ DESCRIPTION
     obtained by using power(x, 1/n, eps).
 
 EXAMPLE
-    > print root(7, 4, 1e-5), root(7, 4, 1e-10), root(7, 4, 1e-15)
+    ; print root(7, 4, 1e-5), root(7, 4, 1e-10), root(7, 4, 1e-15)
     1.62658 1.6265765617 1.626576561697786
 
-    > print root(1+3i, 3, 1e-5), root(1 + 3i, 3, 1e-10)
+    ; print root(1+3i, 3, 1e-5), root(1 + 3i, 3, 1e-10)
     1.34241+.59361i 1.3424077452+.5936127825i
 
-    > print root(-8, 3, 1e-5), root(-8, 34, 1e-5)
+    ; print root(-8, 3, 1e-5), root(-8, 34, 1e-5)
     -2 ~1.05853505050032399594+~.09807874962631613016i
 
-    > print root(1i, 100, 1e-20)
+    ; print root(1i, 100, 1e-20)
     .99987663248166059864+.01570731731182067575i
 
 LIMITS
@@ -68,8 +68,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: root,v 29.3 2005/10/18 10:48:29 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: root,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/root,v $
 ##
 ## Under source code control:	1995/10/25 04:03:46

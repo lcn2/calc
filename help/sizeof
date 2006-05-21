@@ -56,24 +56,24 @@ EXAMPLES
     the system being used.  The following were for an SGI R4k machine
     in 32-bit mode:
 
-    > print sizeof(null()), sizeof(0), sizeof(3), sizeof(2^32 - 1), sizeof(2^32)
+    ; print sizeof(null()), sizeof(0), sizeof(3), sizeof(2^32 - 1), sizeof(2^32)
     8 68 68 68 72
 
-    > x = sqrt(2, 1e-100); print sizeof(x), sizeof(num(x)), sizeof(den(x))
+    ; x = sqrt(2, 1e-100); print sizeof(x), sizeof(num(x)), sizeof(den(x))
     148 108 108
 
-    > print sizeof(list()), sizeof(list(1)), sizeof(list(1,2))
+    ; print sizeof(list()), sizeof(list(1)), sizeof(list(1,2))
     28 104 180
 
-    > print sizeof(list()),sizeof(list(1)),sizeof(list(1,2)),sizeof(list(1,2,3))
+    ; print sizeof(list()),sizeof(list(1)),sizeof(list(1,2)),sizeof(list(1,2,3))
     28 104 180 256
 
-    > mat A[] = {1}; mat B[] = {1,2}; mat C[] = {1,2,3}; mat D[100,100];
-    > print sizeof(A), sizeof(B), sizeof(C), sizeof(D)
+    ; mat A[] = {1}; mat B[] = {1,2}; mat C[] = {1,2,3}; mat D[100,100];
+    ; print sizeof(A), sizeof(B), sizeof(C), sizeof(D)
     124 192 260 680056
 
-    > obj point {x,y,z}
-    > obj point P = {1,2,3}; print sizeof(P)
+    ; obj point {x,y,z}
+    ; obj point P = {1,2,3}; print sizeof(P)
     274
 
 LIMITS
@@ -101,8 +101,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: sizeof,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: sizeof,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/sizeof,v $
 ##
 ## Under source code control:	1996/05/24 02:04:04

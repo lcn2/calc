@@ -17,7 +17,7 @@ DESCRIPTION
     v = atan(x) is the number in (-pi/2, pi/2) for which tan(v) = x.
 
 EXAMPLE
-    > print atan(2, 1e-5), atan(2, 1e-10), atan(2, 1e-15), atan(2, 1e-20)
+    ; print atan(2, 1e-5), atan(2, 1e-10), atan(2, 1e-15), atan(2, 1e-20)
     1.10715 1.1071487178 1.107148717794091 1.10714871779409050302
 
 LIMITS
@@ -45,8 +45,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: atan,v 29.3 2002/07/10 11:47:04 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: atan,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/atan,v $
 ##
 ## Under source code control:	1994/03/19 01:40:25

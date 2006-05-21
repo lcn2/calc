@@ -40,25 +40,25 @@ DESCRIPTION
     relations, it may be difficult to predict the result.
 
 EXAMPLE
-    > print min(2), min(5, 3, 7, 2, 9), min(3.2, -0.5, 8.7, -1.2, 2.5)
+    ; print min(2), min(5, 3, 7, 2, 9), min(3.2, -0.5, 8.7, -1.2, 2.5)
     2 2 -1.2
 
-    > print min(list(3,5), 7, list(6, list(7,8), 2))
+    ; print min(list(3,5), 7, list(6, list(7,8), 2))
     2
 
-    > print min("one", "two", "three", "four")
+    ; print min("one", "two", "three", "four")
     four
 
-    > obj point {x, y}
-    > define point_rel(a,b) = sgn(a.x - b.x)
-    > obj point A = {1, 5}
-    > obj point B = {1, 4}
-    > obj point C = {3, 3}
-    > print min(A, B, C)
+    ; obj point {x, y}
+    ; define point_rel(a,b) = sgn(a.x - b.x)
+    ; obj point A = {1, 5}
+    ; obj point B = {1, 4}
+    ; obj point C = {3, 3}
+    ; print min(A, B, C)
     obj point {1, 5}
 
-    > define point_min(a) = a.x
-    > print min(A, B, C)
+    ; define point_min(a) = a.x
+    ; print min(A, B, C)
     1
 
 LIMITS
@@ -86,8 +86,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: min,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: min,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/min,v $
 ##
 ## Under source code control:	1995/10/05 04:52:27

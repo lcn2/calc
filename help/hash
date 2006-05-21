@@ -24,8 +24,8 @@ DESCRIPTION
     information about the Fowler/Noll/Vo (FNV) hash.
 
 EXAMPLE
-    > a = isqrt(2e1000); s = "xyz";
-    > hash(a,s)
+    ; a = isqrt(2e1000); s = "xyz";
+    ; hash(a,s)
 	    2378490456
 
 LIMITS
@@ -53,8 +53,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: hash,v 29.3 2003/03/01 01:16:02 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: hash,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/hash,v $
 ##
 ## Under source code control:	1996/03/12 23:10:01

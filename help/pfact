@@ -13,7 +13,7 @@ DESCRIPTION
     Returns the product of primes p_i for which p_i <= n.
 
 EXAMPLE
-    > for (i = 0; i <= 16; i++) print pfact(i),:;
+    ; for (i = 0; i <= 16; i++) print pfact(i),:;
     1 1 2 6 6 30 30 210 210 210 210 2310 2310 30030 30030 30030 30030
 
 LIMITS
@@ -42,8 +42,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: pfact,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: pfact,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/pfact,v $
 ##
 ## Under source code control:	1995/12/18 12:34:57

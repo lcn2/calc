@@ -17,7 +17,7 @@ DESCRIPTION
     v = asin(x) is the number in [-pi/2, pi/2] for which sin(v) = x.
 
 EXAMPLE
-    > print asin(.5, 1e-5), asin(.5, 1e-10), asin(.5, 1e-15), asin(.5, 1e-20)
+    ; print asin(.5, 1e-5), asin(.5, 1e-10), asin(.5, 1e-15), asin(.5, 1e-20)
     .5236 .5235987756 .523598775598299 .52359877559829887308
 
 LIMITS
@@ -45,8 +45,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: asin,v 29.3 2002/07/10 11:47:04 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: asin,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/asin,v $
 ##
 ## Under source code control:	1994/03/19 01:40:24

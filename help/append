@@ -19,9 +19,9 @@ DESCRIPTION
     append(x, y_0, y_1, ...) is equivalent to insert(x, n, y_0, y_1, ...).
 
 EXAMPLE
-    > x = list(2,3,4)
-    > append(x, 5, 6)
-    > print x
+    ; x = list(2,3,4)
+    ; append(x, 5, 6)
+    ; print x
 
     list (5 elements, 5 nonzero):
       [[0]] = 2
@@ -30,8 +30,8 @@ EXAMPLE
       [[3]] = 5
       [[4]] = 6
 
-    > append(x, pop(x), pop(x))
-    > print x
+    ; append(x, pop(x), pop(x))
+    ; print x
 
     list (5 elements, 5 nonzero):
       [[0]] = 4
@@ -40,8 +40,8 @@ EXAMPLE
       [[3]] = 2
       [[4]] = 3
 
-    > append(x, (remove(x), 7))
-    > print x
+    ; append(x, (remove(x), 7))
+    ; print x
 
     list (5 elements, 5 nonzero):
       [[0]] = 4
@@ -75,8 +75,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: append,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: append,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/append,v $
 ##
 ## Under source code control:	1994/03/19 03:13:17

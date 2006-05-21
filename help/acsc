@@ -17,7 +17,7 @@ DESCRIPTION
     v = acsc(x) is the number in [-pi/2, pi/2] for which csc(v) = x.
 
 EXAMPLE
-    > print acsc(2, 1e-5), acsc(2, 1e-10), acsc(2, 1e-15), acsc(2, 1e-20)
+    ; print acsc(2, 1e-5), acsc(2, 1e-10), acsc(2, 1e-15), acsc(2, 1e-20)
     .5236 .5235987756 .523598775598299 .52359877559829887308
 
 LIMITS
@@ -45,8 +45,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: acsc,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: acsc,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/acsc,v $
 ##
 ## Under source code control:	1995/11/13 03:49:00

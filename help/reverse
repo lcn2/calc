@@ -19,8 +19,8 @@ DESCRIPTION
     as if the matrix were a linear array.
 
 EXAMPLE
-    > A = list(1, 7, 2, 4, 2)
-    > print reverse(A)
+    ; A = list(1, 7, 2, 4, 2)
+    ; print reverse(A)
 
     list (5 elements, 5 nonzero):
 	  [[0]] = 2
@@ -29,8 +29,8 @@ EXAMPLE
 	  [[3]] = 7
 	  [[4]] = 1
 
-    > mat B[2,3] = {1,2,3,4,5,6}
-    > print reverse(B)
+    ; mat B[2,3] = {1,2,3,4,5,6}
+    ; print reverse(B)
 
     mat [2,3] (6 elements, 6 nonzero):
       [0,0] = 6
@@ -65,8 +65,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: reverse,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: reverse,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/reverse,v $
 ##
 ## Under source code control:	1995/07/09 19:41:26

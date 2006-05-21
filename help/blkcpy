@@ -108,74 +108,74 @@ DESCRIPTION
 
 
 EXAMPLE
-    > A = blk() = {1,2,3,4}
-    > B = blk()
-    > blkcpy(B,A)
-    > B
+    ; A = blk() = {1,2,3,4}
+    ; B = blk()
+    ; blkcpy(B,A)
+    ; B
 	chunksize = 256, maxsize = 256, datalen = 4
 	01020304
     >
-    > blkcpy(B,A)
-    > B
+    ; blkcpy(B,A)
+    ; B
 	chunksize = 256, maxsize = 256, datalen = 8
 	0102030401020304
-    > blkcpy(B, A, 2, 10)
-    > B
+    ; blkcpy(B, A, 2, 10)
+    ; B
 	chunksize = 256, maxsize = 256, datalen = 12
 	010203040102030400000102
-    > blkcpy(B,32767)
-    > B
+    ; blkcpy(B,32767)
+    ; B
 	chunksize = 256, maxsize = 256, datalen = 16
 	010203040102030400000102ff7f0000
-    > mat M[2,2]
-    > blkcpy(M, A)
-    > M
+    ; mat M[2,2]
+    ; blkcpy(M, A)
+    ; M
 	mat [2,2] (4 elements, 4 nonzero):
 	  [0,0] = 1
 	  [0,1] = 2
 	  [1,0] = 3
 	  [1,1] = 4
-    > blkcpy(M, A, 2, 2)
-    > M
+    ; blkcpy(M, A, 2, 2)
+    ; M
 	mat [2,2] (4 elements, 4 nonzero):
 	  [0,0] = 1
 	  [0,1] = 2
 	  [1,0] = 1
 	  [1,1] = 2
 
-    > A = blk() = {1,2,3,4}
-    > B = blk()
-    > copy(A,B)
-    > B
+    ; A = blk() = {1,2,3,4}
+    ; B = blk()
+    ; copy(A,B)
+    ; B
 	chunksize = 256, maxsize = 256, datalen = 4
 	01020304
-    > copy(A,B)
-    > B
+    ; copy(A,B)
+    ; B
 	chunksize = 256, maxsize = 256, datalen = 8
 	0102030401020304
-    > copy(A,B,1,2)
-    > B
+    ; copy(A,B,1,2)
+    ; B
 	chunksize = 256, maxsize = 256, datalen = 10
 	01020304010203040203
-    > mat M[2,2]
-    > copy(A,M)
-    > M
+    ; mat M[2,2]
+    ; copy(A,M)
+    ; M
 	mat [2,2] (4 elements, 4 nonzero):
 	  [0,0] = 1
 	  [0,1] = 2
 	  [1,0] = 3
 	  [1,1] = 4
 
-    > copy(A,M,2)
-    > M
+    ; copy(A,M,2)
+    ; M
 	mat [2,2] (4 elements, 4 nonzero):
 	  [0,0] = 3
 	  [0,1] = 4
 	  [1,0] = 3
 	  [1,1] = 4
 
-    > copy(A,M,0,2,2)
-    > M
+    ; copy(A,M,0,2,2)
+    ; M
 	mat [2,2] (4 elements, 4 nonzero):
 	  [0,0] = 3
 	  [0,1] = 4
@@ -207,8 +207,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: blkcpy,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: blkcpy,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/blkcpy,v $
 ##
 ## Under source code control:	1997/04/05 14:08:50

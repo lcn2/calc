@@ -42,20 +42,20 @@ DESCRIPTION
 		"A line of text in the file on descriptor 5"
 
 EXAMPLE
-    > fd = fopen("/etc/motd", "r")
-    > fd
+    ; fd = fopen("/etc/motd", "r")
+    ; fd
 	    FILE 3 "/etc/motd" (reading, pos 0)
-    > files(3)
+    ; files(3)
 	    FILE 3 "/etc/motd" (reading, pos 0)
 
-    > if (isnull(files(4))) print "not open"
+    ; if (isnull(files(4))) print "not open"
     not open
 
-    > stdin = files(0)
-    > stdout = files(1)
-    > stderr = files(2)
+    ; stdin = files(0)
+    ; stdout = files(1)
+    ; stderr = files(2)
 
-    > print files()
+    ; print files()
     20
 
 LIMITS
@@ -84,8 +84,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: files,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: files,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/files,v $
 ##
 ## Under source code control:	1995/03/04 11:33:19

@@ -25,16 +25,16 @@ DESCRIPTION
     eval(str).
 
 EXAMPLE
-    > saveval(1);
-    > a = 27;
+    ; saveval(1);
+    ; a = 27;
     .
 	    27
-    > saveval(0);
-    > a = 45
+    ; saveval(0);
+    ; a = 45
     .
 	    27
-    > saveval(1);
-    > a = 63
+    ; saveval(1);
+    ; a = 63
     .
 	    63
 
@@ -63,8 +63,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: saveval,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: saveval,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/saveval,v $
 ##
 ## Under source code control:	1997/09/06 20:03:35

@@ -17,7 +17,7 @@ DESCRIPTION
     sinh(x) = (exp(x) - exp(-x))/2
 
 EXAMPLE
-    > print sinh(1, 1e-5), sinh(1, 1e-10), sinh(1, 1e-15), sinh(1, 1e-20)
+    ; print sinh(1, 1e-5), sinh(1, 1e-10), sinh(1, 1e-15), sinh(1, 1e-20)
     1.1752 1.1752011936 1.175201193643801 1.17520119364380145688
 
 LIMITS
@@ -46,8 +46,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: sinh,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: sinh,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/sinh,v $
 ##
 ## Under source code control:	1994/03/19 01:40:29

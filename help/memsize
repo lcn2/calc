@@ -55,30 +55,30 @@ EXAMPLES
     the system being used.  The following were for an SGI R4k machine
     in 32-bit mode:
 
-    > print memsize(null())
+    ; print memsize(null())
     8
 
-    > print memsize(0), memsize(3), memsize(2^32 - 1), memsize(2^32)
+    ; print memsize(0), memsize(3), memsize(2^32 - 1), memsize(2^32)
     68 68 68 72
 
-    > x = sqrt(2, 1e-100); print memsize(x), memsize(num(x)), memsize(den(x))
+    ; x = sqrt(2, 1e-100); print memsize(x), memsize(num(x)), memsize(den(x))
     148 108 108
 
-    > print memsize(list()), memsize(list(1)), memsize(list(1,2))
+    ; print memsize(list()), memsize(list(1)), memsize(list(1,2))
     28 104 180
 
-    > print memsize(list())
+    ; print memsize(list())
     28
 
-    > print ,memsize(list(1)),memsize(list(1,2)),memsize(list(1,2,3))
+    ; print ,memsize(list(1)),memsize(list(1,2)),memsize(list(1,2,3))
     104 180 256
 
-    > mat A[] = {1}; mat B[] = {1,2}; mat C[] = {1,2,3}; mat D[100,100];
-    > print memsize(A), memsize(B), memsize(C), memsize(D)
+    ; mat A[] = {1}; mat B[] = {1,2}; mat C[] = {1,2,3}; mat D[100,100];
+    ; print memsize(A), memsize(B), memsize(C), memsize(D)
     124 192 260 680056
 
-    > obj point {x,y,z}
-    > obj point P = {1,2,3}; print memsize(P)
+    ; obj point {x,y,z}
+    ; obj point P = {1,2,3}; print memsize(P)
     274
 
 LIMITS
@@ -106,8 +106,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: memsize,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: memsize,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/memsize,v $
 ##
 ## Under source code control:	1997/03/23 20:28:02

@@ -1,7 +1,7 @@
 /*
  * value - generic value manipulation routines
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2006  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: value.c,v 29.4 2005/10/18 10:43:49 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: value.c,v 29.8 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -61,55 +61,55 @@ freevalue(VALUE *vp)
 	if (type <= 0)
 		return;
 	switch (type) {
-		case V_ADDR:
-		case V_OCTET:
-		case V_NBLOCK:
-		case V_FILE:
-		case V_VPTR:
-		case V_OPTR:
-		case V_SPTR:
-		case V_NPTR:
-			/* nothing to free */
-			break;
-		case V_STR:
-			sfree(vp->v_str);
-			break;
-		case V_NUM:
-			qfree(vp->v_num);
-			break;
-		case V_COM:
-			comfree(vp->v_com);
-			break;
-		case V_MAT:
-			matfree(vp->v_mat);
-			break;
-		case V_LIST:
-			listfree(vp->v_list);
-			break;
-		case V_ASSOC:
-			assocfree(vp->v_assoc);
-			break;
-		case V_OBJ:
-			objfree(vp->v_obj);
-			break;
-		case V_RAND:
-			randfree(vp->v_rand);
-			break;
-		case V_RANDOM:
-			randomfree(vp->v_random);
-			break;
-		case V_CONFIG:
-			config_free(vp->v_config);
-			break;
-		case V_HASH:
-			hash_free(vp->v_hash);
-			break;
-		case V_BLOCK:
-			blk_free(vp->v_block);
-			break;
-		default:
-			math_error("Freeing unknown value type");
-			/*NOTREACHED*/
+	case V_ADDR:
+	case V_OCTET:
+	case V_NBLOCK:
+	case V_FILE:
+	case V_VPTR:
+	case V_OPTR:
+	case V_SPTR:
+	case V_NPTR:
+		/* nothing to free */
+		break;
+	case V_STR:
+		sfree(vp->v_str);
+		break;
+	case V_NUM:
+		qfree(vp->v_num);
+		break;
+	case V_COM:
+		comfree(vp->v_com);
+		break;
+	case V_MAT:
+		matfree(vp->v_mat);
+		break;
+	case V_LIST:
+		listfree(vp->v_list);
+		break;
+	case V_ASSOC:
+		assocfree(vp->v_assoc);
+		break;
+	case V_OBJ:
+		objfree(vp->v_obj);
+		break;
+	case V_RAND:
+		randfree(vp->v_rand);
+		break;
+	case V_RANDOM:
+		randomfree(vp->v_random);
+		break;
+	case V_CONFIG:
+		config_free(vp->v_config);
+		break;
+	case V_HASH:
+		hash_free(vp->v_hash);
+		break;
+	case V_BLOCK:
+		blk_free(vp->v_block);
+		break;
+	default:
+		math_error("Freeing unknown value type");
+		/*NOTREACHED*/
 	}
 }
 
@@ -118,34 +118,52 @@ freevalue(VALUE *vp)
  * Set protection status for a value and all of its components
  */
 void
-protectall(VALUE *vp, int sts)
+protecttodepth(VALUE *vp, int sts, int depth)
 {
 	VALUE *vq;
 	int i;
 	LISTELEM *ep;
+	ASSOC *ap;
 
 	if (vp->v_type == V_NBLOCK) {
-		vp->v_nblock->subtype |= sts;
+		if (sts > 0)
+			vp->v_nblock->subtype |= sts;
+		else if (sts < 0)
+			vp->v_nblock->subtype &= ~(-sts);
+		else vp->v_nblock->subtype = 0;
 		return;
 	}
-	vp->v_subtype |= sts;
-	switch(vp->v_type) {
-		case V_MAT:
-			vq = vp->v_mat->m_table;
-			i = vp->v_mat->m_size;
-			while (i-- > 0)
-				protectall(vq++, sts);
-			break;
-		case V_LIST:
-			for (ep = vp->v_list->l_first; ep; ep = ep->e_next)
-				protectall(&ep->e_value, sts);
-			break;
-		case V_OBJ:
-			vq = vp->v_obj->o_table;
-			i = vp->v_obj->o_actions->oa_count;
-			while (i-- > 0)
-				protectall(vq++, sts);
-			break;
+	if (sts > 0)
+		vp->v_subtype |= sts;
+	else if (sts < 0)
+		vp->v_subtype &= ~(-sts);
+	else
+		vp->v_subtype = 0;
+
+
+	if (depth > 0) {
+	    switch(vp->v_type) {
+	    case V_MAT:
+		    vq = vp->v_mat->m_table;
+		    i = vp->v_mat->m_size;
+		    while (i-- > 0)
+			    protecttodepth(vq++, sts, depth - 1);
+		    break;
+	    case V_LIST:
+		    for (ep = vp->v_list->l_first; ep; ep = ep->e_next)
+			    protecttodepth(&ep->e_value, sts, depth - 1);
+		    break;
+	    case V_OBJ:
+		    vq = vp->v_obj->o_table;
+		    i = vp->v_obj->o_actions->oa_count;
+		    while (i-- > 0)
+			    protecttodepth(vq++, sts, depth - 1);
+		    break;
+	    case V_ASSOC:
+		    ap = vp->v_assoc;
+		    for (i = 0; i < ap->a_count; i++)
+			    protecttodepth(assocfindex(ap, i), sts, depth - 1);
+	    }
 	}
 }
 
@@ -213,12 +231,11 @@ copyvalue(VALUE *oldvp, VALUE *newvp)
 			break;
 		case V_OCTET:
 			newvp->v_type = V_NUM;
-			newvp->v_subtype = V_NOSUBTYPE;
 			newvp->v_num = itoq((long) *oldvp->v_octet);
 			break;
 		case V_NBLOCK:
 			newvp->v_nblock = oldvp->v_nblock;
-			return;
+			break;
 		default:
 			math_error("Copying unknown value type");
 			/*NOTREACHED*/
@@ -316,34 +333,34 @@ negvalue(VALUE *vp, VALUE *vres)
 	vres->v_type = vp->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
 	switch (vp->v_type) {
-		case V_NUM:
-			vres->v_num = qneg(vp->v_num);
-			return;
-		case V_COM:
-			vres->v_com = c_neg(vp->v_com);
-			return;
-		case V_MAT:
-			vres->v_mat = matneg(vp->v_mat);
-			return;
-		case V_STR:
-			vres->v_str = stringneg(vp->v_str);
-			if (vres->v_str == NULL)
-				*vres = error_value(E_STRNEG);
-			return;
-		case V_OCTET:
-			vres->v_type = V_NUM;
-			vres->v_subtype = V_NOSUBTYPE;
-			vres->v_num = itoq(- (long) *vp->v_octet);
-			return;
+	case V_NUM:
+		vres->v_num = qneg(vp->v_num);
+		return;
+	case V_COM:
+		vres->v_com = c_neg(vp->v_com);
+		return;
+	case V_MAT:
+		vres->v_mat = matneg(vp->v_mat);
+		return;
+	case V_STR:
+		vres->v_str = stringneg(vp->v_str);
+		if (vres->v_str == NULL)
+			*vres = error_value(E_STRNEG);
+		return;
+	case V_OCTET:
+		vres->v_type = V_NUM;
+		vres->v_subtype = V_NOSUBTYPE;
+		vres->v_num = itoq(- (long) *vp->v_octet);
+		return;
 
-		case V_OBJ:
-			*vres = objcall(OBJ_NEG, vp, NULL_VALUE, NULL_VALUE);
+	case V_OBJ:
+		*vres = objcall(OBJ_NEG, vp, NULL_VALUE, NULL_VALUE);
+		return;
+	default:
+		if (vp->v_type <= 0)
 			return;
-		default:
-			if (vp->v_type <= 0)
-				return;
-			*vres = error_value(E_NEG);
-			return;
+		*vres = error_value(E_NEG);
+		return;
 	}
 }
 
@@ -382,65 +399,65 @@ addvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	}
 	vres->v_type = v1->v_type;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
-		case TWOVAL(V_NUM, V_NUM):
-			vres->v_num = qqadd(v1->v_num, v2->v_num);
+	case TWOVAL(V_NUM, V_NUM):
+		vres->v_num = qqadd(v1->v_num, v2->v_num);
+		return;
+	case TWOVAL(V_COM, V_NUM):
+		vres->v_com = c_addq(v1->v_com, v2->v_num);
+		return;
+	case TWOVAL(V_NUM, V_COM):
+		vres->v_com = c_addq(v2->v_com, v1->v_num);
+		vres->v_type = V_COM;
+		return;
+	case TWOVAL(V_COM, V_COM):
+		vres->v_com = c_add(v1->v_com, v2->v_com);
+		c = vres->v_com;
+		if (!cisreal(c))
 			return;
-		case TWOVAL(V_COM, V_NUM):
-			vres->v_com = c_addq(v1->v_com, v2->v_num);
-			return;
-		case TWOVAL(V_NUM, V_COM):
-			vres->v_com = c_addq(v2->v_com, v1->v_num);
-			vres->v_type = V_COM;
-			return;
-		case TWOVAL(V_COM, V_COM):
-			vres->v_com = c_add(v1->v_com, v2->v_com);
-			c = vres->v_com;
-			if (!cisreal(c))
+		vres->v_num = qlink(c->real);
+		vres->v_type = V_NUM;
+		comfree(c);
+		return;
+	case TWOVAL(V_MAT, V_MAT):
+		vres->v_mat = matadd(v1->v_mat, v2->v_mat);
+		return;
+	case TWOVAL(V_STR, V_STR):
+		vres->v_str = stringadd(v1->v_str, v2->v_str);
+		if (vres->v_str == NULL)
+			*vres = error_value(E_STRADD);
+		return;
+	case TWOVAL(V_VPTR, V_NUM):
+		q = v2->v_num;
+		if (qisfrac(q)) {
+			math_error("Adding non-integer to address");
+			/*NOTREACHED*/
+		}
+		i = qtoi(q);
+		vres->v_addr = v1->v_addr + i;
+		vres->v_type = V_VPTR;
+		return;
+	case TWOVAL(V_OPTR, V_NUM):
+		q = v2->v_num;
+		if (qisfrac(q)) {
+			math_error("Adding non-integer to address");
+			/*NOTREACHED*/
+		}
+		i = qtoi(q);
+		vres->v_octet = v1->v_octet + i;
+		vres->v_type = V_OPTR;
+		return;
+	default:
+		if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
+			if (v1->v_type < 0)
 				return;
-			vres->v_num = qlink(c->real);
-			vres->v_type = V_NUM;
-			comfree(c);
+			if (v2->v_type > 0)
+				*vres = error_value(E_ADD);
+			else
+				vres->v_type = v2->v_type;
 			return;
-		case TWOVAL(V_MAT, V_MAT):
-			vres->v_mat = matadd(v1->v_mat, v2->v_mat);
-			return;
-		case TWOVAL(V_STR, V_STR):
-			vres->v_str = stringadd(v1->v_str, v2->v_str);
-			if (vres->v_str == NULL)
-				*vres = error_value(E_STRADD);
-			return;
-		case TWOVAL(V_VPTR, V_NUM):
-			q = v2->v_num;
-			if (qisfrac(q)) {
-				math_error("Adding non-integer to address");
-				/*NOTREACHED*/
-			}
-			i = qtoi(q);
-			vres->v_addr = v1->v_addr + i;
-			vres->v_type = V_VPTR;
-			return;
-		case TWOVAL(V_OPTR, V_NUM):
-			q = v2->v_num;
-			if (qisfrac(q)) {
-				math_error("Adding non-integer to address");
-				/*NOTREACHED*/
-			}
-			i = qtoi(q);
-			vres->v_octet = v1->v_octet + i;
-			vres->v_type = V_OPTR;
-			return;
-		default:
-			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
-				if (v1->v_type < 0)
-					return;
-				if (v2->v_type > 0)
-					*vres = error_value(E_ADD);
-				else
-					vres->v_type = v2->v_type;
-				return;
-			}
-			*vres = objcall(OBJ_ADD, v1, v2, NULL_VALUE);
-			return;
+		}
+		*vres = objcall(OBJ_ADD, v1, v2, NULL_VALUE);
+		return;
 	}
 }
 
@@ -459,76 +476,76 @@ subvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
-		case TWOVAL(V_NUM, V_NUM):
-			vres->v_num = qsub(v1->v_num, v2->v_num);
+	case TWOVAL(V_NUM, V_NUM):
+		vres->v_num = qsub(v1->v_num, v2->v_num);
+		return;
+	case TWOVAL(V_COM, V_NUM):
+		vres->v_com = c_subq(v1->v_com, v2->v_num);
+		return;
+	case TWOVAL(V_NUM, V_COM):
+		c = c_subq(v2->v_com, v1->v_num);
+		vres->v_type = V_COM;
+		vres->v_com = c_neg(c);
+		comfree(c);
+		return;
+	case TWOVAL(V_COM, V_COM):
+		vres->v_com = c_sub(v1->v_com, v2->v_com);
+		c = vres->v_com;
+		if (!cisreal(c))
 			return;
-		case TWOVAL(V_COM, V_NUM):
-			vres->v_com = c_subq(v1->v_com, v2->v_num);
-			return;
-		case TWOVAL(V_NUM, V_COM):
-			c = c_subq(v2->v_com, v1->v_num);
-			vres->v_type = V_COM;
-			vres->v_com = c_neg(c);
-			comfree(c);
-			return;
-		case TWOVAL(V_COM, V_COM):
-			vres->v_com = c_sub(v1->v_com, v2->v_com);
-			c = vres->v_com;
-			if (!cisreal(c))
+		vres->v_num = qlink(c->real);
+		vres->v_type = V_NUM;
+		comfree(c);
+		return;
+	case TWOVAL(V_MAT, V_MAT):
+		vres->v_mat = matsub(v1->v_mat, v2->v_mat);
+		return;
+	case TWOVAL(V_STR, V_STR):
+		vres->v_str = stringsub(v1->v_str, v2->v_str);
+		if (vres->v_str == NULL)
+			*vres = error_value(E_STRSUB);
+		return;
+	case TWOVAL(V_VPTR, V_NUM):
+		q = v2->v_num;
+		if (qisfrac(q)) {
+			math_error("Subtracting non-integer from address");
+			/*NOTREACHED*/
+		}
+		i = qtoi(q);
+		vres->v_addr = v1->v_addr - i;
+		vres->v_type = V_VPTR;
+		return;
+	case TWOVAL(V_OPTR, V_NUM):
+		q = v2->v_num;
+		if (qisfrac(q)) {
+			math_error("Adding non-integer to address");
+			/*NOTREACHED*/
+		}
+		i = qtoi(q);
+		vres->v_octet = v1->v_octet - i;
+		vres->v_type = V_OPTR;
+		return;
+	case TWOVAL(V_VPTR, V_VPTR):
+		vres->v_type = V_NUM;
+		vres->v_num = itoq(v1->v_addr - v2->v_addr);
+		return;
+	case TWOVAL(V_OPTR, V_OPTR):
+		vres->v_type = V_NUM;
+		vres->v_num = itoq(v1->v_octet - v2->v_octet);
+		return;
+	default:
+		if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
+			if (v1->v_type <= 0)
 				return;
-			vres->v_num = qlink(c->real);
-			vres->v_type = V_NUM;
-			comfree(c);
-			return;
-		case TWOVAL(V_MAT, V_MAT):
-			vres->v_mat = matsub(v1->v_mat, v2->v_mat);
-			return;
-		case TWOVAL(V_STR, V_STR):
-			vres->v_str = stringsub(v1->v_str, v2->v_str);
-			if (vres->v_str == NULL)
-				*vres = error_value(E_STRSUB);
-			return;
-		case TWOVAL(V_VPTR, V_NUM):
-			q = v2->v_num;
-			if (qisfrac(q)) {
-				math_error("Subtracting non-integer from address");
-				/*NOTREACHED*/
-			}
-			i = qtoi(q);
-			vres->v_addr = v1->v_addr - i;
-			vres->v_type = V_VPTR;
-			return;
-		case TWOVAL(V_OPTR, V_NUM):
-			q = v2->v_num;
-			if (qisfrac(q)) {
-				math_error("Adding non-integer to address");
-				/*NOTREACHED*/
-			}
-			i = qtoi(q);
-			vres->v_octet = v1->v_octet - i;
-			vres->v_type = V_OPTR;
-			return;
-		case TWOVAL(V_VPTR, V_VPTR):
-			vres->v_type = V_NUM;
-			vres->v_num = itoq(v1->v_addr - v2->v_addr);
-			return;
-		case TWOVAL(V_OPTR, V_OPTR):
-			vres->v_type = V_NUM;
-			vres->v_num = itoq(v1->v_octet - v2->v_octet);
-			return;
-		default:
-			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
-				if (v1->v_type <= 0)
-					return;
-				if (v2->v_type <= 0) {
-					vres->v_type = v2->v_type;
-					return;
-				}
-				*vres = error_value(E_SUB);
+			if (v2->v_type <= 0) {
+				vres->v_type = v2->v_type;
 				return;
 			}
-			*vres = objcall(OBJ_SUB, v1, v2, NULL_VALUE);
+			*vres = error_value(E_SUB);
 			return;
+		}
+		*vres = objcall(OBJ_SUB, v1, v2, NULL_VALUE);
+		return;
 	}
 }
 
@@ -545,55 +562,55 @@ mulvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
-		case TWOVAL(V_NUM, V_NUM):
-			vres->v_num = qmul(v1->v_num, v2->v_num);
-			return;
-		case TWOVAL(V_COM, V_NUM):
-			vres->v_com = c_mulq(v1->v_com, v2->v_num);
-			break;
-		case TWOVAL(V_NUM, V_COM):
-			vres->v_com = c_mulq(v2->v_com, v1->v_num);
-			vres->v_type = V_COM;
-			break;
-		case TWOVAL(V_COM, V_COM):
-			vres->v_com = c_mul(v1->v_com, v2->v_com);
-			break;
-		case TWOVAL(V_MAT, V_MAT):
-			vres->v_mat = matmul(v1->v_mat, v2->v_mat);
-			return;
-		case TWOVAL(V_MAT, V_NUM):
-		case TWOVAL(V_MAT, V_COM):
-			vres->v_mat = matmulval(v1->v_mat, v2);
-			return;
-		case TWOVAL(V_NUM, V_MAT):
-		case TWOVAL(V_COM, V_MAT):
-			vres->v_mat = matmulval(v2->v_mat, v1);
-			vres->v_type = V_MAT;
-			return;
-		case TWOVAL(V_NUM, V_STR):
-			vres->v_type = V_STR;
-			vres->v_str = stringmul(v1->v_num, v2->v_str);
-			if (vres->v_str == NULL)
-				*vres = error_value(E_STRMUL);
-			return;
-		case TWOVAL(V_STR, V_NUM):
-			vres->v_str= stringmul(v2->v_num, v1->v_str);
-			if (vres->v_str == NULL)
-				*vres = error_value(E_STRMUL);
-			return;
-		default:
-			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
-				if (v1->v_type <= 0)
-					return;
-				if (v2->v_type <= 0) {
-					vres->v_type = v2->v_type;
-					return;
-				}
-				*vres = error_value(E_MUL);
+	case TWOVAL(V_NUM, V_NUM):
+		vres->v_num = qmul(v1->v_num, v2->v_num);
+		return;
+	case TWOVAL(V_COM, V_NUM):
+		vres->v_com = c_mulq(v1->v_com, v2->v_num);
+		break;
+	case TWOVAL(V_NUM, V_COM):
+		vres->v_com = c_mulq(v2->v_com, v1->v_num);
+		vres->v_type = V_COM;
+		break;
+	case TWOVAL(V_COM, V_COM):
+		vres->v_com = c_mul(v1->v_com, v2->v_com);
+		break;
+	case TWOVAL(V_MAT, V_MAT):
+		vres->v_mat = matmul(v1->v_mat, v2->v_mat);
+		return;
+	case TWOVAL(V_MAT, V_NUM):
+	case TWOVAL(V_MAT, V_COM):
+		vres->v_mat = matmulval(v1->v_mat, v2);
+		return;
+	case TWOVAL(V_NUM, V_MAT):
+	case TWOVAL(V_COM, V_MAT):
+		vres->v_mat = matmulval(v2->v_mat, v1);
+		vres->v_type = V_MAT;
+		return;
+	case TWOVAL(V_NUM, V_STR):
+		vres->v_type = V_STR;
+		vres->v_str = stringmul(v1->v_num, v2->v_str);
+		if (vres->v_str == NULL)
+			*vres = error_value(E_STRMUL);
+		return;
+	case TWOVAL(V_STR, V_NUM):
+		vres->v_str= stringmul(v2->v_num, v1->v_str);
+		if (vres->v_str == NULL)
+			*vres = error_value(E_STRMUL);
+		return;
+	default:
+		if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
+			if (v1->v_type <= 0)
+				return;
+			if (v2->v_type <= 0) {
+				vres->v_type = v2->v_type;
 				return;
 			}
-			*vres = objcall(OBJ_MUL, v1, v2, NULL_VALUE);
+			*vres = error_value(E_MUL);
 			return;
+		}
+		*vres = objcall(OBJ_MUL, v1, v2, NULL_VALUE);
+		return;
 	}
 	c = vres->v_com;
 	if (cisreal(c)) {
@@ -616,31 +633,31 @@ squarevalue(VALUE *vp, VALUE *vres)
 	vres->v_type = vp->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
 	switch (vp->v_type) {
-		case V_NUM:
-			vres->v_num = qsquare(vp->v_num);
+	case V_NUM:
+		vres->v_num = qsquare(vp->v_num);
+		return;
+	case V_COM:
+		vres->v_com = c_square(vp->v_com);
+		c = vres->v_com;
+		if (!cisreal(c))
 			return;
-		case V_COM:
-			vres->v_com = c_square(vp->v_com);
-			c = vres->v_com;
-			if (!cisreal(c))
-				return;
-			vres->v_num = qlink(c->real);
-			vres->v_type = V_NUM;
-			comfree(c);
+		vres->v_num = qlink(c->real);
+		vres->v_type = V_NUM;
+		comfree(c);
+		return;
+	case V_MAT:
+		vres->v_mat = matsquare(vp->v_mat);
+		return;
+	case V_OBJ:
+		*vres = objcall(OBJ_SQUARE, vp, NULL_VALUE, NULL_VALUE);
+		return;
+	default:
+		if (vp->v_type <= 0) {
+			vres->v_type = vp->v_type;
 			return;
-		case V_MAT:
-			vres->v_mat = matsquare(vp->v_mat);
-			return;
-		case V_OBJ:
-			*vres = objcall(OBJ_SQUARE, vp, NULL_VALUE, NULL_VALUE);
-			return;
-		default:
-			if (vp->v_type <= 0) {
-				vres->v_type = vp->v_type;
-				return;
-			}
-			*vres = error_value(E_SQUARE);
-			return;
+		}
+		*vres = error_value(E_SQUARE);
+		return;
 	}
 }
 
@@ -657,42 +674,42 @@ invertvalue(VALUE *vp, VALUE *vres)
 	vres->v_type = vp->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
 	switch (vp->v_type) {
-		case V_NUM:
-			if (qiszero(vp->v_num))
-				*vres = error_value(E_1OVER0);
-			else
-				vres->v_num = qinv(vp->v_num);
+	case V_NUM:
+		if (qiszero(vp->v_num))
+			*vres = error_value(E_1OVER0);
+		else
+			vres->v_num = qinv(vp->v_num);
+		return;
+	case V_COM:
+		vres->v_com = c_inv(vp->v_com);
+		return;
+	case V_MAT:
+		vres->v_mat = matinv(vp->v_mat);
+		return;
+	case V_OCTET:
+		if (*vp->v_octet == 0) {
+			*vres = error_value(E_1OVER0);
 			return;
-		case V_COM:
-			vres->v_com = c_inv(vp->v_com);
-			return;
-		case V_MAT:
-			vres->v_mat = matinv(vp->v_mat);
-			return;
-		case V_OCTET:
-			if (*vp->v_octet == 0) {
-				*vres = error_value(E_1OVER0);
-				return;
-			}
-			q1 = itoq((long) *vp->v_octet);
-			q2 = qinv(q1);
-			qfree(q1);
-			vres->v_num = q2;
+		}
+		q1 = itoq((long) *vp->v_octet);
+		q2 = qinv(q1);
+		qfree(q1);
+		vres->v_num = q2;
+		vres->v_type = V_NUM;
+		return;
+	case V_OBJ:
+		*vres = objcall(OBJ_INV, vp, NULL_VALUE, NULL_VALUE);
+		return;
+	default:
+		if (vp->v_type == -E_1OVER0) {
 			vres->v_type = V_NUM;
+			vres->v_num = qlink(&_qzero_);
 			return;
-		case V_OBJ:
-			*vres = objcall(OBJ_INV, vp, NULL_VALUE, NULL_VALUE);
+		}
+		if (vp->v_type <= 0)
 			return;
-		default:
-			if (vp->v_type == -E_1OVER0) {
-				vres->v_type = V_NUM;
-				vres->v_num = qlink(&_qzero_);
-				return;
-			}
-			if (vp->v_type <= 0)
-				return;
-			*vres = error_value(E_INV);
-			return;
+		*vres = error_value(E_INV);
+		return;
 	}
 }
 
@@ -716,40 +733,40 @@ andvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	}
 	vres->v_type = v1->v_type;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
-		case TWOVAL(V_NUM, V_NUM):
-			vres->v_num = qand(v1->v_num, v2->v_num);
-			return;
-		case TWOVAL(V_STR, V_STR):
-			vres->v_str = stringand(v1->v_str, v2->v_str);
-			if (vres->v_str == NULL)
-				*vres = error_value(E_STRAND);
-			return;
-		case TWOVAL(V_OCTET, V_OCTET):
-			vres->v_type = V_STR;
-			vres->v_str = charstring(*v1->v_octet & *v2->v_octet);
-			return;
-		case TWOVAL(V_STR, V_OCTET):
-			vres->v_str = charstring(*v1->v_str->s_str &
-						*v2->v_octet);
-			return;
-		case TWOVAL(V_OCTET, V_STR):
-			vres->v_type = V_STR;
-			vres->v_str = charstring(*v1->v_octet &
-						*v2->v_str->s_str);
-			return;
-		default:
-			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
-				if (v1->v_type < 0)
-					return;
-				if (v2->v_type < 0) {
-					vres->v_type = v2->v_type;
-					return;
-				}
-				*vres = error_value(E_AND);
+	case TWOVAL(V_NUM, V_NUM):
+		vres->v_num = qand(v1->v_num, v2->v_num);
+		return;
+	case TWOVAL(V_STR, V_STR):
+		vres->v_str = stringand(v1->v_str, v2->v_str);
+		if (vres->v_str == NULL)
+			*vres = error_value(E_STRAND);
+		return;
+	case TWOVAL(V_OCTET, V_OCTET):
+		vres->v_type = V_STR;
+		vres->v_str = charstring(*v1->v_octet & *v2->v_octet);
+		return;
+	case TWOVAL(V_STR, V_OCTET):
+		vres->v_str = charstring(*v1->v_str->s_str &
+					*v2->v_octet);
+		return;
+	case TWOVAL(V_OCTET, V_STR):
+		vres->v_type = V_STR;
+		vres->v_str = charstring(*v1->v_octet &
+					*v2->v_str->s_str);
+		return;
+	default:
+		if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
+			if (v1->v_type < 0)
+				return;
+			if (v2->v_type < 0) {
+				vres->v_type = v2->v_type;
 				return;
 			}
-			*vres = objcall(OBJ_AND, v1, v2, NULL_VALUE);
+			*vres = error_value(E_AND);
 			return;
+		}
+		*vres = objcall(OBJ_AND, v1, v2, NULL_VALUE);
+		return;
 	}
 }
 
@@ -772,40 +789,40 @@ orvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
-		case TWOVAL(V_NUM, V_NUM):
-			vres->v_num = qor(v1->v_num, v2->v_num);
-			return;
-		case TWOVAL(V_STR, V_STR):
-			vres->v_str = stringor(v1->v_str, v2->v_str);
-			if (vres->v_str == NULL)
-				*vres = error_value(E_STROR);
-			return;
-		case TWOVAL(V_OCTET, V_OCTET):
-			vres->v_type = V_STR;
-			vres->v_str = charstring(*v1->v_octet | *v2->v_octet);
-			return;
-		case TWOVAL(V_STR, V_OCTET):
-			vres->v_str = charstring(*v1->v_str->s_str |
-					*v2->v_octet);
-			return;
-		case TWOVAL(V_OCTET, V_STR):
-			vres->v_type = V_STR;
-			vres->v_str = charstring(*v1->v_octet |
-					*v2->v_str->s_str);
-			return;
-		default:
-			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
-				if (v1->v_type < 0)
-					return;
-				if (v2->v_type < 0) {
-					vres->v_type = v2->v_type;
-					return;
-				}
-				*vres = error_value(E_OR);
+	case TWOVAL(V_NUM, V_NUM):
+		vres->v_num = qor(v1->v_num, v2->v_num);
+		return;
+	case TWOVAL(V_STR, V_STR):
+		vres->v_str = stringor(v1->v_str, v2->v_str);
+		if (vres->v_str == NULL)
+			*vres = error_value(E_STROR);
+		return;
+	case TWOVAL(V_OCTET, V_OCTET):
+		vres->v_type = V_STR;
+		vres->v_str = charstring(*v1->v_octet | *v2->v_octet);
+		return;
+	case TWOVAL(V_STR, V_OCTET):
+		vres->v_str = charstring(*v1->v_str->s_str |
+				*v2->v_octet);
+		return;
+	case TWOVAL(V_OCTET, V_STR):
+		vres->v_type = V_STR;
+		vres->v_str = charstring(*v1->v_octet |
+				*v2->v_str->s_str);
+		return;
+	default:
+		if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
+			if (v1->v_type < 0)
+				return;
+			if (v2->v_type < 0) {
+				vres->v_type = v2->v_type;
 				return;
 			}
-			*vres = objcall(OBJ_OR, v1, v2, NULL_VALUE);
+			*vres = error_value(E_OR);
 			return;
+		}
+		*vres = objcall(OBJ_OR, v1, v2, NULL_VALUE);
+		return;
 	}
 }
 
@@ -821,39 +838,39 @@ xorvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
-		case (TWOVAL(V_NUM, V_NUM)):
-			vres->v_num = qxor(v1->v_num, v2->v_num);
-			return;
-		case (TWOVAL(V_STR, V_STR)):
-			vres->v_str = stringxor(v1->v_str, v2->v_str);
-			if (vres->v_str == NULL)
-				*vres = error_value(E_STRDIFF);
-			return;
-		case (TWOVAL(V_STR, V_OCTET)):
-			if (v1->v_str->s_len) {
-				vres->v_str = stringcopy(v1->v_str);
-				*vres->v_str->s_str ^= *v2->v_octet;
-			} else {
-				vres->v_str = charstring(*v2->v_octet);
-			}
-			return;
-		case (TWOVAL(V_OCTET, V_STR)):
-			if (v2->v_str->s_len) {
-				vres->v_str = stringcopy(v2->v_str);
-				*vres->v_str->s_str ^= *v1->v_octet;
-			} else {
-				vres->v_str = charstring(*v1->v_octet);
-			}
-			return;
-		case (TWOVAL(V_OCTET, V_OCTET)):
-			vres->v_type = V_STR;
-			vres->v_str = charstring(*v1->v_octet ^ *v2->v_octet);
-			return;
-		default:
-			if (v1->v_type == V_OBJ || v2->v_type == V_OBJ)
-				*vres = objcall(OBJ_XOR, v1, v2, NULL_VALUE);
-			else
-				*vres = error_value(E_XOR);
+	case (TWOVAL(V_NUM, V_NUM)):
+		vres->v_num = qxor(v1->v_num, v2->v_num);
+		return;
+	case (TWOVAL(V_STR, V_STR)):
+		vres->v_str = stringxor(v1->v_str, v2->v_str);
+		if (vres->v_str == NULL)
+			*vres = error_value(E_STRDIFF);
+		return;
+	case (TWOVAL(V_STR, V_OCTET)):
+		if (v1->v_str->s_len) {
+			vres->v_str = stringcopy(v1->v_str);
+			*vres->v_str->s_str ^= *v2->v_octet;
+		} else {
+			vres->v_str = charstring(*v2->v_octet);
+		}
+		return;
+	case (TWOVAL(V_OCTET, V_STR)):
+		if (v2->v_str->s_len) {
+			vres->v_str = stringcopy(v2->v_str);
+			*vres->v_str->s_str ^= *v1->v_octet;
+		} else {
+			vres->v_str = charstring(*v1->v_octet);
+		}
+		return;
+	case (TWOVAL(V_OCTET, V_OCTET)):
+		vres->v_type = V_STR;
+		vres->v_str = charstring(*v1->v_octet ^ *v2->v_octet);
+		return;
+	default:
+		if (v1->v_type == V_OBJ || v2->v_type == V_OBJ)
+			*vres = objcall(OBJ_XOR, v1, v2, NULL_VALUE);
+		else
+			*vres = error_value(E_XOR);
 	}
 }
 
@@ -869,16 +886,16 @@ hashopvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
-		case TWOVAL(V_NUM, V_NUM):
-			q = qsub(v1->v_num, v2->v_num);
-			vres->v_num = qqabs(q);
-			qfree(q);
-			return;
-		default:
-			if (v1->v_type == V_OBJ || v2->v_type == V_OBJ)
-				*vres = objcall(OBJ_HASHOP, v1, v2, NULL_VALUE);
-			else
-				*vres = error_value(E_HASHOP);
+	case TWOVAL(V_NUM, V_NUM):
+		q = qsub(v1->v_num, v2->v_num);
+		vres->v_num = qqabs(q);
+		qfree(q);
+		return;
+	default:
+		if (v1->v_type == V_OBJ || v2->v_type == V_OBJ)
+			*vres = objcall(OBJ_HASHOP, v1, v2, NULL_VALUE);
+		else
+			*vres = error_value(E_HASHOP);
 	}
 }
 
@@ -890,23 +907,23 @@ compvalue(VALUE *vp, VALUE *vres)
 	vres->v_type = vp->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
 	switch (vp->v_type) {
-		case V_NUM:
-			vres->v_num = qcomp(vp->v_num);
-			return;
-		case V_STR:
-			vres->v_str = stringcomp(vp->v_str);
-			if (vres->v_str == NULL)
-				*vres = error_value(E_STRCOMP);
-			return;
-		case V_OCTET:
-			vres->v_type = V_STR;
-			vres->v_str = charstring(~*vp->v_octet);
-			return;
-		case V_OBJ:
-			*vres = objcall(OBJ_COMP, vp, NULL_VALUE, NULL_VALUE);
-			return;
-		default:
-			*vres = error_value(E_COMP);
+	case V_NUM:
+		vres->v_num = qcomp(vp->v_num);
+		return;
+	case V_STR:
+		vres->v_str = stringcomp(vp->v_str);
+		if (vres->v_str == NULL)
+			*vres = error_value(E_STRCOMP);
+		return;
+	case V_OCTET:
+		vres->v_type = V_STR;
+		vres->v_str = charstring(~*vp->v_octet);
+		return;
+	case V_OBJ:
+		*vres = objcall(OBJ_COMP, vp, NULL_VALUE, NULL_VALUE);
+		return;
+	default:
+		*vres = error_value(E_COMP);
 	}
 }
 
@@ -933,32 +950,32 @@ setminusvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
-		case TWOVAL(V_NUM, V_NUM):
-			vres->v_num = qandnot(v1->v_num, v2->v_num);
-			return;
-		case TWOVAL(V_STR, V_STR):
-			vres->v_str = stringdiff(v1->v_str, v2->v_str);
-			return;
-		case TWOVAL(V_STR, V_OCTET):
-			vres->v_str = charstring(*v1->v_str->s_str &
-				~*v2->v_octet);
-			return;
-		case TWOVAL(V_OCTET, V_STR):
-			vres->v_type = V_STR;
-			vres->v_str = charstring(*v1->v_octet &
-				~*v2->v_str->s_str);
-			return;
-		case TWOVAL(V_OCTET, V_OCTET):
-			vres->v_type = V_STR;
-			vres->v_str = charstring(*v1->v_octet &
-				~*v2->v_octet);
-			return;
-		default:
-			if (v1->v_type == V_OBJ || v2->v_type == V_OBJ)
-				*vres = objcall(OBJ_SETMINUS, v1, v2,
-					NULL_VALUE);
-			else
-				*vres = error_value(E_SETMINUS);
+	case TWOVAL(V_NUM, V_NUM):
+		vres->v_num = qandnot(v1->v_num, v2->v_num);
+		return;
+	case TWOVAL(V_STR, V_STR):
+		vres->v_str = stringdiff(v1->v_str, v2->v_str);
+		return;
+	case TWOVAL(V_STR, V_OCTET):
+		vres->v_str = charstring(*v1->v_str->s_str &
+			~*v2->v_octet);
+		return;
+	case TWOVAL(V_OCTET, V_STR):
+		vres->v_type = V_STR;
+		vres->v_str = charstring(*v1->v_octet &
+			~*v2->v_str->s_str);
+		return;
+	case TWOVAL(V_OCTET, V_OCTET):
+		vres->v_type = V_STR;
+		vres->v_str = charstring(*v1->v_octet &
+			~*v2->v_octet);
+		return;
+	default:
+		if (v1->v_type == V_OBJ || v2->v_type == V_OBJ)
+			*vres = objcall(OBJ_SETMINUS, v1, v2,
+				NULL_VALUE);
+		else
+			*vres = error_value(E_SETMINUS);
 	}
 }
 
@@ -977,23 +994,23 @@ contentvalue(VALUE *vp, VALUE *vres)
 	vres->v_subtype = V_NOSUBTYPE;
 	count = 0;
 	switch (vp->v_type) {
-		case V_STR:
-			count = stringcontent(vp->v_str);
-			break;
-		case V_OCTET:
-			for (u = *vp->v_octet; u; u >>= 1)
-				count += (u & 1);
-			break;
-		case V_NUM:
-			count = zpopcnt(vp->v_num->num, 1);
-			break;
-		case V_OBJ:
-			*vres = objcall(OBJ_CONTENT, vp, NULL_VALUE,
-				NULL_VALUE);
-			return;
-		default:
-			*vres = error_value(E_CONTENT);
-			return;
+	case V_STR:
+		count = stringcontent(vp->v_str);
+		break;
+	case V_OCTET:
+		for (u = *vp->v_octet; u; u >>= 1)
+			count += (u & 1);
+		break;
+	case V_NUM:
+		count = zpopcnt(vp->v_num->num, 1);
+		break;
+	case V_OBJ:
+		*vres = objcall(OBJ_CONTENT, vp, NULL_VALUE,
+			NULL_VALUE);
+		return;
+	default:
+		*vres = error_value(E_CONTENT);
+		return;
 	}
 	vres->v_num = itoq(count);
 }
@@ -1018,26 +1035,26 @@ apprvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 
 	e = NULL;
 	switch(v2->v_type) {
-		case V_NUM:	e = v2->v_num;
-				break;
-		case V_NULL:	e = conf->epsilon;
-				break;
-		default:
-			*vres = error_value(E_APPR2);
-			return;
+	case V_NUM:	e = v2->v_num;
+			break;
+	case V_NULL:	e = conf->epsilon;
+			break;
+	default:
+		*vres = error_value(E_APPR2);
+		return;
 	}
 	switch(v3->v_type) {
-		case V_NUM:	if (qisfrac(v3->v_num)) {
-					*vres = error_value(E_APPR3);
-					return;
-				}
-				R = qtoi(v3->v_num);
-				break;
-		case V_NULL:	R = conf->appr;
-				break;
-		default:
-			*vres = error_value(E_APPR3);
-			return;
+	case V_NUM:	if (qisfrac(v3->v_num)) {
+				*vres = error_value(E_APPR3);
+				return;
+			}
+			R = qtoi(v3->v_num);
+			break;
+	case V_NULL:	R = conf->appr;
+			break;
+	default:
+		*vres = error_value(E_APPR3);
+		return;
 	}
 
 	if (qiszero(e)) {
@@ -1045,34 +1062,34 @@ apprvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		return;
 	}
 	switch (v1->v_type) {
-		case V_NUM:
-			vres->v_num = qmappr(v1->v_num, e, R);
+	case V_NUM:
+		vres->v_num = qmappr(v1->v_num, e, R);
+		return;
+	case V_MAT:
+		vres->v_mat = matappr(v1->v_mat, v2, v3);
+		return;
+	case V_LIST:
+		vres->v_list = listappr(v1->v_list, v2, v3);
+		return;
+	case V_COM:
+		q1 = qmappr(v1->v_com->real, e, R);
+		q2 = qmappr(v1->v_com->imag, e, R);
+		if (qiszero(q2)) {
+			vres->v_type = V_NUM;
+			vres->v_num = q1;
+			qfree(q2);
 			return;
-		case V_MAT:
-			vres->v_mat = matappr(v1->v_mat, v2, v3);
-			return;
-		case V_LIST:
-			vres->v_list = listappr(v1->v_list, v2, v3);
-			return;
-		case V_COM:
-			q1 = qmappr(v1->v_com->real, e, R);
-			q2 = qmappr(v1->v_com->imag, e, R);
-			if (qiszero(q2)) {
-				vres->v_type = V_NUM;
-				vres->v_num = q1;
-				qfree(q2);
-				return;
-			}
-			c = comalloc();
-			qfree(c->real);
-			qfree(c->imag);
-			c->real = q1;
-			c->imag = q2;
-			vres->v_com = c;
-			return;
-		default:
-			*vres = error_value(E_APPR);
-			return;
+		}
+		c = comalloc();
+		qfree(c->real);
+		qfree(c->imag);
+		c->real = q1;
+		c->imag = q2;
+		vres->v_com = c;
+		return;
+	default:
+		*vres = error_value(E_APPR);
+		return;
 	}
 }
 
@@ -1104,60 +1121,60 @@ roundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	}
 	places = 0;
 	switch (v2->v_type) {
-		case V_NUM:
-			if (qisfrac(v2->v_num)) {
-				*vres = error_value(E_ROUND2);
-				return;
-			}
-			places = qtoi(v2->v_num);
-			break;
-		case V_NULL:
-			break;
-		default:
+	case V_NUM:
+		if (qisfrac(v2->v_num)) {
 			*vres = error_value(E_ROUND2);
 			return;
+		}
+		places = qtoi(v2->v_num);
+		break;
+	case V_NULL:
+		break;
+	default:
+		*vres = error_value(E_ROUND2);
+		return;
 	}
 	rnd = 0;
 	switch (v3->v_type) {
-		case V_NUM:
-			if (qisfrac(v3->v_num)) {
-				*vres = error_value(E_ROUND3);
-				return;
-			}
-			rnd = qtoi(v3->v_num);
-			break;
-		case V_NULL:
-			rnd = conf->round;
-			break;
-		default:
+	case V_NUM:
+		if (qisfrac(v3->v_num)) {
 			*vres = error_value(E_ROUND3);
 			return;
+		}
+		rnd = qtoi(v3->v_num);
+		break;
+	case V_NULL:
+		rnd = conf->round;
+		break;
+	default:
+		*vres = error_value(E_ROUND3);
+		return;
 	}
 	switch(v1->v_type) {
-		case V_NUM:
-			vres->v_num = qround(v1->v_num, places, rnd);
+	case V_NUM:
+		vres->v_num = qround(v1->v_num, places, rnd);
+		return;
+	case V_COM:
+		q1 = qround(v1->v_com->real, places, rnd);
+		q2 = qround(v1->v_com->imag, places, rnd);
+		if (qiszero(q2)) {
+			vres->v_type = V_NUM;
+			vres->v_num = q1;
+			qfree(q2);
 			return;
-		case V_COM:
-			q1 = qround(v1->v_com->real, places, rnd);
-			q2 = qround(v1->v_com->imag, places, rnd);
-			if (qiszero(q2)) {
-				vres->v_type = V_NUM;
-				vres->v_num = q1;
-				qfree(q2);
-				return;
-			}
-			c = comalloc();
-			qfree(c->real);
-			qfree(c->imag);
-			c->real = q1;
-			c->imag = q2;
-			vres->v_com = c;
+		}
+		c = comalloc();
+		qfree(c->real);
+		qfree(c->imag);
+		c->real = q1;
+		c->imag = q2;
+		vres->v_com = c;
+		return;
+	default:
+		if (v1->v_type <= 0)
 			return;
-		default:
-			if (v1->v_type <= 0)
-				return;
-			*vres = error_value(E_ROUND);
-			return;
+		*vres = error_value(E_ROUND);
+		return;
 	}
 }
 
@@ -1190,60 +1207,60 @@ broundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	}
 	places = 0;
 	switch (v2->v_type) {
-		case V_NUM:
-			if (qisfrac(v2->v_num)) {
-				*vres = error_value(E_BROUND2);
-				return;
-			}
-			places = qtoi(v2->v_num);
-			break;
-		case V_NULL:
-			break;
-		default:
+	case V_NUM:
+		if (qisfrac(v2->v_num)) {
 			*vres = error_value(E_BROUND2);
 			return;
+		}
+		places = qtoi(v2->v_num);
+		break;
+	case V_NULL:
+		break;
+	default:
+		*vres = error_value(E_BROUND2);
+		return;
 	}
 	rnd = 0;
 	switch (v3->v_type) {
-		case V_NUM:
-			if (qisfrac(v3->v_num)) {
-				*vres = error_value(E_BROUND3);
-				return;
-			}
-			rnd = qtoi(v3->v_num);
-			break;
-		case V_NULL:
-			rnd = conf->round;
-			break;
-		default:
+	case V_NUM:
+		if (qisfrac(v3->v_num)) {
 			*vres = error_value(E_BROUND3);
 			return;
+		}
+		rnd = qtoi(v3->v_num);
+		break;
+	case V_NULL:
+		rnd = conf->round;
+		break;
+	default:
+		*vres = error_value(E_BROUND3);
+		return;
 	}
 	switch(v1->v_type) {
-		case V_NUM:
-			vres->v_num = qbround(v1->v_num, places, rnd);
+	case V_NUM:
+		vres->v_num = qbround(v1->v_num, places, rnd);
+		return;
+	case V_COM:
+		q1 = qbround(v1->v_com->real, places, rnd);
+		q2 = qbround(v1->v_com->imag, places, rnd);
+		if (qiszero(q2)) {
+			vres->v_type = V_NUM;
+			vres->v_num = q1;
+			qfree(q2);
 			return;
-		case V_COM:
-			q1 = qbround(v1->v_com->real, places, rnd);
-			q2 = qbround(v1->v_com->imag, places, rnd);
-			if (qiszero(q2)) {
-				vres->v_type = V_NUM;
-				vres->v_num = q1;
-				qfree(q2);
-				return;
-			}
-			c = comalloc();
-			qfree(c->real);
-			qfree(c->imag);
-			c->real = q1;
-			c->imag = q2;
-			vres->v_com = c;
+		}
+		c = comalloc();
+		qfree(c->real);
+		qfree(c->imag);
+		c->real = q1;
+		c->imag = q2;
+		vres->v_com = c;
+		return;
+	default:
+		if (v1->v_type <= 0)
 			return;
-		default:
-			if (v1->v_type <= 0)
-				return;
-			*vres = error_value(E_BROUND);
-			return;
+		*vres = error_value(E_BROUND);
+		return;
 	}
 }
 
@@ -1259,36 +1276,36 @@ intvalue(VALUE *vp, VALUE *vres)
 	vres->v_type = vp->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
 	switch (vp->v_type) {
-		case V_NUM:
-			if (qisint(vp->v_num))
-				vres->v_num = qlink(vp->v_num);
-			else
-				vres->v_num = qint(vp->v_num);
+	case V_NUM:
+		if (qisint(vp->v_num))
+			vres->v_num = qlink(vp->v_num);
+		else
+			vres->v_num = qint(vp->v_num);
+		return;
+	case V_COM:
+		if (cisint(vp->v_com)) {
+			vres->v_com = clink(vp->v_com);
 			return;
-		case V_COM:
-			if (cisint(vp->v_com)) {
-				vres->v_com = clink(vp->v_com);
-				return;
-			}
-			vres->v_com = c_int(vp->v_com);
-			c = vres->v_com;
-			if (cisreal(c)) {
-				vres->v_num = qlink(c->real);
-				vres->v_type = V_NUM;
-				comfree(c);
-			}
+		}
+		vres->v_com = c_int(vp->v_com);
+		c = vres->v_com;
+		if (cisreal(c)) {
+			vres->v_num = qlink(c->real);
+			vres->v_type = V_NUM;
+			comfree(c);
+		}
+		return;
+	case V_MAT:
+		vres->v_mat = matint(vp->v_mat);
+		return;
+	case V_OBJ:
+		*vres = objcall(OBJ_INT, vp, NULL_VALUE, NULL_VALUE);
+		return;
+	default:
+		if (vp->v_type <= 0)
 			return;
-		case V_MAT:
-			vres->v_mat = matint(vp->v_mat);
-			return;
-		case V_OBJ:
-			*vres = objcall(OBJ_INT, vp, NULL_VALUE, NULL_VALUE);
-			return;
-		default:
-			if (vp->v_type <= 0)
-				return;
-			*vres = error_value(E_INT);
-			return;
+		*vres = error_value(E_INT);
+		return;
 	}
 }
 
@@ -1305,37 +1322,37 @@ fracvalue(VALUE *vp, VALUE *vres)
 	vres->v_type = vp->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
 	switch (vp->v_type) {
-		case V_NUM:
-			if (qisint(vp->v_num))
-				vres->v_num = qlink(&_qzero_);
-			else
-				vres->v_num = qfrac(vp->v_num);
+	case V_NUM:
+		if (qisint(vp->v_num))
+			vres->v_num = qlink(&_qzero_);
+		else
+			vres->v_num = qfrac(vp->v_num);
+		return;
+	case V_COM:
+		if (cisint(vp->v_com)) {
+			vres->v_num = clink(&_qzero_);
+			vres->v_type = V_NUM;
 			return;
-		case V_COM:
-			if (cisint(vp->v_com)) {
-				vres->v_num = clink(&_qzero_);
-				vres->v_type = V_NUM;
-				return;
-			}
-			vres->v_com = c_frac(vp->v_com);
-			c = vres->v_com;
-			if (cisreal(c)) {
-				vres->v_num = qlink(c->real);
-				vres->v_type = V_NUM;
-				comfree(c);
-			}
+		}
+		vres->v_com = c_frac(vp->v_com);
+		c = vres->v_com;
+		if (cisreal(c)) {
+			vres->v_num = qlink(c->real);
+			vres->v_type = V_NUM;
+			comfree(c);
+		}
+		return;
+	case V_MAT:
+		vres->v_mat = matfrac(vp->v_mat);
+		return;
+	case V_OBJ:
+		*vres = objcall(OBJ_FRAC, vp, NULL_VALUE, NULL_VALUE);
+		return;
+	default:
+		if (vp->v_type < 0)
 			return;
-		case V_MAT:
-			vres->v_mat = matfrac(vp->v_mat);
-			return;
-		case V_OBJ:
-			*vres = objcall(OBJ_FRAC, vp, NULL_VALUE, NULL_VALUE);
-			return;
-		default:
-			if (vp->v_type < 0)
-				return;
-			*vres = error_value(E_FRAC);
-			return;
+		*vres = error_value(E_FRAC);
+		return;
 	}
 }
 
@@ -1349,28 +1366,28 @@ incvalue(VALUE *vp, VALUE *vres)
 {
 	vres->v_type = vp->v_type;
 	switch (vp->v_type) {
-		case V_NUM:
-			vres->v_num = qinc(vp->v_num);
-			break;
-		case V_COM:
-			vres->v_com = c_addq(vp->v_com, &_qone_);
-			break;
-		case V_OBJ:
-			*vres = objcall(OBJ_INC, vp, NULL_VALUE, NULL_VALUE);
-			break;
-		case V_OCTET:
-			*vres->v_octet = *vp->v_octet + 1;
-			break;
-		case V_OPTR:
-			vres->v_octet = vp->v_octet + 1;
-			break;
-		case V_VPTR:
-			vres->v_addr = vp->v_addr + 1;
-			break;
-		default:
-			if (vp->v_type > 0)
-				*vres = error_value(E_INCV);
-			break;
+	case V_NUM:
+		vres->v_num = qinc(vp->v_num);
+		break;
+	case V_COM:
+		vres->v_com = c_addq(vp->v_com, &_qone_);
+		break;
+	case V_OBJ:
+		*vres = objcall(OBJ_INC, vp, NULL_VALUE, NULL_VALUE);
+		break;
+	case V_OCTET:
+		*vres->v_octet = *vp->v_octet + 1;
+		break;
+	case V_OPTR:
+		vres->v_octet = vp->v_octet + 1;
+		break;
+	case V_VPTR:
+		vres->v_addr = vp->v_addr + 1;
+		break;
+	default:
+		if (vp->v_type > 0)
+			*vres = error_value(E_INCV);
+		break;
 	}
 	vres->v_subtype = vp->v_subtype;
 }
@@ -1385,28 +1402,28 @@ decvalue(VALUE *vp, VALUE *vres)
 {
 	vres->v_type = vp->v_type;
 	switch (vp->v_type) {
-		case V_NUM:
-			vres->v_num = qdec(vp->v_num);
-			break;
-		case V_COM:
-			vres->v_com = c_addq(vp->v_com, &_qnegone_);
-			break;
-		case V_OBJ:
-			*vres = objcall(OBJ_DEC, vp, NULL_VALUE, NULL_VALUE);
-			break;
-		case V_OCTET:
-			*vres->v_octet = *vp->v_octet - 1;
-			break;
-		case V_OPTR:
-			vres->v_octet = vp->v_octet - 1;
-			break;
-		case V_VPTR:
-			vres->v_addr = vp->v_addr - 1;
-			break;
-		default:
-			if (vp->v_type >= 0)
-				*vres = error_value(E_DECV);
-			break;
+	case V_NUM:
+		vres->v_num = qdec(vp->v_num);
+		break;
+	case V_COM:
+		vres->v_com = c_addq(vp->v_com, &_qnegone_);
+		break;
+	case V_OBJ:
+		*vres = objcall(OBJ_DEC, vp, NULL_VALUE, NULL_VALUE);
+		break;
+	case V_OCTET:
+		*vres->v_octet = *vp->v_octet - 1;
+		break;
+	case V_OPTR:
+		vres->v_octet = vp->v_octet - 1;
+		break;
+	case V_VPTR:
+		vres->v_addr = vp->v_addr - 1;
+		break;
+	default:
+		if (vp->v_type >= 0)
+			*vres = error_value(E_DECV);
+		break;
 	}
 	vres->v_subtype = vp->v_subtype;
 }
@@ -1423,29 +1440,29 @@ conjvalue(VALUE *vp, VALUE *vres)
 	vres->v_type = vp->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
 	switch (vp->v_type) {
-		case V_NUM:
-			vres->v_num = qlink(vp->v_num);
+	case V_NUM:
+		vres->v_num = qlink(vp->v_num);
+		return;
+	case V_COM:
+		vres->v_com = comalloc();
+		qfree(vres->v_com->real);
+		qfree(vres->v_com->imag)
+		vres->v_com->real = qlink(vp->v_com->real);
+		vres->v_com->imag = qneg(vp->v_com->imag);
+		return;
+	case V_MAT:
+		vres->v_mat = matconj(vp->v_mat);
+		return;
+	case V_OBJ:
+		*vres = objcall(OBJ_CONJ, vp, NULL_VALUE, NULL_VALUE);
+		return;
+	default:
+		if (vp->v_type <= 0) {
+			vres->v_type = vp->v_type;
 			return;
-		case V_COM:
-			vres->v_com = comalloc();
-			qfree(vres->v_com->real);
-			qfree(vres->v_com->imag)
-			vres->v_com->real = qlink(vp->v_com->real);
-			vres->v_com->imag = qneg(vp->v_com->imag);
-			return;
-		case V_MAT:
-			vres->v_mat = matconj(vp->v_mat);
-			return;
-		case V_OBJ:
-			*vres = objcall(OBJ_CONJ, vp, NULL_VALUE, NULL_VALUE);
-			return;
-		default:
-			if (vp->v_type <= 0) {
-				vres->v_type = vp->v_type;
-				return;
-			}
-			*vres = error_value(E_CONJ);
-			return;
+		}
+		*vres = error_value(E_CONJ);
+		return;
 	}
 }
 
@@ -1490,25 +1507,25 @@ sqrtvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		R = qtoi(v3->v_num);
 	}
 	switch (v1->v_type) {
-		case V_NUM:
-			if (!qisneg(v1->v_num)) {
-				vres->v_num = qsqrt(v1->v_num, q, R);
-				return;
-			}
-			tmp = qneg(v1->v_num);
-			c = comalloc();
-			qfree(c->imag);
-			c->imag = qsqrt(tmp, q, R);
-			qfree(tmp);
-			vres->v_com = c;
-			vres->v_type = V_COM;
-			break;
-		case V_COM:
-			vres->v_com = c_sqrt(v1->v_com, q, R);
-			break;
-		default:
-			*vres = error_value(E_SQRT);
+	case V_NUM:
+		if (!qisneg(v1->v_num)) {
+			vres->v_num = qsqrt(v1->v_num, q, R);
 			return;
+		}
+		tmp = qneg(v1->v_num);
+		c = comalloc();
+		qfree(c->imag);
+		c->imag = qsqrt(tmp, q, R);
+		qfree(tmp);
+		vres->v_com = c;
+		vres->v_type = V_COM;
+		break;
+	case V_COM:
+		vres->v_com = c_sqrt(v1->v_com, q, R);
+		break;
+	default:
+		*vres = error_value(E_SQRT);
+		return;
 	}
 	c = vres->v_com;
 	if (cisreal(c)) {
@@ -1556,28 +1573,28 @@ rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	}
 	q3 = v3->v_num;
 	switch (v1->v_type) {
-		case V_NUM:
-			if (!qisneg(v1->v_num)) {
-				vres->v_num = qroot(v1->v_num, q2, q3);
-				if (vres->v_num == NULL)
-					*vres = error_value(E_ROOT4);
-				vres->v_type = V_NUM;
-				return;
-			}
-			ctmp.real = v1->v_num;
-			ctmp.imag = &_qzero_;
-			ctmp.links = 1;
-			c = c_root(&ctmp, q2, q3);
-			break;
-		case V_COM:
-			c = c_root(v1->v_com, q2, q3);
-			break;
-		case V_OBJ:
-			*vres = objcall(OBJ_ROOT, v1, v2, v3);
+	case V_NUM:
+		if (!qisneg(v1->v_num)) {
+			vres->v_num = qroot(v1->v_num, q2, q3);
+			if (vres->v_num == NULL)
+				*vres = error_value(E_ROOT4);
+			vres->v_type = V_NUM;
 			return;
-		default:
-			*vres = error_value(E_ROOT);
-			return;
+		}
+		ctmp.real = v1->v_num;
+		ctmp.imag = &_qzero_;
+		ctmp.links = 1;
+		c = c_root(&ctmp, q2, q3);
+		break;
+	case V_COM:
+		c = c_root(v1->v_com, q2, q3);
+		break;
+	case V_OBJ:
+		*vres = objcall(OBJ_ROOT, v1, v2, v3);
+		return;
+	default:
+		*vres = error_value(E_ROOT);
+		return;
 	}
 	if (c == NULL) {
 		*vres = error_value(E_ROOT4);
@@ -1612,22 +1629,22 @@ absvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		return;
 	}
 	switch (v1->v_type) {
-		case V_NUM:
-			if (qisneg(v1->v_num))
-				q = qneg(v1->v_num);
-			else
-				q = qlink(v1->v_num);
-			break;
-		case V_COM:
-			if (v2->v_type != V_NUM || qiszero(v2->v_num)) {
-				*vres = error_value(E_ABS2);
-				return;
-			}
-			q = qhypot(v1->v_com->real, v1->v_com->imag, v2->v_num);
-			break;
-		default:
-			*vres = error_value(E_ABS);
+	case V_NUM:
+		if (qisneg(v1->v_num))
+			q = qneg(v1->v_num);
+		else
+			q = qlink(v1->v_num);
+		break;
+	case V_COM:
+		if (v2->v_type != V_NUM || qiszero(v2->v_num)) {
+			*vres = error_value(E_ABS2);
 			return;
+		}
+		q = qhypot(v1->v_com->real, v1->v_com->imag, v2->v_num);
+		break;
+	default:
+		*vres = error_value(E_ABS);
+		return;
 	}
 	vres->v_num = q;
 	vres->v_type = V_NUM;
@@ -1651,23 +1668,23 @@ normvalue(VALUE *vp, VALUE *vres)
 		return;
 	}
 	switch (vp->v_type) {
-		case V_NUM:
-			vres->v_num = qsquare(vp->v_num);
-			return;
-		case V_COM:
-			q1 = qsquare(vp->v_com->real);
-			q2 = qsquare(vp->v_com->imag);
-			vres->v_num = qqadd(q1, q2);
-			vres->v_type = V_NUM;
-			qfree(q1);
-			qfree(q2);
-			return;
-		case V_OBJ:
-			*vres = objcall(OBJ_NORM, vp, NULL_VALUE, NULL_VALUE);
-			return;
-		default:
-			*vres = error_value(E_NORM);
-			return;
+	case V_NUM:
+		vres->v_num = qsquare(vp->v_num);
+		return;
+	case V_COM:
+		q1 = qsquare(vp->v_com->real);
+		q2 = qsquare(vp->v_com->imag);
+		vres->v_num = qqadd(q1, q2);
+		vres->v_type = V_NUM;
+		qfree(q1);
+		qfree(q2);
+		return;
+	case V_OBJ:
+		*vres = objcall(OBJ_NORM, vp, NULL_VALUE, NULL_VALUE);
+		return;
+	default:
+		*vres = error_value(E_NORM);
+		return;
 	}
 }
 
@@ -1712,59 +1729,59 @@ shiftvalue(VALUE *v1, VALUE *v2, BOOL rightshift, VALUE *vres)
 		n = -n;
 	vres->v_type = v1->v_type;
 	switch (v1->v_type) {
-		case V_NUM:
-			if (qisfrac(v1->v_num)) {
-				*vres = error_value(E_SHIFT);
-				return;
-			}
-			vres->v_num = qshift(v1->v_num, n);
-			return;
-		case V_COM:
-			if (qisfrac(v1->v_com->real) ||
-					qisfrac(v1->v_com->imag)) {
-				*vres = error_value(E_SHIFT);
-				return;
-			}
-			c = c_shift(v1->v_com, n);
-			if (!cisreal(c)) {
-				vres->v_com = c;
-				return;
-			}
-			vres->v_num = qlink(c->real);
-			vres->v_type = V_NUM;
-			comfree(c);
-			return;
-		case V_MAT:
-			vres->v_mat = matshift(v1->v_mat, n);
-			return;
-		case V_STR:
-			vres->v_str = stringshift(v1->v_str, n);
-			if (vres->v_str == NULL)
-				*vres = error_value(E_STRSHIFT);
-			return;
-		case V_OCTET:
-			vres->v_type = V_STR;
-			if (n >= 8 || n <= -8)
-				ch = 0;
-			else if (n >= 0)
-				ch = (unsigned int) *v1->v_octet << n;
-			else
-				ch = (unsigned int) *v1->v_octet >> -n;
-			vres->v_str = charstring(ch);
-			return;
-		case V_OBJ:
-			if (!rightshift) {
-				*vres = objcall(OBJ_SHIFT, v1, v2, NULL_VALUE);
-				return;
-			}
-			tmp.v_num = qneg(v2->v_num);
-			tmp.v_type = V_NUM;
-			*vres = objcall(OBJ_SHIFT, v1, &tmp, NULL_VALUE);
-			qfree(tmp.v_num);
-			return;
-		default:
+	case V_NUM:
+		if (qisfrac(v1->v_num)) {
 			*vres = error_value(E_SHIFT);
 			return;
+		}
+		vres->v_num = qshift(v1->v_num, n);
+		return;
+	case V_COM:
+		if (qisfrac(v1->v_com->real) ||
+				qisfrac(v1->v_com->imag)) {
+			*vres = error_value(E_SHIFT);
+			return;
+		}
+		c = c_shift(v1->v_com, n);
+		if (!cisreal(c)) {
+			vres->v_com = c;
+			return;
+		}
+		vres->v_num = qlink(c->real);
+		vres->v_type = V_NUM;
+		comfree(c);
+		return;
+	case V_MAT:
+		vres->v_mat = matshift(v1->v_mat, n);
+		return;
+	case V_STR:
+		vres->v_str = stringshift(v1->v_str, n);
+		if (vres->v_str == NULL)
+			*vres = error_value(E_STRSHIFT);
+		return;
+	case V_OCTET:
+		vres->v_type = V_STR;
+		if (n >= 8 || n <= -8)
+			ch = 0;
+		else if (n >= 0)
+			ch = (unsigned int) *v1->v_octet << n;
+		else
+			ch = (unsigned int) *v1->v_octet >> -n;
+		vres->v_str = charstring(ch);
+		return;
+	case V_OBJ:
+		if (!rightshift) {
+			*vres = objcall(OBJ_SHIFT, v1, v2, NULL_VALUE);
+			return;
+		}
+		tmp.v_num = qneg(v2->v_num);
+		tmp.v_type = V_NUM;
+		*vres = objcall(OBJ_SHIFT, v1, &tmp, NULL_VALUE);
+		qfree(tmp.v_num);
+		return;
+	default:
+		*vres = error_value(E_SHIFT);
+		return;
 	}
 }
 
@@ -1796,21 +1813,21 @@ scalevalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	}
 	vres->v_type = v1->v_type;
 	switch (v1->v_type) {
-		case V_NUM:
-			vres->v_num = qscale(v1->v_num, n);
-			return;
-		case V_COM:
-			vres->v_com = c_scale(v1->v_com, n);
-			return;
-		case V_MAT:
-			vres->v_mat = matscale(v1->v_mat, n);
-			return;
-		case V_OBJ:
-			*vres = objcall(OBJ_SCALE, v1, v2, NULL_VALUE);
-			return;
-		default:
-			*vres = error_value(E_SCALE);
-			return;
+	case V_NUM:
+		vres->v_num = qscale(v1->v_num, n);
+		return;
+	case V_COM:
+		vres->v_com = c_scale(v1->v_com, n);
+		return;
+	case V_MAT:
+		vres->v_mat = matscale(v1->v_mat, n);
+		return;
+	case V_OBJ:
+		*vres = objcall(OBJ_SCALE, v1, v2, NULL_VALUE);
+		return;
+	default:
+		*vres = error_value(E_SCALE);
+		return;
 	}
 }
 
@@ -1850,30 +1867,30 @@ powivalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		return;
 	}
 	switch (v1->v_type) {
-		case V_NUM:
-			if (qiszero(v1->v_num)) {
-				if (qisneg(q)) {
-					*vres = error_value(E_1OVER0);
-					return;
-				}
-			}
-			vres->v_num = qpowi(v1->v_num, q);
-			return;
-		case V_COM:
-			vres->v_com = c_powi(v1->v_com, q);
-			c = vres->v_com;
-			if (!cisreal(c))
+	case V_NUM:
+		if (qiszero(v1->v_num)) {
+			if (qisneg(q)) {
+				*vres = error_value(E_1OVER0);
 				return;
-			vres->v_num = qlink(c->real);
-			vres->v_type = V_NUM;
-			comfree(c);
+			}
+		}
+		vres->v_num = qpowi(v1->v_num, q);
+		return;
+	case V_COM:
+		vres->v_com = c_powi(v1->v_com, q);
+		c = vres->v_com;
+		if (!cisreal(c))
 			return;
-		case V_MAT:
-			vres->v_mat = matpowi(v1->v_mat, q);
-			return;
-		default:
-			*vres = error_value(E_POWI);
-			return;
+		vres->v_num = qlink(c->real);
+		vres->v_type = V_NUM;
+		comfree(c);
+		return;
+	case V_MAT:
+		vres->v_mat = matpowi(v1->v_mat, q);
+		return;
+	default:
+		*vres = error_value(E_POWI);
+		return;
 	}
 }
 
@@ -1908,40 +1925,40 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	}
 	epsilon = v3->v_num;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
-		case TWOVAL(V_NUM, V_NUM):
-			if (qisneg(v1->v_num)) {
-				ctmp1.real = v1->v_num;
-				ctmp1.imag = &_qzero_;
-				ctmp1.links = 1;
-				ctmp2.real = v2->v_num;
-				ctmp2.imag = &_qzero_;
-				ctmp2.links = 1;
-				c = c_power(&ctmp1, &ctmp2, epsilon);
-				break;
-			}
-			vres->v_num = qpower(v1->v_num, v2->v_num, epsilon);
-			vres->v_type = V_NUM;
-			if (vres->v_num == NULL)
-				*vres = error_value(E_POWER4);
-			return;
-		case TWOVAL(V_NUM, V_COM):
+	case TWOVAL(V_NUM, V_NUM):
+		if (qisneg(v1->v_num)) {
 			ctmp1.real = v1->v_num;
 			ctmp1.imag = &_qzero_;
 			ctmp1.links = 1;
-			c = c_power(&ctmp1, v2->v_com, epsilon);
-			break;
-		case TWOVAL(V_COM, V_NUM):
 			ctmp2.real = v2->v_num;
 			ctmp2.imag = &_qzero_;
 			ctmp2.links = 1;
-			c = c_power(v1->v_com, &ctmp2, epsilon);
+			c = c_power(&ctmp1, &ctmp2, epsilon);
 			break;
-		case TWOVAL(V_COM, V_COM):
-			c = c_power(v1->v_com, v2->v_com, epsilon);
-			break;
-		default:
-			*vres = error_value(E_POWER);
-			return;
+		}
+		vres->v_num = qpower(v1->v_num, v2->v_num, epsilon);
+		vres->v_type = V_NUM;
+		if (vres->v_num == NULL)
+			*vres = error_value(E_POWER4);
+		return;
+	case TWOVAL(V_NUM, V_COM):
+		ctmp1.real = v1->v_num;
+		ctmp1.imag = &_qzero_;
+		ctmp1.links = 1;
+		c = c_power(&ctmp1, v2->v_com, epsilon);
+		break;
+	case TWOVAL(V_COM, V_NUM):
+		ctmp2.real = v2->v_num;
+		ctmp2.imag = &_qzero_;
+		ctmp2.links = 1;
+		c = c_power(v1->v_com, &ctmp2, epsilon);
+		break;
+	case TWOVAL(V_COM, V_COM):
+		c = c_power(v1->v_com, v2->v_com, epsilon);
+		break;
+	default:
+		*vres = error_value(E_POWER);
+		return;
 	}
 	/*
 	 * Here for any complex result.
@@ -1990,52 +2007,52 @@ divvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	}
 	vres->v_type = v1->v_type;
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
-		case TWOVAL(V_NUM, V_NUM):
-			vres->v_num = qqdiv(v1->v_num, v2->v_num);
+	case TWOVAL(V_NUM, V_NUM):
+		vres->v_num = qqdiv(v1->v_num, v2->v_num);
+		return;
+	case TWOVAL(V_COM, V_NUM):
+		vres->v_com = c_divq(v1->v_com, v2->v_num);
+		return;
+	case TWOVAL(V_NUM, V_COM):
+		if (qiszero(v1->v_num)) {
+			vres->v_num = qlink(&_qzero_);
 			return;
-		case TWOVAL(V_COM, V_NUM):
-			vres->v_com = c_divq(v1->v_com, v2->v_num);
+		}
+		ctmp.real = v1->v_num;
+		ctmp.imag = &_qzero_;
+		ctmp.links = 1;
+		vres->v_com = c_div(&ctmp, v2->v_com);
+		vres->v_type = V_COM;
+		return;
+	case TWOVAL(V_COM, V_COM):
+		vres->v_com = c_div(v1->v_com, v2->v_com);
+		c = vres->v_com;
+		if (cisreal(c)) {
+			vres->v_num = qlink(c->real);
+			vres->v_type = V_NUM;
+			comfree(c);
+		}
+		return;
+	case TWOVAL(V_MAT, V_NUM):
+	case TWOVAL(V_MAT, V_COM):
+		invertvalue(v2, &tmpval);
+		vres->v_mat = matmulval(v1->v_mat, &tmpval);
+		freevalue(&tmpval);
+		return;
+	case TWOVAL(V_STR, V_NUM):
+		q = qinv(v2->v_num);
+		vres->v_str = stringmul(q, v1->v_str);
+		qfree(q);
+		if (vres->v_str == NULL)
+			*vres = error_value(E_DIV);
+		return;
+	default:
+		if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
+			*vres = error_value(E_DIV);
 			return;
-		case TWOVAL(V_NUM, V_COM):
-			if (qiszero(v1->v_num)) {
-				vres->v_num = qlink(&_qzero_);
-				return;
-			}
-			ctmp.real = v1->v_num;
-			ctmp.imag = &_qzero_;
-			ctmp.links = 1;
-			vres->v_com = c_div(&ctmp, v2->v_com);
-			vres->v_type = V_COM;
-			return;
-		case TWOVAL(V_COM, V_COM):
-			vres->v_com = c_div(v1->v_com, v2->v_com);
-			c = vres->v_com;
-			if (cisreal(c)) {
-				vres->v_num = qlink(c->real);
-				vres->v_type = V_NUM;
-				comfree(c);
-			}
-			return;
-		case TWOVAL(V_MAT, V_NUM):
-		case TWOVAL(V_MAT, V_COM):
-			invertvalue(v2, &tmpval);
-			vres->v_mat = matmulval(v1->v_mat, &tmpval);
-			freevalue(&tmpval);
-			return;
-		case TWOVAL(V_STR, V_NUM):
-			q = qinv(v2->v_num);
-			vres->v_str = stringmul(q, v1->v_str);
-			qfree(q);
-			if (vres->v_str == NULL)
-				*vres = error_value(E_DIV);
-			return;
-		default:
-			if ((v1->v_type != V_OBJ) && (v2->v_type != V_OBJ)) {
-				*vres = error_value(E_DIV);
-				return;
-			}
-			*vres = objcall(OBJ_DIV, v1, v2, NULL_VALUE);
-			return;
+		}
+		*vres = objcall(OBJ_DIV, v1, v2, NULL_VALUE);
+		return;
 	}
 }
 
@@ -2078,43 +2095,43 @@ quovalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	}
 	rnd = 0;
 	switch (v3->v_type) {
-		case V_NUM:
-			if (qisfrac(v3->v_num)) {
-				*vres = error_value(E_QUO3);
-				return;
-			}
-			rnd = qtoi(v3->v_num);
-			break;
-		case V_NULL:
-			rnd = conf->quo;
-			break;
-		default:
+	case V_NUM:
+		if (qisfrac(v3->v_num)) {
 			*vres = error_value(E_QUO3);
 			return;
+		}
+		rnd = qtoi(v3->v_num);
+		break;
+	case V_NULL:
+		rnd = conf->quo;
+		break;
+	default:
+		*vres = error_value(E_QUO3);
+		return;
 	}
 	switch (v1->v_type) {
-		case V_NUM:
-			vres->v_num = qquo(v1->v_num, v2->v_num, rnd);
+	case V_NUM:
+		vres->v_num = qquo(v1->v_num, v2->v_num, rnd);
+		return;
+	case V_COM:
+		q1 = qquo(v1->v_com->real, v2->v_num, rnd);
+		q2 = qquo(v1->v_com->imag, v2->v_num, rnd);
+		if (qiszero(q2)) {
+			qfree(q2);
+			vres->v_type = V_NUM;
+			vres->v_num = q1;
 			return;
-		case V_COM:
-			q1 = qquo(v1->v_com->real, v2->v_num, rnd);
-			q2 = qquo(v1->v_com->imag, v2->v_num, rnd);
-			if (qiszero(q2)) {
-				qfree(q2);
-				vres->v_type = V_NUM;
-				vres->v_num = q1;
-				return;
-			}
-			c = comalloc();
-			qfree(c->real);
-			qfree(c->imag);
-			c->real = q1;
-			c->imag = q2;
-			vres->v_com = c;
-			return;
-		default:
-			*vres = error_value(E_QUO);
-			return;
+		}
+		c = comalloc();
+		qfree(c->real);
+		qfree(c->imag);
+		c->real = q1;
+		c->imag = q2;
+		vres->v_com = c;
+		return;
+	default:
+		*vres = error_value(E_QUO);
+		return;
 	}
 }
 
@@ -2157,43 +2174,43 @@ modvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	}
 	rnd = 0;
 	switch (v3->v_type) {
-		case V_NUM:
-			if (qisfrac(v3->v_num)) {
-				*vres = error_value(E_MOD3);
-				return;
-			}
-			rnd = qtoi(v3->v_num);
-			break;
-		case V_NULL:
-			rnd = conf->mod;
-			break;
-		default:
+	case V_NUM:
+		if (qisfrac(v3->v_num)) {
 			*vres = error_value(E_MOD3);
 			return;
+		}
+		rnd = qtoi(v3->v_num);
+		break;
+	case V_NULL:
+		rnd = conf->mod;
+		break;
+	default:
+		*vres = error_value(E_MOD3);
+		return;
 	}
 	switch (v1->v_type) {
-		case V_NUM:
-			vres->v_num = qmod(v1->v_num, v2->v_num, rnd);
+	case V_NUM:
+		vres->v_num = qmod(v1->v_num, v2->v_num, rnd);
+		return;
+	case V_COM:
+		q1 = qmod(v1->v_com->real, v2->v_num, rnd);
+		q2 = qmod(v1->v_com->imag, v2->v_num, rnd);
+		if (qiszero(q2)) {
+			qfree(q2);
+			vres->v_type = V_NUM;
+			vres->v_num = q1;
 			return;
-		case V_COM:
-			q1 = qmod(v1->v_com->real, v2->v_num, rnd);
-			q2 = qmod(v1->v_com->imag, v2->v_num, rnd);
-			if (qiszero(q2)) {
-				qfree(q2);
-				vres->v_type = V_NUM;
-				vres->v_num = q1;
-				return;
-			}
-			c = comalloc();
-			qfree(c->real);
-			qfree(c->imag);
-			c->real = q1;
-			c->imag = q2;
-			vres->v_com = c;
-			return;
-		default:
-			*vres = error_value(E_MOD);
-			return;
+		}
+		c = comalloc();
+		qfree(c->real);
+		qfree(c->imag);
+		c->real = q1;
+		c->imag = q2;
+		vres->v_com = c;
+		return;
+	default:
+		*vres = error_value(E_MOD);
+		return;
 	}
 }
 
@@ -2212,49 +2229,49 @@ testvalue(VALUE *vp)
 	int i;
 
 	switch (vp->v_type) {
-		case V_NUM:
-			return !qiszero(vp->v_num);
-		case V_COM:
-			return !ciszero(vp->v_com);
-		case V_STR:
-			return stringtest(vp->v_str);
-		case V_MAT:
-			return mattest(vp->v_mat);
-		case V_LIST:
-			for (ep = vp->v_list->l_first; ep; ep = ep->e_next) {
-				if (testvalue(&ep->e_value))
-					return TRUE;
+	case V_NUM:
+		return !qiszero(vp->v_num);
+	case V_COM:
+		return !ciszero(vp->v_com);
+	case V_STR:
+		return stringtest(vp->v_str);
+	case V_MAT:
+		return mattest(vp->v_mat);
+	case V_LIST:
+		for (ep = vp->v_list->l_first; ep; ep = ep->e_next) {
+			if (testvalue(&ep->e_value))
+				return TRUE;
+		}
+		return FALSE;
+	case V_ASSOC:
+		return (vp->v_assoc->a_count != 0);
+	case V_FILE:
+		return validid(vp->v_file);
+	case V_NULL:
+		break;	/* hack to get gcc on SunOS to be quiet */
+	case V_OBJ:
+		val = objcall(OBJ_TEST, vp, NULL_VALUE, NULL_VALUE);
+		return (val.v_int != 0);
+	case V_BLOCK:
+		for (i=0; i < vp->v_block->datalen; ++i) {
+			if (vp->v_block->data[i]) {
+				return TRUE;
 			}
+		}
+		return FALSE;
+	case V_OCTET:
+		return (*vp->v_octet != 0);
+	case V_NBLOCK:
+		if (vp->v_nblock->blk->data == NULL)
 			return FALSE;
-		case V_ASSOC:
-			return (vp->v_assoc->a_count != 0);
-		case V_FILE:
-			return validid(vp->v_file);
-		case V_NULL:
-			break;	/* hack to get gcc on SunOS to be quiet */
-		case V_OBJ:
-			val = objcall(OBJ_TEST, vp, NULL_VALUE, NULL_VALUE);
-			return (val.v_int != 0);
-		case V_BLOCK:
-			for (i=0; i < vp->v_block->datalen; ++i) {
-				if (vp->v_block->data[i]) {
-					return TRUE;
-				}
+		for (i=0; i < vp->v_nblock->blk->datalen; ++i) {
+			if (vp->v_nblock->blk->data[i]) {
+				return TRUE;
 			}
-			return FALSE;
-		case V_OCTET:
-			return (*vp->v_octet != 0);
-		case V_NBLOCK:
-			if (vp->v_nblock->blk->data == NULL)
-				return FALSE;
-			for (i=0; i < vp->v_nblock->blk->datalen; ++i) {
-				if (vp->v_nblock->blk->data[i]) {
-					return TRUE;
-				}
-			}
-			return FALSE;
-		default:
-			return TRUE;
+		}
+		return FALSE;
+	default:
+		return TRUE;
 	}
 	/* hack to get gcc on SunOS to be quiet */
 	return FALSE;
@@ -2295,58 +2312,58 @@ comparevalue(VALUE *v1, VALUE *v2)
 	if (v1->v_type <= 0)
 		return FALSE;
 	switch (v1->v_type) {
-		case V_NUM:
-			r = qcmp(v1->v_num, v2->v_num);
-			break;
-		case V_COM:
-			r = c_cmp(v1->v_com, v2->v_com);
-			break;
-		case V_STR:
-			r = stringcmp(v1->v_str, v2->v_str);
-			break;
-		case V_MAT:
-			r = matcmp(v1->v_mat, v2->v_mat);
-			break;
-		case V_LIST:
-			r = listcmp(v1->v_list, v2->v_list);
-			break;
-		case V_ASSOC:
-			r = assoccmp(v1->v_assoc, v2->v_assoc);
-			break;
-		case V_FILE:
-			r = (v1->v_file != v2->v_file);
-			break;
-		case V_RAND:
-			r = randcmp(v1->v_rand, v2->v_rand);
-			break;
-		case V_RANDOM:
-			r = randomcmp(v1->v_random, v2->v_random);
-			break;
-		case V_CONFIG:
-			r = config_cmp(v1->v_config, v2->v_config);
-			break;
-		case V_HASH:
-			r = hash_cmp(v1->v_hash, v2->v_hash);
-			break;
-		case V_BLOCK:
-			r = blk_cmp(v1->v_block, v2->v_block);
-			break;
-		case V_OCTET:
-			r = (v1->v_octet != v2->v_octet);
-			break;
-		case V_NBLOCK:
-			return (v1->v_nblock != v2->v_nblock);
-		case V_VPTR:
-			return (v1->v_addr != v2->v_addr);
-		case V_OPTR:
-			return (v1->v_octet != v2->v_octet);
-		case V_SPTR:
-			return (v1->v_str != v2->v_str);
-		case V_NPTR:
-			return (v1->v_num != v2->v_num);
-		default:
-			math_error("Illegal values for comparevalue");
-			/*NOTREACHED*/
+	case V_NUM:
+		r = qcmp(v1->v_num, v2->v_num);
+		break;
+	case V_COM:
+		r = c_cmp(v1->v_com, v2->v_com);
+		break;
+	case V_STR:
+		r = stringcmp(v1->v_str, v2->v_str);
+		break;
+	case V_MAT:
+		r = matcmp(v1->v_mat, v2->v_mat);
+		break;
+	case V_LIST:
+		r = listcmp(v1->v_list, v2->v_list);
+		break;
+	case V_ASSOC:
+		r = assoccmp(v1->v_assoc, v2->v_assoc);
+		break;
+	case V_FILE:
+		r = (v1->v_file != v2->v_file);
+		break;
+	case V_RAND:
+		r = randcmp(v1->v_rand, v2->v_rand);
+		break;
+	case V_RANDOM:
+		r = randomcmp(v1->v_random, v2->v_random);
+		break;
+	case V_CONFIG:
+		r = config_cmp(v1->v_config, v2->v_config);
+		break;
+	case V_HASH:
+		r = hash_cmp(v1->v_hash, v2->v_hash);
+		break;
+	case V_BLOCK:
+		r = blk_cmp(v1->v_block, v2->v_block);
+		break;
+	case V_OCTET:
+		r = (v1->v_octet != v2->v_octet);
+		break;
+	case V_NBLOCK:
+		return (v1->v_nblock != v2->v_nblock);
+	case V_VPTR:
+		return (v1->v_addr != v2->v_addr);
+	case V_OPTR:
+		return (v1->v_octet != v2->v_octet);
+	case V_SPTR:
+		return (v1->v_str != v2->v_str);
+	case V_NPTR:
+		return (v1->v_num != v2->v_num);
+	default:
+		math_error("Illegal values for comparevalue");
+		/*NOTREACHED*/
 	}
 	return (r != 0);
 }
@@ -2450,105 +2467,105 @@ relvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		return;
 	}
 	switch(v1->v_type) {
+	case V_NUM:
+		switch(v2->v_type) {
 		case V_NUM:
-			switch(v2->v_type) {
-			case V_NUM:
-				r = qrel(v1->v_num, v2->v_num);
-				break;
-			case V_OCTET:
-				q = itoq((long) *v2->v_octet);
-				r = qrel(v1->v_num, q);
-				qfree(q);
-				break;
-			case V_COM:
-				r = qrel(v1->v_num, v2->v_com->real);
-				i = qrel(&_qzero_, v2->v_com->imag);
-				break;
-			default:
-				return;
-			}
-			break;
-		case V_COM:
-			switch(v2->v_type) {
-			case V_NUM:
-				r = qrel(v1->v_com->real, v2->v_num);
-				i = qrel(v1->v_com->imag, &_qzero_);
-				break;
-			case V_COM:
-				r = qrel(v1->v_com->real, v2->v_com->real);
-				i = qrel(v1->v_com->imag, v2->v_com->imag);
-				break;
-			case V_OCTET:
-				q = itoq((long) *v2->v_octet);
-				r = qrel(v1->v_com->real, q);
-				qfree(q);
-				i = qrel(v1->v_com->imag, &_qzero_);
-				break;
-			default:
-				return;
-			}
-			break;
-		case V_STR:
-			switch(v2->v_type) {
-			case V_STR:
-				r = stringrel(v1->v_str, v2->v_str);
-				break;
-			case V_OCTET:
-				r = (unsigned char) *v1->v_str->s_str
-					- *v2->v_octet;
-				if (r == 0) {
-					if (v1->v_str->s_len == 0)
-						r = -1;
-					else
-						r = (v1->v_str->s_len > 1);
-				}
-				break;
-			default:
-				return;
-			}
+			r = qrel(v1->v_num, v2->v_num);
 			break;
 		case V_OCTET:
-			switch(v2->v_type) {
-			case V_NUM:
-				q = itoq((long) *v1->v_octet);
-				r = qrel(q, v2->v_num);
-				qfree(q);
-				break;
-			case V_COM:
-				q = itoq((long) *v1->v_octet);
-				r = qrel(q, v2->v_com->real);
-				qfree(q);
-				i = qrel(&_qzero_, v2->v_com->imag);
-				break;
-			case V_OCTET:
-				r = *v1->v_octet - *v2->v_octet;
-				break;
-			case V_STR:
-				r = *v1->v_octet -
-					(unsigned char) *v2->v_str->s_str;
-				if (r == 0) {
-					if (v2->v_str->s_len == 0)
-						r = 1;
-					else
-						r = -(v2->v_str->s_len > 1);
-				}
-				break;
-			default:
-				return;
-			}
+			q = itoq((long) *v2->v_octet);
+			r = qrel(v1->v_num, q);
+			qfree(q);
 			break;
-		case V_VPTR:
-			if (v2->v_type != V_VPTR)
-				return;
-			r = (v1->v_addr - v2->v_addr);
-			break;
-		case V_OPTR:
-			if (v2->v_type != V_OPTR)
-				return;
-			r = (v1->v_octet - v2->v_octet);
+		case V_COM:
+			r = qrel(v1->v_num, v2->v_com->real);
+			i = qrel(&_qzero_, v2->v_com->imag);
 			break;
 		default:
 			return;
+		}
+		break;
+	case V_COM:
+		switch(v2->v_type) {
+		case V_NUM:
+			r = qrel(v1->v_com->real, v2->v_num);
+			i = qrel(v1->v_com->imag, &_qzero_);
+			break;
+		case V_COM:
+			r = qrel(v1->v_com->real, v2->v_com->real);
+			i = qrel(v1->v_com->imag, v2->v_com->imag);
+			break;
+		case V_OCTET:
+			q = itoq((long) *v2->v_octet);
+			r = qrel(v1->v_com->real, q);
+			qfree(q);
+			i = qrel(v1->v_com->imag, &_qzero_);
+			break;
+		default:
+			return;
+		}
+		break;
+	case V_STR:
+		switch(v2->v_type) {
+		case V_STR:
+			r = stringrel(v1->v_str, v2->v_str);
+			break;
+		case V_OCTET:
+			r = (unsigned char) *v1->v_str->s_str
+				- *v2->v_octet;
+			if (r == 0) {
+				if (v1->v_str->s_len == 0)
+					r = -1;
+				else
+					r = (v1->v_str->s_len > 1);
+			}
+			break;
+		default:
+			return;
+		}
+		break;
+	case V_OCTET:
+		switch(v2->v_type) {
+		case V_NUM:
+			q = itoq((long) *v1->v_octet);
+			r = qrel(q, v2->v_num);
+			qfree(q);
+			break;
+		case V_COM:
+			q = itoq((long) *v1->v_octet);
+			r = qrel(q, v2->v_com->real);
+			qfree(q);
+			i = qrel(&_qzero_, v2->v_com->imag);
+			break;
+		case V_OCTET:
+			r = *v1->v_octet - *v2->v_octet;
+			break;
+		case V_STR:
+			r = *v1->v_octet -
+				(unsigned char) *v2->v_str->s_str;
+			if (r == 0) {
+				if (v2->v_str->s_len == 0)
+					r = 1;
+				else
+					r = -(v2->v_str->s_len > 1);
+			}
+			break;
+		default:
+			return;
+		}
+		break;
+	case V_VPTR:
+		if (v2->v_type != V_VPTR)
+			return;
+		r = (v1->v_addr - v2->v_addr);
+		break;
+	case V_OPTR:
+		if (v2->v_type != V_OPTR)
+			return;
+		r = (v1->v_octet - v2->v_octet);
+		break;
+	default:
+		return;
 	}
 	vres->v_type = V_NUM;
 	*vres = signval(r);
@@ -2577,32 +2594,32 @@ sgnvalue(VALUE *vp, VALUE *vres)
 
 	vres->v_type = vp->v_type;
 	switch (vp->v_type) {
-		case V_NUM:
-			vres->v_num = qsign(vp->v_num);
-			vres->v_subtype = vp->v_subtype;
-			return;
-		case V_COM:
-			c = comalloc();
-			qfree(c->real);
-			qfree(c->imag);
-			c->real = qsign(vp->v_com->real);
-			c->imag = qsign(vp->v_com->imag);
-			vres->v_com = c;
-			vres->v_type = V_COM;
-			vres->v_subtype = V_NOSUBTYPE;
-			return;
-		case V_OCTET:
-			vres->v_type = V_NUM;
-			vres->v_subtype = V_NOSUBTYPE;
-			vres->v_num = itoq((long) (*vp->v_octet != 0));
-			return;
-		case V_OBJ:
-			*vres = objcall(OBJ_SGN, vp, NULL_VALUE, NULL_VALUE);
-			return;
-		default:
-			if (vp->v_type > 0)
-				*vres = error_value(E_SGN);
-			return;
+	case V_NUM:
+		vres->v_num = qsign(vp->v_num);
+		vres->v_subtype = vp->v_subtype;
+		return;
+	case V_COM:
+		c = comalloc();
+		qfree(c->real);
+		qfree(c->imag);
+		c->real = qsign(vp->v_com->real);
+		c->imag = qsign(vp->v_com->imag);
+		vres->v_com = c;
+		vres->v_type = V_COM;
+		vres->v_subtype = V_NOSUBTYPE;
+		return;
+	case V_OCTET:
+		vres->v_type = V_NUM;
+		vres->v_subtype = V_NOSUBTYPE;
+		vres->v_num = itoq((long) (*vp->v_octet != 0));
+		return;
+	case V_OBJ:
+		*vres = objcall(OBJ_SGN, vp, NULL_VALUE, NULL_VALUE);
+		return;
+	default:
+		if (vp->v_type > 0)
+			*vres = error_value(E_SGN);
+		return;
 	}
 }
 
@@ -2648,90 +2665,90 @@ printvalue(VALUE *vp, int flags)
 		return;
 	}
 	switch (type) {
-		case V_NUM:
-			qprintnum(vp->v_num, MODE_DEFAULT);
-			if (conf->traceflags & TRACE_LINKS)
-				printf("#%ld", vp->v_num->links);
+	case V_NUM:
+		qprintnum(vp->v_num, MODE_DEFAULT);
+		if (conf->traceflags & TRACE_LINKS)
+			printf("#%ld", vp->v_num->links);
+		break;
+	case V_COM:
+		comprint(vp->v_com);
+		if (conf->traceflags & TRACE_LINKS)
+			printf("##%ld", vp->v_com->links);
+		break;
+	case V_STR:
+		if (flags & PRINT_UNAMBIG)
+			math_chr('\"');
+		math_str(vp->v_str->s_str);
+		if (flags & PRINT_UNAMBIG)
+			math_chr('\"');
+		break;
+	case V_NULL:
+		if (flags & PRINT_UNAMBIG)
+			math_str("NULL");
+		break;
+	case V_OBJ:
+		(void) objcall(OBJ_PRINT, vp, NULL_VALUE, NULL_VALUE);
+		break;
+	case V_LIST:
+		if (!userfunc("list_print", vp))
+			listprint(vp->v_list,
+			((flags & PRINT_SHORT) ? 0L : conf->maxprint));
+		break;
+	case V_ASSOC:
+		assocprint(vp->v_assoc,
+			((flags & PRINT_SHORT) ? 0L : conf->maxprint));
+		break;
+	case V_MAT:
+		if (!userfunc("mat_print", vp))
+			matprint(vp->v_mat,
+			((flags & PRINT_SHORT) ? 0L : conf->maxprint));
+		break;
+	case V_FILE:
+		if (!userfunc("file_print", vp))
+			printid(vp->v_file, flags);
+		break;
+	case V_RAND:
+		randprint(vp->v_rand, flags);
+		break;
+	case V_RANDOM:
+		randomprint(vp->v_random, flags);
+		break;
+	case V_CONFIG:
+		config_print(vp->v_config);
+		break;
+	case V_HASH:
+		hash_print(vp->v_hash);
+		break;
+	case V_BLOCK:
+		if (!userfunc("blk_print", vp))
+			blk_print(vp->v_block);
+		break;
+	case V_OCTET:
+		if (userfunc("octet_print", vp))
 			break;
-		case V_COM:
-			comprint(vp->v_com);
-			if (conf->traceflags & TRACE_LINKS)
-				printf("##%ld", vp->v_com->links);
-			break;
-		case V_STR:
-			if (flags & PRINT_UNAMBIG)
-				math_chr('\"');
-			math_str(vp->v_str->s_str);
-			if (flags & PRINT_UNAMBIG)
-				math_chr('\"');
-			break;
-		case V_NULL:
-			if (flags & PRINT_UNAMBIG)
-				math_str("NULL");
-			break;
-		case V_OBJ:
-			(void) objcall(OBJ_PRINT, vp, NULL_VALUE, NULL_VALUE);
-			break;
-		case V_LIST:
-			if (!userfunc("list_print", vp))
-				listprint(vp->v_list,
-				((flags & PRINT_SHORT) ? 0L : conf->maxprint));
-			break;
-		case V_ASSOC:
-			assocprint(vp->v_assoc,
-				((flags & PRINT_SHORT) ? 0L : conf->maxprint));
-			break;
-		case V_MAT:
-			if (!userfunc("mat_print", vp))
-				matprint(vp->v_mat,
-				((flags & PRINT_SHORT) ? 0L : conf->maxprint));
-			break;
-		case V_FILE:
-			if (!userfunc("file_print", vp))
-				printid(vp->v_file, flags);
-			break;
-		case V_RAND:
-			randprint(vp->v_rand, flags);
-			break;
-		case V_RANDOM:
-			randomprint(vp->v_random, flags);
-			break;
-		case V_CONFIG:
-			config_print(vp->v_config);
-			break;
-		case V_HASH:
-			hash_print(vp->v_hash);
-			break;
-		case V_BLOCK:
-			if (!userfunc("blk_print", vp))
-				blk_print(vp->v_block);
-			break;
-		case V_OCTET:
-			if (userfunc("octet_print", vp))
-				break;
-			qtemp = itoq((long) *vp->v_octet);
-			qprintnum(qtemp, MODE_DEFAULT);
-			qfree(qtemp);
-			break;
-		case V_OPTR:
-			printf("o-ptr: %p", vp->v_octet);
-			break;
-		case V_VPTR:
-			printf("v-ptr: %p", vp->v_addr);
-			break;
-		case V_SPTR:
-			printf("s_ptr: %p", vp->v_str);
-			break;
-		case V_NPTR:
-			printf("n_ptr: %p", vp->v_num);
-			break;
-		case V_NBLOCK:
-			if (!userfunc("nblk_print", vp))
-				nblock_print(vp->v_nblock);
-			break;
-		default:
-			math_error("Printing unrecognized type of value");
-			/*NOTREACHED*/
+		qtemp = itoq((long) *vp->v_octet);
+		qprintnum(qtemp, MODE_DEFAULT);
+		qfree(qtemp);
+		break;
+	case V_OPTR:
+		printf("o-ptr: %p", vp->v_octet);
+		break;
+	case V_VPTR:
+		printf("v-ptr: %p", vp->v_addr);
+		break;
+	case V_SPTR:
+		printf("s_ptr: %p", vp->v_str);
+		break;
+	case V_NPTR:
+		printf("n_ptr: %p", vp->v_num);
+		break;
+	case V_NBLOCK:
+		if (!userfunc("nblk_print", vp))
+			nblock_print(vp->v_nblock);
+		break;
+	default:
+		math_error("Printing unrecognized type of value");
+		/*NOTREACHED*/
 	}
 }
 
@@ -2748,7 +2765,7 @@ config_print(CONFIG *cfg)
 	NAMETYPE *cp;
 	VALUE tmp;
 	int tab_over;		/* TRUE => ok move over one tab stop */
-	int i;
+	size_t len;
 
 	/*
 	 * firewall
@@ -2779,8 +2796,8 @@ config_print(CONFIG *cfg)
 
 		/* print name and spaces */
 		printf("%s", cp->name);
-		i = 16 - (int)strlen(cp->name);
-		while (i-- > 0)
+		len = 16 - strlen(cp->name);
+		while (len-- > 0)
 			printf(" ");
 
 		/* print value */

@@ -1,0 +1,206 @@
+NAME
+    fpathopen - open an absolute filename, or a relative filename along a search path
+
+SYNOPSIS
+    fpathopen(filename, mode [,searchpath])
+
+TYPES
+    filename	string
+    mode	string
+    searchpath	string
+
+    return	file
+
+DESCRIPTION
+    This function opens the file named filename, potentially searching
+    for the file along a search path given by searchpath.  If searchpath
+    is not given, then CALCPATH search path is used.
+
+    If the filename is absolute, or it has an implied path, then
+    searchpath is ignored and the filename is opened directly.
+    Absolute filenames, and filenames with an implied path are files
+    that begin with:
+
+    	/	# absolute path
+	./	# implied path through the current working directory
+	../	# implied path through the current working directory parent
+	~	# absolute path going through a home directory
+
+    A search path is a :-separated list of directories used to search for
+    a filename.  For example:
+
+    	fpathopen("whey", "r", ".:/tmp:/var/tmp:~chongo/pub:~/tmp");
+
+    will cause this function to open the first readable file it
+    files while searching through these paths in order:
+
+    	./whey
+	/tmp/whey
+	/var/tmp/whey
+	~chongo/pub/whey
+	~/tmp/whey
+
+    IMPORTANT NOTE:
+
+    This function searches along a path by attempting
+    to open files under the given mode.  If the mode allows for
+    writing and a file can be created, then that file is returned.
+
+    This call open "./gleet" for writing if the current directory is
+    writable, even if "./gleet" did not previously exist:
+
+    	fpathopen("gleet", "r", ".:/tmp:/var/tmp:~chongo/pub:~/tmp");
+
+    This call will likely open (and create if needded) for appending,
+    the file "/tmp/log" assuming that the user is not allowed to
+    create files in the previous system directories:
+
+    	fpathopen("log", "a", "/:/etc:/bin:/usr/bin:/tmp");
+
+    The CALCPATH search path is taken from the $CALCPATH environment
+    variable or if no such variable exists, a compiled in default search
+    path is used.  See "help environment" and "help calcpath" for more
+    information on CALCPATH.
+
+    It should be noted that while CALCPATH is typically used to find
+    resource files (*.cal files), this function is not restricted those
+    files.  Any filename may be opened.
+
+    A file can be opened for either reading, writing, or appending.
+    The mode is controlled by the mode flag as follows:
+
+		 allow	  allow    file is   positioned	  file(*)
+       mode	reading	 writing  truncated      at	  mode
+       ----	-------  -------  ---------  ---------	  ----
+	r	   Y	    N	      N      beginning	  text
+	rb	   Y	    N	      N      beginning	  binary
+	r+	   Y	    N	      N      beginning	  text
+	r+b	   Y	    N	      N      beginning	  binary
+	rb+	   Y	    N	      N      beginning	  binary
+
+	w	   N	    Y	      Y      beginning	  text
+	wb	   N	    Y	      Y      beginning	  binary
+	w+	   Y	    Y	      Y      beginning	  text
+	w+b	   Y	    Y	      Y      beginning	  binary
+	wb+	   Y	    Y	      Y      beginning	  binary
+
+	a	   N	    Y	      Y         end	  text
+	ab	   N	    Y	      Y         end	  binary
+	a+	   Y	    Y	      Y         end	  text
+	a+b	   Y	    Y	      Y         end	  binary
+	ab+	   Y	    Y	      Y         end	  binary
+
+    (*) NOTE on 'b' / binary/text mode:
+
+    	The 'b' or fopen binary mode has no effect on POSIX / Linux
+	/ Un*x-like systems.  On those systems a text file is the
+	same as a binary file (as it should be for any modern-day
+	operating system).  Adding 'b' to an fopen has no effect
+	and is ignored.
+
+	Some non-POSIX systems sucn as MS Windoz treat text files
+	and binary files differently.  In text mode MS Windoz consider
+	"\r\n" and end-of-line character.  On an Apple MAC, the
+	text mode end-of-line character is "\r".
+
+    Names of files are subject to ~ expansion just like the C or
+    Korn shell.	 For example, the file name:
+
+	~/lib/gleet
+
+    refers to the file 'gleet' under the directory lib located
+    in your home directory.  The file name:
+
+	~chongo/was_here
+
+    refers to the a file 'was_here' under the home directory of
+    the user 'chongo'.
+
+    If the open is successful, a value of type 'file' will be returned.
+    You can use the 'isfile' function to test the return value to see
+    if the open succeeded.  You should assign the return value of fopen
+    to a variable for later use.  File values can be copied to more than
+    one variable, and using any of the variables with the same file value
+    will produce the same results.
+
+    Standard input, standard output and standard error are always opened
+    and cannot be closed.
+
+    The truth value of an opened file is TRUE.
+
+    If the open is unsuccessful, the numeric value of errno is returned.
+    You can the errno() builtin to determine what the errno number means.
+
+EXAMPLE
+    ; fd = fpathopen("motd", "r", "/etc:.")
+    ; print fd
+    "/etc/motd"
+    ; fd
+	    FILE 3 "/etc/motd" (reading, pos 0)
+
+    ; fd2 = fpathopen("lucas.cal", "r")
+    ; print fd2
+    "/usr/share/calc/lucas.cal"
+    ; fd2
+	    FILE 4 "/usr/share/calc/lucas.cal" (reading, pos 0)
+
+    ; fd3 = fpathopen("randmprime.cal", "r", calcpath())
+    ; print fd3
+    "/usr/share/calc/randmprime.cal"
+    ; fd3
+	    FILE 5 "/usr/share/calc/randmprime.cal" (reading, pos 0)
+
+    ; fd4 = fpathopen("output", "w", "~/tmp:/tmp:/var/tmp")
+    ; print fd4
+    "/home/chongo/tmp/output"
+    ; fd4
+	    FILE 6 "/home/chongo/tmp/output" (writing, pos 0)
+
+    ; !mkdir -p /tmp/log
+    ; !touch /tmp/log/file
+    ; logfile = fpathopen("log/file", "a", "/tmp:/var/tmp")
+    ; print logfile
+    "/tmp/log/file"
+    ; logfile
+	    FILE 7 "/home/chongo/tmp/output" (writing, pos 0)
+
+    ; badfile = fpathopen("no_such_file", "r")
+    ; if (!isfile(badfile)) print "error #" : badfile : ":", errno(badfile);
+    error #2: No such file or directory
+
+LIMITS
+    none
+
+LINK LIBRARY
+    none
+
+SEE ALSO
+    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt,
+    environment, calcpath
+
+## Copyright (C) 2006  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.2 $
+## @(#) $Id: fpathopen,v 29.2 2006/05/07 07:24:34 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/fpathopen,v $
+##
+## Under source code control:	2006/05/07 23:56:04
+## File existed as early as:	2006
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

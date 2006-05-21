@@ -12,7 +12,7 @@ Normally a resource file will simply define some functions.  By default,
 most resource files will print out a short message when they are read.
 For example:
 
-    > read lucas
+    ; read lucas
     lucas(h,n) defined
     gen_u0(h,n,v1) defined
     gen_v1(h,n) defined
@@ -22,9 +22,9 @@ will cause calc to load and execute the 'lucas.cal' resource file.
 Executing the resource file will cause several functions to be defined.
 Executing the lucas function:
 
-    > lucas(149,60)
+    ; lucas(149,60)
 	    1
-    > lucas(146,61)
+    ; lucas(146,61)
 	    0
 
 shows that 149*2^60-1 is prime whereas 146*2^61-1 is not.
@@ -178,6 +178,38 @@ deg.cal
     dms_print(a)
 
     Calculate in degrees, minutes, and seconds.
+
+
+dotest.cal
+
+    dotest(dotest_file [,dotest_code [,dotest_maxcond]])
+
+    dotest_file
+
+	Search along CALCPATH for dotest_file, which contains lines that
+	should evaluate to 1.  Comment lines and empty lines are ignored.
+	Comment lines should use ## instead of the multi like /* ... */
+	because lines are evaluated one line at a time.
+
+    dotest_code
+
+	Assign the code number that is to be printed at the start of
+	each non-error line and after **** in each error line.
+	The default code number is 999.
+
+    dotest_maxcond
+
+	The maximum number of error conditions that may be detected.
+	An error condition is not a sign of a problem, in some cases
+	a line deliberately forces an error condition.	A value of -1,
+	the default, implies a maximum of 2147483647.
+
+    Global variables and functions must be declared ahead of time because
+    the dotest scope of evaluation is a line at a time.  For example:
+
+	read dotest.cal
+	read set8700.cal
+	dotest("set8700.line");
 
 
 ellip.cal
@@ -505,6 +537,58 @@ regress.cal
     Errors are reported with '****' messages, or worse. :-)
 
 
+screen.cal
+
+    up
+    CUU	/* same as up */
+    down = CUD
+    CUD	/* same as down */
+    forward
+    CUF	/* same as forward */
+    back = CUB
+    CUB	/* same as back */
+    save
+    SCP	/* same as save */
+    restore
+    RCP	/* same as restore */
+    cls
+    home
+    eraseline
+    off
+    bold
+    faint
+    italic
+    blink
+    rapidblink
+    reverse
+    concealed
+    /* Lowercase indicates foreground, uppercase background */
+    black
+    red
+    green
+    yellow
+    blue
+    magenta
+    cyan
+    white
+    Black
+    Red
+    Green
+    Yellow
+    Blue
+    Magenta
+    Cyan
+    White
+
+    Define ANSI control sequences providing (i.e., cursor movement, changing
+    foreground or background color, etc.) for VT100 terminals and terminal
+    window emulators (i.e., xterm, Apple OS/X Terminal, etc.) that support them.
+
+    For example:
+
+	read screen
+	print green:"This is green. ":red:"This is red.":black
+
 seedrandom.cal
 
     seedrandom(seed1, seed2, bitsize [,trials])
@@ -521,6 +605,24 @@ seedrandom.cal
     Seed the cryptographically strong Blum generator.  This functions allows
     one to use the raw srandom() without the burden of finding appropriate
     Blum primes for the modulus.
+
+
+set8700.cal
+
+    set8700_getA1() defined
+    set8700_getA2() defined
+    set8700_getvar() defined
+    set8700_f(set8700_x) defined
+    set8700_g(set8700_x) defined
+
+    Declare globals and define functions needed by dotest() (see
+    dotest.cal) to evaluate set8700.line a line at a time.
+
+
+set8700.line
+
+    A line-by-line evaluation file for dotest() (see dotest.cal).
+    The set8700.cal file (and dotest.cal) should be read first.
 
 
 solve.cal
@@ -833,8 +935,8 @@ xx_print.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.10 $
-## @(#) $Id: README,v 29.10 2005/12/12 06:39:18 chongo Exp $
+## @(#) $Revision: 29.12 $
+## @(#) $Id: README,v 29.12 2006/05/21 04:41:09 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/README,v $
 ##
 ## Under source code control:	1990/02/15 01:50:32

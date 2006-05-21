@@ -18,18 +18,18 @@ DESCRIPTION
     positioning operations (fseek, rewind, fsetpos) and by freopen.
 
 EXAMPLE
-    > fd1 = fopen("/tmp/newfile", "w")
-    > fputs(fd1, "Chongo was here\n")
-    > fflush(fd1)
-    > fd2 = fopen("/tmp/newfile", "r")
-    > feof(fd2)
+    ; fd1 = fopen("/tmp/newfile", "w")
+    ; fputs(fd1, "Chongo was here\n")
+    ; fflush(fd1)
+    ; fd2 = fopen("/tmp/newfile", "r")
+    ; feof(fd2)
 	    0
-    > fgetline(fd2)
+    ; fgetline(fd2)
 	    "Chongo was here"
-    > feof(fd2)
+    ; feof(fd2)
 	    0
-    > fgetline(fd2)
-    > feof(fd2)
+    ; fgetline(fd2)
+    ; feof(fd2)
 	    1
 
 LIMITS
@@ -59,8 +59,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: feof,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: feof,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/feof,v $
 ##
 ## Under source code control:	1994/10/27 03:04:17

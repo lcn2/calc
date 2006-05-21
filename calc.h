@@ -1,7 +1,7 @@
 /*
  * calc - definitions for calculator program
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2006  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.11 $
- * @(#) $Id: calc.h,v 29.11 2003/08/26 04:36:10 chongo Exp $
+ * @(#) $Revision: 29.18 $
+ * @(#) $Id: calc.h,v 29.18 2006/05/21 07:28:54 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -98,12 +98,13 @@
 #define FILEID_STDIN	((FILEID) 0)
 #define FILEID_STDOUT	((FILEID) 1)
 #define FILEID_STDERR	((FILEID) 2)
-#define FILEID_NONE	((FILEID) -1)
+#define FILEID_NONE	((FILEID) -1)	/* must be < 0 */
 
 /*
  * File I/O routines.
  */
 extern DLL FILEID openid(char *name, char *mode);
+extern DLL FILEID openpathid(char *name, char *mode, char *pathlist);
 extern DLL FILEID indexid(long index);
 extern DLL BOOL validid(FILEID id);
 extern DLL BOOL errorid(FILEID id);
@@ -148,7 +149,7 @@ extern DLL void trimconstants(void);
 /*
  * Input routines.
  */
-extern DLL int openstring(char *str, long num);
+extern DLL int openstring(char *str, size_t num);
 extern DLL int openterminal(void);
 extern DLL int opensearchfile(char *name, char *pathlist, char *exten, int reopen_ok);
 extern DLL char *nextline(void);
@@ -205,7 +206,7 @@ extern DLL int d_flag;		/* TRUE => disable heading, resource_debug */
 extern DLL int c_flag;		/* TRUE => continue after error if permitted */
 extern DLL int i_flag;		/* TRUE => try to go interactive after error */
 extern DLL int s_flag;		/* TRUE => keep args as strings for argv() */
-extern DLL int stoponerror;	/* >0 => stop, <0 => continue, ==0 => use -c */
+extern DLL long stoponerror;	/* >0 => stop, <0 => continue, ==0 => use -c */
 extern DLL BOOL abort_now;	/* TRUE => try to go interactive */
 
 extern DLL int argc_value;	/* count of argv[] strings for argv() builtin */
@@ -231,7 +232,7 @@ extern DLL char *shell;		/* $SHELL or default */
 extern DLL char *program;	/* our name (argv[0]) */
 
 extern DLL int no_env;		/* TRUE (-e) => ignore env vars on startup */
-extern DLL int errmax;	/* if >= 0, error when errcount exceeds errmax */
+extern DLL long errmax;	/* if >= 0, error when errcount exceeds errmax */
 extern DLL int use_old_std;	/* TRUE (-O) => use classic configuration */
 
 extern DLL int allow_read;	/* FALSE => dont open any files for reading */

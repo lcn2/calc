@@ -19,15 +19,15 @@ DESCRIPTION
     has been freed.
 
 EXAMPLE
-    > A = blk()
-    > isblk(A)
+    ; A = blk()
+    ; isblk(A)
 	1
 
-    > B = blk("beta")
-    > isblk(B)
+    ; B = blk("beta")
+    ; isblk(B)
 	2
 
-    > isblk(3)
+    ; isblk(3)
 	0
 
 LIMITS
@@ -59,8 +59,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: isblk,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: isblk,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/isblk,v $
 ##
 ## Under source code control:	1997/04/06 03:03:23

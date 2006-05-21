@@ -22,16 +22,16 @@ DESCRIPTION
     int(x).
 
 EXAMPLE
-    > print btrunc(pi()), btrunc(pi(), 10)
+    ; print btrunc(pi()), btrunc(pi(), 10)
     3 3.140625
 
-    > print btrunc(3.3), btrunc(3.7), btrunc(3.3, 2), btrunc(3.7, 2)
+    ; print btrunc(3.3), btrunc(3.7), btrunc(3.3, 2), btrunc(3.7, 2)
     3 3 3.25 3.5
 
-    > print btrunc(-3.3), btrunc(-3.7), btrunc(-3.3, 2), btrunc(-3.7, 2)
+    ; print btrunc(-3.3), btrunc(-3.7), btrunc(-3.3, 2), btrunc(-3.7, 2)
     -3 -3 -3.25 -3.5
 
-    > print btrunc(55.123, -4), btrunc(-55.123, -4)
+    ; print btrunc(55.123, -4), btrunc(-55.123, -4)
     48 -48
 
 LIMITS
@@ -59,8 +59,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: btrunc,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: btrunc,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/btrunc,v $
 ##
 ## Under source code control:	1994/09/30 00:44:27

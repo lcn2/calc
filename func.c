@@ -1,7 +1,7 @@
 /*
  * func - built-in functions implemented here
  *
- * Copyright (C) 1999-2004  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2006  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.16 $
- * @(#) $Id: func.c,v 29.16 2005/10/18 10:43:49 chongo Exp $
+ * @(#) $Revision: 29.25 $
+ * @(#) $Id: func.c,v 29.25 2006/05/21 07:28:54 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -128,8 +128,6 @@ extern int idungetc(FILEID id, int ch);
 extern LIST* associndices(ASSOC *ap, long index);
 extern LIST* matindices(MATRIX *mp, long index);
 
-extern int stoponerror;
-
 
 /*
  * malloced environment storage
@@ -197,25 +195,25 @@ f_eval(VALUE *vp)
 	FUNC	*newfunc;
 	VALUE	result;
 	char	*str;
-	long	num;
-	int	temp;
+	size_t	num;
+	long	temp_stoponerror;	/* temp value of stoponerror */
 
 	if (vp->v_type != V_STR)
 		return error_value(E_EVAL2);
 	str = vp->v_str->s_str;
 	num = vp->v_str->s_len;
 	switch (openstring(str, num)) {
-		case -2:
-			return error_value(E_EVAL3);
-		case -1:
-			return error_value(E_EVAL4);
+	case -2:
+		return error_value(E_EVAL3);
+	case -1:
+		return error_value(E_EVAL4);
 	}
 	oldfunc = curfunc;
 	enterfilescope();
-	temp = stoponerror;
+	temp_stoponerror = stoponerror;
 	stoponerror = -1;
 	if (evaluate(TRUE)) {
-		stoponerror = temp;
+		stoponerror = temp_stoponerror;
 		closeinput();
 		exitfilescope();
 		freevalue(stack--);
@@ -229,7 +227,7 @@ f_eval(VALUE *vp)
 			free(newfunc);
 		return result;
 	}
-	stoponerror = temp;
+	stoponerror = temp_stoponerror;
 	closeinput();
 	exitfilescope();
 	newfunc = curfunc;
@@ -250,7 +248,7 @@ f_prompt(VALUE *vp)
 	VALUE result;
 	char *cp;
 	char *newcp;
-	unsigned int len;
+	size_t len;
 
 	/* initialize VALUE */
 	result.v_type = V_STR;
@@ -275,7 +273,7 @@ f_prompt(VALUE *vp)
 		math_error("Cannot allocate string");
 		/*NOTREACHED*/
 	}
-	strcpy(newcp, cp);
+	strncpy(newcp, cp, len+1);
 	result.v_str = makestring(newcp);
 	return result;
 }
@@ -331,29 +329,29 @@ f_str(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch (vp->v_type) {
-		case V_STR:
-			result.v_str = stringcopy(vp->v_str);
-			break;
-		case V_NULL:
-			result.v_str = slink(&_nullstring_);
-			break;
-		case V_OCTET:
-			result.v_str = charstring(*vp->v_octet);
-			break;
-		case V_NUM:
-			math_divertio();
-			qprintnum(vp->v_num, MODE_DEFAULT);
-			cp = math_getdivertedio();
-			result.v_str = makestring(cp);
-			break;
-		case V_COM:
-			math_divertio();
-			comprint(vp->v_com);
-			cp = math_getdivertedio();
-			result.v_str = makestring(cp);
-			break;
-		default:
-			return error_value(E_STR);
+	case V_STR:
+		result.v_str = makenewstring(vp->v_str->s_str);
+		break;
+	case V_NULL:
+		result.v_str = slink(&_nullstring_);
+		break;
+	case V_OCTET:
+		result.v_str = charstring(*vp->v_octet);
+		break;
+	case V_NUM:
+		math_divertio();
+		qprintnum(vp->v_num, MODE_DEFAULT);
+		cp = math_getdivertedio();
+		result.v_str = makestring(cp);
+		break;
+	case V_COM:
+		math_divertio();
+		comprint(vp->v_com);
+		cp = math_getdivertedio();
+		result.v_str = makestring(cp);
+		break;
+	default:
+		return error_value(E_STR);
 	}
 	return result;
 }
@@ -371,23 +369,23 @@ f_name(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch (vp->v_type) {
-		case V_NBLOCK:
-			result.v_type = V_STR;
-			result.v_str = makenewstring(vp->v_nblock->name);
-			return result;
-		case V_FILE:
-			name = findfname(vp->v_file);
-			if (name == NULL) {
-				result.v_type = V_NULL;
-				return result;
-			}
-			math_divertio();
-			math_str(name);
-			cp = math_getdivertedio();
-			break;
-		default:
+	case V_NBLOCK:
+		result.v_type = V_STR;
+		result.v_str = makenewstring(vp->v_nblock->name);
+		return result;
+	case V_FILE:
+		name = findfname(vp->v_file);
+		if (name == NULL) {
 			result.v_type = V_NULL;
 			return result;
+		}
+		math_divertio();
+		math_str(name);
+		cp = math_getdivertedio();
+		break;
+	default:
+		result.v_type = V_NULL;
+		return result;
 	}
 	result.v_str = makestring(cp);
 	return result;
@@ -2025,6 +2023,51 @@ f_ln(int count, VALUE **vals)
 			break;
 		default:
 			return error_value(E_LN2);
+	}
+	result.v_type = V_COM;
+	result.v_com = c;
+	if (cisreal(c)) {
+		result.v_num = qlink(c->real);
+		result.v_type = V_NUM;
+		comfree(c);
+	}
+	return result;
+}
+
+
+static VALUE
+f_log(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX ctmp, *c;
+	NUMBER *err;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM)
+			return error_value(E_LOG1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			if (!qisneg(vals[0]->v_num) && !qiszero(vals[0]->v_num)) {
+				result.v_num = qlog(vals[0]->v_num, err);
+				result.v_type = V_NUM;
+				return result;
+			}
+			ctmp.real = vals[0]->v_num;
+			ctmp.imag = qlink(&_qzero_);
+			ctmp.links = 1;
+			c = c_log(&ctmp, err);
+			break;
+		case V_COM:
+			c = c_log(vals[0]->v_com, err);
+			break;
+		default:
+			return error_value(E_LOG2);
 	}
 	result.v_type = V_COM;
 	result.v_com = c;
@@ -4001,8 +4044,8 @@ f_strlen(VALUE *vp)
 static VALUE
 f_strcmp(VALUE *v1, VALUE *v2)
 {
-	unsigned char *c1, *c2;
 	VALUE result;
+	FLAG flag;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
@@ -4010,17 +4053,10 @@ f_strcmp(VALUE *v1, VALUE *v2)
 	if (v1->v_type != V_STR || v2->v_type != V_STR)
 		return error_value(E_STRCMP);
 
-	c1 = (unsigned char *)v1->v_str->s_str;
-	c2 = (unsigned char *)v2->v_str->s_str;
+	flag = stringrel(v1->v_str, v2->v_str);
 
 	result.v_type = V_NUM;
-	for (; *c1 == *c2; ++c1, ++c2) {
-		if (*c1 == '\0') {
-			result.v_num = qlink(&_qzero_);
-			return result;
-		}
-	}
-	result.v_num = (*c1 > *c2) ? qlink(&_qone_) : qlink(&_qnegone_);
+	result.v_num = itoq((long) flag);
 	return result;
 }
 
@@ -4028,8 +4064,8 @@ f_strcmp(VALUE *v1, VALUE *v2)
 static VALUE
 f_strncmp(VALUE *v1, VALUE *v2, VALUE *v3)
 {
-	unsigned char *c1, *c2;
-	long i;
+	long n1, n2, n;
+	FLAG flag;
 	VALUE result;
 
 	/* initialize VALUE */
@@ -4039,18 +4075,21 @@ f_strncmp(VALUE *v1, VALUE *v2, VALUE *v3)
 		v3->v_type != V_NUM || qisneg(v3->v_num) ||
 		qisfrac(v3->v_num) || zge31b(v3->v_num->num))
 			return error_value(E_STRNCMP);
-	i = qtoi(v3->v_num);
-	for (c1 = (unsigned char *)v1->v_str->s_str,
-	     c2 = (unsigned char *)v2->v_str->s_str;
-	     i > 0 && *c1 == *c2; ++c1, ++c2, --i) {
-		if (*c1 == '\0')
-			break;
-	}
+	n1 = v1->v_str->s_len;
+	n2 = v2->v_str->s_len;
+	n = qtoi(v3->v_num);
+	if (n < n1)
+		v1->v_str->s_len = n;
+	if (n < n2)
+		v2->v_str->s_len = n;
+
+	flag = stringrel(v1->v_str, v2->v_str);
+
+	v1->v_str->s_len = n1;
+	v2->v_str->s_len = n2;
+
 	result.v_type = V_NUM;
-	if (i == 0 || *c1 == *c2)
-		result.v_num = qlink(&_qzero_);
-	else
-		result.v_num = (*c1>*c2) ? qlink(&_qone_) : qlink(&_qnegone_);
+	result.v_num = itoq((long) flag);
 	return result;
 }
 
@@ -4141,7 +4180,7 @@ static VALUE
 f_substr(VALUE *v1, VALUE *v2, VALUE *v3)
 {
 	NUMBER *q1, *q2;
-	long i1, i2, len;
+	size_t start, len;
 	char *cp;
 	char *ccp;
 	VALUE result;
@@ -4157,32 +4196,31 @@ f_substr(VALUE *v1, VALUE *v2, VALUE *v3)
 	q2 = v3->v_num;
 	if (qisfrac(q1) || qisneg(q1) || qisfrac(q2) || qisneg(q2))
 		return error_value(E_SUBSTR2);
-	i1 = qtoi(q1);
-	i2 = qtoi(q2);
-	cp = v1->v_str->s_str;
-	len = (long)strlen(cp);
+	start = qtoi(q1);
+	len = qtoi(q2);
+	if (start > 0)
+		start--;
 	result.v_type = V_STR;
-	if (i1 > 0)
-		i1--;
-	if (i1 >= len) {	/* indexing off of end */
+	if (start >= v1->v_str->s_len || len == 0) {
 		result.v_str = slink(&_nullstring_);
 		return result;
 	}
-	cp += i1;
-	len -= i1;
-	if (len > i2)
-		len = i2;
+	if (len > v1->v_str->s_len - start)
+		len = v1->v_str->s_len - start;
+	cp = v1->v_str->s_str + start;
 	ccp = (char *) malloc(len + 1);
 	if (ccp == NULL) {
 		math_error("No memory for substr");
 		/*NOTREACHED*/
 	}
-	strncpy(ccp, cp, len);
-	ccp[len] = '\0';
-	result.v_str = makestring(ccp);
+	result.v_str = stralloc();
+	result.v_str->s_len = len;
+	result.v_str->s_str = ccp;
+	while (len-- > 0)
+		*ccp++ = *cp++;
+	*ccp = '\0';
 	return result;
 }
-
 
 static VALUE
 f_char(VALUE *vp)
@@ -4245,8 +4283,9 @@ f_ord(VALUE *vp)
 static VALUE
 f_protect(int count, VALUE **vals)
 {
-	int i;
-	VALUE *v1, *v2;
+	int i, depth;
+	VALUE *v1, *v2, *v3;
+
 	VALUE result;
 	BOOL have_nblock;
 
@@ -4272,22 +4311,20 @@ f_protect(int count, VALUE **vals)
 	v2 = vals[1];
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
-	if (v2->v_type != V_NUM || qisfrac(v2->v_num))
+	if (v2->v_type != V_NUM||qisfrac(v2->v_num)||zge16b(v2->v_num->num))
 		return error_value(E_PROTECT2);
-	if (qisneg(v2->v_num) || zge31b(v2->v_num->num))
-		return error_value(E_PROTECT3);
 	i = qtoi(v2->v_num);
-	if (i > MAXPROTECT)
-		return error_value(E_PROTECT3);
-	if (have_nblock) {
-		v1->v_nblock->subtype |= i;
-		return result;
+	depth = 0;
+	if (count > 2) {
+		v3 = vals[2];
+		if (v3->v_type == V_ADDR)
+			v3 = v3->v_addr;
+		if (v3->v_type != V_NUM || qisfrac(v3->v_num) ||
+				qisneg(v3->v_num) || zge31b(v3->v_num->num))
+			return error_value(E_PROTECT3);
+		depth = qtoi(v3->v_num);
 	}
-	if (i & V_PROTECTALL) {
-		protectall(v1, i);
-		return result;
-	}
-	v1->v_subtype |= i;
+	protecttodepth(v1, i, depth);
 	return result;
 }
 
@@ -4786,10 +4823,9 @@ f_listinsert(int count, VALUE **vals)
 	v1 = *vals++;
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
 		return error_value(E_INSERT1);
-	if (v1->v_addr->v_subtype & V_NOREALLOC) {
-		math_error("No-relocate list for insert");
-		/*NOTREACHED*/
-	}
+	if (v1->v_addr->v_subtype & V_NOREALLOC)
+		return error_value(E_LIST1);
+
 	v2 = *vals++;
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
@@ -4820,10 +4856,9 @@ f_listpush(int count, VALUE **vals)
 	v1 = *vals++;
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
 		return error_value(E_PUSH);
-	if (v1->v_addr->v_subtype & V_NOREALLOC) {
-		math_error("No-relocate list for push");
-		/*NOTREACHED*/
-	}
+	if (v1->v_addr->v_subtype & V_NOREALLOC)
+		return error_value(E_LIST3);
+
 	while (--count > 0) {
 		v2 = *vals++;
 		if (v2->v_type == V_ADDR)
@@ -4847,10 +4882,9 @@ f_listappend(int count, VALUE **vals)
 	v1 = *vals++;
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
 		return error_value(E_APPEND);
-	if (v1->v_addr->v_subtype & V_NOREALLOC) {
-		math_error("No-relocate list for append");
-		/*NOTREACHED*/
-	}
+	if (v1->v_addr->v_subtype & V_NOREALLOC)
+		return error_value(E_LIST4);
+
 	while (--count > 0) {
 		v2 = *vals++;
 		if (v2->v_type == V_ADDR)
@@ -4872,10 +4906,9 @@ f_listdelete(VALUE *v1, VALUE *v2)
 
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
 		return error_value(E_DELETE1);
-	if (v1->v_addr->v_subtype & V_NOREALLOC) {
-		math_error("No-relocate list for delete");
-		/*NOTREACHED*/
-	}
+	if (v1->v_addr->v_subtype & V_NOREALLOC)
+		return error_value(E_LIST2);
+
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
 	if ((v2->v_type != V_NUM) || qisfrac(v2->v_num))
@@ -4890,15 +4923,12 @@ f_listpop(VALUE *vp)
 {
 	VALUE result;
 
-	/* initialize VALUE */
-	result.v_subtype = V_NOSUBTYPE;
-
 	if ((vp->v_type != V_ADDR) || (vp->v_addr->v_type != V_LIST))
 		return error_value(E_POP);
-	if (vp->v_addr->v_subtype & V_NOREALLOC) {
-		math_error("No-relocate list for pop");
-		/*NOTREACHED*/
-	}
+
+	if (vp->v_addr->v_subtype & V_NOREALLOC)
+		return error_value(E_LIST5);
+
 	removelistfirst(vp->v_addr->v_list, &result);
 	return result;
 }
@@ -4909,15 +4939,12 @@ f_listremove(VALUE *vp)
 {
 	VALUE result;
 
-	/* initialize VALUE */
-	result.v_subtype = V_NOSUBTYPE;
-
 	if ((vp->v_type != V_ADDR) || (vp->v_addr->v_type != V_LIST))
 		return error_value(E_REMOVE);
-	if (vp->v_addr->v_subtype & V_NOREALLOC) {
-		math_error("No-relocate list for remove");
-		/*NOTREACHED*/
-	}
+
+	if (vp->v_addr->v_subtype & V_NOREALLOC)
+		return error_value(E_LIST6);
+
 	removelistlast(vp->v_addr->v_list, &result);
 	return result;
 }
@@ -4957,23 +4984,16 @@ f_time(void)
 static VALUE
 f_ctime(void)
 {
-	time_t systime;
-	char *str;
 	VALUE res;
+	time_t now;	/* the current time */
 
 	/* initialize VALUE */
 	res.v_subtype = V_NOSUBTYPE;
-
-	str = (char *) malloc(26);
-	if (str == NULL) {
-		math_error("No memory for ctime()");
-		/*NOTREACHED*/
-	}
-	systime = time(NULL);
-	strcpy(str, ctime(&systime));
-	str[24] = '\0';
-	res.v_str = makestring(str);
 	res.v_type = V_STR;
+
+	/* get the time */
+	now = time(NULL);
+	res.v_str = makenewstring(ctime(&now));
 	return res;
 }
 
@@ -5009,6 +5029,61 @@ f_fopen(VALUE *v1, VALUE *v2)
 	/* try to open */
 	errno = 0;
 	id = openid(v1->v_str->s_str, v2->v_str->s_str);
+	if (id == FILEID_NONE)
+		return error_value(errno);
+	if (id < 0)
+		return error_value(-id);
+	result.v_type = V_FILE;
+	result.v_file = id;
+	return result;
+}
+
+
+static VALUE
+f_fpathopen(int count, VALUE **vals)
+{
+	VALUE result;
+	FILEID id;
+	char *mode;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/* check for valid strongs */
+	if (vals[0]->v_type != V_STR || vals[1]->v_type != V_STR) {
+		return error_value(E_FPATHOPEN1);
+	}
+	if (count == 3 && vals[2]->v_type != V_STR) {
+		return error_value(E_FPATHOPEN1);
+	}
+
+	/* check for a valid mode [rwa][b+\0][b+\0] */
+	mode = vals[1]->v_str->s_str;
+	if ((*mode != 'r') && (*mode != 'w') && (*mode != 'a'))
+		return error_value(E_FPATHOPEN2);
+	if (mode[1] != '\0') {
+		if (mode[1] != '+' && mode[1] != 'b')
+			return error_value(E_FPATHOPEN2);
+		if (mode[2] != '\0') {
+			if ((mode[2] != '+' && mode[2] != 'b') ||
+			    mode[1] == mode[2])
+				return error_value(E_FPATHOPEN2);
+			if (mode[3] != '\0')
+				return error_value(E_FPATHOPEN2);
+		}
+	}
+
+	/* try to open along a path */
+	errno = 0;
+	if (count == 2) {
+		id = openpathid(vals[0]->v_str->s_str,
+				vals[1]->v_str->s_str,
+				calcpath);
+	} else {
+		id = openpathid(vals[0]->v_str->s_str,
+				vals[1]->v_str->s_str,
+				vals[2]->v_str->s_str);
+	}
 	if (id == FILEID_NONE)
 		return error_value(errno);
 	if (id < 0)
@@ -5138,7 +5213,7 @@ f_errcount(int count, VALUE **vals)
 static VALUE
 f_errmax(int count, VALUE **vals)
 {
-	int oldmax;
+	long oldmax;
 	VALUE *vp;
 	VALUE result;
 
@@ -5150,11 +5225,12 @@ f_errmax(int count, VALUE **vals)
 		vp = vals[0];
 
 		if (vp->v_type != V_NUM || qisfrac(vp->v_num) ||
-				zge31b(vp->v_num->num))
+		    zge31b(vp->v_num->num) || zltnegone(vp->v_num->num)) {
 			fprintf(stderr,
 				 "Out-of-range arg for errmax ignored\n");
-		else
-			errmax = (int) ztoi(vp->v_num->num);
+		} else {
+			errmax = ztoi(vp->v_num->num);
+		}
 	}
 
 	result.v_type = V_NUM;
@@ -5166,7 +5242,7 @@ f_errmax(int count, VALUE **vals)
 static VALUE
 f_stoponerror(int count, VALUE **vals)
 {
-	int oldval;
+	long oldval;
 	VALUE *vp;
 	VALUE result;
 
@@ -5178,11 +5254,12 @@ f_stoponerror(int count, VALUE **vals)
 		vp = vals[0];
 
 		if (vp->v_type != V_NUM || qisfrac(vp->v_num) ||
-				zge31b(vp->v_num->num))
+		    zge31b(vp->v_num->num) || zltnegone(vp->v_num->num)) {
 			fprintf(stderr,
 				 "Out-of-range arg for stoponerror ignored\n");
-		else
-			stoponerror = (int) ztoi(vp->v_num->num);
+		} else {
+			stoponerror = ztoi(vp->v_num->num);
+		}
 	}
 
 	result.v_type = V_NUM;
@@ -6196,10 +6273,8 @@ f_reverse(VALUE *val)
 {
 	VALUE res;
 
-	/* initialize VALUE */
-	res.v_subtype = V_NOSUBTYPE;
-
 	res.v_type = val->v_type;
+	res.v_subtype = val->v_subtype;
 	switch(val->v_type) {
 		case V_MAT:
 			res.v_mat = matcopy(val->v_mat);
@@ -6227,10 +6302,8 @@ f_sort(VALUE *val)
 {
 	VALUE res;
 
-	/* initialize VALUE */
-	res.v_subtype = V_NOSUBTYPE;
-
 	res.v_type = val->v_type;
+	res.v_subtype = val->v_subtype;
 	switch (val->v_type) {
 		case V_MAT:
 			res.v_mat = matcopy(val->v_mat);
@@ -6413,31 +6486,27 @@ f_modify(VALUE *v1, VALUE *v2)
 	long s;
 	VALUE res;
 	VALUE *vp;
+	unsigned short subtype;
 
-	/* initialize VALUE */
-	res.v_subtype = V_NOSUBTYPE;
-
-	if (v1->v_type != V_ADDR) {
-		math_error("Non-variable first argument for modify");
-		/*NOTREACHED*/
-	}
+	if (v1->v_type != V_ADDR)
+		return error_value(E_MODIFY1);
 	v1 = v1->v_addr;
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
-	if (v2->v_type != V_STR) {
-		math_error("Non-string second argument for modify");
-		/*NOTREACHED*/
-	}
+	if (v2->v_type != V_STR)
+		return error_value(E_MODIFY2);
+	if (v1->v_subtype & V_NONEWVALUE)
+		return error_value(E_MODIFY3);
 	fp = findfunc(adduserfunc(v2->v_str->s_str));
-	if (!fp) {
-		math_error("Undefined function for modify");
-		/*NOTREACHED*/
-	}
+	if (!fp)
+		return error_value(E_MODIFY4);
 	switch (v1->v_type) {
 		case V_LIST:
 			for (ep = v1->v_list->l_first; ep; ep = ep->e_next) {
+				subtype = ep->e_value.v_subtype;
 				*++stack = ep->e_value;
 				calculate(fp, 1);
+				stack->v_subtype |= subtype;
 				ep->e_value = *stack--;
 			}
 			break;
@@ -6445,16 +6514,29 @@ f_modify(VALUE *v1, VALUE *v2)
 			vp = v1->v_mat->m_table;
 			s = v1->v_mat->m_size;
 			while (s-- > 0) {
+				subtype = vp->v_subtype;
 				*++stack = *vp;
 				calculate(fp, 1);
+				stack->v_subtype |= subtype;
+				*vp++ = *stack--;
+			}
+			break;
+		case V_OBJ:
+			vp = v1->v_obj->o_table;
+			s = v1->v_obj->o_actions->oa_count;
+			while (s-- > 0) {
+				subtype = vp->v_subtype;
+				*++stack = *vp;
+				calculate(fp, 1);
+				stack->v_subtype |= subtype;
 				*vp++ = *stack--;
 			}
 			break;
 		default:
-		    math_error("Non list or matrix first argument for modify");
-		    /*NOTREACHED*/
+			return error_value(E_MODIFY5);
 	}
 	res.v_type = V_NULL;
+	res.v_subtype = V_NOSUBTYPE;
 	return res;
 }
 
@@ -6657,13 +6739,15 @@ f_cmdbuf(void)
 {
 	VALUE result;
 	char *newcp;
+	size_t cmdbuf_len;	/* length of cmdbuf string */
 
 	/* initialize VALUE */
 	result.v_type = V_STR;
 	result.v_subtype = V_NOSUBTYPE;
 
-	newcp = (char *)malloc(strlen(cmdbuf) + 1);
-	strcpy(newcp, cmdbuf);
+	cmdbuf_len = strlen(cmdbuf);
+	newcp = (char *)malloc(cmdbuf_len+1);
+	strncpy(newcp, cmdbuf, cmdbuf_len+1);
 	result.v_str = makestring(newcp);
 	return result;
 }
@@ -6738,7 +6822,7 @@ f_inputlevel (void)
 
 
 static VALUE
-f_calclevel (void)
+f_calclevel(void)
 {
 	VALUE result;
 
@@ -6752,13 +6836,28 @@ f_calclevel (void)
 
 
 static VALUE
+f_calcpath(void)
+{
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_type = V_STR;
+	result.v_subtype = V_NOSUBTYPE;
+
+	result.v_str = makenewstring(calcpath);
+	return result;
+}
+
+
+static VALUE
 f_access(int count, VALUE **vals)
 {
 	NUMBER *q;
 	int m;
 	char *s, *fname;
 	VALUE result;
-	long i;
+	size_t len;
+	int i;
 
 	/* initialize VALUE */
 	result.v_type = V_NULL;
@@ -6779,8 +6878,8 @@ f_access(int count, VALUE **vals)
 				break;
 			case V_STR:
 				s = vals[1]->v_str->s_str;
-				i = (long)strlen(s);
-				while (i-- > 0) {
+				len = (long)strlen(s);
+				while (len-- > 0) {
 					switch (*s++) {
 					case 'r': m |= 4; break;
 					case 'w': m |= 2; break;
@@ -6855,7 +6954,8 @@ f_putenv(int count, VALUE **vals)
 			math_error("Cannot allocate string in putenv");
 			/*NOTREACHED*/
 		}
-		strcpy(putenv_str, vals[0]->v_str->s_str);
+		strncpy(putenv_str, vals[0]->v_str->s_str,
+			vals[0]->v_str->s_len + 1);
 	}
 
 	/* return putenv result */
@@ -6912,7 +7012,7 @@ f_system(VALUE *vp)
 	}
 #if defined(_WIN32)
 	/* if the execute length is 0 then just return 0 */
-	if (strlen(vp->v_str->s_str) == 0) {
+	if (vp->v_str->s_len == 0) {
 		result.v_num = itoq((long)0);
 	} else {
 		result.v_num = itoq((long)system(vp->v_str->s_str));
@@ -7820,14 +7920,14 @@ f_version(void)
  *
  *	  For nice output, when the description of function (b_desc)
  *	  gets too long (extends into col 79) you should chop the
- *	  line and add "\n\t\t	  ", thats newline, 2 tabs a 4 spaces.
+ *	  line and add "\n\t\t\t", that's newline and 3 tabs.
  *	  For example the description:
  *
  *		... very long description that goes beyond col 79
  *
  *	  should be written as:
  *
- *		"... very long description that\n\t\t	 goes beyond col 79"},
+ *		"... very long description that\n\t\t\tgoes beyond col 79"},
  *
  * fields:
  *	b_name		name of built-in function
@@ -7904,16 +8004,18 @@ static CONST struct builtin builtins[] = {
 	 "round value a to b number of binary places"},
 	{"btrunc", 1, 2, 0, OP_NOP, f_btrunc, 0,
 	 "truncate a to b number of binary places"},
-	{"calclevel", 0, 0, 0, OP_NOP, 0, f_calclevel,
-	 "current calculation level"},
 	{"calc_tty", 0, 0, 0, OP_NOP, 0, f_calc_tty,
 	 "set tty for interactivity"},
+	{"calclevel", 0, 0, 0, OP_NOP, 0, f_calclevel,
+	 "current calculation level"},
+	{"calcpath", 0, 0, 0, OP_NOP, 0, f_calcpath,
+	 "current CALCPATH search path value"},
 	{"catalan", 1, 1, 0, OP_NOP, 0, f_catalan,
 	 "catalan number for index a"},
 	{"ceil", 1, 1, 0, OP_NOP, 0, f_ceil,
 	 "smallest integer greater than or equal to number"},
 	{"cfappr", 1, 3, 0, OP_NOP, f_cfappr, 0,
-	 "approximate a within accuracy b using\n\t\t	 continued fractions"},
+	 "approximate a within accuracy b using\n\t\t\tcontinued fractions"},
 	{"cfsim", 1, 2, 0, OP_NOP, f_cfsim, 0,
 	 "simplify number using continued fractions"},
 	{"char", 1, 1, 0, OP_NOP, 0, f_char,
@@ -8009,13 +8111,15 @@ static CONST struct builtin builtins[] = {
 	{"fgets", 1, 1, 0, OP_NOP, 0, f_fgets,
 	 "read next line from file, newline is kept"},
 	{"fgetstr", 1, 1, 0, OP_NOP, 0, f_fgetstr,
-	 "read next null-terminated string from file, null character is kept"},
+	 "read next null-terminated string from file, null\n\t\t\tcharacter is kept"},
 	{"files", 0, 1, 0, OP_NOP, 0, f_files,
 	 "return opened file or max number of opened files"},
 	{"floor", 1, 1, 0, OP_NOP, 0, f_floor,
 	 "greatest integer less than or equal to number"},
 	{"fopen", 2, 2, 0, OP_NOP, 0, f_fopen,
 	 "open file name a in mode b"},
+	{"fpathopen", 2, 3, 0, OP_NOP, 0, f_fpathopen,
+	 "open file name a in mode b, search for a along\n\t\t\tCALCPATH or path c"},
 	{"fprintf", 2, IN, 0, OP_NOP, 0, f_fprintf,
 	 "print formatted output to opened file"},
 	{"fputc", 2, 2, 0, OP_NOP, 0, f_fputc,
@@ -8039,9 +8143,9 @@ static CONST struct builtin builtins[] = {
 	{"freopen", 2, 3, 0, OP_NOP, 0, f_freopen,
 	 "reopen a file stream to a named file"},
 	{"fscan", 2, IN, FA, OP_NOP, 0, f_fscan,
-	 "scan a file for assignments to one or more variables"},
+	 "scan a file for assignments to one or\n\t\t\tmore variables"},
 	{"fscanf", 2, IN, FA, OP_NOP, 0, f_fscanf,
-	 "formatted scan of a file for assignment to one or more variables"},
+	 "formatted scan of a file for assignment to one\n\t\t\tor more variables"},
 	{"fseek", 2, 3, 0, OP_NOP, 0, f_fseek,
 	 "seek to position b (offset from c) in file a"},
 	{"fsize", 1, 1, 0, OP_NOP, 0, f_fsize,
@@ -8059,7 +8163,7 @@ static CONST struct builtin builtins[] = {
 	{"getenv", 1, 1, 0, OP_NOP, 0, f_getenv,
 	 "value of environment variable (or NULL)"},
 	{"hash", 1, IN, 0, OP_NOP, 0, f_hash,
-	 "return non-negative hash value for one or\n\t\t    more values"},
+	 "return non-negative hash value for one or\n\t\t\tmore values"},
 	{"head", 2, 2, 0, OP_NOP, 0, f_head,
 	 "return list of specified number at head of a list"},
 	{"highbit", 1, 1, 0, OP_HIGHBIT, 0, 0,
@@ -8153,7 +8257,7 @@ static CONST struct builtin builtins[] = {
 	{"istype", 2, 2, 0, OP_ISTYPE, 0, 0,
 	 "whether the type of a is same as the type of b"},
 	{"jacobi", 2, 2, 0, OP_NOP, qjacobi, 0,
-	 "-1 => a is not quadratic residue mod b\n\t\t	  1 => b is composite, or a is quad residue of b"},
+	 "-1 => a is not quadratic residue mod b\n\t\t\t1 => b is composite, or a is quad residue of b"},
 	{"join", 1, IN, 0, OP_NOP, 0, f_join,
 	 "join one or more lists into one list"},
 	{"lcm", 1, IN, 0, OP_NOP, f_lcm, 0,
@@ -8168,6 +8272,8 @@ static CONST struct builtin builtins[] = {
 	 "create list of specified values"},
 	{"ln", 1, 2, 0, OP_NOP, 0, f_ln,
 	 "natural logarithm of value a within accuracy b"},
+	{"log", 1, 2, 0, OP_NOP, 0, f_log,
+	 "base 10 logarithm of value a within accuracy b"},
 	{"lowbit", 1, 1, 0, OP_LOWBIT, 0, 0,
 	 "low bit number in base 2 representation"},
 	{"ltol", 1, 2, FE, OP_NOP, f_legtoleg, 0,
@@ -8227,7 +8333,7 @@ static CONST struct builtin builtins[] = {
 	{"ord", 1, 1, 0, OP_NOP, 0, f_ord,
 	 "integer corresponding to character value"},
 	{"param", 1, 1, 0, OP_ARGVALUE, 0, 0,
-	 "value of parameter n (or parameter count if n\n\t\t	 is zero)"},
+	 "value of parameter n (or parameter count if n\n\t\t\tis zero)"},
 	{"perm", 2, 2, 0, OP_NOP, qperm, 0,
 	 "permutation number a!/(a-b)!"},
 	{"prevcand", 1, 5, 0, OP_NOP, f_prevcand, 0,
@@ -8247,14 +8353,14 @@ static CONST struct builtin builtins[] = {
 	{"polar", 2, 3, 0, OP_NOP, 0, f_polar,
 	 "complex value of polar coordinate (a * exp(b*1i))"},
 	{"poly", 1, IN, 0, OP_NOP, 0, f_poly,
-	 "evaluates a polynomial given its coefficients or coefficient-list"},
+	 "evaluates a polynomial given its coefficients\n\t\t\tor coefficient-list"},
 	{"pop", 1, 1, FA, OP_NOP, 0, f_listpop,
 	 "pop value from front of list"},
 	{"popcnt", 1, 2, 0, OP_NOP, f_popcnt, 0,
 	 "number of bits in a that match b (or 1)"},
 	{"power", 2, 3, 0, OP_NOP, 0, f_power,
 	 "value a raised to the power b within accuracy c"},
-	{"protect", 1, 2, FA, OP_NOP, 0, f_protect,
+	{"protect", 1, 3, FA, OP_NOP, 0, f_protect,
 	 "read or set protection level for variable"},
 	{"ptest", 1, 3, 0, OP_NOP, f_primetest, 0,
 	 "probabilistic primality test"},
@@ -8269,7 +8375,7 @@ static CONST struct builtin builtins[] = {
 	{"quo", 2, 3, 0, OP_NOP, 0, f_quo,
 	 "integer quotient of a by b, rounding type c"},
 	{"quomod", 4, 4, 0, OP_QUOMOD, 0, 0,
-	 "set c and d to quotient and remainder of a\n\t\t    divided by b"},
+	 "set c and d to quotient and remainder of a\n\t\t\tdivided by b"},
 	{"rand", 0, 2, 0, OP_NOP, f_rand, 0,
 	 "additive 55 random number [0,2^64), [0,a), or [a,b)"},
 	{"randbit", 0, 1, 0, OP_NOP, f_randbit, 0,
@@ -8305,7 +8411,7 @@ static CONST struct builtin builtins[] = {
 	{"round", 1, 3, 0, OP_NOP, 0, f_round,
 	 "round value a to b number of decimal places"},
 	{"rsearch", 2, 4, 0, OP_NOP, 0, f_rsearch,
-	 "reverse search matrix or list for value b\n\t\t    starting at index c"},
+	 "reverse search matrix or list for value b\n\t\t\tstarting at index c"},
 	{"runtime", 0, 0, 0, OP_NOP, f_runtime, 0,
 	 "user mode cpu time in seconds"},
 	{"saveval", 1, 1, 0, OP_SAVEVAL, 0, 0,
@@ -8313,11 +8419,11 @@ static CONST struct builtin builtins[] = {
 	{"scale", 2, 2, 0, OP_SCALE, 0, 0,
 	 "scale value up or down by a power of two"},
 	{"scan", 1, IN, FA, OP_NOP, 0, f_scan,
-	 "scan standard input for assignment to one or more variables"},
+	 "scan standard input for assignment to one\n\t\t\tor more variables"},
 	{"scanf", 2, IN, FA, OP_NOP, 0, f_scanf,
-	 "formatted scan of standard input for assignment to variables"},
+	 "formatted scan of standard input for assignment\n\t\t\tto variables"},
 	{"search", 2, 4, 0, OP_NOP, 0, f_search,
-	 "search matrix or list for value b starting\n\t\t    at index c"},
+	 "search matrix or list for value b starting\n\t\t\tat index c"},
 	{"sec", 1, 2, 0, OP_NOP, 0, f_sec,
 	 "sec of a within accuracy b"},
 	{"sech", 1, 2, 0, OP_NOP, 0, f_sech,
@@ -8363,9 +8469,9 @@ static CONST struct builtin builtins[] = {
 	{"strcat", 1,IN, 0, OP_NOP, 0, f_strcat,
 	 "concatenate strings together"},
 	{"strcmp", 2, 2, 0, OP_NOP, 0, f_strcmp,
-	 "compare two null-terminated strings"},
+	 "compare two strings"},
 	{"strcpy", 2, 2, 0, OP_NOP, 0, f_strcpy,
-	 "copy null-terminated string to string"},
+	 "copy string to string"},
 	{"strerror", 0, 1, 0, OP_NOP, 0, f_strerror,
 	 "string describing error type"},
 	{"strlen", 1, 1, 0, OP_NOP, 0, f_strlen,
@@ -8450,10 +8556,11 @@ void
 showbuiltins(void)
 {
 	CONST struct builtin *bp;	/* current function */
+	int i;
 
 	printf("\nName\tArgs\tDescription\n\n");
-	for (bp = builtins; bp->b_name; bp++) {
-		printf("%-9s ", bp->b_name);
+	for (bp = builtins, i = 0; bp->b_name; bp++, i++) {
+		printf("%-14s ", bp->b_name);
 		if (bp->b_maxargs == IN)
 			printf("%d+    ", bp->b_minargs);
 		else if (bp->b_minargs == bp->b_maxargs)
@@ -8461,6 +8568,11 @@ showbuiltins(void)
 		else
 			printf("%d-%-4d", bp->b_minargs, bp->b_maxargs);
 		printf("%s\n", bp->b_desc);
+		if (i == 32) {
+			i = 0;
+			if (getchar() == 27)
+				break;
+		}
 	}
 	printf("\n");
 }
@@ -8551,6 +8663,7 @@ builtinfunc(long index, int argcount, VALUE *stck)
 		vpp++;
 	}
 	result.v_type = V_NUM;
+	result.v_subtype = V_NOSUBTYPE;
 	if (!(bp->b_flags & FE) && (bp->b_minargs != bp->b_maxargs)) {
 		result.v_num = (*bp->b_numfunc)(argcount, numargs);
 		return result;

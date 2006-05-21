@@ -19,9 +19,9 @@ DESCRIPTION
     the functions appr(x, eps, rnd), sqrt(x, eps, rnd), etc.
 
 EXAMPLE
-    > oldeps = epsilon(1e-6)
-    > print epsilon(), sqrt(2), epsilon(1e-4), sqrt(2), epsilon(oldeps)
-    > .000001 1.414214 .000001 1.4142 .0001
+    ; oldeps = epsilon(1e-6)
+    ; print epsilon(), sqrt(2), epsilon(1e-4), sqrt(2), epsilon(oldeps)
+    ; .000001 1.414214 .000001 1.4142 .0001
 
 LIMITS
     none
@@ -49,8 +49,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: epsilon,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: epsilon,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/epsilon,v $
 ##
 ## Under source code control:	1995/10/05 04:52:26

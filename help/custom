@@ -70,19 +70,19 @@ DESCRIPTION
 EXAMPLE
     If calc compiled with ALLOW_CUSTOM= (custom disabled):
 
-    > print custom("sysinfo", "baseb")
+    ; print custom("sysinfo", "baseb")
 	    Calc was built with custom functions disabled
     Error 10195
 
     If calc compiled with ALLOW_CUSTOM= -DCUSTOM and is invoked without -C:
 
-    > print custom("sysinfo", "baseb")
+    ; print custom("sysinfo", "baseb")
 	    Calc must be run with a -C argument to use custom function
     Error 10194
 
     If calc compiled with ALLOW_CUSTOM= -DCUSTOM and is invoked with -C:
 
-    > print custom("sysinfo", "baseb")
+    ; print custom("sysinfo", "baseb")
     32
 
 LIMITS
@@ -110,8 +110,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: custom,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: custom,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/custom,v $
 ##
 ## Under source code control:	1997/03/09 16:33:22

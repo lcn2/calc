@@ -72,29 +72,29 @@ Four argument case:
     position, according as a match is found or not found.
 
 EXAMPLE
-    > L = list(2,"three",4i)
-    > rsearch(L,"three")
+    ; L = list(2,"three",4i)
+    ; rsearch(L,"three")
 	    1
-    > rsearch(L,"threes")
-    > rsearch(L, 4i, 4)
-    > rsearch(L, 4i, 1)
+    ; rsearch(L,"threes")
+    ; rsearch(L, 4i, 4)
+    ; rsearch(L, 4i, 1)
 	    2
 
-    > f = fopen("foo", "w+")
-    > fputs(f, "This file has 28 characters.")
-    > fflush(f)
-    > rsearch(f, "ha")
+    ; f = fopen("foo", "w+")
+    ; fputs(f, "This file has 28 characters.")
+    ; fflush(f)
+    ; rsearch(f, "ha")
 	18
-    > ftell(f)
+    ; ftell(f)
 	19
-    > rsearch(f, "ha", 17)
+    ; rsearch(f, "ha", 17)
 	10
-    > rsearch(f, "ha", 9)
-    > ftell(f)
+    ; rsearch(f, "ha", 9)
+    ; ftell(f)
 	0
-    > rsearch(f, "ha")
+    ; rsearch(f, "ha")
 	18
-    > rsearch(f, "ha", 5, 500)
+    ; rsearch(f, "ha", 5, 500)
 	18
 
 LIMITS
@@ -122,8 +122,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: rsearch,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: rsearch,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/rsearch,v $
 ##
 ## Under source code control:	1994/03/19 03:13:21

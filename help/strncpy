@@ -1,0 +1,39 @@
+NAME
+    strncpy - copy a number of chracters from head or all of a stringr
+		to head or all of a string
+
+SYNOPSIS
+    strncpy(s1, s2, n)
+
+TYPES
+    s1		string
+    s2		string
+    n		nonnegative integer
+
+    return	string
+
+DESCRIPTION
+    Let n1 = size(s1), n2 = size(n2), and m = min(n1, n2, n).
+    This function replaces the first m characters of s1 by the first
+    m characters of s2, and if min(n1, n) > n2, replaces the next
+    min(n1,n) - n2 characters of s1 by '\0'. The size of s1 and any
+    later characters of s1 are unchanged. The function returns s1, with
+    new value.
+ 
+EXAMPLE
+    strncpy("abcdef", "xyz", 0) == "abcdef"
+    strncpy("abcdef", "xyz", 1) == "xbcdef"
+    strncpy("abcdef", "xyz", 2) == "xycdef"
+    strncpy("abcdef", "xyz", 3) == "xyzdef"
+    strncpy("abcdef", "xyz", 4) == "xyz\0ef"
+    strncpy("abcdef", "xyz", 5) == "xyz\0\0f"
+    strncpy("ab", "xyz", 3) == "xy"  
+
+LIMITS
+    none
+
+LINK LIBRARY
+    STRING* stringncpy(STRING *s1, STRING *s2, long num)
+
+SEE ALSO
+    strcpy

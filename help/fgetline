@@ -25,19 +25,19 @@ DESCRIPTION
     (EOF or ERROR) nil is returned.
 
 EXAMPLE
-    > fd = fopen("/tmp/newfile", "w")
-    > fputs(fd, "chongo was here\n")
-    > fputs(fd, "123\n")
-    > fd2 = fopen("/tmp/newfile", "r")
-    > fgets(fd2)
+    ; fd = fopen("/tmp/newfile", "w")
+    ; fputs(fd, "chongo was here\n")
+    ; fputs(fd, "123\n")
+    ; fd2 = fopen("/tmp/newfile", "r")
+    ; fgets(fd2)
 	    "chongo was here
     "
 
-    > fclose(fd2)
-    > fd2 = fopen("/tmp/newfile", "r")
-    > fgetline(fd2)
+    ; fclose(fd2)
+    ; fd2 = fopen("/tmp/newfile", "r")
+    ; fgetline(fd2)
 	    "chongo was here"
-    > eval(fgetline(fd2))
+    ; eval(fgetline(fd2))
 	    123
 
 LIMITS
@@ -66,8 +66,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: fgetline,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: fgetline,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/fgetline,v $
 ##
 ## Under source code control:	1995/03/04 11:33:19

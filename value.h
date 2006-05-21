@@ -1,7 +1,7 @@
 /*
  * value - definitions of general values  and related routines used by calc
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2006  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: value.h,v 29.7 2001/06/08 21:00:58 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: value.h,v 29.10 2006/05/19 15:26:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -88,7 +88,7 @@ typedef struct random RANDOM;
  */
 struct value {
 	short v_type;			/* type of value */
-	short v_subtype;		/* other data related to some types */
+	unsigned short v_subtype;	/* other data related to some types */
 	union {				/* types of values (see V_XYZ below) */
 		long vv_int;		/* 1: small integer value */
 		NUMBER *vv_num;		/* 2, 21: real number */
@@ -252,7 +252,7 @@ extern DLL void addlistitems(LIST *lp, VALUE *vres);
 extern DLL void addlistinv(LIST *lp, VALUE *vres);
 extern DLL void copy2octet(VALUE *, OCTET *);
 extern DLL int copystod(VALUE *, long, long, VALUE *, long);
-extern DLL void protectall(VALUE *, int);
+extern DLL void protecttodepth(VALUE *, int, int);
 extern DLL void set_update(int);
 
 
@@ -501,8 +501,8 @@ extern DLL void config_print(CONFIG *cfg);	/* the CONFIG to print */
  * size, memsize and sizeof support
  */
 extern DLL long elm_count(VALUE *vp);
-extern DLL long lsizeof(VALUE *vp);
-extern DLL long memsize(VALUE *vp);
+extern DLL size_t lsizeof(VALUE *vp);
+extern DLL size_t memsize(VALUE *vp);
 
 /*
  * String functions
@@ -520,7 +520,7 @@ extern DLL STRING *stringshift(STRING *, long);
 extern DLL STRING *stringcomp(STRING *);
 extern DLL STRING *stringneg(STRING *);
 extern DLL STRING *stringcpy(STRING *, STRING *);
-extern DLL STRING *stringncpy(STRING *, STRING *, long);
+extern DLL STRING *stringncpy(STRING *, STRING *, size_t);
 extern DLL long stringcontent(STRING *s);
 extern DLL long stringlowbit(STRING *s);
 extern DLL long stringhighbit(STRING *s);

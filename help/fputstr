@@ -18,16 +18,16 @@ DESCRIPTION
     null characters ('\0') are written to the file stream fs.
 
 EXAMPLE
-    > f = fopen("/tmp/junk", "w")
-    > fputstr(f, "Alpha", "Beta")
-    > freopen(f, "r")
-    > fgetstr(f)
+    ; f = fopen("/tmp/junk", "w")
+    ; fputstr(f, "Alpha", "Beta")
+    ; freopen(f, "r")
+    ; fgetstr(f)
 	"Alpha"
-    > fgetstr(f)
+    ; fgetstr(f)
 	"Beta"
-    > fgetstr(f)
+    ; fgetstr(f)
     >
-    > fputstr(f, "Gamma")
+    ; fputstr(f, "Gamma")
 	Error 72
 
 LIMITS
@@ -55,8 +55,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: fputstr,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: fputstr,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/fputstr,v $
 ##
 ## Under source code control:	1996/04/30 03:05:18

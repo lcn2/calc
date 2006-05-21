@@ -14,11 +14,11 @@ DESCRIPTION
     Returns the value of x1^2 + x2^2 + ...
 
 EXAMPLE
-    > print ssq(1,2,3), ssq(1+2i, 3-4i, 5 +6i)
+    ; print ssq(1,2,3), ssq(1+2i, 3-4i, 5 +6i)
     14 -21+40i
 
-    > mat A[2,2] = {1,2,3,4}; mat B[2,2] = {5,6,7,8}
-    > print ssq(A, B, A + B)
+    ; mat A[2,2] = {1,2,3,4}; mat B[2,2] = {5,6,7,8}
+    ; print ssq(A, B, A + B)
 
     mat [2,2] (4 elements, 4 nonzero):
       [0,0] = 190
@@ -51,8 +51,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: ssq,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: ssq,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/ssq,v $
 ##
 ## Under source code control:	1995/10/25 04:03:46

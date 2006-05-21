@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: ellip.cal,v 29.2 2000/06/07 14:02:25 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: ellip.cal,v 29.3 2006/03/07 22:16:25 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/ellip.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:33
@@ -141,7 +141,7 @@ define point_mul(p1, p2)
 	if (p2 == 1)
 		return p1;
 	if (p1 == p2)
-		return point_square(&p1);
+		return point_square(`p1);
 	obj point r;
 	m = (minv(p2.x - p1.x, N) * (p2.y - p1.y)) % N;
 	if (m == 0) {
@@ -185,9 +185,9 @@ define point_pow(p, pow)
 		r = p;
 	t = p;
 	for (bit = 2; ((bit <= pow) && (f == 0)); bit <<= 1) {
-		t = point_square(&t);
+		t = point_square(`t);
 		if (bit & pow)
-			r = point_mul(&t, &r);
+			r = point_mul(`t, `r);
 	}
 	return r;
 }

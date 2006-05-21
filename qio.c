@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: qio.c,v 29.6 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: qio.c,v 29.8 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qio.c,v $
  *
  * Under source code control:	1993/07/30 19:42:46
@@ -66,15 +66,15 @@ qprintf(char *fmt, ...)
 			if (ch == '\\') {
 				ch = *fmt++;
 				switch (ch) {
-					case 'n': ch = '\n'; break;
-					case 'r': ch = '\r'; break;
-					case 't': ch = '\t'; break;
-					case 'f': ch = '\f'; break;
-					case 'v': ch = '\v'; break;
-					case 'b': ch = '\b'; break;
-					case 0:
-						va_end(ap);
-						return;
+				case 'n': ch = '\n'; break;
+				case 'r': ch = '\r'; break;
+				case 't': ch = '\t'; break;
+				case 'f': ch = '\f'; break;
+				case 'v': ch = '\v'; break;
+				case 'b': ch = '\b'; break;
+				case 0:
+					va_end(ap);
+					return;
 				}
 				PUTCHAR(ch);
 				continue;
@@ -189,69 +189,69 @@ qprintnum(NUMBER *q, int outmode)
 		outmode2 = conf->outmode2;
 	}
 	switch (outmode) {
-		case MODE_INT:
-			if (conf->tilde_ok && qisfrac(q))
-				PUTCHAR('~');
-			qprintfd(q, 0L);
-			break;
+	case MODE_INT:
+		if (conf->tilde_ok && qisfrac(q))
+			PUTCHAR('~');
+		qprintfd(q, 0L);
+		break;
 
-		case MODE_REAL:
-			prec = qdecplaces(q);
-			if ((prec < 0) || (prec > conf->outdigits)) {
-				if (conf->tilde_ok)
-				    PUTCHAR('~');
-			}
-			if (conf->fullzero || (prec < 0) ||
-			    (prec > conf->outdigits))
-				prec = conf->outdigits;
-			qprintff(q, 0L, prec);
-			break;
+	case MODE_REAL:
+		prec = qdecplaces(q);
+		if ((prec < 0) || (prec > conf->outdigits)) {
+			if (conf->tilde_ok)
+			    PUTCHAR('~');
+		}
+		if (conf->fullzero || (prec < 0) ||
+		    (prec > conf->outdigits))
+			prec = conf->outdigits;
+		qprintff(q, 0L, prec);
+		break;
 
-		case MODE_FRAC:
-			qprintfr(q, 0L, FALSE);
-			break;
+	case MODE_FRAC:
+		qprintfr(q, 0L, FALSE);
+		break;
 
-		case MODE_EXP:
-			if (qiszero(q)) {
-				PUTCHAR('0');
-				return;
-			}
-			tmpval = *q;
-			tmpval.num.sign = 0;
-			exp = qilog10(&tmpval);
-			if (exp == 0) {		/* in range to output as real */
-				qprintnum(q, MODE_REAL);
-				return;
-			}
-			tmpval.num = _one_;
-			tmpval.den = _one_;
-			if (exp > 0)
-				ztenpow(exp, &tmpval.den);
-			else
-				ztenpow(-exp, &tmpval.num);
-			q = qmul(q, &tmpval);
-			zfree(tmpval.num);
-			zfree(tmpval.den);
+	case MODE_EXP:
+		if (qiszero(q)) {
+			PUTCHAR('0');
+			return;
+		}
+		tmpval = *q;
+		tmpval.num.sign = 0;
+		exp = qilog10(&tmpval);
+		if (exp == 0) {		/* in range to output as real */
 			qprintnum(q, MODE_REAL);
-			qfree(q);
-			PRINTF1("e%ld", exp);
-			break;
+			return;
+		}
+		tmpval.num = _one_;
+		tmpval.den = _one_;
+		if (exp > 0)
+			ztenpow(exp, &tmpval.den);
+		else
+			ztenpow(-exp, &tmpval.num);
+		q = qmul(q, &tmpval);
+		zfree(tmpval.num);
+		zfree(tmpval.den);
+		qprintnum(q, MODE_REAL);
+		qfree(q);
+		PRINTF1("e%ld", exp);
+		break;
 
-		case MODE_HEX:
-			qprintfx(q, 0L);
-			break;
+	case MODE_HEX:
+		qprintfx(q, 0L);
+		break;
 
-		case MODE_OCTAL:
-			qprintfo(q, 0L);
-			break;
+	case MODE_OCTAL:
+		qprintfo(q, 0L);
+		break;
 
-		case MODE_BINARY:
-			qprintfb(q, 0L);
-			break;
+	case MODE_BINARY:
+		qprintfb(q, 0L);
+		break;
 
-		default:
-			math_error("Bad mode for print");
-			/*NOTREACHED*/
+	default:
+		math_error("Bad mode for print");
+		/*NOTREACHED*/
 	}
 
 	if (outmode2 != MODE2_OFF) {
@@ -479,7 +479,7 @@ str2q(char *s)
 			}
 			while ((*t >= '0') && (*t <= '9')) {
 				exp = (exp * 10) + *t++ - '0';
-				if (exp > 1000000) {
+				if (exp > (MAXLONG/10L)) {
 					math_error("Exponent too large");
 					/*NOTREACHED*/
 				}

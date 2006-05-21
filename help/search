@@ -79,38 +79,38 @@ DESCRIPTION
     because the specified search region has insufficient remaining characters.
 
 EXAMPLE
-    > L = list(2,"three",4i)
-    > search(L,"three")
+    ; L = list(2,"three",4i)
+    ; search(L,"three")
 	    1
-    > search(L,"threes")
-    > search(L, 4i, 4)
-    > search(L, 4i, 1)
+    ; search(L,"threes")
+    ; search(L, 4i, 4)
+    ; search(L, 4i, 1)
 	    2
 
-    > f = fopen("foo", "w+")
-    > fputs(f, "This file has 28 characters.")
-    > rewind(f)
-    > search(f, "ha")
+    ; f = fopen("foo", "w+")
+    ; fputs(f, "This file has 28 characters.")
+    ; rewind(f)
+    ; search(f, "ha")
 	10
-    > ftell(f)
+    ; ftell(f)
 	12
-    > search(f, "ha")
+    ; search(f, "ha")
 	18
-    > search(f, "ha")
-    > search(f, "ha",)
+    ; search(f, "ha")
+    ; search(f, "ha",)
 	10
-    > search(f, "ha", 12)
+    ; search(f, "ha", 12)
 	18
-    > search(f, "ha", -10)
+    ; search(f, "ha", -10)
 	18
-    > search(f, "ha", ,)
+    ; search(f, "ha", ,)
 	10
-    > search(f, "ha", 11, 19)
-    > ftell(f)
+    ; search(f, "ha", 11, 19)
+    ; ftell(f)
 	18
-    > search(f, "ha", 11, 20)
+    ; search(f, "ha", 11, 20)
 	18
-    > search(f, "ha", 5, 500)
+    ; search(f, "ha", 5, 500)
 	10
 
 LIMITS
@@ -139,8 +139,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: search,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: search,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/search,v $
 ##
 ## Under source code control:	1994/03/19 03:13:21

@@ -21,10 +21,10 @@ DESCRIPTION
     may be chosen from x items where order in which they are chosen matters.
 
 EXAMPLE
-    > print perm(7,3), perm(7,4), perm(7,5), perm(3,0), perm(0,0)
+    ; print perm(7,3), perm(7,4), perm(7,5), perm(3,0), perm(0,0)
     210 840 2520 3 0
 
-    > print perm(2^31+1,3)
+    ; print perm(2^31+1,3)
     9903520314283042197045510144
 
 LIMITS
@@ -53,8 +53,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: perm,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: perm,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/perm,v $
 ##
 ## Under source code control:	1994/10/20 04:03:02

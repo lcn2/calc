@@ -66,38 +66,38 @@ DESCRIPTION
 	variables, so their values are not changed by the call.
 
 EXAMPLES
-    > a = 7/32, b = -7/32
+    ; a = 7/32, b = -7/32
 
-    > print a, b
+    ; print a, b
     .21875 -.21875
 
-    > print round(a,3,0), round(a,3,1), round(a,3,2), print round(a,3,3)
+    ; print round(a,3,0), round(a,3,1), round(a,3,2), print round(a,3,3)
     .218, .219, .218, .219
 
-    > print round(b,3,0), round(b,3,1), round(b,3,2), print round(b,3,3)
+    ; print round(b,3,0), round(b,3,1), round(b,3,2), print round(b,3,3)
     -.219, -.218, -.218, -.219
 
-    > print round(a,3,16), round(a,3,17), round(a,3,18), print round(a,3,19)
+    ; print round(a,3,16), round(a,3,17), round(a,3,18), print round(a,3,19)
     .2188 .2188 .2188 .2188
 
-    > print round(a,4,16), round(a,4,17), round(a,4,18), print round(a,4,19)
+    ; print round(a,4,16), round(a,4,17), round(a,4,18), print round(a,4,19)
     .2187 .2188 .2187 .2188
 
-    > print round(a,2,8), round(a,3,8), round(a,4,8), round(a,5,8)
+    ; print round(a,2,8), round(a,3,8), round(a,4,8), round(a,5,8)
     .22 .218 .2188 .21875
 
-    > print round(a,2,24), round(a,3,24), round(a,4,24), round(a,5,24)
+    ; print round(a,2,24), round(a,3,24), round(a,4,24), round(a,5,24)
     .22 .219 .2188 .21875
 
-    > c = 21875
-    > print round(c,-2,0), round(c,-2,1), round(c,-3,0), round(c,-3,16)
+    ; c = 21875
+    ; print round(c,-2,0), round(c,-2,1), round(c,-3,0), round(c,-3,16)
     21800 21900 21000 22000
 
-    > print round(c,2,32), round(c,2,33), round(c,2,56), round(c,4,56)
+    ; print round(c,2,32), round(c,2,33), round(c,2,56), round(c,4,56)
     21000 22000 22000 21880
 
-    > A = list(1/8, 2/8, 3/8, 4/8, 5/8, 6/8, 7/8)
-    > print round(A,2,24)
+    ; A = list(1/8, 2/8, 3/8, 4/8, 5/8, 6/8, 7/8)
+    ; print round(A,2,24)
 
     list(7 elements, 7 nonzero):
 	[[0]] = .12
@@ -138,8 +138,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: round,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: round,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/round,v $
 ##
 ## Under source code control:	1994/09/30 00:52:38

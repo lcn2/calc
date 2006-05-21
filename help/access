@@ -23,19 +23,19 @@ EXAMPLE
     The system error-numbers and messages may differ for different
 	implementations
 
-    > !rm -f junk
-    > access("junk")
+    ; !rm -f junk
+    ; access("junk")
 	System error 2
-    > strerror(.)
+    ; strerror(.)
 	"No such file or directory"
-    > f = fopen("junk", "w")
-    > access("junk")
-    > fputs(f, "Alpha")
-    > fclose(f)
-    > !chmod u-w junk
-    > access("junk", "w")
+    ; f = fopen("junk", "w")
+    ; access("junk")
+    ; fputs(f, "Alpha")
+    ; fclose(f)
+    ; !chmod u-w junk
+    ; access("junk", "w")
 	System error 13
-    > strerror(.)
+    ; strerror(.)
 	"Permission denied"
 
 LIMITS
@@ -64,8 +64,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: access,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: access,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/access,v $
 ##
 ## Under source code control:	1996/04/30 03:36:20

@@ -15,7 +15,7 @@ DESCRIPTION
     The default value for eps is epsilon().
 
 EXAMPLE
-    > print hypot(3, 4, 1e-6), hypot(2, -3, 1e-6)
+    ; print hypot(3, 4, 1e-6), hypot(2, -3, 1e-6)
     5 3.605551
 
 LIMITS
@@ -43,8 +43,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: hypot,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: hypot,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/hypot,v $
 ##
 ## Under source code control:	1995/10/05 04:52:26

@@ -24,10 +24,10 @@ DESCRIPTION
 
 
 EXAMPLE
-    > print sgn(27), sgn(1e-20), sgn(0), sgn(-45)
+    ; print sgn(27), sgn(1e-20), sgn(0), sgn(-45)
     1 1 0 -1
 
-    > print sgn(2+3i), sgn(6i), sgn(-7+4i), sgn(-6), sgn(-6-3i), sgn(-2i)
+    ; print sgn(2+3i), sgn(6i), sgn(-7+4i), sgn(-6), sgn(-6-3i), sgn(-2i)
     1+1i 1i -1+1i -1 -1-1i -1i
 
 LIMITS
@@ -55,8 +55,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: sgn,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: sgn,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/sgn,v $
 ##
 ## Under source code control:	1995/10/25 04:03:46

@@ -18,16 +18,16 @@ DESCRIPTION
     will give many significant figures.
 
 EXAMPLE
-    > print exp(2, 1e-5), exp(2,1e-10), exp(2, 1e-15), exp(2, 1e-20)
+    ; print exp(2, 1e-5), exp(2,1e-10), exp(2, 1e-15), exp(2, 1e-20)
     7.38906 7.3890560989 7.38905609893065 7.38905609893065022723
 
-    > print exp(30, 1e5), exp(30, 1), exp(30, 1e-10)
+    ; print exp(30, 1e5), exp(30, 1), exp(30, 1e-10)
     10686474600000 10686474581524 10686474581524.4621469905
 
-    > print exp(-20, 1e-5), exp(-20, 1e-10), exp(-20, 1e-15), exp(-20, 1e-20)
+    ; print exp(-20, 1e-5), exp(-20, 1e-10), exp(-20, 1e-15), exp(-20, 1e-20)
     0 .0000000021 .000000002061154 .00000000206115362244
 
-    > print exp(1+2i, 1e-5), exp(1+2i, 1e-10)
+    ; print exp(1+2i, 1e-5), exp(1+2i, 1e-10)
     -1.1312+2.47173i -1.1312043838+2.471726672i
 
 LIMITS
@@ -56,8 +56,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: exp,v 29.3 2005/10/18 10:48:29 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: exp,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/exp,v $
 ##
 ## Under source code control:	1995/10/11 04:41:26

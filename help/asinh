@@ -19,7 +19,7 @@ DESCRIPTION
 		asinh(x) = ln(x + sqrt(1 + x^2))
 
 EXAMPLE
-    > print asinh(2, 1e-5), asinh(2, 1e-10), asinh(2, 1e-15), asinh(2, 1e-20)
+    ; print asinh(2, 1e-5), asinh(2, 1e-10), asinh(2, 1e-15), asinh(2, 1e-20)
     1.44363 1.4436354752 1.44363547517881 1.44363547517881034249
 
 LIMITS
@@ -47,8 +47,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: asinh,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: asinh,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/asinh,v $
 ##
 ## Under source code control:	1994/03/19 01:40:25

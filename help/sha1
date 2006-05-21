@@ -47,35 +47,35 @@ DESCRIPTION
 	sha1(sha1(h,x,y))	number	numeric value of the above call
 
 EXAMPLE
-    > base(16)
+    ; base(16)
 	    0xa
 
-    > sha1()
+    ; sha1()
 	    sha1 hash state
-    > sha1(sha1())
+    ; sha1(sha1())
 	    0xda39a3ee5e6b4b0d3255bfef95601890afd80709
 
-    > sha1("x", "y", "z") == sha1("xyz")
+    ; sha1("x", "y", "z") == sha1("xyz")
 	    1
-    > sha1("x", "y", "z") == sha1("xy")
+    ; sha1("x", "y", "z") == sha1("xy")
 	    0
 
-    > sha1(sha1("this is", 7^19-8, "a composit", 3i+4.5, "hash"))
+    ; sha1(sha1("this is", 7^19-8, "a composit", 3i+4.5, "hash"))
 	    0xc3e1b562bf45b3bcfc055ac65b5b39cdeb6a6c55
 
-    > x = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi())
-    > x
+    ; x = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi())
+    ; x
 	    sha1 hash state
-    > sha1(x)
+    ; sha1(x)
 	    0x988d2de4584b7536aa9a50a5749707a37affa1b5
 
-    > y = sha1()
-    > y = sha1(y, list(1,2,3), "curds and whey")
-    > y = sha1(y, 2^21701-1)
-    > y = sha1(y, pi())
-    > y
+    ; y = sha1()
+    ; y = sha1(y, list(1,2,3), "curds and whey")
+    ; y = sha1(y, 2^21701-1)
+    ; y = sha1(y, pi())
+    ; y
 	    sha1 hash state
-    > sha1(y)
+    ; sha1(y)
 	    0x988d2de4584b7536aa9a50a5749707a37affa1b5
 
 LIMITS
@@ -115,8 +115,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: sha1,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: sha1,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/sha1,v $
 ##
 ## Under source code control:	1997/03/23 00:01:18

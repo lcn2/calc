@@ -36,13 +36,13 @@ DESCRIPTION
     the type of rounding to be used is controlled by config("outround").
 
 EXAMPLE
-    > print display(), 2/3
+    ; print display(), 2/3
     20 ~0.66666666666666666667
 
-    > print display(40), 2/3
+    ; print display(40), 2/3
     20 ~0.6666666666666666666666666666666666666667
 
-    > print display(5), 2/3
+    ; print display(5), 2/3
     40 ~0.66667
 
 LIMITS
@@ -70,8 +70,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: display,v 29.1 2004/07/26 06:54:41 chongo Exp $
+## @(#) $Revision: 29.2 $
+## @(#) $Id: display,v 29.2 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/display,v $
 ##
 ## Under source code control:	2004/07/25 23:50:40

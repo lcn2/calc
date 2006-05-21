@@ -13,33 +13,39 @@ DESCRIPTION
     Without an argument, errmax() returns the current value of an
     internal variable errmax.  Calling errmax(num) returns this value
     but then resets its value to num.  Execution is aborted if
-    evaluation of an error value if this makes errcount > errmax.
-    An error message displays the errno for the error.
+    evaluation of an error value if this makes errcount > errmax
+    and errmax is >= 0.
+
+    When errmax is -1, there is no limit on the number of errors.
 
 EXAMPLE
-    > errmax(2)
+    ; errmax(2)
 	0
-    > errcount()
+    ; errcount()
 	0
-    > a = 1/0; b = 2 + ""; c = error(27); d = newerror("alpha");
+    ; a = 1/0; b = 2 + ""; c = error(27); d = newerror("alpha");
     Error 27 caused errcount to exceed errmax
 
-    > print c, d
+    ## Here global variables c and d were created when compiling the line
+    ## but execution was aborted before the intended assignments to c and d.
+
+    ; print c, d
     0 0
 
-    Here global variables c and d were created when compiling the line
-    but execution was aborted before the intended assignments to c and d.
+    ; errmax(-1)
+	2
 
 LIMITS
-    0 <= num < 2^32
+    -1 <= num <= 2147483647
 
 LINK LIBRARY
     none
 
 SEE ALSO
-    errcount, error, strerror, iserror, errno, newerror, errorcodes
+    errcount, error, strerror, iserror, errno, newerror, errorcodes,
+    stoponerror
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -55,8 +61,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: errmax,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.6 $
+## @(#) $Id: errmax,v 29.6 2006/05/21 07:31:35 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/errmax,v $
 ##
 ## Under source code control:	1997/03/08 08:51:14

@@ -1,77 +1,194 @@
 NAME
-    protect - read or set protect status for a variable or named block
+    protect - read or adjust protect status for a variable or named block
 
 SYNOPSIS
-    protect(var [, sts])
-    protect(nblk [, sts])
+    protect(var [, N [, depth])
+    protect(nblk [, N [, depth]])
 
 TYPES
     var		lvalue
     nblk	named block
-    sts		integer, 0 <= sts < 512
+    N		integer, abs(N) < 65536
+    depth	nonnegative integer
 
     return	null value
 
 DESCRIPTION
-    With one argument, protect(var) or protect(nblk) returns the current
-    protection status for var or nblk.
+    The protection status of the association of an lvalue A with
+    its value is represented by a nonnegative integer less than 2^16.
+    The current value sts of this status is returned by protect(A).
+    Each nonzero bit of the low eight bits of sts corresponds to a
+    builtin kind of protection as follows:
 
-    With two arguments, protect(var, sts) or protect(nblk, sts) sets the
-    protection status for var or nblk to the value sts.	 Each nonzero bit
-    of sts corresponds to one kind of protection as follows:
+     	    bit value 	protection
 
-		sts	protection
+		  1	no assign to A
+		  2	no change of A by assignment
+		  4	no change of type value of A
+		  8	no error value for A
+		 16	no copy to A
+		 32	no relocation for A or its elements
+		 64	no assign from A
+		128	no copy from A
 
-		  1	no assign to var
-		  2	no change of value of var
-		  4	no change of type of var
-		  8	no error value for var
-		 16	no copy to var or nblk
-		 32	no relocation of var or nblk
-		 64	no assign from var
-		128	no copy from var or nblk
-		256	protect recursively all components of var
+    For example, A having protection status 65 = 1 + 64 prevents
+    execution of assignments of the forms A = expression and V = A
+    where V is an lvalue. Attempting either of these assignments
+    will return an error value and leave the value of A or V unchanged.
 
+    Initally, when created, any lvalue A has zero status corresponding
+    to "no protection". This may be restored at any time by protect(A, 0).
 
-    Here "assign" refers to use of '=' as in A = expr to assign the value
+    If N is positive and A does not already have the protection
+    corresponding to a nonzero bit of N, protect(A, N) adds that
+    protection to the status of A. For example, if protect(A) is 65,
+    protect(A, 17) will add the no-copy-to protection so that the
+    new protection status of A will be 81 = 1 + 16 + 64.
+
+    Similarly, if N is negative and A has the protection corresponding
+    to a nonzero bit of abs(N), protect(A,N) will remove that kind of
+    protection. For example if protect(A) = 65, then protect(A, -17)
+    will remove the no-assign-to protection and the new value of
+    protect(A) will be 64. Note that protect(A, -65535) has the same
+    effect as protect(A, 0).
+
+    For the purposes of this function, the depth of a global or local
+    variable is zero; if A has depth d and the value of A is a list,
+    matrix, object or association, its elements have depth d + 1.
+    For example, after
+
+	obj point {x,y}
+	X = mat[3] = {1, list(2,3), mat[2] = {obj point, obj point} }
+
+    X has depth 0; X[0], X[1] and X[2] have depth 1; X[1][0], X[1][1],
+    X[2][0] and X[2][1] have depth 2; X[2][0].x, X[2][0].y, X[2][1].x
+    and X[2][1].y have depth 3. For any lvalue A, protect(A, N, depth)
+    applies protect(A, N) to A and to all elements, elements of
+    elements, etc., up tothe stated depth. In the above example,
+    protect(X, 20, 2) gives no-type-change and no-copy-to protection
+    to 8 of the listed lvalues, but not to the components of the
+    objects X[2][0] and X[2][1]; With any d >= 3, protect(X, 20, d)
+    would give that protection the 12 listed lvalues.
+
+    If B is a variable with positive status and assignment of B to A is
+    permitted, execution of the assignment A = B adds to the protections
+    of A all protections of B that A does not already have. Except when
+    the value returned is the result of the evqluation of an lvalue with
+    positive status, calc's builtin operators and functions return values
+    with zero protection status. For example, whatever the protection
+    statuses of X and Y, X + sqrt(Y) will have zero status, but
+    t ? X : Y may have nonzero status. The list, matrix, object or
+    association returned by the use of list, mat, obj or assoc will have
+    zero status, but any element specified by an lvalue will receive
+    its status; e.g. after  L = list(X, X^2) , protect(L[0]) equals
+    protect(X) and both protect(L) and protect(L[1]) are zero.
+
+    Users may define functions that return values with positive status, e.g.
+
+		define noassigntovalue(x) {protect(x,1); return x};
+		S = noassigntovalue(42);
+
+    will result in S having the value 42 and no-assign-to protection.
+    By using a backquote with a variable as argument, an even simpler
+    function:
+
+		define noassignto(x) = protect(x, 1);
+
+    gives no-assign-to protection to the variable; i.e. noassignto(`A)
+    achieves the same as protect(A,1).
+
+    In the brief descriptions above of builtin kinds of protectiopn,
+    "assign" refers to use of '=' as in A = expr to assign the value
     of expr to A, and in A = {..., expr, ...} to assign the value of expr
-    to some component of A, and to the assignments implicit in swap(A, B),
-    quomod(x, y, A, B), and pre or post ++ or --.
+    to some component of A, and to the assignments implicit in
+    quomod(x, y, A, B), and pre or post ++ or --. Swapping of lvalues is
+    prevented if either value has no-assign-to or no-assign-from
+    protection. (Swapping of octets is prevented if at least one of
+    them is in a string or block with no-copy-to or no-copy-from
+    protection.)
 
-    For example, if A is a global variable, then after
+    "Copying" refers to initialization using {...} and to the operations
+    copy and blkcpy as applied to strings, blocks, lists and matrices.
+    Although A = {..., expr, ...) assigns the value of expr to an
+    elment of A, it is also regarded as copying to A. Thus, initialization
+    of A may be prevented either by giving no-copy-to protection to A or
+    no-assignment=to protection to the elements of A. Assignments to and
+    from characters or octets in strings or blocks are also regarded as
+    copying to or from the string or block. For example, after
+    A = "abc", protect(A,16) would prevent the assignment A[0] = 'x'.
+    (Note that in this example, A[0] is not an lvalue in the sense
+    normally understood - the only values it can have are nonnegative
+    integers less than 256. The only kinds of protection relevant to an
+    octet are the no-copy-to, no-copy-from and no-change protections of
+    the string or block in which the octet resides.)
 
-		protect(A, 1);
+    The no-relocate protection applies to lists and blocks. For lists,
+    it refers to the operations push, pop, append, remove, insert and
+    delete. For example, if A = list(2,3,5,7), protect(A, 32) will
+    prevent any change in the content or size of the list.
+    No-relocation protection of a block prevents reallocation of the
+    memory used by a block and the freeing of a named block, For example,
+    if a block B has maxsize 256, then after
 
-    an error state is established if  A = expr	is attempted.  It does
-    not imply constancy if, for example, the current value of A is a list
-    or matrix; such a value may be changed by assignments to the elements
-    of A, or by push or copy commands.
+		protect(B, 32);
 
-    If the current value of A is val, protect(A, 2) will prevent any
-    assignment to A other than
+    copy(A, B) will fail if the copying would cause size(B) to equal or
+    exceed 256; if B is a named block, blkfree(B) will not be permitted.
 
-		A = expr
+    The elements of the list returned by list(...) will initially have zero
+    protection status except when an argument is an lvalue with positive
+    status, in which case the corresponding element will receive that
+    status. E.g., L = list(A,B) will result in L[0] having status
+    protect(A) and L[1] having status protect(B). L itself will have
+    the status L had before the assignment. There is a similar copying
+    of protection status when "= { ... }" initialization is used for
+    matrices, lists or objects. For example, except when A or B has
+    no-assign-from protection, M = mat [2] = {A,B} or mat M[2] = {A,B}
+    will result in M[0] and M[1] having statuses protect(A) and
+    protect(B) respectively. (If A or B has no-assign-from protection,
+    mat[2] = {A,B} returns an error value.)
 
-    where expr evaluates to val.
+    Although M = mat[2] = {...} and mat M[2] = {...} do the same thing,
+    these are different from (M = mat[2]) = {...} and (mat M[3]) = {...}.
+    In the former pair of statements, the result of mat[2] = {...} is being
+    assigned to M.  In the latter statments, a matrix with zero elements is
+    being assigned to M and then that matrix is being "reinitialized". Both
+    will fail if M has no-asssign-to protection, but only the latter
+    would be prevented by M having no-copy-to protection.
 
-    Any such protection of A is cancelled by protect(A, 0).
+    When the functions which mave move elements like of sort, reverse,
+    swap, insert, pop, remove, push and append. are evaluated, the
+    protection statuses move with the values, e.g. if among the values
+    and elements involved, there is just one with value 42, then the
+    lvalue to which the value 42 is moved will get the status the lvalue
+    with value 42 had before the evaluation of the function. This is
+    relevant to evaluation of expressions like A = sort(A),
+    append(A, pop(A)), insert(A,2,B,C). Note that when pop(A) is first
+    evaluated it is located on the stack calc uses for calculating
+    expressions rather than being the value of an lvalue. With an
+    explicit assignment like X = pop(A) or the implied assignment in
+    append(A, pop(A)), it becomes the value of an lvalue.
 
-    If A has components as in a matrix or list, components may be
-    protected independently from each other and from A by stateents like:
+    Users may use higher bits values for other kinds of protection or
+    simply to store information about an lvalue and its current value.
+    For example 1024 might be used to indicate that the lvalue is always
+    to have positive value.  Then code for evaluating a function might
+    include lines like
 
-		protect(A[0], 1);
-		protect(A[1], 2);
+	if (protect(A) & 1024 && B <= 0)
+		return newerror("Prohibited assignment");
+	A = B;
 
-    "Copy" refers to the use of copy(A, B, ...) or blkcpy(B, A, ...) to
-    copy A to B.  For example if B is a block, then after
-
-		protect(B, 16);
-
-    attempts to copy to B will fail.
-
-    The protection status of var refers to var as a variable, not to its
-    current value: if an operation like var = value is executed it may
-    change the value of var but not protect(var).
+    When an operation forbidden by a particular bit in the protection
+    status of A is attempted, an error value is created but unless this
+    causes errcount to exceed errmax, the only immediate evidence
+    for the error might be the incrementing of errcount. Sometimes the
+    failure causes the return of the error value; e.g. swap(A,B) if
+    not permitted returns an appropriate error value rather than the
+    null value.  If the value of A is a number and A has no-type-change
+    protection, A = "abc" returns an error value. The error-number of
+    the most recent error value is returned by errno(), a string
+    describing it by strerror().
 
     A named block may be referred to by using the blocks() or blk()
     functions, or by assigning it to a variable A and then using either
@@ -81,53 +198,47 @@ DESCRIPTION
     named block; protect(A,16) will prevent any copying to the named block
     only when it is referred to by A.
 
-    The protection provided by sts = 32 prevents relocation of the memory
-    used by a block, the freeing of a named block, and addition or removal
-    of one or more elements from a list.  For example, if a block B has
-    maxsize 256, then after
-
-		protect(B, 32);
-
-    copy(A, B) will fail if the copying would cause size(B) to equal or
-    exceed 256; if B is a named block, blkfree(B) will not be permitted.
-    If the current value of L is a list, protect(L, 32) prevents the
-    execution of push, pop, append, remove, insert, and delete with first
-    argument L.
-
-    With bit 8 of sts set, as with
-
-		protect(A, 257);
-
-    the protection provided by the lower order bits extends to any
-    elements A may have, and recursively to any elements of these elements,
-    etc.
-
-    All protection of A as described above is removed by
-
-		protect(A, 0).
-
-
 EXAMPLE
+
 	> A = 27
 	> protect(A,1)
-	> protect(A)
-		1
-	> A = 99
-	No-assign-to destination for assign
-
-	> protect(A,2)
 	> A = 45
-	Change of value in assign not permitted
-
-	> A = 27
-
+	> A
+		27
+	> strerror()
+		"No-assign-to destination for assign"
+	> protect(A,64)
+	> protect(A)
+		65
+	> X = A
+	> X
+		0
+	> strerror()
+		"No-assign-from source for assign"
+	> protect(A,-1)
+	> protect(A)
+		64
 	> protect(A,4)
-	> A = 2 + 3i
-	Change of type in assign not permitted
-
-	> protect(A,8)
-	> A = 1/0
-	Error value in assign not permitted
+	> protect(A)
+		68
+	> A = "abc"
+	> A
+		27
+	> strerror()
+		"No-type-change destination for assign"
+	> B = 45
+	> swap(A,B)
+		Error 10372
+	> strerror()
+		"No-assign-to-or-from argument for swap"
+	> protect(A,-64)
+	> protect(A)
+		4
+	> swap(A,B)
+	> A
+		45
+	> B
+		27
 
 	> A = mat[4] = {1,2,3,4}
 	> B = list(5,6,7,8)
@@ -137,47 +248,27 @@ EXAMPLE
 	> strerror()
 		"No-copy-to destination variable"
 
-	> A = blk(0,5)
+	> A = list(1,2,3)
 	> protect(A,32)
+	< append(A,4)
+		Error 10402
+	> strerror()
+		"No-relocate for list append"
+
+	> A = blk(0,5)
 	> copy("abc", A)
 	> copy("de",A)
-	Error 10229
+		Error 10229
 	> strerror()
-	"No-relocation destination variable"
+		"No-relocate destination variable"
 
-	> A = list(1,2,3)
-	> append(A, 4)
-	No-relocate list for push
-
-	> protect(A, 64)
-	> X = A
-	No-assign-from source for assign
-
-	> protect(A,128)
-	> copy(A,B)
-	Error 10225
+	> A = blk("alpha") = {1,2,3,4,5}
+	> protect(A,0)
+	< protect(*A, 16)
+	< copy("abc", A)
+		Error 10228
 	> strerror()
-	"No-copy-from source variable"
-
-	> mat A[2] = {1, list(2, mat[2])}
-	> protect(A,257)
-	> A[1][[1]][1] = 4
-	No-assign-to destination for assign
-	> protect(A,256)
-	> A[1][[1]][1] = 4
-	> A[1][[1]]
-
-	mat [2] (2 elements, 1 nonzero):
-	    [0] = 0
-	    [1] = 4
-
-	> A = blk("alpha") = {1,2,3,4}
-	> protect(A, 0)
-	> protect(*A, 16)
-	copy("abc", A)
-	Error 10228
-	No-copy-to destination named block
-
+		"No-copy-to destination named block"
 LIMITS
     none
 
@@ -185,7 +276,7 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    assign, copy, blk
+    assign, copy, blk, error, errno, strerror
 
 ## Copyright (C) 1999  Landon Curt Noll
 ##
@@ -203,8 +294,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: protect,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: protect,v 29.4 2006/05/19 15:12:57 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/protect,v $
 ##
 ## Under source code control:	1997/07/10 22:38:44

@@ -23,27 +23,27 @@ DESCRIPTION
 
 EXAMPLE
 
-    > B1 = blk("foo")
-    > B2 = blk("Second block")
+    ; B1 = blk("foo")
+    ; B2 = blk("Second block")
     show blocks
      id	  name
     ----  -----
      0	 foo
      1	 Second block
 
-    > blkfree(B1)
-    > show blocks
+    ; blkfree(B1)
+    ; show blocks
      id	  name
     ----  -----
      1	 Second block
 
-    > B1
+    ; B1
 	block 0: foo
 	chunksize = 256, maxsize = 0, datalen = 0
 	NULL
 
-    > blk(B1); B[7] = 5
-    > B1
+    ; blk(B1); B[7] = 5
+    ; B1
 	block 0: foo
 	chunksize = 256, maxsize = 256, datalen = 8
 	0000000000000005
@@ -73,8 +73,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: blkfree,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: blkfree,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/blkfree,v $
 ##
 ## Under source code control:	1997/04/05 13:07:13

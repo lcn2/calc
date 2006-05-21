@@ -15,7 +15,7 @@ DESCRIPTION
     in absolute value than .75 * eps.
 
 EXAMPLE
-    > print tan(1, 1e-5), tan(1, 1e-10), tan(1, 1e-15), tan(1, 1e-20)
+    ; print tan(1, 1e-5), tan(1, 1e-10), tan(1, 1e-15), tan(1, 1e-20)
     1.55741 1.5574077247 1.557407724654902 1.55740772465490223051
 
 LIMITS
@@ -44,8 +44,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: tan,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: tan,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/tan,v $
 ##
 ## Under source code control:	1994/03/19 01:40:29

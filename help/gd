@@ -35,10 +35,10 @@ DESCRIPTION
 	gd(z) = atan(sinh(x)/cos(y)) + i * atanh(sin(y)/cosh(x)).
 
 EXAMPLE
-    > print gd(1, 1e-5), gd(1, 1e-10), gd(1, 1e-15)
+    ; print gd(1, 1e-5), gd(1, 1e-10), gd(1, 1e-15)
     .86577 .8657694832 .865769483239659
 
-    > print gd(2+1i, 1e-5), gd(2+1i, 1e-10)
+    ; print gd(2+1i, 1e-5), gd(2+1i, 1e-10)
     1.42291+.22751i 1.4229114625+.2275106584i
 
 LIMITS
@@ -66,8 +66,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: gd,v 29.3 2005/10/18 10:48:29 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: gd,v 29.4 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/gd,v $
 ##
 ## Under source code control:	1997/09/06 20:03:35

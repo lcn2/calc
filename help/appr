@@ -97,47 +97,47 @@ PROPERTIES
 	If y is nonzero, appr(x,y,8)/y = an odd integer n only if x = n * y.
 
 EXAMPLES
-    > print appr(-5.44,0.1,0), appr(5.44,0.1,0), appr(5.7,1,0), appr(-5.7,1,0)
+    ; print appr(-5.44,0.1,0), appr(5.44,0.1,0), appr(5.7,1,0), appr(-5.7,1,0)
     -5.5 5.4 5 -6
 
-    > print appr(-5.44,-.1,0), appr(5.44,-.1,0), appr(5.7,-1,0), appr(-5.7,-1,0)
+    ; print appr(-5.44,-.1,0), appr(5.44,-.1,0), appr(5.7,-1,0), appr(-5.7,-1,0)
     -5.4 5.5 6 -5
 
-    > print appr(-5.44,0.1,3), appr(5.44,0.1,3), appr(5.7,1,3), appr(-5.7,1,3)
+    ; print appr(-5.44,0.1,3), appr(5.44,0.1,3), appr(5.7,1,3), appr(-5.7,1,3)
     -5.5 5.5 6 -6
 
-    > print appr(-5.44,0.1,4), appr(5.44,0.1,4), appr(5.7,1,4), appr(-5.7,1,4)
+    ; print appr(-5.44,0.1,4), appr(5.44,0.1,4), appr(5.7,1,4), appr(-5.7,1,4)
     -5.5 5.4 5 -6
 
-    > print appr(-5.44,0.1,6), appr(5.44,0.1,6), appr(5.7,1,6), appr(-5.7,1,6)
+    ; print appr(-5.44,0.1,6), appr(5.44,0.1,6), appr(5.7,1,6), appr(-5.7,1,6)
     -5.4 5.4 6 -5
 
-    > print appr(-5.44,-.1,6), appr(5.44,-.1,6), appr(5.7,-1,6), appr(-5.7,-1,6)
+    ; print appr(-5.44,-.1,6), appr(5.44,-.1,6), appr(5.7,-1,6), appr(-5.7,-1,6)
     -5.5 5.5 6 -6
 
-    > print appr(-5.44,0.1,9), appr(5.44,0.1,9), appr(5.7,1,9), appr(-5.7,1,9)
+    ; print appr(-5.44,0.1,9), appr(5.44,0.1,9), appr(5.7,1,9), appr(-5.7,1,9)
     -5.5 5.5 5 -5
 
-    > print appr(-.44,0.1,11), appr(.44,0.1,11), appr(5.7,1,11), appr(-5.7,1,11)
+    ; print appr(-.44,0.1,11), appr(.44,0.1,11), appr(5.7,1,11), appr(-5.7,1,11)
     -.4 .5 5 -6
 
-    > print appr(-.44,-.1,11),appr(.44,-.1,11),appr(5.7,-1,11),appr(-5.7,-1,11)
+    ; print appr(-.44,-.1,11),appr(.44,-.1,11),appr(5.7,-1,11),appr(-5.7,-1,11)
     -.5 .4 6 -5
 
-    > print appr(-.44,0.1,12), appr(.44,0.1,12), appr(5.7,1,12), appr(-5.7,1,12)
+    ; print appr(-.44,0.1,12), appr(.44,0.1,12), appr(5.7,1,12), appr(-5.7,1,12)
     -.4 .5 5 -6
 
-    > print appr(-.44,-.1,12),appr(.44,-.1,12),appr(5.7,-1,12),appr(-5.7,-1,12)
+    ; print appr(-.44,-.1,12),appr(.44,-.1,12),appr(5.7,-1,12),appr(-5.7,-1,12)
     -.5 .4 6 -5
 
-    > print appr(-.44,0.1,15), appr(.44,0.1,15), appr(5.7,1,15), appr(-5.7,1,15)
+    ; print appr(-.44,0.1,15), appr(.44,0.1,15), appr(5.7,1,15), appr(-5.7,1,15)
     -.4 .5 5 -6
 
-    > print appr(-.44,-.1,15),appr(.44,-.1,15),appr(5.7,-1,15),appr(-5.7,-1,15)
+    ; print appr(-.44,-.1,15),appr(.44,-.1,15),appr(5.7,-1,15),appr(-5.7,-1,15)
     -.4 .5 5 -6
 
-    > x = sqrt(7-3i, 1e-20)
-    > print appr(x,1e-5,0), appr(x,1e-5,1), appr(x,1e-5,2), appr(x,1e-6,3)
+    ; x = sqrt(7-3i, 1e-20)
+    ; print appr(x,1e-5,0), appr(x,1e-5,1), appr(x,1e-5,2), appr(x,1e-6,3)
     2.70331-.55488i 2.70332-.55487i 2.70331-.55487i 2.70332-.55488i
 
 LIMITS
@@ -167,8 +167,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: appr,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: appr,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/appr,v $
 ##
 ## Under source code control:	1994/09/25 17:18:21

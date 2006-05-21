@@ -1,11 +1,159 @@
-The following are the changes from calc version 2.11.10.1 to date:
+The following are the changes from calc version 2.12.0 to date:
+
+    Fixed ellip.cal to deal with a calc syntax change that happened
+    many ages ago but was never applied to this file until now.
+    This bug was fixed by Ernest Bowen <ebowen at une dot edu dot au>.
+
+    Fixed a problem where comments using # followed by a !, newline or
+    another # works.  This bug was fixed by Ernest Bowen <ebowen at une
+    dot edu dot au>.
+
+    The show builtins display for functions with long descriptions
+    is now broken into multi-line descriptions.
+
+    The str functions, such as strcpy(s1, s2), will now copy as many
+    characters as possible from s2 to s1, treating '\0' like any other
+    character until the end of s2 is reached. If s2 is shorter than s1,
+    a '\0' is inserted.
+
+    The strcmp(s1, s2) builtin, for strings s1, s2: strcmp(s1, s2) == 0 now
+    means the same as s1 == s2.
+
+    The str(s) builtin has been changed so that it will return only the
+    string formed by the characters of 's' up to the first '\0'.
+
+    The substr(s, start, num) builtin has been changed so that '\0' characters
+    are treated like any other.
+
+    Fixed a bug where strcpy("", "a") used to cause a segmentation fault.
+    This bug was fixed by Ernest Bowen <ebowen at une dot edu dot au>.
+
+    Make minor change to natnumset.cal in how the tail variable is initialized.
+
+    Fixed bugs in the strcmp, strncmp, strcpy, and strncpy help files.
+    This bug was fixed by Ernest Bowen <ebowen at une dot edu dot au>.
+
+    Added cal/screen.cal which Defines ANSI control sequences providing
+    (i.e., cursor movement, changing foreground or background color,
+    etc.) for VT100 terminals and terminal window emulators (i.e., xterm,
+    Apple OS/X Terminal, etc.) that support them.  For example:
+
+	read screen
+	print green:"This is green. ":red:"This is red.":black
+
+    Fixed a bug where too many open files returned E_FOPEN3.  Now
+    a new error symbol F_MANYOPEN is used for too many open files.
+
+    Added the builtin function fpathopen() to open a file while
+    searching along a path:
+
+    	; fd2 = fpathopen("tmp/date", "r", ".:~:~sc:/tmp:/var/tmp:/var")
+	; print fd2
+	"/var/tmp/date"
+
+    By default, fpathopen() searches along CALCPATH.
+
+    Added the calcpath() builtin function to return the current value
+    of CALCPATH.
+
+    Fixed prompt characters in the EXAMPLE section of help files.
+
+    Fixed problems related to the protect function and its documentation.
+    This bug was reported by David Gilham <davidgilham at gmail dot com>.
+    This bug was fixed by Ernest Bowen <ebowen at une dot edu dot au>.
+
+    Raised the limit of exponent in exponential notation.  It was set to
+    arbitrary 1000000 (making 1e1000001 in invalid exponential notation
+    value).  The exponent for exponential notation is now int(MAXLONG/10).
+    On 32 bit machines, this means a limit of 214748364.  On 64 bit
+    machines, this means 922337203685477580.  Of course, you may not
+    have enough memory to hold such huge values, but if you did you can
+    now express such values in exponential notation.
+
+    Added log() builtin for base 10 logarithm.
+
+    Fixed problems where internal use of libc strcpy() might have caused
+    a buffer overflow.  Calc now only uses libc strcpy() when the source
+    string is a constant.
+
+    The calc STRING and STRINGHEAD now use the standard size_t (an unsigned
+    type) length.  Calc mostly uses size_t in dealing with string lengths
+    and object sizes when possible.
+
+    Added ${CCWERR} make variable to allow one to force compiler warnings
+    to be treated as errors.  The ${CC} make variable now uses ${CCWERR}
+    however the ${LCC} (used by the Makefile test code for building hsrc
+    files) does not use ${CCWERR}.  By default, ${CCWERR} is empty.
+    In development Makefiles, we set CCWERR= -Werror to force us to
+    address compiler warnings before the next release.
+
+    The calc make variable, CALCPAGER, now defaults to CALCPAGER= less
+    because the less utility is now very common.  Set CALCPAGER= more
+    if you do not have less.
+
+    Calc source had two styles of switch indentation.  Converted the
+    style where case statements were indented with respect to the switch
+    statement into the style where the case statements are at the same
+    level.  When comparing with older source, one may use the -b argument
+    of the diff command to ignore changes in amount of white space:
+
+    	diff -b -r -u calc-2.11.11 calc-2.12.0
+
+    The read, write, and help commands use the value of global string
+    variable if the symbol name starts with a $.  For example:
+
+    	global x = "lucas.cal";
+	read $x;	/* same as read lucas.cal or read "lucas.cal" */
+
+    Added dotest.cal resource.  Based on a design by Ernest Bowen
+    <ebowen at une dot edu dot au>, the dotest evaluates individual
+    lines from a file.  The dotest() function takes 1 to 3 arguments:
+
+    dotest(dotest_file [,dotest_code [,dotest_maxcond]])
+
+    dotest_file
+
+        Search along CALCPATH for dotest_file, which contains lines that
+        should evaluate to 1.  Comment lines and empty lines are ignored.
+        Comment lines should use ## instead of the multi like /* ... */
+        because lines are evaluated one line at a time.
+
+    dotest_code
+
+        Assign the code number that is to be printed at the start of
+        each non-error line and after **** in each error line.
+        The default code number is 999.
+
+    dotest_maxcond
+
+        The maximum number of error conditions that may be detected.
+        An error condition is not a sign of a problem, in some cases
+        a line deliberately forces an error condition.  A value of -1,
+        the default, implies a maximum of 2147483647.
+
+    Global variables and functions must be declared ahead of time because
+    the dotest scope of evaluation is a line at a time.  For example:
+
+        read dotest.cal
+        read set8700.cal
+        dotest("set8700.line");
+
+    Updated the todo / wish list items.  The top priority now is to
+    convert calc to GNU autoconf / configure to build the calc.
+
+	help todo
+
+    Added missing help file for the stoponerror() builtin.
+
+
+The following are the changes from calc version 2.11.10.1 to 2.11.11:
 
     Fixed a bug reported by the sourceforge user: cedars where:
 
     	ln(exp(6)) == 3		/* WRONG!!! */
 
     incorrectly returned 1.  This bug was fixed by Ernest Bowen
-    <ernie at turing dot une dot edu dot au>.  The regression test
+    <ebowen at une dot edu dot au>.  The regression test
     was expanded to cover this issue.
 
     Added minor improvements to hash regression testing of pi().
@@ -2177,6 +2325,8 @@ The following are the changes from calc version 2.10.3t5.38 to 2.11.3t5.46:
 
     Consolidated multiple SGI IRIX -n32 sections (for r4k, r5k and r10k)
     into a single section.
+
+
 
 
 The following are the changes from calc version 2.10.3t5.34 to 2.10.3t5.37:
@@ -5812,8 +5962,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.71 $
-## @(#) $Id: CHANGES,v 29.71 2005/12/12 06:47:21 chongo Exp $
+## @(#) $Revision: 29.76 $
+## @(#) $Id: CHANGES,v 29.76 2006/05/21 07:55:17 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

@@ -78,20 +78,20 @@ DESCRIPTION
     You can the errno() builtin to determine what the errno number means.
 
 EXAMPLE
-    > fd = fopen("/etc/motd", "r")
-    > print fd
+    ; fd = fopen("/etc/motd", "r")
+    ; print fd
     "/etc/motd"
-    > fd
+    ; fd
 	    FILE 3 "/etc/motd" (reading, pos 0)
 
-    > outfile = fopen("~/tmp/output", "w")
-    > print outfile
+    ; outfile = fopen("~/tmp/output", "w")
+    ; print outfile
     "~/tmp/output"
-    > outfile
+    ; outfile
 	    FILE 4 "~/tmp/output" (writing, pos 0)
 
-    > badfile = fopen("not_a_file", "r")
-    > if (!isfile(badfile)) print "error #" : badfile : ":", errno(badfile);
+    ; badfile = fopen("not_a_file", "r")
+    ; if (!isfile(badfile)) print "error #" : badfile : ":", errno(badfile);
     error #2: No such file or directory
 
 LIMITS
@@ -102,7 +102,8 @@ LINK LIBRARY
 
 SEE ALSO
     errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
-    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt
+    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt,
+    fpathopen
 
 ## Copyright (C) 1999  Landon Curt Noll
 ##
@@ -120,8 +121,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: fopen,v 29.3 2001/04/10 21:46:45 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: fopen,v 29.4 2006/05/07 07:18:26 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/fopen,v $
 ##
 ## Under source code control:	1994/10/27 03:04:17

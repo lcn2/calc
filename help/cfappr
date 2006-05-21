@@ -66,17 +66,17 @@ DESCRIPTION
     exceeding n is 1/cfappr(1/x, n, 16).
 
 EXAMPLE
-    > c = config("mode", "frac")
-    > x = 43/30; u = cfappr(x, 10, 0); v = cfappr(x, 10, 1);
-    > print u, v, x - u, v - x, v - u, cfappr(x, 10, 16)
+    ; c = config("mode", "frac")
+    ; x = 43/30; u = cfappr(x, 10, 0); v = cfappr(x, 10, 1);
+    ; print u, v, x - u, v - x, v - u, cfappr(x, 10, 16)
     10/7 13/9 1/210 1/90 1/63 10/7
 
-    > pi = pi(1e-10)
-    > print cfappr(pi, 100, 16), cfappr(pi, .01, 16), cfappr(pi, 1e-6, 16)
+    ; pi = pi(1e-10)
+    ; print cfappr(pi, 100, 16), cfappr(pi, .01, 16), cfappr(pi, 1e-6, 16)
     311/99 22/7 355/113
 
-    > x = 17/12; u = cfappr(x,4,0); v = cfappr(x,4,1);
-    > print u, v, x - u, v - x, cfappr(x,4,16)
+    ; x = 17/12; u = cfappr(x,4,0); v = cfappr(x,4,1);
+    ; print u, v, x - u, v - x, cfappr(x,4,16)
     4/3 3/2 1/12 1/12 3/2
 
 LIMITS
@@ -104,8 +104,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: cfappr,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: cfappr,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/cfappr,v $
 ##
 ## Under source code control:	1994/09/30 01:23:59

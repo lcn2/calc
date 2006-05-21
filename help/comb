@@ -21,10 +21,10 @@ DESCRIPTION
     may be chosen from x items ignoring the order in which they are chosen.
 
 EXAMPLE
-    > print comb(7,3), comb(7,4), comb(7,5), comb(3,0), comb(0,0)
+    ; print comb(7,3), comb(7,4), comb(7,5), comb(3,0), comb(0,0)
     35 35 21 1 1
 
-    > print comb(2^31+1,2^31-1)
+    ; print comb(2^31+1,2^31-1)
     2305843010287435776
 
 LIMITS
@@ -54,8 +54,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: comb,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: comb,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/comb,v $
 ##
 ## Under source code control:	1994/10/20 04:03:02

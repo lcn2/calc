@@ -17,7 +17,7 @@ DESCRIPTION
     v = asec(x) is the number in [0, pi] for which sec(v) = x.
 
 EXAMPLE
-    > print asec(2, 1e-5), asec(2, 1e-10), asec(2, 1e-15), asec(2, 1e-20)
+    ; print asec(2, 1e-5), asec(2, 1e-10), asec(2, 1e-15), asec(2, 1e-20)
     1.0472 1.0471975512 1.047197551196598 1.04719755119659774615
 
 LIMITS
@@ -45,8 +45,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: asec,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: asec,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/asec,v $
 ##
 ## Under source code control:	1995/11/13 03:49:00

@@ -13,7 +13,7 @@ DESCRIPTION
     Return the greatest integer n for which n^2 <= x.
 
 EXAMPLE
-    > print isqrt(8.5), isqrt(200), isqrt(2e6), isqrt(2e56)
+    ; print isqrt(8.5), isqrt(200), isqrt(2e6), isqrt(2e56)
     2 14 1414 14142135623730950488016887242
 
 LIMITS
@@ -41,8 +41,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: isqrt,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: isqrt,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/isqrt,v $
 ##
 ## Under source code control:	1995/10/25 04:03:45

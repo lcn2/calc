@@ -143,7 +143,7 @@
 #define E_RSEARCH4	10130	/* Bad fourth argument for rsearch */
 #define E_RSEARCH5	10131	/* Cannot find fsize or fpos for rsearch */
 #define E_RSEARCH6	10132	/* File not readable for rsearch */
-#define E_FOPEN3	10133	/* Too many open files */
+#define E_MANYOPEN	10133	/* Too many open files */
 #define E_REWIND2	10134	/* Attempt to rewind a file that is not open */
 #define E_STRERROR1	10135	/* Bad argument type for strerror */
 #define E_STRERROR2	10136	/* Index out of range for strerror */
@@ -239,14 +239,14 @@
 #define E_COPY14	10226	/* No-copy-to destination variable */
 #define E_COPY15	10227	/* No-copy-from source named block */
 #define E_COPY16	10228	/* No-copy-to destination named block */
-#define E_COPY17	10229	/* No-relocation destination for copy */
+#define E_COPY17	10229	/* No-relocate destination for copy */
 #define E_COPYF1	10230	/* File not open for copy */
 #define E_COPYF2	10231	/* fseek or fsize failure for copy */
 #define E_COPYF3	10232	/* fwrite error for copy */
 #define E_COPYF4	10233	/* fread error for copy */
 #define E_PROTECT1	10234	/* Non-variable first argument for protect */
-#define E_PROTECT2	10235	/* Non-integer second argument for protect */
-#define E_PROTECT3	10236	/* Out-of-range second argument for protect */
+#define E_PROTECT2	10235	/* Bad second argument for protect */
+#define E_PROTECT3	10236	/* Bad third argument for protect */
 #define E_MATFILL3	10237	/* No-copy-to destination for matfill */
 #define E_MATFILL4	10238	/* No-assign-from source for matfill */
 #define E_MATTRACE1	10239	/* Non-matrix argument for mattrace */
@@ -372,9 +372,61 @@
 #define E_EULER		10359	/* Bad argument for euler */
 #define E_SLEEP		10360	/* Bad argument for sleep */
 #define E_TTY		10361	/* calc_tty failure */
+#define E_ASSIGN1	10362	/* No-copy-to destination for octet assign */
+#define E_ASSIGN2	10363	/* No-copy-from source for octet assign */
+#define E_ASSIGN3	10364	/* No-change destination for octet assign */
+#define E_ASSIGN4	10365	/* Non-variable destination for assign */
+#define E_ASSIGN5	10366	/* No-assign-to destination for assign */
+#define E_ASSIGN6	10367	/* No-assign-from source for assign */
+#define E_ASSIGN7	10368	/* No-change destination for assign */
+#define E_ASSIGN8	10369	/* No-type-change destination for assign */
+#define E_ASSIGN9	10370	/* No-error-value destination for assign */
+#define E_SWAP1		10371	/* No-copy argument for octet swap */
+#define E_SWAP2		10372	/* No-assign-to-or-from argument for swap */
+#define E_SWAP3		10373	/* Non-variable argument for swap */
+#define E_QUOMOD1	10374	/* Non-variable argument 4 or 4 for quomod */
+#define E_QUOMOD2	10375	/* Non-real-number argument 1 or 2 for quomod */
+#define E_QUOMOD3	10376	/* No-assign-to argument 3 or 4 for quomod */
+#define E_PREINC1	10377	/* No-copy-to or no-change argument for octet preinc */
+#define E_PREINC2	10378	/* Non-variable argument for preinc */
+#define E_PREINC3	10379	/* No-assign-to or no-change argument for preinc */
+#define E_PREDEC1	10380	/* No-copy-to or no-change argument for octet predec */
+#define E_PREDEC2	10381	/* Non-variable argument for predec */
+#define E_PREDEC3	10382	/* No-assign-to or no-change argument for predec */
+#define E_POSTINC1	10383	/* No-copy-to or no-change argument for octet postinc */
+#define E_POSTINC2	10384	/* Non-variable argument for postinc */
+#define E_POSTINC3	10385	/* No-assign-to or no-change argument for postinc */
+#define E_POSTDEC1	10386	/* No-copy-to or no-change argument for octet postdec */
+#define E_POSTDEC2	10387	/* Non-variable argument for postdec */
+#define E_POSTDEC3	10388	/* No-assign-to or no-change argument for postdec */
+#define E_INIT1		10389	/* Error-type structure for initialization */
+#define E_INIT2		10390	/* No-copy-to structure for initialization */
+#define E_INIT3		10391	/* Too many initializer values */
+#define E_INIT4		10392	/* Attempt to initialize freed named block */
+#define E_INIT5		10393	/* Bad structure type for initialization */
+#define E_INIT6		10394	/* No-assign-to element for initialization */
+#define E_INIT7		10395	/* No-change element for initialization */
+#define E_INIT8		10396	/* No-type-change element for initialization */
+#define E_INIT9		10397	/* No-error-value element for initialization */
+#define E_INIT10	10398	/* No-assign-or-copy-from source for initialization */
+#define E_LIST1		10399	/* No-relocate for list insert */
+#define E_LIST2		10400	/* No-relocate for list delete */
+#define E_LIST3		10401	/* No-relocate for list push */
+#define E_LIST4		10402	/* No-relocate for list append */
+#define E_LIST5		10403	/* No-relocate for list pop */
+#define E_LIST6		10404	/* No-relocate for list remove */
+#define E_MODIFY1	10405	/* Non-variable first argument for modify */
+#define E_MODIFY2	10406	/* Non-string second argument for modify */
+#define E_MODIFY3	10407	/* No-change first argument for modify */
+#define E_MODIFY4	10408	/* Undefined function for modify */
+#define E_MODIFY5	10409	/* Unacceptable type first argument for modify */
+#define E_FPATHOPEN1	10410	/* Non-string arguments for fpathopen */
+#define E_FPATHOPEN2	10411	/* Unrecognized mode for fpathopen */
+#define E_LOG1		10412	/* Bad epsilon argument for log */
+#define E_LOG2		10413	/* Non-numeric first argument for log */
 
-#define E__HIGHEST	10361	/* highest calc error */
-#define E__COUNT		361	/* number of calc errors */
+#define E__HIGHEST	10413	/* highest calc error */
+#define E__COUNT		413	/* number of calc errors */
 #define E_USERDEF	20000	/* base of user defined errors */
 
 /* names of calc error values */

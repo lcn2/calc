@@ -1,7 +1,7 @@
 /*
  * string - string list routines
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2006  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: string.h,v 29.4 2001/06/08 21:00:58 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: string.h,v 29.6 2006/05/19 15:26:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/string.h,v $
  *
  * Under source code control:	1990/02/15 01:48:36
@@ -41,7 +41,7 @@
 
 struct string {
 	char *s_str;
-	long s_len;
+	size_t s_len;
 	long s_links;
 	struct string *s_next;
 };
@@ -51,8 +51,8 @@ typedef struct string STRING;
 
 typedef struct {
 	char *h_list;	/* list of strings separated by nulls */
-	long h_used;	/* characters used so far */
-	long h_avail;	/* characters available for use */
+	size_t h_used;	/* characters used so far */
+	size_t h_avail;	/* characters available for use */
 	long h_count;	/* number of strings */
 } STRINGHEAD;
 
@@ -65,7 +65,7 @@ extern char *charstr(int ch);
 extern char *addliteral(char *str);
 extern long stringindex(char *str1, char *str2);
 extern STRING *stralloc(void);
-extern long addstring(char *str, long len);
+extern long addstring(char *str, size_t len);
 extern STRING *charstring(int ch);
 extern STRING *makestring(char *str);
 extern STRING *makenewstring(char *str);

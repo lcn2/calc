@@ -1,7 +1,7 @@
 /*
  * addop - add opcodes to a function being compiled
  *
- * Copyright (C) 1999-2004  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2006  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: addop.c,v 29.5 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: addop.c,v 29.8 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/addop.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -184,7 +184,7 @@ void
 endfunc(void)
 {
 	register FUNC *fp;		/* function just finished */
-	unsigned long size;		/* size of just created function */
+	size_t size;			/* size of just created function */
 	unsigned long index;
 
 	if (oldop != OP_RETURN) {
@@ -211,7 +211,7 @@ endfunc(void)
 	if (newname[0] != '*' && (conf->traceflags & TRACE_FNCODES)) {
 		dumpnames = TRUE;
 		for (size = 0; size < fp->f_opcodecount; ) {
-			printf("%ld: ", (long)size);
+			printf("%u: ", size);
 			size += dumpop(&fp->f_opcodes[size]);
 		}
 	}
@@ -451,124 +451,124 @@ addop(long op)
 	 * slightly optimize the code depending on the various combinations.
 	 */
 	switch (op) {
-		case OP_GETVALUE:
-			switch (oldop) {
-				case OP_NUMBER:
-				case OP_ZERO:
-				case OP_ONE:
-				case OP_IMAGINARY:
-				case OP_GETEPSILON:
-				case OP_SETEPSILON:
-				case OP_STRING:
-				case OP_UNDEF:
-				case OP_GETCONFIG:
-				case OP_SETCONFIG:
-					return;
-				case OP_DUPLICATE:
-					diff = 1;
-					oldop = OP_DUPVALUE;
-					break;
-				case OP_FIADDR:
-					diff = 1;
-					oldop = OP_FIVALUE;
-					break;
-				case OP_GLOBALADDR:
-					diff = 1 + PTR_SIZE;
-					oldop = OP_GLOBALVALUE;
-					break;
-				case OP_LOCALADDR:
-					oldop = OP_LOCALVALUE;
-					break;
-				case OP_PARAMADDR:
-					oldop = OP_PARAMVALUE;
-					break;
-				case OP_ELEMADDR:
-					oldop = OP_ELEMVALUE;
-					break;
-				default:
-					cut = FALSE;
+	case OP_GETVALUE:
+		switch (oldop) {
+		case OP_NUMBER:
+		case OP_ZERO:
+		case OP_ONE:
+		case OP_IMAGINARY:
+		case OP_GETEPSILON:
+		case OP_SETEPSILON:
+		case OP_STRING:
+		case OP_UNDEF:
+		case OP_GETCONFIG:
+		case OP_SETCONFIG:
+			return;
+		case OP_DUPLICATE:
+			diff = 1;
+			oldop = OP_DUPVALUE;
+			break;
+		case OP_FIADDR:
+			diff = 1;
+			oldop = OP_FIVALUE;
+			break;
+		case OP_GLOBALADDR:
+			diff = 1 + PTR_SIZE;
+			oldop = OP_GLOBALVALUE;
+			break;
+		case OP_LOCALADDR:
+			oldop = OP_LOCALVALUE;
+			break;
+		case OP_PARAMADDR:
+			oldop = OP_PARAMVALUE;
+			break;
+		case OP_ELEMADDR:
+			oldop = OP_ELEMVALUE;
+			break;
+		default:
+			cut = FALSE;
 
-			}
-			if (cut) {
-				fp->f_opcodes[count - diff] = oldop;
-				return;
-			}
+		}
+		if (cut) {
+			fp->f_opcodes[count - diff] = oldop;
+			return;
+		}
+		break;
+	case OP_POP:
+		switch (oldop) {
+		case OP_ASSIGN:
+			fp->f_opcodes[count-1] = OP_ASSIGNPOP;
+			oldop = OP_ASSIGNPOP;
+			return;
+		case OP_NUMBER:
+		case OP_IMAGINARY:
+			q = constvalue(fp->f_opcodes[count-1]);
+			qfree(q);
 			break;
-		case OP_POP:
-			switch (oldop) {
-			case OP_ASSIGN:
-				fp->f_opcodes[count-1] = OP_ASSIGNPOP;
-				oldop = OP_ASSIGNPOP;
-				return;
-			case OP_NUMBER:
-			case OP_IMAGINARY:
-				q = constvalue(fp->f_opcodes[count-1]);
-				qfree(q);
-				break;
-			case OP_STRING:
-				sfree(findstring((long)fp->f_opcodes[count-1]));
-				break;
-			case OP_LOCALADDR:
-			case OP_PARAMADDR:
-				break;
-			case OP_GLOBALADDR:
-				diff = 1 + PTR_SIZE;
-				break;
-			case OP_UNDEF:
-				fp->f_opcodecount -= 1;
-				oldop = OP_NOP;
-				oldoldop = OP_NOP;
-				return;
-			default:
-				cut = FALSE;
-			}
-			if (cut) {
-				fp->f_opcodecount -= diff;
-				oldop = OP_NOP;
-				oldoldop = OP_NOP;
-				fprintf(stderr,
-					"Line %ld: unused value ignored\n",
-					linenumber());
-				return;
-			}
+		case OP_STRING:
+			sfree(findstring((long)fp->f_opcodes[count-1]));
 			break;
-		case OP_NEGATE:
-			if (oldop == OP_NUMBER) {
-				q = constvalue(fp->f_opcodes[count-1]);
-				fp->f_opcodes[count-1] = addqconstant(qneg(q));
-				qfree(q);
-				return;
-			}
+		case OP_LOCALADDR:
+		case OP_PARAMADDR:
+			break;
+		case OP_GLOBALADDR:
+			diff = 1 + PTR_SIZE;
+			break;
+		case OP_UNDEF:
+			fp->f_opcodecount -= 1;
+			oldop = OP_NOP;
+			oldoldop = OP_NOP;
+			return;
+		default:
+			cut = FALSE;
+		}
+		if (cut) {
+			fp->f_opcodecount -= diff;
+			oldop = OP_NOP;
+			oldoldop = OP_NOP;
+			fprintf(stderr,
+				"Line %ld: unused value ignored\n",
+				linenumber());
+			return;
+		}
+		break;
+	case OP_NEGATE:
+		if (oldop == OP_NUMBER) {
+			q = constvalue(fp->f_opcodes[count-1]);
+			fp->f_opcodes[count-1] = addqconstant(qneg(q));
+			qfree(q);
+			return;
+		}
 	}
 	if (oldop == OP_NUMBER) {
 		if (oldoldop == OP_NUMBER) {
 			q1 = constvalue(fp->f_opcodes[count - 3]);
 			q2 = constvalue(fp->f_opcodes[count - 1]);
 			switch (op) {
-				case OP_DIV:
-					if (qiszero(q2)) {
-						cut = FALSE;
-						break;
-					}
-					q = qqdiv(q1,q2);
-					break;
-				case OP_MUL:
-					q = qmul(q1,q2);
-					break;
-				case OP_ADD:
-					q = qqadd(q1,q2);
-					break;
-				case OP_SUB:
-					q = qsub(q1,q2);
-					break;
-				case OP_POWER:
-					if (qisfrac(q2) || qisneg(q2))
-						cut = FALSE;
-					else
-						q = qpowi(q1,q2);
-					break;
-				default:
+			case OP_DIV:
+				if (qiszero(q2)) {
 					cut = FALSE;
+					break;
+				}
+				q = qqdiv(q1,q2);
+				break;
+			case OP_MUL:
+				q = qmul(q1,q2);
+				break;
+			case OP_ADD:
+				q = qqadd(q1,q2);
+				break;
+			case OP_SUB:
+				q = qsub(q1,q2);
+				break;
+			case OP_POWER:
+				if (qisfrac(q2) || qisneg(q2))
+					cut = FALSE;
+				else
+					q = qpowi(q1,q2);
+				break;
+			default:
+				cut = FALSE;
 			}
 			if (cut) {
 				qfree(q1);

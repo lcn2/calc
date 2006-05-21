@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: quickhash.c,v 29.8 2004/02/25 23:55:38 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: quickhash.c,v 29.9 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/quickhash.c,v $
  *
  * Under source code control:	1995/03/04 11:34:23
@@ -185,46 +185,46 @@ QCKHASH
 hashvalue(VALUE *vp, QCKHASH val)
 {
 	switch (vp->v_type) {
-		case V_INT:
-			val += V_NUM;
-			return quasi_fnv(vp->v_int, val);
-		case V_NUM:
-			return fnv_qhash(vp->v_num, val);
-		case V_COM:
-			return fnv_chash(vp->v_com, val);
-		case V_STR:
-			return fnv_STRhash(vp->v_str, val);
-		case V_NULL:
-			return val;
-		case V_OBJ:
-			return objhash(vp->v_obj, val);
-		case V_LIST:
-			return listhash(vp->v_list, val);
-		case V_ASSOC:
-			return assochash(vp->v_assoc, val);
-		case V_MAT:
-			return mathash(vp->v_mat, val);
-		case V_FILE:
-			val += V_FILE;
-			return quasi_fnv(vp->v_file, val);
-		case V_RAND:
-			return randhash(vp->v_rand, val);
-		case V_RANDOM:
-			return randomhash(vp->v_random, val);
-		case V_CONFIG:
-			return config_hash(vp->v_config, val);
-		case V_HASH:
-			return hash_hash(vp->v_hash, val);
-		case V_BLOCK:
-			return blk_hash(vp->v_block, val);
-		case V_OCTET:
-			val += V_OCTET;
-			return quasi_fnv((int)*vp->v_octet, val);
-		case V_NBLOCK:
-			return blk_hash(vp->v_nblock->blk, val);
-		default:
-			math_error("Hashing unknown value");
-			/*NOTREACHED*/
+	case V_INT:
+		val += V_NUM;
+		return quasi_fnv(vp->v_int, val);
+	case V_NUM:
+		return fnv_qhash(vp->v_num, val);
+	case V_COM:
+		return fnv_chash(vp->v_com, val);
+	case V_STR:
+		return fnv_STRhash(vp->v_str, val);
+	case V_NULL:
+		return val;
+	case V_OBJ:
+		return objhash(vp->v_obj, val);
+	case V_LIST:
+		return listhash(vp->v_list, val);
+	case V_ASSOC:
+		return assochash(vp->v_assoc, val);
+	case V_MAT:
+		return mathash(vp->v_mat, val);
+	case V_FILE:
+		val += V_FILE;
+		return quasi_fnv(vp->v_file, val);
+	case V_RAND:
+		return randhash(vp->v_rand, val);
+	case V_RANDOM:
+		return randomhash(vp->v_random, val);
+	case V_CONFIG:
+		return config_hash(vp->v_config, val);
+	case V_HASH:
+		return hash_hash(vp->v_hash, val);
+	case V_BLOCK:
+		return blk_hash(vp->v_block, val);
+	case V_OCTET:
+		val += V_OCTET;
+		return quasi_fnv((int)*vp->v_octet, val);
+	case V_NBLOCK:
+		return blk_hash(vp->v_nblock->blk, val);
+	default:
+		math_error("Hashing unknown value");
+		/*NOTREACHED*/
 	}
 	return (QCKHASH)0;
 }

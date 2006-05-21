@@ -1,7 +1,7 @@
 /*
  * hist - interactive readline module
  *
- * Copyright (C) 1999-2004  David I. Bell
+ * Copyright (C) 1999-2006  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: hist.c,v 29.6 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: hist.c,v 29.10 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hist.c,v $
  *
  * Under source code control:	1993/05/02 20:09:19
@@ -261,7 +261,7 @@ static	void	insert_string(char *str, int len);
  * zero on an end of file or error.  The prompt is printed before reading
  * the line.
  */
-int
+size_t
 hist_getline(char *prompt, char *buf, int len)
 {
 	/*
@@ -351,7 +351,7 @@ hist_init(char *filename)
 	 */
 	if (filename == NULL)
 		filename = HIST_BINDING_FILE;
-	if (opensearchfile(filename, calcpath, NULL, FALSE) > 0)
+	if (opensearchfile(filename, calcpath, NULL, FALSE, FALSE) > 0)
 		return HIST_NOFILE;
 
 	/*
@@ -763,18 +763,18 @@ static void
 arrow_key(void)
 {
 	switch (fgetc(stdin)) {
-		case 'A':
-			backward_history();
-			break;
-		case 'B':
-			forward_history();
-			break;
-		case 'C':
-			forward_char();
-			break;
-		case 'D':
-			backward_char();
-			break;
+	case 'A':
+		backward_history();
+		break;
+	case 'B':
+		forward_history();
+		break;
+	case 'C':
+		forward_char();
+		break;
+	case 'D':
+		backward_char();
+		break;
 	}
 }
 
@@ -1445,8 +1445,8 @@ quit_calc(void)
 /* name of history file */
 char *my_calc_history = NULL;
 
-int
-hist_getline(char *prompt, char *buf, int len)
+size_t
+hist_getline(char *prompt, char *buf, size_t len)
 {
 	char *line;
 
@@ -1454,13 +1454,13 @@ hist_getline(char *prompt, char *buf, int len)
 	line = readline(prompt);
 	if (!line) {
 		switch (conf->ctrl_d) {
-			case CTRL_D_NEVER_EOF:
-				return 0;
-			case CTRL_D_VIRGIN_EOF:
-			case CTRL_D_EMPTY_EOF:
-			default:
-				quit_calc();
-				/*NOTREACHED*/
+		case CTRL_D_NEVER_EOF:
+			return 0;
+		case CTRL_D_VIRGIN_EOF:
+		case CTRL_D_EMPTY_EOF:
+		default:
+			quit_calc();
+			/*NOTREACHED*/
 		}
 	}
 	strncpy(buf, line, len - 1);
@@ -1553,20 +1553,20 @@ main(int argc, char **argv)
 		filename = argv[1];
 
 	switch (hist_init(filename)) {
-		case HIST_SUCCESS:
-			break;
-		case HIST_NOFILE:
-			fprintf(stderr, "Binding file was not found\n");
-			break;
-		case HIST_NOTTY:
-			fprintf(stderr, "Cannot set terminal parameters\n");
-			break;
-		case HIST_INITED:
-			fprintf(stderr, "Hist is already inited\n");
-			break;
-		default:
-			fprintf(stderr, "Unknown error from hist_init\n");
-			break;
+	case HIST_SUCCESS:
+		break;
+	case HIST_NOFILE:
+		fprintf(stderr, "Binding file was not found\n");
+		break;
+	case HIST_NOTTY:
+		fprintf(stderr, "Cannot set terminal parameters\n");
+		break;
+	case HIST_INITED:
+		fprintf(stderr, "Hist is already inited\n");
+		break;
+	default:
+		fprintf(stderr, "Unknown error from hist_init\n");
+		break;
 	}
 
 	do {

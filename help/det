@@ -37,25 +37,25 @@ DESCRIPTION
 			- (a * h - g * b) * (a * f - d * c))/a.
 
 EXAMPLE
-    > mat A[3,3] = {2, 3, 5, 7, 11, 13, 17, 19, 23}
-    > c = config("mode", "frac")
-    > print det(A), det(A^2), det(A^3), det(A^-1)
+    ; mat A[3,3] = {2, 3, 5, 7, 11, 13, 17, 19, 23}
+    ; c = config("mode", "frac")
+    ; print det(A), det(A^2), det(A^3), det(A^-1)
     -78 6084 -474552 -1/78
 
-    > obj res {r}
-    > global md
-    > define res_test(a) = !ismult(a.r, md)
-    > define res_sub(a,b) {local obj res v = {(a.r - b.r) % md}; return v;}
-    > define res_mul(a,b) {local obj res v = {(a.r * b.r) % md}; return v;}
-    > define res_neg(a) {local obj res v = {(-a.r) % md}; return v;}
-    > define res(x) {local obj res v = {x % md}; return v;}
-    > md = 0
-    > mat A[2,2] = {res(2), res(3), res(5), res(7)}
-    > md = 5
-    > print det(A)
+    ; obj res {r}
+    ; global md
+    ; define res_test(a) = !ismult(a.r, md)
+    ; define res_sub(a,b) {local obj res v = {(a.r - b.r) % md}; return v;}
+    ; define res_mul(a,b) {local obj res v = {(a.r * b.r) % md}; return v;}
+    ; define res_neg(a) {local obj res v = {(-a.r) % md}; return v;}
+    ; define res(x) {local obj res v = {x % md}; return v;}
+    ; md = 0
+    ; mat A[2,2] = {res(2), res(3), res(5), res(7)}
+    ; md = 5
+    ; print det(A)
     obj res {4}
-    > md = 6
-    > print det(A)
+    ; md = 6
+    ; print det(A)
     obj res {5}
 
     Note that if A had been a 3 x 3 or larger matrix, res_div(a,b) for
@@ -89,8 +89,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: det,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: det,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/det,v $
 ##
 ## Under source code control:	1995/11/28 11:17:47

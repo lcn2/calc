@@ -18,10 +18,10 @@ DESCRIPTION
     of EOF or error, nil is returned.
 
 EXAMPLE
-    > fd = fopen("/tmp/newfile", "w")
-    > fputs(fd, "chongo was here\n")
-    > fd2 = fopen("/tmp/newfile", "r")
-    > fgetc(fd2)
+    ; fd = fopen("/tmp/newfile", "w")
+    ; fputs(fd, "chongo was here\n")
+    ; fd2 = fopen("/tmp/newfile", "r")
+    ; fgetc(fd2)
 	    "c"
 
 LIMITS
@@ -50,8 +50,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: fgetc,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: fgetc,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/fgetc,v $
 ##
 ## Under source code control:	1995/03/04 11:33:19

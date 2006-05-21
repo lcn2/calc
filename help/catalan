@@ -25,7 +25,7 @@ DESCRIPTION
     from (x,y) = (0,0) to (x,y) = (n,n) for which always y <= x.
 
 EXAMPLE
-    > print catalan(2), catalan(3), catalan(4), catalan(20)
+    ; print catalan(2), catalan(3), catalan(4), catalan(20)
     2 5 14 6564120420
 
 LIMITS
@@ -53,8 +53,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: catalan,v 29.2 2000/12/17 12:27:58 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: catalan,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/catalan,v $
 ##
 ## Under source code control:	2000/12/14 01:33:00

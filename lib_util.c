@@ -1,7 +1,7 @@
 /*
  * lib_util - calc library utility routines
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2006  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: lib_util.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: lib_util.c,v 29.4 2006/05/19 15:26:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_util.c,v $
  *
  * Under source code control:	1997/04/19 21:38:30
@@ -134,7 +134,7 @@ convstr2z(char *str)
 {
 	HALF *v;	/* storage for string as HALFs */
 	ZVALUE ret;	/* return value */
-	int len;	/* length in HALFs of our string rounded up */
+	size_t len;	/* length in HALFs of our string rounded up */
 
 	/*
 	 * firewall
@@ -192,7 +192,7 @@ convhex2z(char *hex)
 	char *sp;	/* string pointer */
 	ZVALUE ret;	/* return value */
 	int len;	/* length in HALFs of our string rounded up */
-	int slen;	/* hex string length */
+	size_t slen;	/* hex string length */
 	int i;
 
 	/*

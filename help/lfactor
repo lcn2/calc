@@ -17,10 +17,10 @@ DESCRIPTION
     If n < 0, -1 is returned.
 
 EXAMPLE
-    > print lfactor(35,2), lfactor(35,3), lfactor(-35, 3)
+    ; print lfactor(35,2), lfactor(35,3), lfactor(-35, 3)
     1 5 -1
 
-    > print lfactor(2^32+1,115), lfactor(2^32+1,116), lfactor(2^59-1,1e5)
+    ; print lfactor(2^32+1,115), lfactor(2^32+1,116), lfactor(2^59-1,1e5)
     1 641 179951
 
 LIMITS
@@ -49,8 +49,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: lfactor,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: lfactor,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/lfactor,v $
 ##
 ## Under source code control:	1995/12/18 12:34:57

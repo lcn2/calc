@@ -1,0 +1,64 @@
+NAME
+    log	-  base 10 logarithm
+
+SYNOPSIS
+    log(x [,eps])
+
+TYPES
+    x		nonzero real or complex
+    eps		nonzero real, defaults to epsilon()
+
+    return	real or complex
+
+DESCRIPTION
+    Approximate the base 10 logarithm function of x by a multiple of
+    epsilon, the error having absolute value less than 0.75 * eps.
+    If n is a positive integer, log(x, 10^-n) will usually be correct
+    to the n-th decimal place.
+
+EXAMPLE
+    ; print log(10), log(100), log(1e10), log(1e500)
+    1 2 10 500
+
+    ; print log(128), log(23209), log(2^17-19)
+    ~2.10720996964786836649 ~4.36565642852838930424 ~5.11744696704937330414
+
+    ; print log(2+3i, 1e-5)
+    ~0.55696845725899964822+~0.42681936428109216144i
+
+LIMITS
+    x != 0
+    eps > 0
+
+LINK LIBRARY
+    NUMBER *qlog(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_log(COMPLEX *x, NUMBER *eps)
+
+SEE ALSO
+    ln
+
+## Copyright (C) 2006  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.1 $
+## @(#) $Id: log,v 29.1 2006/05/07 12:59:00 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/log,v $
+##
+## Under source code control:	2006/05/06 23:56:04
+## File existed as early as:	2006
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

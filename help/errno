@@ -33,15 +33,15 @@ DESCRIPTION
 
 EXAMPLE
     Assuming there is no file with name "not_a_file"
-    > errno(0)
-    > errmax(errcount()+4)
+    ; errno(0)
+    ; errmax(errcount()+4)
 	    0
-    > badfile = fopen("not_a_file", "r")
-    > print errno(), error(), strerror()
+    ; badfile = fopen("not_a_file", "r")
+    ; print errno(), error(), strerror()
     2 System error 2 No such file or directory
 
-    > a = 1/0
-    > print errno(), error(), strerror()
+    ; a = 1/0
+    ; print errno(), error(), strerror()
     10001 Error 10001 Division by zero
 
 LIMITS
@@ -51,9 +51,10 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    errmax, errcount, error, strerror, iserror, newerror, errorcodes
+    errmax, errcount, error, strerror, iserror, newerror, errorcodes,
+    stoponerror
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -69,8 +70,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: errno,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: errno,v 29.4 2006/05/21 07:31:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/errno,v $
 ##
 ## Under source code control:	1994/10/27 03:05:08

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: comfunc.c,v 29.4 2005/10/18 10:43:49 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: comfunc.c,v 29.6 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/comfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -32,6 +32,16 @@
 
 #include "config.h"
 #include "cmath.h"
+
+/*
+ * cache the natural logarithm of 10
+ */
+static COMPLEX *cln_10 = NULL;
+static NUMBER *cln_10_epsilon = NULL;
+static NUMBER _q10_ = { { _tenval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
+static NUMBER _q0_ = { { _zeroval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
+COMPLEX _cten_ = { &_q10_, &_q0_, 1 };
+
 
 /*
  * Compute the result of raising a complex number to an integer power.
@@ -69,29 +79,29 @@ c_powi(COMPLEX *c, NUMBER *q)
 	 */
 	if (power <= 4) {
 		switch ((int) (power * sign)) {
-			case 0:
-				return clink(&_cone_);
-			case 1:
-				return clink(c);
-			case -1:
-				return c_inv(c);
-			case 2:
-				return c_square(c);
-			case -2:
-				tmp = c_square(c);
-				res = c_inv(tmp);
-				comfree(tmp);
-				return res;
-			case 3:
-				tmp = c_square(c);
-				res = c_mul(c, tmp);
-				comfree(tmp);
-				return res;
-			case 4:
-				tmp = c_square(c);
-				res = c_square(tmp);
-				comfree(tmp);
-				return res;
+		case 0:
+			return clink(&_cone_);
+		case 1:
+			return clink(c);
+		case -1:
+			return c_inv(c);
+		case 2:
+			return c_square(c);
+		case -2:
+			tmp = c_square(c);
+			res = c_inv(tmp);
+			comfree(tmp);
+			return res;
+		case 3:
+			tmp = c_square(c);
+			res = c_mul(c, tmp);
+			comfree(tmp);
+			return res;
+		case 4:
+			tmp = c_square(c);
+			res = c_square(tmp);
+			comfree(tmp);
+			return res;
 		}
 	}
 	/*
@@ -491,7 +501,7 @@ c_ln(COMPLEX *c, NUMBER *epsilon)
 	NUMBER *a2b2, *tmp1, *tmp2, *epsilon1;
 
 	if (ciszero(c)) {
-		math_error("Logarithm of zero");
+		math_error("logarithm of zero");
 		/*NOTREACHED*/
 	}
 	if (cisone(c))
@@ -517,6 +527,60 @@ c_ln(COMPLEX *c, NUMBER *epsilon)
 	qfree(r->imag);
 	r->imag = qatan2(c->imag, c->real, epsilon);
 	return r;
+}
+
+/*
+ * Calculate base 10 logarithm by:
+ *
+ *	log(c) = ln(c) / ln(10)
+ */
+COMPLEX *
+c_log(COMPLEX *c, NUMBER *epsilon)
+{
+	int need_new_cln_10 = TRUE;	/* FALSE => use cached cln_10 value */
+	COMPLEX *ln_c;			/* ln(x) */
+	COMPLEX *ret;			/* base 10 logarithm of x */
+
+	/*
+	 * compute ln(c) first
+	 */
+	ln_c = c_ln(c, epsilon);
+	/* log(1) == 0 */
+	if (ciszero(ln_c)) {
+		return ln_c;
+	}
+
+	/*
+	 * save epsilon for ln(10) if needed
+	 */
+	if (cln_10_epsilon == NULL) {
+		/* first time call */
+		cln_10_epsilon = qcopy(epsilon);
+	} else if (qcmp(cln_10_epsilon, epsilon) == FALSE) {
+		/* replaced cacheed value with epsilon arg */
+		qfree(cln_10_epsilon);
+		cln_10_epsilon = qcopy(epsilon);
+	} else if (cln_10 != NULL) {
+		/* the previously computed ln(2) is OK to use */
+		need_new_cln_10 = FALSE;
+	}
+
+	/*
+	 * compute ln(10) if needed
+	 */
+	if (need_new_cln_10 == TRUE) {
+		if (cln_10 != NULL) {
+			comfree(cln_10);
+		}
+		cln_10 = c_ln(&_cten_, cln_10_epsilon);
+	}
+
+	/*
+	 * return ln(c) / ln(10)
+	 */
+	ret = c_div(ln_c, cln_10);
+	comfree(ln_c);
+	return ret;
 }
 
 

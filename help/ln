@@ -17,10 +17,10 @@ DESCRIPTION
     to the n-th decimal place.
 
 EXAMPLE
-    > print ln(10, 1e-5), ln(10, 1e-10), ln(10, 1e-15), ln(10, 1e-20)
+    ; print ln(10, 1e-5), ln(10, 1e-10), ln(10, 1e-15), ln(10, 1e-20)
     2.30259 2.302585093 2.302585092994046 2.30258509299404568402
 
-    > print ln(2+3i, 1e-5), ln(2+3i, 1e-10)
+    ; print ln(2+3i, 1e-5), ln(2+3i, 1e-10)
     1.28247+.98279i 1.2824746787+.9827937232i
 
 LIMITS
@@ -32,7 +32,7 @@ LINK LIBRARY
     COMPLEX *c_ln(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
-    exp, acosh, asinh, atanh
+    exp, acosh, asinh, atanh, log
 
 ## Copyright (C) 1999  Landon Curt Noll
 ##
@@ -50,8 +50,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: ln,v 29.3 2005/10/18 10:48:29 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: ln,v 29.5 2006/05/07 13:05:18 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/ln,v $
 ##
 ## Under source code control:	1995/10/11 04:41:26

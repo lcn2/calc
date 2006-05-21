@@ -1,7 +1,7 @@
 /*
  * string - string list routines
  *
- * Copyright (C) 1999-2004  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2006  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: string.c,v 29.4 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: string.c,v 29.9 2006/05/20 10:13:39 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/string.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -45,7 +45,7 @@ static char *chartable;		/* single character string table */
 static struct {
 	long l_count;		/* count of strings in table */
 	long l_maxcount;	/* maximum strings storable in table */
-	long l_avail;		/* characters available in current string */
+	size_t l_avail;		/* characters available in current string */
 	char *l_alloc;		/* next available string storage */
 	char **l_table;		/* current string table */
 } literals;
@@ -89,11 +89,11 @@ addstr(STRINGHEAD *hp, char *str)
 	char *retstr;		/* returned string pointer */
 	char *list;		/* string list */
 	long newsize;		/* new size of string list */
-	long len;		/* length of current string */
+	size_t len;		/* length of current string */
 
 	if ((str == NULL) || (*str == '\0'))
 		return NULL;
-	len = (long)strlen(str) + 1;
+	len = strlen(str) + 1;
 	if (hp->h_avail <= len) {
 		newsize = len + 2000 + hp->h_used + hp->h_avail;
 		list = (char *)realloc(hp->h_list, newsize);
@@ -151,17 +151,17 @@ int
 findstr(STRINGHEAD *hp, char *str)
 {
 	register char *test;	/* string being tested */
-	long len;		/* length of string being found */
-	long testlen;		/* length of test string */
+	size_t len;		/* length of string being found */
+	size_t testlen;		/* length of test string */
 	int index;		/* index of string */
 
 	if ((hp->h_count <= 0) || (str == NULL))
 		return -1;
-	len = (long)strlen(str);
+	len = strlen(str);
 	test = hp->h_list;
 	index = 0;
 	while (*test) {
-		testlen = (long)strlen(test);
+		testlen = strlen(test);
 		if ((testlen == len) && (*test == *str) && (strcmp(test, str) == 0))
 			return index;
 		test += (testlen + 1);
@@ -177,7 +177,7 @@ findstr(STRINGHEAD *hp, char *str)
  *
  * given:
  *	hp		header of string storage
- *	n
+ *	n		string index
  */
 char *
 namestr(STRINGHEAD *hp, long n)
@@ -213,13 +213,13 @@ long
 stringindex(char *format, char *test)
 {
 	long index;		/* found index */
-	long len;		/* length of current piece of string */
-	long testlen;		/* length of test string */
+	size_t len;		/* length of current piece of string */
+	size_t testlen;		/* length of test string */
 
-	testlen = (long)strlen(test);
+	testlen = strlen(test);
 	index = 1;
 	while (*format) {
-		len = (long)strlen(format);
+		len = strlen(format);
 		if ((len == testlen) && (*format == *test) &&
 			(strcmp(format, test) == 0))
 				return index;
@@ -241,9 +241,9 @@ addliteral(char *str)
 	register char **table;	/* table of strings */
 	char *newstr;		/* newly allocated string */
 	long count;		/* number of strings */
-	long len;		/* length of string to allocate */
+	size_t len;		/* length of string to allocate */
 
-	len = (long)strlen(str);
+	len = strlen(str);
 	if (len <= 1)
 		return charstr(*str);
 	/*
@@ -320,10 +320,6 @@ stringadd(STRING *s1, STRING *s2)
 	char *cfrom, *c;
 	long len;
 
-	if (s1->s_len == 0)
-		return slink(s2);
-	if (s2->s_len == 0)
-		return slink(s1);
 	len = s1->s_len + s2->s_len;
 	s = stralloc();
 	s->s_len = len;
@@ -391,7 +387,7 @@ STRING *
 stringmul(NUMBER *q, STRING *str)
 {
 	long len;
-	long j;
+	size_t j;
 	NUMBER *tmp1, *tmp2;
 	char *c, *c1;
 	STRING *s;
@@ -414,12 +410,8 @@ stringmul(NUMBER *q, STRING *str)
 	len = qtoi(tmp1);
 	qfree(tmp1);
 	qfree(q);
-	if (len == 0) {
-		s = stralloc();
-		s->s_len = 0;
-		s->s_str = charstr('\0');
-		return s;
-	}
+	if (len == 0)
+		return slink(&_nullstring_);
 	c = (char *) malloc(len + 1);
 	if (c == NULL)
 		return NULL;
@@ -445,7 +437,7 @@ STRING *
 stringand(STRING *s1, STRING *s2)
 {
 	STRING *s;
-	long len;
+	size_t len;
 	char *c1, *c2, *c;
 
 	if (s1->s_len == 0  || s2->s_len == 0)
@@ -543,7 +535,7 @@ STRING *
 stringdiff(STRING *s1, STRING *s2)
 {
 	STRING *s;
-	long i;
+	size_t i;
 	char *c2, *c;
 
 	i = s1->s_len;
@@ -589,15 +581,16 @@ stringsegment(STRING *s1, long n1, long n2)
 	char *c, *c1;
 	long len;
 
-	if ((n1 < 0 && n2 < 0) || (n1 >= s1->s_len && n2 >= s1->s_len))
+	if ((n1 < 0 && n2 < 0) ||
+	    ((size_t)n1 >= s1->s_len && (size_t)n2 >= s1->s_len))
 		return slink(&_nullstring_);
 	if (n1 < 0)
 		n1 = 0;
 	if (n2 < 0)
 		n2 = 0;
-	if (n1 >= s1->s_len)
+	if ((size_t)n1 >= s1->s_len)
 		n1 = s1->s_len - 1;
-	if (n2 >= s1->s_len)
+	if ((size_t)n2 >= s1->s_len)
 		n2 = s1->s_len - 1;
 	len = (n1 >= n2) ? n1 - n2 + 1 : n2 - n1 + 1;
 	s = stralloc();
@@ -688,41 +681,51 @@ stringshift(STRING *s1, long n)
 }
 
 /*
- * stringcpy copies as many characters as possible up to and including
- * the first '\0' from s2 to s1 and returns s1
+ * stringcpy copies as many characters as possible
+ * from s2 to s1 and returns s1
  */
 STRING *
 stringcpy(STRING *s1, STRING *s2)
 {
 	char *c1, *c2;
-	long len;
+	size_t num;
 
-	c1 = s1->s_str;
-	c2 = s2->s_str;
-	len = s1->s_len;
-	while (len-- > 0 && *c2 != 0)
-		*c1++ = *c2++;
-	*c1 = '\0';
+	if (s1->s_len > 0) {
+		c1 = s1->s_str;
+		c2 = s2->s_str;
+		num = s1->s_len;
+		if (num > s2->s_len)
+			num = s2->s_len;
+		while (num-- > 0)
+			*c1++ = *c2++;
+		*c1 = '\0';
+	}
 	return slink(s1);
 }
 
 /*
- * stringncpy copies up to n characters from s2 to s1 and returns s1
+ * stringncpy copies up to num characters from s2 to s1 and returns s1
+ * If num > size(s2) null characters are copied until s1 is full or
+ * a total of num characters have been copied
  */
 STRING *
-stringncpy(STRING *s1, STRING *s2, long num)
+stringncpy(STRING *s1, STRING *s2, size_t num)
 {
 	char *c1, *c2;
+	size_t i;
 
 	if (num > s1->s_len)
 		num = s1->s_len;
+	i = num;
+	if (i > s2->s_len)
+		i = s2->s_len;
 	c1 = s1->s_str;
 	c2 = s2->s_str;
-	while (num-- > 0 && *c2 != 0)
+	while (i-- > 0)
 		*c1++ = *c2++;
-	while (num-- > 0)
-		*c1++ = '\0';
-	*c1 = '\0';
+	if (num > s2->s_len) {
+		memset(c1, 0, num - s2->s_len);
+	}
 	return slink(s1);
 }
 
@@ -824,15 +827,18 @@ stringrel(STRING *s1, STRING *s2)
 	char *c1, *c2;
 	long i1, i2;
 
+	if (s1 == s2)
+		return 0;
+
 	i1 = s1->s_len;
 	i2 = s2->s_len;
-	if (i1 == 0)
-		return (i2 > 0);
 	if (i2 == 0)
+		return (i1 > 0);
+	if (i1 == 0)
 		return -1;
 	c1 = s1->s_str;
 	c2 = s2->s_str;
-	while (i1 > 0 && i2 > 0 && *c1 == *c2) {
+	while (i1 > 1 && i2 > 1 && *c1 == *c2) {
 		i1--;
 		i2--;
 		c1++;
@@ -862,7 +868,7 @@ stringbit(STRING *s, long index)
 		return -1;
 	res = index & 7;
 	index >>= 3;
-	if (index >= s->s_len)
+	if ((size_t)index >= s->s_len)
 		return -1;
 	ch = s->s_str[index];
 	return (ch >> res) & 1;
@@ -899,7 +905,7 @@ stringsetbit(STRING *s, long index, BOOL val)
 		return 1;
 	bit = 1 << (index & 7);
 	index >>= 3;
-	if (index >= s->s_len)
+	if ((size_t)index >= s->s_len)
 		return 2;
 	c = &s->s_str[index];
 	*c &= ~bit;
@@ -1059,9 +1065,9 @@ STRING *
 makestring(char *str)
 {
 	STRING *s;
-	long len;
+	size_t len;
 
-	len = (long)strlen(str);
+	len = strlen(str);
 	s = stralloc();
 	s->s_str = str;
 	s->s_len = len;
@@ -1097,9 +1103,9 @@ makenewstring(char *str)
 {
 	STRING *s;
 	char *c;
-	long len;
+	size_t len;
 
-	len = (long)strlen(str);
+	len = strlen(str);
 	if (len == 0)
 		return slink(&_nullstring_);
 	c = (char *) malloc(len + 1);
@@ -1189,7 +1195,7 @@ initstrings(void)
  * When called, len is length of string including '\0'
  */
 long
-addstring(char *str, long len)
+addstring(char *str, size_t len)
 {
 	STRING **sp;
 	STRING *s;
@@ -1198,6 +1204,9 @@ addstring(char *str, long len)
 	long first;		/* first non-null position found */
 	BOOL havefirst;
 
+	if (len < 1) {
+		math_error("addstring length including trailing NUL < 1");
+	}
 	if (stringconstavail <= 0) {
 		if (stringconsttable == NULL) {
 			initstrings();
@@ -1297,16 +1306,16 @@ printechar(char *c)
 	putchar('\\');
 	ech = 0;
 	switch (ch) {
-		case '\n': ech = 'n'; break;
-		case '\r': ech = 'r'; break;
-		case '\t': ech = 't'; break;
-		case '\b': ech = 'b'; break;
-		case '\f': ech = 'f'; break;
-		case '\v': ech = 'v'; break;
-		case '\\': ech = '\\'; break;
-		case '\"': ech = '\"'; break;
-		case 7: ech = 'a'; break;
-		case 27: ech = 'e'; break;
+	case '\n': ech = 'n'; break;
+	case '\r': ech = 'r'; break;
+	case '\t': ech = 't'; break;
+	case '\b': ech = 'b'; break;
+	case '\f': ech = 'f'; break;
+	case '\v': ech = 'v'; break;
+	case '\\': ech = '\\'; break;
+	case '\"': ech = '\"'; break;
+	case 7: ech = 'a'; break;
+	case 27: ech = 'e'; break;
 	}
 	if (ech) {
 		putchar(ech);
@@ -1355,9 +1364,9 @@ fitstring(char *str, long len, long width)
 			continue;
 		n++;
 		switch (ch) {
-			case '\n': case '\r': case '\t': case '\b': case '\f':
-			case '\v': case '\\': case '\"': case 7: case 27:
-				continue;
+		case '\n': case '\r': case '\t': case '\b': case '\f':
+		case '\v': case '\\': case '\"': case 7: case 27:
+			continue;
 		}
 		if (ch >= 64 || (nch >= '0' && nch <= '7')) {
 			n += 2;
@@ -1383,13 +1392,13 @@ showstrings(void)
 	printf("Index  Links  Length  String\n");
 	printf("-----  -----  ------  ------\n");
 	sp = &_nullstring_;
-	printf("    0  %5ld	  0  \"\"\n", sp->s_links);
+	printf("    0  %5ld	   0  \"\"\n", sp->s_links);
 	for (i = 0, k = 1, count = 1; i < blockcount; i++) {
 		sp = firstStrs[i];
 		for (j = 0; j < STRALLOC; j++, k++, sp++) {
 			if (sp->s_links > 0) {
 				++count;
-				printf("%5ld  %5ld  %6ld  \"",
+				printf("%5ld  %5ld  %6u  \"",
 					k, sp->s_links, sp->s_len);
 				fitstring(sp->s_str, sp->s_len, 50);
 				printf("\"\n");
@@ -1414,7 +1423,7 @@ showliterals(void)
 		sp = stringconsttable[i];
 		if (sp->s_links > 0) {
 			++count;
-			printf("%5ld  %5ld  %6ld  \"",
+			printf("%5ld  %5ld  %6u  \"",
 				i, sp->s_links, sp->s_len);
 			fitstring(sp->s_str, sp->s_len, 50);
 			printf("\"\n");

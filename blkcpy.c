@@ -1,7 +1,7 @@
 /*
  * blkcpy - general values and related routines used by the calculator
  *
- * Copyright (C) 1999-2004  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2006  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: blkcpy.c,v 29.5 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: blkcpy.c,v 29.9 2006/05/20 08:43:55 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/blkcpy.c,v $
  *
  * Under source code control:	1997/04/18 20:41:26
@@ -73,51 +73,51 @@ copystod(VALUE *svp, long ssi, long num, VALUE *dvp, long dsi)
 	 * determine/check source type
 	 */
 	switch(svp->v_type) {
-		case V_NBLOCK:
-			if (svp->v_nblock->subtype & V_NOCOPYFROM)
-				return E_COPY15;
-			sblk = svp->v_nblock->blk;
-			if (sblk->data == NULL)
-				return E_COPY8;
-			break;
-		case V_BLOCK:
-			sblk = svp->v_block;
-			break;
-		case V_STR:
-		case V_OCTET:
-		case V_NUM:
-		case V_FILE:
-		case V_MAT:
-		case V_LIST:
-			break;
-		default:
-			return E_COPY9;
+	case V_NBLOCK:
+		if (svp->v_nblock->subtype & V_NOCOPYFROM)
+			return E_COPY15;
+		sblk = svp->v_nblock->blk;
+		if (sblk->data == NULL)
+			return E_COPY8;
+		break;
+	case V_BLOCK:
+		sblk = svp->v_block;
+		break;
+	case V_STR:
+	case V_OCTET:
+	case V_NUM:
+	case V_FILE:
+	case V_MAT:
+	case V_LIST:
+		break;
+	default:
+		return E_COPY9;
 	}
 
 	/*
 	 * determine/check destination type
 	 */
 	switch(dvp->v_type) {
-		case V_NBLOCK:
-			if (dvp->v_nblock->subtype & V_NOCOPYTO)
-				return E_COPY16;
-			noreloc |=((dvp->v_nblock->subtype & V_NOREALLOC) != 0);
-			dblk = dvp->v_nblock->blk;
-			if (dblk->data == NULL)
-				return E_COPY10;
-			break;
-		case V_BLOCK:
-			noreloc = ((dvp->v_subtype & V_NOREALLOC) != 0);
-			dblk = dvp->v_block;
-			break;
-		case V_STR:
-		case V_NUM:
-		case V_FILE:
-		case V_MAT:
-		case V_LIST:
-			break;
-		default:
-			return E_COPY11;
+	case V_NBLOCK:
+		if (dvp->v_nblock->subtype & V_NOCOPYTO)
+			return E_COPY16;
+		noreloc |=((dvp->v_nblock->subtype & V_NOREALLOC) != 0);
+		dblk = dvp->v_nblock->blk;
+		if (dblk->data == NULL)
+			return E_COPY10;
+		break;
+	case V_BLOCK:
+		noreloc = ((dvp->v_subtype & V_NOREALLOC) != 0);
+		dblk = dvp->v_block;
+		break;
+	case V_STR:
+	case V_NUM:
+	case V_FILE:
+	case V_MAT:
+	case V_LIST:
+		break;
+	default:
+		return E_COPY11;
 	}
 
 	/*
@@ -280,7 +280,7 @@ copymat2mat(MATRIX *smat, long ssi, long num, MATRIX *dmat, long dsi)
 	VALUE *vp;
 	VALUE *vq;
 	VALUE *vtemp;
-	short subtype;
+	unsigned short subtype;
 
 	if (ssi > smat->m_size)
 		return E_COPY2;
@@ -311,7 +311,7 @@ copymat2mat(MATRIX *smat, long ssi, long num, MATRIX *dmat, long dsi)
 		subtype = vq->v_subtype;
 		freevalue(vq);
 		*vq = *vp;
-		vq->v_subtype = subtype;
+		vq->v_subtype |= subtype;
 	}
 	free(vtemp);
 	return 0;
@@ -329,7 +329,7 @@ copyblk2mat(BLOCK *blk, long ssi, long num, MATRIX *dmat, long dsi)
 	VALUE *vq;
 	VALUE *vtemp;
 	long i;
-	short subtype;
+	unsigned short subtype;
 
 	if (ssi > blk->datalen)
 		return E_COPY2;
@@ -363,7 +363,7 @@ copyblk2mat(BLOCK *blk, long ssi, long num, MATRIX *dmat, long dsi)
 		subtype = vq->v_subtype;
 		freevalue(vq);
 		*vq = *vp;
-		vq->v_subtype = subtype;
+		vq->v_subtype |= subtype;
 	}
 	free(vtemp);
 	return 0;
@@ -429,6 +429,7 @@ copymat2list(MATRIX *smat, long ssi, long num, LIST *lp, long dsi)
 	LISTELEM *ep;
 	VALUE *vtemp;
 	long i;
+	unsigned short subtype;
 
 	if (ssi > smat->m_size)
 		return E_COPY2;
@@ -456,8 +457,10 @@ copymat2list(MATRIX *smat, long ssi, long num, LIST *lp, long dsi)
 	ep = listelement(lp, (long) dsi);
 	i = num;
 	while (i-- > 0) {
+		subtype = ep->e_value.v_subtype;
 		freevalue(&ep->e_value);
 		ep->e_value = *vq++;
+		ep->e_value.v_subtype |= subtype;
 		ep = ep->e_next;
 	}
 	free(vtemp);
@@ -476,7 +479,7 @@ copylist2mat(LIST *lp, long ssi, long num, MATRIX *dmat, long dsi)
 	LISTELEM *ep;
 	VALUE *vtemp;
 	long i;
-	short subtype;
+	unsigned short subtype;
 
 	if (ssi > lp->l_count)
 		return E_COPY2;
@@ -508,7 +511,7 @@ copylist2mat(LIST *lp, long ssi, long num, MATRIX *dmat, long dsi)
 		subtype = vq->v_subtype;
 		freevalue(vq);
 		*vq = *vp;
-		vq->v_subtype = subtype;
+		vq->v_subtype |= subtype;
 	}
 	free(vtemp);
 	return 0;
@@ -526,6 +529,7 @@ copylist2list(LIST *slp, long ssi, long num, LIST *dlp, long dsi)
 	LISTELEM *dep;
 	VALUE *vtemp;
 	VALUE *vp;
+	unsigned short subtype;
 
 	if (ssi > slp->l_count)
 		return E_COPY2;
@@ -555,8 +559,10 @@ copylist2list(LIST *slp, long ssi, long num, LIST *dlp, long dsi)
 	vp = vtemp;
 	i = num;
 	while (i-- > 0) {
+		subtype = dep->e_value.v_subtype;
 		freevalue(&dep->e_value);
 		dep->e_value = *vp++;
+		dep->e_value.v_subtype |= subtype;
 		dep = dep->e_next;
 	}
 	free(vtemp);
@@ -806,13 +812,13 @@ copystr2str(STRING *sstr, long ssi, long num, STRING *dstr, long dsi)
 {
 	char *c, *c1;
 
-	if (num < 0 || ssi + num > sstr->s_len)
+	if (num < 0 || (size_t)(ssi + num) > sstr->s_len)
 		num = sstr->s_len - ssi;
 	if (num <= 0)
 		return 0;		/* Nothing to be copied */
 	if (dsi < 0)			/* default destination index */
 		dsi = 0;
-	if (dsi + num > dstr->s_len)
+	if ((size_t)(dsi + num) > dstr->s_len)
 		num = dstr->s_len - dsi;
 	c1 = sstr->s_str + ssi;
 	c = dstr->s_str + dsi;
@@ -838,7 +844,7 @@ copyblk2str(BLOCK *sblk, long ssi, long num, STRING *dstr, long dsi)
 		return 0;		/* Nothing to be copied */
 	if (dsi < 0)			/* default destination index */
 		dsi = 0;
-	if (dsi + num > dstr->s_len)
+	if ((size_t)(dsi + num) > dstr->s_len)
 		num = dstr->s_len - dsi;
 	c1 = sblk->data + ssi;
 	c = (USB8 *)dstr->s_str + dsi;
@@ -852,18 +858,18 @@ copyblk2str(BLOCK *sblk, long ssi, long num, STRING *dstr, long dsi)
 int
 copyostr2str(char *sstr, long ssi, long num, STRING *dstr, long dsi)
 {
-	long len;
+	size_t len;
 	char	*c, *c1;
 
-	len = (long)strlen(sstr);
+	len = strlen(sstr);
 
-	if (num < 0 || ssi + num > len)
+	if (num < 0 || (size_t)(ssi + num) > len)
 		num = len - ssi;
 	if (num <= 0)			/* Nothing to be copied */
 		return 0;
 	if (dsi < 0)
 		dsi = 0;		/* Default destination index */
-	if (dsi + num > dstr->s_len)
+	if ((size_t)(dsi + num) > dstr->s_len)
 		num = dstr->s_len - dsi;
 	c1 = sstr + ssi;
 	c = dstr->s_str + dsi;
@@ -879,16 +885,16 @@ copyostr2str(char *sstr, long ssi, long num, STRING *dstr, long dsi)
 int
 copyostr2blk(char *str,long ssi,long num,BLOCK *dblk,long dsi,BOOL noreloc)
 {
-	int	len;
-	int	newlen;
-	int	newsize;
+	size_t	len;
+	size_t	newlen;
+	size_t	newsize;
 	USB8	*newdata;
 
 	len = strlen(str) + 1;
 
-	if (ssi > len)
+	if (ssi > 0 && (size_t)ssi > len)
 		return E_COPY2;
-	if (num < 0 || ssi + num > len)
+	if (num < 0 || (size_t)(ssi + num) > len)
 		num = len - ssi;
 	if (num <= 0)			/* Nothing to be copied */
 		return 0;
@@ -897,7 +903,7 @@ copyostr2blk(char *str,long ssi,long num,BLOCK *dblk,long dsi,BOOL noreloc)
 	newlen = dsi + num;
 	if (newlen <= 0)
 		return E_COPY7;
-	if (newlen >= dblk->maxsize) {
+	if (newlen >= (size_t)dblk->maxsize) {
 		if (noreloc)
 			return E_COPY17;
 		newsize = (1 + newlen/dblk->blkchunk) * dblk->blkchunk;
@@ -910,7 +916,7 @@ copyostr2blk(char *str,long ssi,long num,BLOCK *dblk,long dsi,BOOL noreloc)
 		dblk->maxsize = newsize;
 	}
 	memmove(dblk->data + dsi, str + ssi, num);
-	if (newlen > dblk->datalen)
+	if (newlen > (size_t)dblk->datalen)
 		dblk->datalen = newlen;
 	return 0;
 }
@@ -978,8 +984,8 @@ memmove(void *s1, const void *s2, CALC_SIZE_T n)
 int
 copynum2blk(NUMBER *snum, long ssi, long num, BLOCK *dblk, long dsi, BOOL noreloc)
 {
-	long	newlen;
-	long	newsize;
+	size_t	newlen;
+	size_t	newsize;
 	USB8	*newdata;
 #if CALC_BYTE_ORDER == BIG_ENDIAN
 	ZVALUE	*swnum; /* byte swapped numerator */
@@ -995,10 +1001,10 @@ copynum2blk(NUMBER *snum, long ssi, long num, BLOCK *dblk, long dsi, BOOL norelo
 		return E_COPY5;
 	if (dsi < 0)
 		dsi = dblk->datalen;
-	newlen = dsi + (long)(num*sizeof(HALF));
+	newlen = dsi + (num*sizeof(HALF));
 	if (newlen <= 0)
 		return E_COPY7;
-	if (newlen >= dblk->maxsize) {
+	if (newlen >= (size_t)dblk->maxsize) {
 		if (noreloc)
 			return E_COPY17;
 		newsize = (1 + newlen/dblk->blkchunk) * dblk->blkchunk;
@@ -1017,7 +1023,7 @@ copynum2blk(NUMBER *snum, long ssi, long num, BLOCK *dblk, long dsi, BOOL norelo
 	memmove(dblk->data+dsi, (char *)(swnum->v+ssi), num*sizeof(HALF));
 	zfree(*swnum);
 #endif
-	if (newlen > dblk->datalen)
+	if (newlen > (size_t)dblk->datalen)
 		dblk->datalen = newlen;
 	return 0;
 }
@@ -1029,7 +1035,7 @@ copynum2blk(NUMBER *snum, long ssi, long num, BLOCK *dblk, long dsi, BOOL norelo
 int
 copyblk2num(BLOCK *sblk, long ssi, long num, NUMBER *dnum, long dsi, NUMBER **res)
 {
-	long	newlen;
+	size_t	newlen;
 	NUMBER *ret;		/* cloned and modified numerator */
 #if CALC_BYTE_ORDER == BIG_ENDIAN
 	HALF *swapped;		/* byte swapped input data */
@@ -1048,7 +1054,7 @@ copyblk2num(BLOCK *sblk, long ssi, long num, NUMBER *dnum, long dsi, NUMBER **re
 		return E_COPY5;
 	if (dsi < 0)
 		dsi = dnum->num.len;
-	newlen = dsi + (long)((num+sizeof(HALF)-1)/sizeof(HALF));
+	newlen = dsi + ((num+sizeof(HALF)-1)/sizeof(HALF));
 	if (newlen <= 0)
 		return E_COPY7;
 

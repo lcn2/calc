@@ -2,7 +2,7 @@ NAME
     freopen - close (if necessary) and reopen a filestream
 
 SYNOPSIS
-    freopen(fs, mode) or freopen(fs, mode, filename)
+    freopen(fs, mode [,filename])
 
 TYPES
     fs		open or closed file stream
@@ -22,13 +22,13 @@ DESCRIPTION
 
 EXAMPLE
 
-    > f = fopen("/tmp/junk", "w")
-    > fputs(f, "Leonard Euler")
-    > freopen(f, "r")
-    > fgets(f)
+    ; f = fopen("/tmp/junk", "w")
+    ; fputs(f, "Leonard Euler")
+    ; freopen(f, "r")
+    ; fgets(f)
 	    "Leonard Euler"
-    > !chmod u-w /tmp/junk
-    > freopen(f, "w")
+    ; !chmod u-w /tmp/junk
+    ; freopen(f, "w")
 	    Error 10013
 
 LIMITS
@@ -57,8 +57,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: freopen,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: freopen,v 29.3 2006/05/07 07:18:56 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/freopen,v $
 ##
 ## Under source code control:	1996/04/30 03:05:18

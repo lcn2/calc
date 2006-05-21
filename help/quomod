@@ -22,13 +22,13 @@ DESCRIPTION
     XXX - need to document relationship with "quomod" config value
 
 EXAMPLE
-    > global u, v;
-    > global mat M[2];
-    > print quomod(13,5,u,v), u, v, quomod(15.6,5.2,M[0],M[1]), M[0], M[1];
-    > 1 2 3 0 3 0
-    > A = assoc();
-    > print quomod(13, 5, A[1], A[2]), A[1], A[2]
-    > 1 2 3
+    ; global u, v;
+    ; global mat M[2];
+    ; print quomod(13,5,u,v), u, v, quomod(15.6,5.2,M[0],M[1]), M[0], M[1];
+    ; 1 2 3 0 3 0
+    ; A = assoc();
+    ; print quomod(13, 5, A[1], A[2]), A[1], A[2]
+    ; 1 2 3
 
     XXX - need examples of how the "quomod" config file changes results
 
@@ -57,8 +57,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: quomod,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: quomod,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/quomod,v $
 ##
 ## Under source code control:	1995/05/07 03:17:03

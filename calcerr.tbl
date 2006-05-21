@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.4 $
-# @(#) $Id: calcerr.tbl,v 29.4 2001/04/10 22:06:46 chongo Exp $
+# @(#) $Revision: 29.8 $
+# @(#) $Id: calcerr.tbl,v 29.8 2006/05/19 15:12:57 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/calcerr.tbl,v $
 #
 # Under source code control:	1996/05/23 17:38:44
@@ -164,7 +164,7 @@ E_RSEARCH3	Bad third argument for rsearch
 E_RSEARCH4	Bad fourth argument for rsearch
 E_RSEARCH5	Cannot find fsize or fpos for rsearch
 E_RSEARCH6	File not readable for rsearch
-E_FOPEN3	Too many open files
+E_MANYOPEN	Too many open files
 E_REWIND2	Attempt to rewind a file that is not open
 E_STRERROR1	Bad argument type for strerror
 E_STRERROR2	Index out of range for strerror
@@ -260,14 +260,14 @@ E_COPY13	No-copy-from source variable
 E_COPY14	No-copy-to destination variable
 E_COPY15	No-copy-from source named block
 E_COPY16	No-copy-to destination named block
-E_COPY17	No-relocation destination for copy
+E_COPY17	No-relocate destination for copy
 E_COPYF1	File not open for copy
 E_COPYF2	fseek or fsize failure for copy
 E_COPYF3	fwrite error for copy
 E_COPYF4	fread error for copy
 E_PROTECT1	Non-variable first argument for protect
-E_PROTECT2	Non-integer second argument for protect
-E_PROTECT3	Out-of-range second argument for protect
+E_PROTECT2	Bad second argument for protect
+E_PROTECT3	Bad third argument for protect
 E_MATFILL3	No-copy-to destination for matfill
 E_MATFILL4	No-assign-from source for matfill
 E_MATTRACE1	Non-matrix argument for mattrace
@@ -393,3 +393,55 @@ E_BERN		Bad argument for bern
 E_EULER		Bad argument for euler
 E_SLEEP		Bad argument for sleep
 E_TTY		calc_tty failure
+E_ASSIGN1	No-copy-to destination for octet assign
+E_ASSIGN2	No-copy-from source for octet assign
+E_ASSIGN3	No-change destination for octet assign
+E_ASSIGN4	Non-variable destination for assign
+E_ASSIGN5	No-assign-to destination for assign
+E_ASSIGN6	No-assign-from source for assign
+E_ASSIGN7	No-change destination for assign
+E_ASSIGN8	No-type-change destination for assign
+E_ASSIGN9	No-error-value destination for assign
+E_SWAP1		No-copy argument for octet swap
+E_SWAP2		No-assign-to-or-from argument for swap
+E_SWAP3		Non-variable argument for swap
+E_QUOMOD1	Non-variable argument 4 or 4 for quomod
+E_QUOMOD2	Non-real-number argument 1 or 2 for quomod
+E_QUOMOD3	No-assign-to argument 3 or 4 for quomod
+E_PREINC1	No-copy-to or no-change argument for octet preinc
+E_PREINC2	Non-variable argument for preinc
+E_PREINC3	No-assign-to or no-change argument for preinc
+E_PREDEC1	No-copy-to or no-change argument for octet predec
+E_PREDEC2	Non-variable argument for predec
+E_PREDEC3	No-assign-to or no-change argument for predec
+E_POSTINC1	No-copy-to or no-change argument for octet postinc
+E_POSTINC2	Non-variable argument for postinc
+E_POSTINC3	No-assign-to or no-change argument for postinc
+E_POSTDEC1	No-copy-to or no-change argument for octet postdec
+E_POSTDEC2	Non-variable argument for postdec
+E_POSTDEC3	No-assign-to or no-change argument for postdec
+E_INIT1		Error-type structure for initialization
+E_INIT2		No-copy-to structure for initialization
+E_INIT3		Too many initializer values
+E_INIT4		Attempt to initialize freed named block
+E_INIT5		Bad structure type for initialization
+E_INIT6		No-assign-to element for initialization
+E_INIT7		No-change element for initialization
+E_INIT8		No-type-change element for initialization
+E_INIT9		No-error-value element for initialization
+E_INIT10	No-assign-or-copy-from source for initialization
+E_LIST1		No-relocate for list insert
+E_LIST2		No-relocate for list delete
+E_LIST3		No-relocate for list push
+E_LIST4		No-relocate for list append
+E_LIST5		No-relocate for list pop
+E_LIST6		No-relocate for list remove
+E_MODIFY1	Non-variable first argument for modify
+E_MODIFY2	Non-string second argument for modify
+E_MODIFY3	No-change first argument for modify
+E_MODIFY4	Undefined function for modify
+E_MODIFY5	Unacceptable type first argument for modify
+E_FPATHOPEN1	Non-string arguments for fpathopen
+E_FPATHOPEN2	Unrecognized mode for fpathopen
+E_LOG1		Bad epsilon argument for log
+E_LOG2		Non-numeric first argument for log

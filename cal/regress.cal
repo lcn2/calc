@@ -1,7 +1,7 @@
 /*
  * regress - calc regression and correctness test suite
  *
- * Copyright (C) 1999-2004  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2006  David I. Bell and Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.20 $
- * @(#) $Id: regress.cal,v 29.20 2004/10/22 23:51:26 chongo Exp $
+ * @(#) $Revision: 29.25 $
+ * @(#) $Id: regress.cal,v 29.25 2006/05/21 00:58:31 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -1310,9 +1310,14 @@ define test_functions()
 	 * verify sleep
 	 */
 	vrfy(sleep(1/5) == null(),	'1153: sleep(1/5) == null()');
-	vrfy(sleep(1) == null(),	'1154: sleep(1) == null()');
+	vrfy(sleep(1/100) == null(),	'1154: sleep(1/100) == null()');
 
-	print '1155: Ending test_functions';
+	/*
+	 * verify calcpath
+	 */
+	vrfy(isstr(calcpath()),		'1155: isstr(calcpath())');
+
+	print '1156: Ending test_functions';
 }
 print '017: parsed test_functions()';
 
@@ -2595,6 +2600,22 @@ define test_2600()
 			    strcat(str(tnum++), ': ln(exp(6)^15) == 90'));
 	vrfy(ln(exp(5)^18) == 90,
 			    strcat(str(tnum++), ': ln(exp(5)^18) == 90'));
+	vrfy(log(1e6) == 6,
+			    strcat(str(tnum++), ': log(1e6)) == 6'));
+	vrfy(log(1) == 0,
+			    strcat(str(tnum++), ': log(1)) == 0'));
+	vrfy(log(100) == 2,
+			    strcat(str(tnum++), ': log(100)) == 2'));
+	vrfy(log(1e66) == 66,
+			    strcat(str(tnum++), ': log(1e66)) == 66'));
+	vrfy(log(1e127) == 127,
+			    strcat(str(tnum++), ': log(1e127)) == 127'));
+	vrfy(round(log(17^47),10) == 57.8310993048,
+			    strcat(str(tnum++),
+			    	   ': round(log(17^47),10) == 57.8310993048'));
+	vrfy(round(log(127),10) == 2.103803721,
+			    strcat(str(tnum++),
+			    	   ': round(log(127),10) == 2.103803721'));
         epsilon(i),;
 	print tnum++: ': epsilon(i),;';
 
@@ -3383,7 +3404,7 @@ print '070: parsed test_redc()';
  */
 define test_fileops()
 {
-	local a, b, c, f, m, n, x, y, z;
+	local a, b, c, f, m, n, p, r, x, y, z;
 	local L = "Landon";
 	local C = "Curt";
 	local N = "Noll";
@@ -3486,12 +3507,20 @@ define test_fileops()
 	vrfy(isnull(fclose(f)),		  '4259: isnull(fclose(f))');
 
 	/*
+	 * fpathopen tests
+	 */
+	vrfy(!iserror(p=fpathopen("junk4200","r",".")),
+			'4260: !iserror(p=fparhopen("junk4200","r","."))');
+	vrfy(!iserror(r=fpathopen("regress.cal","r")),
+			'4261: !iserror(r=fparhopen("regress.cal","r","."))');
+
+	/*
 	 * cleanup
 	 */
 	x = rm("junk4200");
-	print				  '4260: x = rm("junk4200")';
+	print				  '4262: x = rm("junk4200")';
 
-	print '4261: Ending test_fileops';
+	print '4263: Ending test_fileops';
 }
 print '071: parsed test_fileops()';
 
@@ -5115,7 +5144,7 @@ define test_assign(base, work)
 	Y5800 = base+4;
 	print				  base+4: ': Y5800 = base+4';
 	obj xy5800 A={1,2}, obj xy5800 B={3,4};
-	print base+5: ': obj xy5800 A={1,2}, obj xy5000 B={3,4}';
+	print base+5: ': obj xy5800 A={1,2}, obj xy5800 B={3,4}';
 
 	/*
 	 * test assignment
@@ -5238,7 +5267,7 @@ define test_is()
 	prime = 3217;
 	print				  '5922: prime = 3217';
 	square = prime^2;
-	print				  '5923: square = prine^2';
+	print				  '5923: square = prime^2';
 	string = "a string";
 	print				  '5924: string = "a string"';
 	com = 3+4i;
@@ -6237,7 +6266,7 @@ define test_blk()
 	/* A second named block */
 
 	B1 = blk("+++6700", 15, 10) = {1,2,3,4,5};
-	print				  '6746: B1 = blk("+++6700", , 10);';
+	print				  '6746: B1 = blk("+++6700", 15 , 10) = {1,2,3,4,5};';
 	vrfy(size(B1) == 15,		  '6747: size(B1) == 15');
 	vrfy(sizeof(B1) == 20,		  '6748: sizeof(B1) == 20');
 	vrfy(test(B1) == 1,		  '6749: test(B1) == 1');
@@ -7339,7 +7368,7 @@ define test_somenew()
 	vrfy(size(char(0)) == 1,	'8203: size(char(0)) == 1');
 	vrfy(strlen(char(0)) == 0,	'8204: strlen(char(0)) == 0');
 	vrfy(char(0) != "",		'8205: char(0) != ""');
-	vrfy(strcmp(char(0),"") == 0,	'8206: strcmp(char(0),"") == 0');
+	vrfy(str(char(0)) == "",	'8206: str(char(0)) == ""');
 
 	vrfy(str("abc") == "abc",	'8207: str("abc") == "abc"');
 
@@ -7696,19 +7725,33 @@ print	'8406: Ending test_quit';
  * test_divmod - psuedo-random tests on the // and % with various rounding modes
  */
 print;
-print '8500: Starting test_divmod'
+print '8500: Starting test of divmod'
 read -once "test8500";
-/* 85xx: Ending test_divmod is printed by test8500.cal */
+/* 85xx: Ending test of divmod is printed by test8500.cal */
 
 
 /*
  * test_maxargs - test up to 1024 args being passed to a builtin function
  */
 print;
-print '8600: Starting test_1024args'
+print '8600: Starting test of up to 1024 args'
 read -once "test8600";
-/* 86xx: Ending test_1024args is printed by test8600.cal */
+/* 86xx: Ending test of up to 1024 args is printed by test8600.cal */
 
+
+/*
+ * dotest scripts
+ *
+ * We use the dotest driver to evaluate test-97xx data files.
+ */
+print '8700: Starting dotest runs'
+print '8701: read -once "dotest"';
+read -once "dotest";
+print '8702: read -once "set8700"';
+read -once "set8700";
+vrfy(dotest("set8700.line", 8703) == 0,
+     '8703: dotest("set8700.line", 8703) == 0');
+/* 87xx: Ending dotest runs is printed by set8700.test */
 
 /*
  * read various calc resource files

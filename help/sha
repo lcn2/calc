@@ -47,35 +47,35 @@ DESCRIPTION
 	sha(sha(h,x,y))		number	numeric value of the above call
 
 EXAMPLE
-    > base(16)
+    ; base(16)
 	    0xa
 
-    > sha()
+    ; sha()
 	    sha hash state
-    > sha(sha())
+    ; sha(sha())
 	    0xf96cea198ad1dd5617ac084a3d92c6107708c0ef
 
-    > sha("x", "y", "z") == sha("xyz")
+    ; sha("x", "y", "z") == sha("xyz")
 	    1
-    > sha("x", "y", "z") == sha("xy")
+    ; sha("x", "y", "z") == sha("xy")
 	    0
 
-    > sha(sha("this is", 7^19-8, "a composit", 3i+4.5, "hash"))
+    ; sha(sha("this is", 7^19-8, "a composit", 3i+4.5, "hash"))
 	    0x21e42319a26787046c2b28b7ae70f1b54bf0ba2a
 
-    > x = sha(list(1,2,3), "curds and whey", 2^21701-1, pi())
-    > x
+    ; x = sha(list(1,2,3), "curds and whey", 2^21701-1, pi())
+    ; x
 	    sha hash state
-    > sha(x)
+    ; sha(x)
 	    0xc9e155522ea4a38d85340e6f1c2e36636950ea7e
 
-    > y = sha()
-    > y = sha(y, list(1,2,3), "curds and whey")
-    > y = sha(y, 2^21701-1)
-    > y = sha(y, pi())
-    > y
+    ; y = sha()
+    ; y = sha(y, list(1,2,3), "curds and whey")
+    ; y = sha(y, 2^21701-1)
+    ; y = sha(y, pi())
+    ; y
 	    sha hash state
-    > sha(y)
+    ; sha(y)
 	    0xc9e155522ea4a38d85340e6f1c2e36636950ea7e
 
 LIMITS
@@ -115,8 +115,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: sha,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: sha,v 29.3 2006/05/07 07:25:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/sha,v $
 ##
 ## Under source code control:	1997/03/22 06:25:51
