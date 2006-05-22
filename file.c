@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.14 $
- * @(#) $Id: file.c,v 29.14 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.15 $
+ * @(#) $Id: file.c,v 29.15 2006/05/22 19:04:45 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -1988,7 +1988,7 @@ showfiles(void)
 			math_chr('\n');
 			continue;
 		}
-		printf(" size = %ld\n", sizes[i]);
+		printf(" size = %lld\n", (long long int)sizes[i]);
 		for (j = i + 1; j < idnum; j++) {
 			if (listed[j] || sizes[j] == -1)
 				continue;

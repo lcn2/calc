@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: c_argv.c,v 29.6 2006/05/19 15:26:10 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: c_argv.c,v 29.7 2006/05/22 19:04:45 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_argv.c,v $
  *
  * Under source code control:	1997/03/09 20:27:37
@@ -152,10 +152,10 @@ c_argv(char UNUSED *name, int count, VALUE **vals)
 				/* getsize error */
 				printf("\tsize=unknown");
 			}
-			printf("\tsizeof=%u\n", lsizeof(vals[i]));
+			printf("\tsizeof=%ld\n", (long int)lsizeof(vals[i]));
 		} else {
-			printf("\tsize=%ld\tsizeof=%u\n",
-			    elm_count(vals[i]), lsizeof(vals[i]));
+			printf("\tsize=%ld\tsizeof=%ld\n",
+			    elm_count(vals[i]), (long int)lsizeof(vals[i]));
 		}
 	}
 

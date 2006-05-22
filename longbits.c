@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: longbits.c,v 29.5 2006/05/19 15:26:10 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: longbits.c,v 29.6 2006/05/22 19:04:45 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/longbits.c,v $
  *
  * Under source code control:	1994/03/18 03:06:18
@@ -145,7 +145,7 @@ main(int argc, char **argv)
 	 * report size of long
 	 */
 	printf("#undef LONG_BITS\n");
-	printf("#define LONG_BITS %d\t\t/%s/\n",
+	printf("#define LONG_BITS %ld\t\t/%s/\n",
 	  long_bits, "* bit length of a long *");
 	putchar('\n');
 

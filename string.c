@@ -1398,8 +1398,8 @@ showstrings(void)
 		for (j = 0; j < STRALLOC; j++, k++, sp++) {
 			if (sp->s_links > 0) {
 				++count;
-				printf("%5ld  %5ld  %6u  \"",
-					k, sp->s_links, sp->s_len);
+				printf("%5ld  %5ld  %6ld  \"",
+					k, sp->s_links, (long int)sp->s_len);
 				fitstring(sp->s_str, sp->s_len, 50);
 				printf("\"\n");
 			}
@@ -1423,8 +1423,8 @@ showliterals(void)
 		sp = stringconsttable[i];
 		if (sp->s_links > 0) {
 			++count;
-			printf("%5ld  %5ld  %6u  \"",
-				i, sp->s_links, sp->s_len);
+			printf("%5ld  %5ld  %6ld  \"",
+				i, sp->s_links, (long int)sp->s_len);
 			fitstring(sp->s_str, sp->s_len, 50);
 			printf("\"\n");
 		}

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: addop.c,v 29.8 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: addop.c,v 29.9 2006/05/22 19:04:45 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/addop.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -211,7 +211,7 @@ endfunc(void)
 	if (newname[0] != '*' && (conf->traceflags & TRACE_FNCODES)) {
 		dumpnames = TRUE;
 		for (size = 0; size < fp->f_opcodecount; ) {
-			printf("%u: ", size);
+			printf("%ld: ", (unsigned long)size);
 			size += dumpop(&fp->f_opcodes[size]);
 		}
 	}

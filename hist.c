@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.10 $
- * @(#) $Id: hist.c,v 29.10 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.11 $
+ * @(#) $Id: hist.c,v 29.11 2006/05/22 19:04:45 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hist.c,v $
  *
  * Under source code control:	1993/05/02 20:09:19
@@ -262,7 +262,7 @@ static	void	insert_string(char *str, int len);
  * the line.
  */
 size_t
-hist_getline(char *prompt, char *buf, int len)
+hist_getline(char *prompt, char *buf, size_t len)
 {
 	/*
 	 * initialize if we have not already done so
@@ -351,7 +351,7 @@ hist_init(char *filename)
 	 */
 	if (filename == NULL)
 		filename = HIST_BINDING_FILE;
-	if (opensearchfile(filename, calcpath, NULL, FALSE, FALSE) > 0)
+	if (opensearchfile(filename, calcpath, NULL, FALSE) > 0)
 		return HIST_NOFILE;
 
 	/*

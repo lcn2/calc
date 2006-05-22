@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.10 $
- * @(#) $Id: c_sysinfo.c,v 29.10 2004/03/31 05:02:10 chongo Exp $
+ * @(#) $Revision: 29.11 $
+ * @(#) $Id: c_sysinfo.c,v 29.11 2006/05/22 19:04:45 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_sysinfo.c,v $
  *
  * Under source code control:	1997/03/09 23:14:40
@@ -191,6 +191,7 @@ c_sysinfo(char UNUSED *name, int count, VALUE **vals)
 	 * we will return NULL if a value was not found
 	 */
 	result.v_type = V_NULL;
+	result.v_subtype = V_NOSUBTYPE;
 
 	/*
 	 * case 0: if no args, then dump the table with no values
