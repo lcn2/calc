@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: value.c,v 29.8 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: value.c,v 29.9 2006/06/01 11:47:07 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -2659,21 +2659,21 @@ printvalue(VALUE *vp, int flags)
 		if (userfunc("error_print", vp))
 			return;
 		if (-type >= E__BASE)
-			printf("Error %d", -type);
+			math_fmt("Error %d", -type);
 		else
-			printf("System error %d", -type);
+			math_fmt("System error %d", -type);
 		return;
 	}
 	switch (type) {
 	case V_NUM:
 		qprintnum(vp->v_num, MODE_DEFAULT);
 		if (conf->traceflags & TRACE_LINKS)
-			printf("#%ld", vp->v_num->links);
+			math_fmt("#%ld", vp->v_num->links);
 		break;
 	case V_COM:
 		comprint(vp->v_com);
 		if (conf->traceflags & TRACE_LINKS)
-			printf("##%ld", vp->v_com->links);
+			math_fmt("##%ld", vp->v_com->links);
 		break;
 	case V_STR:
 		if (flags & PRINT_UNAMBIG)
@@ -2731,16 +2731,16 @@ printvalue(VALUE *vp, int flags)
 		qfree(qtemp);
 		break;
 	case V_OPTR:
-		printf("o-ptr: %p", vp->v_octet);
+		math_fmt("o-ptr: %p", vp->v_octet);
 		break;
 	case V_VPTR:
-		printf("v-ptr: %p", vp->v_addr);
+		math_fmt("v-ptr: %p", vp->v_addr);
 		break;
 	case V_SPTR:
-		printf("s_ptr: %p", vp->v_str);
+		math_fmt("s_ptr: %p", vp->v_str);
 		break;
 	case V_NPTR:
-		printf("n_ptr: %p", vp->v_num);
+		math_fmt("n_ptr: %p", vp->v_num);
 		break;
 	case V_NBLOCK:
 		if (!userfunc("nblk_print", vp))
@@ -2789,22 +2789,22 @@ config_print(CONFIG *cfg)
 
 		/* print tab if allowed */
 		if (tab_over) {
-			printf("\t");
+			math_str("\t");
 		} else if (conf->tab_ok) {
 			tab_over = TRUE;	/* tab next time */
 		}
 
 		/* print name and spaces */
-		printf("%s", cp->name);
+		math_fmt("%s", cp->name);
 		len = 16 - strlen(cp->name);
 		while (len-- > 0)
-			printf(" ");
+			math_str(" ");
 
 		/* print value */
 		config_value(cfg, cp->type, &tmp);
 		printvalue(&tmp, PRINT_SHORT | PRINT_UNAMBIG);
 		freevalue(&tmp);
 		if ((cp+1)->name)
-			printf("\n");
+			math_str("\n");
 	}
 }

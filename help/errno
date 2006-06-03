@@ -34,8 +34,9 @@ DESCRIPTION
 EXAMPLE
     Assuming there is no file with name "not_a_file"
     ; errno(0)
-    ; errmax(errcount()+4)
 	    0
+    ; errmax(errcount()+4)
+	    20
     ; badfile = fopen("not_a_file", "r")
     ; print errno(), error(), strerror()
     2 System error 2 No such file or directory
@@ -70,8 +71,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: errno,v 29.4 2006/05/21 07:31:46 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: errno,v 29.5 2006/05/23 19:15:48 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/errno,v $
 ##
 ## Under source code control:	1994/10/27 03:05:08

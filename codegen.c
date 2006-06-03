@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.15 $
- * @(#) $Id: codegen.c,v 29.15 2006/05/20 09:42:57 chongo Exp $
+ * @(#) $Revision: 29.18 $
+ * @(#) $Id: codegen.c,v 29.18 2006/06/03 22:47:28 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -306,8 +306,9 @@ ungetfunction(void)
 			name = tokensymbol();
 			type = getbuiltinfunc(name);
 			if (type >= 0) {
-				fprintf(stderr,
-	 "Attempt to undefine builtin function \"%s\" ignored\n", name);
+				errorcount--;
+				scanerror(T_NULL,
+	 "Attempt to undefine the builtin function \"%s\"", name);
 			continue;
 			}
 			rmuserfunc(name);
@@ -365,7 +366,8 @@ getfunction(void)
 		if (type == T_RIGHTPAREN)
 			break;
 		if (type != T_SYMBOL) {
-			scanerror(T_COMMA, "Bad function definition");
+			scanerror(T_COMMA,
+			"Using non-identifier as function parameter");
 			return;
 		}
 		name = tokensymbol();
@@ -394,7 +396,8 @@ getfunction(void)
 		if (type == T_RIGHTPAREN)
 			break;
 		if (type != T_COMMA) {
-			scanerror(T_COMMA, "Bad function definition");
+			scanerror(T_COMMA,
+			"Using other than comma to separate parameters");
 			return;
 		}
 	}
@@ -408,8 +411,7 @@ getfunction(void)
 		break;
 	default:
 		scanerror(T_NULL,
-			"Left brace or equals sign "
-			"expected for function");
+			"Left brace or equals sign expected for function");
 		return;
 	}
 	endfunc();
@@ -938,6 +940,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 			case T_RIGHTBRACKET:
 			case T_RIGHTBRACE:
 			case T_NEWLINE:
+			case T_ELSE:
 			case T_EOF:
 				rescantoken();
 				/*FALLTHRU*/
@@ -1020,6 +1023,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		case T_RIGHTBRACE:
 		case T_NEWLINE:
 		case T_EOF:
+		case T_ELSE:
 			rescantoken();
 			return;
 		case T_SEMICOLON:
@@ -1393,7 +1397,7 @@ getinitlist(void)
 	oldmode = tokenmode(TM_DEFAULT);
 
 	if (gettoken() != T_LEFTBRACE) {
-		scanerror(T_SEMICOLON, "Missing brace for initialization list");
+		scanerror(T_SEMICOLON, "Missing left brace for initialization list");
 		(void) tokenmode(oldmode);
 		return -1;
 	}
@@ -1428,7 +1432,7 @@ getinitlist(void)
 
 		default:
 			scanerror(T_SEMICOLON,
-				  "Bad initialization list");
+				  "Missing right brace for initialization list");
 			(void) tokenmode(oldmode);
 			return -1;
 		}
@@ -2305,7 +2309,7 @@ getfilename(char *name, size_t namelen, BOOL *once)
 
 			/*
 			 * special hack - symbols starting with $ are
-			 *		  treated as a gloabl variable
+			 *		  treated as a global variable
 			 *		  instead of a literal string.
 			 */
 			if (symstr[0] == '$') {

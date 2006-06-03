@@ -9,38 +9,47 @@ TYPES
     limit	integer with abs(limit) < 2^32, defaults to 2^32 - 1
     err		integer
 
-    return	positive integer, -1 or err
+    return	positive integer or err
 
 DESCRIPTION
+    This function ignores the signs of n and limit, so here we shall
+    assume n and limit are both nonnegative.
 
-    If n >= 0 and n has a prime factor less than or equal to limit,
-    factor(n, limit) returns the smallest such factor.	If n >= 0
-    and the smallest prime factor of n exceeds limit, 1 is returned.
-    In particular, if n >= 0 and limit <= 1, factor(n, limit)
-    always returns 1; factor(n,2) returns 2 if and only if n is even.
+    If n has a prime proper factor less than or equal to limit, then
+    factor(n, limit) returns the smallest such factor.
 
-    If n < 0, -1 is returned.
+	NOTE: A proper factor of n>1 is a factor < n.  In other words,
+	      for n>1 is not a proper factor of itself.  The value 1
+	      is a special case because 1 is a proper factor of 1.
 
-    If abs(limit) >= 2^32, factor(n, limit) causes an error,
-    factor(n, limit, err) returns the value of err.
+    When every prime proper factor of n is greater than limit, 1 is
+    returned.  In particular, if limit < 2, factor(n, limit) always
+    returns 1.  Also, factor(n,2) returns 2 if and only if n is even
+    and n > 2.
+
+    If 1 < n < nextprime(limit)^2, then f(n, limit) == 1 <==> n is prime.
+    For example, if 1 < n < 121, n is prime if and only if f(n,7) == 1.
+
+    If limit >= 2^32, factor(n, limit) causes an error and factor(n,
+    limit, err) returns the value of err.
 
 EXAMPLE
     ; print factor(35,4), factor(35,5), factor(35), factor(-35)
-    1 5 5 -1
+    1 5 5 5
 
     ; print factor(2^32 + 1), factor(2^47 - 1), factor(2^59 - 1)
     641 2351 179951
 
 LIMITS
-     none
+    limit < 2^32
 
 LINK LIBRARY
-     FLAG zfactor(ZVALUE n, ZVALUE limit, ZVALUE *res)
+    FLAG zfactor(ZVALUE n, ZVALUE limit, ZVALUE *res)
 
 SEE ALSO
     lfactor
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -56,8 +65,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: factor,v 29.3 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: factor,v 29.4 2006/06/01 11:36:02 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/factor,v $
 ##
 ## Under source code control:	1995/12/18 12:34:57

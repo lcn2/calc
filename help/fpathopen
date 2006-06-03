@@ -165,7 +165,7 @@ EXAMPLE
 	    FILE 7 "/home/chongo/tmp/output" (writing, pos 0)
 
     ; badfile = fpathopen("no_such_file", "r")
-    ; if (!isfile(badfile)) print "error #" : badfile : ":", errno(badfile);
+    ; if (!isfile(badfile)) print "error #" errno(badfile) : ":" : strerror(badfile);
     error #2: No such file or directory
 
 LIMITS
@@ -195,8 +195,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: fpathopen,v 29.2 2006/05/07 07:24:34 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: fpathopen,v 29.3 2006/05/23 19:15:48 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/fpathopen,v $
 ##
 ## Under source code control:	2006/05/07 23:56:04

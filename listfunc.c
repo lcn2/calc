@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: listfunc.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: listfunc.c,v 29.3 2006/06/02 10:24:09 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/listfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:18
@@ -680,14 +680,13 @@ listreverse(LIST *lp)
 }
 
 
-
 void
 listsort(LIST *lp)
 {
 	LISTELEM *start;
 	LISTELEM *last, *a, *a1, *b, *next;
-	LISTELEM *S[32];
-	long len[32];
+	LISTELEM *S[LONG_BITS+1];
+	long len[LONG_BITS+1];
 	long i, j, k;
 
 	if (lp->l_count < 2)
@@ -697,7 +696,7 @@ listsort(LIST *lp)
 	next = lp->l_first;
 	last = start;
 	start->e_next = next;
-	for (k = 0; next; k++) {
+	for (k = 0; next && k < LONG_BITS; k++) {
 		next->e_prev = last;
 		last = next;
 		S[k] = next;
@@ -768,6 +767,11 @@ listsort(LIST *lp)
 				last = a1;
 			}
 		}
+	}
+	if (k >= LONG_BITS) {
+		/* this should never happen */
+		math_error("impossible k overflow in listsort!");
+		/*NOTREACHED*/
 	}
 	lp->l_first = start->e_next;
 	lp->l_first->e_prev = NULL;

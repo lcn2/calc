@@ -15,8 +15,8 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 .\"
-.\" @(#) $Revision: 29.18 $
-.\" @(#) $Id: calc.man,v 29.18 2005/10/18 11:10:18 chongo Exp $
+.\" @(#) $Revision: 29.20 $
+.\" @(#) $Id: calc.man,v 29.20 2006/06/01 12:04:16 chongo Exp $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -63,8 +63,11 @@ CALC OPTIONS
 
 .TP
 .B \-c
-Continue reading command lines even after an execution
+Continue reading command lines even after an scan/parse
 error has caused the abandonment of a line.
+Note that this option only deals with scanning and
+parsing of the calc language.
+It does not deal with execution or run-time errors.
 .sp 1
 For example:
 .sp 1
@@ -76,7 +79,7 @@ calc read many_errors.cal
 .sp 1
 will cause
 .B calc
-to abort on the first error, whereas:
+to abort on the first syntax error, whereas:
 .sp 1
 .in +5n
 .nf
@@ -88,7 +91,7 @@ will
 cause
 .B calc
 to try to process each line being read
-despite the errors that it encounters.
+despite the scan/parse errors that it encounters.
 .sp 1
 By default, calc startup resource files are silently
 ignored if not found.

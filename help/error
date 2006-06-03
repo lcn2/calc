@@ -19,17 +19,13 @@ DESCRIPTION
     is returned by some function, errno() will return the value n.
 
 EXAMPLE
-    Note that by default, errmax() is 0 so unless errmax() is
-    increased you will get:
-
-    ; ba = error(10009)
-    Error 10009 caused errcount to exceed errmax
-
     ; errmax(errcount()+1)
-	   0
+	   20
     ; a = error(10009)
     ; a
 	   Error 10009
+    ; strerror(a)
+	   "Bad argument for inverse"
 
 LIMITS
     none
@@ -57,8 +53,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: error,v 29.4 2006/05/21 07:31:46 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: error,v 29.5 2006/05/23 19:15:48 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/error,v $
 ##
 ## Under source code control:	1995/12/18 03:30:59

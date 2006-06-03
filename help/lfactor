@@ -11,20 +11,29 @@ TYPES
     return	positive integer
 
 DESCRIPTION
-    If n >= 0 and n has a prime factor in the first m primes,
-    lfactor(n, m) returns the smallest such factor.
+    This function ignores the signs of n and m, so here we shall
+    assume n and limit are both nonnegative.
 
-    If n < 0, -1 is returned.
+    If n is nonzero and abs(n) has a prime proper factor in the first
+    m primes (2, 3, 5, ...), then lfactor(n, m) returns the smallest
+    such factor.  Otherwise 1 is returned.
+
+    If n is nonzero and m = pix(limit), then lfactor(n, m) returns the
+    same as factor(n, limit).
+
+    Both lfactor(n, 0) and lfactor(1, m) return 1 for all n and m.
+    Also lfactor(0, m) always returns 1, and factor(0, limit) always
+    returns 2 if limit >= 2.
 
 EXAMPLE
     ; print lfactor(35,2), lfactor(35,3), lfactor(-35, 3)
-    1 5 -1
+    1 5 5
 
     ; print lfactor(2^32+1,115), lfactor(2^32+1,116), lfactor(2^59-1,1e5)
     1 641 179951
 
 LIMITS
-    none
+    m <= 203280221 (= number of primes < 2^32)
 
 LINK LIBRARY
     NUMBER *qlowfactor(NUMBER *n, NUMBER *count)
@@ -33,7 +42,7 @@ LINK LIBRARY
 SEE ALSO
     factor
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -49,8 +58,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: lfactor,v 29.3 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: lfactor,v 29.4 2006/06/01 11:36:02 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/lfactor,v $
 ##
 ## Under source code control:	1995/12/18 12:34:57

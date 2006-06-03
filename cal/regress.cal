@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.25 $
- * @(#) $Id: regress.cal,v 29.25 2006/05/21 00:58:31 chongo Exp $
+ * @(#) $Revision: 29.26 $
+ * @(#) $Id: regress.cal,v 29.26 2006/06/02 09:49:13 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -3409,6 +3409,7 @@ define test_fileops()
 	local C = "Curt";
 	local N = "Noll";
 	local LCN = "Landon\nCurt\nNoll\n";
+	local long = "0123456789abcdef0123456789abcdef";
 
 	print '4200: Beginning test_fileops';
 
@@ -3511,16 +3512,32 @@ define test_fileops()
 	 */
 	vrfy(!iserror(p=fpathopen("junk4200","r",".")),
 			'4260: !iserror(p=fparhopen("junk4200","r","."))');
+	vrfy(!iserror(fclose(p)),	  '4261: !iserror(fclose(p))');
 	vrfy(!iserror(r=fpathopen("regress.cal","r")),
-			'4261: !iserror(r=fparhopen("regress.cal","r","."))');
+			'4262: !iserror(r=fparhopen("regress.cal","r","."))');
+	vrfy(!iserror(fclose(r)),	  '4263: !iserror(fclose(r))');
+
+	/*
+	 * verify non-stack overflow on long filenames
+	 */
+	long = long + long + long + long;
+	print		  '4264: long = long + long + long + long;';
+	long = long + long + long + long;
+	print		  '4265: long = long + long + long + long;';
+	vrfy(strlen(long) == 512,	  '4266: strlen(long) == 512');
+	/* bump ecnt up by 1 */
+	++ecnt;
+	print				  '4267: ++ecnt;';
+	vrfy(isfile(p=fopen(long,"r")) == 0,
+			  '4268: isfile(p=fopen(long,"r")) == 0');
 
 	/*
 	 * cleanup
 	 */
 	x = rm("junk4200");
-	print				  '4262: x = rm("junk4200")';
+	print				  '4269: x = rm("junk4200")';
 
-	print '4263: Ending test_fileops';
+	print '4270: Ending test_fileops';
 }
 print '071: parsed test_fileops()';
 

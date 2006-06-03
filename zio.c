@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: zio.c,v 29.6 2006/05/19 15:26:10 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: zio.c,v 29.8 2006/06/01 16:21:37 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zio.c,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -176,11 +176,12 @@ void
 math_fmt(char *fmt, ...)
 {
 	va_list ap;
-	char buf[200];
+	char buf[BUFSIZ+1];
 
 	va_start(ap, fmt);
-	vsprintf(buf, fmt, ap);
+	vsnprintf(buf, BUFSIZ, fmt, ap);
 	va_end(ap);
+	buf[BUFSIZ] = '\0';
 	math_str(buf);
 }
 

@@ -8,19 +8,21 @@ Calc command line
 
 	#!/usr/local/bin/calc -S [other_flags]
 
-	  -c   Continue reading command lines even after an execution
-	       error has caused the abandonment of a line.
+	  -c   Continue reading command lines even after an scan/parse
+	       error has caused the abandonment of a line.  Note that this
+	       option only deals with scanning and parsing of the calc
+	       language.  It does not deal with execution or run-time errors.
 
 	       For example:
 
 		    calc read many_errors.cal
 
-	       will cause calc to abort on the first error, whereas:
+	       will cause calc to abort on the first syntax error, whereas:
 
 		    calc -c read many_errors.cal
 
 	       will cause calc to try to process each line being read
-	       despite the errors that it encounters.
+	       despite the scan/parse errors that it encounters.
 
 	       By default, calc startup resource files are
 	       silently ignored if not found.  This flag will report
@@ -357,8 +359,8 @@ For more information use the following calc commands:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.6 $
-## @(#) $Id: usage,v 29.6 2003/06/10 21:39:34 chongo Exp $
+## @(#) $Revision: 29.8 $
+## @(#) $Id: usage,v 29.8 2006/06/01 12:04:16 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/usage,v $
 ##
 ## Under source code control:	1991/07/21 04:37:25

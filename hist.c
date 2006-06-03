@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.11 $
- * @(#) $Id: hist.c,v 29.11 2006/05/22 19:04:45 chongo Exp $
+ * @(#) $Revision: 29.12 $
+ * @(#) $Id: hist.c,v 29.12 2006/06/02 09:57:12 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hist.c,v $
  *
  * Under source code control:	1993/05/02 20:09:19
@@ -589,7 +589,7 @@ read_bindings(FILE *fp)
 {
 	char	*cp;
 	KEY_MAP *input_map;
-	char	line[100];
+	char	line[BUFSIZ+1];
 
 	base_map = find_map(base_map_name);
 	cur_map = base_map;
@@ -599,6 +599,7 @@ read_bindings(FILE *fp)
 		return 1;
 
 	while (fgets(line, sizeof(line) - 1, fp)) {
+		line[BUFSIZ] = '\0';
 		cp = line;
 		while (isspace((int)*cp))
 			cp++;
@@ -1546,7 +1547,7 @@ main(int argc, char **argv)
 {
 	char	*filename;
 	int	len;
-	char	buf[256];
+	char	buf[BUFSIZ+1];
 
 	filename = NULL;
 	if (argc > 1)

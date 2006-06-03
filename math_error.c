@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: math_error.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: math_error.c,v 29.3 2006/06/02 09:52:22 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/math_error.c,v $
  *
  * Under source code control:	1994/08/03 05:08:22
@@ -95,8 +95,9 @@ math_error(char *fmt, ...)
 #else
 	va_start(ap, fmt);
 #endif
-	vsprintf(calc_error, fmt, ap);
+	vsnprintf(calc_error, MAXERROR, fmt, ap);
 	va_end(ap);
+	calc_error[MAXERROR] = '\0';
 
 	/*
 	 * if we should longjmp, so do

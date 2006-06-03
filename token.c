@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: token.c,v 29.6 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: token.c,v 29.8 2006/06/03 22:47:28 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/token.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -390,7 +390,7 @@ eatcomment(void)
 			reread();
 		}
 		if (ch == EOF || ch == '\0') {
-			fprintf(stderr, "Unterminated comment ignored\n");
+			scanerror(T_NULL, "Unterminated comment");
 			reread();
 			break;
 		}
@@ -717,8 +717,9 @@ scanerror(int skip, char *fmt, ...)
 	if (name)
 		fprintf(stderr, "\"%s\", line %ld: ", name, linenumber());
 	va_start(ap, fmt);
-	vsprintf(buf, fmt, ap);
+	vsnprintf(buf, MAXERROR, fmt, ap);
 	va_end(ap);
+	buf[MAXERROR] = '\0';
 	fprintf(stderr, "%s\n", buf);
 
 	/* bail out if continuation not permitted */

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: matfunc.c,v 29.6 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: matfunc.c,v 29.7 2006/06/02 10:24:09 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/matfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:18
@@ -1606,8 +1606,8 @@ matsort(MATRIX *m)
 {
 	VALUE *a, *b, *next, *end;
 	VALUE *buf, *p;
-	VALUE *S[32];
-	long len[32];
+	VALUE *S[LONG_BITS];
+	long len[LONG_BITS];
 	long i, j, k;
 
 	buf = (VALUE *) malloc(m->m_size * sizeof(VALUE));
@@ -1617,7 +1617,7 @@ matsort(MATRIX *m)
 	}
 	next = m->m_table;
 	end = next + m->m_size;
-	for (k = 0; next; k++) {
+	for (k = 0; next && k < LONG_BITS; k++) {
 		S[k] = next++;			/* S[k] is start of a run */
 		len[k] = 1;
 		if (next == end)
@@ -1665,6 +1665,11 @@ matsort(MATRIX *m)
 		}
 	}
 	free(buf);
+	if (k >= LONG_BITS) {
+		/* this should never happen */
+		math_error("impossible k overflow in matsort!");
+		/*NOTREACHED*/
+	}
 }
 
 void

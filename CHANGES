@@ -145,6 +145,40 @@ The following are the changes from calc version 2.12.0 to date:
 
     Added missing help file for the stoponerror() builtin.
 
+    Corrected and improved the help documentation for factor and lfactor.
+
+    Fixed a problem where some error messages that should have been
+    written to a file or string, went to stderr instead.  This bug was
+    fixed by Ernest Bowen <ebowen at une dot edu dot au>.
+
+    Corrected the documentation relating to the calc -c command line option.
+    The -c relates to scan/parse errors only, not execution errors.
+
+    Corrected a stack overflow problem where the math_fmt() in zio.c
+    could be induced to overflow the stack.  This problem was independently
+    reported by Chew Keong Tan of Secunia Research <vuln at secunia dot com>.
+
+    Corrected a stack overflow problem where the scanerror() in token.c
+    could be induced to overflow the stack by a malformed token.
+
+    Made math_error() in math_error.c more robust against a error
+    message constant that is too long.
+
+    Made read_bindings() in hist.c more robust against very line bindings
+    config lines.
+
+    Made listsort() in listfunc.c and matsort() matfunc.c more robust
+    against sorting of impossibly huge lists and matrices.
+
+    Warnings about an undefining a builtin or undefined function, a
+    constant before the comma operator, and an unterminated comment is
+    now processed by scanerrors (not simply written directly to stderr).
+    These warnings file and line number in which the "error" occurred
+    as well as a more precise message than before.  If using -c on the
+    calc command line or if stoponerror(-1), then assuming there are
+    no other compile errors, only the unterminated comment will stop
+    completion of the function being defined.
+
 
 The following are the changes from calc version 2.11.10.1 to 2.11.11:
 
@@ -5962,8 +5996,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.76 $
-## @(#) $Id: CHANGES,v 29.76 2006/05/21 07:55:17 chongo Exp $
+## @(#) $Revision: 29.78 $
+## @(#) $Id: CHANGES,v 29.78 2006/06/03 22:52:39 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
