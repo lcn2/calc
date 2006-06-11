@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.25 $
- * @(#) $Id: func.c,v 29.25 2006/05/21 07:28:54 chongo Exp $
+ * @(#) $Revision: 29.26 $
+ * @(#) $Id: func.c,v 29.26 2006/06/11 00:08:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -871,7 +871,7 @@ f_nextcand(int count, NUMBER **vals)
 		ans->num = tmp;
 		return ans;
 	}
-	return qlink(&_qzero_);;
+	return qlink(&_qzero_);
 }
 
 

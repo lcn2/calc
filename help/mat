@@ -79,10 +79,10 @@ DESCRIPTION
     simple assignments, as in A[0,0] = 1, A[0,2] = 2;
 
     If the index-range is left blank but an initializer list is specified
-    as in
+    as in:
 
-	mat A[] = {1, 2 }
-	B = mat[] = {1, , 3, }
+	; mat A[] = {1, 2 }
+	; B = mat[] = {1, , 3, }
 
     the matrix created is one-dimensional.  If the list contains a
     positive number n of values or blanks, the result is as if the
@@ -92,11 +92,13 @@ DESCRIPTION
     B[2] = 3.  The specification mat[] = { } creates the same as mat[1].
 
     If the index-range is left blank and no initializer list is specified,
-    as in  mat C[]  or  C = mat[], the matrix assigned to C has zero
-    dimension; this has one element C[].	 To assign a value using "= { ...}"
-    at the same time as creating C, parentheses are required as in
-    (mat[]) = {value}  or  (mat C[]) = {value}.	Later a value may be
-    assigned to C[] by  C[] = value  or	C = {value}.
+    as in  mat C[]  or	C = mat[], the matrix assigned to C has zero
+    dimension; this has one element C[].
+
+    To assign a value using "= { ...}" at the same time as creating C,
+    parentheses are required as in (mat[]) = {value}  or  (mat C[]) =
+    {value}. Later a value may be assigned to C[] by  C[] = value  or
+    C = {value}.
 
     The value assigned at any time to any element of a matrix can be of
     any type - number, string, list, matrix, object of previously specified
@@ -106,10 +108,11 @@ DESCRIPTION
     If an element of a matrix is a structure for which indices or an
     object element specifier is required, an element of that structure is
     referred to by appropriate uses of [ ] or ., and so on if an element
-    of that element is required.	 For example, one may have an expressions
-    like
+    of that element is required.
 
-		A[1,2][3].alpha[2];
+    For example, one may have an expressions like:
+
+	; A[1,2][3].alpha[2];
 
     if A[1,2][3].alpha is a list with at least three elements, A[1,2][3] is
     an object of a type like  obj {alpha, beta}, A[1,2] is a matrix of
@@ -165,7 +168,7 @@ DESCRIPTION
 
     So that when one defines a 2D matrix such as:
 
-	mat X[2,3] = {1,2,3,4,5,6}
+	; mat X[2,3] = {1,2,3,4,5,6}
 
     then printing X results in:
 
@@ -174,20 +177,20 @@ DESCRIPTION
 
     The default printing may be restored by
 
-		undefine mat_print;
+	; undefine mat_print;
 
     The keyword "mat" followed by two or more index-range-lists returns a
     matrix with indices specified by the first list, whose elements are
     matrices as determined by the later index-range-lists.  For
     example  mat[2][3]  is a 2-element matrix, each of whose elements has
     as its value a 3-element matrix.  Values may be assigned to the
-    elements of the innermost matrices by nested	 = {...} operations as in
+    elements of the innermost matrices by nested = {...} operations as in
 
-		mat [2][3] = {{1,2,3},{4,5,6}}
+	; mat [2][3] = {{1,2,3},{4,5,6}}
 
     An example of the use of mat with a declarator is
 
-		global mat A B [2,3], C [4]
+	; global mat A B [2,3], C [4]
 
     This creates, if they do not already exist, three global variables with
     names A, B, C, and assigns to A and B the value mat[2,3] and to C mat[4].
@@ -284,21 +287,21 @@ DESCRIPTION
 	when it is a divisor), int an integer, rnd a rounding-type
 	specifier integer, real a real number.
 
-		num * A
-		A * num
-		A / num
-		- A
-		conj(A)
-		A << int, A >> int
-		scale(A, int)
-		round(A, int, rnd)
-		bround(A, int, rnd)
-		appr(A, real, rnd)
-		int(A)
-		frac(A)
-		A // real
-		A % real
-		A ^ int
+	    num * A
+	    A * num
+	    A / num
+	    - A
+	    conj(A)
+	    A << int, A >> int
+	    scale(A, int)
+	    round(A, int, rnd)
+	    bround(A, int, rnd)
+	    appr(A, real, rnd)
+	    int(A)
+	    frac(A)
+	    A // real
+	    A % real
+	    A ^ int
 
     If A and B are one-dimensional of the same size dp(A, B) returns
 	their dot-product, i.e. the sum of the products of corresponding
@@ -344,56 +347,56 @@ DESCRIPTION
     in effect they are treated as linear arrays.
 
 EXAMPLE
-	> obj point {x,y}
-	> mat A[5] = {1, 2+3i, "ab", mat[2] = {4,5}, obj point = {6,7}}
-	> A
-	mat [5] (5 elements, 5 nonzero):
-	  [0] = 1
-	  [1] = 2+3i
-	  [2] = "ab"
-	  [3] = mat [2] (2 elements, 2 nonzero)
-	  [4] = obj point {6, 7}
+    ; obj point {x,y}
+    ; mat A[5] = {1, 2+3i, "ab", mat[2] = {4,5}, obj point = {6,7}}
+    ; A
+    mat [5] (5 elements, 5 nonzero):
+      [0] = 1
+      [1] = 2+3i
+      [2] = "ab"
+      [3] = mat [2] (2 elements, 2 nonzero)
+      [4] = obj point {6, 7}
 
-	> print A[0], A[1], A[2], A[3][0], A[4].x
-	1 2+3i ab 4 6
+    ; print A[0], A[1], A[2], A[3][0], A[4].x
+    1 2+3i ab 4 6
 
-	> define point_add(a,b) = obj point = {a.x + b.x, a.y + b.y}
-	point_add(a,b) defined
+    ; define point_add(a,b) = obj point = {a.x + b.x, a.y + b.y}
+    point_add(a,b) defined
 
-	> mat [B] = {8, , "cd", mat[2] = {9,10}, obj point = {11,12}}
-	> A + B
+    ; mat [B] = {8, , "cd", mat[2] = {9,10}, obj point = {11,12}}
+    ; A + B
 
-	mat [5] (5 elements, 5 nonzero):
-	  [0] = 9
-	  [1] = 2+3i
-	  [2] = "abcd"
-	  [3] = mat [2] (2 elements, 2 nonzero)
-	  [4] = obj point {17, 19}
+    mat [5] (5 elements, 5 nonzero):
+      [0] = 9
+      [1] = 2+3i
+      [2] = "abcd"
+      [3] = mat [2] (2 elements, 2 nonzero)
+      [4] = obj point {17, 19}
 
-	> mat C[2,2] = {1,2,3,4}
-	> C^10
+    ; mat C[2,2] = {1,2,3,4}
+    ; C^10
 
-	mat [2,2] (4 elements, 4 nonzero):
-	  [0,0] = 4783807
-	  [0,1] = 6972050
-	  [1,0] = 10458075
-	  [1,1] = 15241882
+    mat [2,2] (4 elements, 4 nonzero):
+      [0,0] = 4783807
+      [0,1] = 6972050
+      [1,0] = 10458075
+      [1,1] = 15241882
 
-	> C^-10
+    ; C^-10
 
-	mat [2,2] (4 elements, 4 nonzero):
-	  [0,0] = 14884.650390625
-	  [0,1] = -6808.642578125
-	  [1,0] = -10212.9638671875
-	  [1,1] = 4671.6865234375
+    mat [2,2] (4 elements, 4 nonzero):
+      [0,0] = 14884.650390625
+      [0,1] = -6808.642578125
+      [1,0] = -10212.9638671875
+      [1,1] = 4671.6865234375
 
-	> mat A[4] = {1,2,3,4}, A * reverse(A);
+    ; mat A[4] = {1,2,3,4}, A * reverse(A);
 
-	mat [4] (4 elements, 4 nonzero):
-	  [0] = 4
-	  [1] = 6
-	  [2] = 6
-	  [3] = 4
+    mat [4] (4 elements, 4 nonzero):
+      [0] = 4
+      [1] = 6
+      [2] = 6
+      [3] = 4
 
 LIMITS
     The theoretical upper bound for the absolute values of indices is
@@ -411,7 +414,7 @@ SEE ALSO
     isident, test, config, search, rsearch, reverse, copy, blkcpy, dp, cp,
     randperm, sort
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -427,8 +430,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: mat,v 29.4 2005/10/18 10:08:45 chongo Exp $
+## @(#) $Revision: 29.6 $
+## @(#) $Id: mat,v 29.6 2006/06/11 07:25:14 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/mat,v $
 ##
 ## Under source code control:	1991/07/21 04:37:22

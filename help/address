@@ -38,7 +38,7 @@ DESCRIPTION
     &X with that component or element depends only on the continued existence
     of the matrix or object.  For example, after
 
-			> mat A[3]
+	; mat A[3]
 
     the addresses &A[0], &A[1], &A[2] locate the three elements
     of the matrix specified by A until another value is assigned to A, etc.
@@ -60,15 +60,15 @@ DESCRIPTION
     results refer to octets in the same block or existing components of the
     same matrix or object.  For example, immediately after
 
-			> mat A[10]
-			> p = &A[5]
+	; mat A[10]
+	; p = &A[5]
 
     it is permitted to use expressions like p + 4, p - 5, p++ .
 
     Strings defined literally have fixed addresses, e.g., after
 
-			> p = &"abc"
-			> A = "abc"
+	; p = &"abc"
+	; A = "abc"
 
     the address &*A of the value of A will be equal to p.
 
@@ -78,7 +78,7 @@ DESCRIPTION
     be useable only while the variables retain these defined values.
     For example, after
 
-			> B = C = strcat("a", "bc");
+	; B = C = strcat("a", "bc");
 
     &*B and &*C will be different.  If p is defined by p = &*B, p should
     not be used after a new value is assigned to B, or B ceases to exist,
@@ -91,9 +91,9 @@ DESCRIPTION
     so long as the number remains associated with at least one function or
     lvalue.  For example, after
 
-			> x = 27;
-			> y = 3 * 9;
-			> define f(a) = 27 + a;
+	; x = 27;
+	; y = 3 * 9;
+	; define f(a) = 27 + a;
 
     the three occurrences of 27 have the same address which may be displayed
     by any of &27, &*x, &*y and &f(0).	If x and y are assigned
@@ -109,13 +109,13 @@ DESCRIPTION
     non-zero value for a will be assigned to different addresses as can be
     seen from printing &*A, &*B, &*C after
 
-		> A = f(2); B = f(2); C = f(2);
+	; A = f(2); B = f(2); C = f(2);
 
     (the case of f(0) is exceptional since 27 + 0 simply copies the 27
     rather than creating a new number value).  Here it is clearly more
     efficient to use
 
-		> A = B = C = f(2);
+	; A = B = C = f(2);
 
     which, not only performs the addition in f() only once, but stores the
     number values for A, B and C at the same address.
@@ -160,7 +160,7 @@ LINK LIBRARY
 SEE ALSO
     dereference, isptr
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -176,8 +176,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: address,v 29.4 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: address,v 29.5 2006/06/10 12:28:10 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/address,v $
 ##
 ## Under source code control:	1997/09/06 20:03:34

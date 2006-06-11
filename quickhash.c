@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: quickhash.c,v 29.9 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: quickhash.c,v 29.10 2006/06/06 07:17:02 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/quickhash.c,v $
  *
  * Under source code control:	1995/03/04 11:34:23
@@ -487,6 +487,7 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	if (cfg->version) {
 		val = fnv_strhash(cfg->version, val);
 	}
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->baseb);
 
 	/*
 	 * hash the epsilon if possible

@@ -38,8 +38,8 @@ The following are the changes from calc version 2.12.0 to date:
     etc.) for VT100 terminals and terminal window emulators (i.e., xterm,
     Apple OS/X Terminal, etc.) that support them.  For example:
 
-	read screen
-	print green:"This is green. ":red:"This is red.":black
+	; read screen
+	; print green:"This is green. ":red:"This is red.":black
 
     Fixed a bug where too many open files returned E_FOPEN3.  Now
     a new error symbol F_MANYOPEN is used for too many open files.
@@ -134,14 +134,14 @@ The following are the changes from calc version 2.12.0 to date:
     Global variables and functions must be declared ahead of time because
     the dotest scope of evaluation is a line at a time.  For example:
 
-        read dotest.cal
-        read set8700.cal
-        dotest("set8700.line");
+        ; read dotest.cal
+        ; read set8700.cal
+        ; dotest("set8700.line");
 
     Updated the todo / wish list items.  The top priority now is to
     convert calc to GNU autoconf / configure to build the calc.
 
-	help todo
+	; help todo
 
     Added missing help file for the stoponerror() builtin.
 
@@ -178,6 +178,87 @@ The following are the changes from calc version 2.12.0 to date:
     calc command line or if stoponerror(-1), then assuming there are
     no other compile errors, only the unterminated comment will stop
     completion of the function being defined.
+
+    Added the reading of more calc resource files to the cal/regress.cal
+    regression test.
+
+    The issq() test had a slight performance boost.  A minor note
+    was added to the help/issq file.
+
+    Improved the documentation of the mul2, sq2, pow2, and redc2 config
+    parameters in help/config.
+
+    Added config("baseb"), a read-only configuration value to return
+    the number of bits in the fundamental base in which calculations
+    are performed.  This is a read-only configuration value.
+
+    Calc now permits such as:
+
+    	++*p--       ++*----*++p----
+
+    where p is an lvalue; successful evaluation of course require the
+    successive operations to be performed to have operands of appropriate
+    types; e.g. in *A, A is usually an lvalue whose current value is a
+    pointer. ++ and -- act on lvalues. In the above examples there are
+    implied parentheses from the beginning to immediately after p. If
+    there are no pre ++ or -- operations, as in
+
+	**p++
+
+    the implied parentheses are from immediately before p to the end.
+
+    Improved the error message when && is used as a prefix operator.
+
+    Changed the help/config file to read like a builtin function
+    help file.
+
+    One can no longer set to 1, or to a value < 0, the config()
+    parameters: "mul2", "sq2", "pow2", and "redc2".  These values
+    in the past would result in improper configuration of internal
+    calc algorithms.  Changed cal/test4100.cal to use the minimal
+    value of 2 for "pow2", and "redc2".
+
+    Changed the default values for the following config() parameters:
+
+    	config("mul2") == 1780
+	config("sq2") == 3388
+	config("pow2") == 176
+
+    These values were determined established on a 1.8GHz AMD 32-bit
+    CPU of ~3406 BogoMIPS by the new resource file:
+
+        cal/alg_config.cal
+
+   Regarding the alg_config.cal resource file:
+
+	The best_mul2() function returns the optimal value of config("mul2").
+	The best_sq2() function returns the optimal value of config("sq2").
+	The best_pow2() function returns the optimal value of config("pow2").
+	The other functions are just support functions.
+
+	By design, best_mul2(), best_sq2(), and best_pow2() take a few
+	minutes to run.  These functions increase the number of times a
+	given computational loop is executed until a minimum amount of CPU
+	time is consumed.  To watch these functions progress, one can set
+	the config("user_debug") value.
+
+	Here is a suggested way to use the alg_config.cal resource file:
+
+	    ; read alg_config
+	    ; config("user_debug",2),;
+	    ; best_mul2(); best_sq2(); best_pow2();
+	    ; best_mul2(); best_sq2(); best_pow2();
+	    ; best_mul2(); best_sq2(); best_pow2();
+
+	NOTE: It is perfectly normal for the optimal value returned
+	to differ slightly from run to run.  Slight variations due to
+	inaccuracy in CPU timings will cause the best value returned to
+	differ slightly from run to run.
+
+    See "help resource" for more information on alg_config.cal.
+
+    Updated the "help variable" text to reflect the current calc
+    use of ` (backquote), * (star), and & (ampersand).
 
 
 The following are the changes from calc version 2.11.10.1 to 2.11.11:
@@ -1094,11 +1175,11 @@ The following are the changes from calc version 2.11.3t0 to 2.11.4:
     files may be referred to in succession by separating their names
     by whitespace.  For example:
 
-	    > read alpha beta gamma;
+	    ; read alpha beta gamma;
 
     does essentially the same as:
 
-	    > read alpha; read beta; read gamma;
+	    ; read alpha; read beta; read gamma;
 
     This is convenient for commands like:
 
@@ -1123,7 +1204,7 @@ The following are the changes from calc version 2.11.3t0 to 2.11.4:
     multiple read statement, -once applies only to the next named file.
     For example
 
-	    > read -once alpha beta -once gamma;
+	    ; read -once alpha beta -once gamma;
 
     will read alpha and gamma only if they have not already been read,
     but in any case, will read beta.
@@ -1131,7 +1212,7 @@ The following are the changes from calc version 2.11.3t0 to 2.11.4:
     (8) A fault in the programming for the cd command has been corrected
     so that specifying a directory by a string constant will work.  E.g:
 
-	    > cd "my work"
+	    ; cd "my work"
 
     should work if the current directory has a directory with name "my work".
 
@@ -1191,17 +1272,17 @@ The following are the changes from calc version 2.11.3t0 to 2.11.4:
 
     (16) "global" and "local" may now be used in expressions.  For example:
 
-	    > for (local i = 0; i < 5; i++) print i^2;
+	    ; for (local i = 0; i < 5; i++) print i^2;
 
     is now acceptable, as is:
 
-	    > define f(x = global x) = (global x = x)^2;
+	    ; define f(x = global x) = (global x = x)^2;
 
     which breaks wise programming rules and would probably better be handled
     by something like:
 
-	    > global x
-	    > define f(t = x) = (x = t)^2;
+	    ; global x
+	    ; define f(t = x) = (x = t)^2;
 
     Both definitions produce the same code for f.  For non-null t, f(t)
     returns t^2 and assigns the value of t to x;  f() and f(t) with null t
@@ -1219,11 +1300,11 @@ The following are the changes from calc version 2.11.3t0 to 2.11.4:
     either 32 or 64-bit longs.  In setting such components, the arguments
     are now to less than 2^31.  Before this change:
 
-	    > config("mul2", 2^32 + 3)
+	    ; config("mul2", 2^32 + 3)
 
     would be accepted on a 64-bit machine but result in the same as:
 
-	    > config("mul2", 3)
+	    ; config("mul2", 3)
 
 
 The following are the changes from calc version 2.11.2t0 to 2.11.2t1.0:
@@ -1462,9 +1543,9 @@ The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
 
 	The power(a, b, epsilon) builtin will return a "too-large result"
 	if an estimate indicates that the result will have absolute value
-	> 2^2^30 * epsilon.  Otherwise the evaluation will be attempted
-	but may fail due to shortage of memory or may require a long
-	runtime if the result will be very large.
+	that is > 2^2^30 * epsilon.  Otherwise the evaluation will be
+	attempted but may fail due to shortage of memory or may require
+	a long runtime if the result will be very large.
 
 	Changes have been made to the algorithms used for some special
 	functions sinh(), cosh(), tanh(), sin(), cos(), etc., that make
@@ -2500,10 +2581,10 @@ The following are the changes from calc version 2.10.3t5.34 to 2.10.3t5.37:
 	of links to the occurrence of that argument that is being referred to.
 	For example, supposing "abc" has not been used earlier:
 
-			    > A = "abc"
-			    > links(A)
+			    ; A = "abc"
+			    ; links(A)
 				    2
-			    > links(A)
+			    ; links(A)
 				    1
 
 	The two links in the first call are to A and the current "oldvalue";
@@ -2798,11 +2879,11 @@ The following are the changes from calc version 2.10.3t5.34 to 2.10.3t5.37:
     (30) Although it is not illegal, it seems pointless to use a comma operator
 	 with a constant or simple variable as in
 
-		    > 2 * 3,14159
+		    ; 2 * 3,14159
 			    14159
-		    > a = 4; b = 5;
-		    > A = (a , b + 2);
-		    > A
+		    ; a = 4; b = 5;
+		    ; A = (a , b + 2);
+		    ; A
 			    7
 
 	 I have added a few lines to addop.c so that when this occurs a
@@ -2833,27 +2914,27 @@ The following are the changes from calc version 2.10.3t5.34 to 2.10.3t5.37:
 
 	 Here is a demo:
 
-	    > global a;
-	    >
-	    > define f(x) {local i = x^2; a++;
-	    >> if (x > 5) quit "Too large!"; return i;}
+	    ; global a;
+	    ;
+	    ; define f(x) {local i = x^2; a++;
+	    ;; if (x > 5) quit "Too large!"; return i;}
 	    f() defined
-	    > define g(x) = f(x) + f(2*x);
+	    ; define g(x) = f(x) + f(2*x);
 	    g() defined
-	    > g(2)
+	    ; g(2)
 		    20
-	    > g(3)
+	    ; g(3)
 	    Too large!
 		    "f": line 3
 		    "g": line 0
 		    "*": line 6
-	    > eval("g(3)")
+	    ; eval("g(3)")
 	    Too large!
 		    "f": line 3
 		    "g": line 0
 		    "**": line 1
 		    "*": line 7
-	    > a
+	    ; a
 		    6
 
     (32) I've made several small changes like removing
@@ -2899,14 +2980,14 @@ The following are the changes from calc version 2.10.3t5.28 to 2.10.3t5.33:
 	    a variable as in p = &var, and then *p in expressions has
 	    the same effect as var.  Here is a simple example of their use:
 
-		> define s(L) {local v=0; while (size(L)) v+= *pop(L);return v;}
+		; define s(L) {local v=0; while (size(L)) v+= *pop(L);return v;}
 		s() defined
-		> global a = 1, b = 2;
-		> L = list(&a, &b);
-		> print s(L)
+		; global a = 1, b = 2;
+		; L = list(&a, &b);
+		; print s(L)
 		3
-		> b = 3;
-		> print s(L)
+		; b = 3;
+		; print s(L)
 		4
 
 	    Octet-pointers, number-pointers, and string-pointers in
@@ -2918,11 +2999,11 @@ The following are the changes from calc version 2.10.3t5.28 to 2.10.3t5.33:
 	    Some arithmetic operations has been defined for corresponding
 	    C operations.  For example:
 
-		> A = mat[4];
-		> p = &A[0];
-		> *(p+2) == A[2]
-		> ++p
-		> *p == A[1]
+		; A = mat[4];
+		; p = &A[0];
+		; *(p+2) == A[2]
+		; ++p
+		; *p == A[1]
 
 	    There is at present no protection against "illegal" use of &
 	    and *, e.g. if one attempts here to assign a value to *(p+5),
@@ -2935,28 +3016,28 @@ The following are the changes from calc version 2.10.3t5.28 to 2.10.3t5.33:
 	    X; in effect X is an address and *X is the value at X.
 
 	    Added isptr(p) builtin to return 0 is p is not a pointer,
-	    >0 if it is a pointer.  The value of isptr(p) comes from the
-	    V_XYZ #define (see the top of value.h) of the value to which
-	    p points.
+	    and >0 if it is a pointer.  The value of isptr(p) comes from
+	    the V_XYZ #define (see the top of value.h) of the value to
+	    which p points.
 
 	    To allow & to be used as a C-like address operator, use of it
 	    has been dropped in calls to user-defined functions.  For the
 	    time being I have replaced it by the back-quote `.	For example:
 
-		> global a
-		> define f(a,b) = a = b
-		> f(&a,5)
-		> print a
+		; global a
+		; define f(a,b) = a = b
+		; f(&a,5)
+		; print a
 		0
-		> f(`a,5)
-		> print a
+		; f(`a,5)
+		; print a
 		5
 
 	   However, one may use & in a similar way as in:
 
-		> define g(a,b) = *a = b
-		> g(&a, 7)
-		> print a
+		; define g(a,b) = *a = b
+		; g(&a, 7)
+		; print a
 		7
 
 	   There is no hashvalue for pointers. Thus, like error values,
@@ -2964,38 +3045,38 @@ The following are the changes from calc version 2.10.3t5.28 to 2.10.3t5.33:
 
 	   The -> also works in calc. For example:
 
-		> obj xy {x,y}
-		> obj uvw {u, v, w}
-		> obj xy A = {1,2}
-		> obj uvw B = {3,4,5}
-		> p = &A
-		> q = &B
-		> p->x
+		; obj xy {x,y}
+		; obj uvw {u, v, w}
+		; obj xy A = {1,2}
+		; obj uvw B = {3,4,5}
+		; p = &A
+		; q = &B
+		; p->x
 			1
-		> p->y = 6
-		> A
+		; p->y = 6
+		; A
 			obj xy {1, 6}
-		> q -> u
+		; q -> u
 			3
-		> p->y = q
-		> A
+		; p->y = q
+		; A
 			obj xy {1, v-ptr: 1400474c0}
-		> p->y->u
+		; p->y->u
 			3
-		> p->y->u = 7
-		> B
+		; p->y->u = 7
+		; B
 			obj uvw {7, 4, 5}
-		> p -> y = p
-		> A
+		; p -> y = p
+		; A
 			obj xy {1, v-ptr: 140047490}
-		> p -> y -> x
+		; p -> y -> x
 			1
-		> p->y->y
+		; p->y->y
 			v-ptr: 140047490
-		> p->y->y-> x
+		; p->y->y-> x
 			1
-		> p->y->y->x = 8
-		> A
+		; p->y->y->x = 8
+		; A
 			obj xy {8, v-ptr: 140047490}
 
 
@@ -3023,14 +3104,14 @@ The following are the changes from calc version 2.10.3t5.28 to 2.10.3t5.33:
 	    The prior method calc has used for handling "constants" amounted
 	    to leakage.	 After:
 
-		> define f(x) = 27 + x;
-		> a = 27;
+		; define f(x) = 27 + x;
+		; a = 27;
 
 	    It is of course necessary for the constant 27 to be stored, but
 	    if one now redefines f and a by:
 
-		> define f(x) = 45 + x;
-		> a = 45;
+		; define f(x) = 45 + x;
+		; a = 45;
 
 	    There seems little point in retaining 27 as a constant and
 	    therefore using up memory.	If this example seems trivial,
@@ -3112,16 +3193,16 @@ The following are the changes from calc version 2.10.3t5.28 to 2.10.3t5.33:
 
 	    The "." value:
 
-		> 2 + 2
+		; 2 + 2
 		4
-		> .
+		; .
 		4
 
 	    can now be treated as an unnamed variable.	For example:
 
-		> mat x[3,3]={1,2,3,4,5,6,7,8,9}
-		> x
-		> print .[1,2]
+		; mat x[3,3]={1,2,3,4,5,6,7,8,9}
+		; x
+		; print .[1,2]
 		6
 
 	(9) for a list L defining L[i] to be same as L[[i]]
@@ -3158,18 +3239,18 @@ The following are the changes from calc version 2.10.3t5.28 to 2.10.3t5.33:
 
 	     For example:
 
-		> A = list(1,2,4);
-		> B = mat[2,2] = {5,6,7,8};
-		> define f(x) = (x ? A : B)[[1]];
-		> print f(1), f(0)
+		; A = list(1,2,4);
+		; B = mat[2,2] = {5,6,7,8};
+		; define f(x) = (x ? A : B)[[1]];
+		; print f(1), f(0)
 		2 6
 
-		> obj xy {x,y}
-		> C = obj xy = {4,5}
-		> p = &C
-		> *p.x
+		; obj xy {x,y}
+		; C = obj xy = {4,5}
+		; p = &C
+		; *p.x
 		Not indexing matrix or object
-		> (*p).x
+		; (*p).x
 		4
 
 	(14) swap(a,b) now permits swapping of octets in the same or different
@@ -3177,10 +3258,10 @@ The following are the changes from calc version 2.10.3t5.28 to 2.10.3t5.33:
 
 	     For example:
 
-		> A = blk() = {1,2,3}
-		> B = blk() = {4,5,6}
-		> swap(A[0], B[2])
-		> A
+		; A = blk() = {1,2,3}
+		; B = blk() = {4,5,6}
+		; swap(A[0], B[2])
+		; A
 			chunksize = 256, maxsize = 256, datalen = 3
 			060203
 
@@ -3316,12 +3397,12 @@ The following are the changes from calc version 2.10.3t5.11 to 2.10.3t5.27:
 
     Blocks will expand when required by the copy() builtin function:
 
-	> f = fopen("help/full", "r")
-	> B = blk()
-	> B
+	; f = fopen("help/full", "r")
+	; B = blk()
+	; B
 		chunksize = 256, maxsize = 256, datalen = 0
-	> copy(B, f)
-	> B
+	; copy(B, f)
+	; B
 		chunksize = 256, maxsize = 310272, datalen = 310084
 		2a2a2a2a2a2a2a2a2a2a2a2a2a0a2a20696e74726f0a2a2a2a2a2a2a2a2a...
 
@@ -4241,11 +4322,11 @@ The following are the changes from calc version 2.10.2t25 to 2.10.2t32:
 	"global a" is read in the last line.  Thus one may now use the
 	same name in several "static" areas as in:
 
-			> static a = 10;
-			> define f(x) = a + x;
-			> static a = 20;
-			> define g(x) = a + x;
-			> global a;
+	    ; static a = 10;
+	    ; define f(x) = a + x;
+	    ; static a = 20;
+	    ; define g(x) = a + x;
+	    ; global a;
 
 	The first "a" exists only for the definition of f(); the second
 	"a" only for the definition of g().  At the end one has only
@@ -4254,10 +4335,10 @@ The following are the changes from calc version 2.10.2t25 to 2.10.2t32:
 	Ending the scope of a static variable in this way is consistent
 	with the normal use of static variables as in:
 
-			> static a = 10;
-			> define f(x) {static a = 20; return a++ + x;}
-			> define g(x) = a + x;
-			> global a;
+	    ; static a = 10;
+	    ; define f(x) {static a = 20; return a++ + x;}
+	    ; define g(x) = a + x;
+	    ; global a;
 
 	The scope of the first "a" is temporarily interrupted by the
 	"static a" in the second line; the second "a" remains active
@@ -4273,12 +4354,12 @@ The following are the changes from calc version 2.10.2t25 to 2.10.2t32:
 	to me that its use must end the scope of any static "a".  Thus
 	the changes I introduce are such that after:
 
-			> global a = 10;
-			> define f(x) = a + x;
-			> static a = 20;
-			> define g(x) = a + x;
-			> define h(x) {global a = 30; return a + x;}
-			> define i(x) = a + x;
+	    ; global a = 10;
+	    ; define f(x) = a + x;
+	    ; static a = 20;
+	    ; define g(x) = a + x;
+	    ; define h(x) {global a = 30; return a + x;}
+	    ; define i(x) = a + x;
 
 	g(x) will always return 20 + x, and until h(x) has been called,
 	f(x) and i(x) will return 10 + x; when h(x) is called, it
@@ -4425,8 +4506,8 @@ The following are the changes from calc version 2.10.2t4 to 2.10.2t24:
 
      The show keyword is now a statement instead of a command:
 
-	> define demo() {local f = open("foo", "w"); show files; fclose(f);}
-	> demo()
+	; define demo() {local f = open("foo", "w"); show files; fclose(f);}
+	; demo()
 
      Added a new trace option for display of links to real and complex
      numbers.  This is activated by config("trace", 4).  The printing of
@@ -4905,13 +4986,13 @@ The following are the changes from calc version 2.10.1t21 to 2.10.2t0:
 
     The param(n) builtin, then n > 0, may be used as an lvalue:
 
-	> define g() = (param(2) = param(1));
-	> define h() = (param(1)++, param(2)--);
-	> u = 5
-	> v = 10
-	> print g(u, &v), u, v;
+	; define g() = (param(2) = param(1));
+	; define h() = (param(1)++, param(2)--);
+	; u = 5
+	; v = 10
+	; print g(u, &v), u, v;
 	5 5 5
-	> print h(&u, &v), u, v;
+	; print h(&u, &v), u, v;
 	5 6 4
 
     Missing args now evaluate to null as in:
@@ -5272,9 +5353,9 @@ The following are the changes from calc version 2.10.0t13 to 2.10.1t10:
 	C-style arbitrary precision calculator (version 2.10.1t3)
 	[Type "exit" to exit, or "help" for help.]
 
-	> files(5)
+	; files(5)
 		FILE 5 "descriptor[5]" (unknown_mode, pos 0)
-	> fgetline(files(5))
+	; fgetline(files(5))
 		"A line of text in the file on descriptor 5"
 
     The -m mode flag now controls calc's ability to open files
@@ -5996,8 +6077,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.78 $
-## @(#) $Id: CHANGES,v 29.78 2006/06/03 22:52:39 chongo Exp $
+## @(#) $Revision: 29.80 $
+## @(#) $Id: CHANGES,v 29.80 2006/06/11 07:52:58 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

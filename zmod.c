@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: zmod.c,v 29.3 2000/07/17 15:35:49 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: zmod.c,v 29.4 2006/06/11 00:08:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmod.c,v $
  *
  * Under source code control:	1991/05/22 23:03:55
@@ -1197,7 +1197,7 @@ zredcmul(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	ZVALUE z1tmp, z2tmp;
 	int sign;
 
-	sign = z1.sign ^ z2.sign;;
+	sign = z1.sign ^ z2.sign;
 	z1.sign = 0;
 	z2.sign = 0;
 	z1tmp.len = 0;

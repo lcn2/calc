@@ -75,7 +75,7 @@ have meanings are as follows:
 	is displayed.
 
     2	Show func will display more information about a functions
-	arguments as well as more argument sdummary information.
+	arguments as well as more argument summary information.
 
     3	During execution, allow calc standard resource files
 	to output additional debugging information.
@@ -103,7 +103,7 @@ either of the bottom 2 bits set:
 		print "funcB(size, mass, ...) defined";
 	}
 
-If your the resource file needs to output special debugging informatin,
+If your the resource file needs to output special debugging information,
 we recommend that you check for bit 3 of the config("resource_debug")
 before printing the debug statement:
 
@@ -117,11 +117,67 @@ The following is a brief description of some of the calc resource files
 that are shipped with calc.  See above for example of how to read in
 and execute these files.
 
+alg_config.cal
+
+    global test_time
+    mul_loop(repeat,x) defined
+    mul_ratio(len) defined
+    best_mul2() defined
+    sq_loop(repeat,x) defined
+    sq_ratio(len) defined
+    best_sq2() defined
+    pow_loop(repeat,x,ex) defined
+    pow_ratio(len) defined
+    best_pow2() defined
+
+    These functions search for an optimal value of config("mul2"),
+    config("sq2"), and config("pow2").  The calc default values of these
+    configuration values were set by running this resource file on a
+    1.8GHz AMD 32-bit CPU of ~3406 BogoMIPS.
+
+    The best_mul2() function returns the optimal value of config("mul2").
+    The best_sq2() function returns the optimal value of config("sq2").
+    The best_pow2() function returns the optimal value of config("pow2").
+    The other functions are just support functions.
+
+    By design, best_mul2(), best_sq2(), and best_pow2() take a few
+    minutes to run.  These functions increase the number of times a
+    given computational loop is executed until a minimum amount of CPU
+    time is consumed.  To watch these functions progress, one can set
+    the config("user_debug") value.
+
+    Here is a suggested way to use this resource file:
+
+	; read alg_config
+	; config("user_debug",2),;
+	; best_mul2(); best_sq2(); best_pow2();
+	; best_mul2(); best_sq2(); best_pow2();
+	; best_mul2(); best_sq2(); best_pow2();
+
+    NOTE: It is perfectly normal for the optimal value returned to differ
+    slightly from run to run.  Slight variations due to inaccuracy in
+    CPU timings will cause the best value returned to differ slightly
+    from run to run.
+
+    One can use a calc startup file to change the initial values of
+    config("mul2"), config("sq2"), and config("pow2").  For example one
+    can place into ~/.calcrc these lines:
+
+	config("mul2", 1780),;
+	config("sq2", 3388),;
+	config("pow2", 176),;
+
+    to automatically and silently change these config values.
+    See help/config and CALCRC in help/environment for more information.
+
+
 beer.cal
 
     Calc's contribution to the 99 Bottles of Beer web page:
 
 	http://www.ionet.net/~timtroyr/funhouse/beer.html#calc
+
+     NOTE: This resource produces a lot of output.  :-)
 
 
 bernoulli.cal
@@ -132,7 +188,7 @@ bernoulli.cal
 
     NOTE: There is now a bernoulli() builtin function.  This file is
     	  left here for backward compatibility and now simply returns
-	  the buildin function.
+	  the builtin function.
 
 
 bigprime.cal
@@ -153,9 +209,9 @@ chi.cal
 
     The chi_prob() function does not work well with odd degrees of freedom.
     It is reasonable with even degrees of freedom, although one must give
-    a sifficently small error term as the degress gets large (>100).
+    a sufficiently small error term as the degrees gets large (>100).
 
-    The Z(x) and P(x) are internal statistical funcions.
+    The Z(x) and P(x) are internal statistical functions.
 
     eps is an optional epsilon() like error term.
 
@@ -225,6 +281,8 @@ hello.cal
 
 	http://www.latech.edu/~acm/HelloWorld.shtml
 	http://www.latech.edu/~acm/helloworld/calc.html
+
+     NOTE: This resource produces a lot of output.  :-)
 
 
 intfile.cal
@@ -935,8 +993,8 @@ xx_print.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.12 $
-## @(#) $Id: README,v 29.12 2006/05/21 04:41:09 chongo Exp $
+## @(#) $Revision: 29.14 $
+## @(#) $Id: README,v 29.14 2006/06/11 07:22:05 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/README,v $
 ##
 ## Under source code control:	1990/02/15 01:50:32

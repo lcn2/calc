@@ -26,26 +26,26 @@ DESCRIPTION
     double-bracket index of the item found.
 
 EXAMPLE
-	> mat M[2,3,1:5]
+    ; mat M[2,3,1:5]
 
-	> indices(M, 11)
-	list (3 elements, 2 nonzero):
-		[[0]] = 0
-		[[1]] = 2
-		[[2]] = 2
+    ; indices(M, 11)
+    list (3 elements, 2 nonzero):
+	    [[0]] = 0
+	    [[1]] = 2
+	    [[2]] = 2
 
-	> A = assoc();
+    ; A = assoc();
 
-	> A["cat", "dog"] = "fight";
-	> A[2,3,5,7] = "primes";
-	> A["square", 3] = 9
+    ; A["cat", "dog"] = "fight";
+    ; A[2,3,5,7] = "primes";
+    ; A["square", 3] = 9
 
-	> indices(A, search(A, "primes"))
-	list (4 elements, 4 nonzero):
-		[[0]] = 2
-		[[1]] = 3
-		[[2]] = 5
-		[[3]] = 7
+    ; indices(A, search(A, "primes"))
+    list (4 elements, 4 nonzero):
+	    [[0]] = 2
+	    [[1]] = 3
+	    [[2]] = 5
+	    [[3]] = 7
 
 LIMITS
     abs(index) < 2^31
@@ -57,7 +57,7 @@ LINK LIBRARY
 SEE ALSO
     assoc, mat
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -73,8 +73,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: indices,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: indices,v 29.3 2006/06/10 12:28:10 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/indices,v $
 ##
 ## Under source code control:	1999/11/16 08:02:03

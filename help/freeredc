@@ -19,7 +19,6 @@ EXAMPLE
     1	    2	    15
     ; freeredc()
     ; show redc
-    >
 
 LIMITS
     none
@@ -30,7 +29,7 @@ LINK LIBRARY
 SEE ALSO
     free, freeglobals, freestatics
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -46,8 +45,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: freeredc,v 29.3 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: freeredc,v 29.4 2006/06/10 12:28:10 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/freeredc,v $
 ##
 ## Under source code control:	1997/09/06 20:03:35

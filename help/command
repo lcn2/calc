@@ -19,26 +19,26 @@ Command sequence
     define function(params) { body }
     define function(params) = expression
 
-	    This first form defines a full function which can consist
-	    of declarations followed by many statements which implement
-	    the function.
+	This first form defines a full function which can consist
+	of declarations followed by many statements which implement
+	the function.
 
-	    The second form defines a simple function which calculates
-	    the specified expression value from the specified parameters.
-	    The expression cannot be a statement.  However, the comma
-	    and question mark operators can be useful.	Examples of
-	    simple functions are:
+	The second form defines a simple function which calculates
+	the specified expression value from the specified parameters.
+	The expression cannot be a statement.  However, the comma
+	and question mark operators can be useful.	Examples of
+	simple functions are:
 
-		    define sumcubes(a, b) = a^3 + b^3
-		    define pimod(a) = a % pi()
-		    define printnum(a, n, p)
-		    {
-			if (p == 0) {
-			    print a: "^": n, "=", a^n;
-			} else {
-			    print a: "^": n, "mod", p, "=", pmod(a,n,p);
-			}
+		define sumcubes(a, b) = a^3 + b^3
+		define pimod(a) = a % pi()
+		define printnum(a, n, p)
+		{
+		    if (p == 0) {
+			print a: "^": n, "=", a^n;
+		    } else {
+			print a: "^": n, "mod", p, "=", pmod(a,n,p);
 		    }
+		}
 
 
     read calc commands
@@ -48,45 +48,45 @@ Command sequence
     read filename
     read -once filename
 
-	    This reads definitions from the specified calc resource filename.
+	This reads definitions from the specified calc resource filename.
 
-	    In the 1st and 2nd forms, if var is a global variable string
-	    value, then the value of that variable is used as a filename.
+	In the 1st and 2nd forms, if var is a global variable string
+	value, then the value of that variable is used as a filename.
 
-	    The following is equivalent to read lucas.cal or read "lucas.cal":
+	The following is equivalent to read lucas.cal or read "lucas.cal":
 
-	    	global var = "lucas.cal";
-		read $var;
+	    global var = "lucas.cal";
+	    read $var;
 
-	    In the 3rd or 4th forms, the filename argument is treated
-	    as a literal string, not a variable.  In these forms, the
-	    name can be quoted if desired.
+	In the 3rd or 4th forms, the filename argument is treated
+	as a literal string, not a variable.  In these forms, the
+	name can be quoted if desired.
 
-	    The calculator uses the CALCPATH environment variable to
-	    search through the specified directories for the filename,
-	    similarly to the use of the PATH environment variable.
-	    If CALCPATH is not defined, then a default path which is
-	    usually ":/usr/local/lib/calc" is used.
+	The calculator uses the CALCPATH environment variable to
+	search through the specified directories for the filename,
+	similarly to the use of the PATH environment variable.
+	If CALCPATH is not defined, then a default path which is
+	usually ":/usr/local/lib/calc" is used.
 
-	    The ".cal" extension is defaulted for input files, so that
-	    if "filename" is not found, then "filename.cal" is then
-	    searched for.  The contents of the filename are command
-	    sequences which can consist of expressions to evaluate or
-	    functions to define, just like at the top level command level.
+	The ".cal" extension is defaulted for input files, so that
+	if "filename" is not found, then "filename.cal" is then
+	searched for.  The contents of the filename are command
+	sequences which can consist of expressions to evaluate or
+	functions to define, just like at the top level command level.
 
-	    When -once is given, the read command acts like the regular
-	    read expect that it will ignore filename if is has been
-	    previously read.
+	When -once is given, the read command acts like the regular
+	read expect that it will ignore filename if is has been
+	previously read.
 
-	    The read -once form is particularly useful in a resource
-	    file that needs to read a 2nd resource file.  By using the
-	    READ -once command, one will not reread that 2nd resource
-	    file, nor will once risk entering into a infinite READ loop
-	    (where that 2nd resource file directly or indirectly does
-	    a READ of the first resource file).
+	The read -once form is particularly useful in a resource
+	file that needs to read a 2nd resource file.  By using the
+	READ -once command, one will not reread that 2nd resource
+	file, nor will once risk entering into a infinite READ loop
+	(where that 2nd resource file directly or indirectly does
+	a READ of the first resource file).
 
-	    If the -m mode disallows opening of files for reading,
-	    this command will be disabled.
+	If the -m mode disallows opening of files for reading,
+	this command will be disabled.
 
 
     write calc commands
@@ -94,29 +94,29 @@ Command sequence
     write $var
     write filename
 
-	    This writes the values of all global variables to the
-	    specified filename, in such a way that the file can be
-	    later read in order to recreate the variable values.
-	    For speed reasons, values are written as hex fractions.
-	    This command currently only saves simple types, so that
-	    matrices, lists, and objects are not saved.	 Function
-	    definitions are also not saved.
+	This writes the values of all global variables to the
+	specified filename, in such a way that the file can be
+	later read in order to recreate the variable values.
+	For speed reasons, values are written as hex fractions.
+	This command currently only saves simple types, so that
+	matrices, lists, and objects are not saved.	 Function
+	definitions are also not saved.
 
-	    In the 1st form, if var is a global variable string
-	    value, then the value of that variable is used as a filename.
+	In the 1st form, if var is a global variable string
+	value, then the value of that variable is used as a filename.
 
-	    The following is equivalent to write dump.out or
-	    write "dump.out":
+	The following is equivalent to write dump.out or
+	write "dump.out":
 
-	    	global var = "dump.out";
-		write $var;
+	    global var = "dump.out";
+	    write $var;
 
-	    In the 2nd form, the filename argument is treated as a literal
-	    string, not a variable.  In this form, the name can be quoted
-	    if desired.
+	In the 2nd form, the filename argument is treated as a literal
+	string, not a variable.  In this form, the name can be quoted
+	if desired.
 
-	    If the -m mode disallows opening of files for writing,
-	    this command will be disabled.
+	If the -m mode disallows opening of files for writing,
+	this command will be disabled.
 
 
     quit or exit
@@ -126,36 +126,35 @@ Command sequence
     exit
     exit string
 
-	    The action of these commands depends on where they are used.
-	    At the interactive level, they will cause calc it edit.
-	    This is the normal way to leave the calculator.  In any
-	    other use, they will stop the current calculation as if
-	    an error had occurred.
+	The action of these commands depends on where they are used.
+	At the interactive level, they will cause calc it edit.
+	This is the normal way to leave the calculator.  In any
+	other use, they will stop the current calculation as if
+	an error had occurred.
 
-	    If a string is given, then the string is printed as the reason
-	    for quitting, otherwise a general quit message is printed.
-	    The routine name and line number which executed the quit is
-	    also printed in either case.
+	If a string is given, then the string is printed as the reason
+	for quitting, otherwise a general quit message is printed.
+	The routine name and line number which executed the quit is
+	also printed in either case.
 
-	    Exit is an alias for quit.
+	Exit is an alias for quit.
 
-	    Quit is useful when a routine detects invalid arguments,
-	    in order to stop a calculation cleanly.  For example,
-	    for a square root routine, an error can be given if the
-	    supplied parameter was a negative number, as in:
+	Quit is useful when a routine detects invalid arguments,
+	in order to stop a calculation cleanly.  For example,
+	for a square root routine, an error can be given if the
+	supplied parameter was a negative number, as in:
 
-		    define mysqrt(n)
-		    {
-			if (! isnum(n))
-			    quit "non-numeric argument";
-			if (n < 0)
-			    quit "Negative argument";
-			return sqrt(n);
-		    }
+		define mysqrt(n)
+		{
+		    if (! isnum(n))
+			quit "non-numeric argument";
+		    if (n < 0)
+			quit "Negative argument";
+		    return sqrt(n);
+		}
 
-	    See 'more information about abort and quit' below for
-	    more information.
-
+	See 'more information about abort and quit' below for
+	more information.
 
 
     abort
@@ -163,12 +162,12 @@ Command sequence
     abort
     abort string
 
-	    This command behaves like QUIT except that it will attempt
-	    to return to the interactive level if permitted, otherwise
-	    calc exit.
+	This command behaves like QUIT except that it will attempt
+	to return to the interactive level if permitted, otherwise
+	calc exit.
 
-	    See 'more information about abort and quit' below for
-	    more information.
+	See 'more information about abort and quit' below for
+	more information.
 
 
     change current directory
@@ -176,45 +175,45 @@ Command sequence
     cd
     cd dir
 
-	    Change the current directory to 'dir'.  If 'dir' is ommitted,
-	    change the current directory to the home directory, if $HOME
-	    is set in the environment.
+	Change the current directory to 'dir'.  If 'dir' is ommitted,
+	change the current directory to the home directory, if $HOME
+	is set in the environment.
 
 
     show information
     ----------------
     show item
 
-	    This command displays some information where 'item' is
-	    one of the following:
+	This command displays some information where 'item' is
+	one of the following:
 
-		    blocks		unfreed named blocks
-		    builtin		built in functions
-		    config		config parameters and values
-		    constants		cache of numeric constants
-		    custom		custom functions if calc -C was used
-		    errors		new error-values created
-		    files		open files, file position and sizes
-		    function		user-defined functions
-		    globaltypes		global variables
-		    objfunctions	possible object functions
-		    objtypes		defined objects
-		    opcodes func	internal opcodes for function `func'
-		    sizes		size in octets of calc value types
-		    realglobals		numeric global variables
-		    statics		unscoped static variables
-		    numbers		calc number cache
-		    redcdata		REDC data defined
-		    strings		calc string cache
-		    literals		calc literal cache
+		blocks		unfreed named blocks
+		builtin		built in functions
+		config		config parameters and values
+		constants		cache of numeric constants
+		custom		custom functions if calc -C was used
+		errors		new error-values created
+		files		open files, file position and sizes
+		function		user-defined functions
+		globaltypes		global variables
+		objfunctions	possible object functions
+		objtypes		defined objects
+		opcodes func	internal opcodes for function `func'
+		sizes		size in octets of calc value types
+		realglobals		numeric global variables
+		statics		unscoped static variables
+		numbers		calc number cache
+		redcdata		REDC data defined
+		strings		calc string cache
+		literals		calc literal cache
 
-	    Only the first 4 characters of item are examined, so:
+	Only the first 4 characters of item are examined, so:
 
-		    show globals
-		    show global
-		    show glob
+		show globals
+		show global
+		show glob
 
-	    do the same thing.
+	do the same thing.
 
 
     calc help
@@ -222,24 +221,23 @@ Command sequence
     help $var
     help name
 
-	    This displays a help related to 'name' or general
-	    help of none is given.
+	This displays a help related to 'name' or general
+	help of none is given.
 
-	    In the 1st form, if var is a global variable string
-	    value, then the value of that variable is used as a name.
+	In the 1st form, if var is a global variable string
+	value, then the value of that variable is used as a name.
 
-	    The following is equivalent to help command or help "command":
+	The following is equivalent to help command or help "command":
 
-	    	global var = "command";
-		help $var;
+	    global var = "command";
+	    help $var;
 
-	    In the 2nd form, the filename argument is treated as a literal
-	    string, not a variable.  In this form, the name can be quoted
-	    if desired.
+	In the 2nd form, the filename argument is treated as a literal
+	string, not a variable.  In this form, the name can be quoted
+	if desired.
 
 
     =-=
-
 
     more information about abort and quit
     =====================================
@@ -291,7 +289,7 @@ Command sequence
 	after statment #1
 	start statment #2
 	abort from a()
-	>		<==== calc interactive prompt
+	;		<==== calc interactive prompt
 
     because the '-i' calc causes ABORT to drop into an
     interactive prompt.	 However typing a QUIT or ABORT
@@ -321,21 +319,21 @@ Command sequence
     If one were to type in the contents of myfile.cal interactively,
     calc will produce:
 
-	> print "start of myfile.cal";
+	; print "start of myfile.cal";
 	start of myfile.cal
-	> define q() {quit "quit from q()"; print "end of q()"}
+	; define q() {quit "quit from q()"; print "end of q()"}
 	q() defined
-	> define a() {abort "abort from a()"}
+	; define a() {abort "abort from a()"}
 	a() defined
-	> x = 3;
-	> {print "start #1"; if (x > 1) q()} print "after #1";
+	; x = 3;
+	; {print "start #1"; if (x > 1) q()} print "after #1";
 	start statment #1
 	quit from q()
 	after statment #1
-	> {print "start #2"; if (x > 1) a()} print "after #2";
+	; {print "start #2"; if (x > 1) a()} print "after #2";
 	start statment #2
 	abort from a()
-	> {print "start #3"; if (x > 1) quit "quit from 3rd statement"}
+	; {print "start #3"; if (x > 1) quit "quit from 3rd statement"}
 	start #3
 	quit from 3rd statement
 
@@ -345,16 +343,14 @@ Command sequence
     The QUIT (after the if (x > 1) ...) will cause calc to exit
     because it was given at the interactive prompt level.
 
-
     =-=
-
 
     Also see the help topic:
 
-	    statement	    flow control and declaration statements
-	    usage	    how to invoke the calc command and calc -options
+	statement   flow control and declaration statements
+	usage	    how to invoke the calc command and calc -options
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -370,8 +366,8 @@ Command sequence
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: command,v 29.3 2006/05/20 10:01:33 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: command,v 29.5 2006/06/10 12:28:10 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/command,v $
 ##
 ## Under source code control:	1991/07/21 04:37:17

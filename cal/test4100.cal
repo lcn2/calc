@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: test4100.cal,v 29.2 2000/06/07 14:02:25 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: test4100.cal,v 29.3 2006/06/10 20:19:20 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/test4100.cal,v $
  *
  * Under source code control:	1996/03/13 03:53:22
@@ -316,8 +316,8 @@ define powtimes(str, N1, N2, n, verbose)
 	mat B[n];
 	v = olen(N1);
 
-	cp = config("pow2", 1);
-	crc = config("redc2", 1);
+	cp = config("pow2", 2);
+	crc = config("redc2", 2);
 
 	/* initialize redc and lastmod info */
 
@@ -346,7 +346,7 @@ define powtimes(str, N1, N2, n, verbose)
 	for (i = 0; i < n; i++)
 		z4 += rcpow(Ar[i], B[i], v);
 	trcsmall = round(runtime() - t, 4);
-	config("redc2", 1);
+	config("redc2", 2);
 	t = runtime();
 	for (i = 0; i < n; i++)
 		z5 += rcpow(Ar[i], B[i], v);

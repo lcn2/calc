@@ -64,24 +64,83 @@ Variable declarations
 	    static mat table[3] = {5, 6, 7};
 	    local obj point p1, p2;
 
-    There are no pointers in the calculator language, thus all
-    arguments to user-defined functions are normally passed by value.
-    This is true even for matrices, strings, and lists.	 In order
-    to circumvent this, the '&' operator is allowed before a variable
-    when it is an argument to a function.  When this is done, the
-    address of the variable is passed to the function instead of its
-    value.  This is true no matter what the type of the variable is.
-    This allows for fast calls of functions when the passed variable
-    is huge (such as a large array).  However, the passed variable can
-    then be changed by the function if the parameter is assigned into.
-    The function being called does not need to know if the variable
-    is being passed by value or by address.
+    When working with user-defined functions, the syntax for passing an
+    lvalue by reference rather than by value is to precede an expression
+    for the lvalue by a backquote. For example, if the function invert is
+    defined by:
 
-    Built-in functions and object functions always accept their
-    arguments as addresses, thus there is no need to use '&' when
-    calling built-in functions.
+	    define invert(x) {x = inverse(x)}
 
-## Copyright (C) 1999  Landon Curt Noll
+    then invert(`A) achieves the effect of A = inverse(A).  In other
+    words, passing and argument of `variable (with a back-quote)
+    will cause and changes to the function argument to be applied to
+    the calling variable.  Calling invert(A) (without the ` backquote)
+    assigns inverse(A) to the temporary function parameter x and leaves
+    A unchanged.
+
+    In an argument, a backquote before other than an lvalue is ignored.
+    Consider, for example:
+
+	    ; define logplus(x,y,z) {return log(++x + ++y + ++z);}
+
+	    ; eh = 55;
+	    ; mi = 25;
+	    ; answer = logplus(eh, `mi, `17);
+
+	    ; print eh, mi, answer;
+	    55 26 2
+
+    The value of eh is was not changed because eh was used as
+    an argument without a back-quote (`).  However, mi was incremented
+    because it was passed as `mi (with a back-quote).  Passing 17
+    (not an lvalue) as `17 has not effect on the value 17.
+
+    The back-quote should only be used before arguments to a function.
+    In all other contexts, a backquote causes a compile error.
+
+    Another method is to pass the address of the lvalue explicitly and
+    use the indirection operator * (star) to refer to the lvalue in the
+    function body.  Consider the following function:
+
+	    ; define ten(a) { *a = 10; }
+
+	    ; n = 17;
+	    ; ten(n);
+	    ; print n;
+	    17
+
+	    ; ten(`n);
+	    ; print n;
+	    17
+
+	    ; ten(&n);
+	    ; print n;
+	    10
+
+    Passing an argument with a & (ampersand) allows the tenmore()
+    function to modify the calling variable:
+
+	    ; wa = tenmore(&vx);
+	    ; print vx, wa;
+	    65 65
+
+    Great care should be taken when using a pointer to a local variable
+    or element of a matrix, list or object, since the lvalue pointed to
+    is deleted when evaluation of the function is completed or the lvalue
+    whose value is the matrix, list or object is assigned another value.
+
+    As both of the above methods (using & arguments (ampersand) *value
+    (star) function values or by using ` arguments (back quote) alone)
+    copy the address rather than the value of the argument to the function
+    parameter, they allow for faster calls of functions when the memory
+    required for the value is huge (such as for a large matrix).
+
+    As the built-in functions and object functions always accept their
+    arguments as addresses, there is no gain in using the backquote when
+    calling these functions.
+
+
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -97,8 +156,8 @@ Variable declarations
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: variable,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: variable,v 29.3 2006/06/11 07:50:48 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/variable,v $
 ##
 ## Under source code control:	1991/07/21 04:37:25

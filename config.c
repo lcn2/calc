@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.17 $
- * @(#) $Id: config.c,v 29.17 2006/05/19 15:26:10 chongo Exp $
+ * @(#) $Revision: 29.20 $
+ * @(#) $Id: config.c,v 29.20 2006/06/11 00:08:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -97,6 +97,7 @@ NAMETYPE configs[] = {
 	{"compile_custom",	CONFIG_COMPILE_CUSTOM},
 	{"allow_custom",	CONFIG_ALLOW_CUSTOM},
 	{"version",	CONFIG_VERSION},
+	{"baseb",	CONFIG_BASEB},
 	{NULL,		0}
 };
 
@@ -159,7 +160,8 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	FALSE,			/* compiled without -DCUSTOM */
 #endif
 	&allow_custom,		/* *TRUE=> custom functions are enabled */
-	NULL			/* version */
+	NULL,			/* version */
+	BASEB,			/* base for calculations */
 };
 CONFIG newstd = {	/* new non-backward compatible configuration */
 	MODE_INITIAL,		/* current output mode */
@@ -216,7 +218,8 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	FALSE,			/* compiled without -DCUSTOM */
 #endif
 	&allow_custom,		/* *TRUE=> custom functions are enabled */
-	NULL			/* version */
+	NULL,			/* version */
+	BASEB,			/* base for calculations */
 };
 CONFIG *conf = NULL;	/* loaded in at startup - current configuration */
 
@@ -527,7 +530,7 @@ setconfig(int type, VALUE *vp)
 		break;
 
 	case CONFIG_MUL2:
-		if (getlen(vp, &len)) {
+		if (getlen(vp, &len) || len < 0 || len == 1) {
 			math_error("Bad value for mul2");
 			/*NOTREACHED*/
 		}
@@ -537,7 +540,7 @@ setconfig(int type, VALUE *vp)
 		break;
 
 	case CONFIG_SQ2:
-		if (getlen(vp, &len)) {
+		if (getlen(vp, &len) || len < 0 || len == 1) {
 			math_error("Bad value for sq2");
 			/*NOTREACHED*/
 		}
@@ -547,7 +550,7 @@ setconfig(int type, VALUE *vp)
 		break;
 
 	case CONFIG_POW2:
-		if (getlen(vp, &len)) {
+		if (getlen(vp, &len) || len < 0 || len == 1) {
 			math_error("Bad value for pow2");
 			/*NOTREACHED*/
 		}
@@ -557,7 +560,7 @@ setconfig(int type, VALUE *vp)
 		break;
 
 	case CONFIG_REDC2:
-		if (getlen(vp, &len)) {
+		if (getlen(vp, &len) || len < 0 || len == 1) {
 			math_error("Bad value for redc2");
 			/*NOTREACHED*/
 		}
@@ -899,6 +902,10 @@ setconfig(int type, VALUE *vp)
 		math_error("The version config parameter is read-only");
 		/*NOTREACHED*/
 
+	case CONFIG_BASEB:
+		math_error("The baseb config parameter is read-only");
+		/*NOTREACHED*/
+
 	default:
 		math_error("Setting illegal config parameter");
 		/*NOTREACHED*/
@@ -1110,20 +1117,12 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		break;
 
 	case CONFIG_TILDE:
-		if (cfg->tilde_ok) {
-			vp->v_num = itoq(1);
-		} else {
-			vp->v_num = itoq(0);
-		}
-		return;
+		i = (cfg->tilde_ok ? 1 : 0);
+		break;
 
 	case CONFIG_TAB:
-		if (cfg->tab_ok) {
-			vp->v_num = itoq(1);
-		} else {
-			vp->v_num = itoq(0);
-		}
-		return;
+		i = (cfg->tab_ok ? 1 : 0);
+		break;
 
 	case CONFIG_QUOMOD:
 		i = cfg->quomod;
@@ -1162,20 +1161,12 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		break;
 
 	case CONFIG_LEADZERO:
-		if (cfg->leadzero) {
-			vp->v_num = itoq(1);
-		} else {
-			vp->v_num = itoq(0);
-		}
-		return;
+		i = (cfg->leadzero ? 1 : 0);
+		break;
 
 	case CONFIG_FULLZERO:
-		if (cfg->fullzero) {
-			vp->v_num = itoq(1);
-		} else {
-			vp->v_num = itoq(0);
-		}
-		return;
+		i = (cfg->fullzero ? 1 : 0);
+		break;
 
 	case CONFIG_MAXSCAN:
 		i = cfg->maxscancount;
@@ -1196,12 +1187,8 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		break;
 
 	case CONFIG_BLKVERBOSE:
-		if (cfg->blkverbose) {
-			vp->v_num = itoq(1);
-		} else {
-			vp->v_num = itoq(0);
-		}
-		return;
+		i = (cfg->blkverbose ? 1 : 0);
+		break;
 
 	case CONFIG_BLKBASE:
 		vp->v_type = V_STR;
@@ -1236,12 +1223,8 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		break;
 
 	case CONFIG_VERBOSE_QUIT:
-		if (cfg->verbose_quit) {
-			vp->v_num = itoq(1);
-		} else {
-			vp->v_num = itoq(0);
-		}
-		return;
+		i = (cfg->verbose_quit ? 1 : 0);
+		break;
 
 	case CONFIG_CTRL_D:
 		vp->v_type = V_STR;
@@ -1272,40 +1255,24 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		return;
 
 	case CONFIG_WINDOWS:
-		if (cfg->windows) {
-			vp->v_num = itoq(1);
-		} else {
-			vp->v_num = itoq(0);
-		}
-		return;
+		i = (cfg->windows ? 1 : 0);
+		break;
 
 	case CONFIG_CYGWIN:
-		if (cfg->cygwin) {
-			vp->v_num = itoq(1);
-		} else {
-			vp->v_num = itoq(0);
-		}
-		return;
+		i = (cfg->cygwin ? 1 : 0);
+		break;
 
 	case CONFIG_COMPILE_CUSTOM:
-		if (cfg->compile_custom) {
-			vp->v_num = itoq(1);
-		} else {
-			vp->v_num = itoq(0);
-		}
-		return;
+		i = (cfg->compile_custom ? 1 : 0);
+		break;
 
 	case CONFIG_ALLOW_CUSTOM:
 		/* firewall */
 		if (cfg->allow_custom == NULL) {
 			cfg->allow_custom = &allow_custom;
 		}
-		if (*(cfg->allow_custom)) {
-			vp->v_num = itoq(1);
-		} else {
-			vp->v_num = itoq(0);
-		}
-		return;
+		i = (*(cfg->allow_custom) ? 1 : 0);
+		break;
 
 	case CONFIG_VERSION:
 		vp->v_type = V_STR;
@@ -1315,6 +1282,10 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 			vp->v_str = makenewstring(cfg->version);
 		}
 		return;
+
+	case CONFIG_BASEB:
+		i = BASEB;
+		break;
 
 	default:
 		math_error("Getting illegal CONFIG element");
@@ -1420,5 +1391,7 @@ config_cmp(CONFIG *cfg1, CONFIG *cfg2)
 	       (cfg1->version == NULL && cfg2->version != NULL) ||
 	       (cfg1->version != NULL && cfg2->version == NULL) ||
 	       (cfg1->version != NULL && cfg2->version != NULL &&
-		strcmp(cfg1->version, cfg2->version) != 0);
+		strcmp(cfg1->version, cfg2->version) != 0) ||
+
+	       cfg1->baseb != cfg2->baseb;
 }

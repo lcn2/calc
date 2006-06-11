@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.26 $
- * @(#) $Id: regress.cal,v 29.26 2006/06/02 09:49:13 chongo Exp $
+ * @(#) $Revision: 29.29 $
+ * @(#) $Id: regress.cal,v 29.29 2006/06/11 07:07:23 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -404,14 +404,14 @@ define test_config()
 					'512: config("trace") == 0');
 	vrfy(config("maxprint") == 16,
 					'513: config("maxprint") == 16');
-	vrfy(config("mul2") == 20,
-					'514: config("mul2") == 20');
-	vrfy(config("sq2") == 20,
-					'515: config("sq2") == 20');
-	vrfy(config("pow2") == 40,
-					'516: config("pow2") == 40');
-	vrfy(config("redc2") == 50,
-					'517: config("redc2") == 50');
+	vrfy(config("mul2") == 1780,
+					'514: config("mul2") == 1780');
+	vrfy(config("sq2") == 3388,
+					'515: config("sq2") == 3388');
+	vrfy(config("pow2") == 176,
+					'516: config("pow2") == 176');
+	vrfy(config("redc2") == 220,
+					'517: config("redc2") == 220');
 	vrfy(config("tilde"),
 					'518: config("tilde")');
 	vrfy(config("tab"),
@@ -5226,6 +5226,11 @@ define test_is()
 	local square;	/* square of an odd prime */
 	local string;	/* string */
 	local com;	/* complex value */
+	local rndint;	/* a random integer */
+	local rndexp;	/* a random exponent */
+	local rndval;	/* rndint ^ rndexp */
+	local i;	/* integer value */
+	local ok;	/* 1 ==> issq() tests were OK, 0 ==> failure */
 
 	print '5900: Beginning test_is';
 
@@ -6164,14 +6169,74 @@ define test_is()
 	vrfy(istype(a,odd) == 0,	  '6662: istype(a,odd) == 0');
 
 	/*
+	 * perform more extensive issq() testing
+	 */
+	ok = 1;
+	for (i=0; i < 256; ++i) {
+		/* rndval will be a square - even powers>0 of x>1 */
+		rndexp = random(1, 16) * 2;
+		rndint = random(2, 4294967296);
+		if (issq(rndint)) {
+			++rndint;
+		}
+		rndval = rndint ^ rndexp;
+		if (issq(rndval) == 0) {
+			prob(strprintf("issq(%d^%d) returned 0",
+					rndint, rndexp));
+			ok = 0;
+		}
+	}
+	if (ok) {
+		print	  '6663: issq() on 256 squares';
+	} else {
+		print	  '****: failure(s): 6663: faiissq() on 256 squares';
+	}
+	for (i=0; i < 256; ++i) {
+		/* rndval will not be a square - 1 + even powers>0 of x>1 */
+		rndexp = random(1, 16) * 2;
+		rndint = random(2, 4294967296);
+		rndval = rndint ^ rndexp;
+		if (issq(rndval+1) != 0) {
+			prob(strprintf("issq(%d^%d)+1 returned non-zero",
+					rndint, rndexp));
+			ok = 0;
+		}
+	}
+	if (ok) {
+		print	  '6664: issq() on 256 squares+1';
+	} else {
+		print	  '****: failure(s): 6664: issq() on 256 squares+1';
+	}
+	print				  '6664: issq() on 256 squares+1';
+	for (i=0; i < 256; ++i) {
+		/* rndval will not be a square - odd powers>0 of x>1 */
+		rndexp = (random(1, 16) * 2) + 1;
+		rndint = random(2, 4294967296);
+		if (issq(rndint)) {
+			++rndint;
+		}
+		rndval = rndint ^ rndexp;
+		if (issq(rndval) != 0) {
+			prob(strprintf("issq(%d^%d) returned non-zero",
+					rndint, rndexp));
+			ok = 0;
+		}
+	}
+	if (ok) {
+		print	  '6665: issq() on 256 non-squares';
+	} else {
+		print	  '****: failure(s): 6665: issq() on 256 non-squares';
+	}
+
+	/*
 	 * cleanup
 	 */
 	blkfree("blk5900");
-	print				  '6663: blkfree("blk5900")';
+	print				  '6666: blkfree("blk5900")';
 	fclose(ofd);
-	print				  '6664: fclose(ofd)';
+	print				  '6667: fclose(ofd)';
 
-	print '6665: Ending test_is';
+	print '6668: Ending test_is';
 }
 print '168: test_is()';
 
@@ -7847,7 +7912,26 @@ read -once varargs;
 print	'9827: read -once varargs';
 read -once qtime;
 print	'9828: read -once qtime';
-print	'9829: Ending read of selected calc resource files';
+read -once chi;
+print	'9829: read -once chi';
+read -once intfile;
+print	'9830: read -once intfile';
+read -once lucas;
+print	'9831: read -once lucas';
+read -once lucas_tbl;
+print	'9832: read -once lucas_tbl';
+read -once natnumset;
+print	'9833: read -once natnumset';
+read -once repeat;
+print	'9834: read -once repeat';
+read -once screen;
+print	'9835: read -once screen';
+read -once linear;
+print	'9836: read -once linear';
+print	'9837: skipping read -once beer.cal because it is an infinite loop';
+print	'9838: skipping read -once hello.cal because it is an infinite loop';
+print	'9839: skipping read -once xx_print.cal because it is a printing demo';
+print	'9840: Ending read of selected calc resource files';
 
 
 /*

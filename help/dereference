@@ -33,16 +33,17 @@ DESCRIPTION
     structure rather than the structure identified by X.  For example,
     suppose B has been created by
 
-			mat B[3] = {1,2,3}
+	; mat B[3] = {1,2,3}
 
     then
-			A = *B = {4,5,6}
+
+	; A = *B = {4,5,6}
 
     will assign the values 4,5,6 to the elements of a copy of B, which
     will then become the value of A, so that the values of A and B will
     be different.  On the other hand,
 
-			A = B = {4,5,6}
+	; A = B = {4,5,6}
 
     will result in A and B having the same value.
 
@@ -51,9 +52,9 @@ DESCRIPTION
     The * operator may be iterated with suitable sequences of pointer-valued
     lvalues.  For example, after
 
-			> global a, b, c;
-			> b = &a;
-			> c = &b;
+	; global a, b, c;
+	; b = &a;
+	; c = &b;
 
     **c returns the lvalue a;  ***c returns the value of a.
 
@@ -81,7 +82,7 @@ LINK LIBRARY
 SEE ALSO
     address, isptr
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -97,8 +98,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: dereference,v 29.3 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: dereference,v 29.4 2006/06/10 12:28:10 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/dereference,v $
 ##
 ## Under source code control:	1997/09/06 20:03:34

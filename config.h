@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.17 $
- * @(#) $Id: config.h,v 29.17 2004/02/25 23:56:13 chongo Exp $
+ * @(#) $Revision: 29.18 $
+ * @(#) $Id: config.h,v 29.18 2006/06/06 07:17:02 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -94,6 +94,7 @@
 #define CONFIG_CYGWIN	40
 #define CONFIG_COMPILE_CUSTOM	41
 #define CONFIG_ALLOW_CUSTOM	42
+#define CONFIG_BASEB	43
 
 
 /*
@@ -162,6 +163,7 @@ struct config {
 	BOOL compile_custom;	/* TRUE => compiled with -DCUSTOM */
 	BOOL *allow_custom;	/* ptr to if custom functions are allowed */
 	char *version;		/* calc version string */
+	int baseb;		/* base for calculations */
 };
 typedef struct config CONFIG;
 

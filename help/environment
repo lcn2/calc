@@ -21,7 +21,6 @@ Environment variables
 
 	The CALCBINDINGS file searches the CALCPATH as well.
 
-
     CALCRC
 
 	On startup (unless -h or -q was given on the command
@@ -105,8 +104,8 @@ Environment variables
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: environment,v 29.4 2006/05/07 07:22:20 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: environment,v 29.5 2006/06/10 13:01:09 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/environment,v $
 ##
 ## Under source code control:	1991/07/23 05:47:25

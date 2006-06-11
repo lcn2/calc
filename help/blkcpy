@@ -19,7 +19,7 @@ TYPES
 DESCRIPTION
     A call to:
 
-	    blkcpy(dst, src, num, dsi, ssi)
+	blkcpy(dst, src, num, dsi, ssi)
 
     attempts to copy 'num' consecutive items (octets or values) starting
     from the source item 'src' with index 'ssi'.  By default, 'num'
@@ -27,7 +27,7 @@ DESCRIPTION
 
     A call to:
 
-	    copy(src, dst, ssi, num, dsi)
+	copy(src, dst, ssi, num, dsi)
 
     does the same thing, but with a different arg order.
 
@@ -40,30 +40,30 @@ DESCRIPTION
 
     The following pairs of source-type, destination-type are permitted:
 
-		block to
-			 int
-			 block
-			 matrix
-			 file
+	block to
+		 int
+		 block
+		 matrix
+		 file
 
-		matrix to
-			 block
-			 matrix
-			 list
+	matrix to
+		 block
+		 matrix
+		 list
 
-		string to
-			 block
-			 file
+	string to
+		 block
+		 file
 
-		list to
-			 list
-			 matrix
+	list to
+		 list
+		 matrix
 
-		file to
-			 block
+	file to
+		 block
 
-		int to
-			 block
+	int to
+		 block
 
     In the above table, int refers to integer values.  However if a
     rational value is supplied, only the numerator is copied.
@@ -79,11 +79,11 @@ DESCRIPTION
     sufficient memory allocated for the copying.  For example, to copy
     a matrix M of size 100 to a newly created list, one may use:
 
-			L = makelist(100);
-			copy(M, L);
+	; L = makelist(100);
+	; copy(M, L);
    or:
-			L = makelist(100);
-			blkcpy(L, M);
+	; L = makelist(100);
+	; blkcpy(L, M);
 
     For copying from a block B (named or unnamed), the total number of octets
     available for copying is taken to the the datalen for that block,
@@ -114,7 +114,6 @@ EXAMPLE
     ; B
 	chunksize = 256, maxsize = 256, datalen = 4
 	01020304
-    >
     ; blkcpy(B,A)
     ; B
 	chunksize = 256, maxsize = 256, datalen = 8
@@ -191,7 +190,7 @@ LINK LIBRARY
 SEE ALSO
     blk, mat, file, list, str
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -207,8 +206,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: blkcpy,v 29.3 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: blkcpy,v 29.4 2006/06/10 12:28:10 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/blkcpy,v $
 ##
 ## Under source code control:	1997/04/05 14:08:50

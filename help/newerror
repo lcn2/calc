@@ -44,12 +44,12 @@ EXAMPLE
 	    "triangle side length <= 0"
 
     ; define area(a,b,c) {
-    >>	local s;
-    >>	if (!(a > 0) || !(b > 0) || !(c > 0)) return e1;
-    >>	s = (a + b + c)/2;
-    >>	if (s <= a || s <= b || s <= c) return newerror("Non-triangle sides");
-    >>	return sqrt(s * (s - a) * (s - b) * (s - c));
-    >> }
+    ;;	local s;
+    ;;	if (!(a > 0) || !(b > 0) || !(c > 0)) return e1;
+    ;;	s = (a + b + c)/2;
+    ;;	if (s <= a || s <= b || s <= c) return newerror("Non-triangle sides");
+    ;;	return sqrt(s * (s - a) * (s - b) * (s - c));
+    ;; }
     "area" defined
 
     ; A = area(8,2,5);
@@ -86,8 +86,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: newerror,v 29.4 2006/05/21 07:31:46 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: newerror,v 29.5 2006/06/10 12:28:10 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/newerror,v $
 ##
 ## Under source code control:	1996/04/30 03:39:56

@@ -29,16 +29,16 @@ DESCRIPTION
     is assumed to be an open file opened in an unknown mode.  Calc
     will try to read and write to this file when directed.
 
-    Consider the following commands:
+    Consider the following commands shell commands:
 
-	$ echo "A line of text in the file on descriptor 5" > datafile
-	$ calc 5<datafile
+	echo "A line of text in the file on descriptor 5" > datafile
+	calc 5<datafile
 
     then one could do the following:
 
-	> files(5)
+	; files(5)
 		FILE 5 "descriptor[5]" (unknown_mode, pos 0)
-	> fgetline(files(5))
+	; fgetline(files(5))
 		"A line of text in the file on descriptor 5"
 
 EXAMPLE
@@ -68,7 +68,7 @@ SEE ALSO
     errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
     fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -84,8 +84,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: files,v 29.3 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: files,v 29.4 2006/06/10 12:28:10 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/files,v $
 ##
 ## Under source code control:	1995/03/04 11:33:19

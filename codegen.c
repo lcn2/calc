@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.18 $
- * @(#) $Id: codegen.c,v 29.18 2006/06/03 22:47:28 chongo Exp $
+ * @(#) $Revision: 29.20 $
+ * @(#) $Id: codegen.c,v 29.20 2006/06/11 07:25:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -1953,7 +1953,8 @@ getreference(void)
 
 	switch(gettoken()) {
 	case T_ANDAND:
-		scanerror(T_NULL, "Non-variable operand for &");
+		scanerror(T_NULL, "&& used as prefix operator");
+		/*FALLTHRU*/
 	case T_AND:
 		type = getreference();
 		addop(OP_PTR);
@@ -2106,6 +2107,19 @@ getterm(void)
 	case T_SYMBOL:
 		rescantoken();
 		type = getidexpr(TRUE, 0);
+		break;
+
+	case T_MULT:
+		(void) getterm();
+		addop(OP_DEREF);
+		type = 0;
+		break;
+
+	case T_POWER:			/* '**' or '^' */
+		(void) getterm();
+		addop(OP_DEREF);
+		addop(OP_DEREF);
+		type = 0;
 		break;
 
 	case T_GLOBAL:

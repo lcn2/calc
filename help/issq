@@ -16,6 +16,15 @@ DESCRIPTION
 
     return 1, otherwise return 0.
 
+    Note that issq() works on rational values, so:
+
+    	issq(25/16) == 1
+
+    If you want to test for prefect square integers, you need to exclude
+    non-integer values before you test:
+
+    	isint(curds) && issq(curds)
+
 EXAMPLE
     ; print issq(25), issq(3), issq(0)
     1 0 1
@@ -52,8 +61,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: issq,v 29.3 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: issq,v 29.4 2006/06/04 21:12:23 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/issq,v $
 ##
 ## Under source code control:	1994/10/21 02:21:31
