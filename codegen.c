@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.20 $
- * @(#) $Id: codegen.c,v 29.20 2006/06/11 07:25:14 chongo Exp $
+ * @(#) $Revision: 29.21 $
+ * @(#) $Id: codegen.c,v 29.21 2006/06/20 10:28:06 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -134,10 +134,6 @@ getcommands(BOOL toplevel)
 
 		case T_DEFINE:
 			getfunction();
-			break;
-
-		case T_UNDEFINE:
-			ungetfunction();
 			break;
 
 		case T_EOF:
@@ -306,9 +302,8 @@ ungetfunction(void)
 			name = tokensymbol();
 			type = getbuiltinfunc(name);
 			if (type >= 0) {
-				errorcount--;
-				scanerror(T_NULL,
-	 "Attempt to undefine the builtin function \"%s\"", name);
+				warning(
+			"Cannot undefine builtin function \"%s\"", name);
 			continue;
 			}
 			rmuserfunc(name);
@@ -316,6 +311,16 @@ ungetfunction(void)
 		case T_MULT:
 			rmalluserfunc();
 			continue;
+		case T_STATIC:
+			if (gettoken() != T_SYMBOL) {
+				scanerror(T_SEMICOLON,
+			 "Non-identifier following \"undefine static\"");
+				return;
+			}
+			name = tokensymbol();
+			endscope(name, FALSE);
+			continue;
+
 		case T_NEWLINE:
 		case T_SEMICOLON:
 		case T_EOF:
@@ -634,6 +639,10 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		(void) getdeclarations(SYM_LOCAL);
 		break;
 
+	case T_UNDEFINE:
+		ungetfunction();
+		break;
+
 	case T_RIGHTBRACE:
 		scanerror(T_NULL, "Extraneous right brace");
 		return;
@@ -799,10 +808,10 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		setlabel(&label3);
 		if (contlabel == NULL_LABEL)
 			contlabel = &label3;
+		(void) tokenmode(oldmode);
 		getstatement(contlabel, breaklabel, NULL_LABEL, NULL_LABEL);
 		addoplabel(OP_JUMP, contlabel);
 		setlabel(breaklabel);
-		(void) tokenmode(oldmode);
 		return;
 
 	case T_WHILE:
@@ -811,6 +820,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		clearlabel(contlabel);
 		setlabel(contlabel);
 		getcondition();
+		(void) tokenmode(oldmode);
 		if (gettoken() != T_SEMICOLON) {
 			breaklabel = &label2;
 			clearlabel(breaklabel);
@@ -823,7 +833,6 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
 		} else {
 			addoplabel(OP_JUMPNZ, contlabel);
 		}
-		(void) tokenmode(oldmode);
 		return;
 
 	case T_DO:
@@ -2124,7 +2133,8 @@ getterm(void)
 
 	case T_GLOBAL:
 		if (gettoken() != T_SYMBOL) {
-			scanerror(T_NULL, "Global id expected");
+			scanerror(T_NULL,
+				 "No identifier after global specifier");
 			break;
 		}
 		rescantoken();
@@ -2133,19 +2143,30 @@ getterm(void)
 
 	case T_LOCAL:
 		if (gettoken() != T_SYMBOL) {
-			scanerror(T_NULL, "Local id expected");
+			scanerror(T_NULL,
+				 "No identifier after local specifier");
 			break;
 		}
 		rescantoken();
 		type = getidexpr(TRUE, T_LOCAL);
 		break;
 
+	case T_STATIC:
+		if (gettoken() != T_SYMBOL) {
+			scanerror(T_NULL,
+				 "No identifier after static specifier");
+			break;
+		}
+		rescantoken();
+		type = getidexpr(TRUE, T_STATIC);
+		break;
+
 	case T_LEFTBRACKET:
-		scanerror(T_NULL, "Bad index usage");
+		scanerror(T_NULL, "Left bracket with no preceding lvalue");
 		break;
 
 	case T_PERIOD:
-		scanerror(T_NULL, "Bad element reference");
+		scanerror(T_NULL, "Period with no preceding lvalue");
 		break;
 
 	default:
@@ -2207,7 +2228,8 @@ getidexpr(BOOL okmat, int autodef)
 		type = 0;
 		break;
 	case T_ASSIGN:
-		if (autodef != T_GLOBAL && autodef != T_LOCAL)
+		if (autodef != T_GLOBAL && autodef != T_LOCAL &&
+				autodef != T_STATIC)
 			autodef = 1;
 		/* fall into default case */
 	default:
@@ -2408,22 +2430,11 @@ getshowstatement(void)
 				  "stri\000"
 				  "lite\000"
 				  "opco\000", name);
-		if (arg == 19) {
-			if (gettoken() != T_SYMBOL) {
-				rescantoken();
-				scanerror(T_SEMICOLON,
-					  "Function name expected");
-				return;
-			}
-			index = adduserfunc(tokensymbol());
-			addopone(OP_SHOW, index + 19);
-			return;
-		}
-		if (arg > 0)
-			addopone(OP_SHOW, arg);
-		else
-			printf("Unknown SHOW parameter ignored\n");
-		return;
+		break;
+	case T_GLOBAL:
+		arg = 13; break;
+	case T_STATIC:
+		arg = 14; break;
 	default:
 		printf("SHOW command to be followed by at least ");
 		printf("four letters of one of:\n");
@@ -2438,6 +2449,21 @@ getshowstatement(void)
 		return;
 
 	}
+	if (arg == 19) {
+		if (gettoken() != T_SYMBOL) {
+			rescantoken();
+			scanerror(T_SEMICOLON,
+				  "Function name expected for show statement");
+			return;
+		}
+		index = adduserfunc(tokensymbol());
+		addopone(OP_SHOW, index + 19);
+		return;
+	}
+	if (arg > 0)
+		addopone(OP_SHOW, arg);
+	else
+		warning("Unknown parameter for show statement");
 }
 
 
@@ -2556,8 +2582,9 @@ getid(char *buf)
  * Define a symbol name to be of the specified symbol type.  The scope
  * of a static variable with the same name is terminated if symtype is
  * global or if symtype is static and the old variable is at the same
- * level.  A scan error occurs if the name is already in use in an
- * incompatible manner.
+ * level.  Warnings are issued when a global or local variable is
+ * redeclared and when in the same body the variable will be accessible only
+ ^ with the appropriate specfier.
  */
 static void
 definesymbol(char *name, int symtype)
@@ -2566,25 +2593,48 @@ definesymbol(char *name, int symtype)
 	case SYM_STATIC:
 		if (symtype == SYM_GLOBAL || symtype == SYM_STATIC)
 			endscope(name, symtype == SYM_GLOBAL);
-		/*FALLTHRU*/
-	case SYM_UNDEFINED:
+		break;
 	case SYM_GLOBAL:
-		if (symtype == SYM_LOCAL)
-			(void) addlocal(name);
-		else
-			(void) addglobal(name, (symtype == SYM_STATIC));
+		if (symtype == SYM_GLOBAL && conf->redecl_warn) {
+			warning("redeclaraion of global \"%s\"",
+				name);
+			return;
+		}
 		break;
 
 	case SYM_LOCAL:
-		if (symtype == SYM_LOCAL)
+		if (symtype == SYM_LOCAL && conf->redecl_warn) {
+			warning("redeclaraion of local \"%s\"",
+				name);
 			return;
-		/*FALLTHRU*/
+		}
+		if (symtype == SYM_GLOBAL && conf->dupvar_warn) {
+			warning("both local and global \"%s\" defined", name);
+			break;
+		}
+		if (conf->dupvar_warn) {
+			warning("both local and static \"%s\" defined", name);
+		}
+		break;
 	case SYM_PARAM:
-		scanerror(T_COMMA,
-			  "Variable \"%s\" is already defined", name);
-		return;
+		if (symtype == SYM_LOCAL && conf->dupvar_warn) {
+			warning("both local and parameter \"%s\" defined",
+				name);
+			break;
+		}
+		if (symtype == SYM_GLOBAL && conf->dupvar_warn) {
+			warning("both global and parameter \"%s\" defined",
+				name);
+			break;
+		}
+		if (conf->dupvar_warn) {
+			warning("both static and parameter \"%s\" defined", name);
+		}
 	}
-
+	if (symtype == SYM_LOCAL)
+		(void) addlocal(name);
+	else
+		(void) addglobal(name, (symtype == SYM_STATIC));
 }
 
 
@@ -2602,21 +2652,28 @@ definesymbol(char *name, int symtype)
 static void
 usesymbol(char *name, int autodef)
 {
+	int type;
 
+	type = symboltype(name);
 	if (autodef == T_GLOBAL) {
-			addopptr(OP_GLOBALADDR, (char *) addglobal(name, FALSE));
-			return;
+		if (type == SYM_GLOBAL) {
+			warning("Unnecessary global specifier");
+		}
+		addopptr(OP_GLOBALADDR, (char *) addglobal(name, FALSE));
+		return;
+	}
+	if (autodef == T_STATIC) {
+		addopptr(OP_GLOBALADDR, (char *) addglobal(name, TRUE));
+		return;
 	}
 	if (autodef == T_LOCAL) {
-			if (symboltype(name) == SYM_PARAM) {
-				scanerror(T_COMMA,
-				  "Variable \"%s\" is already defined", name);
-				return;
-			}
-			addopone(OP_LOCALADDR, addlocal(name));
-			return;
+		if (type == SYM_LOCAL) {
+			warning("Unnecessary local specifier");
+		}
+		addopone(OP_LOCALADDR, addlocal(name));
+		return;
 	}
-	switch (symboltype(name)) {
+	switch (type) {
 	case SYM_LOCAL:
 		addopone(OP_LOCALADDR, (long) findlocal(name));
 		return;

@@ -260,6 +260,78 @@ The following are the changes from calc version 2.12.0 to date:
     Updated the "help variable" text to reflect the current calc
     use of ` (backquote), * (star), and & (ampersand).
 
+    Removal of some restrictions on the use of the same identifier
+    for more than one of parameter, local, static or global variable.
+
+	For example, at command level, one could use:
+
+	    for (local x = 0; x < 10; x++) print sqrt(x);
+
+	At the beginning of a statement, "(global A)" is a way of
+	indicating a reference to the variable A, whereas "global A"
+	would be taken as a declaration. Parentheses are not required in
+	"++global A" or "global A++" when "global" is used in this way.
+
+	The patch extends this "specifier" (or "qualifier") feature
+	to static variables, but such that "static A" refers only
+	to a static variable at the current file and function scope
+	levels. (If there is already a static variable A at the current
+	file and function levels, a declaration statement "static A"
+	would end the scope of that variable and define a new static
+	variable with identifier A. A "global A" declaration is more
+	drastic in that it ends the scope of any static variable A at
+	the same or higher scope levels.)
+
+	Unlike a static declaration in which an "initialization" occurs at
+	most once, in the specifier case, "static A = expr" is simply an
+	assignment which may be repeated any number of times.  An example
+	of its use is:
+
+	    define np() = static a = nextprime(a);
+
+	For n not too large, the n-th call to this function will
+	return the n-th prime. The variable a here will be private to
+	the function.
+
+	Because one can use "global", "local" or "static" to specify a
+	type of variable, there seems little point in restricting the
+	ways identifiers that can be used in more than one of these
+	or as parameters. Obviously, introducing A as a local variable
+	when it is being used as a parameter can lead to confusion and a
+	warning is appropriate, but if it is to be used only occasionally,
+	it might be convenient to be able to refer to it as "local A"
+	rather than introducing another identifier. While it may be
+	silly to use the same identifier for both a parameter and local
+	variable, it should not be illegal.
+
+    The provision of warnings for possibly questionable programming in
+    function definitions.
+
+    Added config("redecl_warn", boolean) to control if calc issues
+    warnings about variables being declared.  The config("redecl_warn")
+    value is TRUE by default.
+
+    Added config("dupvar_warn", boolean) to control if calc issues
+    warnings about when variable names collide.  Examples of variable name
+    collisions include when:
+
+    	* both local and static variables have the same name
+    	* both local and global variables have the same name
+    	* both function parameter and local variables have the same name
+    	* both function parameter and global variables have the same name
+
+    The config("dupvar_warn") value is TRUE by default.
+
+    Fix of a bug which causes some static variables not to be correctly
+    unscoped when their identifiers are used in a global declaration.
+
+    Change of "undefine" from a command-level keyword to statement level and
+    introduction of an "undefine static A" statement to end the scope of a
+    static variable A at the current file/function levels.
+
+    Change/restored the syntax rules for "for" and "while" loops to
+    recognize an unescaped newline in top-level command-level statements.
+
 
 The following are the changes from calc version 2.11.10.1 to 2.11.11:
 
@@ -6077,8 +6149,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.80 $
-## @(#) $Id: CHANGES,v 29.80 2006/06/11 07:52:58 chongo Exp $
+## @(#) $Revision: 29.82 $
+## @(#) $Id: CHANGES,v 29.82 2006/06/20 10:26:41 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

@@ -50,13 +50,13 @@ DESCRIPTION
 	    "prompt"		default interactive prompt
 	    "more"		default interactive multi-line input prompt
 	    "blkmaxprint"	number of block octets to print, 0 means all
-	    "blkverbose"	TRUE=>print all lines, FALSE=>skip duplicates
+	    "blkverbose"	TRUE => print all lines, FALSE=>skip duplicates
 	    "blkbase"		block output base
 	    "blkfmt"		block output format
 	    "calc_debug"	controls internal calc debug information
 	    "resource_debug"	controls resource file debug information
 	    "user_debug"	for user defined debug information
-	    "verbose_quit"	TRUE=>print message on empty quit or abort
+	    "verbose_quit"	TRUE => print message on empty quit or abort
 	    "ctrl_d"		The interactive meaning of ^D (Control D)
 	    "program"		Read-only calc program or shell script path
 	    "basename"		Read-only basename of the program value
@@ -66,6 +66,8 @@ DESCRIPTION
 	    "allow_custom"	TRUE=>custom functions are enabled
 	    "version"		Read-only calc version
 	    "baseb"		bits in calculation base, a read-only value
+	    "redecl_warn"	TRUE => warn when redeclaring
+	    "dupvar_warn"	TRUE => warn when variable names collide
 
     The "all" config value allows one to save/restore the configuration
     set of values.  The return of:
@@ -279,14 +281,14 @@ DESCRIPTION
     established on a 1.8GHz AMD 32-bit CPU of ~3406 BogoMIPS when
     the two algorithms are about equal in speed.  For that CPU test,
     config("baseb") was 32.  This means that by default numbers up to
-    (3388*32)+31 = 108447 bits in length (< 32645 decinal digits) use
+    (3388*32)+31 = 108447 bits in length (< 32645 decimal digits) use
     the 1st algorithm, for squaring.
 
     The default value for config("mul2") is 1780.  This default was
     established on a 1.8GHz AMD 32-bit CPU of ~3406 BogoMIPS when
     the two algorithms are about equal in speed.  For that CPU test,
     config("baseb") was 32.  This means that by default numbers up to
-    (1779*32)+31 = 56927 bits in length (< 17137 decinal digits) use
+    (1779*32)+31 = 56927 bits in length (< 17137 decimal digits) use
     the 1st algorithm, for multiplication.
 
     A value of zero resets the parameter back to their default values.
@@ -315,7 +317,7 @@ DESCRIPTION
     established on a 1.8GHz AMD 32-bit CPU of ~3406 BogoMIPS when
     the two algorithms are about equal in speed.  For that CPU test,
     config("baseb") was 32.  This means that by default numbers up to
-    (176*32)+31 = 5663 bits in length (< 1704 decinal digits) use the
+    (176*32)+31 = 5663 bits in length (< 1704 decimal digits) use the
     1st algorithm, for calculating powers modulo another number.
 
     A value of zero resets the parameter back to their default values.
@@ -344,7 +346,7 @@ DESCRIPTION
     established as 5/4 (the historical ratio of config("pow2") to
     config("pow2")) of the config("pow2") value.  This means that if
     config("baseb") is 32, then by default numbers up to (220*32)+31 =
-    7071 bits in length (< 2128 decinal digits) use the REDC algorithm,
+    7071 bits in length (< 2128 decimal digits) use the REDC algorithm,
     for calculating powers modulo another number.
 
     A value of zero resets the parameter back to their default values.
@@ -430,7 +432,7 @@ DESCRIPTION
 
     =-=
 
-    config("leadzero", bool)
+    config("leadzero", boolean)
 
     The "leadzero" parameter controls whether or not a 0 is printed
     before the decimal point in non-zero fractions with absolute value
@@ -439,7 +441,7 @@ DESCRIPTION
 
     =-=
 
-    config("fullzero", bool)
+    config("fullzero", boolean)
 
     The "fullzero" parameter controls whether or not in decimal floating-
     point printing, the digits are padded with zeros to reach the
@@ -490,7 +492,7 @@ DESCRIPTION
 
     =-=
 
-    config("blkverbose", bool)
+    config("blkverbose", boolean)
 
     The "blkverbose" determines if all lines, including duplicates
     should be printed.	If TRUE, then all lines are printed.  If false,
@@ -656,7 +658,7 @@ DESCRIPTION
 
     =-=
 
-    config("verbose_quit", bool)
+    config("verbose_quit", boolean)
 
     The "verbose_quit" controls the print of the message:
 
@@ -835,6 +837,31 @@ DESCRIPTION
 
     This config parameter is read-only and cannot be set.
 
+    =-=
+
+    config("redecl_warn", boolean)
+
+    Config("redecl_warn") controls whether or not a warning is issued
+    when redeclaring variables.
+
+    The initial "redecl_warn" value is 1.
+
+    =-=
+
+    config("dupvar_warn", boolean)
+
+    Config("dupvar_warn") controls whether or not a warning is issued
+    when a variable name collides with an exist name of a higher scope.
+    Examples of collisions are when:
+
+    	* both local and static variables have the same name
+    	* both local and global variables have the same name
+    	* both function parameter and local variables have the same name
+    	* both function parameter and global variables have the same name
+
+    The initial "redecl_warn" value is 1.
+
+
 EXAMPLE
     ; current_cfg = config("all");
     ; config("tilde", off),;
@@ -893,6 +920,8 @@ EXAMPLE
 	allow_custom    0
 	version         "2.12.0"
 	baseb		32
+	redecl_warn	1
+	dupvar_warn	1
 
     ; display()
 	20
@@ -925,8 +954,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.15 $
-## @(#) $Id: config,v 29.15 2006/06/11 07:22:05 chongo Exp $
+## @(#) $Revision: 29.16 $
+## @(#) $Id: config,v 29.16 2006/06/20 10:25:00 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/config,v $
 ##
 ## Under source code control:	1991/07/21 04:37:17

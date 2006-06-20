@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: symbol.c,v 29.5 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: symbol.c,v 29.6 2006/06/20 10:28:06 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/symbol.c,v $
  *
  * Under source code control:	1990/02/15 01:48:23
@@ -511,6 +511,7 @@ endscope(char *name, BOOL isglobal)
 					prevsp->g_next = sp->g_next;
 				else
 					*hp = sp->g_next;
+				continue;
 			}
 		}
 		prevsp = sp;
@@ -754,10 +755,10 @@ symboltype(char *name)
 {
 	GLOBAL *sp;
 
-	if (findlocal(name) >= 0)
-		return SYM_LOCAL;
 	if (findparam(name) >= 0)
 		return SYM_PARAM;
+	if (findlocal(name) >= 0)
+		return SYM_LOCAL;
 	sp = findglobal(name);
 	if (sp) {
 		if (sp->g_filescope == SCOPE_GLOBAL)

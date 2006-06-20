@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: test3300.cal,v 29.2 2000/06/07 14:02:25 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: test3300.cal,v 29.3 2006/06/20 09:29:16 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/test3300.cal,v $
  *
  * Under source code control:	1995/12/02 04:27:41
@@ -30,8 +30,7 @@
  */
 
 
-global defaultverbose = 1;	/* default verbose value */
-global err;
+defaultverbose = 1;	/* default verbose value */
 
 define testi(str, n, N, verbose)
 {

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.12 $
- * @(#) $Id: addop.c,v 29.12 2006/06/03 22:47:28 chongo Exp $
+ * @(#) $Revision: 29.13 $
+ * @(#) $Id: addop.c,v 29.13 2006/06/20 10:28:06 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/addop.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -280,13 +280,13 @@ rmuserfunc(char *name)
 
 	index = findstr(&funcnames, name);
 	if (index < 0) {
-		errorcount--;
-		scanerror(T_NULL,
-		"Attempt to undefine an undefined function\n\t\"%s\"", name);
+		warning("No function named \"%s\" to be undefined", name);
 		return;
 	}
-	if (functions[index] == NULL)
+	if (functions[index] == NULL) {
+		warning("No defined function \"%s\" to be undefined", name);
 		return;
+	}
 	freenumbers(functions[index]);
 	free(functions[index]);
 	if ((inputisterminal() && conf->resource_debug & RSCDBG_STDIN_FUNC) ||
@@ -527,8 +527,7 @@ addop(long op)
 			fp->f_opcodecount -= diff;
 			oldop = OP_NOP;
 			oldoldop = OP_NOP;
-			errorcount--;
-			scanerror(T_NULL, "Constant before comma operator");
+			warning("Constant before comma operator");
 			return;
 		}
 		break;

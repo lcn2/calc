@@ -17,8 +17,8 @@
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.1 $
-## @(#) $Id: set8700.line,v 29.1 2006/05/20 19:35:33 chongo Exp $
+## @(#) $Revision: 29.2 $
+## @(#) $Id: set8700.line,v 29.2 2006/06/20 09:29:16 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/set8700.line,v $
 ##
 ## Under source code control:	2006/05/20 14:10:11
@@ -143,7 +143,7 @@ a #= 4, a == 1
 
 ## Binary # operator not defined for strings
 
-global set8700_A; protect(set8700_A) == 0
+protect(set8700_A) == 0
 ## Testing with one lvalue
 isnull(protect(set8700_A,65))
 protect(set8700_A) == 65
@@ -302,7 +302,7 @@ protect(set8700_B,0), set8700_B = set8700_getA1(), protect(set8700_B) == 1024
 protect(set8700_B,0), set8700_B = set8700_getA2(), protect(set8700_B) == 1024
 set8700_B = set8700_getvar(), protect(set8700_B) == 1024 + 256
 
-global set8700_x, set8700_y; set8700_x = 7,  protect(set8700_x) == 0
+set8700_x = 7,  protect(set8700_x) == 0
 protect(7,2) == error(10234)
 protect(set8700_x,2.5) == error(10235)
 protect(set8700_x,"abc") == error(10235)
@@ -322,7 +322,6 @@ set8700_x++ == error(10385)
 set8700_x == 7
 set8700_x-- == error(10388)
 
-global set8700_A, set8700_B; 1
 protect(set8700_A,0), protect(set8700_A,16), 1
 set8700_A = "abcdef", protect(set8700_A) == 16		## No copy to set8700_A
 protect(set8700_B,0), set8700_B = "xyz", protect(set8700_B) == 0

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.20 $
- * @(#) $Id: config.c,v 29.20 2006/06/11 00:08:56 chongo Exp $
+ * @(#) $Revision: 29.21 $
+ * @(#) $Id: config.c,v 29.21 2006/06/20 10:25:45 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -98,6 +98,8 @@ NAMETYPE configs[] = {
 	{"allow_custom",	CONFIG_ALLOW_CUSTOM},
 	{"version",	CONFIG_VERSION},
 	{"baseb",	CONFIG_BASEB},
+	{"redecl_warn",	CONFIG_REDECL_WARN},
+	{"dupvar_warn",	CONFIG_DUPVAR_WARN},
 	{NULL,		0}
 };
 
@@ -162,6 +164,8 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	&allow_custom,		/* *TRUE=> custom functions are enabled */
 	NULL,			/* version */
 	BASEB,			/* base for calculations */
+	TRUE,			/* warn when redeclaring */
+	TRUE,			/* warn when variable names collide */
 };
 CONFIG newstd = {	/* new non-backward compatible configuration */
 	MODE_INITIAL,		/* current output mode */
@@ -220,6 +224,8 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	&allow_custom,		/* *TRUE=> custom functions are enabled */
 	NULL,			/* version */
 	BASEB,			/* base for calculations */
+	TRUE,			/* warn when redeclaring */
+	TRUE,			/* warn when variable names collide */
 };
 CONFIG *conf = NULL;	/* loaded in at startup - current configuration */
 
@@ -906,6 +912,34 @@ setconfig(int type, VALUE *vp)
 		math_error("The baseb config parameter is read-only");
 		/*NOTREACHED*/
 
+	case CONFIG_REDECL_WARN:
+		if (vp->v_type == V_NUM) {
+			q = vp->v_num;
+			conf->redecl_warn = !qiszero(q);
+		} else if (vp->v_type == V_STR) {
+			temp = lookup_long(truth, vp->v_str->s_str);
+			if (temp < 0) {
+				math_error("Illegal truth value for redecl_warn");
+				/*NOTREACHED*/
+			}
+			conf->redecl_warn = (int)temp;
+		}
+		break;
+
+	case CONFIG_DUPVAR_WARN:
+		if (vp->v_type == V_NUM) {
+			q = vp->v_num;
+			conf->dupvar_warn = !qiszero(q);
+		} else if (vp->v_type == V_STR) {
+			temp = lookup_long(truth, vp->v_str->s_str);
+			if (temp < 0) {
+				math_error("Illegal truth value for dupvar_warn");
+				/*NOTREACHED*/
+			}
+			conf->dupvar_warn = (int)temp;
+		}
+		break;
+
 	default:
 		math_error("Setting illegal config parameter");
 		/*NOTREACHED*/
@@ -1285,6 +1319,14 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 
 	case CONFIG_BASEB:
 		i = BASEB;
+		break;
+
+	case CONFIG_REDECL_WARN:
+		i = (cfg->redecl_warn ? 1 : 0);
+		break;
+
+	case CONFIG_DUPVAR_WARN:
+		i = (cfg->dupvar_warn ? 1 : 0);
 		break;
 
 	default:

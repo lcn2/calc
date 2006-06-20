@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: token.c,v 29.8 2006/06/03 22:47:28 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: token.c,v 29.9 2006/06/20 10:28:06 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/token.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -769,4 +769,24 @@ scanerror(int skip, char *fmt, ...)
 			}
 		}
 	}
+}
+
+/*
+ * Display a warning and return to compiling
+ */
+void
+warning(char *fmt, ...)
+{
+	va_list ap;
+	char *name;		/* name of file with error */
+	char buf[MAXERROR+1];
+
+	name = inputname();
+	if (name)
+		fprintf(stderr, "\"%s\", line %ld: ", name, linenumber());
+	va_start(ap, fmt);
+	vsnprintf(buf, MAXERROR, fmt, ap);
+	va_end(ap);
+	buf[MAXERROR] = '\0';
+	fprintf(stderr, "Warning: %s\n", buf);
 }

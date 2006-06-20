@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: token.h,v 29.4 2001/06/08 21:00:58 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: token.h,v 29.5 2006/06/20 10:28:06 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/token.h,v $
  *
  * Under source code control:	1990/02/15 01:48:37
@@ -176,6 +176,7 @@ extern int tokenmode(int flag);
 extern int gettoken(void);
 extern void rescantoken(void);
 extern void scanerror(int, char *, ...);
+extern void warning(char *, ...);
 
 
 #endif /* !__TOKEN_H__ */

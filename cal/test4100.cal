@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: test4100.cal,v 29.3 2006/06/10 20:19:20 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: test4100.cal,v 29.4 2006/06/20 09:29:16 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/test4100.cal,v $
  *
  * Under source code control:	1996/03/13 03:53:22
@@ -70,18 +70,16 @@
  */
 
 
-global defaultverbose = 1;	/* default verbose value */
-global err;
+defaultverbose = 1;	/* default verbose value */
 
 /*
  * test defaults
  */
-global K1 = 2^17;
-global K2 = 2^12;
-global BASEB = 16;
-global BASE = 2^BASEB;
+global test4100_K1 = 2^17;
+global test4100_K2 = 2^12;
+global test4100_BASE = 2^config("baseb");
 
-define rlen_4100(N) = rand(BASE^(N-1), BASE^N);
+define rlen_4100(N) = rand(test4100_BASE^(N-1), test4100_BASE^N);
 
 define olen(N)
 {
@@ -234,7 +232,7 @@ define times(str,N,n,verbose)
 	m = olen(N);
 	m2 = m^2;
 	if (isnull(n)) {
-		n = ceil(K1/power(N,1.585));
+		n = ceil(test4100_K1/power(N,1.585));
 		if (verbose > 1)
 			printf("n = %d\n", n);
 	}
@@ -308,7 +306,7 @@ define powtimes(str, N1, N2, n, verbose)
 		N2 = 1;
 
 	if (isnull(n)) {
-		n = ceil(K2/power(N1, 1.585)/N2);
+		n = ceil(test4100_K2/power(N1, 1.585)/N2);
 		printf ("n  = %d\n", n);
 	}
 	mat A[n];
@@ -408,7 +406,7 @@ define inittimes(str,N,n,verbose)
 	}
 	m = 0;
 	if (isnull(n)) {
-		n = ceil(K1/N^2);
+		n = ceil(test4100_K1/N^2);
 		if (verbose > 1) {
 			printf ("n = %d\n", n);
 		}

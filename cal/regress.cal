@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.29 $
- * @(#) $Id: regress.cal,v 29.29 2006/06/11 07:07:23 chongo Exp $
+ * @(#) $Revision: 29.31 $
+ * @(#) $Id: regress.cal,v 29.31 2006/06/20 10:25:00 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -201,7 +201,6 @@ define test_variables()
 	local	x1, x2, x3;
 	global	g1, g2;
 	local	t;
-	global	globalvar;
 	local x;
 
 	print '350: Beginning test_variables';
@@ -3972,7 +3971,7 @@ print '088: parsed test_fileop()';
 /*
  * global and static assignment tests
  */
-global a = 10, b, c d = 20, e, f;
+global a = 10, b, c d = 20, e;
 print			'089: global a = 10, b, c d = 20, e, f';
 vrfy(a == 10,		'090: a == 10');
 vrfy(b == 0,		'091: b == 0');
@@ -4672,13 +4671,11 @@ print '137: parsed test_random()';
 /*
  * test_newsyn - test new command completion syntax and scope rules
  */
-for (s5500 = 0, i = 0; i < 5; i++)
-	s5500 += i;
+for (s5500 = 0, i = 0; i < 5; i++) s5500 += i;
 print "138: for (s5500 = 0, i = 0; i < 5; i++) s5500 += i;";
 vrfy(s5500 == 10,		'139: s5500 == 10');
 vrfy(i == 5,		'140: i == 5');
-for (s5500 = 0, i = 0; i < 9; i++)
-{
+for (s5500 = 0, i = 0; i < 9; i++) {
 	s5500 += i;
 }
 print "141: for (s5500 = 0, i = 0; i < 9; i++) { s5500 += i; }";
@@ -4726,7 +4723,6 @@ define test_newsyn()
 	vrfy(i == 3,			  '5509: i == 3');
 	/**/
 	{
-		local i;
 		for (s5500 = 0, i = 0; i < 11; i++)
 			s5500 += i;
 		vrfy(s5500 == 55,		  '5510: s5500 == 45');
@@ -5138,8 +5134,6 @@ print '156: parsed test_size()';
 /*
  * test_assign - test assignment of constants and variables
  */
-global A, B;	/* A, B for "constants" */
-print '157: global A, B';
 global X5800, Y5800;	/* X5800, Y5800 for "variables" */
 print '158: global X5800, Y5800';
 obj xy5800 {x, y};
@@ -7818,7 +7812,27 @@ read -once "test8500";
 print;
 print '8600: Starting test of up to 1024 args'
 read -once "test8600";
-/* 86xx: Ending test of up to 1024 args is printed by test8600.cal */
+/* 860x: Ending test of up to 1024 args is printed by test8600.cal */
+
+
+/*
+ * dupvar_warn and redecl_warn testing
+ */
+print;
+print '8650: Starting test of dupvar_warn and redecl_warn config parameters';
+vrfy(config("redecl_warn",0),	  '8651: config("redecl_warn",0)');
+vrfy(config("dupvar_warn",0),	  '8652: config("dupvar_warn",0)');
+vrfy(u_glob == 6,		  '8653: u_glob == 6');
+global u_glob = 555;
+print 				  '8654: reclare u_glob';
+vrfy(u_glob == 555,		  '8655: u_glob == 555');
+define func_8650(u_glob) { local u_glob; return u_glob; }
+print				  '8656: u_glob as both local and parameter';
+define func_8650a(u_glob) { static u_glob; return u_glob; }
+print				  '8657: u_glob as both static and parameter';
+vrfy(config("redecl_warn",1)==0,  '8658: config("redecl_warn",1)==0');
+vrfy(config("dupvar_warn",1)==0,  '8659: config("dupvar_warn",1)==0');
+/* 865x: Ending test of up to 1024 args is printed by test8600.cal */
 
 
 /*
@@ -7826,6 +7840,7 @@ read -once "test8600";
  *
  * We use the dotest driver to evaluate test-97xx data files.
  */
+print;
 print '8700: Starting dotest runs'
 print '8701: read -once "dotest"';
 read -once "dotest";
@@ -7834,6 +7849,7 @@ read -once "set8700";
 vrfy(dotest("set8700.line", 8703) == 0,
      '8703: dotest("set8700.line", 8703) == 0');
 /* 87xx: Ending dotest runs is printed by set8700.test */
+
 
 /*
  * read various calc resource files

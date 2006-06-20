@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.18 $
- * @(#) $Id: config.h,v 29.18 2006/06/06 07:17:02 chongo Exp $
+ * @(#) $Revision: 29.19 $
+ * @(#) $Id: config.h,v 29.19 2006/06/20 10:25:45 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -95,6 +95,8 @@
 #define CONFIG_COMPILE_CUSTOM	41
 #define CONFIG_ALLOW_CUSTOM	42
 #define CONFIG_BASEB	43
+#define CONFIG_REDECL_WARN	44
+#define CONFIG_DUPVAR_WARN	45
 
 
 /*
@@ -164,6 +166,8 @@ struct config {
 	BOOL *allow_custom;	/* ptr to if custom functions are allowed */
 	char *version;		/* calc version string */
 	int baseb;		/* base for calculations */
+	BOOL redecl_warn;	/* TRUE => warn of redeclating variables */
+	BOOL dupvar_warn;	/* TRUE => warn of var name collisions */
 };
 typedef struct config CONFIG;
 
