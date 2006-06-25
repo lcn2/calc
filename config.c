@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.21 $
- * @(#) $Id: config.c,v 29.21 2006/06/20 10:25:45 chongo Exp $
+ * @(#) $Revision: 29.22 $
+ * @(#) $Id: config.c,v 29.22 2006/06/25 22:05:38 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -414,7 +414,8 @@ lookup_name(NAMETYPE *set, long val)
 /*
  * Check whether VALUE at vp is a LEN (32-bit signed integer) and if so,
  * copy that integer to lp.
- * Return: 1, 2, 0, or -1 XXX
+ *
+ * Return: 1 ==> not an integer, 2 ==> int > 2^31, 0 ==> OK, -1 ==> error
  */
 
 static int

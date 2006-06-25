@@ -383,9 +383,9 @@
 #define E_ASSIGN9	10370	/* No-error-value destination for assign */
 #define E_SWAP1		10371	/* No-copy argument for octet swap */
 #define E_SWAP2		10372	/* No-assign-to-or-from argument for swap */
-#define E_SWAP3		10373	/* Non-variable argument for swap */
-#define E_QUOMOD1	10374	/* Non-variable argument 4 or 4 for quomod */
-#define E_QUOMOD2	10375	/* Non-real-number argument 1 or 2 for quomod */
+#define E_SWAP3		10373	/* Non-lvalue argument for swap */
+#define E_QUOMOD1	10374	/* Non-lvalue argument 3 or 4 for quomod */
+#define E_QUOMOD2	10375	/* Non-real-number arg 1 or 2 or bad arg 5 for quomod */
 #define E_QUOMOD3	10376	/* No-assign-to argument 3 or 4 for quomod */
 #define E_PREINC1	10377	/* No-copy-to or no-change argument for octet preinc */
 #define E_PREINC2	10378	/* Non-variable argument for preinc */

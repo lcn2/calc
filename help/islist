@@ -25,14 +25,15 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    append, delete, insert, islist, pop, push, remove, rsearch,
-    search, size, list,
-    isassoc, isatty, isblk, isconfig, isdefined, iserror, iseven, isfile,
-    ishash, isident, isint, ismat, ismult, isnull, isnum, isobj,
-    isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
-    issimple, issq, isstr, istype
+     append, delete, insert, pop, push, remove, rsearch, search,
+     select, size,
 
-## Copyright (C) 1999  Landon Curt Noll
+     isassoc, isatty, isblk, isconfig, isdefined, iserror, iseven, isfile,
+     ishash, isident, isint, ismat, ismult, isnull, isnum, isobj,
+     isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
+     issimple, issq, isstr, istype
+
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -48,8 +49,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: islist,v 29.3 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: islist,v 29.4 2006/06/25 22:16:55 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/islist,v $
 ##
 ## Under source code control:	1994/03/19 03:13:19

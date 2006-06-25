@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: c_argv.c,v 29.7 2006/05/22 19:04:45 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: c_argv.c,v 29.8 2006/06/25 22:06:23 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_argv.c,v $
  *
  * Under source code control:	1997/03/09 20:27:37
@@ -123,12 +123,9 @@ c_argv(char UNUSED *name, int count, VALUE **vals)
 		case V_BLOCK:	/* memory block */
 			type = "octet_block";
 			break;
-#if 0
-		/* XXX - V_OCTET is subject to change */
 		case V_OCTET:	/* octet (unsigned char) */
 			type = "octet";
 			break;
-#endif
 		default:
 			type = "unknown";
 			break;

@@ -13,8 +13,6 @@ DESCRIPTION
     Determine if x is a Blum-Blum-Shub pseudo-random number generator state.
     This function will return 1 if x is a file, 0 otherwise.
 
-    XXX - the interface to the Blum generator has not been not written.
-
 EXAMPLE
     ; a = srandom(0)
     ; print israndom(a), israndom(0);
@@ -33,7 +31,7 @@ SEE ALSO
     isobjtype, isodd, isprime, isrand, isreal, isrel,
     issimple, issq, isstr, istype
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -49,8 +47,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: israndom,v 29.3 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: israndom,v 29.4 2006/06/25 22:16:55 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/israndom,v $
 ##
 ## Under source code control:	1995/11/11 05:09:41

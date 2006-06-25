@@ -1,7 +1,7 @@
 /*
  * qmath - declarations for extended precision rational arithmetic
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2006  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: qmath.h,v 29.6 2006/05/07 13:04:18 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: qmath.h,v 29.7 2006/06/25 20:33:26 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -163,7 +163,7 @@ extern long qilog2(NUMBER *q);
 extern long qilog10(NUMBER *q);
 extern NUMBER *qilog(NUMBER *q, ZVALUE base);
 extern BOOL qcmpmod(NUMBER *q1, NUMBER *q2, NUMBER *q3);
-extern BOOL qquomod(NUMBER *q1, NUMBER *q2, NUMBER **retdiv, NUMBER **retmod);
+extern BOOL qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod, long rnd);
 extern FLAG qnear(NUMBER *q1, NUMBER *q2, NUMBER *epsilon);
 extern NUMBER *qdigit(NUMBER *q, ZVALUE dpos, ZVALUE base);
 extern long qprecision(NUMBER *q);

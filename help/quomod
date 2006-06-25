@@ -2,13 +2,14 @@ NAME
     quomod - assign quotient and remainder to two variables
 
 SYNOPSIS
-    quomod(x, y, q, r)
+    quomod(x, y, q, r [, rnd])
 
 TYPES
     x		real
     y		real
     q		any
     r		any
+    rnd		integer, defaults to config("quomod")
 
     return	real
 
@@ -19,18 +20,43 @@ DESCRIPTION
     Q and R.  If x >= 0, the results for Q and R are the same as
     those given by Q = x // y, R = x % y.
 
-    XXX - need to document relationship with "quomod" config value
+    The argument rnd (if passed or config value config("quomod") if the
+    rnd argument is not passed) impacts the rounding mode for producing
+    the quotient and modulus.  See "help quo" details of how the quotient
+    is impacted by rounding modes.  See "help mod" for details of how
+    the modulus is impacted by rounding modes.  The only difference on
+    those descriptions is that quomod() is controlled by a single config
+    value config("quomod") instead of config("quo") and config("mod").
+
+	XXX - replace the above paragraph and directly describe how rnd
+	      and config("quomod") impact quomod.
+
+    The C language method of modulus and integer division is:
+
+	    config("quomod", 2)
+	    config("quo", 2)
+	    config("mod", 2)
 
 EXAMPLE
     ; global u, v;
     ; global mat M[2];
     ; print quomod(13,5,u,v), u, v, quomod(15.6,5.2,M[0],M[1]), M[0], M[1];
-    ; 1 2 3 0 3 0
+    1 2 3 0 3 0
+
     ; A = assoc();
     ; print quomod(13, 5, A[1], A[2]), A[1], A[2]
     ; 1 2 3
 
-    XXX - need examples of how the "quomod" config file changes results
+    ; print quomod(10, -3, u, v), u, v;
+    1 -4 -2
+    ; print quomod(10, -3, u, v, 0), u, v;
+    1 -4 -2
+    ; print quomod(10, -3, u, v, 1), u, v;
+    1 -3 1
+    ; print quomod(10, -3, u, v, 2), u, v;
+    1 -3 1
+    ; print quomod(-10, -3, u, v, 2), u, v;
+    1 3 -1
 
 LIMITS
     y > 0
@@ -41,7 +67,7 @@ LINK LIBRARY
 SEE ALSO
     //,	 %
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -57,8 +83,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: quomod,v 29.3 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: quomod,v 29.5 2006/06/25 20:33:26 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/quomod,v $
 ##
 ## Under source code control:	1995/05/07 03:17:03

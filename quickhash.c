@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.11 $
- * @(#) $Id: quickhash.c,v 29.11 2006/06/20 10:25:45 chongo Exp $
+ * @(#) $Revision: 29.13 $
+ * @(#) $Id: quickhash.c,v 29.13 2006/06/25 23:24:16 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/quickhash.c,v $
  *
  * Under source code control:	1995/03/04 11:34:23
@@ -236,7 +236,11 @@ hashvalue(VALUE *vp, QCKHASH val)
 static QCKHASH
 assochash(ASSOC *ap, QCKHASH val)
 {
-	/* XXX - hash the first and last values??? */
+	/*
+	 * XXX - maybe we should hash the first few and last few values???
+	 *	 Perhaps we should hash associations in a different but
+	 *	 fast way?
+	 */
         val += V_ASSOC;
 	return quasi_fnv(ap->a_count, val);
 }

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.19 $
- * @(#) $Id: config.h,v 29.19 2006/06/20 10:25:45 chongo Exp $
+ * @(#) $Revision: 29.20 $
+ * @(#) $Id: config.h,v 29.20 2006/06/25 22:05:38 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -153,8 +153,8 @@ struct config {
 	BOOL blkverbose;	/* TRUE => print all lines if a block */
 	int blkbase;		/* block output base */
 	int blkfmt;		/* block output style */
-	long calc_debug;	/* internal debug, see CALC_DEBUG_XXX below */
-	long resource_debug;	/* resource debug, see RSCDBG_XXX below */
+	long calc_debug;	/* internal debug, see CALC_DEBUG_XYZ below */
+	long resource_debug;	/* resource debug, see RSCDBG_XYZ below */
 	long user_debug;	/* user defined debug value: 0 default */
 	BOOL verbose_quit;	/* TRUE => print Quit or abort executed msg */
 	int ctrl_d;		/* see CTRL_D_xyz below */

@@ -1,7 +1,7 @@
 /*
  * qmod - modular arithmetic routines for normal numbers and REDC numbers
  *
- * Copyright (C) 1999  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2006  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: qmod.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: qmod.c,v 29.3 2006/06/25 20:33:26 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qmod.c,v $
  *
  * Under source code control:	1991/05/22 23:15:07
@@ -100,39 +100,37 @@ qmod(NUMBER *q1, NUMBER *q2, long rnd)
 
 
 /*
- * Given two numbers q1, q2, qquomod(q1, q2, retqdiv, retqmod)
- * calculates an integral quotient and numerical remainder such that
- * q1 = q2 * quotient + remainder.  The remainder is zero if
- * q1 is a multiple of q2; the quotient is zero if q2 is zero.
- * In other cases, the remainder always has absolute value less than
- * abs(q2).  Which of the two possible quotient-remainder pairs is returned
- * is determined by the conf->quomod configuration parameter.
- * If the quomod parameter is zero, the remainder has the sign of q2
- * and the qotient is rounded towards zero.
- * The results are returned indirectly through pointers.
- * The function returns FALSE or
- * TRUE according as the remainder is or is not zero.  For
- * example, if conf->quomod = 0,
- *	qquomod(11, 4, &x, &y) sets x to 2, y to 3, and returns TRUE.
- *	qquomod(-7, -3, &x, &y) sets x to 2, y to -1, and returns TRUE.
+ * Given two numbers q1, q2, qquomod(q1, q2, quo, mod, rnd) assigns
+ * quo(q1, q2, rnd) to quo and mod(q1, q2, rnd) to mod. The quotient
+ * quo is always an integer, q1 = q2 * quo + mod, and if q2 is non-zero,
+ * abs(mod) < abs(q2). If q2 is zero, quo is assigned the value zero and
+ * mod = q1.
+ * Which of the two possible quotient-remainder pairs is assigned
+ * to quo and mod is determined by the fifth argument rnd.
+ * If rnd is zero, the remainder has the sign of q2
+ * and the quotient is rounded towards zero.
  *
- * given:
- *	q1		numbers to do quotient with
- *	q2		numbers to do quotient with
- *	retqdiv		returned quotient
- *	retqmod		returned modulo
+ * The function returns TRUE or FALSE according as the remainder is
+ * nonzero or zero
+ *
+ * Given:
+ *	q1		number to be divided
+ *	q2		divisor
+ *	quo		quotient
+ *	mod		remainder
+ *      rnd		rounding-type specifier
  */
 BOOL
-qquomod(NUMBER *q1, NUMBER *q2, NUMBER **retqdiv, NUMBER **retqmod)
+qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod, long rnd)
 {
 	NUMBER *qq, *qm;
 	ZVALUE tmp1, tmp2, tmp3, tmp4;
 
-	if (qiszero(q2)) {			/* zero modulus case */
+	if (qiszero(q2)) {			/* zero divisor case */
 		qq = qlink(&_qzero_);
 		qm = qlink(q1);
-	} else if (qisint(q1) && qisint(q2)) {	/* integer case */
-		zdiv(q1->num, q2->num, &tmp1, &tmp2, conf->quomod);
+	} else if (qisint(q1) && qisint(q2)) {	/* integer args case */
+		zdiv(q1->num, q2->num, &tmp1, &tmp2, rnd);
 		if (ziszero(tmp1)) {
 			zfree(tmp1);
 			zfree(tmp2);
@@ -152,7 +150,7 @@ qquomod(NUMBER *q1, NUMBER *q2, NUMBER **retqdiv, NUMBER **retqmod)
 	} else {					/* fractional case */
 		zmul(q1->num, q2->den, &tmp1);
 		zmul(q2->num, q1->den, &tmp2);
-		zdiv(tmp1, tmp2, &tmp3, &tmp4, conf->quomod);
+		zdiv(tmp1, tmp2, &tmp3, &tmp4, rnd);
 		zfree(tmp1);
 		zfree(tmp2);
 		if (ziszero(tmp3)) {
@@ -175,8 +173,8 @@ qquomod(NUMBER *q1, NUMBER *q2, NUMBER **retqdiv, NUMBER **retqmod)
 			}
 		}
 	}
-	*retqdiv = qq;
-	*retqmod = qm;
+	*quo = qq;
+	*mod = qm;
 	return !qiszero(qm);
 }
 

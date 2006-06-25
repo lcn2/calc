@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.31 $
- * @(#) $Id: regress.cal,v 29.31 2006/06/20 10:25:00 chongo Exp $
+ * @(#) $Revision: 29.34 $
+ * @(#) $Id: regress.cal,v 29.34 2006/06/25 20:33:26 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -1316,7 +1316,65 @@ define test_functions()
 	 */
 	vrfy(isstr(calcpath()),		'1155: isstr(calcpath())');
 
-	print '1156: Ending test_functions';
+	/*
+	 * ssq use of lists
+	 */
+	vrfy(ssq(1,2, list(3,4,list(5,6)), list(), 7, 8) == 204,
+		'1156: ssq(1,2, list(3,4,list(5,6)), list(), 7, 8) == 204');
+
+	/*
+	 * quomod 5th argument rounding tests
+	 */
+	vrfy(quomod(10,-3,a,b,0) == 1,	'1157: vrfy(quomod(10,-3,a,b,0) == 1');
+	vrfy(a == -4,			'1158: a == -4');
+	vrfy(b == -2,			'1159: b == -2');
+	vrfy(quomod(-10,-3,a,b,1) == 1, '1160: vrfy(quomod(-10,-3,a,b,1) == 1');
+	vrfy(a == 4,			'1161: a == 4');
+	vrfy(b == 2,			'1162: b == 2');
+	vrfy(quomod(10,3,a,b,2) == 1,	'1163: vrfy(quomod(10,3,a,b,2) == 1');
+	vrfy(a == 3,			'1164: a == 3');
+	vrfy(b == 1,			'1165: b == 1');
+	vrfy(quomod(-10,3,a,b,3) == 1,	'1166: vrfy(quomod(-10,3,a,b,3) == 1');
+	vrfy(a == -4,			'1167: a == -4');
+	vrfy(b == 2,			'1168: b == 2');
+	vrfy(quomod(10,-3,a,b,4) == 1,	'1169: vrfy(quomod(10,-3,a,b,4) == 1');
+	vrfy(a == -3,			'1170: a == -3');
+	vrfy(b == 1,			'1171: b == 1');
+	vrfy(quomod(-10,-3,a,b,5) == 1, '1172: vrfy(quomod(-10,-3,a,b,5) == 1');
+	vrfy(a == 3,			'1173: a == 3');
+	vrfy(b == -1,			'1174: b == -1');
+	vrfy(quomod(10,3,a,b,6) == 1,	'1175: vrfy(quomod(10,3,a,b,6) == 1');
+	vrfy(a == 3,			'1176: a == 3');
+	vrfy(b == 1,			'1177: b == 1');
+	vrfy(quomod(-10,3,a,b,7) == 1,	'1178: vrfy(quomod(-10,3,a,b,7) == 1');
+	vrfy(a == -4,			'1179: a == -4');
+	vrfy(b == 2,			'1180: b == 2');
+	vrfy(quomod(10,-3,a,b,8) == 1,	'1181: vrfy(quomod(10,-3,a,b,8) == 1');
+	vrfy(a == -4,			'1182: a == -4');
+	vrfy(b == -2,			'1183: b == -2');
+	vrfy(quomod(-10,-3,a,b,9) == 1, '1184: vrfy(quomod(-10,-3,a,b,9) == 1');
+	vrfy(a == 3,			'1185: a == 3');
+	vrfy(b == -1,			'1186: b == -1');
+	vrfy(quomod(10,3,a,b,10) == 1,	'1187: vrfy(quomod(10,3,a,b,10) == 1');
+	vrfy(a == 4,			'1188: a == 4');
+	vrfy(b == -2,			'1189: b == -2');
+	vrfy(quomod(-10,3,a,b,11) == 1, '1190: vrfy(quomod(-10,3,a,b,11) == 1');
+	vrfy(a == -4,			'1191: a == -4');
+	vrfy(b == 2,			'1192: b == 2');
+	vrfy(quomod(10,-3,a,b,12) == 1, '1193: vrfy(quomod(10,-3,a,b,12) == 1');
+	vrfy(a == -3,			'1194: a == -3');
+	vrfy(b == 1,			'1195: b == 1');
+	vrfy(quomod(-10,-3,a,b,13) == 1,'1196: vrfy(quomod(-10,-3,a,b,13) == 1');
+	vrfy(a == 4,			'1197: a == 4');
+	vrfy(b == 2,			'1198: b == 2');
+	vrfy(quomod(10,3,a,b,14) == 1,	'1199: vrfy(quomod(10,3,a,b,14) == 1');
+	vrfy(a == 4,			'1200: a == 4');
+	vrfy(b == -2,			'1201: b == -2');
+	vrfy(quomod(-10,3,a,b,15) == 1, '1202: vrfy(quomod(-10,3,a,b,15) == 1');
+	vrfy(a == -4,			'1203: a == -4');
+	vrfy(b == 2,			'1204: b == 2');
+
+	print '1205: Ending test_functions';
 }
 print '017: parsed test_functions()';
 
@@ -1333,14 +1391,14 @@ define _test_underscore()
 	local _a = 27;
 	local __a = 23209;
 
-	print "1200: Beginning _test_underscore";
+	print "1290: Beginning _test_underscore";
 
-	vrfy(_a == 27,			    '1201: _a == 27');
-	vrfy(_ == 49,			    '1202: _ == 49');
-	vrfy(__ == 63,			    '1203: __ == 63');
-	vrfy(__a == 23209,		    '1204: __a == 23209');
+	vrfy(_a == 27,			    '1291: _a == 27');
+	vrfy(_ == 49,			    '1292: _ == 49');
+	vrfy(__ == 63,			    '1293: __ == 63');
+	vrfy(__a == 23209,		    '1294: __a == 23209');
 
-	print "1205: Ending _test_underscore";
+	print "1295: Ending _test_underscore";
 }
 print '020: parsed _test_underscore';
 
@@ -7947,7 +8005,9 @@ print	'9836: read -once linear';
 print	'9837: skipping read -once beer.cal because it is an infinite loop';
 print	'9838: skipping read -once hello.cal because it is an infinite loop';
 print	'9839: skipping read -once xx_print.cal because it is a printing demo';
-print	'9840: Ending read of selected calc resource files';
+read -once sumtimes;
+print	'9840: read -once sumtimes';
+print	'9841: Ending read of selected calc resource files';
 
 
 /*

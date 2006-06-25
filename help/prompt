@@ -35,7 +35,7 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    XXX - fill in
+    fgetfield, fgetline, fgetstr
 
 ## Copyright (C) 1999-2006  Landon Curt Noll
 ##
@@ -53,8 +53,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: prompt,v 29.4 2006/06/10 12:28:10 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: prompt,v 29.5 2006/06/25 22:16:55 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/prompt,v $
 ##
 ## Under source code control:	1995/12/18 12:34:58

@@ -1,7 +1,7 @@
 #
 # calcerr - error codes and messages
 #
-# Copyright (C) 1999  Ernest Bowen
+# Copyright (C) 1999-2006  Ernest Bowen
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.8 $
-# @(#) $Id: calcerr.tbl,v 29.8 2006/05/19 15:12:57 chongo Exp $
+# @(#) $Revision: 29.9 $
+# @(#) $Id: calcerr.tbl,v 29.9 2006/06/25 20:33:26 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/calcerr.tbl,v $
 #
 # Under source code control:	1996/05/23 17:38:44
@@ -404,9 +404,9 @@ E_ASSIGN8	No-type-change destination for assign
 E_ASSIGN9	No-error-value destination for assign
 E_SWAP1		No-copy argument for octet swap
 E_SWAP2		No-assign-to-or-from argument for swap
-E_SWAP3		Non-variable argument for swap
-E_QUOMOD1	Non-variable argument 4 or 4 for quomod
-E_QUOMOD2	Non-real-number argument 1 or 2 for quomod
+E_SWAP3		Non-lvalue argument for swap
+E_QUOMOD1	Non-lvalue argument 3 or 4 for quomod
+E_QUOMOD2	Non-real-number arg 1 or 2 or bad arg 5 for quomod
 E_QUOMOD3	No-assign-to argument 3 or 4 for quomod
 E_PREINC1	No-copy-to or no-change argument for octet preinc
 E_PREINC2	Non-variable argument for preinc

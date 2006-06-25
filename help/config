@@ -430,6 +430,12 @@ DESCRIPTION
     by the various kinds of printing to the output: bits 0, 1, 3 and 4
     are used in the same way as for the functions round and bround.
 
+    The C language method of modulus and integer division is:
+
+	    config("quomod", 2)
+	    config("quo", 2)
+	    config("mod", 2)
+
     =-=
 
     config("leadzero", boolean)
@@ -954,8 +960,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.16 $
-## @(#) $Id: config,v 29.16 2006/06/20 10:25:00 chongo Exp $
+## @(#) $Revision: 29.17 $
+## @(#) $Id: config,v 29.17 2006/06/24 19:06:58 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/config,v $
 ##
 ## Under source code control:	1991/07/21 04:37:17

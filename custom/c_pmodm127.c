@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: c_pmodm127.c,v 29.3 2004/07/29 09:48:31 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: c_pmodm127.c,v 29.5 2006/06/25 22:08:42 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_pmodm127.c,v $
  *
  * Under source code control:	2004/07/28 22:12:25
@@ -156,7 +156,11 @@ c_pmodm127(char UNUSED *name, int UNUSED count, VALUE **vals)
 #else
 		zsquare(result.v_num->num, &temp);	/* square */
 #endif
-		/* XXX - we could manually shift to speed up a tiny bit */
+		/*
+		 * We could manually shift here, but this would o speed
+		 * up the operation only a very tiny bit at the expense
+		 * of a bunch of special code.
+		 */
 		zfree(result.v_num->num);
 		zshift(temp, 1, &result.v_num->num);	/* times 2 */
 		zfree(temp);

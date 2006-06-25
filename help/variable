@@ -139,6 +139,7 @@ Variable declarations
     arguments as addresses, there is no gain in using the backquote when
     calling these functions.
 
+    XXX - this file needs to be updated to be in sync with calc source code.
 
 ## Copyright (C) 1999-2006  Landon Curt Noll
 ##
@@ -156,8 +157,8 @@ Variable declarations
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: variable,v 29.3 2006/06/11 07:50:48 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: variable,v 29.4 2006/06/25 23:07:08 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/variable,v $
 ##
 ## Under source code control:	1991/07/21 04:37:25

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.26 $
- * @(#) $Id: func.c,v 29.26 2006/06/11 00:08:56 chongo Exp $
+ * @(#) $Revision: 29.28 $
+ * @(#) $Id: func.c,v 29.28 2006/06/25 20:33:26 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -1694,14 +1694,13 @@ sumlistitems(LIST *lp)
 					       NULL_VALUE, NULL_VALUE);
 				break;
 			default:
-				copyvalue(vp, &term);
+				addvalue(&sum, vp, &tmp);
+				freevalue(&sum);
+				if (tmp.v_type < 0)
+					return tmp;
+				sum = tmp;
+				continue;
 		}
-		if (sum.v_type == V_NULL) {
-			sum = term;
-			continue;
-		}
-		if (term.v_type == V_NULL)
-			continue;
 		addvalue(&sum, &term, &tmp);
 		freevalue(&sum);
 		freevalue(&term);
@@ -1728,7 +1727,6 @@ f_sum(int count, VALUE **vals)
 	sum.v_subtype = V_NOSUBTYPE;
 	term.v_type = V_NULL;
 	term.v_subtype = V_NOSUBTYPE;
-
 	while (count-- > 0) {
 		vp = *vals++;
 		switch(vp->v_type) {
@@ -1740,24 +1738,19 @@ f_sum(int count, VALUE **vals)
 					      NULL_VALUE, NULL_VALUE);
 				break;
 			default:
-				copyvalue(vp, &term);
-		}
-		if (sum.v_type == V_NULL) {
-			sum = term;
-			continue;
-		}
-		if (term.v_type == V_NULL)
-			continue;
-		if (term.v_type < 0) {
-			freevalue(&sum);
-			return term;
+				addvalue(&sum, vp, &tmp);
+				freevalue(&sum);
+				if (tmp.v_type < 0)
+					return tmp;
+				sum = tmp;
+				continue;
 		}
 		addvalue(&sum, &term, &tmp);
 		freevalue(&term);
 		freevalue(&sum);
 		sum = tmp;
 		if (sum.v_type < 0)
-			return sum;
+			break;
 	}
 	return sum;
 }
@@ -1904,26 +1897,70 @@ f_hnrmod(NUMBER *val1, NUMBER *val2, NUMBER *val3, NUMBER *val4)
 	return res;
 }
 
+VALUE
+ssqlistitems(LIST *lp)
+{
+	LISTELEM *ep;
+	VALUE *vp;
+	VALUE term;
+	VALUE tmp;
+	VALUE sum;
+
+	/* initialize VALUEs */
+	term.v_type = V_NULL;
+	term.v_subtype = V_NOSUBTYPE;
+	tmp.v_type = V_NULL;
+	tmp.v_subtype = V_NOSUBTYPE;
+	sum.v_type = V_NULL;
+	sum.v_subtype = V_NOSUBTYPE;
+
+	for (ep = lp->l_first; ep; ep = ep->e_next) {
+		vp = &ep->e_value;
+		if (vp->v_type == V_LIST) {
+			term = ssqlistitems(vp->v_list);
+		} else {
+			squarevalue(vp, &term);
+		}
+		addvalue(&sum, &term, &tmp);
+		freevalue(&sum);
+		freevalue(&term);
+		sum = tmp;
+		if (sum.v_type < 0)
+			break;
+	}
+	return sum;
+}
 
 static VALUE
 f_ssq(int count, VALUE **vals)
 {
-	VALUE result, tmp1, tmp2;
+	VALUE tmp;
+	VALUE sum;
+	VALUE term;
+	VALUE *vp;
 
 	/* initialize VALUEs */
-	result.v_subtype = V_NOSUBTYPE;
-	tmp1.v_subtype = V_NOSUBTYPE;
-	tmp2.v_subtype = V_NOSUBTYPE;
-
-	squarevalue(*vals++, &result);
-	while (--count > 0) {
-		squarevalue(*vals++, &tmp1);
-		addvalue(&tmp1, &result, &tmp2);
-		freevalue(&tmp1);
-		freevalue(&result);
-		result = tmp2;
+	tmp.v_type = V_NULL;
+	tmp.v_subtype = V_NOSUBTYPE;
+	sum.v_type = V_NULL;
+	sum.v_subtype = V_NOSUBTYPE;
+	term.v_type = V_NULL;
+	term.v_subtype = V_NOSUBTYPE;
+	while (count-- > 0) {
+		vp = *vals++;
+		if (vp->v_type == V_LIST) {
+			term = ssqlistitems(vp->v_list);
+		} else {
+			squarevalue(vp, &term);
+		}
+		addvalue(&sum, &term, &tmp);
+		freevalue(&term);
+		freevalue(&sum);
+		sum = tmp;
+		if (sum.v_type < 0)
+			break;
 	}
-	return result;
+	return sum;
 }
 
 
@@ -3521,6 +3558,58 @@ f_mod(int count, VALUE **vals)
 	return res;
 }
 
+static VALUE
+f_quomod(int count, VALUE **vals)
+{
+	VALUE *v1, *v2, *v3, *v4, *v5;
+	VALUE result;
+	long rnd;
+	BOOL res;
+	short s3, s4; 	/* to preserve subtypes of v3, v4 */
+
+	v1 = vals[0];
+	v2 = vals[1];
+	v3 = vals[2];
+	v4 = vals[3];
+
+	if (v3->v_type != V_ADDR || v4->v_type != V_ADDR)
+		return error_value(E_QUOMOD1);
+	if (count == 5) {
+		v5 = vals[4];
+		if (v5->v_type == V_ADDR)
+			v5 = v5->v_addr;
+		if (v5->v_type != V_NUM || qisfrac(v5->v_num) ||
+			qisneg(v5->v_num)) return error_value(E_QUOMOD2);
+		rnd = qtoi(v5->v_num);
+	} else
+		rnd = conf->quomod;
+
+	if (v1->v_type == V_ADDR)
+		v1 = v1->v_addr;
+	if (v2->v_type == V_ADDR)
+		v2 = v2->v_addr;
+	if (v1->v_type != V_NUM || v2->v_type != V_NUM)
+		return error_value(E_QUOMOD2);
+	v3 = v3->v_addr;
+	v4 = v4->v_addr;
+
+	s3 = v3->v_subtype;
+	s4 = v4->v_subtype;
+
+	if ((s3 | s4) & V_NOASSIGNTO)
+		return error_value(E_QUOMOD3);
+	freevalue(v3);
+	freevalue(v4);
+	v3->v_type = V_NUM;
+	v4->v_type = V_NUM;
+	v3->v_subtype = s3;
+	v4->v_subtype = s4;
+	res = qquomod(v1->v_num, v2->v_num, &v3->v_num, &v4->v_num, rnd);
+	result.v_type = V_NUM;
+	result.v_subtype = V_NOSUBTYPE;
+	result.v_num = res ? qlink(&_qone_) : qlink(&_qzero_);
+	return result;
+}
 
 static VALUE
 f_mmin(VALUE *v1, VALUE *v2)
@@ -8374,7 +8463,7 @@ static CONST struct builtin builtins[] = {
 	 "define an environment variable"},
 	{"quo", 2, 3, 0, OP_NOP, 0, f_quo,
 	 "integer quotient of a by b, rounding type c"},
-	{"quomod", 4, 4, 0, OP_QUOMOD, 0, 0,
+	{"quomod", 4, 5, FA, OP_NOP, 0, f_quomod,
 	 "set c and d to quotient and remainder of a\n\t\t\tdivided by b"},
 	{"rand", 0, 2, 0, OP_NOP, f_rand, 0,
 	 "additive 55 random number [0,2^64), [0,a), or [a,b)"},

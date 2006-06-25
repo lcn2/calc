@@ -106,15 +106,16 @@ EXAMPLE
     ; alpha
 
 LIMITS
-    none - XXX - is this correct?
+    The number of arguments is not to exceed 1024.
 
 LINK LIBRARY
-    none - XXX - is this correct?
+    int fscanfid(FILEID id, char *fmt, int count, VALUE **vals);
 
 SEE ALSO
-    fscanf, scanf, fscan, strscan, scan, print, printf
+    strcat, strcpy, strerror, strlen, strncmp, strncpy, strpos,
+    strprintf, strscan, substr
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Ernest Bowen
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -130,8 +131,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: strscanf,v 29.3 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: strscanf,v 29.4 2006/06/25 22:16:55 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/strscanf,v $
 ##
 ## Under source code control:	1996/04/30 03:05:18

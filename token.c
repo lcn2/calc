@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: token.c,v 29.9 2006/06/20 10:28:06 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: token.c,v 29.10 2006/06/24 18:43:05 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/token.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -187,6 +187,9 @@ gettoken(void)
 		switch (ch) {
 		case ' ':
 		case '\t':
+		case '\r':
+		case '\v':
+		case '\f':
 		case '\0':
 			break;
 		case '\n':

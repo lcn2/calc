@@ -1,5 +1,5 @@
 NAME
-    strcat - concatenate strings
+    strcat - concatenate null-terminated strings
 
 SYNOPSIS
     strcat(x1, x2, ...)
@@ -11,9 +11,16 @@ TYPES
 
 DESCRIPTION
     strcat(x1, x2, ...) forms a string starting with a copy of
-    x1, followed by the characters in order of x2, etc.	 The
+    x1 before the first, if any, null character in x1, followed by the
+    initial non-null characters of any later arguments x2, ... The
     length of the resulting string will be the sum of the lengths
-    of the component strings.
+    of the component strings considered as null-terminated strings (i.e.
+    the lengths as returned by strlen()). The sum function may be used
+    to concatenate strings where '\0' is to be considered as an ordinary
+    character, either by sum(x1, x2, ...) or sum(list(x1, x2, ...));
+    in this case, the size of the resulting string is the sum of the
+    sizes of the component strings.
+
 
 EXAMPLE
     ; A = "abc"; B = "XY"; C = "  ";
@@ -21,15 +28,16 @@ EXAMPLE
     abcXY  XYabc
 
 LIMITS
-    The number of arguments may not to exceed 100.
+    The number of arguments may not to exceed 1024.
 
 LINK LIBRARY
     none
 
 SEE ALSO
-    XXX - fill in
+    strcmp, strcpy, strerror, strlen, strncmp, strncpy, strpos,
+    strprintf, strscan, strscanf, substr
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -45,8 +53,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: strcat,v 29.3 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: strcat,v 29.5 2006/06/25 22:16:55 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/strcat,v $
 ##
 ## Under source code control:	1995/10/05 04:52:27

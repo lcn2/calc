@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.10 $
- * @(#) $Id: opcodes.c,v 29.10 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.12 $
+ * @(#) $Id: opcodes.c,v 29.12 2006/06/25 22:05:38 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/opcodes.c,v $
  *
  * Under source code control:	1990/02/15 01:48:19
@@ -194,7 +194,7 @@ o_paramaddr(FUNC UNUSED *fp, int argcount, VALUE *args, long index)
 	}
 	stack->v_addr = args;
 	stack->v_type = V_ADDR;
-/*	stack->v_subtype = V_NOSUBTYPE; XXX */
+/*	stack->v_subtype = V_NOSUBTYPE; */ /* XXX ??? */
 }
 
 
@@ -1235,70 +1235,6 @@ o_mod(void)
 	freevalue(stack--);
 	freevalue(stack);
 	*stack = tmp;
-}
-
-
-static void
-o_quomod(void)
-{
-	VALUE *v1, *v2, *v3, *v4;
-	VALUE valquo, valmod;
-	BOOL res;
-
-	v1 = &stack[-3];
-	v2 = &stack[-2];
-	v3 = &stack[-1];
-	v4 = &stack[0];
-	if (v1->v_type == V_ADDR)
-		v1 = v1->v_addr;
-	if (v2->v_type == V_ADDR)
-		v2 = v2->v_addr;
-	if ((v3->v_type != V_ADDR) || (v4->v_type != V_ADDR)) {
-		freevalue(stack--);
-		freevalue(stack--);
-		freevalue(stack--);
-		freevalue(stack);
-		*stack = error_value(E_QUOMOD1);
-		return;
-	}
-	if ((v1->v_type != V_NUM) || (v2->v_type != V_NUM)) {
-		stack -= 2;
-		freevalue(stack--);
-		freevalue(stack);
-		*stack = error_value(E_QUOMOD2);
-		return;
-	}
-	v3 = v3->v_addr;
-	v4 = v4->v_addr;
-
-	if ((v3->v_subtype | v4->v_subtype) & V_NOASSIGNTO) {
-		stack -= 2;
-		freevalue(stack--);
-		freevalue(stack);
-		*stack = error_value(E_QUOMOD3);
-		return;
-	}
-
-	valquo.v_type = V_NUM;
-	valquo.v_subtype = v3->v_subtype;
-	valmod.v_type = V_NUM;
-	valmod.v_subtype = v4->v_subtype;
-	res = qquomod(v1->v_num, v2->v_num, &valquo.v_num, &valmod.v_num);
-	stack -= 2;
-	if (stack->v_type == V_NUM)
-		qfree(stack->v_num);
-	stack--;
-	if (stack->v_type == V_NUM)
-		qfree(stack->v_num);
-	stack->v_num = (res ? qlink(&_qone_) : qlink(&_qzero_));
-	stack->v_type = V_NUM;
-	stack->v_subtype = V_NOSUBTYPE;
-
-	freevalue(v3);
-	freevalue(v4);
-
-	*v3 = valquo;
-	*v4 = valmod;
 }
 
 
@@ -3701,7 +3637,6 @@ static struct opcode opcodes[MAX_OPCODE+1] = {
 	{o_swap,	OPNUL,	"SWAP"},	/* swap values of two variables */
 	{o_issimple,	OPNUL,	"ISSIMPLE"},	/* whether value is simple type */
 	{o_cmp,		OPNUL,	"CMP"},		/* compare values returning -1, 0, 1 */
-	{o_quomod,	OPNUL,	"QUOMOD"},	/* calculate quotient and remainder */
 	{o_setconfig,	OPNUL,	"SETCONFIG"},	/* set configuration parameter */
 	{o_setepsilon,	OPNUL,	"SETEPSILON"},	/* set allowed error for calculations */
 	{o_isfile,	OPNUL,	"ISFILE"},	/* whether value is a file */

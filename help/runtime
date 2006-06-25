@@ -11,10 +11,10 @@ DESCRIPTION
     Returns the current user mode cpu runtime in seconds.
 
 EXAMPLE
+
     The result for this example will depend on the speed and number of
-    of clock-ticks per second for the computer being used.
-    The result is a multiple of 1/CLK_TCK, where CLK_TCK is
-    usually 60.	 The following is for a XXX machine.
+    of clock-ticks per second for the computer being used.  The result
+    is a multiple of 1/CLK_TCK, where CLK_TCK is usually 60, 100, or 1000.
 
     ; t = runtime();
     ; pi = pi(1e-1000);
@@ -46,8 +46,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: runtime,v 29.4 2006/06/04 18:24:33 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: runtime,v 29.5 2006/06/25 22:16:55 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/runtime,v $
 ##
 ## Under source code control:	1996/03/12 23:10:01

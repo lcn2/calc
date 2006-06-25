@@ -36,4 +36,31 @@ LINK LIBRARY
     STRING* stringncpy(STRING *s1, STRING *s2, long num)
 
 SEE ALSO
-    strcpy
+    strcat, strcpy, strerror, strlen, strncmp, strpos,
+    strprintf, strscan, strscanf, substr
+
+## Copyright (C) 2006  Ernest Bowen
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 25.2 $
+## @(#) $Id: strncpy,v 25.2 2006/06/25 22:16:55 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/strncpy,v $
+##
+## Under source code control:	2006/03/03 03:32:44
+## File existed as early as:	2006
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

@@ -1,0 +1,186 @@
+/*
+ * sumtimes - runtimes evaluating sums & squares of large lists and mats
+ *
+ * Copyright (C) 2006  Ernest Bowen
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @(#) $Revision: 29.1 $
+ * @(#) $Id: sumtimes.cal,v 29.1 2006/06/23 00:35:30 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/sumtimes.cal,v $
+ *
+ * Under source code control:	2006/06/22 17:29
+ * File existed as early as:	2006
+ *
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ */
+
+
+global sumtimes_t0, sumtimes_t1, sumtimes_t2, sumtimes_t3;
+global sumtimes_A, sumtimes_B;
+config("tilde", 0),;
+
+define timematsum(N) {
+    local n, s, p, ptop;
+
+    sumtimes_A = mat[N];
+
+    for (n = 0; n < N; n++) sumtimes_A[n] = rand(N);
+
+    ptop = &sumtimes_A[n-1];
+    sumtimes_t0 = runtime();
+    for (s = n = 0; n < N; n++) s += sumtimes_A[n];
+    sumtimes_t1 = runtime();
+    for (s = 0, p = &sumtimes_A[0]; p <= ptop; p++) s += *p;
+    sumtimes_t2 = runtime();
+    s = matsum(sumtimes_A);
+    sumtimes_t3 = runtime();
+
+    print "Matrix sum runtimes";
+    printf('\tStandard "for" loop:\t\t%.4f\n', sumtimes_t1 - sumtimes_t0);
+    printf('\t"For" loop using pointers:\t\t%.4f\n', sumtimes_t2 - sumtimes_t1);
+    printf('\tUsing builtin "matsum":\t\t%.4f\n', sumtimes_t3 - sumtimes_t2);
+}
+
+define timelistsum(N) {
+    local n, s;
+
+    sumtimes_A = makelist(N);
+    for (n = 0; n < N; n++) sumtimes_A[n] = rand(N);
+
+    sumtimes_t0 = runtime();
+    for (s = n = 0; n < N; n++) s += sumtimes_A[n];
+    sumtimes_t1 = runtime();
+    s = sum(sumtimes_A);
+    sumtimes_t2 = runtime();
+    print "List sum runtimes";
+    printf('\tStandard "for" loop:\t\t%.4f\n', sumtimes_t1 - sumtimes_t0);
+    printf('\tUsing builtin "sum":\t\t%.4f\n', sumtimes_t2 - sumtimes_t1);
+}
+
+
+define timematsort(N) {
+    local n;
+
+    sumtimes_A = mat[N];
+    for (n = 0; n < N; n++) sumtimes_A[n] = rand(N);
+    sumtimes_t0 = runtime();
+    sort(sumtimes_A);
+    sumtimes_t1 = runtime();
+    printf('\tMatrix sort runtime:\t\t%.4f\n', sumtimes_t1 - sumtimes_t0);
+}
+
+
+define timelistsort(N) {
+    local n;
+
+    sumtimes_A = makelist(N);
+    for (n = 0; n < N; n++) sumtimes_A[n] = rand(N);
+    sumtimes_t0 = runtime();
+    sort(sumtimes_A);
+    sumtimes_t1 = runtime();
+    printf('\tList sort runtime:\t\t%.4f\n', sumtimes_t1 - sumtimes_t0);
+}
+
+define timematreverse(N) {
+    local n;
+
+    sumtimes_A = mat[N];
+    for (n = 0; n < N; n++) sumtimes_A[n] = rand(N);
+    sumtimes_t0 = runtime();
+    reverse(sumtimes_A);
+    sumtimes_t1 = runtime();
+    printf('\tMatrix reverse runtime        %.4f\n', sumtimes_t1 - sumtimes_t0);
+}
+
+define timelistreverse(N) {
+    local n;
+
+    sumtimes_A = makelist(N);
+    for (n = 0; n < N; n++) sumtimes_A[n] = rand(N);
+    sumtimes_t0 = runtime();
+    reverse(sumtimes_A);
+    sumtimes_t1 = runtime();
+    printf('\tList reverse runtime:\t\t%.4f\n', sumtimes_t1 - sumtimes_t0);
+}
+
+define timematssq(N) {
+    local n, s, p, ptop;
+
+    sumtimes_A = mat[N];
+
+    for (n = 0; n < N; n++) sumtimes_A[n] = rand(N);
+
+    ptop = &sumtimes_A[n-1];
+    sumtimes_t0 = runtime();
+    for (s = n = 0; n < N; n++) s += sumtimes_A[n]^2;
+    sumtimes_t1 = runtime();
+    for (s = 0, p = &sumtimes_A[0]; p <= ptop; p++) s += (*p)^2;
+    sumtimes_t2 = runtime();
+
+    print "Matrix sum of squares runtimes";
+    printf('\tStandard "for" loop:\t\t%.4f\n', sumtimes_t1 - sumtimes_t0);
+    printf('\t"For" loop using pointers:\t\t%.4f\n', sumtimes_t2 - sumtimes_t1);
+}
+
+define timelistssq(N) {
+    local n, s;
+
+    sumtimes_A = makelist(N);
+    for (n = 0; n < N; n++) sumtimes_A[n] = rand(N);
+
+    sumtimes_t0 = runtime();
+    for (s = n = 0; n < N; n++) s += sumtimes_A[n]^2;
+    sumtimes_t1 = runtime();
+    s = ssq(sumtimes_A);
+    sumtimes_t2 = runtime();
+    print "List sum of squares runtimes";
+    printf('\tStandard "for" loop:\t\t%.4f\n', sumtimes_t1 - sumtimes_t0);
+    printf('\tUsing builtin "ssq":\t\t%.4f\n', sumtimes_t2 - sumtimes_t1);
+}
+
+define timehmean(N, M = 10) {
+    local n, s, v1, v2;
+
+    sumtimes_A = makelist(N);
+    for (n = 0; n < N; n++) sumtimes_A[n] = rand(1, M);
+
+    sumtimes_t0 = runtime();
+    for (s = n = 0; n < N; n++) s += 1/sumtimes_A[n];
+    v1 = N/s;
+    sumtimes_t1 = runtime();
+    v2 = hmean(sumtimes_A);
+    sumtimes_t2 = runtime();
+    print v1, v2;
+    print "List harmonic meanruntimes";
+    printf('\tStandard "for" loop:\t\t%.4f\n', sumtimes_t1 - sumtimes_t0);
+    printf('\tUsing builtin "hmean":\t\t%.4f\n', sumtimes_t2 - sumtimes_t1);
+}
+
+define doalltimes(N) {
+    timematsum(N);
+    print;
+    timelistsum(N);
+    print;
+    timematssq(N);
+    print;
+    timelistssq(N);
+    print;
+    timematsort(N);
+    timelistsort(N);
+    timematreverse(N);
+    timelistreverse(N);
+    print;
+}

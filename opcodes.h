@@ -1,7 +1,7 @@
 /*
  * opcodes - opcode execution module definition
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2006  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: opcodes.h,v 29.6 2001/06/08 21:00:58 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: opcodes.h,v 29.7 2006/06/25 20:33:26 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/opcodes.h,v $
  *
  * Under source code control:	1990/02/15 01:48:35
@@ -139,43 +139,42 @@
 #define OP_SWAP		94L	/* swap values of two variables */
 #define OP_ISSIMPLE	95L	/* whether value is a simple type */
 #define OP_CMP		96L	/* compare values returning -1, 0, or 1 */
-#define OP_QUOMOD	97L	/* calculate quotient and remainder */
-#define OP_SETCONFIG	98L	/* set configuration parameter */
-#define OP_SETEPSILON	99L	/* set allowed error for calculations */
-#define OP_ISFILE	100L	/* whether value is a file */
-#define OP_ISASSOC	101L	/* whether value is an association */
-#define OP_INITSTATIC	102L	/* once only code for static initialization */
-#define OP_ELEMINIT	103L	/* assign element of matrix or object */
-#define OP_ISCONFIG	104L	/* whether value is a configuration state */
-#define OP_ISHASH	105L	/* whether value is a hash state */
-#define OP_ISRAND	106L	/* whether value is additive 55 random state */
-#define OP_ISRANDOM	107L	/* whether value is a Blum random state */
-#define OP_SHOW		108L	/* show data about current state */
-#define OP_INITFILL	109L	/* fill new matrix with copies of a value */
-#define OP_ASSIGNBACK	110L	/* assign in reverse order */
-#define OP_TEST		111L	/* test whether value is "nonzero" */
-#define OP_ISDEFINED	112L	/* whether string names a function */
-#define OP_ISOBJTYPE	113L	/* whether string names an object type */
-#define OP_ISBLK	114L	/* whether value is a block */
-#define OP_PTR		115L	/* octet pointer */
-#define OP_DEREF	116L	/* dereference an octet pointer */
-#define OP_ISOCTET	117L	/* whether value is an octet */
-#define OP_ISPTR	118L	/* whether value is a pointer */
-#define OP_SAVEVAL	119L	/* activate updating */
-#define OP_LINKS	120L	/* return links for numbers and strings */
-#define OP_BIT		121L	/* whether specified bit is set */
-#define OP_COMP		122L	/* complement value */
-#define OP_XOR		123L	/* xor (~) of values */
-#define OP_HIGHBIT	124L	/* index of high bit of value */
-#define OP_LOWBIT	125L	/* index of low bit of value */
-#define OP_CONTENT	126L	/* value returned by unary # */
-#define OP_HASHOP	127L	/* binary # */
-#define OP_BACKSLASH	128L	/* unary backslash */
-#define OP_SETMINUS	129L	/* binary backslash */
-#define OP_PLUS		130L	/* unary + */
-#define OP_JUMPNN	131L	/* jump if top value is non-null */
-#define OP_ABORT	132L	/* abort operation */
-#define MAX_OPCODE	132L	/* highest legal opcode */
+#define OP_SETCONFIG	97L	/* set configuration parameter */
+#define OP_SETEPSILON	98L	/* set allowed error for calculations */
+#define OP_ISFILE	99L	/* whether value is a file */
+#define OP_ISASSOC	100L	/* whether value is an association */
+#define OP_INITSTATIC	101L	/* once only code for static initialization */
+#define OP_ELEMINIT	102L	/* assign element of matrix or object */
+#define OP_ISCONFIG	103L	/* whether value is a configuration state */
+#define OP_ISHASH	104L	/* whether value is a hash state */
+#define OP_ISRAND	105L	/* whether value is additive 55 random state */
+#define OP_ISRANDOM	106L	/* whether value is a Blum random state */
+#define OP_SHOW		107L	/* show data about current state */
+#define OP_INITFILL	108L	/* fill new matrix with copies of a value */
+#define OP_ASSIGNBACK	109L	/* assign in reverse order */
+#define OP_TEST		110L	/* test whether value is "nonzero" */
+#define OP_ISDEFINED	111L	/* whether string names a function */
+#define OP_ISOBJTYPE	112L	/* whether string names an object type */
+#define OP_ISBLK	113L	/* whether value is a block */
+#define OP_PTR		114L	/* octet pointer */
+#define OP_DEREF	115L	/* dereference an octet pointer */
+#define OP_ISOCTET	116L	/* whether value is an octet */
+#define OP_ISPTR	117L	/* whether value is a pointer */
+#define OP_SAVEVAL	118L	/* activate updating */
+#define OP_LINKS	119L	/* return links for numbers and strings */
+#define OP_BIT		120L	/* whether specified bit is set */
+#define OP_COMP		121L	/* complement value */
+#define OP_XOR		122L	/* xor (~) of values */
+#define OP_HIGHBIT	123L	/* index of high bit of value */
+#define OP_LOWBIT	124L	/* index of low bit of value */
+#define OP_CONTENT	125L	/* value returned by unary # */
+#define OP_HASHOP	126L	/* binary # */
+#define OP_BACKSLASH	127L	/* unary backslash */
+#define OP_SETMINUS	128L	/* binary backslash */
+#define OP_PLUS		129L	/* unary + */
+#define OP_JUMPNN	130L	/* jump if top value is non-null */
+#define OP_ABORT	131L	/* abort operation */
+#define MAX_OPCODE	131L	/* highest legal opcode */
 
 
 /*

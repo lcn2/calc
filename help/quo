@@ -32,8 +32,8 @@ DESCRIPTION
     If x/y is an integer quo(x, y, rnd) returns x/y.
 
     If x is real, y nonzero and x/y is not an integer, x // y returns
-       one of the two integers v for which abs(x/y - v) < 1.  Which
-       integer is returned is controlled by rnd as follows:
+   one of the two integers v for which abs(x/y - v) < 1.  Which
+   integer is returned is controlled by rnd as follows:
 
 		rnd	sign of x/y - v		Description of rounding
 
@@ -59,6 +59,16 @@ DESCRIPTION
 						otherwise, when x/y is a
 						half-integer, as if
 						rnd replaced by rnd & 15
+
+		NOTE: Blank entries in the table above indicate that the
+		     description would be complicated and probably not of
+		     much interest.
+
+    The C language method of modulus and integer division is:
+
+	    config("quomod", 2)
+	    config("quo", 2)
+	    config("mod", 2)
 
 EXAMPLE
     print quo(11,5,0), quo(11,5,1), quo(-11,5,2), quo(-11,-5,3)
@@ -93,8 +103,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: quo,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: quo,v 29.3 2006/06/24 19:06:58 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/quo,v $
 ##
 ## Under source code control:	1995/09/18 04:01:44

@@ -701,6 +701,27 @@ sumsq.cal
     4N+1, and always impossible for primes of the form 4N-1.
 
 
+sumtimes.cal
+
+    timematsum(N)
+    timelistsum(N)
+    timematsort(N)
+    timelistsort(N)
+    timematreverse(N)
+    timelistreverse(N)
+    timematssq(N)
+    timelistssq(N)
+    timehmean(N,M)
+    doalltimes(N)
+
+    Give the runtimes for various ways of evaluating sums, sums of
+    squares, etc, for large lists and matrices.  N is the size of
+    the list or matrix to use.  The doalltimes() function will run
+    all fo the sumtimes tests.  For example:
+
+    	doalltimes(1e6);
+
+
 surd.cal
 
     surd(a, b)
@@ -993,8 +1014,8 @@ xx_print.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.14 $
-## @(#) $Id: README,v 29.14 2006/06/11 07:22:05 chongo Exp $
+## @(#) $Revision: 29.15 $
+## @(#) $Id: README,v 29.15 2006/06/23 00:34:55 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/README,v $
 ##
 ## Under source code control:	1990/02/15 01:50:32

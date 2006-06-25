@@ -49,6 +49,9 @@ LINK LIBRARY
     none
 
 SEE ALSO
+    strcat, strcpy, strlen, strncmp, strncpy, strpos,
+    strprintf, strscan, strscanf, substr,
+
     errcount, errmax, error, iserror, errno, newerror, errorcodes,
     stoponerror
 
@@ -68,8 +71,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: strerror,v 29.4 2006/05/21 07:31:46 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: strerror,v 29.5 2006/06/25 22:16:55 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/strerror,v $
 ##
 ## Under source code control:	1996/04/30 03:05:18

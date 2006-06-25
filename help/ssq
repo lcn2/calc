@@ -5,14 +5,15 @@ SYNOPSIS
     ssq(x1, x2, ...)
 
 TYPES
-    x1, x2, ... any for which the required squaring and addition
-    operations are defined
+    x1, x2, ... lists or values for which required operations are defined
 
     return	as determined by the operations on x1, x2, ...
 
 DESCRIPTION
-    Returns the value of x1^2 + x2^2 + ...
-
+    Null values are ignored; ssq() returns the null value.
+    If no argument is a list, returns x1^2 + x2^2 + ...
+    If an argument = list(t1, t2, ...) it contributes ssq(t1, t2, ...)
+	to the result.
 EXAMPLE
     ; print ssq(1,2,3), ssq(1+2i, 3-4i, 5 +6i)
     14 -21+40i
@@ -26,16 +27,24 @@ EXAMPLE
       [1,0] = 286
       [1,1] = 352
 
+    ; ssq(list(2,3,5),7)
+	87
+
+    ; ssq(1,2,3,4,5,6,7,8)
+	204
+    ; ssq(1,2, list(3,4,list(5,6)), list(), 7, 8)
+	204
+
 LIMITS
-    The number of arguments is not to exceed 100.
+    The number of arguments is not to exceed 1024.
 
 LINK LIBRARY
     none
 
 SEE ALSO
-    XXX - fill in
+    sum, max, min
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -51,8 +60,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: ssq,v 29.3 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.5 $
+## @(#) $Id: ssq,v 29.5 2006/06/23 00:10:20 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/ssq,v $
 ##
 ## Under source code control:	1995/10/25 04:03:46

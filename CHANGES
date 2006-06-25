@@ -332,6 +332,35 @@ The following are the changes from calc version 2.12.0 to date:
     Change/restored the syntax rules for "for" and "while" loops to
     recognize an unescaped newline in top-level command-level statements.
 
+    Updated help/avg, help/define, help/fprintf, help/gcd, help/hash,
+    help/hmean, help/lcm, help/max, help/min, help/null, help/poly,
+    help/printf, help/ssq, help/strcat, help/strprintf, help/sum,
+    help/xor.
+
+    Changed the definition of the function ssq() to enable list arguments
+    to be processed in the same way as in sum().  For example:
+
+    	ssq(1,2, list(3,4,list(5,6)), list(), 7, 8)
+
+    returns the value of 1^2 + 2^2 + ... + 8^2 == 204.
+
+    Added the calc resource sumtimes.cal, to give the runtimes for
+    various ways of evaluating sums, sums of squares, etc, for large
+    lists and matrices.  For example:
+
+    	read sumtimes
+	doalltimes(1e6)
+
+    Calc now ignores carrage returns (\r), vertical tabs (\v), and
+    form feeds (\f) when token parsing.  Thus users on Windoz systems
+    can write files using their \r\n format and users on non-Windoz
+    systems can read them without errors.
+
+    The quomod() builtin function now takes an optional 5th argument
+    which controls the rounding mode like config("quomod") does, but
+    only for that call.  Now quomod() is in line with quo() and mod()
+    in that the final augument is an optional rounding mode.
+
 
 The following are the changes from calc version 2.11.10.1 to 2.11.11:
 
@@ -477,6 +506,9 @@ The following are the changes from calc version 2.11.10 to 2.11.10:
     Fixed some comparison between signed and unsigned in md5.c
     that was reported for the PowerMac G5 2GHz MacOS 10.3 by
     Guillaume VERGNAUD <vergnaud at via dot ecp dot fr>.
+
+    Fixed a number of pending issues with help files filling in
+    missing  LIMITS, LINK LIBRARY, and SEE ALSO information,
 
 
 The following are the changes from calc version 2.11.9 to 2.11.9.3:
@@ -856,7 +888,7 @@ The following are the changes from calc version 2.11.5t4.1 to 2.11.5t4.4:
     For example when forming the calc rpm, the Makefile is called with
     T=$RPM_BUILD_ROOT.  If $T is empty, calc is installed under /.
 
-    Removed all echo_XXX rules except for echo_inst_files from lower
+    Removed all echo_XYZ rules except for echo_inst_files from lower
     level makefile.  The calc.spec will use a make install rule
     with T=$RPM_BUILD_ROOT.
 
@@ -6149,8 +6181,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.82 $
-## @(#) $Id: CHANGES,v 29.82 2006/06/20 10:26:41 chongo Exp $
+## @(#) $Revision: 29.83 $
+## @(#) $Id: CHANGES,v 29.83 2006/06/25 22:58:54 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
