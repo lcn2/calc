@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.17 $
-# @(#) $Id: Makefile,v 29.17 2003/01/14 02:00:23 chongo Exp $
+# @(#) $Revision: 29.18 $
+# @(#) $Id: Makefile,v 29.18 2006/06/26 05:46:06 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/Makefile,v $
 #
 # Under source code control:	1997/04/19 22:46:49
@@ -558,9 +558,22 @@ clobber:
 	-rm -f ${TARGETS}
 	rm -f .all Makefile.tmp sample
 
-# for right now we will not install anything
+# install everything
+#
+# NOTE: Keep the uninstall rule in reverse order to the install rule
+#
+# NOTE: for right now we will not install anything
 #
 install: all
+	@true
+
+# Try to remove everything that was installed
+#
+# NOTE: Keep the uninstall rule in reverse order to the install rule
+#
+# NOTE: nothing installed, nothing to uninstall
+#
+uninstall:
 	@true
 
 ##

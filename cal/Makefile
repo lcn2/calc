@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.20 $
-# @(#) $Id: Makefile,v 29.20 2006/06/23 00:34:55 chongo Exp $
+# @(#) $Revision: 29.21 $
+# @(#) $Id: Makefile,v 29.21 2006/06/26 05:46:06 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
@@ -249,6 +249,10 @@ clean:
 clobber:
 	rm -f .all
 
+# install everything
+#
+# NOTE: Keep the uninstall rule in reverse order to the install rule
+#
 install: all
 	-${Q}if [ ! -d $T${CALC_SHAREDIR} ]; then \
 	    echo mkdir $T${CALC_SHAREDIR}; \
@@ -274,5 +278,30 @@ install: all
 		${CHMOD} 0444 $T${CALC_SHAREDIR}/$$i.new; \
 		mv -f $T${CALC_SHAREDIR}/$$i.new $T${CALC_SHAREDIR}/$$i; \
 		echo "installed $T${CALC_SHAREDIR}/$$i"; \
+	    fi; \
+	done
+
+# Try to remove everything that was installed
+#
+# NOTE: Keep the uninstall rule in reverse order to the install rule
+#
+uninstall:
+	-${Q}for i in ${CALC_FILES} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if [ -f "$T${CALC_SHAREDIR}/$$i" ]; then \
+	    	rm -f "$T${CALC_SHAREDIR}/$$i"; \
+		if [ -f "$T${CALC_SHAREDIR}/$$i" ]; then \
+		   echo "cannot uninstall $T${CALC_SHAREDIR}/$$i"; \
+		else \
+		   echo "uninstalled $T${CALC_SHAREDIR}/$$i"; \
+		fi; \
+	    fi; \
+	done
+	-${Q}for i in ${CALC_SHAREDIR}; do \
+	    if [ -d "$T$$i" ]; then \
+		rmdir "$T$$i" 2>/dev/null; \
+		echo "cleaned up $T$$i"; \
 	    fi; \
 	done

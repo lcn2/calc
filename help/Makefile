@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.28 $
-# @(#) $Id: Makefile,v 29.28 2006/05/07 12:59:51 chongo Exp $
+# @(#) $Revision: 29.29 $
+# @(#) $Id: Makefile,v 29.29 2006/06/26 05:46:06 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -656,6 +656,10 @@ clobber:
 	rm -f COPYING COPYING-LGPL
 	rm -f ${SINGULAR_FILES} ${DETAIL_CLONE}
 
+# install everything
+#
+# NOTE: Keep the uninstall rule in reverse order to the install rule
+#
 install: all
 	-${Q}if [ ! -d $T${CALC_SHAREDIR} ]; then \
 	    echo mkdir $T${CALC_SHAREDIR}; \
@@ -705,3 +709,37 @@ install: all
 	    mv -f $T${HELPDIR}/obj.new $T${HELPDIR}/obj; \
 	    echo "installed $T${HELPDIR}/obj"; \
 	fi
+
+# Try to remove everything that was installed
+#
+# NOTE: Keep the uninstall rule in reverse order to the install rule
+#
+uninstall:
+	-${Q}if [ -f "$T${HELPDIR}/obj" ]; then \
+	    rm -f "$T${HELPDIR}/obj"; \
+	    if [ -f "$T${HELPDIR}/obj" ]; then \
+		echo "cannot uninstall $T${HELPDIR}/obj"; \
+	    else \
+		echo "uninstalled $T${HELPDIR}/obj"; \
+	    fi; \
+	fi
+	-${Q}for i in ${SINGULAR_FILES} ${DETAIL_HELP} full builtin \
+	    ${BLT_HELP_FILES} ${STD_HELP_FILES} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if [ -f "$T${HELPDIR}/$$i" ]; then \
+	    	rm -f "$T${HELPDIR}/$$i"; \
+		if [ -f "$T${HELPDIR}/$$i" ]; then \
+		   echo "cannot uninstall $T${HELPDIR}/$$i"; \
+		else \
+		   echo "uninstalled $T${HELPDIR}/$$i"; \
+		fi; \
+	    fi; \
+	done
+	-${Q}for i in ${HELPDIR} ${CALC_SHAREDIR}; do \
+	    if [ -d "$T$$i" ]; then \
+		rmdir "$T$$i" 2>/dev/null; \
+		echo "cleaned up $T$$i"; \
+	    fi; \
+	done

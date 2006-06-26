@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.23 $
-# @(#) $Id: Makefile,v 29.23 2003/01/14 01:58:18 chongo Exp $
+# @(#) $Revision: 29.24 $
+# @(#) $Id: Makefile,v 29.24 2006/06/26 05:46:06 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -349,6 +349,10 @@ clean:
 clobber:
 	-rm -f ${TARGETS}
 
+# install everything
+#
+# NOTE: Keep the uninstall rule in reverse order to the install rule
+#
 install: all
 	-${Q}if [ ! -d $T${BINDIR} ]; then \
 	    echo mkdir $T${BINDIR}; \
@@ -386,6 +390,31 @@ install: all
 		${CHMOD} 0555 $T${SCRIPTDIR}/$$i.new; \
 		mv -f $T${SCRIPTDIR}/$$i.new $T${SCRIPTDIR}/$$i; \
 		echo "installed $T${SCRIPTDIR}/$$i"; \
+	    fi; \
+	done
+
+# Try to remove everything that was installed
+#
+# NOTE: Keep the uninstall rule in reverse order to the install rule
+#
+uninstall:
+	-${Q}for i in ${SCRIPT} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if [ -f "$T${SCRIPTDIR}/$$i" ]; then \
+	    	rm -f "$T${SCRIPTDIR}/$$i"; \
+		if [ -f "$T${SCRIPTDIR}/$$i" ]; then \
+		   echo "cannot uninstall $T${SCRIPTDIR}/$$i"; \
+		else \
+		   echo "uninstalled $T${SCRIPTDIR}/$$i"; \
+		fi; \
+	    fi; \
+	done
+	-${Q}for i in ${SCRIPTDIR} ${BINDIR}; do \
+	    if [ -d "$T$$i" ]; then \
+		rmdir "$T$$i" 2>/dev/null; \
+		echo "cleaned up $T$$i"; \
 	    fi; \
 	done
 

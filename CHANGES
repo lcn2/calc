@@ -361,6 +361,12 @@ The following are the changes from calc version 2.12.0 to date:
     only for that call.  Now quomod() is in line with quo() and mod()
     in that the final augument is an optional rounding mode.
 
+    Added a "make uninstall" rule which will attempt to remove everything
+    that was installed by a "make install".
+
+    Changed the "Copyright" line in the rpm spec file to a "License" line
+    as per new rpm v4.4 syntax.
+
 
 The following are the changes from calc version 2.11.10.1 to 2.11.11:
 
@@ -6181,8 +6187,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.83 $
-## @(#) $Id: CHANGES,v 29.83 2006/06/25 22:58:54 chongo Exp $
+## @(#) $Revision: 29.84 $
+## @(#) $Id: CHANGES,v 29.84 2006/06/26 05:53:25 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

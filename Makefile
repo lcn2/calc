@@ -32,8 +32,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.75 $$
-# @(#) $Id: Makefile.ship,v 29.75 2006/05/19 13:54:05 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.76 $$
+# @(#) $Id: Makefile.ship,v 29.76 2006/06/26 05:46:06 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -3543,6 +3543,10 @@ clobber:
 	-rm -rf win32
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
+# install everything
+#
+# NOTE: Keep the uninstall rule in reverse order to the install rule
+#
 install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	-${Q}if [ ! -z "$T" ]; then \
@@ -3742,6 +3746,96 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 		fi; \
 	    fi; \
 	fi
+	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+
+# Try to remove everything that was installed
+#
+# NOTE: Keep the uninstall rule in reverse order to the install rule
+#
+uninstall:
+	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+	-${Q}if [ -z "${CATDIR}" ]; then \
+	    true; \
+	else \
+	    if [ -f "$T${CATDIR}/calc.${CATEXT}" ]; then \
+		rm -f "$T${CATDIR}/calc.${CATEXT}"; \
+		if [ -f "$T${CATDIR}/calc.${CATEXT}" ]; then \
+		    echo "cannot uninstall $T${CATDIR}/calc.${CATEXT}"; \
+		else \
+		    echo "uninstalled $T${CATDIR}/calc.${CATEXT}"; \
+		fi; \
+	    fi; \
+	fi
+	-${Q}if [ -z "${MANDIR}" ]; then \
+	    true; \
+	else \
+	    if [ -f "$T${MANDIR}/calc.${MANEXT}" ]; then \
+		rm -f "$T${MANDIR}/calc.${MANEXT}"; \
+		if [ -f "$T${MANDIR}/calc.${MANEXT}" ]; then \
+		    echo "cannot uninstall $T${MANDIR}/calc.${MANEXT}"; \
+		else \
+		    echo "uninstalled $T${MANDIR}/calc.${MANEXT}"; \
+		fi; \
+	    fi; \
+	fi
+	-${Q}for i in ${BUILD_H_SRC} ${LIB_H_SRC} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if [ -f "$T${CALC_INCDIR}/$$i" ]; then \
+		rm -f "$T${CALC_INCDIR}/$$i"; \
+		if [ -f "$T${CALC_INCDIR}/$$i" ]; then \
+		    echo "cannot uninstall $T${CALC_INCDIR}/$$i"; \
+		else \
+		    echo "uninstalled $T${CALC_INCDIR}/$$i"; \
+		fi; \
+	    fi; \
+	done
+	-${Q}if [ -f "$T${LIBDIR}/libcalc.a" ]; then \
+	    rm -f "$T${LIBDIR}/libcalc.a"; \
+	    if [ -f "$T${LIBDIR}/libcalc.a" ]; then \
+		echo "cannot uninstall $T${LIBDIR}/libcalc.a"; \
+	    else \
+		echo "uninstalled $T${LIBDIR}/libcalc.a"; \
+	    fi; \
+	fi
+	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
+	${Q}cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} uninstall
+	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= Invoking $@ rule for sample =-=-=-=-='
+	${Q}cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} uninstall
+	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
+	${Q}cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} uninstall
+	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= Invoking $@ rule for cal =-=-=-=-='
+	${Q}cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} uninstall
+	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
+	${Q}cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} uninstall
+	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+	-${Q}if [ -f "$T${BINDIR}/calc${EXT}" ]; then \
+	    rm -f "$T${BINDIR}/calc${EXT}"; \
+	    if [ -f "$T${BINDIR}/calc${EXT}" ]; then \
+		echo "cannot uninstall $T${BINDIR}/calc${EXT}"; \
+	    else \
+		echo "uninstalled $T${BINDIR}/calc${EXT}"; \
+	    fi; \
+	fi
+	-${Q}for i in ${CATDIR} ${MANDIR} ${SCRIPTDIR} \
+		    ${CUSTOMINCDIR} ${CUSTOMHELPDIR} ${CUSTOMCALDIR} \
+		    ${CALC_INCDIR} ${LIBDIR} ${INCDIR} ${BINDIR}; do \
+	    if [ -d "$T$$i" ]; then \
+		rmdir "$T$$i" 2>/dev/null; \
+		echo "cleaned up $T$$i"; \
+	    fi; \
+	done
+	-${Q}if [ ! -z "$T" ]; then \
+	    if [ -d "$T" ]; then \
+		rmdir "$T" 2>/dev/null; \
+		echo "cleaned up $T"; \
+	    fi; \
+	 fi
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 # splint - A tool for statically checking C programs

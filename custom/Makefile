@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.24 $
-# @(#) $Id: Makefile,v 29.24 2004/07/29 08:38:18 chongo Exp $
+# @(#) $Revision: 29.25 $
+# @(#) $Id: Makefile,v 29.25 2006/06/26 05:46:06 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -599,6 +599,10 @@ clobber:
 	-rm -f ${TARGETS}
 	rm -f .all Makefile.tmp Makefile.bak
 
+# install everything
+#
+# NOTE: Keep the uninstall rule in reverse order to the install rule
+#
 install: all
 	-${Q}if [ ! -d $T${INCDIR} ]; then \
 	    echo mkdir $T${INCDIR}; \
@@ -688,7 +692,7 @@ install: all
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if ${CMP} -s tmp $T${CUSTOMINCDIR}/$$i; then \
+	    if ${CMP} -s "$$i" $T${CUSTOMINCDIR}/$$i; then \
 		true; \
 	    else \
 		rm -f $T${CUSTOMINCDIR}/$$i.new; \
@@ -698,7 +702,6 @@ install: all
 		echo "installed $T${CUSTOMINCDIR}/$$i"; \
 	    fi; \
 	done
-	-${Q}rm -f tmp
 	-${Q}for i in ${CUSTOM_CALC_FILES} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
@@ -740,6 +743,66 @@ install: all
 		echo "installed $T${CUSTOMCALDIR}/libcustcalc.a"; \
 	    fi; \
 	fi
+
+# Try to remove everything that was installed
+#
+# NOTE: Keep the uninstall rule in reverse order to the install rule
+#
+uninstall:
+	-${Q}if [ -f "$T${CUSTOMCALDIR}/libcustcalc.a" ]; then \
+	    rm -f "$T${CUSTOMCALDIR}/libcustcalc.a"; \
+	    if [ -f "$T${CUSTOMCALDIR}/libcustcalc.a" ]; then \
+		echo "cannot uninstall $T${CUSTOMCALDIR}/libcustcalc.a"; \
+	    else \
+		echo "uninstalled $T${CUSTOMCALDIR}/libcustcalc.a"; \
+	    fi; \
+	fi
+	-${Q}for i in ${CUSTOM_HELP} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if [ -f "$T${CUSTOMHELPDIR}/$$i" ]; then \
+	    	rm -f "$T${CUSTOMHELPDIR}/$$i"; \
+		if [ -f "$T${CUSTOMHELPDIR}/$$i" ]; then \
+		   echo "cannot uninstall $T${CUSTOMHELPDIR}/$$i"; \
+		else \
+		   echo "uninstalled $T${CUSTOMHELPDIR}/$$i"; \
+		fi; \
+	    fi; \
+	done
+	-${Q}for i in ${CUSTOM_CALC_FILES} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if [ -f "$T${CUSTOMCALDIR}/$$i" ]; then \
+	    	rm -f "$T${CUSTOMCALDIR}/$$i"; \
+		if [ -f "$T${CUSTOMCALDIR}/$$i" ]; then \
+		   echo "cannot uninstall $T${CUSTOMCALDIR}/$$i"; \
+		else \
+		   echo "uninstalled $T${CUSTOMCALDIR}/$$i"; \
+		fi; \
+	    fi; \
+	done
+	-${Q}for i in ${INSTALL_H_SRC} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if [ -f "$T${CUSTOMINCDIR}/$$i" ]; then \
+	    	rm -f "$T${CUSTOMINCDIR}/$$i"; \
+		if [ -f "$T${CUSTOMINCDIR}/$$i" ]; then \
+		   echo "cannot uninstall $T${CUSTOMINCDIR}/$$i"; \
+		else \
+		   echo "uninstalled $T${CUSTOMINCDIR}/$$i"; \
+		fi; \
+	    fi; \
+	done
+	-${Q}for i in ${CUSTOMINCDIR} ${CUSTOMHELPDIR} ${CUSTOMCALDIR} \
+		    ${HELPDIR} ${CALC_INCDIR} ${CALC_SHAREDIR} ${INCDIR}; do \
+	    if [ -d "$T$$i" ]; then \
+		rmdir "$T$$i" 2>/dev/null; \
+		echo "cleaned up $T$$i"; \
+	    fi; \
+	done
 
 ##
 #

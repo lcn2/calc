@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.15 $
-# @(#) $Id: calc.spec.in,v 29.15 2006/05/21 06:26:00 chongo Exp $
+# @(#) $Revision: 29.16 $
+# @(#) $Id: calc.spec.in,v 29.16 2006/06/26 05:50:44 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.spec.in,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -38,7 +38,7 @@ Summary: Arbitrary precision calculator.
 Name: calc
 Version: <<<PROJECT_VERSION>>>
 Release: 0
-Copyright: LGPL
+License: LGPL
 Group: Applications/Engineering
 Source: %{name}-%{version}.tar.gz
 URL: http://www.isthe.com/chongo/tech/comp/calc/index.html
@@ -101,6 +101,8 @@ rm -rf %{buildroot}
 %attr(644, root, root) %{_libdir}/*.a
 
 %changelog
+* Sun Jun 25 2006 Landon Curt Noll http://www.isthe.com/chongo
+- Changed Copyright to License as per new rpm v4.4 syntax
 * Sun May 20 2006 Landon Curt Noll http://www.isthe.com/chongo
 - Release of calc-2.12.0
 - Added *.line set files to the list of packaged files
