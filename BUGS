@@ -68,10 +68,6 @@ of a context diff patch).
 
 Known bugs:
 
-    The stoponerror() facility does not seem to work, or perhaps
-    the stoponerror help file is incorrect.  The stoponerror help file
-    lacks examples because of this problem.
-
     We are sure some more bugs exist.  When you find them, please let
     us know!  See the above for details on how to report and were to
     EMail your bug reports and hopefully patches to fix them.
@@ -114,51 +110,6 @@ Problems with old systems that have known work-a-rounds:
       to fail the regression test.  The work-a-round is to compile with -O
       or to use gcc-2.96 or later.
 
-      This bug has been observed on the Sparc and the PowerPC machine.
-
-      On the PowerPC with gcc-2.95 when compiled with -O2, the following
-      patch seems to help:
-
-*** zfunc.c.orig        Fri Feb 23 18:18:39 2001
---- zfunc.c     Fri Feb 23 18:39:33 2001
-***************
-*** 1481,1487 ****
-  {
-        HALF *a, *A, *b, *a0, u;
-        int i, j, j1, j2, k, k1, m, m0, m1, n, n0, o;
-!       FULL d, e, f, g, h, s, t, x, topbit;
-        int remsign;
-        BOOL up, onebit;
-        ZVALUE sqrt;
---- 1481,1488 ----
-  {
-        HALF *a, *A, *b, *a0, u;
-        int i, j, j1, j2, k, k1, m, m0, m1, n, n0, o;
-!       volatile FULL d;
-!       FULL e, f, g, h, s, t, x, topbit;
-        int remsign;
-        BOOL up, onebit;
-        ZVALUE sqrt;
-*** zmath.c	2000/06/07 14:02:13	29.2
---- zmath.c	2001/03/13 19:47:03
-***************
-*** 1608,1614 ****
-  void
-  zbitvalue(long n, ZVALUE *res)
-  {
-! 	ZVALUE z;
-
-  	if (n < 0) n = 0;
-  	z.sign = 0;
---- 1608,1614 ----
-  void
-  zbitvalue(long n, ZVALUE *res)
-  {
-! 	volatile ZVALUE z;
-
-  	if (n < 0) n = 0;
-  	z.sign = 0;
-
     * There are problems compiling calc on the sparcv9 under 64 bit
       Solaris.	On that platform, gcc-2.96 is able to compile calc, but
       calc dumps core very early on in startup.	 It is said that sparcv9
@@ -190,8 +141,8 @@ Problems with old systems that have known work-a-rounds:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.24 $
-## @(#) $Id: BUGS,v 29.24 2006/05/21 07:54:13 chongo Exp $
+## @(#) $Revision: 29.25 $
+## @(#) $Id: BUGS,v 29.25 2006/08/20 17:51:25 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13

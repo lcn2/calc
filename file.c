@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.15 $
- * @(#) $Id: file.c,v 29.15 2006/05/22 19:04:45 chongo Exp $
+ * @(#) $Revision: 29.16 $
+ * @(#) $Id: file.c,v 29.16 2006/08/20 15:01:30 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -746,10 +746,10 @@ flushall(void)
  * given:
  *	id		file to read from
  *	flags		read flags (see above)
- *	retptr		returned pointer to string
+ *	retstr		returned pointer to string
  */
 int
-readid(FILEID id, int flags, char **retptr)
+readid(FILEID id, int flags, STRING **retstr)
 {
 	FILEIO *fiop;		/* file structure */
 	FILE *fp;
@@ -761,6 +761,7 @@ readid(FILEID id, int flags, char **retptr)
 	int c;
 	BOOL nlstop, nullstop, wsstop, rmstop, done;
 	FILEPOS fpos;
+	STRING *newstr;
 
 	totlen = 0;
 	str = NULL;
@@ -831,7 +832,10 @@ readid(FILEID id, int flags, char **retptr)
 	if ((nullstop && c == '\0') && !rmstop)
 		str[totlen - 1] = '\0';
 	str[totlen] = '\0';
-	*retptr = str;
+	newstr = stralloc();
+	newstr->s_len = totlen;
+	newstr->s_str = str;
+	*retstr = newstr;
 	return 0;
 }
 
@@ -895,7 +899,7 @@ printid(FILEID id, int flags)
 		math_chr('"');
 		return 0;
 	}
-	math_fmt("FILE %d \"%s\" (%s, ", id, fiop->name,  fiop->mode);
+	math_fmt("FILE %d \"%s\" (%s", id, fiop->name,  fiop->mode);
 
 	/*
 	 * print file position
@@ -904,11 +908,13 @@ printid(FILEID id, int flags)
 	fp = fiop->fp;
 
 	if (get_open_pos(fp, &pos) < 0) {
-	    math_str("Error while determining file position!)");
+	    if (fileno(fp) > 2)
+	   	 math_str("Error while determining file position!");
+	    math_chr(')');
 	    return 0;
 	}
 
-	math_str("pos ");
+	math_str(", pos ");
 	zprintval(pos, 0, 0);
 	zfree(pos);
 
@@ -1233,10 +1239,13 @@ idungetc(FILEID id, int ch)
  *	str		string to write
  */
 int
-idfputs(FILEID id, char *str)
+idfputs(FILEID id, STRING *str)
 {
 	FILEIO *fiop;
 	FILEPOS fpos;
+	FILE *fp;
+	char *c;
+	long len;
 
 	/* get the file info pointer */
 	fiop = findid(id, TRUE);
@@ -1251,14 +1260,13 @@ idfputs(FILEID id, char *str)
 
 	fiop->action = 'w';
 
-	/* set output to file */
-	math_setfp(fiop->fp);
+	fp = fiop->fp;
+	len = str->s_len;
+	c = str->s_str;
 
-	/* write the string */
-	math_str(str);
+	while (len-- > 0)
+		fputc(*c++, fp);
 
-	/* restore output to stdout */
-	math_setfp(stdout);
 	return 0;
 }
 

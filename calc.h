@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.18 $
- * @(#) $Id: calc.h,v 29.18 2006/05/21 07:28:54 chongo Exp $
+ * @(#) $Revision: 29.19 $
+ * @(#) $Id: calc.h,v 29.19 2006/08/20 15:01:30 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -113,10 +113,10 @@ extern DLL int closeid(FILEID id);
 extern DLL int getcharid(FILEID id);
 extern DLL int idprintf(FILEID id, char *fmt, int count, VALUE **vals);
 extern DLL int idfputc(FILEID id, int ch);
-extern DLL int idfputs(FILEID id, char *str);
+extern DLL int idfputs(FILEID id, STRING *str);
 extern DLL int printid(FILEID id, int flags);
 extern DLL int flushid(FILEID id);
-extern DLL int readid(FILEID id, int flags, char **retptr);
+extern DLL int readid(FILEID id, int flags, STRING **retptr);
 extern DLL int getloc(FILEID id, ZVALUE *loc);
 extern DLL int setloc(FILEID id, ZVALUE zpos);
 extern DLL int getsize(FILEID id, ZVALUE *size);

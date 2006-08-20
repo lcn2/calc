@@ -2,34 +2,34 @@ NAME
     fputs - write a string to a file
 
 SYNOPSIS
-    fputs(fd, data)
+    fputs(fd, s1, s2, ...)
 
 TYPES
-    fd		file
-    data	str
+    fd		file stream open for writing
+    s1, s2, ...	strings
 
-    return	nil
+    return	null value
 
 DESCRIPTION
-    This function writes the string found in data to the file
-    associated with fd.
+    This function writes in succession the strings s1, s2, ..., to the
+    file associated with fd.
 
 EXAMPLE
     ; fd = fopen("/tmp/newfile", "w")
-    ; fputs(fd, "chongo was here\n")
+    ; fputs(fd, "chongo was", " here\n")
     ; fd2 = fopen("/tmp/newfile", "r")
     ; fgetline(fd2)
 	    "chongo was here"
 
 LIMITS
-    fd must be associated with an open file
+    The number of arguments is not to exceed 1024
 
 LINK LIBRARY
     none
 
 SEE ALSO
-    errno, fclose, feof, ferror, fflush, fgetc, fgetline, fgets, files, fopen,
-    fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt
+    errno, fclose, feof, ferror, fflush, fgetc, fgetfile, fgetline, fgets,
+    files, fopen, fprintf, fputc, fseek, fsize, ftell, isfile
 
 ## Copyright (C) 1999  Landon Curt Noll
 ##
@@ -47,8 +47,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: fputs,v 29.3 2006/05/07 07:25:46 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: fputs,v 29.4 2006/08/20 15:01:57 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/fputs,v $
 ##
 ## Under source code control:	1995/03/04 11:33:20

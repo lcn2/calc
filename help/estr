@@ -1,0 +1,45 @@
+NAME
+    estr - represent some types of value by text strings
+
+
+SYNOPSIS
+    estr(x)
+
+TYPES
+    x		null, string, real or complex number, list, matrix,
+		object. block, named block, error
+
+    return	string
+
+DESCRIPTION
+    This function attempts to represent x exactly by a string s of
+    ordinary text characters such that eval(s) == x.
+
+    If x is null, estr(x) returns the string "".
+
+    If x is a string, estr(x) returns the string in which occurrences of
+    newline, tab, ", \,  etc. have been converted to \n, \t, \",
+    \\, etc., '\0' to \000 or \0 according as the next character is
+    or is not an octal digit, and other non-text characters to their
+    escaped hex representation, e.g. char(165) becomes \xa5.
+
+    For real x, estr(x) represebts x in fractional mode.
+
+
+EXAMPLE
+    ; estr("abc\0xyz\00023\n\xa5\r\n")
+	""abc\0xyz\00023\n\xa5\r\n""
+    ; estr(1.67)
+	"167/100"
+    ; estr(mat[3] = {2, list(3,5), "abc"})
+	"mat[3]={2,list(3,5),"abc""
+
+LIMITS
+    none
+
+LINK LIBRARY
+    none
+
+SEE ALSO
+    str, strprintf
+

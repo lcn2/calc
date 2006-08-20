@@ -17,8 +17,8 @@
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: set8700.line,v 29.2 2006/06/20 09:29:16 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: set8700.line,v 29.4 2006/08/20 16:16:11 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/set8700.line,v $
 ##
 ## Under source code control:	2006/05/20 14:10:11
@@ -402,3 +402,28 @@ set8700_P == (obj set8700_point = {1,2,3})
 set8700_L = list(mat[1] = {set8700_P}), protect(set8700_L[0][0]) == 16
 set8700_L = {{{4,5,6}}}, set8700_L[0][0] == set8700_P
 protect(set8700_L,0,2), set8700_L = {{{4,5,6}}}, set8700_L[0][0] == (obj set8700_point = {4,5,6})
+
+## Testing quomod
+quomod(14,5,3,4) == error(10374)
+global set8700_a,set8700_b; quomod("abc", 4, set8700_a, set8700_b) == error(10375)
+quomod(14,5,set8700_a,set8700_b,0) == 1 && set8700_a == 2 && set8700_b == 4
+quomod(14,5,set8700_a,set8700_b,1) == 1 && set8700_a == 3 && set8700_b == -1
+quomod("abc",2,set8700_a,set8700_b) == error(10375)
+set8700_a = "abc"; quomod(14,5,set8700_a,set8700_b) == error(10375)
+set8700_a = null(); quomod(14,5,set8700_a,set8700_b,24) == 1; set8700_a == 3 && set8700_b == -1
+quomod(14,5,set8700_a,set8700_a) == error(10374)
+quomod(14,5,set8700_a,set8700_b,-1) == error(10375)
+protect(set8700_a,1); quomod(17,2,set8700_a,set8700_b) == error(10376)
+protect(set8700_a,0); quomod(17,2,set8700_a,set8700_b); set8700_a == 8 && set8700_b == 1
+set8700_p = &set8700_a, set8700_q = &set8700_b; quomod(14,5,*set8700_p,*set8700_q); *set8700_p == 2 && *set8700_q == 4
+
+## Testing estr
+base(1/3) == 10
+strcmp(estr(null()), "\"\"") == 0
+strcmp(estr(bernoulli(48)), "-5609403368997817686249127547/46410") == 0
+strcmp(estr(sin(3i)), "1001787492740990189897i/100000000000000000000") == 0
+base(10) == 1/3
+strcmp(estr("fizzbin"), "\"fizzbin\"") == 0
+strcmp(estr(set8700_c), "mat[5]={1,2+3i,-5+4i,6+5i,-7i}") == 0
+strcmp(estr(set8700_e), "mat[16]={0,1,0,0,2,-3/2,2,-1/2,-3,1/2,-1,1/2,1,0,0,0}") == 0
+strcmp(estr(list(2,3,5)), "list(2,3,5)") == 0

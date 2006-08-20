@@ -7,19 +7,18 @@ SYNOPSIS
 TYPES
     fs		file stream open for reading
 
-    return	string, null or error value
+    return	string or null
 
 DESCRIPTION
-    If characters cannot be read from the file, an error value is returned.
 
-    Otherwise starting at the current file position, any whitespace
+    Starting at the current file position, any whitespace
     characters are skipped.  If the reading reaches end-of-file, the
-    null value is returned.  If non-whitespace is encountered, formation
-    of a string begins, continuing until whitespace of '\0' or end-of-file
-    is reached.	 The returned value is this string (terminated as usual
-    by a null character).  After the operation, the file position will
-    be immediately after the first whitespace character of '\0' or at
-    end-of-file.
+    null value is returned.  Otherwise the function returns the empty
+    string "" if the first non-white character is '\0', and in other cases,
+    the string formed by the non-white-space characters read until '\0' or
+    a white-space character or te end of the file is reached.  In the
+    cases where the reading is stopped by '\0' or white-space character,
+    the file position will be that immediately after that character.
 
 EXAMPLE
 
@@ -67,8 +66,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.5 $
-## @(#) $Id: fgetfield,v 29.5 2006/06/25 22:16:55 chongo Exp $
+## @(#) $Revision: 29.6 $
+## @(#) $Id: fgetfield,v 29.6 2006/08/20 15:01:57 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/fgetfield,v $
 ##
 ## Under source code control:	1996/04/30 03:05:17

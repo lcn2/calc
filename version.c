@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.63 $
- * @(#) $Id: version.c,v 29.63 2006/06/26 05:53:25 chongo Exp $
+ * @(#) $Revision: 29.65 $
+ * @(#) $Id: version.c,v 29.65 2006/08/20 16:18:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
@@ -48,7 +48,7 @@ static char *program;
 #define MAJOR_VER	2	/* major version */
 #define MINOR_VER	12	/* minor version */
 #define MAJOR_PATCH	0	/* patch level or 0 if no patch */
-#define MINOR_PATCH	6	/* test number or 0 if no minor patch */
+#define MINOR_PATCH	8	/* test number or 0 if no minor patch */
 
 
 /*

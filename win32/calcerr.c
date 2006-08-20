@@ -427,5 +427,9 @@ CONST char *error_table[E__COUNT+2] = {
     "Unrecognized mode for fpathopen",
     "Bad epsilon argument for log",
     "Non-numeric first argument for log",
+    "Non-file argument for fgetfile",
+    "File argument for fgetfile not open for reading",
+    "Unable to set file position in fgetfile",
+    "Non-representable type for estr",
 	NULL
 };

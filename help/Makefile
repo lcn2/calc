@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.29 $
-# @(#) $Id: Makefile,v 29.29 2006/06/26 05:46:06 chongo Exp $
+# @(#) $Revision: 29.30 $
+# @(#) $Id: Makefile,v 29.30 2006/08/20 15:01:57 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -267,15 +267,15 @@ BLT_HELP_FILES= ${BLT_HELP_FILES_3} ${BLT_HELP_FILES_5} \
 #
 DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
 	appr arg argv arrow asec asech asin asinh assign atan atan2 atanh \
-	avg base base2 bernoulli bit blk blkcpy blkfree blocks bround btrunc \
-	calc_tty calclevel catalan ceil cfappr cfsim char cmdbuf cmp comb \
-	conj cos cosh cot coth count cp csc csch ctime delete den dereference \
-	det digit digits display dp epsilon errcount errmax errno error \
-	euler eval exp fact factor fclose fcnt feof ferror fflush fgetc \
-	fgetfield fgetline fgets fgetstr fib files floor fopen forall \
-	fpathopen fprintf fputc fputs fputstr frac free freebernoulli \
-	freeeuler freeglobals freeredc freestatics frem freopen fscan \
-	fscanf fseek fsize ftell gcd gcdrem gd getenv hash head highbit \
+	avg base base2 bernoulli bit blk blkcpy blkfree blocks bround \
+	btrunc calc_tty calclevel catalan ceil cfappr cfsim char cmdbuf \
+	cmp comb conj cos cosh cot coth count cp csc csch ctime delete den \
+	dereference det digit digits display dp epsilon errcount errmax \
+	errno error estr euler eval exp fact factor fclose fcnt feof ferror \
+	fflush fgetc fgetfield fgetfile fgetline fgets fgetstr fib files \
+	floor fopen forall fpathopen fprintf fputc fputs fputstr frac free \
+	freebernoulli freeeuler freeglobals freeredc freestatics frem freopen \
+	fscan fscanf fseek fsize ftell gcd gcdrem gd getenv hash head highbit \
 	hmean hnrmod hypot ilog ilog10 ilog2 im indices inputlevel insert \
 	int inverse iroot isassoc isatty isblk isconfig isdefined iserror \
 	iseven isfile ishash isident isint islist ismat ismult isnull isnum \

@@ -424,9 +424,13 @@
 #define E_FPATHOPEN2	10411	/* Unrecognized mode for fpathopen */
 #define E_LOG1		10412	/* Bad epsilon argument for log */
 #define E_LOG2		10413	/* Non-numeric first argument for log */
+#define E_FGETFILE1	10414	/* Non-file argument for fgetfile */
+#define E_FGETFILE2	10415	/* File argument for fgetfile not open for reading */
+#define E_FGETFILE3	10416	/* Unable to set file position in fgetfile */
+#define E_ESTR		10417	/* Non-representable type for estr */
 
-#define E__HIGHEST	10413	/* highest calc error */
-#define E__COUNT		413	/* number of calc errors */
+#define E__HIGHEST	10417	/* highest calc error */
+#define E__COUNT		417	/* number of calc errors */
 #define E_USERDEF	20000	/* base of user defined errors */
 
 /* names of calc error values */

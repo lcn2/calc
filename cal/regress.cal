@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.34 $
- * @(#) $Id: regress.cal,v 29.34 2006/06/25 20:33:26 chongo Exp $
+ * @(#) $Revision: 29.35 $
+ * @(#) $Id: regress.cal,v 29.35 2006/08/20 16:16:11 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -743,6 +743,7 @@ define test_functions()
 	local pi;
 	local h, n, r, m, v;
 	local n2, m2, v2;
+	local t;
 
 	print '700: Beginning test_functions';
 
@@ -3461,7 +3462,7 @@ print '070: parsed test_redc()';
  */
 define test_fileops()
 {
-	local a, b, c, f, m, n, p, r, x, y, z;
+	local a, b, c, f, m, n, p, r, s, x, y, z;
 	local L = "Landon";
 	local C = "Curt";
 	local N = "Noll";
@@ -3586,15 +3587,38 @@ define test_fileops()
 	++ecnt;
 	print				  '4267: ++ecnt;';
 	vrfy(isfile(p=fopen(long,"r")) == 0,
-			  '4268: isfile(p=fopen(long,"r")) == 0');
+			'4268: isfile(p=fopen(long,"r")) == 0');
+
+	/*
+	 * test fgetfile() and fgetline()
+	 */
+	vrfy(!iserror(p=fopen("tmp4200","w")),
+			'4269: !iserror(p=fopen("tmp4200","w"))');
+	vrfy(!iserror(fputs(p,"chongo\n")),
+			'4270: !iserror(fputs(p,"chongo\n"))');
+	vrfy(!iserror(fputs(p,"w\0a\0s\n")),
+			'4271: !iserror(fputs(p,"w\0a\0s\n"))');
+	vrfy(!iserror(fputs(p,"here\n")),
+			'4272: !iserror(fputs(p,"here\n"))');
+	vrfy(!iserror(fclose(p)),	  '4273: !iserror(fclose(p))');
+	vrfy(!iserror(p=fopen("tmp4200","r")),
+			'4274: !iserror(p=fopen("tmp4200","r"))');
+	vrfy(!iserror(s=fgetline(p)),	  '4275: !iserror(s=fgetline(p))');
+	vrfy(strcmp(s,"chongo") == 0, 	  '4276: strcmp(s,"chongo") == 0');
+	vrfy(!iserror(s=fgetfile(p)),	  '4277: !iserror(s=fgetfile(p))');
+	vrfy(strcmp(s,"w\0a\0s\nhere\n") == 0,
+			'4278: strcmp(s,"w\0a\0s\nhere\n") == 0');
+	vrfy(!iserror(fclose(p)),	  '4279: !iserror(fclose(p))');
 
 	/*
 	 * cleanup
 	 */
 	x = rm("junk4200");
-	print				  '4269: x = rm("junk4200")';
+	print				  '4280: x = rm("junk4200")';
+	x = rm("tmp4200");
+	print				  '4281: x = rm("tmp4200")';
 
-	print '4270: Ending test_fileops';
+	print '4282: Ending test_fileops';
 }
 print '071: parsed test_fileops()';
 

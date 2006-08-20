@@ -19,8 +19,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.13 $$
-# @(#) $Id: rpm.mk,v 29.13 2003/04/15 03:39:17 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.14 $$
+# @(#) $Id: rpm.mk,v 29.14 2006/08/20 16:47:51 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/rpm.mk,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -55,7 +55,7 @@ RPM686= $(PROJECT)-$(PROJECT_RELEASE).${TARCH}.rpm
 DRPM686= $(PROJECT_NAME)-devel-$(PROJECT_VERSION)-$(PROJECT_RELEASE).${TARCH}.rpm
 SRPM= $(PROJECT)-$(PROJECT_RELEASE).src.rpm
 TMPDIR= /var/tmp
-RHDIR= /usr/src/redhat
+RPMDIR= /usr/src/redhat
 
 all: calc.spec ver_calc
 	$(MAKE) -f rpm.mk PROJECT_VERSION="`./ver_calc`" \
@@ -80,50 +80,50 @@ calc.spec: calc.spec.in ver_calc
 srcpkg: make_rhdir
 	find . -depth -print | egrep -v '/RCS|/CVS|/NOTES|\.gone' | \
 	    cpio -dumpv $(TMPDIR)/$(PROJECT)
-	(cd $(TMPDIR); tar cf - $(PROJECT) | \
-	  gzip -c > $(RHDIR)/SOURCES/$(TARBALL))
+	(cd $(TMPDIR); tar cf - $(PROJECT)) | \
+	  gzip -c > $(RPMDIR)/SOURCES/$(TARBALL)
 	rm -fr $(TMPDIR)/$(PROJECT)
 
 .PHONY: rpm
 rpm: srcpkg calc.spec
 	$(MAKE) -f Makefile clean
-	cp $(SPECFILE) $(RHDIR)/SPECS/$(SPECFILE)
-	rm -f $(RHDIR)/RPMS/${TARCH}/$(RPM686)
-	rm -f $(RHDIR)/RPMS/${TARCH}/$(DRPM686)
-	rm -f $(RHDIR)/SRPMS/$(SRPM)
-	${RPMBUILD_TOOL} ${RPMBUILD_OPTION} $(RHDIR)/SPECS/$(SPECFILE)
-	@if [ ! -f "$(RHDIR)/SRPMS/$(SRPM)" ]; then \
+	cp $(SPECFILE) $(RPMDIR)/SPECS/$(SPECFILE)
+	rm -f $(RPMDIR)/RPMS/${TARCH}/$(RPM686)
+	rm -f $(RPMDIR)/RPMS/${TARCH}/$(DRPM686)
+	rm -f $(RPMDIR)/SRPMS/$(SRPM)
+	${RPMBUILD_TOOL} ${RPMBUILD_OPTION} $(RPMDIR)/SPECS/$(SPECFILE)
+	@if [ ! -f "$(RPMDIR)/SRPMS/$(SRPM)" ]; then \
 	    echo "SRPMS/$(SRPM) not found" 1>&2; \
 	    exit 3; \
 	fi
 	@echo
 	@echo "RPM package sizes:"
 	@echo
-	@cd $(RHDIR); ls -1s RPMS/${TARCH}/$(RPM686) \
+	@cd $(RPMDIR); ls -1s RPMS/${TARCH}/$(RPM686) \
 	    RPMS/${TARCH}/$(DRPM686) SRPMS/$(SRPM)
 	@echo
 	@echo "RPM package md5 hashes:"
 	@echo
-	-@cd $(RHDIR); ${MD5SUM} RPMS/${TARCH}/$(RPM686) \
+	-@cd $(RPMDIR); ${MD5SUM} RPMS/${TARCH}/$(RPM686) \
 	    RPMS/${TARCH}/$(DRPM686) SRPMS/$(SRPM)
 	@echo
 	@echo "RPM package sha1 hashes:"
 	@echo
-	-@cd $(RHDIR); ${SHA1SUM} RPMS/${TARCH}/$(RPM686) \
+	-@cd $(RPMDIR); ${SHA1SUM} RPMS/${TARCH}/$(RPM686) \
 	    RPMS/${TARCH}/$(DRPM686) SRPMS/$(SRPM)
 	@echo
 	@echo "RPM package locations:"
 	@echo
-	@ls -1 $(RHDIR)/RPMS/${TARCH}/$(RPM686) \
-	    $(RHDIR)/RPMS/${TARCH}/$(DRPM686) $(RHDIR)/SRPMS/$(SRPM)
+	@ls -1 $(RPMDIR)/RPMS/${TARCH}/$(RPM686) \
+	    $(RPMDIR)/RPMS/${TARCH}/$(DRPM686) $(RPMDIR)/SRPMS/$(SRPM)
 	@echo
 	@echo "All done! -- Jessica Noll, Age 2"
 	@echo
 
 .PHONY: make_rhdir
 make_rhdir:
-	for i in $(RHDIR) $(RHDIR)/RPMS $(RHDIR)/SOURCES \
-	  $(RHDIR)/SPECS $(RHDIR)/SRPMS $(RHDIR)/BUILD; do \
+	for i in $(RPMDIR) $(RPMDIR)/RPMS $(RPMDIR)/SOURCES \
+	  $(RPMDIR)/SPECS $(RPMDIR)/SRPMS $(RPMDIR)/BUILD; do \
 	    if [ ! -d $$i ] ; then \
 		mkdir -p $$i; \
 	    fi; \
@@ -136,9 +136,9 @@ logdate:
 
 .PHONY: chkpkg
 chkpkg:
-	for i in $(RHDIR)/RPMS/${TARCH}/$(RPM686) \
-		 $(RHDIR)/RPMS/${TARCH}/$(DRPM686) \
-	  	 $(RHDIR)/SRPMS/$(SRPM) ; do \
+	for i in $(RPMDIR)/RPMS/${TARCH}/$(RPM686) \
+		 $(RPMDIR)/RPMS/${TARCH}/$(DRPM686) \
+	  	 $(RPMDIR)/SRPMS/$(SRPM) ; do \
 	    echo "***** start $$i" ; \
 		${RPM_TOOL} -qpi $$i ; \
 		echo "***** files $$i" ; \
@@ -165,8 +165,8 @@ installrpm:
 	    echo "must be root to install RPMs" 1>&2; \
 	    exit 5; \
 	fi
-	${RPM_TOOL} -ivh $(RHDIR)/RPMS/${TARCH}/$(RPM686)
-	${RPM_TOOL} -ivh $(RHDIR)/RPMS/${TARCH}/$(DRPM686)
+	${RPM_TOOL} -ivh $(RPMDIR)/RPMS/${TARCH}/$(RPM686)
+	${RPM_TOOL} -ivh $(RPMDIR)/RPMS/${TARCH}/$(DRPM686)
 
 .PHONY: uninstallrpm
 uninstallrpm:

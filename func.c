@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.28 $
- * @(#) $Id: func.c,v 29.28 2006/06/25 20:33:26 chongo Exp $
+ * @(#) $Revision: 29.30 $
+ * @(#) $Id: func.c,v 29.30 2006/08/20 15:01:30 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -353,6 +353,24 @@ f_str(VALUE *vp)
 	default:
 		return error_value(E_STR);
 	}
+	return result;
+}
+
+
+static VALUE
+f_estr(VALUE *vp)
+{
+	VALUE result;
+	char *cp;
+
+	/* initialize result */
+	result.v_type = V_STR;
+	result.v_subtype = V_NOSUBTYPE;
+
+	math_divertio();
+	printestr(vp);
+	cp = math_getdivertedio();
+	result.v_str = makestring(cp);
 	return result;
 }
 
@@ -3572,14 +3590,16 @@ f_quomod(int count, VALUE **vals)
 	v3 = vals[2];
 	v4 = vals[3];
 
-	if (v3->v_type != V_ADDR || v4->v_type != V_ADDR)
-		return error_value(E_QUOMOD1);
+	if (v3->v_type != V_ADDR || v4->v_type != V_ADDR ||
+		 v3->v_addr == v4->v_addr)
+			return error_value(E_QUOMOD1);
 	if (count == 5) {
 		v5 = vals[4];
 		if (v5->v_type == V_ADDR)
 			v5 = v5->v_addr;
 		if (v5->v_type != V_NUM || qisfrac(v5->v_num) ||
-			qisneg(v5->v_num)) return error_value(E_QUOMOD2);
+			qisneg(v5->v_num) || zge31b(v5->v_num->num))
+				return error_value(E_QUOMOD2);
 		rnd = qtoi(v5->v_num);
 	} else
 		rnd = conf->quomod;
@@ -3588,22 +3608,29 @@ f_quomod(int count, VALUE **vals)
 		v1 = v1->v_addr;
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
-	if (v1->v_type != V_NUM || v2->v_type != V_NUM)
-		return error_value(E_QUOMOD2);
 	v3 = v3->v_addr;
 	v4 = v4->v_addr;
+
+	if (v1->v_type != V_NUM || v2->v_type != V_NUM ||
+		(v3->v_type != V_NUM && v3->v_type != V_NULL) ||
+		(v4->v_type != V_NUM && v4->v_type != V_NULL))
+			return error_value(E_QUOMOD2);
 
 	s3 = v3->v_subtype;
 	s4 = v4->v_subtype;
 
 	if ((s3 | s4) & V_NOASSIGNTO)
 		return error_value(E_QUOMOD3);
+
 	freevalue(v3);
 	freevalue(v4);
+
 	v3->v_type = V_NUM;
 	v4->v_type = V_NUM;
+
 	v3->v_subtype = s3;
 	v4->v_subtype = s4;
+
 	res = qquomod(v1->v_num, v2->v_num, &v3->v_num, &v4->v_num, rnd);
 	result.v_type = V_NUM;
 	result.v_subtype = V_NOSUBTYPE;
@@ -5827,7 +5854,7 @@ strscan(char *s, int count, VALUE **vals)
 static int
 filescan(FILEID id, int count, VALUE **vals)
 {
-	char	*str;
+	STRING	*str;
 	int	i;
 	int	n = 0;
 	VALUE	val;
@@ -5848,7 +5875,7 @@ filescan(FILEID id, int count, VALUE **vals)
 		if (i > 0)
 			return EOF;
 		n++;
-		val.v_str = makenewstring(str);
+		val.v_str = str;
 		result = f_eval(&val);
 		var = *vals++;
 		if (var->v_type == V_ADDR) {
@@ -6095,7 +6122,7 @@ f_fputs(int count, VALUE **vals)
 			return error_value(E_FPUTS2);
 	}
 	for (i = 1; i < count; i++) {
-		err = idfputs(vals[0]->v_file, vals[i]->v_str->s_str);
+		err = idfputs(vals[0]->v_file, vals[i]->v_str);
 		if (err > 0)
 			return error_value(E_FPUTS3);
 	}
@@ -6242,7 +6269,7 @@ static VALUE
 f_fgetline(VALUE *vp)
 {
 	VALUE result;
-	char *str;
+	STRING *str;
 	int i;
 
 	/* initialize VALUE */
@@ -6256,7 +6283,7 @@ f_fgetline(VALUE *vp)
 	result.v_type = V_NULL;
 	if (i == 0) {
 		result.v_type = V_STR;
-		result.v_str = makestring(str);
+		result.v_str = str;
 	}
 	return result;
 }
@@ -6266,7 +6293,7 @@ static VALUE
 f_fgets(VALUE *vp)
 {
 	VALUE result;
-	char *str;
+	STRING *str;
 	int i;
 
 	/* initialize VALUE */
@@ -6280,7 +6307,7 @@ f_fgets(VALUE *vp)
 	result.v_type = V_NULL;
 	if (i == 0) {
 		result.v_type = V_STR;
-		result.v_str = makestring(str);
+		result.v_str = str;
 	}
 	return result;
 }
@@ -6290,7 +6317,7 @@ static VALUE
 f_fgetstr(VALUE *vp)
 {
 	VALUE result;
-	char *str;
+	STRING *str;
 	int i;
 
 	/* initialize VALUE */
@@ -6304,7 +6331,7 @@ f_fgetstr(VALUE *vp)
 	result.v_type = V_NULL;
 	if (i == 0) {
 		result.v_type = V_STR;
-		result.v_str = makestring(str);
+		result.v_str = str;
 	}
 	return result;
 }
@@ -6314,7 +6341,7 @@ static VALUE
 f_fgetfield(VALUE *vp)
 {
 	VALUE result;
-	char *str;
+	STRING *str;
 	int i;
 
 	/* initialize VALUE */
@@ -6328,7 +6355,32 @@ f_fgetfield(VALUE *vp)
 	result.v_type = V_NULL;
 	if (i == 0) {
 		result.v_type = V_STR;
-		result.v_str = makestring(str);
+		result.v_str = str;
+	}
+	return result;
+}
+
+static VALUE
+f_fgetfile(VALUE *vp)
+{
+	VALUE result;
+	STRING *str;
+	int i;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	if (vp->v_type != V_FILE)
+		return error_value(E_FGETFILE1);
+	i = readid(vp->v_file, 0, &str);
+	if (i == 1)
+		return error_value(E_FGETFILE2);
+	if (i == 3)
+		return error_value(E_FGETFILE3);
+	result.v_type = V_NULL;
+	if (i == 0) {
+		result.v_type = V_STR;
+		result.v_str = str;
 	}
 	return result;
 }
@@ -8165,6 +8217,8 @@ static CONST struct builtin builtins[] = {
 	 "set or read calc_errno"},
 	{"error", 0, 1, 0, OP_NOP, 0, f_error,
 	 "generate error value"},
+	{"estr", 1, 1, 0, OP_NOP, 0, f_estr,
+	 "exact text string representation of value"},
 	{"euler", 1, 1, 0, OP_NOP, 0, f_euler,
 	 "Euler number"},
 	{"eval", 1, 1, 0, OP_NOP, 0, f_eval,
@@ -8195,6 +8249,8 @@ static CONST struct builtin builtins[] = {
 	 "read next char from file"},
 	{"fgetfield", 1, 1, 0, OP_NOP, 0, f_fgetfield,
 	 "read next white-space delimited field from file"},
+	{"fgetfile", 1, 1, 0, OP_NOP, 0, f_fgetfile,
+	 "read to end of file"},
 	{"fgetline", 1, 1, 0, OP_NOP, 0, f_fgetline,
 	 "read next line from file, newline removed"},
 	{"fgets", 1, 1, 0, OP_NOP, 0, f_fgets,

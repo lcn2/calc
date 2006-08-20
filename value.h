@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.10 $
- * @(#) $Id: value.h,v 29.10 2006/05/19 15:26:10 chongo Exp $
+ * @(#) $Revision: 29.11 $
+ * @(#) $Id: value.h,v 29.11 2006/08/20 15:01:30 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -243,6 +243,7 @@ extern DLL void relvalue(VALUE *v1, VALUE *v2, VALUE *vres);
 extern DLL void sgnvalue(VALUE *vp, VALUE *vres);
 extern DLL QCKHASH hashvalue(VALUE *vp, QCKHASH val);
 extern DLL void printvalue(VALUE *vp, int flags);
+extern DLL void printestr(VALUE *vp);
 extern DLL BOOL precvalue(VALUE *v1, VALUE *v2);
 extern DLL VALUE error_value(int e);
 extern DLL int set_errno(int e);

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: value.c,v 29.9 2006/06/01 11:47:07 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: value.c,v 29.10 2006/08/20 15:01:30 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -2749,6 +2749,118 @@ printvalue(VALUE *vp, int flags)
 	default:
 		math_error("Printing unrecognized type of value");
 		/*NOTREACHED*/
+	}
+}
+
+/*
+ * Print an exact text representation of a value
+ */
+void
+printestr(VALUE *vp)
+{
+	LISTELEM *ep;
+	MATRIX *mp;
+	OBJECT *op;
+	BLOCK *bp;
+	int mode;
+	long i, min, max;
+	USB8 *cp;
+
+	if (vp->v_type < 0) {
+		math_fmt("error(%d)", -vp->v_type);
+		return;
+	}
+	switch(vp->v_type) {
+		case V_NULL:
+			math_str("\"\"");
+			return;
+		case V_STR:
+			math_chr('"');
+			strprint(vp->v_str);
+			math_chr('"');
+			return;
+		case V_NUM:
+			qprintnum(vp->v_num, MODE_FRAC);
+			return;
+		case V_COM:
+			mode = math_setmode(MODE_FRAC);
+			comprint(vp->v_com);
+			math_setmode(mode);
+			return;
+		case V_LIST:
+			math_str("list(");
+			ep = vp->v_list->l_first;
+			if (ep) {
+				printestr(&ep->e_value);
+				while ((ep = ep->e_next)) {
+					math_chr(',');
+					printestr(&ep->e_value);
+				}
+			}
+			math_chr(')');
+			return;
+		case V_MAT:
+			mp = vp->v_mat;
+			if (mp->m_dim == 0)
+				math_str("(mat[])");
+			else {
+				math_str("mat[");
+				for (i = 0; i < mp->m_dim; i++) {
+					min = mp->m_min[i];
+					max = mp->m_max[i];
+					if (i > 0)
+						math_chr(',');
+					if (min)
+						math_fmt("%ld:%ld", min, max);
+					else
+						math_fmt("%ld", max + 1);
+				}
+				math_chr(']');
+			}
+			i = mp->m_size;
+			vp = mp->m_table;
+			break;
+		case V_OBJ:
+			op = vp->v_obj;
+			math_fmt("obj %s",objtypename(op->o_actions->oa_index));
+			i = op->o_actions->oa_count;
+			vp = op->o_table;
+			break;
+		case V_BLOCK:
+		case V_NBLOCK:
+			math_str("blk(");
+			if (vp->v_type == V_BLOCK)
+				bp = vp->v_block;
+			else {
+				math_fmt("\"%s\",", vp->v_nblock->name);
+				bp = vp->v_nblock->blk;
+			}
+			i = bp->datalen;
+			math_fmt("%d,%d)", i, bp->blkchunk);
+			cp = bp->data;
+			if (i > 0) {
+				math_str("={");
+				math_fmt("%d", *cp);
+				while (--i > 0) {
+					math_chr(',');
+					math_fmt("%d", *++cp);
+				}
+				math_chr('}');
+			}
+			return;
+
+		default:
+			math_str("\"???\"");
+			return;
+	}
+	if (i > 0) {
+		math_str("={");
+		printestr(vp);
+		while (--i > 0) {
+			math_chr(',');
+			printestr(++vp);
+		}
+		math_chr('}');
 	}
 }
 

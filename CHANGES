@@ -367,6 +367,21 @@ The following are the changes from calc version 2.12.0 to date:
     Changed the "Copyright" line in the rpm spec file to a "License" line
     as per new rpm v4.4 syntax.
 
+    The quomod() builtin function does not allow constants for its 3rd
+    and 4th arguments.  Updated the "help quomod" file and added more
+    quomod regression tests.
+
+    Added patch from Ernest Bowen <ebowen at une dot edu dot au> to
+    add the builtin: estr().  The estr(x) will return a representation
+    of a null, string, real number, complex number, list, matrix,
+    object. block, named block, error as a string.
+
+    Added patch from Ernest Bowen <ebowen at une dot edu dot au> to
+    add the builtin: fgetfile().  The fgetfile(x) will return the rest
+    of an open file as a string.
+
+    Improved help files for fgetfield, fputs, name, or quomod.
+
 
 The following are the changes from calc version 2.11.10.1 to 2.11.11:
 
@@ -6187,8 +6202,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.84 $
-## @(#) $Id: CHANGES,v 29.84 2006/06/26 05:53:25 chongo Exp $
+## @(#) $Revision: 29.86 $
+## @(#) $Id: CHANGES,v 29.86 2006/08/20 16:18:10 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

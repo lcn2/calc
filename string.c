@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: string.c,v 29.9 2006/05/20 10:13:39 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: string.c,v 29.10 2006/08/20 15:01:30 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/string.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -1292,18 +1292,15 @@ freestringconstant(long index)
 long
 printechar(char *c)
 {
-	long n;
-	unsigned char ch;
+	unsigned char ch, cc;
 	unsigned char ech;	/* for escape sequence */
-	unsigned char nch;	/* for next character */
-	BOOL three;
 
 	ch = *c;
-	if (ch >= ' ' && ch < 127 && ch != '\\' && ch != '\"') {
-		putchar(ch);
+	if (ch >= ' ' && ch < 127 && ch != '\\' && ch != '\"' && ch != '\'') {
+		math_chr(ch);
 		return 1;
 	}
-	putchar('\\');
+	math_chr('\\');
 	ech = 0;
 	switch (ch) {
 	case '\n': ech = 'n'; break;
@@ -1314,28 +1311,28 @@ printechar(char *c)
 	case '\v': ech = 'v'; break;
 	case '\\': ech = '\\'; break;
 	case '\"': ech = '\"'; break;
+	case '\'': ech = '\''; break;
+	case 0: ech = '0'; break;
 	case 7: ech = 'a'; break;
 	case 27: ech = 'e'; break;
 	}
+	if (ech == '0') {
+		cc = *(c + 1);
+		if (cc >= '0' && cc < '8') {
+			math_str("000");
+			return 4;
+		}
+	}
 	if (ech) {
-		putchar(ech);
+		math_chr(ech);
 		return 2;
 	}
-	nch = *(c + 1);
-	three = (nch >= '0' && nch < '8');
-	n = 2;
-	if (three || ch >= 64) {
-		putchar('0' + ch/64);
-		n++;
-	}
-	ch %= 64;
-	if (three || ch >= 8) {
-		putchar('0' + ch/8);
-		n++;
-	}
-	ch %= 8;
-	putchar('0' + ch);
-	return n;
+	math_chr('x');
+	cc = ch / 16;
+	math_chr((cc < 10) ? '0' + cc : 87 + cc);
+	cc = ch % 16;
+	math_chr((cc < 10) ? '0' + cc : 87 + cc);
+	return 4;
 }
 
 
@@ -1376,8 +1373,20 @@ fitstring(char *str, long len, long width)
 			n++;
 	}
 	if (j > i)
-		printf("...");
+		math_str("...");
 	while (j++ < len)
+		(void) printechar(c++);
+}
+
+void
+strprint(STRING *str) {
+	long n;
+	char *c;
+
+	c = str->s_str;
+	n = str->s_len;
+
+	while (n-- > 0)
 		(void) printechar(c++);
 }
 

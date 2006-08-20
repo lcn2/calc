@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.9 $
-# @(#) $Id: calcerr.tbl,v 29.9 2006/06/25 20:33:26 chongo Exp $
+# @(#) $Revision: 29.10 $
+# @(#) $Id: calcerr.tbl,v 29.10 2006/08/20 15:01:30 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/calcerr.tbl,v $
 #
 # Under source code control:	1996/05/23 17:38:44
@@ -445,3 +445,7 @@ E_FPATHOPEN1	Non-string arguments for fpathopen
 E_FPATHOPEN2	Unrecognized mode for fpathopen
 E_LOG1		Bad epsilon argument for log
 E_LOG2		Non-numeric first argument for log
+E_FGETFILE1	Non-file argument for fgetfile
+E_FGETFILE2	File argument for fgetfile not open for reading
+E_FGETFILE3	Unable to set file position in fgetfile
+E_ESTR		Non-representable type for estr

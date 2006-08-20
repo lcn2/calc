@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.3 $
-# @(#) $Id: check.awk,v 29.3 2006/05/20 19:43:39 chongo Exp $
+# @(#) $Revision: 29.4 $
+# @(#) $Id: check.awk,v 29.4 2006/08/20 16:16:31 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/check.awk,v $
 #
 # Under source code control:	1996/05/25 22:07:58
@@ -64,7 +64,7 @@ NF == 0 {
 	end_seen = 1;
 }
 
-$1 ~ /^[0-9]+:/ || $1 ~ /^[0-9]+-[0-9]*:/ {
+$1 ~ /^[0-9]+:/ || $1 ~ /^[0-9]+-[0-9]*:/ || $1 ~ /^"))$/ {
 	if (error > 0) {
 		if (havebuf2) {
 			print buf2;

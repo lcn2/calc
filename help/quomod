@@ -1,41 +1,73 @@
 NAME
-    quomod - assign quotient and remainder to two variables
+    quomod - assign quotient and remainder to two lvalues
 
 SYNOPSIS
-    quomod(x, y, q, r [, rnd])
+    quomod(x, y, Q, R [, rnd])
 
 TYPES
     x		real
     y		real
-    q		any
-    r		any
-    rnd		integer, defaults to config("quomod")
+    Q		null-or-real-valued lvalue with assign-to permission
+    R		null-or-real-valued lvalue with assign-to permission
+    rnd		nonnegative integer, defaults to config("quomod")
 
-    return	real
+    return	0 or 1
 
 DESCRIPTION
-    Returns 0 or 1 according as x is or is not a multiple of y.
-    Let	 x = q * y + r	where q is an integer and 0 <= r < y
-    This function assigns the values q and r to the variables
-    Q and R.  If x >= 0, the results for Q and R are the same as
-    those given by Q = x // y, R = x % y.
+    If y is nonzero and x/y is an integer q, this function assigns
+    q to Q and zero to R, and returns zero.
 
-    The argument rnd (if passed or config value config("quomod") if the
-    rnd argument is not passed) impacts the rounding mode for producing
-    the quotient and modulus.  See "help quo" details of how the quotient
-    is impacted by rounding modes.  See "help mod" for details of how
-    the modulus is impacted by rounding modes.  The only difference on
-    those descriptions is that quomod() is controlled by a single config
-    value config("quomod") instead of config("quo") and config("mod").
+    If y is zero, zero is assigned to Q, x to R and 0 or 1 returned
+    according as x is zero or nonzero.
 
-	XXX - replace the above paragraph and directly describe how rnd
-	      and config("quomod") impact quomod.
+    In the remaining case, y nonzero and x/y not an intger, there
+    are two pairs (q,r) for which x = q * y + r, q is an integer, and
+    abs(r) < abs(y).  Depending on the low 5 bits of rnd, the q and r
+    of one of these pairs will be assigned to Q and R respectively,
+    and the number 1 returned. The effects of rnd can be described in
+    terms of the way q is related to x/y, e.g. by rounding down,
+    rounding towards zero, rounding to a nearest integeri, etc. or
+    by properties of the remainder r, e.g. positive, negative,
+    smallest, etc. The effects of the most commonly used values of
+    rnd are described in the following table:
 
-    The C language method of modulus and integer division is:
+       rnd	        q			      r
 
-	    config("quomod", 2)
-	    config("quo", 2)
-	    config("mod", 2)
+	0   round down. q = floor(x/y)	   same sign as y
+	1   round up, q = ceil(x/y)	   opposite sign to y
+	2   round to zero, q = int(x/y)	   same sign as x, r = y * frac(x/y)
+	3   round from zero		   oppsite sign to x
+	4				   positive
+	5				   negative
+	6				   same sign as x/y
+	7				   opposite sigh to x/y
+
+	8   to nearest even
+	9   to nearest odd
+
+    For 16 <= rnd < 32, the rounding is to the nearest integer and r
+    is the smallest (in absolute value) remainder except when x/y is
+    halfway between consecutive integers, in which case the rounding
+    is as given by the 4 low bits of rnd. Using rnd = 24 gives the
+    cpmmonly used principle of rounding: round to the nearest integer,
+    but take the even integer when there are two equally close integers.
+
+    For more detail on the effects of rnd for values other than those
+    listed above, see "help quo" and "help mod".
+
+    In all cases, the values assigned to Q and R by quomod(x, y, Q, R, rnd)
+    are the same as those given by Q = quo(x,y,rnd), R = mod(x,y,rnd).
+    If config("quo") == rnd, Q is also given by quo(x,y) or x // y.
+    If config("mod") == rnd, R is also given by mod(x,y) or x % y.
+
+    The rounding used by the C language for x / y  and x % y corresponds
+    to rnd = 2.
+
+    An error values is returned and the values of Q and R are not changed
+    if Q and R are not both lvalues, or if the current value of any
+    argument is not as specified above, or if Q or R has no-assign-to
+    prptection, e.g. after protect(Q,1).
+
 
 EXAMPLE
     ; global u, v;
@@ -59,13 +91,13 @@ EXAMPLE
     1 3 -1
 
 LIMITS
-    y > 0
+    rnd < 2^31
 
 LINK LIBRARY
-    BOOL qquomod(NUMBER *q1, NUMBER *q2, NUMBER **retqdiv, NUMBER **retqmod)
+    BOOL qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod)
 
 SEE ALSO
-    //,	 %
+    //,	 %, quo, mod, floor. ceil, int. frac
 
 ## Copyright (C) 1999-2006  Landon Curt Noll
 ##
@@ -83,8 +115,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.5 $
-## @(#) $Id: quomod,v 29.5 2006/06/25 20:33:26 chongo Exp $
+## @(#) $Revision: 29.7 $
+## @(#) $Id: quomod,v 29.7 2006/08/20 15:01:57 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/quomod,v $
 ##
 ## Under source code control:	1995/05/07 03:17:03

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: string.h,v 29.6 2006/05/19 15:26:10 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: string.h,v 29.7 2006/08/20 15:01:30 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/string.h,v $
  *
  * Under source code control:	1990/02/15 01:48:36
@@ -73,6 +73,7 @@ extern STRING *findstring(long index);
 extern STRING *slink(STRING *);
 extern void sfree(STRING *);
 extern void fitstring(char *, long, long);
+extern void strprint(STRING *);
 extern void showstrings(void);
 extern void showliterals(void);
 extern STRING _nullstring_;
