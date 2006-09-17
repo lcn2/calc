@@ -1,4 +1,13 @@
-The following are the changes from calc version 2.12.0 to date:
+The following are the changes from calc version 2.12.1 to date:
+
+    Fixed minor typos in the 'version 2.12.0 to 2.12.0.8' section below.
+    Made minor formatting changes as well.
+
+    Changed use of ${Q} in the Makefile to avoid an make "feature"
+    related to OpenBSD.
+
+
+The following are the changes from calc version 2.12.0 to 2.12.0.8:
 
     Fixed ellip.cal to deal with a calc syntax change that happened
     many ages ago but was never applied to this file until now.
@@ -109,34 +118,34 @@ The following are the changes from calc version 2.12.0 to date:
     <ebowen at une dot edu dot au>, the dotest evaluates individual
     lines from a file.  The dotest() function takes 1 to 3 arguments:
 
-    dotest(dotest_file [,dotest_code [,dotest_maxcond]])
+	dotest(dotest_file [,dotest_code [,dotest_maxcond]])
 
-    dotest_file
+	dotest_file
 
-        Search along CALCPATH for dotest_file, which contains lines that
-        should evaluate to 1.  Comment lines and empty lines are ignored.
-        Comment lines should use ## instead of the multi like /* ... */
-        because lines are evaluated one line at a time.
+	    Search along CALCPATH for dotest_file, which contains lines that
+	    should evaluate to 1.  Comment lines and empty lines are ignored.
+	    Comment lines should use ## instead of the multi like /* ... */
+	    because lines are evaluated one line at a time.
 
-    dotest_code
+	dotest_code
 
-        Assign the code number that is to be printed at the start of
-        each non-error line and after **** in each error line.
-        The default code number is 999.
+	    Assign the code number that is to be printed at the start of
+	    each non-error line and after **** in each error line.
+	    The default code number is 999.
 
-    dotest_maxcond
+	dotest_maxcond
 
-        The maximum number of error conditions that may be detected.
-        An error condition is not a sign of a problem, in some cases
-        a line deliberately forces an error condition.  A value of -1,
-        the default, implies a maximum of 2147483647.
+	    The maximum number of error conditions that may be detected.
+	    An error condition is not a sign of a problem, in some cases
+	    a line deliberately forces an error condition.  A value of -1,
+	    the default, implies a maximum of 2147483647.
 
-    Global variables and functions must be declared ahead of time because
-    the dotest scope of evaluation is a line at a time.  For example:
+	Global variables and functions must be declared ahead of time because
+	the dotest scope of evaluation is a line at a time.  For example:
 
-        ; read dotest.cal
-        ; read set8700.cal
-        ; dotest("set8700.line");
+	    ; read dotest.cal
+	    ; read set8700.cal
+	    ; dotest("set8700.line");
 
     Updated the todo / wish list items.  The top priority now is to
     convert calc to GNU autoconf / configure to build the calc.
@@ -164,7 +173,7 @@ The following are the changes from calc version 2.12.0 to date:
     Made math_error() in math_error.c more robust against a error
     message constant that is too long.
 
-    Made read_bindings() in hist.c more robust against very line bindings
+    Made read_bindings() in hist.c more robust against very long bindings
     config lines.
 
     Made listsort() in listfunc.c and matsort() matfunc.c more robust
@@ -179,8 +188,7 @@ The following are the changes from calc version 2.12.0 to date:
     no other compile errors, only the unterminated comment will stop
     completion of the function being defined.
 
-    Added the reading of more calc resource files to the cal/regress.cal
-    regression test.
+    The cal/regress.cal now reads most of the calc resource files.
 
     The issq() test had a slight performance boost.  A minor note
     was added to the help/issq file.
@@ -192,25 +200,18 @@ The following are the changes from calc version 2.12.0 to date:
     the number of bits in the fundamental base in which calculations
     are performed.  This is a read-only configuration value.
 
-    Calc now permits such as:
-
-    	++*p--       ++*----*++p----
-
+    Calc now will allow syntax such as ++*p-- and  ++*----*++p----
     where p is an lvalue; successful evaluation of course require the
     successive operations to be performed to have operands of appropriate
     types; e.g. in *A, A is usually an lvalue whose current value is a
     pointer. ++ and -- act on lvalues. In the above examples there are
     implied parentheses from the beginning to immediately after p. If
-    there are no pre ++ or -- operations, as in
-
-	**p++
-
-    the implied parentheses are from immediately before p to the end.
+    there are no pre ++ or -- operations, as in **p++.  The implied
+    parentheses are from immediately before p to the end.
 
     Improved the error message when && is used as a prefix operator.
 
-    Changed the help/config file to read like a builtin function
-    help file.
+    Changed the help/config file to read like a builtin function help file.
 
     One can no longer set to 1, or to a value < 0, the config()
     parameters: "mul2", "sq2", "pow2", and "redc2".  These values
@@ -224,10 +225,10 @@ The following are the changes from calc version 2.12.0 to date:
 	config("sq2") == 3388
 	config("pow2") == 176
 
-    These values were determined established on a 1.8GHz AMD 32-bit
-    CPU of ~3406 BogoMIPS by the new resource file:
+	These values were determined established on a 1.8GHz AMD 32-bit
+	CPU of ~3406 BogoMIPS by the new resource file:
 
-        cal/alg_config.cal
+	    cal/alg_config.cal
 
    Regarding the alg_config.cal resource file:
 
@@ -255,7 +256,7 @@ The following are the changes from calc version 2.12.0 to date:
 	inaccuracy in CPU timings will cause the best value returned to
 	differ slightly from run to run.
 
-    See "help resource" for more information on alg_config.cal.
+	See "help resource" for more information on alg_config.cal.
 
     Updated the "help variable" text to reflect the current calc
     use of ` (backquote), * (star), and & (ampersand).
@@ -304,23 +305,21 @@ The following are the changes from calc version 2.12.0 to date:
 	silly to use the same identifier for both a parameter and local
 	variable, it should not be illegal.
 
-    The provision of warnings for possibly questionable programming in
-    function definitions.
+    Added warnings for possibly questionable code in function definitions.
 
     Added config("redecl_warn", boolean) to control if calc issues
     warnings about variables being declared.  The config("redecl_warn")
     value is TRUE by default.
 
     Added config("dupvar_warn", boolean) to control if calc issues
-    warnings about when variable names collide.  Examples of variable name
-    collisions include when:
+    warnings about when variable names collide.  The config("dupvar_warn")
+    value is TRUE by default.  Examples of variable name collisions
+    include when:
 
     	* both local and static variables have the same name
     	* both local and global variables have the same name
     	* both function parameter and local variables have the same name
     	* both function parameter and global variables have the same name
-
-    The config("dupvar_warn") value is TRUE by default.
 
     Fix of a bug which causes some static variables not to be correctly
     unscoped when their identifiers are used in a global declaration.
@@ -351,7 +350,7 @@ The following are the changes from calc version 2.12.0 to date:
     	read sumtimes
 	doalltimes(1e6)
 
-    Calc now ignores carrage returns (\r), vertical tabs (\v), and
+    Calc now ignores carriage returns (\r), vertical tabs (\v), and
     form feeds (\f) when token parsing.  Thus users on Windoz systems
     can write files using their \r\n format and users on non-Windoz
     systems can read them without errors.
@@ -359,7 +358,7 @@ The following are the changes from calc version 2.12.0 to date:
     The quomod() builtin function now takes an optional 5th argument
     which controls the rounding mode like config("quomod") does, but
     only for that call.  Now quomod() is in line with quo() and mod()
-    in that the final augument is an optional rounding mode.
+    in that the final argument is an optional rounding mode.
 
     Added a "make uninstall" rule which will attempt to remove everything
     that was installed by a "make install".
@@ -6202,8 +6201,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.86 $
-## @(#) $Id: CHANGES,v 29.86 2006/08/20 16:18:10 chongo Exp $
+## @(#) $Revision: 29.87 $
+## @(#) $Id: CHANGES,v 29.87 2006/09/17 23:50:45 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
