@@ -58,32 +58,6 @@ High priority items:
 
 Medium priority items:
 
-    * Review and if needed, correct/update the help topics:
-
-	    topic		description
-	    -----		-----------
-	    intro		introduction to calc
-	    overview		overview of calc
-	    assoc		using associations
-	    command		top level commands
-	    define		how to define functions
-	    environment		how environment variables effect calc
-	    errorcodes		calc generated error codes
-	    expression		expression sequences
-	    file		using files
-	    history		command history
-	    interrupt		how interrupts are handled
-	    list		using lists
-	    obj			user defined data types
-	    operator		math, relational, logic and variable access ...
-	    statement		flow control and declaration statements
-	    types		builtin data types
-	    unexpected		unexpected syntax/usage surprises for C ...
-	    variable		variables and variable declarations
-	    libcalc		using the arbitrary precision routines in ...
-	    bugs		known bugs and mis-features
-	    wishlist		wish list of future enhancements of calc
-
     * Complete the use of CONST where appropriate:
 
 	CONST is beginning to be used with read-only tables and some
@@ -130,8 +104,8 @@ Medium priority items:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.8 $
-## @(#) $Id: todo,v 29.8 2006/05/21 07:50:11 chongo Exp $
+## @(#) $Revision: 29.9 $
+## @(#) $Id: todo,v 29.9 2006/09/17 20:54:07 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/todo,v $
 ##
 ## Under source code control:	1999/10/20 07:42:55
