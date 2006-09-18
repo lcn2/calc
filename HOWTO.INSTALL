@@ -52,7 +52,7 @@ Installing calc from the gziped tarball in 4 easy steps:
 	    CALC_INCDIR        where the calc include files are installed
 	    CUSTOMCALDIR       where custom *.cal files are installed
 	    CUSTOMHELPDIR      where custom help files are installed
-	    CUSTOMINCPDIR      where custom .h files are installed
+	    CUSTOMINCDIR       where custom .h files are installed
 	    SCRIPTDIR          where calc shell scripts are installed
 
 	If you want to install calc files under a top level directory,
@@ -162,8 +162,8 @@ the calc help subsystem.  See the README file for details.
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.8 $
-## @(#) $Id: HOWTO.INSTALL,v 29.8 2006/09/18 06:27:39 chongo Exp $
+## @(#) $Revision: 29.9 $
+## @(#) $Id: HOWTO.INSTALL,v 29.9 2006/09/18 13:11:57 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/HOWTO.INSTALL,v $
 ##
 ## Under source code control:	1999/09/27 20:48:44

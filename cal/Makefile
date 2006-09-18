@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.23 $
-# @(#) $Id: Makefile,v 29.23 2006/09/18 06:27:39 chongo Exp $
+# @(#) $Revision: 29.24 $
+# @(#) $Id: Makefile,v 29.24 2006/09/18 13:13:25 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
@@ -33,8 +33,8 @@
 
 # required vars
 #
-SHELL = /bin/sh
-MAKE_FILE = Makefile
+SHELL= /bin/sh
+MAKE_FILE= Makefile
 
 ####
 # Normally, the upper level makefile will set these values.  We provide
@@ -96,7 +96,7 @@ CALC_SHAREDIR= /usr/share/calc
 # ${CALC_INCDIR}	where the calc include files are installed
 # ${CUSTOMCALDIR}	where custom *.cal files are installed
 # ${CUSTOMHELPDIR}	where custom help files are installed
-# ${CUSTOMINCPDIR}	where custom .h files are installed
+# ${CUSTOMINCDIR}	where custom .h files are installed
 # ${SCRIPTDIR}		where calc shell scripts are installed
 #
 # NOTE: The install rule prepends installation paths with ${T}, which
@@ -170,6 +170,7 @@ CP= cp
 MV= mv
 CO= co
 TRUE= true
+TOUCH= touch
 
 # The calc files to install
 #

@@ -32,8 +32,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.80 $$
-# @(#) $Id: Makefile.ship,v 29.80 2006/09/18 06:57:18 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.81 $$
+# @(#) $Id: Makefile.ship,v 29.81 2006/09/18 13:13:25 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -617,7 +617,7 @@ CALC_INCDIR= ${INCDIR}/calc
 # ${HELPDIR}		where the help directory is installed
 # ${CUSTOMCALDIR}	where custom *.cal files are installed
 # ${CUSTOMHELPDIR}	where custom help files are installed
-# ${CUSTOMINCPDIR}	where custom .h files are installed
+# ${CUSTOMINCDIR}	where custom .h files are installed
 # ${SCRIPTDIR}		where calc shell scripts are installed
 #
 # NOTE: The install rule prepends installation paths with ${T}, which
@@ -894,14 +894,15 @@ RANLIB=ranlib
 MAKE_FILE= Makefile
 #MAKE_FILE=
 
-# If you do not wish to use purify, leave PURIFY commented out.
+# If you do not wish to use purify, set PURIFY to an empty string.
 #
-# If in doubt, leave PURIFY commented out.
+# If in doubt, use PURIFY=
 #
 #PURIFY= purify
 #PURIFY= purify -m71-engine
 #PURIFY= purify -logfile=pure.out
 #PURIFY= purify -m71-engine -logfile=pure.out
+PURIFY=
 
 # If you want to use a debugging link library such as a malloc debug link
 # library, or need to add special ld flags after the calc link libraries
@@ -1194,8 +1195,8 @@ FMT= fmt
 XARGS= xargs
 CMP= cmp
 MKDIR= mkdir
-SPLINT = splint
-SPLINT_OPTS =
+SPLINT= splint
+SPLINT_OPTS=
 RM= rm
 TOUCH= touch
 RMDIR= rmdir
@@ -3298,7 +3299,7 @@ env:
 	@echo 'HAVE_GETPGID=${HAVE_GETPGID}'; echo ''
 	@echo 'HAVE_GETTIME=${HAVE_GETTIME}'; echo ''
 	@echo 'HAVE_GETPRID=${HAVE_GETPRID}'; echo ''
-	@echo 'HAVE_URANDOM=${HAVE_URANDOM}'; echo ''
+	@echo 'HAVE_URANDOM_H=${HAVE_URANDOM_H}'; echo ''
 	@echo 'ALIGN32=${ALIGN32}'; echo ''
 	@echo 'BINDIR=${BINDIR}'; echo ''
 	@echo 'CALC_SHAREDIR=${CALC_SHAREDIR}'; echo ''

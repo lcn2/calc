@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.28 $
-# @(#) $Id: Makefile,v 29.28 2006/09/18 07:04:42 chongo Exp $
+# @(#) $Revision: 29.29 $
+# @(#) $Id: Makefile,v 29.29 2006/09/18 13:13:25 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -148,7 +148,7 @@ CALC_SHAREDIR= /usr/share/calc
 # ${CALC_INCDIR}	where the calc include files are installed
 # ${CUSTOMCALDIR}	where custom *.cal files are installed
 # ${CUSTOMHELPDIR}	where custom help files are installed
-# ${CUSTOMINCPDIR}	where custom .h files are installed
+# ${CUSTOMINCDIR}	where custom .h files are installed
 # ${SCRIPTDIR}		where calc shell scripts are installed
 #
 # NOTE: The install rule prepends installation paths with ${T}, which
@@ -249,6 +249,20 @@ NO_SHARED=
 #NO_SHARED= -dn
 #NO_SHARED= -non_shared
 
+# On some systems where you are disabling dynamic shared link libs, you may
+# need to pass a special flag to ${CC} and ${LCC} during linking stage.
+#
+#    System type			    NO_SHARED recommendation
+#
+#	IRIX with NO_SHARED= -non_shared    LD_NO_SHARED= -Wl,-rdata_shared
+#	IRIX with NO_SHARED=		    LD_NO_SHARED=
+#	others				    LD_NO_SHARED=
+#
+# If in doubt, use LD_NO_SHARED=
+#
+LD_NO_SHARED=
+#LD_NO_SHARED= -Wl,-rdata_shared
+
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
 #
@@ -275,12 +289,13 @@ MAKE_FILE= Makefile
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
 #
-# If you do not wish to use purify, leave PURIFY commented out.
+# If you do not wish to use purify, set PURIFY to an empty string.
 #
-# If in doubt, leave PURIFY commented out.
+# If in doubt, use PURIFY=
 #
 #PURIFY= purify -logfile=pure.out
 #PURIFY= purify
+PURIFY=
 
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
@@ -411,6 +426,7 @@ MV= mv
 CP= cp
 CO= co
 TRUE= true
+MAKE= make
 
 ##
 #
@@ -517,8 +533,8 @@ depend:
 		>> "skel/custom/$$i"; \
 	    echo '#endif /* '"$$tag"' */' >> "skel/custom/$$i"; \
 	done
-	${Q} (cd ..; ${MAKE} hsrc)
-	${Q} for i in `cd ..; ${MAKE} h_list 2>&1 | \
+	${Q} (cd ..; $(MAKE) hsrc)
+	${Q} for i in `cd ..; $(MAKE) h_list 2>&1 | \
 	    ${SED} -e '/Entering directory/d' \
 		   -e '/Nothing to be done/d' \
 		   -e '/Leaving directory/d'` /dev/null; do \

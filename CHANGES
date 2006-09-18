@@ -13,8 +13,13 @@ The following are the changes from calc version 2.12.1 to date:
     Improved the support for cross-compiled environmens by using
     make symbols for all non-shell commands executed by Makefiles.
 
-    Fixed a problem with the make chk (and make check) awk script
-    which failed under OS X 10.4.7.
+    Fixed a problem with the make chk awk script which failed under
+    OS X 10.4.7.
+
+    Fixed a few minor variables that were not set to default values in
+    lower level Makefiles.
+
+    Fixed a reference to a non-existent make variable in HOWTO.INSTALL.
 
 
 The following are the changes from calc version 2.12.0 to 2.12.0.8:
@@ -6211,8 +6216,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.89 $
-## @(#) $Id: CHANGES,v 29.89 2006/09/18 08:01:36 chongo Exp $
+## @(#) $Revision: 29.90 $
+## @(#) $Id: CHANGES,v 29.90 2006/09/18 13:14:03 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

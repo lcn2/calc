@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.22 $
-# @(#) $Id: Makefile,v 29.22 2006/09/18 07:04:42 chongo Exp $
+# @(#) $Revision: 29.23 $
+# @(#) $Id: Makefile,v 29.23 2006/09/18 13:13:25 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/Makefile,v $
 #
 # Under source code control:	1997/04/19 22:46:49
@@ -35,7 +35,6 @@
 ##############################################################################
 
 # Any .h files that are needed by programs that use libcustcalc.a
-# Don't put ${REQUIRED_H_SRC} files in this list.
 #
 # Put any .h files that you add which might be useful to other
 # programs here.
@@ -43,7 +42,6 @@
 SAMPLE_H_SRC=
 
 # Any .c files that are needed to build libcustcalc.a.
-# Don't put ${REQUIRED_SRC} files in this list.
 #
 # There MUST be a .c in SAMPLE_SRC for every .o in SAMPLE_OBJ.
 #
@@ -52,7 +50,6 @@ SAMPLE_H_SRC=
 SAMPLE_SRC= many_random.c test_random.c
 
 # Any .o files that are needed by program that use libcustcalc.a.
-# Don't put ${REQUIRED_OBJ} files in this list.
 #
 # There MUST be a .c in SAMPLE_SRC for every .o in SAMPLE_OBJ.
 #
@@ -135,7 +132,7 @@ CALC_SHAREDIR= /usr/share/calc
 # ${CALC_INCDIR}	where the calc include files are installed
 # ${CUSTOMCALDIR}	where custom *.cal files are installed
 # ${CUSTOMHELPDIR}	where custom help files are installed
-# ${CUSTOMINCPDIR}	where custom .h files are installed
+# ${CUSTOMINCDIR}	where custom .h files are installed
 # ${SCRIPTDIR}		where calc shell scripts are installed
 #
 # NOTE: The install rule prepends installation paths with ${T}, which
@@ -236,6 +233,20 @@ NO_SHARED=
 #NO_SHARED= -dn
 #NO_SHARED= -non_shared
 
+# On some systems where you are disabling dynamic shared link libs, you may
+# need to pass a special flag to ${CC} and ${LCC} during linking stage.
+#
+#    System type			    NO_SHARED recommendation
+#
+#	IRIX with NO_SHARED= -non_shared    LD_NO_SHARED= -Wl,-rdata_shared
+#	IRIX with NO_SHARED=		    LD_NO_SHARED=
+#	others				    LD_NO_SHARED=
+#
+# If in doubt, use LD_NO_SHARED=
+#
+LD_NO_SHARED=
+#LD_NO_SHARED= -Wl,-rdata_shared
+
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
 #
@@ -262,12 +273,22 @@ MAKE_FILE= Makefile
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
 #
-# If you do not wish to use purify, leave PURIFY commented out.
+# If you do not wish to use purify, set PURIFY to an empty string.
 #
-# If in doubt, leave PURIFY commented out.
+# If in doubt, use PURIFY=
 #
 #PURIFY= purify -logfile=pure.out
 #PURIFY= purify
+PURIFY=
+
+# If you want to use a debugging link library such as a malloc debug link
+# library, or need to add special ld flags after the calc link libraries
+# are included, set ${LD_DEBUG} below.
+#
+# If in doubt, set LD_DEBUG to empty.
+#
+#LD_DEBUG= -lmalloc_cv
+LD_DEBUG=
 
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
@@ -492,8 +513,8 @@ depend:
 		fi; \
 	    fi; \
 	done
-	${Q} (cd ..; ${MAKE} hsrc)
-	${Q} for i in `cd ..; ${MAKE} h_list 2>&1 | \
+	${Q} (cd ..; $(MAKE) hsrc)
+	${Q} for i in `cd ..; $(MAKE) h_list 2>&1 | \
 	    ${SED} -e '/Entering directory/d' \
 		   -e '/Nothing to be done/d' \
 		   -e '/Leaving directory/d'` /dev/null; do \

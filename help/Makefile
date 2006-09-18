@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.33 $
-# @(#) $Id: Makefile,v 29.33 2006/09/18 07:04:42 chongo Exp $
+# @(#) $Revision: 29.34 $
+# @(#) $Id: Makefile,v 29.34 2006/09/18 13:13:25 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -34,7 +34,7 @@
 # required vars
 #
 SHELL= /bin/sh
-MAKE_FILE = Makefile
+MAKE_FILE= Makefile
 
 ####
 # Normally, the upper level makefile will set these values.  We provide
