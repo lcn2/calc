@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.11 $
- * @(#) $Id: c_sysinfo.c,v 29.11 2006/05/22 19:04:45 chongo Exp $
+ * @(#) $Revision: 29.12 $
+ * @(#) $Id: c_sysinfo.c,v 29.12 2006/09/18 06:28:47 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_sysinfo.c,v $
  *
  * Under source code control:	1997/03/09 23:14:40
@@ -85,7 +85,6 @@ static struct infoname sys_info[] = {
     {"DEFAULTSHELL", "default shell to use", DEFAULTSHELL, (FULL)0},
     {"DEV_BITS", "device number size in bits", NULL, (FULL)DEV_BITS},
     {"DISPLAY_DEFAULT", "default digits for float display", NULL, (FULL)DISPLAY_DEFAULT},
-    {"ECHO_PROG", "where the echo command is located", ECHO_PROG, (FULL)0},
     {"EPSILONPREC_DEFAULT", "2^-EPSILON_DEFAULT <= EPSILON_DEFAULT", NULL, (FULL)EPSILONPREC_DEFAULT},
     {"EPSILON_DEFAULT", "allowed error for float calculations", EPSILON_DEFAULT, (FULL)0},
     {"ERRMAX", "default errmax value", NULL, (FULL)ERRMAX},

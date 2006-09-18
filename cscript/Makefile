@@ -1,7 +1,7 @@
 #
 # cscript - makefile for calc shell script files
 #
-# Copyright (C) 1999  Landon Curt Noll
+# Copyright (C) 1999-2006  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.25 $
-# @(#) $Id: Makefile,v 29.25 2006/09/18 00:13:59 chongo Exp $
+# @(#) $Revision: 29.27 $
+# @(#) $Id: Makefile,v 29.27 2006/09/18 07:04:42 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -62,9 +62,9 @@ INCDIR= /usr/include
 # ${LIBDIR}		where calc link library (*.a) files are installed
 # ${CALC_SHAREDIR}	where to install calc help, .cal, startup, config files
 #
-# NOTE: The install rule prepends installation paths with $T, which
-#	by default is empty.  If $T is non-empty, then installation
-#	locations will be relative to the $T directory.
+# NOTE: The install rule prepends installation paths with ${T}, which
+#	by default is empty.  If ${T} is non-empty, then installation
+#	locations will be relative to the ${T} directory.
 #
 # For DJGPP, select:
 #
@@ -99,9 +99,9 @@ CALC_SHAREDIR= /usr/share/calc
 # ${CUSTOMINCPDIR}	where custom .h files are installed
 # ${SCRIPTDIR}		where calc shell scripts are installed
 #
-# NOTE: The install rule prepends installation paths with $T, which
-#	by default is empty.  If $T is non-empty, then installation
-#	locations will be relative to the $T directory.
+# NOTE: The install rule prepends installation paths with ${T}, which
+#	by default is empty.  If ${T} is non-empty, then installation
+#	locations will be relative to the ${T} directory.
 #
 # If in doubt, set:
 #
@@ -121,8 +121,8 @@ SCRIPTDIR= ${BINDIR}/cscript
 
 # T - top level directory under which calc will be installed
 #
-# The calc install is performed under $T, the calc build is
-# performed under /.	The purpose for $T is to allow someone
+# The calc install is performed under ${T}, the calc build is
+# performed under /.	The purpose for ${T} is to allow someone
 # to install calc somewhere other than into the system area.
 #
 # For example, if:
@@ -142,10 +142,10 @@ SCRIPTDIR= ${BINDIR}/cscript
 #     calc help, .cal ...:	/var/tmp/testing/usr/share/calc
 #     ... etc ...		/var/tmp/testing/...
 #
-# If $T is empty, calc is installed under /, which is the same
-# top of tree for which it was built.  If $T is non-empty, then
-# calc is installed under $T, as if one had to chroot under
-# $T for calc to operate.
+# If ${T} is empty, calc is installed under /, which is the same
+# top of tree for which it was built.  If ${T} is non-empty, then
+# calc is installed under ${T}, as if one had to chroot under
+# ${T} for calc to operate.
 #
 # If in doubt, use T=
 #
@@ -166,6 +166,14 @@ SED= sed
 SORT= sort
 FMT= fmt
 CMP= cmp
+MKDIR= mkdir
+RMDIR= rmdir
+RM= rm
+TOUCH= touch
+MV= mv
+CP= cp
+CO= co
+TRUE= true
 
 # The ${SCRIPT} list is the list of calc shell script files (without the .calc
 # extension) which will be installed.
@@ -199,7 +207,7 @@ CALCLIBLIST=
 
 # complete list of targets
 #
-# NOTE: This list MUST be co-ordinated with the ${CSCRIPT_TARGETS} variable
+# NOTE: This list MUST be coordinated with the ${CSCRIPT_TARGETS} variable
 #	in the upper level ../Makefile
 #
 CSCRIPT_TARGETS= ${SCRIPT}
@@ -215,8 +223,8 @@ all: ${TARGETS} .all
 #	a non-empty else clause for every if condition.  *sigh*
 #
 .all:
-	rm -f .all
-	touch .all
+	${RM} -f .all
+	${TOUCH} .all
 
 ##
 #
@@ -257,7 +265,7 @@ detaillist:
 		   -e 's/$$/ \\/' -e '$$s/ \\$$//'
 	${Q} echo
 	${Q} -(echo "xxxxxxxxxxx"; \
-	   for i in ${SCRIPT} /dev/null; do \
+	    for i in ${SCRIPT} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		if [ ! -f RCS/$$i.calc,v ]; then \
 		    echo "WARNING: $$i.calc not under RCS control" 1>&2; \
@@ -283,12 +291,12 @@ detaillist:
 
 depend:
 	${Q} if [ -f Makefile.bak ]; then \
-		echo "Makefile.bak exists, remove or move it out of the way"; \
-		exit 1; \
+	    echo "Makefile.bak exists, remove or move it out of the way"; \
+	    exit 1; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} rm -f makedep.out
+	-${Q} ${RM} -f makedep.out
 	${Q} echo forming cscript dependency list
 	${Q} echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
 		makedep.out
@@ -296,32 +304,32 @@ depend:
 	${Q} for i in ${SCRIPT} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i: $$i.calc"; \
-		echo '	@rm -f $$@'; \
+		echo '	@$${RM} -f $$@'; \
 		echo '	@$${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!$${BINDIR}/calc:" $$?>$$@'; \
 		echo '	@$${CHMOD} +x $$@'; \
 	    fi; \
 	done >> makedep.out
 	${Q} echo sample dependency list formed
 	${Q} echo forming new cscript/Makefile
-	-${Q} rm -f Makefile.bak
-	${Q} mv Makefile Makefile.bak
+	-${Q} ${RM} -f Makefile.bak
+	${Q} ${MV} Makefile Makefile.bak
 	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
 	${Q} echo "" >> Makefile
 	${Q} ${SED} -n '3,$$p' makedep.out >> Makefile
-	-${Q} rm -f makedep.out
+	-${Q} ${RM} -f makedep.out
 	-${Q} if ${CMP} -s Makefile.bak Makefile; then \
-		echo 'sample Makefile was already up to date'; \
-		mv -f Makefile.bak Makefile; \
+	    echo 'sample Makefile was already up to date'; \
+	    ${MV} -f Makefile.bak Makefile; \
 	else \
-		rm -f Makefile.tmp; \
-		mv Makefile Makefile.tmp; \
-		if [ -d RCS ]; then \
-		    co -l Makefile; \
-		fi; \
-		mv Makefile.tmp Makefile; \
-		if [ -d RCS ]; then \
-		    echo new sample Makefile formed, you need to check it in; \
-		fi; \
+	    ${RM} -f Makefile.tmp; \
+	    ${MV} Makefile Makefile.tmp; \
+	    if [ -d RCS ]; then \
+		${CO} -l Makefile; \
+	    fi; \
+	    ${MV} Makefile.tmp Makefile; \
+	    if [ -d RCS ]; then \
+		echo new sample Makefile formed, you need to check it in; \
+	    fi; \
 	fi
 
 ##
@@ -344,52 +352,52 @@ echo_inst_files:
 ##
 
 clean:
-	-rm -f makedep.out
+	-${RM} -f makedep.out
 
 clobber:
-	-rm -f ${TARGETS}
+	-${RM} -f ${TARGETS}
 
 # install everything
 #
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 install: all
-	-${Q} if [ ! -d $T${BINDIR} ]; then \
-	    echo mkdir $T${BINDIR}; \
-	    mkdir $T${BINDIR}; \
-	    if [ ! -d "$T${BINDIR}" ]; then \
-		echo mkdir -p "$T${BINDIR}"; \
-		mkdir -p "$T${BINDIR}"; \
+	-${Q} if [ ! -d ${T}${BINDIR} ]; then \
+	    echo ${MKDIR} ${T}${BINDIR}; \
+	    ${MKDIR} ${T}${BINDIR}; \
+	    if [ ! -d "${T}${BINDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${BINDIR}"; \
+		${MKDIR} -p "${T}${BINDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${BINDIR}; \
-	    ${CHMOD} 0755 $T${BINDIR}; \
+	    echo ${CHMOD} 0755 ${T}${BINDIR}; \
+	    ${CHMOD} 0755 ${T}${BINDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${SCRIPTDIR} ]; then \
-	    echo mkdir $T${SCRIPTDIR}; \
-	    mkdir $T${SCRIPTDIR}; \
-	    if [ ! -d "$T${SCRIPTDIR}" ]; then \
-		echo mkdir -p "$T${SCRIPTDIR}"; \
-		mkdir -p "$T${SCRIPTDIR}"; \
+	-${Q} if [ ! -d ${T}${SCRIPTDIR} ]; then \
+	    echo ${MKDIR} ${T}${SCRIPTDIR}; \
+	    ${MKDIR} ${T}${SCRIPTDIR}; \
+	    if [ ! -d "${T}${SCRIPTDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${SCRIPTDIR}"; \
+		${MKDIR} -p "${T}${SCRIPTDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${SCRIPTDIR}; \
-	    ${CHMOD} 0755 $T${SCRIPTDIR}; \
+	    echo ${CHMOD} 0755 ${T}${SCRIPTDIR}; \
+	    ${CHMOD} 0755 ${T}${SCRIPTDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 	${Q} for i in ${SCRIPT} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if ${CMP} -s $$i $T${SCRIPTDIR}/$$i; then \
-		true; \
+	    if ${CMP} -s $$i ${T}${SCRIPTDIR}/$$i; then \
+		${TRUE}; \
 	    else \
-		rm -f $T${SCRIPTDIR}/$$i.new; \
-		cp -f $$i $T${SCRIPTDIR}/$$i.new; \
-		${CHMOD} 0555 $T${SCRIPTDIR}/$$i.new; \
-		mv -f $T${SCRIPTDIR}/$$i.new $T${SCRIPTDIR}/$$i; \
-		echo "installed $T${SCRIPTDIR}/$$i"; \
+		${RM} -f ${T}${SCRIPTDIR}/$$i.new; \
+		${CP} -f $$i ${T}${SCRIPTDIR}/$$i.new; \
+		${CHMOD} 0555 ${T}${SCRIPTDIR}/$$i.new; \
+		${MV} -f ${T}${SCRIPTDIR}/$$i.new ${T}${SCRIPTDIR}/$$i; \
+		echo "installed ${T}${SCRIPTDIR}/$$i"; \
 	    fi; \
 	done
 
@@ -402,53 +410,53 @@ uninstall:
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if [ -f "$T${SCRIPTDIR}/$$i" ]; then \
-	    	rm -f "$T${SCRIPTDIR}/$$i"; \
-		if [ -f "$T${SCRIPTDIR}/$$i" ]; then \
-		   echo "cannot uninstall $T${SCRIPTDIR}/$$i"; \
+	    if [ -f "${T}${SCRIPTDIR}/$$i" ]; then \
+	    	${RM} -f "${T}${SCRIPTDIR}/$$i"; \
+		if [ -f "${T}${SCRIPTDIR}/$$i" ]; then \
+		   echo "cannot uninstall ${T}${SCRIPTDIR}/$$i"; \
 		else \
-		   echo "uninstalled $T${SCRIPTDIR}/$$i"; \
+		   echo "uninstalled ${T}${SCRIPTDIR}/$$i"; \
 		fi; \
 	    fi; \
 	done
 	-${Q} for i in ${SCRIPTDIR} ${BINDIR}; do \
-	    if [ -d "$T$$i" ]; then \
-		rmdir "$T$$i" 2>/dev/null; \
-		echo "cleaned up $T$$i"; \
+	    if [ -d "${T}$$i" ]; then \
+		${RMDIR} "${T}$$i" 2>/dev/null; \
+		echo "cleaned up ${T}$$i"; \
 	    fi; \
 	done
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 
 4dsphere: 4dsphere.calc
-	@rm -f $@
+	@${RM} -f $@
 	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	@${CHMOD} +x $@
 fproduct: fproduct.calc
-	@rm -f $@
+	@${RM} -f $@
 	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	@${CHMOD} +x $@
 mersenne: mersenne.calc
-	@rm -f $@
+	@${RM} -f $@
 	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	@${CHMOD} +x $@
 piforever: piforever.calc
-	@rm -f $@
+	@${RM} -f $@
 	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	@${CHMOD} +x $@
 plus: plus.calc
-	@rm -f $@
+	@${RM} -f $@
 	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	@${CHMOD} +x $@
 powerterm: powerterm.calc
-	@rm -f $@
+	@${RM} -f $@
 	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	@${CHMOD} +x $@
 simple: simple.calc
-	@rm -f $@
+	@${RM} -f $@
 	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	@${CHMOD} +x $@
 square: square.calc
-	@rm -f $@
+	@${RM} -f $@
 	@${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!${BINDIR}/calc:" $?>$@
 	@${CHMOD} +x $@

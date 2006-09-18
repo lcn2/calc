@@ -2,7 +2,7 @@
 #
 # custom - makefile for calc custom routines
 #
-# Copyright (C) 1999,2004  Landon Curt Noll
+# Copyright (C) 1999-2006  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.26 $
-# @(#) $Id: Makefile,v 29.26 2006/09/18 00:13:59 chongo Exp $
+# @(#) $Revision: 29.28 $
+# @(#) $Id: Makefile,v 29.28 2006/09/18 07:04:42 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -114,9 +114,9 @@ INCDIR= /usr/include
 # ${LIBDIR}		where calc link library (*.a) files are installed
 # ${CALC_SHAREDIR}	where to install calc help, .cal, startup, config files
 #
-# NOTE: The install rule prepends installation paths with $T, which
-#	by default is empty.  If $T is non-empty, then installation
-#	locations will be relative to the $T directory.
+# NOTE: The install rule prepends installation paths with ${T}, which
+#	by default is empty.  If ${T} is non-empty, then installation
+#	locations will be relative to the ${T} directory.
 #
 # For DJGPP, select:
 #
@@ -151,9 +151,9 @@ CALC_SHAREDIR= /usr/share/calc
 # ${CUSTOMINCPDIR}	where custom .h files are installed
 # ${SCRIPTDIR}		where calc shell scripts are installed
 #
-# NOTE: The install rule prepends installation paths with $T, which
-#	by default is empty.  If $T is non-empty, then installation
-#	locations will be relative to the $T directory.
+# NOTE: The install rule prepends installation paths with ${T}, which
+#	by default is empty.  If ${T} is non-empty, then installation
+#	locations will be relative to the ${T} directory.
 #
 # If in doubt, set:
 #
@@ -173,8 +173,8 @@ SCRIPTDIR= ${BINDIR}/cscript
 
 # T - top level directory under which calc will be installed
 #
-# The calc install is performed under $T, the calc build is
-# performed under /.	The purpose for $T is to allow someone
+# The calc install is performed under ${T}, the calc build is
+# performed under /.	The purpose for ${T} is to allow someone
 # to install calc somewhere other than into the system area.
 #
 # For example, if:
@@ -194,10 +194,10 @@ SCRIPTDIR= ${BINDIR}/cscript
 #     calc help, .cal ...:	/var/tmp/testing/usr/share/calc
 #     ... etc ...		/var/tmp/testing/...
 #
-# If $T is empty, calc is installed under /, which is the same
-# top of tree for which it was built.  If $T is non-empty, then
-# calc is installed under $T, as if one had to chroot under
-# $T for calc to operate.
+# If ${T} is empty, calc is installed under /, which is the same
+# top of tree for which it was built.  If ${T} is non-empty, then
+# calc is installed under ${T}, as if one had to chroot under
+# ${T} for calc to operate.
 #
 # If in doubt, use T=
 #
@@ -402,6 +402,15 @@ MAKEDEPEND= makedepend
 CHMOD= chmod
 SORT= sort
 CMP= cmp
+AR= ar
+RM= rm
+TOUCH= touch
+MKDIR= mkdir
+RMDIR= rmdir
+MV= mv
+CP= cp
+CO= co
+TRUE= true
 
 ##
 #
@@ -413,8 +422,8 @@ all: ${TARGETS} ${INSTALL_H_SRC} ${CUSTOM_CALC_FILES} \
 	${CUSTOM_HELP} ${MAKE_FILE} .all
 
 libcustcalc.a: ${CUSTCALC_OBJ} ${MAKE_FILE} ../${MAKE_FILE}
-	-rm -f libcustcalc.a
-	ar qc libcustcalc.a ${CUSTCALC_OBJ}
+	-${RM} -f libcustcalc.a
+	${AR} qc libcustcalc.a ${CUSTCALC_OBJ}
 	${RANLIB} libcustcalc.a
 
 ##
@@ -435,8 +444,8 @@ c_sysinfo.o: c_sysinfo.c ${MAKE_FILE}
 # to determine of we have done all
 #
 .all:
-	rm -f .all
-	touch .all
+	${RM} -f .all
+	${TOUCH} .all
 
 ##
 #
@@ -482,15 +491,15 @@ calcliblist: ${CALCLIBLIST}
 
 depend:
 	${Q} if [ -f Makefile.bak ]; then \
-		echo "Makefile.bak exists, remove or move it out of the way"; \
-		exit 1; \
+	    echo "Makefile.bak exists, remove or move it out of the way"; \
+	    exit 1; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 	${Q} echo forming custom/skel
-	-${Q} rm -rf skel
-	${Q} mkdir skel
-	${Q} mkdir skel/custom
+	-${Q} ${RM} -rf skel
+	${Q} ${MKDIR} skel
+	${Q} ${MKDIR} skel/custom
 	-${Q} for i in ${C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		${SED} -n '/^#[	 ]*include[	 ]*"/p' \
@@ -498,32 +507,32 @@ depend:
 	    fi; \
 	done
 	-${Q} for i in ${H_SRC} /dev/null; do \
-		if [ "$$i" = "/dev/null" ]; then \
-		    continue; \
-		fi; \
-		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
-		echo "#if !defined($$tag)" > "skel/custom/$$i"; \
-		echo "#define $$tag" >> "skel/custom/$$i"; \
-		${SED} -n '/^#[	 ]*include[	 ]*"/p' "$$i" \
-		    >> "skel/custom/$$i"; \
-		echo '#endif /* '"$$tag"' */' >> "skel/custom/$$i"; \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
+	    echo "#if !defined($$tag)" > "skel/custom/$$i"; \
+	    echo "#define $$tag" >> "skel/custom/$$i"; \
+	    ${SED} -n '/^#[	 ]*include[	 ]*"/p' "$$i" \
+		>> "skel/custom/$$i"; \
+	    echo '#endif /* '"$$tag"' */' >> "skel/custom/$$i"; \
 	done
 	${Q} (cd ..; ${MAKE} hsrc)
 	${Q} for i in `cd ..; ${MAKE} h_list 2>&1 | \
-			     ${SED} -e '/Entering directory/d' \
-				    -e '/Nothing to be done/d' \
-				    -e '/Leaving directory/d'` /dev/null; do \
-		if [ "$$i" = "/dev/null" ]; then \
-		    continue; \
-		fi; \
-		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
-		echo "#if !defined($$tag)" > "skel/$$i"; \
-		echo "#define $$tag" >> "skel/$$i"; \
-		${SED} -n '/^#[	 ]*include[	 ]*"/p' "../$$i" \
-		    >> "skel/$$i"; \
-		echo '#endif /* '"$$tag"' */' >> "skel/$$i"; \
+	    ${SED} -e '/Entering directory/d' \
+		   -e '/Nothing to be done/d' \
+		   -e '/Leaving directory/d'` /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
+	    echo "#if !defined($$tag)" > "skel/$$i"; \
+	    echo "#define $$tag" >> "skel/$$i"; \
+	    ${SED} -n '/^#[	 ]*include[	 ]*"/p' "../$$i" \
+		>> "skel/$$i"; \
+	    echo '#endif /* '"$$tag"' */' >> "skel/$$i"; \
 	done
-	-${Q} rm -f skel/custom/makedep.out
+	-${Q} ${RM} -f skel/custom/makedep.out
 	${Q} echo custom/skel formed
 	${Q} echo forming custom dependency list
 	${Q} echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
@@ -536,26 +545,26 @@ depend:
 	done >> skel/custom/makedep.out
 	${Q} echo custom dependency list formed
 	${Q} echo forming new custom/Makefile
-	-${Q} rm -f Makefile.bak
-	${Q} mv Makefile Makefile.bak
+	-${Q} ${RM} -f Makefile.bak
+	${Q} ${MV} Makefile Makefile.bak
 	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
 	${Q} echo "" >> Makefile
 	${Q} ${SED} -n '3,$$p' skel/custom/makedep.out | \
 		LANG=C ${SORT} -u >> Makefile
-	-${Q} rm -rf skel
+	-${Q} ${RM} -rf skel
 	-${Q} if ${CMP} -s Makefile.bak Makefile; then \
-		echo 'custom Makefile was already up to date'; \
-		mv -f Makefile.bak Makefile; \
+	    echo 'custom Makefile was already up to date'; \
+	    ${MV} -f Makefile.bak Makefile; \
 	else \
-		rm -f Makefile.tmp; \
-		mv Makefile Makefile.tmp; \
-		if [ -d RCS ]; then \
-		    co -l Makefile; \
-		fi ;\
-		mv Makefile.tmp Makefile; \
-		if [ -d RCS ]; then \
-		echo 'new custom Makefile formed -- you need to check it in'; \
-		fi; \
+	    ${RM} -f Makefile.tmp; \
+	    ${MV} Makefile Makefile.tmp; \
+	    if [ -d RCS ]; then \
+		${CO} -l Makefile; \
+	    fi ;\
+	    ${MV} Makefile.tmp Makefile; \
+	    if [ -d RCS ]; then \
+	    echo 'new custom Makefile formed -- you need to check it in'; \
+	    fi; \
 	fi
 
 ##
@@ -593,154 +602,154 @@ echo_inst_files:
 ##
 
 clean:
-	-rm -f ${CUSTCALC_OBJ}
+	-${RM} -f ${CUSTCALC_OBJ}
 
 clobber:
-	-rm -f ${TARGETS}
-	rm -f .all Makefile.tmp Makefile.bak
+	-${RM} -f ${TARGETS}
+	${RM} -f .all Makefile.tmp Makefile.bak
 
 # install everything
 #
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 install: all
-	-${Q} if [ ! -d $T${INCDIR} ]; then \
-	    echo mkdir $T${INCDIR}; \
-	    mkdir $T${INCDIR}; \
-	    if [ ! -d "$T${INCDIR}" ]; then \
-		echo mkdir -p "$T${INCDIR}"; \
-		mkdir -p "$T${INCDIR}"; \
+	-${Q} if [ ! -d ${T}${INCDIR} ]; then \
+	    echo ${MKDIR} ${T}${INCDIR}; \
+	    ${MKDIR} ${T}${INCDIR}; \
+	    if [ ! -d "${T}${INCDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${INCDIR}"; \
+		${MKDIR} -p "${T}${INCDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${INCDIR}; \
-	    ${CHMOD} 0755 $T${INCDIR}; \
+	    echo ${CHMOD} 0755 ${T}${INCDIR}; \
+	    ${CHMOD} 0755 ${T}${INCDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${CALC_SHAREDIR} ]; then \
-	    echo mkdir $T${CALC_SHAREDIR}; \
-	    mkdir $T${CALC_SHAREDIR}; \
-	    if [ ! -d "$T${CALC_SHAREDIR}" ]; then \
-		echo mkdir -p "$T${CALC_SHAREDIR}"; \
-		mkdir -p "$T${CALC_SHAREDIR}"; \
+	-${Q} if [ ! -d ${T}${CALC_SHAREDIR} ]; then \
+	    echo ${MKDIR} ${T}${CALC_SHAREDIR}; \
+	    ${MKDIR} ${T}${CALC_SHAREDIR}; \
+	    if [ ! -d "${T}${CALC_SHAREDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
+		${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
-	    ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
+	    echo ${CHMOD} 0755 ${T}${CALC_SHAREDIR}; \
+	    ${CHMOD} 0755 ${T}${CALC_SHAREDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${CALC_INCDIR} ]; then \
-	    echo mkdir $T${CALC_INCDIR}; \
-	    mkdir $T${CALC_INCDIR}; \
-	    if [ ! -d "$T${CALC_INCDIR}" ]; then \
-		echo mkdir -p "$T${CALC_INCDIR}"; \
-		mkdir -p "$T${CALC_INCDIR}"; \
+	-${Q} if [ ! -d ${T}${CALC_INCDIR} ]; then \
+	    echo ${MKDIR} ${T}${CALC_INCDIR}; \
+	    ${MKDIR} ${T}${CALC_INCDIR}; \
+	    if [ ! -d "${T}${CALC_INCDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${CALC_INCDIR}"; \
+		${MKDIR} -p "${T}${CALC_INCDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${CALC_INCDIR}; \
-	    ${CHMOD} 0755 $T${CALC_INCDIR}; \
+	    echo ${CHMOD} 0755 ${T}${CALC_INCDIR}; \
+	    ${CHMOD} 0755 ${T}${CALC_INCDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${HELPDIR} ]; then \
-	    echo mkdir $T${HELPDIR}; \
-	    mkdir $T${HELPDIR}; \
-	    if [ ! -d "$T${HELPDIR}" ]; then \
-		echo mkdir -p "$T${HELPDIR}"; \
-		mkdir -p "$T${HELPDIR}"; \
+	-${Q} if [ ! -d ${T}${HELPDIR} ]; then \
+	    echo ${MKDIR} ${T}${HELPDIR}; \
+	    ${MKDIR} ${T}${HELPDIR}; \
+	    if [ ! -d "${T}${HELPDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${HELPDIR}"; \
+		${MKDIR} -p "${T}${HELPDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${HELPDIR}; \
-	    ${CHMOD} 0755 $T${HELPDIR}; \
+	    echo ${CHMOD} 0755 ${T}${HELPDIR}; \
+	    ${CHMOD} 0755 ${T}${HELPDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${CUSTOMCALDIR} ]; then \
-	    echo mkdir $T${CUSTOMCALDIR}; \
-	    mkdir $T${CUSTOMCALDIR}; \
-	    if [ ! -d "$T${CUSTOMCALDIR}" ]; then \
-		echo mkdir -p "$T${CUSTOMCALDIR}"; \
-		mkdir -p "$T${CUSTOMCALDIR}"; \
+	-${Q} if [ ! -d ${T}${CUSTOMCALDIR} ]; then \
+	    echo ${MKDIR} ${T}${CUSTOMCALDIR}; \
+	    ${MKDIR} ${T}${CUSTOMCALDIR}; \
+	    if [ ! -d "${T}${CUSTOMCALDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${CUSTOMCALDIR}"; \
+		${MKDIR} -p "${T}${CUSTOMCALDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${CUSTOMCALDIR}; \
-	    ${CHMOD} 0755 $T${CUSTOMCALDIR}; \
+	    echo ${CHMOD} 0755 ${T}${CUSTOMCALDIR}; \
+	    ${CHMOD} 0755 ${T}${CUSTOMCALDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${CUSTOMHELPDIR} ]; then \
-	    echo mkdir $T${CUSTOMHELPDIR}; \
-	    mkdir $T${CUSTOMHELPDIR}; \
-	    if [ ! -d "$T${CUSTOMHELPDIR}" ]; then \
-		echo mkdir -p "$T${CUSTOMHELPDIR}"; \
-		mkdir -p "$T${CUSTOMHELPDIR}"; \
+	-${Q} if [ ! -d ${T}${CUSTOMHELPDIR} ]; then \
+	    echo ${MKDIR} ${T}${CUSTOMHELPDIR}; \
+	    ${MKDIR} ${T}${CUSTOMHELPDIR}; \
+	    if [ ! -d "${T}${CUSTOMHELPDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${CUSTOMHELPDIR}"; \
+		${MKDIR} -p "${T}${CUSTOMHELPDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${CUSTOMHELPDIR}; \
-	    ${CHMOD} 0755 $T${CUSTOMHELPDIR}; \
+	    echo ${CHMOD} 0755 ${T}${CUSTOMHELPDIR}; \
+	    ${CHMOD} 0755 ${T}${CUSTOMHELPDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${CUSTOMINCDIR} ]; then \
-	    echo mkdir $T${CUSTOMINCDIR}; \
-	    mkdir $T${CUSTOMINCDIR}; \
-	    if [ ! -d "$T${CUSTOMINCDIR}" ]; then \
-		echo mkdir -p "$T${CUSTOMINCDIR}"; \
-		mkdir -p "$T${CUSTOMINCDIR}"; \
+	-${Q} if [ ! -d ${T}${CUSTOMINCDIR} ]; then \
+	    echo ${MKDIR} ${T}${CUSTOMINCDIR}; \
+	    ${MKDIR} ${T}${CUSTOMINCDIR}; \
+	    if [ ! -d "${T}${CUSTOMINCDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${CUSTOMINCDIR}"; \
+		${MKDIR} -p "${T}${CUSTOMINCDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${CUSTOMINCDIR}; \
-	    ${CHMOD} 0755 $T${CUSTOMINCDIR}; \
+	    echo ${CHMOD} 0755 ${T}${CUSTOMINCDIR}; \
+	    ${CHMOD} 0755 ${T}${CUSTOMINCDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 	-${Q} for i in ${INSTALL_H_SRC} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if ${CMP} -s "$$i" $T${CUSTOMINCDIR}/$$i; then \
-		true; \
+	    if ${CMP} -s "$$i" ${T}${CUSTOMINCDIR}/$$i; then \
+		${TRUE}; \
 	    else \
-		rm -f $T${CUSTOMINCDIR}/$$i.new; \
-		cp -f $$i $T${CUSTOMINCDIR}/$$i.new; \
-		${CHMOD} 0444 $T${CUSTOMINCDIR}/$$i.new; \
-		mv -f $T${CUSTOMINCDIR}/$$i.new $T${CUSTOMINCDIR}/$$i; \
-		echo "installed $T${CUSTOMINCDIR}/$$i"; \
+		${RM} -f ${T}${CUSTOMINCDIR}/$$i.new; \
+		${CP} -f $$i ${T}${CUSTOMINCDIR}/$$i.new; \
+		${CHMOD} 0444 ${T}${CUSTOMINCDIR}/$$i.new; \
+		${MV} -f ${T}${CUSTOMINCDIR}/$$i.new ${T}${CUSTOMINCDIR}/$$i; \
+		echo "installed ${T}${CUSTOMINCDIR}/$$i"; \
 	    fi; \
 	done
 	-${Q} for i in ${CUSTOM_CALC_FILES} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if ${CMP} -s $$i $T${CUSTOMCALDIR}/$$i; then \
-		true; \
+	    if ${CMP} -s $$i ${T}${CUSTOMCALDIR}/$$i; then \
+		${TRUE}; \
 	    else \
-		rm -f $T${CUSTOMCALDIR}/$$i.new; \
-		cp -f $$i $T${CUSTOMCALDIR}/$$i.new; \
-		${CHMOD} 0444 $T${CUSTOMCALDIR}/$$i.new; \
-		mv -f $T${CUSTOMCALDIR}/$$i.new $T${CUSTOMCALDIR}/$$i; \
-		echo "installed $T${CUSTOMCALDIR}/$$i"; \
+		${RM} -f ${T}${CUSTOMCALDIR}/$$i.new; \
+		${CP} -f $$i ${T}${CUSTOMCALDIR}/$$i.new; \
+		${CHMOD} 0444 ${T}${CUSTOMCALDIR}/$$i.new; \
+		${MV} -f ${T}${CUSTOMCALDIR}/$$i.new ${T}${CUSTOMCALDIR}/$$i; \
+		echo "installed ${T}${CUSTOMCALDIR}/$$i"; \
 	    fi; \
 	done
 	-${Q} for i in ${CUSTOM_HELP} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if ${CMP} -s $$i $T${CUSTOMHELPDIR}/$$i; then \
-		true; \
+	    if ${CMP} -s $$i ${T}${CUSTOMHELPDIR}/$$i; then \
+		${TRUE}; \
 	    else \
-		rm -f $T${CUSTOMHELPDIR}/$$i.new; \
-		cp -f $$i $T${CUSTOMHELPDIR}/$$i.new; \
-		${CHMOD} 0444 $T${CUSTOMHELPDIR}/$$i.new; \
-		mv -f $T${CUSTOMHELPDIR}/$$i.new $T${CUSTOMHELPDIR}/$$i; \
-		echo "installed $T${CUSTOMHELPDIR}/$$i"; \
+		${RM} -f ${T}${CUSTOMHELPDIR}/$$i.new; \
+		${CP} -f $$i ${T}${CUSTOMHELPDIR}/$$i.new; \
+		${CHMOD} 0444 ${T}${CUSTOMHELPDIR}/$$i.new; \
+		${MV} -f ${T}${CUSTOMHELPDIR}/$$i.new ${T}${CUSTOMHELPDIR}/$$i; \
+		echo "installed ${T}${CUSTOMHELPDIR}/$$i"; \
 	    fi; \
 	done
 	-${Q} if [ ! -z ${ALLOW_CUSTOM} ]; then \
-	    if ${CMP} -s libcustcalc.a $T${CUSTOMCALDIR}/libcustcalc.a; then \
-		true; \
+	    if ${CMP} -s libcustcalc.a ${T}${CUSTOMCALDIR}/libcustcalc.a; then \
+		${TRUE}; \
 	    else \
-		rm -f $T${CUSTOMCALDIR}/libcustcalc.a.new; \
-		cp -f libcustcalc.a $T${CUSTOMCALDIR}/libcustcalc.a.new; \
-		${CHMOD} 0644 $T${CUSTOMCALDIR}/libcustcalc.a.new; \
-		mv -f $T${CUSTOMCALDIR}/libcustcalc.a.new \
-		      $T${CUSTOMCALDIR}/libcustcalc.a; \
-		${RANLIB} $T${CUSTOMCALDIR}/libcustcalc.a; \
-		echo "installed $T${CUSTOMCALDIR}/libcustcalc.a"; \
+		${RM} -f ${T}${CUSTOMCALDIR}/libcustcalc.a.new; \
+		${CP} -f libcustcalc.a ${T}${CUSTOMCALDIR}/libcustcalc.a.new; \
+		${CHMOD} 0644 ${T}${CUSTOMCALDIR}/libcustcalc.a.new; \
+		${MV} -f ${T}${CUSTOMCALDIR}/libcustcalc.a.new \
+		      ${T}${CUSTOMCALDIR}/libcustcalc.a; \
+		${RANLIB} ${T}${CUSTOMCALDIR}/libcustcalc.a; \
+		echo "installed ${T}${CUSTOMCALDIR}/libcustcalc.a"; \
 	    fi; \
 	fi
 
@@ -749,24 +758,24 @@ install: all
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 uninstall:
-	-${Q} if [ -f "$T${CUSTOMCALDIR}/libcustcalc.a" ]; then \
-	    rm -f "$T${CUSTOMCALDIR}/libcustcalc.a"; \
-	    if [ -f "$T${CUSTOMCALDIR}/libcustcalc.a" ]; then \
-		echo "cannot uninstall $T${CUSTOMCALDIR}/libcustcalc.a"; \
+	-${Q} if [ -f "${T}${CUSTOMCALDIR}/libcustcalc.a" ]; then \
+	    ${RM} -f "${T}${CUSTOMCALDIR}/libcustcalc.a"; \
+	    if [ -f "${T}${CUSTOMCALDIR}/libcustcalc.a" ]; then \
+		echo "cannot uninstall ${T}${CUSTOMCALDIR}/libcustcalc.a"; \
 	    else \
-		echo "uninstalled $T${CUSTOMCALDIR}/libcustcalc.a"; \
+		echo "uninstalled ${T}${CUSTOMCALDIR}/libcustcalc.a"; \
 	    fi; \
 	fi
 	-${Q} for i in ${CUSTOM_HELP} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if [ -f "$T${CUSTOMHELPDIR}/$$i" ]; then \
-	    	rm -f "$T${CUSTOMHELPDIR}/$$i"; \
-		if [ -f "$T${CUSTOMHELPDIR}/$$i" ]; then \
-		   echo "cannot uninstall $T${CUSTOMHELPDIR}/$$i"; \
+	    if [ -f "${T}${CUSTOMHELPDIR}/$$i" ]; then \
+	    	${RM} -f "${T}${CUSTOMHELPDIR}/$$i"; \
+		if [ -f "${T}${CUSTOMHELPDIR}/$$i" ]; then \
+		   echo "cannot uninstall ${T}${CUSTOMHELPDIR}/$$i"; \
 		else \
-		   echo "uninstalled $T${CUSTOMHELPDIR}/$$i"; \
+		   echo "uninstalled ${T}${CUSTOMHELPDIR}/$$i"; \
 		fi; \
 	    fi; \
 	done
@@ -774,12 +783,12 @@ uninstall:
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if [ -f "$T${CUSTOMCALDIR}/$$i" ]; then \
-	    	rm -f "$T${CUSTOMCALDIR}/$$i"; \
-		if [ -f "$T${CUSTOMCALDIR}/$$i" ]; then \
-		   echo "cannot uninstall $T${CUSTOMCALDIR}/$$i"; \
+	    if [ -f "${T}${CUSTOMCALDIR}/$$i" ]; then \
+	    	${RM} -f "${T}${CUSTOMCALDIR}/$$i"; \
+		if [ -f "${T}${CUSTOMCALDIR}/$$i" ]; then \
+		   echo "cannot uninstall ${T}${CUSTOMCALDIR}/$$i"; \
 		else \
-		   echo "uninstalled $T${CUSTOMCALDIR}/$$i"; \
+		   echo "uninstalled ${T}${CUSTOMCALDIR}/$$i"; \
 		fi; \
 	    fi; \
 	done
@@ -787,20 +796,20 @@ uninstall:
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if [ -f "$T${CUSTOMINCDIR}/$$i" ]; then \
-	    	rm -f "$T${CUSTOMINCDIR}/$$i"; \
-		if [ -f "$T${CUSTOMINCDIR}/$$i" ]; then \
-		   echo "cannot uninstall $T${CUSTOMINCDIR}/$$i"; \
+	    if [ -f "${T}${CUSTOMINCDIR}/$$i" ]; then \
+	    	${RM} -f "${T}${CUSTOMINCDIR}/$$i"; \
+		if [ -f "${T}${CUSTOMINCDIR}/$$i" ]; then \
+		   echo "cannot uninstall ${T}${CUSTOMINCDIR}/$$i"; \
 		else \
-		   echo "uninstalled $T${CUSTOMINCDIR}/$$i"; \
+		   echo "uninstalled ${T}${CUSTOMINCDIR}/$$i"; \
 		fi; \
 	    fi; \
 	done
 	-${Q} for i in ${CUSTOMINCDIR} ${CUSTOMHELPDIR} ${CUSTOMCALDIR} \
 		    ${HELPDIR} ${CALC_INCDIR} ${CALC_SHAREDIR} ${INCDIR}; do \
-	    if [ -d "$T$$i" ]; then \
-		rmdir "$T$$i" 2>/dev/null; \
-		echo "cleaned up $T$$i"; \
+	    if [ -d "${T}$$i" ]; then \
+		${RMDIR} "${T}$$i" 2>/dev/null; \
+		echo "cleaned up ${T}$$i"; \
 	    fi; \
 	done
 

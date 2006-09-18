@@ -32,8 +32,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.78 $$
-# @(#) $Id: Makefile.ship,v 29.78 2006/09/18 00:13:59 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.80 $$
+# @(#) $Id: Makefile.ship,v 29.80 2006/09/18 06:57:18 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -580,9 +580,9 @@ INCDIR= /usr/include
 # ${CALC_SHAREDIR}	where to install calc help, .cal, startup, config files
 # ${CALC_INCDIR}	where the calc include files are installed
 #
-# NOTE: The install rule prepends installation paths with $T, which
-#	by default is empty.  If $T is non-empty, then installation
-#	locations will be relative to the $T directory.
+# NOTE: The install rule prepends installation paths with ${T}, which
+#	by default is empty.  If ${T} is non-empty, then installation
+#	locations will be relative to the ${T} directory.
 #
 # For DJGPP, select:
 #
@@ -620,9 +620,9 @@ CALC_INCDIR= ${INCDIR}/calc
 # ${CUSTOMINCPDIR}	where custom .h files are installed
 # ${SCRIPTDIR}		where calc shell scripts are installed
 #
-# NOTE: The install rule prepends installation paths with $T, which
-#	by default is empty.  If $T is non-empty, then installation
-#	locations will be relative to the $T directory.
+# NOTE: The install rule prepends installation paths with ${T}, which
+#	by default is empty.  If ${T} is non-empty, then installation
+#	locations will be relative to the ${T} directory.
 #
 # If in doubt, set:
 #
@@ -641,8 +641,8 @@ SCRIPTDIR= ${BINDIR}/cscript
 
 # T - top level directory under which calc will be installed
 #
-# The calc install is performed under $T, the calc build is
-# performed under /.	The purpose for $T is to allow someone
+# The calc install is performed under ${T}, the calc build is
+# performed under /.	The purpose for ${T} is to allow someone
 # to install calc somewhere other than into the system area.
 #
 # For example, if:
@@ -662,10 +662,10 @@ SCRIPTDIR= ${BINDIR}/cscript
 #     calc help, .cal ...:	/var/tmp/testing/usr/share/calc
 #     ... etc ...		/var/tmp/testing/...
 #
-# If $T is empty, calc is installed under /, which is the same
-# top of tree for which it was built.  If $T is non-empty, then
-# calc is installed under $T, as if one had to chroot under
-# $T for calc to operate.
+# If ${T} is empty, calc is installed under /, which is the same
+# top of tree for which it was built.  If ${T} is non-empty, then
+# calc is installed under ${T}, as if one had to chroot under
+# ${T} for calc to operate.
 #
 # If in doubt, use T=
 #
@@ -1196,14 +1196,17 @@ CMP= cmp
 MKDIR= mkdir
 SPLINT = splint
 SPLINT_OPTS =
+RM= rm
+TOUCH= touch
+RMDIR= rmdir
+CP= cp
+MV= mv
+CO= co
+AR= ar
+TRUE= true
+CAT= cat
 # assume the X11 makedepend tool for the depend rule
 MAKEDEPEND= makedepend
-# echo command location
-#
-# Select ECHO= echo for DJGPP.
-#
-ECHO= /bin/echo
-#ECHO= echo
 
 # Makefile debug
 #
@@ -1358,7 +1361,17 @@ CUSTOM_PASSDOWN= Q="${Q}" \
     MAKEDEPEND=${MAKEDEPEND} \
     SORT=${SORT} \
     LANG=${LANG} \
-    T=$T
+    RM=${RM} \
+    TOUCH=${TOUCH} \
+    MKDIR=${MKDIR} \
+    RMDIR=${RMDIR} \
+    CP=${CP} \
+    MV=${MV} \
+    CO=${CO} \
+    AR=${AR} \
+    TRUE=${TRUE} \
+    CAT=${CAT} \
+    T=${T}
 
 # The complete list of Makefile vars passed down to sample/Makefile.
 #
@@ -1395,7 +1408,17 @@ SAMPLE_PASSDOWN= Q="${Q}" \
     MAKEDEPEND=${MAKEDEPEND} \
     SORT=${SORT} \
     LANG=${LANG} \
-    T=$T
+    RM=${RM} \
+    TOUCH=${TOUCH} \
+    MKDIR=${MKDIR} \
+    RMDIR=${RMDIR} \
+    CP=${CP} \
+    MV=${MV} \
+    CO=${CO} \
+    AR=${AR} \
+    TRUE=${TRUE} \
+    CAT=${CAT} \
+    T=${T}
 
 # The compelte list of Makefile vars passed down to help/Makefile.
 #
@@ -1420,7 +1443,17 @@ HELP_PASSDOWN= Q="${Q}" \
     FMT=${FMT} \
     LANG=${LANG} \
     EXT=${EXT} \
-    T=$T
+    RM=${RM} \
+    TOUCH=${TOUCH} \
+    MKDIR=${MKDIR} \
+    RMDIR=${RMDIR} \
+    CP=${CP} \
+    MV=${MV} \
+    CO=${CO} \
+    AR=${AR} \
+    TRUE=${TRUE} \
+    CAT=${CAT} \
+    T=${T}
 
 # The compelte list of Makefile vars passed down to cal/Makefile.
 #
@@ -1439,7 +1472,17 @@ CAL_PASSDOWN= Q="${Q}" \
     CHMOD=${CHMOD} \
     CMP=${CMP} \
     LANG=${LANG} \
-    T=$T
+    RM=${RM} \
+    TOUCH=${TOUCH} \
+    MKDIR=${MKDIR} \
+    RMDIR=${RMDIR} \
+    CP=${CP} \
+    MV=${MV} \
+    CO=${CO} \
+    AR=${AR} \
+    TRUE=${TRUE} \
+    CAT=${CAT} \
+    T=${T}
 
 # The compelte list of Makefile vars passed down to cscript/Makefile.
 #
@@ -1461,7 +1504,17 @@ CSCRIPT_PASSDOWN= Q="${Q}" \
     SORT=${SORT} \
     CMP=${CMP} \
     LANG=${LANG} \
-    T=$T
+    RM=${RM} \
+    TOUCH=${TOUCH} \
+    MKDIR=${MKDIR} \
+    RMDIR=${RMDIR} \
+    CP=${CP} \
+    MV=${MV} \
+    CO=${CO} \
+    AR=${AR} \
+    TRUE=${TRUE} \
+    CAT=${CAT} \
+    T=${T}
 
 # complete list of .h files found (but not built) in the distribution
 #
@@ -1496,14 +1549,14 @@ CALC_LIBS= libcalc.a custom/libcustcalc.a
 
 # list of sample programs to that need to be built to satisfy sample/.all
 #
-# NOTE: This list MUST be co-ordinated with the ${SAMPLE_TARGETS} variable
+# NOTE: This list MUST be coordinated with the ${SAMPLE_TARGETS} variable
 #	in the sample/Makefile
 #
 SAMPLE_TARGETS= sample/test_random sample/many_random
 
 # list of cscript programs to that need to be built to satisfy cscript/.all
 #
-# NOTE: This list MUST be co-ordinated with the ${CSCRIPT_TARGETS} variable
+# NOTE: This list MUST be coordinated with the ${CSCRIPT_TARGETS} variable
 #	in the cscript/Makefile
 #
 CSCRIPT_TARGETS= cscript/mersenne cscript/piforever cscript/plus \
@@ -1533,13 +1586,13 @@ calc${EXT}: .hsrc ${CALC_LIBS} ${CALCOBJS}
 	      ${READLINE_LIB} -o $@
 
 libcalc.a: ${LIBOBJS} ${MAKE_FILE}
-	-rm -f libcalc.a
-	ar qc libcalc.a ${LIBOBJS}
+	-${RM} -f libcalc.a
+	${AR} qc libcalc.a ${LIBOBJS}
 	${RANLIB} libcalc.a
 	${CHMOD} 0644 libcalc.a
 
 calc.1: calc.man ${MAKE_FILE}
-	-rm -f calc.1
+	-${RM} -f calc.1
 	${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' \
 	       -e 's,$${BINDIR},${BINDIR},g' \
 	       -e 's,$${CALCPATH},${CALCPATH},g' \
@@ -1572,7 +1625,7 @@ func.o: func.c ${MAKE_FILE}
 	${CC} ${CFLAGS} ${ALLOW_CUSTOM} -c func.c
 
 seed.o: seed.c no_implicit.arg ${MAKE_FILE}
-	${CC} ${CFLAGS} `cat no_implicit.arg` -c seed.c
+	${CC} ${CFLAGS} `${CAT} no_implicit.arg` -c seed.c
 
 ##
 #
@@ -1585,7 +1638,7 @@ seed.o: seed.c no_implicit.arg ${MAKE_FILE}
 #
 # NOTE: Due to bogus shells found on one common system we must have
 #	an non-empty else clause for every if condition.  *sigh*
-#	We also place ; true at the end of some commands to avoid
+#	We also place ; ${TRUE} at the end of some commands to avoid
 #	meaningless cosmetic messages by the same system.
 #
 ##
@@ -1593,11 +1646,11 @@ seed.o: seed.c no_implicit.arg ${MAKE_FILE}
 hsrc: ${BUILD_H_SRC} ${BUILD_C_SRC}
 
 .hsrc: ${BUILD_H_SRC} ${BUILD_C_SRC}
-	-${Q} rm -f .hsrc
-	-${Q} touch .hsrc
+	-${Q} ${RM} -f .hsrc
+	-${Q} ${TOUCH} .hsrc
 
 conf.h: ${MAKE_FILE}
-	-${Q} rm -f conf.h
+	-${Q} ${RM} -f conf.h
 	${Q} echo 'forming conf.h'
 	${Q} echo '/*' > conf.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> conf.h
@@ -1633,26 +1686,21 @@ conf.h: ${MAKE_FILE}
 	${Q} echo '#define DEFAULTCALCPAGER "${CALCPAGER}"' >> conf.h
 	${Q} echo '#endif /* DEFAULTCALCPAGER */' >> conf.h
 	${Q} echo '' >> conf.h
-	${Q} echo '/* where the echo command is located */' >> conf.h
-	${Q} echo '#if !defined(ECHO_PROG)' >> conf.h
-	${Q} echo '#define ECHO_PROG "${ECHO}"' >> conf.h
-	${Q} echo '#endif /* ECHO_PROG */' >> conf.h
-	${Q} echo '' >> conf.h
 	${Q} echo '' >> conf.h
 	${Q} echo '#endif /* !__CONF_H__ */' >> conf.h
 	${Q} echo 'conf.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 endian_calc.h: endian${EXT} ${MAKE_FILE}
-	-${Q} rm -f endian_calc.h
+	-${Q} ${RM} -f endian_calc.h
 	${Q} echo 'forming endian_calc.h'
 	${Q} echo '/*' > endian_calc.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> endian_calc.h
@@ -1696,15 +1744,15 @@ endian_calc.h: endian${EXT} ${MAKE_FILE}
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 longbits.h: longbits${EXT} ${MAKE_FILE}
-	-${Q} rm -f longbits.h
+	-${Q} ${RM} -f longbits.h
 	${Q} echo 'forming longbits.h'
 	${Q} echo '/*' > longbits.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> longbits.h
@@ -1723,15 +1771,15 @@ longbits.h: longbits${EXT} ${MAKE_FILE}
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_malloc.h: ${MAKE_FILE}
-	-${Q} rm -f have_malloc.h
+	-${Q} ${RM} -f have_malloc.h
 	${Q} echo 'forming have_malloc.h'
 	${Q} echo '/*' > have_malloc.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_malloc.h
@@ -1761,15 +1809,15 @@ have_malloc.h: ${MAKE_FILE}
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_times.h: ${MAKE_FILE}
-	-${Q} rm -f have_times.h
+	-${Q} ${RM} -f have_times.h
 	${Q} echo 'forming have_times.h'
 	${Q} echo '/*' > have_times.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_times.h
@@ -1832,15 +1880,15 @@ have_times.h: ${MAKE_FILE}
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_stdlib.h: ${MAKE_FILE}
-	-${Q} rm -f have_stdlib.h
+	-${Q} ${RM} -f have_stdlib.h
 	${Q} echo 'forming have_stdlib.h'
 	${Q} echo '/*' > have_stdlib.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_stdlib.h
@@ -1870,15 +1918,15 @@ have_stdlib.h: ${MAKE_FILE}
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_unistd.h: ${MAKE_FILE}
-	-${Q} rm -f have_unistd.h
+	-${Q} ${RM} -f have_unistd.h
 	${Q} echo 'forming have_unistd.h'
 	${Q} echo '/*' > have_unistd.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_unistd.h
@@ -1908,15 +1956,15 @@ have_unistd.h: ${MAKE_FILE}
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_string.h: ${MAKE_FILE}
-	-${Q} rm -f have_string.h
+	-${Q} ${RM} -f have_string.h
 	${Q} echo 'forming have_string.h'
 	${Q} echo '/*' > have_string.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_string.h
@@ -1946,15 +1994,15 @@ have_string.h: ${MAKE_FILE}
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 terminal.h: ${MAKE_FILE}
-	-${Q} rm -f terminal.h
+	-${Q} ${RM} -f terminal.h
 	${Q} echo 'forming terminal.h'
 	${Q} echo '/*' > terminal.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> terminal.h
@@ -2010,15 +2058,15 @@ terminal.h: ${MAKE_FILE}
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_fpos.h: have_fpos.c ${MAKE_FILE}
-	-${Q} rm -f fpos_tmp have_fpos.h
+	-${Q} ${RM} -f fpos_tmp have_fpos.h
 	${Q} echo 'forming have_fpos.h'
 	${Q} echo '/*' > have_fpos.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_fpos.h
@@ -2030,13 +2078,13 @@ have_fpos.h: have_fpos.c ${MAKE_FILE}
 	${Q} echo '' >> have_fpos.h
 	${Q} echo '' >> have_fpos.h
 	${Q} echo '/* do we have fgetpos & fsetpos functions? */' >> have_fpos.h
-	-${Q} rm -f have_fpos.o have_fpos${EXT}
-	-${Q} ${LCC} ${HAVE_FPOS} ${ICFLAGS} have_fpos.c -c >/dev/null 2>&1; true
-	-${Q} ${LCC} ${ILDFLAGS} have_fpos.o -o have_fpos${EXT} >/dev/null 2>&1; true
+	-${Q} ${RM} -f have_fpos.o have_fpos${EXT}
+	-${Q} ${LCC} ${HAVE_FPOS} ${ICFLAGS} have_fpos.c -c >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_fpos.o -o have_fpos${EXT} >/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_fpos${EXT} > fpos_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s fpos_tmp ]; then \
-	    cat fpos_tmp >> have_fpos.h; \
+	    ${CAT} fpos_tmp >> have_fpos.h; \
 	else \
 	    echo '#undef HAVE_FPOS  /* no */' >> have_fpos.h; \
 	    echo '' >> have_fpos.h; \
@@ -2045,20 +2093,20 @@ have_fpos.h: have_fpos.c ${MAKE_FILE}
 	${Q} echo '' >> have_fpos.h
 	${Q} echo '' >> have_fpos.h
 	${Q} echo '#endif /* !__HAVE_FPOS_H__ */' >> have_fpos.h
-	-${Q} rm -f have_fpos${EXT} have_fpos.o fpos_tmp
+	-${Q} ${RM} -f have_fpos${EXT} have_fpos.o fpos_tmp
 	${Q} echo 'have_fpos.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
-	-${Q} rm -f fpos_tmp have_fpos_pos.h
+	-${Q} ${RM} -f fpos_tmp have_fpos_pos.h
 	${Q} echo 'forming have_fpos_pos.h'
 	${Q} echo '/*' > have_fpos_pos.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' \
@@ -2072,15 +2120,15 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
 	${Q} echo '' >> have_fpos_pos.h
 	${Q} echo '/* do we have fgetpos & fsetpos functions? */' \
 		>> have_fpos_pos.h
-	-${Q} rm -f have_fpos_pos.o have_fpos_pos${EXT}
+	-${Q} ${RM} -f have_fpos_pos.o have_fpos_pos${EXT}
 	-${Q} ${LCC} ${HAVE_FPOS} ${HAVE_FPOS_POS} \
-		    ${ICFLAGS} have_fpos_pos.c -c >/dev/null 2>&1; true
+		    ${ICFLAGS} have_fpos_pos.c -c >/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_fpos_pos.o -o have_fpos_pos${EXT} \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_fpos_pos${EXT} > fpos_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s fpos_tmp ]; then \
-	    cat fpos_tmp >> have_fpos_pos.h; \
+	    ${CAT} fpos_tmp >> have_fpos_pos.h; \
 	else \
 	    echo '#undef HAVE_FPOS_POS  /* no */' >> have_fpos_pos.h; \
 	    echo '' >> have_fpos_pos.h; \
@@ -2089,21 +2137,21 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
 	${Q} echo '' >> have_fpos_pos.h
 	${Q} echo '' >> have_fpos_pos.h
 	${Q} echo '#endif /* !__HAVE_FPOS_POS_H__ */' >> have_fpos_pos.h
-	-${Q} rm -f have_fpos_pos${EXT} have_fpos_pos.o fpos_tmp
+	-${Q} ${RM} -f have_fpos_pos${EXT} have_fpos_pos.o fpos_tmp
 	${Q} echo 'have_fpos_pos.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	   endian_calc.h ${MAKE_FILE}
-	-${Q} rm -f fposv_tmp fposval.h
+	-${Q} ${RM} -f fposv_tmp fposval.h
 	${Q} echo 'forming fposval.h'
 	${Q} echo '/*' > fposval.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> fposval.h
@@ -2115,29 +2163,29 @@ fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	${Q} echo '' >> fposval.h
 	${Q} echo '' >> fposval.h
 	${Q} echo '/* what are our file position & size types? */' >> fposval.h
-	-${Q} rm -f fposval.o fposval${EXT}
+	-${Q} ${RM} -f fposval.o fposval${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${FPOS_BITS} ${OFF_T_BITS} \
-		    ${DEV_BITS} ${INODE_BITS} fposval.c -c >/dev/null 2>&1; true
-	-${Q} ${LCC} ${ILDFLAGS} fposval.o -o fposval${EXT} >/dev/null 2>&1; true
+		    ${DEV_BITS} ${INODE_BITS} fposval.c -c >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} fposval.o -o fposval${EXT} >/dev/null 2>&1; ${TRUE}
 	${Q} ${SHELL} -c "./fposval${EXT} fposv_tmp >> fposval.h 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	${Q} echo '' >> fposval.h
 	${Q} echo '' >> fposval.h
 	${Q} echo '#endif /* !__FPOSVAL_H__ */' >> fposval.h
-	-${Q} rm -f fposval${EXT} fposval.o fposv_tmp
+	-${Q} ${RM} -f fposval${EXT} fposval.o fposv_tmp
 	${Q} echo 'fposval.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_const.h: have_const.c ${MAKE_FILE}
-	-${Q} rm -f have_const const_tmp have_const.h
+	-${Q} ${RM} -f have_const const_tmp have_const.h
 	${Q} echo 'forming have_const.h'
 	${Q} echo '/*' > have_const.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_const.h
@@ -2149,14 +2197,14 @@ have_const.h: have_const.c ${MAKE_FILE}
 	${Q} echo '' >> have_const.h
 	${Q} echo '' >> have_const.h
 	${Q} echo '/* do we have or want const? */' >> have_const.h
-	-${Q} rm -f have_const.o have_const${EXT}
+	-${Q} ${RM} -f have_const.o have_const${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_CONST} have_const.c -c \
-		>/dev/null 2>&1; true
-	-${Q} ${LCC} ${ILDFLAGS} have_const.o -o have_const${EXT} >/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_const.o -o have_const${EXT} >/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_const${EXT} > const_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s const_tmp ]; then \
-	    cat const_tmp >> have_const.h; \
+	    ${CAT} const_tmp >> have_const.h; \
 	else \
 	    echo '#undef HAVE_CONST /* no */' >> have_const.h; \
 	    echo '#undef CONST' >> have_const.h; \
@@ -2165,20 +2213,20 @@ have_const.h: have_const.c ${MAKE_FILE}
 	${Q} echo '' >> have_const.h
 	${Q} echo '' >> have_const.h
 	${Q} echo '#endif /* !__HAVE_CONST_H__ */' >> have_const.h
-	-${Q} rm -f have_const${EXT} have_const.o const_tmp
+	-${Q} ${RM} -f have_const${EXT} have_const.o const_tmp
 	${Q} echo 'have_const.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_offscl.h: have_offscl.c ${MAKE_FILE}
-	-${Q} rm -f offscl_tmp have_offscl.h
+	-${Q} ${RM} -f offscl_tmp have_offscl.h
 	${Q} echo 'forming have_offscl.h'
 	${Q} echo '/*' > have_offscl.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_offscl.h
@@ -2189,15 +2237,15 @@ have_offscl.h: have_offscl.c ${MAKE_FILE}
 	${Q} echo '#define __HAVE_OFFSCL_H__' >> have_offscl.h
 	${Q} echo '' >> have_offscl.h
 	${Q} echo '' >> have_offscl.h
-	-${Q} rm -f have_offscl.o have_offscl${EXT}
+	-${Q} ${RM} -f have_offscl.o have_offscl${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_OFFSCL} have_offscl.c -c \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_offscl.o -o have_offscl${EXT} \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_offscl${EXT} > offscl_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s offscl_tmp ]; then \
-	    cat offscl_tmp >> have_offscl.h; \
+	    ${CAT} offscl_tmp >> have_offscl.h; \
 	else \
 	    echo '#undef HAVE_OFF_T_SCALAR /* off_t is not a simple value */' \
 		>> have_offscl.h; \
@@ -2205,20 +2253,20 @@ have_offscl.h: have_offscl.c ${MAKE_FILE}
 	${Q} echo '' >> have_offscl.h
 	${Q} echo '' >> have_offscl.h
 	${Q} echo '#endif /* !__HAVE_OFFSCL_H__ */' >> have_offscl.h
-	-${Q} rm -f have_offscl${EXT} have_offscl.o offscl_tmp
+	-${Q} ${RM} -f have_offscl${EXT} have_offscl.o offscl_tmp
 	${Q} echo 'have_offscl.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_posscl.h: have_posscl.c have_fpos.h ${MAKE_FILE}
-	-${Q} rm -f have_posscl have_posscl.o posscl_tmp have_posscl.h
+	-${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp have_posscl.h
 	${Q} echo 'forming have_posscl.h'
 	${Q} echo '/*' > have_posscl.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_posscl.h
@@ -2229,15 +2277,15 @@ have_posscl.h: have_posscl.c have_fpos.h ${MAKE_FILE}
 	${Q} echo '#define __HAVE_POSSCL_H__' >> have_posscl.h
 	${Q} echo '' >> have_posscl.h
 	${Q} echo '' >> have_posscl.h
-	-${Q} rm -f have_posscl.o have_posscl
+	-${Q} ${RM} -f have_posscl.o have_posscl
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_POSSCL} have_posscl.c -c \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_posscl.o -o have_posscl \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_posscl > posscl_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s posscl_tmp ]; then \
-	    cat posscl_tmp >> have_posscl.h; \
+	    ${CAT} posscl_tmp >> have_posscl.h; \
 	else \
 	    echo '/* FILEPOS is not a simple value */' >> have_posscl.h; \
 	    echo '#undef HAVE_FILEPOS_SCALAR' >> have_posscl.h; \
@@ -2245,20 +2293,20 @@ have_posscl.h: have_posscl.c have_fpos.h ${MAKE_FILE}
 	${Q} echo '' >> have_posscl.h
 	${Q} echo '' >> have_posscl.h
 	${Q} echo '#endif /* !__HAVE_POSSCL_H__ */' >> have_posscl.h
-	-${Q} rm -f have_posscl have_posscl.o posscl_tmp
+	-${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp
 	${Q} echo 'have_posscl.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 align32.h: align32.c longbits.h have_unistd.h ${MAKE_FILE}
-	-${Q} rm -f align32 align32_tmp align32.h
+	-${Q} ${RM} -f align32 align32_tmp align32.h
 	${Q} echo 'forming align32.h'
 	${Q} echo '/*' > align32.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> align32.h
@@ -2274,28 +2322,28 @@ align32.h: align32.c longbits.h have_unistd.h ${MAKE_FILE}
 	    echo '/* forced to align 32 bit values */' >> align32.h; \
 	    echo '#define MUST_ALIGN32' >> align32.h; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 	-${Q} if [ X"-UMUST_ALIGN32" = X${ALIGN32} ]; then \
 	    echo '/* forced to not require 32 bit alignment */' >> align32.h; \
 	    echo '#undef MUST_ALIGN32' >> align32.h; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 	-${Q} if [ X = X${ALIGN32} ]; then \
-	    rm -f align32.o align32${EXT}; \
+	    ${RM} -f align32.o align32${EXT}; \
 	    ${LCC} ${ICFLAGS} ${ALIGN32} align32.c -c >/dev/null 2>&1; \
 	    ${LCC} ${ILDFLAGS} align32.o -o align32${EXT} >/dev/null 2>&1; \
 	    ${SHELL} -c "./align32${EXT} >align32_tmp 2>/dev/null" >/dev/null 2>&1; \
 	    if [ -s align32_tmp ]; then \
-		cat align32_tmp >> align32.h; \
+		${CAT} align32_tmp >> align32.h; \
 	    else \
 		echo '/* guess we must align 32 bit values */' >> align32.h; \
 		echo '#define MUST_ALIGN32' >> align32.h; \
 	    fi; \
-	    rm -f align32${EXT} align32.o align32_tmp core; \
+	    ${RM} -f align32${EXT} align32.o align32_tmp core; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 	${Q} echo '' >> align32.h
 	${Q} echo '' >> align32.h
@@ -2304,15 +2352,15 @@ align32.h: align32.c longbits.h have_unistd.h ${MAKE_FILE}
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_uid_t.h: have_uid_t.c have_unistd.h ${MAKE_FILE}
-	-${Q} rm -f have_uid_t uid_tmp have_uid_t.h
+	-${Q} ${RM} -f have_uid_t uid_tmp have_uid_t.h
 	${Q} echo 'forming have_uid_t.h'
 	${Q} echo '/*' > have_uid_t.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_uid_t.h
@@ -2324,34 +2372,34 @@ have_uid_t.h: have_uid_t.c have_unistd.h ${MAKE_FILE}
 	${Q} echo '' >> have_uid_t.h
 	${Q} echo '' >> have_uid_t.h
 	${Q} echo '/* do we have or want uid_t? */' >> have_uid_t.h
-	-${Q} rm -f have_uid_t.o have_uid_t${EXT}
+	-${Q} ${RM} -f have_uid_t.o have_uid_t${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_UID_T} have_uid_t.c -c \
-		>/dev/null 2>&1; true
-	-${Q} ${LCC} ${ILDFLAGS} have_uid_t.o -o have_uid_t${EXT} >/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_uid_t.o -o have_uid_t${EXT} >/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_uid_t${EXT} > uid_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s uid_tmp ]; then \
-	    cat uid_tmp >> have_uid_t.h; \
+	    ${CAT} uid_tmp >> have_uid_t.h; \
 	else \
 	    echo '#undef HAVE_UID_T /* no */' >> have_uid_t.h; \
 	fi
 	${Q} echo '' >> have_uid_t.h
 	${Q} echo '' >> have_uid_t.h
 	${Q} echo '#endif /* !__HAVE_UID_T_H__ */' >> have_uid_t.h
-	-${Q} rm -f have_uid_t${EXT} have_uid_t.o uid_tmp
+	-${Q} ${RM} -f have_uid_t${EXT} have_uid_t.o uid_tmp
 	${Q} echo 'have_uid_t.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_newstr.h: have_newstr.c ${MAKE_FILE}
-	-${Q} rm -f newstr_tmp have_newstr.h
+	-${Q} ${RM} -f newstr_tmp have_newstr.h
 	${Q} echo 'forming have_newstr.h'
 	${Q} echo '/*' > have_newstr.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_newstr.h
@@ -2364,35 +2412,35 @@ have_newstr.h: have_newstr.c ${MAKE_FILE}
 	${Q} echo '' >> have_newstr.h
 	${Q} echo '/* do we have or want memcpy(), memset() & strchr()? */' \
 							>> have_newstr.h
-	-${Q} rm -f have_newstr.o have_newstr${EXT}
+	-${Q} ${RM} -f have_newstr.o have_newstr${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_NEWSTR} have_newstr.c -c \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_newstr.o -o have_newstr${EXT} \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_newstr${EXT} > newstr_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s newstr_tmp ]; then \
-	    cat newstr_tmp >> have_newstr.h; \
+	    ${CAT} newstr_tmp >> have_newstr.h; \
 	else \
 	    echo '#undef HAVE_NEWSTR /* no */' >> have_newstr.h; \
 	fi
 	${Q} echo '' >> have_newstr.h
 	${Q} echo '' >> have_newstr.h
 	${Q} echo '#endif /* !__HAVE_NEWSTR_H__ */' >> have_newstr.h
-	-${Q} rm -f have_newstr${EXT} have_newstr.o newstr_tmp
+	-${Q} ${RM} -f have_newstr${EXT} have_newstr.o newstr_tmp
 	${Q} echo 'have_newstr.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_memmv.h: have_memmv.c ${MAKE_FILE}
-	-${Q} rm -f have_memmv have_memmv.o memmv_tmp have_memmv.h
+	-${Q} ${RM} -f have_memmv have_memmv.o memmv_tmp have_memmv.h
 	${Q} echo 'forming have_memmv.h'
 	${Q} echo '/*' > have_memmv.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_memmv.h
@@ -2404,35 +2452,35 @@ have_memmv.h: have_memmv.c ${MAKE_FILE}
 	${Q} echo '' >> have_memmv.h
 	${Q} echo '' >> have_memmv.h
 	${Q} echo '/* do we have or want memmove()? */' >> have_memmv.h
-	-${Q} rm -f have_memmv.o have_memmv
+	-${Q} ${RM} -f have_memmv.o have_memmv
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_MEMMOVE} have_memmv.c -c \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_memmv.o -o have_memmv \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_memmv > memmv_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s memmv_tmp ]; then \
-	    cat memmv_tmp >> have_memmv.h; \
+	    ${CAT} memmv_tmp >> have_memmv.h; \
 	else \
 	    echo '#undef HAVE_MEMMOVE /* no */' >> have_memmv.h; \
 	fi
 	${Q} echo '' >> have_memmv.h
 	${Q} echo '' >> have_memmv.h
 	${Q} echo '#endif /* !__HAVE_MEMMV_H__ */' >> have_memmv.h
-	-${Q} rm -f have_memmv have_memmv.o memmv_tmp
+	-${Q} ${RM} -f have_memmv have_memmv.o memmv_tmp
 	${Q} echo 'have_memmv.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_ustat.h: have_ustat.c ${MAKE_FILE}
-	-${Q} rm -f ustat_tmp have_ustat.h
+	-${Q} ${RM} -f ustat_tmp have_ustat.h
 	${Q} echo 'forming have_ustat.h'
 	${Q} echo '/*' > have_ustat.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_ustat.h
@@ -2444,35 +2492,35 @@ have_ustat.h: have_ustat.c ${MAKE_FILE}
 	${Q} echo '' >> have_ustat.h
 	${Q} echo '' >> have_ustat.h
 	${Q} echo '/* do we have or want ustat()? */' >> have_ustat.h
-	-${Q} rm -f have_ustat.o have_ustat${EXT}
+	-${Q} ${RM} -f have_ustat.o have_ustat${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_USTAT} have_ustat.c -c \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_ustat.o -o have_ustat${EXT} \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_ustat${EXT} > ustat_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s ustat_tmp ]; then \
-	    cat ustat_tmp >> have_ustat.h; \
+	    ${CAT} ustat_tmp >> have_ustat.h; \
 	else \
 	    echo '#undef HAVE_USTAT /* no */' >> have_ustat.h; \
 	fi
 	${Q} echo '' >> have_ustat.h
 	${Q} echo '' >> have_ustat.h
 	${Q} echo '#endif /* !__HAVE_USTAT_H__ */' >> have_ustat.h
-	-${Q} rm -f have_ustat${EXT} have_ustat.o ustat_tmp
+	-${Q} ${RM} -f have_ustat${EXT} have_ustat.o ustat_tmp
 	${Q} echo 'have_ustat.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_getsid.h: have_getsid.c ${MAKE_FILE}
-	-${Q} rm -f getsid_tmp have_getsid.h
+	-${Q} ${RM} -f getsid_tmp have_getsid.h
 	${Q} echo 'forming have_getsid.h'
 	${Q} echo '/*' > have_getsid.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_getsid.h
@@ -2484,35 +2532,35 @@ have_getsid.h: have_getsid.c ${MAKE_FILE}
 	${Q} echo '' >> have_getsid.h
 	${Q} echo '' >> have_getsid.h
 	${Q} echo '/* do we have or want getsid()? */' >> have_getsid.h
-	-${Q} rm -f have_getsid.o have_getsid${EXT}
+	-${Q} ${RM} -f have_getsid.o have_getsid${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETSID} have_getsid.c -c \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_getsid.o -o have_getsid \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_getsid${EXT} > getsid_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s getsid_tmp ]; then \
-	    cat getsid_tmp >> have_getsid.h; \
+	    ${CAT} getsid_tmp >> have_getsid.h; \
 	else \
 	    echo '#undef HAVE_GETSID /* no */' >> have_getsid.h; \
 	fi
 	${Q} echo '' >> have_getsid.h
 	${Q} echo '' >> have_getsid.h
 	${Q} echo '#endif /* !__HAVE_GETSID_H__ */' >> have_getsid.h
-	-${Q} rm -f have_getsid${EXT} have_getsid.o getsid_tmp
+	-${Q} ${RM} -f have_getsid${EXT} have_getsid.o getsid_tmp
 	${Q} echo 'have_getsid.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_getpgid.h: have_getpgid.c ${MAKE_FILE}
-	-${Q} rm -f getpgid_tmp have_getpgid.h
+	-${Q} ${RM} -f getpgid_tmp have_getpgid.h
 	${Q} echo 'forming have_getpgid.h'
 	${Q} echo '/*' > have_getpgid.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_getpgid.h
@@ -2524,35 +2572,35 @@ have_getpgid.h: have_getpgid.c ${MAKE_FILE}
 	${Q} echo '' >> have_getpgid.h
 	${Q} echo '' >> have_getpgid.h
 	${Q} echo '/* do we have or want getpgid()? */' >> have_getpgid.h
-	-${Q} rm -f have_getpgid.o have_getpgid${EXT}
+	-${Q} ${RM} -f have_getpgid.o have_getpgid${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETPGID} have_getpgid.c -c \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_getpgid.o -o have_getpgid${EXT} \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_getpgid${EXT} > getpgid_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s getpgid_tmp ]; then \
-	    cat getpgid_tmp >> have_getpgid.h; \
+	    ${CAT} getpgid_tmp >> have_getpgid.h; \
 	else \
 	    echo '#undef HAVE_GETPGID /* no */' >> have_getpgid.h; \
 	fi
 	${Q} echo '' >> have_getpgid.h
 	${Q} echo '' >> have_getpgid.h
 	${Q} echo '#endif /* !__HAVE_GETPGID_H__ */' >> have_getpgid.h
-	-${Q} rm -f have_getpgid${EXT} have_getpgid.o getpgid_tmp
+	-${Q} ${RM} -f have_getpgid${EXT} have_getpgid.o getpgid_tmp
 	${Q} echo 'have_getpgid.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_gettime.h: have_gettime.c ${MAKE_FILE}
-	-${Q} rm -f gettime_tmp have_gettime.h
+	-${Q} ${RM} -f gettime_tmp have_gettime.h
 	${Q} echo 'forming have_gettime.h'
 	${Q} echo '/*' > have_gettime.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_gettime.h
@@ -2564,35 +2612,35 @@ have_gettime.h: have_gettime.c ${MAKE_FILE}
 	${Q} echo '' >> have_gettime.h
 	${Q} echo '' >> have_gettime.h
 	${Q} echo '/* do we have or want clock_gettime()? */' >> have_gettime.h
-	-${Q} rm -f have_gettime.o have_gettime${EXT}
+	-${Q} ${RM} -f have_gettime.o have_gettime${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETTIME} have_gettime.c -c \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_gettime.o -o have_gettime \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_gettime${EXT} > gettime_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s gettime_tmp ]; then \
-	    cat gettime_tmp >> have_gettime.h; \
+	    ${CAT} gettime_tmp >> have_gettime.h; \
 	else \
 	    echo '#undef HAVE_GETTIME /* no */' >> have_gettime.h; \
 	fi
 	${Q} echo '' >> have_gettime.h
 	${Q} echo '' >> have_gettime.h
 	${Q} echo '#endif /* !__HAVE_GETTIME_H__ */' >> have_gettime.h
-	-${Q} rm -f have_gettime${EXT} have_gettime.o gettime_tmp
+	-${Q} ${RM} -f have_gettime${EXT} have_gettime.o gettime_tmp
 	${Q} echo 'have_gettime.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_getprid.h: have_getprid.c ${MAKE_FILE}
-	-${Q} rm -f getprid_tmp have_getprid.h
+	-${Q} ${RM} -f getprid_tmp have_getprid.h
 	${Q} echo 'forming have_getprid.h'
 	${Q} echo '/*' > have_getprid.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_getprid.h
@@ -2604,35 +2652,35 @@ have_getprid.h: have_getprid.c ${MAKE_FILE}
 	${Q} echo '' >> have_getprid.h
 	${Q} echo '' >> have_getprid.h
 	${Q} echo '/* do we have or want getprid()? */' >> have_getprid.h
-	-${Q} rm -f have_getprid.o have_getprid${EXT}
+	-${Q} ${RM} -f have_getprid.o have_getprid${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETPRID} have_getprid.c -c \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_getprid.o -o have_getprid${EXT} \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_getprid${EXT} > getprid_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s getprid_tmp ]; then \
-	    cat getprid_tmp >> have_getprid.h; \
+	    ${CAT} getprid_tmp >> have_getprid.h; \
 	else \
 	    echo '#undef HAVE_GETPRID /* no */' >> have_getprid.h; \
 	fi
 	${Q} echo '' >> have_getprid.h
 	${Q} echo '' >> have_getprid.h
 	${Q} echo '#endif /* !__HAVE_GETPRID_H__ */' >> have_getprid.h
-	-${Q} rm -f have_getprid${EXT} have_getprid.o getprid_tmp
+	-${Q} ${RM} -f have_getprid${EXT} have_getprid.o getprid_tmp
 	${Q} echo 'have_getprid.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_urandom.h: ${MAKE_FILE}
-	-${Q} rm -f have_urandom.h
+	-${Q} ${RM} -f have_urandom.h
 	${Q} echo 'forming have_urandom.h'
 	${Q} echo '/*' > have_urandom.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_urandom.h
@@ -2660,15 +2708,15 @@ have_urandom.h: ${MAKE_FILE}
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_rusage.h: have_rusage.c ${MAKE_FILE}
-	-${Q} rm -f rusage_tmp have_rusage.h
+	-${Q} ${RM} -f rusage_tmp have_rusage.h
 	${Q} echo 'forming have_rusage.h'
 	${Q} echo '/*' > have_rusage.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_rusage.h
@@ -2680,35 +2728,35 @@ have_rusage.h: have_rusage.c ${MAKE_FILE}
 	${Q} echo '' >> have_rusage.h
 	${Q} echo '' >> have_rusage.h
 	${Q} echo '/* do we have or want getrusage()? */' >> have_rusage.h
-	-${Q} rm -f have_rusage.o have_rusage${EXT}
+	-${Q} ${RM} -f have_rusage.o have_rusage${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETRUSAGE} have_rusage.c -c \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_rusage.o -o have_rusage${EXT} \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_rusage${EXT} > rusage_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s rusage_tmp ]; then \
-	    cat rusage_tmp >> have_rusage.h; \
+	    ${CAT} rusage_tmp >> have_rusage.h; \
 	else \
 	    echo '#undef HAVE_GETRUSAGE /* no */' >> have_rusage.h; \
 	fi
 	${Q} echo '' >> have_rusage.h
 	${Q} echo '' >> have_rusage.h
 	${Q} echo '#endif /* !__HAVE_RUSAGE_H__ */' >> have_rusage.h
-	-${Q} rm -f have_rusage${EXT} have_rusage.o rusage_tmp
+	-${Q} ${RM} -f have_rusage${EXT} have_rusage.o rusage_tmp
 	${Q} echo 'have_rusage.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_strdup.h: have_strdup.c ${MAKE_FILE}
-	-${Q} rm -f strdup_tmp have_strdup.h
+	-${Q} ${RM} -f strdup_tmp have_strdup.h
 	${Q} echo 'forming have_strdup.h'
 	${Q} echo '/*' > have_strdup.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_strdup.h
@@ -2720,35 +2768,35 @@ have_strdup.h: have_strdup.c ${MAKE_FILE}
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '/* do we have or want getstrdup()? */' >> have_strdup.h
-	-${Q} rm -f have_strdup.o have_strdup${EXT}
+	-${Q} ${RM} -f have_strdup.o have_strdup${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_STRDUP} have_strdup.c -c \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_strdup.o -o have_strdup \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_strdup${EXT} > strdup_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s strdup_tmp ]; then \
-	    cat strdup_tmp >> have_strdup.h; \
+	    ${CAT} strdup_tmp >> have_strdup.h; \
 	else \
 	    echo '#undef HAVE_STRDUP /* no */' >> have_strdup.h; \
 	fi
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '#endif /* !__HAVE_RUSAGE_H__ */' >> have_strdup.h
-	-${Q} rm -f have_strdup${EXT} have_strdup.o strdup_tmp
+	-${Q} ${RM} -f have_strdup${EXT} have_strdup.o strdup_tmp
 	${Q} echo 'have_strdup.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
-	-${Q} rm -f args.h
+	-${Q} ${RM} -f args.h
 	${Q} echo 'forming args.h'
 	${Q} echo '/*' > args.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> args.h
@@ -2759,27 +2807,27 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
 	${Q} echo '#define __ARGS_H__' >> args.h
 	${Q} echo '' >> args.h
 	${Q} echo '' >> args.h
-	-${Q} rm -f have_stdvs.o have_stdvs${EXT}
+	-${Q} ${RM} -f have_stdvs.o have_stdvs${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_VSPRINTF} have_stdvs.c -c \
-		>/dev/null 2>&1; true
-	-${Q} ${LCC} ${ILDFLAGS} have_stdvs.o -o have_stdvs${EXT} >/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_stdvs.o -o have_stdvs${EXT} >/dev/null 2>&1; ${TRUE}
 	-${Q} if ./have_stdvs${EXT} >>args.h 2>/dev/null; then \
-	    touch have_args.sh; \
+	    ${TOUCH} have_args.sh; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -f have_args.sh ] && [ X"${HAVE_VSPRINTF}" = X ]; then \
-	    rm -f have_stdvs.o have_stdvs${EXT} have_varvs.o have_varvs${EXT}; \
+	    ${RM} -f have_stdvs.o have_stdvs${EXT} have_varvs.o have_varvs${EXT}; \
 	    ${LCC} ${ICFLAGS} -DDONT_HAVE_VSPRINTF have_varvs.c -c \
 		    2>/dev/null; \
 	    ${LCC} ${ILDFLAGS} have_varvs.o -o have_varvs${EXT} 2>/dev/null; \
 	    if ./have_varvs${EXT} >>args.h 2>/dev/null; then \
-		touch have_args.sh; \
+		${TOUCH} have_args.sh; \
 	    else \
-		true; \
+		${TRUE}; \
 	    fi; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 	-${Q} if [ -f have_args.sh ]; then \
 	    echo 'exit 0' > have_args.sh; \
@@ -2793,20 +2841,20 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
 	${Q} echo '' >> args.h
 	${Q} echo '' >> args.h
 	${Q} echo '#endif /* !__ARGS_H__ */' >> args.h
-	-${Q} rm -f have_stdvs.o have_varvs.o have_varvs${EXT} have_args.sh core
+	-${Q} ${RM} -f have_stdvs.o have_varvs.o have_varvs${EXT} have_args.sh core
 	${Q} echo 'args.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 calcerr.h: calcerr.tbl calcerr_h.sed calcerr_h.awk ${MAKE_FILE}
-	-${Q} rm -f calerr.h
+	-${Q} ${RM} -f calerr.h
 	${Q} echo 'forming calcerr.h'
 	${Q} echo '/*' > calcerr.h
 	${Q} echo ' * DO NOT EDIT' >> calcerr.h
@@ -2828,15 +2876,15 @@ calcerr.h: calcerr.tbl calcerr_h.sed calcerr_h.awk ${MAKE_FILE}
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE}
-	-${Q} rm -f calerr.c
+	-${Q} ${RM} -f calerr.c
 	${Q} echo 'forming calcerr.c'
 	${Q} echo '/*' > calcerr.c
 	${Q} echo ' * DO NOT EDIT' >> calcerr.c
@@ -2850,40 +2898,40 @@ calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE}
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 no_implicit.arg: no_implicit.c ${MAKE_FILE}
-	-${Q} rm -f no_implicit${EXT} no_implicit.o no_implicit.arg
+	-${Q} ${RM} -f no_implicit${EXT} no_implicit.o no_implicit.arg
 	${Q} echo 'forming no_implicit.arg'
 	-${Q} if [ X"${HAVE_NO_IMPLICIT}" = X"YES" ]; then \
 	     echo ""'-Wno-implicit' > no_implicit.arg; \
 	elif [ X"${HAVE_NO_IMPLICIT}" = X"NO" ]; then \
-	    touch no_implicit.arg; \
+	    ${TOUCH} no_implicit.arg; \
 	else \
 	    ${LCC} -Wno-implicit ${ICFLAGS} -DHAVE_NO_IMPLICIT \
 		    no_implicit.c -c >/dev/null 2>&1; \
 	    ${LCC} ${ILDFLAGS} no_implicit.o -o no_implicit${EXT} >/dev/null 2>&1; \
 	    ${SHELL} -c "./no_implicit${EXT} > no_implicit.arg 2>/dev/null" \
-	    	>/dev/null 2>&1; true; \
+	    	>/dev/null 2>&1; ${TRUE}; \
 	fi
 	${Q} echo 'no_implicit.arg formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 have_unused.h: have_unused.c ${MAKE_FILE}
-	-${Q} rm -f unused_tmp have_unused.h
+	-${Q} ${RM} -f unused_tmp have_unused.h
 	${Q} echo 'forming have_unused.h'
 	${Q} echo '/*' > have_unused.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_unused.h
@@ -2895,31 +2943,31 @@ have_unused.h: have_unused.c ${MAKE_FILE}
 	${Q} echo '' >> have_unused.h
 	${Q} echo '' >> have_unused.h
 	${Q} echo '/* do we have/want the unused attribute? */' >> have_unused.h
-	-${Q} rm -f have_unused.o have_unused${EXT}
+	-${Q} ${RM} -f have_unused.o have_unused${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_UNUSED} have_unused.c -c \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_unused.o -o have_unused \
-		>/dev/null 2>&1; true
+		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_unused${EXT} > unused_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; true
+	    >/dev/null 2>&1; ${TRUE}
 	-${Q} if [ -s unused_tmp ]; then \
-	    cat unused_tmp >> have_unused.h; \
+	    ${CAT} unused_tmp >> have_unused.h; \
 	else \
 	    echo '#undef HAVE_UNUSED /* no */' >> have_unused.h; \
 	fi
 	${Q} echo '' >> have_unused.h
 	${Q} echo '' >> have_unused.h
 	${Q} echo '#endif /* !__HAVE_UNUSED_H__ */' >> have_unused.h
-	-${Q} rm -f have_unused${EXT} have_unused.o unused_tmp
+	-${Q} ${RM} -f have_unused${EXT} have_unused.o unused_tmp
 	${Q} echo 'have_unused.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
-	    cat $@; \
+	    ${CAT} $@; \
 	    echo '=-=-= end of $@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 ##
@@ -2933,19 +2981,19 @@ have_unused.h: have_unused.c ${MAKE_FILE}
 
 win32_hsrc: ${MAKE_FILE} win32.mkdef
 	${Q} echo 'forming win32 directory'
-	${Q} rm -rf win32
+	${Q} ${RM} -rf win32
 	${Q} ${MKDIR} win32
-	${Q} cp ${UTIL_C_SRC} win32
-	${Q} cp ${UTIL_MISC_SRC} Makefile win32
+	${Q} ${CP} ${UTIL_C_SRC} win32
+	${Q} ${CP} ${UTIL_MISC_SRC} Makefile win32
 	${Q} (cd win32; \
 	 echo "cd win32"; \
-	 echo "$(MAKE) hsrc `cat win32.mkdef` EXT="; \
-	 $(MAKE) hsrc `cat win32.mkdef` EXT=; \
-	 rm -f ${UTIL_C_SRC}; \
-	 rm -f ${UTIL_MISC_SRC}; \
-	 rm -f ${UTIL_OBJS}; \
-	 rm -f ${UTIL_PROGS}; \
-	 rm -f Makefile)
+	 echo "$(MAKE) hsrc `${CAT} win32.mkdef` EXT="; \
+	 $(MAKE) hsrc `${CAT} win32.mkdef` EXT=; \
+	 ${RM} -f ${UTIL_C_SRC}; \
+	 ${RM} -f ${UTIL_MISC_SRC}; \
+	 ${RM} -f ${UTIL_OBJS}; \
+	 ${RM} -f ${UTIL_PROGS}; \
+	 ${RM} -f Makefile)
 	${Q} echo 'win32 directory formed'
 
 
@@ -3030,7 +3078,7 @@ ${SAMPLE_TARGETS}: libcalc.a
 custom/libcustcalc:
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for custom =-=-=-=-='
-	-${Q} rm -f .libcustcalc_error
+	-${Q} ${RM} -f .libcustcalc_error
 	-${Q} NEED="`cd custom; ${MAKE} -n -f Makefile all`"; \
 	 if [ ! -z "$$NEED" ]; then \
 	    echo "	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} all";\
@@ -3041,10 +3089,10 @@ custom/libcustcalc:
 	    fi; \
 	fi
 	${Q} if [ -f .libcustcalc_error ]; then \
-	    echo "custom make failed, code: `cat .libcustcalc_error`" 1>&2; \
-	    exit "`cat .libcustcalc_error`"; \
+	    echo "custom make failed, code: `${CAT} .libcustcalc_error`" 1>&2; \
+	    exit "`${CAT} .libcustcalc_error`"; \
 	else \
-	    true ; \
+	    ${TRUE} ; \
 	fi
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
@@ -3075,7 +3123,7 @@ depend: hsrc
 		echo "Makefile.bak exists, remove or move it out of the way"; \
 		exit 1; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 	${V} echo '=-=-=-=-= Invoking depend rule for custom =-=-=-=-='
 	-${Q} (cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} depend)
@@ -3084,11 +3132,11 @@ depend: hsrc
 	-${Q} (cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} depend)
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q} echo forming skel
-	-${Q} rm -rf skel
+	-${Q} ${RM} -rf skel
 	${Q} ${MKDIR} skel
 	-${Q} for i in ${C_SRC} ${BUILD_C_SRC}; do \
-		${SED} -n '/^#[	 ]*include[	 ]*"/p' "$$i" | \
-		    ${GREP} -v '\.\./getopt/getopt\.h' > "skel/$$i"; \
+	    ${SED} -n '/^#[	 ]*include[	 ]*"/p' "$$i" | \
+	    ${GREP} -v '\.\./getopt/getopt\.h' > "skel/$$i"; \
 	done
 	${Q} ${MKDIR} skel/custom
 	-${Q} for i in ${H_SRC} ${BUILD_H_SRC} custom.h /dev/null; do \
@@ -3101,7 +3149,7 @@ depend: hsrc
 		echo '#endif /* '"$$tag"' */' >> "skel/$$i"; \
 	    fi; \
 	done
-	-${Q} rm -f skel/makedep.out
+	-${Q} ${RM} -f skel/makedep.out
 	${Q} echo skel formed
 	${Q} echo forming dependency list
 	${Q} echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
@@ -3115,17 +3163,17 @@ depend: hsrc
 	done >> skel/makedep.out
 	${Q} echo dependency list formed
 	${Q} echo forming new Makefile
-	-${Q} rm -f Makefile.bak
-	${Q} mv Makefile Makefile.bak
+	-${Q} ${RM} -f Makefile.bak
+	${Q} ${MV} Makefile Makefile.bak
 	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
 	${Q} echo "" >> Makefile
 	${Q} ${SED} -n '3,$$p' skel/makedep.out | LANG=C ${SORT} -u >> Makefile
-	-${Q} rm -rf skel
+	-${Q} ${RM} -rf skel
 	-${Q} if ${CMP} -s Makefile.bak Makefile; then \
-		echo 'Makefile was already up to date'; \
-		mv -f Makefile.bak Makefile; \
+	    echo 'Makefile was already up to date'; \
+	    ${MV} -f Makefile.bak Makefile; \
 	else \
-		echo 'new Makefile formed'; \
+	    echo 'new Makefile formed'; \
 	fi
 
 # generate the list of h files for lower level depend use
@@ -3140,7 +3188,7 @@ h_list:
 # print the calc version
 #
 ver_calc${EXT}: version.c have_unused.h
-	-rm -f $@
+	-${RM} -f $@
 	${LCC} ${ICFLAGS} -DCALC_VER ${ILDFLAGS} version.c -o $@
 
 ##
@@ -3293,15 +3341,25 @@ env:
 	@echo 'AWK=${AWK}'; echo ''
 	@echo 'SED=${SED}'; echo ''
 	@echo 'GREP=${GREP}'; echo ''
+	@echo 'RM=${RM}'; echo ''
+	@echo 'TOUCH=${TOUCH}'; echo ''
+	@echo 'MKDIR=${MKDIR}'; echo ''
+	@echo 'RMDIR=${RMDIR}'; echo ''
+	@echo 'CP=${CP}'; echo ''
+	@echo 'MV=${MV}'; echo ''
+	@echo 'CO=${CO}'; echo ''
+	@echo 'AR=${AR}'; echo ''
+	@echo 'TRUE=${TRUE}'; echo ''
+	@echo 'CAT=${CAT}'; echo ''
 	@echo 'LANG=${LANG}'; echo ''
-	@echo 'T=$T'; echo ''
+	@echo 'T=${T}'; echo ''
 	@echo 'SORT=${SORT}'; echo ''
 	@echo 'TEE=${TEE}'; echo ''
 	@echo 'CTAGS=${CTAGS}'; echo ''
 	@echo 'MAKEDEPEND=${MAKEDEPEND}'; echo ''
 	@echo 'MKDIR_ARG=${MKDIR_ARG}'; echo ''
 	@echo 'EXT=${EXT}'; echo ''
-	@echo 'Q=${Q} '; echo ''
+	@echo 'Q=${Q}'; echo ''
 	@echo 'V=${V}'; echo ''
 	@echo 'LIBSRC=${LIBSRC}'; echo ''
 	@echo 'LIBOBJS=${LIBOBJS}'; echo ''
@@ -3399,7 +3457,7 @@ gdb:
 ##
 
 rpm: clobber rpm.mk calc.spec.in
-	rm -rf /var/tmp/redhat
+	${RM} -rf /var/tmp/redhat
 	${MAKE} -f rpm.mk RHDIR=/var/tmp/redhat TMPDIR=/var/tmp/redhat
 
 
@@ -3414,7 +3472,7 @@ rpm: clobber rpm.mk calc.spec.in
 inst_files: ${MAKE_FILE} help/Makefile cal/Makefile custom/Makefile \
 	   cscript/Makefile ver_calc${EXT}
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	${Q} rm -f inst_files
+	${Q} ${RM} -f inst_files
 	${Q} echo ${BINDIR}/calc${EXT} > inst_files
 	${Q} cd help; LANG=C \
 	    ${MAKE} -f Makefile ${HELP_PASSDOWN} echo_inst_files | \
@@ -3447,7 +3505,7 @@ inst_files: ${MAKE_FILE} help/Makefile cal/Makefile custom/Makefile \
 # the /usr/local directory.
 #
 olduninstall:
-	-rm -f inst_files
+	-${RM} -f inst_files
 	${MAKE} -f Makefile \
 		BINDIR=/usr/local/bin \
 		INCDIR=/usr/local/include \
@@ -3461,14 +3519,14 @@ olduninstall:
 		SCRIPTDIR=/usr/local/bin/cscript \
 		MANDIR=/usr/local/man/man1 \
 		inst_files
-	-${XARGS} rm -f < inst_files
-	-rmdir /usr/local/lib/calc/help/custhelp
-	-rmdir /usr/local/lib/calc/help
-	-rmdir /usr/local/lib/calc/custom
-	-rmdir /usr/local/lib/calc
-	-rmdir /usr/local/include/calc
-	-rmdir /usr/local/bin/cscript
-	-rm -f inst_files
+	-${XARGS} ${RM} -f < inst_files
+	-${RMDIR} /usr/local/lib/calc/help/custhelp
+	-${RMDIR} /usr/local/lib/calc/help
+	-${RMDIR} /usr/local/lib/calc/custom
+	-${RMDIR} /usr/local/lib/calc
+	-${RMDIR} /usr/local/include/calc
+	-${RMDIR} /usr/local/bin/cscript
+	-${RM} -f inst_files
 
 tags: ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} ${MAKE_FILE}
 	-${CTAGS} ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} 2>&1 | \
@@ -3476,13 +3534,13 @@ tags: ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} ${MAKE_FILE}
 
 clean:
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	-rm -f ${LIBOBJS}
-	-rm -f ${CALCOBJS}
-	-rm -f ${UTIL_OBJS}
-	-rm -f ${UTIL_TMP}
-	-rm -f ${UTIL_PROGS}
-	-rm -f .libcustcalc_error
-	-rm -f calc.spec.sed
+	-${RM} -f ${LIBOBJS}
+	-${RM} -f ${CALCOBJS}
+	-${RM} -f ${UTIL_OBJS}
+	-${RM} -f ${UTIL_TMP}
+	-${RM} -f ${UTIL_PROGS}
+	-${RM} -f .libcustcalc_error
+	-${RM} -f calc.spec.sed
 	${Q} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	-cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clean
 	${Q} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
@@ -3499,28 +3557,28 @@ clean:
 	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} clean
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q} echo remove files that are obsolete
-	-rm -rf lib
-	-rm -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
-	-rm -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
+	-${RM} -rf lib
+	-${RM} -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
+	-${RM} -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 clobber:
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	-rm -f ${LIBOBJS}
-	-rm -f ${CALCOBJS}
-	-rm -f ${UTIL_OBJS}
-	-rm -f ${UTIL_TMP}
-	-rm -f ${UTIL_PROGS}
-	-rm -f tags .hsrc hsrc
-	-rm -f ${BUILD_H_SRC}
-	-rm -f ${BUILD_C_SRC}
-	-rm -f calc${EXT} *_pure_*.[oa]
-	-rm -f libcalc.a *.pure_hardlink
-	-rm -f calc.1 *.pure_linkinfo
-	-rm -f *.u
-	-rm -f calc.pixie calc.rf calc.Counts calc.cord
-	-rm -rf gen_h skel Makefile.bak tmp.patch
-	-rm -f calc.spec inst_files rpm.mk.patch tmp
+	-${RM} -f ${LIBOBJS}
+	-${RM} -f ${CALCOBJS}
+	-${RM} -f ${UTIL_OBJS}
+	-${RM} -f ${UTIL_TMP}
+	-${RM} -f ${UTIL_PROGS}
+	-${RM} -f tags .hsrc hsrc
+	-${RM} -f ${BUILD_H_SRC}
+	-${RM} -f ${BUILD_C_SRC}
+	-${RM} -f calc${EXT} *_pure_*.[oa]
+	-${RM} -f libcalc.a *.pure_hardlink
+	-${RM} -f calc.1 *.pure_linkinfo
+	-${RM} -f *.u
+	-${RM} -f calc.pixie calc.rf calc.Counts calc.cord
+	-${RM} -rf gen_h skel Makefile.bak tmp.patch
+	-${RM} -f calc.spec inst_files rpm.mk.patch tmp
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	-cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clobber
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
@@ -3537,10 +3595,10 @@ clobber:
 	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} clobber
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo remove files that are obsolete
-	-rm -rf lib
-	-rm -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
-	-rm -f have_vs.c std_arg.h try_stdarg.c fnvhash.c calc.spec
-	-rm -rf win32
+	-${RM} -rf lib
+	-${RM} -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
+	-${RM} -f have_vs.c std_arg.h try_stdarg.c fnvhash.c calc.spec
+	-${RM} -rf win32
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 # install everything
@@ -3549,126 +3607,126 @@ clobber:
 #
 install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	-${Q} if [ ! -z "$T" ]; then \
-	    if [ ! -d $T ]; then \
-		echo ${MKDIR} ${MKDIR_ARG} $T; \
-		${MKDIR} ${MKDIR_ARG} $T; \
-		echo ${CHMOD} 0755 $T; \
-		${CHMOD} 0755 $T; \
+	-${Q} if [ ! -z "${T}" ]; then \
+	    if [ ! -d ${T} ]; then \
+		echo ${MKDIR} ${MKDIR_ARG} ${T}; \
+		${MKDIR} ${MKDIR_ARG} ${T}; \
+		echo ${CHMOD} 0755 ${T}; \
+		${CHMOD} 0755 ${T}; \
 	    fi; \
 	fi
-	-${Q} if [ ! -d $T${BINDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} $T${BINDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} $T${BINDIR}; \
-	    echo ${CHMOD} 0755 $T${BINDIR}; \
-	    ${CHMOD} 0755 $T${BINDIR}; \
+	-${Q} if [ ! -d ${T}${BINDIR} ]; then \
+	    echo ${MKDIR} ${MKDIR_ARG} ${T}${BINDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} ${T}${BINDIR}; \
+	    echo ${CHMOD} 0755 ${T}${BINDIR}; \
+	    ${CHMOD} 0755 ${T}${BINDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${INCDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} $T${INCDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} $T${INCDIR}; \
-	    echo ${CHMOD} 0755 $T${INCDIR}; \
-	    ${CHMOD} 0755 $T${INCDIR}; \
+	-${Q} if [ ! -d ${T}${INCDIR} ]; then \
+	    echo ${MKDIR} ${MKDIR_ARG} ${T}${INCDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} ${T}${INCDIR}; \
+	    echo ${CHMOD} 0755 ${T}${INCDIR}; \
+	    ${CHMOD} 0755 ${T}${INCDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${LIBDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} $T${LIBDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} $T${LIBDIR}; \
-	    echo ${CHMOD} 0755 $T${LIBDIR}; \
-	    ${CHMOD} 0755 $T${LIBDIR}; \
+	-${Q} if [ ! -d ${T}${LIBDIR} ]; then \
+	    echo ${MKDIR} ${MKDIR_ARG} ${T}${LIBDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} ${T}${LIBDIR}; \
+	    echo ${CHMOD} 0755 ${T}${LIBDIR}; \
+	    ${CHMOD} 0755 ${T}${LIBDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${CALC_SHAREDIR} ]; then \
-	    ${MKDIR} ${MKDIR_ARG} $T${CALC_SHAREDIR}; \
-	    echo ${MKDIR} ${MKDIR_ARG} $T${CALC_SHAREDIR}; \
-	    echo ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
-	    ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
+	-${Q} if [ ! -d ${T}${CALC_SHAREDIR} ]; then \
+	    ${MKDIR} ${MKDIR_ARG} ${T}${CALC_SHAREDIR}; \
+	    echo ${MKDIR} ${MKDIR_ARG} ${T}${CALC_SHAREDIR}; \
+	    echo ${CHMOD} 0755 ${T}${CALC_SHAREDIR}; \
+	    ${CHMOD} 0755 ${T}${CALC_SHAREDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${HELPDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} $T${HELPDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} $T${HELPDIR}; \
-	    echo ${CHMOD} 0755 $T${HELPDIR}; \
-	    ${CHMOD} 0755 $T${HELPDIR}; \
+	-${Q} if [ ! -d ${T}${HELPDIR} ]; then \
+	    echo ${MKDIR} ${MKDIR_ARG} ${T}${HELPDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} ${T}${HELPDIR}; \
+	    echo ${CHMOD} 0755 ${T}${HELPDIR}; \
+	    ${CHMOD} 0755 ${T}${HELPDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${CALC_INCDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} $T${CALC_INCDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} $T${CALC_INCDIR}; \
-	    echo ${CHMOD} 0755 $T${CALC_INCDIR}; \
-	    ${CHMOD} 0755 $T${CALC_INCDIR}; \
+	-${Q} if [ ! -d ${T}${CALC_INCDIR} ]; then \
+	    echo ${MKDIR} ${MKDIR_ARG} ${T}${CALC_INCDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} ${T}${CALC_INCDIR}; \
+	    echo ${CHMOD} 0755 ${T}${CALC_INCDIR}; \
+	    ${CHMOD} 0755 ${T}${CALC_INCDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${CUSTOMCALDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} $T${CUSTOMCALDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} $T${CUSTOMCALDIR}; \
-	    echo ${CHMOD} 0755 $T${CUSTOMCALDIR}; \
-	    ${CHMOD} 0755 $T${CUSTOMCALDIR}; \
+	-${Q} if [ ! -d ${T}${CUSTOMCALDIR} ]; then \
+	    echo ${MKDIR} ${MKDIR_ARG} ${T}${CUSTOMCALDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} ${T}${CUSTOMCALDIR}; \
+	    echo ${CHMOD} 0755 ${T}${CUSTOMCALDIR}; \
+	    ${CHMOD} 0755 ${T}${CUSTOMCALDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${CUSTOMHELPDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} $T${CUSTOMHELPDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} $T${CUSTOMHELPDIR}; \
-	    echo ${CHMOD} 0755 $T${CUSTOMHELPDIR}; \
-	    ${CHMOD} 0755 $T${CUSTOMHELPDIR}; \
+	-${Q} if [ ! -d ${T}${CUSTOMHELPDIR} ]; then \
+	    echo ${MKDIR} ${MKDIR_ARG} ${T}${CUSTOMHELPDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} ${T}${CUSTOMHELPDIR}; \
+	    echo ${CHMOD} 0755 ${T}${CUSTOMHELPDIR}; \
+	    ${CHMOD} 0755 ${T}${CUSTOMHELPDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${CUSTOMINCDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} $T${CUSTOMINCDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} $T${CUSTOMINCDIR}; \
-	    echo ${CHMOD} 0755 $T${CUSTOMINCDIR}; \
-	    ${CHMOD} 0755 $T${CUSTOMINCDIR}; \
+	-${Q} if [ ! -d ${T}${CUSTOMINCDIR} ]; then \
+	    echo ${MKDIR} ${MKDIR_ARG} ${T}${CUSTOMINCDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} ${T}${CUSTOMINCDIR}; \
+	    echo ${CHMOD} 0755 ${T}${CUSTOMINCDIR}; \
+	    ${CHMOD} 0755 ${T}${CUSTOMINCDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${SCRIPTDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} $T${SCRIPTDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} $T${SCRIPTDIR}; \
-	    echo ${CHMOD} 0755 $T${SCRIPTDIR}; \
-	    ${CHMOD} 0755 $T${SCRIPTDIR}; \
+	-${Q} if [ ! -d ${T}${SCRIPTDIR} ]; then \
+	    echo ${MKDIR} ${MKDIR_ARG} ${T}${SCRIPTDIR}; \
+	    ${MKDIR} ${MKDIR_ARG} ${T}${SCRIPTDIR}; \
+	    echo ${CHMOD} 0755 ${T}${SCRIPTDIR}; \
+	    ${CHMOD} 0755 ${T}${SCRIPTDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -z "${MANDIR}" ]; then \
-	    if [ ! -d $T${MANDIR} ]; then \
-		echo ${MKDIR} ${MKDIR_ARG} $T${MANDIR}; \
-		${MKDIR} ${MKDIR_ARG} $T${MANDIR}; \
-		echo ${CHMOD} 0755 $T${MANDIR}; \
-		${CHMOD} 0755 $T${MANDIR}; \
+	    if [ ! -d ${T}${MANDIR} ]; then \
+		echo ${MKDIR} ${MKDIR_ARG} ${T}${MANDIR}; \
+		${MKDIR} ${MKDIR_ARG} ${T}${MANDIR}; \
+		echo ${CHMOD} 0755 ${T}${MANDIR}; \
+		${CHMOD} 0755 ${T}${MANDIR}; \
 	    else \
-		true; \
+		${TRUE}; \
 	    fi; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -z "${CATDIR}" ]; then \
-	    if [ ! -d $T${CATDIR} ]; then \
-		echo ${MKDIR} ${MKDIR_ARG} $T${CATDIR}; \
-		${MKDIR} ${MKDIR_ARG} $T${CATDIR}; \
-		echo ${CHMOD} 0755 $T${CATDIR}; \
-		${CHMOD} 0755 $T${CATDIR}; \
+	    if [ ! -d ${T}${CATDIR} ]; then \
+		echo ${MKDIR} ${MKDIR_ARG} ${T}${CATDIR}; \
+		${MKDIR} ${MKDIR_ARG} ${T}${CATDIR}; \
+		echo ${CHMOD} 0755 ${T}${CATDIR}; \
+		${CHMOD} 0755 ${T}${CATDIR}; \
 	    else \
-		true; \
+		${TRUE}; \
 	    fi; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if ${CMP} -s calc${EXT} $T${BINDIR}/calc${EXT}; then \
-	    true; \
+	-${Q} if ${CMP} -s calc${EXT} ${T}${BINDIR}/calc${EXT}; then \
+	    ${TRUE}; \
 	else \
-	    rm -f $T${BINDIR}/calc.new${EXT}; \
-	    cp -f calc${EXT} $T${BINDIR}/calc.new${EXT}; \
-	    ${CHMOD} 0555 $T${BINDIR}/calc.new${EXT}; \
-	    mv -f $T${BINDIR}/calc.new${EXT} $T${BINDIR}/calc${EXT}; \
-	    echo "installed $T${BINDIR}/calc${EXT}"; \
+	    ${RM} -f ${T}${BINDIR}/calc.new${EXT}; \
+	    ${CP} -f calc${EXT} ${T}${BINDIR}/calc.new${EXT}; \
+	    ${CHMOD} 0555 ${T}${BINDIR}/calc.new${EXT}; \
+	    ${MV} -f ${T}${BINDIR}/calc.new${EXT} ${T}${BINDIR}/calc${EXT}; \
+	    echo "installed ${T}${BINDIR}/calc${EXT}"; \
 	fi
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	${Q} cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} install
@@ -3685,64 +3743,64 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
 	${Q} cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	-${Q} if ${CMP} -s libcalc.a $T${LIBDIR}/libcalc.a; then \
-		true; \
+	-${Q} if ${CMP} -s libcalc.a ${T}${LIBDIR}/libcalc.a; then \
+		${TRUE}; \
 	else \
-		rm -f $T${LIBDIR}/libcalc.a.new; \
-		cp -f libcalc.a $T${LIBDIR}/libcalc.a.new; \
-		mv -f $T${LIBDIR}/libcalc.a.new $T${LIBDIR}/libcalc.a; \
-		${RANLIB} $T${LIBDIR}/libcalc.a; \
-		${CHMOD} 0444 $T${LIBDIR}/libcalc.a; \
-		echo "installed $T${LIBDIR}/libcalc.a"; \
+		${RM} -f ${T}${LIBDIR}/libcalc.a.new; \
+		${CP} -f libcalc.a ${T}${LIBDIR}/libcalc.a.new; \
+		${MV} -f ${T}${LIBDIR}/libcalc.a.new ${T}${LIBDIR}/libcalc.a; \
+		${RANLIB} ${T}${LIBDIR}/libcalc.a; \
+		${CHMOD} 0444 ${T}${LIBDIR}/libcalc.a; \
+		echo "installed ${T}${LIBDIR}/libcalc.a"; \
 	fi
 	-${Q} for i in ${LIB_H_SRC} ${BUILD_H_SRC} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    rm -f tmp; \
+	    ${RM} -f tmp; \
 	    ${SED} -e 's/^\(#[ 	]*include[ 	][ 	]*\)"/\1"calc\//' $$i > tmp; \
-	    if ${CMP} -s tmp $T${CALC_INCDIR}/$$i; then \
-		true; \
+	    if ${CMP} -s tmp ${T}${CALC_INCDIR}/$$i; then \
+		${TRUE}; \
 	    else \
-		rm -f $T${CALC_INCDIR}/$$i.new; \
-		cp -f tmp $T${CALC_INCDIR}/$$i.new; \
-		${CHMOD} 0444 $T${CALC_INCDIR}/$$i.new; \
-		mv -f $T${CALC_INCDIR}/$$i.new $T${CALC_INCDIR}/$$i; \
-		echo "installed $T${CALC_INCDIR}/$$i"; \
+		${RM} -f ${T}${CALC_INCDIR}/$$i.new; \
+		${CP} -f tmp ${T}${CALC_INCDIR}/$$i.new; \
+		${CHMOD} 0444 ${T}${CALC_INCDIR}/$$i.new; \
+		${MV} -f ${T}${CALC_INCDIR}/$$i.new ${T}${CALC_INCDIR}/$$i; \
+		echo "installed ${T}${CALC_INCDIR}/$$i"; \
 	    fi; \
 	done
-	${Q} rm -f tmp
+	${Q} ${RM} -f tmp
 	-${Q} if [ -z "${MANDIR}" ]; then \
-	    true; \
+	    ${TRUE}; \
 	else \
-	    if ${CMP} -s calc.1 $T${MANDIR}/calc.${MANEXT}; then \
-		true; \
+	    if ${CMP} -s calc.1 ${T}${MANDIR}/calc.${MANEXT}; then \
+		${TRUE}; \
 	    else \
-		rm -f $T${MANDIR}/calc.${MANEXT}.new; \
-		cp -f calc.1 $T${MANDIR}/calc.${MANEXT}.new; \
-		${CHMOD} 0444 $T${MANDIR}/calc.${MANEXT}.new; \
-		mv -f $T${MANDIR}/calc.${MANEXT}.new \
-		      $T${MANDIR}/calc.${MANEXT}; \
-		echo "installed $T${MANDIR}/calc.${MANEXT}"; \
+		${RM} -f ${T}${MANDIR}/calc.${MANEXT}.new; \
+		${CP} -f calc.1 ${T}${MANDIR}/calc.${MANEXT}.new; \
+		${CHMOD} 0444 ${T}${MANDIR}/calc.${MANEXT}.new; \
+		${MV} -f ${T}${MANDIR}/calc.${MANEXT}.new \
+		      ${T}${MANDIR}/calc.${MANEXT}; \
+		echo "installed ${T}${MANDIR}/calc.${MANEXT}"; \
 	    fi; \
 	fi
 	-${Q} if [ -z "${CATDIR}" ]; then \
-	    true; \
+	    ${TRUE}; \
 	else \
-	    if ${CMP} -s calc.1 $T${MANDIR}/calc.${MANEXT}; then \
-		true; \
+	    if ${CMP} -s calc.1 ${T}${MANDIR}/calc.${MANEXT}; then \
+		${TRUE}; \
 	    else \
 		if [ -z "${NROFF}" ]; then \
-		    echo "${MANMAKE} calc.1 $T${CATDIR}"; \
-		    ${MANMAKE} calc.1 $T${CATDIR}; \
+		    echo "${MANMAKE} calc.1 ${T}${CATDIR}"; \
+		    ${MANMAKE} calc.1 ${T}${CATDIR}; \
 		else \
-		    rm -f $T${CATDIR}/calc.${CATEXT}.new; \
+		    ${RM} -f ${T}${CATDIR}/calc.${CATEXT}.new; \
 		    ${NROFF} ${NROFF_ARG} calc.1 > \
-			     $T${CATDIR}/calc.${CATEXT}.new; \
-		    ${CHMOD} ${MANMODE} $T${MANDIR}/calc.${CATEXT}.new; \
-		    mv -f $T${CATDIR}/calc.${CATEXT}.new \
-			  $T${CATDIR}/calc.${CATEXT}; \
-		    echo "installed $T${CATDIR}/calc.${CATEXT}"; \
+			     ${T}${CATDIR}/calc.${CATEXT}.new; \
+		    ${CHMOD} ${MANMODE} ${T}${MANDIR}/calc.${CATEXT}.new; \
+		    ${MV} -f ${T}${CATDIR}/calc.${CATEXT}.new \
+			  ${T}${CATDIR}/calc.${CATEXT}; \
+		    echo "installed ${T}${CATDIR}/calc.${CATEXT}"; \
 		fi; \
 	    fi; \
 	fi
@@ -3755,26 +3813,26 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 uninstall:
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	-${Q} if [ -z "${CATDIR}" ]; then \
-	    true; \
+	    ${TRUE}; \
 	else \
-	    if [ -f "$T${CATDIR}/calc.${CATEXT}" ]; then \
-		rm -f "$T${CATDIR}/calc.${CATEXT}"; \
-		if [ -f "$T${CATDIR}/calc.${CATEXT}" ]; then \
-		    echo "cannot uninstall $T${CATDIR}/calc.${CATEXT}"; \
+	    if [ -f "${T}${CATDIR}/calc.${CATEXT}" ]; then \
+		${RM} -f "${T}${CATDIR}/calc.${CATEXT}"; \
+		if [ -f "${T}${CATDIR}/calc.${CATEXT}" ]; then \
+		    echo "cannot uninstall ${T}${CATDIR}/calc.${CATEXT}"; \
 		else \
-		    echo "uninstalled $T${CATDIR}/calc.${CATEXT}"; \
+		    echo "uninstalled ${T}${CATDIR}/calc.${CATEXT}"; \
 		fi; \
 	    fi; \
 	fi
 	-${Q} if [ -z "${MANDIR}" ]; then \
-	    true; \
+	    ${TRUE}; \
 	else \
-	    if [ -f "$T${MANDIR}/calc.${MANEXT}" ]; then \
-		rm -f "$T${MANDIR}/calc.${MANEXT}"; \
-		if [ -f "$T${MANDIR}/calc.${MANEXT}" ]; then \
-		    echo "cannot uninstall $T${MANDIR}/calc.${MANEXT}"; \
+	    if [ -f "${T}${MANDIR}/calc.${MANEXT}" ]; then \
+		${RM} -f "${T}${MANDIR}/calc.${MANEXT}"; \
+		if [ -f "${T}${MANDIR}/calc.${MANEXT}" ]; then \
+		    echo "cannot uninstall ${T}${MANDIR}/calc.${MANEXT}"; \
 		else \
-		    echo "uninstalled $T${MANDIR}/calc.${MANEXT}"; \
+		    echo "uninstalled ${T}${MANDIR}/calc.${MANEXT}"; \
 		fi; \
 	    fi; \
 	fi
@@ -3782,21 +3840,21 @@ uninstall:
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if [ -f "$T${CALC_INCDIR}/$$i" ]; then \
-		rm -f "$T${CALC_INCDIR}/$$i"; \
-		if [ -f "$T${CALC_INCDIR}/$$i" ]; then \
-		    echo "cannot uninstall $T${CALC_INCDIR}/$$i"; \
+	    if [ -f "${T}${CALC_INCDIR}/$$i" ]; then \
+		${RM} -f "${T}${CALC_INCDIR}/$$i"; \
+		if [ -f "${T}${CALC_INCDIR}/$$i" ]; then \
+		    echo "cannot uninstall ${T}${CALC_INCDIR}/$$i"; \
 		else \
-		    echo "uninstalled $T${CALC_INCDIR}/$$i"; \
+		    echo "uninstalled ${T}${CALC_INCDIR}/$$i"; \
 		fi; \
 	    fi; \
 	done
-	-${Q} if [ -f "$T${LIBDIR}/libcalc.a" ]; then \
-	    rm -f "$T${LIBDIR}/libcalc.a"; \
-	    if [ -f "$T${LIBDIR}/libcalc.a" ]; then \
-		echo "cannot uninstall $T${LIBDIR}/libcalc.a"; \
+	-${Q} if [ -f "${T}${LIBDIR}/libcalc.a" ]; then \
+	    ${RM} -f "${T}${LIBDIR}/libcalc.a"; \
+	    if [ -f "${T}${LIBDIR}/libcalc.a" ]; then \
+		echo "cannot uninstall ${T}${LIBDIR}/libcalc.a"; \
 	    else \
-		echo "uninstalled $T${LIBDIR}/libcalc.a"; \
+		echo "uninstalled ${T}${LIBDIR}/libcalc.a"; \
 	    fi; \
 	fi
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
@@ -3814,26 +3872,26 @@ uninstall:
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	${Q} cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} uninstall
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	-${Q} if [ -f "$T${BINDIR}/calc${EXT}" ]; then \
-	    rm -f "$T${BINDIR}/calc${EXT}"; \
-	    if [ -f "$T${BINDIR}/calc${EXT}" ]; then \
-		echo "cannot uninstall $T${BINDIR}/calc${EXT}"; \
+	-${Q} if [ -f "${T}${BINDIR}/calc${EXT}" ]; then \
+	    ${RM} -f "${T}${BINDIR}/calc${EXT}"; \
+	    if [ -f "${T}${BINDIR}/calc${EXT}" ]; then \
+		echo "cannot uninstall ${T}${BINDIR}/calc${EXT}"; \
 	    else \
-		echo "uninstalled $T${BINDIR}/calc${EXT}"; \
+		echo "uninstalled ${T}${BINDIR}/calc${EXT}"; \
 	    fi; \
 	fi
 	-${Q} for i in ${CATDIR} ${MANDIR} ${SCRIPTDIR} \
 		    ${CUSTOMINCDIR} ${CUSTOMHELPDIR} ${CUSTOMCALDIR} \
 		    ${CALC_INCDIR} ${LIBDIR} ${INCDIR} ${BINDIR}; do \
-	    if [ -d "$T$$i" ]; then \
-		rmdir "$T$$i" 2>/dev/null; \
-		echo "cleaned up $T$$i"; \
+	    if [ -d "${T}$$i" ]; then \
+		${RMDIR} "${T}$$i" 2>/dev/null; \
+		echo "cleaned up ${T}$$i"; \
 	    fi; \
 	done
-	-${Q} if [ ! -z "$T" ]; then \
-	    if [ -d "$T" ]; then \
-		rmdir "$T" 2>/dev/null; \
-		echo "cleaned up $T"; \
+	-${Q} if [ ! -z "${T}" ]; then \
+	    if [ -d "${T}" ]; then \
+		${RMDIR} "${T}" 2>/dev/null; \
+		echo "cleaned up ${T}"; \
 	    fi; \
 	 fi
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='

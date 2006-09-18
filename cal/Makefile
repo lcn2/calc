@@ -2,7 +2,7 @@
 #
 # cal - makefile for calc standard resource files
 #
-# Copyright (C) 1999  Landon Curt Noll
+# Copyright (C) 1999-2006  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.22 $
-# @(#) $Id: Makefile,v 29.22 2006/09/18 00:08:42 chongo Exp $
+# @(#) $Revision: 29.23 $
+# @(#) $Id: Makefile,v 29.23 2006/09/18 06:27:39 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
@@ -62,9 +62,9 @@ INCDIR= /usr/include
 # ${LIBDIR}		where calc link library (*.a) files are installed
 # ${CALC_SHAREDIR}	where to install calc help, .cal, startup, config files
 #
-# NOTE: The install rule prepends installation paths with $T, which
-#	by default is empty.  If $T is non-empty, then installation
-#	locations will be relative to the $T directory.
+# NOTE: The install rule prepends installation paths with ${T}, which
+#	by default is empty.  If ${T} is non-empty, then installation
+#	locations will be relative to the ${T} directory.
 #
 # For DJGPP, select:
 #
@@ -99,9 +99,9 @@ CALC_SHAREDIR= /usr/share/calc
 # ${CUSTOMINCPDIR}	where custom .h files are installed
 # ${SCRIPTDIR}		where calc shell scripts are installed
 #
-# NOTE: The install rule prepends installation paths with $T, which
-#	by default is empty.  If $T is non-empty, then installation
-#	locations will be relative to the $T directory.
+# NOTE: The install rule prepends installation paths with ${T}, which
+#	by default is empty.  If ${T} is non-empty, then installation
+#	locations will be relative to the ${T} directory.
 #
 # If in doubt, set:
 #
@@ -121,8 +121,8 @@ SCRIPTDIR= ${BINDIR}/cscript
 
 # T - top level directory under which calc will be installed
 #
-# The calc install is performed under $T, the calc build is
-# performed under /.	The purpose for $T is to allow someone
+# The calc install is performed under ${T}, the calc build is
+# performed under /.	The purpose for ${T} is to allow someone
 # to install calc somewhere other than into the system area.
 #
 # For example, if:
@@ -142,10 +142,10 @@ SCRIPTDIR= ${BINDIR}/cscript
 #     calc help, .cal ...:	/var/tmp/testing/usr/share/calc
 #     ... etc ...		/var/tmp/testing/...
 #
-# If $T is empty, calc is installed under /, which is the same
-# top of tree for which it was built.  If $T is non-empty, then
-# calc is installed under $T, as if one had to chroot under
-# $T for calc to operate.
+# If ${T} is empty, calc is installed under /, which is the same
+# top of tree for which it was built.  If ${T} is non-empty, then
+# calc is installed under ${T}, as if one had to chroot under
+# ${T} for calc to operate.
 #
 # If in doubt, use T=
 #
@@ -163,6 +163,13 @@ Q=@
 #
 CHMOD= chmod
 CMP= cmp
+RM= rm
+MKDIR= mkdir
+RMDIR= rmdir
+CP= cp
+MV= mv
+CO= co
+TRUE= true
 
 # The calc files to install
 #
@@ -192,8 +199,8 @@ all: ${CALC_FILES} ${MAKE_FILE} .all
 # used by the upper level Makefile to determine of we have done all
 #
 .all:
-	rm -f .all
-	touch .all
+	${RM} -f .all
+	${TOUCH} .all
 
 ##
 #
@@ -247,37 +254,37 @@ echo_inst_files:
 clean:
 
 clobber:
-	rm -f .all
+	${RM} -f .all
 
 # install everything
 #
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 install: all
-	-${Q} if [ ! -d $T${CALC_SHAREDIR} ]; then \
-	    echo mkdir $T${CALC_SHAREDIR}; \
-	    mkdir $T${CALC_SHAREDIR}; \
-	    if [ ! -d "$T${CALC_SHAREDIR}" ]; then \
-		echo mkdir -p "$T${CALC_SHAREDIR}"; \
-		mkdir -p "$T${CALC_SHAREDIR}"; \
+	-${Q} if [ ! -d ${T}${CALC_SHAREDIR} ]; then \
+	    echo ${MKDIR} ${T}${CALC_SHAREDIR}; \
+	    ${MKDIR} ${T}${CALC_SHAREDIR}; \
+	    if [ ! -d "${T}${CALC_SHAREDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
+		${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
-	    ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
+	    echo ${CHMOD} 0755 ${T}${CALC_SHAREDIR}; \
+	    ${CHMOD} 0755 ${T}${CALC_SHAREDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 	${Q} for i in ${CALC_FILES} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if ${CMP} -s $$i $T${CALC_SHAREDIR}/$$i; then \
-		true; \
+	    if ${CMP} -s $$i ${T}${CALC_SHAREDIR}/$$i; then \
+		${TRUE}; \
 	    else \
-		rm -f $T${CALC_SHAREDIR}/$$i.new; \
-		cp -f $$i $T${CALC_SHAREDIR}/$$i.new; \
-		${CHMOD} 0444 $T${CALC_SHAREDIR}/$$i.new; \
-		mv -f $T${CALC_SHAREDIR}/$$i.new $T${CALC_SHAREDIR}/$$i; \
-		echo "installed $T${CALC_SHAREDIR}/$$i"; \
+		${RM} -f ${T}${CALC_SHAREDIR}/$$i.new; \
+		${CP} -f $$i ${T}${CALC_SHAREDIR}/$$i.new; \
+		${CHMOD} 0444 ${T}${CALC_SHAREDIR}/$$i.new; \
+		${MV} -f ${T}${CALC_SHAREDIR}/$$i.new ${T}${CALC_SHAREDIR}/$$i; \
+		echo "installed ${T}${CALC_SHAREDIR}/$$i"; \
 	    fi; \
 	done
 
@@ -290,18 +297,18 @@ uninstall:
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if [ -f "$T${CALC_SHAREDIR}/$$i" ]; then \
-	    	rm -f "$T${CALC_SHAREDIR}/$$i"; \
-		if [ -f "$T${CALC_SHAREDIR}/$$i" ]; then \
-		   echo "cannot uninstall $T${CALC_SHAREDIR}/$$i"; \
+	    if [ -f "${T}${CALC_SHAREDIR}/$$i" ]; then \
+	    	${RM} -f "${T}${CALC_SHAREDIR}/$$i"; \
+		if [ -f "${T}${CALC_SHAREDIR}/$$i" ]; then \
+		   echo "cannot uninstall ${T}${CALC_SHAREDIR}/$$i"; \
 		else \
-		   echo "uninstalled $T${CALC_SHAREDIR}/$$i"; \
+		   echo "uninstalled ${T}${CALC_SHAREDIR}/$$i"; \
 		fi; \
 	    fi; \
 	done
 	-${Q} for i in ${CALC_SHAREDIR}; do \
-	    if [ -d "$T$$i" ]; then \
-		rmdir "$T$$i" 2>/dev/null; \
-		echo "cleaned up $T$$i"; \
+	    if [ -d "${T}$$i" ]; then \
+		${RMDIR} "${T}$$i" 2>/dev/null; \
+		echo "cleaned up ${T}$$i"; \
 	    fi; \
 	done

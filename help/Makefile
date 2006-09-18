@@ -2,7 +2,7 @@
 #
 # help - makefile for calc help files
 #
-# Copyright (C) 1999-2002  Landon Curt Noll
+# Copyright (C) 1999-2006  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.31 $
-# @(#) $Id: Makefile,v 29.31 2006/09/18 00:13:59 chongo Exp $
+# @(#) $Revision: 29.33 $
+# @(#) $Id: Makefile,v 29.33 2006/09/18 07:04:42 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -62,9 +62,9 @@ INCDIR= /usr/include
 # ${LIBDIR}		where calc link library (*.a) files are installed
 # ${CALC_SHAREDIR}	where to install calc help, .cal, startup, config files
 #
-# NOTE: The install rule prepends installation paths with $T, which
-#	by default is empty.  If $T is non-empty, then installation
-#	locations will be relative to the $T directory.
+# NOTE: The install rule prepends installation paths with ${T}, which
+#	by default is empty.  If ${T} is non-empty, then installation
+#	locations will be relative to the ${T} directory.
 #
 # For DJGPP, select:
 #
@@ -99,9 +99,9 @@ CALC_SHAREDIR= /usr/share/calc
 # ${CUSTOMINCPDIR}	where custom .h files are installed
 # ${SCRIPTDIR}		where calc shell scripts are installed
 #
-# NOTE: The install rule prepends installation paths with $T, which
-#	by default is empty.  If $T is non-empty, then installation
-#	locations will be relative to the $T directory.
+# NOTE: The install rule prepends installation paths with ${T}, which
+#	by default is empty.  If ${T} is non-empty, then installation
+#	locations will be relative to the ${T} directory.
 #
 # If in doubt, set:
 #
@@ -121,8 +121,8 @@ SCRIPTDIR= ${BINDIR}/cscript
 
 # T - top level directory under which calc will be installed
 #
-# The calc install is performed under $T, the calc build is
-# performed under /.	The purpose for $T is to allow someone
+# The calc install is performed under ${T}, the calc build is
+# performed under /.	The purpose for ${T} is to allow someone
 # to install calc somewhere other than into the system area.
 #
 # For example, if:
@@ -142,10 +142,10 @@ SCRIPTDIR= ${BINDIR}/cscript
 #     calc help, .cal ...:	/var/tmp/testing/usr/share/calc
 #     ... etc ...		/var/tmp/testing/...
 #
-# If $T is empty, calc is installed under /, which is the same
-# top of tree for which it was built.  If $T is non-empty, then
-# calc is installed under $T, as if one had to chroot under
-# $T for calc to operate.
+# If ${T} is empty, calc is installed under /, which is the same
+# top of tree for which it was built.  If ${T} is non-empty, then
+# calc is installed under ${T}, as if one had to chroot under
+# ${T} for calc to operate.
 #
 # If in doubt, use T=
 #
@@ -169,6 +169,14 @@ SED= sed
 SORT= sort
 FMT= fmt
 CMP= cmp
+CP= cm
+MV= mv
+TRUE= true
+RM= rm
+MKDIR= mkdir
+RMDIR= rmdir
+TOUCH= touch
+CAT= cat
 
 # Some out of date operating systems require / want an executable to
 # end with a certain file extension.  Some compile systems such as
@@ -269,7 +277,7 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
 	appr arg argv arrow asec asech asin asinh assign atan atan2 atanh \
 	avg base base2 bernoulli bit blk blkcpy blkfree blocks bround \
 	btrunc calc_tty calclevel catalan ceil cfappr cfsim char cmdbuf \
-	cmp comb conj cos cosh cot coth count cp csc csch ctime delete den \
+	cmp comb conj cos cosh cot coth count ${CP} csc csch ctime delete den \
 	dereference det digit digits display dp epsilon errcount errmax \
 	errno error estr euler eval exp fact factor fclose fcnt feof ferror \
 	fflush fgetc fgetfield fgetfile fgetline fgets fgetstr fib files \
@@ -287,7 +295,7 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
 	param perm pfact pi pix places pmod polar poly pop popcnt power \
 	prevcand prevprime printf prompt protect ptest push putenv quo \
 	quomod rand randbit random randombit randperm rcin rcmul rcout \
-	rcpow rcsq re remove reverse rewind rm root round rsearch runtime \
+	rcpow rcsq re remove reverse rewind ${RM} root round rsearch runtime \
 	saveval scale scan scanf search sec sech seed segment select sgn \
 	sha sha1 sin sinh size sizeof sleep sort sqrt srand srandom ssq \
 	str strcat strcmp strcpy strerror strlen strncmp strncpy strpos \
@@ -325,175 +333,175 @@ all: ${FULL_HELP_FILES} full ${DETAIL_HELP} ${DETAIL_CLONE} \
 #	an non-emoty else clause for every if condition.  *sigh*
 #
 .all:
-	rm -f .all
-	touch .all
+	${RM} -f .all
+	${TOUCH} .all
 
 bindings: ../cal/bindings
-	rm -f $@
-	cp ../cal/bindings $@
+	${RM} -f $@
+	${CP} ../cal/bindings $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 resource: ../cal/README
-	rm -f $@
-	cp ../cal/README $@
+	${RM} -f $@
+	${CP} ../cal/README $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 changes: ../CHANGES
-	rm -f $@
-	cp ../CHANGES $@
+	${RM} -f $@
+	${CP} ../CHANGES $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 libcalc: ../LIBRARY
-	rm -f $@
+	${RM} -f $@
 	${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' \
 	       -e 's:$${CALC_INCDIR}:${CALC_INCDIR}:g' < ../LIBRARY > $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 bugs: ../BUGS
-	rm -f $@
-	cp ../BUGS $@
+	${RM} -f $@
+	${CP} ../BUGS $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 errorcodes: ../calcerr.h errorcodes.hdr errorcodes.sed
-	rm -f $@
-	cat errorcodes.hdr > $@
+	${RM} -f $@
+	${CAT} errorcodes.hdr > $@
 	${SED} -n -f errorcodes.sed < ../calcerr.h >> $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 calc: usage
-	rm -f $@
-	cp usage $@
+	${RM} -f $@
+	${CP} usage $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 custom_cal: ../custom/CUSTOM_CAL
-	rm -f $@
-	cp ../custom/CUSTOM_CAL $@
+	${RM} -f $@
+	${CP} ../custom/CUSTOM_CAL $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 new_custom: ../custom/HOW_TO_ADD
-	rm -f $@
-	cp ../custom/HOW_TO_ADD $@
+	${RM} -f $@
+	${CP} ../custom/HOW_TO_ADD $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 copy: blkcpy
-	rm -f $@
-	cp blkcpy $@
+	${RM} -f $@
+	${CP} blkcpy $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 COPYING: ../COPYING
-	rm -f $@
-	cp ../COPYING $@
+	${RM} -f $@
+	${CP} ../COPYING $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 COPYING-LGPL: ../COPYING-LGPL
-	rm -f $@
-	cp ../COPYING-LGPL $@
+	${RM} -f $@
+	${CP} ../COPYING-LGPL $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 cscript: ../cscript/README
-	rm -f $@
-	cp ../cscript/README $@
+	${RM} -f $@
+	${CP} ../cscript/README $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 full: ${FULL_HELP_FILES} ${MAKE_FILE}
 	${Q} echo "forming full"
-	-${Q} rm -f $@
+	-${Q} ${RM} -f $@
 	-${Q} for i in ${FULL_HELP_FILES}; do \
 	    if [ Xintro != X"$$i" ]; then \
 		echo ""; \
 	    else \
-		true; \
+		${TRUE}; \
 	    fi; \
 	    if [ Xobj.file = X"$$i" ]; then \
 		j=obj; \
@@ -504,15 +512,15 @@ full: ${FULL_HELP_FILES} ${MAKE_FILE}
 	    echo "* $$j"; \
 	    echo "*************"; \
 	    echo ""; \
-	    cat $$i; \
+	    ${CAT} $$i; \
 	done > $@
 	${Q} echo "full formed"
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 # Singular files are the same files as their plural form.
@@ -520,18 +528,18 @@ full: ${FULL_HELP_FILES} ${MAKE_FILE}
 ${SINGULAR_FILES}: ${PLURAL_FILES}
 	${Q} for i in ${SINGULAR_FILES} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
-		echo "rm -f $${i}"; \
-		rm -f $${i}; \
-		echo "cp $${i}s $${i}"; \
-		cp $${i}s $${i}; \
+		echo "${RM} -f $${i}"; \
+		${RM} -f $${i}; \
+		echo "${CP} $${i}s $${i}"; \
+		${CP} $${i}s $${i}; \
 	    fi; \
 	done
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/SINGULAR_FILES =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/SINGULAR_FILES =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 # Form the builtin file
@@ -554,24 +562,24 @@ ${SINGULAR_FILES}: ${PLURAL_FILES}
 #
 builtin: builtin.top builtin.end ../func.c funclist.sed
 	${Q} echo "forming builtin help file"
-	-${Q} rm -f funclist.c
+	-${Q} ${RM} -f funclist.c
 	${Q} ${SED} -n -f funclist.sed ../func.c > funclist.c
-	-${Q} rm -f funclist.o funclist${EXT}
+	-${Q} ${RM} -f funclist.o funclist${EXT}
 	${Q} ${LCC} ${ICFLAGS} -DFUNCLIST -I/usr/include \
 	    -I.. funclist.c -c 2>/dev/null
 	${Q} ${LCC} ${ILDFLAGS} funclist.o -o funclist${EXT}
-	-${Q} rm -f builtin
-	${Q} cat builtin.top > builtin
+	-${Q} ${RM} -f builtin
+	${Q} ${CAT} builtin.top > builtin
 	${Q} ./funclist${EXT} | \
 	    ${SED} -e 's/^/	/' -e 's/[	 ][	 ]*$$//' >> builtin
-	${Q} cat builtin.end >> builtin
+	${Q} ${CAT} builtin.end >> builtin
 	${Q} echo "builtin help file formed"
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
-	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
 	    echo ''; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 
 ##
@@ -606,21 +614,21 @@ calcliblist:
 # ignore this rule.
 #
 bsdi: all
-	rm -f obj
-	cp obj.file obj
+	${RM} -f obj
+	${CP} obj.file obj
 
 # These next rule help me form the ${DETAIL_HELP} makefile variables above.
 #
 detaillist:
 	${Q} -(echo "xxxxx"; \
 	   for i in ${DETAIL_HELP} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
-		if [ ! -f RCS/$$i,v ]; then \
-		    echo "WARNING: $$i not under RCS control" 1>&2; \
-		else \
-		    echo $$i; \
+		if [ X"$$i" != X"/dev/null" ]; then \
+		    if [ ! -f RCS/$$i,v ]; then \
+			echo "WARNING: $$i not under RCS control" 1>&2; \
+		    else \
+			echo $$i; \
+		    fi; \
 		fi; \
-	    fi; \
 	done | LANG=C ${SORT}) | ${FMT} -70 | \
 	    ${SED} -e '1s/xxxxx/DETAIL_HELP=/' -e '2,$$s/^/	/' \
 		   -e 's/$$/ \\/' -e '$$s/ \\$$//'
@@ -647,67 +655,67 @@ echo_inst_files:
 ##
 
 clean:
-	rm -f obj mkbuiltin funclist.c funclist.o funclist${EXT}
-	rm -f COPYING COPYING-LGPL
+	${RM} -f obj mkbuiltin funclist.c funclist.o funclist${EXT}
+	${RM} -f COPYING COPYING-LGPL
 
 clobber:
-	rm -f ${BLT_HELP_FILES} full .all calc
-	rm -f obj mkbuiltin funclist.c funclist.o funclist${EXT}
-	rm -f COPYING COPYING-LGPL
-	rm -f ${SINGULAR_FILES} ${DETAIL_CLONE}
+	${RM} -f ${BLT_HELP_FILES} full .all calc
+	${RM} -f obj mkbuiltin funclist.c funclist.o funclist${EXT}
+	${RM} -f COPYING COPYING-LGPL
+	${RM} -f ${SINGULAR_FILES} ${DETAIL_CLONE}
 
 # install everything
 #
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 install: all
-	-${Q} if [ ! -d $T${CALC_SHAREDIR} ]; then \
-	    echo mkdir $T${CALC_SHAREDIR}; \
-	    mkdir $T${CALC_SHAREDIR}; \
-	    if [ ! -d "$T${CALC_SHAREDIR}" ]; then \
-		echo mkdir -p "$T${CALC_SHAREDIR}"; \
-		mkdir -p "$T${CALC_SHAREDIR}"; \
+	-${Q} if [ ! -d ${T}${CALC_SHAREDIR} ]; then \
+	    echo ${MKDIR} ${T}${CALC_SHAREDIR}; \
+	    ${MKDIR} ${T}${CALC_SHAREDIR}; \
+	    if [ ! -d "${T}${CALC_SHAREDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
+		${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
-	    ${CHMOD} 0755 $T${CALC_SHAREDIR}; \
+	    echo ${CHMOD} 0755 ${T}${CALC_SHAREDIR}; \
+	    ${CHMOD} 0755 ${T}${CALC_SHAREDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -d $T${HELPDIR} ]; then \
-	    echo mkdir $T${HELPDIR}; \
-	    mkdir $T${HELPDIR}; \
-	    if [ ! -d "$T${HELPDIR}" ]; then \
-		echo mkdir -p "$T${HELPDIR}"; \
-		mkdir -p "$T${HELPDIR}"; \
+	-${Q} if [ ! -d ${T}${HELPDIR} ]; then \
+	    echo ${MKDIR} ${T}${HELPDIR}; \
+	    ${MKDIR} ${T}${HELPDIR}; \
+	    if [ ! -d "${T}${HELPDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${HELPDIR}"; \
+		${MKDIR} -p "${T}${HELPDIR}"; \
 	    fi; \
-	    echo ${CHMOD} 0755 $T${HELPDIR}; \
-	    ${CHMOD} 0755 $T${HELPDIR}; \
+	    echo ${CHMOD} 0755 ${T}${HELPDIR}; \
+	    ${CHMOD} 0755 ${T}${HELPDIR}; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 	-${Q} for i in ${STD_HELP_FILES} ${BLT_HELP_FILES} builtin \
 		  full ${DETAIL_HELP} ${SINGULAR_FILES} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if ${CMP} -s $$i $T${HELPDIR}/$$i; then \
-		true; \
+	    if ${CMP} -s $$i ${T}${HELPDIR}/$$i; then \
+		${TRUE}; \
 	    else \
-		rm -f $T${HELPDIR}/$$i.new; \
-		cp -f $$i $T${HELPDIR}/$$i.new; \
-		${CHMOD} 0444 $T${HELPDIR}/$$i.new; \
-		mv -f $T${HELPDIR}/$$i.new $T${HELPDIR}/$$i; \
-		echo "installed $T${HELPDIR}/$$i"; \
+		${RM} -f ${T}${HELPDIR}/$$i.new; \
+		${CP} -f $$i ${T}${HELPDIR}/$$i.new; \
+		${CHMOD} 0444 ${T}${HELPDIR}/$$i.new; \
+		${MV} -f ${T}${HELPDIR}/$$i.new ${T}${HELPDIR}/$$i; \
+		echo "installed ${T}${HELPDIR}/$$i"; \
 	    fi; \
 	done
-	-${Q} if ${CMP} -s obj.file $T${HELPDIR}/obj; then \
-	    true; \
+	-${Q} if ${CMP} -s obj.file ${T}${HELPDIR}/obj; then \
+	    ${TRUE}; \
 	else \
-	    rm -f $T${HELPDIR}/obj.new; \
-	    cp -f obj.file $T${HELPDIR}/obj.new; \
-	    ${CHMOD} 0444 $T${HELPDIR}/obj.new; \
-	    mv -f $T${HELPDIR}/obj.new $T${HELPDIR}/obj; \
-	    echo "installed $T${HELPDIR}/obj"; \
+	    ${RM} -f ${T}${HELPDIR}/obj.new; \
+	    ${CP} -f obj.file ${T}${HELPDIR}/obj.new; \
+	    ${CHMOD} 0444 ${T}${HELPDIR}/obj.new; \
+	    ${MV} -f ${T}${HELPDIR}/obj.new ${T}${HELPDIR}/obj; \
+	    echo "installed ${T}${HELPDIR}/obj"; \
 	fi
 
 # Try to remove everything that was installed
@@ -715,12 +723,12 @@ install: all
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 uninstall:
-	-${Q} if [ -f "$T${HELPDIR}/obj" ]; then \
-	    rm -f "$T${HELPDIR}/obj"; \
-	    if [ -f "$T${HELPDIR}/obj" ]; then \
-		echo "cannot uninstall $T${HELPDIR}/obj"; \
+	-${Q} if [ -f "${T}${HELPDIR}/obj" ]; then \
+	    ${RM} -f "${T}${HELPDIR}/obj"; \
+	    if [ -f "${T}${HELPDIR}/obj" ]; then \
+		echo "cannot uninstall ${T}${HELPDIR}/obj"; \
 	    else \
-		echo "uninstalled $T${HELPDIR}/obj"; \
+		echo "uninstalled ${T}${HELPDIR}/obj"; \
 	    fi; \
 	fi
 	-${Q} for i in ${SINGULAR_FILES} ${DETAIL_HELP} full builtin \
@@ -728,18 +736,18 @@ uninstall:
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if [ -f "$T${HELPDIR}/$$i" ]; then \
-	    	rm -f "$T${HELPDIR}/$$i"; \
-		if [ -f "$T${HELPDIR}/$$i" ]; then \
-		   echo "cannot uninstall $T${HELPDIR}/$$i"; \
+	    if [ -f "${T}${HELPDIR}/$$i" ]; then \
+	    	${RM} -f "${T}${HELPDIR}/$$i"; \
+		if [ -f "${T}${HELPDIR}/$$i" ]; then \
+		   echo "cannot uninstall ${T}${HELPDIR}/$$i"; \
 		else \
-		   echo "uninstalled $T${HELPDIR}/$$i"; \
+		   echo "uninstalled ${T}${HELPDIR}/$$i"; \
 		fi; \
 	    fi; \
 	done
 	-${Q} for i in ${HELPDIR} ${CALC_SHAREDIR}; do \
-	    if [ -d "$T$$i" ]; then \
-		rmdir "$T$$i" 2>/dev/null; \
-		echo "cleaned up $T$$i"; \
+	    if [ -d "${T}$$i" ]; then \
+		${RMDIR} "${T}$$i" 2>/dev/null; \
+		echo "cleaned up ${T}$$i"; \
 	    fi; \
 	done

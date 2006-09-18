@@ -32,10 +32,5 @@
 #define DEFAULTCALCPAGER "less.exe"
 #endif /* DEFAULTCALCPAGER */
 
-/* where the echo command is located */
-#if !defined(ECHO_PROG)
-#define ECHO_PROG ""
-#endif /* ECHO_PROG */
-
 
 #endif /* !__CONF_H__ */

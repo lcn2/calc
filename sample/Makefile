@@ -1,7 +1,7 @@
 #
 # sample - makefile for calc sample programs
 #
-# Copyright (C) 1999  Landon Curt Noll
+# Copyright (C) 1999-2006  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.19 $
-# @(#) $Id: Makefile,v 29.19 2006/09/18 00:14:13 chongo Exp $
+# @(#) $Revision: 29.22 $
+# @(#) $Id: Makefile,v 29.22 2006/09/18 07:04:42 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/Makefile,v $
 #
 # Under source code control:	1997/04/19 22:46:49
@@ -101,9 +101,9 @@ INCDIR= /usr/include
 # ${LIBDIR}		where calc link library (*.a) files are installed
 # ${CALC_SHAREDIR}	where to install calc help, .cal, startup, config files
 #
-# NOTE: The install rule prepends installation paths with $T, which
-#	by default is empty.  If $T is non-empty, then installation
-#	locations will be relative to the $T directory.
+# NOTE: The install rule prepends installation paths with ${T}, which
+#	by default is empty.  If ${T} is non-empty, then installation
+#	locations will be relative to the ${T} directory.
 #
 # For DJGPP, select:
 #
@@ -138,9 +138,9 @@ CALC_SHAREDIR= /usr/share/calc
 # ${CUSTOMINCPDIR}	where custom .h files are installed
 # ${SCRIPTDIR}		where calc shell scripts are installed
 #
-# NOTE: The install rule prepends installation paths with $T, which
-#	by default is empty.  If $T is non-empty, then installation
-#	locations will be relative to the $T directory.
+# NOTE: The install rule prepends installation paths with ${T}, which
+#	by default is empty.  If ${T} is non-empty, then installation
+#	locations will be relative to the ${T} directory.
 #
 # If in doubt, set:
 #
@@ -160,8 +160,8 @@ SCRIPTDIR= ${BINDIR}/cscript
 
 # T - top level directory under which calc will be installed
 #
-# The calc install is performed under $T, the calc build is
-# performed under /.	The purpose for $T is to allow someone
+# The calc install is performed under ${T}, the calc build is
+# performed under /.	The purpose for ${T} is to allow someone
 # to install calc somewhere other than into the system area.
 #
 # For example, if:
@@ -181,10 +181,10 @@ SCRIPTDIR= ${BINDIR}/cscript
 #     calc help, .cal ...:	/var/tmp/testing/usr/share/calc
 #     ... etc ...		/var/tmp/testing/...
 #
-# If $T is empty, calc is installed under /, which is the same
-# top of tree for which it was built.  If $T is non-empty, then
-# calc is installed under $T, as if one had to chroot under
-# $T for calc to operate.
+# If ${T} is empty, calc is installed under /, which is the same
+# top of tree for which it was built.  If ${T} is non-empty, then
+# calc is installed under ${T}, as if one had to chroot under
+# ${T} for calc to operate.
 #
 # If in doubt, use T=
 #
@@ -364,7 +364,7 @@ CALCLIBLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} README_SAMPLE
 
 # complete list of targets
 #
-# NOTE: This list MUST be co-ordinated with the ${SAMPLE_TARGETS} variable
+# NOTE: This list MUST be coordinated with the ${SAMPLE_TARGETS} variable
 #	in the upper level ../Makefile
 #
 SAMPLE_TARGETS= many_random test_random
@@ -381,6 +381,12 @@ MAKEDEPEND= makedepend
 CHMOD= chmod
 SORT= sort
 CMP= cmp
+TRUE= true
+RM= rm
+TOUCH= touch
+MKDIR= mkdir
+MV= mv
+CO= co
 
 ##
 #
@@ -389,7 +395,7 @@ CMP= cmp
 ##
 
 all: ${TARGETS} .all
-	@true
+	@${TRUE}
 
 test_random.o: test_random.c
 	${CC} ${CFLAGS} ${ALLOW_CUSTOM} test_random.c -c
@@ -412,8 +418,8 @@ many_random: many_random.o ../libcalc.a
 # to determine of we have done all
 #
 .all:
-	rm -f .all
-	touch .all
+	${RM} -f .all
+	${TOUCH} .all
 
 ##
 #
@@ -462,12 +468,12 @@ depend:
 		echo "Makefile.bak exists, remove or move it out of the way"; \
 		exit 1; \
 	else \
-	    true; \
+	    ${TRUE}; \
 	fi
 	${Q} echo forming sample/skel
-	-${Q} rm -rf skel
-	${Q} mkdir skel
-	${Q} mkdir skel/sample
+	-${Q} ${RM} -rf skel
+	${Q} ${MKDIR} skel
+	${Q} ${MKDIR} skel/sample
 	-${Q} for i in ${C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		${SED} -n '/^#[	 ]*include[	 ]*"/p' \
@@ -488,9 +494,9 @@ depend:
 	done
 	${Q} (cd ..; ${MAKE} hsrc)
 	${Q} for i in `cd ..; ${MAKE} h_list 2>&1 | \
-			     ${SED} -e '/Entering directory/d' \
-				    -e '/Nothing to be done/d' \
-				    -e '/Leaving directory/d'` /dev/null; do \
+	    ${SED} -e '/Entering directory/d' \
+		   -e '/Nothing to be done/d' \
+		   -e '/Leaving directory/d'` /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
 		echo "#if !defined($$tag)" > "skel/$$i"; \
@@ -500,7 +506,7 @@ depend:
 		echo '#endif /* '"$$tag"' */' >> "skel/$$i"; \
 	    fi; \
 	done
-	-${Q} rm -f skel/sample/makedep.out
+	-${Q} ${RM} -f skel/sample/makedep.out
 	${Q} echo sample/skel formed
 	${Q} echo forming sample dependency list
 	${Q} echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
@@ -513,26 +519,26 @@ depend:
 	done >> skel/sample/makedep.out
 	${Q} echo sample dependency list formed
 	${Q} echo forming new sample/Makefile
-	-${Q} rm -f Makefile.bak
-	${Q} mv Makefile Makefile.bak
+	-${Q} ${RM} -f Makefile.bak
+	${Q} ${MV} Makefile Makefile.bak
 	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
 	${Q} echo "" >> Makefile
 	${Q} ${SED} -n '3,$$p' skel/sample/makedep.out | \
 		LANG=C ${SORT} -u >> Makefile
-	-${Q} rm -rf skel
+	-${Q} ${RM} -rf skel
 	-${Q} if ${CMP} -s Makefile.bak Makefile; then \
-		echo 'sample Makefile was already up to date'; \
-		mv -f Makefile.bak Makefile; \
+	    echo 'sample Makefile was already up to date'; \
+	    ${MV} -f Makefile.bak Makefile; \
 	else \
-		rm -f Makefile.tmp; \
-		mv Makefile Makefile.tmp; \
-		if [ -d RCS ]; then \
-		    co -l Makefile; \
-		fi; \
-		mv Makefile.tmp Makefile; \
-		if [ -d RCS ]; then \
-		    echo new sample Makefile formed, you need to check it in; \
-		fi; \
+	    ${RM} -f Makefile.tmp; \
+	    ${MV} Makefile Makefile.tmp; \
+	    if [ -d RCS ]; then \
+		${CO} -l Makefile; \
+	    fi; \
+	    ${MV} Makefile.tmp Makefile; \
+	    if [ -d RCS ]; then \
+		echo new sample Makefile formed, you need to check it in; \
+	    fi; \
 	fi
 
 ##
@@ -551,12 +557,12 @@ echo_inst_files: Makefile
 ##
 
 clean:
-	-rm -f ${SAMPLE_OBJ} core
+	-${RM} -f ${SAMPLE_OBJ} core
 
 clobber:
-	-rm -f ${SAMPLE_OBJ}
-	-rm -f ${TARGETS}
-	rm -f .all Makefile.tmp sample
+	-${RM} -f ${SAMPLE_OBJ}
+	-${RM} -f ${TARGETS}
+	${RM} -f .all Makefile.tmp sample
 
 # install everything
 #
@@ -565,7 +571,7 @@ clobber:
 # NOTE: for right now we will not install anything
 #
 install: all
-	@true
+	@${TRUE}
 
 # Try to remove everything that was installed
 #
@@ -574,7 +580,7 @@ install: all
 # NOTE: nothing installed, nothing to uninstall
 #
 uninstall:
-	@true
+	@${TRUE}
 
 ##
 #

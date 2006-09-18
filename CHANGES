@@ -4,7 +4,14 @@ The following are the changes from calc version 2.12.1 to date:
     Made minor formatting changes as well.
 
     Changed use of ${Q} in the Makefile to avoid an make "feature"
-    related to OpenBSD.
+    related to OpenBSD.  Added ${RM} make variable for make tools that
+    do not have builtin defined terms.
+
+    Removed the ECHO_PROG Makefile variable.  Also removed it from
+    the sysinfo() custom function.
+
+    Improved the support for cross-compiled environmens by using
+    make symbols for all non-shell commands executed by Makefiles.
 
 
 The following are the changes from calc version 2.12.0 to 2.12.0.8:
@@ -6201,8 +6208,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.87 $
-## @(#) $Id: CHANGES,v 29.87 2006/09/17 23:50:45 chongo Exp $
+## @(#) $Revision: 29.88 $
+## @(#) $Id: CHANGES,v 29.88 2006/09/18 06:29:07 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
