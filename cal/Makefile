@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.21 $
-# @(#) $Id: Makefile,v 29.21 2006/06/26 05:46:06 chongo Exp $
+# @(#) $Revision: 29.22 $
+# @(#) $Id: Makefile,v 29.22 2006/09/18 00:08:42 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
@@ -209,17 +209,17 @@ all: ${CALC_FILES} ${MAKE_FILE} .all
 ##
 
 distlist: ${DISTLIST}
-	${Q}for i in ${DISTLIST} /dev/null; do \
+	${Q} for i in ${DISTLIST} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo cal/$$i; \
 	    fi; \
 	done
 
 distdir:
-	${Q}echo cal
+	${Q} echo cal
 
 calcliblist:
-	${Q}for i in ${CALCLIBLIST} /dev/null; do \
+	${Q} for i in ${CALCLIBLIST} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo cal/$$i; \
 	    fi; \
@@ -232,7 +232,7 @@ calcliblist:
 ##
 
 echo_inst_files:
-	${Q}for i in ${CALC_FILES} /dev/null; do \
+	${Q} for i in ${CALC_FILES} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo __file__ ${CALC_SHAREDIR}/$$i; \
 	    fi; \
@@ -254,7 +254,7 @@ clobber:
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 install: all
-	-${Q}if [ ! -d $T${CALC_SHAREDIR} ]; then \
+	-${Q} if [ ! -d $T${CALC_SHAREDIR} ]; then \
 	    echo mkdir $T${CALC_SHAREDIR}; \
 	    mkdir $T${CALC_SHAREDIR}; \
 	    if [ ! -d "$T${CALC_SHAREDIR}" ]; then \
@@ -266,7 +266,7 @@ install: all
 	else \
 	    true; \
 	fi
-	${Q}for i in ${CALC_FILES} /dev/null; do \
+	${Q} for i in ${CALC_FILES} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
@@ -286,7 +286,7 @@ install: all
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 uninstall:
-	-${Q}for i in ${CALC_FILES} /dev/null; do \
+	-${Q} for i in ${CALC_FILES} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
@@ -299,7 +299,7 @@ uninstall:
 		fi; \
 	    fi; \
 	done
-	-${Q}for i in ${CALC_SHAREDIR}; do \
+	-${Q} for i in ${CALC_SHAREDIR}; do \
 	    if [ -d "$T$$i" ]; then \
 		rmdir "$T$$i" 2>/dev/null; \
 		echo "cleaned up $T$$i"; \

@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.25 $
-# @(#) $Id: Makefile,v 29.25 2006/06/26 05:46:06 chongo Exp $
+# @(#) $Revision: 29.26 $
+# @(#) $Id: Makefile,v 29.26 2006/09/18 00:13:59 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -452,17 +452,17 @@ c_sysinfo.o: c_sysinfo.c ${MAKE_FILE}
 ##
 
 distlist: ${DISTLIST}
-	${Q}for i in ${DISTLIST} /dev/null; do \
+	${Q} for i in ${DISTLIST} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo custom/$$i; \
 	    fi; \
 	done
 
 distdir:
-	${Q}echo custom
+	${Q} echo custom
 
 calcliblist: ${CALCLIBLIST}
-	${Q}for i in ${CALCLIBLIST} /dev/null; do \
+	${Q} for i in ${CALCLIBLIST} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo custom/$$i; \
 	    fi; \
@@ -481,23 +481,23 @@ calcliblist: ${CALCLIBLIST}
 ##
 
 depend:
-	${Q}if [ -f Makefile.bak ]; then \
+	${Q} if [ -f Makefile.bak ]; then \
 		echo "Makefile.bak exists, remove or move it out of the way"; \
 		exit 1; \
 	else \
 	    true; \
 	fi
-	${Q}echo forming custom/skel
-	-${Q}rm -rf skel
-	${Q}mkdir skel
-	${Q}mkdir skel/custom
-	-${Q}for i in ${C_SRC} /dev/null; do \
+	${Q} echo forming custom/skel
+	-${Q} rm -rf skel
+	${Q} mkdir skel
+	${Q} mkdir skel/custom
+	-${Q} for i in ${C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		${SED} -n '/^#[	 ]*include[	 ]*"/p' \
 		    "$$i" > "skel/custom/$$i"; \
 	    fi; \
 	done
-	-${Q}for i in ${H_SRC} /dev/null; do \
+	-${Q} for i in ${H_SRC} /dev/null; do \
 		if [ "$$i" = "/dev/null" ]; then \
 		    continue; \
 		fi; \
@@ -508,8 +508,8 @@ depend:
 		    >> "skel/custom/$$i"; \
 		echo '#endif /* '"$$tag"' */' >> "skel/custom/$$i"; \
 	done
-	${Q}(cd ..; ${MAKE} hsrc)
-	${Q}for i in `cd ..; ${MAKE} h_list 2>&1 | \
+	${Q} (cd ..; ${MAKE} hsrc)
+	${Q} for i in `cd ..; ${MAKE} h_list 2>&1 | \
 			     ${SED} -e '/Entering directory/d' \
 				    -e '/Nothing to be done/d' \
 				    -e '/Leaving directory/d'` /dev/null; do \
@@ -523,27 +523,27 @@ depend:
 		    >> "skel/$$i"; \
 		echo '#endif /* '"$$tag"' */' >> "skel/$$i"; \
 	done
-	-${Q}rm -f skel/custom/makedep.out
-	${Q}echo custom/skel formed
-	${Q}echo forming custom dependency list
-	${Q}echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
+	-${Q} rm -f skel/custom/makedep.out
+	${Q} echo custom/skel formed
+	${Q} echo forming custom dependency list
+	${Q} echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
 	    skel/custom/makedep.out
-	${Q}cd skel/custom; ${MAKEDEPEND} -w 1 -f makedep.out ${C_SRC}
-	-${Q}for i in ${C_SRC} /dev/null; do \
+	${Q} cd skel/custom; ${MAKEDEPEND} -w 1 -f makedep.out ${C_SRC}
+	-${Q} for i in ${C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
 	    fi; \
 	done >> skel/custom/makedep.out
-	${Q}echo custom dependency list formed
-	${Q}echo forming new custom/Makefile
-	-${Q}rm -f Makefile.bak
-	${Q}mv Makefile Makefile.bak
-	${Q}${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
-	${Q}echo "" >> Makefile
-	${Q}${SED} -n '3,$$p' skel/custom/makedep.out | \
+	${Q} echo custom dependency list formed
+	${Q} echo forming new custom/Makefile
+	-${Q} rm -f Makefile.bak
+	${Q} mv Makefile Makefile.bak
+	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
+	${Q} echo "" >> Makefile
+	${Q} ${SED} -n '3,$$p' skel/custom/makedep.out | \
 		LANG=C ${SORT} -u >> Makefile
-	-${Q}rm -rf skel
-	-${Q}if ${CMP} -s Makefile.bak Makefile; then \
+	-${Q} rm -rf skel
+	-${Q} if ${CMP} -s Makefile.bak Makefile; then \
 		echo 'custom Makefile was already up to date'; \
 		mv -f Makefile.bak Makefile; \
 	else \
@@ -565,22 +565,22 @@ depend:
 ##
 
 echo_inst_files:
-	${Q}for i in ${INSTALL_H_SRC} /dev/null; do \
+	${Q} for i in ${INSTALL_H_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo __file__ ${CUSTOMINCDIR}/$$i; \
 	    fi; \
 	done
-	${Q}for i in ${CUSTOM_HELP} /dev/null; do \
+	${Q} for i in ${CUSTOM_HELP} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo __file__ ${CUSTOMHELPDIR}/$$i; \
 	    fi; \
 	done
-	${Q}for i in ${CUSTOM_CALC_FILES} /dev/null; do \
+	${Q} for i in ${CUSTOM_CALC_FILES} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo __file__ ${CUSTOMCALDIR}/$$i; \
 	    fi; \
 	done
-	${Q}for i in ${CALC_LIBCUSTOM} /dev/null; do \
+	${Q} for i in ${CALC_LIBCUSTOM} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo __file__ ${CUSTOMCALDIR}/$$i; \
 	    fi; \
@@ -604,7 +604,7 @@ clobber:
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 install: all
-	-${Q}if [ ! -d $T${INCDIR} ]; then \
+	-${Q} if [ ! -d $T${INCDIR} ]; then \
 	    echo mkdir $T${INCDIR}; \
 	    mkdir $T${INCDIR}; \
 	    if [ ! -d "$T${INCDIR}" ]; then \
@@ -616,7 +616,7 @@ install: all
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${CALC_SHAREDIR} ]; then \
+	-${Q} if [ ! -d $T${CALC_SHAREDIR} ]; then \
 	    echo mkdir $T${CALC_SHAREDIR}; \
 	    mkdir $T${CALC_SHAREDIR}; \
 	    if [ ! -d "$T${CALC_SHAREDIR}" ]; then \
@@ -628,7 +628,7 @@ install: all
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${CALC_INCDIR} ]; then \
+	-${Q} if [ ! -d $T${CALC_INCDIR} ]; then \
 	    echo mkdir $T${CALC_INCDIR}; \
 	    mkdir $T${CALC_INCDIR}; \
 	    if [ ! -d "$T${CALC_INCDIR}" ]; then \
@@ -640,7 +640,7 @@ install: all
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${HELPDIR} ]; then \
+	-${Q} if [ ! -d $T${HELPDIR} ]; then \
 	    echo mkdir $T${HELPDIR}; \
 	    mkdir $T${HELPDIR}; \
 	    if [ ! -d "$T${HELPDIR}" ]; then \
@@ -652,7 +652,7 @@ install: all
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${CUSTOMCALDIR} ]; then \
+	-${Q} if [ ! -d $T${CUSTOMCALDIR} ]; then \
 	    echo mkdir $T${CUSTOMCALDIR}; \
 	    mkdir $T${CUSTOMCALDIR}; \
 	    if [ ! -d "$T${CUSTOMCALDIR}" ]; then \
@@ -664,7 +664,7 @@ install: all
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${CUSTOMHELPDIR} ]; then \
+	-${Q} if [ ! -d $T${CUSTOMHELPDIR} ]; then \
 	    echo mkdir $T${CUSTOMHELPDIR}; \
 	    mkdir $T${CUSTOMHELPDIR}; \
 	    if [ ! -d "$T${CUSTOMHELPDIR}" ]; then \
@@ -676,7 +676,7 @@ install: all
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${CUSTOMINCDIR} ]; then \
+	-${Q} if [ ! -d $T${CUSTOMINCDIR} ]; then \
 	    echo mkdir $T${CUSTOMINCDIR}; \
 	    mkdir $T${CUSTOMINCDIR}; \
 	    if [ ! -d "$T${CUSTOMINCDIR}" ]; then \
@@ -688,7 +688,7 @@ install: all
 	else \
 	    true; \
 	fi
-	-${Q}for i in ${INSTALL_H_SRC} /dev/null; do \
+	-${Q} for i in ${INSTALL_H_SRC} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
@@ -702,7 +702,7 @@ install: all
 		echo "installed $T${CUSTOMINCDIR}/$$i"; \
 	    fi; \
 	done
-	-${Q}for i in ${CUSTOM_CALC_FILES} /dev/null; do \
+	-${Q} for i in ${CUSTOM_CALC_FILES} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
@@ -716,7 +716,7 @@ install: all
 		echo "installed $T${CUSTOMCALDIR}/$$i"; \
 	    fi; \
 	done
-	-${Q}for i in ${CUSTOM_HELP} /dev/null; do \
+	-${Q} for i in ${CUSTOM_HELP} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
@@ -730,7 +730,7 @@ install: all
 		echo "installed $T${CUSTOMHELPDIR}/$$i"; \
 	    fi; \
 	done
-	-${Q}if [ ! -z ${ALLOW_CUSTOM} ]; then \
+	-${Q} if [ ! -z ${ALLOW_CUSTOM} ]; then \
 	    if ${CMP} -s libcustcalc.a $T${CUSTOMCALDIR}/libcustcalc.a; then \
 		true; \
 	    else \
@@ -749,7 +749,7 @@ install: all
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 uninstall:
-	-${Q}if [ -f "$T${CUSTOMCALDIR}/libcustcalc.a" ]; then \
+	-${Q} if [ -f "$T${CUSTOMCALDIR}/libcustcalc.a" ]; then \
 	    rm -f "$T${CUSTOMCALDIR}/libcustcalc.a"; \
 	    if [ -f "$T${CUSTOMCALDIR}/libcustcalc.a" ]; then \
 		echo "cannot uninstall $T${CUSTOMCALDIR}/libcustcalc.a"; \
@@ -757,7 +757,7 @@ uninstall:
 		echo "uninstalled $T${CUSTOMCALDIR}/libcustcalc.a"; \
 	    fi; \
 	fi
-	-${Q}for i in ${CUSTOM_HELP} /dev/null; do \
+	-${Q} for i in ${CUSTOM_HELP} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
@@ -770,7 +770,7 @@ uninstall:
 		fi; \
 	    fi; \
 	done
-	-${Q}for i in ${CUSTOM_CALC_FILES} /dev/null; do \
+	-${Q} for i in ${CUSTOM_CALC_FILES} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
@@ -783,7 +783,7 @@ uninstall:
 		fi; \
 	    fi; \
 	done
-	-${Q}for i in ${INSTALL_H_SRC} /dev/null; do \
+	-${Q} for i in ${INSTALL_H_SRC} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
@@ -796,7 +796,7 @@ uninstall:
 		fi; \
 	    fi; \
 	done
-	-${Q}for i in ${CUSTOMINCDIR} ${CUSTOMHELPDIR} ${CUSTOMCALDIR} \
+	-${Q} for i in ${CUSTOMINCDIR} ${CUSTOMHELPDIR} ${CUSTOMCALDIR} \
 		    ${HELPDIR} ${CALC_INCDIR} ${CALC_SHAREDIR} ${INCDIR}; do \
 	    if [ -d "$T$$i" ]; then \
 		rmdir "$T$$i" 2>/dev/null; \

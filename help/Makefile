@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.30 $
-# @(#) $Id: Makefile,v 29.30 2006/08/20 15:01:57 chongo Exp $
+# @(#) $Revision: 29.31 $
+# @(#) $Id: Makefile,v 29.31 2006/09/18 00:13:59 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -487,9 +487,9 @@ cscript: ../cscript/README
 	fi
 
 full: ${FULL_HELP_FILES} ${MAKE_FILE}
-	${Q}echo "forming full"
-	-${Q}rm -f $@
-	-${Q}for i in ${FULL_HELP_FILES}; do \
+	${Q} echo "forming full"
+	-${Q} rm -f $@
+	-${Q} for i in ${FULL_HELP_FILES}; do \
 	    if [ Xintro != X"$$i" ]; then \
 		echo ""; \
 	    else \
@@ -506,7 +506,7 @@ full: ${FULL_HELP_FILES} ${MAKE_FILE}
 	    echo ""; \
 	    cat $$i; \
 	done > $@
-	${Q}echo "full formed"
+	${Q} echo "full formed"
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -518,7 +518,7 @@ full: ${FULL_HELP_FILES} ${MAKE_FILE}
 # Singular files are the same files as their plural form.
 #
 ${SINGULAR_FILES}: ${PLURAL_FILES}
-	${Q}for i in ${SINGULAR_FILES} /dev/null; do \
+	${Q} for i in ${SINGULAR_FILES} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "rm -f $${i}"; \
 		rm -f $${i}; \
@@ -553,19 +553,19 @@ ${SINGULAR_FILES}: ${PLURAL_FILES}
 # do not treat -I.. correctly!
 #
 builtin: builtin.top builtin.end ../func.c funclist.sed
-	${Q}echo "forming builtin help file"
-	-${Q}rm -f funclist.c
-	${Q}${SED} -n -f funclist.sed ../func.c > funclist.c
-	-${Q}rm -f funclist.o funclist${EXT}
-	${Q}${LCC} ${ICFLAGS} -DFUNCLIST -I/usr/include \
+	${Q} echo "forming builtin help file"
+	-${Q} rm -f funclist.c
+	${Q} ${SED} -n -f funclist.sed ../func.c > funclist.c
+	-${Q} rm -f funclist.o funclist${EXT}
+	${Q} ${LCC} ${ICFLAGS} -DFUNCLIST -I/usr/include \
 	    -I.. funclist.c -c 2>/dev/null
-	${Q}${LCC} ${ILDFLAGS} funclist.o -o funclist${EXT}
-	-${Q}rm -f builtin
-	${Q}cat builtin.top > builtin
-	${Q}./funclist${EXT} | \
+	${Q} ${LCC} ${ILDFLAGS} funclist.o -o funclist${EXT}
+	-${Q} rm -f builtin
+	${Q} cat builtin.top > builtin
+	${Q} ./funclist${EXT} | \
 	    ${SED} -e 's/^/	/' -e 's/[	 ][	 ]*$$//' >> builtin
-	${Q}cat builtin.end >> builtin
-	${Q}echo "builtin help file formed"
+	${Q} cat builtin.end >> builtin
+	${Q} echo "builtin help file formed"
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= skipping the cat of help/$@ =-=-='; \
@@ -585,17 +585,17 @@ builtin: builtin.top builtin.end ../func.c funclist.sed
 ##
 
 distlist: ${DISTLIST}
-	${Q}for i in ${DISTLIST} /dev/null; do \
+	${Q} for i in ${DISTLIST} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo help/$$i; \
 	    fi; \
 	done | LANG=C ${SORT}
 
 distdir:
-	${Q}echo help
+	${Q} echo help
 
 calcliblist:
-	${Q}for i in ${CALCLIBLIST} /dev/null; do \
+	${Q} for i in ${CALCLIBLIST} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo help/$$i; \
 	    fi; \
@@ -612,7 +612,7 @@ bsdi: all
 # These next rule help me form the ${DETAIL_HELP} makefile variables above.
 #
 detaillist:
-	${Q}-(echo "xxxxx"; \
+	${Q} -(echo "xxxxx"; \
 	   for i in ${DETAIL_HELP} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		if [ ! -f RCS/$$i,v ]; then \
@@ -632,13 +632,13 @@ detaillist:
 ##
 
 echo_inst_files:
-	${Q}for i in ${STD_HELP_FILES} full ${BLT_HELP_FILES} \
+	${Q} for i in ${STD_HELP_FILES} full ${BLT_HELP_FILES} \
 		  builtin ${DETAIL_HELP} ${SINGULAR_FILES} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo __file__ ${HELPDIR}/$$i; \
 	    fi; \
 	done
-	${Q}echo __file__ ${HELPDIR}/obj
+	${Q} echo __file__ ${HELPDIR}/obj
 
 ##
 #
@@ -661,7 +661,7 @@ clobber:
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 install: all
-	-${Q}if [ ! -d $T${CALC_SHAREDIR} ]; then \
+	-${Q} if [ ! -d $T${CALC_SHAREDIR} ]; then \
 	    echo mkdir $T${CALC_SHAREDIR}; \
 	    mkdir $T${CALC_SHAREDIR}; \
 	    if [ ! -d "$T${CALC_SHAREDIR}" ]; then \
@@ -673,7 +673,7 @@ install: all
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${HELPDIR} ]; then \
+	-${Q} if [ ! -d $T${HELPDIR} ]; then \
 	    echo mkdir $T${HELPDIR}; \
 	    mkdir $T${HELPDIR}; \
 	    if [ ! -d "$T${HELPDIR}" ]; then \
@@ -685,7 +685,7 @@ install: all
 	else \
 	    true; \
 	fi
-	-${Q}for i in ${STD_HELP_FILES} ${BLT_HELP_FILES} builtin \
+	-${Q} for i in ${STD_HELP_FILES} ${BLT_HELP_FILES} builtin \
 		  full ${DETAIL_HELP} ${SINGULAR_FILES} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
@@ -700,7 +700,7 @@ install: all
 		echo "installed $T${HELPDIR}/$$i"; \
 	    fi; \
 	done
-	-${Q}if ${CMP} -s obj.file $T${HELPDIR}/obj; then \
+	-${Q} if ${CMP} -s obj.file $T${HELPDIR}/obj; then \
 	    true; \
 	else \
 	    rm -f $T${HELPDIR}/obj.new; \
@@ -715,7 +715,7 @@ install: all
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 uninstall:
-	-${Q}if [ -f "$T${HELPDIR}/obj" ]; then \
+	-${Q} if [ -f "$T${HELPDIR}/obj" ]; then \
 	    rm -f "$T${HELPDIR}/obj"; \
 	    if [ -f "$T${HELPDIR}/obj" ]; then \
 		echo "cannot uninstall $T${HELPDIR}/obj"; \
@@ -723,7 +723,7 @@ uninstall:
 		echo "uninstalled $T${HELPDIR}/obj"; \
 	    fi; \
 	fi
-	-${Q}for i in ${SINGULAR_FILES} ${DETAIL_HELP} full builtin \
+	-${Q} for i in ${SINGULAR_FILES} ${DETAIL_HELP} full builtin \
 	    ${BLT_HELP_FILES} ${STD_HELP_FILES} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
@@ -737,7 +737,7 @@ uninstall:
 		fi; \
 	    fi; \
 	done
-	-${Q}for i in ${HELPDIR} ${CALC_SHAREDIR}; do \
+	-${Q} for i in ${HELPDIR} ${CALC_SHAREDIR}; do \
 	    if [ -d "$T$$i" ]; then \
 		rmdir "$T$$i" 2>/dev/null; \
 		echo "cleaned up $T$$i"; \

@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.24 $
-# @(#) $Id: Makefile,v 29.24 2006/06/26 05:46:06 chongo Exp $
+# @(#) $Revision: 29.25 $
+# @(#) $Id: Makefile,v 29.25 2006/09/18 00:13:59 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -229,21 +229,21 @@ all: ${TARGETS} .all
 ##
 
 distlist: ${DISTLIST}
-	${Q}for i in ${DISTLIST} /dev/null; do \
+	${Q} for i in ${DISTLIST} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo cscript/$$i; \
 	    fi; \
 	done | LANG=C ${SORT}
 
 distdir:
-	${Q}echo cscript
+	${Q} echo cscript
 
 calcliblist:
 
 # These next rule help me form the ${DETAIL_HELP} makefile variables above.
 #
 detaillist:
-	${Q}-(echo "xxxxxxx"; \
+	${Q} -(echo "xxxxxxx"; \
 	   for i in ${SCRIPT} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		if [ ! -f RCS/$$i.calc,v ]; then \
@@ -255,8 +255,8 @@ detaillist:
 	done | LANG=C ${SORT}) | ${FMT} -70 | \
 	    ${SED} -e '1s/xxxxxxx/SCRIPT=/' -e '2,$$s/^/	/' \
 		   -e 's/$$/ \\/' -e '$$s/ \\$$//'
-	${Q}echo
-	${Q}-(echo "xxxxxxxxxxx"; \
+	${Q} echo
+	${Q} -(echo "xxxxxxxxxxx"; \
 	   for i in ${SCRIPT} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		if [ ! -f RCS/$$i.calc,v ]; then \
@@ -282,18 +282,18 @@ detaillist:
 ##
 
 depend:
-	${Q}if [ -f Makefile.bak ]; then \
+	${Q} if [ -f Makefile.bak ]; then \
 		echo "Makefile.bak exists, remove or move it out of the way"; \
 		exit 1; \
 	else \
 	    true; \
 	fi
-	-${Q}rm -f makedep.out
-	${Q}echo forming cscript dependency list
-	${Q}echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
+	-${Q} rm -f makedep.out
+	${Q} echo forming cscript dependency list
+	${Q} echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
 		makedep.out
-	${Q}echo "" >> makedep.out
-	${Q}for i in ${SCRIPT} /dev/null; do \
+	${Q} echo "" >> makedep.out
+	${Q} for i in ${SCRIPT} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i: $$i.calc"; \
 		echo '	@rm -f $$@'; \
@@ -301,15 +301,15 @@ depend:
 		echo '	@$${CHMOD} +x $$@'; \
 	    fi; \
 	done >> makedep.out
-	${Q}echo sample dependency list formed
-	${Q}echo forming new cscript/Makefile
-	-${Q}rm -f Makefile.bak
-	${Q}mv Makefile Makefile.bak
-	${Q}${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
-	${Q}echo "" >> Makefile
-	${Q}${SED} -n '3,$$p' makedep.out >> Makefile
-	-${Q}rm -f makedep.out
-	-${Q}if ${CMP} -s Makefile.bak Makefile; then \
+	${Q} echo sample dependency list formed
+	${Q} echo forming new cscript/Makefile
+	-${Q} rm -f Makefile.bak
+	${Q} mv Makefile Makefile.bak
+	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
+	${Q} echo "" >> Makefile
+	${Q} ${SED} -n '3,$$p' makedep.out >> Makefile
+	-${Q} rm -f makedep.out
+	-${Q} if ${CMP} -s Makefile.bak Makefile; then \
 		echo 'sample Makefile was already up to date'; \
 		mv -f Makefile.bak Makefile; \
 	else \
@@ -331,7 +331,7 @@ depend:
 ##
 
 echo_inst_files:
-	${Q}for i in ${SCRIPT} /dev/null; do \
+	${Q} for i in ${SCRIPT} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo __file__ ${SCRIPTDIR}/$$i; \
 	    fi; \
@@ -354,7 +354,7 @@ clobber:
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 install: all
-	-${Q}if [ ! -d $T${BINDIR} ]; then \
+	-${Q} if [ ! -d $T${BINDIR} ]; then \
 	    echo mkdir $T${BINDIR}; \
 	    mkdir $T${BINDIR}; \
 	    if [ ! -d "$T${BINDIR}" ]; then \
@@ -366,7 +366,7 @@ install: all
 	else \
 	    true; \
 	fi
-	-${Q}if [ ! -d $T${SCRIPTDIR} ]; then \
+	-${Q} if [ ! -d $T${SCRIPTDIR} ]; then \
 	    echo mkdir $T${SCRIPTDIR}; \
 	    mkdir $T${SCRIPTDIR}; \
 	    if [ ! -d "$T${SCRIPTDIR}" ]; then \
@@ -378,7 +378,7 @@ install: all
 	else \
 	    true; \
 	fi
-	${Q}for i in ${SCRIPT} /dev/null; do \
+	${Q} for i in ${SCRIPT} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
@@ -398,7 +398,7 @@ install: all
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 uninstall:
-	-${Q}for i in ${SCRIPT} /dev/null; do \
+	-${Q} for i in ${SCRIPT} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
@@ -411,7 +411,7 @@ uninstall:
 		fi; \
 	    fi; \
 	done
-	-${Q}for i in ${SCRIPTDIR} ${BINDIR}; do \
+	-${Q} for i in ${SCRIPTDIR} ${BINDIR}; do \
 	    if [ -d "$T$$i" ]; then \
 		rmdir "$T$$i" 2>/dev/null; \
 		echo "cleaned up $T$$i"; \

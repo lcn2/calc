@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.18 $
-# @(#) $Id: Makefile,v 29.18 2006/06/26 05:46:06 chongo Exp $
+# @(#) $Revision: 29.19 $
+# @(#) $Id: Makefile,v 29.19 2006/09/18 00:14:13 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/Makefile,v $
 #
 # Under source code control:	1997/04/19 22:46:49
@@ -429,17 +429,17 @@ many_random: many_random.o ../libcalc.a
 ##
 
 distlist: ${DISTLIST}
-	${Q}for i in ${DISTLIST} /dev/null; do \
+	${Q} for i in ${DISTLIST} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo sample/$$i; \
 	    fi; \
 	done
 
 distdir:
-	${Q}echo sample
+	${Q} echo sample
 
 calcliblist:
-	${Q}for i in ${CALCLIBLIST} /dev/null; do \
+	${Q} for i in ${CALCLIBLIST} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo sample/$$i; \
 	    fi; \
@@ -458,23 +458,23 @@ calcliblist:
 ##
 
 depend:
-	${Q}if [ -f Makefile.bak ]; then \
+	${Q} if [ -f Makefile.bak ]; then \
 		echo "Makefile.bak exists, remove or move it out of the way"; \
 		exit 1; \
 	else \
 	    true; \
 	fi
-	${Q}echo forming sample/skel
-	-${Q}rm -rf skel
-	${Q}mkdir skel
-	${Q}mkdir skel/sample
-	-${Q}for i in ${C_SRC} /dev/null; do \
+	${Q} echo forming sample/skel
+	-${Q} rm -rf skel
+	${Q} mkdir skel
+	${Q} mkdir skel/sample
+	-${Q} for i in ${C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		${SED} -n '/^#[	 ]*include[	 ]*"/p' \
 		    "$$i" > "skel/sample/$$i"; \
 	    fi; \
 	done
-	-${Q}for i in ${H_SRC} /dev/null; do \
+	-${Q} for i in ${H_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		if [ X"$$i" != X"/dev/null" ]; then \
 		    tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
@@ -486,8 +486,8 @@ depend:
 		fi; \
 	    fi; \
 	done
-	${Q}(cd ..; ${MAKE} hsrc)
-	${Q}for i in `cd ..; ${MAKE} h_list 2>&1 | \
+	${Q} (cd ..; ${MAKE} hsrc)
+	${Q} for i in `cd ..; ${MAKE} h_list 2>&1 | \
 			     ${SED} -e '/Entering directory/d' \
 				    -e '/Nothing to be done/d' \
 				    -e '/Leaving directory/d'` /dev/null; do \
@@ -500,27 +500,27 @@ depend:
 		echo '#endif /* '"$$tag"' */' >> "skel/$$i"; \
 	    fi; \
 	done
-	-${Q}rm -f skel/sample/makedep.out
-	${Q}echo sample/skel formed
-	${Q}echo forming sample dependency list
-	${Q}echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
+	-${Q} rm -f skel/sample/makedep.out
+	${Q} echo sample/skel formed
+	${Q} echo forming sample dependency list
+	${Q} echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
 	    skel/sample/makedep.out
-	${Q}cd skel/sample; ${MAKEDEPEND} -w 1 -f makedep.out -I.. ${C_SRC}
-	-${Q}for i in ${C_SRC} /dev/null; do \
+	${Q} cd skel/sample; ${MAKEDEPEND} -w 1 -f makedep.out -I.. ${C_SRC}
+	-${Q} for i in ${C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
 	    fi; \
 	done >> skel/sample/makedep.out
-	${Q}echo sample dependency list formed
-	${Q}echo forming new sample/Makefile
-	-${Q}rm -f Makefile.bak
-	${Q}mv Makefile Makefile.bak
-	${Q}${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
-	${Q}echo "" >> Makefile
-	${Q}${SED} -n '3,$$p' skel/sample/makedep.out | \
+	${Q} echo sample dependency list formed
+	${Q} echo forming new sample/Makefile
+	-${Q} rm -f Makefile.bak
+	${Q} mv Makefile Makefile.bak
+	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
+	${Q} echo "" >> Makefile
+	${Q} ${SED} -n '3,$$p' skel/sample/makedep.out | \
 		LANG=C ${SORT} -u >> Makefile
-	-${Q}rm -rf skel
-	-${Q}if ${CMP} -s Makefile.bak Makefile; then \
+	-${Q} rm -rf skel
+	-${Q} if ${CMP} -s Makefile.bak Makefile; then \
 		echo 'sample Makefile was already up to date'; \
 		mv -f Makefile.bak Makefile; \
 	else \

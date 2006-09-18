@@ -32,8 +32,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.77 $$
-# @(#) $Id: Makefile.ship,v 29.77 2006/09/17 23:49:27 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.78 $$
+# @(#) $Id: Makefile.ship,v 29.78 2006/09/18 00:13:59 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -1326,7 +1326,7 @@ UTIL_PROGS= align32${EXT} fposval${EXT} have_uid_t${EXT} have_const${EXT} \
 
 # The complete list of Makefile vars passed down to custom/Makefile.
 #
-CUSTOM_PASSDOWN= Q="${Q} " \
+CUSTOM_PASSDOWN= Q="${Q}" \
     INCDIR="${INCDIR}" \
     BINDIR="${BINDIR}" \
     LIBDIR="${LIBDIR}" \
@@ -1362,7 +1362,7 @@ CUSTOM_PASSDOWN= Q="${Q} " \
 
 # The complete list of Makefile vars passed down to sample/Makefile.
 #
-SAMPLE_PASSDOWN= Q="${Q} " \
+SAMPLE_PASSDOWN= Q="${Q}" \
     INCDIR="${INCDIR}" \
     BINDIR="${BINDIR}" \
     LIBDIR="${LIBDIR}" \
@@ -1399,7 +1399,7 @@ SAMPLE_PASSDOWN= Q="${Q} " \
 
 # The compelte list of Makefile vars passed down to help/Makefile.
 #
-HELP_PASSDOWN= Q="${Q} " \
+HELP_PASSDOWN= Q="${Q}" \
     INCDIR="${INCDIR}" \
     BINDIR="${BINDIR}" \
     LIBDIR="${LIBDIR}" \
@@ -1424,7 +1424,7 @@ HELP_PASSDOWN= Q="${Q} " \
 
 # The compelte list of Makefile vars passed down to cal/Makefile.
 #
-CAL_PASSDOWN= Q="${Q} " \
+CAL_PASSDOWN= Q="${Q}" \
     INCDIR="${INCDIR}" \
     BINDIR="${BINDIR}" \
     LIBDIR="${LIBDIR}" \
@@ -1443,7 +1443,7 @@ CAL_PASSDOWN= Q="${Q} " \
 
 # The compelte list of Makefile vars passed down to cscript/Makefile.
 #
-CSCRIPT_PASSDOWN= Q="${Q} " \
+CSCRIPT_PASSDOWN= Q="${Q}" \
     INCDIR="${INCDIR}" \
     BINDIR="${BINDIR}" \
     LIBDIR="${LIBDIR}" \
@@ -1641,7 +1641,7 @@ conf.h: ${MAKE_FILE}
 	${Q} echo '' >> conf.h
 	${Q} echo '#endif /* !__CONF_H__ */' >> conf.h
 	${Q} echo 'conf.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -1693,7 +1693,7 @@ endian_calc.h: endian${EXT} ${MAKE_FILE}
 	${Q} echo '' >> endian_calc.h
 	${Q} echo '#endif /* !__ENDIAN_CALC_H__ */' >> endian_calc.h
 	${Q} echo 'endian_calc.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -1720,7 +1720,7 @@ longbits.h: longbits${EXT} ${MAKE_FILE}
 	${Q} echo '' >> longbits.h
 	${Q} echo '#endif /* !__LONGBITS_H__ */' >> longbits.h
 	${Q} echo 'longbits.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -1758,7 +1758,7 @@ have_malloc.h: ${MAKE_FILE}
 	${Q} echo '' >> have_malloc.h
 	${Q} echo '#endif /* !__HAVE_MALLOC_H__ */' >> have_malloc.h
 	${Q} echo 'have_malloc.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -1829,7 +1829,7 @@ have_times.h: ${MAKE_FILE}
 	${Q} echo '' >> have_times.h
 	${Q} echo '#endif /* !__HAVE_TIMES_H__ */' >> have_times.h
 	${Q} echo 'have_times.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -1867,7 +1867,7 @@ have_stdlib.h: ${MAKE_FILE}
 	${Q} echo '' >> have_stdlib.h
 	${Q} echo '#endif /* !__HAVE_STDLIB_H__ */' >> have_stdlib.h
 	${Q} echo 'have_stdlib.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -1905,7 +1905,7 @@ have_unistd.h: ${MAKE_FILE}
 	${Q} echo '' >> have_unistd.h
 	${Q} echo '#endif /* !__HAVE_UNISTD_H__ */' >> have_unistd.h
 	${Q} echo 'have_unistd.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -1943,7 +1943,7 @@ have_string.h: ${MAKE_FILE}
 	${Q} echo '' >> have_string.h
 	${Q} echo '#endif /* !__HAVE_STRING_H__ */' >> have_string.h
 	${Q} echo 'have_string.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2007,7 +2007,7 @@ terminal.h: ${MAKE_FILE}
 	${Q} echo '' >> terminal.h
 	${Q} echo '#endif /* !__TERMINAL_H__ */' >> terminal.h
 	${Q} echo 'terminal.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2047,7 +2047,7 @@ have_fpos.h: have_fpos.c ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_FPOS_H__ */' >> have_fpos.h
 	-${Q} rm -f have_fpos${EXT} have_fpos.o fpos_tmp
 	${Q} echo 'have_fpos.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2091,7 +2091,7 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_FPOS_POS_H__ */' >> have_fpos_pos.h
 	-${Q} rm -f have_fpos_pos${EXT} have_fpos_pos.o fpos_tmp
 	${Q} echo 'have_fpos_pos.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2126,7 +2126,7 @@ fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	${Q} echo '#endif /* !__FPOSVAL_H__ */' >> fposval.h
 	-${Q} rm -f fposval${EXT} fposval.o fposv_tmp
 	${Q} echo 'fposval.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2167,7 +2167,7 @@ have_const.h: have_const.c ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_CONST_H__ */' >> have_const.h
 	-${Q} rm -f have_const${EXT} have_const.o const_tmp
 	${Q} echo 'have_const.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2207,7 +2207,7 @@ have_offscl.h: have_offscl.c ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_OFFSCL_H__ */' >> have_offscl.h
 	-${Q} rm -f have_offscl${EXT} have_offscl.o offscl_tmp
 	${Q} echo 'have_offscl.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2247,7 +2247,7 @@ have_posscl.h: have_posscl.c have_fpos.h ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_POSSCL_H__ */' >> have_posscl.h
 	-${Q} rm -f have_posscl have_posscl.o posscl_tmp
 	${Q} echo 'have_posscl.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2301,7 +2301,7 @@ align32.h: align32.c longbits.h have_unistd.h ${MAKE_FILE}
 	${Q} echo '' >> align32.h
 	${Q} echo '#endif /* !__MUST_ALIGN32_H__ */' >> align32.h
 	${Q} echo 'align32.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2340,7 +2340,7 @@ have_uid_t.h: have_uid_t.c have_unistd.h ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_UID_T_H__ */' >> have_uid_t.h
 	-${Q} rm -f have_uid_t${EXT} have_uid_t.o uid_tmp
 	${Q} echo 'have_uid_t.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2381,7 +2381,7 @@ have_newstr.h: have_newstr.c ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_NEWSTR_H__ */' >> have_newstr.h
 	-${Q} rm -f have_newstr${EXT} have_newstr.o newstr_tmp
 	${Q} echo 'have_newstr.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2421,7 +2421,7 @@ have_memmv.h: have_memmv.c ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_MEMMV_H__ */' >> have_memmv.h
 	-${Q} rm -f have_memmv have_memmv.o memmv_tmp
 	${Q} echo 'have_memmv.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2461,7 +2461,7 @@ have_ustat.h: have_ustat.c ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_USTAT_H__ */' >> have_ustat.h
 	-${Q} rm -f have_ustat${EXT} have_ustat.o ustat_tmp
 	${Q} echo 'have_ustat.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2501,7 +2501,7 @@ have_getsid.h: have_getsid.c ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_GETSID_H__ */' >> have_getsid.h
 	-${Q} rm -f have_getsid${EXT} have_getsid.o getsid_tmp
 	${Q} echo 'have_getsid.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2541,7 +2541,7 @@ have_getpgid.h: have_getpgid.c ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_GETPGID_H__ */' >> have_getpgid.h
 	-${Q} rm -f have_getpgid${EXT} have_getpgid.o getpgid_tmp
 	${Q} echo 'have_getpgid.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2581,7 +2581,7 @@ have_gettime.h: have_gettime.c ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_GETTIME_H__ */' >> have_gettime.h
 	-${Q} rm -f have_gettime${EXT} have_gettime.o gettime_tmp
 	${Q} echo 'have_gettime.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2621,7 +2621,7 @@ have_getprid.h: have_getprid.c ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_GETPRID_H__ */' >> have_getprid.h
 	-${Q} rm -f have_getprid${EXT} have_getprid.o getprid_tmp
 	${Q} echo 'have_getprid.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2657,7 +2657,7 @@ have_urandom.h: ${MAKE_FILE}
 	${Q} echo '' >> have_urandom.h
 	${Q} echo '#endif /* !__HAVE_URANDOM_H__ */' >> have_urandom.h
 	${Q} echo 'have_urandom.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2697,7 +2697,7 @@ have_rusage.h: have_rusage.c ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_RUSAGE_H__ */' >> have_rusage.h
 	-${Q} rm -f have_rusage${EXT} have_rusage.o rusage_tmp
 	${Q} echo 'have_rusage.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2737,7 +2737,7 @@ have_strdup.h: have_strdup.c ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_RUSAGE_H__ */' >> have_strdup.h
 	-${Q} rm -f have_strdup${EXT} have_strdup.o strdup_tmp
 	${Q} echo 'have_strdup.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2795,7 +2795,7 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
 	${Q} echo '#endif /* !__ARGS_H__ */' >> args.h
 	-${Q} rm -f have_stdvs.o have_varvs.o have_varvs${EXT} have_args.sh core
 	${Q} echo 'args.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2825,7 +2825,7 @@ calcerr.h: calcerr.tbl calcerr_h.sed calcerr_h.awk ${MAKE_FILE}
 	${Q} echo '' >> calcerr.h
 	${Q} echo '#endif /* !__CALCERR_H__ */' >> calcerr.h
 	${Q} echo 'calcerr.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2847,7 +2847,7 @@ calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE}
 	${Q} ${SED} -f calcerr_c.sed < calcerr.tbl | \
 	    ${AWK} -f calcerr_c.awk >> calcerr.c
 	${Q} echo 'calcerr.c formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2872,7 +2872,7 @@ no_implicit.arg: no_implicit.c ${MAKE_FILE}
 	    	>/dev/null 2>&1; true; \
 	fi
 	${Q} echo 'no_implicit.arg formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
@@ -2912,7 +2912,7 @@ have_unused.h: have_unused.c ${MAKE_FILE}
 	${Q} echo '#endif /* !__HAVE_UNUSED_H__ */' >> have_unused.h
 	-${Q} rm -f have_unused${EXT} have_unused.o unused_tmp
 	${Q} echo 'have_unused.h formed'
-	-@if [ -z "${Q} " ]; then \
+	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
 	    cat $@; \
