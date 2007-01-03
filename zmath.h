@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.17 $
- * @(#) $Id: zmath.h,v 29.17 2006/06/11 07:07:23 chongo Exp $
+ * @(#) $Revision: 29.18 $
+ * @(#) $Id: zmath.h,v 29.18 2006/12/15 16:20:04 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -131,6 +131,7 @@ typedef SB32 SFULL;			/* signed FULL */
 
 #define TOPFULL ((FULL)1 << (FULL_BITS-1))	/* highest bit in FULL */
 #define MAXFULL (TOPFULL - (FULL)1)		/* largest SFULL value */
+#define MINSFULL ((SFULL)(TOPFULL))		/* most negative SFULL value */
 #define MAXUFULL (MAXFULL | TOPFULL)		/* largest FULL value */
 
 #define TOPLONG ((unsigned long)1 << (LONG_BITS-1))	/* top long bit */
@@ -289,9 +290,11 @@ extern DLL void freeh(HALF *);
 extern DLL void zcopy(ZVALUE z, ZVALUE *res);
 extern DLL void itoz(long i, ZVALUE *res);
 extern DLL void utoz(FULL i, ZVALUE *res);
+extern DLL void stoz(SFULL i, ZVALUE *res);
 extern DLL void str2z(char *s, ZVALUE *res);
 extern DLL long ztoi(ZVALUE z);
 extern DLL FULL ztou(ZVALUE z);
+extern DLL SFULL ztos(ZVALUE z);
 extern DLL void zprintval(ZVALUE z, long decimals, long width);
 extern DLL void zprintx(ZVALUE z, long width);
 extern DLL void zprintb(ZVALUE z, long width);

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.11 $
- * @(#) $Id: input.c,v 29.11 2006/05/19 15:26:10 chongo Exp $
+ * @(#) $Revision: 29.12 $
+ * @(#) $Id: input.c,v 29.12 2006/12/15 17:02:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/input.c,v $
  *
  * Under source code control:	1990/02/15 01:48:16
@@ -961,9 +961,6 @@ static int
 isinoderead(struct stat *sbuf)
 {
 	int i;
-#if defined(_WIN32) || defined(__MSDOS__)
-	char fullpathname[_MAX_PATH];
-#endif
 
 	/* deal with the empty case */
 	if (readset == NULL || maxreadset <= 0) {
@@ -974,12 +971,16 @@ isinoderead(struct stat *sbuf)
 	/* scan the entire readset */
 	for (i=0; i < maxreadset; ++i) {
 #if defined(_WIN32) || defined(__MSDOS__)
+		tmp = _fullpath(NULL, cip->i_name, _MAX_PATH);
 		if (readset[i].active &&
-		    strcasecmp(readset[i].path,
-		    	       _fullpath(fullpathname,cip->i_name,
-			       _MAX_PATH)) == 0) {
+		    tmp != NULL &&
+		    strcasecmp(readset[i].path, tmp) == 0) {
 			/* found a match */
+			free(tmp);
 			return i;
+		}
+		if (tmp != NULL) {
+			free(tmp);
 		}
 #else /* Windoz free systems */
 		if (readset[i].active &&
@@ -1106,9 +1107,10 @@ addreadset(char *name, char *path, struct stat *sbuf)
 	 * this new longer path name.
 	 */
  	 {
-	 	char fullpathname[_MAX_PATH];
-
-		readset[ret].path = _fullpath(fullpathname, path, _MAX_PATH);
+		readset[ret].path = _fullpath(NULL, path, _MAX_PATH);
+		if (readset[ret].path == NULL) {
+			return -1;
+		}
 	 }
 #else /* Windoz free systems */
 	path_len = strlen(path);

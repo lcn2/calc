@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: test4000.cal,v 29.3 2006/06/20 09:29:16 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: test4000.cal,v 29.4 2006/12/16 11:18:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/test4000.cal,v $
  *
  * Under source code control:	1996/03/13 02:38:45
@@ -145,7 +145,7 @@ define ptimes(str, N, n, count, skip, verbose)
 	mat A[n];
 	for (i = 0; i < n; i++)
 		A[i] = plen(N);
-	t = runtime();
+	t = usertime();
 	for (i = 0; i < n; i++) {
 		p = ptest(A[i], count, skip);
 		if (!p) {
@@ -159,7 +159,7 @@ define ptimes(str, N, n, count, skip, verbose)
 		if (m) {
 			printf("*** %d error(s)\n", m);
 		} else {
-			t = round(runtime() - t, 4);
+			t = round(usertime() - t, 4);
 			if (verbose > 1) {
 				printf("%d probable primes: time = %d\n", n, t);
 			} else {
@@ -194,7 +194,7 @@ define ctimes(str, N, n, count, skip, verbose)
 	mat A[n];
 	for (i = 0; i < n; i++)
 		A[i] = clen(N);
-	t = runtime();
+	t = usertime();
 	for (i = 0; i < n; i++) {
 		p = ptest(A[i], count, skip);
 		if (p) {
@@ -208,7 +208,7 @@ define ctimes(str, N, n, count, skip, verbose)
 		if (m) {
 			printf("*** %d error(s)\n", m);
 		} else {
-			t = round(runtime() - t, 4);
+			t = round(usertime() - t, 4);
 			if (verbose > 1) {
 				printf("%d probable primes: time = %d\n", n, t);
 			} else {
@@ -242,7 +242,7 @@ define crtimes(str, a, b, n, count, skip, verbose)
 		A[i] = rand(a,b);
 		P[i] = ptest(A[i], 20, 0);
 	}
-	t = runtime();
+	t = usertime();
 	for (i = 0; i < n; i++) {
 		p = ptest(A[i], count, skip);
 		if (p != P[i]) {
@@ -257,7 +257,7 @@ define crtimes(str, a, b, n, count, skip, verbose)
 		if (m) {
 			printf("*** %d error(s)?\n", m);
 		} else {
-			t = round(runtime() - t, 4);
+			t = round(usertime() - t, 4);
 			if (verbose > 1) {
 				printf("%d probable primes: time = %d\n", n, t);
 			} else {
@@ -295,16 +295,16 @@ define ntimes(str, N, n, count, skip, residue, modulus, verbose)
 	mat A[n];
 	for (i = 0; i < n; i++)
 		A[i] = rlen(N);
-	t = runtime();
+	t = usertime();
 	for (i = 0; i < n; i++) {
 		p = nextcand(A[i], count, skip, residue, modulus);
 	}
-	tnext = round(runtime() - t, 4);
-	t = runtime();
+	tnext = round(usertime() - t, 4);
+	t = usertime();
 	for (i = 0; i < n; i++) {
 		p = prevcand(A[i], count, skip, residue, modulus);
 	}
-	tprev = round(runtime() - t, 4);
+	tprev = round(usertime() - t, 4);
 	if (verbose > 0) {
 		printf("%d evaluations, nextcand: %d, prevcand: %d\n", n, tnext, tprev);
 	}

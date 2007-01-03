@@ -68,6 +68,7 @@ DESCRIPTION
 	    "baseb"		bits in calculation base, a read-only value
 	    "redecl_warn"	TRUE => warn when redeclaring
 	    "dupvar_warn"	TRUE => warn when variable names collide
+	    "hz"		Read-only operating system tick rate or 0
 
     The "all" config value allows one to save/restore the configuration
     set of values.  The return of:
@@ -867,6 +868,16 @@ DESCRIPTION
 
     The initial "redecl_warn" value is 1.
 
+    =-=
+
+    config("hz")		<== NOTE: This is a read-only config value
+
+    Returns the rate at which the operating system advances the clock
+    on POSIX based systems.  Returns 0 on non-POSIX based systems.
+    The non-zero value returned is in Hetrz.
+
+    This config parameter is read-only and cannot be set.
+
 
 EXAMPLE
     ; current_cfg = config("all");
@@ -928,6 +939,7 @@ EXAMPLE
 	baseb		32
 	redecl_warn	1
 	dupvar_warn	1
+	hz		100
 
     ; display()
 	20
@@ -960,8 +972,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.17 $
-## @(#) $Id: config,v 29.17 2006/06/24 19:06:58 chongo Exp $
+## @(#) $Revision: 29.18 $
+## @(#) $Id: config,v 29.18 2006/12/16 11:14:28 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/config,v $
 ##
 ## Under source code control:	1991/07/21 04:37:17

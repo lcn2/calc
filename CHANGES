@@ -1,4 +1,69 @@
-The following are the changes from calc version 2.12.1 to date:
+The following are the changes from calc version 2.12.1.6 to date:
+
+    Added the calc builtin function, usertime(), to return the amount of
+    user CPU time used by the current process.  Unlike the old runtime()
+    builtin, the CPU time reported for long running processes will not
+    wrap around to 0 after only a few months.
+
+    Added the calc builtin function, systime(), to return the amount of
+    kernel CPU time used by the current process.
+
+    The runtime() builtin function now returns the total amount of CPU
+    time used by the current process.  This time includes both user mode
+    and kernel mode time.  Unlike the old runtime() builtin, the builtin
+    includes time spent executing operating system code on behalf of
+    the current process.
+
+    Fixed runtime() so that the CPU time reported for long running
+    processes will wrap around to 0 for a long time.
+
+    Added config("hz") to return the clock tick rate.  This is
+    a read-only configuration value.
+
+    Added regression tests for recently added config() parameters.
+
+    Fixed the #define symbols that were created in have_strdup.h.
+    Previously this file looked as if have_rusage.h has been
+    included already.
+
+    Restored the function of "help" (without any args) printing the
+    default help file.  Thanks for this fix goes to Silvan Minghetti
+    <bullet at users dot sourceforge dot net>.
+
+    Fixed a problem where some old MS environments failed some of the
+    regression tests because "read -once foo.cal" was not behaving
+    correctly due to how the _fullpath() was being called.  Thanks for
+    this fix goes to Anatoly <notexistent-anb at yandex dot ru>.
+
+    Documented the mis-feature about how calc parses if, for, while
+    and do statements in an unexpected way.   For example:
+
+	This works as expected:
+
+	    if (expr) {
+		...
+	    }
+
+	However this WILL NOT WORK AS EXPECTED:
+
+	    if (expr)
+	    {
+		...
+	    }
+
+	because calc will parse the if being terminated by
+	an empty statement followed by a
+
+	    if (expr) ;
+	    {
+		...
+	    }
+
+    See also "help statement", "help unexpected", "help todo", and
+    "help bugs".
+
+
+The following are the changes from calc version 2.12.1 to 2.12.1.5:
 
     Fixed minor typos in the 'version 2.12.0 to 2.12.0.8' section below.
     Made minor formatting changes as well.
@@ -6216,8 +6281,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.90 $
-## @(#) $Id: CHANGES,v 29.90 2006/09/18 13:14:03 chongo Exp $
+## @(#) $Revision: 29.91 $
+## @(#) $Id: CHANGES,v 29.91 2007/01/03 21:27:55 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

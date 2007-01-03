@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.30 $
- * @(#) $Id: func.c,v 29.30 2006/08/20 15:01:30 chongo Exp $
+ * @(#) $Revision: 29.32 $
+ * @(#) $Id: func.c,v 29.32 2006/12/16 10:46:07 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -83,6 +83,11 @@
 # define strdup(x) calc_strdup((CONST char *)(x))
 #endif
 
+#include "have_rusage.h"
+#if defined(HAVE_GETRUSAGE)
+# include <sys/resource.h>
+#endif
+
 #include "have_const.h"
 #include "have_unused.h"
 #include "calc.h"
@@ -140,18 +145,6 @@ struct env_pool {
 static int env_pool_cnt = 0;	/* number of env_pool elements in use */
 static int env_pool_max = 0;	/* number of env_pool elements allocated */
 static struct env_pool *e_pool = NULL;	/* env_pool elements */
-
-
-/*
- * if HZ & CLK_TCK are not defined, pick typical values, hope for the best
- */
-#if !defined(HZ)
-#  define HZ 60
-#endif
-#if !defined(CLK_TCK)
-# undef CLK_TCK
-# define CLK_TCK HZ
-#endif
 
 
 /*
@@ -5067,20 +5060,131 @@ f_listremove(VALUE *vp)
 
 
 /*
- * Return the current runtime of calc in seconds.
- * This is the user mode time only.
+ * Return the current user time of calc in seconds.
+ */
+static NUMBER *
+f_usertime(void)
+{
+#if defined(HAVE_GETRUSAGE)
+	struct rusage usage;		/* system resource usage */
+	int who = RUSAGE_SELF;		/* obtain time for just this process */
+	int status;			/* getrusage() return code */
+	NUMBER *ret;			/* CPU time to return */
+	NUMBER *secret;			/* whole sconds of CPU time to return */
+	NUMBER *usecret;		/* microseconds of CPU time to return */
+
+	/* get the resource informaion for ourself */
+	status = getrusage(who, &usage);
+	if (status < 0) {
+	    /* system call error, so return 0 */
+	    return qlink(&_qzero_);
+	}
+
+	/* add user time */
+	secret = stoq(usage.ru_utime.tv_sec);
+	usecret = iitoq((long)usage.ru_utime.tv_usec, 1000000L);
+	ret = qqadd(secret, usecret);
+	qfree(secret);
+	qfree(usecret);
+
+	/* return user CPU time */
+	return ret;
+
+#else /* HAVE_GETRUSAGE */
+	/* not a POSIX system */
+	return qlink(&_qzero_);
+#endif /* HAVE_GETRUSAGE */
+}
+
+
+/*
+ * Return the current kernel time of calc in seconds.
+ * This is the kernel mode time only.
+ */
+static NUMBER *
+f_systime(void)
+{
+#if defined(HAVE_GETRUSAGE)
+	struct rusage usage;		/* system resource usage */
+	int who = RUSAGE_SELF;		/* obtain time for just this process */
+	int status;			/* getrusage() return code */
+	NUMBER *ret;			/* CPU time to return */
+	NUMBER *secret;			/* whole sconds of CPU time to return */
+	NUMBER *usecret;		/* microseconds of CPU time to return */
+
+	/* get the resource informaion for ourself */
+	status = getrusage(who, &usage);
+	if (status < 0) {
+	    /* system call error, so return 0 */
+	    return qlink(&_qzero_);
+	}
+
+	/* add kernel time */
+	secret = stoq(usage.ru_stime.tv_sec);
+	usecret = iitoq((long)usage.ru_stime.tv_usec, 1000000L);
+	ret = qqadd(secret, usecret);
+	qfree(secret);
+	qfree(usecret);
+
+	/* return kernel CPU time */
+	return ret;
+
+#else /* HAVE_GETRUSAGE */
+	/* not a POSIX system */
+	return qlink(&_qzero_);
+#endif /* HAVE_GETRUSAGE */
+}
+
+
+/*
+ * Return the current user and kernel time of calc in seconds.
  */
 static NUMBER *
 f_runtime(void)
 {
-#if defined(_WIN32)
-	return qlink(&_qzero_);
-#else /* Windoz free systems */
-	struct tms buf;
+#if defined(HAVE_GETRUSAGE)
+	struct rusage usage;		/* system resource usage */
+	int who = RUSAGE_SELF;		/* obtain time for just this process */
+	int status;			/* getrusage() return code */
+	NUMBER *user;			/* user CPU time to return */
+	NUMBER *sys;			/* kernel CPU time to return */
+	NUMBER *ret;			/* total CPU time to return */
+	NUMBER *secret;			/* whole sconds of CPU time to return */
+	NUMBER *usecret;		/* microseconds of CPU time to return */
 
-	times(&buf);
-	return iitoq((long) buf.tms_utime, (long) CLK_TCK);
-#endif /* Windoz free systems */
+	/* get the resource informaion for ourself */
+	status = getrusage(who, &usage);
+	if (status < 0) {
+	    /* system call error, so return 0 */
+	    return qlink(&_qzero_);
+	}
+
+	/* add kernel time */
+	secret = stoq(usage.ru_stime.tv_sec);
+	usecret = iitoq((long)usage.ru_stime.tv_usec, 1000000L);
+	sys = qqadd(secret, usecret);
+	qfree(secret);
+	qfree(usecret);
+
+	/* add user time */
+	secret = stoq(usage.ru_utime.tv_sec);
+	usecret = iitoq((long)usage.ru_utime.tv_usec, 1000000L);
+	user = qqadd(secret, usecret);
+	qfree(secret);
+	qfree(usecret);
+
+	/* total time is user + kernel */
+	ret = qqadd(user, sys);
+	qfree(user);
+	qfree(sys);
+
+	/* return CPU time */
+	return ret;
+
+#else /* HAVE_GETRUSAGE */
+	/* not a POSIX system */
+	return qlink(&_qzero_);
+#endif /* HAVE_GETRUSAGE */
 }
 
 
@@ -8558,7 +8662,7 @@ static CONST struct builtin builtins[] = {
 	{"rsearch", 2, 4, 0, OP_NOP, 0, f_rsearch,
 	 "reverse search matrix or list for value b\n\t\t\tstarting at index c"},
 	{"runtime", 0, 0, 0, OP_NOP, f_runtime, 0,
-	 "user mode cpu time in seconds"},
+	 "user and kernel mode cpu time in seconds"},
 	{"saveval", 1, 1, 0, OP_SAVEVAL, 0, 0,
 	 "set flag for saving values"},
 	{"scale", 2, 2, 0, OP_SCALE, 0, 0,
@@ -8641,6 +8745,8 @@ static CONST struct builtin builtins[] = {
 	 "swap values of variables a and b (can be dangerous)"},
 	{"system", 1, 1, 0, OP_NOP, 0, f_system,
 	 "call Unix command"},
+	{"systime", 0, 0, 0, OP_NOP, f_systime, 0,
+	 "kernel mode cpu time in seconds"},
 	{"tail", 2, 2, 0, OP_NOP, 0, f_tail,
 	 "retain list of specified number at tail of list"},
 	{"tan", 1, 2, 0, OP_NOP, 0, f_tan,
@@ -8655,6 +8761,8 @@ static CONST struct builtin builtins[] = {
 	 "truncate a to b number of decimal places"},
 	{"ungetc", 2, 2, 0, OP_NOP, 0, f_ungetc,
 	 "unget char read from file"},
+	{"usertime", 0, 0, 0, OP_NOP, f_usertime, 0,
+	 "user mode cpu time in seconds"},
 	{"version", 0, 0, 0, OP_NOP, 0, f_version,
 	 "calc version string"},
 	{"xor", 1, IN, 0, OP_NOP, 0, f_xor,

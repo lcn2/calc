@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: zmath.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: zmath.c,v 29.3 2006/12/15 16:20:04 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmath.c,v $
  *
  * Under source code control:	1990/02/15 01:48:28
@@ -356,6 +356,42 @@ utoz(FULL i, ZVALUE *res)
 
 
 /*
+ * Convert a normal signed integer to a number.
+ */
+void
+stoz(SFULL i, ZVALUE *res)
+{
+	long diddle, len;
+
+	res->len = 1;
+	res->sign = 0;
+	diddle = 0;
+	if (i == 0) {
+		res->v = _zeroval_;
+		return;
+	}
+	if (i < 0) {
+		res->sign = 1;
+		i = -i;
+		if (i < 0) {	/* fix most negative number */
+			diddle = 1;
+			i--;
+		}
+	}
+	if (i == 1) {
+		res->v = _oneval_;
+		return;
+	}
+	len = 1 + (((FULL) i) >= BASE);
+	res->len = (LEN)len;
+	res->v = alloc((LEN)len);
+	res->v[0] = (HALF) (i + diddle);
+	if (len == 2)
+		res->v[1] = (HALF) (i / BASE);
+}
+
+
+/*
  * Convert a number to a unsigned normal integer, as far as possible.
  * If the number is out of range, the largest number is returned.
  * The absolute value of z is converted.
@@ -367,6 +403,41 @@ ztou(ZVALUE z)
 		return MAXUFULL;
 	}
 	return ztofull(z);
+}
+
+
+/*
+ * Convert a number to a signed normal integer, as far as possible.
+ *
+ * If the number is too large to fit into an integer, than the largest
+ * positive or largest negative integer is returned depending on the sign.
+ */
+SFULL
+ztos(ZVALUE z)
+{
+	FULL val;	/* absolute value of the return value */
+
+	/* negative value processing */
+	if (z.sign) {
+	    if (z.len > 2) {
+		return MINSFULL;
+	    }
+	    val = ztofull(z);
+	    if (val > TOPFULL) {
+		return MINSFULL;
+	    }
+	    return (SFULL)(-val);
+	}
+
+	/* positive value processing */
+	if (z.len > 2) {
+	    return (SFULL)MAXFULL;
+	}
+	val = ztofull(z);
+	if (val > MAXFULL) {
+	    return (SFULL)MAXFULL;
+	}
+	return (SFULL)val;
 }
 
 

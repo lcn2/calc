@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: mfactor.cal,v 29.2 2000/06/07 14:02:25 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: mfactor.cal,v 29.3 2006/12/16 11:18:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/mfactor.cal,v $
  *
  * Under source code control:	1996/07/06 06:09:40
@@ -261,7 +261,7 @@ define mfactor(n, start_k, rept_loop, p_elim)
 	} else {
 		/* report this loop */
 		printf("at 2*%d*%d+1, cpu: %f\n",
-			(q-1)/(2*n), n, runtime());
+			(q-1)/(2*n), n, usertime());
 		fflush(files(1));
 		loop = 0;
 	}
@@ -274,7 +274,7 @@ define mfactor(n, start_k, rept_loop, p_elim)
 		if (rept_loop <= ++loop) {
 			/* report this loop */
 			printf("at 2*%d*%d+1, cpu: %f\n",
-				(q-1)/(2*n), n, runtime());
+				(q-1)/(2*n), n, usertime());
 			fflush(files(1));
 			loop = 0;
 		}

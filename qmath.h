@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: qmath.h,v 29.7 2006/06/25 20:33:26 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: qmath.h,v 29.8 2006/12/15 16:18:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -65,8 +65,10 @@ extern NUMBER *iitoq(long i1, long i2);
 extern NUMBER *str2q(char *str);
 extern NUMBER *itoq(long i);
 extern NUMBER *utoq(FULL i);
+extern NUMBER *stoq(SFULL i);
 extern long qtoi(NUMBER *q);
 extern FULL qtou(NUMBER *q);
+extern SFULL qtos(NUMBER *q);
 extern long qparse(char *str, int flags);
 extern void qfreenum(NUMBER *q);
 extern void qprintnum(NUMBER *q, int mode);

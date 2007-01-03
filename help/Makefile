@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.34 $
-# @(#) $Id: Makefile,v 29.34 2006/09/18 13:13:25 chongo Exp $
+# @(#) $Revision: 29.35 $
+# @(#) $Id: Makefile,v 29.35 2006/12/16 10:32:54 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -277,7 +277,7 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
 	appr arg argv arrow asec asech asin asinh assign atan atan2 atanh \
 	avg base base2 bernoulli bit blk blkcpy blkfree blocks bround \
 	btrunc calc_tty calclevel catalan ceil cfappr cfsim char cmdbuf \
-	cmp comb conj cos cosh cot coth count ${CP} csc csch ctime delete den \
+	cmp comb conj cos cosh cot coth count csc csch ctime delete den \
 	dereference det digit digits display dp epsilon errcount errmax \
 	errno error estr euler eval exp fact factor fclose fcnt feof ferror \
 	fflush fgetc fgetfield fgetfile fgetline fgets fgetstr fib files \
@@ -295,12 +295,12 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
 	param perm pfact pi pix places pmod polar poly pop popcnt power \
 	prevcand prevprime printf prompt protect ptest push putenv quo \
 	quomod rand randbit random randombit randperm rcin rcmul rcout \
-	rcpow rcsq re remove reverse rewind ${RM} root round rsearch runtime \
+	rcpow rcsq re remove reverse rewind rm root round rsearch runtime \
 	saveval scale scan scanf search sec sech seed segment select sgn \
 	sha sha1 sin sinh size sizeof sleep sort sqrt srand srandom ssq \
 	str strcat strcmp strcpy strerror strlen strncmp strncpy strpos \
-	strprintf strscan strscanf substr sum swap system tail tan tanh \
-	test time trunc version xor
+	strprintf strscan strscanf substr sum swap system systime tail tan \
+	tanh test time trunc usertime version xor
 
 # This list is of files that are clones of DETAIL_HELP files.  They are
 # built from DETAIL_HELP files.

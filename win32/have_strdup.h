@@ -3,12 +3,12 @@
  */
 
 
-#if !defined(__HAVE_RUSAGE_H__)
-#define __HAVE_RUSAGE_H__
+#if !defined(__HAVE_STRDUP_H__)
+#define __HAVE_STRDUP_H__
 
 
 /* do we have or want getstrdup()? */
 #define HAVE_STRDUP /* yes */
 
 
-#endif /* !__HAVE_RUSAGE_H__ */
+#endif /* !__HAVE_STRDUP_H__ */

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.20 $
- * @(#) $Id: config.h,v 29.20 2006/06/25 22:05:38 chongo Exp $
+ * @(#) $Revision: 29.21 $
+ * @(#) $Id: config.h,v 29.21 2006/12/15 16:16:59 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -97,6 +97,7 @@
 #define CONFIG_BASEB	43
 #define CONFIG_REDECL_WARN	44
 #define CONFIG_DUPVAR_WARN	45
+#define CONFIG_HZ	46
 
 
 /*

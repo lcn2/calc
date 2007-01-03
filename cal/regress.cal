@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.35 $
- * @(#) $Id: regress.cal,v 29.35 2006/08/20 16:16:11 chongo Exp $
+ * @(#) $Revision: 29.36 $
+ * @(#) $Id: regress.cal,v 29.36 2006/12/16 11:18:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -497,7 +497,33 @@ define test_config()
 	vrfy(config("mode2") == "off",
 					'556: config("mode2") == "off"');
 
-	print '557: Ending test_config';
+	/* hz is numeric */
+	vrfy(isint(config("hz")),	'557: isint(config("hz"))');
+
+	/* compile_custom is simple */
+	vrfy(issimple(config("compile_custom")),
+		'558: issimple(config("compile_custom"))');
+
+	/* allow_custom is simple */
+	vrfy(issimple(config("allow_custom")),
+		'559: issimple(config("allow_custom"))');
+
+	/* allow_custom is simple */
+	vrfy(issimple(config("allow_custom")),
+		'559: issimple(config("allow_custom"))');
+
+	/* baseb is numeric */
+	vrfy(isint(config("baseb")),	'560: isint(config("baseb"))');
+
+	/* redecl_warn is simple */
+	vrfy(issimple(config("redecl_warn")),
+		'561: issimple(config("redecl_warn"))');
+
+	/* dupvar_warn is simple */
+	vrfy(issimple(config("dupvar_warn")),
+		'562: issimple(config("rdupvar_warn"))');
+
+	print '563: Ending test_config';
 }
 print '010: parsed test_config()';
 
@@ -1375,7 +1401,12 @@ define test_functions()
 	vrfy(a == -4,			'1203: a == -4');
 	vrfy(b == 2,			'1204: b == 2');
 
-	print '1205: Ending test_functions';
+	/* runtime(), systime(), usertime() return numeric values */
+	vrfy(isnum(runtime()),		'1205: isnum(runtime())');
+	vrfy(isnum(systime()),		'1206: isnum(systime())');
+	vrfy(isnum(usertime()),		'1207: isnum(usertime())');
+
+	print '1208: Ending test_functions';
 }
 print '017: parsed test_functions()';
 

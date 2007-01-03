@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: test3300.cal,v 29.3 2006/06/20 09:29:16 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: test3300.cal,v 29.5 2006/12/16 11:19:45 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/test3300.cal,v $
  *
  * Under source code control:	1995/12/02 04:27:41
@@ -81,9 +81,9 @@ define testr(str, n, N, verbose)
 	for (i = 0; i < n; i++)
 		for (j = 0; j < n; j++)
 			A[i,j] = rand(-(N^2), N^2)/rand(1, N);
-	t = runtime();
+	t = usertime();
 	d1 = det(A);
-	t = runtime() - t;
+	t = usertime() - t;
 	d2 = det(A^2);
 	if (d2 != d1^2) {
 		if (verbose > 0) {

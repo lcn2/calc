@@ -248,7 +248,55 @@ Unexpected
     In addition to the C style /* comment lines */, lines that begin with
     #! are treated as comments.
 
-## Copyright (C) 1999  Landon Curt Noll
+
+    The { must be on the same line as an if, for, while or do
+    =========================================================
+
+    When statement is of the form { ... }, the leading { MUST BE ON
+    THE SAME LINE as the if, for, while or do keyword.
+
+    This works as expected:
+
+	if (expr) {
+	    ...
+	}
+
+    However this WILL NOT WORK AS EXPECTED:
+
+	if (expr)
+	{
+	    ...
+	}
+
+    because calc will parse the if being terminated by
+    an empty statement followed by a
+
+	if (expr) ;
+	{
+	    ...
+	}
+
+    In the same way, use these forms:
+
+	for (optionalexpr ; optionalexpr ; optionalexpr) {
+		...
+	}
+
+	while (expr) {
+		...
+	}
+
+	do {
+		...
+	while (expr);
+
+    where the initial { is on the SAME LINE as the if, while,
+    for or do keyword.
+
+    NOTE: See "help statement", "help todo", and "help bugs".
+
+
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -264,8 +312,8 @@ Unexpected
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: unexpected,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: unexpected,v 29.3 2007/01/03 21:26:22 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/unexpected,v $
 ##
 ## Under source code control:	1997/03/21 13:15:18

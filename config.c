@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.22 $
- * @(#) $Id: config.c,v 29.22 2006/06/25 22:05:38 chongo Exp $
+ * @(#) $Revision: 29.23 $
+ * @(#) $Id: config.c,v 29.23 2006/12/15 16:17:18 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -31,6 +31,24 @@
 
 
 #include <stdio.h>
+
+#include "have_times.h"
+#if defined(HAVE_TIME_H)
+#include <time.h>
+#endif
+
+#if defined(HAVE_TIMES_H)
+#include <times.h>
+#endif
+
+#if defined(HAVE_SYS_TIME_H)
+#include <sys/time.h>
+#endif
+
+#if defined(HAVE_SYS_TIMES_H)
+#include <sys/times.h>
+#endif
+
 #include "calc.h"
 #include "token.h"
 #include "zrand.h"
@@ -44,6 +62,15 @@
 #if !defined(HAVE_STRDUP)
 # define strdup(x) calc_strdup((CONST char *)(x))
 #endif /* HAVE_STRDUP */
+
+/*
+ * deal with systems that lack a defined CLK_TCK
+ */
+#if defined(CLK_TCK)
+# define CALC_HZ ((long)(CLK_TCK))
+#else
+# define CALC_HZ (0L)	/* no defined clock tick rate */
+#endif
 
 
 /*
@@ -100,6 +127,7 @@ NAMETYPE configs[] = {
 	{"baseb",	CONFIG_BASEB},
 	{"redecl_warn",	CONFIG_REDECL_WARN},
 	{"dupvar_warn",	CONFIG_DUPVAR_WARN},
+	{"hz",		CONFIG_HZ},
 	{NULL,		0}
 };
 
@@ -941,6 +969,10 @@ setconfig(int type, VALUE *vp)
 		}
 		break;
 
+	case CONFIG_HZ:
+		math_error("The clock tick rate config parameter is read-only");
+		/*NOTREACHED*/
+
 	default:
 		math_error("Setting illegal config parameter");
 		/*NOTREACHED*/
@@ -1328,6 +1360,10 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 
 	case CONFIG_DUPVAR_WARN:
 		i = (cfg->dupvar_warn ? 1 : 0);
+		break;
+
+	case CONFIG_HZ:
+		i = CALC_HZ;
 		break;
 
 	default:

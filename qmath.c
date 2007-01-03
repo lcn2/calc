@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: qmath.c,v 29.6 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: qmath.c,v 29.7 2006/12/15 16:18:10 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qmath.c,v $
  *
  * Under source code control:	1990/02/15 01:48:21
@@ -141,6 +141,25 @@ qtou(NUMBER *q)
 
 
 /*
+ * Convert a number to a normal signed integer.
+ *	s = qtos(q);
+ */
+SFULL
+qtos(NUMBER *q)
+{
+	SFULL i;
+	ZVALUE res;
+
+	if (qisint(q))
+		return ztos(q->num);
+	zquo(q->num, q->den, &res, 0);
+	i = ztos(res);
+	zfree(res);
+	return i;
+}
+
+
+/*
  * Convert a normal unsigned integer into a number.
  *	q = utoq(i);
  */
@@ -162,6 +181,32 @@ utoq(FULL i)
 	}
 	q = qalloc();
 	utoz(i, &q->num);
+	return q;
+}
+
+
+/*
+ * Convert a normal signed integer into a number.
+ *	q = stoq(s);
+ */
+NUMBER *
+stoq(SFULL i)
+{
+	register NUMBER *q;
+
+	if (i <= 10) {
+		switch ((int) i) {
+		case 0: q = &_qzero_; break;
+		case 1: q = &_qone_; break;
+		case 2: q = &_qtwo_; break;
+		case 10: q = &_qten_; break;
+		default: q = NULL;
+		}
+		if (q)
+			return qlink(q);
+	}
+	q = qalloc();
+	stoz(i, &q->num);
 	return q;
 }
 

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: randmprime.cal,v 29.2 2000/06/07 14:02:25 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: randmprime.cal,v 29.3 2006/12/16 11:18:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/randmprime.cal,v $
  *
  * Under source code control:	1994/03/14 23:11:21
@@ -88,8 +88,8 @@ randmprime(bits, seed, dbg)
      * loop until we find a prime
      */
     if (dbg >= 1) {
-	start = runtime();
-	init = runtime();
+	start = usertime();
+	init = usertime();
 	plush = 0;
 	print "DEBUG1: testing (h+" : plush : ")*2^" : n : "-1";
     }
@@ -97,7 +97,7 @@ randmprime(bits, seed, dbg)
 
 	/* bump h, and n if needed */
 	if (dbg >= 2) {
-	    stop = runtime();
+	    stop = usertime();
 	    print "DEBUG2: last test:", stop-start, "	total time:", stop-init;
 	}
 	if (dbg >= 1) {
@@ -116,7 +116,7 @@ randmprime(bits, seed, dbg)
 
     /* found a prime */
     if (dbg >= 2) {
-	stop = runtime();
+	stop = usertime();
 	print "DEBUG2: last test:", stop-start, "   total time:", stop-init;
 	print "DEBUG3: " : h : "*2^" : n : "-1 is prime";
     }

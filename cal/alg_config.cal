@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.14 $
- * @(#) $Id: alg_config.cal,v 29.14 2006/06/11 07:22:05 chongo Exp $
+ * @(#) $Revision: 29.15 $
+ * @(#) $Id: alg_config.cal,v 29.15 2006/12/16 11:18:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/alg_config.cal,v $
  *
  * Under source code control:	2006/06/07 14:10:11
@@ -85,7 +85,7 @@ define mul_loop(repeat, x)
     }
 
     /* multiply pairwise, all sets of a given length */
-    start = runtime();
+    start = usertime();
     for (i=0; i < repeat; ++i) {
 
 	if (len == 1) {
@@ -130,7 +130,7 @@ define mul_loop(repeat, x)
     /*
      * return duration
      */
-    end = runtime();
+    end = usertime();
     return end-start;
 }
 
@@ -477,7 +477,7 @@ define sq_loop(repeat, x)
     }
 
     /* square pairwise, all sets of a given length */
-    start = runtime();
+    start = usertime();
     for (i=0; i < repeat; ++i) {
 
 	if (len == 1) {
@@ -524,7 +524,7 @@ define sq_loop(repeat, x)
     /*
      * return duration
      */
-    end = runtime();
+    end = usertime();
     return end-start;
 }
 
@@ -874,7 +874,7 @@ define pow_loop(repeat, x, ex)
     }
 
     /* pmod pairwise, all sets of a given length */
-    start = runtime();
+    start = usertime();
     for (i=0; i < repeat; ++i) {
 
 	if (len == 1) {
@@ -927,7 +927,7 @@ define pow_loop(repeat, x, ex)
     /*
      * return duration
      */
-    end = runtime();
+    end = usertime();
     return end-start;
 }
 

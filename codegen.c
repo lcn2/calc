@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.21 $
- * @(#) $Id: codegen.c,v 29.21 2006/06/20 10:28:06 chongo Exp $
+ * @(#) $Revision: 29.22 $
+ * @(#) $Id: codegen.c,v 29.22 2006/12/15 16:25:09 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -144,6 +144,7 @@ getcommands(BOOL toplevel)
 		case T_HELP:
 			for (i=1;;i++) {
 				switch(getfilename(name, MAXCMD+1, NULL)) {
+				case 1:
 				case -1:
 					if(i == 1) {
 						strcpy(name, DEFAULTCALCHELP);

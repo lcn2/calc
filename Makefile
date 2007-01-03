@@ -32,8 +32,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.81 $$
-# @(#) $Id: Makefile.ship,v 29.81 2006/09/18 13:13:25 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.83 $$
+# @(#) $Id: Makefile.ship,v 29.83 2007/01/03 21:29:50 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -2764,8 +2764,8 @@ have_strdup.h: have_strdup.c ${MAKE_FILE}
 	${Q} echo ' */' >> have_strdup.h
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '' >> have_strdup.h
-	${Q} echo '#if !defined(__HAVE_RUSAGE_H__)' >> have_strdup.h
-	${Q} echo '#define __HAVE_RUSAGE_H__' >> have_strdup.h
+	${Q} echo '#if !defined(__HAVE_STRDUP_H__)' >> have_strdup.h
+	${Q} echo '#define __HAVE_STRDUP_H__' >> have_strdup.h
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '/* do we have or want getstrdup()? */' >> have_strdup.h
@@ -2783,7 +2783,7 @@ have_strdup.h: have_strdup.c ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '' >> have_strdup.h
-	${Q} echo '#endif /* !__HAVE_RUSAGE_H__ */' >> have_strdup.h
+	${Q} echo '#endif /* !__HAVE_STRDUP_H__ */' >> have_strdup.h
 	-${Q} ${RM} -f have_strdup${EXT} have_strdup.o strdup_tmp
 	${Q} echo 'have_strdup.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -4160,6 +4160,7 @@ config.o: have_newstr.h
 config.o: have_stdlib.h
 config.o: have_strdup.h
 config.o: have_string.h
+config.o: have_times.h
 config.o: longbits.h
 config.o: md5.h
 config.o: nametype.h
@@ -4283,6 +4284,7 @@ func.o: have_fpos.h
 func.o: have_malloc.h
 func.o: have_memmv.h
 func.o: have_newstr.h
+func.o: have_rusage.h
 func.o: have_stdlib.h
 func.o: have_strdup.h
 func.o: have_string.h

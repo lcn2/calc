@@ -80,6 +80,25 @@ mis-features in calc:
     work better.  The following is a list of mis-features that should be
     addressed and improved someday.
 
+    * When statement is of the form { ... }, the leading { MUST BE ON
+      THE SAME LINE as the if, for, while or do keyword.
+
+      This works as expected:
+
+	if (expr) {
+	    ...
+	}
+
+      However this WILL NOT WORK AS EXPECTED:
+
+	if (expr)
+	{
+	    ...
+	}
+
+      This needs to be changed.  See also "help statement", "help unexpected",
+      and "help todo".
+
     * The chi.cal resource file does not work well with odd degrees
       of freedom.  Can someone improve this algorithm?
 
@@ -141,8 +160,8 @@ Problems with old systems that have known work-a-rounds:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.25 $
-## @(#) $Id: BUGS,v 29.25 2006/08/20 17:51:25 chongo Exp $
+## @(#) $Revision: 29.26 $
+## @(#) $Id: BUGS,v 29.26 2007/01/03 21:26:22 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13

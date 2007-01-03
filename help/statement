@@ -3,22 +3,76 @@ Statements
     Statements are very much like C statements.	 Most statements act
     identically to those in C, but there are minor differences and
     some additions.  The following is a list of the statement types,
-    with explanation of the non-C statements.  In this list, upper
-    case words identify the keywords which are actually in lower case.
-    Statements are generally terminated with semicolons, except if the
-    statement is the compound one formed by matching braces.  Various
-    expressions are optional and may be omitted (as in RETURN).
+    with explanation of the non-C statements.
 
+    Statements are generally terminated with semicolons or { ... }.
 
     C-like statements
     -----------------
     { statement }
     { statement; ... statement }
+
+
+    C-like flow control
+    -------------------
     if (expr) statement
-    if (expr) statement ELSE statement
+    if (expr) statement else statement
     for (optionalexpr ; optionalexpr ; optionalexpr) statement
     while (expr) statement
     do statement while (expr)
+
+	    These all work like in normal C.
+
+	    IMPORTANT NOTE: When statement is of the form { ... },
+	    the leading { must be on the same line as the if, for,
+	    while or do keyword.
+
+	    This works as expected:
+
+	    	if (expr) {
+		    ...
+		}
+
+	    However this WILL NOT WORK AS EXPECTED:
+
+	    	if (expr)
+		{
+		    ...
+		}
+
+	    because calc will parse the if being terminated by
+	    an empty statement followed by a
+
+	    	if (expr) ;
+		{
+		    ...
+		}
+
+	    In the same way, use these forms:
+
+		for (optionalexpr ; optionalexpr ; optionalexpr) {
+			...
+		}
+
+		while (expr) {
+			...
+		}
+
+		do {
+			...
+		while (expr);
+
+	    where the initial { is on the SAME LINE as the if, while,
+	    for or do.
+
+	    See 'help expression' for details on expressions.
+	    See 'help builtin' for details on calc builtin functions.
+	    See 'help unexpanded' for things C programmers do not expect.
+	    See also 'help todo' and 'help bugs'.
+
+
+    C-like flow breaks
+    ------------------
     continue
     break
     goto label
@@ -30,8 +84,9 @@ Statements
 
     return
     ------
-    return optionalexpr
-    return ( optionalexpr )
+    return
+    return expr
+    return ( expr )
 	    This returns a value from a function.  Functions always
 	    have a return value, even if this statement is not used.
 	    If no return statement is executed, or if no expression
@@ -241,7 +296,7 @@ Statements
 	    builtin	    calc builtin functions
 	    usage	    how to invoke the calc command and calc -options
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2006  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -257,8 +312,8 @@ Statements
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: statement,v 29.2 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: statement,v 29.3 2007/01/03 21:26:22 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/statement,v $
 ##
 ## Under source code control:	1991/07/21 04:37:23

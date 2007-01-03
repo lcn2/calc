@@ -24,14 +24,32 @@ Calc Todo Items:
 
 Very High priority items:
 
-    * Consider using GNU autoconf / configure to build calc.
+    * Improve the way that calc parses statements such as if, for, while
+      and do so that when a C programmer does.  This works as expected:
 
-    * Internationalize calc by converting calc error messages and
-      text strings (e.g., calc startup banner, show output, etc.)
-      into calls to the GNU gettext internationalization facility.
-      If somebody translated these strings into another language,
-      setting $LANG would allow calc to produce error messages
-      and text strings in that language.
+	    if (expr) {
+		...
+	    }
+
+      However this WILL NOT WORK AS EXPECTED:
+
+	    if (expr)
+	    {
+		...
+	    }
+
+      because calc will parse the if being terminated by
+      an empty statement followed by a
+
+	    if (expr) ;
+	    {
+		...
+	    }
+
+      See also "help statement", "help unexpected", "help todo", and
+      "help bugs".
+
+    * Consider using GNU autoconf / configure to build calc.
 
     * Fix any 'Known bugs' as noted in the BUGS file or as
       displayed by 'calc help bugs'.
@@ -53,6 +71,13 @@ High priority items:
 
     * Address, if possible and reasonable, any Calc Mis-features
       as noted in the BUGS file or as displayed by 'calc help bugs'.
+
+    * Internationalize calc by converting calc error messages and
+      text strings (e.g., calc startup banner, show output, etc.)
+      into calls to the GNU gettext internationalization facility.
+      If somebody translated these strings into another language,
+      setting $LANG would allow calc to produce error messages
+      and text strings in that language.
 
 =-=
 
@@ -104,8 +129,8 @@ Medium priority items:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.9 $
-## @(#) $Id: todo,v 29.9 2006/09/17 20:54:07 chongo Exp $
+## @(#) $Revision: 29.10 $
+## @(#) $Id: todo,v 29.10 2007/01/03 21:26:22 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/todo,v $
 ##
 ## Under source code control:	1999/10/20 07:42:55
