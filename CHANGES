@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.12.1.7 to date:
+The following are the changes from calc version 2.12.2 to date:
 
     Fixed calc cscripts that contained comments that were not valid calc
     comments.  Improved calc comment documentation in "help unexpected"
@@ -35,8 +35,6 @@ The following are the changes from calc version 2.12.1.7 to date:
     The "help define" command is now equivalent to "help command".
 
     Fixed calc command line usage message.
-    
-    Fixed missing README.src file in RPM src and tgz src tarball.
 
 
 The following are the changes from calc version 2.12.1.6 to 2.12.1.6:
@@ -6320,8 +6318,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.94 $
-## @(#) $Id: CHANGES,v 29.94 2007/02/07 01:38:03 chongo Exp $
+## @(#) $Revision: 29.93 $
+## @(#) $Id: CHANGES,v 29.93 2007/02/07 00:41:06 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.31 $
-# @(#) $Id: Makefile,v 29.31 2007/02/07 01:43:56 chongo Exp $
+# @(#) $Revision: 29.29 $
+# @(#) $Id: Makefile,v 29.29 2007/02/07 00:31:59 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -199,7 +199,7 @@ SCRIPT_SRC= 4dsphere.calc fproduct.calc mersenne.calc \
 
 # These files are found (but not built) in the distribution
 #
-DISTLIST= ${SCRIPT_SRC} ${MAKE_FILE} README.src
+DISTLIST= ${SCRIPT_SRC} ${MAKE_FILE} README
 
 # These files are used to make (but not build) a calc .a library
 #
