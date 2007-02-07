@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: have_varvs.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: have_varvs.c,v 29.3 2007/02/07 20:53:18 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/have_varvs.c,v $
  *
  * Under source code control:	1995/09/09 22:41:10
@@ -52,6 +52,13 @@
 # include <string.h>
 #endif
 
+#undef VSPRINTF_SIZE_T
+#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
+# define VSPRINTF_SIZE_T size_t
+#else
+# define VSPRINTF_SIZE_T long
+#endif
+
 char buf[BUFSIZ];
 
 #if !defined(STDARG) && !defined(SIMULATE_STDARG)
@@ -73,10 +80,32 @@ try_this(char *fmt, ...)
     va_end(ap);
 }
 
+void
+try_nthis(char *fmt, VSPRINTF_SIZE_T size, ...)
+{
+    va_list ap;
+
+    va_start(ap);
+
+#if !defined(DONT_HAVE_VSPRINTF)
+    vsnprintf(buf, size, fmt, ap);
+#else
+    snprintf(buf, size, fmt, ap);
+#endif
+
+    va_end(ap);
+}
+
 #else
 
 void
 try_this(char *a, int b, char *c, int d)
+{
+    return;
+}
+
+void
+try_nthis(char *a, VSPRINTF_SIZE_T size, int b, char *c, int d)
 {
     return;
 }
@@ -109,9 +138,33 @@ main(void)
 	if (strcmp(buf,
 		   "Landon Noll 1st proved that 2^23209-1 was prime") != 0) {
 #if !defined(DONT_HAVE_VSPRINTF)
-	    /* <stdarg.h> with vsprintf() didn't work */
+	    /* <varargs.h> with vsprintf() didn't work */
 #else
-	    /* <stdarg.h> with sprintf() simulating vsprintf() didn't work */
+	    /* <varargs.h> with sprintf() simulating vsprintf() didn't work */
+#endif
+	    exit(1);
+	}
+
+	/*
+	 * test variable args and vsnprintf/snprintf
+	 */
+	try_nthis("@%d:%s:%d@", sizeof(buf)-1, 1, "hello", 5);
+	if (strcmp(buf, "@1:hello:5@") != 0) {
+#if !defined(DONT_HAVE_VSPRINTF)
+	    /* <varargs.h> with vsnprintf() didn't work */
+#else
+	    /* <varargs.h> with snprintf() simulating vsnprintf() didn't work */
+#endif
+	    exit(1);
+	}
+	try_nthis("%s %d%s%d%d %s", sizeof(buf)-1,
+	    "Landon Noll 1st proved that", 2, "^", 23209, -1, "was prime");
+	if (strcmp(buf,
+		   "Landon Noll 1st proved that 2^23209-1 was prime") != 0) {
+#if !defined(DONT_HAVE_VSPRINTF)
+	    /* <varargs.h> with vsnprintf() didn't work */
+#else
+	    /* <varargs.h> with snprintf() simulating vsnprintf() didn't work */
 #endif
 	    exit(1);
 	}
@@ -122,19 +175,22 @@ main(void)
 	puts("/* what type of variable args do we have? */");
 	puts("#define VARARGS /* use <varargs.h> */");
 	puts("#include <varargs.h>");
-	puts("\n/* should we use vsprintf()? */");
+	puts("\n/* should we use vsprintf() and vsnprintf()? */");
 #if !defined(DONT_HAVE_VSPRINTF)
-	puts("#define HAVE_VS /* yes */");
+	puts("#define HAVE_VSPRINTF /* yes */");
 #else
 	puts("/*");
 	puts(" * Hack aleart!!!");
 	puts(" *");
 	puts(" * Systems that do not have vsprintf() need something.  In some");
 	puts(" * cases the sprintf function will deal correctly with the");
-	puts(" * va_alist 3rd arg.  Hope for the best!");
+	puts(" * va_alist 3rd arg.  Same gors for a lack of an vsnprintf()");
+	puts(" * function.  In either case we use the #defines below and");
+	puts(" * hope for the best!");
 	puts(" */");
 	puts("#define vsprintf sprintf");
-	puts("#undef HAVE_VS");
+	puts("#define vsnprintf snprintf");
+	puts("#undef HAVE_VSPRINTF");
 #endif
 	/* exit(0); */
 	return 0;

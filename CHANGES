@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.12.2 to date:
+The following are the changes from calc version 2.12.1.8 to date:
 
     Fixed calc cscripts that contained comments that were not valid calc
     comments.  Improved calc comment documentation in "help unexpected"
@@ -36,8 +36,26 @@ The following are the changes from calc version 2.12.2 to date:
 
     Fixed calc command line usage message.
 
+    Fixed missing README.src file in RPM src and tgz src tarball.
 
-The following are the changes from calc version 2.12.1.6 to 2.12.1.6:
+    Removed HAVE_SNPRINTF test in version.c.  We now assume that
+    all systems come with the standard snprintf() library function.
+
+    Make does not assume that DONT_HAVE_VSPRINTF must be defined in
+    order to test for varargs (via have_varvs.c).  Instead it uses the
+    ${HAVE_VSPRINTF} to determine if the vsprintf() and vsnprintf()
+    should be tested to assumed to exist or not exist.
+
+    Tests for the existence of vsprintf() now also require the existence
+    of vsnprintf().  Test for the existence of vsnprintf() now also
+    require the existence of vsprintf().
+
+    The #define CALC_SIZE_T was never used except when memmove() was
+    not found.  This symbol was renamed to MEMMOVE_SIZE_T.  Calc
+    requires that size_t must be a known type.
+
+
+The following are the changes from calc version 2.12.1.6 to 2.12.1.7:
 
     Added the calc builtin function, usertime(), to return the amount of
     user CPU time used by the current process.  Unlike the old runtime()
@@ -6318,8 +6336,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.93 $
-## @(#) $Id: CHANGES,v 29.93 2007/02/07 00:41:06 chongo Exp $
+## @(#) $Revision: 29.95 $
+## @(#) $Id: CHANGES,v 29.95 2007/02/07 21:28:20 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

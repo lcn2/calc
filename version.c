@@ -1,7 +1,7 @@
 /*
  * version - determine the version of calc
  *
- * Copyright (C) 1999-2006  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.73 $
- * @(#) $Id: version.c,v 29.73 2007/02/07 00:41:06 chongo Exp $
+ * @(#) $Revision: 29.76 $
+ * @(#) $Id: version.c,v 29.76 2007/02/07 21:28:20 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
@@ -48,7 +48,7 @@ static char *program;
 #define MAJOR_VER	2	/* major version */
 #define MINOR_VER	12	/* minor version */
 #define MAJOR_PATCH	1	/* patch level or 0 if no patch */
-#define MINOR_PATCH	7	/* test number or 0 if no minor patch */
+#define MINOR_PATCH	9	/* test number or 0 if no minor patch */
 
 
 /*
@@ -72,9 +72,9 @@ static char *stored_version = NULL;	/* version formed if != NULL */
 char *Copyright = "\n"
   "calc - arbitrary precision calculator\n"
   "\n"
-  "@(#) Copyright (C) 2006  David I. Bell, Landon Curt Noll and Ernest Bowen\n"
+  "@(#) Copyright (C) 2007  David I. Bell, Landon Curt Noll and Ernest Bowen\n"
   "\n"
-  "Primary author:  David I. Bell\n"
+  "Initial author:  David I. Bell\n"
   "\n"
   "Calc is open software; you can redistribute it and/or modify it under\n"
   "the terms of the version 2.1 of the GNU Lesser General Public License\n"
@@ -94,23 +94,6 @@ char *Copyright = "\n"
   "The COPYING-LGPL file may be viewed with:\thelp copying-lgpl\n"
   "\n";
 
-
-#if !defined(HAVE_SNPRINTF)
-/* Simulate snprintf with vsprintf, hoping that BUFSIZ is large enough.  */
-#include <stdarg.h>
-/*ARGSUSED*/
-int
-snprintf (char *buf, size_t UNUSED n, const char *fmt, ...)
-{
-	int retval;
-	va_list arg;
-
-	va_start (arg, fmt);
-	retval = vsprintf (buf, fmt, arg);
-	va_end (arg);
-	return retval;
-}
-#endif
 
 /*
  * version - return version string

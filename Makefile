@@ -32,8 +32,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.84 $$
-# @(#) $Id: Makefile.ship,v 29.84 2007/02/07 00:34:23 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.85 $$
+# @(#) $Id: Makefile.ship,v 29.85 2007/02/07 20:35:58 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -71,12 +71,17 @@ TERMCONTROL=
 
 # If your system does not have a vsprintf() function, you could be in trouble.
 #
-#	vsprintf(stream, format, ap)
+#	vsprintf(string, format, ap)
 #
 # This function works like sprintf except that the 3rd arg is a va_list
 # strarg (or varargs) list.  Some old systems do not have vsprintf().
 # If you do not have vsprintf(), then calc will try sprintf() and hope
 # for the best.
+#
+# A simular problem occurs if your system does not have a vsnprintf()
+# function.  This function is like the vsprintf() function except that
+# there is an extra second argument that controls the maximum size
+# string that is produced.
 #
 # If HAVE_VSPRINTF is empty, this Makefile will run the have_stdvs.c and/or
 # have_varvs.c program to determine if vsprintf() is supported.	 If
@@ -2828,7 +2833,7 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
 	fi
 	-${Q} if [ ! -f have_args.sh ] && [ X"${HAVE_VSPRINTF}" = X ]; then \
 	    ${RM} -f have_stdvs.o have_stdvs${EXT} have_varvs.o have_varvs${EXT}; \
-	    ${LCC} ${ICFLAGS} -DDONT_HAVE_VSPRINTF have_varvs.c -c \
+	    ${LCC} ${ICFLAGS} ${HAVE_VSPRINTF} have_varvs.c -c \
 		    2>/dev/null; \
 	    ${LCC} ${ILDFLAGS} have_varvs.o -o have_varvs${EXT} 2>/dev/null; \
 	    if ./have_varvs${EXT} >>args.h 2>/dev/null; then \

@@ -7,7 +7,7 @@ be useful!
 
 Please note that calc shell scripts must start with the line:
 
-    #!/usr/bin/calc -q -f
+    #!/usr/local/src/cmd/calc/calc -q -f
 
 The above line MUST start in column 1 of the first line.   The first line
 must also end in -f.  The -q is optional, but is recommended to disable
@@ -18,7 +18,7 @@ Comments must be /* c-like comment */ or start with a double ## symbol.
 
 This is the correct way to form a calc shell script:
 
-    #!/usr/bin/calc -q -f
+    #!/usr/local/src/cmd/calc/calc -q -f
 
     /* a correct comment */
     ## another correct comment
@@ -36,7 +36,7 @@ For more informaton about calc command lines, see "help usage".
 
 This next example WRONG:
 
-    #!/usr/bin/calc -q
+    #!/usr/local/src/cmd/calc/calc -q
 
     # This is not a calc calc comment because it has only a single #
     # You must to start comments with ## or /*

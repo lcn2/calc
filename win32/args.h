@@ -11,8 +11,8 @@
 #define STDARG /* use <stdarg.h> */
 #include <stdarg.h>
 
-/* should we use vsprintf()? */
-#define HAVE_VS /* yes */
+/* should we use vsprintf() and vsnprintf()? */
+#define HAVE_VSPRINTF /* yes */
 
 
 #endif /* !__ARGS_H__ */
