@@ -1,4 +1,45 @@
-The following are the changes from calc version 2.12.1.6 to date:
+The following are the changes from calc version 2.12.1.7 to date:
+
+    Fixed calc cscripts that contained comments that were not valid calc
+    comments.  Improved calc comment documentation in "help unexpected"
+    to help other avoid similar mistakes.  Calc comments are of the form:
+
+    	/* c style comments */
+	/*
+	 * multi-line
+	 * commentts
+	 */
+	## two or more #-signs
+	### in a row
+	### Note that # along is a calc uniary and binary operator
+
+    Added "help pound" or "help #' to document the # operator, comments,
+    and the first line of cscript files.
+
+    Documented these help commands in "help help":
+
+    	help ->
+	help *
+	help .
+	help %
+	help //
+	help #
+
+    The usage help file is now formed from the contents of the calc man page.
+    So "help usage" prints the version of the calc man page.  Added ${COL}
+    makefile symbol to support the formation of the calc.usage file from
+    calc.1 via the CALCPAGER (less).
+
+    The "help calc" command is now equivalent to "help help".
+
+    The "help define" command is now equivalent to "help command".
+
+    Fixed calc command line usage message.
+    
+    Fixed missing README.src file in RPM src and tgz src tarball.
+
+
+The following are the changes from calc version 2.12.1.6 to 2.12.1.6:
 
     Added the calc builtin function, usertime(), to return the amount of
     user CPU time used by the current process.  Unlike the old runtime()
@@ -2644,8 +2685,6 @@ The following are the changes from calc version 2.10.3t5.38 to 2.11.3t5.46:
 
     Consolidated multiple SGI IRIX -n32 sections (for r4k, r5k and r10k)
     into a single section.
-
-
 
 
 The following are the changes from calc version 2.10.3t5.34 to 2.10.3t5.37:
@@ -6281,8 +6320,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.91 $
-## @(#) $Id: CHANGES,v 29.91 2007/01/03 21:27:55 chongo Exp $
+## @(#) $Revision: 29.94 $
+## @(#) $Id: CHANGES,v 29.94 2007/02/07 01:38:03 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

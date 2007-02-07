@@ -291,12 +291,36 @@ Statements
 
     Also see the help topic:
 
-	    command	    top level commands
-	    expression	    calc expression syntax
-	    builtin	    calc builtin functions
-	    usage	    how to invoke the calc command and calc -options
+	    help command	top level commands
+	    help expression	calc expression syntax
+	    help builtin	calc builtin functions
+	    help usage	    	how to invoke the calc command and calc -options
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+    You may obtain help on individual builtin functions.  For example:
+
+	    help asinh
+	    help round
+
+    See:
+    	    help builtin
+
+    for a list of builtin functions.
+
+    Some calc operators have their own help pages:
+
+	    help ->
+	    help *
+	    help .
+	    help %
+	    help //
+	    help #
+
+    See also:
+
+	    help help
+
+
+## Copyright (C) 1999-2007  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -312,8 +336,8 @@ Statements
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: statement,v 29.3 2007/01/03 21:26:22 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: statement,v 29.4 2007/02/07 00:29:06 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/statement,v $
 ##
 ## Under source code control:	1991/07/21 04:37:23

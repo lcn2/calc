@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.13 $
- * @(#) $Id: calc.c,v 29.13 2006/05/19 15:26:10 chongo Exp $
+ * @(#) $Revision: 29.14 $
+ * @(#) $Id: calc.c,v 29.14 2007/02/07 00:37:25 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11
@@ -416,6 +416,7 @@ main(int argc, char **argv)
 						cp++;
 					*bp++ = ';';
 					cmdlen++;
+					s_flag = TRUE;	/* -f implies -s */
 					break;
 
 				case 's':
@@ -431,11 +432,13 @@ main(int argc, char **argv)
 					fprintf(stderr, "Illegal option -%c\n",
 							c);
 					fprintf(stderr,
-		"usage: %s [-a] [-c] [-C] [-d] [-e] [-h] [-i] [-m mode]\n"
+		"usage: %s [-c] [-C] [-d] [-e] [-h] [-i] [-m mode]\n"
 		"\t[-D calc_debug[:resource_debug[:user_debug]]]\n"
-		"\t[-O] [-p] [-q] [-u] [-v] "
-		"[--] [calc_cmd ...]\n",
-		program);
+		"\t[-O] [-p] [-q] [-s] [-u] [-v] "
+		"[--] [calc_cmd ...]\n"
+		"usage: %s ... -f filename\n"
+		"1st cscript line: #/path/to/calc ... -f\n",
+		program, program);
 					exit(1);
 			}
 			if (havearg)

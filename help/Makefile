@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.35 $
-# @(#) $Id: Makefile,v 29.35 2006/12/16 10:32:54 chongo Exp $
+# @(#) $Revision: 29.36 $
+# @(#) $Id: Makefile,v 29.36 2007/02/07 00:31:06 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -169,7 +169,7 @@ SED= sed
 SORT= sort
 FMT= fmt
 CMP= cmp
-CP= cm
+CP= cp
 MV= mv
 TRUE= true
 RM= rm
@@ -214,9 +214,9 @@ STD_HELP_FILES_8= operator statement
 
 BLT_HELP_FILES_9= resource
 
-STD_HELP_FILES_10= types usage script
+STD_HELP_FILES_10= types script
 
-BLT_HELP_FILES_10a= cscript
+BLT_HELP_FILES_10a= usage cscript
 
 STD_HELP_FILES_10b= unexpected variable
 
@@ -292,9 +292,9 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
 	ln log lowbit ltol makelist matdim matfill matmax matmin matsum \
 	mattrace mattrans max md5 memsize meq min minv mmin mne mod modify \
 	name near newerror nextcand nextprime norm null num oldvalue ord \
-	param perm pfact pi pix places pmod polar poly pop popcnt power \
-	prevcand prevprime printf prompt protect ptest push putenv quo \
-	quomod rand randbit random randombit randperm rcin rcmul rcout \
+	param perm pfact pi pix places pmod polar poly pop popcnt pound \
+	power prevcand prevprime printf prompt protect ptest push putenv \
+	quo quomod rand randbit random randombit randperm rcin rcmul rcout \
 	rcpow rcsq re remove reverse rewind rm root round rsearch runtime \
 	saveval scale scan scanf search sec sech seed segment select sgn \
 	sha sha1 sin sinh size sizeof sleep sort sqrt srand srandom ssq \
@@ -325,7 +325,7 @@ DISTLIST= ${STD_HELP_FILES} ${DETAIL_HELP} ${MAKE_FILE} \
 CALCLIBLIST=
 
 all: ${FULL_HELP_FILES} full ${DETAIL_HELP} ${DETAIL_CLONE} \
-     ${SINGULAR_FILES} calc .all
+     ${SINGULAR_FILES} .all
 
 # used by the upper level Makefile to determine of we have done all
 #
@@ -410,9 +410,9 @@ errorcodes: ../calcerr.h errorcodes.hdr errorcodes.sed
 	    ${TRUE}; \
 	fi
 
-calc: usage
+usage: ../calc.usage
 	${RM} -f $@
-	${CP} usage $@
+	${CP} ../calc.usage $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -421,6 +421,9 @@ calc: usage
 	else \
 	    ${TRUE}; \
 	fi
+
+../calc.usage:
+	(cd ..; $(MAKE) calc.usage)
 
 custom_cal: ../custom/CUSTOM_CAL
 	${RM} -f $@
@@ -493,6 +496,11 @@ cscript: ../cscript/README
 	else \
 	    ${TRUE}; \
 	fi
+
+../cscript/README: ../cscript/README.src
+	${Q} echo "forming cscript/README"
+	-${Q} ${RM} -f $@
+	(cd ../cscript; $(MAKE) README)
 
 full: ${FULL_HELP_FILES} ${MAKE_FILE}
 	${Q} echo "forming full"

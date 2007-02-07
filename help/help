@@ -51,15 +51,6 @@ following topics:
 
     full		all of the above (in the above order)
 
-You can also ask for help on a particular function name.  For example,
-
-    help asinh
-    help round
-
-or on a particular symbol such as:
-
-    help =
-
 For example:
 
     help usage
@@ -70,6 +61,27 @@ without invoking any startup code by running calc as follows:
     calc -q help topic
 
 where 'topic' is one of the topics listed above.
+
+You can also ask for help on a particular builtin function name.  For example:
+
+    help asinh
+    help round
+
+See:
+
+    help builtin
+
+for a list of builtin functions.
+
+Some calc operators have their own help pages:
+
+    help =
+    help ->
+    help *
+    help .
+    help %
+    help //
+    help #
 
 If the -m mode disallows opening files for reading or execution of programs,
 then the help facility will be disabled.  See:
@@ -103,7 +115,7 @@ as the same effect as:
 
     custom("help", "anything");
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2007  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -119,8 +131,8 @@ as the same effect as:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.3 $
-## @(#) $Id: help,v 29.3 2000/06/07 14:02:33 chongo Exp $
+## @(#) $Revision: 29.4 $
+## @(#) $Id: help,v 29.4 2007/02/07 00:30:04 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/help,v $
 ##
 ## Under source code control:	1991/07/21 04:37:20

@@ -32,8 +32,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.83 $$
-# @(#) $Id: Makefile.ship,v 29.83 2007/01/03 21:29:50 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.84 $$
+# @(#) $Id: Makefile.ship,v 29.84 2007/02/07 00:34:23 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -1206,6 +1206,7 @@ CO= co
 AR= ar
 TRUE= true
 CAT= cat
+COL= col
 # assume the X11 makedepend tool for the depend rule
 MAKEDEPEND= makedepend
 
@@ -1570,7 +1571,7 @@ PROGS= calc${EXT} ${UTIL_PROGS}
 # complete list of targets
 #
 TARGETS= ${LICENSE} ${CALC_LIBS} custom/.all calc${EXT} sample/.all \
-	 cal/.all help/.all help/builtin cscript/.all calc.1
+	 cal/.all help/.all help/builtin cscript/.all calc.1 calc.usage
 
 
 ###
@@ -1593,16 +1594,24 @@ libcalc.a: ${LIBOBJS} ${MAKE_FILE}
 	${CHMOD} 0644 libcalc.a
 
 calc.1: calc.man ${MAKE_FILE}
-	-${RM} -f calc.1
-	${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' \
-	       -e 's,$${BINDIR},${BINDIR},g' \
-	       -e 's,$${CALCPATH},${CALCPATH},g' \
-	       -e 's,$${SCRIPTDIR},${SCRIPTDIR},g' \
-	       -e 's,$${CALC_INCDIR},${CALC_INCDIR},g' \
-	       -e 's,$${CUSTOMCALDIR},${CUSTOMCALDIR},g' \
-	       -e 's,$${CUSTOMINCDIR},${CUSTOMINCDIR},g' \
-	       -e 's,$${CUSTOMHELPDIR},${CUSTOMHELPDIR},g' \
-	       -e 's,$${CALCRC},${CALCRC},g' < calc.man > calc.1
+	-${RM} -f $@
+	${Q} echo forming calc.1 from calc.man
+	@${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' \
+	        -e 's,$${BINDIR},${BINDIR},g' \
+	        -e 's,$${CALCPATH},${CALCPATH},g' \
+	        -e 's,$${SCRIPTDIR},${SCRIPTDIR},g' \
+	        -e 's,$${CALC_INCDIR},${CALC_INCDIR},g' \
+	        -e 's,$${CUSTOMCALDIR},${CUSTOMCALDIR},g' \
+	        -e 's,$${CUSTOMINCDIR},${CUSTOMINCDIR},g' \
+	        -e 's,$${CUSTOMHELPDIR},${CUSTOMHELPDIR},g' \
+	        -e 's,$${CALCRC},${CALCRC},g' < calc.man > calc.1
+	${Q} echo calc.man formed
+
+calc.usage: calc.1
+	-${RM} -f $@
+	${Q} echo forming calc.usage from calc.1
+	${CALCPAGER} calc.1 | ${COL} -b > $@
+	${Q} echo calc.usage formed
 
 ##
 #
@@ -3357,6 +3366,7 @@ env:
 	@echo 'SORT=${SORT}'; echo ''
 	@echo 'TEE=${TEE}'; echo ''
 	@echo 'CTAGS=${CTAGS}'; echo ''
+	@echo 'COL=${COL}'; echo ''
 	@echo 'MAKEDEPEND=${MAKEDEPEND}'; echo ''
 	@echo 'MKDIR_ARG=${MKDIR_ARG}'; echo ''
 	@echo 'EXT=${EXT}'; echo ''

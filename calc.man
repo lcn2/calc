@@ -1,5 +1,5 @@
 .\"
-.\" Copyright (C) 1999-2004	Landon Curt Noll
+.\" Copyright (C) 1999-2007	Landon Curt Noll
 .\"
 .\" Calc is open software; you can redistribute it and/or modify it under
 .\" the terms of the version 2.1 of the GNU Lesser General Public License
@@ -15,8 +15,8 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 .\"
-.\" @(#) $Revision: 29.20 $
-.\" @(#) $Id: calc.man,v 29.20 2006/06/01 12:04:16 chongo Exp $
+.\" @(#) $Revision: 29.21 $
+.\" @(#) $Id: calc.man,v 29.21 2007/02/07 00:38:43 chongo Exp $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -28,7 +28,7 @@
 .\" calculator by David I. Bell
 .\" man page by Landon Noll
 .\"
-.TH calc 1 "^..^" "1999-11-30"
+.TH calc 1 "^..^" "2007-02-06"
 .SH NAME
 calc \- arbitrary precision calculator
 .SH SYNOPSIS

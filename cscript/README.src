@@ -5,6 +5,46 @@ These calc shell scripts are provided because they serve as examples of
 how use the calc language, and/or because the authors thought them to
 be useful!
 
+Please note that calc shell scripts must start with the line:
+
+    #!/usr/local/src/cmd/calc/calc -q -f
+
+The above line MUST start in column 1 of the first line.   The first line
+must also end in -f.  The -q is optional, but is recommended to disable
+the processing of calc startup scripts.
+
+Also please note that single # shell line comments are not supported in calc.
+Comments must be /* c-like comment */ or start with a double ## symbol.
+
+This is the correct way to form a calc shell script:
+
+    #!/usr/local/src/cmd/calc/calc -q -f
+
+    /* a correct comment */
+    ## another correct comment
+    ### two or more together is also a comment
+    /*
+     * another correct comment
+     */
+    print "2+2 =", 2+2;	## yet another comment
+
+The first argument after the path to calc executable must be an -S.
+The next arguments are optional.  The -q is often recommended because
+it will disable the processing of the startup scripts.
+
+For more informaton about calc command lines, see "help usage".
+
+This next example WRONG:
+
+    #!/usr/local/src/cmd/calc/calc -q
+
+    # This is not a calc calc comment because it has only a single #
+    # You must to start comments with ## or /*
+    # is is also wrong because the first line does not end in -f
+    print "This example has invalid comments"
+
+#####
+
 If you write something that you think is useful, please send it to:
 
     calc-contrib at asthe dot com
@@ -77,9 +117,9 @@ simple
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.10 $
-## @(#) $Id: README,v 29.10 2001/06/10 19:34:40 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/README,v $
+## @(#) $Revision: 29.11 $
+## @(#) $Id: README.src,v 29.11 2007/02/07 00:33:10 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/README.src,v $
 ##
 ## Under source code control:	1999/12/17 10:23:40
 ## File existed as early as:	1999
