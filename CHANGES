@@ -54,6 +54,9 @@ The following are the changes from calc version 2.12.1.8 to date:
     not found.  This symbol was renamed to MEMMOVE_SIZE_T.  Calc
     requires that size_t must be a known type.
 
+    Calc and cscripts are installed mode 0755 instead of 0555 to
+    make rpmlint happy.
+
 
 The following are the changes from calc version 2.12.1.6 to 2.12.1.7:
 
@@ -6336,8 +6339,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.95 $
-## @(#) $Id: CHANGES,v 29.95 2007/02/07 21:28:20 chongo Exp $
+## @(#) $Revision: 29.96 $
+## @(#) $Id: CHANGES,v 29.96 2007/02/08 21:22:43 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

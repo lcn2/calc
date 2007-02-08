@@ -32,8 +32,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.85 $$
-# @(#) $Id: Makefile.ship,v 29.85 2007/02/07 20:35:58 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.86 $$
+# @(#) $Id: Makefile.ship,v 29.86 2007/02/08 21:21:53 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -3740,7 +3740,7 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	else \
 	    ${RM} -f ${T}${BINDIR}/calc.new${EXT}; \
 	    ${CP} -f calc${EXT} ${T}${BINDIR}/calc.new${EXT}; \
-	    ${CHMOD} 0555 ${T}${BINDIR}/calc.new${EXT}; \
+	    ${CHMOD} 0755 ${T}${BINDIR}/calc.new${EXT}; \
 	    ${MV} -f ${T}${BINDIR}/calc.new${EXT} ${T}${BINDIR}/calc${EXT}; \
 	    echo "installed ${T}${BINDIR}/calc${EXT}"; \
 	fi

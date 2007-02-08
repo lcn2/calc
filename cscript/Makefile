@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.31 $
-# @(#) $Id: Makefile,v 29.31 2007/02/07 01:43:56 chongo Exp $
+# @(#) $Revision: 29.32 $
+# @(#) $Id: Makefile,v 29.32 2007/02/08 21:21:25 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -400,7 +400,7 @@ install: all
 	    else \
 		${RM} -f ${T}${SCRIPTDIR}/$$i.new; \
 		${CP} -f $$i ${T}${SCRIPTDIR}/$$i.new; \
-		${CHMOD} 0555 ${T}${SCRIPTDIR}/$$i.new; \
+		${CHMOD} 0755 ${T}${SCRIPTDIR}/$$i.new; \
 		${MV} -f ${T}${SCRIPTDIR}/$$i.new ${T}${SCRIPTDIR}/$$i; \
 		echo "installed ${T}${SCRIPTDIR}/$$i"; \
 	    fi; \
