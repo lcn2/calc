@@ -1,7 +1,7 @@
 /*
  * size - size and sizeof functions are implemented here
  *
- * Copyright (C) 1999-2006  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: size.c,v 29.4 2006/05/19 15:26:10 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: size.c,v 29.5 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/size.c,v $
  *
  * Under source code control:	1997/03/10 01:56:51
@@ -37,11 +37,11 @@
 /*
  * forward declarations
  */
-static size_t zsize(ZVALUE);
-static size_t qsize(NUMBER*);
-static size_t csize(COMPLEX*);
-static size_t memzsize(ZVALUE);
-static size_t memqsize(NUMBER*);
+S_FUNC size_t zsize(ZVALUE);
+S_FUNC size_t qsize(NUMBER*);
+S_FUNC size_t csize(COMPLEX*);
+S_FUNC size_t memzsize(ZVALUE);
+S_FUNC size_t memqsize(NUMBER*);
 
 
 /*
@@ -124,7 +124,7 @@ elm_count(VALUE *vp)
  * returns:
  *	value size
  */
-static size_t
+S_FUNC size_t
 zsize(ZVALUE z)
 {
 	/* ignore the size of 0, 1 and -1 */
@@ -148,7 +148,7 @@ zsize(ZVALUE z)
  * returns:
  *	value size
  */
-static size_t
+S_FUNC size_t
 qsize(NUMBER *q)
 {
 	/* ingore denominator parts of integers */
@@ -173,7 +173,7 @@ qsize(NUMBER *q)
  * returns:
  *	value size
  */
-static size_t
+S_FUNC size_t
 csize(COMPLEX *c)
 {
 	/* ingore denominator parts of integers */
@@ -194,7 +194,7 @@ csize(COMPLEX *c)
  * returns:
  *	memory footprint
  */
-static size_t
+S_FUNC size_t
 memzsize(ZVALUE z)
 {
 	return sizeof(ZVALUE) + (z.len * sizeof(HALF));
@@ -210,7 +210,7 @@ memzsize(ZVALUE z)
  * returns:
  *	memory footprint
  */
-static size_t
+S_FUNC size_t
 memqsize(NUMBER *q)
 {
 	return sizeof(NUMBER) + memzsize(q->num) + memzsize(q->den);

@@ -1,7 +1,7 @@
 /*
  * math_error - a simple libcalc math error routine
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: math_error.h,v 29.5 2001/06/08 21:00:58 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: math_error.h,v 29.6 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/math_error.h,v $
  *
  * Under source code control:	1997/03/23 18:37:10
@@ -34,16 +34,16 @@
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
-# include "win32dll.h"
+# include "decl.h"
 #else
-# include <calc/win32dll.h>
+# include <calc/decl.h>
 #endif
 
 
 /*
  * Global data definitions.
  */
-extern DLL jmp_buf jmpbuf;		/* for errors */
+EXTERN jmp_buf jmpbuf;		/* for errors */
 
 
 #endif /* !__MATH_ERROR_H__ */

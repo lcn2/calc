@@ -1,7 +1,7 @@
 /*
  * qmod - modular arithmetic routines for normal numbers and REDC numbers
  *
- * Copyright (C) 1999-2006  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: qmod.c,v 29.3 2006/06/25 20:33:26 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: qmod.c,v 29.4 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qmod.c,v $
  *
  * Under source code control:	1991/05/22 23:15:07
@@ -45,11 +45,11 @@ typedef struct	{
 } REDC_CACHE;
 
 
-static long redc_age;			/* current age counter */
-static REDC_CACHE redc_cache[MAXREDC];	/* cached REDC info */
+STATIC long redc_age;			/* current age counter */
+STATIC REDC_CACHE redc_cache[MAXREDC];	/* cached REDC info */
 
 
-static REDC *qfindredc(NUMBER *q);
+S_FUNC REDC *qfindredc(NUMBER *q);
 
 
 /*
@@ -339,7 +339,7 @@ qredcpower(NUMBER *q1, NUMBER *q2, NUMBER *q3)
  * given:
  *	q		modulus to find REDC information of
  */
-static REDC *
+S_FUNC REDC *
 qfindredc(NUMBER *q)
 {
 	register REDC_CACHE *rcp;

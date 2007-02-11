@@ -1,7 +1,7 @@
 /*
  * codegen - module to generate opcodes from the input tokens
  *
- * Copyright (C) 1999-2006  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.22 $
- * @(#) $Id: codegen.c,v 29.22 2006/12/15 16:25:09 chongo Exp $
+ * @(#) $Revision: 29.23 $
+ * @(#) $Id: codegen.c,v 29.23 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -49,61 +49,61 @@
 # include <direct.h>
 #endif
 
-static BOOL rdonce;	/* TRUE => do not reread this file */
+STATIC BOOL rdonce;	/* TRUE => do not reread this file */
 
 FUNC *curfunc;
 
-static int getsymvalue(char *name, VALUE *v_p);
-static int getfilename(char *name, size_t namelen, BOOL *once);
-static BOOL getid(char *buf);
-static void getshowstatement(void);
-static void getfunction(void);
-static void ungetfunction(void);
-static void getbody(LABEL *contlabel, LABEL *breaklabel,
+S_FUNC int getsymvalue(char *name, VALUE *v_p);
+S_FUNC int getfilename(char *name, size_t namelen, BOOL *once);
+S_FUNC BOOL getid(char *buf);
+S_FUNC void getshowstatement(void);
+S_FUNC void getfunction(void);
+S_FUNC void ungetfunction(void);
+S_FUNC void getbody(LABEL *contlabel, LABEL *breaklabel,
 		    LABEL *nextcaselabel, LABEL *defaultlabel);
-static int getdeclarations(int symtype);
-static int getsimpledeclaration (int symtype);
-static int getonevariable (int symtype);
-static void getstatement(LABEL *contlabel, LABEL *breaklabel,
+S_FUNC int getdeclarations(int symtype);
+S_FUNC int getsimpledeclaration (int symtype);
+S_FUNC int getonevariable (int symtype);
+S_FUNC void getstatement(LABEL *contlabel, LABEL *breaklabel,
 			 LABEL *nextcaselabel, LABEL *defaultlabel);
-static void getobjdeclaration(int symtype);
-static void getoneobj(long index, int symtype);
-static void getobjvars(char *name, int symtype);
-static void getmatdeclaration(int symtype);
-static void getonematrix(int symtype);
-static void creatematrix(void);
-static void getsimplebody(void);
-static void getcondition(void);
-static void getmatargs(void);
-static void getelement(void);
-static void usesymbol(char *name, int autodef);
-static void definesymbol(char *name, int symtype);
-static void getcallargs(char *name);
-static void do_changedir(void);
-static int getexprlist(void);
-static int getopassignment(void);
-static int getassignment(void);
-static int getaltcond(void);
-static int getorcond(void);
-static int getandcond(void);
-static int getrelation(void);
-static int getsum(void);
-static int getproduct(void);
-static int getorexpr(void);
-static int getandexpr(void);
-static int getshiftexpr(void);
-static int getreference(void);
-static int getincdecexpr(void);
-static int getterm(void);
-static int getidexpr(BOOL okmat, int autodef);
-static long getinitlist(void);
+S_FUNC void getobjdeclaration(int symtype);
+S_FUNC void getoneobj(long index, int symtype);
+S_FUNC void getobjvars(char *name, int symtype);
+S_FUNC void getmatdeclaration(int symtype);
+S_FUNC void getonematrix(int symtype);
+S_FUNC void creatematrix(void);
+S_FUNC void getsimplebody(void);
+S_FUNC void getcondition(void);
+S_FUNC void getmatargs(void);
+S_FUNC void getelement(void);
+S_FUNC void usesymbol(char *name, int autodef);
+S_FUNC void definesymbol(char *name, int symtype);
+S_FUNC void getcallargs(char *name);
+S_FUNC void do_changedir(void);
+S_FUNC int getexprlist(void);
+S_FUNC int getopassignment(void);
+S_FUNC int getassignment(void);
+S_FUNC int getaltcond(void);
+S_FUNC int getorcond(void);
+S_FUNC int getandcond(void);
+S_FUNC int getrelation(void);
+S_FUNC int getsum(void);
+S_FUNC int getproduct(void);
+S_FUNC int getorexpr(void);
+S_FUNC int getandexpr(void);
+S_FUNC int getshiftexpr(void);
+S_FUNC int getreference(void);
+S_FUNC int getincdecexpr(void);
+S_FUNC int getterm(void);
+S_FUNC int getidexpr(BOOL okmat, int autodef);
+S_FUNC long getinitlist(void);
 
 #define INDICALLOC 8
 
-static int quickindices[INDICALLOC];
-static int * newindices;
-static int * indices;
-static int maxindices;
+STATIC int quickindices[INDICALLOC];
+STATIC int * newindices;
+STATIC int * indices;
+STATIC int maxindices;
 
 
 /*
@@ -289,7 +289,7 @@ evaluate(BOOL nestflag)
 /*
  * Undefine one or more functions
  */
-static void
+S_FUNC void
 ungetfunction(void)
 {
 	char *name;
@@ -340,7 +340,7 @@ ungetfunction(void)
  * func = name '(' '' | name [ ',' name] ... ')' simplebody
  *	| name '(' '' | name [ ',' name] ... ')' body.
  */
-static void
+S_FUNC void
 getfunction(void)
 {
 	char *name;		/* parameter name */
@@ -429,7 +429,7 @@ getfunction(void)
  * Get a simple assignment style body for a function declaration.
  * simplebody = '=' assignment '\n'.
  */
-static void
+S_FUNC void
 getsimplebody(void)
 {
 	(void) tokenmode(TM_NEWLINES);
@@ -444,7 +444,7 @@ getsimplebody(void)
  *	| [ declarations ] ... [statement ] ... '\n'
  */
 /*ARGSUSED*/
-static void
+S_FUNC void
 getbody(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *defaultlabel)
 {
 	int oldmode;
@@ -474,7 +474,7 @@ getbody(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *defaul
  * declarations = { LOCAL | GLOBAL | STATIC } onedeclaration
  *	[ ',' onedeclaration ] ... ';'.
  */
-static int
+S_FUNC int
 getdeclarations(int symtype)
 {
 	int res = 0;
@@ -526,7 +526,7 @@ getdeclarations(int symtype)
  * Subsequences end with "," or at end of line; spaces indicate
  * repeated assignment, e.g. "c d = 2" has the effect of "c = 2, d = 2".
  */
-static int
+S_FUNC int
 getsimpledeclaration(int symtype)
 {
 	int res = 0;
@@ -554,9 +554,9 @@ getsimpledeclaration(int symtype)
  * Get one variable in a sequence of simple identifiers.
  * Returns 1 if the subsequence in which the variable occurs ends with
  * an assignment, e.g. for the variables b, c, d, in
- *	static a, b = 1, c d = 2, d;
+ *	S_FUNC a, b = 1, c d = 2, d;
  */
-static int
+S_FUNC int
 getonevariable(int symtype)
 {
 	char *name;
@@ -608,7 +608,7 @@ getonevariable(int symtype)
  *	nextcaselabel		label for next case statement
  *	defaultlabel		label for default case
  */
-static void
+S_FUNC void
 getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *defaultlabel)
 {
 	LABEL label;
@@ -1059,7 +1059,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *d
  * is an OBJ statement, otherwise this is part of a declaration which will
  * define new symbols with the specified type.
  */
-static void
+S_FUNC void
 getobjdeclaration(int symtype)
 {
 	char *name;			/* name of object type */
@@ -1165,7 +1165,7 @@ getobjdeclaration(int symtype)
 }
 
 
-static void
+S_FUNC void
 getoneobj(long index, int symtype)
 {
 	char *symname;
@@ -1192,7 +1192,7 @@ getoneobj(long index, int symtype)
 
 /*
  * Routine to assign a specified object-type value to each of a set of
- * variables in a "global", "local" or "static" declaration, or, if
+ * variables in a "global", "local" or "S_FUNC" declaration, or, if
  * symtype is SYM_UNDEFINED, to create one object value of the specified
  * type.
  *
@@ -1200,7 +1200,7 @@ getoneobj(long index, int symtype)
  *	name		object name
  *	symtype		declaration type
  */
-static void
+S_FUNC void
 getobjvars(char *name, int symtype)
 {
 	long index;		/* index for object */
@@ -1224,7 +1224,7 @@ getobjvars(char *name, int symtype)
 }
 
 
-static void
+S_FUNC void
 getmatdeclaration(int symtype)
 {
 	for (;;) {
@@ -1244,7 +1244,7 @@ getmatdeclaration(int symtype)
 }
 
 
-static void
+S_FUNC void
 getonematrix(int symtype)
 {
 	long dim;
@@ -1340,7 +1340,7 @@ getonematrix(int symtype)
 }
 
 
-static void
+S_FUNC void
 creatematrix(void)
 {
 	long dim;
@@ -1398,7 +1398,7 @@ creatematrix(void)
  * Returns the number of elements that are in the list, or -1 on parse error.
  *	initlist = { assignment [ , assignment ] ... }.
  */
-static long
+S_FUNC long
 getinitlist(void)
 {
 	long index;
@@ -1454,7 +1454,7 @@ getinitlist(void)
  * Get a condition.
  * condition = '(' assignment ')'.
  */
-static void
+S_FUNC void
 getcondition(void)
 {
 	if (gettoken() != T_LEFTPAREN) {
@@ -1478,7 +1478,7 @@ getcondition(void)
  * Returns flags describing the type of the last assignment or expression found.
  * exprlist = assignment [ ',' assignment ] ...
  */
-static int
+S_FUNC int
 getexprlist(void)
 {
 	int	type;
@@ -1511,7 +1511,7 @@ getexprlist(void)
  *	| lvalue '**=' assignment
  *	| orcond.
  */
-static int
+S_FUNC int
 getopassignment(void)
 {
 	int type;		/* type of expression */
@@ -1587,7 +1587,7 @@ getopassignment(void)
  * Get an assignment (lvalue = ...) or possibly just an expression
  */
 
-static int
+S_FUNC int
 getassignment (void)
 {
 	int type;		/* type of expression */
@@ -1657,7 +1657,7 @@ getassignment (void)
  * Flags are returned indicating the type of expression found.
  * altcond = orcond [ '?' orcond ':' altcond ].
  */
-static int
+S_FUNC int
 getaltcond(void)
 {
 	int type;		/* type of expression */
@@ -1691,7 +1691,7 @@ getaltcond(void)
  * Flags are returned indicating the type of expression found.
  * orcond = andcond [ '||' andcond ] ...
  */
-static int
+S_FUNC int
 getorcond(void)
 {
 	int type;		/* type of expression */
@@ -1715,7 +1715,7 @@ getorcond(void)
  * Flags are returned indicating the type of expression found.
  * andcond = relation [ '&&' relation ] ...
  */
-static int
+S_FUNC int
 getandcond(void)
 {
 	int type;		/* type of expression */
@@ -1745,7 +1745,7 @@ getandcond(void)
  *	| sum '>' sum
  *	| sum.
  */
-static int
+S_FUNC int
 getrelation(void)
 {
 	int type;		/* type of expression */
@@ -1776,7 +1776,7 @@ getrelation(void)
  * Flags indicating the type of expression found are returned.
  * sum = product [ {'+' | '-'} product ] ...
  */
-static int
+S_FUNC int
 getsum(void)
 {
 	int type;		/* type of expression found */
@@ -1819,7 +1819,7 @@ getsum(void)
  * Flags indicating the type of expression found are returned.
  * product = orexpr [ {'*' | '/' | '//' | '%'} orexpr ] ...
  */
-static int
+S_FUNC int
 getproduct(void)
 {
 	int type;		/* type of value found */
@@ -1850,7 +1850,7 @@ getproduct(void)
  * Flags indicating the type of expression found are returned.
  * orexpr = andexpr [ '|' andexpr ] ...
  */
-static int
+S_FUNC int
 getorexpr(void)
 {
 	int type;		/* type of value found */
@@ -1873,7 +1873,7 @@ getorexpr(void)
  * Flags indicating the type of expression found are returned.
  * andexpr = shiftexpr [ '&' shiftexpr ] ...
  */
-static int
+S_FUNC int
 getandexpr(void)
 {
 	int type;		/* type of value found */
@@ -1912,7 +1912,7 @@ getandexpr(void)
  *	 | reference '>>' shiftexpr
  *	 | reference.
  */
-static int
+S_FUNC int
 getshiftexpr(void)
 {
 	int type;		/* type of value found */
@@ -1956,7 +1956,7 @@ getshiftexpr(void)
  * address = '&' term
  * dereference = '*' term
  */
-static int
+S_FUNC int
 getreference(void)
 {
 	int type;
@@ -1993,7 +1993,7 @@ getreference(void)
  * get an increment or decrement expression
  * ++expr, --expr, expr++, expr--
  */
-static int
+S_FUNC int
 getincdecexpr(void)
 {
 	int type;
@@ -2051,7 +2051,7 @@ getincdecexpr(void)
  *	| function [ '(' [assignment  [',' assignment] ] ')' ]
  *	| '!' term
  */
-static int
+S_FUNC int
 getterm(void)
 {
 	int type;		/* type of term found */
@@ -2211,7 +2211,7 @@ getterm(void)
  * element references.  The symbol can be a global or a local variable name.
  * Returns the type of expression found.
  */
-static int
+S_FUNC int
 getidexpr(BOOL okmat, int autodef)
 {
 	int type;
@@ -2286,7 +2286,7 @@ getidexpr(BOOL okmat, int autodef)
  *	 to get the value of a symbol.  It should NOT be used in the
  *	 general op code generation / calc code parsing case.
  */
-static int
+S_FUNC int
 getsymvalue(char *name, VALUE *v_p)
 {
 	GLOBAL *g_ret;		/* global return from findglobal() */
@@ -2319,7 +2319,7 @@ getsymvalue(char *name, VALUE *v_p)
  *	namelen		length of filename buffer including NUL byte
  *	once		non-NULL => set to TRUE of -once read
  */
-static int
+S_FUNC int
 getfilename(char *name, size_t namelen, BOOL *once)
 {
 	STRING *s;
@@ -2401,7 +2401,7 @@ getfilename(char *name, size_t namelen, BOOL *once)
 /*
  * Read the show command to display useful information
  */
-static void
+S_FUNC void
 getshowstatement(void)
 {
 	char name[5];
@@ -2472,7 +2472,7 @@ getshowstatement(void)
  * Read in a set of matrix index arguments, surrounded with square brackets.
  * This also handles double square brackets for 'fast indexing'.
  */
-static void
+S_FUNC void
 getmatargs(void)
 {
 	int dim;
@@ -2534,7 +2534,7 @@ getmatargs(void)
  * Get an element of an object reference.
  * The leading period which introduces the element has already been read.
  */
-static void
+S_FUNC void
 getelement(void)
 {
 	long index;
@@ -2555,7 +2555,7 @@ getelement(void)
  * Read in a single symbol name and copy its value into the given buffer.
  * Returns TRUE if a valid symbol id was found.
  */
-static BOOL
+S_FUNC BOOL
 getid(char *buf)
 {
 	int type;
@@ -2587,7 +2587,7 @@ getid(char *buf)
  * redeclared and when in the same body the variable will be accessible only
  ^ with the appropriate specfier.
  */
-static void
+S_FUNC void
 definesymbol(char *name, int symtype)
 {
 	switch (symboltype(name)) {
@@ -2650,7 +2650,7 @@ definesymbol(char *name, int symtype)
  *	autodef		1 => define if symbol is not known
  *			T_GLOBAL => get global, define if necessary
  */
-static void
+S_FUNC void
 usesymbol(char *name, int autodef)
 {
 	int type;
@@ -2707,7 +2707,7 @@ usesymbol(char *name, int autodef)
  * given:
  *	name		name of function
  */
-static void
+S_FUNC void
 getcallargs(char *name)
 {
 	long index;		/* function index */
@@ -2776,7 +2776,7 @@ getcallargs(char *name)
 /*
  * Change the current directory.  If no directory is given, assume home.
  */
-static void
+S_FUNC void
 do_changedir(void)
 {
 	char *p;

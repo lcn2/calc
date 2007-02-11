@@ -1,7 +1,7 @@
 /*
  * zrand - subtractive 100 shuffle generator
  *
- * Copyright (C) 1999,2004  Landon Curt Noll
+ * Copyright (C) 1999-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: zrand.h,v 29.7 2004/03/31 04:58:40 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: zrand.h,v 29.8 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrand.h,v $
  *
  * Under source code control:	1995/01/07 09:45:26
@@ -210,16 +210,16 @@ struct rand {
 /*
  * s100 generator function declarations
  */
-extern RAND *zsrand(CONST ZVALUE *seed, CONST MATRIX *pmat100);
-extern RAND *zsetrand(CONST RAND *state);
-extern void zrandskip(long count);
-extern void zrand(long count, ZVALUE *res);
-extern void zrandrange(CONST ZVALUE low, CONST ZVALUE beyond, ZVALUE *res);
-extern long irand(long s);
-extern RAND *randcopy(CONST RAND *rand);
-extern void randfree(RAND *rand);
-extern BOOL randcmp(CONST RAND *s1, CONST RAND *s2);
-extern void randprint(CONST RAND *state, int flags);
+E_FUNC RAND *zsrand(CONST ZVALUE *seed, CONST MATRIX *pmat100);
+E_FUNC RAND *zsetrand(CONST RAND *state);
+E_FUNC void zrandskip(long count);
+E_FUNC void zrand(long count, ZVALUE *res);
+E_FUNC void zrandrange(CONST ZVALUE low, CONST ZVALUE beyond, ZVALUE *res);
+E_FUNC long irand(long s);
+E_FUNC RAND *randcopy(CONST RAND *rand);
+E_FUNC void randfree(RAND *rand);
+E_FUNC BOOL randcmp(CONST RAND *s1, CONST RAND *s2);
+E_FUNC void randprint(CONST RAND *state, int flags);
 
 
 #endif /* !__ZRAND_H__ */

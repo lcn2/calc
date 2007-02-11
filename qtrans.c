@@ -1,7 +1,7 @@
 /*
  * qtrans - transcendental functions for real numbers
  *
- * Copyright (C) 1999-2004  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: qtrans.c,v 29.7 2006/05/07 13:04:18 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: qtrans.c,v 29.8 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qtrans.c,v $
  *
  * Under source code control:	1990/02/15 01:48:22
@@ -44,11 +44,11 @@ NUMBER _qlge_ = { { _qlgenum_, 1, 0 }, { _qlgeden_, 1, 0 }, 1, NULL };
 /*
  * cache the natural logarithm of 10
  */
-static NUMBER *ln_10 = NULL;
-static NUMBER *ln_10_epsilon = NULL;
+STATIC NUMBER *ln_10 = NULL;
+STATIC NUMBER *ln_10_epsilon = NULL;
 
-static NUMBER *pivalue[2];
-static NUMBER *qexprel(NUMBER *q, long bitnum);
+STATIC NUMBER *pivalue[2];
+STATIC NUMBER *qexprel(NUMBER *q, long bitnum);
 
 /*
  * Evaluate and store in specified locations the sin and cos of a given
@@ -821,7 +821,7 @@ qexp(NUMBER *q, NUMBER *epsilon)
  * Requires *q >= 0, bitnum >= 0.
  * This returns NULL if more than 2^30 working bits would be required.
  */
-static NUMBER *
+S_FUNC NUMBER *
 qexprel(NUMBER *q, long bitnum)
 {
 	long n, m, k, h, s, t, d;

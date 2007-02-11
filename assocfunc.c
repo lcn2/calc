@@ -1,7 +1,7 @@
 /*
  * assocfunc - association table routines
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: assocfunc.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: assocfunc.c,v 29.3 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/assocfunc.c,v $
  *
  * Under source code control:	1993/07/20 23:04:27
@@ -46,10 +46,10 @@
 #define ELEMSIZE(n)	(sizeof(ASSOCELEM) + (sizeof(VALUE) * ((n) - 1)))
 
 
-static ASSOCELEM *elemindex(ASSOC *ap, long index);
-static BOOL compareindices(VALUE *v1, VALUE *v2, long dim);
-static void resize(ASSOC *ap, long newsize);
-static void assoc_elemfree(ASSOCELEM *ep);
+S_FUNC ASSOCELEM *elemindex(ASSOC *ap, long index);
+S_FUNC BOOL compareindices(VALUE *v1, VALUE *v2, long dim);
+S_FUNC void resize(ASSOC *ap, long newsize);
+S_FUNC void assoc_elemfree(ASSOCELEM *ep);
 
 
 /*
@@ -69,7 +69,7 @@ associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices)
 {
 	ASSOCELEM **listhead;
 	ASSOCELEM *ep;
-	static VALUE val;
+	STATIC VALUE val;
 	QCKHASH hash;
 	int i;
 
@@ -200,7 +200,7 @@ assocrsearch(ASSOC *ap, VALUE *vp, long i, long j, ZVALUE *index)
  *	ap		association to index into
  *	index		index of desired element
  */
-static ASSOCELEM *
+S_FUNC ASSOCELEM *
 elemindex(ASSOC *ap, long index)
 {
 	ASSOCELEM *ep;
@@ -356,7 +356,7 @@ assoccopy(ASSOC *oldap)
  * This is only actually done if the growth from the previous size is
  * enough to make this worthwhile.
  */
-static void
+S_FUNC void
 resize(ASSOC *ap, long newsize)
 {
 	ASSOCELEM **oldtable;
@@ -400,7 +400,7 @@ resize(ASSOC *ap, long newsize)
 /*
  * Free an association element, along with any contained values.
  */
-static void
+S_FUNC void
 assoc_elemfree(ASSOCELEM *ep)
 {
 	int i;
@@ -520,7 +520,7 @@ assocprint(ASSOC *ap, long max_print)
  * Compare two lists of index values to see if they are identical.
  * Returns TRUE if they are the same.
  */
-static BOOL
+S_FUNC BOOL
 compareindices(VALUE *v1, VALUE *v2, long dim)
 {
 	int i;

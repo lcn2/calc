@@ -1,7 +1,7 @@
 /*
  * zmath - declarations for extended precision integer arithmetic
  *
- * Copyright (C) 1999-2006  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.18 $
- * @(#) $Id: zmath.h,v 29.18 2006/12/15 16:20:04 chongo Exp $
+ * @(#) $Revision: 29.19 $
+ * @(#) $Id: zmath.h,v 29.19 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -39,14 +39,14 @@
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
-# include "win32dll.h"
+# include "decl.h"
 # include "alloc.h"
 # include "endian_calc.h"
 # include "longbits.h"
 # include "byteswap.h"
 # include "have_stdlib.h"
 #else
-# include <calc/win32dll.h>
+# include <calc/decl.h>
 # include <calc/alloc.h>
 # include <calc/endian_calc.h>
 # include <calc/longbits.h>
@@ -278,128 +278,128 @@ typedef struct {
 /*
  * Function prototypes for integer math routines.
  */
-extern DLL HALF * alloc(LEN len);
+E_FUNC HALF * alloc(LEN len);
 #ifdef	ALLOCTEST
-extern DLL void freeh(HALF *);
+E_FUNC void freeh(HALF *);
 #endif
 
 
 /*
  * Input, output, and conversion routines.
  */
-extern DLL void zcopy(ZVALUE z, ZVALUE *res);
-extern DLL void itoz(long i, ZVALUE *res);
-extern DLL void utoz(FULL i, ZVALUE *res);
-extern DLL void stoz(SFULL i, ZVALUE *res);
-extern DLL void str2z(char *s, ZVALUE *res);
-extern DLL long ztoi(ZVALUE z);
-extern DLL FULL ztou(ZVALUE z);
-extern DLL SFULL ztos(ZVALUE z);
-extern DLL void zprintval(ZVALUE z, long decimals, long width);
-extern DLL void zprintx(ZVALUE z, long width);
-extern DLL void zprintb(ZVALUE z, long width);
-extern DLL void zprinto(ZVALUE z, long width);
-extern DLL void fitzprint(ZVALUE, long, long);
+E_FUNC void zcopy(ZVALUE z, ZVALUE *res);
+E_FUNC void itoz(long i, ZVALUE *res);
+E_FUNC void utoz(FULL i, ZVALUE *res);
+E_FUNC void stoz(SFULL i, ZVALUE *res);
+E_FUNC void str2z(char *s, ZVALUE *res);
+E_FUNC long ztoi(ZVALUE z);
+E_FUNC FULL ztou(ZVALUE z);
+E_FUNC SFULL ztos(ZVALUE z);
+E_FUNC void zprintval(ZVALUE z, long decimals, long width);
+E_FUNC void zprintx(ZVALUE z, long width);
+E_FUNC void zprintb(ZVALUE z, long width);
+E_FUNC void zprinto(ZVALUE z, long width);
+E_FUNC void fitzprint(ZVALUE, long, long);
 
 
 /*
  * Basic numeric routines.
  */
-extern DLL void zmuli(ZVALUE z, long n, ZVALUE *res);
-extern DLL long zdivi(ZVALUE z, long n, ZVALUE *res);
-extern DLL long zmodi(ZVALUE z, long n);
-extern DLL void zadd(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL void zsub(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL void zmul(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL long zdiv(ZVALUE z1, ZVALUE z2, ZVALUE *res, ZVALUE *rem, long R);
-extern DLL long zquo(ZVALUE z1, ZVALUE z2, ZVALUE *res, long R);
-extern DLL long zmod(ZVALUE z1, ZVALUE z2, ZVALUE *rem, long R);
-extern DLL void zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL BOOL zdivides(ZVALUE z1, ZVALUE z2);
-extern DLL void zor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL void zand(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL void zxor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL void zandnot(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL long zpopcnt(ZVALUE z, int bitval);
-extern DLL void zshift(ZVALUE z, long n, ZVALUE *res);
-extern DLL void zsquare(ZVALUE z, ZVALUE *res);
-extern DLL long zlowbit(ZVALUE z);
-extern DLL LEN zhighbit(ZVALUE z);
-extern DLL void zbitvalue(long n, ZVALUE *res);
-extern DLL BOOL zisset(ZVALUE z, long n);
-extern DLL BOOL zisonebit(ZVALUE z);
-extern DLL BOOL zisallbits(ZVALUE z);
-extern DLL FLAG ztest(ZVALUE z);
-extern DLL FLAG zrel(ZVALUE z1, ZVALUE z2);
-extern DLL FLAG zabsrel(ZVALUE z1, ZVALUE z2);
-extern DLL BOOL zcmp(ZVALUE z1, ZVALUE z2);
+E_FUNC void zmuli(ZVALUE z, long n, ZVALUE *res);
+E_FUNC long zdivi(ZVALUE z, long n, ZVALUE *res);
+E_FUNC long zmodi(ZVALUE z, long n);
+E_FUNC void zadd(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC void zsub(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC void zmul(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC long zdiv(ZVALUE z1, ZVALUE z2, ZVALUE *res, ZVALUE *rem, long R);
+E_FUNC long zquo(ZVALUE z1, ZVALUE z2, ZVALUE *res, long R);
+E_FUNC long zmod(ZVALUE z1, ZVALUE z2, ZVALUE *rem, long R);
+E_FUNC void zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC BOOL zdivides(ZVALUE z1, ZVALUE z2);
+E_FUNC void zor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC void zand(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC void zxor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC void zandnot(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC long zpopcnt(ZVALUE z, int bitval);
+E_FUNC void zshift(ZVALUE z, long n, ZVALUE *res);
+E_FUNC void zsquare(ZVALUE z, ZVALUE *res);
+E_FUNC long zlowbit(ZVALUE z);
+E_FUNC LEN zhighbit(ZVALUE z);
+E_FUNC void zbitvalue(long n, ZVALUE *res);
+E_FUNC BOOL zisset(ZVALUE z, long n);
+E_FUNC BOOL zisonebit(ZVALUE z);
+E_FUNC BOOL zisallbits(ZVALUE z);
+E_FUNC FLAG ztest(ZVALUE z);
+E_FUNC FLAG zrel(ZVALUE z1, ZVALUE z2);
+E_FUNC FLAG zabsrel(ZVALUE z1, ZVALUE z2);
+E_FUNC BOOL zcmp(ZVALUE z1, ZVALUE z2);
 
 
 /*
  * More complicated numeric functions.
  */
-extern DLL FULL uugcd(FULL i1, FULL i2);
-extern DLL long iigcd(long i1, long i2);
-extern DLL void zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL void zlcm(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL void zreduce(ZVALUE z1, ZVALUE z2, ZVALUE *z1res, ZVALUE *z2res);
-extern DLL void zfact(ZVALUE z, ZVALUE *dest);
-extern DLL void zperm(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL int zcomb(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL FLAG zjacobi(ZVALUE z1, ZVALUE z2);
-extern DLL void zfib(ZVALUE z, ZVALUE *res);
-extern DLL void zpowi(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL void ztenpow(long power, ZVALUE *res);
-extern DLL void zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res);
-extern DLL BOOL zmodinv(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL BOOL zrelprime(ZVALUE z1, ZVALUE z2);
-extern DLL long zlog(ZVALUE z1, ZVALUE z2);
-extern DLL long zlog10(ZVALUE z, BOOL *was_10_power);
-extern DLL long zdivcount(ZVALUE z1, ZVALUE z2);
-extern DLL long zfacrem(ZVALUE z1, ZVALUE z2, ZVALUE *rem);
-extern DLL long zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL long zdigits(ZVALUE z1);
-extern DLL long zdigit(ZVALUE z1, long n);
-extern DLL FLAG zsqrt(ZVALUE z1, ZVALUE *dest, long R);
-extern DLL void zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest);
-extern DLL BOOL zissquare(ZVALUE z);
-extern DLL void zhnrmod(ZVALUE v, ZVALUE h, ZVALUE zn, ZVALUE zr, ZVALUE *res);
+E_FUNC FULL uugcd(FULL i1, FULL i2);
+E_FUNC long iigcd(long i1, long i2);
+E_FUNC void zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC void zlcm(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC void zreduce(ZVALUE z1, ZVALUE z2, ZVALUE *z1res, ZVALUE *z2res);
+E_FUNC void zfact(ZVALUE z, ZVALUE *dest);
+E_FUNC void zperm(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC int zcomb(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC FLAG zjacobi(ZVALUE z1, ZVALUE z2);
+E_FUNC void zfib(ZVALUE z, ZVALUE *res);
+E_FUNC void zpowi(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC void ztenpow(long power, ZVALUE *res);
+E_FUNC void zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res);
+E_FUNC BOOL zmodinv(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC BOOL zrelprime(ZVALUE z1, ZVALUE z2);
+E_FUNC long zlog(ZVALUE z1, ZVALUE z2);
+E_FUNC long zlog10(ZVALUE z, BOOL *was_10_power);
+E_FUNC long zdivcount(ZVALUE z1, ZVALUE z2);
+E_FUNC long zfacrem(ZVALUE z1, ZVALUE z2, ZVALUE *rem);
+E_FUNC long zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC long zdigits(ZVALUE z1);
+E_FUNC long zdigit(ZVALUE z1, long n);
+E_FUNC FLAG zsqrt(ZVALUE z1, ZVALUE *dest, long R);
+E_FUNC void zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest);
+E_FUNC BOOL zissquare(ZVALUE z);
+E_FUNC void zhnrmod(ZVALUE v, ZVALUE h, ZVALUE zn, ZVALUE zr, ZVALUE *res);
 
 
 /*
  * Prime related functions.
  */
-extern DLL FLAG zisprime(ZVALUE z);
-extern DLL FULL znprime(ZVALUE z);
-extern DLL FULL next_prime(FULL v);
-extern DLL FULL zpprime(ZVALUE z);
-extern DLL void zpfact(ZVALUE z, ZVALUE *dest);
-extern DLL BOOL zprimetest(ZVALUE z, long count, ZVALUE skip);
-extern DLL BOOL zredcprimetest(ZVALUE z, long count, ZVALUE skip);
-extern DLL BOOL znextcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *cand);
-extern DLL BOOL zprevcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *cand);
-extern DLL FULL zlowfactor(ZVALUE z, long count);
-extern DLL FLAG zfactor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL long zpix(ZVALUE z1);
-extern DLL void zlcmfact(ZVALUE z, ZVALUE *dest);
+E_FUNC FLAG zisprime(ZVALUE z);
+E_FUNC FULL znprime(ZVALUE z);
+E_FUNC FULL next_prime(FULL v);
+E_FUNC FULL zpprime(ZVALUE z);
+E_FUNC void zpfact(ZVALUE z, ZVALUE *dest);
+E_FUNC BOOL zprimetest(ZVALUE z, long count, ZVALUE skip);
+E_FUNC BOOL zredcprimetest(ZVALUE z, long count, ZVALUE skip);
+E_FUNC BOOL znextcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *cand);
+E_FUNC BOOL zprevcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *cand);
+E_FUNC FULL zlowfactor(ZVALUE z, long count);
+E_FUNC FLAG zfactor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC long zpix(ZVALUE z1);
+E_FUNC void zlcmfact(ZVALUE z, ZVALUE *dest);
 
 
 /*
  * Misc misc functions. :-)
  */
-extern DLL void zsquaremod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL void zminmod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL BOOL zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3);
-extern DLL void zio_init(void);
+E_FUNC void zsquaremod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC void zminmod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC BOOL zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3);
+E_FUNC void zio_init(void);
 
 
 /*
  * These functions are for internal use only.
  */
-extern DLL void ztrim(ZVALUE *z);
-extern DLL void zshiftr(ZVALUE z, long n);
-extern DLL void zshiftl(ZVALUE z, long n);
-extern DLL HALF *zalloctemp(LEN len);
+E_FUNC void ztrim(ZVALUE *z);
+E_FUNC void zshiftr(ZVALUE z, long n);
+E_FUNC void zshiftl(ZVALUE z, long n);
+E_FUNC HALF *zalloctemp(LEN len);
 
 
 /*
@@ -416,13 +416,13 @@ typedef struct {
 	ZVALUE one;		/* REDC format for the number 1 */
 } REDC;
 
-extern DLL REDC *zredcalloc(ZVALUE z1);
-extern DLL void zredcfree(REDC *rp);
-extern DLL void zredcencode(REDC *rp, ZVALUE z1, ZVALUE *res);
-extern DLL void zredcdecode(REDC *rp, ZVALUE z1, ZVALUE *res);
-extern DLL void zredcmul(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
-extern DLL void zredcsquare(REDC *rp, ZVALUE z1, ZVALUE *res);
-extern DLL void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC REDC *zredcalloc(ZVALUE z1);
+E_FUNC void zredcfree(REDC *rp);
+E_FUNC void zredcencode(REDC *rp, ZVALUE z1, ZVALUE *res);
+E_FUNC void zredcdecode(REDC *rp, ZVALUE z1, ZVALUE *res);
+E_FUNC void zredcmul(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC void zredcsquare(REDC *rp, ZVALUE z1, ZVALUE *res);
+E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 
 
 /*
@@ -587,63 +587,63 @@ extern DLL void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 /*
  * Output routines for either FILE handles or strings.
  */
-extern DLL void math_chr(int ch);
-extern DLL void math_str(char *str);
-extern DLL void math_fill(char *str, long width);
-extern DLL void math_flush(void);
-extern DLL void math_divertio(void);
-extern DLL void math_cleardiversions(void);
-extern DLL char *math_getdivertedio(void);
-extern DLL int math_setmode(int mode);
-extern DLL int math_setmode2(int mode);
-extern DLL LEN math_setdigits(LEN digits);
-extern DLL void math_fmt(char *, ...);
+E_FUNC void math_chr(int ch);
+E_FUNC void math_str(char *str);
+E_FUNC void math_fill(char *str, long width);
+E_FUNC void math_flush(void);
+E_FUNC void math_divertio(void);
+E_FUNC void math_cleardiversions(void);
+E_FUNC char *math_getdivertedio(void);
+E_FUNC int math_setmode(int mode);
+E_FUNC int math_setmode2(int mode);
+E_FUNC LEN math_setdigits(LEN digits);
+E_FUNC void math_fmt(char *, ...);
 
 
 /*
  * The error routine.
  */
-extern DLL void math_error(char *, ...);
+E_FUNC void math_error(char *, ...);
 
 
 /*
  * external swap functions
  */
-extern DLL HALF *swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len);
-extern DLL ZVALUE *swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all);
-extern DLL HALF *swap_b16_in_HALFs(HALF *dest, HALF *src, LEN len);
-extern DLL ZVALUE *swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all);
-extern DLL ZVALUE *swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all);
+E_FUNC HALF *swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len);
+E_FUNC ZVALUE *swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all);
+E_FUNC HALF *swap_b16_in_HALFs(HALF *dest, HALF *src, LEN len);
+E_FUNC ZVALUE *swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all);
+E_FUNC ZVALUE *swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all);
 
 
 /*
  * constants used often by the arithmetic routines
  */
-extern HALF _zeroval_[], _oneval_[], _twoval_[], _threeval_[], _fourval_[];
-extern HALF _fiveval_[], _sixval_[], _sevenval_[], _eightval_[], _nineval_[];
-extern HALF _tenval_[], _elevenval_[], _twelveval_[], _thirteenval_[];
-extern HALF _fourteenval_[], _fifteenval_[];
-extern HALF _sqbaseval_[];
-extern HALF _fourthbaseval_[];
+EXTERN HALF _zeroval_[], _oneval_[], _twoval_[], _threeval_[], _fourval_[];
+EXTERN HALF _fiveval_[], _sixval_[], _sevenval_[], _eightval_[], _nineval_[];
+EXTERN HALF _tenval_[], _elevenval_[], _twelveval_[], _thirteenval_[];
+EXTERN HALF _fourteenval_[], _fifteenval_[];
+EXTERN HALF _sqbaseval_[];
+EXTERN HALF _fourthbaseval_[];
 
-extern ZVALUE zconst[];		/* ZVALUE integers from 0 thru 15 */
+EXTERN ZVALUE zconst[];		/* ZVALUE integers from 0 thru 15 */
 
-extern ZVALUE _zero_, _one_, _two_, _ten_, _neg_one_;
-extern ZVALUE _sqbase_, _pow4base_, _pow8base_;
+EXTERN ZVALUE _zero_, _one_, _two_, _ten_, _neg_one_;
+EXTERN ZVALUE _sqbase_, _pow4base_, _pow8base_;
 
-extern ZVALUE _b32_, _b64_;
+EXTERN ZVALUE _b32_, _b64_;
 
-extern DLL BOOL _math_abort_;	/* nonzero to abort calculations */
-extern ZVALUE _tenpowers_[];	/* table of 10^2^n */
+EXTERN BOOL _math_abort_;	/* nonzero to abort calculations */
+EXTERN ZVALUE _tenpowers_[];	/* table of 10^2^n */
 
 /*
  * Bit fiddeling functions and types
  */
-extern HALF bitmask[];		/* bit rotation, norm 0 */
-extern HALF lowhalf[];		/* bit masks from low end of HALF */
-extern HALF rlowhalf[];		/* reversed bit masks from low end of HALF */
-extern HALF highhalf[];		/* bit masks from high end of HALF */
-extern HALF rhighhalf[];	/* reversed bit masks from high end of HALF */
+EXTERN HALF bitmask[];		/* bit rotation, norm 0 */
+EXTERN HALF lowhalf[];		/* bit masks from low end of HALF */
+EXTERN HALF rlowhalf[];		/* reversed bit masks from low end of HALF */
+EXTERN HALF highhalf[];		/* bit masks from high end of HALF */
+EXTERN HALF rhighhalf[];	/* reversed bit masks from high end of HALF */
 #define HAVE_REVERSED_MASKS	/* allows old code to know libcalc.a has them */
 
 

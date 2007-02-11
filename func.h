@@ -1,7 +1,7 @@
 /*
  * func - built-in function interface definitions
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: func.h,v 29.4 2001/06/08 21:00:58 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: func.h,v 29.5 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.h,v $
  *
  * Under source code control:	1990/02/15 01:48:33
@@ -72,42 +72,42 @@ struct func {
 /*
  * The current function being compiled.
  */
-extern FUNC *curfunc;
+EXTERN FUNC *curfunc;
 
 
 /*
  * Functions to handle functions.
  */
-extern FUNC *findfunc(long index);
-extern char *namefunc(long index);
-extern BOOL evaluate(BOOL nestflag);
-extern long adduserfunc(char *name);
-extern void rmuserfunc(char *name);
-extern void rmalluserfunc(void);
-extern long getuserfunc(char *name);
-extern void beginfunc(char *name, BOOL newflag);
-extern int builtinopcode(long index);
-extern char *builtinname(long index);
-extern int dumpop(unsigned long *pc);
-extern void addop(long op);
-extern void endfunc(void);
-extern void addopone(long op, long arg);
-extern void addoptwo(long op, long arg1, long arg2);
-extern void addoplabel(long op, LABEL *label);
-extern void addopptr(long op, char *ptr);
-extern void writeindexop(void);
-extern void showbuiltins(void);
-extern int getbuiltinfunc(char *name);
-extern void builtincheck(long index, int count);
-extern void addopfunction(long op, long index, int count);
-extern void showfunctions(void);
-extern void initfunctions(void);
-extern void clearopt(void);
-extern void updateoldvalue(FUNC *fp);
-extern void calculate(FUNC *fp, int argcount);
-extern VALUE builtinfunc(long index, int argcount, VALUE *stck);
-extern void freenumbers(FUNC *);
-extern void freefunc(FUNC *);
+E_FUNC FUNC *findfunc(long index);
+E_FUNC char *namefunc(long index);
+E_FUNC BOOL evaluate(BOOL nestflag);
+E_FUNC long adduserfunc(char *name);
+E_FUNC void rmuserfunc(char *name);
+E_FUNC void rmalluserfunc(void);
+E_FUNC long getuserfunc(char *name);
+E_FUNC void beginfunc(char *name, BOOL newflag);
+E_FUNC int builtinopcode(long index);
+E_FUNC char *builtinname(long index);
+E_FUNC int dumpop(unsigned long *pc);
+E_FUNC void addop(long op);
+E_FUNC void endfunc(void);
+E_FUNC void addopone(long op, long arg);
+E_FUNC void addoptwo(long op, long arg1, long arg2);
+E_FUNC void addoplabel(long op, LABEL *label);
+E_FUNC void addopptr(long op, char *ptr);
+E_FUNC void writeindexop(void);
+E_FUNC void showbuiltins(void);
+E_FUNC int getbuiltinfunc(char *name);
+E_FUNC void builtincheck(long index, int count);
+E_FUNC void addopfunction(long op, long index, int count);
+E_FUNC void showfunctions(void);
+E_FUNC void initfunctions(void);
+E_FUNC void clearopt(void);
+E_FUNC void updateoldvalue(FUNC *fp);
+E_FUNC void calculate(FUNC *fp, int argcount);
+E_FUNC VALUE builtinfunc(long index, int argcount, VALUE *stck);
+E_FUNC void freenumbers(FUNC *);
+E_FUNC void freefunc(FUNC *);
 
 
 #endif /* !__FUNC_H__ */

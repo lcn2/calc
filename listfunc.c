@@ -1,7 +1,7 @@
 /*
  * listfunc - list handling routines
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: listfunc.c,v 29.3 2006/06/02 10:24:09 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: listfunc.c,v 29.4 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/listfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:18
@@ -40,11 +40,11 @@
 #include "value.h"
 #include "zrand.h"
 
-extern long irand(long s);
+E_FUNC long irand(long s);
 
-static LISTELEM *elemalloc(void);
-static void elemfree(LISTELEM *ep);
-static void removelistelement(LIST *lp, LISTELEM *ep);
+S_FUNC LISTELEM *elemalloc(void);
+S_FUNC void elemfree(LISTELEM *ep);
+S_FUNC void removelistelement(LIST *lp, LISTELEM *ep);
 
 
 /*
@@ -224,7 +224,7 @@ removelistmiddle(LIST *lp, long index, VALUE *vp)
  *	lp		list header
  *	ep		list element to remove
  */
-static void
+S_FUNC void
 removelistelement(LIST *lp, LISTELEM *ep)
 {
 	if ((ep == lp->l_cache) || ((ep != lp->l_first) && (ep != lp->l_last)))
@@ -804,7 +804,7 @@ listrandperm(LIST *lp)
 /*
  * Allocate an element for a list.
  */
-static LISTELEM *
+S_FUNC LISTELEM *
 elemalloc(void)
 {
 	LISTELEM *ep;
@@ -825,7 +825,7 @@ elemalloc(void)
 /*
  * Free a list element, along with any contained value.
  */
-static void
+S_FUNC void
 elemfree(LISTELEM *ep)
 {
 	if (ep->e_value.v_type != V_NULL)

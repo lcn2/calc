@@ -1,7 +1,7 @@
 /*
  * c_sysinfo - names and values of selected #defines
  *
- * Copyright (C) 1999,2004  Landon Curt Noll
+ * Copyright (C) 1999-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.12 $
- * @(#) $Id: c_sysinfo.c,v 29.12 2006/09/18 06:28:47 chongo Exp $
+ * @(#) $Revision: 29.13 $
+ * @(#) $Id: c_sysinfo.c,v 29.13 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_sysinfo.c,v $
  *
  * Under source code control:	1997/03/09 23:14:40
@@ -64,7 +64,7 @@ struct infoname {
 	char *str;	/* non-NULL ==> value of #define is a string */
 	FULL nmbr;	/* if str==NULL ==> value fo #define as a FULL */
 };
-static struct infoname sys_info[] = {
+STATIC struct infoname sys_info[] = {
     {"S100", "slots in an subtractive 100 table", NULL, (FULL)S100},
     {"BASE", "base for calculations", NULL, (FULL)BASE},
     {"BASE1", "one less than base", NULL, (FULL)BASE},
@@ -160,9 +160,9 @@ static struct infoname sys_info[] = {
 /*
  * forward declarations
  */
-static void dump_name_meaning(void);	/* custom("sysinfo", 0) */
-static void dump_name_value(void);	/* custom("sysinfo", 1) */
-static void dump_mening_value(void);	/* custom("sysinfo", 2) */
+S_FUNC void dump_name_meaning(void);	/* custom("sysinfo", 0) */
+S_FUNC void dump_name_value(void);	/* custom("sysinfo", 1) */
+S_FUNC void dump_mening_value(void);	/* custom("sysinfo", 2) */
 
 
 /*
@@ -290,7 +290,7 @@ c_sysinfo(char UNUSED *name, int count, VALUE **vals)
 /*
  * dump_name_meaning - print all infonames and meanings
  */
-static void
+S_FUNC void
 dump_name_meaning(void)
 {
 	struct infoname *p;	/* current infoname */
@@ -307,7 +307,7 @@ dump_name_meaning(void)
 /*
  * dump_name_value - print all infonames and values
  */
-static void
+S_FUNC void
 dump_name_value(void)
 {
 	struct infoname *p;	/* current infoname */
@@ -338,7 +338,7 @@ dump_name_value(void)
 /*
  * dump_mening_value - print all values and meanings
  */
-static void
+S_FUNC void
 dump_mening_value(void)
 {
 	struct infoname *p;	/* current infoname */

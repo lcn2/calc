@@ -1,7 +1,7 @@
 /*
  * string - string list routines
  *
- * Copyright (C) 1999-2006  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.10 $
- * @(#) $Id: string.c,v 29.10 2006/08/20 15:01:30 chongo Exp $
+ * @(#) $Revision: 29.11 $
+ * @(#) $Id: string.c,v 29.11 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/string.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -40,9 +40,9 @@
 
 STRING _nullstring_ = {"", 0, 1, NULL};
 
-static char *chartable;		/* single character string table */
+STATIC char *chartable;		/* single character string table */
 
-static struct {
+STATIC struct {
 	long l_count;		/* count of strings in table */
 	long l_maxcount;	/* maximum strings storable in table */
 	size_t l_avail;		/* characters available in current string */
@@ -792,7 +792,7 @@ stringlowbit(STRING *s)
  * Returns TRUE if and only if a difference is encountered.
  * Essentially a local version of memcmp.
  */
-static BOOL
+S_FUNC BOOL
 stringcompare(char *c1, char *c2, long len)
 {
 	while (len-- > 0) {
@@ -1000,9 +1000,9 @@ stringrsearch(STRING *s1, STRING *s2, long start, long end, ZVALUE *index)
 #define STRALLOC	100
 
 
-static STRING	*freeStr = NULL;
-static STRING	**firstStrs = NULL;
-static long	blockcount = 0;
+STATIC STRING	*freeStr = NULL;
+STATIC STRING	**firstStrs = NULL;
+STATIC long	blockcount = 0;
 
 
 STRING *
@@ -1172,9 +1172,9 @@ sfree(STRING *s)
 	freeStr = s;
 }
 
-static long	stringconstcount = 0;
-static long	stringconstavail = 0;
-static STRING	**stringconsttable;
+STATIC long	stringconstcount = 0;
+STATIC long	stringconstavail = 0;
+STATIC STRING	**stringconsttable;
 #define STRCONSTALLOC 100
 
 void

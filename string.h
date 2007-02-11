@@ -1,7 +1,7 @@
 /*
  * string - string list routines
  *
- * Copyright (C) 1999-2006  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: string.h,v 29.7 2006/08/20 15:01:30 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: string.h,v 29.8 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/string.h,v $
  *
  * Under source code control:	1990/02/15 01:48:36
@@ -57,26 +57,26 @@ typedef struct {
 } STRINGHEAD;
 
 
-extern void initstr(STRINGHEAD *hp);
-extern char *addstr(STRINGHEAD *hp, char *str);
-extern char *namestr(STRINGHEAD *hp, long n);
-extern int findstr(STRINGHEAD *hp, char *str);
-extern char *charstr(int ch);
-extern char *addliteral(char *str);
-extern long stringindex(char *str1, char *str2);
-extern STRING *stralloc(void);
-extern long addstring(char *str, size_t len);
-extern STRING *charstring(int ch);
-extern STRING *makestring(char *str);
-extern STRING *makenewstring(char *str);
-extern STRING *findstring(long index);
-extern STRING *slink(STRING *);
-extern void sfree(STRING *);
-extern void fitstring(char *, long, long);
-extern void strprint(STRING *);
-extern void showstrings(void);
-extern void showliterals(void);
-extern STRING _nullstring_;
+E_FUNC void initstr(STRINGHEAD *hp);
+E_FUNC char *addstr(STRINGHEAD *hp, char *str);
+E_FUNC char *namestr(STRINGHEAD *hp, long n);
+E_FUNC int findstr(STRINGHEAD *hp, char *str);
+E_FUNC char *charstr(int ch);
+E_FUNC char *addliteral(char *str);
+E_FUNC long stringindex(char *str1, char *str2);
+E_FUNC STRING *stralloc(void);
+E_FUNC long addstring(char *str, size_t len);
+E_FUNC STRING *charstring(int ch);
+E_FUNC STRING *makestring(char *str);
+E_FUNC STRING *makenewstring(char *str);
+E_FUNC STRING *findstring(long index);
+E_FUNC STRING *slink(STRING *);
+E_FUNC void sfree(STRING *);
+E_FUNC void fitstring(char *, long, long);
+E_FUNC void strprint(STRING *);
+E_FUNC void showstrings(void);
+E_FUNC void showliterals(void);
+EXTERN STRING _nullstring_;
 
 
 #endif /* !__CALCSTRING_H__ */

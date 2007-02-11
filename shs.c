@@ -31,8 +31,8 @@
  * Based on Version 2.11 (09 Mar 1995) from Landon Curt Noll's
  * (http://www.isthe.com/chongo/) shs hash program.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: shs.c,v 29.3 2004/02/23 08:14:15 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: shs.c,v 29.4 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/shs.c,v $
  *
  * This file is not covered under version 2.1 of the GNU LGPL.
@@ -128,23 +128,23 @@
 /*
  * forward declarations
  */
-static void shsInit(HASH*);
-static void shsTransform(USB32*, USB32*);
-static void shsUpdate(HASH*, USB8*, USB32);
-static void shsFinal(HASH*);
-static void shs_chkpt(HASH*);
-static void shs_note(int, HASH*);
-static void shs_type(int, HASH*);
+S_FUNC void shsInit(HASH*);
+S_FUNC void shsTransform(USB32*, USB32*);
+S_FUNC void shsUpdate(HASH*, USB8*, USB32);
+S_FUNC void shsFinal(HASH*);
+S_FUNC void shs_chkpt(HASH*);
+S_FUNC void shs_note(int, HASH*);
+S_FUNC void shs_type(int, HASH*);
 void shs_init_state(HASH*);
-static ZVALUE shs_final_state(HASH*);
-static int shs_cmp(HASH*, HASH*);
-static void shs_print(HASH*);
+S_FUNC ZVALUE shs_final_state(HASH*);
+S_FUNC int shs_cmp(HASH*, HASH*);
+S_FUNC void shs_print(HASH*);
 
 
 /*
  * shsInit - initialize the SHS state
  */
-static void
+S_FUNC void
 shsInit(HASH *state)
 {
 	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
@@ -170,7 +170,7 @@ shsInit(HASH *state)
  * It may be necessary to split it into sections, eg based on the four
  * subrounds.  One may also want to roll each subround into a loop.
  */
-static void
+S_FUNC void
 shsTransform(USB32 *digest, USB32 *W)
 {
 	USB32 A, B, C, D, E;	/* Local vars */
@@ -279,7 +279,7 @@ shsTransform(USB32 *digest, USB32 *W)
 /*
  * shsUpdate - update SHS with arbitrary length data
  */
-static void
+S_FUNC void
 shsUpdate(HASH *state, USB8 *buffer, USB32 count)
 {
 	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
@@ -356,7 +356,7 @@ shsUpdate(HASH *state, USB8 *buffer, USB32 count)
  * Finally we append the 64 bit length on to the 56 bytes of data
  * remaining.  This final chunk is transformed.
  */
-static void
+S_FUNC void
 shsFinal(HASH *state)
 {
 	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
@@ -428,7 +428,7 @@ shsFinal(HASH *state)
  * This function will ensure that the the hash chunk buffer is empty.
  * Any partially hashed data will be padded out with 0's and hashed.
  */
-static void
+S_FUNC void
 shs_chkpt(HASH *state)
 {
 	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
@@ -474,7 +474,7 @@ shs_chkpt(HASH *state)
  * Types include negative values, complex values, division, zero numeric
  * and array of HALFs.
  */
-static void
+S_FUNC void
 shs_note(int special, HASH *state)
 {
 	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
@@ -505,7 +505,7 @@ shs_note(int special, HASH *state)
  * or not.  We also do nothing with V_STR so that a hash of a string
  * will produce the same value as the standard hash function.
  */
-static void
+S_FUNC void
 shs_type(int type, HASH *state)
 {
 	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
@@ -572,7 +572,7 @@ shs_init_state(HASH *state)
  * returns:
  *	a ZVALUE representing the state
  */
-static ZVALUE
+S_FUNC ZVALUE
 shs_final_state(HASH *state)
 {
 	SHS_INFO *dig = &state->h_union.h_shs;		/* digest state */
@@ -636,7 +636,7 @@ shs_final_state(HASH *state)
  *	TRUE => hash states are different
  *	FALSE => hash states are the same
  */
-static int
+S_FUNC int
 shs_cmp(HASH *a, HASH *b)
 {
 	/*
@@ -695,7 +695,7 @@ shs_cmp(HASH *a, HASH *b)
  * given:
  *	state	the hash state to print
  */
-static void
+S_FUNC void
 shs_print(HASH *state)
 {
 	/*

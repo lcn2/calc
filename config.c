@@ -1,7 +1,7 @@
 /*
  * config - configuration routines
  *
- * Copyright (C) 1999-2006  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.23 $
- * @(#) $Id: config.c,v 29.23 2006/12/15 16:17:18 chongo Exp $
+ * @(#) $Revision: 29.24 $
+ * @(#) $Id: config.c,v 29.24 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -261,7 +261,7 @@ CONFIG *conf = NULL;	/* loaded in at startup - current configuration */
 /*
  * Possible output modes.
  */
-static NAMETYPE modes[] = {
+STATIC NAMETYPE modes[] = {
 	{"fraction",	MODE_FRAC},
 	{"frac",	MODE_FRAC},
 	{"integer",	MODE_INT},
@@ -286,7 +286,7 @@ static NAMETYPE modes[] = {
 /*
  * Possible block base output modes
  */
-static NAMETYPE blk_base[] = {
+STATIC NAMETYPE blk_base[] = {
 	{"hexadecimal", BLK_BASE_HEX},
 	{"hex",		BLK_BASE_HEX},
 	{"default",	BLK_BASE_HEX},
@@ -305,7 +305,7 @@ static NAMETYPE blk_base[] = {
 /*
  * Possible block output formats
  */
-static NAMETYPE blk_fmt[] = {
+STATIC NAMETYPE blk_fmt[] = {
 	{"lines",	BLK_FMT_LINE},
 	{"line",	BLK_FMT_LINE},
 	{"strings",	BLK_FMT_STRING},
@@ -325,7 +325,7 @@ static NAMETYPE blk_fmt[] = {
 /*
  * Possible ctrl_d styles
  */
-static NAMETYPE ctrl_d[] = {
+STATIC NAMETYPE ctrl_d[] = {
 	{"virgin_eof",	CTRL_D_VIRGIN_EOF},
 	{"virgineof",	CTRL_D_VIRGIN_EOF},
 	{"virgin",	CTRL_D_VIRGIN_EOF},
@@ -345,7 +345,7 @@ static NAMETYPE ctrl_d[] = {
  */
 #define TRUE_STRING	"true"
 #define FALSE_STRING	"false"
-static NAMETYPE truth[] = {
+STATIC NAMETYPE truth[] = {
 	{TRUE_STRING,	TRUE},
 	{"t",		TRUE},
 	{"on",		TRUE},
@@ -367,9 +367,9 @@ static NAMETYPE truth[] = {
 /*
  * declare static functions
  */
-static long lookup_long(NAMETYPE *set, char *name);
-static char *lookup_name(NAMETYPE *set, long val);
-static int getlen(VALUE *vp, LEN *lp);
+S_FUNC long lookup_long(NAMETYPE *set, char *name);
+S_FUNC char *lookup_name(NAMETYPE *set, long val);
+S_FUNC int getlen(VALUE *vp, LEN *lp);
 
 
 /*
@@ -403,7 +403,7 @@ configtype(char *name)
  * returns:
  *	numeric value of the name or -1 if not found
  */
-static long
+S_FUNC long
 lookup_long(NAMETYPE *set, char *name)
 {
 	NAMETYPE *cp;		/* current config pointer */
@@ -426,7 +426,7 @@ lookup_long(NAMETYPE *set, char *name)
  * returns:
  *	name of the value found of NULL
  */
-static char *
+S_FUNC char *
 lookup_name(NAMETYPE *set, long val)
 {
 	NAMETYPE *cp;		/* current config pointer */
@@ -446,7 +446,7 @@ lookup_name(NAMETYPE *set, long val)
  * Return: 1 ==> not an integer, 2 ==> int > 2^31, 0 ==> OK, -1 ==> error
  */
 
-static int
+S_FUNC int
 getlen(VALUE *vp, LEN *lp)
 {
 	if (vp->v_type != V_NUM || !qisint(vp->v_num))

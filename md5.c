@@ -10,8 +10,8 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: md5.c,v 29.3 2004/08/03 12:28:29 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: md5.c,v 29.4 2007/02/11 10:16:31 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/md5.c,v $
  *
  * This file is not covered under version 2.1 of the GNU LGPL.
@@ -54,12 +54,16 @@
 
 
 #include <stdio.h>
+#include "decl.h"
 #include "longbits.h"
 #include "align32.h"
 #include "endian_calc.h"
 #include "value.h"
 #include "hash.h"
 #include "md5.h"
+
+CONST char *rsa_notice = "The md5 code was derived from the RSA "
+    "Data Security, Inc. MD5 Message-Digest Algorithm.";
 
 
 /*

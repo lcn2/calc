@@ -1,7 +1,7 @@
 /*
  * obj - object handling primitives
  *
- * Copyright (C) 1999-2006  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: obj.c,v 29.8 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: obj.c,v 29.9 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/obj.c,v $
  *
  * Under source code control:	1990/02/15 01:48:19
@@ -64,7 +64,7 @@
 #define ERR_ASSIGN 10	/* assign value */
 
 
-static struct objectinfo {
+STATIC struct objectinfo {
 	short args;	/* number of arguments */
 	short retval;	/* type of return value */
 	short error;	/* special action on errors */
@@ -119,17 +119,17 @@ static struct objectinfo {
 };
 
 
-static STRINGHEAD objectnames;	/* names of objects */
-static STRINGHEAD elements;	/* element names for parts of objects */
-static OBJECTACTIONS **objects; /* table of actions for objects */
+STATIC STRINGHEAD objectnames;	/* names of objects */
+STATIC STRINGHEAD elements;	/* element names for parts of objects */
+STATIC OBJECTACTIONS **objects; /* table of actions for objects */
 
 #define OBJALLOC 16
-static long maxobjcount = 0;
+STATIC long maxobjcount = 0;
 
-static VALUE objpowi(VALUE *vp, NUMBER *q);
-static BOOL objtest(OBJECT *op);
-static BOOL objcmp(OBJECT *op1, OBJECT *op2);
-static void objprint(OBJECT *op);
+S_FUNC VALUE objpowi(VALUE *vp, NUMBER *q);
+S_FUNC BOOL objtest(OBJECT *op);
+S_FUNC BOOL objcmp(OBJECT *op1, OBJECT *op2);
+S_FUNC void objprint(OBJECT *op);
 
 
 /*
@@ -159,7 +159,7 @@ VALUE
 objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 {
 	FUNC *fp;		/* function to call */
-	static OBJECTACTIONS *oap; /* object to call for */
+	STATIC OBJECTACTIONS *oap; /* object to call for */
 	struct objectinfo *oip; /* information about action */
 	long index;		/* index of function (negative if undefined) */
 	VALUE val;		/* return value */
@@ -332,7 +332,7 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
  * given:
  *	op		object being printed
  */
-static void
+S_FUNC void
 objprint(OBJECT *op)
 {
 	int count;		/* number of elements */
@@ -354,7 +354,7 @@ objprint(OBJECT *op)
  * This is the default routine if the user's is not defined.
  * Returns TRUE if any of the elements are "nonzero".
  */
-static BOOL
+S_FUNC BOOL
 objtest(OBJECT *op)
 {
 	int i;			/* loop counter */
@@ -373,7 +373,7 @@ objtest(OBJECT *op)
  * This is the default routine if the user's is not defined.
  * For equality, all elements must be equal.
  */
-static BOOL
+S_FUNC BOOL
 objcmp(OBJECT *op1, OBJECT *op2)
 {
 	int i;			/* loop counter */
@@ -399,7 +399,7 @@ objcmp(OBJECT *op1, OBJECT *op2)
  *	vp		value to be powered
  *	q		power to raise number to
  */
-static VALUE
+S_FUNC VALUE
 objpowi(VALUE *vp, NUMBER *q)
 {
 	VALUE res, tmp;

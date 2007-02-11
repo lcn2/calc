@@ -1,7 +1,7 @@
 /*
  * calc - definitions for calculator program
  *
- * Copyright (C) 1999-2006  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.19 $
- * @(#) $Id: calc.h,v 29.19 2006/08/20 15:01:30 chongo Exp $
+ * @(#) $Revision: 29.20 $
+ * @(#) $Id: calc.h,v 29.20 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -33,11 +33,11 @@
 
 #include <setjmp.h>
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
-# include "win32dll.h"
+# include "decl.h"
 # include "value.h"
 # include "have_const.h"
 #else
-# include <calc/win32dll.h>
+# include <calc/decl.h>
 # include <calc/value.h>
 # include <calc/have_const.h>
 #endif
@@ -103,141 +103,141 @@
 /*
  * File I/O routines.
  */
-extern DLL FILEID openid(char *name, char *mode);
-extern DLL FILEID openpathid(char *name, char *mode, char *pathlist);
-extern DLL FILEID indexid(long index);
-extern DLL BOOL validid(FILEID id);
-extern DLL BOOL errorid(FILEID id);
-extern DLL BOOL eofid(FILEID id);
-extern DLL int closeid(FILEID id);
-extern DLL int getcharid(FILEID id);
-extern DLL int idprintf(FILEID id, char *fmt, int count, VALUE **vals);
-extern DLL int idfputc(FILEID id, int ch);
-extern DLL int idfputs(FILEID id, STRING *str);
-extern DLL int printid(FILEID id, int flags);
-extern DLL int flushid(FILEID id);
-extern DLL int readid(FILEID id, int flags, STRING **retptr);
-extern DLL int getloc(FILEID id, ZVALUE *loc);
-extern DLL int setloc(FILEID id, ZVALUE zpos);
-extern DLL int getsize(FILEID id, ZVALUE *size);
-extern DLL int get_device(FILEID id, ZVALUE *dev);
-extern DLL int get_inode(FILEID id, ZVALUE *ino);
-extern DLL FILEID reopenid(FILEID id, char *mode, char *name);
-extern DLL int closeall(void);
+E_FUNC FILEID openid(char *name, char *mode);
+E_FUNC FILEID openpathid(char *name, char *mode, char *pathlist);
+E_FUNC FILEID indexid(long index);
+E_FUNC BOOL validid(FILEID id);
+E_FUNC BOOL errorid(FILEID id);
+E_FUNC BOOL eofid(FILEID id);
+E_FUNC int closeid(FILEID id);
+E_FUNC int getcharid(FILEID id);
+E_FUNC int idprintf(FILEID id, char *fmt, int count, VALUE **vals);
+E_FUNC int idfputc(FILEID id, int ch);
+E_FUNC int idfputs(FILEID id, STRING *str);
+E_FUNC int printid(FILEID id, int flags);
+E_FUNC int flushid(FILEID id);
+E_FUNC int readid(FILEID id, int flags, STRING **retptr);
+E_FUNC int getloc(FILEID id, ZVALUE *loc);
+E_FUNC int setloc(FILEID id, ZVALUE zpos);
+E_FUNC int getsize(FILEID id, ZVALUE *size);
+E_FUNC int get_device(FILEID id, ZVALUE *dev);
+E_FUNC int get_inode(FILEID id, ZVALUE *ino);
+E_FUNC FILEID reopenid(FILEID id, char *mode, char *name);
+E_FUNC int closeall(void);
 
 #if !defined(_WIN32)
-extern DLL int flushall(void);
+E_FUNC int flushall(void);
 #endif
 
-extern DLL int idfputstr(FILEID id, char *str);
-extern DLL int rewindid(FILEID id);
-extern DLL void rewindall(void);
-extern DLL ZVALUE zfilesize(FILEID id);
-extern DLL void showfiles(void);
-extern DLL int fscanfid(FILEID id, char *fmt, int count, VALUE **vals);
-extern DLL int scanfstr(char *str, char *fmt, int count, VALUE **vals);
-extern DLL int ftellid(FILEID id, ZVALUE *res);
-extern DLL int fseekid(FILEID id, ZVALUE offset, int whence);
-extern DLL int isattyid(FILEID id);
-extern DLL int fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res);
-extern DLL int frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res);
-extern DLL void showconstants(void);
-extern DLL void freeconstant(unsigned long);
-extern DLL void freestringconstant(long);
-extern DLL void trimconstants(void);
+E_FUNC int idfputstr(FILEID id, char *str);
+E_FUNC int rewindid(FILEID id);
+E_FUNC void rewindall(void);
+E_FUNC ZVALUE zfilesize(FILEID id);
+E_FUNC void showfiles(void);
+E_FUNC int fscanfid(FILEID id, char *fmt, int count, VALUE **vals);
+E_FUNC int scanfstr(char *str, char *fmt, int count, VALUE **vals);
+E_FUNC int ftellid(FILEID id, ZVALUE *res);
+E_FUNC int fseekid(FILEID id, ZVALUE offset, int whence);
+E_FUNC int isattyid(FILEID id);
+E_FUNC int fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res);
+E_FUNC int frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res);
+E_FUNC void showconstants(void);
+E_FUNC void freeconstant(unsigned long);
+E_FUNC void freestringconstant(long);
+E_FUNC void trimconstants(void);
 
 /*
  * Input routines.
  */
-extern DLL int openstring(char *str, size_t num);
-extern DLL int openterminal(void);
-extern DLL int opensearchfile(char *name, char *pathlist, char *exten, int reopen_ok);
-extern DLL char *nextline(void);
-extern DLL int nextchar(void);
-extern DLL void reread(void);
-extern DLL void resetinput(void);
-extern DLL void setprompt(char *);
-extern DLL BOOL inputisterminal(void);
-extern DLL int inputlevel(void);
-extern DLL long calclevel(void);
-extern DLL char *inputname(void);
-extern DLL long linenumber(void);
-extern DLL void runrcfiles(void);
-extern DLL void closeinput(void);
+E_FUNC int openstring(char *str, size_t num);
+E_FUNC int openterminal(void);
+E_FUNC int opensearchfile(char *name, char *pathlist, char *exten, int reopen_ok);
+E_FUNC char *nextline(void);
+E_FUNC int nextchar(void);
+E_FUNC void reread(void);
+E_FUNC void resetinput(void);
+E_FUNC void setprompt(char *);
+E_FUNC BOOL inputisterminal(void);
+E_FUNC int inputlevel(void);
+E_FUNC long calclevel(void);
+E_FUNC char *inputname(void);
+E_FUNC long linenumber(void);
+E_FUNC void runrcfiles(void);
+E_FUNC void closeinput(void);
 
 /*
  * Other routines.
  */
-extern DLL NUMBER *constvalue(unsigned long index);
-extern DLL long addnumber(char *str);
-extern DLL long addqconstant(NUMBER *q);
-extern DLL void initstack(void);
-extern DLL void getcommands(BOOL toplevel);
-extern DLL void givehelp(char *type);
-extern DLL void libcalc_call_me_first(void);
-extern DLL void libcalc_call_me_last(void);
-extern DLL BOOL calc_tty(int fd);
-extern DLL BOOL orig_tty(int fd);
-extern DLL void showerrors(void);
-extern DLL char *calc_strdup(CONST char *);
+E_FUNC NUMBER *constvalue(unsigned long index);
+E_FUNC long addnumber(char *str);
+E_FUNC long addqconstant(NUMBER *q);
+E_FUNC void initstack(void);
+E_FUNC void getcommands(BOOL toplevel);
+E_FUNC void givehelp(char *type);
+E_FUNC void libcalc_call_me_first(void);
+E_FUNC void libcalc_call_me_last(void);
+E_FUNC BOOL calc_tty(int fd);
+E_FUNC BOOL orig_tty(int fd);
+E_FUNC void showerrors(void);
+E_FUNC char *calc_strdup(CONST char *);
 
 /*
  * Initialization
  */
-extern DLL void initialize(void);
-extern DLL void reinitialize(void);
+E_FUNC void initialize(void);
+E_FUNC void reinitialize(void);
 #if !defined (_WIN32)
-extern DLL int isatty(int tty);	/* TRUE if fd is a tty */
+E_FUNC int isatty(int tty);	/* TRUE if fd is a tty */
 #endif
-extern DLL char *version(void);	/* return version string */
-extern DLL int post_init;	/* TRUE => math_error setjmp is ready */
+E_FUNC char *version(void);	/* return version string */
+EXTERN int post_init;	/* TRUE => math_error setjmp is ready */
 
 /*
  * global flags and definitions
  */
-extern DLL int abortlevel;	/* current level of aborts */
-extern DLL BOOL inputwait;	/* TRUE if in a terminal input wait */
-extern DLL jmp_buf jmpbuf;	/* for errors */
+EXTERN int abortlevel;	/* current level of aborts */
+EXTERN BOOL inputwait;	/* TRUE if in a terminal input wait */
+EXTERN jmp_buf jmpbuf;	/* for errors */
 
-extern DLL int p_flag;		/* TRUE => pipe mode */
-extern DLL int q_flag;		/* TRUE => don't execute rc files */
-extern DLL int u_flag;		/* TRUE => unbuffer stdin and stdout */
-extern DLL int d_flag;		/* TRUE => disable heading, resource_debug */
-extern DLL int c_flag;		/* TRUE => continue after error if permitted */
-extern DLL int i_flag;		/* TRUE => try to go interactive after error */
-extern DLL int s_flag;		/* TRUE => keep args as strings for argv() */
-extern DLL long stoponerror;	/* >0 => stop, <0 => continue, ==0 => use -c */
-extern DLL BOOL abort_now;	/* TRUE => try to go interactive */
+EXTERN int p_flag;		/* TRUE => pipe mode */
+EXTERN int q_flag;		/* TRUE => don't execute rc files */
+EXTERN int u_flag;		/* TRUE => unbuffer stdin and stdout */
+EXTERN int d_flag;		/* TRUE => disable heading, resource_debug */
+EXTERN int c_flag;		/* TRUE => continue after error if permitted */
+EXTERN int i_flag;		/* TRUE => try to go interactive after error */
+E_FUNC int s_flag;		/* TRUE => keep args as strings for argv() */
+EXTERN long stoponerror;	/* >0 => stop, <0 => continue, ==0 => use -c */
+EXTERN BOOL abort_now;	/* TRUE => try to go interactive */
 
-extern DLL int argc_value;	/* count of argv[] strings for argv() builtin */
-extern DLL char **argv_value;	/* argv[] strings for argv() builtin */
+E_FUNC int argc_value;	/* count of argv[] strings for argv() builtin */
+E_FUNC char **argv_value;	/* argv[] strings for argv() builtin */
 
-extern DLL char *pager;		/* $PAGER or default */
-extern DLL int stdin_tty;	/* TRUE if stdin is a tty */
-extern DLL int havecommands;	/* TRUE if have cmd args) */
-extern DLL char *program;	/* our name */
-extern DLL char *base_name;	/* basename of our name */
-extern DLL char cmdbuf[];	/* command line expression */
+EXTERN char *pager;		/* $PAGER or default */
+EXTERN int stdin_tty;	/* TRUE if stdin is a tty */
+EXTERN int havecommands;	/* TRUE if have cmd args) */
+EXTERN char *program;	/* our name */
+EXTERN char *base_name;	/* basename of our name */
+EXTERN char cmdbuf[];	/* command line expression */
 
-extern DLL int abortlevel;	/* current level of aborts */
-extern DLL BOOL inputwait;	/* TRUE if in a terminal input wait */
-extern DLL VALUE *stack;	/* execution stack */
-extern DLL int dumpnames;	/* TRUE => dump names rather than indices */
+EXTERN int abortlevel;	/* current level of aborts */
+EXTERN BOOL inputwait;	/* TRUE if in a terminal input wait */
+EXTERN VALUE *stack;	/* execution stack */
+EXTERN int dumpnames;	/* TRUE => dump names rather than indices */
 
-extern DLL char *calcpath;	/* $CALCPATH or default */
-extern DLL char *calcrc;	/* $CALCRC or default */
-extern DLL char *calcbindings;	/* $CALCBINDINGS or default */
-extern DLL char *home;		/* $HOME or default */
-extern DLL char *shell;		/* $SHELL or default */
-extern DLL char *program;	/* our name (argv[0]) */
+EXTERN char *calcpath;	/* $CALCPATH or default */
+EXTERN char *calcrc;	/* $CALCRC or default */
+EXTERN char *calcbindings;	/* $CALCBINDINGS or default */
+EXTERN char *home;		/* $HOME or default */
+EXTERN char *shell;		/* $SHELL or default */
+E_FUNC char *program;	/* our name (argv[0]) */
 
-extern DLL int no_env;		/* TRUE (-e) => ignore env vars on startup */
-extern DLL long errmax;	/* if >= 0, error when errcount exceeds errmax */
-extern DLL int use_old_std;	/* TRUE (-O) => use classic configuration */
+E_FUNC int no_env;		/* TRUE (-e) => ignore env vars on startup */
+EXTERN long errmax;	/* if >= 0, error when errcount exceeds errmax */
+E_FUNC int use_old_std;	/* TRUE (-O) => use classic configuration */
 
-extern DLL int allow_read;	/* FALSE => dont open any files for reading */
-extern DLL int allow_write; 	/* FALSE => dont open any files for writing */
-extern DLL int allow_exec;	/* FALSE => may not execute any commands */
+EXTERN int allow_read;	/* FALSE => dont open any files for reading */
+EXTERN int allow_write; 	/* FALSE => dont open any files for writing */
+EXTERN int allow_exec;	/* FALSE => may not execute any commands */
 
 /*
  * calc startup and run state
@@ -253,19 +253,19 @@ typedef enum {
     RUN_EXIT,			/* normal exit from calc */
     RUN_EXIT_WITH_ERROR		/* exit with error */
 } run;
-extern DLL run run_state;
-extern DLL char *run_state_name(run state);
+EXTERN run run_state;
+E_FUNC char *run_state_name(run state);
 
 /*
  * calc version information
  */
 #define CALC_TITLE "C-style arbitrary precision calculator"
-extern int calc_major_ver;
-extern int calc_minor_ver;
-extern int calc_major_patch;
-extern int calc_minor_patch;
-extern char *Copyright;
-extern DLL char *version(void);
+EXTERN int calc_major_ver;
+EXTERN int calc_minor_ver;
+EXTERN int calc_major_patch;
+EXTERN int calc_minor_patch;
+EXTERN char *Copyright;
+E_FUNC char *version(void);
 
 
 #endif /* !__CALC_H__ */

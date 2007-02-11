@@ -1,7 +1,7 @@
 /*
  * func - built-in functions implemented here
  *
- * Copyright (C) 1999-2006  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.32 $
- * @(#) $Id: func.c,v 29.32 2006/12/16 10:46:07 chongo Exp $
+ * @(#) $Revision: 29.33 $
+ * @(#) $Id: func.c,v 29.33 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -35,6 +35,7 @@
 #include <sys/types.h>
 #include <errno.h>
 
+
 #if defined(_WIN32)
 # include <io.h>
 # define _access access
@@ -43,8 +44,13 @@
 #if defined(FUNCLIST)
 
 #define CONST /* disabled for FUNCLIST in case NATIVE_CC doesn't have it */
+#undef HAVE_CONST
+
+#include "decl.h"
 
 #else /* FUNCLIST */
+
+#include "decl.h"
 
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
@@ -113,25 +119,25 @@
 /*
  * forward declarations
  */
-static NUMBER *base_value(long mode, int defval);
-static int strscan(char *s, int count, VALUE **vals);
-static int filescan(FILEID id, int count, VALUE **vals);
-static VALUE f_eval(VALUE *vp);
-static VALUE f_fsize(VALUE *vp);
-static int malloced_putenv(char *str);
+S_FUNC NUMBER *base_value(long mode, int defval);
+S_FUNC int strscan(char *s, int count, VALUE **vals);
+S_FUNC int filescan(FILEID id, int count, VALUE **vals);
+S_FUNC VALUE f_eval(VALUE *vp);
+S_FUNC VALUE f_fsize(VALUE *vp);
+S_FUNC int malloced_putenv(char *str);
 
 
 
 /*
  * external declarations
  */
-extern char cmdbuf[];				/* command line expression */
-extern CONST char *error_table[E__COUNT+2];	/* calc coded error messages */
-extern void matrandperm(MATRIX *M);
-extern void listrandperm(LIST *lp);
-extern int idungetc(FILEID id, int ch);
-extern LIST* associndices(ASSOC *ap, long index);
-extern LIST* matindices(MATRIX *mp, long index);
+EXTERN char cmdbuf[];				/* command line expression */
+EXTERN CONST char *error_table[E__COUNT+2];	/* calc coded error messages */
+E_FUNC void matrandperm(MATRIX *M);
+E_FUNC void listrandperm(LIST *lp);
+E_FUNC int idungetc(FILEID id, int ch);
+E_FUNC LIST* associndices(ASSOC *ap, long index);
+E_FUNC LIST* matindices(MATRIX *mp, long index);
 
 
 /*
@@ -142,16 +148,16 @@ struct env_pool {
     char *getenv;	/* what getenv() would return, NULL => unused */
     char *putenv;	/* pointer given to putenv() */
 };
-static int env_pool_cnt = 0;	/* number of env_pool elements in use */
-static int env_pool_max = 0;	/* number of env_pool elements allocated */
-static struct env_pool *e_pool = NULL;	/* env_pool elements */
+STATIC int env_pool_cnt = 0;	/* number of env_pool elements in use */
+STATIC int env_pool_max = 0;	/* number of env_pool elements allocated */
+STATIC struct env_pool *e_pool = NULL;	/* env_pool elements */
 
 
 /*
  * user-defined error strings
  */
-static short nexterrnum = E_USERDEF;
-static STRINGHEAD newerrorstr;
+STATIC short nexterrnum = E_USERDEF;
+STATIC STRINGHEAD newerrorstr;
 
 #endif /* !FUNCLIST */
 
@@ -181,7 +187,7 @@ struct builtin {
 
 #if !defined(FUNCLIST)
 
-static VALUE
+S_FUNC VALUE
 f_eval(VALUE *vp)
 {
 	FUNC	*oldfunc;
@@ -235,7 +241,7 @@ f_eval(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_prompt(VALUE *vp)
 {
 	VALUE result;
@@ -272,7 +278,7 @@ f_prompt(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_display(int count, VALUE **vals)
 {
 	LEN oldvalue;
@@ -298,7 +304,7 @@ f_display(int count, VALUE **vals)
 
 
 /*ARGSUSED*/
-static VALUE
+S_FUNC VALUE
 f_null(int UNUSED count, VALUE UNUSED **vals)
 {
 	VALUE res;
@@ -311,7 +317,7 @@ f_null(int UNUSED count, VALUE UNUSED **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_str(VALUE *vp)
 {
 	VALUE result;
@@ -350,7 +356,7 @@ f_str(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_estr(VALUE *vp)
 {
 	VALUE result;
@@ -368,7 +374,7 @@ f_estr(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_name(VALUE *vp)
 {
 	VALUE result;
@@ -404,7 +410,7 @@ f_name(VALUE *vp)
 
 
 
-static VALUE
+S_FUNC VALUE
 f_poly(int count, VALUE **vals)
 {
 	VALUE *x;
@@ -443,7 +449,7 @@ f_poly(int count, VALUE **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_mne(NUMBER *val1, NUMBER *val2, NUMBER *val3)
 {
 	NUMBER *tmp, *res;
@@ -455,7 +461,7 @@ f_mne(NUMBER *val1, NUMBER *val2, NUMBER *val3)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_isrel(NUMBER *val1, NUMBER *val2)
 {
 	if (qisfrac(val1) || qisfrac(val2)) {
@@ -466,14 +472,14 @@ f_isrel(NUMBER *val1, NUMBER *val2)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_issquare(NUMBER *vp)
 {
 	return itoq((long) qissquare(vp));
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_isprime(int count, NUMBER **vals)
 {
 	NUMBER *err;		/* error return, NULL => use math_error */
@@ -513,7 +519,7 @@ f_isprime(int count, NUMBER **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_nprime(int count, NUMBER **vals)
 {
 	NUMBER *err;		/* error return, NULL => use math_error */
@@ -557,7 +563,7 @@ f_nprime(int count, NUMBER **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_pprime(int count, NUMBER **vals)
 {
 	NUMBER *err;		/* error return, NULL => use math_error */
@@ -605,7 +611,7 @@ f_pprime(int count, NUMBER **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_factor(int count, NUMBER **vals)
 {
 	NUMBER *err;	/* error return, NULL => use math_error */
@@ -678,7 +684,7 @@ f_factor(int count, NUMBER **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_pix(int count, NUMBER **vals)
 {
 	NUMBER *err;		/* error return, NULL => use math_error */
@@ -719,7 +725,7 @@ f_pix(int count, NUMBER **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_prevcand(int count, NUMBER **vals)
 {
 	ZVALUE zmodulus;
@@ -800,7 +806,7 @@ f_prevcand(int count, NUMBER **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_nextcand(int count, NUMBER **vals)
 {
 	ZVALUE zmodulus;
@@ -886,14 +892,14 @@ f_nextcand(int count, NUMBER **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_seed(void)
 {
 	return pseudo_seed();
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_rand(int count, NUMBER **vals)
 {
 	NUMBER *ans;
@@ -940,7 +946,7 @@ f_rand(int count, NUMBER **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_randbit(int count, NUMBER **vals)
 {
 	NUMBER *ans;
@@ -988,7 +994,7 @@ f_randbit(int count, NUMBER **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_srand(int count, VALUE **vals)
 {
 	VALUE result;
@@ -1044,7 +1050,7 @@ f_srand(int count, VALUE **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_random(int count, NUMBER **vals)
 {
 	NUMBER *ans;
@@ -1091,7 +1097,7 @@ f_random(int count, NUMBER **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_randombit(int count, NUMBER **vals)
 {
 	NUMBER *ans;
@@ -1139,7 +1145,7 @@ f_randombit(int count, NUMBER **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_srandom(int count, VALUE **vals)
 {
 	VALUE result;
@@ -1230,7 +1236,7 @@ f_srandom(int count, VALUE **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_primetest(int count, NUMBER **vals)
 {
 	/* parse args */
@@ -1244,7 +1250,7 @@ f_primetest(int count, NUMBER **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_setbit(int count, VALUE **vals)
 {
 	BOOL r;
@@ -1270,7 +1276,7 @@ f_setbit(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_digit(int count, VALUE **vals)
 {
 	VALUE res;
@@ -1298,7 +1304,7 @@ f_digit(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_digits(int count, VALUE **vals)
 {
 	ZVALUE base;
@@ -1320,7 +1326,7 @@ f_digits(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_places(int count, VALUE **vals)
 {
 	long places;
@@ -1343,7 +1349,7 @@ f_places(int count, VALUE **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_popcnt(int count, NUMBER **vals)
 {
 	int bitval = 1;
@@ -1367,7 +1373,7 @@ f_popcnt(int count, NUMBER **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_xor(int count, VALUE **vals)
 {
 	NUMBER *q, *qtmp;
@@ -1515,7 +1521,7 @@ maxlistitems(LIST *lp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_min(int count, VALUE **vals)
 {
 	VALUE min;
@@ -1571,7 +1577,7 @@ f_min(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_max(int count, VALUE **vals)
 {
 	VALUE max;
@@ -1627,7 +1633,7 @@ f_max(int count, VALUE **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_gcd(int count, NUMBER **vals)
 {
 	NUMBER *val, *tmp;
@@ -1642,7 +1648,7 @@ f_gcd(int count, NUMBER **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_lcm(int count, NUMBER **vals)
 {
 	NUMBER *val, *tmp;
@@ -1659,7 +1665,7 @@ f_lcm(int count, NUMBER **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_hash(int count, VALUE **vals)
 {
 	QCKHASH hash;
@@ -1723,7 +1729,7 @@ sumlistitems(LIST *lp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_sum(int count, VALUE **vals)
 {
 	VALUE tmp;
@@ -1767,7 +1773,7 @@ f_sum(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_avg(int count, VALUE **vals)
 {
 	VALUE tmp;
@@ -1809,7 +1815,7 @@ f_avg(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fact(VALUE *vp)
 {
 	VALUE res;
@@ -1830,7 +1836,7 @@ f_fact(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_hmean(int count, VALUE **vals)
 {
 	VALUE sum, tmp1, tmp2;
@@ -1869,7 +1875,7 @@ f_hmean(int count, VALUE **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_hnrmod(NUMBER *val1, NUMBER *val2, NUMBER *val3, NUMBER *val4)
 {
 	ZVALUE answer;			/* v mod h*2^n+r */
@@ -1942,7 +1948,7 @@ ssqlistitems(LIST *lp)
 	return sum;
 }
 
-static VALUE
+S_FUNC VALUE
 f_ssq(int count, VALUE **vals)
 {
 	VALUE tmp;
@@ -1975,14 +1981,14 @@ f_ssq(int count, VALUE **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_ismult(NUMBER *val1, NUMBER *val2)
 {
 	return itoq((long) qdivides(val1, val2));
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_meq(NUMBER *val1, NUMBER *val2, NUMBER *val3)
 {
 	NUMBER *tmp, *res;
@@ -1994,7 +2000,7 @@ f_meq(NUMBER *val1, NUMBER *val2, NUMBER *val3)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_exp(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2038,7 +2044,7 @@ f_exp(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_ln(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2083,7 +2089,7 @@ f_ln(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_log(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2128,7 +2134,7 @@ f_log(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_cos(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2168,7 +2174,7 @@ f_cos(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_sin(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2208,7 +2214,7 @@ f_sin(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_tan(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2246,7 +2252,7 @@ f_tan(int count, VALUE **vals)
 	return result;
 }
 
-static VALUE
+S_FUNC VALUE
 f_sec(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2281,7 +2287,7 @@ f_sec(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_cot(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2322,7 +2328,7 @@ f_cot(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_csc(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2358,7 +2364,7 @@ f_csc(int count, VALUE **vals)
 	return result;
 }
 
-static VALUE
+S_FUNC VALUE
 f_sinh(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2401,7 +2407,7 @@ f_sinh(int count, VALUE **vals)
 	return result;
 }
 
-static VALUE
+S_FUNC VALUE
 f_cosh(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2445,7 +2451,7 @@ f_cosh(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_tanh(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2484,7 +2490,7 @@ f_tanh(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_coth(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2525,7 +2531,7 @@ f_coth(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_sech(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2560,7 +2566,7 @@ f_sech(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_csch(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2597,7 +2603,7 @@ f_csch(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_atan(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2637,7 +2643,7 @@ f_atan(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_acot(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2676,7 +2682,7 @@ f_acot(int count, VALUE **vals)
 	return result;
 }
 
-static VALUE
+S_FUNC VALUE
 f_asin(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2722,7 +2728,7 @@ f_asin(int count, VALUE **vals)
 	return result;
 }
 
-static VALUE
+S_FUNC VALUE
 f_acos(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2769,7 +2775,7 @@ f_acos(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_asec(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2822,7 +2828,7 @@ f_asec(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_acsc(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2875,7 +2881,7 @@ f_acsc(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_asinh(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2913,7 +2919,7 @@ f_asinh(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_acosh(int count, VALUE **vals)
 {
 	VALUE result;
@@ -2960,7 +2966,7 @@ f_acosh(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_atanh(int count, VALUE **vals)
 {
 	VALUE result;
@@ -3011,7 +3017,7 @@ f_atanh(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_acoth(int count, VALUE **vals)
 {
 	VALUE result;
@@ -3062,7 +3068,7 @@ f_acoth(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_asech(int count, VALUE **vals)
 {
 	VALUE result;
@@ -3115,7 +3121,7 @@ f_asech(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_acsch(int count, VALUE **vals)
 {
 	VALUE result;
@@ -3168,7 +3174,7 @@ f_acsch(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_gd(int count, VALUE **vals)
 {
 	VALUE result;
@@ -3217,7 +3223,7 @@ f_gd(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_agd(int count, VALUE **vals)
 {
 	VALUE result;
@@ -3266,7 +3272,7 @@ f_agd(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_comb(VALUE *v1, VALUE *v2)
 {
 	long n;
@@ -3323,7 +3329,7 @@ f_comb(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_bern(VALUE *vp)
 {
 	VALUE res;
@@ -3340,7 +3346,7 @@ f_bern(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_freebern(void)
 {
 	VALUE res;
@@ -3352,7 +3358,7 @@ f_freebern(void)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_euler(VALUE *vp)
 {
 	VALUE res;
@@ -3368,7 +3374,7 @@ f_euler(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_freeeuler(void)
 {
 	VALUE res;
@@ -3380,7 +3386,7 @@ f_freeeuler(void)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_catalan(VALUE *vp)
 {
 	VALUE res;
@@ -3395,7 +3401,7 @@ f_catalan(VALUE *vp)
 	return res;
 }
 
-static VALUE
+S_FUNC VALUE
 f_arg(int count, VALUE **vals)
 {
 	VALUE result;
@@ -3433,14 +3439,14 @@ f_arg(int count, VALUE **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_legtoleg(NUMBER *val1, NUMBER *val2)
 {
 	return qlegtoleg(val1, val2, FALSE);
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_trunc(int count, NUMBER **vals)
 {
 	NUMBER *val;
@@ -3452,7 +3458,7 @@ f_trunc(int count, NUMBER **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_bround(int count, VALUE **vals)
 {
 	VALUE tmp1, tmp2, res;
@@ -3475,7 +3481,7 @@ f_bround(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_appr(int count, VALUE **vals)
 {
 	VALUE tmp1, tmp2, res;
@@ -3499,7 +3505,7 @@ f_appr(int count, VALUE **vals)
 	return res;
 }
 
-static VALUE
+S_FUNC VALUE
 f_round(int count, VALUE **vals)
 {
 	VALUE tmp1, tmp2, res;
@@ -3522,7 +3528,7 @@ f_round(int count, VALUE **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_btrunc(int count, NUMBER **vals)
 {
 	NUMBER *val;
@@ -3534,7 +3540,7 @@ f_btrunc(int count, NUMBER **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_quo(int count, VALUE **vals)
 {
 	VALUE tmp, res;
@@ -3552,7 +3558,7 @@ f_quo(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_mod(int count, VALUE **vals)
 {
 	VALUE tmp, res;
@@ -3569,7 +3575,7 @@ f_mod(int count, VALUE **vals)
 	return res;
 }
 
-static VALUE
+S_FUNC VALUE
 f_quomod(int count, VALUE **vals)
 {
 	VALUE *v1, *v2, *v3, *v4, *v5;
@@ -3631,7 +3637,7 @@ f_quomod(int count, VALUE **vals)
 	return result;
 }
 
-static VALUE
+S_FUNC VALUE
 f_mmin(VALUE *v1, VALUE *v2)
 {
 	VALUE sixteen, res;
@@ -3648,7 +3654,7 @@ f_mmin(VALUE *v1, VALUE *v2)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_near(int count, NUMBER **vals)
 {
 	NUMBER *val;
@@ -3660,7 +3666,7 @@ f_near(int count, NUMBER **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_cfsim(int count, NUMBER **vals)
 {
 	long R;
@@ -3670,7 +3676,7 @@ f_cfsim(int count, NUMBER **vals)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_cfappr(int count, NUMBER **vals)
 {
 	long R;
@@ -3683,7 +3689,7 @@ f_cfappr(int count, NUMBER **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_ceil(VALUE *val)
 {
 	VALUE tmp, res;
@@ -3699,7 +3705,7 @@ f_ceil(VALUE *val)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_floor(VALUE *val)
 {
 	VALUE tmp1, tmp2, res;
@@ -3718,7 +3724,7 @@ f_floor(VALUE *val)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_sqrt(int count, VALUE **vals)
 {
 	VALUE tmp1, tmp2, result;
@@ -3741,7 +3747,7 @@ f_sqrt(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_root(int count, VALUE **vals)
 {
 	VALUE *vp, err, result;
@@ -3762,7 +3768,7 @@ f_root(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_power(int count, VALUE **vals)
 {
 	VALUE *vp, err, result;
@@ -3783,7 +3789,7 @@ f_power(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_polar(int count, VALUE **vals)
 {
 	VALUE *vp, err, result;
@@ -3816,7 +3822,7 @@ f_polar(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_ilog(VALUE *v1, VALUE *v2)
 {
 	VALUE res;
@@ -3845,7 +3851,7 @@ f_ilog(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_ilog2(VALUE *vp)
 {
 	VALUE res;
@@ -3870,7 +3876,7 @@ f_ilog2(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_ilog10(VALUE *vp)
 {
 	VALUE res;
@@ -3895,7 +3901,7 @@ f_ilog10(VALUE *vp)
 }
 
 
-static NUMBER *
+S_FUNC NUMBER *
 f_faccnt(NUMBER *val1, NUMBER *val2)
 {
 	if (qisfrac(val1) || qisfrac(val2))
@@ -3904,7 +3910,7 @@ f_faccnt(NUMBER *val1, NUMBER *val2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_matfill(int count, VALUE **vals)
 {
 	VALUE *v1, *v2, *v3;
@@ -3941,7 +3947,7 @@ f_matfill(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_matsum(VALUE *vp)
 {
 	VALUE result;
@@ -3959,7 +3965,7 @@ f_matsum(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_isident(VALUE *vp)
 {
 	VALUE result;
@@ -3977,7 +3983,7 @@ f_isident(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_mattrace(VALUE *vp)
 {
 	if (vp->v_type != V_MAT)
@@ -3986,7 +3992,7 @@ f_mattrace(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_mattrans(VALUE *vp)
 {
 	VALUE result;
@@ -4004,7 +4010,7 @@ f_mattrans(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_det(VALUE *vp)
 {
 	if (vp->v_type != V_MAT)
@@ -4014,7 +4020,7 @@ f_det(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_matdim(VALUE *vp)
 {
 	VALUE result;
@@ -4037,7 +4043,7 @@ f_matdim(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_matmin(VALUE *v1, VALUE *v2)
 {
 	VALUE result;
@@ -4063,7 +4069,7 @@ f_matmin(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_matmax(VALUE *v1, VALUE *v2)
 {
 	VALUE result;
@@ -4089,7 +4095,7 @@ f_matmax(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_cp(VALUE *v1, VALUE *v2)
 {
 	MATRIX *m1, *m2;
@@ -4112,7 +4118,7 @@ f_cp(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_dp(VALUE *v1, VALUE *v2)
 {
 	MATRIX *m1, *m2;
@@ -4129,7 +4135,7 @@ f_dp(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_strlen(VALUE *vp)
 {
 	VALUE result;
@@ -4150,7 +4156,7 @@ f_strlen(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_strcmp(VALUE *v1, VALUE *v2)
 {
 	VALUE result;
@@ -4170,7 +4176,7 @@ f_strcmp(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_strncmp(VALUE *v1, VALUE *v2, VALUE *v3)
 {
 	long n1, n2, n;
@@ -4203,7 +4209,7 @@ f_strncmp(VALUE *v1, VALUE *v2, VALUE *v3)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_strcat(int count, VALUE **vals)
 {
 	VALUE **vp;
@@ -4247,7 +4253,7 @@ f_strcat(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_strcpy(VALUE *v1, VALUE *v2)
 {
 	VALUE result;
@@ -4263,7 +4269,7 @@ f_strcpy(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_strncpy(VALUE *v1, VALUE *v2, VALUE *v3)
 {
 	VALUE result;
@@ -4285,7 +4291,7 @@ f_strncpy(VALUE *v1, VALUE *v2, VALUE *v3)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_substr(VALUE *v1, VALUE *v2, VALUE *v3)
 {
 	NUMBER *q1, *q2;
@@ -4331,7 +4337,7 @@ f_substr(VALUE *v1, VALUE *v2, VALUE *v3)
 	return result;
 }
 
-static VALUE
+S_FUNC VALUE
 f_char(VALUE *vp)
 {
 	char ch;
@@ -4363,7 +4369,7 @@ f_char(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_ord(VALUE *vp)
 {
 	OCTET *c;
@@ -4389,7 +4395,7 @@ f_ord(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_protect(int count, VALUE **vals)
 {
 	int i, depth;
@@ -4438,7 +4444,7 @@ f_protect(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_size(VALUE *vp)
 {
 	VALUE result;
@@ -4466,7 +4472,7 @@ f_size(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_sizeof(VALUE *vp)
 {
 	VALUE result;
@@ -4486,7 +4492,7 @@ f_sizeof(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_memsize(VALUE *vp)
 {
 	VALUE result;
@@ -4506,7 +4512,7 @@ f_memsize(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_search(int count, VALUE **vals)
 {
 	VALUE *v1, *v2, *v3, *v4;
@@ -4672,7 +4678,7 @@ f_search(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_rsearch(int count, VALUE **vals)
 {
 	VALUE *v1, *v2, *v3, *v4;
@@ -4858,7 +4864,7 @@ f_rsearch(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_list(int count, VALUE **vals)
 {
 	VALUE result;
@@ -4875,7 +4881,7 @@ f_list(int count, VALUE **vals)
 
 
 /*ARGSUSED*/
-static VALUE
+S_FUNC VALUE
 f_assoc(int UNUSED count, VALUE UNUSED **vals)
 {
 	VALUE result;
@@ -4889,7 +4895,7 @@ f_assoc(int UNUSED count, VALUE UNUSED **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_indices(VALUE *v1, VALUE *v2)
 {
 	VALUE result;
@@ -4919,7 +4925,7 @@ f_indices(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_listinsert(int count, VALUE **vals)
 {
 	VALUE *v1, *v2, *v3;
@@ -4953,7 +4959,7 @@ f_listinsert(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_listpush(int count, VALUE **vals)
 {
 	VALUE result;
@@ -4979,7 +4985,7 @@ f_listpush(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_listappend(int count, VALUE **vals)
 {
 	VALUE *v1, *v2;
@@ -5005,7 +5011,7 @@ f_listappend(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_listdelete(VALUE *v1, VALUE *v2)
 {
 	VALUE result;
@@ -5027,7 +5033,7 @@ f_listdelete(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_listpop(VALUE *vp)
 {
 	VALUE result;
@@ -5043,7 +5049,7 @@ f_listpop(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_listremove(VALUE *vp)
 {
 	VALUE result;
@@ -5062,7 +5068,7 @@ f_listremove(VALUE *vp)
 /*
  * Return the current user time of calc in seconds.
  */
-static NUMBER *
+S_FUNC NUMBER *
 f_usertime(void)
 {
 #if defined(HAVE_GETRUSAGE)
@@ -5101,7 +5107,7 @@ f_usertime(void)
  * Return the current kernel time of calc in seconds.
  * This is the kernel mode time only.
  */
-static NUMBER *
+S_FUNC NUMBER *
 f_systime(void)
 {
 #if defined(HAVE_GETRUSAGE)
@@ -5139,7 +5145,7 @@ f_systime(void)
 /*
  * Return the current user and kernel time of calc in seconds.
  */
-static NUMBER *
+S_FUNC NUMBER *
 f_runtime(void)
 {
 #if defined(HAVE_GETRUSAGE)
@@ -5191,7 +5197,7 @@ f_runtime(void)
 /*
  * return the number of second since the Epoch (00:00:00 1 Jan 1970 UTC).
  */
-static NUMBER *
+S_FUNC NUMBER *
 f_time(void)
 {
 	return itoq((long) time(0));
@@ -5201,7 +5207,7 @@ f_time(void)
 /*
  * time in asctime()/ctime() format
  */
-static VALUE
+S_FUNC VALUE
 f_ctime(void)
 {
 	VALUE res;
@@ -5218,7 +5224,7 @@ f_ctime(void)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fopen(VALUE *v1, VALUE *v2)
 {
 	VALUE result;
@@ -5259,7 +5265,7 @@ f_fopen(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fpathopen(int count, VALUE **vals)
 {
 	VALUE result;
@@ -5314,7 +5320,7 @@ f_fpathopen(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_freopen(int count, VALUE **vals)
 {
 	VALUE result;
@@ -5362,7 +5368,7 @@ f_freopen(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_errno(int count, VALUE **vals)
 {
 	int newerr, olderr;
@@ -5400,7 +5406,7 @@ f_errno(int count, VALUE **vals)
 
 
 
-static VALUE
+S_FUNC VALUE
 f_errcount(int count, VALUE **vals)
 {
 	int newcount, oldcount;
@@ -5430,7 +5436,7 @@ f_errcount(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_errmax(int count, VALUE **vals)
 {
 	long oldmax;
@@ -5459,7 +5465,7 @@ f_errmax(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_stoponerror(int count, VALUE **vals)
 {
 	long oldval;
@@ -5487,7 +5493,7 @@ f_stoponerror(int count, VALUE **vals)
 	return result;
 }
 
-static VALUE
+S_FUNC VALUE
 f_fclose(int count, VALUE **vals)
 {
 	VALUE result;
@@ -5520,7 +5526,7 @@ f_fclose(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_rm(int count, VALUE **vals)
 {
 	VALUE result;
@@ -5570,7 +5576,7 @@ f_rm(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_newerror(int count, VALUE **vals)
 {
 	char *str;
@@ -5597,7 +5603,7 @@ f_newerror(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_strerror(int count, VALUE **vals)
 {
 	VALUE *vp;
@@ -5663,7 +5669,7 @@ f_strerror(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_ferror(VALUE *vp)
 {
 	VALUE result;
@@ -5683,7 +5689,7 @@ f_ferror(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_feof(VALUE *vp)
 {
 	VALUE result;
@@ -5703,7 +5709,7 @@ f_feof(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fflush(int count, VALUE **vals)
 {
 	VALUE result;
@@ -5732,7 +5738,7 @@ f_fflush(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_error(int count, VALUE **vals)
 {
 	VALUE *vp;
@@ -5760,7 +5766,7 @@ f_error(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_iserror(VALUE *vp)
 {
 	VALUE res;
@@ -5774,7 +5780,7 @@ f_iserror(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fsize(VALUE *vp)
 {
 	VALUE result;
@@ -5798,7 +5804,7 @@ f_fsize(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fseek(int count, VALUE **vals)
 {
 	VALUE result;
@@ -5837,7 +5843,7 @@ f_fseek(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_ftell(VALUE *vp)
 {
 	VALUE result;
@@ -5861,7 +5867,7 @@ f_ftell(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_rewind(int count, VALUE **vals)
 {
 	VALUE result;
@@ -5889,7 +5895,7 @@ f_rewind(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fprintf(int count, VALUE **vals)
 {
 	VALUE result;
@@ -5911,7 +5917,7 @@ f_fprintf(int count, VALUE **vals)
 }
 
 
-static int
+S_FUNC int
 strscan(char *s, int count, VALUE **vals)
 {
 	char	ch, chtmp;
@@ -5955,7 +5961,7 @@ strscan(char *s, int count, VALUE **vals)
 }
 
 
-static int
+S_FUNC int
 filescan(FILEID id, int count, VALUE **vals)
 {
 	STRING	*str;
@@ -5992,7 +5998,7 @@ filescan(FILEID id, int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_scan(int count, VALUE **vals)
 {
 	char *cp;
@@ -6015,7 +6021,7 @@ f_scan(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_strscan(int count, VALUE **vals)
 {
 	VALUE *vp;
@@ -6039,7 +6045,7 @@ f_strscan(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fscan(int count, VALUE **vals)
 {
 	VALUE *vp;
@@ -6069,7 +6075,7 @@ f_fscan(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_scanf(int count, VALUE **vals)
 {
 	VALUE *vp;
@@ -6097,7 +6103,7 @@ f_scanf(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_strscanf(int count, VALUE **vals)
 {
 	VALUE *vp, *vq;
@@ -6134,7 +6140,7 @@ f_strscanf(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fscanf(int count, VALUE **vals)
 {
 	VALUE *vp, *sp;
@@ -6171,7 +6177,7 @@ f_fscanf(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fputc(VALUE *v1, VALUE *v2)
 {
 	VALUE result;
@@ -6210,7 +6216,7 @@ f_fputc(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fputs(int count, VALUE **vals)
 {
 	VALUE result;
@@ -6235,7 +6241,7 @@ f_fputs(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fputstr(int count, VALUE **vals)
 {
 	VALUE result;
@@ -6261,7 +6267,7 @@ f_fputstr(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_printf(int count, VALUE **vals)
 {
 	VALUE result;
@@ -6281,7 +6287,7 @@ f_printf(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_strprintf(int count, VALUE **vals)
 {
 	VALUE result;
@@ -6308,7 +6314,7 @@ f_strprintf(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fgetc(VALUE *vp)
 {
 	VALUE result;
@@ -6331,7 +6337,7 @@ f_fgetc(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_ungetc(VALUE *v1, VALUE *v2)
 {
 	VALUE result;
@@ -6369,7 +6375,7 @@ f_ungetc(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fgetline(VALUE *vp)
 {
 	VALUE result;
@@ -6393,7 +6399,7 @@ f_fgetline(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fgets(VALUE *vp)
 {
 	VALUE result;
@@ -6417,7 +6423,7 @@ f_fgets(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fgetstr(VALUE *vp)
 {
 	VALUE result;
@@ -6441,7 +6447,7 @@ f_fgetstr(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_fgetfield(VALUE *vp)
 {
 	VALUE result;
@@ -6464,7 +6470,7 @@ f_fgetfield(VALUE *vp)
 	return result;
 }
 
-static VALUE
+S_FUNC VALUE
 f_fgetfile(VALUE *vp)
 {
 	VALUE result;
@@ -6490,7 +6496,7 @@ f_fgetfile(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_files(int count, VALUE **vals)
 {
 	VALUE result;
@@ -6513,7 +6519,7 @@ f_files(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_reverse(VALUE *val)
 {
 	VALUE res;
@@ -6542,7 +6548,7 @@ f_reverse(VALUE *val)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_sort(VALUE *val)
 {
 	VALUE res;
@@ -6566,7 +6572,7 @@ f_sort(VALUE *val)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_join(int count, VALUE **vals)
 {
 	LIST *lp;
@@ -6594,7 +6600,7 @@ f_join(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_head(VALUE *v1, VALUE *v2)
 {
 	VALUE res;
@@ -6634,7 +6640,7 @@ f_head(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_tail(VALUE *v1, VALUE *v2)
 {
 	long n;
@@ -6683,7 +6689,7 @@ f_tail(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_segment(int count, VALUE **vals)
 {
 	VALUE *vp;
@@ -6723,7 +6729,7 @@ f_segment(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_modify(VALUE *v1, VALUE *v2)
 {
 	FUNC *fp;
@@ -6786,7 +6792,7 @@ f_modify(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_forall(VALUE *v1, VALUE *v2)
 {
 	FUNC *fp;
@@ -6833,7 +6839,7 @@ f_forall(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_select(VALUE *v1, VALUE *v2)
 {
 	LIST *lp;
@@ -6871,7 +6877,7 @@ f_select(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_count(VALUE *v1, VALUE *v2)
 {
 	LISTELEM *ep;
@@ -6924,7 +6930,7 @@ f_count(VALUE *v1, VALUE *v2)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_makelist(VALUE *v1)
 {
 	LIST *lp;
@@ -6953,7 +6959,7 @@ f_makelist(VALUE *v1)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_randperm(VALUE *val)
 {
 	VALUE res;
@@ -6979,7 +6985,7 @@ f_randperm(VALUE *val)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_cmdbuf(void)
 {
 	VALUE result;
@@ -6998,7 +7004,7 @@ f_cmdbuf(void)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_getenv(VALUE *v1)
 {
 	VALUE result;
@@ -7021,7 +7027,7 @@ f_getenv(VALUE *v1)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_isatty(VALUE *vp)
 {
 	VALUE result;
@@ -7039,7 +7045,7 @@ f_isatty(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_calc_tty(void)
 {
 	VALUE res;
@@ -7052,7 +7058,7 @@ f_calc_tty(void)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_inputlevel (void)
 {
 	VALUE result;
@@ -7066,7 +7072,7 @@ f_inputlevel (void)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_calclevel(void)
 {
 	VALUE result;
@@ -7080,7 +7086,7 @@ f_calclevel(void)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_calcpath(void)
 {
 	VALUE result;
@@ -7094,7 +7100,7 @@ f_calcpath(void)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_access(int count, VALUE **vals)
 {
 	NUMBER *q;
@@ -7146,7 +7152,7 @@ f_access(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_putenv(int count, VALUE **vals)
 {
 	VALUE result;
@@ -7209,7 +7215,7 @@ f_putenv(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_strpos(VALUE *haystack, VALUE *needle)
 {
 	VALUE result;
@@ -7235,7 +7241,7 @@ f_strpos(VALUE *haystack, VALUE *needle)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_system(VALUE *vp)
 {
 	VALUE result;
@@ -7269,7 +7275,7 @@ f_system(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_sleep(int count, VALUE **vals)
 {
 	long time;
@@ -7316,7 +7322,7 @@ f_sleep(int count, VALUE **vals)
 /*
  * set the default output base/mode
  */
-static NUMBER *
+S_FUNC NUMBER *
 f_base(int count, NUMBER **vals)
 {
 	long base;	/* output base/mode */
@@ -7367,7 +7373,7 @@ f_base(int count, NUMBER **vals)
 /*
  * set the default secondary output base/mode
  */
-static NUMBER *
+S_FUNC NUMBER *
 f_base2(int count, NUMBER **vals)
 {
 	long base;	/* output base/mode */
@@ -7421,7 +7427,7 @@ f_base2(int count, NUMBER **vals)
 /*
  * return a numerical 'value' of the mode/base
  */
-static NUMBER *
+S_FUNC NUMBER *
 base_value(long mode, int defval)
 {
 	NUMBER *result;
@@ -7498,7 +7504,7 @@ base_value(long mode, int defval)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_custom(int count, VALUE **vals)
 {
 	VALUE result;
@@ -7546,7 +7552,7 @@ f_custom(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_blk(int count, VALUE **vals)
 {
 	int len;		/* number of octets to malloc */
@@ -7623,7 +7629,7 @@ f_blk(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_blkfree(VALUE *vp)
 {
 	int id;
@@ -7660,7 +7666,7 @@ f_blkfree(VALUE *vp)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_blocks(int count, VALUE **vals)
 {
 	NBLOCK *nblk;
@@ -7691,7 +7697,7 @@ f_blocks(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_free(int count, VALUE **vals)
 {
 	VALUE result;
@@ -7710,7 +7716,7 @@ f_free(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_freeglobals(void)
 {
 	VALUE result;
@@ -7724,7 +7730,7 @@ f_freeglobals(void)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_freeredc(void)
 {
 	VALUE result;
@@ -7738,7 +7744,7 @@ f_freeredc(void)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_freestatics(void)
 {
 	VALUE result;
@@ -7760,7 +7766,7 @@ f_freestatics(void)
  * Copy 'num' consecutive items from 'src' with index 'ssi' to
  * 'dest', starting at position with index 'dsi'.
  */
-static VALUE
+S_FUNC VALUE
 f_copy(int count, VALUE **vals)
 {
 	long ssi = 0;	/* source start index */
@@ -7841,7 +7847,7 @@ f_copy(int count, VALUE **vals)
  * Copy 'num' consecutive items from 'src' with index 'ssi' to
  * 'dest', starting at position with index 'dsi'.
  */
-static VALUE
+S_FUNC VALUE
 f_blkcpy(int count, VALUE **vals)
 {
 	VALUE *args[5];		/* args to re-order */
@@ -7883,7 +7889,7 @@ f_blkcpy(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_sha(int count, VALUE **vals)
 {
 	VALUE result;
@@ -7952,7 +7958,7 @@ f_sha(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_sha1(int count, VALUE **vals)
 {
 	VALUE result;
@@ -8019,7 +8025,7 @@ f_sha1(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_md5(int count, VALUE **vals)
 {
 	VALUE result;
@@ -8088,7 +8094,7 @@ f_md5(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_argv(int count, VALUE **vals)
 {
 	int arg;		/* the argv_value string index */
@@ -8131,7 +8137,7 @@ f_argv(int count, VALUE **vals)
 }
 
 
-static VALUE
+S_FUNC VALUE
 f_version(void)
 {
 	VALUE result;
@@ -8184,7 +8190,7 @@ f_version(void)
  *	b_valfunc	routine to calculate general values
  *	b_desc		description of function
  */
-static CONST struct builtin builtins[] = {
+STATIC CONST struct builtin builtins[] = {
 	{"abs", 1, 2, 0, OP_ABS, 0, 0,
 	 "absolute value within accuracy b"},
 	{"access", 1, 2, 0, OP_NOP, 0, f_access,
@@ -9047,7 +9053,7 @@ showerrors(void)
  *
  * NOTE: The caller MUST pass a string that the caller has previously malloced.
  */
-static int
+S_FUNC int
 malloced_putenv(char *str)
 {
 	char *value;	/* location of the value part of the str argument */

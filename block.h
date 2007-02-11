@@ -1,7 +1,7 @@
 /*
  * block - fixed, dynamic, fifo and circular memory blocks
  *
- * Copyright (C) 1999  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: block.h,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: block.h,v 29.3 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/block.h,v $
  *
  * Under source code control:	1997/02/21 05:03:39
@@ -160,7 +160,7 @@ typedef struct nblock NBLOCK;
 /*
  * block debug
  */
-extern int blk_debug;	/* 0 => debug off */
+EXTERN int blk_debug;	/* 0 => debug off */
 
 
 /*
@@ -204,22 +204,22 @@ typedef USB8 OCTET;
 /*
  * external functions
  */
-extern BLOCK *blkalloc(int, int);
-extern void blk_free(BLOCK*);
-extern BLOCK *blkrealloc(BLOCK*, int, int);
-extern void blktrunc(BLOCK*);
-extern BLOCK *blk_copy(BLOCK*);
-extern int blk_cmp(BLOCK*, BLOCK*);
-extern void blk_print(BLOCK*);
-extern void nblock_print(NBLOCK *);
-extern NBLOCK *createnblock(char *, int, int);
-extern NBLOCK *reallocnblock(int, int, int);
-extern int removenblock(int);
-extern int findnblockid(char *);
-extern NBLOCK *findnblock(int);
-extern BLOCK *copyrealloc(BLOCK*, int, int);
-extern int countnblocks(void);
-extern void shownblocks(void);
+E_FUNC BLOCK *blkalloc(int, int);
+E_FUNC void blk_free(BLOCK*);
+E_FUNC BLOCK *blkrealloc(BLOCK*, int, int);
+E_FUNC void blktrunc(BLOCK*);
+E_FUNC BLOCK *blk_copy(BLOCK*);
+E_FUNC int blk_cmp(BLOCK*, BLOCK*);
+E_FUNC void blk_print(BLOCK*);
+E_FUNC void nblock_print(NBLOCK *);
+E_FUNC NBLOCK *createnblock(char *, int, int);
+E_FUNC NBLOCK *reallocnblock(int, int, int);
+E_FUNC int removenblock(int);
+E_FUNC int findnblockid(char *);
+E_FUNC NBLOCK *findnblock(int);
+E_FUNC BLOCK *copyrealloc(BLOCK*, int, int);
+E_FUNC int countnblocks(void);
+E_FUNC void shownblocks(void);
 
 
 #endif /* !__BLOCK_H__ */

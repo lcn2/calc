@@ -1,7 +1,7 @@
 /*
  * zio - scanf and printf routines for arbitrary precision integers
  *
- * Copyright (C) 1999-2006  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: zio.c,v 29.8 2006/06/01 16:21:37 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: zio.c,v 29.9 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zio.c,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -61,12 +61,12 @@ struct iostate {
 };
 
 
-static IOSTATE	*oldiostates = NULL;	/* list of saved output states */
-static FILE	*outfp = NULL;		/* file unit for output */
-static char	*outbuf = NULL;		/* current diverted buffer */
-static BOOL	outputisstring = FALSE;
-static size_t	outbufsize;
-static size_t	outbufused;
+STATIC IOSTATE	*oldiostates = NULL;	/* list of saved output states */
+STATIC FILE	*outfp = NULL;		/* file unit for output */
+STATIC char	*outbuf = NULL;		/* current diverted buffer */
+STATIC BOOL	outputisstring = FALSE;
+STATIC size_t	outbufsize;
+STATIC size_t	outbufused;
 
 
 /*
@@ -79,7 +79,7 @@ static size_t	outbufused;
 void
 zio_init(void)
 {
-	static int done = 0;	/* 1 => routine already called */
+	STATIC int done = 0;	/* 1 => routine already called */
 
 	if (!done) {
 		outfp = stdout;

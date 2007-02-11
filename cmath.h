@@ -1,7 +1,7 @@
 /*
  * cmath - data structures for extended precision complex arithmetic
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -52,84 +52,84 @@ typedef struct {
 /*
  * Input, output, and conversion routines.
  */
-extern COMPLEX *comalloc(void);
-extern COMPLEX *qqtoc(NUMBER *q1, NUMBER *q2);
-extern void comfree(COMPLEX *c);
-extern void comprint(COMPLEX *c);
-extern void cprintfr(COMPLEX *c);
+E_FUNC COMPLEX *comalloc(void);
+E_FUNC COMPLEX *qqtoc(NUMBER *q1, NUMBER *q2);
+E_FUNC void comfree(COMPLEX *c);
+E_FUNC void comprint(COMPLEX *c);
+E_FUNC void cprintfr(COMPLEX *c);
 
 
 /*
  * Basic numeric routines.
  */
 
-extern COMPLEX *c_add(COMPLEX *c1, COMPLEX *c2);
-extern COMPLEX *c_sub(COMPLEX *c1, COMPLEX *c2);
-extern COMPLEX *c_mul(COMPLEX *c1, COMPLEX *c2);
-extern COMPLEX *c_div(COMPLEX *c1, COMPLEX *c2);
-extern COMPLEX *c_addq(COMPLEX *c, NUMBER *q);
-extern COMPLEX *c_subq(COMPLEX *c, NUMBER *q);
-extern COMPLEX *c_mulq(COMPLEX *c, NUMBER *q);
-extern COMPLEX *c_divq(COMPLEX *c, NUMBER *q);
-extern COMPLEX *c_scale(COMPLEX *c, long i);
-extern COMPLEX *c_shift(COMPLEX *c, long i);
-extern COMPLEX *c_square(COMPLEX *c);
-extern COMPLEX *c_conj(COMPLEX *c);
-extern COMPLEX *c_real(COMPLEX *c);
-extern COMPLEX *c_imag(COMPLEX *c);
-extern COMPLEX *c_neg(COMPLEX *c);
-extern COMPLEX *c_inv(COMPLEX *c);
-extern COMPLEX *c_int(COMPLEX *c);
-extern COMPLEX *c_frac(COMPLEX *c);
-extern BOOL c_cmp(COMPLEX *c1, COMPLEX *c2);
+E_FUNC COMPLEX *c_add(COMPLEX *c1, COMPLEX *c2);
+E_FUNC COMPLEX *c_sub(COMPLEX *c1, COMPLEX *c2);
+E_FUNC COMPLEX *c_mul(COMPLEX *c1, COMPLEX *c2);
+E_FUNC COMPLEX *c_div(COMPLEX *c1, COMPLEX *c2);
+E_FUNC COMPLEX *c_addq(COMPLEX *c, NUMBER *q);
+E_FUNC COMPLEX *c_subq(COMPLEX *c, NUMBER *q);
+E_FUNC COMPLEX *c_mulq(COMPLEX *c, NUMBER *q);
+E_FUNC COMPLEX *c_divq(COMPLEX *c, NUMBER *q);
+E_FUNC COMPLEX *c_scale(COMPLEX *c, long i);
+E_FUNC COMPLEX *c_shift(COMPLEX *c, long i);
+E_FUNC COMPLEX *c_square(COMPLEX *c);
+E_FUNC COMPLEX *c_conj(COMPLEX *c);
+E_FUNC COMPLEX *c_real(COMPLEX *c);
+E_FUNC COMPLEX *c_imag(COMPLEX *c);
+E_FUNC COMPLEX *c_neg(COMPLEX *c);
+E_FUNC COMPLEX *c_inv(COMPLEX *c);
+E_FUNC COMPLEX *c_int(COMPLEX *c);
+E_FUNC COMPLEX *c_frac(COMPLEX *c);
+E_FUNC BOOL c_cmp(COMPLEX *c1, COMPLEX *c2);
 
 
 /*
  * More complicated functions.
  */
-extern COMPLEX *c_powi(COMPLEX *c, NUMBER *q);
-extern NUMBER *c_ilog(COMPLEX *c, ZVALUE base);
+E_FUNC COMPLEX *c_powi(COMPLEX *c, NUMBER *q);
+E_FUNC NUMBER *c_ilog(COMPLEX *c, ZVALUE base);
 
 
 /*
  * Transcendental routines.  These all take an epsilon argument to
  * specify how accurately these are to be calculated.
  */
-extern COMPLEX *c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon);
-extern COMPLEX *c_sqrt(COMPLEX *c, NUMBER *epsilon, long R);
-extern COMPLEX *c_root(COMPLEX *c, NUMBER *q, NUMBER *epsilon);
-extern COMPLEX *c_exp(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_ln(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_log(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_cos(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_sin(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_cosh(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_sinh(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_polar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon);
-extern COMPLEX *c_rel(COMPLEX *c1, COMPLEX *c2);
-extern COMPLEX *c_asin(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_acos(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_atan(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_acot(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_asec(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_acsc(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_asinh(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_acosh(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_atanh(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_acoth(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_asech(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_acsch(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_gd(COMPLEX *c, NUMBER *epsilon);
-extern COMPLEX *c_agd(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon);
+E_FUNC COMPLEX *c_sqrt(COMPLEX *c, NUMBER *epsilon, long R);
+E_FUNC COMPLEX *c_root(COMPLEX *c, NUMBER *q, NUMBER *epsilon);
+E_FUNC COMPLEX *c_exp(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_ln(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_log(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_cos(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_sin(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_cosh(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_sinh(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_polar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon);
+E_FUNC COMPLEX *c_rel(COMPLEX *c1, COMPLEX *c2);
+E_FUNC COMPLEX *c_asin(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_acos(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_atan(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_acot(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_asec(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_acsc(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_asinh(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_acosh(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_atanh(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_acoth(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_asech(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_acsch(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_gd(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_agd(COMPLEX *c, NUMBER *epsilon);
 
 
 
 /*
  * external functions
  */
-extern COMPLEX *swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all);
-extern COMPLEX *swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all);
-extern COMPLEX *swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all);
+E_FUNC COMPLEX *swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all);
+E_FUNC COMPLEX *swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all);
+E_FUNC COMPLEX *swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all);
 
 
 /*
@@ -153,7 +153,7 @@ extern COMPLEX *swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all);
 /*
  * Pre-defined values.
  */
-extern COMPLEX _czero_, _cone_, _conei_;
+EXTERN COMPLEX _czero_, _cone_, _conei_;
 
 
 #endif /* !__CMATH_H__ */

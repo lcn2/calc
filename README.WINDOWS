@@ -56,7 +56,7 @@ recommends the following settings:
 	CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR}
 	CALCRC= ${CALC_SHAREDIR}/startup;~/.calcrc;./.calcinit
 	CALCPAGER= less.exe -ci
-	DEBUG= -O2 -gstabs+
+	DEBUG= -O2 -gstabs+ -DWINDOZ
 
 The 'Linux set' or 'gcc set' (see the Select your compiler type section)
 should work for DJGPP systems if you set the above Makefile variables.
@@ -112,37 +112,8 @@ In particular:
 	source directory, edit them (if needed) and build using the
 	Cygwin GCC compiler and Cygwin build environment.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-=-=-= calc maintenance folk =-=-=
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-People who maintain calc need to keep in mind the following:
-
-The following was added to opcodes.h, config.h, zmath.h and value.h:
-
-	#if defined(_WIN32)
-	#ifdef _EXPORTING
-	  #define DLL	__declspec(dllexport)
-	#else
-	  #define DLL	__declspec(dllimport)
-	#endif
-
-	#else /* Windoz free systems */
-
-	  #define DLL
-
-	#endif /* Windoz free systems */
-
-Then DLL was added in front of all the exported functions.  For example:
-
-    extern int configtype(char*);
-
-was changed to:
-
-    DLL extern int configtype(char*);
-
-
-## Copyright (C) 2002  Landon Curt Noll and Thomas Jones-Low
+## Copyright (C) 2002-2007  Landon Curt Noll and Thomas Jones-Low
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -158,8 +129,8 @@ was changed to:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.12 $
-## @(#) $Id: README.WINDOWS,v 29.12 2004/07/28 12:52:01 chongo Exp $
+## @(#) $Revision: 29.13 $
+## @(#) $Id: README.WINDOWS,v 29.13 2007/02/11 10:23:28 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/README.WINDOWS,v $
 ##
 ## Under source code control:	2001/02/25 14:00:05

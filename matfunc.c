@@ -1,7 +1,7 @@
 /*
  * matfunc - extended precision rational arithmetic matrix functions
  *
- * Copyright (C) 1999-2004  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: matfunc.c,v 29.7 2006/06/02 10:24:09 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: matfunc.c,v 29.8 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/matfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:18
@@ -38,12 +38,12 @@
 
 #include "have_unused.h"
 
-extern long irand(long s);
+E_FUNC long irand(long s);
 
-static void matswaprow(MATRIX *m, long r1, long r2);
-static void matsubrow(MATRIX *m, long oprow, long baserow, VALUE *mulval);
-static void matmulrow(MATRIX *m, long row, VALUE *mulval);
-static MATRIX *matident(MATRIX *m);
+S_FUNC void matswaprow(MATRIX *m, long r1, long r2);
+S_FUNC void matsubrow(MATRIX *m, long oprow, long baserow, VALUE *mulval);
+S_FUNC void matmulrow(MATRIX *m, long row, VALUE *mulval);
+S_FUNC MATRIX *matident(MATRIX *m);
 
 
 
@@ -1043,7 +1043,7 @@ matfill(MATRIX *m, VALUE *v1, VALUE *v2)
 /*
  * Set a copy of a square matrix to the identity matrix.
  */
-static MATRIX *
+S_FUNC MATRIX *
 matident(MATRIX *m)
 {
 	register VALUE *val;	/* current value */
@@ -1318,7 +1318,7 @@ matdet(MATRIX *m)
  * Local utility routine to swap two rows of a square matrix.
  * No checks are made to verify the legality of the arguments.
  */
-static void
+S_FUNC void
 matswaprow(MATRIX *m, long r1, long r2)
 {
 	register VALUE *v1, *v2;
@@ -1345,7 +1345,7 @@ matswaprow(MATRIX *m, long r1, long r2)
  * The row to be changed is oprow, the row to be subtracted is baserow.
  * No checks are made to verify the legality of the arguments.
  */
-static void
+S_FUNC void
 matsubrow(MATRIX *m, long oprow, long baserow, VALUE *mulval)
 {
 	register VALUE *vop, *vbase;
@@ -1371,7 +1371,7 @@ matsubrow(MATRIX *m, long oprow, long baserow, VALUE *mulval)
  * Local utility routine to multiply a row by a specified number.
  * No checks are made to verify the legality of the arguments.
  */
-static void
+S_FUNC void
 matmulrow(MATRIX *m, long row, VALUE *mulval)
 {
 	register VALUE *val;

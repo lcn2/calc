@@ -1,7 +1,7 @@
 /*
  * zrand - subtractive 100 shuffle generator
  *
- * Copyright (C) 1999,2004  Landon Curt Noll
+ * Copyright (C) 1999-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: zrand.c,v 29.9 2004/03/31 04:58:40 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: zrand.c,v 29.10 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrand.c,v $
  *
  * Under source code control:	1995/01/07 09:45:25
@@ -366,7 +366,7 @@
  * This is the state of the s100 generator after initialization, or srand(0),
  * or srand(0) is called.  The init_s100 value is never changed, only copied.
  */
-static CONST RAND init_s100 = {
+STATIC CONST RAND init_s100 = {
 	1,		/* seeded */
 	0,		/* no buffered bits */
 #if FULL_BITS == SBITS		/* buffer */
@@ -759,7 +759,7 @@ static CONST RAND init_s100 = {
  *
  * This array is never changed, only copied.
  */
-static CONST FULL def_subtract[SCNT] = {
+STATIC CONST FULL def_subtract[SCNT] = {
 #if FULL_BITS == SBITS
 	    (FULL)U(0xc8c0370c7db7dc19), (FULL)U(0x738e33b940a06fbb),
 	    (FULL)U(0x481abb76a859ed2b), (FULL)U(0x74106bb39ccdccb5),
@@ -877,32 +877,32 @@ static CONST FULL def_subtract[SCNT] = {
  * These constants are used in the randreseed64().  See below.
  */
 #if FULL_BITS == SBITS
-static CONST HALF a_vec[SHALFS] = { (HALF)0x73c0ccbd, (HALF)0x57aa0ff4 };
-static CONST HALF c_vec[SHALFS] = { (HALF)0x18e09865, (HALF)0x12ea8057 };
+STATIC CONST HALF a_vec[SHALFS] = { (HALF)0x73c0ccbd, (HALF)0x57aa0ff4 };
+STATIC CONST HALF c_vec[SHALFS] = { (HALF)0x18e09865, (HALF)0x12ea8057 };
 #elif 2*FULL_BITS == SBITS
-static CONST HALF a_vec[SHALFS] = { (HALF)0xccbd, (HALF)0x73c0,
+STATIC CONST HALF a_vec[SHALFS] = { (HALF)0xccbd, (HALF)0x73c0,
 				    (HALF)0x0ff4, (HALF)0x57aa };
-static CONST HALF c_vec[SHALFS] = { (HALF)0x9865, (HALF)0x18e0,
+STATIC CONST HALF c_vec[SHALFS] = { (HALF)0x9865, (HALF)0x18e0,
 				    (HALF)0x8057, (HALF)0x12ea };
 #else
    /\../\	FULL_BITS must be 32 or 64	/\../\	 !!!
 #endif
-static CONST ZVALUE a_val = {(HALF *)a_vec, SHALFS, 0};
-static CONST ZVALUE c_val = {(HALF *)c_vec, SHALFS, 0};
+STATIC CONST ZVALUE a_val = {(HALF *)a_vec, SHALFS, 0};
+STATIC CONST ZVALUE c_val = {(HALF *)c_vec, SHALFS, 0};
 
 
 /*
  * current s100 generator state
  */
-static RAND s100;
+STATIC RAND s100;
 
 
 /*
  * declare static functions
  */
-static void randreseed64(ZVALUE seed, ZVALUE *res);
-static int slotcp(BITSTR *bitstr, FULL *src, int count);
-static void slotcp64(BITSTR *bitstr, FULL *src);
+S_FUNC void randreseed64(ZVALUE seed, ZVALUE *res);
+S_FUNC int slotcp(BITSTR *bitstr, FULL *src, int count);
+S_FUNC void slotcp64(BITSTR *bitstr, FULL *src);
 
 
 /*
@@ -1034,7 +1034,7 @@ static void slotcp64(BITSTR *bitstr, FULL *src);
  * NOTE: This is NOT a pseudo random number generator.	This function is
  *	 intended to be used internally by ss100rand() and sshufrand().
  */
-static void
+S_FUNC void
 randreseed64(ZVALUE seed, ZVALUE *res)
 {
 	ZVALUE t;		/* temp value */
@@ -1440,7 +1440,7 @@ zsetrand(CONST RAND *state)
  * returns:
  *	number of bits transfered
  */
-static int
+S_FUNC int
 slotcp(BITSTR *bitstr, FULL *src, int count)
 {
 	HALF *dh;		/* most significant HALF in dest */
@@ -1615,7 +1615,7 @@ slotcp(BITSTR *bitstr, FULL *src, int count)
  * returns:
  *	number of bits transfered
  */
-static void
+S_FUNC void
 slotcp64(BITSTR *bitstr, FULL *src)
 {
 	HALF *dh = bitstr->loc;		/* most significant HALF in dest */

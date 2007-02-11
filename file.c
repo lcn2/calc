@@ -1,7 +1,7 @@
 /*
  * file - file I/O routines callable by users
  *
- * Copyright (C) 1999-2006  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.16 $
- * @(#) $Id: file.c,v 29.16 2006/08/20 15:01:30 chongo Exp $
+ * @(#) $Revision: 29.17 $
+ * @(#) $Id: file.c,v 29.17 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -57,8 +57,8 @@
 /*
  * external STDIO functions
  */
-extern void math_setfp(FILE *fp);
-extern FILE *f_open(char *name, char *mode);
+E_FUNC void math_setfp(FILE *fp);
+E_FUNC FILE *f_open(char *name, char *mode);
 
 
 /*
@@ -66,7 +66,7 @@ extern FILE *f_open(char *name, char *mode);
  * The first three entries always correspond to stdin, stdout, and stderr,
  * and cannot be closed.  Their file ids are always 0, 1, and 2.
  */
-static FILEIO files[MAXFILES] = {
+STATIC FILEIO files[MAXFILES] = {
 	{FILEID_STDIN,	NULL,  (dev_t)0, (ino_t)0,
 	 "(stdin)",  TRUE, FALSE, FALSE, FALSE, 'r', "r"},
 	{FILEID_STDOUT, NULL, (dev_t)0, (ino_t)0,
@@ -76,28 +76,28 @@ static FILEIO files[MAXFILES] = {
 };
 
 
-static int ioindex[MAXFILES] = {0,1,2}; /* Indices for FILEIO table */
-static FILEID lastid = FILEID_STDERR;	/* Last allocated file id */
-static int idnum = 3;			/* Number of allocated file ids */
+STATIC int ioindex[MAXFILES] = {0,1,2}; /* Indices for FILEIO table */
+STATIC FILEID lastid = FILEID_STDERR;	/* Last allocated file id */
+STATIC int idnum = 3;			/* Number of allocated file ids */
 
 
 /* forward static declarations */
-static ZVALUE filepos2z(FILEPOS pos);
-static FILEPOS z2filepos(ZVALUE pos);
-static int set_open_pos(FILE *fp, ZVALUE zpos);
-static int get_open_pos(FILE *fp, ZVALUE *res);
-static ZVALUE off_t2z(off_t siz);
-static ZVALUE dev2z(dev_t dev);
-static ZVALUE inode2z(ino_t inode);
-static void getscanfield(FILE *fp, BOOL skip, unsigned int width,
+S_FUNC ZVALUE filepos2z(FILEPOS pos);
+S_FUNC FILEPOS z2filepos(ZVALUE pos);
+S_FUNC int set_open_pos(FILE *fp, ZVALUE zpos);
+S_FUNC int get_open_pos(FILE *fp, ZVALUE *res);
+S_FUNC ZVALUE off_t2z(off_t siz);
+S_FUNC ZVALUE dev2z(dev_t dev);
+S_FUNC ZVALUE inode2z(ino_t inode);
+S_FUNC void getscanfield(FILE *fp, BOOL skip, unsigned int width,
 			 int scannum, char *scanptr, char **strptr);
-static void getscanwhite(FILE *fp, BOOL skip, unsigned int width,
+S_FUNC void getscanwhite(FILE *fp, BOOL skip, unsigned int width,
 			 int scannum, char **strptr);
-static int fscanfile(FILE *fp, char *fmt, int count, VALUE **vals);
-static void freadnum(FILE *fp, VALUE *valptr);
-static void freadsum(FILE *fp, VALUE *valptr);
-static void freadprod(FILE *fp, VALUE *valptr);
-static void fskipnum(FILE *fp);
+S_FUNC int fscanfile(FILE *fp, char *fmt, int count, VALUE **vals);
+S_FUNC void freadnum(FILE *fp, VALUE *valptr);
+S_FUNC void freadsum(FILE *fp, VALUE *valptr);
+S_FUNC void freadprod(FILE *fp, VALUE *valptr);
+S_FUNC void fskipnum(FILE *fp);
 
 
 /*
@@ -112,7 +112,7 @@ static void fskipnum(FILE *fp);
 void
 file_init(void)
 {
-    static int done = 0;	/* 1 => routine already called */
+    STATIC int done = 0;	/* 1 => routine already called */
     struct stat sbuf;		/* file status */
     FILEIO *fiop;
     FILE *fp;
@@ -202,7 +202,7 @@ file_init(void)
  *	id	calc file ID
  *	fp	open file stream
  */
-static void
+S_FUNC void
 init_fileio(FILEIO *fiop, char *name, char *mode,
 	    struct stat *sbufp, FILEID id, FILE *fp)
 {
@@ -1352,7 +1352,7 @@ rewindall(void)
  * NOTE: Does not support negative file positions.
  */
 /*ARGSUSED*/
-static ZVALUE
+S_FUNC ZVALUE
 filepos2z(FILEPOS pos)
 {
 	ZVALUE ret;		/* ZVALUE file position to return */
@@ -1385,7 +1385,7 @@ filepos2z(FILEPOS pos)
  *
  * NOTE: Does not support negative file positions.
  */
-static FILEPOS
+S_FUNC FILEPOS
 z2filepos(ZVALUE zpos)
 {
 #if FILEPOS_BITS > FULL_BITS
@@ -1462,7 +1462,7 @@ z2filepos(ZVALUE zpos)
  *	0		res points to the file position
  *	-1		error
  */
-static int
+S_FUNC int
 get_open_pos(FILE *fp, ZVALUE *res)
 {
 	FILEPOS pos;		/* current file position */
@@ -1622,7 +1622,7 @@ fseekid(FILEID id, ZVALUE offset, int whence)
  * NOTE: Due to fsetpos limitation, position is set relative to only
  *	 the beginning of the file.
  */
-static int
+S_FUNC int
 set_open_pos(FILE *fp, ZVALUE zpos)
 {
 	FILEPOS pos;		/* current file position */
@@ -1706,7 +1706,7 @@ setloc(FILEID id, ZVALUE zpos)
  *	file size as a ZVALUE
  */
 /*ARGSUSED*/
-static ZVALUE
+S_FUNC ZVALUE
 off_t2z(off_t siz)
 {
 	ZVALUE ret;		/* ZVALUE file size to return */
@@ -1737,7 +1737,7 @@ off_t2z(off_t siz)
  * returns:
  *	file size as a ZVALUE
  */
-static ZVALUE
+S_FUNC ZVALUE
 dev2z(dev_t dev)
 {
 	ZVALUE ret;		/* ZVALUE file size to return */
@@ -1769,7 +1769,7 @@ dev2z(dev_t dev)
  *	file size as a ZVALUE
  */
 /*ARGSUSED*/
-static ZVALUE
+S_FUNC ZVALUE
 inode2z(ino_t inode)
 {
 	ZVALUE ret;		/* ZVALUE file size to return */
@@ -1927,7 +1927,7 @@ get_inode(FILEID id, ZVALUE *inode)
 }
 
 
-static off_t
+S_FUNC off_t
 filesize(FILEIO *fiop)
 {
 	struct stat sbuf;
@@ -2025,7 +2025,7 @@ showfiles(void)
  *	scanptr		string of characters considered separators
  *	strptr		pointer to where the new field pointer may be found
  */
-static void
+S_FUNC void
 getscanfield(FILE *fp, BOOL skip, unsigned int width, int scannum, char *scanptr, char **strptr)
 {
 	char *str;		/* current string */
@@ -2103,7 +2103,7 @@ getscanfield(FILE *fp, BOOL skip, unsigned int width, int scannum, char *scanptr
  *	scannum		Number of characters in scanset
  *	strptr		pointer to where the new field pointer may be found
  */
-static void
+S_FUNC void
 getscanwhite(FILE *fp, BOOL skip, unsigned int width, int scannum, char **strptr)
 {
 	char *str;		/* current string */
@@ -2170,7 +2170,7 @@ getscanwhite(FILE *fp, BOOL skip, unsigned int width, int scannum, char **strptr
 }
 
 
-static int
+S_FUNC int
 fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
 {
 	int assnum;	/* Number of assignments made */
@@ -2364,7 +2364,7 @@ scanfstr(char *str, char *fmt, int count, VALUE **vals)
  * a sign immediately following 'e' or 'E', or a dot is encountered.
  * Absence of digits is interpreted as zero.
  */
-static void
+S_FUNC void
 freadnum(FILE *fp, VALUE *valptr)
 {
 	ZVALUE num, zden, newnum, newden, div, tmp;
@@ -2502,7 +2502,7 @@ freadnum(FILE *fp, VALUE *valptr)
 }
 
 
-static void
+S_FUNC void
 freadsum(FILE *fp, VALUE *valptr)
 {
 	VALUE v1, v2, v3;
@@ -2528,7 +2528,7 @@ freadsum(FILE *fp, VALUE *valptr)
 }
 
 
-static void
+S_FUNC void
 freadprod(FILE *fp, VALUE *valptr)
 {
 	VALUE v1, v2, v3;
@@ -2552,7 +2552,7 @@ freadprod(FILE *fp, VALUE *valptr)
 }
 
 
-static void
+S_FUNC void
 fskipnum(FILE *fp)
 {
 	char ch;

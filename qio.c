@@ -1,7 +1,7 @@
 /*
  * qio - scanf and printf routines for arbitrary precision rational numbers
  *
- * Copyright (C) 1999-2004  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: qio.c,v 29.8 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: qio.c,v 29.9 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qio.c,v $
  *
  * Under source code control:	1993/07/30 19:42:46
@@ -40,8 +40,8 @@
 #define PRINTF1(fmt, a1)	math_fmt(fmt, a1)
 #define PRINTF2(fmt, a1, a2)	math_fmt(fmt, a1, a2)
 
-static long	scalefactor;
-static ZVALUE	scalenumber = { 0, 0, 0 };
+STATIC long	scalefactor;
+STATIC ZVALUE	scalenumber = { 0, 0, 0 };
 
 
 /*

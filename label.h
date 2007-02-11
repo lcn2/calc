@@ -1,7 +1,7 @@
 /*
  * label - label handling routines
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: label.h,v 29.4 2001/06/08 21:00:58 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: label.h,v 29.5 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/label.h,v $
  *
  * Under source code control:	1990/02/15 01:48:33
@@ -52,13 +52,13 @@ typedef struct {
 } LABEL;
 
 
-extern void initlabels(void);
-extern void definelabel(char *name);
-extern void addlabel(char *name);
-extern void clearlabel(LABEL *lp);
-extern void setlabel(LABEL *lp);
-extern void uselabel(LABEL *lp);
-extern void checklabels(void);
+E_FUNC void initlabels(void);
+E_FUNC void definelabel(char *name);
+E_FUNC void addlabel(char *name);
+E_FUNC void clearlabel(LABEL *lp);
+E_FUNC void setlabel(LABEL *lp);
+E_FUNC void uselabel(LABEL *lp);
+E_FUNC void checklabels(void);
 
 
 #endif /* !__LABEL_H__ */

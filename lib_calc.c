@@ -1,7 +1,7 @@
 /*
  * lib_calc - calc link library initialization and shutdown routines
  *
- * Copyright (C) 1999-2006  Landon Curt Noll
+ * Copyright (C) 1999-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.14 $
- * @(#) $Id: lib_calc.c,v 29.14 2006/05/21 07:28:54 chongo Exp $
+ * @(#) $Revision: 29.15 $
+ * @(#) $Id: lib_calc.c,v 29.15 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.c,v $
  *
  * Under source code control:	1996/06/17 18:06:19
@@ -98,8 +98,8 @@ typedef struct {int fd;} ttystruct;
 #if !defined(HAVE_UID_T) && !defined(_UID_T)
 typedef unsigned short uid_t;
 #endif
-extern char *getenv();
-extern uid_t geteuid();
+E_FUNC char *getenv();
+E_FUNC uid_t geteuid();
 #endif
 
 
@@ -167,23 +167,23 @@ char *user_debug = NULL;	/* !=NULL => value of config("user_debug") */
 /*
  * initialization functions
  */
-extern void math_setfp(FILE *fp);
-extern void file_init(void);
-extern void zio_init(void);
-extern void initialize(void);
-extern void reinitialize(void);
+E_FUNC void math_setfp(FILE *fp);
+E_FUNC void file_init(void);
+E_FUNC void zio_init(void);
+E_FUNC void initialize(void);
+E_FUNC void reinitialize(void);
 
 
 /*
  * static declarations
  */
-static int init_done = 0;		/* 1 => we already initialized */
-static int *fd_setup = NULL;		/* fd's setup for interaction or -1 */
-static int fd_setup_len = 0;		/* number of fd's in fd_setup */
-static ttystruct *fd_orig = NULL;	/* fd original state */
-static ttystruct *fd_cur = NULL;	/* fd current state */
-static void initenv(void);		/* setup calc environment */
-static int find_tty_state(int fd);	/* find slot for saved tty state */
+STATIC int init_done = 0;		/* 1 => we already initialized */
+STATIC int *fd_setup = NULL;		/* fd's setup for interaction or -1 */
+STATIC int fd_setup_len = 0;		/* number of fd's in fd_setup */
+STATIC ttystruct *fd_orig = NULL;	/* fd original state */
+STATIC ttystruct *fd_cur = NULL;	/* fd current state */
+S_FUNC void initenv(void);		/* setup calc environment */
+S_FUNC int find_tty_state(int fd);	/* find slot for saved tty state */
 
 
 /*
@@ -394,7 +394,7 @@ cvmalloc_error(char *message)
  * use a default value. If $HOME does not exist, or is empty, use the home
  * directory information from the password file.
  */
-static void
+S_FUNC void
 initenv(void)
 {
 #if !defined(_WIN32)
@@ -597,7 +597,7 @@ calc_strdup(CONST char *s1)
  * Returns:
  *	indx	The index into fd_setup[], fd_orig[] and fd_cur[] to use or -1
  */
-static int
+S_FUNC int
 find_tty_state(int fd)
 {
 	int *new_fd_setup;		/* new fd_setup array */

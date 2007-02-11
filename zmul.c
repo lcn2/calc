@@ -1,7 +1,7 @@
 /*
  * zmul - faster than usual multiplying and squaring routines
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: zmul.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: zmul.c,v 29.3 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmul.c,v $
  *
  * Under source code control:	1991/01/09 20:01:31
@@ -41,10 +41,10 @@
 #include "zmath.h"
 
 
-static HALF *tempbuf;		/* temporary buffer for multiply and square */
+STATIC HALF *tempbuf;		/* temporary buffer for multiply and square */
 
-static LEN domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans);
-static LEN dosquare(HALF *vp, LEN size, HALF *ans);
+S_FUNC LEN domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans);
+S_FUNC LEN dosquare(HALF *vp, LEN size, HALF *ans);
 
 
 /*
@@ -116,7 +116,7 @@ zmul(ZVALUE z1, ZVALUE z2, ZVALUE *res)
  *	size2		size of second number
  *	ans		location for result
  */
-static LEN
+S_FUNC LEN
 domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 {
 	LEN shift;		/* amount numbers are shifted by */
@@ -705,7 +705,7 @@ zsquare(ZVALUE z, ZVALUE *res)
  *	size		length of value to square
  *	ans		location for result
  */
-static LEN
+S_FUNC LEN
 dosquare(HALF *vp, LEN size, HALF *ans)
 {
 	LEN shift;		/* amount numbers are shifted by */
@@ -1052,8 +1052,8 @@ HALF *
 zalloctemp(LEN len)
 {
 	HALF *hp;
-	static LEN buflen;	/* current length of temp buffer */
-	static HALF *bufptr;	/* pointer to current temp buffer */
+	STATIC LEN buflen;	/* current length of temp buffer */
+	STATIC HALF *bufptr;	/* pointer to current temp buffer */
 
 	if (len <= buflen)
 		return bufptr;

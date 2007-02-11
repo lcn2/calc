@@ -1,4 +1,23 @@
-The following are the changes from calc version 2.12.1.8 to date:
+The following are the changes from calc version 2.12.1.10 to date:
+
+    Put back the missing -s flags on the cscripts:  mersenne, 4dsphere,
+    fprodcut, plus, and powerterm.  Thanks goes to Bradley Reed
+    <bradreed1 at gmail dot com> for discovering this problem.
+
+    All static variables are now declared with the symbol STATIC.
+    All extern variables are now declared with the symbol EXTERN.
+    All static functions are now declared with the symbol S_FUNC.
+    All extern functions are now declared with the symbol E_FUNC.
+    The include file decl.h defines these 4 symbols by default
+    to static, extern, static, and extern respectively.  Under
+    Windoz, DLL is also defined accorind to the _EXPORTING symbol
+    and is prepended to the EXTERN and E_FUNC symbols.  The decl.h
+    file has replaced the win32dll.h file.
+
+    Added Apple Mac OS X compiler set in the Makefile.
+
+
+The following are the changes from calc version 2.12.1.8 to 2.12.1.9:
 
     Fixed calc cscripts that contained comments that were not valid calc
     comments.  Improved calc comment documentation in "help unexpected"
@@ -6339,8 +6358,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.96 $
-## @(#) $Id: CHANGES,v 29.96 2007/02/08 21:22:43 chongo Exp $
+## @(#) $Revision: 29.97 $
+## @(#) $Id: CHANGES,v 29.97 2007/02/11 10:25:01 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

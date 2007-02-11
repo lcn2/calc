@@ -1,7 +1,7 @@
 /*
  * seed - produce a pseudo-random seeds
  *
- * Copyright (C) 1999-2004  Landon Curt Noll
+ * Copyright (C) 1999-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: seed.c,v 29.7 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: seed.c,v 29.8 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/seed.c,v $
  *
  * Under source code control:	1999/10/03 10:06:53
@@ -171,7 +171,7 @@ typedef struct s_hash64 hash64;
  * returns:
  *	64 bit hash as a static hash64 structure
  */
-static hash64
+S_FUNC hash64
 hash_buf(char *buf, unsigned len)
 {
 	hash64 hval;		/* current hash value */

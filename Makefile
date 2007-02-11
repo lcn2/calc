@@ -16,7 +16,7 @@
 #	 USE_READLINE= -DUSE_READLINE
 #	 READLINE_LIB= -lreadline -lhistory -lncurses
 #
-# Copyright (C) 1999-2006  Landon Curt Noll
+# Copyright (C) 1999-2007  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -32,8 +32,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.86 $$
-# @(#) $Id: Makefile.ship,v 29.86 2007/02/08 21:21:53 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.88 $$
+# @(#) $Id: Makefile.ship,v 29.88 2007/02/11 10:32:26 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -819,7 +819,7 @@ CALCPAGER= less
 
 # Debug/Optimize options for ${CC} and ${LCC}
 #
-# Select DEBUG= -O2 -gstabs+ for DJGPP.
+# Select DEBUG= -O2 -gstabs+ -DWINDOZ for DJGPP.
 #
 #DEBUG=
 #
@@ -850,7 +850,7 @@ DEBUG= -O3 -g3
 #DEBUG= -gx
 #DEBUG= -WM,-g
 #
-#DEBUG= -O2 -gstabs+
+#DEBUG= -O2 -gstabs+ -DWINDOZ
 
 # On systems that have dynamic shared link libs, you may want want to disable
 # them for faster calc startup.
@@ -1006,8 +1006,6 @@ EXT=
 #
 # Linux set
 #
-# Tested on Red Hat 6.0 Linux but should run on almost any Linux release.
-#
 CCWARN= -Wall -W -Wno-comment
 CCWERR=
 CCOPT= ${DEBUG} ${NO_SHARED}
@@ -1021,6 +1019,24 @@ ILDFLAGS=
 #
 LCC= gcc
 CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+###
+#
+# Apple Mac OS X
+#
+#CCWARN= -Wall -W -Wno-comment
+#CCWERR=
+#CCOPT= ${DEBUG} ${NO_SHARED}
+#CCMISC= -arch i386 -arch ppc
+#
+#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
+#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
+#
+#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED} -arch i386 -arch ppc
+#ILDFLAGS=
+#
+#LCC= gcc
+#CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 ###
 #
@@ -1270,10 +1286,10 @@ CALCOBJS= calc.o
 # these .h files are needed by programs that use libcalc.a
 #
 LIB_H_SRC= alloc.h blkcpy.h block.h byteswap.h calc.h cmath.h \
-	config.h custom.h file.h func.h hash.h hist.h jump.h \
+	config.h custom.h decl.h file.h func.h hash.h hist.h jump.h \
 	label.h lib_util.h math_error.h md5.h nametype.h \
 	opcodes.h prime.h qmath.h shs.h shs1.h string.h \
-	symbol.h token.h value.h win32dll.h zmath.h zrand.h zrandom.h
+	symbol.h token.h value.h zmath.h zrand.h zrandom.h
 
 # we build these .h files during the make
 #
@@ -1585,7 +1601,7 @@ TARGETS= ${LICENSE} ${CALC_LIBS} custom/.all calc${EXT} sample/.all \
 #
 ###
 
-all: .hsrc ${TARGETS}
+all: .hsrc ${TARGETS} CHANGES
 
 calc${EXT}: .hsrc ${CALC_LIBS} ${CALCOBJS}
 	${RM} -f $@
@@ -2969,6 +2985,8 @@ have_unused.h: have_unused.c ${MAKE_FILE}
 	    ${CAT} unused_tmp >> have_unused.h; \
 	else \
 	    echo '#undef HAVE_UNUSED /* no */' >> have_unused.h; \
+	    echo '#undef UNUSED' >> have_unused.h; \
+	    echo '#define UNUSED /* no */' >> have_unused.h; \
 	fi
 	${Q} echo '' >> have_unused.h
 	${Q} echo '' >> have_unused.h
@@ -3574,7 +3592,7 @@ clean:
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q} echo remove files that are obsolete
 	-${RM} -rf lib
-	-${RM} -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
+	-${RM} -f endian.h stdarg.h libcalcerr.a cal/obj help/obj win32dll.h
 	-${RM} -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
@@ -3612,7 +3630,7 @@ clobber:
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo remove files that are obsolete
 	-${RM} -rf lib
-	-${RM} -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
+	-${RM} -f endian.h stdarg.h libcalcerr.a cal/obj help/obj win32dll.h
 	-${RM} -f have_vs.c std_arg.h try_stdarg.c fnvhash.c calc.spec
 	-${RM} -rf win32
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
@@ -3740,7 +3758,7 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	else \
 	    ${RM} -f ${T}${BINDIR}/calc.new${EXT}; \
 	    ${CP} -f calc${EXT} ${T}${BINDIR}/calc.new${EXT}; \
-	    ${CHMOD} 0755 ${T}${BINDIR}/calc.new${EXT}; \
+	    ${CHMOD} 0555 ${T}${BINDIR}/calc.new${EXT}; \
 	    ${MV} -f ${T}${BINDIR}/calc.new${EXT} ${T}${BINDIR}/calc${EXT}; \
 	    echo "installed ${T}${BINDIR}/calc${EXT}"; \
 	fi
@@ -3934,6 +3952,7 @@ addop.o: calc.h
 addop.o: calcerr.h
 addop.o: cmath.h
 addop.o: config.h
+addop.o: decl.h
 addop.o: endian_calc.h
 addop.o: func.h
 addop.o: hash.h
@@ -3955,7 +3974,6 @@ addop.o: string.h
 addop.o: symbol.h
 addop.o: token.h
 addop.o: value.h
-addop.o: win32dll.h
 addop.o: zmath.h
 align32.o: align32.c
 align32.o: have_unistd.h
@@ -3967,8 +3985,10 @@ assocfunc.o: byteswap.h
 assocfunc.o: calcerr.h
 assocfunc.o: cmath.h
 assocfunc.o: config.h
+assocfunc.o: decl.h
 assocfunc.o: endian_calc.h
 assocfunc.o: hash.h
+assocfunc.o: have_const.h
 assocfunc.o: have_malloc.h
 assocfunc.o: have_memmv.h
 assocfunc.o: have_newstr.h
@@ -3982,7 +4002,6 @@ assocfunc.o: shs.h
 assocfunc.o: shs1.h
 assocfunc.o: string.h
 assocfunc.o: value.h
-assocfunc.o: win32dll.h
 assocfunc.o: zmath.h
 blkcpy.o: alloc.h
 blkcpy.o: blkcpy.c
@@ -3993,6 +4012,7 @@ blkcpy.o: calc.h
 blkcpy.o: calcerr.h
 blkcpy.o: cmath.h
 blkcpy.o: config.h
+blkcpy.o: decl.h
 blkcpy.o: endian_calc.h
 blkcpy.o: file.h
 blkcpy.o: hash.h
@@ -4011,7 +4031,6 @@ blkcpy.o: shs.h
 blkcpy.o: shs1.h
 blkcpy.o: string.h
 blkcpy.o: value.h
-blkcpy.o: win32dll.h
 blkcpy.o: zmath.h
 block.o: alloc.h
 block.o: block.c
@@ -4020,8 +4039,10 @@ block.o: byteswap.h
 block.o: calcerr.h
 block.o: cmath.h
 block.o: config.h
+block.o: decl.h
 block.o: endian_calc.h
 block.o: hash.h
+block.o: have_const.h
 block.o: have_malloc.h
 block.o: have_memmv.h
 block.o: have_newstr.h
@@ -4035,13 +4056,14 @@ block.o: shs.h
 block.o: shs1.h
 block.o: string.h
 block.o: value.h
-block.o: win32dll.h
 block.o: zmath.h
 byteswap.o: alloc.h
 byteswap.o: byteswap.c
 byteswap.o: byteswap.h
 byteswap.o: cmath.h
+byteswap.o: decl.h
 byteswap.o: endian_calc.h
+byteswap.o: have_const.h
 byteswap.o: have_malloc.h
 byteswap.o: have_memmv.h
 byteswap.o: have_newstr.h
@@ -4049,7 +4071,6 @@ byteswap.o: have_stdlib.h
 byteswap.o: have_string.h
 byteswap.o: longbits.h
 byteswap.o: qmath.h
-byteswap.o: win32dll.h
 byteswap.o: zmath.h
 calc.o: alloc.h
 calc.o: args.h
@@ -4062,6 +4083,7 @@ calc.o: cmath.h
 calc.o: conf.h
 calc.o: config.h
 calc.o: custom.h
+calc.o: decl.h
 calc.o: endian_calc.h
 calc.o: func.h
 calc.o: hash.h
@@ -4089,7 +4111,6 @@ calc.o: string.h
 calc.o: symbol.h
 calc.o: token.h
 calc.o: value.h
-calc.o: win32dll.h
 calc.o: zmath.h
 calcerr.o: calcerr.c
 calcerr.o: calcerr.h
@@ -4103,6 +4124,7 @@ codegen.o: cmath.h
 codegen.o: codegen.c
 codegen.o: conf.h
 codegen.o: config.h
+codegen.o: decl.h
 codegen.o: endian_calc.h
 codegen.o: func.h
 codegen.o: hash.h
@@ -4125,14 +4147,15 @@ codegen.o: string.h
 codegen.o: symbol.h
 codegen.o: token.h
 codegen.o: value.h
-codegen.o: win32dll.h
 codegen.o: zmath.h
 comfunc.o: alloc.h
 comfunc.o: byteswap.h
 comfunc.o: cmath.h
 comfunc.o: comfunc.c
 comfunc.o: config.h
+comfunc.o: decl.h
 comfunc.o: endian_calc.h
+comfunc.o: have_const.h
 comfunc.o: have_malloc.h
 comfunc.o: have_memmv.h
 comfunc.o: have_newstr.h
@@ -4141,13 +4164,14 @@ comfunc.o: have_string.h
 comfunc.o: longbits.h
 comfunc.o: nametype.h
 comfunc.o: qmath.h
-comfunc.o: win32dll.h
 comfunc.o: zmath.h
 commath.o: alloc.h
 commath.o: byteswap.h
 commath.o: cmath.h
 commath.o: commath.c
+commath.o: decl.h
 commath.o: endian_calc.h
+commath.o: have_const.h
 commath.o: have_malloc.h
 commath.o: have_memmv.h
 commath.o: have_newstr.h
@@ -4155,7 +4179,6 @@ commath.o: have_stdlib.h
 commath.o: have_string.h
 commath.o: longbits.h
 commath.o: qmath.h
-commath.o: win32dll.h
 commath.o: zmath.h
 config.o: alloc.h
 config.o: block.h
@@ -4166,6 +4189,7 @@ config.o: cmath.h
 config.o: config.c
 config.o: config.h
 config.o: custom.h
+config.o: decl.h
 config.o: endian_calc.h
 config.o: hash.h
 config.o: have_const.h
@@ -4185,7 +4209,6 @@ config.o: shs1.h
 config.o: string.h
 config.o: token.h
 config.o: value.h
-config.o: win32dll.h
 config.o: zmath.h
 config.o: zrand.h
 const.o: alloc.h
@@ -4196,6 +4219,7 @@ const.o: calcerr.h
 const.o: cmath.h
 const.o: config.h
 const.o: const.c
+const.o: decl.h
 const.o: endian_calc.h
 const.o: hash.h
 const.o: have_const.h
@@ -4212,7 +4236,6 @@ const.o: shs.h
 const.o: shs1.h
 const.o: string.h
 const.o: value.h
-const.o: win32dll.h
 const.o: zmath.h
 custom.o: alloc.h
 custom.o: block.h
@@ -4223,6 +4246,7 @@ custom.o: cmath.h
 custom.o: config.h
 custom.o: custom.c
 custom.o: custom.h
+custom.o: decl.h
 custom.o: endian_calc.h
 custom.o: hash.h
 custom.o: have_const.h
@@ -4239,7 +4263,6 @@ custom.o: shs.h
 custom.o: shs1.h
 custom.o: string.h
 custom.o: value.h
-custom.o: win32dll.h
 custom.o: zmath.h
 endian.o: endian.c
 endian.o: have_stdlib.h
@@ -4251,6 +4274,7 @@ file.o: calc.h
 file.o: calcerr.h
 file.o: cmath.h
 file.o: config.h
+file.o: decl.h
 file.o: endian_calc.h
 file.o: file.c
 file.o: file.h
@@ -4273,7 +4297,6 @@ file.o: shs.h
 file.o: shs1.h
 file.o: string.h
 file.o: value.h
-file.o: win32dll.h
 file.o: zmath.h
 fposval.o: endian_calc.h
 fposval.o: fposval.c
@@ -4289,6 +4312,7 @@ func.o: calcerr.h
 func.o: cmath.h
 func.o: config.h
 func.o: custom.h
+func.o: decl.h
 func.o: endian_calc.h
 func.o: file.h
 func.o: func.c
@@ -4319,7 +4343,6 @@ func.o: string.h
 func.o: symbol.h
 func.o: token.h
 func.o: value.h
-func.o: win32dll.h
 func.o: zmath.h
 func.o: zrand.h
 func.o: zrandom.h
@@ -4330,6 +4353,7 @@ hash.o: calc.h
 hash.o: calcerr.h
 hash.o: cmath.h
 hash.o: config.h
+hash.o: decl.h
 hash.o: endian_calc.h
 hash.o: hash.c
 hash.o: hash.h
@@ -4347,7 +4371,6 @@ hash.o: shs.h
 hash.o: shs1.h
 hash.o: string.h
 hash.o: value.h
-hash.o: win32dll.h
 hash.o: zmath.h
 hash.o: zrand.h
 hash.o: zrandom.h
@@ -4385,6 +4408,7 @@ help.o: calcerr.h
 help.o: cmath.h
 help.o: conf.h
 help.o: config.h
+help.o: decl.h
 help.o: endian_calc.h
 help.o: hash.h
 help.o: have_const.h
@@ -4403,7 +4427,6 @@ help.o: shs.h
 help.o: shs1.h
 help.o: string.h
 help.o: value.h
-help.o: win32dll.h
 help.o: zmath.h
 hist.o: alloc.h
 hist.o: block.h
@@ -4412,6 +4435,7 @@ hist.o: calc.h
 hist.o: calcerr.h
 hist.o: cmath.h
 hist.o: config.h
+hist.o: decl.h
 hist.o: endian_calc.h
 hist.o: hash.h
 hist.o: have_const.h
@@ -4433,7 +4457,6 @@ hist.o: shs.h
 hist.o: shs1.h
 hist.o: string.h
 hist.o: value.h
-hist.o: win32dll.h
 hist.o: zmath.h
 input.o: alloc.h
 input.o: block.h
@@ -4443,6 +4466,7 @@ input.o: calcerr.h
 input.o: cmath.h
 input.o: conf.h
 input.o: config.h
+input.o: decl.h
 input.o: endian_calc.h
 input.o: hash.h
 input.o: have_const.h
@@ -4462,8 +4486,8 @@ input.o: shs.h
 input.o: shs1.h
 input.o: string.h
 input.o: value.h
-input.o: win32dll.h
 input.o: zmath.h
+jump.o: decl.h
 jump.o: have_const.h
 jump.o: jump.c
 jump.o: jump.h
@@ -4474,6 +4498,7 @@ label.o: calc.h
 label.o: calcerr.h
 label.o: cmath.h
 label.o: config.h
+label.o: decl.h
 label.o: endian_calc.h
 label.o: func.h
 label.o: hash.h
@@ -4495,7 +4520,6 @@ label.o: shs1.h
 label.o: string.h
 label.o: token.h
 label.o: value.h
-label.o: win32dll.h
 label.o: zmath.h
 lib_calc.o: alloc.h
 lib_calc.o: block.h
@@ -4505,6 +4529,7 @@ lib_calc.o: calcerr.h
 lib_calc.o: cmath.h
 lib_calc.o: conf.h
 lib_calc.o: config.h
+lib_calc.o: decl.h
 lib_calc.o: endian_calc.h
 lib_calc.o: func.h
 lib_calc.o: hash.h
@@ -4529,12 +4554,13 @@ lib_calc.o: symbol.h
 lib_calc.o: terminal.h
 lib_calc.o: token.h
 lib_calc.o: value.h
-lib_calc.o: win32dll.h
 lib_calc.o: zmath.h
 lib_calc.o: zrandom.h
 lib_util.o: alloc.h
 lib_util.o: byteswap.h
+lib_util.o: decl.h
 lib_util.o: endian_calc.h
+lib_util.o: have_const.h
 lib_util.o: have_malloc.h
 lib_util.o: have_memmv.h
 lib_util.o: have_newstr.h
@@ -4543,7 +4569,6 @@ lib_util.o: have_string.h
 lib_util.o: lib_util.c
 lib_util.o: lib_util.h
 lib_util.o: longbits.h
-lib_util.o: win32dll.h
 lib_util.o: zmath.h
 listfunc.o: alloc.h
 listfunc.o: block.h
@@ -4551,6 +4576,7 @@ listfunc.o: byteswap.h
 listfunc.o: calcerr.h
 listfunc.o: cmath.h
 listfunc.o: config.h
+listfunc.o: decl.h
 listfunc.o: endian_calc.h
 listfunc.o: hash.h
 listfunc.o: have_const.h
@@ -4568,7 +4594,6 @@ listfunc.o: shs.h
 listfunc.o: shs1.h
 listfunc.o: string.h
 listfunc.o: value.h
-listfunc.o: win32dll.h
 listfunc.o: zmath.h
 listfunc.o: zrand.h
 longbits.o: have_stdlib.h
@@ -4580,6 +4605,7 @@ matfunc.o: byteswap.h
 matfunc.o: calcerr.h
 matfunc.o: cmath.h
 matfunc.o: config.h
+matfunc.o: decl.h
 matfunc.o: endian_calc.h
 matfunc.o: hash.h
 matfunc.o: have_const.h
@@ -4598,7 +4624,6 @@ matfunc.o: shs.h
 matfunc.o: shs1.h
 matfunc.o: string.h
 matfunc.o: value.h
-matfunc.o: win32dll.h
 matfunc.o: zmath.h
 matfunc.o: zrand.h
 math_error.o: alloc.h
@@ -4609,6 +4634,7 @@ math_error.o: calc.h
 math_error.o: calcerr.h
 math_error.o: cmath.h
 math_error.o: config.h
+math_error.o: decl.h
 math_error.o: endian_calc.h
 math_error.o: hash.h
 math_error.o: have_const.h
@@ -4627,7 +4653,6 @@ math_error.o: shs.h
 math_error.o: shs1.h
 math_error.o: string.h
 math_error.o: value.h
-math_error.o: win32dll.h
 math_error.o: zmath.h
 md5.o: align32.h
 md5.o: alloc.h
@@ -4636,8 +4661,10 @@ md5.o: byteswap.h
 md5.o: calcerr.h
 md5.o: cmath.h
 md5.o: config.h
+md5.o: decl.h
 md5.o: endian_calc.h
 md5.o: hash.h
+md5.o: have_const.h
 md5.o: have_malloc.h
 md5.o: have_memmv.h
 md5.o: have_newstr.h
@@ -4652,7 +4679,6 @@ md5.o: shs.h
 md5.o: shs1.h
 md5.o: string.h
 md5.o: value.h
-md5.o: win32dll.h
 md5.o: zmath.h
 no_implicit.o: no_implicit.c
 obj.o: alloc.h
@@ -4662,6 +4688,7 @@ obj.o: calc.h
 obj.o: calcerr.h
 obj.o: cmath.h
 obj.o: config.h
+obj.o: decl.h
 obj.o: endian_calc.h
 obj.o: func.h
 obj.o: hash.h
@@ -4683,7 +4710,6 @@ obj.o: shs1.h
 obj.o: string.h
 obj.o: symbol.h
 obj.o: value.h
-obj.o: win32dll.h
 obj.o: zmath.h
 opcodes.o: alloc.h
 opcodes.o: block.h
@@ -4693,6 +4719,7 @@ opcodes.o: calcerr.h
 opcodes.o: cmath.h
 opcodes.o: config.h
 opcodes.o: custom.h
+opcodes.o: decl.h
 opcodes.o: endian_calc.h
 opcodes.o: file.h
 opcodes.o: func.h
@@ -4719,12 +4746,12 @@ opcodes.o: shs1.h
 opcodes.o: string.h
 opcodes.o: symbol.h
 opcodes.o: value.h
-opcodes.o: win32dll.h
 opcodes.o: zmath.h
 opcodes.o: zrand.h
 opcodes.o: zrandom.h
 pix.o: alloc.h
 pix.o: byteswap.h
+pix.o: decl.h
 pix.o: endian_calc.h
 pix.o: have_const.h
 pix.o: have_malloc.h
@@ -4736,7 +4763,6 @@ pix.o: longbits.h
 pix.o: pix.c
 pix.o: prime.h
 pix.o: qmath.h
-pix.o: win32dll.h
 pix.o: zmath.h
 poly.o: alloc.h
 poly.o: block.h
@@ -4744,8 +4770,10 @@ poly.o: byteswap.h
 poly.o: calcerr.h
 poly.o: cmath.h
 poly.o: config.h
+poly.o: decl.h
 poly.o: endian_calc.h
 poly.o: hash.h
+poly.o: have_const.h
 poly.o: have_malloc.h
 poly.o: have_memmv.h
 poly.o: have_newstr.h
@@ -4760,10 +4788,10 @@ poly.o: shs.h
 poly.o: shs1.h
 poly.o: string.h
 poly.o: value.h
-poly.o: win32dll.h
 poly.o: zmath.h
 prime.o: alloc.h
 prime.o: byteswap.h
+prime.o: decl.h
 prime.o: endian_calc.h
 prime.o: have_const.h
 prime.o: have_malloc.h
@@ -4776,11 +4804,11 @@ prime.o: longbits.h
 prime.o: prime.c
 prime.o: prime.h
 prime.o: qmath.h
-prime.o: win32dll.h
 prime.o: zmath.h
 qfunc.o: alloc.h
 qfunc.o: byteswap.h
 qfunc.o: config.h
+qfunc.o: decl.h
 qfunc.o: endian_calc.h
 qfunc.o: have_const.h
 qfunc.o: have_malloc.h
@@ -4793,13 +4821,14 @@ qfunc.o: nametype.h
 qfunc.o: prime.h
 qfunc.o: qfunc.c
 qfunc.o: qmath.h
-qfunc.o: win32dll.h
 qfunc.o: zmath.h
 qio.o: alloc.h
 qio.o: args.h
 qio.o: byteswap.h
 qio.o: config.h
+qio.o: decl.h
 qio.o: endian_calc.h
+qio.o: have_const.h
 qio.o: have_malloc.h
 qio.o: have_memmv.h
 qio.o: have_newstr.h
@@ -4810,12 +4839,13 @@ qio.o: longbits.h
 qio.o: nametype.h
 qio.o: qio.c
 qio.o: qmath.h
-qio.o: win32dll.h
 qio.o: zmath.h
 qmath.o: alloc.h
 qmath.o: byteswap.h
 qmath.o: config.h
+qmath.o: decl.h
 qmath.o: endian_calc.h
+qmath.o: have_const.h
 qmath.o: have_malloc.h
 qmath.o: have_memmv.h
 qmath.o: have_newstr.h
@@ -4825,12 +4855,13 @@ qmath.o: longbits.h
 qmath.o: nametype.h
 qmath.o: qmath.c
 qmath.o: qmath.h
-qmath.o: win32dll.h
 qmath.o: zmath.h
 qmod.o: alloc.h
 qmod.o: byteswap.h
 qmod.o: config.h
+qmod.o: decl.h
 qmod.o: endian_calc.h
+qmod.o: have_const.h
 qmod.o: have_malloc.h
 qmod.o: have_memmv.h
 qmod.o: have_newstr.h
@@ -4840,11 +4871,12 @@ qmod.o: longbits.h
 qmod.o: nametype.h
 qmod.o: qmath.h
 qmod.o: qmod.c
-qmod.o: win32dll.h
 qmod.o: zmath.h
 qtrans.o: alloc.h
 qtrans.o: byteswap.h
+qtrans.o: decl.h
 qtrans.o: endian_calc.h
+qtrans.o: have_const.h
 qtrans.o: have_malloc.h
 qtrans.o: have_memmv.h
 qtrans.o: have_newstr.h
@@ -4853,7 +4885,6 @@ qtrans.o: have_string.h
 qtrans.o: longbits.h
 qtrans.o: qmath.h
 qtrans.o: qtrans.c
-qtrans.o: win32dll.h
 qtrans.o: zmath.h
 quickhash.o: alloc.h
 quickhash.o: block.h
@@ -4861,6 +4892,7 @@ quickhash.o: byteswap.h
 quickhash.o: calcerr.h
 quickhash.o: cmath.h
 quickhash.o: config.h
+quickhash.o: decl.h
 quickhash.o: endian_calc.h
 quickhash.o: hash.h
 quickhash.o: have_const.h
@@ -4878,13 +4910,14 @@ quickhash.o: shs.h
 quickhash.o: shs1.h
 quickhash.o: string.h
 quickhash.o: value.h
-quickhash.o: win32dll.h
 quickhash.o: zmath.h
 quickhash.o: zrand.h
 quickhash.o: zrandom.h
 seed.o: alloc.h
 seed.o: byteswap.h
+seed.o: decl.h
 seed.o: endian_calc.h
+seed.o: have_const.h
 seed.o: have_getpgid.h
 seed.o: have_getprid.h
 seed.o: have_getsid.h
@@ -4903,7 +4936,6 @@ seed.o: have_ustat.h
 seed.o: longbits.h
 seed.o: qmath.h
 seed.o: seed.c
-seed.o: win32dll.h
 seed.o: zmath.h
 shs.o: align32.h
 shs.o: alloc.h
@@ -4912,8 +4944,10 @@ shs.o: byteswap.h
 shs.o: calcerr.h
 shs.o: cmath.h
 shs.o: config.h
+shs.o: decl.h
 shs.o: endian_calc.h
 shs.o: hash.h
+shs.o: have_const.h
 shs.o: have_malloc.h
 shs.o: have_memmv.h
 shs.o: have_newstr.h
@@ -4928,7 +4962,6 @@ shs.o: shs.h
 shs.o: shs1.h
 shs.o: string.h
 shs.o: value.h
-shs.o: win32dll.h
 shs.o: zmath.h
 shs1.o: align32.h
 shs1.o: alloc.h
@@ -4937,8 +4970,10 @@ shs1.o: byteswap.h
 shs1.o: calcerr.h
 shs1.o: cmath.h
 shs1.o: config.h
+shs1.o: decl.h
 shs1.o: endian_calc.h
 shs1.o: hash.h
+shs1.o: have_const.h
 shs1.o: have_malloc.h
 shs1.o: have_memmv.h
 shs1.o: have_newstr.h
@@ -4953,7 +4988,6 @@ shs1.o: shs1.c
 shs1.o: shs1.h
 shs1.o: string.h
 shs1.o: value.h
-shs1.o: win32dll.h
 shs1.o: zmath.h
 size.o: alloc.h
 size.o: block.h
@@ -4961,6 +4995,7 @@ size.o: byteswap.h
 size.o: calcerr.h
 size.o: cmath.h
 size.o: config.h
+size.o: decl.h
 size.o: endian_calc.h
 size.o: hash.h
 size.o: have_const.h
@@ -4978,7 +5013,6 @@ size.o: shs1.h
 size.o: size.c
 size.o: string.h
 size.o: value.h
-size.o: win32dll.h
 size.o: zmath.h
 size.o: zrand.h
 size.o: zrandom.h
@@ -4989,6 +5023,7 @@ string.o: calc.h
 string.o: calcerr.h
 string.o: cmath.h
 string.o: config.h
+string.o: decl.h
 string.o: endian_calc.h
 string.o: hash.h
 string.o: have_const.h
@@ -5006,7 +5041,6 @@ string.o: shs1.h
 string.o: string.c
 string.o: string.h
 string.o: value.h
-string.o: win32dll.h
 string.o: zmath.h
 symbol.o: alloc.h
 symbol.o: block.h
@@ -5015,6 +5049,7 @@ symbol.o: calc.h
 symbol.o: calcerr.h
 symbol.o: cmath.h
 symbol.o: config.h
+symbol.o: decl.h
 symbol.o: endian_calc.h
 symbol.o: func.h
 symbol.o: hash.h
@@ -5037,7 +5072,6 @@ symbol.o: symbol.c
 symbol.o: symbol.h
 symbol.o: token.h
 symbol.o: value.h
-symbol.o: win32dll.h
 symbol.o: zmath.h
 token.o: alloc.h
 token.o: args.h
@@ -5047,6 +5081,7 @@ token.o: calc.h
 token.o: calcerr.h
 token.o: cmath.h
 token.o: config.h
+token.o: decl.h
 token.o: endian_calc.h
 token.o: hash.h
 token.o: have_const.h
@@ -5066,7 +5101,6 @@ token.o: string.h
 token.o: token.c
 token.o: token.h
 token.o: value.h
-token.o: win32dll.h
 token.o: zmath.h
 value.o: alloc.h
 value.o: block.h
@@ -5075,6 +5109,7 @@ value.o: calc.h
 value.o: calcerr.h
 value.o: cmath.h
 value.o: config.h
+value.o: decl.h
 value.o: endian_calc.h
 value.o: file.h
 value.o: func.h
@@ -5098,7 +5133,6 @@ value.o: string.h
 value.o: symbol.h
 value.o: value.c
 value.o: value.h
-value.o: win32dll.h
 value.o: zmath.h
 value.o: zrand.h
 value.o: zrandom.h
@@ -5109,6 +5143,7 @@ version.o: calc.h
 version.o: calcerr.h
 version.o: cmath.h
 version.o: config.h
+version.o: decl.h
 version.o: endian_calc.h
 version.o: hash.h
 version.o: have_const.h
@@ -5127,25 +5162,27 @@ version.o: shs1.h
 version.o: string.h
 version.o: value.h
 version.o: version.c
-version.o: win32dll.h
 version.o: zmath.h
 zfunc.o: alloc.h
 zfunc.o: byteswap.h
+zfunc.o: decl.h
 zfunc.o: endian_calc.h
+zfunc.o: have_const.h
 zfunc.o: have_malloc.h
 zfunc.o: have_memmv.h
 zfunc.o: have_newstr.h
 zfunc.o: have_stdlib.h
 zfunc.o: have_string.h
 zfunc.o: longbits.h
-zfunc.o: win32dll.h
 zfunc.o: zfunc.c
 zfunc.o: zmath.h
 zio.o: alloc.h
 zio.o: args.h
 zio.o: byteswap.h
 zio.o: config.h
+zio.o: decl.h
 zio.o: endian_calc.h
+zio.o: have_const.h
 zio.o: have_malloc.h
 zio.o: have_memmv.h
 zio.o: have_newstr.h
@@ -5154,25 +5191,27 @@ zio.o: have_string.h
 zio.o: longbits.h
 zio.o: nametype.h
 zio.o: qmath.h
-zio.o: win32dll.h
 zio.o: zio.c
 zio.o: zmath.h
 zmath.o: alloc.h
 zmath.o: byteswap.h
+zmath.o: decl.h
 zmath.o: endian_calc.h
+zmath.o: have_const.h
 zmath.o: have_malloc.h
 zmath.o: have_memmv.h
 zmath.o: have_newstr.h
 zmath.o: have_stdlib.h
 zmath.o: have_string.h
 zmath.o: longbits.h
-zmath.o: win32dll.h
 zmath.o: zmath.c
 zmath.o: zmath.h
 zmod.o: alloc.h
 zmod.o: byteswap.h
 zmod.o: config.h
+zmod.o: decl.h
 zmod.o: endian_calc.h
+zmod.o: have_const.h
 zmod.o: have_malloc.h
 zmod.o: have_memmv.h
 zmod.o: have_newstr.h
@@ -5181,13 +5220,14 @@ zmod.o: have_string.h
 zmod.o: longbits.h
 zmod.o: nametype.h
 zmod.o: qmath.h
-zmod.o: win32dll.h
 zmod.o: zmath.h
 zmod.o: zmod.c
 zmul.o: alloc.h
 zmul.o: byteswap.h
 zmul.o: config.h
+zmul.o: decl.h
 zmul.o: endian_calc.h
+zmul.o: have_const.h
 zmul.o: have_malloc.h
 zmul.o: have_memmv.h
 zmul.o: have_newstr.h
@@ -5196,7 +5236,6 @@ zmul.o: have_string.h
 zmul.o: longbits.h
 zmul.o: nametype.h
 zmul.o: qmath.h
-zmul.o: win32dll.h
 zmul.o: zmath.h
 zmul.o: zmul.c
 zprime.o: alloc.h
@@ -5205,6 +5244,7 @@ zprime.o: byteswap.h
 zprime.o: calcerr.h
 zprime.o: cmath.h
 zprime.o: config.h
+zprime.o: decl.h
 zprime.o: endian_calc.h
 zprime.o: hash.h
 zprime.o: have_const.h
@@ -5223,7 +5263,6 @@ zprime.o: shs.h
 zprime.o: shs1.h
 zprime.o: string.h
 zprime.o: value.h
-zprime.o: win32dll.h
 zprime.o: zmath.h
 zprime.o: zprime.c
 zprime.o: zrand.h
@@ -5233,6 +5272,7 @@ zrand.o: byteswap.h
 zrand.o: calcerr.h
 zrand.o: cmath.h
 zrand.o: config.h
+zrand.o: decl.h
 zrand.o: endian_calc.h
 zrand.o: hash.h
 zrand.o: have_const.h
@@ -5250,7 +5290,6 @@ zrand.o: shs.h
 zrand.o: shs1.h
 zrand.o: string.h
 zrand.o: value.h
-zrand.o: win32dll.h
 zrand.o: zmath.h
 zrand.o: zrand.c
 zrand.o: zrand.h
@@ -5260,6 +5299,7 @@ zrandom.o: byteswap.h
 zrandom.o: calcerr.h
 zrandom.o: cmath.h
 zrandom.o: config.h
+zrandom.o: decl.h
 zrandom.o: endian_calc.h
 zrandom.o: hash.h
 zrandom.o: have_const.h
@@ -5277,7 +5317,6 @@ zrandom.o: shs.h
 zrandom.o: shs1.h
 zrandom.o: string.h
 zrandom.o: value.h
-zrandom.o: win32dll.h
 zrandom.o: zmath.h
 zrandom.o: zrandom.c
 zrandom.o: zrandom.h

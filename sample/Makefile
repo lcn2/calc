@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.23 $
-# @(#) $Id: Makefile,v 29.23 2006/09/18 13:13:25 chongo Exp $
+# @(#) $Revision: 29.24 $
+# @(#) $Id: Makefile,v 29.24 2007/02/11 10:22:29 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/Makefile,v $
 #
 # Under source code control:	1997/04/19 22:46:49
@@ -618,6 +618,7 @@ many_random.o: ../calc.h
 many_random.o: ../calcerr.h
 many_random.o: ../cmath.h
 many_random.o: ../config.h
+many_random.o: ../decl.h
 many_random.o: ../endian_calc.h
 many_random.o: ../hash.h
 many_random.o: ../have_const.h
@@ -635,7 +636,6 @@ many_random.o: ../shs.h
 many_random.o: ../shs1.h
 many_random.o: ../string.h
 many_random.o: ../value.h
-many_random.o: ../win32dll.h
 many_random.o: ../zmath.h
 many_random.o: ../zrandom.h
 many_random.o: many_random.c
@@ -646,6 +646,7 @@ test_random.o: ../calc.h
 test_random.o: ../calcerr.h
 test_random.o: ../cmath.h
 test_random.o: ../config.h
+test_random.o: ../decl.h
 test_random.o: ../endian_calc.h
 test_random.o: ../hash.h
 test_random.o: ../have_const.h
@@ -663,7 +664,6 @@ test_random.o: ../shs.h
 test_random.o: ../shs1.h
 test_random.o: ../string.h
 test_random.o: ../value.h
-test_random.o: ../win32dll.h
 test_random.o: ../zmath.h
 test_random.o: ../zrandom.h
 test_random.o: test_random.c

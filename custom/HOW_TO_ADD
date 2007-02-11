@@ -480,18 +480,18 @@ Step 6: Register the function in the custom interface table
 	 *
 	 * Declare custom functions as follows:
 	 *
-	 *	extern VALUE c_xyz(char*, int, VALUE**);
+	 *	E_FUNC VALUE c_xyz(char*, int, VALUE**);
 	 *
 	 * We suggest that you sort the entries below by name.
 	 */
-	extern VALUE c_argv(char*, int, VALUE**);
-	extern VALUE c_devnull(char*, int, VALUE**);
-	extern VALUE c_help(char*, int, VALUE**);
-	extern VALUE c_sysinfo(char*, int, VALUE**);
+	E_FUNC VALUE c_argv(char*, int, VALUE**);
+	E_FUNC VALUE c_devnull(char*, int, VALUE**);
+	E_FUNC VALUE c_help(char*, int, VALUE**);
+	E_FUNC VALUE c_sysinfo(char*, int, VALUE**);
 
     For u_curds we would add the line:
 
-	extern VALUE u_curds(char*, int, VALUE**);
+	E_FUNC VALUE u_curds(char*, int, VALUE**);
 
 
 Step 7: Add the required information to the custom/Makefile
@@ -631,7 +631,7 @@ Step 12: Contribute
     and consider submitting your custom function for possible
     inclusion in later versions of calc.
 
-## Copyright (C) 1999-2004  Landon Curt Noll
+## Copyright (C) 1999-2007  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -647,8 +647,8 @@ Step 12: Contribute
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.5 $
-## @(#) $Id: HOW_TO_ADD,v 29.5 2005/10/18 11:18:34 chongo Exp $
+## @(#) $Revision: 29.6 $
+## @(#) $Id: HOW_TO_ADD,v 29.6 2007/02/11 10:22:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/HOW_TO_ADD,v $
 ##
 ## Under source code control:	1997/03/10 03:03:21

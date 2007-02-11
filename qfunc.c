@@ -1,7 +1,7 @@
 /*
  * qfunc - extended precision rational arithmetic non-primitive functions
  *
- * Copyright (C) 1999-2004  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: qfunc.c,v 29.9 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: qfunc.c,v 29.10 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:20
@@ -34,11 +34,11 @@
 #include "config.h"
 #include "prime.h"
 
-static NUMBER **B_table;
-static long B_num;
-static long B_allocnum;
-static NUMBER **E_table;
-static long E_num;
+STATIC NUMBER **B_table;
+STATIC long B_num;
+STATIC long B_allocnum;
+STATIC NUMBER **E_table;
+STATIC long E_num;
 
 #define QALLOCNUM 64
 

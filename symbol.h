@@ -1,7 +1,7 @@
 /*
  * symbol - global and local symbol routines
  *
- * Copyright (C) 1999-2006  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: symbol.h,v 29.6 2006/05/19 15:26:10 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: symbol.h,v 29.7 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/symbol.h,v $
  *
  * Under source code control:	1990/02/15 01:48:37
@@ -66,45 +66,45 @@ struct global {
 /*
  * Routines to search for global symbols.
  */
-extern GLOBAL *addglobal(char *name, BOOL isstatic);
-extern GLOBAL *findglobal(char *name);
+E_FUNC GLOBAL *addglobal(char *name, BOOL isstatic);
+E_FUNC GLOBAL *findglobal(char *name);
 
 
 /*
  * Routines to return names of variables.
  */
-extern char *localname(long n);
-extern char *paramname(long n);
-extern char *globalname(GLOBAL *sp);
+E_FUNC char *localname(long n);
+E_FUNC char *paramname(long n);
+E_FUNC char *globalname(GLOBAL *sp);
 
 
 /*
  * Routines to handle entering and leaving of scope levels.
  */
-extern void resetscopes(void);
-extern void enterfilescope(void);
-extern void exitfilescope(void);
-extern void enterfuncscope(void);
-extern void exitfuncscope(void);
-extern void endscope (char *name, BOOL isglobal);
+E_FUNC void resetscopes(void);
+E_FUNC void enterfilescope(void);
+E_FUNC void exitfilescope(void);
+E_FUNC void enterfuncscope(void);
+E_FUNC void exitfuncscope(void);
+E_FUNC void endscope (char *name, BOOL isglobal);
 
 
 /*
  * Other routines.
  */
-extern long addlocal(char *name);
-extern long findlocal(char *name);
-extern long addparam(char *name);
-extern long findparam(char *name);
-extern void initlocals(void);
-extern void initglobals(void);
-extern int writeglobals(char *name);
-extern int symboltype(char *name);
-extern void showglobals(void);
-extern void showallglobals(void);
-extern void freeglobals(void);
-extern void showstatics(void);
-extern void freestatics(void);
+E_FUNC long addlocal(char *name);
+E_FUNC long findlocal(char *name);
+E_FUNC long addparam(char *name);
+E_FUNC long findparam(char *name);
+E_FUNC void initlocals(void);
+E_FUNC void initglobals(void);
+E_FUNC int writeglobals(char *name);
+E_FUNC int symboltype(char *name);
+E_FUNC void showglobals(void);
+E_FUNC void showallglobals(void);
+E_FUNC void freeglobals(void);
+E_FUNC void showstatics(void);
+E_FUNC void freestatics(void);
 
 
 #endif /* !__SYMBOL_H__ */

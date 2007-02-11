@@ -1,7 +1,7 @@
 /*
  * token - read input file characters into tokens
  *
- * Copyright (C) 1999  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.10 $
- * @(#) $Id: token.c,v 29.10 2006/06/24 18:43:05 chongo Exp $
+ * @(#) $Revision: 29.11 $
+ * @(#) $Id: token.c,v 29.11 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/token.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -52,7 +52,7 @@
 /*
  * Current token.
  */
-static struct {
+STATIC struct {
 	short t_type;		/* type of token */
 	char *t_sym;		/* symbol name */
 	long t_strindex;	/* index of string value */
@@ -60,12 +60,12 @@ static struct {
 } curtoken;
 
 
-static BOOL rescan;		/* TRUE to reread current token */
-static BOOL newlines;		/* TRUE to return newlines as tokens */
-static BOOL allsyms;		/* TRUE if always want a symbol token */
-static STRINGHEAD strings;	/* list of constant strings */
-static char *numbuf;		/* buffer for numeric tokens */
-static long numbufsize;		/* current size of numeric buffer */
+STATIC BOOL rescan;		/* TRUE to reread current token */
+STATIC BOOL newlines;		/* TRUE to return newlines as tokens */
+STATIC BOOL allsyms;		/* TRUE if always want a symbol token */
+STATIC STRINGHEAD strings;	/* list of constant strings */
+STATIC char *numbuf;		/* buffer for numeric tokens */
+STATIC long numbufsize;		/* current size of numeric buffer */
 
 long errorcount = 0;			/* number of compilation errors */
 
@@ -78,7 +78,7 @@ struct keyword {
 	int k_token;	/* token number */
 };
 
-static struct keyword keywords[] = {
+STATIC struct keyword keywords[] = {
 	{"if",		T_IF},
 	{"else",	T_ELSE},
 	{"for",		T_FOR},
@@ -111,11 +111,11 @@ static struct keyword keywords[] = {
 };
 
 
-static void eatcomment(void);
-static void eatstring(int quotechar);
-static void eatline(void);
-static int eatsymbol(void);
-static int eatnumber(void);
+S_FUNC void eatcomment(void);
+S_FUNC void eatstring(int quotechar);
+S_FUNC void eatline(void);
+S_FUNC int eatsymbol(void);
+S_FUNC int eatnumber(void);
 
 
 /*
@@ -379,7 +379,7 @@ gettoken(void)
  * Continue to eat up a comment string.
  * The leading slash-asterisk has just been scanned at this point.
  */
-static void
+S_FUNC void
 eatcomment(void)
 {
 	int ch;
@@ -407,7 +407,7 @@ eatcomment(void)
  * Typically a #! will require the rest of the line to be eaten as if
  * it were a comment.
  */
-static void
+S_FUNC void
 eatline(void)
 {
 	int ch;		/* chars being eaten */
@@ -423,7 +423,7 @@ eatline(void)
  * Read in a string and add it to the literal string pool.
  * The leading single or double quote has been read in at this point.
  */
-static void
+S_FUNC void
 eatstring(int quotechar)
 {
 	register char *cp;	/* current character address */
@@ -551,14 +551,14 @@ eatstring(int quotechar)
  * If allsyms is set, keywords are not looked up and almost all chars
  * will be accepted for the symbol.  Returns the type of symbol found.
  */
-static int
+S_FUNC int
 eatsymbol(void)
 {
 	register struct keyword *kp;	/* pointer to current keyword */
 	register char *cp;		/* current character pointer */
 	int ch;				/* current character */
 	int cc;				/* character count */
-	static char buf[SYMBOLSIZE+1];	/* temporary buffer */
+	STATIC char buf[SYMBOLSIZE+1];	/* temporary buffer */
 
 	cp = buf;
 	cc = SYMBOLSIZE;
@@ -604,7 +604,7 @@ eatsymbol(void)
  * return just a period, which is used for element accesses and for
  * the old numeric value.
  */
-static int
+S_FUNC int
 eatnumber(void)
 {
 	register char *cp;	/* current character pointer */

@@ -1,7 +1,7 @@
 /*
  * blkcpy - general values and related routines used by the calculator
  *
- * Copyright (C) 1999-2006  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.10 $
- * @(#) $Id: blkcpy.c,v 29.10 2007/02/07 20:51:38 chongo Exp $
+ * @(#) $Revision: 29.11 $
+ * @(#) $Id: blkcpy.c,v 29.11 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/blkcpy.c,v $
  *
  * Under source code control:	1997/04/18 20:41:26
@@ -935,7 +935,7 @@ copyostr2blk(char *str,long ssi,long num,BLOCK *dblk,long dsi,BOOL noreloc)
  *	s1
  */
 void *
-memmove(void *s1, const void *s2, MEMMOVE_SIZE_T n)
+memmove(void *s1, CONST void *s2, MEMMOVE_SIZE_T n)
 {
 	/*
 	 * firewall

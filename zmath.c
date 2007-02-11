@@ -1,7 +1,7 @@
 /*
  * zmath - extended precision integral arithmetic primitives
  *
- * Copyright (C) 1999  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: zmath.c,v 29.3 2006/12/15 16:20:04 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: zmath.c,v 29.4 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmath.c,v $
  *
  * Under source code control:	1990/02/15 01:48:28
@@ -228,8 +228,8 @@ char popcnt[256] = {
 
 
 #ifdef ALLOCTEST
-static long nalloc = 0;
-static long nfree = 0;
+STATIC long nalloc = 0;
+STATIC long nfree = 0;
 #endif
 
 

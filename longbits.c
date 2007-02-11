@@ -1,7 +1,7 @@
 /*
  * longbits - Determine the number if bits in a char, short, int or long
  *
- * Copyright (C) 1999-2006  Landon Curt Noll
+ * Copyright (C) 1999-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: longbits.c,v 29.7 2006/06/01 11:37:20 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: longbits.c,v 29.8 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/longbits.c,v $
  *
  * Under source code control:	1994/03/18 03:06:18
@@ -98,7 +98,7 @@
 
 #if defined(__linux)
 # if !defined(isascii)
-   extern int isascii(int c);
+   E_FUNC int isascii(int c);
 # endif /* !isascii */
 #endif /* __linux */
 

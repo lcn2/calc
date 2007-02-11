@@ -1,7 +1,7 @@
 /*
  * file - file I/O routines callable by users
  *
- * Copyright (C) 1999-2006  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: file.h,v 29.8 2006/05/19 15:26:10 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: file.h,v 29.9 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.h,v $
  *
  * Under source code control:	1996/05/24 05:55:58
@@ -91,12 +91,12 @@ typedef struct {
 /*
  * external functions
  */
-extern DLL FILEIO * findid(FILEID id, int writable);
-extern DLL int fgetposid(FILEID id, FILEPOS *ptr);
-extern DLL int fsetposid(FILEID id, FILEPOS *ptr);
-extern DLL int get_open_siz(FILE *fp, ZVALUE *res);
-extern DLL char* findfname(FILEID);
-extern DLL FILE *f_pathopen(char *name, char *mode, char *pathlist, char **openpath);
+E_FUNC FILEIO * findid(FILEID id, int writable);
+E_FUNC int fgetposid(FILEID id, FILEPOS *ptr);
+E_FUNC int fsetposid(FILEID id, FILEPOS *ptr);
+E_FUNC int get_open_siz(FILE *fp, ZVALUE *res);
+E_FUNC char* findfname(FILEID);
+E_FUNC FILE *f_pathopen(char *name, char *mode, char *pathlist, char **openpath);
 
 
 #endif /* !__FILE_H__ */

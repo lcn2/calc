@@ -1,7 +1,7 @@
 /*
  * alloc - storage allocation and storage debug macros
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: alloc.h,v 29.5 2007/02/07 20:51:38 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: alloc.h,v 29.6 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/alloc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:29
@@ -48,13 +48,13 @@
 # include <malloc.h>
 #else
 #if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
-   extern void *malloc();
-   extern void *realloc();
-   extern void free();
+   E_FUNC void *malloc();
+   E_FUNC void *realloc();
+   E_FUNC void free();
 # else
-   extern char *malloc();
-   extern char *realloc();
-   extern void free();
+   E_FUNC char *malloc();
+   E_FUNC char *realloc();
+   E_FUNC void free();
 # endif
 #endif
 
@@ -64,23 +64,23 @@
 #else
 
 # if defined(HAVE_NEWSTR)
-extern void *memcpy();
-extern void *memset();
+E_FUNC void *memcpy();
+E_FUNC void *memset();
 #if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
-extern size_t strlen();
+E_FUNC size_t strlen();
 #  else
-extern long strlen();
+E_FUNC long strlen();
 #  endif
 # else /* HAVE_NEWSTR */
-extern void bcopy();
-extern void bfill();
-extern char *index();
+E_FUNC void bcopy();
+E_FUNC void bfill();
+E_FUNC char *index();
 # endif /* HAVE_NEWSTR */
-extern char *strchr();
-extern char *strcpy();
-extern char *strncpy();
-extern char *strcat();
-extern int strcmp();
+E_FUNC char *strchr();
+E_FUNC char *strcpy();
+E_FUNC char *strncpy();
+E_FUNC char *strcat();
+E_FUNC int strcmp();
 
 #endif
 
@@ -100,7 +100,7 @@ extern int strcmp();
 # else
 #  define MEMMOVE_SIZE_T long
 # endif
-extern void *memmove(void *s1, const void *s2, MEMMOVE_SIZE_T n);
+E_FUNC void *memmove(void *s1, CONST void *s2, MEMMOVE_SIZE_T n);
 #endif
 
 #endif /* !__ALLOC_H__ */

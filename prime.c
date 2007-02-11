@@ -1,7 +1,7 @@
 /*
  * prime - quickly determine if a small number is prime
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: prime.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: prime.c,v 29.3 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/prime.c,v $
  *
  * Under source code control:	1994/06/04 03:26:14
@@ -916,11 +916,11 @@ CONST unsigned short prime[MAP_POPCNT+1] = {
  * smallest prime > MAX_SM_PRIME (2^32-5) == 2^32+15
  */
 #if BASEB == 32
-static CONST HALF _nxt_prime_val_[] = { 0xf, 0x1 };
+STATIC CONST HALF _nxt_prime_val_[] = { 0xf, 0x1 };
 ZVALUE CONST _nxt_prime_ = { (HALF *)_nxt_prime_val_, 2, 0 };
 NUMBER _nxtprime_ = {{(HALF *)_nxt_prime_val_,2,0}, {_oneval_,1,0}, 1, NULL};
 #else
-static CONST HALF _nxt_prime_val_[] = { 0xf, 0x0, 0x1 };
+STATIC CONST HALF _nxt_prime_val_[] = { 0xf, 0x0, 0x1 };
 ZVALUE CONST _nxt_prime_ = { (HALF *)_nxt_prime_val_, 3, 0 };
 NUMBER _nxtprime_ = {{(HALF *)_nxt_prime_val_,3,0}, {_oneval_,1,0}, 1, NULL};
 #endif
@@ -928,5 +928,5 @@ NUMBER _nxtprime_ = {{(HALF *)_nxt_prime_val_,3,0}, {_oneval_,1,0}, 1, NULL};
 /*
  * JMPMOD*2 as a ZVALUE
  */
-static CONST HALF _jmpmod2_val_[] = { JMPMOD*2 };
+STATIC CONST HALF _jmpmod2_val_[] = { JMPMOD*2 };
 CONST ZVALUE _jmpmod2_ = { (HALF *)_jmpmod2_val_, 1, 0 };

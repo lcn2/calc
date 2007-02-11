@@ -1,7 +1,7 @@
 /*
  * block - fixed, dynamic, fifo and circular memory blocks
  *
- * Copyright (C) 1999  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: block.c,v 29.3 2006/05/01 19:16:57 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: block.c,v 29.4 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/block.c,v $
  *
  * Under source code control:	1997/02/27 00:29:40
@@ -42,14 +42,14 @@
 
 #define NBLOCKCHUNK 16
 
-static long nblockcount = 0;
-static long maxnblockcount = 0;
-static STRINGHEAD nblocknames;
-static NBLOCK **nblocks;
+STATIC long nblockcount = 0;
+STATIC long maxnblockcount = 0;
+STATIC STRINGHEAD nblocknames;
+STATIC NBLOCK **nblocks;
 
 
 /* forward declarations */
-static void blkchk(BLOCK*);
+S_FUNC void blkchk(BLOCK*);
 
 
 /*
@@ -154,7 +154,7 @@ blk_free(BLOCK *blk)
  *	if all is ok, otherwise math_error() is called and this
  *	function does not return
  */
-static void
+S_FUNC void
 blkchk(BLOCK *blk)
 {
 

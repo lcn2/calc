@@ -1,7 +1,7 @@
 /*
  * c_pmodm127 - calculate q mod 2^(2^127-1)
  *
- * Copyright (C) 2004  Landon Curt Noll
+ * Copyright (C) 2004-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: c_pmodm127.c,v 29.5 2006/06/25 22:08:42 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: c_pmodm127.c,v 29.6 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_pmodm127.c,v $
  *
  * Under source code control:	2004/07/28 22:12:25
@@ -40,7 +40,7 @@
 #include "../have_unused.h"
 
 /* 2^255 */
-static HALF h255[] = {
+STATIC HALF h255[] = {
 #if BASEB == 32
 	(HALF)0x00000000, (HALF)0x00000000, (HALF)0x00000000, (HALF)0x00000000,
 	(HALF)0x00000000, (HALF)0x00000000, (HALF)0x00000000, (HALF)0x80000000
@@ -57,10 +57,10 @@ ZVALUE p255 = {
 
 
 /* static declarations */
-static void zmod5_or_zmod(ZVALUE *zp);
-static BOOL havelastmod = FALSE;
-static ZVALUE lastmod[1];
-static ZVALUE lastmodinv[1];
+S_FUNC void zmod5_or_zmod(ZVALUE *zp);
+STATIC BOOL havelastmod = FALSE;
+STATIC ZVALUE lastmod[1];
+STATIC ZVALUE lastmodinv[1];
 
 
 /*
@@ -187,7 +187,7 @@ c_pmodm127(char UNUSED *name, int UNUSED count, VALUE **vals)
  * the result of the zmod5_or_zmod conditions do not apply to the argument
  * and saved mod.
  */
-static void
+S_FUNC void
 zmod5_or_zmod(ZVALUE *zp)
 {
 	LEN len, modlen, j;

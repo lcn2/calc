@@ -1,7 +1,7 @@
 /*
  * zmod - modulo arithmetic routines
  *
- * Copyright (C) 1999  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: zmod.c,v 29.4 2006/06/11 00:08:56 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: zmod.c,v 29.5 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmod.c,v $
  *
  * Under source code control:	1991/05/22 23:03:55
@@ -47,15 +47,15 @@
 #define POWBITS 4		/* bits for power chunks (must divide BASEB) */
 #define POWNUMS (1<<POWBITS)	/* number of powers needed in table */
 
-static void zmod5(ZVALUE *zp);
-static void zmod6(ZVALUE z1, ZVALUE *res);
-static void zredcmodinv(ZVALUE z1, ZVALUE *res);
+S_FUNC void zmod5(ZVALUE *zp);
+S_FUNC void zmod6(ZVALUE z1, ZVALUE *res);
+S_FUNC void zredcmodinv(ZVALUE z1, ZVALUE *res);
 
-static REDC *powermodredc = NULL;	/* REDC info for raising to power */
+STATIC REDC *powermodredc = NULL;	/* REDC info for raising to power */
 
 BOOL havelastmod = FALSE;
-static ZVALUE lastmod[1];
-static ZVALUE lastmodinv[1];
+STATIC ZVALUE lastmod[1];
+STATIC ZVALUE lastmodinv[1];
 
 
 /*
@@ -341,7 +341,7 @@ zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3)
  * exceed twice that of the modulus stored at lastmod, to evaluate and store
  * at that address the value of the integer modulo the modulus.
  */
-static void
+S_FUNC void
 zmod5(ZVALUE *zp)
 {
 	LEN len, modlen, j;
@@ -422,7 +422,7 @@ zmod5(ZVALUE *zp)
 		zp->len = 1;
 }
 
-static void
+S_FUNC void
 zmod6(ZVALUE z1, ZVALUE *res)
 {
 	LEN len, modlen, len0;
@@ -799,7 +799,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 /*
  * Given a positive odd N-word integer z, evaluate minv(-z, BASEB^N)
  */
-static void
+S_FUNC void
 zredcmodinv(ZVALUE z, ZVALUE *res)
 {
 	ZVALUE tmp;

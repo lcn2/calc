@@ -1,7 +1,7 @@
 /*
  * calc - arbitrary precision calculator
  *
- * Copyright (C) 1999-2006  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.14 $
- * @(#) $Id: calc.c,v 29.14 2007/02/07 00:37:25 chongo Exp $
+ * @(#) $Revision: 29.15 $
+ * @(#) $Id: calc.c,v 29.15 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11
@@ -87,11 +87,11 @@
 
 
 /*
- * static definitions and functions
+ * S_FUNC definitions and functions
  */
-static void intint(int arg);	/* interrupt routine */
-static int nextcp(char **cpp, int *ip, int argc, char **argv, BOOL haveendstr);
-static void set_run_state(run state);
+S_FUNC void intint(int arg);	/* interrupt routine */
+S_FUNC int nextcp(char **cpp, int *ip, int argc, char **argv, BOOL haveendstr);
+S_FUNC void set_run_state(run state);
 
 /*
  * Top level calculator routine.
@@ -713,7 +713,7 @@ main(int argc, char **argv)
  *	arg		to keep ANSI C happy
  */
 /*ARGSUSED*/
-static void
+S_FUNC void
 intint(int UNUSED arg)
 {
 	(void) signal(SIGINT, intint);
@@ -760,7 +760,7 @@ math_error(char *fmt, ...)
 	}
 }
 
-static int
+S_FUNC int
 nextcp(char **cpp, int *ip, int argc, char **argv, BOOL haveendstr)
 {
 	char *cp;
@@ -799,7 +799,7 @@ nextcp(char **cpp, int *ip, int argc, char **argv, BOOL haveendstr)
 }
 
 
-static void
+S_FUNC void
 set_run_state(run state)
 {
 	if (conf->calc_debug & CALCDBG_RUNSTATE)

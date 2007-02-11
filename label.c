@@ -1,7 +1,7 @@
 /*
  * label - label handling routines
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: label.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 29.3 $
+ * @(#) $Id: label.c,v 29.3 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/label.c,v $
  *
  * Under source code control:	1990/02/15 01:48:17
@@ -35,9 +35,9 @@
 #include "opcodes.h"
 #include "func.h"
 
-static long labelcount;			/* number of user labels defined */
-static STRINGHEAD labelnames;		/* list of user label names */
-static LABEL labels[MAXLABELS];		/* list of user labels */
+STATIC long labelcount;			/* number of user labels defined */
+STATIC STRINGHEAD labelnames;		/* list of user label names */
+STATIC LABEL labels[MAXLABELS];		/* list of user labels */
 
 
 /*

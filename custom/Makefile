@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.29 $
-# @(#) $Id: Makefile,v 29.29 2006/09/18 13:13:25 chongo Exp $
+# @(#) $Revision: 29.30 $
+# @(#) $Id: Makefile,v 29.30 2007/02/11 10:22:29 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -845,6 +845,7 @@ c_argv.o: ../calcerr.h
 c_argv.o: ../cmath.h
 c_argv.o: ../config.h
 c_argv.o: ../custom.h
+c_argv.o: ../decl.h
 c_argv.o: ../endian_calc.h
 c_argv.o: ../hash.h
 c_argv.o: ../have_const.h
@@ -862,7 +863,6 @@ c_argv.o: ../shs.h
 c_argv.o: ../shs1.h
 c_argv.o: ../string.h
 c_argv.o: ../value.h
-c_argv.o: ../win32dll.h
 c_argv.o: ../zmath.h
 c_argv.o: c_argv.c
 c_devnull.o: ../alloc.h
@@ -872,6 +872,7 @@ c_devnull.o: ../calcerr.h
 c_devnull.o: ../cmath.h
 c_devnull.o: ../config.h
 c_devnull.o: ../custom.h
+c_devnull.o: ../decl.h
 c_devnull.o: ../endian_calc.h
 c_devnull.o: ../hash.h
 c_devnull.o: ../have_const.h
@@ -889,7 +890,6 @@ c_devnull.o: ../shs.h
 c_devnull.o: ../shs1.h
 c_devnull.o: ../string.h
 c_devnull.o: ../value.h
-c_devnull.o: ../win32dll.h
 c_devnull.o: ../zmath.h
 c_devnull.o: c_devnull.c
 c_help.o: ../alloc.h
@@ -899,6 +899,7 @@ c_help.o: ../calcerr.h
 c_help.o: ../cmath.h
 c_help.o: ../config.h
 c_help.o: ../custom.h
+c_help.o: ../decl.h
 c_help.o: ../endian_calc.h
 c_help.o: ../hash.h
 c_help.o: ../have_const.h
@@ -916,7 +917,6 @@ c_help.o: ../shs.h
 c_help.o: ../shs1.h
 c_help.o: ../string.h
 c_help.o: ../value.h
-c_help.o: ../win32dll.h
 c_help.o: ../zmath.h
 c_help.o: c_help.c
 c_pmodm127.o: ../alloc.h
@@ -926,6 +926,7 @@ c_pmodm127.o: ../calcerr.h
 c_pmodm127.o: ../cmath.h
 c_pmodm127.o: ../config.h
 c_pmodm127.o: ../custom.h
+c_pmodm127.o: ../decl.h
 c_pmodm127.o: ../endian_calc.h
 c_pmodm127.o: ../hash.h
 c_pmodm127.o: ../have_const.h
@@ -943,7 +944,6 @@ c_pmodm127.o: ../shs.h
 c_pmodm127.o: ../shs1.h
 c_pmodm127.o: ../string.h
 c_pmodm127.o: ../value.h
-c_pmodm127.o: ../win32dll.h
 c_pmodm127.o: ../zmath.h
 c_pmodm127.o: c_pmodm127.c
 c_pzasusb8.o: ../alloc.h
@@ -953,6 +953,7 @@ c_pzasusb8.o: ../calcerr.h
 c_pzasusb8.o: ../cmath.h
 c_pzasusb8.o: ../config.h
 c_pzasusb8.o: ../custom.h
+c_pzasusb8.o: ../decl.h
 c_pzasusb8.o: ../endian_calc.h
 c_pzasusb8.o: ../hash.h
 c_pzasusb8.o: ../have_const.h
@@ -970,7 +971,6 @@ c_pzasusb8.o: ../shs.h
 c_pzasusb8.o: ../shs1.h
 c_pzasusb8.o: ../string.h
 c_pzasusb8.o: ../value.h
-c_pzasusb8.o: ../win32dll.h
 c_pzasusb8.o: ../zmath.h
 c_pzasusb8.o: c_pzasusb8.c
 c_sysinfo.o: ../alloc.h
@@ -982,6 +982,7 @@ c_sysinfo.o: ../cmath.h
 c_sysinfo.o: ../conf.h
 c_sysinfo.o: ../config.h
 c_sysinfo.o: ../custom.h
+c_sysinfo.o: ../decl.h
 c_sysinfo.o: ../endian_calc.h
 c_sysinfo.o: ../fposval.h
 c_sysinfo.o: ../hash.h
@@ -1002,7 +1003,6 @@ c_sysinfo.o: ../shs.h
 c_sysinfo.o: ../shs1.h
 c_sysinfo.o: ../string.h
 c_sysinfo.o: ../value.h
-c_sysinfo.o: ../win32dll.h
 c_sysinfo.o: ../zmath.h
 c_sysinfo.o: ../zrand.h
 c_sysinfo.o: ../zrandom.h
@@ -1014,6 +1014,7 @@ custtbl.o: ../calcerr.h
 custtbl.o: ../cmath.h
 custtbl.o: ../config.h
 custtbl.o: ../custom.h
+custtbl.o: ../decl.h
 custtbl.o: ../endian_calc.h
 custtbl.o: ../hash.h
 custtbl.o: ../have_const.h
@@ -1030,6 +1031,5 @@ custtbl.o: ../shs.h
 custtbl.o: ../shs1.h
 custtbl.o: ../string.h
 custtbl.o: ../value.h
-custtbl.o: ../win32dll.h
 custtbl.o: ../zmath.h
 custtbl.o: custtbl.c

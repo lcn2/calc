@@ -1,7 +1,7 @@
 /*
  * token - token defines
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: token.h,v 29.5 2006/06/20 10:28:06 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: token.h,v 29.6 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/token.h,v $
  *
  * Under source code control:	1990/02/15 01:48:37
@@ -166,17 +166,17 @@
 #define TM_ALLSYMS	0x2		/* treat almost everything as a symbol */
 
 
-extern long errorcount;		/* number of errors found */
+EXTERN long errorcount;		/* number of errors found */
 
-extern long tokenstring(void);
-extern long tokennumber(void);
-extern char *tokensymbol(void);
-extern void inittokens(void);
-extern int tokenmode(int flag);
-extern int gettoken(void);
-extern void rescantoken(void);
-extern void scanerror(int, char *, ...);
-extern void warning(char *, ...);
+E_FUNC long tokenstring(void);
+E_FUNC long tokennumber(void);
+E_FUNC char *tokensymbol(void);
+E_FUNC void inittokens(void);
+E_FUNC int tokenmode(int flag);
+E_FUNC int gettoken(void);
+E_FUNC void rescantoken(void);
+E_FUNC void scanerror(int, char *, ...);
+E_FUNC void warning(char *, ...);
 
 
 #endif /* !__TOKEN_H__ */

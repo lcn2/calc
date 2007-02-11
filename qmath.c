@@ -1,7 +1,7 @@
 /*
  * qmath - extended precision rational arithmetic primitive routines
  *
- * Copyright (C) 1999-2004  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: qmath.c,v 29.7 2006/12/15 16:18:10 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: qmath.c,v 29.8 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qmath.c,v $
  *
  * Under source code control:	1990/02/15 01:48:21
@@ -1393,9 +1393,9 @@ qcmpi(NUMBER *q, long n)
 #define NNALLOC 1000
 
 
-static NUMBER	*freeNum = NULL;
-static NUMBER	**firstNums = NULL;
-static long	blockcount = 0;
+STATIC NUMBER	*freeNum = NULL;
+STATIC NUMBER	**firstNums = NULL;
+STATIC long	blockcount = 0;
 
 
 NUMBER *

@@ -1,7 +1,7 @@
 /*
  * commath - extended precision complex arithmetic primitive routines
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: commath.c,v 29.4 2005/10/18 10:43:49 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: commath.c,v 29.5 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/commath.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -35,7 +35,7 @@ COMPLEX _czero_ =		{ &_qzero_, &_qzero_, 1 };
 COMPLEX _cone_ =		{ &_qone_, &_qzero_, 1 };
 COMPLEX _conei_ =		{ &_qzero_, &_qone_, 1 };
 
-static COMPLEX _cnegone_ =	{ &_qnegone_, &_qzero_, 1 };
+STATIC COMPLEX _cnegone_ =	{ &_qnegone_, &_qzero_, 1 };
 
 
 /*

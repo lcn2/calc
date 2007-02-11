@@ -1,7 +1,7 @@
 /*
  * addop - add opcodes to a function being compiled
  *
- * Copyright (C) 1999-2006  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.13 $
- * @(#) $Id: addop.c,v 29.13 2006/06/20 10:28:06 chongo Exp $
+ * @(#) $Revision: 29.14 $
+ * @(#) $Id: addop.c,v 29.14 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/addop.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -44,17 +44,17 @@
 #define OPCODEALLOCSIZE 100	/* reallocate size for opcodes in functions */
 
 
-static unsigned long maxopcodes;/* number of opcodes available */
-static long newindex;		/* index of new function */
-static char *newname;		/* name of new function */
-static long oldop;		/* previous opcode */
-static long oldoldop;		/* opcode before previous opcode */
-static long debugline;		/* line number of latest debug opcode */
-static long funccount;		/* number of functions */
-static long funcavail;		/* available number of functions */
-static FUNC *functemplate;	/* function definition template */
-static FUNC **functions;	/* table of functions */
-static STRINGHEAD funcnames;	/* function names */
+STATIC unsigned long maxopcodes;/* number of opcodes available */
+STATIC long newindex;		/* index of new function */
+STATIC char *newname;		/* name of new function */
+STATIC long oldop;		/* previous opcode */
+STATIC long oldoldop;		/* opcode before previous opcode */
+STATIC long debugline;		/* line number of latest debug opcode */
+STATIC long funccount;		/* number of functions */
+STATIC long funcavail;		/* available number of functions */
+STATIC FUNC *functemplate;	/* function definition template */
+STATIC FUNC **functions;	/* table of functions */
+STATIC STRINGHEAD funcnames;	/* function names */
 
 
 /*

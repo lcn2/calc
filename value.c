@@ -1,7 +1,7 @@
 /*
  * value - generic value manipulation routines
  *
- * Copyright (C) 1999-2006  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.10 $
- * @(#) $Id: value.c,v 29.10 2006/08/20 15:01:30 chongo Exp $
+ * @(#) $Revision: 29.11 $
+ * @(#) $Id: value.c,v 29.11 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -1617,7 +1617,7 @@ rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 void
 absvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
-	static NUMBER *q;
+	STATIC NUMBER *q;
 
 	if (v1->v_type == V_OBJ || v2->v_type == V_OBJ) {
 		*vres = objcall(OBJ_ABS, v1, v2, NULL_VALUE);

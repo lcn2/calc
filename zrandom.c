@@ -1,7 +1,7 @@
 /*
  * zrandom - Blum-Blum-Shub pseudo-random generator
  *
- * Copyright (C) 1999,2004  Landon Curt Noll
+ * Copyright (C) 1999-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: zrandom.c,v 29.8 2004/03/31 04:58:40 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: zrandom.c,v 29.9 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrandom.c,v $
  *
  * Under source code control:	1997/02/15 04:01:56
@@ -1090,7 +1090,7 @@
 /*
  * current Blum generator state
  */
-static RANDOM blum;
+STATIC RANDOM blum;
 
 
 /*
@@ -1101,25 +1101,25 @@ static RANDOM blum;
  * The z_rdefault ZVALUE is the 'r' (quadratic residue) of init_blum.
  */
 #if FULL_BITS == 64
-static CONST HALF h_ndefvec[] = {
+STATIC CONST HALF h_ndefvec[] = {
 	(HALF)0xd6be18d9, (HALF)0xba55a689, (HALF)0x4a9027d9, (HALF)0x84f34b64,
 	(HALF)0xd0e8d302, (HALF)0x3d78613e, (HALF)0x56af9e37, (HALF)0x2ac19031,
 	(HALF)0xf
 };
-static CONST HALF h_rdefvec[] = {
+STATIC CONST HALF h_rdefvec[] = {
 	(HALF)0xd3e7b11e, (HALF)0x0f23fd7e, (HALF)0xa62546c9, (HALF)0x06c73ca5,
 	(HALF)0x627d6265, (HALF)0x2f1e93a8, (HALF)0xff4b074e, (HALF)0x48b6d882,
 	(HALF)0x7
 };
 #elif 2*FULL_BITS == 64
-static CONST HALF h_ndefvec[] = {
+STATIC CONST HALF h_ndefvec[] = {
 	(HALF)0x18d9, (HALF)0xd6be, (HALF)0xa689, (HALF)0xba55,
 	(HALF)0x27d9, (HALF)0x4a90, (HALF)0x4b64, (HALF)0x84f3,
 	(HALF)0xd302, (HALF)0xd0e8, (HALF)0x613e, (HALF)0x3d78,
 	(HALF)0x9e37, (HALF)0x56af, (HALF)0x9031, (HALF)0x2ac1,
 	(HALF)0xf
 };
-static CONST HALF h_rdefvec[] = {
+STATIC CONST HALF h_rdefvec[] = {
 	(HALF)0xb11e, (HALF)0xd3e7, (HALF)0xfd7e, (HALF)0x0f23,
 	(HALF)0x46c9, (HALF)0xa625, (HALF)0x3ca5, (HALF)0x06c7,
 	(HALF)0x6265, (HALF)0x627d, (HALF)0x93a8, (HALF)0x2f1e,
@@ -1129,19 +1129,19 @@ static CONST HALF h_rdefvec[] = {
 #else
    /\../\	FULL_BITS must be 32 or 64	/\../\	 !!!
 #endif
-static CONST RANDOM init_blum = {1, 0, 8, (HALF)0, (HALF)0xff,
+STATIC CONST RANDOM init_blum = {1, 0, 8, (HALF)0, (HALF)0xff,
 				 {(HALF *)h_ndefvec,
 				  sizeof(h_ndefvec)/sizeof(HALF), 0},
 				 {(HALF *)h_rdefvec,
 				  sizeof(h_rdefvec)/sizeof(HALF), 0}};
 #if FULL_BITS == 64
-static CONST HALF h_rdefvec_2[] = {
+STATIC CONST HALF h_rdefvec_2[] = {
 	(HALF)0xd3e7b11e, (HALF)0x0f23fd7e, (HALF)0xa62546c9, (HALF)0x06c73ca5,
 	(HALF)0x627d6265, (HALF)0x2f1e93a8, (HALF)0xff4b074e, (HALF)0x48b6d882,
 	(HALF)0x7
 };
 #elif 2*FULL_BITS == 64
-static CONST HALF h_rdefvec_2[] = {
+STATIC CONST HALF h_rdefvec_2[] = {
 	(HALF)0xb11e, (HALF)0xd3e7, (HALF)0xfd7e, (HALF)0x0f23,
 	(HALF)0x46c9, (HALF)0xa625, (HALF)0x3ca5, (HALF)0x06c7,
 	(HALF)0x6265, (HALF)0x627d, (HALF)0x93a8, (HALF)0x2f1e,
@@ -1151,7 +1151,7 @@ static CONST HALF h_rdefvec_2[] = {
 #else
    /\../\	FULL_BITS must be 32 or 64	/\../\	 !!!
 #endif
-static CONST ZVALUE z_rdefault = {
+STATIC CONST ZVALUE z_rdefault = {
     (HALF *)h_rdefvec_2, sizeof(h_rdefvec_2)/sizeof(HALF), 0
 };
 
@@ -1163,132 +1163,132 @@ static CONST ZVALUE z_rdefault = {
  * 1 <= newn < BLUM_PREGEN.
  */
 #if FULL_BITS == 64
-static CONST HALF h_nvec01[] = {
+STATIC CONST HALF h_nvec01[] = {
 	(HALF)0x83de9361, (HALF)0xf0db722d, (HALF)0x6fe328ca, (HALF)0x04944073,
 	(HALF)0x5
 };
-static CONST HALF h_rvec01[] = {
+STATIC CONST HALF h_rvec01[] = {
 	(HALF)0xa4cc42ec, (HALF)0x4e5dbb01, (HALF)0x11d952e7, (HALF)0xb226980f
 };
-static CONST HALF h_nvec02[] = {
+STATIC CONST HALF h_nvec02[] = {
 	(HALF)0x353443f1, (HALF)0xeb286ea9, (HALF)0xdd374a18, (HALF)0x348a2555,
 	(HALF)0x2c5
 };
-static CONST HALF h_rvec02[] = {
+STATIC CONST HALF h_rvec02[] = {
 	(HALF)0x21e3a218, (HALF)0xe893616b, (HALF)0x6cd710e3, (HALF)0xf3d64344,
 	(HALF)0x40
 };
-static CONST HALF h_nvec03[] = {
+STATIC CONST HALF h_nvec03[] = {
 	(HALF)0x11d001f1, (HALF)0xf2ca661f, (HALF)0x3a81f1e0, (HALF)0x59d6ce4e,
 	(HALF)0x0009cfd9
 };
-static CONST HALF h_rvec03[] = {
+STATIC CONST HALF h_rvec03[] = {
 	(HALF)0xa0d7d76a, (HALF)0x3e142de2, (HALF)0xff5cea4f, (HALF)0xb44d9b64,
 	(HALF)0xfae5
 };
-static CONST HALF h_nvec04[] = {
+STATIC CONST HALF h_nvec04[] = {
 	(HALF)0xdfcc0751, (HALF)0x2decc680, (HALF)0x5df12a1a, (HALF)0x5c894ed7,
 	(HALF)0x3070f924
 };
-static CONST HALF h_rvec04[] = {
+STATIC CONST HALF h_rvec04[] = {
 	(HALF)0x4b984570, (HALF)0xa220ddba, (HALF)0xa2c0af8a, (HALF)0x131b2bdc,
 	(HALF)0x0020c2d8
 };
-static CONST HALF h_nvec05[] = {
+STATIC CONST HALF h_nvec05[] = {
 	(HALF)0x99166ef1, (HALF)0x8b99e5e7, (HALF)0x8769a010, (HALF)0x5d3fe111,
 	(HALF)0x680bc2fa, (HALF)0x38f75aac, (HALF)0xdb81a85b, (HALF)0x109b1822,
 	(HALF)0x2
 };
-static CONST HALF h_rvec05[] = {
+STATIC CONST HALF h_rvec05[] = {
 	(HALF)0x59e2efa9, (HALF)0x0e6c77c8, (HALF)0x1e70aeed, (HALF)0x234f7b7d,
 	(HALF)0x5f5df6db, (HALF)0xe821a960, (HALF)0xae33b792, (HALF)0x5e9b890e
 };
-static CONST HALF h_nvec06[] = {
+STATIC CONST HALF h_nvec06[] = {
 	(HALF)0xe1ddf431, (HALF)0xd85557f1, (HALF)0x5ee732da, (HALF)0x3a38db77,
 	(HALF)0x5c644026, (HALF)0xf2dbf218, (HALF)0x9ada2c79, (HALF)0x7bfd9d7d,
 	(HALF)0xa
 };
-static CONST HALF h_rvec06[] = {
+STATIC CONST HALF h_rvec06[] = {
 	(HALF)0xc9404daf, (HALF)0xc5dc2e80, (HALF)0x2c98eccf, (HALF)0xe1f3495d,
 	(HALF)0xce1c925c, (HALF)0xe097aede, (HALF)0x88667154, (HALF)0x5e94a02f
 };
-static CONST HALF h_nvec07[] = {
+STATIC CONST HALF h_nvec07[] = {
 	(HALF)0xcf9ec751, (HALF)0x602f9125, (HALF)0x52882e7f, (HALF)0x0dcf53ce,
 	(HALF)0xff569d6b, (HALF)0x628643fc, (HALF)0x37801cd5, (HALF)0xf2399ef2,
 	(HALF)0x43d87de8
 };
-static CONST HALF h_rvec07[] = {
+STATIC CONST HALF h_rvec07[] = {
 	(HALF)0x098d25e6, (HALF)0x3992d2e5, (HALF)0x64f0b58c, (HALF)0xcf18d4dd,
 	(HALF)0x9d876aef, (HALF)0x7acced04, (HALF)0xbfbe9076, (HALF)0x1ee014c7,
 	(HALF)0x0013522d
 };
-static CONST HALF h_nvec08[] = {
+STATIC CONST HALF h_nvec08[] = {
 	(HALF)0x26742f11, (HALF)0xbc42e66a, (HALF)0xb59cd9f0, (HALF)0x9ad4a6c2,
 	(HALF)0x5bdbd2f9, (HALF)0xbdc91fed, (HALF)0xf13c9ce7, (HALF)0xeb4699b7,
 	(HALF)0x47126ca7, (HALF)0x58
 };
-static CONST HALF h_rvec08[] = {
+STATIC CONST HALF h_rvec08[] = {
 	(HALF)0x489dc674, (HALF)0xaae95f3a, (HALF)0xa35da929, (HALF)0x5597b4b8,
 	(HALF)0x28e9c947, (HALF)0x3d344f9a, (HALF)0xb7e661fa, (HALF)0xa3269116,
 	(HALF)0x853016dc
 };
-static CONST HALF h_nvec09[] = {
+STATIC CONST HALF h_nvec09[] = {
 	(HALF)0xab27e3d1, (HALF)0x12745db4, (HALF)0xb980f951, (HALF)0x62b16b66,
 	(HALF)0x0fdece0d, (HALF)0x6061c6fd, (HALF)0x36a6ff09, (HALF)0xe08eb61c,
 	(HALF)0x84d895c3, (HALF)0x4a86752a, (HALF)0xc1797b4f, (HALF)0x562157a3,
 	(HALF)0x3d267bb0, (HALF)0x14e81b00, (HALF)0x218d9238, (HALF)0x52322fd3,
 	(HALF)0x0039e8be
 };
-static CONST HALF h_rvec09[] = {
+STATIC CONST HALF h_rvec09[] = {
 	(HALF)0x7d4ed20d, (HALF)0x601ef2b8, (HALF)0x8e59f959, (HALF)0xedaa5d9e,
 	(HALF)0x309a89ba, (HALF)0xe5ab7d81, (HALF)0x796b2545, (HALF)0x02de3222,
 	(HALF)0x8357c0bd, (HALF)0x0107e3fd, (HALF)0x82d9d288, (HALF)0xbc42a8aa,
 	(HALF)0x4b787343, (HALF)0xc0150886, (HALF)0xbab915bf, (HALF)0xf8ad1e6b,
 	(HALF)0xb458
 };
-static CONST HALF h_nvec10[] = {
+STATIC CONST HALF h_nvec10[] = {
 	(HALF)0xb7e64b89, (HALF)0xc3cdc363, (HALF)0x2ef9c73c, (HALF)0x6092ce22,
 	(HALF)0x02abe36c, (HALF)0x08d49573, (HALF)0x74511c40, (HALF)0xd38582de,
 	(HALF)0xa524a02f, (HALF)0x52c81b3b, (HALF)0x250d3cc9, (HALF)0x23b50e88,
 	(HALF)0xbd1448bf, (HALF)0x882d7f98, (HALF)0xc23ef596, (HALF)0xc9055666,
 	(HALF)0x025f2435
 };
-static CONST HALF h_rvec10[] = {
+STATIC CONST HALF h_rvec10[] = {
 	(HALF)0x94cfc482, (HALF)0x594f5ad4, (HALF)0x23442aee, (HALF)0x145f40ce,
 	(HALF)0x1baf950d, (HALF)0xadc4f175, (HALF)0xf62c669f, (HALF)0x8d075d56,
 	(HALF)0x08ed8b40, (HALF)0xaaf2cf30, (HALF)0xc24b5ffb, (HALF)0x250df8cf,
 	(HALF)0x7ca81ec9, (HALF)0x787e2b70, (HALF)0x18401468, (HALF)0x47b20e0c,
 	(HALF)0x0066bb7e
 };
-static CONST HALF h_nvec11[] = {
+STATIC CONST HALF h_nvec11[] = {
 	(HALF)0x546ee069, (HALF)0x2e1a530c, (HALF)0x2014dab2, (HALF)0xa729cf52,
 	(HALF)0x920ee1a9, (HALF)0x68f27533, (HALF)0x25873cfa, (HALF)0xdd37a749,
 	(HALF)0x4499daa2, (HALF)0x286e5870, (HALF)0x57f3f9b6, (HALF)0x5ec54467,
 	(HALF)0x69a791ea, (HALF)0x874ecd77, (HALF)0x4217d56b, (HALF)0x82bdb309,
 	(HALF)0x497864de
 };
-static CONST HALF h_rvec11[] = {
+STATIC CONST HALF h_rvec11[] = {
 	(HALF)0x56e38b04, (HALF)0x3a0aded3, (HALF)0x461d88b1, (HALF)0x9c094d65,
 	(HALF)0xe5333fed, (HALF)0x34d918fe, (HALF)0x1ef56281, (HALF)0xcedfa07c,
 	(HALF)0x590f47fb, (HALF)0xa2c54d5c, (HALF)0x732339ee, (HALF)0x806549a7,
 	(HALF)0x9ce3163f, (HALF)0xae3af8b6, (HALF)0x264a4465, (HALF)0x1cb5e630,
 	(HALF)0x00868488
 };
-static CONST HALF h_nvec12[] = {
+STATIC CONST HALF h_nvec12[] = {
 	(HALF)0xf14c7b99, (HALF)0x7f66d151, (HALF)0x87efad2b, (HALF)0x57d3f098,
 	(HALF)0xd6534165, (HALF)0x812fdd25, (HALF)0x48c7c7ce, (HALF)0xa1bf41e0,
 	(HALF)0x4c94e315, (HALF)0x190b1593, (HALF)0xee4251da, (HALF)0x2b4a1a66,
 	(HALF)0x2bb7c2a1, (HALF)0x65b18ca9, (HALF)0x08b89116, (HALF)0xc0ccb15f,
 	(HALF)0x57582ab3, (HALF)0x34
 };
-static CONST HALF h_rvec12[] = {
+STATIC CONST HALF h_rvec12[] = {
 	(HALF)0xe207b4a0, (HALF)0x5227dd68, (HALF)0x9488fbc4, (HALF)0x6ed081aa,
 	(HALF)0x8e736fe5, (HALF)0x3dd2c020, (HALF)0xeeb07c57, (HALF)0x0b604eb7,
 	(HALF)0xa13f72a1, (HALF)0xcbfc4333, (HALF)0xa4c5e8cd, (HALF)0x0add520d,
 	(HALF)0x758ca3b2, (HALF)0x55490137, (HALF)0x5870babd, (HALF)0xf648ed93,
 	(HALF)0xdf719bd1
 };
-static CONST HALF h_nvec13[] = {
+STATIC CONST HALF h_nvec13[] = {
 	(HALF)0x3314fc49, (HALF)0xcca20032, (HALF)0x208e3420, (HALF)0x8aaa503a,
 	(HALF)0xd79a63cc, (HALF)0xb4ed7417, (HALF)0x95dd1892, (HALF)0xb5915f64,
 	(HALF)0xd14cc7f1, (HALF)0x1589917e, (HALF)0xb2b05667, (HALF)0xc32d99cb,
@@ -1299,7 +1299,7 @@ static CONST HALF h_nvec13[] = {
 	(HALF)0xdaf66d82, (HALF)0xed03d833, (HALF)0x1b5af734, (HALF)0x166b7dd2,
 	(HALF)0x01517c19
 };
-static CONST HALF h_rvec13[] = {
+STATIC CONST HALF h_rvec13[] = {
 	(HALF)0x6b7736f5, (HALF)0x2407bfe4, (HALF)0x965e2072, (HALF)0xcc26cf3e,
 	(HALF)0xa432b567, (HALF)0x2ed007ab, (HALF)0x0e2f67b9, (HALF)0xef640960,
 	(HALF)0xbe5f1ad3, (HALF)0x3faeda1b, (HALF)0xa8f6b988, (HALF)0xe5c9cea5,
@@ -1310,7 +1310,7 @@ static CONST HALF h_rvec13[] = {
 	(HALF)0x9b706d2b, (HALF)0x8b04f6a6, (HALF)0x1263fa64, (HALF)0x8e9a560d,
 	(HALF)0xd42e
 };
-static CONST HALF h_nvec14[] = {
+STATIC CONST HALF h_nvec14[] = {
 	(HALF)0xc116af01, (HALF)0xbdef8c0f, (HALF)0xc4409a1a, (HALF)0xacb3185c,
 	(HALF)0xb33f925b, (HALF)0xfee83005, (HALF)0x4b3db112, (HALF)0x7f076743,
 	(HALF)0x21709223, (HALF)0x2159054b, (HALF)0x6fdfefe3, (HALF)0x792d0a07,
@@ -1321,7 +1321,7 @@ static CONST HALF h_nvec14[] = {
 	(HALF)0x1f564618, (HALF)0xb9d983d0, (HALF)0x7479ac07, (HALF)0x93c6f4e8,
 	(HALF)0x5e56a00e
 };
-static CONST HALF h_rvec14[] = {
+STATIC CONST HALF h_rvec14[] = {
 	(HALF)0x0ff9f190, (HALF)0x47a4db68, (HALF)0x913cc8ea, (HALF)0xb6b1b220,
 	(HALF)0x13edfbbb, (HALF)0xa8f1f1c3, (HALF)0xd6d71f8f, (HALF)0x4194649a,
 	(HALF)0x7d497344, (HALF)0x677c8416, (HALF)0x0186b983, (HALF)0xee633901,
@@ -1332,7 +1332,7 @@ static CONST HALF h_rvec14[] = {
 	(HALF)0x15b9a564, (HALF)0x9b18f154, (HALF)0x6ef0c5d0, (HALF)0xb6733509,
 	(HALF)0x00f7aa7c
 };
-static CONST HALF h_nvec15[] = {
+STATIC CONST HALF h_nvec15[] = {
 	(HALF)0xc8d97079, (HALF)0x061e7597, (HALF)0xf5d2c721, (HALF)0x299bc51f,
 	(HALF)0xffe6c337, (HALF)0x19798624, (HALF)0xee6f92b6, (HALF)0x0b1d0c7a,
 	(HALF)0xb5308231, (HALF)0x49c558dd, (HALF)0x196a530e, (HALF)0x0caa515c,
@@ -1343,7 +1343,7 @@ static CONST HALF h_nvec15[] = {
 	(HALF)0x45352ebe, (HALF)0x5ba81ca8, (HALF)0x02c46c17, (HALF)0x9edfbcdb,
 	(HALF)0x97dd840b
 };
-static CONST HALF h_rvec15[] = {
+STATIC CONST HALF h_rvec15[] = {
 	(HALF)0x6c3e2110, (HALF)0x808f0aaa, (HALF)0xd98db92e, (HALF)0x1e6abd43,
 	(HALF)0xf401b920, (HALF)0x9d3f0381, (HALF)0xdb95d174, (HALF)0xa2f65c33,
 	(HALF)0x0c5469f8, (HALF)0xa3c126fc, (HALF)0x8866241b, (HALF)0x0e46eca7,
@@ -1354,7 +1354,7 @@ static CONST HALF h_rvec15[] = {
 	(HALF)0xa8d77ca6, (HALF)0xb50025da, (HALF)0x69ab99f9, (HALF)0x03b8c758,
 	(HALF)0x00b82207
 };
-static CONST HALF h_nvec16[] = {
+STATIC CONST HALF h_nvec16[] = {
 	(HALF)0xd84346e1, (HALF)0x184183f6, (HALF)0x2dc9bd36, (HALF)0x4ca857ac,
 	(HALF)0x96a5828d, (HALF)0xed1f1c59, (HALF)0x36d9731f, (HALF)0xbd3f6183,
 	(HALF)0xde0f5578, (HALF)0xb6a2ea8a, (HALF)0xbe993c44, (HALF)0x0e283c05,
@@ -1365,7 +1365,7 @@ static CONST HALF h_nvec16[] = {
 	(HALF)0x9e43536a, (HALF)0x9f544cb8, (HALF)0xb56f84c3, (HALF)0xb82fbb12,
 	(HALF)0x6e348549, (HALF)0x45
 };
-static CONST HALF h_rvec16[] = {
+STATIC CONST HALF h_rvec16[] = {
 	(HALF)0x7b4e8830, (HALF)0x70605db8, (HALF)0xa1abe4a5, (HALF)0xa70fbe04,
 	(HALF)0x2bcda8f4, (HALF)0xd29ada9a, (HALF)0x55ad0560, (HALF)0xb367137e,
 	(HALF)0xd6972f1a, (HALF)0x809bad45, (HALF)0xb15d2454, (HALF)0x0c0d415f,
@@ -1376,7 +1376,7 @@ static CONST HALF h_rvec16[] = {
 	(HALF)0x7895ae8f, (HALF)0x4a4b6dcd, (HALF)0x973e921a, (HALF)0x9fb27a07,
 	(HALF)0xb0d7dcb1
 };
-static CONST HALF h_nvec17[] = {
+STATIC CONST HALF h_nvec17[] = {
 	(HALF)0x72b72051, (HALF)0xedc24ebf, (HALF)0xe970a8d1, (HALF)0x66c9b150,
 	(HALF)0xcbb927f7, (HALF)0xb574ffd9, (HALF)0x4166b249, (HALF)0x0fce4030,
 	(HALF)0xfa6922ca, (HALF)0x39cc14a9, (HALF)0x14396e2a, (HALF)0xaff74c7f,
@@ -1395,7 +1395,7 @@ static CONST HALF h_nvec17[] = {
 	(HALF)0x96e0faf9, (HALF)0x33be3c0f, (HALF)0xffa3040b, (HALF)0x813aeac0,
 	(HALF)0x6177
 };
-static CONST HALF h_rvec17[] = {
+STATIC CONST HALF h_rvec17[] = {
 	(HALF)0x22b41dac, (HALF)0xd6258005, (HALF)0x2aa1e0cb, (HALF)0x45d147b5,
 	(HALF)0xbf5c46d9, (HALF)0x14c9dadf, (HALF)0x09b0aec4, (HALF)0x4286bfef,
 	(HALF)0xc6f8e9d1, (HALF)0xdd68467b, (HALF)0x93f4ffb9, (HALF)0x58f2eb51,
@@ -1414,7 +1414,7 @@ static CONST HALF h_rvec17[] = {
 	(HALF)0xc2d2fc5b, (HALF)0xdd665324, (HALF)0xc3b8adf1, (HALF)0x0b6eaf3b,
 	(HALF)0x5372
 };
-static CONST HALF h_nvec18[] = {
+STATIC CONST HALF h_nvec18[] = {
 	(HALF)0xc8b78629, (HALF)0x41351b18, (HALF)0x28ad4ed8, (HALF)0xc96f7df1,
 	(HALF)0x7cd3c931, (HALF)0x0f23036a, (HALF)0xac657631, (HALF)0x6a625812,
 	(HALF)0x08144788, (HALF)0x8642ed62, (HALF)0x76198a40, (HALF)0x70defd64,
@@ -1433,7 +1433,7 @@ static CONST HALF h_nvec18[] = {
 	(HALF)0x5378efcb, (HALF)0xfec0c7c6, (HALF)0xf07cb724, (HALF)0xfb61b42a,
 	(HALF)0x068f2a38
 };
-static CONST HALF h_rvec18[] = {
+STATIC CONST HALF h_rvec18[] = {
 	(HALF)0x35ea3c63, (HALF)0x8df2ef97, (HALF)0xa2b3afb7, (HALF)0x179158f6,
 	(HALF)0x04920dba, (HALF)0xf333077e, (HALF)0xf8304b5a, (HALF)0x230ff2ae,
 	(HALF)0x84a8f3f0, (HALF)0xadda164e, (HALF)0xc9a1c944, (HALF)0xc70502f2,
@@ -1452,7 +1452,7 @@ static CONST HALF h_rvec18[] = {
 	(HALF)0x5358be89, (HALF)0x4cd835d7, (HALF)0xf0d5cda8, (HALF)0x1f1ac6c3,
 	(HALF)0x04735e92
 };
-static CONST HALF h_nvec19[] = {
+STATIC CONST HALF h_nvec19[] = {
 	(HALF)0x6b659a79, (HALF)0x0239c12d, (HALF)0xd204df49, (HALF)0x1d4ae0c7,
 	(HALF)0x099bf000, (HALF)0x6435ade8, (HALF)0xdc4af029, (HALF)0x2f4ee7a2,
 	(HALF)0xadfcf1e3, (HALF)0x73358f43, (HALF)0x687eede5, (HALF)0xb567cd4d,
@@ -1471,7 +1471,7 @@ static CONST HALF h_nvec19[] = {
 	(HALF)0x2e410ad4, (HALF)0x0721c315, (HALF)0xdde27654, (HALF)0x2ad6534b,
 	(HALF)0xd6788b25, (HALF)0xb23bb9e8, (HALF)0x00230d7a
 };
-static CONST HALF h_rvec19[] = {
+STATIC CONST HALF h_rvec19[] = {
 	(HALF)0x698ef473, (HALF)0x3d53a5b7, (HALF)0x06448319, (HALF)0xd9ad4445,
 	(HALF)0x6967daa0, (HALF)0xa14c6240, (HALF)0x78e77724, (HALF)0x63ef2ab7,
 	(HALF)0x8dff2ee2, (HALF)0x662eb424, (HALF)0xcd9307d6, (HALF)0x0ab06a5d,
@@ -1490,7 +1490,7 @@ static CONST HALF h_rvec19[] = {
 	(HALF)0x6fa6fa75, (HALF)0xe21f6512, (HALF)0x999518b4, (HALF)0x2196605b,
 	(HALF)0xe4fc1798, (HALF)0x5f21e245, (HALF)0x0008f172
 };
-static CONST HALF h_nvec20[] = {
+STATIC CONST HALF h_nvec20[] = {
 	(HALF)0xc3c1d081, (HALF)0x4d262fce, (HALF)0x8765cc91, (HALF)0xf3727f7c,
 	(HALF)0xabba4bbc, (HALF)0xe0985801, (HALF)0xfa365c51, (HALF)0xb2a4b230,
 	(HALF)0xf4430a8d, (HALF)0x546b98c8, (HALF)0xd9748b26, (HALF)0xe255a82f,
@@ -1509,7 +1509,7 @@ static CONST HALF h_nvec20[] = {
 	(HALF)0x56d79660, (HALF)0x6066a3f3, (HALF)0x648b0327, (HALF)0x267e5b3a,
 	(HALF)0xdddc63a0, (HALF)0x3322e890, (HALF)0x20e0d8b1, (HALF)0x004fd2b8
 };
-static CONST HALF h_rvec20[] = {
+STATIC CONST HALF h_rvec20[] = {
 	(HALF)0xa048bd1a, (HALF)0x95abdc7b, (HALF)0x98f47cf8, (HALF)0x126ac98d,
 	(HALF)0xaebf85fd, (HALF)0x5650580f, (HALF)0x3292d7dd, (HALF)0xf49e8377,
 	(HALF)0x2947ed46, (HALF)0xd1a5b26c, (HALF)0xae14e6a1, (HALF)0x9b1f5788,
@@ -1529,100 +1529,100 @@ static CONST HALF h_rvec20[] = {
 	(HALF)0xee960da1, (HALF)0xa3099293, (HALF)0x84445fea, (HALF)0x0046ef01
 };
 #elif 2*FULL_BITS == 64
-static CONST HALF h_nvec01[] = {
+STATIC CONST HALF h_nvec01[] = {
 	(HALF)0x9361, (HALF)0x83de, (HALF)0x722d, (HALF)0xf0db,
 	(HALF)0x28ca, (HALF)0x6fe3, (HALF)0x4073, (HALF)0x0494,
 	(HALF)0x5
 };
-static CONST HALF h_rvec01[] = {
+STATIC CONST HALF h_rvec01[] = {
 	(HALF)0x42ec, (HALF)0xa4cc, (HALF)0xbb01, (HALF)0x4e5d,
 	(HALF)0x52e7, (HALF)0x11d9, (HALF)0x980f, (HALF)0xb226
 };
-static CONST HALF h_nvec02[] = {
+STATIC CONST HALF h_nvec02[] = {
 	(HALF)0x43f1, (HALF)0x3534, (HALF)0x6ea9, (HALF)0xeb28,
 	(HALF)0x4a18, (HALF)0xdd37, (HALF)0x2555, (HALF)0x348a,
 	(HALF)0x2c5
 };
-static CONST HALF h_rvec02[] = {
+STATIC CONST HALF h_rvec02[] = {
 	(HALF)0xa218, (HALF)0x21e3, (HALF)0x616b, (HALF)0xe893,
 	(HALF)0x10e3, (HALF)0x6cd7, (HALF)0x4344, (HALF)0xf3d6,
 	(HALF)0x40
 };
-static CONST HALF h_nvec03[] = {
+STATIC CONST HALF h_nvec03[] = {
 	(HALF)0x01f1, (HALF)0x11d0, (HALF)0x661f, (HALF)0xf2ca,
 	(HALF)0xf1e0, (HALF)0x3a81, (HALF)0xce4e, (HALF)0x59d6,
 	(HALF)0xcfd9, (HALF)0x0009
 };
-static CONST HALF h_rvec03[] = {
+STATIC CONST HALF h_rvec03[] = {
 	(HALF)0xd76a, (HALF)0xa0d7, (HALF)0x2de2, (HALF)0x3e14,
 	(HALF)0xea4f, (HALF)0xff5c, (HALF)0x9b64, (HALF)0xb44d,
 	(HALF)0xfae5
 };
-static CONST HALF h_nvec04[] = {
+STATIC CONST HALF h_nvec04[] = {
 	(HALF)0x0751, (HALF)0xdfcc, (HALF)0xc680, (HALF)0x2dec,
 	(HALF)0x2a1a, (HALF)0x5df1, (HALF)0x4ed7, (HALF)0x5c89,
 	(HALF)0xf924, (HALF)0x3070
 };
-static CONST HALF h_rvec04[] = {
+STATIC CONST HALF h_rvec04[] = {
 	(HALF)0x4570, (HALF)0x4b98, (HALF)0xddba, (HALF)0xa220,
 	(HALF)0xaf8a, (HALF)0xa2c0, (HALF)0x2bdc, (HALF)0x131b,
 	(HALF)0xc2d8, (HALF)0x0020
 };
-static CONST HALF h_nvec05[] = {
+STATIC CONST HALF h_nvec05[] = {
 	(HALF)0x6ef1, (HALF)0x9916, (HALF)0xe5e7, (HALF)0x8b99,
 	(HALF)0xa010, (HALF)0x8769, (HALF)0xe111, (HALF)0x5d3f,
 	(HALF)0xc2fa, (HALF)0x680b, (HALF)0x5aac, (HALF)0x38f7,
 	(HALF)0xa85b, (HALF)0xdb81, (HALF)0x1822, (HALF)0x109b,
 	(HALF)0x2
 };
-static CONST HALF h_rvec05[] = {
+STATIC CONST HALF h_rvec05[] = {
 	(HALF)0xefa9, (HALF)0x59e2, (HALF)0x77c8, (HALF)0x0e6c,
 	(HALF)0xaeed, (HALF)0x1e70, (HALF)0x7b7d, (HALF)0x234f,
 	(HALF)0xf6db, (HALF)0x5f5d, (HALF)0xa960, (HALF)0xe821,
 	(HALF)0xb792, (HALF)0xae33, (HALF)0x890e, (HALF)0x5e9b
 };
-static CONST HALF h_nvec06[] = {
+STATIC CONST HALF h_nvec06[] = {
 	(HALF)0xf431, (HALF)0xe1dd, (HALF)0x57f1, (HALF)0xd855,
 	(HALF)0x32da, (HALF)0x5ee7, (HALF)0xdb77, (HALF)0x3a38,
 	(HALF)0x4026, (HALF)0x5c64, (HALF)0xf218, (HALF)0xf2db,
 	(HALF)0x2c79, (HALF)0x9ada, (HALF)0x9d7d, (HALF)0x7bfd,
 	(HALF)0xa
 };
-static CONST HALF h_rvec06[] = {
+STATIC CONST HALF h_rvec06[] = {
 	(HALF)0x4daf, (HALF)0xc940, (HALF)0x2e80, (HALF)0xc5dc,
 	(HALF)0xeccf, (HALF)0x2c98, (HALF)0x495d, (HALF)0xe1f3,
 	(HALF)0x925c, (HALF)0xce1c, (HALF)0xaede, (HALF)0xe097,
 	(HALF)0x7154, (HALF)0x8866, (HALF)0xa02f, (HALF)0x5e94
 };
-static CONST HALF h_nvec07[] = {
+STATIC CONST HALF h_nvec07[] = {
 	(HALF)0xc751, (HALF)0xcf9e, (HALF)0x9125, (HALF)0x602f,
 	(HALF)0x2e7f, (HALF)0x5288, (HALF)0x53ce, (HALF)0x0dcf,
 	(HALF)0x9d6b, (HALF)0xff56, (HALF)0x43fc, (HALF)0x6286,
 	(HALF)0x1cd5, (HALF)0x3780, (HALF)0x9ef2, (HALF)0xf239,
 	(HALF)0x7de8, (HALF)0x43d8
 };
-static CONST HALF h_rvec07[] = {
+STATIC CONST HALF h_rvec07[] = {
 	(HALF)0x25e6, (HALF)0x098d, (HALF)0xd2e5, (HALF)0x3992,
 	(HALF)0xb58c, (HALF)0x64f0, (HALF)0xd4dd, (HALF)0xcf18,
 	(HALF)0x6aef, (HALF)0x9d87, (HALF)0xed04, (HALF)0x7acc,
 	(HALF)0x9076, (HALF)0xbfbe, (HALF)0x14c7, (HALF)0x1ee0,
 	(HALF)0x522d, (HALF)0x0013
 };
-static CONST HALF h_nvec08[] = {
+STATIC CONST HALF h_nvec08[] = {
 	(HALF)0x2f11, (HALF)0x2674, (HALF)0xe66a, (HALF)0xbc42,
 	(HALF)0xd9f0, (HALF)0xb59c, (HALF)0xa6c2, (HALF)0x9ad4,
 	(HALF)0xd2f9, (HALF)0x5bdb, (HALF)0x1fed, (HALF)0xbdc9,
 	(HALF)0x9ce7, (HALF)0xf13c, (HALF)0x99b7, (HALF)0xeb46,
 	(HALF)0x6ca7, (HALF)0x4712, (HALF)0x58
 };
-static CONST HALF h_rvec08[] = {
+STATIC CONST HALF h_rvec08[] = {
 	(HALF)0xc674, (HALF)0x489d, (HALF)0x5f3a, (HALF)0xaae9,
 	(HALF)0xa929, (HALF)0xa35d, (HALF)0xb4b8, (HALF)0x5597,
 	(HALF)0xc947, (HALF)0x28e9, (HALF)0x4f9a, (HALF)0x3d34,
 	(HALF)0x61fa, (HALF)0xb7e6, (HALF)0x9116, (HALF)0xa326,
 	(HALF)0x16dc, (HALF)0x8530
 };
-static CONST HALF h_nvec09[] = {
+STATIC CONST HALF h_nvec09[] = {
 	(HALF)0xe3d1, (HALF)0xab27, (HALF)0x5db4, (HALF)0x1274,
 	(HALF)0xf951, (HALF)0xb980, (HALF)0x6b66, (HALF)0x62b1,
 	(HALF)0xce0d, (HALF)0x0fde, (HALF)0xc6fd, (HALF)0x6061,
@@ -1633,7 +1633,7 @@ static CONST HALF h_nvec09[] = {
 	(HALF)0x9238, (HALF)0x218d, (HALF)0x2fd3, (HALF)0x5232,
 	(HALF)0xe8be, (HALF)0x0039
 };
-static CONST HALF h_rvec09[] = {
+STATIC CONST HALF h_rvec09[] = {
 	(HALF)0xd20d, (HALF)0x7d4e, (HALF)0xf2b8, (HALF)0x601e,
 	(HALF)0xf959, (HALF)0x8e59, (HALF)0x5d9e, (HALF)0xedaa,
 	(HALF)0x89ba, (HALF)0x309a, (HALF)0x7d81, (HALF)0xe5ab,
@@ -1644,7 +1644,7 @@ static CONST HALF h_rvec09[] = {
 	(HALF)0x15bf, (HALF)0xbab9, (HALF)0x1e6b, (HALF)0xf8ad,
 	(HALF)0xb458
 };
-static CONST HALF h_nvec10[] = {
+STATIC CONST HALF h_nvec10[] = {
 	(HALF)0x4b89, (HALF)0xb7e6, (HALF)0xc363, (HALF)0xc3cd,
 	(HALF)0xc73c, (HALF)0x2ef9, (HALF)0xce22, (HALF)0x6092,
 	(HALF)0xe36c, (HALF)0x02ab, (HALF)0x9573, (HALF)0x08d4,
@@ -1655,7 +1655,7 @@ static CONST HALF h_nvec10[] = {
 	(HALF)0xf596, (HALF)0xc23e, (HALF)0x5666, (HALF)0xc905,
 	(HALF)0x2435, (HALF)0x025f
 };
-static CONST HALF h_rvec10[] = {
+STATIC CONST HALF h_rvec10[] = {
 	(HALF)0xc482, (HALF)0x94cf, (HALF)0x5ad4, (HALF)0x594f,
 	(HALF)0x2aee, (HALF)0x2344, (HALF)0x40ce, (HALF)0x145f,
 	(HALF)0x950d, (HALF)0x1baf, (HALF)0xf175, (HALF)0xadc4,
@@ -1666,7 +1666,7 @@ static CONST HALF h_rvec10[] = {
 	(HALF)0x1468, (HALF)0x1840, (HALF)0x0e0c, (HALF)0x47b2,
 	(HALF)0xbb7e, (HALF)0x0066
 };
-static CONST HALF h_nvec11[] = {
+STATIC CONST HALF h_nvec11[] = {
 	(HALF)0xe069, (HALF)0x546e, (HALF)0x530c, (HALF)0x2e1a,
 	(HALF)0xdab2, (HALF)0x2014, (HALF)0xcf52, (HALF)0xa729,
 	(HALF)0xe1a9, (HALF)0x920e, (HALF)0x7533, (HALF)0x68f2,
@@ -1677,7 +1677,7 @@ static CONST HALF h_nvec11[] = {
 	(HALF)0xd56b, (HALF)0x4217, (HALF)0xb309, (HALF)0x82bd,
 	(HALF)0x64de, (HALF)0x4978
 };
-static CONST HALF h_rvec11[] = {
+STATIC CONST HALF h_rvec11[] = {
 	(HALF)0x8b04, (HALF)0x56e3, (HALF)0xded3, (HALF)0x3a0a,
 	(HALF)0x88b1, (HALF)0x461d, (HALF)0x4d65, (HALF)0x9c09,
 	(HALF)0x3fed, (HALF)0xe533, (HALF)0x18fe, (HALF)0x34d9,
@@ -1688,7 +1688,7 @@ static CONST HALF h_rvec11[] = {
 	(HALF)0x4465, (HALF)0x264a, (HALF)0xe630, (HALF)0x1cb5,
 	(HALF)0x8488, (HALF)0x0086
 };
-static CONST HALF h_nvec12[] = {
+STATIC CONST HALF h_nvec12[] = {
 	(HALF)0x7b99, (HALF)0xf14c, (HALF)0xd151, (HALF)0x7f66,
 	(HALF)0xad2b, (HALF)0x87ef, (HALF)0xf098, (HALF)0x57d3,
 	(HALF)0x4165, (HALF)0xd653, (HALF)0xdd25, (HALF)0x812f,
@@ -1699,7 +1699,7 @@ static CONST HALF h_nvec12[] = {
 	(HALF)0x9116, (HALF)0x08b8, (HALF)0xb15f, (HALF)0xc0cc,
 	(HALF)0x2ab3, (HALF)0x5758, (HALF)0x34
 };
-static CONST HALF h_rvec12[] = {
+STATIC CONST HALF h_rvec12[] = {
 	(HALF)0xb4a0, (HALF)0xe207, (HALF)0xdd68, (HALF)0x5227,
 	(HALF)0xfbc4, (HALF)0x9488, (HALF)0x81aa, (HALF)0x6ed0,
 	(HALF)0x6fe5, (HALF)0x8e73, (HALF)0xc020, (HALF)0x3dd2,
@@ -1710,7 +1710,7 @@ static CONST HALF h_rvec12[] = {
 	(HALF)0xbabd, (HALF)0x5870, (HALF)0xed93, (HALF)0xf648,
 	(HALF)0x9bd1, (HALF)0xdf71
 };
-static CONST HALF h_nvec13[] = {
+STATIC CONST HALF h_nvec13[] = {
 	(HALF)0xfc49, (HALF)0x3314, (HALF)0x0032, (HALF)0xcca2,
 	(HALF)0x3420, (HALF)0x208e, (HALF)0x503a, (HALF)0x8aaa,
 	(HALF)0x63cc, (HALF)0xd79a, (HALF)0x7417, (HALF)0xb4ed,
@@ -1729,7 +1729,7 @@ static CONST HALF h_nvec13[] = {
 	(HALF)0xf734, (HALF)0x1b5a, (HALF)0x7dd2, (HALF)0x166b,
 	(HALF)0x7c19, (HALF)0x0151
 };
-static CONST HALF h_rvec13[] = {
+STATIC CONST HALF h_rvec13[] = {
 	(HALF)0x36f5, (HALF)0x6b77, (HALF)0xbfe4, (HALF)0x2407,
 	(HALF)0x2072, (HALF)0x965e, (HALF)0xcf3e, (HALF)0xcc26,
 	(HALF)0xb567, (HALF)0xa432, (HALF)0x07ab, (HALF)0x2ed0,
@@ -1748,7 +1748,7 @@ static CONST HALF h_rvec13[] = {
 	(HALF)0xfa64, (HALF)0x1263, (HALF)0x560d, (HALF)0x8e9a,
 	(HALF)0xd42e
 };
-static CONST HALF h_nvec14[] = {
+STATIC CONST HALF h_nvec14[] = {
 	(HALF)0xaf01, (HALF)0xc116, (HALF)0x8c0f, (HALF)0xbdef,
 	(HALF)0x9a1a, (HALF)0xc440, (HALF)0x185c, (HALF)0xacb3,
 	(HALF)0x925b, (HALF)0xb33f, (HALF)0x3005, (HALF)0xfee8,
@@ -1767,7 +1767,7 @@ static CONST HALF h_nvec14[] = {
 	(HALF)0xac07, (HALF)0x7479, (HALF)0xf4e8, (HALF)0x93c6,
 	(HALF)0xa00e, (HALF)0x5e56
 };
-static CONST HALF h_rvec14[] = {
+STATIC CONST HALF h_rvec14[] = {
 	(HALF)0xf190, (HALF)0x0ff9, (HALF)0xdb68, (HALF)0x47a4,
 	(HALF)0xc8ea, (HALF)0x913c, (HALF)0xb220, (HALF)0xb6b1,
 	(HALF)0xfbbb, (HALF)0x13ed, (HALF)0xf1c3, (HALF)0xa8f1,
@@ -1786,7 +1786,7 @@ static CONST HALF h_rvec14[] = {
 	(HALF)0xc5d0, (HALF)0x6ef0, (HALF)0x3509, (HALF)0xb673,
 	(HALF)0xaa7c, (HALF)0x00f7
 };
-static CONST HALF h_nvec15[] = {
+STATIC CONST HALF h_nvec15[] = {
 	(HALF)0x7079, (HALF)0xc8d9, (HALF)0x7597, (HALF)0x061e,
 	(HALF)0xc721, (HALF)0xf5d2, (HALF)0xc51f, (HALF)0x299b,
 	(HALF)0xc337, (HALF)0xffe6, (HALF)0x8624, (HALF)0x1979,
@@ -1805,7 +1805,7 @@ static CONST HALF h_nvec15[] = {
 	(HALF)0x6c17, (HALF)0x02c4, (HALF)0xbcdb, (HALF)0x9edf,
 	(HALF)0x840b, (HALF)0x97dd
 };
-static CONST HALF h_rvec15[] = {
+STATIC CONST HALF h_rvec15[] = {
 	(HALF)0x2110, (HALF)0x6c3e, (HALF)0x0aaa, (HALF)0x808f,
 	(HALF)0xb92e, (HALF)0xd98d, (HALF)0xbd43, (HALF)0x1e6a,
 	(HALF)0xb920, (HALF)0xf401, (HALF)0x0381, (HALF)0x9d3f,
@@ -1824,7 +1824,7 @@ static CONST HALF h_rvec15[] = {
 	(HALF)0x99f9, (HALF)0x69ab, (HALF)0xc758, (HALF)0x03b8,
 	(HALF)0x2207, (HALF)0x00b8
 };
-static CONST HALF h_nvec16[] = {
+STATIC CONST HALF h_nvec16[] = {
 	(HALF)0x46e1, (HALF)0xd843, (HALF)0x83f6, (HALF)0x1841,
 	(HALF)0xbd36, (HALF)0x2dc9, (HALF)0x57ac, (HALF)0x4ca8,
 	(HALF)0x828d, (HALF)0x96a5, (HALF)0x1c59, (HALF)0xed1f,
@@ -1843,7 +1843,7 @@ static CONST HALF h_nvec16[] = {
 	(HALF)0x84c3, (HALF)0xb56f, (HALF)0xbb12, (HALF)0xb82f,
 	(HALF)0x8549, (HALF)0x6e34, (HALF)0x45
 };
-static CONST HALF h_rvec16[] = {
+STATIC CONST HALF h_rvec16[] = {
 	(HALF)0x8830, (HALF)0x7b4e, (HALF)0x5db8, (HALF)0x7060, (HALF)0xe4a5,
 	(HALF)0xa1ab, (HALF)0xbe04, (HALF)0xa70f,
 	(HALF)0xa8f4, (HALF)0x2bcd, (HALF)0xda9a, (HALF)0xd29a,
@@ -1862,7 +1862,7 @@ static CONST HALF h_rvec16[] = {
 	(HALF)0x921a, (HALF)0x973e, (HALF)0x7a07, (HALF)0x9fb2,
 	(HALF)0xdcb1, (HALF)0xb0d7
 };
-static CONST HALF h_nvec17[] = {
+STATIC CONST HALF h_nvec17[] = {
 	(HALF)0x2051, (HALF)0x72b7, (HALF)0x4ebf, (HALF)0xedc2,
 	(HALF)0xa8d1, (HALF)0xe970, (HALF)0xb150, (HALF)0x66c9,
 	(HALF)0x27f7, (HALF)0xcbb9, (HALF)0xffd9, (HALF)0xb574,
@@ -1897,7 +1897,7 @@ static CONST HALF h_nvec17[] = {
 	(HALF)0x040b, (HALF)0xffa3, (HALF)0xeac0, (HALF)0x813a,
 	(HALF)0x6177
 };
-static CONST HALF h_rvec17[] = {
+STATIC CONST HALF h_rvec17[] = {
 	(HALF)0x1dac, (HALF)0x22b4, (HALF)0x8005, (HALF)0xd625,
 	(HALF)0xe0cb, (HALF)0x2aa1, (HALF)0x47b5, (HALF)0x45d1,
 	(HALF)0x46d9, (HALF)0xbf5c, (HALF)0xdadf, (HALF)0x14c9,
@@ -1932,7 +1932,7 @@ static CONST HALF h_rvec17[] = {
 	(HALF)0xadf1, (HALF)0xc3b8, (HALF)0xaf3b, (HALF)0x0b6e,
 	(HALF)0x5372
 };
-static CONST HALF h_nvec18[] = {
+STATIC CONST HALF h_nvec18[] = {
 	(HALF)0x8629, (HALF)0xc8b7, (HALF)0x1b18, (HALF)0x4135, (HALF)0x4ed8,
 	(HALF)0x28ad, (HALF)0x7df1, (HALF)0xc96f,
 	(HALF)0xc931, (HALF)0x7cd3, (HALF)0x036a, (HALF)0x0f23,
@@ -1967,7 +1967,7 @@ static CONST HALF h_nvec18[] = {
 	(HALF)0xb724, (HALF)0xf07c, (HALF)0xb42a, (HALF)0xfb61,
 	(HALF)0x2a38, (HALF)0x068f
 };
-static CONST HALF h_rvec18[] = {
+STATIC CONST HALF h_rvec18[] = {
 	(HALF)0x3c63, (HALF)0x35ea, (HALF)0xef97, (HALF)0x8df2,
 	(HALF)0xafb7, (HALF)0xa2b3, (HALF)0x58f6, (HALF)0x1791,
 	(HALF)0x0dba, (HALF)0x0492, (HALF)0x077e, (HALF)0xf333,
@@ -2002,7 +2002,7 @@ static CONST HALF h_rvec18[] = {
 	(HALF)0xcda8, (HALF)0xf0d5, (HALF)0xc6c3, (HALF)0x1f1a,
 	(HALF)0x5e92, (HALF)0x0473
 };
-static CONST HALF h_nvec19[] = {
+STATIC CONST HALF h_nvec19[] = {
 	(HALF)0x9a79, (HALF)0x6b65, (HALF)0xc12d, (HALF)0x0239,
 	(HALF)0xdf49, (HALF)0xd204, (HALF)0xe0c7, (HALF)0x1d4a,
 	(HALF)0xf000, (HALF)0x099b, (HALF)0xade8, (HALF)0x6435,
@@ -2038,7 +2038,7 @@ static CONST HALF h_nvec19[] = {
 	(HALF)0x8b25, (HALF)0xd678, (HALF)0xb9e8, (HALF)0xb23b,
 	(HALF)0x0d7a, (HALF)0x0023
 };
-static CONST HALF h_rvec19[] = {
+STATIC CONST HALF h_rvec19[] = {
 	(HALF)0xf473, (HALF)0x698e, (HALF)0xa5b7, (HALF)0x3d53,
 	(HALF)0x8319, (HALF)0x0644, (HALF)0x4445, (HALF)0xd9ad,
 	(HALF)0xdaa0, (HALF)0x6967, (HALF)0x6240, (HALF)0xa14c,
@@ -2073,7 +2073,7 @@ static CONST HALF h_rvec19[] = {
 	(HALF)0x18b4, (HALF)0x9995, (HALF)0x605b, (HALF)0x2196,
 	(HALF)0x1798, (HALF)0xe4fc, (HALF)0xe245, (HALF)0x5f21, (HALF)0xf172, (HALF)0x0008
 };
-static CONST HALF h_nvec20[] = {
+STATIC CONST HALF h_nvec20[] = {
 	(HALF)0xd081, (HALF)0xc3c1, (HALF)0x2fce, (HALF)0x4d26,
 	(HALF)0xcc91, (HALF)0x8765, (HALF)0x7f7c, (HALF)0xf372,
 	(HALF)0x4bbc, (HALF)0xabba, (HALF)0x5801, (HALF)0xe098,
@@ -2109,7 +2109,7 @@ static CONST HALF h_nvec20[] = {
 	(HALF)0x63a0, (HALF)0xdddc, (HALF)0xe890, (HALF)0x3322,
 	(HALF)0xd8b1, (HALF)0x20e0, (HALF)0xd2b8, (HALF)0x004f
 };
-static CONST HALF h_rvec20[] = {
+STATIC CONST HALF h_rvec20[] = {
 	(HALF)0xbd1a, (HALF)0xa048, (HALF)0xdc7b, (HALF)0x95ab,
 	(HALF)0x7cf8, (HALF)0x98f4, (HALF)0xc98d, (HALF)0x126a,
 	(HALF)0x85fd, (HALF)0xaebf, (HALF)0x580f, (HALF)0x5650,
@@ -2151,7 +2151,7 @@ static CONST HALF h_rvec20[] = {
 /*
  * NOTE: set n is found in random_pregen[n-1]
  */
-static RANDOM random_pregen[BLUM_PREGEN] = {
+STATIC RANDOM random_pregen[BLUM_PREGEN] = {
     {1, 0, 7, (HALF)0, (HALF)0x07f,
      {(HALF *)h_nvec01, sizeof(h_nvec01)/sizeof(HALF), 0},
      {(HALF *)h_rvec01, sizeof(h_rvec01)/sizeof(HALF), 0}},
@@ -2218,7 +2218,7 @@ static RANDOM random_pregen[BLUM_PREGEN] = {
 /*
  * forward static declarations
  */
-static void zfree_random(ZVALUE z);
+S_FUNC void zfree_random(ZVALUE z);
 
 
 /*
@@ -3171,7 +3171,7 @@ random_libcalc_cleanup(void)
  * given:
  *	z	the ZVALUE to zfree(z) if not pointing to static data
  */
-static void
+S_FUNC void
 zfree_random(ZVALUE z)
 {
 	if (z.v != NULL &&

@@ -1,7 +1,7 @@
 /*
  * zprime - rapid small prime routines
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: zprime.c,v 29.3 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: zprime.c,v 29.4 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zprime.c,v $
  *
  * Under source code control:	1994/05/29 04:34:36
@@ -49,7 +49,7 @@
 /*
  * product of primes that fit into a long
  */
-static CONST FULL pfact_tbl[MAX_PFACT_VAL+1] = {
+STATIC CONST FULL pfact_tbl[MAX_PFACT_VAL+1] = {
     1, 1, 2, 6, 6, 30, 30, 210, 210, 210, 210, 2310, 2310, 30030, 30030,
     30030, 30030, 510510, 510510, 9699690, 9699690, 9699690, 9699690,
     223092870, 223092870, 223092870, 223092870, 223092870, 223092870
@@ -70,7 +70,7 @@ static CONST FULL pfact_tbl[MAX_PFACT_VAL+1] = {
  *	topbit[0] == 0 by convention
  *	topbit[x] gives the highest 1 bit of x
  */
-static CONST unsigned char topbit[256] = {
+STATIC CONST unsigned char topbit[256] = {
     0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,
     4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -96,7 +96,7 @@ static CONST unsigned char topbit[256] = {
  *
  * We have enough table entries for a FULL that is 64 bits long.
  */
-static CONST FULL isqrt_pow2[64] = {
+STATIC CONST FULL isqrt_pow2[64] = {
     1, 1, 2, 2, 4, 5, 8, 11,					/*  0 ..  7 */
     16, 22, 32, 45, 64, 90, 128, 181,				/*  8 .. 15 */
     256, 362, 512, 724, 1024, 1448, 2048, 2896,			/* 16 .. 23 */
@@ -114,9 +114,9 @@ static CONST FULL isqrt_pow2[64] = {
 /*
  * static functions
  */
-static FULL fsqrt(FULL v);		/* quick square root of v */
-static long pix(FULL x);		/* pi of x */
-static FULL small_factor(ZVALUE n, FULL limit);	  /* factor or 0 */
+S_FUNC FULL fsqrt(FULL v);		/* quick square root of v */
+S_FUNC long pix(FULL x);		/* pi of x */
+S_FUNC FULL small_factor(ZVALUE n, FULL limit);	  /* factor or 0 */
 
 
 /*
@@ -434,7 +434,7 @@ zpix(ZVALUE z)
  *	-1	error
  *	>=0	number of primes <= x
  */
-static long
+S_FUNC long
 pix(FULL x)
 {
 	long count;			/* pi(x) */
@@ -588,7 +588,7 @@ zfactor(ZVALUE n, ZVALUE zlimit, ZVALUE *res)
  *	0	no prime <= the limit was found
  *	!= 0	the smallest prime factor
  */
-static FULL
+S_FUNC FULL
 small_factor(ZVALUE z, FULL limit)
 {
 	FULL top;			/* current max factor level */
@@ -1588,7 +1588,7 @@ zlcmfact(ZVALUE z, ZVALUE *dest)
  * given:
  *	x		compute the integer square root of x
  */
-static FULL
+S_FUNC FULL
 fsqrt(FULL x)
 {
 	FULL y;		/* (FULL)temporary value */

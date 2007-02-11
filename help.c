@@ -1,7 +1,7 @@
 /*
  * help - display help for calc
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: help.c,v 29.9 2007/02/07 00:37:52 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: help.c,v 29.10 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/help.c,v $
  *
  * Under source code control:	1997/09/14 10:58:30
@@ -51,7 +51,7 @@
 /*
  * some help topics are symbols, so we alias them to nice filenames
  */
-static struct help_alias {
+STATIC struct help_alias {
 	char *topic;
 	char *filename;
 } halias[] = {
@@ -89,7 +89,7 @@ static struct help_alias {
 /*
  * external values
  */
-extern char *pager;		/* $PAGER or default */
+EXTERN char *pager;		/* $PAGER or default */
 
 
 /*
@@ -104,7 +104,7 @@ extern char *pager;		/* $PAGER or default */
  * given:
  *	stream	open file stream of the file to send to the pager
  */
-static void
+S_FUNC void
 page_file(FILE *stream)
 {
 	FILE *cmd;		/* pager command */

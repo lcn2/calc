@@ -22,8 +22,8 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: shs1.c,v 29.3 2004/02/23 08:15:52 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: shs1.c,v 29.4 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/shs1.c,v $
  *
  * This file is not covered under version 2.1 of the GNU LGPL.
@@ -102,23 +102,23 @@
     (e += LEFT_ROT(a,5) + f(b,c,d) + k + data, b = LEFT_ROT(b,30))
 
 /* forward declarations */
-static void shs1Init(HASH*);
-static void shs1Transform(USB32*, USB32*);
-static void shs1Update(HASH*, USB8*, USB32);
-static void shs1Final(HASH*);
-static void shs1_chkpt(HASH*);
-static void shs1_note(int, HASH*);
-static void shs1_type(int, HASH*);
+S_FUNC void shs1Init(HASH*);
+S_FUNC void shs1Transform(USB32*, USB32*);
+S_FUNC void shs1Update(HASH*, USB8*, USB32);
+S_FUNC void shs1Final(HASH*);
+S_FUNC void shs1_chkpt(HASH*);
+S_FUNC void shs1_note(int, HASH*);
+S_FUNC void shs1_type(int, HASH*);
 void shs1_init_state(HASH*);
-static ZVALUE shs1_final_state(HASH*);
-static int shs1_cmp(HASH*, HASH*);
-static void shs1_print(HASH*);
+S_FUNC ZVALUE shs1_final_state(HASH*);
+S_FUNC int shs1_cmp(HASH*, HASH*);
+S_FUNC void shs1_print(HASH*);
 
 
 /*
  * shs1Init - initialize the SHS1 state
  */
-static void
+S_FUNC void
 shs1Init(HASH *state)
 {
 	SHS1_INFO *dig = &state->h_union.h_shs1;  /* digest state */
@@ -144,7 +144,7 @@ shs1Init(HASH *state)
  * It may be necessary to split it into sections, eg based on the four
  * subrounds.  One may also want to roll each subround into a loop.
  */
-static void
+S_FUNC void
 shs1Transform(USB32 *digest, USB32 *W)
 {
 	USB32 A, B, C, D, E;		/* Local vars */
@@ -406,7 +406,7 @@ shs1Final(HASH *state)
  * This function will ensure that the the hash chunk buffer is empty.
  * Any partially hashed data will be padded out with 0's and hashed.
  */
-static void
+S_FUNC void
 shs1_chkpt(HASH *state)
 {
 	SHS1_INFO *dig = &state->h_union.h_shs1;	/* digest state */
@@ -451,7 +451,7 @@ shs1_chkpt(HASH *state)
  * Types include negative values, complex values, division, zero numeric
  * and array of HALFs.
  */
-static void
+S_FUNC void
 shs1_note(int special, HASH *state)
 {
 	SHS1_INFO *dig = &state->h_union.h_shs1;	/* digest state */
@@ -482,7 +482,7 @@ shs1_note(int special, HASH *state)
  * or not.  We also do nothing with V_STR so that a hash of a string
  * will produce the same value as the standard hash function.
  */
-static void
+S_FUNC void
 shs1_type(int type, HASH *state)
 {
 	SHS1_INFO *dig = &state->h_union.h_shs1;	/* digest state */
@@ -549,7 +549,7 @@ shs1_init_state(HASH *state)
  * returns:
  *	a ZVALUE representing the state
  */
-static ZVALUE
+S_FUNC ZVALUE
 shs1_final_state(HASH *state)
 {
 	SHS1_INFO *dig = &state->h_union.h_shs1;	/* digest state */
@@ -613,7 +613,7 @@ shs1_final_state(HASH *state)
  *	TRUE => hash states are different
  *	FALSE => hash states are the same
  */
-static int
+S_FUNC int
 shs1_cmp(HASH *a, HASH *b)
 {
 	/*
@@ -672,7 +672,7 @@ shs1_cmp(HASH *a, HASH *b)
  * given:
  *	state	the hash state to print
  */
-static void
+S_FUNC void
 shs1_print(HASH *state)
 {
 	/*

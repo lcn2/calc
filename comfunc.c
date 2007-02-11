@@ -1,7 +1,7 @@
 /*
  * comfunc - extended precision complex arithmetic non-primitive routines
  *
- * Copyright (C) 1999  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: comfunc.c,v 29.6 2006/05/20 08:43:55 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: comfunc.c,v 29.7 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/comfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -36,10 +36,10 @@
 /*
  * cache the natural logarithm of 10
  */
-static COMPLEX *cln_10 = NULL;
-static NUMBER *cln_10_epsilon = NULL;
-static NUMBER _q10_ = { { _tenval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
-static NUMBER _q0_ = { { _zeroval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
+STATIC COMPLEX *cln_10 = NULL;
+STATIC NUMBER *cln_10_epsilon = NULL;
+STATIC NUMBER _q10_ = { { _tenval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
+STATIC NUMBER _q0_ = { { _zeroval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
 COMPLEX _cten_ = { &_q10_, &_q0_, 1 };
 
 

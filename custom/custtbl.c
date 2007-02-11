@@ -1,7 +1,7 @@
 /*
  * custtbl - custom interface table
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: custtbl.c,v 29.4 2005/02/05 06:16:19 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: custtbl.c,v 29.5 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/custtbl.c,v $
  *
  * Under source code control:	1997/03/09 02:28:54
@@ -47,16 +47,16 @@
  *
  * Declare custom functions as follows:
  *
- *	extern VALUE c_xyz(char*, int, VALUE**);
+ *	E_FUNC VALUE c_xyz(char*, int, VALUE**);
  *
  * We suggest that you sort the entries below by name.
  */
-extern VALUE c_argv(char*, int, VALUE**);
-extern VALUE c_devnull(char*, int, VALUE**);
-extern VALUE c_help(char*, int, VALUE**);
-extern VALUE c_sysinfo(char*, int, VALUE**);
-extern VALUE c_pzasusb8(char*, int, VALUE**);
-extern VALUE c_pmodm127(char*, int, VALUE**);
+E_FUNC VALUE c_argv(char*, int, VALUE**);
+E_FUNC VALUE c_devnull(char*, int, VALUE**);
+E_FUNC VALUE c_help(char*, int, VALUE**);
+E_FUNC VALUE c_sysinfo(char*, int, VALUE**);
+E_FUNC VALUE c_pzasusb8(char*, int, VALUE**);
+E_FUNC VALUE c_pmodm127(char*, int, VALUE**);
 
 
 #endif /* CUSTOM */

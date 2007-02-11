@@ -1,7 +1,7 @@
 /*
  * custom - interface for custom software and hardware interfaces
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: custom.h,v 29.3 2004/02/25 23:54:40 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: custom.h,v 29.4 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/custom.h,v $
  *
  * Under source code control:	1997/03/03 04:53:08
@@ -71,10 +71,10 @@ struct custom {
  *
  * These are the required interfaces.  The dummy.c stubs these interfaces too.
  */
-extern VALUE custom(char*, int, VALUE**);	/* master custom interface */
-extern BOOL allow_custom;		/* TRUE => custom builtins allowed */
-extern void showcustom(void);		/* print custom functions */
-extern void customhelp(char *);		/* direct custom help */
-extern CONST struct custom cust[];	/* custom interface table */
+E_FUNC VALUE custom(char*, int, VALUE**);	/* master custom interface */
+EXTERN BOOL allow_custom;		/* TRUE => custom builtins allowed */
+E_FUNC void showcustom(void);		/* print custom functions */
+E_FUNC void customhelp(char *);		/* direct custom help */
+EXTERN CONST struct custom cust[];	/* custom interface table */
 
 #endif /* !CUSTOM_H */

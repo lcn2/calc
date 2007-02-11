@@ -12,8 +12,8 @@ This file is Copyrighted
 	Everyone is permitted to copy and distribute verbatim copies
 	of this license document, but changing it is not allowed.
 
-    # @(#) $Revision: 29.8 $
-    # @(#) $Id: COPYING,v 29.8 2006/05/01 19:16:57 chongo Exp $
+    # @(#) $Revision: 29.9 $
+    # @(#) $Id: COPYING,v 29.9 2007/02/11 10:16:31 chongo Exp $
     # @(#) $Source: /usr/local/src/cmd/calc/RCS/COPYING,v $
 
 =-=
@@ -182,9 +182,11 @@ Calc copyrights and exception files
     top of this file.  It is important to note that you may distribute
     verbatim copies of this file but you may not modify this file.
 
-    Some of these exception files are in the public domain.  Other
-    exception files have non-LGPL Copyrights.  Other files are under a
-    LGPL Copyright but have different authors.
+    Some of these exception files are in the public domain.  The md5.c
+    and md5.h files were "derived from the RSA Data Security, Inc. MD5
+    Message-Digest Algorithm" and are under a copyright that allows these
+    two files to be freely used and distributed.  Other files are under
+    the LGPL but have different authors that those listed above.
 
     In all cases one may use and distribute these exception files freely.
     And because one may freely distribute the LGPL covered files, the

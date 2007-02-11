@@ -1,7 +1,7 @@
 /*
  * value - definitions of general values  and related routines used by calc
  *
- * Copyright (C) 1999-2006  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.11 $
- * @(#) $Id: value.h,v 29.11 2006/08/20 15:01:30 chongo Exp $
+ * @(#) $Revision: 29.12 $
+ * @(#) $Id: value.h,v 29.12 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -33,7 +33,7 @@
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
-# include "win32dll.h"
+# include "decl.h"
 # include "cmath.h"
 # include "config.h"
 # include "shs.h"
@@ -43,7 +43,7 @@
 # include "nametype.h"
 # include "string.h"
 #else
-# include <calc/win32dll.h>
+# include <calc/decl.h>
 # include <calc/cmath.h>
 # include <calc/config.h>
 # include <calc/shs.h>
@@ -201,60 +201,60 @@ struct value {
 /*
  * value functions
  */
-extern DLL void freevalue(VALUE *vp);
-extern DLL void copyvalue(VALUE *vp, VALUE *vres);
-extern DLL void negvalue(VALUE *vp, VALUE *vres);
-extern DLL void addvalue(VALUE *v1, VALUE *v2, VALUE *vres);
-extern DLL void subvalue(VALUE *v1, VALUE *v2, VALUE *vres);
-extern DLL void mulvalue(VALUE *v1, VALUE *v2, VALUE *vres);
-extern DLL void orvalue(VALUE *v1, VALUE *v2, VALUE *vres);
-extern DLL void andvalue(VALUE *v1, VALUE *v2, VALUE *vres);
-extern DLL void compvalue(VALUE *vp, VALUE *vres);
-extern DLL void xorvalue(VALUE *v1, VALUE *v2, VALUE *vres);
-extern DLL void squarevalue(VALUE *vp, VALUE *vres);
-extern DLL void invertvalue(VALUE *vp, VALUE *vres);
-extern DLL void roundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
-extern DLL void broundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
-extern DLL void setminusvalue(VALUE *, VALUE *, VALUE *);
-extern DLL void backslashvalue(VALUE *, VALUE *);
-extern DLL void contentvalue(VALUE *, VALUE *);
-extern DLL void hashopvalue(VALUE *, VALUE *, VALUE *);
-extern DLL void apprvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
-extern DLL void intvalue(VALUE *vp, VALUE *vres);
-extern DLL void fracvalue(VALUE *vp, VALUE *vres);
-extern DLL void incvalue(VALUE *vp, VALUE *vres);
-extern DLL void decvalue(VALUE *vp, VALUE *vres);
-extern DLL void conjvalue(VALUE *vp, VALUE *vres);
-extern DLL void sqrtvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
-extern DLL void rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
-extern DLL void absvalue(VALUE *v1, VALUE *v2, VALUE *vres);
-extern DLL void normvalue(VALUE *vp, VALUE *vres);
-extern DLL void shiftvalue(VALUE *v1, VALUE *v2, BOOL rightshift, VALUE *vres);
-extern DLL void scalevalue(VALUE *v1, VALUE *v2, VALUE *vres);
-extern DLL void powivalue(VALUE *v1, VALUE *v2, VALUE *vres);
-extern DLL void powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
-extern DLL void divvalue(VALUE *v1, VALUE *v2, VALUE *vres);
-extern DLL void quovalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
-extern DLL void modvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
-extern DLL BOOL testvalue(VALUE *vp);
-extern DLL BOOL comparevalue(VALUE *v1, VALUE *v2);
-extern DLL BOOL acceptvalue(VALUE *v1, VALUE *v2);
-extern DLL void relvalue(VALUE *v1, VALUE *v2, VALUE *vres);
-extern DLL void sgnvalue(VALUE *vp, VALUE *vres);
-extern DLL QCKHASH hashvalue(VALUE *vp, QCKHASH val);
-extern DLL void printvalue(VALUE *vp, int flags);
-extern DLL void printestr(VALUE *vp);
-extern DLL BOOL precvalue(VALUE *v1, VALUE *v2);
-extern DLL VALUE error_value(int e);
-extern DLL int set_errno(int e);
-extern DLL int set_errcount(int e);
-extern DLL long countlistitems(LIST *lp);
-extern DLL void addlistitems(LIST *lp, VALUE *vres);
-extern DLL void addlistinv(LIST *lp, VALUE *vres);
-extern DLL void copy2octet(VALUE *, OCTET *);
-extern DLL int copystod(VALUE *, long, long, VALUE *, long);
-extern DLL void protecttodepth(VALUE *, int, int);
-extern DLL void set_update(int);
+E_FUNC void freevalue(VALUE *vp);
+E_FUNC void copyvalue(VALUE *vp, VALUE *vres);
+E_FUNC void negvalue(VALUE *vp, VALUE *vres);
+E_FUNC void addvalue(VALUE *v1, VALUE *v2, VALUE *vres);
+E_FUNC void subvalue(VALUE *v1, VALUE *v2, VALUE *vres);
+E_FUNC void mulvalue(VALUE *v1, VALUE *v2, VALUE *vres);
+E_FUNC void orvalue(VALUE *v1, VALUE *v2, VALUE *vres);
+E_FUNC void andvalue(VALUE *v1, VALUE *v2, VALUE *vres);
+E_FUNC void compvalue(VALUE *vp, VALUE *vres);
+E_FUNC void xorvalue(VALUE *v1, VALUE *v2, VALUE *vres);
+E_FUNC void squarevalue(VALUE *vp, VALUE *vres);
+E_FUNC void invertvalue(VALUE *vp, VALUE *vres);
+E_FUNC void roundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
+E_FUNC void broundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
+E_FUNC void setminusvalue(VALUE *, VALUE *, VALUE *);
+E_FUNC void backslashvalue(VALUE *, VALUE *);
+E_FUNC void contentvalue(VALUE *, VALUE *);
+E_FUNC void hashopvalue(VALUE *, VALUE *, VALUE *);
+E_FUNC void apprvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
+E_FUNC void intvalue(VALUE *vp, VALUE *vres);
+E_FUNC void fracvalue(VALUE *vp, VALUE *vres);
+E_FUNC void incvalue(VALUE *vp, VALUE *vres);
+E_FUNC void decvalue(VALUE *vp, VALUE *vres);
+E_FUNC void conjvalue(VALUE *vp, VALUE *vres);
+E_FUNC void sqrtvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
+E_FUNC void rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
+E_FUNC void absvalue(VALUE *v1, VALUE *v2, VALUE *vres);
+E_FUNC void normvalue(VALUE *vp, VALUE *vres);
+E_FUNC void shiftvalue(VALUE *v1, VALUE *v2, BOOL rightshift, VALUE *vres);
+E_FUNC void scalevalue(VALUE *v1, VALUE *v2, VALUE *vres);
+E_FUNC void powivalue(VALUE *v1, VALUE *v2, VALUE *vres);
+E_FUNC void powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
+E_FUNC void divvalue(VALUE *v1, VALUE *v2, VALUE *vres);
+E_FUNC void quovalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
+E_FUNC void modvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
+E_FUNC BOOL testvalue(VALUE *vp);
+E_FUNC BOOL comparevalue(VALUE *v1, VALUE *v2);
+E_FUNC BOOL acceptvalue(VALUE *v1, VALUE *v2);
+E_FUNC void relvalue(VALUE *v1, VALUE *v2, VALUE *vres);
+E_FUNC void sgnvalue(VALUE *vp, VALUE *vres);
+E_FUNC QCKHASH hashvalue(VALUE *vp, QCKHASH val);
+E_FUNC void printvalue(VALUE *vp, int flags);
+E_FUNC void printestr(VALUE *vp);
+E_FUNC BOOL precvalue(VALUE *v1, VALUE *v2);
+E_FUNC VALUE error_value(int e);
+E_FUNC int set_errno(int e);
+E_FUNC int set_errcount(int e);
+E_FUNC long countlistitems(LIST *lp);
+E_FUNC void addlistitems(LIST *lp, VALUE *vres);
+E_FUNC void addlistinv(LIST *lp, VALUE *vres);
+E_FUNC void copy2octet(VALUE *, OCTET *);
+E_FUNC int copystod(VALUE *, long, long, VALUE *, long);
+E_FUNC void protecttodepth(VALUE *, int, int);
+E_FUNC void set_update(int);
 
 
 /*
@@ -271,44 +271,44 @@ struct matrix {
 #define matsize(n) (sizeof(MATRIX) - sizeof(VALUE) + ((n) * sizeof(VALUE)))
 
 
-extern DLL MATRIX *matadd(MATRIX *m1, MATRIX *m2);
-extern DLL MATRIX *matsub(MATRIX *m1, MATRIX *m2);
-extern DLL MATRIX *matmul(MATRIX *m1, MATRIX *m2);
-extern DLL MATRIX *matneg(MATRIX *m);
-extern DLL MATRIX *matalloc(long size);
-extern DLL MATRIX *matcopy(MATRIX *m);
-extern DLL MATRIX *matinit(MATRIX *m, VALUE *v1, VALUE *v2);
-extern DLL MATRIX *matsquare(MATRIX *m);
-extern DLL MATRIX *matinv(MATRIX *m);
-extern DLL MATRIX *matscale(MATRIX *m, long n);
-extern DLL MATRIX *matshift(MATRIX *m, long n);
-extern DLL MATRIX *matmulval(MATRIX *m, VALUE *vp);
-extern DLL MATRIX *matpowi(MATRIX *m, NUMBER *q);
-extern DLL MATRIX *matconj(MATRIX *m);
-extern DLL MATRIX *matquoval(MATRIX *m, VALUE *vp, VALUE *v3);
-extern DLL MATRIX *matmodval(MATRIX *m, VALUE *vp, VALUE *v3);
-extern DLL MATRIX *matint(MATRIX *m);
-extern DLL MATRIX *matfrac(MATRIX *m);
-extern DLL MATRIX *matappr(MATRIX *m, VALUE *v2, VALUE *v3);
-extern DLL VALUE mattrace(MATRIX *m);
-extern DLL MATRIX *mattrans(MATRIX *m);
-extern DLL MATRIX *matcross(MATRIX *m1, MATRIX *m2);
-extern DLL BOOL mattest(MATRIX *m);
-extern DLL void matsum(MATRIX *m, VALUE *vres);
-extern DLL BOOL matcmp(MATRIX *m1, MATRIX *m2);
-extern DLL int matsearch(MATRIX *m, VALUE *vp, long start, long end, ZVALUE *index);
-extern DLL int matrsearch(MATRIX *m, VALUE *vp, long start, long end, ZVALUE *index);
-extern DLL VALUE matdet(MATRIX *m);
-extern DLL VALUE matdot(MATRIX *m1, MATRIX *m2);
-extern DLL void matfill(MATRIX *m, VALUE *v1, VALUE *v2);
-extern DLL void matfree(MATRIX *m);
-extern DLL void matprint(MATRIX *m, long max_print);
-extern DLL VALUE *matindex(MATRIX *mp, BOOL create, long dim, VALUE *indices);
-extern DLL void matreverse(MATRIX *m);
-extern DLL void matsort(MATRIX *m);
-extern DLL BOOL matisident(MATRIX *m);
-extern DLL MATRIX *matround(MATRIX *m, VALUE *v2, VALUE *v3);
-extern DLL MATRIX *matbround(MATRIX *m, VALUE *v2, VALUE *v3);
+E_FUNC MATRIX *matadd(MATRIX *m1, MATRIX *m2);
+E_FUNC MATRIX *matsub(MATRIX *m1, MATRIX *m2);
+E_FUNC MATRIX *matmul(MATRIX *m1, MATRIX *m2);
+E_FUNC MATRIX *matneg(MATRIX *m);
+E_FUNC MATRIX *matalloc(long size);
+E_FUNC MATRIX *matcopy(MATRIX *m);
+E_FUNC MATRIX *matinit(MATRIX *m, VALUE *v1, VALUE *v2);
+E_FUNC MATRIX *matsquare(MATRIX *m);
+E_FUNC MATRIX *matinv(MATRIX *m);
+E_FUNC MATRIX *matscale(MATRIX *m, long n);
+E_FUNC MATRIX *matshift(MATRIX *m, long n);
+E_FUNC MATRIX *matmulval(MATRIX *m, VALUE *vp);
+E_FUNC MATRIX *matpowi(MATRIX *m, NUMBER *q);
+E_FUNC MATRIX *matconj(MATRIX *m);
+E_FUNC MATRIX *matquoval(MATRIX *m, VALUE *vp, VALUE *v3);
+E_FUNC MATRIX *matmodval(MATRIX *m, VALUE *vp, VALUE *v3);
+E_FUNC MATRIX *matint(MATRIX *m);
+E_FUNC MATRIX *matfrac(MATRIX *m);
+E_FUNC MATRIX *matappr(MATRIX *m, VALUE *v2, VALUE *v3);
+E_FUNC VALUE mattrace(MATRIX *m);
+E_FUNC MATRIX *mattrans(MATRIX *m);
+E_FUNC MATRIX *matcross(MATRIX *m1, MATRIX *m2);
+E_FUNC BOOL mattest(MATRIX *m);
+E_FUNC void matsum(MATRIX *m, VALUE *vres);
+E_FUNC BOOL matcmp(MATRIX *m1, MATRIX *m2);
+E_FUNC int matsearch(MATRIX *m, VALUE *vp, long start, long end, ZVALUE *index);
+E_FUNC int matrsearch(MATRIX *m, VALUE *vp, long start, long end, ZVALUE *index);
+E_FUNC VALUE matdet(MATRIX *m);
+E_FUNC VALUE matdot(MATRIX *m1, MATRIX *m2);
+E_FUNC void matfill(MATRIX *m, VALUE *v1, VALUE *v2);
+E_FUNC void matfree(MATRIX *m);
+E_FUNC void matprint(MATRIX *m, long max_print);
+E_FUNC VALUE *matindex(MATRIX *mp, BOOL create, long dim, VALUE *indices);
+E_FUNC void matreverse(MATRIX *m);
+E_FUNC void matsort(MATRIX *m);
+E_FUNC BOOL matisident(MATRIX *m);
+E_FUNC MATRIX *matround(MATRIX *m, VALUE *v2, VALUE *v3);
+E_FUNC MATRIX *matbround(MATRIX *m, VALUE *v2, VALUE *v3);
 
 
 /*
@@ -335,32 +335,32 @@ struct list {
 };
 
 
-extern DLL void insertlistfirst(LIST *lp, VALUE *vp);
-extern DLL void insertlistlast(LIST *lp, VALUE *vp);
-extern DLL void insertlistmiddle(LIST *lp, long index, VALUE *vp);
-extern DLL void removelistfirst(LIST *lp, VALUE *vp);
-extern DLL void removelistlast(LIST *lp, VALUE *vp);
-extern DLL void removelistmiddle(LIST *lp, long index, VALUE *vp);
-extern DLL void listfree(LIST *lp);
-extern DLL void listprint(LIST *lp, long max_print);
-extern DLL int listsearch(LIST *lp, VALUE *vp, long start, long end, ZVALUE *index);
-extern DLL int listrsearch(LIST *lp, VALUE *vp, long start, long end, ZVALUE *index);
-extern DLL BOOL listcmp(LIST *lp1, LIST *lp2);
-extern DLL VALUE *listfindex(LIST *lp, long index);
-extern DLL LIST *listalloc(void);
-extern DLL LIST *listcopy(LIST *lp);
-extern DLL void listreverse(LIST *lp);
-extern DLL void listsort(LIST *lp);
-extern DLL LIST *listappr(LIST *lp, VALUE *v2, VALUE *v3);
-extern DLL LIST *listround(LIST *m, VALUE *v2, VALUE *v3);
-extern DLL LIST *listbround(LIST *m, VALUE *v2, VALUE *v3);
-extern DLL LIST *listquo(LIST *lp, VALUE *v2, VALUE *v3);
-extern DLL LIST *listmod(LIST *lp, VALUE *v2, VALUE *v3);
-extern DLL BOOL evp(LISTELEM *cp, LISTELEM *x, VALUE *vres);
-extern DLL BOOL evalpoly(LIST *clist, LISTELEM *x, VALUE *vres);
-extern DLL void insertitems(LIST *lp1, LIST *lp2);
-extern DLL LISTELEM *listelement(LIST *, long);
-extern DLL LIST *listsegment(LIST *, long, long);
+E_FUNC void insertlistfirst(LIST *lp, VALUE *vp);
+E_FUNC void insertlistlast(LIST *lp, VALUE *vp);
+E_FUNC void insertlistmiddle(LIST *lp, long index, VALUE *vp);
+E_FUNC void removelistfirst(LIST *lp, VALUE *vp);
+E_FUNC void removelistlast(LIST *lp, VALUE *vp);
+E_FUNC void removelistmiddle(LIST *lp, long index, VALUE *vp);
+E_FUNC void listfree(LIST *lp);
+E_FUNC void listprint(LIST *lp, long max_print);
+E_FUNC int listsearch(LIST *lp, VALUE *vp, long start, long end, ZVALUE *index);
+E_FUNC int listrsearch(LIST *lp, VALUE *vp, long start, long end, ZVALUE *index);
+E_FUNC BOOL listcmp(LIST *lp1, LIST *lp2);
+E_FUNC VALUE *listfindex(LIST *lp, long index);
+E_FUNC LIST *listalloc(void);
+E_FUNC LIST *listcopy(LIST *lp);
+E_FUNC void listreverse(LIST *lp);
+E_FUNC void listsort(LIST *lp);
+E_FUNC LIST *listappr(LIST *lp, VALUE *v2, VALUE *v3);
+E_FUNC LIST *listround(LIST *m, VALUE *v2, VALUE *v3);
+E_FUNC LIST *listbround(LIST *m, VALUE *v2, VALUE *v3);
+E_FUNC LIST *listquo(LIST *lp, VALUE *v2, VALUE *v3);
+E_FUNC LIST *listmod(LIST *lp, VALUE *v2, VALUE *v3);
+E_FUNC BOOL evp(LISTELEM *cp, LISTELEM *x, VALUE *vres);
+E_FUNC BOOL evalpoly(LIST *clist, LISTELEM *x, VALUE *vres);
+E_FUNC void insertitems(LIST *lp1, LIST *lp2);
+E_FUNC LISTELEM *listelement(LIST *, long);
+E_FUNC LIST *listsegment(LIST *, long, long);
 
 
 /*
@@ -385,15 +385,15 @@ struct assoc {
 };
 
 
-extern DLL ASSOC *assocalloc(long initsize);
-extern DLL ASSOC *assoccopy(ASSOC *ap);
-extern DLL void assocfree(ASSOC *ap);
-extern DLL void assocprint(ASSOC *ap, long max_print);
-extern DLL int assocsearch(ASSOC *ap, VALUE *vp, long start, long end, ZVALUE *index);
-extern DLL int assocrsearch(ASSOC *ap, VALUE *vp, long start, long end, ZVALUE *index);
-extern DLL BOOL assoccmp(ASSOC *ap1, ASSOC *ap2);
-extern DLL VALUE *assocfindex(ASSOC *ap, long index);
-extern DLL VALUE *associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices);
+E_FUNC ASSOC *assocalloc(long initsize);
+E_FUNC ASSOC *assoccopy(ASSOC *ap);
+E_FUNC void assocfree(ASSOC *ap);
+E_FUNC void assocprint(ASSOC *ap, long max_print);
+E_FUNC int assocsearch(ASSOC *ap, VALUE *vp, long start, long end, ZVALUE *index);
+E_FUNC int assocrsearch(ASSOC *ap, VALUE *vp, long start, long end, ZVALUE *index);
+E_FUNC BOOL assoccmp(ASSOC *ap1, ASSOC *ap2);
+E_FUNC VALUE *assocfindex(ASSOC *ap, long index);
+E_FUNC VALUE *associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices);
 
 
 /*
@@ -475,62 +475,62 @@ struct object {
 	(sizeof(OBJECT) + ((elements) - USUAL_ELEMENTS) * sizeof(VALUE))
 
 
-extern DLL OBJECT *objcopy(OBJECT *op);
-extern DLL OBJECT *objalloc(long index);
-extern DLL VALUE objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3);
-extern DLL void objfree(OBJECT *op);
-extern DLL int addelement(char *name);
-extern DLL int defineobject(char *name, int indices[], int count);
-extern DLL int checkobject(char *name);
-extern DLL void showobjfuncs(void);
-extern DLL void showobjtypes(void);
-extern DLL int findelement(char *name);
-extern DLL char *objtypename(unsigned long index);
-extern DLL int objoffset(OBJECT *op, long index);
+E_FUNC OBJECT *objcopy(OBJECT *op);
+E_FUNC OBJECT *objalloc(long index);
+E_FUNC VALUE objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3);
+E_FUNC void objfree(OBJECT *op);
+E_FUNC int addelement(char *name);
+E_FUNC int defineobject(char *name, int indices[], int count);
+E_FUNC int checkobject(char *name);
+E_FUNC void showobjfuncs(void);
+E_FUNC void showobjtypes(void);
+E_FUNC int findelement(char *name);
+E_FUNC char *objtypename(unsigned long index);
+E_FUNC int objoffset(OBJECT *op, long index);
 
 
 /*
  * Configuration parameter name and type.
  */
-extern NAMETYPE configs[];
-extern DLL void config_value(CONFIG *cfg, int type, VALUE *ret);
-extern DLL void setconfig(int type, VALUE *vp);
-extern DLL void config_print(CONFIG *cfg);	/* the CONFIG to print */
+EXTERN NAMETYPE configs[];
+E_FUNC void config_value(CONFIG *cfg, int type, VALUE *ret);
+E_FUNC void setconfig(int type, VALUE *vp);
+E_FUNC void config_print(CONFIG *cfg);	/* the CONFIG to print */
 
 
 /*
  * size, memsize and sizeof support
  */
-extern DLL long elm_count(VALUE *vp);
-extern DLL size_t lsizeof(VALUE *vp);
-extern DLL size_t memsize(VALUE *vp);
+E_FUNC long elm_count(VALUE *vp);
+E_FUNC size_t lsizeof(VALUE *vp);
+E_FUNC size_t memsize(VALUE *vp);
 
 /*
  * String functions
  */
-extern DLL STRING *stringadd(STRING *, STRING *);
-extern DLL STRING *stringcopy(STRING *);
-extern DLL STRING *stringsub(STRING *, STRING *);
-extern DLL STRING *stringmul(NUMBER *, STRING *);
-extern DLL STRING *stringand(STRING *, STRING *);
-extern DLL STRING *stringor(STRING *, STRING *);
-extern DLL STRING *stringxor(STRING *, STRING *);
-extern DLL STRING *stringdiff(STRING *, STRING *);
-extern DLL STRING *stringsegment(STRING *, long, long);
-extern DLL STRING *stringshift(STRING *, long);
-extern DLL STRING *stringcomp(STRING *);
-extern DLL STRING *stringneg(STRING *);
-extern DLL STRING *stringcpy(STRING *, STRING *);
-extern DLL STRING *stringncpy(STRING *, STRING *, size_t);
-extern DLL long stringcontent(STRING *s);
-extern DLL long stringlowbit(STRING *s);
-extern DLL long stringhighbit(STRING *s);
-extern DLL BOOL stringcmp(STRING *, STRING *);
-extern DLL BOOL stringrel(STRING *, STRING *);
-extern DLL int stringbit(STRING *, long);
-extern DLL BOOL stringtest(STRING *);
-extern DLL int stringsetbit(STRING *, long, BOOL);
-extern DLL int stringsearch(STRING *, STRING *, long, long, ZVALUE *);
-extern DLL int stringrsearch(STRING *, STRING *, long, long, ZVALUE *);
+E_FUNC STRING *stringadd(STRING *, STRING *);
+E_FUNC STRING *stringcopy(STRING *);
+E_FUNC STRING *stringsub(STRING *, STRING *);
+E_FUNC STRING *stringmul(NUMBER *, STRING *);
+E_FUNC STRING *stringand(STRING *, STRING *);
+E_FUNC STRING *stringor(STRING *, STRING *);
+E_FUNC STRING *stringxor(STRING *, STRING *);
+E_FUNC STRING *stringdiff(STRING *, STRING *);
+E_FUNC STRING *stringsegment(STRING *, long, long);
+E_FUNC STRING *stringshift(STRING *, long);
+E_FUNC STRING *stringcomp(STRING *);
+E_FUNC STRING *stringneg(STRING *);
+E_FUNC STRING *stringcpy(STRING *, STRING *);
+E_FUNC STRING *stringncpy(STRING *, STRING *, size_t);
+E_FUNC long stringcontent(STRING *s);
+E_FUNC long stringlowbit(STRING *s);
+E_FUNC long stringhighbit(STRING *s);
+E_FUNC BOOL stringcmp(STRING *, STRING *);
+E_FUNC BOOL stringrel(STRING *, STRING *);
+E_FUNC int stringbit(STRING *, long);
+E_FUNC BOOL stringtest(STRING *);
+E_FUNC int stringsetbit(STRING *, long, BOOL);
+E_FUNC int stringsearch(STRING *, STRING *, long, long, ZVALUE *);
+E_FUNC int stringrsearch(STRING *, STRING *, long, long, ZVALUE *);
 
 #endif /* !__VALUE_H__ */

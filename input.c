@@ -1,7 +1,7 @@
 /*
  * input - nested input source file reader
  *
- * Copyright (C) 1999-2006  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.12 $
- * @(#) $Id: input.c,v 29.12 2006/12/15 17:02:49 chongo Exp $
+ * @(#) $Revision: 29.13 $
+ * @(#) $Id: input.c,v 29.13 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/input.c,v $
  *
  * Under source code control:	1990/02/15 01:48:16
@@ -56,9 +56,9 @@
 #include "conf.h"
 #include "hist.h"
 
-extern int stdin_tty;		/* TRUE if stdin is a tty */
-extern FILE *f_open(char *name, char *mode);
-extern FILE *curstream(void);
+EXTERN int stdin_tty;		/* TRUE if stdin is a tty */
+E_FUNC FILE *f_open(char *name, char *mode);
+E_FUNC FILE *curstream(void);
 
 
 #define TTYSIZE		100	/* reallocation size for terminal buffers */
@@ -90,25 +90,25 @@ typedef struct {
 	struct stat inode;	/* inode information for file */
 } READSET;
 
-static READSET *readset = NULL;		/* array of files read */
-static int maxreadset = 0;		/* length of readset */
+STATIC READSET *readset = NULL;		/* array of files read */
+STATIC int maxreadset = 0;		/* length of readset */
 
-static int linesize;		/* current max size of input line */
-static char *linebuf;		/* current input line buffer */
-static char *prompt;		/* current prompt for terminal */
-static BOOL noprompt;		/* TRUE if should not print prompt */
+STATIC int linesize;		/* current max size of input line */
+STATIC char *linebuf;		/* current input line buffer */
+STATIC char *prompt;		/* current prompt for terminal */
+STATIC BOOL noprompt;		/* TRUE if should not print prompt */
 
-static int depth;		/* current input depth */
-static INPUT *cip;		/* current input source */
-static INPUT inputs[MAXDEPTH];	/* input sources */
+STATIC int depth;		/* current input depth */
+STATIC INPUT *cip;		/* current input source */
+STATIC INPUT inputs[MAXDEPTH];	/* input sources */
 
 
-static int openfile(char *name);
-static int ttychar(void);
-static int isinoderead(struct stat *sbuf);
-static int findfreeread(void);
-static int addreadset(char *name, char *path, struct stat *sbuf);
-static char *homeexpand(char *name);
+S_FUNC int openfile(char *name);
+S_FUNC int ttychar(void);
+S_FUNC int isinoderead(struct stat *sbuf);
+S_FUNC int findfreeread(void);
+S_FUNC int addreadset(char *name, char *path, struct stat *sbuf);
+S_FUNC char *homeexpand(char *name);
 
 
 /*
@@ -390,7 +390,7 @@ f_pathopen(char *name, char *mode, char *pathlist, char **openpath)
  * given:
  *	name		a filename with a leading ~
  */
-static char *
+S_FUNC char *
 homeexpand(char *name)
 {
 #if defined(_WIN32)
@@ -539,7 +539,7 @@ f_open(char *name, char *mode)
  * given:
  *	name		file name to be read
  */
-static int
+S_FUNC int
 openfile(char *name)
 {
 	FILE *fp;		/* open file descriptor */
@@ -773,12 +773,12 @@ nextline(void)
  * The routines in the history module are called so that the user
  * can use a command history and emacs-like editing of the line.
  */
-static int
+S_FUNC int
 ttychar(void)
 {
 	int ch;			/* current char */
 	int len;		/* length of current command */
-	static char charbuf[1024];
+	STATIC char charbuf[1024];
 
 	/*
 	 * If we have more to read from the saved command line, then do that.
@@ -957,7 +957,7 @@ runrcfiles(void)
  *	sbuf		stat of the inode in question
  */
 
-static int
+S_FUNC int
 isinoderead(struct stat *sbuf)
 {
 	int i;
@@ -1005,7 +1005,7 @@ isinoderead(struct stat *sbuf)
  *
  * This function returns the index of the next free element, or -1.
  */
-static int
+S_FUNC int
 findfreeread(void)
 {
 	int i;
@@ -1066,7 +1066,7 @@ findfreeread(void)
  *	path		full pathname of file
  *	sbuf		stat of the path
  */
-static int
+S_FUNC int
 addreadset(char *name, char *path, struct stat *sbuf)
 {
 	int ret;		/* index to return */

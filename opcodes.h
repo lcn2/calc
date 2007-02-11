@@ -1,7 +1,7 @@
 /*
  * opcodes - opcode execution module definition
  *
- * Copyright (C) 1999-2006  David I. Bell
+ * Copyright (C) 1999-2007  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: opcodes.h,v 29.7 2006/06/25 20:33:26 chongo Exp $
+ * @(#) $Revision: 29.8 $
+ * @(#) $Id: opcodes.h,v 29.8 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/opcodes.h,v $
  *
  * Under source code control:	1990/02/15 01:48:35
@@ -33,9 +33,9 @@
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
-# include "win32dll.h"
+# include "decl.h"
 #else
-# include <calc/win32dll.h>
+# include <calc/decl.h>
 #endif
 
 
@@ -180,8 +180,8 @@
 /*
  * external declarations
  */
-extern DLL char *funcname;		/* function being executed */
-extern DLL long funcline;		/* function line being executed */
+EXTERN char *funcname;		/* function being executed */
+EXTERN long funcline;		/* function line being executed */
 
 
 #endif /* !__OPCODES_H__ */

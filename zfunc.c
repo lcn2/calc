@@ -1,7 +1,7 @@
 /*
  * zfunc - extended precision integral arithmetic non-primitive routines
  *
- * Copyright (C) 1999  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: zfunc.c,v 29.8 2006/06/04 20:18:44 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: zfunc.c,v 29.9 2007/02/11 10:19:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:27
@@ -34,8 +34,8 @@
 
 ZVALUE _tenpowers_[TEN_MAX+1];		/* table of 10^2^n */
 
-static long *power10 = NULL;
-static int max_power10_exp = 0;
+STATIC long *power10 = NULL;
+STATIC int max_power10_exp = 0;
 
 /*
  * given:
@@ -48,7 +48,7 @@ static int max_power10_exp = 0;
  * If issq_mod4k[x & 0xfff] == 0, then x cannot be a perfect square
  * else x might be a perfect square.
  */
-static USB8 issq_mod4k[1<<12] = {
+STATIC USB8 issq_mod4k[1<<12] = {
 	1,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
 	0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
 	1,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
@@ -275,7 +275,7 @@ zperm(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 /*
  * docomb evaluates binomial coefficient when z1 >= 0, z2 >= 0
  */
-static int
+S_FUNC int
 docomb(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
 	ZVALUE ans;
