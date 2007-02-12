@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.17 $
- * @(#) $Id: file.c,v 29.17 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.18 $
+ * @(#) $Id: file.c,v 29.18 2007/02/12 08:20:24 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -1363,7 +1363,7 @@ filepos2z(FILEPOS pos)
 	ret.len = FILEPOS_BITS/BASEB;
 	ret.v = alloc(ret.len);
 	zclearval(ret);
-	SWAP_HALF_IN_FILEPOS(ret.v, (HALF *)&pos);
+	SWAP_HALF_IN_FILEPOS(ret.v, &pos);
 	ret.sign = 0;
 	ztrim(&ret);
 

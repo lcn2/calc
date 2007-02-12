@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.30 $
-# @(#) $Id: Makefile,v 29.30 2007/02/11 10:22:29 chongo Exp $
+# @(#) $Revision: 29.31 $
+# @(#) $Id: Makefile,v 29.31 2007/02/12 04:19:17 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -849,7 +849,6 @@ c_argv.o: ../decl.h
 c_argv.o: ../endian_calc.h
 c_argv.o: ../hash.h
 c_argv.o: ../have_const.h
-c_argv.o: ../have_malloc.h
 c_argv.o: ../have_memmv.h
 c_argv.o: ../have_newstr.h
 c_argv.o: ../have_stdlib.h
@@ -876,7 +875,6 @@ c_devnull.o: ../decl.h
 c_devnull.o: ../endian_calc.h
 c_devnull.o: ../hash.h
 c_devnull.o: ../have_const.h
-c_devnull.o: ../have_malloc.h
 c_devnull.o: ../have_memmv.h
 c_devnull.o: ../have_newstr.h
 c_devnull.o: ../have_stdlib.h
@@ -903,7 +901,6 @@ c_help.o: ../decl.h
 c_help.o: ../endian_calc.h
 c_help.o: ../hash.h
 c_help.o: ../have_const.h
-c_help.o: ../have_malloc.h
 c_help.o: ../have_memmv.h
 c_help.o: ../have_newstr.h
 c_help.o: ../have_stdlib.h
@@ -930,7 +927,6 @@ c_pmodm127.o: ../decl.h
 c_pmodm127.o: ../endian_calc.h
 c_pmodm127.o: ../hash.h
 c_pmodm127.o: ../have_const.h
-c_pmodm127.o: ../have_malloc.h
 c_pmodm127.o: ../have_memmv.h
 c_pmodm127.o: ../have_newstr.h
 c_pmodm127.o: ../have_stdlib.h
@@ -957,7 +953,6 @@ c_pzasusb8.o: ../decl.h
 c_pzasusb8.o: ../endian_calc.h
 c_pzasusb8.o: ../hash.h
 c_pzasusb8.o: ../have_const.h
-c_pzasusb8.o: ../have_malloc.h
 c_pzasusb8.o: ../have_memmv.h
 c_pzasusb8.o: ../have_newstr.h
 c_pzasusb8.o: ../have_stdlib.h
@@ -987,7 +982,6 @@ c_sysinfo.o: ../endian_calc.h
 c_sysinfo.o: ../fposval.h
 c_sysinfo.o: ../hash.h
 c_sysinfo.o: ../have_const.h
-c_sysinfo.o: ../have_malloc.h
 c_sysinfo.o: ../have_memmv.h
 c_sysinfo.o: ../have_newstr.h
 c_sysinfo.o: ../have_stdlib.h
@@ -1018,7 +1012,6 @@ custtbl.o: ../decl.h
 custtbl.o: ../endian_calc.h
 custtbl.o: ../hash.h
 custtbl.o: ../have_const.h
-custtbl.o: ../have_malloc.h
 custtbl.o: ../have_memmv.h
 custtbl.o: ../have_newstr.h
 custtbl.o: ../have_stdlib.h

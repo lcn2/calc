@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: alloc.h,v 29.6 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: alloc.h,v 29.7 2007/02/12 03:57:00 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/alloc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:29
@@ -33,29 +33,13 @@
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
-# include "have_malloc.h"
 # include "have_newstr.h"
 # include "have_string.h"
 # include "have_memmv.h"
 #else
-# include <calc/have_malloc.h>
 # include <calc/have_newstr.h>
 # include <calc/have_string.h>
 # include <calc/have_memmv.h>
-#endif
-
-#ifdef HAVE_MALLOC_H
-# include <malloc.h>
-#else
-#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
-   E_FUNC void *malloc();
-   E_FUNC void *realloc();
-   E_FUNC void free();
-# else
-   E_FUNC char *malloc();
-   E_FUNC char *realloc();
-   E_FUNC void free();
-# endif
 #endif
 
 #ifdef HAVE_STRING_H

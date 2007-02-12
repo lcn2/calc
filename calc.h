@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.20 $
- * @(#) $Id: calc.h,v 29.20 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.21 $
+ * @(#) $Id: calc.h,v 29.21 2007/02/12 03:26:23 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -229,11 +229,10 @@ EXTERN char *calcrc;	/* $CALCRC or default */
 EXTERN char *calcbindings;	/* $CALCBINDINGS or default */
 EXTERN char *home;		/* $HOME or default */
 EXTERN char *shell;		/* $SHELL or default */
-E_FUNC char *program;	/* our name (argv[0]) */
 
-E_FUNC int no_env;		/* TRUE (-e) => ignore env vars on startup */
+EXTERN int no_env;	/* TRUE (-e) => ignore env vars on startup */
 EXTERN long errmax;	/* if >= 0, error when errcount exceeds errmax */
-E_FUNC int use_old_std;	/* TRUE (-O) => use classic configuration */
+EXTERN int use_old_std;	/* TRUE (-O) => use classic configuration */
 
 EXTERN int allow_read;	/* FALSE => dont open any files for reading */
 EXTERN int allow_write; 	/* FALSE => dont open any files for writing */

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: func.h,v 29.5 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: func.h,v 29.6 2007/02/12 03:40:06 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.h,v $
  *
  * Under source code control:	1990/02/15 01:48:33
@@ -72,7 +72,7 @@ struct func {
 /*
  * The current function being compiled.
  */
-EXTERN FUNC *curfunc;
+E_FUNC FUNC *curfunc;	/* NOTE: This is a function pointer, we need E_FUNC */
 
 
 /*

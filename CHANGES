@@ -16,6 +16,21 @@ The following are the changes from calc version 2.12.1.10 to date:
 
     Added Apple Mac OS X compiler set in the Makefile.
 
+    When MACOSX_TLS is defined, calc attempts to compile with OS
+    X Thread Local Storage.  As of version 2.12.1.12 this mode is
+    extremely experimental.  Calc may not compile with MACOSX_TLS defined.
+
+    Fixed E_FUNC vs EXTERN issues discovered by Mirko Viviani
+    <mirko at objectlab dot org>.
+
+    Removed include of <malloc.h>.  The building of the include file
+    "have_malloc.h" has been removed from the Makefile.  One some
+    systems such as FreeBSD, the file /usr/include/malloc.h exists
+    and contains an forced error saying that stdlib.h should be used
+    instead.  The Makefile symbol HAVE_MALLOC has been removed.
+
+    Fixed FreeBSD dereferencing type-punned pointer error in filepos2z().
+
 
 The following are the changes from calc version 2.12.1.8 to 2.12.1.9:
 
@@ -6358,8 +6373,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.97 $
-## @(#) $Id: CHANGES,v 29.97 2007/02/11 10:25:01 chongo Exp $
+## @(#) $Revision: 29.100 $
+## @(#) $Id: CHANGES,v 29.100 2007/02/12 08:22:13 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
