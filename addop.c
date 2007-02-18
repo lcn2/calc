@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.14 $
- * @(#) $Id: addop.c,v 29.14 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.15 $
+ * @(#) $Id: addop.c,v 29.15 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/addop.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -33,7 +33,7 @@
 #include <stdio.h>
 #include "calc.h"
 #include "opcodes.h"
-#include "string.h"
+#include "str.h"
 #include "func.h"
 #include "token.h"
 #include "label.h"

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: c_pmodm127.c,v 29.6 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: c_pmodm127.c,v 29.7 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_pmodm127.c,v $
  *
  * Under source code control:	2004/07/28 22:12:25
@@ -32,12 +32,12 @@
 
 #include <stdio.h>
 
-#include "../have_const.h"
-#include "../value.h"
-#include "../custom.h"
-#include "../zmath.h"
+#include "have_const.h"
+#include "value.h"
+#include "custom.h"
+#include "zmath.h"
 
-#include "../have_unused.h"
+#include "have_unused.h"
 
 /* 2^255 */
 STATIC HALF h255[] = {

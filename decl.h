@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: decl.h,v 29.4 2007/02/12 03:38:42 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: decl.h,v 29.5 2007/02/15 09:50:28 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/decl.h,v $
  *
  * Under source code control:	2007/02/09 05:24:25
@@ -38,12 +38,12 @@
 
 
 /*
- * Mac OS X Thread Local Storage macros
+ * Thread Local Storage macros
  *
- * NOTE: The use of -DMACOSX_TLS is extremely experimental.  Calc may not
- *	 compile with MACOSX_TLS defined.
+ * NOTE: The use of -DWITH_TLS is extremely experimental.  Calc may not
+ *	 compile with WITH_TLS defined.
  */
-#if defined(MACOSX_TLS)
+#if defined(WITH_TLS)
 
 
   /* variable related macros */

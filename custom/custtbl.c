@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: custtbl.c,v 29.5 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.6 $
+ * @(#) $Id: custtbl.c,v 29.6 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/custtbl.c,v $
  *
  * Under source code control:	1997/03/09 02:28:54
@@ -28,10 +28,11 @@
  * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+#include <unistd.h>
 
-#include "../have_const.h"
-#include "../value.h"
-#include "../custom.h"
+#include "have_const.h"
+#include "value.h"
+#include "custom.h"
 
 /*
  * NOTE: See the file CUSTOM for instructions on how to add

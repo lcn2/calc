@@ -58,13 +58,18 @@ External programs most likely want to use the installed calc header
 files under ${INCDIRCALC}.  External programs most likely NOT want
 to define CALC_SRC.
 
+You need to include the following file to get the symbols and variables
+related to error handling:
+
+	lib_calc.h
+
 External programs may want to compile with:
 
-	-L${LIBDIR} -lcalc
+	-I${INCDIR} -L${LIBDIR} -lcalc
 
 If custom functions are also used, they may want to compile with:
 
-	-L${LIBDIR} -lcalc -lcustcalc
+	-I${INCDIR} -L${LIBDIR} -lcalc -lcustcalc
 
 The CALC_SRC symbol should NOT be defined by default.  However if you are
 feeling pedantic you may want to force CALC_SRC to be undefined:
@@ -73,71 +78,215 @@ feeling pedantic you may want to force CALC_SRC to be undefined:
 
 as well.
 
---------------
-ERROR HANDLING
---------------
+-------------------
+MATH ERROR HANDLING
+-------------------
 
-Your program MUST provide a function called math_error.	 This is called by
-the math routines on an error condition, such as malloc failures or a
-division by zero.  The routine is called in the manner of printf, with a
-format string and optional arguments.  (However, none of the low level math
-routines currently uses formatting, so if you are lazy you can simply use
-the first argument as a simple error string.)  For example, one of the
-error calls you might expect to receive is:
+The math_error() function is called by the math routines on an error
+condition, such as malloc failures, division by zero, or some form of
+an internal computation error.  The routine is called in the manner of
+printf, with a format string and optional arguments:
 
-	math_error("Division by zero");
+	    void math_error(char *fmt, ...);
 
-Your program can handle errors in basically one of two ways.  Firstly, it
-can simply print the error message and then exit.  Secondly, you can make
-use of setjmp and longjmp in your program.  Use setjmp at some appropriate
-level in your program, and use longjmp in the math_error routine to return
-to that level and so recover from the error.  This is what the calc program
-does.
+Your program must handle math errors in one of three ways:
 
-For convenience, the link library libcalc.a contains a math_error routine.
-By default, this routine simply prints a message to stderr and then exits.
-By simply linking in this link library, any calc errors will result in a
-error message on stderr followed by an exit.
+    1) Print the error message and then exit
 
-External programs that wish to use this math_error may want to compile with:
+	There is a math_error() function supplied with the calc library.
+	By default, this routine simply prints a message to stderr and
+	then exits.  By simply linking in this link library, any calc
+	errors will result in a error message on stderr followed by
+	an exit.
 
-	-I${LIBDIR} -L${LIBDIR} -lcalc
+    2) Use setjmp and longjmp in your program
 
-If one sets up calc_jmp_buf, and then sets calc_jmp to non-zero then
-this routine will longjmp back (with the value of calc_jmp) instead.
-In addition, the last calc error message will be found in calc_error;
-this error is not printed to stderr.  The calc error message will
-not have a trailing newline.
+	Use setjmp at some appropriate level in your program, and let
+	the longjmp in math_error() return to that level and to allow you
+	to recover from the error.  This is what the calc program does.
 
-For example:
+	If one sets up calc_matherr_jmpbuf, and then sets
+	calc_use_matherr_jmpbuf to non-zero then math_error() will
+	longjmp back with the return value of calc_use_matherr_jmpbuf.
+	In addition, the last calc error message will be found in
+	calc_err_msg; this error is not printed to stderr.  The calc
+	error message will not have a trailing newline.
 
-    #include <setjmp.h>
+	For example:
 
-    extern jmp_buf calc_jmp_buf;
-    extern int calc_jmp;
-    extern char *calc_error;
-    int error;
+	    #include <setjmp.h>
+	    #include "lib_calc.h"
 
-    ...
+	    int error;
 
-    if ((error = setjmp(calc_jmp_buf)) != 0) {
+	    ...
 
-	    /* reinitialize calc after a longjmp */
-	    reinitialize();
+	    if ((error = setjmp(calc_matherr_jmpbuf)) != 0) {
 
-	    /* report the error */
-	    printf("Ouch: %s\n", calc_error);
-    }
-    calc_jmp = 1;
+		    /* report the error */
+		    printf("Ouch: %s\n", calc_err_msg);
+
+		    /* reinitialize calc after the longjmp */
+		    reinitialize();
+	    }
+	    calc_use_matherr_jmpbuf = 1;
+
+	If calc_use_matherr_jmpbuf is non-zero, then the jmp_buf value
+	calc_matherr_jmpbuf must be initialized by the setjmp() function
+	or your program will crash.
+
+    3) Supply your own math_error function:
+
+	    void math_error(char *fmt, ...);
+
+	Your math_error() function may exit or transfer control to outside
+	of the calc library, but it must never return or calc will crash.
+
+External programs can obtain the appropriate calc symbols by compiling with:
+
+	-I${INCDIR} -L${LIBDIR} -lcalc
+
+-------------------------
+PARSE/SCAN ERROR HANDLING
+-------------------------
+
+The scanerror() function is called when calc encounters a parse/scan
+error.  For example, scanerror() is called when calc is given code
+with a syntax error.
+
+The variable, calc_print_scanerr_msg, controls if calc prints to stderr,
+any parse/scan errors.  By default, this variable it set to 1 and so
+parse/scan errors are printed to stderr.  By setting this value to zero,
+parse/scan errors are not printed:
+
+	#include "lib_calc.h"
+
+	/* do not print parse/scan errors to stderr */
+	calc_print_scanerr_msg = 0;
+
+The last calc math error or calc parse/scan error message is kept
+in the NUL terminated buffer:
+
+	char calc_err_msg[MAXERROR+1];
+
+The value of calc_print_scanerr_msg does not change the use
+of the calc_err_msg[] buffer.  Messages are stored in that
+buffer regardless of the calc_print_scanerr_msg value.
+
+The calc_print_scanerr_msg and the calc_err_msg[] buffer are declared
+lib_calc.h include file.  The initialized storage for these variables
+comes from the calc library.  The MAXERROR symbol is also declared in
+the lib_calc.h include file.
+
+Your program must handle parse/scan errors in one of two ways:
+
+    1) exit on error
+
+	If you do not setup the calc_scanerr_jmpbuf, then when calc
+	encounters a parse/scan error, a message will be printed to
+	stderr and calc will exit.
+
+    2) Use setjmp and longjmp in your program
+
+	Use setjmp at some appropriate level in your program, and let
+	the longjmp in scanerror() return to that level and to allow you
+	to recover from the error.  This is what the calc program does.
+
+	If one sets up calc_scanerr_jmpbuf, and then sets
+	calc_use_scanerr_jmpbuf to non-zero then scanerror() will longjmp
+	back with the return with a non-zero code.  In addition, the last
+	calc error message will be found in calc_err_msg[]; this error is
+	not printed to stderr.	The calc error message will not have a
+	trailing newline.
+
+	For example:
+
+	    #include <setjmp.h>
+	    #include "lib_calc.h"
+
+	    int scan_error;
+
+	    ...
+
+	    /* delay the printing of the parse/scan error */
+	    calc_use_scanerr_jmpbuf = 0;	/* this is optional */
+
+	    if ((scan_error = setjmp(calc_scanerr_jmpbuf)) != 0) {
+
+		    /* report the parse/scan */
+		    if (calc_use_scanerr_jmpbuf == 0) {
+			    printf("parse error: %s\n", calc_err_msg);
+	    	    }
+
+		    /* initialize calc after the longjmp */
+		    initialize();
+	    }
+	    calc_use_scanerr_jmpbuf = 1;
+
+	If calc_use_scanerr_jmpbuf is non-zero, then the jmp_buf value
+	calc_scanerr_jmpbuf must be initialized by the setjmp() function
+	or your program will crash.
+
+External programs can obtain the appropriate calc symbols by compiling with:
+
+	-I${INCDIR} -L${LIBDIR} -lcalc
+
+---------------------------
+PARSE/SCAN WARNING HANDLING
+---------------------------
+
+Calc parse/scan warning message are printed to stderr by the warning()
+function.  The routine is called in the manner of printf, with a format
+string and optional arguments:
+
+	void warning(char *fmt, ...);
+
+The variable, calc_print_scanwarn_msg, controls if calc prints to stderr,
+any parse/scan warnings.  By default, this variable it set to 1 and so
+parse/scan warnings are printed to stderr.  By setting this value to zero,
+parse/scan warnings are not printed:
+
+	#include "lib_calc.h"
+
+	/* do not print parse/scan warnings to stderr */
+	calc_print_scanwarn_msg = 0;
+
+The last calc calc parse/scan warning message is kept in the NUL
+terminated buffer:
+
+	char calc_warn_msg[MAXERROR+1];
+
+The value of calc_print_scanwarn_msg does not change the use
+of the calc_warn_msg[] buffer.  Messages are stored in that
+buffer regardless of the calc_print_scanwarn_msg value.
+
+Your program must handle parse/scan warnings in one of two ways:
+
+    1) print the warning to stderr and continue
+
+	The warning() from libcalc prints warning messages to
+	stderr and returns.  The flow of execution is not changed.
+	This is what calc does by default.
+
+    2) Supply your own warning function:
+
+	    void warning(char *fmt, ...);
+
+	Your warning function should simply return when it is finished.
+
+External programs can obtain the appropriate calc symbols by compiling with:
+
+	-I${INCDIR} -L${LIBDIR} -lcalc
+
 
 ---------------
 OUTPUT ROUTINES
 ---------------
 
-The output from the routines in the link library normally goes to stdout.  You
-can divert that output to either another FILE handle, or else to a string.
-Read the routines in zio.c to see what is available.  Diversions can be
-nested.
+The output from the routines in the link library normally goes to stdout.
+You can divert that output to either another FILE handle, or else
+to a string.  Read the routines in zio.c to see what is available.
+Diversions can be nested.
 
 You use math_setfp to divert output to another FILE handle.  Calling
 math_setfp with stdout restores output to stdout.
@@ -489,8 +638,8 @@ need call libcalc_call_me_last() only once.
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.5 $
-## @(#) $Id: LIBRARY,v 29.5 2001/06/08 22:57:35 chongo Exp $
+## @(#) $Revision: 29.7 $
+## @(#) $Id: LIBRARY,v 29.7 2007/02/18 14:45:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/LIBRARY,v $
 ##
 ## Under source code control:	1993/07/30 19:44:49

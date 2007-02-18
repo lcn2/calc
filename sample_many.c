@@ -1,7 +1,7 @@
 /*
- * many_random - generate many random values via random number generator
+ * sample_many - generate many random values via random number generator
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2007  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,9 +17,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: many_random.c,v 29.2 2000/06/07 14:02:54 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/many_random.c,v $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: sample_many.c,v 29.4 2007/02/15 09:49:57 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/sample_many.c,v $
  *
  * Under source code control:	1997/04/19 22:46:49
  * File existed as early as:	1997
@@ -39,10 +39,10 @@
 
 #include <sys/types.h>
 #include <stdio.h>
-#include "../calc.h"
-#include "../zrandom.h"
-#include "../have_const.h"
-#include "../lib_util.h"
+#include "calc.h"
+#include "zrandom.h"
+#include "have_const.h"
+#include "lib_util.h"
 
 #define DEF_CNT 128	/* default number of bits to generate */
 #define RESEED 1000	/* number of random numbers to generate */

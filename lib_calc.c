@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.15 $
- * @(#) $Id: lib_calc.c,v 29.15 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.16 $
+ * @(#) $Id: lib_calc.c,v 29.16 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.c,v $
  *
  * Under source code control:	1996/06/17 18:06:19
@@ -37,6 +37,7 @@
 # include <pwd.h>
 #endif
 
+#include "lib_calc.h"
 #include "calc.h"
 #include "zmath.h"
 #include "zrandom.h"
@@ -109,7 +110,6 @@ E_FUNC uid_t geteuid();
 int use_old_std = FALSE;	/* TRUE => use old classic configuration */
 int abortlevel;			/* current level of aborts */
 BOOL inputwait;			/* TRUE if in a terminal input wait */
-jmp_buf jmpbuf;			/* for errors */
 char *program = "calc";		/* our name */
 char *base_name = "calc";	/* basename of our name */
 char cmdbuf[MAXCMD+1+1+1];	/* command line expression + "\n\0" + guard */
@@ -148,8 +148,29 @@ char *shell = NULL;		/* $SHELL or default */
 int stdin_tty = FALSE;		/* TRUE if stdin is a tty */
 int havecommands = FALSE;	/* TRUE if have one or more cmd args */
 long stoponerror = 0;		/* >0 => stop, <0 => continue, ==0 => use -c */
-int post_init = FALSE;		/* TRUE setjmp for math_error is ready */
 BOOL abort_now = FALSE;		/* TRUE => go interactive now, if permitted */
+
+/* non-zero => calc_scanerr_jmpbuf ready */
+int calc_use_scanerr_jmpbuf = 0;
+/* for scan and parse errors */
+jmp_buf calc_scanerr_jmpbuf;
+
+/* non-zero => use calc_use_matherr_jmpbuf */
+int calc_use_matherr_jmpbuf = 0;
+/* math_error() control jump point when calc_use_matherr_jmpbuf != 0 */
+jmp_buf calc_matherr_jmpbuf;
+
+/* last calc error message, also parse/scan errors use this buffer */
+char calc_err_msg[MAXERROR+1];
+/* 0 ==> do not print parse/scan errors */
+int calc_print_scanerr_msg = 1;
+
+/* last parse/scan warning message */
+char calc_warn_msg[MAXERROR+1];
+/* 0 ==> do not print parse/scan warnings */
+int calc_print_scanwarn_msg = 1;
+/* number of parse/scan warnings found */
+unsigned long calc_warn_cnt = 0;
 
 int argc_value = 0;		/* count of argv[] strings for argv() builtin */
 char **argv_value = NULL;	/* argv[] strings for argv() builtin */
@@ -184,6 +205,7 @@ STATIC ttystruct *fd_orig = NULL;	/* fd original state */
 STATIC ttystruct *fd_cur = NULL;	/* fd current state */
 S_FUNC void initenv(void);		/* setup calc environment */
 S_FUNC int find_tty_state(int fd);	/* find slot for saved tty state */
+STATIC BOOL initialized = FALSE;	/* TRUE => initialize() has been run */
 
 
 /*
@@ -305,6 +327,13 @@ void
 initialize(void)
 {
 	/*
+	 * firewall
+	 */
+	if (initialized) {
+		return;
+	}
+
+	/*
 	 * ZVALUE io initialization
 	 */
 	zio_init();
@@ -340,6 +369,11 @@ initialize(void)
 	math_setmode(MODE_INITIAL);
 	math_setdigits(DISPLAY_DEFAULT);
 	conf->maxprint = MAXPRINT_DEFAULT;
+
+	/*
+	 * note that we are done
+	 */
+	initialized = TRUE;
 }
 
 

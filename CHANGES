@@ -16,9 +16,9 @@ The following are the changes from calc version 2.12.1.10 to date:
 
     Added Apple Mac OS X compiler set in the Makefile.
 
-    When MACOSX_TLS is defined, calc attempts to compile with OS
-    X Thread Local Storage.  As of version 2.12.1.12 this mode is
-    extremely experimental.  Calc may not compile with MACOSX_TLS defined.
+    When WITH_TLS is defined, calc attempts to compile with Thread Local
+    Storage.  As of version 2.12.1.12 this mode is extremely experimental.
+    Calc may not compile when WITH_TLS defined.
 
     Fixed E_FUNC vs EXTERN issues discovered by Mirko Viviani
     <mirko at objectlab dot org>.
@@ -31,6 +31,69 @@ The following are the changes from calc version 2.12.1.10 to date:
 
     Fixed FreeBSD dereferencing type-punned pointer error in filepos2z().
 
+    Removed SGI IRIX from the compiler section.
+
+    Moved the sample code in the sample sub-directory up into the
+    main source level.  The sample/many_random.c source file is
+    now sample_many.c.  The sample/test_random.c source file is now
+    sample_rand.c.  The sample Makefile and the sub-directory is no more.
+
+    Renamed the following source files:
+
+	math_error.h		==>    lib_calc.h
+	string.c		==>    str.c
+	string.h		==>    str.h
+
+    Renamed the following variables related to calc error processing:
+
+	int calc_jmp		==>    int calc_use_matherr_jmpbuf
+    	jmp_buf calc_jmp_buf	==>    jmp_buf calc_matherr_jmpbuf
+
+	int post_init		==>    int calc_use_scanerr_jmpbuf
+	jmp_buf jmpbuf		==>    jmpbuf calc_scanerr_jmpbuf
+
+	char *calc_error	==>    char calc_err_msg[MAXERROR+1]
+
+    These values are now declared in the lib_calc.h include file.
+    The value MAXERROR is now defined in lib_calc.h instead of calc.h.
+    The calc_err_msg[] buffer is now used for math errors as well
+    as scan and parse errors.
+
+    Parse/scan errors will not be printed if calc_print_scanerr_msg
+    is zero.  By default:
+
+    	int calc_print_scanerr_msg = 1;
+
+    This variable is declared in the lib_calc.h include file.  Storage
+    comes from libcalc.
+
+    Parse/scan warnings will not be printed if calc_print_scanwarn_msg
+    is zero.  By default:
+
+    	int calc_print_scanwarn_msg = 1;
+
+    This variable is declared in the lib_calc.h include file.  Storage
+    comes from libcalc.
+
+    The last parse/scan error message is stored in the calc_err_msg[]
+    buffer.  This happens even when calc_print_scanerr_msg is zero.
+
+    The last parse/scan warning message is stored in the calc_warn_msg[]
+    buffer.  After each parse/scan warning condition is detected,
+    the value calc_warn_cnt is incremented.  This happens even when
+    calc_print_scanwarn_msg is zero.
+
+    The calc_warn_msg[] buffer and calc_warn_cnt variables are declared
+    in the lib_calc.h include file.  Storage comes from libcalc.
+
+    See the file, LIBRARY or use the calc command "help libcalc" for
+    more information on calc error processing.  This file has been
+    updated to reflect the changes noted above in this section.
+
+    The make install rule removes std_arg.h, have_malloc.h, math_error.h,
+    string.h, and win32dll.h from ${INCDIR} if they exist.  These calc
+    include files are no longer supported.
+
 
 The following are the changes from calc version 2.12.1.8 to 2.12.1.9:
 
@@ -41,11 +104,11 @@ The following are the changes from calc version 2.12.1.8 to 2.12.1.9:
     	/* c style comments */
 	/*
 	 * multi-line
-	 * commentts
+	 * comments
 	 */
 	## two or more #-signs
 	### in a row
-	### Note that # along is a calc uniary and binary operator
+	### Note that # along is a calc unary and binary operator
 
     Added "help pound" or "help #' to document the # operator, comments,
     and the first line of cscript files.
@@ -169,7 +232,7 @@ The following are the changes from calc version 2.12.1 to 2.12.1.5:
     Removed the ECHO_PROG Makefile variable.  Also removed it from
     the sysinfo() custom function.
 
-    Improved the support for cross-compiled environmens by using
+    Improved the support for cross-compiled environments by using
     make symbols for all non-shell commands executed by Makefiles.
 
     Fixed a problem with the make chk awk script which failed under
@@ -6373,8 +6436,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.100 $
-## @(#) $Id: CHANGES,v 29.100 2007/02/12 08:22:13 chongo Exp $
+## @(#) $Revision: 29.102 $
+## @(#) $Id: CHANGES,v 29.102 2007/02/18 14:45:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

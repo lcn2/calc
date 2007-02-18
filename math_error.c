@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: math_error.c,v 29.3 2006/06/02 09:52:22 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: math_error.c,v 29.4 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/math_error.c,v $
  *
  * Under source code control:	1994/08/03 05:08:22
@@ -36,31 +36,29 @@
  *
  * By default, this routine simply prints a message to stderr and then exits.
  *
- * If one sets up calc_jmp_buf, and then sets calc_jmp to non-zero then
- * this routine will longjmp back (with the value of calc_jmp) instead.
- * In addition, the last calc error message will be found in calc_error;
- * this error is not printed to sttderr.
+ * If one sets up calc_matherr_jmpbuf, and then sets calc_use_matherr_jmpbuf
+ * to non-zero then this routine will longjmp back with the return value of
+ * calc_use_matherr_jmpbuf.  In addition, the last calc error message will be
+ * found in calc_use_matherr_jmpbuf_msg.  This error is not printed to sttderr.
  *
  * For example:
  *
  *	#include <setjmp.h>
+ *	#include "lib_calc.h"
  *
- *	extern jmp_buf calc_jmp_buf;
- *	extern int calc_jmp;
- *	extern char *calc_error;
  *	int error;
  *
  *	...
  *
- *	if ((error = setjmp(calc_jmp_buf)) != 0) {
+ *	if ((error = setjmp(calc_matherr_jmpbuf)) != 0) {
  *
  *		(* reinitialize calc after a longjmp *)
  *		reinitialize();
  *
  *		(* report the error *)
- *		printf("Ouch: %s\n", calc_error);
+ *		printf("Ouch: %s\n", calc_err_msg);
  *	}
- *	calc_jmp = 1;
+ *	calc_use_matherr_jmpbuf = 1;
  */
 
 
@@ -68,15 +66,7 @@
 #include <setjmp.h>
 #include "args.h"
 #include "calc.h"
-#include "math_error.h"
-
-
-/*
- * error jump point we will longjmp to this jmp_buf if calc_jmp is non-zero
- */
-jmp_buf calc_jmp_buf;
-int calc_jmp = 0;		/* non-zero => use calc_jmp_buf */
-char calc_error[MAXERROR+1];	/* last calc error message */
+#include "lib_calc.h"
 
 
 /*
@@ -95,15 +85,15 @@ math_error(char *fmt, ...)
 #else
 	va_start(ap, fmt);
 #endif
-	vsnprintf(calc_error, MAXERROR, fmt, ap);
+	vsnprintf(calc_err_msg, MAXERROR, fmt, ap);
 	va_end(ap);
-	calc_error[MAXERROR] = '\0';
+	calc_err_msg[MAXERROR] = '\0';
 
 	/*
 	 * if we should longjmp, so do
 	 */
-	if (calc_jmp != 0) {
-		longjmp(calc_jmp_buf, calc_jmp);
+	if (calc_use_matherr_jmpbuf != 0) {
+		longjmp(calc_matherr_jmpbuf, calc_use_matherr_jmpbuf);
 	}
 
 	/*
@@ -111,8 +101,7 @@ math_error(char *fmt, ...)
 	 */
 	(void) fflush(stdout);
 	(void) fflush(stderr);
-	fprintf(stderr, "%s\n", calc_error);
-	fputc('\n', stderr);
+	fprintf(stderr, "%s\n\n", calc_err_msg);
 	libcalc_call_me_last();
-	exit(1);
+	exit(40);
 }

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.13 $
- * @(#) $Id: opcodes.c,v 29.13 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.14 $
+ * @(#) $Id: opcodes.c,v 29.14 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/opcodes.c,v $
  *
  * Under source code control:	1990/02/15 01:48:19
@@ -44,9 +44,9 @@
 #include "zrandom.h"
 #include "have_fpos.h"
 #include "custom.h"
-#include "math_error.h"
+#include "lib_calc.h"
 #include "block.h"
-#include "string.h"
+#include "str.h"
 
 #include "have_unused.h"
 
@@ -3260,7 +3260,14 @@ o_quit(FUNC *fp, long index)
 		}
 		freevalue(stackarray);
 		run_state = RUN_EXIT;
-		longjmp(jmpbuf, 1);
+		if (calc_use_scanerr_jmpbuf != 0) {
+			longjmp(calc_scanerr_jmpbuf, 50);
+		} else {
+			fprintf(stderr,
+			  "calc_scanerr_jmpbuf not setup, exiting code 50\n");
+			libcalc_call_me_last();
+			exit(50);
+		}
 	}
 	if (cp)
 		printf("%s\n", cp);

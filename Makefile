@@ -32,8 +32,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.89 $$
-# @(#) $Id: Makefile.ship,v 29.89 2007/02/12 04:19:38 chongo Exp $
+MAKEFILE_REV= $$Revision: 29.94 $$
+# @(#) $Id: Makefile.ship,v 29.94 2007/02/18 15:29:23 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -599,6 +599,10 @@ LIBDIR= /usr/lib
 #CALC_SHAREDIR= /dev/env/DJDIR/share/calc
 CALC_SHAREDIR= /usr/share/calc
 
+# NOTE: Do not set CALC_INCDIR to /usr/include or /usr/local/include!!!
+#	Always be sure that the CALC_INCDIR path ends in /calc to avoid
+#	conflicts with system or other application include files!!!
+#
 #CALC_INCDIR= /usr/local/include/calc
 #CALC_INCDIR= /dev/env/DJDIR/include/calc
 CALC_INCDIR= ${INCDIR}/calc
@@ -838,35 +842,70 @@ DEBUG= -O3 -g3
 #
 #DEBUG= -O2 -gstabs+ -DWINDOZ
 
-# On systems that have dynamic shared link libs, you may want want to disable
-# them for faster calc startup.
+# How to compile .c files so that we can form a shared library.
 #
-#    System type    NO_SHARED recommendation
+# CC_SHARE= -fPIC
+#	Building for shared library using the gcc position independent code
+#	(PIC) model.
+# CC_SHARE=
+#	Do not build for shared libraries.
 #
-#	BSD	    NO_SHARED=
-#	SYSV	    NO_SHARED= -dn
-#	IRIX	    NO_SHARED= -non_shared
-#	disable	    NO_SHARED=
+# NOTE: If CC_SHARE= is empty, then you very likely want to set
+#	CC_SHLIB= and LD_SHARE= to empty.
 #
-# If in doubt, use NO_SHARED=
+# If in doubt, try:
+#	CC_SHARE= -fPIC
+# If that fails try:
+#	CC_SHARE=
 #
-NO_SHARED=
-#NO_SHARED= -dn
-#NO_SHARED= -non_shared
+# NOTE: Shared libraries are not yet supported.  For now, use CC_SHARE=
+#
+#CC_SHARE= -fPIC
+CC_SHARE=
 
-# On some systems where you are disabling dynamic shared link libs, you may
-# need to pass a special flag to ${CC} and ${LCC} during linking stage.
+# How build a shared librtary
+# NOTE: This is not yet supported
 #
-#    System type			    NO_SHARED recommendation
+# CC_SHLIB= -shared "-Wl,-soname,libcalc.so.`./ver_calc${EXE} -V`"
+#	Building for shared library using the gcc position independent code
+#	(PIC) model.
+# CC_SHLIB=
+#	Do not build for shared libraries.
 #
-#	IRIX with NO_SHARED= -non_shared    LD_NO_SHARED= -Wl,-rdata_shared
-#	IRIX with NO_SHARED=		    LD_NO_SHARED=
-#	others				    LD_NO_SHARED=
+# NOTE: If CC_SHARE= is empty, then you very likely want to set
+#	CC_SHLIB= and LD_SHARE= to empty.
 #
-# If in doubt, use LD_NO_SHARED=
+# If in doubt, try:
+#	CC_SHLIB= -shared "-Wl,-soname,libcalc.so.`./ver_calc${EXE} -V`"
+# If that fails, try:
+#	CC_SHLIB=
 #
-LD_NO_SHARED=
-#LD_NO_SHARED= -Wl,-rdata_shared
+# NOTE: Shared libraries are not yet supported.  For now, use CC_SHLIB=
+#
+#CC_SHLIB= -shared "-Wl,-soname,libcalc.so.`./ver_calc${EXE} -V`"
+CC_SHLIB=
+
+# How to link with a shared library
+# NOTE: This is not yet supported
+#
+# LD_SHARE= -L.
+#	Building for shared library using the gcc position independent code
+#	(PIC) model.
+# LD_SHARE=
+#
+# NOTE: If CC_SHARE= is empty, then you very likely want to set
+#	CC_SHLIB= and LD_SHARE= to empty.
+#	Do not build for shared libraries.
+#
+# If in doubt, try:
+#	LD_SHARE= -L.
+# If that fails, try:
+#	LD_SHARE=
+#
+# NOTE: Shared libraries are not yet supported.  For now, use LD_SHARE=
+#
+#LD_SHARE= -L.
+LD_SHARE=
 
 # Some systems require one to use ranlib to add a symbol table to
 # a *.a link library.  Set RANLIB to the utility that performs this
@@ -994,13 +1033,13 @@ EXT=
 #
 CCWARN= -Wall -W -Wno-comment
 CCWERR=
-CCOPT= ${DEBUG} ${NO_SHARED}
+CCOPT= ${DEBUG} ${CC_SHARE}
 CCMISC=
 #
 CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
 ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
 #
-LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
+LDFLAGS= ${LD_SHARE}
 ILDFLAGS=
 #
 LCC= gcc
@@ -1012,13 +1051,13 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 #CCWARN= -Wall -W -Wno-comment
 #CCWERR=
-#CCOPT= ${DEBUG} ${NO_SHARED}
+#CCOPT= ${DEBUG} ${CC_SHARE}
 #CCMISC= -arch i386 -arch ppc
 #
 #CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
 #
-#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED} -arch i386 -arch ppc
+#LDFLAGS= ${LD_SHARE} -arch i386 -arch ppc
 #ILDFLAGS=
 #
 #LCC= gcc
@@ -1030,13 +1069,13 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 #CCWARN= -Wall -W -Wno-comment
 #CCWERR=
-#CCOPT= ${DEBUG} ${NO_SHARED}
+#CCOPT= ${DEBUG} ${CC_SHARE}
 #CCMISC=
 #
 #CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
 #
-#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
+#LDFLAGS= ${LD_SHARE}
 #ILDFLAGS=
 #
 #LCC= gcc
@@ -1051,45 +1090,16 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 #CCWARN=
 #CCWERR=
-#CCOPT= ${DEBUG} ${NO_SHARED}
+#CCOPT= ${DEBUG} ${CC_SHARE}
 #CCMISC=
 #
 #CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
 #
-#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
+#LDFLAGS= ${LD_SHARE}
 #ILDFLAGS=
 #
 #LCC= cc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-###
-#
-# SGI IRIX6.2 (or later) -n32 (v7.1 or later) Compiler
-#
-# You must set above:					RANLIB=:
-#
-# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
-# If -O2 -g is not supported try:			DEBUG= -O -g
-#
-# If you have the directory /usr/lib32/nonshared, then set the following above:
-#	NO_SHARED= -non_shared
-#	LD_NO_SHARED= -Wl,-rdata_shared
-#
-# woff 1209: cancel 'controlling expression is constant' warnings
-#
-#CCWARN= -fullwarn -woff 1209
-#CCWERR=
-#CCOPT= ${DEBUG} ${NO_SHARED}
-#CCMISC= -rdata_shared
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
-#
-#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
-#ILDFLAGS=
-#
-#LCC= cc -n32 -xansi
 #CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 ###
@@ -1104,13 +1114,13 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 #CCWARN=
 #CCWERR=
-#CCOPT= ${DEBUG} ${NO_SHARED}
+#CCOPT= ${DEBUG} ${CC_SHARE}
 #CCMISC= +e
 #
 #CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
 #
-#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
+#LDFLAGS= ${LD_SHARE}
 #ILDFLAGS=
 #
 #LCC= cc
@@ -1125,13 +1135,13 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 #CCWARN=
 #CCWERR=
-#CCOPT= ${DEBUG} ${NO_SHARED}
+#CCOPT= ${DEBUG} ${CC_SHARE}
 #CCMISC= -qlanglvl=ansi
 #
 #CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
 #
-#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
+#LDFLAGS= ${LD_SHARE}
 #ILDFLAGS=
 #
 #LCC= cc
@@ -1149,13 +1159,13 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 #CCWARN=
 #CCWERR=
-#CCOPT= ${DEBUG} ${NO_SHARED}
+#CCOPT= ${DEBUG} ${CC_SHARE}
 #CCMISC= -DFORCE_STDC
 #
 #CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
 #
-#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
+#LDFLAGS= ${LD_SHARE}
 #ILDFLAGS=
 #
 #LCC= cc
@@ -1169,13 +1179,13 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 #CCWARN=
 #CCWERR=
-#CCOPT= ${DEBUG} ${NO_SHARED}
+#CCOPT= ${DEBUG} ${CC_SHARE}
 #CCMISC=
 #
 #CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
 #ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -Wno-unused
 #
-#LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
+#LDFLAGS= ${LD_SHARE}
 #ILDFLAGS=
 #
 #LCC= cc
@@ -1240,7 +1250,7 @@ LIBSRC= addop.c assocfunc.c blkcpy.c block.c byteswap.c \
 	lib_calc.c lib_util.c listfunc.c matfunc.c math_error.c \
 	md5.c obj.c opcodes.c pix.c poly.c prime.c qfunc.c qio.c \
 	qmath.c qmod.c qtrans.c quickhash.c seed.c shs.c shs1.c size.c \
-	string.c symbol.c token.c value.c version.c zfunc.c zio.c \
+	str.c symbol.c token.c value.c version.c zfunc.c zio.c \
 	zmath.c zmod.c zmul.c zprime.c zrand.c zrandom.c
 
 # the object files which are built into a math link library
@@ -1254,7 +1264,7 @@ LIBOBJS= addop.o assocfunc.o blkcpy.o block.o byteswap.o calcerr.o \
 	lib_calc.o lib_util.o listfunc.o matfunc.o math_error.o \
 	md5.o obj.o opcodes.o pix.o poly.o prime.o qfunc.o qio.o \
 	qmath.o qmod.o qtrans.o quickhash.o seed.o shs.o shs1.o size.o \
-	string.o symbol.o token.o value.o version.o zfunc.o zio.o \
+	str.o symbol.o token.o value.o version.o zfunc.o zio.o \
 	zmath.o zmod.o zmul.o zprime.o zrand.o zrandom.o
 
 # the calculator source files
@@ -1273,8 +1283,8 @@ CALCOBJS= calc.o
 #
 LIB_H_SRC= alloc.h blkcpy.h block.h byteswap.h calc.h cmath.h \
 	config.h custom.h decl.h file.h func.h hash.h hist.h jump.h \
-	label.h lib_util.h math_error.h md5.h nametype.h \
-	opcodes.h prime.h qmath.h shs.h shs1.h string.h \
+	label.h lib_util.h lib_calc.h md5.h nametype.h \
+	opcodes.h prime.h qmath.h shs.h shs1.h str.h \
 	symbol.h token.h value.h zmath.h zrand.h zrandom.h
 
 # we build these .h files during the make
@@ -1336,6 +1346,22 @@ UTIL_PROGS= align32${EXT} fposval${EXT} have_uid_t${EXT} have_const${EXT} \
 	have_unused${EXT} have_fpos${EXT} have_fpos_pos${EXT} \
 	have_offscl${EXT} have_rusage${EXT} have_args.sh
 
+# Any .h files that are needed to compile sample code.
+#
+SAMPLE_H_SRC=
+
+# Any .c files that are needed to compile sample code.
+#
+# There MUST be a .c in SAMPLE_C_SRC for every .o in SAMPLE_OBJ.
+#
+SAMPLE_C_SRC= sample_many.c sample_rand.c
+
+# Any .o files that are needed to compile sample code.
+#
+# There MUST be a .c in SAMPLE_C_SRC for every .o in SAMPLE_OBJ.
+#
+SAMPLE_OBJ= sample_many.o sample_rand.o
+
 # The complete list of Makefile vars passed down to custom/Makefile.
 #
 CUSTOM_PASSDOWN= Q="${Q}" \
@@ -1350,64 +1376,18 @@ CUSTOM_PASSDOWN= Q="${Q}" \
     CUSTOMINCDIR="${CUSTOMINCDIR}" \
     SCRIPTDIR="${SCRIPTDIR}" \
     DEBUG="${DEBUG}" \
-    NO_SHARED="${NO_SHARED}" \
+    CC_SHARE="${CC_SHARE}" \
+    LD_SHARE="${LD_SHARE}" \
     RANLIB="${RANLIB}" \
     PURIFY="${PURIFY}" \
     ALLOW_CUSTOM="${ALLOW_CUSTOM}" \
     CCWARN="${CCWARN}" \
     CCOPT="${CCOPT}" \
     CCMISC="${CCMISC}" \
-    CFLAGS="${CFLAGS} ${ALLOW_CUSTOM}" \
+    CFLAGS="${CFLAGS} ${ALLOW_CUSTOM} -I/usr/include -I.." \
     ICFLAGS="${ICFLAGS}" \
     LDFLAGS="${LDFLAGS}" \
     ILDFLAGS="${ILDFLAGS}" \
-    LCC="${LCC}" \
-    CC="${CC}" \
-    MAKE_FILE=${MAKE_FILE} \
-    SED=${SED} \
-    CHMOD=${CHMOD} \
-    CMP=${CMP} \
-    MAKEDEPEND=${MAKEDEPEND} \
-    SORT=${SORT} \
-    LANG=${LANG} \
-    RM=${RM} \
-    TOUCH=${TOUCH} \
-    MKDIR=${MKDIR} \
-    RMDIR=${RMDIR} \
-    CP=${CP} \
-    MV=${MV} \
-    CO=${CO} \
-    AR=${AR} \
-    TRUE=${TRUE} \
-    CAT=${CAT} \
-    T=${T}
-
-# The complete list of Makefile vars passed down to sample/Makefile.
-#
-SAMPLE_PASSDOWN= Q="${Q}" \
-    INCDIR="${INCDIR}" \
-    BINDIR="${BINDIR}" \
-    LIBDIR="${LIBDIR}" \
-    CALC_SHAREDIR="${CALC_SHAREDIR}" \
-    HELPDIR="${HELPDIR}" \
-    CALC_INCDIR="${CALC_INCDIR}" \
-    CUSTOMCALDIR="${CUSTOMCALDIR}" \
-    CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
-    CUSTOMINCDIR="${CUSTOMINCDIR}" \
-    SCRIPTDIR="${SCRIPTDIR}" \
-    DEBUG="${DEBUG}" \
-    NO_SHARED="${NO_SHARED}" \
-    RANLIB="${RANLIB}" \
-    PURIFY="${PURIFY}" \
-    ALLOW_CUSTOM="${ALLOW_CUSTOM}" \
-    CCWARN="${CCWARN}" \
-    CCOPT="${CCOPT}" \
-    CCMISC="${CCMISC}" \
-    CFLAGS="${CFLAGS} ${ALLOW_CUSTOM}" \
-    ICFLAGS="${ICFLAGS}" \
-    LDFLAGS="${LDFLAGS}" \
-    ILDFLAGS="${ILDFLAGS}" \
-    CALC_LIBS="../libcalc.a ../custom/libcustcalc.a ${READLINE_LIB}" \
     LCC="${LCC}" \
     CC="${CC}" \
     MAKE_FILE=${MAKE_FILE} \
@@ -1527,11 +1507,11 @@ CSCRIPT_PASSDOWN= Q="${Q}" \
 
 # complete list of .h files found (but not built) in the distribution
 #
-H_SRC= ${LIB_H_SRC}
+H_SRC= ${LIB_H_SRC} ${SAMPLE_H_SRC}
 
 # complete list of .c files found (but not built) in the distribution
 #
-C_SRC= ${LIBSRC} ${CALCSRC} ${UTIL_C_SRC}
+C_SRC= ${LIBSRC} ${CALCSRC} ${UTIL_C_SRC} ${SAMPLE_C_SRC}
 
 # The list of files that describe calc's GNU Lesser General Public License
 #
@@ -1541,7 +1521,7 @@ LICENSE= COPYING COPYING-LGPL
 #
 DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README \
 	  README.WINDOWS calc.man HOWTO.INSTALL ${UTIL_MISC_SRC} ${LICENSE} \
-	  calc.spec.in rpm.mk
+	  sample.README calc.spec.in rpm.mk
 
 # These files are used to make (but not built) a calc .a link library
 #
@@ -1550,18 +1530,17 @@ CALCLIBLIST= ${LIBSRC} ${UTIL_C_SRC} ${LIB_H_SRC} ${MAKE_FILE} \
 
 # complete list of .o files
 #
-OBJS= ${LIBOBJS} ${CALCOBJS} ${UTIL_OBJS}
+OBJS= ${LIBOBJS} ${CALCOBJS} ${UTIL_OBJS} ${SAMPLE_OBJS}
 
 # Libaraies created and used to build calc
 #
-CALC_LIBS= libcalc.a custom/libcustcalc.a
+CALC_STATIC_LIBS= libcalc.a custom/libcustcalc.a
 
-# list of sample programs to that need to be built to satisfy sample/.all
+# list of sample programs to that need to be built to satisfy sample rule
 #
-# NOTE: This list MUST be coordinated with the ${SAMPLE_TARGETS} variable
-#	in the sample/Makefile
+# NOTE: The ${SAMPLE_TARGETS} are built but not installed at this time.
 #
-SAMPLE_TARGETS= sample/test_random sample/many_random
+SAMPLE_TARGETS= sample_rand${EXE} sample_many${EXE}
 
 # list of cscript programs to that need to be built to satisfy cscript/.all
 #
@@ -1577,8 +1556,9 @@ PROGS= calc${EXT} ${UTIL_PROGS}
 
 # complete list of targets
 #
-TARGETS= ${LICENSE} ${CALC_LIBS} custom/.all calc${EXT} sample/.all \
-	 cal/.all help/.all help/builtin cscript/.all calc.1 calc.usage
+TARGETS= ${LICENSE} ${CALC_STATIC_LIBS} custom/.all calc${EXT} \
+	 ${SAMPLE_TARGETS} calc.1 calc.usage \
+	 cal/.all help/.all help/builtin cscript/.all
 
 
 ###
@@ -1587,18 +1567,23 @@ TARGETS= ${LICENSE} ${CALC_LIBS} custom/.all calc${EXT} sample/.all \
 #
 ###
 
-all: .hsrc ${TARGETS} CHANGES
+all: .hsrc ver_calc${EXE} ${TARGETS} CHANGES
 
-calc${EXT}: .hsrc ${CALC_LIBS} ${CALCOBJS}
+calc${EXT}: .hsrc ${CALC_STATIC_LIBS} ${CALCOBJS} ${MAKE_FILE}
 	${RM} -f $@
-	${CC} ${LDFLAGS} ${CALCOBJS} ${CALC_LIBS} ${LD_DEBUG} \
-	      ${READLINE_LIB} -o $@
+	${CC} ${LDFLAGS} ${CALCOBJS} ${CALC_STATIC_LIBS} \
+	      ${LD_DEBUG} ${READLINE_LIB} -o $@; \
 
 libcalc.a: ${LIBOBJS} ${MAKE_FILE}
 	-${RM} -f libcalc.a
 	${AR} qc libcalc.a ${LIBOBJS}
 	${RANLIB} libcalc.a
 	${CHMOD} 0644 libcalc.a
+
+# NOTE: Shared libraries are not yet supported.
+#
+libcalc.so: ${LIBOBJS} ver_calc${EXE} ${MAKE_FILE}
+	${CC} ${CC_SHLIB} ${LIBOBJS} -o libcalc.so.`./ver_calc${EXE}`
 
 calc.1: calc.man ${MAKE_FILE}
 	-${RM} -f $@
@@ -1619,6 +1604,30 @@ calc.usage: calc.1
 	${Q} echo forming calc.usage from calc.1
 	${CALCPAGER} calc.1 | ${COL} -b > $@
 	${Q} echo calc.usage formed
+
+
+##
+#
+# These rules compile the sample code against the calc library
+#
+##
+
+sample: ${SAMPLE_TARGETS}
+
+sample_rand.o: sample_rand.c
+	${CC} ${CFLAGS} ${ALLOW_CUSTOM} sample_rand.c -c
+
+sample_rand${EXE}: sample_rand.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
+	${CC} ${LDFLAGS} sample_rand.o ${CALC_STATIC_LIBS} \
+	      ${LD_DEBUG} ${READLINE_LIB} -o $@
+
+sample_many.o: sample_many.c
+	${CC} ${CFLAGS} ${ALLOW_CUSTOM} sample_many.c -c
+
+sample_many${EXE}: sample_many.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
+	${CC} ${LDFLAGS} sample_many.o ${CALC_STATIC_LIBS} \
+	      ${LD_DEBUG} ${READLINE_LIB} -o $@
+
 
 ##
 #
@@ -1643,6 +1652,7 @@ func.o: func.c ${MAKE_FILE}
 
 seed.o: seed.c no_implicit.arg ${MAKE_FILE}
 	${CC} ${CFLAGS} `${CAT} no_implicit.arg` -c seed.c
+
 
 ##
 #
@@ -2951,6 +2961,7 @@ have_unused.h: have_unused.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
+
 ##
 #
 # Build .h files for windoz based systems
@@ -2998,6 +3009,7 @@ longbits${EXT}: longbits.o
 	${RM} -f $@
 	${LCC} ${ICFLAGS} longbits.o -o $@
 
+
 ##
 #
 # These two .all rules are used to determine of the lower level
@@ -3035,19 +3047,10 @@ ${CSCRIPT_TARGETS}:
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
-sample/.all: ${SAMPLE_TARGETS}
-
 custom/.all:
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for custom =-=-=-=-='
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} all
-	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
-
-${SAMPLE_TARGETS}: libcalc.a
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= Invoking all rule for cscript =-=-=-=-='
-	cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
@@ -3087,6 +3090,7 @@ custom/libcustcalc.a:
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
+
 ##
 #
 # Home grown make dependency rules.  Your system make not support
@@ -3108,9 +3112,6 @@ depend: hsrc
 	fi
 	${V} echo '=-=-=-=-= Invoking depend rule for custom =-=-=-=-='
 	-${Q} (cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} depend)
-	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= Invoking depend rule for sample =-=-=-=-='
-	-${Q} (cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} depend)
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q} echo forming skel
 	-${Q} ${RM} -rf skel
@@ -3172,6 +3173,7 @@ ver_calc${EXT}: version.c have_unused.h
 	-${RM} -f $@
 	${LCC} ${ICFLAGS} -DCALC_VER ${ILDFLAGS} version.c -o $@
 
+
 ##
 #
 # File distribution list generation.  You can ignore this section.
@@ -3195,8 +3197,7 @@ distlist: ${DISTLIST}
 	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
 	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
 	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
-	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@); \
-	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | LANG=C ${SORT}
+	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@)) | LANG=C ${SORT}
 
 distdir:
 	${Q} (echo .; \
@@ -3204,8 +3205,7 @@ distdir:
 	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
 	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
 	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
-	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@); \
-	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | LANG=C ${SORT}
+	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@)) | LANG=C ${SORT}
 
 calcliblist:
 	${Q} (for i in ${CALCLIBLIST} /dev/null; do \
@@ -3216,11 +3216,11 @@ calcliblist:
 	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
 	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
 	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
-	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@); \
-	(cd sample; ${MAKE} ${SAMPLE_PASSDOWN} $@)) | LANG=C ${SORT}
+	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@)) | LANG=C ${SORT}
 
 calcliblistfmt:
 	${Q} ${MAKE} calcliblist | ${FMT} -64 | ${SED} -e 's/^/	/'
+
 
 ##
 #
@@ -3241,6 +3241,7 @@ chk: ./cal/regress.cal
 	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
 	${CALC_ENV} ./calc${EXT} -d -q read regress 2>&1 | ${AWK} -f check.awk
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+
 
 ##
 #
@@ -3300,8 +3301,8 @@ env:
 	@echo 'CALCRC=${CALCRC}'; echo ''
 	@echo 'CALCPAGER=${CALCPAGER}'; echo ''
 	@echo 'DEBUG=${DEBUG}'; echo ''
-	@echo 'NO_SHARED=${NO_SHARED}'; echo ''
-	@echo 'LD_NO_SHARED=${LD_NO_SHARED}'; echo ''
+	@echo 'CC_SHARE=${CC_SHARE}'; echo ''
+	@echo 'LD_SHARE=${LD_SHARE}'; echo ''
 	@echo 'RANLIB=${RANLIB}'; echo ''
 	@echo 'MAKE_FILE=${MAKE_FILE}'; echo ''
 	@echo 'PURIFY=${PURIFY}'; echo ''
@@ -3364,7 +3365,7 @@ env:
 	@echo 'C_SRC=${C_SRC}'; echo ''
 	@echo 'DISTLIST=${DISTLIST}'; echo ''
 	@echo 'OBJS=${OBJS}'; echo ''
-	@echo 'CALC_LIBS=${CALC_LIBS}'; echo ''
+	@echo 'CALC_STATIC_LIBS=${CALC_STATIC_LIBS}'; echo ''
 	@echo 'PROGS=${PROGS}'; echo ''
 	@echo 'TARGETS=${TARGETS}'; echo ''
 	@echo '=-=-=-=-= end of major make variable dump =-=-=-=-='
@@ -3402,6 +3403,7 @@ debug: env rpm.release
 	@${MAKE} -f Makefile Q= V=@ chk
 	@echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+
 
 ##
 #
@@ -3521,6 +3523,7 @@ clean:
 	-${RM} -f ${UTIL_OBJS}
 	-${RM} -f ${UTIL_TMP}
 	-${RM} -f ${UTIL_PROGS}
+	-${RM} -f ${SAMPLE_OBJ}
 	-${RM} -f .libcustcalc_error
 	-${RM} -f calc.spec.sed
 	${Q} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
@@ -3532,17 +3535,14 @@ clean:
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} clean
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= Invoking $@ rule for sample =-=-=-=-='
-	cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} clean
-	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
 	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} clean
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q} echo remove files that are obsolete
 	-${RM} -rf lib
-	-${RM} -f endian.h stdarg.h libcalcerr.a cal/obj help/obj win32dll.h
+	-${RM} -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
 	-${RM} -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
-	-${RM} -f have_malloc.h
+	-${RM} -f win32dll.h have_malloc.h math_error.h string.h string.c
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
 clobber:
@@ -3552,6 +3552,7 @@ clobber:
 	-${RM} -f ${UTIL_OBJS}
 	-${RM} -f ${UTIL_TMP}
 	-${RM} -f ${UTIL_PROGS}
+	-${RM} -f ${SAMPLE_TARGETS}
 	-${RM} -f tags .hsrc hsrc
 	-${RM} -f ${BUILD_H_SRC}
 	-${RM} -f ${BUILD_C_SRC}
@@ -3571,17 +3572,14 @@ clobber:
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} clobber
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= Invoking $@ rule for sample =-=-=-=-='
-	cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} clobber
-	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
 	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} clobber
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo remove files that are obsolete
 	-${RM} -rf lib
-	-${RM} -f endian.h stdarg.h libcalcerr.a cal/obj help/obj win32dll.h
-	-${RM} -f have_vs.c std_arg.h try_stdarg.c fnvhash.c calc.spec
-	-${RM} -f have_malloc.h
+	-${RM} -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
+	-${RM} -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
+	-${RM} -f win32dll.h have_malloc.h math_error.h string.h string.c
 	-${RM} -rf win32
 	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
 
@@ -3721,9 +3719,6 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= Invoking $@ rule for sample =-=-=-=-='
-	${Q} cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} install
-	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
 	${Q} cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
@@ -3751,6 +3746,26 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 		${CHMOD} 0444 ${T}${CALC_INCDIR}/$$i.new; \
 		${MV} -f ${T}${CALC_INCDIR}/$$i.new ${T}${CALC_INCDIR}/$$i; \
 		echo "installed ${T}${CALC_INCDIR}/$$i"; \
+	    fi; \
+	    if [ -f "${T}${CALC_INCDIR}/std_arg.h" ]; then \
+		${RM} -f ${T}${CALC_INCDIR}/std_arg.h; \
+		echo "removed old ${T}${CALC_INCDIR}/std_arg.h"; \
+	    fi; \
+	    if [ -f "${T}${CALC_INCDIR}/win32dll.h" ]; then \
+		${RM} -f ${T}${CALC_INCDIR}/win32dll.h; \
+		echo "removed old ${T}${CALC_INCDIR}/win32dll.h"; \
+	    fi; \
+	    if [ -f "${T}${CALC_INCDIR}/have_malloc.h" ]; then \
+		${RM} -f ${T}${CALC_INCDIR}/have_malloc.h; \
+		echo "removed old ${T}${CALC_INCDIR}/have_malloc.h"; \
+	    fi; \
+	    if [ -f "${T}${CALC_INCDIR}/math_error.h" ]; then \
+		${RM} -f ${T}${CALC_INCDIR}/math_error.h; \
+		echo "removed old ${T}${CALC_INCDIR}/math_error.h"; \
+	    fi; \
+	    if [ -f "${T}${CALC_INCDIR}/string.h" ]; then \
+		${RM} -f ${T}${CALC_INCDIR}/string.h; \
+		echo "removed old ${T}${CALC_INCDIR}/string.h"; \
 	    fi; \
 	done
 	${Q} ${RM} -f tmp
@@ -3844,9 +3859,6 @@ uninstall:
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
 	${Q} cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} uninstall
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= Invoking $@ rule for sample =-=-=-=-='
-	${Q} cd sample; ${MAKE} -f Makefile ${SAMPLE_PASSDOWN} uninstall
-	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} uninstall
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
@@ -3886,6 +3898,7 @@ splint: #hsrc
 	${SPLINT} ${SPLINT_OPTS} -DCALC_SRC -I. \
 	    ${CALCSRC} ${LIBSRC} ${BUILD_C_SRC} ${UTIL_C_SRC}
 
+
 ##
 #
 # make depend stuff
@@ -3919,7 +3932,7 @@ addop.o: opcodes.h
 addop.o: qmath.h
 addop.o: shs.h
 addop.o: shs1.h
-addop.o: string.h
+addop.o: str.h
 addop.o: symbol.h
 addop.o: token.h
 addop.o: value.h
@@ -3948,7 +3961,7 @@ assocfunc.o: nametype.h
 assocfunc.o: qmath.h
 assocfunc.o: shs.h
 assocfunc.o: shs1.h
-assocfunc.o: string.h
+assocfunc.o: str.h
 assocfunc.o: value.h
 assocfunc.o: zmath.h
 blkcpy.o: alloc.h
@@ -3976,7 +3989,7 @@ blkcpy.o: nametype.h
 blkcpy.o: qmath.h
 blkcpy.o: shs.h
 blkcpy.o: shs1.h
-blkcpy.o: string.h
+blkcpy.o: str.h
 blkcpy.o: value.h
 blkcpy.o: zmath.h
 block.o: alloc.h
@@ -4000,7 +4013,7 @@ block.o: nametype.h
 block.o: qmath.h
 block.o: shs.h
 block.o: shs1.h
-block.o: string.h
+block.o: str.h
 block.o: value.h
 block.o: zmath.h
 byteswap.o: alloc.h
@@ -4043,15 +4056,15 @@ calc.o: have_unistd.h
 calc.o: have_unused.h
 calc.o: hist.h
 calc.o: label.h
+calc.o: lib_calc.h
 calc.o: longbits.h
-calc.o: math_error.h
 calc.o: md5.h
 calc.o: nametype.h
 calc.o: opcodes.h
 calc.o: qmath.h
 calc.o: shs.h
 calc.o: shs1.h
-calc.o: string.h
+calc.o: str.h
 calc.o: symbol.h
 calc.o: token.h
 calc.o: value.h
@@ -4079,6 +4092,7 @@ codegen.o: have_stdlib.h
 codegen.o: have_string.h
 codegen.o: have_unistd.h
 codegen.o: label.h
+codegen.o: lib_calc.h
 codegen.o: longbits.h
 codegen.o: md5.h
 codegen.o: nametype.h
@@ -4086,7 +4100,7 @@ codegen.o: opcodes.h
 codegen.o: qmath.h
 codegen.o: shs.h
 codegen.o: shs1.h
-codegen.o: string.h
+codegen.o: str.h
 codegen.o: symbol.h
 codegen.o: token.h
 codegen.o: value.h
@@ -4146,7 +4160,7 @@ config.o: nametype.h
 config.o: qmath.h
 config.o: shs.h
 config.o: shs1.h
-config.o: string.h
+config.o: str.h
 config.o: token.h
 config.o: value.h
 config.o: zmath.h
@@ -4173,7 +4187,7 @@ const.o: nametype.h
 const.o: qmath.h
 const.o: shs.h
 const.o: shs1.h
-const.o: string.h
+const.o: str.h
 const.o: value.h
 const.o: zmath.h
 custom.o: alloc.h
@@ -4199,7 +4213,7 @@ custom.o: nametype.h
 custom.o: qmath.h
 custom.o: shs.h
 custom.o: shs1.h
-custom.o: string.h
+custom.o: str.h
 custom.o: value.h
 custom.o: zmath.h
 endian.o: endian.c
@@ -4232,7 +4246,7 @@ file.o: nametype.h
 file.o: qmath.h
 file.o: shs.h
 file.o: shs1.h
-file.o: string.h
+file.o: str.h
 file.o: value.h
 file.o: zmath.h
 fposval.o: endian_calc.h
@@ -4275,7 +4289,7 @@ func.o: prime.h
 func.o: qmath.h
 func.o: shs.h
 func.o: shs1.h
-func.o: string.h
+func.o: str.h
 func.o: symbol.h
 func.o: token.h
 func.o: value.h
@@ -4304,7 +4318,7 @@ hash.o: nametype.h
 hash.o: qmath.h
 hash.o: shs.h
 hash.o: shs1.h
-hash.o: string.h
+hash.o: str.h
 hash.o: value.h
 hash.o: zmath.h
 hash.o: zrand.h
@@ -4359,7 +4373,7 @@ help.o: nametype.h
 help.o: qmath.h
 help.o: shs.h
 help.o: shs1.h
-help.o: string.h
+help.o: str.h
 help.o: value.h
 help.o: zmath.h
 hist.o: alloc.h
@@ -4388,7 +4402,7 @@ hist.o: nametype.h
 hist.o: qmath.h
 hist.o: shs.h
 hist.o: shs1.h
-hist.o: string.h
+hist.o: str.h
 hist.o: value.h
 hist.o: zmath.h
 input.o: alloc.h
@@ -4416,7 +4430,7 @@ input.o: nametype.h
 input.o: qmath.h
 input.o: shs.h
 input.o: shs1.h
-input.o: string.h
+input.o: str.h
 input.o: value.h
 input.o: zmath.h
 jump.o: decl.h
@@ -4448,7 +4462,7 @@ label.o: opcodes.h
 label.o: qmath.h
 label.o: shs.h
 label.o: shs1.h
-label.o: string.h
+label.o: str.h
 label.o: token.h
 label.o: value.h
 label.o: zmath.h
@@ -4473,13 +4487,14 @@ lib_calc.o: have_string.h
 lib_calc.o: have_unistd.h
 lib_calc.o: label.h
 lib_calc.o: lib_calc.c
+lib_calc.o: lib_calc.h
 lib_calc.o: longbits.h
 lib_calc.o: md5.h
 lib_calc.o: nametype.h
 lib_calc.o: qmath.h
 lib_calc.o: shs.h
 lib_calc.o: shs1.h
-lib_calc.o: string.h
+lib_calc.o: str.h
 lib_calc.o: symbol.h
 lib_calc.o: terminal.h
 lib_calc.o: token.h
@@ -4520,7 +4535,7 @@ listfunc.o: nametype.h
 listfunc.o: qmath.h
 listfunc.o: shs.h
 listfunc.o: shs1.h
-listfunc.o: string.h
+listfunc.o: str.h
 listfunc.o: value.h
 listfunc.o: zmath.h
 listfunc.o: zrand.h
@@ -4549,7 +4564,7 @@ matfunc.o: nametype.h
 matfunc.o: qmath.h
 matfunc.o: shs.h
 matfunc.o: shs1.h
-matfunc.o: string.h
+matfunc.o: str.h
 matfunc.o: value.h
 matfunc.o: zmath.h
 matfunc.o: zrand.h
@@ -4569,15 +4584,15 @@ math_error.o: have_memmv.h
 math_error.o: have_newstr.h
 math_error.o: have_stdlib.h
 math_error.o: have_string.h
+math_error.o: lib_calc.h
 math_error.o: longbits.h
 math_error.o: math_error.c
-math_error.o: math_error.h
 math_error.o: md5.h
 math_error.o: nametype.h
 math_error.o: qmath.h
 math_error.o: shs.h
 math_error.o: shs1.h
-math_error.o: string.h
+math_error.o: str.h
 math_error.o: value.h
 math_error.o: zmath.h
 md5.o: align32.h
@@ -4602,7 +4617,7 @@ md5.o: nametype.h
 md5.o: qmath.h
 md5.o: shs.h
 md5.o: shs1.h
-md5.o: string.h
+md5.o: str.h
 md5.o: value.h
 md5.o: zmath.h
 no_implicit.o: no_implicit.c
@@ -4631,7 +4646,7 @@ obj.o: opcodes.h
 obj.o: qmath.h
 obj.o: shs.h
 obj.o: shs1.h
-obj.o: string.h
+obj.o: str.h
 obj.o: symbol.h
 obj.o: value.h
 obj.o: zmath.h
@@ -4657,8 +4672,8 @@ opcodes.o: have_string.h
 opcodes.o: have_unused.h
 opcodes.o: hist.h
 opcodes.o: label.h
+opcodes.o: lib_calc.h
 opcodes.o: longbits.h
-opcodes.o: math_error.h
 opcodes.o: md5.h
 opcodes.o: nametype.h
 opcodes.o: opcodes.c
@@ -4666,7 +4681,7 @@ opcodes.o: opcodes.h
 opcodes.o: qmath.h
 opcodes.o: shs.h
 opcodes.o: shs1.h
-opcodes.o: string.h
+opcodes.o: str.h
 opcodes.o: symbol.h
 opcodes.o: value.h
 opcodes.o: zmath.h
@@ -4707,7 +4722,7 @@ poly.o: poly.c
 poly.o: qmath.h
 poly.o: shs.h
 poly.o: shs1.h
-poly.o: string.h
+poly.o: str.h
 poly.o: value.h
 poly.o: zmath.h
 prime.o: alloc.h
@@ -4822,11 +4837,65 @@ quickhash.o: qmath.h
 quickhash.o: quickhash.c
 quickhash.o: shs.h
 quickhash.o: shs1.h
-quickhash.o: string.h
+quickhash.o: str.h
 quickhash.o: value.h
 quickhash.o: zmath.h
 quickhash.o: zrand.h
 quickhash.o: zrandom.h
+sample_many.o: alloc.h
+sample_many.o: block.h
+sample_many.o: byteswap.h
+sample_many.o: calc.h
+sample_many.o: calcerr.h
+sample_many.o: cmath.h
+sample_many.o: config.h
+sample_many.o: decl.h
+sample_many.o: endian_calc.h
+sample_many.o: hash.h
+sample_many.o: have_const.h
+sample_many.o: have_memmv.h
+sample_many.o: have_newstr.h
+sample_many.o: have_stdlib.h
+sample_many.o: have_string.h
+sample_many.o: lib_util.h
+sample_many.o: longbits.h
+sample_many.o: md5.h
+sample_many.o: nametype.h
+sample_many.o: qmath.h
+sample_many.o: sample_many.c
+sample_many.o: shs.h
+sample_many.o: shs1.h
+sample_many.o: str.h
+sample_many.o: value.h
+sample_many.o: zmath.h
+sample_many.o: zrandom.h
+sample_rand.o: alloc.h
+sample_rand.o: block.h
+sample_rand.o: byteswap.h
+sample_rand.o: calc.h
+sample_rand.o: calcerr.h
+sample_rand.o: cmath.h
+sample_rand.o: config.h
+sample_rand.o: decl.h
+sample_rand.o: endian_calc.h
+sample_rand.o: hash.h
+sample_rand.o: have_const.h
+sample_rand.o: have_memmv.h
+sample_rand.o: have_newstr.h
+sample_rand.o: have_stdlib.h
+sample_rand.o: have_string.h
+sample_rand.o: lib_util.h
+sample_rand.o: longbits.h
+sample_rand.o: md5.h
+sample_rand.o: nametype.h
+sample_rand.o: qmath.h
+sample_rand.o: sample_rand.c
+sample_rand.o: shs.h
+sample_rand.o: shs1.h
+sample_rand.o: str.h
+sample_rand.o: value.h
+sample_rand.o: zmath.h
+sample_rand.o: zrandom.h
 seed.o: alloc.h
 seed.o: byteswap.h
 seed.o: decl.h
@@ -4872,7 +4941,7 @@ shs.o: qmath.h
 shs.o: shs.c
 shs.o: shs.h
 shs.o: shs1.h
-shs.o: string.h
+shs.o: str.h
 shs.o: value.h
 shs.o: zmath.h
 shs1.o: align32.h
@@ -4897,7 +4966,7 @@ shs1.o: qmath.h
 shs1.o: shs.h
 shs1.o: shs1.c
 shs1.o: shs1.h
-shs1.o: string.h
+shs1.o: str.h
 shs1.o: value.h
 shs1.o: zmath.h
 size.o: alloc.h
@@ -4921,36 +4990,36 @@ size.o: qmath.h
 size.o: shs.h
 size.o: shs1.h
 size.o: size.c
-size.o: string.h
+size.o: str.h
 size.o: value.h
 size.o: zmath.h
 size.o: zrand.h
 size.o: zrandom.h
-string.o: alloc.h
-string.o: block.h
-string.o: byteswap.h
-string.o: calc.h
-string.o: calcerr.h
-string.o: cmath.h
-string.o: config.h
-string.o: decl.h
-string.o: endian_calc.h
-string.o: hash.h
-string.o: have_const.h
-string.o: have_memmv.h
-string.o: have_newstr.h
-string.o: have_stdlib.h
-string.o: have_string.h
-string.o: longbits.h
-string.o: md5.h
-string.o: nametype.h
-string.o: qmath.h
-string.o: shs.h
-string.o: shs1.h
-string.o: string.c
-string.o: string.h
-string.o: value.h
-string.o: zmath.h
+str.o: alloc.h
+str.o: block.h
+str.o: byteswap.h
+str.o: calc.h
+str.o: calcerr.h
+str.o: cmath.h
+str.o: config.h
+str.o: decl.h
+str.o: endian_calc.h
+str.o: hash.h
+str.o: have_const.h
+str.o: have_memmv.h
+str.o: have_newstr.h
+str.o: have_stdlib.h
+str.o: have_string.h
+str.o: longbits.h
+str.o: md5.h
+str.o: nametype.h
+str.o: qmath.h
+str.o: shs.h
+str.o: shs1.h
+str.o: str.c
+str.o: str.h
+str.o: value.h
+str.o: zmath.h
 symbol.o: alloc.h
 symbol.o: block.h
 symbol.o: byteswap.h
@@ -4975,7 +5044,7 @@ symbol.o: opcodes.h
 symbol.o: qmath.h
 symbol.o: shs.h
 symbol.o: shs1.h
-symbol.o: string.h
+symbol.o: str.h
 symbol.o: symbol.c
 symbol.o: symbol.h
 symbol.o: token.h
@@ -4997,14 +5066,14 @@ token.o: have_memmv.h
 token.o: have_newstr.h
 token.o: have_stdlib.h
 token.o: have_string.h
+token.o: lib_calc.h
 token.o: longbits.h
-token.o: math_error.h
 token.o: md5.h
 token.o: nametype.h
 token.o: qmath.h
 token.o: shs.h
 token.o: shs1.h
-token.o: string.h
+token.o: str.h
 token.o: token.c
 token.o: token.h
 token.o: value.h
@@ -5035,7 +5104,7 @@ value.o: opcodes.h
 value.o: qmath.h
 value.o: shs.h
 value.o: shs1.h
-value.o: string.h
+value.o: str.h
 value.o: symbol.h
 value.o: value.c
 value.o: value.h
@@ -5064,7 +5133,7 @@ version.o: nametype.h
 version.o: qmath.h
 version.o: shs.h
 version.o: shs1.h
-version.o: string.h
+version.o: str.h
 version.o: value.h
 version.o: version.c
 version.o: zmath.h
@@ -5160,7 +5229,7 @@ zprime.o: prime.h
 zprime.o: qmath.h
 zprime.o: shs.h
 zprime.o: shs1.h
-zprime.o: string.h
+zprime.o: str.h
 zprime.o: value.h
 zprime.o: zmath.h
 zprime.o: zprime.c
@@ -5186,7 +5255,7 @@ zrand.o: nametype.h
 zrand.o: qmath.h
 zrand.o: shs.h
 zrand.o: shs1.h
-zrand.o: string.h
+zrand.o: str.h
 zrand.o: value.h
 zrand.o: zmath.h
 zrand.o: zrand.c
@@ -5212,7 +5281,7 @@ zrandom.o: nametype.h
 zrandom.o: qmath.h
 zrandom.o: shs.h
 zrandom.o: shs1.h
-zrandom.o: string.h
+zrandom.o: str.h
 zrandom.o: value.h
 zrandom.o: zmath.h
 zrandom.o: zrandom.c

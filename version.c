@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.81 $
- * @(#) $Id: version.c,v 29.81 2007/02/12 03:40:35 chongo Exp $
+ * @(#) $Revision: 29.82 $
+ * @(#) $Id: version.c,v 29.82 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
@@ -46,10 +46,10 @@ static char *program;
 
 #include "have_unused.h"
 
-#define MAJOR_VER	2	/* major version */
-#define MINOR_VER	12	/* minor version */
-#define MAJOR_PATCH	1	/* patch level or 0 if no patch */
-#define MINOR_PATCH	12	/* test number or 0 if no minor patch */
+#define MAJOR_VER	2	/* major library version */
+#define MINOR_VER	12	/* minor library version */
+#define MAJOR_PATCH	1	/* major software level under library version */
+#define MINOR_PATCH	13	/* minor software level or 0 if none */
 
 
 /*
@@ -136,8 +136,8 @@ version(void)
 	 */
 	stored_version = (char *)malloc(strlen(verbuf)+1);
 	if (stored_version == NULL) {
-		fprintf(stderr, "%s: version formation value\n", program);
-		exit(1);
+		fprintf(stderr, "%s: cannot malloc version string\n", program);
+		exit(70);
 	}
 	strcpy(stored_version, verbuf);
 
@@ -175,13 +175,13 @@ print_rpm_version(char *release)
 	if (file == NULL) {
 		fprintf(stderr, "%s: cannot open %s: %s\n",
 		    program, release, strerror(errno));
-		exit(2);
+		exit(71);
 	}
 	buf[BUFSIZ] = '\0';
 	if (fgets(buf, BUFSIZ, file) == NULL) {
 		fprintf(stderr, "%s: cannot read %s: %s\n",
 		    program, release, strerror(errno));
-		exit(3);
+		exit(72);
 	}
 	p = strchr(buf, '\n');
 	if (p != NULL) {
@@ -244,13 +244,13 @@ print_rpm_release(char *release)
 	if (file == NULL) {
 		fprintf(stderr, "%s: cannot open %s: %s\n",
 		    program, release, strerror(errno));
-		exit(2);
+		exit(73);
 	}
 	buf[BUFSIZ] = '\0';
 	if (fgets(buf, BUFSIZ, file) == NULL) {
 		fprintf(stderr, "%s: cannot read %s: %s\n",
 		    program, release, strerror(errno));
-		exit(3);
+		exit(74);
 	}
 	p = strchr(buf, '\n');
 	if (p != NULL) {
@@ -289,7 +289,7 @@ main(int argc, char *argv[])
 		fprintf(stderr,
 		    "usage: %s [-V] [-R release_file] [-r release_file]\n",
 		    program);
-		exit(4);
+		exit(75);
 	}
 	return 0;
 }

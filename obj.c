@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: obj.c,v 29.9 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.10 $
+ * @(#) $Id: obj.c,v 29.10 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/obj.c,v $
  *
  * Under source code control:	1990/02/15 01:48:19
@@ -38,7 +38,7 @@
 #include "opcodes.h"
 #include "func.h"
 #include "symbol.h"
-#include "string.h"
+#include "str.h"
 
 
 /*

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.23 $
- * @(#) $Id: codegen.c,v 29.23 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.24 $
+ * @(#) $Id: codegen.c,v 29.24 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -36,12 +36,13 @@
 #include <unistd.h>
 #endif
 
+#include "lib_calc.h"
 #include "calc.h"
 #include "token.h"
 #include "symbol.h"
 #include "label.h"
 #include "opcodes.h"
-#include "string.h"
+#include "str.h"
 #include "func.h"
 #include "conf.h"
 
@@ -227,7 +228,14 @@ getcommands(BOOL toplevel)
 					run_state = RUN_EXIT;
 				else if (run_state < RUN_PRE_TOP_LEVEL)
 				run_state = RUN_PRE_TOP_LEVEL;
-				longjmp(jmpbuf, 1);
+				if (calc_use_scanerr_jmpbuf != 0) {
+					longjmp(calc_scanerr_jmpbuf, 30);
+				} else {
+					fprintf(stderr,
+			  "calc_scanerr_jmpbuf not setup, exiting code 30\n");
+					libcalc_call_me_last();
+					exit(30);
+				}
 			}
 		}
 	}

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.24 $
- * @(#) $Id: config.c,v 29.24 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.25 $
+ * @(#) $Id: config.c,v 29.25 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -55,7 +55,7 @@
 #include "block.h"
 #include "nametype.h"
 #include "config.h"
-#include "string.h"
+#include "str.h"
 #include "custom.h"
 
 #include "have_strdup.h"

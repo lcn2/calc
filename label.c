@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.3 $
- * @(#) $Id: label.c,v 29.3 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.4 $
+ * @(#) $Id: label.c,v 29.4 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/label.c,v $
  *
  * Under source code control:	1990/02/15 01:48:17
@@ -31,7 +31,7 @@
 #include "calc.h"
 #include "token.h"
 #include "label.h"
-#include "string.h"
+#include "str.h"
 #include "opcodes.h"
 #include "func.h"
 

@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-# @(#) $Revision: 29.31 $
-# @(#) $Id: Makefile,v 29.31 2007/02/12 04:19:17 chongo Exp $
+# @(#) $Revision: 29.32 $
+# @(#) $Id: Makefile,v 29.32 2007/02/18 14:24:56 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -203,103 +203,164 @@ SCRIPTDIR= ${BINDIR}/cscript
 #
 T=
 
-# Normally, the upper level makefile will set these values.  We provide
-# a default here just in case you want to build from this directory.
+# Debug/Optimize options for ${CC} and ${LCC}
 #
-# Debug/Optimize options for ${CC}
+# Select DEBUG= -O2 -gstabs+ -DWINDOZ for DJGPP.
 #
-DEBUG= -O
+#DEBUG=
+#
+#DEBUG= -O
 #DEBUG= -O -g
 #DEBUG= -O -g3
+#
 #DEBUG= -O1
 #DEBUG= -O1 -g
 #DEBUG= -O1 -g3
+#
 #DEBUG= -O2
 #DEBUG= -O2 -g
 #DEBUG= -O2 -g3
 #DEBUG= -O2 -ipa
 #DEBUG= -O2 -g3 -ipa
+#
 #DEBUG= -O3
 #DEBUG= -O3 -g
-#DEBUG= -O3 -g3
+DEBUG= -O3 -g3
 #DEBUG= -O3 -ipa
 #DEBUG= -O3 -g3 -ipa
+#
+#DEBUG= -std0 -fast -O4 -static
+#
 #DEBUG= -g
 #DEBUG= -g3
 #DEBUG= -gx
 #DEBUG= -WM,-g
-#DEBUG=
+#
+#DEBUG= -O2 -gstabs+ -DWINDOZ
 
-# Normally, the upper level makefile will set these values.  We provide
-# a default here just in case you want to build from this directory.
+# How to compile .c files so that we can form a shared library.
 #
-# On systems that have dynamic shared libs, you may want want to disable them
-# for faster calc startup.
+# CC_SHARE= -fPIC
+#	Building for shared library using the gcc position independent code
+#	(PIC) model.
+# CC_SHARE=
+#	Do not build for shared libraries.
 #
-#    System type    NO_SHARED recommendation
+# NOTE: If CC_SHARE= is empty, then you very likely want to set
+#	CC_SHLIB= and LD_SHARE= to empty.
 #
-#	BSD	    NO_SHARED=
-#	SYSV	    NO_SHARED= -dn
-#	IRIX	    NO_SHARED= -non_shared
-#	disable	    NO_SHARED=
+# If in doubt, try:
+#	CC_SHARE= -fPIC
+# If that fails try:
+#	CC_SHARE=
 #
-# If in doubt, use NO_SHARED=
+# NOTE: Shared libraries are not yet supported.  For now, use CC_SHARE=
 #
-NO_SHARED=
-#NO_SHARED= -dn
-#NO_SHARED= -non_shared
+#CC_SHARE= -fPIC
+CC_SHARE=
 
-# On some systems where you are disabling dynamic shared link libs, you may
-# need to pass a special flag to ${CC} and ${LCC} during linking stage.
+# How build a shared librtary
+# NOTE: This is not yet supported
 #
-#    System type			    NO_SHARED recommendation
+# CC_SHLIB= -shared "-Wl,-soname,libcalc.so.`./ver_calc${EXE} -V`"
+#	Building for shared library using the gcc position independent code
+#	(PIC) model.
+# CC_SHLIB=
+#	Do not build for shared libraries.
 #
-#	IRIX with NO_SHARED= -non_shared    LD_NO_SHARED= -Wl,-rdata_shared
-#	IRIX with NO_SHARED=		    LD_NO_SHARED=
-#	others				    LD_NO_SHARED=
+# NOTE: If CC_SHARE= is empty, then you very likely want to set
+#	CC_SHLIB= and LD_SHARE= to empty.
 #
-# If in doubt, use LD_NO_SHARED=
+# If in doubt, try:
+#	CC_SHLIB= -shared "-Wl,-soname,libcalc.so.`./ver_calc${EXE} -V`"
+# If that fails, try:
+#	CC_SHLIB=
 #
-LD_NO_SHARED=
-#LD_NO_SHARED= -Wl,-rdata_shared
+# NOTE: Shared libraries are not yet supported.  For now, use CC_SHLIB=
+#
+#CC_SHLIB= -shared "-Wl,-soname,libcalc.so.`./ver_calc${EXE} -V`"
+CC_SHLIB=
 
-# Normally, the upper level makefile will set these values.  We provide
-# a default here just in case you want to build from this directory.
+# How to link with a shared library
+# NOTE: This is not yet supported
 #
+# LD_SHARE= -L.
+#	Building for shared library using the gcc position independent code
+#	(PIC) model.
+# LD_SHARE=
+#
+# NOTE: If CC_SHARE= is empty, then you very likely want to set
+#	CC_SHLIB= and LD_SHARE= to empty.
+#	Do not build for shared libraries.
+#
+# If in doubt, try:
+#	LD_SHARE= -L.
+# If that fails, try:
+#	LD_SHARE=
+#
+# NOTE: Shared libraries are not yet supported.  For now, use LD_SHARE=
+#
+#LD_SHARE= -L.
+LD_SHARE=
+
 # Some systems require one to use ranlib to add a symbol table to
-# a *.a link library.  Set RANLIB to the utility that performs this action.
-# Set RANLIB to : if your system does not need such a utility.
+# a *.a link library.  Set RANLIB to the utility that performs this
+# action.  Set RANLIB to : if your system does not need such a utility.
 #
-#RANLIB=ranlib
-RANLIB=:
+RANLIB=ranlib
+#RANLIB=:
 
-# Normally, the upper level makefile will set these values.  We provide
-# a default here just in case you want to build from this directory.
-#
 # Normally certain files depend on the Makefile.  If the Makefile is
 # changed, then certain steps should be redone.	 If MAKE_FILE is
 # set to Makefile, then these files will depend on Makefile.  If
-# MAKE_FILE is empty, they they wont.
+# MAKE_FILE is empty, then they wont.
 #
 # If in doubt, set MAKE_FILE to Makefile
 #
 MAKE_FILE= Makefile
 #MAKE_FILE=
 
-# Normally, the upper level makefile will set these values.  We provide
-# a default here just in case you want to build from this directory.
-#
 # If you do not wish to use purify, set PURIFY to an empty string.
 #
 # If in doubt, use PURIFY=
 #
-#PURIFY= purify -logfile=pure.out
 #PURIFY= purify
+#PURIFY= purify -m71-engine
+#PURIFY= purify -logfile=pure.out
+#PURIFY= purify -m71-engine -logfile=pure.out
 PURIFY=
 
-# Normally, the upper level makefile will set these values.  We provide
-# a default here just in case you want to build from this directory.
+# If you want to use a debugging link library such as a malloc debug link
+# library, or need to add special ld flags after the calc link libraries
+# are included, set ${LD_DEBUG} below.
 #
+# If in doubt, set LD_DEBUG to empty.
+#
+#LD_DEBUG= -lmalloc_cv
+LD_DEBUG=
+
+# When doing a:
+#
+#	make check
+#	make chk
+#	make debug
+#
+# the ${CALC_ENV} is used to supply the proper environment variables
+# to calc.  Most people will simply need 'CALCPATH=./cal' to ensure
+# that these debug rules will only use calc resource files under the
+# local source directory.  The longer lines (with MALLOC_VERBOSE=1 ...)
+# are useful for SGI IRIX people who have 'WorkShop Performance Tools'
+# and who also set 'LD_DEBUG= -lmalloc_cv' above.
+#
+# If in doubt, use CALC_ENV= CALCPATH=./cal.
+#
+CALC_ENV= CALCPATH=./cal
+#CALC_ENV= CALCPATH=./cal MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
+#	  MALLOC_FASTCHK=1 MALLOC_FULLWARN=1
+#CALC_ENV= CALCPATH=./cal MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
+#	  MALLOC_FASTCHK=1 MALLOC_FULLWARN=1 MALLOC_CLEAR_FREE=1 \
+#	  MALLOC_CLEAR_MALLOC=1
+
 # By default, custom builtin functions may only be executed if calc
 # is given the -C option.  This is because custom builtin functions
 # may invoke non-standard or non-portable code.	 One may completely
@@ -313,15 +374,44 @@ PURIFY=
 ALLOW_CUSTOM= -DCUSTOM
 #ALLOW_CUSTOM=
 
-###
+# The install rule uses:
 #
-# Normally, the upper level makefile will set these values.  We provide
-# a default here just in case you want to build from this directory.
+#	${MKDIR} ${MKDIR_ARG}
+#
+# to create directorties.  Normall this amounts to usins mkdir -p dir ...
+# Some older systems may not have mkdir -p.  If you system does not
+# make mkdir -p, then set MKDIR_ARG to empty.
+#
+# MKDIR_ARG= -p			# use mkdir -p when creating paths
+# MKDIR_ARG=			# use if system does not understand mkdir -p
+#
+MKDIR_ARG= -p
+#MKDIR_ARG=
+
+# Some out of date operating systems require / want an executable to
+# end with a certain file extension.  Some compile systems such as
+# Cygwin build calc as calc.exe.  The EXT variable is used to denote
+# the extension required by such.
+#
+# EXT=				# normal Un*x / Linux / GNU/Linux systems
+# EXT=.exe			# windoz / Cygwin
+#
+# If in doubt, use EXT=
+#
+EXT=
+#EXT=.exe
+
+################
+# compiler set #
+################
 #
 # Select your compiler type by commenting out one of the cc sets below:
 #
 # CCOPT are flags given to ${CC} for optimization
 # CCWARN are flags given to ${CC} for warning message control
+# CCWERR are flags given to ${CC} to make warnings fatal errors
+#	NOTE: CCWERR is only set in development Makefiles and must
+#	      only be used with ${CC}, not ${LCC}.
 # CCMISC are misc flags given to ${CC}
 #
 # CFLAGS are all flags given to ${CC} [[often includes CCOPT, CCWARN, CCMISC]]
@@ -330,23 +420,173 @@ ALLOW_CUSTOM= -DCUSTOM
 # LDFLAGS are flags given to ${CC} for linking .o files
 # ILDFLAGS are flags given to ${CC} for linking .o files for intermediate progs
 #
-# CC is how the the C compiler is invoked
+# LCC how the the C compiler is invoked on locally executed intermediate progs
+# CC is how the the C compiler is invoked (with an optional Purify)
+#
+###
+#
+# Linux set
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR= -Werror
+CCOPT= ${DEBUG} ${CC_SHARE}
+CCMISC=
+#
+CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
+ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -I/usr/include -I..
+#
+LDFLAGS= ${LD_SHARE}
+ILDFLAGS=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+###
+#
+# Apple Mac OS X
+#
+#CCWARN= -Wall -W -Wno-comment
+#CCWERR=
+#CCOPT= ${DEBUG} ${CC_SHARE}
+#CCMISC= -arch i386 -arch ppc
+#
+#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
+#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -I/usr/include -I..
+#
+#LDFLAGS= ${LD_SHARE} -arch i386 -arch ppc
+#ILDFLAGS=
+#
+#LCC= gcc
+#CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+###
+#
+# gcc set
+#
+#CCWARN= -Wall -W -Wno-comment
+#CCWERR=
+#CCOPT= ${DEBUG} ${CC_SHARE}
+#CCMISC=
+#
+#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
+#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -I/usr/include -I..
+#
+#LDFLAGS= ${LD_SHARE}
+#ILDFLAGS=
+#
+#LCC= gcc
+#CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 ###
 #
 # common cc set
 #
-CCWARN=
-CCOPT= ${DEBUG} ${NO_SHARED}
-CCMISC=
+# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
+# If -O2 -g is not supported try:			DEBUG= -O -g
 #
-CFLAGS= ${CCWARN} ${CCOPT} ${CCMISC} ${ALLOW_CUSTOM}
-ICFLAGS= ${CCWARN} ${CCMISC}
+#CCWARN=
+#CCWERR=
+#CCOPT= ${DEBUG} ${CC_SHARE}
+#CCMISC=
 #
-LDFLAGS= ${NO_SHARED} ${LD_NO_SHARED}
-ILDFLAGS=
+#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
+#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -I/usr/include -I..
 #
-CC= ${PURIFY} cc
+#LDFLAGS= ${LD_SHARE}
+#ILDFLAGS=
+#
+#LCC= cc
+#CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+###
+#
+# HP-UX set
+#
+# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
+# If -O2 -g is not supported try:			DEBUG= -O -g
+#
+# Warning: Some HP-UX optimizers are brain-damaged.
+# If 'make check' fails use:				DEBUG= -g
+#
+#CCWARN=
+#CCWERR=
+#CCOPT= ${DEBUG} ${CC_SHARE}
+#CCMISC= +e
+#
+#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
+#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -I/usr/include -I..
+#
+#LDFLAGS= ${LD_SHARE}
+#ILDFLAGS=
+#
+#LCC= cc
+#CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+###
+#
+# AIX RS/6000 set
+#
+# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
+# If -O2 -g is not supported try:			DEBUG= -O -g
+#
+#CCWARN=
+#CCWERR=
+#CCOPT= ${DEBUG} ${CC_SHARE}
+#CCMISC= -qlanglvl=ansi
+#
+#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
+#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -I/usr/include -I..
+#
+#LDFLAGS= ${LD_SHARE}
+#ILDFLAGS=
+#
+#LCC= cc
+#CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+###
+#
+# Solaris Sun cc compiler set
+#
+# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
+# If -O2 -g is not supported try:			DEBUG= -O -g
+#
+# We need -DFORCE_STDC to make use of ANSI-C like features and
+# to avoid the use of -Xc (which as a lose performance wise).
+#
+#CCWARN=
+#CCWERR=
+#CCOPT= ${DEBUG} ${CC_SHARE}
+#CCMISC= -DFORCE_STDC
+#
+#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
+#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -I/usr/include -I..
+#
+#LDFLAGS= ${LD_SHARE}
+#ILDFLAGS=
+#
+#LCC= cc
+#CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+###
+#
+# Dec Alpha / Compaq Tru64 cc (non-gnu) compiler set
+#
+# For better performance, set the following:	DEBUG= -std0 -fast -O4 -static
+#
+#CCWARN=
+#CCWERR=
+#CCOPT= ${DEBUG} ${CC_SHARE}
+#CCMISC=
+#
+#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
+#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -Wno-unused -I/usr/include -I..
+#
+#LDFLAGS= ${LD_SHARE}
+#ILDFLAGS=
+#
+#LCC= cc
+#CC= ${PURIFY} ${LCC} ${CCWERR}
+
 
 ##############################################################################
 #-=-=-=-=-=-=-=-=- Be careful if you change something below -=-=-=-=-=-=-=-=-#
@@ -553,7 +793,7 @@ depend:
 	${Q} echo forming custom dependency list
 	${Q} echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
 	    skel/custom/makedep.out
-	${Q} cd skel/custom; ${MAKEDEPEND} -w 1 -f makedep.out ${C_SRC}
+	${Q} cd skel/custom; ${MAKEDEPEND} -I.. -w 1 -f makedep.out ${C_SRC}
 	-${Q} for i in ${C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
@@ -860,7 +1100,7 @@ c_argv.o: ../nametype.h
 c_argv.o: ../qmath.h
 c_argv.o: ../shs.h
 c_argv.o: ../shs1.h
-c_argv.o: ../string.h
+c_argv.o: ../str.h
 c_argv.o: ../value.h
 c_argv.o: ../zmath.h
 c_argv.o: c_argv.c
@@ -879,6 +1119,7 @@ c_devnull.o: ../have_memmv.h
 c_devnull.o: ../have_newstr.h
 c_devnull.o: ../have_stdlib.h
 c_devnull.o: ../have_string.h
+c_devnull.o: ../have_unistd.h
 c_devnull.o: ../have_unused.h
 c_devnull.o: ../longbits.h
 c_devnull.o: ../md5.h
@@ -886,7 +1127,7 @@ c_devnull.o: ../nametype.h
 c_devnull.o: ../qmath.h
 c_devnull.o: ../shs.h
 c_devnull.o: ../shs1.h
-c_devnull.o: ../string.h
+c_devnull.o: ../str.h
 c_devnull.o: ../value.h
 c_devnull.o: ../zmath.h
 c_devnull.o: c_devnull.c
@@ -905,6 +1146,7 @@ c_help.o: ../have_memmv.h
 c_help.o: ../have_newstr.h
 c_help.o: ../have_stdlib.h
 c_help.o: ../have_string.h
+c_help.o: ../have_unistd.h
 c_help.o: ../have_unused.h
 c_help.o: ../longbits.h
 c_help.o: ../md5.h
@@ -912,7 +1154,7 @@ c_help.o: ../nametype.h
 c_help.o: ../qmath.h
 c_help.o: ../shs.h
 c_help.o: ../shs1.h
-c_help.o: ../string.h
+c_help.o: ../str.h
 c_help.o: ../value.h
 c_help.o: ../zmath.h
 c_help.o: c_help.c
@@ -938,7 +1180,7 @@ c_pmodm127.o: ../nametype.h
 c_pmodm127.o: ../qmath.h
 c_pmodm127.o: ../shs.h
 c_pmodm127.o: ../shs1.h
-c_pmodm127.o: ../string.h
+c_pmodm127.o: ../str.h
 c_pmodm127.o: ../value.h
 c_pmodm127.o: ../zmath.h
 c_pmodm127.o: c_pmodm127.c
@@ -964,7 +1206,7 @@ c_pzasusb8.o: ../nametype.h
 c_pzasusb8.o: ../qmath.h
 c_pzasusb8.o: ../shs.h
 c_pzasusb8.o: ../shs1.h
-c_pzasusb8.o: ../string.h
+c_pzasusb8.o: ../str.h
 c_pzasusb8.o: ../value.h
 c_pzasusb8.o: ../zmath.h
 c_pzasusb8.o: c_pzasusb8.c
@@ -988,6 +1230,7 @@ c_sysinfo.o: ../have_stdlib.h
 c_sysinfo.o: ../have_string.h
 c_sysinfo.o: ../have_unused.h
 c_sysinfo.o: ../hist.h
+c_sysinfo.o: ../lib_calc.h
 c_sysinfo.o: ../longbits.h
 c_sysinfo.o: ../md5.h
 c_sysinfo.o: ../nametype.h
@@ -995,7 +1238,7 @@ c_sysinfo.o: ../prime.h
 c_sysinfo.o: ../qmath.h
 c_sysinfo.o: ../shs.h
 c_sysinfo.o: ../shs1.h
-c_sysinfo.o: ../string.h
+c_sysinfo.o: ../str.h
 c_sysinfo.o: ../value.h
 c_sysinfo.o: ../zmath.h
 c_sysinfo.o: ../zrand.h
@@ -1022,7 +1265,7 @@ custtbl.o: ../nametype.h
 custtbl.o: ../qmath.h
 custtbl.o: ../shs.h
 custtbl.o: ../shs1.h
-custtbl.o: ../string.h
+custtbl.o: ../str.h
 custtbl.o: ../value.h
 custtbl.o: ../zmath.h
 custtbl.o: custtbl.c

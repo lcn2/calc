@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: block.c,v 29.4 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: block.c,v 29.5 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/block.c,v $
  *
  * Under source code control:	1997/02/27 00:29:40
@@ -37,7 +37,7 @@
 #include "config.h"
 #include "block.h"
 #include "nametype.h"
-#include "string.h"
+#include "str.h"
 #include "calcerr.h"
 
 #define NBLOCKCHUNK 16

@@ -1,5 +1,5 @@
 /*
- * string - string list routines
+ * str - string list routines
  *
  * Copyright (C) 1999-2007  David I. Bell
  *
@@ -17,9 +17,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: string.h,v 29.8 2007/02/11 10:19:14 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/string.h,v $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: str.h,v 29.9 2007/02/18 14:24:56 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/str.h,v $
  *
  * Under source code control:	1990/02/15 01:48:36
  * File existed as early as:	before 1990

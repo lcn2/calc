@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: c_pzasusb8.c,v 29.4 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: c_pzasusb8.c,v 29.5 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_pzasusb8.c,v $
  *
  * Under source code control:	1999/10/06 03:12:25
@@ -32,12 +32,12 @@
 
 #include <stdio.h>
 
-#include "../have_const.h"
-#include "../value.h"
-#include "../custom.h"
-#include "../zmath.h"
+#include "have_const.h"
+#include "value.h"
+#include "custom.h"
+#include "zmath.h"
 
-#include "../have_unused.h"
+#include "have_unused.h"
 
 /*
  * c_pzasusb8 - print numereator as a string of USB8s

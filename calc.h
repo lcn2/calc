@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.21 $
- * @(#) $Id: calc.h,v 29.21 2007/02/12 03:26:23 chongo Exp $
+ * @(#) $Revision: 29.22 $
+ * @(#) $Id: calc.h,v 29.22 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -66,7 +66,6 @@
 #define LISTCHAR	':'	/* char which separates paths in a list */
 #endif
 #define MAXCMD		16384	/* maximum length of command invocation */
-#define MAXERROR	512	/* maximum length of error message string */
 
 #define SYMBOLSIZE	256	/* maximum symbol name size */
 #define MAXLABELS	100	/* maximum number of user labels in function */
@@ -190,14 +189,12 @@ E_FUNC void reinitialize(void);
 E_FUNC int isatty(int tty);	/* TRUE if fd is a tty */
 #endif
 E_FUNC char *version(void);	/* return version string */
-EXTERN int post_init;	/* TRUE => math_error setjmp is ready */
 
 /*
  * global flags and definitions
  */
 EXTERN int abortlevel;	/* current level of aborts */
 EXTERN BOOL inputwait;	/* TRUE if in a terminal input wait */
-EXTERN jmp_buf jmpbuf;	/* for errors */
 
 EXTERN int p_flag;		/* TRUE => pipe mode */
 EXTERN int q_flag;		/* TRUE => don't execute rc files */

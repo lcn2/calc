@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: c_argv.c,v 29.8 2006/06/25 22:06:23 chongo Exp $
+ * @(#) $Revision: 29.9 $
+ * @(#) $Id: c_argv.c,v 29.9 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_argv.c,v $
  *
  * Under source code control:	1997/03/09 20:27:37
@@ -33,14 +33,14 @@
 
 #include <stdio.h>
 
-#include "../have_const.h"
-#include "../value.h"
-#include "../custom.h"
+#include "have_const.h"
+#include "value.h"
+#include "custom.h"
 
-#include "../config.h"
-#include "../calc.h"
+#include "config.h"
+#include "calc.h"
 
-#include "../have_unused.h"
+#include "have_unused.h"
 
 /*
  * c_argv - a custom function display info about its args

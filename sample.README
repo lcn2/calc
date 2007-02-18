@@ -3,9 +3,7 @@ Sample usage of libcalc.a
 
 This directory contains a few examples of how to use libcalc.a.
 
-For more details on how to use libcalc.a, see the file ../LIBRARY.
-
-chongo <share and enjoy :-)> /\oo/\
+For more details on how to use libcalc.a, see the file LIBRARY.
 
 =-=
 
@@ -54,7 +52,7 @@ many_random
 	bitlen		number of random bits per line set (default: 128 bits)
 	seed_string	seed using this ASCII string (default: use default seed)
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2007  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -70,9 +68,9 @@ many_random
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 29.2 $
-## @(#) $Id: README_SAMPLE,v 29.2 2000/06/07 14:02:54 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/sample/RCS/README_SAMPLE,v $
+## @(#) $Revision: 29.3 $
+## @(#) $Id: sample.README,v 29.3 2007/02/15 09:27:18 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/RCS/sample.README,v $
 ##
 ## Under source code control:	1997/04/19 23:15:42
 ## File existed as early as:	1997

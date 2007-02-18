@@ -1,5 +1,5 @@
 /*
- * string - string list routines
+ * str - string list routines
  *
  * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
  *
@@ -19,9 +19,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.11 $
- * @(#) $Id: string.c,v 29.11 2007/02/11 10:19:14 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/string.c,v $
+ * @(#) $Revision: 29.12 $
+ * @(#) $Id: str.c,v 29.12 2007/02/18 14:24:56 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/str.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
  * File existed as early as:	before 1990
@@ -32,7 +32,7 @@
 
 #include <stdio.h>
 #include "calc.h"
-#include "string.h"
+#include "str.h"
 
 #define STR_TABLECHUNK	100	/* how often to reallocate string table */
 #define STR_CHUNK	2000	/* size of string storage allocation */

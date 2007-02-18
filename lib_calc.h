@@ -17,9 +17,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: math_error.h,v 29.6 2007/02/11 10:19:14 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/math_error.h,v $
+ * @(#) $Revision: 29.7 $
+ * @(#) $Id: lib_calc.h,v 29.7 2007/02/18 14:24:56 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.h,v $
  *
  * Under source code control:	1997/03/23 18:37:10
  * File existed as early as:	1997
@@ -32,6 +32,7 @@
 #if !defined(__MATH_ERROR_H__)
 #define __MATH_ERROR_H__
 
+#include <setjmp.h>
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
 # include "decl.h"
@@ -39,11 +40,42 @@
 # include <calc/decl.h>
 #endif
 
+/*
+ * error buffer definitions
+ */
+#define MAXERROR	512	/* maximum length of error message string */
 
 /*
- * Global data definitions.
+ * calc math error control
  */
-EXTERN jmp_buf jmpbuf;		/* for errors */
+/* non-zero => use calc_use_matherr_jmpbuf */
+EXTERN int calc_use_matherr_jmpbuf;
+/* math_error() control jump point when calc_use_matherr_jmpbuf != 0 */
+EXTERN jmp_buf calc_matherr_jmpbuf;
 
+/*
+ * calc parse/scan error control
+ */
+/* non-zero => calc_scanerr_jmpbuf is ready */
+EXTERN int calc_use_scanerr_jmpbuf;
+/* scanerror() control jump point when calc_use_scanerr_jmpbuf != 0 */
+EXTERN jmp_buf calc_scanerr_jmpbuf;
+
+/*
+ * last calc math error, parse/scan error message
+ */
+EXTERN char calc_err_msg[MAXERROR+1];
+/* 0 ==> do not print parse/scan errors */
+EXTERN int calc_print_scanerr_msg;
+
+/*
+ * calc parse/scan warning control
+ */
+/* last parse/scan warning message */
+EXTERN char calc_warn_msg[MAXERROR+1];
+/* 0 ==> do not print parse/scan warnings */
+EXTERN int calc_print_scanwarn_msg;
+/* number of parse/scan warnings found */
+EXTERN unsigned long calc_warn_cnt;
 
 #endif /* !__MATH_ERROR_H__ */

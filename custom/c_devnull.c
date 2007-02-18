@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: c_devnull.c,v 29.4 2004/02/23 14:04:01 chongo Exp $
+ * @(#) $Revision: 29.5 $
+ * @(#) $Id: c_devnull.c,v 29.5 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_devnull.c,v $
  *
  * Under source code control:	1997/03/09 17:49:12
@@ -31,12 +31,16 @@
 
 #if defined(CUSTOM)
 
+#include "have_unistd.h"
+#if defined(HAVE_UNISTD_H)
+#include <unistd.h>
+#endif
 
-#include "../have_const.h"
-#include "../value.h"
-#include "../custom.h"
+#include "have_const.h"
+#include "value.h"
+#include "custom.h"
 
-#include "../have_unused.h"
+#include "have_unused.h"
 
 
 /*

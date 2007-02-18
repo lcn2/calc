@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.33 $
- * @(#) $Id: func.c,v 29.33 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.34 $
+ * @(#) $Id: func.c,v 29.34 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -101,7 +101,7 @@
 #include "opcodes.h"
 #include "token.h"
 #include "func.h"
-#include "string.h"
+#include "str.h"
 #include "symbol.h"
 #include "prime.h"
 #include "file.h"

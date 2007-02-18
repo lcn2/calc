@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.12 $
- * @(#) $Id: value.h,v 29.12 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.13 $
+ * @(#) $Id: value.h,v 29.13 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -41,7 +41,7 @@
 # include "hash.h"
 # include "block.h"
 # include "nametype.h"
-# include "string.h"
+# include "str.h"
 #else
 # include <calc/decl.h>
 # include <calc/cmath.h>
@@ -51,7 +51,7 @@
 # include <calc/hash.h>
 # include <calc/block.h>
 # include <calc/nametype.h>
-# include <calc/string.h>
+# include <calc/str.h>
 #endif
 
 

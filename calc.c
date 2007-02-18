@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.15 $
- * @(#) $Id: calc.c,v 29.15 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.16 $
+ * @(#) $Id: calc.c,v 29.16 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11
@@ -64,7 +64,7 @@
 #include "have_uid_t.h"
 #include "have_const.h"
 #include "custom.h"
-#include "math_error.h"
+#include "lib_calc.h"
 #include "args.h"
 #include "zmath.h"
 
@@ -188,7 +188,7 @@ main(int argc, char **argv)
 							fprintf(stderr,
 								"-m expects"
 								" argument");
-							exit (1);
+							exit(2);
 						}
 						cp = argv[index];
 					}
@@ -203,7 +203,7 @@ main(int argc, char **argv)
 						fprintf(stderr,
 							"%s: unknown -m arg\n",
 							program);
-						exit(1);
+						exit(3);
 					}
 					allow_read = (((*cp-'0') & 04) > 0);
 					allow_write = (((*cp-'0') & 02) > 0);
@@ -211,7 +211,7 @@ main(int argc, char **argv)
 					cp++;
 					if (*cp != ' ' && *cp != '\0') {
 						fprintf(stderr, "??? m-arg");
-						exit(1);
+						exit(4);
 					}
 					havearg = TRUE;
 					break;
@@ -262,7 +262,7 @@ main(int argc, char **argv)
 						   FALSE)) {
 					    fprintf(stderr,
 					    	    "-D expects argument\n");
-					    exit (1);
+					    exit(5);
 					}
 					havearg = TRUE;
 					if (*cp != ':') {
@@ -270,7 +270,7 @@ main(int argc, char **argv)
 						    fprintf(stderr,
 						    	    "-D expects"
 							    " integer\n");
-						    exit (1);
+						    exit(6);
 						}
 						calc_debug = cp;
 						(void) strtol(cp, &endcp, 10);
@@ -280,7 +280,7 @@ main(int argc, char **argv)
 						    fprintf(stderr,
 						    	    "Bad syntax im -D"
 							    " arg\n");
-						    exit (1);
+						    exit(7);
 						}
 						if (*cp != ':') {
 						    if (nextcp(&cp, &index,
@@ -295,14 +295,14 @@ main(int argc, char **argv)
 						fprintf(stderr,
 							"-D : expects"
 							" argument\n");
-						exit (1);
+						exit(8);
 					}
 					if (*cp != ':') {
 						if (*cp < '0' || *cp > '9') {
 						    fprintf(stderr,
 						    	    "-D : expects"
 							    " integer\n");
-						    exit (1);
+						    exit(9);
 						}
 						resource_debug = cp;
 						(void) strtol(cp, &endcp, 10);
@@ -312,7 +312,7 @@ main(int argc, char **argv)
 						    fprintf(stderr,
 						    	    "Bad syntax im -D"
 							    " : arg\n");
-						    exit (1);
+						    exit(10);
 						}
 						if (*cp != ':') {
 							if (nextcp(&cp, &index,
@@ -327,12 +327,12 @@ main(int argc, char **argv)
 						   FALSE)) {
 					    fprintf(stderr, "-D : : expects"
 					    	    " argument\n");
-					    exit (1);
+					    exit(11);
 					}
 					if (*cp < '0' || *cp > '9') {
 					    fprintf(stderr, "-D :: expects"
 					    	    " integer\n");
-					    exit (1);
+					    exit(12);
 					}
 					user_debug = cp;
 					(void) strtol(cp, &endcp, 10);
@@ -340,7 +340,7 @@ main(int argc, char **argv)
 					if (*cp != '\0' && *cp != ' ') {
 						fprintf(stderr, "Bad syntax in"
 							" -D : : arg\n");
-						exit (1);
+						exit(13);
 					}
 					break;
 				case 'f':
@@ -349,13 +349,13 @@ main(int argc, char **argv)
 						   haveendstr)) {
 					    fprintf(stderr, "-f expects"
 						    " filename\n");
-					    exit (1);
+					    exit(14);
 					}
 					if (*cp == ';') {
 						fprintf(stderr,
 							"-f expects"
 							" filename\n");
-						exit (1);
+						exit(15);
 					}
 					havearg = TRUE;
 					if (cmdlen > 0)
@@ -373,7 +373,7 @@ main(int argc, char **argv)
 						    fprintf(stderr, "-f -once"
 						    	    " expects"
 							    " filename\n");
-						    exit (1);
+						    exit(16);
 						}
 					}
 					bp = cmdbuf + cmdlen;
@@ -383,13 +383,13 @@ main(int argc, char **argv)
 							fprintf(stderr,
 								"Null"
 								" filename!");
-							exit (1);
+							exit(17);
 						}
 						if (cmdlen + len + 2 > MAXCMD) {
 							fprintf(stderr,
 								"Commands too"
 								" long");
-							exit (1);
+							exit(18);
 						}
 						/* XXX What if *cp = '\''? */
 						*bp++ = '\'';
@@ -404,7 +404,7 @@ main(int argc, char **argv)
 								fprintf(stderr,
 								   "Commands"
 								   " too long");
-								exit (1);
+								exit(19);
 							}
 							*bp++ =  *cp++;
 							cmdlen++;
@@ -439,7 +439,7 @@ main(int argc, char **argv)
 		"usage: %s ... -f filename\n"
 		"1st cscript line: #/path/to/calc ... -f\n",
 		program, program);
-					exit(1);
+					exit(20);
 			}
 			if (havearg)
 				break;
@@ -465,7 +465,7 @@ main(int argc, char **argv)
 			fprintf(stderr,
 				"%s: commands too long\n",
 				program);
-			exit(1);
+			exit(21);
 		}
 		strncpy(cmdbuf + cmdlen, cp, cplen+1);
 		cmdlen = newcmdlen;
@@ -536,14 +536,13 @@ main(int argc, char **argv)
 	/*
 	 * establish error longjump point with initial conditions
 	 */
-	if (setjmp(jmpbuf) == 0) {
+	if (setjmp(calc_scanerr_jmpbuf) == 0) {
 
 		/*
 		 * reset/initialize the computing environment
 		 */
-		if (post_init)
-			initialize();
-		post_init = TRUE;
+		initialize();
+		calc_use_scanerr_jmpbuf = 1;
 	}
 
 	/*
@@ -735,7 +734,6 @@ void
 math_error(char *fmt, ...)
 {
 	va_list ap;
-	char buf[MAXERROR+1];
 
 	if (funcname && (*funcname != '*'))
 		fprintf(stderr, "\"%s\": ", funcname);
@@ -743,12 +741,13 @@ math_error(char *fmt, ...)
 	    !inputisterminal()))
 		fprintf(stderr, "line %ld: ", funcline);
 	va_start(ap, fmt);
-	vsprintf(buf, fmt, ap);
+	vsnprintf(calc_err_msg, MAXERROR, fmt, ap);
 	va_end(ap);
-	fprintf(stderr, "%s\n", buf);
+	calc_err_msg[MAXERROR] = '\0';
+	fprintf(stderr, "%s\n\n", calc_err_msg);
 	funcname = NULL;
-	if (post_init) {
-		longjmp(jmpbuf, 1);
+	if (calc_use_scanerr_jmpbuf != 0) {
+		longjmp(calc_scanerr_jmpbuf, 22);
 	} else {
 		fprintf(stderr, "It is too early provide a command line prompt "
 				"so we must simply exit.  Sorry!\n");
@@ -756,7 +755,7 @@ math_error(char *fmt, ...)
 		 * don't call libcalc_call_me_last() -- we might loop
 		 * and besides ... this is an unusual internal error case
 		 */
-		exit(3);
+		exit(22);
 	}
 }
 

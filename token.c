@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.11 $
- * @(#) $Id: token.c,v 29.11 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.12 $
+ * @(#) $Id: token.c,v 29.12 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/token.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -35,9 +35,9 @@
 
 #include "calc.h"
 #include "token.h"
-#include "string.h"
+#include "str.h"
 #include "args.h"
-#include "math_error.h"
+#include "lib_calc.h"
 
 
 #define isletter(ch)	((((ch) >= 'a') && ((ch) <= 'z')) || \
@@ -710,30 +710,58 @@ scanerror(int skip, char *fmt, ...)
 {
 	va_list ap;
 	char *name;		/* name of file with error */
-	char buf[MAXERROR+1];
+	int len;		/* length of error msg bufer */
 
 	/* count the error */
 	errorcount++;
 
-	/* print the error message */
+	/* form the error message */
 	name = inputname();
-	if (name)
-		fprintf(stderr, "\"%s\", line %ld: ", name, linenumber());
 	va_start(ap, fmt);
-	vsnprintf(buf, MAXERROR, fmt, ap);
+	if (name) {
+		snprintf(calc_err_msg, MAXERROR, "\"%s\", line %ld: ",
+			 name, linenumber());
+		calc_err_msg[MAXERROR] = '\0';	/* firewall */
+		len = strlen(calc_err_msg);
+		if (len < MAXERROR) {
+			vsnprintf(calc_err_msg+len, MAXERROR-len, fmt, ap);
+		}
+	} else {
+		vsnprintf(calc_err_msg, MAXERROR, fmt, ap);
+	}
 	va_end(ap);
-	buf[MAXERROR] = '\0';
-	fprintf(stderr, "%s\n", buf);
+	calc_err_msg[MAXERROR] = '\0';
+
+	/* print error message if allowed */
+	if (calc_print_scanerr_msg != 0) {
+		fprintf(stderr, "%s\n\n", calc_err_msg);
+	}
 
 	/* bail out if continuation not permitted */
-	if ((!c_flag && !stoponerror) || stoponerror > 0)
-		longjmp(jmpbuf, 1);
+	if ((!c_flag && !stoponerror) || stoponerror > 0) {
+		if (calc_use_scanerr_jmpbuf != 0) {
+			longjmp(calc_scanerr_jmpbuf, 60);
+			/*NOTREACHED*/
+		} else {
+			fprintf(stderr,
+			  "calc_scanerr_jmpbuf not setup, exiting code 60\n");
+			libcalc_call_me_last();
+			exit(60);
+		}
+	}
 
 	/* bail out if too many errors */
 	if (conf->maxscancount > 0 && errorcount > conf->maxscancount) {
-		fputs("Too many scan errors, compilation aborted.\n", stderr);
-		longjmp(jmpbuf, 1);
-		/*NOTREACHED*/
+		fprintf(stderr, "Too many scan errors, compilation aborted.\n");
+		if (calc_use_scanerr_jmpbuf != 0) {
+			longjmp(calc_scanerr_jmpbuf, 61);
+			/*NOTREACHED*/
+		} else {
+			fprintf(stderr,
+			  "calc_scanerr_jmpbuf not ready: exit 61\n");
+			libcalc_call_me_last();
+			exit(61);
+		}
 	}
 
 	/* post-error report processing */
@@ -755,7 +783,12 @@ scanerror(int skip, char *fmt, ...)
 			}
 		}
 	default:
-		fprintf(stderr, "Unknown skip token for scanerror\n");
+		snprintf(calc_err_msg, MAXERROR,
+			 "Unknown skip token for scanerror\n");
+		calc_err_msg[MAXERROR] = '\0';
+		if (calc_print_scanerr_msg != 0) {
+			fprintf(stderr, "%s\n\n", calc_err_msg);
+		}
 		/* fall into semicolon case */
 		/*FALLTHRU*/
 	case T_SEMICOLON:
@@ -782,14 +815,32 @@ warning(char *fmt, ...)
 {
 	va_list ap;
 	char *name;		/* name of file with error */
-	char buf[MAXERROR+1];
+	int len;		/* length of error msg bufer */
 
+	/* count this warning */
+	++calc_warn_cnt;
+
+	/* form the error message */
 	name = inputname();
-	if (name)
-		fprintf(stderr, "\"%s\", line %ld: ", name, linenumber());
 	va_start(ap, fmt);
-	vsnprintf(buf, MAXERROR, fmt, ap);
+	vsnprintf(calc_warn_msg, MAXERROR, fmt, ap);
+	if (name) {
+		snprintf(calc_warn_msg, MAXERROR, "\"%s\", line %ld: ",
+			 name, linenumber());
+		calc_warn_msg[MAXERROR] = '\0';	/* firewall */
+		len = strlen(calc_warn_msg);
+		if (len < MAXERROR) {
+			vsnprintf(calc_warn_msg+len, MAXERROR-len, fmt, ap);
+		}
+	} else {
+		vsnprintf(calc_warn_msg, MAXERROR, fmt, ap);
+	}
 	va_end(ap);
-	buf[MAXERROR] = '\0';
-	fprintf(stderr, "Warning: %s\n", buf);
+	calc_warn_msg[MAXERROR] = '\0';
+
+	/* print the warning if allowed */
+	if (calc_print_scanwarn_msg != 0) {
+		fprintf(stderr, "Warning: %s\n", calc_warn_msg);
+	}
+	return;
 }

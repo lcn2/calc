@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
  *
- * @(#) $Revision: 29.13 $
- * @(#) $Id: c_sysinfo.c,v 29.13 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 29.14 $
+ * @(#) $Id: c_sysinfo.c,v 29.14 2007/02/18 14:24:56 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_sysinfo.c,v $
  *
  * Under source code control:	1997/03/09 23:14:40
@@ -34,25 +34,31 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#include "../have_const.h"
-#include "../value.h"
-#include "../custom.h"
+#include "have_string.h"
+#if defined(HAVE_STRING_H)
+#include <string.h>
+#endif
 
-#include "../config.h"
-#include "../calc.h"
-#include "../longbits.h"
+#include "have_const.h"
+#include "value.h"
+#include "custom.h"
+
+#include "config.h"
+#include "lib_calc.h"
+#include "calc.h"
+#include "longbits.h"
 #define CHECK_L_FORMAT
-#include "../block.h"
-#include "../calcerr.h"
-#include "../conf.h"
-#include "../endian_calc.h"
-#include "../fposval.h"
-#include "../hist.h"
-#include "../prime.h"
-#include "../zrand.h"
-#include "../zrandom.h"
+#include "block.h"
+#include "calcerr.h"
+#include "conf.h"
+#include "endian_calc.h"
+#include "fposval.h"
+#include "hist.h"
+#include "prime.h"
+#include "zrand.h"
+#include "zrandom.h"
 
-#include "../have_unused.h"
+#include "have_unused.h"
 
 
 /*
