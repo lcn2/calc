@@ -15,10 +15,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: custtbl.c,v 29.6 2007/02/18 14:24:56 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: custtbl.c,v 30.2 2007/07/05 19:35:20 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/custtbl.c,v $
  *
  * Under source code control:	1997/03/09 02:28:54
@@ -58,6 +58,7 @@ E_FUNC VALUE c_help(char*, int, VALUE**);
 E_FUNC VALUE c_sysinfo(char*, int, VALUE**);
 E_FUNC VALUE c_pzasusb8(char*, int, VALUE**);
 E_FUNC VALUE c_pmodm127(char*, int, VALUE**);
+E_FUNC VALUE c_register(char*, int, VALUE**);
 
 
 #endif /* CUSTOM */
@@ -112,6 +113,9 @@ CONST struct custom cust[] = {
 
 	{ "pmodm127", "calculate q mod 2^(2^127-1)",
 	 1, 1, c_pmodm127 },
+
+	{ "register", "get or set customer registers",
+	 1, 2, c_register },
 
 
 #endif /* CUSTOM */

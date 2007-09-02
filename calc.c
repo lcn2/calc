@@ -17,10 +17,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.16 $
- * @(#) $Id: calc.c,v 29.16 2007/02/18 14:24:56 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: calc.c,v 30.3 2007/07/15 02:03:42 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11
@@ -90,6 +90,7 @@
  * S_FUNC definitions and functions
  */
 S_FUNC void intint(int arg);	/* interrupt routine */
+S_FUNC void calc_interrupt(char *fmt, ...);
 S_FUNC int nextcp(char **cpp, int *ip, int argc, char **argv, BOOL haveendstr);
 S_FUNC void set_run_state(run state);
 
@@ -245,8 +246,13 @@ main(int argc, char **argv)
 					 * call libcalc_call_me_last() -
 					 * nothing to cleanup
 					 */
-					printf("%s (version %s)\n",
-					       CALC_TITLE, version());
+					fputs(CALC_TITLE, stdout);
+#if defined(CUSTOM)
+					fputs(" w/custom functions", stdout);
+#else
+					fputs(" w/o custom functions", stdout);
+#endif /* CUSTOM */
+					printf(" (version %s)\n", version());
 					exit(0);
 				case 'D':
 					/*
@@ -717,7 +723,7 @@ intint(int UNUSED arg)
 {
 	(void) signal(SIGINT, intint);
 	if (inputwait || (++abortlevel >= ABORT_NOW)) {
-		math_error("\nABORT");
+		calc_interrupt("\nABORT");
 		/*NOTREACHED*/
 	}
 	if (abortlevel >= ABORT_MATH)
@@ -727,11 +733,10 @@ intint(int UNUSED arg)
 
 
 /*
- * Routine called on any runtime error, to complain about it (with possible
- * arguments), and then longjump back to the top level command scanner.
+ * report an interrupt
  */
-void
-math_error(char *fmt, ...)
+static void
+calc_interrupt(char *fmt, ...)
 {
 	va_list ap;
 

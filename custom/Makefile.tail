@@ -1,0 +1,723 @@
+##############################################################################
+#-=-=-=-=-=-=-=-=- Be careful if you change something below -=-=-=-=-=-=-=-=-#
+##############################################################################
+
+# These .c files are required for the main custom interface and
+# for the custom support functions for libcustcalc${LIB_EXT_VERS}.
+#
+# There MUST be a .c for every .o in REQUIRED_OBJ.
+#
+REQUIRED_SRC= custtbl.c
+
+# These .o files correspond to the .c files in REQUIRED_SRC
+# for libcustcalc${LIB_EXT_VERS}.
+#
+# There MUST be a .o for every .c in REQUIRED_SRC.
+#
+REQUIRED_OBJ= custtbl.o
+
+# These .h files are installed under ${CUSTOMCALDIR} by the install rule.
+#
+INSTALL_H_SRC= ${CUSTOM_H_SRC}
+
+# These .c files are used to form libcustcalc${LIB_EXT_VERS}.
+#
+CUSTCALC_SRC= ${REQUIRED_SRC} ${CUSTOM_SRC}
+
+# These .o files are used to form libcustcalc${LIB_EXT_VERS}.
+#
+CUSTCALC_OBJ= ${REQUIRED_OBJ} ${CUSTOM_OBJ}
+
+# These .c files are used to build the dependency list
+#
+C_SRC= ${REQUIRED_SRC} ${CUSTOM_SRC}
+
+# These .h files are used to build the dependecy list
+#
+H_SRC= ${CUSTOM_H_SRC}
+
+# These files are found (but not built) in the distribution
+#
+# The CUSTOM_CAL and HOW_TO_ADD are files distributed from this
+# directory but are installed as help files from the help/Makefile.
+#
+DISTLIST= ${CUSTCALC_SRC} ${CUSTOM_CALC_FILES} ${CUSTOM_HELP} \
+	${INSTALL_H_SRC} CUSTOM_CAL HOW_TO_ADD ${MAKE_FILE}.head \
+	${MAKE_FILE}.tail
+
+# These files are used to make (but not built) a calc .a link library
+#
+CALCLIBLIST= ${CUSTCALC_SRC} ${INSTALL_H_SRC} ${MAKE_FILE} HOW_TO_ADD
+
+# This is the custom dynbamic shared library that is build
+#
+CALC_DYNAMIC_LIBCUSTCALC= libcustcalc${LIB_EXT_VERS}
+
+# This is the custom static library that is build
+#
+CALC_STATIC_LIBCUSTCALC= libcustcalc.a
+
+# complete list of targets
+#
+TARGETS= ${BLD_TYPE} Makefile.simple
+
+###
+#
+# The reason for this Makefile	:-)
+#
+###
+
+all: ${TARGETS} ${INSTALL_H_SRC} ${CUSTOM_CALC_FILES} \
+	${CUSTOM_HELP} ${MAKE_FILE} .all
+
+calc-dynamic-only: ${CUSTCALC_OBJ} ${CALC_DYNAMIC_LIBCUSTCALC}
+
+calc-static-only: ${CUSTCALC_OBJ} ${CALC_STATIC_LIBCUSTCALC}
+
+custom/libcustcalc${LIB_EXT_VERS}: libcustcalc${LIB_EXT_VERS} \
+	${CALC_STATIC_LIBCUSTCALC}
+
+libcustcalc${LIB_EXT_VERS}: ${CUSTCALC_OBJ} ${MAKE_FILE}
+	${CC} ${LIBCUSTCALC_SHLIB} ${CUSTCALC_OBJ} -o $@
+
+##
+#
+# Special .o files
+#
+##
+
+c_sysinfo.o: c_sysinfo.c ${MAKE_FILE}
+	${CC} ${CFLAGS} c_sysinfo.c -c
+
+##
+#
+# used by the upper level Makefile
+#
+##
+
+# to determine of we have done all
+#
+.all:
+	${RM} -f .all
+	${TOUCH} .all
+
+###
+#
+# building calc-static and static lib*.a libraires
+#
+###
+
+libcustcalc.a: ${CUSTCALC_OBJ} ${MAKE_FILE}
+	${RM} -f libcustcalc.a
+	${AR} qc libcustcalc.a ${CUSTCALC_OBJ}
+	${RANLIB} libcustcalc.a
+	${CHMOD} 0644 libcustcalc.a
+
+##
+#
+# File list generation.	 You can ignore this section.
+#
+#
+# We will form the names of source files as if they were in a
+# sub-directory called calc/lib.
+#
+# NOTE: Due to bogus shells found on one common system we must have
+#	an non-emoty else clause for every if condition.  *sigh*
+#
+##
+
+distlist: ${DISTLIST}
+	${Q} for i in ${DISTLIST} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo custom/$$i; \
+	    fi; \
+	done
+
+distdir:
+	${Q} echo custom
+
+calcliblist: ${CALCLIBLIST}
+	${Q} for i in ${CALCLIBLIST} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo custom/$$i; \
+	    fi; \
+	done
+
+#if 0	/* start of skip for non-Gnu makefiles */
+Makefile.simple: ${MAKE_FILE}
+	${V} echo '=-=-=-=-= custom/${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${Q} ${RM} -f $@
+	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
+	    ${MAKE_FILE} > $@
+	${Q} echo >> $@
+	${Q} echo 'Makefile.simple:' >> $@
+	${Q} echo '	$${Q} if [ ! -f Makefile.simple ]; then '"\\" >> $@
+	${Q} echo '		$${CP} -f $${MAKE_FILE} $$@; fi' >> $@
+	${V} echo '=-=-=-=-= custom/${MAKE_FILE} end of $@ rule =-=-=-=-='
+#endif	/* end of skip for non-Gnu makefiles */
+
+##
+#
+# Home grown make dependency rules.  Your system make not support
+# or have the needed tools.  You can ignore this section.
+#
+# We will form a skelaton tree of *.c files containing only #include "foo.h"
+# lines and .h files containing the same lines surrounded by multiple include
+# prevention lines.  This allows us to build a static depend list that will
+# satisfy all possible cpp symbol definition combinations.
+#
+##
+
+depend:
+	${Q} if [ -f ${MAKE_FILE}.bak ]; then \
+	    echo "${MAKE_FILE}.bak exists, remove or move it"; \
+	    exit 1; \
+	else \
+	    ${TRUE}; \
+	fi
+	${Q} echo forming custom/skel
+	${Q} ${RM} -rf skel
+	${Q} ${MKDIR} skel
+	${Q} ${MKDIR} skel/custom
+	-${Q} for i in ${C_SRC} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		${SED} -n '/^#[	 ]*include[	 ]*"/p' \
+		    "$$i" > "skel/custom/$$i"; \
+	    fi; \
+	done
+	-${Q} for i in ${H_SRC} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
+	    echo "#if !defined($$tag)" > "skel/custom/$$i"; \
+	    echo "#define $$tag" >> "skel/custom/$$i"; \
+	    ${SED} -n '/^#[	 ]*include[	 ]*"/p' "$$i" \
+		>> "skel/custom/$$i"; \
+	    echo '#endif /* '"$$tag"' */' >> "skel/custom/$$i"; \
+	done
+	${Q} (cd ..; ${MAKE} -f ${TOP_MAKE_FILE} hsrc)
+	${Q} for i in `cd ..; ${MAKE} -f ${TOP_MAKE_FILE} h_list 2>&1 | \
+	    ${SED} -e '/Entering directory/d' \
+		   -e '/Nothing to be done/d' \
+		   -e '/Leaving directory/d'` /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
+	    echo "#if !defined($$tag)" > "skel/$$i"; \
+	    echo "#define $$tag" >> "skel/$$i"; \
+	    ${SED} -n '/^#[	 ]*include[	 ]*"/p' "../$$i" \
+		>> "skel/$$i"; \
+	    echo '#endif /* '"$$tag"' */' >> "skel/$$i"; \
+	done
+	${Q} ${RM} -f skel/custom/makedep.out
+	${Q} echo custom/skel formed
+	${Q} echo forming custom dependency list
+	${Q} :> skel/custom/makedep.out
+	${Q} cd skel/custom; ${MAKEDEPEND} -I.. -w 1 -f makedep.out ${C_SRC}
+	-${Q} for i in ${C_SRC} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
+	    fi; \
+	done >> skel/custom/makedep.out
+	${Q} LANG=C ${SORT} -u skel/custom/makedep.out \
+			    -o skel/custom/makedep.out
+	${Q} echo custom dependency list formed
+	${Q} echo forming new custom/${MAKE_FILE}
+	${Q} ${RM} -f ${MAKE_FILE}.bak
+	${Q} ${MV} ${MAKE_FILE} ${MAKE_FILE}.bak
+	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' ${MAKE_FILE}.bak > ${MAKE_FILE}
+	${Q} ${GREP} -v '^#' skel/custom/makedep.out >> ${MAKE_FILE}
+	${Q} ${RM} -rf skel
+	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
+	    echo 'custom ${MAKE_FILE} was already up to date'; \
+	    ${MV} -f ${MAKE_FILE}.bak ${MAKE_FILE}; \
+	else \
+	    ${RM} -f ${MAKE_FILE}.tmp; \
+	    ${MV} ${MAKE_FILE} ${MAKE_FILE}.tmp; \
+	    if [ -d RCS -a ! -w "${MAKE_FILE}" ]; then \
+		${CO} -l ${MAKE_FILE}; \
+	    fi ;\
+	    ${MV} ${MAKE_FILE}.tmp ${MAKE_FILE}; \
+	    if [ -d RCS ]; then \
+	    echo '****************************************************'; \
+	    echo 'new custom ${MAKE_FILE} formed -- you to check it in'; \
+	    echo '****************************************************'; \
+	    fi; \
+	fi
+
+##
+#
+# rpm rules
+#
+##
+
+echo_inst_files:
+	${Q} for i in ${INSTALL_H_SRC} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo __file__ ${CUSTOMINCDIR}/$$i; \
+	    fi; \
+	done
+	${Q} for i in ${CUSTOM_HELP} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo __file__ ${CUSTOMHELPDIR}/$$i; \
+	    fi; \
+	done
+	${Q} for i in ${CUSTOM_CALC_FILES} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo __file__ ${CUSTOMCALDIR}/$$i; \
+	    fi; \
+	done
+	${Q} for i in ${CALC_DYNAMIC_LIBCUSTCALC} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo __file__ ${CUSTOMCALDIR}/$$i; \
+	    fi; \
+	done
+
+##
+#
+# Utility rules
+#
+##
+
+clean:
+	${RM} -f ${CUSTCALC_OBJ}
+
+clobber: clean
+	${RM} -f ${BLD_TYPE}
+	${RM} -f .all ${MAKE_FILE}.tmp ${MAKE_FILE}.bak
+	${RM} -f libcustcalc${LIB_EXT_VERS}
+	${RM} -f libcustcalc${LIB_EXT_VER}
+	${RM} -f libcustcalc${LIB_EXT_VE}
+	${RM} -f libcustcalc${LIB_EXT}
+	${RM} -f libcustcalc.a
+#if 0	/* start of skip for non-Gnu makefiles */
+	${RM} -f Makefile.simple
+#endif	/* end of skip for non-Gnu makefiles */
+
+# install everything
+#
+# NOTE: Keep the uninstall rule in reverse order to the install rule
+#
+install: all
+	-${Q} if [ ! -d ${T}${INCDIR} ]; then \
+	    echo ${MKDIR} ${T}${INCDIR}; \
+	    ${MKDIR} ${T}${INCDIR}; \
+	    if [ ! -d "${T}${INCDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${INCDIR}"; \
+		${MKDIR} -p "${T}${INCDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 ${T}${INCDIR}; \
+	    ${CHMOD} 0755 ${T}${INCDIR}; \
+	else \
+	    ${TRUE}; \
+	fi
+	-${Q} if [ ! -d ${T}${CALC_SHAREDIR} ]; then \
+	    echo ${MKDIR} ${T}${CALC_SHAREDIR}; \
+	    ${MKDIR} ${T}${CALC_SHAREDIR}; \
+	    if [ ! -d "${T}${CALC_SHAREDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
+		${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 ${T}${CALC_SHAREDIR}; \
+	    ${CHMOD} 0755 ${T}${CALC_SHAREDIR}; \
+	else \
+	    ${TRUE}; \
+	fi
+	-${Q} if [ ! -d ${T}${CALC_INCDIR} ]; then \
+	    echo ${MKDIR} ${T}${CALC_INCDIR}; \
+	    ${MKDIR} ${T}${CALC_INCDIR}; \
+	    if [ ! -d "${T}${CALC_INCDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${CALC_INCDIR}"; \
+		${MKDIR} -p "${T}${CALC_INCDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 ${T}${CALC_INCDIR}; \
+	    ${CHMOD} 0755 ${T}${CALC_INCDIR}; \
+	else \
+	    ${TRUE}; \
+	fi
+	-${Q} if [ ! -d ${T}${HELPDIR} ]; then \
+	    echo ${MKDIR} ${T}${HELPDIR}; \
+	    ${MKDIR} ${T}${HELPDIR}; \
+	    if [ ! -d "${T}${HELPDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${HELPDIR}"; \
+		${MKDIR} -p "${T}${HELPDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 ${T}${HELPDIR}; \
+	    ${CHMOD} 0755 ${T}${HELPDIR}; \
+	else \
+	    ${TRUE}; \
+	fi
+	-${Q} if [ ! -d ${T}${CUSTOMCALDIR} ]; then \
+	    echo ${MKDIR} ${T}${CUSTOMCALDIR}; \
+	    ${MKDIR} ${T}${CUSTOMCALDIR}; \
+	    if [ ! -d "${T}${CUSTOMCALDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${CUSTOMCALDIR}"; \
+		${MKDIR} -p "${T}${CUSTOMCALDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 ${T}${CUSTOMCALDIR}; \
+	    ${CHMOD} 0755 ${T}${CUSTOMCALDIR}; \
+	else \
+	    ${TRUE}; \
+	fi
+	-${Q} if [ ! -d ${T}${CUSTOMHELPDIR} ]; then \
+	    echo ${MKDIR} ${T}${CUSTOMHELPDIR}; \
+	    ${MKDIR} ${T}${CUSTOMHELPDIR}; \
+	    if [ ! -d "${T}${CUSTOMHELPDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${CUSTOMHELPDIR}"; \
+		${MKDIR} -p "${T}${CUSTOMHELPDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 ${T}${CUSTOMHELPDIR}; \
+	    ${CHMOD} 0755 ${T}${CUSTOMHELPDIR}; \
+	else \
+	    ${TRUE}; \
+	fi
+	-${Q} if [ ! -d ${T}${CUSTOMINCDIR} ]; then \
+	    echo ${MKDIR} ${T}${CUSTOMINCDIR}; \
+	    ${MKDIR} ${T}${CUSTOMINCDIR}; \
+	    if [ ! -d "${T}${CUSTOMINCDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${CUSTOMINCDIR}"; \
+		${MKDIR} -p "${T}${CUSTOMINCDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 ${T}${CUSTOMINCDIR}; \
+	    ${CHMOD} 0755 ${T}${CUSTOMINCDIR}; \
+	else \
+	    ${TRUE}; \
+	fi
+	-${Q} for i in ${INSTALL_H_SRC} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if ${CMP} -s "$$i" ${T}${CUSTOMINCDIR}/$$i; then \
+		${TRUE}; \
+	    else \
+		${RM} -f ${T}${CUSTOMINCDIR}/$$i.new; \
+		${CP} -f $$i ${T}${CUSTOMINCDIR}/$$i.new; \
+		${CHMOD} 0444 ${T}${CUSTOMINCDIR}/$$i.new; \
+		${MV} -f ${T}${CUSTOMINCDIR}/$$i.new ${T}${CUSTOMINCDIR}/$$i; \
+		echo "installed ${T}${CUSTOMINCDIR}/$$i"; \
+	    fi; \
+	done
+	-${Q} for i in ${CUSTOM_CALC_FILES} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if ${CMP} -s $$i ${T}${CUSTOMCALDIR}/$$i; then \
+		${TRUE}; \
+	    else \
+		${RM} -f ${T}${CUSTOMCALDIR}/$$i.new; \
+		${CP} -f $$i ${T}${CUSTOMCALDIR}/$$i.new; \
+		${CHMOD} 0444 ${T}${CUSTOMCALDIR}/$$i.new; \
+		${MV} -f ${T}${CUSTOMCALDIR}/$$i.new ${T}${CUSTOMCALDIR}/$$i; \
+		echo "installed ${T}${CUSTOMCALDIR}/$$i"; \
+	    fi; \
+	done
+	-${Q} for i in ${CUSTOM_HELP} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if ${CMP} -s $$i ${T}${CUSTOMHELPDIR}/$$i; then \
+		${TRUE}; \
+	    else \
+		${RM} -f ${T}${CUSTOMHELPDIR}/$$i.new; \
+		${CP} -f $$i ${T}${CUSTOMHELPDIR}/$$i.new; \
+		${CHMOD} 0444 ${T}${CUSTOMHELPDIR}/$$i.new; \
+		${MV} -f ${T}${CUSTOMHELPDIR}/$$i.new ${T}${CUSTOMHELPDIR}/$$i; \
+		echo "installed ${T}${CUSTOMHELPDIR}/$$i"; \
+	    fi; \
+	done
+	-${Q} if [ -f "${T}${CUSTOMCALDIR}/libcustcalc.a" ]; then \
+	    ${RM} -f ${T}${CUSTOMCALDIR}/libcustcalc.a; \
+	    echo "removed old ${T}${CUSTOMCALDIR}/libcustcalc.a"; \
+	fi
+	-${Q} if [ ! -z ${ALLOW_CUSTOM} ]; then \
+	  if [ -f libcustcalc.a ]; then \
+	    if ${CMP} -s libcustcalc.a ${T}${LIBDIR}/libcustcalc.a; then \
+		${TRUE}; \
+	    else \
+		${RM} -f ${T}${LIBDIR}/libcustcalc.a.new; \
+		${CP} -f libcustcalc.a ${T}${LIBDIR}/libcustcalc.a.new; \
+		${CHMOD} 0644 ${T}${LIBDIR}/libcustcalc.a.new; \
+		${MV} -f ${T}${LIBDIR}/libcustcalc.a.new \
+		      ${T}${LIBDIR}/libcustcalc.a; \
+		${RANLIB} ${T}${LIBDIR}/libcustcalc.a; \
+		echo "installed ${T}${LIBDIR}/libcustcalc.a"; \
+	    fi; \
+	  fi; \
+	fi
+	${Q}# NOTE: The upper level makefile installs libcustcalc${LIB_EXT_VERS}
+	${Q}#       because we only want to perform one ${LDCONFIG} for both
+	${Q}#       libcalc${LIB_EXT_VERS} and libcustcalc${LIB_EXT_VERS}.
+
+# Try to remove everything that was installed
+#
+# NOTE: Keep the uninstall rule in reverse order to the install rule
+#
+uninstall:
+	-${Q} if [ -f "${T}${CUSTOMCALDIR}/libcustcalc.a" ]; then \
+	    ${RM} -f "${T}${CUSTOMCALDIR}/libcustcalc.a"; \
+	    if [ -f "${T}${CUSTOMCALDIR}/libcustcalc.a" ]; then \
+		echo "cannot uninstall ${T}${CUSTOMCALDIR}/libcustcalc.a"; \
+	    else \
+		echo "uninstalled ${T}${CUSTOMCALDIR}/libcustcalc.a"; \
+	    fi; \
+	fi
+	-${Q} for i in ${CUSTOM_HELP} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if [ -f "${T}${CUSTOMHELPDIR}/$$i" ]; then \
+	    	${RM} -f "${T}${CUSTOMHELPDIR}/$$i"; \
+		if [ -f "${T}${CUSTOMHELPDIR}/$$i" ]; then \
+		   echo "cannot uninstall ${T}${CUSTOMHELPDIR}/$$i"; \
+		else \
+		   echo "uninstalled ${T}${CUSTOMHELPDIR}/$$i"; \
+		fi; \
+	    fi; \
+	done
+	-${Q} for i in ${CUSTOM_CALC_FILES} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if [ -f "${T}${CUSTOMCALDIR}/$$i" ]; then \
+	    	${RM} -f "${T}${CUSTOMCALDIR}/$$i"; \
+		if [ -f "${T}${CUSTOMCALDIR}/$$i" ]; then \
+		   echo "cannot uninstall ${T}${CUSTOMCALDIR}/$$i"; \
+		else \
+		   echo "uninstalled ${T}${CUSTOMCALDIR}/$$i"; \
+		fi; \
+	    fi; \
+	done
+	-${Q} for i in ${INSTALL_H_SRC} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if [ -f "${T}${CUSTOMINCDIR}/$$i" ]; then \
+	    	${RM} -f "${T}${CUSTOMINCDIR}/$$i"; \
+		if [ -f "${T}${CUSTOMINCDIR}/$$i" ]; then \
+		   echo "cannot uninstall ${T}${CUSTOMINCDIR}/$$i"; \
+		else \
+		   echo "uninstalled ${T}${CUSTOMINCDIR}/$$i"; \
+		fi; \
+	    fi; \
+	done
+	-${Q} for i in ${CUSTOMINCDIR} ${CUSTOMHELPDIR} ${CUSTOMCALDIR} \
+		    ${HELPDIR} ${CALC_INCDIR} ${CALC_SHAREDIR} ${INCDIR}; do \
+	    if [ -d "${T}$$i" ]; then \
+		${RMDIR} "${T}$$i" 2>/dev/null; \
+		echo "cleaned up ${T}$$i"; \
+	    fi; \
+	done
+
+##
+#
+# make depend stuff
+#
+##
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+c_argv.o: ../alloc.h
+c_argv.o: ../block.h
+c_argv.o: ../byteswap.h
+c_argv.o: ../calc.h
+c_argv.o: ../calcerr.h
+c_argv.o: ../cmath.h
+c_argv.o: ../config.h
+c_argv.o: ../custom.h
+c_argv.o: ../decl.h
+c_argv.o: ../endian_calc.h
+c_argv.o: ../hash.h
+c_argv.o: ../have_const.h
+c_argv.o: ../have_memmv.h
+c_argv.o: ../have_newstr.h
+c_argv.o: ../have_stdlib.h
+c_argv.o: ../have_string.h
+c_argv.o: ../have_unused.h
+c_argv.o: ../longbits.h
+c_argv.o: ../nametype.h
+c_argv.o: ../qmath.h
+c_argv.o: ../sha1.h
+c_argv.o: ../str.h
+c_argv.o: ../value.h
+c_argv.o: ../zmath.h
+c_argv.o: c_argv.c
+c_devnull.o: ../alloc.h
+c_devnull.o: ../block.h
+c_devnull.o: ../byteswap.h
+c_devnull.o: ../calcerr.h
+c_devnull.o: ../cmath.h
+c_devnull.o: ../config.h
+c_devnull.o: ../custom.h
+c_devnull.o: ../decl.h
+c_devnull.o: ../endian_calc.h
+c_devnull.o: ../hash.h
+c_devnull.o: ../have_const.h
+c_devnull.o: ../have_memmv.h
+c_devnull.o: ../have_newstr.h
+c_devnull.o: ../have_stdlib.h
+c_devnull.o: ../have_string.h
+c_devnull.o: ../have_unistd.h
+c_devnull.o: ../have_unused.h
+c_devnull.o: ../longbits.h
+c_devnull.o: ../nametype.h
+c_devnull.o: ../qmath.h
+c_devnull.o: ../sha1.h
+c_devnull.o: ../str.h
+c_devnull.o: ../value.h
+c_devnull.o: ../zmath.h
+c_devnull.o: c_devnull.c
+c_help.o: ../alloc.h
+c_help.o: ../block.h
+c_help.o: ../byteswap.h
+c_help.o: ../calcerr.h
+c_help.o: ../cmath.h
+c_help.o: ../config.h
+c_help.o: ../custom.h
+c_help.o: ../decl.h
+c_help.o: ../endian_calc.h
+c_help.o: ../hash.h
+c_help.o: ../have_const.h
+c_help.o: ../have_memmv.h
+c_help.o: ../have_newstr.h
+c_help.o: ../have_stdlib.h
+c_help.o: ../have_string.h
+c_help.o: ../have_unistd.h
+c_help.o: ../have_unused.h
+c_help.o: ../longbits.h
+c_help.o: ../nametype.h
+c_help.o: ../qmath.h
+c_help.o: ../sha1.h
+c_help.o: ../str.h
+c_help.o: ../value.h
+c_help.o: ../zmath.h
+c_help.o: c_help.c
+c_pmodm127.o: ../alloc.h
+c_pmodm127.o: ../block.h
+c_pmodm127.o: ../byteswap.h
+c_pmodm127.o: ../calcerr.h
+c_pmodm127.o: ../cmath.h
+c_pmodm127.o: ../config.h
+c_pmodm127.o: ../custom.h
+c_pmodm127.o: ../decl.h
+c_pmodm127.o: ../endian_calc.h
+c_pmodm127.o: ../hash.h
+c_pmodm127.o: ../have_const.h
+c_pmodm127.o: ../have_memmv.h
+c_pmodm127.o: ../have_newstr.h
+c_pmodm127.o: ../have_stdlib.h
+c_pmodm127.o: ../have_string.h
+c_pmodm127.o: ../have_unused.h
+c_pmodm127.o: ../longbits.h
+c_pmodm127.o: ../nametype.h
+c_pmodm127.o: ../qmath.h
+c_pmodm127.o: ../sha1.h
+c_pmodm127.o: ../str.h
+c_pmodm127.o: ../value.h
+c_pmodm127.o: ../zmath.h
+c_pmodm127.o: c_pmodm127.c
+c_pzasusb8.o: ../alloc.h
+c_pzasusb8.o: ../block.h
+c_pzasusb8.o: ../byteswap.h
+c_pzasusb8.o: ../calcerr.h
+c_pzasusb8.o: ../cmath.h
+c_pzasusb8.o: ../config.h
+c_pzasusb8.o: ../custom.h
+c_pzasusb8.o: ../decl.h
+c_pzasusb8.o: ../endian_calc.h
+c_pzasusb8.o: ../hash.h
+c_pzasusb8.o: ../have_const.h
+c_pzasusb8.o: ../have_memmv.h
+c_pzasusb8.o: ../have_newstr.h
+c_pzasusb8.o: ../have_stdlib.h
+c_pzasusb8.o: ../have_string.h
+c_pzasusb8.o: ../have_unused.h
+c_pzasusb8.o: ../longbits.h
+c_pzasusb8.o: ../nametype.h
+c_pzasusb8.o: ../qmath.h
+c_pzasusb8.o: ../sha1.h
+c_pzasusb8.o: ../str.h
+c_pzasusb8.o: ../value.h
+c_pzasusb8.o: ../zmath.h
+c_pzasusb8.o: c_pzasusb8.c
+c_register.o: ../alloc.h
+c_register.o: ../block.h
+c_register.o: ../byteswap.h
+c_register.o: ../calc.h
+c_register.o: ../calcerr.h
+c_register.o: ../cmath.h
+c_register.o: ../config.h
+c_register.o: ../custom.h
+c_register.o: ../decl.h
+c_register.o: ../endian_calc.h
+c_register.o: ../hash.h
+c_register.o: ../have_const.h
+c_register.o: ../have_memmv.h
+c_register.o: ../have_newstr.h
+c_register.o: ../have_stdlib.h
+c_register.o: ../have_string.h
+c_register.o: ../have_unused.h
+c_register.o: ../longbits.h
+c_register.o: ../nametype.h
+c_register.o: ../qmath.h
+c_register.o: ../sha1.h
+c_register.o: ../str.h
+c_register.o: ../value.h
+c_register.o: ../zmath.h
+c_register.o: c_register.c
+c_sysinfo.o: ../alloc.h
+c_sysinfo.o: ../block.h
+c_sysinfo.o: ../byteswap.h
+c_sysinfo.o: ../calc.h
+c_sysinfo.o: ../calcerr.h
+c_sysinfo.o: ../cmath.h
+c_sysinfo.o: ../conf.h
+c_sysinfo.o: ../config.h
+c_sysinfo.o: ../custom.h
+c_sysinfo.o: ../decl.h
+c_sysinfo.o: ../endian_calc.h
+c_sysinfo.o: ../fposval.h
+c_sysinfo.o: ../hash.h
+c_sysinfo.o: ../have_const.h
+c_sysinfo.o: ../have_memmv.h
+c_sysinfo.o: ../have_newstr.h
+c_sysinfo.o: ../have_stdlib.h
+c_sysinfo.o: ../have_string.h
+c_sysinfo.o: ../have_unused.h
+c_sysinfo.o: ../hist.h
+c_sysinfo.o: ../lib_calc.h
+c_sysinfo.o: ../longbits.h
+c_sysinfo.o: ../nametype.h
+c_sysinfo.o: ../prime.h
+c_sysinfo.o: ../qmath.h
+c_sysinfo.o: ../sha1.h
+c_sysinfo.o: ../str.h
+c_sysinfo.o: ../value.h
+c_sysinfo.o: ../zmath.h
+c_sysinfo.o: ../zrand.h
+c_sysinfo.o: ../zrandom.h
+c_sysinfo.o: c_sysinfo.c
+custtbl.o: ../alloc.h
+custtbl.o: ../block.h
+custtbl.o: ../byteswap.h
+custtbl.o: ../calcerr.h
+custtbl.o: ../cmath.h
+custtbl.o: ../config.h
+custtbl.o: ../custom.h
+custtbl.o: ../decl.h
+custtbl.o: ../endian_calc.h
+custtbl.o: ../hash.h
+custtbl.o: ../have_const.h
+custtbl.o: ../have_memmv.h
+custtbl.o: ../have_newstr.h
+custtbl.o: ../have_stdlib.h
+custtbl.o: ../have_string.h
+custtbl.o: ../longbits.h
+custtbl.o: ../nametype.h
+custtbl.o: ../qmath.h
+custtbl.o: ../sha1.h
+custtbl.o: ../str.h
+custtbl.o: ../value.h
+custtbl.o: ../zmath.h
+custtbl.o: custtbl.c

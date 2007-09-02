@@ -1,0 +1,82 @@
+NAME
+    register - set or print a custom register value
+
+SYNOPSIS
+    custom("register", regnum[, value])
+
+TYPES
+    regnum	int
+    value	any, &any
+
+    return	any
+
+DESCRIPTION
+    This custom function reads or sets a value of a custom register.
+    A custom register can hold any calc value.
+
+    Without a value arg, the register value is return.  With a value
+    arg, the register is set with that value and the previous value
+    is returned.
+
+    The number of custom registers is defined at compile time.
+    There will be at least 32 registers although there could be more
+    added in the future.  It may be deterimed by:
+
+		custom("sysinfo", "REGNUM_MAX")
+
+    The custom registers are initialized to 0 by the internal
+    function libcalc_call_me_first() during calc startup.
+
+    This custom interface is intented to make it easier to interface
+    with special purpose hardware.
+
+EXAMPLE
+    > custom("register", 3)
+	0
+    > custom("register", 3, 45)
+	0
+    > custom("register", 3)
+	45
+
+    > custom("register", 7, 2i),
+    > custom("register", 8, 3i),
+    > custom("register", 7) * custom("register", 8)
+	-6
+
+LIMITS
+    calc must be built with ALLOW_CUSTOM= -DCUSTOM
+    calc must be executed with a -C arg.
+    The regnum numbe bee an integer >= 0 and < REGNUM_MAX where
+        REGNUM_MAX is a compile time constant that is >= 32.
+
+LIBRARY
+    none
+
+SEE ALSO
+    custom
+
+## Copyright (C) 2007  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+##
+## @(#) $Revision: 29.2 $
+## @(#) $Id: register,v 29.2 2007/07/05 19:35:20 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/register,v $
+##
+## Under source code control:	2005/02/04 22:39:50
+## File existed as early as:	2005
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

@@ -2,6 +2,12 @@
 #
 # calc - arbitrary precision calculator
 #
+########################################################################
+# Gnu makefile: # This is a Gnu make makefile.  If your make does not  #
+# Gnu makefile: # understand this makefilkke format, then edit and use #
+# Gnu makefile: # Makefile.simple instead of this Makefile.            #
+########################################################################
+#
 # (Generic calc makefile)
 #
 #  NOTE: This is NOT the calc rpm Makefile.  This Makefile is a generic
@@ -32,8 +38,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 29.94 $$
-# @(#) $Id: Makefile.ship,v 29.94 2007/02/18 15:29:23 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.18 $$
+# @(#) $Id: Makefile.ship,v 30.18 2007/09/02 05:38:34 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -44,6 +50,22 @@ MAKEFILE_REV= $$Revision: 29.94 $$
 #
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
+
+#if 0	/* start of skip for non-Gnu makefiles */
+##############################################################################
+#-=-=-=-=-=-=-=-=- Identify the target machine, if possible -=-=-=-=-=-=-=-=-#
+##############################################################################
+
+# NOTE: You can force a target value by defining target as in:
+#
+#	make ...__optional_arguments_... target=value
+
+# Try uname -s if the target was not alreadhy set on the make command line
+#
+ifeq ($(target),)
+target=$(shell uname -s 2>/dev/null)
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 ##############################################################################
 #-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
@@ -812,6 +834,8 @@ CALCPAGER= less
 # Select DEBUG= -O2 -gstabs+ -DWINDOZ for DJGPP.
 #
 #DEBUG=
+#DEBUG= -g
+#DEBUG= -g3
 #
 #DEBUG= -O
 #DEBUG= -O -g
@@ -832,80 +856,6 @@ CALCPAGER= less
 DEBUG= -O3 -g3
 #DEBUG= -O3 -ipa
 #DEBUG= -O3 -g3 -ipa
-#
-#DEBUG= -std0 -fast -O4 -static
-#
-#DEBUG= -g
-#DEBUG= -g3
-#DEBUG= -gx
-#DEBUG= -WM,-g
-#
-#DEBUG= -O2 -gstabs+ -DWINDOZ
-
-# How to compile .c files so that we can form a shared library.
-#
-# CC_SHARE= -fPIC
-#	Building for shared library using the gcc position independent code
-#	(PIC) model.
-# CC_SHARE=
-#	Do not build for shared libraries.
-#
-# NOTE: If CC_SHARE= is empty, then you very likely want to set
-#	CC_SHLIB= and LD_SHARE= to empty.
-#
-# If in doubt, try:
-#	CC_SHARE= -fPIC
-# If that fails try:
-#	CC_SHARE=
-#
-# NOTE: Shared libraries are not yet supported.  For now, use CC_SHARE=
-#
-#CC_SHARE= -fPIC
-CC_SHARE=
-
-# How build a shared librtary
-# NOTE: This is not yet supported
-#
-# CC_SHLIB= -shared "-Wl,-soname,libcalc.so.`./ver_calc${EXE} -V`"
-#	Building for shared library using the gcc position independent code
-#	(PIC) model.
-# CC_SHLIB=
-#	Do not build for shared libraries.
-#
-# NOTE: If CC_SHARE= is empty, then you very likely want to set
-#	CC_SHLIB= and LD_SHARE= to empty.
-#
-# If in doubt, try:
-#	CC_SHLIB= -shared "-Wl,-soname,libcalc.so.`./ver_calc${EXE} -V`"
-# If that fails, try:
-#	CC_SHLIB=
-#
-# NOTE: Shared libraries are not yet supported.  For now, use CC_SHLIB=
-#
-#CC_SHLIB= -shared "-Wl,-soname,libcalc.so.`./ver_calc${EXE} -V`"
-CC_SHLIB=
-
-# How to link with a shared library
-# NOTE: This is not yet supported
-#
-# LD_SHARE= -L.
-#	Building for shared library using the gcc position independent code
-#	(PIC) model.
-# LD_SHARE=
-#
-# NOTE: If CC_SHARE= is empty, then you very likely want to set
-#	CC_SHLIB= and LD_SHARE= to empty.
-#	Do not build for shared libraries.
-#
-# If in doubt, try:
-#	LD_SHARE= -L.
-# If that fails, try:
-#	LD_SHARE=
-#
-# NOTE: Shared libraries are not yet supported.  For now, use LD_SHARE=
-#
-#LD_SHARE= -L.
-LD_SHARE=
 
 # Some systems require one to use ranlib to add a symbol table to
 # a *.a link library.  Set RANLIB to the utility that performs this
@@ -922,7 +872,15 @@ RANLIB=ranlib
 # If in doubt, set MAKE_FILE to Makefile
 #
 MAKE_FILE= Makefile
-#MAKE_FILE=
+
+# Controlling file makefile basename (without the path)
+#
+# This is the basename same of the makefile that may/does/will drive
+# this makefile.
+#
+# If in doubt, set TOP_MAKE_FILE to Makefile
+#
+TOP_MAKE_FILE= Makefile
 
 # If you do not wish to use purify, set PURIFY to an empty string.
 #
@@ -956,14 +914,14 @@ LD_DEBUG=
 # are useful for SGI IRIX people who have 'WorkShop Performance Tools'
 # and who also set 'LD_DEBUG= -lmalloc_cv' above.
 #
-# If in doubt, use CALC_ENV= CALCPATH=./cal.
+# If in doubt, use CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=.:./custom
 #
-CALC_ENV= CALCPATH=./cal
+CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=.
 #CALC_ENV= CALCPATH=./cal MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
-#	  MALLOC_FASTCHK=1 MALLOC_FULLWARN=1
+#	  MALLOC_FASTCHK=1 MALLOC_FULLWARN=1 LD_LIBRARY_PATH=.:./custom
 #CALC_ENV= CALCPATH=./cal MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
 #	  MALLOC_FASTCHK=1 MALLOC_FULLWARN=1 MALLOC_CLEAR_FREE=1 \
-#	  MALLOC_CLEAR_MALLOC=1
+#	  MALLOC_CLEAR_MALLOC=1 LD_LIBRARY_PATH=.:./custom
 
 # By default, custom builtin functions may only be executed if calc
 # is given the -C option.  This is because custom builtin functions
@@ -1005,195 +963,19 @@ MKDIR_ARG= -p
 EXT=
 #EXT=.exe
 
-################
-# compiler set #
-################
+# The default calc versions
 #
-# Select your compiler type by commenting out one of the cc sets below:
-#
-# CCOPT are flags given to ${CC} for optimization
-# CCWARN are flags given to ${CC} for warning message control
-# CCWERR are flags given to ${CC} to make warnings fatal errors
-#	NOTE: CCWERR is only set in development Makefiles and must
-#	      only be used with ${CC}, not ${LCC}.
-# CCMISC are misc flags given to ${CC}
-#
-# CFLAGS are all flags given to ${CC} [[often includes CCOPT, CCWARN, CCMISC]]
-# ICFLAGS are given to ${CC} for intermediate progs
-#
-# LDFLAGS are flags given to ${CC} for linking .o files
-# ILDFLAGS are flags given to ${CC} for linking .o files for intermediate progs
-#
-# LCC how the the C compiler is invoked on locally executed intermediate progs
-# CC is how the the C compiler is invoked (with an optional Purify)
-#
-###
-#
-# Linux set
-#
-CCWARN= -Wall -W -Wno-comment
-CCWERR=
-CCOPT= ${DEBUG} ${CC_SHARE}
-CCMISC=
-#
-CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
-ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
-#
-LDFLAGS= ${LD_SHARE}
-ILDFLAGS=
-#
-LCC= gcc
-CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-###
-#
-# Apple Mac OS X
-#
-#CCWARN= -Wall -W -Wno-comment
-#CCWERR=
-#CCOPT= ${DEBUG} ${CC_SHARE}
-#CCMISC= -arch i386 -arch ppc
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
-#
-#LDFLAGS= ${LD_SHARE} -arch i386 -arch ppc
-#ILDFLAGS=
-#
-#LCC= gcc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-###
-#
-# gcc set
-#
-#CCWARN= -Wall -W -Wno-comment
-#CCWERR=
-#CCOPT= ${DEBUG} ${CC_SHARE}
-#CCMISC=
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
-#
-#LDFLAGS= ${LD_SHARE}
-#ILDFLAGS=
-#
-#LCC= gcc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-###
-#
-# common cc set
-#
-# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
-# If -O2 -g is not supported try:			DEBUG= -O -g
-#
-#CCWARN=
-#CCWERR=
-#CCOPT= ${DEBUG} ${CC_SHARE}
-#CCMISC=
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
-#
-#LDFLAGS= ${LD_SHARE}
-#ILDFLAGS=
-#
-#LCC= cc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-###
-#
-# HP-UX set
-#
-# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
-# If -O2 -g is not supported try:			DEBUG= -O -g
-#
-# Warning: Some HP-UX optimizers are brain-damaged.
-# If 'make check' fails use:				DEBUG= -g
-#
-#CCWARN=
-#CCWERR=
-#CCOPT= ${DEBUG} ${CC_SHARE}
-#CCMISC= +e
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
-#
-#LDFLAGS= ${LD_SHARE}
-#ILDFLAGS=
-#
-#LCC= cc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-###
-#
-# AIX RS/6000 set
-#
-# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
-# If -O2 -g is not supported try:			DEBUG= -O -g
-#
-#CCWARN=
-#CCWERR=
-#CCOPT= ${DEBUG} ${CC_SHARE}
-#CCMISC= -qlanglvl=ansi
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
-#
-#LDFLAGS= ${LD_SHARE}
-#ILDFLAGS=
-#
-#LCC= cc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-###
-#
-# Solaris Sun cc compiler set
-#
-# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
-# If -O2 -g is not supported try:			DEBUG= -O -g
-#
-# We need -DFORCE_STDC to make use of ANSI-C like features and
-# to avoid the use of -Xc (which as a lose performance wise).
-#
-#CCWARN=
-#CCWERR=
-#CCOPT= ${DEBUG} ${CC_SHARE}
-#CCMISC= -DFORCE_STDC
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC}
-#
-#LDFLAGS= ${LD_SHARE}
-#ILDFLAGS=
-#
-#LCC= cc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-###
-#
-# Dec Alpha / Compaq Tru64 cc (non-gnu) compiler set
-#
-# For better performance, set the following:	DEBUG= -std0 -fast -O4 -static
-#
-#CCWARN=
-#CCWERR=
-#CCOPT= ${DEBUG} ${CC_SHARE}
-#CCMISC=
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC}
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -Wno-unused
-#
-#LDFLAGS= ${LD_SHARE}
-#ILDFLAGS=
-#
-#LCC= cc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
+VERSION= 2.12.2
+VERS= 2.12.2
+VER= 2.12
+VE= 2
 
-##############################################################################
-#-=-=-=-=-=-=-=-=- Be careful if you change something below -=-=-=-=-=-=-=-=-#
-##############################################################################
+# Names of shared libraries with versions
+#
+LIB_EXT= .so
+LIB_EXT_VERS= ${LIB_EXT}.${VERS}
+LIB_EXT_VER= ${LIB_EXT}.${VER}
+LIB_EXT_VE= ${LIB_EXT}.${VE}
 
 # standard utilities used during make
 #
@@ -1224,8 +1006,316 @@ AR= ar
 TRUE= true
 CAT= cat
 COL= col
+LN= ln
+LDCONFIG= ldconfig
 # assume the X11 makedepend tool for the depend rule
 MAKEDEPEND= makedepend
+
+# Extra compiling and linking flags
+#
+# EXTRA_CFLAGS are flags given to ${CC} when compiling C files
+# EXTRA_LDFLAGS are flags given to ${CC} when linking progs
+#
+# Both CFLAGS and LDFLAGS are left blank in this Makefile by
+# default so that users may use them on the make command line
+# to always the way that C is compiled and files are linked
+# respectively.  For example:
+#
+#	make all EXTRA_CFLAGS="-DMAGIC" EXTRA_LDFLAGS="-lmagic"
+#
+# NOTE: These should be left blank in this Makefile to make it
+#       easier to add stuff on the command line.  If you want to
+#	to change the way calc is compiled by this Makefile, change
+#	the appropirate host target section below or a flag above.
+#
+EXTRA_CFLAGS=
+EXTRA_LDFLAGS=
+
+# COMMON_CFLAGS are the common ${CC} flags used for all progs, both
+#	    intermediate and final calc and calc related progs
+#
+COMMON_CFLAGS= -DCALC_SRC ${ALLOW_CUSTOM} ${CCWARN} ${CCMISC} ${EXTRA_CFLAGS}
+
+# COMMON_LDFLAGS are the common flags used for linking all progs, both
+#	     intermediate and final calc and calc related progs
+#
+COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
+
+# start of host target cut - Do not remove this line
+##############################################################################
+#-=-=-=-=-=- host target section - targets that override defaults -=-=-=-=-=-#
+##############################################################################
+
+# Common values set in targets
+#
+# BLD_TYPE determines if calc is built with static and/or dynamic libs.
+#	       Set this value to one of:
+#
+#	BLD_TYPE= calc-dynamic-only
+#	BLD_TYPE= calc-static-only
+#
+# CC_SHARE are flags given to ${CC} to build .o files suitable for shared libs
+# DEFAULT_LIB_INSTALL_PATH is where calc progs look for calc shared libs
+# LD_SHARE are common flags given to ${CC} to link with shared libraries
+# LIBCALC_SHLIB are flags given to ${CC} to build libcalc shared lib
+# LIBCUSTCALC_SHLIB are flags given to ${CC} to build libcustcalc shared lib
+#
+#	NOTE: The above 4 values are unused if BLD_TYPE= calc-static-only
+#
+# CC_STATIC are flags given to ${CC} to build .o files suitable for static libs
+# LD_STATIC are common flags given to ${CC} to link with static libraries
+# LIBCALC_STATIC are flags given to ${CC} to build libcalc static lib
+# LIBCUSTCALC_STATIC are flags given to ${CC} to build libcustcalc static lib
+#
+#	NOTE: The above 4 values are unused if BLD_TYPE= calc-dynamic-only
+#
+# CCOPT are flags given to ${CC} for optimization
+# CCWARN are flags given to ${CC} for warning message control
+# CCWERR are flags given to ${CC} to make warnings fatal errors
+#	NOTE: CCWERR is only set in development Makefiles and must only be
+#	      used with ${CC}, not ${LCC}.  If you do not want the compiler
+#	      to abort on warnings, then leave CCWERR blank.
+# CCMISC are misc flags given to ${CC}
+#
+# LCC how the the C compiler is invoked on locally executed intermediate progs
+# CC is how the the C compiler is invoked (with an optional Purify)
+#
+# Specific target overrides or modifications to default values
+
+##########################################################################
+# NOTE: If your target is not supported below and the default target	 #
+#	is not suitable for your needs, please send to the:		 #
+#									 #
+#		calc-contrib at asthe dot com				 #
+#									 #
+#	EMail address an "ifeq ($(target),YOUR_TARGET_NAME)" ... "endif" #
+#	set of lines so that we can consider them for the next release.  #
+##########################################################################
+
+#if 0	/* start of skip for non-Gnu makefiles */
+################
+# Linux target #
+################
+
+ifeq ($(target),Linux)
+#
+BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+#
+CC_STATIC=
+LD_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+endif
+
+#################################
+# Apple MacOS X / Darwin target #
+#################################
+
+ifeq ($(target),Darwin)
+#
+BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/sw/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= ${DARWIN_ARCH}
+LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib
+LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib
+#
+CC_STATIC=
+LD_STATIC= ${DARWIN_ARCH}
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC= ${DARWIN_ARCH}
+#
+LCC= MACOSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+# Darmin dynamic shared lib filenames
+LIB_EXT:= .dylib
+LIB_EXT_VERS:= .${VERS}${LIB_EXT}
+LIB_EXT_VER:= .${VER}${LIB_EXT}
+LIB_EXT_VE:= .${VE}${LIB_EXT}
+# compile Universal by default
+DARWIN_ARCH= -arch i386 -arch ppc
+MACOSX_DEPLOYMENT_TARGET=10.4
+#
+endif
+
+##################
+# FreeBSD target #
+##################
+
+########################################################################
+# NOTE: You MUST either use gmake (GNU Make) or you must try your luck #
+#       with Makefile.simple and custom/Makefile.simple versions.      #
+#	See HOWTO.INSTALL for more information.                        #
+########################################################################
+
+ifeq ($(target),FreeBSD)
+#
+BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+#
+CC_STATIC=
+LD_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+MAKE= gmake
+#
+endif
+
+#######################################################
+# simple target - values used to form Makefile.simple #
+#######################################################
+
+# NOTE: This is not a real host target.  The simple target
+#	exists only to form the Makefile.simple file.
+
+ifeq ($(target),simple)
+#endif	/* end of skip for non-Gnu makefiles */
+#
+BLD_TYPE= calc-static-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+#
+CC_STATIC=
+LD_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= cc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+# The simple makefile forces the use of static ${CC} flags
+#
+# ICFLAGS are given to ${CC} for intermediate progs used to help compile calc
+# CFLAGS are given to ${CC} for calc progs other than intermediate progs
+# ILDFLAGS for ${CC} in linking intermediate progs used to help compile calc
+# LDFLAGS for ${CC} in linking calc progs other than intermediate progs
+#
+ICFLAGS= ${COMMON_CFLAGS} ${CC_STATIC}
+CFLAGS= ${ICFLAGS} ${CCOPT}
+#
+ILDFLAGS= ${COMMON_LDFLAGS} ${LD_STATIC}
+LDFLAGS= ${LD_DEBUG} ${ILDFLAGS} ${LIBCALC_STATIC} ${LIBCUSTCALC_STATIC}
+#
+#if 0	/* start of skip for non-Gnu makefiles */
+endif
+
+###################################################
+# default target - when no specific target exists #
+###################################################
+
+# NOTE: This is the default generic host target.  Used when no other
+#	host target matches.
+
+ifeq ($(target),)
+#
+BLD_TYPE= calc-static-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+#
+CC_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+LD_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+endif
+
+###########################################
+# Set the default compile flags for ${CC} #
+###########################################
+
+# Required flags to compile C files for calc
+#
+# ICFLAGS are given to ${CC} for intermediate progs used to help compile calc
+# CFLAGS are given to ${CC} for calc progs other than intermediate progs
+#
+# NOTE: This does not work for: make-XYZ-only and BLD_TYPE != make-XYZ-only
+#
+ifeq ($(BLD_TYPE),calc-static-only)
+ICFLAGS= ${COMMON_CFLAGS} ${CC_STATIC}
+else
+ICFLAGS= ${COMMON_CFLAGS} ${CC_SHARE}
+endif
+CFLAGS= ${ICFLAGS} ${CCOPT}
+
+# Required flags to link files for calc
+#
+# ILDFLAGS for ${CC} in linking intermediate progs used to help compile calc
+# LDFLAGS for ${CC} in linking calc progs other than intermediate progs
+#
+ILDFLAGS= ${COMMON_LDFLAGS}
+LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
+
+#endif	/* end of skip for non-Gnu makefiles */
+
+#######################################################################
+#-=-=-=-=-=- end of target section - only make rules below -=-=-=-=-=-#
+#######################################################################
+# end of host target cut - Do not remove this line
+
+###############################################################################
+#=-=-=-=-=- Be careful if you change something in this next section -=-=-=-=-=#
+###############################################################################
 
 # Makefile debug
 #
@@ -1248,8 +1338,8 @@ LIBSRC= addop.c assocfunc.c blkcpy.c block.c byteswap.c \
 	codegen.c comfunc.c commath.c config.c const.c custom.c \
 	file.c func.c hash.c help.c hist.c input.c jump.c label.c \
 	lib_calc.c lib_util.c listfunc.c matfunc.c math_error.c \
-	md5.c obj.c opcodes.c pix.c poly.c prime.c qfunc.c qio.c \
-	qmath.c qmod.c qtrans.c quickhash.c seed.c shs.c shs1.c size.c \
+	obj.c opcodes.c pix.c poly.c prime.c qfunc.c qio.c \
+	qmath.c qmod.c qtrans.c quickhash.c seed.c sha1.c size.c \
 	str.c symbol.c token.c value.c version.c zfunc.c zio.c \
 	zmath.c zmod.c zmul.c zprime.c zrand.c zrandom.c
 
@@ -1262,8 +1352,8 @@ LIBOBJS= addop.o assocfunc.o blkcpy.o block.o byteswap.o calcerr.o \
 	codegen.o comfunc.o commath.o config.o const.o custom.o \
 	file.o func.o hash.o help.o hist.o input.o jump.o label.o \
 	lib_calc.o lib_util.o listfunc.o matfunc.o math_error.o \
-	md5.o obj.o opcodes.o pix.o poly.o prime.o qfunc.o qio.o \
-	qmath.o qmod.o qtrans.o quickhash.o seed.o shs.o shs1.o size.o \
+	obj.o opcodes.o pix.o poly.o prime.o qfunc.o qio.o \
+	qmath.o qmod.o qtrans.o quickhash.o seed.o sha1.o size.o \
 	str.o symbol.o token.o value.o version.o zfunc.o zio.o \
 	zmath.o zmod.o zmul.o zprime.o zrand.o zrandom.o
 
@@ -1279,12 +1369,12 @@ CALCSRC= calc.c
 #
 CALCOBJS= calc.o
 
-# these .h files are needed by programs that use libcalc.a
+# these .h files are needed to build the math link library
 #
 LIB_H_SRC= alloc.h blkcpy.h block.h byteswap.h calc.h cmath.h \
 	config.h custom.h decl.h file.h func.h hash.h hist.h jump.h \
-	label.h lib_util.h lib_calc.h md5.h nametype.h \
-	opcodes.h prime.h qmath.h shs.h shs1.h str.h \
+	label.h lib_util.h lib_calc.h nametype.h \
+	opcodes.h prime.h qmath.h sha1.h str.h \
 	symbol.h token.h value.h zmath.h zrand.h zrandom.h
 
 # we build these .h files during the make
@@ -1364,146 +1454,171 @@ SAMPLE_OBJ= sample_many.o sample_rand.o
 
 # The complete list of Makefile vars passed down to custom/Makefile.
 #
-CUSTOM_PASSDOWN= Q="${Q}" \
-    INCDIR="${INCDIR}" \
+CUSTOM_PASSDOWN=  \
+    ALLOW_CUSTOM="${ALLOW_CUSTOM}" \
+    AR=${AR} \
+    AWK=${AWK} \
     BINDIR="${BINDIR}" \
-    LIBDIR="${LIBDIR}" \
-    CALC_SHAREDIR="${CALC_SHAREDIR}" \
-    HELPDIR="${HELPDIR}" \
+    BLD_TYPE="${BLD_TYPE}" \
     CALC_INCDIR="${CALC_INCDIR}" \
+    CALC_SHAREDIR="${CALC_SHAREDIR}" \
+    CAT=${CAT} \
+    CC="${CC}" \
+    CCERR="${CCERR}" \
+    CCMISC="${CCMISC}" \
+    CCOPT="${CCOPT}" \
+    CCWARN="${CCWARN}" \
+    CC_SHARE="${CC_SHARE}" \
+    CFLAGS="${CFLAGS} -I.." \
+    CHMOD=${CHMOD} \
+    CMP=${CMP} \
+    CO=${CO} \
+    COMMON_CFLAGS="${COMMON_CFLAGS} -I.." \
+    COMMON_LDFLAGS="${COMMON_LDFLAGS}" \
+    CP=${CP} \
     CUSTOMCALDIR="${CUSTOMCALDIR}" \
     CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
     CUSTOMINCDIR="${CUSTOMINCDIR}" \
-    SCRIPTDIR="${SCRIPTDIR}" \
     DEBUG="${DEBUG}" \
-    CC_SHARE="${CC_SHARE}" \
-    LD_SHARE="${LD_SHARE}" \
-    RANLIB="${RANLIB}" \
-    PURIFY="${PURIFY}" \
-    ALLOW_CUSTOM="${ALLOW_CUSTOM}" \
-    CCWARN="${CCWARN}" \
-    CCOPT="${CCOPT}" \
-    CCMISC="${CCMISC}" \
-    CFLAGS="${CFLAGS} ${ALLOW_CUSTOM} -I/usr/include -I.." \
-    ICFLAGS="${ICFLAGS}" \
-    LDFLAGS="${LDFLAGS}" \
+    DEFAULT_LIB_INSTALL_PATH="${DEFAULT_LIB_INSTALL_PATH}" \
+    FMT=${FMT} \
+    GREP=${GREP} \
+    HELPDIR="${HELPDIR}" \
+    ICFLAGS="${ICFLAGS} -I.." \
     ILDFLAGS="${ILDFLAGS}" \
-    LCC="${LCC}" \
-    CC="${CC}" \
-    MAKE_FILE=${MAKE_FILE} \
-    SED=${SED} \
-    CHMOD=${CHMOD} \
-    CMP=${CMP} \
-    MAKEDEPEND=${MAKEDEPEND} \
-    SORT=${SORT} \
+    INCDIR="${INCDIR}" \
     LANG=${LANG} \
-    RM=${RM} \
-    TOUCH=${TOUCH} \
+    LCC="${LCC}" \
+    LDCONFIG=${LDCONFIG} \
+    LDFLAGS="${LDFLAGS}" \
+    LD_SHARE="${LD_SHARE}" \
+    LIBCUSTCALC_SHLIB="${LIBCUSTCALC_SHLIB}" \
+    LIBDIR="${LIBDIR}" \
+    LN=${LN} \
+    MAKE=${MAKE} \
+    MAKEDEPEND=${MAKEDEPEND} \
+    MAKE_FILE=Makefile \
     MKDIR=${MKDIR} \
-    RMDIR=${RMDIR} \
-    CP=${CP} \
     MV=${MV} \
-    CO=${CO} \
-    AR=${AR} \
+    PURIFY="${PURIFY}" \
+    Q="${Q}" \
+    RANLIB="${RANLIB}" \
+    RM=${RM} \
+    RMDIR=${RMDIR} \
+    SCRIPTDIR="${SCRIPTDIR}" \
+    SED=${SED} \
+    SORT=${SORT} \
+    T=${T} \
+    TOP_MAKE_FILE=${MAKE_FILE} \
+    TOUCH=${TOUCH} \
     TRUE=${TRUE} \
-    CAT=${CAT} \
-    T=${T}
+    VERSION=${VERSION} \
+    target=${target}
 
 # The compelte list of Makefile vars passed down to help/Makefile.
 #
-HELP_PASSDOWN= Q="${Q}" \
-    INCDIR="${INCDIR}" \
+HELP_PASSDOWN= \
+    AR=${AR} \
     BINDIR="${BINDIR}" \
-    LIBDIR="${LIBDIR}" \
-    CALC_SHAREDIR="${CALC_SHAREDIR}" \
-    HELPDIR="${HELPDIR}" \
     CALC_INCDIR="${CALC_INCDIR}" \
+    CALC_SHAREDIR="${CALC_SHAREDIR}" \
+    CAT=${CAT} \
+    CFLAGS="${CFLAGS}" \
+    CHMOD=${CHMOD} \
+    CMP=${CMP} \
+    CO=${CO} \
+    COMMON_CFLAGS="${COMMON_CFLAGS}" \
+    COMMON_LDFLAGS="${COMMON_LDFLAGS}" \
+    CP=${CP} \
     CUSTOMCALDIR="${CUSTOMCALDIR}" \
     CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
     CUSTOMINCDIR="${CUSTOMINCDIR}" \
-    SCRIPTDIR="${SCRIPTDIR}" \
+    EXT=${EXT} \
+    FMT=${FMT} \
+    HELPDIR="${HELPDIR}" \
     ICFLAGS="${ICFLAGS}" \
     ILDFLAGS="${ILDFLAGS}" \
-    LCC="${LCC}" \
-    MAKE_FILE=${MAKE_FILE} \
-    SED=${SED} \
-    CHMOD=${CHMOD} \
-    CMP=${CMP} \
-    FMT=${FMT} \
+    INCDIR="${INCDIR}" \
     LANG=${LANG} \
-    EXT=${EXT} \
-    RM=${RM} \
-    TOUCH=${TOUCH} \
+    LCC="${LCC}" \
+    LIBDIR="${LIBDIR}" \
+    MAKE_FILE=Makefile \
     MKDIR=${MKDIR} \
-    RMDIR=${RMDIR} \
-    CP=${CP} \
     MV=${MV} \
-    CO=${CO} \
-    AR=${AR} \
-    TRUE=${TRUE} \
-    CAT=${CAT} \
-    T=${T}
+    Q="${Q}" \
+    RM=${RM} \
+    RMDIR=${RMDIR} \
+    SCRIPTDIR="${SCRIPTDIR}" \
+    SED=${SED} \
+    T=${T} \
+    TOP_MAKE_FILE=${MAKE_FILE} \
+    TOUCH=${TOUCH} \
+    TRUE=${TRUE}
 
 # The compelte list of Makefile vars passed down to cal/Makefile.
 #
-CAL_PASSDOWN= Q="${Q}" \
-    INCDIR="${INCDIR}" \
+CAL_PASSDOWN= \
+    AR=${AR} \
     BINDIR="${BINDIR}" \
-    LIBDIR="${LIBDIR}" \
-    CALC_SHAREDIR="${CALC_SHAREDIR}" \
-    HELPDIR="${HELPDIR}" \
     CALC_INCDIR="${CALC_INCDIR}" \
+    CALC_SHAREDIR="${CALC_SHAREDIR}" \
+    CAT=${CAT} \
+    CHMOD=${CHMOD} \
+    CMP=${CMP} \
+    CO=${CO} \
+    CP=${CP} \
     CUSTOMCALDIR="${CUSTOMCALDIR}" \
     CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
     CUSTOMINCDIR="${CUSTOMINCDIR}" \
-    SCRIPTDIR="${SCRIPTDIR}" \
-    MAKE_FILE=${MAKE_FILE} \
-    CHMOD=${CHMOD} \
-    CMP=${CMP} \
+    HELPDIR="${HELPDIR}" \
+    INCDIR="${INCDIR}" \
     LANG=${LANG} \
-    RM=${RM} \
-    TOUCH=${TOUCH} \
+    LIBDIR="${LIBDIR}" \
+    MAKE_FILE=Makefile \
     MKDIR=${MKDIR} \
-    RMDIR=${RMDIR} \
-    CP=${CP} \
     MV=${MV} \
-    CO=${CO} \
-    AR=${AR} \
-    TRUE=${TRUE} \
-    CAT=${CAT} \
-    T=${T}
+    Q="${Q}" \
+    RM=${RM} \
+    RMDIR=${RMDIR} \
+    SCRIPTDIR="${SCRIPTDIR}" \
+    T=${T} \
+    TOP_MAKE_FILE=${MAKE_FILE} \
+    TOUCH=${TOUCH} \
+    TRUE=${TRUE}
 
 # The compelte list of Makefile vars passed down to cscript/Makefile.
 #
-CSCRIPT_PASSDOWN= Q="${Q}" \
-    INCDIR="${INCDIR}" \
+CSCRIPT_PASSDOWN= \
+    AR=${AR} \
     BINDIR="${BINDIR}" \
-    LIBDIR="${LIBDIR}" \
-    CALC_SHAREDIR="${CALC_SHAREDIR}" \
-    HELPDIR="${HELPDIR}" \
     CALC_INCDIR="${CALC_INCDIR}" \
+    CALC_SHAREDIR="${CALC_SHAREDIR}" \
+    CAT=${CAT} \
+    CHMOD=${CHMOD} \
+    CMP=${CMP} \
+    CO=${CO} \
+    CP=${CP} \
     CUSTOMCALDIR="${CUSTOMCALDIR}" \
     CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
     CUSTOMINCDIR="${CUSTOMINCDIR}" \
-    SCRIPTDIR="${SCRIPTDIR}" \
-    MAKE_FILE=${MAKE_FILE} \
-    CHMOD=${CHMOD} \
-    SED=${SED} \
     FMT=${FMT} \
-    SORT=${SORT} \
-    CMP=${CMP} \
+    HELPDIR="${HELPDIR}" \
+    INCDIR="${INCDIR}" \
     LANG=${LANG} \
-    RM=${RM} \
-    TOUCH=${TOUCH} \
+    LIBDIR="${LIBDIR}" \
+    MAKE_FILE=Makefile \
     MKDIR=${MKDIR} \
-    RMDIR=${RMDIR} \
-    CP=${CP} \
     MV=${MV} \
-    CO=${CO} \
-    AR=${AR} \
-    TRUE=${TRUE} \
-    CAT=${CAT} \
-    T=${T}
+    Q="${Q}" \
+    RM=${RM} \
+    RMDIR=${RMDIR} \
+    SCRIPTDIR="${SCRIPTDIR}" \
+    SED=${SED} \
+    SORT=${SORT} \
+    T=${T} \
+    TOP_MAKE_FILE=${MAKE_FILE} \
+    TOUCH=${TOUCH} \
+    TRUE=${TRUE}
 
 # complete list of .h files found (but not built) in the distribution
 #
@@ -1532,15 +1647,30 @@ CALCLIBLIST= ${LIBSRC} ${UTIL_C_SRC} ${LIB_H_SRC} ${MAKE_FILE} \
 #
 OBJS= ${LIBOBJS} ${CALCOBJS} ${UTIL_OBJS} ${SAMPLE_OBJS}
 
+# static library build
+#
+CALC_STATIC_LIBS= libcalc.a libcustcalc.a
+
 # Libaraies created and used to build calc
 #
-CALC_STATIC_LIBS= libcalc.a custom/libcustcalc.a
+CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERS} libcustcalc${LIB_EXT_VERS}
+
+# Symlinks of dymanic shared libraries
+#
+SYM_DYNAMIC_LIBS= libcalc${LIB_EXT_VER} libcalc${LIB_EXT_VE} libcalc${LIB_EXT} \
+	libcustcalc${LIB_EXT_VERS} libcustcalc${LIB_EXT_VER} \
+	libcustcalc${LIB_EXT_VE} libcustcalc${LIB_EXT}
 
 # list of sample programs to that need to be built to satisfy sample rule
 #
-# NOTE: The ${SAMPLE_TARGETS} are built but not installed at this time.
+# NOTE: The ${SAMPLE_TARGETS} and ${SAMPLE_STATIC_TARGETS} are built but
+#	not installed at this time.
+#
+# NOTE: There must be a foo-static${EXE} in SAMPLE_STATIC_TARGETS for
+#	every foo${EXE} in ${SAMPLE_TARGETS}.
 #
 SAMPLE_TARGETS= sample_rand${EXE} sample_many${EXE}
+SAMPLE_STATIC_TARGETS= sample_rand-static${EXE} sample_many-static${EXE}
 
 # list of cscript programs to that need to be built to satisfy cscript/.all
 #
@@ -1550,16 +1680,27 @@ SAMPLE_TARGETS= sample_rand${EXE} sample_many${EXE}
 CSCRIPT_TARGETS= cscript/mersenne cscript/piforever cscript/plus \
 		 cscript/square cscript/fproduct cscript/powerterm
 
-# complete list of progs built
+# dynamic first targets
 #
-PROGS= calc${EXT} ${UTIL_PROGS}
+DYNAMIC_FIRST_TARGETS= ${LICENSE} .dynamic
+
+# static first targets
+#
+STATIC_FIRST_TARGETS= ${LICENSE} .static
+
+# early targets - things needed before the main build phase can begin
+#
+EARLY_TARGETS= custom/Makefile hsrc .hsrc custom/.all
+
+# late targets - things needed after the main build phase is complete
+#
+LATE_TARGETS= calc.1 calc.usage \
+	      cal/.all help/.all help/builtin cscript/.all \
+	      Makefile.simple
 
 # complete list of targets
 #
-TARGETS= ${LICENSE} ${CALC_STATIC_LIBS} custom/.all calc${EXT} \
-	 ${SAMPLE_TARGETS} calc.1 calc.usage \
-	 cal/.all help/.all help/builtin cscript/.all
-
+TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS}
 
 ###
 #
@@ -1567,26 +1708,118 @@ TARGETS= ${LICENSE} ${CALC_STATIC_LIBS} custom/.all calc${EXT} \
 #
 ###
 
-all: .hsrc ver_calc${EXE} ${TARGETS} CHANGES
+all: ${BLD_TYPE} CHANGES
 
-calc${EXT}: .hsrc ${CALC_STATIC_LIBS} ${CALCOBJS} ${MAKE_FILE}
+calc-dynamic-only: ${DYNAMIC_FIRST_TARGETS} ${EARLY_TARGETS} \
+		   ${CALC_DYNAMIC_LIBS} ${SYM_DYNAMIC_LIBS} calc${EXT} \
+		   ${SAMPLE_TARGETS} ${LATE_TARGETS}
+
+.dynamic: ${MAKE_FILE}
+	${Q} r="calc-dynamic-only"; \
+	    if [ "${BLD_TYPE}" != "$$r" ]; then \
+	    echo "NOTE: The host target $(target) defaults to a build" 1>&2; \
+	    echo "      type of: ${BLD_TYPE}, so you need to use" 1>&2; \
+	    echo "      the following make command:" 1>&2; \
+	    echo "" 1>&2; \
+	    echo "      ${MAKE} -f ${MAKE_FILE} clobber" 1>&2; \
+	    echo "      ${MAKE} -f ${MAKE_FILE} $$r BLD_TYPE=$$r" 1>&2; \
+	    echo "" 1>&2; \
+	    echo "NOTE: It is a very good idea to c first clobber any" 1>&2; \
+	    echo "      previously built .o, libs and executables" 1>&2; \
+	    echo "      before switching to $$r!" 1>&2; \
+	    echo "" 1>&2; \
+	    echo "=== aborting make ===" 1>&2; \
+	    exit 1; \
+	fi
+	${Q} for i in .static calc-static${EXT} ${SAMPLE_STATIC_TARGETS} \
+		      libcalc.a custom/libcustcalc.a; do \
+	    r="calc-dynamic-only"; \
+	    if [ -e "$$i" ]; then \
+		echo "Found the static target $$i file.  You must:" 1>&2; \
+		echo "" 1>&2; \
+		echo "      ${MAKE} -f ${MAKE_FILE} clobber" 1>&2; \
+		echo "      ${MAKE} -f ${MAKE_FILE} $$r BLD_TYPE=$$r" 1>&2; \
+		echo "" 1>&2; \
+		echo "to clean out any previously build static files." 1>&2; \
+		echo "" 1>&2; \
+		echo "=== aborting make ===" 1>&2; \
+		exit 2; \
+	    fi; \
+	done
+	 -${Q} ${TOUCH} $@
+
+calc-static-only: ${STATIC_FIRST_TARGETS} ${EARLY_TARGETS} \
+		  ${CALC_STATIC_LIBS} calc-static${EXT} \
+		  ${SAMPLE_STATIC_TARGETS} ${LATE_TARGETS}
+	${Q} for i in calc${EXT} ${SAMPLE_TARGETS}; do \
+	    if ! ${CMP} -s "$$i-static" "$$i"; then \
+		${RM} -f "$$i"; \
+		${LN} "$$i-static" "$$i"; \
+	    fi; \
+	done
+
+.static: ${MAKE_FILE}
+	${Q} r="calc-static-only"; \
+	    if [ "${BLD_TYPE}" != "$$r" ]; then \
+	    echo "NOTE: The host target $(target) defaults to a build" 1>&2; \
+	    echo "      type of: ${BLD_TYPE}, so you need to use" 1>&2; \
+	    echo "      the following make command:" 1>&2; \
+	    echo "" 1>&2; \
+	    echo "      ${MAKE} -f ${MAKE_FILE} clobber" 1>&2; \
+	    echo "      ${MAKE} -f ${MAKE_FILE} $$r BLD_TYPE=$$r" 1>&2; \
+	    echo "" 1>&2; \
+	    echo "NOTE: It is a very good idea to c first clobber any" 1>&2; \
+	    echo "      previously built .o, libs and executables" 1>&2; \
+	    echo "      before switching to $$r!" 1>&2; \
+	    echo "" 1>&2; \
+	    echo "=== aborting make ===" 1>&2; \
+	    exit 3; \
+	fi
+	${Q} for i in .dynamic ${CALC_DYNAMIC_LIBS} ${SYM_DYNAMIC_LIBS} \
+		      custom/libcustcalc${LIB_EXT_VERS}; do \
+	    r="calc-static-only"; \
+	    if [ -e "$$i" ]; then \
+		echo "Found the dynamic target $$i file.  You must:" 1>&2; \
+		echo "" 1>&2; \
+		echo "      ${MAKE} -f ${MAKE_FILE} clobber" 1>&2; \
+		echo "      ${MAKE} -f ${MAKE_FILE} $$r BLD_TYPE=$$r" 1>&2; \
+		echo "" 1>&2; \
+		echo "to clean out any previously build dynamic files." 1>&2; \
+		echo "" 1>&2; \
+		echo "=== aborting make ===" 1>&2; \
+		exit 4; \
+	    fi; \
+	done
+	 -${Q} ${TOUCH} $@
+
+calc${EXT}: .hsrc ${CALCOBJS} ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
 	${RM} -f $@
-	${CC} ${LDFLAGS} ${CALCOBJS} ${CALC_STATIC_LIBS} \
-	      ${LD_DEBUG} ${READLINE_LIB} -o $@; \
+	${CC} ${CALCOBJS} ${LDFLAGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
+	      ${READLINE_LIB} -o $@
 
-libcalc.a: ${LIBOBJS} ${MAKE_FILE}
-	-${RM} -f libcalc.a
-	${AR} qc libcalc.a ${LIBOBJS}
-	${RANLIB} libcalc.a
-	${CHMOD} 0644 libcalc.a
+libcalc${LIB_EXT_VERS}: ${LIBOBJS} ver_calc${EXE} ${MAKE_FILE}
+	${CC} ${LIBCALC_SHLIB} ${LIBOBJS} -o libcalc${LIB_EXT_VERS}
 
-# NOTE: Shared libraries are not yet supported.
+libcalc${LIB_EXT_VER}: libcalc${LIB_EXT_VERS}
+	${Q} ${RM} -f $@
+	${LN} -s $? $@
+
+libcalc${LIB_EXT_VE}: libcalc${LIB_EXT_VERS}
+	${Q} ${RM} -f $@
+	${LN} -s $? $@
+
+libcalc${LIB_EXT}: libcalc${LIB_EXT_VERS}
+	${Q} ${RM} -f $@
+	${LN} -s $? $@
+
+###
 #
-libcalc.so: ${LIBOBJS} ver_calc${EXE} ${MAKE_FILE}
-	${CC} ${CC_SHLIB} ${LIBOBJS} -o libcalc.so.`./ver_calc${EXE}`
+# calc documentation
+#
+###
 
 calc.1: calc.man ${MAKE_FILE}
-	-${RM} -f $@
+	${RM} -f $@
 	${Q} echo forming calc.1 from calc.man
 	@${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' \
 	        -e 's,$${BINDIR},${BINDIR},g' \
@@ -1599,10 +1832,14 @@ calc.1: calc.man ${MAKE_FILE}
 	        -e 's,$${CALCRC},${CALCRC},g' < calc.man > calc.1
 	${Q} echo calc.man formed
 
-calc.usage: calc.1
-	-${RM} -f $@
+calc.usage: calc.1 ${MAKE_FILE}
+	${RM} -f $@
 	${Q} echo forming calc.usage from calc.1
-	${CALCPAGER} calc.1 | ${COL} -b > $@
+	${Q} if [ -z "${NROFF}" ]; then \
+	    LESSCHARSET=iso8859 ${CALCPAGER} calc.1; \
+	else \
+	    ${NROFF} -man calc.1; \
+	fi | ${COL} -b > $@
 	${Q} echo calc.usage formed
 
 
@@ -1614,47 +1851,28 @@ calc.usage: calc.1
 
 sample: ${SAMPLE_TARGETS}
 
-sample_rand.o: sample_rand.c
-	${CC} ${CFLAGS} ${ALLOW_CUSTOM} sample_rand.c -c
+sample_rand${EXE}: sample_rand.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
+	${CC} sample_rand.o ${CLDFALGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
+	      ${READLINE_LIB} -o $@
 
-sample_rand${EXE}: sample_rand.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
-	${CC} ${LDFLAGS} sample_rand.o ${CALC_STATIC_LIBS} \
-	      ${LD_DEBUG} ${READLINE_LIB} -o $@
+sample_many${EXE}: sample_many.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
+	${CC} sample_many.o ${CLDFALGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
+	      ${READLINE_LIB} -o $@
 
-sample_many.o: sample_many.c
-	${CC} ${CFLAGS} ${ALLOW_CUSTOM} sample_many.c -c
-
-sample_many${EXE}: sample_many.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
-	${CC} ${LDFLAGS} sample_many.o ${CALC_STATIC_LIBS} \
-	      ${LD_DEBUG} ${READLINE_LIB} -o $@
-
-
-##
+###
 #
 # Special .o files
 #
-##
-
-calc.o: calc.c ${MAKE_FILE}
-	${CC} ${CFLAGS} ${ALLOW_CUSTOM} -c calc.c
-
-config.o: config.c ${MAKE_FILE}
-	${CC} ${CFLAGS} ${ALLOW_CUSTOM} -c config.c
-
-custom.o: custom.c ${MAKE_FILE}
-	${CC} ${CFLAGS} ${ALLOW_CUSTOM} -c custom.c
+###
 
 hist.o: hist.c ${MAKE_FILE}
-	${CC} ${CFLAGS} ${TERMCONTROL} ${USE_READLINE} ${READLINE_INCLUDE} -c hist.c
-
-func.o: func.c ${MAKE_FILE}
-	${CC} ${CFLAGS} ${ALLOW_CUSTOM} -c func.c
+	${CC} ${CFLAGS} ${TERMCONTROL} ${USE_READLINE} ${READLINE_INCLUDE} \
+	    -c hist.c
 
 seed.o: seed.c no_implicit.arg ${MAKE_FILE}
 	${CC} ${CFLAGS} `${CAT} no_implicit.arg` -c seed.c
 
-
-##
+###
 #
 # The next set of rules cause the .h files BUILD_H_SRC files to be built
 # according tot he system and the Makefile variables above.  The hsrc rule
@@ -1668,16 +1886,16 @@ seed.o: seed.c no_implicit.arg ${MAKE_FILE}
 #	We also place ; ${TRUE} at the end of some commands to avoid
 #	meaningless cosmetic messages by the same system.
 #
-##
+###
 
 hsrc: ${BUILD_H_SRC} ${BUILD_C_SRC}
 
 .hsrc: ${BUILD_H_SRC} ${BUILD_C_SRC}
-	-${Q} ${RM} -f .hsrc
+	${Q} ${RM} -f .hsrc
 	-${Q} ${TOUCH} .hsrc
 
 conf.h: ${MAKE_FILE}
-	-${Q} ${RM} -f conf.h
+	${Q} ${RM} -f conf.h
 	${Q} echo 'forming conf.h'
 	${Q} echo '/*' > conf.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> conf.h
@@ -1727,7 +1945,7 @@ conf.h: ${MAKE_FILE}
 	fi
 
 endian_calc.h: endian${EXT} ${MAKE_FILE}
-	-${Q} ${RM} -f endian_calc.h
+	${Q} ${RM} -f endian_calc.h
 	${Q} echo 'forming endian_calc.h'
 	${Q} echo '/*' > endian_calc.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> endian_calc.h
@@ -1779,7 +1997,7 @@ endian_calc.h: endian${EXT} ${MAKE_FILE}
 	fi
 
 longbits.h: longbits${EXT} ${MAKE_FILE}
-	-${Q} ${RM} -f longbits.h
+	${Q} ${RM} -f longbits.h
 	${Q} echo 'forming longbits.h'
 	${Q} echo '/*' > longbits.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> longbits.h
@@ -1806,7 +2024,7 @@ longbits.h: longbits${EXT} ${MAKE_FILE}
 	fi
 
 have_times.h: ${MAKE_FILE}
-	-${Q} ${RM} -f have_times.h
+	${Q} ${RM} -f have_times.h
 	${Q} echo 'forming have_times.h'
 	${Q} echo '/*' > have_times.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_times.h
@@ -1877,7 +2095,7 @@ have_times.h: ${MAKE_FILE}
 	fi
 
 have_stdlib.h: ${MAKE_FILE}
-	-${Q} ${RM} -f have_stdlib.h
+	${Q} ${RM} -f have_stdlib.h
 	${Q} echo 'forming have_stdlib.h'
 	${Q} echo '/*' > have_stdlib.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_stdlib.h
@@ -1915,7 +2133,7 @@ have_stdlib.h: ${MAKE_FILE}
 	fi
 
 have_unistd.h: ${MAKE_FILE}
-	-${Q} ${RM} -f have_unistd.h
+	${Q} ${RM} -f have_unistd.h
 	${Q} echo 'forming have_unistd.h'
 	${Q} echo '/*' > have_unistd.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_unistd.h
@@ -1953,7 +2171,7 @@ have_unistd.h: ${MAKE_FILE}
 	fi
 
 have_string.h: ${MAKE_FILE}
-	-${Q} ${RM} -f have_string.h
+	${Q} ${RM} -f have_string.h
 	${Q} echo 'forming have_string.h'
 	${Q} echo '/*' > have_string.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_string.h
@@ -1991,7 +2209,7 @@ have_string.h: ${MAKE_FILE}
 	fi
 
 terminal.h: ${MAKE_FILE}
-	-${Q} ${RM} -f terminal.h
+	${Q} ${RM} -f terminal.h
 	${Q} echo 'forming terminal.h'
 	${Q} echo '/*' > terminal.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> terminal.h
@@ -2055,7 +2273,7 @@ terminal.h: ${MAKE_FILE}
 	fi
 
 have_fpos.h: have_fpos.c ${MAKE_FILE}
-	-${Q} ${RM} -f fpos_tmp have_fpos.h
+	${Q} ${RM} -f fpos_tmp have_fpos.h
 	${Q} echo 'forming have_fpos.h'
 	${Q} echo '/*' > have_fpos.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_fpos.h
@@ -2067,7 +2285,7 @@ have_fpos.h: have_fpos.c ${MAKE_FILE}
 	${Q} echo '' >> have_fpos.h
 	${Q} echo '' >> have_fpos.h
 	${Q} echo '/* do we have fgetpos & fsetpos functions? */' >> have_fpos.h
-	-${Q} ${RM} -f have_fpos.o have_fpos${EXT}
+	${Q} ${RM} -f have_fpos.o have_fpos${EXT}
 	-${Q} ${LCC} ${HAVE_FPOS} ${ICFLAGS} have_fpos.c -c >/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_fpos.o -o have_fpos${EXT} >/dev/null 2>&1; ${TRUE}
 	-${Q} ${SHELL} -c "./have_fpos${EXT} > fpos_tmp 2>/dev/null" \
@@ -2082,7 +2300,7 @@ have_fpos.h: have_fpos.c ${MAKE_FILE}
 	${Q} echo '' >> have_fpos.h
 	${Q} echo '' >> have_fpos.h
 	${Q} echo '#endif /* !__HAVE_FPOS_H__ */' >> have_fpos.h
-	-${Q} ${RM} -f have_fpos${EXT} have_fpos.o fpos_tmp
+	${Q} ${RM} -f have_fpos${EXT} have_fpos.o fpos_tmp
 	${Q} echo 'have_fpos.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2095,7 +2313,7 @@ have_fpos.h: have_fpos.c ${MAKE_FILE}
 	fi
 
 have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
-	-${Q} ${RM} -f fpos_tmp have_fpos_pos.h
+	${Q} ${RM} -f fpos_tmp have_fpos_pos.h
 	${Q} echo 'forming have_fpos_pos.h'
 	${Q} echo '/*' > have_fpos_pos.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' \
@@ -2109,7 +2327,7 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
 	${Q} echo '' >> have_fpos_pos.h
 	${Q} echo '/* do we have fgetpos & fsetpos functions? */' \
 		>> have_fpos_pos.h
-	-${Q} ${RM} -f have_fpos_pos.o have_fpos_pos${EXT}
+	${Q} ${RM} -f have_fpos_pos.o have_fpos_pos${EXT}
 	-${Q} ${LCC} ${HAVE_FPOS} ${HAVE_FPOS_POS} \
 		    ${ICFLAGS} have_fpos_pos.c -c >/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_fpos_pos.o -o have_fpos_pos${EXT} \
@@ -2126,7 +2344,7 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
 	${Q} echo '' >> have_fpos_pos.h
 	${Q} echo '' >> have_fpos_pos.h
 	${Q} echo '#endif /* !__HAVE_FPOS_POS_H__ */' >> have_fpos_pos.h
-	-${Q} ${RM} -f have_fpos_pos${EXT} have_fpos_pos.o fpos_tmp
+	${Q} ${RM} -f have_fpos_pos${EXT} have_fpos_pos.o fpos_tmp
 	${Q} echo 'have_fpos_pos.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2140,7 +2358,7 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
 
 fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	   endian_calc.h ${MAKE_FILE}
-	-${Q} ${RM} -f fposv_tmp fposval.h
+	${Q} ${RM} -f fposv_tmp fposval.h
 	${Q} echo 'forming fposval.h'
 	${Q} echo '/*' > fposval.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> fposval.h
@@ -2152,7 +2370,7 @@ fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	${Q} echo '' >> fposval.h
 	${Q} echo '' >> fposval.h
 	${Q} echo '/* what are our file position & size types? */' >> fposval.h
-	-${Q} ${RM} -f fposval.o fposval${EXT}
+	${Q} ${RM} -f fposval.o fposval${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${FPOS_BITS} ${OFF_T_BITS} \
 		    ${DEV_BITS} ${INODE_BITS} fposval.c -c >/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} fposval.o -o fposval${EXT} >/dev/null 2>&1; ${TRUE}
@@ -2161,7 +2379,7 @@ fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	${Q} echo '' >> fposval.h
 	${Q} echo '' >> fposval.h
 	${Q} echo '#endif /* !__FPOSVAL_H__ */' >> fposval.h
-	-${Q} ${RM} -f fposval${EXT} fposval.o fposv_tmp
+	${Q} ${RM} -f fposval${EXT} fposval.o fposv_tmp
 	${Q} echo 'fposval.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2174,7 +2392,7 @@ fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	fi
 
 have_const.h: have_const.c ${MAKE_FILE}
-	-${Q} ${RM} -f have_const const_tmp have_const.h
+	${Q} ${RM} -f have_const const_tmp have_const.h
 	${Q} echo 'forming have_const.h'
 	${Q} echo '/*' > have_const.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_const.h
@@ -2186,7 +2404,7 @@ have_const.h: have_const.c ${MAKE_FILE}
 	${Q} echo '' >> have_const.h
 	${Q} echo '' >> have_const.h
 	${Q} echo '/* do we have or want const? */' >> have_const.h
-	-${Q} ${RM} -f have_const.o have_const${EXT}
+	${Q} ${RM} -f have_const.o have_const${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_CONST} have_const.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_const.o -o have_const${EXT} >/dev/null 2>&1; ${TRUE}
@@ -2202,7 +2420,7 @@ have_const.h: have_const.c ${MAKE_FILE}
 	${Q} echo '' >> have_const.h
 	${Q} echo '' >> have_const.h
 	${Q} echo '#endif /* !__HAVE_CONST_H__ */' >> have_const.h
-	-${Q} ${RM} -f have_const${EXT} have_const.o const_tmp
+	${Q} ${RM} -f have_const${EXT} have_const.o const_tmp
 	${Q} echo 'have_const.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2215,7 +2433,7 @@ have_const.h: have_const.c ${MAKE_FILE}
 	fi
 
 have_offscl.h: have_offscl.c ${MAKE_FILE}
-	-${Q} ${RM} -f offscl_tmp have_offscl.h
+	${Q} ${RM} -f offscl_tmp have_offscl.h
 	${Q} echo 'forming have_offscl.h'
 	${Q} echo '/*' > have_offscl.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_offscl.h
@@ -2226,7 +2444,7 @@ have_offscl.h: have_offscl.c ${MAKE_FILE}
 	${Q} echo '#define __HAVE_OFFSCL_H__' >> have_offscl.h
 	${Q} echo '' >> have_offscl.h
 	${Q} echo '' >> have_offscl.h
-	-${Q} ${RM} -f have_offscl.o have_offscl${EXT}
+	${Q} ${RM} -f have_offscl.o have_offscl${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_OFFSCL} have_offscl.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_offscl.o -o have_offscl${EXT} \
@@ -2242,7 +2460,7 @@ have_offscl.h: have_offscl.c ${MAKE_FILE}
 	${Q} echo '' >> have_offscl.h
 	${Q} echo '' >> have_offscl.h
 	${Q} echo '#endif /* !__HAVE_OFFSCL_H__ */' >> have_offscl.h
-	-${Q} ${RM} -f have_offscl${EXT} have_offscl.o offscl_tmp
+	${Q} ${RM} -f have_offscl${EXT} have_offscl.o offscl_tmp
 	${Q} echo 'have_offscl.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2255,7 +2473,7 @@ have_offscl.h: have_offscl.c ${MAKE_FILE}
 	fi
 
 have_posscl.h: have_posscl.c have_fpos.h ${MAKE_FILE}
-	-${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp have_posscl.h
+	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp have_posscl.h
 	${Q} echo 'forming have_posscl.h'
 	${Q} echo '/*' > have_posscl.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_posscl.h
@@ -2266,7 +2484,7 @@ have_posscl.h: have_posscl.c have_fpos.h ${MAKE_FILE}
 	${Q} echo '#define __HAVE_POSSCL_H__' >> have_posscl.h
 	${Q} echo '' >> have_posscl.h
 	${Q} echo '' >> have_posscl.h
-	-${Q} ${RM} -f have_posscl.o have_posscl
+	${Q} ${RM} -f have_posscl.o have_posscl
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_POSSCL} have_posscl.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_posscl.o -o have_posscl \
@@ -2282,7 +2500,7 @@ have_posscl.h: have_posscl.c have_fpos.h ${MAKE_FILE}
 	${Q} echo '' >> have_posscl.h
 	${Q} echo '' >> have_posscl.h
 	${Q} echo '#endif /* !__HAVE_POSSCL_H__ */' >> have_posscl.h
-	-${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp
+	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp
 	${Q} echo 'have_posscl.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2295,7 +2513,7 @@ have_posscl.h: have_posscl.c have_fpos.h ${MAKE_FILE}
 	fi
 
 align32.h: align32.c longbits.h have_unistd.h ${MAKE_FILE}
-	-${Q} ${RM} -f align32 align32_tmp align32.h
+	${Q} ${RM} -f align32 align32_tmp align32.h
 	${Q} echo 'forming align32.h'
 	${Q} echo '/*' > align32.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> align32.h
@@ -2349,7 +2567,7 @@ align32.h: align32.c longbits.h have_unistd.h ${MAKE_FILE}
 	fi
 
 have_uid_t.h: have_uid_t.c have_unistd.h ${MAKE_FILE}
-	-${Q} ${RM} -f have_uid_t uid_tmp have_uid_t.h
+	${Q} ${RM} -f have_uid_t uid_tmp have_uid_t.h
 	${Q} echo 'forming have_uid_t.h'
 	${Q} echo '/*' > have_uid_t.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_uid_t.h
@@ -2361,7 +2579,7 @@ have_uid_t.h: have_uid_t.c have_unistd.h ${MAKE_FILE}
 	${Q} echo '' >> have_uid_t.h
 	${Q} echo '' >> have_uid_t.h
 	${Q} echo '/* do we have or want uid_t? */' >> have_uid_t.h
-	-${Q} ${RM} -f have_uid_t.o have_uid_t${EXT}
+	${Q} ${RM} -f have_uid_t.o have_uid_t${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_UID_T} have_uid_t.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_uid_t.o -o have_uid_t${EXT} >/dev/null 2>&1; ${TRUE}
@@ -2375,7 +2593,7 @@ have_uid_t.h: have_uid_t.c have_unistd.h ${MAKE_FILE}
 	${Q} echo '' >> have_uid_t.h
 	${Q} echo '' >> have_uid_t.h
 	${Q} echo '#endif /* !__HAVE_UID_T_H__ */' >> have_uid_t.h
-	-${Q} ${RM} -f have_uid_t${EXT} have_uid_t.o uid_tmp
+	${Q} ${RM} -f have_uid_t${EXT} have_uid_t.o uid_tmp
 	${Q} echo 'have_uid_t.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2388,7 +2606,7 @@ have_uid_t.h: have_uid_t.c have_unistd.h ${MAKE_FILE}
 	fi
 
 have_newstr.h: have_newstr.c ${MAKE_FILE}
-	-${Q} ${RM} -f newstr_tmp have_newstr.h
+	${Q} ${RM} -f newstr_tmp have_newstr.h
 	${Q} echo 'forming have_newstr.h'
 	${Q} echo '/*' > have_newstr.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_newstr.h
@@ -2401,7 +2619,7 @@ have_newstr.h: have_newstr.c ${MAKE_FILE}
 	${Q} echo '' >> have_newstr.h
 	${Q} echo '/* do we have or want memcpy(), memset() & strchr()? */' \
 							>> have_newstr.h
-	-${Q} ${RM} -f have_newstr.o have_newstr${EXT}
+	${Q} ${RM} -f have_newstr.o have_newstr${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_NEWSTR} have_newstr.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_newstr.o -o have_newstr${EXT} \
@@ -2416,7 +2634,7 @@ have_newstr.h: have_newstr.c ${MAKE_FILE}
 	${Q} echo '' >> have_newstr.h
 	${Q} echo '' >> have_newstr.h
 	${Q} echo '#endif /* !__HAVE_NEWSTR_H__ */' >> have_newstr.h
-	-${Q} ${RM} -f have_newstr${EXT} have_newstr.o newstr_tmp
+	${Q} ${RM} -f have_newstr${EXT} have_newstr.o newstr_tmp
 	${Q} echo 'have_newstr.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2429,7 +2647,7 @@ have_newstr.h: have_newstr.c ${MAKE_FILE}
 	fi
 
 have_memmv.h: have_memmv.c ${MAKE_FILE}
-	-${Q} ${RM} -f have_memmv have_memmv.o memmv_tmp have_memmv.h
+	${Q} ${RM} -f have_memmv have_memmv.o memmv_tmp have_memmv.h
 	${Q} echo 'forming have_memmv.h'
 	${Q} echo '/*' > have_memmv.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_memmv.h
@@ -2441,7 +2659,7 @@ have_memmv.h: have_memmv.c ${MAKE_FILE}
 	${Q} echo '' >> have_memmv.h
 	${Q} echo '' >> have_memmv.h
 	${Q} echo '/* do we have or want memmove()? */' >> have_memmv.h
-	-${Q} ${RM} -f have_memmv.o have_memmv
+	${Q} ${RM} -f have_memmv.o have_memmv
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_MEMMOVE} have_memmv.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_memmv.o -o have_memmv \
@@ -2456,7 +2674,7 @@ have_memmv.h: have_memmv.c ${MAKE_FILE}
 	${Q} echo '' >> have_memmv.h
 	${Q} echo '' >> have_memmv.h
 	${Q} echo '#endif /* !__HAVE_MEMMV_H__ */' >> have_memmv.h
-	-${Q} ${RM} -f have_memmv have_memmv.o memmv_tmp
+	${Q} ${RM} -f have_memmv have_memmv.o memmv_tmp
 	${Q} echo 'have_memmv.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2469,7 +2687,7 @@ have_memmv.h: have_memmv.c ${MAKE_FILE}
 	fi
 
 have_ustat.h: have_ustat.c ${MAKE_FILE}
-	-${Q} ${RM} -f ustat_tmp have_ustat.h
+	${Q} ${RM} -f ustat_tmp have_ustat.h
 	${Q} echo 'forming have_ustat.h'
 	${Q} echo '/*' > have_ustat.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_ustat.h
@@ -2481,7 +2699,7 @@ have_ustat.h: have_ustat.c ${MAKE_FILE}
 	${Q} echo '' >> have_ustat.h
 	${Q} echo '' >> have_ustat.h
 	${Q} echo '/* do we have or want ustat()? */' >> have_ustat.h
-	-${Q} ${RM} -f have_ustat.o have_ustat${EXT}
+	${Q} ${RM} -f have_ustat.o have_ustat${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_USTAT} have_ustat.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_ustat.o -o have_ustat${EXT} \
@@ -2496,7 +2714,7 @@ have_ustat.h: have_ustat.c ${MAKE_FILE}
 	${Q} echo '' >> have_ustat.h
 	${Q} echo '' >> have_ustat.h
 	${Q} echo '#endif /* !__HAVE_USTAT_H__ */' >> have_ustat.h
-	-${Q} ${RM} -f have_ustat${EXT} have_ustat.o ustat_tmp
+	${Q} ${RM} -f have_ustat${EXT} have_ustat.o ustat_tmp
 	${Q} echo 'have_ustat.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2509,7 +2727,7 @@ have_ustat.h: have_ustat.c ${MAKE_FILE}
 	fi
 
 have_getsid.h: have_getsid.c ${MAKE_FILE}
-	-${Q} ${RM} -f getsid_tmp have_getsid.h
+	${Q} ${RM} -f getsid_tmp have_getsid.h
 	${Q} echo 'forming have_getsid.h'
 	${Q} echo '/*' > have_getsid.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_getsid.h
@@ -2521,7 +2739,7 @@ have_getsid.h: have_getsid.c ${MAKE_FILE}
 	${Q} echo '' >> have_getsid.h
 	${Q} echo '' >> have_getsid.h
 	${Q} echo '/* do we have or want getsid()? */' >> have_getsid.h
-	-${Q} ${RM} -f have_getsid.o have_getsid${EXT}
+	${Q} ${RM} -f have_getsid.o have_getsid${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETSID} have_getsid.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_getsid.o -o have_getsid \
@@ -2536,7 +2754,7 @@ have_getsid.h: have_getsid.c ${MAKE_FILE}
 	${Q} echo '' >> have_getsid.h
 	${Q} echo '' >> have_getsid.h
 	${Q} echo '#endif /* !__HAVE_GETSID_H__ */' >> have_getsid.h
-	-${Q} ${RM} -f have_getsid${EXT} have_getsid.o getsid_tmp
+	${Q} ${RM} -f have_getsid${EXT} have_getsid.o getsid_tmp
 	${Q} echo 'have_getsid.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2549,7 +2767,7 @@ have_getsid.h: have_getsid.c ${MAKE_FILE}
 	fi
 
 have_getpgid.h: have_getpgid.c ${MAKE_FILE}
-	-${Q} ${RM} -f getpgid_tmp have_getpgid.h
+	${Q} ${RM} -f getpgid_tmp have_getpgid.h
 	${Q} echo 'forming have_getpgid.h'
 	${Q} echo '/*' > have_getpgid.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_getpgid.h
@@ -2561,7 +2779,7 @@ have_getpgid.h: have_getpgid.c ${MAKE_FILE}
 	${Q} echo '' >> have_getpgid.h
 	${Q} echo '' >> have_getpgid.h
 	${Q} echo '/* do we have or want getpgid()? */' >> have_getpgid.h
-	-${Q} ${RM} -f have_getpgid.o have_getpgid${EXT}
+	${Q} ${RM} -f have_getpgid.o have_getpgid${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETPGID} have_getpgid.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_getpgid.o -o have_getpgid${EXT} \
@@ -2576,7 +2794,7 @@ have_getpgid.h: have_getpgid.c ${MAKE_FILE}
 	${Q} echo '' >> have_getpgid.h
 	${Q} echo '' >> have_getpgid.h
 	${Q} echo '#endif /* !__HAVE_GETPGID_H__ */' >> have_getpgid.h
-	-${Q} ${RM} -f have_getpgid${EXT} have_getpgid.o getpgid_tmp
+	${Q} ${RM} -f have_getpgid${EXT} have_getpgid.o getpgid_tmp
 	${Q} echo 'have_getpgid.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2589,7 +2807,7 @@ have_getpgid.h: have_getpgid.c ${MAKE_FILE}
 	fi
 
 have_gettime.h: have_gettime.c ${MAKE_FILE}
-	-${Q} ${RM} -f gettime_tmp have_gettime.h
+	${Q} ${RM} -f gettime_tmp have_gettime.h
 	${Q} echo 'forming have_gettime.h'
 	${Q} echo '/*' > have_gettime.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_gettime.h
@@ -2601,7 +2819,7 @@ have_gettime.h: have_gettime.c ${MAKE_FILE}
 	${Q} echo '' >> have_gettime.h
 	${Q} echo '' >> have_gettime.h
 	${Q} echo '/* do we have or want clock_gettime()? */' >> have_gettime.h
-	-${Q} ${RM} -f have_gettime.o have_gettime${EXT}
+	${Q} ${RM} -f have_gettime.o have_gettime${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETTIME} have_gettime.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_gettime.o -o have_gettime \
@@ -2616,7 +2834,7 @@ have_gettime.h: have_gettime.c ${MAKE_FILE}
 	${Q} echo '' >> have_gettime.h
 	${Q} echo '' >> have_gettime.h
 	${Q} echo '#endif /* !__HAVE_GETTIME_H__ */' >> have_gettime.h
-	-${Q} ${RM} -f have_gettime${EXT} have_gettime.o gettime_tmp
+	${Q} ${RM} -f have_gettime${EXT} have_gettime.o gettime_tmp
 	${Q} echo 'have_gettime.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2629,7 +2847,7 @@ have_gettime.h: have_gettime.c ${MAKE_FILE}
 	fi
 
 have_getprid.h: have_getprid.c ${MAKE_FILE}
-	-${Q} ${RM} -f getprid_tmp have_getprid.h
+	${Q} ${RM} -f getprid_tmp have_getprid.h
 	${Q} echo 'forming have_getprid.h'
 	${Q} echo '/*' > have_getprid.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_getprid.h
@@ -2641,7 +2859,7 @@ have_getprid.h: have_getprid.c ${MAKE_FILE}
 	${Q} echo '' >> have_getprid.h
 	${Q} echo '' >> have_getprid.h
 	${Q} echo '/* do we have or want getprid()? */' >> have_getprid.h
-	-${Q} ${RM} -f have_getprid.o have_getprid${EXT}
+	${Q} ${RM} -f have_getprid.o have_getprid${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETPRID} have_getprid.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_getprid.o -o have_getprid${EXT} \
@@ -2656,7 +2874,7 @@ have_getprid.h: have_getprid.c ${MAKE_FILE}
 	${Q} echo '' >> have_getprid.h
 	${Q} echo '' >> have_getprid.h
 	${Q} echo '#endif /* !__HAVE_GETPRID_H__ */' >> have_getprid.h
-	-${Q} ${RM} -f have_getprid${EXT} have_getprid.o getprid_tmp
+	${Q} ${RM} -f have_getprid${EXT} have_getprid.o getprid_tmp
 	${Q} echo 'have_getprid.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2669,7 +2887,7 @@ have_getprid.h: have_getprid.c ${MAKE_FILE}
 	fi
 
 have_urandom.h: ${MAKE_FILE}
-	-${Q} ${RM} -f have_urandom.h
+	${Q} ${RM} -f have_urandom.h
 	${Q} echo 'forming have_urandom.h'
 	${Q} echo '/*' > have_urandom.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_urandom.h
@@ -2705,7 +2923,7 @@ have_urandom.h: ${MAKE_FILE}
 	fi
 
 have_rusage.h: have_rusage.c ${MAKE_FILE}
-	-${Q} ${RM} -f rusage_tmp have_rusage.h
+	${Q} ${RM} -f rusage_tmp have_rusage.h
 	${Q} echo 'forming have_rusage.h'
 	${Q} echo '/*' > have_rusage.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_rusage.h
@@ -2717,7 +2935,7 @@ have_rusage.h: have_rusage.c ${MAKE_FILE}
 	${Q} echo '' >> have_rusage.h
 	${Q} echo '' >> have_rusage.h
 	${Q} echo '/* do we have or want getrusage()? */' >> have_rusage.h
-	-${Q} ${RM} -f have_rusage.o have_rusage${EXT}
+	${Q} ${RM} -f have_rusage.o have_rusage${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETRUSAGE} have_rusage.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_rusage.o -o have_rusage${EXT} \
@@ -2732,7 +2950,7 @@ have_rusage.h: have_rusage.c ${MAKE_FILE}
 	${Q} echo '' >> have_rusage.h
 	${Q} echo '' >> have_rusage.h
 	${Q} echo '#endif /* !__HAVE_RUSAGE_H__ */' >> have_rusage.h
-	-${Q} ${RM} -f have_rusage${EXT} have_rusage.o rusage_tmp
+	${Q} ${RM} -f have_rusage${EXT} have_rusage.o rusage_tmp
 	${Q} echo 'have_rusage.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2745,7 +2963,7 @@ have_rusage.h: have_rusage.c ${MAKE_FILE}
 	fi
 
 have_strdup.h: have_strdup.c ${MAKE_FILE}
-	-${Q} ${RM} -f strdup_tmp have_strdup.h
+	${Q} ${RM} -f strdup_tmp have_strdup.h
 	${Q} echo 'forming have_strdup.h'
 	${Q} echo '/*' > have_strdup.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_strdup.h
@@ -2757,7 +2975,7 @@ have_strdup.h: have_strdup.c ${MAKE_FILE}
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '/* do we have or want getstrdup()? */' >> have_strdup.h
-	-${Q} ${RM} -f have_strdup.o have_strdup${EXT}
+	${Q} ${RM} -f have_strdup.o have_strdup${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_STRDUP} have_strdup.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_strdup.o -o have_strdup \
@@ -2772,7 +2990,7 @@ have_strdup.h: have_strdup.c ${MAKE_FILE}
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '#endif /* !__HAVE_STRDUP_H__ */' >> have_strdup.h
-	-${Q} ${RM} -f have_strdup${EXT} have_strdup.o strdup_tmp
+	${Q} ${RM} -f have_strdup${EXT} have_strdup.o strdup_tmp
 	${Q} echo 'have_strdup.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2785,7 +3003,7 @@ have_strdup.h: have_strdup.c ${MAKE_FILE}
 	fi
 
 args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
-	-${Q} ${RM} -f args.h
+	${Q} ${RM} -f args.h
 	${Q} echo 'forming args.h'
 	${Q} echo '/*' > args.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> args.h
@@ -2796,7 +3014,7 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
 	${Q} echo '#define __ARGS_H__' >> args.h
 	${Q} echo '' >> args.h
 	${Q} echo '' >> args.h
-	-${Q} ${RM} -f have_stdvs.o have_stdvs${EXT}
+	${Q} ${RM} -f have_stdvs.o have_stdvs${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_VSPRINTF} have_stdvs.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_stdvs.o -o have_stdvs${EXT} >/dev/null 2>&1; ${TRUE}
@@ -2830,7 +3048,7 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
 	${Q} echo '' >> args.h
 	${Q} echo '' >> args.h
 	${Q} echo '#endif /* !__ARGS_H__ */' >> args.h
-	-${Q} ${RM} -f have_stdvs.o have_varvs.o have_varvs${EXT} have_args.sh core
+	${Q} ${RM} -f have_stdvs.o have_varvs.o have_varvs${EXT} have_args.sh core
 	${Q} echo 'args.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2843,7 +3061,7 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
 	fi
 
 calcerr.h: calcerr.tbl calcerr_h.sed calcerr_h.awk ${MAKE_FILE}
-	-${Q} ${RM} -f calerr.h
+	${Q} ${RM} -f calerr.h
 	${Q} echo 'forming calcerr.h'
 	${Q} echo '/*' > calcerr.h
 	${Q} echo ' * DO NOT EDIT' >> calcerr.h
@@ -2873,7 +3091,7 @@ calcerr.h: calcerr.tbl calcerr_h.sed calcerr_h.awk ${MAKE_FILE}
 	fi
 
 calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE}
-	-${Q} ${RM} -f calerr.c
+	${Q} ${RM} -f calerr.c
 	${Q} echo 'forming calcerr.c'
 	${Q} echo '/*' > calcerr.c
 	${Q} echo ' * DO NOT EDIT' >> calcerr.c
@@ -2895,7 +3113,7 @@ calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE}
 	fi
 
 no_implicit.arg: no_implicit.c ${MAKE_FILE}
-	-${Q} ${RM} -f no_implicit${EXT} no_implicit.o no_implicit.arg
+	${Q} ${RM} -f no_implicit${EXT} no_implicit.o no_implicit.arg
 	${Q} echo 'forming no_implicit.arg'
 	-${Q} if [ X"${HAVE_NO_IMPLICIT}" = X"YES" ]; then \
 	     echo ""'-Wno-implicit' > no_implicit.arg; \
@@ -2920,7 +3138,7 @@ no_implicit.arg: no_implicit.c ${MAKE_FILE}
 	fi
 
 have_unused.h: have_unused.c ${MAKE_FILE}
-	-${Q} ${RM} -f unused_tmp have_unused.h
+	${Q} ${RM} -f unused_tmp have_unused.h
 	${Q} echo 'forming have_unused.h'
 	${Q} echo '/*' > have_unused.h
 	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_unused.h
@@ -2932,7 +3150,7 @@ have_unused.h: have_unused.c ${MAKE_FILE}
 	${Q} echo '' >> have_unused.h
 	${Q} echo '' >> have_unused.h
 	${Q} echo '/* do we have/want the unused attribute? */' >> have_unused.h
-	-${Q} ${RM} -f have_unused.o have_unused${EXT}
+	${Q} ${RM} -f have_unused.o have_unused${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_UNUSED} have_unused.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_unused.o -o have_unused \
@@ -2949,7 +3167,7 @@ have_unused.h: have_unused.c ${MAKE_FILE}
 	${Q} echo '' >> have_unused.h
 	${Q} echo '' >> have_unused.h
 	${Q} echo '#endif /* !__HAVE_UNUSED_H__ */' >> have_unused.h
-	-${Q} ${RM} -f have_unused${EXT} have_unused.o unused_tmp
+	${Q} ${RM} -f have_unused${EXT} have_unused.o unused_tmp
 	${Q} echo 'have_unused.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2961,39 +3179,37 @@ have_unused.h: have_unused.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-
-##
+###
 #
 # Build .h files for windoz based systems
 #
 # This is really a internal utility rule that is used to create the
 # win32 sub-directory for distribution.
 #
-##
+###
 
-win32_hsrc: ${MAKE_FILE} win32.mkdef
+win32_hsrc: win32.mkdef ${MAKE_FILE}
 	${Q} echo 'forming win32 directory'
 	${Q} ${RM} -rf win32
 	${Q} ${MKDIR} win32
 	${Q} ${CP} ${UTIL_C_SRC} win32
-	${Q} ${CP} ${UTIL_MISC_SRC} Makefile win32
+	${Q} ${CP} ${UTIL_MISC_SRC} win32
+	${Q} ${CP} ${MAKE_FILE} win32/${MAKE_FILE}
 	${Q} (cd win32; \
-	 echo "cd win32"; \
-	 echo "$(MAKE) hsrc `${CAT} win32.mkdef` EXT="; \
-	 $(MAKE) hsrc `${CAT} win32.mkdef` EXT=; \
+	 echo "${MAKE} -f ${MAKE_FILE} hsrc `${CAT} win32.mkdef` EXT="; \
+	 ${MAKE} -f ${MAKE_FILE} hsrc `${CAT} win32.mkdef` EXT=; \
 	 ${RM} -f ${UTIL_C_SRC}; \
 	 ${RM} -f ${UTIL_MISC_SRC}; \
 	 ${RM} -f ${UTIL_OBJS}; \
 	 ${RM} -f ${UTIL_PROGS}; \
-	 ${RM} -f Makefile)
+	 ${RM} -f ${MAKE_FILE})
 	${Q} echo 'win32 directory formed'
 
-
-##
+###
 #
 # These rules are used in the process of building the BUILD_H_SRC.
 #
-##
+###
 
 endian.o: endian.c have_unistd.h
 	${LCC} ${ICFLAGS} ${BYTE_ORDER} endian.c -c
@@ -3009,89 +3225,113 @@ longbits${EXT}: longbits.o
 	${RM} -f $@
 	${LCC} ${ICFLAGS} longbits.o -o $@
 
-
-##
+###
 #
 # These two .all rules are used to determine of the lower level
 # directory has had its all rule performed.
 #
-##
+###
 
-cal/.all:
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+cal/.all: cal/Makefile
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for cal =-=-=-=-='
+	${RM} -f $@
 	cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-help/.all:
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+help/.all: help/Makefile
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for help =-=-=-=-='
+	${RM} -f $@
 	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-help/builtin: func.c help/builtin.top help/builtin.end help/funclist.sed
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+help/builtin: help/Makefile \
+	      func.c help/builtin.top help/builtin.end help/funclist.sed
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking builtin rule for help =-=-=-=-='
+	${RM} -f $@
 	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} builtin
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 cscript/.all: ${CSCRIPT_TARGETS}
 
-${CSCRIPT_TARGETS}:
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+${CSCRIPT_TARGETS}: cscript/Makefile
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for cscript =-=-=-=-='
+	${RM} -f cscript/.all
 	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-custom/.all:
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+custom/.all: custom/Makefile
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for custom =-=-=-=-='
+	${RM} -f $@
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-# This is a special rule that first tries to determine of a lower level
-# make is needed, and it so a make will be performed.  Because it is
-# triggered as the first dependent of the all rule, it will ensure
-# that custom/libcustcalc.a is ready.
-#
-custom/libcustcalc:
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+custom/libcustcalc${LIB_EXT_VERS}: custom/Makefile
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for custom =-=-=-=-='
-	-${Q} ${RM} -f .libcustcalc_error
-	-${Q} NEED="`cd custom; ${MAKE} -n -f Makefile all`"; \
-	 if [ ! -z "$$NEED" ]; then \
-	    echo "	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} all";\
-	    cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} all; \
-	    status="$$?"; \
-	    if [ "$$status" -ne 0 ]; then \
-		echo "$$status" > ../.libcustcalc_error; \
-	    fi; \
-	fi
-	${Q} if [ -f .libcustcalc_error ]; then \
-	    echo "custom make failed, code: `${CAT} .libcustcalc_error`" 1>&2; \
-	    exit "`${CAT} .libcustcalc_error`"; \
-	else \
-	    ${TRUE} ; \
-	fi
+	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-# This is the real custom/libcustcalc.a rule.
+libcustcalc${LIB_EXT_VERS}: custom/libcustcalc${LIB_EXT_VERS}
+	${Q} ${RM} -f $@
+	${CP} -p $? $@
+
+libcustcalc${LIB_EXT_VER}: libcustcalc${LIB_EXT_VERS}
+	${Q} ${RM} -f $@
+	${LN} -s $? $@
+
+libcustcalc${LIB_EXT_VE}: libcustcalc${LIB_EXT_VERS}
+	${Q} ${RM} -f $@
+	${LN} -s $? $@
+
+libcustcalc${LIB_EXT}: libcustcalc${LIB_EXT_VERS}
+	${Q} ${RM} -f $@
+	${LN} -s $? $@
+
+###
 #
-custom/libcustcalc.a:
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= Invoking all rule for custom =-=-=-=-='
-	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} all
-	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+# building calc-static and static lib*.a libraires
+#
+###
 
+calc-static${EXT}: .hsrc ${CALCOBJS} \
+		   ${CALC_STATIC_LIBS} ${MAKE_FILE}
+	${RM} -f $@
+	${CC} ${LDFLAGS} ${CALCOBJS} ${LD_STATIC} ${CALC_STATIC_LIBS} \
+	      ${READLINE_LIB} -o $@
 
-##
+libcustcalc.a: custom/libcustcalc.a
+	${Q} ${RM} -f $@
+	${CP} -f $? $@
+
+libcalc.a: ${LIBOBJS} ${MAKE_FILE}
+	${RM} -f libcalc.a
+	${AR} qc libcalc.a ${LIBOBJS}
+	${RANLIB} libcalc.a
+	${CHMOD} 0644 libcalc.a
+
+custom/libcustcalc.a: custom/Makefile
+	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} libcustcalc.a
+
+sample_rand-static${EXE}: sample_rand.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
+	${CC} ${LDFLAGS} sample_rand.o ${LD_STATIC} \
+	      ${CALC_STATIC_LIBS} ${READLINE_LIB} -o $@
+
+sample_many-static${EXE}: sample_many.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
+	${CC} ${LDFLAGS} sample_many.o ${LD_STATIC} \
+	      ${CALC_STATIC_LIBS} ${READLINE_LIB} -o $@
+
+###
 #
 # Home grown make dependency rules.  Your system make not support
 # or have the needed tools.  You can ignore this section.
@@ -3101,20 +3341,23 @@ custom/libcustcalc.a:
 # prevention lines.  This allows us to build a static depend list that will
 # satisfy all possible cpp symbol definition combinations.
 #
-##
+###
 
-depend: hsrc
-	${Q} if [ -f Makefile.bak ]; then \
-		echo "Makefile.bak exists, remove or move it out of the way"; \
+depend: custom/Makefile hsrc
+	${Q} if [ -f ${MAKE_FILE}.bak ]; then \
+		echo "${MAKE_FILE}.bak exists, remove or move it"; \
 		exit 1; \
 	else \
 	    ${TRUE}; \
 	fi
+	${V} echo '=-=-=-=-= Invoking depend rule for cscript =-=-=-=-='
+	${Q} cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} depend
+	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking depend rule for custom =-=-=-=-='
-	-${Q} (cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} depend)
+	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} depend
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q} echo forming skel
-	-${Q} ${RM} -rf skel
+	${Q} ${RM} -rf skel
 	${Q} ${MKDIR} skel
 	-${Q} for i in ${C_SRC} ${BUILD_C_SRC}; do \
 	    ${SED} -n '/^#[	 ]*include[	 ]*"/p' "$$i" | \
@@ -3131,31 +3374,40 @@ depend: hsrc
 		echo '#endif /* '"$$tag"' */' >> "skel/$$i"; \
 	    fi; \
 	done
-	-${Q} ${RM} -f skel/makedep.out
+	${Q} ${RM} -f skel/makedep.out
 	${Q} echo skel formed
 	${Q} echo forming dependency list
-	${Q} echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
-	    skel/makedep.out
+	${Q} :> skel/makedep.out
 	${Q} cd skel; \
 	    ${MAKEDEPEND} -w 1 -f makedep.out ${C_SRC} ${BUILD_C_SRC}
 	-${Q} for i in ${C_SRC} ${BUILD_C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
-		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
+	      echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
 	    fi; \
 	done >> skel/makedep.out
+	${Q} LANG=C ${SORT} -u skel/makedep.out -o skel/makedep.out
 	${Q} echo dependency list formed
-	${Q} echo forming new Makefile
-	-${Q} ${RM} -f Makefile.bak
-	${Q} ${MV} Makefile Makefile.bak
-	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
-	${Q} echo "" >> Makefile
-	${Q} ${SED} -n '3,$$p' skel/makedep.out | LANG=C ${SORT} -u >> Makefile
-	-${Q} ${RM} -rf skel
-	-${Q} if ${CMP} -s Makefile.bak Makefile; then \
-	    echo 'Makefile was already up to date'; \
-	    ${MV} -f Makefile.bak Makefile; \
+	${Q} echo forming new ${MAKE_FILE}
+	${Q} ${RM} -f ${MAKE_FILE}.bak
+	${Q} ${MV} ${MAKE_FILE} ${MAKE_FILE}.bak
+	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' ${MAKE_FILE}.bak > ${MAKE_FILE}
+	${Q} ${GREP} -v '^#' skel/makedep.out >> ${MAKE_FILE}
+	${Q} ${RM} -rf skel
+	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
+	    echo 'top level ${MAKE_FILE} was already up to date'; \
+	    ${MV} -f ${MAKE_FILE}.bak ${MAKE_FILE}; \
 	else \
-	    echo 'new Makefile formed'; \
+	    ${RM} -f ${MAKE_FILE}.tmp; \
+	    ${MV} ${MAKE_FILE} ${MAKE_FILE}.tmp; \
+	    if [ -d RCS -a ! -w "${MAKE_FILE}" ]; then \
+		${CO} -l ${MAKE_FILE}; \
+	    fi ;\
+	    ${MV} ${MAKE_FILE}.tmp ${MAKE_FILE}; \
+	    if [ -d RCS ]; then \
+	    echo '********************************************************'; \
+	    echo 'new top level ${MAKE_FILE} formed -- need to check it in'; \
+	    echo '********************************************************'; \
+	    fi; \
 	fi
 
 # generate the list of h files for lower level depend use
@@ -3167,23 +3419,89 @@ h_list:
 	    fi; \
 	done
 
-# print the calc version
+###
 #
+# calc version
+#
+# calc_version:
+#	This rule is the most accurate as it uses calc source to
+#	produce the version value.  This rule produces a full
+#	version string.  Note that the full version could be 4
+#	or 3 levels long depending on the minor patch number.
+#
+# calc_vers:
+#	This rule is the most accurate as it uses calc source to
+#	produce the version value.  This rule produces only a
+#	3 level version string.
+#
+# calc_ver:
+#	This rule is the most accurate as it uses calc source to
+#	produce the version value.  This rule produces only a
+#	2 level version string.
+#
+# calc_ve:
+#	This rule is the most accurate as it uses calc source to
+#	produce the version value.  This rule produces only a
+#	1 level version string.
+#
+# version:
+#	This rule simply echos the value found in this makefile.
+#	This rule produces the full version string.  Note that the
+#	full version could be 4 or 3 levels long depending on the
+#	minor patch number.
+#
+# vers:
+#	This rule simply echos the value found in this makefile.
+#	This rule produces only a 3 level version string.
+#
+# ver:
+#	This rule simply echos the value found in this makefile.
+#	This rule produces only a 2 level version string.
+#
+# ve:
+#	This rule simply echos the value found in this makefile.
+#	This rule produces only a 1 level version string.
+#
+###
+
+calc_version: ver_calc${EXT}
+	@./ver_calc${EXT}
+
+calc_vers: ver_calc${EXT}
+	@./ver_calc${EXT} -V
+
+calc_ver: ver_calc${EXT}
+	@./ver_calc${EXT} -V | ${SED} -e 's/\.[^.]*$$//'
+
+calc_ve: ver_calc${EXT}
+	@./ver_calc${EXT} -V | ${SED} -e 's/\.[^.]*\.[^.]*$$//'
+
+version:
+	@echo ${VERSION}
+
+vers:
+	@echo ${VERS}
+
+ver:
+	@echo ${VER}
+
+ve:
+	@echo ${VE}
+
 ver_calc${EXT}: version.c have_unused.h
-	-${RM} -f $@
+	${RM} -f $@
 	${LCC} ${ICFLAGS} -DCALC_VER ${ILDFLAGS} version.c -o $@
 
-
-##
+###
 #
 # File distribution list generation.  You can ignore this section.
 #
 # We will form the names of source files as if they were in a
 # sub-directory called calc.
 #
-##
+###
 
-distlist: ${DISTLIST}
+distlist: custom/Makefile ${DISTLIST}
 	${Q} (for i in ${DISTLIST} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo $$i; \
@@ -3194,35 +3512,65 @@ distlist: ${DISTLIST}
 		echo win32/$$i; \
 	    fi; \
 	done; \
-	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
-	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
-	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
-	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@)) | LANG=C ${SORT}
+	(cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} $@); \
+	(cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} $@); \
+	(cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} $@); \
+	(cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} $@) \
+	) | LANG=C ${SORT}
 
-distdir:
+distdir: custom/Makefile
 	${Q} (echo .; \
 	echo win32; \
-	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
-	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
-	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
-	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@)) | LANG=C ${SORT}
+	(cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} $@); \
+	(cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} $@); \
+	(cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} $@); \
+	(cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} $@) \
+	) | LANG=C ${SORT}
 
-calcliblist:
+calcliblist: custom/Makefile
 	${Q} (for i in ${CALCLIBLIST} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo $$i; \
 	    fi; \
 	done; \
-	(cd help; ${MAKE} ${HELP_PASSDOWN} $@); \
-	(cd cal; ${MAKE} ${CAL_PASSDOWN} $@); \
-	(cd custom; ${MAKE} ${CUSTOM_PASSDOWN} $@); \
-	(cd cscript; ${MAKE} ${CSCRIPT_PASSDOWN} $@)) | LANG=C ${SORT}
+	(cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} $@); \
+	(cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} $@); \
+	(cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} $@); \
+	(cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} $@) \
+	) | LANG=C ${SORT}
 
 calcliblistfmt:
-	${Q} ${MAKE} calcliblist | ${FMT} -64 | ${SED} -e 's/^/	/'
+	${Q} ${MAKE} -f Makefile calcliblist | \
+	    ${FMT} -64 | ${SED} -e 's/^/	/'
 
+#if 0	/* start of skip for non-Gnu makefiles */
+custom/Makefile: ${MAKE_FILE} custom/Makefile.head custom/Makefile.tail
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${Q} ${RM} -f $@
+	${Q} ${CAT} custom/Makefile.head > $@
+	${Q} ${SED} -n -e \
+	    "/^# start of host target cut/,/^# end of host target cut/p" \
+	    ${MAKE_FILE} >> $@
+	${Q} ${CAT} custom/Makefile.tail >> $@
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-##
+Makefile.simple: ${MAKE_FILE} custom/Makefile.simple
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${Q} ${RM} -f $@
+	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
+	    ${MAKE_FILE} | \
+	    ${SED} -e 's/cd custom; $${MAKE} -f Makefile/&.simple/g' > $@
+	${Q} echo >> $@
+	${Q} echo 'Makefile.simple:' >> $@
+	${Q} echo '	$${Q} if [ ! -f Makefile.simple ]; then '"\\" >> $@
+	${Q} echo '		$${CP} -f $${MAKE_FILE} $$@; fi' >> $@
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
+
+custom/Makefile.simple: custom/Makefile
+	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} Makefile.simple
+#endif	/* end of skip for non-Gnu makefiles */
+
+###
 #
 # Doing a 'make check' will cause the regression test suite to be executed.
 # This rule will try to build anything that needs to be built as well.
@@ -3232,18 +3580,17 @@ calcliblistfmt:
 # rule does not cause things to be built.  I.e., the all rule is
 # not invoked.
 #
-##
+###
 
 check: all ./cal/regress.cal
 	${CALC_ENV} ./calc${EXT} -d -q read regress
 
 chk: ./cal/regress.cal
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${CALC_ENV} ./calc${EXT} -d -q read regress 2>&1 | ${AWK} -f check.awk
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-
-##
+###
 #
 # debug
 #
@@ -3259,119 +3606,171 @@ chk: ./cal/regress.cal
 #	* print major Makefile variables
 #	* make everything
 #	* run the regression tests
-##
+###
 
 env:
 	@echo '=-=-=-=-= dumping major make variables =-=-=-=-='
-	@echo 'MAKEFILE_REV=${MAKEFILE_REV}'; echo ''
-	@echo 'TERMCONTROL=${TERMCONTROL}'; echo ''
-	@echo 'HAVE_VSPRINTF=${HAVE_VSPRINTF}'; echo ''
-	@echo 'BYTE_ORDER=${BYTE_ORDER}'; echo ''
-	@echo 'LONG_BITS=${LONG_BITS}'; echo ''
-	@echo 'HAVE_FPOS=${HAVE_FPOS}'; echo ''
-	@echo 'HAVE_FPOS_POS=${HAVE_FPOS_POS}'; echo ''
-	@echo 'HAVE_OFFSCL=${HAVE_OFFSCL}'; echo ''
-	@echo 'HAVE_POSSCL=${HAVE_POSSCL}'; echo ''
-	@echo 'HAVE_CONST=${HAVE_CONST}'; echo ''
-	@echo 'HAVE_UID_T=${HAVE_UID_T}'; echo ''
-	@echo 'HAVE_NEWSTR=${HAVE_NEWSTR}'; echo ''
-	@echo 'HAVE_USTAT=${HAVE_USTAT}'; echo ''
-	@echo 'HAVE_GETSID=${HAVE_GETSID}'; echo ''
-	@echo 'HAVE_GETPGID=${HAVE_GETPGID}'; echo ''
-	@echo 'HAVE_GETTIME=${HAVE_GETTIME}'; echo ''
-	@echo 'HAVE_GETPRID=${HAVE_GETPRID}'; echo ''
-	@echo 'HAVE_URANDOM_H=${HAVE_URANDOM_H}'; echo ''
 	@echo 'ALIGN32=${ALIGN32}'; echo ''
+	@echo 'ALLOW_CUSTOM=${ALLOW_CUSTOM}'; echo ''
+	@echo 'AR=${AR}'; echo ''
+	@echo 'AWK=${AWK}'; echo ''
 	@echo 'BINDIR=${BINDIR}'; echo ''
-	@echo 'CALC_SHAREDIR=${CALC_SHAREDIR}'; echo ''
-	@echo 'LIBDIR=${LIBDIR}'; echo ''
-	@echo 'HELPDIR=${HELPDIR}'; echo ''
-	@echo 'CUSTOMCALDIR=${CUSTOMCALDIR}'; echo ''
-	@echo 'CUSTOMINCDIR=${CUSTOMINCDIR}'; echo ''
-	@echo 'CUSTOMHELPDIR=${CUSTOMHELPDIR}'; echo ''
-	@echo 'SCRIPTDIR=${SCRIPTDIR}'; echo ''
-	@echo 'MANDIR=${MANDIR}'; echo ''
-	@echo 'CATDIR=${CATDIR}'; echo ''
-	@echo 'MANEXT=${MANEXT}'; echo ''
-	@echo 'CATEXT=${CATEXT}'; echo ''
-	@echo 'NROFF=${NROFF}'; echo ''
-	@echo 'NROFF_ARG=${NROFF_ARG}'; echo ''
-	@echo 'MANMAKE=${MANMAKE}'; echo ''
+	@echo 'BLD_TYPE=${BLD_TYPE}'; echo ''
+	@echo 'BUILD_C_SRC=${BUILD_C_SRC}'; echo ''
+	@echo 'BUILD_H_SRC=${BUILD_H_SRC}'; echo ''
+	@echo 'BYTE_ORDER=${BYTE_ORDER}'; echo ''
+	@echo 'CALCLIBLIST=${CALCLIBLIST}'; echo ''
+	@echo 'CALCOBJS=${CALCOBJS}'; echo ''
+	@echo 'CALCPAGER=${CALCPAGER}'; echo ''
 	@echo 'CALCPATH=${CALCPATH}'; echo ''
 	@echo 'CALCRC=${CALCRC}'; echo ''
-	@echo 'CALCPAGER=${CALCPAGER}'; echo ''
-	@echo 'DEBUG=${DEBUG}'; echo ''
-	@echo 'CC_SHARE=${CC_SHARE}'; echo ''
-	@echo 'LD_SHARE=${LD_SHARE}'; echo ''
-	@echo 'RANLIB=${RANLIB}'; echo ''
-	@echo 'MAKE_FILE=${MAKE_FILE}'; echo ''
-	@echo 'PURIFY=${PURIFY}'; echo ''
-	@echo 'LD_DEBUG=${LD_DEBUG}'; echo ''
+	@echo 'CALCSRC=${CALCSRC}'; echo ''
+	@echo 'CALC_DYNAMIC_LIBS=${CALC_DYNAMIC_LIBS}'; echo ''
 	@echo 'CALC_ENV=${CALC_ENV}'; echo ''
-	@echo 'ALLOW_CUSTOM=${ALLOW_CUSTOM}'; echo ''
+	@echo 'CALC_INCDIR=${CALC_INCDIR}'; echo ''
+	@echo 'CALC_SHAREDIR=${CALC_SHAREDIR}'; echo ''
+	@echo 'CALC_STATIC_LIBS=${CALC_STATIC_LIBS}'; echo ''
+	@echo 'CAL_PASSDOWN=${CAL_PASSDOWN}'; echo ''
+	@echo 'CAT=${CAT}'; echo ''
+	@echo 'CATDIR=${CATDIR}'; echo ''
+	@echo 'CATEXT=${CATEXT}'; echo ''
+	@echo 'CATMODE=${CATMODE}'; echo ''
+	@echo 'CC=${CC}'; echo ''
+	@echo 'CCMISC=${CCMISC}'; echo ''
 	@echo 'CCOPT=${CCOPT}'; echo ''
 	@echo 'CCWARN=${CCWARN}'; echo ''
-	@echo 'CCMISC=${CCMISC}'; echo ''
+	@echo 'CCWERR=${CCWERR}'; echo ''
 	@echo 'CFLAGS=${CFLAGS}'; echo ''
-	@echo 'ICFLAGS=${ICFLAGS}'; echo ''
-	@echo 'LDFLAGS=${LDFLAGS}'; echo ''
-	@echo 'ILDFLAGS=${ILDFLAGS}'; echo ''
-	@echo 'LCC=${LCC}'; echo ''
-	@echo 'CC=${CC}'; echo ''
-	@echo 'SHELL=${SHELL}'; echo ''
-	@echo 'MAKE=${MAKE}'; echo ''
-	@echo 'AWK=${AWK}'; echo ''
-	@echo 'SED=${SED}'; echo ''
-	@echo 'GREP=${GREP}'; echo ''
-	@echo 'RM=${RM}'; echo ''
-	@echo 'TOUCH=${TOUCH}'; echo ''
-	@echo 'MKDIR=${MKDIR}'; echo ''
-	@echo 'RMDIR=${RMDIR}'; echo ''
-	@echo 'CP=${CP}'; echo ''
-	@echo 'MV=${MV}'; echo ''
+	@echo 'CHMOD=${CHMOD}'; echo ''
+	@echo 'CMP=${CMP}'; echo ''
 	@echo 'CO=${CO}'; echo ''
-	@echo 'AR=${AR}'; echo ''
-	@echo 'TRUE=${TRUE}'; echo ''
-	@echo 'CAT=${CAT}'; echo ''
-	@echo 'LANG=${LANG}'; echo ''
-	@echo 'T=${T}'; echo ''
-	@echo 'SORT=${SORT}'; echo ''
-	@echo 'TEE=${TEE}'; echo ''
-	@echo 'CTAGS=${CTAGS}'; echo ''
 	@echo 'COL=${COL}'; echo ''
-	@echo 'MAKEDEPEND=${MAKEDEPEND}'; echo ''
-	@echo 'MKDIR_ARG=${MKDIR_ARG}'; echo ''
+	@echo 'COMMON_CFLAGS=${COMMON_CFLAGS}'; echo ''
+	@echo 'COMMON_LDFLAGS=${COMMON_LDFLAGS}'; echo ''
+	@echo 'CP=${CP}'; echo ''
+	@echo 'CSCRIPT_PASSDOWN=${CSCRIPT_PASSDOWN}'; echo ''
+	@echo 'CSCRIPT_TARGETS=${CSCRIPT_TARGETS}'; echo ''
+	@echo 'CTAGS=${CTAGS}'; echo ''
+	@echo 'CUSTOMCALDIR=${CUSTOMCALDIR}'; echo ''
+	@echo 'CUSTOMHELPDIR=${CUSTOMHELPDIR}'; echo ''
+	@echo 'CUSTOMINCDIR=${CUSTOMINCDIR}'; echo ''
+	@echo 'CUSTOM_PASSDOWN=${CUSTOM_PASSDOWN}'; echo ''
+	@echo 'C_SRC=${C_SRC}'; echo ''
+	@echo 'DEBUG=${DEBUG}'; echo ''
+	@echo 'DEFAULT_LIB_INSTALL_PATH=${DEFAULT_LIB_INSTALL_PATH}'; echo ''
+	@echo 'DEV_BITS=${DEV_BITS}'; echo ''
+	@echo 'DIFF=${DIFF}'; echo ''
+	@echo 'DISTLIST=${DISTLIST}'; echo ''
 	@echo 'EXT=${EXT}'; echo ''
-	@echo 'Q=${Q}'; echo ''
-	@echo 'V=${V}'; echo ''
-	@echo 'LIBSRC=${LIBSRC}'; echo ''
+	@echo 'FMT=${FMT}'; echo ''
+	@echo 'FPOS_BITS=${FPOS_BITS}'; echo ''
+	@echo 'FPOS_POS_BITS=${FPOS_POS_BITS}'; echo ''
+	@echo 'GREP=${GREP}'; echo ''
+	@echo 'HAVE_CONST=${HAVE_CONST}'; echo ''
+	@echo 'HAVE_FPOS=${HAVE_FPOS}'; echo ''
+	@echo 'HAVE_FPOS_POS=${HAVE_FPOS_POS}'; echo ''
+	@echo 'HAVE_GETPGID=${HAVE_GETPGID}'; echo ''
+	@echo 'HAVE_GETPRID=${HAVE_GETPRID}'; echo ''
+	@echo 'HAVE_GETRUSAGE=${HAVE_GETRUSAGE}'; echo ''
+	@echo 'HAVE_GETSID=${HAVE_GETSID}'; echo ''
+	@echo 'HAVE_GETTIME=${HAVE_GETTIME}'; echo ''
+	@echo 'HAVE_MEMMOVE=${HAVE_MEMMOVE}'; echo ''
+	@echo 'HAVE_NEWSTR=${HAVE_NEWSTR}'; echo ''
+	@echo 'HAVE_NO_IMPLICIT=${HAVE_NO_IMPLICIT}'; echo ''
+	@echo 'HAVE_OFFSCL=${HAVE_OFFSCL}'; echo ''
+	@echo 'HAVE_POSSCL=${HAVE_POSSCL}'; echo ''
+	@echo 'HAVE_STDLIB_H=${HAVE_STDLIB_H}'; echo ''
+	@echo 'HAVE_STRDUP=${HAVE_STRDUP}'; echo ''
+	@echo 'HAVE_STRING_H=${HAVE_STRING_H}'; echo ''
+	@echo 'HAVE_SYS_TIMES_H=${HAVE_SYS_TIMES_H}'; echo ''
+	@echo 'HAVE_SYS_TIME_H=${HAVE_SYS_TIME_H}'; echo ''
+	@echo 'HAVE_TIMES_H=${HAVE_TIMES_H}'; echo ''
+	@echo 'HAVE_TIME_H=${HAVE_TIME_H}'; echo ''
+	@echo 'HAVE_UID_T=${HAVE_UID_T}'; echo ''
+	@echo 'HAVE_UNISTD_H=${HAVE_UNISTD_H}'; echo ''
+	@echo 'HAVE_UNUSED=${HAVE_UNUSED}'; echo ''
+	@echo 'HAVE_URANDOM_H=${HAVE_URANDOM_H}'; echo ''
+	@echo 'HAVE_USTAT=${HAVE_USTAT}'; echo ''
+	@echo 'HAVE_VSPRINTF=${HAVE_VSPRINTF}'; echo ''
+	@echo 'HELPDIR=${HELPDIR}'; echo ''
+	@echo 'HELP_PASSDOWN=${HELP_PASSDOWN}'; echo ''
+	@echo 'H_SRC=${H_SRC}'; echo ''
+	@echo 'ICFLAGS=${ICFLAGS}'; echo ''
+	@echo 'ILDFLAGS=${ILDFLAGS}'; echo ''
+	@echo 'INCDIR=${INCDIR}'; echo ''
+	@echo 'INODE_BITS=${INODE_BITS}'; echo ''
+	@echo 'LANG=${LANG}'; echo ''
+	@echo 'LCC=${LCC}'; echo ''
+	@echo 'LDCONFIG=${LDCONFIG}'; echo ''
+	@echo 'LDFLAGS=${LDFLAGS}'; echo ''
+	@echo 'LDFLAGS=${LDFLAGS}'; echo ''
+	@echo 'LD_DEBUG=${LD_DEBUG}'; echo ''
+	@echo 'LD_SHARE=${LD_SHARE}'; echo ''
+	@echo 'LIBCALC_SHLIB=${LIBCALC_SHLIB}'; echo ''
+	@echo 'LIBCUSTCALC_SHLIB=${LIBCUSTCALC_SHLIB}'; echo ''
+	@echo 'LIBDIR=${LIBDIR}'; echo ''
 	@echo 'LIBOBJS=${LIBOBJS}'; echo ''
-	@echo 'CALCSRC=${CALCSRC}'; echo ''
-	@echo 'CALCOBJS=${CALCOBJS}'; echo ''
-	@echo 'BUILD_H_SRC=${BUILD_H_SRC}'; echo ''
-	@echo 'BUILD_C_SRC=${BUILD_C_SRC}'; echo ''
+	@echo 'LIBSRC=${LIBSRC}'; echo ''
+	@echo 'LIB_H_SRC=${LIB_H_SRC}'; echo ''
+	@echo 'LICENSE=${LICENSE}'; echo ''
+	@echo 'LN=${LN}'; echo ''
+	@echo 'LONG_BITS=${LONG_BITS}'; echo ''
+	@echo 'MAKE=${MAKE}'; echo ''
+	@echo 'MAKEDEPEND=${MAKEDEPEND}'; echo ''
+	@echo 'MAKEFILE_REV=${MAKEFILE_REV}'; echo ''
+	@echo 'MAKE_FILE=${MAKE_FILE}'; echo ''
+	@echo 'MANDIR=${MANDIR}'; echo ''
+	@echo 'MANEXT=${MANEXT}'; echo ''
+	@echo 'MANMAKE=${MANMAKE}'; echo ''
+	@echo 'MANMODE=${MANMODE}'; echo ''
+	@echo 'MKDIR=${MKDIR}'; echo ''
+	@echo 'MKDIR_ARG=${MKDIR_ARG}'; echo ''
+	@echo 'MV=${MV}'; echo ''
+	@echo 'NROFF=${NROFF}'; echo ''
+	@echo 'NROFF_ARG=${NROFF_ARG}'; echo ''
+	@echo 'OBJS=${OBJS}'; echo ''
+	@echo 'OFF_T_BITS=${OFF_T_BITS}'; echo ''
+	@echo 'PURIFY=${PURIFY}'; echo ''
+	@echo 'Q=${Q}'; echo ''
+	@echo 'RANLIB=${RANLIB}'; echo ''
+	@echo 'READLINE_INCLUDE=${READLINE_INCLUDE}'; echo ''
+	@echo 'READLINE_LIB=${READLINE_LIB}'; echo ''
+	@echo 'RM=${RM}'; echo ''
+	@echo 'RMDIR=${RMDIR}'; echo ''
+	@echo 'SAMPLE_C_SRC=${SAMPLE_C_SRC}'; echo ''
+	@echo 'SAMPLE_H_SRC=${SAMPLE_H_SRC}'; echo ''
+	@echo 'SAMPLE_OBJ=${SAMPLE_OBJ}'; echo ''
+	@echo 'SAMPLE_STATIC_TARGETS=${SAMPLE_STATIC_TARGETS}'; echo ''
+	@echo 'SAMPLE_TARGETS=${SAMPLE_TARGETS}'; echo ''
+	@echo 'SCRIPTDIR=${SCRIPTDIR}'; echo ''
+	@echo 'SED=${SED}'; echo ''
+	@echo 'SHELL=${SHELL}'; echo ''
+	@echo 'SORT=${SORT}'; echo ''
+	@echo 'SPLINT=${SPLINT}'; echo ''
+	@echo 'SPLINT_OPTS=${SPLINT_OPTS}'; echo ''
+	@echo 'SYM_DYNAMIC_LIBS=${SYM_DYNAMIC_LIBS}'; echo ''
+	@echo 'T=${T}'; echo ''
+	@echo 'TARGETS=${TARGETS}'; echo ''
+	@echo 'TEE=${TEE}'; echo ''
+	@echo 'TERMCONTROL=${TERMCONTROL}'; echo ''
+	@echo 'TOP_MAKE_FILE=${TOP_MAKE_FILE}'; echo ''
+	@echo 'TOUCH=${TOUCH}'; echo ''
+	@echo 'TRUE=${TRUE}'; echo ''
+	@echo 'USE_READLINE=${USE_READLINE}'; echo ''
 	@echo 'UTIL_C_SRC=${UTIL_C_SRC}'; echo ''
 	@echo 'UTIL_MISC_SRC=${UTIL_MISC_SRC}'; echo ''
 	@echo 'UTIL_OBJS=${UTIL_OBJS}'; echo ''
-	@echo 'UTIL_TMP=${UTIL_TMP}'; echo ''
 	@echo 'UTIL_PROGS=${UTIL_PROGS}'; echo ''
-	@echo 'LIB_H_SRC=${LIB_H_SRC}'; echo ''
-	@echo 'CUSTOM_PASSDOWN=${CUSTOM_PASSDOWN}'; echo ''
-	@echo 'SAMPLE_PASSDOWN=${SAMPLE_PASSDOWN}'; echo ''
-	@echo 'HELP_PASSDOWN=${HELP_PASSDOWN}'; echo ''
-	@echo 'CAL_PASSDOWN=${CAL_PASSDOWN}'; echo ''
-	@echo 'CSCRIPT_PASSDOWN=${CSCRIPT_PASSDOWN}'; echo ''
-	@echo 'H_SRC=${H_SRC}'; echo ''
-	@echo 'C_SRC=${C_SRC}'; echo ''
-	@echo 'DISTLIST=${DISTLIST}'; echo ''
-	@echo 'OBJS=${OBJS}'; echo ''
-	@echo 'CALC_STATIC_LIBS=${CALC_STATIC_LIBS}'; echo ''
-	@echo 'PROGS=${PROGS}'; echo ''
-	@echo 'TARGETS=${TARGETS}'; echo ''
-	@echo '=-=-=-=-= end of major make variable dump =-=-=-=-='
+	@echo 'UTIL_TMP=${UTIL_TMP}'; echo ''
+	@echo 'V=${V}'; echo ''
+	@echo 'VERS=${VERS}'; echo ''
+	@echo 'VERSION=${VERSION}'; echo ''
+	@echo 'XARGS=${XARGS}'; echo ''
+	@echo 'target=${target}'; echo ''
+	@echo '=-=-=-=-= ${MAKE_FILE} end of major make variable dump =-=-=-=-='
 
 mkdebug: env version.c rpm.release
-	@echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+	@echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= Determining the source version =-=-=-=-='
 	@${MAKE} -f Makefile Q= V=@ ver_calc${EXT}
 	-@./ver_calc${EXT}
@@ -3382,10 +3781,10 @@ mkdebug: env version.c rpm.release
 	@echo '=-=-=-=-= Determining the binary version =-=-=-=-='
 	-@./calc${EXT} -e -q -v
 	@echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	@echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+	@echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 debug: env rpm.release
-	@echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+	@echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ clobber =-=-=-=-='
 	@${MAKE} -f Makefile Q= V=@ clobber
 	@echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
@@ -3402,10 +3801,11 @@ debug: env rpm.release
 	@echo '=-=-=-=-= this may take a while =-=-=-=-='
 	@${MAKE} -f Makefile Q= V=@ chk
 	@echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	@echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+	@echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-
-##
+###
+#
+# testing rules
 #
 # make run
 #	* only run calc interactively with the ${CALC_ENV} environment
@@ -3419,7 +3819,7 @@ debug: env rpm.release
 # make gdb
 #	* run the gdb debugger on calc with the ${CALC_ENV} environment
 #
-##
+###
 
 run:
 	${CALC_ENV} ./calc${EXT}
@@ -3433,29 +3833,59 @@ dbx:
 gdb:
 	${CALC_ENV} gdb ./calc${EXT}
 
-
-##
+###
 #
 # rpm rules
 #
-##
+###
 
 rpm: clobber rpm.mk calc.spec.in
-	${RM} -rf /var/tmp/redhat
-	${MAKE} -f rpm.mk RHDIR=/var/tmp/redhat TMPDIR=/var/tmp/redhat
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${RM} -rf /var/tmp/redhat /var/tmp/calc-root
+	${MAKE} -f rpm.mk RHDIR=/var/tmp/redhat TMPDIR=/var/tmp/redhat V=${V}
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
+# rpm static rules
+#
+rpm-hide-static:
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${RM} -rf static
+	${MKDIR} -p static
+	${CP} -f -p calc-static${EXT} ${SAMPLE_STATIC_TARGETS} static
+	${CP} -f -p libcalc.a custom/libcustcalc.a static
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-##
+rpm-unhide-static:
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${RM} -f calc-static${EXT} ${SAMPLE_STATIC_TARGETS}
+	cd static; ${CP} -f -p calc-static${EXT} ${SAMPLE_STATIC_TARGETS} ..
+	${RM} -f libcalc.a
+	cd static; ${CP} -f -p libcalc.a ..
+	${RM} -f custom/libcustcalc.a
+	cd static; ${CP} -f -p libcustcalc.a ../custom
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
+
+rpm-chk-static:
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${CALC_ENV} ./calc-static${EXT} -d -q read regress 2>&1 | ${AWK} -f check.awk
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
+
+rpm-clean-static:
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${RM} -rf static
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
+
+###
 #
 # Utility rules
 #
-##
+###
 
 # Form the installed file list
 #
 inst_files: ${MAKE_FILE} help/Makefile cal/Makefile custom/Makefile \
-	   cscript/Makefile ver_calc${EXT}
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+	    cscript/Makefile ver_calc${EXT}
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${Q} ${RM} -f inst_files
 	${Q} echo ${BINDIR}/calc${EXT} > inst_files
 	${Q} cd help; LANG=C \
@@ -3480,7 +3910,7 @@ inst_files: ${MAKE_FILE} help/Makefile cal/Makefile custom/Makefile \
 	    echo ${MANDIR}/calc.${MANEXT}; \
 	fi >> inst_files
 	${Q} LANG=C ${SORT} -u inst_files -o inst_files
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # The olduninstall rule will remove calc files from the older, histroic
 # locations under the /usr/local directory.  If you are using the
@@ -3489,7 +3919,7 @@ inst_files: ${MAKE_FILE} help/Makefile cal/Makefile custom/Makefile \
 # the /usr/local directory.
 #
 olduninstall:
-	-${RM} -f inst_files
+	${RM} -f inst_files
 	${MAKE} -f Makefile \
 		BINDIR=/usr/local/bin \
 		INCDIR=/usr/local/include \
@@ -3503,34 +3933,34 @@ olduninstall:
 		SCRIPTDIR=/usr/local/bin/cscript \
 		MANDIR=/usr/local/man/man1 \
 		inst_files
-	-${XARGS} ${RM} -f < inst_files
+	${XARGS} ${RM} -f < inst_files
 	-${RMDIR} /usr/local/lib/calc/help/custhelp
 	-${RMDIR} /usr/local/lib/calc/help
 	-${RMDIR} /usr/local/lib/calc/custom
 	-${RMDIR} /usr/local/lib/calc
 	-${RMDIR} /usr/local/include/calc
 	-${RMDIR} /usr/local/bin/cscript
-	-${RM} -f inst_files
+	${RM} -f inst_files
 
 tags: ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} ${MAKE_FILE}
 	-${CTAGS} ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} 2>&1 | \
 	    ${GREP} -v 'Duplicate entry|Second entry ignored'
 
-clean:
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	-${RM} -f ${LIBOBJS}
-	-${RM} -f ${CALCOBJS}
-	-${RM} -f ${UTIL_OBJS}
-	-${RM} -f ${UTIL_TMP}
-	-${RM} -f ${UTIL_PROGS}
-	-${RM} -f ${SAMPLE_OBJ}
-	-${RM} -f .libcustcalc_error
-	-${RM} -f calc.spec.sed
+clean: custom/Makefile
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${RM} -f ${LIBOBJS}
+	${RM} -f ${CALCOBJS}
+	${RM} -f ${UTIL_OBJS}
+	${RM} -f ${UTIL_TMP}
+	${RM} -f ${UTIL_PROGS}
+	${RM} -f ${SAMPLE_OBJ}
+	${RM} -f .libcustcalc_error
+	${RM} -f calc.spec.sed
 	${Q} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
-	-cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clean
+	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clean
 	${Q} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q} echo '=-=-=-=-= Invoking $@ rule for cal =-=-=-=-='
-	-cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} clean
+	cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} clean
 	${Q} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} clean
@@ -3539,30 +3969,40 @@ clean:
 	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} clean
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q} echo remove files that are obsolete
-	-${RM} -rf lib
-	-${RM} -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
-	-${RM} -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
-	-${RM} -f win32dll.h have_malloc.h math_error.h string.h string.c
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+	${RM} -rf lib
+	${RM} -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
+	${RM} -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
+	${RM} -f win32dll.h have_malloc.h math_error.h string.h string.c
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-clobber:
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
-	-${RM} -f ${LIBOBJS}
-	-${RM} -f ${CALCOBJS}
-	-${RM} -f ${UTIL_OBJS}
-	-${RM} -f ${UTIL_TMP}
-	-${RM} -f ${UTIL_PROGS}
-	-${RM} -f ${SAMPLE_TARGETS}
-	-${RM} -f tags .hsrc hsrc
-	-${RM} -f ${BUILD_H_SRC}
-	-${RM} -f ${BUILD_C_SRC}
-	-${RM} -f calc${EXT} *_pure_*.[oa]
-	-${RM} -f libcalc.a *.pure_hardlink
-	-${RM} -f calc.1 *.pure_linkinfo
-	-${RM} -f *.u
-	-${RM} -f calc.pixie calc.rf calc.Counts calc.cord
-	-${RM} -rf gen_h skel Makefile.bak tmp.patch
-	-${RM} -f calc.spec inst_files rpm.mk.patch tmp
+clobber: custom/Makefile clean
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${RM} -f ${SAMPLE_TARGETS}
+	${RM} -f ${SAMPLE_STATIC_TARGETS}
+	${RM} -f tags .hsrc hsrc
+	${RM} -f ${BUILD_H_SRC}
+	${RM} -f ${BUILD_C_SRC}
+	${RM} -f calc${EXT}
+	${RM} -f *_pure_*.[oa]
+	${RM} -f *.pure_linkinfo
+	${RM} -f *.pure_hardlin
+	${RM} -f *.u
+	${RM} -f libcalc.a
+	${RM} -f calc.1 calc.usage
+	${RM} -f calc.pixie calc.rf calc.Counts calc.cord
+	${RM} -rf gen_h skel Makefile.bak tmp.patch
+	${RM} -f calc.spec inst_files rpm.mk.patch tmp
+	${RM} -f libcalc${LIB_EXT_VERS}
+	${RM} -f libcalc${LIB_EXT_VER}
+	${RM} -f libcalc${LIB_EXT_VE}
+	${RM} -f libcalc*${LIB_EXT}
+	${RM} -f libcustcalc${LIB_EXT_VERS}
+	${RM} -f libcustcalc${LIB_EXT_VER}
+	${RM} -f libcustcalc${LIB_EXT_VE}
+	${RM} -f libcustcalc*${LIB_EXT}
+	${RM} -f libcustcalc.a
+	${RM} -f calc-static${EXE}
+	${RM} -f ${CALC_STATIC_LIBS}
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	-cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clobber
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
@@ -3576,19 +4016,20 @@ clobber:
 	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} clobber
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo remove files that are obsolete
-	-${RM} -rf lib
-	-${RM} -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
-	-${RM} -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
-	-${RM} -f win32dll.h have_malloc.h math_error.h string.h string.c
-	-${RM} -rf win32
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+	${RM} -rf win32 build
+#if 0	/* start of skip for non-Gnu makefiles */
+	${RM} -f Makefile.simple
+	${RM} -f custom/Makefile
+#endif	/* end of skip for non-Gnu makefiles */
+	${RM} -f .static .dynamic
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # install everything
 #
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
-install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+install: custom/Makefile ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	-${Q} if [ ! -z "${T}" ]; then \
 	    if [ ! -d ${T} ]; then \
 		echo ${MKDIR} ${MKDIR_ARG} ${T}; \
@@ -3706,9 +4147,23 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	else \
 	    ${RM} -f ${T}${BINDIR}/calc.new${EXT}; \
 	    ${CP} -f calc${EXT} ${T}${BINDIR}/calc.new${EXT}; \
-	    ${CHMOD} 0555 ${T}${BINDIR}/calc.new${EXT}; \
+	    ${CHMOD} 0755 ${T}${BINDIR}/calc.new${EXT}; \
 	    ${MV} -f ${T}${BINDIR}/calc.new${EXT} ${T}${BINDIR}/calc${EXT}; \
 	    echo "installed ${T}${BINDIR}/calc${EXT}"; \
+	fi
+	-${Q} if [ -f calc-static${EXE} ]; then \
+	    if ${CMP} -s calc-static${EXT} \
+	    		 ${T}${BINDIR}/calc-static${EXT}; then \
+		${TRUE}; \
+	    else \
+		${RM} -f ${T}${BINDIR}/calc-static.new${EXT}; \
+		${CP} -f calc-static${EXT} \
+			 ${T}${BINDIR}/calc-static.new${EXT}; \
+		${CHMOD} 0755 ${T}${BINDIR}/calc-static.new${EXT}; \
+		${MV} -f ${T}${BINDIR}/calc-static.new${EXT} \
+			 ${T}${BINDIR}/calc-static${EXT}; \
+		echo "installed ${T}${BINDIR}/calc-static${EXT}"; \
+	    fi; \
 	fi
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	${Q} cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} install
@@ -3722,15 +4177,62 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
 	${Q} cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-	-${Q} if ${CMP} -s libcalc.a ${T}${LIBDIR}/libcalc.a; then \
+	-${Q} if [ -f libcalc.a ]; then \
+		if ${CMP} -s libcalc.a ${T}${LIBDIR}/libcalc.a; then \
 		${TRUE}; \
-	else \
+	        else \
 		${RM} -f ${T}${LIBDIR}/libcalc.a.new; \
 		${CP} -f libcalc.a ${T}${LIBDIR}/libcalc.a.new; \
 		${MV} -f ${T}${LIBDIR}/libcalc.a.new ${T}${LIBDIR}/libcalc.a; \
 		${RANLIB} ${T}${LIBDIR}/libcalc.a; \
 		${CHMOD} 0444 ${T}${LIBDIR}/libcalc.a; \
 		echo "installed ${T}${LIBDIR}/libcalc.a"; \
+	   fi; \
+	fi
+	${Q}# NOTE: The this makefile installs libcustcalc${LIB_EXT_VERS}
+	${Q}#       because we only want to perform one ${LDCONFIG} for both
+	${Q}#       libcalc${LIB_EXT_VERS} and libcustcalc${LIB_EXT_VERS}.
+	-${Q} if ${CMP} -s libcalc${LIB_EXT_VERS} \
+		     ${T}${LIBDIR}/libcalc${LIB_EXT_VERS} && \
+	   ${CMP} -s custom/libcustcalc${LIB_EXT_VERS} \
+		     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}; then \
+	    ${TRUE}; \
+	else \
+	    ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}.new; \
+	    ${CP} -f libcalc${LIB_EXT_VERS} \
+	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}.new; \
+	    ${MV} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}.new \
+	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}; \
+	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
+	    ${LN} -f -s libcalc${LIB_EXT_VERS} \
+	    		${T}${LIBDIR}/libcalc${LIB_EXT_VER}; \
+	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VER}"; \
+	    ${LN} -f -s libcalc${LIB_EXT_VERS} \
+	    		${T}${LIBDIR}/libcalc${LIB_EXT_VE}; \
+	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VE}"; \
+	    ${LN} -f -s libcalc${LIB_EXT_VERS} \
+	    		${T}${LIBDIR}/libcalc${LIB_EXT}; \
+	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
+	    ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}.new; \
+	    ${CP} -f custom/libcustcalc${LIB_EXT_VERS} \
+	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}.new; \
+	    ${MV} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}.new \
+	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}; \
+	    echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
+	    ${LN} -f -s libcustcalc${LIB_EXT_VERS} \
+	    		${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}; \
+	    echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}"; \
+	    ${LN} -f -s libcustcalc${LIB_EXT_VERS} \
+	    		${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}; \
+	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VE}"; \
+	    ${LN} -f -s libcustcalc${LIB_EXT_VERS} \
+	    		${T}${LIBDIR}/libcustcalc${LIB_EXT}; \
+	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
+	    if [ -z "${T}" -o "/" = "${T}" ]; then \
+		echo "running ${LDCONFIG}"; \
+		${LDCONFIG}; \
+		echo "finished ${LDCONFIG}"; \
+	    fi; \
 	fi
 	-${Q} for i in ${LIB_H_SRC} ${BUILD_H_SRC} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
@@ -3768,7 +4270,6 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 		echo "removed old ${T}${CALC_INCDIR}/string.h"; \
 	    fi; \
 	done
-	${Q} ${RM} -f tmp
 	-${Q} if [ -z "${MANDIR}" ]; then \
 	    ${TRUE}; \
 	else \
@@ -3803,14 +4304,18 @@ install: calc libcalc.a ${LIB_H_SRC} ${BUILD_H_SRC} calc.1
 		fi; \
 	    fi; \
 	fi
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+	${V} # NOTE: remove ${T}${CALC_INCDIR}/custom if it is empty
+	-${Q} ${RMDIR} ${T}${CALC_INCDIR}/custom 2>/dev/null
+	${V} # NOTE: misc install cleanup
+	${Q} ${RM} -f tmp
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # Try to remove everything that was installed
 #
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
-uninstall:
-	${V} echo '=-=-=-=-= start of $@ rule =-=-=-=-='
+uninstall: custom/Makefile
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	-${Q} if [ -z "${CATDIR}" ]; then \
 	    ${TRUE}; \
 	else \
@@ -3848,6 +4353,91 @@ uninstall:
 		fi; \
 	    fi; \
 	done
+	-${Q} if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT}" ]; then \
+	    ${RM} -f "${T}${LIBDIR}/libcustcalc${LIB_EXT}"; \
+	    if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT}" ]; then \
+		echo "cannot uninstall ${T}${LIBDIR}/libcustcalc${LIB_EXT}"; \
+	    else \
+		echo "uninstalled ${T}${LIBDIR}/libcustcalc${LIB_EXT}"; \
+	    fi; \
+	fi
+	-${Q} if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}" ]; then \
+	    ${RM} -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}"; \
+	    if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}" ]; then \
+		echo "cannot uninstall ${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}"; \
+	    else \
+		echo "uninstalled ${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}"; \
+	    fi; \
+	fi
+	-${Q} if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}" ]; then \
+	    ${RM} -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}"; \
+	    if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}" ]; then \
+		echo "cannot uninstall ${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}"; \
+	    else \
+		echo "uninstalled ${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}"; \
+	    fi; \
+	fi
+	-${Q} if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}" ]; then \
+	    ${RM} -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
+	    if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}" ]; then \
+		echo "cannot uninstall ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
+	    else \
+		echo "uninstalled ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
+	    fi; \
+	fi
+	-${Q} if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}" ]; then \
+	    ${RM} -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
+	    if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}" ]; then \
+		echo "cannot uninstall ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
+	    else \
+		echo "uninstalled ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
+	    fi; \
+	fi
+	-${Q} if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT}" ]; then \
+	    ${RM} -f "${T}${LIBDIR}/libcalc${LIB_EXT}"; \
+	    if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT}" ]; then \
+		echo "cannot uninstall ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
+	    else \
+		echo "uninstalled ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
+	    fi; \
+	fi
+	-${Q} if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VE}" ]; then \
+	    ${RM} -f "${T}${LIBDIR}/libcalc${LIB_EXT_VE}"; \
+	    if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VE}" ]; then \
+		echo "cannot uninstall ${T}${LIBDIR}/libcalc${LIB_EXT_VE}"; \
+	    else \
+		echo "uninstalled ${T}${LIBDIR}/libcalc${LIB_EXT_VE}"; \
+	    fi; \
+	fi
+	-${Q} if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VER}" ]; then \
+	    ${RM} -f "${T}${LIBDIR}/libcalc${LIB_EXT_VER}"; \
+	    if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VER}" ]; then \
+		echo "cannot uninstall ${T}${LIBDIR}/libcalc${LIB_EXT_VER}"; \
+	    else \
+		echo "uninstalled ${T}${LIBDIR}/libcalc${LIB_EXT_VER}"; \
+	    fi; \
+	fi
+	-${Q} if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}" ]; then \
+	    ${RM} -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
+	    if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}" ]; then \
+		echo "cannot uninstall ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
+	    else \
+		echo "uninstalled ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
+	    fi; \
+	fi
+	-${Q} if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}" ]; then \
+	    ${RM} -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
+	    if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}" ]; then \
+		echo "cannot uninstall ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
+	    else \
+		echo "uninstalled ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
+	    fi; \
+	fi
+	-${Q} if [ -z "${T}" -o "/" = "${T}" ]; then \
+	    echo "running ${LDCONFIG}"; \
+	    ${LDCONFIG}; \
+	    echo "finished ${LDCONFIG}"; \
+	fi
 	-${Q} if [ -f "${T}${LIBDIR}/libcalc.a" ]; then \
 	    ${RM} -f "${T}${LIBDIR}/libcalc.a"; \
 	    if [ -f "${T}${LIBDIR}/libcalc.a" ]; then \
@@ -3868,6 +4458,14 @@ uninstall:
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	${Q} cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} uninstall
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+	-${Q} if [ -f "${T}${BINDIR}/calc-static${EXT}" ]; then \
+	    ${RM} -f "${T}${BINDIR}/calc-static${EXT}"; \
+	    if [ -f "${T}${BINDIR}/calc-static${EXT}" ]; then \
+		echo "cannot uninstall ${T}${BINDIR}/calc-static${EXT}"; \
+	    else \
+		echo "uninstalled ${T}${BINDIR}/calc-static${EXT}"; \
+	    fi; \
+	fi
 	-${Q} if [ -f "${T}${BINDIR}/calc${EXT}" ]; then \
 	    ${RM} -f "${T}${BINDIR}/calc${EXT}"; \
 	    if [ -f "${T}${BINDIR}/calc${EXT}" ]; then \
@@ -3890,7 +4488,7 @@ uninstall:
 		echo "cleaned up ${T}"; \
 	    fi; \
 	 fi
-	${V} echo '=-=-=-=-= end of $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # splint - A tool for statically checking C programs
 #
@@ -3898,12 +4496,11 @@ splint: #hsrc
 	${SPLINT} ${SPLINT_OPTS} -DCALC_SRC -I. \
 	    ${CALCSRC} ${LIBSRC} ${BUILD_C_SRC} ${UTIL_C_SRC}
 
-
-##
+###
 #
 # make depend stuff
 #
-##
+###
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 
@@ -3926,12 +4523,10 @@ addop.o: have_stdlib.h
 addop.o: have_string.h
 addop.o: label.h
 addop.o: longbits.h
-addop.o: md5.h
 addop.o: nametype.h
 addop.o: opcodes.h
 addop.o: qmath.h
-addop.o: shs.h
-addop.o: shs1.h
+addop.o: sha1.h
 addop.o: str.h
 addop.o: symbol.h
 addop.o: token.h
@@ -3956,11 +4551,9 @@ assocfunc.o: have_newstr.h
 assocfunc.o: have_stdlib.h
 assocfunc.o: have_string.h
 assocfunc.o: longbits.h
-assocfunc.o: md5.h
 assocfunc.o: nametype.h
 assocfunc.o: qmath.h
-assocfunc.o: shs.h
-assocfunc.o: shs1.h
+assocfunc.o: sha1.h
 assocfunc.o: str.h
 assocfunc.o: value.h
 assocfunc.o: zmath.h
@@ -3984,11 +4577,9 @@ blkcpy.o: have_newstr.h
 blkcpy.o: have_stdlib.h
 blkcpy.o: have_string.h
 blkcpy.o: longbits.h
-blkcpy.o: md5.h
 blkcpy.o: nametype.h
 blkcpy.o: qmath.h
-blkcpy.o: shs.h
-blkcpy.o: shs1.h
+blkcpy.o: sha1.h
 blkcpy.o: str.h
 blkcpy.o: value.h
 blkcpy.o: zmath.h
@@ -4008,11 +4599,9 @@ block.o: have_newstr.h
 block.o: have_stdlib.h
 block.o: have_string.h
 block.o: longbits.h
-block.o: md5.h
 block.o: nametype.h
 block.o: qmath.h
-block.o: shs.h
-block.o: shs1.h
+block.o: sha1.h
 block.o: str.h
 block.o: value.h
 block.o: zmath.h
@@ -4058,12 +4647,10 @@ calc.o: hist.h
 calc.o: label.h
 calc.o: lib_calc.h
 calc.o: longbits.h
-calc.o: md5.h
 calc.o: nametype.h
 calc.o: opcodes.h
 calc.o: qmath.h
-calc.o: shs.h
-calc.o: shs1.h
+calc.o: sha1.h
 calc.o: str.h
 calc.o: symbol.h
 calc.o: token.h
@@ -4094,12 +4681,10 @@ codegen.o: have_unistd.h
 codegen.o: label.h
 codegen.o: lib_calc.h
 codegen.o: longbits.h
-codegen.o: md5.h
 codegen.o: nametype.h
 codegen.o: opcodes.h
 codegen.o: qmath.h
-codegen.o: shs.h
-codegen.o: shs1.h
+codegen.o: sha1.h
 codegen.o: str.h
 codegen.o: symbol.h
 codegen.o: token.h
@@ -4155,11 +4740,9 @@ config.o: have_strdup.h
 config.o: have_string.h
 config.o: have_times.h
 config.o: longbits.h
-config.o: md5.h
 config.o: nametype.h
 config.o: qmath.h
-config.o: shs.h
-config.o: shs1.h
+config.o: sha1.h
 config.o: str.h
 config.o: token.h
 config.o: value.h
@@ -4182,11 +4765,9 @@ const.o: have_newstr.h
 const.o: have_stdlib.h
 const.o: have_string.h
 const.o: longbits.h
-const.o: md5.h
 const.o: nametype.h
 const.o: qmath.h
-const.o: shs.h
-const.o: shs1.h
+const.o: sha1.h
 const.o: str.h
 const.o: value.h
 const.o: zmath.h
@@ -4208,11 +4789,9 @@ custom.o: have_newstr.h
 custom.o: have_stdlib.h
 custom.o: have_string.h
 custom.o: longbits.h
-custom.o: md5.h
 custom.o: nametype.h
 custom.o: qmath.h
-custom.o: shs.h
-custom.o: shs1.h
+custom.o: sha1.h
 custom.o: str.h
 custom.o: value.h
 custom.o: zmath.h
@@ -4241,11 +4820,9 @@ file.o: have_stdlib.h
 file.o: have_string.h
 file.o: have_unistd.h
 file.o: longbits.h
-file.o: md5.h
 file.o: nametype.h
 file.o: qmath.h
-file.o: shs.h
-file.o: shs1.h
+file.o: sha1.h
 file.o: str.h
 file.o: value.h
 file.o: zmath.h
@@ -4282,13 +4859,11 @@ func.o: have_unistd.h
 func.o: have_unused.h
 func.o: label.h
 func.o: longbits.h
-func.o: md5.h
 func.o: nametype.h
 func.o: opcodes.h
 func.o: prime.h
 func.o: qmath.h
-func.o: shs.h
-func.o: shs1.h
+func.o: sha1.h
 func.o: str.h
 func.o: symbol.h
 func.o: token.h
@@ -4313,11 +4888,9 @@ hash.o: have_newstr.h
 hash.o: have_stdlib.h
 hash.o: have_string.h
 hash.o: longbits.h
-hash.o: md5.h
 hash.o: nametype.h
 hash.o: qmath.h
-hash.o: shs.h
-hash.o: shs1.h
+hash.o: sha1.h
 hash.o: str.h
 hash.o: value.h
 hash.o: zmath.h
@@ -4368,11 +4941,9 @@ help.o: have_string.h
 help.o: have_unistd.h
 help.o: help.c
 help.o: longbits.h
-help.o: md5.h
 help.o: nametype.h
 help.o: qmath.h
-help.o: shs.h
-help.o: shs1.h
+help.o: sha1.h
 help.o: str.h
 help.o: value.h
 help.o: zmath.h
@@ -4397,11 +4968,9 @@ hist.o: have_unused.h
 hist.o: hist.c
 hist.o: hist.h
 hist.o: longbits.h
-hist.o: md5.h
 hist.o: nametype.h
 hist.o: qmath.h
-hist.o: shs.h
-hist.o: shs1.h
+hist.o: sha1.h
 hist.o: str.h
 hist.o: value.h
 hist.o: zmath.h
@@ -4425,11 +4994,9 @@ input.o: have_unistd.h
 input.o: hist.h
 input.o: input.c
 input.o: longbits.h
-input.o: md5.h
 input.o: nametype.h
 input.o: qmath.h
-input.o: shs.h
-input.o: shs1.h
+input.o: sha1.h
 input.o: str.h
 input.o: value.h
 input.o: zmath.h
@@ -4456,12 +5023,10 @@ label.o: have_string.h
 label.o: label.c
 label.o: label.h
 label.o: longbits.h
-label.o: md5.h
 label.o: nametype.h
 label.o: opcodes.h
 label.o: qmath.h
-label.o: shs.h
-label.o: shs1.h
+label.o: sha1.h
 label.o: str.h
 label.o: token.h
 label.o: value.h
@@ -4474,6 +5039,7 @@ lib_calc.o: calcerr.h
 lib_calc.o: cmath.h
 lib_calc.o: conf.h
 lib_calc.o: config.h
+lib_calc.o: custom.h
 lib_calc.o: decl.h
 lib_calc.o: endian_calc.h
 lib_calc.o: func.h
@@ -4489,11 +5055,9 @@ lib_calc.o: label.h
 lib_calc.o: lib_calc.c
 lib_calc.o: lib_calc.h
 lib_calc.o: longbits.h
-lib_calc.o: md5.h
 lib_calc.o: nametype.h
 lib_calc.o: qmath.h
-lib_calc.o: shs.h
-lib_calc.o: shs1.h
+lib_calc.o: sha1.h
 lib_calc.o: str.h
 lib_calc.o: symbol.h
 lib_calc.o: terminal.h
@@ -4530,11 +5094,9 @@ listfunc.o: have_stdlib.h
 listfunc.o: have_string.h
 listfunc.o: listfunc.c
 listfunc.o: longbits.h
-listfunc.o: md5.h
 listfunc.o: nametype.h
 listfunc.o: qmath.h
-listfunc.o: shs.h
-listfunc.o: shs1.h
+listfunc.o: sha1.h
 listfunc.o: str.h
 listfunc.o: value.h
 listfunc.o: zmath.h
@@ -4559,11 +5121,9 @@ matfunc.o: have_string.h
 matfunc.o: have_unused.h
 matfunc.o: longbits.h
 matfunc.o: matfunc.c
-matfunc.o: md5.h
 matfunc.o: nametype.h
 matfunc.o: qmath.h
-matfunc.o: shs.h
-matfunc.o: shs1.h
+matfunc.o: sha1.h
 matfunc.o: str.h
 matfunc.o: value.h
 matfunc.o: zmath.h
@@ -4587,39 +5147,12 @@ math_error.o: have_string.h
 math_error.o: lib_calc.h
 math_error.o: longbits.h
 math_error.o: math_error.c
-math_error.o: md5.h
 math_error.o: nametype.h
 math_error.o: qmath.h
-math_error.o: shs.h
-math_error.o: shs1.h
+math_error.o: sha1.h
 math_error.o: str.h
 math_error.o: value.h
 math_error.o: zmath.h
-md5.o: align32.h
-md5.o: alloc.h
-md5.o: block.h
-md5.o: byteswap.h
-md5.o: calcerr.h
-md5.o: cmath.h
-md5.o: config.h
-md5.o: decl.h
-md5.o: endian_calc.h
-md5.o: hash.h
-md5.o: have_const.h
-md5.o: have_memmv.h
-md5.o: have_newstr.h
-md5.o: have_stdlib.h
-md5.o: have_string.h
-md5.o: longbits.h
-md5.o: md5.c
-md5.o: md5.h
-md5.o: nametype.h
-md5.o: qmath.h
-md5.o: shs.h
-md5.o: shs1.h
-md5.o: str.h
-md5.o: value.h
-md5.o: zmath.h
 no_implicit.o: no_implicit.c
 obj.o: alloc.h
 obj.o: block.h
@@ -4639,13 +5172,11 @@ obj.o: have_stdlib.h
 obj.o: have_string.h
 obj.o: label.h
 obj.o: longbits.h
-obj.o: md5.h
 obj.o: nametype.h
 obj.o: obj.c
 obj.o: opcodes.h
 obj.o: qmath.h
-obj.o: shs.h
-obj.o: shs1.h
+obj.o: sha1.h
 obj.o: str.h
 obj.o: symbol.h
 obj.o: value.h
@@ -4674,13 +5205,11 @@ opcodes.o: hist.h
 opcodes.o: label.h
 opcodes.o: lib_calc.h
 opcodes.o: longbits.h
-opcodes.o: md5.h
 opcodes.o: nametype.h
 opcodes.o: opcodes.c
 opcodes.o: opcodes.h
 opcodes.o: qmath.h
-opcodes.o: shs.h
-opcodes.o: shs1.h
+opcodes.o: sha1.h
 opcodes.o: str.h
 opcodes.o: symbol.h
 opcodes.o: value.h
@@ -4716,12 +5245,10 @@ poly.o: have_newstr.h
 poly.o: have_stdlib.h
 poly.o: have_string.h
 poly.o: longbits.h
-poly.o: md5.h
 poly.o: nametype.h
 poly.o: poly.c
 poly.o: qmath.h
-poly.o: shs.h
-poly.o: shs1.h
+poly.o: sha1.h
 poly.o: str.h
 poly.o: value.h
 poly.o: zmath.h
@@ -4831,12 +5358,10 @@ quickhash.o: have_newstr.h
 quickhash.o: have_stdlib.h
 quickhash.o: have_string.h
 quickhash.o: longbits.h
-quickhash.o: md5.h
 quickhash.o: nametype.h
 quickhash.o: qmath.h
 quickhash.o: quickhash.c
-quickhash.o: shs.h
-quickhash.o: shs1.h
+quickhash.o: sha1.h
 quickhash.o: str.h
 quickhash.o: value.h
 quickhash.o: zmath.h
@@ -4859,12 +5384,10 @@ sample_many.o: have_stdlib.h
 sample_many.o: have_string.h
 sample_many.o: lib_util.h
 sample_many.o: longbits.h
-sample_many.o: md5.h
 sample_many.o: nametype.h
 sample_many.o: qmath.h
 sample_many.o: sample_many.c
-sample_many.o: shs.h
-sample_many.o: shs1.h
+sample_many.o: sha1.h
 sample_many.o: str.h
 sample_many.o: value.h
 sample_many.o: zmath.h
@@ -4886,12 +5409,10 @@ sample_rand.o: have_stdlib.h
 sample_rand.o: have_string.h
 sample_rand.o: lib_util.h
 sample_rand.o: longbits.h
-sample_rand.o: md5.h
 sample_rand.o: nametype.h
 sample_rand.o: qmath.h
 sample_rand.o: sample_rand.c
-sample_rand.o: shs.h
-sample_rand.o: shs1.h
+sample_rand.o: sha1.h
 sample_rand.o: str.h
 sample_rand.o: value.h
 sample_rand.o: zmath.h
@@ -4919,56 +5440,29 @@ seed.o: longbits.h
 seed.o: qmath.h
 seed.o: seed.c
 seed.o: zmath.h
-shs.o: align32.h
-shs.o: alloc.h
-shs.o: block.h
-shs.o: byteswap.h
-shs.o: calcerr.h
-shs.o: cmath.h
-shs.o: config.h
-shs.o: decl.h
-shs.o: endian_calc.h
-shs.o: hash.h
-shs.o: have_const.h
-shs.o: have_memmv.h
-shs.o: have_newstr.h
-shs.o: have_stdlib.h
-shs.o: have_string.h
-shs.o: longbits.h
-shs.o: md5.h
-shs.o: nametype.h
-shs.o: qmath.h
-shs.o: shs.c
-shs.o: shs.h
-shs.o: shs1.h
-shs.o: str.h
-shs.o: value.h
-shs.o: zmath.h
-shs1.o: align32.h
-shs1.o: alloc.h
-shs1.o: block.h
-shs1.o: byteswap.h
-shs1.o: calcerr.h
-shs1.o: cmath.h
-shs1.o: config.h
-shs1.o: decl.h
-shs1.o: endian_calc.h
-shs1.o: hash.h
-shs1.o: have_const.h
-shs1.o: have_memmv.h
-shs1.o: have_newstr.h
-shs1.o: have_stdlib.h
-shs1.o: have_string.h
-shs1.o: longbits.h
-shs1.o: md5.h
-shs1.o: nametype.h
-shs1.o: qmath.h
-shs1.o: shs.h
-shs1.o: shs1.c
-shs1.o: shs1.h
-shs1.o: str.h
-shs1.o: value.h
-shs1.o: zmath.h
+sha1.o: align32.h
+sha1.o: alloc.h
+sha1.o: block.h
+sha1.o: byteswap.h
+sha1.o: calcerr.h
+sha1.o: cmath.h
+sha1.o: config.h
+sha1.o: decl.h
+sha1.o: endian_calc.h
+sha1.o: hash.h
+sha1.o: have_const.h
+sha1.o: have_memmv.h
+sha1.o: have_newstr.h
+sha1.o: have_stdlib.h
+sha1.o: have_string.h
+sha1.o: longbits.h
+sha1.o: nametype.h
+sha1.o: qmath.h
+sha1.o: sha1.c
+sha1.o: sha1.h
+sha1.o: str.h
+sha1.o: value.h
+sha1.o: zmath.h
 size.o: alloc.h
 size.o: block.h
 size.o: byteswap.h
@@ -4984,11 +5478,9 @@ size.o: have_newstr.h
 size.o: have_stdlib.h
 size.o: have_string.h
 size.o: longbits.h
-size.o: md5.h
 size.o: nametype.h
 size.o: qmath.h
-size.o: shs.h
-size.o: shs1.h
+size.o: sha1.h
 size.o: size.c
 size.o: str.h
 size.o: value.h
@@ -5011,11 +5503,9 @@ str.o: have_newstr.h
 str.o: have_stdlib.h
 str.o: have_string.h
 str.o: longbits.h
-str.o: md5.h
 str.o: nametype.h
 str.o: qmath.h
-str.o: shs.h
-str.o: shs1.h
+str.o: sha1.h
 str.o: str.c
 str.o: str.h
 str.o: value.h
@@ -5038,12 +5528,10 @@ symbol.o: have_stdlib.h
 symbol.o: have_string.h
 symbol.o: label.h
 symbol.o: longbits.h
-symbol.o: md5.h
 symbol.o: nametype.h
 symbol.o: opcodes.h
 symbol.o: qmath.h
-symbol.o: shs.h
-symbol.o: shs1.h
+symbol.o: sha1.h
 symbol.o: str.h
 symbol.o: symbol.c
 symbol.o: symbol.h
@@ -5068,11 +5556,9 @@ token.o: have_stdlib.h
 token.o: have_string.h
 token.o: lib_calc.h
 token.o: longbits.h
-token.o: md5.h
 token.o: nametype.h
 token.o: qmath.h
-token.o: shs.h
-token.o: shs1.h
+token.o: sha1.h
 token.o: str.h
 token.o: token.c
 token.o: token.h
@@ -5098,12 +5584,10 @@ value.o: have_stdlib.h
 value.o: have_string.h
 value.o: label.h
 value.o: longbits.h
-value.o: md5.h
 value.o: nametype.h
 value.o: opcodes.h
 value.o: qmath.h
-value.o: shs.h
-value.o: shs1.h
+value.o: sha1.h
 value.o: str.h
 value.o: symbol.h
 value.o: value.c
@@ -5128,11 +5612,9 @@ version.o: have_stdlib.h
 version.o: have_string.h
 version.o: have_unused.h
 version.o: longbits.h
-version.o: md5.h
 version.o: nametype.h
 version.o: qmath.h
-version.o: shs.h
-version.o: shs1.h
+version.o: sha1.h
 version.o: str.h
 version.o: value.h
 version.o: version.c
@@ -5223,12 +5705,10 @@ zprime.o: have_stdlib.h
 zprime.o: have_string.h
 zprime.o: jump.h
 zprime.o: longbits.h
-zprime.o: md5.h
 zprime.o: nametype.h
 zprime.o: prime.h
 zprime.o: qmath.h
-zprime.o: shs.h
-zprime.o: shs1.h
+zprime.o: sha1.h
 zprime.o: str.h
 zprime.o: value.h
 zprime.o: zmath.h
@@ -5250,11 +5730,9 @@ zrand.o: have_stdlib.h
 zrand.o: have_string.h
 zrand.o: have_unused.h
 zrand.o: longbits.h
-zrand.o: md5.h
 zrand.o: nametype.h
 zrand.o: qmath.h
-zrand.o: shs.h
-zrand.o: shs1.h
+zrand.o: sha1.h
 zrand.o: str.h
 zrand.o: value.h
 zrand.o: zmath.h
@@ -5276,11 +5754,9 @@ zrandom.o: have_stdlib.h
 zrandom.o: have_string.h
 zrandom.o: have_unused.h
 zrandom.o: longbits.h
-zrandom.o: md5.h
 zrandom.o: nametype.h
 zrandom.o: qmath.h
-zrandom.o: shs.h
-zrandom.o: shs1.h
+zrandom.o: sha1.h
 zrandom.o: str.h
 zrandom.o: value.h
 zrandom.o: zmath.h

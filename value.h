@@ -15,10 +15,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.13 $
- * @(#) $Id: value.h,v 29.13 2007/02/18 14:24:56 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: value.h,v 30.3 2007/07/10 21:18:08 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -36,7 +36,7 @@
 # include "decl.h"
 # include "cmath.h"
 # include "config.h"
-# include "shs.h"
+# include "sha1.h"
 # include "calcerr.h"
 # include "hash.h"
 # include "block.h"
@@ -46,7 +46,7 @@
 # include <calc/decl.h>
 # include <calc/cmath.h>
 # include <calc/config.h>
-# include <calc/shs.h>
+# include <calc/sha1.h>
 # include <calc/calcerr.h>
 # include <calc/hash.h>
 # include <calc/block.h>
@@ -231,7 +231,7 @@ E_FUNC void absvalue(VALUE *v1, VALUE *v2, VALUE *vres);
 E_FUNC void normvalue(VALUE *vp, VALUE *vres);
 E_FUNC void shiftvalue(VALUE *v1, VALUE *v2, BOOL rightshift, VALUE *vres);
 E_FUNC void scalevalue(VALUE *v1, VALUE *v2, VALUE *vres);
-E_FUNC void powivalue(VALUE *v1, VALUE *v2, VALUE *vres);
+E_FUNC void powvalue(VALUE *v1, VALUE *v2, VALUE *vres);
 E_FUNC void powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);
 E_FUNC void divvalue(VALUE *v1, VALUE *v2, VALUE *vres);
 E_FUNC void quovalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres);

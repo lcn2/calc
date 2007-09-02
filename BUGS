@@ -74,6 +74,14 @@ Known bugs:
 
 =-=
 
+Problems that have known work-a-rounds:
+
+    * There is a bug in gcc v4.1.0 that causes calc to fail the regression
+      test.  The work-a-round is to compile with gcc v4.1.1 or later.  This
+      problems was observed on Fedora 5.
+
+=-=
+
 mis-features in calc:
 
     Some problems are not bugs but rarther mis-features / things that could
@@ -121,30 +129,7 @@ mis-features in calc:
 
       will not.
 
-=-=
-
-Problems with old systems that have known work-a-rounds:
-
-    * There is a bug in gcc-2.95 that causes calc, when compiled with -O2,
-      to fail the regression test.  The work-a-round is to compile with -O
-      or to use gcc-2.96 or later.
-
-    * There are problems compiling calc on the sparcv9 under 64 bit
-      Solaris.	On that platform, gcc-2.96 is able to compile calc, but
-      calc dumps core very early on in startup.	 It is said that sparcv9
-      support in gcc-2.96 is very unofficial and thus there is no
-      work-a-round for gcc-2-96.
-
-      There is a work-a-round for this architecture us one is using the
-      Solaris CC on the sparcv9.  It has been reported that setting the
-      following Makefile variables will produce a working version of
-      calc on the sparcv9 under 64 bit Solaris:
-
-	    LCC="cc -xarch=v9"
-	    CCWARN="-DFORCE_STDC -w"
-	    DEBUG="-fast -xarch=v9"
-
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2007  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -158,10 +143,10 @@ Problems with old systems that have known work-a-rounds:
 ## A copy of version 2.1 of the GNU Lesser General Public License is
 ## distributed with calc under the filename COPYING-LGPL.  You should have
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
-## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 29.26 $
-## @(#) $Id: BUGS,v 29.26 2007/01/03 21:26:22 chongo Exp $
+## @(#) $Revision: 30.1 $
+## @(#) $Id: BUGS,v 30.1 2007/03/16 11:09:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13

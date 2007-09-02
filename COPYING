@@ -12,8 +12,8 @@ This file is Copyrighted
 	Everyone is permitted to copy and distribute verbatim copies
 	of this license document, but changing it is not allowed.
 
-    # @(#) $Revision: 29.9 $
-    # @(#) $Id: COPYING,v 29.9 2007/02/11 10:16:31 chongo Exp $
+    # @(#) $Revision: 30.1 $
+    # @(#) $Id: COPYING,v 30.1 2007/03/16 11:09:46 chongo Exp $
     # @(#) $Source: /usr/local/src/cmd/calc/RCS/COPYING,v $
 
 =-=
@@ -45,12 +45,12 @@ Calc is covered by the GNU Lesser General Public License
     Public License by the calc command:			help copying-lgpl
 
     You should have received a copy of the version 2.1 GNU Lesser General
-    Public License with calc; if not, write to:
+    Public License with calc; if not, write to the following address:
 
 	    Free Software Foundation, Inc.
-	    59 Temple Place
-	    Suite 330
-	    Boston, MA	02111-1307
+	    51 Franklin Street
+	    Fifth Floor
+	    Boston, MA  02110-1301
 	    USA
 
     The contact addresses for calc is as follows:

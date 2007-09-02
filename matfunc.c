@@ -15,10 +15,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.8 $
- * @(#) $Id: matfunc.c,v 29.8 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: matfunc.c,v 30.2 2007/07/05 13:30:38 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/matfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:18
@@ -1483,7 +1483,7 @@ matalloc(long size)
 
 	m = (MATRIX *) malloc(matsize(size));
 	if (m == NULL) {
-		math_error("Cannot get memory to allocate matrix of size %d",
+		math_error("Cannot get memory to allocate matrix of size %ld",
 			   size);
 		/*NOTREACHED*/
 	}

@@ -17,10 +17,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.7 $
- * @(#) $Id: comfunc.c,v 29.7 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: comfunc.c,v 30.2 2007/07/11 23:05:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/comfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -1117,8 +1117,8 @@ c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon)
 		/*NOTREACHED*/
 	}
 	if (ciszero(c1)) {
-		if (qisneg(c2->real) || qiszero(c2->real)) {
-			math_error ("Non-positive exponent of zero");
+		if (cisreal(c2) && qisneg(c2->real)) {
+			math_error ("Non-positive real exponent of zero");
 			/*NOTREACHED*/
 		}
 		return clink(&_czero_);

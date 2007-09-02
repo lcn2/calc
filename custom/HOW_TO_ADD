@@ -130,13 +130,7 @@ Step 4: Write your test code
 	change the comment from 'halflen - determine the length ...' to
 	'curds - brief description about ...'
 
-	change the print statement near the very bottom from:
-
-		print "halflen(num) defined";
-
-	to:
-
-		print "curds( ... args description here ...) defined";
+	change other code as needed.
 
 
 Step 5: Write your custom function
@@ -494,24 +488,25 @@ Step 6: Register the function in the custom interface table
 	E_FUNC VALUE u_curds(char*, int, VALUE**);
 
 
-Step 7: Add the required information to the custom/Makefile
+Step 7: Add the required information to the custom/Makefile.head
 
     The calc test script, curds.cal, should be added to the
-    CUSTOM_CALC_FILES Makefile variable found in custom/Makefile:
+    CUSTOM_CALC_FILES Makefile variable found in custom/Makefile.head:
 
 	CUSTOM_CALC_FILES= argv.cal halflen.cal curds.cal
 
     The help file, curds, should be added to the CUSTOM_HELP
-    Makefile variable:
+    custom/Makefile.head variable:
 
 	CUSTOM_HELP= argv devnull help sysinfo curds
 
     If you needed to create any .h files to support u_curds.c, these
-    files should be added to the CUSTOM_H_SRC Makefile variable:
+    files should be added to the CUSTOM_H_SRC custom/Makefile.head variable:
 
 	CUSTOM_H_SRC= u_curds.h otherfile.h
 
-    Your u_curds.c file MUST be added to the CUSTOM_SRC Makefile variable:
+    Your u_curds.c file MUST be added to the CUSTOM_SRC custom/Makefile.head
+    variable:
 
 	CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c u_curds.c
 
@@ -645,10 +640,10 @@ Step 12: Contribute
 ## A copy of version 2.1 of the GNU Lesser General Public License is
 ## distributed with calc under the filename COPYING-LGPL.  You should have
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
-## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 29.6 $
-## @(#) $Id: HOW_TO_ADD,v 29.6 2007/02/11 10:22:46 chongo Exp $
+## @(#) $Revision: 30.3 $
+## @(#) $Id: HOW_TO_ADD,v 30.3 2007/07/13 23:45:54 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/HOW_TO_ADD,v $
 ##
 ## Under source code control:	1997/03/10 03:03:21

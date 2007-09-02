@@ -15,10 +15,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: token.h,v 29.6 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: token.h,v 30.2 2007/07/05 13:30:38 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/token.h,v $
  *
  * Under source code control:	1990/02/15 01:48:37
@@ -175,8 +175,8 @@ E_FUNC void inittokens(void);
 E_FUNC int tokenmode(int flag);
 E_FUNC int gettoken(void);
 E_FUNC void rescantoken(void);
-E_FUNC void scanerror(int, char *, ...);
-E_FUNC void warning(char *, ...);
+E_FUNC void scanerror(int, char *, ...) PRINTF_FORMAT(2, 3);
+E_FUNC void warning(char *, ...) PRINTF_FORMAT(1, 2);
 
 
 #endif /* !__TOKEN_H__ */

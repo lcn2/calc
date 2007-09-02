@@ -15,10 +15,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.12 $
- * @(#) $Id: value.c,v 29.12 2007/02/18 14:24:56 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: value.c,v 30.3 2007/07/11 23:09:01 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -1833,13 +1833,13 @@ scalevalue(VALUE *v1, VALUE *v2, VALUE *vres)
 
 
 /*
- * Raise a value to an integral power.
+ * Raise a value to an power.
  * Result is placed in the indicated location.
  */
 void
-powivalue(VALUE *v1, VALUE *v2, VALUE *vres)
+powvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
-	NUMBER *q;
+	NUMBER *real_v2;	/* real part of v2 */
 	COMPLEX *c;
 
 	if (v1->v_type == V_OBJ || v2->v_type == V_OBJ) {
@@ -1854,50 +1854,145 @@ powivalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		vres->v_type = v2->v_type;
 		return;
 	}
-	if (v2->v_type != V_NUM || qisfrac(v2->v_num)) {
-		*vres = error_value(E_POWI2);
-		return;
-	}
-	q = v2->v_num;
-	if (v1->v_type == -E_1OVER0) {
-		if (qisneg(q)) {
-			vres->v_type = V_NUM;
-			vres->v_num = qlink(&_qzero_);
-		}
-		return;
-	}
-	switch (v1->v_type) {
+	real_v2 = v2->v_num;
+
+	/* case: raising to a real power */
+	switch (v2->v_type) {
 	case V_NUM:
-		if (qiszero(v1->v_num)) {
-			if (qisneg(q)) {
-				*vres = error_value(E_1OVER0);
-				return;
+
+		/* deal with the division by 0 value */
+		if (v1->v_type == -E_1OVER0) {
+			if (qisneg(real_v2)) {
+				vres->v_type = V_NUM;
+				vres->v_num = qlink(&_qzero_);
+			} else {
+				vres->v_type = -E_1OVER0;
 			}
+			break;
 		}
-		vres->v_num = qpowi(v1->v_num, q);
-		return;
+
+		/* raise something with a real exponent */
+		switch (v1->v_type) {
+		case V_NUM:
+			if (qiszero(v1->v_num)) {
+				if (qisneg(real_v2)) {
+					*vres = error_value(E_1OVER0);
+					break;
+				}
+				/* 0 ^ non-neg is zero, including 0^0 */
+				vres->v_type = V_NUM;
+				vres->v_num = qlink(&_qzero_);
+			} else if (qisint(real_v2)) {
+				vres->v_num = qpowi(v1->v_num, real_v2);
+			} else {
+				vres->v_type = V_NUM;
+				vres->v_num = qlink(&_qzero_);
+				powervalue(v1, v2, NULL, vres);
+			}
+			break;
+		case V_COM:
+			if (qisint(real_v2)) {
+				vres->v_com = c_powi(v1->v_com, real_v2);
+			} else {
+				vres->v_type = V_NUM;
+				vres->v_num = qlink(&_qzero_);
+				powervalue(v1, v2, NULL, vres);
+			}
+			if (vres->v_type == V_COM) {
+				c = vres->v_com;
+				if (!cisreal(c))
+					break;
+				vres->v_num = qlink(c->real);
+				vres->v_type = V_NUM;
+				comfree(c);
+			}
+			break;
+		case V_MAT:
+			vres->v_mat = matpowi(v1->v_mat, real_v2);
+			break;
+		default:
+			*vres = error_value(E_POWI);
+			break;
+		}
+		break;
+
 	case V_COM:
-		vres->v_com = c_powi(v1->v_com, q);
-		c = vres->v_com;
-		if (!cisreal(c))
-			return;
-		vres->v_num = qlink(c->real);
-		vres->v_type = V_NUM;
-		comfree(c);
-		return;
-	case V_MAT:
-		vres->v_mat = matpowi(v1->v_mat, q);
-		return;
+
+		/* deal with the division by 0 value */
+		if (v1->v_type == -E_1OVER0) {
+			if (cisreal(v2->v_com) && qisneg(real_v2)) {
+				vres->v_type = V_NUM;
+				vres->v_num = qlink(&_qzero_);
+			} else {
+				vres->v_type = -E_1OVER0;
+			}
+			break;
+		}
+
+		/* raise something with a real exponent */
+		switch (v1->v_type) {
+		case V_NUM:
+			if (qiszero(v1->v_num)) {
+				if (cisreal(v2->v_com) && qisneg(real_v2)) {
+					*vres = error_value(E_1OVER0);
+					break;
+				}
+				/* 0 ^ real non-neg is zero, 0 ^ complex is zero */
+				vres->v_type = V_NUM;
+				vres->v_num = qlink(&_qzero_);
+			}
+			if (cisreal(v2->v_com) && qisint(real_v2)) {
+				vres->v_num = qpowi(v1->v_num, real_v2);
+			} else {
+				vres->v_type = V_NUM;
+				vres->v_num = qlink(&_qzero_);
+				powervalue(v1, v2, NULL, vres);
+			}
+			if (vres->v_type == V_COM) {
+				c = vres->v_com;
+				if (!cisreal(c))
+					break;
+				vres->v_num = qlink(c->real);
+				vres->v_type = V_NUM;
+				comfree(c);
+			}
+			break;
+		case V_COM:
+			if (cisreal(v2->v_com) && qisint(real_v2)) {
+				vres->v_com = c_powi(v1->v_com, real_v2);
+			} else {
+				vres->v_type = V_NUM;
+				vres->v_num = qlink(&_qzero_);
+				powervalue(v1, v2, NULL, vres);
+			}
+			if (vres->v_type == V_COM) {
+				c = vres->v_com;
+				if (!cisreal(c))
+					break;
+				vres->v_num = qlink(c->real);
+				vres->v_type = V_NUM;
+				comfree(c);
+			}
+			break;
+		default:
+			*vres = error_value(E_POWI);
+			break;
+		}
+		break;
+
+	/* unspported exponent type */
 	default:
-		*vres = error_value(E_POWI);
-		return;
+		*vres = error_value(E_POWI2);
+		break;
 	}
+	return;
 }
 
 
 /*
  * Raise one value to another value's power, within the specified error.
- * Result is placed in the indicated location.
+ * Result is placed in the indicated location.  If v3 is NULL, the
+ * value conf->epsiilon is used.
  */
 void
 powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
@@ -1919,11 +2014,21 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		return;
 	}
 
-	if (v3->v_type != V_NUM || qiszero(v3->v_num)) {
+	/* NULL epsilon means use built-in epslion value */
+	if (v3 == NULL) {
+		epsilon = conf->epsilon;
+	} else {
+		if (v3->v_type != V_NUM || qiszero(v3->v_num)) {
+			*vres = error_value(E_POWER3);
+			return;
+		}
+		epsilon = v3->v_num;
+	}
+	if (qiszero(epsilon)) {
 		*vres = error_value(E_POWER3);
 		return;
 	}
-	epsilon = v3->v_num;
+
 	switch (TWOVAL(v1->v_type, v2->v_type)) {
 	case TWOVAL(V_NUM, V_NUM):
 		if (qisneg(v1->v_num)) {
@@ -2836,7 +2941,7 @@ printestr(VALUE *vp)
 				bp = vp->v_nblock->blk;
 			}
 			i = bp->datalen;
-			math_fmt("%d,%d)", i, bp->blkchunk);
+			math_fmt("%ld,%ld)", i, bp->blkchunk);
 			cp = bp->data;
 			if (i > 0) {
 				math_str("={");

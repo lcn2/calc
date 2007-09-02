@@ -17,10 +17,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.34 $
- * @(#) $Id: func.c,v 29.34 2007/02/18 14:24:56 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: func.c,v 30.2 2007/07/05 17:37:41 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -7890,75 +7890,6 @@ f_blkcpy(int count, VALUE **vals)
 
 
 S_FUNC VALUE
-f_sha(int count, VALUE **vals)
-{
-	VALUE result;
-	HASH *state;		/* pointer to hash state to use */
-	int i;			/* vals[i] to hash */
-
-	/* initialize VALUE */
-	result.v_subtype = V_NOSUBTYPE;
-
-	state = NULL;
-
-	/*
-	 * arg check
-	 */
-	if (count == 0) {
-
-		/* return an initial hash state */
-		result.v_type = V_HASH;
-		result.v_hash = hash_init(SHS_HASH_TYPE, NULL);
-
-	} else if (count == 1 && vals[0]->v_type == V_HASH &&
-		vals[0]->v_hash->hashtype == SHS_HASH_TYPE) {
-
-		/* if just a hash value, finalize it */
-		state = hash_copy(vals[0]->v_hash);
-		result.v_type = V_NUM;
-		result.v_num = qalloc();
-		result.v_num->num = hash_final(state);
-		hash_free(state);
-
-	} else {
-
-		/*
-		 * If the first value is a hash, use that as
-		 * the initial hash state
-		 */
-		if (vals[0]->v_type == V_HASH &&
-			vals[0]->v_hash->hashtype == SHS_HASH_TYPE) {
-			state = hash_copy(vals[0]->v_hash);
-			i = 1;
-
-		/*
-		 * otherwise use the default initial state
-		 */
-		} else {
-			state = hash_init(SHS_HASH_TYPE, NULL);
-			i = 0;
-		}
-
-		/*
-		 * hash the remaining values
-		 */
-		do {
-			state = hash_value(SHS_HASH_TYPE, vals[i], state);
-		} while (++i < count);
-
-		/*
-		 * return the current hash state
-		 */
-		result.v_type = V_HASH;
-		result.v_hash = state;
-	}
-
-	/* return the result */
-	return result;
-}
-
-
-S_FUNC VALUE
 f_sha1(int count, VALUE **vals)
 {
 	VALUE result;
@@ -7975,10 +7906,10 @@ f_sha1(int count, VALUE **vals)
 
 		/* return an initial hash state */
 		result.v_type = V_HASH;
-		result.v_hash = hash_init(SHS1_HASH_TYPE, NULL);
+		result.v_hash = hash_init(SHA1_HASH_TYPE, NULL);
 
 	} else if (count == 1 && vals[0]->v_type == V_HASH &&
-		vals[0]->v_hash->hashtype == SHS1_HASH_TYPE) {
+		vals[0]->v_hash->hashtype == SHA1_HASH_TYPE) {
 
 		/* if just a hash value, finalize it */
 		state = hash_copy(vals[0]->v_hash);
@@ -7994,7 +7925,7 @@ f_sha1(int count, VALUE **vals)
 		 * the initial hash state
 		 */
 		if (vals[0]->v_type == V_HASH &&
-			vals[0]->v_hash->hashtype == SHS1_HASH_TYPE) {
+			vals[0]->v_hash->hashtype == SHA1_HASH_TYPE) {
 			state = hash_copy(vals[0]->v_hash);
 			i = 1;
 
@@ -8002,7 +7933,7 @@ f_sha1(int count, VALUE **vals)
 		 * otherwise use the default initial state
 		 */
 		} else {
-			state = hash_init(SHS1_HASH_TYPE, NULL);
+			state = hash_init(SHA1_HASH_TYPE, NULL);
 			i = 0;
 		}
 
@@ -8010,76 +7941,7 @@ f_sha1(int count, VALUE **vals)
 		 * hash the remaining values
 		 */
 		do {
-			state = hash_value(SHS1_HASH_TYPE, vals[i], state);
-		} while (++i < count);
-
-		/*
-		 * return the current hash state
-		 */
-		result.v_type = V_HASH;
-		result.v_hash = state;
-	}
-
-	/* return the result */
-	return result;
-}
-
-
-S_FUNC VALUE
-f_md5(int count, VALUE **vals)
-{
-	VALUE result;
-	HASH *state;		/* pointer to hash state to use */
-	int i;			/* vals[i] to hash */
-
-	/* initialize VALUE */
-	result.v_subtype = V_NOSUBTYPE;
-
-	state = NULL;
-
-	/*
-	 * arg check
-	 */
-	if (count == 0) {
-
-		/* return an initial hash state */
-		result.v_type = V_HASH;
-		result.v_hash = hash_init(MD5_HASH_TYPE, NULL);
-
-	} else if (count == 1 && vals[0]->v_type == V_HASH &&
-		vals[0]->v_hash->hashtype == MD5_HASH_TYPE) {
-
-		/* if just a hash value, finalize it */
-		state = hash_copy(vals[0]->v_hash);
-		result.v_type = V_NUM;
-		result.v_num = qalloc();
-		result.v_num->num = hash_final(state);
-		hash_free(state);
-
-	} else {
-
-		/*
-		 * If the first value is a hash, use that as
-		 * the initial hash state
-		 */
-		if (vals[0]->v_type == V_HASH &&
-			vals[0]->v_hash->hashtype == MD5_HASH_TYPE) {
-			state = hash_copy(vals[0]->v_hash);
-			i = 1;
-
-		/*
-		 * otherwise use the default initial state
-		 */
-		} else {
-			state = hash_init(MD5_HASH_TYPE, NULL);
-			i = 0;
-		}
-
-		/*
-		 * hash the remaining values
-		 */
-		do {
-			state = hash_value(MD5_HASH_TYPE, vals[i], state);
+			state = hash_value(SHA1_HASH_TYPE, vals[i], state);
 		} while (++i < count);
 
 		/*
@@ -8551,8 +8413,6 @@ STATIC CONST struct builtin builtins[] = {
 	 "transpose of matrix"},
 	{"max", 0, IN, 0, OP_NOP, 0, f_max,
 	 "maximum value"},
-	{"md5", 0, IN, 0, OP_NOP, 0, f_md5,
-	 "MD5 Hash Algorithm"},
 	{"memsize", 1, 1, 0, OP_NOP, 0, f_memsize,
 	 "number of octets used by the value, including overhead"},
 	{"meq", 3, 3, 0, OP_NOP, f_meq, 0,
@@ -8693,8 +8553,6 @@ STATIC CONST struct builtin builtins[] = {
 	 "set specified bit in string"},
 	{"sgn", 1, 1, 0, OP_SGN, qsign, 0,
 	 "sign of value (-1, 0, 1)"},
-	{"sha", 0, IN, 0, OP_NOP, 0, f_sha,
-	 "old Secure Hash Algorithm (SHS FIPS Pub 180)"},
 	{"sha1", 0, IN, 0, OP_NOP, 0, f_sha1,
 	 "Secure Hash Algorithm (SHS-1 FIPS Pub 180-1)"},
 	{"sin", 1, 2, 0, OP_NOP, 0, f_sin,

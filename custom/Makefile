@@ -16,11 +16,11 @@
 # A copy of version 2.1 of the GNU Lesser General Public License is
 # distributed with calc under the filename COPYING-LGPL.  You should have
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
-# 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 29.32 $
-# @(#) $Id: Makefile,v 29.32 2007/02/18 14:24:56 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile,v $
+# @(#) $Revision: 30.12 $
+# @(#) $Id: Makefile.head,v 30.12 2007/09/01 19:54:03 chongo Exp $
+# @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile.head,v $
 #
 # Under source code control:	1997/03/09 02:28:54
 # File existed as early as:	1997
@@ -31,6 +31,21 @@
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
 
+#if 0	/* start of skip for non-Gnu makefiles */
+##############################################################################
+#-=-=-=-=-=-=-=-=- Identify the target machine, if possible -=-=-=-=-=-=-=-=-#
+##############################################################################
+
+# NOTE: You can force a target value by defining target as in:
+#
+#	make ...__optional_arguments_... target=value
+
+# Try uname -s if the target was not alreadhy set on the make command line
+#
+ifeq ($(target),)
+target=$(shell uname -s 2>/dev/null)
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 ##############################################################################
 #-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
@@ -40,38 +55,40 @@
 #
 # Put your custom calc resource files here.
 #
-CUSTOM_CALC_FILES= argv.cal halflen.cal pzasusb8.cal pmodm127.cal
+CUSTOM_CALC_FILES= argv.cal halflen.cal pzasusb8.cal pmodm127.cal register.cal
 
 # The custom help files to install
 #
 # Put your custom help files here.
 #
-CUSTOM_HELP= argv devnull help sysinfo pzasusb8 pmodm127
+CUSTOM_HELP= argv devnull help sysinfo pzasusb8 pmodm127 register
 
-# Any .h files that are needed by programs that use libcustcalc.a
+# Any .h files that are needed by programs that use libcustcalc${LIB_EXT_VERS}
 #
 # Put any .h files that you add which might be useful to other
 # programs here.
 #
 CUSTOM_H_SRC=
 
-# Any .c files that are needed to build libcustcalc.a.
+# Any .c files that are needed to build libcustcalc${LIB_EXT_VERS}.
 # Don't put ${REQUIRED_SRC} files in this list.
 #
 # There MUST be a .c in CUSTOM_SRC for every .o in CUSTOM_OBJ.
 #
 # Put your custom .c files here.
 #
-CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c c_pzasusb8.c c_pmodm127.c
+CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c c_pzasusb8.c \
+	c_pmodm127.c c_register.c
 
-# Any .o files that are needed by program that use libcustcalc.a.
+# Any .o files that are needed by program that use libcustcalc${LIB_EXT_VERS}.
 # Don't put ${REQUIRED_OBJ} files in this list.
 #
 # There MUST be a .c in CUSTOM_SRC for every .o in CUSTOM_OBJ.
 #
 # Put your custom .o files here.
 #
-CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o c_pzasusb8.o c_pmodm127.o
+CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o c_pzasusb8.o \
+	c_pmodm127.o c_register.o
 
 ##############################################################################
 #-=-=-=-=-=-=- Defaults in case you want to build from this dir -=-=-=-=-=-=-#
@@ -229,79 +246,12 @@ DEBUG= -O3 -g3
 #DEBUG= -O3 -ipa
 #DEBUG= -O3 -g3 -ipa
 #
-#DEBUG= -std0 -fast -O4 -static
-#
 #DEBUG= -g
 #DEBUG= -g3
 #DEBUG= -gx
 #DEBUG= -WM,-g
 #
 #DEBUG= -O2 -gstabs+ -DWINDOZ
-
-# How to compile .c files so that we can form a shared library.
-#
-# CC_SHARE= -fPIC
-#	Building for shared library using the gcc position independent code
-#	(PIC) model.
-# CC_SHARE=
-#	Do not build for shared libraries.
-#
-# NOTE: If CC_SHARE= is empty, then you very likely want to set
-#	CC_SHLIB= and LD_SHARE= to empty.
-#
-# If in doubt, try:
-#	CC_SHARE= -fPIC
-# If that fails try:
-#	CC_SHARE=
-#
-# NOTE: Shared libraries are not yet supported.  For now, use CC_SHARE=
-#
-#CC_SHARE= -fPIC
-CC_SHARE=
-
-# How build a shared librtary
-# NOTE: This is not yet supported
-#
-# CC_SHLIB= -shared "-Wl,-soname,libcalc.so.`./ver_calc${EXE} -V`"
-#	Building for shared library using the gcc position independent code
-#	(PIC) model.
-# CC_SHLIB=
-#	Do not build for shared libraries.
-#
-# NOTE: If CC_SHARE= is empty, then you very likely want to set
-#	CC_SHLIB= and LD_SHARE= to empty.
-#
-# If in doubt, try:
-#	CC_SHLIB= -shared "-Wl,-soname,libcalc.so.`./ver_calc${EXE} -V`"
-# If that fails, try:
-#	CC_SHLIB=
-#
-# NOTE: Shared libraries are not yet supported.  For now, use CC_SHLIB=
-#
-#CC_SHLIB= -shared "-Wl,-soname,libcalc.so.`./ver_calc${EXE} -V`"
-CC_SHLIB=
-
-# How to link with a shared library
-# NOTE: This is not yet supported
-#
-# LD_SHARE= -L.
-#	Building for shared library using the gcc position independent code
-#	(PIC) model.
-# LD_SHARE=
-#
-# NOTE: If CC_SHARE= is empty, then you very likely want to set
-#	CC_SHLIB= and LD_SHARE= to empty.
-#	Do not build for shared libraries.
-#
-# If in doubt, try:
-#	LD_SHARE= -L.
-# If that fails, try:
-#	LD_SHARE=
-#
-# NOTE: Shared libraries are not yet supported.  For now, use LD_SHARE=
-#
-#LD_SHARE= -L.
-LD_SHARE=
 
 # Some systems require one to use ranlib to add a symbol table to
 # a *.a link library.  Set RANLIB to the utility that performs this
@@ -319,6 +269,15 @@ RANLIB=ranlib
 #
 MAKE_FILE= Makefile
 #MAKE_FILE=
+
+# Controlling file makefile basename (without the path)
+#
+# This is the basename same of the makefile that may/does/will drive
+# this makefile.
+#
+# If in doubt, set TOP_MAKE_FILE to Makefile
+#
+TOP_MAKE_FILE= Makefile
 
 # If you do not wish to use purify, set PURIFY to an empty string.
 #
@@ -401,205 +360,384 @@ MKDIR_ARG= -p
 EXT=
 #EXT=.exe
 
-################
-# compiler set #
-################
+# The default calc versions
 #
-# Select your compiler type by commenting out one of the cc sets below:
+VERSION= 2.12.2
+VERS= 2.12.2
+VER= 2.12
+VE= 2
+
+# Names of shared libraries with versions
+#
+LIB_EXT= .so
+LIB_EXT_VERS= ${LIB_EXT}.${VERS}
+LIB_EXT_VER= ${LIB_EXT}.${VER}
+LIB_EXT_VE= ${LIB_EXT}.${VE}
+
+# standard tools
+#
+SHELL= /bin/sh
+SED= sed
+MAKEDEPEND= makedepend
+GREP= egrep
+CHMOD= chmod
+FMT= fmt
+SORT= sort
+CMP= cmp
+AR= ar
+RM= rm
+TOUCH= touch
+MKDIR= mkdir
+RMDIR= rmdir
+MV= mv
+CP= cp
+CO= co
+TRUE= true
+MAKE= make
+LN= ln
+AWK= awk
+
+# EXTRA_CFLAGS are flags given to ${CC} when compiling C files
+# EXTRA_LDFLAGS are flags given to ${CC} when linking progs
+#
+# Both CFLAGS and LDFLAGS are left blank in this Makefile by
+# default so that users may use them on the make command line
+# to always the way that C is compiled and files are linked
+# respectively.  For example:
+#
+#	make all EXTRA_CFLAGS="-DMAGIC" EXTRA_LDFLAGS="-lmagic"
+#
+# NOTE: These should be left blank in this Makefile to make it
+#       easier to add stuff on the command line.  If you want to
+#	to change the way calc is compiled by this Makefile, change
+#	the appropirate host target section below or a flag above.
+#
+EXTRA_CFLAGS=
+EXTRA_LDFLAGS=
+
+# COMMON_CFLAGS are the common ${CC} flags used for all progs, both
+#	    intermediate and final calc and calc related progs
+#
+COMMON_CFLAGS= -DCALC_SRC ${ALLOW_CUSTOM} ${CCWARN} ${CCMISC} ${EXTRA_CFLAGS}
+
+# COMMON_LDFLAGS are the common flags used for linking all progs, both
+#	     intermediate and final calc and calc related progs
+#
+COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
+
+###########################################
+# Set the default compile flags for ${CC} #
+###########################################
+
+#if 0	/* start of skip for non-Gnu makefiles */
+
+# Required flags to compile C files for calc
+#
+# ICFLAGS are given to ${CC} for intermediate progs used to help compile calc
+# CFLAGS are given to ${CC} for calc progs other than intermediate progs
+#
+# NOTE: This does not work for: make-XYZ-only and BLD_TYPE != make-XYZ-only
+#
+ifeq ($(BLD_TYPE),calc-static-only)
+ICFLAGS= ${COMMON_CFLAGS} ${CC_STATIC}
+else
+ICFLAGS= ${COMMON_CFLAGS} ${CC_SHARE}
+endif
+CFLAGS= ${ICFLAGS} ${CCOPT}
+
+# Required flags to link files for calc
+#
+# ILDFLAGS for ${CC} in linking intermediate progs used to help compile calc
+# LDFLAGS for ${CC} in linking calc progs other than intermediate progs
+#
+ILDFLAGS= ${COMMON_LDFLAGS}
+LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
+
+#endif	/* end of skip for non-Gnu makefiles */
+# start of host target cut - Do not remove this line
+##############################################################################
+#-=-=-=-=-=- host target section - targets that override defaults -=-=-=-=-=-#
+##############################################################################
+
+# Common values set in targets
+#
+# BLD_TYPE determines if calc is built with static and/or dynamic libs.
+#	       Set this value to one of:
+#
+#	BLD_TYPE= calc-dynamic-only
+#	BLD_TYPE= calc-static-only
+#
+# CC_SHARE are flags given to ${CC} to build .o files suitable for shared libs
+# DEFAULT_LIB_INSTALL_PATH is where calc progs look for calc shared libs
+# LD_SHARE are common flags given to ${CC} to link with shared libraries
+# LIBCALC_SHLIB are flags given to ${CC} to build libcalc shared lib
+# LIBCUSTCALC_SHLIB are flags given to ${CC} to build libcustcalc shared lib
+#
+#	NOTE: The above 4 values are unused if BLD_TYPE= calc-static-only
+#
+# CC_STATIC are flags given to ${CC} to build .o files suitable for static libs
+# LD_STATIC are common flags given to ${CC} to link with static libraries
+# LIBCALC_STATIC are flags given to ${CC} to build libcalc static lib
+# LIBCUSTCALC_STATIC are flags given to ${CC} to build libcustcalc static lib
+#
+#	NOTE: The above 4 values are unused if BLD_TYPE= calc-dynamic-only
 #
 # CCOPT are flags given to ${CC} for optimization
 # CCWARN are flags given to ${CC} for warning message control
 # CCWERR are flags given to ${CC} to make warnings fatal errors
-#	NOTE: CCWERR is only set in development Makefiles and must
-#	      only be used with ${CC}, not ${LCC}.
+#	NOTE: CCWERR is only set in development Makefiles and must only be
+#	      used with ${CC}, not ${LCC}.  If you do not want the compiler
+#	      to abort on warnings, then leave CCWERR blank.
 # CCMISC are misc flags given to ${CC}
-#
-# CFLAGS are all flags given to ${CC} [[often includes CCOPT, CCWARN, CCMISC]]
-# ICFLAGS are given to ${CC} for intermediate progs
-#
-# LDFLAGS are flags given to ${CC} for linking .o files
-# ILDFLAGS are flags given to ${CC} for linking .o files for intermediate progs
 #
 # LCC how the the C compiler is invoked on locally executed intermediate progs
 # CC is how the the C compiler is invoked (with an optional Purify)
 #
-###
+# Specific target overrides or modifications to default values
+
+##########################################################################
+# NOTE: If your target is not supported below and the default target	 #
+#	is not suitable for your needs, please send to the:		 #
+#									 #
+#		calc-contrib at asthe dot com				 #
+#									 #
+#	EMail address an "ifeq ($(target),YOUR_TARGET_NAME)" ... "endif" #
+#	set of lines so that we can consider them for the next release.  #
+##########################################################################
+
+#if 0	/* start of skip for non-Gnu makefiles */
+################
+# Linux target #
+################
+
+ifeq ($(target),Linux)
 #
-# Linux set
+BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+#
+CC_STATIC=
+LD_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
 #
 CCWARN= -Wall -W -Wno-comment
-CCWERR= -Werror
-CCOPT= ${DEBUG} ${CC_SHARE}
+CCWERR=
+CCOPT= ${DEBUG}
 CCMISC=
-#
-CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
-ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -I/usr/include -I..
-#
-LDFLAGS= ${LD_SHARE}
-ILDFLAGS=
 #
 LCC= gcc
 CC= ${PURIFY} ${LCC} ${CCWERR}
 #
-###
-#
-# Apple Mac OS X
-#
-#CCWARN= -Wall -W -Wno-comment
-#CCWERR=
-#CCOPT= ${DEBUG} ${CC_SHARE}
-#CCMISC= -arch i386 -arch ppc
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -I/usr/include -I..
-#
-#LDFLAGS= ${LD_SHARE} -arch i386 -arch ppc
-#ILDFLAGS=
-#
-#LCC= gcc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-###
-#
-# gcc set
-#
-#CCWARN= -Wall -W -Wno-comment
-#CCWERR=
-#CCOPT= ${DEBUG} ${CC_SHARE}
-#CCMISC=
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -I/usr/include -I..
-#
-#LDFLAGS= ${LD_SHARE}
-#ILDFLAGS=
-#
-#LCC= gcc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-###
-#
-# common cc set
-#
-# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
-# If -O2 -g is not supported try:			DEBUG= -O -g
-#
-#CCWARN=
-#CCWERR=
-#CCOPT= ${DEBUG} ${CC_SHARE}
-#CCMISC=
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -I/usr/include -I..
-#
-#LDFLAGS= ${LD_SHARE}
-#ILDFLAGS=
-#
-#LCC= cc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-###
-#
-# HP-UX set
-#
-# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
-# If -O2 -g is not supported try:			DEBUG= -O -g
-#
-# Warning: Some HP-UX optimizers are brain-damaged.
-# If 'make check' fails use:				DEBUG= -g
-#
-#CCWARN=
-#CCWERR=
-#CCOPT= ${DEBUG} ${CC_SHARE}
-#CCMISC= +e
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -I/usr/include -I..
-#
-#LDFLAGS= ${LD_SHARE}
-#ILDFLAGS=
-#
-#LCC= cc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-###
-#
-# AIX RS/6000 set
-#
-# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
-# If -O2 -g is not supported try:			DEBUG= -O -g
-#
-#CCWARN=
-#CCWERR=
-#CCOPT= ${DEBUG} ${CC_SHARE}
-#CCMISC= -qlanglvl=ansi
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -I/usr/include -I..
-#
-#LDFLAGS= ${LD_SHARE}
-#ILDFLAGS=
-#
-#LCC= cc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-###
-#
-# Solaris Sun cc compiler set
-#
-# If -O3 -g3 is not supported try:			DEBUG= -O2 -g
-# If -O2 -g is not supported try:			DEBUG= -O -g
-#
-# We need -DFORCE_STDC to make use of ANSI-C like features and
-# to avoid the use of -Xc (which as a lose performance wise).
-#
-#CCWARN=
-#CCWERR=
-#CCOPT= ${DEBUG} ${CC_SHARE}
-#CCMISC= -DFORCE_STDC
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -I/usr/include -I..
-#
-#LDFLAGS= ${LD_SHARE}
-#ILDFLAGS=
-#
-#LCC= cc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-###
-#
-# Dec Alpha / Compaq Tru64 cc (non-gnu) compiler set
-#
-# For better performance, set the following:	DEBUG= -std0 -fast -O4 -static
-#
-#CCWARN=
-#CCWERR=
-#CCOPT= ${DEBUG} ${CC_SHARE}
-#CCMISC=
-#
-#CFLAGS= -DCALC_SRC ${CCWARN} ${CCOPT} ${CCMISC} -I/usr/include -I..
-#ICFLAGS= -DCALC_SRC ${CCWARN} ${CCMISC} -Wno-unused -I/usr/include -I..
-#
-#LDFLAGS= ${LD_SHARE}
-#ILDFLAGS=
-#
-#LCC= cc
-#CC= ${PURIFY} ${LCC} ${CCWERR}
+endif
 
+#################################
+# Apple MacOS X / Darwin target #
+#################################
 
+ifeq ($(target),Darwin)
+#
+BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/sw/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= ${DARWIN_ARCH}
+LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib
+LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib
+#
+CC_STATIC=
+LD_STATIC= ${DARWIN_ARCH}
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC= ${DARWIN_ARCH}
+#
+LCC= MACOSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+# Darmin dynamic shared lib filenames
+LIB_EXT:= .dylib
+LIB_EXT_VERS:= .${VERS}${LIB_EXT}
+LIB_EXT_VER:= .${VER}${LIB_EXT}
+LIB_EXT_VE:= .${VE}${LIB_EXT}
+# compile Universal by default
+DARWIN_ARCH= -arch i386 -arch ppc
+MACOSX_DEPLOYMENT_TARGET=10.4
+#
+endif
+
+##################
+# FreeBSD target #
+##################
+
+########################################################################
+# NOTE: You MUST either use gmake (GNU Make) or you must try your luck #
+#       with Makefile.simple and custom/Makefile.simple versions.      #
+#	See HOWTO.INSTALL for more information.                        #
+########################################################################
+
+ifeq ($(target),FreeBSD)
+#
+BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+#
+CC_STATIC=
+LD_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+MAKE= gmake
+#
+endif
+
+#######################################################
+# simple target - values used to form Makefile.simple #
+#######################################################
+
+# NOTE: This is not a real host target.  The simple target
+#	exists only to form the Makefile.simple file.
+
+ifeq ($(target),simple)
+#endif	/* end of skip for non-Gnu makefiles */
+#
+BLD_TYPE= calc-static-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+#
+CC_STATIC=
+LD_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= cc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+# The simple makefile forces the use of static ${CC} flags
+#
+# ICFLAGS are given to ${CC} for intermediate progs used to help compile calc
+# CFLAGS are given to ${CC} for calc progs other than intermediate progs
+# ILDFLAGS for ${CC} in linking intermediate progs used to help compile calc
+# LDFLAGS for ${CC} in linking calc progs other than intermediate progs
+#
+ICFLAGS= ${COMMON_CFLAGS} ${CC_STATIC}
+CFLAGS= ${ICFLAGS} ${CCOPT}
+#
+ILDFLAGS= ${COMMON_LDFLAGS} ${LD_STATIC}
+LDFLAGS= ${LD_DEBUG} ${ILDFLAGS} ${LIBCALC_STATIC} ${LIBCUSTCALC_STATIC}
+#
+#if 0	/* start of skip for non-Gnu makefiles */
+endif
+
+###################################################
+# default target - when no specific target exists #
+###################################################
+
+# NOTE: This is the default generic host target.  Used when no other
+#	host target matches.
+
+ifeq ($(target),)
+#
+BLD_TYPE= calc-static-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+#
+CC_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+LD_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+endif
+
+###########################################
+# Set the default compile flags for ${CC} #
+###########################################
+
+# Required flags to compile C files for calc
+#
+# ICFLAGS are given to ${CC} for intermediate progs used to help compile calc
+# CFLAGS are given to ${CC} for calc progs other than intermediate progs
+#
+# NOTE: This does not work for: make-XYZ-only and BLD_TYPE != make-XYZ-only
+#
+ifeq ($(BLD_TYPE),calc-static-only)
+ICFLAGS= ${COMMON_CFLAGS} ${CC_STATIC}
+else
+ICFLAGS= ${COMMON_CFLAGS} ${CC_SHARE}
+endif
+CFLAGS= ${ICFLAGS} ${CCOPT}
+
+# Required flags to link files for calc
+#
+# ILDFLAGS for ${CC} in linking intermediate progs used to help compile calc
+# LDFLAGS for ${CC} in linking calc progs other than intermediate progs
+#
+ILDFLAGS= ${COMMON_LDFLAGS}
+LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
+
+#endif	/* end of skip for non-Gnu makefiles */
+
+#######################################################################
+#-=-=-=-=-=- end of target section - only make rules below -=-=-=-=-=-#
+#######################################################################
+# end of host target cut - Do not remove this line
 ##############################################################################
 #-=-=-=-=-=-=-=-=- Be careful if you change something below -=-=-=-=-=-=-=-=-#
 ##############################################################################
 
 # These .c files are required for the main custom interface and
-# for the custom support functions.
+# for the custom support functions for libcustcalc${LIB_EXT_VERS}.
 #
 # There MUST be a .c for every .o in REQUIRED_OBJ.
 #
 REQUIRED_SRC= custtbl.c
 
 # These .o files correspond to the .c files in REQUIRED_SRC
+# for libcustcalc${LIB_EXT_VERS}.
 #
 # There MUST be a .o for every .c in REQUIRED_SRC.
 #
@@ -609,11 +747,11 @@ REQUIRED_OBJ= custtbl.o
 #
 INSTALL_H_SRC= ${CUSTOM_H_SRC}
 
-# These .c files are used to form libcustcalc.a.
+# These .c files are used to form libcustcalc${LIB_EXT_VERS}.
 #
 CUSTCALC_SRC= ${REQUIRED_SRC} ${CUSTOM_SRC}
 
-# These .o files are used to form libcustcalc.a.
+# These .o files are used to form libcustcalc${LIB_EXT_VERS}.
 #
 CUSTCALC_OBJ= ${REQUIRED_OBJ} ${CUSTOM_OBJ}
 
@@ -631,56 +769,43 @@ H_SRC= ${CUSTOM_H_SRC}
 # directory but are installed as help files from the help/Makefile.
 #
 DISTLIST= ${CUSTCALC_SRC} ${CUSTOM_CALC_FILES} ${CUSTOM_HELP} \
-	${INSTALL_H_SRC} CUSTOM_CAL HOW_TO_ADD ${MAKE_FILE}
+	${INSTALL_H_SRC} CUSTOM_CAL HOW_TO_ADD ${MAKE_FILE}.head \
+	${MAKE_FILE}.tail
 
 # These files are used to make (but not built) a calc .a link library
 #
 CALCLIBLIST= ${CUSTCALC_SRC} ${INSTALL_H_SRC} ${MAKE_FILE} HOW_TO_ADD
 
-# This is the custom .a link library that is build
+# This is the custom dynbamic shared library that is build
 #
-CALC_LIBCUSTOM= libcustcalc.a
+CALC_DYNAMIC_LIBCUSTCALC= libcustcalc${LIB_EXT_VERS}
+
+# This is the custom static library that is build
+#
+CALC_STATIC_LIBCUSTCALC= libcustcalc.a
 
 # complete list of targets
 #
-TARGETS= ${CALC_LIBCUSTOM} ${CUSTCALC_OBJ}
+TARGETS= ${BLD_TYPE} Makefile.simple
 
-# required vars
+###
 #
-SHELL= /bin/sh
-MAKE_FILE= Makefile
-
-# standard tools
+# The reason for this Makefile	:-)
 #
-SED= sed
-MAKEDEPEND= makedepend
-CHMOD= chmod
-SORT= sort
-CMP= cmp
-AR= ar
-RM= rm
-TOUCH= touch
-MKDIR= mkdir
-RMDIR= rmdir
-MV= mv
-CP= cp
-CO= co
-TRUE= true
-MAKE= make
-
-##
-#
-# Standard rules and targets
-#
-##
+###
 
 all: ${TARGETS} ${INSTALL_H_SRC} ${CUSTOM_CALC_FILES} \
 	${CUSTOM_HELP} ${MAKE_FILE} .all
 
-libcustcalc.a: ${CUSTCALC_OBJ} ${MAKE_FILE} ../${MAKE_FILE}
-	-${RM} -f libcustcalc.a
-	${AR} qc libcustcalc.a ${CUSTCALC_OBJ}
-	${RANLIB} libcustcalc.a
+calc-dynamic-only: ${CUSTCALC_OBJ} ${CALC_DYNAMIC_LIBCUSTCALC}
+
+calc-static-only: ${CUSTCALC_OBJ} ${CALC_STATIC_LIBCUSTCALC}
+
+custom/libcustcalc${LIB_EXT_VERS}: libcustcalc${LIB_EXT_VERS} \
+	${CALC_STATIC_LIBCUSTCALC}
+
+libcustcalc${LIB_EXT_VERS}: ${CUSTCALC_OBJ} ${MAKE_FILE}
+	${CC} ${LIBCUSTCALC_SHLIB} ${CUSTCALC_OBJ} -o $@
 
 ##
 #
@@ -702,6 +827,18 @@ c_sysinfo.o: c_sysinfo.c ${MAKE_FILE}
 .all:
 	${RM} -f .all
 	${TOUCH} .all
+
+###
+#
+# building calc-static and static lib*.a libraires
+#
+###
+
+libcustcalc.a: ${CUSTCALC_OBJ} ${MAKE_FILE}
+	${RM} -f libcustcalc.a
+	${AR} qc libcustcalc.a ${CUSTCALC_OBJ}
+	${RANLIB} libcustcalc.a
+	${CHMOD} 0644 libcustcalc.a
 
 ##
 #
@@ -733,6 +870,19 @@ calcliblist: ${CALCLIBLIST}
 	    fi; \
 	done
 
+#if 0	/* start of skip for non-Gnu makefiles */
+Makefile.simple: ${MAKE_FILE}
+	${V} echo '=-=-=-=-= custom/${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${Q} ${RM} -f $@
+	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
+	    ${MAKE_FILE} > $@
+	${Q} echo >> $@
+	${Q} echo 'Makefile.simple:' >> $@
+	${Q} echo '	$${Q} if [ ! -f Makefile.simple ]; then '"\\" >> $@
+	${Q} echo '		$${CP} -f $${MAKE_FILE} $$@; fi' >> $@
+	${V} echo '=-=-=-=-= custom/${MAKE_FILE} end of $@ rule =-=-=-=-='
+#endif	/* end of skip for non-Gnu makefiles */
+
 ##
 #
 # Home grown make dependency rules.  Your system make not support
@@ -746,14 +896,14 @@ calcliblist: ${CALCLIBLIST}
 ##
 
 depend:
-	${Q} if [ -f Makefile.bak ]; then \
-	    echo "Makefile.bak exists, remove or move it out of the way"; \
+	${Q} if [ -f ${MAKE_FILE}.bak ]; then \
+	    echo "${MAKE_FILE}.bak exists, remove or move it"; \
 	    exit 1; \
 	else \
 	    ${TRUE}; \
 	fi
 	${Q} echo forming custom/skel
-	-${Q} ${RM} -rf skel
+	${Q} ${RM} -rf skel
 	${Q} ${MKDIR} skel
 	${Q} ${MKDIR} skel/custom
 	-${Q} for i in ${C_SRC} /dev/null; do \
@@ -773,8 +923,8 @@ depend:
 		>> "skel/custom/$$i"; \
 	    echo '#endif /* '"$$tag"' */' >> "skel/custom/$$i"; \
 	done
-	${Q} (cd ..; $(MAKE) hsrc)
-	${Q} for i in `cd ..; $(MAKE) h_list 2>&1 | \
+	${Q} (cd ..; ${MAKE} -f ${TOP_MAKE_FILE} hsrc)
+	${Q} for i in `cd ..; ${MAKE} -f ${TOP_MAKE_FILE} h_list 2>&1 | \
 	    ${SED} -e '/Entering directory/d' \
 		   -e '/Nothing to be done/d' \
 		   -e '/Leaving directory/d'` /dev/null; do \
@@ -788,38 +938,39 @@ depend:
 		>> "skel/$$i"; \
 	    echo '#endif /* '"$$tag"' */' >> "skel/$$i"; \
 	done
-	-${Q} ${RM} -f skel/custom/makedep.out
+	${Q} ${RM} -f skel/custom/makedep.out
 	${Q} echo custom/skel formed
 	${Q} echo forming custom dependency list
-	${Q} echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
-	    skel/custom/makedep.out
+	${Q} :> skel/custom/makedep.out
 	${Q} cd skel/custom; ${MAKEDEPEND} -I.. -w 1 -f makedep.out ${C_SRC}
 	-${Q} for i in ${C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
 	    fi; \
 	done >> skel/custom/makedep.out
+	${Q} LANG=C ${SORT} -u skel/custom/makedep.out \
+			    -o skel/custom/makedep.out
 	${Q} echo custom dependency list formed
-	${Q} echo forming new custom/Makefile
-	-${Q} ${RM} -f Makefile.bak
-	${Q} ${MV} Makefile Makefile.bak
-	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
-	${Q} echo "" >> Makefile
-	${Q} ${SED} -n '3,$$p' skel/custom/makedep.out | \
-		LANG=C ${SORT} -u >> Makefile
-	-${Q} ${RM} -rf skel
-	-${Q} if ${CMP} -s Makefile.bak Makefile; then \
-	    echo 'custom Makefile was already up to date'; \
-	    ${MV} -f Makefile.bak Makefile; \
+	${Q} echo forming new custom/${MAKE_FILE}
+	${Q} ${RM} -f ${MAKE_FILE}.bak
+	${Q} ${MV} ${MAKE_FILE} ${MAKE_FILE}.bak
+	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' ${MAKE_FILE}.bak > ${MAKE_FILE}
+	${Q} ${GREP} -v '^#' skel/custom/makedep.out >> ${MAKE_FILE}
+	${Q} ${RM} -rf skel
+	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
+	    echo 'custom ${MAKE_FILE} was already up to date'; \
+	    ${MV} -f ${MAKE_FILE}.bak ${MAKE_FILE}; \
 	else \
-	    ${RM} -f Makefile.tmp; \
-	    ${MV} Makefile Makefile.tmp; \
-	    if [ -d RCS ]; then \
-		${CO} -l Makefile; \
+	    ${RM} -f ${MAKE_FILE}.tmp; \
+	    ${MV} ${MAKE_FILE} ${MAKE_FILE}.tmp; \
+	    if [ -d RCS -a ! -w "${MAKE_FILE}" ]; then \
+		${CO} -l ${MAKE_FILE}; \
 	    fi ;\
-	    ${MV} Makefile.tmp Makefile; \
+	    ${MV} ${MAKE_FILE}.tmp ${MAKE_FILE}; \
 	    if [ -d RCS ]; then \
-	    echo 'new custom Makefile formed -- you need to check it in'; \
+	    echo '****************************************************'; \
+	    echo 'new custom ${MAKE_FILE} formed -- you to check it in'; \
+	    echo '****************************************************'; \
 	    fi; \
 	fi
 
@@ -845,7 +996,7 @@ echo_inst_files:
 		echo __file__ ${CUSTOMCALDIR}/$$i; \
 	    fi; \
 	done
-	${Q} for i in ${CALC_LIBCUSTOM} /dev/null; do \
+	${Q} for i in ${CALC_DYNAMIC_LIBCUSTCALC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo __file__ ${CUSTOMCALDIR}/$$i; \
 	    fi; \
@@ -858,11 +1009,19 @@ echo_inst_files:
 ##
 
 clean:
-	-${RM} -f ${CUSTCALC_OBJ}
+	${RM} -f ${CUSTCALC_OBJ}
 
-clobber:
-	-${RM} -f ${TARGETS}
-	${RM} -f .all Makefile.tmp Makefile.bak
+clobber: clean
+	${RM} -f ${BLD_TYPE}
+	${RM} -f .all ${MAKE_FILE}.tmp ${MAKE_FILE}.bak
+	${RM} -f libcustcalc${LIB_EXT_VERS}
+	${RM} -f libcustcalc${LIB_EXT_VER}
+	${RM} -f libcustcalc${LIB_EXT_VE}
+	${RM} -f libcustcalc${LIB_EXT}
+	${RM} -f libcustcalc.a
+#if 0	/* start of skip for non-Gnu makefiles */
+	${RM} -f Makefile.simple
+#endif	/* end of skip for non-Gnu makefiles */
 
 # install everything
 #
@@ -995,19 +1154,28 @@ install: all
 		echo "installed ${T}${CUSTOMHELPDIR}/$$i"; \
 	    fi; \
 	done
+	-${Q} if [ -f "${T}${CUSTOMCALDIR}/libcustcalc.a" ]; then \
+	    ${RM} -f ${T}${CUSTOMCALDIR}/libcustcalc.a; \
+	    echo "removed old ${T}${CUSTOMCALDIR}/libcustcalc.a"; \
+	fi
 	-${Q} if [ ! -z ${ALLOW_CUSTOM} ]; then \
-	    if ${CMP} -s libcustcalc.a ${T}${CUSTOMCALDIR}/libcustcalc.a; then \
+	  if [ -f libcustcalc.a ]; then \
+	    if ${CMP} -s libcustcalc.a ${T}${LIBDIR}/libcustcalc.a; then \
 		${TRUE}; \
 	    else \
-		${RM} -f ${T}${CUSTOMCALDIR}/libcustcalc.a.new; \
-		${CP} -f libcustcalc.a ${T}${CUSTOMCALDIR}/libcustcalc.a.new; \
-		${CHMOD} 0644 ${T}${CUSTOMCALDIR}/libcustcalc.a.new; \
-		${MV} -f ${T}${CUSTOMCALDIR}/libcustcalc.a.new \
-		      ${T}${CUSTOMCALDIR}/libcustcalc.a; \
-		${RANLIB} ${T}${CUSTOMCALDIR}/libcustcalc.a; \
-		echo "installed ${T}${CUSTOMCALDIR}/libcustcalc.a"; \
+		${RM} -f ${T}${LIBDIR}/libcustcalc.a.new; \
+		${CP} -f libcustcalc.a ${T}${LIBDIR}/libcustcalc.a.new; \
+		${CHMOD} 0644 ${T}${LIBDIR}/libcustcalc.a.new; \
+		${MV} -f ${T}${LIBDIR}/libcustcalc.a.new \
+		      ${T}${LIBDIR}/libcustcalc.a; \
+		${RANLIB} ${T}${LIBDIR}/libcustcalc.a; \
+		echo "installed ${T}${LIBDIR}/libcustcalc.a"; \
 	    fi; \
+	  fi; \
 	fi
+	${Q}# NOTE: The upper level makefile installs libcustcalc${LIB_EXT_VERS}
+	${Q}#       because we only want to perform one ${LDCONFIG} for both
+	${Q}#       libcalc${LIB_EXT_VERS} and libcustcalc${LIB_EXT_VERS}.
 
 # Try to remove everything that was installed
 #
@@ -1075,7 +1243,7 @@ uninstall:
 #
 ##
 
-# DO NOT DELETE THIS LINE
+# DO NOT DELETE THIS LINE -- make depend depends on it.
 
 c_argv.o: ../alloc.h
 c_argv.o: ../block.h
@@ -1095,11 +1263,9 @@ c_argv.o: ../have_stdlib.h
 c_argv.o: ../have_string.h
 c_argv.o: ../have_unused.h
 c_argv.o: ../longbits.h
-c_argv.o: ../md5.h
 c_argv.o: ../nametype.h
 c_argv.o: ../qmath.h
-c_argv.o: ../shs.h
-c_argv.o: ../shs1.h
+c_argv.o: ../sha1.h
 c_argv.o: ../str.h
 c_argv.o: ../value.h
 c_argv.o: ../zmath.h
@@ -1122,11 +1288,9 @@ c_devnull.o: ../have_string.h
 c_devnull.o: ../have_unistd.h
 c_devnull.o: ../have_unused.h
 c_devnull.o: ../longbits.h
-c_devnull.o: ../md5.h
 c_devnull.o: ../nametype.h
 c_devnull.o: ../qmath.h
-c_devnull.o: ../shs.h
-c_devnull.o: ../shs1.h
+c_devnull.o: ../sha1.h
 c_devnull.o: ../str.h
 c_devnull.o: ../value.h
 c_devnull.o: ../zmath.h
@@ -1149,11 +1313,9 @@ c_help.o: ../have_string.h
 c_help.o: ../have_unistd.h
 c_help.o: ../have_unused.h
 c_help.o: ../longbits.h
-c_help.o: ../md5.h
 c_help.o: ../nametype.h
 c_help.o: ../qmath.h
-c_help.o: ../shs.h
-c_help.o: ../shs1.h
+c_help.o: ../sha1.h
 c_help.o: ../str.h
 c_help.o: ../value.h
 c_help.o: ../zmath.h
@@ -1175,11 +1337,9 @@ c_pmodm127.o: ../have_stdlib.h
 c_pmodm127.o: ../have_string.h
 c_pmodm127.o: ../have_unused.h
 c_pmodm127.o: ../longbits.h
-c_pmodm127.o: ../md5.h
 c_pmodm127.o: ../nametype.h
 c_pmodm127.o: ../qmath.h
-c_pmodm127.o: ../shs.h
-c_pmodm127.o: ../shs1.h
+c_pmodm127.o: ../sha1.h
 c_pmodm127.o: ../str.h
 c_pmodm127.o: ../value.h
 c_pmodm127.o: ../zmath.h
@@ -1201,15 +1361,38 @@ c_pzasusb8.o: ../have_stdlib.h
 c_pzasusb8.o: ../have_string.h
 c_pzasusb8.o: ../have_unused.h
 c_pzasusb8.o: ../longbits.h
-c_pzasusb8.o: ../md5.h
 c_pzasusb8.o: ../nametype.h
 c_pzasusb8.o: ../qmath.h
-c_pzasusb8.o: ../shs.h
-c_pzasusb8.o: ../shs1.h
+c_pzasusb8.o: ../sha1.h
 c_pzasusb8.o: ../str.h
 c_pzasusb8.o: ../value.h
 c_pzasusb8.o: ../zmath.h
 c_pzasusb8.o: c_pzasusb8.c
+c_register.o: ../alloc.h
+c_register.o: ../block.h
+c_register.o: ../byteswap.h
+c_register.o: ../calc.h
+c_register.o: ../calcerr.h
+c_register.o: ../cmath.h
+c_register.o: ../config.h
+c_register.o: ../custom.h
+c_register.o: ../decl.h
+c_register.o: ../endian_calc.h
+c_register.o: ../hash.h
+c_register.o: ../have_const.h
+c_register.o: ../have_memmv.h
+c_register.o: ../have_newstr.h
+c_register.o: ../have_stdlib.h
+c_register.o: ../have_string.h
+c_register.o: ../have_unused.h
+c_register.o: ../longbits.h
+c_register.o: ../nametype.h
+c_register.o: ../qmath.h
+c_register.o: ../sha1.h
+c_register.o: ../str.h
+c_register.o: ../value.h
+c_register.o: ../zmath.h
+c_register.o: c_register.c
 c_sysinfo.o: ../alloc.h
 c_sysinfo.o: ../block.h
 c_sysinfo.o: ../byteswap.h
@@ -1232,12 +1415,10 @@ c_sysinfo.o: ../have_unused.h
 c_sysinfo.o: ../hist.h
 c_sysinfo.o: ../lib_calc.h
 c_sysinfo.o: ../longbits.h
-c_sysinfo.o: ../md5.h
 c_sysinfo.o: ../nametype.h
 c_sysinfo.o: ../prime.h
 c_sysinfo.o: ../qmath.h
-c_sysinfo.o: ../shs.h
-c_sysinfo.o: ../shs1.h
+c_sysinfo.o: ../sha1.h
 c_sysinfo.o: ../str.h
 c_sysinfo.o: ../value.h
 c_sysinfo.o: ../zmath.h
@@ -1260,11 +1441,9 @@ custtbl.o: ../have_newstr.h
 custtbl.o: ../have_stdlib.h
 custtbl.o: ../have_string.h
 custtbl.o: ../longbits.h
-custtbl.o: ../md5.h
 custtbl.o: ../nametype.h
 custtbl.o: ../qmath.h
-custtbl.o: ../shs.h
-custtbl.o: ../shs1.h
+custtbl.o: ../sha1.h
 custtbl.o: ../str.h
 custtbl.o: ../value.h
 custtbl.o: ../zmath.h

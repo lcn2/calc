@@ -17,10 +17,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.18 $
- * @(#) $Id: file.c,v 29.18 2007/02/12 08:20:24 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: file.c,v 30.2 2007/07/05 13:30:38 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -884,7 +884,7 @@ printid(FILEID id, int flags)
 	fiop = findid(id, -1);
 	if (fiop == NULL) {
 		if (flags & PRINT_UNAMBIG)
-			math_fmt("FILE %d closed", id);
+			math_fmt("FILE %ld closed", id);
 		else
 			math_str("\"\"");
 		return 1;
@@ -899,7 +899,7 @@ printid(FILEID id, int flags)
 		math_chr('"');
 		return 0;
 	}
-	math_fmt("FILE %d \"%s\" (%s", id, fiop->name,  fiop->mode);
+	math_fmt("FILE %ld \"%s\" (%s", id, fiop->name,  fiop->mode);
 
 	/*
 	 * print file position

@@ -15,10 +15,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.19 $
- * @(#) $Id: zmath.h,v 29.19 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: zmath.h,v 30.2 2007/07/05 13:30:38 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -597,13 +597,13 @@ E_FUNC char *math_getdivertedio(void);
 E_FUNC int math_setmode(int mode);
 E_FUNC int math_setmode2(int mode);
 E_FUNC LEN math_setdigits(LEN digits);
-E_FUNC void math_fmt(char *, ...);
+E_FUNC void math_fmt(char *, ...) PRINTF_FORMAT(1, 2);
 
 
 /*
  * The error routine.
  */
-E_FUNC void math_error(char *, ...);
+E_FUNC void math_error(char *, ...) PRINTF_FORMAT(1, 2);
 
 
 /*

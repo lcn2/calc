@@ -27,6 +27,20 @@ Installing calc from the gziped tarball in 4 easy steps:
 
     1)	Look at the makefile, and adjust it to suit your needs.
 
+	The top level Makefile and the custom/Makefile require a GNU
+	Make (such as gmake) or an equivalently advanced make.	On many
+	targets, the default make is sufficent.  On FreeBSD for example,
+	one must use gmake instead of make.
+
+	If your target system does not have GNU Make (or equivalent), then
+	you should try using the Makefile.simple and custom/Makefile.simple
+	files:
+
+	    mv Makefile Makefile.gmake
+	    cp Makefile.simple Makefile
+	    mv custom/Makefile custom/Makefile.gmake
+	    cp custom/Makefile.simple custom/Makefile
+
 	The Makefile, as shipped, is suitable for installation under
 	Linux and Un*x-like environments.  For the most part, the default
 	values should work.  If in doubt, follow the 'When in doubt'
@@ -126,11 +140,35 @@ Installing calc from the gziped tarball in 4 easy steps:
 
     2)	build calc:
 
+	The top level Makefile and the custom/Makefile require a GNU
+	Make (such as gmake) or an equivalently advanced make.	On many
+	targets, the default make is sufficent.  On FreeBSD for example,
+	one must use gmake instead of make.
+
+	If your target system does not have GNU Make (or equivalent), then
+	you should try using the Makefile.simple and custom/Makefile.simple
+	files:
+
+	    mv Makefile Makefile.gmake
+	    cp Makefile.simple Makefile
+	    mv custom/Makefile custom/Makefile.gmake
+	    cp custom/Makefile.simple custom/Makefile
+
 	make all
 
 	==> We are interested in any compiler warnings (and errors) that
 	    you may find.  See the BUGS file if you find any compiler
 	    warning or errors.
+
+	NOTE: You can force calc to build with only static libs:
+
+		make clobber
+		make calc-static-only BLD_TYPE=calc-static-only
+
+	      or force calc to build with only dynamic libs:
+
+		make clobber
+		make calc-dynamic-only BLD_TYPE=calc-dynamic-only
 
     3)	test calc:
 
@@ -139,6 +177,10 @@ Installing calc from the gziped tarball in 4 easy steps:
 	==> If you run into problems, read the BUGS file and follow
 	    the instructions found in there.
 
+	NOTE: For a quiet check which only prints if something goes wrong:
+
+		make chk
+
     4)	install calc:
 
 	make install
@@ -146,7 +188,7 @@ Installing calc from the gziped tarball in 4 easy steps:
 We suggest that you might want to read the README file and look at
 the calc help subsystem.  See the README file for details.
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2007  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -160,10 +202,10 @@ the calc help subsystem.  See the README file for details.
 ## A copy of version 2.1 of the GNU Lesser General Public License is
 ## distributed with calc under the filename COPYING-LGPL.  You should have
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
-## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 29.9 $
-## @(#) $Id: HOWTO.INSTALL,v 29.9 2006/09/18 13:11:57 chongo Exp $
+## @(#) $Revision: 30.5 $
+## @(#) $Id: HOWTO.INSTALL,v 30.5 2007/09/01 19:54:03 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/HOWTO.INSTALL,v $
 ##
 ## Under source code control:	1999/09/27 20:48:44

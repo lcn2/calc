@@ -1,15 +1,9 @@
 /*
- * shs - old Secure Hash Standard
- *
- **************************************************************************
- * This version implements the old Secure Hash Algorithm specified by	  *
- * (FIPS Pub 180).  This version is kept for backward compatibility with  *
- * shs version 2.10.1.	See the shs utility for the new standard.	  *
- **************************************************************************
+ * sha1 - implements new NIST Secure Hash Standard-1 (SHA1)
  *
  * Written 2 September 1992, Peter C. Gutmann.
  *
- * This file was Modified/Re-written by:
+ * This file has been extensively modified by:
  *
  *	Landon Curt Noll
  *	http://www.isthe.com/chongo/
@@ -28,33 +22,13 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * Based on Version 2.11 (09 Mar 1995) from Landon Curt Noll's
- * (http://www.isthe.com/chongo/) shs hash program.
- *
- * @(#) $Revision: 29.4 $
- * @(#) $Id: shs.c,v 29.4 2007/02/11 10:19:14 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/shs.c,v $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: sha1.c,v 30.3 2007/07/05 17:37:41 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/sha1.c,v $
  *
  * This file is not covered under version 2.1 of the GNU LGPL.
- *
- ****
- *
- * The SHS algorithm hashes 32 bit unsigned values, 16 at a time.
- * It further specifies that strings are to be converted into
- * 32 bit values in BIG ENDIAN order.  That is on little endian
- * machines, strings are byte swapped into BIG ENDIAN order before
- * they are taken 32 bit at a time.  Even so, when hashing 32 bit
- * numeric values the byte order DOES NOT MATTER because the
- * algorithm works off of their numeric value, not their byte order.
- *
- * In calc, we want to hash equal values to the same hash value.
- * For the most part, we will be hashing arrays of HALF's instead
- * of strings.	For this reason, the functions below do not byte
- * swap on little endian machines automatically.  Instead it is
- * the responsibility of the caller of the internal SHS function
- * to ensure that the values are already in the canonical 32 bit
- * numeric value form.
  */
+
 
 #include <stdio.h>
 #include "longbits.h"
@@ -62,11 +36,11 @@
 #include "endian_calc.h"
 #include "value.h"
 #include "hash.h"
-#include "shs.h"
+#include "sha1.h"
 
 
 /*
- * The SHS f()-functions.  The f1 and f3 functions can be optimized
+ * The SHA1 f()-functions.  The f1 and f3 functions can be optimized
  * to save one boolean operation each - thanks to Rich Schroeppel,
  * rcs@cs.arizona.edu for discovering this.
  *
@@ -78,13 +52,13 @@
 #define f3(x,y,z)	((x&y) | (z&(x|y)))	/* Rounds 40-59 */
 #define f4(x,y,z)	(x^y^z)			/* Rounds 60-79 */
 
-/* The SHS Mysterious Constants */
+/* The SHA1 Mysterious Constants */
 #define K1	0x5A827999L	/* Rounds  0-19 */
 #define K2	0x6ED9EBA1L	/* Rounds 20-39 */
 #define K3	0x8F1BBCDCL	/* Rounds 40-59 */
 #define K4	0xCA62C1D6L	/* Rounds 60-79 */
 
-/* SHS initial values */
+/* SHA1 initial values */
 #define h0init	0x67452301L
 #define h1init	0xEFCDAB89L
 #define h2init	0x98BADCFEL
@@ -95,20 +69,23 @@
 #define LEFT_ROT(X,n)  (((X)<<(n)) | ((X)>>(32-(n))))
 
 /*
+ *
  * The initial expanding function.  The hash function is defined over an
  * 80-word expanded input array W, where the first 16 are copies of the input
  * data, and the remaining 64 are defined by
  *
- *	W[i] = W[i-16] ^ W[i-14] ^ W[i-8] ^ W[i-3]
+ *	W[i] = LEFT_ROT(W[i-16] ^ W[i-14] ^ W[i-8] ^ W[i-3], 1)
  *
- * This implementation generates these values on the fly in a circular
- * buffer - thanks to Colin Plumb (colin@nyx10.cs.du.edu) for this
- * optimization.
+ * NOTE: The expanding function used in rounds 16 to 79 was changed from the
+ *	 original SHA (in FIPS Pub 180) to one that also left circular shifted
+ *	 by one bit for Secure Hash Algorithm-1 (FIPS Pub 180-1).
  */
-#define exor(W,i) (W[i&15] ^= (W[(i-14)&15] ^ W[(i-8)&15] ^ W[(i-3)&15]))
+#define exor(W,i,t) \
+    (t = (W[i&15] ^ W[(i-14)&15] ^ W[(i-8)&15] ^ W[(i-3)&15]), \
+     W[i&15] = LEFT_ROT(t, 1))
 
 /*
- * The prototype SHS sub-round.	 The fundamental sub-round is:
+ * The prototype SHA1 sub-round.  The fundamental sub-round is:
  *
  *	a' = e + LEFT_ROT(a,5) + f(b,c,d) + k + data;
  *	b' = a;
@@ -124,30 +101,27 @@
 #define subRound(a, b, c, d, e, f, k, data) \
     (e += LEFT_ROT(a,5) + f(b,c,d) + k + data, b = LEFT_ROT(b,30))
 
-
-/*
- * forward declarations
- */
-S_FUNC void shsInit(HASH*);
-S_FUNC void shsTransform(USB32*, USB32*);
-S_FUNC void shsUpdate(HASH*, USB8*, USB32);
-S_FUNC void shsFinal(HASH*);
-S_FUNC void shs_chkpt(HASH*);
-S_FUNC void shs_note(int, HASH*);
-S_FUNC void shs_type(int, HASH*);
-void shs_init_state(HASH*);
-S_FUNC ZVALUE shs_final_state(HASH*);
-S_FUNC int shs_cmp(HASH*, HASH*);
-S_FUNC void shs_print(HASH*);
+/* forward declarations */
+S_FUNC void sha1Init(HASH*);
+S_FUNC void sha1Transform(USB32*, USB32*);
+S_FUNC void sha1Update(HASH*, USB8*, USB32);
+S_FUNC void sha1Final(HASH*);
+S_FUNC void sha1_chkpt(HASH*);
+S_FUNC void sha1_note(int, HASH*);
+S_FUNC void sha1_type(int, HASH*);
+void sha1_init_state(HASH*);
+S_FUNC ZVALUE sha1_final_state(HASH*);
+S_FUNC int sha1_cmp(HASH*, HASH*);
+S_FUNC void sha1_print(HASH*);
 
 
 /*
- * shsInit - initialize the SHS state
+ * sha1Init - initialize the SHA1 state
  */
 S_FUNC void
-shsInit(HASH *state)
+sha1Init(HASH *state)
 {
-	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
+	SHA1_INFO *dig = &state->h_union.h_sha1;  /* digest state */
 
 	/* Set the h-vars to their initial values */
 	dig->digest[0] = h0init;
@@ -164,16 +138,17 @@ shsInit(HASH *state)
 
 
 /*
- * shsTransform - perform the SHS transformatio
+ * sha1Transform - perform the SHA1 transformatio
  *
  * Note that this code, like MD5, seems to break some optimizing compilers.
  * It may be necessary to split it into sections, eg based on the four
  * subrounds.  One may also want to roll each subround into a loop.
  */
 S_FUNC void
-shsTransform(USB32 *digest, USB32 *W)
+sha1Transform(USB32 *digest, USB32 *W)
 {
-	USB32 A, B, C, D, E;	/* Local vars */
+	USB32 A, B, C, D, E;		/* Local vars */
+	USB32 t;			/* temp storage for exor() */
 
 	/* Set up first buffer and local data buffer */
 	A = digest[0];
@@ -199,73 +174,73 @@ shsTransform(USB32 *digest, USB32 *W)
 	subRound(C, D, E, A, B, f1, K1, W[13]);
 	subRound(B, C, D, E, A, f1, K1, W[14]);
 	subRound(A, B, C, D, E, f1, K1, W[15]);
-	subRound(E, A, B, C, D, f1, K1, exor(W,16));
-	subRound(D, E, A, B, C, f1, K1, exor(W,17));
-	subRound(C, D, E, A, B, f1, K1, exor(W,18));
-	subRound(B, C, D, E, A, f1, K1, exor(W,19));
+	subRound(E, A, B, C, D, f1, K1, exor(W,16,t));
+	subRound(D, E, A, B, C, f1, K1, exor(W,17,t));
+	subRound(C, D, E, A, B, f1, K1, exor(W,18,t));
+	subRound(B, C, D, E, A, f1, K1, exor(W,19,t));
 
-	subRound(A, B, C, D, E, f2, K2, exor(W,20));
-	subRound(E, A, B, C, D, f2, K2, exor(W,21));
-	subRound(D, E, A, B, C, f2, K2, exor(W,22));
-	subRound(C, D, E, A, B, f2, K2, exor(W,23));
-	subRound(B, C, D, E, A, f2, K2, exor(W,24));
-	subRound(A, B, C, D, E, f2, K2, exor(W,25));
-	subRound(E, A, B, C, D, f2, K2, exor(W,26));
-	subRound(D, E, A, B, C, f2, K2, exor(W,27));
-	subRound(C, D, E, A, B, f2, K2, exor(W,28));
-	subRound(B, C, D, E, A, f2, K2, exor(W,29));
-	subRound(A, B, C, D, E, f2, K2, exor(W,30));
-	subRound(E, A, B, C, D, f2, K2, exor(W,31));
-	subRound(D, E, A, B, C, f2, K2, exor(W,32));
-	subRound(C, D, E, A, B, f2, K2, exor(W,33));
-	subRound(B, C, D, E, A, f2, K2, exor(W,34));
-	subRound(A, B, C, D, E, f2, K2, exor(W,35));
-	subRound(E, A, B, C, D, f2, K2, exor(W,36));
-	subRound(D, E, A, B, C, f2, K2, exor(W,37));
-	subRound(C, D, E, A, B, f2, K2, exor(W,38));
-	subRound(B, C, D, E, A, f2, K2, exor(W,39));
+	subRound(A, B, C, D, E, f2, K2, exor(W,20,t));
+	subRound(E, A, B, C, D, f2, K2, exor(W,21,t));
+	subRound(D, E, A, B, C, f2, K2, exor(W,22,t));
+	subRound(C, D, E, A, B, f2, K2, exor(W,23,t));
+	subRound(B, C, D, E, A, f2, K2, exor(W,24,t));
+	subRound(A, B, C, D, E, f2, K2, exor(W,25,t));
+	subRound(E, A, B, C, D, f2, K2, exor(W,26,t));
+	subRound(D, E, A, B, C, f2, K2, exor(W,27,t));
+	subRound(C, D, E, A, B, f2, K2, exor(W,28,t));
+	subRound(B, C, D, E, A, f2, K2, exor(W,29,t));
+	subRound(A, B, C, D, E, f2, K2, exor(W,30,t));
+	subRound(E, A, B, C, D, f2, K2, exor(W,31,t));
+	subRound(D, E, A, B, C, f2, K2, exor(W,32,t));
+	subRound(C, D, E, A, B, f2, K2, exor(W,33,t));
+	subRound(B, C, D, E, A, f2, K2, exor(W,34,t));
+	subRound(A, B, C, D, E, f2, K2, exor(W,35,t));
+	subRound(E, A, B, C, D, f2, K2, exor(W,36,t));
+	subRound(D, E, A, B, C, f2, K2, exor(W,37,t));
+	subRound(C, D, E, A, B, f2, K2, exor(W,38,t));
+	subRound(B, C, D, E, A, f2, K2, exor(W,39,t));
 
-	subRound(A, B, C, D, E, f3, K3, exor(W,40));
-	subRound(E, A, B, C, D, f3, K3, exor(W,41));
-	subRound(D, E, A, B, C, f3, K3, exor(W,42));
-	subRound(C, D, E, A, B, f3, K3, exor(W,43));
-	subRound(B, C, D, E, A, f3, K3, exor(W,44));
-	subRound(A, B, C, D, E, f3, K3, exor(W,45));
-	subRound(E, A, B, C, D, f3, K3, exor(W,46));
-	subRound(D, E, A, B, C, f3, K3, exor(W,47));
-	subRound(C, D, E, A, B, f3, K3, exor(W,48));
-	subRound(B, C, D, E, A, f3, K3, exor(W,49));
-	subRound(A, B, C, D, E, f3, K3, exor(W,50));
-	subRound(E, A, B, C, D, f3, K3, exor(W,51));
-	subRound(D, E, A, B, C, f3, K3, exor(W,52));
-	subRound(C, D, E, A, B, f3, K3, exor(W,53));
-	subRound(B, C, D, E, A, f3, K3, exor(W,54));
-	subRound(A, B, C, D, E, f3, K3, exor(W,55));
-	subRound(E, A, B, C, D, f3, K3, exor(W,56));
-	subRound(D, E, A, B, C, f3, K3, exor(W,57));
-	subRound(C, D, E, A, B, f3, K3, exor(W,58));
-	subRound(B, C, D, E, A, f3, K3, exor(W,59));
+	subRound(A, B, C, D, E, f3, K3, exor(W,40,t));
+	subRound(E, A, B, C, D, f3, K3, exor(W,41,t));
+	subRound(D, E, A, B, C, f3, K3, exor(W,42,t));
+	subRound(C, D, E, A, B, f3, K3, exor(W,43,t));
+	subRound(B, C, D, E, A, f3, K3, exor(W,44,t));
+	subRound(A, B, C, D, E, f3, K3, exor(W,45,t));
+	subRound(E, A, B, C, D, f3, K3, exor(W,46,t));
+	subRound(D, E, A, B, C, f3, K3, exor(W,47,t));
+	subRound(C, D, E, A, B, f3, K3, exor(W,48,t));
+	subRound(B, C, D, E, A, f3, K3, exor(W,49,t));
+	subRound(A, B, C, D, E, f3, K3, exor(W,50,t));
+	subRound(E, A, B, C, D, f3, K3, exor(W,51,t));
+	subRound(D, E, A, B, C, f3, K3, exor(W,52,t));
+	subRound(C, D, E, A, B, f3, K3, exor(W,53,t));
+	subRound(B, C, D, E, A, f3, K3, exor(W,54,t));
+	subRound(A, B, C, D, E, f3, K3, exor(W,55,t));
+	subRound(E, A, B, C, D, f3, K3, exor(W,56,t));
+	subRound(D, E, A, B, C, f3, K3, exor(W,57,t));
+	subRound(C, D, E, A, B, f3, K3, exor(W,58,t));
+	subRound(B, C, D, E, A, f3, K3, exor(W,59,t));
 
-	subRound(A, B, C, D, E, f4, K4, exor(W,60));
-	subRound(E, A, B, C, D, f4, K4, exor(W,61));
-	subRound(D, E, A, B, C, f4, K4, exor(W,62));
-	subRound(C, D, E, A, B, f4, K4, exor(W,63));
-	subRound(B, C, D, E, A, f4, K4, exor(W,64));
-	subRound(A, B, C, D, E, f4, K4, exor(W,65));
-	subRound(E, A, B, C, D, f4, K4, exor(W,66));
-	subRound(D, E, A, B, C, f4, K4, exor(W,67));
-	subRound(C, D, E, A, B, f4, K4, exor(W,68));
-	subRound(B, C, D, E, A, f4, K4, exor(W,69));
-	subRound(A, B, C, D, E, f4, K4, exor(W,70));
-	subRound(E, A, B, C, D, f4, K4, exor(W,71));
-	subRound(D, E, A, B, C, f4, K4, exor(W,72));
-	subRound(C, D, E, A, B, f4, K4, exor(W,73));
-	subRound(B, C, D, E, A, f4, K4, exor(W,74));
-	subRound(A, B, C, D, E, f4, K4, exor(W,75));
-	subRound(E, A, B, C, D, f4, K4, exor(W,76));
-	subRound(D, E, A, B, C, f4, K4, exor(W,77));
-	subRound(C, D, E, A, B, f4, K4, exor(W,78));
-	subRound(B, C, D, E, A, f4, K4, exor(W,79));
+	subRound(A, B, C, D, E, f4, K4, exor(W,60,t));
+	subRound(E, A, B, C, D, f4, K4, exor(W,61,t));
+	subRound(D, E, A, B, C, f4, K4, exor(W,62,t));
+	subRound(C, D, E, A, B, f4, K4, exor(W,63,t));
+	subRound(B, C, D, E, A, f4, K4, exor(W,64,t));
+	subRound(A, B, C, D, E, f4, K4, exor(W,65,t));
+	subRound(E, A, B, C, D, f4, K4, exor(W,66,t));
+	subRound(D, E, A, B, C, f4, K4, exor(W,67,t));
+	subRound(C, D, E, A, B, f4, K4, exor(W,68,t));
+	subRound(B, C, D, E, A, f4, K4, exor(W,69,t));
+	subRound(A, B, C, D, E, f4, K4, exor(W,70,t));
+	subRound(E, A, B, C, D, f4, K4, exor(W,71,t));
+	subRound(D, E, A, B, C, f4, K4, exor(W,72,t));
+	subRound(C, D, E, A, B, f4, K4, exor(W,73,t));
+	subRound(B, C, D, E, A, f4, K4, exor(W,74,t));
+	subRound(A, B, C, D, E, f4, K4, exor(W,75,t));
+	subRound(E, A, B, C, D, f4, K4, exor(W,76,t));
+	subRound(D, E, A, B, C, f4, K4, exor(W,77,t));
+	subRound(C, D, E, A, B, f4, K4, exor(W,78,t));
+	subRound(B, C, D, E, A, f4, K4, exor(W,79,t));
 
 	/* Build message digest */
 	digest[0] += A;
@@ -277,12 +252,12 @@ shsTransform(USB32 *digest, USB32 *W)
 
 
 /*
- * shsUpdate - update SHS with arbitrary length data
+ * sha1Update - update SHA1 with arbitrary length data
  */
-S_FUNC void
-shsUpdate(HASH *state, USB8 *buffer, USB32 count)
+void
+sha1Update(HASH *state, USB8 *buffer, USB32 count)
 {
-	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
+	SHA1_INFO *dig = &state->h_union.h_sha1;  /* digest state */
 	USB32 datalen = dig->datalen;
 	USB32 cpylen;
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
@@ -292,16 +267,16 @@ shsUpdate(HASH *state, USB8 *buffer, USB32 count)
 	/*
 	 * Update the full count, even if some of it is buffered for later
 	 */
-	SHSCOUNT(dig, count);
+	SHA1COUNT(dig, count);
 
 
 	/* determine the size we need to copy */
-	cpylen = SHS_CHUNKSIZE - datalen;
+	cpylen = SHA1_CHUNKSIZE - datalen;
 
 	/* case: new data will not fill the buffer */
 	if (cpylen > count) {
-		memcpy((char *)dig->data + datalen,
-		       (char *)buffer, count);
+		memcpy((char *)dig->data+datalen,
+			(char *)buffer, count);
 		dig->datalen = datalen+count;
 		return;
 	}
@@ -310,28 +285,28 @@ shsUpdate(HASH *state, USB8 *buffer, USB32 count)
 	memcpy((char *)dig->data + datalen, (char *)buffer, cpylen);
 
 	/*
-	 * process data in SHS_CHUNKSIZE chunks
+	 * Process data in SHA1_CHUNKSIZE chunks
 	 */
 	for (;;) {
-
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
 		if (state->bytes) {
-			for (i=0; i < SHS_CHUNKWORDS; ++i) {
+			for (i=0; i < SHA1_CHUNKWORDS; ++i) {
 				SWAP_B8_IN_B32(dig->data+i, dig->data+i);
 			}
 		}
 #endif
-		shsTransform(dig->digest, dig->data);
+		sha1Transform(dig->digest, dig->data);
 		buffer += cpylen;
 		count -= cpylen;
-		if (count < SHS_CHUNKSIZE)
+		if (count < SHA1_CHUNKSIZE)
 			break;
-		cpylen = SHS_CHUNKSIZE;
-		memcpy((char *) dig->data, (char *) buffer, cpylen);
+		cpylen = SHA1_CHUNKSIZE;
+		memcpy(dig->data, buffer, cpylen);
 	}
 
 	/*
 	 * Handle any remaining bytes of data.
+	 * This should only happen once on the final lot of data
 	 */
 	if (count > 0) {
 		memcpy((char *)dig->data, (char *)buffer, count);
@@ -341,10 +316,10 @@ shsUpdate(HASH *state, USB8 *buffer, USB32 count)
 
 
 /*
- * shsFinal - perform final SHS transforms
+ * sha1Final - perform final SHA1 transforms
  *
  * At this point we have less than a full chunk of data remaining
- * (and possibly no data) in the shs state data buffer.
+ * (and possibly no data) in the sha1 state data buffer.
  *
  * First we append a final 0x80 byte.
  *
@@ -356,10 +331,11 @@ shsUpdate(HASH *state, USB8 *buffer, USB32 count)
  * Finally we append the 64 bit length on to the 56 bytes of data
  * remaining.  This final chunk is transformed.
  */
-S_FUNC void
-shsFinal(HASH *state)
+
+void
+sha1Final(HASH *state)
 {
-	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
+	SHA1_INFO *dig = &state->h_union.h_sha1;	/* digest state */
 	long count = (long)(dig->datalen);
 	USB32 lowBitcount;
 	USB32 highBitcount;
@@ -367,6 +343,10 @@ shsFinal(HASH *state)
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
 	unsigned int i;
 #endif
+
+	/* Pad to end of chunk */
+
+	memset(data + count, 0, SHA1_CHUNKSIZE - count);
 
 	/*
 	 * If processing bytes, set the first byte of padding to 0x80.
@@ -376,19 +356,17 @@ shsFinal(HASH *state)
 	 * This is safe since there is always at least one byte or word free
 	 */
 
-	/* Pad to end of chunk */
-
-	memset(data + count, 0, SHS_CHUNKSIZE - count);
+	memset(data + count, 0, SHA1_CHUNKSIZE - count);
 
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
 	if (state->bytes) {
 		data[count] = 0x80;
-		for (i=0; i < SHS_CHUNKWORDS; ++i) {
+		for (i=0; i < SHA1_CHUNKWORDS; ++i) {
 			SWAP_B8_IN_B32(dig->data+i, dig->data+i);
 		}
 	} else {
 		if (count % 4) {
-			math_error("This should not happen in shsFinal");
+			math_error("This should not happen in sha1Final");
 			/*NOTREACHED*/
 		}
 		data[count + 3] = 0x80;
@@ -397,11 +375,11 @@ shsFinal(HASH *state)
 	data[count] = 0x80;
 #endif
 
-	if (count >= SHS_CHUNKSIZE-8) {
-		shsTransform(dig->digest, dig->data);
+	if (count >= SHA1_CHUNKSIZE-8) {
+		sha1Transform(dig->digest, dig->data);
 
-		/* Now fill another chunk with 56 bytes */
-		memset(data, 0, SHS_CHUNKSIZE-8);
+		/* Now load another chunk with 56 bytes of padding */
+		memset(data, 0, SHA1_CHUNKSIZE-8);
 	}
 
 	/*
@@ -412,15 +390,15 @@ shsFinal(HASH *state)
 	 */
 	highBitcount = dig->countHi;
 	lowBitcount = dig->countLo;
-	dig->data[SHS_HIGH] = (highBitcount << 3) | (lowBitcount >> 29);
-	dig->data[SHS_LOW] = (lowBitcount << 3);
-	shsTransform(dig->digest, dig->data);
+	dig->data[SHA1_HIGH] = (highBitcount << 3) | (lowBitcount >> 29);
+	dig->data[SHA1_LOW] = (lowBitcount << 3);
+	sha1Transform(dig->digest, dig->data);
 	dig->datalen = 0;
 }
 
 
 /*
- * shs_chkpt - checkpoint a SHS state
+ * sha1_chkpt - checkpoint a SHA1 state
  *
  * given:
  *	state	the state to checkpoint
@@ -429,9 +407,9 @@ shsFinal(HASH *state)
  * Any partially hashed data will be padded out with 0's and hashed.
  */
 S_FUNC void
-shs_chkpt(HASH *state)
+sha1_chkpt(HASH *state)
 {
-	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
+	SHA1_INFO *dig = &state->h_union.h_sha1;	/* digest state */
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
 	unsigned int i;
 #endif
@@ -443,18 +421,17 @@ shs_chkpt(HASH *state)
 
 		/* pad to the end of the chunk */
 		memset((USB8 *)dig->data + dig->datalen, 0,
-		       SHS_CHUNKSIZE-dig->datalen);
+		       SHA1_CHUNKSIZE-dig->datalen);
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
 		if (state->bytes) {
-			for (i=0; i < SHS_CHUNKWORDS; ++i) {
+			for (i=0; i < SHA1_CHUNKWORDS; ++i) {
 				SWAP_B8_IN_B32(dig->data+i, dig->data+i);
 			}
 		}
 #endif
-
 		/* transform padded chunk */
-		shsTransform(dig->digest, dig->data);
-		SHSCOUNT(dig, SHS_CHUNKSIZE-dig->datalen);
+		sha1Transform(dig->digest, dig->data);
+		SHA1COUNT(dig, SHA1_CHUNKSIZE-dig->datalen);
 
 		/* empty buffer */
 		dig->datalen = 0;
@@ -464,27 +441,27 @@ shs_chkpt(HASH *state)
 
 
 /*
- * shs_note - note a special value
+ * sha1_note - note a special value
  *
  * given:
  *	state		the state to hash
- *	special		a special value (SHS_HASH_XYZ) to note
+ *	special		a special value (SHA1_HASH_XYZ) to note
  *
  * This function will note that a special value is about to be hashed.
  * Types include negative values, complex values, division, zero numeric
  * and array of HALFs.
  */
 S_FUNC void
-shs_note(int special, HASH *state)
+sha1_note(int special, HASH *state)
 {
-	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
+	SHA1_INFO *dig = &state->h_union.h_sha1;	/* digest state */
 	unsigned int i;
 
 	/*
 	 * change state to reflect a special value
 	 */
 	dig->digest[0] ^= special;
-	for (i=1; i < SHS_DIGESTWORDS; ++i) {
+	for (i=1; i < SHA1_DIGESTWORDS; ++i) {
 		dig->digest[i] ^= (special + dig->digest[i-1] + i);
 	}
 	return;
@@ -492,7 +469,7 @@ shs_note(int special, HASH *state)
 
 
 /*
- * shs_type - note a VALUE type
+ * sha1_type - note a VALUE type
  *
  * given:
  *	state		the state to hash
@@ -501,14 +478,14 @@ shs_note(int special, HASH *state)
  * This function will note that a type of value is about to be hashed.
  * The type of a VALUE will be noted.  For purposes of hash comparison,
  * we will do nothing with V_NUM and V_COM so that the other functions
- * can hash to the same value regardless of if shs_value() is called
+ * can hash to the same value regardless of if sha1_value() is called
  * or not.  We also do nothing with V_STR so that a hash of a string
  * will produce the same value as the standard hash function.
  */
 S_FUNC void
-shs_type(int type, HASH *state)
+sha1_type(int type, HASH *state)
 {
-	SHS_INFO *dig = &state->h_union.h_shs;	/* digest state */
+	SHA1_INFO *dig = &state->h_union.h_sha1;	/* digest state */
 	unsigned int i;
 
 	/*
@@ -522,7 +499,7 @@ shs_type(int type, HASH *state)
 	 * change state to reflect a VALUE type
 	 */
 	dig->digest[0] += type;
-	for (i=1; i < SHS_DIGESTWORDS; ++i) {
+	for (i=1; i < SHA1_DIGESTWORDS; ++i) {
 		dig->digest[i] += ((type+i) ^ dig->digest[i-1]);
 	}
 	return;
@@ -530,41 +507,41 @@ shs_type(int type, HASH *state)
 
 
 /*
- * shs_init_state - initialize a hash state structure for this hash
+ * sha1_init_state - initialize a hash state structure for this hash
  *
  * given:
  *	state	- pointer to the hfunction element to initialize
  */
 void
-shs_init_state(HASH *state)
+sha1_init_state(HASH *state)
 {
 	/*
 	 * initalize state
 	 */
-	state->hashtype = SHS_HASH_TYPE;
+	state->hashtype = SHA1_HASH_TYPE;
 	state->bytes = TRUE;
-	state->update = shsUpdate;
-	state->chkpt = shs_chkpt;
-	state->note = shs_note;
-	state->type = shs_type;
-	state->final = shs_final_state;
-	state->cmp = shs_cmp;
-	state->print = shs_print;
-	state->base = SHS_BASE;
-	state->chunksize = SHS_CHUNKSIZE;
-	state->unionsize = sizeof(SHS_INFO);
+	state->update = sha1Update;
+	state->chkpt = sha1_chkpt;
+	state->note = sha1_note;
+	state->type = sha1_type;
+	state->final = sha1_final_state;
+	state->cmp = sha1_cmp;
+	state->print = sha1_print;
+	state->base = SHA1_BASE;
+	state->chunksize = SHA1_CHUNKSIZE;
+	state->unionsize = sizeof(SHA1_INFO);
 
 	/*
 	 * perform the internal init function
 	 */
-	memset((void *)&(state->h_union.h_shs), 0, sizeof(SHS_INFO));
-	shsInit(state);
+	memset((void *)&(state->h_union.h_sha1), 0, sizeof(SHA1_INFO));
+	sha1Init(state);
 	return;
 }
 
 
 /*
- * shs_final_state - complete hash state and return a ZVALUE
+ * sha1_final_state - complete hash state and return a ZVALUE
  *
  * given:
  *	state	the state to complete and convert
@@ -573,9 +550,9 @@ shs_init_state(HASH *state)
  *	a ZVALUE representing the state
  */
 S_FUNC ZVALUE
-shs_final_state(HASH *state)
+sha1_final_state(HASH *state)
 {
-	SHS_INFO *dig = &state->h_union.h_shs;		/* digest state */
+	SHA1_INFO *dig = &state->h_union.h_sha1;	/* digest state */
 	ZVALUE ret;		/* return ZVALUE of completed hash state */
 	int i;
 
@@ -588,18 +565,18 @@ shs_final_state(HASH *state)
 			math_error("cannot malloc HASH");
 			/*NOTREACHED*/
 		}
-		shs_init_state(state);
+		sha1_init_state(state);
 	}
 
 	/*
 	 * complete the hash state
 	 */
-	shsFinal(state);
+	sha1Final(state);
 
 	/*
 	 * allocate storage for ZVALUE
 	 */
-	ret.len = SHS_DIGESTSIZE/sizeof(HALF);
+	ret.len = SHA1_DIGESTSIZE/sizeof(HALF);
 	ret.sign = 0;
 	ret.v = alloc(ret.len);
 
@@ -626,7 +603,7 @@ shs_final_state(HASH *state)
 
 
 /*
- * shs_cmp - compare two hash states
+ * sha1_cmp - compare two hash states
  *
  * given:
  *	a	first hash state
@@ -637,7 +614,7 @@ shs_final_state(HASH *state)
  *	FALSE => hash states are the same
  */
 S_FUNC int
-shs_cmp(HASH *a, HASH *b)
+sha1_cmp(HASH *a, HASH *b)
 {
 	/*
 	 * firewall and quick check
@@ -660,8 +637,8 @@ shs_cmp(HASH *a, HASH *b)
 	/*
 	 * compare bit counts
 	 */
-	if (a->h_union.h_shs.countLo != b->h_union.h_shs.countLo ||
-	    a->h_union.h_shs.countHi != b->h_union.h_shs.countHi) {
+	if (a->h_union.h_sha1.countLo != b->h_union.h_sha1.countLo ||
+	    a->h_union.h_sha1.countHi != b->h_union.h_sha1.countHi) {
 		/* counts differ */
 		return TRUE;
 	}
@@ -669,13 +646,13 @@ shs_cmp(HASH *a, HASH *b)
 	/*
 	 * compare pending buffers
 	 */
-	if (a->h_union.h_shs.datalen != b->h_union.h_shs.datalen) {
+	if (a->h_union.h_sha1.datalen != b->h_union.h_sha1.datalen) {
 		/* buffer lengths differ */
 		return TRUE;
 	}
-	if (memcmp((USB8*)a->h_union.h_shs.data,
-		   (USB8*)b->h_union.h_shs.data,
-		   a->h_union.h_shs.datalen) != 0) {
+	if (memcmp((USB8*)a->h_union.h_sha1.data,
+		   (USB8*)b->h_union.h_sha1.data,
+		   a->h_union.h_sha1.datalen) != 0) {
 		/* buffer contents differ */
 		return TRUE;
 	}
@@ -683,20 +660,20 @@ shs_cmp(HASH *a, HASH *b)
 	/*
 	 * compare digest
 	 */
-	return (memcmp((USB8*)(a->h_union.h_shs.digest),
-		       (USB8*)(b->h_union.h_shs.digest),
-		       SHS_DIGESTSIZE) != 0);
+	return (memcmp((USB8*)(a->h_union.h_sha1.digest),
+		       (USB8*)(b->h_union.h_sha1.digest),
+		       SHA1_DIGESTSIZE) != 0);
 }
 
 
 /*
- * shs_print - print a hash state
+ * sha1_print - print a hash state
  *
  * given:
  *	state	the hash state to print
  */
 S_FUNC void
-shs_print(HASH *state)
+sha1_print(HASH *state)
 {
 	/*
 	 * form the hash value
@@ -712,16 +689,16 @@ shs_print(HASH *state)
 		 *	 may NOT be the actual hash value.
 		 */
 		sprintf(buf,
-			"sha: 0x%08x%08x%08x%08x%08x data: %d octets",
-			(int)state->h_union.h_shs.digest[0],
-			(int)state->h_union.h_shs.digest[1],
-			(int)state->h_union.h_shs.digest[2],
-			(int)state->h_union.h_shs.digest[3],
-			(int)state->h_union.h_shs.digest[4],
-			(int)state->h_union.h_shs.datalen);
+			"sha1: 0x%08x%08x%08x%08x%08x data: %d octets",
+			(int)state->h_union.h_sha1.digest[0],
+			(int)state->h_union.h_sha1.digest[1],
+			(int)state->h_union.h_sha1.digest[2],
+			(int)state->h_union.h_sha1.digest[3],
+			(int)state->h_union.h_sha1.digest[4],
+			(int)state->h_union.h_sha1.datalen);
 		math_str(buf);
 	} else {
-		math_str("sha hash state");
+		math_str("sha1 hash state");
 	}
 	return;
 }

@@ -15,10 +15,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.36 $
- * @(#) $Id: regress.cal,v 29.36 2006/12/16 11:18:46 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: regress.cal,v 30.3 2007/07/11 22:58:26 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -596,12 +596,18 @@ print '012: parsed squarecheck(a, b, str)';
 define powercheck(a, p1, p2, str)
 {
 	local	a1, a2, a3;
+	local	b1, b2, b3;
 
 	a1 = (a^p1)^p2;
 	a2 = (a^p2)^p1;
 	a3 = a^(p1*p2);
+	b1 = (a**p1)**p2;
+	b2 = (a**p2)**p1;
+	b3 = a**(p1*p2);
 	if (a1 != a2) {print '**** (a^p1)^p2 != (a^p2)^p1:', str; ++prob;}
 	if (a1 != a3) {print '**** (a^p1)^p2 != a^(p1*p2):', str; ++prob;}
+	if (b1 != b2) {print '**** (b^p1)^p2 != (b^p2)^p1:', str; ++prob;}
+	if (b1 != b3) {print '**** (b^p1)^p2 != b^(p1*p2):', str; ++prob;}
 	print str;
 }
 print '013: parsed powercheck(a, p1, p2, str)';
@@ -3259,7 +3265,7 @@ define test_error()
 				    '3654: scale(3,2^31) == error(10034)');
 	vrfy("x" ^ 3 == error(10035),	'3655: "x" ^ 3 == error(10035)');
 	vrfy(2 ^ "x" == error(10036),	'3656: 2 ^ "x" == error(10036)');
-	vrfy(2 ^ 2.5 == error(10036),	'3657: 2 ^ 2.5 == error(10036)');
+	vrfy(2 ^ "2" == error(10036),   '3657: 2 ^ "2" == error(10036)');
 	vrfy(power("x",2.1) == error(10037),
 					'3658: power("x",2.1) == error(10037)');
 	vrfy(power(2,"x") == error(10038),
@@ -5320,7 +5326,7 @@ define test_is()
 	local nerr;	/* new error value */
 	local odd;	/* odd integer */
 	local even;	/* even integer that is 10 times odd */
-	local hash;	/* sha hash value */
+	local hash;	/* sha1 hash value */
 	local id;	/* identity matrix */
 	local list;	/* list value */
 	local matrix;	/* non-identity matrix */
@@ -5375,8 +5381,8 @@ define test_is()
 	print				  '5911: odd = 23209';
 	even = odd*10;
 	print				  '5912: even = odd*10';
-	hash = sha();
-	print				  '5913: hash = sha()';
+	hash = sha1();
+	print				  '5913: hash = sha1()';
 	mat id[3,3] = {1,0,0,0,1,0,0,0,1};
 	print				  '5914: id[3,3] = {1,0,0,0,1,0,0,0,1}';
 	list = list(2,3,4);
@@ -5699,7 +5705,7 @@ define test_is()
 	vrfy(ishash(nerr) == 0,		  '6178: ishash(nerr) == 0');
 	vrfy(ishash(odd) == 0,		  '6179: ishash(odd) == 0');
 	vrfy(ishash(even) == 0,		  '6180: ishash(even) == 0');
-	vrfy(ishash(hash) == 1,		  '6181: ishash(hash) == 1');
+	vrfy(ishash(hash) == 2,		  '6181: ishash(hash) == 2');
 	vrfy(ishash(id) == 0,		  '6182: ishash(id) == 0');
 	vrfy(ishash(list) == 0,		  '6183: ishash(list) == 0');
 	vrfy(ishash(matrix) == 0,	  '6184: ishash(matrix) == 0');
@@ -6793,108 +6799,6 @@ print '172: parsed test_blkprintf()';
 
 
 /*
- * test_sha - test the sha hash
- */
-define test_sha()
-{
-	local a, b, c, d, e, f, x, y, z, L, M, B1, B2, B;
-
-	print '7100: Beginning test_sha';
-	y = sha();
-	print				'7101: y = sha();';
-	z = sha();
-	print				'7102: z = sha();';
-	vrfy(y == z,			'7103: y == z');
-	vrfy(sha("") == y,		'7104: sha("") == y');
-	y = sha(y,1);
-	print				'7105: y = sha(y,1);';
-	vrfy(y == sha(1),		'7106: y == sha(1)');
-	vrfy(sha(y,2) == sha(1,2),	'7107: sha(y,2) == sha(1,2)');
-
-	vrfy(sha(sha()) == 0xf96cea198ad1dd5617ac084a3d92c6107708c0ef,
-	    '7108: sha(sha()) == 0xf96cea198ad1dd5617ac084a3d92c6107708c0ef');
-
-	vrfy(sha(sha("a"))==0x37f297772fae4cb1ba39b6cf9cf0381180bd62f2,
-	    '7109: sha(sha("a"))==0x37f297772fae4cb1ba39b6cf9cf0381180bd62f2');
-
-	vrfy(sha(sha("ab"))==0x488373d362684af3d3f7a6a408b59dfe85419e09,
-	    '7110: sha(sha("ab"))==0x488373d362684af3d3f7a6a408b59dfe85419e09');
-	vrfy(sha(sha("abc"))==0x0164b8a914cd2a5e74c4f7ff082c4d97f1edf880,
-	'7111: sha(sha("abc"))==0x0164b8a914cd2a5e74c4f7ff082c4d97f1edf880');
-	vrfy(sha(sha("abcd"))==0x082c73b06f71185d840fb4b28eb3abade67714bc,
-	'7112: sha(sha("abcd"))==0x082c73b06f71185d840fb4b28eb3abade67714bc');
-	vrfy(sha(sha("abcde"))==0xd624e34951bb800f0acae773001df8cffe781ba8,
-	'7113: sha(sha("abcde"))==0xd624e34951bb800f0acae773001df8cffe781ba8');
-	vrfy(sha(sha("abcdef"))==0x2a589f7750598dc0ea0a608719e04327f609279a,
-	'7114: sha(sha("abcdef"))==0x2a589f7750598dc0ea0a608719e04327f609279a');
-	vrfy(sha(sha("abcdefg"))==0x5bdf01f9298e9d19d3f8d15520fd74eed600b497,
-    '7115: sha(sha("abcdefg"))==0x5bdf01f9298e9d19d3f8d15520fd74eed600b497');
-	vrfy(sha(sha("abcdefgh"))==0x734ba8b31975d0dbae4d6e249f4e8da270796c94,
-    '7116: sha(sha("abcdefgh"))==0x734ba8b31975d0dbae4d6e249f4e8da270796c94');
-
-	vrfy(sha(sha(1)) == 0x864c8d09e828c7c31d62693736a5a9302c282777,
-	    '7117: sha(sha(1)) == 0x864c8d09e828c7c31d62693736a5a9302c282777');
-
-	vrfy(sha(sha(2)) == 0x2c0b59c512cb20fad6bb0883b69c9f5a46545808,
-	    '7118: sha(sha(2)) == 0x2c0b59c512cb20fad6bb0883b69c9f5a46545808');
-
-	vrfy(sha(sha(22/7))==0x7ddb7f8a7e9d70757f157744fddea7a6c6a6bcc6,
-	    '7119: sha(sha(22/7)==0x7ddb7f8a7e9d70757f157744fddea7a6c6a6bcc6');
-	vrfy(sha(sha(isqrt(2e1000))) ==
-	    0x6db8d9cf0b018b8f9cbbf5aa1edb8066d19e1bb0,
-    '7120: sha(sha(isqrt(2e1000)==0x6db8d9cf0b018b8f9cbbf5aa1edb8066d19e1bb0');
-	vrfy(sha("x", "y", "z") == sha("xyz"),
-		'7121: sha("x", "y", "z") == sha("xyz")');
-
-	vrfy(sha(sha("this is", 7^19-8, "a composit", 3i+4.5, "hash")) ==
-	    0x21e42319a26787046c2b28b7ae70f1b54bf0ba2a,
-		'7122: sha(sha("this is", 7^19-8, ..., "hash")) == 0x21e4...');
-
-	z = sha(list(1,2,3), "curds and whey", 2^21701-1, pi(1e-100));
-	print '7123: z = sha(list(1,2,3), "curds and whey", 2^21701-1, pi(1e-100));';
-	vrfy(sha(z) == 257075527903934749824451356785709876382198951165,
-		'7124: sha(z) == 257075527903934749824451356785709876382198951165');
-
-	y = sha();
-	print '7125: y = sha()';
-	y = sha(y, list(1,2,3), "curds and whey");
-	print '7126: y = sha(y, list(1,2,3), "curds and whey")';
-	y = sha(y, 2^21701-1);
-	print '7127: y = sha(y, 2^21701-1)';
-	y = sha(y, pi(1e-100));
-	print '7128: y = sha(y, pi(1e-100))';
-	vrfy(y == z,			'7129: y == z');
-
-	B = blk() = {"a", "b", "c"};
-	print				'7130: B = blk() = {"a", "b", "c"};';
-	vrfy(sha(B) == sha("abc"),	'7131: sha(B) == sha("abc")');
-
-	B1 = blk() = {1,2,3,4};
-	print '7132: B1 = blk() = {1,2,3,4};';
-	B2 = blk() = {5,6,7,8};
-	print '7133: B2 = blk() = {5,6,7,8};';
-	B = blk() = {1,2,3,4,5,6,7,8};
-	print '7134: B = blk() = {1,2,3,4,5,6,7,8};';
-
-	vrfy(sha(B1, B2) == sha(B),	'7135: sha(B1, B2) == sha(B)');
-	vrfy(sha(B[1], B[3], B[5]) == sha("\02\04\06"),
-		'7136: sha(B[1], B[3], B[5]) == sha("\02\04\06")');
-
-	L = list(1,2,3);
-	print				'7137: L = list(1,2,3)';
-	mat M[3] = {4,5,6};
-	print				'7138: mat M[3] = {4,5,6}';
-	vrfy(sha(sha(L), M, B) == sha(L, M, B),
-		'7139: sha(sha(L), M, B) == sha(L, M, B)');
-	vrfy(sha(sha(L,M), B) == sha(L, M, B),
-		'7140: sha(sha(L, M), B) == sha(L, M, B)');
-
-	print '7141: Ending test_sha';
-}
-print '173: parsed test_sha()';
-
-
-/*
  * test_sha1 - test the sha1 hash
  */
 define test_sha1()
@@ -6977,88 +6881,6 @@ define test_sha1()
 	print '7233: Ending test_sha1';
 }
 print '174: parsed test_sha1()';
-
-
-/*
- * test_md5 - test the md5 hash
- */
-define test_md5()
-{
-	local a, b, c, d, e, f, x, y, z, L, M, B;
-
-	print '7300: Beginning test_md5';
-	y = md5();
-	print				'7301: y = md5();';
-	z = md5();
-	print				'7302: z = md5();';
-	vrfy(y == z,			'7303: y == z');
-	y = md5(y,1);
-	print				'7304: y = md5(y,1);';
-	z = md5(1);
-	print				'7305: z = md5(1);';
-	vrfy(y == z,			'7306: y == z');
-	vrfy(md5(z,2) == md5(1,2),	'7307: md5(z,2) == md5(1,2)');
-
-	vrfy(md5(md5()) == 0xd41d8cd98f00b204e9800998ecf8427e,
-		'7308: md5(md5()) == 0xd41d8cd98f00b204e9800998ecf8427e');
-	vrfy(md5("x", "y", "z") == md5("xyz"),
-		'7309: md5("x", "y", "z") == md5("xyz")');
-
-	vrfy(md5(md5("this is", 7^19-8, "a composit", 3i+4.5, "hash")) ==
-		0x39a5a8e24a2eb65a51af462c8bdd5e3,
-    '7310: md5(md5("this is", 7^19-8, "a composit", 3i+4.5, "hash")) == ...');
-
-
-	z = md5(list(1,2,3), "curds and whey", 2^21701-1, pi(1e-100));
-	print '7311: z = md5(list(1,2,3), "curds and whey", 2^21701-1, pi(1e-100));';
-	vrfy(md5(z) == 0x487462e577eabef0302dd13af6632546,
-		'7312: md5(z) == 0x487462e577eabef0302dd13af6632546');
-	y = md5();
-	print		'7313: y = md5();';
-	y = md5(y, list(1,2,3), "curds and whey");
-	print		'7314: y = md5(y, list(1,2,3), "curds and whey")';
-	y = md5(y, 2^21701-1);
-	print		'7315: y = md5(y, 2^21701-1);';
-	y = md5(y, pi(1e-100));
-	print		'7316: y = md5(y, pi(1e-100));';
-	vrfy(y == z,	'7317: y == z');
-
-	vrfy(md5(md5("a")) == 0x0cc175b9c0f1b6a831c399e269772661,
-		'7318: md5(md5("a")) == 0x0cc175b9c0f1b6a831c399e269772661');
-	vrfy(md5(md5("ab")) == 0x187ef4436122d1cc2f40dc2b92f0eba0,
-		'7319: md5(md5("ab")) == 0x187ef4436122d1cc2f40dc2b92f0eba0');
-	vrfy(md5(md5("abc")) == 0x900150983cd24fb0d6963f7d28e17f72,
-		'7320: md5(md5("abc")) == 0x900150983cd24fb0d6963f7d28e17f72');
-	vrfy(md5(md5("abcd")) == 0xe2fc714c4727ee9395f324cd2e7f331f,
-		'7321: md5(md5("abcd")) == 0xe2fc714c4727ee9395f324cd2e7f331f');
-	vrfy(md5(md5("abcde")) == 0xab56b4d92b40713acc5af89985d4b786,
-	    '7322: md5(md5("abcde")) == 0xab56b4d92b40713acc5af89985d4b786');
-	vrfy(md5(md5("abcdef")) == 0xe80b5017098950fc58aad83c8c14978e,
-	    '7323: md5(md5("abcdef")) == 0xe80b5017098950fc58aad83c8c14978e');
-	vrfy(md5(md5("abcdefg")) == 0x7ac66c0f148de9519b8bd264312c4d64,
-	    '7324: md5(md5("abcdefg")) == 0x7ac66c0f148de9519b8bd264312c4d64');
-	vrfy(md5(md5("abcdefgh")) == 0xe8dc4081b13434b45189a720b77b6818,
-	    '7325: md5(md5("abcdefgh")) == 0xe8dc4081b13434b45189a720b77b6818');
-	vrfy(md5(md5(1)) == 0x44fe7987067ac45311c88772038f60d1,
-	    '7326: md5(md5(1)) == 0x44fe7987067ac45311c88772038f60d1');
-	vrfy(md5(md5(22/7)) == 0x9274b951e1dfb9cba22af1c127daa8e7,
-	    '7327: md5(md5(22/7) == 0x9274b951e1dfb9cba22af1c127daa8e7');
-	vrfy(md5(md5(isqrt(2e1000))) == 0xe56ac4b8cad869e738a04fedc97058f3,
-	'7328: md5(md5(isqrt(2e1000))) == 0xe56ac4b8cad869e738a04fedc97058f3');
-	L = list(1,2,3);
-	print				'7329: L = list(1,2,3)';
-	mat M[3] = {4,5,6};
-	print				'7330: mat M[3] = {4,5,6}';
-	B = blk() = {7,8,9};
-	print				'7331: B = blk() = {7,8,9}';
-	vrfy(md5(md5(L), M, B) == md5(L, M, B),
-		'7332: md5(md5(L), M, B) == md5(L, M, B)');
-	vrfy(md5(md5(L,M), B) == md5(L, M, B),
-		'7333: md5(md5(L, M), B) == md5(L, M, B)');
-
-	print '7334: Ending test_md5';
-}
-print '175: parsed test_md5()';
 
 
 /*
@@ -7594,6 +7416,85 @@ print '190: parsed test_somenew()';
 
 
 /*
+ * test_exponentiation - test new exponentiation functionaltiy
+ */
+define test_exponentiation()
+{
+	local a;
+
+	print	'8800: Starting test_somenew';
+
+	/* unexpected help file cases */
+	vrfy(2^3 == 8,			'8801: 2^3 == 8');
+	vrfy(2.5 ^ 3.5 == power(2.5, 3.5),
+			'8802: 2.5 ^ 3.5 == power(2.5, 3.5)');
+	vrfy(2.5 ^ 2.718i == power(2.5, 2.718i),
+			'8803: 2.5 ^ 2.718i == power(2.5, 2.718i)');
+	vrfy(3i^4 == 81,		'8804: 3i^4 == 81');
+	vrfy(0.5i ^ 0.25 == power(0.5i, 0.25),
+			'8804: 0.5i ^ 0.25 == power(0.5i, 0.25)');
+	vrfy(3.13145i^0.30103i == power(3.13145i, 0.30103i),
+			'8806: 3.13145i^0.30103i == power(3.13145i, 0.30103i)');
+
+	/* deal with some corner error cases */
+	ecnt += 12;
+	print				'8807: ecnt += 2';
+	vrfy((1/0) ^ -1 == 0,		'8808: (1/0) ^ -1 == 0');
+	vrfy((1/0) ^ -2 == 0,		'8809: (1/0) ^ -2 == 0');
+	vrfy((1/0) ^ 0 == error(10001),	'8810: (1/0) ^ 0 == error(10001)');
+	vrfy((1/0) ^ 3 == error(10001),	'8811: (1/0) ^ 3 == error(10001)');
+	vrfy(0 ^ -2 == error(10001),	'8812: 0 ^ -2 == error(10001)');
+	vrfy((1/0) ^ 1i == error(10001),'8813: (1/0) ^ 1i == error(10001)');
+	vrfy((1/0) ^ 0i == error(10001),'8814: (1/0) ^ 0i == error(10001)');
+
+	/* real ^ real */
+	vrfy(5^6 == 15625,		'8815: 5^6 == 15625');
+	vrfy(10^31 == 1e31,		'8816: 10^31 == 1e31');
+	vrfy(10 ^ (127/31) == power(10, 127/31),
+			'8817: 10 ^ (127/31) == power(10, 127/31)');
+	vrfy((10^31) ^ 10 == 1e310,	'8818: (10^31) ^ 10 == 1e310');
+
+	/* complex ^ real */
+	vrfy(10i ^ 10 == -1e10,		'8819: 10i ^ 10 == -1e10');
+	vrfy((-10i) ^ 10 == -1e10,	'8820: (-10i) ^ 10 == -1e10');
+	vrfy((1+1i) ^ 4 == -4,		'8821: (1+1i) ^ 4 == -4');
+	vrfy((1+1i) ^ 65536 == 2^32768,	'8822: (1+1i) ^ 65536 == 2^32768');
+	vrfy((1+1i) ^ (2^20) == 2^(2^19),
+			'8823: (1+1i) ^ (2^20) == 2^(2^19)');
+	vrfy((31+17i) ^ pi() == power(31+17i, pi()),
+			'8824: (31+17i) ^ pi() == power(31+17i, pi()');
+	vrfy((5+7i) ^ exp(5) == power(5+7i, exp(5)),
+			'8825: (5+7i) ^ exp(5) == power(5+7i, exp(5))');
+
+	/* real ^ complex */
+	vrfy(10 ^ 1i == power(10, 1i), '8826: 10 ^ 1i == power(10, 1i)');
+	vrfy(10 ^ (2+3i) == power(10, 2+3i),
+			'8827: 10 ^ (2+3i) == power(10, 2+3i)');
+	vrfy(pi() ^ (2+3i) == power(pi(), 2+3i),
+			'8828: pi() ^ (2+3i) == power(pi(), 2+3i)');
+	vrfy(exp(64) ^ (2+3i) == power(exp(64), 2+3i),
+			'8828: exp(64) ^ (2+3i) == power(exp(64), 2+3i)');
+	vrfy(pi() ^ (257+127i) == power(pi(), 257+127i),
+			'8829: pi() ^ (257+127i) == power(pi(), 257+127i)');
+	vrfy(pi() ^ asin(-2) == power(pi(), asin(-2)),
+			'8830: pi() ^ asin(-2) == power(pi(), asin(-2)');
+
+	/* complex ^ complex */
+	vrfy((3+4i) ^ (2+3i) == power(3+4i, 2+3i),
+			'8831: (3+4i) ^ (2+3i) == power(3+4i, 2+3i)');
+	vrfy(ln(-10) ^ (2+3i) == power(ln(-10), 2+3i),
+			'8832: ln(-10) ^ (2+3i) == power(ln(-10), 2+3i)');
+	vrfy((pi()*1i) ^ asin(-2) == power(pi()*1i, asin(-2)),
+		'8833: (pi()*1i) ^ asin(-2) == power(pi()*1i, asin(-2))');
+	vrfy((exp(1)+pi()*1i) ^ asin(-2) == power(exp(1)+pi()*1i, asin(-2)),
+	'8834: (exp(1)+pi()*1i) ^ asin(-2) == power(exp(1)+pi()*1i, asin(-2))');
+
+	print '8835: Ending test_somenew';
+}
+print '191: parsed test_exponentiation()';
+
+
+/*
  * test_quit - test the QUIT functionality
  */
 define test_quit()
@@ -7820,11 +7721,7 @@ return test_name();
 print;
 return test_blkprintf();
 print;
-return test_sha();
-print;
 return test_sha1();
-print;
-return test_md5();
 print;
 
 print '7400: Beginning test_savedot';
@@ -7962,6 +7859,14 @@ read -once "set8700";
 vrfy(dotest("set8700.line", 8703) == 0,
      '8703: dotest("set8700.line", 8703) == 0');
 /* 87xx: Ending dotest runs is printed by set8700.test */
+
+
+/*
+ * new exponentiation functionaltiy
+ */
+print;
+return test_exponentiation();
+/* 88xx: test exponentiation */
 
 
 /*

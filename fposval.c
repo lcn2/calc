@@ -15,10 +15,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.6 $
- * @(#) $Id: fposval.c,v 29.6 2001/03/18 03:01:41 chongo Exp $
+ * @(#) $Revision: 30.1 $
+ * @(#) $Id: fposval.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/fposval.c,v $
  *
  * Under source code control:	1994/11/05 03:19:52
@@ -41,12 +41,16 @@
  * We will #define of 8 symbols:
  *
  *	FILEPOS_BITS		length in bits of the type FILEPOS
+ *	FILEPOS_LEN		length in octets of the type FILEPOS
  *	SWAP_HALF_IN_FILEPOS	will copy/swap FILEPOS into an HALF array
  *	OFF_T_BITS		length in bits of the st_size stat element
+ *	OFF_T_LEN		length in octets of the st_size stat element
  *	SWAP_HALF_IN_OFF_T	will copy/swap st_size into an HALF array
  *	DEV_BITS		length in bits of the st_dev stat element
+ *	DEV_LEN			length in bits of the st_dev stat element
  *	SWAP_HALF_IN_DEV	will copy/swap st_dev into an HALF array
  *	INODE_BITS		length in bits of the st_ino stat element
+ *	INODE_LEN		length in octets of the st_ino stat element
  *	SWAP_HALF_IN_INODE	will copy/swap st_ino into an HALF array
  *
  * With regards to 'will copy/swap ... into an HALF array'.  Such macros
@@ -95,6 +99,8 @@ main(int argc, char **argv)
 #endif /* ! HAVE_FPOS_POS */
 	printf("#undef FILEPOS_BITS\n");
 	printf("#define FILEPOS_BITS %d\n", fileposlen);
+	printf("#undef FILEPOS_LEN\n");
+	printf("#define FILEPOS_LEN %d\n", fileposlen/8);
 #if CALC_BYTE_ORDER == BIG_ENDIAN
 	/*
 	 * Big Endian
@@ -138,6 +144,8 @@ main(int argc, char **argv)
 #endif
 	printf("#undef OFF_T_BITS\n");
 	printf("#define OFF_T_BITS %d\n", stsizelen);
+	printf("#undef OFF_T_LEN\n");
+	printf("#define OFF_T_LEN %d\n", stsizelen/8);
 #if CALC_BYTE_ORDER == BIG_ENDIAN
 	/*
 	 * Big Endian
@@ -184,6 +192,8 @@ main(int argc, char **argv)
 #endif
 	printf("#undef DEV_BITS\n");
 	printf("#define DEV_BITS %d\n", devlen);
+	printf("#undef DEV_LEN\n");
+	printf("#define DEV_LEN %d\n", devlen/8);
 #if CALC_BYTE_ORDER == BIG_ENDIAN
 	/*
 	 * Big Endian
@@ -224,6 +234,8 @@ main(int argc, char **argv)
 #endif
 	printf("#undef INODE_BITS\n");
 	printf("#define INODE_BITS %d\n", inodelen);
+	printf("#undef INODE_LEN\n");
+	printf("#define INODE_LEN %d\n", inodelen/8);
 #if CALC_BYTE_ORDER == BIG_ENDIAN
 	/*
 	 * Big Endian

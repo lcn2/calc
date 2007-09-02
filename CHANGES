@@ -10,11 +10,9 @@ The following are the changes from calc version 2.12.1.10 to date:
     All extern functions are now declared with the symbol E_FUNC.
     The include file decl.h defines these 4 symbols by default
     to static, extern, static, and extern respectively.  Under
-    Windoz, DLL is also defined accorind to the _EXPORTING symbol
+    Windoz, DLL is also defined according to the _EXPORTING symbol
     and is prepended to the EXTERN and E_FUNC symbols.  The decl.h
     file has replaced the win32dll.h file.
-
-    Added Apple Mac OS X compiler set in the Makefile.
 
     When WITH_TLS is defined, calc attempts to compile with Thread Local
     Storage.  As of version 2.12.1.12 this mode is extremely experimental.
@@ -28,10 +26,6 @@ The following are the changes from calc version 2.12.1.10 to date:
     systems such as FreeBSD, the file /usr/include/malloc.h exists
     and contains an forced error saying that stdlib.h should be used
     instead.  The Makefile symbol HAVE_MALLOC has been removed.
-
-    Fixed FreeBSD dereferencing type-punned pointer error in filepos2z().
-
-    Removed SGI IRIX from the compiler section.
 
     Moved the sample code in the sample sub-directory up into the
     main source level.  The sample/many_random.c source file is
@@ -94,6 +88,165 @@ The following are the changes from calc version 2.12.1.10 to date:
     string.h, and win32dll.h from ${INCDIR} if they exist.  These calc
     include files are no longer supported.
 
+    Do reduce the number of special case .o build rules, the
+    ${ALLOW_CUSTOM} make flag is added to ${CFLAGS} by default.  This means
+    that if ALLOW_CUSTOM= -DCUSTOM, then -DCUSTOM is given to the compile
+    line of most .c files.
+
+    Calc -v reports "w/custom functions" or "w/o custom functions" on
+    the version string depending on if calc was compiled with the
+    ALLOW_CUSTOM= -DCUSTOM or not.
+
+    Replaced the concept of compiler sets in the Makefile with
+    host target section in the Makefile.  Initial host targets are:
+
+    	Linux
+	Darwin
+	FreeBSD
+	(default)	<<== Target does not match any previous target name
+	Simple
+
+    	NOTE: If your target is not supported below and the default target
+	      is not suitable for your needs, please send to the:
+
+	      	calc-contrib at asthe dot com
+
+	      EMail address an "ifeq ($(target),YOUR_TARGET_NAME)"
+	      ... "endif" set of lines from the Makefile so that
+	      we can consider them for the next release.
+
+    The custom/Makefile is now constructed from 3 parts: custom/Makefile.head,
+    the host target section in Makefile, and the custom/Makefile.tail.
+
+    The top level Makefile and the custom/Makefile require a GNU Make
+    (such as gmake) or an equivalently advanced make.  On many targets,
+    the default make is sufficient.  On FreeBSD for example, one must
+    use gmake instead of make.
+
+    If your target system does not have GNU Make (or equivalent), then
+    you should try using the Makefile.simple and custom/Makefile.simple
+    files:
+
+	mv Makefile Makefile.gmake
+	cp Makefile.simple Makefile
+	mv custom/Makefile custom/Makefile.gmake
+	cp custom/Makefile.simple custom/Makefile
+	make all
+
+    Added the ability to build calc with dynamic libraries, static
+    libraries or both.  Many thanks goes to Matthew Miller (mattdm
+    at mattdm dot org) and Mirko Viviani (mirko at objectlab dot
+    org) for this help, encouragement, and testing of this major change!
+
+    Added BLD_TYPE Makefile variable to control how calc is
+    built.  The BLD_TYPE value may be one of:
+
+	BLD_TYPE= calc-dynamic-only
+	BLD_TYPE= calc-static-only
+
+    Each host target establishes a default BLD_TYPE value.  Of course
+    one can override the host target BLD_TYPE on the make command line:
+
+	make clobber
+	make calc-dynamic-only BLD_TYPE=calc-dynamic-only
+
+	make clobber
+	make calc-static-only BLD_TYPE=calc-static-only
+
+	NOTE: It is a very good idea to first clobber (remove) any previously
+	      built .o, libs and executables before switching the build
+	      between static and dynamic.
+
+    which have the same effect as make all with a given build phase set.
+
+    For Linux and Darwin, the default BLD_TYPE is calc-dynamic-only.
+    For the simple case, BLD_TYPE is calc-static-only.  For the
+    default target (the target does not match any of the previous
+    defined targets), BLD_TYPE is calc-static-only.
+
+    Added ${CSFLAGS} make variable to hold the {$CC} flags for compiling
+    without shared library.  By default, ${CFLAGS} is ${CSFLAGS} with
+    ${CC_SHARE} added to it.
+
+    Added ${CC_SHARE}, ${LIBCALC_SHLIB}, ${LIBCUSTCALC_SHLIB}, and
+    ${LD_SHARE} to the remaining compiler sets.
+
+    Fixed make depend and make uninstall rules.   Performed various
+    makefile syntax cleanups.
+
+    Removed ${PROGS} and ${STATIC_PROGS} Makefile variables due to
+    the new BLD_TYPE system (see above).
+
+    Added missing help for cp, calcpath, and stoponerror.
+
+    Noted that calc fails the regression test (and will crash at
+    various times) when compiled with gcc v4.1.0.  This problem was
+    first reported under Fedora Core 5 by Christian Siebert.
+
+    Set the LESSCHARSET to iso8859 so that less will not confuse or
+    upset the col utility with Invalid or incomplete multi-byte or wide
+    characters.
+
+    Updated the Free Software Foundation postal address and updated
+    the COPYING-LGPL from http://www.fsf.org/licensing/licenses/lgpl.txt
+    on 2007-Mar-14.  Calc is using the same Version 2.1 of the LGPL,
+    only the postal address of the Free Software Foundation has
+    been updated.  All source files were updated to RCS level 30.
+    Thanks goes to Martin Buck (m at rtin-buck dor de) for this patch.
+
+    Added printf arg checking for GNU C compilers that helps check
+    printf-style functions in calc.  Thanks goes to Martin Buck (m at
+    rtin-buck dor de) for this patch.
+
+    Fixed issues where the argument of a printf-like did not match the
+    format type.
+
+    Removed build function md5().  The MD5 hash has been compromised to
+    such a degree that is it no longer advisable to use this function.
+
+    Removed build function sha().  The SHA hash has been compromised to
+    such a degree that is it no longer advisable to use this function.
+    Note that the SHA-1 hash has not been compromised to the same degree
+    and so this hash function remains.
+
+    Renamed shs1.c to sha1.c.  Renamed shs1.h to sha1.h.
+
+    Added custom registers.  The custom register function:
+
+	custom("register", 3)
+
+    returns the value of custom register 3.  Custom registers, initialized
+    with 0, may take on any calc value:
+
+	custom("register", regnum, value)
+
+    Added REGNUM_MAX to the sysinfo custom function to return the maximum
+    register number:
+
+	custom("sysinfo", "REGNUM_MAX")
+
+    which defaults to 31.  The first custom register is 0 and thus the
+    default number of custom registers is 32.
+
+    Added E_OK #define in calc.h to indicate no error (0).
+
+    Renamed C function powivalue() in value.c to powvalue() because it
+    now handles raising NUMBER or COMPLEX to a NUMBER or COMPLEX power.
+
+    The powervalue() function in value.c may be given a NULL epsilon
+    which will cause to the builtin epsilon value to be used.
+
+    Calc supports both real and complex exponentiation bases and exponents.
+    For a ^ b and a ** b, "a" and "b" can be a real value or a complex value:
+
+        2^3                     3i^4
+	2.5 ^ 3.5               0.5i ^ 0.25
+	2.5 ^ 2.718i            3.13145i ^ 0.30103i
+
+    Fixed typos in the calc man page thanks to a Debian bug report
+    by A. Costa <agcosta at gis dot .net> that wsa kindly forwarded
+    to us by Martin Buck <m at rtin-buck dot de>.
+
 
 The following are the changes from calc version 2.12.1.8 to 2.12.1.9:
 
@@ -125,7 +278,7 @@ The following are the changes from calc version 2.12.1.8 to 2.12.1.9:
     The usage help file is now formed from the contents of the calc man page.
     So "help usage" prints the version of the calc man page.  Added ${COL}
     makefile symbol to support the formation of the calc.usage file from
-    calc.1 via the CALCPAGER (less).
+    calc.1 via the CALCPAGER (less) or NROFF (if NROFF is non-empty).
 
     The "help calc" command is now equivalent to "help help".
 
@@ -154,6 +307,9 @@ The following are the changes from calc version 2.12.1.8 to 2.12.1.9:
     Calc and cscripts are installed mode 0755 instead of 0555 to
     make rpmlint happy.
 
+    Make clobber cleanup as suggested by Martin Buck <m at rtin-buck dot de>.
+    The clobber rule now depends on the clean rule.
+
 
 The following are the changes from calc version 2.12.1.6 to 2.12.1.7:
 
@@ -162,7 +318,7 @@ The following are the changes from calc version 2.12.1.6 to 2.12.1.7:
     builtin, the CPU time reported for long running processes will not
     wrap around to 0 after only a few months.
 
-    Added the calc builtin function, systime(), to return the amount of
+    Added the calc built0in function, systime(), to return the amount of
     kernel CPU time used by the current process.
 
     The runtime() builtin function now returns the total amount of CPU
@@ -6434,10 +6590,10 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## A copy of version 2.1 of the GNU Lesser General Public License is
 ## distributed with calc under the filename COPYING-LGPL.  You should have
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
-## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 29.102 $
-## @(#) $Id: CHANGES,v 29.102 2007/02/18 14:45:46 chongo Exp $
+## @(#) $Revision: 30.8 $
+## @(#) $Id: CHANGES,v 30.8 2007/09/02 06:26:38 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

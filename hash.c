@@ -15,10 +15,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.11 $
- * @(#) $Id: hash.c,v 29.11 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: hash.c,v 30.2 2007/07/05 17:37:41 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hash.c,v $
  *
  * Under source code control:	1995/11/23 05:13:11
@@ -44,7 +44,7 @@
  * external hash_setup functions
  */
 E_FUNC void shs_init_state(HASH*);
-E_FUNC void shs1_init_state(HASH*);
+E_FUNC void sha1_init_state(HASH*);
 E_FUNC void MD5_init_state(HASH*);
 
 
@@ -64,9 +64,7 @@ STATIC struct hash_setup {
 	int type;		/* hash type (see XYZ_HASH_TYPE below) */
 	void (*init_state)(HASH*);	/* initialize a hash state */
 } htbl[] = {
-	{ SHS_HASH_TYPE, shs_init_state },	/* old SHS / SHA */
-	{ SHS1_HASH_TYPE, shs1_init_state },	/* SHS-1 / SHA-1 */
-	{ MD5_HASH_TYPE, MD5_init_state },	/* MD5 */
+	{ SHA1_HASH_TYPE, sha1_init_state },	/* SHA-1 / SHA-1 */
 	{ -1, NULL }		/* must be last */
 };
 

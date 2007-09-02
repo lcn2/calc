@@ -15,10 +15,10 @@
 # A copy of version 2.1 of the GNU Lesser General Public License is
 # distributed with calc under the filename COPYING-LGPL.  You should have
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
-# 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 29.32 $
-# @(#) $Id: Makefile,v 29.32 2007/02/08 21:21:25 chongo Exp $
+# @(#) $Revision: 30.2 $
+# @(#) $Id: Makefile,v 30.2 2007/03/22 07:34:47 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -34,12 +34,29 @@
 # required vars
 #
 SHELL= /bin/sh
-MAKE_FILE= Makefile
 
 ####
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
 ####
+
+# Normally certain files depend on the Makefile.  If the Makefile is
+# changed, then certain steps should be redone.  If MAKE_FILE is
+# set to Makefile, then these files will depend on Makefile.  If
+# MAKE_FILE is empty, then they wont.
+#
+# If in doubt, set MAKE_FILE to Makefile
+#
+MAKE_FILE= Makefile
+
+# Controlling file makefile basename (without the path)
+#
+# This is the basename same of the makefile that may/does/will drive
+# this makefile.
+#
+# If in doubt, set TOP_MAKE_FILE to Makefile
+#
+TOP_MAKE_FILE= Makefile
 
 # Where the system include (.h) files are kept
 #
@@ -295,17 +312,14 @@ detaillist:
 ##
 
 depend:
-	${Q} if [ -f Makefile.bak ]; then \
-	    echo "Makefile.bak exists, remove or move it out of the way"; \
+	${Q} if [ -f ${MAKE_FILE}.bak ]; then \
+	    echo "${MAKE_FILE}.bak exists, remove or move it"; \
 	    exit 1; \
 	else \
 	    ${TRUE}; \
 	fi
-	-${Q} ${RM} -f makedep.out
+	${Q} ${RM} -f makedep.out
 	${Q} echo forming cscript dependency list
-	${Q} echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > \
-		makedep.out
-	${Q} echo "" >> makedep.out
 	${Q} for i in ${SCRIPT} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i: $$i.calc"; \
@@ -315,25 +329,27 @@ depend:
 	    fi; \
 	done >> makedep.out
 	${Q} echo sample dependency list formed
-	${Q} echo forming new cscript/Makefile
-	-${Q} ${RM} -f Makefile.bak
-	${Q} ${MV} Makefile Makefile.bak
-	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' Makefile.bak > Makefile
-	${Q} echo "" >> Makefile
-	${Q} ${SED} -n '3,$$p' makedep.out >> Makefile
-	-${Q} ${RM} -f makedep.out
-	-${Q} if ${CMP} -s Makefile.bak Makefile; then \
-	    echo 'sample Makefile was already up to date'; \
-	    ${MV} -f Makefile.bak Makefile; \
+	${Q} echo forming new cscript/${MAKE_FILE}
+	${Q} ${RM} -f ${MAKE_FILE}.bak
+	${Q} ${MV} ${MAKE_FILE} ${MAKE_FILE}.bak
+	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' ${MAKE_FILE}.bak > ${MAKE_FILE}
+	${Q} echo "" >> ${MAKE_FILE}
+	${Q} ${CAT} makedep.out >> ${MAKE_FILE}
+	${Q} ${RM} -f makedep.out
+	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
+	    echo 'sample ${MAKE_FILE} was already up to date'; \
+	    ${MV} -f ${MAKE_FILE}.bak ${MAKE_FILE}; \
 	else \
-	    ${RM} -f Makefile.tmp; \
-	    ${MV} Makefile Makefile.tmp; \
-	    if [ -d RCS ]; then \
-		${CO} -l Makefile; \
+	    ${RM} -f ${MAKE_FILE}.tmp; \
+	    ${MV} ${MAKE_FILE} ${MAKE_FILE}.tmp; \
+	    if [ -d RCS -a ! -w "${MAKE_FILE}" ]; then \
+		${CO} -l ${MAKE_FILE}; \
 	    fi; \
-	    ${MV} Makefile.tmp Makefile; \
+	    ${MV} ${MAKE_FILE}.tmp ${MAKE_FILE}; \
 	    if [ -d RCS ]; then \
-		echo new sample Makefile formed, you need to check it in; \
+		echo '*****************************************************'; \
+		echo 'new sample ${MAKE_FILE} formed -- need to check it in'; \
+		echo '*****************************************************'; \
 	    fi; \
 	fi
 
@@ -357,10 +373,11 @@ echo_inst_files:
 ##
 
 clean:
-	-${RM} -f makedep.out
+	${RM} -f makedep.out
 
-clobber:
-	-${RM} -f ${TARGETS}
+clobber: clean
+	${RM} -f .all
+	${RM} -f ${TARGETS}
 
 # install everything
 #

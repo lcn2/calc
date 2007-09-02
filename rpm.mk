@@ -17,10 +17,10 @@
 # A copy of version 2.1 of the GNU Lesser General Public License is
 # distributed with calc under the filename COPYING-LGPL.  You should have
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
-# 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-MAKEFILE_REV= $$Revision: 29.16 $$
-# @(#) $Id: rpm.mk,v 29.16 2006/09/18 06:33:50 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.2 $$
+# @(#) $Id: rpm.mk,v 30.2 2007/09/02 05:38:34 chongo Exp chongo $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/rpm.mk,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -51,7 +51,8 @@ CPIO= cpio
 CP= cp
 EGREP= egrep
 MKDIR= mkdir
-GREP= GREP
+GREP= grep
+SORT= sort
 
 # rpm-related parameters
 #
@@ -67,35 +68,62 @@ SRPM= $(PROJECT)-$(PROJECT_RELEASE).src.rpm
 TMPDIR= /var/tmp
 RPMDIR= /usr/src/redhat
 
+# Makefile debug
+#
+# Q=@	do not echo internal Makefile actions (quiet mode)
+# Q=	echo internal Makefile actions (debug / verbose mode)
+#
+# V=@:	do not echo debug statements (quiet mode)
+# V=@	do echo debug statements (debug / verbose mode)
+#
+#Q=
+Q=@
+V=@:
+#V=@
+
 all: calc.spec ver_calc
+	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	$(MAKE) -f rpm.mk PROJECT_VERSION="`./ver_calc`" \
 		PROJECT_RELEASE="`${SED} -n -e '/^Release:/s/^Release: *//p' \
 				  calc.spec.in`" rpm
+	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 pkgme: $(PROJECT_NAME)-spec.${TAR}.gz
 
 ver_calc:
+	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	$(MAKE) -f Makefile ver_calc
+	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: vers
 vers:
+	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	$(MAKE) -f Makefile ver_calc
+	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 calc.spec: calc.spec.in ver_calc
+	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	${RM} -f calc.spec
 	${SED} -e 's/<<<PROJECT_VERSION>>>/'"`./ver_calc`"/g \
 	    calc.spec.in > calc.spec
+	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: srcpkg
 srcpkg: make_rhdir
-	${FIND} . -depth -print | ${EGREP} -v '/RCS|/CVS|/NOTES|\.gone' | \
+	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
+	${FIND} . -depth -print | \
+	    ${EGREP} -v '/RCS|/CVS|/NOTES|/\.|\.out$$|\.safe$$' | \
+	    ${EGREP} -v '/old[._-]|\.old$$|\.tar\.gz$$' | \
+	    LANG=C ${SORT} | \
 	    ${CPIO} -dumpv "$(TMPDIR)/$(PROJECT)"
 	(cd "$(TMPDIR)"; ${TAR} cf - "$(PROJECT)") | \
 	  ${GZIP_PROG} -c > "$(RPMDIR)/SOURCES/$(TARBALL)"
 	${RM} -fr "$(TMPDIR)/$(PROJECT)"
+	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: rpm
 rpm: srcpkg calc.spec
+	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	$(MAKE) -f Makefile clean
 	${CP} "$(SPECFILE)" "$(RPMDIR)/SPECS/$(SPECFILE)"
 	${RM} -f "$(RPMDIR)/RPMS/${TARCH}/$(RPM686)"
@@ -129,15 +157,18 @@ rpm: srcpkg calc.spec
 	@echo
 	@echo "All done! -- Jessica Noll, Age 2"
 	@echo
+	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: make_rhdir
 make_rhdir:
+	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	for i in "$(RPMDIR)" "$(RPMDIR)/RPMS" "$(RPMDIR)/SOURCES" \
 	  "$(RPMDIR)/SPECS" "$(RPMDIR)/SRPMS" "$(RPMDIR)/BUILD"; do \
 	    if [ ! -d "$$i" ] ; then \
 		${MKDIR} -p "$$i"; \
 	    fi; \
 	done;
+	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 # date format for spec file
 .PHONY: logdate
@@ -146,6 +177,7 @@ logdate:
 
 .PHONY: chkpkg
 chkpkg:
+	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	for i in "$(RPMDIR)/RPMS/${TARCH}/$(RPM686)" \
 		 "$(RPMDIR)/RPMS/${TARCH}/$(DRPM686)" \
 	  	 "$(RPMDIR)/SRPMS/$(SRPM)" ; do \
@@ -155,40 +187,51 @@ chkpkg:
 	    ${RPM_TOOL} -qpl "$$i" ; \
 	    echo "***** end $$i" ; \
 	done ;
+	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: chksys
 chksys:
+	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	${RPM_TOOL} -qa | ${GREP} "$(PROJECT_NAME)"
 	${RPM_TOOL} -qa | ${GREP} "$(PROJECT_NAME)-devel"
+	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: test
 test: ver_calc
+	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	@if [ X"`id -u`" != X"0" ]; then \
 	    echo "test needs to install, must be root to test" 1>&2; \
 	    exit 4; \
 	fi
 	$(MAKE) -f rpm.mk PROJECT_VERSION="`./ver_calc`" installrpm chksys
+	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: installrpm
 installrpm:
+	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	@if [ X"`id -u`" != X"0" ]; then \
 	    echo "must be root to install RPMs" 1>&2; \
 	    exit 5; \
 	fi
 	${RPM_TOOL} -ivh "$(RPMDIR)/RPMS/${TARCH}/$(RPM686)"
 	${RPM_TOOL} -ivh "$(RPMDIR)/RPMS/${TARCH}/$(DRPM686)"
+	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: uninstallrpm
 uninstallrpm:
+	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	@if [ X"`id -u`" != X"0" ]; then \
 	    echo "must be root to uninstall RPMs" 1>&2; \
 	    exit 6; \
 	fi
 	${RPM_TOOL} -e "$(PROJECT_NAME)-devel"
 	${RPM_TOOL} -e "$(PROJECT_NAME)"
+	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 $(PROJECT_NAME)-spec.${TAR}.gz: rpm.mk $(PROJECT_NAME).spec.in
+	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	${RM} -f "$@"
 	${TAR} cf - "$^" | ${GZIP_PROG} -c > "$@"
+	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 #****

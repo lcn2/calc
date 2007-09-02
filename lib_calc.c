@@ -15,10 +15,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.16 $
- * @(#) $Id: lib_calc.c,v 29.16 2007/02/18 14:24:56 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: lib_calc.c,v 30.3 2007/07/10 17:57:04 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.c,v $
  *
  * Under source code control:	1996/06/17 18:06:19
@@ -45,6 +45,10 @@
 #include "token.h"
 #include "symbol.h"
 #include "func.h"
+
+#if defined(CUSTOM)
+#include "custom.h"
+#endif /* CUSTOM */
 
 #include "have_strdup.h"
 #if !defined(HAVE_STRDUP)
@@ -369,6 +373,15 @@ initialize(void)
 	math_setmode(MODE_INITIAL);
 	math_setdigits(DISPLAY_DEFAULT);
 	conf->maxprint = MAXPRINT_DEFAULT;
+
+#if defined(CUSTOM)
+	/*
+	 * initialize custom registers
+	 */
+	if (allow_custom) {
+		init_custreg();
+	}
+#endif /* CUSTOM */
 
 	/*
 	 * note that we are done

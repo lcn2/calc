@@ -13,10 +13,10 @@
 .\" A copy of version 2.1 of the GNU Lesser General Public License is
 .\" distributed with calc under the filename COPYING-LGPL.  You should have
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
-.\" 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+.\" 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 .\"
-.\" @(#) $Revision: 29.21 $
-.\" @(#) $Id: calc.man,v 29.21 2007/02/07 00:38:43 chongo Exp $
+.\" @(#) $Revision: 30.2 $
+.\" @(#) $Id: calc.man,v 30.2 2007/08/18 17:28:29 chongo Exp $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -63,7 +63,7 @@ CALC OPTIONS
 
 .TP
 .B \-c
-Continue reading command lines even after an scan/parse
+Continue reading command lines even after a scan/parse
 error has caused the abandonment of a line.
 Note that this option only deals with scanning and
 parsing of the calc language.
@@ -225,7 +225,7 @@ filename
 .sp 1
 On systems that treat an executable that begins with
 .B #!
-as a script, the path of the execurable is appended by the kernel
+as a script, the path of the executable is appended by the kernel
 as the final argument to the exec() system call.
 This is why the
 .B \-f
@@ -706,7 +706,7 @@ the rest of the file will be processed in
 .BR "shell script mode" .
 Note that
 .B \-f
-must at the end of the intiial ``#!'' line.
+must at the end of the initial ``#!'' line.
 Any other optional
 .B "other_flags"
 must come before
@@ -1078,9 +1078,9 @@ If you do not have these files, write to:
 .in +0.5i
 .nf
 Free Software Foundation, Inc.
-59 Temple Place
-Suite 330
-Boston, MA  02111-1307
+51 Franklin Street
+Fifth Floor
+Boston, MA  02110-1301
 USA
 .fi
 .in -0.5i

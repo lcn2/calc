@@ -15,10 +15,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.22 $
- * @(#) $Id: calc.h,v 29.22 2007/02/18 14:24:56 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: calc.h,v 30.2 2007/07/10 17:44:52 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -90,6 +90,7 @@
 #define ABORT_NOW	4	/* abort right away */
 
 #define ERRMAX 20		/* default errmax value */
+#define E_OK 0			/* no error */
 
 /*
  * File ids corresponding to standard in, out, error, and when not in use.

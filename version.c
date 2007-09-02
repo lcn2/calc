@@ -17,10 +17,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.82 $
- * @(#) $Id: version.c,v 29.82 2007/02/18 14:24:56 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: version.c,v 30.3 2007/07/15 02:09:35 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
@@ -48,8 +48,8 @@ static char *program;
 
 #define MAJOR_VER	2	/* major library version */
 #define MINOR_VER	12	/* minor library version */
-#define MAJOR_PATCH	1	/* major software level under library version */
-#define MINOR_PATCH	13	/* minor software level or 0 if none */
+#define MAJOR_PATCH	2	/* major software level under library version */
+#define MINOR_PATCH	0	/* minor software level or 0 if none */
 
 
 /*
@@ -89,7 +89,7 @@ char *Copyright = "\n"
   "A copy of version 2.1 of the GNU Lesser General Public License is\n"
   "distributed with calc under the filename COPYING-LGPL.  You should have\n"
   "received a copy with calc; if not, write to Free Software Foundation, Inc.\n"
-  "59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.\n"
+  "51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n"
   "\n"
   "@(#) For license details use the command:\thelp copying\n"
   "The COPYING-LGPL file may be viewed with:\thelp copying-lgpl\n"

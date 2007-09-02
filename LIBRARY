@@ -636,10 +636,10 @@ need call libcalc_call_me_last() only once.
 ## A copy of version 2.1 of the GNU Lesser General Public License is
 ## distributed with calc under the filename COPYING-LGPL.  You should have
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
-## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 29.7 $
-## @(#) $Id: LIBRARY,v 29.7 2007/02/18 14:45:46 chongo Exp $
+## @(#) $Revision: 30.1 $
+## @(#) $Id: LIBRARY,v 30.1 2007/03/16 11:09:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/LIBRARY,v $
 ##
 ## Under source code control:	1993/07/30 19:44:49

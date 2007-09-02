@@ -15,10 +15,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.2 $
- * @(#) $Id: have_getsid.c,v 29.2 2000/06/07 14:02:13 chongo Exp $
+ * @(#) $Revision: 30.1 $
+ * @(#) $Id: have_getsid.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/have_getsid.c,v $
  *
  * Under source code control:	1999/10/20 22:51:13

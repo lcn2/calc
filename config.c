@@ -17,10 +17,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.25 $
- * @(#) $Id: config.c,v 29.25 2007/02/18 14:24:56 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: config.c,v 30.2 2007/07/05 13:30:38 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -529,7 +529,7 @@ setconfig(int type, VALUE *vp)
 		}
 		temp = lookup_long(modes, vp->v_str->s_str);
 		if (temp < 0) {
-			math_error("Unknown mode \"%s\"", vp->v_str);
+			math_error("Unknown mode \"%s\"", vp->v_str->s_str);
 			/*NOTREACHED*/
 		}
 		math_setmode((int) temp);
@@ -542,7 +542,7 @@ setconfig(int type, VALUE *vp)
 		}
 		temp = lookup_long(modes, vp->v_str->s_str);
 		if (temp < 0) {
-			math_error("Unknown mode \"%s\"", vp->v_str);
+			math_error("Unknown mode \"%s\"", vp->v_str->s_str);
 			/*NOTREACHED*/
 		}
 		math_setmode2((int) temp);

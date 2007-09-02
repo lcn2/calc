@@ -16,10 +16,10 @@
 # A copy of version 2.1 of the GNU Lesser General Public License is
 # distributed with calc under the filename COPYING-LGPL.  You should have
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
-# 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 29.36 $
-# @(#) $Id: Makefile,v 29.36 2007/02/07 00:31:06 chongo Exp $
+# @(#) $Revision: 30.4 $
+# @(#) $Id: Makefile,v 30.4 2007/09/02 05:49:56 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -34,12 +34,29 @@
 # required vars
 #
 SHELL= /bin/sh
-MAKE_FILE= Makefile
 
 ####
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
 ####
+
+# Normally certain files depend on the Makefile.  If the Makefile is
+# changed, then certain steps should be redone.  If MAKE_FILE is
+# set to Makefile, then these files will depend on Makefile.  If
+# MAKE_FILE is empty, then they wont.
+#
+# If in doubt, set MAKE_FILE to Makefile
+#
+MAKE_FILE= Makefile
+
+# Controlling file makefile basename (without the path)
+#
+# This is the basename same of the makefile that may/does/will drive
+# this makefile.
+#
+# If in doubt, set TOP_MAKE_FILE to Makefile
+#
+TOP_MAKE_FILE= Makefile
 
 # Where the system include (.h) files are kept
 #
@@ -275,29 +292,29 @@ BLT_HELP_FILES= ${BLT_HELP_FILES_3} ${BLT_HELP_FILES_5} \
 #
 DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
 	appr arg argv arrow asec asech asin asinh assign atan atan2 atanh \
-	avg base base2 bernoulli bit blk blkcpy blkfree blocks bround \
-	btrunc calc_tty calclevel catalan ceil cfappr cfsim char cmdbuf \
-	cmp comb conj cos cosh cot coth count csc csch ctime delete den \
+	avg base base2 bernoulli bit blk blkcpy blkfree blocks bround btrunc \
+	calc_tty calclevel calcpath catalan ceil cfappr cfsim char cmdbuf \
+	cmp comb conj cos cosh cot coth count cp csc csch ctime delete den \
 	dereference det digit digits display dp epsilon errcount errmax \
 	errno error estr euler eval exp fact factor fclose fcnt feof ferror \
 	fflush fgetc fgetfield fgetfile fgetline fgets fgetstr fib files \
 	floor fopen forall fpathopen fprintf fputc fputs fputstr frac free \
 	freebernoulli freeeuler freeglobals freeredc freestatics frem freopen \
 	fscan fscanf fseek fsize ftell gcd gcdrem gd getenv hash head highbit \
-	hmean hnrmod hypot ilog ilog10 ilog2 im indices inputlevel insert \
-	int inverse iroot isassoc isatty isblk isconfig isdefined iserror \
-	iseven isfile ishash isident isint islist ismat ismult isnull isnum \
-	isobj isobjtype isodd isprime isptr isqrt isrand israndom isreal \
-	isrel issimple issq isstr istype jacobi join lcm lcmfact lfactor \
-	ln log lowbit ltol makelist matdim matfill matmax matmin matsum \
-	mattrace mattrans max md5 memsize meq min minv mmin mne mod modify \
-	name near newerror nextcand nextprime norm null num oldvalue ord \
-	param perm pfact pi pix places pmod polar poly pop popcnt pound \
-	power prevcand prevprime printf prompt protect ptest push putenv \
-	quo quomod rand randbit random randombit randperm rcin rcmul rcout \
-	rcpow rcsq re remove reverse rewind rm root round rsearch runtime \
-	saveval scale scan scanf search sec sech seed segment select sgn \
-	sha sha1 sin sinh size sizeof sleep sort sqrt srand srandom ssq \
+	hmean hnrmod hypot ilog ilog10 ilog2 im indices inputlevel insert int \
+	inverse iroot isassoc isatty isblk isconfig isdefined iserror iseven \
+	isfile ishash isident isint islist ismat ismult isnull isnum isobj \
+	isobjtype isodd isprime isptr isqrt isrand israndom isreal isrel \
+	issimple issq isstr istype jacobi join lcm lcmfact lfactor ln log \
+	lowbit ltol makelist matdim matfill matmax matmin matsum mattrace \
+	mattrans max memsize meq min minv mmin mne mod modify name near \
+	newerror nextcand nextprime norm null num oldvalue ord param perm \
+	pfact pi pix places pmod polar poly pop popcnt pound power prevcand \
+	prevprime printf prompt protect ptest push putenv quo quomod rand \
+	randbit random randombit randperm rcin rcmul rcout rcpow rcsq re \
+	remove reverse rewind rm root round rsearch runtime saveval scale \
+	scan scanf search sec sech seed segment select sgn sha1 sin \
+	sinh size sizeof sleep sort sqrt srand srandom ssq stoponerror \
 	str strcat strcmp strcpy strerror strlen strncmp strncpy strpos \
 	strprintf strscan strscanf substr sum swap system systime tail tan \
 	tanh test time trunc usertime version xor
@@ -423,7 +440,7 @@ usage: ../calc.usage
 	fi
 
 ../calc.usage:
-	(cd ..; $(MAKE) calc.usage)
+	(cd ..; ${MAKE} -f ${TOP_MAKE_FILE} calc.usage)
 
 custom_cal: ../custom/CUSTOM_CAL
 	${RM} -f $@
@@ -499,12 +516,12 @@ cscript: ../cscript/README
 
 ../cscript/README: ../cscript/README.src
 	${Q} echo "forming cscript/README"
-	-${Q} ${RM} -f $@
-	(cd ../cscript; $(MAKE) README)
+	${Q} ${RM} -f $@
+	(cd ../cscript; ${MAKE} -f Makefile README)
 
 full: ${FULL_HELP_FILES} ${MAKE_FILE}
 	${Q} echo "forming full"
-	-${Q} ${RM} -f $@
+	${Q} ${RM} -f $@
 	-${Q} for i in ${FULL_HELP_FILES}; do \
 	    if [ Xintro != X"$$i" ]; then \
 		echo ""; \
@@ -570,13 +587,13 @@ ${SINGULAR_FILES}: ${PLURAL_FILES}
 #
 builtin: builtin.top builtin.end ../func.c funclist.sed
 	${Q} echo "forming builtin help file"
-	-${Q} ${RM} -f funclist.c
+	${Q} ${RM} -f funclist.c
 	${Q} ${SED} -n -f funclist.sed ../func.c > funclist.c
-	-${Q} ${RM} -f funclist.o funclist${EXT}
+	${Q} ${RM} -f funclist.o funclist${EXT}
 	${Q} ${LCC} ${ICFLAGS} -DFUNCLIST -I/usr/include \
 	    -I.. funclist.c -c 2>/dev/null
 	${Q} ${LCC} ${ILDFLAGS} funclist.o -o funclist${EXT}
-	-${Q} ${RM} -f builtin
+	${Q} ${RM} -f builtin
 	${Q} ${CAT} builtin.top > builtin
 	${Q} ./funclist${EXT} | \
 	    ${SED} -e 's/^/	/' -e 's/[	 ][	 ]*$$//' >> builtin
@@ -666,10 +683,8 @@ clean:
 	${RM} -f obj mkbuiltin funclist.c funclist.o funclist${EXT}
 	${RM} -f COPYING COPYING-LGPL
 
-clobber:
+clobber: clean
 	${RM} -f ${BLT_HELP_FILES} full .all calc
-	${RM} -f obj mkbuiltin funclist.c funclist.o funclist${EXT}
-	${RM} -f COPYING COPYING-LGPL
 	${RM} -f ${SINGULAR_FILES} ${DETAIL_CLONE}
 
 # install everything
@@ -725,6 +740,14 @@ install: all
 	    ${MV} -f ${T}${HELPDIR}/obj.new ${T}${HELPDIR}/obj; \
 	    echo "installed ${T}${HELPDIR}/obj"; \
 	fi
+	-${Q} if [ -f "${T}${HELPDIR}/sha" ]; then \
+	    ${RM} -f ${T}${HELPDIR}/sha; \
+	    echo "removed old ${T}${HELPDIR}/sha"; \
+	fi;
+	-${Q} if [ -f "${T}${HELPDIR}/md5" ]; then \
+	    ${RM} -f ${T}${HELPDIR}/md5; \
+	    echo "removed old ${T}${HELPDIR}/md5"; \
+	fi;
 
 # Try to remove everything that was installed
 #

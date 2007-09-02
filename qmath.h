@@ -15,10 +15,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.9 $
- * @(#) $Id: qmath.h,v 29.9 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: qmath.h,v 30.2 2007/07/05 19:35:20 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -252,6 +252,7 @@ E_FUNC NUMBER *swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all);
 #define qiseven(q)	(zisunit((q)->den) && ziseven((q)->num))
 #define qisodd(q)	(zisunit((q)->den) && zisodd((q)->num))
 #define qistwopower(q)	(zisunit((q)->den) && zistwopower((q)->num))
+#define qistiny(q)	(zistiny((q)->num))
 
 #define qhighbit(q)	(zhighbit((q)->num))
 #define qlowbit(q)	(zlowbit((q)->num))

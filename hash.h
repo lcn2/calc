@@ -15,10 +15,10 @@
  * A copy of version 2.1 of the GNU Lesser General Public License is
  * distributed with calc under the filename COPYING-LGPL.  You should have
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
- * 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 29.5 $
- * @(#) $Id: hash.h,v 29.5 2007/02/11 10:19:14 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: hash.h,v 30.2 2007/07/05 17:37:41 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/hash.h,v $
  *
  * Under source code control:	1995/11/14 23:57:45
@@ -34,20 +34,16 @@
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
-# include "shs.h"
-# include "shs1.h"
-# include "md5.h"
+# include "sha1.h"
 # include "zmath.h"
 #else
-# include <calc/shs.h>
-# include <calc/shs1.h>
-# include <calc/md5.h>
+# include <calc/sha1.h>
 # include <calc/zmath.h>
 #endif
 
 
 /* MAX_CHUNKSIZE is the largest chunksize of any hash */
-#define MAX_CHUNKSIZE (SHS1_CHUNKSIZE)
+#define MAX_CHUNKSIZE (SHA1_CHUNKSIZE)
 
 /* max size of debugging strings in xyz_print() functions */
 #define DEBUG_SIZE 127
@@ -81,9 +77,7 @@ struct hashstate {
 	int unionsize;			/* h_union element size */
 	union {				/* hash dependent states */
 		USB8 data[1];		/* used by hash_value to hash below */
-		SHS_INFO h_shs;		/* old SHS/SHA internal state */
-		SHS1_INFO h_shs1;	/* new SHS-1/SHA-1 internal state */
-		MD5_CTX h_md5;		/* MD5 internal state */
+		SHA1_INFO h_sha1;	/* new SHA-1 internal state */
 	} h_union;
 };
 
@@ -95,9 +89,9 @@ struct hashstate {
  *	      XYZ_BASE values should be unique random hex values
  *	      that end in 00 (i.e., 0 mod 256).
  */
-#define SHS_BASE 0x12face00		/* old SHS / SHA */
-#define SHS1_BASE 0x23cafe00		/* new SHS-1 / SHA-1 */
-#define MD5_BASE 0x34feed00		/* MD5 */
+#define SHA_BASE 0x12face00		/* old SHA / SHA - no longer used */
+#define SHA1_BASE 0x23cafe00		/* new SHA-1 / SHA-1 */
+#define MD5_BASE 0x34feed00		/* MD5 - no longer used */
 
 
 /*
@@ -105,9 +99,9 @@ struct hashstate {
  *
  * we support these hash types
  */
-#define SHS_HASH_TYPE 1
-#define SHS1_HASH_TYPE 2
-#define MD5_HASH_TYPE 3
+#define SHA_HASH_TYPE 1		/* no longer used */
+#define SHA1_HASH_TYPE 2
+#define MD5_HASH_TYPE 3		/* no longer used */
 
 
 /*

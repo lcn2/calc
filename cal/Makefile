@@ -16,10 +16,10 @@
 # A copy of version 2.1 of the GNU Lesser General Public License is
 # distributed with calc under the filename COPYING-LGPL.  You should have
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
-# 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 29.24 $
-# @(#) $Id: Makefile,v 29.24 2006/09/18 13:13:25 chongo Exp $
+# @(#) $Revision: 30.2 $
+# @(#) $Id: Makefile,v 30.2 2007/03/22 07:34:47 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
@@ -34,12 +34,29 @@
 # required vars
 #
 SHELL= /bin/sh
-MAKE_FILE= Makefile
 
 ####
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
 ####
+
+# Normally certain files depend on the Makefile.  If the Makefile is
+# changed, then certain steps should be redone.  If MAKE_FILE is
+# set to Makefile, then these files will depend on Makefile.  If
+# MAKE_FILE is empty, then they wont.
+#
+# If in doubt, set MAKE_FILE to Makefile
+#
+MAKE_FILE= Makefile
+
+# Controlling file makefile basename (without the path)
+#
+# This is the basename same of the makefile that may/does/will drive
+# this makefile.
+#
+# If in doubt, set TOP_MAKE_FILE to Makefile
+#
+TOP_MAKE_FILE= Makefile
 
 # Where the system include (.h) files are kept
 #
@@ -254,7 +271,7 @@ echo_inst_files:
 
 clean:
 
-clobber:
+clobber: clean
 	${RM} -f .all
 
 # install everything

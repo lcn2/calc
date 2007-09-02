@@ -34,7 +34,7 @@ DESCRIPTION
     multiple of n or b^m = 1 (mod n) or b^(2^j * m) = n - 1 (mod n) for
     some j where 0 <= j < s; integers that pass the test are called
     strong probable primes for the base b; composite integers that pass
-    the test are called strong pseudoprimes for the base b; ( XXX ) Since
+    the test are called strong pseudoprimes for the base b; Since
     the test for base b depends on b % n, and bases 0, 1 and n - 1 are
     trivial (n is always a strong probable prime for these bases), it
     is sufficient to consider 1 < b < n - 1.
@@ -67,7 +67,7 @@ RUNTIME
 
     If n is a large prime (say 50 or more decimal digits), the runtime
     for ptest(n, count, skip) will usually be roughly K * abs(count) *
-    ln(n)^3 for some constant K. ( XXX )  For composite n with
+    ln(n)^3 for some constant K.  For composite n with
     highbit(n) = N, the compositeness is detected quickly if n is
     divisible by a small prime and count >= 0; otherwise, if count is
     not zero, usually only one test is required to establish
@@ -143,10 +143,10 @@ SEE ALSO
 ## A copy of version 2.1 of the GNU Lesser General Public License is
 ## distributed with calc under the filename COPYING-LGPL.  You should have
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
-## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 29.4 $
-## @(#) $Id: ptest,v 29.4 2006/06/25 22:16:55 chongo Exp $
+## @(#) $Revision: 30.2 $
+## @(#) $Id: ptest,v 30.2 2007/09/01 19:53:15 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/ptest,v $
 ##
 ## Under source code control:	1996/02/25 00:27:43

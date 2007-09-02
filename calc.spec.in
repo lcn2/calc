@@ -2,7 +2,7 @@
 #
 # calc.spec.in - template specfile for calc
 #
-# Copyright (C) 2003-2005  Petteri Kettunen and Landon Curt Noll
+# Copyright (C) 2003-2007  Petteri Kettunen and Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -16,10 +16,10 @@
 # A copy of version 2.1 of the GNU Lesser General Public License is
 # distributed with calc under the filename COPYING-LGPL.  You should have
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
-# 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 29.16 $
-# @(#) $Id: calc.spec.in,v 29.16 2006/06/26 05:50:44 chongo Exp $
+# @(#) $Revision: 30.4 $
+# @(#) $Id: calc.spec.in,v 30.4 2007/09/02 05:38:34 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.spec.in,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -37,7 +37,7 @@
 Summary: Arbitrary precision calculator.
 Name: calc
 Version: <<<PROJECT_VERSION>>>
-Release: 0
+Release: 1.0
 License: LGPL
 Group: Applications/Engineering
 Source: %{name}-%{version}.tar.gz
@@ -73,12 +73,40 @@ For the latest calc release, see the project home page:
 %setup -q
 
 %build
-make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 all chk
+echo '-=- calc.spec beginning make clobber -=-'
+make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ clobber
+echo '-=- calc.spec ending make clobber -=-'
+echo '-=- calc.spec beginning make calc-static-only -=-'
+make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ calc-static-only BLD_TYPE=calc-static-only
+echo '-=- calc.spec ending make calc-static-only -=-'
+echo '-=- calc.spec beginning make rpm-hide-static -=-'
+make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-hide-static
+echo '-=- calc.spec ending make rpm-hide-static -=-'
+echo '-=- calc.spec beginning make clobber (again) -=-'
+make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ clobber
+echo '-=- calc.spec ending make clobber (again) -=-'
+echo '-=- calc.spec beginning make calc-dynamic-only -=-'
+make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ calc-dynamic-only BLD_TYPE=calc-dynamic-only
+echo '-=- calc.spec ending make calc-dynamic-only -=-'
+echo '-=- calc.spec beginning make chk -=-'
+make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ chk
+echo '-=- calc.spec ending make chk -=-'
+echo '-=- calc.spec beginning make rpm-unhide-static -=-'
+make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-unhide-static
+echo '-=- calc.spec ending make rpm-unhide-static -=-'
+echo '-=- calc.spec beginning make rpm-clean-static -=-'
+make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-clean-static
+echo '-=- calc.spec ending make rpm-clean-static -=-'
+echo '-=- calc.spec beginning make rpm-chk-static -=-'
+make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-chk-static
+echo '-=- calc.spec ending make rpm-chk-static -=-'
 
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}
-make T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 install
+echo '-=- calc.spec beginning make install -=-'
+make T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ install
+echo '-=- calc.spec ending make install -=-'
 
 %clean
 rm -rf %{buildroot}
@@ -86,21 +114,31 @@ rm -rf %{buildroot}
 %files
 %defattr(-, root, root)
 %doc BUGS CHANGES COPYING COPYING-LGPL
-%{_bindir}/*
-%{_mandir}/man1/*
-%{_datadir}/%{name}/*/*
-%{_datadir}/%{name}/bindings
-%{_datadir}/%{name}/README
-%{_datadir}/%{name}/*.cal
-%{_datadir}/%{name}/*.line
+%attr(755, root, root) %{_bindir}/calc
+%attr(755, root, root) %{_bindir}/cscript/*
+%attr(644, root, root) %{_mandir}/man1/calc.1.gz
+%attr(644, root, root) %{_datadir}/%{name}/README
+%attr(644, root, root) %{_datadir}/%{name}/bindings
+%attr(644, root, root) %{_datadir}/%{name}/custhelp/*
+%attr(644, root, root) %{_datadir}/%{name}/custom/*.cal
+%attr(644, root, root) %{_datadir}/%{name}/help/*
+%attr(644, root, root) %{_datadir}/%{name}/*.cal
+%attr(644, root, root) %{_datadir}/%{name}/*.line
+%attr(644, root, root) %{_libdir}/libcalc.so.%{version}
+%attr(644, root, root) %{_libdir}/libcustcalc.so.%{version}
 
 %files devel
 %defattr(-, root, root)
 %doc BUGS COPYING COPYING-LGPL LIBRARY
+%attr(755, root, root) %{_bindir}/calc-static
 %attr(644, root, root) %{_includedir}/calc/*
-%attr(644, root, root) %{_libdir}/*.a
+%attr(644, root, root) %{_libdir}/libcalc.a
+%attr(644, root, root) %{_libdir}/libcustcalc.a
 
 %changelog
+* Sun Sep 01 2007 Landon Curt Noll http://www.isthe.com/chongo
+- Release of calc-2.12.2
+- Calc builds with shared libraries
 * Sun Jun 25 2006 Landon Curt Noll http://www.isthe.com/chongo
 - Changed Copyright to License as per new rpm v4.4 syntax
 * Sun May 20 2006 Landon Curt Noll http://www.isthe.com/chongo
