@@ -38,8 +38,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.18 $$
-# @(#) $Id: Makefile.ship,v 30.18 2007/09/02 05:38:34 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.21 $$
+# @(#) $Id: Makefile.ship,v 30.21 2007/09/06 08:08:39 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -965,7 +965,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.2
+VERSION= 2.12.2.1
 VERS= 2.12.2
 VER= 2.12
 VE= 2
@@ -973,6 +973,7 @@ VE= 2
 # Names of shared libraries with versions
 #
 LIB_EXT= .so
+LIB_EXT_VERSION= ${LIB_EXT}.${VERSION}
 LIB_EXT_VERS= ${LIB_EXT}.${VERS}
 LIB_EXT_VER= ${LIB_EXT}.${VER}
 LIB_EXT_VE= ${LIB_EXT}.${VE}
@@ -1010,6 +1011,7 @@ LN= ln
 LDCONFIG= ldconfig
 # assume the X11 makedepend tool for the depend rule
 MAKEDEPEND= makedepend
+STRIP= strip
 
 # Extra compiling and linking flags
 #
@@ -1105,8 +1107,8 @@ CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
 #
 CC_STATIC=
 LD_STATIC=
@@ -1132,7 +1134,7 @@ ifeq ($(target),Darwin)
 BLD_TYPE= calc-dynamic-only
 #
 CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/sw/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:${LIBDIR}:/usr/local/lib
 LD_SHARE= ${DARWIN_ARCH}
 LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib
 LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib
@@ -1152,11 +1154,14 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 # Darmin dynamic shared lib filenames
 LIB_EXT:= .dylib
+LIB_EXT_VERSION:= .${VERSION}${LIB_EXT}
 LIB_EXT_VERS:= .${VERS}${LIB_EXT}
 LIB_EXT_VER:= .${VER}${LIB_EXT}
 LIB_EXT_VE:= .${VE}${LIB_EXT}
-# compile Universal by default
-DARWIN_ARCH= -arch i386 -arch ppc
+# DARWIN_ARCH= -arch i386 -arch ppc	# Universal binary
+# DARWIN_ARCH= -arch i386		# Intel binary
+# DARWIN_ARCH= -arch ppc		# PPC binary
+DARWIN_ARCH=				# native binary
 MACOSX_DEPLOYMENT_TARGET=10.4
 #
 endif
@@ -1179,8 +1184,8 @@ CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
 #
 CC_STATIC=
 LD_STATIC=
@@ -1196,6 +1201,37 @@ LCC= gcc
 CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 MAKE= gmake
+#
+endif
+
+######################
+# Sun Solaris target #
+######################
+
+# XXX - this needs to be tested
+ifeq ($(target),solaris)
+#
+BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+#
+CC_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+LD_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 endif
 
@@ -1215,8 +1251,8 @@ CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
 #
 CC_STATIC=
 LD_STATIC=
@@ -1262,8 +1298,8 @@ CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
 #
 CC_STATIC=
 LIBCALC_STATIC=
@@ -1426,15 +1462,21 @@ UTIL_TMP= ll_tmp fpos_tmp fposv_tmp const_tmp uid_tmp newstr_tmp vs_tmp \
 	memmv_tmp offscl_tmp posscl_tmp newstr_tmp \
 	getsid_tmp gettime_tmp getprid_tmp rusage_tmp strdup_tmp
 
-# these utility progs may be created in the process of building BUILD_H_SRC
+# these utility executables may be created in the process of 
+# building the BUILD_H_SRC file set
 #
 UTIL_PROGS= align32${EXT} fposval${EXT} have_uid_t${EXT} have_const${EXT} \
 	endian${EXT} longbits${EXT} have_newstr${EXT} have_stdvs${EXT} \
 	have_varvs${EXT} have_ustat${EXT} have_getsid${EXT} \
 	have_getpgid${EXT} have_gettime${EXT} have_getprid${EXT} \
-	ver_calc${EXT} have_strdup${EXT} no_implicit${EXT} no_implicit.arg \
+	ver_calc${EXT} have_strdup${EXT} no_implicit${EXT} \
 	have_unused${EXT} have_fpos${EXT} have_fpos_pos${EXT} \
-	have_offscl${EXT} have_rusage${EXT} have_args.sh
+	have_offscl${EXT} have_rusage${EXT}
+
+# these utility files and scripts may be created in the process of building
+# the BUILD_H_SRC file set
+#
+UTIL_FILES= no_implicit.arg have_args.sh
 
 # Any .h files that are needed to compile sample code.
 #
@@ -1653,11 +1695,12 @@ CALC_STATIC_LIBS= libcalc.a libcustcalc.a
 
 # Libaraies created and used to build calc
 #
-CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERS} libcustcalc${LIB_EXT_VERS}
+CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERSION} libcustcalc${LIB_EXT_VERSION}
 
 # Symlinks of dymanic shared libraries
 #
 SYM_DYNAMIC_LIBS= libcalc${LIB_EXT_VER} libcalc${LIB_EXT_VE} libcalc${LIB_EXT} \
+	libcalc${LIB_EXT_VERS} libcustcalc${LIB_EXT_VERSION} \
 	libcustcalc${LIB_EXT_VERS} libcustcalc${LIB_EXT_VER} \
 	libcustcalc${LIB_EXT_VE} libcustcalc${LIB_EXT}
 
@@ -1666,11 +1709,11 @@ SYM_DYNAMIC_LIBS= libcalc${LIB_EXT_VER} libcalc${LIB_EXT_VE} libcalc${LIB_EXT} \
 # NOTE: The ${SAMPLE_TARGETS} and ${SAMPLE_STATIC_TARGETS} are built but
 #	not installed at this time.
 #
-# NOTE: There must be a foo-static${EXE} in SAMPLE_STATIC_TARGETS for
-#	every foo${EXE} in ${SAMPLE_TARGETS}.
+# NOTE: There must be a foo-static${EXT} in SAMPLE_STATIC_TARGETS for
+#	every foo${EXT} in ${SAMPLE_TARGETS}.
 #
-SAMPLE_TARGETS= sample_rand${EXE} sample_many${EXE}
-SAMPLE_STATIC_TARGETS= sample_rand-static${EXE} sample_many-static${EXE}
+SAMPLE_TARGETS= sample_rand${EXT} sample_many${EXT}
+SAMPLE_STATIC_TARGETS= sample_rand-static${EXT} sample_many-static${EXT}
 
 # list of cscript programs to that need to be built to satisfy cscript/.all
 #
@@ -1776,7 +1819,7 @@ calc-static-only: ${STATIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 	    exit 3; \
 	fi
 	${Q} for i in .dynamic ${CALC_DYNAMIC_LIBS} ${SYM_DYNAMIC_LIBS} \
-		      custom/libcustcalc${LIB_EXT_VERS}; do \
+		      custom/libcustcalc${LIB_EXT_VERSION}; do \
 	    r="calc-static-only"; \
 	    if [ -e "$$i" ]; then \
 		echo "Found the dynamic target $$i file.  You must:" 1>&2; \
@@ -1797,18 +1840,22 @@ calc${EXT}: .hsrc ${CALCOBJS} ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
 	${CC} ${CALCOBJS} ${LDFLAGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
 	      ${READLINE_LIB} -o $@
 
-libcalc${LIB_EXT_VERS}: ${LIBOBJS} ver_calc${EXE} ${MAKE_FILE}
-	${CC} ${LIBCALC_SHLIB} ${LIBOBJS} -o libcalc${LIB_EXT_VERS}
+libcalc${LIB_EXT_VERSION}: ${LIBOBJS} ver_calc${EXT} ${MAKE_FILE}
+	${CC} ${LIBCALC_SHLIB} ${LIBOBJS} -o libcalc${LIB_EXT_VERSION}
 
-libcalc${LIB_EXT_VER}: libcalc${LIB_EXT_VERS}
+libcalc${LIB_EXT_VERS}: libcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${LN} -s $? $@
 
-libcalc${LIB_EXT_VE}: libcalc${LIB_EXT_VERS}
+libcalc${LIB_EXT_VER}: libcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${LN} -s $? $@
 
-libcalc${LIB_EXT}: libcalc${LIB_EXT_VERS}
+libcalc${LIB_EXT_VE}: libcalc${LIB_EXT_VERSION}
+	${Q} ${RM} -f $@
+	${LN} -s $? $@
+
+libcalc${LIB_EXT}: libcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${LN} -s $? $@
 
@@ -1851,11 +1898,11 @@ calc.usage: calc.1 ${MAKE_FILE}
 
 sample: ${SAMPLE_TARGETS}
 
-sample_rand${EXE}: sample_rand.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
+sample_rand${EXT}: sample_rand.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
 	${CC} sample_rand.o ${CLDFALGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
 	      ${READLINE_LIB} -o $@
 
-sample_many${EXE}: sample_many.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
+sample_many${EXT}: sample_many.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
 	${CC} sample_many.o ${CLDFALGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
 	      ${READLINE_LIB} -o $@
 
@@ -3202,6 +3249,7 @@ win32_hsrc: win32.mkdef ${MAKE_FILE}
 	 ${RM} -f ${UTIL_MISC_SRC}; \
 	 ${RM} -f ${UTIL_OBJS}; \
 	 ${RM} -f ${UTIL_PROGS}; \
+	 ${RM} -f ${UTIL_FILES}; \
 	 ${RM} -f ${MAKE_FILE})
 	${Q} echo 'win32 directory formed'
 
@@ -3275,26 +3323,30 @@ custom/.all: custom/Makefile
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-custom/libcustcalc${LIB_EXT_VERS}: custom/Makefile
+custom/libcustcalc${LIB_EXT_VERSION}: custom/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for custom =-=-=-=-='
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-libcustcalc${LIB_EXT_VERS}: custom/libcustcalc${LIB_EXT_VERS}
+libcustcalc${LIB_EXT_VERSION}: custom/libcustcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${CP} -p $? $@
 
-libcustcalc${LIB_EXT_VER}: libcustcalc${LIB_EXT_VERS}
+libcustcalc${LIB_EXT_VERS}: custom/libcustcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${LN} -s $? $@
 
-libcustcalc${LIB_EXT_VE}: libcustcalc${LIB_EXT_VERS}
+libcustcalc${LIB_EXT_VER}: libcustcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${LN} -s $? $@
 
-libcustcalc${LIB_EXT}: libcustcalc${LIB_EXT_VERS}
+libcustcalc${LIB_EXT_VE}: libcustcalc${LIB_EXT_VERSION}
+	${Q} ${RM} -f $@
+	${LN} -s $? $@
+
+libcustcalc${LIB_EXT}: libcustcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${LN} -s $? $@
 
@@ -3323,11 +3375,11 @@ libcalc.a: ${LIBOBJS} ${MAKE_FILE}
 custom/libcustcalc.a: custom/Makefile
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} libcustcalc.a
 
-sample_rand-static${EXE}: sample_rand.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
+sample_rand-static${EXT}: sample_rand.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
 	${CC} ${LDFLAGS} sample_rand.o ${LD_STATIC} \
 	      ${CALC_STATIC_LIBS} ${READLINE_LIB} -o $@
 
-sample_many-static${EXE}: sample_many.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
+sample_many-static${EXT}: sample_many.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
 	${CC} ${LDFLAGS} sample_many.o ${LD_STATIC} \
 	      ${CALC_STATIC_LIBS} ${READLINE_LIB} -o $@
 
@@ -3760,6 +3812,7 @@ env:
 	@echo 'UTIL_C_SRC=${UTIL_C_SRC}'; echo ''
 	@echo 'UTIL_MISC_SRC=${UTIL_MISC_SRC}'; echo ''
 	@echo 'UTIL_OBJS=${UTIL_OBJS}'; echo ''
+	@echo 'UTIL_FILES=${UTIL_FILES}'; echo ''
 	@echo 'UTIL_PROGS=${UTIL_PROGS}'; echo ''
 	@echo 'UTIL_TMP=${UTIL_TMP}'; echo ''
 	@echo 'V=${V}'; echo ''
@@ -3841,8 +3894,7 @@ gdb:
 
 rpm: clobber rpm.mk calc.spec.in
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
-	${RM} -rf /var/tmp/redhat /var/tmp/calc-root
-	${MAKE} -f rpm.mk RHDIR=/var/tmp/redhat TMPDIR=/var/tmp/redhat V=${V}
+	${MAKE} -f rpm.mk V=${V}
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # rpm static rules
@@ -3953,6 +4005,7 @@ clean: custom/Makefile
 	${RM} -f ${UTIL_OBJS}
 	${RM} -f ${UTIL_TMP}
 	${RM} -f ${UTIL_PROGS}
+	${RM} -f ${UTIL_FILES}
 	${RM} -f ${SAMPLE_OBJ}
 	${RM} -f .libcustcalc_error
 	${RM} -f calc.spec.sed
@@ -3992,16 +4045,18 @@ clobber: custom/Makefile clean
 	${RM} -f calc.pixie calc.rf calc.Counts calc.cord
 	${RM} -rf gen_h skel Makefile.bak tmp.patch
 	${RM} -f calc.spec inst_files rpm.mk.patch tmp
+	${RM} -f libcalc${LIB_EXT_VERSION}
 	${RM} -f libcalc${LIB_EXT_VERS}
 	${RM} -f libcalc${LIB_EXT_VER}
 	${RM} -f libcalc${LIB_EXT_VE}
 	${RM} -f libcalc*${LIB_EXT}
+	${RM} -f libcustcalc${LIB_EXT_VERSION}
 	${RM} -f libcustcalc${LIB_EXT_VERS}
 	${RM} -f libcustcalc${LIB_EXT_VER}
 	${RM} -f libcustcalc${LIB_EXT_VE}
 	${RM} -f libcustcalc*${LIB_EXT}
 	${RM} -f libcustcalc.a
-	${RM} -f calc-static${EXE}
+	${RM} -f calc-static${EXT}
 	${RM} -f ${CALC_STATIC_LIBS}
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	-cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clobber
@@ -4151,7 +4206,7 @@ install: custom/Makefile ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all
 	    ${MV} -f ${T}${BINDIR}/calc.new${EXT} ${T}${BINDIR}/calc${EXT}; \
 	    echo "installed ${T}${BINDIR}/calc${EXT}"; \
 	fi
-	-${Q} if [ -f calc-static${EXE} ]; then \
+	-${Q} if [ -f calc-static${EXT} ]; then \
 	    if ${CMP} -s calc-static${EXT} \
 	    		 ${T}${BINDIR}/calc-static${EXT}; then \
 		${TRUE}; \
@@ -4189,43 +4244,49 @@ install: custom/Makefile ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all
 		echo "installed ${T}${LIBDIR}/libcalc.a"; \
 	   fi; \
 	fi
-	${Q}# NOTE: The this makefile installs libcustcalc${LIB_EXT_VERS}
+	${Q}# NOTE: The this makefile installs libcustcalc${LIB_EXT_VERSION}
 	${Q}#       because we only want to perform one ${LDCONFIG} for both
-	${Q}#       libcalc${LIB_EXT_VERS} and libcustcalc${LIB_EXT_VERS}.
-	-${Q} if ${CMP} -s libcalc${LIB_EXT_VERS} \
-		     ${T}${LIBDIR}/libcalc${LIB_EXT_VERS} && \
-	   ${CMP} -s custom/libcustcalc${LIB_EXT_VERS} \
-		     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}; then \
+	${Q}#       libcalc${LIB_EXT_VERSION} and libcustcalc${LIB_EXT_VERSION}.
+	-${Q} if ${CMP} -s libcalc${LIB_EXT_VERSION} \
+		     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION} && \
+	   ${CMP} -s custom/libcustcalc${LIB_EXT_VERSION} \
+		     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}; then \
 	    ${TRUE}; \
 	else \
-	    ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}.new; \
-	    ${CP} -f libcalc${LIB_EXT_VERS} \
-	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}.new; \
-	    ${MV} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}.new \
-	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}; \
+	    ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
+	    ${CP} -f libcalc${LIB_EXT_VERSION} \
+	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
+	    ${MV} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new \
+	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}; \
+	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
+	    ${LN} -f -s libcalc${LIB_EXT_VERSION} \
+	    		${T}${LIBDIR}/libcalc${LIB_EXT_VERS}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
-	    ${LN} -f -s libcalc${LIB_EXT_VERS} \
+	    ${LN} -f -s libcalc${LIB_EXT_VERSION} \
 	    		${T}${LIBDIR}/libcalc${LIB_EXT_VER}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VER}"; \
-	    ${LN} -f -s libcalc${LIB_EXT_VERS} \
+	    ${LN} -f -s libcalc${LIB_EXT_VERSION} \
 	    		${T}${LIBDIR}/libcalc${LIB_EXT_VE}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VE}"; \
-	    ${LN} -f -s libcalc${LIB_EXT_VERS} \
+	    ${LN} -f -s libcalc${LIB_EXT_VERSION} \
 	    		${T}${LIBDIR}/libcalc${LIB_EXT}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
-	    ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}.new; \
-	    ${CP} -f custom/libcustcalc${LIB_EXT_VERS} \
-	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}.new; \
-	    ${MV} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}.new \
-	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}; \
+	    ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
+	    ${CP} -f custom/libcustcalc${LIB_EXT_VERSION} \
+	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
+	    ${MV} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new \
+	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}; \
+	    echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}"; \
+	    ${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
+	    		${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}; \
 	    echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
-	    ${LN} -f -s libcustcalc${LIB_EXT_VERS} \
+	    ${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
 	    		${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}; \
 	    echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}"; \
-	    ${LN} -f -s libcustcalc${LIB_EXT_VERS} \
+	    ${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
 	    		${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VE}"; \
-	    ${LN} -f -s libcustcalc${LIB_EXT_VERS} \
+	    ${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
 	    		${T}${LIBDIR}/libcustcalc${LIB_EXT}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
 	    if [ -z "${T}" -o "/" = "${T}" ]; then \
@@ -4385,12 +4446,12 @@ uninstall: custom/Makefile
 		echo "uninstalled ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
 	    fi; \
 	fi
-	-${Q} if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}" ]; then \
-	    ${RM} -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
-	    if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}" ]; then \
-		echo "cannot uninstall ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
+	-${Q} if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}" ]; then \
+	    ${RM} -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}"; \
+	    if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}" ]; then \
+		echo "cannot uninstall ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}"; \
 	    else \
-		echo "uninstalled ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
+		echo "uninstalled ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}"; \
 	    fi; \
 	fi
 	-${Q} if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT}" ]; then \
@@ -4425,12 +4486,12 @@ uninstall: custom/Makefile
 		echo "uninstalled ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
 	    fi; \
 	fi
-	-${Q} if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}" ]; then \
-	    ${RM} -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
-	    if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}" ]; then \
-		echo "cannot uninstall ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
+	-${Q} if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}" ]; then \
+	    ${RM} -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
+	    if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}" ]; then \
+		echo "cannot uninstall ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
 	    else \
-		echo "uninstalled ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
+		echo "uninstalled ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
 	    fi; \
 	fi
 	-${Q} if [ -z "${T}" -o "/" = "${T}" ]; then \
@@ -4495,6 +4556,20 @@ uninstall: custom/Makefile
 splint: #hsrc
 	${SPLINT} ${SPLINT_OPTS} -DCALC_SRC -I. \
 	    ${CALCSRC} ${LIBSRC} ${BUILD_C_SRC} ${UTIL_C_SRC}
+
+# strip - for reducing the size of the binary files
+#
+strip:
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${Q} for i in ${UTIL_PROGS} ${SAMPLE_TARGETS} ${SAMPLE_STATIC_TARGETS} \
+		 calc${EXT} calc-static${EXT} ${CALC_DYNAMIC_LIBS} \
+		 ${CALC_STATIC_LIBS}; do \
+	    if [ -s "$$i" -a -w "$$i" ]; then \
+		${STRIP} "$$i"; \
+		echo "stripped $$i"; \
+	    fi; \
+	done
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 ###
 #

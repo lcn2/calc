@@ -19,8 +19,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-MAKEFILE_REV= $$Revision: 30.2 $$
-# @(#) $Id: rpm.mk,v 30.2 2007/09/02 05:38:34 chongo Exp chongo $
+MAKEFILE_REV= $$Revision: 30.3 $$
+# @(#) $Id: rpm.mk,v 30.3 2007/09/02 09:30:11 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/rpm.mk,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -113,7 +113,7 @@ srcpkg: make_rhdir
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	${FIND} . -depth -print | \
 	    ${EGREP} -v '/RCS|/CVS|/NOTES|/\.|\.out$$|\.safe$$' | \
-	    ${EGREP} -v '/old[._-]|\.old$$|\.tar\.gz$$' | \
+	    ${EGREP} -v '/old[._-]|\.old$$|\.tar\.gz$$|/ver_calc$$' | \
 	    LANG=C ${SORT} | \
 	    ${CPIO} -dumpv "$(TMPDIR)/$(PROJECT)"
 	(cd "$(TMPDIR)"; ${TAR} cf - "$(PROJECT)") | \

@@ -3,14 +3,14 @@
 ##############################################################################
 
 # These .c files are required for the main custom interface and
-# for the custom support functions for libcustcalc${LIB_EXT_VERS}.
+# for the custom support functions for libcustcalc${LIB_EXT_VERSION}.
 #
 # There MUST be a .c for every .o in REQUIRED_OBJ.
 #
 REQUIRED_SRC= custtbl.c
 
 # These .o files correspond to the .c files in REQUIRED_SRC
-# for libcustcalc${LIB_EXT_VERS}.
+# for libcustcalc${LIB_EXT_VERSION}.
 #
 # There MUST be a .o for every .c in REQUIRED_SRC.
 #
@@ -20,11 +20,11 @@ REQUIRED_OBJ= custtbl.o
 #
 INSTALL_H_SRC= ${CUSTOM_H_SRC}
 
-# These .c files are used to form libcustcalc${LIB_EXT_VERS}.
+# These .c files are used to form libcustcalc${LIB_EXT_VERSION}.
 #
 CUSTCALC_SRC= ${REQUIRED_SRC} ${CUSTOM_SRC}
 
-# These .o files are used to form libcustcalc${LIB_EXT_VERS}.
+# These .o files are used to form libcustcalc${LIB_EXT_VERSION}.
 #
 CUSTCALC_OBJ= ${REQUIRED_OBJ} ${CUSTOM_OBJ}
 
@@ -51,7 +51,7 @@ CALCLIBLIST= ${CUSTCALC_SRC} ${INSTALL_H_SRC} ${MAKE_FILE} HOW_TO_ADD
 
 # This is the custom dynbamic shared library that is build
 #
-CALC_DYNAMIC_LIBCUSTCALC= libcustcalc${LIB_EXT_VERS}
+CALC_DYNAMIC_LIBCUSTCALC= libcustcalc${LIB_EXT_VERSION}
 
 # This is the custom static library that is build
 #
@@ -74,10 +74,10 @@ calc-dynamic-only: ${CUSTCALC_OBJ} ${CALC_DYNAMIC_LIBCUSTCALC}
 
 calc-static-only: ${CUSTCALC_OBJ} ${CALC_STATIC_LIBCUSTCALC}
 
-custom/libcustcalc${LIB_EXT_VERS}: libcustcalc${LIB_EXT_VERS} \
+custom/libcustcalc${LIB_EXT_VERSION}: libcustcalc${LIB_EXT_VERSION} \
 	${CALC_STATIC_LIBCUSTCALC}
 
-libcustcalc${LIB_EXT_VERS}: ${CUSTCALC_OBJ} ${MAKE_FILE}
+libcustcalc${LIB_EXT_VERSION}: ${CUSTCALC_OBJ} ${MAKE_FILE}
 	${CC} ${LIBCUSTCALC_SHLIB} ${CUSTCALC_OBJ} -o $@
 
 ##
@@ -287,6 +287,7 @@ clean:
 clobber: clean
 	${RM} -f ${BLD_TYPE}
 	${RM} -f .all ${MAKE_FILE}.tmp ${MAKE_FILE}.bak
+	${RM} -f libcustcalc${LIB_EXT_VERSION}
 	${RM} -f libcustcalc${LIB_EXT_VERS}
 	${RM} -f libcustcalc${LIB_EXT_VER}
 	${RM} -f libcustcalc${LIB_EXT_VE}
@@ -446,9 +447,10 @@ install: all
 	    fi; \
 	  fi; \
 	fi
-	${Q}# NOTE: The upper level makefile installs libcustcalc${LIB_EXT_VERS}
-	${Q}#       because we only want to perform one ${LDCONFIG} for both
-	${Q}#       libcalc${LIB_EXT_VERS} and libcustcalc${LIB_EXT_VERS}.
+	${Q}# NOTE: The upper level makefile installs the file
+	${Q}#	    libcustcalc${LIB_EXT_VERSION} because we only want to
+	${Q}#	    perform one ${LDCONFIG} for both libcalc${LIB_EXT_VERSION}
+	${Q}#	    and libcustcalc${LIB_EXT_VERSION}.
 
 # Try to remove everything that was installed
 #

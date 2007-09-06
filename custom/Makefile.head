@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.12 $
-# @(#) $Id: Makefile.head,v 30.12 2007/09/01 19:54:03 chongo Exp $
+# @(#) $Revision: 30.14 $
+# @(#) $Id: Makefile.head,v 30.14 2007/09/06 08:08:39 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile.head,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -63,14 +63,16 @@ CUSTOM_CALC_FILES= argv.cal halflen.cal pzasusb8.cal pmodm127.cal register.cal
 #
 CUSTOM_HELP= argv devnull help sysinfo pzasusb8 pmodm127 register
 
-# Any .h files that are needed by programs that use libcustcalc${LIB_EXT_VERS}
+# Any .h files that are needed by programs that use
+# libcustcalc${LIB_EXT_VERSION}
 #
 # Put any .h files that you add which might be useful to other
 # programs here.
 #
 CUSTOM_H_SRC=
 
-# Any .c files that are needed to build libcustcalc${LIB_EXT_VERS}.
+# Any .c files that are needed to build libcustcalc${LIB_EXT_VERSION}.
+#
 # Don't put ${REQUIRED_SRC} files in this list.
 #
 # There MUST be a .c in CUSTOM_SRC for every .o in CUSTOM_OBJ.
@@ -80,7 +82,9 @@ CUSTOM_H_SRC=
 CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c c_pzasusb8.c \
 	c_pmodm127.c c_register.c
 
-# Any .o files that are needed by program that use libcustcalc${LIB_EXT_VERS}.
+# Any .o files that are needed by program that use
+# libcustcalc${LIB_EXT_VERSION}.
+#
 # Don't put ${REQUIRED_OBJ} files in this list.
 #
 # There MUST be a .c in CUSTOM_SRC for every .o in CUSTOM_OBJ.
@@ -362,7 +366,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.2
+VERSION= 2.12.2.1
 VERS= 2.12.2
 VER= 2.12
 VE= 2
@@ -370,6 +374,7 @@ VE= 2
 # Names of shared libraries with versions
 #
 LIB_EXT= .so
+LIB_EXT_VERSION= ${LIB_EXT}.${VERSION}
 LIB_EXT_VERS= ${LIB_EXT}.${VERS}
 LIB_EXT_VER= ${LIB_EXT}.${VER}
 LIB_EXT_VE= ${LIB_EXT}.${VE}

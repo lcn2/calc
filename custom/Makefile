@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.12 $
-# @(#) $Id: Makefile.head,v 30.12 2007/09/01 19:54:03 chongo Exp $
+# @(#) $Revision: 30.14 $
+# @(#) $Id: Makefile.head,v 30.14 2007/09/06 08:08:39 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile.head,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -63,14 +63,16 @@ CUSTOM_CALC_FILES= argv.cal halflen.cal pzasusb8.cal pmodm127.cal register.cal
 #
 CUSTOM_HELP= argv devnull help sysinfo pzasusb8 pmodm127 register
 
-# Any .h files that are needed by programs that use libcustcalc${LIB_EXT_VERS}
+# Any .h files that are needed by programs that use
+# libcustcalc${LIB_EXT_VERSION}
 #
 # Put any .h files that you add which might be useful to other
 # programs here.
 #
 CUSTOM_H_SRC=
 
-# Any .c files that are needed to build libcustcalc${LIB_EXT_VERS}.
+# Any .c files that are needed to build libcustcalc${LIB_EXT_VERSION}.
+#
 # Don't put ${REQUIRED_SRC} files in this list.
 #
 # There MUST be a .c in CUSTOM_SRC for every .o in CUSTOM_OBJ.
@@ -80,7 +82,9 @@ CUSTOM_H_SRC=
 CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c c_pzasusb8.c \
 	c_pmodm127.c c_register.c
 
-# Any .o files that are needed by program that use libcustcalc${LIB_EXT_VERS}.
+# Any .o files that are needed by program that use
+# libcustcalc${LIB_EXT_VERSION}.
+#
 # Don't put ${REQUIRED_OBJ} files in this list.
 #
 # There MUST be a .c in CUSTOM_SRC for every .o in CUSTOM_OBJ.
@@ -362,7 +366,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.2
+VERSION= 2.12.2.1
 VERS= 2.12.2
 VER= 2.12
 VE= 2
@@ -370,6 +374,7 @@ VE= 2
 # Names of shared libraries with versions
 #
 LIB_EXT= .so
+LIB_EXT_VERSION= ${LIB_EXT}.${VERSION}
 LIB_EXT_VERS= ${LIB_EXT}.${VERS}
 LIB_EXT_VER= ${LIB_EXT}.${VER}
 LIB_EXT_VE= ${LIB_EXT}.${VE}
@@ -518,8 +523,8 @@ CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
 #
 CC_STATIC=
 LD_STATIC=
@@ -545,7 +550,7 @@ ifeq ($(target),Darwin)
 BLD_TYPE= calc-dynamic-only
 #
 CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/sw/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:${LIBDIR}:/usr/local/lib
 LD_SHARE= ${DARWIN_ARCH}
 LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib
 LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib
@@ -565,11 +570,14 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 # Darmin dynamic shared lib filenames
 LIB_EXT:= .dylib
+LIB_EXT_VERSION:= .${VERSION}${LIB_EXT}
 LIB_EXT_VERS:= .${VERS}${LIB_EXT}
 LIB_EXT_VER:= .${VER}${LIB_EXT}
 LIB_EXT_VE:= .${VE}${LIB_EXT}
-# compile Universal by default
-DARWIN_ARCH= -arch i386 -arch ppc
+# DARWIN_ARCH= -arch i386 -arch ppc	# Universal binary
+# DARWIN_ARCH= -arch i386		# Intel binary
+# DARWIN_ARCH= -arch ppc		# PPC binary
+DARWIN_ARCH=				# native binary
 MACOSX_DEPLOYMENT_TARGET=10.4
 #
 endif
@@ -592,8 +600,8 @@ CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
 #
 CC_STATIC=
 LD_STATIC=
@@ -609,6 +617,37 @@ LCC= gcc
 CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 MAKE= gmake
+#
+endif
+
+######################
+# Sun Solaris target #
+######################
+
+# XXX - this needs to be tested
+ifeq ($(target),solaris)
+#
+BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+#
+CC_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+LD_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 endif
 
@@ -628,8 +667,8 @@ CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
 #
 CC_STATIC=
 LD_STATIC=
@@ -675,8 +714,8 @@ CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERS}"
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERS}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
 #
 CC_STATIC=
 LIBCALC_STATIC=
@@ -730,14 +769,14 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 ##############################################################################
 
 # These .c files are required for the main custom interface and
-# for the custom support functions for libcustcalc${LIB_EXT_VERS}.
+# for the custom support functions for libcustcalc${LIB_EXT_VERSION}.
 #
 # There MUST be a .c for every .o in REQUIRED_OBJ.
 #
 REQUIRED_SRC= custtbl.c
 
 # These .o files correspond to the .c files in REQUIRED_SRC
-# for libcustcalc${LIB_EXT_VERS}.
+# for libcustcalc${LIB_EXT_VERSION}.
 #
 # There MUST be a .o for every .c in REQUIRED_SRC.
 #
@@ -747,11 +786,11 @@ REQUIRED_OBJ= custtbl.o
 #
 INSTALL_H_SRC= ${CUSTOM_H_SRC}
 
-# These .c files are used to form libcustcalc${LIB_EXT_VERS}.
+# These .c files are used to form libcustcalc${LIB_EXT_VERSION}.
 #
 CUSTCALC_SRC= ${REQUIRED_SRC} ${CUSTOM_SRC}
 
-# These .o files are used to form libcustcalc${LIB_EXT_VERS}.
+# These .o files are used to form libcustcalc${LIB_EXT_VERSION}.
 #
 CUSTCALC_OBJ= ${REQUIRED_OBJ} ${CUSTOM_OBJ}
 
@@ -778,7 +817,7 @@ CALCLIBLIST= ${CUSTCALC_SRC} ${INSTALL_H_SRC} ${MAKE_FILE} HOW_TO_ADD
 
 # This is the custom dynbamic shared library that is build
 #
-CALC_DYNAMIC_LIBCUSTCALC= libcustcalc${LIB_EXT_VERS}
+CALC_DYNAMIC_LIBCUSTCALC= libcustcalc${LIB_EXT_VERSION}
 
 # This is the custom static library that is build
 #
@@ -801,10 +840,10 @@ calc-dynamic-only: ${CUSTCALC_OBJ} ${CALC_DYNAMIC_LIBCUSTCALC}
 
 calc-static-only: ${CUSTCALC_OBJ} ${CALC_STATIC_LIBCUSTCALC}
 
-custom/libcustcalc${LIB_EXT_VERS}: libcustcalc${LIB_EXT_VERS} \
+custom/libcustcalc${LIB_EXT_VERSION}: libcustcalc${LIB_EXT_VERSION} \
 	${CALC_STATIC_LIBCUSTCALC}
 
-libcustcalc${LIB_EXT_VERS}: ${CUSTCALC_OBJ} ${MAKE_FILE}
+libcustcalc${LIB_EXT_VERSION}: ${CUSTCALC_OBJ} ${MAKE_FILE}
 	${CC} ${LIBCUSTCALC_SHLIB} ${CUSTCALC_OBJ} -o $@
 
 ##
@@ -1014,6 +1053,7 @@ clean:
 clobber: clean
 	${RM} -f ${BLD_TYPE}
 	${RM} -f .all ${MAKE_FILE}.tmp ${MAKE_FILE}.bak
+	${RM} -f libcustcalc${LIB_EXT_VERSION}
 	${RM} -f libcustcalc${LIB_EXT_VERS}
 	${RM} -f libcustcalc${LIB_EXT_VER}
 	${RM} -f libcustcalc${LIB_EXT_VE}
@@ -1173,9 +1213,10 @@ install: all
 	    fi; \
 	  fi; \
 	fi
-	${Q}# NOTE: The upper level makefile installs libcustcalc${LIB_EXT_VERS}
-	${Q}#       because we only want to perform one ${LDCONFIG} for both
-	${Q}#       libcalc${LIB_EXT_VERS} and libcustcalc${LIB_EXT_VERS}.
+	${Q}# NOTE: The upper level makefile installs the file
+	${Q}#	    libcustcalc${LIB_EXT_VERSION} because we only want to
+	${Q}#	    perform one ${LDCONFIG} for both libcalc${LIB_EXT_VERSION}
+	${Q}#	    and libcustcalc${LIB_EXT_VERSION}.
 
 # Try to remove everything that was installed
 #

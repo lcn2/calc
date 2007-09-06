@@ -1,4 +1,47 @@
-The following are the changes from calc version 2.12.1.10 to date:
+The following are the changes from calc version 2.12.1.1 to date:
+
+    Added an explicit Solaris target.
+
+    Fixed confusion in Makefile where some uses of ${EXT} were misnamed ${EXE}.
+
+    Added a "make strip" rule, per suggestion from Igor Furlan <primorec
+    at sbcglobal dot net>, to allow one to strip previously built binary
+    executables and libraries.
+
+    Under the Darwin / OS X target, ${DARWIN_ARCH} is left empty meaning
+    that calc is compiled for the native CPU type instead of Universal
+    Binary (Intel and PPC).
+
+    By default, the calc binary that is built for the rpm forces
+    ${LD_SHARE} to be empty.  An empty ${LD_SHARE} means that the calc
+    from the rpm does not set rpath.  This in turn causes the default
+    system path to be searched when looking for libcalc and libcustcalc.
+
+    The Makefile shipped with calc still sets ${LD_SHARE} for host targets.
+    By default, the dynamic shared library search path for all targets
+    starts with the source directory.  Starting the search in the source
+    directory is convenient for testing and debugging but is not appropriate
+    for installation on a production system.  To get the same effect
+    as the calc binary in the calc rpm, try:
+
+	make clobber
+	make calc-dynamic-only BLD_TYPE=calc-dynamic-only LD_SHARE=
+	make install
+
+    The libcalc and libcustcalc shared libraries are now tied to
+    the 4 level calc version instead of just 3 levels.  For example,
+    under Linux calc version 2.12.2.1 uses /usr/lib/libcalc.so.2.12.2.1
+    instead of just the /usr/lib/libcalc.so.2.12.2 file.  This change
+    was made so that calc produced by 'make clobber; make all install'
+    is consistent with the calc rpm.
+
+    Calc is now releasing the calc-debuginfo rpm for those RPM users who
+    which to use non-stripped libraries and binaries for debugging
+    purposes.  By default, the calc rpm installed stripped binaries
+    and libraries.
+
+
+The following are the changes from calc version 2.12.1.10 to 2.12.2:
 
     Put back the missing -s flags on the cscripts:  mersenne, 4dsphere,
     fprodcut, plus, and powerterm.  Thanks goes to Bradley Reed
@@ -6592,8 +6635,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.8 $
-## @(#) $Id: CHANGES,v 30.8 2007/09/02 06:26:38 chongo Exp $
+## @(#) $Revision: 30.10 $
+## @(#) $Id: CHANGES,v 30.10 2007/09/06 08:10:54 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
