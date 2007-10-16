@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: endian.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: endian.c,v 30.2 2007/09/29 16:56:40 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/endian.c,v $
  *
  * Under source code control:	1993/11/15 04:32:58
@@ -53,10 +53,8 @@ char byte[8] = { (char)0x12, (char)0x36, (char)0x48, (char)0x59,
 int
 main(void)
 {
-#if !defined(LITTLE_ENDIAN) && !defined(BIG_ENDIAN)
 	/* pointers into the byte order array */
 	int *intp = (int *)byte;
-#endif
 #if defined(DEBUG)
 	short *shortp = (short *)byte;
 	long *longp = (long *)byte;
@@ -73,13 +71,16 @@ main(void)
 #endif
 
 	/* Print the standard <machine/endian.h> defines */
+	printf("#undef BIG_ENDIAN\n");
 	printf("#define BIG_ENDIAN\t4321\n");
+	printf("#undef LITTLE_ENDIAN\n");
 	printf("#define LITTLE_ENDIAN\t1234\n");
+	printf("#undef CALC_BYTE_ORDER\n");
 
-#if defined(LITTLE_ENDIAN)
-	printf("#define CALC_BYTE_ORDER\tLITTLE_ENDIAN\n");
-#elif defined(BIG_ENDIAN)
+#if defined(CALC_BIG_ENDIAN)
 	printf("#define CALC_BYTE_ORDER\tBIG_ENDIAN\n");
+#elif defined(CALC_LITTLE_ENDIAN)
+	printf("#define CALC_BYTE_ORDER\tLITTLW_ENDIAN\n");
 #else
 	/* Determine byte order */
 	if (intp[0] == 0x12364859) {
@@ -89,8 +90,11 @@ main(void)
 	    /* Least Significant Byte first */
 	    printf("#define CALC_BYTE_ORDER\tLITTLE_ENDIAN\n");
 	} else {
-	    fprintf(stderr,
-		"Unknown int Byte Order, set CALC_BYTE_ORDER in Makefile\n");
+	    fprintf(stderr, "@=-=@ Fatal build error - cannot @=-=@\n");
+	    fprintf(stderr, "@=-=@ determine byte order.  Set @=-=@\n");
+	    fprintf(stderr, "@=-=@ ${CALC_BYTE_ORDER} in the Makefile @=-=@\n");
+	    fprintf(stderr, "@=-=@ to be either -DCALC_BIG_ENDIAN or @=-=@\n");
+	    fprintf(stderr, "@=-=@ to be -DCALC_LITTLE_ENDIAN @=-=@\n");
 	    exit(1);
 	}
 #endif

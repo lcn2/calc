@@ -11,7 +11,7 @@
 # (Generic calc makefile)
 #
 #  NOTE: This is NOT the calc rpm Makefile.  This Makefile is a generic
-#	 Makefile for the people who build calc from the gziped tarball.
+#	 Makefile for the people who build calc from the bzip2-ed tarball.
 #	 Without modification, it not assume the system has readline, ncurses
 #	 or less.  It compiles with gcc -O3 -g3 as well.  You can change all
 #	 this by modifying the Makefile variables below.
@@ -20,7 +20,8 @@
 #	 has the GNU readline headers and libaraies:
 #
 #	 USE_READLINE= -DUSE_READLINE
-#	 READLINE_LIB= -lreadline -lhistory -lncurses
+#	 READLINE_LIB= -lreadline
+#	 READLINE_EXTRAS= -lhistory -lncurses
 #
 # Copyright (C) 1999-2007  Landon Curt Noll
 #
@@ -38,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.21 $$
-# @(#) $Id: Makefile.ship,v 30.21 2007/09/06 08:08:39 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.25 $$
+# @(#) $Id: Makefile.ship,v 30.25 2007/09/29 16:57:48 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -105,19 +106,19 @@ HAVE_VSPRINTF=
 #    Big Endian:	Amdahl, 68k, Pyramid, Mips, Sparc, ...
 #    Little Endian:	Vax, 32k, Spim (Dec Mips), i386, i486, ...
 #
-# If in doubt, leave BYTE_ORDER empty.	This Makefile will attempt to
+# If in doubt, leave CALC_BYTE_ORDER empty.  This Makefile will attempt to
 # use BYTE_ORDER in <machine/endian.h> or it will attempt to run
 # the endian program.  If you get syntax errors when you compile,
 # try forcing the value to be -DBIG_ENDIAN and run the calc regression
 # tests. (see the README file)	If the calc regression tests fail, do
-# a make clobber and try -DLITTLE_ENDIAN.   If that fails, ask a wizard
+# a make clobber and try -DCALC_LITTLE_ENDIAN.   If that fails, ask a wizard
 # for help.
 #
-# Select BYTE_ORDER= -DLITTLE_ENDIAN for DJGPP.
+# Select CALC_BYTE_ORDER= -DCALC_LITTLE_ENDIAN for DJGPP.
 #
-BYTE_ORDER=
-#BYTE_ORDER= -DBIG_ENDIAN
-#BYTE_ORDER= -DLITTLE_ENDIAN
+CALC_BYTE_ORDER=
+#CALC_BYTE_ORDER= -DCALC_BIG_ENDIAN
+#CALC_BYTE_ORDER= -DCALC_LITTLE_ENDIAN
 
 # Determine the number of bits in a long
 #
@@ -752,13 +753,25 @@ MANMAKE= /usr/local/bin/manmake
 MANMODE= 0444
 CATMODE= 0444
 
+# By default, custom builtin functions may only be executed if calc
+# is given the -C option.  This is because custom builtin functions
+# may invoke non-standard or non-portable code.	 One may completely
+# disable custom builtin functions by not compiling any of code
+#
+# ALLOW_CUSTOM= -DCUSTOM	# allow custom only if -C is given
+# ALLOW_CUSTOM=			# disable custom even if -C is given
+#
+# If in doubt, use ALLOW_CUSTOM= -DCUSTOM
+#
+ALLOW_CUSTOM= -DCUSTOM
+#ALLOW_CUSTOM=
+
 # If the $CALCPATH environment variable is not defined, then the following
 # path will be search for calc resource file routines.
 #
 # Select CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR} for DJGPP.
 #
 CALCPATH= .:./cal:~/.cal:${CALC_SHAREDIR}:${CUSTOMCALDIR}
-#CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR}
 
 # If the $CALCRC environment variable is not defined, then the following
 # path will be search for calc resource files.
@@ -778,6 +791,8 @@ CALCRC= ${CALC_SHAREDIR}/startup:~/.calcrc:./.calcinit
 #
 #	READLINE_LIB		The flags needed to link in the readline
 #				and history link libraries
+#	READLINE_EXTRAS		Flags and libs needed to use the readline
+#				and history link libraries
 #	READLINE_INCLUDE	Where the readline include files reside
 #				(leave blank if they are /usr/include/readline)
 #
@@ -791,14 +806,22 @@ USE_READLINE=
 #USE_READLINE= -DUSE_READLINE
 #
 READLINE_LIB=
-#READLINE_LIB= -lreadline -lhistory -lncurses
-#READLINE_LIB= -L/usr/gnu/lib -lreadline -lhistory -lncurses
-#READLINE_LIB= -L/usr/local/lib -lreadline -lhistory -lncurses
+READLINE_EXTRAS=
+#
+#READLINE_LIB= -lreadline
+#READLINE_EXTRAS= -lhistory -lncurses
+#
+#READLINE_LIB= -L/usr/gnu/lib -lreadline
+#READLINE_EXTRAS= -lhistory -lncurses
+#
+#READLINE_LIB= -L/usr/local/lib -lreadline
+#READLINE_EXTRAS= -lhistory -lncurses
 #
 # For Apple OS X: install fink from http://fink.sourceforge.net
 #		  and then do a 'fink install readline' and then use:
 #
-#READLINE_LIB= -L/sw/lib -lreadline -lhistory -lncurses
+#READLINE_LIB= -L/sw/lib -lreadline
+#READLINE_EXTRAS= -lhistory -lncurses
 #
 READLINE_INCLUDE=
 #READLINE_INCLUDE= -I/usr/gnu/include
@@ -908,18 +931,6 @@ CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=.
 #	  MALLOC_FASTCHK=1 MALLOC_FULLWARN=1 MALLOC_CLEAR_FREE=1 \
 #	  MALLOC_CLEAR_MALLOC=1 LD_LIBRARY_PATH=.:./custom
 
-# By default, custom builtin functions may only be executed if calc
-# is given the -C option.  This is because custom builtin functions
-# may invoke non-standard or non-portable code.	 One may completely
-# disable custom builtin functions by not compiling any of code
-#
-# ALLOW_CUSTOM= -DCUSTOM	# allow custom only if -C is given
-# ALLOW_CUSTOM=			# disable custom even if -C is given
-#
-# If in doubt, use ALLOW_CUSTOM= -DCUSTOM
-#
-ALLOW_CUSTOM= -DCUSTOM
-#ALLOW_CUSTOM=
 
 # The install rule uses:
 #
@@ -950,7 +961,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.2.1
+VERSION= 2.12.2.2
 VERS= 2.12.2
 VER= 2.12
 VE= 2
@@ -1234,7 +1245,7 @@ UTIL_TMP= ll_tmp fpos_tmp fposv_tmp const_tmp uid_tmp newstr_tmp vs_tmp \
 	memmv_tmp offscl_tmp posscl_tmp newstr_tmp \
 	getsid_tmp gettime_tmp getprid_tmp rusage_tmp strdup_tmp
 
-# these utility executables may be created in the process of 
+# these utility executables may be created in the process of
 # building the BUILD_H_SRC file set
 #
 UTIL_PROGS= align32${EXT} fposval${EXT} have_uid_t${EXT} have_const${EXT} \
@@ -1344,9 +1355,6 @@ HELP_PASSDOWN= \
     COMMON_CFLAGS="${COMMON_CFLAGS}" \
     COMMON_LDFLAGS="${COMMON_LDFLAGS}" \
     CP=${CP} \
-    CUSTOMCALDIR="${CUSTOMCALDIR}" \
-    CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
-    CUSTOMINCDIR="${CUSTOMINCDIR}" \
     EXT=${EXT} \
     FMT=${FMT} \
     HELPDIR="${HELPDIR}" \
@@ -1381,9 +1389,6 @@ CAL_PASSDOWN= \
     CMP=${CMP} \
     CO=${CO} \
     CP=${CP} \
-    CUSTOMCALDIR="${CUSTOMCALDIR}" \
-    CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
-    CUSTOMINCDIR="${CUSTOMINCDIR}" \
     HELPDIR="${HELPDIR}" \
     INCDIR="${INCDIR}" \
     LANG=${LANG} \
@@ -1412,9 +1417,6 @@ CSCRIPT_PASSDOWN= \
     CMP=${CMP} \
     CO=${CO} \
     CP=${CP} \
-    CUSTOMCALDIR="${CUSTOMCALDIR}" \
-    CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
-    CUSTOMINCDIR="${CUSTOMINCDIR}" \
     FMT=${FMT} \
     HELPDIR="${HELPDIR}" \
     INCDIR="${INCDIR}" \
@@ -1610,10 +1612,11 @@ calc-static-only: ${STATIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 calc${EXT}: .hsrc ${CALCOBJS} ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
 	${RM} -f $@
 	${CC} ${CALCOBJS} ${LDFLAGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
-	      ${READLINE_LIB} -o $@
+	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
 libcalc${LIB_EXT_VERSION}: ${LIBOBJS} ver_calc${EXT} ${MAKE_FILE}
-	${CC} ${LIBCALC_SHLIB} ${LIBOBJS} -o libcalc${LIB_EXT_VERSION}
+	${CC} ${LIBCALC_SHLIB} ${LIBOBJS} \
+	      ${READLINE_LIB} ${READLINE_EXTRAS} -o libcalc${LIB_EXT_VERSION}
 
 libcalc${LIB_EXT_VERS}: libcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
@@ -1672,11 +1675,11 @@ sample: ${SAMPLE_TARGETS}
 
 sample_rand${EXT}: sample_rand.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
 	${CC} sample_rand.o ${CLDFALGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
-	      ${READLINE_LIB} -o $@
+	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
 sample_many${EXT}: sample_many.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
 	${CC} sample_many.o ${CLDFALGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
-	      ${READLINE_LIB} -o $@
+	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
 ###
 #
@@ -1776,7 +1779,7 @@ endian_calc.h: endian${EXT} ${MAKE_FILE}
 	${Q} echo '' >> endian_calc.h
 	${Q} echo '' >> endian_calc.h
 	${Q} echo '/* what byte order are we? */' >> endian_calc.h
-	-${Q} if [ X"${BYTE_ORDER}" = X ]; then \
+	-${Q} if [ X"${CALC_BYTE_ORDER}" = X ]; then \
 	    if [ -f ${INCDIR}/endian.h ]; then \
 		echo '#include <endian.h>' >> endian_calc.h; \
 		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
@@ -3032,7 +3035,7 @@ win32_hsrc: win32.mkdef ${MAKE_FILE}
 ###
 
 endian.o: endian.c have_unistd.h
-	${LCC} ${ICFLAGS} ${BYTE_ORDER} endian.c -c
+	${LCC} ${ICFLAGS} ${CALC_BYTE_ORDER} endian.c -c
 
 endian${EXT}: endian.o
 	${RM} -f $@
@@ -3132,7 +3135,7 @@ calc-static${EXT}: .hsrc ${CALCOBJS} \
 		   ${CALC_STATIC_LIBS} ${MAKE_FILE}
 	${RM} -f $@
 	${CC} ${LDFLAGS} ${CALCOBJS} ${LD_STATIC} ${CALC_STATIC_LIBS} \
-	      ${READLINE_LIB} -o $@
+	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
 libcustcalc.a: custom/libcustcalc.a
 	${Q} ${RM} -f $@
@@ -3149,11 +3152,11 @@ custom/libcustcalc.a: custom/Makefile
 
 sample_rand-static${EXT}: sample_rand.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
 	${CC} ${LDFLAGS} sample_rand.o ${LD_STATIC} \
-	      ${CALC_STATIC_LIBS} ${READLINE_LIB} -o $@
+	      ${CALC_STATIC_LIBS} ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
 sample_many-static${EXT}: sample_many.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
 	${CC} ${LDFLAGS} sample_many.o ${LD_STATIC} \
-	      ${CALC_STATIC_LIBS} ${READLINE_LIB} -o $@
+	      ${CALC_STATIC_LIBS} ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
 ###
 #
@@ -3531,6 +3534,7 @@ env:
 	@echo 'PURIFY=${PURIFY}'; echo ''
 	@echo 'Q=${Q}'; echo ''
 	@echo 'RANLIB=${RANLIB}'; echo ''
+	@echo 'READLINE_EXTRAS=${READLINE_EXTRAS}'; echo ''
 	@echo 'READLINE_INCLUDE=${READLINE_INCLUDE}'; echo ''
 	@echo 'READLINE_LIB=${READLINE_LIB}'; echo ''
 	@echo 'RM=${RM}'; echo ''

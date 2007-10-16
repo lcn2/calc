@@ -8,9 +8,8 @@
 
 
 /* what byte order are we? */
-#define BIG_ENDIAN	4321
-#define LITTLE_ENDIAN	1234
-#define CALC_BYTE_ORDER	LITTLE_ENDIAN
+#include <endian.h>
+#define CALC_BYTE_ORDER BYTE_ORDER
 
 
 #endif /* !__ENDIAN_CALC_H__ */

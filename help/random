@@ -2,18 +2,21 @@ NAME
     random - Blum-Blum-Shub pseudo-random number generator
 
 SYNOPSIS
-    random([[min, ] max])
+    random([[min, ] beyond])
 
 TYPES
     min		integer
-    max		integer
+    beyond	integer
 
     return	integer
 
 DESCRIPTION
     Generate a pseudo-random number using a Blum-Blum-Shub generator.
-    We return a pseudo-random number over the half closed interval [min,max).
-    By default, min is 0 and max is 2^64.
+    We return a pseudo-random number over the half closed interval:
+
+    	[min,beyond)	((min <= return < beyond))
+
+    By default, min is 0 and beyond is 2^64.
 
     While the Blum-Blum-Shub generator is not painfully slow, it is not
     a fast generator.  For a faster, but lesser quality generator
@@ -22,8 +25,8 @@ DESCRIPTION
 
     Other arg forms:
 
-	random()	Same as rand(0, 2^64)
-	random(max)	Same as rand(0, max)
+	random()	Same as random(0, 2^64)
+	random(beyond)	Same as random(0, beyond)
 
     The random generator generates the highest order bit first.	 Thus:
 
@@ -146,17 +149,17 @@ EXAMPLE
     10 483381144668580304003305 0 -70235
 
 LIMITS
-    min < max
+    min < beyond
 
 LINK LIBRARY
     void zrandom(long cnt, ZVALUE *res)
-    void zrandomrange(ZVALUE low, ZVALUE high, ZVALUE *res)
-    long irandom(long max)
+    void zrandomrange(ZVALUE low, ZVALUE beyond, ZVALUE *res)
+    long irandom(long beyond)
 
 SEE ALSO
     seed, srand, randbit, isrand, rand, srandom, israndom
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2007  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -172,8 +175,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.1 $
-## @(#) $Id: random,v 30.1 2007/03/16 11:10:42 chongo Exp $
+## @(#) $Revision: 30.3 $
+## @(#) $Id: random,v 30.3 2007/09/21 02:16:29 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/random,v $
 ##
 ## Under source code control:	1997/02/17 01:18:22

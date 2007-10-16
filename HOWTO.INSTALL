@@ -1,4 +1,4 @@
-Installing calc from the gziped tarball in 4 easy steps:
+Installing calc from the bzip2-ed tarball in 4 easy steps:
 
     0)  If your platform supports i686 RPMs, you may want to go to:
 
@@ -17,13 +17,13 @@ Installing calc from the gziped tarball in 4 easy steps:
 
 	The following 4 steps apply to calc source tree that comes from either:
 
-		gunzip -c calc-*.tar.gz | tar -xvf -
+		bunzip2 -c calc-*.tar.bz2 | tar -xvf -
 
 	or from:
 
 		rpm -ivh calc-*.src.rpm
 		cd /var/tmp
-		gunzip -c /usr/src/redhat/SOURCES/calc-*.tar.gz | tar -xvf -
+		bunzip2 -c /usr/src/redhat/SOURCES/calc-*.tar.bz2 | tar -xvf -
 
     1)	Look at the makefile, and adjust it to suit your needs.
 
@@ -204,8 +204,8 @@ the calc help subsystem.  See the README file for details.
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.5 $
-## @(#) $Id: HOWTO.INSTALL,v 30.5 2007/09/01 19:54:03 chongo Exp $
+## @(#) $Revision: 30.6 $
+## @(#) $Id: HOWTO.INSTALL,v 30.6 2007/10/16 12:22:22 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/HOWTO.INSTALL,v $
 ##
 ## Under source code control:	1999/09/27 20:48:44

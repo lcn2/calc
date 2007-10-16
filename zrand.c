@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: zrand.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: zrand.c,v 30.2 2007/09/21 01:47:34 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrand.c,v $
  *
  * Under source code control:	1995/01/07 09:45:25
@@ -123,7 +123,7 @@
  *
  * The s100 generator as the following calc interfaces:
  *
- *   rand(min,max)		(where min < max)
+ *   rand(min,beyond)		(where min < beyond)
  *
  *	Print an s100 generator random value over interval [a,b).
  *
@@ -2171,17 +2171,17 @@ zrand(long cnt, ZVALUE *res)
 
 
 /*
- * zrandrange - generate an s100 random value in the range [low, high)
+ * zrandrange - generate an s100 random value in the range [low, beyond)
  *
  * given:
  *	low - low value of range
- *	high - beyond end of range
+ *	beyond - beyond end of range
  *	res - where to place the random bits as ZVALUE
  */
 void
-zrandrange(CONST ZVALUE low, CONST ZVALUE high, ZVALUE *res)
+zrandrange(CONST ZVALUE low, CONST ZVALUE beyond, ZVALUE *res)
 {
-	ZVALUE range;		/* high-low */
+	ZVALUE range;		/* beyond-low */
 	ZVALUE rval;		/* random value [0, 2^bitlen) */
 	ZVALUE rangem1;		/* range - 1 */
 	long bitlen;		/* smallest power of 2 >= diff */
@@ -2189,15 +2189,15 @@ zrandrange(CONST ZVALUE low, CONST ZVALUE high, ZVALUE *res)
 	/*
 	 * firewall
 	 */
-	if (zrel(low, high) >= 0) {
-		math_error("srand low range >= high range");
+	if (zrel(low, beyond) >= 0) {
+		math_error("srand low range >= beyond range");
 		/*NOTREACHED*/
 	}
 
 	/*
 	 * determine the size of the random number needed
 	 */
-	zsub(high, low, &range);
+	zsub(beyond, low, &range);
 	if (zisone(range)) {
 		zfree(range);
 		*res = low;
@@ -2226,7 +2226,7 @@ zrandrange(CONST ZVALUE low, CONST ZVALUE high, ZVALUE *res)
 
 	/*
 	 * add in low value to produce the range [0+low, diff+low)
-	 * which is the range [low, high)
+	 * which is the range [low, beyond)
 	 */
 	zadd(rval, low, res);
 	zfree(rval);

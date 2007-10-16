@@ -600,7 +600,9 @@ DESCRIPTION
 
 	6	Report on rand() subtractive 100 shuffle generator issues.
 
-    Bits >= 7 are reserved for future use and should not be used at this time.
+	7	Report on custom function issues.
+
+    Bits >= 8 are reserved for future use and should not be used at this time.
 
     By default, "calc_debug" is 0.  The initial value may be overridden
     by the -D command line option.
@@ -972,8 +974,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.2 $
-## @(#) $Id: config,v 30.2 2007/07/05 17:37:41 chongo Exp $
+## @(#) $Revision: 30.3 $
+## @(#) $Id: config,v 30.3 2007/09/21 01:27:27 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/config,v $
 ##
 ## Under source code control:	1991/07/21 04:37:17

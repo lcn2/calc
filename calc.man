@@ -15,8 +15,8 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 .\"
-.\" @(#) $Revision: 30.2 $
-.\" @(#) $Id: calc.man,v 30.2 2007/08/18 17:28:29 chongo Exp $
+.\" @(#) $Revision: 30.3 $
+.\" @(#) $Id: calc.man,v 30.3 2007/09/08 02:53:09 chongo Exp $
 .\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -275,18 +275,14 @@ See
 .TP
 .B \-i
 Become interactive if possible.
-If
-.I calc_cmd
-args are given,
-.B calc
-by default, calc will execute them and exit.
-This flag causes
-.B calc
-to drop into interactive mode after the commands are executed.
 This flag will cause
 .B calc
 to drop into interactive mode after the
-commands are executed.
+.I calc_cmd
+arguments on the command line are evaluated.
+Without this flag,
+.B calc
+will exit after they are evaluated.
 .sp 1
 For example:
 .sp 1

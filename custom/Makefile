@@ -524,7 +524,11 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifdef ALLOW_CUSTOM
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
 #
 CC_STATIC=
 LD_STATIC=
@@ -553,7 +557,11 @@ CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:${LIBDIR}:/usr/local/lib
 LD_SHARE= ${DARWIN_ARCH}
 LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib
+ifdef ALLOW_CUSTOM
 LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib
+else
+LIBCUSTCALC_SHLIB=
+endif
 #
 CC_STATIC=
 LD_STATIC= ${DARWIN_ARCH}
@@ -601,7 +609,11 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifdef ALLOW_CUSTOM
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
 #
 CC_STATIC=
 LD_STATIC=
@@ -620,12 +632,12 @@ MAKE= gmake
 #
 endif
 
-######################
-# Sun Solaris target #
-######################
+################
+# SunOS target #
+################
 
 # XXX - this needs to be tested
-ifeq ($(target),solaris)
+ifeq ($(target),SunOS)
 #
 BLD_TYPE= calc-dynamic-only
 #
@@ -634,7 +646,11 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifdef ALLOW_CUSTOM
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
 #
 CC_STATIC=
 LIBCALC_STATIC=
@@ -715,7 +731,11 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifdef ALLOW_CUSTOM
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
 #
 CC_STATIC=
 LIBCALC_STATIC=
@@ -757,7 +777,6 @@ CFLAGS= ${ICFLAGS} ${CCOPT}
 #
 ILDFLAGS= ${COMMON_LDFLAGS}
 LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
-
 #endif	/* end of skip for non-Gnu makefiles */
 
 #######################################################################

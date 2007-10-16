@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.4 $
-# @(#) $Id: Makefile,v 30.4 2007/09/02 05:49:56 chongo Exp $
+# @(#) $Revision: 30.5 $
+# @(#) $Id: Makefile,v 30.5 2007/09/21 01:27:27 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -111,9 +111,6 @@ CALC_SHAREDIR= /usr/share/calc
 # ---------------------------------------------------------------
 # ${HELPDIR}		where the help directory is installed
 # ${CALC_INCDIR}	where the calc include files are installed
-# ${CUSTOMCALDIR}	where custom *.cal files are installed
-# ${CUSTOMHELPDIR}	where custom help files are installed
-# ${CUSTOMINCPDIR}	where custom .h files are installed
 # ${SCRIPTDIR}		where calc shell scripts are installed
 #
 # NOTE: The install rule prepends installation paths with ${T}, which
@@ -124,16 +121,10 @@ CALC_SHAREDIR= /usr/share/calc
 #
 #	HELPDIR= ${CALC_SHAREDIR}/help
 #	CALC_INCDIR= ${INCDIR}/calc
-#	CUSTOMCALDIR= ${CALC_SHAREDIR}/custom
-#	CUSTOMHELPDIR= ${CALC_SHAREDIR}/custhelp
-#	CUSTOMINCDIR= ${CALC_INCDIR}/custom
 #	SCRIPTDIR= ${BINDIR}/cscript
 #
 HELPDIR= ${CALC_SHAREDIR}/help
 CALC_INCDIR= ${INCDIR}/calc
-CUSTOMCALDIR= ${CALC_SHAREDIR}/custom
-CUSTOMHELPDIR= ${CALC_SHAREDIR}/custhelp
-CUSTOMINCDIR= ${CALC_INCDIR}/custom
 SCRIPTDIR= ${BINDIR}/cscript
 
 # T - top level directory under which calc will be installed

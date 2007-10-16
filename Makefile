@@ -11,7 +11,7 @@
 # (Generic calc makefile)
 #
 #  NOTE: This is NOT the calc rpm Makefile.  This Makefile is a generic
-#	 Makefile for the people who build calc from the gziped tarball.
+#	 Makefile for the people who build calc from the bzip2-ed tarball.
 #	 Without modification, it not assume the system has readline, ncurses
 #	 or less.  It compiles with gcc -O3 -g3 as well.  You can change all
 #	 this by modifying the Makefile variables below.
@@ -20,7 +20,8 @@
 #	 has the GNU readline headers and libaraies:
 #
 #	 USE_READLINE= -DUSE_READLINE
-#	 READLINE_LIB= -lreadline -lhistory -lncurses
+#	 READLINE_LIB= -lreadline
+#	 READLINE_EXTRAS= -lhistory -lncurses
 #
 # Copyright (C) 1999-2007  Landon Curt Noll
 #
@@ -38,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.21 $$
-# @(#) $Id: Makefile.ship,v 30.21 2007/09/06 08:08:39 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.25 $$
+# @(#) $Id: Makefile.ship,v 30.25 2007/09/29 16:57:48 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -120,19 +121,19 @@ HAVE_VSPRINTF=
 #    Big Endian:	Amdahl, 68k, Pyramid, Mips, Sparc, ...
 #    Little Endian:	Vax, 32k, Spim (Dec Mips), i386, i486, ...
 #
-# If in doubt, leave BYTE_ORDER empty.	This Makefile will attempt to
+# If in doubt, leave CALC_BYTE_ORDER empty.  This Makefile will attempt to
 # use BYTE_ORDER in <machine/endian.h> or it will attempt to run
 # the endian program.  If you get syntax errors when you compile,
 # try forcing the value to be -DBIG_ENDIAN and run the calc regression
 # tests. (see the README file)	If the calc regression tests fail, do
-# a make clobber and try -DLITTLE_ENDIAN.   If that fails, ask a wizard
+# a make clobber and try -DCALC_LITTLE_ENDIAN.   If that fails, ask a wizard
 # for help.
 #
-# Select BYTE_ORDER= -DLITTLE_ENDIAN for DJGPP.
+# Select CALC_BYTE_ORDER= -DCALC_LITTLE_ENDIAN for DJGPP.
 #
-BYTE_ORDER=
-#BYTE_ORDER= -DBIG_ENDIAN
-#BYTE_ORDER= -DLITTLE_ENDIAN
+CALC_BYTE_ORDER=
+#CALC_BYTE_ORDER= -DCALC_BIG_ENDIAN
+#CALC_BYTE_ORDER= -DCALC_LITTLE_ENDIAN
 
 # Determine the number of bits in a long
 #
@@ -767,13 +768,33 @@ MANMAKE= /usr/local/bin/manmake
 MANMODE= 0444
 CATMODE= 0444
 
+# By default, custom builtin functions may only be executed if calc
+# is given the -C option.  This is because custom builtin functions
+# may invoke non-standard or non-portable code.	 One may completely
+# disable custom builtin functions by not compiling any of code
+#
+# ALLOW_CUSTOM= -DCUSTOM	# allow custom only if -C is given
+# ALLOW_CUSTOM=			# disable custom even if -C is given
+#
+# If in doubt, use ALLOW_CUSTOM= -DCUSTOM
+#
+ALLOW_CUSTOM= -DCUSTOM
+#ALLOW_CUSTOM=
+
 # If the $CALCPATH environment variable is not defined, then the following
 # path will be search for calc resource file routines.
 #
 # Select CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR} for DJGPP.
 #
+#if 0	/* start of skip for non-Gnu makefiles */
+ifdef ALLOW_CUSTOM
+#endif	/* end of skip for non-Gnu makefiles */
 CALCPATH= .:./cal:~/.cal:${CALC_SHAREDIR}:${CUSTOMCALDIR}
-#CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR}
+#if 0	/* start of skip for non-Gnu makefiles */
+else
+CALCPATH= .:./cal:~/.cal:${CALC_SHAREDIR}
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 # If the $CALCRC environment variable is not defined, then the following
 # path will be search for calc resource files.
@@ -793,6 +814,8 @@ CALCRC= ${CALC_SHAREDIR}/startup:~/.calcrc:./.calcinit
 #
 #	READLINE_LIB		The flags needed to link in the readline
 #				and history link libraries
+#	READLINE_EXTRAS		Flags and libs needed to use the readline
+#				and history link libraries
 #	READLINE_INCLUDE	Where the readline include files reside
 #				(leave blank if they are /usr/include/readline)
 #
@@ -806,14 +829,22 @@ USE_READLINE=
 #USE_READLINE= -DUSE_READLINE
 #
 READLINE_LIB=
-#READLINE_LIB= -lreadline -lhistory -lncurses
-#READLINE_LIB= -L/usr/gnu/lib -lreadline -lhistory -lncurses
-#READLINE_LIB= -L/usr/local/lib -lreadline -lhistory -lncurses
+READLINE_EXTRAS=
+#
+#READLINE_LIB= -lreadline
+#READLINE_EXTRAS= -lhistory -lncurses
+#
+#READLINE_LIB= -L/usr/gnu/lib -lreadline
+#READLINE_EXTRAS= -lhistory -lncurses
+#
+#READLINE_LIB= -L/usr/local/lib -lreadline
+#READLINE_EXTRAS= -lhistory -lncurses
 #
 # For Apple OS X: install fink from http://fink.sourceforge.net
 #		  and then do a 'fink install readline' and then use:
 #
-#READLINE_LIB= -L/sw/lib -lreadline -lhistory -lncurses
+#READLINE_LIB= -L/sw/lib -lreadline
+#READLINE_EXTRAS= -lhistory -lncurses
 #
 READLINE_INCLUDE=
 #READLINE_INCLUDE= -I/usr/gnu/include
@@ -923,18 +954,6 @@ CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=.
 #	  MALLOC_FASTCHK=1 MALLOC_FULLWARN=1 MALLOC_CLEAR_FREE=1 \
 #	  MALLOC_CLEAR_MALLOC=1 LD_LIBRARY_PATH=.:./custom
 
-# By default, custom builtin functions may only be executed if calc
-# is given the -C option.  This is because custom builtin functions
-# may invoke non-standard or non-portable code.	 One may completely
-# disable custom builtin functions by not compiling any of code
-#
-# ALLOW_CUSTOM= -DCUSTOM	# allow custom only if -C is given
-# ALLOW_CUSTOM=			# disable custom even if -C is given
-#
-# If in doubt, use ALLOW_CUSTOM= -DCUSTOM
-#
-ALLOW_CUSTOM= -DCUSTOM
-#ALLOW_CUSTOM=
 
 # The install rule uses:
 #
@@ -965,7 +984,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.2.1
+VERSION= 2.12.2.2
 VERS= 2.12.2
 VER= 2.12
 VE= 2
@@ -1036,7 +1055,15 @@ EXTRA_LDFLAGS=
 # COMMON_CFLAGS are the common ${CC} flags used for all progs, both
 #	    intermediate and final calc and calc related progs
 #
+#if 0	/* start of skip for non-Gnu makefiles */
+ifdef ALLOW_CUSTOM
+#endif	/* end of skip for non-Gnu makefiles */
 COMMON_CFLAGS= -DCALC_SRC ${ALLOW_CUSTOM} ${CCWARN} ${CCMISC} ${EXTRA_CFLAGS}
+#if 0	/* start of skip for non-Gnu makefiles */
+else
+COMMON_CFLAGS= -DCALC_SRC -UCUSTOM ${CCWARN} ${CCMISC} ${EXTRA_CFLAGS}
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 # COMMON_LDFLAGS are the common flags used for linking all progs, both
 #	     intermediate and final calc and calc related progs
@@ -1108,7 +1135,11 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifdef ALLOW_CUSTOM
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
 #
 CC_STATIC=
 LD_STATIC=
@@ -1137,7 +1168,11 @@ CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:${LIBDIR}:/usr/local/lib
 LD_SHARE= ${DARWIN_ARCH}
 LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib
+ifdef ALLOW_CUSTOM
 LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib
+else
+LIBCUSTCALC_SHLIB=
+endif
 #
 CC_STATIC=
 LD_STATIC= ${DARWIN_ARCH}
@@ -1185,7 +1220,11 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifdef ALLOW_CUSTOM
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
 #
 CC_STATIC=
 LD_STATIC=
@@ -1204,12 +1243,12 @@ MAKE= gmake
 #
 endif
 
-######################
-# Sun Solaris target #
-######################
+################
+# SunOS target #
+################
 
 # XXX - this needs to be tested
-ifeq ($(target),solaris)
+ifeq ($(target),SunOS)
 #
 BLD_TYPE= calc-dynamic-only
 #
@@ -1218,7 +1257,11 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifdef ALLOW_CUSTOM
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
 #
 CC_STATIC=
 LIBCALC_STATIC=
@@ -1299,7 +1342,11 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifdef ALLOW_CUSTOM
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
 #
 CC_STATIC=
 LIBCALC_STATIC=
@@ -1341,7 +1388,6 @@ CFLAGS= ${ICFLAGS} ${CCOPT}
 #
 ILDFLAGS= ${COMMON_LDFLAGS}
 LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
-
 #endif	/* end of skip for non-Gnu makefiles */
 
 #######################################################################
@@ -1462,7 +1508,7 @@ UTIL_TMP= ll_tmp fpos_tmp fposv_tmp const_tmp uid_tmp newstr_tmp vs_tmp \
 	memmv_tmp offscl_tmp posscl_tmp newstr_tmp \
 	getsid_tmp gettime_tmp getprid_tmp rusage_tmp strdup_tmp
 
-# these utility executables may be created in the process of 
+# these utility executables may be created in the process of
 # building the BUILD_H_SRC file set
 #
 UTIL_PROGS= align32${EXT} fposval${EXT} have_uid_t${EXT} have_const${EXT} \
@@ -1572,9 +1618,6 @@ HELP_PASSDOWN= \
     COMMON_CFLAGS="${COMMON_CFLAGS}" \
     COMMON_LDFLAGS="${COMMON_LDFLAGS}" \
     CP=${CP} \
-    CUSTOMCALDIR="${CUSTOMCALDIR}" \
-    CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
-    CUSTOMINCDIR="${CUSTOMINCDIR}" \
     EXT=${EXT} \
     FMT=${FMT} \
     HELPDIR="${HELPDIR}" \
@@ -1609,9 +1652,6 @@ CAL_PASSDOWN= \
     CMP=${CMP} \
     CO=${CO} \
     CP=${CP} \
-    CUSTOMCALDIR="${CUSTOMCALDIR}" \
-    CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
-    CUSTOMINCDIR="${CUSTOMINCDIR}" \
     HELPDIR="${HELPDIR}" \
     INCDIR="${INCDIR}" \
     LANG=${LANG} \
@@ -1640,9 +1680,6 @@ CSCRIPT_PASSDOWN= \
     CMP=${CMP} \
     CO=${CO} \
     CP=${CP} \
-    CUSTOMCALDIR="${CUSTOMCALDIR}" \
-    CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
-    CUSTOMINCDIR="${CUSTOMINCDIR}" \
     FMT=${FMT} \
     HELPDIR="${HELPDIR}" \
     INCDIR="${INCDIR}" \
@@ -1691,18 +1728,43 @@ OBJS= ${LIBOBJS} ${CALCOBJS} ${UTIL_OBJS} ${SAMPLE_OBJS}
 
 # static library build
 #
+#if 0	/* start of skip for non-Gnu makefiles */
+ifdef ALLOW_CUSTOM
+#endif	/* end of skip for non-Gnu makefiles */
 CALC_STATIC_LIBS= libcalc.a libcustcalc.a
+#if 0	/* start of skip for non-Gnu makefiles */
+else
+CALC_STATIC_LIBS= libcalc.a
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 # Libaraies created and used to build calc
 #
+#if 0	/* start of skip for non-Gnu makefiles */
+ifdef ALLOW_CUSTOM
+#endif	/* end of skip for non-Gnu makefiles */
 CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERSION} libcustcalc${LIB_EXT_VERSION}
+#if 0	/* start of skip for non-Gnu makefiles */
+else
+CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERSION}
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 # Symlinks of dymanic shared libraries
 #
+#if 0	/* start of skip for non-Gnu makefiles */
+ifdef ALLOW_CUSTOM
+#endif	/* end of skip for non-Gnu makefiles */
 SYM_DYNAMIC_LIBS= libcalc${LIB_EXT_VER} libcalc${LIB_EXT_VE} libcalc${LIB_EXT} \
 	libcalc${LIB_EXT_VERS} libcustcalc${LIB_EXT_VERSION} \
 	libcustcalc${LIB_EXT_VERS} libcustcalc${LIB_EXT_VER} \
 	libcustcalc${LIB_EXT_VE} libcustcalc${LIB_EXT}
+#if 0	/* start of skip for non-Gnu makefiles */
+else
+SYM_DYNAMIC_LIBS= libcalc${LIB_EXT_VER} libcalc${LIB_EXT_VE} libcalc${LIB_EXT} \
+	libcalc${LIB_EXT_VERS}
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 # list of sample programs to that need to be built to satisfy sample rule
 #
@@ -1733,7 +1795,15 @@ STATIC_FIRST_TARGETS= ${LICENSE} .static
 
 # early targets - things needed before the main build phase can begin
 #
+#if 0	/* start of skip for non-Gnu makefiles */
+ifdef ALLOW_CUSTOM
+#endif	/* end of skip for non-Gnu makefiles */
 EARLY_TARGETS= custom/Makefile hsrc .hsrc custom/.all
+#if 0	/* start of skip for non-Gnu makefiles */
+else
+EARLY_TARGETS= hsrc .hsrc
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 # late targets - things needed after the main build phase is complete
 #
@@ -1838,10 +1908,11 @@ calc-static-only: ${STATIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 calc${EXT}: .hsrc ${CALCOBJS} ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
 	${RM} -f $@
 	${CC} ${CALCOBJS} ${LDFLAGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
-	      ${READLINE_LIB} -o $@
+	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
 libcalc${LIB_EXT_VERSION}: ${LIBOBJS} ver_calc${EXT} ${MAKE_FILE}
-	${CC} ${LIBCALC_SHLIB} ${LIBOBJS} -o libcalc${LIB_EXT_VERSION}
+	${CC} ${LIBCALC_SHLIB} ${LIBOBJS} \
+	      ${READLINE_LIB} ${READLINE_EXTRAS} -o libcalc${LIB_EXT_VERSION}
 
 libcalc${LIB_EXT_VERS}: libcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
@@ -1900,11 +1971,11 @@ sample: ${SAMPLE_TARGETS}
 
 sample_rand${EXT}: sample_rand.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
 	${CC} sample_rand.o ${CLDFALGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
-	      ${READLINE_LIB} -o $@
+	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
 sample_many${EXT}: sample_many.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
 	${CC} sample_many.o ${CLDFALGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
-	      ${READLINE_LIB} -o $@
+	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
 ###
 #
@@ -1968,11 +2039,17 @@ conf.h: ${MAKE_FILE}
 	${Q} echo '#define HELPDIR "${HELPDIR}"' >> conf.h
 	${Q} echo '#endif /* HELPDIR */' >> conf.h
 	${Q} echo '' >> conf.h
+#if 0	/* start of skip for non-Gnu makefiles */
+ifdef ALLOW_CUSTOM
+#endif	/* end of skip for non-Gnu makefiles */
 	${Q} echo '/* the location of the custom help directory */' >> conf.h
 	${Q} echo '#if !defined(CUSTOMHELPDIR)' >> conf.h
 	${Q} echo '#define CUSTOMHELPDIR "${CUSTOMHELPDIR}"' >> conf.h
 	${Q} echo '#endif /* CUSTOMHELPDIR */' >> conf.h
 	${Q} echo '' >> conf.h
+#if 0	/* start of skip for non-Gnu makefiles */
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 	${Q} echo '/* the default pager to use */' >> conf.h
 	${Q} echo '#if !defined(DEFAULTCALCPAGER)' >> conf.h
 	${Q} echo '#define DEFAULTCALCPAGER "${CALCPAGER}"' >> conf.h
@@ -2004,7 +2081,7 @@ endian_calc.h: endian${EXT} ${MAKE_FILE}
 	${Q} echo '' >> endian_calc.h
 	${Q} echo '' >> endian_calc.h
 	${Q} echo '/* what byte order are we? */' >> endian_calc.h
-	-${Q} if [ X"${BYTE_ORDER}" = X ]; then \
+	-${Q} if [ X"${CALC_BYTE_ORDER}" = X ]; then \
 	    if [ -f ${INCDIR}/endian.h ]; then \
 		echo '#include <endian.h>' >> endian_calc.h; \
 		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
@@ -3260,7 +3337,7 @@ win32_hsrc: win32.mkdef ${MAKE_FILE}
 ###
 
 endian.o: endian.c have_unistd.h
-	${LCC} ${ICFLAGS} ${BYTE_ORDER} endian.c -c
+	${LCC} ${ICFLAGS} ${CALC_BYTE_ORDER} endian.c -c
 
 endian${EXT}: endian.o
 	${RM} -f $@
@@ -3315,6 +3392,9 @@ ${CSCRIPT_TARGETS}: cscript/Makefile
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
+#if 0	/* start of skip for non-Gnu makefiles */
+ifdef ALLOW_CUSTOM
+#endif	/* end of skip for non-Gnu makefiles */
 custom/.all: custom/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for custom =-=-=-=-='
@@ -3349,6 +3429,9 @@ libcustcalc${LIB_EXT_VE}: libcustcalc${LIB_EXT_VERSION}
 libcustcalc${LIB_EXT}: libcustcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${LN} -s $? $@
+#if 0	/* start of skip for non-Gnu makefiles */
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 ###
 #
@@ -3360,7 +3443,7 @@ calc-static${EXT}: .hsrc ${CALCOBJS} \
 		   ${CALC_STATIC_LIBS} ${MAKE_FILE}
 	${RM} -f $@
 	${CC} ${LDFLAGS} ${CALCOBJS} ${LD_STATIC} ${CALC_STATIC_LIBS} \
-	      ${READLINE_LIB} -o $@
+	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
 libcustcalc.a: custom/libcustcalc.a
 	${Q} ${RM} -f $@
@@ -3372,16 +3455,22 @@ libcalc.a: ${LIBOBJS} ${MAKE_FILE}
 	${RANLIB} libcalc.a
 	${CHMOD} 0644 libcalc.a
 
+#if 0	/* start of skip for non-Gnu makefiles */
+ifdef ALLOW_CUSTOM
+#endif	/* end of skip for non-Gnu makefiles */
 custom/libcustcalc.a: custom/Makefile
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} libcustcalc.a
+#if 0	/* start of skip for non-Gnu makefiles */
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 sample_rand-static${EXT}: sample_rand.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
 	${CC} ${LDFLAGS} sample_rand.o ${LD_STATIC} \
-	      ${CALC_STATIC_LIBS} ${READLINE_LIB} -o $@
+	      ${CALC_STATIC_LIBS} ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
 sample_many-static${EXT}: sample_many.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
 	${CC} ${LDFLAGS} sample_many.o ${LD_STATIC} \
-	      ${CALC_STATIC_LIBS} ${READLINE_LIB} -o $@
+	      ${CALC_STATIC_LIBS} ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
 ###
 #
@@ -3785,6 +3874,7 @@ env:
 	@echo 'PURIFY=${PURIFY}'; echo ''
 	@echo 'Q=${Q}'; echo ''
 	@echo 'RANLIB=${RANLIB}'; echo ''
+	@echo 'READLINE_EXTRAS=${READLINE_EXTRAS}'; echo ''
 	@echo 'READLINE_INCLUDE=${READLINE_INCLUDE}'; echo ''
 	@echo 'READLINE_LIB=${READLINE_LIB}'; echo ''
 	@echo 'RM=${RM}'; echo ''
@@ -4141,6 +4231,9 @@ install: custom/Makefile ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all
 	else \
 	    ${TRUE}; \
 	fi
+#if 0	/* start of skip for non-Gnu makefiles */
+ifdef ALLOW_CUSTOM
+#endif	/* end of skip for non-Gnu makefiles */
 	-${Q} if [ ! -d ${T}${CUSTOMCALDIR} ]; then \
 	    echo ${MKDIR} ${MKDIR_ARG} ${T}${CUSTOMCALDIR}; \
 	    ${MKDIR} ${MKDIR_ARG} ${T}${CUSTOMCALDIR}; \
@@ -4165,6 +4258,9 @@ install: custom/Makefile ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all
 	else \
 	    ${TRUE}; \
 	fi
+#if 0	/* start of skip for non-Gnu makefiles */
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 	-${Q} if [ ! -d ${T}${SCRIPTDIR} ]; then \
 	    echo ${MKDIR} ${MKDIR_ARG} ${T}${SCRIPTDIR}; \
 	    ${MKDIR} ${MKDIR_ARG} ${T}${SCRIPTDIR}; \
@@ -4226,9 +4322,15 @@ install: custom/Makefile ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all
 	${V} echo '=-=-=-=-= Invoking $@ rule for cal =-=-=-=-='
 	${Q} cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+#if 0	/* start of skip for non-Gnu makefiles */
+ifdef ALLOW_CUSTOM
+#endif	/* end of skip for non-Gnu makefiles */
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+#if 0	/* start of skip for non-Gnu makefiles */
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
 	${Q} cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='

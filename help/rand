@@ -2,18 +2,21 @@ NAME
     rand - subtractive 100 shuffle pseudo-random number generator
 
 SYNOPSIS
-    rand([[min, ] max])
+    rand([[min, ] beyond])
 
 TYPES
     min		integer
-    max		integer
+    beyond	integer
 
     return	integer
 
 DESCRIPTION
     Generate a pseudo-random number using an subtractive 100 shuffle generator.
-    We return a pseudo-random number over the half closed interval [min,max).
-    By default, min is 0 and max is 2^64.
+    We return a pseudo-random number over the half closed interval:
+
+    	[min,beyond)	((min <= return < beyond))
+
+    By default, min is 0 and beyond is 2^64.
 
     The shuffle method is fast and serves as a fairly good standard
     pseudo-random generator.   If you need a fast generator and do not
@@ -26,7 +29,7 @@ DESCRIPTION
     Other arg forms:
 
 	rand()		Same as rand(0, 2^64)
-	rand(max)	Same as rand(0, max)
+	rand(beyond)	Same as rand(0, beyond)
 
     The rand generator generates the highest order bit first.  Thus:
 
@@ -230,17 +233,17 @@ EXAMPLE
     2 658186291252503497642116 1 -324097
 
 LIMITS
-    min < max
+    min < beyond
 
 LINK LIBRARY
     void zrand(long cnt, ZVALUE *res)
-    void zrandrange(ZVALUE low, ZVALUE high, ZVALUE *res)
-    long irand(long max)
+    void zrandrange(ZVALUE low, ZVALUE beyond, ZVALUE *res)
+    long irand(long beyond)
 
 SEE ALSO
     seed, srand, randbit, isrand, random, srandom, israndom
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999-2007  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -256,8 +259,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.1 $
-## @(#) $Id: rand,v 30.1 2007/03/16 11:10:42 chongo Exp $
+## @(#) $Revision: 30.3 $
+## @(#) $Id: rand,v 30.3 2007/09/21 02:16:29 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/rand,v $
 ##
 ## Under source code control:	1996/01/01 02:16:09

@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.5 $
-# @(#) $Id: calc.spec.in,v 30.5 2007/09/06 06:13:46 chongo Exp $
+# @(#) $Revision: 30.6 $
+# @(#) $Id: calc.spec.in,v 30.6 2007/10/16 12:22:22 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.spec.in,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -40,7 +40,7 @@ Version: <<<PROJECT_VERSION>>>
 Release: 1.1
 License: LGPL
 Group: Applications/Engineering
-Source: %{name}-%{version}.tar.gz
+Source: %{name}-%{version}.tar.bz2
 URL: http://www.isthe.com/chongo/tech/comp/calc/index.html
 Requires: ncurses >= 5.2-26, readline >= 4.2, less >= 358
 BuildRequires: ncurses-devel >= 5.2-26, readline-devel >= 4.2

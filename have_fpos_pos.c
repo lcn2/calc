@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: have_fpos_pos.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: have_fpos_pos.c,v 30.2 2007/09/19 22:34:22 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/have_fpos_pos.c,v $
  *
  * Under source code control:	2000/12/17 01:23
@@ -51,17 +51,21 @@ main(void)
 	printf("#define HAVE_FPOS_POS 1  /* yes */\n\n");
 
 	/* determine __pos element size */
-	printf("#undef FPOS_POS_BITS\t/* no */\n");
+	printf("#undef FPOS_POS_BITS\n");
+	printf("#undef FPOS_POS_LEN\n");
 # if defined(FPOS_POS_BITS)
-	printf("#define FPOS_POS_BITS %d\n\n", FPOS_POS_BITS);
+	printf("#define FPOS_POS_BITS %d\n", FPOS_POS_BITS);
+	printf("#define FPOS_POS_LEN %d\n", int(FPOS_POS_BITS/8));
 # else
-	printf("#define FPOS_POS_BITS %d\n\n", sizeof(pos.__pos)*8);
+	printf("#define FPOS_POS_BITS %d\n", sizeof(pos.__pos)*8);
+	printf("#define FPOS_POS_LEN %d\n", sizeof(pos.__pos));
 # endif
 
 #else
 	/* we have no __pos element */
 	printf("#undef HAVE_FPOS_POS\t/* no */\n");
 	printf("#undef FPOS_POS_BITS\n");
+	printf("#undef FPOS_POS_LEN\n");
 #endif
 	/* exit(0); */
 	return 0;

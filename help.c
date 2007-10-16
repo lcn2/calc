@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: help.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: help.c,v 30.2 2007/09/21 01:27:27 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/help.c,v $
  *
  * Under source code control:	1997/09/14 10:58:30
@@ -249,11 +249,15 @@ givehelp(char *type)
 	/*
 	 * open the helpfile (looking in HELPDIR first)
 	 */
+#if defined(CUSTOM)
 	if (sizeof(CUSTOMHELPDIR) > sizeof(HELPDIR)) {
 		helppath = (char *)malloc(sizeof(CUSTOMHELPDIR)+1+strlen(type));
 	} else {
 		helppath = (char *)malloc(sizeof(HELPDIR)+1+strlen(type));
 	}
+#else /* CUSTOM */
+	helppath = (char *)malloc(sizeof(HELPDIR)+1+strlen(type));
+#endif /* CUSTOM */
 	if (helppath == NULL) {
 		fprintf(stderr, "malloc failure in givehelp()\n");
 		return;
@@ -268,6 +272,7 @@ givehelp(char *type)
 		page_file(stream);
 		(void) fclose(stream);
 
+#if defined(CUSTOM)
 	/*
 	 * open the the helpfile (looking in CUSTOMHELPDIR last)
 	 */
@@ -287,6 +292,7 @@ givehelp(char *type)
 			page_file(stream);
 			(void) fclose(stream);
 		}
+#endif /* CUSTOM */
 	}
 
 	/*

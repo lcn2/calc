@@ -40,6 +40,66 @@ The following are the changes from calc version 2.12.1.1 to date:
     purposes.  By default, the calc rpm installed stripped binaries
     and libraries.
 
+    Added this high priority item to the calc help/todo list:
+
+	It is overkill to have nearly everything wind up in libcalc.
+	Form a libcalcmath and a libcalclang so that an application
+	that just wants to link with the calc math libs can use them
+	without dragging in all of the other calc language, I/O,
+	and builtin functions.
+
+    Fixed the wording for the -i flag in the calc man page.
+
+    Added some notes to the help/unexpected file regarding calc
+    and interactice shells.
+
+    Fixed bug where a FILEPOS was copied FPOS_POS_BITS octets instead of
+    FPOS_POS_LEN octets.
+
+    Split out ${READLINE_EXTRAS} Makefile variables from ${READLINE_LIB}
+    to better deal with Fedora rpm requirements.
+
+    Bit 8 (0x80) of calc_debug is reserved for custom debugging.
+    See help/config and custom/HOW_TO_ADD for details.
+
+    When the Makefile variable ${ALLOW_CUSTOM} is not defined or empty,
+    the libcustcalc library is not built or linked against, certain make
+    rules skip going into the custom sub-directory, the install
+    rule skips certain custom installation actions, and the common
+    C flags (${COMMON_CFLAGS}) is given -UCUSTOM.  Other make rules such
+    as "make clean" and "make clobber" still work as before.  Also
+    the Makefile.simple assumes that the Makefile variable ${ALLOW_CUSTOM}
+    is -DCUSTOM.
+
+    Clarified that the calc builtin functions rand() and random()
+    operate over a half closed interval.  The help/rand and help/random
+    refer to  the top of the interval as "beyond" instead of "max".
+
+    Releaseing source tar balls using bzip2 instead of with gzip.  So
+    what was calc-something.tar.gz is now calc-something.tar.bz2.
+    To "uncompress" use:
+
+    	bunzip2 calc-something.tar.bz2
+
+    On some systems, one may untar directly by:
+
+	tar -jxvf calc-something.tar.bz2
+
+   The Makefile variable ${BYTE_ORDER} was replaced by ${CALC_BYTE_ORDER}.
+
+   Changed the way the Makefile can force the calc byte order.  If you set
+   the Makefile variable ${CALC_BYTE_ORDER} to be -DCALC_BIG_ENDIAN then
+   endian.h will force the CPP symbol CALC_BYTE_ORDER to be BIG_ENDIAN.
+   If you set ${CALC_BYTE_ORDER} to be -DCALC_LITTLE_ENDIAN then endian.h
+   will force the CPP symbol CALC_BYTE_ORDER to be LITTLE_ENDIAN.
+   If the Makefile variable ${CALC_BYTE_ORDER} is empty, then the CPP
+   symbol CALC_BYTE_ORDER will set to the CPP symbol BYTE_ORDER as
+   defined by some system include file (if the Makefile can find such
+   an include file), or the Makefile compiling endian.c and hopefully
+   using that result to set CPP symbol CALC_BYTE_ORDER.  Regardless of
+   how it happens, the CPP symbol CALC_BYTE_ORDER should end up set in
+   endian_calc.h include file.
+
 
 The following are the changes from calc version 2.12.1.10 to 2.12.2:
 
@@ -6635,8 +6695,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.10 $
-## @(#) $Id: CHANGES,v 30.10 2007/09/06 08:10:54 chongo Exp $
+## @(#) $Revision: 30.11 $
+## @(#) $Id: CHANGES,v 30.11 2007/10/16 12:22:22 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

@@ -4,6 +4,10 @@ Unexpected
     surprises in calc syntax and usage.	 Persons familiar with C should
     review this file.
 
+    Persons familiar with shell scripting may want to review this file
+    as well, particularly notes dealing with command line evaluation
+    and execution.
+
 
     The Comma
     =========
@@ -75,7 +79,7 @@ Unexpected
 
     	(-1) ^ 0.5 == 1i
 
-    because the above expresssion in parsed as:
+    because the above expression in parsed as:
 
 	-(1 ^ 0.5) == -1
 
@@ -335,7 +339,66 @@ Unexpected
     NOTE: See "help statement", "help todo", and "help bugs".
 
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+    Shell evaluation of command line arguments
+    ==========================================
+
+    In most interactive shells:
+
+    	calc 2 * 3
+
+    will frequently produce a "Missing operator" error because the '*' is
+    evaluated as a "shell glob".  To avoid this you must quote or escape
+    argument with characters that your interactive shell interprets.
+
+    For example, bash / ksh / sh shell users should use:
+
+    	calc '2 * 3'
+
+    or:
+
+    	calc 2 \* 3
+
+    or some other form of shell meta-character escaping.
+
+
+    Calc reads standard input after processing command line args
+    ============================================================
+
+    The shell command:
+
+	seq 5 | while read i; do calc "($i+3)^2"; done
+
+	FYI: The command "seq 5" will write 1 through 5 on separate
+	     lines on standard output, while read i sets $i to
+	     the value of each line that is read from stdin.
+
+    will produce:
+
+        16
+	2
+	3
+	4
+	5
+
+    The reason why the last 4 lines of output are 2 through 5 is
+    that after calc evaluates the first line and prints (1+3)^2
+    (i.e., 16), calc continues to read stdin and slurps up all
+    of the remaining data on the pipe.
+
+    To avoid this problem, use:
+
+    	seq 5 | while read i; do calc "($i+3)^2" </dev/null; done
+
+    which produces the expected results:
+
+	16
+	25
+	36
+	49
+	64
+
+
+## Copyright (C) 1999-2007  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -351,8 +414,8 @@ Unexpected
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.2 $
-## @(#) $Id: unexpected,v 30.2 2007/07/11 23:00:39 chongo Exp $
+## @(#) $Revision: 30.3 $
+## @(#) $Id: unexpected,v 30.3 2007/09/08 02:48:45 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/unexpected,v $
 ##
 ## Under source code control:	1997/03/21 13:15:18

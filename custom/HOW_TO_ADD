@@ -363,6 +363,25 @@ Step 5: Write your custom function
 		very_tiny_variable = z1tol(z_num);
 	}
 
+    You can (and should) add debugging statements to your custom code
+    by examining bit 8 of the calc_debug config flag:
+
+	if (conf->calc_debug & CALCDBG_CUSTOM) {
+	    fprintf(stderr, "%ssome custom debug note: msg\n",
+		(conf->tab_ok ? "\t" : ""),
+		((msg == NULL) ? "((NULL))" : msg));
+	}
+
+    One is able to set bit 8 by way of the calc command line:
+
+    	calc -D 128
+
+    See the calc man page for details.  One may also set that bit
+    while running calc by way of the config() builtin function:
+
+    	config("calc_debug", 128);
+
+    See the help/config file for details on calc_debug.
 
 Step 6: Register the function in the custom interface table
 
@@ -642,8 +661,8 @@ Step 12: Contribute
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.3 $
-## @(#) $Id: HOW_TO_ADD,v 30.3 2007/07/13 23:45:54 chongo Exp $
+## @(#) $Revision: 30.4 $
+## @(#) $Id: HOW_TO_ADD,v 30.4 2007/09/21 01:27:27 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/HOW_TO_ADD,v $
 ##
 ## Under source code control:	1997/03/10 03:03:21

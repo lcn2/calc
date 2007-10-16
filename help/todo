@@ -51,6 +51,12 @@ Very High priority items:
 
     * Consider using GNU autoconf / configure to build calc.
 
+    * It is overkill to have nearly everything wind up in libcalc.
+      Form a libcalcmath and a libcalclang so that an application
+      that just wants to link with the calc math libs can use them
+      without dragging in all of the other calc language, I/O,
+      and builtin functions.
+
     * Fix any 'Known bugs' as noted in the BUGS file or as
       displayed by 'calc help bugs'.
 
@@ -102,8 +108,6 @@ Medium priority items:
 	at by 'fizbin' and the HALF array pointer at by 'data' should be
 	treated as read-only.
 
-    * It is overkill to have nearly everything wind up in libcalc.a.
-
       One should make available a the fundamental math operations
       on ZVALUE, NUMBER and perhaps COMPLEX (without all of the
       other stuff) in a separate library.
@@ -113,7 +117,7 @@ Medium priority items:
     * Add a builtin function to access the 64 bit FNV hash which
       is currently being used internally in seed.c.
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2007  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -129,8 +133,8 @@ Medium priority items:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.1 $
-## @(#) $Id: todo,v 30.1 2007/03/16 11:10:42 chongo Exp $
+## @(#) $Revision: 30.2 $
+## @(#) $Id: todo,v 30.2 2007/09/08 02:52:42 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/todo,v $
 ##
 ## Under source code control:	1999/10/20 07:42:55

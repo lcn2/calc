@@ -19,8 +19,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-MAKEFILE_REV= $$Revision: 30.3 $$
-# @(#) $Id: rpm.mk,v 30.3 2007/09/02 09:30:11 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.4 $$
+# @(#) $Id: rpm.mk,v 30.4 2007/10/16 12:22:22 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/rpm.mk,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -43,7 +43,7 @@ MD5SUM= md5sum
 SHA1SUM= sha1sum
 SED= sed
 FIND= find
-GZIP_PROG= gzip
+BZIP2_PROG= bzip2
 TAR= tar
 RM= rm
 LS= ls
@@ -61,7 +61,7 @@ PROJECT_VERSION=
 PROJECT_RELEASE=
 PROJECT= $(PROJECT_NAME)-$(PROJECT_VERSION)
 SPECFILE= $(PROJECT_NAME).spec
-TARBALL= $(PROJECT).${TAR}.gz
+TARBALL= $(PROJECT).${TAR}.bz2
 RPM686= $(PROJECT)-$(PROJECT_RELEASE).${TARCH}.rpm
 DRPM686= $(PROJECT_NAME)-devel-$(PROJECT_VERSION)-$(PROJECT_RELEASE).${TARCH}.rpm
 SRPM= $(PROJECT)-$(PROJECT_RELEASE).src.rpm
@@ -88,7 +88,7 @@ all: calc.spec ver_calc
 				  calc.spec.in`" rpm
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
-pkgme: $(PROJECT_NAME)-spec.${TAR}.gz
+pkgme: $(PROJECT_NAME)-spec.${TAR}.bz2
 
 ver_calc:
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
@@ -112,12 +112,12 @@ calc.spec: calc.spec.in ver_calc
 srcpkg: make_rhdir
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	${FIND} . -depth -print | \
-	    ${EGREP} -v '/RCS|/CVS|/NOTES|/\.|\.out$$|\.safe$$' | \
+	    ${EGREP} -v '/RCS|/CVS|/NOTES|/\.|\.out$$|\.safe$$\.tar\.bz2$$' | \
 	    ${EGREP} -v '/old[._-]|\.old$$|\.tar\.gz$$|/ver_calc$$' | \
 	    LANG=C ${SORT} | \
 	    ${CPIO} -dumpv "$(TMPDIR)/$(PROJECT)"
 	(cd "$(TMPDIR)"; ${TAR} cf - "$(PROJECT)") | \
-	  ${GZIP_PROG} -c > "$(RPMDIR)/SOURCES/$(TARBALL)"
+	  ${BZIP2_PROG} --best -c -z > "$(RPMDIR)/SOURCES/$(TARBALL)"
 	${RM} -fr "$(TMPDIR)/$(PROJECT)"
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
@@ -228,10 +228,10 @@ uninstallrpm:
 	${RPM_TOOL} -e "$(PROJECT_NAME)"
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
-$(PROJECT_NAME)-spec.${TAR}.gz: rpm.mk $(PROJECT_NAME).spec.in
+$(PROJECT_NAME)-spec.${TAR}.bz2: rpm.mk $(PROJECT_NAME).spec.in
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	${RM} -f "$@"
-	${TAR} cf - "$^" | ${GZIP_PROG} -c > "$@"
+	${TAR} cf - "$^" | ${BZIP2_PROG} --best -c -z > "$@"
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 #****

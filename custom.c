@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: custom.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: custom.c,v 30.2 2007/09/21 01:27:27 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/custom.c,v $
  *
  * Under source code control:	1997/03/03 04:53:08
@@ -100,6 +100,12 @@ custom(char *name, int count, VALUE **vals)
 	fprintf(stderr,
 	    "%sCalc was built with custom functions disabled\n",
 	    (conf->tab_ok ? "\t" : ""));
+	if (conf->calc_debug & CALCDBG_CUSTOM) {
+		fprintf(stderr,
+		    "%scustom function %s with %d args, %s vals not executed\n",
+		    (conf->tab_ok ? "\t" : ""), name, count,
+		    (vals == NULL) ? "NULL" : "non-NULL");
+	}
 	return error_value(E_NO_CUSTOM);
 
 #endif /* CUSTOM */
@@ -211,6 +217,11 @@ customhelp(char *name)
 	fprintf(stderr,
 	    "%sCalc was built with custom functions disabled\n",
 	    (conf->tab_ok ? "\t" : ""));
+	if (conf->calc_debug & CALCDBG_CUSTOM) {
+	    fprintf(stderr, "%scustom help for %s unavailable\n",
+		(conf->tab_ok ? "\t" : ""),
+		((name == NULL) ? "((NULL))" : name));
+	}
 
 #endif /* CUSTOM */
 }

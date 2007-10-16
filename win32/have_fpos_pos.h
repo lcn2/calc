@@ -10,6 +10,7 @@
 /* do we have fgetpos & fsetpos functions? */
 #undef HAVE_FPOS_POS	/* no */
 #undef FPOS_POS_BITS
+#undef FPOS_POS_LEN
 
 
 #endif /* !__HAVE_FPOS_POS_H__ */

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: fposval.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: fposval.c,v 30.2 2007/09/19 22:34:22 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/fposval.c,v $
  *
  * Under source code control:	1994/11/05 03:19:52
@@ -129,7 +129,7 @@ main(int argc, char **argv)
 	 * systems a FILEPOS is not a scalar hince we must memcpy.
 	 */
 	printf("#define SWAP_HALF_IN_FILEPOS(dest, src)\t%s\n",
-	    "memcpy((void *)(dest), (void *)(src), sizeof(FPOS_POS_BITS))");
+	    "memcpy((void *)(dest), (void *)(src), sizeof(FPOS_POS_LEN))");
 #endif /* HAVE_FILEPOS_SCALAR */
 #endif /* CALC_BYTE_ORDER == BIG_ENDIAN */
 	putchar('\n');
