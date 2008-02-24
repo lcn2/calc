@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.14 $
-# @(#) $Id: Makefile.head,v 30.14 2007/09/06 08:08:39 chongo Exp $
+# @(#) $Revision: 30.16 $
+# @(#) $Id: Makefile.head,v 30.16 2008/02/24 07:58:36 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile.head,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -366,8 +366,8 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.2.1
-VERS= 2.12.2
+VERSION= 2.12.3.0
+VERS= 2.12.3
 VER= 2.12
 VE= 2
 
@@ -621,6 +621,48 @@ LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 #
 CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+MAKE= gmake
+#
+endif
+
+##################
+# OpenBSD target #
+##################
+
+########################################################################
+# NOTE: You MUST either use gmake (GNU Make) or you must try your luck #
+#       with Makefile.simple and custom/Makefile.simple versions.      #
+#	See HOWTO.INSTALL for more information.                        #
+########################################################################
+
+ifeq ($(target),OpenBSD)
+#
+BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifdef ALLOW_CUSTOM
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
+#
+CC_STATIC=
+LD_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+#
+CCWARN= -Wall
 CCWERR=
 CCOPT= ${DEBUG}
 CCMISC=

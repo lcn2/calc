@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: zfunc.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: zfunc.c,v 30.2 2008/02/24 07:41:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:27
@@ -374,12 +374,28 @@ zcomb(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 
 
 /*
- * Compute the Jacobi function (p / q) for odd q.
- * If q is prime then the result is:
- *	1 if p == x^2 (mod q) for some x.
- *	-1 otherwise.
- * If q is not prime, then the result is not meaningful if it is 1.
- * This function returns 0 if q is even or q < 0.
+ * Compute the Jacobi function (m / n) for odd n.
+ *
+ * The property of the Jacobi function is: If n>2 is prime then
+ *
+ *	the result is 1 if m == x^2 (mod n) for some x.
+ *	otherwise the result is -1.
+ *
+ * If n is not prime, then the result does not prove that n is not prine
+ * when the value of the Jacobi is 1.
+ *
+ * Jacobi evaluation of (m / n), where n > 0 is odd AND m > 0 is odd:
+ *
+ *	rule 0:	(0 / n) == 0
+ *	rule 1:	(1 / n) == 1
+ *	rule 2:	(m / n) == (a / n)	if m == a % n
+ *	rule 3:	(m / n) == (2*m / n)	if n == 1 % 8 OR n == 7 % 8
+ *	rule 4:	(m / n) == -(2*m / n)	if n != 1 & 8 AND n != 7 % 8
+ *	rule 5:	(m / n) == (n / m)	if m == 3 % 4 AND n == 3 % 4
+ *	rule 6:	(m / n) == -(n / m)	if m != 3 % 4 OR n != 3 % 4
+ *
+ * NOTE: This function returns 0 in invalid Jacobi parameters:
+ *	 m < 0 OR n is even OR n < 1.
  */
 FLAG
 zjacobi(ZVALUE z1, ZVALUE z2)
@@ -388,16 +404,16 @@ zjacobi(ZVALUE z1, ZVALUE z2)
 	long lowbit;
 	int val;
 
+	/* firewall */
+	if (ziszero(z1) || zisneg(z1))
+		return 0;
 	if (ziseven(z2) || zisneg(z2))
 		return 0;
+
+	/* assume a value of 1 unless we find otherwise */
+	if (zisone(z1))
+		return 1;
 	val = 1;
-	if (ziszero(z1) || zisone(z1))
-		return val;
-	if (zisunit(z1)) {
-		if ((*z2.v - 1) & 0x2)
-			val = -val;
-		return val;
-	}
 	zcopy(z1, &p);
 	zcopy(z2, &q);
 	for (;;) {
@@ -406,7 +422,8 @@ zjacobi(ZVALUE z1, ZVALUE z2)
 		p = tmp;
 		if (ziszero(p)) {
 			zfree(p);
-			p = _one_;
+			zfree(q);
+			return 0;
 		}
 		if (ziseven(p)) {
 			lowbit = zlowbit(p);

@@ -1,4 +1,26 @@
-The following are the changes from calc version 2.12.1.1 to date:
+The following are the changes from calc version 2.12.3.0 to date:
+
+    Fixed the Jacobi function where it returned 1 when it should have
+    returned 0.  Thanks goes to Kevin Sopp (baraclese at googlemail dot com)
+    for discovering the problem and suggesting the nature if the fix.
+
+    Calc versions will always be of the form x.y.z.w even when the
+    MINOR_PATCH (w) is 0.  Thus, 2.12.3.0 will be printed as 2.12.3.0
+    instread of just 2.12.3.
+
+
+The following are the changes from calc version 2.12.2.3 to 2.12.2.4:
+
+    Added OpenBSD target.
+
+    Using the -r test instead of the -e test in Makefiles because some
+    out of date shells still do not have the -e test.
+
+    The Makefile now avoids the use of if ! command because some out of
+    date shells to not support the ! construct.
+
+
+The following are the changes from calc version 2.12.1.1 to 2.12.2.2:
 
     Added an explicit Solaris target.
 
@@ -6695,8 +6717,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.11 $
-## @(#) $Id: CHANGES,v 30.11 2007/10/16 12:22:22 chongo Exp $
+## @(#) $Revision: 30.13 $
+## @(#) $Id: CHANGES,v 30.13 2008/02/24 07:58:36 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

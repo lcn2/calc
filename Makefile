@@ -39,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.25 $$
-# @(#) $Id: Makefile.ship,v 30.25 2007/09/29 16:57:48 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.27 $$
+# @(#) $Id: Makefile.ship,v 30.27 2008/02/24 07:58:36 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -984,8 +984,8 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.2.2
-VERS= 2.12.2
+VERSION= 2.12.3.0
+VERS= 2.12.3
 VER= 2.12
 VE= 2
 
@@ -1232,6 +1232,48 @@ LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 #
 CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+MAKE= gmake
+#
+endif
+
+##################
+# OpenBSD target #
+##################
+
+########################################################################
+# NOTE: You MUST either use gmake (GNU Make) or you must try your luck #
+#       with Makefile.simple and custom/Makefile.simple versions.      #
+#	See HOWTO.INSTALL for more information.                        #
+########################################################################
+
+ifeq ($(target),OpenBSD)
+#
+BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifdef ALLOW_CUSTOM
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
+#
+CC_STATIC=
+LD_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+#
+CCWARN= -Wall
 CCWERR=
 CCOPT= ${DEBUG}
 CCMISC=
@@ -1847,7 +1889,7 @@ calc-dynamic-only: ${DYNAMIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 	${Q} for i in .static calc-static${EXT} ${SAMPLE_STATIC_TARGETS} \
 		      libcalc.a custom/libcustcalc.a; do \
 	    r="calc-dynamic-only"; \
-	    if [ -e "$$i" ]; then \
+	    if [ -r "$$i" ]; then \
 		echo "Found the static target $$i file.  You must:" 1>&2; \
 		echo "" 1>&2; \
 		echo "      ${MAKE} -f ${MAKE_FILE} clobber" 1>&2; \
@@ -1865,7 +1907,9 @@ calc-static-only: ${STATIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 		  ${CALC_STATIC_LIBS} calc-static${EXT} \
 		  ${SAMPLE_STATIC_TARGETS} ${LATE_TARGETS}
 	${Q} for i in calc${EXT} ${SAMPLE_TARGETS}; do \
-	    if ! ${CMP} -s "$$i-static" "$$i"; then \
+	    if ${CMP} -s "$$i-static" "$$i"; then \
+		${TRUE}; \
+	    else \
 		${RM} -f "$$i"; \
 		${LN} "$$i-static" "$$i"; \
 	    fi; \
@@ -1891,7 +1935,7 @@ calc-static-only: ${STATIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 	${Q} for i in .dynamic ${CALC_DYNAMIC_LIBS} ${SYM_DYNAMIC_LIBS} \
 		      custom/libcustcalc${LIB_EXT_VERSION}; do \
 	    r="calc-static-only"; \
-	    if [ -e "$$i" ]; then \
+	    if [ -r "$$i" ]; then \
 		echo "Found the dynamic target $$i file.  You must:" 1>&2; \
 		echo "" 1>&2; \
 		echo "      ${MAKE} -f ${MAKE_FILE} clobber" 1>&2; \
@@ -3027,7 +3071,7 @@ have_urandom.h: ${MAKE_FILE}
 	    echo '#define HAVE_URANDOM_H	/* yes */' >> have_urandom.h; \
 	elif [ X"${HAVE_URANDOM_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_URANDOM_H  /* no */' >> have_urandom.h; \
-	elif [ -e /dev/urandom ] 2>/dev/null; then \
+	elif [ -r /dev/urandom ] 2>/dev/null; then \
 	    echo '#define HAVE_URANDOM_H  /* yes */' >> have_urandom.h; \
 	else \
 	    echo '#undef HAVE_URANDOM_H	 /* no */' >> have_urandom.h; \
@@ -4148,17 +4192,18 @@ clobber: custom/Makefile clean
 	${RM} -f libcustcalc.a
 	${RM} -f calc-static${EXT}
 	${RM} -f ${CALC_STATIC_LIBS}
+	${RM} -f all
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
-	-cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clobber
+	-cd help; ${RM} -f all; ${MAKE} -f Makefile ${HELP_PASSDOWN} $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cal =-=-=-=-='
-	-cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} clobber
+	-cd cal; ${RM} -f all; ${MAKE} -f Makefile ${CAL_PASSDOWN} $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
-	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} clobber
+	cd custom; ${RM} -f all; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
-	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} clobber
+	cd cscript; ${RM} -f all; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo remove files that are obsolete
 	${RM} -rf win32 build
@@ -4166,7 +4211,7 @@ clobber: custom/Makefile clean
 	${RM} -f Makefile.simple
 	${RM} -f custom/Makefile
 #endif	/* end of skip for non-Gnu makefiles */
-	${RM} -f .static .dynamic
+	${RM} -f .static .dynamic calc-dynamic-only calc-static-only
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # install everything

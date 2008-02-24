@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: regress.cal,v 30.3 2007/07/11 22:58:26 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: regress.cal,v 30.4 2008/02/24 07:41:49 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -1412,7 +1412,39 @@ define test_functions()
 	vrfy(isnum(systime()),		'1206: isnum(systime())');
 	vrfy(isnum(usertime()),		'1207: isnum(usertime())');
 
-	print '1208: Ending test_functions';
+	/* more jacobi tests */
+	vrfy(jacobi(987897,987) == 0,	'1208: jacobi(987897,987) == 0');
+	vrfy(jacobi(897,987) == 0,	'1209: jacobi(897,987) == 0');
+	vrfy(jacobi(987,897) == 0,	'1210: jacobi(987,897) == 0');
+	vrfy(jacobi(90,897) == 0,	'1211: jacobi(90,897) == 0');
+	vrfy(jacobi(45,897) == 0,	'1212: jacobi(45,897) == 0');
+	vrfy(jacobi(897,45) == 0,	'1213: jacobi(897,45) == 0');
+	vrfy(jacobi(42,45) == 0,	'1214: jacobi(42,45) == 0');
+	vrfy(jacobi(21,45) == 0,	'1215: jacobi(21,45) == 0');
+	vrfy(jacobi(45,21) == 0,	'1216: jacobi(45,21) == 0');
+	vrfy(jacobi(3,21) == 0,		'1217: jacobi(3,21) == 0');
+	vrfy(jacobi(0,21) == 0,		'1218: jacobi(0,21) == 0');
+	vrfy(jacobi(0,20003) == 0,	'1219: jacobi(0,20003) == 0');
+	vrfy(jacobi(1,20003) == 1,	'1220: jacobi(1,20003) == 1');
+	vrfy(jacobi(1236,20003) == 1,	'1221: jacobi(1236,20003) == 1');
+	vrfy(jacobi(618,20003) == -1,	'1222: jacobi(618,20003) == -1');
+	vrfy(jacobi(309,20003) == 1,	'1223: jacobi(309,20003) == 1');
+	vrfy(jacobi(227,309) == 1,	'1224: jacobi(227,309) == 1');
+	vrfy(jacobi(82,227) == 1,	'1225: jacobi(82,227) == 1');
+	vrfy(jacobi(41,227) == -1,	'1226: jacobi(41,227) == -1');
+	vrfy(jacobi(22,41) == -1,	'1227: jacobi(22,41) == -1');
+	vrfy(jacobi(11,41) == -1,	'1228: jacobi(11,41) == -1');
+	vrfy(jacobi(8,11) == -1,	'1229: jacobi(8,11) == -1');
+	vrfy(jacobi(4,11) == 1,		'1230: jacobi(4,11) == 1');
+	vrfy(jacobi(2,11) == -1,	'1231: jacobi(2,11) == -1');
+	vrfy(jacobi(1,11) == 1,		'1232: jacobi(1,11) == 1');
+	vrfy(jacobi(0,11) == 0,		'1233: jacobi(0,11) == 0');
+	vrfy(jacobi(0,0) == 0,		'1234: jacobi(0,0) == 0');
+	vrfy(jacobi(-1,0) == 0,		'1235: jacobi(-1,0) == 0');
+	vrfy(jacobi(-1,-1) == 0,	'1236: jacobi(-1,-1) == 0');
+	vrfy(jacobi(0,-1) == 0,		'1237: jacobi(0,-1) == 0');
+
+	print '1238: Ending test_functions';
 }
 print '017: parsed test_functions()';
 
