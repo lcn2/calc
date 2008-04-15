@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: alloc.h,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: alloc.h,v 30.2 2008/04/15 21:17:57 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/alloc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:29
@@ -46,6 +46,9 @@
 # include <string.h>
 
 #else
+#if defined(_WIN32) && defined(NOTCYGWIN)
+#include <stdio.h>
+#endif
 
 # if defined(HAVE_NEWSTR)
 E_FUNC void *memcpy();

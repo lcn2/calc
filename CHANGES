@@ -8,6 +8,9 @@ The following are the changes from calc version 2.12.3.0 to date:
     MINOR_PATCH (w) is 0.  Thus, 2.12.3.0 will be printed as 2.12.3.0
     instread of just 2.12.3.
 
+    Added MINGW32_NT-5.0 compile target based on a patch from
+    Brian L. Angus (angus at eng dot utah dot edu).
+
 
 The following are the changes from calc version 2.12.2.3 to 2.12.2.4:
 
@@ -6717,8 +6720,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.13 $
-## @(#) $Id: CHANGES,v 30.13 2008/02/24 07:58:36 chongo Exp $
+## @(#) $Revision: 30.14 $
+## @(#) $Id: CHANGES,v 30.14 2008/04/15 21:37:54 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

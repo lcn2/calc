@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: decl.h,v 30.2 2007/07/05 13:30:38 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: decl.h,v 30.3 2008/04/15 21:17:57 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/decl.h,v $
  *
  * Under source code control:	2007/02/09 05:24:25
@@ -62,10 +62,14 @@
 
 
   /* determine which type of DLL we must generate */
-# if defined(_EXPORTING)
-#  define DLL __declspec(dllexport)
+# if !defined(STATIC_ONLY)
+#  if defined(_EXPORTING)
+#   define DLL __declspec(dllexport)
+#  else
+#   define DLL __declspec(dllimport)
+#  endif
 # else
-#  define DLL __declspec(dllimport)
+#  define DLL
 # endif
 
   /* variable related macros */

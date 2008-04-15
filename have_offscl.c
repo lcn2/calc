@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: have_offscl.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: have_offscl.c,v 30.2 2008/04/15 21:17:57 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/have_offscl.c,v $
  *
  * Under source code control:	1996/07/13 12:57:22
@@ -66,9 +66,11 @@ main(void)
 	if (value > (off_t)1) {
 		--value;
 	}
+#if !defined(_WIN32)
 	if (value <= (off_t)getppid()) {
 		--value;
 	}
+#endif
 	if (value == value2) {
 		value += value2;
 	}

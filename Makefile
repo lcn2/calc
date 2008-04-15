@@ -39,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.27 $$
-# @(#) $Id: Makefile.ship,v 30.27 2008/02/24 07:58:36 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.28 $$
+# @(#) $Id: Makefile.ship,v 30.28 2008/04/15 21:17:57 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -984,7 +984,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.3.0
+VERSION= 2.12.3.1
 VERS= 2.12.3
 VER= 2.12
 VE= 2
@@ -1366,6 +1366,52 @@ ILDFLAGS= ${COMMON_LDFLAGS} ${LD_STATIC}
 LDFLAGS= ${LD_DEBUG} ${ILDFLAGS} ${LIBCALC_STATIC} ${LIBCUSTCALC_STATIC}
 #
 #if 0	/* start of skip for non-Gnu makefiles */
+endif
+
+###################################################
+# MINGW32_NT-5.0 target                           #
+###################################################
+
+
+ifeq ($(target),MINGW32_NT-5.0)
+
+EXT=.exe
+TERMCONTROL= -DUSE_WIN32
+ifdef ALLOW_CUSTOM
+#endif	/* end of skip for non-Gnu makefiles */
+CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR}
+#if 0	/* start of skip for non-Gnu makefiles */
+else
+CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR}
+endif
+CALCRC= ${CALC_SHAREDIR}/startup;~/.calcrc;./.calcinit
+#
+BLD_TYPE= calc-static-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifdef ALLOW_CUSTOM
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
+#
+CC_STATIC= -DSTATIC_ONLY
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+LD_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC= -DNOTCYGWIN
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
 endif
 
 ###################################################

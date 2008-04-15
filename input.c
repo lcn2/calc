@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: input.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: input.c,v 30.2 2008/04/15 21:17:57 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/input.c,v $
  *
  * Under source code control:	1990/02/15 01:48:16
@@ -37,6 +37,8 @@
 #include <ctype.h>
 #if !defined(_WIN32)
 # include <pwd.h>
+#else
+# include <stdlib.h>
 #endif
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -971,16 +973,13 @@ isinoderead(struct stat *sbuf)
 	/* scan the entire readset */
 	for (i=0; i < maxreadset; ++i) {
 #if defined(_WIN32) || defined(__MSDOS__)
-		tmp = _fullpath(NULL, cip->i_name, _MAX_PATH);
-		if (readset[i].active &&
-		    tmp != NULL &&
+		char tmp[_MAX_PATH+1];
+		tmp[_MAX_PATH] = '\0';
+		if (_fullpath(tmp, cip->i_name, _MAX_PATH) &&
+		    readset[i].active &&
 		    strcasecmp(readset[i].path, tmp) == 0) {
 			/* found a match */
-			free(tmp);
 			return i;
-		}
-		if (tmp != NULL) {
-			free(tmp);
 		}
 #else /* Windoz free systems */
 		if (readset[i].active &&

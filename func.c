@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: func.c,v 30.2 2007/07/05 17:37:41 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: func.c,v 30.3 2008/04/15 21:17:57 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -5721,7 +5721,9 @@ f_fflush(int count, VALUE **vals)
 	i = 0;
 	errno = 0;
 	if (count == 0) {
+#if !defined(_WIN32)
 		i = flushall();
+#endif /* Windoz free systems */
 	} else {
 		for (n = 0; n < count; n++) {
 			if (vals[n]->v_type != V_FILE)

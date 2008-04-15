@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: calc.c,v 30.3 2007/07/15 02:03:42 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: calc.c,v 30.4 2008/04/15 21:17:57 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11
@@ -42,6 +42,7 @@
 
 #if defined(_WIN32)
 # include <io.h>
+# if !defined(NOTCYGWIN)
 /*
  * getopt.h file is from the Cygwin GNU library
  *
@@ -49,6 +50,7 @@
  *	http://sources.redhat.com/cygwin/
  */
 # include "../getopt/getopt.h"
+# endif
 # define strdup _strdup
 # define isatty _isatty
 #endif /* Windoz */
