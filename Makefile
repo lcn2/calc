@@ -39,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.28 $$
-# @(#) $Id: Makefile.ship,v 30.28 2008/04/15 21:17:57 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.33 $$
+# @(#) $Id: Makefile.ship,v 30.33 2008/05/09 20:30:04 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -984,7 +984,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.3.1
+VERSION= 2.12.3.2
 VERS= 2.12.3
 VER= 2.12
 VE= 2
@@ -1193,6 +1193,8 @@ LIB_EXT_VERSION:= .${VERSION}${LIB_EXT}
 LIB_EXT_VERS:= .${VERS}${LIB_EXT}
 LIB_EXT_VER:= .${VER}${LIB_EXT}
 LIB_EXT_VE:= .${VE}${LIB_EXT}
+# LDCONFIG not required on this platform, so we redefine it to an empty string
+LDCONFIG:=
 # DARWIN_ARCH= -arch i386 -arch ppc	# Universal binary
 # DARWIN_ARCH= -arch i386		# Intel binary
 # DARWIN_ARCH= -arch ppc		# PPC binary
@@ -4002,12 +4004,11 @@ env:
 	@echo 'target=${target}'; echo ''
 	@echo '=-=-=-=-= ${MAKE_FILE} end of major make variable dump =-=-=-=-='
 
-mkdebug: env version.c rpm.release
+mkdebug: env version.c
 	@echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= Determining the source version =-=-=-=-='
 	@${MAKE} -f Makefile Q= V=@ ver_calc${EXT}
 	-@./ver_calc${EXT}
-	-@./ver_calc${EXT} -r rpm.release
 	@echo '=-=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ all =-=-=-=-='
 	@${MAKE} -f Makefile Q= V=@ all
 	@echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
@@ -4016,7 +4017,7 @@ mkdebug: env version.c rpm.release
 	@echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-debug: env rpm.release
+debug: env
 	@echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	@echo '=-=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ clobber =-=-=-=-='
 	@${MAKE} -f Makefile Q= V=@ clobber
@@ -4024,7 +4025,6 @@ debug: env rpm.release
 	@echo '=-=-=-=-= Determining the source version =-=-=-=-='
 	@${MAKE} -f Makefile Q= V=@ ver_calc${EXT}
 	-@./ver_calc${EXT}
-	-@./ver_calc${EXT} -r rpm.release
 	@echo '=-=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ all =-=-=-=-='
 	@${MAKE} -f Makefile Q= V=@ all
 	@echo '=-=-=-=-= Determining the binary version =-=-=-=-='
@@ -4483,9 +4483,11 @@ endif
 	    		${T}${LIBDIR}/libcustcalc${LIB_EXT}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
 	    if [ -z "${T}" -o "/" = "${T}" ]; then \
-		echo "running ${LDCONFIG}"; \
-		${LDCONFIG}; \
-		echo "finished ${LDCONFIG}"; \
+		if [ ! -z "${LDCONFIG}" ]; then \
+		    echo "running ${LDCONFIG}"; \
+		    ${LDCONFIG} -v; \
+		    echo "finished ${LDCONFIG}"; \
+		fi; \
 	    fi; \
 	fi
 	-${Q} for i in ${LIB_H_SRC} ${BUILD_H_SRC} /dev/null; do \
@@ -4558,8 +4560,6 @@ endif
 		fi; \
 	    fi; \
 	fi
-	${V} # NOTE: remove ${T}${CALC_INCDIR}/custom if it is empty
-	-${Q} ${RMDIR} ${T}${CALC_INCDIR}/custom 2>/dev/null
 	${V} # NOTE: misc install cleanup
 	${Q} ${RM} -f tmp
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
@@ -4688,9 +4688,11 @@ uninstall: custom/Makefile
 	    fi; \
 	fi
 	-${Q} if [ -z "${T}" -o "/" = "${T}" ]; then \
-	    echo "running ${LDCONFIG}"; \
-	    ${LDCONFIG}; \
-	    echo "finished ${LDCONFIG}"; \
+	    if [ ! -z "${LDCONFIG}" ]; then \
+		echo "running ${LDCONFIG}"; \
+		${LDCONFIG} -v; \
+		echo "finished ${LDCONFIG}"; \
+	    fi; \
 	fi
 	-${Q} if [ -f "${T}${LIBDIR}/libcalc.a" ]; then \
 	    ${RM} -f "${T}${LIBDIR}/libcalc.a"; \

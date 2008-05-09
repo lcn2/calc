@@ -582,6 +582,8 @@ LIB_EXT_VERSION:= .${VERSION}${LIB_EXT}
 LIB_EXT_VERS:= .${VERS}${LIB_EXT}
 LIB_EXT_VER:= .${VER}${LIB_EXT}
 LIB_EXT_VE:= .${VE}${LIB_EXT}
+# LDCONFIG not required on this platform, so we redefine it to an empty string
+LDCONFIG:=
 # DARWIN_ARCH= -arch i386 -arch ppc	# Universal binary
 # DARWIN_ARCH= -arch i386		# Intel binary
 # DARWIN_ARCH= -arch ppc		# PPC binary
