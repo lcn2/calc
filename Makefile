@@ -39,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.33 $$
-# @(#) $Id: Makefile.ship,v 30.33 2008/05/09 20:30:04 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.35 $$
+# @(#) $Id: Makefile.ship,v 30.35 2008/05/10 11:58:05 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -984,7 +984,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.3.2
+VERSION= 2.12.3.3
 VERS= 2.12.3
 VER= 2.12
 VE= 2
@@ -4256,6 +4256,7 @@ clobber: custom/Makefile clean
 #if 0	/* start of skip for non-Gnu makefiles */
 	${RM} -f Makefile.simple
 	${RM} -f custom/Makefile
+	-${MAKE} -f ${MAKE_FILE} custom/Makefile
 #endif	/* end of skip for non-Gnu makefiles */
 	${RM} -f .static .dynamic calc-dynamic-only calc-static-only
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='

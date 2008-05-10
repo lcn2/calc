@@ -22,6 +22,9 @@ The following are the changes from calc version 2.12.3.0 to date:
     if it is empty.  Now when ${ALLOW_CUSTOM} make variable is empty,
     an empty ${CALC_INCDIR}/custom may be left hehind.
 
+    Fixed a problem where a "make clobber" would remove custom/Makefile
+    and fail to rebuilt it.
+
 
 The following are the changes from calc version 2.12.2.3 to 2.12.2.4:
 
@@ -6731,8 +6734,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.16 $
-## @(#) $Id: CHANGES,v 30.16 2008/05/09 20:30:04 chongo Exp $
+## @(#) $Revision: 30.17 $
+## @(#) $Id: CHANGES,v 30.17 2008/05/10 10:53:34 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
