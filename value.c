@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: value.c,v 30.3 2007/07/11 23:09:01 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: value.c,v 30.4 2008/05/10 13:44:28 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -179,6 +179,10 @@ protecttodepth(VALUE *vp, int sts, int depth)
 void
 copyvalue(VALUE *oldvp, VALUE *newvp)
 {
+	/* firewall */
+	if (oldvp == NULL)
+		return;
+
 	newvp->v_type = oldvp->v_type;
 	if (oldvp->v_type >= 0) {
 		switch (oldvp->v_type) {

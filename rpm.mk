@@ -19,8 +19,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-MAKEFILE_REV= $$Revision: 30.4 $$
-# @(#) $Id: rpm.mk,v 30.4 2007/10/16 12:22:22 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.5 $$
+# @(#) $Id: rpm.mk,v 30.5 2008/10/24 08:44:00 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/rpm.mk,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -53,6 +53,7 @@ EGREP= egrep
 MKDIR= mkdir
 GREP= grep
 SORT= sort
+CHMOD= chmod
 
 # rpm-related parameters
 #
@@ -116,6 +117,12 @@ srcpkg: make_rhdir
 	    ${EGREP} -v '/old[._-]|\.old$$|\.tar\.gz$$|/ver_calc$$' | \
 	    LANG=C ${SORT} | \
 	    ${CPIO} -dumpv "$(TMPDIR)/$(PROJECT)"
+	${RM} -f "$(TMPDIR)/$(PROJECT)/Makefile"
+	${SED} -e 's/^CCWERR=[ 	]*-Werror/CCWERR=/' \
+	       -e 's/^#.*CCWERR=.*-Werror$$/#/' \
+	       -e 's/^CHECK= check/CHECK= true/' \
+	    Makefile > "$(TMPDIR)/$(PROJECT)/Makefile"
+	${CHMOD} 0444 "$(TMPDIR)/$(PROJECT)/Makefile"
 	(cd "$(TMPDIR)"; ${TAR} cf - "$(PROJECT)") | \
 	  ${BZIP2_PROG} --best -c -z > "$(RPMDIR)/SOURCES/$(TARBALL)"
 	${RM} -fr "$(TMPDIR)/$(PROJECT)"

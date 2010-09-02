@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: math_error.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: math_error.c,v 30.2 2008/10/24 09:49:20 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/math_error.c,v $
  *
  * Under source code control:	1994/08/03 05:08:22
@@ -93,6 +93,8 @@ math_error(char *fmt, ...)
 	 * if we should longjmp, so do
 	 */
 	if (calc_use_matherr_jmpbuf != 0) {
+		if (conf->calc_debug & CALCDBG_RUNSTATE)
+			printf("math_error: longjmp calc_matherr_jmpbuf\n");
 		longjmp(calc_matherr_jmpbuf, calc_use_matherr_jmpbuf);
 	}
 
@@ -102,6 +104,21 @@ math_error(char *fmt, ...)
 	(void) fflush(stdout);
 	(void) fflush(stderr);
 	fprintf(stderr, "%s\n\n", calc_err_msg);
+
+	/*
+	 * if interactive, return to main via longjmp()
+	 */
+	if (calc_use_scanerr_jmpbuf != 0) {
+		if (conf->calc_debug & CALCDBG_RUNSTATE)
+			printf("math_error: longjmp calc_scanerr_jmpbuf\n");
+		longjmp(calc_scanerr_jmpbuf, calc_use_scanerr_jmpbuf);
+	}
+
+	/*
+	 * exit
+	 */
+	if (conf->calc_debug & CALCDBG_RUNSTATE)
+		printf("math_error: about to exit\n");
 	libcalc_call_me_last();
 	exit(40);
 }

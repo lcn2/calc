@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: regress.cal,v 30.4 2008/02/24 07:41:49 chongo Exp $
+ * @(#) $Revision: 30.6 $
+ * @(#) $Id: regress.cal,v 30.6 2010/09/02 06:09:06 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -2738,11 +2738,24 @@ define test_2600()
 	vrfy(log(1e127) == 127,
 			    strcat(str(tnum++), ': log(1e127)) == 127'));
 	vrfy(round(log(17^47),10) == 57.8310993048,
-			    strcat(str(tnum++),
-			    	   ': round(log(17^47),10) == 57.8310993048'));
+	    strcat(str(tnum++),
+		   ': round(log(17^47),10) == 57.8310993048'));
 	vrfy(round(log(127),10) == 2.103803721,
-			    strcat(str(tnum++),
-			    	   ': round(log(127),10) == 2.103803721'));
+	    strcat(str(tnum++),
+		   ': round(log(127),10) == 2.103803721'));
+	vrfy(round(log(0.25,0.00001),5) == -0.60206,
+	    strcat(str(tnum++),
+		   ': round(log(0.25,0.00001),5) == -0.60206'));
+	vrfy(round(log(0.25,1e-10),10) == -0.6020599913,
+	    strcat(str(tnum++),
+		   ': round(log(0.25,1e-10),10) == -0.6020599913'));
+	vrfy(round( log(1.2+1.2i,1e-5),5) == 0.2297+0.34109i,
+	    strcat(str(tnum++),
+		   ': round(log(1.2+1.2i,1e-5),5) == 0.2297+0.34109i'));
+	vrfy(round( log(1.2+1.2i,1e-10),10) == 0.2296962439+0.3410940885i,
+	    strcat(str(tnum++),
+		   ': round(log(1.2+1.2i,1e-10),10) == ',
+		   '0.2296962439+0.3410940885i'));
         epsilon(i),;
 	print tnum++: ': epsilon(i),;';
 
@@ -7999,7 +8012,11 @@ print	'9838: skipping read -once hello.cal because it is an infinite loop';
 print	'9839: skipping read -once xx_print.cal because it is a printing demo';
 read -once sumtimes;
 print	'9840: read -once sumtimes';
-print	'9841: Ending read of selected calc resource files';
+read -once dms;
+print	'9841: read -once dms';
+read -once hms;
+print	'9842: read -once hms';
+print	'9843: Ending read of selected calc resource files';
 
 
 /*

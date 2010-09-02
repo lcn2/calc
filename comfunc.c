@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: comfunc.c,v 30.2 2007/07/11 23:05:49 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: comfunc.c,v 30.3 2008/10/24 07:09:41 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/comfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -556,7 +556,7 @@ c_log(COMPLEX *c, NUMBER *epsilon)
 	if (cln_10_epsilon == NULL) {
 		/* first time call */
 		cln_10_epsilon = qcopy(epsilon);
-	} else if (qcmp(cln_10_epsilon, epsilon) == FALSE) {
+	} else if (qcmp(cln_10_epsilon, epsilon) == TRUE) {
 		/* replaced cacheed value with epsilon arg */
 		qfree(cln_10_epsilon);
 		cln_10_epsilon = qcopy(epsilon);

@@ -1,4 +1,65 @@
-The following are the changes from calc version 2.12.3.0 to date:
+The following are the changes from calc version 2.12.4.0 to date:
+
+    Fixed a documentation bug for the sgn() builtin.
+
+    Added the 1<<8/2 evaluation example to "help unexpected".  That
+    expression evalutes to 128, not 16 as some C programmers might expect.
+
+    Fixed a bug in solve.cal where high was not returned in some situations.
+
+    Fixed a bug reported by Paul & Karen Tomlinson (paulnkaz at pktomlinson
+    dot fsnet dot co dot uk) where calling log multiple times with different
+    values of epsilon resulted in an incorrect value.
+
+    Removed cvd rule from Makefiles.
+
+    The Makefile used in the source rpm (calc-*.src.rpm) no longer uses
+    the -Werror compile flag.  This is to help those distributions with
+    compilers that make produce (hopefully) complination warnings.
+    NOTE: For testing and calc build purposes will recommend and will
+    continue to use the -Werror flag.
+
+    Fixed a typo in the Makefile where the make variable ${SAMPLE_OBJ}
+    was misspelled as ${SAMPLE_OBJS}.
+
+    Added prep makefile rule to make is easier to compile calc without
+    an optimizer.  By doing:
+
+    	make clobber prep
+
+    one may build a calc binary that is easier to debug.
+
+    Fixed a bug where an certains typos (e.g., calling an unknown
+    function) would previously cause calc to exit.
+
+    Updated the COPYING file to reflect the new filenames associated
+    with the SHA1 hash function, and removed mention of files related
+    to the SHA (SHA0, not SHA1) and the MD5 hash functions (which is
+    no longer supported in calc).
+
+    Fixed a bug where a calling vsnprintf() twice created problems.
+    The thanks for this fix goes to Matthew Miller (mattdm at mattdm
+    dot org) for this patch.
+
+    Michael Penk (mpenk at wuska dot com) reported success in installs
+    under windoz via Cygwin by making a change to the Cygwin target.
+    These changes have been folded into the main calc Makefile.
+    The old recommendation of using 'make win32_hsrc' is no longer
+    required for Cygwin.  See the README.WINDOWS file for details.
+
+    Added dms.cal and hms.cal resource files.  The dms.cal is a more
+    functional version of deg.cal.  It is a superset except that increment
+    and decrement is on the arc second level.  The hms.cal is for
+    24-hour cycle instread of the 360 degree cycle of dms.cal.
+
+    Changed deg.cal object name from dms to deg so that the more functional
+    dms.cal can own the dms object name.
+
+    Updated 'help obj' to reflect changes to 'show objfunctions' and
+    resource file example list since 1999.
+
+
+The following are the changes from calc version 2.12.3.0 to 2.12.3.3:
 
     Fixed the Jacobi function where it returned 1 when it should have
     returned 0.  Thanks goes to Kevin Sopp (baraclese at googlemail dot com)
@@ -6734,8 +6795,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.17 $
-## @(#) $Id: CHANGES,v 30.17 2008/05/10 10:53:34 chongo Exp $
+## @(#) $Revision: 30.20 $
+## @(#) $Id: CHANGES,v 30.20 2010/09/02 06:36:48 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

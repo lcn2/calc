@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: deg.cal,v 30.1 2007/03/16 11:09:54 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: deg.cal,v 30.2 2010/09/02 06:01:14 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/deg.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:33
@@ -28,9 +28,9 @@
  */
 
 
-obj dms {deg, min, sec};
+obj deg {deg, min, sec};
 
-define dms(deg, min, sec)
+define deg(deg, min, sec)
 {
 	local ans;
 
@@ -38,18 +38,18 @@ define dms(deg, min, sec)
 		sec = 0;
 	if (isnull(min))
 		min = 0;
-	obj dms ans;
+	obj deg ans;
 	ans.deg = deg;
 	ans.min = min;
 	ans.sec = sec;
-	fixdms(ans);
+	fixdeg(ans);
 	return ans;
 }
 
 
-define dms_add(a, b)
+define deg_add(a, b)
 {
-	local obj dms	ans;
+	local obj deg	ans;
 
 	ans.deg = 0;
 	ans.min = 0;
@@ -66,14 +66,14 @@ define dms_add(a, b)
 		ans.sec += b.sec;
 	} else
 		ans.deg += b;
-	fixdms(ans);
+	fixdeg(ans);
 	return ans;
 }
 
 
-define dms_neg(a)
+define deg_neg(a)
 {
-	local obj dms	ans;
+	local obj deg	ans;
 
 	ans.deg = -a.deg;
 	ans.min = -a.min;
@@ -82,15 +82,15 @@ define dms_neg(a)
 }
 
 
-define dms_sub(a, b)
+define deg_sub(a, b)
 {
 	return a - b;
 }
 
 
-define dms_mul(a, b)
+define deg_mul(a, b)
 {
-	local obj dms	ans;
+	local obj deg	ans;
 
 	if (istype(a, ans) && istype(b, ans))
 		quit "Cannot multiply degrees together";
@@ -103,24 +103,24 @@ define dms_mul(a, b)
 		ans.min = b.min * a;
 		ans.sec = b.sec * a;
 	}
-	fixdms(ans);
+	fixdeg(ans);
 	return ans;
 }
 
 
-define dms_print(a)
+define deg_print(a)
 {
 	print a.deg : 'd' : a.min : 'm' : a.sec : 's' :;
 }
 
 
-define dms_abs(a)
+define deg_abs(a)
 {
 	return a.deg + a.min / 60 + a.sec / 3600;
 }
 
 
-define fixdms(a)
+define fixdeg(a)
 {
 	a.min += frac(a.deg) * 60;
 	a.deg = int(a.deg);
@@ -134,5 +134,5 @@ define fixdms(a)
 }
 
 if (config("resource_debug") & 3) {
-    print "obj dms {deg, min, sec} defined";
+    print "obj deg {deg, min, sec} defined";
 }

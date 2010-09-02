@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: opcodes.c,v 30.2 2007/07/10 21:18:08 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: opcodes.c,v 30.4 2008/05/10 13:51:32 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/opcodes.c,v $
  *
  * Under source code control:	1990/02/15 01:48:19
@@ -3120,8 +3120,18 @@ o_printresult(void)
 	VALUE *vp;
 
 	vp = stack;
+
+	/* firewall */
+	if (vp == NULL)
+		return;
+
 	if (vp->v_type == V_ADDR)
 		vp = vp->v_addr;
+
+	/* firewall */
+	if (vp == NULL)
+		return;
+
 	if (vp->v_type != V_NULL) {
 		if (conf->tab_ok)
 		    math_chr('\t');

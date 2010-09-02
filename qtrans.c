@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: qtrans.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: qtrans.c,v 30.2 2008/10/24 07:09:41 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/qtrans.c,v $
  *
  * Under source code control:	1990/02/15 01:48:22
@@ -1062,7 +1062,7 @@ qlog(NUMBER *q, NUMBER *epsilon)
 	if (ln_10_epsilon == NULL) {
 		/* first time call */
 		ln_10_epsilon = qcopy(epsilon);
-	} else if (qcmp(ln_10_epsilon, epsilon) == FALSE) {
+	} else if (qcmp(ln_10_epsilon, epsilon) == TRUE) {
 		/* replaced cacheed value with epsilon arg */
 		qfree(ln_10_epsilon);
 		ln_10_epsilon = qcopy(epsilon);

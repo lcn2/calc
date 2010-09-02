@@ -23,7 +23,7 @@
 #	 READLINE_LIB= -lreadline
 #	 READLINE_EXTRAS= -lhistory -lncurses
 #
-# Copyright (C) 1999-2007  Landon Curt Noll
+# Copyright (C) 1999-2008  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -39,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.35 $$
-# @(#) $Id: Makefile.ship,v 30.35 2008/05/10 11:58:05 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.44 $$
+# @(#) $Id: Makefile.ship,v 30.44 2010/09/02 06:07:07 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -598,6 +598,18 @@ INCDIR= /usr/include
 #	by default is empty.  If ${T} is non-empty, then installation
 #	locations will be relative to the ${T} directory.
 #
+# NOTE: If you change LIBDIR to a non-standard location, you will need
+#	to make changes to your execution environment so that executables
+#	will search LIBDIR when they are resolving dynamic shared libraries.
+#
+#	On OS X, this means you need to export $DYLD_LIBRARY_PATH
+#	to include the LIBDIR path in the value.
+#
+#	On Linux and BSD, this means you need to export $LD_LIBRARY_PATH
+#	to include the LIBDIR path in the value.
+#
+#	You might be better off not changing LIBDIR in the first place.
+#
 # For DJGPP, select:
 #
 #	BINDIR= /dev/env/DJDIR/bin
@@ -971,11 +983,12 @@ MKDIR_ARG= -p
 
 # Some out of date operating systems require / want an executable to
 # end with a certain file extension.  Some compile systems such as
-# Cygwin build calc as calc.exe.  The EXT variable is used to denote
-# the extension required by such.
+# windoz build calc as calc.exe.  The EXT variable is used to denote
+# the extension required by such.  Note that Cygwin requires EXT to be
+# the same as Linux/Un*x/GNU, even though it runs under windoz.
 #
-# EXT=				# normal Un*x / Linux / GNU/Linux systems
-# EXT=.exe			# windoz / Cygwin
+# EXT=				# normal Un*x / Linux / GNU/Linux / Cygwin
+# EXT=.exe			# windoz
 #
 # If in doubt, use EXT=
 #
@@ -984,8 +997,8 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.3.3
-VERS= 2.12.3
+VERSION= 2.12.4.2
+VERS= 2.12.4
 VER= 2.12
 VE= 2
 
@@ -1295,6 +1308,40 @@ endif
 ifeq ($(target),SunOS)
 #
 BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifdef ALLOW_CUSTOM
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
+#
+CC_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+LD_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+endif
+
+#################
+# Cygwin target #
+#################
+
+ifeq ($(target),Cygwin)
+#
+BLD_TYPE= calc-static-only
 #
 CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
@@ -1814,7 +1861,7 @@ CALCLIBLIST= ${LIBSRC} ${UTIL_C_SRC} ${LIB_H_SRC} ${MAKE_FILE} \
 
 # complete list of .o files
 #
-OBJS= ${LIBOBJS} ${CALCOBJS} ${UTIL_OBJS} ${SAMPLE_OBJS}
+OBJS= ${LIBOBJS} ${CALCOBJS} ${UTIL_OBJS} ${SAMPLE_OBJ}
 
 # static library build
 #
@@ -1912,6 +1959,9 @@ TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS}
 ###
 
 all: ${BLD_TYPE} CHANGES
+
+prep:
+	${Q} ${MAKE} -f ${MAKE_FILE} all DEBUG='-g3'
 
 calc-dynamic-only: ${DYNAMIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 		   ${CALC_DYNAMIC_LIBS} ${SYM_DYNAMIC_LIBS} calc${EXT} \
@@ -4043,9 +4093,6 @@ debug: env
 # make run
 #	* only run calc interactively with the ${CALC_ENV} environment
 #
-# make cvd
-#	* run the SGI WorkShop debugger on calc with the ${CALC_ENV} environment
-#
 # make dbx
 #	* run the dbx debugger on calc with the ${CALC_ENV} environment
 #
@@ -4056,9 +4103,6 @@ debug: env
 
 run:
 	${CALC_ENV} ./calc${EXT}
-
-cvd:
-	${CALC_ENV} cvd ./calc${EXT}
 
 dbx:
 	${CALC_ENV} dbx ./calc${EXT}
