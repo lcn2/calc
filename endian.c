@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: endian.c,v 30.2 2007/09/29 16:56:40 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: endian.c,v 30.3 2010/09/02 09:47:46 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/endian.c,v $
  *
  * Under source code control:	1993/11/15 04:32:58
@@ -77,9 +77,9 @@ main(void)
 	printf("#define LITTLE_ENDIAN\t1234\n");
 	printf("#undef CALC_BYTE_ORDER\n");
 
-#if defined(CALC_BIG_ENDIAN)
+#if defined(BIG_ENDIAN)
 	printf("#define CALC_BYTE_ORDER\tBIG_ENDIAN\n");
-#elif defined(CALC_LITTLE_ENDIAN)
+#elif defined(LITTLE_ENDIAN)
 	printf("#define CALC_BYTE_ORDER\tLITTLW_ENDIAN\n");
 #else
 	/* Determine byte order */
@@ -93,8 +93,8 @@ main(void)
 	    fprintf(stderr, "@=-=@ Fatal build error - cannot @=-=@\n");
 	    fprintf(stderr, "@=-=@ determine byte order.  Set @=-=@\n");
 	    fprintf(stderr, "@=-=@ ${CALC_BYTE_ORDER} in the Makefile @=-=@\n");
-	    fprintf(stderr, "@=-=@ to be either -DCALC_BIG_ENDIAN or @=-=@\n");
-	    fprintf(stderr, "@=-=@ to be -DCALC_LITTLE_ENDIAN @=-=@\n");
+	    fprintf(stderr, "@=-=@ to be either -DBIG_ENDIAN or @=-=@\n");
+	    fprintf(stderr, "@=-=@ to be -DLITTLE_ENDIAN @=-=@\n");
 	    exit(1);
 	}
 #endif

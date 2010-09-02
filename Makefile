@@ -39,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.44 $$
-# @(#) $Id: Makefile.ship,v 30.44 2010/09/02 06:07:07 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.46 $$
+# @(#) $Id: Makefile.ship,v 30.46 2010/09/02 09:48:41 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -132,8 +132,8 @@ HAVE_VSPRINTF=
 # Select CALC_BYTE_ORDER= -DCALC_LITTLE_ENDIAN for DJGPP.
 #
 CALC_BYTE_ORDER=
-#CALC_BYTE_ORDER= -DCALC_BIG_ENDIAN
-#CALC_BYTE_ORDER= -DCALC_LITTLE_ENDIAN
+#CALC_BYTE_ORDER= -DBIG_ENDIAN
+#CALC_BYTE_ORDER= -DLITTLE_ENDIAN
 
 # Determine the number of bits in a long
 #
@@ -997,7 +997,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.2
+VERSION= 2.12.4.3
 VERS= 2.12.4
 VER= 2.12
 VE= 2

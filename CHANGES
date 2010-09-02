@@ -58,6 +58,9 @@ The following are the changes from calc version 2.12.4.0 to date:
     Updated 'help obj' to reflect changes to 'show objfunctions' and
     resource file example list since 1999.
 
+    Fixed problem where CALC_BYTE_ORDER refering to CALC_BIG_ENDIAN
+    and CALC_LITTLE_ENDIAN instead of BIG_ENDIAN and LITTLE_ENDIAN.
+
 
 The following are the changes from calc version 2.12.3.0 to 2.12.3.3:
 
@@ -6795,8 +6798,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.20 $
-## @(#) $Id: CHANGES,v 30.20 2010/09/02 06:36:48 chongo Exp $
+## @(#) $Revision: 30.21 $
+## @(#) $Id: CHANGES,v 30.21 2010/09/02 09:50:19 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
