@@ -1,4 +1,14 @@
-The following are the changes from calc version 2.12.4.0 to date:
+The following are the changes from calc version 2.12.4.3 to date:
+
+    Added gvec.cal resource script.
+
+    Added calc-symlink make rulle to setup symlinks from stardard locations
+    into a tree specified by a non-empty ${T} makefile variable.  Added
+    calc-unsymlink to remove any symlinks that may have been created by
+    the calc-symlink rule.
+
+
+The following are the changes from calc version 2.12.4.0 to 2.12.4.2:
 
     Fixed a documentation bug for the sgn() builtin.
 
@@ -6798,8 +6808,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.21 $
-## @(#) $Id: CHANGES,v 30.21 2010/09/02 09:50:19 chongo Exp $
+## @(#) $Revision: 30.22 $
+## @(#) $Id: CHANGES,v 30.22 2011/05/23 22:48:17 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

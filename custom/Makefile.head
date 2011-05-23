@@ -366,7 +366,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.3
+VERSION= 2.12.4.4
 VERS= 2.12.4
 VER= 2.12
 VE= 2
