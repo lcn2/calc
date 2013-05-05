@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.3 $
  * @(#) $Id: value.h,v 30.3 2007/07/10 21:18:08 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/value.h,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/value.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
  * File existed as early as:	1993

@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: have_varvs.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/have_varvs.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/have_varvs.c,v $
  *
  * Under source code control:	1995/09/09 22:41:10
  * File existed as early as:	1995

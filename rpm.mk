@@ -19,9 +19,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-MAKEFILE_REV= $$Revision: 30.5 $$
-# @(#) $Id: rpm.mk,v 30.5 2008/10/24 08:44:00 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/calc/RCS/rpm.mk,v $
+MAKEFILE_REV= $$Revision: 30.7 $$
+# @(#) $Id: rpm.mk,v 30.7 2013/05/02 01:00:12 chongo Exp chongo $
+# @(#) $Source: /usr/local/src/bin/calc/RCS/rpm.mk,v $
 #
 # Under source code control:	2003/02/16 20:21:39
 # File existed as early as:	2003
@@ -37,7 +37,7 @@ MAKEFILE_REV= $$Revision: 30.5 $$
 SHELL= /bin/sh
 RPMBUILD_TOOL= rpmbuild
 TARCH= i686
-RPMBUILD_OPTION= -ba --target=${TARCH}
+RPMBUILD_OPTION= -ba --target=$(TARCH)
 RPM_TOOL= rpm
 MD5SUM= md5sum
 SHA1SUM= sha1sum
@@ -54,20 +54,22 @@ MKDIR= mkdir
 GREP= grep
 SORT= sort
 CHMOD= chmod
+LN= ln
 
 # rpm-related parameters
 #
-PROJECT_NAME= calc
+NAME= calc
+PROJECT_NAME= $(NAME)
 PROJECT_VERSION=
 PROJECT_RELEASE=
 PROJECT= $(PROJECT_NAME)-$(PROJECT_VERSION)
 SPECFILE= $(PROJECT_NAME).spec
 TARBALL= $(PROJECT).${TAR}.bz2
-RPM686= $(PROJECT)-$(PROJECT_RELEASE).${TARCH}.rpm
-DRPM686= $(PROJECT_NAME)-devel-$(PROJECT_VERSION)-$(PROJECT_RELEASE).${TARCH}.rpm
+RPM686= $(PROJECT)-$(PROJECT_RELEASE).$(TARCH).rpm
+DRPM686= $(PROJECT_NAME)-devel-$(PROJECT_VERSION)-$(PROJECT_RELEASE).$(TARCH).rpm
 SRPM= $(PROJECT)-$(PROJECT_RELEASE).src.rpm
-TMPDIR= /var/tmp
-RPMDIR= /usr/src/redhat
+RPM_TOP= /usr/local/rpm/${NAME}
+TMPDIR= ${RPM_TOP}/tmp
 
 # Makefile debug
 #
@@ -82,11 +84,14 @@ Q=@
 V=@:
 #V=@
 
-all: calc.spec ver_calc
+all: ver_calc calc.spec
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
-	$(MAKE) -f rpm.mk PROJECT_VERSION="`./ver_calc`" \
-		PROJECT_RELEASE="`${SED} -n -e '/^Release:/s/^Release: *//p' \
-				  calc.spec.in`" rpm
+	PROJECT_VERSION="`./ver_calc`"; \
+	PROJECT_RELEASE="`${SED} -n \
+	    -e '/^Release:/s/^Release: *//p' calc.spec.in`"; \
+	$(MAKE) -f rpm.mk rpm \
+	    PROJECT_VERSION="$$PROJECT_VERSION" \
+	    PROJECT_RELEASE="$$PROJECT_RELEASE"
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 pkgme: $(PROJECT_NAME)-spec.${TAR}.bz2
@@ -112,6 +117,10 @@ calc.spec: calc.spec.in ver_calc
 .PHONY: srcpkg
 srcpkg: make_rhdir
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
+	${V} echo RPM_TOP="${RPM_TOP}"
+	${V} echo PROJECT_VERSION="${PROJECT_VERSION}"
+	${V} echo PROJECT_RELEASE="${PROJECT_RELEASE}"
+	${RM} -rf "$(TMPDIR)/$(PROJECT)"
 	${FIND} . -depth -print | \
 	    ${EGREP} -v '/RCS|/CVS|/NOTES|/\.|\.out$$|\.safe$$\.tar\.bz2$$' | \
 	    ${EGREP} -v '/old[._-]|\.old$$|\.tar\.gz$$|/ver_calc$$' | \
@@ -123,44 +132,42 @@ srcpkg: make_rhdir
 	       -e 's/^CHECK= check/CHECK= true/' \
 	    Makefile > "$(TMPDIR)/$(PROJECT)/Makefile"
 	${CHMOD} 0444 "$(TMPDIR)/$(PROJECT)/Makefile"
-	(cd "$(TMPDIR)"; ${TAR} cf - "$(PROJECT)") | \
-	  ${BZIP2_PROG} --best -c -z > "$(RPMDIR)/SOURCES/$(TARBALL)"
-	${RM} -fr "$(TMPDIR)/$(PROJECT)"
+	cd "$(TMPDIR)"; ${TAR} cf - "$(PROJECT)" | \
+	  ${BZIP2_PROG} --best -c -z > "$(RPM_TOP)/SOURCES/$(TARBALL)"
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: rpm
 rpm: srcpkg calc.spec
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
+	${V} echo RPM_TOP="${RPM_TOP}"
+	${V} echo PROJECT_VERSION="${PROJECT_VERSION}"
+	${V} echo PROJECT_RELEASE="${PROJECT_RELEASE}"
 	$(MAKE) -f Makefile clean
-	${CP} "$(SPECFILE)" "$(RPMDIR)/SPECS/$(SPECFILE)"
-	${RM} -f "$(RPMDIR)/RPMS/${TARCH}/$(RPM686)"
-	${RM} -f "$(RPMDIR)/RPMS/${TARCH}/$(DRPM686)"
-	${RM} -f "$(RPMDIR)/SRPMS/$(SRPM)"
-	${RPMBUILD_TOOL} ${RPMBUILD_OPTION} "$(RPMDIR)/SPECS/$(SPECFILE)"
-	@if [ ! -f "$(RPMDIR)/SRPMS/$(SRPM)" ]; then \
+	${CP} "$(SPECFILE)" "$(RPM_TOP)/SPECS/$(SPECFILE)"
+	${RM} -f "$(RPM_TOP)/RPMS/$(TARCH)/$(RPM686)"
+	${RM} -f "$(RPM_TOP)/RPMS/$(TARCH)/$(DRPM686)"
+	${RM} -f "$(RPM_TOP)/SRPMS/$(SRPM)"
+	${RPMBUILD_TOOL} ${RPMBUILD_OPTION} "$(RPM_TOP)/SPECS/$(SPECFILE)"
+	@if [ ! -f "$(RPM_TOP)/SRPMS/$(SRPM)" ]; then \
 	    echo "SRPMS/$(SRPM) not found" 1>&2; \
 	    exit 3; \
 	fi
 	@echo
 	@echo "RPM package sizes:"
 	@echo
-	@cd $(RPMDIR); ${LS} -1s "RPMS/${TARCH}/$(RPM686)" \
-	    "RPMS/${TARCH}/$(DRPM686)" "SRPMS/$(SRPM)"
+	@cd $(RPM_TOP); ${LS} -1s "RPMS/$(RPM686)" "RPMS/$(DRPM686)" "SRPMS/$(SRPM)"
 	@echo
 	@echo "RPM package md5 hashes:"
 	@echo
-	-@cd $(RPMDIR); ${MD5SUM} "RPMS/${TARCH}/$(RPM686)" \
-	    "RPMS/${TARCH}/$(DRPM686)" "SRPMS/$(SRPM)"
+	-@cd $(RPM_TOP); ${MD5SUM} "RPMS/$(RPM686)" "RPMS/$(DRPM686)" "SRPMS/$(SRPM)"
 	@echo
 	@echo "RPM package sha1 hashes:"
 	@echo
-	-@cd $(RPMDIR); ${SHA1SUM} "RPMS/${TARCH}/$(RPM686)" \
-	    "RPMS/${TARCH}/$(DRPM686)" "SRPMS/$(SRPM)"
+	-@cd $(RPM_TOP); ${SHA1SUM} "RPMS/$(RPM686)" "RPMS/$(DRPM686)" "SRPMS/$(SRPM)"
 	@echo
 	@echo "RPM package locations:"
 	@echo
-	@${LS} -1 "$(RPMDIR)/RPMS/${TARCH}/$(RPM686)" \
-	    "$(RPMDIR)/RPMS/${TARCH}/$(DRPM686)" "$(RPMDIR)/SRPMS/$(SRPM)"
+	@${LS} -1 "$(RPM_TOP)/RPMS/$(RPM686)" "$(RPM_TOP)/RPMS/$(DRPM686)" "$(RPM_TOP)/SRPMS/$(SRPM)"
 	@echo
 	@echo "All done! -- Jessica Noll, Age 2"
 	@echo
@@ -169,13 +176,51 @@ rpm: srcpkg calc.spec
 .PHONY: make_rhdir
 make_rhdir:
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
-	for i in "$(RPMDIR)" "$(RPMDIR)/RPMS" "$(RPMDIR)/SOURCES" \
-	  "$(RPMDIR)/SPECS" "$(RPMDIR)/SRPMS" "$(RPMDIR)/BUILD"; do \
+	${V} echo RPM_TOP="${RPM_TOP}"
+	${V} echo PROJECT_VERSION="${PROJECT_VERSION}"
+	${V} echo PROJECT_RELEASE="${PROJECT_RELEASE}"
+	for subdir in "" BUILD RPMS SOURCES SPECS SRPMS tmp; do \
+	    i="$(RPM_TOP)/$$subdir"; \
 	    if [ ! -d "$$i" ] ; then \
 		${MKDIR} -p "$$i"; \
 	    fi; \
+	    if [ ! -d "$$i" ] ; then \
+		echo "FATAL: unable to create: $$i" 1>&2; \
+		exit 4; \
+	    fi; \
+	    if [ ! -w "$$i" ] ; then \
+		${CHMOD} +w "$$i"; \
+	    fi; \
+	    if [ ! -w "$$i" ] ; then \
+		echo "FATAL: unable to make writable: $$i" 1>&2; \
+		exit 5; \
+	    fi; \
 	done;
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
+
+.PHONY: -preclean
+rpm-preclean:
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${Q} if [ -n "$(RPM_TOP)" ]; then \
+	    if [ -d "$(RPM_TOP)" ]; then \
+		echo ${RM} -rf "$(RPM_TOP)"; \
+		${RM} -rf "$(RPM_TOP)"; \
+	    fi; \
+	    if [ -d "$(RPM_TOP)" ]; then \
+		echo "FATAL: cannot rm -rf $(RPM_TOP)" 1>&2; \
+		exit 1; \
+	    fi; \
+	    echo ${MKDIR} -p "$(RPM_TOP)"; \
+	    ${MKDIR} -p "$(RPM_TOP)"; \
+	    if [ ! -d "$(RPM_TOP)" ]; then \
+		echo "FATAL: cannot mkdir -p $(RPM_TOP)" 1>&2; \
+		exit 1; \
+	    fi; \
+	else \
+	    echo "FATAL: make symbol RPM_TOP is empty" 1>&2; \
+	    exit 2; \
+	fi
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # date format for spec file
 .PHONY: logdate
@@ -185,9 +230,9 @@ logdate:
 .PHONY: chkpkg
 chkpkg:
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
-	for i in "$(RPMDIR)/RPMS/${TARCH}/$(RPM686)" \
-		 "$(RPMDIR)/RPMS/${TARCH}/$(DRPM686)" \
-	  	 "$(RPMDIR)/SRPMS/$(SRPM)" ; do \
+	for i in "$(RPM_TOP)/RPMS/$(TARCH)/$(RPM686)" \
+		 "$(RPM_TOP)/RPMS/$(TARCH)/$(DRPM686)" \
+	  	 "$(RPM_TOP)/SRPMS/$(SRPM)" ; do \
 	    echo "***** start $$i" ; \
 	    ${RPM_TOOL} -qpi "$$"i ; \
 	    echo "***** files $$i" ; \
@@ -208,7 +253,7 @@ test: ver_calc
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	@if [ X"`id -u`" != X"0" ]; then \
 	    echo "test needs to install, must be root to test" 1>&2; \
-	    exit 4; \
+	    exit 6; \
 	fi
 	$(MAKE) -f rpm.mk PROJECT_VERSION="`./ver_calc`" installrpm chksys
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
@@ -218,10 +263,10 @@ installrpm:
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	@if [ X"`id -u`" != X"0" ]; then \
 	    echo "must be root to install RPMs" 1>&2; \
-	    exit 5; \
+	    exit 7; \
 	fi
-	${RPM_TOOL} -ivh "$(RPMDIR)/RPMS/${TARCH}/$(RPM686)"
-	${RPM_TOOL} -ivh "$(RPMDIR)/RPMS/${TARCH}/$(DRPM686)"
+	${RPM_TOOL} -ivh "$(RPM_TOP)/RPMS/$(TARCH)/$(RPM686)"
+	${RPM_TOOL} -ivh "$(RPM_TOP)/RPMS/$(TARCH)/$(DRPM686)"
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: uninstallrpm
@@ -229,7 +274,7 @@ uninstallrpm:
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	@if [ X"`id -u`" != X"0" ]; then \
 	    echo "must be root to uninstall RPMs" 1>&2; \
-	    exit 6; \
+	    exit 8; \
 	fi
 	${RPM_TOOL} -e "$(PROJECT_NAME)-devel"
 	${RPM_TOOL} -e "$(PROJECT_NAME)"

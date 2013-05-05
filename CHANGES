@@ -1,11 +1,29 @@
-The following are the changes from calc version 2.12.4.3 to date:
+The following are the changes from calc version 2.12.4.6 to date:
+
+    Updated RPM build process to remove use of deprecated flags.
+
+    Applied a number of fixes calc.spec file.
+
+    Changed rpm release to 2.1.
+
+
+The following are the changes from calc version 2.12.4.3 to 2.12.4.5:
 
     Added gvec.cal resource script.
 
-    Added calc-symlink make rulle to setup symlinks from stardard locations
+    Added calc-symlink make rule to setup symlinks from stardard locations
     into a tree specified by a non-empty ${T} makefile variable.  Added
     calc-unsymlink to remove any symlinks that may have been created by
     the calc-symlink rule.
+
+    If is OK for the calc-symlink make rule to pre-remove a symlink.
+
+    Fixed bug was uncovered in calc that caused script failures when calc
+    is called within a while loop in BASH if the while loop is fed from
+    stdin due to calc's redirection/inheritance of stdin and no option
+    to change this behavior.  Thanks gores to David C. Rankin
+    <drankinatty at gmail dot com> for the bug fix and to David Haller
+    <dnh at opensuse dot org> for helping debug this problem.
 
 
 The following are the changes from calc version 2.12.4.0 to 2.12.4.2:
@@ -6808,9 +6826,9 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.22 $
-## @(#) $Id: CHANGES,v 30.22 2011/05/23 22:48:17 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
+## @(#) $Revision: 30.24 $
+## @(#) $Id: CHANGES,v 30.24 2013/05/05 08:31:08 chongo Exp $
+## @(#) $Source: /usr/local/src/bin/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
 ## File existed as early as:	1989

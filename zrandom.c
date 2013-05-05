@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: zrandom.c,v 30.2 2007/09/21 01:47:34 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrandom.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/zrandom.c,v $
  *
  * Under source code control:	1997/02/15 04:01:56
  * File existed as early as:	1997

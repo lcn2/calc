@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: c_sysinfo.c,v 30.2 2007/07/05 19:35:20 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_sysinfo.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/custom/RCS/c_sysinfo.c,v $
  *
  * Under source code control:	1997/03/09 23:14:40
  * File existed as early as:	1997

@@ -39,9 +39,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.47 $$
-# @(#) $Id: Makefile.ship,v 30.47 2011/05/23 22:47:49 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
+MAKEFILE_REV= $$Revision: 30.49 $$
+# @(#) $Id: Makefile.ship,v 30.49 2013/03/25 21:31:55 chongo Exp chongo $
+# @(#) $Source: /usr/local/src/bin/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
 # File existed as early as:	before 1990
@@ -997,7 +997,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.4
+VERSION= 2.12.4.6
 VERS= 2.12.4
 VER= 2.12
 VE= 2
@@ -1212,7 +1212,7 @@ LDCONFIG:=
 # DARWIN_ARCH= -arch i386		# Intel binary
 # DARWIN_ARCH= -arch ppc		# PPC binary
 DARWIN_ARCH=				# native binary
-MACOSX_DEPLOYMENT_TARGET=10.4
+MACOSX_DEPLOYMENT_TARGET=10.8
 #
 endif
 
@@ -4116,9 +4116,14 @@ gdb:
 #
 ###
 
-rpm: clobber rpm.mk calc.spec.in
+rpm: clobber rpm-preclean rpm.mk calc.spec.in
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
-	${MAKE} -f rpm.mk V=${V}
+	${MAKE} -f rpm.mk all V=${V} RPM_TOP="${RPM_TOP}"
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
+
+rpm-preclean:
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${MAKE} -f rpm.mk $@ V=${V} RPM_TOP="${RPM_TOP}"
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # rpm static rules
@@ -4476,9 +4481,9 @@ endif
 	        else \
 		${RM} -f ${T}${LIBDIR}/libcalc.a.new; \
 		${CP} -f libcalc.a ${T}${LIBDIR}/libcalc.a.new; \
+		${CHMOD} 0644 ${T}${LIBDIR}/libcalc.a.new; \
 		${MV} -f ${T}${LIBDIR}/libcalc.a.new ${T}${LIBDIR}/libcalc.a; \
 		${RANLIB} ${T}${LIBDIR}/libcalc.a; \
-		${CHMOD} 0444 ${T}${LIBDIR}/libcalc.a; \
 		echo "installed ${T}${LIBDIR}/libcalc.a"; \
 	   fi; \
 	fi
@@ -4494,6 +4499,7 @@ endif
 	    ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
 	    ${CP} -f libcalc${LIB_EXT_VERSION} \
 	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
+	    ${CHMOD} 0644 ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
 	    ${MV} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new \
 	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
@@ -4512,6 +4518,7 @@ endif
 	    ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
 	    ${CP} -f custom/libcustcalc${LIB_EXT_VERSION} \
 	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
+	    ${CHMOD} 0644 ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
 	    ${MV} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new \
 	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}; \
 	    echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}"; \
@@ -4829,7 +4836,7 @@ calc-symlink:
 			${CALC_INCDIR} \
 			; do \
 	    if [ -e "${T}$$i" ]; then \
-		    if [ "${T}$$i" -ef "$$i" ]; then \
+		    if [ ! -L "$$i" -a "${T}$$i" -ef "$$i" ]; then \
 		    	echo "ERROR: ${T}$$i is the same as $$i" 1>&2; \
 		    else \
 			if [ -e "$$i" ]; then \
@@ -4845,7 +4852,7 @@ calc-symlink:
 	done
 	-${Q} if [ -n "${CATDIR}" ]; then \
 	    if [ -e "${T}${CATDIR}/calc.${CATEXT}" ]; then \
-		if [ "${T}${CATDIR}/calc.${CATEXT}" -ef "${CATDIR}/calc.${CATEXT}" ]; then \
+		if [ ! -L "${CATDIR}/calc.${CATEXT}" -a "${T}${CATDIR}/calc.${CATEXT}" -ef "${CATDIR}/calc.${CATEXT}" ]; then \
 		    	echo "ERROR: ${T}${CATDIR}/calc.${CATEXT} is the same as ${CATDIR}/calc.${CATEXT}" 1>&2; \
 		else \
 		    if [ -e "${CATDIR}/calc.${CATEXT}" ]; then \

@@ -21,7 +21,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: qtrans.c,v 30.2 2008/10/24 07:09:41 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/qtrans.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/qtrans.c,v $
  *
  * Under source code control:	1990/02/15 01:48:22
  * File existed as early as:	before 1990

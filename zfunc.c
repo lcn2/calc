@@ -21,7 +21,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: zfunc.c,v 30.2 2008/02/24 07:41:49 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/zfunc.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/zfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:27
  * File existed as early as:	before 1990

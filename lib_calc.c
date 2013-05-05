@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.3 $
  * @(#) $Id: lib_calc.c,v 30.3 2007/07/10 17:57:04 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/lib_calc.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/lib_calc.c,v $
  *
  * Under source code control:	1996/06/17 18:06:19
  * File existed as early as:	1996

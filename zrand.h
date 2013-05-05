@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: zrand.h,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrand.h,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/zrand.h,v $
  *
  * Under source code control:	1995/01/07 09:45:26
  * File existed as early as:	1994

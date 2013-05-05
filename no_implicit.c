@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: no_implicit.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/no_implicit.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/no_implicit.c,v $
  *
  * Under source code control:	2003/01/14 01:45:19
  * File existed as early as:	2003

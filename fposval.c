@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: fposval.c,v 30.2 2007/09/19 22:34:22 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/fposval.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/fposval.c,v $
  *
  * Under source code control:	1994/11/05 03:19:52
  * File existed as early as:	1994

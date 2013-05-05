@@ -21,7 +21,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: config.h,v 30.2 2007/09/21 01:27:27 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/config.h,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
  * File existed as early as:	1995

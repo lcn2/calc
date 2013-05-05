@@ -21,7 +21,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: symbol.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/symbol.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/symbol.c,v $
  *
  * Under source code control:	1990/02/15 01:48:23
  * File existed as early as:	before 1990

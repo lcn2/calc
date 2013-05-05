@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: c_help.c,v 30.1 2007/03/16 11:10:04 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_help.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/custom/RCS/c_help.c,v $
  *
  * Under source code control:	1997/03/09 05:25:41
  * File existed as early as:	1997

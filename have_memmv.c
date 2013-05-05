@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: have_memmv.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/have_memmv.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/have_memmv.c,v $
  *
  * Under source code control:	1997/04/16 02:02:34
  * File existed as early as:	1997

@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.3 $
  * @(#) $Id: endian.c,v 30.3 2010/09/02 09:47:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/endian.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/endian.c,v $
  *
  * Under source code control:	1993/11/15 04:32:58
  * File existed as early as:	1993

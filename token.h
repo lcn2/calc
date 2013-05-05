@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: token.h,v 30.2 2007/07/05 13:30:38 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/token.h,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/token.h,v $
  *
  * Under source code control:	1990/02/15 01:48:37
  * File existed as early as:	before 1990

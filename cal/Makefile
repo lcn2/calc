@@ -20,7 +20,7 @@
 #
 # @(#) $Revision: 30.5 $
 # @(#) $Id: Makefile,v 30.5 2011/05/23 22:50:18 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/Makefile,v $
+# @(#) $Source: /usr/local/src/bin/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
 # File existed as early as:	1991

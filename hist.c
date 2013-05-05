@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: hist.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/hist.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/hist.c,v $
  *
  * Under source code control:	1993/05/02 20:09:19
  * File existed as early as:	1993
