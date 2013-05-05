@@ -19,8 +19,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-MAKEFILE_REV= $$Revision: 30.7 $$
-# @(#) $Id: rpm.mk,v 30.7 2013/05/02 01:00:12 chongo Exp chongo $
+MAKEFILE_REV= $$Revision: 30.10 $$
+# @(#) $Id: rpm.mk,v 30.10 2013/05/05 11:59:51 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/RCS/rpm.mk,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -32,6 +32,37 @@ MAKEFILE_REV= $$Revision: 30.7 $$
 # calculator by David I. Bell with help/mods from others
 # Makefile by Petteri Kettunen with modifications from Landon Curt Noll
 
+# IMPORTANT NOTE: The rpm process assumes that ~/.rpmmacros contains the following:
+#
+#	%_signature	gpg
+#	%_gpg_path	~/.gnupg
+#	%_gpg_name	__YOUR_NAME_HERE__
+#	%_gpgbin	/usr/bin/gpg
+#	%_topdir	%(echo $HOME)/rpm/%{name}
+#	%_sourcedir     %(echo $HOME)/rpm/%{name}/SOURCES
+#	%_specdir	%(echo $HOME)/rpm/%{name}/SPECS
+#	%_tmppath	%(echo $HOME)/rpm/%{name}/tmp
+#	%_builddir	%(echo $HOME)/rpm/%{name}/BUILD
+#	%_buildroot	%(echo $HOME)/rpm/%{name}/tmp/build-root
+#	%_rpmdir	%(echo $HOME)/rpm/%{name}/RPMS
+#	%_srcrpmdir	%(echo $HOME)/rpm/%{name}/SRPMS
+#	%_rpmfilename	%%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
+#	%packager	__YOUR_NAME_HERE__
+#	%vendor		__YOUR_ORG_OR_GROUP_OR_COMPANY_HERE__
+
+# IMPORTANT NOTE: Unless the package redhat-rpm-config is installed,
+#	 	  the calc-debuginfo rpm will not be created.
+#
+# IMPORTANT NOTE: These packages are important for general
+#		  rpm processing:
+#
+#	rpm
+#	rpm-python
+#	rpmlint
+#	rpm-build
+#	rpm-libs
+#	redhat-rpm-config
+
 # setup
 #
 SHELL= /bin/sh
@@ -39,8 +70,6 @@ RPMBUILD_TOOL= rpmbuild
 TARCH= i686
 RPMBUILD_OPTION= -ba --target=$(TARCH)
 RPM_TOOL= rpm
-MD5SUM= md5sum
-SHA1SUM= sha1sum
 SED= sed
 FIND= find
 BZIP2_PROG= bzip2
@@ -59,16 +88,16 @@ LN= ln
 # rpm-related parameters
 #
 NAME= calc
-PROJECT_NAME= $(NAME)
+PROJECT_NAME= ${NAME}
 PROJECT_VERSION=
 PROJECT_RELEASE=
-PROJECT= $(PROJECT_NAME)-$(PROJECT_VERSION)
-SPECFILE= $(PROJECT_NAME).spec
-TARBALL= $(PROJECT).${TAR}.bz2
-RPM686= $(PROJECT)-$(PROJECT_RELEASE).$(TARCH).rpm
-DRPM686= $(PROJECT_NAME)-devel-$(PROJECT_VERSION)-$(PROJECT_RELEASE).$(TARCH).rpm
-SRPM= $(PROJECT)-$(PROJECT_RELEASE).src.rpm
-RPM_TOP= /usr/local/rpm/${NAME}
+PROJECT= ${PROJECT_NAME}-${PROJECT_VERSION}
+SPECFILE= ${PROJECT_NAME}.spec
+TARBALL= ${PROJECT}.${TAR}.bz2
+RPM686= ${PROJECT}-${PROJECT_RELEASE}.${TARCH}.rpm
+DRPM686= ${PROJECT_NAME}-devel-${PROJECT_VERSION}-${PROJECT_RELEASE}.${TARCH}.rpm
+SRPM= ${PROJECT}-${PROJECT_RELEASE}.src.rpm
+RPM_TOP= ${HOME}/rpm/${NAME}
 TMPDIR= ${RPM_TOP}/tmp
 
 # Makefile debug
@@ -152,24 +181,6 @@ rpm: srcpkg calc.spec
 	    echo "SRPMS/$(SRPM) not found" 1>&2; \
 	    exit 3; \
 	fi
-	@echo
-	@echo "RPM package sizes:"
-	@echo
-	@cd $(RPM_TOP); ${LS} -1s "RPMS/$(RPM686)" "RPMS/$(DRPM686)" "SRPMS/$(SRPM)"
-	@echo
-	@echo "RPM package md5 hashes:"
-	@echo
-	-@cd $(RPM_TOP); ${MD5SUM} "RPMS/$(RPM686)" "RPMS/$(DRPM686)" "SRPMS/$(SRPM)"
-	@echo
-	@echo "RPM package sha1 hashes:"
-	@echo
-	-@cd $(RPM_TOP); ${SHA1SUM} "RPMS/$(RPM686)" "RPMS/$(DRPM686)" "SRPMS/$(SRPM)"
-	@echo
-	@echo "RPM package locations:"
-	@echo
-	@${LS} -1 "$(RPM_TOP)/RPMS/$(RPM686)" "$(RPM_TOP)/RPMS/$(DRPM686)" "$(RPM_TOP)/SRPMS/$(SRPM)"
-	@echo
-	@echo "All done! -- Jessica Noll, Age 2"
 	@echo
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
