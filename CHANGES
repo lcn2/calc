@@ -1,40 +1,4 @@
-The following are the changes from calc version 2.12.4.6 to date:
-
-    Updated RPM build process to remove use of deprecated flags.
-
-    Applied a number of fixes to calc.spec and rpm.mk file.
-    See calc.spec.in for details.  Changed rpm release to 2.1.
-
-    Set MACOSX_DEPLOYMENT_TARGET=10.8 as we upgraded all of
-    our development Mac OS X to 10.8.
-
-    Libraries are chmodded as 0644 to allow for building rpms
-    without root.
-
-    Silenced annoying warning about unused variable 'intp'
-    while compiline endian.c under some circumstances.
-
-
-The following are the changes from calc version 2.12.4.3 to 2.12.4.5:
-
-    Added gvec.cal resource script.
-
-    Added calc-symlink make rule to setup symlinks from stardard locations
-    into a tree specified by a non-empty ${T} makefile variable.  Added
-    calc-unsymlink to remove any symlinks that may have been created by
-    the calc-symlink rule.
-
-    If is OK for the calc-symlink make rule to pre-remove a symlink.
-
-    Fixed bug was uncovered in calc that caused script failures when calc
-    is called within a while loop in BASH if the while loop is fed from
-    stdin due to calc's redirection/inheritance of stdin and no option
-    to change this behavior.  Thanks gores to David C. Rankin
-    <drankinatty at gmail dot com> for the bug fix and to David Haller
-    <dnh at opensuse dot org> for helping debug this problem.
-
-
-The following are the changes from calc version 2.12.4.0 to 2.12.4.2:
+The following are the changes from calc version 2.12.4.0 to date:
 
     Fixed a documentation bug for the sgn() builtin.
 
@@ -90,12 +54,6 @@ The following are the changes from calc version 2.12.4.0 to 2.12.4.2:
 
     Changed deg.cal object name from dms to deg so that the more functional
     dms.cal can own the dms object name.
-
-    Updated 'help obj' to reflect changes to 'show objfunctions' and
-    resource file example list since 1999.
-
-    Fixed problem where CALC_BYTE_ORDER refering to CALC_BIG_ENDIAN
-    and CALC_LITTLE_ENDIAN instead of BIG_ENDIAN and LITTLE_ENDIAN.
 
 
 The following are the changes from calc version 2.12.3.0 to 2.12.3.3:
@@ -6834,9 +6792,9 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.26 $
-## @(#) $Id: CHANGES,v 30.26 2013/05/19 22:10:34 chongo Exp $
-## @(#) $Source: /usr/local/src/bin/calc/RCS/CHANGES,v $
+## @(#) $Revision: 30.19 $
+## @(#) $Id: CHANGES,v 30.19 2010/09/02 06:09:26 chongo Exp $
+## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
 ## File existed as early as:	1989

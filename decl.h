@@ -21,7 +21,7 @@
  *
  * @(#) $Revision: 30.3 $
  * @(#) $Id: decl.h,v 30.3 2008/04/15 21:17:57 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/decl.h,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/decl.h,v $
  *
  * Under source code control:	2007/02/09 05:24:25
  * File existed as early as:	2007

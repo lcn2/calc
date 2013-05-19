@@ -21,7 +21,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: codegen.c,v 30.2 2007/07/05 13:30:38 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/codegen.c,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
  * File existed as early as:	before 1990

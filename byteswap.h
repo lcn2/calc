@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: byteswap.h,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/byteswap.h,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/byteswap.h,v $
  *
  * Under source code control:	1995/10/11 04:44:01
  * File existed as early as:	1995

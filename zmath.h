@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: zmath.h,v 30.2 2007/07/05 13:30:38 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/zmath.h,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/zmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:48
  * File existed as early as:	1993

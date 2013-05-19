@@ -21,7 +21,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: block.h,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/block.h,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/block.h,v $
  *
  * Under source code control:	1997/02/21 05:03:39
  * File existed as early as:	1997

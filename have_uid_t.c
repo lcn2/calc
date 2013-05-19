@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: have_uid_t.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/have_uid_t.c,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/have_uid_t.c,v $
  *
  * Under source code control:	1995/05/02 03:03:24
  * File existed as early as:	1995

@@ -24,7 +24,7 @@ p
 ##
 ## @(#) $Revision: 30.1 $
 ## @(#) $Id: funclist.sed,v 30.1 2007/03/16 11:10:42 chongo Exp $
-## @(#) $Source: /usr/local/src/bin/calc/help/RCS/funclist.sed,v $
+## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/funclist.sed,v $
 ##
 ## Under source code control:	1995/07/10 01:33:06
 ## File existed as early as:	1995

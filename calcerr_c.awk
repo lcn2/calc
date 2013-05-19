@@ -20,7 +20,7 @@
 #
 # @(#) $Revision: 30.1 $
 # @(#) $Id: calcerr_c.awk,v 30.1 2007/03/16 11:09:46 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/calc/RCS/calcerr_c.awk,v $
+# @(#) $Source: /usr/local/src/cmd/calc/RCS/calcerr_c.awk,v $
 #
 # Under source code control:	1996/05/24 03:15:35
 # File existed as early as:	1996

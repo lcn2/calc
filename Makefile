@@ -39,9 +39,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.51 $$
-# @(#) $Id: Makefile.ship,v 30.51 2013/05/05 13:52:39 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/calc/RCS/Makefile.ship,v $
+MAKEFILE_REV= $$Revision: 30.44 $$
+# @(#) $Id: Makefile.ship,v 30.44 2010/09/02 06:07:07 chongo Exp $
+# @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
 # File existed as early as:	before 1990
@@ -132,8 +132,8 @@ HAVE_VSPRINTF=
 # Select CALC_BYTE_ORDER= -DCALC_LITTLE_ENDIAN for DJGPP.
 #
 CALC_BYTE_ORDER=
-#CALC_BYTE_ORDER= -DBIG_ENDIAN
-#CALC_BYTE_ORDER= -DLITTLE_ENDIAN
+#CALC_BYTE_ORDER= -DCALC_BIG_ENDIAN
+#CALC_BYTE_ORDER= -DCALC_LITTLE_ENDIAN
 
 # Determine the number of bits in a long
 #
@@ -997,7 +997,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.8
+VERSION= 2.12.4.1
 VERS= 2.12.4
 VER= 2.12
 VE= 2
@@ -1212,7 +1212,7 @@ LDCONFIG:=
 # DARWIN_ARCH= -arch i386		# Intel binary
 # DARWIN_ARCH= -arch ppc		# PPC binary
 DARWIN_ARCH=				# native binary
-MACOSX_DEPLOYMENT_TARGET=10.8
+MACOSX_DEPLOYMENT_TARGET=10.4
 #
 endif
 
@@ -4116,14 +4116,9 @@ gdb:
 #
 ###
 
-rpm: clobber rpm-preclean rpm.mk calc.spec.in
+rpm: clobber rpm.mk calc.spec.in
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
-	${MAKE} -f rpm.mk all V=${V} RPM_TOP="${RPM_TOP}"
-	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
-
-rpm-preclean:
-	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
-	${MAKE} -f rpm.mk $@ V=${V} RPM_TOP="${RPM_TOP}"
+	${MAKE} -f rpm.mk V=${V}
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # rpm static rules
@@ -4481,9 +4476,9 @@ endif
 	        else \
 		${RM} -f ${T}${LIBDIR}/libcalc.a.new; \
 		${CP} -f libcalc.a ${T}${LIBDIR}/libcalc.a.new; \
-		${CHMOD} 0644 ${T}${LIBDIR}/libcalc.a.new; \
 		${MV} -f ${T}${LIBDIR}/libcalc.a.new ${T}${LIBDIR}/libcalc.a; \
 		${RANLIB} ${T}${LIBDIR}/libcalc.a; \
+		${CHMOD} 0444 ${T}${LIBDIR}/libcalc.a; \
 		echo "installed ${T}${LIBDIR}/libcalc.a"; \
 	   fi; \
 	fi
@@ -4499,7 +4494,6 @@ endif
 	    ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
 	    ${CP} -f libcalc${LIB_EXT_VERSION} \
 	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
-	    ${CHMOD} 0644 ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
 	    ${MV} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new \
 	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
@@ -4518,7 +4512,6 @@ endif
 	    ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
 	    ${CP} -f custom/libcustcalc${LIB_EXT_VERSION} \
 	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
-	    ${CHMOD} 0644 ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
 	    ${MV} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new \
 	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}; \
 	    echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}"; \
@@ -4817,81 +4810,6 @@ strip:
 	    fi; \
 	done
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
-
-# calc-symlink - setup symlinks from stardard locations into the ${T} tree
-#
-calc-symlink:
-	${Q}if [ -z "${T}" ]; then \
-	    echo "cannot use $@ make rule when T make var is empty" 1>&2; \
-	    echo "aborting" 1>&2; \
-	    exit 1; \
-	fi
-	-${Q} for i in	${BINDIR}/calc${EXT} \
-			${BINDIR}/calc-static${EXT} \
-			${SCRIPTDIR} \
-			${LIBDIR}/libcalc${LIB_EXT_VERSION} \
-			${LIBDIR}/libcustcalc${LIB_EXT_VERSION} \
-			${MANDIR}/calc.${MANEXT} \
-			${CALC_SHAREDIR} \
-			${CALC_INCDIR} \
-			; do \
-	    if [ -e "${T}$$i" ]; then \
-		    if [ ! -L "$$i" -a "${T}$$i" -ef "$$i" ]; then \
-		    	echo "ERROR: ${T}$$i is the same as $$i" 1>&2; \
-		    else \
-			if [ -e "$$i" ]; then \
-			    echo ${RM} -f "$$i"; \
-			    ${RM} -f "$$i"; \
-			fi; \
-			echo ${LN} -s "${T}$$i" "$$i"; \
-			${LN} -s "${T}$$i" "$$i"; \
-	    	    fi; \
-	    else \
-	        echo "Warning: not found: ${T}$$i" 1>&2; \
-	    fi; \
-	done
-	-${Q} if [ -n "${CATDIR}" ]; then \
-	    if [ -e "${T}${CATDIR}/calc.${CATEXT}" ]; then \
-		if [ ! -L "${CATDIR}/calc.${CATEXT}" -a "${T}${CATDIR}/calc.${CATEXT}" -ef "${CATDIR}/calc.${CATEXT}" ]; then \
-		    	echo "ERROR: ${T}${CATDIR}/calc.${CATEXT} is the same as ${CATDIR}/calc.${CATEXT}" 1>&2; \
-		else \
-		    if [ -e "${CATDIR}/calc.${CATEXT}" ]; then \
-			echo ${RM} -f "${CATDIR}/calc.${CATEXT}"; \
-			${RM} -f "${CATDIR}/calc.${CATEXT}"; \
-		    fi; \
-		    echo ${LN} -s "${T}${CATDIR}/calc.${CATEXT}" "${CATDIR}/calc.${CATEXT}"; \
-		    ${LN} -s "${T}${CATDIR}/calc.${CATEXT}" "${CATDIR}/calc.${CATEXT}"; \
-		fi; \
-	    fi; \
-	fi
-
-# remove any symlinks that may have been created by calc-symlink
-#
-calc-unsymlink:
-	-${Q} for i in	${BINDIR}/calc${EXT} \
-			${BINDIR}/calc-static${EXT} \
-			${SCRIPTDIR} \
-			${LIBDIR}/libcalc${LIB_EXT_VERSION} \
-			${LIBDIR}/libcustcalc${LIB_EXT_VERSION} \
-			${MANDIR}/calc.${MANEXT} \
-			${CALC_SHAREDIR} \
-			${CALC_INCDIR} \
-			; do \
-	    if [ -L "$$i" ]; then \
-		echo ${RM} -f "$$i"; \
-		${RM} -f "$$i"; \
-	    else \
-	        echo "Warning: ignoring non-symlink: $$i" 1>&2; \
-	    fi; \
-	done
-	-${Q} if [ -n "${CATDIR}" ]; then \
-	    if [ -L "${CATDIR}/calc.${CATEXT}" ]; then \
-		echo ${RM} -f "${CATDIR}/calc.${CATEXT}"; \
-		${RM} -f "${CATDIR}/calc.${CATEXT}"; \
-	    else \
-	        echo "Warning: ignoring non-symlink: ${CATDIR}/calc.${CATEXT}" 1>&2; \
-	    fi; \
-	fi
 
 ###
 #

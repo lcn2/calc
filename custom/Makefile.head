@@ -18,9 +18,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.26 $
-# @(#) $Id: Makefile.head,v 30.26 2013/05/05 13:52:40 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/calc/custom/RCS/Makefile.head,v $
+# @(#) $Revision: 30.21 $
+# @(#) $Id: Makefile.head,v 30.21 2008/11/05 17:38:01 chongo Exp $
+# @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile.head,v $
 #
 # Under source code control:	1997/03/09 02:28:54
 # File existed as early as:	1997
@@ -366,7 +366,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.8
+VERSION= 2.12.4.1
 VERS= 2.12.4
 VER= 2.12
 VE= 2

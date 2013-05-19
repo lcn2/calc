@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: calc.h,v 30.2 2007/07/10 17:44:52 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/calc.h,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
  * File existed as early as:	before 1990

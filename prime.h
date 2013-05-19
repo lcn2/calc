@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: prime.h,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/prime.h,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/prime.h,v $
  *
  * Under source code control:	1994/06/04 03:26:15
  * File existed as early as:	1994

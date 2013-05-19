@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: input.c,v 30.2 2008/04/15 21:17:57 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/input.c,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/input.c,v $
  *
  * Under source code control:	1990/02/15 01:48:16
  * File existed as early as:	before 1990

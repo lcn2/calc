@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: align32.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/align32.c,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/align32.c,v $
  *
  * Under source code control:	1995/11/23 05:18:06
  * File existed as early as:	1995

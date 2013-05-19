@@ -19,9 +19,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.17 $
- * @(#) $Id: version.c,v 30.17 2013/05/19 22:10:34 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/version.c,v $
+ * @(#) $Revision: 30.11 $
+ * @(#) $Id: version.c,v 30.11 2010/09/02 06:09:26 chongo Exp $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
  * File existed as early as:	1990
@@ -49,7 +49,7 @@ static char *program;
 #define MAJOR_VER	2	/* major library version */
 #define MINOR_VER	12	/* minor library version */
 #define MAJOR_PATCH	4	/* major software level under library version */
-#define MINOR_PATCH	8	/* minor software level or 0 if not patched */
+#define MINOR_PATCH	1	/* minor software level or 0 if not patched */
 
 
 /*

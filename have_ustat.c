@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: have_ustat.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/have_ustat.c,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/have_ustat.c,v $
  *
  * Under source code control:	1999/10/20 22:51:13
  * File existed as early as:	1999

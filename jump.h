@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: jump.h,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/jump.h,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/jump.h,v $
  *
  * Under source code control:	1994/06/29 04:03:55
  * File existed as early as:	1994

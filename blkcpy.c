@@ -21,7 +21,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: blkcpy.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/blkcpy.c,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/blkcpy.c,v $
  *
  * Under source code control:	1997/04/18 20:41:26
  * File existed as early as:	1997

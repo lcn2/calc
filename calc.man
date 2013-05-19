@@ -17,7 +17,7 @@
 .\"
 .\" @(#) $Revision: 30.3 $
 .\" @(#) $Id: calc.man,v 30.3 2007/09/08 02:53:09 chongo Exp $
-.\" @(#) $Source: /usr/local/src/bin/calc/RCS/calc.man,v $
+.\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
 .\" File existed as early as:	    1991

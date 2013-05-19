@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: c_pzasusb8.c,v 30.1 2007/03/16 11:10:04 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/custom/RCS/c_pzasusb8.c,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_pzasusb8.c,v $
  *
  * Under source code control:	1999/10/06 03:12:25
  * File existed as early as:	1999

@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: have_posscl.c,v 30.2 2008/04/15 21:17:57 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/have_posscl.c,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/have_posscl.c,v $
  *
  * Under source code control:	1996/07/13 12:57:22
  * File existed as early as:	1996

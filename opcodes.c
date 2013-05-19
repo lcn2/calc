@@ -21,7 +21,7 @@
  *
  * @(#) $Revision: 30.4 $
  * @(#) $Id: opcodes.c,v 30.4 2008/05/10 13:51:32 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/opcodes.c,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/opcodes.c,v $
  *
  * Under source code control:	1990/02/15 01:48:19
  * File existed as early as:	before 1990

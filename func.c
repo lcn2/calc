@@ -21,7 +21,7 @@
  *
  * @(#) $Revision: 30.3 $
  * @(#) $Id: func.c,v 30.3 2008/04/15 21:17:57 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/func.c,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
  * File existed as early as:	before 1990

@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: custtbl.c,v 30.2 2007/07/05 19:35:20 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/custom/RCS/custtbl.c,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/custtbl.c,v $
  *
  * Under source code control:	1997/03/09 02:28:54
  * File existed as early as:	1997

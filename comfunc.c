@@ -21,7 +21,7 @@
  *
  * @(#) $Revision: 30.3 $
  * @(#) $Id: comfunc.c,v 30.3 2008/10/24 07:09:41 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/comfunc.c,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/comfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
  * File existed as early as:	before 1990

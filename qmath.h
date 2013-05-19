@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: qmath.h,v 30.2 2007/07/05 19:35:20 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/qmath.h,v $
+ * @(#) $Source: /usr/local/src/cmd/calc/RCS/qmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
  * File existed as early as:	1993
