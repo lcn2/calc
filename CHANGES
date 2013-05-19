@@ -11,6 +11,9 @@ The following are the changes from calc version 2.12.4.6 to date:
     Libraries are chmodded as 0644 to allow for building rpms
     without root.
 
+    Silenced annoying warning about unused variable 'intp'
+    while compiline endian.c under some circumstances.
+
 
 The following are the changes from calc version 2.12.4.3 to 2.12.4.5:
 
@@ -6831,8 +6834,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.25 $
-## @(#) $Id: CHANGES,v 30.25 2013/05/05 10:15:30 chongo Exp $
+## @(#) $Revision: 30.26 $
+## @(#) $Id: CHANGES,v 30.26 2013/05/19 22:10:34 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

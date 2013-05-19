@@ -1,7 +1,7 @@
 /*
  * endian - determine the byte order of a long on your machine
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2013  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: endian.c,v 30.3 2010/09/02 09:47:46 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: endian.c,v 30.4 2013/05/05 13:57:08 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/endian.c,v $
  *
  * Under source code control:	1993/11/15 04:32:58
@@ -54,7 +54,9 @@ int
 main(void)
 {
 	/* pointers into the byte order array */
+#if defined(DEBUG) || (!defined(BIG_ENDIAN) && !defined(BIG_ENDIAN))
 	int *intp = (int *)byte;
+#endif
 #if defined(DEBUG)
 	short *shortp = (short *)byte;
 	long *longp = (long *)byte;
