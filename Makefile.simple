@@ -39,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.44 $$
-# @(#) $Id: Makefile.ship,v 30.44 2010/09/02 06:07:07 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.41 $$
+# @(#) $Id: Makefile.ship,v 30.41 2008/10/24 09:20:09 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -960,12 +960,11 @@ MKDIR_ARG= -p
 
 # Some out of date operating systems require / want an executable to
 # end with a certain file extension.  Some compile systems such as
-# windoz build calc as calc.exe.  The EXT variable is used to denote
-# the extension required by such.  Note that Cygwin requires EXT to be
-# the same as Linux/Un*x/GNU, even though it runs under windoz.
+# Cygwin build calc as calc.exe.  The EXT variable is used to denote
+# the extension required by such.
 #
-# EXT=				# normal Un*x / Linux / GNU/Linux / Cygwin
-# EXT=.exe			# windoz
+# EXT=				# normal Un*x / Linux / GNU/Linux systems
+# EXT=.exe			# windoz / Cygwin
 #
 # If in doubt, use EXT=
 #
@@ -974,7 +973,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.1
+VERSION= 2.12.4.0
 VERS= 2.12.4
 VER= 2.12
 VE= 2

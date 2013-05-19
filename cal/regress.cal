@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.6 $
- * @(#) $Id: regress.cal,v 30.6 2010/09/02 06:09:06 chongo Exp $
+ * @(#) $Revision: 30.5 $
+ * @(#) $Id: regress.cal,v 30.5 2008/10/24 07:09:41 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -8012,11 +8012,7 @@ print	'9838: skipping read -once hello.cal because it is an infinite loop';
 print	'9839: skipping read -once xx_print.cal because it is a printing demo';
 read -once sumtimes;
 print	'9840: read -once sumtimes';
-read -once dms;
-print	'9841: read -once dms';
-read -once hms;
-print	'9842: read -once hms';
-print	'9843: Ending read of selected calc resource files';
+print	'9841: Ending read of selected calc resource files';
 
 
 /*

@@ -11,63 +11,6 @@ NOTE: The main developers do not have access to a Windoz based platform.
       Windoz build environment.
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-=-= compiling with Cygwin =-=
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-An effort is being made to allow windows users to compile calc using the
-Cygwin project (http://sources.redhat.com/cygwin/) with the GCC compiler
-and Un*x tools for Windows.
-
-The major porting work for Cygwin was performed by Thomas Jones-Low
-(tjoneslo at softstart dot com).
-
-In March 2009, Michael Penk (mpenk at wuska dot com) reported success in
-installs under Cygwin:
-
-    On my fairly complete Cygwin installs, everything compiles,
-    checks, and installs correctly.  My Cygwin is configured
-    in a very standard way (out of the box, using all of Cygwin's
-    defaults).  The install worked on 5 different machines with
-    Cygwin on them: one XP home, one XP professional, and three
-    Vista professionals.
-
-Using the calc Makefile, he did the following:
-
-    make all target=Cygwin
-    make check
-    make install
-
-He also reports:
-
-    Of course, one should be logged in as an Administrator when
-    one builds and installs calc.
-
-He was compiling calc 2.12.4.0 with Cygwin version 1.5.25-15.
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-=-= If all else fails, for Cygwin =-=
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-Much earlier (2001?) Thomas Jones-Low (tjoneslo at softstart dot com)
-recommended that you generate by hand all of the header files that
-by the Makefile.  This has been done for you via the makefile rule:
-
-	make win32_hsrc
-
-which uses the Makefile variables in win32.mkdef to form these header
-files under win32 directory.
-
-You will find generated versions of these files located in the win32
-sub-directory.  These files may be appropriate for your Cygwin building
-needs.
-
-In particular:
-
-	Just copy the win32/*.[ch] files up into the top level calc
-	source directory, edit them (if needed) and build using the
-	Cygwin GCC compiler and Cygwin build environment.
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-= compiling under DJGPP =-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
@@ -125,8 +68,52 @@ Look for Makefile comments of the form:
 Follow those recommendations.  In cases where they conflict with
 the above Makefile list, follow the recommendation in the Makefile.
 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-= compiling with Cygwin =-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-## Copyright (C) 2002-2009  Landon Curt Noll and Thomas Jones-Low
+An effort is being made to allow windows users to compile calc using the
+Cygwin project (http://sources.redhat.com/cygwin/) with the GCC compiler
+and Un*x tools for Windows.
+
+The major porting work was performed by Thomas Jones-Low
+(tjoneslo at softstart dot com).  He said:
+
+    I had previous stated to this group that I have successfully managed
+    to port a version of Calc to Windows, and promised some point to
+    post what was required, so here it is.
+
+    One obvious manner of doing this port is to get the latest version
+    of the Cygwin project (http://sources.redhat.com/cygwin/) with the
+    GCC compiler and Un*x tools for Windows and recompile.
+
+    I built my working version using Calc ... I am using Visual C++
+    version 7.0, which is an older version of the Microsoft development
+    tools. The make file provided with Calc is not compatible with
+    NMAKE, so I used the Visual Studio tools to generate another one
+    (not included). Calc is built in two parts, calc.dll, which is the
+    library, and calc.exe which is the command line interface.
+
+He recommended that you generate by hand all of the header files that
+by the Makefile.  This has been done for you via the makefile rule:
+
+	make win32_hsrc
+
+which uses the Makefile variables in win32.mkdef to form these header
+files under win32 directory.
+
+You will find generated versions of these files located in the win32
+sub-directory.  These files may be appropriate for your Cygwin building
+needs.
+
+In particular:
+
+	Just copy the win32/*.[ch] files up into the top level calc
+	source directory, edit them (if needed) and build using the
+	Cygwin GCC compiler and Cygwin build environment.
+
+
+## Copyright (C) 2002-2007  Landon Curt Noll and Thomas Jones-Low
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -142,8 +129,8 @@ the above Makefile list, follow the recommendation in the Makefile.
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.2 $
-## @(#) $Id: README.WINDOWS,v 30.2 2009/03/14 02:29:31 chongo Exp $
+## @(#) $Revision: 30.1 $
+## @(#) $Id: README.WINDOWS,v 30.1 2007/03/16 11:09:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/RCS/README.WINDOWS,v $
 ##
 ## Under source code control:	2001/02/25 14:00:05

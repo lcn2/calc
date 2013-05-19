@@ -226,37 +226,14 @@ chrem.cal
 
 deg.cal
 
-    deg(deg, min, sec)
-    deg_add(a, b)
-    deg_neg(a)
-    deg_sub(a, b)
-    deg_mul(a, b)
-    deg_print(a)
-
-    Calculate in degrees, minutes, and seconds.  For a more functional
-    version see dms.cal.
-
-
-dms.cal
-
     dms(deg, min, sec)
     dms_add(a, b)
     dms_neg(a)
     dms_sub(a, b)
     dms_mul(a, b)
     dms_print(a)
-    dms_abs(a)
-    dms_norm(a)
-    dms_test(a)
-    dms_int(a)
-    dms_frac(a)
-    dms_rel(a,b)
-    dms_cmp(a,b)
-    dms_inc(a)
-    dms_dec(a)
 
-    Calculate in degrees, minutes, and seconds.  Unlike deg.cal, increments
-    are on the arc second level.  See also hms.cal.
+    Calculate in degrees, minutes, and seconds.
 
 
 dotest.cal
@@ -306,27 +283,6 @@ hello.cal
 	http://www.latech.edu/~acm/helloworld/calc.html
 
      NOTE: This resource produces a lot of output.  :-)
-
-
-hms.cal
-
-    hms(hour, min, sec)
-    hms_add(a, b)
-    hms_neg(a)
-    hms_sub(a, b)
-    hms_mul(a, b)
-    hms_print(a)
-    hms_abs(a)
-    hms_norm(a)
-    hms_test(a)
-    hms_int(a)
-    hms_frac(a)
-    hms_rel(a,b)
-    hms_cmp(a,b)
-    hms_inc(a)
-    hms_dec(a)
-
-    Calculate in hours, minutes, and seconds.  See also dmscal.
 
 
 intfile.cal
@@ -1058,8 +1014,8 @@ xx_print.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.2 $
-## @(#) $Id: README,v 30.2 2010/09/02 06:01:39 chongo Exp $
+## @(#) $Revision: 30.1 $
+## @(#) $Id: README,v 30.1 2007/03/16 11:09:54 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/README,v $
 ##
 ## Under source code control:	1990/02/15 01:50:32
