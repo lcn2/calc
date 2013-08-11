@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: blkcpy.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: blkcpy.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/blkcpy.c,v $
  *
  * Under source code control:	1997/04/18 20:41:26
@@ -374,7 +374,8 @@ copyblk2mat(BLOCK *blk, long ssi, long num, MATRIX *dmat, long dsi)
  * copymat2blk - copy matrix to block
  */
 int
-copymat2blk(MATRIX *smat, long ssi, long num, BLOCK *dblk, long dsi, BOOL noreloc)
+copymat2blk(MATRIX *smat, long ssi, long num, BLOCK *dblk, long dsi,
+	    BOOL noreloc)
 {
 	long i;
 	long newlen;
@@ -720,7 +721,8 @@ copystr2file(STRING *str, long ssi, long num, FILEID id, long dsi)
  * copyblk2blk - copy block to block
  */
 int
-copyblk2blk(BLOCK *sblk, long ssi, long num, BLOCK *dblk, long dsi, BOOL noreloc)
+copyblk2blk(BLOCK *sblk, long ssi, long num, BLOCK *dblk, long dsi,
+	    BOOL noreloc)
 {
 	long	newlen;
 	long	newsize;
@@ -762,7 +764,8 @@ copyblk2blk(BLOCK *sblk, long ssi, long num, BLOCK *dblk, long dsi, BOOL noreloc
  * copystr2blk - copy string to block
  */
 int
-copystr2blk(STRING *str, long ssi, long num, BLOCK *dblk, long dsi, BOOL noreloc)
+copystr2blk(STRING *str, long ssi, long num, BLOCK *dblk, long dsi,
+	    BOOL noreloc)
 {
 	long	len;
 	long	newlen;
@@ -982,7 +985,8 @@ memmove(void *s1, CONST void *s2, MEMMOVE_SIZE_T n)
  * copynum2blk - copy number numerator to block
  */
 int
-copynum2blk(NUMBER *snum, long ssi, long num, BLOCK *dblk, long dsi, BOOL noreloc)
+copynum2blk(NUMBER *snum, long ssi, long num, BLOCK *dblk, long dsi,
+	    BOOL noreloc)
 {
 	size_t	newlen;
 	size_t	newsize;
@@ -1033,7 +1037,8 @@ copynum2blk(NUMBER *snum, long ssi, long num, BLOCK *dblk, long dsi, BOOL norelo
  * copyblk2num - copy block to number
  */
 int
-copyblk2num(BLOCK *sblk, long ssi, long num, NUMBER *dnum, long dsi, NUMBER **res)
+copyblk2num(BLOCK *sblk, long ssi, long num, NUMBER *dnum, long dsi,
+	    NUMBER **res)
 {
 	size_t	newlen;
 	NUMBER *ret;		/* cloned and modified numerator */

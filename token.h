@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: token.h,v 30.2 2007/07/05 13:30:38 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: token.h,v 30.3 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/token.h,v $
  *
  * Under source code control:	1990/02/15 01:48:37
@@ -152,18 +152,22 @@
 #define EXPR_CONST	0x0002		/* result is constant */
 #define EXPR_ASSIGN	0x0004		/* result is an assignment */
 
-#define isrvalue(n)	((n) & EXPR_RVALUE)	/* TRUE if expression is rvalue */
-#define islvalue(n)	(((n) & EXPR_RVALUE) == 0)	/* TRUE if expr is lvalue */
-#define isconst(n)	((n) & EXPR_CONST)	/* TRUE if expr is constant */
-#define isassign(n)	((n) & EXPR_ASSIGN)	/* TRUE if expr is an assignment */
+/* TRUE if expression is rvalue */
+#define isrvalue(n)	((n) & EXPR_RVALUE)
+/* TRUE if expr is lvalue */
+#define islvalue(n)	(((n) & EXPR_RVALUE) == 0)
+/* TRUE if expr is constant */
+#define isconst(n)	((n) & EXPR_CONST)
+/* TRUE if expr is an assignment */
+#define isassign(n)	((n) & EXPR_ASSIGN)
 
 
 /*
  * Flags for modes for tokenizing.
  */
-#define TM_DEFAULT	0x0		/* normal mode */
-#define TM_NEWLINES	0x1		/* treat any newline as a token */
-#define TM_ALLSYMS	0x2		/* treat almost everything as a symbol */
+#define TM_DEFAULT	0x0	/* normal mode */
+#define TM_NEWLINES	0x1	/* treat any newline as a token */
+#define TM_ALLSYMS	0x2	/* treat almost everything as a symbol */
 
 
 EXTERN long errorcount;		/* number of errors found */

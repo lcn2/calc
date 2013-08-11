@@ -1,0 +1,723 @@
+/*
+ * factorial2 - implementation of different factorial related functions
+ *
+ * Copyright (C) 2013 Christoph Zurnieden
+ *
+ * factorial2 is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * factorial2 is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with factorial2 under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: factorial2.cal,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/factorial2.cal,v $
+ *
+ * Under source code control:	2013/08/11 01:31:28
+ * File existed as early as:	2013
+ */
+
+
+/*
+ * hide internal function from resource debugging
+ */
+static resource_debug_level;
+resource_debug_level = config("resource_debug", 0);
+
+
+/*
+  get dependencies
+*/
+read -once factorial toomcook specialfunctions;
+
+
+/*
+  Factorize a factorial and put the result in a 2-column matrix with pi(n) rows
+  mat[ primes , exponent ]
+  Result can be restricted to start at a prime different from 2 with the second
+  argument "start". That arguments gets taken at face value if it prime and
+  smaller than n, otherwise the next larger prime is taken if that prime is
+  smaller than n.
+*/
+
+define __CZ__factor_factorial(n,start){
+  local prime prime_list k pix stop;
+
+
+  if(!isint(n)) return
+    newerror("__CZ__factor_factorial(n,start): n is not integer");
+  if(n <  0)    return newerror("__CZ__factor_factorial(n,start): n < 0");
+  if(n == 1)    return newerror("__CZ__factor_factorial(n,start): n == 1");
+
+  if(start){
+    if(!isint(start) && start < 0 && start > n)
+      return newerror("__CZ__factor_factorial(n,start): value of "
+      		      "parameter 'start' out of range");
+    if(start == n && isprime(n)){
+      prime_list = mat[1 , 2];
+      prime_list[0,0] = n;
+      prime_list[0,1] = 1;
+    }
+    else if(!isprime(start) && nextprime(start) >n)
+      return newerror("__CZ__factor_factorial(n,start): value of parameter "
+      		      "'start' out of range");
+    else{
+      if(!isprime(start))  prime = nextprime(start);
+      else prime = start;
+    }
+  }
+  else
+    prime = 2;
+
+  pix   = pix(n);
+  if(start){
+    pix -= pix(prime) -1;
+  }
+  prime_list = mat[pix , 2];
+
+  k = 0;
+
+  do {
+    prime_list[k  ,0] = prime;
+    prime_list[k++,1] = __CZ__prime_divisors(n,prime);
+    prime          = nextprime(prime);
+  }while(prime <= n);
+
+  return prime_list;
+}
+
+/*
+
+  subtracts exponents of n_1! from exponents of n_2! with n_1<=n_2
+
+  Does not check for size or consecutiveness of the primes or a carry
+*/
+
+define __CZ__subtract_factored_factorials(matrix_2n,matrix_n){
+  local k ret len1,len2,tmp count p e;
+  len1 = size(matrix_n)/2;
+  len2 = size(matrix_2n)/2;
+  if(len2<len1){
+
+    swap(len1,len2);
+    tmp = matrix_n;
+    matrix_n = matrix_2n;
+    matrix_2n = tmp;
+  }
+  tmp = mat[len1,2];
+  k   = 0;
+
+  for(;k<len1;k++){
+     p = matrix_2n[k,0];
+     e = matrix_2n[k,1] - matrix_n[k,1];
+     if(e!=0){
+       tmp[count  ,0] = p;
+       tmp[count++,1] = e;
+     }
+  }
+  ret = mat[count + (len2-len1),2];
+  for(k=0;k<count;k++){
+     ret[k,0] = tmp[k,0];
+     ret[k,1] = tmp[k,1];
+  }
+
+  free(tmp);
+  for(k=len1;k<len2;k++){
+     ret[count,0] = matrix_2n[k,0];
+     ret[count++,1] = matrix_2n[k,1];
+  }
+  return ret;
+}
+
+/*
+
+  adds exponents of n_1! to exponents of n_2! with n_1<=n_2
+
+  Does not check for size or consecutiveness of the primes or a carry
+*/
+
+define __CZ__add_factored_factorials(matrix_2n,matrix_n){
+  local k ret len1,len2,tmp;
+  len1 = size(matrix_n)/2;
+  len2 = size(matrix_2n)/2;
+  if(len2<len1){
+    swap(len1,len2);
+    tmp = matrix_n;
+    matrix_n = matrix_2n;
+    matrix_2n = tmp;
+  }
+  ret = mat[len2,2];
+  k   = 0;
+  for(;k<len1;k++){
+     ret[k,0] = matrix_2n[k,0];
+     ret[k,1] = matrix_2n[k,1] + matrix_n[k,1];
+  }
+  for(;k<len2;k++){
+     ret[k,0] = matrix_2n[k,0];
+     ret[k,1] = matrix_2n[k,1];
+  }
+  return ret;
+}
+
+/*
+   Does not check if all exponents are positive
+
+
+                   timings
+                   this		  comb	    comb-this     rel. k/n
+;  benchmark_binomial(10,13)
+n=2^13 k=2^10 	 0.064004 	 0.016001	+ 	0.76923076923076923077
+n=2^13 k=2^11 	 0.064004 	 0.048003	+ 	0.84615384615384615385
+n=2^13 k=2^12 	 0.068004 	 0.124008	- 	0.92307692307692307692
+;  benchmark_binomial(10,15)
+n=2^15 k=2^10 	 0.216014 	 0.024001	+ 	0.66666666666666666667
+n=2^15 k=2^11 	 0.220014 	 0.064004	+ 	0.73333333333333333333
+n=2^15 k=2^12 	 0.228014 	 0.212014	+ 	0.8
+n=2^15 k=2^13 	 0.216013 	 0.664042	- 	0.86666666666666666667
+n=2^15 k=2^14 	 0.240015 	 1.868117	- 	0.93333333333333333333
+;  benchmark_binomial(11,15)
+n=2^15 k=2^11 	 0.216014 	 0.068004	+ 	0.73333333333333333333
+n=2^15 k=2^12 	 0.236015 	 0.212013	+ 	0.8
+n=2^15 k=2^13 	 0.216013 	 0.656041	- 	0.86666666666666666667
+n=2^15 k=2^14 	 0.244016 	 1.872117	- 	0.93333333333333333333
+;  benchmark_binomial(11,18)
+n=2^18 k=2^11 	 1.652103 	 0.100006	+ 	0.61111111111111111111
+n=2^18 k=2^12 	 1.608101 	 0.336021	+ 	0.66666666666666666667
+n=2^18 k=2^13 	 1.700106 	 1.140071	+ 	0.72222222222222222222
+n=2^18 k=2^14 	 1.756109 	 3.924245	- 	0.77777777777777777778
+n=2^18 k=2^15 	 2.036127 	 13.156822	- 	0.83333333333333333333
+n=2^18 k=2^16 	 2.172135 	 41.974624	- 	0.88888888888888888889
+n=2^18 k=2^17 	 2.528158 	 121.523594	- 	0.94444444444444444444
+;  benchmark_binomial(15,25)
+n=2^25 k=2^15 	 303.790985 	 38.266392	+ 	0.6
+;  benchmark_binomial(17,25)
+n=2^25 k=2^17 	 319.127944 	 529.025062	- 	0.68
+*/
+
+define benchmark_binomial(s,limit){
+  local ret k A B T1 T2 start end N K;
+    N = 2^(limit);
+  for(k=s;k<limit;k++){
+    K = 2^k;
+   start=usertime();A=binomial(N,K);end=usertime();
+   T1 = end-start;
+   start=usertime();B=comb(N,K);end=usertime();
+   T2 = end-start;
+   print "n=2^"limit,"k=2^"k,"	",T1,"	",T2,T1<T2?"-":"+","	"k/limit;
+   if(A!=B){
+     print "false";
+    break;
+   }
+  }
+}
+
+define __CZ__multiply_factored_factorial(matrix,stop){
+  local prime result shift prime_list k k1 k2 expo_list pix count start;
+  local hb flag;
+
+  result = 1;
+  shift  = 0;
+
+
+  if(!ismat(matrix))
+   return newerror("__CZ__multiply_factored_factorial(matrix): "
+   		   "argument matrix not a matrix ");
+  if(!matrix[0,0])
+    return
+      newerror("__CZ__multiply_factored_factorial(matrix): "
+      	       "matrix[0,0] is null/0");
+
+  if(!isnull(stop))
+    pix = stop;
+  else
+    pix   = size(matrix)/2-1;
+
+  if(matrix[0,0] == 2 && matrix[0,1] > 0){
+    shift = matrix[0,1];
+    if(pix-1 == 0)
+      return 2^matrix[0,1];
+  }
+
+  /*
+    This is a more general way to do the multiplication, so any optimization
+    must have been done by the caller.
+  */
+  k = 0;
+  /*
+     The size of the largest exponent in bits is calculated dynamically.
+     Can be done more elegantly and saves one run over the whole array if done
+     inside the main loop.
+   */
+  hb =0;
+  for(k=0;k<pix;k++){
+    k1=highbit(matrix[k,1]);
+    if(hb < k1)hb=k1;
+  }
+
+  k2 = pix;
+  start = 0;
+  if(shift) start++;
+
+  for(k1=hb;k1>=0;k1--){
+    /*
+       the cut-off for T-C-4 ist still too low, using T-C-3 here
+       TODO: check cutoffs
+     */
+    result = toomcook3square(result);
+
+    for(k=start; k<=k2; k++) {
+      if((matrix[k,1] & (1 << k1)) != 0) {
+        result *= matrix[k,0];
+      }
+    }
+  }
+
+  result <<= shift;
+  return result;
+}
+
+/*
+    Compute binomial coeficients n!/(k!(n-k)!)
+
+    One of the rare cases where a formula once meant to ease manual computation
+    is actually the (aymptotically) fastest way to do it (in July 2013) for
+    the extreme case binomial(2N,N) but for a high price, the memory
+    needed is pi(N)--theoretically.
+*/
+define binomial(n,k){
+  local ret factored_n factored_k factored_nk denom num quot K prime_list prime;
+  local pix diff;
+
+  if(!isint(n) || !isint(k))
+    return newerror("binomial(n,k): input is not integer");
+  if(n<0 || k<0)
+    return newerror("binomial(n,k): input is not >= 0"); ;
+  if(n<k )   return 0;
+  if(n==k)   return 1;
+  if(k==0)   return 1;
+  if(k==1)   return n;
+  if(n-k==1) return n;
+  /*
+      cut-off depends on real size of n,k and size of n/k
+      The current cut-off is to small for large n, e.g.:
+      for 2n=2^23, k=n-n/2 the quotient is q=2n/k=0.25. Empirical tests showed
+      that 2n=2^23 and k=2^16  with q=0.0078125 are still faster than the
+      builtin function.
+
+      The symmetry (n,k) = (n,n-k) is of not much advantage here. One way
+      might be to get closer to k=n/2 if k<n-k but only if the difference
+      is small and n very large.
+   */
+  if(n<2e4 && !isdefined("test8900"))  return comb(n,k);
+  if(n<2e4 && k< n-n/2 && !isdefined("test8900")) return comb(n,k);
+  /*
+    This should be done in parallel to save some memory, e.g. no temporary
+    arrays are needed, all can be done inline.
+    The theoretical memory needed is pi(k).
+    Which is still a lot.
+  */
+
+  prime = 2;
+  pix   = pix(n);
+  prime_list = mat[pix , 2];
+  K = 0;
+  do {
+    prime_list[K  ,0] = prime;
+    diff = __CZ__prime_divisors(n,prime)-
+	   ( __CZ__prime_divisors(n-k,prime)+__CZ__prime_divisors(k,prime));
+    if(diff != 0)
+      prime_list[K++,1] = diff;
+    prime          = nextprime(prime);
+  }while(prime <= k);
+
+  do {
+    prime_list[K  ,0] = prime;
+    diff = __CZ__prime_divisors(n,prime)-__CZ__prime_divisors(n-k,prime);
+    if(diff != 0)
+      prime_list[K++,1] = diff;
+    prime          = nextprime(prime);
+  }while(prime <= n-k);
+
+  do {
+    prime_list[K  ,0] = prime;
+    prime_list[K++,1] = __CZ__prime_divisors(n,prime);
+    prime          = nextprime(prime);
+  }while(prime <= n);
+  ##print K,pix(k),pix(n-k),pix(n);
+  ##factored_k  = __CZ__factor_factorial(k,1);
+  ##factored_nk = __CZ__factor_factorial(n-k,1);
+
+  ##denom = __CZ__add_factored_factorials(factored_k,factored_nk);
+    ##free(factored_k,factored_nk);
+  ##num  = __CZ__factor_factorial(n,1);
+  ##quot  = __CZ__subtract_factored_factorials( num , denom );
+    ##free(num,denom);
+
+  ret = __CZ__multiply_factored_factorial(`prime_list,K-1);
+
+  return ret;
+}
+
+/*
+    Compute large catalan numbers  C(n) = binomial(2n,n)/(n+1) with
+    cut-off: (n>5e4)
+    Needs a lot of memory.
+*/
+define bigcatalan(n){
+  if(!isint(n) )return newerror("bigcatalan(n): n is not integer");
+  if( n<0) return newerror("bigcatalan(n): n < 0");
+  if( n<5e4 && !isdefined("test8900") ) return catalan(n);
+  return binomial(2*n,n)/(n+1);
+}
+
+/*
+  df(-111) = -1/3472059605858239446587523014902616804783337112829102414124928
+  		7753332469144201839599609375
+
+ df(-3+1i) = 0.12532538977287649201-0.0502372106177184607i
+ df(2n + 1) = (2*n)!/(n!*2^n)
+*/
+define __CZ__double_factorial(n){
+  local n1 n2 diff prime pix K prime_list k;
+  prime = 3;
+  pix   = pix(2*n)+1;
+  prime_list = mat[pix , 2];
+  K = 0;
+  do {
+    prime_list[K  ,0] = prime;
+    diff = __CZ__prime_divisors(2*n,prime)-( __CZ__prime_divisors(n,prime));
+    if(diff != 0)
+      prime_list[K++,1] = diff;
+    prime          = nextprime(prime);
+  }while(prime <= n);
+  do {
+    prime_list[K  ,0] = prime;
+    prime_list[K++,1] = __CZ__prime_divisors(2*n,prime);
+    prime          = nextprime(prime);
+  }while(prime <= 2*n);
+  return __CZ__multiply_factored_factorial(prime_list,K);
+/*
+        n1=__CZ__factor_factorial(2*n,1);
+        n1[0,1] = n1[0,1]-n;
+        n2=__CZ__factor_factorial(n,1);
+        diff=__CZ__subtract_factored_factorials( n1 , n2 );
+        return __CZ__multiply_factored_factorial(diff);
+*/
+}
+
+##1, 1, 3, 15, 105, 945, 10395, 135135, 2027025, 34459425, 654729075,
+##13749310575, 316234143225, 7905853580625, 213458046676875,
+##6190283353629375, 191898783962510625, 6332659870762850625,
+##221643095476699771875, 8200794532637891559375
+
+## 1, 2, 8, 48, 384, 3840, 46080, 645120, 10321920, 185794560,
+##3715891200, 81749606400, 1961990553600, 51011754393600,
+##1428329123020800, 42849873690624000, 1371195958099968000,
+##46620662575398912000, 1678343852714360832000, 63777066403145711616000
+define doublefactorial(n){
+    local n1 n2 diff eps ret;
+    if(!isint(n) ){
+       /*
+           Probably one of the not-so-good ideas. See result of
+            http://www.wolframalpha.com/input/?i=doublefactorial%28a%2Bbi%29
+        */
+       eps=epsilon(epsilon()*1e-2);
+       ret =  2^(n/2-1/4 * cos(pi()* n)+1/4) * pi()^(1/4 *
+       	      cos(pi()* n)-1/4)* gamma(n/2+1);
+       epsilon(eps);
+       return ret;
+    }
+    if(n==2) return 2;
+    if(n==3) return 3;
+    switch(n){
+      case -1:
+      case 0 : return 1;break;
+      case 2 : return 2;break;
+      case 3 : return 3;break;
+      case 4 : return 8;break;
+      default: break;
+    }
+    if(isodd(n)){
+      /*
+        TODO: find reasonable cutoff
+        df(2n + 1) = (2*n)!/(n!*2^n)
+      */
+      if(n>0){
+         n = (n+1)//2;
+         return __CZ__double_factorial(n);
+      }
+      else{
+        if(n == -3 ) return -1;
+        n = ((-n)-1)/2;
+        return ((-1)^-n)/__CZ__double_factorial(n);
+       }
+    }
+    else{
+      /*
+         I'm undecided here. The formula for complex n is valid for the negative
+         integers, too.
+      */
+      n = n>>1;
+      if(n>0){
+        if(!isdefined("test8900"))
+          return factorial(n)<<n;
+        else
+          return n!<<n;
+      }
+      else
+        return newerror("doublefactorial(n): even(n) < 0");
+   }
+}
+
+/*
+    Algorithm 3.17,
+    Donald Kreher and Douglas Simpson,
+    Combinatorial Algorithms,
+    CRC Press, 1998, page 89.
+*/
+static __CZ__stirling1;
+static __CZ__stirling1_n = -1;
+static __CZ__stirling1_m = -1;
+
+define stirling1(n,m){
+  local i j k;
+  if(n<0)return newerror("stirling1(n,m): n <= 0");
+  if(m<0)return newerror("stirling1(n,m): m < 0");
+  if(n<m) return 0;
+  if(n==m) return 1;
+  if(m==0 || n==0) return 0;
+  /* We always use the list */
+  /*
+  if(m=1){
+    if(iseven(n)) return -factorial(n-1);
+    else return factorial(n-1);
+  }
+  if(m == n-1){
+    if(iseven(n)) return -binomial(n,2);
+    else return -binomial(n,2);
+  }
+  */
+  if(__CZ__stirling1_n >= n && __CZ__stirling1_m  >= m){
+    return __CZ__stirling1[n,m];
+  }
+  else{
+    __CZ__stirling1      = mat[n+1,m+1];
+    __CZ__stirling1[0,0] = 1;
+    for(i=1;i<=n;i++)
+      __CZ__stirling1[i,0] = 0;
+    for(i=1;i<=n;i++){
+      for(j=1;j<=m;j++){
+        if(j<=i){
+          __CZ__stirling1[i, j] =   __CZ__stirling1[i - 1, j - 1] - (i - 1)\
+                                  * __CZ__stirling1[i - 1, j];
+        }
+        else{
+         __CZ__stirling1[i, j] = 0;
+        }
+      }
+    }
+    __CZ__stirling1_n = n;
+    __CZ__stirling1_m = m;
+    return __CZ__stirling1[n,m];
+  }
+}
+
+define stirling2(n,m){
+  local k sum;
+  if(n<0)return newerror("stirling2(n,m): n < 0");
+  if(m<0)return newerror("stirling2(n,m): m < 0");
+  if(n<m) return 0;
+  if(n==0 && n!=m) return 0;
+  if(n==m) return 1;
+  if(m==0 )return 0;
+  if(m==1) return 1;
+  if(m==2) return 2^(n-1)-1;
+  /*
+    There are different methods to speed up alternating sums.
+    This one doesn't.
+   */
+  if(isdefined("test8900")){
+    for(k=0;k<=m;k++){
+      sum += (-1)^(m-k)*comb(m,k)*k^n;
+    }
+  return sum/(m!);
+  }
+  else{
+    for(k=0;k<=m;k++){
+      sum += (-1)^(m-k)*binomial(m,k)*k^n;
+    }
+  return sum/factorial(m);
+  }
+}
+
+static __CZ__stirling2;
+static __CZ__stirling2_n = -1;
+static __CZ__stirling2_m = -1;
+define stirling2caching(n,m){
+  local nm i j ;
+  if(n<0)return newerror("stirling2iter(n,m): n < 0");
+  if(m<0)return newerror("stirling2iter(n,m): m < 0");
+  /* no shortcuts here */
+
+  if(n<m) return 0;
+  if(n==0 && n!=m) return 0;
+  if(n==m) return 1;
+  if(m==0 )return 0;
+  if(m==1) return 1;
+  if(m==2) return 2^(n-1)-1;
+
+  nm = n-m;
+  if(__CZ__stirling2_n >= n && __CZ__stirling2_m >= m){
+    return __CZ__stirling2[n,m];
+  }
+  else{
+    __CZ__stirling2 = mat[n+1,m+1];
+    __CZ__stirling2[0,0] = 1;
+    for(i=1;i<=n;i++){
+      __CZ__stirling2[i,0] = 0;
+      for(j=1;j<=m;j++){
+        if(j<=i){
+          __CZ__stirling2[i, j] =   __CZ__stirling2[i -1, j -1] + (j )\
+                                  * __CZ__stirling2[i - 1, j];
+        }
+        else{
+         __CZ__stirling2[i, j] = 0;
+        }
+      }
+    }
+  }
+  __CZ__stirling2_n = (n);
+  __CZ__stirling2_m = (m);
+  return __CZ__stirling2[n,m];
+}
+
+define bell(n){
+  local sum s2list k A;
+
+  if(!isint(n)) return newerror("bell(n): n is not integer");
+  if(n < 0) return newerror("bell(n): n is not positive");
+  /* place some more shortcuts here?*/
+  if(n<=15){
+    mat A[16] = {
+                  1, 1, 2, 5, 15, 52, 203, 877, 4140, 21147, 115975, 678570,
+                  4213597, 27644437, 190899322, 1382958545
+                };
+    return A[n];
+  }
+  /* Start by generating the list of stirling numbers of the second kind */
+  s2list = stirling2caching(n,n//2);
+  if(iserror(s2list))
+    return newerror("bell(n): could not build stirling num. list");
+  sum = 0;
+  for(k=1;k<=n;k++){
+      sum += stirling2caching(n,k);
+  }
+  return sum;
+}
+
+define subfactorialrecursive(n){
+  if(n==0) return 1;
+  if(n==1) return 0;
+  if(n==2) return 1;
+  return n * subfactorialrecursive(n-1) + (-1)^n;
+}
+
+/* This is, quite amusingely, faster than the very same algorithm in
+   PARI/GP + GMP*/
+define subfactorialiterative(n){
+  local k temp1 temp2 ret;
+  if(n==0) return 1;
+  if(n==1) return 0;
+  if(n==2) return 1;
+  temp1 = 0;
+  ret   = 1;
+  for(k=3;k<=n;k++){
+    temp2 = temp1;
+    temp1 = ret;
+    ret =  (k-1) *(temp1 + temp2);
+  }
+  return ret;
+}
+
+define subfactorial(n){
+  local epsilon eps ret lnfact;
+  if(!isint(n))return  newerror("subfactorial(n): n is not integer.");
+  if(n < 0)return  newerror("subfactorial(n): n < 0");
+  return subfactorialiterative(n);
+}
+
+define risingfactorial(x,n){
+  local num denom quot ret;
+  if(n == 1) return x;
+  if(x==0) return newerror("risingfactorial(x,n): x == 0");
+  if(!isint(x) || !isint(n)){
+    return gamma(x+n)/gamma(x);
+  }
+  if(x<1)return newerror("risingfactorial(x,n): integer x and x < 1");
+  if(x+n < 1)return newerror("risingfactorial(x,n): integer x+n and x+n < 1");
+  if(x<9000&&n<9000){
+    return (x+n-1)!/(x-1)!;
+  }
+  else{
+    num   = __CZ__factor_factorial(x+n-1,1);
+    denom = __CZ__factor_factorial(x-1,1);
+    quot  = __CZ__subtract_factored_factorials( num , denom );
+      free(num,denom);
+    ret = __CZ__multiply_factored_factorial(quot);
+    return ret;
+  }
+}
+
+define fallingfactorial(x,n){
+  local num denom quot ret;
+  if(n == 0) return 1;
+
+  if(!isint(x) || !isint(n)){
+    if(x == n) return gamma(x+1);
+    return gamma(x+1)/gamma(x-n+1);
+  }
+  else{
+    if(x<0 || x-n < 0)
+     return newerror("fallingfactorial(x,n): integer x<0 or x-n < 0");
+    if(x == n) return factorial(x);
+    if(x<9000&&n<9000){
+      return (x)!/(x-n)!;
+    }
+    else{
+      num   = __CZ__factor_factorial(x,1);
+      denom = __CZ__factor_factorial(x-n,1);
+      quot  = __CZ__subtract_factored_factorials( num , denom );
+        free(num,denom);
+      ret = __CZ__multiply_factored_factorial(quot);
+      return ret;
+    }
+  }
+}
+
+
+/*
+ * restore internal function from resource debugging
+ * report important interface functions
+ */
+config("resource_debug", resource_debug_level),;
+if (config("resource_debug") & 3) {
+    print "binomial(n,k)";
+    print "bigcatalan(n)";
+    print "doublefactorial(n)";
+    print "subfactorial(n)";
+    print "stirling1(n,m)";
+    print "stirling2(n,m)";
+    print "stirling2caching(n,m)";
+    print "bell(n)";
+    print "subfactorial(n)";
+    print "risingfactorial(x,n)";
+    print "fallingfactorial(x,n)";
+}

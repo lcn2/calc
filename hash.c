@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: hash.c,v 30.2 2007/07/05 17:37:41 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: hash.c,v 30.3 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/hash.c,v $
  *
  * Under source code control:	1995/11/23 05:13:11
@@ -848,7 +848,8 @@ hash_value(int type, void *v, HASH *state)
 			value->v_obj->o_actions->oa_index), state);
 		(state->chkpt)(state);
 
-		for (i=value->v_obj->o_actions->oa_count, vp=value->v_obj->o_table;
+		for (i=value->v_obj->o_actions->oa_count,
+		     vp=value->v_obj->o_table;
 		     i-- > 0;
 		     vp++) {
 

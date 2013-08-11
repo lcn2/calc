@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: qmath.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: qmath.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/qmath.c,v $
  *
  * Under source code control:	1990/02/15 01:48:21
@@ -1260,9 +1260,9 @@ qrel(NUMBER *q1, NUMBER *q2)
 	if (qiszero(q1))
 		return -1;
 	/*
-	 * Make a quick comparison by calculating the number of words resulting as
-	 * if we multiplied through by the denominators, and then comparing the
-	 * word counts.
+	 * Make a quick comparison by calculating the number of words
+	 * resulting as if we multiplied through by the denominators,
+	 * and then comparing the word counts.
 	 */
 	sign = 1;
 	if (qisneg(q1))

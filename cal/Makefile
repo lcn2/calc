@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.5 $
-# @(#) $Id: Makefile,v 30.5 2011/05/23 22:50:18 chongo Exp $
+# @(#) $Revision: 30.7 $
+# @(#) $Id: Makefile,v 30.7 2013/08/11 09:07:26 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
@@ -182,19 +182,21 @@ TOUCH= touch
 
 # The calc files to install
 #
-CALC_FILES= README bigprime.cal deg.cal ellip.cal lucas.cal lucas_chk.cal \
-	lucas_tbl.cal mersenne.cal mod.cal pell.cal pi.cal pix.cal \
-	pollard.cal poly.cal psqrt.cal quat.cal regress.cal solve.cal \
-	sumsq.cal surd.cal unitfrac.cal varargs.cal chrem.cal mfactor.cal \
-	bindings randmprime.cal test1700.cal randrun.cal linear.cal \
-	randbitrun.cal bernoulli.cal test2300.cal test2600.cal \
-	test2700.cal test3100.cal test3300.cal test3400.cal prompt.cal \
-	test3500.cal seedrandom.cal test4000.cal test4100.cal test4600.cal \
-	beer.cal hello.cal test5100.cal test5200.cal randombitrun.cal \
-	randomrun.cal repeat.cal xx_print.cal natnumset.cal qtime.cal \
-	test8400.cal test8500.cal test8600.cal chi.cal intfile.cal screen.cal \
-	dotest.cal set8700.cal set8700.line alg_config.cal sumtimes.cal \
-	dms.cal hms.cal gvec.cal
+CALC_FILES= alg_config.cal beer.cal bernoulli.cal bernpoly.cal \
+	bigprime.cal bindings brentsolve.cal chi.cal chrem.cal constants.cal \
+	deg.cal dms.cal dotest.cal ellip.cal factorial2.cal factorial.cal \
+	gvec.cal hello.cal hms.cal intfile.cal lambertw.cal linear.cal \
+	lnseries.cal lucas.cal lucas_chk.cal lucas_tbl.cal mersenne.cal \
+	mfactor.cal mod.cal natnumset.cal pell.cal pi.cal pix.cal pollard.cal \
+	poly.cal prompt.cal psqrt.cal qtime.cal quat.cal randbitrun.cal \
+	randmprime.cal randombitrun.cal randomrun.cal randrun.cal README \
+	regress.cal repeat.cal screen.cal seedrandom.cal set8700.cal \
+	set8700.line solve.cal specialfunctions.cal statistics.cal sumsq.cal \
+	sumtimes.cal surd.cal test1700.cal test2300.cal test2600.cal \
+	test2700.cal test3100.cal test3300.cal test3400.cal test3500.cal \
+	test4000.cal test4100.cal test4600.cal test5100.cal test5200.cal \
+	test8400.cal test8500.cal test8600.cal test8900.cal toomcook.cal \
+	unitfrac.cal varargs.cal xx_print.cal zeta2.cal
 
 # These files are found (but not built) in the distribution
 #
@@ -293,7 +295,7 @@ install: all
 		${RM} -f ${T}${CALC_SHAREDIR}/$$i.new; \
 		${CP} -f $$i ${T}${CALC_SHAREDIR}/$$i.new; \
 		${CHMOD} 0444 ${T}${CALC_SHAREDIR}/$$i.new; \
-		${MV} -f ${T}${CALC_SHAREDIR}/$$i.new ${T}${CALC_SHAREDIR}/$$i; \
+		${MV} -f ${T}${CALC_SHAREDIR}/$$i.new ${T}${CALC_SHAREDIR}/$$i;\
 		echo "installed ${T}${CALC_SHAREDIR}/$$i"; \
 	    fi; \
 	done

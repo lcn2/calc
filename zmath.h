@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: zmath.h,v 30.2 2007/07/05 13:30:38 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: zmath.h,v 30.3 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/zmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -376,8 +376,10 @@ E_FUNC FULL zpprime(ZVALUE z);
 E_FUNC void zpfact(ZVALUE z, ZVALUE *dest);
 E_FUNC BOOL zprimetest(ZVALUE z, long count, ZVALUE skip);
 E_FUNC BOOL zredcprimetest(ZVALUE z, long count, ZVALUE skip);
-E_FUNC BOOL znextcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *cand);
-E_FUNC BOOL zprevcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *cand);
+E_FUNC BOOL znextcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res,
+		      ZVALUE mod, ZVALUE *cand);
+E_FUNC BOOL zprevcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res,
+		      ZVALUE mod, ZVALUE *cand);
 E_FUNC FULL zlowfactor(ZVALUE z, long count);
 E_FUNC FLAG zfactor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 E_FUNC long zpix(ZVALUE z1);
@@ -447,7 +449,8 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 /*
  * zgtmaxfull(z)	TRUE if abs(z) > MAXFULL
  */
-#define zgtmaxfull(z)	(((z).len > 2) || (((z).len == 2) && (((SHALF)(z).v[1]) < 0)))
+#define zgtmaxfull(z)	(((z).len > 2) || (((z).len == 2) && \
+			 (((SHALF)(z).v[1]) < 0)))
 
 /*
  * zgtmaxufull(z)	TRUE if abs(z) will not fit into a FULL (> MAXUFULL)
@@ -467,7 +470,8 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
  * zgtmaxlong(z)	TRUE if abs(z) > MAXLONG
  */
 #if BASEB >= LONG_BITS
-#define zgtmaxlong(z)	(((z).len > 1) || (((z).len == 1) && (((SHALF)(z).v[0]) < 0)))
+#define zgtmaxlong(z)	(((z).len > 1) || (((z).len == 1) && \
+			 (((SHALF)(z).v[0]) < 0)))
 #else
 #define zgtmaxlong(z)	zgtmaxfull(z)
 #endif
@@ -510,8 +514,10 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 #else
 
 #define zge16b(z)	(!zistiny(z))
-#define zge24b(z)	(((z).len > 2) || (((z).len == 2) && ((z).v[1] >= (HALF)0x100)))
-#define zge31b(z)	(((z).len > 2) || (((z).len == 2) && (((SHALF)(z).v[1]) < 0)))
+#define zge24b(z)	(((z).len > 2) || (((z).len == 2) && \
+			 ((z).v[1] >= (HALF)0x100)))
+#define zge31b(z)	(((z).len > 2) || (((z).len == 2) && \
+			 (((SHALF)(z).v[1]) < 0)))
 #define zge32b(z)	((z).len > 2)
 #define zge64b(z)	((z).len > 4)
 #define zge128b(z)	((z).len > 8)

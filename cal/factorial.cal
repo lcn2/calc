@@ -1,0 +1,204 @@
+/*
+ * factorial - implementation of different algorithms for the factorial
+ *
+ * Copyright (C) 2013 Christoph Zurnieden
+ *
+ * factorial is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * factorial is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: factorial.cal,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/factorial.cal,v $
+ *
+ * Under source code control:	2013/08/11 01:31:28
+ * File existed as early as:	2013
+ */
+
+
+/*
+ * hide internal function from resource debugging
+ */
+static resource_debug_level;
+resource_debug_level = config("resource_debug", 0);
+
+
+/*
+  get dependencies
+*/
+read -once toomcook;
+
+
+/* A simple list to keep things...uhm...simple?*/
+static __CZ__primelist = list();
+
+/* Helper for primorial: fill list with primes in range a,b */
+define __CZ__fill_prime_list(a,b)
+{
+  local k;
+  k=a;
+  if(isprime(k))k--;
+  while(1){
+    k = nextprime(k);
+    if(k > b) break;
+    append(__CZ__primelist,k );
+  }
+}
+
+/* Helper for factorial: how often prime p divides the factorial of n */
+define __CZ__prime_divisors(n,p)
+{
+    local q,m;
+    q = n;
+    m = 0;
+    if (p > n) return 0;
+    if (p > n/2) return 1;
+    while (q >= p) {
+        q  = q//p;
+        m += q;
+    }
+    return m;
+}
+
+/*
+  Wrapper. Please set cut-offs to own taste and hardware.
+*/
+define factorial(n){
+  local prime result shift prime_list k k1 k2 expo_list pix cut primorial;
+
+  result = 1;
+  prime  = 2;
+
+  if(!isint(n))  {
+    return newerror("factorial(n): n is not an integer"); ## or gamma(n)?
+  }
+  if(n < 0)      return newerror("factorial(n): n < 0");
+  if(n < 9000 && !isdefined("test8900"))   {
+    ## builtin is implemented with splitting but only with
+    ## Toom-Cook 2 (by Karatsuba (the father))
+    return n!;
+  }
+
+  shift = __CZ__prime_divisors(n,prime);
+  prime = 3;
+  cut = n//2;
+  pix   = pix(cut);
+  prime_list = mat[pix];
+  expo_list  = mat[pix];
+
+  k = 0;
+/*
+  Peter Borwein's algorithm
+
+  @Article{journals/jal/Borwein85,
+  author = {Borwein, Peter B.},
+  title  = {On the Complexity of Calculating Factorials.},
+  journal = {J. Algorithms},
+  year   = {1985},
+  number = {3},
+  url    = {http://dblp.uni-trier.de/db/journals/jal/jal6.html#Borwein85}
+*/
+
+  do {
+    prime_list[k]  = prime;
+    expo_list[k++] = __CZ__prime_divisors(n,prime);
+    prime          = nextprime(prime);
+  }while(prime <= cut);
+
+  /* size of the largest exponent in bits  */
+  k1 = highbit(expo_list[0]);
+  k2 = size(prime_list)-1;
+
+  for(;k1>=0;k1--){
+    /*
+       the cut-off for T-C-4 ist still to low, using T-C-3 here
+       TODO: check cutoffs
+     */
+    result = toomcook3square(result);
+    /*
+      almost all time is spend in this loop, so cutting of the
+      upper half of the primes makes sense
+    */
+    for(k=0; k<=k2; k++) {
+      if((expo_list[k] & (1 << k1)) != 0) {
+        result *= prime_list[k];
+      }
+    }
+
+  }
+  primorial = primorial( cut, n);
+  result *= primorial;
+  result <<= shift;
+  return result;
+}
+
+/*
+  Helper for primorial: do the product with binary splitting
+  TODO: do it without the intermediate list
+*/
+define __CZ__primorial__lowlevel( a, b ,p)
+{
+  local  c;
+  if( b == a) return p ;
+  if( b-a > 1){
+    c= (b + a) >> 1;
+    return  __CZ__primorial__lowlevel( a   , c , __CZ__primelist[a] )
+         *  __CZ__primorial__lowlevel( c+1 , b , __CZ__primelist[b] ) ;
+  }
+  return  __CZ__primelist[a] * __CZ__primelist[b];
+}
+
+/*
+   Primorial, Product of consecutive primes in range a,b
+
+  Originally meant to do primorials with a start different from 2, but
+  found out that this is faster at about a=1,b>=10^5 than the builtin
+  function pfact().  With the moderately small list a=1,b=10^6 (78498
+  primes) it is 3 times faster.  A quick look-up showed what was already
+  guessed: pfact() does it linearly.  (BTW: what is the time complexity
+  of the primorial with the naive algorithm?)
+*/
+define primorial(a,b)
+{
+  local C1 C2;
+  if(!isint(a)) return newerror("primorial(a,b): a is not an integer");
+  else if(!isint(b)) return newerror("primorial(a,b): b is not an integer");
+  else if(a < 0) return newerror("primorial(a,b): a < 0");
+  else if( b < 2 ) return newerror("primorial(a,b): b < 2");
+  else if( b < a) return newerror("primorial(a,b): b < a");
+  else{
+    /* last prime < 2^32 is also  max. prime for nextprime()*/
+    if(b >= 4294967291) return newerror("primorial(a,b): max. prime exceeded");
+    if(b ==  2) return 2;
+    /*
+      Can be extended by way of pfact(b)/pfact(floor(a-1/2)) for small a
+     */
+    if(a<=2 && b < 10^5) return pfact(b);
+    /* TODO: use pix() and a simple array (mat[])instead*/
+     __CZ__primelist = list();
+     __CZ__fill_prime_list(a,b);
+    C1 = size(__CZ__primelist)-1;
+    return __CZ__primorial__lowlevel( 0, C1,1)
+  }
+}
+
+
+/*
+ * restore internal function from resource debugging
+ * report important interface functions
+ */
+config("resource_debug", resource_debug_level),;
+if (config("resource_debug") & 3) {
+    print "factorial(n)";
+    print "primorial(a, b)";
+}

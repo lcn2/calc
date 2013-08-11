@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: zfunc.c,v 30.2 2008/02/24 07:41:49 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: zfunc.c,v 30.3 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/zfunc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:27
@@ -430,7 +430,8 @@ zjacobi(ZVALUE z1, ZVALUE z2)
 			zshift(p, -lowbit, &tmp);
 			zfree(p);
 			p = tmp;
-			if ((lowbit & 1) && (((*q.v & 0x7) == 3) || ((*q.v & 0x7) == 5)))
+			if ((lowbit & 1) && (((*q.v & 0x7) == 3) ||
+			    ((*q.v & 0x7) == 5)))
 				val = -val;
 		}
 		if (zisunit(p)) {
@@ -2069,11 +2070,12 @@ zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest)
 		i = zrel(ztry, quo);
 		if (i <= 0) {
 			/*
-			 * Current try is less than or equal to the root since it is
-			 * less than the quotient. If the quotient is equal to the try,
-			 * we are all done.  Also, if the try is equal to the old value,
-			 * we are done since no improvement occurred.
-			 * If not, save the improved value and loop some more.
+			 * Current try is less than or equal to the root since
+			 * it is less than the quotient. If the quotient is
+			 * equal to the try, we are all done.  Also, if the
+			 * try is equal to the old value, we are done since
+			 * no improvement occurred.  If not, save the improved
+			 * value and loop some more.
 			 */
 			if ((i == 0) || (zcmp(old, ztry) == 0)) {
 				zfree(quo);

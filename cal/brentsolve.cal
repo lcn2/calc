@@ -1,0 +1,257 @@
+/*
+ *  brentsolve- Root finding with the Brent-Dekker trick.
+ *
+ * Copyright (C) 2013 Christoph Zurnieden
+ *
+ * brentsolve is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * brentsolve is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: brentsolve.cal,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/brentsolve.cal,v $
+ *
+ * Under source code control:	2013/08/11 01:31:28
+ * File existed as early as:	2013
+ */
+
+static resource_debug_level;
+resource_debug_level = config("resource_debug", 0);
+
+
+/*
+  A short explanation is at http://en.wikipedia.org/wiki/Brent%27s_method
+  I tried to follow the description at wikipedia as much as possible to make
+  the slight changes I did more visible.
+  You may give http://people.sc.fsu.edu/~jburkardt/cpp_src/brent/brent.html a
+  short glimpse (Brent's originl Fortran77 versions and some translations of
+  it).
+*/
+
+static true = 1;
+static false = 0;
+define brentsolve(low, high,eps){
+  local a b c d fa fb fc fa2 fb2 fc2 s fs  tmp tmp2  mflag i places;
+  a = low;
+  b = high;
+  c = 0;
+
+  if(isnull(eps))
+    eps = epsilon(epsilon()*1e-3);
+  places = highbit(1 + int( 1/epsilon() ) ) + 1;
+
+  d = 1/eps;
+
+  fa = f(a);
+  fb = f(b);
+
+  fc = 0;
+  s = 0;
+  fs = 0;
+
+  if(fa * fb >= 0){
+    if(fa < fb){
+      epsilon(eps);
+      return a;
+    }
+    else{
+      epsilon(eps);
+      return b;
+    }
+  }
+
+  if(abs(fa) < abs(fb)){
+    tmp = a; a = b; b = tmp;
+    tmp = fa; fa = fb; fb = tmp;
+  }
+
+  c = a;
+  fc = fa;
+  mflag = 1;
+  i = 0;
+
+  while(!(fb==0) && (abs(a-b) > eps)){
+    if((fa != fc) && (fb != fc)){
+      /* Inverse quadratic interpolation*/
+      fc2 = fc^2;
+      fa2 = fa^2;
+      s = bround(((fb^2*((fc*a)-(c*fa)))+(fb*((c*fa2)-(fc2*a)))+(b*((fc2*fa)
+                    -(fc*fa2))))/((fc - fb)*(fa - fb)*(fc - fa)),places++);
+    }
+    else{
+      /* Secant Rule*/
+      s =bround( b - fb * (b - a) / (fb - fa),places++);
+    }
+    tmp2 = (3 * a + b) / 4;
+    if( (!( ((s > tmp2) && (s < b))||((s < tmp2) && (s > b))))
+        || (mflag && (abs(s - b) >= (abs(b - c) / 2)))
+        || (!mflag && (abs(s - b) >= (abs(c - d) / 2)))) {
+      s = (a + b) / 2;
+      mflag = true;
+    }
+    else{
+      if( (mflag && (abs(b - c) < eps))
+          || (!mflag && (abs(c - d) < eps))) {
+        s = (a + b) / 2;
+        mflag = true;
+      }
+      else
+        mflag = false;
+    }
+    fs = f(s);
+    c = b;
+    fc = fb;
+    if (fa * fs < 0){
+      b = s;
+      fb = fs;
+    }
+    else {
+      a = s;
+      fa = fs;
+    }
+
+    if (abs(fa) < abs(fb)){
+      tmp = a; a = b; b = tmp;
+      tmp = fa; fa = fb; fb = tmp;
+    }
+    i++;
+    if (i > 1000){
+      epsilon(eps);
+      return newerror("brentsolve: does not converge");
+    }
+  }
+  epsilon(eps);
+  return b;
+}
+
+/*
+  A variation of the solver to accept functions named differently from "f". The
+  code should explain it.
+*/
+define brentsolve2(low, high,which,eps){
+  local a b c d fa fb fc fa2 fb2 fc2 s fs  tmp tmp2  mflag i places;
+  a = low;
+  b = high;
+  c = 0;
+
+  switch(param(0)){
+    case 0:
+    case 1: return newerror("brentsolve2: not enough argments");
+    case 2: eps = epsilon(epsilon()*1e-2);
+            which = 0;break;
+    case 3: eps = epsilon(epsilon()*1e-2);break;
+    default: break;
+  };
+  places = highbit(1 + int(1/epsilon())) + 1;
+
+  d = 1/eps;
+
+  switch(which){
+    case 1:  fa = __CZ__invbeta(a);
+             fb = __CZ__invbeta(b); break;
+    case 2:  fa = __CZ__invincgamma(a);
+             fb = __CZ__invincgamma(b); break;
+
+    default: fa = f(a);fb = f(b);   break;
+  };
+
+  fc = 0;
+  s = 0;
+  fs = 0;
+
+  if(fa * fb >= 0){
+    if(fa < fb)
+      return a;
+    else
+      return b;
+  }
+
+  if(abs(fa) < abs(fb)){
+    tmp = a; a = b; b = tmp;
+    tmp = fa; fa = fb; fb = tmp;
+  }
+
+  c = a;
+  fc = fa;
+  mflag = 1;
+  i = 0;
+
+  while(!(fb==0) && (abs(a-b) > eps)){
+
+    if((fa != fc) && (fb != fc)){
+      /* Inverse quadratic interpolation*/
+      fc2 = fc^2;
+      fa2 = fa^2;
+      s = bround(((fb^2*((fc*a)-(c*fa)))+(fb*((c*fa2)-(fc2*a)))+(b*((fc2*fa)
+                    -(fc*fa2))))/((fc - fb)*(fa - fb)*(fc - fa)),places);
+      places++;
+    }
+    else{
+      /* Secant Rule*/
+      s =bround( b - fb * (b - a) / (fb - fa),places);
+      places++;
+    }
+    tmp2 = (3 * a + b) / 4;
+    if( (!( ((s > tmp2) && (s < b))||((s < tmp2) && (s > b))))
+        || (mflag && (abs(s - b) >= (abs(b - c) / 2)))
+        || (!mflag && (abs(s - b) >= (abs(c - d) / 2)))) {
+      s = (a + b) / 2;
+      mflag = true;
+    }
+    else{
+      if( (mflag && (abs(b - c) < eps))
+          || (!mflag && (abs(c - d) < eps))) {
+        s = (a + b) / 2;
+        mflag = true;
+      }
+      else
+        mflag = false;
+    }
+    switch(which){
+      case 1:  fs = __CZ__invbeta(s); break;
+      case 2:  fs = __CZ__invincgamma(s); break;
+
+      default: fs = f(s);             break;
+    };
+    c = b;
+    fc = fb;
+    if (fa * fs < 0){
+      b = s;
+      fb = fs;
+    }
+    else {
+      a = s;
+      fa = fs;
+    }
+
+    if (abs(fa) < abs(fb)){
+      tmp = a; a = b; b = tmp;
+      tmp = fa; fa = fb; fb = tmp;
+    }
+    i++;
+    if (i > 1000){
+      return newerror("brentsolve2: does not converge");
+    }
+  }
+  return b;
+}
+
+
+/*
+ * restore internal function from resource debugging
+ */
+config("resource_debug", resource_debug_level),;
+if (config("resource_debug") & 3) {
+    print "brentsolve(low, high,eps)";
+    print "brentsolve2(low, high,which,eps)";
+}

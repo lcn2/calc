@@ -15,9 +15,9 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 .\"
-.\" @(#) $Revision: 30.4 $
-.\" @(#) $Id: calc.man,v 30.4 2013/08/11 01:09:56 chongo Exp $
-.\" @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.man,v $
+.\" @(#) $Revision: 30.5 $
+.\" @(#) $Id: calc.man,v 30.5 2013/08/11 08:41:38 chongo Exp $
+.\" @(#) $Source: /usr/local/src/bin/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
 .\" File existed as early as:	    1991
@@ -1164,8 +1164,10 @@ Send bug reports and bug fixes to:
 .nf
 calc-bugs at asthe dot com
 
-[[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
-[[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
+[[ NOTE: Replace 'at' with @, 'dot' is with . ]]
+[[       and remove the spaces ]]
+[[ NOTE: The EMail address uses 'asthe' and
+[[       the web site URL uses 'isthe' ]]
 .fi
 .in -0.5i
 .sp

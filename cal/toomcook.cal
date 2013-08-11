@@ -1,0 +1,362 @@
+/*
+ * Toom-Cook - implementation of Toom-Cook(3,4) multiplication algorithm
+ *
+ * Copyright (C) 2013 Christoph Zurnieden
+ *
+ * Toom-Cook is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Toom-Cook is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: toomcook.cal,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/toomcook.cal,v $
+ *
+ * Under source code control:	2013/08/11 01:31:28
+ * File existed as early as:	2013
+ */
+
+/*
+ * hide internal function from resource debugging
+ */
+static resource_debug_level;
+resource_debug_level = config("resource_debug", 0);
+
+
+/* */
+define toomcook3(a,b){
+  local alen blen  a0 a1 a2  b0 b1 b2 m ret sign mask;
+  local S0 S1 S2 S3 S4 T1 T2;
+
+  if(!isint(a) || !isint(b))
+      return newerror("toomcook3(a,b): a and/or b is not an integer");
+
+  alen = digits(a,2);
+  blen = digits(b,2);
+
+  sign = sgn(a) * sgn(b);
+  /* sgn(x) returns 0 if x = 0 */
+  if(sign == 0) return 0;
+
+  m = min(alen,blen)//3;
+  mask = ~-(1<<m);
+
+  /*
+    Cut-off at about 4,000 dec. digits
+    TODO: check
+  */
+  if(isdefined("test8900")){
+    if(m < 20) return a*b;
+  }
+  else{
+    if(m < 4096 ) return a*b;
+  }
+  a = abs(a);
+  b = abs(b);
+
+  a0 = a & mask;
+  a1 = (a>>m) & mask;
+  a2 = (a>>(2*m));
+
+  b0 =  b         & mask;
+  b1 = (b>>m)     & mask;
+  b2 = (b>>(2*m));
+
+  /*
+    Zimmermann
+  */
+
+  S0 = toomcook3(a0 , b0);
+  S1 = toomcook3((a2+a1+a0) , (b2+b1+b0));
+  S2 = toomcook3(((a2<<2)+(a1<<1)+a0) , ((b2<<2)+(b1<<1)+b0));
+  S3 = toomcook3((a2-a1+a0) , (b2-b1+b0));
+  S4 = toomcook3(a2,b2);
+  T1 = (S3<<1) + S2;
+  T1 /= 3;
+  T1 += S0;
+  T1 >>= 1;
+  T1 -= S4<<1;
+  T2 = (S1 + S3)>>1;
+  S1 -= T1;
+  S2 = T2 - S0 - S4;
+  S3 = T1 - T2;
+
+  ret =  (S4<<(4*m)) + (S3<<(3*m)) + (S2<<(2*m)) + (S1<<(1*m)) + S0;
+
+
+  ret = sign *ret;
+
+  return ret;
+}
+
+define toomcook3square(a){
+  local alen  a0 a1 a2  m tmp tmp2 ret sign S0 S1 S2 S3 S4 T1 mask;
+
+  if(!isint(a))return newerror("toomcook3square(a): a is not integer");
+
+  alen = digits(a,2);
+
+  sign = sgn(a) * sgn(a);
+  if(sign == 0) return 0;
+
+  m = alen//3;
+  mask = ~-(1<<m);
+  /*
+    Cut-off at about 5,000 dec. digits
+    TODO: check
+  */
+
+  if(isdefined("test8900")){
+    if(m < 20) return a^2;
+  }
+  else{
+    if(m < 5000 ) return a^2;
+  }
+
+  a = abs(a);
+
+  a0 = a & mask;
+  a1 = (a>>m) & mask;
+  a2 = (a>>(2*m));
+
+  /*
+   Bodrato/Zanoni
+   */
+  S0 = toomcook3square(a0);
+  S1 = toomcook3square(a2+a1+a0);
+  S2 = toomcook3square(a2-a1+a0);
+  S3 = toomcook3(a1<<1,a2);
+  S4 = toomcook3square(a2);
+
+  T1 = (S1 + S2)>>1;
+  S1 = S1 - T1 - S3;
+  S2 = T1 - S4 -S0;
+
+
+  S1 = S1<<(1*m);
+  S2 = S2<<(2*m);
+  S3 = S3<<(3*m);
+  S4 = S4<<(4*m);
+
+  ret = S0 + S1 + S2 + S3 + S4;
+  ret = sign *ret;
+
+  return ret;
+}
+
+define toomcook4(a,b)
+{
+
+  local  a0 a1 a2 a3 b0 b1 b2 b3 b4 ret tmp tmp2 tmp3 sign;
+  local  m alen blen mask;
+  local w1, w2, w3, w4, w5, w6, w7;
+
+  if(!isint(a) || !isint(b))
+    return newerror("toomcook4(a,b): a and/or b is not integer");
+
+  alen = digits(a,2);
+  blen = digits(b,2);
+
+  sign = sgn(a) * sgn(b);
+
+  if(sign == 0) return 0;
+
+  m = min(alen//4,blen//4);
+  mask = ~-(1<<m);
+
+  if(isdefined("test8900")){
+    if(m < 100) return toomcook3(a,b);
+  }
+  else{
+    if(m < 256*3072) return toomcook3(a,b);
+  }
+
+  a = abs(a);
+  b = abs(b);
+
+
+  a0 = a & mask;
+  a1 = (a>>m) & mask;
+  a2 = (a>>(2*m)) & mask;
+  a3 = (a>>(3*m));
+
+  b0 =  b         & mask;
+  b1 = (b>>m)     & mask;
+  b2 = (b>>(2*m)) & mask;
+  b3 = (b>>(3*m));
+
+  /*
+    Bodrato / Zanoni
+  */
+
+  w3 = a3 + (a1 + (a2 + a0));
+  w7 = b3 + (b1 + (b2 + b0));
+
+  w4 = -a3 + (-a1 + (a2 + a0));
+  w5 = -b3 + (-b1 + (b2 + b0));
+
+  w3 = toomcook4(w3, w7);
+  w4 = toomcook4(w4, w5);
+
+  w5 = a3 + ((a1<<2) + ((a2<<1) + (a0<<3)));
+  w2 = b3 + ((b1<<2) + ((b2<<1) + (b0<<3)));
+
+  w6 = -a3 + (-(a1<<2) + ((a2<<1) + (a0<<3)));
+  w7 = -b3 + (-(b1<<2) + ((b2<<1) + (b0<<3)));
+
+  w5 = toomcook4(w5, w2);
+  w6 = toomcook4(w6, w7);
+
+
+  w2 = (a3<<3) + ((a1<<1) + ((a2<<2) + a0));
+  w7 = (b3<<3) + ((b1<<1) + ((b2<<2) + b0));
+
+
+  w2 = toomcook4(w2, w7);
+
+  w1 = toomcook4(a3, b3);
+  w7 = toomcook4(a0, b0);
+
+  w2 = w2 + w5;
+  w6 = w5 - w6;
+  w4 = w3 - w4;
+  w5 = w5 - w1;
+  w5 -= w7 << 6;
+  w4 = w4>>1;
+  w3 = w3 - w4;
+  w5 = w5<<1;
+  w5 = w5 - w6;
+  w2 -= w3 * 65;
+  w3 = w3 - w7;
+  w3 = w3 - w1;
+  w2 += w3 * 45;
+  w5 -= w3<<3;
+  w5 = w5//24;
+  w6 =  w6 - w2;
+  w2 -= w4<<4;
+  w2 = w2//18;
+  w3 = w3 - w5;
+  w4 = w4 - w2;
+  w6 += w2 * 30;
+  w6 = w6//60;
+  w2 = w2 - w6;
+
+
+  ret = w7 + (w6<<m) + (w5<<(2*m)) + (w4<<(3*m))+ (w3<<(4*m))+
+        (w2<<(5*m))+ (w1<<(6*m));
+
+  ret = sign *ret;
+
+  return ret;
+}
+
+define toomcook4square(a){
+  local  a0 a1 a2 a3 ret S0 S1 S2 S3 S4 S5 S6 S7 tmp tmp2 tmp3;
+  local  sign m alen mask;
+  local T0 T1 T2 T3 T4 T5 T6 T7 T8;
+
+  if(!isint(a) )return newerror("toomcook3square(a): a is not integer");
+
+  alen = digits(a,2);
+
+  sign = sgn(a) * sgn(a);
+  /* sgn(x) returns 0 if x = 0 */
+  if(sign == 0) return 0;
+
+  m = (alen)//4;
+  mask = ~-( 1 << m );
+
+  /*
+    cut-off at about 2 mio. dec. digits
+    TODO: check!
+  */
+
+  if(isdefined("test8900")){
+    if(m < 100) return toomcook3square(a);
+  }
+  else{
+    if(m < 512*3072) return toomcook3square(a);
+  }
+
+  a = abs(a);
+
+  a0 = a          & mask;
+  a1 = (a>>m)     & mask;
+  a2 = (a>>(2*m)) & mask;
+  a3 = (a>>(3*m)) ;
+
+  /*
+    Bodrato / Zanoni
+  */
+
+  S1 = toomcook4square(a0);
+  S2 = toomcook4(a0<<1,a1);
+  S3 = toomcook4((a0 + a1 - a2 - a3 ) , (a0 - a1 - a2 + a3 ));
+  S4 = toomcook4square(a0 + a1 + a2 + a3 );
+  S5 = toomcook4( (a0 - a2 )<<1 , (a1 - a3 ));
+  S6 = toomcook4(a3<<1 , a2);
+  S7 = toomcook4square(a3);
+
+  T1 = S3 + S4;
+  T2 = (T1 + S5 )>>1;
+  T3 = S2 + S6;
+  T4 = T2 - T3;
+  T5 = T3 - S5;
+  T6 = T4 - S3;
+  T7 = T4 - S1;
+  T8 = T6 - S7;
+
+  ret =   (S7<<(6*m)) + (S6<<(5*m)) + (T7<<(4*m))
+        + (T5<<(3*m)) + (T8<<(2*m)) + (S2<<(1*m))  + S1;
+
+  ret = sign *ret;
+
+  return ret;
+}
+
+/*
+  TODO: Implement the asymmetric variations
+*/
+
+/*
+  produce_long_random_number(n) returns large pseudorandom numbers. Really large
+  numbers, e.g.:
+      produce_long_random_number(16)
+  is ca 4,128,561 bits (ca 1,242,821 dec. digits) large. Exact length is not
+  predeterminable because of the chaotic output of the function random().
+*/
+define __CZ__produce_long_random_number(n)
+{
+  local ret k;
+  ret = 1;
+  if(!isint(n) || n<1)
+    return newerror("__CZ__produce_long_random_number(n): "
+    		    "n is not an integer >=1");
+  for(k=0;k<n;k++){
+    ret += random();
+    ret  = toomcook4square(ret);
+  }
+  return ret;
+}
+
+
+/*
+ * restore internal function from resource debugging
+ * report important interface functions
+ */
+config("resource_debug", resource_debug_level),;
+if (config("resource_debug") & 3) {
+    print "toomcook3(a,b)";
+    print "toomcook3square(a)";
+    print "toomcook4(a,b)";
+    print "toomcook4square(a)";
+}

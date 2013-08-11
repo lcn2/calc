@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: test2600.cal,v 30.2 2007/07/11 22:57:23 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: test2600.cal,v 30.3 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/test2600.cal,v $
  *
  * Under source code control:	1995/10/13 00:13:14
@@ -91,7 +91,8 @@ define testismult(str, n, verbose)
 		if (!ismult(c,a)) {
 			m++;
 			if (verbose > 1) {
-				printf("*** Failure with:\na = %d\nb = %d\n", a,b);
+				printf("*** Failure with:\na = %d\nb = %d\n",
+				       a,b);
 			}
 		}
 	}
@@ -133,7 +134,8 @@ define testsqrt(str, n, eps, verbose)
 		if (abs(c) > 1) {
 			m++;
 			if (verbose > 1) {
-				printf("*** Failure with:\na = %d\neps = %d\n", a,eps);
+				printf("*** Failure with:\na = %d\neps = %d\n",
+				       a,eps);
 			}
 		}
 	}
@@ -178,7 +180,8 @@ define testexp(str, n, eps, verbose)
 		if (abs(c) > 0.02) {
 			m++;
 			if (verbose > 1) {
-				printf("*** Failure with:\na = %d\neps = %d\n", a,eps);
+				printf("*** Failure with:\na = %d\neps = %d\n",
+				       a,eps);
 			}
 		}
 	}
@@ -235,7 +238,8 @@ define testln(str, n, eps, verbose)
 		if (abs(c) > 0.5) {
 			m++;
 			if (verbose > 1) {
-				printf("*** Failure with:\na = %d\neps = %d\n", a,eps);
+				printf("*** Failure with:\na = %d\neps = %d\n",
+				       a,eps);
 			}
 		}
 	}

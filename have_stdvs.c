@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: have_stdvs.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: have_stdvs.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/have_stdvs.c,v $
  *
  * Under source code control:	1995/09/09 22:41:10
@@ -57,7 +57,8 @@
 #endif
 
 #undef VSPRINTF_SIZE_T
-#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
+#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || \
+    defined(__cplusplus)
 # define VSPRINTF_SIZE_T size_t
 #else
 # define VSPRINTF_SIZE_T long
@@ -160,8 +161,10 @@ main(void)
 	puts("/*");
 	puts(" * SIMULATE_STDARG");
 	puts(" *");
-	puts(" * WARNING: This type of stdarg makes assumptions about the stack");
-	puts(" *	    that may not be true on your system.  You may want to");
+	puts(" * WARNING: This type of stdarg makes assumptions "
+	     "about the stack");
+	puts(" *	    that may not be true on your system.  "
+	     "You may want to");
 	puts(" *	    define STDARG (if using ANSI C) or VARARGS.");
 	puts(" */");
 	puts("typedef char *va_list;");
@@ -169,7 +172,8 @@ main(void)
 	puts("#define va_end(ap) (void)((ap) = 0)");
 	puts("#define va_arg(ap, type) \\");
 	puts("	      (((type*)((ap) = ((ap) + sizeof(type))))[-1])");
-	puts("#define SIMULATE_STDARG /* use std_arg.h to simulate <stdarg.h> */");
+	puts("#define SIMULATE_STDARG "
+	     "/* use std_arg.h to simulate <stdarg.h> */");
 #else
 	puts("#define STDARG /* use <stdarg.h> */");
 	puts("#include <stdarg.h>");

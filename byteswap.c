@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: byteswap.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: byteswap.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/byteswap.c,v $
  *
  * Under source code control:	1995/10/11 04:44:01
@@ -102,7 +102,8 @@ swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
 		 */
 		dest = malloc(sizeof(ZVALUE));
 		if (dest == NULL) {
-			math_error("swap_b8_in_ZVALUE: swap_b8_in_ZVALUE: Not enough memory");
+			math_error("swap_b8_in_ZVALUE: swap_b8_in_ZVALUE: "
+				    "Not enough memory");
 			/*NOTREACHED*/
 		}
 

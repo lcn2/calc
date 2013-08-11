@@ -19,8 +19,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-MAKEFILE_REV= $$Revision: 30.10 $$
-# @(#) $Id: rpm.mk,v 30.10 2013/05/05 11:59:51 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.11 $$
+# @(#) $Id: rpm.mk,v 30.11 2013/08/11 08:41:38 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/RCS/rpm.mk,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -32,7 +32,8 @@ MAKEFILE_REV= $$Revision: 30.10 $$
 # calculator by David I. Bell with help/mods from others
 # Makefile by Petteri Kettunen with modifications from Landon Curt Noll
 
-# IMPORTANT NOTE: The rpm process assumes that ~/.rpmmacros contains the following:
+# IMPORTANT NOTE: The rpm process assumes that ~/.rpmmacros contains
+#                 the following:
 #
 #	%_signature	gpg
 #	%_gpg_path	~/.gnupg
@@ -95,7 +96,8 @@ PROJECT= ${PROJECT_NAME}-${PROJECT_VERSION}
 SPECFILE= ${PROJECT_NAME}.spec
 TARBALL= ${PROJECT}.${TAR}.bz2
 RPM686= ${PROJECT}-${PROJECT_RELEASE}.${TARCH}.rpm
-DRPM686= ${PROJECT_NAME}-devel-${PROJECT_VERSION}-${PROJECT_RELEASE}.${TARCH}.rpm
+DRPM686= \
+  ${PROJECT_NAME}-devel-${PROJECT_VERSION}-${PROJECT_RELEASE}.${TARCH}.rpm
 SRPM= ${PROJECT}-${PROJECT_RELEASE}.src.rpm
 RPM_TOP= ${HOME}/rpm/${NAME}
 TMPDIR= ${RPM_TOP}/tmp

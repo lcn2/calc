@@ -1,0 +1,59 @@
+/*
+ *  bernpoly- Bernoully polynomials B_n(z) for arbitrary n,z..
+ *
+ * Copyright (C) 2013 Christoph Zurnieden
+ *
+ * bernpoly is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * bernpoly is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: bernpoly.cal,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/bernpoly.cal,v $
+ *
+ * Under source code control:	2013/08/11 01:31:28
+ * File existed as early as:	2013
+ */
+
+
+static resource_debug_level;
+resource_debug_level = config("resource_debug", 0);
+
+
+read -once zeta2
+
+
+/* Idea by Don Zagier */
+define bernpoly(n,z){
+  local h s c k;
+  if(isint(n) && n>=0){
+    h=0;s=0;c=-1;
+    for(k=1;k<=n+1;k++){
+      c*=1-(n+2)/k;
+      s+=z^n;
+      z++;
+      h+=c*s/k;
+    }
+    return h;
+  }
+  else return -n*hurwitzzeta(1-n,z);
+}
+
+
+/*
+ * restore internal function from resource debugging
+ */
+config("resource_debug", resource_debug_level),;
+if (config("resource_debug") & 3) {
+    print "bernpoly(n,z)";
+}

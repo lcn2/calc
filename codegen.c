@@ -19,9 +19,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: codegen.c,v 30.3 2013/07/12 22:41:33 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: codegen.c,v 30.4 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
  * File existed as early as:	before 1990
@@ -453,7 +453,8 @@ getsimplebody(void)
  */
 /*ARGSUSED*/
 S_FUNC void
-getbody(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *defaultlabel)
+getbody(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel,
+        LABEL *defaultlabel)
 {
 	int oldmode;
 
@@ -617,7 +618,8 @@ getonevariable(int symtype)
  *	defaultlabel		label for default case
  */
 S_FUNC void
-getstatement(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel, LABEL *defaultlabel)
+getstatement(LABEL *contlabel, LABEL *breaklabel,
+	     LABEL *nextcaselabel, LABEL *defaultlabel)
 {
 	LABEL label;
 	LABEL label1, label2, label3, label4;	/* locations for jumps */
@@ -1104,7 +1106,8 @@ getobjdeclaration(int symtype)
 					newindices = (int *) malloc(maxindices *
 						sizeof(int));
 					if (newindices == NULL) {
-						scanerror(T_SEMICOLON, "Out of memory for indices malloc");
+						scanerror(T_SEMICOLON,
+					    "Out of memory for indices malloc");
 						(void) tokenmode(oldmode);
 						return;
 					}
@@ -1117,7 +1120,8 @@ getobjdeclaration(int symtype)
 						maxindices * sizeof(int));
 					if (newindices == NULL) {
 						free(indices);
-						scanerror(T_SEMICOLON, "Out of memory for indices realloc");
+						scanerror(T_SEMICOLON,
+					  "Out of memory for indices realloc");
 						(void) tokenmode(oldmode);
 						return;
 					}
@@ -1129,7 +1133,9 @@ getobjdeclaration(int symtype)
 				if (indices[i] == index) {
 					if (indices != quickindices)
 						free(indices);
-					scanerror(T_SEMICOLON, "Duplicate element name \"%s\"", tokensymbol());
+					scanerror(T_SEMICOLON,
+					    "Duplicate element name \"%s\"",
+					    tokensymbol());
 					(void) tokenmode(oldmode);
 					return;
 				}
@@ -1141,7 +1147,8 @@ getobjdeclaration(int symtype)
 			if (gettoken() != T_RIGHTBRACE) {
 				if (indices != quickindices)
 					free(indices);
-				scanerror(T_SEMICOLON, "Bad object type definition");
+				scanerror(T_SEMICOLON,
+				    "Bad object type definition");
 				(void) tokenmode(oldmode);
 				return;
 			}
@@ -1415,7 +1422,8 @@ getinitlist(void)
 	oldmode = tokenmode(TM_DEFAULT);
 
 	if (gettoken() != T_LEFTBRACE) {
-		scanerror(T_SEMICOLON, "Missing left brace for initialization list");
+		scanerror(T_SEMICOLON,
+		    "Missing left brace for initialization list");
 		(void) tokenmode(oldmode);
 		return -1;
 	}
@@ -1450,7 +1458,7 @@ getinitlist(void)
 
 		default:
 			scanerror(T_SEMICOLON,
-				  "Missing right brace for initialization list");
+			      "Missing right brace for initialization list");
 			(void) tokenmode(oldmode);
 			return -1;
 		}
@@ -2364,11 +2372,13 @@ getfilename(char *name, size_t namelen, BOOL *once)
 						/* use symbol VALUE string */
 						symstr = val.v_str->s_str;
 						if (symstr == NULL) {
-							math_error("string value pointer is NULL!!");
+							math_error(
+					"string value pointer is NULL!!");
 							/*NOTREACHED*/
 						}
 					} else {
-						math_error("a filename variable must be a string");
+						math_error(
+				    "a filename variable must be a string");
 						/*NOTREACHED*/
 					}
 				} else {
@@ -2637,7 +2647,8 @@ definesymbol(char *name, int symtype)
 			break;
 		}
 		if (conf->dupvar_warn) {
-			warning("both static and parameter \"%s\" defined", name);
+			warning("both static and parameter \"%s\" defined",
+			        name);
 		}
 	}
 	if (symtype == SYM_LOCAL)

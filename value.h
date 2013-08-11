@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: value.h,v 30.3 2007/07/10 21:18:08 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: value.h,v 30.4 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/value.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -297,7 +297,8 @@ E_FUNC BOOL mattest(MATRIX *m);
 E_FUNC void matsum(MATRIX *m, VALUE *vres);
 E_FUNC BOOL matcmp(MATRIX *m1, MATRIX *m2);
 E_FUNC int matsearch(MATRIX *m, VALUE *vp, long start, long end, ZVALUE *index);
-E_FUNC int matrsearch(MATRIX *m, VALUE *vp, long start, long end, ZVALUE *index);
+E_FUNC int matrsearch(MATRIX *m, VALUE *vp, long start, long end,
+		      ZVALUE *index);
 E_FUNC VALUE matdet(MATRIX *m);
 E_FUNC VALUE matdot(MATRIX *m1, MATRIX *m2);
 E_FUNC void matfill(MATRIX *m, VALUE *v1, VALUE *v2);
@@ -344,7 +345,8 @@ E_FUNC void removelistmiddle(LIST *lp, long index, VALUE *vp);
 E_FUNC void listfree(LIST *lp);
 E_FUNC void listprint(LIST *lp, long max_print);
 E_FUNC int listsearch(LIST *lp, VALUE *vp, long start, long end, ZVALUE *index);
-E_FUNC int listrsearch(LIST *lp, VALUE *vp, long start, long end, ZVALUE *index);
+E_FUNC int listrsearch(LIST *lp, VALUE *vp, long start, long end,
+		       ZVALUE *index);
 E_FUNC BOOL listcmp(LIST *lp1, LIST *lp2);
 E_FUNC VALUE *listfindex(LIST *lp, long index);
 E_FUNC LIST *listalloc(void);
@@ -389,8 +391,10 @@ E_FUNC ASSOC *assocalloc(long initsize);
 E_FUNC ASSOC *assoccopy(ASSOC *ap);
 E_FUNC void assocfree(ASSOC *ap);
 E_FUNC void assocprint(ASSOC *ap, long max_print);
-E_FUNC int assocsearch(ASSOC *ap, VALUE *vp, long start, long end, ZVALUE *index);
-E_FUNC int assocrsearch(ASSOC *ap, VALUE *vp, long start, long end, ZVALUE *index);
+E_FUNC int assocsearch(ASSOC *ap, VALUE *vp, long start, long end,
+		       ZVALUE *index);
+E_FUNC int assocrsearch(ASSOC *ap, VALUE *vp, long start, long end,
+			ZVALUE *index);
 E_FUNC BOOL assoccmp(ASSOC *ap1, ASSOC *ap2);
 E_FUNC VALUE *assocfindex(ASSOC *ap, long index);
 E_FUNC VALUE *associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices);

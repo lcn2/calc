@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: decl.h,v 30.3 2008/04/15 21:17:57 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: decl.h,v 30.4 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/decl.h,v $
  *
  * Under source code control:	2007/02/09 05:24:25
@@ -100,7 +100,8 @@
 
 /* Perform printf-style argument type checking for known compilers */
 #ifdef __GNUC__
-# define PRINTF_FORMAT(fmt_idx, arg_idx) __attribute__ ((format (printf, fmt_idx, arg_idx)))
+# define PRINTF_FORMAT(fmt_idx, arg_idx) __attribute__ \
+         ((format (printf, fmt_idx, arg_idx)))
 #else
 # define PRINTF_FORMAT(fmt_idx, arg_idx)
 #endif

@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.27 $
-# @(#) $Id: Makefile.head,v 30.27 2013/08/11 01:16:36 chongo Exp $
+# @(#) $Revision: 30.28 $
+# @(#) $Id: Makefile.head,v 30.28 2013/08/11 05:40:18 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile.head,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -366,7 +366,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.9
+VERSION= 2.12.4.10
 VERS= 2.12.4
 VER= 2.12
 VE= 2
@@ -1136,7 +1136,8 @@ depend:
 	${Q} echo forming new custom/${MAKE_FILE}
 	${Q} ${RM} -f ${MAKE_FILE}.bak
 	${Q} ${MV} ${MAKE_FILE} ${MAKE_FILE}.bak
-	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' ${MAKE_FILE}.bak > ${MAKE_FILE}
+	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' \
+		    ${MAKE_FILE}.bak > ${MAKE_FILE}
 	${Q} ${GREP} -v '^#' skel/custom/makedep.out >> ${MAKE_FILE}
 	${Q} ${RM} -rf skel
 	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
@@ -1333,7 +1334,8 @@ install: all
 		${RM} -f ${T}${CUSTOMHELPDIR}/$$i.new; \
 		${CP} -f $$i ${T}${CUSTOMHELPDIR}/$$i.new; \
 		${CHMOD} 0444 ${T}${CUSTOMHELPDIR}/$$i.new; \
-		${MV} -f ${T}${CUSTOMHELPDIR}/$$i.new ${T}${CUSTOMHELPDIR}/$$i; \
+		${MV} -f ${T}${CUSTOMHELPDIR}/$$i.new \
+			 ${T}${CUSTOMHELPDIR}/$$i; \
 		echo "installed ${T}${CUSTOMHELPDIR}/$$i"; \
 	    fi; \
 	done

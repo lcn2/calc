@@ -17,7 +17,7 @@ The following are the changes from calc version 2.12.4.6 to date:
     Fixed typo in redeclaration warnings.  Thanks to
     Christoph Zurnieden <czurnieden at gmx dot de> for this report.
 
-    Added a number of calc resource functions by
+    Added a number of calc resource files by
     Christoph Zurnieden <czurnieden at gmx dot de> including:
 
     	bernpoly.cal - Computes the nth Bernoulli polynomial at z for any n,z
@@ -31,14 +31,12 @@ The following are the changes from calc version 2.12.4.6 to date:
 	toomcook.cal - Multiply by way of the Toom-Cook algorithm
 	zeta2.cal - Calculate the value of the Hurwitz Zeta function
 
+    Fixed a makefile bug that prevented the those new calc resource
+    files from being installed.
+
     Improved the formatting of the output from:
 
 	help resource
-
-    Cleaned up old DOS-like CRLF line terminators in some
-    help files.  Thanks goes to to Michael Somos
-    <somos at harary dot math dot georgetown dot edu>
-    for pointing this out.
 
     We replaced COPYING-LGPL with the version that is found at
     http://www.gnu.org/licenses/lgpl-2.1.txt because that version
@@ -50,6 +48,18 @@ The following are the changes from calc version 2.12.4.6 to date:
 
 	NOTE: Fixes to grammar, spelling and minor formatting
 	      problems are welcome.  Please send us your patches!
+
+    With the exception of 3 source files, we became "picky" about
+    line lengths and other issues reported by the picky tool:
+
+    	cal/test8900.cal
+	cal/set8700.line
+	help/errorcodes.sed
+
+    The above 3 files now pass picky -w (OK except for line length).
+    For more information about the picky tool, see:
+
+	http://cis.csuohio.edu/~somos/picky.html
 
 
 The following are the changes from calc version 2.12.4.3 to 2.12.4.5:
@@ -6871,8 +6881,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.28 $
-## @(#) $Id: CHANGES,v 30.28 2013/08/11 01:18:56 chongo Exp chongo $
+## @(#) $Revision: 30.32 $
+## @(#) $Id: CHANGES,v 30.32 2013/08/11 09:10:11 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

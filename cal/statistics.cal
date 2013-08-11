@@ -1,0 +1,502 @@
+/*
+ *  statistics - Some assorted statistics functions.
+ *
+ * Copyright (C) 2013 Christoph Zurnieden
+ *
+ * statistics is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * statistics is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: statistics.cal,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/statistics.cal,v $
+ *
+ * Under source code control:	2013/08/11 01:31:28
+ * File existed as early as:	2013
+ */
+
+
+static resource_debug_level;
+resource_debug_level = config("resource_debug", 0);
+
+
+/*
+  get dependencies
+*/
+read -once factorial2 brentsolve
+
+
+/*******************************************************************************
+ *
+ *
+ *                Continuous distributions
+ *
+ *
+ ******************************************************************************/
+
+/* regularized incomplete gamma function like in Octave, hence the name */
+define gammaincoctave(z,a){
+  local tmp;
+  tmp = gamma(z);
+  return (tmp-gammainc(a,z))/tmp;
+}
+
+/* Inverse incomplete beta function. Old and slow. */
+static __CZ__invbeta_a;
+static __CZ__invbeta_b;
+static __CZ__invbeta_x;
+define __CZ__invbeta(x){
+   return __CZ__invbeta_x-__CZ__ibetaas63(x,__CZ__invbeta_a,__CZ__invbeta_b);
+}
+
+define invbetainc_slow(x,a,b){
+  local flag ret eps;
+  /* place checks and balances here */
+  eps = epsilon();
+  if(.5 < x){
+    __CZ__invbeta_x = 1 - x;
+    __CZ__invbeta_a = b;
+    __CZ__invbeta_b = a;
+    flag = 1;
+  }
+  else{
+    __CZ__invbeta_x = x;
+    __CZ__invbeta_a = a;
+    __CZ__invbeta_b = b;
+    flag = 0;
+  }
+
+  ret =  brentsolve2(0,1,1);
+
+  if(flag == 1)
+    ret = 1-ret;
+  epsilon(eps);
+  return ret;
+}
+
+/* Inverse incomplete beta function. Still old but not as slow as the function
+   above. */
+/*
+  Purpose:
+
+    invbetainc computes inverse of the incomplete Beta function.
+
+  Licensing:
+
+    This code is distributed under the GNU LGPL license.
+
+  Modified:
+
+    10 August 2013
+
+  Author:
+
+    Original FORTRAN77 version by GW Cran, KJ Martin, GE Thomas.
+    C version by John Burkardt.
+    Calc version by Christoph Zurnieden
+
+  Reference:
+
+    GW Cran, KJ Martin, GE Thomas,
+    Remark AS R19 and Algorithm AS 109:
+    A Remark on Algorithms AS 63: The Incomplete Beta Integral
+    and AS 64: Inverse of the Incomplete Beta Integeral,
+    Applied Statistics,
+    Volume 26, Number 1, 1977, pages 111-114.
+
+  Parameters:
+
+    Input,  P, Q, the parameters of the incomplete
+    Beta function.
+
+    Input,  BETA, the logarithm of the value of
+    the complete Beta function.
+
+    Input,  ALPHA, the value of the incomplete Beta
+    function.  0 <= ALPHA <= 1.
+
+    Output,  the argument of the incomplete
+    Beta function which produces the value ALPHA.
+
+  Local Parameters:
+
+    Local, SAE, the most negative decimal exponent
+    which does not cause an underflow.
+*/
+define invbetainc(x,a,b){
+  return __CZ__invbetainc(a,b,lnbeta(a,b),x);
+}
+
+define __CZ__invbetainc(p,q,beta,alpha){
+  local a acu adj fpu g h iex indx pp prev qq r s sae sq t tx value;
+  local w xin y yprev places eps;
+
+  /* Dirty trick, don't try at home */
+  eps= epsilon(epsilon()^2);
+  sae = -((log(1/epsilon())/log(2))//2);
+  fpu = 10.0^sae;
+
+  places = highbit(1 + int(1/epsilon())) + 1;
+  value = alpha;
+  if( p <= 0.0 ){
+    epsilon(eps);
+    return newerror("invbeta: argument p <= 0");
+  }
+  if( q <= 0.0 ){
+    epsilon(eps);
+    return newerror("invbeta: argument q <= 0");
+  }
+
+  if( alpha < 0.0 || 1.0 < alpha ){
+    epsilon(eps);
+    return newerror("invbeta: argument alpha out of domain");
+  }
+  if( alpha == 0.0 ){
+    epsilon(eps);
+    return 0;
+  }
+  if( alpha == 1.0 ){
+    epsilon(eps);
+    return 1;
+  }
+  if ( 0.5 < alpha ){
+    a = 1.0 - alpha;
+    pp = q;
+    qq = p;
+    indx = 1;
+  }
+  else{
+    a = alpha;
+    pp = p;
+    qq = q;
+    indx = 0;
+  }
+  r = sqrt ( - ln ( a * a ) );
+
+  y = r-(2.30753+0.27061*r)/(1.0+(0.99229+0.04481*r)*r);
+
+  if ( 1.0 < pp && 1.0 < qq ){
+    r = ( y * y - 3.0 ) / 6.0;
+    s = 1.0 / ( pp + pp - 1.0 );
+    t = 1.0 / ( qq + qq - 1.0 );
+    h = 2.0 / ( s + t );
+    w = y*sqrt(h+r)/h-(t-s)*(r+5.0/6.0-2.0/(3.0*h));
+    value = pp / ( pp + qq * exp ( w + w ) );
+  }
+  else{
+    r = qq + qq;
+    t = 1.0 / ( 9.0 * qq );
+    t = r *  ( 1.0 - t + y * sqrt ( t )^ 3 );
+
+    if ( t <= 0.0 ){
+      value = 1.0 - exp ( ( ln ( ( 1.0 - a ) * qq ) + beta ) / qq );
+    }
+    else{
+      t = ( 4.0 * pp + r - 2.0 ) / t;
+
+      if ( t <= 1.0 ) {
+        value = exp ( ( ln ( a * pp ) + beta ) / pp );
+      }
+      else{
+        value = 1.0 - 2.0 / ( t + 1.0 );
+      }
+    }
+  }
+  r = 1.0 - pp;
+  t = 1.0 - qq;
+  yprev = 0.0;
+  sq = 1.0;
+  prev = 1.0;
+
+  if ( value < 0.0001 )
+    value = 0.0001;
+
+  if ( 0.9999 < value )
+    value = 0.9999;
+
+  acu = 10^sae;
+
+  for ( ; ; ){
+    y = bround(__CZ__ibetaas63( value, pp, qq, beta),places);
+    xin = value;
+    y = bround(exp(ln(y-a)+(beta+r*ln(xin)+t*ln(1.0- xin ) )),places);
+
+    if ( y * yprev <= 0.0 ) {
+      prev = max ( sq, fpu );
+    }
+
+    g = 1.0;
+
+    for ( ; ; ){
+      for ( ; ; ){
+        adj = g * y;
+        sq = adj * adj;
+        if ( sq < prev ){
+          tx = value - adj;
+          if ( 0.0 <= tx && tx <= 1.0 )  break;
+        }
+        g = g / 3.0;
+      }
+      if ( prev <= acu ){
+        if ( indx )
+          value = 1.0 - value;
+        epsilon(eps);
+        return value;
+      }
+      if ( y * y <= acu ){
+        if ( indx )
+          value = 1.0 - value;
+        epsilon(eps);
+        return value;
+      }
+      if ( tx != 0.0 && tx != 1.0 )
+        break;
+      g = g / 3.0;
+    }
+    if ( tx == value )  break;
+    value = tx;
+    yprev = y;
+  }
+  if ( indx )
+    value = 1.0 - value;
+
+  epsilon(eps);
+  return value;
+}
+
+/*******************************************************************************
+ *
+ *
+ *                Beta distribution
+ *
+ *
+ ******************************************************************************/
+
+define betapdf(x,a,b){
+  if(x<0 || x>1) return newerror("betapdf: parameter x out of domain");
+  if(a<=0) return newerror("betapdf: parameter a out of domain");
+  if(b<=0) return newerror("betapdf: parameter b out of domain");
+
+  return 1/beta(a,b) *x^(a-1)*(1-x)^(b-1);
+}
+
+define betacdf(x,a,b){
+  if(x<0 || x>1) return newerror("betacdf: parameter x out of domain");
+  if(a<=0) return newerror("betacdf: parameter a out of domain");
+  if(b<=0) return newerror("betacdf: parameter b out of domain");
+
+  return betainc(x,a,b);
+}
+
+define betacdfinv(x,a,b){
+  return invbetainc(x,a,b);
+}
+
+define betamedian(a,b){
+  local t106 t104 t103 t105 approx ret;
+  if(a == b) return 1/2;
+  if(a == 1 && b > 0) return 1-(1/2)^(1/b);
+  if(a > 0 && b == 1) return   (1/2)^(1/a);
+  if(a == 3 && b == 2){
+    /* Yes, the author is not ashamed to ask Maxima for the exact solution
+       of a quartic equation. */
+    t103 = ( (2^(3/2))/27 +4/27  )^(1/3);
+    t104 = sqrt( ( 9*t103^2 + 4*t103 + 2  )/(t103)  )/3;
+    t105 = -t103-2/(9*t103) +8/9;
+    t106 = sqrt( (27*t104*t105+16)/(t104)  )/(2*3^(3/2));
+    return -t106+t104/2+1/3;
+  }
+  if(a == 2 && b == 3){
+    t103 = ( (2^(3/2))/27 +4/27  )^(1/3);
+    t104 = sqrt( ( 9*t103^2 + 4*t103 + 2  )/(t103)  )/3;
+    t105 = -t103-2/(9*t103) +8/9;
+    t106 = sqrt( (27*t104*t105+16)/(t104)  )/(2*3^(3/2));
+    return 1-(-t106+t104/2+1/3);
+  }
+  return invbetainc(1/2,a,b);
+}
+
+define betamode(a,b){
+  if(a + b == 2) return newerror("betamod: a + b = 2 = division by zero");
+  return (a-1)/(a+b-2);
+}
+
+define betavariance(a,b){
+  return (a*b)/( (a+b)^2*(a+b+1) );
+}
+
+define betalnvariance(a,b){
+  return polygamma(1,a)-polygamma(a+b);
+}
+
+define betaskewness(a,b){
+  return (2*(b-a)*sqrt(a+b+1))/( (a+b+1)*sqrt(a*b) );
+}
+
+define betakurtosis(a,b){
+  local num denom;
+
+  num = 6*( (a-b)^2*(a+b+1)-a*b*(a+b+2));
+  denom = a*b*(a+b+2)*(a+b+3);
+  return num/denom;
+}
+
+define betaentropy(a,b){
+  return lnbeta(a,b)-(a-1)*psi(a)-(b-1)*psi(b)+(a+b+1)*psi(a+b);
+
+}
+
+/*******************************************************************************
+ *
+ *
+ *                Normal (Gaussian) distribution
+ *
+ *
+ ******************************************************************************/
+
+
+define normalpdf(x,mu,sigma){
+  return 1/(sqrt(2*pi()*sigma^2))*exp( ( (x-mu)^2 )/( 2*sigma^2 ) );
+}
+
+define normalcdf(x,mu,sigma){
+  return 1/2*(1+erf( ( x-mu )/( sqrt(2*sigma^2) )  )  );
+}
+
+define probit(p){
+  if(p<0 || p > 1) return newerror("probit: p out of domain 0<=p<=1");
+  return sqrt(2)*ervinv(2*p-1);
+}
+
+define normalcdfinv(p,mu,sigma){
+  if(p<0 || p > 1) return newerror("normalcdfinv: p out of domain 0<=p<=1");
+  return mu+ sigma*probit(p);
+}
+
+define normalmean(mu,sigma){return mu;}
+
+define normalmedian(mu,sigma){return mu;}
+
+define normalmode(mu,sigma){return mu;}
+
+define normalvariance(mu,sigma){return sigma^2;}
+
+define normalskewness(mu,sigma){return 0;}
+
+define normalkurtosis(mu,sigma){return 0;}
+
+define normalentropy(mu,sigma){
+  return 1/3*ln( 2*pi()*exp(1)*sigma^2 );
+}
+
+/* moment generating f. */
+define normalmgf(mu,sigma,t){
+  return exp(mu*t+1/2*sigma^2*t^2);
+}
+
+/* characteristic f. */
+define normalcf(mu,sigma,t){
+  return exp(mu*t-1/2*sigma^2*t^2);
+}
+
+
+/*******************************************************************************
+ *
+ *
+ *                Chi-squared distribution
+ *
+ *
+ ******************************************************************************/
+
+define chisquaredpdf(x,k){
+  if(!isint(k) || k<0) return newerror("chisquaredpdf: k not in N");
+  if(im(x) || x<0) return newerror("chisquaredpdf: x not in +R");
+  /* The gamma function does not check for half integers, do it here? */
+  return 1/(2^(k/2)*gamma(k/2))*x^((k/2)-1)*exp(-x/2);
+}
+
+define chisquaredpcdf(x,k){
+  if(!isint(k) || k<0) return newerror("chisquaredcdf: k not in N");
+  if(im(x) || x<0) return newerror("chisquaredcdf: x not in +R");
+
+  return 1/(gamma(k/2))*gammainc(k/2,x/2);
+}
+
+define chisquaredmean(x,k){return k;}
+
+define chisquaredmedian(x,k){
+  /* TODO: implement a FAST inverse incomplete gamma-{q,p} function */
+  return k*(1-2/(9*k))^3;
+}
+
+define chisquaredmode(x,k){return max(k-2,0);}
+define chisquaredvariance(x,k){return 2*k;}
+define chisquaredskewness(x,k){return sqrt(8/k);}
+define chisquaredkurtosis(x,k){return 12/k;}
+define chisquaredentropy(x,k){
+  return k/2+ln(2*gamma(k/2)) + (1-k/2)*psi(k/2);
+}
+
+define chisquaredmfg(k,t){
+  if(t>=1/2)return newerror("chisquaredmfg: t >= 1/2");
+  return (1-2*t)^(k/2);
+}
+
+define chisquaredcf(k,t){
+  return (1-2*1i*t)^(k/2);
+}
+
+
+/*
+ * restore internal function from resource debugging
+ */
+config("resource_debug", resource_debug_level),;
+if (config("resource_debug") & 3) {
+    print "gammaincoctave(z,a)";
+    print "invbetainc(x,a,b)";
+    print "betapdf(x,a,b)";
+    print "betacdf(x,a,b)";
+    print "betacdfinv(x,a,b)";
+    print "betamedian(a,b)";
+    print "betamode(a,b)";
+    print "betavariance(a,b)";
+    print "betalnvariance(a,b)";
+    print "betaskewness(a,b)";
+    print "betakurtosis(a,b)";
+    print "betaentropy(a,b)";
+    print "normalpdf(x,mu,sigma)";
+    print "normalcdf(x,mu,sigma)";
+    print "probit(p)";
+    print "normalcdfinv(p,mu,sigma)";
+    print "normalmean(mu,sigma)";
+    print "normalmedian(mu,sigma)";
+    print "normalmode(mu,sigma)";
+    print "normalvariance(mu,sigma)";
+    print "normalskewness(mu,sigma)";
+    print "normalkurtosis(mu,sigma)";
+    print "normalentropy(mu,sigma)";
+    print "normalmgf(mu,sigma,t)";
+    print "normalcf(mu,sigma,t)";
+    print "chisquaredpdf(x,k)";
+    print "chisquaredpcdf(x,k)";
+    print "chisquaredmean(x,k)";
+    print "chisquaredmedian(x,k)";
+    print "chisquaredmode(x,k)";
+    print "chisquaredvariance(x,k)";
+    print "chisquaredskewness(x,k)";
+    print "chisquaredkurtosis(x,k)";
+    print "chisquaredentropy(x,k)";
+    print "chisquaredmfg(k,t)";
+    print "chisquaredcf(k,t)";
+}
+

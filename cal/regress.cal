@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.7 $
- * @(#) $Id: regress.cal,v 30.7 2013/08/11 02:57:22 chongo Exp $
+ * @(#) $Revision: 30.8 $
+ * @(#) $Id: regress.cal,v 30.8 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -1397,7 +1397,8 @@ define test_functions()
 	vrfy(quomod(10,-3,a,b,12) == 1, '1193: vrfy(quomod(10,-3,a,b,12) == 1');
 	vrfy(a == -3,			'1194: a == -3');
 	vrfy(b == 1,			'1195: b == 1');
-	vrfy(quomod(-10,-3,a,b,13) == 1,'1196: vrfy(quomod(-10,-3,a,b,13) == 1');
+	vrfy(quomod(-10,-3,a,b,13) == 1,
+	    '1196: vrfy(quomod(-10,-3,a,b,13) == 1');
 	vrfy(a == 4,			'1197: a == 4');
 	vrfy(b == 2,			'1198: b == 2');
 	vrfy(quomod(10,3,a,b,14) == 1,	'1199: vrfy(quomod(10,3,a,b,14) == 1');
@@ -1509,8 +1510,10 @@ define test_assoc()
 	vrfy(isnull(search(a,16)),	'1312: isnull(search(a,16))');
 	a["curds","whey"] = "spider";
 	print				'1313: a["curds","whey"] = "spider"';
-	vrfy(a["curds","whey"] == "spider", '1314: a["curds","whey"] == "spider"');
-	vrfy(a[[rsearch(a,"spider")]] == "spider", '1315: a[[rsearch(a,"spider")]] == "spider"');
+	vrfy(a["curds","whey"] == "spider",
+		'1314: a["curds","whey"] == "spider"');
+	vrfy(a[[rsearch(a,"spider")]] == "spider",
+		'1315: a[[rsearch(a,"spider")]] == "spider"');
 	b = a;
 	print				'1316: b = a';
 	vrfy(b[17] == 19,		'1317: b[17] == 19');
@@ -4892,7 +4895,8 @@ define test_newsyn()
 		vrfy(s5500 == 55,		  '5510: s5500 == 45');
 		vrfy(i == 11,		  '5511: i == 11');
 	}
-	print "5512: { local i; for (s5500 = 0, i = 0; i < 10; i++) s5500 += i; ... }";
+	print "5512: { local i; for (s5500 = 0, i = 0; i < 10; i++) ":
+	      "s5500 += i; ... }";
 	vrfy(s5500 == 55,			  '5513: s5500 == 55');
 	vrfy(i == 11,			  '5514: i == 11');
 
@@ -6506,7 +6510,8 @@ define test_blk()
 	/* A second named block */
 
 	B1 = blk("+++6700", 15, 10) = {1,2,3,4,5};
-	print				  '6746: B1 = blk("+++6700", 15 , 10) = {1,2,3,4,5};';
+	print
+	    '6746: B1 = blk("+++6700", 15 , 10) = {1,2,3,4,5};';
 	vrfy(size(B1) == 15,		  '6747: size(B1) == 15');
 	vrfy(sizeof(B1) == 20,		  '6748: sizeof(B1) == 20');
 	vrfy(test(B1) == 1,		  '6749: test(B1) == 1');
@@ -6871,7 +6876,8 @@ define test_sha1()
 
 
 	z = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi(1e-100));
-	print '7210: z = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi(1e-100));';
+	print '7210: z = sha1(list(1,2,3), "curds and whey",',
+	      '2^21701-1, pi(1e-100));';
 	vrfy(sha1(z) == 0x158cc87deeb9dd478ca14e3ab359205b0fb15b83,
 		'7211: sha1(z) == 0x158cc87deeb9dd478ca14e3ab359205b0fb15b83');
 
@@ -7923,7 +7929,6 @@ print '8901: read -once "test8900"';
 read -once "test8900";
 print '8902: about to run test8900(1,,8903)';
 testnum = test8900(1,,8903);
-print testnum: ": End of test of calc resource functions by Christoph Zurnieden";
 /* 89xx: test calc resource functions by Christoph Zurnieden */
 
 

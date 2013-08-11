@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: file.c,v 30.2 2007/07/05 13:30:38 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: file.c,v 30.3 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/file.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -367,7 +367,8 @@ openid(char *name, char *mode)
 
 
 /*
- * openpathid - open the specified abse filename, or relative filename along a search path
+ * openpathid - open the specified abse filename, or
+ *	        relative filename along a search path
  *
  * given:
  *	name		file name
@@ -2026,7 +2027,8 @@ showfiles(void)
  *	strptr		pointer to where the new field pointer may be found
  */
 S_FUNC void
-getscanfield(FILE *fp, BOOL skip, unsigned int width, int scannum, char *scanptr, char **strptr)
+getscanfield(FILE *fp, BOOL skip, unsigned int width, int scannum,
+	     char *scanptr, char **strptr)
 {
 	char *str;		/* current string */
 	unsigned long len;	/* current length of string */
@@ -2104,7 +2106,8 @@ getscanfield(FILE *fp, BOOL skip, unsigned int width, int scannum, char *scanptr
  *	strptr		pointer to where the new field pointer may be found
  */
 S_FUNC void
-getscanwhite(FILE *fp, BOOL skip, unsigned int width, int scannum, char **strptr)
+getscanwhite(FILE *fp, BOOL skip, unsigned int width, int scannum,
+	     char **strptr)
 {
 	char *str;		/* current string */
 	unsigned long len;	/* current length of string */

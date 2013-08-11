@@ -17,9 +17,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: zrandom.c,v 30.3 2013/08/11 01:08:32 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrandom.c,v $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: zrandom.c,v 30.4 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/zrandom.c,v $
  *
  * Under source code control:	1997/02/15 04:01:56
  * File existed as early as:	1997
@@ -2063,15 +2063,16 @@ STATIC CONST HALF h_rvec19[] = {
 	(HALF)0x8892, (HALF)0xc73d, (HALF)0xc3f4, (HALF)0xa635,
 	(HALF)0x0cf9, (HALF)0x9b5d, (HALF)0x3fd9, (HALF)0x0ac7,
 	(HALF)0xfefb, (HALF)0xe801, (HALF)0xffd2, (HALF)0xb31c,
-	(HALF)0xaa55, (HALF)0xf3ea, (HALF)0xfa23, (HALF)0x0e74, (HALF)0xb290,
-	(HALF)0x5414, (HALF)0x6101, (HALF)0x6d17,
+	(HALF)0xaa55, (HALF)0xf3ea, (HALF)0xfa23, (HALF)0x0e74,
+	(HALF)0xb290, (HALF)0x5414, (HALF)0x6101, (HALF)0x6d17,
 	(HALF)0x93f8, (HALF)0x5229, (HALF)0x3dad, (HALF)0xf829,
 	(HALF)0x1e82, (HALF)0x713b, (HALF)0xbef0, (HALF)0xb83b,
 	(HALF)0xcc62, (HALF)0xd001, (HALF)0xda39, (HALF)0x7537,
 	(HALF)0x158b, (HALF)0x7d80, (HALF)0xc8e2, (HALF)0x9332,
 	(HALF)0xfa75, (HALF)0x6fa6, (HALF)0x6512, (HALF)0xe21f,
 	(HALF)0x18b4, (HALF)0x9995, (HALF)0x605b, (HALF)0x2196,
-	(HALF)0x1798, (HALF)0xe4fc, (HALF)0xe245, (HALF)0x5f21, (HALF)0xf172, (HALF)0x0008
+	(HALF)0x1798, (HALF)0xe4fc, (HALF)0xe245, (HALF)0x5f21,
+	(HALF)0xf172, (HALF)0x0008
 };
 STATIC CONST HALF h_nvec20[] = {
 	(HALF)0xd081, (HALF)0xc3c1, (HALF)0x2fce, (HALF)0x4d26,

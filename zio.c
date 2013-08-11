@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: zio.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: zio.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/zio.c,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -327,7 +327,8 @@ math_setmode2(int newmode)
 {
 	int oldmode;
 
-	if (newmode != MODE2_OFF && ((newmode <= MODE_DEFAULT) || (newmode > MODE_MAX))) {
+	if (newmode != MODE2_OFF && ((newmode <= MODE_DEFAULT) ||
+	    (newmode > MODE_MAX))) {
 		math_error("Setting illegal secondary output mode");
 		/*NOTREACHED*/
 	}
@@ -620,7 +621,8 @@ zprintval(ZVALUE z, long decimals, long width)
 	 */
 	_tenpowers_[0] = _ten_;
 	depth = 0;
-	while ((_tenpowers_[depth].len < z.len) || (zrel(_tenpowers_[depth], z) <= 0)) {
+	while ((_tenpowers_[depth].len < z.len) ||
+	       (zrel(_tenpowers_[depth], z) <= 0)) {
 		depth++;
 		if (_tenpowers_[depth].len == 0) {
 			if (depth <= TEN_MAX) {

@@ -1,0 +1,114 @@
+/*
+ * zeta2 - Hurwitz Zeta function
+ * Copyright (C) 2013 Christoph Zurnieden
+ * Version: 0.0.1
+ * Licence: GPL
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: zeta2.cal,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/zeta2.cal,v $
+ *
+ * Under source code control:	2013/08/11 01:31:28
+ * File existed as early as:	2013
+ */
+
+/*
+ * hide internal function from resource debugging
+ */
+static resource_debug_level;
+resource_debug_level = config("resource_debug", 0);
+
+
+define hurwitzzeta(s,a){
+   local realpart_a  imagpart_s  tmp tmp1 tmp2 tmp3;
+   local sum1 sum2 sum3 i k n precision result limit;
+   local limit_function offset offset_squared rest_sum eps;
+  /*
+    According to Linas Vepstas' "An efficient algorithm for accelerating
+    the convergence of oscillatory series, useful for computing the
+    polylogarithm and Hurwitz zeta functions" the Euler-Maclaurin series
+    is the fastest in most cases.
+
+    With a lot of help of the PARI/GP implementation by Prof. Henri Cohen,
+    hence the different license.
+  */
+   eps=epsilon( epsilon() * 1e-3);
+   realpart_a=re(a);
+   if(realpart_a>1.5){
+    tmp=floor(realpart_a-0.5);
+    sum1 = 0;
+    for( i = 1 ; i <= tmp ; i++){
+      sum1 += ( a - i )^( -s );
+    }
+    epsilon(eps);
+    return (hurwitzzeta(s,a-tmp)-sum1);
+   }
+   if(realpart_a<=0){
+    tmp=ceil(-realpart_a+0.5);
+    for( i = 0 ; i <= tmp-1 ; i++){
+      sum2 += ( a + i )^( -s );
+    }
+    epsilon(eps);
+    return (hurwitzzeta(s,a+tmp)+sum2);
+   }
+   precision=digits(1/epsilon());
+   realpart_a=re(s);
+   imagpart_s=im(s);
+   epsilon(1e-9);
+   result=s-1.;
+   if(abs(result)<0.1){
+     result=-1;
+   }
+   else
+     result=ln(result);
+  limit=(precision*ln(10)-re((s-.5)*result)+(1.*realpart_a)*ln(2.*pi()))/2;
+  limit=max(2,ceil(max(limit,abs(s*1.)/2)));
+  limit_function=ceil(sqrt((limit+realpart_a/2-.25)^2+(imagpart_s*1.)^2/4)/
+  		      pi());
+  if (config("user_debug") > 0) {
+     print "limit_function = " limit_function;
+     print "limit = " limit;
+     print "prec = " precision;
+  }
+  /* Full precison plus 5 digits angstzuschlag*/
+  epsilon( (10^(-precision)) * 1e-5);
+  tmp3=(a+limit_function+0.)^(-s);
+  sum3 = tmp3/2;
+  for(n=0;n<=limit_function-1;n++){
+    sum3 += (a+n)^(-s);
+  }
+  result=sum3;
+  offset=a+limit_function;
+  offset_squared=1./(offset*offset);
+  tmp1=2*s-1;
+  tmp2=s*(s-1);
+  rest_sum=bernoulli(2*limit);
+  for(k=2*limit-2;k>=2;k-=2){
+    rest_sum=bernoulli(k)+offset_squared*
+      (k*k+tmp1*k+tmp2)*rest_sum/((k+1)*(k+2));
+  }
+  rest_sum=offset*(1+offset_squared*tmp2*rest_sum/2);
+  result+=rest_sum*tmp3/(s-1);
+  epsilon(eps);
+  return result;
+}
+
+
+/*
+ * restore internal function from resource debugging
+ * report important interface functions
+ */
+config("resource_debug", resource_debug_level),;
+if (config("resource_debug") & 3) {
+    print "hurwitzzeta(s,a)";
+}

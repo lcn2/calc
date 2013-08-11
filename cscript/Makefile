@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.3 $
-# @(#) $Id: Makefile,v 30.3 2007/09/21 01:27:27 chongo Exp $
+# @(#) $Revision: 30.4 $
+# @(#) $Id: Makefile,v 30.4 2013/08/11 08:41:38 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
@@ -315,7 +315,9 @@ depend:
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i: $$i.calc"; \
 		echo '	@$${RM} -f $$@'; \
-		echo '	@$${SED} -e "1s:^#!/usr/local/src/cmd/calc/calc:#!$${BINDIR}/calc:" $$?>$$@'; \
+		echo -n '	@$${SED} -e "1s:'; \
+		echo "^#!/usr/local/src/cmd/calc/calc:#!$${BINDIR}/calc:" \
+			$$?>$$@'; \
 		echo '	@$${CHMOD} +x $$@'; \
 	    fi; \
 	done >> makedep.out
@@ -323,7 +325,8 @@ depend:
 	${Q} echo forming new cscript/${MAKE_FILE}
 	${Q} ${RM} -f ${MAKE_FILE}.bak
 	${Q} ${MV} ${MAKE_FILE} ${MAKE_FILE}.bak
-	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' ${MAKE_FILE}.bak > ${MAKE_FILE}
+	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' \
+		    ${MAKE_FILE}.bak > ${MAKE_FILE}
 	${Q} echo "" >> ${MAKE_FILE}
 	${Q} ${CAT} makedep.out >> ${MAKE_FILE}
 	${Q} ${RM} -f makedep.out

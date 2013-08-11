@@ -1,0 +1,104 @@
+/*
+ * constants - implementation of different constants to arbitrary precision
+ *
+ * Copyright (C) 2013 Christoph Zurnieden
+ *
+ * constants is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * constants is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: constants.cal,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/constants.cal,v $
+ *
+ * Under source code control:	2013/08/11 01:31:28
+ * File existed as early as:	2013
+ */
+
+
+static resource_debug_level;
+resource_debug_level = config("resource_debug", 0);
+
+
+static __CZ__euler_mascheroni = 0;
+static __CZ__euler_mascheroni_prec = 0;
+
+
+define e(){
+  local k temp1 temp2 ret eps factor upperlimit prec;
+
+  prec = digits(1/epsilon());
+  if(__CZ__euler_mascheroni != 0 &&  __CZ__euler_mascheroni_prec >= prec)
+    return __CZ__euler_mascheroni;
+  if(prec<=20) return 2.718281828459045235360287471;
+  if(prec<=1800){
+    __CZ__euler_mascheroni = exp(1);
+    __CZ__euler_mascheroni_prec = prec;
+  }
+
+  eps=epsilon(1e-20);
+  factor = 1;
+  k = 0;
+  upperlimit = prec * ln(10);
+  while(k<upperlimit){
+    k += ln(factor);
+    factor++;
+  }
+  epsilon(eps);
+  temp1 = 0;
+  ret   = 1;
+  for(k=3;k<=factor;k++){
+    temp2 = temp1;
+    temp1 = ret;
+    ret =  (k-1) *(temp1 + temp2);
+  }
+
+  ret = inverse( ret * inverse(factorial(factor) ) ) ;
+  __CZ__euler_mascheroni = ret;
+  __CZ__euler_mascheroni_prec = prec;
+  return ret;
+}
+
+
+/* Lupas' series */
+static __CZ__catalan = 0;
+static __CZ__catalan_prec = 0;
+define G(){
+  local eps a s t n;
+  eps = epsilon(epsilon()*1e-10);
+  if(__CZ__catalan != 0 &&  __CZ__catalan >= log(1/eps))
+    return __CZ__catalan;
+  a = 1;
+  s = 0;
+  t = 1;
+  n = 1;
+  while(abs(t)> eps){
+    a *= 32 * n^3 * (2*n-1);
+    a /=((3-16*n+16*n^2)^2);
+    t = a * (-1)^(n-1) * (40*n^2-24*n+3) / (n^3 * (2*n-1));
+    s += t;
+    n += 1;
+  }
+  s = s/64;
+  __CZ__catalan = s;
+  __CZ__catalan_prec = log(1/eps);
+  epsilon(eps);
+  return s;
+}
+
+
+config("resource_debug", resource_debug_level),;
+if (config("resource_debug") & 3) {
+    print "e()";
+    print "G()";
+}

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: longbits.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: longbits.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/longbits.c,v $
  *
  * Under source code control:	1994/03/18 03:06:18
@@ -203,7 +203,8 @@ main(int argc, char **argv)
 		  "* signed 64 bits *");
 		putchar('\n');
 		printf("/%s/\n","* how to form 64 bit constants *");
-#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
+#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || \
+    defined(__cplusplus)
 		printf("#define U(x) x ## ULL\n");
 		printf("#define L(x) x ## LL\n");
 #else
@@ -307,7 +308,8 @@ main(int argc, char **argv)
 		  "* signed 64 bits *");
 		putchar('\n');
 		printf("/%s/\n","* how to form 64 bit constants *");
-#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
+#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || \
+    defined(__cplusplus)
 		printf("#define U(x) x ## UL\n");
 		printf("#define L(x) x ## L\n");
 #else
@@ -324,7 +326,8 @@ main(int argc, char **argv)
 		  "* signed 64 bits *");
 		putchar('\n');
 		printf("/%s/\n","* how to form 64 bit constants *");
-#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
+#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || \
+    defined(__cplusplus)
 		printf("#define U(x) x ## ULL\n");
 		printf("#define L(x) x ## LL\n");
 #else

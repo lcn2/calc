@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: str.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: str.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/str.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -162,7 +162,8 @@ findstr(STRINGHEAD *hp, char *str)
 	index = 0;
 	while (*test) {
 		testlen = strlen(test);
-		if ((testlen == len) && (*test == *str) && (strcmp(test, str) == 0))
+		if ((testlen == len) && (*test == *str) &&
+		    (strcmp(test, str) == 0))
 			return index;
 		test += (testlen + 1);
 		index++;
@@ -263,7 +264,8 @@ addliteral(char *str)
 	if (literals.l_count >= literals.l_maxcount) {
 		count = literals.l_maxcount + STR_TABLECHUNK;
 		if (literals.l_maxcount)
-			table = (char **) realloc(literals.l_table, count * sizeof(char *));
+			table = (char **) realloc(literals.l_table, count *
+						  sizeof(char *));
 		else
 			table = (char **) malloc(count * sizeof(char *));
 		if (table == NULL) {
@@ -1214,7 +1216,8 @@ addstring(char *str, size_t len)
 			sp = (STRING **) realloc((char *) stringconsttable,
 			sizeof(STRING *) * (stringconstcount + STRCONSTALLOC));
 			if (sp == NULL) {
-				math_error("Unable to reallocate string const table");
+				math_error("Unable to reallocate string "
+					   "const table");
 				/*NOTREACHED*/
 			}
 			stringconsttable = sp;

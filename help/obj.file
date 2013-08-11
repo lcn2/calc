@@ -134,7 +134,8 @@ Using objects
 
 	    xx_print    1	print value, default prints elements
 	    xx_one      1	multiplicative identity, default is 1
-	    xx_test     1	logical test (false,true => 0,1), default tests elements
+	    xx_test     1	logical test (false,true => 0,1),
+	    			  default tests elements
 	    xx_add      2
 	    xx_sub      2
 	    xx_neg      1	negative
@@ -144,9 +145,11 @@ Using objects
 	    xx_abs      2	absolute value within given error
 	    xx_norm     1	square of absolute value
 	    xx_conj     1	conjugate
-	    xx_pow      2	integer power, default does multiply, square, inverse
+	    xx_pow      2	integer power, default does multiply,
+	    			  square, inverse
 	    xx_sgn      1	sign of value (-1, 0, 1)
-	    xx_cmp      2	equality (equal,nonequal => 0,1), default tests elements
+	    xx_cmp      2	equality (equal,nonequal => 0,1),
+	    			   default tests elements
 	    xx_rel      2	relative order, positive for >, etc.
 	    xx_quo      3	integer quotient
 	    xx_mod      3	remainder of division
@@ -209,9 +212,9 @@ Using objects
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.3 $
-## @(#) $Id: obj.file,v 30.3 2010/09/02 06:36:21 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/obj.file,v $
+## @(#) $Revision: 30.4 $
+## @(#) $Id: obj.file,v 30.4 2013/08/11 08:41:38 chongo Exp $
+## @(#) $Source: /usr/local/src/bin/calc/help/RCS/obj.file,v $
 ##
 ## Under source code control:	1991/07/21 04:37:22
 ## File existed as early as:	1991

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: func.c,v 30.3 2008/04/15 21:17:57 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: func.c,v 30.4 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -2062,7 +2062,8 @@ f_ln(int count, VALUE **vals)
 	}
 	switch (vals[0]->v_type) {
 		case V_NUM:
-			if (!qisneg(vals[0]->v_num) && !qiszero(vals[0]->v_num)) {
+			if (!qisneg(vals[0]->v_num) &&
+			    !qiszero(vals[0]->v_num)) {
 				result.v_num = qln(vals[0]->v_num, err);
 				result.v_type = V_NUM;
 				return result;
@@ -2107,7 +2108,8 @@ f_log(int count, VALUE **vals)
 	}
 	switch (vals[0]->v_type) {
 		case V_NUM:
-			if (!qisneg(vals[0]->v_num) && !qiszero(vals[0]->v_num)) {
+			if (!qisneg(vals[0]->v_num) &&
+			    !qiszero(vals[0]->v_num)) {
 				result.v_num = qlog(vals[0]->v_num, err);
 				result.v_type = V_NUM;
 				return result;
@@ -4842,7 +4844,8 @@ f_rsearch(int count, VALUE **vals)
 			i = listrsearch(v1->v_list, v2, l_start, l_end, &indx);
 			break;
 		case V_ASSOC:
-			i = assocrsearch(v1->v_assoc, v2, l_start, l_end, &indx);
+			i = assocrsearch(v1->v_assoc, v2, l_start,
+				         l_end, &indx);
 			break;
 		case V_STR:
 			i = stringrsearch(v1->v_str, v2->v_str, l_start,
@@ -8130,7 +8133,8 @@ STATIC CONST struct builtin builtins[] = {
 	{"ceil", 1, 1, 0, OP_NOP, 0, f_ceil,
 	 "smallest integer greater than or equal to number"},
 	{"cfappr", 1, 3, 0, OP_NOP, f_cfappr, 0,
-	 "approximate a within accuracy b using\n\t\t\tcontinued fractions"},
+	 "approximate a within accuracy b using\n"
+	 "\t\t\tcontinued fractions"},
 	{"cfsim", 1, 2, 0, OP_NOP, f_cfsim, 0,
 	 "simplify number using continued fractions"},
 	{"char", 1, 1, 0, OP_NOP, 0, f_char,
@@ -8230,7 +8234,8 @@ STATIC CONST struct builtin builtins[] = {
 	{"fgets", 1, 1, 0, OP_NOP, 0, f_fgets,
 	 "read next line from file, newline is kept"},
 	{"fgetstr", 1, 1, 0, OP_NOP, 0, f_fgetstr,
-	 "read next null-terminated string from file, null\n\t\t\tcharacter is kept"},
+	 "read next null-terminated string from file, null\n"
+	 "\t\t\tcharacter is kept"},
 	{"files", 0, 1, 0, OP_NOP, 0, f_files,
 	 "return opened file or max number of opened files"},
 	{"floor", 1, 1, 0, OP_NOP, 0, f_floor,
@@ -8238,7 +8243,8 @@ STATIC CONST struct builtin builtins[] = {
 	{"fopen", 2, 2, 0, OP_NOP, 0, f_fopen,
 	 "open file name a in mode b"},
 	{"fpathopen", 2, 3, 0, OP_NOP, 0, f_fpathopen,
-	 "open file name a in mode b, search for a along\n\t\t\tCALCPATH or path c"},
+	 "open file name a in mode b, search for a along\n"
+	 "\t\t\tCALCPATH or path c"},
 	{"fprintf", 2, IN, 0, OP_NOP, 0, f_fprintf,
 	 "print formatted output to opened file"},
 	{"fputc", 2, 2, 0, OP_NOP, 0, f_fputc,
@@ -8262,9 +8268,11 @@ STATIC CONST struct builtin builtins[] = {
 	{"freopen", 2, 3, 0, OP_NOP, 0, f_freopen,
 	 "reopen a file stream to a named file"},
 	{"fscan", 2, IN, FA, OP_NOP, 0, f_fscan,
-	 "scan a file for assignments to one or\n\t\t\tmore variables"},
+	 "scan a file for assignments to one or\n"
+	 "\t\t\tmore variables"},
 	{"fscanf", 2, IN, FA, OP_NOP, 0, f_fscanf,
-	 "formatted scan of a file for assignment to one\n\t\t\tor more variables"},
+	 "formatted scan of a file for assignment to one\n"
+	 "\t\t\tor more variables"},
 	{"fseek", 2, 3, 0, OP_NOP, 0, f_fseek,
 	 "seek to position b (offset from c) in file a"},
 	{"fsize", 1, 1, 0, OP_NOP, 0, f_fsize,
@@ -8282,7 +8290,8 @@ STATIC CONST struct builtin builtins[] = {
 	{"getenv", 1, 1, 0, OP_NOP, 0, f_getenv,
 	 "value of environment variable (or NULL)"},
 	{"hash", 1, IN, 0, OP_NOP, 0, f_hash,
-	 "return non-negative hash value for one or\n\t\t\tmore values"},
+	 "return non-negative hash value for one or\n"
+	 "\t\t\tmore values"},
 	{"head", 2, 2, 0, OP_NOP, 0, f_head,
 	 "return list of specified number at head of a list"},
 	{"highbit", 1, 1, 0, OP_HIGHBIT, 0, 0,
@@ -8376,7 +8385,8 @@ STATIC CONST struct builtin builtins[] = {
 	{"istype", 2, 2, 0, OP_ISTYPE, 0, 0,
 	 "whether the type of a is same as the type of b"},
 	{"jacobi", 2, 2, 0, OP_NOP, qjacobi, 0,
-	 "-1 => a is not quadratic residue mod b\n\t\t\t1 => b is composite, or a is quad residue of b"},
+	 "-1 => a is not quadratic residue mod b\n"
+	 "\t\t\t1 => b is composite, or a is quad residue of b"},
 	{"join", 1, IN, 0, OP_NOP, 0, f_join,
 	 "join one or more lists into one list"},
 	{"lcm", 1, IN, 0, OP_NOP, f_lcm, 0,
@@ -8450,7 +8460,8 @@ STATIC CONST struct builtin builtins[] = {
 	{"ord", 1, 1, 0, OP_NOP, 0, f_ord,
 	 "integer corresponding to character value"},
 	{"param", 1, 1, 0, OP_ARGVALUE, 0, 0,
-	 "value of parameter n (or parameter count if n\n\t\t\tis zero)"},
+	 "value of parameter n (or parameter count if n\n"
+	 "\t\t\tis zero)"},
 	{"perm", 2, 2, 0, OP_NOP, qperm, 0,
 	 "permutation number a!/(a-b)!"},
 	{"prevcand", 1, 5, 0, OP_NOP, f_prevcand, 0,
@@ -8470,7 +8481,8 @@ STATIC CONST struct builtin builtins[] = {
 	{"polar", 2, 3, 0, OP_NOP, 0, f_polar,
 	 "complex value of polar coordinate (a * exp(b*1i))"},
 	{"poly", 1, IN, 0, OP_NOP, 0, f_poly,
-	 "evaluates a polynomial given its coefficients\n\t\t\tor coefficient-list"},
+	 "evaluates a polynomial given its coefficients\n"
+	 "\t\t\tor coefficient-list"},
 	{"pop", 1, 1, FA, OP_NOP, 0, f_listpop,
 	 "pop value from front of list"},
 	{"popcnt", 1, 2, 0, OP_NOP, f_popcnt, 0,
@@ -8492,7 +8504,8 @@ STATIC CONST struct builtin builtins[] = {
 	{"quo", 2, 3, 0, OP_NOP, 0, f_quo,
 	 "integer quotient of a by b, rounding type c"},
 	{"quomod", 4, 5, FA, OP_NOP, 0, f_quomod,
-	 "set c and d to quotient and remainder of a\n\t\t\tdivided by b"},
+	 "set c and d to quotient and remainder of a\n"
+	 "\t\t\tdivided by b"},
 	{"rand", 0, 2, 0, OP_NOP, f_rand, 0,
 	 "additive 55 random number [0,2^64), [0,a), or [a,b)"},
 	{"randbit", 0, 1, 0, OP_NOP, f_randbit, 0,
@@ -8528,7 +8541,8 @@ STATIC CONST struct builtin builtins[] = {
 	{"round", 1, 3, 0, OP_NOP, 0, f_round,
 	 "round value a to b number of decimal places"},
 	{"rsearch", 2, 4, 0, OP_NOP, 0, f_rsearch,
-	 "reverse search matrix or list for value b\n\t\t\tstarting at index c"},
+	 "reverse search matrix or list for value b\n"
+	 "\t\t\tstarting at index c"},
 	{"runtime", 0, 0, 0, OP_NOP, f_runtime, 0,
 	 "user and kernel mode cpu time in seconds"},
 	{"saveval", 1, 1, 0, OP_SAVEVAL, 0, 0,
@@ -8536,11 +8550,14 @@ STATIC CONST struct builtin builtins[] = {
 	{"scale", 2, 2, 0, OP_SCALE, 0, 0,
 	 "scale value up or down by a power of two"},
 	{"scan", 1, IN, FA, OP_NOP, 0, f_scan,
-	 "scan standard input for assignment to one\n\t\t\tor more variables"},
+	 "scan standard input for assignment to one\n"
+	 "\t\t\tor more variables"},
 	{"scanf", 2, IN, FA, OP_NOP, 0, f_scanf,
-	 "formatted scan of standard input for assignment\n\t\t\tto variables"},
+	 "formatted scan of standard input for assignment\n"
+	 "\t\t\tto variables"},
 	{"search", 2, 4, 0, OP_NOP, 0, f_search,
-	 "search matrix or list for value b starting\n\t\t\tat index c"},
+	 "search matrix or list for value b starting\n"
+	 "\t\t\tat index c"},
 	{"sec", 1, 2, 0, OP_NOP, 0, f_sec,
 	 "sec of a within accuracy b"},
 	{"sech", 1, 2, 0, OP_NOP, 0, f_sech,
@@ -8775,7 +8792,8 @@ builtinfunc(long index, int argcount, VALUE *stck)
 	vpp = valargs;
 	for (i = 0; i < argcount; i++) {
 		if ((*vpp)->v_type != V_NUM) {
-			math_error("Non-real argument for builtin function %s", bp->b_name);
+			math_error("Non-real argument for builtin function %s",
+				   bp->b_name);
 			/*NOTREACHED*/
 		}
 		numargs[i] = (*vpp)->v_num;

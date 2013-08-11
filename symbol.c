@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: symbol.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: symbol.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/symbol.c,v $
  *
  * Under source code control:	1990/02/15 01:48:23
@@ -61,7 +61,8 @@ STATIC GLOBAL **statictable;
  * Hash a symbol name so we can find it in the hash table.
  * Args are the symbol name and the symbol name size.
  */
-#define HASHSYM(n, s) ((unsigned)((n)[0]*123 + (n)[s-1]*135 + (s)*157) % HASHSIZE)
+#define HASHSYM(n, s) ((unsigned)((n)[0]*123 + (n)[s-1]*135 + (s)*157) % \
+		       HASHSIZE)
 
 
 /*

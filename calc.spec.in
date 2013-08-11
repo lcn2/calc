@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.10 $
-# @(#) $Id: calc.spec.in,v 30.10 2013/05/05 11:57:44 chongo Exp $
+# @(#) $Revision: 30.11 $
+# @(#) $Id: calc.spec.in,v 30.11 2013/08/11 08:41:38 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/RCS/calc.spec.in,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -76,38 +76,59 @@ For the latest calc release, see the project home page:
 
 %build
 echo '-=- calc.spec beginning make clobber -=-'
-make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ clobber
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+     CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
+     MANDIR=%{_mandir}/man1 EXT= V=@ clobber
 echo '-=- calc.spec ending make clobber -=-'
 echo '-=- calc.spec beginning make calc-static-only -=-'
-make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ calc-static-only BLD_TYPE=calc-static-only
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+     CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
+     MANDIR=%{_mandir}/man1 EXT= V=@ calc-static-only BLD_TYPE=calc-static-only
 echo '-=- calc.spec ending make calc-static-only -=-'
 echo '-=- calc.spec beginning make rpm-hide-static -=-'
-make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-hide-static
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+     CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
+     MANDIR=%{_mandir}/man1 EXT= V=@ rpm-hide-static
 echo '-=- calc.spec ending make rpm-hide-static -=-'
 echo '-=- calc.spec beginning make clobber (again) -=-'
-make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ clobber
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+     CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
+     MANDIR=%{_mandir}/man1 EXT= V=@ clobber
 echo '-=- calc.spec ending make clobber (again) -=-'
 echo '-=- calc.spec beginning make calc-dynamic-only -=-'
-make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ calc-dynamic-only BLD_TYPE=calc-dynamic-only LD_SHARE=
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+     CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
+     MANDIR=%{_mandir}/man1 EXT= V=@ calc-dynamic-only \
+     BLD_TYPE=calc-dynamic-only LD_SHARE=
 echo '-=- calc.spec ending make calc-dynamic-only -=-'
 echo '-=- calc.spec beginning make chk -=-'
-make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ chk
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+     CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
+     MANDIR=%{_mandir}/man1 EXT= V=@ chk
 echo '-=- calc.spec ending make chk -=-'
 echo '-=- calc.spec beginning make rpm-unhide-static -=-'
-make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-unhide-static
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+     CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
+     MANDIR=%{_mandir}/man1 EXT= V=@ rpm-unhide-static
 echo '-=- calc.spec ending make rpm-unhide-static -=-'
 echo '-=- calc.spec beginning make rpm-clean-static -=-'
-make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-clean-static
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+     CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
+     MANDIR=%{_mandir}/man1 EXT= V=@ rpm-clean-static
 echo '-=- calc.spec ending make rpm-clean-static -=-'
 echo '-=- calc.spec beginning make rpm-chk-static -=-'
-make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-chk-static
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+     CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
+     MANDIR=%{_mandir}/man1 EXT= V=@ rpm-chk-static
 echo '-=- calc.spec ending make rpm-chk-static -=-'
 
 %install
 echo '-=- calc.spec beginning make install -=-'
 rm -rf %{_buildroot}
 mkdir -p %{_buildroot}
-make T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ install
+make T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+     CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
+     MANDIR=%{_mandir}/man1 EXT= V=@ install
 echo '-=- calc.spec ending make install -=-'
 
 %clean

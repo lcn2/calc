@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: opcodes.c,v 30.4 2008/05/10 13:51:32 chongo Exp $
+ * @(#) $Revision: 30.5 $
+ * @(#) $Id: opcodes.c,v 30.5 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/opcodes.c,v $
  *
  * Under source code control:	1990/02/15 01:48:19
@@ -168,7 +168,8 @@ S_FUNC void
 o_globaladdr(FUNC UNUSED *fp, GLOBAL *sp)
 {
 	if (sp == NULL) {
-		math_error("Global variable \"%s\" not initialized", sp->g_name);
+		math_error("Global variable \"%s\" not initialized",
+			    sp->g_name);
 		/*NOTREACHED*/
 	}
 	stack++;
@@ -3557,138 +3558,270 @@ showsizes(void)
  * Information about each opcode.
  */
 STATIC struct opcode opcodes[MAX_OPCODE+1] = {
-	{o_nop,		OPNUL,	"NOP"},		/* no operation */
-	{o_localaddr,	OPLOC,	"LOCALADDR"},	/* address of local variable */
-	{o_globaladdr,	OPGLB,	"GLOBALADDR"},	/* address of global variable */
-	{o_paramaddr,	OPPAR,	"PARAMADDR"},	/* address of parameter variable */
-	{o_localvalue,	OPLOC,	"LOCALVALUE"},	/* value of local variable */
-	{o_globalvalue, OPGLB,	"GLOBALVALUE"}, /* value of global variable */
-	{o_paramvalue,	OPPAR,	"PARAMVALUE"},	/* value of parameter variable */
-	{o_number,	OPONE,	"NUMBER"},	/* constant real numeric value */
-	{o_indexaddr,	OPTWO,	"INDEXADDR"},	/* array index address */
-	{o_printresult, OPNUL,	"PRINTRESULT"}, /* print result of top-level expression */
-	{o_assign,	OPNUL,	"ASSIGN"},	/* assign value to variable */
-	{o_add,		OPNUL,	"ADD"},		/* add top two values */
-	{o_sub,		OPNUL,	"SUB"},		/* subtract top two values */
-	{o_mul,		OPNUL,	"MUL"},		/* multiply top two values */
-	{o_div,		OPNUL,	"DIV"},		/* divide top two values */
-	{o_mod,		OPNUL,	"MOD"},		/* take mod of top two values */
-	{o_save,	OPNUL,	"SAVE"},	/* save value for later use */
-	{o_negate,	OPNUL,	"NEGATE"},	/* negate top value */
-	{o_invert,	OPNUL,	"INVERT"},	/* invert top value */
-	{o_int,		OPNUL,	"INT"},		/* take integer part */
-	{o_frac,	OPNUL,	"FRAC"},	/* take fraction part */
-	{o_numerator,	OPNUL,	"NUMERATOR"},	/* take numerator */
-	{o_denominator, OPNUL,	"DENOMINATOR"}, /* take denominator */
-	{o_duplicate,	OPNUL,	"DUPLICATE"},	/* duplicate top value */
-	{o_pop,		OPNUL,	"POP"},		/* pop top value */
-	{o_return,	OPRET,	"RETURN"},	/* return value of function */
-	{o_jumpz,	OPJMP,	"JUMPZ"},	/* jump if value zero */
-	{o_jumpnz,	OPJMP,	"JUMPNZ"},	/* jump if value nonzero */
-	{o_jump,	OPJMP,	"JUMP"},	/* jump unconditionally */
-	{o_usercall,	OPTWO,	"USERCALL"},	/* call a user function */
-	{o_getvalue,	OPNUL,	"GETVALUE"},	/* convert address to value */
-	{o_eq,		OPNUL,	"EQ"},		/* test elements for equality */
-	{o_ne,		OPNUL,	"NE"},		/* test elements for inequality */
-	{o_le,		OPNUL,	"LE"},		/* test elements for <= */
-	{o_ge,		OPNUL,	"GE"},		/* test elements for >= */
-	{o_lt,		OPNUL,	"LT"},		/* test elements for < */
-	{o_gt,		OPNUL,	"GT"},		/* test elements for > */
-	{o_preinc,	OPNUL,	"PREINC"},	/* add one to variable (++x) */
-	{o_predec,	OPNUL,	"PREDEC"},	/* subtract one from variable (--x) */
-	{o_postinc,	OPNUL,	"POSTINC"},	/* add one to variable (x++) */
-	{o_postdec,	OPNUL,	"POSTDEC"},	/* subtract one from variable (x--) */
-	{o_debug,	OPONE,	"DEBUG"},	/* debugging point */
-	{o_print,	OPONE,	"PRINT"},	/* print value */
-	{o_assignpop,	OPNUL,	"ASSIGNPOP"},	/* assign to variable and pop it */
-	{o_zero,	OPNUL,	"ZERO"},	/* put zero on the stack */
-	{o_one,		OPNUL,	"ONE"},		/* put one on the stack */
-	{o_printeol,	OPNUL,	"PRINTEOL"},	/* print end of line */
-	{o_printspace,	OPNUL,	"PRINTSPACE"},	/* print a space */
-	{o_printstring, OPONE,	"PRINTSTR"},	/* print constant string */
-	{o_dupvalue,	OPNUL,	"DUPVALUE"},	/* duplicate value of top value */
-	{o_oldvalue,	OPNUL,	"OLDVALUE"},	/* old value from previous calc */
-	{o_quo,		OPNUL,	"QUO"},		/* integer quotient of top values */
-	{o_power,	OPNUL,	"POWER"},	/* value raised to a power */
-	{o_quit,	OPONE,	"QUIT"},	/* quit program */
-	{o_call,	OPTWO,	"CALL"},	/* call built-in routine */
-	{o_getepsilon,	OPNUL,	"GETEPSILON"},	/* get allowed error for calculations */
-	{o_and,		OPNUL,	"AND"},		/* arithmetic and or top two values */
-	{o_or,		OPNUL,	"OR"},		/* arithmetic or of top two values */
-	{o_not,		OPNUL,	"NOT"},		/* logical not or top value */
-	{o_abs,		OPNUL,	"ABS"},		/* absolute value of top value */
-	{o_sgn,		OPNUL,	"SGN"},		/* sign of number */
-	{o_isint,	OPNUL,	"ISINT"},	/* whether number is an integer */
-	{o_condorjump,	OPJMP,	"CONDORJUMP"},	/* conditional or jump */
-	{o_condandjump, OPJMP,	"CONDANDJUMP"}, /* conditional and jump */
-	{o_square,	OPNUL,	"SQUARE"},	/* square top value */
-	{o_string,	OPONE,	"STRING"},	/* string constant value */
-	{o_isnum,	OPNUL,	"ISNUM"},	/* whether value is a number */
-	{o_undef,	OPNUL,	"UNDEF"},	/* load undefined value on stack */
-	{o_isnull,	OPNUL,	"ISNULL"},	/* whether value is the null value */
-	{o_argvalue,	OPARG,	"ARGVALUE"},	/* load value of arg (parameter) n */
-	{o_matcreate,	OPONE,	"MATCREATE"},	/* create matrix */
-	{o_ismat,	OPNUL,	"ISMAT"},	/* whether value is a matrix */
-	{o_isstr,	OPNUL,	"ISSTR"},	/* whether value is a string */
-	{o_getconfig,	OPNUL,	"GETCONFIG"},	/* get value of configuration parameter */
-	{o_leftshift,	OPNUL,	"LEFTSHIFT"},	/* left shift of integer */
-	{o_rightshift,	OPNUL,	"RIGHTSHIFT"},	/* right shift of integer */
-	{o_casejump,	OPJMP,	"CASEJUMP"},	/* test case and jump if not matched */
-	{o_isodd,	OPNUL,	"ISODD"},	/* whether value is odd integer */
-	{o_iseven,	OPNUL,	"ISEVEN"},	/* whether value is even integer */
-	{o_fiaddr,	OPNUL,	"FIADDR"},	/* 'fast index' matrix address */
-	{o_fivalue,	OPNUL,	"FIVALUE"},	/* 'fast index' matrix value */
-	{o_isreal,	OPNUL,	"ISREAL"},	/* whether value is real number */
-	{o_imaginary,	OPONE,	"IMAGINARY"},	/* constant imaginary numeric value */
-	{o_re,		OPNUL,	"RE"},		/* real part of complex number */
-	{o_im,		OPNUL,	"IM"},		/* imaginary part of complex number */
-	{o_conjugate,	OPNUL,	"CONJUGATE"},	/* complex conjugate */
-	{o_objcreate,	OPONE,	"OBJCREATE"},	/* create object */
-	{o_isobj,	OPNUL,	"ISOBJ"},	/* whether value is an object */
-	{o_norm,	OPNUL,	"NORM"},	/* norm of value (square of abs) */
-	{o_elemaddr,	OPONE,	"ELEMADDR"},	/* address of element of object */
-	{o_elemvalue,	OPONE,	"ELEMVALUE"},	/* value of element of object */
-	{o_istype,	OPNUL,	"ISTYPE"},	/* whether types are the same */
-	{o_scale,	OPNUL,	"SCALE"},	/* scale value by a power of two */
-	{o_islist,	OPNUL,	"ISLIST"},	/* whether value is a list */
-	{o_swap,	OPNUL,	"SWAP"},	/* swap values of two variables */
-	{o_issimple,	OPNUL,	"ISSIMPLE"},	/* whether value is simple type */
-	{o_cmp,		OPNUL,	"CMP"},		/* compare values returning -1, 0, 1 */
-	{o_setconfig,	OPNUL,	"SETCONFIG"},	/* set configuration parameter */
-	{o_setepsilon,	OPNUL,	"SETEPSILON"},	/* set allowed error for calculations */
-	{o_isfile,	OPNUL,	"ISFILE"},	/* whether value is a file */
-	{o_isassoc,	OPNUL,	"ISASSOC"},	/* whether value is an association */
-	{o_nop,		OPSTI,	"INITSTATIC"},	/* once only code for static init */
-	{o_eleminit,	OPONE,	"ELEMINIT"},	/* assign element of matrix or object */
-	{o_isconfig,	OPNUL,	"ISCONFIG"},	/* whether value is a configuration state */
-	{o_ishash,	OPNUL,	"ISHASH"},	/* whether value is a hash state */
-	{o_isrand,	OPNUL,	"ISRAND"},	/* whether value is a rand element */
-	{o_israndom,	OPNUL,	"ISRANDOM"},	/* whether value is a random element */
-	{o_show,	OPONE,	"SHOW"},	/* show current state data */
-	{o_initfill,	OPNUL,	"INITFILL"},	/* initially fill matrix */
-	{o_assignback,	OPNUL,	"ASSIGNBACK"},	/* assign in reverse order */
-	{o_test,	OPNUL,	"TEST"},	 /* test that value is "nonzero" */
-	{o_isdefined,	OPNUL,	"ISDEFINED"},	/* whether a string names a function */
-	{o_isobjtype,	OPNUL,	"ISOBJTYPE"},	/* whether a string names an object type */
-	{o_isblock,	OPNUL,	"ISBLK"},	/* whether value is a block */
-	{o_ptr,		OPNUL,	"PTR"},		/* octet pointer */
-	{o_deref,	OPNUL,	"DEREF"},	/* dereference an octet pointer */
-	{o_isoctet,	OPNUL,	"ISOCTET"},	/* whether a value is an octet */
-	{o_isptr,	OPNUL,	"ISPTR"},	/* whether a value is a pointer */
-	{o_setsaveval,	OPNUL,	"SAVEVAL"},	/* enable or disable saving */
-	{o_links,	OPNUL,	"LINKS"},	/* links to number or string */
-	{o_bit,		OPNUL,	"BIT"},		/* whether bit is set */
-	{o_comp,	OPNUL,	"COMP"},	/* complement value */
-	{o_xor,		OPNUL,	"XOR"},		/* xor (~) of values */
-	{o_highbit,	OPNUL,	"HIGHBIT"},	/* highbit of value */
-	{o_lowbit,	OPNUL,	"LOWBIT"},	/* lowbit of value */
-	{o_content,	OPNUL,	"CONTENT"},	/* unary hash op */
-	{o_hashop,	OPNUL,	"HASHOP"},	/* binary hash op */
-	{o_backslash,	OPNUL,	"BACKSLASH"},	/* unary backslash op */
-	{o_setminus,	OPNUL,	"SETMINUS"},	/* binary backslash op */
-	{o_plus,	OPNUL,	"PLUS"},	/* unary + op */
-	{o_jumpnn,	OPJMP,	"JUMPNN"},	/* jump if non-null */
-	{o_abort,	OPONE,	"ABORT"}	/* abort operation */
+	{o_nop,		OPNUL,
+	 "NOP"},		/* no operation */
+	{o_localaddr,	OPLOC,
+	 "LOCALADDR"},	/* address of local variable */
+	{o_globaladdr,	OPGLB,
+	 "GLOBALADDR"},	/* address of global variable */
+	{o_paramaddr,	OPPAR,
+	 "PARAMADDR"},	/* address of parameter variable */
+	{o_localvalue,	OPLOC,
+	 "LOCALVALUE"},	/* value of local variable */
+	{o_globalvalue, OPGLB,
+	 "GLOBALVALUE"}, /* value of global variable */
+	{o_paramvalue,	OPPAR,
+	 "PARAMVALUE"},	/* value of parameter variable */
+	{o_number,	OPONE,
+	 "NUMBER"},	/* constant real numeric value */
+	{o_indexaddr,	OPTWO,
+	 "INDEXADDR"},	/* array index address */
+	{o_printresult, OPNUL,
+	 "PRINTRESULT"}, /* print result of top-level expression */
+	{o_assign,	OPNUL,
+	 "ASSIGN"},	/* assign value to variable */
+	{o_add,		OPNUL,
+	 "ADD"},		/* add top two values */
+	{o_sub,		OPNUL,
+	 "SUB"},		/* subtract top two values */
+	{o_mul,		OPNUL,
+	 "MUL"},		/* multiply top two values */
+	{o_div,		OPNUL,
+	 "DIV"},		/* divide top two values */
+	{o_mod,		OPNUL,
+	 "MOD"},		/* take mod of top two values */
+	{o_save,	OPNUL,
+	 "SAVE"},	/* save value for later use */
+	{o_negate,	OPNUL,
+	 "NEGATE"},	/* negate top value */
+	{o_invert,	OPNUL,
+	 "INVERT"},	/* invert top value */
+	{o_int,		OPNUL,
+	 "INT"},		/* take integer part */
+	{o_frac,	OPNUL,
+	 "FRAC"},	/* take fraction part */
+	{o_numerator,	OPNUL,
+	 "NUMERATOR"},	/* take numerator */
+	{o_denominator, OPNUL,
+	 "DENOMINATOR"}, /* take denominator */
+	{o_duplicate,	OPNUL,
+	 "DUPLICATE"},	/* duplicate top value */
+	{o_pop,		OPNUL,
+	 "POP"},		/* pop top value */
+	{o_return,	OPRET,
+	 "RETURN"},	/* return value of function */
+	{o_jumpz,	OPJMP,
+	 "JUMPZ"},	/* jump if value zero */
+	{o_jumpnz,	OPJMP,
+	 "JUMPNZ"},	/* jump if value nonzero */
+	{o_jump,	OPJMP,
+	 "JUMP"},	/* jump unconditionally */
+	{o_usercall,	OPTWO,
+	 "USERCALL"},	/* call a user function */
+	{o_getvalue,	OPNUL,
+	 "GETVALUE"},	/* convert address to value */
+	{o_eq,		OPNUL,
+	 "EQ"},		/* test elements for equality */
+	{o_ne,		OPNUL,
+	 "NE"},		/* test elements for inequality */
+	{o_le,		OPNUL,
+	 "LE"},		/* test elements for <= */
+	{o_ge,		OPNUL,
+	 "GE"},		/* test elements for >= */
+	{o_lt,		OPNUL,
+	 "LT"},		/* test elements for < */
+	{o_gt,		OPNUL,
+	 "GT"},		/* test elements for > */
+	{o_preinc,	OPNUL,
+	 "PREINC"},	/* add one to variable (++x) */
+	{o_predec,	OPNUL,
+	 "PREDEC"},	/* subtract one from variable (--x) */
+	{o_postinc,	OPNUL,
+	 "POSTINC"},	/* add one to variable (x++) */
+	{o_postdec,	OPNUL,
+	 "POSTDEC"},	/* subtract one from variable (x--) */
+	{o_debug,	OPONE,
+	 "DEBUG"},	/* debugging point */
+	{o_print,	OPONE,
+	 "PRINT"},	/* print value */
+	{o_assignpop,	OPNUL,
+	 "ASSIGNPOP"},	/* assign to variable and pop it */
+	{o_zero,	OPNUL,
+	 "ZERO"},	/* put zero on the stack */
+	{o_one,		OPNUL,
+	 "ONE"},		/* put one on the stack */
+	{o_printeol,	OPNUL,
+	 "PRINTEOL"},	/* print end of line */
+	{o_printspace,	OPNUL,
+	 "PRINTSPACE"},	/* print a space */
+	{o_printstring, OPONE,
+	 "PRINTSTR"},	/* print constant string */
+	{o_dupvalue,	OPNUL,
+	 "DUPVALUE"},	/* duplicate value of top value */
+	{o_oldvalue,	OPNUL,
+	 "OLDVALUE"},	/* old value from previous calc */
+	{o_quo,		OPNUL,
+	 "QUO"},		/* integer quotient of top values */
+	{o_power,	OPNUL,
+	 "POWER"},	/* value raised to a power */
+	{o_quit,	OPONE,
+	 "QUIT"},	/* quit program */
+	{o_call,	OPTWO,
+	 "CALL"},	/* call built-in routine */
+	{o_getepsilon,	OPNUL,
+	 "GETEPSILON"},	/* get allowed error for calculations */
+	{o_and,		OPNUL,
+	 "AND"},		/* arithmetic and or top two values */
+	{o_or,		OPNUL,
+	 "OR"},		/* arithmetic or of top two values */
+	{o_not,		OPNUL,
+	 "NOT"},		/* logical not or top value */
+	{o_abs,		OPNUL,
+	 "ABS"},		/* absolute value of top value */
+	{o_sgn,		OPNUL,
+	 "SGN"},		/* sign of number */
+	{o_isint,	OPNUL,
+	 "ISINT"},	/* whether number is an integer */
+	{o_condorjump,	OPJMP,
+	 "CONDORJUMP"},	/* conditional or jump */
+	{o_condandjump, OPJMP,
+	 "CONDANDJUMP"}, /* conditional and jump */
+	{o_square,	OPNUL,
+	 "SQUARE"},	/* square top value */
+	{o_string,	OPONE,
+	 "STRING"},	/* string constant value */
+	{o_isnum,	OPNUL,
+	 "ISNUM"},	/* whether value is a number */
+	{o_undef,	OPNUL,
+	 "UNDEF"},	/* load undefined value on stack */
+	{o_isnull,	OPNUL,
+	 "ISNULL"},	/* whether value is the null value */
+	{o_argvalue,	OPARG,
+	 "ARGVALUE"},	/* load value of arg (parameter) n */
+	{o_matcreate,	OPONE,
+	 "MATCREATE"},	/* create matrix */
+	{o_ismat,	OPNUL,
+	 "ISMAT"},	/* whether value is a matrix */
+	{o_isstr,	OPNUL,
+	 "ISSTR"},	/* whether value is a string */
+	{o_getconfig,	OPNUL,
+	 "GETCONFIG"},	/* get value of configuration parameter */
+	{o_leftshift,	OPNUL,
+	 "LEFTSHIFT"},	/* left shift of integer */
+	{o_rightshift,	OPNUL,
+	 "RIGHTSHIFT"},	/* right shift of integer */
+	{o_casejump,	OPJMP,
+	 "CASEJUMP"},	/* test case and jump if not matched */
+	{o_isodd,	OPNUL,
+	 "ISODD"},	/* whether value is odd integer */
+	{o_iseven,	OPNUL,
+	 "ISEVEN"},	/* whether value is even integer */
+	{o_fiaddr,	OPNUL,
+	 "FIADDR"},	/* 'fast index' matrix address */
+	{o_fivalue,	OPNUL,
+	 "FIVALUE"},	/* 'fast index' matrix value */
+	{o_isreal,	OPNUL,
+	 "ISREAL"},	/* whether value is real number */
+	{o_imaginary,	OPONE,
+	 "IMAGINARY"},	/* constant imaginary numeric value */
+	{o_re,		OPNUL,
+	 "RE"},		/* real part of complex number */
+	{o_im,		OPNUL,
+	 "IM"},		/* imaginary part of complex number */
+	{o_conjugate,	OPNUL,
+	 "CONJUGATE"},	/* complex conjugate */
+	{o_objcreate,	OPONE,
+	 "OBJCREATE"},	/* create object */
+	{o_isobj,	OPNUL,
+	 "ISOBJ"},	/* whether value is an object */
+	{o_norm,	OPNUL,
+	 "NORM"},	/* norm of value (square of abs) */
+	{o_elemaddr,	OPONE,
+	 "ELEMADDR"},	/* address of element of object */
+	{o_elemvalue,	OPONE,
+	 "ELEMVALUE"},	/* value of element of object */
+	{o_istype,	OPNUL,
+	 "ISTYPE"},	/* whether types are the same */
+	{o_scale,	OPNUL,
+	 "SCALE"},	/* scale value by a power of two */
+	{o_islist,	OPNUL,
+	 "ISLIST"},	/* whether value is a list */
+	{o_swap,	OPNUL,
+	 "SWAP"},	/* swap values of two variables */
+	{o_issimple,	OPNUL,
+	 "ISSIMPLE"},	/* whether value is simple type */
+	{o_cmp,		OPNUL,
+	 "CMP"},		/* compare values returning -1, 0, 1 */
+	{o_setconfig,	OPNUL,
+	 "SETCONFIG"},	/* set configuration parameter */
+	{o_setepsilon,	OPNUL,
+	 "SETEPSILON"},	/* set allowed error for calculations */
+	{o_isfile,	OPNUL,
+	 "ISFILE"},	/* whether value is a file */
+	{o_isassoc,	OPNUL,
+	 "ISASSOC"},	/* whether value is an association */
+	{o_nop,		OPSTI,
+	 "INITSTATIC"},	/* once only code for static init */
+	{o_eleminit,	OPONE,
+	 "ELEMINIT"},	/* assign element of matrix or object */
+	{o_isconfig,	OPNUL,
+	 "ISCONFIG"},	/* whether value is a configuration state */
+	{o_ishash,	OPNUL,
+	 "ISHASH"},	/* whether value is a hash state */
+	{o_isrand,	OPNUL,
+	 "ISRAND"},	/* whether value is a rand element */
+	{o_israndom,	OPNUL,
+	 "ISRANDOM"},	/* whether value is a random element */
+	{o_show,	OPONE,
+	 "SHOW"},	/* show current state data */
+	{o_initfill,	OPNUL,
+	 "INITFILL"},	/* initially fill matrix */
+	{o_assignback,	OPNUL,
+	 "ASSIGNBACK"},	/* assign in reverse order */
+	{o_test,	OPNUL,
+	 "TEST"},	 /* test that value is "nonzero" */
+	{o_isdefined,	OPNUL,
+	 "ISDEFINED"},	/* whether a string names a function */
+	{o_isobjtype,	OPNUL,
+	 "ISOBJTYPE"},	/* whether a string names an object type */
+	{o_isblock,	OPNUL,
+	 "ISBLK"},	/* whether value is a block */
+	{o_ptr,		OPNUL,
+	 "PTR"},		/* octet pointer */
+	{o_deref,	OPNUL,
+	 "DEREF"},	/* dereference an octet pointer */
+	{o_isoctet,	OPNUL,
+	 "ISOCTET"},	/* whether a value is an octet */
+	{o_isptr,	OPNUL,
+	 "ISPTR"},	/* whether a value is a pointer */
+	{o_setsaveval,	OPNUL,
+	 "SAVEVAL"},	/* enable or disable saving */
+	{o_links,	OPNUL,
+	 "LINKS"},	/* links to number or string */
+	{o_bit,		OPNUL,
+	 "BIT"},		/* whether bit is set */
+	{o_comp,	OPNUL,
+	 "COMP"},	/* complement value */
+	{o_xor,		OPNUL,
+	 "XOR"},		/* xor (~) of values */
+	{o_highbit,	OPNUL,
+	 "HIGHBIT"},	/* highbit of value */
+	{o_lowbit,	OPNUL,
+	 "LOWBIT"},	/* lowbit of value */
+	{o_content,	OPNUL,
+	 "CONTENT"},	/* unary hash op */
+	{o_hashop,	OPNUL,
+	 "HASHOP"},	/* binary hash op */
+	{o_backslash,	OPNUL,
+	 "BACKSLASH"},	/* unary backslash op */
+	{o_setminus,	OPNUL,
+	 "SETMINUS"},	/* binary backslash op */
+	{o_plus,	OPNUL,
+	 "PLUS"},	/* unary + op */
+	{o_jumpnn,	OPJMP,
+	 "JUMPNN"},	/* jump if non-null */
+	{o_abort,	OPONE,
+	 "ABORT"}	/* abort operation */
 };
 
 

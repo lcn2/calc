@@ -1,0 +1,112 @@
+/*
+ * special_functions - special functions (e.g.: gamma, zeta, psi)
+ *
+ * Copyright (C) 2013 Christoph Zurnieden
+ *
+ * lnseries.cal is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * lnseries.cal is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: lnseries.cal,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/lnseries.cal,v $
+ *
+ * Under source code control:	2013/08/11 01:31:28
+ * File existed as early as:	2013
+ */
+
+
+/*
+ * hide internal function from resource debugging
+ */
+static resource_debug_level;
+resource_debug_level = config("resource_debug", 0);
+
+
+static __CZ__int_logs;
+static __CZ__int_logs_limit;
+static __CZ__int_logs_prec;
+
+
+define deletelnseries(){
+  free(__CZ__int_logs,__CZ__int_logs_limit,__CZ__int_logs_prec);
+}
+
+define lnfromseries(n){
+  if(    isnull(__CZ__int_logs)
+      || __CZ__int_logs_limit < n
+      || __CZ__int_logs_prec < log(1/epsilon())){
+
+    lnseries(n+1);
+  }
+  return __CZ__int_logs[n,0];
+}
+
+define lnseries(limit){
+  local k j eps ;
+  if(    isnull(__CZ__int_logs)
+      || __CZ__int_logs_limit < limit
+      || __CZ__int_logs_prec < log(1/epsilon())){
+    __CZ__int_logs = mat[limit+1,2];
+    __CZ__int_logs_limit = limit;
+    __CZ__int_logs_prec = log(1/epsilon());
+
+    /* probably still too much */
+    eps = epsilon(epsilon()*10^(-(5+log(limit))));
+    k =2;
+    while(1){
+      /* the prime itself, compute logarithm */
+      __CZ__int_logs[k,0] = ln(k);
+      __CZ__int_logs[k,1] = k;
+
+      for(j = 2*k;j<=limit;j+=k){
+       /* multiples of prime k, add logarithm of k computed earlier */
+       __CZ__int_logs[j,0] += __CZ__int_logs[k,0];
+       /* First hit, set counter to number */
+       if(__CZ__int_logs[j,1] ==0)
+         __CZ__int_logs[j,1]=j;
+       /* reduce counter by prime added */
+       __CZ__int_logs[j,1] //= __CZ__int_logs[k,1];
+      }
+
+      k++;
+      if(k>=limit) break;
+      /* Erastothenes-sieve: look for next prime. */
+      while(__CZ__int_logs[k,0]!=0){
+        k++;
+        if(k>=limit) break;
+      }
+    }
+    /* Second run to include the last factor */
+    for(k=1;k<=limit;k++){
+      if(__CZ__int_logs[k,1] != k){
+        __CZ__int_logs[k,0] +=__CZ__int_logs[ __CZ__int_logs[k,1],0];
+        __CZ__int_logs[k,1] = 0;
+      }
+    }
+
+    epsilon(eps);
+  }
+  return 1;
+}
+
+
+/*
+ * restore internal function from resource debugging
+ */
+config("resource_debug", resource_debug_level),;
+if (config("resource_debug") & 3) {
+    print "lnseries(limit)";
+    print "lnfromseries(n)";
+    print "deletelnseries()";
+}

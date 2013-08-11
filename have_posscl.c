@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: have_posscl.c,v 30.2 2008/04/15 21:17:57 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: have_posscl.c,v 30.3 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/have_posscl.c,v $
  *
  * Under source code control:	1996/07/13 12:57:22
@@ -85,7 +85,8 @@ main(void)
 	printf("#undef HAVE_FILEPOS_SCALAR\n");
 	printf("#define HAVE_FILEPOS_SCALAR /* FILEPOS is a simple value */\n");
 #else
-	printf("#undef HAVE_FILEPOS_SCALAR /* FILEPOS is not a simple value */\n");
+	printf("#undef HAVE_FILEPOS_SCALAR "
+	       "/* FILEPOS is not a simple value */\n");
 #endif
 	/* exit(0); */
 	return 0;

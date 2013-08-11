@@ -227,7 +227,8 @@ depend:
 	${Q} echo forming new custom/${MAKE_FILE}
 	${Q} ${RM} -f ${MAKE_FILE}.bak
 	${Q} ${MV} ${MAKE_FILE} ${MAKE_FILE}.bak
-	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' ${MAKE_FILE}.bak > ${MAKE_FILE}
+	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' \
+		    ${MAKE_FILE}.bak > ${MAKE_FILE}
 	${Q} ${GREP} -v '^#' skel/custom/makedep.out >> ${MAKE_FILE}
 	${Q} ${RM} -rf skel
 	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
@@ -424,7 +425,8 @@ install: all
 		${RM} -f ${T}${CUSTOMHELPDIR}/$$i.new; \
 		${CP} -f $$i ${T}${CUSTOMHELPDIR}/$$i.new; \
 		${CHMOD} 0444 ${T}${CUSTOMHELPDIR}/$$i.new; \
-		${MV} -f ${T}${CUSTOMHELPDIR}/$$i.new ${T}${CUSTOMHELPDIR}/$$i; \
+		${MV} -f ${T}${CUSTOMHELPDIR}/$$i.new \
+			 ${T}${CUSTOMHELPDIR}/$$i; \
 		echo "installed ${T}${CUSTOMHELPDIR}/$$i"; \
 	    fi; \
 	done

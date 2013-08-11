@@ -1,0 +1,288 @@
+/*
+ *  lambertw- Lambert's W-function
+ *
+ * Copyright (C) 2013 Christoph Zurnieden
+ *
+ * lambertw is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * lambertw is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: lambertw.cal,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/lambertw.cal,v $
+ *
+ * Under source code control:	2013/08/11 01:31:28
+ * File existed as early as:	2013
+ */
+
+
+static resource_debug_level;
+resource_debug_level = config("resource_debug", 0);
+
+
+/*
+
+     R. M. Corless and G. H. Gonnet and D. E. G. Hare and D. J. Jeffrey and
+     D. E. Knuth, "On the Lambert W Function", Advances n Computational
+     Mathematics, 329--359, (1996)
+     http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.112.6117
+
+     D. J. Jeffrey, D. E. G. Hare, R. M. Corless, "Unwinding the branches of the
+     Lambert W function", The Mathematical Scientist, 21, pp 1-7, (1996)
+     http://www.apmaths.uwo.ca/~djeffrey/Offprints/wbranch.pdf
+
+     Darko Verebic, "Having Fun with Lambert W(x) Function"
+     arXiv:1003.1628v1, March 2010, http://arxiv.org/abs/1003.1628
+
+     Winitzki, S. "Uniform Approximations for Transcendental Functions",
+     In Part 1 of Computational Science and its Applications - ICCSA 2003,
+     Lecture Notes in Computer Science, Vol. 2667, Springer-Verlag,
+     Berlin, 2003, 780-789. DOI 10.1007/3-540-44839-X_82
+     A copy may be found by Google.
+
+
+*/
+static true = 1;
+static false = 0;
+
+/* Branch 0, Winitzki (2003) , the well known Taylor series*/
+define __CZ__lambertw_0(z,eps){
+  local a=2.344e0, b=0.8842e0, c=0.9294e0, d=0.5106e0, e=-1.213e0;
+  local y=sqrt(2*exp(1)*z+2);
+  return (2*ln(1+b*y)-ln(1+c*ln(1+d*y))+e)/(1+1/(2*ln(1+b*y)+2*a));
+}
+/* branch -1 */
+define __CZ__lambertw_m1(z,eps){
+  local wn k;
+  /* Cut-off found in Maxima */
+  if(z < 0.3) return __CZ__lambertw_app(z,eps);
+  wn = z;
+  /*  Verebic (2010) eqs. 16-18*/
+  for(k=0;k<10;k++){
+    wn = ln(-z)-ln(-wn);
+  }
+  return wn;
+}
+
+/*
+  generic approximation
+
+  series for 1+W((z-2)/(2 e))
+
+  Corless et al (1996) (4.22)
+  Verebic (2010) eqs. 35-37; more coefficients given at the end of sect. 3.1
+  or online
+     http://www.wolframalpha.com/input/?
+       i=taylor+%28+1%2Bproductlog%28+%28z-2%29%2F%282*e%29+%29+%29
+  or by using the function lambertw_series_print() after running
+  lambertw_series(z,eps,branch,terms) at least once with the wanted number of
+  terms and z = 1 (which might throw an error because the series will not
+  converge in anybodies lifetime for something that far from the branchpoint).
+
+
+*/
+define __CZ__lambertw_app(z,eps){
+  local  b0=-1, b1=1, b2=-1/3, b3=11/72;
+  local  y=sqrt(2*exp(1)*z+2);
+  return b0 + ( y * (b1 + (y * (b2 + (b3 * y)))));
+}
+
+static __CZ__Ws_a;
+static __CZ__Ws_c;
+static __CZ__Ws_len=0;
+
+define lambertw_series_print(){
+  local k;
+  for(k=0;k<__CZ__Ws_len;k++){
+    print num(__CZ__Ws_c[k]):"/":den(__CZ__Ws_c[k]):"*p^":k;
+  }
+}
+
+/*
+   The series is fast but only if _very_ close to the branchpoint
+   The exact branch must be given explicitly, e.g.:
+
+; lambertw(-exp(-1)+.001)-lambertw_series(-exp(-1)+.001,epsilon()*1e-10,0)
+	-0.14758879113205794065490184399030194122136720202792-
+                  0.00000000000000000000000000000000000000000000000000i
+; lambertw(-exp(-1)+.001)-lambertw_series(-exp(-1)+.001,epsilon()*1e-10,1)
+	0.00000000000000000000000000000000000000000000000000-
+                  0.00000000000000000000000000000000000000000000000000i
+ */
+define lambertw_series(z,eps,branch,terms){
+  local k l limit tmp sum A C P PP epslocal;
+  if(!isnull(terms))
+    limit = terms;
+  else
+    limit = 100;
+
+  if(isnull(eps))
+    eps = epsilon(epsilon()*1e-10);
+  epslocal = epsilon(eps);
+
+  P = sqrt(2*(exp(1)*z+1));
+  if(branch != 0) P = -P;
+  tmp=0;sum=0;PP=P;
+
+    __CZ__Ws_a   = mat[limit+1];
+    __CZ__Ws_c   = mat[limit+1];
+    __CZ__Ws_len = limit;
+   /*
+      c0 = -1; c1 = 1
+      a0 =  2; a1 =-1
+    */
+    __CZ__Ws_c[0] = -1; __CZ__Ws_c[1] =  1;
+    __CZ__Ws_a[0] =  2; __CZ__Ws_a[1] = -1;
+    sum += __CZ__Ws_c[0];
+    sum += __CZ__Ws_c[1] * P;
+    PP *= P;
+    for(k=2;k<limit;k++){
+      for(l=2;l<k;l++){
+         __CZ__Ws_a[k] += __CZ__Ws_c[l]*__CZ__Ws_c[k+1-l];
+      }
+
+      __CZ__Ws_c[k] = (k-1) * (  __CZ__Ws_c[k-2]/2
+                            +__CZ__Ws_a[k-2]/4)/
+                      (k+1)-__CZ__Ws_a[k]/2-__CZ__Ws_c[k-1]/(k+1);
+      tmp = __CZ__Ws_c[k] * PP;
+      sum += tmp;
+      if(abs(tmp) <= eps){
+        epsilon(epslocal);
+        return sum;
+      }
+      PP *= P;
+    }
+    epsilon(epslocal);
+    return
+      newerror(strcat("lambertw_series: does not converge in ",
+                        str(limit)," terms" ));
+}
+
+/* */
+define lambertw(z,branch){
+  local eps epslarge ret branchpoint bparea w we ew w1e wn k places m1e;
+  local closeness;
+
+  eps = epsilon();
+  if(branch == 0){
+    if(!im(z)){
+      if(abs(z) <= eps) return 0;
+      if(abs(z-exp(1)) <= eps) return 1;
+      if(abs(z - (-ln(2)/2)) <= eps ) return -ln(2);
+      if(abs(z - (-pi()/2)) <= eps ) return 1i*pi()/2;
+    }
+  }
+
+  branchpoint = -exp(-1);
+  bparea = .2;
+  if(branch == 0){
+    if(!im(z) && abs(z-branchpoint) == 0) return -1;
+    ret = __CZ__lambertw_0(z,eps);
+   /* Yeah, C&P, I know, sorry */
+   ##ret = ln(z) + 2*pi()*1i*branch - ln(ln(z)+2*pi()*1i*branch);
+  }
+  else if(branch == 1){
+    if(im(z)<0 && abs(z-branchpoint) <= bparea)
+      ret = __CZ__lambertw_app(z,eps);
+   /* Does calc have a goto? Oh, it does!  */
+    ret =ln(z) + 2*pi()*1i*branch - ln(ln(z)+2*pi()*1i*branch);
+  }
+  else if(branch == -1){##print "-1";
+    if(!im(z) && abs(z-branchpoint) == 0) return -1;
+    if(!im(z) && z>branchpoint && z < 0){##print "0";
+      ret = __CZ__lambertw_m1(z,eps);}
+    if(im(z)>=0 && abs(z-branchpoint) <= bparea){##print "1";
+      ret = __CZ__lambertw_app(z,eps);}
+    ret =ln(z) + 2*pi()*1i*branch - ln(ln(z)+2*pi()*1i*branch);
+  }
+  else
+    ret = ln(z) + 2*pi()*1i*branch - ln(ln(z)+2*pi()*1i*branch);
+
+  /*
+     Such a high precision is only needed _very_ close to the branchpoint
+     and might even be insufficient if z has not been computed with
+     sufficient precision itself (M below was calculated by Mathematica and also
+     with the series above with epsilon(1e-200)):
+    ; epsilon(1e-50)
+	0.00000000000000000001
+    ; display(50)
+	20
+    ; M=-0.9999999999999999999999997668356018402875796636464119050387
+    ; lambertw(-exp(-1)+1e-50,0)-M
+	-0.00000000000000000000000002678416515423276355643684
+    ; epsilon(1e-60)
+	0.0000000000000000000000000000000000000000000000000
+    ; A=-exp(-1)+1e-50
+    ; epsilon(1e-50)
+	0.00000000000000000000000000000000000000000000000000
+    ; lambertw(A,0)-M
+	-0.00000000000000000000000000000000000231185460220585
+    ; lambertw_series(A,epsilon(),0)-M
+	-0.00000000000000000000000000000000000132145133161626
+    ; epsilon(1e-100)
+	0.00000000000000000000000000000000000000000000000001
+    ; A=-exp(-1)+1e-50
+    ; epsilon(1e-65)
+	0.00000000000000000000000000000000000000000000000000
+    ; lambertw_series(A,epsilon(),0)-M
+	0.00000000000000000000000000000000000000000000000000
+    ; lambertw_series(-exp(-1)+1e-50,epsilon(),0)-M
+	-0.00000000000000000000000000000000000000002959444084
+    ; epsilon(1e-74)
+	0.00000000000000000000000000000000000000000000000000
+    ; lambertw_series(-exp(-1)+1e-50,epsilon(),0)-M
+	-0.00000000000000000000000000000000000000000000000006
+   */
+  closeness = abs(z-branchpoint);
+  if( closeness< 1){
+    if(closeness != 0)
+      eps = epsilon(epsilon()*( closeness));
+    else
+      eps = epsilon(epsilon()^2);
+  }
+  else
+    eps = epsilon(epsilon()*1e-2);
+
+
+  epslarge =epsilon();
+
+  places = highbit(1 + int(1/epslarge)) + 1;
+  w = ret;
+  for(k=0;k<100;k++){
+    ew = exp(w);
+    we = w*ew;
+    if(abs(we-z)<= 4*epslarge*abs(z))break;
+    w1e = (1+w)*ew;
+    wn = bround(w- ((we - z) / ( w1e - ( (w+2)*(we-z) )/(2*w+2)  ) ),places++) ;
+    if( abs(wn - w) <= epslarge*abs(wn)) break;
+    else  w = wn;
+  }
+
+  if(k==100){
+    epsilon(eps);
+    return newerror("lambertw: Halley iteration does not converge");
+  }
+  /* The Maxima coders added a check if the iteration converged to the correct
+     branch. This coder deems it superfluous. */
+
+  epsilon(eps);
+  return wn;
+}
+
+
+config("resource_debug", resource_debug_level),;
+if (config("resource_debug") & 3) {
+    print "lambertw(z,branch)";
+    print "lambertw_series(z,eps,branch,terms)";
+    print "lambertw_series_print()";
+}

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: assocfunc.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: assocfunc.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/assocfunc.c,v $
  *
  * Under source code control:	1993/07/20 23:04:27
@@ -332,7 +332,8 @@ assoccopy(ASSOC *oldap)
 			oldep = oldep->e_next) {
 			ep = (ASSOCELEM *) malloc(ELEMSIZE(oldep->e_dim));
 			if (ep == NULL) {
-				math_error("Cannot allocate association element");
+				math_error("Cannot allocate "
+					   "association element");
 				/*NOTREACHED*/
 			}
 			ep->e_dim = oldep->e_dim;
@@ -340,7 +341,8 @@ assoccopy(ASSOC *oldap)
 			ep->e_value.v_type = V_NULL;
 			ep->e_value.v_subtype = V_NOSUBTYPE;
 			for (i = 0; i < ep->e_dim; i++)
-				copyvalue(&oldep->e_indices[i], &ep->e_indices[i]);
+				copyvalue(&oldep->e_indices[i],
+					  &ep->e_indices[i]);
 			copyvalue(&oldep->e_value, &ep->e_value);
 			listhead = &ap->a_table[ep->e_hash % ap->a_size];
 			ep->e_next = *listhead;

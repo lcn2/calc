@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: value.c,v 30.4 2008/05/10 13:44:28 chongo Exp $
+ * @(#) $Revision: 30.5 $
+ * @(#) $Id: value.c,v 30.5 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/value.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -1941,7 +1941,10 @@ powvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 					*vres = error_value(E_1OVER0);
 					break;
 				}
-				/* 0 ^ real non-neg is zero, 0 ^ complex is zero */
+				/*
+				 * 0 ^ real non-neg is zero
+				 * 0 ^ complex is zero
+				 */
 				vres->v_type = V_NUM;
 				vres->v_num = qlink(&_qzero_);
 			}

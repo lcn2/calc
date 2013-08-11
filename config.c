@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: config.c,v 30.2 2007/07/05 13:30:38 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: config.c,v 30.3 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/config.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
@@ -948,7 +948,8 @@ setconfig(int type, VALUE *vp)
 		} else if (vp->v_type == V_STR) {
 			temp = lookup_long(truth, vp->v_str->s_str);
 			if (temp < 0) {
-				math_error("Illegal truth value for redecl_warn");
+				math_error("Illegal truth value for "
+					   "redecl_warn");
 				/*NOTREACHED*/
 			}
 			conf->redecl_warn = (int)temp;
@@ -962,7 +963,8 @@ setconfig(int type, VALUE *vp)
 		} else if (vp->v_type == V_STR) {
 			temp = lookup_long(truth, vp->v_str->s_str);
 			if (temp < 0) {
-				math_error("Illegal truth value for dupvar_warn");
+				math_error("Illegal truth value for "
+					   "dupvar_warn");
 				/*NOTREACHED*/
 			}
 			conf->dupvar_warn = (int)temp;
@@ -1153,7 +1155,8 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		vp->v_type = V_STR;
 		p = lookup_name(modes, cfg->outmode2);
 		if (p == NULL) {
-			math_error("invalid secondary output mode: %d", cfg->outmode2);
+			math_error("invalid secondary output mode: %d",
+				   cfg->outmode2);
 			/*NOTREACHED*/
 		}
 		vp->v_str = makenewstring(p);

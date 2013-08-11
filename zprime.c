@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: zprime.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: zprime.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/zprime.c,v $
  *
  * Under source code control:	1994/05/29 04:34:36
@@ -1206,7 +1206,8 @@ zredcprimetest(ZVALUE z, long count, ZVALUE skip)
  *	cand		candidate found
  */
 BOOL
-znextcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *cand)
+znextcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
+	  ZVALUE *cand)
 {
 	ZVALUE tmp1;
 	ZVALUE tmp2;
@@ -1285,7 +1286,8 @@ znextcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *can
  *	cand		candidate found
  */
 BOOL
-zprevcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod, ZVALUE *cand)
+zprevcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
+	  ZVALUE *cand)
 {
 	ZVALUE tmp1;
 	ZVALUE tmp2;

@@ -1,5 +1,5 @@
 NAME
-    fpathopen - open an absolute filename, or a relative filename along a search path
+    fpathopen - open an absolute or relative filename along a search path
 
 SYNOPSIS
     fpathopen(filename, mode [,searchpath])
@@ -165,7 +165,8 @@ EXAMPLE
 	    FILE 7 "/home/chongo/tmp/output" (writing, pos 0)
 
     ; badfile = fpathopen("no_such_file", "r")
-    ; if (!isfile(badfile)) print "error #" errno(badfile) : ":" : strerror(badfile);
+    ; if (!isfile(badfile)) print "error #" errno(badfile) : \
+      ":" : strerror(badfile);
     error #2: No such file or directory
 
 LIMITS
@@ -195,9 +196,9 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.1 $
-## @(#) $Id: fpathopen,v 30.1 2007/03/16 11:10:42 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/fpathopen,v $
+## @(#) $Revision: 30.2 $
+## @(#) $Id: fpathopen,v 30.2 2013/08/11 08:41:38 chongo Exp $
+## @(#) $Source: /usr/local/src/bin/calc/help/RCS/fpathopen,v $
 ##
 ## Under source code control:	2006/05/07 23:56:04
 ## File existed as early as:	2006

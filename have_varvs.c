@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: have_varvs.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: have_varvs.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/have_varvs.c,v $
  *
  * Under source code control:	1995/09/09 22:41:10
@@ -53,7 +53,8 @@
 #endif
 
 #undef VSPRINTF_SIZE_T
-#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || defined(__cplusplus)
+#if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || \
+    defined(__cplusplus)
 # define VSPRINTF_SIZE_T size_t
 #else
 # define VSPRINTF_SIZE_T long

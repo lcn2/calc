@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: input.c,v 30.2 2008/04/15 21:17:57 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: input.c,v 30.3 2013/08/11 08:41:38 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/input.c,v $
  *
  * Under source code control:	1990/02/15 01:48:16
@@ -258,7 +258,7 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 
 
 /*
- * f_pathopen - open an absolute filename, or a relative filename along a search path
+ * f_pathopen - open an absolute or relative filename along a search path
  *
  * Open a file by possibly searching through a path list.  For example:
  *
@@ -277,13 +277,16 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
  * and opens the first one that exists and allows the mode.
  *
  *	name		file name to be read
- *	mode		fopen() mode argument (one of "r", "w", "a", "r+", "w+", "a+")
+ *	mode		fopen() mode argument
+ *			  (one of "r", "w", "a", "r+", "w+", "a+")
  *	pathlist	list of colon separated paths (or NULL)
- *	openpath	if non-NULL, and file was opened, set to malloced path used to open
+ *	openpath	if non-NULL, and file was opened, set to malloced
+ *		 	  path used to open
  *
  * returns:
  *	open file stream, NULL ==> file was not found or error
- *	If file was open and openpath was non-NULL, changed to point to path used to open
+ *	If file was open and openpath was non-NULL, changed to point
+ *	to path used to open
  */
 FILE *
 f_pathopen(char *name, char *mode, char *pathlist, char **openpath)
@@ -478,7 +481,8 @@ homeexpand(char *name)
  *
  * given:
  *	name		the filename to open
- *	mode		fopen() mode argument (one of "r", "w", "a", "r+", "w+", "a+")
+ *	mode		fopen() mode argument
+ *			    (one of "r", "w", "a", "r+", "w+", "a+")
  */
 FILE *
 f_open(char *name, char *mode)
