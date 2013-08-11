@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: help.c,v 30.2 2007/09/21 01:27:27 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: help.c,v 30.3 2013/08/11 01:08:32 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/help.c,v $
  *
  * Under source code control:	1997/09/14 10:58:30
@@ -274,7 +274,7 @@ givehelp(char *type)
 
 #if defined(CUSTOM)
 	/*
-	 * open the the helpfile (looking in CUSTOMHELPDIR last)
+	 * open the helpfile (looking in CUSTOMHELPDIR last)
 	 */
 	} else {
 

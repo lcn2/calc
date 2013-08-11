@@ -1,0 +1,107 @@
+/*
+ * gvec - vectorize any single-input function or trailing operator
+ *
+ * This version accepts arbitrary number of arguments, but of course
+ * they must all be same length vectors.
+ *
+ * The gvec function is for use in either a two-arg function or a two-arg
+ * operation "function" must be first; calc doesn't care how many more
+ * arguments there actually are.
+ *
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: gvec.cal,v 30.3 2011/05/23 23:00:55 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/gvec.cal,v $
+ *
+ * Under source code control:   2011/03/31 17:54:55
+ * File existed as early as:    2010
+ *
+ * By Carl Witthoft carl at witthoft dot com
+ */
+
+define gvec(function, vector)
+{
+    local xlen,y,foo;
+    local precx = 1e-50;	/* default for now */
+    local argc = param(0)-1;
+    local old_tilde;		/* previous config("tilde") */
+
+    /*
+     * parse args
+     */
+    local plist = mat[argc];
+    if (config("resource_debug") & 8) {
+	print "plist=", plist;
+	print "argc=", argc;
+    }
+    for(local i = 0; i< argc; i++) {
+	local ii = i + 2;
+	if (config("resource_debug") & 8) {
+	    print "ii=", ii;
+	    print "param(" : ii : "}=", param(ii);
+	    print "size(param(" : ii : ")=", size(param(ii));
+	}
+	plist[i] = size(param(ii));
+    }
+    local slist=sort(plist);
+    if (config("resource_debug") & 8) {
+	print "plist=", plist;
+    }
+    local argm = argc-1;
+    if (config("resource_debug") & 8) {
+	print "argm=", argm;
+    }
+    if (slist[0] != slist[argm]) {
+	quit "lengths don't match";
+    }
+    xlen = size(vector);
+    y = mat[xlen];
+
+    /*
+     * We can't do str(vector[j]) outside loop, eval() petulantly refuses to
+     * look at local variables.
+     *
+     * Also we need to config("tilde",0) to turn off lead tilde
+     * (so str(vector[j]) looks like a number.
+     */
+    old_tilde = config("tilde",0);
+
+    /*
+     * Ok, now check to see if "function" is a function.  If not, it's an
+     * operation and it's up to user to make it valid
+     */
+    if (isdefined(function)) {
+
+	/* yep, it's a function, either builtin or user-defined */
+	for (local j=0; j<xlen; j++) {
+
+	    /* build the function call */
+	    foo = strcat(function, "(");
+	    for (local jj = 0; jj<argc; jj++) {
+		foo = strcat(foo , str(param(jj+2)[j]), ",");
+	    }
+	    foo = strcat(foo, str(precx), ")");
+	    if (config("resource_debug") & 8) {
+		print "foo=", foo;
+	    }
+	    y[j] = eval(foo);
+	}
+
+    /*
+     * it is an operator --  multi-argument operator makes no sense
+     */
+    } else {
+	if (argc > 1) {
+	    quit "Error: operator can accept only one argument";
+	}
+	for (j=0; j<xlen; j++) {
+	    foo = strcat(str(vector[j]), function);
+	    y[j] = eval(foo);
+	}
+    }
+
+    /* restore tilde mode if needed */
+    config("tilde", old_tilde);
+
+    /* return result */
+    return y;
+}

@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.20 $
-# @(#) $Id: Makefile.head,v 30.20 2008/10/23 00:13:44 chongo Exp $
+# @(#) $Revision: 30.27 $
+# @(#) $Id: Makefile.head,v 30.27 2013/08/11 01:16:36 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile.head,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -366,7 +366,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.0
+VERSION= 2.12.4.9
 VERS= 2.12.4
 VER= 2.12
 VE= 2
@@ -495,8 +495,8 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 #	      to abort on warnings, then leave CCWERR blank.
 # CCMISC are misc flags given to ${CC}
 #
-# LCC how the the C compiler is invoked on locally executed intermediate progs
-# CC is how the the C compiler is invoked (with an optional Purify)
+# LCC how the C compiler is invoked on locally executed intermediate progs
+# CC is how the C compiler is invoked (with an optional Purify)
 #
 # Specific target overrides or modifications to default values
 
@@ -588,7 +588,7 @@ LDCONFIG:=
 # DARWIN_ARCH= -arch i386		# Intel binary
 # DARWIN_ARCH= -arch ppc		# PPC binary
 DARWIN_ARCH=				# native binary
-MACOSX_DEPLOYMENT_TARGET=10.4
+MACOSX_DEPLOYMENT_TARGET=10.8
 #
 endif
 
@@ -684,6 +684,40 @@ endif
 ifeq ($(target),SunOS)
 #
 BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifdef ALLOW_CUSTOM
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
+#
+CC_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+LD_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+endif
+
+#################
+# Cygwin target #
+#################
+
+ifeq ($(target),Cygwin)
+#
+BLD_TYPE= calc-static-only
 #
 CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib

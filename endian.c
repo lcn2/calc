@@ -1,7 +1,7 @@
 /*
  * endian - determine the byte order of a long on your machine
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999-2013  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,9 +17,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: endian.c,v 30.2 2007/09/29 16:56:40 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/endian.c,v $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: endian.c,v 30.4 2013/05/05 13:57:08 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/endian.c,v $
  *
  * Under source code control:	1993/11/15 04:32:58
  * File existed as early as:	1993
@@ -54,7 +54,9 @@ int
 main(void)
 {
 	/* pointers into the byte order array */
+#if defined(DEBUG) || (!defined(BIG_ENDIAN) && !defined(BIG_ENDIAN))
 	int *intp = (int *)byte;
+#endif
 #if defined(DEBUG)
 	short *shortp = (short *)byte;
 	long *longp = (long *)byte;
@@ -77,9 +79,9 @@ main(void)
 	printf("#define LITTLE_ENDIAN\t1234\n");
 	printf("#undef CALC_BYTE_ORDER\n");
 
-#if defined(CALC_BIG_ENDIAN)
+#if defined(BIG_ENDIAN)
 	printf("#define CALC_BYTE_ORDER\tBIG_ENDIAN\n");
-#elif defined(CALC_LITTLE_ENDIAN)
+#elif defined(LITTLE_ENDIAN)
 	printf("#define CALC_BYTE_ORDER\tLITTLW_ENDIAN\n");
 #else
 	/* Determine byte order */
@@ -93,8 +95,8 @@ main(void)
 	    fprintf(stderr, "@=-=@ Fatal build error - cannot @=-=@\n");
 	    fprintf(stderr, "@=-=@ determine byte order.  Set @=-=@\n");
 	    fprintf(stderr, "@=-=@ ${CALC_BYTE_ORDER} in the Makefile @=-=@\n");
-	    fprintf(stderr, "@=-=@ to be either -DCALC_BIG_ENDIAN or @=-=@\n");
-	    fprintf(stderr, "@=-=@ to be -DCALC_LITTLE_ENDIAN @=-=@\n");
+	    fprintf(stderr, "@=-=@ to be either -DBIG_ENDIAN or @=-=@\n");
+	    fprintf(stderr, "@=-=@ to be -DLITTLE_ENDIAN @=-=@\n");
 	    exit(1);
 	}
 #endif

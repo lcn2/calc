@@ -17,9 +17,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.5 $
- * @(#) $Id: regress.cal,v 30.5 2008/10/24 07:09:41 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/regress.cal,v $
+ * @(#) $Revision: 30.7 $
+ * @(#) $Id: regress.cal,v 30.7 2013/08/11 02:57:22 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
  * File existed as early as:	before 1990
@@ -7915,6 +7915,19 @@ return test_exponentiation();
 
 
 /*
+ * calc resource functions by Christoph Zurnieden
+ */
+print;
+print '8900: Starting test of calc resource functions by Christoph Zurnieden';
+print '8901: read -once "test8900"';
+read -once "test8900";
+print '8902: about to run test8900(1,,8903)';
+testnum = test8900(1,,8903);
+print testnum: ": End of test of calc resource functions by Christoph Zurnieden";
+/* 89xx: test calc resource functions by Christoph Zurnieden */
+
+
+/*
  * read various calc resource files
  *
  * We read most of the standard calc resource files.  There are a few
@@ -8012,7 +8025,11 @@ print	'9838: skipping read -once hello.cal because it is an infinite loop';
 print	'9839: skipping read -once xx_print.cal because it is a printing demo';
 read -once sumtimes;
 print	'9840: read -once sumtimes';
-print	'9841: Ending read of selected calc resource files';
+read -once dms;
+print	'9841: read -once dms';
+read -once hms;
+print	'9842: read -once hms';
+print	'9843: Ending read of selected calc resource files';
 
 
 /*

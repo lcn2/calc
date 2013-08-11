@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: hash.h,v 30.2 2007/07/05 17:37:41 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/hash.h,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/hash.h,v $
  *
  * Under source code control:	1995/11/14 23:57:45
  * File existed as early as:	1995

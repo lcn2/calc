@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: longbits.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/longbits.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/longbits.c,v $
  *
  * Under source code control:	1994/03/18 03:06:18
  * File existed as early as:	1994

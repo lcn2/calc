@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: quickhash.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/quickhash.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/quickhash.c,v $
  *
  * Under source code control:	1995/03/04 11:34:23
  * File existed as early as:	1995

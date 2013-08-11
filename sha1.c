@@ -22,8 +22,8 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: sha1.c,v 30.3 2007/07/05 17:37:41 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: sha1.c,v 30.4 2013/08/11 01:08:32 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/sha1.c,v $
  *
  * This file is not covered under version 2.1 of the GNU LGPL.
@@ -403,7 +403,7 @@ sha1Final(HASH *state)
  * given:
  *	state	the state to checkpoint
  *
- * This function will ensure that the the hash chunk buffer is empty.
+ * This function will ensure that the hash chunk buffer is empty.
  * Any partially hashed data will be padded out with 0's and hashed.
  */
 S_FUNC void

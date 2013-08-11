@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: zio.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/zio.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/zio.c,v $
  *
  * Under source code control:	1993/07/30 19:42:48
  * File existed as early as:	1993

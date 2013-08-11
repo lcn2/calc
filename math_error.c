@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: math_error.c,v 30.2 2008/10/24 09:49:20 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/math_error.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/math_error.c,v $
  *
  * Under source code control:	1994/08/03 05:08:22
  * File existed as early as:	1994

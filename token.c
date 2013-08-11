@@ -19,9 +19,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: token.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/token.c,v $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: token.c,v 30.2 2008/11/05 17:32:19 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/token.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
  * File existed as early as:	before 1990
@@ -823,7 +823,6 @@ warning(char *fmt, ...)
 	/* form the error message */
 	name = inputname();
 	va_start(ap, fmt);
-	vsnprintf(calc_warn_msg, MAXERROR, fmt, ap);
 	if (name) {
 		snprintf(calc_warn_msg, MAXERROR, "\"%s\", line %ld: ",
 			 name, linenumber());

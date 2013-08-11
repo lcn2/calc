@@ -21,7 +21,7 @@
  *
  * @(#) $Revision: 30.2 $
  * @(#) $Id: file.c,v 30.2 2007/07/05 13:30:38 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/file.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/file.c,v $
  *
  * Under source code control:	1991/07/20 00:21:56
  * File existed as early as:	1991

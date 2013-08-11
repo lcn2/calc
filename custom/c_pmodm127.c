@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: c_pmodm127.c,v 30.1 2007/03/16 11:10:04 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_pmodm127.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/custom/RCS/c_pmodm127.c,v $
  *
  * Under source code control:	2004/07/28 22:12:25
  * File existed as early as:	2004

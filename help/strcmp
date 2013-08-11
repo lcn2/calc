@@ -19,7 +19,7 @@ DESCRIPTION
     returns 1, 0, or -1 according as n1 is greater than, equal to,
     or less than n2.
     Note that null characters within the strings are included in the
-    comparison. 
+    comparison.
 
 EXAMPLE
     strcmp("ab", "abc") == -1
@@ -55,9 +55,9 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 30.1 $
-## @(#) $Id: strcmp,v 30.1 2007/03/16 11:10:42 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/strcmp,v $
+## @(#) $Revision: 30.3 $
+## @(#) $Id: strcmp,v 30.3 2013/08/11 01:16:03 chongo Exp $
+## @(#) $Source: /usr/local/src/bin/calc/help/RCS/strcmp,v $
 ##
 ## Under source code control:	2006/03/03 03:32:44
 ## File existed as early as:	2006

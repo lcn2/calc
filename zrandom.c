@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: zrandom.c,v 30.2 2007/09/21 01:47:34 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: zrandom.c,v 30.3 2013/08/11 01:08:32 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/zrandom.c,v $
  *
  * Under source code control:	1997/02/15 04:01:56
@@ -318,7 +318,7 @@
  *
  *    seed >= 2^32, 0 < newn <= 20:
  *    -----------------------------
- *	Set the Blum modulus to one of the the pre-defined Blum moduli.
+ *	Set the Blum modulus to one of the pre-defined Blum moduli.
  *	See below for the values of these pre-defined Blum moduli and how
  *	they were computed.
  *
@@ -341,7 +341,7 @@
  *
  *    seed == 0, 0 < newn <= 20:
  *    --------------------------
- *	Set the Blum modulus to one of the the pre-defined Blum moduli.
+ *	Set the Blum modulus to one of the pre-defined Blum moduli.
  *	The new quadratic residue will also be set to one of
  *	the pre-defined quadratic residues.
  *
@@ -609,7 +609,7 @@
  *	      to having their Blum moduli factored, depending in their size,
  *	      by small PCs in a reasonable to large supercomputers/highly
  *	      parallel processors over a long time.  Their value lies in their
- *	      speed relative the the default Blum generator.  As of Jan 1997,
+ *	      speed relative the default Blum generator.  As of Jan 1997,
  *	      the Blum moduli associated with 13 <= newn < 20 appear to
  *	      be well beyond the scope of hardware and algorithms,
  *	      and 9 <= newn < 12 might be factorable with extreme difficulty.
@@ -1064,7 +1064,7 @@
  * Blum generator.  A combination of better algorithms, helped by faster
  * hardware will be needed.
  *
- * It is true that the the pre-defined moduli are 'magic'.  On the other
+ * It is true that the pre-defined moduli are 'magic'.  On the other
  * hand, there purpose was in part to produce users with pre-seeded
  * generators where the individual Blum primes are not well known.  If
  * this bothers you, don't use them and seed your own!
@@ -2373,7 +2373,7 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 	/*
 	 * srandom(seed, 0 < newn <= 20)
 	 *
-	 * Set the Blum modulus to one of the the pre-defined Blum moduli.
+	 * Set the Blum modulus to one of the pre-defined Blum moduli.
 	 * The new quadratic residue will also be set to one of
 	 * the pre-defined quadratic residues.
 	 */

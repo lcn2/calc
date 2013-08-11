@@ -173,7 +173,8 @@ alg_config.cal
 
 beer.cal
 
-    Calc's contribution to the 99 Bottles of Beer web page:
+    This calc resource is calc's contribution to the 99 Bottles of Beer
+    web page:
 
 	http://www.ionet.net/~timtroyr/funhouse/beer.html#calc
 
@@ -191,11 +192,51 @@ bernoulli.cal
 	  the builtin function.
 
 
+bernpoly.cal
+
+    bernpoly(n,z)
+
+    Computes the nth Bernoulli polynomial at z for arbitrary n,z.  See:
+
+        http://en.wikipedia.org/wiki/Bernoulli_polynomials
+        http://mathworld.wolfram.com/BernoulliPolynomial.html
+
+    for further information
+
+
 bigprime.cal
 
     bigprime(a, m, p)
 
     A prime test, base a, on p*2^x+1 for even x>m.
+
+
+brentsolve.cal
+
+    brentsolve(low, high,eps)
+
+    A root-finder implementwed with the Brent-Dekker trick.
+
+    brentsolve2(low, high,which,eps)
+
+    The second function, brentsolve2(low, high,which,eps) has some lines
+    added to make it easier to hardcode the name of the helper function
+    different from the obligatory "f".
+
+    See:
+
+        http://en.wikipedia.org/wiki/Brent%27s_method
+        http://mathworld.wolfram.com/BrentsMethod.html
+
+    to find out more about the Brent-Dekker method.
+
+
+constants.cal
+
+    e()
+    G()
+
+    An implementation of different constants to arbitrary precision.
 
 
 chi.cal
@@ -226,14 +267,37 @@ chrem.cal
 
 deg.cal
 
+    deg(deg, min, sec)
+    deg_add(a, b)
+    deg_neg(a)
+    deg_sub(a, b)
+    deg_mul(a, b)
+    deg_print(a)
+
+    Calculate in degrees, minutes, and seconds.  For a more functional
+    version see dms.cal.
+
+
+dms.cal
+
     dms(deg, min, sec)
     dms_add(a, b)
     dms_neg(a)
     dms_sub(a, b)
     dms_mul(a, b)
     dms_print(a)
+    dms_abs(a)
+    dms_norm(a)
+    dms_test(a)
+    dms_int(a)
+    dms_frac(a)
+    dms_rel(a,b)
+    dms_cmp(a,b)
+    dms_inc(a)
+    dms_dec(a)
 
-    Calculate in degrees, minutes, and seconds.
+    Calculate in degrees, minutes, and seconds.  Unlike deg.cal, increments
+    are on the arc second level.  See also hms.cal.
 
 
 dotest.cal
@@ -268,11 +332,178 @@ dotest.cal
 	dotest("set8700.line");
 
 
+factorial.cal
+
+    factorial(n)
+
+    Calculates the product of the positive integers up to and including n.
+
+    See:
+
+	http://en.wikipedia.org/wiki/Factorial
+
+    for information on the factorial. This function depends on the script
+    toomcook.cal.
+
+
+    primorial(a,b)
+
+    Calculates the product of the primes between a and b. If a is not prime
+    the next higher prime is taken as the starting point. If b is not prime
+    the next lower prime is taking as the end point b. The end point b must
+    not exceed 4294967291.  See:
+
+	http://en.wikipedia.org/wiki/Primorial
+
+    for information on the primorial.
+
+
+factorial2.cal
+
+    This file contents a small variety of integer functions that can, with
+    more or less pressure, be related to the factorial.
+
+    doublefactorial(n)
+
+    Calculates the double factorial n!! with different algorithms for
+        - n odd
+        - n even and positive
+        - n (real|complex) sans the negative half integers
+
+    See:
+
+        http://en.wikipedia.org/wiki/Double_factorial
+        http://mathworld.wolfram.com/DoubleFactorial.html
+
+    for information on the double factorial. This function depends on
+    the script toomcook.cal, factorial.cal and specialfunctions.cal.
+
+
+    binomial(n,k)
+
+    Calculates the binomial coefficients for n large and k = k \pm
+    n/2. Defaults to the built-in function for smaller and/or different
+    values. Meant as a complete replacement for comb(n,k) with only a
+    very small overhead.  See:
+
+        http://en.wikipedia.org/wiki/Binomial_coefficient
+
+    for information on the binomial. This function depends on the script
+    toomcook.cal factorial.cal and specialfunctions.cal.
+
+
+    bigcatalan(n)
+
+    Calculates the n-th Catalan number for n large. It is usefull
+    above n~50,000 but defaults to the builtin function for smaller
+    values.Meant as a complete replacement for catalan(n) with only a
+    very small overhead.  See:
+
+        http://en.wikipedia.org/wiki/Catalan_number
+        http://mathworld.wolfram.com/CatalanNumber.html
+
+    for information on Catalan numbers. This function depends on the scripts
+    toomcook.cal, factorial.cal and specialfunctions.cal.
+
+
+    stirling1(n,m)
+
+    Calculates the Stirling number of the first kind. It does so with
+    building a list of all of the smaller results. It might be a good
+    idea, though, to run it once for the highest n,m first if many
+    Stirling  numbers are needed at once, for example in a series.  See:
+
+        http://en.wikipedia.org/wiki/Stirling_numbers_of_the_first_kind
+        http://mathworld.wolfram.com/StirlingNumberoftheFirstKind.html
+        Algorithm 3.17,  Donald Kreher and Douglas Simpson, "Combinatorial
+          Algorithms", CRC Press, 1998, page 89.
+
+    for information on Stirling numbers of the first kind.
+
+
+    stirling2(n,m)
+    stirling2caching(n,m)
+
+    Calculate the Stirling number of the second kind.
+    The first function stirling2(n,m) does it with the sum
+                       m
+                      ====
+                 1    \      n      m - k
+                 --    >    k  (- 1)      binomial(m, k)
+                 m!   /
+                      ====
+                      k = 0
+
+    The other function stirling2caching(n,m) does it by way of the
+    reccurence relation and keeps all earlier results. This function
+    is much slower for computing a single value than stirling2(n,m) but
+    is very usefull if many Stirling numbers are needed, for example in
+    a series.  See:
+
+        http://en.wikipedia.org/wiki/Stirling_numbers_of_the_second_kind
+        http://mathworld.wolfram.com/StirlingNumberoftheSecondKind.html
+
+        Algorithm 3.17,  Donald Kreher and Douglas Simpson, "Combinatorial
+          Algorithms", CRC Press, 1998, page 89.
+
+    for information on Stirling numbers of the second kind.
+
+
+    bell(n)
+
+    Calculate the n-th Bell number. This may take some time for large n.
+    See:
+
+        http://oeis.org/A000110
+        http://en.wikipedia.org/wiki/Bell_number
+        http://mathworld.wolfram.com/BellNumber.html
+
+    for information on Bell numbers.
+
+
+    subfactorial(n)
+
+    Calculate the n-th subfactorial or derangement. This may take some
+    time for large n.  See:
+
+        http://mathworld.wolfram.com/Derangement.html
+        http://en.wikipedia.org/wiki/Derangement
+
+    for information on subfactorials.
+
+
+    risingfactorial(x,n)
+
+    Calculates the rising factorial or Pochammer symbol of almost arbitrary
+    x,n.  See:
+
+        http://en.wikipedia.org/wiki/Pochhammer_symbol
+        http://mathworld.wolfram.com/PochhammerSymbol.html
+
+    for information on rising factorials.
+
+    fallingfactorial(x,n)
+
+    Calculates the rising factorial of almost arbitrary x,n.  See:
+
+        http://en.wikipedia.org/wiki/Pochhammer_symbol
+        http://mathworld.wolfram.com/PochhammerSymbol.html
+
+    for information on falling factorials.
+
+
 ellip.cal
 
     efactor(iN, ia, B, force)
 
     Attempt to factor using the elliptic functions: y^2 = x^3 + a*x + b.
+
+
+gvec.cal
+
+    gvec(function, vector)
+
+    Vectorize any single-input function or trailing operator.
 
 
 hello.cal
@@ -283,6 +514,27 @@ hello.cal
 	http://www.latech.edu/~acm/helloworld/calc.html
 
      NOTE: This resource produces a lot of output.  :-)
+
+
+hms.cal
+
+    hms(hour, min, sec)
+    hms_add(a, b)
+    hms_neg(a)
+    hms_sub(a, b)
+    hms_mul(a, b)
+    hms_print(a)
+    hms_abs(a)
+    hms_norm(a)
+    hms_test(a)
+    hms_int(a)
+    hms_frac(a)
+    hms_rel(a,b)
+    hms_cmp(a,b)
+    hms_inc(a)
+    hms_dec(a)
+
+    Calculate in hours, minutes, and seconds.  See also dmscal.
 
 
 intfile.cal
@@ -312,12 +564,61 @@ intfile.cal
 	of the integer become the last octets of the file.
 
 
+lambertw.cal
+
+     lambertw(z,branch)
+
+     Computes Lambert's W-function at "z" at branch "branch". See
+
+         http://en.wikipedia.org/wiki/Lambert_W_function
+         http://mathworld.wolfram.com/LambertW-Function.html
+         https://cs.uwaterloo.ca/research/tr/1993/03/W.pdf
+         http://arxiv.org/abs/1003.1628
+
+     to get more information.
+
+     This file includes also an implementation for the series described in
+     Corless et al. (1996) eq. 4.22 (W-pdf) and Verebic (2010) (arxive link)
+     eqs.35-37.
+
+     The series has been implemented to get a different algorithm
+     for checking the results. This was necessary because the results
+     of the implementation in Maxima, the only program with a general
+     lambert-w implementation at hand at that time, differed slightly. The
+     Maxima versions tested were: Maxima 5.21.1 and 5.29.1. The current
+     version of this code concurs with the results of Mathematica`s(tm)
+     ProductLog[branch,z] with the tested values.
+
+     The series is only valid for the branches 0,-1, real z, converges
+     for values of z _very_ near the branchpoint -exp(-1) only, and must
+     be given the branches explicitly.  See the code in lambertw.cal
+     for further information.
+
+
 linear.cal
 
     linear(x0, y0, x1, y1, x)
 
     Returns the value y such that (x,y) in on the line (x0,y0), (x1,y1).
     Requires x0 != y0.
+
+
+lnseries.cal
+
+    lnseries(limit)
+    lnfromseries(n)
+    deletelnseries()
+
+    Calculates a series of n natural logarithms at 1,2,3,4...n. It
+    does so by computing the prime factorization of all of the number
+    sequence 1,2,3...n, calculates the natural logarithms of the primes
+    in 1,2,3...n and uses the above factorization to build the natural
+    logarithms of the rest of the sequence by sadding the logarithms of
+    the primes in the factorization.  This is faster for high precision
+    of the logarithms and/or long sequences.
+
+    The sequence need to be initiated by running either lnseries(n) or
+    lnfromseries(n) once with n the upper limit of the sequence.
 
 
 lucas.cal
@@ -364,6 +665,7 @@ mfactor.cal
     The value p_elim == 17 is best for long factorizations.  It is the
     fastest even thought the initial startup overhead is larger than
     for p_elim == 13.
+
 
 mod.cal
 
@@ -454,6 +756,7 @@ pi.cal
     Lambert Meertens.  See also the ABC Programmer's Handbook, by Geurts,
     Meertens & Pemberton, published by Prentice-Hall (UK) Ltd., 1990.
 
+
 pix.cal
 
     pi_of_x(x)
@@ -536,10 +839,10 @@ randmprime.cal
 
     randmprime(bits, seed [,dbg])
 
-    Find a prime of the form h*2^n-1 >= 2^bits for some given x.  The initial
-    search points for 'h' and 'n' are selected by a cryptographic pseudo-random
-    number generator.  The optional argument, dbg, if set to 1, 2 or 3
-    turn on various debugging print statements.
+    Find a prime of the form h*2^n-1 >= 2^bits for some given x.  The
+    initial search points for 'h' and 'n' are selected by a cryptographic
+    pseudo-random number generator.  The optional argument, dbg, if set
+    to 1, 2 or 3 turn on various debugging print statements.
 
 
 randombitrun.cal
@@ -591,8 +894,8 @@ repeat.cal
 
 regress.cal
 
-    Test the correct execution of the calculator by reading this resource file.
-    Errors are reported with '****' messages, or worse. :-)
+    Test the correct execution of the calculator by reading this resource
+    file.  Errors are reported with '****' messages, or worse. :-)
 
 
 screen.cal
@@ -638,14 +941,16 @@ screen.cal
     Cyan
     White
 
-    Define ANSI control sequences providing (i.e., cursor movement, changing
-    foreground or background color, etc.) for VT100 terminals and terminal
-    window emulators (i.e., xterm, Apple OS/X Terminal, etc.) that support them.
+    Define ANSI control sequences providing (i.e., cursor movement,
+    changing foreground or background color, etc.) for VT100 terminals
+    and terminal window emulators (i.e., xterm, Apple OS/X Terminal,
+    etc.) that support them.
 
     For example:
 
 	read screen
 	print green:"This is green. ":red:"This is red.":black
+
 
 seedrandom.cal
 
@@ -688,8 +993,247 @@ solve.cal
     solve(low, high, epsilon)
 
     Solve the equation f(x) = 0 to within the desired error value for x.
-    The function 'f' must be defined outside of this routine, and the low
-    and high values are guesses which must produce values with opposite signs.
+    The function 'f' must be defined outside of this routine, and the
+    low and high values are guesses which must produce values with
+    opposite signs.
+
+
+specialfunctions.cal
+
+    beta(a,b)
+
+    Calculates the value of the beta function.  See:
+
+	https://en.wikipedia.org/wiki/Beta_function
+        http://mathworld.wolfram.com/BetaFunction.html
+        http://dlmf.nist.gov/5.12
+
+    for information on the beta function.
+
+
+    betainc(a,b,z)
+
+    Calculates the value of the regularized incomplete beta function.  See:
+
+	https://en.wikipedia.org/wiki/Beta_function
+        http://mathworld.wolfram.com/RegularizedBetaFunction.html
+        http://dlmf.nist.gov/8.17
+
+    for information on the regularized incomplete beta function.
+
+
+    expoint(z)
+
+    Calculates the value of the exponential integral Ei(z) function at z.
+    See:
+
+	http://en.wikipedia.org/wiki/Exponential_integral
+        http://www.cs.utah.edu/~vpegorar/research/2011_JGT/
+
+    for information on the exponential integral Ei(z) function.
+
+
+    erf(z)
+
+    Calculates the value of the error function at z.  See:
+
+	http://en.wikipedia.org/wiki/Error_function
+
+    for information on the error function function.
+
+
+    erfc(z)
+
+    Calculates the value of the complementary error function at z.  See:
+
+	http://en.wikipedia.org/wiki/Error_function
+
+    for information on the complementary error function function.
+
+
+    erfi(z)
+
+    Calculates the value of the imaginary error function at z.  See:
+
+	http://en.wikipedia.org/wiki/Error_function
+
+    for information on the imaginary error function function.
+
+
+    erfinv(x)
+
+    Calculates the inverse of the error function at x.  See:
+
+	http://en.wikipedia.org/wiki/Error_function
+
+    for information on the inverse of the error function function.
+
+
+    faddeeva(z)
+
+    Calculates the value of the complex error function at z.  See:
+
+	http://en.wikipedia.org/wiki/Faddeeva_function
+
+    for information on the complex error function function.
+
+
+    gamma(z)
+
+    Calculates the value of the Euler gamma function at z.  See:
+
+	http://en.wikipedia.org/wiki/Gamma_function
+        http://dlmf.nist.gov/5
+
+    for information on the Euler gamma function.
+
+
+    gammainc(a,z)
+
+    Calculates the value of the lower incomplete gamma function for
+    arbitrary a, z.  See:
+
+	http://en.wikipedia.org/wiki/Incomplete_gamma_function
+
+    for information on the lower incomplete gamma function.
+
+    gammap(a,z)
+
+    Calculates the value of the regularized lower incomplete gamma
+    function for a, z with a not in -N.  See:
+
+	http://en.wikipedia.org/wiki/Incomplete_gamma_function
+
+    for information on the regularized lower incomplete gamma function.
+
+    gammaq(a,z)
+
+    Calculates the value of the regularized upper incomplete gamma
+    function for a, z with a not in -N.  See:
+
+	http://en.wikipedia.org/wiki/Incomplete_gamma_function
+
+    for information on the regularized upper incomplete gamma function.
+
+
+    heavisidestep(x)
+
+    Computes the Heaviside stepp function (1+sign(x))/2
+
+
+    harmonic(limit)
+
+    Calculates partial values of the harmonic series up to limit.  See:
+
+	http://en.wikipedia.org/wiki/Harmonic_series_(mathematics)
+        http://mathworld.wolfram.com/HarmonicSeries.html
+
+    for information on the harmonic series.
+
+
+    lnbeta(a,b)
+
+    Calculates the natural logarithm of the beta function.  See:
+
+	https://en.wikipedia.org/wiki/Beta_function
+        http://mathworld.wolfram.com/BetaFunction.html
+        http://dlmf.nist.gov/5.12
+
+    for information on the beta function.
+
+    lngamma(z)
+
+    Calculates the value of the logarithm of the Euler gamma function
+    at z.  See:
+
+	http://en.wikipedia.org/wiki/Gamma_function
+        http://dlmf.nist.gov/5.15
+
+    for information on the derivatives of the the Euler gamma function.
+
+
+    polygamma(m,z)
+
+    Calculates the value of the m-th derivative of the Euler gamma
+    function at z.  See:
+
+	http://en.wikipedia.org/wiki/Polygamma
+        http://dlmf.nist.gov/5
+
+    for information on the n-th derivative ofthe Euler gamma function. This
+    function depends on the script zeta2.cal.
+
+
+    psi(z)
+
+    Calculates the value of the first derivative of the Euler gamma
+    function at z.  See:
+
+	http://en.wikipedia.org/wiki/Digamma_function
+        http://dlmf.nist.gov/5
+
+    for information on the first derivative of the Euler gamma function.
+
+
+    zeta(s)
+
+    Calculates the value of the Rieman Zeta function at s.  See:
+
+	http://en.wikipedia.org/wiki/Riemann_zeta_function
+        http://dlmf.nist.gov/25.2
+
+    for information on the Riemann zeta function. This function depends
+    on the script zeta2.cal.
+
+
+statistics.cal
+
+    gammaincoctave(z,a)
+
+    Computes the regularized incomplete gamma function in a way to
+    correspond with the function in Octave.
+
+    invbetainc(x,a,b)
+
+    Computes the inverse of the regularized beta function. Does so the
+    brute-force way wich makes it a bit slower.
+
+    betapdf(x,a,b)
+    betacdf(x,a,b)
+    betacdfinv(x,a,b)
+    betamedian(a,b)
+    betamode(a,b)
+    betavariance(a,b)
+    betalnvariance(a,b)
+    betaskewness(a,b)
+    betakurtosis(a,b)
+    betaentropy(a,b)
+    normalpdf(x,mu,sigma)
+    normalcdf(x,mu,sigma)
+    probit(p)
+    normalcdfinv(p,mu,sigma)
+    normalmean(mu,sigma)
+    normalmedian(mu,sigma)
+    normalmode(mu,sigma)
+    normalvariance(mu,sigma)
+    normalskewness(mu,sigma)
+    normalkurtosis(mu,sigma)
+    normalentropy(mu,sigma)
+    normalmgf(mu,sigma,t)
+    normalcf(mu,sigma,t)
+    chisquaredpdf(x,k)
+    chisquaredpcdf(x,k)
+    chisquaredmean(x,k)
+    chisquaredmedian(x,k)
+    chisquaredmode(x,k)
+    chisquaredvariance(x,k)
+    chisquaredskewness(x,k)
+    chisquaredkurtosis(x,k)
+    chisquaredentropy(x,k)
+    chisquaredmfg(k,t)
+    chisquaredcf(k,t)
+
+    Calculates a bunch of (hopefully) aptly named statistical functions.
 
 
 sumsq.cal
@@ -751,7 +1295,8 @@ test1700.cal
 
     value
 
-    This resource files is used by regress.cal to test the read and use keywords.
+    This resource files is used by regress.cal to test the read and
+    use keywords.
 
 
 test2600.cal
@@ -776,8 +1321,8 @@ test2600.cal
     checkresult(x, y, z, a)
     test2600(verbose, tnum)
 
-    This resource files is used by regress.cal to test some of builtin functions
-    in terms of accuracy and roundoff.
+    This resource files is used by regress.cal to test some of builtin
+    functions in terms of accuracy and roundoff.
 
 
 test2700.cal
@@ -814,7 +1359,8 @@ test3100.cal
     res_inv(a)
     res(x)
 
-    This resource file is used by regress.cal to test determinants of a matrix
+    This resource file is used by regress.cal to test determinants of
+    a matrix.
 
 
 test3300.cal
@@ -825,8 +1371,9 @@ test3300.cal
     testr(str, n, N, verbose)
     test3300(verbose, tnum)
 
-    This resource file is used by regress.cal to provide for more determinant
-    tests.
+    This resource file is used by regress.cal to provide for more
+    determinant tests.
+
 
 test3400.cal
 
@@ -856,6 +1403,7 @@ test3500.cal
 
     This resource file is used by regress.cal to test the functions frem,
     fcnt, gcdrem.
+
 
 test4000.cal
 
@@ -889,6 +1437,7 @@ test4000.cal
     This resource file is used by regress.cal to test ptest, nextcand and
     prevcand builtins.
 
+
 test4100.cal
 
     global defaultverbose
@@ -908,6 +1457,7 @@ test4100.cal
 
     This resource file is used by regress.cal to test REDC operations.
 
+
 test4600.cal
 
     stest(str [, verbose]) defined
@@ -919,6 +1469,7 @@ test4600.cal
 
     This resource file is used by regress.cal to test searching in files.
 
+
 test5100.cal
 
     global a5100
@@ -927,6 +1478,7 @@ test5100.cal
 
     This resource file is used by regress.cal to test the new code generator
     declaration scope and order.
+
 
 test5200.cal
 
@@ -939,12 +1491,14 @@ test5200.cal
     This resource file is used by regress.cal to test the fix of a
     global/static bug.
 
+
 test8400.cal
 
     test8400() defined
 
     This resource file is used by regress.cal to check for quit-based
     memory leaks.
+
 
 test8500.cal
 
@@ -958,6 +1512,7 @@ test8500.cal
 
     This resource file is used by regress.cal to the // and % operators.
 
+
 test8600.cal
 
     global min_8600
@@ -968,11 +1523,53 @@ test8600.cal
     This resource file is used by regress.cal to test a change of
     allowing up to 1024 args to be passed to a builtin function.
 
+
+test8900.cal
+
+    This function tests a number of calc resource functions contributed
+    by Christoph Zurnieden.  These include:
+
+	bernpoly.cal
+	brentsolve.cal
+	constants.cal
+	factorial2.cal
+	factorial.cal
+	lambertw.cal
+	lnseries.cal
+	specialfunctions.cal
+	statistics.cal
+	toomcook.cal
+	zeta2.cal
+
+
 unitfrac.cal
 
     unitfrac(x)
 
     Represent a fraction as sum of distinct unit fractions.
+
+
+toomcook.cal
+
+
+    toomcook3(a,b)
+    toomcook4(a,b)
+
+    Toom-Cook multiplication algorithm.  Multiply two integers a,b by
+    way of the Toom-Cook algorithm.  See:
+
+	http://en.wikipedia.org/wiki/Toom%E2%80%93Cook_multiplication
+
+    toomcook3square(a)
+    toomcook4square(a)
+
+    Square the integer a by way of the Toom-Cook algorithm.  See:
+
+	http://en.wikipedia.org/wiki/Toom%E2%80%93Cook_multiplication
+
+    The function toomCook4(a,b) calls the function toomCook3(a,b) which
+    calls built-in multiplication at a specific cut-off point. The
+    squaring functions act in the same way.
 
 
 varargs.cal
@@ -981,6 +1578,7 @@ varargs.cal
 
     Example program to use 'varargs'.  Program to sum the cubes of all
     the specified numbers.
+
 
 xx_print.cal
 
@@ -995,6 +1593,19 @@ xx_print.cal
     error_print(a) defined
 
     Demo for the xx_print object routines.
+
+
+zeta2.cal
+
+    hurwitzzeta(s,a)
+
+    Calculate the value of the Hurwitz Zeta function.  See:
+
+	http://en.wikipedia.org/wiki/Hurwitz_zeta_function
+        http://dlmf.nist.gov/25.11
+
+    for information on this special zeta function.
+
 
 ## Copyright (C) 2000  David I. Bell and Landon Curt Noll
 ##
@@ -1014,8 +1625,8 @@ xx_print.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.1 $
-## @(#) $Id: README,v 30.1 2007/03/16 11:09:54 chongo Exp $
+## @(#) $Revision: 30.5 $
+## @(#) $Id: README,v 30.5 2013/08/11 03:26:46 chongo Exp $
 ## @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/README,v $
 ##
 ## Under source code control:	1990/02/15 01:50:32

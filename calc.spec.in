@@ -2,7 +2,7 @@
 #
 # calc.spec.in - template specfile for calc
 #
-# Copyright (C) 2003-2007  Petteri Kettunen and Landon Curt Noll
+# Copyright (C) 2003-2013  Petteri Kettunen and Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,9 +18,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.6 $
-# @(#) $Id: calc.spec.in,v 30.6 2007/10/16 12:22:22 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.spec.in,v $
+# @(#) $Revision: 30.10 $
+# @(#) $Id: calc.spec.in,v 30.10 2013/05/05 11:57:44 chongo Exp $
+# @(#) $Source: /usr/local/src/bin/calc/RCS/calc.spec.in,v $
 #
 # Under source code control:	2003/02/16 20:21:39
 # File existed as early as:	2003
@@ -37,14 +37,16 @@
 Summary: Arbitrary precision calculator.
 Name: calc
 Version: <<<PROJECT_VERSION>>>
-Release: 1.1
+Release: 10
 License: LGPL
 Group: Applications/Engineering
-Source: %{name}-%{version}.tar.bz2
+Source: http://www.isthe.com/chongo/src/calc/%{name}-%{version}.tar.bz2
 URL: http://www.isthe.com/chongo/tech/comp/calc/index.html
-Requires: ncurses >= 5.2-26, readline >= 4.2, less >= 358
-BuildRequires: ncurses-devel >= 5.2-26, readline-devel >= 4.2
-BuildRoot: %{_tmppath}/%{name}-root
+Vendor: Landon Noll and Associates
+Packager: Landon Noll and Associates (http://www.isthe.com/chongo/index.html)
+Requires: ncurses >= 5.5-24, readline >= 5.1-3, less >= 358
+BuildRequires: ncurses-devel >= 5.5-24, readline-devel >= 5.1-3
+BuildRoot: %{_tmppath}/build-root
 
 %description
 Calc is arbitrary precision C-like arithmetic system that is a
@@ -58,8 +60,8 @@ For the latest calc release, see the calc project home page:
 
 %package devel
 Summary: Development files and documentation for calc.
-Group: Development/Libraries
-PreReq: %{name} = %{version}-%{release}
+Group: Applications/Engineering
+Requires: calc = %{version}-%{release}
 
 %description devel
 This package contains the header files and static libraries for developing
@@ -70,46 +72,46 @@ For the latest calc release, see the project home page:
     http://www.isthe.com/chongo/tech/comp/calc/index.html
 
 %prep
-%setup -q
+%setup -T -b 0
 
 %build
 echo '-=- calc.spec beginning make clobber -=-'
-make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ clobber
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ clobber
 echo '-=- calc.spec ending make clobber -=-'
 echo '-=- calc.spec beginning make calc-static-only -=-'
-make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ calc-static-only BLD_TYPE=calc-static-only
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ calc-static-only BLD_TYPE=calc-static-only
 echo '-=- calc.spec ending make calc-static-only -=-'
 echo '-=- calc.spec beginning make rpm-hide-static -=-'
-make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-hide-static
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-hide-static
 echo '-=- calc.spec ending make rpm-hide-static -=-'
 echo '-=- calc.spec beginning make clobber (again) -=-'
-make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ clobber
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ clobber
 echo '-=- calc.spec ending make clobber (again) -=-'
 echo '-=- calc.spec beginning make calc-dynamic-only -=-'
-make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ calc-dynamic-only BLD_TYPE=calc-dynamic-only LD_SHARE=
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ calc-dynamic-only BLD_TYPE=calc-dynamic-only LD_SHARE=
 echo '-=- calc.spec ending make calc-dynamic-only -=-'
 echo '-=- calc.spec beginning make chk -=-'
-make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ chk
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ chk
 echo '-=- calc.spec ending make chk -=-'
 echo '-=- calc.spec beginning make rpm-unhide-static -=-'
-make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-unhide-static
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-unhide-static
 echo '-=- calc.spec ending make rpm-unhide-static -=-'
 echo '-=- calc.spec beginning make rpm-clean-static -=-'
-make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-clean-static
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-clean-static
 echo '-=- calc.spec ending make rpm-clean-static -=-'
 echo '-=- calc.spec beginning make rpm-chk-static -=-'
-make %{?_smp_mflags} T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-chk-static
+make %{?_smp_mflags} T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ rpm-chk-static
 echo '-=- calc.spec ending make rpm-chk-static -=-'
 
 %install
-rm -rf %{buildroot}
-mkdir -p %{buildroot}
 echo '-=- calc.spec beginning make install -=-'
-make T=%{buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ install
+rm -rf %{_buildroot}
+mkdir -p %{_buildroot}
+make T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc MANDIR=%{_mandir}/man1 EXT= V=@ install
 echo '-=- calc.spec ending make install -=-'
 
 %clean
-rm -rf %{buildroot}
+rm -rf %{_buildroot}
 
 %files
 %defattr(-, root, root)
@@ -124,8 +126,10 @@ rm -rf %{buildroot}
 %attr(644, root, root) %{_datadir}/%{name}/help/*
 %attr(644, root, root) %{_datadir}/%{name}/*.cal
 %attr(644, root, root) %{_datadir}/%{name}/*.line
-%attr(644, root, root) %{_libdir}/libcalc.so.%{version}
-%attr(644, root, root) %{_libdir}/libcustcalc.so.%{version}
+%attr(644, root, root) %{_libdir}/libcalc.so
+%attr(644, root, root) %{_libdir}/libcalc.so.*
+%attr(644, root, root) %{_libdir}/libcustcalc.so
+%attr(644, root, root) %{_libdir}/libcustcalc.so.*
 
 %files devel
 %defattr(-, root, root)
@@ -136,28 +140,49 @@ rm -rf %{buildroot}
 %attr(644, root, root) %{_libdir}/libcustcalc.a
 
 %changelog
+* Sat May 05 2013 Landon Curt Noll http://www.isthe.com/chongo
+- Release: 10
+- Major bug rpm build process bug fix
+- Source: is a URL as per rpm requirements
+- Requires: ncurses >= 5.5-24, readline >= 5.1-3, less >= 358
+- BuildRequires: ncurses-devel >= 5.5-24, readline-devel >= 5.1-3
+- BuildRoot: %{_tmppath}/build-root
+- Fixed use of %{_buildroot}
+- Fixed permissions so that rpm build services can modify libraries
+- Added missing files to files section
+* Mon Mar 25 2013 Landon Curt Noll http://www.isthe.com/chongo
+- Release: 9 (was 1.1)
+- Removed deprecated PreReq for calc-devel, using Requires
 * Sun Sep 01 2007 Landon Curt Noll http://www.isthe.com/chongo
+- Release: 8
 - Release of calc-2.12.2
 - Calc builds with shared libraries
 * Sun Jun 25 2006 Landon Curt Noll http://www.isthe.com/chongo
+- Release: 7
 - Changed Copyright to License as per new rpm v4.4 syntax
 * Sun May 20 2006 Landon Curt Noll http://www.isthe.com/chongo
+- Release: 6
 - Release of calc-2.12.0
 - Added *.line set files to the list of packaged files
 * Sun Dec 11 2005 Landon Curt Noll http://www.isthe.com/chongo
+- Release: 5
 - Release of calc-2.11.11
 - Fixed description in spec file
 * Wed Feb 26 2003 Landon Curt Noll http://www.isthe.com/chongo
+- Release: 4
 - Release of calc-2.11.7-2
 - Fixed attributes on include and lib calc-devel files
 - Added BUGS to calc-devel as well as calc
 * Tue Feb 25 2003 Landon Curt Noll http://www.isthe.com/chongo
+- Release: 3
 - Release of calc-2.11.7-1
 - Require ncurses, readline and less to install.
 - Require ncurses-devel and readline-devel to build.
 * Tue Feb 18 2003 Landon Curt Noll http://www.isthe.com/chongo
+- Release: 2
 - Misc changes to fit local directory setup
 * Sun Feb 16 2003 Petteri Kettunen <petterik@users.sourceforge.net>
+- Release: 1
 - initial RPM build
 
 #****

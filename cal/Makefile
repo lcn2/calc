@@ -18,9 +18,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.3 $
-# @(#) $Id: Makefile,v 30.3 2007/09/21 01:27:27 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/Makefile,v $
+# @(#) $Revision: 30.5 $
+# @(#) $Id: Makefile,v 30.5 2011/05/23 22:50:18 chongo Exp $
+# @(#) $Source: /usr/local/src/bin/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
 # File existed as early as:	1991
@@ -193,7 +193,8 @@ CALC_FILES= README bigprime.cal deg.cal ellip.cal lucas.cal lucas_chk.cal \
 	beer.cal hello.cal test5100.cal test5200.cal randombitrun.cal \
 	randomrun.cal repeat.cal xx_print.cal natnumset.cal qtime.cal \
 	test8400.cal test8500.cal test8600.cal chi.cal intfile.cal screen.cal \
-	dotest.cal set8700.cal set8700.line alg_config.cal sumtimes.cal
+	dotest.cal set8700.cal set8700.line alg_config.cal sumtimes.cal \
+	dms.cal hms.cal gvec.cal
 
 # These files are found (but not built) in the distribution
 #

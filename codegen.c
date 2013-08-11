@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: codegen.c,v 30.2 2007/07/05 13:30:38 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: codegen.c,v 30.3 2013/07/12 22:41:33 chongo Exp $
  * @(#) $Source: /usr/local/src/cmd/calc/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
@@ -2605,7 +2605,7 @@ definesymbol(char *name, int symtype)
 		break;
 	case SYM_GLOBAL:
 		if (symtype == SYM_GLOBAL && conf->redecl_warn) {
-			warning("redeclaraion of global \"%s\"",
+			warning("redeclaration of global \"%s\"",
 				name);
 			return;
 		}
@@ -2613,7 +2613,7 @@ definesymbol(char *name, int symtype)
 
 	case SYM_LOCAL:
 		if (symtype == SYM_LOCAL && conf->redecl_warn) {
-			warning("redeclaraion of local \"%s\"",
+			warning("redeclaration of local \"%s\"",
 				name);
 			return;
 		}

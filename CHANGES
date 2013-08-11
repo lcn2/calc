@@ -1,4 +1,77 @@
-The following are the changes from calc version 2.12.4.0 to date:
+The following are the changes from calc version 2.12.4.6 to date:
+
+    Updated RPM build process to remove use of deprecated flags.
+
+    Applied a number of fixes to calc.spec and rpm.mk file.
+    See calc.spec.in for details.  Changed rpm release to 2.1.
+
+    Set MACOSX_DEPLOYMENT_TARGET=10.8 as we upgraded all of
+    our development Mac OS X to 10.8.
+
+    Libraries are chmodded as 0644 to allow for building rpms
+    without root.
+
+    Silenced annoying warning about unused variable 'intp'
+    while compiline endian.c under some circumstances.
+
+    Fixed typo in redeclaration warnings.  Thanks to
+    Christoph Zurnieden <czurnieden at gmx dot de> for this report.
+
+    Added a number of calc resource functions by
+    Christoph Zurnieden <czurnieden at gmx dot de> including:
+
+    	bernpoly.cal - Computes the nth Bernoulli polynomial at z for any n,z
+	brentsolve.cal - root-finder implementwed with the Brent-Dekker trick
+	factorial.cal - product of the positive integers
+	factorial2.cal - variety of integer functions quasi-related to factoral
+	lambertw.cal - Computes Lambert's W-function at "z" at branch "branch"
+	lnseries.cal - Calculates a series of natural logarithms at 1,2,3,4...n
+	specialfunctions.cal - Calculates the value of the beta function
+	statistics.cal - a wide vareity of stastical functions
+	toomcook.cal - Multiply by way of the Toom-Cook algorithm
+	zeta2.cal - Calculate the value of the Hurwitz Zeta function
+
+    Improved the formatting of the output from:
+
+	help resource
+
+    Cleaned up old DOS-like CRLF line terminators in some
+    help files.  Thanks goes to to Michael Somos
+    <somos at harary dot math dot georgetown dot edu>
+    for pointing this out.
+
+    We replaced COPYING-LGPL with the version that is found at
+    http://www.gnu.org/licenses/lgpl-2.1.txt because that version
+    contans some whitespace formatting cleanup.  Otherwise the
+    license is the same.
+
+    We fixed a number of places where "the the" was used
+    when just "the" should be used.
+
+	NOTE: Fixes to grammar, spelling and minor formatting
+	      problems are welcome.  Please send us your patches!
+
+
+The following are the changes from calc version 2.12.4.3 to 2.12.4.5:
+
+    Added gvec.cal resource script.
+
+    Added calc-symlink make rule to setup symlinks from stardard locations
+    into a tree specified by a non-empty ${T} makefile variable.  Added
+    calc-unsymlink to remove any symlinks that may have been created by
+    the calc-symlink rule.
+
+    If is OK for the calc-symlink make rule to pre-remove a symlink.
+
+    Fixed bug was uncovered in calc that caused script failures when calc
+    is called within a while loop in BASH if the while loop is fed from
+    stdin due to calc's redirection/inheritance of stdin and no option
+    to change this behavior.  Thanks gores to David C. Rankin
+    <drankinatty at gmail dot com> for the bug fix and to David Haller
+    <dnh at opensuse dot org> for helping debug this problem.
+
+
+The following are the changes from calc version 2.12.4.0 to 2.12.4.2:
 
     Fixed a documentation bug for the sgn() builtin.
 
@@ -31,6 +104,35 @@ The following are the changes from calc version 2.12.4.0 to date:
 
     Fixed a bug where an certains typos (e.g., calling an unknown
     function) would previously cause calc to exit.
+
+    Updated the COPYING file to reflect the new filenames associated
+    with the SHA1 hash function, and removed mention of files related
+    to the SHA (SHA0, not SHA1) and the MD5 hash functions (which is
+    no longer supported in calc).
+
+    Fixed a bug where a calling vsnprintf() twice created problems.
+    The thanks for this fix goes to Matthew Miller (mattdm at mattdm
+    dot org) for this patch.
+
+    Michael Penk (mpenk at wuska dot com) reported success in installs
+    under windoz via Cygwin by making a change to the Cygwin target.
+    These changes have been folded into the main calc Makefile.
+    The old recommendation of using 'make win32_hsrc' is no longer
+    required for Cygwin.  See the README.WINDOWS file for details.
+
+    Added dms.cal and hms.cal resource files.  The dms.cal is a more
+    functional version of deg.cal.  It is a superset except that increment
+    and decrement is on the arc second level.  The hms.cal is for
+    24-hour cycle instread of the 360 degree cycle of dms.cal.
+
+    Changed deg.cal object name from dms to deg so that the more functional
+    dms.cal can own the dms object name.
+
+    Updated 'help obj' to reflect changes to 'show objfunctions' and
+    resource file example list since 1999.
+
+    Fixed problem where CALC_BYTE_ORDER refering to CALC_BIG_ENDIAN
+    and CALC_LITTLE_ENDIAN instead of BIG_ENDIAN and LITTLE_ENDIAN.
 
 
 The following are the changes from calc version 2.12.3.0 to 2.12.3.3:
@@ -2060,7 +2162,7 @@ The following are the changes from calc version 2.11.1 to 2.11.1t2.2:
     Cleaned up help display system.  Help file lines that begin with
     '##' are not displayed.
 
-    Calc source and documentation now uses the the these terms:
+    Calc source and documentation now uses these terms:
 
 	*.cal files	calc resource file
 	*.a files	calc binary link library
@@ -2098,7 +2200,7 @@ The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
     Fixed whitespace to make the best use of 8 character tabs.
 
     Fixed some bugs relating to '// and %' in combination with some
-    of the the rounding modes based on a patch from Ernest Bowen
+    of the rounding modes based on a patch from Ernest Bowen
     <ernie at turing dot une dot edu dot au>.
 
     A patch from Klaus Alexander Seistrup <klaus at seistrup dot dk>, when
@@ -2292,7 +2394,7 @@ The following are the changes from calc version 2.11.0t10 to 2.11.0t11:
 
 	Where ``/usr/local/bin/calc'' is the path to the calc binary.
 	Additional -options may be added to the line, but it MUST
-	start with -S.	For example, the the executable file ``plus''
+	start with -S.	For example, the executable file ``plus''
 	contain the following:
 
 	    #!/usr/local/bin/calc -S -e
@@ -4755,7 +4857,7 @@ The following are the changes from calc version 2.10.3t0 to 2.10.3t2:
 
 	global variable: to the end of the session with calc
 
-	static within a function definition: to the the first of:
+	static within a function definition: to the first of:
 
 	    an end of a global, static or local declaration (including
 	    initialization code) with the same identifier
@@ -4853,7 +4955,7 @@ The following are the changes from calc version 2.10.3t0 to 2.10.3t2:
 
 	global a, b, mat A, B[2] = {3,4}, C[2] = {4,5}, obj point P = {5,6}, Q
 
-    Fixed some bugs related to global and static scoping.  See the the
+    Fixed some bugs related to global and static scoping.  See the
     5200 regress test and lib/test5200.cal for details.
 
     Optimized opcode generator so that functions defined using '=' do not
@@ -5350,7 +5452,7 @@ The following are the changes from calc version 2.10.2t4 to 2.10.2t24:
 	 ILDFLAGS are flags given to ${CC} for linking .o files
 		  for intermediate progs
 
-	 CC is how the the C compiler is invoked
+	 CC is how the C compiler is invoked
 
     Added more tests to regress.cal.
 
@@ -5575,7 +5677,7 @@ The following are the changes from calc version 2.10.2t1 to 2.10.2t3:
     Some systems has a libc symbolic qadd() that conflicted with calc's
     qadd function.  To avoid this, qadd() has been renamed to qqadd().
 
-    The calc error codes are produced from the the calcerr.tbl file.
+    The calc error codes are produced from the calcerr.tbl file.
     Instead of changing #defines in value.h, one can not edit calcerr.tbl.
     The Makefile builds calcerr.h from this file.
 
@@ -6118,7 +6220,7 @@ The following are the changes from calc version 2.9.3t11 to 2.10.0t12:
 	LDFLAGS are flags given to ${CC} for linking .o files
 	ILDFLAGS are given to ${CC} for linking .o's for intermediate progs
 
-	CC is how the the C compiler is invoked
+	CC is how the C compiler is invoked
 
     The syntax error:
 
@@ -6769,9 +6871,9 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.18 $
-## @(#) $Id: CHANGES,v 30.18 2008/10/24 09:55:12 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/RCS/CHANGES,v $
+## @(#) $Revision: 30.28 $
+## @(#) $Id: CHANGES,v 30.28 2013/08/11 01:18:56 chongo Exp chongo $
+## @(#) $Source: /usr/local/src/bin/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
 ## File existed as early as:	1989

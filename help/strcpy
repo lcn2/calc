@@ -20,7 +20,7 @@ DESCRIPTION
     not require n1 to be greater than or equal to n2, but if this is so,
     normal printing of the returned value will give the same result as
     normal printing of s2.
- 
+
 EXAMPLE
     strcpy("", "xyz") == ""
     strcpy("a", "xyz") == "x"
@@ -57,9 +57,9 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 ##
-## @(#) $Revision: 30.1 $
-## @(#) $Id: strcpy,v 30.1 2007/03/16 11:10:42 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/help/RCS/strcpy,v $
+## @(#) $Revision: 30.3 $
+## @(#) $Id: strcpy,v 30.3 2013/08/11 01:16:03 chongo Exp $
+## @(#) $Source: /usr/local/src/bin/calc/help/RCS/strcpy,v $
 ##
 ## Under source code control:	2006/03/03 03:32:44
 ## File existed as early as:	2006

@@ -39,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.41 $$
-# @(#) $Id: Makefile.ship,v 30.41 2008/10/24 09:20:09 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.53 $$
+# @(#) $Id: Makefile.ship,v 30.53 2013/08/11 01:16:36 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -132,8 +132,8 @@ HAVE_VSPRINTF=
 # Select CALC_BYTE_ORDER= -DCALC_LITTLE_ENDIAN for DJGPP.
 #
 CALC_BYTE_ORDER=
-#CALC_BYTE_ORDER= -DCALC_BIG_ENDIAN
-#CALC_BYTE_ORDER= -DCALC_LITTLE_ENDIAN
+#CALC_BYTE_ORDER= -DBIG_ENDIAN
+#CALC_BYTE_ORDER= -DLITTLE_ENDIAN
 
 # Determine the number of bits in a long
 #
@@ -983,11 +983,12 @@ MKDIR_ARG= -p
 
 # Some out of date operating systems require / want an executable to
 # end with a certain file extension.  Some compile systems such as
-# Cygwin build calc as calc.exe.  The EXT variable is used to denote
-# the extension required by such.
+# windoz build calc as calc.exe.  The EXT variable is used to denote
+# the extension required by such.  Note that Cygwin requires EXT to be
+# the same as Linux/Un*x/GNU, even though it runs under windoz.
 #
-# EXT=				# normal Un*x / Linux / GNU/Linux systems
-# EXT=.exe			# windoz / Cygwin
+# EXT=				# normal Un*x / Linux / GNU/Linux / Cygwin
+# EXT=.exe			# windoz
 #
 # If in doubt, use EXT=
 #
@@ -996,7 +997,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.0
+VERSION= 2.12.4.9
 VERS= 2.12.4
 VER= 2.12
 VE= 2
@@ -1118,8 +1119,8 @@ COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
 #	      to abort on warnings, then leave CCWERR blank.
 # CCMISC are misc flags given to ${CC}
 #
-# LCC how the the C compiler is invoked on locally executed intermediate progs
-# CC is how the the C compiler is invoked (with an optional Purify)
+# LCC how the C compiler is invoked on locally executed intermediate progs
+# CC is how the C compiler is invoked (with an optional Purify)
 #
 # Specific target overrides or modifications to default values
 
@@ -1211,7 +1212,7 @@ LDCONFIG:=
 # DARWIN_ARCH= -arch i386		# Intel binary
 # DARWIN_ARCH= -arch ppc		# PPC binary
 DARWIN_ARCH=				# native binary
-MACOSX_DEPLOYMENT_TARGET=10.4
+MACOSX_DEPLOYMENT_TARGET=10.8
 #
 endif
 
@@ -1307,6 +1308,40 @@ endif
 ifeq ($(target),SunOS)
 #
 BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifdef ALLOW_CUSTOM
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
+#
+CC_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+LD_STATIC=
+#
+CCWARN= -Wall -W -Wno-comment
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+endif
+
+#################
+# Cygwin target #
+#################
+
+ifeq ($(target),Cygwin)
+#
+BLD_TYPE= calc-static-only
 #
 CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
@@ -4081,9 +4116,14 @@ gdb:
 #
 ###
 
-rpm: clobber rpm.mk calc.spec.in
+rpm: clobber rpm-preclean rpm.mk calc.spec.in
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
-	${MAKE} -f rpm.mk V=${V}
+	${MAKE} -f rpm.mk all V=${V} RPM_TOP="${RPM_TOP}"
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
+
+rpm-preclean:
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${MAKE} -f rpm.mk $@ V=${V} RPM_TOP="${RPM_TOP}"
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # rpm static rules
@@ -4441,9 +4481,9 @@ endif
 	        else \
 		${RM} -f ${T}${LIBDIR}/libcalc.a.new; \
 		${CP} -f libcalc.a ${T}${LIBDIR}/libcalc.a.new; \
+		${CHMOD} 0644 ${T}${LIBDIR}/libcalc.a.new; \
 		${MV} -f ${T}${LIBDIR}/libcalc.a.new ${T}${LIBDIR}/libcalc.a; \
 		${RANLIB} ${T}${LIBDIR}/libcalc.a; \
-		${CHMOD} 0444 ${T}${LIBDIR}/libcalc.a; \
 		echo "installed ${T}${LIBDIR}/libcalc.a"; \
 	   fi; \
 	fi
@@ -4459,6 +4499,7 @@ endif
 	    ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
 	    ${CP} -f libcalc${LIB_EXT_VERSION} \
 	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
+	    ${CHMOD} 0644 ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
 	    ${MV} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new \
 	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
@@ -4477,6 +4518,7 @@ endif
 	    ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
 	    ${CP} -f custom/libcustcalc${LIB_EXT_VERSION} \
 	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
+	    ${CHMOD} 0644 ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
 	    ${MV} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new \
 	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}; \
 	    echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}"; \
@@ -4775,6 +4817,81 @@ strip:
 	    fi; \
 	done
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
+
+# calc-symlink - setup symlinks from stardard locations into the ${T} tree
+#
+calc-symlink:
+	${Q}if [ -z "${T}" ]; then \
+	    echo "cannot use $@ make rule when T make var is empty" 1>&2; \
+	    echo "aborting" 1>&2; \
+	    exit 1; \
+	fi
+	-${Q} for i in	${BINDIR}/calc${EXT} \
+			${BINDIR}/calc-static${EXT} \
+			${SCRIPTDIR} \
+			${LIBDIR}/libcalc${LIB_EXT_VERSION} \
+			${LIBDIR}/libcustcalc${LIB_EXT_VERSION} \
+			${MANDIR}/calc.${MANEXT} \
+			${CALC_SHAREDIR} \
+			${CALC_INCDIR} \
+			; do \
+	    if [ -e "${T}$$i" ]; then \
+		    if [ ! -L "$$i" -a "${T}$$i" -ef "$$i" ]; then \
+		    	echo "ERROR: ${T}$$i is the same as $$i" 1>&2; \
+		    else \
+			if [ -e "$$i" ]; then \
+			    echo ${RM} -f "$$i"; \
+			    ${RM} -f "$$i"; \
+			fi; \
+			echo ${LN} -s "${T}$$i" "$$i"; \
+			${LN} -s "${T}$$i" "$$i"; \
+	    	    fi; \
+	    else \
+	        echo "Warning: not found: ${T}$$i" 1>&2; \
+	    fi; \
+	done
+	-${Q} if [ -n "${CATDIR}" ]; then \
+	    if [ -e "${T}${CATDIR}/calc.${CATEXT}" ]; then \
+		if [ ! -L "${CATDIR}/calc.${CATEXT}" -a "${T}${CATDIR}/calc.${CATEXT}" -ef "${CATDIR}/calc.${CATEXT}" ]; then \
+		    	echo "ERROR: ${T}${CATDIR}/calc.${CATEXT} is the same as ${CATDIR}/calc.${CATEXT}" 1>&2; \
+		else \
+		    if [ -e "${CATDIR}/calc.${CATEXT}" ]; then \
+			echo ${RM} -f "${CATDIR}/calc.${CATEXT}"; \
+			${RM} -f "${CATDIR}/calc.${CATEXT}"; \
+		    fi; \
+		    echo ${LN} -s "${T}${CATDIR}/calc.${CATEXT}" "${CATDIR}/calc.${CATEXT}"; \
+		    ${LN} -s "${T}${CATDIR}/calc.${CATEXT}" "${CATDIR}/calc.${CATEXT}"; \
+		fi; \
+	    fi; \
+	fi
+
+# remove any symlinks that may have been created by calc-symlink
+#
+calc-unsymlink:
+	-${Q} for i in	${BINDIR}/calc${EXT} \
+			${BINDIR}/calc-static${EXT} \
+			${SCRIPTDIR} \
+			${LIBDIR}/libcalc${LIB_EXT_VERSION} \
+			${LIBDIR}/libcustcalc${LIB_EXT_VERSION} \
+			${MANDIR}/calc.${MANEXT} \
+			${CALC_SHAREDIR} \
+			${CALC_INCDIR} \
+			; do \
+	    if [ -L "$$i" ]; then \
+		echo ${RM} -f "$$i"; \
+		${RM} -f "$$i"; \
+	    else \
+	        echo "Warning: ignoring non-symlink: $$i" 1>&2; \
+	    fi; \
+	done
+	-${Q} if [ -n "${CATDIR}" ]; then \
+	    if [ -L "${CATDIR}/calc.${CATEXT}" ]; then \
+		echo ${RM} -f "${CATDIR}/calc.${CATEXT}"; \
+		${RM} -f "${CATDIR}/calc.${CATEXT}"; \
+	    else \
+	        echo "Warning: ignoring non-symlink: ${CATDIR}/calc.${CATEXT}" 1>&2; \
+	    fi; \
+	fi
 
 ###
 #

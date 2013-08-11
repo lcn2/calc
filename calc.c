@@ -1,7 +1,7 @@
 /*
  * calc - arbitrary precision calculator
  *
- * Copyright (C) 1999-2007  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2013  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,9 +19,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: calc.c,v 30.4 2008/04/15 21:17:57 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/calc.c,v $
+ * @(#) $Revision: 30.6 $
+ * @(#) $Id: calc.c,v 30.6 2013/03/25 21:39:57 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/calc.c,v $
  *
  * Under source code control:	1990/02/15 01:48:11
  * File existed as early as:	before 1990
@@ -487,6 +487,9 @@ main(int argc, char **argv)
 	if (havecommands) {
 		cmdbuf[cmdlen++] = '\n';
 		cmdbuf[cmdlen] = '\0';
+		if (fclose(stdin)) {
+			perror("main(): fclose(stdin) failed:");
+		}
 	}
 
 	argc_value = argc - maxindex;

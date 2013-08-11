@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.1 $
-# @(#) $Id: check.awk,v 30.1 2007/03/16 11:09:46 chongo Exp $
+# @(#) $Revision: 30.2 $
+# @(#) $Id: check.awk,v 30.2 2013/08/11 01:08:32 chongo Exp $
 # @(#) $Source: /usr/local/src/cmd/calc/RCS/check.awk,v $
 #
 # Under source code control:	1996/05/25 22:07:58
@@ -30,7 +30,7 @@
 #
 # This awk script will print 3 lines before and after any non-blank line that
 # does not begin with a number.	 This allows the 'make debug' rule to remove
-# all non-interest lines the the 'make check' regression output while providing
+# all non-interest lines the 'make check' regression output while providing
 # 3 lines of context around unexpected output.
 #
 BEGIN {

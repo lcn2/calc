@@ -19,7 +19,7 @@
  *
  * @(#) $Revision: 30.1 $
  * @(#) $Id: c_register.c,v 30.1 2007/07/15 02:24:34 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/c_register.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/custom/RCS/c_register.c,v $
  *
  * Under source code control:	2007/07/14 20:23:46
  * File existed as early as:	2007
