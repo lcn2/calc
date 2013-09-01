@@ -1,13 +1,13 @@
 /*
- * Toom-Cook - implementation of Toom-Cook(3,4) multiplication algorithm
+ * toomcook - implementation of Toom-Cook(3,4) multiplication algorithm
  *
  * Copyright (C) 2013 Christoph Zurnieden
  *
- * Toom-Cook is open software; you can redistribute it and/or modify it under
+ * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
  * as published by the Free Software Foundation.
  *
- * Toom-Cook is distributed in the hope that it will be useful, but WITHOUT
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
  * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: toomcook.cal,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: toomcook.cal,v 30.4 2013/08/18 20:01:53 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/toomcook.cal,v $
  *
  * Under source code control:	2013/08/11 01:31:28

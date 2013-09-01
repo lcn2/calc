@@ -537,6 +537,20 @@ hms.cal
     Calculate in hours, minutes, and seconds.  See also dmscal.
 
 
+infinities.cal
+
+    isinfinite(x)
+    iscinf(x)
+    ispinf(x)
+    isninf(x)
+    cinf()
+    ninf()
+    pinf()
+
+    The symbolic handling of infinities. Needed for intnum.cal but might be
+    usefull elsewhere, too.
+
+
 intfile.cal
 
     file2be(filename)
@@ -562,6 +576,127 @@ intfile.cal
 	Write the absolute value of v into filename in Little Endian order.
 	The v argument must be on integer.  The least significant bits
 	of the integer become the last octets of the file.
+
+
+intnum.cal
+
+    quadtsdeletenodes()
+    quadtscomputenodes(order, expo, eps)
+    quadtscore(a, b, n)
+    quadts(a, b, points)
+    quadglcomputenodes(N)
+    quadgldeletenodes()
+    quadglcore(a, b, n)
+    quadgl(a, b, points)
+    quad(a, b, points = -1, method = "tanhsinh")
+    makerange(start, end, steps)
+    makecircle(radius, center, points)
+    makeellipse(angle, a, b, center, points)
+    makepoints()
+
+    This file offers some methods for numerical integration. Implemented are
+    the Gauss-Legendre and the tanh-sinh quadrature.
+
+    All functions are usefull to some extend but the main function for
+    quadrature is quad(), which is not much more than an abstraction layer.
+
+    The main workers are quadgl() for Gauss-legendre and quadts() for the
+    tanh-sinh quadrature. The limits of the integral can be anything in the
+    complex plane and the extended real line. The latter means that infinite
+    limits are supported by way of the smbolic infinities implemented in the
+    file infinities.cal (automatically linked in by intnum.cal).
+
+    Integration in parts and contour is supported by the "points" argument
+    which takes either a number or a list. the functions starting with "make"
+    allow for a less error prone use.
+
+    The function to evaluate must have the name "f".
+
+    Examples (shamelessly stolen from mpmath):
+
+        ; define f(x){return sin(x);}
+        f(x) defined
+        ; quadts(0,pi())  -  2
+	    0.00000000000000000000
+        ; quadgl(0,pi())  -  2
+	    0.00000000000000000000
+
+    Sometimes rounding errors accumulate, it might be a good idea to crank up
+    the working precision a notch or two.
+
+        ; define f(x){ return exp(-x^2);}
+        f(x) redefined
+        ; quadts(0,pinf())  - pi()
+	    0.00000000000000000000
+        ; quadgl(0,pinf())  - pi()
+	    0.00000000000000000001
+
+        ; define f(x){ return exp(-x^2);}
+        f(x) redefined
+        ; quadgl(ninf(),pinf()) - sqrt(pi())
+	    0.00000000000000000000
+        ; quadts(ninf(),pinf()) - sqrt(pi())
+	   -0.00000000000000000000
+
+    Using the "points" parameter is a bit tricky
+
+        ; define f(x){ return 1/x;  }
+        f(x) redefined
+        ; quadts(1,1,mat[3]={1i,-1,-1i})  -  2i*pi()
+	    0.00000000000000000001i
+        ; quadgl(1,1,mat[3]={1i,-1,-1i})  -  2i*pi()
+	    0.00000000000000000001i
+
+    The make* functions make it a bit simpler
+
+        ; quadts(1,1,makepoints(1i,-1,-1i))  -  2i*pi()
+	    0.00000000000000000001i
+        ; quadgl(1,1,makepoints(1i,-1,-1i))  -  2i*pi()
+	    0.00000000000000000001i
+
+        ; define f(x){ return abs(sin(x));}
+        f(x) redefined
+        ; quadts(0,2*pi(),makepoints(pi()))  - 4
+	    0.00000000000000000000
+        ; quadgl(0,2*pi(),makepoints(pi()))  - 4
+	    0.00000000000000000000
+
+    The quad*core functions do not offer anything fancy but the third parameter
+    controls the so called "order" which is just the number of nodes computed.
+    This can be quite usefull in some circumstances.
+
+        ; quadgldeletenodes()
+        ; define f(x){ return exp(x);}
+        f(x) redefined
+        ; s=usertime();quadglcore(-3,3)- (exp(3)-exp(-3));e=usertime();e-s
+	    0.00000000000000000001
+	    2.632164
+        ; s=usertime();quadglcore(-3,3)- (exp(3)-exp(-3));e=usertime();e-s
+	    0.00000000000000000001
+	    0.016001
+        ; quadgldeletenodes()
+        ; s=usertime();quadglcore(-3,3,14)- (exp(3)-exp(-3));e=usertime();e-s
+	   -0.00000000000000000000
+	    0.024001
+        ; s=usertime();quadglcore(-3,3,14)- (exp(3)-exp(-3));e=usertime();e-s
+	   -0.00000000000000000000
+	    0
+
+    It is not much but can sum up. The tanh-sinh algorithm is not optimizable
+    as much as the Gauss-Legendre algorithm but is per se much faster.
+
+        ; s=usertime();quadtscore(-3,3)- (exp(3)-exp(-3));e=usertime();e-s
+	    -0.00000000000000000001
+	     0.128008
+        ; s=usertime();quadtscore(-3,3)- (exp(3)-exp(-3));e=usertime();e-s
+	    -0.00000000000000000001
+	     0.036002
+        ; s=usertime();quadtscore(-3,3,49)- (exp(3)-exp(-3));e=usertime();e-s
+	    -0.00000000000000000000
+	     0.036002
+        ; s=usertime();quadtscore(-3,3,49)- (exp(3)-exp(-3));e=usertime();e-s
+	    -0.00000000000000000000
+	     0.01200
 
 
 lambertw.cal
@@ -988,6 +1123,15 @@ set8700.line
     The set8700.cal file (and dotest.cal) should be read first.
 
 
+smallfactors.cal
+
+    smallfactors(x0)
+    printsmallfactors(flist)
+
+    Lists the prime factors of numbers smaller than 2^32. Try for example:
+    printsmallfactors(smallfactors(10!)).
+
+
 solve.cal
 
     solve(low, high, epsilon)
@@ -1234,6 +1378,29 @@ statistics.cal
     chisquaredcf(k,t)
 
     Calculates a bunch of (hopefully) aptly named statistical functions.
+
+
+strings.cal
+
+    toupper(s)
+    tolower(s)
+    strcasecmp(s1,s2)
+    strncasecmp(s1,s2,length)
+    isascii(c)
+    isalnum(c)
+    isalpha(c)
+    iscntrl(c)
+    isdigit(c)
+    isgraph(c)
+    islower(c)
+    isprint(c)
+    ispunct(c)
+    isspace(c)
+    isupper(c)
+    isblank(c)
+    isxdigit(c)
+
+    Implements most of the functions of libc's ctype.h and strings.h.
 
 
 sumsq.cal
@@ -1625,9 +1792,9 @@ zeta2.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.5 $
-## @(#) $Id: README,v 30.5 2013/08/11 03:26:46 chongo Exp $
-## @(#) $Source: /usr/local/src/cmd/calc/cal/RCS/README,v $
+## @(#) $Revision: 30.6 $
+## @(#) $Id: README,v 30.6 2013/08/18 20:01:53 chongo Exp $
+## @(#) $Source: /usr/local/src/bin/calc/cal/RCS/README,v $
 ##
 ## Under source code control:	1990/02/15 01:50:32
 ## File existed as early as:	before 1990

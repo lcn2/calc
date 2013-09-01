@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: func.c,v 30.4 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.8 $
+ * @(#) $Id: func.c,v 30.8 2013/09/01 22:11:07 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -4177,6 +4177,24 @@ f_strcmp(VALUE *v1, VALUE *v2)
 	return result;
 }
 
+S_FUNC VALUE
+f_strcasecmp(VALUE *v1, VALUE *v2)
+{
+	VALUE result;
+	FLAG flag;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	if (v1->v_type != V_STR || v2->v_type != V_STR)
+		return error_value(E_STRCASECMP);
+
+	flag = stringcaserel(v1->v_str, v2->v_str);
+
+	result.v_type = V_NUM;
+	result.v_num = itoq((long) flag);
+	return result;
+}
 
 S_FUNC VALUE
 f_strncmp(VALUE *v1, VALUE *v2, VALUE *v3)
@@ -4209,7 +4227,37 @@ f_strncmp(VALUE *v1, VALUE *v2, VALUE *v3)
 	result.v_num = itoq((long) flag);
 	return result;
 }
+S_FUNC VALUE
+f_strncasecmp(VALUE *v1, VALUE *v2, VALUE *v3)
+{
+	long n1, n2, n;
+	FLAG flag;
+	VALUE result;
 
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	if (v1->v_type != V_STR || v2->v_type != V_STR ||
+		v3->v_type != V_NUM || qisneg(v3->v_num) ||
+		qisfrac(v3->v_num) || zge31b(v3->v_num->num))
+			return error_value(E_STRNCASECMP);
+	n1 = v1->v_str->s_len;
+	n2 = v2->v_str->s_len;
+	n = qtoi(v3->v_num);
+	if (n < n1)
+		v1->v_str->s_len = n;
+	if (n < n2)
+		v2->v_str->s_len = n;
+
+	flag = stringcaserel(v1->v_str, v2->v_str);
+
+	v1->v_str->s_len = n1;
+	v2->v_str->s_len = n2;
+
+	result.v_type = V_NUM;
+	result.v_num = itoq((long) flag);
+	return result;
+}
 
 S_FUNC VALUE
 f_strcat(int count, VALUE **vals)
@@ -4396,6 +4444,307 @@ f_ord(VALUE *vp)
 	return result;
 }
 
+S_FUNC VALUE
+f_isupper(VALUE *vp)
+{
+	char c;
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	switch(vp->v_type) {
+		case V_STR:
+			c = *vp->v_str->s_str;
+			break;
+		case V_OCTET:
+			c = *vp->v_octet;
+			break;
+		default:
+			return error_value(E_ISUPPER);
+	}
+
+	result.v_type = V_NUM;
+	result.v_num = itoq( (isupper( c ))?1l:0l);
+	return result;
+}
+
+S_FUNC VALUE
+f_islower(VALUE *vp)
+{
+	char c;
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	switch(vp->v_type) {
+		case V_STR:
+			c = *vp->v_str->s_str;
+			break;
+		case V_OCTET:
+			c = *vp->v_octet;
+			break;
+		default:
+			return error_value(E_ISLOWER);
+	}
+
+	result.v_type = V_NUM;
+	result.v_num = itoq( (islower( c ))?1l:0l);
+	return result;
+}
+
+S_FUNC VALUE
+f_isalnum(VALUE *vp)
+{
+	char c;
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	switch(vp->v_type) {
+		case V_STR:
+			c = *vp->v_str->s_str;
+			break;
+		case V_OCTET:
+			c = *vp->v_octet;
+			break;
+		default:
+			return error_value(E_ISALNUM);
+	}
+
+	result.v_type = V_NUM;
+	result.v_num = itoq( (isalnum( c ))?1l:0l);
+	return result;
+}
+
+S_FUNC VALUE
+f_isalpha(VALUE *vp)
+{
+	char c;
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	switch(vp->v_type) {
+		case V_STR:
+			c = *vp->v_str->s_str;
+			break;
+		case V_OCTET:
+			c = *vp->v_octet;
+			break;
+		default:
+			return error_value(E_ISALPHA);
+	}
+
+	result.v_type = V_NUM;
+	result.v_num = itoq( (isalpha( c ))?1l:0l);
+	return result;
+}
+
+#if 0
+/* Not in C-standard, marked as obsolete in POSIX.1-2008 */
+S_FUNC VALUE
+f_isascii(VALUE *vp)
+{
+	char c;
+	VALUE result;
+
+	result.v_subtype = V_NOSUBTYPE;
+
+	switch(vp->v_type) {
+		case V_STR:
+			c = *vp->v_str->s_str;
+			break;
+		case V_OCTET:
+			c = *vp->v_octet;
+			break;
+		default:
+			return error_value(E_ISASCII);
+	}
+
+	result.v_type = V_NUM;
+	result.v_num = itoq( (isascii( c ))?1l:0l);
+	return result;
+}
+#endif /* 0 */
+
+S_FUNC VALUE
+f_iscntrl(VALUE *vp)
+{
+	char c;
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	switch(vp->v_type) {
+		case V_STR:
+			c = *vp->v_str->s_str;
+			break;
+		case V_OCTET:
+			c = *vp->v_octet;
+			break;
+		default:
+			return error_value(E_ISCNTRL);
+	}
+
+	result.v_type = V_NUM;
+	result.v_num = itoq( (iscntrl( c ))?1l:0l);
+	return result;
+}
+
+S_FUNC VALUE
+f_isdigit(VALUE *vp)
+{
+	char c;
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	switch(vp->v_type) {
+		case V_STR:
+			c = *vp->v_str->s_str;
+			break;
+		case V_OCTET:
+			c = *vp->v_octet;
+			break;
+		default:
+			return error_value(E_ISDIGIT);
+	}
+
+	result.v_type = V_NUM;
+	result.v_num = itoq( (isdigit( c ))?1l:0l);
+	return result;
+}
+
+S_FUNC VALUE
+f_isgraph(VALUE *vp)
+{
+	char c;
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	switch(vp->v_type) {
+		case V_STR:
+			c = *vp->v_str->s_str;
+			break;
+		case V_OCTET:
+			c = *vp->v_octet;
+			break;
+		default:
+			return error_value(E_ISGRAPH);
+	}
+
+	result.v_type = V_NUM;
+	result.v_num = itoq( (isgraph( c ))?1l:0l);
+	return result;
+}
+
+S_FUNC VALUE
+f_isprint(VALUE *vp)
+{
+	char c;
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	switch(vp->v_type) {
+		case V_STR:
+			c = *vp->v_str->s_str;
+			break;
+		case V_OCTET:
+			c = *vp->v_octet;
+			break;
+		default:
+			return error_value(E_ISPRINT);
+	}
+
+	result.v_type = V_NUM;
+	result.v_num = itoq( (isprint( c ))?1l:0l);
+	return result;
+}
+
+S_FUNC VALUE
+f_ispunct(VALUE *vp)
+{
+	char c;
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	switch(vp->v_type) {
+		case V_STR:
+			c = *vp->v_str->s_str;
+			break;
+		case V_OCTET:
+			c = *vp->v_octet;
+			break;
+		default:
+			return error_value(E_ISPUNCT);
+	}
+
+	result.v_type = V_NUM;
+	result.v_num = itoq( (ispunct( c ))?1l:0l);
+	return result;
+}
+
+S_FUNC VALUE
+f_isspace(VALUE *vp)
+{
+	char c;
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	switch(vp->v_type) {
+		case V_STR:
+			c = *vp->v_str->s_str;
+			break;
+		case V_OCTET:
+			c = *vp->v_octet;
+			break;
+		default:
+			return error_value(E_ISSPACE);
+	}
+
+	result.v_type = V_NUM;
+	result.v_num = itoq( (isspace( c ))?1l:0l);
+	return result;
+}
+
+S_FUNC VALUE
+f_isxdigit(VALUE *vp)
+{
+	char c;
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	switch(vp->v_type) {
+		case V_STR:
+			c = *vp->v_str->s_str;
+			break;
+		case V_OCTET:
+			c = *vp->v_octet;
+			break;
+		default:
+			return error_value(E_ISXDIGIT);
+	}
+
+	result.v_type = V_NUM;
+	result.v_num = itoq( (isxdigit( c ))?1l:0l);
+	return result;
+}
 
 S_FUNC VALUE
 f_protect(int count, VALUE **vals)
@@ -8459,6 +8808,28 @@ STATIC CONST struct builtin builtins[] = {
 	 "numerator of fraction"},
 	{"ord", 1, 1, 0, OP_NOP, 0, f_ord,
 	 "integer corresponding to character value"},
+	{"isupper", 1, 1, 0, OP_NOP, 0, f_isupper,
+	 "whether character is upper case"},
+	{"islower", 1, 1, 0, OP_NOP, 0, f_islower,
+	 "whether character is lower case"},
+	{"isalnum", 1, 1, 0, OP_NOP, 0, f_isalnum,
+	 "whether character is alpha-numeric"},
+	{"isalpha", 1, 1, 0, OP_NOP, 0, f_isalpha,
+	 "whether character is alphabetic"},
+	{"iscntrl", 1, 1, 0, OP_NOP, 0, f_iscntrl,
+	 "whether character is a control character"},
+	{"isdigit", 1, 1, 0, OP_NOP, 0, f_isdigit,
+	 "whether character is a digit"},
+	{"isgraph", 1, 1, 0, OP_NOP, 0, f_isgraph,
+	 "whether character is a graphical character"},
+	{"isprint", 1, 1, 0, OP_NOP, 0, f_isprint,
+	 "whether character is printable"},
+	{"ispunct", 1, 1, 0, OP_NOP, 0, f_ispunct,
+	 "whether character is a punctuation"},
+	{"isspace", 1, 1, 0, OP_NOP, 0, f_isspace,
+	 "whether character is a space character"},
+	{"isxdigit", 1, 1, 0, OP_NOP, 0, f_isxdigit,
+	 "whether character is a hexadecimal digit"},
 	{"param", 1, 1, 0, OP_ARGVALUE, 0, 0,
 	 "value of parameter n (or parameter count if n\n"
 	 "\t\t\tis zero)"},
@@ -8602,6 +8973,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "concatenate strings together"},
 	{"strcmp", 2, 2, 0, OP_NOP, 0, f_strcmp,
 	 "compare two strings"},
+	{"strcasecmp", 2, 2, 0, OP_NOP, 0, f_strcasecmp,
+	 "compare two strings case independent"},
 	{"strcpy", 2, 2, 0, OP_NOP, 0, f_strcpy,
 	 "copy string to string"},
 	{"strerror", 0, 1, 0, OP_NOP, 0, f_strerror,
@@ -8610,6 +8983,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "length of string"},
 	{"strncmp", 3, 3, 0, OP_NOP, 0, f_strncmp,
 	 "compare strings a, b to c characters"},
+	{"strncasecmp", 3, 3, 0, OP_NOP, 0, f_strncasecmp,
+	 "compare strings a, b to c characters case independent"},
 	{"strncpy", 3, 3, 0, OP_NOP, 0, f_strncpy,
 	 "copy up to c characters from string to string"},
 	{"strpos", 2, 2, 0, OP_NOP, 0, f_strpos,

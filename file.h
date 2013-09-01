@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: file.h,v 30.2 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: file.h,v 30.3 2013/09/01 22:16:21 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/file.h,v $
  *
  * Under source code control:	1996/05/24 05:55:58
@@ -96,7 +96,7 @@ E_FUNC int fgetposid(FILEID id, FILEPOS *ptr);
 E_FUNC int fsetposid(FILEID id, FILEPOS *ptr);
 E_FUNC int get_open_siz(FILE *fp, ZVALUE *res);
 E_FUNC char* findfname(FILEID);
-E_FUNC FILE *f_pathopen(char *name, char *mode, char *pathlist, 
+E_FUNC FILE *f_pathopen(char *name, char *mode, char *pathlist,
 			char **openpath);
 
 

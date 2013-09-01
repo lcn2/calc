@@ -12,11 +12,11 @@ This file is Copyrighted
 	Everyone is permitted to copy and distribute verbatim copies
 	of this license document, but changing it is not allowed.
 
-    # @(#) $Revision: 30.2 $
-    # @(#) $Id: COPYING,v 30.2 2008/10/24 10:46:52 chongo Exp $
+    # @(#) $Revision: 30.4 $
+    # @(#) $Id: COPYING,v 30.4 2013/09/01 20:14:30 chongo Exp $
     # @(#) $Source: /usr/local/src/bin/calc/RCS/COPYING,v $
 
-=-=
+-=-
 
 Calc is covered by the GNU Lesser General Public License
 --------------------------------------------------------
@@ -78,7 +78,7 @@ Calc is covered by the GNU Lesser General Public License
 
     Feel free to follow the name line with additional EMail text as desired.
 
-=-=
+-=-
 
     Calc bug reports and calc bug fixes should be sent to:
 
@@ -93,7 +93,7 @@ Calc is covered by the GNU Lesser General Public License
 
     You may have additional words in your subject line.
 
-=-=
+-=-
 
 Calc's relationship to the GNU Lesser General Public License
 ------------------------------------------------------------
@@ -149,7 +149,7 @@ Calc's relationship to the GNU Lesser General Public License
      except for the exception files explicitly listed in the ``Calc
      copyrights and exception files'' section below.
 
-=-=
+-=-
 
 Calc copyrights and exception files
 -----------------------------------
@@ -165,6 +165,7 @@ Calc copyrights and exception files
 	Copyright (C) year  Ernest Bowen and Landon Curt Noll
 	Copyright (C) year  Ernest Bowen
 	Copyright (C) year  Petteri Kettunen and Landon Curt Noll
+	Copyright (C) year  Christoph Zurnieden
 
     These files are not covered under one of the Copyrights listed above:
 
@@ -188,7 +189,7 @@ Calc copyrights and exception files
     And because one may freely distribute the LGPL covered files, the
     entire calc source may be freely used and distributed.
 
-=-=
+-=-
 
 General Copyleft and License info
 ---------------------------------
@@ -202,7 +203,7 @@ General Copyleft and License info
 	http://www.gnu.org/copyleft/lesser.html
 	http://www.gnu.org/copyleft/lesser.txt
 
-=-=
+-=-
 
 Why calc did not use the GNU General Public License
 ---------------------------------------------------

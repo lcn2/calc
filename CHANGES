@@ -1,4 +1,67 @@
-The following are the changes from calc version 2.12.4.6 to date:
+The following are the changes from calc version 2.12.4.11 to date:
+
+    Fixed many typos in comments of the Makefile thanks to the review
+    work of Michael Somos <somos at harary dot math dot georgetown dot edu>.
+
+    Fixed typo in "help sysinfo".
+
+    The Makefile rule, debug, is now more verbose and prints more information
+    about the calc compiled constants.
+
+    Added a more of calc resource files by
+    Christoph Zurnieden <czurnieden at gmx dot de> including:
+
+    infinities.cal - handle infinities symbolically, a little helper file
+    intnum.cal - implementation of tanhsinh- and Gauss-Legendre quadrature
+    smallfactors.cal - find the factors of a number < 2^32
+    strings.cal - implementation of the macros in ctype.h plus str[n]casecmp
+
+    Reformatted some calc resource files.  Cleanup in comment the headers
+    of some calc resource files.
+
+    Minor formatting changes to a few help files.
+
+    No need to be special picky about the test8900.cal calc resource file.
+
+    Added a number of ctype-like builtins:
+
+    isalnum - whether character is alpha-numeric
+    isalpha - whether character is alphabetic
+    iscntrl - whether character is a control character
+    isdigit - whether character is a digit character
+    isgraph - whether character is a graphical character
+    islower - whether character is lower case
+    isprint - whether character is a printable
+    ispunct - whether character is a punctuation
+    isspace - whether character is a space character
+    isupper - whether character is upper case
+    isxdigit - whether character a hexadecimal digit
+    strcasecmp - compare two strings, case independent
+    strncasecmp - compare two strings up to n characters, case independent
+
+    For details on these new builtins, see their help messages.
+    Thanks goes to Inge Zurnieden <inge dot zurnieden at gmx dot de> for
+    these new builtins.
+
+    Calc source code is now picky v2.3 clean using:
+
+	picky -s -v file file2 ..
+
+    With the exception of:
+
+	help/errorcodes.sed
+	cal/set8700.line
+
+    Due to the long lines in those files, we use:
+
+	picky -w -s -v help/errorcodes.sed cal/set8700.line
+
+    For more information about the picky tool, see:
+
+	http://cis.csuohio.edu/~somos/picky.html
+
+
+The following are the changes from calc version 2.12.4.6 to version 2.12.4.10:
 
     Updated RPM build process to remove use of deprecated flags.
 
@@ -20,16 +83,16 @@ The following are the changes from calc version 2.12.4.6 to date:
     Added a number of calc resource files by
     Christoph Zurnieden <czurnieden at gmx dot de> including:
 
-    	bernpoly.cal - Computes the nth Bernoulli polynomial at z for any n,z
-	brentsolve.cal - root-finder implementwed with the Brent-Dekker trick
-	factorial.cal - product of the positive integers
-	factorial2.cal - variety of integer functions quasi-related to factoral
-	lambertw.cal - Computes Lambert's W-function at "z" at branch "branch"
-	lnseries.cal - Calculates a series of natural logarithms at 1,2,3,4...n
-	specialfunctions.cal - Calculates the value of the beta function
-	statistics.cal - a wide vareity of stastical functions
-	toomcook.cal - Multiply by way of the Toom-Cook algorithm
-	zeta2.cal - Calculate the value of the Hurwitz Zeta function
+    bernpoly.cal - Computes the nth Bernoulli polynomial at z for any n,z
+    brentsolve.cal - root-finder implementwed with the Brent-Dekker trick
+    factorial.cal - product of the positive integers
+    factorial2.cal - variety of integer functions quasi-related to factoral
+    lambertw.cal - Computes Lambert's W-function at "z" at branch "branch"
+    lnseries.cal - Calculates a series of natural logarithms at 1,2,3,4...n
+    specialfunctions.cal - Calculates the value of the beta function
+    statistics.cal - a wide vareity of stastical functions
+    toomcook.cal - Multiply by way of the Toom-Cook algorithm
+    zeta2.cal - Calculate the value of the Hurwitz Zeta function
 
     Fixed a makefile bug that prevented the those new calc resource
     files from being installed.
@@ -6881,8 +6944,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.32 $
-## @(#) $Id: CHANGES,v 30.32 2013/08/11 09:10:11 chongo Exp $
+## @(#) $Revision: 30.33 $
+## @(#) $Id: CHANGES,v 30.33 2013/09/01 22:19:41 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

@@ -18,9 +18,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.28 $
-# @(#) $Id: Makefile.head,v 30.28 2013/08/11 05:40:18 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/calc/custom/RCS/Makefile.head,v $
+# @(#) $Revision: 30.29 $
+# @(#) $Id: Makefile.head,v 30.29 2013/08/17 01:22:19 chongo Exp $
+# @(#) $Source: /usr/local/src/bin/calc/custom/RCS/Makefile.head,v $
 #
 # Under source code control:	1997/03/09 02:28:54
 # File existed as early as:	1997
@@ -366,7 +366,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.10
+VERSION= 2.12.4.11
 VERS= 2.12.4
 VER= 2.12
 VE= 2
@@ -473,16 +473,16 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 #	BLD_TYPE= calc-static-only
 #
 # CC_SHARE are flags given to ${CC} to build .o files suitable for shared libs
-# DEFAULT_LIB_INSTALL_PATH is where calc progs look for calc shared libs
+# DEFAULT_LIB_INSTALL_PATH is where calc programs look for calc shared libs
 # LD_SHARE are common flags given to ${CC} to link with shared libraries
-# LIBCALC_SHLIB are flags given to ${CC} to build libcalc shared lib
+# LIBCALC_SHLIB are flags given to ${CC} to build libcalc shared libraries
 # LIBCUSTCALC_SHLIB are flags given to ${CC} to build libcustcalc shared lib
 #
 #	NOTE: The above 4 values are unused if BLD_TYPE= calc-static-only
 #
 # CC_STATIC are flags given to ${CC} to build .o files suitable for static libs
 # LD_STATIC are common flags given to ${CC} to link with static libraries
-# LIBCALC_STATIC are flags given to ${CC} to build libcalc static lib
+# LIBCALC_STATIC are flags given to ${CC} to build libcalc static libraries
 # LIBCUSTCALC_STATIC are flags given to ${CC} to build libcustcalc static lib
 #
 #	NOTE: The above 4 values are unused if BLD_TYPE= calc-dynamic-only
@@ -495,7 +495,7 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 #	      to abort on warnings, then leave CCWERR blank.
 # CCMISC are misc flags given to ${CC}
 #
-# LCC how the C compiler is invoked on locally executed intermediate progs
+# LCC is how the C compiler is invoked on locally executed intermediate programs
 # CC is how the C compiler is invoked (with an optional Purify)
 #
 # Specific target overrides or modifications to default values
@@ -576,7 +576,7 @@ CCMISC= ${DARWIN_ARCH}
 LCC= MACOSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} gcc
 CC= ${PURIFY} ${LCC} ${CCWERR}
 #
-# Darmin dynamic shared lib filenames
+# Darwin dynamic shared lib filenames
 LIB_EXT:= .dylib
 LIB_EXT_VERSION:= .${VERSION}${LIB_EXT}
 LIB_EXT_VERS:= .${VERS}${LIB_EXT}
@@ -779,10 +779,10 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 # The simple makefile forces the use of static ${CC} flags
 #
-# ICFLAGS are given to ${CC} for intermediate progs used to help compile calc
-# CFLAGS are given to ${CC} for calc progs other than intermediate progs
-# ILDFLAGS for ${CC} in linking intermediate progs used to help compile calc
-# LDFLAGS for ${CC} in linking calc progs other than intermediate progs
+# ICFLAGS are given to ${CC} for intermediate programs used to help compile calc
+# CFLAGS are given to ${CC} for calc programs other than intermediate programs
+# ILDFLAGS for ${CC} in linking intermediate programs used to help compile calc
+# LDFLAGS for ${CC} in linking calc programs other than intermediate programs
 #
 ICFLAGS= ${COMMON_CFLAGS} ${CC_STATIC}
 CFLAGS= ${ICFLAGS} ${CCOPT}
@@ -882,8 +882,8 @@ endif
 
 # Required flags to compile C files for calc
 #
-# ICFLAGS are given to ${CC} for intermediate progs used to help compile calc
-# CFLAGS are given to ${CC} for calc progs other than intermediate progs
+# ICFLAGS are given to ${CC} for intermediate programs used to help compile calc
+# CFLAGS are given to ${CC} for calc programs other than intermediate programs
 #
 # NOTE: This does not work for: make-XYZ-only and BLD_TYPE != make-XYZ-only
 #
@@ -896,8 +896,8 @@ CFLAGS= ${ICFLAGS} ${CCOPT}
 
 # Required flags to link files for calc
 #
-# ILDFLAGS for ${CC} in linking intermediate progs used to help compile calc
-# LDFLAGS for ${CC} in linking calc progs other than intermediate progs
+# ILDFLAGS for ${CC} in linking intermediate programs used to help compile calc
+# LDFLAGS for ${CC} in linking calc programs other than intermediate programs
 #
 ILDFLAGS= ${COMMON_LDFLAGS}
 LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}

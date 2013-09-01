@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.1 $
-# @(#) $Id: calcerr.tbl,v 30.1 2007/03/16 11:09:46 chongo Exp $
+# @(#) $Revision: 30.3 $
+# @(#) $Id: calcerr.tbl,v 30.3 2013/09/01 19:23:57 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/RCS/calcerr.tbl,v $
 #
 # Under source code control:	1996/05/23 17:38:44
@@ -31,6 +31,16 @@
 # Lines should be of the form:
 #
 #	SYMBOL	meaning
+
+######################################################################
+# WARNING: The order of the lines below is critical!  If you change  #
+#	   the order, you will break code that depends on the return #
+#	   value of the errno() builtin function.		     #
+#								     #
+#	   If you need to add values to this table, ONLY add then    #
+#	   to the bottom of the file!				     #
+######################################################################
+
 
 E_1OVER0	Division by zero
 E_0OVER0	Indeterminate (0/0)
@@ -449,3 +459,17 @@ E_FGETFILE1	Non-file argument for fgetfile
 E_FGETFILE2	File argument for fgetfile not open for reading
 E_FGETFILE3	Unable to set file position in fgetfile
 E_ESTR		Non-representable type for estr
+E_STRCASECMP	Non-string argument for strcasecmp
+E_STRNCASECMP	Bad argument type for strncasecmp
+E_ISUPPER	Bad argument for isupper
+E_ISLOWER	Bad argument for islower
+E_ISALNUM	Bad argument for isalnum
+E_ISALPHA	Bad argument for isalpha
+E_ISASCII	Bad argument for isascii
+E_ISCNTRL	Bad argument for iscntrl
+E_ISDIGIT	Bad argument for isdigit
+E_ISGRAPH	Bad argument for isgraph
+E_ISPRINT	Bad argument for isprint
+E_ISPUNCT	Bad argument for ispunct
+E_ISSPACE	Bad argument for isspace
+E_ISXDIGIT	Bad argument for isxdigit

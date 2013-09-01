@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: qmath.h,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: qmath.h,v 30.4 2013/09/01 22:16:21 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/qmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -165,7 +165,7 @@ E_FUNC long qilog2(NUMBER *q);
 E_FUNC long qilog10(NUMBER *q);
 E_FUNC NUMBER *qilog(NUMBER *q, ZVALUE base);
 E_FUNC BOOL qcmpmod(NUMBER *q1, NUMBER *q2, NUMBER *q3);
-E_FUNC BOOL qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod, 
+E_FUNC BOOL qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod,
 		    long rnd);
 E_FUNC FLAG qnear(NUMBER *q1, NUMBER *q2, NUMBER *epsilon);
 E_FUNC NUMBER *qdigit(NUMBER *q, ZVALUE dpos, ZVALUE base);

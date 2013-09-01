@@ -18,9 +18,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.5 $
-# @(#) $Id: Makefile,v 30.5 2007/09/21 01:27:27 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/calc/help/RCS/Makefile,v $
+# @(#) $Revision: 30.6 $
+# @(#) $Id: Makefile,v 30.6 2013/09/01 18:37:27 chongo Exp $
+# @(#) $Source: /usr/local/src/bin/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
 # File existed as early as:	1991
@@ -292,20 +292,20 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
 	floor fopen forall fpathopen fprintf fputc fputs fputstr frac free \
 	freebernoulli freeeuler freeglobals freeredc freestatics frem freopen \
 	fscan fscanf fseek fsize ftell gcd gcdrem gd getenv hash head highbit \
-	hmean hnrmod hypot ilog ilog10 ilog2 im indices inputlevel insert int \
-	inverse iroot isassoc isatty isblk isconfig isdefined iserror iseven \
-	isfile ishash isident isint islist ismat ismult isnull isnum isobj \
-	isobjtype isodd isprime isptr isqrt isrand israndom isreal isrel \
-	issimple issq isstr istype jacobi join lcm lcmfact lfactor ln log \
-	lowbit ltol makelist matdim matfill matmax matmin matsum mattrace \
-	mattrans max memsize meq min minv mmin mne mod modify name near \
-	newerror nextcand nextprime norm null num oldvalue ord param perm \
-	pfact pi pix places pmod polar poly pop popcnt pound power prevcand \
-	prevprime printf prompt protect ptest push putenv quo quomod rand \
-	randbit random randombit randperm rcin rcmul rcout rcpow rcsq re \
-	remove reverse rewind rm root round rsearch runtime saveval scale \
-	scan scanf search sec sech seed segment select sgn sha1 sin \
-	sinh size sizeof sleep sort sqrt srand srandom ssq stoponerror \
+	hmean hnrmod hypot ilog ilog10 ilog2 im indices inputlevel insert \
+	int inverse iroot isassoc isatty isblk isconfig isdefined iserror \
+	iseven isfile ishash isident isint islist ismat ismult isnull isnum \
+	isobj isobjtype isodd isprime isptr isqrt isrand israndom isreal \
+	isrel issimple issq isstr istype jacobi join lcm lcmfact lfactor \
+	ln log lowbit ltol makelist matdim matfill matmax matmin matsum \
+	mattrace mattrans max memsize meq min minv mmin mne mod modify \
+	name near newerror nextcand nextprime norm null num oldvalue ord \
+	param perm pfact pi pix places pmod polar poly pop popcnt pound \
+	power prevcand prevprime printf prompt protect ptest push putenv \
+	quo quomod rand randbit random randombit randperm rcin rcmul rcout \
+	rcpow rcsq re remove reverse rewind rm root round rsearch runtime \
+	saveval scale scan scanf search sec sech seed segment select sgn sha1 \
+	sin sinh size sizeof sleep sort sqrt srand srandom ssq stoponerror \
 	str strcat strcmp strcpy strerror strlen strncmp strncpy strpos \
 	strprintf strscan strscanf substr sum swap system systime tail tan \
 	tanh test time trunc usertime version xor

@@ -428,9 +428,23 @@
 #define E_FGETFILE2	10415	/* File argument for fgetfile not open for reading */
 #define E_FGETFILE3	10416	/* Unable to set file position in fgetfile */
 #define E_ESTR		10417	/* Non-representable type for estr */
+#define E_STRCASECMP	10418	/* Non-string argument for strcasecmp */
+#define E_STRNCASECMP	10419	/* Bad argument type for strncasecmp */
+#define E_ISUPPER	10420	/* Bad argument for isupper */
+#define E_ISLOWER	10421	/* Bad argument for islower */
+#define E_ISALNUM	10422	/* Bad argument for isalnum */
+#define E_ISALPHA	10423	/* Bad argument for isalpha */
+#define E_ISASCII	10424	/* Bad argument for isascii */
+#define E_ISCNTRL	10425	/* Bad argument for iscntrl */
+#define E_ISDIGIT	10426	/* Bad argument for isdigit */
+#define E_ISGRAPH	10427	/* Bad argument for isgraph */
+#define E_ISPRINT	10428	/* Bad argument for isprint */
+#define E_ISPUNCT	10429	/* Bad argument for ispunct */
+#define E_ISSPACE	10430	/* Bad argument for isspace */
+#define E_ISXDIGIT	10431	/* Bad argument for isxdigit */
 
-#define E__HIGHEST	10417	/* highest calc error */
-#define E__COUNT		417	/* number of calc errors */
+#define E__HIGHEST	10431	/* highest calc error */
+#define E__COUNT		431	/* number of calc errors */
 #define E_USERDEF	20000	/* base of user defined errors */
 
 /* names of calc error values */

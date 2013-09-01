@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: str.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: str.c,v 30.4 2013/09/01 20:23:07 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/str.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -31,6 +31,7 @@
 
 
 #include <stdio.h>
+#include <ctype.h>
 #include "calc.h"
 #include "str.h"
 
@@ -852,7 +853,43 @@ stringrel(STRING *s1, STRING *s2)
 	return (i1 > i2);
 }
 
+/* Case independent stringrel(STRING *s1, STRING *s2)
+ * stringcaserel returns 0 if strings are equal; otherwise 1 or -1 according
+ * as the greater of the first unequal characters are in the first or
+ * second string, or in the case of unequal-length strings when the compared
+ * characters are all equal, 1 or -1 according as the first or second string
+ * is longer.
+ */
+FLAG
+stringcaserel(STRING *s1, STRING *s2)
+{
+	char *c1, *c2;
+	long i1, i2;
 
+	if (s1 == s2)
+		return 0;
+
+	i1 = s1->s_len;
+	i2 = s2->s_len;
+	if (i2 == 0)
+		return (i1 > 0);
+	if (i1 == 0)
+		return -1;
+	c1 = s1->s_str;
+	c2 = s2->s_str;
+	while (i1 > 1 && i2 > 1 && tolower(*c1) == tolower(*c2)) {
+		i1--;
+		i2--;
+		c1++;
+		c2++;
+	}
+	if ( (tolower(*c1)) > (tolower(*c2)))
+        	return 1;
+	if ( (tolower(*c1)) <  (tolower(*c2)))
+        	return -1;
+	if (i1 < i2) return -1;
+	return (i1 > i2);
+}
 /*
  * str with characters c0, c1, ... is considered as a bitstream, 8 bits
  * per character; within a character the bits ordered from low order to

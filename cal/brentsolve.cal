@@ -1,13 +1,13 @@
 /*
- *  brentsolve- Root finding with the Brent-Dekker trick.
+ * brentsolve - Root finding with the Brent-Dekker trick
  *
  * Copyright (C) 2013 Christoph Zurnieden
  *
- * brentsolve is open software; you can redistribute it and/or modify it under
+ * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
  * as published by the Free Software Foundation.
  *
- * brentsolve is distributed in the hope that it will be useful, but WITHOUT
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
  * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
@@ -17,13 +17,14 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: brentsolve.cal,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: brentsolve.cal,v 30.4 2013/08/18 20:01:53 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/brentsolve.cal,v $
  *
  * Under source code control:	2013/08/11 01:31:28
  * File existed as early as:	2013
  */
+
 
 static resource_debug_level;
 resource_debug_level = config("resource_debug", 0);

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: calc.h,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: calc.h,v 30.4 2013/09/01 22:16:21 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -140,7 +140,7 @@ E_FUNC int ftellid(FILEID id, ZVALUE *res);
 E_FUNC int fseekid(FILEID id, ZVALUE offset, int whence);
 E_FUNC int isattyid(FILEID id);
 E_FUNC int fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res);
-E_FUNC int frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, 
+E_FUNC int frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last,
 		    ZVALUE *res);
 E_FUNC void showconstants(void);
 E_FUNC void freeconstant(unsigned long);
@@ -152,7 +152,7 @@ E_FUNC void trimconstants(void);
  */
 E_FUNC int openstring(char *str, size_t num);
 E_FUNC int openterminal(void);
-E_FUNC int opensearchfile(char *name, char *pathlist, char *exten, 
+E_FUNC int opensearchfile(char *name, char *pathlist, char *exten,
 			  int reopen_ok);
 E_FUNC char *nextline(void);
 E_FUNC int nextchar(void);

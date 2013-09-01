@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: value.h,v 30.4 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.5 $
+ * @(#) $Id: value.h,v 30.5 2013/09/01 18:57:17 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/value.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -531,6 +531,7 @@ E_FUNC long stringlowbit(STRING *s);
 E_FUNC long stringhighbit(STRING *s);
 E_FUNC BOOL stringcmp(STRING *, STRING *);
 E_FUNC BOOL stringrel(STRING *, STRING *);
+E_FUNC BOOL stringcaserel(STRING *, STRING *);
 E_FUNC int stringbit(STRING *, long);
 E_FUNC BOOL stringtest(STRING *);
 E_FUNC int stringsetbit(STRING *, long, BOOL);
