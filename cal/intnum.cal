@@ -1,0 +1,728 @@
+/*
+ * intnum - implementation of tanhsinh- and Gauss-Legendre quadrature
+ *
+ * Copyright (C) 2013 Christoph Zurnieden
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+
+static resource_debug_level;
+resource_debug_level = config("resource_debug", 0);
+
+
+read -once infinities;
+
+static __CZ__tanhsinh_x;
+static __CZ__tanhsinh_w;
+static __CZ__tanhsinh_order;
+static __CZ__tanhsinh_prec;
+
+define quadtsdeletenodes()
+{
+    free(__CZ__tanhsinh_x);
+    free(__CZ__tanhsinh_w);
+    free(__CZ__tanhsinh_order);
+    free(__CZ__tanhsinh_prec);
+}
+
+define quadtscomputenodes(order, expo, eps)
+{
+    local t cht sht chp sum k PI places;
+    local h t0 x w;
+    if (__CZ__tanhsinh_order == order && __CZ__tanhsinh_prec == eps)
+	return 1;
+    __CZ__tanhsinh_order = order;
+    __CZ__tanhsinh_prec = eps;
+    __CZ__tanhsinh_x = list();
+    __CZ__tanhsinh_w = list();
+    /* The tanhsinh algorithm needs a slightly higher precision than G-L */
+    eps = epsilon(eps * 1e-2);
+    places = highbit(1 + int (1 / epsilon())) +1;
+    PI = pi();
+    sum = 0;
+    t0 = 2 ^ (-expo);
+    h = 2 * t0;
+    /*
+     * The author wanted to use the mpmath trick here which was
+     * advertised---and reasonably so!---to be faster. Didn't work out
+     * so well with calc.
+     * PI4 = PI/4;
+     * expt0 = bround(exp(t0),places);
+     * a = bround( PI4 * expt0,places);
+     * b = bround(PI4 / expt0,places);
+     * udelta = bround(exp(h),places);
+     * urdelta = bround(1/udelta,places);
+     */
+    /* make use of x(-t) = -x(t), w(-t) = w(t)  */
+    for (k = 0; k < 20 * order + 1; k++) {
+	/*
+	 * x = tanh(pi/2 * sinh(t))
+	 * w = pi/2 * cosh(t) / cosh(pi/2 * sinh(t))^2
+	 */
+	t = bround(t0 + k * h, places);
+
+	cht = bround(cosh(t), places);
+	sht = bround(sinh(t), places);
+	chp = bround(cosh(0.5 * PI * sht), places);
+	x = bround(tanh(0.5 * PI * sht), places);
+	w = bround((PI * h * cht) / (2 * chp ^ 2), places);
+	/*
+	 * c = bround(exp(a-b),places);
+	 * d = bround(1/c,places);
+	 * co =bround( (c+d)/2,places);
+	 * si =bround( (c-d)/2,places);
+	 * x = bround(si / co,places);
+	 * w = bround((a+b) / co^2,places);
+	 */
+	if (abs(x - 1) <= eps)
+	    break;
+
+	append(__CZ__tanhsinh_x, x);
+	append(__CZ__tanhsinh_w, w);
+	/*
+	 * a *= udelta;
+	 * b *= urdelta;
+	 */
+    }
+
+    /* Normalize the weights to make them add up to 2 (two) */
+    /*
+     * for(k=0;k < size(__CZ__tanhsinh_w);k++)
+     * sum = bround(sum + __CZ__tanhsinh_w[k],places);
+     * sum *= 2;
+     * for(k=0;k < size(__CZ__tanhsinh_w);k++)
+     * __CZ__tanhsinh_w[k] = bround(2.0 * __CZ__tanhsinh_w[k] / sum,places);
+     */
+
+    epsilon(eps);
+    return 1;
+}
+
+define quadtscore(a, b, n)
+{
+    local k c d order eps places sum ret x x1 x2 xm w w1 w2 m sizel;
+
+    eps = epsilon(epsilon() * 1e-2);
+    places = highbit(1 + int (1 / epsilon())) +1;
+    m = int (4 + max(0, ln(places / 30.0) / ln(2))) + 2;
+    if (!isnull(n)) {
+	order = n;
+	m = ilog(order / 3, 2) + 1;
+    } else
+	order = 3 * 2 ^ (m - 1);
+
+    quadtscomputenodes(order, m, epsilon());
+    sizel = size(__CZ__tanhsinh_w);
+
+    if (isinfinite(a) || isinfinite(b)) {
+	/*
+	 *           x
+	 * t =  ------------
+	 *                2
+	 *      sqrt(1 - y )
+	 */
+	if (isninf(a) && ispinf(b)) {
+	    for (k = 0; k < sizel; k++) {
+		x1 = __CZ__tanhsinh_x[k];
+		x2 = -__CZ__tanhsinh_x[k];
+		w1 = __CZ__tanhsinh_w[k];
+
+		x = bround(x1 * (1 - x1 ^ 2) ^ (-1 / 2), places);
+		xm = bround(x2 * (1 - x2 ^ 2) ^ (-1 / 2), places);
+		w = bround(w1 * (((1 - x1 ^ 2) ^ (-1 / 2)) / (1 - x1 ^ 2)),
+			   places);
+		w2 = bround(w1 * (((1 - x2 ^ 2) ^ (-1 / 2)) / (1 - x2 ^ 2)),
+			    places);
+		sum += bround(w * f(x), places);
+		sum += bround(w2 * f(xm), places);
+	    }
+	}
+	/*
+	 *        1
+	 * t =  - - + b + 1
+	 *        x
+	 */
+	else if (isninf(a) && !iscinf(b)) {
+	    for (k = 0; k < sizel; k++) {
+		x1 = __CZ__tanhsinh_x[k];
+		x2 = -__CZ__tanhsinh_x[k];
+		w1 = __CZ__tanhsinh_w[k];
+
+		x = bround((b + 1) - (2 / (x1 + 1)), places);
+		xm = bround((b + 1) - (2 / (x2 + 1)), places);
+		w = bround(w1 * (1 / 2 * (2 / (x1 + 1)) ^ 2), places);
+		w2 = bround(w1 * (1 / 2 * (2 / (x2 + 1)) ^ 2), places);
+		sum += bround(w * f(x), places);
+		sum += bround(w2 * f(xm), places);
+	    }
+	}
+	/*
+	 *      1
+	 * t =  - + a - 1
+	 *      x
+	 */
+	else if (!iscinf(a) && ispinf(b)) {
+	    for (k = 0; k < sizel; k++) {
+		x1 = __CZ__tanhsinh_x[k];
+		x2 = -__CZ__tanhsinh_x[k];
+		w1 = __CZ__tanhsinh_w[k];
+		x = bround((a - 1) + (2 / (x1 + 1)), places);
+		xm = bround((a - 1) + (2 / (x2 + 1)), places);
+		w = bround(w1 * (((1 / 2) * (2 / (x1 + 1)) ^ 2)), places);
+		w2 = bround(w1 * (((1 / 2) * (2 / (x2 + 1)) ^ 2)), places);
+		sum += bround(w * f(x), places);
+		sum += bround(w2 * f(xm), places);
+	    }
+	} else if (isninf(a) || isninf(b)) {
+	    /*TODO: swap(a,b) and negate(w)? Lookup! */
+	    return newerror("quadtscore: reverse limits?");
+	} else {
+	    return
+		newerror("quadtscore: complex infinity not yet implemented");
+        }
+	ret = sum;
+    } else {
+	/* Avoid rounding errors */
+	if (a == -1 && b == 1) {
+	    c = 1;
+	    d = 0;
+	} else {
+	    c = (b - a) / 2;
+	    d = (b + a) / 2;
+	}
+	sum = 0;
+	for (k = 0; k < sizel; k++) {
+	    sum +=
+		bround(__CZ__tanhsinh_w[k] * f(c * __CZ__tanhsinh_x[k] + d),
+		       places);
+	    sum +=
+		bround(__CZ__tanhsinh_w[k] * f(c * -__CZ__tanhsinh_x[k] + d),
+		       places);
+	}
+	ret = c * sum;
+    }
+    epsilon(eps);
+    return ret;
+}
+
+static __CZ__quadts_error;
+
+define quadts(a, b, points)
+{
+    local k sp results epsbits nsect interval length segment slope C ;
+    local x1 x2 y1 y2  sum D1 D2 D3 D4;
+    if (param(0) < 2)
+	return newerror("quadts: not enough arguments");
+    epsbits = highbit(1 + int (1 / epsilon())) +1;
+    if (param(0) < 3 || isnull(points)) {
+	/* return as given */
+	return quadtscore(a, b);
+    } else {
+	if ((isinfinite(a) || isinfinite(b))
+	    && (!ismat(points) && !islist(points)))
+	    return
+		newerror(strcat
+			 ("quadts: segments of infinite length ",
+			  "are not yet supported"));
+	if (ismat(points) || islist(points)) {
+	    sp = size(points);
+	    if (sp == 0)
+		return
+		    newerror(strcat
+			     ("quadts: variable 'points` must be a list or ",
+			      "1d-matrix of a length > 0"));
+	    /* check if all points are numbers */
+	    for (k = 0; k < sp; k++) {
+		if (!isnum(points[k]))
+		    return
+			newerror(strcat
+				 ("quadts: elements of 'points` must be",
+				  " numbers only"));
+	    }
+	    /* We have n-1 intervals and a and b, hence n-1 + 2 results */
+	    results = mat[sp + 1];
+            if (a != points[0]) {
+	        results[0] = quadtscore(a, points[0]);
+            } else {
+                results[0] = 0;
+            }
+	    if (sp == 1) {
+                if (b != points[0]) {
+		    results[1] = quadtscore(points[0], b);
+                } else {
+                    results[1] = 0;
+                }
+	    } else {
+		for (k = 1; k < sp; k++) {
+		    results[k] = quadtscore(points[k - 1], points[k]);
+		}
+                if (b != points[k - 1]) {
+		    results[k] = quadtscore(points[k - 1], b);
+                } else {
+                    results[k] = 0;
+                }
+	    }
+	} else {
+	    if (!isint(points) || points <= 0)
+		return newerror(strcat("quadts: variable 'points` must be a ",
+				       "list or a positive integer"));
+	    /* Taking "points" as the number of equally spaced intervals */
+	    results = mat[points + 1];
+	    /* It is easy if a,b lie on the real line */
+	    if (isreal(a) && isreal(b)) {
+		length = abs(a - b);
+		segment = length / points;
+
+		for (k = 1; k <= points; k++) {
+		    results[k - 1] =
+			quadtscore(a + (k - 1) * segment, a + k * segment);
+		}
+	    } else {
+		/* We have at least one complex limit but treat "points" still
+                 * as the number of equally spaced intervals on a straight line
+                 * connecting a and b. Computing the segments here is a bit
+                 * more complicated but not much, it should have been taught in
+                 * highschool.
+		 * Other contours by way of a list of points */
+		slope = (im(b) - im(a)) / (re(b) - re(a));
+		C = (im(a) + slope) * re(a);
+		length = abs(re(a) - re(b));
+		segment = length / points;
+
+		/* y = mx+C where m is the slope, x is the real part and y the
+		 * imaginary part  */
+                if(re(a)>re(b))swap(a,b);
+		for (k = re(a); k <= (re(b)); k+=segment) {
+		    x1 = slope*(k) +  C;
+		    results[k] = quadtscore(k + x1 * 1i);
+		}
+	    }			/* else of isreal */
+	}			/* else of ismat|islist */
+    }				/* else of isnull(points) */
+    /* With a bit of undeserved luck we have a result by now. */
+    sp = size(results);
+    for (k = 0; k < sp; k++) {
+	sum += results[k];
+    }
+    return sum;
+}
+
+static __CZ__gl_x;
+static __CZ__gl_w;
+static __CZ__gl_order;
+static __CZ__gl_prec;
+
+define quadglcomputenodes(N)
+{
+    local places k l x w t1 t2 t3 t4 t5 r tmp;
+
+    if (__CZ__gl_order == N && __CZ__gl_prec == epsilon())
+	return;
+
+    __CZ__gl_x = mat[N];
+    __CZ__gl_w = mat[N];
+    __CZ__gl_order = N;
+    __CZ__gl_prec = epsilon();
+
+    places = highbit(1 + int (1 / epsilon())) +1;
+
+    /*
+     * Compute roots and weights (doing it inline seems to be fastest)
+     * Trick shamelessly stolen from D. Bailey et .al (program "arprec")
+     */
+    for (k = 1; k <= N//2; k++) {
+	r = bround(cos(pi() * (k - .25) / (N + .5)), places);
+	while (1) {
+	    t1 = 1, t2 = 0;
+	    for (l = 1; l <= N; l++) {
+		t3 = t2;
+		t2 = t1;
+		t1 = bround(((2 * l - 1) * r * t2 - (l - 1) * t3) / l, places);
+	    }
+	    t4 = bround(N * (r * t1 - t2) / ((r ^ 2) - 1), places);
+	    t5 = r;
+	    tmp = t1 / t4;
+	    r = r - tmp;
+	    if (abs(tmp) <= epsilon())
+		break;
+	}
+	x = r;
+	w = bround(2 / ((1 - r ^ 2) * t4 ^ 2), places);
+
+	__CZ__gl_x[k - 1] = x;
+	__CZ__gl_w[k - 1] = w;
+	__CZ__gl_x[N - k] = -__CZ__gl_x[k - 1];
+	__CZ__gl_w[N - k] = __CZ__gl_w[k - 1];
+    }
+    return;
+}
+
+define quadgldeletenodes()
+{
+    free(__CZ__gl_x);
+    free(__CZ__gl_w);
+    free(__CZ__gl_order);
+    free(__CZ__gl_prec);
+}
+
+define quadglcore(a, b, n)
+{
+    local k c d digs order eps places sum ret err x x1 w w1 m;
+    local phalf x2 px1 spx1 u b1 a1 half;
+
+    eps = epsilon(epsilon() * 1e-2);
+    places = highbit(1 + int (1 / epsilon())) +1;
+    if (!isnull(n))
+	order = n;
+    else {
+	m = int (4 + max(0, ln(places / 30.0) / ln(2))) + 2;
+	order = 3 * 2 ^ (m - 1);
+    }
+
+
+    quadglcomputenodes(order, 1);
+
+    if (isinfinite(a) || isinfinite(b)) {
+	if (isninf(a) && ispinf(b)) {
+	    for (k = 0; k < order; k++) {
+		x1 = __CZ__gl_x[k];
+		w1 = __CZ__gl_w[k];
+
+		x = bround(x1 * (1 - x1 ^ 2) ^ (-1 / 2), places);
+		w = bround(w1 * (((1 - x1 ^ 2) ^ (-1 / 2)) / (1 - x1 ^ 2)),
+			   places);
+		sum += bround(w * f(x), places);
+	    }
+	} else if (isninf(a) && !iscinf(b)) {
+	    for (k = 0; k < order; k++) {
+		x1 = __CZ__gl_x[k];
+		w1 = __CZ__gl_w[k];
+
+		x = bround((b + 1) - (2 / (x1 + 1)), places);
+		w = bround(w1 * (1 / 2 * (2 / (x1 + 1)) ^ 2), places);
+		sum += bround(w * f(x), places);
+	    }
+	} else if (!iscinf(a) && ispinf(b)) {
+	    for (k = 0; k < order; k++) {
+		x1 = __CZ__gl_x[k];
+		w1 = __CZ__gl_w[k];
+		x = bround((a - 1) + (2 / (x1 + 1)), places);
+		w = bround(w1 * (((1 / 2) * (2 / (x1 + 1)) ^ 2)), places);
+		sum += bround(w * f(x), places);
+	    }
+	} else if (isninf(a) || isninf(b)) {
+	    /*TODO: swap(a,b) and negate(w)? Lookup! */
+	    return newerror("quadglcore: reverse limits?");
+	} else
+	    return
+		newerror("quadglcore: complex infinity not yet implemented");
+	ret = sum;
+    } else {
+	/* Avoid rounding errors */
+	if (a == -1 && b == 1) {
+	    c = 1;
+	    d = 0;
+	} else {
+	    c = (b - a) / 2;
+	    d = (b + a) / 2;
+	}
+	sum = 0;
+	for (k = 0; k < order; k++) {
+	    sum += bround(__CZ__gl_w[k] * f(c * __CZ__gl_x[k] + d), places);
+	}
+	ret = c * sum;
+    }
+    epsilon(eps);
+    return ret;
+}
+
+define quadgl(a, b, points)
+{
+    local k sp results epsbits nsect interval length segment slope C x1 y1 x2
+	y2;
+    local sum D1 D2 D3 D4;
+    if (param(0) < 2)
+	return newerror("quadgl: not enough arguments");
+    epsbits = highbit(1 + int (1 / epsilon())) +1;
+    if (isnull(points)) {
+	/* return as given */
+	return quadglcore(a, b);
+    } else {
+	/* But if we could half the time needed to execute a single operation
+	 * we could do all of it in just twice that time. */
+	if (isinfinite(a) || isinfinite(b)
+	    && (!ismat(points) && !islist(points)))
+	    return
+		newerror(strcat
+			 ("quadgl: multiple segments of infinite length ",
+			  "are not yet supported"));
+	if (ismat(points) || islist(points)) {
+	    sp = size(points);
+	    if (sp == 0)
+		return
+		    newerror(strcat
+			     ("quadgl: variable 'points` must be a list or ",
+			      "1d-matrix of a length > 0"));
+	    /* check if all points are numbers */
+	    for (k = 0; k < sp; k++) {
+		if (!isnum(points[k]))
+		    return
+			newerror(strcat
+				 ("quadgl: elements of 'points` must be ",
+				  "numbers only"));
+	    }
+	    /* We have n-1 intervals and a and b, hence n-1 + 2 results */
+	    results = mat[sp + 1];
+            if (a != points[0]) {
+	        results[0] = quadglcore(a, points[0]);
+            } else {
+                results[0] = 0;
+            }
+	    if (sp == 1) {
+		if (b != points[0]) {
+		    results[1] = quadglcore(points[0], b);
+                } else {
+                    results[1] = 0;
+                }
+	    } else {
+		for (k = 1; k < sp; k++) {
+		    results[k] = quadglcore(points[k - 1], points[k]);
+		}
+                if (b != points[k - 1]) {
+		    results[k] = quadglcore(points[k - 1], b);
+                } else {
+                    results[k] = 0;
+                }
+	    }
+	} else {
+	    if (!isint(points) || points <= 0)
+		return newerror(strcat("quadgl: variable 'points` must be a ",
+				       "list or a positive integer"));
+	    /* Taking "points" as the number of equally spaced intervals */
+	    results = mat[points + 1];
+	    /* It is easy if a,b lie on the real line */
+	    if (isreal(a) && isreal(b)) {
+		length = abs(a - b);
+		segment = length / points;
+
+		for (k = 1; k <= points; k++) {
+		    results[k - 1] =
+			quadglcore(a + (k - 1) * segment, a + k * segment);
+		}
+	    } else {
+		/* Other contours by way of a list of points */
+		slope = (im(b) - im(a)) / (re(b) - re(a));
+		C = (im(a) + slope) * re(a);
+		length = abs(re(a) - re(b));
+		segment = length / points;
+
+		/* y = mx+C where m is the slope, x is the real part and y the
+		 * imaginary part  */
+                if(re(a)>re(b))swap(a,b);
+		for (k = re(a); k <= (re(b)); k+=segment) {
+		    x1 = slope*(k) +  C;
+		    results[k] = quadglcore(k + x1 * 1i);
+		}
+	    }			/* else of isreal */
+	}			/* else of ismat|islist */
+    }				/* else of isnull(points) */
+    /* With a bit of undeserved luck we have a result by now. */
+    sp = size(results);
+    for (k = 0; k < sp; k++) {
+	sum += results[k];
+    }
+    return sum;
+}
+
+define quad(a, b, points = -1, method = "tanhsinh")
+{
+    if (isnull(a) || isnull(b) || param(0) < 2)
+	return newerror("quad: both limits must be given");
+    if (isstr(a)) {
+	if (strncmp(a, "cinf", 1) == 0)
+	    return
+		newerror(strcat
+			 ("quad: complex infinity not yet supported, use",
+			  " 'pinf' or 'ninf' respectively"));
+    }
+    if (isstr(b)) {
+	if (strncmp(b, "cinf", 1) == 0)
+	    return
+		newerror(strcat
+			 ("quad: complex infinity not yet supported, use",
+			  " 'pinf' or 'ninf' respectively"));
+    }
+
+    if (param(0) == 3) {
+	if (isstr(points))
+	    method = points;
+    }
+
+    if (strncmp(method, "tanhsinh", 1) == 0) {
+	if (!isstr(points)) {
+	    if (points == -1) {
+		return quadts(a, b);
+	    } else {
+		return quadts(a, b, points);
+	    }
+	} else {
+	    return quadts(a, b);
+	}
+    }
+
+    if (strncmp(method, "gausslegendre", 1) == 0) {
+	if (!isstr(points)) {
+	    if (points == -1) {
+		return quadgl(a, b);
+	    } else {
+		return quadgl(a, b, points);
+	    }
+	} else {
+	    return quadgl(a, b);
+	}
+    }
+}
+
+define makerange(start, end, steps)
+{
+    local ret k l step C length slope x1 x2 y1 y2;
+    local segment;
+    steps = int (steps);
+    if (steps < 1) {
+	return newerror("makerange: number of steps must be > 0");
+    }
+    if (!isnum(start) || !isnum(end)) {
+	return newerror("makerange: only numbers are supported yet");
+    }
+    if (isreal(start) && isreal(end)) {
+	step = (end - start) / (steps);
+	print step;
+	ret = mat[steps + 1];
+	for (k = 0; k <= steps; k++) {
+	    ret[k] = k * step + start;
+	}
+    } else {
+	ret = mat[steps + 1];
+	if (re(start) > re(end)) {
+	    swap(start, end);
+	}
+
+	slope = (im(end) - im(start)) / (re(end) - re(start));
+	C = im(start) - slope * re(start);
+	length = abs(re(start) - re(end));
+	segment = length / (steps);
+
+	for (k = re(start), l = 0; k <= (re(end)); k += segment, l++) {
+	    x1 = slope * (k) + C;
+	    ret[l] = k + x1 * 1i;
+	}
+
+    }
+    return ret;
+}
+
+define makecircle(radius, center, points)
+{
+    local ret k a b twopi centerx centery;
+    if (!isint(points) || points < 2) {
+	return
+	    newerror("makecircle: number of points is not a positive integer");
+    }
+    if (!isnum(center)) {
+	return newerror("makecircle: center does not lie on the complex plane");
+    }
+    if (!isreal(radius) || radius <= 0) {
+	return newerror("makecircle: radius is not a real > 0");
+    }
+    ret = mat[points];
+    twopi = 2 * pi();
+    centerx = re(center);
+    centery = im(center);
+    for (k = 0; k < points; k++) {
+	a = centerx + radius * cos(twopi * k / points);
+	b = centery + radius * sin(twopi * k / points);
+	ret[k] = a + b * 1i;
+    }
+    return ret;
+}
+
+define makeellipse(angle, a, b, center, points)
+{
+    local ret k x y twopi centerx centery;
+    if (!isint(points) || points < 2) {
+	return
+	    newerror("makeellipse: number of points is not a positive integer");
+    }
+    if (!isnum(center)) {
+	return
+	    newerror("makeellipse: center does not lie on the complex plane");
+    }
+    if (!isreal(a) || a <= 0) {
+	return newerror("makecircle: a is not a real > 0");
+    }
+    if (!isreal(b) || b <= 0) {
+	return newerror("makecircle: b is not a real > 0");
+    }
+    if (!isreal(angle)) {
+	return newerror("makecircle: angle is not a real");
+    }
+    ret = mat[points];
+    twopi = 2 * pi();
+    centerx = re(center);
+    centery = im(center);
+    for (k = 0; k < points; k++) {
+	x = centerx + a * cos(twopi * k / points) * cos(angle)
+	    - b * sin(twopi * k / points) * sin(angle);
+	y = centerx + a * cos(twopi * k / points) * sin(angle)
+	    + b * sin(twopi * k / points) * cos(angle);
+	ret[k] = x + y * 1i;
+    }
+    return ret;
+}
+
+define makepoints()
+{
+    local ret k;
+    ret = mat[param(0)];
+    for (k = 0; k < param(0); k++) {
+	if (!isnum(param(k + 1))) {
+	    return
+		newerror(strcat
+			 ("makepoints: parameter number \"", str(k + 1),
+			  "\" is not a number"));
+	}
+	ret[k] = param(k + 1);
+    }
+    return ret;
+}
+
+
+config("resource_debug", resource_debug_level),;
+if (config("resource_debug") & 3) {
+    print "quadtsdeletenodes()";
+    print "quadtscomputenodes(order, expo, eps)";
+    print "quadtscore(a,b,n)";
+    print "quadts(a,b,points)";
+    print "quadglcomputenodes(N)";
+    print "quadgldeletenodes()";
+    print "quadglcore(a,b,n)";
+    print "quadgl(a,b,points)";
+    print "quad(a,b,points=-1,method=\"tanhsinh\")";
+    print "makerange(start, end, steps)";
+    print "makecircle(radius, center, points)";
+    print "makeellipse(angle, a, b, center, points)";
+    print "makepoints(a1,[...])";
+}

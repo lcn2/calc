@@ -445,5 +445,7 @@ CONST char *error_table[E__COUNT+2] = {
     "Bad argument for ispunct",
     "Bad argument for isspace",
     "Bad argument for isxdigit",
+    "Bad argument type for strtoupper",
+    "Bad argument type for strtolower",
 	NULL
 };

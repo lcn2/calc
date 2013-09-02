@@ -1,0 +1,71 @@
+/*
+ * smallfactors - find the factors of a number < 2^32
+ *
+ * Copyright (C) 2013 Christoph Zurnieden
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+
+static resource_debug_level;
+resource_debug_level = config("resource_debug", 0);
+
+
+define smallfactors(x0)
+{
+    local d q x flist tuple w;
+
+    if (x >= (2 ^ 32) - 1)
+	return newerror("smallfactors: number must be < 2^32 -1");
+
+    tuple = mat[2];
+    flist = list();
+    x = x0;
+    d = 2;
+    q = 0;
+    tuple[0] = d;
+    if (x < 2)
+	return 0;
+    do {
+	q = x // d;
+	    while (x == (q * d)) {
+	    tuple[0] = d;
+	    tuple[1]++;
+	    x = floor(q);
+	    q = x // d;
+	}
+	d = nextprime(d);
+	if (tuple[1] > 0)
+	    append(flist, tuple);
+	tuple = mat[2];
+    } while (d <= x);
+    return flist;
+}
+
+define printsmallfactors(flist)
+{
+    local k;
+    for (k = 0; k < size(flist); k++) {
+	print flist[k][0]:"^":flist[k][1];
+    }
+}
+
+
+config("resource_debug", resource_debug_level),;
+if (config("resource_debug") & 3) {
+    print "smallfactors(x0)";
+    print "printsmallfactors(flist)";
+
+}

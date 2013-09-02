@@ -1382,25 +1382,17 @@ statistics.cal
 
 strings.cal
 
-    toupper(s)
-    tolower(s)
-    strcasecmp(s1,s2)
-    strncasecmp(s1,s2,length)
     isascii(c)
-    isalnum(c)
-    isalpha(c)
-    iscntrl(c)
-    isdigit(c)
-    isgraph(c)
-    islower(c)
-    isprint(c)
-    ispunct(c)
-    isspace(c)
-    isupper(c)
     isblank(c)
-    isxdigit(c)
 
-    Implements most of the functions of libc's ctype.h and strings.h.
+    Implements some of the functions of libc's ctype.h and strings.h.
+
+    NOTE: A number of the ctype.h and strings.h functions are now builtin
+          functions in calc.
+
+   WARNING: If the remaining functions in this calc resource file become
+	    calc builtin functions, then strings.cal may be removed in
+	    a future release.
 
 
 sumsq.cal
@@ -1792,8 +1784,8 @@ zeta2.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.6 $
-## @(#) $Id: README,v 30.6 2013/08/18 20:01:53 chongo Exp $
+## @(#) $Revision: 30.8 $
+## @(#) $Id: README,v 30.8 2013/09/02 01:46:05 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/cal/RCS/README,v $
 ##
 ## Under source code control:	1990/02/15 01:50:32

@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.7 $
-# @(#) $Id: Makefile,v 30.7 2013/08/11 09:07:26 chongo Exp $
+# @(#) $Revision: 30.10 $
+# @(#) $Id: Makefile,v 30.10 2013/09/02 03:02:00 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
@@ -179,19 +179,32 @@ MV= mv
 CO= co
 TRUE= true
 TOUCH= touch
+SED= sed
+SORT= sort
+FMT= fmt
 
 # The calc files to install
 #
-CALC_FILES= alg_config.cal beer.cal bernoulli.cal bernpoly.cal \
-	bigprime.cal bindings brentsolve.cal chi.cal chrem.cal constants.cal \
-	deg.cal dms.cal dotest.cal ellip.cal factorial2.cal factorial.cal \
-	gvec.cal hello.cal hms.cal intfile.cal lambertw.cal linear.cal \
-	lnseries.cal lucas.cal lucas_chk.cal lucas_tbl.cal mersenne.cal \
-	mfactor.cal mod.cal natnumset.cal pell.cal pi.cal pix.cal pollard.cal \
-	poly.cal prompt.cal psqrt.cal qtime.cal quat.cal randbitrun.cal \
-	randmprime.cal randombitrun.cal randomrun.cal randrun.cal README \
-	regress.cal repeat.cal screen.cal seedrandom.cal set8700.cal \
-	set8700.line solve.cal specialfunctions.cal statistics.cal sumsq.cal \
+# This list is prodiced by the detaillist rule when no WARNINGS are detected.
+#
+# Please use:
+#
+#	make calc_files_list
+#
+# to keep this list in nice sorted order and to check that these
+# deailed help files are under RCS control.
+#
+CALC_FILES= README alg_config.cal beer.cal bernoulli.cal \
+	bernpoly.cal bigprime.cal bindings brentsolve.cal chi.cal chrem.cal \
+	constants.cal deg.cal dms.cal dotest.cal ellip.cal factorial.cal \
+	factorial2.cal gvec.cal hello.cal hms.cal infinities.cal \
+	intfile.cal intnum.cal lambertw.cal linear.cal lnseries.cal \
+	lucas.cal lucas_chk.cal lucas_tbl.cal mersenne.cal mfactor.cal \
+	mod.cal natnumset.cal pell.cal pi.cal pix.cal pollard.cal poly.cal \
+	prompt.cal psqrt.cal qtime.cal quat.cal randbitrun.cal randmprime.cal \
+	randombitrun.cal randomrun.cal randrun.cal regress.cal repeat.cal \
+	screen.cal seedrandom.cal set8700.cal set8700.line smallfactors.cal \
+	solve.cal specialfunctions.cal statistics.cal strings.cal sumsq.cal \
 	sumtimes.cal surd.cal test1700.cal test2300.cal test2600.cal \
 	test2700.cal test3100.cal test3300.cal test3400.cal test3500.cal \
 	test4000.cal test4100.cal test4600.cal test5100.cal test5200.cal \
@@ -243,6 +256,27 @@ calcliblist:
 		echo cal/$$i; \
 	    fi; \
 	done
+
+# These next rule help form the ${CALC_FILES} makefile variables above.
+#
+calc_files_list:
+	${Q} -(find .  -mindepth 1 -maxdepth 1 -type f -name '*.cal' -print | \
+	   while read i; do \
+		if [ X"$$i" != X"/dev/null" ]; then \
+		    if [ ! -f RCS/$$i,v ]; then \
+			echo "WARNING: $$i not under RCS control" 1>&2; \
+		    else \
+			echo $$i; \
+		    fi; \
+		fi; \
+	done; \
+	echo '--first_line--'; \
+	echo README; \
+	echo set8700.line; \
+	echo bindings) | \
+	    ${SED} -e 's:^\./::' | LANG=C ${SORT} | ${FMT} -70 | \
+	    ${SED} -e '1s/--first_line--/CALC_FILES=/' -e '2,$$s/^/	/' \
+		   -e 's/$$/ \\/' -e '$$s/ \\$$//'
 
 ##
 #

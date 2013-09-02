@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.11 $
-# @(#) $Id: calc.spec.in,v 30.11 2013/08/11 08:41:38 chongo Exp $
+# @(#) $Revision: 30.12 $
+# @(#) $Id: calc.spec.in,v 30.12 2013/09/02 03:04:26 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/RCS/calc.spec.in,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -37,7 +37,7 @@
 Summary: Arbitrary precision calculator.
 Name: calc
 Version: <<<PROJECT_VERSION>>>
-Release: 10
+Release: 11
 License: LGPL
 Group: Applications/Engineering
 Source: http://www.isthe.com/chongo/src/calc/%{name}-%{version}.tar.bz2
@@ -146,7 +146,7 @@ rm -rf %{_buildroot}
 %attr(644, root, root) %{_datadir}/%{name}/custom/*.cal
 %attr(644, root, root) %{_datadir}/%{name}/help/*
 %attr(644, root, root) %{_datadir}/%{name}/*.cal
-%attr(644, root, root) %{_datadir}/%{name}/*.line
+%attr(644, root, root) %{_datadir}/%{name}/set8700.line
 %attr(644, root, root) %{_libdir}/libcalc.so
 %attr(644, root, root) %{_libdir}/libcalc.so.*
 %attr(644, root, root) %{_libdir}/libcustcalc.so
@@ -161,6 +161,9 @@ rm -rf %{_buildroot}
 %attr(644, root, root) %{_libdir}/libcustcalc.a
 
 %changelog
+* Sun Sep 01 2013 Landon Curt Noll http://www.isthe.com/chongo
+- Release: 11
+- only list %{_datadir}/%{name}/set8700.line not *.line
 * Sat May 05 2013 Landon Curt Noll http://www.isthe.com/chongo
 - Release: 10
 - Major bug rpm build process bug fix

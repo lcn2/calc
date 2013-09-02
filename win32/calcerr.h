@@ -442,9 +442,11 @@
 #define E_ISPUNCT	10429	/* Bad argument for ispunct */
 #define E_ISSPACE	10430	/* Bad argument for isspace */
 #define E_ISXDIGIT	10431	/* Bad argument for isxdigit */
+#define E_STRTOUPPER	10432	/* Bad argument type for strtoupper */
+#define E_STRTOLOWER	10433	/* Bad argument type for strtolower */
 
-#define E__HIGHEST	10431	/* highest calc error */
-#define E__COUNT		431	/* number of calc errors */
+#define E__HIGHEST	10433	/* highest calc error */
+#define E__COUNT		433	/* number of calc errors */
 #define E_USERDEF	20000	/* base of user defined errors */
 
 /* names of calc error values */

@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: str.c,v 30.4 2013/09/01 20:23:07 chongo Exp $
+ * @(#) $Revision: 30.5 $
+ * @(#) $Id: str.c,v 30.5 2013/09/02 01:38:08 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/str.c,v $
  *
  * Under source code control:	1990/02/15 01:48:10
@@ -682,6 +682,47 @@ stringshift(STRING *s1, long n)
 	}
 	return s;
 }
+
+/*
+ * stringtoupper makes st upper case
+ */
+STRING *
+stringtoupper(STRING *st)
+{
+        char *c1, *c2;
+        size_t num;
+
+        if (st->s_len > 0) {
+                c1 = st->s_str;
+                num = st->s_len;
+                c2 = c1;
+                while (num-- > 0)
+                        *c1++ = (char)toupper((int)*c2++);
+                *c1 = '\0';
+        }
+        return slink(st);
+}
+
+/*
+ * stringtolower makes st lower case
+ */
+STRING *
+stringtolower(STRING *st)
+{
+        char *c1, *c2;
+        size_t num;
+
+        if (st->s_len > 0) {
+                c1 = st->s_str;
+                num = st->s_len;
+                c2 = c1;
+                while (num-- > 0)
+                        *c1++ = (char)tolower((int)*c2++);
+                *c1 = '\0';
+        }
+        return slink(st);
+}
+
 
 /*
  * stringcpy copies as many characters as possible

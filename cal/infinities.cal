@@ -1,0 +1,88 @@
+/*
+ * infinities - handle infinities symbolically, a little helper file
+ *
+ * Copyright (C) 2013 Christoph Zurnieden
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+
+static resource_debug_level;
+resource_debug_level = config("resource_debug", 0);
+
+
+define isinfinite(x)
+{
+    if (isstr(x)) {
+	if (strncmp(x, "cinf", 4) == 0
+	    || strncmp(x, "pinf", 4) == 0 || strncmp(x, "ninf", 4) == 0)
+	    return 1;
+    }
+    return 0;
+}
+
+define iscinf(x)
+{
+    if (isstr(x)) {
+	if (strncmp(x, "cinf", 4) == 0)
+	    return 1;
+    }
+    return 0;
+}
+
+define ispinf(x)
+{
+    if (isstr(x)) {
+	if (strncmp(x, "pinf", 4) == 0)
+	    return 1;
+    }
+    return 0;
+}
+
+define isninf(x)
+{
+    if (isstr(x)) {
+	if (strncmp(x, "ninf", 4) == 0)
+	    return 1;
+    }
+    return 0;
+}
+
+define cinf()
+{
+    return "cinf";
+}
+
+define ninf()
+{
+    return "ninf";
+}
+
+define pinf()
+{
+    return "pinf";
+}
+
+
+config("resource_debug", resource_debug_level),;
+if (config("resource_debug") & 3) {
+    print "isinfinite(x)";
+    print "iscinf(x)";
+    print "ispinf(x)";
+    print "isninf(x)";
+    print "cinf()";
+    print "ninf()";
+    print "pinf()";
+}

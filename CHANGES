@@ -1,7 +1,7 @@
 The following are the changes from calc version 2.12.4.11 to date:
 
     Fixed many typos in comments of the Makefile thanks to the review
-    work of Michael Somos <somos at harary dot math dot georgetown dot edu>.
+    work of Michael Somos.
 
     Fixed typo in "help sysinfo".
 
@@ -12,9 +12,9 @@ The following are the changes from calc version 2.12.4.11 to date:
     Christoph Zurnieden <czurnieden at gmx dot de> including:
 
     infinities.cal - handle infinities symbolically, a little helper file
-    intnum.cal - implementation of tanhsinh- and Gauss-Legendre quadrature
+    intnum.cal - implementation of tanh sinh and Gauss-Legendre quadrature
     smallfactors.cal - find the factors of a number < 2^32
-    strings.cal - implementation of the macros in ctype.h plus str[n]casecmp
+    strings.cal - implementation of isascii() and isblank()
 
     Reformatted some calc resource files.  Cleanup in comment the headers
     of some calc resource files.
@@ -38,6 +38,8 @@ The following are the changes from calc version 2.12.4.11 to date:
     isxdigit - whether character a hexadecimal digit
     strcasecmp - compare two strings, case independent
     strncasecmp - compare two strings up to n characters, case independent
+    strtolower - transform an ASCII string to lower case
+    strtoupper - transform an ASCII string to upper case
 
     For details on these new builtins, see their help messages.
     Thanks goes to Inge Zurnieden <inge dot zurnieden at gmx dot de> for
@@ -59,6 +61,16 @@ The following are the changes from calc version 2.12.4.11 to date:
     For more information about the picky tool, see:
 
 	http://cis.csuohio.edu/~somos/picky.html
+
+    Removed functions from strings.cal that have been replaced by
+    the new ctype-like builtin functions.
+
+    Fixed cal/Makefile to include missing intnum.cal file.
+
+    Added detail_help_list make target to cal/Makefile.
+
+    The detaillist make target in help/Makefile is now
+    called detail_help_list.
 
 
 The following are the changes from calc version 2.12.4.6 to version 2.12.4.10:
@@ -1279,8 +1291,7 @@ The following are the changes from calc version 2.11.10 to 2.11.10:
 The following are the changes from calc version 2.11.9 to 2.11.9.3:
 
     Fixed calc man page examples to move -f to the end of the line.
-    Thanks goes to Michael Somos <somos at grail dot cba dot csuohio
-    dot edu> for pointing this out.
+    Thanks goes to Michael Somos for pointing this out.
 
     Linux and gcc now compiled with -Wall -W -Wno-comment.
 
@@ -6944,8 +6955,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.33 $
-## @(#) $Id: CHANGES,v 30.33 2013/09/01 22:19:41 chongo Exp $
+## @(#) $Revision: 30.37 $
+## @(#) $Id: CHANGES,v 30.37 2013/09/02 02:31:57 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.6 $
-# @(#) $Id: Makefile,v 30.6 2013/09/01 18:37:27 chongo Exp $
+# @(#) $Revision: 30.9 $
+# @(#) $Id: Makefile,v 30.9 2013/09/02 02:55:19 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -272,43 +272,47 @@ BLT_HELP_FILES= ${BLT_HELP_FILES_3} ${BLT_HELP_FILES_5} \
 		${BLT_HELP_FILES_11} ${BLT_HELP_FILES_13} \
 		${BLT_HELP_FILES_14}
 
+# The detailed list of help files to install
+#
 # This list is prodiced by the detaillist rule when no WARNINGS are detected.
 #
 # Please use:
 #
-#	make detaillist
+#	make detail_help_list
 #
 # to keep this list in nice sorted order and to check that these
 # non-special help files are under RCS control.
 #
-DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd append \
-	appr arg argv arrow asec asech asin asinh assign atan atan2 atanh \
-	avg base base2 bernoulli bit blk blkcpy blkfree blocks bround btrunc \
-	calc_tty calclevel calcpath catalan ceil cfappr cfsim char cmdbuf \
-	cmp comb conj cos cosh cot coth count cp csc csch ctime delete den \
-	dereference det digit digits display dp epsilon errcount errmax \
-	errno error estr euler eval exp fact factor fclose fcnt feof ferror \
-	fflush fgetc fgetfield fgetfile fgetline fgets fgetstr fib files \
-	floor fopen forall fpathopen fprintf fputc fputs fputstr frac free \
-	freebernoulli freeeuler freeglobals freeredc freestatics frem freopen \
-	fscan fscanf fseek fsize ftell gcd gcdrem gd getenv hash head highbit \
-	hmean hnrmod hypot ilog ilog10 ilog2 im indices inputlevel insert \
-	int inverse iroot isassoc isatty isblk isconfig isdefined iserror \
-	iseven isfile ishash isident isint islist ismat ismult isnull isnum \
-	isobj isobjtype isodd isprime isptr isqrt isrand israndom isreal \
-	isrel issimple issq isstr istype jacobi join lcm lcmfact lfactor \
-	ln log lowbit ltol makelist matdim matfill matmax matmin matsum \
-	mattrace mattrans max memsize meq min minv mmin mne mod modify \
-	name near newerror nextcand nextprime norm null num oldvalue ord \
-	param perm pfact pi pix places pmod polar poly pop popcnt pound \
-	power prevcand prevprime printf prompt protect ptest push putenv \
-	quo quomod rand randbit random randombit randperm rcin rcmul rcout \
-	rcpow rcsq re remove reverse rewind rm root round rsearch runtime \
-	saveval scale scan scanf search sec sech seed segment select sgn sha1 \
-	sin sinh size sizeof sleep sort sqrt srand srandom ssq stoponerror \
-	str strcat strcmp strcpy strerror strlen strncmp strncpy strpos \
-	strprintf strscan strscanf substr sum swap system systime tail tan \
-	tanh test time trunc usertime version xor
+DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address \
+	agd append appr arg argv arrow asec asech asin asinh assign atan \
+	atan2 atanh avg base base2 bernoulli bit blk blkcpy blkfree blocks \
+	bround btrunc calc_tty calclevel calcpath catalan ceil cfappr cfsim \
+	char cmdbuf cmp comb conj cos cosh cot coth count cp csc csch ctime \
+	delete den dereference det digit digits display dp epsilon errcount \
+	errmax errno error estr euler eval exp fact factor fclose fcnt \
+	feof ferror fflush fgetc fgetfield fgetfile fgetline fgets fgetstr \
+	fib files floor fopen forall fpathopen fprintf fputc fputs fputstr \
+	frac free freebernoulli freeeuler freeglobals freeredc freestatics \
+	frem freopen fscan fscanf fseek fsize ftell gcd gcdrem gd getenv \
+	hash head highbit hmean hnrmod hypot ilog ilog10 ilog2 im indices \
+	inputlevel insert int inverse iroot isalnum isalpha isassoc isatty \
+	isblk iscntrl isconfig isdefined isdigit iserror iseven isfile \
+	isgraph ishash isident isint islist islower ismat ismult isnull \
+	isnum isobj isobjtype isodd isprime isprint isptr ispunct isqrt \
+	isrand israndom isreal isrel issimple isspace issq isstr istype \
+	isupper isxdigit jacobi join lcm lcmfact lfactor ln log lowbit ltol \
+	makelist matdim matfill matmax matmin matsum mattrace mattrans max \
+	memsize meq min minv mmin mne mod modify name near newerror nextcand \
+	nextprime norm null num oldvalue ord param perm pfact pi pix places \
+	pmod polar poly pop popcnt pound power prevcand prevprime printf \
+	prompt protect ptest push putenv quo quomod rand randbit random \
+	randombit randperm rcin rcmul rcout rcpow rcsq re remove reverse \
+	rewind rm root round rsearch runtime saveval scale scan scanf \
+	search sec sech seed segment select sgn sha1 sin sinh size sizeof \
+	sleep sort sqrt srand srandom ssq stoponerror str strcasecmp strcat \
+	strcmp strcpy strerror strlen strncasecmp strncmp strncpy strpos \
+	strprintf strscan strscanf strtolower strtoupper substr sum swap \
+	system systime tail tan tanh test time trunc usertime version xor
 
 # This list is of files that are clones of DETAIL_HELP files.  They are
 # built from DETAIL_HELP files.
@@ -633,11 +637,26 @@ bsdi: all
 	${RM} -f obj
 	${CP} obj.file obj
 
-# These next rule help me form the ${DETAIL_HELP} makefile variables above.
+# These next rule help form the ${DETAIL_HELP} makefile variables above.
 #
-detaillist:
-	${Q} -(echo "xxxxx"; \
-	   for i in ${DETAIL_HELP} /dev/null; do \
+# NOTE: The ${DETAIL_HELP} list does not include special help files.
+#
+detail_help_list:
+	${Q} -(find .  -mindepth 1 -maxdepth 1 -type f \
+	         ! -name Makefile ! -name '.Makefile.swp' \
+		 ! -name archive ! -name assoc ! -name builtin.end \
+		 ! -name builtin.top ! -name command ! -name config \
+		 ! -name contrib ! -name credit ! -name custom ! -name define \
+		 ! -name environment ! -name errorcodes.hdr \
+		 ! -name errorcodes.sed ! -name expression ! -name file \
+		 ! -name funclist.c ! -name funclist.sed ! -name help \
+		 ! -name history ! -name interrupt ! -name intro ! -name list \
+		 ! -name mat ! -name obj.file ! -name operator \
+		 ! -name overview ! -name script ! -name statement \
+		 ! -name todo ! -name types ! -name unexpected \
+		 ! -name variable ! -name wishlist \
+		 -print | \
+	   while read i; do \
 		if [ X"$$i" != X"/dev/null" ]; then \
 		    if [ ! -f RCS/$$i,v ]; then \
 			echo "WARNING: $$i not under RCS control" 1>&2; \
@@ -645,8 +664,10 @@ detaillist:
 			echo $$i; \
 		    fi; \
 		fi; \
-	done | LANG=C ${SORT}) | ${FMT} -70 | \
-	    ${SED} -e '1s/xxxxx/DETAIL_HELP=/' -e '2,$$s/^/	/' \
+	done; \
+	echo '--first_line--') | \
+	    ${SED} -e 's:^\./::' | LANG=C ${SORT} | ${FMT} -70 | \
+	    ${SED} -e '1s/--first_line--/DETAIL_HELP=/' -e '2,$$s/^/	/' \
 		   -e 's/$$/ \\/' -e '$$s/ \\$$//'
 
 ##

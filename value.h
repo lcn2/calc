@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.5 $
- * @(#) $Id: value.h,v 30.5 2013/09/01 18:57:17 chongo Exp $
+ * @(#) $Revision: 30.6 $
+ * @(#) $Id: value.h,v 30.6 2013/09/02 01:38:08 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/value.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -524,6 +524,8 @@ E_FUNC STRING *stringsegment(STRING *, long, long);
 E_FUNC STRING *stringshift(STRING *, long);
 E_FUNC STRING *stringcomp(STRING *);
 E_FUNC STRING *stringneg(STRING *);
+E_FUNC STRING *stringtolower(STRING *);
+E_FUNC STRING *stringtoupper(STRING *);
 E_FUNC STRING *stringcpy(STRING *, STRING *);
 E_FUNC STRING *stringncpy(STRING *, STRING *, size_t);
 E_FUNC long stringcontent(STRING *s);

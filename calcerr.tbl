@@ -17,8 +17,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.3 $
-# @(#) $Id: calcerr.tbl,v 30.3 2013/09/01 19:23:57 chongo Exp $
+# @(#) $Revision: 30.4 $
+# @(#) $Id: calcerr.tbl,v 30.4 2013/09/02 01:38:08 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/RCS/calcerr.tbl,v $
 #
 # Under source code control:	1996/05/23 17:38:44
@@ -473,3 +473,5 @@ E_ISPRINT	Bad argument for isprint
 E_ISPUNCT	Bad argument for ispunct
 E_ISSPACE	Bad argument for isspace
 E_ISXDIGIT	Bad argument for isxdigit
+E_STRTOUPPER    Bad argument type for strtoupper
+E_STRTOLOWER    Bad argument type for strtolower

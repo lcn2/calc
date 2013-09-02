@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.10 $
- * @(#) $Id: regress.cal,v 30.10 2013/09/01 22:08:44 chongo Exp $
+ * @(#) $Revision: 30.12 $
+ * @(#) $Id: regress.cal,v 30.12 2013/09/02 02:32:55 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -768,6 +768,8 @@ print '016: parsed test_bignums()';
 
 /*
  * Test many of the built-in functions.
+ *
+ * See test_functionss() starting at test 9000 for more built-in function tests.
  */
 define test_functions()
 {
@@ -1445,91 +1447,10 @@ define test_functions()
 	vrfy(jacobi(-1,-1) == 0,	'1236: jacobi(-1,-1) == 0');
 	vrfy(jacobi(0,-1) == 0,		'1237: jacobi(0,-1) == 0');
 
-	/* ctype function tests */
-	vrfy(isalnum("A") == 1,		'1238: isalnum("A") == 1');
-	vrfy(isalnum("a") == 1,		'1239: isalnum("a") == 1');
-	vrfy(isalnum("2") == 1,		'1239: isalnum("2") == 1');
-	vrfy(isalnum("\t") == 0,	'1240: isalnum("\t") == 0');
-
-	vrfy(isalpha("A") == 1,		'1241: isalpha("A") == 1');
-	vrfy(isalpha("a") == 1,		'1242: isalpha("a") == 1');
-	vrfy(isalpha("2") == 0,		'1243: isalpha("2") == 0');
-	vrfy(isalpha("\t") == 0,	'1244: isalpha("\t") == 0');
-
-	vrfy(iscntrl("A") == 0,		'1245: iscntrl("A") == 0');
-	vrfy(iscntrl("a") == 0,		'1246: iscntrl("a") == 0');
-	vrfy(iscntrl("2") == 0,		'1247: iscntrl("2") == 0');
-	vrfy(iscntrl("\t") == 1,	'1248: iscntrl("\t") == 1');
-
-	vrfy(isdigit("A") == 0,		'1249: isdigit("A") == 0');
-	vrfy(isdigit("a") == 0,		'1250: isdigit("a") == 0');
-	vrfy(isdigit("2") == 1,		'1251: isdigit("2") == 1');
-	vrfy(isdigit("\t") == 0,	'1252: isdigit("\t") == 0');
-
-	vrfy(isgraph("A") == 1,		'1253: isgraph("A") == 1');
-	vrfy(isgraph("a") == 1,		'1254: isgraph("a") == 1');
-	vrfy(isgraph("2") == 1,		'1255: isgraph("2") == 1');
-	vrfy(isgraph("\t") == 0,	'1255: isgraph("\t") == 0');
-
-	vrfy(islower("A") == 0,		'1256: islower("A") == 0');
-	vrfy(islower("a") == 1,		'1257: islower("a") == 1');
-	vrfy(islower("1") == 0,		'1258: islower("1") == 0');
-
-	vrfy(isprint("A") == 1,		'1259: isprint("A") == 1');
-	vrfy(isprint("a") == 1,		'1260: isprint("a") == 1');
-	vrfy(isprint(" ") == 1,		'1261: isprint(" ") == 1');
-	vrfy(isprint("\t") == 0,	'1262: isprint("\t") == 0');
-
-	vrfy(ispunct("A") == 0,		'1263: ispunct("A") == 0');
-	vrfy(ispunct("a") == 0,		'1264: ispunct("a") == 0');
-	vrfy(ispunct(" ") == 0,		'1265: ispunct(" ") == 0');
-	vrfy(ispunct("?") == 1,		'1266: ispunct("?") == 1');
-
-	vrfy(isspace("A") == 0,		'1267: isspace("A") == 0');
-	vrfy(isspace("Krik") == 0,	'1268: isspace("Krik") == 0');
-	vrfy(isspace(" ") == 1,		'1269: isspace(" ") == 1');
-	vrfy(isspace("?") == 0,		'1270: isspace("?") == 0');
-
-	vrfy(isupper("A") == 1,		'1271: isupper("A") == 1');
-	vrfy(isupper("a") == 0,		'1272: isupper("a") == 0');
-	vrfy(isupper("1") == 0,		'1273: isupper("1") == 0');
-
-	vrfy(isxdigit("A") == 1,	'1274: isxdigit("A") == 1');
-	vrfy(isxdigit("f") == 1,	'1275: isxdigit("f") == 1');
-	vrfy(isxdigit("2") == 1,	'1276: isxdigit("2") == 1');
-	vrfy(isxdigit("x") == 0,	'1277: isxdigit("x") == 0');
-
-	vrfy(strcasecmp("ab", "aBc") == -1,
-	     '1278: strcasecmp("ab", "aBc") == -1');
-	vrfy(strcasecmp("abc", "aBb") == 1,
-	     '1279: strcasecmp("abc", "aBb") == 1');
-	vrfy(strcasecmp("abc", "abc") == 0,
-	     '1280: strcasecmp("abc", "abc") == 0');
-	vrfy(strcasecmp("abc", "aBc") == 0,
-	     '1281: strcasecmp("abc", "aBc") == 0');
-	vrfy(strcasecmp("abc", "aBd") == -1,
-	     '1282: strcasecmp("abc", "aBd") == -1');
-	vrfy(strcasecmp("abc\0", "aBc") == 1,
-	     '1283: strcasecmp("abc\0", "aBc") == 1');
-	vrfy(strcasecmp("a\0b", "A\0c") == -1,
-	     '1284: strcasecmp("a\0b", "A\0c") == -1');
-
-	vrfy(strncasecmp("abc", "xyz", 0) == 0,
-	     '1285: strncasecmp("abc", "xyz", 0) == 0');
-	vrfy(strncasecmp("abc", "xyz", 1) == -1,
-	     '1286: strncasecmp("abc", "xyz", 1) == -1');
-	vrfy(strncasecmp("abc", "", 1) == 1,
-	     '1287: strncasecmp("abc", "", 1) == 1');
-	vrfy(strncasecmp("a", "b", 2) == -1,
-	     '1288: strncasecmp("a", "b", 2) == -1');
-	vrfy(strncasecmp("ab", "Ac", 2) == -1,
-	     '1289: strncasecmp("ab", "Ac", 2) == -1');
-	vrfy(strncasecmp("\0ac", "\0b", 2) == -1,
-	     '1290: strncasecmp("\0ac", "\0b", 2) == -1');
-	vrfy(strncasecmp("ab", "aBc", 2) == 0,
-	     '1291: strncasecmp("ab", "aBc", 2) == 0');
-	vrfy(strncasecmp("abc", "abd", 2) == 0,
-	     '1292: strncasecmp("abc", "abd", 2) == 0');
+	/*
+	 * NOTE: Function tests are continued in test_functionss()
+	 *	 starting at test 9000.
+	 */
 
 	print '1293: Ending test_functions';
 }
@@ -8015,7 +7936,126 @@ print '8901: read -once "test8900"';
 read -once "test8900";
 print '8902: about to run test8900(1,,8903)';
 testnum = test8900(1,,8903);
+print '8999: ecnt = 203;'
+ecnt = 203;
 /* 89xx: test calc resource functions by Christoph Zurnieden */
+
+
+/*
+ * Test more of the built-in functions.
+ *
+ * See test_functions() (test 700 - 1238) for other built-in function tests.
+ */
+define test_functions2()
+{
+	print '9001: Beginning test_functions2';
+
+	/* ctype function tests */
+	vrfy(isalnum("A") == 1,		'9002: isalnum("A") == 1');
+	vrfy(isalnum("a") == 1,		'9003: isalnum("a") == 1');
+	vrfy(isalnum("2") == 1,		'9004: isalnum("2") == 1');
+	vrfy(isalnum("\t") == 0,	'9005: isalnum("\\t") == 0');
+
+	vrfy(isalpha("A") == 1,		'9006: isalpha("A") == 1');
+	vrfy(isalpha("a") == 1,		'9007: isalpha("a") == 1');
+	vrfy(isalpha("2") == 0,		'9008: isalpha("2") == 0');
+	vrfy(isalpha("\t") == 0,	'9009: isalpha("\\t") == 0');
+
+	vrfy(iscntrl("A") == 0,		'9010: iscntrl("A") == 0');
+	vrfy(iscntrl("a") == 0,		'9011: iscntrl("a") == 0');
+	vrfy(iscntrl("2") == 0,		'9012: iscntrl("2") == 0');
+	vrfy(iscntrl("\t") == 1,	'9013: iscntrl("\\t") == 1');
+
+	vrfy(isdigit("A") == 0,		'9014: isdigit("A") == 0');
+	vrfy(isdigit("a") == 0,		'9015: isdigit("a") == 0');
+	vrfy(isdigit("2") == 1,		'9016: isdigit("2") == 1');
+	vrfy(isdigit("\t") == 0,	'9017: isdigit("\\t") == 0');
+
+	vrfy(isgraph("A") == 1,		'9018: isgraph("A") == 1');
+	vrfy(isgraph("a") == 1,		'9019: isgraph("a") == 1');
+	vrfy(isgraph("2") == 1,		'9020: isgraph("2") == 1');
+	vrfy(isgraph("\t") == 0,	'9021: isgraph("\\t") == 0');
+
+	vrfy(islower("A") == 0,		'9022: islower("A") == 0');
+	vrfy(islower("a") == 1,		'9023: islower("a") == 1');
+	vrfy(islower("1") == 0,		'9024: islower("1") == 0');
+
+	vrfy(isprint("A") == 1,		'9025: isprint("A") == 1');
+	vrfy(isprint("a") == 1,		'9026: isprint("a") == 1');
+	vrfy(isprint(" ") == 1,		'9027: isprint(" ") == 1');
+	vrfy(isprint("\t") == 0,	'9028: isprint("\\t") == 0');
+
+	vrfy(ispunct("A") == 0,		'9029: ispunct("A") == 0');
+	vrfy(ispunct("a") == 0,		'9030: ispunct("a") == 0');
+	vrfy(ispunct(" ") == 0,		'9031: ispunct(" ") == 0');
+	vrfy(ispunct("?") == 1,		'9032: ispunct("?") == 1');
+
+	vrfy(isspace("A") == 0,		'9033: isspace("A") == 0');
+	vrfy(isspace("Krik") == 0,	'9034: isspace("Krik") == 0');
+	vrfy(isspace(" ") == 1,		'9035: isspace(" ") == 1');
+	vrfy(isspace("?") == 0,		'9036: isspace("?") == 0');
+
+	vrfy(isupper("A") == 1,		'9037: isupper("A") == 1');
+	vrfy(isupper("a") == 0,		'9038: isupper("a") == 0');
+	vrfy(isupper("1") == 0,		'9039: isupper("1") == 0');
+
+	vrfy(isxdigit("A") == 1,	'9040: isxdigit("A") == 1');
+	vrfy(isxdigit("f") == 1,	'9041: isxdigit("f") == 1');
+	vrfy(isxdigit("2") == 1,	'9042: isxdigit("2") == 1');
+	vrfy(isxdigit("x") == 0,	'9043: isxdigit("x") == 0');
+
+	vrfy(strcasecmp("ab", "aBc") == -1,
+			     '9044: strcasecmp("ab", "aBc") == -1');
+	vrfy(strcasecmp("abc", "aBb") == 1,
+			     '9045: strcasecmp("abc", "aBb") == 1');
+	vrfy(strcasecmp("abc", "abc") == 0,
+			     '9046: strcasecmp("abc", "abc") == 0');
+	vrfy(strcasecmp("abc", "aBc") == 0,
+			     '9047: strcasecmp("abc", "aBc") == 0');
+	vrfy(strcasecmp("abc", "aBd") == -1,
+			     '9048: strcasecmp("abc", "aBd") == -1');
+	vrfy(strcasecmp("abc\0", "aBc") == 1,
+			     '9049: strcasecmp("a8c\\0", "aBc") == 1');
+	vrfy(strcasecmp("a\0b", "A\0c") == -1,
+			     '9050: strcasecmp("a\\0b", "A\\0c") == -1');
+
+	vrfy(strncasecmp("abc", "xyz", 0) == 0,
+			     '9051: strncasecmp("abc", "xyz", 0) == 0');
+	vrfy(strncasecmp("abc", "xyz", 1) == -1,
+			     '9052: strncasecmp("abc", "xyz", 1) == -1');
+	vrfy(strncasecmp("abc", "", 1) == 1,
+			     '9053: strncasecmp("abc", "", 1) == 1');
+	vrfy(strncasecmp("a", "b", 2) == -1,
+			     '9054: strncasecmp("a", "b", 2) == -1');
+	vrfy(strncasecmp("ab", "Ac", 2) == -1,
+			     '9055: strncasecmp("ab", "Ac", 2) == -1');
+	vrfy(strncasecmp("\0ac", "\0b", 2) == -1,
+			     '9056: strncasecmp("\\0ac", "\\0b", 2) == -1');
+	vrfy(strncasecmp("ab", "aBc", 2) == 0,
+			     '9057: strncasecmp("ab", "aBc", 2) == 0');
+	vrfy(strncasecmp("abc", "abd", 2) == 0,
+			     '9058: strncasecmp("abc", "abd", 2) == 0');
+
+	local s1 = " gnu lesser general public license";
+	print '9059: local s1 = " gnu lesser general public license";';
+
+	vrfy(strcmp(strtolower(" GNU Lesser General Public License"), s1) == 0,
+	    '9060: strcmp(strtolower(" GNU Lesser General Public License"),' +
+	    ' s1) == 0');
+
+	local s2 = " GNU LESSER GENERAL PUBLIC LICENSE";
+	print '9061: local s2 = " GNU LESSER GENERAL PUBLIC LICENSE";';
+
+	vrfy(strcmp(strtoupper(" GNU Lesser General Public License"), s2) == 0,
+	    '9062: strcmp(strtoupper(" GNU Lesser General Public License"),' +
+	    ' s2) == 0');
+
+	print '9063: Ending test_functions2';
+}
+print;
+print '9000: parsed test_functions2()';
+print;
+return test_functions2();
 
 
 /*

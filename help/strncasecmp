@@ -1,0 +1,71 @@
+NAME
+    strncasecmp - compare two strings up to n characters, case independent
+
+SYNOPSIS
+    strncasecmp(s1, s2, n)
+
+TYPES
+    s1          string
+    s2          string
+    n           nonnegative integer
+
+    return      integer (1, 0 or -1)
+
+DESCRIPTION
+    Let n1 = size(s1), n2 = size(s2) and m = min(n1, n2, n).
+    This function compares up to m values of consecutive characters
+    in the strings s1 and s2. If an inequality is encountered, the
+    function returns 1 or -1 according as the greater character is
+    in s1 or s2. If there has been no inequality, the function
+    returns 1, 0, or -1 according as min(n1, n) is greater than, equal
+    to, or less than min(n2, n); in particular, if n1 and n2 are
+    both greater than equal to n, 0 is returned.
+    This function is case independent.
+
+
+EXAMPLE
+    strncasecmp("abc", "xyz", 0) == 0
+    strncasecmp("abc", "xyz", 1) == -1
+    strncasecmp("abc", "", 1) == 1
+    strncasecmp("a", "b", 2) == -1
+    strncasecmp("ab", "Ac", 2) == -1
+    strncasecmp("\0ac", "\0b", 2) == -1
+    strncasecmp("ab", "aBc", 2) == 0
+    strncasecmp("abc", "abd", 2) == 0
+
+LIMITS
+    none
+
+LINK LIBRARY
+    This function uses FLAG stringcaserel(STRING *s1, STRING *s2),
+    temporarily replacing the string sizes by min(n1,n) and min(n2,n).
+
+SEE ALSO
+    strcat, strcpy, strerror, strlen, strncpy, strpos, strcasecmp
+    strprintf, strscan, strscanf, substr
+
+## Copyright (C) 2013  Christoph Zurnieden
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+##
+## @(#) $Revision: 30.3 $
+## @(#) $Id: strncasecmp,v 30.3 2013/09/01 20:08:38 chongo Exp $
+## @(#) $Source: /usr/local/src/bin/calc/help/RCS/strncasecmp,v $
+##
+## Under source code control:	2013/09/01 20:04:02
+## File existed as early as:	2013
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

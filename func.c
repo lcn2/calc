@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.8 $
- * @(#) $Id: func.c,v 30.8 2013/09/01 22:11:07 chongo Exp $
+ * @(#) $Revision: 30.9 $
+ * @(#) $Id: func.c,v 30.9 2013/09/02 01:38:08 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -4258,6 +4258,39 @@ f_strncasecmp(VALUE *v1, VALUE *v2, VALUE *v3)
 	result.v_num = itoq((long) flag);
 	return result;
 }
+
+S_FUNC VALUE
+f_strtoupper(VALUE *vp)
+{
+        VALUE result;
+
+        /* initialize VALUE */
+        result.v_subtype = V_NOSUBTYPE;
+
+        if (vp->v_type != V_STR)
+                return error_value(E_STRTOUPPER);
+
+        result.v_str  = stringtoupper(vp->v_str);
+        result.v_type = V_STR;
+        return result;
+}
+
+S_FUNC VALUE
+f_strtolower(VALUE *vp)
+{
+        VALUE result;
+
+        /* initialize VALUE */
+        result.v_subtype = V_NOSUBTYPE;
+
+        if (vp->v_type != V_STR)
+                return error_value(E_STRTOLOWER);
+
+        result.v_str  = stringtolower(vp->v_str);
+        result.v_type = V_STR;
+        return result;
+}
+
 
 S_FUNC VALUE
 f_strcat(int count, VALUE **vals)
@@ -8969,6 +9002,10 @@ STATIC CONST struct builtin builtins[] = {
 	 "assign value to stoponerror flag"},
 	{"str", 1, 1, 0, OP_NOP, 0, f_str,
 	 "simple value converted to string"},
+        {"strtoupper", 1, 1, 0, OP_NOP, 0, f_strtoupper,
+         "Make string upper case"},
+        {"strtolower", 1, 1, 0, OP_NOP, 0, f_strtolower,
+         "Make string lower case"},
 	{"strcat", 1,IN, 0, OP_NOP, 0, f_strcat,
 	 "concatenate strings together"},
 	{"strcmp", 2, 2, 0, OP_NOP, 0, f_strcmp,
