@@ -39,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.59 $$
-# @(#) $Id: Makefile.ship,v 30.59 2013/09/01 23:02:02 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.60 $$
+# @(#) $Id: Makefile.ship,v 30.60 2013/09/27 08:55:27 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -997,7 +997,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.12
+VERSION= 2.12.4.13
 VERS= 2.12.4
 VER= 2.12
 VE= 2

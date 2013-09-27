@@ -72,6 +72,11 @@ The following are the changes from calc version 2.12.4.11 to date:
     The detaillist make target in help/Makefile is now
     called detail_help_list.
 
+    Removed requirement of gen_u0(h, n, v1) in lucas.cal that h
+    be odd.  While still lucas(h, n) converts even h into an odd h
+    internally by incrementing n, gen_u0(h, n, v1) will output even
+    when h is even.
+
 
 The following are the changes from calc version 2.12.4.6 to version 2.12.4.10:
 
@@ -6955,8 +6960,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.37 $
-## @(#) $Id: CHANGES,v 30.37 2013/09/02 02:31:57 chongo Exp $
+## @(#) $Revision: 30.38 $
+## @(#) $Id: CHANGES,v 30.38 2013/09/27 08:59:43 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
