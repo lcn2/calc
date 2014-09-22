@@ -1,7 +1,7 @@
 /*
  * jump - trivial prime jump table
  *
- * Copyright (C) 1999-2007  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: jump.h,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: jump.h,v 30.3 2014/08/24 21:56:51 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/jump.h,v $
  *
  * Under source code control:	1994/06/29 04:03:55
@@ -62,8 +62,8 @@
  */
 
 
-#if !defined(__JUMP_H__)
-#define __JUMP_H__
+#if !defined(INCLUDE_JUMP_H)
+#define INCLUDE_JUMP_H
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
@@ -107,4 +107,4 @@ EXTERN CONST short jmpindx[];
 EXTERN CONST unsigned char jmp[];
 EXTERN CONST unsigned char *CONST lastjmp;
 
-#endif /* !__JUMP_H__ */
+#endif /* !INCLUDE_JUMP_H */

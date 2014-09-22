@@ -1,7 +1,7 @@
 /*
  * block - fixed, dynamic, fifo and circular memory blocks
  *
- * Copyright (C) 1999-2007  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2014  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: block.h,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: block.h,v 30.3 2014/08/24 21:56:51 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/block.h,v $
  *
  * Under source code control:	1997/02/21 05:03:39
@@ -31,8 +31,8 @@
  */
 
 
-#if !defined(__BLOCK_H__)
-#define __BLOCK_H__
+#if !defined(INCLUDE_BLOCK_H)
+#define INCLUDE_BLOCK_H
 
 
 /*
@@ -222,4 +222,4 @@ E_FUNC int countnblocks(void);
 E_FUNC void shownblocks(void);
 
 
-#endif /* !__BLOCK_H__ */
+#endif /* !INCLUDE_BLOCK_H */

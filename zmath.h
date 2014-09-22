@@ -1,7 +1,7 @@
 /*
  * zmath - declarations for extended precision integer arithmetic
  *
- * Copyright (C) 1999-2007  David I. Bell
+ * Copyright (C) 1999-2007,2014  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: zmath.h,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.5 $
+ * @(#) $Id: zmath.h,v 30.5 2014/08/24 21:56:51 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/zmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -34,8 +34,8 @@
  */
 
 
-#if !defined(__ZMATH_H__)
-#define __ZMATH_H__
+#if !defined(INCLUDE_ZMATH_H)
+#define INCLUDE_ZMATH_H
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
@@ -669,4 +669,4 @@ typedef struct {
 } BITSTR;
 
 
-#endif /* !__ZMATH_H__*/
+#endif /* !INCLUDE_ZMATH_H*/

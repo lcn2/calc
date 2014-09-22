@@ -1,7 +1,7 @@
 /*
  * calc - definitions for calculator program
  *
- * Copyright (C) 1999-2007  David I. Bell
+ * Copyright (C) 1999-2007,2014  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: calc.h,v 30.4 2013/09/01 22:16:21 chongo Exp $
+ * @(#) $Revision: 30.6 $
+ * @(#) $Id: calc.h,v 30.6 2014/08/24 21:56:51 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/calc.h,v $
  *
  * Under source code control:	1990/02/15 01:48:31
@@ -28,8 +28,8 @@
  */
 
 
-#if !defined(__CALC_H__)
-#define __CALC_H__
+#if !defined(INCLUDE_CALC_H)
+#define INCLUDE_CALC_H
 
 #include <setjmp.h>
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
@@ -267,4 +267,4 @@ EXTERN char *Copyright;
 E_FUNC char *version(void);
 
 
-#endif /* !__CALC_H__ */
+#endif /* !INCLUDE_CALC_H */

@@ -3,12 +3,12 @@
  */
 
 
-#if !defined(__HAVE_UID_T_H__)
-#define __HAVE_UID_T_H__
+#if !defined(CALC_HAVE_UID_T_H)
+#define CALC_HAVE_UID_T_H
 
 
 /* do we have or want uid_t? */
 #undef HAVE_UID_T /* no */
 
 
-#endif /* !__HAVE_UID_T_H__ */
+#endif /* !CALC_HAVE_UID_T_H */

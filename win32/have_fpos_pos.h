@@ -3,8 +3,8 @@
  */
 
 
-#if !defined(__HAVE_FPOS_POS_H__)
-#define __HAVE_FPOS_POS_H__
+#if !defined(CALC_HAVE_FPOS_POS_H)
+#define CALC_HAVE_FPOS_POS_H
 
 
 /* do we have fgetpos & fsetpos functions? */
@@ -13,4 +13,4 @@
 #undef FPOS_POS_LEN
 
 
-#endif /* !__HAVE_FPOS_POS_H__ */
+#endif /* !CALC_HAVE_FPOS_POS_H */

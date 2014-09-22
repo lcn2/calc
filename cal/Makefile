@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.10 $
-# @(#) $Id: Makefile,v 30.10 2013/09/02 03:02:00 chongo Exp $
+# @(#) $Revision: 30.11 $
+# @(#) $Id: Makefile,v 30.11 2014/09/02 07:14:49 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
@@ -308,8 +308,8 @@ clobber: clean
 #
 install: all
 	-${Q} if [ ! -d ${T}${CALC_SHAREDIR} ]; then \
-	    echo ${MKDIR} ${T}${CALC_SHAREDIR}; \
-	    ${MKDIR} ${T}${CALC_SHAREDIR}; \
+	    echo ${MKDIR} -p ${T}${CALC_SHAREDIR}; \
+	    ${MKDIR} -p ${T}${CALC_SHAREDIR}; \
 	    if [ ! -d "${T}${CALC_SHAREDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
 		${MKDIR} -p "${T}${CALC_SHAREDIR}"; \

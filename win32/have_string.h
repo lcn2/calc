@@ -3,12 +3,12 @@
  */
 
 
-#if !defined(__HAVE_STRING_H__)
-#define __HAVE_STRING_H__
+#if !defined(CALC_HAVE_STRING_H)
+#define CALC_HAVE_STRING_H
 
 
 /* do we have <string.h>? */
 #define HAVE_STRING_H	/* yes */
 
 
-#endif /* !__HAVE_STRING_H__ */
+#endif /* !CALC_HAVE_STRING_H */

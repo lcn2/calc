@@ -277,7 +277,7 @@ Unexpected
     A single # is an calc operator, not a comment.  However two or more
     ##'s in a row is a comment.  See "help pound" for more information.
 
-    	#!/usr/local/src/cmd/calc/calc -q -f
+    	#!/usr/local/src/bin/calc/calc -q -f
 
 	/* a correct comment */
 	## another correct comment
@@ -289,7 +289,7 @@ Unexpected
 
     This next example is WRONG:
 
-    	#!/usr/local/src/cmd/calc/calc -q -f
+    	#!/usr/local/src/bin/calc/calc -q -f
 
 	# This is not a calc calc comment because it has only a single #
 	# You must to start comments with ## or /*
@@ -404,7 +404,7 @@ Unexpected
 	64
 
 
-## Copyright (C) 1999-2007  Landon Curt Noll
+## Copyright (C) 1999-2007,2014  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -420,8 +420,8 @@ Unexpected
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.4 $
-## @(#) $Id: unexpected,v 30.4 2008/05/10 13:18:09 chongo Exp $
+## @(#) $Revision: 30.6 $
+## @(#) $Id: unexpected,v 30.6 2014/08/24 21:59:45 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/help/RCS/unexpected,v $
 ##
 ## Under source code control:	1997/03/21 13:15:18

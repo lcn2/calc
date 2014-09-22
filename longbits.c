@@ -1,7 +1,7 @@
 /*
  * longbits - Determine the number if bits in a char, short, int or long
  *
- * Copyright (C) 1999-2007  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: longbits.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: longbits.c,v 30.3 2014/08/24 21:57:31 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/longbits.c,v $
  *
  * Under source code control:	1994/03/18 03:06:18

@@ -3,12 +3,12 @@
  */
 
 
-#if !defined(__HAVE_URANDOM_H__)
-#define __HAVE_URANDOM_H__
+#if !defined(CALC_HAVE_URANDOM_H)
+#define CALC_HAVE_URANDOM_H
 
 
 /* do we have /dev/urandom? */
 #undef HAVE_URANDOM_H  /* no */
 
 
-#endif /* !__HAVE_URANDOM_H__ */
+#endif /* !CALC_HAVE_URANDOM_H */

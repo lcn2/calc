@@ -1,7 +1,7 @@
 /*
  * qmath - extended precision rational arithmetic primitive routines
  *
- * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2014  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: qmath.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: qmath.c,v 30.4 2014/08/24 21:56:51 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/qmath.c,v $
  *
  * Under source code control:	1990/02/15 01:48:21
@@ -1312,7 +1312,7 @@ qcmp(NUMBER *q1, NUMBER *q2)
 	if (q1 == q2)
 		return FALSE;
 	if ((q1->num.sign != q2->num.sign) || (q1->num.len != q2->num.len) ||
-		(q2->den.len != q2->den.len) || (*q1->num.v != *q2->num.v) ||
+		(q1->den.len != q2->den.len) || (*q1->num.v != *q2->num.v) ||
 		(*q1->den.v != *q2->den.v))
 			return TRUE;
 	if (zcmp(q1->num, q2->num))

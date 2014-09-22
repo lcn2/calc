@@ -1,7 +1,7 @@
 /*
  * config - configuration routines
  *
- * Copyright (C) 1999-2007  Landon Curt Noll and David I. Bell
+ * Copyright (C) 1999-2007,2014  Landon Curt Noll and David I. Bell
  *
  * Primary author:  Landon Curt Noll
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: config.h,v 30.2 2007/09/21 01:27:27 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: config.h,v 30.4 2014/08/24 21:56:51 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/config.h,v $
  *
  * Under source code control:	1995/11/01 22:20:17
@@ -31,8 +31,8 @@
  */
 
 
-#if !defined(__CONFIG_H__)
-#define __CONFIG_H__
+#if !defined(INCLUDE_CONFIG_H)
+#define INCLUDE_CONFIG_H
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
@@ -226,4 +226,4 @@ E_FUNC void config_print(CONFIG*);
 E_FUNC BOOL config_cmp(CONFIG*, CONFIG*);
 
 
-#endif /* !__CONFIG_H__ */
+#endif /* !INCLUDE_CONFIG_H */

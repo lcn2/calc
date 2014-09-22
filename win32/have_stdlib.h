@@ -3,12 +3,12 @@
  */
 
 
-#if !defined(__HAVE_STDLIB_H__)
-#define __HAVE_STDLIB_H__
+#if !defined(CALC_HAVE_STDLIB_H)
+#define CALC_HAVE_STDLIB_H
 
 
 /* do we have <stdlib.h>? */
 #define HAVE_STDLIB_H	/* yes */
 
 
-#endif /* !__HAVE_STDLIB_H__ */
+#endif /* !CALC_HAVE_STDLIB_H */

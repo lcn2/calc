@@ -3,12 +3,12 @@
  */
 
 
-#if !defined(__HAVE_GETTIME_H__)
-#define __HAVE_GETTIME_H__
+#if !defined(CALC_HAVE_GETTIME_H)
+#define CALC_HAVE_GETTIME_H
 
 
 /* do we have or want clock_gettime()? */
 #undef HAVE_GETTIME /* no */
 
 
-#endif /* !__HAVE_GETTIME_H__ */
+#endif /* !CALC_HAVE_GETTIME_H */

@@ -3,8 +3,8 @@
  */
 
 
-#if !defined(__HAVE_FPOS_H__)
-#define __HAVE_FPOS_H__
+#if !defined(CALC_HAVE_FPOS_H)
+#define CALC_HAVE_FPOS_H
 
 
 /* do we have fgetpos & fsetpos functions? */
@@ -13,4 +13,4 @@
 typedef long FILEPOS;
 
 
-#endif /* !__HAVE_FPOS_H__ */
+#endif /* !CALC_HAVE_FPOS_H */

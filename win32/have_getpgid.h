@@ -3,12 +3,12 @@
  */
 
 
-#if !defined(__HAVE_GETPGID_H__)
-#define __HAVE_GETPGID_H__
+#if !defined(CALC_HAVE_GETPGID_H)
+#define CALC_HAVE_GETPGID_H
 
 
 /* do we have or want getpgid()? */
 #undef HAVE_GETPGID /* no */
 
 
-#endif /* !__HAVE_GETPGID_H__ */
+#endif /* !CALC_HAVE_GETPGID_H */

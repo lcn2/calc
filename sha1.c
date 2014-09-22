@@ -24,7 +24,7 @@
  *
  * @(#) $Revision: 30.4 $
  * @(#) $Id: sha1.c,v 30.4 2013/08/11 01:08:32 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/sha1.c,v $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/sha1.c,v $
  *
  * This file is not covered under version 2.1 of the GNU LGPL.
  */

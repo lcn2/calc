@@ -3,8 +3,8 @@
  */
 
 
-#if !defined(__HAVE_CONST_H__)
-#define __HAVE_CONST_H__
+#if !defined(CALC_HAVE_CONST_H)
+#define CALC_HAVE_CONST_H
 
 
 /* do we have or want const? */
@@ -13,4 +13,4 @@
 #define CONST const /* yes */
 
 
-#endif /* !__HAVE_CONST_H__ */
+#endif /* !CALC_HAVE_CONST_H */

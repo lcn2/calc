@@ -3,12 +3,12 @@
  */
 
 
-#if !defined(__HAVE_UNISTD_H__)
-#define __HAVE_UNISTD_H__
+#if !defined(CALC_HAVE_UNISTD_H)
+#define CALC_HAVE_UNISTD_H
 
 
 /* do we have <unistd.h>? */
 #undef HAVE_UNISTD_H  /* no */
 
 
-#endif /* !__HAVE_UNISTD_H__ */
+#endif /* !CALC_HAVE_UNISTD_H */

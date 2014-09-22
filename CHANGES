@@ -1,4 +1,87 @@
-The following are the changes from calc version 2.12.4.11 to date:
+The following are the changes from calc version 2.12.4.14 to date:
+
+    For Apple OS X / Darwin target:
+
+    	MACOSX_DEPLOYMENT_TARGET is no longer defined
+	using clang compiler
+
+	By default, -install-name is used when forming shared libs.
+	To force -install-name to not be used, set SET_INSTALL_NAME=no.
+
+    The have_stdvs.c test uses <stdlib.h> and fixed va_start() test call
+    that didn't use last arg.
+
+    Fixed math_fmt (printf) in value.c where a LEN (SB32) be printed as %d.
+
+    Fixed a significant bug where that resulted in an incorrect
+    complex number comparison.  Thanks goes to David Binderman
+    <dcb314 at hotmail dot com> for identifying the subtle typo!
+
+    Make minor fixes to the make depend rule.
+
+    Fixed places were calc defined a reserved identifier that
+    begin with either __ or _[A-Z].  For example, __FILE_H__ has
+    been replaced with INCLUDE_FILE_H.
+
+    Fixed the addall3 example in the script help file.  Thanks for this
+    fix goes to Igor Furlan <igor dot furlan at gmail dot com>.
+
+    We made important fixes to the calc command line history:
+
+	Fixed a bug in the command line history where calc would somtimes
+	crash.  There was code that used memcpy() instead of memmove()
+	that could corrupt the command line history when entering a
+	into into history that was similar to a previous entry.  Thanks
+	goes to Einar Lielmanis <einars at spicausis dot lv> for first
+	identifying this mistake.
+
+	The calc command line history code, in general was not robust.
+	We made use a patch from Mathias Buhr <napcode at users dot sf
+	dot net>, that while it uses a bit more memory: is much more
+	flexible, readable and robust.  This patch replaced the improer
+	use of memcpy() (see above) with better code.  Thanks!
+
+    The alg_config.cal calc resource file has been reworked to produce
+    better diagnostics while attempting to determine the ideal values
+    for mul2, sq2, and pow2.  However, it has been shown that this
+    code is not correct.  Suggestions for a replacement are welcome!
+
+   	calc -u 'read alg_config; config("user_debug", 2),; best_mul2();'
+   	calc -u 'read alg_config; config("user_debug", 2),; best_sq2();'
+   	calc -u 'read alg_config; config("user_debug", 2),; best_pow2();'
+
+    Fixed a number of pedantic compiler warnings.
+
+    Removed -W and -Wno-comment from the the CCWARN makefile variable.
+
+    Removed no_implicit.arg makefile rule.  Removed HAVE_NO_IMPLICIT
+    makefile variable.  Removed no_implicit.c source file.
+
+    Added WNO_IMPLICT makefile variable to hold the compiler flag
+    -Wno-implicit for use on selective compile lines.
+
+    Added WNO_ERROR_LONG_LONG makefile variable to hold the compiler flag
+    -Wno-error=long-long for use on selective compile lines.
+
+    Added WNO_LONG_LONG makefile variable to hold the compiler flag
+    -Wno-long-long for use on selective compile lines.
+
+    The makefile variable ${MKDIR_ARG} has been replaced with just -p.
+
+    Minor fixes were made to the calc.spec.in file.
+
+    The target rpm architecture changed from i686 to x86_64.  For those
+    who do not run machine with x86_64, we continue to release a src
+    rpm. For those without the ability to process an rpm, we will always
+    to release src tarball.
+
+    When building the libcalc and libcustcalc shared  libraries,
+    ONLY the .so and .so.${VERSION} files are created.  The .so is
+    a symlink to the .so.${VERSION} file.  Here ${VERSION} is the
+    full "w.x.y.z" calc version.
+
+
+The following are the changes from calc version 2.12.4.11 to 2.12.4.13:
 
     Fixed many typos in comments of the Makefile thanks to the review
     work of Michael Somos.
@@ -6960,8 +7043,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.38 $
-## @(#) $Id: CHANGES,v 30.38 2013/09/27 08:59:43 chongo Exp $
+## @(#) $Revision: 30.44 $
+## @(#) $Id: CHANGES,v 30.44 2014/09/22 03:40:07 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

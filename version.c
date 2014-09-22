@@ -1,7 +1,7 @@
 /*
  * version - determine the version of calc
  *
- * Copyright (C) 1999-2007  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2014  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.22 $
- * @(#) $Id: version.c,v 30.22 2013/09/27 08:59:43 chongo Exp $
+ * @(#) $Revision: 30.24 $
+ * @(#) $Id: version.c,v 30.24 2014/08/31 15:43:39 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
@@ -49,7 +49,7 @@ static char *program;
 #define MAJOR_VER	2	/* major library version */
 #define MINOR_VER	12	/* minor library version */
 #define MAJOR_PATCH	4	/* major software level under library version */
-#define MINOR_PATCH	13	/* minor software level or 0 if not patched */
+#define MINOR_PATCH	14	/* minor software level or 0 if not patched */
 
 
 /*
@@ -73,19 +73,20 @@ STATIC char *stored_version = NULL;	/* version formed if != NULL */
 char *Copyright = "\n"
   "calc - arbitrary precision calculator\n"
   "\n"
-  "@(#) Copyright (C) 2007  David I. Bell, Landon Curt Noll and Ernest Bowen\n"
+  "@(#) Copyright (C) 1999-2014  David I. Bell, Landon Curt Noll "
+  					   "and Ernest Bowen\n"
   "\n"
   "Initial author:  David I. Bell\n"
   "\n"
   "Calc is open software; you can redistribute it and/or modify it under\n"
   "the terms of the version 2.1 of the GNU Lesser General Public License\n"
-  "as published by the Free Software Foundation.\n"
-  "\n"
+  "as published by the Free Software Foundation.\n";
+char *Usability = "\n"
   "Calc is distributed in the hope that it will be useful, but WITHOUT\n"
   "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY\n"
   "or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General\n"
-  "Public License for more details.\n"
-  "\n"
+  "Public License for more details.\n";
+char *COPYING_LGPL = "\n"
   "A copy of version 2.1 of the GNU Lesser General Public License is\n"
   "distributed with calc under the filename COPYING-LGPL.  You should have\n"
   "received a copy with calc; if not, write to Free Software Foundation, Inc.\n"

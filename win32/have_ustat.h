@@ -3,12 +3,12 @@
  */
 
 
-#if !defined(__HAVE_USTAT_H__)
-#define __HAVE_USTAT_H__
+#if !defined(CALC_HAVE_USTAT_H)
+#define CALC_HAVE_USTAT_H
 
 
 /* do we have or want ustat()? */
 #undef HAVE_USTAT /* no */
 
 
-#endif /* !__HAVE_USTAT_H__ */
+#endif /* !CALC_HAVE_USTAT_H */

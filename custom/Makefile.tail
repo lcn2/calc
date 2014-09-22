@@ -177,8 +177,8 @@ depend:
 	fi
 	${Q} echo forming custom/skel
 	${Q} ${RM} -rf skel
-	${Q} ${MKDIR} skel
-	${Q} ${MKDIR} skel/custom
+	${Q} ${MKDIR} -p skel
+	${Q} ${MKDIR} -p skel/custom
 	-${Q} for i in ${C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		${SED} -n '/^#[	 ]*include[	 ]*"/p' \
@@ -289,11 +289,13 @@ clobber: clean
 	${RM} -f ${BLD_TYPE}
 	${RM} -f .all ${MAKE_FILE}.tmp ${MAKE_FILE}.bak
 	${RM} -f libcustcalc${LIB_EXT_VERSION}
+	${RM} -f libcustcalc${LIB_EXT}
+	${RM} -f libcustcalc.*.dylib
+	${RM} -f libcustcalc.a
+	${V} echo remove files that are obsolete
 	${RM} -f libcustcalc${LIB_EXT_VERS}
 	${RM} -f libcustcalc${LIB_EXT_VER}
 	${RM} -f libcustcalc${LIB_EXT_VE}
-	${RM} -f libcustcalc${LIB_EXT}
-	${RM} -f libcustcalc.a
 #if 0	/* start of skip for non-Gnu makefiles */
 	${RM} -f Makefile.simple
 #endif	/* end of skip for non-Gnu makefiles */
@@ -303,9 +305,21 @@ clobber: clean
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 install: all
+	-${Q} if [ ! -d ${T}${LIBDIR} ]; then \
+	    echo ${MKDIR} -p ${T}${LIBDIR}; \
+	    ${MKDIR} -p ${T}${LIBDIR}; \
+	    if [ ! -d "${T}${LIBDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${LIBDIR}"; \
+		${MKDIR} -p "${T}${LIBDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 ${T}${LIBDIR}; \
+	    ${CHMOD} 0755 ${T}${LIBDIR}; \
+	else \
+	    ${TRUE}; \
+	fi
 	-${Q} if [ ! -d ${T}${INCDIR} ]; then \
-	    echo ${MKDIR} ${T}${INCDIR}; \
-	    ${MKDIR} ${T}${INCDIR}; \
+	    echo ${MKDIR} -p ${T}${INCDIR}; \
+	    ${MKDIR} -p ${T}${INCDIR}; \
 	    if [ ! -d "${T}${INCDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${INCDIR}"; \
 		${MKDIR} -p "${T}${INCDIR}"; \
@@ -316,8 +330,8 @@ install: all
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CALC_SHAREDIR} ]; then \
-	    echo ${MKDIR} ${T}${CALC_SHAREDIR}; \
-	    ${MKDIR} ${T}${CALC_SHAREDIR}; \
+	    echo ${MKDIR} -p ${T}${CALC_SHAREDIR}; \
+	    ${MKDIR} -p ${T}${CALC_SHAREDIR}; \
 	    if [ ! -d "${T}${CALC_SHAREDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
 		${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
@@ -328,8 +342,8 @@ install: all
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CALC_INCDIR} ]; then \
-	    echo ${MKDIR} ${T}${CALC_INCDIR}; \
-	    ${MKDIR} ${T}${CALC_INCDIR}; \
+	    echo ${MKDIR} -p ${T}${CALC_INCDIR}; \
+	    ${MKDIR} -p ${T}${CALC_INCDIR}; \
 	    if [ ! -d "${T}${CALC_INCDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${CALC_INCDIR}"; \
 		${MKDIR} -p "${T}${CALC_INCDIR}"; \
@@ -340,8 +354,8 @@ install: all
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${HELPDIR} ]; then \
-	    echo ${MKDIR} ${T}${HELPDIR}; \
-	    ${MKDIR} ${T}${HELPDIR}; \
+	    echo ${MKDIR} -p ${T}${HELPDIR}; \
+	    ${MKDIR} -p ${T}${HELPDIR}; \
 	    if [ ! -d "${T}${HELPDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${HELPDIR}"; \
 		${MKDIR} -p "${T}${HELPDIR}"; \
@@ -352,8 +366,8 @@ install: all
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CUSTOMCALDIR} ]; then \
-	    echo ${MKDIR} ${T}${CUSTOMCALDIR}; \
-	    ${MKDIR} ${T}${CUSTOMCALDIR}; \
+	    echo ${MKDIR} -p ${T}${CUSTOMCALDIR}; \
+	    ${MKDIR} -p ${T}${CUSTOMCALDIR}; \
 	    if [ ! -d "${T}${CUSTOMCALDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${CUSTOMCALDIR}"; \
 		${MKDIR} -p "${T}${CUSTOMCALDIR}"; \
@@ -364,8 +378,8 @@ install: all
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CUSTOMHELPDIR} ]; then \
-	    echo ${MKDIR} ${T}${CUSTOMHELPDIR}; \
-	    ${MKDIR} ${T}${CUSTOMHELPDIR}; \
+	    echo ${MKDIR} -p ${T}${CUSTOMHELPDIR}; \
+	    ${MKDIR} -p ${T}${CUSTOMHELPDIR}; \
 	    if [ ! -d "${T}${CUSTOMHELPDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${CUSTOMHELPDIR}"; \
 		${MKDIR} -p "${T}${CUSTOMHELPDIR}"; \
@@ -376,8 +390,8 @@ install: all
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CUSTOMINCDIR} ]; then \
-	    echo ${MKDIR} ${T}${CUSTOMINCDIR}; \
-	    ${MKDIR} ${T}${CUSTOMINCDIR}; \
+	    echo ${MKDIR} -p ${T}${CUSTOMINCDIR}; \
+	    ${MKDIR} -p ${T}${CUSTOMINCDIR}; \
 	    if [ ! -d "${T}${CUSTOMINCDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${CUSTOMINCDIR}"; \
 		${MKDIR} -p "${T}${CUSTOMINCDIR}"; \

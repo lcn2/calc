@@ -3,12 +3,12 @@
  */
 
 
-#if !defined(__HAVE_NEWSTR_H__)
-#define __HAVE_NEWSTR_H__
+#if !defined(CALC_HAVE_NEWSTR_H)
+#define CALC_HAVE_NEWSTR_H
 
 
 /* do we have or want memcpy(), memset() & strchr()? */
 #define HAVE_NEWSTR /* yes */
 
 
-#endif /* !__HAVE_NEWSTR_H__ */
+#endif /* !CALC_HAVE_NEWSTR_H */

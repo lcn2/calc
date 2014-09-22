@@ -3,12 +3,12 @@
  */
 
 
-#if !defined(__HAVE_OFFSCL_H__)
-#define __HAVE_OFFSCL_H__
+#if !defined(CALC_HAVE_OFFSCL_H)
+#define CALC_HAVE_OFFSCL_H
 
 
 #undef HAVE_OFF_T_SCALAR
 #define HAVE_OFF_T_SCALAR /* off_t is a simple value */
 
 
-#endif /* !__HAVE_OFFSCL_H__ */
+#endif /* !CALC_HAVE_OFFSCL_H */

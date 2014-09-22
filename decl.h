@@ -1,7 +1,7 @@
 /*
  * decl - variable and function declaration macros
  *
- * Copyright (C) 2007  Landon Curt Noll
+ * Copyright (C) 2007,2014  Landon Curt Noll
  *
  * Primary author:  Landon Curt Noll
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: decl.h,v 30.4 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.6 $
+ * @(#) $Id: decl.h,v 30.6 2014/08/24 21:56:51 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/decl.h,v $
  *
  * Under source code control:	2007/02/09 05:24:25
@@ -33,8 +33,8 @@
 #include "have_const.h"
 
 
-#if !defined(__DECL_H__)
-#define __DECL_H__
+#if !defined(INCLUDE_DECL_H)
+#define INCLUDE_DECL_H
 
 
 /*
@@ -106,4 +106,4 @@
 # define PRINTF_FORMAT(fmt_idx, arg_idx)
 #endif
 
-#endif /* !__DECL_H__ */
+#endif /* !INCLUDE_DECL_H */

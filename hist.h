@@ -1,7 +1,7 @@
 /*
  * hist - definitions for command history module
  *
- * Copyright (C) 1999-2007  David I. Bell
+ * Copyright (C) 1999-2007,2014  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: hist.h,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: hist.h,v 30.3 2014/08/24 21:56:51 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/hist.h,v $
  *
  * Under source code control:	1993/05/02 20:09:20
@@ -28,8 +28,8 @@
  */
 
 
-#if !defined(__HIST_H__)
-#define __HIST_H__
+#if !defined(INCLUDE_HIST_H)
+#define INCLUDE_HIST_H
 
 
 /*
@@ -74,4 +74,4 @@ E_FUNC	size_t	hist_getline(char *prompt, char *buf, size_t len);
 E_FUNC	void	hist_saveline(char *line, int len);
 
 
-#endif /* !__HIST_H__ */
+#endif /* !INCLUDE_HIST_H */

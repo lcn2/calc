@@ -1,7 +1,7 @@
 /*
  * help - display help for calc
  *
- * Copyright (C) 1999-2007  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,9 +17,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: help.c,v 30.3 2013/08/11 01:08:32 chongo Exp $
- * @(#) $Source: /usr/local/src/cmd/calc/RCS/help.c,v $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: help.c,v 30.4 2014/08/24 21:57:31 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc/RCS/help.c,v $
  *
  * Under source code control:	1997/09/14 10:58:30
  * File existed as early as:	1997

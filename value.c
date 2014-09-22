@@ -1,7 +1,7 @@
 /*
  * value - generic value manipulation routines
  *
- * Copyright (C) 1999-2007  David I. Bell
+ * Copyright (C) 1999-2007,2014  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.5 $
- * @(#) $Id: value.c,v 30.5 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.8 $
+ * @(#) $Id: value.c,v 30.8 2014/08/31 15:43:39 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/value.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
@@ -2846,13 +2846,13 @@ printvalue(VALUE *vp, int flags)
 		math_fmt("o-ptr: %p", vp->v_octet);
 		break;
 	case V_VPTR:
-		math_fmt("v-ptr: %p", vp->v_addr);
+		math_fmt("v-ptr: %p", (void *)vp->v_addr);
 		break;
 	case V_SPTR:
-		math_fmt("s_ptr: %p", vp->v_str);
+		math_fmt("s_ptr: %p", (void *)vp->v_str);
 		break;
 	case V_NPTR:
-		math_fmt("n_ptr: %p", vp->v_num);
+		math_fmt("n_ptr: %p", (void *)vp->v_num);
 		break;
 	case V_NBLOCK:
 		if (!userfunc("nblk_print", vp))
@@ -2948,7 +2948,7 @@ printestr(VALUE *vp)
 				bp = vp->v_nblock->blk;
 			}
 			i = bp->datalen;
-			math_fmt("%ld,%ld)", i, bp->blkchunk);
+			math_fmt("%ld,%d)", i, bp->blkchunk);
 			cp = bp->data;
 			if (i > 0) {
 				math_str("={");

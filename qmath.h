@@ -1,7 +1,7 @@
 /*
  * qmath - declarations for extended precision rational arithmetic
  *
- * Copyright (C) 1999-2007  David I. Bell
+ * Copyright (C) 1999-2007,2014  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: qmath.h,v 30.4 2013/09/01 22:16:21 chongo Exp $
+ * @(#) $Revision: 30.6 $
+ * @(#) $Id: qmath.h,v 30.6 2014/08/24 21:56:51 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/qmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:47
@@ -28,8 +28,8 @@
  */
 
 
-#if !defined(__QMATH_H__)
-#define __QMATH_H__
+#if !defined(INCLUDE_QMATH_H)
+#define INCLUDE_QMATH_H
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
@@ -278,4 +278,4 @@ EXTERN NUMBER _qtwo_, _qthree_, _qfour_, _qten_;
 EXTERN NUMBER * initnumbs[];
 
 
-#endif /* !__QMATH_H__ */
+#endif /* !INCLUDE_QMATH_H */

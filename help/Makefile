@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.9 $
-# @(#) $Id: Makefile,v 30.9 2013/09/02 02:55:19 chongo Exp $
+# @(#) $Revision: 30.10 $
+# @(#) $Id: Makefile,v 30.10 2014/09/02 07:15:58 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
@@ -705,8 +705,8 @@ clobber: clean
 #
 install: all
 	-${Q} if [ ! -d ${T}${CALC_SHAREDIR} ]; then \
-	    echo ${MKDIR} ${T}${CALC_SHAREDIR}; \
-	    ${MKDIR} ${T}${CALC_SHAREDIR}; \
+	    echo ${MKDIR} -p ${T}${CALC_SHAREDIR}; \
+	    ${MKDIR} -p ${T}${CALC_SHAREDIR}; \
 	    if [ ! -d "${T}${CALC_SHAREDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
 		${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
@@ -717,8 +717,8 @@ install: all
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${HELPDIR} ]; then \
-	    echo ${MKDIR} ${T}${HELPDIR}; \
-	    ${MKDIR} ${T}${HELPDIR}; \
+	    echo ${MKDIR} -p ${T}${HELPDIR}; \
+	    ${MKDIR} -p ${T}${HELPDIR}; \
 	    if [ ! -d "${T}${HELPDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${HELPDIR}"; \
 		${MKDIR} -p "${T}${HELPDIR}"; \

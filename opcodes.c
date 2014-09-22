@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.5 $
- * @(#) $Id: opcodes.c,v 30.5 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.6 $
+ * @(#) $Id: opcodes.c,v 30.6 2014/08/31 14:54:50 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/opcodes.c,v $
  *
  * Under source code control:	1990/02/15 01:48:19
@@ -3936,7 +3936,7 @@ calculate(FUNC *fp, int argcount)
 		case OPGLB:	/* global symbol reference (pointer arg) */
 			/* ignore Saber-C warning #68 - benign type mismatch */
 			/*	  ok to ignore in proc calculate */
-			(*op->o_func)(fp, *((char **) &fp->f_opcodes[pc]));
+			(*op->o_func)(fp, *(&fp->f_opcodes[pc]));
 			pc += PTR_SIZE;
 			break;
 

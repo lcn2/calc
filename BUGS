@@ -68,6 +68,9 @@ of a context diff patch).
 
 Known bugs:
 
+    The output of the alg_config.cal resource file is bogus.
+    We would welcome a replacement for this code.
+
     We are sure some more bugs exist.  When you find them, please let
     us know!  See the above for details on how to report and were to
     EMail your bug reports and hopefully patches to fix them.
@@ -129,7 +132,7 @@ mis-features in calc:
 
       will not.
 
-## Copyright (C) 1999-2013  Landon Curt Noll
+## Copyright (C) 1999-2014  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -145,8 +148,8 @@ mis-features in calc:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.2 $
-## @(#) $Id: BUGS,v 30.2 2013/08/11 01:09:27 chongo Exp $
+## @(#) $Revision: 30.3 $
+## @(#) $Id: BUGS,v 30.3 2014/09/07 06:20:41 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13

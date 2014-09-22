@@ -2,7 +2,7 @@ NAME
     #
 
 SYNOPSIS
-    #!/usr/local/src/cmd/calc/calc -q -f
+    #!/usr/local/src/bin/calc/calc -q -f
     # x
     x # y
     ## comment
@@ -52,7 +52,7 @@ DESCRIPTION
 
     For example, of an executable file contains:
 
-    	#!/usr/local/src/cmd/calc/calc -q -f
+    	#!/usr/local/src/bin/calc/calc -q -f
 	/* NOTE: The #! above must start in column 1 of the 1st line */
 	/* 	 The 1st line must end with -f */
 	## Single # shell comments don't work, use two or more
@@ -100,7 +100,7 @@ LINK LIBRARY
 SEE ALSO
     cscript, unexpected, usage
 
-## Copyright (C) 2007  Landon Curt Noll
+## Copyright (C) 2007,2014  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -116,8 +116,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.1 $
-## @(#) $Id: pound,v 30.1 2007/03/16 11:10:42 chongo Exp $
+## @(#) $Revision: 30.4 $
+## @(#) $Id: pound,v 30.4 2014/08/24 21:59:45 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/help/RCS/pound,v $
 ##
 ## Under source code control:	2007/02/06 14:09

@@ -1,7 +1,7 @@
 /*
  * cmath - data structures for extended precision complex arithmetic
  *
- * Copyright (C) 1999-2007  David I. Bell
+ * Copyright (C) 1999-2007,2014  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: cmath.h,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: cmath.h,v 30.3 2014/08/24 21:56:51 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/cmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:45
@@ -28,8 +28,8 @@
  */
 
 
-#if !defined(__CMATH_H__)
-#define __CMATH_H__
+#if !defined(INCLUDE_CMATH_H)
+#define INCLUDE_CMATH_H
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
@@ -156,4 +156,4 @@ E_FUNC COMPLEX *swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all);
 EXTERN COMPLEX _czero_, _cone_, _conei_;
 
 
-#endif /* !__CMATH_H__ */
+#endif /* !INCLUDE_CMATH_H */

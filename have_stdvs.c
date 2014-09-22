@@ -1,7 +1,7 @@
 /*
  * have_stdvs - try <stdarg.h> to see if it really works with vsprintf()
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999,2014  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: have_stdvs.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: have_stdvs.c,v 30.4 2014/08/24 21:57:31 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/have_stdvs.c,v $
  *
  * Under source code control:	1995/09/09 22:41:10
@@ -56,6 +56,11 @@
 # include <string.h>
 #endif
 
+#include "have_stdlib.h"
+#ifdef HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+
 #undef VSPRINTF_SIZE_T
 #if defined(FORCE_STDC) || (defined(__STDC__) && __STDC__ != 0) || \
     defined(__cplusplus)
@@ -87,7 +92,7 @@ try_nthis(char *fmt, VSPRINTF_SIZE_T size, ...)
 {
 	va_list ap;
 
-	va_start(ap, fmt);
+	va_start(ap, size);
 #if !defined(DONT_HAVE_VSPRINTF)
 	vsnprintf(buf, size, fmt, ap);
 #else

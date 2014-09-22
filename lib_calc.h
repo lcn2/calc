@@ -1,7 +1,7 @@
 /*
  * math_error - a simple libcalc math error routine
  *
- * Copyright (C) 1999-2007  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: lib_calc.h,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: lib_calc.h,v 30.3 2014/08/24 21:56:51 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/lib_calc.h,v $
  *
  * Under source code control:	1997/03/23 18:37:10
@@ -29,8 +29,8 @@
  */
 
 
-#if !defined(__MATH_ERROR_H__)
-#define __MATH_ERROR_H__
+#if !defined(INCLUDE_MATH_ERROR_H)
+#define INCLUDE_MATH_ERROR_H
 
 #include <setjmp.h>
 
@@ -78,4 +78,4 @@ EXTERN int calc_print_scanwarn_msg;
 /* number of parse/scan warnings found */
 EXTERN unsigned long calc_warn_cnt;
 
-#endif /* !__MATH_ERROR_H__ */
+#endif /* !INCLUDE_MATH_ERROR_H */

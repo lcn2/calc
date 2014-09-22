@@ -7,7 +7,7 @@ be useful!
 
 Please note that calc shell scripts must start with the line:
 
-    #!/usr/local/src/cmd/calc/calc -q -f
+    #!/usr/local/src/bin/calc/calc -q -f
 
 The above line MUST start in column 1 of the first line.   The first line
 must also end in -f.  The -q is optional, but is recommended to disable
@@ -18,7 +18,7 @@ Comments must be /* c-like comment */ or start with a double ## symbol.
 
 This is the correct way to form a calc shell script:
 
-    #!/usr/local/src/cmd/calc/calc -q -f
+    #!/usr/local/src/bin/calc/calc -q -f
 
     /* a correct comment */
     ## another correct comment
@@ -36,7 +36,7 @@ For more informaton about calc command lines, see "help usage".
 
 This next example WRONG:
 
-    #!/usr/local/src/cmd/calc/calc -q
+    #!/usr/local/src/bin/calc/calc -q
 
     # This is not a calc calc comment because it has only a single #
     # You must to start comments with ## or /*
@@ -101,7 +101,7 @@ simple
 
     A trivial example of a calc shell script.
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2014  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -117,8 +117,8 @@ simple
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.1 $
-## @(#) $Id: README.src,v 30.1 2007/03/16 11:12:11 chongo Exp $
+## @(#) $Revision: 30.3 $
+## @(#) $Id: README.src,v 30.3 2014/08/24 22:04:32 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/cscript/RCS/README.src,v $
 ##
 ## Under source code control:	1999/12/17 10:23:40

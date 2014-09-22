@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: hist.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: hist.c,v 30.2 2014/08/24 23:57:57 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/hist.c,v $
  *
  * Under source code control:	1993/05/02 20:09:19
@@ -88,7 +88,7 @@ STATIC	struct {
 	char	*mark;
 	int	bufsize;
 	int	linelen;
-	int	histcount;
+	int	histcount;	/* valid history entries */
 	int	curhist;
 	BOOL	virgin_line;	/* 1 => never typed chars, 0 => chars typed */
 } HS;
@@ -199,29 +199,22 @@ STATIC KEY_MAP	maps[] = {
 	{esc_map_name, {NULL, NULL}, {NULL, NULL}},
 };
 
-
-#define INTROUND	(sizeof(int) - 1)
-#define HISTLEN(hp)	((((hp)->len + INTROUND) & ~INTROUND) + sizeof(int))
-#define HISTOFFSET(hp)	(((char *) (hp)) - histbuf)
-#define FIRSTHIST	((HIST *) histbuf)
-#define NEXTHIST(hp)	((HIST *) (((char *) (hp)) + HISTLEN(hp)))
-
-
-typedef struct {
-	int	len;		/* length of data */
-	char	data[1];	/* varying length data */
+typedef struct history_entry {
+    int	len;	/* length of data */
+    char *data;	/* varying length data */
+    struct history_entry* prev;
+    struct history_entry* next;
 } HIST;
-
 
 STATIC	int		inited;
 STATIC	int		canedit;
-STATIC	int		histused;
 STATIC	int		key_count;
 STATIC	int		save_len;
 STATIC	KEY_MAP		*cur_map;
 STATIC	KEY_MAP		*base_map;
 STATIC	KEY_ENT		key_table[MAX_KEYS];
-STATIC	char		histbuf[HIST_SIZE + 1];
+STATIC  HIST*    	hist_first = NULL;
+STATIC  HIST*   	hist_last = NULL;
 STATIC	char		save_buffer[SAVE_SIZE];
 
 /* declare other static functions */
@@ -398,6 +391,19 @@ hist_term(void)
 			printf("hist_term: Cleared inited\n");
 		return;
 	}
+
+	if (hist_first) {
+		HIST* hp = hist_first;
+		HIST* next;
+		while(hp) {
+			next = hp->next;
+			free(hp->data);
+			free(hp);
+			hp = next;
+		}
+	}
+	hist_first = NULL;
+	hist_last = NULL;
 
 	/*
 	 * restore orignal tty state
@@ -656,14 +662,18 @@ read_key(void)
 S_FUNC HIST *
 get_event(int n)
 {
-	register HIST * hp;
+	register HIST * hp = hist_first;
+	int i = 0;
 
-	if ((n < 0) || (n >= HS.histcount))
-		return NULL;
-	hp = FIRSTHIST;
-	while (n-- > 0)
-		hp = NEXTHIST(hp);
-	return hp;
+	do {
+		if(!hp)
+		    break;
+		if(i == n)
+		    return hp;
+		++i;
+		hp = hp->next;
+	} while(hp);
+	return NULL;
 }
 
 
@@ -674,11 +684,11 @@ get_event(int n)
 S_FUNC HIST *
 find_event(char *pat, int len)
 {
-	register HIST * hp;
+	register HIST * hp = hist_first;
 
-	for (hp = FIRSTHIST; hp->len; hp = NEXTHIST(hp)) {
-		if ((hp->len == len) && (memcmp(hp->data, pat, len) == 0))
-			return hp;
+	for(hp = hist_first; hp != NULL; hp = hp->next) {
+	    if ((hp->len == len) && (memcmp(hp->data, pat, len) == 0))
+		    return hp;
 	}
 	return NULL;
 }
@@ -694,8 +704,6 @@ void
 hist_saveline(char *line, int len)
 {
 	HIST *	hp;
-	HIST *	hp2;
-	int	left;
 
 	if ((len > 0) && (line[len - 1] == '\n'))
 		len--;
@@ -709,13 +717,17 @@ hist_saveline(char *line, int len)
 	 */
 	hp = find_event(line, len);
 	if (hp) {
-		hp2 = NEXTHIST(hp);
-		left = histused - HISTOFFSET(hp2);
-		if (left <= 0)
+		if (hp == hist_last)
 			return;
-		histused -= HISTLEN(hp);
-		memcpy(hp, hp2, left + 1);
-		HS.histcount--;
+		if (hp->prev)
+			hp->prev->next = hp->next;
+		hp->next->prev = hp->prev;
+
+		hist_last->next = hp;
+		hp->next = NULL;
+		hp->prev = hist_last;
+		hist_last = hp;
+		return;
 	}
 
 	/*
@@ -723,24 +735,34 @@ hist_saveline(char *line, int len)
 	 * the new command, then repeatedly delete the earliest command
 	 * as many times as necessary in order to make enough room.
 	 */
-	while ((histused + len) >= HIST_SIZE) {
-		hp = (HIST *) histbuf;
-		hp2 = NEXTHIST(hp);
-		left = histused - HISTOFFSET(hp2);
-		histused -= HISTLEN(hp);
-		memcpy(hp, hp2, left + 1);
+	if (HS.histcount >= HIST_SIZE) {
+		HIST *new_first = hist_first->next;
+		free(hist_first->data);
+		free(hist_first);
+		new_first->prev = NULL;
+		hist_first = new_first;
 		HS.histcount--;
 	}
 
 	/*
 	 * Add the line to the end of the history table.
 	 */
-	hp = (HIST *) &histbuf[histused];
+	hp = malloc(sizeof(HIST));
+	hp->next = NULL;
+	hp->prev = NULL;
 	hp->len = len;
+	hp->data = malloc(len);
 	memcpy(hp->data, line, len);
-	histused += HISTLEN(hp);
-	histbuf[histused] = 0;
 	HS.curhist = ++HS.histcount;
+	if (!hist_first)
+		hist_first = hp;
+	if (!hist_last)
+		hist_last = hp;
+	else {
+		hist_last->next = hp;
+		hp->prev = hist_last;
+		hist_last = hp;
+	}
 }
 
 

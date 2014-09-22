@@ -2,7 +2,7 @@
 #
 # custom - makefile for calc custom routines
 #
-# Copyright (C) 1999-2006  Landon Curt Noll
+# Copyright (C) 1999-2006,2014  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.31 $
-# @(#) $Id: Makefile.head,v 30.31 2013/09/27 08:55:28 chongo Exp $
+# @(#) $Revision: 30.35 $
+# @(#) $Id: Makefile.head,v 30.35 2014/09/21 14:09:18 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/custom/RCS/Makefile.head,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -337,20 +337,6 @@ CALC_ENV= CALCPATH=./cal
 ALLOW_CUSTOM= -DCUSTOM
 #ALLOW_CUSTOM=
 
-# The install rule uses:
-#
-#	${MKDIR} ${MKDIR_ARG}
-#
-# to create directorties.  Normall this amounts to usins mkdir -p dir ...
-# Some older systems may not have mkdir -p.  If you system does not
-# make mkdir -p, then set MKDIR_ARG to empty.
-#
-# MKDIR_ARG= -p			# use mkdir -p when creating paths
-# MKDIR_ARG=			# use if system does not understand mkdir -p
-#
-MKDIR_ARG= -p
-#MKDIR_ARG=
-
 # Some out of date operating systems require / want an executable to
 # end with a certain file extension.  Some compile systems such as
 # Cygwin build calc as calc.exe.  The EXT variable is used to denote
@@ -366,15 +352,18 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.13
-VERS= 2.12.4
-VER= 2.12
-VE= 2
+VERSION= 2.12.4.14
 
 # Names of shared libraries with versions
 #
 LIB_EXT= .so
 LIB_EXT_VERSION= ${LIB_EXT}.${VERSION}
+
+# legacy partial versions are no longer used, only removed
+#
+VERS= 2.12.4
+VER= 2.12
+VE= 2
 LIB_EXT_VERS= ${LIB_EXT}.${VERS}
 LIB_EXT_VER= ${LIB_EXT}.${VER}
 LIB_EXT_VE= ${LIB_EXT}.${VE}
@@ -489,6 +478,17 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 #
 # CCOPT are flags given to ${CC} for optimization
 # CCWARN are flags given to ${CC} for warning message control
+#
+# WNO_IMPLICT, WNO_ERROR_LONG_LONG and WNO_LONG_LONG are given to ${CC}
+#	when compiling special .o files that may need special compile options
+#	NOTE: These flags simply turn off certain compiler warnings,
+#	      which is useful only when CCWERR is set to -Werror.
+#	NOTE: If your compiler does not have these -Wno files, just
+#	      set these variables to nothing as in:
+#		WNO_IMPLICT=
+#		WNO_ERROR_LONG_LONG=
+#		WNO_LONG_LONG=
+#
 # CCWERR are flags given to ${CC} to make warnings fatal errors
 #	NOTE: CCWERR is only set in development Makefiles and must only be
 #	      used with ${CC}, not ${LCC}.  If you do not want the compiler
@@ -535,7 +535,10 @@ LD_STATIC=
 LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 #
-CCWARN= -Wall -W -Wno-comment
+CCWARN= -Wall
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
 CCWERR=
 CCOPT= ${DEBUG}
 CCMISC=
@@ -545,9 +548,9 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 endif
 
-#################################
-# Apple MacOS X / Darwin target #
-#################################
+##############################
+# Apple OS X / Darwin target #
+##############################
 
 ifeq ($(target),Darwin)
 #
@@ -556,9 +559,23 @@ BLD_TYPE= calc-dynamic-only
 CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:${LIBDIR}:/usr/local/lib
 LD_SHARE= ${DARWIN_ARCH}
-LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib
+#SET_INSTALL_NAME= no
+SET_INSTALL_NAME= yes
+ifeq ($(SET_INSTALL_NAME),yes)
+LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
+    -install_name ${LIBDIR}/libcalc${LIB_EXT_VERSION} ${DARWIN_ARCH}
+else
+LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
+    ${DARWIN_ARCH}
+endif
 ifdef ALLOW_CUSTOM
-LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib
+ifeq ($(SET_INSTALL_NAME),yes)
+LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
+    -install_name ${LIBDIR}/libcustcalc${LIB_EXT_VERSION} ${DARWIN_ARCH}
+else
+LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
+    ${DARWIN_ARCH}
+endif
 else
 LIBCUSTCALC_SHLIB=
 endif
@@ -568,17 +585,21 @@ LD_STATIC= ${DARWIN_ARCH}
 LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 #
-CCWARN= -Wall -W -Wno-comment
+CCWARN= -Wall
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
 CCWERR=
 CCOPT= ${DEBUG}
 CCMISC= ${DARWIN_ARCH}
 #
-LCC= MACOSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} gcc
+LCC= clang
 CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 # Darwin dynamic shared lib filenames
 LIB_EXT:= .dylib
 LIB_EXT_VERSION:= .${VERSION}${LIB_EXT}
+# legacy partial versions are no longer used, only removed
 LIB_EXT_VERS:= .${VERS}${LIB_EXT}
 LIB_EXT_VER:= .${VER}${LIB_EXT}
 LIB_EXT_VE:= .${VE}${LIB_EXT}
@@ -587,8 +608,8 @@ LDCONFIG:=
 # DARWIN_ARCH= -arch i386 -arch ppc	# Universal binary
 # DARWIN_ARCH= -arch i386		# Intel binary
 # DARWIN_ARCH= -arch ppc		# PPC binary
+# DARWIN_ARCH= -arch x86_64		# native 64-bit binary
 DARWIN_ARCH=				# native binary
-MACOSX_DEPLOYMENT_TARGET=10.8
 #
 endif
 
@@ -622,7 +643,10 @@ LD_STATIC=
 LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 #
-CCWARN= -Wall -W -Wno-comment
+CCWARN= -Wall
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
 CCWERR=
 CCOPT= ${DEBUG}
 CCMISC=
@@ -665,6 +689,9 @@ LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 #
 CCWARN= -Wall
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
 CCWERR=
 CCOPT= ${DEBUG}
 CCMISC=
@@ -680,7 +707,6 @@ endif
 # SunOS target #
 ################
 
-# XXX - this needs to be tested
 ifeq ($(target),SunOS)
 #
 BLD_TYPE= calc-dynamic-only
@@ -701,7 +727,10 @@ LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 LD_STATIC=
 #
-CCWARN= -Wall -W -Wno-comment
+CCWARN= -Wall
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
 CCWERR=
 CCOPT= ${DEBUG}
 CCMISC=
@@ -735,7 +764,10 @@ LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 LD_STATIC=
 #
-CCWARN= -Wall -W -Wno-comment
+CCWARN= -Wall
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
 CCWERR=
 CCOPT= ${DEBUG}
 CCMISC=
@@ -769,7 +801,10 @@ LD_STATIC=
 LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 #
-CCWARN= -Wall -W -Wno-comment
+CCWARN= -Wall
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
 CCWERR=
 CCOPT= ${DEBUG}
 CCMISC=
@@ -829,7 +864,10 @@ LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 LD_STATIC=
 #
-CCWARN= -Wall -W -Wno-comment
+CCWARN= -Wall
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
 CCWERR=
 CCOPT= ${DEBUG}
 CCMISC= -DNOTCYGWIN
@@ -866,7 +904,10 @@ LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 LD_STATIC=
 #
-CCWARN= -Wall -W -Wno-comment
+CCWARN= -Wall
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
 CCWERR=
 CCOPT= ${DEBUG}
 CCMISC=
@@ -1086,8 +1127,8 @@ depend:
 	fi
 	${Q} echo forming custom/skel
 	${Q} ${RM} -rf skel
-	${Q} ${MKDIR} skel
-	${Q} ${MKDIR} skel/custom
+	${Q} ${MKDIR} -p skel
+	${Q} ${MKDIR} -p skel/custom
 	-${Q} for i in ${C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		${SED} -n '/^#[	 ]*include[	 ]*"/p' \
@@ -1198,11 +1239,13 @@ clobber: clean
 	${RM} -f ${BLD_TYPE}
 	${RM} -f .all ${MAKE_FILE}.tmp ${MAKE_FILE}.bak
 	${RM} -f libcustcalc${LIB_EXT_VERSION}
+	${RM} -f libcustcalc${LIB_EXT}
+	${RM} -f libcustcalc.*.dylib
+	${RM} -f libcustcalc.a
+	${V} echo remove files that are obsolete
 	${RM} -f libcustcalc${LIB_EXT_VERS}
 	${RM} -f libcustcalc${LIB_EXT_VER}
 	${RM} -f libcustcalc${LIB_EXT_VE}
-	${RM} -f libcustcalc${LIB_EXT}
-	${RM} -f libcustcalc.a
 #if 0	/* start of skip for non-Gnu makefiles */
 	${RM} -f Makefile.simple
 #endif	/* end of skip for non-Gnu makefiles */
@@ -1212,9 +1255,21 @@ clobber: clean
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 install: all
+	-${Q} if [ ! -d ${T}${LIBDIR} ]; then \
+	    echo ${MKDIR} -p ${T}${LIBDIR}; \
+	    ${MKDIR} -p ${T}${LIBDIR}; \
+	    if [ ! -d "${T}${LIBDIR}" ]; then \
+		echo ${MKDIR} -p "${T}${LIBDIR}"; \
+		${MKDIR} -p "${T}${LIBDIR}"; \
+	    fi; \
+	    echo ${CHMOD} 0755 ${T}${LIBDIR}; \
+	    ${CHMOD} 0755 ${T}${LIBDIR}; \
+	else \
+	    ${TRUE}; \
+	fi
 	-${Q} if [ ! -d ${T}${INCDIR} ]; then \
-	    echo ${MKDIR} ${T}${INCDIR}; \
-	    ${MKDIR} ${T}${INCDIR}; \
+	    echo ${MKDIR} -p ${T}${INCDIR}; \
+	    ${MKDIR} -p ${T}${INCDIR}; \
 	    if [ ! -d "${T}${INCDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${INCDIR}"; \
 		${MKDIR} -p "${T}${INCDIR}"; \
@@ -1225,8 +1280,8 @@ install: all
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CALC_SHAREDIR} ]; then \
-	    echo ${MKDIR} ${T}${CALC_SHAREDIR}; \
-	    ${MKDIR} ${T}${CALC_SHAREDIR}; \
+	    echo ${MKDIR} -p ${T}${CALC_SHAREDIR}; \
+	    ${MKDIR} -p ${T}${CALC_SHAREDIR}; \
 	    if [ ! -d "${T}${CALC_SHAREDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
 		${MKDIR} -p "${T}${CALC_SHAREDIR}"; \
@@ -1237,8 +1292,8 @@ install: all
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CALC_INCDIR} ]; then \
-	    echo ${MKDIR} ${T}${CALC_INCDIR}; \
-	    ${MKDIR} ${T}${CALC_INCDIR}; \
+	    echo ${MKDIR} -p ${T}${CALC_INCDIR}; \
+	    ${MKDIR} -p ${T}${CALC_INCDIR}; \
 	    if [ ! -d "${T}${CALC_INCDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${CALC_INCDIR}"; \
 		${MKDIR} -p "${T}${CALC_INCDIR}"; \
@@ -1249,8 +1304,8 @@ install: all
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${HELPDIR} ]; then \
-	    echo ${MKDIR} ${T}${HELPDIR}; \
-	    ${MKDIR} ${T}${HELPDIR}; \
+	    echo ${MKDIR} -p ${T}${HELPDIR}; \
+	    ${MKDIR} -p ${T}${HELPDIR}; \
 	    if [ ! -d "${T}${HELPDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${HELPDIR}"; \
 		${MKDIR} -p "${T}${HELPDIR}"; \
@@ -1261,8 +1316,8 @@ install: all
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CUSTOMCALDIR} ]; then \
-	    echo ${MKDIR} ${T}${CUSTOMCALDIR}; \
-	    ${MKDIR} ${T}${CUSTOMCALDIR}; \
+	    echo ${MKDIR} -p ${T}${CUSTOMCALDIR}; \
+	    ${MKDIR} -p ${T}${CUSTOMCALDIR}; \
 	    if [ ! -d "${T}${CUSTOMCALDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${CUSTOMCALDIR}"; \
 		${MKDIR} -p "${T}${CUSTOMCALDIR}"; \
@@ -1273,8 +1328,8 @@ install: all
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CUSTOMHELPDIR} ]; then \
-	    echo ${MKDIR} ${T}${CUSTOMHELPDIR}; \
-	    ${MKDIR} ${T}${CUSTOMHELPDIR}; \
+	    echo ${MKDIR} -p ${T}${CUSTOMHELPDIR}; \
+	    ${MKDIR} -p ${T}${CUSTOMHELPDIR}; \
 	    if [ ! -d "${T}${CUSTOMHELPDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${CUSTOMHELPDIR}"; \
 		${MKDIR} -p "${T}${CUSTOMHELPDIR}"; \
@@ -1285,8 +1340,8 @@ install: all
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CUSTOMINCDIR} ]; then \
-	    echo ${MKDIR} ${T}${CUSTOMINCDIR}; \
-	    ${MKDIR} ${T}${CUSTOMINCDIR}; \
+	    echo ${MKDIR} -p ${T}${CUSTOMINCDIR}; \
+	    ${MKDIR} -p ${T}${CUSTOMINCDIR}; \
 	    if [ ! -d "${T}${CUSTOMINCDIR}" ]; then \
 		echo ${MKDIR} -p "${T}${CUSTOMINCDIR}"; \
 		${MKDIR} -p "${T}${CUSTOMINCDIR}"; \

@@ -3,7 +3,7 @@
 #
 # rpm.mk - Makefile for building rpm packages for calc
 #
-# Copyright (C) 2003  Petteri Kettunen and Landon Curt Noll
+# Copyright (C) 2003,2014  Petteri Kettunen and Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -19,8 +19,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-MAKEFILE_REV= $$Revision: 30.11 $$
-# @(#) $Id: rpm.mk,v 30.11 2013/08/11 08:41:38 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.15 $$
+# @(#) $Id: rpm.mk,v 30.15 2014/09/08 00:04:13 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/RCS/rpm.mk,v $
 #
 # Under source code control:	2003/02/16 20:21:39
@@ -35,21 +35,22 @@ MAKEFILE_REV= $$Revision: 30.11 $$
 # IMPORTANT NOTE: The rpm process assumes that ~/.rpmmacros contains
 #                 the following:
 #
+#	%_topdir	/var/tmp/rpmbuild
+#	%_tmppath	%{_topdir}/tmp
+#	%_builddir	%{_topdir}/BUILD
+#	%_rpmdir	%{_topdir}/RPMS
+#	%_sourcedir     %{_topdir}/SOURCES
+#	%_specdir	%{_topdir}/SPECS
+#	%_srcrpmdir	%{_topdir}/SRPMS
+#	%_buildroot	%{_topdir}/BUILDROOT
+#	%_rpmfilename	%%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
+#
+# If you are signing the rpms, you also need:
+#
 #	%_signature	gpg
 #	%_gpg_path	~/.gnupg
 #	%_gpg_name	__YOUR_NAME_HERE__
 #	%_gpgbin	/usr/bin/gpg
-#	%_topdir	%(echo $HOME)/rpm/%{name}
-#	%_sourcedir     %(echo $HOME)/rpm/%{name}/SOURCES
-#	%_specdir	%(echo $HOME)/rpm/%{name}/SPECS
-#	%_tmppath	%(echo $HOME)/rpm/%{name}/tmp
-#	%_builddir	%(echo $HOME)/rpm/%{name}/BUILD
-#	%_buildroot	%(echo $HOME)/rpm/%{name}/tmp/build-root
-#	%_rpmdir	%(echo $HOME)/rpm/%{name}/RPMS
-#	%_srcrpmdir	%(echo $HOME)/rpm/%{name}/SRPMS
-#	%_rpmfilename	%%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
-#	%packager	__YOUR_NAME_HERE__
-#	%vendor		__YOUR_ORG_OR_GROUP_OR_COMPANY_HERE__
 
 # IMPORTANT NOTE: Unless the package redhat-rpm-config is installed,
 #	 	  the calc-debuginfo rpm will not be created.
@@ -68,8 +69,8 @@ MAKEFILE_REV= $$Revision: 30.11 $$
 #
 SHELL= /bin/sh
 RPMBUILD_TOOL= rpmbuild
-TARCH= i686
-RPMBUILD_OPTION= -ba --target=$(TARCH)
+TARCH= x86_64
+RPMBUILD_OPTION= -ba --target=$(TARCH) --buildroot=${RPM_BUILD_ROOT}
 RPM_TOOL= rpm
 SED= sed
 FIND= find
@@ -95,11 +96,13 @@ PROJECT_RELEASE=
 PROJECT= ${PROJECT_NAME}-${PROJECT_VERSION}
 SPECFILE= ${PROJECT_NAME}.spec
 TARBALL= ${PROJECT}.${TAR}.bz2
-RPM686= ${PROJECT}-${PROJECT_RELEASE}.${TARCH}.rpm
-DRPM686= \
+RPMx86_64= ${PROJECT}-${PROJECT_RELEASE}.${TARCH}.rpm
+DRPMx86_64= \
   ${PROJECT_NAME}-devel-${PROJECT_VERSION}-${PROJECT_RELEASE}.${TARCH}.rpm
 SRPM= ${PROJECT}-${PROJECT_RELEASE}.src.rpm
-RPM_TOP= ${HOME}/rpm/${NAME}
+# NOTE: RPM_TOP must be the same as %_topdir in ~/.rpmmacros
+RPM_TOP= /var/tmp/rpmbuild
+RPM_BUILD_ROOT= ${RPM_TOP}/BUILDROOT
 TMPDIR= ${RPM_TOP}/tmp
 
 # Makefile debug
@@ -149,6 +152,7 @@ calc.spec: calc.spec.in ver_calc
 srcpkg: make_rhdir
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	${V} echo RPM_TOP="${RPM_TOP}"
+	${V} echo RPM_BUILD_ROOT="${RPM_BUILD_ROOT}"
 	${V} echo PROJECT_VERSION="${PROJECT_VERSION}"
 	${V} echo PROJECT_RELEASE="${PROJECT_RELEASE}"
 	${RM} -rf "$(TMPDIR)/$(PROJECT)"
@@ -171,12 +175,13 @@ srcpkg: make_rhdir
 rpm: srcpkg calc.spec
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	${V} echo RPM_TOP="${RPM_TOP}"
+	${V} echo RPM_BUILD_ROOT="${RPM_BUILD_ROOT}"
 	${V} echo PROJECT_VERSION="${PROJECT_VERSION}"
 	${V} echo PROJECT_RELEASE="${PROJECT_RELEASE}"
 	$(MAKE) -f Makefile clean
 	${CP} "$(SPECFILE)" "$(RPM_TOP)/SPECS/$(SPECFILE)"
-	${RM} -f "$(RPM_TOP)/RPMS/$(TARCH)/$(RPM686)"
-	${RM} -f "$(RPM_TOP)/RPMS/$(TARCH)/$(DRPM686)"
+	${RM} -f "$(RPM_TOP)/RPMS/$(TARCH)/$(RPMx86_64)"
+	${RM} -f "$(RPM_TOP)/RPMS/$(TARCH)/$(DRPMx86_64)"
 	${RM} -f "$(RPM_TOP)/SRPMS/$(SRPM)"
 	${RPMBUILD_TOOL} ${RPMBUILD_OPTION} "$(RPM_TOP)/SPECS/$(SPECFILE)"
 	@if [ ! -f "$(RPM_TOP)/SRPMS/$(SRPM)" ]; then \
@@ -190,6 +195,7 @@ rpm: srcpkg calc.spec
 make_rhdir:
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	${V} echo RPM_TOP="${RPM_TOP}"
+	${V} echo RPM_BUILD_ROOT="${RPM_BUILD_ROOT}"
 	${V} echo PROJECT_VERSION="${PROJECT_VERSION}"
 	${V} echo PROJECT_RELEASE="${PROJECT_RELEASE}"
 	for subdir in "" BUILD RPMS SOURCES SPECS SRPMS tmp; do \
@@ -243,8 +249,8 @@ logdate:
 .PHONY: chkpkg
 chkpkg:
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
-	for i in "$(RPM_TOP)/RPMS/$(TARCH)/$(RPM686)" \
-		 "$(RPM_TOP)/RPMS/$(TARCH)/$(DRPM686)" \
+	for i in "$(RPM_TOP)/RPMS/$(TARCH)/$(RPMx86_64)" \
+		 "$(RPM_TOP)/RPMS/$(TARCH)/$(DRPMx86_64)" \
 	  	 "$(RPM_TOP)/SRPMS/$(SRPM)" ; do \
 	    echo "***** start $$i" ; \
 	    ${RPM_TOOL} -qpi "$$"i ; \
@@ -278,8 +284,8 @@ installrpm:
 	    echo "must be root to install RPMs" 1>&2; \
 	    exit 7; \
 	fi
-	${RPM_TOOL} -ivh "$(RPM_TOP)/RPMS/$(TARCH)/$(RPM686)"
-	${RPM_TOOL} -ivh "$(RPM_TOP)/RPMS/$(TARCH)/$(DRPM686)"
+	${RPM_TOOL} -ivh "$(RPM_TOP)/RPMS/$(TARCH)/$(RPMx86_64)"
+	${RPM_TOOL} -ivh "$(RPM_TOP)/RPMS/$(TARCH)/$(DRPMx86_64)"
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: uninstallrpm

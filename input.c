@@ -1,7 +1,7 @@
 /*
  * input - nested input source file reader
  *
- * Copyright (C) 1999-2007  David I. Bell
+ * Copyright (C) 1999-2007,2014  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: input.c,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.6 $
+ * @(#) $Id: input.c,v 30.6 2014/08/31 14:54:50 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/input.c,v $
  *
  * Under source code control:	1990/02/15 01:48:16
@@ -51,7 +51,7 @@
 #if defined(__MSDOS__)
 #include <limits.h>
 #define _fullpath(f,n,s) (_fixpath(n,f),f)
-#define _MAX_PATH PATH_MAX
+#define MSDOS_MAX_PATH PATH_MAX
 #endif
 
 #include "calc.h"
@@ -815,6 +815,7 @@ ttychar(void)
 	 */
 	if (charbuf[0] == '!') {		/* do a shell command */
 		char *cmd;
+		int ret;
 
 		cmd = charbuf + 1;
 		if (*cmd == '\0' || *cmd == '\n')
@@ -823,7 +824,10 @@ ttychar(void)
 			if (conf->calc_debug & CALCDBG_SYSTEM) {
 				printf("%s\n", cmd);
 			}
-			system(cmd);
+			ret = system(cmd);
+			if (ret < 0) {
+				fprintf(stderr, "error in cmd: %s\n", cmd);
+			}
 		} else {
 			fprintf(stderr, "execution disallowed by -m flag\n");
 		}
@@ -977,9 +981,9 @@ isinoderead(struct stat *sbuf)
 	/* scan the entire readset */
 	for (i=0; i < maxreadset; ++i) {
 #if defined(_WIN32) || defined(__MSDOS__)
-		char tmp[_MAX_PATH+1];
-		tmp[_MAX_PATH] = '\0';
-		if (_fullpath(tmp, cip->i_name, _MAX_PATH) &&
+		char tmp[MSDOS_MAX_PATH+1];
+		tmp[MSDOS_MAX_PATH] = '\0';
+		if (_fullpath(tmp, cip->i_name, MSDOS_MAX_PATH) &&
 		    readset[i].active &&
 		    strcasecmp(readset[i].path, tmp) == 0) {
 			/* found a match */
@@ -1110,7 +1114,7 @@ addreadset(char *name, char *path, struct stat *sbuf)
 	 * this new longer path name.
 	 */
  	 {
-		readset[ret].path = _fullpath(NULL, path, _MAX_PATH);
+		readset[ret].path = _fullpath(NULL, path, MSDOS_MAX_PATH);
 		if (readset[ret].path == NULL) {
 			return -1;
 		}

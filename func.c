@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.9 $
- * @(#) $Id: func.c,v 30.9 2013/09/02 01:38:08 chongo Exp $
+ * @(#) $Revision: 30.10 $
+ * @(#) $Id: func.c,v 30.10 2014/08/31 14:54:50 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -1241,10 +1241,11 @@ f_primetest(int count, NUMBER **vals)
 {
 	/* parse args */
 	switch (count) {
-	case 1: return itoq((long) qprimetest(vals[0],
-			    qlink(&_qone_), qlink(&_qone_)));
-	case 2: return itoq((long) qprimetest(vals[0],
-			    vals[1], qlink(&_qone_)));
+	case 1: qlink(&_qone_);
+		qlink(&_qone_);
+		return itoq((long) qprimetest(vals[0], &_qone_, &_qone_));
+	case 2: qlink(&_qone_);
+		return itoq((long) qprimetest(vals[0], vals[1], &_qone_));
 	default: return itoq((long) qprimetest(vals[0], vals[1], vals[2]));
 	}
 }
@@ -8248,6 +8249,10 @@ f_blkcpy(int count, VALUE **vals)
 	 */
 	args[0] = vals[1];
 	args[1] = vals[0];
+	null_value.v_type = V_NULL;
+	args[2] = &null_value;
+	args[3] = &null_value;
+	args[4] = &null_value;
 	switch(count) {
 	case 5:
 		args[2] = vals[4];
@@ -8258,14 +8263,10 @@ f_blkcpy(int count, VALUE **vals)
 		count = 5;
 		args[4] = vals[3];
 		args[3] = vals[2];
-		null_value.v_type = V_NULL;
-		args[2] = &null_value;
 		break;
 	case 3:
 		count = 4;
 		args[3] = vals[2];
-		null_value.v_type = V_NULL;
-		args[2] = &null_value;
 		break;
 	}
 

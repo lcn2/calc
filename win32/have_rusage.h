@@ -3,12 +3,12 @@
  */
 
 
-#if !defined(__HAVE_RUSAGE_H__)
-#define __HAVE_RUSAGE_H__
+#if !defined(CALC_HAVE_RUSAGE_H)
+#define CALC_HAVE_RUSAGE_H
 
 
 /* do we have or want getrusage()? */
 #undef HAVE_GETRUSAGE /* no */
 
 
-#endif /* !__HAVE_RUSAGE_H__ */
+#endif /* !CALC_HAVE_RUSAGE_H */

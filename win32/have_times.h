@@ -3,8 +3,8 @@
  */
 
 
-#if !defined(__HAVE_TIMES_H__)
-#define __HAVE_TIMES_H__
+#if !defined(CALC_HAVE_TIMES_H)
+#define CALC_HAVE_TIMES_H
 
 
 /* do we have <times.h>? */
@@ -14,4 +14,4 @@
 #undef HAVE_SYS_TIME_H  /* no */
 
 
-#endif /* !__HAVE_TIMES_H__ */
+#endif /* !CALC_HAVE_TIMES_H */

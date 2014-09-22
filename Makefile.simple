@@ -23,7 +23,7 @@
 #	 READLINE_LIB= -lreadline
 #	 READLINE_EXTRAS= -lhistory -lncurses
 #
-# Copyright (C) 1999-2008  Landon Curt Noll
+# Copyright (C) 1999-2014  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of version 2.1 of the GNU Lesser General Public License
@@ -39,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.60 $$
-# @(#) $Id: Makefile.ship,v 30.60 2013/09/27 08:55:27 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.75 $$
+# @(#) $Id: Makefile.ship,v 30.75 2014/09/21 14:09:18 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -530,18 +530,6 @@ HAVE_UNISTD_H=
 #HAVE_UNISTD_H= YES
 #HAVE_UNISTD_H= NO
 
-# Determine if our compiler allows the -Wno-implicit flag
-#
-#    HAVE_NO_IMPLICIT=		let the Makefile test the -Wno-implicit flag
-#    HAVE_NO_IMPLICIT= NO	Our compiler does not have -Wno-implicit flags
-#    HAVE_NO_IMPLICIT= YES	Our compiler has a -Wno-implicit flag
-#
-# Select HAVE_NO_IMPLICIT= for DJGPP.
-#
-HAVE_NO_IMPLICIT=
-# HAVE_NO_IMPLICIT= NO
-# HAVE_NO_IMPLICIT= YES
-
 # Determine if our compiler allows the unused attribute
 #
 # If HAVE_UNUSED is empty, this Makefile will run the have_unused program
@@ -934,29 +922,19 @@ LD_DEBUG=
 # are useful for SGI IRIX people who have 'WorkShop Performance Tools'
 # and who also set 'LD_DEBUG= -lmalloc_cv' above.
 #
-# If in doubt, use CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=.:./custom
+# If in doubt, use:
 #
-CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=.
-#CALC_ENV= CALCPATH=./cal MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
+#	CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=.:./custom DYLD_LIBRARY_PATH=.
+#
+CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=.
+#CALC_ENV= CALCPATH=./cal DYLD_LIBRARY_PATH=. \
+#	  MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
 #	  MALLOC_FASTCHK=1 MALLOC_FULLWARN=1 LD_LIBRARY_PATH=.:./custom
-#CALC_ENV= CALCPATH=./cal MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
+#CALC_ENV= CALCPATH=./cal DYLD_LIBRARY_PATH=. \
+#	  MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
 #	  MALLOC_FASTCHK=1 MALLOC_FULLWARN=1 MALLOC_CLEAR_FREE=1 \
 #	  MALLOC_CLEAR_MALLOC=1 LD_LIBRARY_PATH=.:./custom
 
-
-# The install rule uses:
-#
-#	${MKDIR} ${MKDIR_ARG}
-#
-# to create directories.  Normally this amounts to using mkdir -p dir ...
-# Some older systems may not have mkdir -p.  If your system does not
-# have mkdir -p, then set MKDIR_ARG to empty.
-#
-# MKDIR_ARG= -p			# use mkdir -p when creating paths
-# MKDIR_ARG=			# use if system does not understand mkdir -p
-#
-MKDIR_ARG= -p
-#MKDIR_ARG=
 
 # Some out of date operating systems require/want an executable to
 # end with a certain file extension.  Some compiler systems such as
@@ -974,15 +952,18 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.13
-VERS= 2.12.4
-VER= 2.12
-VE= 2
+VERSION= 2.12.4.14
 
 # Names of shared libraries with versions
 #
 LIB_EXT= .so
 LIB_EXT_VERSION= ${LIB_EXT}.${VERSION}
+
+# legacy partial versions are no longer used, only removed
+#
+VERS= 2.12.4
+VER= 2.12
+VE= 2
 LIB_EXT_VERS= ${LIB_EXT}.${VERS}
 LIB_EXT_VER= ${LIB_EXT}.${VER}
 LIB_EXT_VE= ${LIB_EXT}.${VE}
@@ -1082,6 +1063,17 @@ COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
 #
 # CCOPT are flags given to ${CC} for optimization
 # CCWARN are flags given to ${CC} for warning message control
+#
+# WNO_IMPLICT, WNO_ERROR_LONG_LONG and WNO_LONG_LONG are given to ${CC}
+#	when compiling special .o files that may need special compile options
+#	NOTE: These flags simply turn off certain compiler warnings,
+#	      which is useful only when CCWERR is set to -Werror.
+#	NOTE: If your compiler does not have these -Wno files, just
+#	      set these variables to nothing as in:
+#		WNO_IMPLICT=
+#		WNO_ERROR_LONG_LONG=
+#		WNO_LONG_LONG=
+#
 # CCWERR are flags given to ${CC} to make warnings fatal errors
 #	NOTE: CCWERR is only set in development Makefiles and must only be
 #	      used with ${CC}, not ${LCC}.  If you do not want the compiler
@@ -1118,7 +1110,10 @@ LD_STATIC=
 LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 #
-CCWARN= -Wall -W -Wno-comment
+CCWARN= -Wall
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
 CCWERR=
 CCOPT= ${DEBUG}
 CCMISC=
@@ -1234,7 +1229,7 @@ UTIL_C_SRC= align32.c endian.c longbits.c have_newstr.c have_uid_t.c \
 	have_fpos_pos.c have_offscl.c have_posscl.c have_memmv.c \
 	have_ustat.c have_getsid.c have_getpgid.c \
 	have_gettime.c have_getprid.c have_rusage.c have_strdup.c \
-	no_implicit.c have_unused.c
+	have_unused.c
 
 # these awk and sed tools are used in the process of building BUILD_H_SRC
 # and BUILD_C_SRC
@@ -1251,7 +1246,7 @@ UTIL_OBJS= endian.o longbits.o have_newstr.o have_uid_t.o \
 	try_strarg.o have_stdvs.o have_varvs.o have_posscl.o have_memmv.o \
 	have_ustat.o have_getsid.o have_getpgid.o \
 	have_gettime.o have_getprid.o ver_calc.o have_rusage.o have_strdup.o \
-	no_implicit.o have_unused.o
+	have_unused.o
 
 # these temp files may be created (and removed) during the build of BUILD_C_SRC
 #
@@ -1266,14 +1261,14 @@ UTIL_PROGS= align32${EXT} fposval${EXT} have_uid_t${EXT} have_const${EXT} \
 	endian${EXT} longbits${EXT} have_newstr${EXT} have_stdvs${EXT} \
 	have_varvs${EXT} have_ustat${EXT} have_getsid${EXT} \
 	have_getpgid${EXT} have_gettime${EXT} have_getprid${EXT} \
-	ver_calc${EXT} have_strdup${EXT} no_implicit${EXT} \
+	ver_calc${EXT} have_strdup${EXT} \
 	have_unused${EXT} have_fpos${EXT} have_fpos_pos${EXT} \
 	have_offscl${EXT} have_rusage${EXT}
 
 # these utility files and scripts may be created in the process of building
 # the BUILD_H_SRC file set
 #
-UTIL_FILES= no_implicit.arg have_args.sh
+UTIL_FILES= have_args.sh
 
 # Any .h files that are needed to compile sample code.
 #
@@ -1352,6 +1347,9 @@ CUSTOM_PASSDOWN=  \
     TOUCH=${TOUCH} \
     TRUE=${TRUE} \
     VERSION=${VERSION} \
+    VERS=${VERS} \
+    VER=${VER} \
+    VE=${VE} \
     target=${target}
 
 # The complete list of Makefile vars passed down to help/Makefile.
@@ -1487,10 +1485,8 @@ CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERSION} libcustcalc${LIB_EXT_VERSION}
 
 # Symlinks of dynamic shared libraries
 #
-SYM_DYNAMIC_LIBS= libcalc${LIB_EXT_VER} libcalc${LIB_EXT_VE} libcalc${LIB_EXT} \
-	libcalc${LIB_EXT_VERS} libcustcalc${LIB_EXT_VERSION} \
-	libcustcalc${LIB_EXT_VERS} libcustcalc${LIB_EXT_VER} \
-	libcustcalc${LIB_EXT_VE} libcustcalc${LIB_EXT}
+SYM_DYNAMIC_LIBS= libcalc${LIB_EXT} \
+	libcustcalc${LIB_EXT_VERSION}  libcustcalc${LIB_EXT}
 
 # list of sample programs that need to be built to satisfy sample rule
 #
@@ -1637,18 +1633,6 @@ libcalc${LIB_EXT_VERSION}: ${LIBOBJS} ver_calc${EXT} ${MAKE_FILE}
 	${CC} ${LIBCALC_SHLIB} ${LIBOBJS} \
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o libcalc${LIB_EXT_VERSION}
 
-libcalc${LIB_EXT_VERS}: libcalc${LIB_EXT_VERSION}
-	${Q} ${RM} -f $@
-	${LN} -s $? $@
-
-libcalc${LIB_EXT_VER}: libcalc${LIB_EXT_VERSION}
-	${Q} ${RM} -f $@
-	${LN} -s $? $@
-
-libcalc${LIB_EXT_VE}: libcalc${LIB_EXT_VERSION}
-	${Q} ${RM} -f $@
-	${LN} -s $? $@
-
 libcalc${LIB_EXT}: libcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${LN} -s $? $@
@@ -1702,7 +1686,7 @@ sample_many${EXT}: sample_many.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
 
 ###
 #
-# Special .o files
+# Special .o files that may need special compile options
 #
 ###
 
@@ -1710,8 +1694,12 @@ hist.o: hist.c ${MAKE_FILE}
 	${CC} ${CFLAGS} ${TERMCONTROL} ${USE_READLINE} ${READLINE_INCLUDE} \
 	    -c hist.c
 
-seed.o: seed.c no_implicit.arg ${MAKE_FILE}
-	${CC} ${CFLAGS} `${CAT} no_implicit.arg` -c seed.c
+seed.o: seed.c ${MAKE_FILE}
+	${CC} ${CFLAGS} ${WNO_IMPLICT} ${WNO_ERROR_LONG_LONG} \
+	    ${WNO_LONG_LONG} -c seed.c
+
+file.o: file.c ${MAKE_FILE}
+	${CC} ${CFLAGS} ${WNO_ERROR_LONG_LONG} ${WNO_LONG_LONG} -c file.c
 
 ###
 #
@@ -1872,8 +1860,8 @@ have_times.h: ${MAKE_FILE}
 	${Q} echo ' */' >> have_times.h
 	${Q} echo '' >> have_times.h
 	${Q} echo '' >> have_times.h
-	${Q} echo '#if !defined(__HAVE_TIMES_H__)' >> have_times.h
-	${Q} echo '#define __HAVE_TIMES_H__' >> have_times.h
+	${Q} echo '#if !defined(CALC_HAVE_TIMES_H)' >> have_times.h
+	${Q} echo '#define CALC_HAVE_TIMES_H' >> have_times.h
 	${Q} echo '' >> have_times.h
 	${Q} echo '' >> have_times.h
 	${Q} echo '/* do we have <times.h>? */' >> have_times.h
@@ -1923,7 +1911,7 @@ have_times.h: ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_times.h
 	${Q} echo '' >> have_times.h
-	${Q} echo '#endif /* !__HAVE_TIMES_H__ */' >> have_times.h
+	${Q} echo '#endif /* !CALC_HAVE_TIMES_H */' >> have_times.h
 	${Q} echo 'have_times.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -1943,8 +1931,8 @@ have_stdlib.h: ${MAKE_FILE}
 	${Q} echo ' */' >> have_stdlib.h
 	${Q} echo '' >> have_stdlib.h
 	${Q} echo '' >> have_stdlib.h
-	${Q} echo '#if !defined(__HAVE_STDLIB_H__)' >> have_stdlib.h
-	${Q} echo '#define __HAVE_STDLIB_H__' >> have_stdlib.h
+	${Q} echo '#if !defined(CALC_HAVE_STDLIB_H)' >> have_stdlib.h
+	${Q} echo '#define CALC_HAVE_STDLIB_H' >> have_stdlib.h
 	${Q} echo '' >> have_stdlib.h
 	${Q} echo '' >> have_stdlib.h
 	${Q} echo '/* do we have <stdlib.h>? */' >> have_stdlib.h
@@ -1961,7 +1949,7 @@ have_stdlib.h: ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_stdlib.h
 	${Q} echo '' >> have_stdlib.h
-	${Q} echo '#endif /* !__HAVE_STDLIB_H__ */' >> have_stdlib.h
+	${Q} echo '#endif /* !CALC_HAVE_STDLIB_H */' >> have_stdlib.h
 	${Q} echo 'have_stdlib.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -1981,8 +1969,8 @@ have_unistd.h: ${MAKE_FILE}
 	${Q} echo ' */' >> have_unistd.h
 	${Q} echo '' >> have_unistd.h
 	${Q} echo '' >> have_unistd.h
-	${Q} echo '#if !defined(__HAVE_UNISTD_H__)' >> have_unistd.h
-	${Q} echo '#define __HAVE_UNISTD_H__' >> have_unistd.h
+	${Q} echo '#if !defined(CALC_HAVE_UNISTD_H)' >> have_unistd.h
+	${Q} echo '#define CALC_HAVE_UNISTD_H' >> have_unistd.h
 	${Q} echo '' >> have_unistd.h
 	${Q} echo '' >> have_unistd.h
 	${Q} echo '/* do we have <unistd.h>? */' >> have_unistd.h
@@ -1999,7 +1987,7 @@ have_unistd.h: ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_unistd.h
 	${Q} echo '' >> have_unistd.h
-	${Q} echo '#endif /* !__HAVE_UNISTD_H__ */' >> have_unistd.h
+	${Q} echo '#endif /* !CALC_HAVE_UNISTD_H */' >> have_unistd.h
 	${Q} echo 'have_unistd.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2019,8 +2007,8 @@ have_string.h: ${MAKE_FILE}
 	${Q} echo ' */' >> have_string.h
 	${Q} echo '' >> have_string.h
 	${Q} echo '' >> have_string.h
-	${Q} echo '#if !defined(__HAVE_STRING_H__)' >> have_string.h
-	${Q} echo '#define __HAVE_STRING_H__' >> have_string.h
+	${Q} echo '#if !defined(CALC_HAVE_STRING_H)' >> have_string.h
+	${Q} echo '#define CALC_HAVE_STRING_H' >> have_string.h
 	${Q} echo '' >> have_string.h
 	${Q} echo '' >> have_string.h
 	${Q} echo '/* do we have <string.h>? */' >> have_string.h
@@ -2037,7 +2025,7 @@ have_string.h: ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_string.h
 	${Q} echo '' >> have_string.h
-	${Q} echo '#endif /* !__HAVE_STRING_H__ */' >> have_string.h
+	${Q} echo '#endif /* !CALC_HAVE_STRING_H */' >> have_string.h
 	${Q} echo 'have_string.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2121,8 +2109,8 @@ have_fpos.h: have_fpos.c ${MAKE_FILE}
 	${Q} echo ' */' >> have_fpos.h
 	${Q} echo '' >> have_fpos.h
 	${Q} echo '' >> have_fpos.h
-	${Q} echo '#if !defined(__HAVE_FPOS_H__)' >> have_fpos.h
-	${Q} echo '#define __HAVE_FPOS_H__' >> have_fpos.h
+	${Q} echo '#if !defined(CALC_HAVE_FPOS_H)' >> have_fpos.h
+	${Q} echo '#define CALC_HAVE_FPOS_H' >> have_fpos.h
 	${Q} echo '' >> have_fpos.h
 	${Q} echo '' >> have_fpos.h
 	${Q} echo '/* do we have fgetpos & fsetpos functions? */' >> have_fpos.h
@@ -2142,7 +2130,7 @@ have_fpos.h: have_fpos.c ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_fpos.h
 	${Q} echo '' >> have_fpos.h
-	${Q} echo '#endif /* !__HAVE_FPOS_H__ */' >> have_fpos.h
+	${Q} echo '#endif /* !CALC_HAVE_FPOS_H */' >> have_fpos.h
 	${Q} ${RM} -f have_fpos${EXT} have_fpos.o fpos_tmp
 	${Q} echo 'have_fpos.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2164,8 +2152,8 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
 	${Q} echo ' */' >> have_fpos_pos.h
 	${Q} echo '' >> have_fpos_pos.h
 	${Q} echo '' >> have_fpos_pos.h
-	${Q} echo '#if !defined(__HAVE_FPOS_POS_H__)' >> have_fpos_pos.h
-	${Q} echo '#define __HAVE_FPOS_POS_H__' >> have_fpos_pos.h
+	${Q} echo '#if !defined(CALC_HAVE_FPOS_POS_H)' >> have_fpos_pos.h
+	${Q} echo '#define CALC_HAVE_FPOS_POS_H' >> have_fpos_pos.h
 	${Q} echo '' >> have_fpos_pos.h
 	${Q} echo '' >> have_fpos_pos.h
 	${Q} echo '/* do we have fgetpos & fsetpos functions? */' \
@@ -2186,7 +2174,7 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_fpos_pos.h
 	${Q} echo '' >> have_fpos_pos.h
-	${Q} echo '#endif /* !__HAVE_FPOS_POS_H__ */' >> have_fpos_pos.h
+	${Q} echo '#endif /* !CALC_HAVE_FPOS_POS_H */' >> have_fpos_pos.h
 	${Q} ${RM} -f have_fpos_pos${EXT} have_fpos_pos.o fpos_tmp
 	${Q} echo 'have_fpos_pos.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2243,8 +2231,8 @@ have_const.h: have_const.c ${MAKE_FILE}
 	${Q} echo ' */' >> have_const.h
 	${Q} echo '' >> have_const.h
 	${Q} echo '' >> have_const.h
-	${Q} echo '#if !defined(__HAVE_CONST_H__)' >> have_const.h
-	${Q} echo '#define __HAVE_CONST_H__' >> have_const.h
+	${Q} echo '#if !defined(CALC_HAVE_CONST_H)' >> have_const.h
+	${Q} echo '#define CALC_HAVE_CONST_H' >> have_const.h
 	${Q} echo '' >> have_const.h
 	${Q} echo '' >> have_const.h
 	${Q} echo '/* do we have or want const? */' >> have_const.h
@@ -2264,7 +2252,7 @@ have_const.h: have_const.c ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_const.h
 	${Q} echo '' >> have_const.h
-	${Q} echo '#endif /* !__HAVE_CONST_H__ */' >> have_const.h
+	${Q} echo '#endif /* !CALC_HAVE_CONST_H */' >> have_const.h
 	${Q} ${RM} -f have_const${EXT} have_const.o const_tmp
 	${Q} echo 'have_const.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2285,8 +2273,8 @@ have_offscl.h: have_offscl.c ${MAKE_FILE}
 	${Q} echo ' */' >> have_offscl.h
 	${Q} echo '' >> have_offscl.h
 	${Q} echo '' >> have_offscl.h
-	${Q} echo '#if !defined(__HAVE_OFFSCL_H__)' >> have_offscl.h
-	${Q} echo '#define __HAVE_OFFSCL_H__' >> have_offscl.h
+	${Q} echo '#if !defined(CALC_HAVE_OFFSCL_H)' >> have_offscl.h
+	${Q} echo '#define CALC_HAVE_OFFSCL_H' >> have_offscl.h
 	${Q} echo '' >> have_offscl.h
 	${Q} echo '' >> have_offscl.h
 	${Q} ${RM} -f have_offscl.o have_offscl${EXT}
@@ -2304,7 +2292,7 @@ have_offscl.h: have_offscl.c ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_offscl.h
 	${Q} echo '' >> have_offscl.h
-	${Q} echo '#endif /* !__HAVE_OFFSCL_H__ */' >> have_offscl.h
+	${Q} echo '#endif /* !CALC_HAVE_OFFSCL_H */' >> have_offscl.h
 	${Q} ${RM} -f have_offscl${EXT} have_offscl.o offscl_tmp
 	${Q} echo 'have_offscl.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2325,8 +2313,8 @@ have_posscl.h: have_posscl.c have_fpos.h ${MAKE_FILE}
 	${Q} echo ' */' >> have_posscl.h
 	${Q} echo '' >> have_posscl.h
 	${Q} echo '' >> have_posscl.h
-	${Q} echo '#if !defined(__HAVE_POSSCL_H__)' >> have_posscl.h
-	${Q} echo '#define __HAVE_POSSCL_H__' >> have_posscl.h
+	${Q} echo '#if !defined(CALC_HAVE_POSSCL_H)' >> have_posscl.h
+	${Q} echo '#define CALC_HAVE_POSSCL_H' >> have_posscl.h
 	${Q} echo '' >> have_posscl.h
 	${Q} echo '' >> have_posscl.h
 	${Q} ${RM} -f have_posscl.o have_posscl
@@ -2344,7 +2332,7 @@ have_posscl.h: have_posscl.c have_fpos.h ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_posscl.h
 	${Q} echo '' >> have_posscl.h
-	${Q} echo '#endif /* !__HAVE_POSSCL_H__ */' >> have_posscl.h
+	${Q} echo '#endif /* !CALC_HAVE_POSSCL_H */' >> have_posscl.h
 	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp
 	${Q} echo 'have_posscl.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2420,8 +2408,8 @@ have_uid_t.h: have_uid_t.c have_unistd.h ${MAKE_FILE}
 	${Q} echo ' */' >> have_uid_t.h
 	${Q} echo '' >> have_uid_t.h
 	${Q} echo '' >> have_uid_t.h
-	${Q} echo '#if !defined(__HAVE_UID_T_H__)' >> have_uid_t.h
-	${Q} echo '#define __HAVE_UID_T_H__' >> have_uid_t.h
+	${Q} echo '#if !defined(CALC_HAVE_UID_T_H)' >> have_uid_t.h
+	${Q} echo '#define CALC_HAVE_UID_T_H' >> have_uid_t.h
 	${Q} echo '' >> have_uid_t.h
 	${Q} echo '' >> have_uid_t.h
 	${Q} echo '/* do we have or want uid_t? */' >> have_uid_t.h
@@ -2439,7 +2427,7 @@ have_uid_t.h: have_uid_t.c have_unistd.h ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_uid_t.h
 	${Q} echo '' >> have_uid_t.h
-	${Q} echo '#endif /* !__HAVE_UID_T_H__ */' >> have_uid_t.h
+	${Q} echo '#endif /* !CALC_HAVE_UID_T_H */' >> have_uid_t.h
 	${Q} ${RM} -f have_uid_t${EXT} have_uid_t.o uid_tmp
 	${Q} echo 'have_uid_t.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2460,8 +2448,8 @@ have_newstr.h: have_newstr.c ${MAKE_FILE}
 	${Q} echo ' */' >> have_newstr.h
 	${Q} echo '' >> have_newstr.h
 	${Q} echo '' >> have_newstr.h
-	${Q} echo '#if !defined(__HAVE_NEWSTR_H__)' >> have_newstr.h
-	${Q} echo '#define __HAVE_NEWSTR_H__' >> have_newstr.h
+	${Q} echo '#if !defined(CALC_HAVE_NEWSTR_H)' >> have_newstr.h
+	${Q} echo '#define CALC_HAVE_NEWSTR_H' >> have_newstr.h
 	${Q} echo '' >> have_newstr.h
 	${Q} echo '' >> have_newstr.h
 	${Q} echo '/* do we have or want memcpy(), memset() & strchr()? */' \
@@ -2480,7 +2468,7 @@ have_newstr.h: have_newstr.c ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_newstr.h
 	${Q} echo '' >> have_newstr.h
-	${Q} echo '#endif /* !__HAVE_NEWSTR_H__ */' >> have_newstr.h
+	${Q} echo '#endif /* !CALC_HAVE_NEWSTR_H */' >> have_newstr.h
 	${Q} ${RM} -f have_newstr${EXT} have_newstr.o newstr_tmp
 	${Q} echo 'have_newstr.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2501,8 +2489,8 @@ have_memmv.h: have_memmv.c ${MAKE_FILE}
 	${Q} echo ' */' >> have_memmv.h
 	${Q} echo '' >> have_memmv.h
 	${Q} echo '' >> have_memmv.h
-	${Q} echo '#if !defined(__HAVE_MEMMV_H__)' >> have_memmv.h
-	${Q} echo '#define __HAVE_MEMMV_H__' >> have_memmv.h
+	${Q} echo '#if !defined(CALC_HAVE_MEMMV_H)' >> have_memmv.h
+	${Q} echo '#define CALC_HAVE_MEMMV_H' >> have_memmv.h
 	${Q} echo '' >> have_memmv.h
 	${Q} echo '' >> have_memmv.h
 	${Q} echo '/* do we have or want memmove()? */' >> have_memmv.h
@@ -2520,7 +2508,7 @@ have_memmv.h: have_memmv.c ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_memmv.h
 	${Q} echo '' >> have_memmv.h
-	${Q} echo '#endif /* !__HAVE_MEMMV_H__ */' >> have_memmv.h
+	${Q} echo '#endif /* !CALC_HAVE_MEMMV_H */' >> have_memmv.h
 	${Q} ${RM} -f have_memmv have_memmv.o memmv_tmp
 	${Q} echo 'have_memmv.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2541,8 +2529,8 @@ have_ustat.h: have_ustat.c ${MAKE_FILE}
 	${Q} echo ' */' >> have_ustat.h
 	${Q} echo '' >> have_ustat.h
 	${Q} echo '' >> have_ustat.h
-	${Q} echo '#if !defined(__HAVE_USTAT_H__)' >> have_ustat.h
-	${Q} echo '#define __HAVE_USTAT_H__' >> have_ustat.h
+	${Q} echo '#if !defined(CALC_HAVE_USTAT_H)' >> have_ustat.h
+	${Q} echo '#define CALC_HAVE_USTAT_H' >> have_ustat.h
 	${Q} echo '' >> have_ustat.h
 	${Q} echo '' >> have_ustat.h
 	${Q} echo '/* do we have or want ustat()? */' >> have_ustat.h
@@ -2560,7 +2548,7 @@ have_ustat.h: have_ustat.c ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_ustat.h
 	${Q} echo '' >> have_ustat.h
-	${Q} echo '#endif /* !__HAVE_USTAT_H__ */' >> have_ustat.h
+	${Q} echo '#endif /* !CALC_HAVE_USTAT_H */' >> have_ustat.h
 	${Q} ${RM} -f have_ustat${EXT} have_ustat.o ustat_tmp
 	${Q} echo 'have_ustat.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2581,8 +2569,8 @@ have_getsid.h: have_getsid.c ${MAKE_FILE}
 	${Q} echo ' */' >> have_getsid.h
 	${Q} echo '' >> have_getsid.h
 	${Q} echo '' >> have_getsid.h
-	${Q} echo '#if !defined(__HAVE_GETSID_H__)' >> have_getsid.h
-	${Q} echo '#define __HAVE_GETSID_H__' >> have_getsid.h
+	${Q} echo '#if !defined(CALC_HAVE_GETSID_H)' >> have_getsid.h
+	${Q} echo '#define CALC_HAVE_GETSID_H' >> have_getsid.h
 	${Q} echo '' >> have_getsid.h
 	${Q} echo '' >> have_getsid.h
 	${Q} echo '/* do we have or want getsid()? */' >> have_getsid.h
@@ -2600,7 +2588,7 @@ have_getsid.h: have_getsid.c ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_getsid.h
 	${Q} echo '' >> have_getsid.h
-	${Q} echo '#endif /* !__HAVE_GETSID_H__ */' >> have_getsid.h
+	${Q} echo '#endif /* !CALC_HAVE_GETSID_H */' >> have_getsid.h
 	${Q} ${RM} -f have_getsid${EXT} have_getsid.o getsid_tmp
 	${Q} echo 'have_getsid.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2622,8 +2610,8 @@ have_getpgid.h: have_getpgid.c ${MAKE_FILE}
 	${Q} echo ' */' >> have_getpgid.h
 	${Q} echo '' >> have_getpgid.h
 	${Q} echo '' >> have_getpgid.h
-	${Q} echo '#if !defined(__HAVE_GETPGID_H__)' >> have_getpgid.h
-	${Q} echo '#define __HAVE_GETPGID_H__' >> have_getpgid.h
+	${Q} echo '#if !defined(CALC_HAVE_GETPGID_H)' >> have_getpgid.h
+	${Q} echo '#define CALC_HAVE_GETPGID_H' >> have_getpgid.h
 	${Q} echo '' >> have_getpgid.h
 	${Q} echo '' >> have_getpgid.h
 	${Q} echo '/* do we have or want getpgid()? */' >> have_getpgid.h
@@ -2641,7 +2629,7 @@ have_getpgid.h: have_getpgid.c ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_getpgid.h
 	${Q} echo '' >> have_getpgid.h
-	${Q} echo '#endif /* !__HAVE_GETPGID_H__ */' >> have_getpgid.h
+	${Q} echo '#endif /* !CALC_HAVE_GETPGID_H */' >> have_getpgid.h
 	${Q} ${RM} -f have_getpgid${EXT} have_getpgid.o getpgid_tmp
 	${Q} echo 'have_getpgid.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2663,8 +2651,8 @@ have_gettime.h: have_gettime.c ${MAKE_FILE}
 	${Q} echo ' */' >> have_gettime.h
 	${Q} echo '' >> have_gettime.h
 	${Q} echo '' >> have_gettime.h
-	${Q} echo '#if !defined(__HAVE_GETTIME_H__)' >> have_gettime.h
-	${Q} echo '#define __HAVE_GETTIME_H__' >> have_gettime.h
+	${Q} echo '#if !defined(CALC_HAVE_GETTIME_H)' >> have_gettime.h
+	${Q} echo '#define CALC_HAVE_GETTIME_H' >> have_gettime.h
 	${Q} echo '' >> have_gettime.h
 	${Q} echo '' >> have_gettime.h
 	${Q} echo '/* do we have or want clock_gettime()? */' >> have_gettime.h
@@ -2682,7 +2670,7 @@ have_gettime.h: have_gettime.c ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_gettime.h
 	${Q} echo '' >> have_gettime.h
-	${Q} echo '#endif /* !__HAVE_GETTIME_H__ */' >> have_gettime.h
+	${Q} echo '#endif /* !CALC_HAVE_GETTIME_H */' >> have_gettime.h
 	${Q} ${RM} -f have_gettime${EXT} have_gettime.o gettime_tmp
 	${Q} echo 'have_gettime.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2704,8 +2692,8 @@ have_getprid.h: have_getprid.c ${MAKE_FILE}
 	${Q} echo ' */' >> have_getprid.h
 	${Q} echo '' >> have_getprid.h
 	${Q} echo '' >> have_getprid.h
-	${Q} echo '#if !defined(__HAVE_GETPRID_H__)' >> have_getprid.h
-	${Q} echo '#define __HAVE_GETPRID_H__' >> have_getprid.h
+	${Q} echo '#if !defined(CALC_HAVE_GETPRID_H)' >> have_getprid.h
+	${Q} echo '#define CALC_HAVE_GETPRID_H' >> have_getprid.h
 	${Q} echo '' >> have_getprid.h
 	${Q} echo '' >> have_getprid.h
 	${Q} echo '/* do we have or want getprid()? */' >> have_getprid.h
@@ -2723,7 +2711,7 @@ have_getprid.h: have_getprid.c ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_getprid.h
 	${Q} echo '' >> have_getprid.h
-	${Q} echo '#endif /* !__HAVE_GETPRID_H__ */' >> have_getprid.h
+	${Q} echo '#endif /* !CALC_HAVE_GETPRID_H */' >> have_getprid.h
 	${Q} ${RM} -f have_getprid${EXT} have_getprid.o getprid_tmp
 	${Q} echo 'have_getprid.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2745,8 +2733,8 @@ have_urandom.h: ${MAKE_FILE}
 	${Q} echo ' */' >> have_urandom.h
 	${Q} echo '' >> have_urandom.h
 	${Q} echo '' >> have_urandom.h
-	${Q} echo '#if !defined(__HAVE_URANDOM_H__)' >> have_urandom.h
-	${Q} echo '#define __HAVE_URANDOM_H__' >> have_urandom.h
+	${Q} echo '#if !defined(CALC_HAVE_URANDOM_H)' >> have_urandom.h
+	${Q} echo '#define CALC_HAVE_URANDOM_H' >> have_urandom.h
 	${Q} echo '' >> have_urandom.h
 	${Q} echo '' >> have_urandom.h
 	${Q} echo '/* do we have /dev/urandom? */' >> have_urandom.h
@@ -2761,7 +2749,7 @@ have_urandom.h: ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_urandom.h
 	${Q} echo '' >> have_urandom.h
-	${Q} echo '#endif /* !__HAVE_URANDOM_H__ */' >> have_urandom.h
+	${Q} echo '#endif /* !CALC_HAVE_URANDOM_H */' >> have_urandom.h
 	${Q} echo 'have_urandom.h formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2782,8 +2770,8 @@ have_rusage.h: have_rusage.c ${MAKE_FILE}
 	${Q} echo ' */' >> have_rusage.h
 	${Q} echo '' >> have_rusage.h
 	${Q} echo '' >> have_rusage.h
-	${Q} echo '#if !defined(__HAVE_RUSAGE_H__)' >> have_rusage.h
-	${Q} echo '#define __HAVE_RUSAGE_H__' >> have_rusage.h
+	${Q} echo '#if !defined(CALC_HAVE_RUSAGE_H)' >> have_rusage.h
+	${Q} echo '#define CALC_HAVE_RUSAGE_H' >> have_rusage.h
 	${Q} echo '' >> have_rusage.h
 	${Q} echo '' >> have_rusage.h
 	${Q} echo '/* do we have or want getrusage()? */' >> have_rusage.h
@@ -2801,7 +2789,7 @@ have_rusage.h: have_rusage.c ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_rusage.h
 	${Q} echo '' >> have_rusage.h
-	${Q} echo '#endif /* !__HAVE_RUSAGE_H__ */' >> have_rusage.h
+	${Q} echo '#endif /* !CALC_HAVE_RUSAGE_H */' >> have_rusage.h
 	${Q} ${RM} -f have_rusage${EXT} have_rusage.o rusage_tmp
 	${Q} echo 'have_rusage.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2822,8 +2810,8 @@ have_strdup.h: have_strdup.c ${MAKE_FILE}
 	${Q} echo ' */' >> have_strdup.h
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '' >> have_strdup.h
-	${Q} echo '#if !defined(__HAVE_STRDUP_H__)' >> have_strdup.h
-	${Q} echo '#define __HAVE_STRDUP_H__' >> have_strdup.h
+	${Q} echo '#if !defined(CALC_HAVE_STRDUP_H)' >> have_strdup.h
+	${Q} echo '#define CALC_HAVE_STRDUP_H' >> have_strdup.h
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '/* do we have or want getstrdup()? */' >> have_strdup.h
@@ -2841,7 +2829,7 @@ have_strdup.h: have_strdup.c ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_strdup.h
 	${Q} echo '' >> have_strdup.h
-	${Q} echo '#endif /* !__HAVE_STRDUP_H__ */' >> have_strdup.h
+	${Q} echo '#endif /* !CALC_HAVE_STRDUP_H */' >> have_strdup.h
 	${Q} ${RM} -f have_strdup${EXT} have_strdup.o strdup_tmp
 	${Q} echo 'have_strdup.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -2967,32 +2955,6 @@ calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-no_implicit.arg: no_implicit.c ${MAKE_FILE}
-	${Q} ${RM} -f no_implicit${EXT} no_implicit.o no_implicit.arg
-	${Q} echo 'forming no_implicit.arg'
-	-${Q} if [ X"${HAVE_NO_IMPLICIT}" = X"YES" ]; then \
-	     echo ""'-Wno-implicit' > no_implicit.arg; \
-	elif [ X"${HAVE_NO_IMPLICIT}" = X"NO" ]; then \
-	    ${TOUCH} no_implicit.arg; \
-	else \
-	    ${LCC} -Wno-implicit ${ICFLAGS} -DHAVE_NO_IMPLICIT \
-		    no_implicit.c -c >/dev/null 2>&1; \
-	    ${LCC} ${ILDFLAGS} no_implicit.o -o no_implicit${EXT} \
-	        >/dev/null 2>&1; \
-	    ${SHELL} -c "./no_implicit${EXT} > no_implicit.arg 2>/dev/null" \
-	    	>/dev/null 2>&1; ${TRUE}; \
-	fi
-	${Q} echo 'no_implicit.arg formed'
-	-@if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= start of $@ =-=-='; \
-	    ${CAT} $@; \
-	    echo '=-=-= end of $@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
 have_unused.h: have_unused.c ${MAKE_FILE}
 	${Q} ${RM} -f unused_tmp have_unused.h
 	${Q} echo 'forming have_unused.h'
@@ -3001,8 +2963,8 @@ have_unused.h: have_unused.c ${MAKE_FILE}
 	${Q} echo ' */' >> have_unused.h
 	${Q} echo '' >> have_unused.h
 	${Q} echo '' >> have_unused.h
-	${Q} echo '#if !defined(__HAVE_UNUSED_H__)' >> have_unused.h
-	${Q} echo '#define __HAVE_UNUSED_H__' >> have_unused.h
+	${Q} echo '#if !defined(CALC_HAVE_UNUSED_H)' >> have_unused.h
+	${Q} echo '#define CALC_HAVE_UNUSED_H' >> have_unused.h
 	${Q} echo '' >> have_unused.h
 	${Q} echo '' >> have_unused.h
 	${Q} echo '/* do we have/want the unused attribute? */' >> have_unused.h
@@ -3022,7 +2984,7 @@ have_unused.h: have_unused.c ${MAKE_FILE}
 	fi
 	${Q} echo '' >> have_unused.h
 	${Q} echo '' >> have_unused.h
-	${Q} echo '#endif /* !__HAVE_UNUSED_H__ */' >> have_unused.h
+	${Q} echo '#endif /* !CALC_HAVE_UNUSED_H */' >> have_unused.h
 	${Q} ${RM} -f have_unused${EXT} have_unused.o unused_tmp
 	${Q} echo 'have_unused.h formed'
 	-@if [ -z "${Q}" ]; then \
@@ -3047,7 +3009,7 @@ have_unused.h: have_unused.c ${MAKE_FILE}
 win32_hsrc: win32.mkdef ${MAKE_FILE}
 	${Q} echo 'forming win32 directory'
 	${Q} ${RM} -rf win32
-	${Q} ${MKDIR} win32
+	${Q} ${MKDIR} -p win32
 	${Q} ${CP} ${UTIL_C_SRC} win32
 	${Q} ${CP} ${UTIL_MISC_SRC} win32
 	${Q} ${CP} ${MAKE_FILE} win32/${MAKE_FILE}
@@ -3143,18 +3105,6 @@ libcustcalc${LIB_EXT_VERSION}: custom/libcustcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${CP} -p $? $@
 
-libcustcalc${LIB_EXT_VERS}: custom/libcustcalc${LIB_EXT_VERSION}
-	${Q} ${RM} -f $@
-	${LN} -s $? $@
-
-libcustcalc${LIB_EXT_VER}: libcustcalc${LIB_EXT_VERSION}
-	${Q} ${RM} -f $@
-	${LN} -s $? $@
-
-libcustcalc${LIB_EXT_VE}: libcustcalc${LIB_EXT_VERSION}
-	${Q} ${RM} -f $@
-	${LN} -s $? $@
-
 libcustcalc${LIB_EXT}: libcustcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${LN} -s $? $@
@@ -3219,12 +3169,12 @@ depend: custom/Makefile hsrc
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q} echo forming skel
 	${Q} ${RM} -rf skel
-	${Q} ${MKDIR} skel
+	${Q} ${MKDIR} -p skel
 	-${Q} for i in ${C_SRC} ${BUILD_C_SRC}; do \
 	    ${SED} -n '/^#[	 ]*include[	 ]*"/p' "$$i" | \
 	    ${GREP} -v '\.\./getopt/getopt\.h' > "skel/$$i"; \
 	done
-	${Q} ${MKDIR} skel/custom
+	${Q} ${MKDIR} -p skel/custom
 	-${Q} for i in ${H_SRC} ${BUILD_H_SRC} custom.h /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
@@ -3291,6 +3241,28 @@ h_list:
 #	version string.  Note that the full version could be 4
 #	or 3 levels long depending on the minor patch number.
 #
+# version:
+#	This rule simply echoes the value found in this makefile.
+#	This rule produces the full version string.  Note that the
+#	full version could be 4 or 3 levels long depending on the
+#	minor patch number.
+#
+###
+
+calc_version: ver_calc${EXT}
+	@./ver_calc${EXT}
+
+version:
+	@echo ${VERSION}
+
+ver_calc${EXT}: version.c have_unused.h
+	${RM} -f $@
+	${LCC} ${ICFLAGS} -DCALC_VER ${ILDFLAGS} version.c -o $@
+
+###
+#
+# legacy partial versions are no longer used, only removed
+#
 # calc_vers:
 #	This rule is the most accurate as it uses calc source to
 #	produce the version value.  This rule produces only a
@@ -3306,12 +3278,6 @@ h_list:
 #	produce the version value.  This rule produces only a
 #	1 level version string.
 #
-# version:
-#	This rule simply echoes the value found in this makefile.
-#	This rule produces the full version string.  Note that the
-#	full version could be 4 or 3 levels long depending on the
-#	minor patch number.
-#
 # vers:
 #	This rule simply echoes the value found in this makefile.
 #	This rule produces only a 3 level version string.
@@ -3326,9 +3292,6 @@ h_list:
 #
 ###
 
-calc_version: ver_calc${EXT}
-	@./ver_calc${EXT}
-
 calc_vers: ver_calc${EXT}
 	@./ver_calc${EXT} -V
 
@@ -3338,9 +3301,6 @@ calc_ver: ver_calc${EXT}
 calc_ve: ver_calc${EXT}
 	@./ver_calc${EXT} -V | ${SED} -e 's/\.[^.]*\.[^.]*$$//'
 
-version:
-	@echo ${VERSION}
-
 vers:
 	@echo ${VERS}
 
@@ -3349,10 +3309,6 @@ ver:
 
 ve:
 	@echo ${VE}
-
-ver_calc${EXT}: version.c have_unused.h
-	${RM} -f $@
-	${LCC} ${ICFLAGS} -DCALC_VER ${ILDFLAGS} version.c -o $@
 
 ###
 #
@@ -3512,7 +3468,6 @@ env:
 	@echo 'HAVE_GETTIME=${HAVE_GETTIME}'; echo ''
 	@echo 'HAVE_MEMMOVE=${HAVE_MEMMOVE}'; echo ''
 	@echo 'HAVE_NEWSTR=${HAVE_NEWSTR}'; echo ''
-	@echo 'HAVE_NO_IMPLICIT=${HAVE_NO_IMPLICIT}'; echo ''
 	@echo 'HAVE_OFFSCL=${HAVE_OFFSCL}'; echo ''
 	@echo 'HAVE_POSSCL=${HAVE_POSSCL}'; echo ''
 	@echo 'HAVE_STDLIB_H=${HAVE_STDLIB_H}'; echo ''
@@ -3560,7 +3515,6 @@ env:
 	@echo 'MANMAKE=${MANMAKE}'; echo ''
 	@echo 'MANMODE=${MANMODE}'; echo ''
 	@echo 'MKDIR=${MKDIR}'; echo ''
-	@echo 'MKDIR_ARG=${MKDIR_ARG}'; echo ''
 	@echo 'MV=${MV}'; echo ''
 	@echo 'NROFF=${NROFF}'; echo ''
 	@echo 'NROFF_ARG=${NROFF_ARG}'; echo ''
@@ -3601,7 +3555,6 @@ env:
 	@echo 'UTIL_PROGS=${UTIL_PROGS}'; echo ''
 	@echo 'UTIL_TMP=${UTIL_TMP}'; echo ''
 	@echo 'V=${V}'; echo ''
-	@echo 'VERS=${VERS}'; echo ''
 	@echo 'VERSION=${VERSION}'; echo ''
 	@echo 'XARGS=${XARGS}'; echo ''
 	@echo 'target=${target}'; echo ''
@@ -3833,14 +3786,8 @@ clobber: custom/Makefile clean
 	${RM} -rf gen_h skel Makefile.bak tmp.patch
 	${RM} -f calc.spec inst_files rpm.mk.patch tmp
 	${RM} -f libcalc${LIB_EXT_VERSION}
-	${RM} -f libcalc${LIB_EXT_VERS}
-	${RM} -f libcalc${LIB_EXT_VER}
-	${RM} -f libcalc${LIB_EXT_VE}
 	${RM} -f libcalc*${LIB_EXT}
 	${RM} -f libcustcalc${LIB_EXT_VERSION}
-	${RM} -f libcustcalc${LIB_EXT_VERS}
-	${RM} -f libcustcalc${LIB_EXT_VER}
-	${RM} -f libcustcalc${LIB_EXT_VE}
 	${RM} -f libcustcalc*${LIB_EXT}
 	${RM} -f libcustcalc.a
 	${RM} -f calc-static${EXT}
@@ -3859,7 +3806,15 @@ clobber: custom/Makefile clean
 	cd cscript; ${RM} -f all; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo remove files that are obsolete
+	${RM} -f libcalc${LIB_EXT_VERS}
+	${RM} -f libcalc${LIB_EXT_VER}
+	${RM} -f libcalc${LIB_EXT_VE}
+	${RM} -f libcustcalc${LIB_EXT_VERS}
+	${RM} -f libcustcalc${LIB_EXT_VER}
+	${RM} -f libcustcalc${LIB_EXT_VE}
 	${RM} -rf win32 build
+	${RM} -f no_implicit.arg
+	${RM} -f no_implicit.c no_implicit.o no_implicit${EXT}
 	${RM} -f .static .dynamic calc-dynamic-only calc-static-only
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
@@ -3871,87 +3826,87 @@ install: custom/Makefile ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	-${Q} if [ ! -z "${T}" ]; then \
 	    if [ ! -d ${T} ]; then \
-		echo ${MKDIR} ${MKDIR_ARG} ${T}; \
-		${MKDIR} ${MKDIR_ARG} ${T}; \
+		echo ${MKDIR} -p ${T}; \
+		${MKDIR} -p ${T}; \
 		echo ${CHMOD} 0755 ${T}; \
 		${CHMOD} 0755 ${T}; \
 	    fi; \
 	fi
 	-${Q} if [ ! -d ${T}${BINDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} ${T}${BINDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} ${T}${BINDIR}; \
+	    echo ${MKDIR} -p ${T}${BINDIR}; \
+	    ${MKDIR} -p ${T}${BINDIR}; \
 	    echo ${CHMOD} 0755 ${T}${BINDIR}; \
 	    ${CHMOD} 0755 ${T}${BINDIR}; \
 	else \
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${INCDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} ${T}${INCDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} ${T}${INCDIR}; \
+	    echo ${MKDIR} -p ${T}${INCDIR}; \
+	    ${MKDIR} -p ${T}${INCDIR}; \
 	    echo ${CHMOD} 0755 ${T}${INCDIR}; \
 	    ${CHMOD} 0755 ${T}${INCDIR}; \
 	else \
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${LIBDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} ${T}${LIBDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} ${T}${LIBDIR}; \
+	    echo ${MKDIR} -p ${T}${LIBDIR}; \
+	    ${MKDIR} -p ${T}${LIBDIR}; \
 	    echo ${CHMOD} 0755 ${T}${LIBDIR}; \
 	    ${CHMOD} 0755 ${T}${LIBDIR}; \
 	else \
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CALC_SHAREDIR} ]; then \
-	    ${MKDIR} ${MKDIR_ARG} ${T}${CALC_SHAREDIR}; \
-	    echo ${MKDIR} ${MKDIR_ARG} ${T}${CALC_SHAREDIR}; \
+	    ${MKDIR} -p ${T}${CALC_SHAREDIR}; \
+	    echo ${MKDIR} -p ${T}${CALC_SHAREDIR}; \
 	    echo ${CHMOD} 0755 ${T}${CALC_SHAREDIR}; \
 	    ${CHMOD} 0755 ${T}${CALC_SHAREDIR}; \
 	else \
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${HELPDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} ${T}${HELPDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} ${T}${HELPDIR}; \
+	    echo ${MKDIR} -p ${T}${HELPDIR}; \
+	    ${MKDIR} -p ${T}${HELPDIR}; \
 	    echo ${CHMOD} 0755 ${T}${HELPDIR}; \
 	    ${CHMOD} 0755 ${T}${HELPDIR}; \
 	else \
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CALC_INCDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} ${T}${CALC_INCDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} ${T}${CALC_INCDIR}; \
+	    echo ${MKDIR} -p ${T}${CALC_INCDIR}; \
+	    ${MKDIR} -p ${T}${CALC_INCDIR}; \
 	    echo ${CHMOD} 0755 ${T}${CALC_INCDIR}; \
 	    ${CHMOD} 0755 ${T}${CALC_INCDIR}; \
 	else \
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CUSTOMCALDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} ${T}${CUSTOMCALDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} ${T}${CUSTOMCALDIR}; \
+	    echo ${MKDIR} -p ${T}${CUSTOMCALDIR}; \
+	    ${MKDIR} -p ${T}${CUSTOMCALDIR}; \
 	    echo ${CHMOD} 0755 ${T}${CUSTOMCALDIR}; \
 	    ${CHMOD} 0755 ${T}${CUSTOMCALDIR}; \
 	else \
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CUSTOMHELPDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} ${T}${CUSTOMHELPDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} ${T}${CUSTOMHELPDIR}; \
+	    echo ${MKDIR} -p ${T}${CUSTOMHELPDIR}; \
+	    ${MKDIR} -p ${T}${CUSTOMHELPDIR}; \
 	    echo ${CHMOD} 0755 ${T}${CUSTOMHELPDIR}; \
 	    ${CHMOD} 0755 ${T}${CUSTOMHELPDIR}; \
 	else \
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${CUSTOMINCDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} ${T}${CUSTOMINCDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} ${T}${CUSTOMINCDIR}; \
+	    echo ${MKDIR} -p ${T}${CUSTOMINCDIR}; \
+	    ${MKDIR} -p ${T}${CUSTOMINCDIR}; \
 	    echo ${CHMOD} 0755 ${T}${CUSTOMINCDIR}; \
 	    ${CHMOD} 0755 ${T}${CUSTOMINCDIR}; \
 	else \
 	    ${TRUE}; \
 	fi
 	-${Q} if [ ! -d ${T}${SCRIPTDIR} ]; then \
-	    echo ${MKDIR} ${MKDIR_ARG} ${T}${SCRIPTDIR}; \
-	    ${MKDIR} ${MKDIR_ARG} ${T}${SCRIPTDIR}; \
+	    echo ${MKDIR} -p ${T}${SCRIPTDIR}; \
+	    ${MKDIR} -p ${T}${SCRIPTDIR}; \
 	    echo ${CHMOD} 0755 ${T}${SCRIPTDIR}; \
 	    ${CHMOD} 0755 ${T}${SCRIPTDIR}; \
 	else \
@@ -3959,8 +3914,8 @@ install: custom/Makefile ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all
 	fi
 	-${Q} if [ ! -z "${MANDIR}" ]; then \
 	    if [ ! -d ${T}${MANDIR} ]; then \
-		echo ${MKDIR} ${MKDIR_ARG} ${T}${MANDIR}; \
-		${MKDIR} ${MKDIR_ARG} ${T}${MANDIR}; \
+		echo ${MKDIR} -p ${T}${MANDIR}; \
+		${MKDIR} -p ${T}${MANDIR}; \
 		echo ${CHMOD} 0755 ${T}${MANDIR}; \
 		${CHMOD} 0755 ${T}${MANDIR}; \
 	    else \
@@ -3971,8 +3926,8 @@ install: custom/Makefile ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all
 	fi
 	-${Q} if [ ! -z "${CATDIR}" ]; then \
 	    if [ ! -d ${T}${CATDIR} ]; then \
-		echo ${MKDIR} ${MKDIR_ARG} ${T}${CATDIR}; \
-		${MKDIR} ${MKDIR_ARG} ${T}${CATDIR}; \
+		echo ${MKDIR} -p ${T}${CATDIR}; \
+		${MKDIR} -p ${T}${CATDIR}; \
 		echo ${CHMOD} 0755 ${T}${CATDIR}; \
 		${CHMOD} 0755 ${T}${CATDIR}; \
 	    else \
@@ -4044,15 +3999,27 @@ install: custom/Makefile ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all
 	    ${MV} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new \
 	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
-	    ${LN} -f -s libcalc${LIB_EXT_VERSION} \
-	    		${T}${LIBDIR}/libcalc${LIB_EXT_VERS}; \
-	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
-	    ${LN} -f -s libcalc${LIB_EXT_VERSION} \
-	    		${T}${LIBDIR}/libcalc${LIB_EXT_VER}; \
-	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VER}"; \
-	    ${LN} -f -s libcalc${LIB_EXT_VERSION} \
-	    		${T}${LIBDIR}/libcalc${LIB_EXT_VE}; \
-	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VE}"; \
+	    if [ "${LIB_EXT_VERSION}" != "${LIB_EXT_VERS}" ]; then \
+		if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}" ]; then \
+		    ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}; \
+		    echo -n "removed legacy and likely out of date: "; \
+		    echo "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
+		fi; \
+	    fi; \
+	    if [ "${LIB_EXT_VERSION}" != "${LIB_EXT_VER}" ]; then \
+		if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VER}" ]; then \
+		    ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VER}; \
+		    echo -n "removed legacy and likely out of date: "; \
+		    echo "${T}${LIBDIR}/libcalc${LIB_EXT_VER}"; \
+		fi; \
+	    fi; \
+	    if [ "${LIB_EXT_VERSION}" != "${LIB_EXT_VE}" ]; then \
+		if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VE}" ]; then \
+		    ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VE}; \
+		    echo -n "removed legacy and likely out of date: "; \
+		    echo "${T}${LIBDIR}/libcalc${LIB_EXT_VE}"; \
+		fi; \
+	    fi; \
 	    ${LN} -f -s libcalc${LIB_EXT_VERSION} \
 	    		${T}${LIBDIR}/libcalc${LIB_EXT}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
@@ -4063,15 +4030,27 @@ install: custom/Makefile ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all
 	    ${MV} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new \
 	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}; \
 	    echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}"; \
-	    ${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
-	    		${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}; \
-	    echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
-	    ${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
-	    		${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}; \
-	    echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}"; \
-	    ${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
-	    		${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}; \
-	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VE}"; \
+	    if [ "${LIB_EXT_VERSION}" != "${LIB_EXT_VERS}" ]; then \
+		if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}" ]; then \
+		    ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}; \
+		    echo -n "removed legacy and likely out of date: "; \
+		    echo "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
+		fi; \
+	    fi; \
+	    if [ "${LIB_EXT_VERSION}" != "${LIB_EXT_VER}" ]; then \
+		if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}" ]; then \
+		    ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}; \
+		    echo -n "removed legacy and likely out of date: "; \
+		    echo "${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}"; \
+		fi; \
+	    fi; \
+	    if [ "${LIB_EXT_VERSION}" != "${LIB_EXT_VE}" ]; then \
+		if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}" ]; then \
+		    ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}; \
+		    echo -n "removed legacy and likely out of date: "; \
+		    echo "${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}"; \
+		fi; \
+	    fi; \
 	    ${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
 	    		${T}${LIBDIR}/libcustcalc${LIB_EXT}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
@@ -4860,6 +4839,7 @@ have_offscl.o: have_offscl.c
 have_posscl.o: have_fpos.h
 have_posscl.o: have_posscl.c
 have_rusage.o: have_rusage.c
+have_stdvs.o: have_stdlib.h
 have_stdvs.o: have_stdvs.c
 have_stdvs.o: have_string.h
 have_stdvs.o: have_unistd.h
@@ -5102,7 +5082,6 @@ math_error.o: sha1.h
 math_error.o: str.h
 math_error.o: value.h
 math_error.o: zmath.h
-no_implicit.o: no_implicit.c
 obj.o: alloc.h
 obj.o: block.h
 obj.o: byteswap.h

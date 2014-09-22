@@ -1,7 +1,7 @@
 /*
  * blkcpy - general values and related routines used by the calculator
  *
- * Copyright (C) 1999-2007  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2014  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: blkcpy.h,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: blkcpy.h,v 30.3 2014/08/24 21:56:51 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/blkcpy.h,v $
  *
  * Under source code control:	1997/04/18 20:41:25
@@ -30,8 +30,8 @@
  */
 
 
-#if !defined(__BLKCPY_H__)
-#define __BLKCPY_H__
+#if !defined(INCLUDE_BLKCPY_H)
+#define INCLUDE_BLKCPY_H
 
 /*
  * the main copy gateway function
@@ -59,4 +59,4 @@ E_FUNC int copystr2blk(STRING *, long, long, BLOCK *, long, BOOL);
 E_FUNC int copystr2file(STRING *, long, long, FILEID, long);
 E_FUNC int copystr2str(STRING *, long, long, STRING *, long);
 
-#endif /* !__BLKCPY_H__ */
+#endif /* !INCLUDE_BLKCPY_H */

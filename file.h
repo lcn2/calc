@@ -1,7 +1,7 @@
 /*
  * file - file I/O routines callable by users
  *
- * Copyright (C) 1999-2007  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2014  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: file.h,v 30.3 2013/09/01 22:16:21 chongo Exp $
+ * @(#) $Revision: 30.5 $
+ * @(#) $Id: file.h,v 30.5 2014/08/24 21:56:51 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/file.h,v $
  *
  * Under source code control:	1996/05/24 05:55:58
@@ -31,8 +31,8 @@
  */
 
 
-#if !defined(__FILE_H__)
-#define __FILE_H__
+#if !defined(INCLUDE_FILE_H)
+#define INCLUDE_FILE_H
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
@@ -100,4 +100,4 @@ E_FUNC FILE *f_pathopen(char *name, char *mode, char *pathlist,
 			char **openpath);
 
 
-#endif /* !__FILE_H__ */
+#endif /* !INCLUDE_FILE_H */

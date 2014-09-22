@@ -1,7 +1,7 @@
 /*
  * token - token defines
  *
- * Copyright (C) 1999-2007  David I. Bell
+ * Copyright (C) 1999-2007,2014  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: token.h,v 30.3 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.5 $
+ * @(#) $Id: token.h,v 30.5 2014/08/24 21:56:51 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/token.h,v $
  *
  * Under source code control:	1990/02/15 01:48:37
@@ -28,8 +28,8 @@
  */
 
 
-#if !defined(__TOKEN_H__)
-#define __TOKEN_H__
+#if !defined(INCLUDE_TOKEN_H)
+#define INCLUDE_TOKEN_H
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
@@ -183,4 +183,4 @@ E_FUNC void scanerror(int, char *, ...) PRINTF_FORMAT(2, 3);
 E_FUNC void warning(char *, ...) PRINTF_FORMAT(1, 2);
 
 
-#endif /* !__TOKEN_H__ */
+#endif /* !INCLUDE_TOKEN_H */

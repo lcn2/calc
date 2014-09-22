@@ -3,8 +3,8 @@
  */
 
 
-#if !defined(__HAVE_UNUSED_H__)
-#define __HAVE_UNUSED_H__
+#if !defined(CALC_HAVE_UNUSED_H)
+#define CALC_HAVE_UNUSED_H
 
 
 /* do we have/want the unused attribute? */
@@ -13,4 +13,4 @@
 #define UNUSED __attribute__((unused)) /* yes */
 
 
-#endif /* !__HAVE_UNUSED_H__ */
+#endif /* !CALC_HAVE_UNUSED_H */

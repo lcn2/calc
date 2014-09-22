@@ -2,7 +2,7 @@
 #
 # custom - makefile for calc custom routines
 #
-# Copyright (C) 1999-2006  Landon Curt Noll
+# Copyright (C) 1999-2006,2014  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.31 $
-# @(#) $Id: Makefile.head,v 30.31 2013/09/27 08:55:28 chongo Exp $
+# @(#) $Revision: 30.35 $
+# @(#) $Id: Makefile.head,v 30.35 2014/09/21 14:09:18 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/custom/RCS/Makefile.head,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -337,20 +337,6 @@ CALC_ENV= CALCPATH=./cal
 ALLOW_CUSTOM= -DCUSTOM
 #ALLOW_CUSTOM=
 
-# The install rule uses:
-#
-#	${MKDIR} ${MKDIR_ARG}
-#
-# to create directorties.  Normall this amounts to usins mkdir -p dir ...
-# Some older systems may not have mkdir -p.  If you system does not
-# make mkdir -p, then set MKDIR_ARG to empty.
-#
-# MKDIR_ARG= -p			# use mkdir -p when creating paths
-# MKDIR_ARG=			# use if system does not understand mkdir -p
-#
-MKDIR_ARG= -p
-#MKDIR_ARG=
-
 # Some out of date operating systems require / want an executable to
 # end with a certain file extension.  Some compile systems such as
 # Cygwin build calc as calc.exe.  The EXT variable is used to denote
@@ -366,15 +352,18 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.13
-VERS= 2.12.4
-VER= 2.12
-VE= 2
+VERSION= 2.12.4.14
 
 # Names of shared libraries with versions
 #
 LIB_EXT= .so
 LIB_EXT_VERSION= ${LIB_EXT}.${VERSION}
+
+# legacy partial versions are no longer used, only removed
+#
+VERS= 2.12.4
+VER= 2.12
+VE= 2
 LIB_EXT_VERS= ${LIB_EXT}.${VERS}
 LIB_EXT_VER= ${LIB_EXT}.${VER}
 LIB_EXT_VE= ${LIB_EXT}.${VE}

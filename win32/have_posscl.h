@@ -3,12 +3,12 @@
  */
 
 
-#if !defined(__HAVE_POSSCL_H__)
-#define __HAVE_POSSCL_H__
+#if !defined(CALC_HAVE_POSSCL_H)
+#define CALC_HAVE_POSSCL_H
 
 
 #undef HAVE_FILEPOS_SCALAR
 #define HAVE_FILEPOS_SCALAR /* FILEPOS is a simple value */
 
 
-#endif /* !__HAVE_POSSCL_H__ */
+#endif /* !CALC_HAVE_POSSCL_H */
