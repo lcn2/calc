@@ -6,14 +6,14 @@ This file is Copyrighted
 
     This file is covered under the following Copyright:
 
-	Copyright (C) 1999-2008  Landon Curt Noll
+	Copyright (C) 1999-2014  Landon Curt Noll
 	All rights reserved.
 
 	Everyone is permitted to copy and distribute verbatim copies
 	of this license document, but changing it is not allowed.
 
-    # @(#) $Revision: 30.4 $
-    # @(#) $Id: COPYING,v 30.4 2013/09/01 20:14:30 chongo Exp $
+    # @(#) $Revision: 30.6 $
+    # @(#) $Id: COPYING,v 30.6 2014/10/12 12:23:43 chongo Exp $
     # @(#) $Source: /usr/local/src/bin/calc/RCS/COPYING,v $
 
 -=-
@@ -53,45 +53,62 @@ Calc is covered by the GNU Lesser General Public License
 	    Boston, MA  02110-1301
 	    USA
 
-    The contact addresses for calc is as follows:
+    To subscribe to the calc-tester mailing list, visit the following URL:
 
-	Web:	http://www.isthe.com/chongo/tech/comp/calc/email.html
+	    http://www.isthe.com/chongo/tech/comp/calc/calc-tester.html
 
-    To join the low volume calc mailing list.  Send a EMail message to:
+	This is a low volume moderated mailing list.
 
-	calc-tester-request at asthe dot com
+	This mailing list replaces calc-tester at asthe dot com list.
 
-    Your subject must contain the words:
+	If you need a human to help you with your mailing list subscription,
+	please send EMail to our special:
 
-	calc mailing list subscription
+	    calc-tester-maillist-help at asthe dot com
 
-    You may have additional words in your subject line.
+	    NOTE: Remove spaces and replace 'at' with @, 'dot' with .
 
-    Your message body (not the subject) should consist of:
+	address.  To be sure we see your EMail asking for help with your
+	mailing list subscription, please use the following phase in your
+	EMail Subject line:
 
-	 subscribe calc-tester address
-	 end
-	 name your_full_name
+	    calc tester mailing list help
 
-    where ``address'' is your EMail address and ``your_full_name'' is
-    your full name.
-
-    Feel free to follow the name line with additional EMail text as desired.
+	That phrase in your subject line will help ensure your
+	request will get past our anti-spam filters.  You may have
+	additional words in your subject line.
 
 -=-
 
     Calc bug reports and calc bug fixes should be sent to:
 
-	calc-bugs at asthe dot com
+	    calc-bug-report at asthe dot com
 
-    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
-    [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
+	    NOTE: Remove spaces and replace 'at' with @, 'dot' with .
 
-    Your subject must contain the words:
+	This replaces the old calc-bugs at asthe dot com address.
 
-	   calc bug report
+	To be sure we see your EMail reporting a calc bug, please use the
+	following phase in your EMail Subject line:
 
-    You may have additional words in your subject line.
+	    calc bug report
+
+	That phrase in your subject line will help ensure your
+	request will get past our anti-spam filters.  You may have
+	additional words in your subject line.
+
+	However, you may find it more helpful to simply subscribe
+	to the calc-tester mailing list (see above) and then to
+	send your report to that mailing list as a wider set calc
+	testers may be able to help you.
+
+-=-
+
+    The calc web site is located at:
+
+	http://www.isthe.com/chongo/tech/comp/calc/
+
+    NOTE: The EMail address uses 'asthe', while the web site uses 'isthe'.
 
 -=-
 

@@ -32,16 +32,25 @@ If you have tried all of the above and things still are not right,
 then it may be time to send in a bug report.  You can send bug
 and bug fixes reports to:
 
-    calc-bugs at asthe dot com
+	calc-bug-report at asthe dot com
 
-    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
-    [[ NOTE: The EMail address uses 'asthe', the web site URL uses 'isthe' ]]
+	NOTE: Remove spaces and replace 'at' with @, 'dot' with .
 
-Your subject must contain the words:
+    This replaces the old calc-bugs at asthe dot com address.
 
-       calc bug report
+    To be sure we see your EMail reporting a calc bug, please use the
+    following phase in your EMail Subject line:
 
-You may have additional words in your subject line.
+	calc bug report
+
+    That phrase in your subject line will help ensure your request
+    will get past our anti-spam filters.  You may have additional
+    words in your subject line.
+
+    However, you may find it more helpful to simply subscribe
+    to the calc-tester mailing list (see below) and then to
+    send your report to that mailing list as a wider set calc
+    testers may be able to help you.
 
 When you send your report, please include the following information:
 
@@ -74,14 +83,6 @@ Known bugs:
     We are sure some more bugs exist.  When you find them, please let
     us know!  See the above for details on how to report and were to
     EMail your bug reports and hopefully patches to fix them.
-
-=-=
-
-Problems that have known work-a-rounds:
-
-    * There is a bug in gcc v4.1.0 that causes calc to fail the regression
-      test.  The work-a-round is to compile with gcc v4.1.1 or later.  This
-      problems was observed on Fedora 5.
 
 =-=
 
@@ -132,6 +133,33 @@ mis-features in calc:
 
       will not.
 
+=-=
+
+To subscribe to the calc-tester mailing list, visit the following URL:
+
+	http://www.isthe.com/chongo/tech/comp/calc/calc-tester.html
+
+    This is a low volume moderated mailing list.
+
+    This mailing list replaces calc-tester at asthe dot com list.
+
+    If you need a human to help you with your mailing list subscription,
+    please send EMail to our special:
+
+	calc-tester-maillist-help at asthe dot com
+
+	NOTE: Remove spaces and replace 'at' with @, 'dot' with .
+
+    address.  To be sure we see your EMail asking for help with your
+    mailing list subscription, please use the following phase in your
+    EMail Subject line:
+
+	calc tester mailing list help
+
+    That phrase in your subject line will help ensure your
+    request will get past our anti-spam filters.  You may have
+    additional words in your subject line.
+
 ## Copyright (C) 1999-2014  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
@@ -148,8 +176,8 @@ mis-features in calc:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.3 $
-## @(#) $Id: BUGS,v 30.3 2014/09/07 06:20:41 chongo Exp $
+## @(#) $Revision: 30.5 $
+## @(#) $Id: BUGS,v 30.5 2014/10/12 12:23:43 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/RCS/BUGS,v $
 ##
 ## Under source code control:	1994/03/18 14:06:13

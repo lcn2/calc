@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: seed.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: seed.c,v 30.2 2014/09/30 01:00:04 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/seed.c,v $
  *
  * Under source code control:	1999/10/03 10:06:53
@@ -117,7 +117,7 @@ typedef struct s_hash64 hash64;
 
 
 /*
- * FNV-1 initial basis
+ * 64-bit initial basis - Based on the 64-bit FNV basis value
  *
  * We start the hash at a non-zero value at the beginning so that
  * hashing blocks of data with all 0 bits do not map onto the same
@@ -151,17 +151,17 @@ typedef struct s_hash64 hash64;
  * good hash function.
  */
 #if defined(HAVE_B64)
-# define FNV1_64_BASIS ((hash64)(0xcbf29ce484222325ULL))
+# define PRIVATE_64_BASIS ((hash64)(0xcbf29ce484222325ULL))
 #else
-# define FNV1_64_BASIS_0 ((USB32)0x2325)
-# define FNV1_64_BASIS_1 ((USB32)0x8422)
-# define FNV1_64_BASIS_2 ((USB32)0x9ce4)
-# define FNV1_64_BASIS_3 ((USB32)0xcbf2)
+# define PRIVATE_64_BASIS_0 ((USB32)0x2325)
+# define PRIVATE_64_BASIS_1 ((USB32)0x8422)
+# define PRIVATE_64_BASIS_2 ((USB32)0x9ce4)
+# define PRIVATE_64_BASIS_3 ((USB32)0xcbf2)
 #endif
 
 
 /*
- * hash_buf - perform a Fowler/Noll/Vo-1 64 bit hash
+ * prvate_hash64_buf - perform a Fowler/Noll/Vo-1 64 bit hash
  *
  * input:
  *	buf	- start of buffer to hash
@@ -172,7 +172,7 @@ typedef struct s_hash64 hash64;
  *	64 bit hash as a static hash64 structure
  */
 S_FUNC hash64
-hash_buf(char *buf, unsigned len)
+prvate_hash64_buf(char *buf, unsigned len)
 {
 	hash64 hval;		/* current hash value */
 #if !defined(HAVE_B64)
@@ -205,10 +205,15 @@ hash_buf(char *buf, unsigned len)
 	 *	http://www.isthe.com/chongo/tech/comp/fnv/
 	 *
 	 * for more details as well as other forms of the FNV hash.
+	 *
+	 * NOTE: For general hash functions, we recommend using the
+	 *	 FNV-1a hash function.  The use of FNV-1 is kept
+	 *	 for backwards compatibility purposes and because
+	 *	 the use of FNV-1 in this special purpose, suffices.
 	 */
 #if defined(HAVE_B64)
 	/* hash each octet of the buffer */
-	for (hval = FNV1_64_BASIS; buf < buf_end; ++buf) {
+	for (hval = PRIVATE_64_BASIS; buf < buf_end; ++buf) {
 
 	    /* multiply by 1099511628211ULL mod 2^64 using 64 bit longs */
 	    hval *= (hash64)1099511628211ULL;
@@ -220,10 +225,10 @@ hash_buf(char *buf, unsigned len)
 #else /* HAVE_B64 */
 
 	/* hash each octet of the buffer */
-	val[0] = FNV1_64_BASIS_0;
-	val[1] = FNV1_64_BASIS_1;
-	val[2] = FNV1_64_BASIS_2;
-	val[3] = FNV1_64_BASIS_3;
+	val[0] = PRIVATE_64_BASIS_0;
+	val[1] = PRIVATE_64_BASIS_1;
+	val[2] = PRIVATE_64_BASIS_2;
+	val[3] = PRIVATE_64_BASIS_3;
 	for (; buf < buf_end; ++buf) {
 
 	    /*
@@ -441,7 +446,7 @@ pseudo_seed(void)
     /*
      * seed the generator with the above data
      */
-    hash_val = hash_buf((char *)&sdata, sizeof(sdata));
+    hash_val = prvate_hash64_buf((char *)&sdata, sizeof(sdata));
 
     /*
      * load the hash data into the ZVALUE

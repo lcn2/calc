@@ -36,45 +36,73 @@ as a diff -c /dev/null your-file patch, or as a uuencoded and
 gziped (or compressed) tar file).
 
 To contribute code, scripts, resource files and/or to help please
-join the low volume calc mailing list by sending EMail to:
+join the low volume calc mailing list calc-tester.  Then send
+your contribution to the calc-tester mailing list.
 
-    calc-contrib at asthe dot com
+To subscribe to the calc-tester mailing list, visit the following URL:
 
-    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
-    [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
+	https://www.listbox.com/subscribe/?list_id=239342
 
-Your subject must contain the words:
+    To help determine you are a human and not just a spam bot,
+    you will be required to provide the following additional info:
 
-    calc mailing list subscription
+	Your Name
+	Calc Version
+	Operating System
+	The date 7 days ago
 
-You may have additional words in your subject line.
+    This is a low volume moderated mailing list.
 
-Feel free to follow the name line with additional EMail text as desired.
+    This mailing list replaces calc-tester at asthe dot com list.
 
-Thanks for considering submitting code to calc.	 Calc is a collective
-work by a number of people.  It would not be what it is today without
-your efforts and submissions!
+    If you need a human to help you with your mailing list subscription,
+    please send EMail to our special:
+
+	calc-tester-maillist-help at asthe dot com
+
+	NOTE: Remove spaces and replace 'at' with @, 'dot' with .
+
+    address.  To be sure we see your EMail asking for help with your
+    mailing list subscription, please use the following phase in your
+    EMail Subject line:
+
+	calc tester mailing list help
+
+    That phrase in your subject line will help ensure your
+    request will get past our anti-spam filters.  You may have
+    additional words in your subject line.
 
 =-=
 
 Calc bug reports and calc bug fixes should be sent to:
 
-    calc-bugs at asthe dot com
+	calc-bug-report at asthe dot com
 
-    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
-    [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
+	NOTE: Remove spaces and replace 'at' with @, 'dot' with .
 
-Your subject must contain the words:
+    This replaces the old calc-bugs at asthe dot com address.
 
-       calc bug report
+    To be sure we see your EMail reporting a calc bug, please use the
+    following phase in your EMail Subject line:
 
-You may have additional words in your subject line.
+	calc bug report
 
-See the BUGS file or try the help command:
+    That phrase in your subject line will help ensure your
+    request will get past our anti-spam filters.  You may have
+    additional words in your subject line.
 
-    help bugs
+    However, you may find it more helpful to simply subscribe
+    to the calc-tester mailing list (see above) and then to
+    send your report to that mailing list as a wider set calc
+    testers may be able to help you.
 
-for details on bug reporting.
+=-=
+
+The calc web site is located at:
+
+    http://www.isthe.com/chongo/tech/comp/calc/
+
+NOTE: The EMail address uses 'asthe', while the web site uses 'isthe'.
 
 =-=
 
@@ -83,7 +111,7 @@ http://www.isthe.com/chongo/
 
 chongo (share and enjoy) /\../\
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2014  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -99,8 +127,8 @@ chongo (share and enjoy) /\../\
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.1 $
-## @(#) $Id: contrib,v 30.1 2007/03/16 11:10:42 chongo Exp $
+## @(#) $Revision: 30.2 $
+## @(#) $Id: contrib,v 30.2 2014/10/06 08:39:45 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/help/RCS/contrib,v $
 ##
 ## Under source code control:	1997/03/09 16:33:22

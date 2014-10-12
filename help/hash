@@ -13,11 +13,21 @@ DESCRIPTION
     Returns a hash value for one or more values of arbitrary types.
 
     The calc hash value is based on the core Fowler/Noll/Vo hash
-    known as FNV-1.  The return value, however, cannot be used
+    known as FNV-0.  The return value, however, cannot be used
     as an FNV hash value because calc's internal function also
     takes into account more abstract concepts such as data types.
 
-    See:
+    WARNING: Use of FNV-0 is NOT recommended for general purposes.
+    	     Calc uses FNV-0 for internal objects such as associative
+	     arrays as well as other internal processes.  Calc
+	     maintains the use of FNV-0 for backwards compatibility.
+
+	     You should use the FNV-1a hash instead!!!!!
+
+    Use the fnv() builtin function for general quick, non-cryptographic
+    hash purposes.
+
+    See also:
 
 	 http://www.isthe.com/chongo/tech/comp/fnv/
 
@@ -35,9 +45,9 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    ishash, sha1
+    ishash, fnv, sha1
 
-## Copyright (C) 1999-2007  Landon Curt Noll
+## Copyright (C) 1999-2007,2014  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -53,8 +63,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.2 $
-## @(#) $Id: hash,v 30.2 2007/07/05 17:37:41 chongo Exp $
+## @(#) $Revision: 30.3 $
+## @(#) $Id: hash,v 30.3 2014/10/06 08:45:56 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/help/RCS/hash,v $
 ##
 ## Under source code control:	1996/03/12 23:10:01

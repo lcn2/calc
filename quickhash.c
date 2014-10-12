@@ -1,7 +1,12 @@
 /*
- * quickhash - quickly hash a calc value using a quasi Fowler/Noll/Vo hash
+ * quickhash - quickly hash a calc value using a 32-bit FNV-0 hash
  *
- * Copyright (C) 1999-2007  Landon Curt Noll
+ * WARNING: General use of FNV-0 hash is not recommended.  Calc uses FNV-0
+ *	    for a specific You should use FNV-1a hash instead.  See:
+ *
+ *	http://www.isthe.com/chongo/tech/comp/fnv/index.html
+ *
+ * Copyright (C) 1999-2007,2014  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,8 +22,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.1 $
- * @(#) $Id: quickhash.c,v 30.1 2007/03/16 11:09:46 chongo Exp $
+ * @(#) $Revision: 30.2 $
+ * @(#) $Id: quickhash.c,v 30.2 2014/09/30 00:55:46 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/quickhash.c,v $
  *
  * Under source code control:	1995/03/04 11:34:23
@@ -58,6 +63,8 @@ S_FUNC QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
 
 /*
  * quasi_fnv - quasi Fowler/Noll/Vo-0 32 bit hash
+ *
+ * NOTE: General use of FNV-0 hadh
  *
  * The basis of this hash algorithm was taken from an idea sent
  * as reviewer comments to the IEEE POSIX P1003.2 committee by:
@@ -108,7 +115,7 @@ S_FUNC QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
  * to the (val) hash state.  This is a simulation of hashing
  * a variable type.
  *
- * The Fowler/Noll/Vo hash does a very good job in producing
+ * The 32-bit FNV-0 hash does a very good job in producing
  * a 32 bit hash arrays of octets in a short amount of time.
  * It is not bad for hashing calc data as well.	 So doing a
  * quick and dirty job of hashing on a part of a calc value
@@ -139,7 +146,7 @@ S_FUNC QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
 
 
 /*
- * fnv_qhash - compute the next Fowler/Noll/Vo hash given a NUMBER
+ * fnv_qhash - compute the next 32-bit FNV-0 hash given a NUMBER
  *
  * given:
  *	q	pointer to a NUMBER
@@ -154,7 +161,7 @@ S_FUNC QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
 
 
 /*
- * fnv_chash - compute the next Fowler/Noll/Vo hash given a COMPLEX
+ * fnv_chash - compute the next 32-bit FNV-0 hash given a COMPLEX
  *
  * given:
  *	c	pointer to a COMPLEX

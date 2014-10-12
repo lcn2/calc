@@ -39,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.75 $$
-# @(#) $Id: Makefile.ship,v 30.75 2014/09/21 14:09:18 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.78 $$
+# @(#) $Id: Makefile.ship,v 30.78 2014/10/06 08:45:06 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -975,7 +975,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.4.14
+VERSION= 2.12.5.0
 
 # Names of shared libraries with versions
 #
@@ -984,7 +984,7 @@ LIB_EXT_VERSION= ${LIB_EXT}.${VERSION}
 
 # legacy partial versions are no longer used, only removed
 #
-VERS= 2.12.4
+VERS= 2.12.5
 VER= 2.12
 VE= 2
 LIB_EXT_VERS= ${LIB_EXT}.${VERS}
@@ -2104,6 +2104,7 @@ calc.1: calc.man ${MAKE_FILE}
 	${Q} echo forming calc.1 from calc.man
 	@${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' \
 	        -e 's,$${BINDIR},${BINDIR},g' \
+	        -e 's,$${VERSION},${VERSION},g' \
 	        -e 's,$${CALCPATH},${CALCPATH},g' \
 	        -e 's,$${SCRIPTDIR},${SCRIPTDIR},g' \
 	        -e 's,$${CALC_INCDIR},${CALC_INCDIR},g' \
@@ -3732,57 +3733,6 @@ version:
 ver_calc${EXT}: version.c have_unused.h
 	${RM} -f $@
 	${LCC} ${ICFLAGS} -DCALC_VER ${ILDFLAGS} version.c -o $@
-
-###
-#
-# legacy partial versions are no longer used, only removed
-#
-# calc_vers:
-#	This rule is the most accurate as it uses calc source to
-#	produce the version value.  This rule produces only a
-#	3 level version string.
-#
-# calc_ver:
-#	This rule is the most accurate as it uses calc source to
-#	produce the version value.  This rule produces only a
-#	2 level version string.
-#
-# calc_ve:
-#	This rule is the most accurate as it uses calc source to
-#	produce the version value.  This rule produces only a
-#	1 level version string.
-#
-# vers:
-#	This rule simply echoes the value found in this makefile.
-#	This rule produces only a 3 level version string.
-#
-# ver:
-#	This rule simply echoes the value found in this makefile.
-#	This rule produces only a 2 level version string.
-#
-# ve:
-#	This rule simply echoes the value found in this makefile.
-#	This rule produces only a 1 level version string.
-#
-###
-
-calc_vers: ver_calc${EXT}
-	@./ver_calc${EXT} -V
-
-calc_ver: ver_calc${EXT}
-	@./ver_calc${EXT} -V | ${SED} -e 's/\.[^.]*$$//'
-
-calc_ve: ver_calc${EXT}
-	@./ver_calc${EXT} -V | ${SED} -e 's/\.[^.]*\.[^.]*$$//'
-
-vers:
-	@echo ${VERS}
-
-ver:
-	@echo ${VER}
-
-ve:
-	@echo ${VE}
 
 ###
 #

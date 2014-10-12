@@ -1,5 +1,5 @@
 .\"
-.\" Copyright (C) 1999-2007	Landon Curt Noll
+.\" Copyright (C) 1999-2007,2014	Landon Curt Noll
 .\"
 .\" Calc is open software; you can redistribute it and/or modify it under
 .\" the terms of the version 2.1 of the GNU Lesser General Public License
@@ -15,8 +15,8 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 .\"
-.\" @(#) $Revision: 30.5 $
-.\" @(#) $Id: calc.man,v 30.5 2013/08/11 08:41:38 chongo Exp $
+.\" @(#) $Revision: 30.6 $
+.\" @(#) $Id: calc.man,v 30.6 2014/10/06 08:39:45 chongo Exp $
 .\" @(#) $Source: /usr/local/src/bin/calc/RCS/calc.man,v $
 .\"
 .\" Under source code control:	    1991/07/23 05:48:26
@@ -1115,44 +1115,61 @@ To contribute comments, suggestions, enhancements
 and interesting
 .B calc
 resource files, and
-shell scripts please join the low volume calc mailing list.
+shell scripts please join the calc-tester
+low volume moderated calc mailing list.
 .sp
-To join the low volume calc mailing list, send EMail to:
+To the calc-tester mailing list, visit the following URL:
 .sp
 .in +0.5i
 .nf
-calc-tester-request at asthe dot com
+https://www.listbox.com/subscribe/?list_id=239342
 .fi
 .in -0.5i
 .sp
-Your subject must contain the words:
+To help determine you are a human and not just a spam bot,
+you will be required to provide the following additional information:
 .sp
 .in +0.5i
 .nf
-calc mailing list subscription
+Your Name
+
+Calc Version
+   For example, the current version is: ${VERSION}
+
+Operating System
+   If you don't know your operating system, enter: unknown
+
+The date 7 days ago
+   Consult a calendar :-)
+.fi
+.in -0.5i
+.sp
+If you need a human to help you with your mailing list subscription,
+or if you have problems with the above procedure, please
+send EMail to our special address:
+.sp
+.in +0.5i
+.nf
+calc-tester-maillist-help at asthe dot com
+
+NOTE: Remove spaces and replace 'at' with @, 'dot' with .
+
+NOTE: Yes, the EMail address uses 'asthe',
+      while the web site uses 'isthe'.
+.fi
+.in -0.5i
+.sp
+To be sure we see your EMail asking for help with your mailing list
+subscription, please use the following phase in your EMail Subject line
+your subject must contain the words:
+.sp
+.in +0.5i
+.nf
+calc tester mailing list help
 .fi
 .in -0.5i
 .sp
 You may have additional words in your subject line.
-.sp
-Your message body must contain:
-.sp
-.in +0.5i
-.nf
-subscribe calc-tester address
-end
-name your_full_name
-.fi
-.in -0.5i
-.sp
-where
-.B address
-s your EMail address and
-.B your_full_name
-is your full name.
-Feel free to follow the
-.B name
-line with additional EMail text as desired.
 .sp
 .SH "BUG REPORTS / BUG FIXES"
 \&
@@ -1162,12 +1179,12 @@ Send bug reports and bug fixes to:
 .sp
 .in +0.5i
 .nf
-calc-bugs at asthe dot com
+calc-bug-report at asthe dot com
 
-[[ NOTE: Replace 'at' with @, 'dot' is with . ]]
-[[       and remove the spaces ]]
-[[ NOTE: The EMail address uses 'asthe' and
-[[       the web site URL uses 'isthe' ]]
+NOTE: Remove spaces and replace 'at' with @, 'dot' with .
+
+NOTE: Yes, the EMail address uses 'asthe',
+      while the web site uses 'isthe'.
 .fi
 .in -0.5i
 .sp
@@ -1180,6 +1197,10 @@ calc bug report
 .in -0.5i
 .sp
 You may have additional words in your subject line.
+.in
+However, you may find it more helpful to simply subscribe to the
+calc-tester mailing list (see above) and then to send your report
+to that mailing list as a wider set calc testers may be able to help you.
 .sp
 See the
 .I BUGS

@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: assocfunc.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: assocfunc.c,v 30.3 2014/09/30 00:55:11 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/assocfunc.c,v $
  *
  * Under source code control:	1993/07/20 23:04:27
@@ -83,7 +83,7 @@ associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices)
 	 * so that we can first select the correct hash chain, and
 	 * also so we can quickly compare each element for a match.
 	 */
-	hash = FNV1_32_BASIS;
+	hash = QUICKHASH_BASIS;
 	for (i = 0; i < dim; i++)
 		hash = hashvalue(&indices[i], hash);
 

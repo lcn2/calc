@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.10 $
- * @(#) $Id: func.c,v 30.10 2014/08/31 14:54:50 chongo Exp $
+ * @(#) $Revision: 30.11 $
+ * @(#) $Id: func.c,v 30.11 2014/09/30 00:55:11 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/func.c,v $
  *
  * Under source code control:	1990/02/15 01:48:15
@@ -1676,7 +1676,7 @@ f_hash(int count, VALUE **vals)
 	result.v_type = V_NUM;
 	result.v_subtype = V_NOSUBTYPE;
 
-	hash = FNV1_32_BASIS;
+	hash = QUICKHASH_BASIS;
 	while (count-- > 0)
 		hash = hashvalue(*vals++, hash);
 	result.v_num = utoq((FULL) hash);

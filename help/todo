@@ -1,28 +1,36 @@
 Calc Todo Items:
 
-    The following items should be addressed sometime in the short to
-    medium term future, if not before the next release.
+    Code contributions are welcome.  First Subscribe to the calc-tester
+    mailing list.  Next, send patches to the calc-tester mailing list.
 
-    Code contributions are welcome.  Send patches to:
+    To subscribe to the calc-tester mailing list, visit the following URL:
 
-	    calc-contrib at asthe dot com
+	    http://www.isthe.com/chongo/tech/comp/calc/calc-tester.html
 
-    Calc bug reports, however, should send to:
+	This is a low volume moderated mailing list.
 
-	    calc-bugs at asthe dot com
+	This mailing list replaces calc-tester at asthe dot com list.
 
-    [[ NOTE: Replace 'at' with @, 'dot' is with . and remove the spaces ]]
-    [[ NOTE: The EMail address uses 'asthe' and the web site URL uses 'isthe' ]]
+	If you need a human to help you with your mailing list subscription,
+	please send EMail to our special:
 
-    See the BUGS file or try the calc command:
+	    calc-tester-maillist-help at asthe dot com
 
-	    help bugs
+	    NOTE: Remove spaces and replace 'at' with @, 'dot' with .
 
-    See also the 'wishlist' help files for the calc enhancement wish list.
+	address.  To be sure we see your EMail asking for help with your
+	mailing list subscription, please use the following phase in your
+	EMail Subject line:
+
+	    calc tester mailing list help
+
+	That phrase in your subject line will help ensure your
+	request will get past our anti-spam filters.  You may have
+	additional words in your subject line.
 
 =-=
 
-Very High priority items:
+High priority items:
 
     * Improve the way that calc parses statements such as if, for, while
       and do so that when a C programmer does.  This works as expected:
@@ -62,7 +70,7 @@ Very High priority items:
 
 =-=
 
-High priority items:
+Medium priority items:
 
     * Verify, complete or fix the 'SEE ALSO' help file sections.
 
@@ -87,7 +95,7 @@ High priority items:
 
 =-=
 
-Medium priority items:
+Low priority items:
 
     * Complete the use of CONST where appropriate:
 
@@ -117,7 +125,39 @@ Medium priority items:
     * Add a builtin function to access the 64 bit FNV hash which
       is currently being used internally in seed.c.
 
-## Copyright (C) 1999-2007  Landon Curt Noll
+=-=
+
+Calc bug reports and calc bug fixes should be sent to:
+
+	calc-bug-report at asthe dot com
+
+	NOTE: Remove spaces and replace 'at' with @, 'dot' with .
+
+    This replaces the old calc-bugs at asthe dot com address.
+
+    To be sure we see your EMail reporting a calc bug, please use the
+    following phase in your EMail Subject line:
+
+	calc bug report
+
+    That phrase in your subject line will help ensure your
+    request will get past our anti-spam filters.  You may have
+    additional words in your subject line.
+
+    However, you may find it more helpful to simply subscribe
+    to the calc-tester mailing list (see above) and then to
+    send your report to that mailing list as a wider set calc
+    testers may be able to help you.
+
+=-=
+
+The calc web site is located at:
+
+    http://www.isthe.com/chongo/tech/comp/calc/
+
+NOTE: The EMail address uses 'asthe', while the web site uses 'isthe'.
+
+## Copyright (C) 1999-2007,2014  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -133,8 +173,8 @@ Medium priority items:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.2 $
-## @(#) $Id: todo,v 30.2 2007/09/08 02:52:42 chongo Exp $
+## @(#) $Revision: 30.4 $
+## @(#) $Id: todo,v 30.4 2014/10/12 12:23:43 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/help/RCS/todo,v $
 ##
 ## Under source code control:	1999/10/20 07:42:55

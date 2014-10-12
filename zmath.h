@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.5 $
- * @(#) $Id: zmath.h,v 30.5 2014/08/24 21:56:51 chongo Exp $
+ * @(#) $Revision: 30.6 $
+ * @(#) $Id: zmath.h,v 30.6 2014/09/30 00:55:11 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/zmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -180,12 +180,12 @@ typedef SB32 LEN;			/* unit of length storage */
 
 
 /*
- * FNV-1 basis
+ * Quickhash basis
  *
  * We start the hash at a non-zero value at the beginning so that
  * hashing blocks of data with all 0 bits do not map onto the same
- * 0 hash value.  The virgin value that we use below is the hash value
- * that we would get from following 32 ASCII characters:
+ * 0 hash value.  The virgin value that we use below is the 32-bit
+ * FNV-0 hash value that we would get from following 32 ASCII characters:
  *
  *		chongo <Landon Curt Noll> /\../\
  *
@@ -213,7 +213,7 @@ typedef SB32 LEN;			/* unit of length storage */
  * to be a cryptographic hash function, just a fast and reasonably
  * good hash function.
  */
-#define FNV1_32_BASIS ((QCKHASH)(0x811c9dc5))
+#define QUICKHASH_BASIS ((QCKHASH)(0x811c9dc5))
 
 
 /*

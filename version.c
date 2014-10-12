@@ -19,8 +19,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.24 $
- * @(#) $Id: version.c,v 30.24 2014/08/31 15:43:39 chongo Exp $
+ * @(#) $Revision: 30.27 $
+ * @(#) $Id: version.c,v 30.27 2014/10/12 12:44:57 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
@@ -48,8 +48,8 @@ static char *program;
 
 #define MAJOR_VER	2	/* major library version */
 #define MINOR_VER	12	/* minor library version */
-#define MAJOR_PATCH	4	/* major software level under library version */
-#define MINOR_PATCH	14	/* minor software level or 0 if not patched */
+#define MAJOR_PATCH	5	/* major software level under library version */
+#define MINOR_PATCH	0	/* minor software level or 0 if not patched */
 
 
 /*
@@ -150,7 +150,6 @@ version(void)
  * This function prints a version string, rpm style:
  *
  *		x.y.z.w-r
- *		x.y.z-r
  *
  * where 'r' comes from the content of the release file.
  */
@@ -184,13 +183,8 @@ print_rpm_version(char *release)
 	/*
 	 * form the version buffer
 	 */
-	if (MINOR_PATCH > 0) {
-		printf("%d.%d.%d.%d-%s\n", calc_major_ver, calc_minor_ver,
-				      calc_major_patch, calc_minor_patch, buf);
-	} else {
-		printf("%d.%d.%d-%s\n", calc_major_ver, calc_minor_ver,
-				     calc_major_patch, buf);
-	}
+	printf("%d.%d.%d.%d-%s\n", calc_major_ver, calc_minor_ver,
+			      calc_major_patch, calc_minor_patch, buf);
 	return;
 }
 
