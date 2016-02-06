@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.6 $
- * @(#) $Id: zmath.h,v 30.6 2014/09/30 00:55:11 chongo Exp $
+ * @(#) $Revision: 30.7 $
+ * @(#) $Id: zmath.h,v 30.7 2016/02/06 08:39:35 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/RCS/zmath.h,v $
  *
  * Under source code control:	1993/07/30 19:42:48
@@ -229,12 +229,12 @@ typedef SB32 LEN;			/* unit of length storage */
 #define MAXLEN	((LEN) 0x7fffffff >> 3) /* longest value allowed */
 
 
-#define MAXREDC 64			/* number of entries in REDC cache */
-#define SQ_ALG2 3388			/* size for alternative squaring */
-#define MUL_ALG2 1780			/* size for alternative multiply */
-#define POW_ALG2 176			/* size for using REDC for powers */
+#define MAXREDC 256			/* number of entries in REDC cache */
+#define SQ_ALG2 28			/* size for alternative squaring */
+#define MUL_ALG2 28			/* size for alternative multiply */
+#define POW_ALG2 20			/* size for using REDC for powers */
 /* old REDC_ALG2 was 5/4 of POW_ALG2, so we will keep the same ratio */
-#define REDC_ALG2 220			/* size for using alternative REDC */
+#define REDC_ALG2 25			/* size for using alternative REDC */
 
 
 typedef union {

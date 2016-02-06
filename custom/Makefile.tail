@@ -293,9 +293,6 @@ clobber: clean
 	${RM} -f libcustcalc.*.dylib
 	${RM} -f libcustcalc.a
 	${V} echo remove files that are obsolete
-	${RM} -f libcustcalc${LIB_EXT_VERS}
-	${RM} -f libcustcalc${LIB_EXT_VER}
-	${RM} -f libcustcalc${LIB_EXT_VE}
 #if 0	/* start of skip for non-Gnu makefiles */
 	${RM} -f Makefile.simple
 #endif	/* end of skip for non-Gnu makefiles */

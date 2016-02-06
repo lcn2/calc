@@ -39,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.78 $$
-# @(#) $Id: Makefile.ship,v 30.78 2014/10/06 08:45:06 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.83 $$
+# @(#) $Id: Makefile.ship,v 30.83 2016/02/06 08:16:06 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -846,6 +846,15 @@ READLINE_EXTRAS=
 #READLINE_LIB= -L/sw/lib -lreadline
 #READLINE_EXTRAS= -lhistory -lncurses
 #
+# For Apple OS X: install homebrew and then:
+#
+#	brew install readline
+#
+# and use:
+#
+#READLINE_LIB= -L/usr/local/opt/readline/lib -lreadline
+#READLINE_EXTRAS= -lhistory -lncurses
+#
 READLINE_INCLUDE=
 #READLINE_INCLUDE= -I/usr/gnu/include
 #READLINE_INCLUDE= -I/usr/local/include
@@ -975,21 +984,12 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.5.0
+VERSION= 2.12.5.2
 
 # Names of shared libraries with versions
 #
 LIB_EXT= .so
 LIB_EXT_VERSION= ${LIB_EXT}.${VERSION}
-
-# legacy partial versions are no longer used, only removed
-#
-VERS= 2.12.5
-VER= 2.12
-VE= 2
-LIB_EXT_VERS= ${LIB_EXT}.${VERS}
-LIB_EXT_VER= ${LIB_EXT}.${VER}
-LIB_EXT_VE= ${LIB_EXT}.${VE}
 
 # standard utilities used during make
 #
@@ -1215,10 +1215,6 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 # Darwin dynamic shared lib filenames
 LIB_EXT:= .dylib
 LIB_EXT_VERSION:= .${VERSION}${LIB_EXT}
-# legacy partial versions are no longer used, only removed
-LIB_EXT_VERS:= .${VERS}${LIB_EXT}
-LIB_EXT_VER:= .${VER}${LIB_EXT}
-LIB_EXT_VE:= .${VE}${LIB_EXT}
 # LDCONFIG not required on this platform, so we redefine it to an empty string
 LDCONFIG:=
 # DARWIN_ARCH= -arch i386 -arch ppc	# Universal binary
@@ -1227,6 +1223,15 @@ LDCONFIG:=
 # DARWIN_ARCH= -arch x86_64		# native 64-bit binary
 DARWIN_ARCH=				# native binary
 #
+# Starting with El Capitan OS X 10.11, root by default could not
+# mkdir under system locations, so we now use the /opt/calc tree.
+#
+OPTDIR:= /opt/calc
+BINDIR:= /${OPTDIR}/bin
+LIBDIR:= /${OPTDIR}/lib
+CALC_SHAREDIR:= /${OPTDIR}/share
+CALC_INCDIR:= /${OPTDIR}/include
+SCRIPTDIR:= ${BINDIR}/cscript
 endif
 
 ##################
@@ -1771,9 +1776,6 @@ CUSTOM_PASSDOWN=  \
     TOUCH=${TOUCH} \
     TRUE=${TRUE} \
     VERSION=${VERSION} \
-    VERS=${VERS} \
-    VER=${VER} \
-    VE=${VE} \
     target=${target}
 
 # The complete list of Makefile vars passed down to help/Makefile.
@@ -1991,7 +1993,33 @@ TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS}
 #
 ###
 
-all: ${BLD_TYPE} CHANGES
+all: check_include ${BLD_TYPE} CHANGES
+
+check_include:
+	$(Q) if [ ! -d /usr/include ]; then \
+	    echo "ERROR: critical directory missing: /usr/include" 1>&2; \
+	    echo "Without this critical directory, we cannot compile." 1>&2; \
+	    echo 1>&2; \
+	    echo "Perhaps your system isn't setup to compile C source?" 1>&2; \
+	    echo "For example, Apple OS X / darwin requres that XCode" 1>&2; \
+	    echo "must be installed and that you run the command:" 1>&2; \
+	    echo 1>&2; \
+	    echo "    xcode-select --install" 1>&2; \
+	    echo 1>&2; \
+	    exit 1; \
+	fi
+	$(Q) if [ ! -f /usr/include/stdio.h ]; then \
+	    echo "ERROR: critical include files are missing" 1>&2; \
+	    echo "Without this critical directory, we cannot compile." 1>&2; \
+	    echo 1>&2; \
+	    echo "Perhaps your system isn't setup to compile C source?" 1>&2; \
+	    echo "For example, Apple OS X / darwin requres that XCode" 1>&2; \
+	    echo "must be installed and that you run the command:" 1>&2; \
+	    echo 1>&2; \
+	    echo "    xcode-select --install" 1>&2; \
+	    echo 1>&2; \
+	    exit 1; \
+	fi
 
 prep:
 	${Q} ${MAKE} -f ${MAKE_FILE} all DEBUG='-g3'
@@ -4256,12 +4284,6 @@ clobber: custom/Makefile clean
 	cd cscript; ${RM} -f all; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo remove files that are obsolete
-	${RM} -f libcalc${LIB_EXT_VERS}
-	${RM} -f libcalc${LIB_EXT_VER}
-	${RM} -f libcalc${LIB_EXT_VE}
-	${RM} -f libcustcalc${LIB_EXT_VERS}
-	${RM} -f libcustcalc${LIB_EXT_VER}
-	${RM} -f libcustcalc${LIB_EXT_VE}
 	${RM} -rf win32 build
 	${RM} -f no_implicit.arg
 	${RM} -f no_implicit.c no_implicit.o no_implicit${EXT}
@@ -4466,27 +4488,6 @@ endif
 	    ${MV} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new \
 	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
-	    if [ "${LIB_EXT_VERSION}" != "${LIB_EXT_VERS}" ]; then \
-		if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}" ]; then \
-		    ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}; \
-		    echo -n "removed legacy and likely out of date: "; \
-		    echo "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
-		fi; \
-	    fi; \
-	    if [ "${LIB_EXT_VERSION}" != "${LIB_EXT_VER}" ]; then \
-		if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VER}" ]; then \
-		    ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VER}; \
-		    echo -n "removed legacy and likely out of date: "; \
-		    echo "${T}${LIBDIR}/libcalc${LIB_EXT_VER}"; \
-		fi; \
-	    fi; \
-	    if [ "${LIB_EXT_VERSION}" != "${LIB_EXT_VE}" ]; then \
-		if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VE}" ]; then \
-		    ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VE}; \
-		    echo -n "removed legacy and likely out of date: "; \
-		    echo "${T}${LIBDIR}/libcalc${LIB_EXT_VE}"; \
-		fi; \
-	    fi; \
 	    ${LN} -f -s libcalc${LIB_EXT_VERSION} \
 	    		${T}${LIBDIR}/libcalc${LIB_EXT}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
@@ -4497,27 +4498,6 @@ endif
 	    ${MV} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new \
 	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}; \
 	    echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}"; \
-	    if [ "${LIB_EXT_VERSION}" != "${LIB_EXT_VERS}" ]; then \
-		if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}" ]; then \
-		    ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}; \
-		    echo -n "removed legacy and likely out of date: "; \
-		    echo "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
-		fi; \
-	    fi; \
-	    if [ "${LIB_EXT_VERSION}" != "${LIB_EXT_VER}" ]; then \
-		if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}" ]; then \
-		    ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}; \
-		    echo -n "removed legacy and likely out of date: "; \
-		    echo "${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}"; \
-		fi; \
-	    fi; \
-	    if [ "${LIB_EXT_VERSION}" != "${LIB_EXT_VE}" ]; then \
-		if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}" ]; then \
-		    ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}; \
-		    echo -n "removed legacy and likely out of date: "; \
-		    echo "${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}"; \
-		fi; \
-	    fi; \
 	    ${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
 	    		${T}${LIBDIR}/libcustcalc${LIB_EXT}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
@@ -4655,32 +4635,6 @@ uninstall: custom/Makefile
 		echo "uninstalled ${T}${LIBDIR}/libcustcalc${LIB_EXT}"; \
 	    fi; \
 	fi
-	-${Q} if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}" ]; then \
-	    ${RM} -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}"; \
-	    if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}" ]; then \
-		echo "cannot uninstall ${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}";\
-	    else \
-		echo "uninstalled ${T}${LIBDIR}/libcustcalc${LIB_EXT_VE}"; \
-	    fi; \
-	fi
-	-${Q} if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}" ]; then \
-	    ${RM} -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}"; \
-	    if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}" ]; then \
-		echo -n "cannot uninstall "; \
-		echo "${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}"; \
-	    else \
-		echo "uninstalled ${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}"; \
-	    fi; \
-	fi
-	-${Q} if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}" ]; then \
-	    ${RM} -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
-	    if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}" ]; then \
-		echo \
-		  "cannot uninstall ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
-	    else \
-		echo "uninstalled ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERS}"; \
-	    fi; \
-	fi
 	-${Q} if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}" ]; then \
 	    ${RM} -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}"; \
 	    if [ -f "${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}" ]; then \
@@ -4696,30 +4650,6 @@ uninstall: custom/Makefile
 		echo "cannot uninstall ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
 	    else \
 		echo "uninstalled ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
-	    fi; \
-	fi
-	-${Q} if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VE}" ]; then \
-	    ${RM} -f "${T}${LIBDIR}/libcalc${LIB_EXT_VE}"; \
-	    if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VE}" ]; then \
-		echo "cannot uninstall ${T}${LIBDIR}/libcalc${LIB_EXT_VE}"; \
-	    else \
-		echo "uninstalled ${T}${LIBDIR}/libcalc${LIB_EXT_VE}"; \
-	    fi; \
-	fi
-	-${Q} if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VER}" ]; then \
-	    ${RM} -f "${T}${LIBDIR}/libcalc${LIB_EXT_VER}"; \
-	    if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VER}" ]; then \
-		echo "cannot uninstall ${T}${LIBDIR}/libcalc${LIB_EXT_VER}"; \
-	    else \
-		echo "uninstalled ${T}${LIBDIR}/libcalc${LIB_EXT_VER}"; \
-	    fi; \
-	fi
-	-${Q} if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}" ]; then \
-	    ${RM} -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
-	    if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERS}" ]; then \
-		echo "cannot uninstall ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
-	    else \
-		echo "uninstalled ${T}${LIBDIR}/libcalc${LIB_EXT_VERS}"; \
 	    fi; \
 	fi
 	-${Q} if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}" ]; then \

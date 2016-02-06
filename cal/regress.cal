@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.12 $
- * @(#) $Id: regress.cal,v 30.12 2013/09/02 02:32:55 chongo Exp $
+ * @(#) $Revision: 30.13 $
+ * @(#) $Id: regress.cal,v 30.13 2016/02/06 08:39:35 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
@@ -403,14 +403,14 @@ define test_config()
 					'512: config("trace") == 0');
 	vrfy(config("maxprint") == 16,
 					'513: config("maxprint") == 16');
-	vrfy(config("mul2") == 1780,
-					'514: config("mul2") == 1780');
-	vrfy(config("sq2") == 3388,
-					'515: config("sq2") == 3388');
-	vrfy(config("pow2") == 176,
-					'516: config("pow2") == 176');
-	vrfy(config("redc2") == 220,
-					'517: config("redc2") == 220');
+	vrfy(config("mul2") == 28,
+					'514: config("mul2") == 28');
+	vrfy(config("sq2") == 28,
+					'515: config("sq2") == 28');
+	vrfy(config("pow2") == 20,
+					'516: config("pow2") == 20');
+	vrfy(config("redc2") == 25,
+					'517: config("redc2") == 25');
 	vrfy(config("tilde"),
 					'518: config("tilde")');
 	vrfy(config("tab"),

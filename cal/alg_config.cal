@@ -17,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.11 $
- * @(#) $Id: alg_config.cal,v 30.11 2014/09/07 06:13:04 chongo Exp $
+ * @(#) $Revision: 30.12 $
+ * @(#) $Id: alg_config.cal,v 30.12 2016/02/06 08:38:56 chongo Exp $
  * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/alg_config.cal,v $
  *
  * Under source code control:	2006/06/07 14:10:11
@@ -364,7 +364,8 @@ define best_mul2()
     /*
      * setup
      */
-    test_time = 30.0;
+    printf("WARNING: This tool may not be computing the correct best value\n");
+    test_time = 5.0;
     printf("The best_mul2() function will take a LONG time to run!\n");
     printf("It is important that best_mul2() run on an othwewise idle host!\n");
     if (config("user_debug") <= 0) {
@@ -376,7 +377,7 @@ define best_mul2()
     /*
      * firewall - must have a >1 ratio for the initial length
      */
-    high = 16;
+    high = 8;
     best_val = high;
     if (config("user_debug") > 0) {
 	printf("testing multiply alg1/alg2 ratio for len = %d\n", high);
@@ -400,7 +401,7 @@ define best_mul2()
 	 * We will multiplicatively expand our test level until
 	 * the ratio drops below 1.0.
 	 */
-	expand = ((ratio >= 10) ? 1024 : 2^round(ratio));
+	expand = 2;
 	low = high;
 	high *= expand;
 	if (config("user_debug") > 1) {
@@ -844,7 +845,8 @@ define best_sq2()
     /*
      * setup
      */
-    test_time = 30.0;
+    printf("WARNING: This tool may not be computing the correct best value\n");
+    test_time = 5.0;
     printf("The best_sq2() function will take a LONG time to run!\n");
     printf("It is important that best_sq2() run on an othwewise idle host!\n");
     if (config("user_debug") <= 0) {
@@ -856,7 +858,7 @@ define best_sq2()
     /*
      * firewall - must have a >1 ratio for the initial length
      */
-    high = 16;
+    high = 8;
     best_val = high;
     if (config("user_debug") > 0) {
 	printf("testing square alg1/alg2 ratio for len = %d\n", high);
@@ -880,7 +882,7 @@ define best_sq2()
 	 * We will multiplicatively expand our test level until
 	 * the ratio drops below 1.0.
 	 */
-	expand = ((ratio >= 10) ? 1024 : 2^round(ratio));
+	expand = 2;
 	low = high;
 	high *= expand;
 	if (config("user_debug") > 1) {
@@ -1346,6 +1348,7 @@ define best_pow2()
     /*
      * setup
      */
+    printf("WARNING: This tool may not be computing the correct best value\n");
     test_time = 60.0;
     printf("The best_pow2() function will take a LONG time to run!\n");
     printf("It is important that best_pow2() run on an othwewise idle host!\n");

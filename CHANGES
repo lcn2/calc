@@ -1,4 +1,34 @@
-The following are the changes from calc version 2.12.5.0 to date:
+The following are the changes from calc version 2.12.5.1 to date:
+
+    Removed rules and makefile variables assocated with shortened
+    calc version numbers of less than 4 levels.
+
+    Under OS X (darwin), if /usr/include is missing, warnings
+    are issued to help the user use xcode-select --install
+    so that one may properly compile C code.
+
+    Lowered REDC levels:
+
+	#define MAXREDC 256	/* number of entries in REDC cache */
+
+	#define SQ_ALG2 28	/* size for alternative squaring */
+	    config("sq2") == 28		/* was 3388 */
+	#define MUL_ALG2 28	/* size for alternative multiply */
+	    config("mul2") == 28	/* was 1780 */
+	#define POW_ALG2 20	/* size for using REDC for powers */
+	    config("pow2") == 20	/* was 176 */
+	#define REDC_ALG2 25	/* size for using alternative REDC */
+	    config("redc2") == 25	/* was 220 */
+
+    The alg_config.cal script appears to be not correctly finding the
+    best REDC values.  While it has been improved, alg_config.cal still
+    seems to be suspect on how it attempts to find the best values.
+
+    Fixed an intro help file mistake found by Roger Hardiman
+    <roger at rjh dot org dot uk>.
+
+
+The following are the changes from calc version 2.12.5.0 to 2.12.5.1:
 
     Calc has a new calc-tester mailing list.  This list is for those
     who are using/testing calc.  We also use this list to announce
@@ -61,7 +91,7 @@ The following are the changes from calc version 2.12.5.0 to date:
     a general non-cryptographic quick hash.
 
 
-The following are the changes from calc version 2.12.4.14 to date:
+The following are the changes from calc version 2.12.4.14 to 2.12.5.0:
 
     For Apple OS X / Darwin target:
 
@@ -7106,8 +7136,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.46 $
-## @(#) $Id: CHANGES,v 30.46 2014/10/12 12:46:23 chongo Exp $
+## @(#) $Revision: 30.49 $
+## @(#) $Id: CHANGES,v 30.49 2016/02/06 08:42:57 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57

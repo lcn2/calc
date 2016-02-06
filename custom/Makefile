@@ -18,8 +18,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.36 $
-# @(#) $Id: Makefile.head,v 30.36 2014/09/30 00:03:05 chongo Exp $
+# @(#) $Revision: 30.39 $
+# @(#) $Id: Makefile.head,v 30.39 2016/01/17 09:02:17 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/custom/RCS/Makefile.head,v $
 #
 # Under source code control:	1997/03/09 02:28:54
@@ -352,21 +352,12 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.5.0
+VERSION= 2.12.5.2
 
 # Names of shared libraries with versions
 #
 LIB_EXT= .so
 LIB_EXT_VERSION= ${LIB_EXT}.${VERSION}
-
-# legacy partial versions are no longer used, only removed
-#
-VERS= 2.12.5
-VER= 2.12
-VE= 2
-LIB_EXT_VERS= ${LIB_EXT}.${VERS}
-LIB_EXT_VER= ${LIB_EXT}.${VER}
-LIB_EXT_VE= ${LIB_EXT}.${VE}
 
 # standard tools
 #
@@ -599,10 +590,6 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 # Darwin dynamic shared lib filenames
 LIB_EXT:= .dylib
 LIB_EXT_VERSION:= .${VERSION}${LIB_EXT}
-# legacy partial versions are no longer used, only removed
-LIB_EXT_VERS:= .${VERS}${LIB_EXT}
-LIB_EXT_VER:= .${VER}${LIB_EXT}
-LIB_EXT_VE:= .${VE}${LIB_EXT}
 # LDCONFIG not required on this platform, so we redefine it to an empty string
 LDCONFIG:=
 # DARWIN_ARCH= -arch i386 -arch ppc	# Universal binary
@@ -611,6 +598,15 @@ LDCONFIG:=
 # DARWIN_ARCH= -arch x86_64		# native 64-bit binary
 DARWIN_ARCH=				# native binary
 #
+# Starting with El Capitan OS X 10.11, root by default could not
+# mkdir under system locations, so we now use the /opt/calc tree.
+#
+OPTDIR:= /opt/calc
+BINDIR:= /${OPTDIR}/bin
+LIBDIR:= /${OPTDIR}/lib
+CALC_SHAREDIR:= /${OPTDIR}/share
+CALC_INCDIR:= /${OPTDIR}/include
+SCRIPTDIR:= ${BINDIR}/cscript
 endif
 
 ##################
@@ -1243,9 +1239,6 @@ clobber: clean
 	${RM} -f libcustcalc.*.dylib
 	${RM} -f libcustcalc.a
 	${V} echo remove files that are obsolete
-	${RM} -f libcustcalc${LIB_EXT_VERS}
-	${RM} -f libcustcalc${LIB_EXT_VER}
-	${RM} -f libcustcalc${LIB_EXT_VE}
 #if 0	/* start of skip for non-Gnu makefiles */
 	${RM} -f Makefile.simple
 #endif	/* end of skip for non-Gnu makefiles */
