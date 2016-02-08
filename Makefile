@@ -39,8 +39,8 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.83 $$
-# @(#) $Id: Makefile.ship,v 30.83 2016/02/06 08:16:06 chongo Exp $
+MAKEFILE_REV= $$Revision: 30.85 $$
+# @(#) $Id: Makefile.ship,v 30.85 2016/02/08 22:10:13 chongo Exp $
 # @(#) $Source: /usr/local/src/bin/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
@@ -984,7 +984,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.5.2
+VERSION= 2.12.5.3
 
 # Names of shared libraries with versions
 #
@@ -1224,9 +1224,9 @@ LDCONFIG:=
 DARWIN_ARCH=				# native binary
 #
 # Starting with El Capitan OS X 10.11, root by default could not
-# mkdir under system locations, so we now use the /opt/calc tree.
+# mkdir under system locations, so we now use the /usr/local tree.
 #
-OPTDIR:= /opt/calc
+OPTDIR:= /usr/local
 BINDIR:= /${OPTDIR}/bin
 LIBDIR:= /${OPTDIR}/lib
 CALC_SHAREDIR:= /${OPTDIR}/share

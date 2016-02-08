@@ -1,4 +1,25 @@
-The following are the changes from calc version 2.12.5.1 to date:
+The following are the changes from calc version 2.12.5.3 to date:
+
+    Calc version 2.12.5.2 for Darwin (Mac OS X) users, code to installed
+    calc under /opt/calc.  Moreover the CHANGES file did not mention
+    /opt/calc.  Sorry about that!.
+
+    A much better tree for Darwin (Mac OS X) users would have been
+    to install cal under /opt/calc.  This release ONLY changes the Darwin
+    (Mac OS X) install tree to /usr/local.
+
+    Darwin (Mac OS X) users who installed calc version 2.12.5.2
+    should, after installing version 2.12.5.3:
+
+    	rm -rf /opt/calc
+
+
+The following are the changes from calc version 2.12.5.1 to 2.12.5.2:
+
+    NOTE: calc version 2.12.5.2, for Darwin (Mac OS X) users,
+    	  installed under /opt/calc.  We neglected to mention this
+	  AND /usr/local would have been a better choice.  Sorry!
+	  Fixed in calc version 2.12.5.3.
 
     Removed rules and makefile variables assocated with shortened
     calc version numbers of less than 4 levels.
@@ -7136,8 +7157,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.49 $
-## @(#) $Id: CHANGES,v 30.49 2016/02/06 08:42:57 chongo Exp $
+## @(#) $Revision: 30.50 $
+## @(#) $Id: CHANGES,v 30.50 2016/02/08 22:09:34 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
