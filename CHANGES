@@ -1,4 +1,9 @@
-The following are the changes from calc version 2.12.5.3 to date:
+The following are the changes from calc version 2.12.5.4 to date:
+
+    Recompile to match current RHEL7.2 libc and friends.
+
+
+The following are the changes from calc version 2.12.5.3 to 2.12.5.3:
 
     Calc version 2.12.5.2 for Darwin (Mac OS X) users, code to installed
     calc under /opt/calc.  Moreover the CHANGES file did not mention
@@ -7157,8 +7162,8 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.50 $
-## @(#) $Id: CHANGES,v 30.50 2016/02/08 22:09:34 chongo Exp $
+## @(#) $Revision: 30.51 $
+## @(#) $Id: CHANGES,v 30.51 2016/02/22 19:37:21 chongo Exp $
 ## @(#) $Source: /usr/local/src/bin/calc/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
