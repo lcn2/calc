@@ -1,4 +1,12 @@
-The following are the changes from calc version 2.12.5.4 to date:
+The following are the changes from calc version 2.12.5.6 to date:
+
+    Fixed a crash that showed up on Mac OS that was reported
+    by Richard Outerbridge <outer at interlog dot com> and
+    fixed by Stuart Henderson <stu at spacehopper dot org>.
+    Thanks goes to both!
+
+
+The following are the changes from calc version 2.12.5.4 to 2.12.5.5:
 
     Recompile to match current RHEL7.2 libc and friends.
 

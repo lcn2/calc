@@ -49,7 +49,7 @@ static char *program;
 #define MAJOR_VER	2	/* major library version */
 #define MINOR_VER	12	/* minor library version */
 #define MAJOR_PATCH	5	/* major software level under library version */
-#define MINOR_PATCH	5	/* minor software level or 0 if not patched */
+#define MINOR_PATCH	6	/* minor software level or 0 if not patched */
 
 
 /*
@@ -134,7 +134,7 @@ version(void)
 		fprintf(stderr, "%s: cannot malloc version string\n", program);
 		exit(70);
 	}
-	strncpy(stored_version, verbuf, BUFSIZ);
+	strncpy(stored_version, verbuf, len);
 	stored_version[len] = '\0';	/* paranoia */
 
 	/*

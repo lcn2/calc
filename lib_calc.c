@@ -259,9 +259,40 @@ libcalc_call_me_first(void)
 	 * initialize old and new configuration values
 	 */
 	newstd.epsilon = &_qonesqbase_; /* magic to fake early str2q() */
+	if (program == NULL) {
+		fprintf(stderr, "libcalc_call_me_first: FATAL: "
+				"program is NULL\n");
+		exit(80);
+	}
 	newstd.program = strdup(program);
+	if (newstd.program == NULL) {
+		fprintf(stderr, "libcalc_call_me_first: FATAL: "
+				"cannot strdup program string\n");
+		exit(81);
+	}
+	if (base_name == NULL) {
+		fprintf(stderr, "libcalc_call_me_first: FATAL: "
+				"base_name is NULL\n");
+		exit(82);
+	}
 	newstd.base_name = strdup(base_name);
-	newstd.version = strdup(version());
+	if (newstd.base_name == NULL) {
+		fprintf(stderr, "libcalc_call_me_first: FATAL: "
+				"cannot strdup base_name string\n");
+		exit(83);
+	}
+	p = version();
+	if (p == NULL) {
+		fprintf(stderr, "libcalc_call_me_first: FATAL: "
+				"version() returned NULL\n");
+		exit(84);
+	}
+	newstd.version = strdup(p);
+	if (newstd.version == NULL) {
+		fprintf(stderr, "libcalc_call_me_first: FATAL: "
+				"cannot strdup return from version()\n");
+		exit(85);
+	}
 	conf = config_copy(&newstd); /* more magic to fake early str2q() */
 	conf->tab_ok = FALSE;
 	newstd.epsilon = str2q(EPSILON_DEFAULT);
