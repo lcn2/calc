@@ -1,7 +1,7 @@
 #
 # cscript - makefile for calc shell script files
 #
-# Copyright (C) 1999-2006,2014  Landon Curt Noll
+# Copyright (C) 1999-2006,2014,2017  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,9 +17,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.9 $
-# @(#) $Id: Makefile,v 30.9 2014/09/02 07:14:49 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/calc/cscript/RCS/Makefile,v $
+# @(#) $Revision: 30.10 $
+# @(#) $Id: Makefile,v 30.10 2017/05/19 16:09:14 chongo Exp $
+# @(#) $Source: /usr/local/src/bin/calc-RHEL7/cscript/RCS/Makefile,v $
 #
 # Under source code control:	1999/11/29 11:10:26
 # File existed as early as:	1999
@@ -371,6 +371,10 @@ clean:
 clobber: clean
 	${RM} -f .all
 	${RM} -f ${TARGETS}
+	-${Q} if [ -e .DS_Store ]; then \
+	    echo ${RM} -rf .DS_Store; \
+	    ${RM} -rf .DS_Store; \
+	fi
 
 # install everything
 #

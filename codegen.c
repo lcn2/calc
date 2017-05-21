@@ -1,7 +1,7 @@
 /*
  * codegen - module to generate opcodes from the input tokens
  *
- * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2017  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,9 +19,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: codegen.c,v 30.4 2013/08/11 08:41:38 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/codegen.c,v $
+ * @(#) $Revision: 30.5 $
+ * @(#) $Id: codegen.c,v 30.5 2017/05/19 16:09:14 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc-RHEL7/RCS/codegen.c,v $
  *
  * Under source code control:	1990/02/15 01:48:13
  * File existed as early as:	before 1990
@@ -148,7 +148,11 @@ getcommands(BOOL toplevel)
 				case 1:
 				case -1:
 					if(i == 1) {
-						strcpy(name, DEFAULTCALCHELP);
+						strncpy(name,
+							DEFAULTCALCHELP,
+							MAXCMD);
+						/* paranoia */
+						name[MAXCMD] = '\0';
 						givehelp(name);
 					}
 					break;

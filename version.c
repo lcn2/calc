@@ -1,7 +1,7 @@
 /*
  * version - determine the version of calc
  *
- * Copyright (C) 1999-2014  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2017  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -19,9 +19,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.31 $
- * @(#) $Id: version.c,v 30.31 2016/02/22 19:37:21 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/version.c,v $
+ * @(#) $Revision: 30.32 $
+ * @(#) $Id: version.c,v 30.32 2017/05/19 16:09:14 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc-RHEL7/RCS/version.c,v $
  *
  * Under source code control:	1990/05/22 11:00:58
  * File existed as early as:	1990
@@ -49,7 +49,7 @@ static char *program;
 #define MAJOR_VER	2	/* major library version */
 #define MINOR_VER	12	/* minor library version */
 #define MAJOR_PATCH	5	/* major software level under library version */
-#define MINOR_PATCH	4	/* minor software level or 0 if not patched */
+#define MINOR_PATCH	5	/* minor software level or 0 if not patched */
 
 
 /*
@@ -109,6 +109,7 @@ char *
 version(void)
 {
 	char verbuf[BUFSIZ+1];		/* form version string here */
+	size_t len;			/* length of version string */
 
 	/*
 	 * return previously stored version if one exists
@@ -127,12 +128,14 @@ version(void)
 	/*
 	 * save the versions string into a newly malloced buffer
 	 */
-	stored_version = (char *)malloc(strlen(verbuf)+1);
+	len = strlen(verbuf);
+	stored_version = (char *)malloc(len+1);
 	if (stored_version == NULL) {
 		fprintf(stderr, "%s: cannot malloc version string\n", program);
 		exit(70);
 	}
-	strcpy(stored_version, verbuf);
+	strncpy(stored_version, verbuf, BUFSIZ);
+	stored_version[len] = '\0';	/* paranoia */
 
 	/*
 	 * return the newly malloced buffer

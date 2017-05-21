@@ -2,7 +2,7 @@
 #
 # help - makefile for calc help files
 #
-# Copyright (C) 1999-2006  Landon Curt Noll
+# Copyright (C) 1999-2006,2017  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,9 +18,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.10 $
-# @(#) $Id: Makefile,v 30.10 2014/09/02 07:15:58 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/calc/help/RCS/Makefile,v $
+# @(#) $Revision: 30.11 $
+# @(#) $Id: Makefile,v 30.11 2017/05/19 16:09:14 chongo Exp $
+# @(#) $Source: /usr/local/src/bin/calc-RHEL7/help/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/23 06:47:57
 # File existed as early as:	1991
@@ -204,7 +204,7 @@ EXT=
 STD_HELP_FILES_1= intro overview help
 STD_HELP_FILES_2= assoc
 
-BLT_HELP_FILES_3= builtin
+BLT_HELP_FILES_3= builtin man
 
 STD_HELP_FILES_4= command config custom define environment expression
 
@@ -283,36 +283,35 @@ BLT_HELP_FILES= ${BLT_HELP_FILES_3} ${BLT_HELP_FILES_5} \
 # to keep this list in nice sorted order and to check that these
 # non-special help files are under RCS control.
 #
-DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address \
-	agd append appr arg argv arrow asec asech asin asinh assign atan \
-	atan2 atanh avg base base2 bernoulli bit blk blkcpy blkfree blocks \
-	bround btrunc calc_tty calclevel calcpath catalan ceil cfappr cfsim \
-	char cmdbuf cmp comb conj cos cosh cot coth count cp csc csch ctime \
-	delete den dereference det digit digits display dp epsilon errcount \
-	errmax errno error estr euler eval exp fact factor fclose fcnt \
-	feof ferror fflush fgetc fgetfield fgetfile fgetline fgets fgetstr \
-	fib files floor fopen forall fpathopen fprintf fputc fputs fputstr \
-	frac free freebernoulli freeeuler freeglobals freeredc freestatics \
-	frem freopen fscan fscanf fseek fsize ftell gcd gcdrem gd getenv \
-	hash head highbit hmean hnrmod hypot ilog ilog10 ilog2 im indices \
-	inputlevel insert int inverse iroot isalnum isalpha isassoc isatty \
-	isblk iscntrl isconfig isdefined isdigit iserror iseven isfile \
-	isgraph ishash isident isint islist islower ismat ismult isnull \
-	isnum isobj isobjtype isodd isprime isprint isptr ispunct isqrt \
-	isrand israndom isreal isrel issimple isspace issq isstr istype \
-	isupper isxdigit jacobi join lcm lcmfact lfactor ln log lowbit ltol \
-	makelist matdim matfill matmax matmin matsum mattrace mattrans max \
-	memsize meq min minv mmin mne mod modify name near newerror nextcand \
-	nextprime norm null num oldvalue ord param perm pfact pi pix places \
-	pmod polar poly pop popcnt pound power prevcand prevprime printf \
-	prompt protect ptest push putenv quo quomod rand randbit random \
-	randombit randperm rcin rcmul rcout rcpow rcsq re remove reverse \
-	rewind rm root round rsearch runtime saveval scale scan scanf \
-	search sec sech seed segment select sgn sha1 sin sinh size sizeof \
-	sleep sort sqrt srand srandom ssq stoponerror str strcasecmp strcat \
-	strcmp strcpy strerror strlen strncasecmp strncmp strncpy strpos \
-	strprintf strscan strscanf strtolower strtoupper substr sum swap \
-	system systime tail tan tanh test time trunc usertime version xor
+DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd \
+	append appr arg argv arrow asec asech asin asinh assign atan atan2 \
+	atanh avg base base2 bernoulli bit blk blkcpy blkfree blocks bround \
+	btrunc calc_tty calclevel calcpath catalan ceil cfappr cfsim char \
+	cmdbuf cmp comb conj cos cosh cot coth count cp csc csch ctime delete \
+	den dereference det digit digits display dp epsilon errcount errmax \
+	errno error estr euler eval exp fact factor fclose fcnt feof ferror \
+	fflush fgetc fgetfield fgetfile fgetline fgets fgetstr fib files floor \
+	fopen forall fpathopen fprintf fputc fputs fputstr frac free \
+	freebernoulli freeeuler freeglobals freeredc freestatics frem freopen \
+	fscan fscanf fseek fsize ftell gcd gcdrem gd getenv hash head highbit \
+	hmean hnrmod hypot ilog ilog10 ilog2 im indices inputlevel insert int \
+	inverse iroot isalnum isalpha isassoc isatty isblk iscntrl isconfig \
+	isdefined isdigit iserror iseven isfile isgraph ishash isident isint \
+	islist islower ismat ismult isnull isnum isobj isobjtype isodd isprime \
+	isprint isptr ispunct isqrt isrand israndom isreal isrel issimple \
+	isspace issq isstr istype isupper isxdigit jacobi join lcm lcmfact \
+	lfactor ln log lowbit ltol makelist matdim matfill matmax matmin \
+	matsum mattrace mattrans max memsize meq min minv mmin mne mod modify \
+	name near newerror nextcand nextprime norm null num oldvalue ord param \
+	perm pfact pi pix places pmod polar poly pop popcnt pound power \
+	prevcand prevprime printf prompt protect ptest push putenv quo quomod \
+	rand randbit random randombit randperm rcin rcmul rcout rcpow rcsq re \
+	remove reverse rewind rm root round rsearch runtime saveval scale scan \
+	scanf search sec sech seed segment select sgn sha1 sin sinh size \
+	sizeof sleep sort sqrt srand srandom ssq stoponerror str strcasecmp \
+	strcat strcmp strcpy strerror strlen strncasecmp strncmp strncpy \
+	strpos strprintf strscan strscanf strtolower strtoupper substr sum \
+	swap system systime tail tan tanh test time trunc usertime version xor
 
 # This list is of files that are clones of DETAIL_HELP files.  They are
 # built from DETAIL_HELP files.
@@ -464,6 +463,18 @@ new_custom: ../custom/HOW_TO_ADD
 copy: blkcpy
 	${RM} -f $@
 	${CP} blkcpy $@
+	${CHMOD} 0444 $@
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
+	    echo ''; \
+	else \
+	    ${TRUE}; \
+	fi
+
+man: help
+	${RM} -f $@
+	${CP} help $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -698,6 +709,10 @@ clean:
 clobber: clean
 	${RM} -f ${BLT_HELP_FILES} full .all calc
 	${RM} -f ${SINGULAR_FILES} ${DETAIL_CLONE}
+	-${Q} if [ -e .DS_Store ]; then \
+	    echo ${RM} -rf .DS_Store; \
+	    ${RM} -rf .DS_Store; \
+	fi
 
 # install everything
 #

@@ -2,7 +2,7 @@
 #
 # custom - makefile for calc custom routines
 #
-# Copyright (C) 1999-2006,2014  Landon Curt Noll
+# Copyright (C) 1999-2006,2014,2017  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,9 +18,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.41 $
-# @(#) $Id: Makefile.head,v 30.41 2016/02/22 19:38:22 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/calc/custom/RCS/Makefile.head,v $
+# @(#) $Revision: 30.42 $
+# @(#) $Id: Makefile.head,v 30.42 2017/05/19 16:09:14 chongo Exp $
+# @(#) $Source: /usr/local/src/bin/calc-RHEL7/custom/RCS/Makefile.head,v $
 #
 # Under source code control:	1997/03/09 02:28:54
 # File existed as early as:	1997
@@ -352,7 +352,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.5.4
+VERSION= 2.12.5.5
 
 # Names of shared libraries with versions
 #
@@ -458,7 +458,7 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 # LIBCALC_SHLIB are flags given to ${CC} to build libcalc shared libraries
 # LIBCUSTCALC_SHLIB are flags given to ${CC} to build libcustcalc shared lib
 #
-#	NOTE: The above 4 values are unused if BLD_TYPE= calc-static-only
+#	NOTE: The above 5 values are unused if BLD_TYPE= calc-static-only
 #
 # CC_STATIC are flags given to ${CC} to build .o files suitable for static libs
 # LD_STATIC are common flags given to ${CC} to link with static libraries
@@ -835,10 +835,10 @@ EXT=.exe
 TERMCONTROL= -DUSE_WIN32
 ifdef ALLOW_CUSTOM
 #endif	/* end of skip for non-Gnu makefiles */
-CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR}
+CALCPATH= .;./cal;~/.cal;${T}${CALC_SHAREDIR};${T}${CUSTOMCALDIR}
 #if 0	/* start of skip for non-Gnu makefiles */
 else
-CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR}
+CALCPATH= .;./cal;~/.cal;${T}${CALC_SHAREDIR}
 endif
 CALCRC= ${CALC_SHAREDIR}/startup;~/.calcrc;./.calcinit
 #
@@ -1236,12 +1236,16 @@ clobber: clean
 	${RM} -f .all ${MAKE_FILE}.tmp ${MAKE_FILE}.bak
 	${RM} -f libcustcalc${LIB_EXT_VERSION}
 	${RM} -f libcustcalc${LIB_EXT}
-	${RM} -f libcustcalc.*.dylib
 	${RM} -f libcustcalc.a
+	${RM} -f libcustcalc*
 	${V} echo remove files that are obsolete
 #if 0	/* start of skip for non-Gnu makefiles */
 	${RM} -f Makefile.simple
 #endif	/* end of skip for non-Gnu makefiles */
+	-${Q} if [ -e .DS_Store ]; then \
+	    echo ${RM} -rf .DS_Store; \
+	    ${RM} -rf .DS_Store; \
+	fi
 
 # install everything
 #

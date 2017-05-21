@@ -1,7 +1,7 @@
 /*
  * token - read input file characters into tokens
  *
- * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2017  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -19,9 +19,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: token.c,v 30.2 2008/11/05 17:32:19 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/token.c,v $
+ * @(#) $Revision: 30.3 $
+ * @(#) $Id: token.c,v 30.3 2017/05/19 16:09:14 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc-RHEL7/RCS/token.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
  * File existed as early as:	before 1990
@@ -100,6 +100,7 @@ STATIC struct keyword keywords[] = {
 	{"read",	T_READ},
 	{"show",	T_SHOW},
 	{"help",	T_HELP},
+	{"man",		T_HELP},
 	{"write",	T_WRITE},
 	{"mat",		T_MAT},
 	{"obj",		T_OBJ},

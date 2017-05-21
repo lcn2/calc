@@ -2,7 +2,7 @@
 #
 # cal - makefile for calc standard resource files
 #
-# Copyright (C) 1999-2006  Landon Curt Noll
+# Copyright (C) 1999-2006,2017  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,9 +18,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.11 $
-# @(#) $Id: Makefile,v 30.11 2014/09/02 07:14:49 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/calc/cal/RCS/Makefile,v $
+# @(#) $Revision: 30.12 $
+# @(#) $Id: Makefile,v 30.12 2017/05/19 16:09:14 chongo Exp $
+# @(#) $Source: /usr/local/src/bin/calc-RHEL7/cal/RCS/Makefile,v $
 #
 # Under source code control:	1991/07/21 05:00:54
 # File existed as early as:	1991
@@ -199,7 +199,7 @@ CALC_FILES= README alg_config.cal beer.cal bernoulli.cal \
 	constants.cal deg.cal dms.cal dotest.cal ellip.cal factorial.cal \
 	factorial2.cal gvec.cal hello.cal hms.cal infinities.cal \
 	intfile.cal intnum.cal lambertw.cal linear.cal lnseries.cal \
-	lucas.cal lucas_chk.cal lucas_tbl.cal mersenne.cal mfactor.cal \
+	lucas.cal lucas_chk.cal mersenne.cal mfactor.cal \
 	mod.cal natnumset.cal pell.cal pi.cal pix.cal pollard.cal poly.cal \
 	prompt.cal psqrt.cal qtime.cal quat.cal randbitrun.cal randmprime.cal \
 	randombitrun.cal randomrun.cal randrun.cal regress.cal repeat.cal \
@@ -210,6 +210,10 @@ CALC_FILES= README alg_config.cal beer.cal bernoulli.cal \
 	test4000.cal test4100.cal test4600.cal test5100.cal test5200.cal \
 	test8400.cal test8500.cal test8600.cal test8900.cal toomcook.cal \
 	unitfrac.cal varargs.cal xx_print.cal zeta2.cal
+
+# These calc files are now obsolete and are removed by the install rule.
+#
+DEAD_CALC_FILES= lucas_tbl.cal
 
 # These files are found (but not built) in the distribution
 #
@@ -301,6 +305,23 @@ clean:
 
 clobber: clean
 	${RM} -f .all
+	-${Q} if [ -e .DS_Store ]; then \
+	    echo ${RM} -rf .DS_Store; \
+	    ${RM} -rf .DS_Store; \
+	fi
+	-${Q} for i in ${DEAD_CALC_FILES} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if [ -e "${T}${CALC_SHAREDIR}/$$i" ]; then \
+		echo "${RM} -f ${T}${CALC_SHAREDIR}/$$i"; \
+		${RM} -f ${T}${CALC_SHAREDIR}/$$i; \
+	    fi; \
+	    if [ -e "./$$i" ]; then \
+		echo "${RM} -f ./$$i"; \
+		${RM} -f ./$$i; \
+	    fi; \
+	done
 
 # install everything
 #
@@ -333,12 +354,38 @@ install: all
 		echo "installed ${T}${CALC_SHAREDIR}/$$i"; \
 	    fi; \
 	done
+	${Q} for i in ${DEAD_CALC_FILES} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if [ -e "${T}${CALC_SHAREDIR}/$$i" ]; then \
+		echo "${RM} -f ${T}${CALC_SHAREDIR}/$$i"; \
+		${RM} -f ${T}${CALC_SHAREDIR}/$$i; \
+	    fi; \
+	    if [ -e "./$$i" ]; then \
+		echo "${RM} -f ./$$i"; \
+		${RM} -f ./$$i; \
+	    fi; \
+	done
 
 # Try to remove everything that was installed
 #
 # NOTE: Keep the uninstall rule in reverse order to the install rule
 #
 uninstall:
+	- ${Q} for i in ${DEAD_CALC_FILES} /dev/null; do \
+	    if [ "$$i" = "/dev/null" ]; then \
+		continue; \
+	    fi; \
+	    if [ -e "${T}${CALC_SHAREDIR}/$$i" ]; then \
+		echo "${RM} -f ${T}${CALC_SHAREDIR}/$$i"; \
+		${RM} -f ${T}${CALC_SHAREDIR}/$$i; \
+	    fi; \
+	    if [ -e "./$$i" ]; then \
+		echo "${RM} -f ./$$i"; \
+		${RM} -f ./$$i; \
+	    fi; \
+	done
 	-${Q} for i in ${CALC_FILES} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \

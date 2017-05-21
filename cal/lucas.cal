@@ -1,7 +1,7 @@
 /*
  * lucas - perform a Lucas primality test on h*2^n-1
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999,2017  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,15 +17,21 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: lucas.cal,v 30.2 2013/09/27 08:58:46 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/lucas.cal,v $
+ * @(#) $Revision: 30.4 $
+ * @(#) $Id: lucas.cal,v 30.4 2017/05/20 21:54:16 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc-RHEL7/cal/RCS/lucas.cal,v $
  *
  * Under source code control:	1990/05/03 16:49:51
  * File existed as early as:	1990
  *
  * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
  * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ */
+
+/*
+ * For a general tutorial on how to find a new largest known prime, see:
+ *
+ *	http://www.isthe.com/chongo/tech/math/prime/prime-tutorial.pdf
  */
 
 /*
@@ -71,10 +77,15 @@
  * NOTE: Both largest known and largest known twin prime records have been
  *	 broken.  Rather than update this file each time, I'll just
  *	 congratulate the finders and encourage others to try for
- *	 larger finds.	Records were made to be broken afterall!
+ *	 larger finds.	Records were made to be broken after all!
  */
 
-/* ON GAINING A WORLD RECORD:
+/*
+ * ON GAINING A WORLD RECORD:
+ *
+ * For a general tutorial on how to find a new largest known prime, see:
+ *
+ *	http://www.isthe.com/chongo/tech/math/prime/prime-tutorial.pdf
  *
  * The routines in calc were designed to be portable, and to work on
  * numbers of 'sane' size.  The Amdahl 6 team used a 'ultra-high speed
@@ -82,6 +93,13 @@
  * tuned for a long trace vector processor to work with very large numbers.
  * The heart of the package was a multiplication and square routine that
  * was based on the PFA Fast Fourier Transform and on Winograd's radix FFTs.
+ *
+ * NOTE: While the PFA Fast Fourier Transform and Winograd's radix FFTs
+ *	 might have been optimal for the Amdahl 6 team at the time,
+ *	 they might not be optimal for your CPU architecture.  See
+ *	 the above mentioned tutorial for information on better
+ *	 methods of performing multiplications and squares of very
+ *	 large numbers.
  *
  * Having a fast computer, and a good multi-precision package are
  * critical, but one also needs to know where to look in order to have
@@ -139,12 +157,10 @@
  * be the factors of another candidate.
  *
  * Finally, one should eliminate all values of 'h*2^n-1' where
- * 'h*2^n+1' is divisible by a small primes.  The ideas behind this
- * point is beyond the scope of this program.
+ * 'h*2^n+1' is divisible by a small primes.
  */
 
-
-global pprod256;	/* product of  "primes up to 256" / "primes up to 46" */
+pprod256 = 0;	/* product of  "primes up to 256" / "primes up to 46" */
 
 /*
  * lucas - lucas primality test on h*2^n-1
@@ -171,15 +187,33 @@ global pprod256;	/* product of  "primes up to 256" / "primes up to 46" */
  *	"Introduction to Analytic Number Theory", by Tom A. Apostol,
  *	Springer-Verlag, 1984, p 188.
  *
+ * An excellent 5-page paper by Oystein J. Rodseth (we apologize that the
+ * ASCII character set does not allow us to spell his name with the
+ * umlaut marks on the O's):
+ *
+ * NOTE: The original Amdahl 6 method predates the publication of Ref4.
+ *	 The gen_v1() function used by lucas() uses the Ref4 method.
+ *	 See the 'Amdahl 6 legacy code' section below for the original
+ *	 method of generating v(1).
+ *
+ * Ref4:
+ *
+ * 	"A note on primality tests for N = h*2^n-1", by Oystein J. Rodseth,
+ *	Department of Mathematics, University of Bergen, BIT Numerical
+ *	Mathematics. 34 (3): pp 451-454.
+ *
+ *	http://folk.uib.no/nmaoy/papers/luc.pdf
+ *
  * This test is performed as follows:	(see Ref1, Theorem 5)
  *
- *	a) generate u(0)		(see the function gen_u0() below)
+ *	a) generate u(2)		(see the function gen_u2() below)
+ *					(NOTE: some call this u(0))
  *
- *	b) generate u(n-2) according to the rule:
+ *	b) generate u(n) according to the rule:
  *
  *		u(i+1) = u(i)^2-2 mod h*2^n-1
  *
- *	c) h*2^n-1 is prime if and only if u(n-2) == 0		Q.E.D. :-)
+ *	c) h*2^n-1 is prime if and only if u(n) == 0		Q.E.D. :-)
  *
  * Now the following conditions must be true for the test to work:
  *
@@ -188,7 +222,7 @@ global pprod256;	/* product of  "primes up to 256" / "primes up to 46" */
  *	h < 2^n
  *	h mod 2 == 1
  *
- * A few misc notes:
+ * A few miscellaneous notes:
  *
  * In order to reduce the number of tests, as attempt to eliminate
  * any number that is divisible by a prime less than 257.  Valid prime
@@ -222,7 +256,7 @@ lucas(h, n)
 	local testval;		/* h*2^n-1 */
 	local shiftdown;	/* the power of 2 that divides h */
 	local u;		/* the u(i) sequence value */
-	local v1;		/* the v(1) generator of u(0) */
+	local v1;		/* the v(1) generator of u(2) */
 	local i;		/* u sequence cycle number */
 	local oldh;		/* pre-reduced h */
 	local oldn;		/* pre-reduced n */
@@ -364,18 +398,17 @@ lucas(h, n)
 	}
 
 	/*
-	 * try to compute u(0)
+	 * try to compute u(2)		(NOTE: some call this u(0))
 	 *
 	 * We will use gen_v1() to give us a v(1) using the values
-	 * of 'h' and 'n'.  We will then use gen_u0() to convert
-	 * the v(1) into u(0).
+	 * of 'h' and 'n'.  We will then use gen_u2() to convert
+	 * the v(1) into u(2).
 	 *
 	 * If gen_v1() returns a negative value, then we failed to
-	 * generate a test for h*2^n-1.	 This is because h mod 3 == 0
-	 * is hard to do, and in rare cases, exceed the tables found
-	 * in this program.  We will generate an message and assume
-	 * the number is not prime, even though if we had a larger
-	 * table, we might have been able to show that it is prime.
+	 * generate a test for h*2^n-1.	 The legacy function,
+	 * legacy_gen_v1() used by the Amdahl 6 could have returned
+	 * -1. The new gen_v1() based on the method outlined in Ref4
+	 * will never return -1.
 	 */
 	v1 = gen_v1(h, n);
 	if (v1 < 0) {
@@ -384,10 +417,10 @@ lucas(h, n)
 		ldebug("lucas", "unknown: no v(1)");
 		return -1;
 	}
-	u = gen_u0(h, n, v1);
+	u = gen_u2(h, n, v1);
 
 	/*
-	 * compute u(n-2)
+	 * compute u(n)			(NOTE: some call this u(n-2))
 	 */
 	for (i=3; i <= n; ++i) {
 		/* u = (u^2 - 2) % testval; */
@@ -407,11 +440,19 @@ lucas(h, n)
 }
 
 /*
- * gen_u0 - determine the initial Lucas sequence for h*2^n-1
+ * gen_u2 - determine the initial Lucas sequence for h*2^n-1
+ *
+ * Historically many start the Lucas sequence with u(0).
+ * Some, like the author of this code, prefer to start
+ * with U(2).  This is so one may say:
+ *
+ *	2^p-1 is prime if u(p) = 0 mod 2^p-1
+ * or:
+ *	h*2^p-1 is prime if u(p) = 0 mod h*2^p-1
  *
  * According to Ref1, Theorem 5:
  *
- *	u(0) = alpha^h + alpha^(-h)
+ *	u(2) = alpha^h + alpha^(-h)	(NOTE: Ref1 calls it u(0))
  *
  * Now:
  *
@@ -419,7 +460,7 @@ lucas(h, n)
  *
  * Therefore:
  *
- *	u(0) = v(h)
+ *	u(2) = v(h)			(NOTE: Ref1 calls it u(0))
  *
  * We calculate v(h) as follows:	(Ref1, top of page 873)
  *
@@ -447,11 +488,11 @@ lucas(h, n)
  *	v1	- gen_v1(h,n)		(see function below)
  *
  * returns:
- *	u(0)	- initial value for Lucas test on h*2^n-1
- *	-1	- failed to generate u(0)
+ *	u(2)	- initial value for Lucas test on h*2^n-1
+ *	-1	- failed to generate u(2)
  */
 define
-gen_u0(h, n, v1)
+gen_u2(h, n, v1)
 {
 	local shiftdown;	/* the power of 2 that divides h */
 	local r;		/* low value: v(n) */
@@ -500,7 +541,7 @@ gen_u0(h, n, v1)
 	 * at least 2 bits long for the loop below to work.
 	 */
 	if (h == 1) {
-		ldebug("gen_u0", "quick h == 1 case");
+		ldebug("gen_u2", "quick h == 1 case");
 		/* return r%(h*2^n-1); */
 		return hnrmod(r, h, n, -1);
 	}
@@ -541,20 +582,501 @@ gen_u0(h, n, v1)
 }
 
 /*
+ * gen_u0 - determine the initial Lucas sequence for h*2^n-1
+ *
+ * Historically many start the Lucas sequence with u(0).
+ * Some, like the author of this code, prefer to start
+ * with u(2).  This is so one may say:
+ *
+ *	2^p-1 is prime if u(p) = 0 mod 2^p-1
+ * or:
+ *	h*2^n-1 is prime if U(n) = 0 mod h*2^n-1
+ *
+ * For those using the old code with gen_u0(), we
+ * simply call gen_u2() instead.
+ *
+ * See the function gen_u2() for details.
+ *
+ * input:
+ *	h	- h as in h*2^n-1
+ *	n	- n as in h*2^n-1
+ *	v1	- gen_v1(h,n)		(see function below)
+ *
+ * returns:
+ *	u(2)	- initial value for Lucas test on h*2^n-1
+ *	-1	- failed to generate u(2)
+ */
+define
+gen_u0(h, n, v1)
+{
+	return gen_u2(h, n, v1);
+}
+
+/*
+ * rodseth_xhn - determine if v(1) == x for h*2^n-1
+ *
+ * For a given h*2^n-1, v(1) == x if:
+ *
+ *	jacobi(x-2, h*2^n-1) == 1		(Ref4, condition 1) part 1
+ *	jacobi(x+2, h*2^n-1) == -1		(Ref4, condition 1) part 2
+ *
+ * Now when x-2 <= 0:
+ *
+ *	jacobi(x-2, h*2^n-1) == 0
+ *
+ * because:
+ *
+ *	jacobi(x,y) == 0                        if x <= 0
+ *
+ * So for (Ref4, condition 1) part 1 to be true:
+ *
+ *	x-2 > 0
+ *
+ * And therefore:
+ *
+ *	x > 2
+ *
+ * input:
+ *	x	- potential v(1) value
+ *	h	- h as in h*2^n-1
+ *	n	- n as in h*2^n-1
+ *
+ * returns:
+ *	1	if v(1) == x for h*2^n-1
+ *	0	otherwise
+ */
+define
+rodseth_xhn(x, h, n)
+{
+	local testval;		/* h*2^n-1 */
+
+	/*
+	 * check arg types
+	 */
+	if (!isint(h)) {
+		quit "bad args: h must be an integer";
+	}
+	if (!isint(n)) {
+		quit "bad args: n must be an integer";
+	}
+	if (!isint(x)) {
+		quit "bad args: x must be an integer";
+	}
+
+	/*
+	 * firewall
+	 */
+	if (x <= 2) {
+		return 0;
+	}
+
+ 	/*
+	 * Check for jacobi(x-2, h*2^n-1) == 1	(Ref4, condition 1) part 1
+	 */
+	testval = h*2^n-1;
+	if (jacobi(x-2, testval) != 1) {
+		return 0;
+	}
+
+ 	/*
+	 * Check for jacobi(x+2, h*2^n-1) == -1	(Ref4, condition 1) part 2
+	 */
+	if (jacobi(x+2, testval) != -1) {
+		return 0;
+	}
+
+	/*
+	 * v(1) == x for this h*2^n-1
+	 */
+	return 1;
+}
+
+/*
  * Trial tables used by gen_v1()
  *
- * When h mod 3 == 0, one needs particular values of D, a and b (see gen_v1
- * documentation) in order to find a value of v(1).
+ * When h mod 3 == 0, according to Ref4 we need to find the first value X where:
  *
- * This table defines 'quickmax' possible tests to be taken in ascending
- * order.  The v1_qval[x] refers to a v(1) value from Ref1, Table 1.  A
- * related D value is found in d_qval[x].  All D values expect d_qval[1]
- * are also taken from Ref1, Table 1.  The case of D == 21 as listed in
- * Ref1, Table 1 can be changed to D == 7 for the sake of the test because
- * of {note 6}.
+ *	jacobi(X-2, h*2^n-1) == 1		(Ref4, condition 1) part 1
+ *	jacobi(X+2, h*2^n-1) == -1		(Ref4, condition 1) part 2
+ *
+ * We can show that X > 2.  See the comments in the rodseth_xhn(x,h,n) above.
+ *
+ * Some values of X satisfy more often than others. For example a large sample
+ * of odd h, h multiple of 3 and large n (some around 1e4, some near 1e6, others
+ * near 3e7) where the sample size was 66 973 365, here is the count of the
+ * smallest value of X that satisfies conditions in Ref4, condition 1:
+ *
+ *      count  X
+ *    ----------
+ *    26791345 3
+ *    17223016 5
+ *     7829600 9
+ *     6988774 11
+ *     3301093 15
+ *     1517149 17
+ *      910346 21
+ *      711791 29
+ *      573403 20
+ *      390395 27
+ *      288637 35
+ *      149751 36
+ *      107733 39
+ *       58743 41
+ *       35619 45
+ *       25052 32
+ *       17775 51
+ *       13031 44
+ *        7563 56
+ *        7540 49
+ *        7060 59
+ *        4407 57
+ *        2948 65
+ *        2502 55
+ *        2388 69
+ *        2094 71
+ *         689 77
+ *         626 81
+ *         491 66
+ *         426 95
+ *         219 80
+ *         203 67
+ *         185 84
+ *         152 99
+ *         127 72
+ *         102 74
+ *          98 87
+ *          67 90
+ *          55 104
+ *          48 101
+ *          32 105
+ *          17 109
+ *          16 116
+ *          15 111
+ *          13 92
+ *          12 125
+ *           7 129
+ *           3 146
+ *           2 140
+ *           2 120
+ *           1 165
+ *           1 161
+ *           1 155
+ *
+ * The above distribution was found to hold fairly well over many values of
+ * odd h that are a multiple of 3 and for many values of n where h < 2^n.
+ *
+ * Given this information, when odd h is a multiple of 3 we try, in order,
+ * these values of X:
+ *
+ *      3, 5, 9, 11, 15, 17, 21, 29, 20, 27, 35, 36, 39, 41, 45, 32, 51, 44,
+ *      56, 49, 59, 57, 65, 55, 69, 71, 77, 81, 66, 95, 80, 67, 84, 99, 72,
+ *      74, 87, 90, 104, 101, 105, 109, 116, 111, 92
+ *
+ * And stop on the first value of X where:
+ *
+ *      jacobi(X-2, h*2^n-1) == 1
+ *      jacobi(X+2, h*2^n-1) == -1
+ *
+ * If no value in that list works, we start simple search starting with X = 120
+ * and incrementing by 1 until a value of X is found.
+ *
+ * The x_tbl[] matrix contains those common values of X to try in order.
+ * If all x_tbl_len fail to satisfy Ref4 condition 1, then we begin a
+ * linear search at next_x until we find a proper X value.
+ *
+ * IMPORTANT NOTE: Using this table will not find the smallest possible v(1)
+ *		   for a given h and n.  This is not a problem because using
+ *		   a larger value of v(1) does not impact the primality test.
+ *		   Furthermore after lucas(h, n) generates a few u(n) terms,
+ *		   the values will wrap (due to computing mod h*2^n-1).
+ *		   Finally on average, about 1/4 of the values of X work as
+ *		   v(1) for a given n when h is a multiple of 3.  Skipping
+ *		   rarely used v(1) will not doom gen_v1() to a long search.
+ */
+x_tbl_len = 45;
+mat x_tbl[x_tbl_len];
+x_tbl = {
+    3, 5, 9, 11, 15, 17, 21, 29, 20, 27, 35, 36, 39, 41, 45, 32, 51, 44,
+   56, 49, 59, 57, 65, 55, 69, 71, 77, 81, 66, 95, 80, 67, 84, 99, 72,
+   74, 87, 90, 104, 101, 105, 109, 116, 111, 92
+};
+next_x = 120;
+
+/*
+ * gen_v1 - compute the v(1) for a given h*2^n-1 if we can
+ *
+ * This function assumes:
+ *
+ *	n > 2			(n==2 has already been eliminated)
+ *	h mod 2 == 1
+ *	h < 2^n
+ *	h*2^n-1 mod 3 != 0	(h*2^n-1 has no small factors, such as 3)
+ *
+ * The generation of v(1) depends on the value of h.  There are two cases
+ * to consider, h mod 3 != 0, and h mod 3 == 0.
+ *
+ ***
+ *
+ * Case 1:	(h mod 3 != 0)
+ *
+ * This case is easy.
+ *
+ * In Ref1, page 869, one finds that if:	(or see Ref2, page 131-132)
+ *
+ *	h mod 6 == +/-1
+ *	h*2^n-1 mod 3 != 0
+ *
+ * which translates, gives the functions assumptions, into the condition:
+ *
+ *	h mod 3 != 0
+ *
+ * If this case condition is true, then:
+ *
+ *	u(2) = (2+sqrt(3))^h + (2-sqrt(3))^h	 (see Ref1, page 869)
+ *	     = (2+sqrt(3))^h + (2+sqrt(3))^(-h)	 (NOTE: some call this u(2))
+ *
+ * and since Ref1, Theorem 5 states:
+ *
+ *	u(2) = alpha^h + alpha^(-h)		 (NOTE: some call this u(2))
+ *	r = abs(2^2 - 1^2*3) = 1
+ *
+ * and the bottom of Ref1, page 872 states:
+ *
+ *	v(x) = alpha^x + alpha^(-x)
+ *
+ * If we let:
+ *
+ *	alpha = (2+sqrt(3))
+ *
+ * then
+ *
+ *	u(2) = v(h)				 (NOTE: some call this u(2))
+ *
+ * so we simply return
+ *
+ *	v(1) = alpha^1 + alpha^(-1)
+ *	     = (2+sqrt(3)) + (2-sqrt(3))
+ *	     = 4
+ *
+ ***
+ *
+ * Case 2:	(h mod 3 == 0)
+ *
+ * For the case where h is a multiple of 3, we turn to Ref4.
+ *
+ * The central theorem on page 3 of that paper states that
+ * we may set v(1) to the first value X that satisfies:
+ *
+ *	jacobi(X-2, h*2^n-1) == 1		(Ref4, condition 1)
+ *	jacobi(X+2, h*2^n-1) == -1		(Ref4, condition 1)
+ *
+ *	NOTE: Ref4 uses P, which we shall refer to as X.
+ *	      Ref4 uses N, which we shall refer to as h*2^n-1.
+ *
+ *	NOTE: Ref4 uses the term Legendre-Jacobi symbol, which
+ *	      we shall refer to as the Jacobi symbol.
+ *
+ * Before we address the two conditions, we need some background information
+ * on two symbols, Legendre and Jacobi.	 In Ref 2, pp 278, 284-285, we find
+ * the following definitions of jacobi(a,b) and L(a,p):
+ *
+ * The Legendre symbol L(a,p) takes the value:
+ *
+ *	L(a,p) == 1	=> a is a quadratic residue of p
+ *	L(a,p) == -1	=> a is NOT a quadratic residue of p
+ *
+ * when:
+ *
+ *	p is prime
+ *	p mod 2 == 1
+ *	gcd(a,p) == 1
+ *
+ * The value a is a quadratic residue of b if there exists some integer z
+ * such that:
+ *
+ *	z^2 mod b == a
+ *
+ * The Jacobi symbol jacobi(a,b) takes the value:
+ *
+ *	jacobi(a,b) == 1	=> b is not prime,
+ *				   or a is a quadratic residue of b
+ *	jacobi(a,b) == -1	=> a is NOT a quadratic residue of b
+ *
+ * when
+ *
+ *	b mod 2 == 1
+ *	gcd(a,b) == 1
+ *
+ * It is worth noting for the Legendre symbol, in order for L(X+/-2,
+ * h*2^n-1) to be defined, we must ensure that neither X-2 nor X+2 are
+ * factors of h*2^n-1.  This is done by pre-screening h*2^n-1 to not
+ * have small factors and keeping X+2 less than that small factor
+ * limit.  It is worth noting that in lucas(h, n), we first verify
+ * that h*2^n-1 does not have a factor < 257 before performing the
+ * primality test.  So while X+/-2 < 257, we know that
+ * gcd(X+/-2, h*2^n-1) == 1.
+ *
+ * Returning to the testing of conditions in Ref4, condition 1:
+ *
+ *	jacobi(X-2, h*2^n-1) == 1
+ *	jacobi(X+2, h*2^n-1) == -1
+ *
+ * When such an X is found, we set:
+ *
+ *	v(1) = X
+ *
+ ***
+ *
+ * In conclusion, we can compute v,(1) by attempting to do the following:
+ *
+ * h mod 3 != 0
+ *
+ *     we return:
+ *
+ *	   v(1) == 4
+ *
+ * h mod 3 == 0
+ *
+ *     we return:
+ *
+ *	    v(1) = X
+ *
+ *     where X > 2 in a integer such that:
+ *
+ *	    jacobi(X-2, h*2^n-1) == 1
+ *	    jacobi(X+2, h*2^n-1) == -1
+ *
+ ***
+ *
+ * input:
+ *	h	h as in h*2^n-1
+ *	n	n as in h*2^n-1
+ *
+ * output:
+ *	returns v(1), or -1 is there is no quick way
+ */
+define
+gen_v1(h, n)
+{
+	local x;	/* potential v(1) to test */
+	local i;	/* x_tbl index */
+
+	/*
+	 * check arg types
+	 */
+	if (!isint(h)) {
+		quit "bad args: h must be an integer";
+	}
+	if (!isint(n)) {
+		quit "bad args: n must be an integer";
+	}
+
+	/*
+	 * check for Case 1:      (h mod 3 != 0)
+	 */
+	if (h % 3 != 0) {
+		/* v(1) is easy to compute */
+		return 4;
+	}
+
+	/*
+	 * What follow is Case 2:      (h mod 3 == 0)
+	 */
+
+	/*
+	 * We will look for x that satisfies conditions in Ref4, condition 1:
+	 *
+	 *	jacobi(X-2, h*2^n-1) == 1		part 1
+	 *	jacobi(X+2, h*2^n-1) == -1		part 2
+	 */
+	for (i=0; i < x_tbl_len; ++i) {
+
+		/*
+		 * test Ref4 condition 1:
+		 */
+		x = x_tbl[i];
+		if (rodseth_xhn(x, h, n) == 1) {
+
+			/*
+			 * found a x that satisfies Ref4 condition 1
+			 */
+			ldebug("gen_v1", "h= " + str(h) + " n= " + str(n) +
+				" v1= " + str(x) + " using tbl[ " +
+				str(i) + " ]");
+			return x;
+		}
+	}
+
+	/*
+	 * We are in that rare case (about 1 in 2 300 000) where none of the
+	 * common X values satisfy Ref4 condition 1.  We start a linear search
+	 * at next_x from here on.
+	 *
+	 * However, we also need to keep in mind that when x+2 >= 257, we
+	 * need to verify that gcd(x-2, h*2^n-1) == 1 and
+	 * and to verify that gcd(x+2, h*2^n-1) == 1.
+	 */
+	x = next_x;
+	while (rodseth_xhn(x, h, n) != 1) {
+		++x;
+	}
+	/* finally found a v(1) value */
+	ldebug("gen_v1", "h= " + str(h) + " n= " + str(n) +
+	       " v1= " + str(x) + " beyond tbl");
+	return x;
+}
+
+/*
+ * ldebug - print a debug statement
+ *
+ * input:
+ *	funct	name of calling function
+ *	str	string to print
+ */
+define
+ldebug(funct, str)
+{
+	if (config("resource_debug") & 8) {
+		print "DEBUG:", funct:":", str;
+	}
+	return;
+}
+
+/*
+ ************************
+ * Amdahl 6 legacy code *
+ ************************
+ *
+ * NOTE: What follows is legacy code based on the method used by the
+ *	 Amdahl 6 group:
+ *
+ *	    John Brown, Landon Curt Noll, Bodo Parady, Gene Smith,
+ *	    Joel Smith and Sergio Zarantonello
+ *
+ * This method generated v(1) for nearly all values, except for a
+ * few rare cases when h mod 3 == 0.  The code is NOT used by lucas.cal
+ * above.  The gen_v1() function above is based on an improved method
+ * outlined in Ref4.  That method generated v(1) for all h.
+ *
+ * The code below is kept for historical purposes only.  The functions
+ * and global variables of the Amdahl 6 legacy code all begin with legacy_.
+ */
+
+/*
+ * Trial tables used by legacy_gen_v1()
+ *
+ * When h mod 3 == 0, one needs particular values of D, a and b (see
+ * legacy_gen_v1 documentation) in order to find a value of v(1).
+ *
+ * This table defines 'legacy_quickmax' possible tests to be taken in ascending
+ * order.  The legacy_v1_qval[x] refers to a v(1) value from Ref1, Table 1.  A
+ * related D value is found in legacy_d_qval[x].  All D values expect
+ * legacy_d_qval[1] are also taken from Ref1, Table 1.  The case of D == 21 as
+ * listed in Ref1, Table 1 can be changed to D == 7 for the sake of the test
+ * because of {note 6}.
  *
  * It should be noted that the D values all satisfy the selection values
- * as outlined in the gen_v1() function comments.  That is:
+ * as outlined in the legacy_gen_v1() function comments.  That is:
  *
  *	   D == P*(2^f)*(3^g)
  *
@@ -571,20 +1093,20 @@ gen_u0(h, n, v1)
  * where Q == 1.  No further processing is needed to compute v(1) when r
  * is of this form.
  */
-quickmax = 8;
-mat d_qval[quickmax];
-mat v1_qval[quickmax];
-d_qval[0] = 5;		v1_qval[0] = 3;		/* a=1	 b=1  r=4  */
-d_qval[1] = 7;		v1_qval[1] = 5;		/* a=3	 b=1  r=12  D=21 */
-d_qval[2] = 13;		v1_qval[2] = 11;	/* a=3	 b=1  r=4  */
-d_qval[3] = 11;		v1_qval[3] = 20;	/* a=3	 b=1  r=2  */
-d_qval[4] = 29;		v1_qval[4] = 27;	/* a=5	 b=1  r=4  */
-d_qval[5] = 53;		v1_qval[5] = 51;	/* a=53	 b=1  r=4  */
-d_qval[6] = 17;		v1_qval[6] = 66;	/* a=17	 b=1  r=1  */
-d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38	 b=1  r=2  */
+legacy_quickmax = 8;
+mat legacy_d_qval[legacy_quickmax];
+mat legacy_v1_qval[legacy_quickmax];
+legacy_d_qval[0] = 5;	legacy_v1_qval[0] = 3;	/* a=1	 b=1  r=4  */
+legacy_d_qval[1] = 7;	legacy_v1_qval[1] = 5;	/* a=3	 b=1  r=12  D=21 */
+legacy_d_qval[2] = 13;	legacy_v1_qval[2] = 11;	/* a=3	 b=1  r=4  */
+legacy_d_qval[3] = 11;	legacy_v1_qval[3] = 20;	/* a=3	 b=1  r=2  */
+legacy_d_qval[4] = 29;	legacy_v1_qval[4] = 27;	/* a=5	 b=1  r=4  */
+legacy_d_qval[5] = 53;	legacy_v1_qval[5] = 51;	/* a=53	 b=1  r=4  */
+legacy_d_qval[6] = 17;	legacy_v1_qval[6] = 66;	/* a=17	 b=1  r=1  */
+legacy_d_qval[7] = 19;	legacy_v1_qval[7] = 74;	/* a=38	 b=1  r=2  */
 
 /*
- * gen_v1 - compute the v(1) for a given h*2^n-1 if we can
+ * legacy_gen_v1 - compute the v(1) for a given h*2^n-1 if we can
  *
  * This function assumes:
  *
@@ -613,12 +1135,12 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38	 b=1  r=2  */
  *
  * If this case condition is true, then:
  *
- *	u(0) = (2+sqrt(3))^h + (2-sqrt(3))^h		(see Ref1, page 869)
- *	     = (2+sqrt(3))^h + (2+sqrt(3))^(-h)
+ *	u(2) = (2+sqrt(3))^h + (2-sqrt(3))^h		(see Ref1, page 869)
+ *	     = (2+sqrt(3))^h + (2+sqrt(3))^(-h)		(some call this u(0))
  *
  * and since Ref1, Theorem 5 states:
  *
- *	u(0) = alpha^h + alpha^(-h)
+ *	u(2) = alpha^h + alpha^(-h)
  *	r = abs(2^2 - 1^2*3) = 1
  *
  * and the bottom of Ref1, page 872 states:
@@ -631,7 +1153,7 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38	 b=1  r=2  */
  *
  * then
  *
- *	u(0) = v(h)
+ *	u(2) = v(h)
  *
  * so we simply return
  *
@@ -666,7 +1188,7 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38	 b=1  r=2  */
  *
  * where L(x,y) is the Legendre symbol (see below), then:
  *
- *	u(0) = alpha^h + alpha^(-h)
+ *	u(2) = alpha^h + alpha^(-h)
  *
  * The bottom of Ref1, page 872 states:
  *
@@ -674,7 +1196,7 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38	 b=1  r=2  */
  *
  * thus since:
  *
- *	u(0) = v(h)
+ *	u(2) = v(h)
  *
  * so we want to return:
  *
@@ -929,7 +1451,7 @@ d_qval[7] = 19;		v1_qval[7] = 74;	/* a=38	 b=1  r=2  */
  *	returns v(1), or -1 is there is no quick way
  */
 define
-gen_v1(h, n)
+legacy_gen_v1(h, n)
 {
 	local d;	/* the 'D' value to try */
 	local val_mod;	/* h*2^n-1 mod 'D' */
@@ -947,10 +1469,10 @@ gen_v1(h, n)
 	 * We will try all 'D' values until we find a proper v(1)
 	 * or run out of 'D' values.
 	 */
-	for (i=0; i < quickmax; ++i) {
+	for (i=0; i < legacy_quickmax; ++i) {
 
 		/* grab our 'D' value */
-		d = d_qval[i];
+		d = legacy_d_qval[i];
 
 		/* compute h*2^n-1 mod 'D' quickly */
 		val_mod = (h*pmod(2,n%(d-1),d)-1) % d;
@@ -965,13 +1487,13 @@ gen_v1(h, n)
 			/* D mod 4 == 1, so check for J(D, h*2^n-1) == -1 */
 			if (jacobi(val_mod, d) == -1) {
 				/* it worked, return the related v(1) value */
-				return v1_qval[i];
+				return legacy_v1_qval[i];
 			}
 		} else {
 			/* D mod 4 == -1, so check for J(D, h*2^n-1) == 1 */
 			if (jacobi(val_mod, d) == 1) {
 				/* it worked, return the related v(1) value */
-				return v1_qval[i];
+				return legacy_v1_qval[i];
 			}
 		}
 	}
@@ -1028,20 +1550,4 @@ gen_v1(h, n)
 
 	/* no quick and dirty v(1), so return -1 */
 	return -1;
-}
-
-/*
- * ldebug - print a debug statement
- *
- * input:
- *	funct	name of calling function
- *	str	string to print
- */
-define
-ldebug(funct, str)
-{
-	if (config("resource_debug") & 8) {
-		print "DEBUG:", funct:":", str;
-	}
-	return;
 }

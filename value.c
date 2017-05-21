@@ -1,7 +1,7 @@
 /*
  * value - generic value manipulation routines
  *
- * Copyright (C) 1999-2007,2014  David I. Bell
+ * Copyright (C) 1999-2007,2014,2017  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,9 +17,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.8 $
- * @(#) $Id: value.c,v 30.8 2014/08/31 15:43:39 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/value.c,v $
+ * @(#) $Revision: 30.9 $
+ * @(#) $Id: value.c,v 30.9 2017/05/19 16:09:14 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc-RHEL7/RCS/value.c,v $
  *
  * Under source code control:	1990/02/15 01:48:25
  * File existed as early as:	before 1990
@@ -2843,7 +2843,7 @@ printvalue(VALUE *vp, int flags)
 		qfree(qtemp);
 		break;
 	case V_OPTR:
-		math_fmt("o-ptr: %p", vp->v_octet);
+		math_fmt("o-ptr: %p", (void *)vp->v_octet);
 		break;
 	case V_VPTR:
 		math_fmt("v-ptr: %p", (void *)vp->v_addr);

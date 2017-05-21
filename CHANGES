@@ -2,6 +2,56 @@ The following are the changes from calc version 2.12.5.4 to date:
 
     Recompile to match current RHEL7.2 libc and friends.
 
+    Added fix by Alexandre Fedotov <fedotov at mail dot desy dot de>
+    to prepend ${T} in front of the CALCPATH path components
+    ${CALC_SHAREDIR} and ${CUSTOMDIR}.  Add ${T} in front of ${HELPDIR}
+    and ${CUSTONHELPDIR} when making conf.h.
+
+    Improved the jacobi help page.
+
+    Rewrote gen_v1() in the lucas.cal resource file using the method
+    based on a paper:
+
+ 	"A note on primality tests for N = h*2^n-1", by Oystein J. Rodseth,
+	Department of Mathematics, University of Bergen, BIT Numerical
+	Mathematics. 34 (3): pp 451-454.
+
+	http://folk.uib.no/nmaoy/papers/luc.pdf
+
+    The improved gen_v1() function is capable of returning a value
+    for all valid values of h and n.  As a result, the trial tables
+    used by gen_v1() have been changed to a short list of values
+    to try, in order ot likelyhood of success, before doing an
+    enhaustive search for a v1 value to return.
+
+    Removed lucas_tbl.cal calc resource file.  This file was made
+    obsolete by the above rewrite of the lucas.cal resource file.
+    This file will be removed from the local cal directory and
+    from CALC_SHAREDIR during a 'make install', 'make cobber',
+    and 'make uninstall'.
+
+    Renamed gen_u0() to gen_u2() in lucas.cal.  Provided a gen_u0()
+    stub function that calls gen_u2() for backward compatibility.
+
+    The old gen_v1() method used by the Amdahl 6 group has been
+    renamed legacy_gen_v1() in lucas.cal.  This function is no
+    longer usde by the lucas(h, n) function to test the primality of
+    h*2^n-1.  It is preserved in lucas.cal for historical purposes.
+
+    The 'make clobber' rule will attempt to remove all files that
+    start with libcalc and start with libcustcalc.
+
+    The 'man' command is now an alias for the 'help' command.
+
+    Fixed extra /'s that were put into CALCPATH because of ${T}.
+    Fixed extra /'s that were compiled into HELPDIR and CUSTOMHELPDIR.
+
+    The fix in 2.12.5.4 to to prepend ${T} in front of the CALCPATH
+    path components ${CALC_SHAREDIR} and ${CUSTOMDIR} broke the
+    calc rpm build process.  The check-buildroot tool discovered
+    that the BUILDROOT directory had been improperly put into various
+    paths and binaries.  This has been fixed in 2.12.5.5.
+
 
 The following are the changes from calc version 2.12.5.3 to 2.12.5.3:
 
@@ -7146,7 +7196,7 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 
     A small bug in the library file regress.cal was fixed.
 
-## Copyright (C) 2001-2014  Landon Curt Noll
+## Copyright (C) 2001-2017  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -7162,9 +7212,9 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.51 $
-## @(#) $Id: CHANGES,v 30.51 2016/02/22 19:37:21 chongo Exp $
-## @(#) $Source: /usr/local/src/bin/calc/RCS/CHANGES,v $
+## @(#) $Revision: 30.55 $
+## @(#) $Id: CHANGES,v 30.55 2017/05/21 02:22:22 chongo Exp $
+## @(#) $Source: /usr/local/src/bin/calc-RHEL7/RCS/CHANGES,v $
 ##
 ## Under source code control:	1993/06/02 18:12:57
 ## File existed as early as:	1989

@@ -23,7 +23,7 @@
 #	 READLINE_LIB= -lreadline
 #	 READLINE_EXTRAS= -lhistory -lncurses
 #
-# Copyright (C) 1999-2014  Landon Curt Noll
+# Copyright (C) 1999-2017  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of version 2.1 of the GNU Lesser General Public License
@@ -39,9 +39,9 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
-MAKEFILE_REV= $$Revision: 30.86 $$
-# @(#) $Id: Makefile.ship,v 30.86 2016/02/22 19:38:22 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/calc/RCS/Makefile.ship,v $
+MAKEFILE_REV= $$Revision: 30.88 $$
+# @(#) $Id: Makefile.ship,v 30.88 2017/05/21 01:26:42 chongo Exp $
+# @(#) $Source: /usr/local/src/bin/calc-RHEL7/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
 # File existed as early as:	before 1990
@@ -787,12 +787,20 @@ ALLOW_CUSTOM= -DCUSTOM
 # Select CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR} for DJGPP.
 #
 #if 0	/* start of skip for non-Gnu makefiles */
+ifdef RPM_TOP
 ifdef ALLOW_CUSTOM
-#endif	/* end of skip for non-Gnu makefiles */
 CALCPATH= .:./cal:~/.cal:${CALC_SHAREDIR}:${CUSTOMCALDIR}
-#if 0	/* start of skip for non-Gnu makefiles */
 else
 CALCPATH= .:./cal:~/.cal:${CALC_SHAREDIR}
+endif
+else
+ifdef ALLOW_CUSTOM
+#endif	/* end of skip for non-Gnu makefiles */
+CALCPATH= .:./cal:~/.cal:${T}${CALC_SHAREDIR}:${T}${CUSTOMCALDIR}
+#if 0	/* start of skip for non-Gnu makefiles */
+else
+CALCPATH= .:./cal:~/.cal:${T}${CALC_SHAREDIR}
+endif
 endif
 #endif	/* end of skip for non-Gnu makefiles */
 
@@ -984,7 +992,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.5.4
+VERSION= 2.12.5.5
 
 # Names of shared libraries with versions
 #
@@ -1083,7 +1091,7 @@ COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
 # LIBCALC_SHLIB are flags given to ${CC} to build libcalc shared libraries
 # LIBCUSTCALC_SHLIB are flags given to ${CC} to build libcustcalc shared lib
 #
-#	NOTE: The above 4 values are unused if BLD_TYPE= calc-static-only
+#	NOTE: The above 5 values are unused if BLD_TYPE= calc-static-only
 #
 # CC_STATIC are flags given to ${CC} to build .o files suitable for static libs
 # LD_STATIC are common flags given to ${CC} to link with static libraries
@@ -1460,10 +1468,10 @@ EXT=.exe
 TERMCONTROL= -DUSE_WIN32
 ifdef ALLOW_CUSTOM
 #endif	/* end of skip for non-Gnu makefiles */
-CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR}
+CALCPATH= .;./cal;~/.cal;${T}${CALC_SHAREDIR};${T}${CUSTOMCALDIR}
 #if 0	/* start of skip for non-Gnu makefiles */
 else
-CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR}
+CALCPATH= .;./cal;~/.cal;${T}${CALC_SHAREDIR}
 endif
 CALCRC= ${CALC_SHAREDIR}/startup;~/.calcrc;./.calcinit
 #
@@ -2232,7 +2240,15 @@ conf.h: ${MAKE_FILE}
 	${Q} echo '' >> conf.h
 	${Q} echo '/* the location of the help directory */' >> conf.h
 	${Q} echo '#if !defined(HELPDIR)' >> conf.h
+#if 0	/* start of skip for non-Gnu makefiles */
+ifdef RPM_TOP
 	${Q} echo '#define HELPDIR "${HELPDIR}"' >> conf.h
+else
+#endif	/* end of skip for non-Gnu makefiles */
+	${Q} echo '#define HELPDIR "${T}${HELPDIR}"' >> conf.h
+#if 0	/* start of skip for non-Gnu makefiles */
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 	${Q} echo '#endif /* HELPDIR */' >> conf.h
 	${Q} echo '' >> conf.h
 #if 0	/* start of skip for non-Gnu makefiles */
@@ -2240,7 +2256,15 @@ ifdef ALLOW_CUSTOM
 #endif	/* end of skip for non-Gnu makefiles */
 	${Q} echo '/* the location of the custom help directory */' >> conf.h
 	${Q} echo '#if !defined(CUSTOMHELPDIR)' >> conf.h
+#if 0	/* start of skip for non-Gnu makefiles */
+ifdef RPM_TOP
 	${Q} echo '#define CUSTOMHELPDIR "${CUSTOMHELPDIR}"' >> conf.h
+else
+#endif	/* end of skip for non-Gnu makefiles */
+	${Q} echo '#define CUSTOMHELPDIR "${T}${CUSTOMHELPDIR}"' >> conf.h
+#if 0	/* start of skip for non-Gnu makefiles */
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 	${Q} echo '#endif /* CUSTOMHELPDIR */' >> conf.h
 	${Q} echo '' >> conf.h
 #if 0	/* start of skip for non-Gnu makefiles */
@@ -4104,6 +4128,13 @@ gdb:
 #
 ###
 
+# NOTE: Only the 2 rpm rules should set ${RPM_TOP}!
+#
+# When making calc RPM, ${RPM_TOP} will be set to the tree
+# under which rpm files are built.  You should NOT set RPM_TOP
+# by yourself.  Only make rpm and make rpm-preclean should
+# set this value.
+
 rpm: clobber rpm-preclean rpm.mk calc.spec.in
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${MAKE} -f rpm.mk all V=${V} RPM_TOP="${RPM_TOP}"
@@ -4259,15 +4290,15 @@ clobber: custom/Makefile clean
 	${RM} -f *.pure_hardlin
 	${RM} -f *.u
 	${RM} -f libcalc.a
+	${RM} -f libcustcalc.a
 	${RM} -f calc.1 calc.usage
 	${RM} -f calc.pixie calc.rf calc.Counts calc.cord
 	${RM} -rf gen_h skel Makefile.bak tmp.patch
 	${RM} -f calc.spec inst_files rpm.mk.patch tmp
 	${RM} -f libcalc${LIB_EXT_VERSION}
-	${RM} -f libcalc*${LIB_EXT}
+	${RM} -f libcalc*
 	${RM} -f libcustcalc${LIB_EXT_VERSION}
-	${RM} -f libcustcalc*${LIB_EXT}
-	${RM} -f libcustcalc.a
+	${RM} -f libcustcalc*
 	${RM} -f calc-static${EXT}
 	${RM} -f ${CALC_STATIC_LIBS}
 	${RM} -f all
@@ -4293,6 +4324,10 @@ clobber: custom/Makefile clean
 	-${MAKE} -f ${MAKE_FILE} custom/Makefile
 #endif	/* end of skip for non-Gnu makefiles */
 	${RM} -f .static .dynamic calc-dynamic-only calc-static-only
+	-${Q} if [ -e .DS_Store ]; then \
+	    echo ${RM} -rf .DS_Store; \
+	    ${RM} -rf .DS_Store; \
+	fi
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # install everything

@@ -11,39 +11,186 @@ TYPES
     return	1, -1, or 0
 
 DESCRIPTION
-    If y is a positive odd prime and x is an integer not divisible
-    by y, jacobi(x,y) returns the Legendre symbol function, usually
-    denoted by (x/y) as if x/y were a fraction; this has the value
-    1 or -1 according as x is or is not a quadratic residue modulo y.
-    x is a quadratic residue modulo y if for some integer u,
-    x = u^2 (mod y); if for all integers u, x != u^2 (mod y), x
-    is said to be a quadratic nonresidue modulo y.
+    The jacobi builtin function of calc returns the value of the
+    Jacobi symbol.
 
-    If y is a positive odd prime and x is divisible by y, jacobi(x,y)
-    returns the value 1.  (This differs from the zero value usually
-    given in number theory books for (x/y) when x and y
-    are not relatively prime.)
-    assigned to (x/y) O
+    If y is an odd prime, then the Legendre symbol (x/y) returns:
 
-    If y is an odd positive integer equal to p_1 * p_2 * ... * p_k,
-    where the p_i are primes, not necessarily distinct, the
-    jacobi symbol function is given by
+	(x/y) == 0	x is divisible by y (0 == x % y)
+    	(x/y) == 1	if x is a quadratic residue modulo y
+    	(x/y) == -1	if x is not a quadratic residue modulo y
 
-		jacobi(x,y)  =	(x/p_1) * (x/p_2) * ... * (x/p_k).
+    Legendre symbol often denoted as (x/y) as if x/y were a fraction.
 
-    where the functions on the right are Legendre symbol functions.
+    If there exists an integer u such that:
 
-    This is also often usually by (x/y).
+	x == u^2 modulo y		(i.e., x == u^2 % y)
 
-    If jacobi(x,y) = -1, then x is a quadratic nonresidue modulo y.
-    Equivalently, if x is a quadratic residue modulo y, then
-    jacobi(x,y) = 1.
+    then x is a quadratic residue modulo y.  However, if for all integers u:
 
-    If jacobi(x,y) = 1 and y is composite, x may be either a quadratic
-    residue or a quadratic nonresidue modulo y.
+	x != u^2 modulo y		(i.e., x != u^2 % y)
 
-    If y is even or negative, jacobi(x,y) as defined by calc returns
-    the value 0.
+    x is said to be a quadratic non-residue modulo y.
+
+    When y is prime, Jacobi symbol is the same as the Legendre symbol.
+    That is, Jacobi symbol satisfies the same rules as the Legendre symbol.
+    Therefore, when y is an odd prime:
+
+	jacobi(x,y) == 0	x is divisible by y (x == 0 % y)
+	jacobi(x,y) == 1	if x is a quadratic residue modulo y
+	jacobi(x,y) == -1	if x is a quadratic non-residue modulo y
+
+    When y is even or y <= 0:
+
+	jacobi(x,y) == 0
+
+    When y is not prime, we may express y as the product of primes:
+
+	y == p0^a0 * p1^a1 * .. * pn^an
+
+    When y is odd and NOT prime, then:
+
+	jacobi(x,y) == (x/p0)^a0 * (x/p1)^a1 * .. * (x/pn)^an
+
+    where (x/y) is Legendre symbol.
+
+    If x is a quadratic residue modulo y, then jacobi(x,y) == 1.
+
+    If jacobi(x,y) == 1 and y is composite (y is not prime), x may
+    be either a quadratic residue or a quadratic non-residue modulo y.
+
+    If y is even or negative, jacobi(x,y) as defined by calc, returns 0.
+
+    Jacobi symbol details
+    ---------------------
+
+    In the rest of this section we present for the curious, some
+    rules related to the jacobi symbol.  Most of these rules are
+    used internally by calc to evaluate the jacobi symbol.
+
+    In this section, a and b are positive odd integers.
+    In this section, x and y are any integers.
+
+    We have these identities:
+
+	jacobi(x,y) == 0			if x <= 0
+	jacobi(x,y) == 0			if y <= 0
+	jacobi(x,y) == 0	    		if y is even
+
+	jacobi(x,b) == 0			if gcd(x,b) > 1
+
+	jacobi(0,b) == 0
+	jacobi(1,b) == 1
+
+	jacobi(x,b) == jacobi(y,b)		if x == y % b
+
+	jacobi(a,b) == jacobi(2*a,b)		if b == 1 % 8 OR b == 7 % 8
+	jacobi(a,b) == -jacobi(2*a,b)		if b != 1 & 8 AND b != 7 % 8
+
+	jacobi(a,b) == jacobi(b,a)		if a == 3 % 4 AND b == 3 % 4
+	jacobi(a,b) == -jacobi(b,a)		if a != 3 % 4 OR b != 3 % 4
+
+	jacobi(-1,b) == 1			if b == 1 % 4
+	jacobi(-1,b) == -1			if b == 3 % 4
+
+	jacobi(x,b) * jacobi(y,b) == jacobi(x*y,b)
+	jacobi(x,a) * jacobi(x,b) == jacobi(x,a*b)
+
+    Technically the Jacobi symbol jacobi(x,y) is not defined when
+    x == 0, x < 0, y is even, y == 0, and when y < 0.  So by convention:
+
+	jacobi(x,y) == 0			if x <= 0
+	jacobi(x,y) == 0			if y <= 0
+	jacobi(x,y) == 0			if y == 0 % 2
+
+    It is also worth noting that:
+
+	jacobi(x,y) == 0 			if gcd(y,x) != 1
+	jacobi(y,y) == 0			if y > 1
+
+    Based on the generalization of the quadratic reciprocity theorem,
+    when a and b are odd, b >= 3, and gcd(a,b) == 1:
+
+	jacobi(a,b) == jacobi(b,a) * ((-1) ^ ((a-1) * (b-1) / 4))
+
+    Therefore, when a and b are odd, b >= 3, and gcd(a,b) == 1:
+
+	jacobi(a,b) == jacobi(b,a)		if a == 1 % 4 OR b == 1 % 4
+	jacobi(a,b) == -jacobi(b,a)		if a == 3 % 4 AND b == 3 % 4
+
+    Jacobi symbol satisfies the same rules as the Legendre symbol such as:
+
+	jacobi(x,y0*y1) == jacobi(x,y0) * jacobi(x,y1)
+	jacobi(x0*x1,y) == jacobi(x0,y) * jacobi(x1,y)
+
+    When b is odd:
+
+	jacobi(x^2,b) == 1 				if gcd(x,b) == 1
+	jacobi(x,b^2) == 1 				if gcd(x,b) == 1
+
+	jacobi(x0,b) == jacobi(x1,b)			if x0 == x1 % b
+
+	jacobi(-1,b) == (-1) ^ ((b-1) / 2) == 1		if b == 1 % 4
+	jacobi(-1,b) == (-1) ^ ((b-1) / 2) == -1	if b == 3 % 4
+
+	jacobi(2,b) == (-1) ^ ((b^2 - 1) / 8) == 1	if b == 1 % 8 OR
+							   b == 7 % 8
+	jacobi(2,b) == (-1) ^ ((b^2 - 1) / 8) == -1	if b == 3 % 8 OR
+							   b == 5 % 8
+
+	jacobi(-3,b) == 1				if b == 1 % 6
+	jacobi(-3,b) == -1				if b == 5 % 6
+
+	jacobi(5,b) == 1				if b == 1 % 10 OR
+							   b == 9 % 10
+	jacobi(5,b) == -1				if b == 3 % 10 OR
+							   b == 7 % 10
+
+    If a and b are both odd primes, OR
+    if gcd(a,b) = 1 and, a > 0, and a is odd:
+
+	jacobi(a,b) == jacobi(b,a) * ((-1) ^ (((a-1)/2) * ((b-1)/2)))
+	jacobi(a,b) * jacobi(b,a) == ((-1) ^ (((a-1)/2) * ((b-1)/2)))
+
+    If b is an odd prime:
+
+	jacobi(a,b) == (a ^ ((b-1)/2)) % b
+
+    Combining all of the above, computing jacobi(x,b) may be expressed
+    in the following algorithm when b is odd and 0 < x < b:
+
+	j = 1;
+	while (x != 0) {
+	    while (iseven(x)) {
+	    	x = x / 2;
+		t = b % 8;
+		if (t == 3 || t == 5) {
+		    j = -j;
+		}
+	    }
+	    swap(x,b);
+	    if (((x % 4) == 3) && ((b % 4) == 3)) {
+	    	j = -j;
+	    }
+	    x = x % b;
+	}
+
+	if (b == 1) {
+	    return j;
+	} else {
+	    return 0;
+	}
+
+    The above calc pseudo code is provided to help illustrate the
+    properties of the jacobi symbol only.  The use of calc's jacobi
+    builtin is recommended for both speed as well as to handle
+    specical cases.
+
+    For more information on the Legendre symbol and the Jacobi symbol:
+
+	http://mathworld.wolfram.com/LegendreSymbol.html
+	http://mathworld.wolfram.com/JacobiSymbol.html
+	http://primes.utm.edu/glossary/xpage/JacobiSymbol.html
 
 EXAMPLE
     ; print jacobi(2,3), jacobi(2,5), jacobi(2,15)
@@ -61,7 +208,7 @@ LINK LIBRARY
 
 SEE ALSO
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2017  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -77,9 +224,9 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.1 $
-## @(#) $Id: jacobi,v 30.1 2007/03/16 11:10:42 chongo Exp $
-## @(#) $Source: /usr/local/src/bin/calc/help/RCS/jacobi,v $
+## @(#) $Revision: 30.2 $
+## @(#) $Id: jacobi,v 30.2 2017/05/19 16:09:14 chongo Exp $
+## @(#) $Source: /usr/local/src/bin/calc-RHEL7/help/RCS/jacobi,v $
 ##
 ## Under source code control:	1995/12/18 12:34:57
 ## File existed as early as:	1995

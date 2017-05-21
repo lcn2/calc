@@ -1,7 +1,7 @@
 /*
  * regress - calc regression and correctness test suite
  *
- * Copyright (C) 1999-2006  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2017  David I. Bell and Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,9 +17,9 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.13 $
- * @(#) $Id: regress.cal,v 30.13 2016/02/06 08:39:35 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/regress.cal,v $
+ * @(#) $Revision: 30.14 $
+ * @(#) $Id: regress.cal,v 30.14 2017/05/19 16:09:14 chongo Exp $
+ * @(#) $Source: /usr/local/src/bin/calc-RHEL7/cal/RCS/regress.cal,v $
  *
  * Under source code control:	1990/02/15 01:50:36
  * File existed as early as:	before 1990
@@ -8068,7 +8068,6 @@ return test_functions2();
  *	hello.cal	- designed to go into an infinite loop
  *	lucal.cal	- already read by this file
  *	lucas_chk.cal	- already read by this file
- *	lucas_tbl.cal	- duplicatres code already read by another file
  *	regress.cal	- this file
  *	surd.cal	- already read by this file
  *	test9999.cal	- files of this form are already read by this file
@@ -8141,8 +8140,6 @@ read -once intfile;
 print	'9830: read -once intfile';
 read -once lucas;
 print	'9831: read -once lucas';
-read -once lucas_tbl;
-print	'9832: read -once lucas_tbl';
 read -once natnumset;
 print	'9833: read -once natnumset';
 read -once repeat;

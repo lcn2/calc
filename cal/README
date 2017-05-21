@@ -14,9 +14,12 @@ For example:
 
     ; read lucas
     lucas(h,n) defined
+    gen_u2(h,n,v1) defined
     gen_u0(h,n,v1) defined
+    rodseth_xhn(x,h,n) defined
     gen_v1(h,n) defined
     ldebug(funct,str) defined
+    legacy_gen_v1(h,n) defined
 
 will cause calc to load and execute the 'lucas.cal' resource file.
 Executing the resource file will cause several functions to be defined.
@@ -792,7 +795,27 @@ lucas.cal
 
     lucas(h, n)
 
-    Perform a primality test of h*2^n-1, with 1<=h<2*n.
+    Perform a primality test of h*2^n-1.
+
+    gen_u2(h, n, v1)
+
+    Generate u(2) for h*2^n-1.  This function is used by lucas(h, n),
+    as the first term in the lucas sequence that is needed to
+    prove that h*2^n-1 is prime or not prime.
+
+    NOTE: Some call this term u(0).  The function gen_u0(h, n, v1)
+    	  simply calls gen_u2(h, n, v1) for such people.  :-)
+
+    gen_v1(h, v)
+
+    Generate v(1) for h*2^n-1.  This function is used by lucas(h, n),
+    via the gen_u2(h, n, v1), to supply the 3rd argument to gen_u2.
+
+    legacy_gen_v1(h, n)
+
+    Generate v(1) for h*2^n-1 using the legacy Amdahl 6 method.
+    This function sometimes returns -1 for a few cases when
+    h is a multiple of 3.  This function is NOT used by lucas(h, n).
 
 
 lucas_chk.cal
@@ -803,11 +826,6 @@ lucas_chk.cal
     Requires lucas.cal to be loaded.  The highest useful high_n is 1000.
 
     Used by regress.cal during the 2100 test set.
-
-
-lucas_tbl.cal
-
-    Lucasian criteria for primality tables.
 
 
 mersenne.cal
@@ -1798,7 +1816,7 @@ zeta2.cal
     for information on this special zeta function.
 
 
-## Copyright (C) 2000,2014  David I. Bell and Landon Curt Noll
+## Copyright (C) 2000,2014,2017  David I. Bell and Landon Curt Noll
 ##
 ## Primary author: Landon Curt Noll
 ##
@@ -1816,9 +1834,9 @@ zeta2.cal
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.9 $
-## @(#) $Id: README,v 30.9 2014/10/06 08:44:18 chongo Exp $
-## @(#) $Source: /usr/local/src/bin/calc/cal/RCS/README,v $
+## @(#) $Revision: 30.10 $
+## @(#) $Id: README,v 30.10 2017/05/19 16:09:14 chongo Exp $
+## @(#) $Source: /usr/local/src/bin/calc-RHEL7/cal/RCS/README,v $
 ##
 ## Under source code control:	1990/02/15 01:50:32
 ## File existed as early as:	before 1990

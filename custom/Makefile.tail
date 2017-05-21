@@ -290,12 +290,16 @@ clobber: clean
 	${RM} -f .all ${MAKE_FILE}.tmp ${MAKE_FILE}.bak
 	${RM} -f libcustcalc${LIB_EXT_VERSION}
 	${RM} -f libcustcalc${LIB_EXT}
-	${RM} -f libcustcalc.*.dylib
 	${RM} -f libcustcalc.a
+	${RM} -f libcustcalc*
 	${V} echo remove files that are obsolete
 #if 0	/* start of skip for non-Gnu makefiles */
 	${RM} -f Makefile.simple
 #endif	/* end of skip for non-Gnu makefiles */
+	-${Q} if [ -e .DS_Store ]; then \
+	    echo ${RM} -rf .DS_Store; \
+	    ${RM} -rf .DS_Store; \
+	fi
 
 # install everything
 #
