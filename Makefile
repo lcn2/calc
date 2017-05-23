@@ -124,7 +124,7 @@ CCWERR= -Werror -Wextra -pedantic
 #################################
 
 ifeq ($(target),Darwin)
-COMMON_ADD= -fsanitize=undefined -fsanitize=address
+COMMON_ADD=
 else
 COMMON_ADD=
 endif
