@@ -522,6 +522,23 @@ LD_STATIC=
 LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 #
+# If you want to add flags to all compiler and linker
+# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
+# set ${COMMON_ADD}.
+#
+# For example to use gcc's -Werror to force warnings
+# to become errors, call make with:
+#
+#   make .. COMMON_ADD='-Werror'
+#
+# This facility requires a Gnu Makefile, or a make command
+# that understands the += make operand.
+#
+#if 0	/* start of skip for non-Gnu makefiles */
+COMMON_CFLAGS+= ${COMMON_ADD}
+COMMON_LDFLAGS+= ${COMMON_ADD}
+#endif	/* end of skip for non-Gnu makefiles */
+#
 CCWARN= -Wall
 WNO_IMPLICT= -Wno-implicit
 WNO_ERROR_LONG_LONG= -Wno-error=long-long
@@ -571,6 +588,24 @@ CC_STATIC=
 LD_STATIC= ${DARWIN_ARCH}
 LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
+#
+# If you want to add flags to all compiler and linker
+# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
+# set ${COMMON_ADD}.
+#
+# For example to use clang's -fsanitize for calc testing,
+# which requires a common set of flags to be passed to
+# every compile and link, then call make with:
+#
+#   make .. COMMON_ADD='-fsanitize=undefined -fsanitize=address'
+#
+# This facility requires a Gnu Makefile, or a make command
+# that understands the += make operand.
+#
+#if 0	/* start of skip for non-Gnu makefiles */
+COMMON_CFLAGS+= ${COMMON_ADD}
+COMMON_LDFLAGS+= ${COMMON_ADD}
+#endif	/* end of skip for non-Gnu makefiles */
 #
 CCWARN= -Wall
 WNO_IMPLICT= -Wno-implicit
@@ -635,6 +670,23 @@ LD_STATIC=
 LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 #
+# If you want to add flags to all compiler and linker
+# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
+# set ${COMMON_ADD}.
+#
+# For example to use gcc's -Werror to force warnings
+# to become errors, call make with:
+#
+#   make .. COMMON_ADD='-Werror'
+#
+# This facility requires a Gnu Makefile, or a make command
+# that understands the += make operand.
+#
+#if 0	/* start of skip for non-Gnu makefiles */
+COMMON_CFLAGS+= ${COMMON_ADD}
+COMMON_LDFLAGS+= ${COMMON_ADD}
+#endif	/* end of skip for non-Gnu makefiles */
+#
 CCWARN= -Wall
 WNO_IMPLICT= -Wno-implicit
 WNO_ERROR_LONG_LONG= -Wno-error=long-long
@@ -680,6 +732,23 @@ LD_STATIC=
 LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 #
+# If you want to add flags to all compiler and linker
+# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
+# set ${COMMON_ADD}.
+#
+# For example to use gcc's -Werror to force warnings
+# to become errors, call make with:
+#
+#   make .. COMMON_ADD='-Werror'
+#
+# This facility requires a Gnu Makefile, or a make command
+# that understands the += make operand.
+#
+#if 0	/* start of skip for non-Gnu makefiles */
+COMMON_CFLAGS+= ${COMMON_ADD}
+COMMON_LDFLAGS+= ${COMMON_ADD}
+#endif	/* end of skip for non-Gnu makefiles */
+#
 CCWARN= -Wall
 WNO_IMPLICT= -Wno-implicit
 WNO_ERROR_LONG_LONG= -Wno-error=long-long
@@ -719,6 +788,23 @@ LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 LD_STATIC=
 #
+# If you want to add flags to all compiler and linker
+# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
+# set ${COMMON_ADD}.
+#
+# For example to use gcc's -Werror to force warnings
+# to become errors, call make with:
+#
+#   make .. COMMON_ADD='-Werror'
+#
+# This facility requires a Gnu Makefile, or a make command
+# that understands the += make operand.
+#
+#if 0	/* start of skip for non-Gnu makefiles */
+COMMON_CFLAGS+= ${COMMON_ADD}
+COMMON_LDFLAGS+= ${COMMON_ADD}
+#endif	/* end of skip for non-Gnu makefiles */
+#
 CCWARN= -Wall
 WNO_IMPLICT= -Wno-implicit
 WNO_ERROR_LONG_LONG= -Wno-error=long-long
@@ -755,6 +841,23 @@ CC_STATIC=
 LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 LD_STATIC=
+#
+# If you want to add flags to all compiler and linker
+# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
+# set ${COMMON_ADD}.
+#
+# For example to use gcc's -Werror to force warnings
+# to become errors, call make with:
+#
+#   make .. COMMON_ADD='-Werror'
+#
+# This facility requires a Gnu Makefile, or a make command
+# that understands the += make operand.
+#
+#if 0	/* start of skip for non-Gnu makefiles */
+COMMON_CFLAGS+= ${COMMON_ADD}
+COMMON_LDFLAGS+= ${COMMON_ADD}
+#endif	/* end of skip for non-Gnu makefiles */
 #
 CCWARN= -Wall
 WNO_IMPLICT= -Wno-implicit
@@ -895,6 +998,23 @@ CC_STATIC=
 LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 LD_STATIC=
+#
+# If you want to add flags to all compiler and linker
+# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
+# set ${COMMON_ADD}.
+#
+# For example to use gcc's -Werror to force warnings
+# to become errors, call make with:
+#
+#   make .. COMMON_ADD='-Werror'
+#
+# This facility requires a Gnu Makefile, or a make command
+# that understands the += make operand.
+#
+#if 0	/* start of skip for non-Gnu makefiles */
+COMMON_CFLAGS+= ${COMMON_ADD}
+COMMON_LDFLAGS+= ${COMMON_ADD}
+#endif	/* end of skip for non-Gnu makefiles */
 #
 CCWARN= -Wall
 WNO_IMPLICT= -Wno-implicit

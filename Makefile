@@ -119,6 +119,16 @@ RPM_TOP= ${HOME}/rpm/calc
 
 CCWERR= -Werror -Wextra -pedantic
 
+#################################
+# clang -fsanitize test options #
+#################################
+
+ifeq ($(target),Darwin)
+COMMON_ADD= -fsanitize=undefined -fsanitize=address
+else
+COMMON_ADD=
+endif
+
 ##############################################################################
 #-=-=-=-=-=-=-=-=- Be careful if you change something below -=-=-=-=-=-=-=-=-#
 ##############################################################################
@@ -173,6 +183,7 @@ XVAR= \
 	DARWIN_ARCH='${DARWIN_ARCH}' \
 	CCWERR='${CCWERR}' \
 	NROFF='${NROFF}' \
+	COMMON_ADD='${COMMON_ADD}' \
 	Q='${Q}' \
 	V='${V}'
 
