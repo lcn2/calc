@@ -171,6 +171,11 @@ pprod256 = 0;	/* product of  "primes up to 256" / "primes up to 46" */
  *	"Lucasian Criteria for the Primality of N=h*2^n-1", by Hans Riesel,
  *	Mathematics of Computation, Vol 23 #108, pp. 869-875, Oct 1969
  *
+ *	http://www.ams.org/journals/mcom/1969-23-108/
+ *			   S0025-5718-1969-0262163-1/S0025-5718-1969-0262163-1.pdf
+ *
+ *	NOTE: Join the above two lines for the complete URL of the paper.
+ *
  * The following book is also useful:
  *
  * Ref2:
@@ -836,7 +841,13 @@ next_x = 120;
  *	u(2) = alpha^h + alpha^(-h)		 (NOTE: some call this u(2))
  *	r = abs(2^2 - 1^2*3) = 1
  *
- * and the bottom of Ref1, page 872 states:
+ * where these values work for Case 1:		 (h mod 3 != 0)
+ *
+ *	a = 1
+ *	b = 2
+ *	D = 1
+ *
+ * Now at the bottom of Ref1, page 872 states:
  *
  *	v(x) = alpha^x + alpha^(-x)
  *
@@ -1139,7 +1150,13 @@ legacy_d_qval[7] = 19;	legacy_v1_qval[7] = 74;	/* a=38	 b=1  r=2  */
  *	u(2) = alpha^h + alpha^(-h)
  *	r = abs(2^2 - 1^2*3) = 1
  *
- * and the bottom of Ref1, page 872 states:
+ * where these values work for Case 1: 			(h mod 3 != 0)
+ *
+ *	a = 1
+ *	b = 2
+ *	D = 1
+ *
+ * Now at the bottom of Ref1, page 872 states:
  *
  *	v(x) = alpha^x + alpha^(-x)
  *
