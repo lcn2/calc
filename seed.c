@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: seed.c,v 30.2 2014/09/30 01:00:04 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/seed.c,v $
- *
  * Under source code control:	1999/10/03 10:06:53
  * File existed as early as:	1999
  *

@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: longbits.c,v 30.3 2014/08/24 21:57:31 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/longbits.c,v $
- *
  * Under source code control:	1994/03/18 03:06:18
  * File existed as early as:	1994
  *

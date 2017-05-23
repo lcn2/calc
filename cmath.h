@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: cmath.h,v 30.3 2014/08/24 21:56:51 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/cmath.h,v $
- *
  * Under source code control:	1993/07/30 19:42:45
  * File existed as early as:	1993
  *

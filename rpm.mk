@@ -20,8 +20,6 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 MAKEFILE_REV= $$Revision: 30.15 $$
-# @(#) $Id: rpm.mk,v 30.15 2014/09/08 00:04:13 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/calc-RHEL7/RCS/rpm.mk,v $
 #
 # Under source code control:	2003/02/16 20:21:39
 # File existed as early as:	2003

@@ -19,10 +19,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: blkcpy.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/blkcpy.c,v $
- *
  * Under source code control:	1997/04/18 20:41:26
  * File existed as early as:	1997
  *

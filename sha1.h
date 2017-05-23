@@ -22,10 +22,6 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: sha1.h,v 30.4 2014/09/02 06:37:39 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/sha1.h,v $
- *
  * This file is not covered under version 2.1 of the GNU LGPL.
  */
 

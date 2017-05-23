@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: custtbl.c,v 30.2 2007/07/05 19:35:20 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/custom/RCS/custtbl.c,v $
- *
  * Under source code control:	1997/03/09 02:28:54
  * File existed as early as:	1997
  *

@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: zrand.c,v 30.2 2007/09/21 01:47:34 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/zrand.c,v $
- *
  * Under source code control:	1995/01/07 09:45:25
  * File existed as early as:	1994
  *

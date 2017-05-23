@@ -19,10 +19,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: token.c,v 30.3 2017/05/19 16:09:14 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc-RHEL7/RCS/token.c,v $
- *
  * Under source code control:	1990/02/15 01:48:25
  * File existed as early as:	before 1990
  *

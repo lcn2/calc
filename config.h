@@ -19,10 +19,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: config.h,v 30.4 2014/08/24 21:56:51 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/config.h,v $
- *
  * Under source code control:	1995/11/01 22:20:17
  * File existed as early as:	1995
  *

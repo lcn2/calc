@@ -19,10 +19,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.32 $
- * @(#) $Id: version.c,v 30.32 2017/05/19 16:09:14 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc-RHEL7/RCS/version.c,v $
- *
  * Under source code control:	1990/05/22 11:00:58
  * File existed as early as:	1990
  *
@@ -73,7 +69,7 @@ STATIC char *stored_version = NULL;	/* version formed if != NULL */
 char *Copyright = "\n"
   "calc - arbitrary precision calculator\n"
   "\n"
-  "@(#) Copyright (C) 1999-2014  David I. Bell, Landon Curt Noll "
+  "Copyright (C) 1999-2014  David I. Bell, Landon Curt Noll "
   					   "and Ernest Bowen\n"
   "\n"
   "Initial author:  David I. Bell\n"
@@ -92,7 +88,7 @@ char *COPYING_LGPL = "\n"
   "received a copy with calc; if not, write to Free Software Foundation, Inc.\n"
   "51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n"
   "\n"
-  "@(#) For license details use the command:\thelp copying\n"
+  "For license details use the command:\thelp copying\n"
   "The COPYING-LGPL file may be viewed with:\thelp copying-lgpl\n"
   "\n";
 

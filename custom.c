@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: custom.c,v 30.2 2007/09/21 01:27:27 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/custom.c,v $
- *
  * Under source code control:	1997/03/03 04:53:08
  * File existed as early as:	1997
  *

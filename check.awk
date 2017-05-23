@@ -18,10 +18,6 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.2 $
-# @(#) $Id: check.awk,v 30.2 2013/08/11 01:08:32 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/calc/RCS/check.awk,v $
-#
 # Under source code control:	1996/05/25 22:07:58
 # File existed as early as:	1996
 #

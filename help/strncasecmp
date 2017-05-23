@@ -60,10 +60,6 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.3 $
-## @(#) $Id: strncasecmp,v 30.3 2013/09/01 20:08:38 chongo Exp $
-## @(#) $Source: /usr/local/src/bin/calc/help/RCS/strncasecmp,v $
-##
 ## Under source code control:	2013/09/01 20:04:02
 ## File existed as early as:	2013
 ##

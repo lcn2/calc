@@ -22,10 +22,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: quickhash.c,v 30.2 2014/09/30 00:55:46 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/quickhash.c,v $
- *
  * Under source code control:	1995/03/04 11:34:23
  * File existed as early as:	1995
  *

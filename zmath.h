@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.7 $
- * @(#) $Id: zmath.h,v 30.7 2016/02/06 08:39:35 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/zmath.h,v $
- *
  * Under source code control:	1993/07/30 19:42:48
  * File existed as early as:	1993
  *

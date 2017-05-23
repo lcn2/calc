@@ -16,10 +16,6 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: dotest.cal,v 30.2 2007/03/16 11:09:54 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/dotest.cal,v $
- *
  * This file is not covered under version 2.1 of the GNU LGPL.
  *
  * Under source dotest_code control:	2006/03/08 05:54:09

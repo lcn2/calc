@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: have_fpos_pos.c,v 30.2 2007/09/19 22:34:22 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/have_fpos_pos.c,v $
- *
  * Under source code control:	2000/12/17 01:23
  * File existed as early as:	2000
  *

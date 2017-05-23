@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: assocfunc.c,v 30.3 2014/09/30 00:55:11 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/assocfunc.c,v $
- *
  * Under source code control:	1993/07/20 23:04:27
  * File existed as early as:	1993
  *

@@ -19,10 +19,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.6 $
- * @(#) $Id: decl.h,v 30.6 2014/08/24 21:56:51 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/decl.h,v $
- *
  * Under source code control:	2007/02/09 05:24:25
  * File existed as early as:	2007
  *

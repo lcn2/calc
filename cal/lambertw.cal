@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: lambertw.cal,v 30.4 2013/08/18 20:01:53 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/lambertw.cal,v $
- *
  * Under source code control:	2013/08/11 01:31:28
  * File existed as early as:	2013
  */

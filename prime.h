@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: prime.h,v 30.3 2014/08/24 21:56:51 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/prime.h,v $
- *
  * Under source code control:	1994/06/04 03:26:15
  * File existed as early as:	1994
  *

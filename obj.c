@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: obj.c,v 30.3 2013/09/01 22:16:21 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/obj.c,v $
- *
  * Under source code control:	1990/02/15 01:48:19
  * File existed as early as:	before 1990
  *

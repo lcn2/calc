@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: have_varvs.c,v 30.2 2013/08/11 08:41:38 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/have_varvs.c,v $
- *
  * Under source code control:	1995/09/09 22:41:10
  * File existed as early as:	1995
  *

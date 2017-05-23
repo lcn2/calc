@@ -19,10 +19,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: qtrans.c,v 30.2 2008/10/24 07:09:41 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/qtrans.c,v $
- *
  * Under source code control:	1990/02/15 01:48:22
  * File existed as early as:	before 1990
  *

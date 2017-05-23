@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: endian.c,v 30.4 2013/05/05 13:57:08 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/endian.c,v $
- *
  * Under source code control:	1993/11/15 04:32:58
  * File existed as early as:	1993
  *

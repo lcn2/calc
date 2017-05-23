@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.4 $
- * @(#) $Id: c_sysinfo.c,v 30.4 2013/09/01 22:16:21 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/custom/RCS/c_sysinfo.c,v $
- *
  * Under source code control:	1997/03/09 23:14:40
  * File existed as early as:	1997
  *

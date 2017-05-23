@@ -8,10 +8,6 @@
  * operation "function" must be first; calc doesn't care how many more
  * arguments there actually are.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: gvec.cal,v 30.3 2011/05/23 23:00:55 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/cal/RCS/gvec.cal,v $
- *
  * Under source code control:   2011/03/31 17:54:55
  * File existed as early as:    2010
  *

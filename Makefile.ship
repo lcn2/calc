@@ -40,8 +40,6 @@
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
 #
 MAKEFILE_REV= $$Revision: 30.88 $$
-# @(#) $Id: Makefile.ship,v 30.88 2017/05/21 01:26:42 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/calc/RCS/Makefile.ship,v $
 #
 # Under source code control:	1990/02/15 01:48:41
 # File existed as early as:	before 1990

@@ -7220,10 +7220,6 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.55 $
-## @(#) $Id: CHANGES,v 30.55 2017/05/21 02:22:22 chongo Exp $
-## @(#) $Source: /usr/local/src/bin/calc-RHEL7/RCS/CHANGES,v $
-##
 ## Under source code control:	1993/06/02 18:12:57
 ## File existed as early as:	1989
 ##

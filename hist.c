@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: hist.c,v 30.2 2014/08/24 23:57:57 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/hist.c,v $
- *
  * Under source code control:	1993/05/02 20:09:19
  * File existed as early as:	1993
  *

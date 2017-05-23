@@ -15,10 +15,6 @@
 .\" received a copy with calc; if not, write to Free Software Foundation, Inc.
 .\" 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 .\"
-.\" @(#) $Revision: 30.6 $
-.\" @(#) $Id: calc.man,v 30.6 2014/10/06 08:39:45 chongo Exp $
-.\" @(#) $Source: /usr/local/src/bin/calc/RCS/calc.man,v $
-.\"
 .\" Under source code control:	    1991/07/23 05:48:26
 .\" File existed as early as:	    1991
 .\"

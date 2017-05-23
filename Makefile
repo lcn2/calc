@@ -43,9 +43,6 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Id: Makefile,v 30.26 2016/02/06 08:16:06 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/calc/RCS/Makefile,v $
-#
 # Under source code control:	1990/02/15 01:48:41
 # File existed as early as:	before 1990
 #

@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.2 $
- * @(#) $Id: have_offscl.c,v 30.2 2008/04/15 21:17:57 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/have_offscl.c,v $
- *
  * Under source code control:	1996/07/13 12:57:22
  * File existed as early as:	1996
  *

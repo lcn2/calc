@@ -23,10 +23,6 @@ Builtin functions
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## @(#) $Revision: 30.1 $
-## @(#) $Id: builtin.top,v 30.1 2007/03/16 11:10:42 chongo Exp $
-## @(#) $Source: /usr/local/src/bin/calc/help/RCS/builtin.top,v $
-##
 ## Under source code control:	1995/07/10 01:17:53
 ## File existed as early as:	1995
 ##

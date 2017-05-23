@@ -18,10 +18,6 @@
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# @(#) $Revision: 30.12 $
-# @(#) $Id: Makefile,v 30.12 2017/05/19 16:09:14 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/calc-RHEL7/cal/RCS/Makefile,v $
-#
 # Under source code control:	1991/07/21 05:00:54
 # File existed as early as:	1991
 #

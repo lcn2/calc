@@ -17,10 +17,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.5 $
- * @(#) $Id: token.h,v 30.5 2014/08/24 21:56:51 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/token.h,v $
- *
  * Under source code control:	1990/02/15 01:48:37
  * File existed as early as:	before 1990
  *

@@ -19,10 +19,6 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * @(#) $Revision: 30.3 $
- * @(#) $Id: file.c,v 30.3 2013/08/11 08:41:38 chongo Exp $
- * @(#) $Source: /usr/local/src/bin/calc/RCS/file.c,v $
- *
  * Under source code control:	1991/07/20 00:21:56
  * File existed as early as:	1991
  *
