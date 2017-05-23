@@ -1,12 +1,23 @@
-The following are the changes from calc version 2.12.5.6 to date:
+The following are the changes from calc version 2.12.6.0 to date:
 
-    Fixed a crash that showed up on Mac OS that was reported
-    by Richard Outerbridge <outer at interlog dot com> and
-    fixed by Stuart Henderson <stu at spacehopper dot org>.
-    Thanks goes to both!
+    Added the makefile variable ${COMMON_ADD} that will add flags
+    to all compile and link commands. The ${COMMON_ADD} flags are
+    appended to both ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}.  This
+    facility is available to nearly all platforms except those with
+    very old make comamnds that do not understand the += operator.
+
+    Example on masOS (Darwin), one may invoke clang's -fsanitize
+    facility by:
+
+	make clobber all \
+	  COMMON_ADD='-fsanitize=undefined -fsanitize=address'
+
+    Another example.  To force C warnings to be treated as errors:
+
+	make COMMON_ADD='-Werror'
 
 
-The following are the changes from calc version 2.12.5.4 to 2.12.5.5:
+The following are the changes from calc version 2.12.5.4 to 2.12.5.6:
 
     Recompile to match current RHEL7.2 libc and friends.
 
@@ -60,18 +71,23 @@ The following are the changes from calc version 2.12.5.4 to 2.12.5.5:
     that the BUILDROOT directory had been improperly put into various
     paths and binaries.  This has been fixed in 2.12.5.5.
 
+    Fixed a crash that showed up on macOS (Darwin) that was reported
+    by Richard Outerbridge <outer at interlog dot com> and
+    fixed by Stuart Henderson <stu at spacehopper dot org>.
+    Thanks goes to both!
+
 
 The following are the changes from calc version 2.12.5.3 to 2.12.5.3:
 
-    Calc version 2.12.5.2 for Darwin (Mac OS X) users, code to installed
+    Calc version 2.12.5.2 for macOS (Darwin) users, code to installed
     calc under /opt/calc.  Moreover the CHANGES file did not mention
     /opt/calc.  Sorry about that!.
 
-    A much better tree for Darwin (Mac OS X) users would have been
-    to install cal under /opt/calc.  This release ONLY changes the Darwin
-    (Mac OS X) install tree to /usr/local.
+    A much better tree for masOS (Darwin) users would have been
+    to install cal under /opt/calc.  This release ONLY changes the
+    macOS (Darwin) install tree to /usr/local.
 
-    Darwin (Mac OS X) users who installed calc version 2.12.5.2
+    macOS (Darwin) users who installed calc version 2.12.5.2
     should, after installing version 2.12.5.3:
 
     	rm -rf /opt/calc
@@ -79,7 +95,7 @@ The following are the changes from calc version 2.12.5.3 to 2.12.5.3:
 
 The following are the changes from calc version 2.12.5.1 to 2.12.5.2:
 
-    NOTE: calc version 2.12.5.2, for Darwin (Mac OS X) users,
+    NOTE: calc version 2.12.5.2, for macOS (Darwin) users,
     	  installed under /opt/calc.  We neglected to mention this
 	  AND /usr/local would have been a better choice.  Sorry!
 	  Fixed in calc version 2.12.5.3.
