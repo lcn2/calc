@@ -99,8 +99,8 @@ The calculator can calculate transcendental functions, and accept and
 display numbers in real or exponential format. For example, typing:
 
 ```sh
-config("display", 70)
-epsilon(1e-70)
+config("display", 70),
+epsilon(1e-70),
 sin(1)
 ```
 
@@ -116,15 +116,21 @@ For example:
 ```sh
 config("mode", "fraction"),
 (17/19)^23
+print
 base(16),
 (19/17)^29
+print
+log(79.3i)
 ```
 
  will print:
 
 ```sh
 19967568900859523802559065713/257829627945307727248226067259
+
 0x9201e65bdbb801eaf403f657efcf863/0x5cd2e2a01291ffd73bee6aa7dcf7d1
+
+0x17b5164ac24ee836bf/0xc7b7a8e3ef5fcf752+0x883eaf5adadd26be3/0xc7b7a8e3ef5fcf752i
 ```
 
 All numbers are represented as fractions with arbitrarily large
@@ -158,7 +164,7 @@ followed by a function declaration very similar to C.
 ```sh
 define f2(n)
 {
-	local       ans;
+	local ans;
 
 	ans = 1;
 	while (n > 1)
@@ -173,7 +179,7 @@ Thus the input:
 f2(79)
 ```
 
-will produce;
+will produce:
 
 ```sh
 1009847364737869270905302433221592504062302663202724609375
@@ -192,7 +198,7 @@ Thus the input:
 sc(31, 61)
 ```
 
-will produce;
+will produce:
 
 ```sh
 256772
