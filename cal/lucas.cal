@@ -171,8 +171,8 @@ pprod256 = 0;	/* product of  "primes up to 256" / "primes up to 46" */
  *	"Lucasian Criteria for the Primality of N=h*2^n-1", by Hans Riesel,
  *	Mathematics of Computation, Vol 23 #108, pp. 869-875, Oct 1969
  *
- *	http://www.ams.org/journals/mcom/1969-23-108/
- *			   S0025-5718-1969-0262163-1/S0025-5718-1969-0262163-1.pdf
+ *	http://www.ams.org/journals/mcom/1969-23-108/S0025-5718-1969-0262163-1/
+ *			   S0025-5718-1969-0262163-1.pdf
  *
  *	NOTE: Join the above two lines for the complete URL of the paper.
  *
