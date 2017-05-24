@@ -123,7 +123,7 @@ HAVE_VSPRINTF=
 # use BYTE_ORDER in <machine/endian.h> or it will attempt to run
 # the endian program.  If you get syntax errors when you compile,
 # try forcing the value to be -DBIG_ENDIAN and run the calc regression
-# tests. (see the README file)	If the calc regression tests fail, do
+# tests. (see the README.FIRST file) If the calc regression tests fail, do
 # a make clobber and try -DCALC_LITTLE_ENDIAN.   If that fails, ask a wizard
 # for help.
 #
@@ -2016,9 +2016,9 @@ LICENSE= COPYING COPYING-LGPL
 
 # These files are found (but not built) in the distribution
 #
-DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README \
+DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README.FIRST \
 	  README.WINDOWS calc.man HOWTO.INSTALL ${UTIL_MISC_SRC} ${LICENSE} \
-	  sample.README calc.spec.in rpm.mk
+	  sample.README calc.spec.in rpm.mk README.md
 
 # These files are used to make (but not build) a calc .a link library
 #

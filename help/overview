@@ -147,12 +147,16 @@
     Separating values by a comma puts one space between the output
     values, whereas separating values by a colon concatenates the
     output values.  A trailing colon suppresses printing of the end
-    of line.  An example of printing is 'print \"The square of\",
-    x, \"is\", x^2\'.
+    of line.  An example of printing is
+
+	print "The square of", x, "is", x^2
 
     The 'config' function is used to modify certain parameters that
     affect calculations or the display of values.  For example, the
-    output display mode can be set using 'config(\"mode\", type)',
+    output display mode can be set using:
+
+	config("mode", type)
+
     where 'type' is one of 'frac', 'int', 'real', 'exp', 'hex',
     'oct', or 'bin'.  The default output mode is real.	For the
     integer, real, or exponential formats, a leading '~' indicates
@@ -160,10 +164,17 @@
     specified by the default precision.	 If the '~' does not
     appear, then the displayed number is the exact value.
 
-    The number of decimal places printed is set by using
-    'config(\"display\", n)'.  The default precision for
-    real-valued functions can be set by using 'epsilon(x)', where x
-    is the required precision (such as 1e-50).
+    The number of decimal places printed is set by using:
+
+	config("display", n)
+
+    The default precision for real-valued functions can be set by
+    using 'epsilon(x)', where x is the required precision (such as
+    1e-50).  For example:
+
+	config("display", 70)
+	epsilon(1e-70)
+	sin(1)
 
     There is a command stack feature so that you can easily
     re-execute previous commands and expressions from the terminal.

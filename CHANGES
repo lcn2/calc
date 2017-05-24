@@ -16,6 +16,13 @@ The following are the changes from calc version 2.12.6.0 to date:
 
 	make COMMON_ADD='-Werror'
 
+    Created a GitHub repository for calc:
+
+	https://github.com/lcn2/calc
+
+    Renamed README to README.FIRST.  Added README.md for the
+    GitHub repository.
+
 
 The following are the changes from calc version 2.12.5.4 to 2.12.5.6:
 

@@ -185,8 +185,8 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 
 	make install
 
-We suggest that you might want to read the README file and look at
-the calc help subsystem.  See the README file for details.
+We suggest that you might want to read the README.FIRST file and look at
+the calc help subsystem.  See also the README.md file.
 
 ## Copyright (C) 1999-2007  Landon Curt Noll
 ##
