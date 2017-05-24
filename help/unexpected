@@ -318,7 +318,7 @@ Unexpected
 	}
 
     because calc will parse the if being terminated by
-    an empty statement followed by a
+    an empty statement followed by { ... }.  As in:
 
 	if (expr) ;
 	{
@@ -404,7 +404,7 @@ Unexpected
 	64
 
 
-## Copyright (C) 1999-2007,2014  Landon Curt Noll
+## Copyright (C) 1999-2007,2014,2017  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
