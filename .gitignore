@@ -1,3 +1,9 @@
+# files and directories created during the building of calc and other Makefile actions
+#
+# NOTE: While many of these might be part of a released calc tarball, they are
+#	not consider development source.  Some other file(s) and/or programs
+#	generate these files.
+#
 .dynamic
 .hsrc
 Makefile.simple
@@ -81,3 +87,14 @@ sample_many
 sample_rand
 terminal.h
 ver_calc
+
+# other commonly excluded patterns
+#
+*~
+*.BAK
+core*
+.DS_Store
+*.dSYM/
+*.[oa]
+.*.swp
+*,v
