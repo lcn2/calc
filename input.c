@@ -361,6 +361,10 @@ f_pathopen(char *name, char *mode, char *pathlist, char **openpath)
 		}
 		if (*openpath == NULL) {
 			free(path);
+			if ((conf->calc_debug & CALCDBG_TTY) && ret == stdin) {
+				printf("f_pathopen: closing stdin "
+				       "on malloc return error\n");
+			}
 			fclose(ret);
 			math_error("cannot malloc return openpath buffer");
 			/*NOTREACHED*/
@@ -647,8 +651,13 @@ closeinput(void)
 		return;
 	if (cip->i_str)
 		free(cip->i_str);
-	if (cip->i_fp)
+	if (cip->i_fp) {
+		if ((conf->calc_debug & CALCDBG_TTY) && cip->i_fp == stdin) {
+			printf("closeinput: closing stdin "
+			        "at depth: %d\n", depth);
+		}
 		fclose(cip->i_fp);
+	}
 	if (cip->i_name)
 		free(cip->i_name);
 	depth--;

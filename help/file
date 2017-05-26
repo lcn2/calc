@@ -50,6 +50,15 @@ Using files
 
 	    stdout = files(1);
 
+     Or for example, if you wanted to assign a file value which is
+     equivalent to stdin, you could use:
+
+	    stdout = files(0);
+
+    And for stderr:
+
+	    stderr = files(2);
+
     The 'fclose' function is used to close a file which had been opened.
     When this is done, the file value associated with the file remains
     a file value, but appears 'closed', and cannot be used in further
@@ -99,6 +108,36 @@ Using files
     The 'fgetc' function returns the next character from a file as a
     single character string.  It returns the null value when end of file
     is reached.
+
+    Reading from standard input when calc is part of a pipe works
+    as long as the -p flag is given to calc.  For example, this
+    will print "chongo was here":
+
+	    echo chongo was here | calc -p 'print fgetline(files(0));'
+
+    while this does not:
+
+	    echo chongo was here | calc 'print fgetline(files(0));'
+
+    nor will this print "chongo was here":
+
+	    echo chongo was here | calc -i 'print fgetline(files(0));'
+
+    This is because without -p, the interactive parser, in an effort
+    to parse interactive commands, flushes data on standard input.
+
+    On the other hand, once interactive mode is entered, reading
+    from standard input works as expected.  For example, this works:
+
+	    $ calc
+	    C-style arbitrary precision calculator (version 2.12.6.0)
+	    Calc is open software. For license details type:  help copyright
+	    [Type "exit" to exit, or "help" for help.]
+
+	    ; str = fgetline(files(0))
+	    this text was typed into stdin
+	    ; print str
+	    this text was typed into stdin
 
     The 'printf' and 'fprintf' functions are used to print results to a
     file (which could be stdout or stderr).  The 'fprintf' function

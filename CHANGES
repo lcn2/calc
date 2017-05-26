@@ -23,6 +23,17 @@ The following are the changes from calc version 2.12.6.0 to date:
     Renamed README to README.FIRST.  Added README.md for the
     GitHub repository.
 
+    Fixed reading from standard input (stdin) when -p is given on
+    the comamnd line.  This now prints hello:
+
+	echo hello | calc -p 'stdin = files(0); print fgetline(stdin);'
+
+    Added more debugging realted to stdin when bit 4 of calc_debug
+    is set (e.g., running calc with -D16).
+
+    Updated the calc(1) man page and 'help file' to explain about
+    reading from standard input (stdin).
+
 
 The following are the changes from calc version 2.12.5.4 to 2.12.5.6:
 

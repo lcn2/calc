@@ -2268,7 +2268,7 @@ calc.1: calc.man ${MAKE_FILE}
 	        -e 's,$${CUSTOMINCDIR},${CUSTOMINCDIR},g' \
 	        -e 's,$${CUSTOMHELPDIR},${CUSTOMHELPDIR},g' \
 	        -e 's,$${CALCRC},${CALCRC},g' < calc.man > calc.1
-	${Q} echo calc.man formed
+	${Q} echo calc.1 formed
 
 calc.usage: calc.1 ${MAKE_FILE}
 	${RM} -f $@

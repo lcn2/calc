@@ -110,6 +110,7 @@ main(int argc, char **argv)
 	BOOL done = FALSE;
 	BOOL havearg;
 	BOOL haveendstr;
+	BOOL stdin_closed = FALSE;
 	size_t len;
 
 	/*
@@ -483,8 +484,11 @@ main(int argc, char **argv)
 	if (havecommands) {
 		cmdbuf[cmdlen++] = '\n';
 		cmdbuf[cmdlen] = '\0';
-		if (fclose(stdin)) {
-			perror("main(): fclose(stdin) failed:");
+		if (p_flag != TRUE) {
+			if (fclose(stdin)) {
+				perror("main(): fclose(stdin) failed:");
+			}
+			stdin_closed = TRUE;
 		}
 	}
 
@@ -495,7 +499,9 @@ main(int argc, char **argv)
 	 * unbuffered mode
 	 */
 	if (u_flag) {
-		setbuf(stdin, NULL);
+		if (stdin_closed == FALSE) {
+			setbuf(stdin, NULL);
+		}
 		setbuf(stdout, NULL);
 	}
 
@@ -504,6 +510,17 @@ main(int argc, char **argv)
 	 * initialize
 	 */
 	libcalc_call_me_first();
+	if (u_flag) {
+		if (conf->calc_debug & CALCDBG_TTY) {
+			if (stdin_closed == FALSE) {
+				printf("main: stdin set to unbuffered before "
+				       "calling libcalc_call_me_first()\n");
+			} else {
+				printf("main: stdin closed before "
+				       "calling libcalc_call_me_first()\n");
+			}
+		}
+	}
 	stdin_tty = isatty(0);		/* assume stdin is on fd 0 */
 	if (conf->calc_debug & CALCDBG_TTY)
 		printf("main: stdin_tty is %d\n", stdin_tty);

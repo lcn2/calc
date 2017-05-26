@@ -554,6 +554,40 @@ print 27! ^2	or	print 27\!^2
 .fi
 .in -5n
 
+Reading from standard input when calc is part of a pipe works
+as long as the \-p flag is given to calc.  For example, this
+will print chongo was here:
+.sp 1
+.in +5n
+.nf
+echo chongo was here | calc \-p 'print fgetline(files(0));'
+.sp 1
+.fi
+.in -5n
+.sp 1
+while this does not:
+.sp 1
+.in +5n
+.nf
+echo chongo was here | calc 'print fgetline(files(0));'
+.sp 1
+.fi
+.in -5n
+.sp 1
+nor will this print chongo was here:
+.sp 1
+.in +5n
+.nf
+echo chongo was here | calc \-i 'print fgetline(files(0));'
+.sp 1
+.fi
+.in -5n
+.sp 1
+This is because without \-p, the interactive parser, in an effort
+to parse interactive commands, flushes data on standard input.
+
+.PP
+
 \&
 .br
 CALC STARTUP FILES
