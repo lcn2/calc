@@ -168,6 +168,7 @@ Q=@
 LCC= cc
 ICFLAGS=
 ILDFLAGS=
+GREP= egrep
 CHMOD= chmod
 SED= sed
 SORT= sort
@@ -596,7 +597,7 @@ builtin: builtin.top builtin.end ../func.c funclist.sed
 	    -I.. funclist.c -c 2>/dev/null
 	${Q} ${LCC} ${ILDFLAGS} funclist.o -o funclist${EXT}
 	${Q} ${RM} -f builtin
-	${Q} ${CAT} builtin.top > builtin
+	${Q} ${GREP} -v '^#'  builtin.top > builtin
 	${Q} ./funclist${EXT} | \
 	    ${SED} -e 's/^/	/' -e 's/[	 ][	 ]*$$//' >> builtin
 	${Q} ${CAT} builtin.end >> builtin

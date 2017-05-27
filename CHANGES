@@ -20,6 +20,14 @@ The following are the changes from calc version 2.12.6.0 to date:
 
 	https://github.com/lcn2/calc
 
+    NOTE: The calc GitHub repository represents the an active
+	  development stream.  While an effort will be made to keep
+	  the master branch of the calc GitHub repository in working
+	  order, that tree may be unstable.  Those wishing for more
+	  reliable releases use releases found at calc mirror sites:
+
+	    http://www.isthe.com/chongo/tech/comp/calc/calc-mirror.html
+
     Renamed README to README.FIRST.  Added README.md for the
     GitHub repository.
 
@@ -33,6 +41,13 @@ The following are the changes from calc version 2.12.6.0 to date:
 
     Updated the calc(1) man page and 'help file' to explain about
     reading from standard input (stdin).
+
+    Added some clarifying remarks for 'help ptest' explaining that
+    the ptest builtin can return 1 is some cases where the test
+    value is a psuedoprime.
+
+    Removed duplicate copyright comments from the help/builtin that
+    is built.
 
 
 The following are the changes from calc version 2.12.5.4 to 2.12.5.6:

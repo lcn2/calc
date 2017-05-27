@@ -199,7 +199,7 @@
 	For convenience, any non-integer value is assumed to mean "frac",
 	and any integer >= 2^64 is assumed to mean "exp".
 
-## Copyright (C) 1999-2007  Landon Curt Noll
+## Copyright (C) 1999-2017  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

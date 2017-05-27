@@ -39,6 +39,14 @@ DESCRIPTION
     trivial (n is always a strong probable prime for these bases), it
     is sufficient to consider 1 < b < n - 1.
 
+    Note that if ptest returns 1, this does not mean that n is
+    prime!  If n is composit (not prime) and a pseudoprime then
+    ptest may return 1.  For this reason, if ptest returns 1, this
+    is not proof that n is prime.
+
+    If ptest returns 0, then this is proof that n is not prime
+    (composit).
+
     The bases for ptest(n, count, skip) are selected as follows:
 
 	skip = 0:	random in [2, n-2]
@@ -56,14 +64,14 @@ DESCRIPTION
     with random base b will return 1 if n is composite is always
     less than 1/4, so with count = k, the probability is less
     than 1/4^k.	 For most values of n the probability is much
-    smaller, possible zero.
+    smaller (possibly zero).
 
 RUNTIME
-    If n is composite, ptest(n, 1, skip) is usually faster than
-    ptest(n, -1, skip), much faster if n is divisible by a small
-    prime.  If n is prime, ptest(n, -1, skip) is usually faster than
-    ptest(n, 1, skip), possibly much faster if n < 2^32, only slightly
-    faster if n > 2^32.
+    If n is composite, ptest(n, 1, skip) (where skip > 0) is usually
+    faster than ptest(n, -1, skip), and much faster if n is divisible
+    by a small prime.  If n is prime, ptest(n, -1, skip) is usually
+    faster than ptest(n, 1, skip), possibly much faster if n < 2^32,
+    only slightly faster if n > 2^32.
 
     If n is a large prime (say 50 or more decimal digits), the runtime
     for ptest(n, count, skip) will usually be roughly K * abs(count) *
@@ -129,7 +137,7 @@ SEE ALSO
     factor, isprime, lfactor, nextcand, nextprime, prevcand, prevprime,
     pfact, pix
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2017  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

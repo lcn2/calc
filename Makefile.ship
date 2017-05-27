@@ -1923,6 +1923,7 @@ HELP_PASSDOWN= \
     CP=${CP} \
     EXT=${EXT} \
     FMT=${FMT} \
+    GREP=${GREP} \
     HELPDIR="${HELPDIR}" \
     ICFLAGS="${ICFLAGS}" \
     ILDFLAGS="${ILDFLAGS}" \
