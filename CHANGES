@@ -28,6 +28,23 @@ The following are the changes from calc version 2.12.6.0 to date:
 
 	    http://www.isthe.com/chongo/tech/comp/calc/calc-mirror.html
 
+    IMPORTANT NOTE:
+
+	On 2017 June 02, the calc GitHub history was re-written.
+	Anyone who was tracking the calc "pre-release" on GitHub prior
+	to version 2.12.6.0 should do a:
+
+	    git reset --hard origin/master
+	    git cleanup -f
+
+	Or you may just want to start over:
+
+	    rm -rf calc
+	    git clone https://github.com/lcn2/calc.git
+
+	Sorry about that.  The previous GitHub repository was an useful
+	experiment.  Based on what we learned, we decided to rebuild it.
+
     Renamed README to README.FIRST.  Added README.md for the
     GitHub repository.
 
