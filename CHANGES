@@ -4,9 +4,9 @@ The following are the changes from calc version 2.12.6.0 to date:
     to all compile and link commands. The ${COMMON_ADD} flags are
     appended to both ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}.  This
     facility is available to nearly all platforms except those with
-    very old make comamnds that do not understand the += operator.
+    very old make commands that do not understand the += operator.
 
-    Example on masOS (Darwin), one may invoke clang's -fsanitize
+    Example on macOS (Darwin), one may invoke clang's -fsanitize
     facility by:
 
 	make clobber all \
@@ -30,7 +30,7 @@ The following are the changes from calc version 2.12.6.0 to date:
 
     IMPORTANT NOTE:
 
-	On 2017 June 02, the calc GitHub history was re-written.
+	On 2017 June 05, the calc GitHub history was re-written.
 	Anyone who was tracking the calc "pre-release" on GitHub prior
 	to version 2.12.6.0 should do a:
 
@@ -49,11 +49,11 @@ The following are the changes from calc version 2.12.6.0 to date:
     GitHub repository.
 
     Fixed reading from standard input (stdin) when -p is given on
-    the comamnd line.  This now prints hello:
+    the command line.  This now prints hello:
 
 	echo hello | calc -p 'stdin = files(0); print fgetline(stdin);'
 
-    Added more debugging realted to stdin when bit 4 of calc_debug
+    Added more debugging related to stdin when bit 4 of calc_debug
     is set (e.g., running calc with -D16).
 
     Updated the calc(1) man page and 'help file' to explain about
@@ -61,10 +61,12 @@ The following are the changes from calc version 2.12.6.0 to date:
 
     Added some clarifying remarks for 'help ptest' explaining that
     the ptest builtin can return 1 is some cases where the test
-    value is a psuedoprime.
+    value is a pseudoprime.
 
     Removed duplicate copyright comments from the help/builtin that
     is built.
+
+    Fixed a number of typos in the CHANGES file.
 
 
 The following are the changes from calc version 2.12.5.4 to 2.12.5.6:
@@ -91,12 +93,12 @@ The following are the changes from calc version 2.12.5.4 to 2.12.5.6:
     for all valid values of h and n.  As a result, the trial tables
     used by gen_v1() have been changed to a short list of values
     to try, in order ot likelyhood of success, before doing an
-    enhaustive search for a v1 value to return.
+    exhaustive search for a v1 value to return.
 
     Removed lucas_tbl.cal calc resource file.  This file was made
     obsolete by the above rewrite of the lucas.cal resource file.
     This file will be removed from the local cal directory and
-    from CALC_SHAREDIR during a 'make install', 'make cobber',
+    from CALC_SHAREDIR during a 'make install', 'make clobber',
     and 'make uninstall'.
 
     Renamed gen_u0() to gen_u2() in lucas.cal.  Provided a gen_u0()
@@ -104,7 +106,7 @@ The following are the changes from calc version 2.12.5.4 to 2.12.5.6:
 
     The old gen_v1() method used by the Amdahl 6 group has been
     renamed legacy_gen_v1() in lucas.cal.  This function is no
-    longer usde by the lucas(h, n) function to test the primality of
+    longer used by the lucas(h, n) function to test the primality of
     h*2^n-1.  It is preserved in lucas.cal for historical purposes.
 
     The 'make clobber' rule will attempt to remove all files that
@@ -133,7 +135,7 @@ The following are the changes from calc version 2.12.5.3 to 2.12.5.3:
     calc under /opt/calc.  Moreover the CHANGES file did not mention
     /opt/calc.  Sorry about that!.
 
-    A much better tree for masOS (Darwin) users would have been
+    A much better tree for macOS (Darwin) users would have been
     to install cal under /opt/calc.  This release ONLY changes the
     macOS (Darwin) install tree to /usr/local.
 
@@ -150,10 +152,10 @@ The following are the changes from calc version 2.12.5.1 to 2.12.5.2:
 	  AND /usr/local would have been a better choice.  Sorry!
 	  Fixed in calc version 2.12.5.3.
 
-    Removed rules and makefile variables assocated with shortened
+    Removed rules and makefile variables associated with shortened
     calc version numbers of less than 4 levels.
 
-    Under OS X (darwin), if /usr/include is missing, warnings
+    Under OS X (Darwin), if /usr/include is missing, warnings
     are issued to help the user use xcode-select --install
     so that one may properly compile C code.
 
@@ -192,13 +194,13 @@ The following are the changes from calc version 2.12.5.0 to 2.12.5.1:
 	This mailing list replaces calc-tester at asthe dot com list.
 
 	If you need a human to help you with your mailing list subscription,
-	please send EMail to our special:
+	please send Email to our special:
 
 	    calc-tester-maillist-help at asthe dot com
 
-	address.  To be sure we see your EMail asking for help with your
+	address.  To be sure we see your Email asking for help with your
 	mailing list subscription, please use the following phase in your
-	EMail Subject line:
+	Email Subject line:
 
 	    calc tester mailing list help
 
@@ -206,14 +208,14 @@ The following are the changes from calc version 2.12.5.0 to 2.12.5.1:
 	request will get past our anti-spam filters.  You may have
 	additional words in your subject line.
 
-    There is a new calc bug report EMail address:
+    There is a new calc bug report Email address:
 
 	    calc-bug-report at asthe dot com
 
 	This replaces the old calc-bugs at asthe dot com address.
 
-	To be sure we see your EMail reporting a calc bug, please use the
-	following phase in your EMail Subject line:
+	To be sure we see your Email reporting a calc bug, please use the
+	following phase in your Email Subject line:
 
 	    calc bug report
 
@@ -235,7 +237,7 @@ The following are the changes from calc version 2.12.5.0 to 2.12.5.1:
 
     Noted that the hash() builtin function, internally known as
     quickhash (used for internal objects such as the associative
-    arrays as well as other internal processes) uses the deprcated
+    arrays as well as other internal processes) uses the deprecated
     32-bit FNV-0 hash.  The use of this deprecated hash is sufficient
     for calc internal purposes.  Use of FNV-1a is recommended for
     a general non-cryptographic quick hash.
@@ -271,7 +273,7 @@ The following are the changes from calc version 2.12.4.14 to 2.12.5.0:
 
     We made important fixes to the calc command line history:
 
-	Fixed a bug in the command line history where calc would somtimes
+	Fixed a bug in the command line history where calc would sometimes
 	crash.  There was code that used memcpy() instead of memmove()
 	that could corrupt the command line history when entering a
 	into into history that was similar to a previous entry.  Thanks
@@ -281,7 +283,7 @@ The following are the changes from calc version 2.12.4.14 to 2.12.5.0:
 	The calc command line history code, in general was not robust.
 	We made use a patch from Mathias Buhr <napcode at users dot sf
 	dot net>, that while it uses a bit more memory: is much more
-	flexible, readable and robust.  This patch replaced the improer
+	flexible, readable and robust.  This patch replaced the improper
 	use of memcpy() (see above) with better code.  Thanks!
 
     The alg_config.cal calc resource file has been reworked to produce
@@ -414,11 +416,11 @@ The following are the changes from calc version 2.12.4.6 to version 2.12.4.10:
     Set MACOSX_DEPLOYMENT_TARGET=10.8 as we upgraded all of
     our development Mac OS X to 10.8.
 
-    Libraries are chmodded as 0644 to allow for building rpms
+    Libraries are chmod-ed as 0644 to allow for building rpms
     without root.
 
     Silenced annoying warning about unused variable 'intp'
-    while compiline endian.c under some circumstances.
+    while compiling endian.c under some circumstances.
 
     Fixed typo in redeclaration warnings.  Thanks to
     Christoph Zurnieden <czurnieden at gmx dot de> for this report.
@@ -427,13 +429,13 @@ The following are the changes from calc version 2.12.4.6 to version 2.12.4.10:
     Christoph Zurnieden <czurnieden at gmx dot de> including:
 
     bernpoly.cal - Computes the nth Bernoulli polynomial at z for any n,z
-    brentsolve.cal - root-finder implementwed with the Brent-Dekker trick
+    brentsolve.cal - root-finder implemented with the Brent-Dekker trick
     factorial.cal - product of the positive integers
-    factorial2.cal - variety of integer functions quasi-related to factoral
+    factorial2.cal - variety of integer functions quasi-related to factorial
     lambertw.cal - Computes Lambert's W-function at "z" at branch "branch"
     lnseries.cal - Calculates a series of natural logarithms at 1,2,3,4...n
     specialfunctions.cal - Calculates the value of the beta function
-    statistics.cal - a wide vareity of stastical functions
+    statistics.cal - a wide variety of statistical functions
     toomcook.cal - Multiply by way of the Toom-Cook algorithm
     zeta2.cal - Calculate the value of the Hurwitz Zeta function
 
@@ -446,7 +448,7 @@ The following are the changes from calc version 2.12.4.6 to version 2.12.4.10:
 
     We replaced COPYING-LGPL with the version that is found at
     http://www.gnu.org/licenses/lgpl-2.1.txt because that version
-    contans some whitespace formatting cleanup.  Otherwise the
+    contains some whitespace formatting cleanup.  Otherwise the
     license is the same.
 
     We fixed a number of places where "the the" was used
@@ -472,7 +474,7 @@ The following are the changes from calc version 2.12.4.3 to 2.12.4.5:
 
     Added gvec.cal resource script.
 
-    Added calc-symlink make rule to setup symlinks from stardard locations
+    Added calc-symlink make rule to setup symlinks from standard locations
     into a tree specified by a non-empty ${T} makefile variable.  Added
     calc-unsymlink to remove any symlinks that may have been created by
     the calc-symlink rule.
@@ -492,7 +494,7 @@ The following are the changes from calc version 2.12.4.0 to 2.12.4.2:
     Fixed a documentation bug for the sgn() builtin.
 
     Added the 1<<8/2 evaluation example to "help unexpected".  That
-    expression evalutes to 128, not 16 as some C programmers might expect.
+    expression evaluates to 128, not 16 as some C programmers might expect.
 
     Fixed a bug in solve.cal where high was not returned in some situations.
 
@@ -504,7 +506,7 @@ The following are the changes from calc version 2.12.4.0 to 2.12.4.2:
 
     The Makefile used in the source rpm (calc-*.src.rpm) no longer uses
     the -Werror compile flag.  This is to help those distributions with
-    compilers that make produce (hopefully) complination warnings.
+    compilers that make produce (hopefully) compilation warnings.
     NOTE: For testing and calc build purposes will recommend and will
     continue to use the -Werror flag.
 
@@ -518,7 +520,7 @@ The following are the changes from calc version 2.12.4.0 to 2.12.4.2:
 
     one may build a calc binary that is easier to debug.
 
-    Fixed a bug where an certains typos (e.g., calling an unknown
+    Fixed a bug where an certain typos (e.g., calling an unknown
     function) would previously cause calc to exit.
 
     Updated the COPYING file to reflect the new filenames associated
@@ -539,7 +541,7 @@ The following are the changes from calc version 2.12.4.0 to 2.12.4.2:
     Added dms.cal and hms.cal resource files.  The dms.cal is a more
     functional version of deg.cal.  It is a superset except that increment
     and decrement is on the arc second level.  The hms.cal is for
-    24-hour cycle instread of the 360 degree cycle of dms.cal.
+    24-hour cycle instead of the 360 degree cycle of dms.cal.
 
     Changed deg.cal object name from dms to deg so that the more functional
     dms.cal can own the dms object name.
@@ -547,7 +549,7 @@ The following are the changes from calc version 2.12.4.0 to 2.12.4.2:
     Updated 'help obj' to reflect changes to 'show objfunctions' and
     resource file example list since 1999.
 
-    Fixed problem where CALC_BYTE_ORDER refering to CALC_BIG_ENDIAN
+    Fixed problem where CALC_BYTE_ORDER referring to CALC_BIG_ENDIAN
     and CALC_LITTLE_ENDIAN instead of BIG_ENDIAN and LITTLE_ENDIAN.
 
 
@@ -559,7 +561,7 @@ The following are the changes from calc version 2.12.3.0 to 2.12.3.3:
 
     Calc versions will always be of the form x.y.z.w even when the
     MINOR_PATCH (w) is 0.  Thus, 2.12.3.0 will be printed as 2.12.3.0
-    instread of just 2.12.3.
+    instead of just 2.12.3.
 
     Added MINGW32_NT-5.0 compile target based on a patch from
     Brian L. Angus (angus at eng dot utah dot edu).
@@ -573,7 +575,7 @@ The following are the changes from calc version 2.12.3.0 to 2.12.3.3:
 
     The ${CALC_INCDIR}/custom is no longer being removed at install time
     if it is empty.  Now when ${ALLOW_CUSTOM} make variable is empty,
-    an empty ${CALC_INCDIR}/custom may be left hehind.
+    an empty ${CALC_INCDIR}/custom may be left behind.
 
     Fixed a problem where a "make clobber" would remove custom/Makefile
     and fail to rebuilt it.
@@ -643,7 +645,7 @@ The following are the changes from calc version 2.12.1.1 to 2.12.2.2:
     Fixed the wording for the -i flag in the calc man page.
 
     Added some notes to the help/unexpected file regarding calc
-    and interactice shells.
+    and interactive shells.
 
     Fixed bug where a FILEPOS was copied FPOS_POS_BITS octets instead of
     FPOS_POS_LEN octets.
@@ -667,7 +669,7 @@ The following are the changes from calc version 2.12.1.1 to 2.12.2.2:
     operate over a half closed interval.  The help/rand and help/random
     refer to  the top of the interval as "beyond" instead of "max".
 
-    Releaseing source tar balls using bzip2 instead of with gzip.  So
+    Releasing source tar balls using bzip2 instead of with gzip.  So
     what was calc-something.tar.gz is now calc-something.tar.bz2.
     To "uncompress" use:
 
@@ -806,7 +808,7 @@ The following are the changes from calc version 2.12.1.10 to 2.12.2:
 
 	      	calc-contrib at asthe dot com
 
-	      EMail address an "ifeq ($(target),YOUR_TARGET_NAME)"
+	      Email address an "ifeq ($(target),YOUR_TARGET_NAME)"
 	      ... "endif" set of lines from the Makefile so that
 	      we can consider them for the next release.
 
@@ -939,7 +941,7 @@ The following are the changes from calc version 2.12.1.10 to 2.12.2:
 	2.5 ^ 2.718i            3.13145i ^ 0.30103i
 
     Fixed typos in the calc man page thanks to a Debian bug report
-    by A. Costa <agcosta at gis dot .net> that wsa kindly forwarded
+    by A. Costa <agcosta at gis dot .net> that was kindly forwarded
     to us by Martin Buck <m at rtin-buck dot de>.
 
 
@@ -1560,7 +1562,7 @@ The following are the changes from calc version 2.11.10 to 2.11.10:
     and ${L64_FORMAT}.  Removed longlong.c and longlong.h.  The use
     of HAVE_LONGLONG=0 was problematic.  The lack of complaints about
     the HAVE_LONGLONG=0 shows that the 'long long' type is wide spread
-    enough warrent not trying to support compilers without 'long long'.
+    enough to warrant not trying to support compilers without 'long long'.
 
     Removed the SVAL and SHVAL macros from zrand.c, zrand.h, and zmath.h
     as they were causing too many broken C pre-processors and C checkers
@@ -1574,7 +1576,7 @@ The following are the changes from calc version 2.11.10 to 2.11.10:
     could test calc.  Best wishes to the former BSDI folk and thanks
     for breaking important ground in the Open Source Movement!
 
-    Fixed several typos found in the documentation and buildin
+    Fixed several typos found in the documentation and builtin
     function output by C Smith <smichr at hotmail dot com>.
 
     Fixed -d so that:
@@ -1946,7 +1948,7 @@ The following are the changes from calc version 2.11.5t4.1 to 2.11.5t4.4:
     version string.
 
     Added subject requirements for the calc-tester-request and
-    calc-bugs-mail EMail aliases.  See:
+    calc-bugs-mail Email aliases.  See:
 
     	http://www.isthe.com/chongo/tech/comp/calc/email.html
 
@@ -1974,7 +1976,7 @@ The following are the changes from calc version 2.11.5t4.1 to 2.11.5t4.4:
     (kawamura at mlb.co.jp) for the bug report and patch!
 
     Fixed headers on fproduct.calc powerterm.calc 4dsphere.calc so
-    that they are correcly changed on installation.
+    that they are correctly changed on installation.
 
     Added ${GREP} Makefile variable.
 
@@ -2258,7 +2260,7 @@ The following are the changes from calc version 2.11.4t1 to 2.11.4t2:
     function.  It remains for backward compatibility.
 
     The Makefile now builds have_fpos_pos.h to determine if the
-    a non-scalar FILEPOS has a __pos stucture element.  If it does,
+    a non-scalar FILEPOS has a __pos structure element.  If it does,
     the FILEPOS_BITS is taken to be the size of just the __pos element.
 
     Misc fixes related to non-scalar (e.g., structure) FILEPOS.  Fixed
@@ -2523,8 +2525,8 @@ The following are the changes from calc version 2.11.2t0 to 2.11.2t1.0:
     Fixed a bug whereby help files are not displayed correctly on
     systems such as NetBSD 1.4.1.  Thanks to a fix from Jakob Naumann.
 
-    Changed EMail addresses to use asthe.com.  Changed URLs to use
-    www.isthe.com.  NOTE: The EMail address uses 'asthe' and the web
+    Changed Email addresses to use asthe.com.  Changed URLs to use
+    www.isthe.com.  NOTE: The Email address uses 'asthe' and the web
     site URL uses 'isthe'.
 
     Using calc-bugs at asthe dot com for calc bug reports,
@@ -2532,7 +2534,7 @@ The following are the changes from calc version 2.11.2t0 to 2.11.2t1.0:
     calc-tester-request at asthe dot com for requests to join calc-tester and
     calc-tester at asthe dot com for the calc tester mailing list.
 
-    Replaced explicit EMail addresses found this file with the <user at
+    Replaced explicit Email addresses found this file with the <user at
     site dot domain> notation to reduce the potential for those folks
     to be spammed.
 
@@ -3008,7 +3010,7 @@ The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
     by Prentice-Hall (UK) Ltd., 1990.)	The piforever() function prints
     digits of pi for as long as your memory and system uptime allows.  :-)
 
-    Fixed the URLs found thruout the source and documentation which did
+    Fixed the URLs found throughout the source and documentation which did
     not and in /, but should for performance and server load reasons.
 
     Cleaned up and improved handling of "mat" and "obj".  The comma in:
@@ -3087,7 +3089,7 @@ The following are the changes from calc version 2.11.0t8.9.1 to 2.11.0t9.4.5:
     and investigated by Michel van der List <vanderlistmj at sbphrd dot com>.
 
     Made an effort to ensure that the v_subtype of VALUES are initialized
-    to V_NOSUBTYPE thruout the source code.
+    to V_NOSUBTYPE through out the source code.
 
     Established a separate calc-bugs address from the calc-tester
     mailing list.  Using anti-spam address forms in order to try and
@@ -3120,7 +3122,7 @@ The following are the changes from calc version 2.11.0t8 to 2.11.0t8.9:
     If $CALCRC has more than one file as in file1:file2 and an error
     occurs in file1, then calc -c will not read file2.
 
-    Fixed some of the old EMail addresses found in calc documentation.
+    Fixed some of the old Email addresses found in calc documentation.
 
     Added HAVE_USTAT, HAVE_GETSID, HAVE_GETPGID, HAVE_GETTIME, HAVE_GETPRID
     and HAVE_URANDOM symbols to the Makefile.  These symbols, along with
@@ -3578,7 +3580,7 @@ The following are the changes from calc version 2.11.0t1 to 2.11.0t6.3:
     A patch from Ernest Bowen <ernie at turing dot une dot edu dot au> now
     defines special meaning to the first 2 bits of config("lib_debug"):
 
-	bit 0 set => messages printed when inputisterminal
+	bit 0 set => messages printed when input is from a terminal
 	bit 1 set => messages printed when reading from a file
 
     The lib/regress.cal regression suite does:
@@ -4527,7 +4529,7 @@ The following are the changes from calc version 2.10.3t5.28 to 2.10.3t5.33:
     long Mersenne factorizations.  The default reporting loop
     is now 10000 cycles.
 
-    SGI Mips r10k compile set is speced for IRIX6.5 with v7.2
+    SGI Mips r10k compile set is specified for IRIX6.5 with v7.2
     compilers.	A note for pre-IRIX6.5 and/or pre-v7.2 compilers
     is given in the compile set.
 
@@ -4788,7 +4790,7 @@ The following are the changes from calc version 2.10.3t5.1 to 2.10.3t5.10:
     surprises that C programmers may encounter.
 
     Updated the 'help', 'intro' and 'overview' to reflect the
-    full list of non-builtin function help files.  Reorered the
+    full list of non-builtin function help files.  Reordered the
     'full' help file.
 
     The blkalloc() builtin has been renamed blk().
@@ -5739,7 +5741,7 @@ The following are the changes from calc version 2.10.2t4 to 2.10.2t24:
 
      The regression test suite output has been changed so that it will
      output the same information regardless of CPU performance.	 In
-     particular, cpu times of certain tests are not printed.  This allows
+     particular, CPU times of certain tests are not printed.  This allows
      one to compare the regression output of two different systems easier.
 
      A matrix or object declaration is now considered an expression
@@ -6062,11 +6064,11 @@ The following are the changes from calc version 2.10.2t1 to 2.10.2t3:
 	    y = fgetstr(f);	/* returns "Curt" */
 	    z = fgetstr(f);	/* returns "Noll" */
 
-    The builtin fgetfield() returns the next field of non-whitepsace
+    The builtin fgetfield() returns the next field of non-whitespace
     characters.
 
     The builtins scan(), fscan(), strscan() read tokens (fields of
-    non-whitepsace characters) and evaluates them.  Thus:
+    non-whitespace characters) and evaluates them.  Thus:
 
 	global a,b,c;
 	strscan("2+3  4^2\n c=a+b", a, b, 0);
@@ -6345,7 +6347,7 @@ The following are the changes from calc version 2.10.1t11 to 2.10.1t19:
 	config("all", "newstd")
 
     Renamed config.h (configuration file built during the make) to conf.h.
-    Added a new config.h to contain info on thw V_CONFIG type.
+    Added a new config.h to contain info on the V_CONFIG type.
 
     Fixed some ANSI C compile warnings.
 
@@ -6910,7 +6912,7 @@ The following are the changes from calc version 2.9.3t8 to 2.9.3t9.2:
     the rand() builtin does not match the additive 55 / shuffle
     generators from the old cryrand.cal file.
 
-    Added Makfile support for building BSD/386 releases.
+    Added Makefile support for building BSD/386 releases.
 
     The cmp() builtin can now compare complex values.
 
@@ -6963,7 +6965,7 @@ The following are the changes from calc version 2.9.3t8 to 2.9.3t9.2:
 
     Some systems do not have uid_t.  The file have_uid_t.h, which is
     built from have_uid_t.c will determine if we can or should depend
-    on uid_t being typefed by the system include files.	 See the Makefile
+    on uid_t being typedefed by the system include files.	 See the Makefile
     for details.
 
     Some systems do not have memcpy(), memset() and strchr().  The
