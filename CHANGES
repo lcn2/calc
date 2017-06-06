@@ -6963,10 +6963,10 @@ The following are the changes from calc version 2.9.3t8 to 2.9.3t9.2:
     which is built from have_const.c will determine if we can or should
     use const.	See the Makefile for details.
 
-    Some systems do not have uid_t.  The file have_uid_t.h, which is
-    built from have_uid_t.c will determine if we can or should depend
-    on uid_t being typedefed by the system include files.	 See the Makefile
-    for details.
+    Some systems do not have uid_t.  The file have_uid_t.h, which
+    is built from have_uid_t.c will determine if we can or should
+    depend on uid_t being typedefed by the system include files.
+    See the Makefile for details.
 
     Some systems do not have memcpy(), memset() and strchr().  The
     file have_newstr.h, which is built from have_newstr.c will
