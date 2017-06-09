@@ -243,8 +243,8 @@ pprod256 = 0;	/* product of  "primes up to 256" / "primes up to 46" */
  * do make this so.
  *
  * input:
- *	h    the h as in h*2^n-1
- *	n    the n as in h*2^n-1
+ *	h    h as in h*2^n-1 (must be >= 1)
+ *	n    n as in h*2^n-1 (must be >= 1)
  *
  * returns:
  *	1 => h*2^n-1 is prime
@@ -267,12 +267,16 @@ lucas(h, n)
 	 * check arg types
 	 */
 	if (!isint(h)) {
-		ldebug("lucas", "h is non-int");
 		quit "FATAL: bad args: h must be an integer";
 	}
+	if (h < 1) {
+		quit "FATAL: bad args: h must be an integer >= 1";
+	}
 	if (!isint(n)) {
-		ldebug("lucas", "n is non-int");
 		quit "FATAL: bad args: n must be an integer";
+	}
+	if (n < 1) {
+		quit "FATAL: bad args: n must be an integer >= 1";
 	}
 
 	/*
@@ -484,9 +488,9 @@ lucas(h, n)
  * See the function gen_v1() for details on the value of v(1).
  *
  * input:
- *	h	- h as in h*2^n-1
- *	n	- n as in h*2^n-1
- *	v1	- gen_v1(h,n)		(see function below)
+ *	h	- h as in h*2^n-1	(must be >= 1)
+ *	n	- n as in h*2^n-1	(must be >= 1)
+ *	v1	- gen_v1(h,n)		(must be >= 3) (see function below)
  *
  * returns:
  *	u(2)	- initial value for Lucas test on h*2^n-1
@@ -499,6 +503,8 @@ gen_u2(h, n, v1)
 	local r;		/* low value: v(n) */
 	local s;		/* high value: v(n+1) */
 	local hbits;		/* highest bit set in h */
+	local oldh;		/* pre-reduced h */
+	local oldn;		/* pre-reduced n */
 	local i;
 
 	/*
@@ -507,24 +513,45 @@ gen_u2(h, n, v1)
 	if (!isint(h)) {
 		quit "bad args: h must be an integer";
 	}
+	if (h < 0) {
+		quit "bad args: h must be an integer >= 1";
+	}
 	if (!isint(n)) {
 		quit "bad args: n must be an integer";
+	}
+	if (n < 1) {
+		quit "bad args: n must be an integer >= 1";
 	}
 	if (!isint(v1)) {
 		quit "bad args: v1 must be an integer";
 	}
-	if (v1 <= 0) {
-		quit "bogus arg: v1 is <= 0";
+	if (v1 < 3) {
+		quit "bogus arg: v1 must be an integer >= 3";
+	}
+
+	/*
+	 * reduce h if even
+	 *
+	 * we will force h to be odd by moving powers of two over to 2^n
+	 */
+	oldh = h;
+	oldn = n;
+	shiftdown = fcnt(h,2);	/* h % 2^shiftdown == 0, max shiftdown */
+	if (shiftdown > 0) {
+		h >>= shiftdown;
+		n += shiftdown;
 	}
 
 	/*
 	 * enforce the h > 0 and n >= 2 rules
 	 */
 	if (h <= 0 || n < 1) {
+		print "	   ERROR: h=":oldh, "n=":oldn, "reduced h=":h, "n=":n;
 		quit "reduced args violate the rule: 0 < h < 2^n";
 	}
 	hbits = highbit(h);
 	if (hbits >= n) {
+		print "	   ERROR: h=":oldh, "n=":oldn, "reduced h=":h, "n=":n;
 		quit "reduced args violate the rule: 0 < h < 2^n";
 	}
 
@@ -599,8 +626,8 @@ gen_u2(h, n, v1)
  * See the function gen_u2() for details.
  *
  * input:
- *	h	- h as in h*2^n-1
- *	n	- n as in h*2^n-1
+ *	h	- h as in h*2^n-1	(must be >= 1)
+ *	n	- n as in h*2^n-1	(must be >= 1)
  *	v1	- gen_v1(h,n)		(see function below)
  *
  * returns:
@@ -638,9 +665,9 @@ gen_u0(h, n, v1)
  *	x > 2
  *
  * input:
- *	x	- potential v(1) value
- *	h	- h as in h*2^n-1
- *	n	- n as in h*2^n-1
+ *	x	potential v(1) value
+ *	h	h as in h*2^n-1 (h must be odd >= 1)
+ *	n	n as in h*2^n-1	(must be >= 1)
  *
  * returns:
  *	1	if v(1) == x for h*2^n-1
@@ -657,8 +684,17 @@ rodseth_xhn(x, h, n)
 	if (!isint(h)) {
 		quit "bad args: h must be an integer";
 	}
+	if (iseven(h)) {
+		quit "bad args: h must be an odd integer";
+	}
+	if (h < 1) {
+		quit "bad args: h must be an integer >= 1";
+	}
 	if (!isint(n)) {
 		quit "bad args: n must be an integer";
+	}
+	if (n < 1) {
+		quit "bad args: n must be an integer >= 1";
 	}
 	if (!isint(x)) {
 		quit "bad args: x must be an integer";
@@ -764,22 +800,31 @@ rodseth_xhn(x, h, n)
  *           1 155
  *
  * The above distribution was found to hold fairly well over many values of
- * odd h that are a multiple of 3 and for many values of n where h < 2^n.
+ * odd h that are also a multiple of 3 and for many values of n where h < 2^n.
+ *
+ * When h * 2^n-1 is prime and h is multiple of 3, a smallest v(1) that is
+ * even is extremely rate.  Of the list of 127287 known primes of the form
+ * h*2^n-1 when h was a multiple of 3, none has an smallest v(1) that was even.
+ *
+ * About 1 out of 45000 cases when h is a multiple of 3 use v(1) > 99 as the
+ * smallest value of v(1).
  *
  * Given this information, when odd h is a multiple of 3 we try, in order,
  * these values of X:
  *
- *      3, 5, 9, 11, 15, 17, 21, 29, 20, 27, 35, 36, 39, 41, 45, 32, 51, 44,
- *      56, 49, 59, 57, 65, 55, 69, 71, 77, 81, 66, 95, 80, 67, 84, 99, 72,
- *      74, 87, 90, 104, 101, 105, 109, 116, 111, 92
+ *      3, 5, 9, 11, 15, 17, 21, 29, 27, 35, 39, 41, 45, 51, 49, 59, 57,
+ *	65, 55, 69, 71, 77, 81, 95, 67, 99, 87
  *
  * And stop on the first value of X where:
  *
  *      jacobi(X-2, h*2^n-1) == 1
  *      jacobi(X+2, h*2^n-1) == -1
  *
- * If no value in that list works, we start simple search starting with X = 120
- * and incrementing by 1 until a value of X is found.
+ * About 1 out of 45000 cases when h is a multiple of 3 use V(1) > 99 as
+ * the smallest value of v(1).
+ *
+ * If no value in that list works, we start simple search starting with X = 101
+ * and incrementing by 2 until a value of X is found.
  *
  * The x_tbl[] matrix contains those common values of X to try in order.
  * If all x_tbl_len fail to satisfy Ref4 condition 1, then we begin a
@@ -794,14 +839,13 @@ rodseth_xhn(x, h, n)
  *		   v(1) for a given n when h is a multiple of 3.  Skipping
  *		   rarely used v(1) will not doom gen_v1() to a long search.
  */
-x_tbl_len = 45;
+x_tbl_len = 27;
 mat x_tbl[x_tbl_len];
 x_tbl = {
-    3, 5, 9, 11, 15, 17, 21, 29, 20, 27, 35, 36, 39, 41, 45, 32, 51, 44,
-   56, 49, 59, 57, 65, 55, 69, 71, 77, 81, 66, 95, 80, 67, 84, 99, 72,
-   74, 87, 90, 104, 101, 105, 109, 116, 111, 92
+    3, 5, 9, 11, 15, 17, 21, 29, 27, 35, 39, 41, 45, 51, 49, 59, 57, 65,
+    55, 69, 71, 77, 81, 95, 67, 99, 87
 };
-next_x = 120;
+next_x = 101;
 
 /*
  * gen_v1 - compute the v(1) for a given h*2^n-1 if we can
@@ -956,8 +1000,8 @@ next_x = 120;
  ***
  *
  * input:
- *	h	h as in h*2^n-1
- *	n	n as in h*2^n-1
+ *	h	h as in h*2^n-1 (h must be odd >= 1)
+ *	n	n as in h*2^n-1	(must be >= 1)
  *
  * output:
  *	returns v(1), or -1 is there is no quick way
@@ -974,8 +1018,17 @@ gen_v1(h, n)
 	if (!isint(h)) {
 		quit "bad args: h must be an integer";
 	}
+	if (iseven(h)) {
+		quit "bad args: h must be an odd integer";
+	}
+	if (h < 1) {
+		quit "bad args: h must be an integer >= 1";
+	}
 	if (!isint(n)) {
 		quit "bad args: n must be an integer";
+	}
+	if (n < 1) {
+		quit "bad args: n must be an integer >= 1";
 	}
 
 	/*
@@ -1015,17 +1068,13 @@ gen_v1(h, n)
 	}
 
 	/*
-	 * We are in that rare case (about 1 in 2 300 000) where none of the
+	 * We are in that rare case (about 1 in 45 000) where none of the
 	 * common X values satisfy Ref4 condition 1.  We start a linear search
-	 * at next_x from here on.
-	 *
-	 * However, we also need to keep in mind that when x+2 >= 257, we
-	 * need to verify that gcd(x-2, h*2^n-1) == 1 and
-	 * and to verify that gcd(x+2, h*2^n-1) == 1.
+	 * of odd vules at next_x from here on.
 	 */
 	x = next_x;
 	while (rodseth_xhn(x, h, n) != 1) {
-		++x;
+		x += 2;
 	}
 	/* finally found a v(1) value */
 	ldebug("gen_v1", "h= " + str(h) + " n= " + str(n) +
@@ -1457,8 +1506,8 @@ legacy_d_qval[7] = 19;	legacy_v1_qval[7] = 74;	/* a=38	 b=1  r=2  */
  ***
  *
  * input:
- *	h	h as in h*2^n-1
- *	n	n as in h*2^n-1
+ *	h	h as in h*2^n-1	(must be >= 1)
+ *	n	n as in h*2^n-1	(must be >= 1)
  *
  * output:
  *	returns v(1), or -1 is there is no quick way
@@ -1469,6 +1518,22 @@ legacy_gen_v1(h, n)
 	local d;	/* the 'D' value to try */
 	local val_mod;	/* h*2^n-1 mod 'D' */
 	local i;
+
+	/*
+	 * check arg types
+	 */
+	if (!isint(h)) {
+		quit "bad args: h must be an integer";
+	}
+	if (h < 1) {
+		quit "bad args: h must be an integer >= 1";
+	}
+	if (!isint(n)) {
+		quit "bad args: n must be an integer";
+	}
+	if (n < 1) {
+		quit "bad args: n must be an integer >= 1";
+	}
 
 	/*
 	 * check for case 1
