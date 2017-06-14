@@ -847,7 +847,7 @@ rodseth_xhn(x, h, n)
  *	 111 0.0004323%
  *	 101 0.0002882%
  *	  83 0.0001441%
- *	 127 0.0001196%
+ *	 129 0.0001196%
  *
  * When h * 2^n-1 is prime and h is an odd multiple of 3, a smallest v(1) that
  * is even is extremely rate.  Of the list of 127287 known primes of the form
@@ -880,7 +880,7 @@ x_tbl = {
     3, 5, 9, 11, 15, 17, 21, 27, 29, 31, 35, 39, 41, 45, 49, 51, 53, 55,
     57, 59, 65, 67, 69, 71, 77, 81, 83, 85, 87, 95, 99, 101, 105, 111, 125
 };
-next_x = 127;
+next_x = 129;
 
 /*
  * gen_v1 - compute the v(1) for a given h*2^n-1 if we can
