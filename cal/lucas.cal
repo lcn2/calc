@@ -739,9 +739,9 @@ rodseth_xhn(x, h, n)
  * We can show that X > 2.  See the comments in the rodseth_xhn(x,h,n) above.
  *
  * Some values of X satisfy more often than others. For example a large sample
- * of odd h, h multiple of 3 and large n (some around 1e4, some near 1e6, others
- * near 3e7) where the sample size was 66 973 365, here is the count of the
- * smallest value of X that satisfies conditions in Ref4, condition 1:
+ * of odd h, h odd multiple of 3 and large n (some around 1e4, some near 1e6,
+ * others near 3e7) where the sample size was 66 973 365, here is the count of
+ * the smallest value of X that satisfies conditions in Ref4, condition 1:
  *
  *      count  X
  *    ----------
@@ -799,53 +799,88 @@ rodseth_xhn(x, h, n)
  *           1 161
  *           1 155
  *
+ * It is important that we select the smallest possible v(1).  While testing
+ * various values of X for V(1) is fast, using larger than necessary values
+ * of V(1) of can slow down calculating V(h).
+ *
  * The above distribution was found to hold fairly well over many values of
  * odd h that are also a multiple of 3 and for many values of n where h < 2^n.
+ * For example for in a sample size of 835823 numbers of the form h*2^n-1
+ * where odd h >= 12996351 is a multiple of 3, n >= 12996351, these are the
+ * smallest v(1) values that were found:
  *
- * When h * 2^n-1 is prime and h is multiple of 3, a smallest v(1) that is
- * even is extremely rate.  Of the list of 127287 known primes of the form
+ *  smallest percentage
+ *	v(1) used
+ *  -------------------
+ *	   3 40.000%
+ *	   5 25.683%
+ *	   9 11.693%
+ *	  11 10.452%
+ *	  15 4.806%
+ *	  17 2.348%
+ *	  21 1.656%
+ *	  29 1.281%
+ *	  27 0.6881%
+ *	  35 0.4536%
+ *	  39 0.3121%
+ *	  41 0.1760%
+ *	  31 0.1414%
+ *	  45 0.1173%
+ *	  51 0.05576%
+ *	  55 0.03300%
+ *	  49 0.03185%
+ *	  59 0.02090%
+ *	  69 0.00980%
+ *	  65 0.009367%
+ *	  71 0.007205%
+ *	  57 0.006341%
+ *	  85 0.004611%
+ *	  81 0.004179%
+ *	  95 0.002882%
+ *	  99 0.001873%
+ *	  77 0.001153%
+ *	  53 0.0007205%
+ *	  67 0.0005764%
+ *	 125 0.0005764%
+ *	 105 0.0005764%
+ *	  87 0.0004323%
+ *	 111 0.0004323%
+ *	 101 0.0002882%
+ *	  83 0.0001441%
+ *	 127 0.0001196%
+ *
+ * When h * 2^n-1 is prime and h is an odd multiple of 3, a smallest v(1) that
+ * is even is extremely rate.  Of the list of 127287 known primes of the form
  * h*2^n-1 when h was a multiple of 3, none has an smallest v(1) that was even.
  *
- * About 1 out of 45000 cases when h is a multiple of 3 use v(1) > 99 as the
+ * About 1 out of 835000 cases when h is a multiple of 3 use v(1) > 127 as the
  * smallest value of v(1).
  *
  * Given this information, when odd h is a multiple of 3 we try, in order,
- * these values of X:
+ * these sorted values of X:
  *
- *      3, 5, 9, 11, 15, 17, 21, 29, 27, 35, 39, 41, 45, 51, 49, 59, 57,
- *	65, 55, 69, 71, 77, 81, 95, 67, 99, 87
+ *      3, 5, 9, 11, 15, 17, 21, 27, 29, 31, 35, 39, 41, 45, 49, 51, 53, 55,
+ *	57, 59, 65, 67, 69, 71, 77, 81, 83, 85, 87, 95, 99, 101, 105, 111, 125
  *
  * And stop on the first value of X where:
  *
  *      jacobi(X-2, h*2^n-1) == 1
  *      jacobi(X+2, h*2^n-1) == -1
  *
- * About 1 out of 45000 cases when h is a multiple of 3 use V(1) > 99 as
- * the smallest value of v(1).
- *
- * If no value in that list works, we start simple search starting with X = 101
+ * If no value in that list works, we start simple search starting with X = 12/
  * and incrementing by 2 until a value of X is found.
  *
  * The x_tbl[] matrix contains those common values of X to try in order.
  * If all x_tbl_len fail to satisfy Ref4 condition 1, then we begin a
  * linear search at next_x until we find a proper X value.
- *
- * IMPORTANT NOTE: Using this table will not find the smallest possible v(1)
- *		   for a given h and n.  This is not a problem because using
- *		   a larger value of v(1) does not impact the primality test.
- *		   Furthermore after lucas(h, n) generates a few u(n) terms,
- *		   the values will wrap (due to computing mod h*2^n-1).
- *		   Finally on average, about 1/4 of the values of X work as
- *		   v(1) for a given n when h is a multiple of 3.  Skipping
- *		   rarely used v(1) will not doom gen_v1() to a long search.
  */
-x_tbl_len = 27;
+x_tbl_len = 35;
 mat x_tbl[x_tbl_len];
 x_tbl = {
-    3, 5, 9, 11, 15, 17, 21, 29, 27, 35, 39, 41, 45, 51, 49, 59, 57, 65,
-    55, 69, 71, 77, 81, 95, 67, 99, 87
+    3, 5, 9, 11, 15, 17, 21, 27, 29, 31, 35, 39, 41, 45, 49, 51, 53, 55,
+    57, 59, 65, 67, 69, 71, 77, 81, 83, 85, 87, 95, 99, 101, 105, 111, 125
 };
-next_x = 101;
+next_x = 127;
 
 /*
  * gen_v1 - compute the v(1) for a given h*2^n-1 if we can
@@ -1048,6 +1083,11 @@ gen_v1(h, n)
 	 *
 	 *	jacobi(X-2, h*2^n-1) == 1		part 1
 	 *	jacobi(X+2, h*2^n-1) == -1		part 2
+	 *
+	 * NOTE: If we wanted to be super optimial, we would cache
+	 *	 jacobi(X+2, h*2^n-1) that that when we increment X
+	 *	 to the next odd value, the now jacobi(X-2, h*2^n-1)
+	 *	 does not need to be re-evaluted.
 	 */
 	for (i=0; i < x_tbl_len; ++i) {
 
@@ -1068,7 +1108,7 @@ gen_v1(h, n)
 	}
 
 	/*
-	 * We are in that rare case (about 1 in 45 000) where none of the
+	 * We are in that rare case (about 1 in 835 000) where none of the
 	 * common X values satisfy Ref4 condition 1.  We start a linear search
 	 * of odd vules at next_x from here on.
 	 */
