@@ -869,7 +869,7 @@ rodseth_xhn(x, h, n)
  *      jacobi(X-2, h*2^n-1) == 1
  *      jacobi(X+2, h*2^n-1) == -1
  *
- * If no value in that list works, we start simple search starting with X = 12/
+ * If no value in that list works, we start simple search starting with X = 129
  * and incrementing by 2 until a value of X is found.
  *
  * The x_tbl[] matrix contains those common values of X to try in order.
