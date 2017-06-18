@@ -739,7 +739,7 @@ rodseth_xhn(x, h, n)
  * We can show that X > 2.  See the comments in the rodseth_xhn(x,h,n) above.
  *
  * Some values of X satisfy more often than others. For example a large sample
- * of odd h, h odd multiple of 3 and large n (some around 1e4, some near 1e6,
+ * of h*2^n-1, h odd multiple of 3, and large n (some around 1e4, some near 1e6,
  * others near 3e7) where the sample size was 66 973 365, here is the count of
  * the smallest value of X that satisfies conditions in Ref4, condition 1:
  *
@@ -806,8 +806,8 @@ rodseth_xhn(x, h, n)
  * The above distribution was found to hold fairly well over many values of
  * odd h that are also a multiple of 3 and for many values of n where h < 2^n.
  * For example for in a sample size of 1000000 numbers of the form h*2^n-1
- * where h is an odd multiple of 3, 13002351 >= h >= 12996351,
- * 4332116 >= n >= 12996351, these are the smallest v(1) values that were found:
+ * where h is an odd multiple of 3, 12996351 <= h <= 13002351,
+ * 4331116 <= n <= 4332116, these are the smallest v(1) values that were found:
  *
  *  smallest percentage
  *	v(1) used
