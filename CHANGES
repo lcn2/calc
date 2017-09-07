@@ -6,6 +6,9 @@ The following are the changes from calc version 2.12.6.1 to date:
     integers >= 1.  In the case of both rodseth_xhn(x, h, n) and gen_v1(h, n)
     h must be odd.
 
+    Fixed an C code intending issue that was reported by Thomas Walter
+    <th dot walter42 at gmx dot de> in zfunc.c.
+
 
 The following are the changes from calc version 2.12.6.0 to 2.12.6.0:
 
