@@ -657,8 +657,8 @@ searches in succession:
 .sp 1
 .in +5n
 .nf
-./myfile
-./myfile.cal
+\a./myfile
+\a./myfile.cal
 ${LIBDIR}/myfile
 ${LIBDIR}/myfile.cal
 ${CUSTOMCALDIR}/myfile
