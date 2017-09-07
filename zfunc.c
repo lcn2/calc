@@ -1029,93 +1029,98 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 				needw = FALSE;
 			}
 			g = *a0 * w;
-			if (h < BASEB) g &= (1 << h) - 1;
-			else g &= BASE1;
+			if (h < BASEB) {
+			    g &= (1 << h) - 1;
+			} else {
+			    g &= BASE1;
+			}
+		} else {
+			g = 1;
 		}
-		else g = 1;
-	   } else
+	    } else {
 		g = (HALF) *a0 * w;
-		a = a0;
-		b = b0;
-		i = n;
-		if (g > 1) {			/* a - g * b case */
-			f = 0;
-			while (i--) {
-				f = (FULL) *a - g * *b++ - f;
-				*a++ = (HALF) f;
-				f >>= BASEB;
-				f = -f & BASE1;
-			}
-			if (f) {
-				i = m - n;
-				while (i-- && f) {
-					f = *a - f;
-					*a++ = (HALF) f;
-					f >>= BASEB;
-					f = -f & BASE1;
-				}
-			}
-			while (m && !*a0) { /* Removing trailing zeros */
-				m--;
-				a0++;
-			}
-			if (f) {		/* a - g * b < 0 */
-				while (m > 1 && a0[m-1] == BASE1) m--;
-				*a0 = - *a0;
-				a = a0;
-				i = m;
-				while (--i) {
-					a++;
-					*a = ~*a;
-				}
-			}
-		} else {				/* abs(a - b) case */
-			while (i && *a++ == *b++) i--;
-			q = n - i;
-			if (m == n) {		/* a and b same length */
-				if (i) {	 /* a not equal to b */
-					while (m && a0[m-1] == b0[m-1]) m--;
-					if (a0[m-1] < b0[m-1]) {
-						/* Swapping since a < b */
-						a = a0;
-						a0 = b0;
-						b0 = a;
-						k = j;
-					}
-					a = a0 + q;
-					b = b0 + q;
-					i = m - q;
-					f = 0;
-					while (i--) {
-						f = (FULL) *a - *b++ - f;
-						*a++ = (HALF) f;
-						f >>= BASEB;
-						f = -f & BASE1;
-					}
-				}
-			} else {		/* a has more digits than b */
-				a = a0 + q;
-				b = b0 + q;
-				i = n - q;
-				f = 0;
-				while (i--) {
-					f = (FULL) *a - *b++ - f;
-					*a++ = (HALF) f;
-					f >>= BASEB;
-					f = -f & BASE1;
-				}
-				if (f) { while (!*a) *a++ = BASE1;
-					(*a)--;
-				}
-			}
-			a0 += q;
-			m -= q;
-			while (m && !*a0) { /* Removing trailing zeros */
-				m--;
-				a0++;
-			}
-		}
-		while (m && !a0[m-1]) m--;	/* Removing leading zeros */
+	    }
+	    a = a0;
+	    b = b0;
+	    i = n;
+	    if (g > 1) {			/* a - g * b case */
+		    f = 0;
+		    while (i--) {
+			    f = (FULL) *a - g * *b++ - f;
+			    *a++ = (HALF) f;
+			    f >>= BASEB;
+			    f = -f & BASE1;
+		    }
+		    if (f) {
+			    i = m - n;
+			    while (i-- && f) {
+				    f = *a - f;
+				    *a++ = (HALF) f;
+				    f >>= BASEB;
+				    f = -f & BASE1;
+			    }
+		    }
+		    while (m && !*a0) { /* Removing trailing zeros */
+			    m--;
+			    a0++;
+		    }
+		    if (f) {		/* a - g * b < 0 */
+			    while (m > 1 && a0[m-1] == BASE1) m--;
+			    *a0 = - *a0;
+			    a = a0;
+			    i = m;
+			    while (--i) {
+				    a++;
+				    *a = ~*a;
+			    }
+		    }
+	    } else {				/* abs(a - b) case */
+		    while (i && *a++ == *b++) i--;
+		    q = n - i;
+		    if (m == n) {		/* a and b same length */
+			    if (i) {	 /* a not equal to b */
+				    while (m && a0[m-1] == b0[m-1]) m--;
+				    if (a0[m-1] < b0[m-1]) {
+					    /* Swapping since a < b */
+					    a = a0;
+					    a0 = b0;
+					    b0 = a;
+					    k = j;
+				    }
+				    a = a0 + q;
+				    b = b0 + q;
+				    i = m - q;
+				    f = 0;
+				    while (i--) {
+					    f = (FULL) *a - *b++ - f;
+					    *a++ = (HALF) f;
+					    f >>= BASEB;
+					    f = -f & BASE1;
+				    }
+			    }
+		    } else {		/* a has more digits than b */
+			    a = a0 + q;
+			    b = b0 + q;
+			    i = n - q;
+			    f = 0;
+			    while (i--) {
+				    f = (FULL) *a - *b++ - f;
+				    *a++ = (HALF) f;
+				    f >>= BASEB;
+				    f = -f & BASE1;
+			    }
+			    if (f) { while (!*a) *a++ = BASE1;
+				    (*a)--;
+			    }
+		    }
+		    a0 += q;
+		    m -= q;
+		    while (m && !*a0) { /* Removing trailing zeros */
+			    m--;
+			    a0++;
+		    }
+	    }
+	    while (m && !a0[m-1]) m--;	/* Removing leading zeros */
 	}
 	if (m == 1) {				/* a has one digit */
 		v = *a0;
