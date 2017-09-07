@@ -1041,7 +1041,8 @@ next_x = 129;
  *	n	n as in h*2^n-1	(must be >= 1)
  *
  * output:
- *	returns v(1), or -1 is there is no quick way
+ *	returns v(1), or
+ *		-1 when h*2^n-1 is a multiple of 3
  */
 define
 gen_v1(h, n)
@@ -1066,6 +1067,14 @@ gen_v1(h, n)
 	}
 	if (n < 1) {
 		quit "bad args: n must be an integer >= 1";
+	}
+
+	/*
+	 * pretest: Verify that h*2^n-1 is not a multiple of 3
+	 */
+	if (((h % 3 == 1) && (n % 2 == 0)) || ((h % 3 == 2) && (n % 2 == 1))) {
+		/* no need to test h*2^n-1, it is not prime */
+		return -1;
 	}
 
 	/*
