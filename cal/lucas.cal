@@ -863,10 +863,11 @@ rodseth_xhn(x, h, n)
  *	104    0.0001 %
  *	129    0.0001 %
  *
- * However, a case can be made for considering only odd values for v(1) candidates.
- * When h * 2^n-1 is prime and h is an odd multiple of 3, a smallest v(1) that
- * is even is extremely rate.  Of the list of 146553 known primes of the form
- * h*2^n-1 when h is an odd a multiple of 3, none has an smallest v(1) that was even.
+ * However, a case can be made for considering only odd values for v(1)
+ * candidates.  When h * 2^n-1 is prime and h is an odd multiple of 3,
+ * a smallest v(1) that is even is extremely rate.  Of the list of 146553
+ * known primes of the form h*2^n-1 when h is an odd a multiple of 3,
+ * none has an smallest v(1) that was even.
  *
  * See:
  *
@@ -874,9 +875,10 @@ rodseth_xhn(x, h, n)
  *
  * for that list of 146553 known primes of the form h*2^n-1.
  *
- * That same example for in a sample size of 1000000 numbers of the form h*2^n-1
- * where h is an odd multiple of 3, 12996351 <= h <= 13002351,
- * 4331116 <= n <= 4332116, these are the smallest odd v(1) values that were found:
+ * That same example for in a sample size of 1000000 numbers of the
+ * form h*2^n-1 where h is an odd multiple of 3, 12996351 <= h <= 13002351,
+ * 4331116 <= n <= 4332116, these are the smallest odd v(1) values that were
+ * found:
  *
  *  smallest    percentage
  *  odd v(1)       used
@@ -916,26 +918,25 @@ rodseth_xhn(x, h, n)
  *	101	 0.0002 %
  *	 53	 0.0001 %
  *
- * Moreover when evaluating odd candidates for v(1), one may cache Jacobi symbol
- * evaluations to reduce the number of Jacobi symbol evaluations to a minimum.
- * For example, if one tests 5 and finds that the 2nd case fails:
+ * Moreover when evaluating odd candidates for v(1), one may cache Jacobi
+ * symbol evaluations to reduce the number of Jacobi symbol evaluations to
+ * a minimum. For example, if one tests 5 and finds that the 2nd case fails:
  *
  *	jacobi(5+2, h*2^n-1) != -1
  *
- * Then if one is later testing 9, the Jacobi symbol value for the first 1st case:
+ * Then if one is later testing 9, the Jacobi symbol value for the first
+ * 1st case:
  *
  *	jacobi(7-2, h*2^n-1)
  *
  * is already known.
  *
- * The hit rate in the cache improves (thus fewer Jacobi symbols need evaluating)
- * if we sort the above "smallest odd v(1) values" in numerical order.
  * Without Jacobi symbol value caching, it requires on average
  * 4.851377 Jacobi symbol evaluations.  With Jacobi symbol value caching
  * cacheing, an averare of 4.348820 Jacobi symbol evaluations is needed.
  *
  * Given this information, when odd h is a multiple of 3 we try, in order,
- * these sorted odd values of X:
+ * these odd values of X:
  *
  *	3, 5, 9, 11, 15, 17, 21, 29, 27, 35, 39, 41, 31, 45, 51, 55, 49, 59,
  *	69, 65, 71, 57, 85, 81, 95, 99, 77, 53, 67, 125, 111, 105, 87, 129,
@@ -946,7 +947,7 @@ rodseth_xhn(x, h, n)
  *      jacobi(X-2, h*2^n-1) == 1
  *      jacobi(X+2, h*2^n-1) == -1
  *
- * Less than 1 case out of 1000000 will not be satisifed by the above sorted list.
+ * Less than 1 case out of 1000000 will not be satisifed by the above list.
  * If no value in that list works, we start simple search starting with X = 167
  * and incrementing by 2 until a value of X is found.
  *
@@ -1141,7 +1142,7 @@ gen_v1(h, n)
 	local i;	/* x_tbl index */
 	local v1m2;	/* X-2 1st case */
 	local v1p2;	/* X+2 2nd case */
-	local testval;			/* h*2^n-1 - value we are testing if prime */
+	local testval;	/* h*2^n-1 - value we are testing if prime */
 	local mat cached_v1[next_x];	/* cached Jacobi symbol values or 0 */
 
 	/*
