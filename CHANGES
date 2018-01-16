@@ -9,6 +9,19 @@ The following are the changes from calc version 2.12.6.1 to date:
     Fixed an C code indenting issue that was reported by Thomas Walter
     <th dot walter42 at gmx dot de> in zfunc.c.
 
+    Fixed a man page warning about ./myfile where the leading dot
+    was mistook for an nroff macro.  Thanks goes to David Haller
+    <dnh at opensuse dot org> for providing the patch.
+
+    Improved gen_v1(h,n) in lucas.cal for cases where h is not a
+    multiple of 3. Optimized the search for v(1) when h is a
+    multiple of 3.
+
+    Fixed a Makefile problem, reported by Doug Hays <doughays6 at gmail
+    dot com>, where if a macOS user set BINDIR, LIBDIR, CALC_SHAREDIR
+    or INCDIR in the top section, their values will be overwritten by
+    the Darwin specific section.
+
 
 The following are the changes from calc version 2.12.6.0 to 2.12.6.0:
 

@@ -348,7 +348,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.6.3
+VERSION= 2.12.6.4
 
 # Names of shared libraries with versions
 #
@@ -628,16 +628,6 @@ LDCONFIG:=
 # DARWIN_ARCH= -arch ppc		# PPC binary
 # DARWIN_ARCH= -arch x86_64		# native 64-bit binary
 DARWIN_ARCH=				# native binary
-#
-# Starting with El Capitan OS X 10.11, root by default could not
-# mkdir under system locations, so we now use the /usr/local tree.
-#
-OPTDIR:= /usr/local
-BINDIR:= /${OPTDIR}/bin
-LIBDIR:= /${OPTDIR}/lib
-CALC_SHAREDIR:= /${OPTDIR}/share
-CALC_INCDIR:= /${OPTDIR}/include
-SCRIPTDIR:= ${BINDIR}/cscript
 endif
 
 ##################

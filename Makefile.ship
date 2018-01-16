@@ -23,7 +23,7 @@
 #	 READLINE_LIB= -lreadline
 #	 READLINE_EXTRAS= -lhistory -lncurses
 #
-# Copyright (C) 1999-2017  Landon Curt Noll
+# Copyright (C) 1999-2018  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of version 2.1 of the GNU Lesser General Public License
@@ -564,14 +564,30 @@ HAVE_UNUSED=
 #
 #	INCDIR= /dev/env/DJDIR/include
 #
-# If in doubt, set:
+# If in doubt, for non-macOS hosts set:
 #
 #	INCDIR= /usr/include
 #
+# However, if you are on macOS then set:
+#
+#	INCDIR= /usr/local/include
+#if 0	/* start of skip for non-Gnu makefiles */
+ifeq ($(target),Darwin)
 
+# default INCDIR for macOS
+INCDIR= /usr/local/include
+
+else
+#endif	/* end of skip for non-Gnu makefiles */
+
+# default INCDIR for non-macOS
+INCDIR= /usr/include
 #INCDIR= /usr/local/include
 #INCDIR= /dev/env/DJDIR/include
-INCDIR= /usr/include
+
+#if 0	/* start of skip for non-Gnu makefiles */
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 # Where to install calc related things
 #
@@ -602,23 +618,71 @@ INCDIR= /usr/include
 #	LIBDIR= /dev/env/DJDIR/lib
 #	CALC_SHAREDIR= /dev/env/DJDIR/share/calc
 #
-# If in doubt, set:
+# If in doubt, for non-macOS hosts set:
 #
 #	BINDIR= /usr/bin
 #	LIBDIR= /usr/lib
 #	CALC_SHAREDIR= /usr/share/calc
 #
+# However, if you are on macOS then set:
+#
+#	BINDIR= /usr/local/bin
+#	LIBDIR= /usr/local/lib
+#	CALC_SHAREDIR= /usr/local/share/calc
+#
+# 	NOTE: Starting with macOS El Capitan OS X 10.11, root by default
+# 	      could not mkdir under system locations, so macOS must now
+# 	      use the /usr/local tree.
+
+#if 0	/* start of skip for non-Gnu makefiles */
+ifeq ($(target),Darwin)
+
+# default BINDIR for macOS
+BINDIR= /usr/local/bin
+
+else
+#endif	/* end of skip for non-Gnu makefiles */
+
+# default BINDIR for non-macOS
+BINDIR= /usr/bin
 #BINDIR= /usr/local/bin
 #BINDIR= /dev/env/DJDIR/bin
-BINDIR= /usr/bin
 
+#if 0	/* start of skip for non-Gnu makefiles */
+endif
+
+ifeq ($(target),Darwin)
+
+# default LIBDIR for macOS
+LIBDIR= /usr/local/lib
+
+else
+#endif	/* end of skip for non-Gnu makefiles */
+
+# default LIBDIR for non-macOS
+LIBDIR= /usr/lib
 #LIBDIR= /usr/local/lib
 #LIBDIR= /dev/env/DJDIR/lib
-LIBDIR= /usr/lib
 
+#if 0	/* start of skip for non-Gnu makefiles */
+endif
+
+ifeq ($(target),Darwin)
+
+# default CALC_SHAREDIR for macOS
+CALC_SHAREDIR= /usr/local/share/calc
+
+else
+#endif	/* end of skip for non-Gnu makefiles */
+
+# default CALC_SHAREDIR for non-macOS
+CALC_SHAREDIR= /usr/share/calc
 #CALC_SHAREDIR= /usr/local/lib/calc
 #CALC_SHAREDIR= /dev/env/DJDIR/share/calc
-CALC_SHAREDIR= /usr/share/calc
+
+#if 0	/* start of skip for non-Gnu makefiles */
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 # NOTE: Do not set CALC_INCDIR to /usr/include or /usr/local/include!!!
 #	Always be sure that the CALC_INCDIR path ends in /calc to avoid
@@ -990,7 +1054,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.6.3
+VERSION= 2.12.6.4
 
 # Names of shared libraries with versions
 #
@@ -1263,16 +1327,6 @@ LDCONFIG:=
 # DARWIN_ARCH= -arch ppc		# PPC binary
 # DARWIN_ARCH= -arch x86_64		# native 64-bit binary
 DARWIN_ARCH=				# native binary
-#
-# Starting with El Capitan OS X 10.11, root by default could not
-# mkdir under system locations, so we now use the /usr/local tree.
-#
-OPTDIR:= /usr/local
-BINDIR:= /${OPTDIR}/bin
-LIBDIR:= /${OPTDIR}/lib
-CALC_SHAREDIR:= /${OPTDIR}/share
-CALC_INCDIR:= /${OPTDIR}/include
-SCRIPTDIR:= ${BINDIR}/cscript
 endif
 
 ##################
