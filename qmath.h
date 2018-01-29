@@ -254,7 +254,9 @@ E_FUNC NUMBER *swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all);
 #define qhighbit(q)	(zhighbit((q)->num))
 #define qlowbit(q)	(zlowbit((q)->num))
 #define qdivcount(q1, q2)	(zdivcount((q1)->num, (q2)->num))
-#define qlink(q)	((q)->links++, (q))
+/* operation on #q may be undefined, so replace with an inline-function */
+/* was: #define qlink(q)	((q)->links++, (q)) */
+static inline NUMBER* qlink(NUMBER* q) { if(q) { (q)->links++; } return q; }
 
 #define qfree(q)	{if (--((q)->links) <= 0) qfreenum(q);}
 
