@@ -1,7 +1,7 @@
 /*
  * lucas - perform a Lucas primality test on h*2^n-1
  *
- * Copyright (C) 1999,2017  Landon Curt Noll
+ * Copyright (C) 1999,2017,2018  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -374,40 +374,52 @@ lucas(h, n)
 	}
 
 	/*
+	 * Verify that h*2^n-1 is not a multiple of 3
+	 *
+	 * The case for h*2^n-1 == 3 is handled above.
+	 */
+	if (((h % 3 == 1) && (n % 2 == 0)) || ((h % 3 == 2) && (n % 2 == 1))) {
+		/* no need to test h*2^n-1, it is a multiple of 3 */
+		ldebug("lucas","not-prime: != 3 and is a multiple of 3");
+		return 0;
+	}
+
+	/*
 	 * Avoid any numbers divisible by small primes
 	 */
 	/*
-	 * check for 3 <= prime factors < 29
-	 * pfact(28)/2 = 111546435
+	 * check for 5 <= prime factors < 31
+	 * pfact(30)/6 = 1078282205
 	 */
 	testval = h*2^n - 1;
-	if (gcd(testval, 111546435) > 1) {
-		/* a small 3 <= prime < 29 divides h*2^n-1 */
-		ldebug("lucas","not-prime: 3<=prime<29 divides h*2^n-1");
+	if (gcd(testval, 1078282205) > 1) {
+		/* a small 5 <= prime < 31 divides h*2^n-1 */
+		ldebug("lucas",\
+		    "not-prime: a small 5<=prime<31 divides h*2^n-1");
 		return 0;
 	}
 	/*
-	 * check for 29 <= prime factors < 47
-	 * pfact(46)/pfact(28) = 5864229
+	 * check for 31 <= prime factors < 53
+	 * pfact(52)/pfact(30) = 95041567
 	 */
-	if (gcd(testval, 58642669) > 1) {
-		/* a small 29 <= prime < 47 divides h*2^n-1 */
-		ldebug("lucas","not-prime: 29<=prime<47 divides h*2^n-1");
+	if (gcd(testval, 95041567) > 1) {
+		/* a small 31 <= prime < 53 divides h*2^n-1 */
+		ldebug("lucas","not-prime: 31<=prime<53 divides h*2^n-1");
 		return 0;
 	}
 	/*
-	 * check for prime 47 <= factors < 257, if h*2^n-1 is large
-	 * 2^282 > pfact(256)/pfact(46) > 2^281
+	 * check for prime 53 <= factors < 257, if h*2^n-1 is large
+	 * 2^276 > pfact(256)/pfact(52) > 2^275
 	 */
 	bits = highbit(testval);
-	if (bits >= 281) {
+	if (bits >= 275) {
 		if (pprod256 <= 0) {
-			pprod256 = pfact(256)/pfact(46);
+			pprod256 = pfact(256)/pfact(52);
 		}
 		if (gcd(testval, pprod256) > 1) {
-			/* a small 47 <= prime < 257 divides h*2^n-1 */
+			/* a small 53 <= prime < 257 divides h*2^n-1 */
 			ldebug("lucas",\
-			    "not-prime: 47<=prime<257 divides h*2^n-1");
+			    "not-prime: 53<=prime<257 divides h*2^n-1");
 			return 0;
 		}
 	}
@@ -423,7 +435,9 @@ lucas(h, n)
 	 * generate a test for h*2^n-1.	 The legacy function,
 	 * legacy_gen_v1() used by the Amdahl 6 could have returned
 	 * -1. The new gen_v1() based on the method outlined in Ref4
-	 * will never return -1.
+	 * will never return -1 if h*2^n-1 is not a multiple of 3.
+	 * Because the "multiple of 3" case is handled above, the
+	 * call below to gen_v1() will never return -1.
 	 */
 	v1 = gen_v1(h, n);
 	if (v1 < 0) {
@@ -1170,6 +1184,26 @@ gen_v1(h, n)
 	if (((h % 3 == 1) && (n % 2 == 0)) || ((h % 3 == 2) && (n % 2 == 1))) {
 		/* no need to test h*2^n-1, it is not prime */
 		return -1;
+	}
+
+	/*
+	 * Common Mersenne number case:
+	 *
+	 * For Mersenne numbers:
+	 *
+	 *	2^n-1
+	 *
+	 * we can use, 40% of the time, v(1) == 3.  However nearly all code that
+	 * implements the Lucas-Lehmer test uses v(1) == 4.  Whenever for
+	 * h != 0 mod 3, and particular the Mersenne number case of when h == 1:
+	 *
+	 *	1*2^n-1
+	 *
+	 * v(1) == 4 always works.  For this reason, we return 4 when h == 1.
+	 */
+	if (h == 1) {
+		/* v(1) == 4 always works for the Mersenne number case */
+		return 4;
 	}
 
 	/*
