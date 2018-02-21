@@ -104,6 +104,7 @@ main(int argc, char **argv)
 	int c;			/* option */
 	int index;
 	int maxindex;
+	int unusedint = 0;	/* avoids gcc compiler warning bug - '...assigned, but never used...' */
 	char *cp;
 	char *endcp;
 	char *bp;
@@ -278,7 +279,7 @@ main(int argc, char **argv)
 						    exit(6);
 						}
 						calc_debug = cp;
-						(void) strtol(cp, &endcp, 10);
+						unusedint =  strtol(cp, &endcp, 10);	/* avoids gcc compiler warning bug */
 						cp = endcp;
 						if (*cp != '\0' &&
 						    *cp != ' ' && *cp != ':') {
@@ -310,7 +311,7 @@ main(int argc, char **argv)
 						    exit(9);
 						}
 						resource_debug = cp;
-						(void) strtol(cp, &endcp, 10);
+						unusedint =  strtol(cp, &endcp, 10);	/* avoids gcc compiler warning bug */
 						cp = endcp;
 						if (*cp != '\0' &&
 						    *cp != ' ' && *cp != ':') {
@@ -340,7 +341,7 @@ main(int argc, char **argv)
 					    exit(12);
 					}
 					user_debug = cp;
-					(void) strtol(cp, &endcp, 10);
+					unusedint = strtol(cp, &endcp, 10);	/* avoids gcc compiler warning bug */
 					cp = endcp;
 					if (*cp != '\0' && *cp != ' ') {
 						fprintf(stderr, "Bad syntax in"
@@ -721,8 +722,9 @@ main(int argc, char **argv)
 		printf("main: run_state = %s\n", run_state_name(run_state));
 
 	/*
-	 * all done
+	 * All done! - Jessica Noll, Age 2
 	 */
+	unusedint++;	/* avoids gcc compiler warning bug */
 	libcalc_call_me_last();
 	return (run_state == RUN_EXIT_WITH_ERROR ||
 		run_state == RUN_ZERO) ? 1 : 0;

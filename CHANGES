@@ -1,7 +1,18 @@
-The following are the changes from calc version 2.12.6.5 to date:
+The following are the changes from calc version 2.12.6.6 to date:
+
+    For historical purposes, in lucas.cal, gen_v1(1, n) always returns 4.
+
+    Fixed some compiler warnings, thanks to a report by Mike
+    <michael dot d dot ince at gmail dot com>.
+
+    Added work around for a gcc warning bug, thanks to a report by Mike
+    <michael dot d dot ince at gmail dot com>.
+
+
+The following are the changes from calc version 2.12.6.4 to 2.12.6.5:
 
     Fixed warning about undefined operations involving the qlink(q)
-    macro by deplacing that macro with an inline-function.  Thanks goes
+    macro by replacing that macro with an inline-function.  Thanks goes
     to David Haller <dnh at opensuse dot org> for this fix.
 
     NOTE for Windows 10 users: Pavel Nemec <pane at seznam dot cz>

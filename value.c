@@ -2944,7 +2944,7 @@ printestr(VALUE *vp)
 				bp = vp->v_nblock->blk;
 			}
 			i = bp->datalen;
-			math_fmt("%ld,%d)", i, bp->blkchunk);
+			math_fmt("%ld,%d)", i, (int) bp->blkchunk);
 			cp = bp->data;
 			if (i > 0) {
 				math_str("={");
