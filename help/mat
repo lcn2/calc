@@ -54,13 +54,13 @@ DESCRIPTION
     The elements of the matrix are stored internally as a linear array
     in which locations are arranged in order of increasing indices.
     For example, in order of location, the six element of A = mat [2,3]
-    are
+    are:
 
-	A[0,0], A[0,1], A[0,2], A[1,0], A[1,,1], A[1,2].
+	A[0,0], A[0,1], A[0,2], A[1,0], A[1,1], and A[1,2].
 
     These elements may also be specified using the double-bracket operator
     with a single integer index as in A[[0]], A[[1]], ..., A[[5]].
-    If p is assigned the value &A[0.0], the address of A[[i]] for 0 <= i < 6
+    If p is assigned the value &A[0,0], the address of A[[i]] for 0 <= i < 6
     is p + i as long as A exists and a new value is not assigned to A.
 
     When a matrix is created, each element is initially assigned the
@@ -414,7 +414,7 @@ SEE ALSO
     det, inverse, isident, test, config, search, rsearch, reverse, copy,
     blkcpy, dp, cp, randperm, sort
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2018  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

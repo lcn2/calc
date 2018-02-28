@@ -1,6 +1,6 @@
 Builtin types
 
-    The calculator has the following built-in types.
+    The calculator has the following built-in types:
 
     null value
 	    This is the undefined value type.  The function 'null'
@@ -101,7 +101,20 @@ Builtin types
 	    using the result of the 'files' function.  Such copies are
 	    indistinguishable from each other.
 
-## Copyright (C) 1999  Landon Curt Noll
+    The calculator also has a number of special types that as used
+    by some special builtin functions:
+
+    rand
+	    A subtractive 100 shuffle pseudo-random number generator
+	    state.  This state is used by functions such as isrand()
+	    and srand().
+
+    random
+	    A Blum-Blum-Shub pseudo-random number generator state.
+	    This state is used by functions such as israndom() and
+	    srandom().
+
+## Copyright (C) 1999,2018  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

@@ -18,14 +18,7 @@ DESCRIPTION
 	It should be pointed out that the information collected by seed
 	is almost certainly non-chaotic.  This function is likely not
 	suitable for applications (such as cryptographic applications)
-	where the unpredictability of seeds is critical.  For such critical
-	applications, LavaRnd should be used.	See the URL:
-
-		http://www.LavaRnd.org/
-
-	for information about seeding a pseudo-random number generator
-	(such as rand() or random()) with the cryptographic hash of the
-	digitization of chaotic system.
+	where the unpredictability of seeds is critical.
 
     Given the above warning, this builtin function produces a seed that is
     suitable for most applications that desire a different pseudo-random
@@ -51,7 +44,7 @@ LINK LIBRARY
 SEE ALSO
     seed, srand, randbit, isrand, rand, random, srandom, israndom
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2018  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

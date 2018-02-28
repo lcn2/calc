@@ -332,13 +332,13 @@ LIMITS
     iq >= 2^16
 
 LINK LIBRARY
-    RAND *zsrandom(ZVALUE *pseed, MATRIX *pmat55)
-    RAND *zsetrandom(RAND *state)
+    RANDOM *zsrandom(ZVALUE *pseed, MATRIX *pmat55)
+    RANDOM *zsetrandom(RAND *state)
 
 SEE ALSO
     seed, srand, randbit, isrand, random, srandom, israndom
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2018  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
