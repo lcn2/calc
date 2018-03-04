@@ -8,6 +8,23 @@ The following are the changes from calc version 2.12.6.6 to date:
     Added work around for a gcc warning bug, thanks to a report by Mike
     <michael dot d dot ince at gmail dot com>.
 
+    Fixed errors in various help files such as:
+
+	mat randbit seed srandom types
+
+    Removed the MAXSTRING symbol because it was no longer used by calc.
+
+    Increased HIST_SIZE (depth of the history stack) from 10k to 32k.
+
+    Increased TTYSIZE (reallocation size for terminal buffers) from 100 to 8191.
+
+    Increased MAXDEPTH (maximum depth of input stack) from 10 to 255.
+
+    Increased interactive input buffer size from 1024 to 256k.  This has the
+    effect of increasing the maximum length of an input line from a tty.
+    This helps with an interactive bug that was reported by Ruslan Kabatsayev
+    (b7 dot 10110111 at gmail dot com).
+
 
 The following are the changes from calc version 2.12.6.4 to 2.12.6.5:
 

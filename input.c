@@ -59,8 +59,8 @@ E_FUNC FILE *f_open(char *name, char *mode);
 E_FUNC FILE *curstream(void);
 
 
-#define TTYSIZE		100	/* reallocation size for terminal buffers */
-#define MAXDEPTH		10	/* maximum depth of input */
+#define TTYSIZE		8191	/* reallocation size for terminal buffers */
+#define MAXDEPTH	255	/* maximum depth of input */
 #define IS_READ		1	/* reading normally */
 #define IS_REREAD	2	/* reread current character */
 #define chartoint(ch)	((ch) & 0xff)	/* make sure char is not negative */
@@ -789,7 +789,7 @@ ttychar(void)
 {
 	int ch;			/* current char */
 	int len;		/* length of current command */
-	STATIC char charbuf[1024];
+	STATIC char charbuf[256*1024];
 
 	/*
 	 * If we have more to read from the saved command line, then do that.

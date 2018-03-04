@@ -173,8 +173,6 @@ STATIC struct infoname sys_info[] = {
      (FULL)MAXSCANCOUNT},
     {"MAXSTACK", "max depth of evaluation stack", NULL,
      (FULL)MAXSTACK},
-    {"MAXSTRING", "max size of string constant", NULL,
-     (FULL)MAXSTRING},
     {"MAXUFULL", "largest FULL value", NULL,
      (FULL)MAXUFULL},
     {"MAXULONG", "largest unsigned long val", NULL,

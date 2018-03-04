@@ -36,7 +36,7 @@
 #endif
 
 #ifndef HIST_SIZE
-#define HIST_SIZE		(1024*10)
+#define HIST_SIZE		(1024*32)
 #endif
 
 

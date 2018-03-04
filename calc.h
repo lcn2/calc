@@ -65,7 +65,6 @@
 
 #define SYMBOLSIZE	256	/* maximum symbol name size */
 #define MAXLABELS	100	/* maximum number of user labels in function */
-#define MAXSTRING	1024	/* maximum size of string constant */
 #define MAXSTACK	2048	/* maximum depth of evaluation stack */
 #define MAXFILES	20	/* maximum number of opened files */
 #define PROMPT1		"> "	/* default normal prompt*/
