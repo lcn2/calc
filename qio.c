@@ -233,6 +233,27 @@ qprintnum(NUMBER *q, int outmode)
 		PRINTF1("e%ld", exp);
 		break;
 
+	case MODE_REAL_AUTO:
+	{
+		const int P = conf->outdigits ? conf->outdigits : 1;
+		tmpval = *q;
+		tmpval.num.sign = 0;
+		exp = qilog10(&tmpval);
+		const long olddigits = conf->outdigits;
+		if(P > exp && exp >= -4)
+		{
+			conf->outdigits = P - 1 - exp;
+			qprintnum(q, MODE_REAL);
+		}
+		else
+		{
+			conf->outdigits = P - 1;
+			qprintnum(q, MODE_EXP);
+		}
+		conf->outdigits = olddigits;
+		break;
+	}
+
 	case MODE_HEX:
 		qprintfx(q, 0L);
 		break;
