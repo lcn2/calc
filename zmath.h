@@ -583,7 +583,7 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 #define MODE_MAX	8
 #define MODE2_OFF	(MODE_MAX+1)
 
-#define MODE_INITIAL	MODE_REAL
+#define MODE_INITIAL	MODE_REAL_AUTO
 #define MODE2_INITIAL	MODE2_OFF
 
 
