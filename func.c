@@ -2122,6 +2122,9 @@ f_log(int count, VALUE **vals)
 		default:
 			return error_value(E_LOG2);
 	}
+	if (c == NULL) {
+		return error_value(E_LOG3);
+	}
 	result.v_type = V_COM;
 	result.v_com = c;
 	if (cisreal(c)) {
@@ -2239,8 +2242,15 @@ f_tan(int count, VALUE **vals)
 		case V_COM:
 			tmp1.v_type = V_COM;
 			tmp1.v_com = c_sin(vals[0]->v_com, err);
+			if (tmp1.v_com == NULL) {
+				return error_value(E_TAN3);
+			}
 			tmp2.v_type = V_COM;
 			tmp2.v_com = c_cos(vals[0]->v_com, err);
+			if (tmp2.v_com == NULL) {
+				comfree(tmp1.v_com);
+				return error_value(E_TAN4);
+			}
 			divvalue(&tmp1, &tmp2, &result);
 			comfree(tmp1.v_com);
 			comfree(tmp2.v_com);
@@ -2276,6 +2286,9 @@ f_sec(int count, VALUE **vals)
 		case V_COM:
 			tmp.v_type = V_COM;
 			tmp.v_com = c_cos(vals[0]->v_com, err);
+			if (tmp.v_com == NULL) {
+				return error_value(E_SEC3);
+			}
 			invertvalue(&tmp, &result);
 			comfree(tmp.v_com);
 			break;
@@ -2314,8 +2327,15 @@ f_cot(int count, VALUE **vals)
 		case V_COM:
 			tmp1.v_type = V_COM;
 			tmp1.v_com = c_cos(vals[0]->v_com, err);
+			if (tmp1.v_com == NULL) {
+				return error_value(E_COT3);
+			}
 			tmp2.v_type = V_COM;
 			tmp2.v_com = c_sin(vals[0]->v_com, err);
+			if (tmp2.v_com == NULL) {
+				comfree(tmp1.v_com);
+				return error_value(E_COT4);
+			}
 			divvalue(&tmp1, &tmp2, &result);
 			comfree(tmp1.v_com);
 			comfree(tmp2.v_com);
@@ -2354,6 +2374,9 @@ f_csc(int count, VALUE **vals)
 		case V_COM:
 			tmp.v_type = V_COM;
 			tmp.v_com = c_sin(vals[0]->v_com, err);
+			if (tmp.v_com == NULL) {
+				return error_value(E_CSC3);
+			}
 			invertvalue(&tmp, &result);
 			comfree(tmp.v_com);
 			break;
@@ -2476,8 +2499,15 @@ f_tanh(int count, VALUE **vals)
 		case V_COM:
 			tmp1.v_type = V_COM;
 			tmp1.v_com = c_sinh(vals[0]->v_com, err);
+			if (tmp1.v_com == NULL) {
+				return error_value(E_TANH3);
+			}
 			tmp2.v_type = V_COM;
 			tmp2.v_com = c_cosh(vals[0]->v_com, err);
+			if (tmp2.v_com == NULL) {
+				comfree(tmp1.v_com);
+				return error_value(E_TANH4);
+			}
 			divvalue(&tmp1, &tmp2, &result);
 			comfree(tmp1.v_com);
 			comfree(tmp2.v_com);
@@ -2517,8 +2547,15 @@ f_coth(int count, VALUE **vals)
 		case V_COM:
 			tmp1.v_type = V_COM;
 			tmp1.v_com = c_cosh(vals[0]->v_com, err);
+			if (tmp1.v_com == NULL) {
+				return error_value(E_COTH3);
+			}
 			tmp2.v_type = V_COM;
 			tmp2.v_com = c_sinh(vals[0]->v_com, err);
+			if (tmp2.v_com == NULL) {
+				comfree(tmp1.v_com);
+				return error_value(E_COTH4);
+			}
 			divvalue(&tmp1, &tmp2, &result);
 			comfree(tmp1.v_com);
 			comfree(tmp2.v_com);
@@ -2555,6 +2592,9 @@ f_sech(int count, VALUE **vals)
 		case V_COM:
 			tmp.v_type = V_COM;
 			tmp.v_com = c_cosh(vals[0]->v_com, err);
+			if (tmp.v_com == NULL) {
+				return error_value(E_SECH3);
+			}
 			invertvalue(&tmp, &result);
 			comfree(tmp.v_com);
 			break;
@@ -2592,6 +2632,9 @@ f_csch(int count, VALUE **vals)
 		case V_COM:
 			tmp.v_type = V_COM;
 			tmp.v_com = c_sinh(vals[0]->v_com, err);
+			if (tmp.v_com == NULL) {
+				return error_value(E_CSCH3);
+			}
 			invertvalue(&tmp, &result);
 			comfree(tmp.v_com);
 			break;
@@ -2626,7 +2669,7 @@ f_atan(int count, VALUE **vals)
 		case V_COM:
 			tmp = c_atan(vals[0]->v_com, err);
 			if (tmp == NULL)
-				return error_value(E_LOGINF);
+				return error_value(E_ATAN3);
 			result.v_type = V_COM;
 			result.v_com = tmp;
 			if (cisreal(tmp)) {
@@ -2666,7 +2709,7 @@ f_acot(int count, VALUE **vals)
 		case V_COM:
 			tmp = c_acot(vals[0]->v_com, err);
 			if (tmp == NULL)
-				return error_value(E_LOGINF);
+				return error_value(E_ACOT3);
 			result.v_type = V_COM;
 			result.v_com = tmp;
 			if (cisreal(tmp)) {
@@ -2718,6 +2761,9 @@ f_asin(int count, VALUE **vals)
 		default:
 			return error_value(E_ASIN2);
 	}
+	if (result.v_com == NULL) {
+		return error_value(E_ASIN3);
+	}
 	if (result.v_type == V_COM && cisreal(result.v_com)) {
 		q = qlink(result.v_com->real);
 		comfree(result.v_com);
@@ -2764,6 +2810,9 @@ f_acos(int count, VALUE **vals)
 		default:
 			return error_value(E_ACOS2);
 	}
+	if (result.v_com == NULL) {
+		return error_value(E_ACOS3);
+	}
 	if (result.v_type == V_COM && cisreal(result.v_com)) {
 		q = qlink(result.v_com->real);
 		comfree(result.v_com);
@@ -2794,7 +2843,7 @@ f_asec(int count, VALUE **vals)
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (qiszero(vals[0]->v_num))
-				return error_value(E_LOGINF);
+				return error_value(E_ASEC3);
 			result.v_num = qasec(vals[0]->v_num, err);
 			result.v_type = V_NUM;
 			if (result.v_num == NULL) {
@@ -2813,9 +2862,10 @@ f_asec(int count, VALUE **vals)
 		default:
 			return error_value(E_ASEC2);
 	}
+	if (result.v_com == NULL) {
+		return error_value(E_ASEC3);
+	}
 	if (result.v_type == V_COM) {
-		if (result.v_com == NULL)
-			return error_value(E_LOGINF);
 		if (cisreal(result.v_com)) {
 			q = qlink(result.v_com->real);
 			comfree(result.v_com);
@@ -2847,7 +2897,7 @@ f_acsc(int count, VALUE **vals)
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (qiszero(vals[0]->v_num))
-				return error_value(E_LOGINF);
+				return error_value(E_ACSC3);
 			result.v_num = qacsc(vals[0]->v_num, err);
 			result.v_type = V_NUM;
 			if (result.v_num == NULL) {
@@ -2866,9 +2916,10 @@ f_acsc(int count, VALUE **vals)
 		default:
 			return error_value(E_ACSC2);
 	}
+	if (result.v_com == NULL) {
+		return error_value(E_ACSC3);
+	}
 	if (result.v_type == V_COM) {
-		if (result.v_com == NULL)
-			return error_value(E_LOGINF);
 		if (cisreal(result.v_com)) {
 			q = qlink(result.v_com->real);
 			comfree(result.v_com);
@@ -2903,6 +2954,9 @@ f_asinh(int count, VALUE **vals)
 			break;
 		case V_COM:
 			tmp = c_asinh(vals[0]->v_com, err);
+			if (tmp == NULL) {
+				return error_value(E_ASINH3);
+			}
 			result.v_type = V_COM;
 			result.v_com = tmp;
 			if (cisreal(tmp)) {
@@ -2955,6 +3009,9 @@ f_acosh(int count, VALUE **vals)
 		default:
 			return error_value(E_ACOSH2);
 	}
+	if (result.v_com == NULL) {
+		return error_value(E_ACOSH3);
+	}
 	if (result.v_type == V_COM && cisreal(result.v_com)) {
 		q = qlink(result.v_com->real);
 		comfree(result.v_com);
@@ -3002,9 +3059,10 @@ f_atanh(int count, VALUE **vals)
 		default:
 			return error_value(E_ATANH2);
 	}
+	if (result.v_com == NULL) {
+		return error_value(E_ATANH3);
+	}
 	if (result.v_type == V_COM) {
-		if (result.v_com == NULL)
-			return error_value(E_LOGINF);
 		if (cisreal(result.v_com)) {
 			q = qlink(result.v_com->real);
 			comfree(result.v_com);
@@ -3053,9 +3111,10 @@ f_acoth(int count, VALUE **vals)
 		default:
 			return error_value(E_ACOTH2);
 	}
+	if (result.v_com == NULL) {
+		return error_value(E_ACOTH3);
+	}
 	if (result.v_type == V_COM) {
-		if (result.v_com == NULL)
-			return error_value(E_LOGINF);
 		if (cisreal(result.v_com)) {
 			q = qlink(result.v_com->real);
 			comfree(result.v_com);
@@ -3087,7 +3146,7 @@ f_asech(int count, VALUE **vals)
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (qiszero(vals[0]->v_num))
-				return error_value(E_LOGINF);
+				return error_value(E_ASECH3);
 			result.v_num = qasech(vals[0]->v_num, err);
 			result.v_type = V_NUM;
 			if (result.v_num == NULL) {
@@ -3106,9 +3165,10 @@ f_asech(int count, VALUE **vals)
 		default:
 			return error_value(E_ASECH2);
 	}
+	if (result.v_com == NULL) {
+		return error_value(E_ASECH3);
+	}
 	if (result.v_type == V_COM) {
-		if (result.v_com == NULL)
-			return error_value(E_LOGINF);
 		if (cisreal(result.v_com)) {
 			q = qlink(result.v_com->real);
 			comfree(result.v_com);
@@ -3140,7 +3200,7 @@ f_acsch(int count, VALUE **vals)
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (qiszero(vals[0]->v_num))
-				return error_value(E_LOGINF);
+				return error_value(E_ACSCH3);
 			result.v_num = qacsch(vals[0]->v_num, err);
 			result.v_type = V_NUM;
 			if (result.v_num == NULL) {
@@ -3159,9 +3219,10 @@ f_acsch(int count, VALUE **vals)
 		default:
 			return error_value(E_ACSCH2);
 	}
+	if (result.v_com == NULL) {
+		return error_value(E_ACSCH3);
+	}
 	if (result.v_type == V_COM) {
-		if (result.v_com == NULL)
-			return error_value(E_LOGINF);
 		if (cisreal(result.v_com)) {
 			q = qlink(result.v_com->real);
 			comfree(result.v_com);
@@ -3260,7 +3321,7 @@ f_agd(int count, VALUE **vals)
 			return error_value(E_AGD2);
 	}
 	if (result.v_com == NULL)
-			return error_value(E_AGD3);
+		return error_value(E_AGD3);
 	if (cisreal(result.v_com)) {
 		q = qlink(result.v_com->real);
 		comfree(result.v_com);

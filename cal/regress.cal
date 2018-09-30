@@ -3227,9 +3227,9 @@ define test_error()
 
 	print '3600: Beginning test_error';
 
-	/* bump ecnt up by 148 */
-	ecnt += 148;
-	print				'3601: ecnt += 148';
+	/* bump ecnt up by 156 */
+	ecnt += 156;
+	print				'3601: ecnt += 156';
 
 	strx = "x";
 	print				'3602: strx = "x"';
@@ -3418,11 +3418,15 @@ define test_error()
 	n = 8191;
 	print				'3727: n = 8191';
 	/* test 3728 removed due to non-portable strerror() output */
+	vrfy(tan(2e9i) == error(10435),	'3729: tan(2e9i) == error(10435)');
+	vrfy(cot(2e9i) == error(10437),	'3730: cot(2e9i) == error(10437)');
+	vrfy(sec(2e9i) == error(10439),	'3731: sec(2e9i) == error(10439)');
+	vrfy(csc(2e9i) == error(10440),	'3732: csc(2e9i) == error(10440)');
 
 	/* errmax and errcount should be bumped up the 148 errors above */
-	vrfy(errcount() == ecnt,	'3729: errcount() == ecnt');
+	vrfy(errcount() == ecnt,	'3733: errcount() == ecnt');
 
-	print '3730: Ending test_error';
+	print '3734: Ending test_error';
 }
 print '054: parsed test_error()';
 
@@ -7932,8 +7936,8 @@ print '8901: read -once "test8900"';
 read -once "test8900";
 print '8902: about to run test8900(1,,8903)';
 testnum = test8900(1,,8903);
-print '8999: ecnt = 203;'
-ecnt = 203;
+print '8999: ecnt = 211;'
+ecnt = 211;
 /* 89xx: test calc resource functions by Christoph Zurnieden */
 
 

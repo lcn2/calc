@@ -451,6 +451,7 @@ E_FPATHOPEN1	Non-string arguments for fpathopen
 E_FPATHOPEN2	Unrecognized mode for fpathopen
 E_LOG1		Bad epsilon argument for log
 E_LOG2		Non-numeric first argument for log
+E_LOG3		Cannot calculate log for this value
 E_FGETFILE1	Non-file argument for fgetfile
 E_FGETFILE2	File argument for fgetfile not open for reading
 E_FGETFILE3	Unable to set file position in fgetfile
@@ -471,3 +472,27 @@ E_ISSPACE	Bad argument for isspace
 E_ISXDIGIT	Bad argument for isxdigit
 E_STRTOUPPER    Bad argument type for strtoupper
 E_STRTOLOWER    Bad argument type for strtolower
+E_TAN3		Invalid value for calculating the sin numerator for tan
+E_TAN4		Invalid value for calculating the cos denominator for tan
+E_COT3		Invalid value for calculating the sin numerator for cot
+E_COT4		Invalid value for calculating the cos denominator for cot
+E_SEC3		Invalid value for calculating the cos reciprocal for sec
+E_CSC3		Invalid value for calculating the sin reciprocal for csc
+E_TANH3		Invalid value for calculating the sinh numerator for tanh
+E_TANH4		Invalid value for calculating the cosh denominator for tanh
+E_COTH3		Invalid value for calculating the sinh numerator for coth
+E_COTH4		Invalid value for calculating the cosh denominator for coth
+E_SECH3		Invalid value for calculating the cosh reciprocal for sech
+E_CSCH3		Invalid value for calculating the sinh reciprocal for csch
+E_ASIN3		Invalid value for calculating asin
+E_ACOS3		Invalid value for calculating acos
+E_ASINH3	Invalid value for calculating asinh
+E_ACOSH3	Invalid value for calculating acosn
+E_ATAN3		Invalid value for calculating atan
+E_ACOT3		Invalid value for calculating acot
+E_ASEC3		Invalid value for calculating asec
+E_ACSC3		Invalid value for calculating acsc
+E_ATANH3	Invalid value for calculating atan
+E_ACOTH3	Invalid value for calculating acot
+E_ASECH3	Invalid value for calculating asec
+E_ACSCH3	Invalid value for calculating acsc

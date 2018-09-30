@@ -1,4 +1,24 @@
-The following are the changes from calc version 2.12.6.6 to date:
+The following are the changes from calc version 2.12.6.9 to date:
+
+    Fixed a number of core dump bugs related to the calculation of
+    tan(), cot(), sec(), csc(), tanh(), coth(), sech(), and csch(),
+    asin(), acos(), asinh(), acosh(), where when a call to an
+    underlying function produced an invalid value.  Thanks goes to
+    github user wuxiuheng for reporting this problem.
+
+    A number of trigonometric and hyperbolic functions that incorrectly
+    returned E_LOGINF, now return a new error code that is more
+    specific to the trigonometric or hyperbolic function.  The
+    following is a list of these new error codes: E_TAN3 E_TAN4
+    E_COT3 E_COT4 E_SEC3 E_CSC3 E_TANH3 E_TANH4 E_COTH3 E_COTH4
+    E_SECH3 E_CSCH3 E_ASIN3 E_ACOS3 E_ASINH3 E_ACOSH3 E_ATAN3 E_ACOT3
+    E_ASEC3 E_ACSC3 E_ATANH3 E_ACOTH3 E_ASECH3 E_ACSCH3.
+
+    Added regression tests 3729 thru 3732 to test E_TAN3, E_COT3,
+    E_SEC3 and E_CSC3 respectively.
+
+
+The following are the changes from calc version 2.12.6.6 to 2.12.6.8:
 
     For historical purposes, in lucas.cal, gen_v1(1, n) always returns 4.
 
