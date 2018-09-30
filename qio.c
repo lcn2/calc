@@ -97,6 +97,15 @@ qprintf(char *fmt, ...)
 			q = va_arg(ap, NUMBER *);
 			qprintfe(q, width, precision);
 			break;
+		case 'g':
+			q = va_arg(ap, NUMBER *);
+			/* XXX - we need a qprintfg function */
+#if 0	/* XXX - we need a qprintfg() function */
+			qprintfg(q, width, precision);
+#else	/* XXX - use qprintfe until we have a qprintfg() function */
+			qprintfe(q, width, precision);
+#endif	/* XXX - we need a qprintfg() function */
+			break;
 		case 'r':
 		case 'R':
 			q = va_arg(ap, NUMBER *);
@@ -232,6 +241,32 @@ qprintnum(NUMBER *q, int outmode)
 		qfree(q);
 		PRINTF1("e%ld", exp);
 		break;
+
+	case MODE_REAL_AUTO:
+	{
+		/*
+		 * XXX - re-write to not modify conf->outdigits
+		 *
+		 * Modifying the configuration value could be dangerious
+		 * when a calculation is aborted within an opcode.
+		 * Better to use qprintfg() use inline code that
+		 * does not depend on changing conf->outdigits.
+		 */
+		const int P = conf->outdigits ? conf->outdigits : 1;
+		tmpval = *q;
+		tmpval.num.sign = 0;
+		exp = qilog10(&tmpval);
+		const long olddigits = conf->outdigits;
+		if (P > exp && exp >= -P) {
+			conf->outdigits = P - 1 - exp;
+			qprintnum(q, MODE_REAL);
+		} else {
+			conf->outdigits = P - 1;
+			qprintnum(q, MODE_EXP);
+		}
+		conf->outdigits = olddigits;
+		break;
+	}
 
 	case MODE_HEX:
 		qprintfx(q, 0L);

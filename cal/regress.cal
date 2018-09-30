@@ -4106,38 +4106,46 @@ define test_strprintf()
 			'4821: strprintf("%b", 27/29) == "0b11011/0b11101"');
 	vrfy(strprintf("%e", 12345) == "~1.23e4",
 			'4822: strprintf("%e", 12345) == "~1.23e4"');
+	vrfy(strprintf("%g", .385) == "~.38",
+			'4823: strprintf("%g", .385) == "~.38"');
+	vrfy(strprintf("%g", 385) == "~3.8e2",
+			'4824: strprintf("%g", 385) == "~3.8e2"');
 
 	/* mode tests with tilde == 0 */
 	c = config("tilde", 0);
-	print		'4823: c = config("tilde", 0)';
+	print		'4825: c = config("tilde", 0)';
 	vrfy(strprintf("%e", 12345) == "1.23e4",
-			'4824: strprintf("%e", 12345) == "1.23e4"');
+			'4826: strprintf("%e", 12345) == "1.23e4"');
 	vrfy(strprintf("%.3e", 12345) == "1.234e4",
-			'4825: strprintf("%.3e", 12345) == "1.234e4"');
+			'4827: strprintf("%.3e", 12345) == "1.234e4"');
 	vrfy(strprintf("%e", .00012345) == "1.23e-4",
-			'4826: strprintf("%e", .00012345) == "1.23e-4"');
+			'4828: strprintf("%e", .00012345) == "1.23e-4"');
 	vrfy(strprintf("%d %d", 27) == "27 ",
-			'4827: strprintf("%d %d", 27) == "27 "');
+			'4829: strprintf("%d %d", 27) == "27 "');
 	vrfy(strprintf("%d", 27, 29) == "27",
-			'4828: strprintf("%d", 27, 29) == "27"');
+			'4830: strprintf("%d", 27, 29) == "27"');
 	vrfy(strprintf("%r = %f", 27/29, 27/29) == "27/29 = .93",
-		'4829: strprintf("%r = %f", 27/29, 27/29) == "27/29 = .93"');
+		'4831: strprintf("%r = %f", 27/29, 27/29) == "27/29 = .93"');
 	vrfy(strprintf("%s", "abc") == "abc",
-		'4830: strprintf("%s", "abc") == "abc"');
+		'4832: strprintf("%s", "abc") == "abc"');
 	vrfy(strprintf("%f", "abc") == "abc",
-		'4831: strprintf("%f", "abc") == "abc"');
+		'4833: strprintf("%f", "abc") == "abc"');
 	vrfy(strprintf("%e", "abc") == "abc",
-		'4832: strprintf("%e", "abc") == "abc"');
+		'4834: strprintf("%e", "abc") == "abc"');
 	vrfy(strprintf("%5s", "abc") == "  abc",
-		'4833: strprintf("%5s", "abc") == "  abc"');
+		'4835: strprintf("%5s", "abc") == "  abc"');
 	vrfy(strprintf("%-5s", "abc") == "abc  ",
-		'4834: strprintf("%-5s", "abc") == "abc	 "');
+		'4836: strprintf("%-5s", "abc") == "abc	 "');
+	vrfy(strprintf("%g", .385) == ".38",
+			'4837: strprintf("%g", .385) == ".38"');
+	vrfy(strprintf("%g", 385) == "3.8e2",
+			'4838: strprintf("%g", 385) == "3.8e2"');
 
 	/* restore config */
 	c = config("all", callcfg);
-	print				    '4835: c = config("all", callcfg)';
+	print				    '4839: c = config("all", callcfg)';
 
-	print '4836: Ending test_strprintf';
+	print '4840: Ending test_strprintf';
 }
 print '088: parsed test_fileop()';
 
