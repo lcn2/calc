@@ -684,7 +684,7 @@ sha1_print(HASH *state)
 		 *	 the last full update or finalization.	Thus it
 		 *	 may NOT be the actual hash value.
 		 */
-		sprintf(buf,
+		snprintf(buf, DEBUG_SIZE,
 			"sha1: 0x%08x%08x%08x%08x%08x data: %d octets",
 			(int)state->h_union.h_sha1.digest[0],
 			(int)state->h_union.h_sha1.digest[1],
@@ -692,6 +692,7 @@ sha1_print(HASH *state)
 			(int)state->h_union.h_sha1.digest[3],
 			(int)state->h_union.h_sha1.digest[4],
 			(int)state->h_union.h_sha1.datalen);
+		buf[DEBUG_SIZE] = '\0';	/* paranoia */
 		math_str(buf);
 	} else {
 		math_str("sha1 hash state");

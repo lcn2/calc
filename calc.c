@@ -775,7 +775,7 @@ calc_interrupt(char *fmt, ...)
 	va_start(ap, fmt);
 	vsnprintf(calc_err_msg, MAXERROR, fmt, ap);
 	va_end(ap);
-	calc_err_msg[MAXERROR] = '\0';
+	calc_err_msg[MAXERROR] = '\0';	/* paranoia */
 	fprintf(stderr, "%s\n\n", calc_err_msg);
 	funcname = NULL;
 	if (calc_use_scanerr_jmpbuf != 0) {

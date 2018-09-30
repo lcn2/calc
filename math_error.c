@@ -83,7 +83,7 @@ math_error(char *fmt, ...)
 #endif
 	vsnprintf(calc_err_msg, MAXERROR, fmt, ap);
 	va_end(ap);
-	calc_err_msg[MAXERROR] = '\0';
+	calc_err_msg[MAXERROR] = '\0';	/* paranoia */
 
 	/*
 	 * if we should longjmp, so do

@@ -1,7 +1,7 @@
 /*
  * help - display help for calc
  *
- * Copyright (C) 1999-2007,2014  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2018  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -183,6 +183,7 @@ givehelp(char *type)
 	FILE *stream;		/* help file stream */
 	char *helppath;		/* path to the help file */
 	char *c;
+	size_t snprintf_len;	/* malloced snprintf buffer length */
 
 	/*
 	 * check permissions to see if we are allowed to help
@@ -247,18 +248,21 @@ givehelp(char *type)
 	 */
 #if defined(CUSTOM)
 	if (sizeof(CUSTOMHELPDIR) > sizeof(HELPDIR)) {
-		helppath = (char *)malloc(sizeof(CUSTOMHELPDIR)+1+strlen(type));
+		snprintf_len = sizeof(CUSTOMHELPDIR)+1+strlen(type) + 1;
 	} else {
-		helppath = (char *)malloc(sizeof(HELPDIR)+1+strlen(type));
+		snprintf_len = sizeof(HELPDIR)+1+strlen(type) + 1;
 	}
+	helppath = (char *)malloc(snprintf_len+1);
 #else /* CUSTOM */
-	helppath = (char *)malloc(sizeof(HELPDIR)+1+strlen(type));
+	snprintf_len = sizeof(HELPDIR)+1+strlen(type) + 1;
+	helppath = (char *)malloc(snprintf_len+1);
 #endif /* CUSTOM */
 	if (helppath == NULL) {
 		fprintf(stderr, "malloc failure in givehelp()\n");
 		return;
 	}
-	sprintf(helppath, "%s/%s", HELPDIR, type);
+	snprintf(helppath, snprintf_len, "%s/%s", HELPDIR, type);
+	helppath[snprintf_len] = '\0';	/* paranoia */
 	stream = fopen(helppath, "r");
 	if (stream != NULL) {
 
@@ -274,7 +278,8 @@ givehelp(char *type)
 	 */
 	} else {
 
-		sprintf(helppath, "%s/%s", CUSTOMHELPDIR, type);
+		snprintf(helppath, snprintf_len, "%s/%s", CUSTOMHELPDIR, type);
+		helppath[snprintf_len] = '\0';	/* paranoia */
 		stream = fopen(helppath, "r");
 		if (stream == NULL) {
 

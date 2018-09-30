@@ -2,7 +2,7 @@
 #
 # custom - makefile for calc custom routines
 #
-# Copyright (C) 1999-2006,2014,2017  Landon Curt Noll
+# Copyright (C) 1999-2006,2014,2017-2018  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -348,7 +348,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.6.7
+VERSION= 2.12.6.8
 
 # Names of shared libraries with versions
 #

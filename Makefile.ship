@@ -90,29 +90,29 @@ TERMCONTROL=
 #TERMCONTROL= -DUSE_SGTTY
 #TERMCONTROL= -DUSE_WIN32
 
-# If your system does not have a vsprintf() function, you could be in trouble.
+# If your system does not have a vsnprintf() function, you could be in trouble.
 #
-#	vsprintf(string, format, ap)
+#	vsnprintf(string, size, format, ap)
 #
-# This function works like sprintf except that the 3rd arg is a va_list
-# strarg (or varargs) list.  Some old systems do not have vsprintf().
-# If you do not have vsprintf(), then calc will try sprintf() and hope
+# This function works like spnrintf except that the 4th arg is a va_list
+# strarg (or varargs) list.  Some old systems do not have vsnprintf().
+# If you do not have vsnprintf(), then calc will try snprintf() and hope
 # for the best.
 #
 # A similar problem occurs if your system does not have a vsnprintf()
-# function.  This function is like the vsprintf() function except that
+# function.  This function is like the vsnprintf() function except that
 # there is an extra second argument that controls the maximum size
 # string that is produced.
 #
-# If HAVE_VSPRINTF is empty, this Makefile will run the have_stdvs.c and/or
-# have_varvs.c program to determine if vsprintf() is supported.  If
-# HAVE_VSPRINTF is set to -DDONT_HAVE_VSPRINTF then calc will hope that
-# sprintf() will work.
+# If HAVE_VSNPRINTF is empty, this Makefile will run the have_stdvs.c and/or
+# have_varvs.c program to determine if vsnprintf() is supported.  If
+# HAVE_VSNPRINTF is set to -DDONT_HAVE_VSNPRINTF then calc will hope that
+# snprintf() will work.
 #
-# If in doubt, leave HAVE_VSPRINTF empty.
+# If in doubt, leave HAVE_VSNPRINTF empty.
 #
-HAVE_VSPRINTF=
-#HAVE_VSPRINTF= -DDONT_HAVE_VSPRINTF
+HAVE_VSNPRINTF=
+#HAVE_VSNPRINTF= -DDONT_HAVE_VSNPRINTF
 
 # Determine the byte order of your machine
 #
@@ -1054,7 +1054,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.6.7
+VERSION= 2.12.6.8
 
 # Names of shared libraries with versions
 #
@@ -3545,7 +3545,7 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
 	${Q} echo '' >> args.h
 	${Q} echo '' >> args.h
 	${Q} ${RM} -f have_stdvs.o have_stdvs${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_VSPRINTF} have_stdvs.c -c \
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_VSNPRINTF} have_stdvs.c -c \
 		>/dev/null 2>&1; ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_stdvs.o -o have_stdvs${EXT} \
 	    >/dev/null 2>&1; ${TRUE}
@@ -3554,10 +3554,10 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
 	else \
 	    ${TRUE}; \
 	fi
-	-${Q} if [ ! -f have_args.sh ] && [ X"${HAVE_VSPRINTF}" = X ]; then \
+	-${Q} if [ ! -f have_args.sh ] && [ X"${HAVE_VSNPRINTF}" = X ]; then \
 	    ${RM} -f have_stdvs.o have_stdvs${EXT} have_varvs.o; \
 	    ${RM} -f have_varvs${EXT}; \
-	    ${LCC} ${ICFLAGS} ${HAVE_VSPRINTF} have_varvs.c -c \
+	    ${LCC} ${ICFLAGS} ${HAVE_VSNPRINTF} have_varvs.c -c \
 		    2>/dev/null; \
 	    ${LCC} ${ILDFLAGS} have_varvs.o -o have_varvs${EXT} 2>/dev/null; \
 	    if ./have_varvs${EXT} >>args.h 2>/dev/null; then \
@@ -3573,8 +3573,8 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
 	else \
 	    echo 'exit 1' > have_args.sh; \
 	    echo "Unable to determine what type of variable args and"; \
-	    echo "what type of vsprintf() should be used.  Set or change"; \
-	    echo "the Makefile variable HAVE_VSPRINTF."; \
+	    echo "what type of vsnprintf() should be used.  Set or change"; \
+	    echo "the Makefile variable HAVE_VSNPRINTF."; \
 	fi
 	${Q} sh ./have_args.sh
 	${Q} echo '' >> args.h
@@ -4160,7 +4160,7 @@ env:
 	@echo 'HAVE_UNUSED=${HAVE_UNUSED}'; echo ''
 	@echo 'HAVE_URANDOM_H=${HAVE_URANDOM_H}'; echo ''
 	@echo 'HAVE_USTAT=${HAVE_USTAT}'; echo ''
-	@echo 'HAVE_VSPRINTF=${HAVE_VSPRINTF}'; echo ''
+	@echo 'HAVE_VSNPRINTF=${HAVE_VSNPRINTF}'; echo ''
 	@echo 'HELPDIR=${HELPDIR}'; echo ''
 	@echo 'HELP_PASSDOWN=${HELP_PASSDOWN}'; echo ''
 	@echo 'H_SRC=${H_SRC}'; echo ''

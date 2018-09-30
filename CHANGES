@@ -25,6 +25,20 @@ The following are the changes from calc version 2.12.6.6 to date:
     This helps with an interactive bug that was reported by Ruslan Kabatsayev
     (b7 dot 10110111 at gmail dot com).
 
+    The calc man page indicates that -d also disables the printing of the
+    leading tilde.
+
+    Added information to "help command" about how to silence messages
+    while reading calc resource files.
+
+    Fixed an error message buffer overflow thanks to a report by
+    Frank Peters <nlp at northernlightsphoto dot biz>.
+
+    Replaced all use of the C funcion sprintf() with snprintf().
+    Replaced all use of the C funcion vsprintf() with vsnprintf().
+    Replaced all DONT_HAVE_VSPRINTF with DONT_HAVE_VSNPRINTF.
+    Replaced all Makefile var ${HAVE_VSPRINTF} with ${HAVE_VSNPRINTF}.
+
 
 The following are the changes from calc version 2.12.6.4 to 2.12.6.5:
 

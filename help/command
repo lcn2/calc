@@ -88,6 +88,31 @@ Command sequence
 	If the -m mode disallows opening of files for reading,
 	this command will be disabled.
 
+	To read a calc resource file without printing various
+	messages about defined functions, the "resource_debug"
+	config should be set to zero.  For example:
+
+	    read lucas;
+
+	will, by default, print messages such as:
+
+	    lucas(h,n) defined
+	    gen_u2(h,n,v1) defined
+	    gen_u0(h,n,v1) defined
+	    rodseth_xhn(x,h,n) defined
+	    gen_v1(h,n) defined
+	    ldebug(funct,str) defined
+	    legacy_gen_v1(h,n) defined
+
+        When "resource_debug" is zero, such messages are silenced.
+
+	    config("resource_debug", 0),;
+	    read lucas;
+
+	To silence such messages on the calc command line, try:
+
+	    calc -p -D :0 'read -once lucas; lucas(1, 23209);'
+
 
     write calc commands
     -------------------
@@ -350,7 +375,7 @@ Command sequence
 	statement   flow control and declaration statements
 	usage	    how to invoke the calc command and calc -options
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2018  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

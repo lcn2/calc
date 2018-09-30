@@ -1,5 +1,5 @@
 .\"
-.\" Copyright (C) 1999-2007,2014	Landon Curt Noll
+.\" Copyright (C) 1999-2007,2014,2018	Landon Curt Noll
 .\"
 .\" Calc is open software; you can redistribute it and/or modify it under
 .\" the terms of the version 2.1 of the GNU Lesser General Public License
@@ -138,7 +138,7 @@ calc -d "read qtime; qtime(2)"
 .fi
 .in -5n
 .sp 1
-will just say:
+will just print:
 .sp 1
 .in +5n
 .nf
@@ -148,6 +148,41 @@ It's nearly ten past six.
 .sp 1
 This flag disables the reporting of missing calc
 startup resource files.
+.sp 1
+
+This flag also disables the printing the leading tilde. For example:
+.sp 1
+.in +5n
+.nf
+calc 2/3
+.fi
+.in -5n
+.sp 1
+will print:
+.sp 1
+.in +5n
+.nf
+~0.66666666666666666667
+.fi
+.in -5n
+.sp 1
+.sp 1
+whereas:
+.sp 1
+.in +5n
+.nf
+calc -d 2/3
+.fi
+.in -5n
+.sp 1
+will just print:
+.sp 1
+.in +5n
+.nf
+0.66666666666666666667
+.fi
+.in -5n
+.sp 1
 
 .TP
 .BR -D " calc_debug[:resource_debug[:user_debug]]"

@@ -177,7 +177,7 @@ math_fmt(char *fmt, ...)
 	va_start(ap, fmt);
 	vsnprintf(buf, BUFSIZ, fmt, ap);
 	va_end(ap);
-	buf[BUFSIZ] = '\0';
+	buf[BUFSIZ] = '\0';	/* paranoia */
 	math_str(buf);
 }
 

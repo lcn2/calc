@@ -1,7 +1,7 @@
 /*
  * file - file I/O routines callable by users
  *
- * Copyright (C) 1999-2007  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2018  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -143,6 +143,7 @@ file_init(void)
 		 * stat the descriptor to see what we have
 		 */
 		if (fstat(i, &sbuf) >= 0) {
+			size_t snprintf_len;	/* malloced snprintf length */
 			fp = (FILE *) fdopen(i,"r+");	/*guess mode*/
 			if (fp) {
 				strcpy(files[idnum].mode, "r+");
@@ -161,12 +162,15 @@ file_init(void)
 						continue;
 				}
 			}
-			tname = (char *)malloc(sizeof("descriptor[19]"));
+			snprintf_len =
+			  sizeof("descriptor[12345678901234567890]") + 1;
+			tname = (char *)malloc(snprintf_len+1);
 			if (tname == NULL) {
 				math_error("Out of memory for init_file");
 				/*NOTREACHED*/
 			}
-			sprintf(tname, "descriptor[%d]", i);
+			snprintf(tname, snprintf_len, "descriptor[%d]", i);
+			tname[snprintf_len] = '\0';	/* paranoia */
 			files[idnum].name = tname;
 			files[idnum].id = idnum;
 			files[idnum].fp = fp;

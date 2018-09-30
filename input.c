@@ -1,7 +1,7 @@
 /*
  * input - nested input source file reader
  *
- * Copyright (C) 1999-2007,2014  David I. Bell
+ * Copyright (C) 1999-2007,2014,2018  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -410,6 +410,7 @@ homeexpand(char *name)
 	char *after;		/* after the ~user or ~ */
 	char *username;		/* extracted username */
 	size_t fullpath_len;	/* length of fullpath */
+	size_t snprintf_len;	/* malloced snprintf buffer length */
 
 	/* firewall */
 	if (name[0] != HOMECHAR)
@@ -466,11 +467,13 @@ homeexpand(char *name)
 	/*
 	 * build the fullpath given the home directory
 	 */
-	fullpath = (char *)malloc(strlen(home2)+strlen(after)+1);
+	snprintf_len = strlen(home2)+strlen(after) + 1;
+	fullpath = (char *)malloc(snprintf_len+1);
 	if (fullpath == NULL) {
 		return NULL;
 	}
-	sprintf(fullpath, "%s%s", home2, after);
+	snprintf(fullpath, snprintf_len, "%s%s", home2, after);
+	fullpath[snprintf_len] = '\0';	/* paranoia */
 	return fullpath;
 #endif /* Windoz free systems */
 }

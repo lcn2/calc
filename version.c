@@ -1,7 +1,7 @@
 /*
  * version - determine the version of calc
  *
- * Copyright (C) 1999-2017  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2018  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -45,7 +45,7 @@ static char *program;
 #define MAJOR_VER	2	/* major library version */
 #define MINOR_VER	12	/* minor library version */
 #define MAJOR_PATCH	6	/* major software level under library version */
-#define MINOR_PATCH	7	/* minor software level or 0 if not patched */
+#define MINOR_PATCH	8	/* minor software level or 0 if not patched */
 
 
 /*
@@ -120,6 +120,7 @@ version(void)
 	snprintf(verbuf, BUFSIZ,
 	    "%d.%d.%d.%d", calc_major_ver, calc_minor_ver,
 	     calc_major_patch, calc_minor_patch);
+	verbuf[BUFSIZ] = '\0';	/* paranoia */
 
 	/*
 	 * save the versions string into a newly malloced buffer

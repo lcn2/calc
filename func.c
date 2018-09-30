@@ -1,7 +1,7 @@
 /*
  * func - built-in functions implemented here
  *
- * Copyright (C) 1999-2007  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2018  David I. Bell, Landon Curt Noll & Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -6022,12 +6022,15 @@ f_strerror(int count, VALUE **vals)
 	/* firewall - return generic error string if it is not assigned */
 	if (i >= nexterrnum || (i > E__HIGHEST && i < E_USERDEF)
 			|| (i < E__BASE && strerror(i) == NULL)) {
-		cp = (char *) malloc(sizeof("Error 1234567890")+1);
+		size_t snprintf_len;	/* malloced snprintf buffer length */
+		snprintf_len = sizeof("Unknown error 12345678901234567890")+1;
+		cp = (char *) malloc(snprintf_len+1);
 		if (cp == NULL) {
 			math_error("Out of memory for strerror");
 			/*NOTREACHED*/
 		}
-		sprintf(cp, "Unknown error %ld", i);
+		snprintf(cp, snprintf_len, "Unknown error %ld", i);
+		cp[snprintf_len] = '\0';	/* paranoia */
 		result.v_str = makestring(cp);
 		return result;
 	}
@@ -7550,6 +7553,8 @@ f_putenv(int count, VALUE **vals)
 	 * parse args
 	 */
 	if (count == 2) {
+		size_t snprintf_len;	/* malloced snprintf buffer length */
+
 		/* firewall */
 		if (vals[0]->v_type != V_STR || vals[1]->v_type != V_STR) {
 			math_error("Non-string argument for putenv");
@@ -7557,14 +7562,17 @@ f_putenv(int count, VALUE **vals)
 		}
 
 		/* convert putenv("foo","bar") into putenv("foo=bar") */
-		putenv_str = (char *)malloc(vals[0]->v_str->s_len + 1 +
-			    vals[1]->v_str->s_len + 1);
+		snprintf_len = vals[0]->v_str->s_len + 1 +
+                               vals[1]->v_str->s_len + 1;
+		putenv_str = (char *)malloc(snprintf_len+1);
 		if (putenv_str == NULL) {
 			math_error("Cannot allocate string in putenv");
 			/*NOTREACHED*/
 		}
-		sprintf(putenv_str, "%s=%s", vals[0]->v_str->s_str,
+		snprintf(putenv_str, snprintf_len,
+			"%s=%s", vals[0]->v_str->s_str,
 			vals[1]->v_str->s_str);
+		putenv_str[snprintf_len] = '\0';	/* paranoia */
 
 
 	} else {

@@ -718,7 +718,7 @@ scanerror(int skip, char *fmt, ...)
 	if (name) {
 		snprintf(calc_err_msg, MAXERROR, "\"%s\", line %ld: ",
 			 name, linenumber());
-		calc_err_msg[MAXERROR] = '\0';	/* firewall */
+		calc_err_msg[MAXERROR] = '\0';	/* paranoia */
 		len = strlen(calc_err_msg);
 		if (len < MAXERROR) {
 			vsnprintf(calc_err_msg+len, MAXERROR-len, fmt, ap);
@@ -727,7 +727,7 @@ scanerror(int skip, char *fmt, ...)
 		vsnprintf(calc_err_msg, MAXERROR, fmt, ap);
 	}
 	va_end(ap);
-	calc_err_msg[MAXERROR] = '\0';
+	calc_err_msg[MAXERROR] = '\0';	/* paranoia */
 
 	/* print error message if allowed */
 	if (calc_print_scanerr_msg != 0) {
@@ -782,7 +782,7 @@ scanerror(int skip, char *fmt, ...)
 	default:
 		snprintf(calc_err_msg, MAXERROR,
 			 "Unknown skip token for scanerror\n");
-		calc_err_msg[MAXERROR] = '\0';
+		calc_err_msg[MAXERROR] = '\0';	/* paranoia */
 		if (calc_print_scanerr_msg != 0) {
 			fprintf(stderr, "%s\n\n", calc_err_msg);
 		}
@@ -823,7 +823,7 @@ warning(char *fmt, ...)
 	if (name) {
 		snprintf(calc_warn_msg, MAXERROR, "\"%s\", line %ld: ",
 			 name, linenumber());
-		calc_warn_msg[MAXERROR] = '\0';	/* firewall */
+		calc_warn_msg[MAXERROR] = '\0';	/* paranoia */
 		len = strlen(calc_warn_msg);
 		if (len < MAXERROR) {
 			vsnprintf(calc_warn_msg+len, MAXERROR-len, fmt, ap);
@@ -832,7 +832,7 @@ warning(char *fmt, ...)
 		vsnprintf(calc_warn_msg, MAXERROR, fmt, ap);
 	}
 	va_end(ap);
-	calc_warn_msg[MAXERROR] = '\0';
+	calc_warn_msg[MAXERROR] = '\0';	/* paranoia */
 
 	/* print the warning if allowed */
 	if (calc_print_scanwarn_msg != 0) {

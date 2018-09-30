@@ -1,7 +1,7 @@
 /*
  * custom - interface for custom software and hardware interfaces
  *
- * Copyright (C) 1999-2006  Landon Curt Noll
+ * Copyright (C) 1999-2006,2018  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -180,6 +180,7 @@ customhelp(char *name)
 #if defined(CUSTOM)
 
 	char *customname;	/* a string of the form: custom/name */
+	size_t snprintf_len;	/* malloced snprintf buffer length */
 
 	/*
 	 * firewall
@@ -191,12 +192,14 @@ customhelp(char *name)
 	/*
 	 * form the custom help name
 	 */
-	customname = (char *)malloc(sizeof("custhelp")+1+strlen(name)+1);
+	snprintf_len = sizeof("custhelp")+1+strlen(name)+1;
+	customname = (char *)malloc(snprintf_len+1);
 	if (customname == NULL) {
 		math_error("bad malloc of customname");
 		/*NOTREACHED*/
 	}
-	sprintf(customname, "custhelp/%s", name);
+	snprintf(customname, snprintf_len, "custhelp/%s", name);
+	customname[snprintf_len] = '\0';	/* paranoia */
 
 	/*
 	 * give help directly to the custom file
