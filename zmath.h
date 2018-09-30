@@ -583,7 +583,12 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 #define MODE_MAX	8
 #define MODE2_OFF	(MODE_MAX+1)
 
+/* XXX - perhaps we need the MODE_REAL_AUTO vs MODE_REAL as a config mode? */
+#if 0 	/* XXX - can we safely set MODE_INITIAL to MODE_REAL_AUTO ?? */
 #define MODE_INITIAL	MODE_REAL_AUTO
+#else
+#define MODE_INITIAL	MODE_REAL
+#endif
 #define MODE2_INITIAL	MODE2_OFF
 
 

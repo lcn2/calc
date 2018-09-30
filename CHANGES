@@ -17,6 +17,9 @@ The following are the changes from calc version 2.12.6.9 to date:
     Added regression tests 3729 thru 3732 to test E_TAN3, E_COT3,
     E_SEC3 and E_CSC3 respectively.
 
+    Added experimential %g printf (and strprintf) format implementation
+    based on pull request from github user 10110111.
+
 
 The following are the changes from calc version 2.12.6.6 to 2.12.6.8:
 
