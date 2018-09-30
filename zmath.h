@@ -579,10 +579,11 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 #define MODE_HEX	5
 #define MODE_OCTAL	6
 #define MODE_BINARY	7
-#define MODE_MAX	7
+#define MODE_REAL_AUTO	8
+#define MODE_MAX	8
 #define MODE2_OFF	(MODE_MAX+1)
 
-#define MODE_INITIAL	MODE_REAL
+#define MODE_INITIAL	MODE_REAL_AUTO
 #define MODE2_INITIAL	MODE2_OFF
 
 

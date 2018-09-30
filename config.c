@@ -274,6 +274,7 @@ STATIC NAMETYPE modes[] = {
 	{"oct",		MODE_OCTAL},
 	{"binary",	MODE_BINARY},
 	{"bin",		MODE_BINARY},
+	{"float-auto",	MODE_REAL_AUTO},
 	{"off",		MODE2_OFF},
 	{NULL,		0}
 };
