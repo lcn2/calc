@@ -575,7 +575,7 @@ HAVE_UNUSED=
 ifeq ($(target),Darwin)
 
 # default INCDIR for macOS
-INCDIR= /usr/local/include
+INCDIR= $(shell xcrun --show-sdk-path --sdk macosx)/usr/include
 
 else
 #endif	/* end of skip for non-Gnu makefiles */
@@ -1054,7 +1054,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.6.8
+VERSION= 2.12.6.9
 
 # Names of shared libraries with versions
 #
@@ -2179,7 +2179,7 @@ TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS}
 all: check_include ${BLD_TYPE} CHANGES
 
 check_include:
-	$(Q) if [ ! -d /usr/include ]; then \
+	$(Q) if [ ! -d ${INCDIR} ]; then \
 	    echo "ERROR: critical directory missing: /usr/include" 1>&2; \
 	    echo "Without this critical directory, we cannot compile." 1>&2; \
 	    echo 1>&2; \
@@ -2191,7 +2191,7 @@ check_include:
 	    echo 1>&2; \
 	    exit 1; \
 	fi
-	$(Q) if [ ! -f /usr/include/stdio.h ]; then \
+	$(Q) if [ ! -f ${INCDIR}/stdio.h ]; then \
 	    echo "ERROR: critical include files are missing" 1>&2; \
 	    echo "Without this critical directory, we cannot compile." 1>&2; \
 	    echo 1>&2; \

@@ -253,10 +253,11 @@ qprintnum(NUMBER *q, int outmode)
 		 * does not depend on changing conf->outdigits.
 		 */
 		const int P = conf->outdigits ? conf->outdigits : 1;
+		long olddigits;
 		tmpval = *q;
 		tmpval.num.sign = 0;
 		exp = qilog10(&tmpval);
-		const long olddigits = conf->outdigits;
+		olddigits = conf->outdigits;
 		if (P > exp && exp >= -P) {
 			conf->outdigits = P - 1 - exp;
 			qprintnum(q, MODE_REAL);

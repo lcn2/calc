@@ -32,6 +32,16 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 	targets, the default make is sufficent.  On FreeBSD for example,
 	one must use gmake instead of make.
 
+	Some report that under macOS, one has to declare the target
+	to be darwin.  So for macOS, one might have to do:
+
+	    # for macOS users only, force the target to be darwin
+	    #
+	    make target=Darwin clobber
+	    make target=Darwin all
+	    make target=Darwin chk
+	    make target=Darwin install
+
 	If your target system does not have GNU Make (or equivalent), then
 	you should try using the Makefile.simple and custom/Makefile.simple
 	files:

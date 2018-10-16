@@ -20,6 +20,22 @@ The following are the changes from calc version 2.12.6.9 to date:
     Added experimential %g printf (and strprintf) format implementation
     based on pull request from github user 10110111.
 
+    Made exterimental changes to macOS builds to not require use of
+    /usr/include.  The INCDIR for macOS uses:
+
+	INCDIR= $(shell xcrun --show-sdk-path --sdk macosx)/usr/include
+
+    to determine the upper path of the /usr/include directory for macOS.
+    The Darwin target seems to not automatically detected.  For now,
+    under macOS, declare the target as darwin:
+
+	# for macOS users only, force the target to be darwin
+	#
+	make target=Darwin clobber
+	make target=Darwin all
+	make target=Darwin chk
+	make target=Darwin install
+
 
 The following are the changes from calc version 2.12.6.6 to 2.12.6.8:
 
