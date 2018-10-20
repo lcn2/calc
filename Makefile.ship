@@ -2180,7 +2180,7 @@ all: check_include ${BLD_TYPE} CHANGES
 
 check_include:
 	$(Q) if ! echo '#include <stdio.h>' | ${CC} -E - >/dev/null 2>&1; then \
-	    echo "ERROR: The critical <stdio.h> include file is missing." 1>&2; \
+	    echo "ERROR: Missing critical <stdio.h> include file." 1>&2; \
 	    echo "Without critical include files, we cannot compile." 1>&2; \
 	    echo "Perhaps your system isn't setup to compile C source?" 1>&2; \
 	    echo 1>&2; \
@@ -2470,10 +2470,12 @@ endian_calc.h: endian${EXT} ${MAKE_FILE}
 	    if echo '#include <endian.h>' | ${CC} -E - >/dev/null 2>&1; then \
 		echo '#include <endian.h>' >> endian_calc.h; \
 		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
-	    elif echo '#include <machine/endian.h>' | ${CC} -E - >/dev/null 2>&1; then \
+	    elif echo '#include <machine/endian.h>' | \
+		 ${CC} -E - >/dev/null 2>&1; then \
 		echo '#include <machine/endian.h>' >> endian_calc.h; \
 		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
-	    elif echo '#include <sys/endian.h>' | ${CC} -E- >/dev/null 2>&1; then \
+	    elif echo '#include <sys/endian.h>' | \
+		 ${CC} -E- >/dev/null 2>&1; then \
 		echo '#include <sys/endian.h>' >> endian_calc.h; \
 		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
 	    else \
