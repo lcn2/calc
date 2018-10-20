@@ -67,7 +67,7 @@ E_FUNC FULL qtou(NUMBER *q);
 E_FUNC SFULL qtos(NUMBER *q);
 E_FUNC long qparse(char *str, int flags);
 E_FUNC void qfreenum(NUMBER *q);
-E_FUNC void qprintnum(NUMBER *q, int mode);
+E_FUNC void qprintnum(NUMBER *q, int mode, LEN outdigits);
 E_FUNC void qprintff(NUMBER *q, long width, long precision);
 E_FUNC void qprintfe(NUMBER *q, long width, long precision);
 E_FUNC void qprintfr(NUMBER *q, long width, BOOL force);

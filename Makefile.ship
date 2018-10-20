@@ -1054,7 +1054,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.6.9
+VERSION= 2.12.6.10
 
 # Names of shared libraries with versions
 #
@@ -2179,25 +2179,15 @@ TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS}
 all: check_include ${BLD_TYPE} CHANGES
 
 check_include:
-	$(Q) if [ ! -d ${INCDIR} ]; then \
-	    echo "ERROR: critical directory missing: /usr/include" 1>&2; \
-	    echo "Without this critical directory, we cannot compile." 1>&2; \
-	    echo 1>&2; \
+	$(Q) if ! echo '#include <stdio.h>' | ${CC} -E - >/dev/null 2>&1; then \
+	    echo "ERROR: The critical <stdio.h> include file is missing." 1>&2; \
+	    echo "Without critical include files, we cannot compile." 1>&2; \
 	    echo "Perhaps your system isn't setup to compile C source?" 1>&2; \
-	    echo "For example, Apple OS X / darwin requres that XCode" 1>&2; \
-	    echo "must be installed and that you run the command:" 1>&2; \
 	    echo 1>&2; \
-	    echo "    xcode-select --install" 1>&2; \
+	    echo "For example, Apple macOS / Darwin requres that XCode" 1>&2; \
+	    echo "must be installed." 1>&2; \
 	    echo 1>&2; \
-	    exit 1; \
-	fi
-	$(Q) if [ ! -f ${INCDIR}/stdio.h ]; then \
-	    echo "ERROR: critical include files are missing" 1>&2; \
-	    echo "Without this critical directory, we cannot compile." 1>&2; \
-	    echo 1>&2; \
-	    echo "Perhaps your system isn't setup to compile C source?" 1>&2; \
-	    echo "For example, Apple OS X / darwin requres that XCode" 1>&2; \
-	    echo "must be installed and that you run the command:" 1>&2; \
+	    echo "Also macOS users might later to run this command:" 1>&2; \
 	    echo 1>&2; \
 	    echo "    xcode-select --install" 1>&2; \
 	    echo 1>&2; \
@@ -2477,22 +2467,13 @@ endian_calc.h: endian${EXT} ${MAKE_FILE}
 	${Q} echo '' >> endian_calc.h
 	${Q} echo '/* what byte order are we? */' >> endian_calc.h
 	-${Q} if [ X"${CALC_BYTE_ORDER}" = X ]; then \
-	    if [ -f ${INCDIR}/endian.h ]; then \
+	    if echo '#include <endian.h>' | ${CC} -E - >/dev/null 2>&1; then \
 		echo '#include <endian.h>' >> endian_calc.h; \
 		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
-	    elif [ -f ${INCDIR}/machine/endian.h ]; then \
+	    elif echo '#include <machine/endian.h>' | ${CC} -E - >/dev/null 2>&1; then \
 		echo '#include <machine/endian.h>' >> endian_calc.h; \
 		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
-	    elif [ -f ${INCDIR}/sys/endian.h ]; then \
-		echo '#include <sys/endian.h>' >> endian_calc.h; \
-		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
-	    elif [ -f /usr/include/endian.h ]; then \
-		echo '#include <endian.h>' >> endian_calc.h; \
-		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
-	    elif [ -f /usr/include/machine/endian.h ]; then \
-		echo '#include <machine/endian.h>' >> endian_calc.h; \
-		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
-	    elif [ -f /usr/include/sys/endian.h ]; then \
+	    elif echo '#include <sys/endian.h>' | ${CC} -E- >/dev/null 2>&1; then \
 		echo '#include <sys/endian.h>' >> endian_calc.h; \
 		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
 	    else \
@@ -2559,9 +2540,7 @@ have_times.h: ${MAKE_FILE}
 	    echo '#define HAVE_TIMES_H	/* yes */' >> have_times.h; \
 	elif [ X"${HAVE_TIMES_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_TIMES_H  /* no */' >> have_times.h; \
-	elif [ -f ${INCDIR}/times.h ]; then \
-	    echo '#define HAVE_TIMES_H	/* yes */' >> have_times.h; \
-	elif [ -f /usr/include/times.h ]; then \
+	elif echo '#include <times.h>' | ${CC} -E - >/dev/null 2>&1; then \
 	    echo '#define HAVE_TIMES_H	/* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_TIMES_H  /* no */' >> have_times.h; \
@@ -2570,9 +2549,7 @@ have_times.h: ${MAKE_FILE}
 	    echo '#define HAVE_SYS_TIMES_H	/* yes */' >> have_times.h; \
 	elif [ X"${HAVE_SYS_TIMES_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_SYS_TIMES_H  /* no */' >> have_times.h; \
-	elif [ -f ${INCDIR}/sys/times.h ]; then \
-	    echo '#define HAVE_SYS_TIMES_H  /* yes */' >> have_times.h; \
-	elif [ -f /usr/include/sys/times.h ]; then \
+	elif echo '#include <sys/times.h>' | ${CC} -E - >/dev/null 2>&1; then \
 	    echo '#define HAVE_SYS_TIMES_H  /* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_SYS_TIMES_H  /* no */' >> have_times.h; \
@@ -2581,9 +2558,7 @@ have_times.h: ${MAKE_FILE}
 	    echo '#define HAVE_TIME_H	/* yes */' >> have_times.h; \
 	elif [ X"${HAVE_TIME_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_TIME_H  /* no */' >> have_times.h; \
-	elif [ -f ${INCDIR}/time.h ]; then \
-	    echo '#define HAVE_TIME_H  /* yes */' >> have_times.h; \
-	elif [ -f /usr/include/time.h ]; then \
+	elif echo '#include <time.h>' | ${CC} -E - >/dev/null 2>&1; then \
 	    echo '#define HAVE_TIME_H  /* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_TIME_H  /* no */' >> have_times.h; \
@@ -2592,9 +2567,7 @@ have_times.h: ${MAKE_FILE}
 	    echo '#define HAVE_SYS_TIME_H	/* yes */' >> have_times.h; \
 	elif [ X"${HAVE_SYS_TIME_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_SYS_TIME_H  /* no */' >> have_times.h; \
-	elif [ -f ${INCDIR}/sys/time.h ]; then \
-	    echo '#define HAVE_SYS_TIME_H  /* yes */' >> have_times.h; \
-	elif [ -f /usr/include/sys/time.h ]; then \
+	elif echo '#include <sys/time.h>' | ${CC} -E - >/dev/null 2>&1; then \
 	    echo '#define HAVE_SYS_TIME_H  /* yes */' >> have_times.h; \
 	else \
 	    echo '#undef HAVE_SYS_TIME_H  /* no */' >> have_times.h; \
@@ -2630,9 +2603,7 @@ have_stdlib.h: ${MAKE_FILE}
 	    echo '#define HAVE_STDLIB_H	/* yes */' >> have_stdlib.h; \
 	elif [ X"${HAVE_STDLIB_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_STDLIB_H  /* no */' >> have_stdlib.h; \
-	elif [ -f ${INCDIR}/stdlib.h ]; then \
-	    echo '#define HAVE_STDLIB_H	 /* yes */' >> have_stdlib.h; \
-	elif [ -f /usr/include/stdlib.h ]; then \
+	elif echo '#include <stdlib.h>' | ${CC} -E - >/dev/null 2>&1; then \
 	    echo '#define HAVE_STDLIB_H	 /* yes */' >> have_stdlib.h; \
 	else \
 	    echo '#undef HAVE_STDLIB_H	/* no */' >> have_stdlib.h; \
@@ -2668,9 +2639,7 @@ have_unistd.h: ${MAKE_FILE}
 	    echo '#define HAVE_UNISTD_H	/* yes */' >> have_unistd.h; \
 	elif [ X"${HAVE_UNISTD_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_UNISTD_H  /* no */' >> have_unistd.h; \
-	elif [ -f ${INCDIR}/unistd.h ]; then \
-	    echo '#define HAVE_UNISTD_H	 /* yes */' >> have_unistd.h; \
-	elif [ -f /usr/include/unistd.h ]; then \
+	elif echo '#include <unistd.h>' | ${CC} -E - >/dev/null 2>&1; then \
 	    echo '#define HAVE_UNISTD_H	 /* yes */' >> have_unistd.h; \
 	else \
 	    echo '#undef HAVE_UNISTD_H	/* no */' >> have_unistd.h; \
@@ -2706,9 +2675,7 @@ have_string.h: ${MAKE_FILE}
 	    echo '#define HAVE_STRING_H	/* yes */' >> have_string.h; \
 	elif [ X"${HAVE_STRING_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_STRING_H  /* no */' >> have_string.h; \
-	elif [ -f ${INCDIR}/string.h ]; then \
-	    echo '#define HAVE_STRING_H	 /* yes */' >> have_string.h; \
-	elif [ -f /usr/include/string.h ]; then \
+	elif echo '#include <string.h>' | ${CC} -E - >/dev/null 2>&1; then \
 	    echo '#define HAVE_STRING_H	 /* yes */' >> have_string.h; \
 	else \
 	    echo '#undef HAVE_STRING_H	/* no */' >> have_string.h; \
@@ -2748,22 +2715,12 @@ terminal.h: ${MAKE_FILE}
 	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> terminal.h; \
 	    echo '#undef USE_TERMIO    /* <termio.h> */' >> terminal.h; \
 	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
-	elif [ -f ${INCDIR}/termios.h ]; then \
+	elif echo '#include <termios.h>' | ${CC} -E - >/dev/null 2>&1; then \
 	    echo '/* use termios */' >> terminal.h; \
 	    echo '#define USE_TERMIOS  /* <termios.h> */' >> terminal.h; \
 	    echo '#undef USE_TERMIO    /* <termio.h> */' >> terminal.h; \
 	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
-	elif [ -f ${INCDIR}/termio.h ]; then \
-	    echo '/* use termio */' >> terminal.h; \
-	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> terminal.h; \
-	    echo '#define USE_TERMIO   /* <termio.h> */' >> terminal.h; \
-	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
-	elif [ -f /usr/include/termios.h ]; then \
-	    echo '/* use termios */' >> terminal.h; \
-	    echo '#define USE_TERMIOS  /* <termios.h> */' >> terminal.h; \
-	    echo '#undef USE_TERMIO    /* <termio.h> */' >> terminal.h; \
-	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
-	elif [ -f /usr/include/termio.h ]; then \
+	elif echo '#include <termio.h>' | ${CC} -E - >/dev/null 2>&1; then \
 	    echo '/* use termio */' >> terminal.h; \
 	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> terminal.h; \
 	    echo '#define USE_TERMIO   /* <termio.h> */' >> terminal.h; \

@@ -2774,7 +2774,7 @@ printvalue(VALUE *vp, int flags)
 	}
 	switch (type) {
 	case V_NUM:
-		qprintnum(vp->v_num, MODE_DEFAULT);
+		qprintnum(vp->v_num, MODE_DEFAULT, conf->outdigits);
 		if (conf->traceflags & TRACE_LINKS)
 			math_fmt("#%ld", vp->v_num->links);
 		break;
@@ -2835,7 +2835,7 @@ printvalue(VALUE *vp, int flags)
 		if (userfunc("octet_print", vp))
 			break;
 		qtemp = itoq((long) *vp->v_octet);
-		qprintnum(qtemp, MODE_DEFAULT);
+		qprintnum(qtemp, MODE_DEFAULT, conf->outdigits);
 		qfree(qtemp);
 		break;
 	case V_OPTR:
@@ -2888,7 +2888,7 @@ printestr(VALUE *vp)
 			math_chr('"');
 			return;
 		case V_NUM:
-			qprintnum(vp->v_num, MODE_FRAC);
+			qprintnum(vp->v_num, MODE_FRAC, conf->outdigits);
 			return;
 		case V_COM:
 			mode = math_setmode(MODE_FRAC);

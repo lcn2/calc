@@ -404,7 +404,7 @@ showredcdata(void)
 	for (i = 0, rcp = redc_cache; i < MAXREDC; i++, rcp++) {
 		if (rcp->age > 0) {
 			printf("%-8ld%-8ld", i, rcp->age);
-			qprintnum(rcp->rnum, 0);
+			qprintnum(rcp->rnum, 0, conf->outdigits);
 			printf("\n");
 		}
 	}

@@ -1182,7 +1182,7 @@ comprint(COMPLEX *c)
 		return;
 	}
 	if (!qiszero(c->real) || qiszero(c->imag))
-		qprintnum(c->real, MODE_DEFAULT);
+		qprintnum(c->real, MODE_DEFAULT, conf->outdigits);
 	qtmp = c->imag[0];
 	if (qiszero(&qtmp))
 		return;
@@ -1192,7 +1192,7 @@ comprint(COMPLEX *c)
 		math_chr('-');
 		qtmp.num.sign = 0;
 	}
-	qprintnum(&qtmp, MODE_DEFAULT);
+	qprintnum(&qtmp, MODE_DEFAULT, conf->outdigits);
 	math_chr('i');
 }
 

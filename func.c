@@ -335,7 +335,7 @@ f_str(VALUE *vp)
 		break;
 	case V_NUM:
 		math_divertio();
-		qprintnum(vp->v_num, MODE_DEFAULT);
+		qprintnum(vp->v_num, MODE_DEFAULT, conf->outdigits);
 		cp = math_getdivertedio();
 		result.v_str = makestring(cp);
 		break;

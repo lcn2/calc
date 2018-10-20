@@ -1,4 +1,20 @@
-The following are the changes from calc version 2.12.6.9 to date:
+The following are the changes from calc version 2.12.6.10 to date:
+
+    Added a patch to replaces the manual search for include files
+    in $(INCDIR) in the have_*.h targets with compiler invocations.
+    Thanks goes to Helmut Grohne <helmut at subdivi dot de> who
+    implemented the patch and posted it to the Debian bug tracker
+    and Martin Buck (m at rtin-buck dor de) for forwarding it to us.
+
+    The check_include make rule was fixed to not assume /usr/include.
+
+    The qprintnum() function now takes outdigits as a 3rd argument.
+    Most of the time, this 3rd argument is just conf->outdigits.
+    But when it comes to the experimental '%g', this value can
+    change.  This avoids having to modify conf->outdigits.
+
+
+The following are the changes from calc version 2.12.6.9 to 2.12.6.9:
 
     Fixed a number of core dump bugs related to the calculation of
     tan(), cot(), sec(), csc(), tanh(), coth(), sech(), and csch(),

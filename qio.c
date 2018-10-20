@@ -183,7 +183,7 @@ qprintf(char *fmt, ...)
  * Integers are always printed as themselves.
  */
 void
-qprintnum(NUMBER *q, int outmode)
+qprintnum(NUMBER *q, int outmode, LEN outdigits)
 {
 	NUMBER tmpval;
 	long prec, exp;
@@ -202,13 +202,13 @@ qprintnum(NUMBER *q, int outmode)
 
 	case MODE_REAL:
 		prec = qdecplaces(q);
-		if ((prec < 0) || (prec > conf->outdigits)) {
+		if ((prec < 0) || (prec > outdigits)) {
 			if (conf->tilde_ok)
 			    PUTCHAR('~');
 		}
 		if (conf->fullzero || (prec < 0) ||
-		    (prec > conf->outdigits))
-			prec = conf->outdigits;
+		    (prec > outdigits))
+			prec = outdigits;
 		qprintff(q, 0L, prec);
 		break;
 
@@ -225,7 +225,7 @@ qprintnum(NUMBER *q, int outmode)
 		tmpval.num.sign = 0;
 		exp = qilog10(&tmpval);
 		if (exp == 0) {		/* in range to output as real */
-			qprintnum(q, MODE_REAL);
+			qprintnum(q, MODE_REAL, outdigits);
 			return;
 		}
 		tmpval.num = _one_;
@@ -237,35 +237,22 @@ qprintnum(NUMBER *q, int outmode)
 		q = qmul(q, &tmpval);
 		zfree(tmpval.num);
 		zfree(tmpval.den);
-		qprintnum(q, MODE_REAL);
+		qprintnum(q, MODE_REAL, outdigits);
 		qfree(q);
 		PRINTF1("e%ld", exp);
 		break;
 
 	case MODE_REAL_AUTO:
 	{
-		/*
-		 * XXX - re-write to not modify conf->outdigits
-		 *
-		 * Modifying the configuration value could be dangerious
-		 * when a calculation is aborted within an opcode.
-		 * Better to use qprintfg() use inline code that
-		 * does not depend on changing conf->outdigits.
-		 */
 		const int P = conf->outdigits ? conf->outdigits : 1;
-		long olddigits;
 		tmpval = *q;
 		tmpval.num.sign = 0;
 		exp = qilog10(&tmpval);
-		olddigits = conf->outdigits;
 		if (P > exp && exp >= -P) {
-			conf->outdigits = P - 1 - exp;
-			qprintnum(q, MODE_REAL);
+			qprintnum(q, MODE_REAL, P - 1 - exp);
 		} else {
-			conf->outdigits = P - 1;
-			qprintnum(q, MODE_EXP);
+			qprintnum(q, MODE_EXP, P - 1);
 		}
-		conf->outdigits = olddigits;
 		break;
 	}
 
@@ -288,7 +275,7 @@ qprintnum(NUMBER *q, int outmode)
 
 	if (outmode2 != MODE2_OFF) {
 		PUTSTR(" /* ");
-		qprintnum(q, outmode2);
+		qprintnum(q, outmode2, outdigits);
 		PUTSTR(" */");
 	}
 }
