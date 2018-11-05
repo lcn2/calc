@@ -1,4 +1,11 @@
-The following are the changes from calc version 2.12.7.0 to date:
+The following are the changes from calc version 2.12.7.1 to date:
+
+    Corrected CHANGES notes that were mixed up for TAB, VT, CR & NL.
+    The core in 2.12.7.0 is correct.  The CHANGE notes were mixed up.
+    Sorry!
+
+
+The following are the changes from calc version 2.12.6.10: to 2.12.7.0:
 
     Added a patch to replaces the manual search for include files
     in $(INCDIR) in the have_*.h targets with compiler invocations.
@@ -32,10 +39,10 @@ The following are the changes from calc version 2.12.7.0 to date:
 	\a	audible bell	byte 0x07 in ASCII encoding
 	\b	backspace	byte 0x08 in ASCII encoding
 	\f	form feed	byte 0x0c in ASCII encoding
-	\n	newline		byte 0x0b in ASCII encoding
-	\r	return		byte 0x0a in ASCII encoding
-	\t	tab		byte 0x0d in ASCII encoding
-	\v	vertical tab	byte 0x09 in ASCII encoding
+	\n	newline		byte 0x0a in ASCII encoding
+	\r	return		byte 0x0d in ASCII encoding
+	\t	tab		byte 0x09 in ASCII encoding
+	\v	vertical tab	byte 0x0b in ASCII encoding
 
 
 The following are the changes from calc version 2.12.6.9 to 2.12.6.9:
