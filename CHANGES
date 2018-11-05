@@ -1,8 +1,8 @@
-The following are the changes from calc version 2.12.6.10 to date:
+The following are the changes from calc version 2.12.7.0 to date:
 
     Added a patch to replaces the manual search for include files
     in $(INCDIR) in the have_*.h targets with compiler invocations.
-    Thanks goes to Helmut Grohne <helmut at subdivi dot de> who
+    Thanks goes to Helmut Grohne (helmut at subdivi dot de) who
     implemented the patch and posted it to the Debian bug tracker
     and Martin Buck (m at rtin-buck dor de) for forwarding it to us.
 
@@ -12,6 +12,30 @@ The following are the changes from calc version 2.12.6.10 to date:
     Most of the time, this 3rd argument is just conf->outdigits.
     But when it comes to the experimental '%g', this value can
     change.  This avoids having to modify conf->outdigits.
+
+    Fixed a problem where gcc complains about E_FUNC not being defined
+    for Linux systems as reported by Martin Buck (m at rtin-buck dor de).
+
+    Updated the help files help/config, help/display, help/epsilon,
+    help/fprint, help/printf, and help/strprintf to give more
+    examples of how display digits and epsilon precision interact
+    with displaying values.
+
+    Added more information about %g in the help file help/printf.
+
+    The '\a' is now recognized in a printf format string as the
+    single byte audible bell character (byte 0x07 in ASCII encoding).
+
+    The following is a partial list of escape sequences recognized
+    in strings and in printf formats:
+
+	\a	audible bell	byte 0x07 in ASCII encoding
+	\b	backspace	byte 0x08 in ASCII encoding
+	\f	form feed	byte 0x0c in ASCII encoding
+	\n	newline		byte 0x0b in ASCII encoding
+	\r	return		byte 0x0a in ASCII encoding
+	\t	tab		byte 0x0d in ASCII encoding
+	\v	vertical tab	byte 0x09 in ASCII encoding
 
 
 The following are the changes from calc version 2.12.6.9 to 2.12.6.9:
@@ -42,8 +66,9 @@ The following are the changes from calc version 2.12.6.9 to 2.12.6.9:
 	INCDIR= $(shell xcrun --show-sdk-path --sdk macosx)/usr/include
 
     to determine the upper path of the /usr/include directory for macOS.
-    The Darwin target seems to not automatically detected.  For now,
-    under macOS, declare the target as darwin:
+    In some rare cases, the Darwin target seems to not automatically detected.
+    If you are running under macOS, and that happens, you can force
+    the target to be Darwin:
 
 	# for macOS users only, force the target to be darwin
 	#
