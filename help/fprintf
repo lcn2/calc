@@ -45,6 +45,48 @@ EXAMPLE
       [2] = "undefined"
       [3] = NULL
 
+    ; /*
+       * NOTE: When displaying many digits after the decimal point
+       *       be sure to set display(digits) (see 'help display') to
+       *       large enough AND to set epsilon(eps) (see 'help epsilon')
+       *       small enough (or if the function has a esp argument,
+       *       give a eps argument that is small enough) to display
+       *       the value correctly.
+       */
+    ; config("tilde", 1),;
+
+    ; /* NOTE: display has too few digits and epsilon is not small enough */
+    ; display(12),;
+    ; fprintf(files(1), "%f\n", pi(1e-10));
+    3.1415926536
+    ; epsilon(1e-10),;
+    ; fprintf(files(1), "%f\n", pi());
+    3.1415926536
+
+    ; /* NOTE: display has too few digits yet epsilon is small enough */
+    ; display(12),;
+    ; fprintf(files(1), "%f\n", pi(1e-72));
+    ~3.141592653590
+    ; epsilon(1e-72),;
+    ; fprintf(files(1), "%f\n", pi());
+    ~3.141592653590
+
+    ; /* NOTE: display has enough digits but epsilon is not small enough */
+    ; display(72),;
+    ; fprintf(files(1), "%f\n", pi(1e-10));
+    3.1415926536
+    ; epsilon(1e-10),;
+    ; fprintf(files(1), "%f\n", pi());
+    3.1415926536
+
+    /* NOTE: display has enough digits and epsilon is small enough */
+    ; display(72),;
+    ; fprintf(files(1), "%f\n", pi(1e-72));
+    3.141592653589793238462643383279502884197169399375105820974944592307816406
+    ; epsilon(1e-72),;
+    ; fprintf(files(1), "%f\n", pi());
+    3.141592653589793238462643383279502884197169399375105820974944592307816406
+
 LIMITS
     The number of arguments of fprintf() is not to exceed 1024.
 
@@ -52,9 +94,9 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    printf, strprintf, print
+    config, display, epsilon, printf, strprintf
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2018  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

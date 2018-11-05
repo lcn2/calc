@@ -51,7 +51,7 @@ DESCRIPTION
 	    d, s, c		current config("mode")
 	    f		real (decimal, floating point)
 	    e		exponential
-	    g		real or exponential depending on config("display")
+	    g		general format (real or exponential)
 	    r		fractional
 	    o		octal
 	    x		hexadecimal
@@ -63,15 +63,27 @@ DESCRIPTION
     if a positive width w has been specified, the effect is to
     produce w spaces, e.g., printf("abc%6dxyz") prints "abc      xyz".
 
+    Control charters may be given in fmt by escaping them with
+    the \ character.  The following control charter escape
+    sequences are recognized:
+
+	\a	audible bell	byte 0x07 in ASCII encoding
+	\b	backspace	byte 0x08 in ASCII encoding
+	\f	form feed	byte 0x0c in ASCII encoding
+	\n	newline		byte 0x0b in ASCII encoding
+	\r	return		byte 0x0a in ASCII encoding
+	\t	tab		byte 0x0d in ASCII encoding
+	\v	vertical tab	byte 0x09 in ASCII encoding
+
     If i <= the number of specifiers in fmt, the value of argument
     x_i is printed in the format specified by the i-th specifier.
     If a positive width w has been specified and normal printing
     of x_i does not include a '\n' character, what is printed will
     if necessary be padded with spaces so that the length of the
     printed output is at least the w.  Note that control characters
-    like '\t', '\b' each count as one character.  If the 'right-pad'
-    flag has been set, the padding is on the right; otherwise it
-    is on the left.
+    (e.g., '\a', '\b', '\f', '\n', '\r', '\t', '\n') count as one
+    character.  If the 'right-pad' flag has been set, the padding
+    is on the right; otherwise it is on the left.
 
     If i > the number of specifiers in fmt, the value of argument x_i
     does not contribute to the printing.  However, as all arguments
@@ -84,22 +96,38 @@ DESCRIPTION
     specified precision will be ignored except for floating-point
     mode.
 
-    In the case of floating-point (f) format the precision determines
-    the maximum number of decimal places to be displayed.  Other
-    aspects of this printing may be affected by the configuration
-    parameters "outround", "tilde", "fullzero", "leadzero".
+    The (g) general format will print the as real (f) (decimal or
+    floating point) or as an exponential (e) depending on the
+    configuration parameter "display".
+
+    In the case of floating-point (f) format, and the (g) general
+    format, the precision determines the maximum number of decimal
+    places to be displayed.  Other aspects of this printing may be
+    affected by the configuration parameters "outround", "tilde",
+    "fullzero", "leadzero".
 
 EXAMPLE
-    ; c = config("epsilon", 1e-6); c = config("display", 6);
-    ; c = config("tilde", 1); c = config("outround", 0);
-    ; c = config("fullzero", 0);
+    ; config("epsilon", 1e-6),;
+    : config("display", 6),;
+    ; config("tilde", 1),;
+    ; config("outround", 0),;
+    ; config("fullzero", 0),;
     ; fmt = "%f,%10f,%-10f,%10.4f,%.4f,%.f.\n";
     ; a = sqrt(3);
     ; printf(fmt,a,a,a,a,a,a);
     1.732051,  1.732051,1.732051  ,   ~1.7320,~1.7320,~1.
 
-    ; c = config("tilde", 0); c = config("outround",24);
-    ; c = config("fullzero", 1);
+    ; config("display", 5),;
+    : config("tilde", 0),;
+    ; printf("%f\n", pi());
+    3.1416
+    ; config("display", 10),;
+    ; printf("%f\n", pi());
+    3.141592654
+
+    ; config("tilde", 0),;
+    : config("outround",24),;
+    ; config("fullzero", 1),;
     ; printf(fmt,a,a,a,a,a,a);
     1.732051,  1.732051,1.732051  ,    1.7321,1.7321,2.
 
@@ -117,11 +145,82 @@ EXAMPLE
       [2] = "undefined"
       [3] = NULL
 
-    ; c = config("display", 50);
+    ; config("display", 50),;
     ; printf("%g %g\n%g %g\n", 1e5, 1e49, 1e50, 1e500);
     100000 100000000000000000000000000000000000000000000000000
     1e50 1e500
 
+    ; config("display", 10),;
+    : config("tilde", 0),;
+    ; printf("%f %f %f\n%f %f %f\n",
+             exp(1), exp(2), exp(3), exp(4), exp(5), exp(6));
+    2.7182818285 7.3890560989 20.0855369232
+    54.5981500331 148.4131591026 403.4287934927
+    ; printf("%e %e %e\n%e %e %e\n",
+             exp(1), exp(2), exp(3), exp(4), exp(5), exp(6));
+    2.7182818285 7.3890560989 2.0085536923e1
+    5.4598150033e1 1.4841315910e2 4.0342879349e2
+    ; printf("%g %g %g\n%g %g %g\n",
+             exp(1), exp(2), exp(3), exp(4), exp(5), exp(6));
+    2.718281828 7.389056099 20.08553692
+    54.59815003 148.4131591 403.4287935
+
+    ; config("display", 10),;
+    ; config("tilde", 0),;
+    ; printf("%f %f %f\n%f %f %f\n",
+             exp(20), exp(21), exp(22), exp(23), exp(24), exp(25));
+    485165195.4097902780 1318815734.4832146972 3584912846.1315915617
+    9744803446.2489026000 26489122129.8434722941 72004899337.3858725242`
+    ; printf("%e %e %e\n%e %e %e\n",
+             exp(20), exp(21), exp(22), exp(23), exp(24), exp(25));
+    4.8516519541e8 1.3188157345e9 3.5849128461e9
+    9.7448034462e9 2.6489122130e10 7.2004899337e10
+    ; printf("%g %g %g\n%g %g %g\n",
+             exp(20), exp(21), exp(22), exp(23), exp(24), exp(25));
+    485165195.4 1318815734 3584912846
+    9744803446 2.648912213e10 7.200489934e10
+
+    ; /*
+       * NOTE: When displaying many digits after the decimal point
+       *       be sure to set display(digits) (see 'help display') to
+       *       large enough AND to set epsilon(eps) (see 'help epsilon')
+       *       small enough (or if the function has a esp argument,
+       *       give a eps argument that is small enough) to display
+       *       the value correctly.
+       */
+    ; config("tilde", 1),;
+
+    ; /* NOTE: display has too few digits and epsilon is not small enough */
+    ; display(12),;
+    ; printf("%f\n", pi(1e-10));
+    3.1415926536
+    ; epsilon(1e-10),;
+    ; printf("%f\n", pi());
+    3.1415926536
+
+    ; /* NOTE: display has too few digits yet epsilon is small enough */
+    ; display(12),;
+    ; printf("%f\n", pi(1e-72));
+    ~3.141592653590
+    ; epsilon(1e-72),;
+    ; printf("%f\n", pi());
+    ~3.141592653590
+
+    ; /* NOTE: display has enough digits but epsilon is not small enough */
+    ; display(72),;
+    ; printf("%f\n", pi(1e-10));
+    3.1415926536
+    ; epsilon(1e-10),;
+    ; printf("%f\n", pi());
+    3.1415926536
+
+    /* NOTE: display has enough digits and epsilon is small enough */
+    ; display(72),;
+    ; printf("%f\n", pi(1e-72));
+    3.141592653589793238462643383279502884197169399375105820974944592307816406
+    ; epsilon(1e-72),;
+    ; printf("%f\n", pi());
+    3.141592653589793238462643383279502884197169399375105820974944592307816406
 
 LIMITS
     The number of arguments of printf() is not to exceed 1024.
@@ -130,7 +229,7 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    fprintf, strprintf, print
+    config, display, epsilon, fprintf, strprintf
 
 ## Copyright (C) 1999-2006,2018  Landon Curt Noll
 ##

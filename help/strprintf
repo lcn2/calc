@@ -18,21 +18,67 @@ EXAMPLE
     ; strprintf("h=%d, i=%d", 2, 3);
 	    "h=2, i=3"
 
-    ; c = config("epsilon", 1e-6); c = config("display", 6);
-    ; c = config("tilde", 1); c = config("outround", 0);
-    ; c = config("fullzero", 0);
+    ; config("epsilon", 1e-6),;
+    ; config("display", 6),;
+    ; config("tilde", 1),;
+    ; config("outround", 0),;
+    ; config("fullzero", 0),;
     ; fmt = "%f,%10f,%-10f,%10.4f,%.4f,%.f.\n";
     ; a = sqrt(3);
     ; strprintf(fmt,a,a,a,a,a,a);
 	    "1.732051,	1.732051,1.732051  ,   ~1.7320,~1.7320,~1.
     "
 
-    ; c = config("display", 50);
+    ; config("display", 50),;
     ; fmt2 = "%g %g\n%g %g\n"
     ; strprintf(fmt2, 1e5, 1e49, 1e50, 1e500);
 	    "100000 100000000000000000000000000000000000000000000000000
     1e50 1e500
     "
+
+    ; /*
+       * NOTE: When displaying many digits after the decimal point
+       *       be sure to set display(digits) (see 'help display') to
+       *       large enough AND to set epsilon(eps) (see 'help epsilon')
+       *       small enough (or if the function has a esp argument,
+       *       give a eps argument that is small enough) to display
+       *       the value correctly.
+       */
+    ; config("tilde", 1),;
+    ; config("tab", 0),;
+    ; fmt1 = "%f";
+
+    ; /* NOTE: display has too few digits and epsilon is not small enough */
+    ; display(12),;
+    ; strprintf(fmt1, pi(1e-10));
+    "3.1415926536"
+    ; epsilon(1e-10),;
+    ; strprintf(fmt1, pi());
+    "3.1415926536"
+
+    ; /* NOTE: display has too few digits yet epsilon is small enough */
+    ; display(12),;
+    ; strprintf(fmt1, pi(1e-72));
+    "~3.141592653590"
+    ; epsilon(1e-72),;
+    ; strprintf(fmt1, pi());
+    ~3.141592653590
+
+    ; /* NOTE: display has enough digits but epsilon is not small enough */
+    ; display(72),;
+    ; strprintf(fmt1, pi(1e-10));
+    "3.1415926536"
+    ; epsilon(1e-10),;
+    ; strprintf(fmt1, pi());
+    "3.1415926536"
+
+    /* NOTE: display has enough digits and epsilon is small enough */
+    ; display(72),;
+    ; strprintf(fmt1, pi(1e-72));
+    "3.141592653589793238462643383279502884197169399375105820974944592307816406"
+    ; epsilon(1e-72),;
+    ; strprintf(fmt1, pi());
+    "3.141592653589793238462643383279502884197169399375105820974944592307816406"
 
 LIMITS
     The number of arguments of strprintf() is not to exceed 1024.
@@ -41,10 +87,9 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    strcat, strcpy, strerror, strlen, strncmp, strncpy, strpos,
-    strscan, strscanf, substr,
-
-    printf, fprintf, print
+    config, display, epsilon, fprintf, strcat, strcpy, strerror,
+    strlen, strncmp, strncpy, strpos, strscan, strscanf, substr,
+    printf
 
 ## Copyright (C) 1999-2006,2018  Landon Curt Noll
 ##
