@@ -207,30 +207,9 @@ all: fix_version check_include
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
 
 check_include:
-	$(Q) if [ ! -d /usr/include ]; then \
-	    echo "ERROR: critical directory missing: /usr/include" 1>&2; \
-	    echo "Without this critical directory, we cannot compile." 1>&2; \
-	    echo 1>&2; \
-	    echo "Perhaps your system isn't setup to compile C source?" 1>&2; \
-	    echo "For example, Apple OS X / darwin requres that XCode" 1>&2; \
-	    echo "must be installed and that you run the command:" 1>&2; \
-	    echo 1>&2; \
-	    echo "    xcode-select --install" 1>&2; \
-	    echo 1>&2; \
-	    exit 1; \
-	fi
-	$(Q) if [ ! -f /usr/include/stdio.h ]; then \
-	    echo "ERROR: critical include files are missing" 1>&2; \
-	    echo "Without this critical directory, we cannot compile." 1>&2; \
-	    echo 1>&2; \
-	    echo "Perhaps your system isn't setup to compile C source?" 1>&2; \
-	    echo "For example, Apple OS X / darwin requres that XCode" 1>&2; \
-	    echo "must be installed and that you run the command:" 1>&2; \
-	    echo 1>&2; \
-	    echo "    xcode-select --install" 1>&2; \
-	    echo 1>&2; \
-	    exit 1; \
-	fi
+	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
+	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
+	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
 
 calc-dynamic-only:
 	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
