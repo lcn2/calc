@@ -92,12 +92,6 @@
 # include <stdlib.h>
 #endif
 
-#if defined(__linux)
-# if !defined(isascii)
-   E_FUNC int isascii(int c);
-# endif /* !isascii */
-#endif /* __linux */
-
 char *program;		/* our name */
 
 int
