@@ -183,10 +183,12 @@ gettoken(void)
 		}
 		switch (ch) {
 		case ' ':
-		case '\t':
-		case '\r':
-		case '\v':
+		case '\a':
+		case '\b':
 		case '\f':
+		case '\r':
+		case '\t':
+		case '\v':
 		case '\0':
 			break;
 		case '\n':

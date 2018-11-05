@@ -62,12 +62,13 @@ qprintf(char *fmt, ...)
 			if (ch == '\\') {
 				ch = *fmt++;
 				switch (ch) {
+				case 'a': ch = '\a'; break;
+				case 'b': ch = '\b'; break;
+				case 'f': ch = '\f'; break;
 				case 'n': ch = '\n'; break;
 				case 'r': ch = '\r'; break;
 				case 't': ch = '\t'; break;
-				case 'f': ch = '\f'; break;
 				case 'v': ch = '\v'; break;
-				case 'b': ch = '\b'; break;
 				case 0:
 					va_end(ap);
 					return;

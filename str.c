@@ -1380,17 +1380,17 @@ printechar(char *c)
 	math_chr('\\');
 	ech = 0;
 	switch (ch) {
+	case '\a': ech = 'a'; break;
+	case '\b': ech = 'b'; break;
+	case '\f': ech = 'f'; break;
 	case '\n': ech = 'n'; break;
 	case '\r': ech = 'r'; break;
 	case '\t': ech = 't'; break;
-	case '\b': ech = 'b'; break;
-	case '\f': ech = 'f'; break;
 	case '\v': ech = 'v'; break;
 	case '\\': ech = '\\'; break;
 	case '\"': ech = '\"'; break;
 	case '\'': ech = '\''; break;
 	case 0: ech = '0'; break;
-	case 7: ech = 'a'; break;
 	case 27: ech = 'e'; break;
 	}
 	if (ech == '0') {
@@ -1438,8 +1438,17 @@ fitstring(char *str, long len, long width)
 			continue;
 		n++;
 		switch (ch) {
-		case '\n': case '\r': case '\t': case '\b': case '\f':
-		case '\v': case '\\': case '\"': case 7: case 27:
+		case '\a':
+		case '\b':
+		case '\f':
+		case '\n':
+		case '\r':
+		case '\t':
+		case '\v':
+		case '\\':
+		case '\"':
+		case '\'':
+		case 27:
 			continue;
 		}
 		if (ch >= 64 || (nch >= '0' && nch <= '7')) {
