@@ -1,7 +1,7 @@
 /*
  * lib_calc - calc link library initialization and shutdown routines
  *
- * Copyright (C) 1999-2007  Landon Curt Noll
+ * Copyright (C) 1999-2007,2018  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -504,22 +504,35 @@ initenv(void)
 	home = (c ? strdup(c) : NULL);
 #if defined(_WIN32)
 	if (home == NULL || home[0] == '\0') {
+		/* free home if it was previously allocated, but empty */
+		if (home != NULL) {
+			free(home);
+		}
 		/* just assume . is home if all else fails */
-		home = ".";
+		home = strdup(".");
 	}
 #else /* Windoz free systems */
 	if (home == NULL || home[0] == '\0') {
-		size_t pw_dir_len;
-		ent = (struct passwd *)getpwuid(geteuid());
-		if (ent == NULL) {
-			/* just assume . is home if all else fails */
-			home = ".";
+		/* free home if it was previously allocated, but empty */
+		if (home != NULL) {
+			free(home);
 		}
-		pw_dir_len = strlen(ent->pw_dir);
-		home = (char *)malloc(pw_dir_len+1);
-		strncpy(home, ent->pw_dir, pw_dir_len+1);
+		/* try using the home directory of current effective UID from password file */
+		ent = (struct passwd *)getpwuid(geteuid());
+		if (ent == NULL || ent->pw_dir == NULL || ent->pw_dir[0] == '\0') {
+			/* just assume . is home if all else fails */
+			home = strdup(".");
+		} else {
+			/* use home directory of current effective UID from password file */
+			home = strdup(ent->pw_dir);
+		}
 	}
 #endif /* Windoz free systems */
+	/* paranoia */
+	if (home == NULL) {
+		math_error("Unable to allocate string for $HOME");
+		/*NOTREACHED*/
+	}
 
 	/* determine the $PAGER value */
 	c = (no_env ? NULL : getenv(PAGER));
