@@ -517,13 +517,14 @@ initenv(void)
 		if (home != NULL) {
 			free(home);
 		}
-		/* try using the home directory of current effective UID from password file */
+		/* try using the home directory of current effective UID */
 		ent = (struct passwd *)getpwuid(geteuid());
-		if (ent == NULL || ent->pw_dir == NULL || ent->pw_dir[0] == '\0') {
+		if (ent == NULL || ent->pw_dir == NULL ||
+		    ent->pw_dir[0] == '\0') {
 			/* just assume . is home if all else fails */
 			home = strdup(".");
 		} else {
-			/* use home directory of current effective UID from password file */
+			/* use home directory of current effective UID */
 			home = strdup(ent->pw_dir);
 		}
 	}
