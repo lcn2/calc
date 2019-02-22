@@ -6,7 +6,7 @@ SYNOPSIS
 
 TYPES
     x		number
-    x		number
+    y		number
     eps		nonzero real, defaults to epsilon()
 
     return	number
