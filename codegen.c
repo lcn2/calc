@@ -1021,7 +1021,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel,
 			return;
 		}
 		reread();
-		/* fall into default case */
+        /* fall through */
 
 	default:
 		rescantoken();
@@ -1384,6 +1384,7 @@ creatematrix(void)
 		switch (gettoken()) {
 		case T_RIGHTBRACKET:
 			rescantoken();
+            /* fall through */
 		case T_COMMA:
 			addop(OP_ONE);
 			addop(OP_SUB);
@@ -1394,6 +1395,7 @@ creatematrix(void)
 			switch(gettoken()) {
 			case T_RIGHTBRACKET:
 				rescantoken();
+                /* fall through */
 			case T_COMMA:
 				continue;
 			}
@@ -2211,6 +2213,7 @@ getterm(void)
 				scanerror(T_NULL,
 					  "Function calls not allowed "
 					  "as expressions");
+                /* fall through */
 			default:
 				rescantoken();
 			return type;
@@ -2248,7 +2251,7 @@ getidexpr(BOOL okmat, int autodef)
 		if (autodef != T_GLOBAL && autodef != T_LOCAL &&
 				autodef != T_STATIC)
 			autodef = 1;
-		/* fall into default case */
+        /* fall through */
 	default:
 		rescantoken();
 		usesymbol(name, autodef);
@@ -2277,6 +2280,7 @@ getidexpr(BOOL okmat, int autodef)
 			scanerror(T_NULL,
 				  "Function calls not allowed "
 				  "as expressions");
+        /* fall through */
 		default:
 			rescantoken();
 			return type;

@@ -447,6 +447,7 @@ eatstring(int quotechar)
 		case '\n':
 			if (!newlines)
 				break;
+            /* fall through */
 		case EOF:
 			reread();
 			scanerror(T_NULL,

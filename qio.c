@@ -144,6 +144,7 @@ qprintf(char *fmt, ...)
 		case '-':
 			sign = -1;
 			ch = *fmt++;
+            /* fall through */
 		default:
 			if (('0' <= ch && ch <= '9') ||
 			    ch == '.' || ch == '*') {
