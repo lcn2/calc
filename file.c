@@ -1021,7 +1021,7 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 		switch (ch) {
 		case 's':
 			printstring = TRUE;
-            /* fall through */
+			/*FALLTHRU*/
 		case 'c':
 			printchar = TRUE;
 		case 'd':

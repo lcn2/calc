@@ -909,42 +909,42 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_PROGRAM:
 		math_error("The program config parameter is read-only");
 		/*NOTREACHED*/
-        abort();
+		abort();
 
 	case CONFIG_BASENAME:
 		math_error("The basename config parameter is read-only");
 		/*NOTREACHED*/
-        abort();
+		abort();
 
 	case CONFIG_WINDOWS:
 		math_error("The windows config parameter is read-only");
 		/*NOTREACHED*/
-        abort();
+		abort();
 
 	case CONFIG_CYGWIN:
 		math_error("The cygwin config parameter is read-only");
 		/*NOTREACHED*/
-        abort();
+		abort();
 
 	case CONFIG_COMPILE_CUSTOM:
 		math_error("The custom config parameter is read-only");
 		/*NOTREACHED*/
-        abort();
+		abort();
 
 	case CONFIG_ALLOW_CUSTOM:
 		math_error("The allow_custom config parameter is read-only");
 		/*NOTREACHED*/
-        abort();
+		abort();
 
 	case CONFIG_VERSION:
 		math_error("The version config parameter is read-only");
 		/*NOTREACHED*/
-        abort();
+		abort();
 
 	case CONFIG_BASEB:
 		math_error("The baseb config parameter is read-only");
 		/*NOTREACHED*/
-        abort();
+		abort();
 
 	case CONFIG_REDECL_WARN:
 		if (vp->v_type == V_NUM) {
@@ -979,12 +979,12 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_HZ:
 		math_error("The clock tick rate config parameter is read-only");
 		/*NOTREACHED*/
-        abort();
+		abort();
 
 	default:
 		math_error("Setting illegal config parameter");
 		/*NOTREACHED*/
-        abort();
+		abort();
 	}
 }
 

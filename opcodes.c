@@ -4104,7 +4104,7 @@ freenumbers(FUNC *fp)
 			case OP_QUIT:
 				freestringconstant(
 				    (long)fp->f_opcodes[pc]);
-                break;
+				break;
 			}
 			/* FALLTHRU */
 		case OPLOC:
