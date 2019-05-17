@@ -4106,7 +4106,7 @@ freenumbers(FUNC *fp)
 				    (long)fp->f_opcodes[pc]);
 				break;
 			}
-			/* FALLTHRU */
+			/*FALLTHRU*/
 		case OPLOC:
 		case OPPAR:
 		case OPJMP:
