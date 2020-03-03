@@ -15,7 +15,7 @@ What is calc?
 
     	    15
 
-    Calc as the usual collection of arithmetic operators +, -, /, *
+    Calc has the usual collection of arithmetic operators +, -, /, *
     as well as ^ (exponentiation), % (modulus) and // (integer divide).
     For example:
 
@@ -137,7 +137,7 @@ What is calc?
 
 	    f2(79)
 
-    will produce;
+    will produce:
 
 	    1009847364737869270905302433221592504062302663202724609375
 
@@ -150,7 +150,7 @@ What is calc?
 
 	    sc(31, 61)
 
-    will produce;
+    will produce:
 
 	    256772
 
