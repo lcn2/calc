@@ -1,7 +1,7 @@
 /*
  * version - determine the version of calc
  *
- * Copyright (C) 1999-2018  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2021  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -45,7 +45,7 @@ static char *program;
 #define MAJOR_VER	2	/* major library version */
 #define MINOR_VER	12	/* minor library version */
 #define MAJOR_PATCH	7	/* major software level under library version */
-#define MINOR_PATCH	3	/* minor software level or 0 if not patched */
+#define MINOR_PATCH	4	/* minor software level or 0 if not patched */
 
 
 /*
@@ -69,7 +69,7 @@ STATIC char *stored_version = NULL;	/* version formed if != NULL */
 char *Copyright = "\n"
   "calc - arbitrary precision calculator\n"
   "\n"
-  "Copyright (C) 1999-2017  David I. Bell, Landon Curt Noll "
+  "Copyright (C) 1999-2021  David I. Bell, Landon Curt Noll "
   					   "and Ernest Bowen\n"
   "\n"
   "Initial author:  David I. Bell\n"

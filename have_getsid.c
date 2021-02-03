@@ -1,7 +1,7 @@
 /*
  * have_getsid - determine if we have getsid()
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -40,6 +40,10 @@
 
 
 #include <sys/types.h>
+#include "have_unistd.h"
+#if defined(HAVE_UNISTD_H)
+#include <unistd.h>
+#endif
 
 int
 main(void)
