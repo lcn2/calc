@@ -1,7 +1,7 @@
 #
 # cscript - makefile for calc shell script files
 #
-# Copyright (C) 1999-2006,2014,2017  Landon Curt Noll
+# Copyright (C) 1999-2006,2014,2017,2021  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -199,7 +199,8 @@ SCRIPT= 4dsphere fproduct mersenne piforever plus powerterm \
 	simple square
 
 SCRIPT_SRC= 4dsphere.calc fproduct.calc mersenne.calc \
-	piforever.calc plus.calc powerterm.calc simple.calc
+	piforever.calc plus.calc powerterm.calc simple.calc \
+	square.calc
 
 # These files are found (but not built) in the distribution
 #
