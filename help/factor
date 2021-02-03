@@ -16,7 +16,8 @@ DESCRIPTION
     assume n and limit are both nonnegative.
 
     If n has a prime proper factor less than or equal to limit, then
-    factor(n, limit) returns the smallest such factor.
+    factor(n, limit) returns the smallest such factor, or 1 if no
+    factor was found below the limit.
 
 	NOTE: A proper factor of n>1 is a factor < n.  In other words,
 	      for n>1 is not a proper factor of itself.  The value 1
@@ -50,7 +51,7 @@ SEE ALSO
     isprime, lfactor, nextcand, nextprime, prevcand, prevprime,
     pfact, pix, ptest
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
