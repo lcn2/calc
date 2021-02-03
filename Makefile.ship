@@ -1054,7 +1054,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.7.3
+VERSION= 2.12.7.4
 
 # Names of shared libraries with versions
 #
@@ -2925,7 +2925,7 @@ have_const.h: have_const.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_offscl.h: have_offscl.c ${MAKE_FILE}
+have_offscl.h: have_offscl.c have_unistd.h ${MAKE_FILE}
 	${Q} ${RM} -f offscl_tmp have_offscl.h
 	${Q} echo 'forming have_offscl.h'
 	${Q} echo '/*' > have_offscl.h
@@ -2965,7 +2965,7 @@ have_offscl.h: have_offscl.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_posscl.h: have_posscl.c have_fpos.h ${MAKE_FILE}
+have_posscl.h: have_posscl.c have_fpos.h have_unistd.h ${MAKE_FILE}
 	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp have_posscl.h
 	${Q} echo 'forming have_posscl.h'
 	${Q} echo '/*' > have_posscl.h
@@ -3221,7 +3221,7 @@ have_ustat.h: have_ustat.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_getsid.h: have_getsid.c ${MAKE_FILE}
+have_getsid.h: have_getsid.c have_unistd.h ${MAKE_FILE}
 	${Q} ${RM} -f getsid_tmp have_getsid.h
 	${Q} echo 'forming have_getsid.h'
 	${Q} echo '/*' > have_getsid.h
@@ -3261,7 +3261,7 @@ have_getsid.h: have_getsid.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_getpgid.h: have_getpgid.c ${MAKE_FILE}
+have_getpgid.h: have_getpgid.c have_unistd.h ${MAKE_FILE}
 	${Q} ${RM} -f getpgid_tmp have_getpgid.h
 	${Q} echo 'forming have_getpgid.h'
 	${Q} echo '/*' > have_getpgid.h
@@ -3343,7 +3343,7 @@ have_gettime.h: have_gettime.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_getprid.h: have_getprid.c ${MAKE_FILE}
+have_getprid.h: have_getprid.c have_unistd.h ${MAKE_FILE}
 	${Q} ${RM} -f getprid_tmp have_getprid.h
 	${Q} echo 'forming have_getprid.h'
 	${Q} echo '/*' > have_getprid.h

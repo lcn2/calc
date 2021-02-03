@@ -1,7 +1,7 @@
 /*
  * have_memmv - Determine if we have memmove()
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -40,6 +40,7 @@
 
 
 #include <stdio.h>
+#include <string.h>
 
 #define MOVELEN 3
 

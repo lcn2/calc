@@ -39,6 +39,9 @@ The following are the changes from calc version 2.12.7.1 to date:
      To make calc RPMs more portable, they are compiled with an
      empty ARCH_CFLAGS.
 
+     Fixed issues relating to compiling on macOS.  Fixed issues
+     where <unistd.h> is needed.
+
 
 The following are the changes from calc version 2.12.6.10: to 2.12.7.0:
 
