@@ -74,4 +74,9 @@ EXTERN int calc_print_scanwarn_msg;
 /* number of parse/scan warnings found */
 EXTERN unsigned long calc_warn_cnt;
 
+/*
+ * calc history file
+ */
+EXTERN char *calc_history;
+
 #endif /* !INCLUDE_MATH_ERROR_H */

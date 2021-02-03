@@ -145,6 +145,7 @@ char *calcbindings = NULL;	/* $CALCBINDINGS or default */
 char *home = NULL;		/* $HOME or default */
 char *pager = NULL;		/* $PAGER or default */
 char *shell = NULL;		/* $SHELL or default */
+char *calc_history = NULL;	/* $CALCHISTFILE or ~/.calc_history */
 int stdin_tty = FALSE;		/* TRUE if stdin is a tty */
 int havecommands = FALSE;	/* TRUE if have one or more cmd args */
 long stoponerror = 0;		/* >0 => stop, <0 => continue, ==0 => use -c */
@@ -546,6 +547,12 @@ initenv(void)
 	shell = (c ? strdup(c) : NULL);
 	if (shell == NULL || *shell == '\0')
 		shell = DEFAULTSHELL;
+
+	/* determine the $CALCHISTFILE value */
+	c = (no_env ? NULL : getenv(CALCHISTFILE));
+	calc_history = (c ? strdup(c) : NULL);
+	if (calc_history == NULL || *calc_history == '\0')
+		calc_history = NULL;	/* will use ~/.calc_history */
 }
 
 

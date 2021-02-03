@@ -48,6 +48,7 @@
 #define HOME		"HOME"		/* environment variable for home dir */
 #define PAGER		"PAGER"		/* environment variable for help */
 #define SHELL		"SHELL"		/* environment variable for shell */
+#define CALCHISTFILE	"CALCHISTFILE"	/* history file environment variable */
 #define DEFAULTCALCBINDINGS "bindings"	/* default calc bindings file */
 #define DEFAULTCALCHELP "help"		/* help file that -h prints */
 #define DEFAULTSHELL	"sh"		/* default shell to use */

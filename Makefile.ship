@@ -1054,7 +1054,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.7.4
+VERSION= 2.12.7.5
 
 # Names of shared libraries with versions
 #
@@ -5475,6 +5475,7 @@ hist.o: have_unistd.h
 hist.o: have_unused.h
 hist.o: hist.c
 hist.o: hist.h
+hist.o: lib_calc.h
 hist.o: longbits.h
 hist.o: nametype.h
 hist.o: qmath.h

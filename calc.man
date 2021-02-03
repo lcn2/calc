@@ -1103,6 +1103,14 @@ Default value: binding
 This variable is not used if calc was compiled with GNU-readline support.
 In that case, the standard readline mechanisms (see readline(3)) are used.
 .sp
+.TP 5
+CALCHISTFILE
+Location of the calc history file.
+.sp
+Default value: ~/.calc_history
+.sp
+This variable is not used if calc was compiled with GNU-readline support.
+.sp
 .SH CREDIT
 \&
 .br

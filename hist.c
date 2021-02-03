@@ -51,6 +51,7 @@
 #endif
 
 #include "calc.h"
+#include "lib_calc.h"
 #include "hist.h"
 #include "have_string.h"
 
@@ -1461,9 +1462,6 @@ quit_calc(void)
  */
 
 
-/* name of history file */
-char *my_calc_history = NULL;
-
 size_t
 hist_getline(char *prompt, char *buf, size_t len)
 {
@@ -1504,8 +1502,8 @@ my_stifle_history (void)
 	/* only save last number of entries */
 	stifle_history(HISTORY_LEN);
 
-	if (my_calc_history)
-		write_history(my_calc_history);
+	if (calc_history)
+		write_history(calc_history);
 }
 
 
@@ -1519,10 +1517,12 @@ hist_init(char UNUSED *filename)
 	using_history();
 
 	/* name of history file */
-	my_calc_history = tilde_expand("~/.calc_history");
+	if (calc_history == NULL) {
+		calc_history = tilde_expand("~/.calc_history");
+	}
 
 	/* read previous history */
-	read_history(my_calc_history);
+	read_history(calc_history);
 
 	atexit(my_stifle_history);
 
