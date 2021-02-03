@@ -68,6 +68,8 @@ The following are the changes from calc version 2.12.7.1 to date:
     was that 0^0 was different than 0^(6-6) or even 0^(0).
     Now, calc will return 1 for 0^(0) and 0^zero when zero == 0.
 
+    The missing cscript/square.calc file has been restored.
+
 
 The following are the changes from calc version 2.12.6.10: to 2.12.7.0:
 
