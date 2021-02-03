@@ -1,6 +1,9 @@
 # What is calc?
 
 Calc is an interactive calculator which provides for easy large
+numeric calculations, but which also can be easily programmed
+for difficult or long calculations.	 It can accept a command line
+argument, in which case it executes that single command and exits.
 Otherwise, it enters interactive mode.  In this mode, it accepts
 commands one at a time, processes them, and displays the answers.
 In the simplest case, commands are simply expressions which are
@@ -16,7 +19,7 @@ and the calculator will print:
 15
 ```
 
-Calc as the usual collection of arithmetic operators +, -, /, * as
+Calc has the usual collection of arithmetic operators +, -, /, * as
 well as ^ (exponentiation), % (modulus) and // (integer divide).
 For example:
 
