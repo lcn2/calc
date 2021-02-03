@@ -32,7 +32,7 @@
 Summary: Arbitrary precision calculator.
 Name: calc
 Version: <<<PROJECT_VERSION>>>
-Release: 12
+Release: 13
 License: LGPL
 Group: Applications/Engineering
 Source: http://www.isthe.com/chongo/src/calc/%{name}-%{version}.tar.bz2
@@ -76,48 +76,48 @@ For the latest calc release, see the project home page:
 
 %build
 echo '-=- calc.spec beginning make clobber -=-'
-make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} ARCH_CFLAGS= \
      CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
      MANDIR=%{_mandir}/man1 EXT= V=@ clobber
 echo '-=- calc.spec ending make clobber -=-'
 echo '-=- calc.spec beginning make calc-static-only -=-'
-make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} ARCH_CFLAGS= \
      CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
      MANDIR=%{_mandir}/man1 EXT= V=@ calc-static-only BLD_TYPE=calc-static-only
 echo '-=- calc.spec ending make calc-static-only -=-'
 echo '-=- calc.spec beginning make rpm-hide-static -=-'
-make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} ARCH_CFLAGS= \
      CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
      MANDIR=%{_mandir}/man1 EXT= V=@ rpm-hide-static
 echo '-=- calc.spec ending make rpm-hide-static -=-'
 echo '-=- calc.spec beginning make clobber (again) -=-'
-make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} ARCH_CFLAGS= \
      CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
      MANDIR=%{_mandir}/man1 EXT= V=@ clobber
 echo '-=- calc.spec ending make clobber (again) -=-'
 echo '-=- calc.spec beginning make calc-dynamic-only -=-'
-make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} ARCH_CFLAGS= \
      CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
      MANDIR=%{_mandir}/man1 EXT= V=@ calc-dynamic-only \
      BLD_TYPE=calc-dynamic-only LD_SHARE=
 echo '-=- calc.spec ending make calc-dynamic-only -=-'
 echo '-=- calc.spec beginning make chk -=-'
-make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} ARCH_CFLAGS= \
      CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
      MANDIR=%{_mandir}/man1 EXT= V=@ chk
 echo '-=- calc.spec ending make chk -=-'
 echo '-=- calc.spec beginning make rpm-unhide-static -=-'
-make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} ARCH_CFLAGS= \
      CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
      MANDIR=%{_mandir}/man1 EXT= V=@ rpm-unhide-static
 echo '-=- calc.spec ending make rpm-unhide-static -=-'
 echo '-=- calc.spec beginning make rpm-clean-static -=-'
-make -j1 BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+make -j1 BINDIR=%{_bindir} LIBDIR=%{_libdir} ARCH_CFLAGS= \
      CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
      MANDIR=%{_mandir}/man1 EXT= V=@ rpm-clean-static
 echo '-=- calc.spec ending make rpm-clean-static -=-'
 echo '-=- calc.spec beginning make rpm-chk-static -=-'
-make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} ARCH_CFLAGS= \
      CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
      MANDIR=%{_mandir}/man1 EXT= V=@ rpm-chk-static
 echo '-=- calc.spec ending make rpm-chk-static -=-'
@@ -125,7 +125,7 @@ echo '-=- calc.spec ending make rpm-chk-static -=-'
 %install
 echo '-=- calc.spec beginning make install -=-'
 mkdir -p %{_buildroot}
-make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} \
+make -j1 T=%{_buildroot} BINDIR=%{_bindir} LIBDIR=%{_libdir} ARCH_CFLAGS= \
      CALC_SHAREDIR=%{_datadir}/%{name} CALC_INCDIR=%{_includedir}/calc \
      MANDIR=%{_mandir}/man1 EXT= V=@ install
 echo '-=- calc.spec ending make install -=-'
@@ -165,6 +165,12 @@ echo '-=- calc.spec beginning make clean -=-'
 %attr(644, root, root) %{_libdir}/libcustcalc.a
 
 %changelog
+* Sun Mar 24 2019 cLandon Curt Noll http://www.isthe.com/chongo
+- Release: 13
+- Disable compiling with the default ARCH_CFLAGS= -march=native
+  by clearking the ARCH_CFLAGS value in order to maximize
+  the RPM binary protability.
+
 * Mon Sep 01 2014 Landon Curt Noll http://www.isthe.com/chongo
 - Release: 12
 - Removed use of %{?_smp_mflags}.  On Ubuntu 14.04, the -j2

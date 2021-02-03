@@ -18,6 +18,27 @@ The following are the changes from calc version 2.12.7.1 to date:
      Fixed a segfault when getpwuid() returned NULL during initialization.
      Thanks goes to baratharon GitHub user for reporting this issue.
 
+     Requiring calc shell scripts to use -s -f at the end of the
+     initial #! line.
+
+     Fixed /tmp/mersenne example in calc(1) man page.
+
+     Added make variable ${ARCH_CFLAGS}.  The ${ARCH_CFLAGS} is
+     added after ${CCMISC} and before ${EXTRA_CFLAGS} when building
+     the ${CFLAGS} for compiling C code.  are ${CC} when compiling
+     C files.  The default value is:
+
+	ARCH_CFLAGS= -march=native
+
+     which directs C compiler to compile for the native machine.
+     To disable use of '-march=native', set ARCH_CFLAGS to the empty
+     string as in:
+
+	make all ARCH_CFLAGS=
+
+     To make calc RPMs more portable, they are compiled with an
+     empty ARCH_CFLAGS.
+
 
 The following are the changes from calc version 2.12.6.10: to 2.12.7.0:
 

@@ -1,8 +1,8 @@
-#!/usr/local/src/bin/calc/calc -q -f
+#!/usr/local/src/bin/calc/calc -q -s -f
 /*
  * plus - add two or more arguments together
  *
- * Copyright (C) 1999-2007,2014  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2019  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -32,10 +32,13 @@
 /*
  * parse args
  */
-if (argv() < 2) {
-	/* we include the name of this script in the error message */
-	fprintf(files(2), "usage: %s value ...\n", config("program"));
-	abort "not enough args";
+argc = argv();
+stderr = files(2);
+program = argv(0);
+if (argc < 2) {
+    /* we include the name of this script in the error message */
+    fprintf(stderr, "usage: %s value ...\n", program);
+    abort "not enough args";
 }
 
 /*
@@ -45,6 +48,6 @@ if (argv() < 2) {
  */
 sum = 0;
 for (i=1; i < argv(); ++i) {
-	sum += eval(argv(i));
+    sum += eval(argv(i));
 }
 print sum;

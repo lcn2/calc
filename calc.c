@@ -449,7 +449,7 @@ main(int argc, char **argv)
 		"\t[-O] [-p] [-q] [-s] [-u] [-v] "
 		"[--] [calc_cmd ...]\n"
 		"usage: %s ... -f filename\n"
-		"1st cscript line: #/path/to/calc ... -f\n",
+		"1st cscript line: #/path/to/calc ... -s -f\n",
 		program, program);
 					exit(20);
 			}

@@ -1054,7 +1054,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.7.2
+VERSION= 2.12.7.3
 
 # Names of shared libraries with versions
 #
@@ -1116,16 +1116,26 @@ STRIP= strip
 EXTRA_CFLAGS=
 EXTRA_LDFLAGS=
 
+# Architecture compile flags
+#
+# The ARCH_CFLAGS are ${CC} when compiling C files. They follow
+# CCMISC and preceed EXTRA_CFLAGS.
+#
+ARCH_CFLAGS= -march=native
+#ARCH_CFLAGS=
+
 # COMMON_CFLAGS are the common ${CC} flags used for all programs, both
 #	    intermediate and final calc and calc related programs
 #
 #if 0	/* start of skip for non-Gnu makefiles */
 ifdef ALLOW_CUSTOM
 #endif	/* end of skip for non-Gnu makefiles */
-COMMON_CFLAGS= -DCALC_SRC ${ALLOW_CUSTOM} ${CCWARN} ${CCMISC} ${EXTRA_CFLAGS}
+COMMON_CFLAGS= -DCALC_SRC ${ALLOW_CUSTOM} ${CCWARN} \
+    ${CCMISC} ${ARCH_CFLAGS} ${EXTRA_CFLAGS}
 #if 0	/* start of skip for non-Gnu makefiles */
 else
-COMMON_CFLAGS= -DCALC_SRC -UCUSTOM ${CCWARN} ${CCMISC} ${EXTRA_CFLAGS}
+COMMON_CFLAGS= -DCALC_SRC -UCUSTOM ${CCWARN} \
+    ${CCMISC} ${ARCH_CFLAGS} ${EXTRA_CFLAGS}
 endif
 #endif	/* end of skip for non-Gnu makefiles */
 
@@ -1900,6 +1910,7 @@ SAMPLE_OBJ= sample_many.o sample_rand.o
 CUSTOM_PASSDOWN=  \
     ALLOW_CUSTOM="${ALLOW_CUSTOM}" \
     AR=${AR} \
+    ARCH_CFLAGS=${ARCH_CFLAGS} \
     AWK=${AWK} \
     BINDIR="${BINDIR}" \
     BLD_TYPE="${BLD_TYPE}" \
@@ -4041,6 +4052,7 @@ env:
 	@echo 'ALIGN32=${ALIGN32}'; echo ''
 	@echo 'ALLOW_CUSTOM=${ALLOW_CUSTOM}'; echo ''
 	@echo 'AR=${AR}'; echo ''
+	@echo 'ARCH_CFLAGS=${ARCH_CFLAGS}'; echo ''
 	@echo 'AWK=${AWK}'; echo ''
 	@echo 'BINDIR=${BINDIR}'; echo ''
 	@echo 'BLD_TYPE=${BLD_TYPE}'; echo ''

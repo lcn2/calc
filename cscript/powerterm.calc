@@ -8,7 +8,7 @@
  *	base_limit	largest base we will consider (def: 10000)
  *      value		value to convert into sums of powers of integers
  *
- * Copyright (C) 2001,2014  Landon Curt Noll
+ * Copyright (C) 2001,2014,2019  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the powerterm of the version 2.1 of the GNU Lesser General Public License
@@ -35,28 +35,31 @@
 /*
  * parse args
  */
+argc = argv();
+stderr = files(2);
+program = argv(0);
 config("verbose_quit", 0),;
 base_lim = 10000;		/* default: highest base we will consider */
-if (argv() < 2 || argv() > 3) {
-    fprintf(files(2), "usage: %s [base_limit] value\n", argv(0));
+if (argc < 2 || argc > 3) {
+    fprintf(stderr, "usage: %s [base_limit] value\n", program);
     exit;
 }
-if (argv() == 3) {
+if (argc == 3) {
     x = eval(argv(2));
     base_lim = eval(argv(1));
 } else {
     x = eval(argv(1));
 }
 if (! isint(x)) {
-    fprintf(files(2), "%s: value must be an integer\n");
+    fprintf(stderr, "%s: value must be an integer\n", program);
     exit;
 }
 if (! isint(base_lim)) {
-    fprintf(files(2), "%s: base limit must be an integer\n");
+    fprintf(stderr, "%s: base limit must be an integer\n", program);
     exit;
 }
 if (base_lim <= 1) {
-    fprintf(files(2), "%s: base limit is too small\n");
+    fprintf(stderr, "%s: base limit is too small\n", program);
     exit;
 }
 ++base_lim;

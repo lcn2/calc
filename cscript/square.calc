@@ -1,8 +1,8 @@
-#!/usr/local/src/bin/calc/calc -q -f
+#!/usr/local/src/bin/calc/calc -q -s -f
 /*
  * sqaure - print the squares of input values
  *
- * Copyright (C) 2000-2007,2014  Ernest Bowen
+ * Copyright (C) 2000-2007,2014,2019  Ernest Bowen
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -33,10 +33,6 @@
  *               cat file | ./square
  *               echo "123" | ./square
  *
- *       Within calc:
- *
- *               > read square
- *
  *  With input from a terminal, there is no prompt but each non-empty
  *  line of input is evaluated as a calc expression and if it can be
  *  calculated, the square of the value of that expression is displayed.
@@ -59,6 +55,6 @@
  */
 
 
-global s;
-while ((s = prompt("")))
+while (s = fgetline(files(0))) {
 	print "\t":eval(s)^2;
+}

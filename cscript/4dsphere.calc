@@ -10,7 +10,7 @@
  *	...		...
  *      x5 y5 z5 w5	point 5 in R^4
  *
- * Copyright (C) 2001,2014  Landon Curt Noll
+ * Copyright (C) 2001,2014,2019  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -37,9 +37,11 @@
  * parse args
  */
 argc = argv();
-if (argc != 25) {
-    fprintf(files(2), "usage: %s x0 y0 z0 w0 x1 y1 z1 w1 ... x5 y5 z5 w5\n",
-	argv(0));
+stderr = files(2);
+program = argv(0);
+if (argc != 24) {
+    fprintf(stderr, "usage: %s x0 y0 z0 w0 x1 y1 z1 w1 ... x5 y5 z5 w5\n",
+		    program);
     exit;
 }
 x0 = eval(argv(1));

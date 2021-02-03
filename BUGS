@@ -80,6 +80,54 @@ Known bugs:
     The output of the alg_config.cal resource file is bogus.
     We would welcome a replacement for this code.
 
+    Calc shell scripts do not read from stdin properly,
+    we all as a number of the cscript examples.
+
+    The argv() function is behaving differently
+    when run in calc shell script mode:
+
+	When calc is run as:
+
+	    calc -s a bb ccc
+
+        and given this input on the command prompt:
+
+	    print "config(\"program\")=", config("program");
+	    print "argv()=", argv();
+	    argc = argv();
+	    for (i=0; i < argc; ++i) {
+		print "argv(":i:")=", argv(i);
+	    }
+
+	calc prints:
+
+	    config("program")= calc
+	    argv()= 3
+	    argv(0)= a
+	    argv(1)= bb
+	    argv(2)= ccc
+
+	but when it is run as a script called ./simple:
+
+	    #!/usr/local/bin/calc -q -s -f
+	    print "config(\"program\")=", config("program");
+	    print "argv()=", argv();
+	    argc = argv();
+	    for (i=0; i < argc; ++i) {
+		print "argv(":i:")=", argv(i);
+	    }
+
+	under Linux prints:
+
+	    config("program")= /usr/bin/calc
+	    argv()= 4
+	    argv(0)= ./simple
+	    argv(1)= a
+	    argv(2)= bb
+	    argv(3)= ccc
+
+	and under macOS simply enters into interactive mode.
+
     We are sure some more bugs exist.  When you find them, please let
     us know!  See the above for details on how to report and were to
     EMail your bug reports and hopefully patches to fix them.

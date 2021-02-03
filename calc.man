@@ -50,7 +50,7 @@ calc \- arbitrary precision calculator
 .RB [ [\-\-]\ calc_cmd\ \&.\|.\|. ]
 .in -5n
 .sp
-\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-f\fP
+\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-s\fP \fB\-f\fP
 .SH DESCRIPTION
 \&
 .br
@@ -219,24 +219,29 @@ The getenv() builtin will still return values, however.
 
 .TP
 .B \-f
+This flag is normally only with calc shell scripts.
+.sp 1
 This flag is required when using calc in
 .BR "shell script mode" .
 It must be at the end of the initial
 .B #!
-line of the script.
+line of the script
+and must be immedately preceeded by the
+.B \-s
+flag.
 .sp 1
-This flag is normally only at the end of a calc shell script.
 If the first line of an executable file begins
 .B #!
 followed by the absolute pathname of the
 .B calc
-program and the flag
+program and if the first line ends with the two flags
+.B \-s
 .B \-f
 as in:
 .sp 1
 .in +5n
 .nf
-\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-f\fP
+\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-s\fP \fB\-f\fP
 .fi
 .in -5n
 .sp 1
@@ -270,7 +275,7 @@ on the command line:
 .sp 1
 .in +5n
 .nf
-\fIcalc\fP\ [other_flags\ \&...] \fB\-f\fP filename
+\fIcalc\fP\ [other_flags\ \&...] \fB\-s\fP \fB\-f\fP filename
 .fi
 .in -5n
 .sp 1
@@ -283,6 +288,16 @@ Use of
 .B \-f
 implies
 .BR \-s .
+However in a calc shell script,
+one must include
+.B \-f
+before
+.B \-s
+on the initial
+.B #!
+line.
+
+.sp 1
 In addition,
 .B \-d
 and
@@ -753,25 +768,28 @@ If the first line of an executable file begins
 .B #!
 followed by the absolute pathname of the
 .B calc
-program and the flag
+program and the first line ends with the two flags
+.B \-s
 .B \-f
 as in:
 .sp 1
 .in +5n
 .nf
-\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-f\fP
+\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-s\fP \fB\-f\fP
 .fi
 .in -5n
 .sp 1
 the rest of the file will be processed in
 .BR "shell script mode" .
 Note that
+.B \-s
 .B \-f
 must at the end of the initial ``#!'' line.
 Any other optional
 .B "other_flags"
 must come before
 the
+.B \-s
 .BR \-f .
 .sp 1
 In
@@ -803,18 +821,26 @@ the file
 .sp 1
 .in +5n
 .nf
-\fI#!${BINDIR}/calc\fP\ \&\fB\-q\fP \fB\-f\fP
-#
-# mersenne - an example of a calc \fBshell script file\fP
+\fI#!${BINDIR}/calc\fP\ \&\fB\-q\fP \&\fB\-s\fP \fB\-f\fP
+
+/* setup */
+argc = argv();
+program = argv(0);
+stderr = files(2);
 
 /* parse args */
-if (argv() != 1) {
-    fprintf(files(2), "usage: %s exp\\n", config("program"));
+if (argc != 2) {
+    fprintf(stderr, "usage: %s exp\n", program);
+    abort "must give one exponent arg";
+}
+exp = eval(argv(1));
+if (!isint(exp) || exp < 0) {
+    fprintf(stderr, "%s: exp must be non-negative integer\n", program);
     abort "must give one exponent arg";
 }
 
 /* print the mersenne number */
-print "2^": argv(0) : "-1 =", 2^eval(argv(0))-1;
+print "2^": exp : "-1 =", 2^exp-1;
 .fi
 .in -5n
 .sp 1
@@ -844,9 +870,9 @@ will print:
 .sp 1
 Note that because
 .B \-s
-is assumed in
+is required in
 .B "shell script mode"
-and non-dashed args are made available as
+non-dashed args are made available as
 strings via the
 .BR argv ()
 builtin function.
@@ -854,16 +880,16 @@ Therefore:
 .sp 1
 .in +5n
 .nf
-2^eval(argv(0))-1
+2^eval(argv(1))-1
 .fi
 .in -5n
 .sp 1
 will print the decimal value of 2^n-1
-but
+whereas
 .sp 1
 .in +5n
 .nf
-2^argv(0)-1
+2^argv(1)-1
 .fi
 .in -5n
 .sp 1

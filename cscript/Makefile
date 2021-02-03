@@ -199,7 +199,7 @@ SCRIPT= 4dsphere fproduct mersenne piforever plus powerterm \
 	simple square
 
 SCRIPT_SRC= 4dsphere.calc fproduct.calc mersenne.calc \
-	piforever.calc plus.calc powerterm.calc simple.calc square.calc
+	piforever.calc plus.calc powerterm.calc simple.calc
 
 # These files are found (but not built) in the distribution
 #

@@ -2,7 +2,7 @@
 /*
  * mersenne - print the value of a mersenne number
  *
- * Copyright (C) 1999-2007,2014  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2019  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -32,16 +32,19 @@
 /*
  * parse args
  */
-if (argv() != 2) {
-	/* we include the name of this script in the error message */
-	fprintf(files(2), "usage: %s exp\n", config("program"));
-	abort "wrong number of args";
+argc = argv();
+stderr = files(2);
+program = argv(0);
+if (argc != 2) {
+    /* we include the name of this script in the error message */
+    fprintf(stderr, "usage: %s exp\n", program);
+    abort "wrong number of args";
 }
 
-global n = eval(argv(1));
+n = eval(argv(1));
 
 if (!isint(n) || n <= 0) {
-	quit "Argument to be a positive integer";
+    quit "Argument to be a positive integer";
 }
 
 /*
