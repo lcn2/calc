@@ -63,6 +63,11 @@ The following are the changes from calc version 2.12.7.1 to date:
     and is non-empty, then calc history file will be defined
     by the $CALCHISTFILE environment variable.
 
+    Calc as defined 0^0 as 1.  However in the past, 0 raised to
+    an expression that evaluted to zero returned 1.  The result
+    was that 0^0 was different than 0^(6-6) or even 0^(0).
+    Now, calc will return 1 for 0^(0) and 0^zero when zero == 0.
+
 
 The following are the changes from calc version 2.12.6.10: to 2.12.7.0:
 
