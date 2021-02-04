@@ -745,10 +745,18 @@ hist_saveline(char *line, int len)
 	 * Add the line to the end of the history table.
 	 */
 	hp = malloc(sizeof(HIST));
+	if (hp == NULL) {
+		fprintf(stderr, "Out of memory adding line to the history table #0\n");
+		return;
+	}
 	hp->next = NULL;
 	hp->prev = NULL;
 	hp->len = len;
 	hp->data = malloc(len);
+	if (hp->data == NULL) {
+		fprintf(stderr, "Out of memory adding line to the history table #1\n");
+		return;
+	}
 	memcpy(hp->data, line, len);
 	HS.curhist = ++HS.histcount;
 	if (!hist_first)

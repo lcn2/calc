@@ -571,9 +571,13 @@ defineobject(char *name, int indices[], int count)
 	}
 
 	oap = (OBJECTACTIONS *) malloc(objectactionsize(count));
+	if (oap == NULL) {
+		math_error("Cannot allocate object type #0");
+		/*NOTREACHED*/
+	}
 	name = addstr(hp, name);
-	if ((oap == NULL) || (name == NULL)) {
-		math_error("Cannot allocate object type");
+	if (name == NULL) {
+		math_error("Cannot allocate object type #1");
 		/*NOTREACHED*/
 	}
 	oap->oa_count = count;

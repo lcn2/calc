@@ -59,6 +59,10 @@ initstr(STRINGHEAD *hp)
 {
 	if (hp->h_list == NULL) {
 		hp->h_list = (char *)malloc(2000);
+		if (hp->h_list == NULL) {
+			math_error("Cannot allocate string header");
+			/*NOTREACHED*/
+		}
 		hp->h_avail = 2000;
 		hp->h_used = 0;
 	}
