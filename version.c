@@ -131,8 +131,22 @@ version(void)
 		fprintf(stderr, "%s: cannot malloc version string\n", program);
 		exit(70);
 	}
-	strncpy(stored_version, verbuf, len);
-	stored_version[len] = '\0';	/* paranoia */
+	/*
+	 * The next statement could be:
+	 *
+	 *	strncpy(stored_version, verbuf, len);
+	 *
+	 * however compilers like gcc would issue warnings such as:
+	 *
+	 * 	specified bound depends on the length of the
+	 * 	source argument
+	 *
+	 * even though we terminate the string by setting a NUL
+	 * byte following the copy.  Therefore we call memcpy()
+	 * instead to avoid such warnings.
+	 */
+	memcpy(stored_version, verbuf, len);
+	stored_version[len] = '\0';
 
 	/*
 	 * return the newly malloced buffer

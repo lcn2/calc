@@ -479,7 +479,22 @@ main(int argc, char **argv)
 				program);
 			exit(21);
 		}
-		strncpy(cmdbuf + cmdlen, cp, cplen+1);
+		/*
+		 * The next statement could be:
+		 *
+		 *	strncpy(cmdbuf + cmdlen, cp, cplen);
+		 *
+		 * however compilers like gcc would issue warnings such as:
+		 *
+		 * 	specified bound depends on the length of the
+		 * 	source argument
+		 *
+		 * even though we terminate the string by setting a NUL
+		 * byte following the copy.  Therefore we call memcpy()
+		 * instead to avoid such warnings.
+		 */
+		memcpy(cmdbuf + cmdlen, cp, cplen);
+		cmdbuf[newcmdlen] = '\0';
 		cmdlen = newcmdlen;
 		index++;
 		if (index < maxindex)

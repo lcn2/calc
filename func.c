@@ -268,7 +268,22 @@ f_prompt(VALUE *vp)
 		math_error("Cannot allocate string");
 		/*NOTREACHED*/
 	}
-	strncpy(newcp, cp, len+1);
+	/*
+	 * The next statement could be::
+	 *
+	 *	strncpy(newcp, cp, len);
+	 *
+	 * however compilers like gcc would issue warnings such as:
+	 *
+	 * 	specified bound depends on the length of the
+	 * 	source argument
+	 *
+	 * even though we terminate the string by setting a NUL
+	 * byte following the copy.  Therefore we call memcpy()
+	 * instead to avoid such warnings.
+	 */
+	memcpy(newcp, cp, len);
+	newcp[len] = '\0';
 	result.v_str = makestring(newcp);
 	return result;
 }
@@ -7446,7 +7461,26 @@ f_cmdbuf(void)
 
 	cmdbuf_len = strlen(cmdbuf);
 	newcp = (char *)malloc(cmdbuf_len+1);
-	strncpy(newcp, cmdbuf, cmdbuf_len+1);
+	if (newcp == NULL) {
+		math_error("Cannot allocate string in cmdbuf");
+		/*NOTREACHED*/
+	}
+	/*
+	 * The next statement could be::
+	 *
+	 *	strncpy(newcp, cmdbuf, cmdbuf_len);
+	 *
+	 * however compilers like gcc would issue warnings such as:
+	 *
+	 * 	specified bound depends on the length of the
+	 * 	source argument
+	 *
+	 * even though we terminate the string by setting a NUL
+	 * byte following the copy.  Therefore we call memcpy()
+	 * instead to avoid such warnings.
+	 */
+	memcpy(newcp, cmdbuf, cmdbuf_len);
+	newcp[cmdbuf_len] = '\0';
 	result.v_str = makestring(newcp);
 	return result;
 }
@@ -7624,17 +7658,35 @@ f_putenv(int count, VALUE **vals)
 
 		/* convert putenv("foo","bar") into putenv("foo=bar") */
 		snprintf_len = vals[0]->v_str->s_len + 1 +
-                               vals[1]->v_str->s_len + 1;
+                               vals[1]->v_str->s_len;
 		putenv_str = (char *)malloc(snprintf_len+1);
 		if (putenv_str == NULL) {
 			math_error("Cannot allocate string in putenv");
 			/*NOTREACHED*/
 		}
-		snprintf(putenv_str, snprintf_len,
-			"%s=%s", vals[0]->v_str->s_str,
-			vals[1]->v_str->s_str);
-		putenv_str[snprintf_len] = '\0';	/* paranoia */
-
+		/*
+		 * The next statement could be::
+		 *
+		 *	snprintf(putenv_str, snprintf_len,
+		 *	        "%s=%s", vals[0]->v_str->s_str,
+		 *	        vals[1]->v_str->s_str);
+		 *
+		 * however compilers like gcc would issue warnings such as:
+		 *
+		 * 	null destination pointer
+		 *
+		 * even though we check that putenv_str is non-NULL
+		 * above before using it.  Therefore we call memcpy()
+		 * twice and make an assignment instead to avoid such warnings.
+		 */
+		memcpy(putenv_str,
+		       vals[0]->v_str->s_str,
+		       vals[0]->v_str->s_len);
+		putenv_str[vals[0]->v_str->s_len] = '=';
+		memcpy(putenv_str + vals[0]->v_str->s_len + 1,
+		       vals[1]->v_str->s_str,
+		       vals[1]->v_str->s_len);
+		putenv_str[snprintf_len] = '\0';
 
 	} else {
 		/* firewall */
@@ -7658,8 +7710,8 @@ f_putenv(int count, VALUE **vals)
 			math_error("Cannot allocate string in putenv");
 			/*NOTREACHED*/
 		}
-		strncpy(putenv_str, vals[0]->v_str->s_str,
-			vals[0]->v_str->s_len + 1);
+		memcpy(putenv_str, vals[0]->v_str->s_str, vals[0]->v_str->s_len);
+		putenv_str[vals[0]->v_str->s_len] = '\0';
 	}
 
 	/* return putenv result */

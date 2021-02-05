@@ -442,7 +442,23 @@ homeexpand(char *name)
 			if (fullpath == NULL) {
 				return NULL;
 			}
-			strncpy(fullpath, ent->pw_dir, fullpath_len+1);
+			/*
+			 * The next statement could be:
+			 *
+			 *	strncpy(fullpath, ent->pw_dir, fullpath_len);
+			 *
+			 * however compilers like gcc would issue warnings
+			 * such as:
+			 *
+			 * 	specified bound depends on the length of the
+			 * 	source argument
+			 *
+			 * even though we terminate the string by setting a NUL
+			 * byte following the copy.  Therefore we call memcpy()
+			 * instead to avoid such warnings.
+			 */
+			memcpy(fullpath, ent->pw_dir, fullpath_len);
+			fullpath[fullpath_len] = '\0';
 			return fullpath;
 		}
 		username = (char *) malloc(after-name + 1 + 1);
