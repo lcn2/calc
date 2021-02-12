@@ -52,37 +52,6 @@ For more info, see:
 
 #####
 
-If you write something that you think is useful, please join the
-low volume calc mailing list calc-tester.  Then send your contribution
-to the calc-tester mailing list.
-
-To subscribe to the calc-tester mailing list, visit the following URL:
-
-	http://www.isthe.com/chongo/tech/comp/calc/calc-tester.html
-
-    This is a low volume moderated mailing list.
-
-    This mailing list replaces calc-tester at asthe dot com list.
-
-    If you need a human to help you with your mailing list subscription,
-    please send EMail to our special:
-
-	calc-tester-maillist-help at asthe dot com
-
-	NOTE: Remove spaces and replace 'at' with @, 'dot' with .
-
-    address.  To be sure we see your EMail asking for help with your
-    mailing list subscription, please use the following phase in your
-    EMail Subject line:
-
-	calc tester mailing list help
-
-    That phrase in your subject line will help ensure your
-    request will get past our anti-spam filters.  You may have
-    additional words in your subject line.
-
-=-=
-
 4dsphere
 
     Determine if 6 points lie on the surface of a 4-dimensional sphere in R^4.
@@ -125,7 +94,7 @@ simple
 
     A trivial example of a calc shell script.
 
-## Copyright (C) 1999,2014  Landon Curt Noll
+## Copyright (C) 1999,2014,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

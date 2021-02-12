@@ -32,6 +32,7 @@
 
 #include "calc.h"
 #include "conf.h"
+#include "lib_calc.h"
 
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
@@ -78,6 +79,7 @@ STATIC struct help_alias {
 	{"cd", "command"},
 	{"show", "command"},
 	{"stdlib", "resource"},
+	{"question", "questions"},
 	{NULL, NULL}
 };
 
@@ -246,22 +248,13 @@ givehelp(char *type)
 	/*
 	 * open the helpfile (looking in HELPDIR first)
 	 */
-#if defined(CUSTOM)
-	if (sizeof(CUSTOMHELPDIR) > sizeof(HELPDIR)) {
-		snprintf_len = sizeof(CUSTOMHELPDIR)+1+strlen(type) + 1;
-	} else {
-		snprintf_len = sizeof(HELPDIR)+1+strlen(type) + 1;
-	}
+	snprintf_len = strlen(calc_helpdir)+1+strlen(type) + 1;
 	helppath = (char *)malloc(snprintf_len+1);
-#else /* CUSTOM */
-	snprintf_len = sizeof(HELPDIR)+1+strlen(type) + 1;
-	helppath = (char *)malloc(snprintf_len+1);
-#endif /* CUSTOM */
 	if (helppath == NULL) {
-		fprintf(stderr, "malloc failure in givehelp()\n");
+		fprintf(stderr, "malloc failure in givehelp #0\n");
 		return;
 	}
-	snprintf(helppath, snprintf_len, "%s/%s", HELPDIR, type);
+	snprintf(helppath, snprintf_len, "%s/%s", calc_helpdir, type);
 	helppath[snprintf_len] = '\0';	/* paranoia */
 	stream = fopen(helppath, "r");
 	if (stream != NULL) {
@@ -277,22 +270,30 @@ givehelp(char *type)
 	 * open the helpfile (looking in CUSTOMHELPDIR last)
 	 */
 	} else {
+	    char *cust_helppath;	/* path to the custom help file */
+	    size_t cust_snprintf_len;	/* malloced custom snprintf buf len */
 
-		snprintf(helppath, snprintf_len, "%s/%s", CUSTOMHELPDIR, type);
-		helppath[snprintf_len] = '\0';	/* paranoia */
-		stream = fopen(helppath, "r");
-		if (stream == NULL) {
+	    cust_snprintf_len = strlen(calc_customhelpdir)+1+strlen(type) + 1;
+	    cust_helppath = (char *)malloc(cust_snprintf_len+1);
+	    if (cust_helppath == NULL) {
+		    fprintf(stderr, "malloc failure for givehelp #1\n");
+		    return;
+	    }
+	    snprintf(cust_helppath, cust_snprintf_len,
+		     "%s/%s", calc_customhelpdir, type);
+	    cust_helppath[cust_snprintf_len] = '\0';	/* paranoia */
+	    stream = fopen(cust_helppath, "r");
+	    if (stream != NULL) {
 
-			/* no such help file */
-			fprintf(stderr,
-				"%s: no such help file, try: help help\n",
-				type);
-		} else {
+		    /*
+		     * we have the help file open, now display it
+		     */
+		    page_file(stream);
+		    (void) fclose(stream);
+	    }
+	    free(cust_helppath);
+	    cust_helppath = NULL;
 
-			/* we have the help file open, now display it */
-			page_file(stream);
-			(void) fclose(stream);
-		}
 #endif /* CUSTOM */
 	}
 
@@ -300,5 +301,6 @@ givehelp(char *type)
 	 * cleanup
 	 */
 	free(helppath);
+	helppath = NULL;
 	return;
 }

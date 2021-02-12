@@ -1,7 +1,7 @@
 /*
  * hist - interactive readline module
  *
- * Copyright (C) 1999-2007  David I. Bell
+ * Copyright (C) 1999-2007,2021  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -746,7 +746,8 @@ hist_saveline(char *line, int len)
 	 */
 	hp = malloc(sizeof(HIST));
 	if (hp == NULL) {
-		fprintf(stderr, "Out of memory adding line to the history table #0\n");
+		fprintf(stderr,
+			"Out of memory adding line to the history table #0\n");
 		return;
 	}
 	hp->next = NULL;
@@ -754,7 +755,8 @@ hist_saveline(char *line, int len)
 	hp->len = len;
 	hp->data = malloc(len);
 	if (hp->data == NULL) {
-		fprintf(stderr, "Out of memory adding line to the history table #1\n");
+		fprintf(stderr,
+			"Out of memory adding line to the history table #1\n");
 		return;
 	}
 	memcpy(hp->data, line, len);

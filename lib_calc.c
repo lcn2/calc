@@ -146,6 +146,9 @@ char *home = NULL;		/* $HOME or default */
 char *pager = NULL;		/* $PAGER or default */
 char *shell = NULL;		/* $SHELL or default */
 char *calc_history = NULL;	/* $CALCHISTFILE or ~/.calc_history */
+char *calc_helpdir = NULL;	/* $CALCHELP or /usr/local/share/calc/help */
+/* $CALCCUSTOMHELP or /usr/local/share/calc/custhelp */
+char *calc_customhelpdir = NULL;
 int stdin_tty = FALSE;		/* TRUE if stdin is a tty */
 int havecommands = FALSE;	/* TRUE if have one or more cmd args */
 long stoponerror = 0;		/* >0 => stop, <0 => continue, ==0 => use -c */
@@ -553,6 +556,22 @@ initenv(void)
 	calc_history = (c ? strdup(c) : NULL);
 	if (calc_history == NULL || *calc_history == '\0')
 		calc_history = NULL;	/* will use ~/.calc_history */
+
+	/* determine the $CALCHELP value */
+	c = (no_env ? NULL : getenv(CALCHELP));
+	calc_helpdir = (c ? strdup(c) : NULL);
+	if (calc_helpdir == NULL || *calc_helpdir == '\0') {
+		/* will use /usr/local/share/calc/help */
+		calc_helpdir = HELPDIR;
+	}
+
+	/* determine the $CALCCUSTOMHELP value */
+	c = (no_env ? NULL : getenv(CALCCUSTOMHELP));
+	calc_customhelpdir = (c ? strdup(c) : NULL);
+	if (calc_customhelpdir == NULL || *calc_customhelpdir == '\0') {
+		/* will use /usr/local/share/calc/custhelp */
+		calc_customhelpdir = CUSTOMHELPDIR;
+	}
 }
 
 

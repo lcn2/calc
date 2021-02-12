@@ -38,43 +38,6 @@ Calc resource file files are provided because they serve as examples of
 how use the calc language, and/or because the authors thought them to
 be useful!
 
-If you write something that you think is useful, please join the
-low volume calc mailing list calc-tester.  Then send your contribution
-to the calc-tester mailing list.
-
-To subscribe to the calc-tester mailing list, visit the following URL:
-
-	https://www.listbox.com/subscribe/?list_id=239342
-
-    To help determine you are a human and not just a spam bot,
-    you will be required to provide the following additional info:
-
-	Your Name
-	Calc Version
-	Operating System
-	The date 7 days ago
-
-    This is a low volume moderated mailing list.
-
-    This mailing list replaces calc-tester at asthe dot com list.
-
-    If you need a human to help you with your mailing list subscription,
-    please send EMail to our special:
-
-	calc-tester-maillist-help at asthe dot com
-
-	NOTE: Remove spaces and replace 'at' with @, 'dot' with .
-
-    address.  To be sure we see your EMail asking for help with your
-    mailing list subscription, please use the following phase in your
-    EMail Subject line:
-
-	calc tester mailing list help
-
-    That phrase in your subject line will help ensure your
-    request will get past our anti-spam filters.  You may have
-    additional words in your subject line.
-
 =-=
 
 By convention, a resource file only defines and/or initializes functions,
@@ -1816,7 +1779,7 @@ zeta2.cal
     for information on this special zeta function.
 
 
-## Copyright (C) 2000,2014,2017  David I. Bell and Landon Curt Noll
+## Copyright (C) 2000,2014,2017,2021  David I. Bell and Landon Curt Noll
 ##
 ## Primary author: Landon Curt Noll
 ##

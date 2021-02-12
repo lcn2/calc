@@ -101,6 +101,21 @@ Environment variables
 	variable is an empty string, then ~/.calc_history
 	is used.
 
+     CALCHELP
+
+	Location of the calc help directory.
+
+	If this variable does not exist, or if this
+	variable is an empty string, then ${HELPDIR}
+
+     CALCCUSTOMHELP
+
+	Location of the calc custom help directory.
+
+	If this variable does not exist, or if this
+	variable is an empty string, then ${CUSTOMHELPDIR}
+	is used.
+
 ## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under

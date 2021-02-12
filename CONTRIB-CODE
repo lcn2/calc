@@ -1,0 +1,100 @@
+Calc is open source. Contributions of code are welcome.
+
+We welcome and encourage you to send us:
+
+    * calc resource files (cal/*.cal files)
+    * calc shell scripts (cscript/*.calc files)
+    * builtin functions that you have modified or written, i.e.:
+	assocfunc.c comfunc.c func.c func.h
+	listfunc.c matfunc.c qfunc.c zfunc.c
+    * custom functions that you have modified or written
+    * help files modified or written (help/*)
+    * Makefile improvements (Makefile, */Makefile)
+    * other source code modifications (*.c, *.h)
+    * etc. (* */* :) )
+
+In order to consider integrating your code, we need:
+
+    * calc version you are working with (please try use the latest version)
+    * new help files or help file patches, if applicable (documentation)
+    * proposed text for the CHANGES file (brief description of what it does)
+    * regress.cal test patch as needed
+    * your source code and/or source code changes (:-))
+
+If you add functionality to calc, please be sure to modify/patch/add
+Makefiles, help files, cal/regress.cal test code as well.
+Regression test cases are vital to maintaining calc's level
+of correctness and helps us avoid code bug regression.
+
+Please try to generate a patch against the most recent
+version of calc, and if you use GitHub, the top of the
+master branch:
+
+    https://github.com/lcn2/calc
+
+The best way contribute to calc bug is to generate calc
+GitHub pull request:
+
+    https://github.com/lcn2/calc/pulls
+
+Your code needs to be contributed under either the 2.1 of the GNU
+Lesser General Public License (LGPL 2.1) or in the public domain.
+
+If you do not want to use calc GitHub, then send Email to:
+
+    calc-contrib-mail at asthe dot com
+
+    NOTE: Remove spaces and replace 'at' with @, 'dot' with .
+
+You MUST use following SPECIAL PHRASE in your Email Subject line:
+
+    calc contribution
+
+You may add additional words to your subject line.
+
+Suggestion:
+
+    From time to time, the Email address and Subject SPECIAL PHRASE
+    may change so verify you have the current info by visiting:
+
+	http://www.isthe.com/chongo/tech/comp/calc/calc-contrib.html
+
+IMPORTANT: If your Email doesn't contain the above phrase,
+	   then we WILL NOT SEE your Email.
+
+PLEASE BE SURE you have that SPECIAL PHRASE somewhere in the subject line!
+
+Keep in mind that the best way to report on a calc bug is to use
+the above mentioned calc GitHub procedure.
+
+Please be patient as we cannot always respond to Email messages quickly.
+
+=-=
+
+See also the calc wishlist by running the calc command:
+
+    ; help wishlist
+
+=-=
+
+## Copyright (C) 1999,2014,2021  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+##
+## Under source code control:	1997/03/09 16:33:22
+## File existed as early as:	1997
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

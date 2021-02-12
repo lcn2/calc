@@ -1,7 +1,8 @@
 /*
  * calc - arbitrary precision calculator
  *
- * Copyright (C) 1999-2013  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2013,2021  David I. Bell, Landon Curt Noll
+ *				 and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -403,7 +404,7 @@ main(int argc, char **argv)
 								" long");
 							exit(18);
 						}
-						/* XXX What if *cp = '\''? */
+						/* XXX - what if *cp = '\''? */
 						*bp++ = '\'';
 						strncpy(bp, cp, len+1);
 						bp += len;

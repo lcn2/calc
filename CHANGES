@@ -1,4 +1,61 @@
-The following are the changes from calc version 2.12.7.1 to date:
+The following are the changes from calc version 2.12.8.0 to date:
+
+    Fixed a mistake in "help intro" where some inserted text
+    changed the value of "." and thus made the next result
+    incorrect.
+
+    Clarified in "help factor" that 1 is returned if no
+    factor below the limit was found.
+
+    Removed Makefile variable ${MAKEFILE_REV}.
+
+    The missing cscript/square.calc file has been restored.
+
+    Fixed compiler errors and warnings related to GCC.
+    In particular, gcc/9.3.1 and gcc/10.2.1 now compile
+    calc without any compiler errors or warnings,
+    even with -Werror -Wextra -pedantic.
+
+    To print out information about the calc compliation
+    environment, we added the following make rule:
+
+	make calcinfo
+
+    Improved how 'make debug' operates.
+
+    Moved help/contrib to CONTRIB-CODE.  The help/contrib file
+    is now build from a copy of CONTRIB-CODE.
+
+    Created a new calc bug report Email address.  Created a new calc
+    question Email address.  Created a new calc contribution Email
+    address.  See the BUGS file for details.
+
+    Added "help questions" to print the QUESIONS help file.
+
+    If the environment variable $CALCHELP is defined and is non-empty,
+    then calc help files will be in the direcgory by the $CALCHISTFILE
+    environment variable.
+
+    If the environment variable $CALCCUSTOMHELP is defined and is
+    non-empty, then custom calc help files will be in the direcgory
+    by the $CALCCUSTOMHELP environment variable.
+
+    The calc-tester mailing list has been retired.  See:
+
+	* How to submit a calc bug report:
+
+	    http://www.isthe.com/chongo/tech/comp/calc/calc-bugrept.html
+
+	* How to contribute code to calc:
+
+	    http://www.isthe.com/chongo/tech/comp/calc/calc-contrib.html
+
+	* How to submit a question about calc:
+
+	    http://www.isthe.com/chongo/tech/comp/calc/calc-question.html
+
+
+The following are the changes from calc version 2.12.7.1 to 2.12.7.5:
 
     Corrected CHANGES notes that were mixed up for TAB, VT, CR &
     NL.  The code in 2.12.7.0 is correct.  The CHANGE notes should
@@ -54,7 +111,7 @@ The following are the changes from calc version 2.12.7.1 to date:
     some specific regexes is enough to disable the warning.
     Fixed spaces vs tabs and use FALLTHRU as it's used elsewhere.
     Fixed one FALLTHRU comment that was inconsistent with others.
-    <<thanks jcul>>
+    <<GitHub jcul>>
 
     Fixed minor typo on help/power. <<GitHub thegithubr>>
 
@@ -64,7 +121,7 @@ The following are the changes from calc version 2.12.7.1 to date:
     by the $CALCHISTFILE environment variable.
 
     Calc as defined 0^0 as 1.  However in the past, 0 raised to
-    an expression that evaluted to zero returned 1.  The result
+    an expression that evaluated to zero returned 1.  The result
     was that 0^0 was different than 0^(6-6) or even 0^(0).
     Now, calc will return 1 for 0^(0) and 0^zero when zero == 0.
 
@@ -412,32 +469,6 @@ The following are the changes from calc version 2.12.5.1 to 2.12.5.2:
 
 
 The following are the changes from calc version 2.12.5.0 to 2.12.5.1:
-
-    Calc has a new calc-tester mailing list.  This list is for those
-    who are using/testing calc.  We also use this list to announce
-    new versions of calc.  To subscribe to the calc-tester mailing
-    list, visit the following URL:
-
-	    http://www.isthe.com/chongo/tech/comp/calc/calc-tester.html
-
-	This is a low volume moderated mailing list.
-
-	This mailing list replaces calc-tester at asthe dot com list.
-
-	If you need a human to help you with your mailing list subscription,
-	please send Email to our special:
-
-	    calc-tester-maillist-help at asthe dot com
-
-	address.  To be sure we see your Email asking for help with your
-	mailing list subscription, please use the following phase in your
-	Email Subject line:
-
-	    calc tester mailing list help
-
-	That phrase in your subject line will help ensure your
-	request will get past our anti-spam filters.  You may have
-	additional words in your subject line.
 
     There is a new calc bug report Email address:
 
@@ -2763,7 +2794,6 @@ The following are the changes from calc version 2.11.2t0 to 2.11.2t1.0:
     Using calc-bugs at asthe dot com for calc bug reports,
     calc-contrib at asthe dot com for calc contributions,
     calc-tester-request at asthe dot com for requests to join calc-tester and
-    calc-tester at asthe dot com for the calc tester mailing list.
 
     Replaced explicit Email addresses found this file with the <user at
     site dot domain> notation to reduce the potential for those folks
@@ -7503,7 +7533,7 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 
     A small bug in the library file regress.cal was fixed.
 
-## Copyright (C) 2001-2017  Landon Curt Noll
+## Copyright (C) 2001-2017,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

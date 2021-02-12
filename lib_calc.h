@@ -79,4 +79,10 @@ EXTERN unsigned long calc_warn_cnt;
  */
 EXTERN char *calc_history;
 
+/*
+ * calc help
+ */
+EXTERN char *calc_helpdir;
+EXTERN char *calc_customhelpdir;
+
 #endif /* !INCLUDE_MATH_ERROR_H */

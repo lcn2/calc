@@ -2,7 +2,7 @@
 #
 # help - makefile for calc help files
 #
-# Copyright (C) 1999-2006,2017  Landon Curt Noll
+# Copyright (C) 1999-2006,2017,2021  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -231,9 +231,9 @@ STD_HELP_FILES_12= archive
 
 BLT_HELP_FILES_13= bugs changes
 
-STD_HELP_FILES_14= contrib credit
+STD_HELP_FILES_14= credit
 
-BLT_HELP_FILES_14= COPYING COPYING-LGPL
+BLT_HELP_FILES_14= contrib COPYING COPYING-LGPL question
 
 STD_HELP_FILES_15= wishlist todo
 
@@ -405,6 +405,18 @@ bugs: ../BUGS
 	    ${TRUE}; \
 	fi
 
+contrib: ../CONTRIB-CODE
+	${RM} -f $@
+	${CP} ../CONTRIB-CODE $@
+	${CHMOD} 0444 $@
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
+	    echo ''; \
+	else \
+	    ${TRUE}; \
+	fi
+
 errorcodes: ../calcerr.h errorcodes.hdr errorcodes.sed
 	${RM} -f $@
 	${CAT} errorcodes.hdr > $@
@@ -496,6 +508,18 @@ COPYING: ../COPYING
 COPYING-LGPL: ../COPYING-LGPL
 	${RM} -f $@
 	${CP} ../COPYING-LGPL $@
+	${CHMOD} 0444 $@
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
+	    echo ''; \
+	else \
+	    ${TRUE}; \
+	fi
+
+question: ../QUESTIONS
+	${RM} -f $@
+	${CP} ../QUESTIONS $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -662,7 +686,7 @@ detail_help_list:
 		 ! -name mat ! -name obj.file ! -name operator \
 		 ! -name overview ! -name script ! -name statement \
 		 ! -name todo ! -name types ! -name unexpected \
-		 ! -name variable ! -name wishlist \
+		 ! -name variable ! -name wishlist ! -name question \
 		 -print | \
 	   while read i; do \
 		if [ X"$$i" != X"/dev/null" ]; then \
@@ -701,7 +725,7 @@ echo_inst_files:
 
 clean:
 	${RM} -f obj mkbuiltin funclist.c funclist.o funclist${EXT}
-	${RM} -f COPYING COPYING-LGPL
+	${RM} -f COPYING COPYING-LGPL question
 
 clobber: clean
 	${RM} -f ${BLT_HELP_FILES} full .all calc

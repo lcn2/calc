@@ -1,7 +1,7 @@
 /*
  * seed - produce a pseudo-random seeds
  *
- * Copyright (C) 1999-2007  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -191,7 +191,7 @@ prvate_hash64_buf(char *buf, unsigned len)
 	 *	Landon Curt Noll (http://www.isthe.com/chongo/)
 	 *
 	 * improved on their algorithm.	 Some people tried this hash
-	 * and found that it worked rather well.  In an EMail message
+	 * and found that it worked rather well.  In an Email message
 	 * to Landon, they named it ``Fowler/Noll/Vo'' or the FNV hash.
 	 *
 	 * FNV hashes are architected to be fast while maintaining a low

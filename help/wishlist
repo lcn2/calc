@@ -4,34 +4,13 @@ Calc Enhancement Wish List:
     interesting calc scripts that you would like you see included in
     future distributions.
 
-    To send such items, first subscribe to the calc-tester mailing list.
-    Then send your comments, suggestions, bug fixes, enhancements and
-    interesting calc scripts to the calc-tester mailing list.
+=-=
 
-    To subscribe to the calc-tester mailing list, visit the following URL:
+Calc is open source. Contributions of code are welcome.
 
-	    http://www.isthe.com/chongo/tech/comp/calc/calc-tester.html
+Please read CONTRIB-CODE or run the following calc command:
 
-	This is a low volume moderated mailing list.
-
-	This mailing list replaces calc-tester at asthe dot com list.
-
-	If you need a human to help you with your mailing list subscription,
-	please send EMail to our special:
-
-	    calc-tester-maillist-help at asthe dot com
-
-	    NOTE: Remove spaces and replace 'at' with @, 'dot' with .
-
-	address.  To be sure we see your EMail asking for help with your
-	mailing list subscription, please use the following phase in your
-	EMail Subject line:
-
-	    calc tester mailing list help
-
-	That phrase in your subject line will help ensure your
-	request will get past our anti-spam filters.  You may have
-	additional words in your subject line.
+    ; help contrib
 
 =-=
 
@@ -212,8 +191,8 @@ Calc bug reports and calc bug fixes should be sent to:
 
     This replaces the old calc-bugs at asthe dot com address.
 
-    To be sure we see your EMail reporting a calc bug, please use the
-    following phase in your EMail Subject line:
+    To be sure we see your Email reporting a calc bug, please use the
+    following phase in your Email Subject line:
 
 	calc bug report
 
@@ -232,9 +211,9 @@ The calc web site is located at:
 
     http://www.isthe.com/chongo/tech/comp/calc/
 
-NOTE: The EMail address uses 'asthe', while the web site uses 'isthe'.
+NOTE: The Email address uses 'asthe', while the web site uses 'isthe'.
 
-## Copyright (C) 1999,2014  Landon Curt Noll
+## Copyright (C) 1999,2014,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

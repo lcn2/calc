@@ -32,30 +32,30 @@ something that you type in.
 
 For list of help topics:
 
-    > help
+    ; help
 
 For overview of calc overview:
 
-    > help intro
-    > help overview
-    > help command
-    > help define
-    > help statement
-    > help variable
-    > help usage
+    ; help intro
+    ; help overview
+    ; help command
+    ; help define
+    ; help statement
+    ; help variable
+    ; help usage
 
 For list of builtin functions:
 
-    > help builtin
+    ; help builtin
 
 C programmers should note some unexpected differences in the calc syntax:
 
-    > help unexpected
+    ; help unexpected
 
 Calc is shipped with a standard collection of calc resource files.
 For a list of calc standard resource files see:
 
-    > help resource
+    ; help resource
 
 =-=
 
@@ -71,66 +71,33 @@ or run:
 
 for a wish/todo list.  Code contributions are welcome.
 
-=-=
+-=-
 
-To subscribe to the calc-tester mailing list, visit the following URL:
+If you you notice something wrong, strange or broken, see the file:
 
-	http://www.isthe.com/chongo/tech/comp/calc/calc-tester.html
+    BUGS
 
-    This is a low volume moderated mailing list.
+or run:
 
-    This mailing list replaces calc-tester at asthe dot com list.
+    calc help bugs
 
-    If you need a human to help you with your mailing list subscription,
-    please send EMail to our special:
-
-	calc-tester-maillist-help at asthe dot com
-
-	NOTE: Remove spaces and replace 'at' with @, 'dot' with .
-
-    address.  To be sure we see your EMail asking for help with your
-    mailing list subscription, please use the following phase in your
-    EMail Subject line:
-
-	calc tester mailing list help
-
-    That phrase in your subject line will help ensure your
-    request will get past our anti-spam filters.  You may have
-    additional words in your subject line.
+for information about how to report a bug.
 
 -=-
 
-Calc bug reports and calc bug fixes should be sent to:
+If you have a general question about calc, see the file:
 
-	calc-bug-report at asthe dot com
+    QUESTIONS
 
-	NOTE: Remove spaces and replace 'at' with @, 'dot' with .
+or run:
 
-    This replaces the old calc-bugs at asthe dot com address.
+    calc help questions
 
-    To be sure we see your EMail reporting a calc bug, please use the
-    following phase in your EMail Subject line:
-
-	calc bug report
-
-    That phrase in your subject line will help ensure your
-    request will get past our anti-spam filters.  You may have
-    additional words in your subject line.
-
-    However, you may find it more helpful to simply subscribe
-    to the calc-tester mailing list (see above) and then to
-    send your report to that mailing list as a wider set calc
-    testers may be able to help you.
+for information about how to ask a question.
 
 -=-
 
-The calc web site is located at:
-
-    http://www.isthe.com/chongo/tech/comp/calc/
-
-NOTE: The EMail address uses 'asthe', while the web site uses 'isthe'.
-
-## Copyright (C) 1999,2014,2017  Landon Curt Noll
+## Copyright (C) 1999,2014,2017,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

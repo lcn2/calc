@@ -1,7 +1,7 @@
 /*
  * file - file I/O routines callable by users
  *
- * Copyright (C) 1999-2007,2018  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2018,2021  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -1416,21 +1416,22 @@ z2filepos(ZVALUE zpos)
 #if FILEPOS_BITS == FULL_BITS
 	/* ztofull puts the value into native byte order */
 	pos = ztofull(zpos);
-	memset(&ret, 0, sizeof(ret));	/* on some hosts, FILEPOS is not a scalar */
+	memset(&ret, 0, sizeof(ret));	/* FILEPOS could be non-scalar */
 	memcpy((void *)&ret, (void *)&pos, MIN(sizeof(ret), sizeof(pos)));
 	return ret;
 #elif FILEPOS_BITS < FULL_BITS
 	/* ztofull puts the value into native byte order */
 	pos = ztolong(zpos);
-	memset(&ret, 0, sizeof(ret));	/* on some hosts, FILEPOS is not a scalar */
+	memset(&ret, 0, sizeof(ret));	/* FILEPOS could be non-scalar */
 	memcpy((void *)&ret, (void *)&pos, MIN(sizeof(ret), sizeof(pos)));
 	return ret;
 #else /* FILEPOS_BITS > FULL_BITS */
 	if (!zgtmaxfull(zpos)) {
 		/* ztofull puts the value into native byte order */
 		pos = ztofull(zpos);
-		memset(&ret, 0, sizeof(ret));	/* on some hosts, FILEPOS is not a scalar */
-		memcpy((void *)&ret, (void *)&pos, MIN(sizeof(ret), sizeof(pos)));
+		memset(&ret, 0, sizeof(ret)); /* FILEPOS could be non-scalar */
+		memcpy((void *)&ret, (void *)&pos,
+				     MIN(sizeof(ret), sizeof(pos)));
 		return ret;
 	}
 
@@ -1439,12 +1440,13 @@ z2filepos(ZVALUE zpos)
 	 */
 	if (zpos.len >= FILEPOS_BITS/BASEB) {
 		/* copy the lower FILEPOS_BITS of the ZVALUE */
-		memset(&tmp, 0, sizeof(tmp));	/* on some hosts, FILEPOS is not a scalar */
+		memset(&tmp, 0, sizeof(tmp)); /* FILEPOS could be non-scalar */
 		memcpy(&tmp, zpos.v, MIN(sizeof(tmp), FILEPOS_LEN);
 	} else {
 		/* copy what bits we can into the temp value */
-		memset(&tmp, 0, sizeof(tmp));	/* on some hosts, FILEPOS is not a scalar */
-		memcpy(&tmp, zpos.v, MIN(sizeof(tmp), MIN(zpos.len*BASEB/8, FILEPOS_LEN)));
+		memset(&tmp, 0, sizeof(tmp)); /* FILEPOS could be non-scalar */
+		memcpy(&tmp, zpos.v, MIN(sizeof(tmp),
+			     MIN(zpos.len*BASEB/8, FILEPOS_LEN)));
 	}
 	/* swap into native byte order */
 	SWAP_HALF_IN_FILEPOS(&ret, &tmp);

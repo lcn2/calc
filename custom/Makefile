@@ -2,7 +2,7 @@
 #
 # custom - makefile for calc custom routines
 #
-# Copyright (C) 1999-2006,2014,2017-2018  Landon Curt Noll
+# Copyright (C) 1999-2006,2014,2017-2018,2021  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -348,7 +348,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.7.6
+VERSION= 2.12.8.0
 
 # Names of shared libraries with versions
 #
@@ -493,7 +493,7 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 #									 #
 #		calc-contrib at asthe dot com				 #
 #									 #
-#	EMail address an "ifeq ($(target),YOUR_TARGET_NAME)" ... "endif" #
+#	Email address an "ifeq ($(target),YOUR_TARGET_NAME)" ... "endif" #
 #	set of lines so that we can consider them for the next release.  #
 ##########################################################################
 

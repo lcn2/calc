@@ -1,12 +1,12 @@
 If you notice something wrong, strange or broken, try rereading:
 
-   README.FIRST
-   HOWTO.INSTALL
-   BUGS (this file)
+    README.FIRST
+    HOWTO.INSTALL
+    BUGS (this file)
 
 If that does not help, cd to the calc source directory and try:
 
-   make check
+    make check
 
 Look at the end of the output, it should say something like:
 
@@ -15,67 +15,108 @@ Look at the end of the output, it should say something like:
 
 If it does not, then something is really broken!
 
+To be sure that your version of calc is up to date, check out:
+
+    http://www.isthe.com/chongo/tech/comp/calc/calc-mirror.html
+
 If you made and modifications to calc beyond the simple Makefile
 configuration, try backing them out and see if things get better.
 
-To be sure that your version of calc is up to date, check out:
-
-	http://www.isthe.com/chongo/tech/comp/calc/calc-download.html
-
-The calc web site is located at:
-
-	http://www.isthe.com/chongo/tech/comp/calc/index.html
+If you have tried all of the above and things still are not right,
+then it may be time to send in a bug report.
 
 =-=
 
-If you have tried all of the above and things still are not right,
-then it may be time to send in a bug report.  You can send bug
-and bug fixes reports to:
+The BEST WAY TO SEND IN A BUG REPORT is via calc GitHub issue URL:
 
-	calc-bug-report at asthe dot com
+    https://github.com/lcn2/calc/issues
 
-	NOTE: Remove spaces and replace 'at' with @, 'dot' with .
+If you see an existing issue that matches your problem, look
+over the notes and if needed, add your own observation,
+even if you just add to an existing issue:
 
-    This replaces the old calc-bugs at asthe dot com address.
+    I have this issue too
 
-    To be sure we see your EMail reporting a calc bug, please use the
-    following phase in your EMail Subject line:
+If you don't see your issue addressed, then on the above
+GitHub web page, click on this button:
 
-	calc bug report
+    ((New Issue))
 
-    That phrase in your subject line will help ensure your request
-    will get past our anti-spam filters.  You may have additional
-    words in your subject line.
+=-=
 
-    However, you may find it more helpful to simply subscribe
-    to the calc-tester mailing list (see below) and then to
-    send your report to that mailing list as a wider set calc
-    testers may be able to help you.
+If you prefer to not use GitHub, then you
+may send bug and bug fixes reports to:
 
-When you send your report, please include the following information:
+    calc-bugrept-mail at asthe dot com
 
-    * a description of the problem
-    * the version of calc you are using (if you cannot get calc
-      to run, then send us the 4 #define lines from version.c)
-    * if you modified calc from an official patch, send me the mods you made
-    * the type of system you were using
-    * the type of compiler you were using
-    * any compiler warnings or errors that you saw
-    * cd to the calc source directory, and type:
+    NOTE: Remove spaces and replace 'at' with @, 'dot' with .
 
-	make debug > debug.out 2>&1		(sh, ksh, bash users)
-	make debug >& debug.out			(csh, tcsh users)
+    NOTE: This replaces the old calc-bugs at asthe dot com address.
 
-      and send the contents of the 'debug.out' file.
+PLEASE put following the SPECIAL PHRASE somewhere in your Email Subject line:
 
-Stack traces from core dumps are useful to send as well.
+    calc bug report
 
-Fell free to use the above address to send in big fixes (in the form
+You may add additional words to your subject line.
+
+Suggestion:
+
+    From time to time, the Email address and Subject SPECIAL PHRASE
+    may change so verify you have the current info by visiting:
+
+	http://www.isthe.com/chongo/tech/comp/calc/calc-bugrept.html
+
+IMPORTANT:
+
+    PLEASE use the above SPECIAL PHRASE somewhere in the Subject line or
+    the mail system won't deliver your Email message.
+
+Keep in mind that the best way to report on a calc bug is
+via the above mentioned calc GitHub issue URL.
+
+Please be patient as we cannot always respond to Email messages quickly.
+
+=-=
+
+When you send your report, via the calc GitHub issue URL or Email,
+please include the following information:
+
+    * A description of the problem
+
+    * Version of calc you are using
+
+	If you cannot compile calc, then look at version.c
+	and report the #define that start with:
+
+	    #define MAJOR_VER
+	    #define MINOR_VER
+	    #define MAJOR_PATCH
+	    #define MINOR_PATCH
+
+    * If you modified calc from an official patch,
+      send us the mods you made
+
+    * Type and version of the operating system
+
+    * Type and version of compiler
+
+    * Send us all compiler warnings or errors you find
+
+    * If calc dumped core, try to send us a core dump stack trace
+
+    * cd to the calc source directory, and send the contents
+      of debug.out produced by this command:
+
+	make debug > debug.out 2>&1
+
+Fell free to use the above address to send in bug fixes (in the form
 of a context diff patch).
 
 =-=
 
-Known bugs:
+Known bugs in calc:
+
+    Under macOS, the installation of the calc man page fails.
 
     The output of the alg_config.cal resource file is bogus.
     We would welcome a replacement for this code.
@@ -130,7 +171,7 @@ Known bugs:
 
     We are sure some more bugs exist.  When you find them, please let
     us know!  See the above for details on how to report and were to
-    EMail your bug reports and hopefully patches to fix them.
+    Email your bug reports and hopefully patches to fix them.
 
 =-=
 
@@ -183,32 +224,7 @@ mis-features in calc:
 
 =-=
 
-To subscribe to the calc-tester mailing list, visit the following URL:
-
-	http://www.isthe.com/chongo/tech/comp/calc/calc-tester.html
-
-    This is a low volume moderated mailing list.
-
-    This mailing list replaces calc-tester at asthe dot com list.
-
-    If you need a human to help you with your mailing list subscription,
-    please send EMail to our special:
-
-	calc-tester-maillist-help at asthe dot com
-
-	NOTE: Remove spaces and replace 'at' with @, 'dot' with .
-
-    address.  To be sure we see your EMail asking for help with your
-    mailing list subscription, please use the following phase in your
-    EMail Subject line:
-
-	calc tester mailing list help
-
-    That phrase in your subject line will help ensure your
-    request will get past our anti-spam filters.  You may have
-    additional words in your subject line.
-
-## Copyright (C) 1999-2014  Landon Curt Noll
+## Copyright (C) 1999-2014,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

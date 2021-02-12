@@ -23,7 +23,7 @@
 #	 READLINE_LIB= -lreadline
 #	 READLINE_EXTRAS= -lhistory -lncurses
 #
-# Copyright (C) 1999-2018  Landon Curt Noll
+# Copyright (C) 1999-2018,2021  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of version 2.1 of the GNU Lesser General Public License
@@ -38,8 +38,6 @@
 # distributed with calc under the filename COPYING-LGPL.  You should have
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
-#
-MAKEFILE_REV= $$Revision: 30.88 $$
 #
 # Under source code control:	1990/02/15 01:48:41
 # File existed as early as:	before 1990
@@ -1028,7 +1026,8 @@ LD_DEBUG=
 #
 #	CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=.:./custom DYLD_LIBRARY_PATH=.
 #
-CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=.
+CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help \
+	  CALCCUSTOMHELP=./custom
 #CALC_ENV= CALCPATH=./cal DYLD_LIBRARY_PATH=. \
 #	  MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
 #	  MALLOC_FASTCHK=1 MALLOC_FULLWARN=1 LD_LIBRARY_PATH=.:./custom
@@ -1054,7 +1053,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.7.6
+VERSION= 2.12.8.0
 
 # Names of shared libraries with versions
 #
@@ -1064,34 +1063,39 @@ LIB_EXT_VERSION= ${LIB_EXT}.${VERSION}
 # standard utilities used during make
 #
 SHELL= /bin/sh
-LANG= C
-MAKE= make
+AR= ar
 AWK= awk
-SED= sed
-DIFF= diff
-GREP= egrep
-SORT= sort
-TEE= tee
-CTAGS= ctags
+CAT= cat
 CHMOD= chmod
-FMT= fmt
-XARGS= xargs
 CMP= cmp
+CO= co
+COL= col
+CP= cp
+CTAGS= ctags
+DATE= date
+DIFF= diff
+FMT= fmt
+GREP= egrep
+HOSTNAME= hostname
+LANG= C
+LDCONFIG= ldconfig
+LN= ln
+MAKE= make
 MKDIR= mkdir
+MV= mv
+PWDCMD= pwd
+RM= rm
+RMDIR= rmdir
+SED= sed
+SORT= sort
 SPLINT= splint
 SPLINT_OPTS=
-RM= rm
+TEE= tee
 TOUCH= touch
-RMDIR= rmdir
-CP= cp
-MV= mv
-CO= co
-AR= ar
 TRUE= true
-CAT= cat
-COL= col
-LN= ln
-LDCONFIG= ldconfig
+UNAME= uname
+XARGS= xargs
+
 # assume the X11 makedepend tool for the depend rule
 MAKEDEPEND= makedepend
 STRIP= strip
@@ -1202,7 +1206,7 @@ COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
 #									 #
 #		calc-contrib at asthe dot com				 #
 #									 #
-#	EMail address an "ifeq ($(target),YOUR_TARGET_NAME)" ... "endif" #
+#	Email address an "ifeq ($(target),YOUR_TARGET_NAME)" ... "endif" #
 #	set of lines so that we can consider them for the next release.  #
 ##########################################################################
 
@@ -2084,7 +2088,7 @@ LICENSE= COPYING COPYING-LGPL
 #
 DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README.FIRST \
 	  README.WINDOWS calc.man HOWTO.INSTALL ${UTIL_MISC_SRC} ${LICENSE} \
-	  sample.README calc.spec.in rpm.mk README.md
+	  sample.README calc.spec.in rpm.mk README.md QUESTION CONTRUB
 
 # These files are used to make (but not build) a calc .a link library
 #
@@ -2322,6 +2326,7 @@ calc.1: calc.man ${MAKE_FILE}
 	        -e 's,$${CALC_INCDIR},${CALC_INCDIR},g' \
 	        -e 's,$${CUSTOMCALDIR},${CUSTOMCALDIR},g' \
 	        -e 's,$${CUSTOMINCDIR},${CUSTOMINCDIR},g' \
+	        -e 's,$${HELPDIR},${HELPDIR},g' \
 	        -e 's,$${CUSTOMHELPDIR},${CUSTOMHELPDIR},g' \
 	        -e 's,$${CALCRC},${CALCRC},g' < calc.man > calc.1
 	${Q} echo calc.1 formed
@@ -2333,7 +2338,7 @@ calc.usage: calc.1 ${MAKE_FILE}
 	    LESSCHARSET=iso8859 ${CALCPAGER} calc.1; \
 	else \
 	    ${NROFF} -man calc.1; \
-	fi | ${COL} -b > $@
+	fi 2>&1 | ${GREP} -v 'cannot adjust line' | ${COL} -b > $@
 	${Q} echo calc.usage formed
 
 
@@ -4033,6 +4038,9 @@ chk: ./cal/regress.cal
 #
 # debug
 #
+# make calcinfo:
+#	* print information about the host ane compile environment
+#
 # make env:
 #	* print major Makefile variables
 #
@@ -4046,6 +4054,53 @@ chk: ./cal/regress.cal
 #	* make everything
 #	* run the regression tests
 ###
+
+calcinfo:
+	@echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	@echo
+	@echo '=-=-= UNAME=${UNAME} =-=-='
+	@echo
+	@echo '=-=-= output of $${UNAME} -a follows =-=-='
+	-@${UNAME} -a
+	@echo '=-=-= end of output of $${UNAME} -a =-=-='
+	@echo
+	@echo '=-=-= HOSTNAME=${HOSTNAME} =-=-='
+	@echo
+	@echo '=-=-= output of $${HOSTNAME} follows =-=-='
+	-@${HOSTNAME}
+	@echo '=-=-= end of output of $${HOSTNAME} =-=-='
+	@echo
+	@echo '=-=-= DATE=${DATE} =-=-='
+	@echo
+	@echo '=-=-= output of $${DATE} follows =-=-='
+	-@${DATE}
+	@echo '=-=-= end of output of $${DATE} =-=-='
+	@echo
+	@echo '=-=-= LCC=${LCC} =-=-='
+	@echo
+	@echo '=-=-= output of $${LCC} -v follows =-=-='
+	-@${LCC} -v
+	@echo '=-=-= end of output of $${LCC} -v =-=-='
+	@echo
+	@echo '=-=-= PWD=${PWD} =-=-='
+	@echo
+	@echo '=-=-= output of echo $${PWD} follows =-=-='
+	-@echo ${PWD}
+	@echo '=-=-= end of output of echo $${PWD} =-=-='
+	@echo
+	@echo '=-=-= PWDCMD=${PWDCMD} =-=-='
+	@echo
+	@echo '=-=-= output of $${PWDCMD} follows =-=-='
+	-@${PWDCMD}
+	@echo '=-=-= end of output of $${PWDCMD} =-=-='
+	@echo
+	@echo '=-=-= VERSION=${VERSION} =-=-='
+	@echo
+	@echo '=-=-= output of echo $${VERSION} follows =-=-='
+	-@echo ${VERSION}
+	@echo '=-=-= end of output of echo $${VERSION} =-=-='
+	@echo
+	@echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 env:
 	@echo '=-=-=-=-= dumping major make variables =-=-=-=-='
@@ -4097,6 +4152,7 @@ env:
 	@echo 'CUSTOMINCDIR=${CUSTOMINCDIR}'; echo ''
 	@echo 'CUSTOM_PASSDOWN=${CUSTOM_PASSDOWN}'; echo ''
 	@echo 'C_SRC=${C_SRC}'; echo ''
+	@echo 'DATE=${DATE}'; echo ''
 	@echo 'DEBUG=${DEBUG}'; echo ''
 	@echo 'DEFAULT_LIB_INSTALL_PATH=${DEFAULT_LIB_INSTALL_PATH}'; echo ''
 	@echo 'DEV_BITS=${DEV_BITS}'; echo ''
@@ -4134,6 +4190,7 @@ env:
 	@echo 'HAVE_VSNPRINTF=${HAVE_VSNPRINTF}'; echo ''
 	@echo 'HELPDIR=${HELPDIR}'; echo ''
 	@echo 'HELP_PASSDOWN=${HELP_PASSDOWN}'; echo ''
+	@echo 'HOSTNAME=${HOSTNAME}'; echo ''
 	@echo 'H_SRC=${H_SRC}'; echo ''
 	@echo 'ICFLAGS=${ICFLAGS}'; echo ''
 	@echo 'ILDFLAGS=${ILDFLAGS}'; echo ''
@@ -4157,7 +4214,6 @@ env:
 	@echo 'LONG_BITS=${LONG_BITS}'; echo ''
 	@echo 'MAKE=${MAKE}'; echo ''
 	@echo 'MAKEDEPEND=${MAKEDEPEND}'; echo ''
-	@echo 'MAKEFILE_REV=${MAKEFILE_REV}'; echo ''
 	@echo 'MAKE_FILE=${MAKE_FILE}'; echo ''
 	@echo 'MANDIR=${MANDIR}'; echo ''
 	@echo 'MANEXT=${MANEXT}'; echo ''
@@ -4170,6 +4226,8 @@ env:
 	@echo 'OBJS=${OBJS}'; echo ''
 	@echo 'OFF_T_BITS=${OFF_T_BITS}'; echo ''
 	@echo 'PURIFY=${PURIFY}'; echo ''
+	@echo 'PWD=${PWD}'; echo ''
+	@echo 'PWDCMD=${PWDCMD}'; echo ''
 	@echo 'Q=${Q}'; echo ''
 	@echo 'RANLIB=${RANLIB}'; echo ''
 	@echo 'READLINE_EXTRAS=${READLINE_EXTRAS}'; echo ''
@@ -4196,11 +4254,12 @@ env:
 	@echo 'TOP_MAKE_FILE=${TOP_MAKE_FILE}'; echo ''
 	@echo 'TOUCH=${TOUCH}'; echo ''
 	@echo 'TRUE=${TRUE}'; echo ''
+	@echo 'UNAME=${UNAME}'; echo ''
 	@echo 'USE_READLINE=${USE_READLINE}'; echo ''
 	@echo 'UTIL_C_SRC=${UTIL_C_SRC}'; echo ''
+	@echo 'UTIL_FILES=${UTIL_FILES}'; echo ''
 	@echo 'UTIL_MISC_SRC=${UTIL_MISC_SRC}'; echo ''
 	@echo 'UTIL_OBJS=${UTIL_OBJS}'; echo ''
-	@echo 'UTIL_FILES=${UTIL_FILES}'; echo ''
 	@echo 'UTIL_PROGS=${UTIL_PROGS}'; echo ''
 	@echo 'UTIL_TMP=${UTIL_TMP}'; echo ''
 	@echo 'V=${V}'; echo ''
@@ -4222,7 +4281,7 @@ mkdebug: env version.c
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-debug: env
+debug: calcinfo env
 	@echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	@echo '=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ clobber =-=-=-='
 	@${MAKE} -f Makefile Q= V=@ clobber
@@ -4237,7 +4296,7 @@ debug: env
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@echo -n '=-=-=-= Print #defile values if custom functions '
 	@echo 'are allowed =-=-=-='
-	-@./calc${EXT} -e -q -C 'print custom("sysinfo", 2);'
+	-@${CALC_ENV} ./calc${EXT} -e -q -C 'print custom("sysinfo", 2);'
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@echo '=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ check =-=-=-='
 	@echo '=-=-= this may take a while =-=-='
@@ -5449,6 +5508,7 @@ help.o: have_string.h
 help.o: have_unistd.h
 help.o: help.c
 help.o: longbits.h
+help.o: lib_calc.h
 help.o: nametype.h
 help.o: qmath.h
 help.o: sha1.h

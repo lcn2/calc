@@ -8,7 +8,6 @@
 #	 comments, this Makefile differs from the non-rpm bzip2-ed tarball
 #	 source Makefile in the following ways:
 #
-#	 MAKEFILE_REV= $$Revision: 30.26 $$
 #	 CCWERR= -Werror
 #	 USE_READLINE= -DUSE_READLINE
 #	 READLINE_LIB= -lreadline -lhistory -lncurses
@@ -710,6 +709,9 @@ chk:
 #
 # debug
 #
+# make calcinfo:
+#       * print information about the host ane compile environment
+#
 # make env:
 #	* print major Makefile variables
 #
@@ -726,6 +728,11 @@ chk:
 # make prep:
 #	* compile without optimizers to make debugging easier
 ##
+
+calcinfo:
+	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
+	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
+	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
 
 env:
 	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='

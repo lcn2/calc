@@ -1,7 +1,8 @@
 /*
  * func - built-in functions implemented here
  *
- * Copyright (C) 1999-2007,2018  David I. Bell, Landon Curt Noll & Ernest Bowen
+ * Copyright (C) 1999-2007,2018,2021  David I. Bell, Landon Curt Noll
+ *				      and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -7710,7 +7711,8 @@ f_putenv(int count, VALUE **vals)
 			math_error("Cannot allocate string in putenv");
 			/*NOTREACHED*/
 		}
-		memcpy(putenv_str, vals[0]->v_str->s_str, vals[0]->v_str->s_len);
+		memcpy(putenv_str, vals[0]->v_str->s_str,
+				   vals[0]->v_str->s_len);
 		putenv_str[vals[0]->v_str->s_len] = '\0';
 	}
 

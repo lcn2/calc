@@ -37,13 +37,13 @@ What is calc?
     last command expression, if any.  This is of great use when a series
     of partial results are calculated, or when the output mode is changed
     and the last result needs to be redisplayed.  For example, the above
-    result can be modified by typing:
+    result (2^23209-1) can be modified by typing:
 
 	    . % (2^127-1)
 
     and the calculator will print:
 
-	    47385033654019111249345128555354223304
+	    39614081257132168796771975167
 
     For more complex calculations, variables can be used to save the
     intermediate results.  For example, the result of adding 7 to the
@@ -169,7 +169,7 @@ What is calc?
     In particular, check out the other help functions listed in the
     overview help file.
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

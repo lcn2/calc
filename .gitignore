@@ -65,6 +65,7 @@ help/bugs
 help/builtin
 help/change
 help/changes
+help/contrib
 help/copy
 help/cscript
 help/custom_cal
@@ -76,6 +77,8 @@ help/funclist.c
 help/libcalc
 help/man
 help/new_custom
+help/question
+help/questions
 help/resource
 help/type
 help/usage

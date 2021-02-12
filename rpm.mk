@@ -3,7 +3,7 @@
 #
 # rpm.mk - Makefile for building rpm packages for calc
 #
-# Copyright (C) 2003,2014  Petteri Kettunen and Landon Curt Noll
+# Copyright (C) 2003,2014,2021  Petteri Kettunen and Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -18,8 +18,6 @@
 # distributed with calc under the filename COPYING-LGPL.  You should have
 # received a copy with calc; if not, write to Free Software Foundation, Inc.
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-#
-MAKEFILE_REV= $$Revision: 30.15 $$
 #
 # Under source code control:	2003/02/16 20:21:39
 # File existed as early as:	2003
