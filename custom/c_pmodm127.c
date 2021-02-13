@@ -1,7 +1,7 @@
 /*
  * c_pmodm127 - calculate q mod 2^(2^127-1)
  *
- * Copyright (C) 2004-2007  Landon Curt Noll
+ * Copyright (C) 2004-2007,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License

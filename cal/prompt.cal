@@ -1,7 +1,7 @@
 /*
  * prompt - demonstration of some uses of prompt() and eval()
  *
- * Copyright (C) 1999  Ernest Bowen
+ * Copyright (C) 1999,2021  Ernest Bowen
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License

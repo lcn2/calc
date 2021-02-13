@@ -1,7 +1,7 @@
 /*
  * chrem - Chinese remainder theorem/problem solver
  *
- * Copyright (C) 1999  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2021  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *

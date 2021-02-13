@@ -1,7 +1,7 @@
 /*
  * file - file I/O routines callable by users
  *
- * Copyright (C) 1999-2007,2014  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2021  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *

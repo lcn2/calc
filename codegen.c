@@ -1,7 +1,7 @@
 /*
  * codegen - module to generate opcodes from the input tokens
  *
- * Copyright (C) 1999-2007,2017  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2017,2021  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *

@@ -1,7 +1,7 @@
 /*
  * block - fixed, dynamic, fifo and circular memory blocks
  *
- * Copyright (C) 1999-2007,2014  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2014,2021  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *

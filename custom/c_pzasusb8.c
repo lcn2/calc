@@ -1,7 +1,7 @@
 /*
  * c_pzasusb8 - print numerator as a string of USB8s
  *
- * Copyright (C) 1999-2004  Ernest Bowen
+ * Copyright (C) 1999-2004,2021  Ernest Bowen
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License

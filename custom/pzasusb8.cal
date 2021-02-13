@@ -1,7 +1,7 @@
 /*
  * pzasusb8 - print numerator as a string of USB8s
  *
- * Copyright (C) 1999,2004  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2004,2021  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *

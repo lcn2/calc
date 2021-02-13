@@ -1,7 +1,7 @@
 /*
  * comfunc - extended precision complex arithmetic non-primitive routines
  *
- * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *

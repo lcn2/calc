@@ -273,7 +273,7 @@ For more information use the following calc commands:
     help config
     help cscript
 
-## Copyright (C) 2000,2014  Landon Curt Noll and Ernest Bowen
+## Copyright (C) 2000,2014,2021  Landon Curt Noll and Ernest Bowen
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

@@ -1,7 +1,7 @@
 /*
  * config - configuration routines
  *
- * Copyright (C) 1999-2007,2014  Landon Curt Noll and David I. Bell
+ * Copyright (C) 1999-2007,2014,2021  Landon Curt Noll and David I. Bell
  *
  * Primary author:  Landon Curt Noll
  *

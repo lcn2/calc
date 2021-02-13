@@ -1,7 +1,7 @@
 /*
  * lambertw - Lambert's W-function
  *
- * Copyright (C) 2013 Christoph Zurnieden
+ * Copyright (C) 2013,2021 Christoph Zurnieden
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License

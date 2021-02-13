@@ -1,7 +1,7 @@
 /*
  * blkcpy - general values and related routines used by the calculator
  *
- * Copyright (C) 1999-2007  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *

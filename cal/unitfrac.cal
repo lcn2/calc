@@ -1,7 +1,7 @@
 /*
  * unixfrac - represent a fraction as a sum of distance unit fractions
  *
- * Copyright (C) 1999  David I. Bell
+ * Copyright (C) 1999,2021  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License

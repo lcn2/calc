@@ -1,7 +1,7 @@
 /*
  * qtrans - transcendental functions for real numbers
  *
- * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *

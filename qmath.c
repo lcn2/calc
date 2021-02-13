@@ -1,7 +1,7 @@
 /*
  * qmath - extended precision rational arithmetic primitive routines
  *
- * Copyright (C) 1999-2007,2014  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2014,2021  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
