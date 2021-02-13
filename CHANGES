@@ -1,8 +1,7 @@
 The following are the changes from calc version 2.12.8.0 to date:
 
-    Fixed a mistake in "help intro" where some inserted text
-    changed the value of "." and thus made the next result
-    incorrect.
+    Fixed a mistake in "help intro" where some inserted text changed
+    the value of "." and thus made the next result incorrect.
 
     Clarified in "help factor" that 1 is returned if no
     factor below the limit was found.
@@ -11,10 +10,9 @@ The following are the changes from calc version 2.12.8.0 to date:
 
     The missing cscript/square.calc file has been restored.
 
-    Fixed compiler errors and warnings related to GCC.
-    In particular, gcc/9.3.1 and gcc/10.2.1 now compile
-    calc without any compiler errors or warnings,
-    even with -Werror -Wextra -pedantic.
+    Fixed compiler errors and warnings related to GCC.  In particular,
+    gcc/9.3.1 and gcc/10.2.1 now compile calc without any compiler
+    errors or warnings, even with -Werror -Wextra -pedantic.
 
     To print out information about the calc compilation
     environment, we added the following make rule:
@@ -26,9 +24,9 @@ The following are the changes from calc version 2.12.8.0 to date:
     Moved help/contrib to CONTRIB-CODE.  The help/contrib file
     is now build from a copy of CONTRIB-CODE.
 
-    Created a new calc bug report Email address.  Created a new calc
-    question Email address.  Created a new calc contribution Email
-    address.  See the BUGS file for details.
+    Created a new calc bug report Email address.  Created a new
+    calc question Email address.  Created a new calc contribution
+    Email address.  See the BUGS file for details.
 
     Added "help questions" to print the QUESTIONS help file.
 
