@@ -34,7 +34,7 @@ define hurwitzzeta(s,a){
   /*
     According to Linas Vepstas' "An efficient algorithm for accelerating
     the convergence of oscillatory series, useful for computing the
-    polylogarithm and Hurwitz zeta functions" the Euler-Maclaurin series
+    poly-logarithm and Hurwitz zeta functions" the Euler-Maclaurin series
     is the fastest in most cases.
 
     With a lot of help of the PARI/GP implementation by Prof. Henri Cohen,
@@ -78,7 +78,7 @@ define hurwitzzeta(s,a){
      print "limit = " limit;
      print "prec = " precision;
   }
-  /* Full precison plus 5 digits angstzuschlag*/
+  /* Full precision plus 5 digits angstzuschlag*/
   epsilon( (10^(-precision)) * 1e-5);
   tmp3=(a+limit_function+0.)^(-s);
   sum3 = tmp3/2;

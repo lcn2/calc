@@ -291,7 +291,7 @@ blkrealloc(BLOCK *blk, int newlen, int newchunk)
 	 * Set the data length
 	 *
 	 * We also know that the new block is not empty since we have
-	 * already dealth with that case above.
+	 * already dealt with that case above.
 	 *
 	 * After this section of code, limit and datalen will be
 	 * correct in terms of the new type.

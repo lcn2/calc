@@ -200,7 +200,7 @@ Command sequence
     cd
     cd dir
 
-	Change the current directory to 'dir'.  If 'dir' is ommitted,
+	Change the current directory to 'dir'.  If 'dir' is omitted,
 	change the current directory to the home directory, if $HOME
 	is set in the environment.
 
@@ -286,10 +286,10 @@ Command sequence
 
 	q() defined
 	a() defined
-	start statment #1
+	start statement #1
 	quit from q()
-	after statment #1
-	start statment #2
+	after statement #1
+	start statement #2
 	abort from a()
 
     The QUIT within the q() function prevented the ``end of q()''
@@ -309,10 +309,10 @@ Command sequence
 
 	q() defined
 	a() defined
-	start statment #1
+	start statement #1
 	quit from q()
-	after statment #1
-	start statment #2
+	after statement #1
+	start statement #2
 	abort from a()
 	;		<==== calc interactive prompt
 
@@ -330,10 +330,10 @@ Command sequence
 
 	q() defined
 	a() defined
-	start statment #1
+	start statement #1
 	quit from q()
-	after statment #1
-	start statment #2
+	after statement #1
+	start statement #2
 	abort from a()
 
     The ABORT inside function a() halts the processing of statements
@@ -352,11 +352,11 @@ Command sequence
 	a() defined
 	; x = 3;
 	; {print "start #1"; if (x > 1) q()} print "after #1";
-	start statment #1
+	start statement #1
 	quit from q()
-	after statment #1
+	after statement #1
 	; {print "start #2"; if (x > 1) a()} print "after #2";
-	start statment #2
+	start statement #2
 	abort from a()
 	; {print "start #3"; if (x > 1) quit "quit from 3rd statement"}
 	start #3

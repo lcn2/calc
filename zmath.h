@@ -26,7 +26,7 @@
 /*
  * Data structure declarations for extended precision integer arithmetic.
  * The assumption made is that a long is 32 bits and shorts are 16 bits,
- * and longs must be addressible on word boundaries.
+ * and longs must be addressable on word boundaries.
  */
 
 
@@ -140,11 +140,11 @@ typedef SB32 SFULL;			/* signed FULL */
  */
 typedef USB32 QCKHASH;			/* 32 bit hash value */
 #if defined(HAVE_B64) && LONG_BITS == 32
-typedef HALF PRINT;			/* cast for zio printing fucctions */
+typedef HALF PRINT;			/* cast for zio printing functions */
 #define SWAP_B16_IN_PRINT(dest, src)	SWAP_B16_IN_HALF(dest, src)
 #define SWAP_B8_IN_PRINT(dest, src)	SWAP_B8_IN_HALF(dest, src)
 #else
-typedef FULL PRINT;			/* cast for zio printing fucctions */
+typedef FULL PRINT;			/* cast for zio printing functions */
 #define SWAP_B16_IN_PRINT(dest, src)	SWAP_B16_IN_FULL(dest, src)
 #define SWAP_B8_IN_PRINT(dest, src)	SWAP_B8_IN_FULL(dest, src)
 #endif
@@ -474,7 +474,7 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 
 /*
  * Some algorithms testing for values of a certain length.  Macros such as
- * zistiny() do this well.  In other cases algorthms require tests for values
+ * zistiny() do this well.  In other cases algorithms require tests for values
  * in comparison to a given power of 2.	 In the later case, zistiny() compares
  * against a different power of 2 on a 64 bit machine.	The macros below
  * provide a tests against powers of 2 that are independent of the work size.
@@ -645,7 +645,7 @@ EXTERN BOOL _math_abort_;	/* nonzero to abort calculations */
 EXTERN ZVALUE _tenpowers_[];	/* table of 10^2^n */
 
 /*
- * Bit fiddeling functions and types
+ * Bit fiddling functions and types
  */
 EXTERN HALF bitmask[];		/* bit rotation, norm 0 */
 EXTERN HALF lowhalf[];		/* bit masks from low end of HALF */

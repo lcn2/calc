@@ -213,12 +213,12 @@ brentsolve.cal
 
     brentsolve(low, high,eps)
 
-    A root-finder implementwed with the Brent-Dekker trick.
+    A root-finder implemented with the Brent-Dekker trick.
 
     brentsolve2(low, high,which,eps)
 
     The second function, brentsolve2(low, high,which,eps) has some lines
-    added to make it easier to hardcode the name of the helper function
+    added to make it easier to hard-code the name of the helper function
     different from the obligatory "f".
 
     See:
@@ -392,7 +392,7 @@ factorial2.cal
 
     bigcatalan(n)
 
-    Calculates the n-th Catalan number for n large. It is usefull
+    Calculates the n-th Catalan number for n large. It is useful
     above n~50,000 but defaults to the builtin function for smaller
     values.Meant as a complete replacement for catalan(n) with only a
     very small overhead.  See:
@@ -433,9 +433,9 @@ factorial2.cal
                       k = 0
 
     The other function stirling2caching(n,m) does it by way of the
-    reccurence relation and keeps all earlier results. This function
+    re-occurrence relation and keeps all earlier results. This function
     is much slower for computing a single value than stirling2(n,m) but
-    is very usefull if many Stirling numbers are needed, for example in
+    is very useful if many Stirling numbers are needed, for example in
     a series.  See:
 
         http://en.wikipedia.org/wiki/Stirling_numbers_of_the_second_kind
@@ -546,7 +546,7 @@ infinities.cal
     pinf()
 
     The symbolic handling of infinities. Needed for intnum.cal but might be
-    usefull elsewhere, too.
+    useful elsewhere, too.
 
 
 intfile.cal
@@ -595,13 +595,13 @@ intnum.cal
     This file offers some methods for numerical integration. Implemented are
     the Gauss-Legendre and the tanh-sinh quadrature.
 
-    All functions are usefull to some extend but the main function for
+    All functions are useful to some extend but the main function for
     quadrature is quad(), which is not much more than an abstraction layer.
 
-    The main workers are quadgl() for Gauss-legendre and quadts() for the
+    The main workers are quadgl() for Gauss-Legendre and quadts() for the
     tanh-sinh quadrature. The limits of the integral can be anything in the
     complex plane and the extended real line. The latter means that infinite
-    limits are supported by way of the smbolic infinities implemented in the
+    limits are supported by way of the symbolic infinities implemented in the
     file infinities.cal (automatically linked in by intnum.cal).
 
     Integration in parts and contour is supported by the "points" argument
@@ -661,7 +661,7 @@ intnum.cal
 
     The quad*core functions do not offer anything fancy but the third parameter
     controls the so called "order" which is just the number of nodes computed.
-    This can be quite usefull in some circumstances.
+    This can be quite useful in some circumstances.
 
         ; quadgldeletenodes()
         ; define f(x){ return exp(x);}
@@ -723,7 +723,7 @@ lambertw.cal
      ProductLog[branch,z] with the tested values.
 
      The series is only valid for the branches 0,-1, real z, converges
-     for values of z _very_ near the branchpoint -exp(-1) only, and must
+     for values of z _very_ near the branch-point -exp(-1) only, and must
      be given the branches explicitly.  See the code in lambertw.cal
      for further information.
 
@@ -746,7 +746,7 @@ lnseries.cal
     does so by computing the prime factorization of all of the number
     sequence 1,2,3...n, calculates the natural logarithms of the primes
     in 1,2,3...n and uses the above factorization to build the natural
-    logarithms of the rest of the sequence by sadding the logarithms of
+    logarithms of the rest of the sequence by adding the logarithms of
     the primes in the factorization.  This is faster for high precision
     of the logarithms and/or long sequences.
 
@@ -806,7 +806,7 @@ mfactor.cal
     at 2*start_k*n+1.  Skips values that are multiples of primes <= p_elim.
     By default, start_k == 1, rept_loop = 10000 and p_elim = 17.
 
-    The p_elim == 17 overhead takes ~3 minutes on an 200 Mhz r4k CPU and
+    The p_elim == 17 overhead takes ~3 minutes on an 200 MHz r4k CPU and
     requires about ~13 Megs of memory.	The p_elim == 13 overhead
     takes about 3 seconds and requires ~1.5 Megs of memory.
 
@@ -1317,7 +1317,7 @@ specialfunctions.cal
 	http://en.wikipedia.org/wiki/Polygamma
         http://dlmf.nist.gov/5
 
-    for information on the n-th derivative ofthe Euler gamma function. This
+    for information on the n-th derivative of the Euler gamma function. This
     function depends on the script zeta2.cal.
 
 
@@ -1334,7 +1334,7 @@ specialfunctions.cal
 
     zeta(s)
 
-    Calculates the value of the Rieman Zeta function at s.  See:
+    Calculates the value of the Riemann Zeta function at s.  See:
 
 	http://en.wikipedia.org/wiki/Riemann_zeta_function
         http://dlmf.nist.gov/25.2
@@ -1353,7 +1353,7 @@ statistics.cal
     invbetainc(x,a,b)
 
     Computes the inverse of the regularized beta function. Does so the
-    brute-force way wich makes it a bit slower.
+    brute-force way which makes it a bit slower.
 
     betapdf(x,a,b)
     betacdf(x,a,b)
@@ -1433,7 +1433,7 @@ sumtimes.cal
     Give the user CPU time for various ways of evaluating sums, sums of
     squares, etc, for large lists and matrices.  N is the size of
     the list or matrix to use.  The doalltimes() function will run
-    all fo the sumtimes tests.  For example:
+    all of the sumtimes tests.  For example:
 
     	doalltimes(1e6);
 

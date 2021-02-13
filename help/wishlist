@@ -18,6 +18,8 @@ Please read CONTRIB-CODE or run the following calc command:
        become known.  In particular, look at better algorithms for
        very large numbers -- multiply, square and mod in particular.
 
+    *  Correct typos in text and code comments.
+
     *  Implement an autoload feature.  Associate a calc resource filename
        with a function or global variable.  On the first reference of
        such item, perform an automatic load of that file.
@@ -69,7 +71,7 @@ Please read CONTRIB-CODE or run the following calc command:
 
        If you have a command that takes a very long time to execute,
        it would be nice if you could get at its result without having
-       to spend the time to reexecute it.
+       to spend the time to re-execute it.
 
     *  Add a binding to delete a value from the history list.
 

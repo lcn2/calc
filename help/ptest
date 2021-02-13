@@ -40,12 +40,12 @@ DESCRIPTION
     is sufficient to consider 1 < b < n - 1.
 
     Note that if ptest returns 1, this does not mean that n is
-    prime!  If n is composit (not prime) and a pseudoprime then
+    prime!  If n is composite (not prime) and a pseudoprime then
     ptest may return 1.  For this reason, if ptest returns 1, this
     is not proof that n is prime.
 
     If ptest returns 0, then this is proof that n is not prime
-    (composit).
+    (composite).
 
     The bases for ptest(n, count, skip) are selected as follows:
 

@@ -14,7 +14,7 @@ DESCRIPTION
     Truncate x to j decimal places.  If j is omitted, 0 places is assumed.
     Specifying zero places makes the result identical to int().
 
-    Truncation of a non-integer prodcues values nearer to zero.
+    Truncation of a non-integer produces values nearer to zero.
 
 EXAMPLE
     ; print trunc(pi()), trunc(pi(), 5)

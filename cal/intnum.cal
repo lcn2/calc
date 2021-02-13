@@ -295,7 +295,7 @@ define quadts(a, b, points)
                  * as the number of equally spaced intervals on a straight line
                  * connecting a and b. Computing the segments here is a bit
                  * more complicated but not much, it should have been taught in
-                 * highschool.
+                 * high school.
 		 * Other contours by way of a list of points */
 		slope = (im(b) - im(a)) / (re(b) - re(a));
 		C = (im(a) + slope) * re(a);

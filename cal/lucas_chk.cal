@@ -303,7 +303,7 @@ read -once "lucas.cal";
  *	[quiet] if given and != 0, then do not print individual test results
  *
  * returns:
- *	1	all is ok
+ *	1	all is OK
  *	0	something went wrong
  */
 define

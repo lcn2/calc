@@ -35,7 +35,7 @@ defaultverbose = 1;	/* default verbose value */
  * with zero value, when the definition is read.
  *
  * The variable a5100 is initialized with the value x if and when this
- * function is first called with a positive even x. The varable b5100
+ * function is first called with a positive even x. The variable b5100
  * is similarly initialized if and when this function is first called positive
  * odd x.
  *

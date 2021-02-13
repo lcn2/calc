@@ -260,4 +260,4 @@ help unexpected
 ```
 
 It contains information about differences between C and calc
-that may surprize C programmers.
+that may surprise C programmers.

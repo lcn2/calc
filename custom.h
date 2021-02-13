@@ -35,7 +35,7 @@
  *
  * before they include this file.
  *
- * Keep this file down to a minimum.   Don't put custom builtin funcion
+ * Keep this file down to a minimum.   Don't put custom builtin function
  * stuff in this file!
  */
 
@@ -45,7 +45,7 @@
 
 
 /*
- * arg count definitons
+ * arg count definitions
  */
 #define MAX_CUSTOM_ARGS 100	/* maximum number of custom arguments */
 

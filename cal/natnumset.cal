@@ -76,7 +76,7 @@
  *	A \ B = set difference, integers in A but not in B
  *
  *	~A	= complement of A, integers not in A
- *	#A	= number ofintegers in A
+ *	#A	= number of integers in A
  *	!A	= 1 or 0 according as A is empty or not empty
  *	+A	= sum of the members of A
  *
@@ -100,7 +100,7 @@
  *	A >= B = (B <= A)
  *	A > B = (B < A)
  *
- * Expresssions may be formed from the above "arithmetic" operations in
+ * Expressions may be formed from the above "arithmetic" operations in
  * the usual way, with parentheses for variations from the usual precedence
  * rules.  For example
  *

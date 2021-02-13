@@ -122,7 +122,7 @@ main(int argc, char **argv)
 #else /* HAVE_FILEPOS_SCALAR */
 	/*
 	 * Normally a "(*(dest) = *(src))" would do, but on some
-	 * systems a FILEPOS is not a scalar hince we must memcpy.
+	 * systems a FILEPOS is not a scalar hence we must memcpy.
 	 */
 	printf("#define SWAP_HALF_IN_FILEPOS(dest, src)\t%s\n",
 	    "\\\n\tmemcpy((void *)(dest), (void *)(src), "
@@ -163,7 +163,7 @@ main(int argc, char **argv)
 	 * Little Endian
 	 *
 	 * Normally a "(*(dest) = *(src))" would do, but on some
-	 * systems an off_t is not a scalar hince we must memcpy.
+	 * systems an off_t is not a scalar hence we must memcpy.
 	 */
 #if defined(HAVE_OFF_T_SCALAR)
 	printf("#define SWAP_HALF_IN_OFF_T(dest, src)\t\t%s\n",
@@ -171,7 +171,7 @@ main(int argc, char **argv)
 #else /* HAVE_OFF_T_SCALAR */
 	/*
 	 * Normally a "(*(dest) = *(src))" would do, but on some
-	 * systems, a off_t is not a scalar hince we must memcpy.
+	 * systems, a off_t is not a scalar hence we must memcpy.
 	 */
 	printf("#define SWAP_HALF_IN_OFF_T(dest, src)\t%s%d%s\n",
 	    "memcpy((void *)(dest), (void *)(src), ", stsizelen/8, ")");
@@ -214,7 +214,7 @@ main(int argc, char **argv)
 	 * Little Endian
 	 *
 	 * Normally a "(*(dest) = *(src))" would do, but on some
-	 * systems, a DEV is not a scalar hince we must memcpy.
+	 * systems, a DEV is not a scalar hence we must memcpy.
 	 */
 	printf("#define SWAP_HALF_IN_DEV(dest, src)\t%s%d%s\n",
 	    "memcpy((void *)(dest), (void *)(src), ", devlen/8, ")");
@@ -256,7 +256,7 @@ main(int argc, char **argv)
 	 * Little Endian
 	 *
 	 * Normally a "(*(dest) = *(src))" would do, but on some
-	 * systems, a INODE is not a scalar hince we must memcpy.
+	 * systems, a INODE is not a scalar hence we must memcpy.
 	 */
 	printf("#define SWAP_HALF_IN_INODE(dest, src)\t%s%d%s\n",
 	    "memcpy((void *)(dest), (void *)(src), ", inodelen/8, ")");

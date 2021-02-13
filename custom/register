@@ -20,14 +20,14 @@ DESCRIPTION
 
     The number of custom registers is defined at compile time.
     There will be at least 32 registers although there could be more
-    added in the future.  It may be deterimed by:
+    added in the future.  It may be determined by:
 
 		custom("sysinfo", "REGNUM_MAX")
 
     The custom registers are initialized to 0 by the internal
     function libcalc_call_me_first() during calc startup.
 
-    This custom interface is intented to make it easier to interface
+    This custom interface is intended to make it easier to interface
     with special purpose hardware.
 
 EXAMPLE
@@ -46,7 +46,7 @@ EXAMPLE
 LIMITS
     calc must be built with ALLOW_CUSTOM= -DCUSTOM
     calc must be executed with a -C arg.
-    The regnum numbe bee an integer >= 0 and < REGNUM_MAX where
+    The regnum number bee an integer >= 0 and < REGNUM_MAX where
         REGNUM_MAX is a compile time constant that is >= 32.
 
 LIBRARY

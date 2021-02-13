@@ -77,7 +77,7 @@ qsincos(NUMBER *q, long bitnum, NUMBER **vs, NUMBER **vc)
 	s++;
 	if (s < -h)
 		s = -h;
-	n = h + s;	/* n is number of squarings that will be required */
+	n = h + s;	/* n is number of squaring that will be required */
 	m = bitnum + n;
 	while (s > 0) {		/* increasing m by ilog2(s) */
 		s >>= 1;
@@ -1059,7 +1059,7 @@ qlog(NUMBER *q, NUMBER *epsilon)
 		/* first time call */
 		ln_10_epsilon = qcopy(epsilon);
 	} else if (qcmp(ln_10_epsilon, epsilon) == TRUE) {
-		/* replaced cacheed value with epsilon arg */
+		/* replaced cached value with epsilon arg */
 		qfree(ln_10_epsilon);
 		ln_10_epsilon = qcopy(epsilon);
 	} else if (ln_10 != NULL) {

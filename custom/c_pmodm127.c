@@ -124,7 +124,7 @@ c_pmodm127(char UNUSED *name, int UNUSED count, VALUE **vals)
 	result.v_type = V_NUM;
 
 	/*
-	 * compute 2^(2^127-1) mod q by modular exponentation
+	 * compute 2^(2^127-1) mod q by modular exponentiation
 	 *
 	 * We implement the following calc code in C:
 	 *

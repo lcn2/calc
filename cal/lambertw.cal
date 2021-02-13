@@ -83,7 +83,7 @@ define __CZ__lambertw_m1(z,eps){
   or by using the function lambertw_series_print() after running
   lambertw_series(z,eps,branch,terms) at least once with the wanted number of
   terms and z = 1 (which might throw an error because the series will not
-  converge in anybodies lifetime for something that far from the branchpoint).
+  converge in anybodies lifetime for something that far from the branch point).
 
 
 */
@@ -105,7 +105,7 @@ define lambertw_series_print(){
 }
 
 /*
-   The series is fast but only if _very_ close to the branchpoint
+   The series is fast but only if _very_ close to the branch point
    The exact branch must be given explicitly, e.g.:
 
 ; lambertw(-exp(-1)+.001)-lambertw_series(-exp(-1)+.001,epsilon()*1e-10,0)

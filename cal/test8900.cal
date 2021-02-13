@@ -26,7 +26,7 @@ static __CZ__eps = 1e-20;
 
 
 /*
- * load once, the calc resource functions contribued by Christoph Zurnieden
+ * load once, the calc resource functions contributed by Christoph Zurnieden
  */
 read -once bernpoly.cal;
 read -once brentsolve.cal;
@@ -45,7 +45,7 @@ read -once intnum.cal;
 /*
  * tests of correctness of the functions implemented by the above listed
  * author. All values tested against have been computed with at least two
- * independant algorithms where possible (indicated if not).
+ * independent algorithms where possible (indicated if not).
  */
 define t01()
 {
@@ -1649,7 +1649,7 @@ define t03()
 /*  test 04 tests polygamma(m,z) for the following values (m==0 gets computed
  *  by psi()).
  *  Values tested against were computed with Mathematica(TM) only
- *  (z in the left complex halfplane does not get computed yet)
+ *  (z in the left complex half plane does not get computed yet)
  */
 define t04()
 {

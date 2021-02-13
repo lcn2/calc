@@ -267,7 +267,7 @@ DESCRIPTION
 	speed relative the default Blum generator.	As of Feb 1997,
 	the Blum moduli associated with 13 <= newn < 20 appear to
 	be well beyond the scope of hardware and algorithms,
-	and 9 <= newn < 12 might be factorable with extreme difficulty.
+	and 9 <= newn < 12 might be factor-able with extreme difficulty.
 
 	The following table may be useful as a guide for how easy it
 	is to factor the modulus:

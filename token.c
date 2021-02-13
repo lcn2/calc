@@ -710,7 +710,7 @@ scanerror(int skip, char *fmt, ...)
 {
 	va_list ap;
 	char *name;		/* name of file with error */
-	int len;		/* length of error msg bufer */
+	int len;		/* length of error msg buffer */
 
 	/* count the error */
 	errorcount++;
@@ -815,7 +815,7 @@ warning(char *fmt, ...)
 {
 	va_list ap;
 	char *name;		/* name of file with error */
-	int len;		/* length of error msg bufer */
+	int len;		/* length of error msg buffer */
 
 	/* count this warning */
 	++calc_warn_cnt;

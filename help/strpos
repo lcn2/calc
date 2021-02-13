@@ -11,7 +11,7 @@ TYPES
     return	int
 
 DESCRIPTION
-    This function returns the location of the first occurance of the string t
+    This function returns the location of the first occurrence of the string t
     in the string s.  If t is not found within s, 0 is returned.  If t is
     found at the beginning of s, 1 is returned.
 

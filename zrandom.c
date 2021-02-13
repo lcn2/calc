@@ -357,7 +357,7 @@
  *
  *	    http://www.LavaRnd.org/
  *
- *	for an explination of how the LavaRnd random number generator works.
+ *	for an explanation of how the LavaRnd random number generator works.
  *
  *	For a given newn, we select a given bit length.	 For 0 < newn <= 20,
  *	the bit length selected was by:

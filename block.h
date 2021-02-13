@@ -55,7 +55,7 @@
  *		blkchunk defaults to BLK_CHUNKSIZE
  *
  *	blkfree(x)
- *		Reduce storage down to 0 octetes.
+ *		Reduce storage down to 0 octets.
  *
  *	size(x)
  *		The length of data stored in the block.
@@ -88,7 +88,7 @@
  *	blkmove(dest, src, length [, dest_offset [, src_offset]])
  *		0 <= length <= blksize(x)
  *		offset's are restricted in value by block type
- *		overlapping moves are handeled correctly
+ *		overlapping moves are handled correctly
  *
  *	blkccpy(dest, src, stopval, length [, dest_offset [, src_offset]])
  *		0 <= length <= blksize(x)
@@ -104,7 +104,7 @@
  *		b = a*k for some integer k >= 1
  *
  *	scatter(src, dest1, dest2 [, dest3 ] ...)
- *		copy sucessive octets from src into dest1, dest2, ...
+ *		copy successive octets from src into dest1, dest2, ...
  *		    restarting with dest1 after end of list
  *		stops at end of src
  *
@@ -184,7 +184,7 @@ EXTERN int blk_debug;	/* 0 => debug off */
 /* length of data stored in a block */
 #define blklen(blk) ((blk)->datalen)
 
-/* block footpint in memory */
+/* block footprint in memory */
 #define blksizeof(blk) ((blk)->maxsize)
 
 /* block allocation chunk size */

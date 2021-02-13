@@ -14,7 +14,7 @@ DESCRIPTION
     The function printf() is similar to the C function with the same name.
     The most significant difference is that there is no requirement
     that the types of values of the arguments x_i match the
-    corresponding format specifier in fmt.  Thus, whatver the
+    corresponding format specifier in fmt.  Thus, whatever the
     format specifier, a number is printed as a number, a string as
     a string, a list as a list, a matrix as a matrix, an xx-object
     as an xx-object, etc.
@@ -26,7 +26,7 @@ DESCRIPTION
 
 	    an optional '-'
 	    zero or more decimal digits
-	    an optional '. followed by zero or more decimal deigits
+	    an optional '. followed by zero or more decimal digits
 	    an optional 'l'
 	    one of the letters: d, s, c, f, e, g, r, o, x, b,
 

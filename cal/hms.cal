@@ -53,7 +53,7 @@ define hms_add(a, b)
 {
     local obj hms ans;		/* return value */
 
-    /* initalize value to 1st arg */
+    /* initialize value to 1st arg */
     if (istype(a, ans)) {
 	/* 1st arg is hms object, load it */
 	ans.hour = a.hour;
@@ -110,7 +110,7 @@ define hms_sub(a, b)
 {
     local obj hms ans;		/* return value */
 
-    /* initalize value to 1st arg */
+    /* initialize value to 1st arg */
     if (istype(a, ans)) {
 	/* 1st arg is hms object, load it */
 	ans.hour = a.hour;
@@ -352,11 +352,11 @@ define fixhms(a)
 	quit "attempt to fix a non hms object";
     }
 
-    /* force minutes to be intergral */
+    /* force minutes to be integral */
     a.min += frac(a.hour) * 60;
     a.hour = int(a.hour);
 
-    /* force hours to be intergral */
+    /* force hours to be integral */
     a.sec += frac(a.min) * 60;
     a.min = int(a.min);
 

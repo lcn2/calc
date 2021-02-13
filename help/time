@@ -9,7 +9,7 @@ TYPES
 
 DESCRIPTION
     The time() builtin returns the number of seconds since the Epoch,
-    which according to Posix is:
+    which according to POSIX is:
 
 	Thr Jan	 1 00:00:00 UTC 1970
 

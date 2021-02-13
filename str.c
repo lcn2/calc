@@ -78,7 +78,7 @@ initstr(STRINGHEAD *hp)
  * Copy a string to the end of a list of strings, and return the address
  * of the copied string.  Returns NULL if the string could not be copied.
  * No checks are made to see if the string is already in the list.
- * The string cannot be null or have imbedded nulls.
+ * The string cannot be null or have embedded nulls.
  *
  * given:
  *	hp		header of string storage
@@ -1230,7 +1230,7 @@ STRING *
 slink(STRING *s)
 {
 	if (s->s_links <= 0) {
-		math_error("Argument for slink has nonpositive links!!!");
+		math_error("Argument for slink has non-positive links!!!");
 		/*NOTREACHED*/
 	}
 	++s->s_links;
@@ -1242,7 +1242,7 @@ void
 sfree(STRING *s)
 {
 	if (s->s_links <= 0) {
-		math_error("Argument for sfree has nonpositive links!!!");
+		math_error("Argument for sfree has non-positive links!!!");
 		/*NOTREACHED*/
 	}
 	if (--s->s_links > 0 || s->s_len == 0)

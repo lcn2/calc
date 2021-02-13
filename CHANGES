@@ -16,7 +16,7 @@ The following are the changes from calc version 2.12.8.0 to date:
     calc without any compiler errors or warnings,
     even with -Werror -Wextra -pedantic.
 
-    To print out information about the calc compliation
+    To print out information about the calc compilation
     environment, we added the following make rule:
 
 	make calcinfo
@@ -30,15 +30,17 @@ The following are the changes from calc version 2.12.8.0 to date:
     question Email address.  Created a new calc contribution Email
     address.  See the BUGS file for details.
 
-    Added "help questions" to print the QUESIONS help file.
+    Added "help questions" to print the QUESTIONS help file.
 
     If the environment variable $CALCHELP is defined and is non-empty,
-    then calc help files will be in the direcgory by the $CALCHISTFILE
+    then calc help files will be in the directory by the $CALCHISTFILE
     environment variable.
 
     If the environment variable $CALCCUSTOMHELP is defined and is
-    non-empty, then custom calc help files will be in the direcgory
+    non-empty, then custom calc help files will be in the directory
     by the $CALCCUSTOMHELP environment variable.
+
+    Fixed a number of typos in text and in source code comments.
 
     The calc-tester mailing list has been retired.  See:
 
@@ -104,7 +106,7 @@ The following are the changes from calc version 2.12.7.1 to 2.12.7.5:
     Copied missing description lines from help/intro to README.md
     "What is calc?" section.  <<GitHub guilhermgonzaga>>
 
-    GCC 7 added a warning on fall throughs in case statements.  It's
+    GCC 7 added a warning on fall through in case statements.  It's
     enabled by -Wextra and treated as an error due to -Wall so it
     breaks compilation.  See -Wimplicit-fallthrough in the GCC
     manual.  The default value is 3, which means a comment matching
@@ -187,10 +189,10 @@ The following are the changes from calc version 2.12.6.9 to 2.12.6.9:
     Added regression tests 3729 thru 3732 to test E_TAN3, E_COT3,
     E_SEC3 and E_CSC3 respectively.
 
-    Added experimential %g printf (and strprintf) format implementation
+    Added experimental %g printf (and strprintf) format implementation
     based on pull request from github user 10110111.
 
-    Made exterimental changes to macOS builds to not require use of
+    Made experimental changes to macOS builds to not require use of
     /usr/include.  The INCDIR for macOS uses:
 
 	INCDIR= $(shell xcrun --show-sdk-path --sdk macosx)/usr/include
@@ -244,7 +246,7 @@ The following are the changes from calc version 2.12.6.6 to 2.12.6.8:
     Fixed an error message buffer overflow thanks to a report by
     Frank Peters <nlp at northernlightsphoto dot biz>.
 
-    Replaced all use of the C funcion sprintf() with snprintf().
+    Replaced all use of the C function sprintf() with snprintf().
     Replaced all use of the C funcion vsprintf() with vsnprintf().
     Replaced all DONT_HAVE_VSPRINTF with DONT_HAVE_VSNPRINTF.
     Replaced all Makefile var ${HAVE_VSPRINTF} with ${HAVE_VSNPRINTF}.
@@ -380,7 +382,7 @@ The following are the changes from calc version 2.12.5.4 to 2.12.5.6:
     The improved gen_v1() function is capable of returning a value
     for all valid values of h and n.  As a result, the trial tables
     used by gen_v1() have been changed to a short list of values
-    to try, in order ot likelyhood of success, before doing an
+    to try, in order ot likelihood of success, before doing an
     exhaustive search for a v1 value to return.
 
     Removed lucas_tbl.cal calc resource file.  This file was made
@@ -684,7 +686,7 @@ The following are the changes from calc version 2.12.4.6 to version 2.12.4.10:
     Silenced annoying warning about unused variable 'intp'
     while compiling endian.c under some circumstances.
 
-    Fixed typo in redeclaration warnings.  Thanks to
+    Fixed typo in re-declaration warnings.  Thanks to
     Christoph Zurnieden <czurnieden at gmx dot de> for this report.
 
     Added a number of calc resource files by

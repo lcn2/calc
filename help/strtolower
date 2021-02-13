@@ -14,7 +14,7 @@ DESCRIPTION
    All ASCII upper case letters get transformed into lower case letters. This
    function can be locale dependent.
 
-   The function returns the lowercase'd string.
+   The function returns the lowercased string.
 
 EXAMPLE
     ; strtolower(" GNU Lesser General Public License");

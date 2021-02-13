@@ -58,7 +58,7 @@
  * not prevent calling the other routines, but fancy command line editing
  * is then disabled.
  */
-#define HIST_SUCCESS	0	/* successfully inited */
+#define HIST_SUCCESS	0	/* successfully initialized */
 #define HIST_INITED	1	/* initialization is already done */
 #define HIST_NOFILE	2	/* bindings file could not be read */
 #define HIST_NOTTY	3	/* terminal modes could not be set */

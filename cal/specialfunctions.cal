@@ -442,8 +442,8 @@ define lngamma(z)
 			if (tmp2 < tmp) {
 			    return
 				newerror(strcat
-					 ("lngamma(1): something happend that ",
-					  "should not have happend"));
+					 ("lngamma(1): something happened ",
+					  "that shouldn't have happened"));
 			}
 		    }
 		}
@@ -519,8 +519,8 @@ define lngamma(z)
 			    if (tmp2 < tmp) {
 				return
 				    newerror(strcat
-					     ("lngamma(1): something happend ",
-					      "that should not have happend"));
+					     ("lngamma(1): something happened ",
+					      "that should not have happened"));
 			    }
 			}
 		    }
@@ -576,8 +576,8 @@ define lngamma(z)
 			    if (tmp2 < tmp) {
 				return
 				    newerror(strcat
-					     ("lngamma(1): something happend ",
-					      "that should not have happend"));
+					     ("lngamma(1): something happened ",
+					      "that should not have happened"));
 			    }
 			}
 		    }
@@ -1047,7 +1047,7 @@ define __CZ__ibeta_cf_var_dm(a, b, z, max)
 	}
     }
     if (m > max) {
-	return newerror("ibeta: continous fraction does not converge");
+	return newerror("ibeta: continuous fraction does not converge");
     }
     return f;
 }
@@ -1290,7 +1290,7 @@ define __CZ__erfinvapprox(x)
 	     - (2 / (pi() * a) + (ln(1 - x ^ 2)) / 2));
 }
 
-/* complementary inverse errror function, faster at about x < 1-.91
+/* complementary inverse error function, faster at about x < 1-.91
    Henry E. Fettis. "A stable algorithm for computing the inverse error function
    in the 'tail-end' region" Math. Comp., 28:585-587, 1974.
 */
@@ -1324,7 +1324,7 @@ define __CZ__fettiscf(y, n)
     return t / (1 + r);
 }
 
-/* inverse errror function, faster at about x<=.91*/
+/* inverse error function, faster at about x<=.91*/
 define __CZ__inverfbin(x)
 {
     local places approx flow fhigh eps high low mid fmid epsilon;
@@ -1370,7 +1370,7 @@ define erfinv(x)
 	x = -x;
 	flag = 1;
     }
-    /* No need for full pecision */
+    /* No need for full precision */
     eps = epsilon(1e-20);
     if (eps >= 1e-40) {
 	/* Winitzki, Sergei (6 February 2008). "A handy approximation for the

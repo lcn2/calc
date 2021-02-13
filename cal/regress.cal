@@ -43,7 +43,7 @@ global prob;				/* libregress.cal problem counter */
 prob = 0;				/* clear problem counter */
 
 errcount(0),;				/* clear error count */
-errmax(-1),;				/* prevent errcount from abouting */
+errmax(-1),;				/* prevent errcount from aborting */
 
 global ecnt;				/* expected value of errcount() */
 ecnt = 0;				/* clear expected errcount() value */
@@ -453,7 +453,7 @@ define test_config()
 					'539: config("more", ">> ") == ";; "');
 	vrfy(config("all") == oldcfg,	'540: config("all") == oldcfg');
 
-	/* restore the configation at the start of this function */
+	/* restore the configuration at the start of this function */
 	vrfy(config("all",callcfg) == oldcfg,
 					'541: config("all",callcfg) == oldcfg');
 
@@ -3156,7 +3156,7 @@ print '047: parsed test_poly()';
 
 
 /*
- * test_det - more determinent testing
+ * test_det - more determinant testing
  */
 read -once "test3300";
 print '048: read -once test3300';
@@ -3473,7 +3473,7 @@ print '065: parsed test_param()';
 
 
 /*
- * test_noarg - test missing argment functionality
+ * test_noarg - test missing argument functionality
  */
 define test_noarg()
 {
@@ -5183,7 +5183,7 @@ define test_size()
 			'5715: sizeof(17^139 + 674)*2 == sizeof(q)');
 
 	/*
-	 * recipricals are the same size of their integer inverses
+	 * reciprocals are the same size of their integer inverses
 	 */
 	q = 1/13;
 	print				  '5716: q = 1/13';
@@ -5261,7 +5261,7 @@ define test_size()
 
 	/*
 	 * size of a matrix is the sum of the sizes of the elements
-	 * sizeof of a matrix is the sum of the sizeofs of the elements
+	 * sizeof of a matrix is the sum of the sizeof's of the elements
 	 */
 	mat m[] = {z,q,c};
 	print				  '5752: mat m[] = {z,q,c}';
@@ -5381,7 +5381,7 @@ define test_is()
 {
 	local loc;	/* unassigned local variable */
 	local a;	/* assoc */
-	local ofd;	/* open file desriptor */
+	local ofd;	/* open file descriptor */
 	local cfd;	/* closed file descriptor */
 	local blk;	/* unnamed block */
 	local nblk;	/* named block */
@@ -5398,7 +5398,7 @@ define test_is()
 	local object;	/* object */
 	local rand;	/* rand seed */
 	local random;	/* random seed */
-	local real;	/* real non-intger value */
+	local real;	/* real non-integer value */
 	local prime;	/* odd prime */
 	local square;	/* square of an odd prime */
 	local string;	/* string */
@@ -7482,7 +7482,7 @@ print '190: parsed test_somenew()';
 
 
 /*
- * test_exponentiation - test new exponentiation functionaltiy
+ * test_exponentiation - test new exponentiation functionality
  */
 define test_exponentiation()
 {
@@ -7573,7 +7573,7 @@ define test_quit()
 	quit;
 	prob('quit did not end the test_quit() function');
 
-	/* 8400 serise continued after return, do not print end here */
+	/* 8400 series continued after return, do not print end here */
 }
 print '191: parsed test_quit()';
 
@@ -7874,7 +7874,7 @@ print	'8406: Ending test_quit';
 
 
 /*
- * test_divmod - psuedo-random tests on the // and % with various rounding modes
+ * test_divmod - pseudo-random tests on the // and % with various rounding modes
  */
 print;
 print '8500: Starting test of divmod'
@@ -7900,7 +7900,7 @@ vrfy(config("redecl_warn",0),	  '8651: config("redecl_warn",0)');
 vrfy(config("dupvar_warn",0),	  '8652: config("dupvar_warn",0)');
 vrfy(u_glob == 6,		  '8653: u_glob == 6');
 global u_glob = 555;
-print 				  '8654: reclare u_glob';
+print 				  '8654: declare u_glob';
 vrfy(u_glob == 555,		  '8655: u_glob == 555');
 define func_8650(u_glob) { local u_glob; return u_glob; }
 print				  '8656: u_glob as both local and parameter';
@@ -7928,7 +7928,7 @@ vrfy(dotest("set8700.line", 8703) == 0,
 
 
 /*
- * new exponentiation functionaltiy
+ * new exponentiation functionality
  */
 print;
 return test_exponentiation();
@@ -8074,7 +8074,7 @@ return test_functions2();
  *
  *	beer.cal	- prints a bunch of things when loaded
  *	hello.cal	- designed to go into an infinite loop
- *	lucal.cal	- already read by this file
+ *	lucas.cal	- already read by this file
  *	lucas_chk.cal	- already read by this file
  *	regress.cal	- this file
  *	surd.cal	- already read by this file

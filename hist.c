@@ -403,7 +403,7 @@ hist_term(void)
 	hist_last = NULL;
 
 	/*
-	 * restore orignal tty state
+	 * restore original tty state
 	 */
 	(void) orig_tty(STDIN);
 }

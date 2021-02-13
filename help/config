@@ -25,7 +25,7 @@ DESCRIPTION
 
 	    "trace"		turns tracing features on or off
 	    "display"		sets number of digits in prints.
-	    "epsilon"		sets error value for transcendentals.
+	    "epsilon"		sets error value for transcendental.
 	    "maxprint"		sets maximum number of elements printed.
 	    "mode"		sets printout mode.
 	    "mode2"		sets 2nd base printout mode.

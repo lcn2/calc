@@ -25,7 +25,7 @@
 #
 # This makefile contains only those critical rules (such as all, clean, etc.)
 # and the common rules needed in development (such as chk, check, etc.).
-# This makefiile has a few special rules that are used to set the version
+# This makefile has a few special rules that are used to set the version
 # string in the shipped makefiles (such as Makefile.ship).
 
 # Copyright (C) 1999-2008,2014  Landon Curt Noll
@@ -53,7 +53,7 @@
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
 
-# Try uname -s if the target was not alreadhy set on the make command line
+# Try uname -s if the target was not already set on the make command line
 #
 ifeq ($(target),)
 target=$(shell uname -s 2>/dev/null)
@@ -110,7 +110,7 @@ TOP_MAKE_FILE= Makefile
 EXT=
 #EXT=.exe
 
-# This value is configured for chongo@theta.mellis.com.
+# This value is configured for chongo for his laptop
 #
 RPM_TOP= ${HOME}/rpm/calc
 
@@ -170,7 +170,7 @@ V=@:
 #
 XARG=
 
-# We pass these make varaibles to the end of each make command line
+# We pass these make variables to the end of each make command line
 # that invokes the ${MAKE_FILE}.
 #
 XVAR= \
@@ -574,7 +574,7 @@ custom/.all:
 
 ###
 #
-# building calc-static and static lib*.a libraires
+# building calc-static and static lib*.a libraries
 #
 ###
 
@@ -603,7 +603,7 @@ libcustcalc.a:
 # Home grown make dependency rules.  Your system make not support
 # or have the needed tools.  You can ignore this section.
 #
-# We will form a skelaton tree of *.c files containing only #include "foo.h"
+# We will form a skeleton tree of *.c files containing only #include "foo.h"
 # lines and .h files containing the same lines surrounded by multiple include
 # prevention lines.  This allows us to build a static depend list that will
 # satisfy all possible cpp symbol definition combinations.
@@ -712,7 +712,7 @@ chk:
 # debug
 #
 # make calcinfo:
-#       * print information about the host ane compile environment
+#       * print information about the host and compile environment
 #
 # make env:
 #	* print major Makefile variables
@@ -836,7 +836,7 @@ inst_files:
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
 
-# The olduninstall rule will remove calc files from the older, histroic
+# The olduninstall rule will remove calc files from the older, historic
 # locations under the /usr/local directory.  If you are using the
 # new default values for ${BINDIR}, ${CALC_SHAREDIR}, ${INCDIR} and ${LIBDIR}
 # then you can use this rule to clean out the older calc stuff under
@@ -894,7 +894,7 @@ strip:
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
 
-# calc-symlink - setup symlinks from stardard locations into the ${T} tree
+# calc-symlink - setup symlinks from standard locations into the ${T} tree
 #
 calc-symlink:
 	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='

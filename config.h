@@ -130,7 +130,7 @@ struct config {
 	LEN sq2;		/* size of number to use square algorithm 2 */
 	LEN pow2;		/* size of modulus to use REDC for powers */
 	LEN redc2;		/* size of modulus to use REDC algorithm 2 */
-	BOOL tilde_ok;		/* ok to print a tilde on aproximations */
+	BOOL tilde_ok;		/* ok to print a tilde on approximations */
 	BOOL tab_ok;		/* ok to print tab before numeric values */
 	LEN quomod;		/* quomod() default rounding mode */
 	LEN quo;		/* quotient // default rounding mode */
@@ -163,7 +163,7 @@ struct config {
 	BOOL *allow_custom;	/* ptr to if custom functions are allowed */
 	char *version;		/* calc version string */
 	int baseb;		/* base for calculations */
-	BOOL redecl_warn;	/* TRUE => warn of redeclating variables */
+	BOOL redecl_warn;	/* TRUE => warn of redeclaring variables */
 	BOOL dupvar_warn;	/* TRUE => warn of var name collisions */
 };
 typedef struct config CONFIG;

@@ -63,7 +63,7 @@ typedef struct {
  *	Seek loc bytes from the beginning of the open file, stream.
  *
  * f_tell(FILE *stream, FILEPOS *loc)
- *	Set loc to bytes from the beinning of the open file, stream.
+ *	Set loc to bytes from the beginning of the open file, stream.
  *
  * We assume that if your system does not have fgetpos/fsetpos,
  * then it will have a FILEPOS that is a scalar type (e.g., long).

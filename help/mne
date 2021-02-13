@@ -1,5 +1,5 @@
 NAME
-    mne - test for inequality of real numbers modulo a specifed number
+    mne - test for inequality of real numbers modulo a specified number
 
 SYNOPSIS
     mne(x, y, md)

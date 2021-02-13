@@ -1983,7 +1983,7 @@ powvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		}
 		break;
 
-	/* unspported exponent type */
+	/* unsupported exponent type */
 	default:
 		*vres = error_value(E_POWI2);
 		break;
@@ -1995,7 +1995,7 @@ powvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 /*
  * Raise one value to another value's power, within the specified error.
  * Result is placed in the indicated location.  If v3 is NULL, the
- * value conf->epsiilon is used.
+ * value conf->epsilon is used.
  */
 void
 powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
@@ -2017,7 +2017,7 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		return;
 	}
 
-	/* NULL epsilon means use built-in epslion value */
+	/* NULL epsilon means use built-in epsilon value */
 	if (v3 == NULL) {
 		epsilon = conf->epsilon;
 	} else {

@@ -20,13 +20,13 @@ DESCRIPTION
     If y is zero, zero is assigned to Q, x to R and 0 or 1 returned
     according as x is zero or nonzero.
 
-    In the remaining case, y nonzero and x/y not an intger, there
+    In the remaining case, y nonzero and x/y not an integer, there
     are two pairs (q,r) for which x = q * y + r, q is an integer, and
     abs(r) < abs(y).  Depending on the low 5 bits of rnd, the q and r
     of one of these pairs will be assigned to Q and R respectively,
     and the number 1 returned. The effects of rnd can be described in
     terms of the way q is related to x/y, e.g. by rounding down,
-    rounding towards zero, rounding to a nearest integeri, etc. or
+    rounding towards zero, rounding to a nearest integer, etc. or
     by properties of the remainder r, e.g. positive, negative,
     smallest, etc. The effects of the most commonly used values of
     rnd are described in the following table:
@@ -36,7 +36,7 @@ DESCRIPTION
 	0   round down. q = floor(x/y)	   same sign as y
 	1   round up, q = ceil(x/y)	   opposite sign to y
 	2   round to zero, q = int(x/y)	   same sign as x, r = y * frac(x/y)
-	3   round from zero		   oppsite sign to x
+	3   round from zero		   opposite sign to x
 	4				   positive
 	5				   negative
 	6				   same sign as x/y
@@ -49,7 +49,7 @@ DESCRIPTION
     is the smallest (in absolute value) remainder except when x/y is
     halfway between consecutive integers, in which case the rounding
     is as given by the 4 low bits of rnd. Using rnd = 24 gives the
-    cpmmonly used principle of rounding: round to the nearest integer,
+    commonly used principle of rounding: round to the nearest integer,
     but take the even integer when there are two equally close integers.
 
     For more detail on the effects of rnd for values other than those
@@ -66,7 +66,7 @@ DESCRIPTION
     An error values is returned and the values of Q and R are not changed
     if Q and R are not both lvalues, or if the current value of any
     argument is not as specified above, or if Q or R has no-assign-to
-    prptection, e.g. after protect(Q,1).
+    protection, e.g. after protect(Q,1).
 
 
 EXAMPLE

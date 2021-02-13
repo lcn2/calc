@@ -185,7 +185,7 @@ Unexpected
     calc always evaluates terms from left to right
     ==============================================
 
-    Calc has a definite order for evaluation of terms (addends in a
+    Calc has a definite order for evaluation of terms (adds in a
     sum, factors in a product, arguments for a function or a matrix,
     etc.).  This order is always from left to right. but skipping of
     terms may occur for ||, && and ? : .

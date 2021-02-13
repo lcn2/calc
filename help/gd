@@ -1,5 +1,5 @@
 NAME
-    gd - gudermannian function
+    gd - Gudermannian function
 
 SYNOPSIS
     gd(z [,eps])
@@ -11,7 +11,7 @@ TYPES
     return	number or "Log of zero or infinity" error value
 
 DESCRIPTION
-    Calculate the gudermannian of z to a nultiple of eps with errors in
+    Calculate the Gudermannian of z to a multiple of eps with errors in
     real and imaginary parts less in absolute value than .75 * eps,
     or return an error value if z is close to one of the branch points
     at odd multiples of (pi/2) * i.

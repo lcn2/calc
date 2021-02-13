@@ -21,7 +21,7 @@ DESCRIPTION
     If euler(k) is called with negative k, zero is returned and the
     memory used by the table iu freed.
 
-    Considerable runtime and memery are required for calculating
+    Considerable runtime and memory are required for calculating
     euler(n) for large even n.
 
 EXAMPLE

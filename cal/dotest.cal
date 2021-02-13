@@ -8,8 +8,8 @@
  * copyright this dotest_code.
  *
  * ERNEST BOWEN AND LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO
- * THIS	 SOFTWARE,  INCLUDING  ALL IMPLIED WARRANTIES OF MER-
- * CHANTABILITY AND FITNESS.  IN NO EVENT SHALL	 LANDON	 CURT
+ * THIS         SOFTWARE,  INCLUDING  ALL IMPLIED WARRANTIES OF MER-
+ * CHANTABILITY AND FITNESS.  IN NO EVENT SHALL         LANDON  CURT
  * NOLL	 BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  LOSS  OF
  * USE,	 DATA  OR  PROFITS, WHETHER IN AN ACTION OF CONTRACT,
@@ -173,7 +173,7 @@ define dotest(dotest_file, dotest_code = 0, dotest_maxcond = -1)
     }
 
     /*
-     * preppare to return to the caller environment
+     * prepare to return to the caller environment
      *
      * We increase the caller's error count by the number
      * of line tests that failed, not the number of internal

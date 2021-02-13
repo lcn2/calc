@@ -1,5 +1,5 @@
 NAME
-    agd - inverse gudermannian function
+    agd - inverse Gudermannian function
 
 SYNOPSIS
     agd(z [,eps])
@@ -11,7 +11,7 @@ TYPES
     return	number or infinite error value
 
 DESCRIPTION
-    Calculate the inverse gudermannian of z to a nultiple of eps with
+    Calculate the inverse Gudermannian of z to a multiple of eps with
     errors in real and imaginary parts less in absolute value than .75 * eps,
     or an error value if z is very close to one of the one of the branch
     points of agd(z)..

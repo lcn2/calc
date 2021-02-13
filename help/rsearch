@@ -14,7 +14,7 @@ TYPES
 
 DESCRIPTION
 
-    Negative values of c and nonpositive values of d are treated as
+    Negative values of c and non-positive values of d are treated as
     offsets from size(a), i.e. as if c were replaced by size(a) + c
     and d by size(a) + d.  Any such adjustment is assumed to have been
     made.

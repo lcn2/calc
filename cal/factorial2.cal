@@ -281,10 +281,10 @@ define __CZ__multiply_factored_factorial(matrix,stop){
 }
 
 /*
-    Compute binomial coeficients n!/(k!(n-k)!)
+    Compute binomial coefficients n!/(k!(n-k)!)
 
     One of the rare cases where a formula once meant to ease manual computation
-    is actually the (aymptotically) fastest way to do it (in July 2013) for
+    is actually the (asymptotically) fastest way to do it (in July 2013) for
     the extreme case binomial(2N,N) but for a high price, the memory
     needed is pi(N)--theoretically.
 */
@@ -626,7 +626,7 @@ define subfactorialrecursive(n){
   return n * subfactorialrecursive(n-1) + (-1)^n;
 }
 
-/* This is, quite amusingely, faster than the very same algorithm in
+/* This is, quite amusingly, faster than the very same algorithm in
    PARI/GP + GMP*/
 define subfactorialiterative(n){
   local k temp1 temp2 ret;

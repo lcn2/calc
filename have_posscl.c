@@ -55,8 +55,8 @@ int
 main(void)
 {
 #if !defined(FILEPOS_NON_SCALAR)
-	FILEPOS value;	/* an FILEPOS to perform arithmatic on */
-	FILEPOS value2; /* an FILEPOS to perform arithmatic on */
+	FILEPOS value;	/* an FILEPOS to perform arithmetic on */
+	FILEPOS value2; /* an FILEPOS to perform arithmetic on */
 
 	/*
 	 * do some math opts on an FILEPOS

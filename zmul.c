@@ -99,7 +99,7 @@ zmul(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 /*
  * Recursive routine to multiply two numbers by splitting them up into
  * two numbers of half the size, and using the results of multiplying the
- * subpieces.  The result is placed in the indicated array, which must be
+ * sub-pieces.  The result is placed in the indicated array, which must be
  * large enough for the result plus one extra word (size1 + size2 + 1).
  * Returns the actual size of the result with leading zeroes stripped.
  * This also uses a temporary array which must be twice as large as
@@ -140,7 +140,7 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	FULL carryACBD;		/* carry from addition of A*C and B*D */
 	FULL digit;		/* single digit multiplying by */
 	HALF *temp;		/* base for temporary calculations */
-	BOOL neg;		/* whether imtermediate term is negative */
+	BOOL neg;		/* whether intermediate term is negative */
 	register HALF *hd, *h1=NULL, *h2=NULL;	/* for inner loops */
 	SIUNION sival;		/* for addition of digits */
 
@@ -690,7 +690,7 @@ zsquare(ZVALUE z, ZVALUE *res)
 
 /*
  * Recursive routine to square a number by splitting it up into two numbers
- * of half the size, and using the results of squaring the subpieces.
+ * of half the size, and using the results of squaring the sub-pieces.
  * The result is placed in the indicated array, which must be large
  * enough for the result (size * 2).  Returns the size of the result.
  * This uses a temporary array which must be 3 times as large as the
@@ -744,7 +744,7 @@ dosquare(HALF *vp, LEN size, HALF *ans)
 	/*
 	 * If the number has only a small number of digits, then use the
 	 * (almost) normal multiplication method.  Multiply each halfword
-	 * only by those halfwards further on in the number.  Missed terms
+	 * only by those halfwords further on in the number.  Missed terms
 	 * will then be the same pairs of products repeated, and the squares
 	 * of each halfword.  The first case is handled by doubling the
 	 * result.  The second case is handled explicitly.  The number of

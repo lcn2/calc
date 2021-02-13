@@ -1,5 +1,5 @@
 NAME
-    isatty - returns 1 if fd assocatied with a tty
+    isatty - returns 1 if fd is associated with a tty
 
 SYNOPSIS
     isatty(fd)

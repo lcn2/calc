@@ -126,7 +126,7 @@ sha1Init(HASH *state)
 	dig->digest[3] = h3init;
 	dig->digest[4] = h4init;
 
-	/* Initialise bit count */
+	/* Initialize bit count */
 	dig->countLo = 0;
 	dig->countHi = 0;
 	dig->datalen = 0;
@@ -134,10 +134,10 @@ sha1Init(HASH *state)
 
 
 /*
- * sha1Transform - perform the SHA1 transformatio
+ * sha1Transform - perform the SHA1 transformation
  *
  * Note that this code, like MD5, seems to break some optimizing compilers.
- * It may be necessary to split it into sections, eg based on the four
+ * It may be necessary to split it into sections, e.g., based on the four
  * subrounds.  One may also want to roll each subround into a loop.
  */
 S_FUNC void
@@ -153,7 +153,7 @@ sha1Transform(USB32 *digest, USB32 *W)
 	D = digest[3];
 	E = digest[4];
 
-	/* Heavy mangling, in 4 sub-rounds of 20 interations each. */
+	/* Heavy mangling, in 4 sub-rounds of 20 iterations each. */
 	subRound(A, B, C, D, E, f1, K1, W[ 0]);
 	subRound(E, A, B, C, D, f1, K1, W[ 1]);
 	subRound(D, E, A, B, C, f1, K1, W[ 2]);
@@ -512,7 +512,7 @@ void
 sha1_init_state(HASH *state)
 {
 	/*
-	 * initalize state
+	 * initialize state
 	 */
 	state->hashtype = SHA1_HASH_TYPE;
 	state->bytes = TRUE;

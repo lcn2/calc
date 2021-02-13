@@ -38,10 +38,10 @@
 #endif
 
 
-#define MAX_MAP_PRIME ((FULL)65521)	   /* (2^16-15) larest prime in prmap */
-#define MAX_MAP_VAL   ((FULL)65535)	   /* (2^16-1)	larest bit in pr_map */
-#define MAX_SM_PRIME  ((FULL)0xfffffffb)   /* (2^32-5)	larest 32 bit prime */
-#define MAX_SM_VAL    ((FULL)0xffffffff)   /* (2^32-1)	larest 32 bit value */
+#define MAX_MAP_PRIME ((FULL)65521)	  /* (2^16-15) largest prime in prmap */
+#define MAX_MAP_VAL   ((FULL)65535)	   /* (2^16-1)	largest bit in pr_map */
+#define MAX_SM_PRIME  ((FULL)0xfffffffb)   /* (2^32-5)	largest 32 bit prime */
+#define MAX_SM_VAL    ((FULL)0xffffffff)   /* (2^32-1)	largest 32 bit value */
 
 #define MAP_POPCNT    6541		   /* number of odd primes in pr_map */
 
@@ -70,7 +70,7 @@
 
 /*
  * Limits for piXb tables.  Do not test about this value using the
- * given table, even though the table has a higher sentinal value.
+ * given table, even though the table has a higher sentinel value.
  */
 #define MAX_PI10B ((1024*256)-1)	/* largest pi10b value to test */
 #define MAX_PI18B ((FULL)(0xFFFFFFFF))	/* largest pi18b value to test */

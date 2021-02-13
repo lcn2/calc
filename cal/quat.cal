@@ -1,5 +1,5 @@
 /*
- * quat - alculate using quaternions of the form: a + bi + cj + dk
+ * quat - calculate using quaternions of the form: a + bi + cj + dk
  *
  * Copyright (C) 1999  David I. Bell
  *

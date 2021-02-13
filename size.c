@@ -110,7 +110,7 @@ elm_count(VALUE *vp)
 
 
 /*
- * zsize - calculate memory footprint of a ZVALUE (exlcuding overhead)
+ * zsize - calculate memory footprint of a ZVALUE (excluding overhead)
  *
  * The numeric -1, - and 1 storage values are ignored.
  *
@@ -133,7 +133,7 @@ zsize(ZVALUE z)
 
 
 /*
- * qsize - calculate memory footprint of a NUMBER (exlcuding overhead)
+ * qsize - calculate memory footprint of a NUMBER (excluding overhead)
  *
  * The numeric -1, - and 1 storage values are ignored.	Denominator
  * parts of integers are ignored.
@@ -147,7 +147,7 @@ zsize(ZVALUE z)
 S_FUNC size_t
 qsize(NUMBER *q)
 {
-	/* ingore denominator parts of integers */
+	/* ignore denominator parts of integers */
 	if (qisint(q)) {
 		return zsize(q->num);
 	} else {
@@ -157,7 +157,7 @@ qsize(NUMBER *q)
 
 
 /*
- * csize - calculate memory footprint of a COMPLEX (exlcuding overhead)
+ * csize - calculate memory footprint of a COMPLEX (excluding overhead)
  *
  * The numeric -1, - and 1 storage values are ignored.	Denominator
  * parts of integers are ignored.  Imaginary parts of pure reals
@@ -172,7 +172,7 @@ qsize(NUMBER *q)
 S_FUNC size_t
 csize(COMPLEX *c)
 {
-	/* ingore denominator parts of integers */
+	/* ignore denominator parts of integers */
 	if (cisreal(c)) {
 		return qsize(c->real);
 	} else {

@@ -76,7 +76,7 @@ S_FUNC QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
  * and found that it worked rather well.  In an Email message
  * to Landon, they named it ``Fowler/Noll/Vo'' or the FNV hash.
  *
- * FNV hashes are architected to be fast while maintaining a low
+ * FNV hashes are designed to be fast while maintaining a low
  * collision rate. The FNV speed allows one to quickly hash lots
  * of data while maintaining a reasonable collision rate.  See:
  *
@@ -120,7 +120,7 @@ S_FUNC QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
  * The core of the of the FNV hash has been adopted as the calc
  * quick hash with the provision that it operates on 32 bit
  * objects instead of octets.  For calc's internal purposes,
- * this is sufficent.  For general FNV hashing, this is not
+ * this is sufficient.  For general FNV hashing, this is not
  * recommended.
  *
  * It has been observed that gcc, when using -O, -O2, -O3 or
@@ -425,7 +425,7 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->outmode);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->outmode2);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->outdigits);
-	/* epsilon is handeled out of order */
+	/* epsilon is handled out of order */
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->epsilonprec);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->traceflags);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->maxprint);
@@ -447,8 +447,8 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->leadzero);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->fullzero);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->maxscancount);
-	/* prompt1 is handeled out of order */
-	/* prompt2 is handeled out of order */
+	/* prompt1 is handled out of order */
+	/* prompt2 is handled out of order */
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->blkmaxprint);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->blkverbose);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->blkbase);
@@ -458,8 +458,8 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->user_debug);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->verbose_quit);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->ctrl_d);
-	/* program is handeled out of order */
-	/* basename is handeled out of order */
+	/* program is handled out of order */
+	/* basename is handled out of order */
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->windows);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->cygwin);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->compile_custom);
@@ -468,7 +468,7 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	} else {
 		value = (((value>>5) | (value<<27)) ^ (USB32)FALSE);
 	}
-	/* version is handeled out of order */
+	/* version is handled out of order */
 
 	/*
 	 * hash the built up scalar

@@ -947,7 +947,7 @@ rodseth_xhn(x, h, n)
  *
  * Without Jacobi symbol value caching, it requires on average
  * 4.851377 Jacobi symbol evaluations.  With Jacobi symbol value caching
- * cacheing, an averare of 4.348820 Jacobi symbol evaluations is needed.
+ * cacheing, an average of 4.348820 Jacobi symbol evaluations is needed.
  *
  * Given this information, when odd h is a multiple of 3 we try, in order,
  * these odd values of X:
@@ -961,7 +961,7 @@ rodseth_xhn(x, h, n)
  *      jacobi(X-2, h*2^n-1) == 1
  *      jacobi(X+2, h*2^n-1) == -1
  *
- * Less than 1 case out of 1000000 will not be satisifed by the above list.
+ * Less than 1 case out of 1000000 will not be satisfied by the above list.
  * If no value in that list works, we start simple search starting with X = 167
  * and incrementing by 2 until a value of X is found.
  *
@@ -1049,7 +1049,7 @@ next_x = 167;	/* must be 2 more than the largest value in x_tbl[] */
  *	else
  *	    v(1) = 4
  *
- * HOTE: The above "if then else" works only of h is not a multiple of 3.
+ * NOTE: The above "if then else" works only of h is not a multiple of 3.
  *
  ***
  *
@@ -1234,10 +1234,10 @@ gen_v1(h, n)
 	 *	jacobi(X-2, h*2^n-1) == 1		part 1
 	 *	jacobi(X+2, h*2^n-1) == -1		part 2
 	 *
-	 * NOTE: If we wanted to be super optimial, we would cache
+	 * NOTE: If we wanted to be super optimal, we would cache
 	 *	 jacobi(X+2, h*2^n-1) that that when we increment X
 	 *	 to the next odd value, the now jacobi(X-2, h*2^n-1)
-	 *	 does not need to be re-evaluted.
+	 *	 does not need to be re-evaluated.
 	 */
 	testval = h*2^n-1;
 	for (i=0; i < x_tbl_len; ++i) {
@@ -1285,7 +1285,7 @@ gen_v1(h, n)
 	/*
 	 * We are in that rare case (less than 1 in 1 000 000) where none of the
 	 * common X values satisfy Ref4 condition 1.  We start a linear search
-	 * of odd vules at next_x from here on.
+	 * of odd values at next_x from here on.
 	 */
 	x = next_x;
 	while (rodseth_xhn(x, h, n) != 1) {

@@ -270,7 +270,7 @@ hash_final(HASH *state)
  * The input is a long.	 If a long is smaller than 64 bits, we will
  * hash a final 32 bits of zeros.
  *
- * This function is OK to hash BOOL's, unslogned long's, unsigned int's
+ * This function is OK to hash BOOL's, unsigned long's, unsigned int's
  * signed int's as well as FLAG's and LEN's.
  */
 HASH *

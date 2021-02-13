@@ -1,5 +1,5 @@
 /*
- * have_const - Determine if we want or can support ansi const
+ * have_const - Determine if we want or can support ANSI const
  *
  * Copyright (C) 1999  Landon Curt Noll
  *

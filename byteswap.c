@@ -77,7 +77,7 @@ swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len)
  *		  NULL to allocate the storage
  *	src	- pointer to a ZVALUE to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
- *		  multiprecision storage
+ *		  multi-precision storage
  *
  * returns:
  *	pointer to where the swapped src has been put
@@ -145,7 +145,7 @@ swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
  *		  NULL to allocate the storage
  *	src	- pointer to a NUMBER to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
- *		  multiprecision storage
+ *		  multi-precision storage
  *
  * returns:
  *	pointer to where the swapped src has been put
@@ -209,7 +209,7 @@ swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
  *		  NULL to allocate the storage
  *	src	- pointer to a COMPLEX to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
- *		  multiprecision storage
+ *		  multi-precision storage
  *
  * returns:
  *	pointer to where the swapped src has been put
@@ -313,7 +313,7 @@ swap_b16_in_HALFs(HALF *dest, HALF *src, LEN len)
  *		  NULL to allocate the storage
  *	src	- pointer to a ZVALUE to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
- *		  multiprecision storage
+ *		  multi-precision storage
  *
  * returns:
  *	pointer to where the swapped src has been put
@@ -380,7 +380,7 @@ swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
  *		  NULL to allocate the storage
  *	src	- pointer to a NUMBER to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
- *		  multiprecision storage
+ *		  multi-precision storage
  *
  * returns:
  *	pointer to where the swapped src has been put
@@ -444,7 +444,7 @@ swap_b16_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
  *		  NULL to allocate the storage
  *	src	- pointer to a COMPLEX to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
- *		  multiprecision storage
+ *		  multi-precision storage
  *
  * returns:
  *	pointer to where the swapped src has been put
@@ -508,7 +508,7 @@ swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
  *		  NULL to allocate the storage
  *	src	- pointer to a ZVALUE to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
- *		  multiprecision storage
+ *		  multi-precision storage
  *
  * returns:
  *	pointer to where the swapped src has been put
@@ -576,7 +576,7 @@ swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
  *		  NULL to allocate the storage
  *	src	- pointer to a NUMBER to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
- *		  multiprecision storage
+ *		  multi-precision storage
  *
  * returns:
  *	pointer to where the swapped src has been put
@@ -640,7 +640,7 @@ swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
  *		  NULL to allocate the storage
  *	src	- pointer to a COMPLEX to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
- *		  multiprecision storage
+ *		  multi-precision storage
  *
  * returns:
  *	pointer to where the swapped src has been put

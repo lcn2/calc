@@ -45,9 +45,9 @@ randmprime(bits, seed, dbg)
     local n;		/* n as in h*2^n-1 */
     local h;		/* h as in h*2^n-1 */
     local plush;	/* value added to h since the beginning */
-    local init;		/* initial cpu time */
-    local start;	/* cpu time before last test */
-    local stop;		/* cpu time afte last test */
+    local init;		/* initial CPU time */
+    local start;	/* CPU time before last test */
+    local stop;		/* CPU time after last test */
     local tmp;		/* just a tmp place holder value */
     local ret;		/* h*2^n-1 that is prime */
 

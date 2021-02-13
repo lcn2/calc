@@ -1123,7 +1123,7 @@ EXTRA_LDFLAGS=
 # Architecture compile flags
 #
 # The ARCH_CFLAGS are ${CC} when compiling C files. They follow
-# CCMISC and preceed EXTRA_CFLAGS.
+# CCMISC and precede EXTRA_CFLAGS.
 #
 ARCH_CFLAGS= -march=native
 #ARCH_CFLAGS=
@@ -2088,7 +2088,7 @@ LICENSE= COPYING COPYING-LGPL
 #
 DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README.FIRST \
 	  README.WINDOWS calc.man HOWTO.INSTALL ${UTIL_MISC_SRC} ${LICENSE} \
-	  sample.README calc.spec.in rpm.mk README.md QUESTION CONTRUB
+	  sample.README calc.spec.in rpm.mk README.md QUESTION CONTRIB-CODE
 
 # These files are used to make (but not build) a calc .a link library
 #
@@ -2199,7 +2199,7 @@ check_include:
 	    echo "Without critical include files, we cannot compile." 1>&2; \
 	    echo "Perhaps your system isn't setup to compile C source?" 1>&2; \
 	    echo 1>&2; \
-	    echo "For example, Apple macOS / Darwin requres that XCode" 1>&2; \
+	    echo "For example, Apple macOS / Darwin requires that XCode" 1>&2; \
 	    echo "must be installed." 1>&2; \
 	    echo 1>&2; \
 	    echo "Also macOS users might later to run this command:" 1>&2; \
@@ -4039,7 +4039,7 @@ chk: ./cal/regress.cal
 # debug
 #
 # make calcinfo:
-#	* print information about the host ane compile environment
+#	* print information about the host and compile environment
 #
 # make env:
 #	* print major Makefile variables

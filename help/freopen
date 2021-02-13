@@ -1,5 +1,5 @@
 NAME
-    freopen - close (if necessary) and reopen a filestream
+    freopen - close (if necessary) and reopen a file stream
 
 SYNOPSIS
     freopen(fs, mode [,filename])

@@ -5538,7 +5538,7 @@ f_usertime(void)
 	NUMBER *secret;			/* whole sconds of CPU time to return */
 	NUMBER *usecret;		/* microseconds of CPU time to return */
 
-	/* get the resource informaion for ourself */
+	/* get the resource information for ourself */
 	status = getrusage(who, &usage);
 	if (status < 0) {
 	    /* system call error, so return 0 */
@@ -5577,7 +5577,7 @@ f_systime(void)
 	NUMBER *secret;			/* whole sconds of CPU time to return */
 	NUMBER *usecret;		/* microseconds of CPU time to return */
 
-	/* get the resource informaion for ourself */
+	/* get the resource information for ourself */
 	status = getrusage(who, &usage);
 	if (status < 0) {
 	    /* system call error, so return 0 */
@@ -5617,7 +5617,7 @@ f_runtime(void)
 	NUMBER *secret;			/* whole sconds of CPU time to return */
 	NUMBER *usecret;		/* microseconds of CPU time to return */
 
-	/* get the resource informaion for ourself */
+	/* get the resource information for ourself */
 	status = getrusage(who, &usage);
 	if (status < 0) {
 	    /* system call error, so return 0 */
@@ -5734,7 +5734,7 @@ f_fpathopen(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
-	/* check for valid strongs */
+	/* check for valid strong */
 	if (vals[0]->v_type != V_STR || vals[1]->v_type != V_STR) {
 		return error_value(E_FPATHOPEN1);
 	}
@@ -7840,7 +7840,7 @@ f_base(int count, NUMBER **vals)
 		return base_value(conf->outmode, conf->outmode);
 	}
 
-	/* deal with the specal modes first */
+	/* deal with the special modes first */
 	if (qisfrac(vals[0])) {
 		return base_value(math_setmode(MODE_FRAC), conf->outmode);
 	}
@@ -7891,7 +7891,7 @@ f_base2(int count, NUMBER **vals)
 		return base_value(conf->outmode2, conf->outmode2);
 	}
 
-	/* deal with the specal modes first */
+	/* deal with the special modes first */
 	if (qisfrac(vals[0])) {
 		return base_value(math_setmode2(MODE_FRAC), conf->outmode2);
 	}
@@ -8511,7 +8511,7 @@ f_version(void)
 {
 	VALUE result;
 
-	/* return the calc verstion string */
+	/* return the calc version string */
 	result.v_type = V_STR;
 	result.v_subtype = V_NOSUBTYPE;
 	result.v_str = makestring(strdup(version()));
@@ -8577,7 +8577,7 @@ STATIC CONST struct builtin builtins[] = {
 	{"acsch", 1, 2, 0, OP_NOP, 0, f_acsch,
 	 "inverse csch of a within accuracy b"},
 	{"agd", 1, 2, 0, OP_NOP, 0, f_agd,
-	 "inverse gudermannian function"},
+	 "inverse Gudermannian function"},
 	{"append", 1, IN, FA, OP_NOP, 0, f_listappend,
 	 "append values to end of list"},
 	{"appr", 1, 3, 0, OP_NOP, 0, f_appr,
@@ -8788,7 +8788,7 @@ STATIC CONST struct builtin builtins[] = {
 	{"gcdrem", 2, 2, 0, OP_NOP, qgcdrem, 0,
 	 "a divided repeatedly by gcd with b"},
 	{"gd", 1, 2, 0, OP_NOP, 0, f_gd,
-	 "gudermannian function"},
+	 "Gudermannian function"},
 	{"getenv", 1, 1, 0, OP_NOP, 0, f_getenv,
 	 "value of environment variable (or NULL)"},
 	{"hash", 1, IN, 0, OP_NOP, 0, f_hash,
@@ -9068,7 +9068,7 @@ STATIC CONST struct builtin builtins[] = {
 	 "reverse search matrix or list for value b\n"
 	 "\t\t\tstarting at index c"},
 	{"runtime", 0, 0, 0, OP_NOP, f_runtime, 0,
-	 "user and kernel mode cpu time in seconds"},
+	 "user and kernel mode CPU time in seconds"},
 	{"saveval", 1, 1, 0, OP_SAVEVAL, 0, 0,
 	 "set flag for saving values"},
 	{"scale", 2, 2, 0, OP_SCALE, 0, 0,
@@ -9087,7 +9087,7 @@ STATIC CONST struct builtin builtins[] = {
 	{"sech", 1, 2, 0, OP_NOP, 0, f_sech,
 	 "hyperbolic secant of a within accuracy b"},
 	{"seed", 0, 0, 0, OP_NOP, f_seed, 0,
-	 "return a 64 bit seed for a psuedo-random generator"},
+	 "return a 64 bit seed for a pseudo-random generator"},
 	{"segment", 2, 3, 0, OP_NOP, 0, f_segment,
 	 "specified segment of specified list"},
 	{"select", 2, 2, 0, OP_NOP, 0, f_select,
@@ -9161,7 +9161,7 @@ STATIC CONST struct builtin builtins[] = {
 	{"system", 1, 1, 0, OP_NOP, 0, f_system,
 	 "call Unix command"},
 	{"systime", 0, 0, 0, OP_NOP, f_systime, 0,
-	 "kernel mode cpu time in seconds"},
+	 "kernel mode CPU time in seconds"},
 	{"tail", 2, 2, 0, OP_NOP, 0, f_tail,
 	 "retain list of specified number at tail of list"},
 	{"tan", 1, 2, 0, OP_NOP, 0, f_tan,
@@ -9177,7 +9177,7 @@ STATIC CONST struct builtin builtins[] = {
 	{"ungetc", 2, 2, 0, OP_NOP, 0, f_ungetc,
 	 "unget char read from file"},
 	{"usertime", 0, 0, 0, OP_NOP, f_usertime, 0,
-	 "user mode cpu time in seconds"},
+	 "user mode CPU time in seconds"},
 	{"version", 0, 0, 0, OP_NOP, 0, f_version,
 	 "calc version string"},
 	{"xor", 1, IN, 0, OP_NOP, 0, f_xor,
@@ -9194,7 +9194,7 @@ STATIC CONST struct builtin builtins[] = {
  *
  * When FUNCLIST is defined, we are being compiled by rules from the help
  * sub-directory to form a program that will produce the main part of the
- * buiiltin help file.
+ * builtin help file.
  *
  * See the builtin rule in the help/Makefile for details.
  */

@@ -626,7 +626,7 @@ qilog(NUMBER *q, ZVALUE base)
  *
  *	digits(12.3456) == 2    computes with the integer part only
  *	digits(-1234) == 4      computes with the absolute value only
- *	digits(0) == 1          specical case
+ *	digits(0) == 1          special case
  *	digits(-0.123) == 1     combination of all of the above
  *
  * given:
@@ -1315,7 +1315,7 @@ qmappr(NUMBER *q, NUMBER *e, long rnd)
 
 /*
  * Determine the smallest-denominator rational number in the interval of
- * length abs(epsilon) (< 1) with centre or one end at q, or to determine
+ * length abs(epsilon) (< 1) with center or one end at q, or to determine
  * the number nearest above or nearest below q with denominator
  * not exceeding abs(epsilon).
  * Whether the approximation is nearest above or nearest below is

@@ -30,7 +30,7 @@ DESCRIPTION
     This corresponds to the use of rnd for functions like round(x, n, rnd).
 
     If bit 3 or 4 of rnd is set, the lower order bits are ignored; bit 3
-    is ignored if bit 4 is set.	 Thusi, for rnd > 3, it sufficient to
+    is ignored if bit 4 is set.	 Thus, for rnd > 3, it sufficient to
     consider the two cases rnd = 8 and rnd = 16.
 
     If den(x) > 2, cfsim(x, 8) returns the value of the penultimate simple

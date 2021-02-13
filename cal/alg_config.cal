@@ -33,7 +33,7 @@ static test_time;	/* try for this many seconds in loop test */
  * given:
  *	ratio	the ratio of time between two algorithms
  *
- * retuns:
+ * returns:
  *	1	When ratio is near 1.0
  *	0	otherwise
  *
@@ -354,7 +354,7 @@ define best_mul2()
     local high;		/* high loop value tested */
     local mid;		/* between low and high */
     local best_val;	/* value found with ratio closest to unity */
-    local best_ratio;	/* cloest ratio found to unity */
+    local best_ratio;	/* closest ratio found to unity */
     local expand;	/* how fast to expand the length */
 
     /*
@@ -363,7 +363,7 @@ define best_mul2()
     printf("WARNING: This tool may not be computing the correct best value\n");
     test_time = 5.0;
     printf("The best_mul2() function will take a LONG time to run!\n");
-    printf("It is important that best_mul2() run on an othwewise idle host!\n");
+    printf("It is important that best_mul2() run on an otherwise idle host!\n");
     if (config("user_debug") <= 0) {
 	printf("To monitor progress, set user_debug to 2: "
 	       "config(\"user_debug\", 2)\n");
@@ -392,7 +392,7 @@ define best_mul2()
      */
     do {
 	/*
-	 * determine the paramters of the next ratio test
+	 * determine the parameters of the next ratio test
 	 *
 	 * We will multiplicatively expand our test level until
 	 * the ratio drops below 1.0.
@@ -419,7 +419,7 @@ define best_mul2()
 	    best_val = high;
 	    best_ratio = ratio;
 	    if (config("user_debug") > 1) {
-		printf("    len %d has a new cloest ratio to unity: %.6f\n",
+		printf("    len %d has a new closest ratio to unity: %.6f\n",
 		       best_val, best_ratio);
 	    }
 	}
@@ -442,7 +442,7 @@ define best_mul2()
 	    high /= 2;
 	    low = high / 2;
 	    if (config("user_debug") > 0) {
-		printf("retesting multiply alg1/alg2 ratio for len = %d\n",
+		printf("re-testing multiply alg1/alg2 ratio for len = %d\n",
 		       high);
 	    }
 	    ratio = mul_ratio(high);
@@ -450,7 +450,8 @@ define best_mul2()
 		best_val = high;
 		best_ratio = ratio;
 		if (config("user_debug") > 1) {
-		    printf("    len %d has a new cloest ratio to unity: %.6f\n",
+		    printf("    len %d has a new closest ratio "
+			   "to unity: %.6f\n",
 			   best_val, best_ratio);
 		}
 	    }
@@ -483,7 +484,7 @@ define best_mul2()
 	    best_val = mid;
 	    best_ratio = ratio;
 	    if (config("user_debug") > 1) {
-		printf("    len %d has a new cloest ratio to unity: %.6f\n",
+		printf("    len %d has a new closest ratio to unity: %.6f\n",
 		       best_val, best_ratio);
 	    }
 	}
@@ -535,7 +536,7 @@ define best_mul2()
 	printf("config(\"mul2\", %d),;\n", best_val);
 	printf("WARNING: It is believed that the output "
 	       "of this resource file is bogus!\n");
-	printf("WARNING: You may NOT wish to follow the above suggeston.\n");
+	printf("WARNING: You may NOT wish to follow the above suggestion.\n");
     }
     return mid;
 }
@@ -835,7 +836,7 @@ define best_sq2()
     local high;		/* high loop value tested */
     local mid;		/* between low and high */
     local best_val;	/* value found with ratio closest to unity */
-    local best_ratio;	/* cloest ratio found to unity */
+    local best_ratio;	/* closest ratio found to unity */
     local expand;	/* how fast to expand the length */
 
     /*
@@ -844,7 +845,7 @@ define best_sq2()
     printf("WARNING: This tool may not be computing the correct best value\n");
     test_time = 5.0;
     printf("The best_sq2() function will take a LONG time to run!\n");
-    printf("It is important that best_sq2() run on an othwewise idle host!\n");
+    printf("It is important that best_sq2() run on an otherwise idle host!\n");
     if (config("user_debug") <= 0) {
 	printf("To monitor progress, set user_debug to 2: "
 	       "config(\"user_debug\", 2)\n");
@@ -873,7 +874,7 @@ define best_sq2()
      */
     do {
 	/*
-	 * determine the paramters of the next ratio test
+	 * determine the parameters of the next ratio test
 	 *
 	 * We will multiplicatively expand our test level until
 	 * the ratio drops below 1.0.
@@ -900,7 +901,7 @@ define best_sq2()
 	    best_val = high;
 	    best_ratio = ratio;
 	    if (config("user_debug") > 1) {
-		printf("    len %d has a new cloest ratio to unity: %.6f\n",
+		printf("    len %d has a new closest ratio to unity: %.6f\n",
 		       best_val, best_ratio);
 	    }
 	}
@@ -923,7 +924,7 @@ define best_sq2()
 	    high /= 2;
 	    low = high / 2;
 	    if (config("user_debug") > 0) {
-		printf("retesting multiply alg1/alg2 ratio for len = %d\n",
+		printf("re-testing multiply alg1/alg2 ratio for len = %d\n",
 		       high);
 	    }
 	    ratio = mul_ratio(high);
@@ -931,7 +932,8 @@ define best_sq2()
 		best_val = high;
 		best_ratio = ratio;
 		if (config("user_debug") > 1) {
-		    printf("    len %d has a new cloest ratio to unity: %.6f\n",
+		    printf("    len %d has a new closest ratio "
+			   "to unity: %.6f\n",
 			   best_val, best_ratio);
 		}
 	    }
@@ -964,7 +966,7 @@ define best_sq2()
 	    best_val = mid;
 	    best_ratio = ratio;
 	    if (config("user_debug") > 1) {
-		printf("    len %d has a new cloest ratio to unity: %.6f\n",
+		printf("    len %d has a new closest ratio to unity: %.6f\n",
 		       best_val, best_ratio);
 	    }
 	}
@@ -1017,7 +1019,7 @@ define best_sq2()
 	printf("config(\"sq2\", %d),;\n", best_val);
 	printf("WARNING: It is believed that the output "
 	       "of this resource file is bogus!\n");
-	printf("WARNING: You may NOT wish to follow the above suggeston.\n");
+	printf("WARNING: You may NOT wish to follow the above suggestion.\n");
     }
     return mid;
 }
@@ -1337,7 +1339,7 @@ define best_pow2()
     local high;		/* high loop value tested */
     local mid;		/* between low and high */
     local best_val;	/* value found with ratio closest to unity */
-    local best_ratio;	/* cloest ratio found to unity */
+    local best_ratio;	/* closest ratio found to unity */
     local expand;	/* how fast to expand the length */
     local looped;	/* 1 ==> we have expanded lengths before */
 
@@ -1347,7 +1349,7 @@ define best_pow2()
     printf("WARNING: This tool may not be computing the correct best value\n");
     test_time = 60.0;
     printf("The best_pow2() function will take a LONG time to run!\n");
-    printf("It is important that best_pow2() run on an othwewise idle host!\n");
+    printf("It is important that best_pow2() run on an otherwise idle host!\n");
     if (config("user_debug") <= 0) {
 	printf("To monitor progress, set user_debug to 2: "
 	       "config(\"user_debug\", 2)\n");
@@ -1358,7 +1360,7 @@ define best_pow2()
      * firewall - must have a >1.02 ratio for the initial length
      *
      * We select 1.02 because of the precision of the CPU timing.  We
-     * want to firt move into an area where the 1st algoritm clearly
+     * want to first move into an area where the 1st algorithm clearly
      * dominates.
      */
     low = 4;
@@ -1375,7 +1377,7 @@ define best_pow2()
 	    best_val = high;
 	    best_ratio = ratio;
 	    if (config("user_debug") > 1) {
-		printf("    len %d has a new cloest ratio to unity: %.6f\n",
+		printf("    len %d has a new closest ratio to unity: %.6f\n",
 		       best_val, best_ratio);
 	    }
 	}
@@ -1397,7 +1399,7 @@ define best_pow2()
     looped = 0;
     do {
 	/*
-	 * determine the paramters of the next ratio test
+	 * determine the parameters of the next ratio test
 	 *
 	 * We will multiplicatively expand our test level until
 	 * the ratio drops below 1.0.
@@ -1435,7 +1437,7 @@ define best_pow2()
 	    best_val = high;
 	    best_ratio = ratio;
 	    if (config("user_debug") > 1) {
-		printf("    len %d has a new cloest ratio to unity: %.6f\n",
+		printf("    len %d has a new closest ratio to unity: %.6f\n",
 		       best_val, best_ratio);
 	    }
 	}
@@ -1463,7 +1465,7 @@ define best_pow2()
 	    best_val = mid;
 	    best_ratio = ratio;
 	    if (config("user_debug") > 1) {
-		printf("    len %d has a new cloest ratio to unity: %.6f\n",
+		printf("    len %d has a new closest ratio to unity: %.6f\n",
 		       best_val, best_ratio);
 	    }
 	}
@@ -1516,7 +1518,7 @@ define best_pow2()
 	printf("config(\"pow2\", %d),;\n", best_val);
 	printf("WARNING: It is believed that the output "
 	       "of this resource file is bogus!\n");
-	printf("WARNING: You may NOT wish to follow the above suggeston.\n");
+	printf("WARNING: You may NOT wish to follow the above suggestion.\n");
     }
     return mid;
 }

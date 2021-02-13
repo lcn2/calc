@@ -76,7 +76,7 @@ mersenne exp
 
 piforever
 
-    Print the value of pi forever, or as long as you cpu / memory allows.
+    Print the value of pi forever, or as long as you CPU / memory allows.
 
 
 plus arg ...

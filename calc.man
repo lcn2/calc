@@ -1401,7 +1401,7 @@ gziped (or compressed) tar file).
 Please try to generate a patch against the most recent
 version of calc, and if you use GitHub, the top of the
 master branch:
-sp
+.sp
 .nf
 .in +0.5i
 https://github.com/lcn2/calc

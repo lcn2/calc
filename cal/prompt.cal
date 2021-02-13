@@ -1,5 +1,5 @@
 /*
- * prompt - eemonstration of some uses of prompt() and eval()
+ * prompt - demonstration of some uses of prompt() and eval()
  *
  * Copyright (C) 1999  Ernest Bowen
  *
@@ -61,9 +61,9 @@
  * nothing to sum.  The last line returns the value 3, i.e. the last
  * non-null value found for the expressions separated by semicolons,
  * so sum will be increased by 3 after the "print sum^2;" command
- * is executed.	 xxx The terminating semicolon is essential in the
+ * is executed.	 XXX The terminating semicolon is essential in the
  * last two lines.  A command like eval("print 7;") is acceptable to
- * calc but eval("print 7") causes an exit from calc. xxx)
+ * calc but eval("print 7") causes an exit from calc. XXX)
  *
  * If the value returned is not a number (e.g. the name of a list or matrix,
  * or if the string has syntax errors as in "2 + ", in which case the
@@ -75,7 +75,7 @@
  *	"sin(x)", "x^2 + 3*x", "exp(x, 1e-5)".
  *
  * Values of the function so defined are returned for values of x
- * entered in reponse to the ? prompt.	Operation is terminated by
+ * entered in response to the ? prompt.	Operation is terminated by
  * entering "end", "exit" or "quit".
  */
 

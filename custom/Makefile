@@ -36,7 +36,7 @@
 #
 #	make ...__optional_arguments_... target=value
 
-# Try uname -s if the target was not alreadhy set on the make command line
+# Try uname -s if the target was not already set on the make command line
 #
 ifeq ($(target),)
 target=$(shell uname -s 2>/dev/null)
@@ -125,7 +125,7 @@ Q=@
 #INCDIR= /dev/env/DJDIR/include
 INCDIR= /usr/include
 
-# where to install calc realted things
+# where to install calc related things
 #
 # ${BINDIR}		where to install calc binary files
 # ${LIBDIR}		where calc link library (*.a) files are installed
@@ -391,7 +391,7 @@ AWK= awk
 # NOTE: These should be left blank in this Makefile to make it
 #       easier to add stuff on the command line.  If you want to
 #	to change the way calc is compiled by this Makefile, change
-#	the appropirate host target section below or a flag above.
+#	the appropriate host target section below or a flag above.
 #
 EXTRA_CFLAGS=
 EXTRA_LDFLAGS=
@@ -1084,7 +1084,7 @@ CUSTCALC_OBJ= ${REQUIRED_OBJ} ${CUSTOM_OBJ}
 #
 C_SRC= ${REQUIRED_SRC} ${CUSTOM_SRC}
 
-# These .h files are used to build the dependecy list
+# These .h files are used to build the dependency list
 #
 H_SRC= ${CUSTOM_H_SRC}
 
@@ -1101,7 +1101,7 @@ DISTLIST= ${CUSTCALC_SRC} ${CUSTOM_CALC_FILES} ${CUSTOM_HELP} \
 #
 CALCLIBLIST= ${CUSTCALC_SRC} ${INSTALL_H_SRC} ${MAKE_FILE} HOW_TO_ADD
 
-# This is the custom dynbamic shared library that is build
+# This is the custom dynamic shared library that is build
 #
 CALC_DYNAMIC_LIBCUSTCALC= libcustcalc${LIB_EXT_VERSION}
 
@@ -1155,7 +1155,7 @@ c_sysinfo.o: c_sysinfo.c ${MAKE_FILE}
 
 ###
 #
-# building calc-static and static lib*.a libraires
+# building calc-static and static lib*.a libraries
 #
 ###
 
@@ -1174,7 +1174,7 @@ libcustcalc.a: ${CUSTCALC_OBJ} ${MAKE_FILE}
 # sub-directory called calc/lib.
 #
 # NOTE: Due to bogus shells found on one common system we must have
-#	an non-emoty else clause for every if condition.  *sigh*
+#	an non-empty else clause for every if condition.  *sigh*
 #
 ##
 
@@ -1213,7 +1213,7 @@ Makefile.simple: ${MAKE_FILE}
 # Home grown make dependency rules.  Your system make not support
 # or have the needed tools.  You can ignore this section.
 #
-# We will form a skelaton tree of *.c files containing only #include "foo.h"
+# We will form a skeleton tree of *.c files containing only #include "foo.h"
 # lines and .h files containing the same lines surrounded by multiple include
 # prevention lines.  This allows us to build a static depend list that will
 # satisfy all possible cpp symbol definition combinations.
@@ -1531,7 +1531,7 @@ uninstall:
 	    if [ -f "${T}${CUSTOMCALDIR}/libcustcalc.a" ]; then \
 		echo "cannot uninstall ${T}${CUSTOMCALDIR}/libcustcalc.a"; \
 	    else \
-		echo "uninstalled ${T}${CUSTOMCALDIR}/libcustcalc.a"; \
+		echo "un-installed ${T}${CUSTOMCALDIR}/libcustcalc.a"; \
 	    fi; \
 	fi
 	-${Q} for i in ${CUSTOM_HELP} /dev/null; do \
@@ -1543,7 +1543,7 @@ uninstall:
 		if [ -f "${T}${CUSTOMHELPDIR}/$$i" ]; then \
 		   echo "cannot uninstall ${T}${CUSTOMHELPDIR}/$$i"; \
 		else \
-		   echo "uninstalled ${T}${CUSTOMHELPDIR}/$$i"; \
+		   echo "un-installed ${T}${CUSTOMHELPDIR}/$$i"; \
 		fi; \
 	    fi; \
 	done
@@ -1556,7 +1556,7 @@ uninstall:
 		if [ -f "${T}${CUSTOMCALDIR}/$$i" ]; then \
 		   echo "cannot uninstall ${T}${CUSTOMCALDIR}/$$i"; \
 		else \
-		   echo "uninstalled ${T}${CUSTOMCALDIR}/$$i"; \
+		   echo "un-installed ${T}${CUSTOMCALDIR}/$$i"; \
 		fi; \
 	    fi; \
 	done
@@ -1569,7 +1569,7 @@ uninstall:
 		if [ -f "${T}${CUSTOMINCDIR}/$$i" ]; then \
 		   echo "cannot uninstall ${T}${CUSTOMINCDIR}/$$i"; \
 		else \
-		   echo "uninstalled ${T}${CUSTOMINCDIR}/$$i"; \
+		   echo "un-installed ${T}${CUSTOMINCDIR}/$$i"; \
 		fi; \
 	    fi; \
 	done

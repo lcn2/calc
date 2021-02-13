@@ -36,7 +36,7 @@
 #
 #	make ...__optional_arguments_... target=value
 
-# Try uname -s if the target was not alreadhy set on the make command line
+# Try uname -s if the target was not already set on the make command line
 #
 ifeq ($(target),)
 target=$(shell uname -s 2>/dev/null)
@@ -125,7 +125,7 @@ Q=@
 #INCDIR= /dev/env/DJDIR/include
 INCDIR= /usr/include
 
-# where to install calc realted things
+# where to install calc related things
 #
 # ${BINDIR}		where to install calc binary files
 # ${LIBDIR}		where calc link library (*.a) files are installed
@@ -391,7 +391,7 @@ AWK= awk
 # NOTE: These should be left blank in this Makefile to make it
 #       easier to add stuff on the command line.  If you want to
 #	to change the way calc is compiled by this Makefile, change
-#	the appropirate host target section below or a flag above.
+#	the appropriate host target section below or a flag above.
 #
 EXTRA_CFLAGS=
 EXTRA_LDFLAGS=

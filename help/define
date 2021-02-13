@@ -52,7 +52,7 @@ DESCRIPTION
 
     In the definition of a function, the builtin function param(n)
     provides a way of referring to the parameters.  If n (which may
-    result from evaluating an expreession) is zero, it returns the number
+    result from evaluating an expression) is zero, it returns the number
     of arguments in a call to the function, and if 1 <= n <= param(0),
     param(n) refers to the parameter with index n.
 
@@ -63,7 +63,7 @@ DESCRIPTION
 
     In the statement form, if a return statement is encountered,
     the "return" keyword is to be either immediately followed by an
-    expression or by a statement terminator (semicolon or rightbrace);
+    expression or by a statement terminator (semicolon or right-brace);
     in the former case, the expression is evaluated, evaluation of
     the function ceases, and the value obtained for the expression is
     returned as the "value of the function";  in the no-expression case,
@@ -93,7 +93,7 @@ DESCRIPTION
     definition has no effect on the new definition, but if the definition
     is completed successfully, the new definition replaces the old one;
     otherwise the old definition is retained.  The number of parameters
-    and their names in the new definiton may be quite different from
+    and their names in the new definition may be quite different from
     those in the old definition.
 
     An attempt at a definition may fail because of scanerrors as the

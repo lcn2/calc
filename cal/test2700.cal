@@ -84,7 +84,7 @@ define mkfrac() = rand(2) ? mkposfrac() : -mkposfrac();
 define mksquarereal() = mknonnegreal()^2;
 
 /*
- * We might be able to do better than the following.  For nonsquare
+ * We might be able to do better than the following.  For non-square
  * positive integer less than 1e6, could use:
  *		 x = rand(1, 1000);
  *		 return rand(x^2 + 1, (x + 1)^2);

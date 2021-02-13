@@ -320,16 +320,16 @@ define toomcook4square(a){
 }
 
 /*
-  TODO: Implement the asymmetric variations
-*/
+ * TODO: Implement the asymmetric variations
+ */
 
 /*
-  produce_long_random_number(n) returns large pseudorandom numbers. Really large
-  numbers, e.g.:
-      produce_long_random_number(16)
-  is ca 4,128,561 bits (ca 1,242,821 dec. digits) large. Exact length is not
-  predeterminable because of the chaotic output of the function random().
-*/
+ * produce_long_random_number(n) returns large pseudo-random numbers.
+ * Really large numbers, e.g.:
+ *     produce_long_random_number(16)
+ * is ca 4,128,561 bits (ca 1,242,821 dec. digits) large. Exact length is not
+ * pre-determinable because of the chaotic output of the function random().
+ */
 define __CZ__produce_long_random_number(n)
 {
   local ret k;

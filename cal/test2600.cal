@@ -50,7 +50,7 @@
  * of b in power(a, b, eps) is large, the computation required for
  * a test may be very heavy.
  *
- * Test funcations are called as:
+ * Test functions are called as:
  *
  *	testabc(str, ..., verbose)
  *

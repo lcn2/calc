@@ -66,7 +66,7 @@ STATIC size_t	outbufused;
 
 
 /*
- * zio_init - perform needed initilization work
+ * zio_init - perform needed initialization work
  *
  * On some systems, one cannot initialize a pointer to a FILE *.
  * This routine, called once at startup is a work-a-round for

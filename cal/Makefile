@@ -181,14 +181,14 @@ FMT= fmt
 
 # The calc files to install
 #
-# This list is prodiced by the detaillist rule when no WARNINGS are detected.
+# This list is produced by the detaillist rule when no WARNINGS are detected.
 #
 # Please use:
 #
 #	make calc_files_list
 #
 # to keep this list in nice sorted order and to check that these
-# deailed help files are under RCS control.
+# detailed help files are under RCS control.
 #
 CALC_FILES= README alg_config.cal beer.cal bernoulli.cal \
 	bernpoly.cal bigprime.cal bindings brentsolve.cal chi.cal chrem.cal \
@@ -236,7 +236,7 @@ all: ${CALC_FILES} ${MAKE_FILE} .all
 # sub-directory called calc/cal.
 #
 # NOTE: Due to bogus shells found on one common system we must have
-#	an non-emoty else clause for every if condition.  *sigh*
+#	an non-empty else clause for every if condition.  *sigh*
 #
 ##
 
@@ -391,7 +391,7 @@ uninstall:
 		if [ -f "${T}${CALC_SHAREDIR}/$$i" ]; then \
 		   echo "cannot uninstall ${T}${CALC_SHAREDIR}/$$i"; \
 		else \
-		   echo "uninstalled ${T}${CALC_SHAREDIR}/$$i"; \
+		   echo "un-installed ${T}${CALC_SHAREDIR}/$$i"; \
 		fi; \
 	    fi; \
 	done

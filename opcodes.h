@@ -41,10 +41,10 @@
 #define OP_NOP		0L	/* no operation */
 #define OP_LOCALADDR	1L	/* load address of local variable */
 #define OP_GLOBALADDR	2L	/* load address of global variable */
-#define OP_PARAMADDR	3L	/* load address of paramater variable */
+#define OP_PARAMADDR	3L	/* load address of parameter variable */
 #define OP_LOCALVALUE	4L	/* load value of local variable */
 #define OP_GLOBALVALUE	5L	/* load value of global variable */
-#define OP_PARAMVALUE	6L	/* load value of paramater variable */
+#define OP_PARAMVALUE	6L	/* load value of parameter variable */
 #define OP_NUMBER	7L	/* load constant real numeric value */
 #define OP_INDEXADDR	8L	/* load array index address */
 #define OP_PRINTRESULT	9L	/* print result of top-level expression */

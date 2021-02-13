@@ -12,13 +12,13 @@ TYPES
 DESCRIPTION
     This is analogous to the C operator sizeof.	 It attempts to assess
     the number of bytes in memory used to store a value and all its
-    components plus all of the related structue overhead.  Unlike
+    components plus all of the related structure overhead.  Unlike
     sizeof(x), this builtin includes overhead.
 
-    Unlike size(x), this builtin incldues the trailing \0 byte on the
+    Unlike size(x), this builtin includes the trailing \0 byte on the
     end of strings.
 
-    Unlike sizeof(x), this builtin includes the size demonitor for integers
+    Unlike sizeof(x), this builtin includes the size denominator for integers
     and the imaginary part for complex values.	Storage for holding
     0, 1 and -1 values are also included.
 

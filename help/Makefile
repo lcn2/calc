@@ -69,7 +69,7 @@ TOP_MAKE_FILE= Makefile
 #INCDIR= /dev/env/DJDIR/include
 INCDIR= /usr/include
 
-# where to install calc realted things
+# where to install calc related things
 #
 # ${BINDIR}		where to install calc binary files
 # ${LIBDIR}		where calc link library (*.a) files are installed
@@ -209,7 +209,7 @@ BLT_HELP_FILES_5= errorcodes
 
 STD_HELP_FILES_6= file history interrupt list mat
 
-# beacuse obj is built special (due to confusion with it as
+# because obj is built special (due to confusion with it as
 # a symlink for some built environments, we treat obj specially
 # and call it obj.file
 #
@@ -249,7 +249,7 @@ FULL_HELP_FILES= ${STD_HELP_FILES_1} ${STD_HELP_FILES_2} \
 		${BLT_HELP_FILES_13} ${STD_HELP_FILES_14} \
 		${BLT_HELP_FILES_14} ${STD_HELP_FILES_15}
 
-# These full files are those who are not built or constrcuted
+# These full files are those who are not built or constructed
 #
 STD_HELP_FILES= ${STD_HELP_FILES_1} ${STD_HELP_FILES_2} \
 		${STD_HELP_FILES_4} ${STD_HELP_FILES_6} \
@@ -271,7 +271,7 @@ BLT_HELP_FILES= ${BLT_HELP_FILES_3} ${BLT_HELP_FILES_5} \
 
 # The detailed list of help files to install
 #
-# This list is prodiced by the detaillist rule when no WARNINGS are detected.
+# This list is produced by the detaillist rule when no WARNINGS are detected.
 #
 # Please use:
 #
@@ -338,7 +338,7 @@ all: ${FULL_HELP_FILES} full ${DETAIL_HELP} ${DETAIL_CLONE} \
 # used by the upper level Makefile to determine of we have done all
 #
 # NOTE: Due to bogus shells found on one common system we must have
-#	an non-emoty else clause for every if condition.  *sigh*
+#	an non-empty else clause for every if condition.  *sigh*
 #
 .all:
 	${RM} -f .all
@@ -596,18 +596,18 @@ ${SINGULAR_FILES}: ${PLURAL_FILES}
 
 # Form the builtin file
 #
-# We ave a "chicken-and-egg" problem.  We want the builtn help file to
+# We have a "chicken-and-egg" problem.  We want the builtin help file to
 # accurately reflect the function list.	 It would be nice if we could
 # just execute calc show builtin, but calc may not have been built or
-# buildable at this point.  The hack-a-round used is to convert ../func.c
-# into a standalone program that generates a suitable function list
-# that is standwiched between the top and bottom builtin help text.
+# build-able at this point.  The hack-a-round used is to convert ../func.c
+# into a stand-alone program that generates a suitable function list
+# that is sandwiched between the top and bottom builtin help text.
 #
 # We form funclist.c by sedding out unwanted stuff from builtins table,
 # converting NUMBER* and VALUE into harmless types and converting
 # the showbuiltins() function into main().  Combined with the -DFUNCLIST
 # we will avoid all of the complex calc types, macros and defines and
-# be left with just main() and a mininal builtins table.
+# be left with just main() and a minimal builtins table.
 #
 # Building funclist.o a portable fashion is ugly because some systems
 # do not treat -I.. correctly!
@@ -662,7 +662,7 @@ calcliblist:
 	done
 
 # The BSDI cdrom makefile expects all help files to be pre-built.  This rule
-# creats these fils so that the release can be shipped off to BSDI.  You can
+# creates these files so that the release can be shipped off to BSDI.  You can
 # ignore this rule.
 #
 bsdi: all

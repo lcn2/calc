@@ -12,7 +12,7 @@ TYPES
 DESCRIPTION
     If an argument x_i is a list with elements e_1, e_2, ..., e_n, it
     is treated as if x_i were replaced by e_1, e_2, ..., e_n; this may
-    continue recurively if any of the e_j is a list.
+    continue recursively if any of the e_j is a list.
 
     If an argument x_i is an object of type xx, then x_i is replaced by
     xx_sum(x_i) if the function xx_sum() has been defined.  If the

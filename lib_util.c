@@ -141,7 +141,7 @@ convstr2z(char *str)
 	}
 
 	/*
-	 * allocate HALF strorage
+	 * allocate HALF storage
 	 */
 	len = (strlen(str)+sizeof(HALF)-1)/sizeof(HALF);
 	v = (HALF *)malloc(len * sizeof(HALF));
@@ -211,7 +211,7 @@ convhex2z(char *hex)
 	}
 
 	/*
-	 * allocate HALF strorage
+	 * allocate HALF storage
 	 */
 	slen = strlen(hex);
 	len = ((slen*4)+BASEB-1)/BASEB;

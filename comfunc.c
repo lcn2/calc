@@ -553,7 +553,7 @@ c_log(COMPLEX *c, NUMBER *epsilon)
 		/* first time call */
 		cln_10_epsilon = qcopy(epsilon);
 	} else if (qcmp(cln_10_epsilon, epsilon) == TRUE) {
-		/* replaced cacheed value with epsilon arg */
+		/* replaced cached value with epsilon arg */
 		qfree(cln_10_epsilon);
 		cln_10_epsilon = qcopy(epsilon);
 	} else if (cln_10 != NULL) {

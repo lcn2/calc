@@ -1,5 +1,5 @@
 /*
- * c_pzasusb8 - print numereator as a string of USB8s
+ * c_pzasusb8 - print numerator as a string of USB8s
  *
  * Copyright (C) 1999-2004  Ernest Bowen
  *
@@ -36,7 +36,7 @@
 #include "have_unused.h"
 
 /*
- * c_pzasusb8 - print numereator as a string of USB8s
+ * c_pzasusb8 - print numerator as a string of USB8s
  *
  * given:
  *    count = 1;

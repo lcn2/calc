@@ -774,7 +774,7 @@ matbround(MATRIX *m, VALUE *v2, VALUE *v3)
 }
 
 /*
- * Approximate a matrix by approximating elemenbs to be multiples of
+ * Approximate a matrix by approximating elements to be multiples of
  * v2, rounding type determined by v3.
  */
 MATRIX *
@@ -1455,7 +1455,7 @@ matinit(MATRIX *m, VALUE *v1, VALUE *v2)
 	}
 
 	/*
-	 * fill the diaginal of a square matrix if requested
+	 * fill the diagonal of a square matrix if requested
 	 */
 	rows = res->m_max[0] - res->m_min[0] + 1;
 	v = res->m_table;
@@ -1786,7 +1786,7 @@ matprint(MATRIX *m, long max_print)
 
 	/*
 	 * Now print the first few elements of the matrix in short
-	 * and unambigous format.
+	 * and unambiguous format.
 	 */
 	math_str(":\n");
 	vp = m->m_table;

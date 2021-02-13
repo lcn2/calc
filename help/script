@@ -48,7 +48,7 @@ Calc shell scripts
     ( ... ) for shell-function arguments, { ... } for brace
     expansion, $ for parameter or variable expansion, <, <<, >, >>
     for redirection of input or output, etc.) it will usually be
-    necessary to quote or escape tho characters, or usually more
+    necessary to quote or escape th characters, or usually more
     conveniently, quote whole expressions with single or double
     quotes.
 
@@ -132,7 +132,7 @@ Calc shell scripts
 
 	    ./addall2 2 3 4
 
-    the $* in ths script expands to  2 3 4, and because of the "-s"
+    the $* in this script expands to  2 3 4, and because of the "-s"
     in the options, calc starts with argv(0) = "2", argv(1) = "3",
     argv(2)= "4".  As there is only one calc process involved and
     the eval() function accepts as argument any string that
@@ -156,7 +156,7 @@ Calc shell scripts
 	IMPORTANT NOTE:
 
 	    The -f flag must be at the very end of the #! line.
-	    The #! line must be the first line of the exeuctable file.
+	    The #! line must be the first line of the executable file.
 	    The path after the #! must be the full path to the calc executable.
 
     After the command:

@@ -2607,7 +2607,7 @@ getid(char *buf)
  * global or if symtype is static and the old variable is at the same
  * level.  Warnings are issued when a global or local variable is
  * redeclared and when in the same body the variable will be accessible only
- ^ with the appropriate specfier.
+ ^ with the appropriate specifier.
  */
 S_FUNC void
 definesymbol(char *name, int symtype)

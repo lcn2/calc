@@ -79,7 +79,7 @@
  *		hindx = 0;
  *	} while (test_factor < some_limit);
  *
- * The test, mfactor(67, 1, 10000) took on an 200 Mhz r4k (user CPU seconds):
+ * The test, mfactor(67, 1, 10000) took on an 200 MHz r4k (user CPU seconds):
  *
  *	210.83	(prior to use of hset[])
  *	 78.35	(hset[] for p_elim = 7)
@@ -99,7 +99,7 @@
  *	 57.78	(hset[] for p_elim = 17)
  *	 p_elim == 19 rejected because of memory size
  *
- * The p_elim == 17 overhead takes ~3 minutes on an 200 Mhz r4k CPU and
+ * The p_elim == 17 overhead takes ~3 minutes on an 200 MHz r4k CPU and
  * requires about ~13 Megs of memory.  The p_elim == 13 overhead
  * takes about 3 seconds and requires ~1.5 Megs of memory.
  *
@@ -256,7 +256,7 @@ define mfactor(n, start_k, rept_loop, p_elim)
 		return q;
 	} else {
 		/* report this loop */
-		printf("at 2*%d*%d+1, cpu: %f\n",
+		printf("at 2*%d*%d+1, CPU: %f\n",
 			(q-1)/(2*n), n, usertime());
 		fflush(files(1));
 		loop = 0;
@@ -269,14 +269,14 @@ define mfactor(n, start_k, rept_loop, p_elim)
 		 */
 		if (rept_loop <= ++loop) {
 			/* report this loop */
-			printf("at 2*%d*%d+1, cpu: %f\n",
+			printf("at 2*%d*%d+1, CPU: %f\n",
 				(q-1)/(2*n), n, usertime());
 			fflush(files(1));
 			loop = 0;
 		}
 
 		/*
-		 * skip if divisable by a prime <= 449
+		 * skip if divisible by a prime <= 449
 		 *
 		 * The value 281 was determined by timing loops
 		 * which found that 281 was at or near the
@@ -285,7 +285,7 @@ define mfactor(n, start_k, rept_loop, p_elim)
 		 * The addition of the do { ... } while (factor(q, 449)>1);
 		 * loop reduced the factoring loop time (36504 k values with
 		 * the hset[] initialization time removed) from 25.69 sec to
-		 * 15.62 sec of CPU time on a 200Mhz r4k.
+		 * 15.62 sec of CPU time on a 200MHz r4k.
 		 */
 		do {
 			/*

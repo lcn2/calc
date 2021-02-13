@@ -1430,7 +1430,7 @@ zxor(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 
 
 /*
- * Compute the bitwise ANDNOT of two integers.
+ * Compute the bitwise AND NOT of two integers.
  */
 void
 zandnot(ZVALUE z1, ZVALUE z2, ZVALUE *res)
@@ -1597,7 +1597,7 @@ zhighbit(ZVALUE z)
 
 
 /*
- * Return whether or not the specifed bit number is set in a number.
+ * Return whether or not the specified bit number is set in a number.
  * Rightmost bit of a number is bit 0.
  */
 BOOL
@@ -1669,7 +1669,7 @@ zisallbits(ZVALUE z)
 
 /*
  * Return the number whose binary representation contains only one bit which
- * is in the specified position (counting from zero).  This is equivilant
+ * is in the specified position (counting from zero).  This is equivalent
  * to raising two to the given power.
  */
 void

@@ -109,7 +109,7 @@ custom(char *name, int count, VALUE **vals)
 
 
 /*
- * showcustom - display the names and brief descriptins of custom functions
+ * showcustom - display the names and brief descriptions of custom functions
  */
 /*ARGSUSED*/
 void

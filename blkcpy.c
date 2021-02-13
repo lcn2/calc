@@ -1040,7 +1040,7 @@ copyblk2num(BLOCK *sblk, long ssi, long num, NUMBER *dnum, long dsi,
 	NUMBER *ret;		/* cloned and modified numerator */
 #if CALC_BYTE_ORDER == BIG_ENDIAN
 	HALF *swapped;		/* byte swapped input data */
-	unsigned long halflen;	/* length of the input ounded up to HALFs */
+	unsigned long halflen;	/* length of the input rounded up to HALFs */
 	HALF *h;		/* copy byteswap pointer */
 	unsigned long i;
 #endif

@@ -35,7 +35,7 @@
  * If one sets up calc_matherr_jmpbuf, and then sets calc_use_matherr_jmpbuf
  * to non-zero then this routine will longjmp back with the return value of
  * calc_use_matherr_jmpbuf.  In addition, the last calc error message will be
- * found in calc_use_matherr_jmpbuf_msg.  This error is not printed to sttderr.
+ * found in calc_use_matherr_jmpbuf_msg.  This error is not printed to stderr.
  *
  * For example:
  *

@@ -220,7 +220,7 @@ Step 5: Write your custom function
 	   NOTE: If you do not use any of the 3 function parameters,
 	   then you should declare that function parameter to be UNUSED.
 	   For example, if the count and vals parameters were not used
-	   in your custom function, then your declaraction should be:
+	   in your custom function, then your declaration should be:
 
 		/*ARGSUSED*/
 		VALUE

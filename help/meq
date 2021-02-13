@@ -1,5 +1,5 @@
 NAME
-    meq - test for equality modulo a specifed number
+    meq - test for equality modulo a specified number
 
 SYNOPSIS
     meq(x, y, md)

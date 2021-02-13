@@ -13,7 +13,7 @@ DESCRIPTION
 
     This custom function will return the value certain selected #define
     values.  The infoname arg must be a string that matches the given
-    #define name.  For conveience, the case infoname does not matter,
+    #define name.  For convenience, the case infoname does not matter,
     so "baseb" and "BASEB" refer to the same #define value.
 
     The return value is either an integer or a string depending on

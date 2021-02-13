@@ -106,7 +106,7 @@ define invbetainc_slow(x,a,b){
     GW Cran, KJ Martin, GE Thomas,
     Remark AS R19 and Algorithm AS 109:
     A Remark on Algorithms AS 63: The Incomplete Beta Integral
-    and AS 64: Inverse of the Incomplete Beta Integeral,
+    and AS 64: Inverse of the Incomplete Beta integral,
     Applied Statistics,
     Volume 26, Number 1, 1977, pages 111-114.
 

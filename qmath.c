@@ -1092,7 +1092,7 @@ qxor(NUMBER *q1, NUMBER *q2)
 
 
 /*
- * Perform the bitwise ANDNOT of two integers.
+ * Perform the bitwise AND-NOT of two integers.
  */
 NUMBER *
 qandnot(NUMBER *q1, NUMBER *q2)

@@ -25,7 +25,7 @@ DESCRIPTION
     The new arg1 HASH state is returned.
 
     If arg1 is not a a HASH state, then the initial HASH is
-    used and modifed by arg1 and any val args supplied.	 The
+    used and modified by arg1 and any val args supplied.	 The
     return value is the new HASH state.
 
     The following table gives a summary of actions and return values.
@@ -60,7 +60,7 @@ EXAMPLE
     ; sha1("x", "y", "z") == sha1("xy")
 	    0
 
-    ; sha1(sha1("this is", 7^19-8, "a composit", 3i+4.5, "hash"))
+    ; sha1(sha1("this is", 7^19-8, "a composite", 3i+4.5, "hash"))
 	    0xc3e1b562bf45b3bcfc055ac65b5b39cdeb6a6c55
 
     ; x = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi())

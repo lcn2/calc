@@ -12,7 +12,7 @@ TYPES
 DESCRIPTION
     If an argument x_i is a list with elements e_1, e_2, ..., e_n, it
     is treated as if x_i were replaced by e_1, e_2, ..., e_n; this may
-    continue recurively if any of the e_j is a list.
+    continue recursively if any of the e_j is a list.
 
     If an argument x_i is an object of type xx, then x_i is replaced by
     xx_max(x_i) if the function xx_max() has been defined. If the
@@ -29,14 +29,14 @@ DESCRIPTION
     will return the same as max(a, b, c).
 
     Assuming the above replacements, and that the x_1, x_2, ..., are
-    of sufficently simple ordered types (e.g. real numbers or strings),
+    of sufficiently simple ordered types (e.g. real numbers or strings),
     or, if some are objects, the relevant xx_rel(a,b) has been defined
     and returns a real-number value for any comparison that has to be made,
     max(x_1, x_2, ...) returns the value determined by max(x_1) = x_1,
-    and succesively for later arguments, by the use of the equivalent of
+    and successively for later arguments, by the use of the equivalent of
     max(a,b) = (a < b) ? b : a.	 If the ordering determined by < is total,
     max(x_1, ...) will be the maximum value among the arguments.  For a
-    preorder relation it may be one of several maximal values.	For
+    pre-order relation it may be one of several maximal values.	For
     other relations, it may be difficult to predict the result.
 
 EXAMPLE

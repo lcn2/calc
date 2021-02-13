@@ -25,7 +25,7 @@
 
 /*
  * Solve Pell's equation; Returns the solution X to: X^2 - D * Y^2 = 1.
- * Type the solution to pells equation for a particular D.
+ * Type the solution to Pell's equation for a particular D.
  */
 
 

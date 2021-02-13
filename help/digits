@@ -25,7 +25,7 @@ DESCRIPTION
 
 	digits(12.3456) == 2    computes with the integer part only
 	digits(-1234) == 4      computes with the absolute value only
-	digits(0) == 1          specical case
+	digits(0) == 1          special case
 	digits(-0.123) == 1     combination of all of the above
 
 EXAMPLE

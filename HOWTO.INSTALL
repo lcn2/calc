@@ -29,7 +29,7 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 
 	The top level Makefile and the custom/Makefile require a GNU
 	Make (such as gmake) or an equivalently advanced make.	On many
-	targets, the default make is sufficent.  On FreeBSD for example,
+	targets, the default make is sufficient.  On FreeBSD for example,
 	one must use gmake instead of make.
 
 	Some report that under macOS, one has to declare the target
@@ -120,7 +120,7 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 	    found below, comment out the Linux set and comment in that
 	    set or edit the gcc set or the common cc set as needed.
 
-	You may want to change these Makrfile variables from their defaults:
+	You may want to change these Makefile variables from their defaults:
 
 	    RANLIB
 
@@ -152,7 +152,7 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 
 	The top level Makefile and the custom/Makefile require a GNU
 	Make (such as gmake) or an equivalently advanced make.	On many
-	targets, the default make is sufficent.  On FreeBSD for example,
+	targets, the default make is sufficient.  On FreeBSD for example,
 	one must use gmake instead of make.
 
 	If your target system does not have GNU Make (or equivalent), then

@@ -40,7 +40,7 @@
 
 
 /*
- * add your forward custom function declaractions here
+ * add your forward custom function declarations here
  *
  * Declare custom functions as follows:
  *

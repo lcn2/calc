@@ -20,7 +20,7 @@ DESCRIPTION
     combinatorial problems, e.g. for n >= 1, catalan(n) is the number of
     ways of using parentheses to express a product of n + 1 letters in
     terms of binary products; it is the number of ways of dissecting a
-    convex polygon with n + 2 sides into triangles by nonintersecting
+    convex polygon with n + 2 sides into triangles by non-intersecting
     diagonals; it is the number of integer-component-incrementing paths
     from (x,y) = (0,0) to (x,y) = (n,n) for which always y <= x.
 

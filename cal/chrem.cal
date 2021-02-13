@@ -1,5 +1,5 @@
 /*
- * chrem - chinese remainder theorem/problem solver
+ * chrem - Chinese remainder theorem/problem solver
  *
  * Copyright (C) 1999  Ernest Bowen and Landon Curt Noll
  *
@@ -26,7 +26,7 @@
  */
 
 /*
- * When possible, chrem finds solutions for x of a set of congruences
+ * When possible, chrem finds solutions for x of a set of congruence
  * of the form:
  *
  *			x = r1 (mod m1)
@@ -35,7 +35,7 @@
  *
  * where the residues r1, r2, ... and the moduli m1, m2, ... are
  * given integers.  The Chinese remainder theorem states that if
- * m1, m2, ... are relatively prime in pairs, the above congruences
+ * m1, m2, ... are relatively prime in pairs, the above congruence
  * have a unique solution modulo  m1 * m2 * ...	  If m1, m2, ...
  * are not relatively prime in pairs, it is possible that no solution
  * exists.  If solutions exist, the general solution is expressible as:

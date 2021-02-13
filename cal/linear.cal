@@ -29,7 +29,7 @@
  *
  * given:
  *	x0, y0		first known point on the line
- *	x1, y1		second knonw point on the line
+ *	x1, y1		second known point on the line
  *	x		a given point to interpolate on
  *
  * returns:

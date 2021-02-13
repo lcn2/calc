@@ -75,7 +75,7 @@ DESCRIPTION
     Except in cases like strcat(A, "") when *A identified with a literal
     string as above, definitions of string values using strcat() or substr()
     will copy the relevant strings to newly allocated addresses which will
-    be useable only while the variables retain these defined values.
+    be usable only while the variables retain these defined values.
     For example, after
 
 	; B = C = strcat("a", "bc");

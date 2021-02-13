@@ -15,10 +15,10 @@ DESCRIPTION
     a value and all of its components.	Unlike memsize(x), this
     builtin does not include the size of the overhead.
 
-    Unlike size(x), this builtin incldues the trailing \0 byte on the
+    Unlike size(x), this builtin includes the trailing \0 byte on the
     end of strings.
 
-    For numeric values, sizeof(x) ignores the demoninator if 'x' is
+    For numeric values, sizeof(x) ignores the denominator if 'x' is
     an integer.	 For complex values, sizeof(x) ignores the imaginary
     part if 'x' is real.  Because the 0, 1 and -1 numeric values are
     shared static values, sizeof(x) reports such values as having

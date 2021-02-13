@@ -916,7 +916,7 @@ zredcfree(REDC *rp)
  * The resulting number can be used for multiplying, adding, subtracting,
  * or comparing with any other such converted numbers, as if the numbers
  * were being calculated modulo the number which initialized the REDC
- * information.	 When the final value is unconverted, the result is the
+ * information.	 When the final value is not converted, the result is the
  * same as if the usual operations were done with the original numbers.
  *
  * given:

@@ -10,13 +10,13 @@ SYNOPSIS
 TYPES
     x, y		integer or real
 
-    return		integer (uniary operator case)
+    return		integer (unary operator case)
 			integer or real (binary operator case)
 
 DESCRIPTION
     The pound sign or sharp sign "#" has special meaning in calc.
 
-    As a uniary operator:
+    As a unary operator:
 
     	# value
 

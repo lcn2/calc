@@ -35,7 +35,7 @@
  *	variable has only one name.  For some purposes, a name like
  *	"sin(t)" or "(a + b)" or "\lambda" might be useful;
  *	names like "*" or "-27" are legal but might give expressions
- *	that are difficult to intepret.
+ *	that are difficult to interpret.
  *
  * Polynomial expressions may be constructed from numbers and the
  *	independent variable and other polynomials by the algebraic
@@ -43,7 +43,7 @@
  *	The operations // and % are defined to have the quotient and
  *	remainder meanings as usually defined for polynomials.
  *
- * When polynomials are assigned to idenfifiers, it is convenient to
+ * When polynomials are assigned to identifiers, it is convenient to
  *	think of the polynomials as values.  For example, p = (x - 1)^2
  *	assigns to p a polynomial value in the same way as q = (7 - 1)^2
  *	would assign to q a number value.  As with number expressions

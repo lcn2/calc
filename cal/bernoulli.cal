@@ -1,5 +1,5 @@
 /*
- * bernoulli - clculate the Nth Bernoulli number B(n)
+ * bernoulli - calculate the Nth Bernoulli number B(n)
  *
  * Copyright (C) 2000  David I. Bell and Landon Curt Noll
  *
@@ -26,9 +26,9 @@
 /*
  * Calculate the Nth Bernoulli number B(n).
  *
- * NOTE: This is now a bulitin function.
+ * NOTE: This is now a builtin function.
  *
- * The non-buildin code used the following symbolic formula to calculate B(n):
+ * The non-builtin code used the following symbolic formula to calculate B(n):
  *
  *	(b+1)^(n+1) - b^(n+1) = 0
  *
@@ -42,7 +42,7 @@
  *	B(3) = -(6*B(2) + 4*B(1) + 1) / 4
  *
  * The combinatorial factors in the expansion of the above formula are
- * calculated interatively, and we use the fact that B(2i+1) = 0 if i > 0.
+ * calculated interactively, and we use the fact that B(2i+1) = 0 if i > 0.
  * Since all previous B(n)'s are needed to calculate a particular B(n), all
  * values obtained are saved in an array for ease in repeated calculations.
  */

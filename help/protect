@@ -36,7 +36,7 @@ DESCRIPTION
     where V is an lvalue. Attempting either of these assignments
     will return an error value and leave the value of A or V unchanged.
 
-    Initally, when created, any lvalue A has zero status corresponding
+    Initially, when created, any lvalue A has zero status corresponding
     to "no protection". This may be restored at any time by protect(A, 0).
 
     If N is positive and A does not already have the protection
@@ -64,7 +64,7 @@ DESCRIPTION
     X[2][0] and X[2][1] have depth 2; X[2][0].x, X[2][0].y, X[2][1].x
     and X[2][1].y have depth 3. For any lvalue A, protect(A, N, depth)
     applies protect(A, N) to A and to all elements, elements of
-    elements, etc., up tothe stated depth. In the above example,
+    elements, etc., up to the stated depth. In the above example,
     protect(X, 20, 2) gives no-type-change and no-copy-to protection
     to 8 of the listed lvalues, but not to the components of the
     objects X[2][0] and X[2][1]; With any d >= 3, protect(X, 20, d)
@@ -73,7 +73,7 @@ DESCRIPTION
     If B is a variable with positive status and assignment of B to A is
     permitted, execution of the assignment A = B adds to the protections
     of A all protections of B that A does not already have. Except when
-    the value returned is the result of the evqluation of an lvalue with
+    the value returned is the result of the evaluation of an lvalue with
     positive status, calc's builtin operators and functions return values
     with zero protection status. For example, whatever the protection
     statuses of X and Y, X + sqrt(Y) will have zero status, but
@@ -97,7 +97,7 @@ DESCRIPTION
     gives no-assign-to protection to the variable; i.e. noassignto(`A)
     achieves the same as protect(A,1).
 
-    In the brief descriptions above of builtin kinds of protectiopn,
+    In the brief descriptions above of builtin kinds of protection,
     "assign" refers to use of '=' as in A = expr to assign the value
     of expr to A, and in A = {..., expr, ...} to assign the value of expr
     to some component of A, and to the assignments implicit in
@@ -110,7 +110,7 @@ DESCRIPTION
     "Copying" refers to initialization using {...} and to the operations
     copy and blkcpy as applied to strings, blocks, lists and matrices.
     Although A = {..., expr, ...) assigns the value of expr to an
-    elment of A, it is also regarded as copying to A. Thus, initialization
+    element of A, it is also regarded as copying to A. Thus, initialization
     of A may be prevented either by giving no-copy-to protection to A or
     no-assignment=to protection to the elements of A. Assignments to and
     from characters or octets in strings or blocks are also regarded as
@@ -151,12 +151,12 @@ DESCRIPTION
     Although M = mat[2] = {...} and mat M[2] = {...} do the same thing,
     these are different from (M = mat[2]) = {...} and (mat M[3]) = {...}.
     In the former pair of statements, the result of mat[2] = {...} is being
-    assigned to M.  In the latter statments, a matrix with zero elements is
+    assigned to M.  In the latter statements, a matrix with zero elements is
     being assigned to M and then that matrix is being "reinitialized". Both
-    will fail if M has no-asssign-to protection, but only the latter
+    will fail if M has no-assign-to protection, but only the latter
     would be prevented by M having no-copy-to protection.
 
-    When the functions which mave move elements like of sort, reverse,
+    When the functions which can move elements like of sort, reverse,
     swap, insert, pop, remove, push and append. are evaluated, the
     protection statuses move with the values, e.g. if among the values
     and elements involved, there is just one with value 42, then the

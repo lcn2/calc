@@ -99,7 +99,7 @@ S_FUNC void fskipnum(FILE *fp);
 
 
 /*
- * file_init - perform needed initilization work
+ * file_init - perform needed initialization work
  *
  * On some systems, one cannot initialize a pointer to a FILE *.
  * This routine, called once at startup is a work-a-round for
@@ -240,7 +240,7 @@ init_fileio(FILEIO *fiop, char *name, char *mode,
 	 * determine file open mode
 	 *
 	 * While a leading 'r' is for reading and a leading 'w' is
-	 * for writing, the presense of a '+' in the string means
+	 * for writing, the presence of a '+' in the string means
 	 * both reading and writing.  A leading 'a' means append
 	 * which is writing.
 	 */
@@ -1408,7 +1408,7 @@ z2filepos(ZVALUE zpos)
 	/*
 	 * firewall
 	 */
-	zpos.sign = 0;	/* deal only with the absolue value */
+	zpos.sign = 0;	/* deal only with the absolute value */
 
 	/*
 	 * quick return if the position can fit into a long
@@ -1649,7 +1649,7 @@ set_open_pos(FILE *fp, ZVALUE zpos)
 	}
 
 	/*
-	 * return sucess
+	 * return success
 	 */
 	return 0;
 }
@@ -2606,7 +2606,7 @@ isattyid(FILEID id)
  * given:
  *	id	FILEID to search
  *	str	string to look for
- *	pos	file postion to start at (NULL => current position)
+ *	pos	file position to start at (NULL => current position)
  *
  * returns:
  *	EOF if system error
@@ -2616,7 +2616,7 @@ isattyid(FILEID id)
  *
  * XXX - This search is a translation of the original search that did not
  *	 work with large files.	 The search algorithm used is slow and
- *	 should be spead up much more.
+ *	 should be speed up much more.
  */
 int
 fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)

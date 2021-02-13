@@ -55,8 +55,8 @@ int
 main(void)
 {
 #if !defined(OFF_T_NON_SCALAR)
-	off_t value;	/* an off_t to perform arithmatic on */
-	off_t value2;	/* an off_t to perform arithmatic on */
+	off_t value;	/* an off_t to perform arithmetic on */
+	off_t value2;	/* an off_t to perform arithmetic on */
 
 	/*
 	 * do some math opts on an off_t

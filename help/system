@@ -10,7 +10,7 @@ TYPES
     return	int
 
 DESCRIPTION
-    This function excutes the shell command found in the srtring, cmd.
+    This function executes the shell command found in the string, cmd.
     The return value is system dependent.  On POSIX P1003.1 compliant
     systems the return value is defined by the waitpid system call.
     Typically a shell command that returns with a 0 exit status will

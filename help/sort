@@ -56,7 +56,7 @@ DESCRIPTION
     precede b, while precedes(a,b) being zero intends that the order
     of a and b is to be as in the original x.  For any integer-valued
     precedes() function, the algorithm will return a result for sort(x),
-    but to guarantee fulfilment of the intentions just described,
+    but to guarantee fulfillment of the intentions just described,
     precedes() should satisfy the conditions:
 
     (1) For all a, b, c, precedes(a,b) implies precedes(a,c) || precedes (c,b),
@@ -159,7 +159,7 @@ DESCRIPTION
     Examples of effects of various precedes functions for sorting
     lists of integers:
 
-	a > b			Sorts into nonincreasing order.
+	a > b			Sorts into non-increasing order.
 
 	abs(a) < abs(b)		Sorts into nondecreasing order of
 				absolute values, numbers with the

@@ -1,5 +1,5 @@
 NAME
-    strncpy - copy a number of chracters from head or all of a stringr
+    strncpy - copy a number of characters from head or all of a string
 		to head or all of a string
 
 SYNOPSIS

@@ -232,8 +232,8 @@ EXTERN int no_env;	/* TRUE (-e) => ignore env vars on startup */
 EXTERN long errmax;	/* if >= 0, error when errcount exceeds errmax */
 EXTERN int use_old_std;	/* TRUE (-O) => use classic configuration */
 
-EXTERN int allow_read;	/* FALSE => dont open any files for reading */
-EXTERN int allow_write; 	/* FALSE => dont open any files for writing */
+EXTERN int allow_read;	/* FALSE => don't open any files for reading */
+EXTERN int allow_write; 	/* FALSE => don't open any files for writing */
 EXTERN int allow_exec;	/* FALSE => may not execute any commands */
 
 /*

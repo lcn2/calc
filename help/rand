@@ -197,7 +197,7 @@ DESCRIPTION
 
     The truly paranoid might suggest that my claims in the MAGIC NUMBERS
     section are a lie intended to entrap people.  Well they are not, but
-    if you that paranoid why would you use a non-cryprographically strong
+    if you that paranoid why would you use a non-cryptographically strong
     pseudo-random number generator in the first place?  You would be
     better off using the random() builtin function.
 

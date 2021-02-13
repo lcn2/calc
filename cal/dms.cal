@@ -53,7 +53,7 @@ define dms_add(a, b)
 {
     local obj dms ans;		/* return value */
 
-    /* initalize value to 1st arg */
+    /* initialize value to 1st arg */
     if (istype(a, ans)) {
 	/* 1st arg is dms object, load it */
 	ans.deg = a.deg;
@@ -110,7 +110,7 @@ define dms_sub(a, b)
 {
     local obj dms ans;		/* return value */
 
-    /* initalize value to 1st arg */
+    /* initialize value to 1st arg */
     if (istype(a, ans)) {
 	/* 1st arg is dms object, load it */
 	ans.deg = a.deg;
@@ -352,11 +352,11 @@ define fixdms(a)
 	quit "attempt to fix a non dms object";
     }
 
-    /* force minutes to be intergral */
+    /* force minutes to be integral */
     a.min += frac(a.deg) * 60;
     a.deg = int(a.deg);
 
-    /* force degrees to be intergral */
+    /* force degrees to be integral */
     a.sec += frac(a.min) * 60;
     a.min = int(a.min);
 

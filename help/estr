@@ -22,7 +22,7 @@ DESCRIPTION
     or is not an octal digit, and other non-text characters to their
     escaped hex representation, e.g. char(165) becomes \xa5.
 
-    For real x, estr(x) represebts x in fractional mode.
+    For real x, estr(x) represents x in fractional mode.
 
 
 EXAMPLE

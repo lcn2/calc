@@ -194,7 +194,7 @@ prvate_hash64_buf(char *buf, unsigned len)
 	 * and found that it worked rather well.  In an Email message
 	 * to Landon, they named it ``Fowler/Noll/Vo'' or the FNV hash.
 	 *
-	 * FNV hashes are architected to be fast while maintaining a low
+	 * FNV hashes are designed to be fast while maintaining a low
 	 * collision rate. The FNV speed allows one to quickly hash lots
 	 * of data while maintaining a reasonable collision rate.  See:
 	 *
@@ -242,7 +242,7 @@ prvate_hash64_buf(char *buf, unsigned len)
 	    /* multiply by the other non-zero digit */
 	    tmp[2] += val[0] << 8;		/* tmp[2] += val[0] * 0x100 */
 	    tmp[3] += val[1] << 8;		/* tmp[1] += val[1] * 0x100 */
-	    /* proapage carries */
+	    /* propagate carries */
 	    tmp[1] += (tmp[0] >> 16);
 	    val[0] = tmp[0] & 0xffff;
 	    tmp[2] += (tmp[1] >> 16);

@@ -280,7 +280,7 @@
  * SOURCE OF MAGIC NUMBERS:
  *
  * Most of the magic constants used on this file ultimately are
- * based on LavaRnd.  LavaRnd produced them via a cryprographic
+ * based on LavaRnd.  LavaRnd produced them via a cryptographic
  * of the digitization of chaotic system that consisted of a noisy
  * digital camera and 6 Lava Lite(R) lamps.
  *
@@ -310,7 +310,7 @@
  *
  * The truly paranoid might suggest that my claims in the MAGIC NUMBERS
  * section are a lie intended to entrap people.	 Well they are not, but
- * if you that paranoid why would you use a non-cryprographically strong
+ * if you that paranoid why would you use a non-cryptographically strong
  * pseudo-random number generator in the first place?  You would be
  * better off using the random() builtin function.
  *
@@ -1343,7 +1343,7 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat100)
 			    printf("rand: skipped %d states\n", RAND_SKIP);
 			}
 
-		/* no skip, just descrment use counter */
+		/* no skip, just decrement use counter */
 		} else {
 			--s100.need_to_skip;
 		}
@@ -1426,7 +1426,7 @@ zsetrand(CONST RAND *state)
  * When FULL_BITS is 64 the element is 1 FULL, otherwise FULL_BITS
  * is 32 bits and the element is 2 FULLs.  The most significant bit
  * in the array (highest bit in the last FULL of the array) is to
- * be transfered to the most significant bit in the destination.
+ * be transferred to the most significant bit in the destination.
  *
  * given:
  *	bitstr	- most significant destination bit in a bit string
@@ -1434,15 +1434,15 @@ zsetrand(CONST RAND *state)
  *	count	- number of bits to transfer (must be 0 < count <= 64)
  *
  * returns:
- *	number of bits transfered
+ *	number of bits transferred
  */
 S_FUNC int
 slotcp(BITSTR *bitstr, FULL *src, int count)
 {
 	HALF *dh;		/* most significant HALF in dest */
-	int dnxtbit;		/* next bit beyond most signif in dh */
+	int dnxtbit;		/* next bit beyond most significant in dh */
 	int need;		/* number of bits we need to transfer */
-	int ret;		/* bits transfered */
+	int ret;		/* bits transferred */
 
 	/*
 	 * determine how many bits we actually need to transfer
@@ -1548,12 +1548,12 @@ slotcp(BITSTR *bitstr, FULL *src, int count)
 	*dh |= (((HALF)src[0] & highhalf[dnxtbit+need]) << dnxtbit);
 #else
 	if (need > BASEB) {
-		/* load the remaining bits from the most signif FULL */
+		/* load the remaining bits from the most significant FULL */
 		*dh-- = ((((HALF)src[SLEN-1] & lowhalf[BASEB-dnxtbit])
 			   << dnxtbit) | (HALF)(src[0] >> (FULL_BITS-dnxtbit)));
 		need -= BASEB;
 	} else if (need > 0) {
-		/* load the remaining bits from the most signif FULL */
+		/* load the remaining bits from the most significant FULL */
 		*dh-- |= (((((HALF)src[SLEN-1] & lowhalf[BASEB-dnxtbit])
 			 << dnxtbit) | (HALF)(src[0] >> (FULL_BITS-dnxtbit))) &
 			  highhalf[need]);
@@ -1570,7 +1570,7 @@ slotcp(BITSTR *bitstr, FULL *src, int count)
 	if (need > BASEB) {
 		/* fill	 up the 2nd most significant HALF */
 		*dh-- = (HALF)(src[0] >> (BASEB-dnxtbit));
-		/* no need todo: need -= BASEB, because we are nearly done */
+		/* no need TODO: need -= BASEB, because we are nearly done */
 	} else if (need > 0) {
 		/* we exhaust our need before 2nd half is filled */
 		*dh |= ((HALF)(src[0] >> (BASEB-dnxtbit)) &
@@ -1602,20 +1602,20 @@ slotcp(BITSTR *bitstr, FULL *src, int count)
  * When FULL_BITS is 64 this array is 1 FULL, otherwise FULL_BITS
  * is 32 bits and the array is 2 FULLs.	 The most significant bit
  * in the array (highest bit in the last FULL of the array) is to
- * be transfered to the most significant bit in the destination.
+ * be transferred to the most significant bit in the destination.
  *
  * given:
  *	bitstr	- most significant destination bit in a bit string
  *	src	- low order FULL in a 64 bit slot
  *
  * returns:
- *	number of bits transfered
+ *	number of bits transferred
  */
 S_FUNC void
 slotcp64(BITSTR *bitstr, FULL *src)
 {
-	HALF *dh = bitstr->loc;		/* most significant HALF in dest */
-	int dnxtbit = bitstr->bit+1;	/* next bit beyond most signif in dh */
+	HALF *dh = bitstr->loc;	     /* most significant HALF in dest */
+	int dnxtbit = bitstr->bit+1; /* next dh bit beyond most significant */
 
 	/*
 	 * prepare for the return
@@ -1663,7 +1663,7 @@ slotcp64(BITSTR *bitstr, FULL *src)
 #if FULL_BITS == SBITS
 	*dh |= (((HALF)src[0] & lowhalf[BASEB-dnxtbit]) << dnxtbit);
 #else
-	/* load the remaining bits from the most signif FULL */
+	/* load the remaining bits from the most significant FULL */
 	*dh-- = ((((HALF)src[SLEN-1] & lowhalf[BASEB-dnxtbit])
 		   << dnxtbit) | (HALF)(src[0] >> (FULL_BITS-dnxtbit)));
 
@@ -1775,7 +1775,7 @@ zrandskip(long cnt)
 			    printf("rand: skipped %d states\n", RAND_SKIP);
 			}
 
-		/* no skip, just descrment use counter */
+		/* no skip, just decrement use counter */
 		} else {
 			--s100.need_to_skip;
 		}
@@ -1843,7 +1843,7 @@ zrandskip(long cnt)
 			    printf("rand: skipped %d states\n", RAND_SKIP);
 			}
 
-		/* no skip, just descrment use counter */
+		/* no skip, just decrement use counter */
 		} else {
 			--s100.need_to_skip;
 		}
@@ -1910,7 +1910,7 @@ void
 zrand(long cnt, ZVALUE *res)
 {
 	BITSTR dest;		/* destination bit string */
-	int trans;		/* bits transfered */
+	int trans;		/* bits transferred */
 	int indx;		/* shuffle entry index */
 
 	/*
@@ -2036,7 +2036,7 @@ zrand(long cnt, ZVALUE *res)
 			    printf("rand: skipped %d states\n", RAND_SKIP);
 			}
 
-		/* no skip, just descrment use counter */
+		/* no skip, just decrement use counter */
 		} else {
 			--s100.need_to_skip;
 		}
@@ -2104,7 +2104,7 @@ zrand(long cnt, ZVALUE *res)
 			    printf("rand: skipped %d states\n", RAND_SKIP);
 			}
 
-		/* no skip, just descrment use counter */
+		/* no skip, just decrement use counter */
 		} else {
 			--s100.need_to_skip;
 		}

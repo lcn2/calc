@@ -18,7 +18,7 @@ DESCRIPTION
 		3 if x is a string-pointer
 		4 if x is a number-pointer
 
-     Pointers are initially defined by using the addreess (&) operator
+     Pointers are initially defined by using the address (&) operator
      with an "addressable" value; currently, these are octets, lvalues,
      strings and real numbers.
 

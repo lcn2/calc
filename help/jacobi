@@ -184,7 +184,7 @@ DESCRIPTION
     The above calc pseudo code is provided to help illustrate the
     properties of the jacobi symbol only.  The use of calc's jacobi
     builtin is recommended for both speed as well as to handle
-    specical cases.
+    special cases.
 
     For more information on the Legendre symbol and the Jacobi symbol:
 

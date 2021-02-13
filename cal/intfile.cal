@@ -27,20 +27,20 @@
 
 /*
  * NOTE: Because leading HALF values are trimmed from integer, a file
- *	 that begins with lots of 0 bits (in the case of big endian)
- *	 or that ends with lots of 0 bits (in the case of little endian)
+ *	 that begins with lots of 0 bits (in the case of big Endian)
+ *	 or that ends with lots of 0 bits (in the case of little Endian)
  *	 will be changed when the subsequent integer is written back.
  */
 
 
 /*
- * file2be - convert a file into an big endian integer
+ * file2be - convert a file into an big Endian integer
  *
  * given:
  *	filename	filename to read
  *
  * returns:
- *	integer read from its contents on big endian order
+ *	integer read from its contents on big Endian order
  */
 define file2be(filename)
 {
@@ -75,13 +75,13 @@ define file2be(filename)
 
 
 /*
- * file2le - convert a file into an little endian integer
+ * file2le - convert a file into an little Endian integer
  *
  * given:
  *	filename	filename to read
  *
  * returns:
- *	integer read from its contents on little endian order
+ *	integer read from its contents on little Endian order
  */
 define file2le(filename)
 {
@@ -118,7 +118,7 @@ define file2le(filename)
 
 
 /*
- * be2file - convert a big endian integer into a file
+ * be2file - convert a big Endian integer into a file
  *
  * given:
  *	v		integer to write to the file
@@ -168,7 +168,7 @@ define be2file(v, filename)
 
 
 /*
- * le2file - convert a little endian integer into a file
+ * le2file - convert a little Endian integer into a file
  *
  * given:
  *	v		integer to write to the file

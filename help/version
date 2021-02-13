@@ -17,7 +17,7 @@ DESCRIPTION
     	x.y
 
     where x, y, z, w, v are integers (without leading 0's) and,
-    t is the liternal character 't'.
+    t is the literal character 't'.
 
 EXAMPLE
     ; version()

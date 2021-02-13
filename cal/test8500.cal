@@ -169,7 +169,7 @@ define divmod_8500(N = 10, M1 = 2^128, M2 = 2^64, testnum = 0)
 		}
 
 		/*
-		 * seelect one of the 32 rounding modes at random
+		 * select one of the 32 rounding modes at random
 		 */
 		rnd = rand(32);
 

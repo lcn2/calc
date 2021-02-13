@@ -1577,8 +1577,8 @@ zlcmfact(ZVALUE z, ZVALUE *dest)
  *
  * We will determine the square root of a given value.
  * Starting with the integer square root of the largest power of
- * two <= the value, we will perform 3 Newton interations to
- * arive at our guess.
+ * two <= the value, we will perform 3 Newton iterations to
+ * arrive at our guess.
  *
  * We have verified that fsqrt(x) == (FULL)sqrt((double)x), or
  * fsqrt(x)-1 == (FULL)sqrt((double)x) for all 0 <= x < 2^32.
@@ -1604,7 +1604,7 @@ fsqrt(FULL x)
 	}
 	y = isqrt_pow2[i + topbit[y]];
 
-	/* perform 3 Newton interations */
+	/* perform 3 Newton interactions */
 	y = (y+x/y)>>1;
 	y = (y+x/y)>>1;
 	y = (y+x/y)>>1;

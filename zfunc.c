@@ -377,7 +377,7 @@ zcomb(ZVALUE z1, ZVALUE z2, ZVALUE *res)
  *	the result is 1 if m == x^2 (mod n) for some x.
  *	otherwise the result is -1.
  *
- * If n is not prime, then the result does not prove that n is not prine
+ * If n is not prime, then the result does not prove that n is not prime
  * when the value of the Jacobi is 1.
  *
  * Jacobi evaluation of (m / n), where n > 0 is odd AND m > 0 is odd:
@@ -456,7 +456,7 @@ zfib(ZVALUE z, ZVALUE *res)
 {
 	long n;
 	int sign;
-	ZVALUE fnm1, fn, fnp1;		/* consecutive fibonacci values */
+	ZVALUE fnm1, fn, fnp1;		/* consecutive Fibonacci values */
 	ZVALUE t1, t2, t3;
 	FULL i;
 

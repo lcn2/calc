@@ -15,7 +15,7 @@ DESCRIPTION
 	null		0
 	real number	1
 	complex number	1
-	string		length of string (not counding the trailing \0)
+	string		length of string (not including the trailing \0)
 	matrix		number of elements
 	list		number of members
 	association	number of (elements, value) pairs
@@ -25,9 +25,9 @@ DESCRIPTION
 	random state	1
 	config state	1
 	hash state	1
-	block		numer of octets of data it currently holds
+	block		number of octets of data it currently holds
 	octet		1
-	named block	numer of octets of data it currently holds
+	named block	number of octets of data it currently holds
 
 EXAMPLE
     ; print size(null()), size(3), size(2 - 7i), size("abc")
