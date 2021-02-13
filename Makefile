@@ -88,6 +88,12 @@ endif
 #READLINE_INCLUDE= -I/usr/gnu/include
 #READLINE_INCLUDE= -I/usr/local/include
 
+# Where man pages are installed
+#
+# Under macOS, we cannot modify /usr/share/man.
+#
+MANDIR= /usr/local/man/man1
+
 # Normally certain files depend on the Makefile.  If the Makefile is
 # changed, then certain steps should be redone.	 If MAKE_FILE is
 # set to Makefile, then these files will depend on Makefile.  If
@@ -185,6 +191,7 @@ XVAR= \
 	CCWERR='${CCWERR}' \
 	NROFF='${NROFF}' \
 	COMMON_ADD='${COMMON_ADD}' \
+	MANDIR='${MANDIR}' \
 	Q='${Q}' \
 	V='${V}'
 
