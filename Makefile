@@ -12,6 +12,8 @@
 #	 USE_READLINE= -DUSE_READLINE
 #	 READLINE_LIB= -lreadline -lhistory -lncurses
 #
+# Copyright (C) 1999-2018,2021  Landon Curt Noll
+#
 # The Makefile.ship makefile becomes the Makefile found in the
 # calc-*.tar.bz2 bzip2 source tarball.
 #
