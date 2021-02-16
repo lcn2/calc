@@ -1053,7 +1053,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.8.0
+VERSION= 2.12.8.1
 
 # Names of shared libraries with versions
 #
@@ -2088,7 +2088,7 @@ LICENSE= COPYING COPYING-LGPL
 #
 DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README.FIRST \
 	  README.WINDOWS calc.man HOWTO.INSTALL ${UTIL_MISC_SRC} ${LICENSE} \
-	  sample.README calc.spec.in rpm.mk README.md QUESTION CONTRIB-CODE
+	  sample.README calc.spec.in rpm.mk README.md QUESTIONS CONTRIB-CODE
 
 # These files are used to make (but not build) a calc .a link library
 #
@@ -4032,6 +4032,9 @@ check: all ./cal/regress.cal
 chk: ./cal/regress.cal
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${CALC_ENV} ./calc${EXT} -d -q read regress 2>&1 | ${AWK} -f check.awk
+	@${MAKE} -f Makefile Q= V=@ distdir >/dev/null 2>&1
+	@${MAKE} -f Makefile Q= V=@ distlist >/dev/null 2>&1
+	${Q} echo 'chk OK'
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 ###

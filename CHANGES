@@ -54,6 +54,15 @@ The following are the changes from calc version 2.12.8.0 to date:
 
 	    http://www.isthe.com/chongo/tech/comp/calc/calc-question.html
 
+    Fixed how the *.tar.bz2 are formed.  The calc-2.12.8.0.tar.bz2 file
+    that was formed for calc version 2.12.8.0 was missing most files.
+
+    Expanded 'make chk' to also verify that 'make distchk' and 'make
+    distlist' execute successfully.  This will help check a regression
+    of the bug that produced the bogus calc-2.12.8.0.tar.bz2 file.
+
+    Added additional regression tests related 0^(zero_expression)==1.
+
 
 The following are the changes from calc version 2.12.7.1 to 2.12.7.5:
 
