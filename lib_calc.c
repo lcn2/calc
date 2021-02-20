@@ -565,6 +565,7 @@ initenv(void)
 		calc_helpdir = HELPDIR;
 	}
 
+#if defined(CUSTOM)
 	/* determine the $CALCCUSTOMHELP value */
 	c = (no_env ? NULL : getenv(CALCCUSTOMHELP));
 	calc_customhelpdir = (c ? strdup(c) : NULL);
@@ -572,6 +573,7 @@ initenv(void)
 		/* will use /usr/local/share/calc/custhelp */
 		calc_customhelpdir = CUSTOMHELPDIR;
 	}
+#endif /* CUSTOM */
 }
 
 

@@ -1,4 +1,19 @@
-The following are the changes from calc version 2.12.8.0 to date:
+The following are the changes from calc version 2.12.8.1 to date:
+
+    Fixed how the *.tar.bz2 are formed.  The calc-2.12.8.0.tar.bz2 file
+    that was formed for calc version 2.12.8.0 was missing most files.
+
+    Expanded 'make chk' to also verify that 'make distchk' and 'make
+    distlist' execute successfully.  This will help check a regression
+    of the bug that produced the bogus calc-2.12.8.0.tar.bz2 file.
+
+    Added additional regression tests related 0^(zero_expression)==1.
+
+    Calc can now correctly compile without CUSTOM being defined,
+    thanks to a report by <GitHub user barsnick>.
+
+
+The following are the changes from calc version 2.12.7.5 to 2.12.8.0:
 
     Fixed a mistake in "help intro" where some inserted text changed
     the value of "." and thus made the next result incorrect.
@@ -53,15 +68,6 @@ The following are the changes from calc version 2.12.8.0 to date:
 	* How to submit a question about calc:
 
 	    http://www.isthe.com/chongo/tech/comp/calc/calc-question.html
-
-    Fixed how the *.tar.bz2 are formed.  The calc-2.12.8.0.tar.bz2 file
-    that was formed for calc version 2.12.8.0 was missing most files.
-
-    Expanded 'make chk' to also verify that 'make distchk' and 'make
-    distlist' execute successfully.  This will help check a regression
-    of the bug that produced the bogus calc-2.12.8.0.tar.bz2 file.
-
-    Added additional regression tests related 0^(zero_expression)==1.
 
 
 The following are the changes from calc version 2.12.7.1 to 2.12.7.5:
