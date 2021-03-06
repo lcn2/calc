@@ -123,8 +123,8 @@ swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
 	 * swap or copy the rest of the ZVALUE elements
 	 */
 	if (all) {
-		dest->len = (LEN)SWAP_B8_IN_LEN(&dest->len, &src->len);
-		dest->sign = (BOOL)SWAP_B8_IN_BOOL(&dest->sign, &src->sign);
+		SWAP_B8_IN_LEN(&dest->len, &src->len);
+		SWAP_B8_IN_BOOL(&dest->sign, &src->sign);
 	} else {
 		dest->len = src->len;
 		dest->sign = src->sign;
@@ -189,7 +189,7 @@ swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
 	 * swap or copy the rest of the NUMBER elements
 	 */
 	if (all) {
-		dest->links = (long)SWAP_B8_IN_LONG(&dest->links, &src->links);
+		SWAP_B8_IN_LONG(&dest->links, &src->links);
 	} else {
 		dest->links = src->links;
 	}
@@ -253,7 +253,7 @@ swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
 	 * swap or copy the rest of the NUMBER elements
 	 */
 	if (all) {
-		dest->links = (long)SWAP_B8_IN_LONG(&dest->links, &src->links);
+		SWAP_B8_IN_LONG(&dest->links, &src->links);
 	} else {
 		dest->links = src->links;
 	}
@@ -358,8 +358,8 @@ swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
 	 * swap or copy the rest of the ZVALUE elements
 	 */
 	if (all) {
-		dest->len = (LEN)SWAP_B16_IN_LEN(&dest->len, &src->len);
-		dest->sign = (BOOL)SWAP_B16_IN_BOOL(&dest->sign, &src->sign);
+		SWAP_B16_IN_LEN(&dest->len, &src->len);
+		SWAP_B16_IN_BOOL(&dest->sign, &src->sign);
 	} else {
 		dest->len = src->len;
 		dest->sign = src->sign;
@@ -424,7 +424,7 @@ swap_b16_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
 	 * swap or copy the rest of the NUMBER elements
 	 */
 	if (all) {
-		dest->links = (long)SWAP_B16_IN_LONG(&dest->links, &src->links);
+		SWAP_B16_IN_LONG(&dest->links, &src->links);
 	} else {
 		dest->links = src->links;
 	}
@@ -488,7 +488,7 @@ swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
 	 * swap or copy the rest of the NUMBER elements
 	 */
 	if (all) {
-		dest->links = (long)SWAP_B16_IN_LONG(&dest->links, &src->links);
+		SWAP_B16_IN_LONG(&dest->links, &src->links);
 	} else {
 		dest->links = src->links;
 	}
@@ -554,8 +554,8 @@ swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
 	 * swap or copy the rest of the ZVALUE elements
 	 */
 	if (all) {
-		dest->len = (LEN)SWAP_HALF_IN_LEN(&dest->len, &src->len);
-		dest->sign = (BOOL)SWAP_HALF_IN_BOOL(&dest->sign, &src->sign);
+		SWAP_HALF_IN_LEN(&dest->len, &src->len);
+		SWAP_HALF_IN_BOOL(&dest->sign, &src->sign);
 	} else {
 		dest->len = src->len;
 		dest->sign = src->sign;
@@ -620,7 +620,7 @@ swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
 	 * swap or copy the rest of the NUMBER elements
 	 */
 	if (all) {
-		dest->links = (long)SWAP_HALF_IN_LONG(&dest->links,&src->links);
+		SWAP_HALF_IN_LONG(&dest->links, &src->links);
 	} else {
 		dest->links = src->links;
 	}
@@ -684,7 +684,7 @@ swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
 	 * swap or copy the rest of the NUMBER elements
 	 */
 	if (all) {
-		dest->links = (long)SWAP_HALF_IN_LONG(&dest->links,&src->links);
+		SWAP_HALF_IN_LONG(&dest->links, &src->links);
 	} else {
 		dest->links = src->links;
 	}
