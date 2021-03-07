@@ -165,23 +165,23 @@ Q=@
 
 # standard tools
 #
-LCC= cc
-ICFLAGS=
-ILDFLAGS=
-GREP= egrep
+CAT= cat
 CHMOD= chmod
-SED= sed
-SORT= sort
-FMT= fmt
 CMP= cmp
 CP= cp
-MV= mv
-TRUE= true
-RM= rm
+FMT= fmt
+GREP= egrep
+ICFLAGS=
+ILDFLAGS=
+LCC= cc
 MKDIR= mkdir
+MV= mv
+RM= rm
 RMDIR= rmdir
+SED= sed
+SORT= sort
 TOUCH= touch
-CAT= cat
+TRUE= true
 
 # Some out of date operating systems require / want an executable to
 # end with a certain file extension.  Some compile systems such as

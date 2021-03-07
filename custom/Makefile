@@ -27,6 +27,11 @@
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
 
+
+# our shell
+#
+SHELL= /bin/sh
+
 #if 0	/* start of skip for non-Gnu makefiles */
 ##############################################################################
 #-=-=-=-=-=-=-=-=- Identify the target machine, if possible -=-=-=-=-=-=-=-=-#
@@ -357,26 +362,25 @@ LIB_EXT_VERSION= ${LIB_EXT}.${VERSION}
 
 # standard tools
 #
-SHELL= /bin/sh
-SED= sed
-MAKEDEPEND= makedepend
-GREP= egrep
-CHMOD= chmod
-FMT= fmt
-SORT= sort
-CMP= cmp
 AR= ar
-RM= rm
-TOUCH= touch
-MKDIR= mkdir
-RMDIR= rmdir
-MV= mv
-CP= cp
-CO= co
-TRUE= true
-MAKE= make
-LN= ln
 AWK= awk
+CHMOD= chmod
+CMP= cmp
+CO= co
+CP= cp
+FMT= fmt
+GREP= egrep
+LN= ln
+MAKE= make
+MAKEDEPEND= makedepend
+MKDIR= mkdir
+MV= mv
+RM= rm
+RMDIR= rmdir
+SED= sed
+SORT= sort
+TOUCH= touch
+TRUE= true
 
 # EXTRA_CFLAGS are flags given to ${CC} when compiling C files
 # EXTRA_LDFLAGS are flags given to ${CC} when linking progs

@@ -53,6 +53,11 @@
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
 
+
+# our shell
+#
+SHELL= /bin/sh
+
 # Try uname -s if the target was not already set on the make command line
 #
 ifeq ($(target),)
@@ -142,7 +147,6 @@ endif
 
 # standard utilities used during make
 #
-SHELL= /bin/sh
 MAKE= make
 SED= sed
 GREP= egrep

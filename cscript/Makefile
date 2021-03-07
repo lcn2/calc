@@ -27,7 +27,7 @@
 # Makefile by Landon Curt Noll
 
 
-# required vars
+# our shell
 #
 SHELL= /bin/sh
 
@@ -165,18 +165,19 @@ Q=@
 
 # standard tools
 #
+CAT= cat
 CHMOD= chmod
+CMP= cmp
+CO= co
+CP= cp
+FMT= fmt
+MKDIR= mkdir
+MV= mv
+RM= rm
+RMDIR= rmdir
 SED= sed
 SORT= sort
-FMT= fmt
-CMP= cmp
-MKDIR= mkdir
-RMDIR= rmdir
-RM= rm
 TOUCH= touch
-MV= mv
-CP= cp
-CO= co
 TRUE= true
 
 # The ${SCRIPT} list is the list of calc shell script files (without the .calc
@@ -312,7 +313,7 @@ depend:
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i: $$i.calc"; \
 		echo '	@$${RM} -f $$@'; \
-		echo -n '	@$${SED} -e "1s:^#!/usr/local/src/bin/'; \
+		/bin/echo -n '	@$${SED} -e "1s:^#!/usr/local/src/bin/'; \
 		echo 'calc/calc:#!$${BINDIR}/calc:" $$?>$$@'; \
 		echo '	@$${CHMOD} +x $$@'; \
 	    fi; \

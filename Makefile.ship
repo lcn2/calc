@@ -48,6 +48,11 @@
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
 
+
+# our shell
+#
+SHELL= /bin/sh
+
 #if 0	/* start of skip for non-Gnu makefiles */
 ##############################################################################
 #-=-=-=-=-=-=-=-=- Identify the target machine, if possible -=-=-=-=-=-=-=-=-#
@@ -1062,7 +1067,6 @@ LIB_EXT_VERSION= ${LIB_EXT}.${VERSION}
 
 # standard utilities used during make
 #
-SHELL= /bin/sh
 AR= ar
 AWK= awk
 CAT= cat
@@ -4297,7 +4301,7 @@ debug: calcinfo env
 	@${MAKE} -f Makefile Q= V=@ ver_calc${EXT}
 	-@./ver_calc${EXT}
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
-	@echo -n '=-=-=-= Print #defile values if custom functions '
+	@/bin/echo -n '=-=-=-= Print #defile values if custom functions '
 	@echo 'are allowed =-=-=-='
 	-@${CALC_ENV} ./calc${EXT} -e -q -C 'print custom("sysinfo", 2);'
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
@@ -4899,7 +4903,7 @@ uninstall: custom/Makefile
 	-${Q} if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}" ]; then \
 	    ${RM} -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
 	    if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}" ]; then \
-		echo -n "cannot uninstall " \
+		/bin/echo -n "cannot uninstall " \
 		echo "${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
 	    else \
 		echo "uninstalled ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
@@ -5021,7 +5025,7 @@ calc-symlink:
 		if [ ! -L "${CATDIR}/calc.${CATEXT}" -a \
 		     "${T}${CATDIR}/calc.${CATEXT}" -ef \
 		     "${CATDIR}/calc.${CATEXT}" ]; then \
-		    	echo -n "ERROR: ${T}${CATDIR}/calc.${CATEXT}" 2>&1; \
+			/bin/echo -n "ERROR: ${T}${CATDIR}/calc.${CATEXT}" 2>&1; \
 			echo "is the same as ${CATDIR}/calc.${CATEXT}" 1>&2; \
 		else \
 		    if [ -e "${CATDIR}/calc.${CATEXT}" ]; then \

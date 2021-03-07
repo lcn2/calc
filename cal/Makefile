@@ -27,7 +27,8 @@
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
 
-# required vars
+
+# our shell
 #
 SHELL= /bin/sh
 
@@ -167,17 +168,17 @@ Q=@
 #
 CHMOD= chmod
 CMP= cmp
-RM= rm
-MKDIR= mkdir
-RMDIR= rmdir
-CP= cp
-MV= mv
 CO= co
-TRUE= true
-TOUCH= touch
+CP= cp
+FMT= fmt
+MKDIR= mkdir
+MV= mv
+RM= rm
+RMDIR= rmdir
 SED= sed
 SORT= sort
-FMT= fmt
+TOUCH= touch
+TRUE= true
 
 # The calc files to install
 #
