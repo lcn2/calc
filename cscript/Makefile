@@ -180,6 +180,11 @@ SORT= sort
 TOUCH= touch
 TRUE= true
 
+# NOTE: On some shells, echo is a builtin that does
+#	not understand -n, so we call /bin/echo -n
+#	directly to get around such shells.
+ECHON= /bin/echo -n
+
 # The ${SCRIPT} list is the list of calc shell script files (without the .calc
 # extension) which will be installed.
 #
@@ -313,7 +318,7 @@ depend:
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i: $$i.calc"; \
 		echo '	@$${RM} -f $$@'; \
-		/bin/echo -n '	@$${SED} -e "1s:^#!/usr/local/src/bin/'; \
+		${ECHON} '	@$${SED} -e "1s:^#!/usr/local/src/bin/'; \
 		echo 'calc/calc:#!$${BINDIR}/calc:" $$?>$$@'; \
 		echo '	@$${CHMOD} +x $$@'; \
 	    fi; \

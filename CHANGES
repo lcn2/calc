@@ -25,7 +25,8 @@ The following are the changes from calc version 2.12.8.1 to date:
     Fixed Makefile dependenies for the args.h rule.
 
     Fixed Makefile cases where echo with -n is used.  On some systems,
-    /bin/sh does not use -n, so we must call /bin/echo -n instead.
+    /bin/sh does not use -n, so we must call /bin/echo -n instead
+    via the ${ECHON} Makefile variable.
 
     Add missing standard tools to sub-Makefiles to make them
     easier to invoke directly.

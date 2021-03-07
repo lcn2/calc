@@ -1100,6 +1100,11 @@ TRUE= true
 UNAME= uname
 XARGS= xargs
 
+# NOTE: On some shells, echo is a builtin that does
+#	not understand -n, so we call /bin/echo -n
+#	directly to get around such shells.
+ECHON= /bin/echo -n
+
 # assume the X11 makedepend tool for the depend rule
 MAKEDEPEND= makedepend
 STRIP= strip
@@ -3511,7 +3516,8 @@ have_strdup.h: have_strdup.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h have_stdlib.h
+args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h \
+	have_stdlib.h
 	${Q} ${RM} -f args.h
 	${Q} echo 'forming args.h'
 	${Q} echo '/*' > args.h
@@ -4301,7 +4307,7 @@ debug: calcinfo env
 	@${MAKE} -f Makefile Q= V=@ ver_calc${EXT}
 	-@./ver_calc${EXT}
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
-	@/bin/echo -n '=-=-=-= Print #defile values if custom functions '
+	@${ECHON} '=-=-=-= Print #defile values if custom functions '
 	@echo 'are allowed =-=-=-='
 	-@${CALC_ENV} ./calc${EXT} -e -q -C 'print custom("sysinfo", 2);'
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
@@ -4903,7 +4909,7 @@ uninstall: custom/Makefile
 	-${Q} if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}" ]; then \
 	    ${RM} -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
 	    if [ -f "${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}" ]; then \
-		/bin/echo -n "cannot uninstall " \
+		${ECHON} "cannot uninstall " \
 		echo "${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
 	    else \
 		echo "uninstalled ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
@@ -5025,7 +5031,7 @@ calc-symlink:
 		if [ ! -L "${CATDIR}/calc.${CATEXT}" -a \
 		     "${T}${CATDIR}/calc.${CATEXT}" -ef \
 		     "${CATDIR}/calc.${CATEXT}" ]; then \
-			/bin/echo -n "ERROR: ${T}${CATDIR}/calc.${CATEXT}" 2>&1; \
+			${ECHON} "ERROR: ${T}${CATDIR}/calc.${CATEXT}" 2>&1; \
 			echo "is the same as ${CATDIR}/calc.${CATEXT}" 1>&2; \
 		else \
 		    if [ -e "${CATDIR}/calc.${CATEXT}" ]; then \
