@@ -12,6 +12,28 @@ The following are the changes from calc version 2.12.8.1 to date:
     Calc can now correctly compile without CUSTOM being defined,
     thanks to a report by <GitHub user barsnick>.
 
+    Added notes to help/unexpected about:
+
+	display() will limit the number of digits printed after decimal point
+
+	%d will format after the decimal point for non-integer numeric values
+
+	%x will format as fractions for non-integer numeric values
+
+	fprintf(fd, "%d\n", huge_value) may need fflush(fd) to finish
+
+    Fixed Makefile dependenies for the args.h rule.
+
+    Fixed Makefile cases where echo with -n is used.  On some systems,
+    /bin/sh does not use -n, so we must call /bin/echo -n instead.
+
+    Add missing standard tools to sub-Makefiles to make them
+    easier to invoke directly.
+
+    Sort lists of standard tool Makefile variables and remove duplicates.
+
+    Declare the SHELL at the top of Makefiles.
+
 
 The following are the changes from calc version 2.12.7.5 to 2.12.8.0:
 

@@ -106,6 +106,66 @@ DESCRIPTION
     affected by the configuration parameters "outround", "tilde",
     "fullzero", "leadzero".
 
+    IMPORTANT NOTES:
+
+    In calc, %d formats in base 10 according to the current
+    config("mode").  Therefore this will print the entire
+    "1.2345" value:
+
+	; printf("%d\n", 1.2345);
+	1.2345
+
+
+    assuming printing of 4 or more digits is allowed by the current
+    value of display().
+
+    See also:
+
+	; help printf
+	; help display
+	; help mode
+
+    In calc, %x formats in base 16.  A non-integer numeric values such
+    as 1/3 is represented as a fraction.  When fractions are printed
+    in %x format, both the numerator and denominator are printed
+    as is mode("fraction"):
+
+	; printf("%x\n", 1.2345);
+	0x9a5/0x7d0
+
+    See also:
+
+	; help printf
+	; help display
+	; help mode
+
+
+    Because calc is capable of of printing very large values, some
+    people may be surprised when this does not print the entire
+    value of M(23209):
+
+	fprintf(fd, "%d\n", 2^23209-1);
+	/* the entire value may not be printed yet */
+
+    Because I/O is usually buffered to files, the above fprintf()
+    may print only the initial 4096 characters.  One needs to also
+    flush (or close the stream) to be sure that the entire
+    value as been printed to the file:
+
+	; fflush(fd);
+
+    A similar problem an arise when printing many digits after
+    the decimal point:
+
+	; display(10000),;
+	; fprintf(fd, "%d\n", pi(1e-10000));
+	; fflush(fd);
+
+    The buffer will also be flushed during a call to fclose():
+
+	; fclose(fd);
+
+
 EXAMPLE
     ; config("epsilon", 1e-6),;
     : config("display", 6),;
@@ -116,6 +176,18 @@ EXAMPLE
     ; a = sqrt(3);
     ; printf(fmt,a,a,a,a,a,a);
     1.732051,  1.732051,1.732051  ,   ~1.7320,~1.7320,~1.
+
+    ; fd = fopen("/tmp/test.txt", "w+");
+    ; fprintf(fd, "%d\n", 2^23209-1);
+    ; /* one must flush to be buffered output is written */
+    ; fflush(fd);
+    ; display(10000),;
+    ; fprintf(fd, "%d\n", pi(1e-10000));
+    ; /* closing the file will also flush the buffer */
+    ; fclose(fd);
+
+    ; printf("%x\n", 1.2345);
+    0x9a5/0x7d0
 
     ; config("display", 5),;
     : config("tilde", 0),;
@@ -229,7 +301,7 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    config, display, epsilon, fprintf, strprintf
+    config, display, epsilon, fclose, fflush, fopen, fprintf, strprintf
 
 ## Copyright (C) 1999-2006,2018,2021  Landon Curt Noll
 ##

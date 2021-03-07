@@ -404,6 +404,131 @@ Unexpected
 	64
 
 
+    display() will limit the number of digits printed after decimal point
+    =====================================================================
+
+    While calc is able to print many digits after the decimal point,
+    the value of display() may limit the number of digits printed.
+
+    For example, while the following will calculate e to 50 digits:
+
+	; e = exp(1,1e-50);
+
+     the value of display() (defaults to 20) will limit the number of
+     digits printed after the decimal point:
+
+	; e
+		~2.71828182845904523536
+
+     To print many digits after the decimal point, one needs to change
+     the value of display():
+
+	; display(100),;
+	; e
+		2.71828182845904523536028747135266249775724709369996
+
+     Printing a leading ~ (unless disabled by config("tilde", 0)) is
+     your indication that the computed value has been rounded
+     (rounding mode controlled by config("outround", bitflag)):
+
+     For example, if display(49) is used for that value if e,
+     the output will be rounded:
+
+	; display(49);
+		50
+	; e
+		~2.7182818284590452353602874713526624977572470937000
+
+    See also:
+
+	; help display
+	; help config
+	; help epsilon
+
+
+    %d will format after the decimal point for non-integer numeric values
+    =====================================================================
+
+    In calc, %d formats in base 10 according to the current
+    config("mode").  Therefore this will print the entire
+    "1.2345" value:
+
+	; printf("%d\n", 1.2345);
+	1.2345
+
+
+    assuming printing of 4 or more digits is allowed by the current
+    value of display().
+
+    See also:
+
+	; help printf
+	; help display
+	; help mode
+
+
+    %x will format as fractions for non-integer numeric values
+    ==========================================================
+
+    In calc, %x formats in base 16.  A non-integer numeric values such
+    as 1/3 is represented as a fraction.  When fractions are printed
+    in %x format, both the numerator and denominator are printed
+    as is mode("fraction"):
+
+	; printf("%x\n", 1.2345);
+	0x9a5/0x7d0
+
+    See also:
+
+	; help printf
+	; help display
+	; help mode
+
+
+    fprintf(fd, "%d\n", huge_value) may need fflush(fd) to finish
+    =============================================================
+
+    When printing a small value such as:
+
+	; fd = fopen("/tmp/test.txt", "w+");
+	; i = 20;
+	; fprintf(fd, "%d\n", i);
+
+    The resulting string will almost always be printed in full.
+
+    Because calc is capable of of printing very large values, some
+    people may be surprised when this does not print the entire
+    value of M(23209):
+
+	fprintf(fd, "%d\n", 2^23209-1);
+	/* the entire value may not be printed yet */
+
+    Because I/O is usually buffered to files, the above fprintf()
+    may print only the initial 4096 characters.  One needs to also
+    flush (or close the stream) to be sure that the entire
+    value as been printed to the file:
+
+	; fflush(fd);
+
+    A similar problem an arise when printing many digits after
+    the decimal point:
+
+	; display(10000),;
+	; fprintf(fd, "%d\n", pi(1e-10000));
+	; fflush(fd);
+
+    The buffer will also be flushed during a call to fclose():
+
+	; fclose(fd);
+
+    See also:
+
+	; help fprintf
+	; help fflush
+	; help fopen
+	; help fclose
+
+
 ## Copyright (C) 1999-2007,2014,2017,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
