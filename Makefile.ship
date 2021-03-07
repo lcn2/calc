@@ -3507,7 +3507,7 @@ have_strdup.h: have_strdup.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h
+args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h have_stdlib.h
 	${Q} ${RM} -f args.h
 	${Q} echo 'forming args.h'
 	${Q} echo '/*' > args.h
