@@ -277,8 +277,7 @@ BLT_HELP_FILES= ${BLT_HELP_FILES_3} ${BLT_HELP_FILES_5} \
 #
 #	make detail_help_list
 #
-# to keep this list in nice sorted order and to check that these
-# non-special help files are under RCS control.
+# to keep this list in nice sorted order.
 #
 DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd \
 	append appr arg argv arrow asec asech asin asinh assign atan atan2 \
@@ -301,14 +300,15 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd \
 	matsum mattrace mattrans max memsize meq min minv mmin mne mod modify \
 	name near newerror nextcand nextprime norm null num oldvalue ord param \
 	perm pfact pi pix places pmod polar poly pop popcnt pound power \
-	prevcand prevprime printf prompt protect ptest push putenv quo quomod \
-	rand randbit random randombit randperm rcin rcmul rcout rcpow rcsq re \
-	remove reverse rewind rm root round rsearch runtime saveval scale scan \
-	scanf search sec sech seed segment select sgn sha1 sin sinh size \
-	sizeof sleep sort sqrt srand srandom ssq stoponerror str strcasecmp \
-	strcat strcmp strcpy strerror strlen strncasecmp strncmp strncpy \
-	strpos strprintf strscan strscanf strtolower strtoupper substr sum \
-	swap system systime tail tan tanh test time trunc usertime version xor
+	prevcand prevprime printf prompt protect ptest push putenv questions \
+	quo quomod rand randbit random randombit randperm rcin rcmul rcout \
+	rcpow rcsq re remove reverse rewind rm root round rsearch runtime \
+	saveval scale scan scanf search sec sech seed segment select sgn sha1 \
+	sin sinh size sizeof sleep sort sqrt srand srandom ssq stoponerror str \
+	strcasecmp strcat strcmp strcpy strerror strlen strncasecmp strncmp \
+	strncpy strpos strprintf strscan strscanf strtolower strtoupper substr \
+	sum swap system systime tail tan tanh test time trunc usertime version \
+	xor
 
 # This list is of files that are clones of DETAIL_HELP files.  They are
 # built from DETAIL_HELP files.
@@ -690,11 +690,7 @@ detail_help_list:
 		 -print | \
 	   while read i; do \
 		if [ X"$$i" != X"/dev/null" ]; then \
-		    if [ ! -f RCS/$$i,v ]; then \
-			echo "WARNING: $$i not under RCS control" 1>&2; \
-		    else \
-			echo $$i; \
-		    fi; \
+		    echo $$i; \
 		fi; \
 	done; \
 	echo '--first_line--') | \

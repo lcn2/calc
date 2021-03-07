@@ -170,7 +170,7 @@ Makefile.simple: ${MAKE_FILE}
 
 depend:
 	${Q} if [ -f ${MAKE_FILE}.bak ]; then \
-	    echo "${MAKE_FILE}.bak exists, remove or move it"; \
+	    echo "custom/${MAKE_FILE}.bak exists, remove or move it"; \
 	    exit 1; \
 	else \
 	    ${TRUE}; \
@@ -186,9 +186,7 @@ depend:
 	    fi; \
 	done
 	-${Q} for i in ${H_SRC} /dev/null; do \
-	    if [ "$$i" = "/dev/null" ]; then \
-		continue; \
-	    fi; \
+	    if [ "$$i" = "/dev/null" ]; then continue; fi; \
 	    tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
 	    echo "#if !defined($$tag)" > "skel/custom/$$i"; \
 	    echo "#define $$tag" >> "skel/custom/$$i"; \
@@ -197,25 +195,24 @@ depend:
 	    echo '#endif /* '"$$tag"' */' >> "skel/custom/$$i"; \
 	done
 	${Q} (cd ..; ${MAKE} -f ${TOP_MAKE_FILE} hsrc)
-	${Q} for i in `cd ..; ${MAKE} -f ${TOP_MAKE_FILE} h_list 2>&1 | \
-	    ${SED} -e '/Entering directory/d' \
-		   -e '/Nothing to be done/d' \
-		   -e '/Leaving directory/d'` /dev/null; do \
-	    if [ "$$i" = "/dev/null" ]; then \
-		continue; \
-	    fi; \
-	    tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
-	    echo "#if !defined($$tag)" > "skel/$$i"; \
-	    echo "#define $$tag" >> "skel/$$i"; \
-	    ${SED} -n '/^#[	 ]*include[	 ]*"/p' "../$$i" \
-		>> "skel/$$i"; \
-	    echo '#endif /* '"$$tag"' */' >> "skel/$$i"; \
-	done
+	${MAKE} -f ../${TOP_MAKE_FILE} h_list 2>/dev/null | \
+	    while read i; do \
+		if [ ! -f "../$$i" ]; then continue; fi; \
+		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
+		echo "#if !defined($$tag)" > "skel/$$i"; \
+		echo "#define $$tag" >> "skel/$$i"; \
+		${SED} -n '/^#[	 ]*include[	 ]*"/p' "../$$i" \
+		    >> "skel/$$i"; \
+		echo '#endif /* '"$$tag"' */' >> "skel/$$i"; \
+	    done
 	${Q} ${RM} -f skel/custom/makedep.out
 	${Q} echo custom/skel formed
 	${Q} echo forming custom dependency list
 	${Q} :> skel/custom/makedep.out
-	${Q} cd skel/custom; ${MAKEDEPEND} -I.. -w 1 -f makedep.out ${C_SRC}
+	${Q} cd skel/custom; ${MAKEDEPEND} \
+	    -I../../.. -w 1 -f makedep.out \
+	    ${C_SRC} 2>/dev/null
+	${Q} ${SED} -e 's|: ../../|: |' -E -i '' -l skel/custom/makedep.out
 	-${Q} for i in ${C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
@@ -232,20 +229,13 @@ depend:
 	${Q} ${GREP} -v '^#' skel/custom/makedep.out >> ${MAKE_FILE}
 	${Q} ${RM} -rf skel
 	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
-	    echo 'custom ${MAKE_FILE} was already up to date'; \
+	    echo 'custom/${MAKE_FILE} was already up to date'; \
+	    echo 'restoring original custom/${MAKE_FILE}'; \
 	    ${MV} -f ${MAKE_FILE}.bak ${MAKE_FILE}; \
 	else \
-	    ${RM} -f ${MAKE_FILE}.tmp; \
-	    ${MV} ${MAKE_FILE} ${MAKE_FILE}.tmp; \
-	    if [ -d RCS -a ! -w "${MAKE_FILE}" ]; then \
-		${CO} -l ${MAKE_FILE}; \
-	    fi ;\
-	    ${MV} ${MAKE_FILE}.tmp ${MAKE_FILE}; \
-	    if [ -d RCS ]; then \
-	    echo '****************************************************'; \
-	    echo 'new custom ${MAKE_FILE} formed -- you to check it in'; \
-	    echo '****************************************************'; \
-	    fi; \
+	    echo 'previous custom/${MAKE_FILE} is now custom/${MAKE_FILE}.bak'; \
+	    echo 'new custom/${MAKE_FILE} formed'; \
+	    echo 'try: diff -u custom/${MAKE_FILE}.bak custom/${MAKE_FILE};' \
 	fi
 
 ##

@@ -1085,6 +1085,7 @@ LANG= C
 LDCONFIG= ldconfig
 LN= ln
 MAKE= make
+MAKEDEPEND= makedepend
 MKDIR= mkdir
 MV= mv
 PWDCMD= pwd
@@ -1094,6 +1095,7 @@ SED= sed
 SORT= sort
 SPLINT= splint
 SPLINT_OPTS=
+STRIP= strip
 TEE= tee
 TOUCH= touch
 TRUE= true
@@ -1103,11 +1105,8 @@ XARGS= xargs
 # NOTE: On some shells, echo is a builtin that does
 #	not understand -n, so we call /bin/echo -n
 #	directly to get around such shells.
+#
 ECHON= /bin/echo -n
-
-# assume the X11 makedepend tool for the depend rule
-MAKEDEPEND= makedepend
-STRIP= strip
 
 # Extra compiling and linking flags
 #
@@ -2062,6 +2061,7 @@ CSCRIPT_PASSDOWN= \
     CMP=${CMP} \
     CO=${CO} \
     CP=${CP} \
+    ECHON="${ECHON}" \
     FMT=${FMT} \
     HELPDIR="${HELPDIR}" \
     INCDIR="${INCDIR}" \
@@ -3894,19 +3894,12 @@ depend: custom/Makefile hsrc
 	${Q} ${RM} -rf skel
 	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
 	    echo 'top level ${MAKE_FILE} was already up to date'; \
+	    echo 'restoring original ${MAKE_FILE};' \
 	    ${MV} -f ${MAKE_FILE}.bak ${MAKE_FILE}; \
 	else \
-	    ${RM} -f ${MAKE_FILE}.tmp; \
-	    ${MV} ${MAKE_FILE} ${MAKE_FILE}.tmp; \
-	    if [ -d RCS -a ! -w "${MAKE_FILE}" ]; then \
-		${CO} -l ${MAKE_FILE}; \
-	    fi ;\
-	    ${MV} ${MAKE_FILE}.tmp ${MAKE_FILE}; \
-	    if [ -d RCS ]; then \
-	    echo '********************************************************'; \
-	    echo 'new top level ${MAKE_FILE} formed -- need to check it in'; \
-	    echo '********************************************************'; \
-	    fi; \
+	    echo 'previous ${MAKE_FILE} is now ${MAKE_FILE}.bak'; \
+	    echo 'new top level ${MAKE_FILE} formed'; \
+	    echo 'try: diff -u ${MAKE_FILE}.bak ${MAKE_FILE}'; \
 	fi
 
 # generate the list of h files for lower level depend use

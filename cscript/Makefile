@@ -183,6 +183,7 @@ TRUE= true
 # NOTE: On some shells, echo is a builtin that does
 #	not understand -n, so we call /bin/echo -n
 #	directly to get around such shells.
+#
 ECHON= /bin/echo -n
 
 # The ${SCRIPT} list is the list of calc shell script files (without the .calc
@@ -194,19 +195,17 @@ ECHON= /bin/echo -n
 # To add a script:
 #
 #	1) Name the file with a .calc filename extension
-#	2) Place that file under RCS control
-#	3) Add the name, without the .calc extension to the ${SCRIPT} below
-#	4) Write out this Makefile
-#	5) Replace the ${SCRIPT} and ${SCRIPT_SRC} lines with the output of:
+#	2) Add the name, without the .calc extension to the ${SCRIPT} below
+#	3) Write out this Makefile
+#	4) Replace the SCRIPT= and SCRIPT_SRC= lines with the output of:
 #
 #		make detaillist
 #
-SCRIPT= 4dsphere fproduct mersenne piforever plus powerterm \
-	simple square
+SCRIPT= 4dsphere fproduct mersenne piforever plus powerterm simple \
+	square
 
-SCRIPT_SRC= 4dsphere.calc fproduct.calc mersenne.calc \
-	piforever.calc plus.calc powerterm.calc simple.calc \
-	square.calc
+SCRIPT_SRC= 4dsphere.calc fproduct.calc mersenne.calc piforever.calc \
+	plus.calc powerterm.calc simple.calc square.calc
 
 # These files are found (but not built) in the distribution
 #
@@ -270,11 +269,7 @@ detaillist:
 	${Q} -(echo "xxxxxxx"; \
 	   for i in ${SCRIPT} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
-		if [ ! -f RCS/$$i.calc,v ]; then \
-		    echo "WARNING: $$i.calc not under RCS control" 1>&2; \
-		else \
-		    echo $$i; \
-		fi; \
+		echo $$i; \
 	    fi; \
 	done | LANG=C ${SORT}) | ${FMT} -70 | \
 	    ${SED} -e '1s/xxxxxxx/SCRIPT=/' -e '2,$$s/^/	/' \
@@ -283,11 +278,7 @@ detaillist:
 	${Q} -(echo "xxxxxxxxxxx"; \
 	    for i in ${SCRIPT} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
-		if [ ! -f RCS/$$i.calc,v ]; then \
-		    echo "WARNING: $$i.calc not under RCS control" 1>&2; \
-		else \
-		    echo $$i.calc; \
-		fi; \
+		echo $$i.calc; \
 	    fi; \
 	done | LANG=C ${SORT}) | ${FMT} -70 | \
 	    ${SED} -e '1s/xxxxxxxxxxx/SCRIPT_SRC=/' -e '2,$$s/^/	/' \
@@ -333,20 +324,13 @@ depend:
 	${Q} ${CAT} makedep.out >> ${MAKE_FILE}
 	${Q} ${RM} -f makedep.out
 	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
-	    echo 'sample ${MAKE_FILE} was already up to date'; \
+	    echo 'sample/${MAKE_FILE} was already up to date'; \
+	    echo 'restoring original sample/${MAKE_FILE}'; \
 	    ${MV} -f ${MAKE_FILE}.bak ${MAKE_FILE}; \
 	else \
-	    ${RM} -f ${MAKE_FILE}.tmp; \
-	    ${MV} ${MAKE_FILE} ${MAKE_FILE}.tmp; \
-	    if [ -d RCS -a ! -w "${MAKE_FILE}" ]; then \
-		${CO} -l ${MAKE_FILE}; \
-	    fi; \
-	    ${MV} ${MAKE_FILE}.tmp ${MAKE_FILE}; \
-	    if [ -d RCS ]; then \
-		echo '******************************************************'; \
-		echo 'new cscript ${MAKE_FILE} formed -- need to check it in'; \
-		echo '******************************************************'; \
-	    fi; \
+	    echo 'previous sample/${MAKE_FILE} is now sample/${MAKE_FILE}.bak'; \
+	    echo 'new sample/${MAKE_FILE} formed'; \
+	    echo 'try: diff -u sample/${MAKE_FILE}.bak sample/${MAKE_FILE};' \
 	fi
 
 ##

@@ -56,7 +56,7 @@
 
 # our shell
 #
-SHELL= /bin/sh
+SHELL= /bin/zsh
 
 # Try uname -s if the target was not already set on the make command line
 #

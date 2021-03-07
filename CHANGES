@@ -35,6 +35,8 @@ The following are the changes from calc version 2.12.8.1 to date:
 
     Declare the SHELL at the top of Makefiles.
 
+    Fixed the depend rule in the custom Makefile.
+
 
 The following are the changes from calc version 2.12.7.5 to 2.12.8.0:
 
