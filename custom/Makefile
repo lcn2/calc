@@ -1266,7 +1266,8 @@ depend:
 	${Q} echo forming custom dependency list
 	${Q} :> skel/custom/makedep.out
 	${Q} cd skel/custom; ${MAKEDEPEND} \
-	    -I../../.. -w 1 -f makedep.out \
+	    -I../../.. -w 1 -f makedep.out -- \
+	    ${CFLAGS} -- \
 	    ${C_SRC} 2>/dev/null
 	${Q} ${SED} -e 's|: ../../|: |' -E -i '' -l skel/custom/makedep.out
 	-${Q} for i in ${C_SRC} /dev/null; do \
@@ -1291,7 +1292,7 @@ depend:
 	else \
 	    echo 'previous custom/${MAKE_FILE} is now custom/${MAKE_FILE}.bak'; \
 	    echo 'new custom/${MAKE_FILE} formed'; \
-	    echo 'try: diff -u custom/${MAKE_FILE}.bak custom/${MAKE_FILE};' \
+	    echo 'try: diff -u custom/${MAKE_FILE}.bak custom/${MAKE_FILE}'; \
 	fi
 
 ##

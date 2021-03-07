@@ -3876,8 +3876,10 @@ depend: custom/Makefile hsrc
 	${Q} echo skel formed
 	${Q} echo forming dependency list
 	${Q} :> skel/makedep.out
-	${Q} cd skel; \
-	    ${MAKEDEPEND} -w 1 -f makedep.out ${C_SRC} ${BUILD_C_SRC}
+	${Q} cd skel; ${MAKEDEPEND} \
+	    -w 1 -f makedep.out -- \
+	    ${CFLAGS} -- \
+	    ${C_SRC} ${BUILD_C_SRC} 2>/dev/null
 	-${Q} for i in ${C_SRC} ${BUILD_C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 	      echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
@@ -5474,14 +5476,19 @@ have_fpos_pos.o: have_fpos.h
 have_fpos_pos.o: have_fpos_pos.c
 have_fpos_pos.o: have_posscl.h
 have_getpgid.o: have_getpgid.c
+have_getpgid.o: have_unistd.h
 have_getprid.o: have_getprid.c
+have_getprid.o: have_unistd.h
 have_getsid.o: have_getsid.c
+have_getsid.o: have_unistd.h
 have_gettime.o: have_gettime.c
 have_memmv.o: have_memmv.c
 have_newstr.o: have_newstr.c
 have_offscl.o: have_offscl.c
+have_offscl.o: have_unistd.h
 have_posscl.o: have_fpos.h
 have_posscl.o: have_posscl.c
+have_posscl.o: have_unistd.h
 have_rusage.o: have_rusage.c
 have_stdvs.o: have_stdlib.h
 have_stdvs.o: have_stdvs.c
@@ -5513,8 +5520,8 @@ help.o: have_stdlib.h
 help.o: have_string.h
 help.o: have_unistd.h
 help.o: help.c
-help.o: longbits.h
 help.o: lib_calc.h
+help.o: longbits.h
 help.o: nametype.h
 help.o: qmath.h
 help.o: sha1.h

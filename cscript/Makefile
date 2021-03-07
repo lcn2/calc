@@ -324,13 +324,13 @@ depend:
 	${Q} ${CAT} makedep.out >> ${MAKE_FILE}
 	${Q} ${RM} -f makedep.out
 	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
-	    echo 'sample/${MAKE_FILE} was already up to date'; \
-	    echo 'restoring original sample/${MAKE_FILE}'; \
+	    echo 'cscript/${MAKE_FILE} was already up to date'; \
+	    echo 'restoring original cscript/${MAKE_FILE}'; \
 	    ${MV} -f ${MAKE_FILE}.bak ${MAKE_FILE}; \
 	else \
-	    echo 'previous sample/${MAKE_FILE} is now sample/${MAKE_FILE}.bak'; \
-	    echo 'new sample/${MAKE_FILE} formed'; \
-	    echo 'try: diff -u sample/${MAKE_FILE}.bak sample/${MAKE_FILE};' \
+	    echo 'previous cscript/${MAKE_FILE} is now cscript/${MAKE_FILE}.bak'; \
+	    echo 'new cscript/${MAKE_FILE} formed'; \
+	    echo 'try: diff -u cscript/${MAKE_FILE}.bak cscript/${MAKE_FILE}'; \
 	fi
 
 ##
