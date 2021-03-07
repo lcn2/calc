@@ -3896,7 +3896,7 @@ depend: custom/Makefile hsrc
 	${Q} ${RM} -rf skel
 	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
 	    echo 'top level ${MAKE_FILE} was already up to date'; \
-	    echo 'restoring original ${MAKE_FILE};' \
+	    echo 'restoring original ${MAKE_FILE}'; \
 	    ${MV} -f ${MAKE_FILE}.bak ${MAKE_FILE}; \
 	else \
 	    echo 'previous ${MAKE_FILE} is now ${MAKE_FILE}.bak'; \
