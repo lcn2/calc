@@ -105,12 +105,16 @@
 #include "zrand.h"
 #include "zrandom.h"
 #include "custom.h"
+#include "strl.h"
 
 #if defined(CUSTOM)
 # define E_CUSTOM_ERROR E_NO_C_ARG
 #else
 # define E_CUSTOM_ERROR E_NO_CUSTOM
 #endif
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 /*
@@ -269,22 +273,7 @@ f_prompt(VALUE *vp)
 		math_error("Cannot allocate string");
 		/*NOTREACHED*/
 	}
-	/*
-	 * The next statement could be::
-	 *
-	 *	strncpy(newcp, cp, len);
-	 *
-	 * however compilers like gcc would issue warnings such as:
-	 *
-	 * 	specified bound depends on the length of the
-	 * 	source argument
-	 *
-	 * even though we terminate the string by setting a NUL
-	 * byte following the copy.  Therefore we call memcpy()
-	 * instead to avoid such warnings.
-	 */
-	memcpy(newcp, cp, len);
-	newcp[len] = '\0';
+	strlcpy(newcp, cp, len+1);
 	result.v_str = makestring(newcp);
 	return result;
 }
@@ -317,7 +306,7 @@ f_display(int count, VALUE **vals)
 
 /*ARGSUSED*/
 S_FUNC VALUE
-f_null(int UNUSED count, VALUE UNUSED **vals)
+f_null(int UNUSED(count), VALUE **UNUSED(vals))
 {
 	VALUE res;
 
@@ -5341,7 +5330,7 @@ f_list(int count, VALUE **vals)
 
 /*ARGSUSED*/
 S_FUNC VALUE
-f_assoc(int UNUSED count, VALUE UNUSED **vals)
+f_assoc(int UNUSED(count), VALUE **UNUSED(vals))
 {
 	VALUE result;
 
@@ -7466,22 +7455,7 @@ f_cmdbuf(void)
 		math_error("Cannot allocate string in cmdbuf");
 		/*NOTREACHED*/
 	}
-	/*
-	 * The next statement could be::
-	 *
-	 *	strncpy(newcp, cmdbuf, cmdbuf_len);
-	 *
-	 * however compilers like gcc would issue warnings such as:
-	 *
-	 * 	specified bound depends on the length of the
-	 * 	source argument
-	 *
-	 * even though we terminate the string by setting a NUL
-	 * byte following the copy.  Therefore we call memcpy()
-	 * instead to avoid such warnings.
-	 */
-	memcpy(newcp, cmdbuf, cmdbuf_len);
-	newcp[cmdbuf_len] = '\0';
+	strlcpy(newcp, cmdbuf, cmdbuf_len+1);
 	result.v_str = makestring(newcp);
 	return result;
 }
@@ -7666,7 +7640,7 @@ f_putenv(int count, VALUE **vals)
 			/*NOTREACHED*/
 		}
 		/*
-		 * The next statement could be::
+		 * The next statement could be:
 		 *
 		 *	snprintf(putenv_str, snprintf_len,
 		 *	        "%s=%s", vals[0]->v_str->s_str,
@@ -7677,16 +7651,16 @@ f_putenv(int count, VALUE **vals)
 		 * 	null destination pointer
 		 *
 		 * even though we check that putenv_str is non-NULL
-		 * above before using it.  Therefore we call memcpy()
+		 * above before using it.  Therefore we call strlcpy()
 		 * twice and make an assignment instead to avoid such warnings.
 		 */
-		memcpy(putenv_str,
+		strlcpy(putenv_str,
 		       vals[0]->v_str->s_str,
-		       vals[0]->v_str->s_len);
+		       vals[0]->v_str->s_len+1);
 		putenv_str[vals[0]->v_str->s_len] = '=';
-		memcpy(putenv_str + vals[0]->v_str->s_len + 1,
+		strlcpy(putenv_str + vals[0]->v_str->s_len + 1,
 		       vals[1]->v_str->s_str,
-		       vals[1]->v_str->s_len);
+		       vals[1]->v_str->s_len+1);
 		putenv_str[snprintf_len] = '\0';
 
 	} else {
@@ -7711,9 +7685,8 @@ f_putenv(int count, VALUE **vals)
 			math_error("Cannot allocate string in putenv");
 			/*NOTREACHED*/
 		}
-		memcpy(putenv_str, vals[0]->v_str->s_str,
-				   vals[0]->v_str->s_len);
-		putenv_str[vals[0]->v_str->s_len] = '\0';
+		strlcpy(putenv_str, vals[0]->v_str->s_str,
+				   vals[0]->v_str->s_len+1);
 	}
 
 	/* return putenv result */

@@ -1,7 +1,7 @@
 /*
  * zrandom - Blum-Blum-Shub pseudo-random generator
  *
- * Copyright (C) 1999-2007  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -1081,6 +1081,9 @@
 #include "zrandom.h"
 #include "have_const.h"
 #include "have_unused.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 /*
@@ -3139,7 +3142,7 @@ randomcmp(CONST RANDOM *s1, CONST RANDOM *s2)
  */
 /*ARGSUSED*/
 void
-randomprint(CONST RANDOM UNUSED *state, int UNUSED flags)
+randomprint(CONST RANDOM *UNUSED(state), int UNUSED(flags))
 {
 	math_str("RANDOM state");
 }

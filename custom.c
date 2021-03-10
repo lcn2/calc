@@ -47,6 +47,10 @@
 
 #endif /* CUSTOM */
 
+
+#include "banned.h"	/* include after system header <> includes */
+
+
 BOOL allow_custom = FALSE;	 /* TRUE => custom builtins allowed */
 
 

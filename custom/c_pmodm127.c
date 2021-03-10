@@ -35,6 +35,10 @@
 
 #include "have_unused.h"
 
+
+#include "banned.h"	/* include after system header <> includes */
+
+
 /* 2^255 */
 STATIC HALF h255[] = {
 #if BASEB == 32
@@ -71,7 +75,7 @@ STATIC ZVALUE lastmodinv[1];
  */
 /*ARGSUSED*/
 VALUE
-c_pmodm127(char UNUSED *name, int UNUSED count, VALUE **vals)
+c_pmodm127(char *UNUSED(name), int UNUSED(count), VALUE **vals)
 {
 	VALUE result;		/* what we will return */
 	ZVALUE q;		/* test factor */

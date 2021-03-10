@@ -28,6 +28,8 @@ BEGIN {
     printf("#include <stdio.h>\n");
     printf("#include \"calcerr.h\"\n\n");
     printf("#include \"have_const.h\"\n\n");
+    printf("#include \"banned.h\"\t");
+    printf("/* include after system header <> includes */\n\n");
     printf("/*\n");
     printf(" * names of calc error values\n");
     printf(" */\n");

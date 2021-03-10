@@ -35,6 +35,10 @@
 
 #include "have_unused.h"
 
+
+#include "banned.h"	/* include after system header <> includes */
+
+
 /*
  * c_pzasusb8 - print numerator as a string of USB8s
  *
@@ -47,7 +51,7 @@
  */
 /*ARGSUSED*/
 VALUE
-c_pzasusb8(char UNUSED *name, int UNUSED count, VALUE **vals)
+c_pzasusb8(char *UNUSED(name), int UNUSED(count), VALUE **vals)
 {
 	VALUE result;		/* what we will return */
 	ZVALUE z;		/* numerator of the value */

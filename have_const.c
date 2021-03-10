@@ -41,8 +41,11 @@
  *		(nothing) ==> const not used
  */
 
-
 #include <stdio.h>
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 int
 main(void)

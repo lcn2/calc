@@ -52,19 +52,25 @@
 
 #include "calc.h"
 #include "lib_calc.h"
+#include "alloc.h"
 #include "hist.h"
-#include "have_string.h"
+#include "strl.h"
 
 #include "have_strdup.h"
 #if !defined(HAVE_STRDUP)
 # define strdup(x) calc_strdup((CONST char *)(x))
 #endif /* HAVE_STRDUP */
 
+#include "have_string.h"
 #ifdef HAVE_STRING_H
 # include <string.h>
 #endif
 
 #include "have_unused.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 #if !defined(USE_READLINE)
 
@@ -1490,7 +1496,7 @@ hist_getline(char *prompt, char *buf, size_t len)
 			/*NOTREACHED*/
 		}
 	}
-	strncpy(buf, line, len - 1);
+	strlcpy(buf, line, len);
 	buf[len - 2] = '\0';
 	len = strlen(buf);
 	buf[len] = '\n';
@@ -1518,7 +1524,7 @@ my_stifle_history (void)
 
 
 int
-hist_init(char UNUSED *filename)
+hist_init(char *UNUSED(filename))
 {
 	/* used when parsing conditionals in ~/.inputrc */
 	rl_readline_name = "calc";
@@ -1570,7 +1576,7 @@ hist_saveline(char *line, int len)
 /*
  * Main routine to test history.
  */
-void
+int
 main(int argc, char **argv)
 {
 	char	*filename;

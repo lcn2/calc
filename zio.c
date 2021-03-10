@@ -1,7 +1,7 @@
 /*
  * zio - scanf and printf routines for arbitrary precision integers
  *
- * Copyright (C) 1999-2007  David I. Bell
+ * Copyright (C) 1999-2007,2021  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -25,9 +25,13 @@
 
 
 #include <stdio.h>
+#include "alloc.h"
 #include "config.h"
 #include "zmath.h"
 #include "args.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 #define OUTBUFSIZE	200		/* realloc size for output buffers */

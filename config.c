@@ -1,7 +1,7 @@
 /*
  * config - configuration routines
  *
- * Copyright (C) 1999-2007  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2021  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -46,6 +46,7 @@
 #endif
 
 #include "calc.h"
+#include "alloc.h"
 #include "token.h"
 #include "zrand.h"
 #include "block.h"
@@ -53,11 +54,16 @@
 #include "config.h"
 #include "str.h"
 #include "custom.h"
+#include "strl.h"
 
 #include "have_strdup.h"
 #if !defined(HAVE_STRDUP)
 # define strdup(x) calc_strdup((CONST char *)(x))
 #endif /* HAVE_STRDUP */
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 /*
  * deal with systems that lack a defined CLK_TCK
@@ -757,7 +763,7 @@ setconfig(int type, VALUE *vp)
 			math_error("Cannot duplicate new prompt");
 			/*NOTREACHED*/
 		}
-		strncpy(p, vp->v_str->s_str, vp->v_str->s_len + 1);
+		strlcpy(p, vp->v_str->s_str, vp->v_str->s_len + 1);
 		free(conf->prompt1);
 		conf->prompt1 = p;
 		break;
@@ -772,7 +778,7 @@ setconfig(int type, VALUE *vp)
 			math_error("Cannot duplicate new more prompt");
 			/*NOTREACHED*/
 		}
-		strncpy(p, vp->v_str->s_str, vp->v_str->s_len + 1);
+		strlcpy(p, vp->v_str->s_str, vp->v_str->s_len + 1);
 		free(conf->prompt2);
 		conf->prompt2 = p;
 		break;

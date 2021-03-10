@@ -33,6 +33,7 @@ custom/libcustcalc*
 endian
 endian_calc.h
 fposval.h
+have_ban_pragma.h
 have_const.h
 have_fpos.h
 have_fpos_pos.h
@@ -49,6 +50,8 @@ have_stdlib.h
 have_stdvs
 have_strdup.h
 have_string.h
+have_strlcat.h
+have_strlcpy.h
 have_times.h
 have_uid_t.h
 have_unistd.h
@@ -88,6 +91,7 @@ longbits
 longbits.h
 sample_many
 sample_rand
+tags
 terminal.h
 ver_calc
 

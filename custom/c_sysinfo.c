@@ -57,6 +57,9 @@
 #include "have_unused.h"
 
 
+#include "banned.h"	/* include after system header <> includes */
+
+
 /*
  * sys_info - names and values of selected #defines
  */
@@ -266,7 +269,7 @@ S_FUNC void dump_mening_value(void);	/* custom("sysinfo", 2) */
  */
 /*ARGSUSED*/
 VALUE
-c_sysinfo(char UNUSED *name, int count, VALUE **vals)
+c_sysinfo(char *UNUSED(name), int count, VALUE **vals)
 {
 	VALUE result;		/* what we will return */
 	struct infoname *p;	/* current infoname */

@@ -41,7 +41,6 @@
  *		undefined ==> convert to ZVALUE first
  */
 
-
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -50,6 +49,10 @@
 #include <unistd.h>
 #endif
 #include "have_fpos.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 int
 main(void)

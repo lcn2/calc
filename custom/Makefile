@@ -28,9 +28,63 @@
 # Makefile by Landon Curt Noll
 
 
-# our shell
+# The shell used by this Makefile
+#
+# On some systems, /bin/sh is a rather reduced shell with
+# deprecated behavor.
+#
+# If your system has a up to date, bash shell, then
+# you may wish to use:
+#
+#	SHELL= /bin/bash
+#
+# On some systems such as macOS, the bash shell is very
+# far behind to the point wehre is cannot be depended on.
+# On such systems, the zsh may be a much better alternative
+# shell for this Makefile to use:
+#
+#	SHELL= /bin/zsh
 #
 SHELL= /bin/sh
+#SHELL= /bin/bash
+#SHELL= /bin/zsh
+
+
+# CCBAN is given to ${CC} in order to control if banned.h is in effect.
+#
+# The banned.h attempts to ban the use of certain dangerous functions
+# that, if improperly used, could compromise the computational integrity
+# if calculations.
+#
+# In the case of calc, we are motivated in part by the desire for calc
+# to correctly calculate: even durings extremely long calculations.
+#
+# If UNBAN is NOT defined, then calling certain functions
+# will result in a call to a non-existent function (link error).
+#
+# While we do NOT encourage defining UNBAN, there may be
+# a system / compiler environment where re-defining a
+# function may lead to a fatal compiler complication.
+# If that happens, consider compiling as:
+#
+#	make clobber all chk CCBAN=-DUNBAN
+#
+# as see if this is a work-a-round.
+#
+# If YOU discover a need for the -DUNBAN work-a-round, PLEASE tell us!
+# Please send us a bug report.  See the file:
+#
+#	BUGS
+#
+# or the URL:
+#
+#	http://www.isthe.com/chongo/tech/comp/calc/calc-bugrept.html
+#
+# for how to send us such a bug report.
+#
+CCBAN= -UUNBAN
+#CCBAN= -DUNBAN
+
 
 #if 0	/* start of skip for non-Gnu makefiles */
 ##############################################################################
@@ -353,7 +407,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.8.2
+VERSION= 2.12.9.0
 
 # Names of shared libraries with versions
 #
@@ -424,9 +478,9 @@ COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
 # NOTE: This does not work for: make-XYZ-only and BLD_TYPE != make-XYZ-only
 #
 ifeq ($(BLD_TYPE),calc-static-only)
-ICFLAGS= ${COMMON_CFLAGS} ${CC_STATIC}
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
 else
-ICFLAGS= ${COMMON_CFLAGS} ${CC_SHARE}
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_SHARE}
 endif
 CFLAGS= ${ICFLAGS} ${CCOPT}
 
@@ -470,12 +524,20 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 # CCOPT are flags given to ${CC} for optimization
 # CCWARN are flags given to ${CC} for warning message control
 #
-# WNO_IMPLICT, WNO_ERROR_LONG_LONG and WNO_LONG_LONG are given to ${CC}
-#	when compiling special .o files that may need special compile options
+# The following are given to ${CC}:
+#
+#	WNO_IMPLICT
+#	WNO_ERROR_LONG_LONG
+#	WNO_LONG_LONG
+#
+# when compiling special .o files that may need special compile options:
+#
 #	NOTE: These flags simply turn off certain compiler warnings,
 #	      which is useful only when CCWERR is set to -Werror.
+#
 #	NOTE: If your compiler does not have these -Wno files, just
 #	      set these variables to nothing as in:
+#
 #		WNO_IMPLICT=
 #		WNO_ERROR_LONG_LONG=
 #		WNO_LONG_LONG=
@@ -485,6 +547,9 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 #	      used with ${CC}, not ${LCC}.  If you do not want the compiler
 #	      to abort on warnings, then leave CCWERR blank.
 # CCMISC are misc flags given to ${CC}
+#
+# CCBAN is given to ${CC} in order to control if banned.h is in effect.
+#	NOTE: See where CCBAN is defined above for details.
 #
 # LCC is how the C compiler is invoked on locally executed intermediate programs
 # CC is how the C compiler is invoked (with an optional Purify)
@@ -908,7 +973,7 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 # ILDFLAGS for ${CC} in linking intermediate programs used to help compile calc
 # LDFLAGS for ${CC} in linking calc programs other than intermediate programs
 #
-ICFLAGS= ${COMMON_CFLAGS} ${CC_STATIC}
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
 CFLAGS= ${ICFLAGS} ${CCOPT}
 #
 ILDFLAGS= ${COMMON_LDFLAGS} ${LD_STATIC}
@@ -1035,9 +1100,9 @@ endif
 # NOTE: This does not work for: make-XYZ-only and BLD_TYPE != make-XYZ-only
 #
 ifeq ($(BLD_TYPE),calc-static-only)
-ICFLAGS= ${COMMON_CFLAGS} ${CC_STATIC}
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
 else
-ICFLAGS= ${COMMON_CFLAGS} ${CC_SHARE}
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_SHARE}
 endif
 CFLAGS= ${ICFLAGS} ${CCOPT}
 
@@ -1284,13 +1349,14 @@ depend:
 	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' \
 		    ${MAKE_FILE}.bak > ${MAKE_FILE}
 	${Q} ${GREP} -v '^#' skel/custom/makedep.out >> ${MAKE_FILE}
+	${Q} echo removing skel
 	${Q} ${RM} -rf skel
 	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
 	    echo 'custom/${MAKE_FILE} was already up to date'; \
 	    echo 'restoring original custom/${MAKE_FILE}'; \
 	    ${MV} -f ${MAKE_FILE}.bak ${MAKE_FILE}; \
 	else \
-	    echo 'previous custom/${MAKE_FILE} is now custom/${MAKE_FILE}.bak'; \
+	    echo 'old custom/${MAKE_FILE} is now custom/${MAKE_FILE}.bak'; \
 	    echo 'new custom/${MAKE_FILE} formed'; \
 	    echo 'try: diff -u custom/${MAKE_FILE}.bak custom/${MAKE_FILE}'; \
 	fi
@@ -1339,6 +1405,7 @@ clobber: clean
 	${RM} -f libcustcalc${LIB_EXT}
 	${RM} -f libcustcalc.a
 	${RM} -f libcustcalc*
+	${RM} -rf skel
 	${V} echo remove files that are obsolete
 #if 0	/* start of skip for non-Gnu makefiles */
 	${RM} -f Makefile.simple
@@ -1585,6 +1652,7 @@ uninstall:
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 
 c_argv.o: ../alloc.h
+c_argv.o: ../banned.h
 c_argv.o: ../block.h
 c_argv.o: ../byteswap.h
 c_argv.o: ../calc.h
@@ -1595,6 +1663,7 @@ c_argv.o: ../custom.h
 c_argv.o: ../decl.h
 c_argv.o: ../endian_calc.h
 c_argv.o: ../hash.h
+c_argv.o: ../have_ban_pragma.h
 c_argv.o: ../have_const.h
 c_argv.o: ../have_memmv.h
 c_argv.o: ../have_newstr.h
@@ -1610,6 +1679,7 @@ c_argv.o: ../value.h
 c_argv.o: ../zmath.h
 c_argv.o: c_argv.c
 c_devnull.o: ../alloc.h
+c_devnull.o: ../banned.h
 c_devnull.o: ../block.h
 c_devnull.o: ../byteswap.h
 c_devnull.o: ../calcerr.h
@@ -1619,6 +1689,7 @@ c_devnull.o: ../custom.h
 c_devnull.o: ../decl.h
 c_devnull.o: ../endian_calc.h
 c_devnull.o: ../hash.h
+c_devnull.o: ../have_ban_pragma.h
 c_devnull.o: ../have_const.h
 c_devnull.o: ../have_memmv.h
 c_devnull.o: ../have_newstr.h
@@ -1635,6 +1706,7 @@ c_devnull.o: ../value.h
 c_devnull.o: ../zmath.h
 c_devnull.o: c_devnull.c
 c_help.o: ../alloc.h
+c_help.o: ../banned.h
 c_help.o: ../block.h
 c_help.o: ../byteswap.h
 c_help.o: ../calcerr.h
@@ -1644,6 +1716,7 @@ c_help.o: ../custom.h
 c_help.o: ../decl.h
 c_help.o: ../endian_calc.h
 c_help.o: ../hash.h
+c_help.o: ../have_ban_pragma.h
 c_help.o: ../have_const.h
 c_help.o: ../have_memmv.h
 c_help.o: ../have_newstr.h
@@ -1660,6 +1733,7 @@ c_help.o: ../value.h
 c_help.o: ../zmath.h
 c_help.o: c_help.c
 c_pmodm127.o: ../alloc.h
+c_pmodm127.o: ../banned.h
 c_pmodm127.o: ../block.h
 c_pmodm127.o: ../byteswap.h
 c_pmodm127.o: ../calcerr.h
@@ -1669,6 +1743,7 @@ c_pmodm127.o: ../custom.h
 c_pmodm127.o: ../decl.h
 c_pmodm127.o: ../endian_calc.h
 c_pmodm127.o: ../hash.h
+c_pmodm127.o: ../have_ban_pragma.h
 c_pmodm127.o: ../have_const.h
 c_pmodm127.o: ../have_memmv.h
 c_pmodm127.o: ../have_newstr.h
@@ -1684,6 +1759,7 @@ c_pmodm127.o: ../value.h
 c_pmodm127.o: ../zmath.h
 c_pmodm127.o: c_pmodm127.c
 c_pzasusb8.o: ../alloc.h
+c_pzasusb8.o: ../banned.h
 c_pzasusb8.o: ../block.h
 c_pzasusb8.o: ../byteswap.h
 c_pzasusb8.o: ../calcerr.h
@@ -1693,6 +1769,7 @@ c_pzasusb8.o: ../custom.h
 c_pzasusb8.o: ../decl.h
 c_pzasusb8.o: ../endian_calc.h
 c_pzasusb8.o: ../hash.h
+c_pzasusb8.o: ../have_ban_pragma.h
 c_pzasusb8.o: ../have_const.h
 c_pzasusb8.o: ../have_memmv.h
 c_pzasusb8.o: ../have_newstr.h
@@ -1708,6 +1785,7 @@ c_pzasusb8.o: ../value.h
 c_pzasusb8.o: ../zmath.h
 c_pzasusb8.o: c_pzasusb8.c
 c_register.o: ../alloc.h
+c_register.o: ../banned.h
 c_register.o: ../block.h
 c_register.o: ../byteswap.h
 c_register.o: ../calc.h
@@ -1718,6 +1796,7 @@ c_register.o: ../custom.h
 c_register.o: ../decl.h
 c_register.o: ../endian_calc.h
 c_register.o: ../hash.h
+c_register.o: ../have_ban_pragma.h
 c_register.o: ../have_const.h
 c_register.o: ../have_memmv.h
 c_register.o: ../have_newstr.h
@@ -1733,6 +1812,7 @@ c_register.o: ../value.h
 c_register.o: ../zmath.h
 c_register.o: c_register.c
 c_sysinfo.o: ../alloc.h
+c_sysinfo.o: ../banned.h
 c_sysinfo.o: ../block.h
 c_sysinfo.o: ../byteswap.h
 c_sysinfo.o: ../calc.h
@@ -1745,6 +1825,7 @@ c_sysinfo.o: ../decl.h
 c_sysinfo.o: ../endian_calc.h
 c_sysinfo.o: ../fposval.h
 c_sysinfo.o: ../hash.h
+c_sysinfo.o: ../have_ban_pragma.h
 c_sysinfo.o: ../have_const.h
 c_sysinfo.o: ../have_memmv.h
 c_sysinfo.o: ../have_newstr.h
@@ -1765,6 +1846,7 @@ c_sysinfo.o: ../zrand.h
 c_sysinfo.o: ../zrandom.h
 c_sysinfo.o: c_sysinfo.c
 custtbl.o: ../alloc.h
+custtbl.o: ../banned.h
 custtbl.o: ../block.h
 custtbl.o: ../byteswap.h
 custtbl.o: ../calcerr.h
@@ -1774,6 +1856,7 @@ custtbl.o: ../custom.h
 custtbl.o: ../decl.h
 custtbl.o: ../endian_calc.h
 custtbl.o: ../hash.h
+custtbl.o: ../have_ban_pragma.h
 custtbl.o: ../have_const.h
 custtbl.o: ../have_memmv.h
 custtbl.o: ../have_newstr.h

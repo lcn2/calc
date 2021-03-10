@@ -28,6 +28,11 @@
 
 
 #include <stdio.h>
+#include "have_string.h"
+#ifdef HAVE_STRING_H
+# include <string.h>
+#endif
+#include "alloc.h"
 #include "value.h"
 #include "zmath.h"
 #include "config.h"
@@ -35,6 +40,10 @@
 #include "nametype.h"
 #include "str.h"
 #include "calcerr.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 #define NBLOCKCHUNK 16
 

@@ -30,6 +30,10 @@
 #include "config.h"
 #include "prime.h"
 
+
+#include "banned.h"	/* include after system header <> includes */
+
+
 STATIC NUMBER **B_table;
 STATIC long B_num;
 STATIC long B_allocnum;

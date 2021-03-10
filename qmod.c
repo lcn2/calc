@@ -1,7 +1,7 @@
 /*
  * qmod - modular arithmetic routines for normal numbers and REDC numbers
  *
- * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -29,6 +29,9 @@
 #include <stdio.h>
 #include "qmath.h"
 #include "config.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 /*

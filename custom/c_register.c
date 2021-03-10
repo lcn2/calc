@@ -1,7 +1,7 @@
 /*
  * c_register - set or print a custom register value
  *
- * Copyright (C) 2007  Landon Curt Noll
+ * Copyright (C) 2007,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -37,6 +37,9 @@
 #include "calc.h"
 
 #include "have_unused.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 /*
@@ -76,7 +79,7 @@ init_custreg(void)
  */
 /*ARGSUSED*/
 VALUE
-c_register(char UNUSED *name, int count, VALUE **vals)
+c_register(char *UNUSED(name), int count, VALUE **vals)
 {
 	VALUE result;		/* what we will return */
 	long reg;		/* register number */

@@ -34,6 +34,7 @@
 
 #include "lib_calc.h"
 #include "calc.h"
+#include "alloc.h"
 #include "token.h"
 #include "symbol.h"
 #include "label.h"
@@ -41,10 +42,15 @@
 #include "str.h"
 #include "func.h"
 #include "conf.h"
+#include "strl.h"
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
 # include <direct.h>
 #endif
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 STATIC BOOL rdonce;	/* TRUE => do not reread this file */
 
@@ -144,11 +150,9 @@ getcommands(BOOL toplevel)
 				case 1:
 				case -1:
 					if(i == 1) {
-						strncpy(name,
+						strlcpy(name,
 							DEFAULTCALCHELP,
-							MAXCMD);
-						/* paranoia */
-						name[MAXCMD] = '\0';
+							MAXCMD+1);
 						givehelp(name);
 					}
 					break;
@@ -2354,8 +2358,7 @@ getfilename(char *name, size_t namelen, BOOL *once)
 
 			/* use the value of the literal string */
 			s = findstring(tokenstring());
-			strncpy(name, s->s_str, namelen-1);
-			name[namelen-1] = '\0';
+			strlcpy(name, s->s_str, namelen);
 			sfree(s);
 			break;
 
@@ -2392,8 +2395,7 @@ getfilename(char *name, size_t namelen, BOOL *once)
 			}
 
 			/* return symbol name or value of global var string */
-			strncpy(name, symstr, namelen-1);
-			name[namelen-1] = '\0';
+			strlcpy(name, symstr, namelen);
 			break;
 
 		case T_NEWLINE:
@@ -2431,7 +2433,7 @@ getshowstatement(void)
 
 	switch (gettoken()) {
 	case T_SYMBOL:
-		strncpy(name, tokensymbol(), 4);
+		strlcpy(name, tokensymbol(), sizeof(name));
 		name[4] = '\0';
 		/* Yuck! */
 		arg = stringindex("buil\000"
@@ -2595,8 +2597,7 @@ getid(char *buf)
 		*buf = '\0';
 		return FALSE;
 	}
-	strncpy(buf, tokensymbol(), SYMBOLSIZE);
-	buf[SYMBOLSIZE] = '\0';
+	strlcpy(buf, tokensymbol(), SYMBOLSIZE+1);
 	return TRUE;
 }
 

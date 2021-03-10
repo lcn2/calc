@@ -38,9 +38,15 @@
  *		undefined ==> use internal slow memmove() instead
  */
 
-
 #include <stdio.h>
-#include <string.h>
+#include "have_string.h"
+#ifdef HAVE_STRING_H
+# include <string.h>
+#endif
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 #define MOVELEN 3
 

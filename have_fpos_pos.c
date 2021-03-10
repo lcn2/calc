@@ -1,7 +1,7 @@
 /*
  * have_fpos_pos - Determine if a __pos element in FILEPOS
  *
- * Copyright (C) 2000  Landon Curt Noll
+ * Copyright (C) 2000,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -31,10 +31,13 @@
  * __pos element in a non-scalar FILEPOS.
  */
 
-
 #include <stdio.h>
 #include "have_fpos.h"
 #include "have_posscl.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 int
 main(void)

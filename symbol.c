@@ -1,7 +1,7 @@
 /*
  * symbol - global and local symbol routines
  *
- * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -33,6 +33,10 @@
 #include "str.h"
 #include "opcodes.h"
 #include "func.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 #define HASHSIZE	37	/* size of hash table */
 

@@ -33,6 +33,10 @@
 
 #include "qmath.h"
 
+
+#include "banned.h"	/* include after system header <> includes */
+
+
 HALF _qlgenum_[] = { 36744 };
 HALF _qlgeden_[] = { 25469 };
 NUMBER _qlge_ = { { _qlgenum_, 1, 0 }, { _qlgeden_, 1, 0 }, 1, NULL };

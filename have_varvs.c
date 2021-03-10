@@ -1,7 +1,7 @@
 /*
  * have_varvs - try <varargs.h> to see if it really works with vsnprintf()
  *
- * Copyright (C) 1999,2018  Landon Curt Noll
+ * Copyright (C) 1999,2018,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -35,7 +35,6 @@
  * include file.
  */
 
-
 #include <stdio.h>
 
 #include "have_unistd.h"
@@ -56,10 +55,17 @@
 # define VSNPRINTF_SIZE_T long
 #endif
 
+#if !defined(STDARG) && !defined(SIMULATE_STDARG)
+#include <varargs.h>
+#endif
+
+
+#include "banned.h"	/* include after system header <> includes */
+
+
 char buf[BUFSIZ+1];
 
 #if !defined(STDARG) && !defined(SIMULATE_STDARG)
-#include <varargs.h>
 
 void
 try_nthis(char *fmt, VSNPRINTF_SIZE_T size, ...)

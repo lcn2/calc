@@ -1,7 +1,7 @@
 /*
  * opcodes - opcode execution module
  *
- * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -45,6 +45,10 @@
 #include "str.h"
 
 #include "have_unused.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 #define QUICKLOCALS	20		/* local vars to handle quickly */
 
@@ -161,7 +165,7 @@ o_localaddr(FUNC *fp, VALUE *locals, long index)
 
 /*ARGSUSED*/
 S_FUNC void
-o_globaladdr(FUNC UNUSED *fp, GLOBAL *sp)
+o_globaladdr(FUNC *UNUSED(fp), GLOBAL *sp)
 {
 	if (sp == NULL) {
 		math_error("Global variable \"%s\" not initialized",
@@ -177,7 +181,7 @@ o_globaladdr(FUNC UNUSED *fp, GLOBAL *sp)
 
 /*ARGSUSED*/
 S_FUNC void
-o_paramaddr(FUNC UNUSED *fp, int argcount, VALUE *args, long index)
+o_paramaddr(FUNC *UNUSED(fp), int argcount, VALUE *args, long index)
 {
 	if ((long)index >= argcount) {
 		math_error("Bad parameter index");
@@ -209,7 +213,7 @@ o_localvalue(FUNC *fp, VALUE *locals, long index)
 
 /*ARGSUSED*/
 S_FUNC void
-o_globalvalue(FUNC UNUSED *fp, GLOBAL *sp)
+o_globalvalue(FUNC *UNUSED(fp), GLOBAL *sp)
 {
 	if (sp == NULL) {
 		math_error("Global variable not defined");
@@ -221,7 +225,7 @@ o_globalvalue(FUNC UNUSED *fp, GLOBAL *sp)
 
 /*ARGSUSED*/
 S_FUNC void
-o_paramvalue(FUNC UNUSED *fp, int argcount, VALUE *args, long index)
+o_paramvalue(FUNC *UNUSED(fp), int argcount, VALUE *args, long index)
 {
 	if ((long)index >= argcount) {
 		math_error("Bad parameter index");
@@ -266,7 +270,7 @@ o_argvalue(FUNC *fp, int argcount, VALUE *args)
 
 /*ARGSUSED*/
 S_FUNC void
-o_number(FUNC UNUSED *fp, long arg)
+o_number(FUNC *UNUSED(fp), long arg)
 {
 	NUMBER *q;
 
@@ -284,7 +288,7 @@ o_number(FUNC UNUSED *fp, long arg)
 
 /*ARGSUSED*/
 S_FUNC void
-o_imaginary(FUNC UNUSED *fp, long arg)
+o_imaginary(FUNC *UNUSED(fp), long arg)
 {
 	NUMBER *q;
 	COMPLEX *c;
@@ -311,7 +315,7 @@ o_imaginary(FUNC UNUSED *fp, long arg)
 
 /*ARGSUSED*/
 S_FUNC void
-o_string(FUNC UNUSED *fp, long arg)
+o_string(FUNC *UNUSED(fp), long arg)
 {
 	stack++;
 	stack->v_str = slink(findstring(arg));
@@ -331,7 +335,7 @@ o_undef(void)
 
 /*ARGSUSED*/
 S_FUNC void
-o_matcreate(FUNC UNUSED *fp, long dim)
+o_matcreate(FUNC *UNUSED(fp), long dim)
 {
 	register MATRIX *mp;	/* matrix being defined */
 	NUMBER *num1;		/* first number from stack */
@@ -399,7 +403,7 @@ o_matcreate(FUNC UNUSED *fp, long dim)
 
 /*ARGSUSED*/
 S_FUNC void
-o_eleminit(FUNC UNUSED *fp, long index)
+o_eleminit(FUNC *UNUSED(fp), long index)
 {
 	VALUE *vp;
 	STATIC VALUE *oldvp;
@@ -540,7 +544,7 @@ o_eleminit(FUNC UNUSED *fp, long index)
  */
 /*ARGSUSED*/
 S_FUNC void
-o_indexaddr(FUNC UNUSED *fp, long dim, long writeflag)
+o_indexaddr(FUNC *UNUSED(fp), long dim, long writeflag)
 {
 	int i;
 	BOOL flag;
@@ -693,7 +697,7 @@ o_indexaddr(FUNC UNUSED *fp, long dim, long writeflag)
 
 /*ARGSUSED*/
 S_FUNC void
-o_elemaddr(FUNC UNUSED *fp, long index)
+o_elemaddr(FUNC *UNUSED(fp), long index)
 {
 	VALUE *vp;
 	MATRIX *mp;
@@ -748,7 +752,7 @@ o_elemvalue(FUNC *fp, long index)
 
 /*ARGSUSED*/
 S_FUNC void
-o_objcreate(FUNC UNUSED *fp, long arg)
+o_objcreate(FUNC *UNUSED(fp), long arg)
 {
 	stack++;
 	stack->v_type = V_OBJ;
@@ -2558,7 +2562,7 @@ o_return(void)
 
 /*ARGSUSED*/
 S_FUNC void
-o_jumpz(FUNC UNUSED *fp, BOOL *dojump)
+o_jumpz(FUNC *UNUSED(fp), BOOL *dojump)
 {
 	VALUE *vp;
 	int i;			/* result of comparison */
@@ -2582,7 +2586,7 @@ o_jumpz(FUNC UNUSED *fp, BOOL *dojump)
 
 /*ARGSUSED*/
 S_FUNC void
-o_jumpnz(FUNC UNUSED *fp, BOOL *dojump)
+o_jumpnz(FUNC *UNUSED(fp), BOOL *dojump)
 {
 	VALUE *vp;
 	int i;			/* result of comparison */
@@ -2609,7 +2613,7 @@ o_jumpnz(FUNC UNUSED *fp, BOOL *dojump)
  */
 /*ARGSUSED*/
 S_FUNC void
-o_jumpnn(FUNC UNUSED *fp, BOOL *dojump)
+o_jumpnn(FUNC *UNUSED(fp), BOOL *dojump)
 {
 	if (stack->v_addr->v_type) {
 		*dojump = TRUE;
@@ -2620,7 +2624,7 @@ o_jumpnn(FUNC UNUSED *fp, BOOL *dojump)
 
 /*ARGSUSED*/
 S_FUNC void
-o_condorjump(FUNC UNUSED *fp, BOOL *dojump)
+o_condorjump(FUNC *UNUSED(fp), BOOL *dojump)
 {
 	VALUE *vp;
 
@@ -2646,7 +2650,7 @@ o_condorjump(FUNC UNUSED *fp, BOOL *dojump)
 
 /*ARGSUSED*/
 S_FUNC void
-o_condandjump(FUNC UNUSED *fp, BOOL *dojump)
+o_condandjump(FUNC *UNUSED(fp), BOOL *dojump)
 {
 	VALUE *vp;
 
@@ -2677,7 +2681,7 @@ o_condandjump(FUNC UNUSED *fp, BOOL *dojump)
  */
 /*ARGSUSED*/
 S_FUNC void
-o_casejump(FUNC UNUSED *fp, BOOL *dojump)
+o_casejump(FUNC *UNUSED(fp), BOOL *dojump)
 {
 	VALUE *v1, *v2;
 	int r;
@@ -2699,7 +2703,7 @@ o_casejump(FUNC UNUSED *fp, BOOL *dojump)
 
 /*ARGSUSED*/
 S_FUNC void
-o_jump(FUNC UNUSED *fp, BOOL *dojump)
+o_jump(FUNC *UNUSED(fp), BOOL *dojump)
 {
 	*dojump = TRUE;
 }
@@ -2719,7 +2723,7 @@ o_usercall(FUNC *fp, long index, long argcount)
 
 /*ARGSUSED*/
 S_FUNC void
-o_call(FUNC UNUSED *fp, long index, long argcount)
+o_call(FUNC *UNUSED(fp), long index, long argcount)
 {
 	VALUE result;
 
@@ -3101,7 +3105,7 @@ o_rightshift(void)
 
 /*ARGSUSED*/
 S_FUNC void
-o_debug(FUNC UNUSED *fp, long line)
+o_debug(FUNC *UNUSED(fp), long line)
 {
 	funcline = line;
 	if (abortlevel >= ABORT_STATEMENT) {
@@ -3142,7 +3146,7 @@ o_printresult(void)
 
 /*ARGSUSED*/
 S_FUNC void
-o_print(FUNC UNUSED *fp, long flags)
+o_print(FUNC *UNUSED(fp), long flags)
 {
 	VALUE *vp;
 
@@ -3176,7 +3180,7 @@ o_printspace(void)
 
 /*ARGSUSED*/
 S_FUNC void
-o_printstring(FUNC UNUSED *fp, long index)
+o_printstring(FUNC *UNUSED(fp), long index)
 {
 	STRING *s;
 	char *cp;

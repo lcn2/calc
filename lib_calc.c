@@ -41,6 +41,7 @@
 #include "token.h"
 #include "symbol.h"
 #include "func.h"
+#include "strl.h"
 
 #if defined(CUSTOM)
 #include "custom.h"
@@ -91,6 +92,10 @@ typedef struct {int fd;} ttystruct;
 
 # endif
 #endif /* Windoz */
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 /*
  * in case we do not have certain .h files
@@ -692,7 +697,7 @@ calc_strdup(CONST char *s1)
 	 * if we have storage, duplicate the string
 	 */
 	if (ret != NULL) {
-		strncpy(ret, s1, s1_len+1);
+		strlcpy(ret, s1, s1_len+1);
 	}
 
 	/*

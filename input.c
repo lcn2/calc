@@ -1,7 +1,7 @@
 /*
  * input - nested input source file reader
  *
- * Copyright (C) 1999-2007,2014,2018  David I. Bell
+ * Copyright (C) 1999-2007,2014,2018,2021  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -53,6 +53,11 @@
 #include "calc.h"
 #include "conf.h"
 #include "hist.h"
+#include "strl.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 EXTERN int stdin_tty;		/* TRUE if stdin is a tty */
 E_FUNC FILE *f_open(char *name, char *mode);
@@ -135,6 +140,7 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 	int i;
 	char *cp;
 	char *path;		/* name being searched for */
+	size_t path_alloc;	/* length of malloced path */
 	struct stat statbuf;	/* stat of the path */
 	size_t namelen;	/* length of name */
 	size_t extlen;	/* length of the extension if non-NULL or 0 */
@@ -181,11 +187,14 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 	    extlen = 0;
 	}
 	pathlen = strlen(pathlist);
-	path = malloc(pathlen+1 + 1 + namelen+1 + extlen+1 + 1 + 1);
+	path_alloc = pathlen+1 + 1 + namelen+1 + extlen+1 + 1 + 1;
+	path = malloc(path_alloc+1);
 	if (path == NULL) {
 		math_error("Cannot allocate filename path buffer");
 		/*NOTREACHED*/
 	}
+	path[0] = '\0';	/* paranoia */
+	path[path_alloc] = '\0';	/* paranoia */
 
 	/*
 	 * Don't try the extension if the filename already contains it.
@@ -206,11 +215,11 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 			*cp++ = *pathlist++;
 		if (cp != path)
 			*cp++ = PATHCHAR;
-		strncpy(cp, name, namelen+1);
+		strlcpy(cp, name, namelen+1);
 		i = openfile(path);
 		if ((i < 0) &&
 		    (extension != NULL && extension[0] != '\0')) {
-			strcat(path, extension);
+			strlcat(path, extension, path_alloc+1);
 			i = openfile(path);
 		}
 	} while ((i < 0) && *pathlist);
@@ -348,7 +357,7 @@ f_pathopen(char *name, char *mode, char *pathlist, char **openpath)
 			*cp++ = *pathlist++;
 		if (cp != path)
 			*cp++ = PATHCHAR;
-		strncpy(cp, name, namelen+1);
+		strlcpy(cp, name, namelen+1);
 		ret = f_open(path, mode);
 	} while ((ret == NULL) && *pathlist);
 
@@ -442,23 +451,7 @@ homeexpand(char *name)
 			if (fullpath == NULL) {
 				return NULL;
 			}
-			/*
-			 * The next statement could be:
-			 *
-			 *	strncpy(fullpath, ent->pw_dir, fullpath_len);
-			 *
-			 * however compilers like gcc would issue warnings
-			 * such as:
-			 *
-			 * 	specified bound depends on the length of the
-			 * 	source argument
-			 *
-			 * even though we terminate the string by setting a NUL
-			 * byte following the copy.  Therefore we call memcpy()
-			 * instead to avoid such warnings.
-			 */
-			memcpy(fullpath, ent->pw_dir, fullpath_len);
-			fullpath[fullpath_len] = '\0';
+			strlcpy(fullpath, ent->pw_dir, fullpath_len+1);
 			return fullpath;
 		}
 		username = (char *) malloc(after-name + 1 + 1);
@@ -466,8 +459,7 @@ homeexpand(char *name)
 			/* failed to malloc username */
 			return NULL;
 		}
-		strncpy(username, name+1, after-name-1);
-		username[after-name-1] = '\0';
+		strlcpy(username, name+1, after-name+1+1);
 
 		/* get that user's home directory */
 		ent = (struct passwd *)getpwnam(username);
@@ -587,7 +579,7 @@ openfile(char *name)
 	if (cip->i_name == NULL) {
 		 return -1;
 	}
-	strncpy(cip->i_name, name, namelen+1);
+	strlcpy(cip->i_name, name, namelen+1);
 	return 0;
 }
 
@@ -623,8 +615,7 @@ openstring(char *str, size_t num)
 	cp = (char *) malloc(num + 1);
 	if (cp == NULL)
 		 return -1;
-	strncpy(cp, str, num);
-	cp[num] = '\0';	/* firewall */
+	strlcpy(cp, str, num+1);
 	cip = inputs + depth++;
 	cip->i_state = IS_READ;
 	cip->i_char = '\0';
@@ -946,10 +937,9 @@ runrcfiles(void)
 
 		/* load file name into the path */
 		if (calcrc == NULL) {
-			strncpy(path, cp, MAX_CALCRC+1);
+			strlcpy(path, cp, MAX_CALCRC+1);
 		} else {
-			strncpy(path, cp, calcrc - cp);
-			path[calcrc - cp] = '\0';
+			strlcpy(path, cp, calcrc - cp + 1);
 		}
 
 		/* find the start of the path */
@@ -1129,7 +1119,7 @@ addreadset(char *name, char *path, struct stat *sbuf)
 	if (readset[ret].name == NULL) {
 		return -1;
 	}
-	strncpy(readset[ret].name, name, name_len+1);
+	strlcpy(readset[ret].name, name, name_len+1);
 #if defined(_WIN32) || defined(__MSDOS__)
 	/*
 	 * For WIN32, _fullpath expands the path to a fully qualified
@@ -1149,7 +1139,7 @@ addreadset(char *name, char *path, struct stat *sbuf)
 	if (readset[ret].path == NULL) {
 		return -1;
 	}
-	strncpy(readset[ret].path, path, path_len+1);
+	strlcpy(readset[ret].path, path, path_len+1);
 #endif /* Windoz free systems */
 	readset[ret].inode = *sbuf;
 	readset[ret].active = 1;

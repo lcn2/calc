@@ -1,7 +1,8 @@
 /*
  * zmod - modulo arithmetic routines
  *
- * Copyright (C) 1999-2007  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021  David I. Bell, Landon Curt Noll
+ *				 and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -36,8 +37,12 @@
  */
 
 
+#include "alloc.h"
 #include "config.h"
 #include "zmath.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 #define POWBITS 4		/* bits for power chunks (must divide BASEB) */

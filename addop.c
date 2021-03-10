@@ -1,7 +1,7 @@
 /*
  * addop - add opcodes to a function being compiled
  *
- * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -28,12 +28,16 @@
 
 #include <stdio.h>
 #include "calc.h"
+#include "alloc.h"
 #include "opcodes.h"
 #include "str.h"
 #include "func.h"
 #include "token.h"
 #include "label.h"
 #include "symbol.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 #define FUNCALLOCSIZE	20	/* reallocate size for functions */

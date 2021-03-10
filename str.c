@@ -1,7 +1,7 @@
 /*
  * str - string list routines
  *
- * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -28,12 +28,22 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include "have_string.h"
+#ifdef HAVE_STRING_H
+# include <string.h>
+#endif
 #include "calc.h"
+#include "alloc.h"
 #include "str.h"
+#include "strl.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 #define STR_TABLECHUNK	100	/* how often to reallocate string table */
-#define STR_CHUNK	2000	/* size of string storage allocation */
-#define STR_UNIQUE	100	/* size of string to allocate separately */
+#define STR_CHUNK	(1<<11)	/* size of string storage allocation */
+#define STR_UNIQUE	(1<<7)	/* size of string to allocate separately */
 
 STRING _nullstring_ = {"", 0, 1, NULL};
 
@@ -107,7 +117,7 @@ addstr(STRINGHEAD *hp, char *str)
 	hp->h_used += len;
 	hp->h_avail -= len;
 	hp->h_count++;
-	strcpy(retstr, str);
+	strlcpy(retstr, str, len);
 	retstr[len] = '\0';
 	return retstr;
 }
@@ -279,15 +289,19 @@ addliteral(char *str)
 	table = literals.l_table;
 	/*
 	 * If the new string is very long, allocate it manually.
+	 *
+	 * Add room for trailing NUL and then round up to a
+	 * memory chunk (in this case we pick the size of a FULL
+	 * just because that is a nice size) for extra padded room.
 	 */
-	len = (len + 2) & ~1;	/* add room for null and round up to word */
+	len = ROUNDUP(len+1, FULL_LEN);
 	if (len >= STR_UNIQUE) {
 		newstr = (char *)malloc(len);
 		if (newstr == NULL) {
 			math_error("Cannot allocate large literal string");
 			/*NOTREACHED*/
 		}
-		strcpy(newstr, str);
+		strlcpy(newstr, str, len);
 		table[literals.l_count++] = newstr;
 		return newstr;
 	}
@@ -311,7 +325,7 @@ addliteral(char *str)
 	literals.l_avail -= len;
 	literals.l_alloc += len;
 	table[literals.l_count++] = newstr;
-	strcpy(newstr, str);
+	strlcpy(newstr, str, len);
 	return newstr;
 }
 

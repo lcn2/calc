@@ -79,6 +79,7 @@
 # include <sys/resource.h>
 #endif
 #include <setjmp.h>
+#include "alloc.h"
 #include "qmath.h"
 #include "longbits.h"
 #include "have_ustat.h"
@@ -97,6 +98,9 @@
 # define DEV_URANDOM "/dev/urandom"
 # define DEV_URANDOM_POOL 16
 #endif
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 /*

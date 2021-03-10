@@ -54,9 +54,63 @@
 # Makefile by Landon Curt Noll
 
 
-# our shell
+# The shell used by this Makefile
 #
-SHELL= /bin/zsh
+# On some systems, /bin/sh is a rather reduced shell with
+# deprecated behavor.
+#
+# If your system has a up to date, bash shell, then
+# you may wish to use:
+#
+#	SHELL= /bin/bash
+#
+# On some systems such as macOS, the bash shell is very
+# far behind to the point wehre is cannot be depended on.
+# On such systems, the zsh may be a much better alternative
+# shell for this Makefile to use:
+#
+#	SHELL= /bin/zsh
+#
+#SHELL= /bin/sh
+SHELL= /bin/bash
+#SHELL= /bin/zsh
+
+
+# CCBAN is given to ${CC} in order to control if banned.h is in effect.
+#
+# The banned.h attempts to ban the use of certain dangerous functions
+# that, if improperly used, could compromise the computational integrity
+# if calculations.
+#
+# In the case of calc, we are motivated in part by the desire for calc
+# to correctly calculate: even durings extremely long calculations.
+#
+# If UNBAN is NOT defined, then calling certain functions
+# will result in a call to a non-existent function (link error).
+#
+# While we do NOT encourage defining UNBAN, there may be
+# a system / compiler environment where re-defining a
+# function may lead to a fatal compiler complication.
+# If that happens, consider compiling as:
+#
+#	make clobber all chk CCBAN=-DUNBAN
+#
+# as see if this is a work-a-round.
+#
+# If YOU discover a need for the -DUNBAN work-a-round, PLEASE tell us!
+# Please send us a bug report.  See the file:
+#
+#	BUGS
+#
+# or the URL:
+#
+#	http://www.isthe.com/chongo/tech/comp/calc/calc-bugrept.html
+#
+# for how to send us such a bug report.
+#
+CCBAN= -UUNBAN
+#CCBAN= -DUNBAN
+
 
 # Try uname -s if the target was not already set on the make command line
 #
@@ -164,11 +218,30 @@ CI= ci
 # Q=@	do not echo internal Makefile actions (quiet mode)
 # Q=	echo internal Makefile actions (debug / verbose mode)
 #
+# H=@:	do not report hsrc file formation progress
+# H=@	do echo hsrc file formation progress
+#
+# S= >/dev/null 2>&1	slience ${CC} output during hsrc file formation
+# S=			full ${CC} output during hsrc file formation
+#
+# E= 2>/dev/null	slience command stderr during hsrc file formation
+# E=			full command stderr during hsrc file formation
+#
 # V=@:	do not echo debug statements (quiet mode)
 # V=@	do echo debug statements (debug / verbose mode)
 #
 #Q=
 Q=@
+#
+S= >/dev/null 2>&1
+#S=
+#
+E= 2>/dev/null
+#E=
+#
+#H=@:
+H=@
+#
 V=@:
 #V=@
 
@@ -184,20 +257,24 @@ XARG=
 # that invokes the ${MAKE_FILE}.
 #
 XVAR= \
-	target=${target} \
-	USE_READLINE='${USE_READLINE}' \
-	READLINE_LIB='${READLINE_LIB}' \
-	READLINE_INCLUDE='${READLINE_INCLUDE}' \
-	RPM_TOP='${RPM_TOP}' \
-	MAKE_FILE='${MAKE_FILE}' \
-	EXT='${EXT}' \
-	DARWIN_ARCH='${DARWIN_ARCH}' \
+	CCBAN='${CCBAN}' \
 	CCWERR='${CCWERR}' \
-	NROFF='${NROFF}' \
 	COMMON_ADD='${COMMON_ADD}' \
+	DARWIN_ARCH='${DARWIN_ARCH}' \
+	E='${E}' \
+	EXT='${EXT}' \
+	H='${H}' \
+	MAKE_FILE='${MAKE_FILE}' \
 	MANDIR='${MANDIR}' \
+	NROFF='${NROFF}' \
 	Q='${Q}' \
-	V='${V}'
+	READLINE_INCLUDE='${READLINE_INCLUDE}' \
+	READLINE_LIB='${READLINE_LIB}' \
+	RPM_TOP='${RPM_TOP}' \
+	S='${S}' \
+	USE_READLINE='${USE_READLINE}' \
+	V='${V}' \
+	target=${target}
 
 # We update the calc version string in these makefiles
 #
@@ -213,7 +290,7 @@ XMKVER= ${MAKE_FILE} custom/Makefile.head
 #
 ###
 
-all: fix_version check_include
+all: fix_version
 	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
@@ -508,6 +585,20 @@ have_unused.h:
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
 
+have_ban_pragma.h:
+	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
+	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
+	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
+
+have_strlcpy.h:
+	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
+	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
+	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
+
+have_strlcat.h:
+	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
+	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
+	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
 
 ##
 #
@@ -522,34 +613,6 @@ win32_hsrc:
 	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
-
-
-##
-#
-# These rules are used in the process of building the BUILD_H_SRC.
-#
-##
-
-endian.o:
-	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
-	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
-	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
-
-endian${EXT}:
-	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
-	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
-	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
-
-longbits.o:
-	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
-	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
-	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
-
-longbits${EXT}:
-	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
-	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
-	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
-
 
 ##
 #

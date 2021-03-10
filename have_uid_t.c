@@ -1,7 +1,7 @@
 /*
  * have_uid_t - Determine if we want or can support uid_t
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -37,7 +37,6 @@
  *		undefined ==> do not use uid_t
  */
 
-
 #include <stdio.h>
 
 #if !defined(HAVE_NO_UID_T)
@@ -48,6 +47,10 @@
 #include <pwd.h>
 #include <sys/types.h>
 #endif /* ! HAVE_NO_UID_T */
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 int
 main(void)

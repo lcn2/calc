@@ -42,6 +42,10 @@
 #include <unistd.h>
 #endif
 
+
+#include "banned.h"	/* include after system header <> includes */
+
+
 /* byte order array */
 char byte[8] = { (char)0x12, (char)0x36, (char)0x48, (char)0x59,
 		 (char)0x01, (char)0x23, (char)0x45, (char)0x67 };

@@ -1,7 +1,7 @@
 /*
  * token - read input file characters into tokens
  *
- * Copyright (C) 1999-2007,2017  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2017,2021  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -30,10 +30,14 @@
 #include <setjmp.h>
 
 #include "calc.h"
+#include "alloc.h"
 #include "token.h"
 #include "str.h"
 #include "args.h"
 #include "lib_calc.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 #define isletter(ch)	((((ch) >= 'a') && ((ch) <= 'z')) || \

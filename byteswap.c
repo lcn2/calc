@@ -29,6 +29,9 @@
 #include "byteswap.h"
 
 
+#include "banned.h"	/* include after system header <> includes */
+
+
 /*
  * swap_b8_in_HALFs - swap 8 and if needed, 16 bits in an array of HALFs
  *

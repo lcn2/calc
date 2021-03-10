@@ -28,11 +28,16 @@
  * Matrices can contain arbitrary types of elements.
  */
 
+#include "alloc.h"
 #include "value.h"
 #include "zrand.h"
 #include "calcerr.h"
 
 #include "have_unused.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 E_FUNC long irand(long s);
 
@@ -851,7 +856,7 @@ matfrac(MATRIX *m)
  */
 /*ARGSUSED*/
 VALUE *
-matindex(MATRIX *mp, BOOL UNUSED create, long dim, VALUE *indices)
+matindex(MATRIX *mp, BOOL UNUSED(create), long dim, VALUE *indices)
 {
 	NUMBER *q;		/* index value */
 	VALUE *vp;

@@ -1,7 +1,7 @@
 /*
  * value - definitions of general values  and related routines used by calc
  *
- * Copyright (C) 1999-2007,2014  David I. Bell
+ * Copyright (C) 1999-2007,2014,2021  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License

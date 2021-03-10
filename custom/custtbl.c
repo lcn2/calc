@@ -30,6 +30,10 @@
 #include "value.h"
 #include "custom.h"
 
+
+#include "banned.h"	/* include after system header <> includes */
+
+
 /*
  * NOTE: See the file CUSTOM for instructions on how to add
  *	 custom functions.

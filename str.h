@@ -24,8 +24,8 @@
  */
 
 
-#if !defined(INCLUDE_CALCSTRING_H)
-#define INCLUDE_CALCSTRING_H
+#if !defined(INCLUDE_STR_H)
+#define INCLUDE_STR_H
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
@@ -33,6 +33,7 @@
 #else
 # include <calc/zmath.h>
 #endif
+
 
 
 struct string {
@@ -52,6 +53,7 @@ typedef struct {
 	long h_count;	/* number of strings */
 } STRINGHEAD;
 
+EXTERN STRING _nullstring_;
 
 E_FUNC void initstr(STRINGHEAD *hp);
 E_FUNC char *addstr(STRINGHEAD *hp, char *str);
@@ -72,7 +74,6 @@ E_FUNC void fitstring(char *, long, long);
 E_FUNC void strprint(STRING *);
 E_FUNC void showstrings(void);
 E_FUNC void showliterals(void);
-EXTERN STRING _nullstring_;
 
 
-#endif /* !INCLUDE_CALCSTRING_H */
+#endif /* !INCLUDE_STR_H */

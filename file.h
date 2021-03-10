@@ -41,6 +41,7 @@
 /*
  * Definition of opened files.
  */
+#define MODE_LEN (sizeof("rb+")-1)
 typedef struct {
 	FILEID id;		/* id to identify this file */
 	FILE *fp;		/* real file structure for I/O */
@@ -52,7 +53,7 @@ typedef struct {
 	BOOL appending;		/* TRUE if also opened for appending */
 	BOOL binary;		/* TRUE if binary mode - mode ignored/unused */
 	char action;		/* most recent use for 'r', 'w' or 0 */
-	char mode[sizeof("rb+")+1];/* open mode */
+	char mode[MODE_LEN+1];	/* open mode */
 } FILEIO;
 
 

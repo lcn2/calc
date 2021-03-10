@@ -28,9 +28,63 @@
 # Makefile by Landon Curt Noll
 
 
-# our shell
+# The shell used by this Makefile
+#
+# On some systems, /bin/sh is a rather reduced shell with
+# deprecated behavor.
+#
+# If your system has a up to date, bash shell, then
+# you may wish to use:
+#
+#	SHELL= /bin/bash
+#
+# On some systems such as macOS, the bash shell is very
+# far behind to the point wehre is cannot be depended on.
+# On such systems, the zsh may be a much better alternative
+# shell for this Makefile to use:
+#
+#	SHELL= /bin/zsh
 #
 SHELL= /bin/sh
+#SHELL= /bin/bash
+#SHELL= /bin/zsh
+
+
+# CCBAN is given to ${CC} in order to control if banned.h is in effect.
+#
+# The banned.h attempts to ban the use of certain dangerous functions
+# that, if improperly used, could compromise the computational integrity
+# if calculations.
+#
+# In the case of calc, we are motivated in part by the desire for calc
+# to correctly calculate: even durings extremely long calculations.
+#
+# If UNBAN is NOT defined, then calling certain functions
+# will result in a call to a non-existent function (link error).
+#
+# While we do NOT encourage defining UNBAN, there may be
+# a system / compiler environment where re-defining a
+# function may lead to a fatal compiler complication.
+# If that happens, consider compiling as:
+#
+#	make clobber all chk CCBAN=-DUNBAN
+#
+# as see if this is a work-a-round.
+#
+# If YOU discover a need for the -DUNBAN work-a-round, PLEASE tell us!
+# Please send us a bug report.  See the file:
+#
+#	BUGS
+#
+# or the URL:
+#
+#	http://www.isthe.com/chongo/tech/comp/calc/calc-bugrept.html
+#
+# for how to send us such a bug report.
+#
+CCBAN= -UUNBAN
+#CCBAN= -DUNBAN
+
 
 #if 0	/* start of skip for non-Gnu makefiles */
 ##############################################################################
@@ -353,7 +407,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.8.2
+VERSION= 2.12.9.0
 
 # Names of shared libraries with versions
 #
@@ -424,9 +478,9 @@ COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
 # NOTE: This does not work for: make-XYZ-only and BLD_TYPE != make-XYZ-only
 #
 ifeq ($(BLD_TYPE),calc-static-only)
-ICFLAGS= ${COMMON_CFLAGS} ${CC_STATIC}
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
 else
-ICFLAGS= ${COMMON_CFLAGS} ${CC_SHARE}
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_SHARE}
 endif
 CFLAGS= ${ICFLAGS} ${CCOPT}
 

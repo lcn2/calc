@@ -45,6 +45,9 @@
 #endif
 
 
+#include "banned.h"	/* include after system header <> includes */
+
+
 /*
  * some help topics are symbols, so we alias them to nice filenames
  */

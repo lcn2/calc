@@ -1,7 +1,7 @@
 /*
  * have_gettime - determine if we have clock_gettime()
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -40,8 +40,12 @@
  *			      CLOCK_SGI_CYCLE and CLOCK_REALTIME
  */
 
-
+#include <stdio.h>
 #include <time.h>
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 int
 main(void)

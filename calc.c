@@ -26,7 +26,6 @@
  * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-
 #include <stdio.h>
 #include <signal.h>
 
@@ -66,6 +65,7 @@
 #include "lib_calc.h"
 #include "args.h"
 #include "zmath.h"
+#include "strl.h"
 
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
@@ -83,6 +83,9 @@
 #endif /* HAVE_STRDUP */
 
 #include "have_unused.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 /*
@@ -373,14 +376,20 @@ main(int argc, char **argv)
 					havearg = TRUE;
 					if (cmdlen > 0)
 						cmdbuf[cmdlen++] = ' ';
-					strcpy(cmdbuf + cmdlen, "read ");
-					cmdlen += 5;
-					if (strncmp(cp, "-once", 5) == 0 &&
-					    (cp[5] == '\0' || cp[5] == ' ')) {
-						cp += 5;
+					strlcpy(cmdbuf + cmdlen, "read ",
+						sizeof("read "));
+					cmdlen += sizeof("read ")-1;
+					cmdbuf[cmdlen] = '\0';
+					if (strncmp(cp, "-once",
+						    sizeof("-once")) == 0 &&
+					    (cp[sizeof("-once")-1] == '\0' ||
+					     cp[sizeof("-once")-1] == ' ')) {
+						cp += sizeof("-once")-1;
 						haveendstr = (*cp == '\0');
-						strcpy(cmdbuf+cmdlen, "-once ");
-						cmdlen += 6;
+						strlcpy(cmdbuf+cmdlen, "-once ",
+							sizeof("-once "));
+						cmdlen += sizeof("-once ")-1;
+						cmdbuf[cmdlen] = '\0';
 						if (nextcp(&cp, &index, argc,
 							   argv, haveendstr)) {
 						    fprintf(stderr, "-f -once"
@@ -406,7 +415,7 @@ main(int argc, char **argv)
 						}
 						/* XXX - what if *cp = '\''? */
 						*bp++ = '\'';
-						strncpy(bp, cp, len+1);
+						strlcpy(bp, cp, len+1);
 						bp += len;
 						*bp++ = '\'';
 						cp += len;
@@ -428,6 +437,7 @@ main(int argc, char **argv)
 					if (*cp == ';')
 						cp++;
 					*bp++ = ';';
+					*bp = '\0';
 					cmdlen++;
 					s_flag = TRUE;	/* -f implies -s */
 					break;
@@ -480,21 +490,7 @@ main(int argc, char **argv)
 				program);
 			exit(21);
 		}
-		/*
-		 * The next statement could be:
-		 *
-		 *	strncpy(cmdbuf + cmdlen, cp, cplen);
-		 *
-		 * however compilers like gcc would issue warnings such as:
-		 *
-		 * 	specified bound depends on the length of the
-		 * 	source argument
-		 *
-		 * even though we terminate the string by setting a NUL
-		 * byte following the copy.  Therefore we call memcpy()
-		 * instead to avoid such warnings.
-		 */
-		memcpy(cmdbuf + cmdlen, cp, cplen);
+		strlcpy(cmdbuf + cmdlen, cp, cplen+1);
 		cmdbuf[newcmdlen] = '\0';
 		cmdlen = newcmdlen;
 		index++;
@@ -762,7 +758,7 @@ main(int argc, char **argv)
  */
 /*ARGSUSED*/
 S_FUNC void
-intint(int UNUSED arg)
+intint(int UNUSED(arg))
 {
 	(void) signal(SIGINT, intint);
 	if (inputwait || (++abortlevel >= ABORT_NOW)) {

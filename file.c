@@ -37,16 +37,22 @@
 #endif /* HAVE_UNISTD_H */
 #include <ctype.h>
 #include "calc.h"
+#include "alloc.h"
 #include "longbits.h"
 #include "have_fpos.h"
 #include "have_fpos_pos.h"
 #include "fposval.h"
 #include "file.h"
 #include "calcerr.h"
+#include "strl.h"
 
 #if defined(_WIN32)
 # include <io.h>
 #endif
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 #define READSIZE	1024	/* buffer size for reading */
 
@@ -141,6 +147,7 @@ file_init(void)
 		files[idnum].reading = TRUE;
 		files[idnum].writing = TRUE;
 		files[idnum].action = 0;
+		memset(files[idnum].mode, 0, MODE_LEN+1);
 		/*
 		 * stat the descriptor to see what we have
 		 */
@@ -148,16 +155,19 @@ file_init(void)
 			size_t snprintf_len;	/* malloced snprintf length */
 			fp = (FILE *) fdopen(i,"r+");	/*guess mode*/
 			if (fp) {
-				strcpy(files[idnum].mode, "r+");
+				strlcpy(files[idnum].mode, "r+",
+					sizeof(files[idnum].mode));
 			} else {
 				fp = (FILE *) fdopen(i, "r");
 				if (fp) {
-					strcpy(files[idnum].mode, "r");
+					strlcpy(files[idnum].mode, "r",
+						sizeof(files[idnum].mode));
 					files[idnum].writing = FALSE;
 				} else {
 					fp = (FILE *) fdopen(i, "w");
 					if (fp) {
-						strcpy(files[idnum].mode, "w");
+						strlcpy(files[idnum].mode, "w",
+						    sizeof(files[idnum].mode));
 						files[idnum].reading = FALSE;
 					}
 					else
@@ -208,10 +218,14 @@ S_FUNC void
 init_fileio(FILEIO *fiop, char *name, char *mode,
 	    struct stat *sbufp, FILEID id, FILE *fp)
 {
-	char modestr[sizeof(fiop->mode)];	/* mode [rwa]b?\+? */
-	size_t namelen;				/* length of name */
+	char modestr[MODE_LEN+1];	/* mode [rwa]b?\+? */
+	size_t namelen;			/* length of name */
+
+	/* clear modestr */
+	memset(modestr, 0, sizeof(modestr));
 
 	/* allocate filename if requested */
+	namelen = 0;
 	if (name != NULL) {
 		namelen = strlen(name);
 		fiop->name = (char *)malloc(namelen + 1);
@@ -223,7 +237,7 @@ init_fileio(FILEIO *fiop, char *name, char *mode,
 
 	/* initialize FILEIO structure */
 	if (name != NULL) {
-		strncpy(fiop->name, name, namelen+1);
+		strlcpy(fiop->name, name, namelen+1);
 	}
 	fiop->id = id;
 	fiop->fp = fp;
@@ -234,7 +248,7 @@ init_fileio(FILEIO *fiop, char *name, char *mode,
 	fiop->appending = FALSE;
 	fiop->binary = FALSE;
 	fiop->action = 0;
-	fiop->mode[0] = '\0';
+	memset(fiop->mode, 0, sizeof(fiop->mode));
 
 	/*
 	 * determine file open mode
@@ -248,65 +262,65 @@ init_fileio(FILEIO *fiop, char *name, char *mode,
 	if (mode[0] == 'r') {
 
 		/* note read mode */
-		strcpy(modestr, "r");
+		strlcpy(modestr, "r", sizeof(modestr));
 		fiop->reading = TRUE;
 
 		/* note binary mode even though mode is not used / ignored */
 		if (strchr(mode, 'b') != NULL) {
-		    strcat(modestr, "b");
+		    strlcat(modestr, "b", sizeof(modestr));
 		}
 
 		/* note if reading and writing */
 		if (strchr(mode, '+') != NULL) {
 			fiop->writing = TRUE;
-			strcat(modestr, "+");
+			strlcat(modestr, "+", sizeof(modestr));
 		}
 
 	/* canonicalize write modes */
 	} else if (mode[0] == 'w') {
 
 		/* note write mode */
-		strcpy(modestr, "w");
+		strlcpy(modestr, "w", sizeof(modestr));
 		fiop->writing = TRUE;
 
 		/* note binary mode even though mode is not used / ignored */
 		if (strchr(mode, 'b') != NULL) {
-		    strcat(modestr, "b");
+		    strlcat(modestr, "b", sizeof(modestr));
 		}
 
 		/* note if reading and writing */
 		if (strchr(mode, '+') != NULL) {
 			fiop->reading = TRUE;
-			strcat(modestr, "+");
+			strlcat(modestr, "+", sizeof(modestr));
 		}
 
 	/* canonicalize append modes */
 	} else if (mode[0] == 'a') {
 
 		/* note append mode */
-		strcpy(modestr, "a");
+		strlcpy(modestr, "a", sizeof(modestr));
 		fiop->writing = TRUE;
 		fiop->appending = TRUE;
 
 		/* note binary mode even though mode is not used / ignored */
 		if (strchr(mode, 'b') != NULL) {
-		    strcat(modestr, "b");
+		    strlcat(modestr, "b", sizeof(modestr));
 		}
 
 		/* note if reading and writing */
 		if (strchr(mode, '+') != NULL) {
 			fiop->reading = TRUE;
-			strcat(modestr, "+");
+			strlcat(modestr, "+", sizeof(modestr));
 		}
 
 	/* canonicalize no I/O modes */
 	} else {
 		modestr[0] = '\0';
 	}
-	modestr[sizeof(modestr)-1] = '\0';	/* firewall */
+	modestr[MODE_LEN] = '\0';	/* firewall */
 
 	/* record canonical open mode string */
-	strncpy(fiop->mode, modestr, sizeof(fiop->mode));
+	strlcpy(fiop->mode, modestr, sizeof(fiop->mode));
 }
 
 

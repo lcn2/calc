@@ -1,7 +1,7 @@
 /*
  * label - label handling routines
  *
- * Copyright (C) 1999-2007  David I. Bell
+ * Copyright (C) 1999-2007,2021  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -30,6 +30,10 @@
 #include "str.h"
 #include "opcodes.h"
 #include "func.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 STATIC long labelcount;			/* number of user labels defined */
 STATIC STRINGHEAD labelnames;		/* list of user label names */

@@ -1,7 +1,7 @@
 /*
  * obj - object handling primitives
  *
- * Copyright (C) 1999-2007  David I. Bell
+ * Copyright (C) 1999-2007,2021  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -35,6 +35,10 @@
 #include "func.h"
 #include "symbol.h"
 #include "str.h"
+#include "strl.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 /*
@@ -210,6 +214,9 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 	char *namestr_ret;	/* namestr() return string */
 	size_t opi_name_len;	/* length of the oip name */
 
+	/* initilaize name */
+	memset(name, 0, sizeof(name));
+
 	/* initialize VALUEs */
 	val.v_subtype = V_NOSUBTYPE;
 	tmp.v_subtype = V_NOSUBTYPE;
@@ -241,9 +248,9 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 			/*NOTREACHED*/
 		}
 		name[0] = '\0';
-		strncpy(name, namestr_ret, namestr_len+1);
-		strcat(name, "_");
-		strncat(name, oip->name, opi_name_len+1);
+		strlcpy(name, namestr_ret, namestr_len+1);
+		strlcat(name, "_", sizeof(name));
+		strlcat(name, oip->name, sizeof(name));
 		index = adduserfunc(name);
 		oap->oa_indices[action] = index;
 	}

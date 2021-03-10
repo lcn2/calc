@@ -1,7 +1,7 @@
 /*
  * commath - extended precision complex arithmetic primitive routines
  *
- * Copyright (C) 1999-2007  David I. Bell
+ * Copyright (C) 1999-2007,2021  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -25,6 +25,9 @@
 
 
 #include "cmath.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 COMPLEX _czero_ =		{ &_qzero_, &_qzero_, 1 };

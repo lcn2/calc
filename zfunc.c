@@ -1,7 +1,8 @@
 /*
  * zfunc - extended precision integral arithmetic non-primitive routines
  *
- * Copyright (C) 1999-2007  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021  David I. Bell, Landon Curt Noll
+ *				 and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -27,6 +28,11 @@
 
 
 #include "zmath.h"
+#include "alloc.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 ZVALUE _tenpowers_[TEN_MAX+1];		/* table of 10^2^n */
 

@@ -38,12 +38,16 @@
  *		undefined ==> do not call or cannot call getsid()
  */
 
-
+#include <stdio.h>
 #include <sys/types.h>
 #include "have_unistd.h"
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 int
 main(void)

@@ -1,7 +1,7 @@
 /*
  * have_unused - Determine if we want or can support the unused attribute
  *
- * Copyright (C) 2004  Landon Curt Noll
+ * Copyright (C) 2004,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -42,22 +42,25 @@
  *		(nothing) ==> unused not used
  */
 
-
 #include <stdio.h>
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 #if !defined(HAVE_NO_UNUSED)
 
-/* make sure that we can use the __attribute__((unused)) in #define's */
+/* make sure that we can use the __attribute__((x)) in #define's */
 #undef UNUSED
-#define UNUSED __attribute__((unused))
+#define UNUSED(x) UNUSED_ ## x __attribute__((unused))
 
 /*
  * unused_str - a function with an unused argument
  */
 static char *
-unused_str(char UNUSED *str)
+unused_str(char *UNUSED(str))
 {
-    return "__attribute__((unused))";
+    return "UNUSED_ ## x __attribute__((unused))";
 }
 
 #endif /* !HAVE_NO_UNUSED */
@@ -68,15 +71,17 @@ main(void)
 {
 #if defined(HAVE_NO_UNUSED)
 
-	printf("#undef HAVE_UNUSED /* no */\n");
 	printf("#undef UNUSED\n");
-	printf("#define UNUSED /* no */\n");
+	printf("#if defined(__LCLINT__)\n");
+	printf("# define UNUSED(x) /*@unused@*/ x\n");
+	printf("#else\n");
+	printf("# define UNUSED(x) x\n");
+	printf("#endif\n");
 
 #else /* HAVE_NO_UNUSED */
 
-	printf("#define HAVE_UNUSED /* yes */\n");
 	printf("#undef UNUSED\n");
-	printf("#define UNUSED %s /* yes */\n", unused_str(NULL));
+	printf("#define UNUSED(x) %s\n", unused_str(NULL));
 
 #endif /* HAVE_NO_UNUSED */
 

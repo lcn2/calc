@@ -26,14 +26,21 @@
 
 
 #include <stdio.h>
-#include <string.h>
+#include "have_string.h"
+#ifdef HAVE_STRING_H
+# include <string.h>
+#endif
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "calc.h"
+#include "alloc.h"
 #include "value.h"
 #include "zrand.h"
 #include "zrandom.h"
 #include "hash.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 /*

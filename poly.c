@@ -1,7 +1,7 @@
 /*
  * poly - polynomial functions
  *
- * Copyright (C) 1999  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2021  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *
@@ -28,6 +28,9 @@
 
 
 #include "value.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 BOOL

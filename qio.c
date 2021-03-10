@@ -1,7 +1,7 @@
 /*
  * qio - scanf and printf routines for arbitrary precision rational numbers
  *
- * Copyright (C) 1999-2007  David I. Bell
+ * Copyright (C) 1999-2007,2021  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -29,6 +29,9 @@
 #include "args.h"
 
 #include "have_unused.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 #define PUTCHAR(ch)		math_chr(ch)
@@ -322,7 +325,7 @@ qprintff(NUMBER *q, long width, long precision)
  */
 /*ARGSUSED*/
 void
-qprintfe(NUMBER *q, long UNUSED width, long precision)
+qprintfe(NUMBER *q, long UNUSED(width), long precision)
 {
 	long exponent;
 	NUMBER q2;

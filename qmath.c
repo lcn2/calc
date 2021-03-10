@@ -31,6 +31,9 @@
 #include "config.h"
 
 
+#include "banned.h"	/* include after system header <> includes */
+
+
 NUMBER _qzero_ =	{ { _zeroval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
 NUMBER _qone_ =		{ { _oneval_, 1, 0  }, { _oneval_, 1, 0 }, 1, NULL };
 NUMBER _qtwo_ =		{ { _twoval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };

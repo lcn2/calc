@@ -1,7 +1,7 @@
 /*
  * zrand - subtractive 100 shuffle generator
  *
- * Copyright (C) 1999-2007  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -351,9 +351,13 @@
 
 #include <stdio.h>
 
+#include "alloc.h"
 #include "zrand.h"
 #include "have_const.h"
 #include "have_unused.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 /*
@@ -2348,7 +2352,7 @@ randcmp(CONST RAND *s1, CONST RAND *s2)
  */
 /*ARGSUSED*/
 void
-randprint(CONST RAND UNUSED *state, int UNUSED flags)
+randprint(CONST RAND *UNUSED(state), int UNUSED(flags))
 {
 	math_str("RAND state");
 }

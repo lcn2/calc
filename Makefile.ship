@@ -1,4 +1,3 @@
-#!/bin/make
 #
 # calc - arbitrary precision calculator
 #
@@ -49,9 +48,63 @@
 # Makefile by Landon Curt Noll
 
 
-# our shell
+# The shell used by this Makefile
+#
+# On some systems, /bin/sh is a rather reduced shell with
+# deprecated behavor.
+#
+# If your system has a up to date, bash shell, then
+# you may wish to use:
+#
+#	SHELL= /bin/bash
+#
+# On some systems such as macOS, the bash shell is very
+# far behind to the point wehre is cannot be depended on.
+# On such systems, the zsh may be a much better alternative
+# shell for this Makefile to use:
+#
+#	SHELL= /bin/zsh
 #
 SHELL= /bin/sh
+#SHELL= /bin/bash
+#SHELL= /bin/zsh
+
+
+# CCBAN is given to ${CC} in order to control if banned.h is in effect.
+#
+# The banned.h attempts to ban the use of certain dangerous functions
+# that, if improperly used, could compromise the computational integrity
+# if calculations.
+#
+# In the case of calc, we are motivated in part by the desire for calc
+# to correctly calculate: even durings extremely long calculations.
+#
+# If UNBAN is NOT defined, then calling certain functions
+# will result in a call to a non-existent function (link error).
+#
+# While we do NOT encourage defining UNBAN, there may be
+# a system / compiler environment where re-defining a
+# function may lead to a fatal compiler complication.
+# If that happens, consider compiling as:
+#
+#	make clobber all chk CCBAN=-DUNBAN
+#
+# as see if this is a work-a-round.
+#
+# If YOU discover a need for the -DUNBAN work-a-round, PLEASE tell us!
+# Please send us a bug report.  See the file:
+#
+#	BUGS
+#
+# or the URL:
+#
+#	http://www.isthe.com/chongo/tech/comp/calc/calc-bugrept.html
+#
+# for how to send us such a bug report.
+#
+CCBAN= -UUNBAN
+#CCBAN= -DUNBAN
+
 
 #if 0	/* start of skip for non-Gnu makefiles */
 ##############################################################################
@@ -559,6 +612,44 @@ HAVE_UNISTD_H=
 HAVE_UNUSED=
 #HAVE_UNUSED= -DHAVE_NO_UNUSED
 
+# Determine if we allow use of "#pragma GCC poison func_name"
+#
+# If HAVE_PRAGMA_GCC_POSION is empty, then Makefile will run the
+# have_bprag program to determine if the "#pragma GCC poison func_name"
+# is supported.  If HAVE_PRAGMA_GCC_POSION is set to
+# -DHAVE_NO_PRAGMA_GCC_POSION. then the "#pragma GCC poison func_name"
+# is not used.
+#
+# If in doubt, leave HAVE_PRAGMA_GCC_POSION empty and this Makefile
+# will figure it out.
+#
+HAVE_PRAGMA_GCC_POSION=
+#HAVE_PRAGMA_GCC_POSION= -DHAVE_NO_PRAGMA_GCC_POSION
+
+# Determine if we have strlcpy()
+#
+# If HAVE_STRLCPY is empty, this Makefile will run the have_strlcpy program
+# to determine if strlcpy() is supported.  If HAVE_STRLCPY is set to
+# -DHAVE_NO_STRLCPY, then calc will use internal functions to simulate
+# the strlcpy() function.
+#
+# If in doubt, leave HAVE_STRLCPY empty and this Makefile will figure it out.
+#
+HAVE_STRLCPY=
+#HAVE_STRLCPY= -DHAVE_NO_STRLCPY
+
+# Determine if we have strlcat()
+#
+# If HAVE_STRLCAT is empty, this Makefile will run the have_strlcat program
+# to determine if strlcat() is supported.  If HAVE_STRLCAT is set to
+# -DHAVE_NO_STRLCAT, then calc will use internal functions to simulate
+# the strlcat() function.
+#
+# If in doubt, leave HAVE_STRLCAT empty and this Makefile will figure it out.
+#
+HAVE_STRLCAT=
+#HAVE_STRLCAT= -DHAVE_NO_STRLCAT
+
 # System include files
 #
 # ${INCDIR}		where the system include (.h) files are kept
@@ -1058,7 +1149,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.8.2
+VERSION= 2.12.9.0
 
 # Names of shared libraries with versions
 #
@@ -1187,12 +1278,20 @@ COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
 # CCOPT are flags given to ${CC} for optimization
 # CCWARN are flags given to ${CC} for warning message control
 #
-# WNO_IMPLICT, WNO_ERROR_LONG_LONG and WNO_LONG_LONG are given to ${CC}
-#	when compiling special .o files that may need special compile options
+# The following are given to ${CC}:
+#
+#	WNO_IMPLICT
+#	WNO_ERROR_LONG_LONG
+#	WNO_LONG_LONG
+#
+# when compiling special .o files that may need special compile options:
+#
 #	NOTE: These flags simply turn off certain compiler warnings,
 #	      which is useful only when CCWERR is set to -Werror.
+#
 #	NOTE: If your compiler does not have these -Wno files, just
 #	      set these variables to nothing as in:
+#
 #		WNO_IMPLICT=
 #		WNO_ERROR_LONG_LONG=
 #		WNO_LONG_LONG=
@@ -1202,6 +1301,9 @@ COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
 #	      used with ${CC}, not ${LCC}.  If you do not want the compiler
 #	      to abort on warnings, then leave CCWERR blank.
 # CCMISC are misc flags given to ${CC}
+#
+# CCBAN is given to ${CC} in order to control if banned.h is in effect.
+#	NOTE: See where CCBAN is defined above for details.
 #
 # LCC is how the C compiler is invoked on locally executed intermediate programs
 # CC is how the C compiler is invoked (with an optional Purify)
@@ -1625,7 +1727,7 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 # ILDFLAGS for ${CC} in linking intermediate programs used to help compile calc
 # LDFLAGS for ${CC} in linking calc programs other than intermediate programs
 #
-ICFLAGS= ${COMMON_CFLAGS} ${CC_STATIC}
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
 CFLAGS= ${ICFLAGS} ${CCOPT}
 #
 ILDFLAGS= ${COMMON_LDFLAGS} ${LD_STATIC}
@@ -1752,9 +1854,9 @@ endif
 # NOTE: This does not work for: make-XYZ-only and BLD_TYPE != make-XYZ-only
 #
 ifeq ($(BLD_TYPE),calc-static-only)
-ICFLAGS= ${COMMON_CFLAGS} ${CC_STATIC}
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
 else
-ICFLAGS= ${COMMON_CFLAGS} ${CC_SHARE}
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_SHARE}
 endif
 CFLAGS= ${ICFLAGS} ${CCOPT}
 
@@ -1781,11 +1883,30 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 # Q=@	do not echo internal Makefile actions (quiet mode)
 # Q=	echo internal Makefile actions (debug / verbose mode)
 #
+# H=@:	do not report hsrc file formation progress
+# H=@	do echo hsrc file formation progress
+#
+# S= >/dev/null 2>&1	slience ${CC} output during hsrc file formation
+# S=			full ${CC} output during hsrc file formation
+#
+# E= 2>/dev/null	slience command stderr during hsrc file formation
+# E=			full command stderr during hsrc file formation
+#
 # V=@:	do not echo debug statements (quiet mode)
 # V=@	do echo debug statements (debug / verbose mode)
 #
 #Q=
 Q=@
+#
+S= >/dev/null 2>&1
+#S=
+#
+E= 2>/dev/null
+#E=
+#
+#H=@:
+H=@
+#
 V=@:
 #V=@
 
@@ -1799,7 +1920,7 @@ LIBSRC= addop.c assocfunc.c blkcpy.c block.c byteswap.c \
 	lib_calc.c lib_util.c listfunc.c matfunc.c math_error.c \
 	obj.c opcodes.c pix.c poly.c prime.c qfunc.c qio.c \
 	qmath.c qmod.c qtrans.c quickhash.c seed.c sha1.c size.c \
-	str.c symbol.c token.c value.c version.c zfunc.c zio.c \
+	str.c strl.c symbol.c token.c value.c version.c zfunc.c zio.c \
 	zmath.c zmod.c zmul.c zprime.c zrand.c zrandom.c
 
 # the object files which are built into a math link library
@@ -1813,7 +1934,7 @@ LIBOBJS= addop.o assocfunc.o blkcpy.o block.o byteswap.o calcerr.o \
 	lib_calc.o lib_util.o listfunc.o matfunc.o math_error.o \
 	obj.o opcodes.o pix.o poly.o prime.o qfunc.o qio.o \
 	qmath.o qmod.o qtrans.o quickhash.o seed.o sha1.o size.o \
-	str.o symbol.o token.o value.o version.o zfunc.o zio.o \
+	str.o strl.o symbol.o token.o value.o version.o zfunc.o zio.o \
 	zmath.o zmod.o zmul.o zprime.o zrand.o zrandom.o
 
 # the calculator source files
@@ -1830,22 +1951,22 @@ CALCOBJS= calc.o
 
 # these .h files are needed to build the math link library
 #
-LIB_H_SRC= alloc.h blkcpy.h block.h byteswap.h calc.h cmath.h \
+LIB_H_SRC= alloc.h banned.h blkcpy.h block.h byteswap.h calc.h cmath.h \
 	config.h custom.h decl.h file.h func.h hash.h hist.h jump.h \
 	label.h lib_util.h lib_calc.h nametype.h \
-	opcodes.h prime.h qmath.h sha1.h str.h \
+	opcodes.h prime.h qmath.h sha1.h str.h strl.h \
 	symbol.h token.h value.h zmath.h zrand.h zrandom.h
 
 # we build these .h files during the make
 #
-BUILD_H_SRC= align32.h args.h calcerr.h conf.h endian_calc.h \
-	fposval.h have_const.h have_fpos.h have_fpos_pos.h \
-	have_memmv.h have_newstr.h have_offscl.h have_posscl.h \
-	have_stdlib.h have_string.h have_times.h have_uid_t.h \
-	have_unistd.h longbits.h terminal.h \
-	have_ustat.h have_getsid.h have_getpgid.h \
-	have_gettime.h have_getprid.h have_urandom.h have_rusage.h \
-	have_strdup.h have_unused.h
+BUILD_H_SRC= align32.h args.h calcerr.c calcerr.h conf.h endian_calc.h \
+	fposval.h have_ban_pragma.h have_const.h have_fpos.h \
+	have_fpos_pos.h have_getpgid.h have_getprid.h have_getsid.h \
+	have_gettime.h have_memmv.h have_newstr.h have_offscl.h \
+	have_posscl.h have_rusage.h have_stdlib.h have_strdup.h \
+	have_string.h have_strlcat.h have_strlcpy.h have_times.h \
+	have_uid_t.h have_unistd.h have_unused.h have_urandom.h \
+	have_ustat.h longbits.h terminal.h
 
 # we build these .c files during the make
 #
@@ -1860,13 +1981,13 @@ UTIL_C_SRC= align32.c endian.c longbits.c have_newstr.c have_uid_t.c \
 	have_fpos_pos.c have_offscl.c have_posscl.c have_memmv.c \
 	have_ustat.c have_getsid.c have_getpgid.c \
 	have_gettime.c have_getprid.c have_rusage.c have_strdup.c \
-	have_unused.c
+	have_unused.c have_ban_pragma.c have_strlcpy.c have_strlcat.c
 
 # these awk and sed tools are used in the process of building BUILD_H_SRC
 # and BUILD_C_SRC
 #
 UTIL_MISC_SRC= calcerr_h.sed calcerr_h.awk calcerr_c.sed calcerr_c.awk \
-	calcerr.tbl check.awk win32.mkdef
+	calcerr.tbl check.awk win32.mkdef fposval.h.def
 
 # these .o files may get built in the process of building BUILD_H_SRC
 #
@@ -1877,11 +1998,11 @@ UTIL_OBJS= endian.o longbits.o have_newstr.o have_uid_t.o \
 	try_strarg.o have_stdvs.o have_varvs.o have_posscl.o have_memmv.o \
 	have_ustat.o have_getsid.o have_getpgid.o \
 	have_gettime.o have_getprid.o ver_calc.o have_rusage.o have_strdup.o \
-	have_unused.o
+	have_unused.o have_ban_pragma.o have_strlcpy.o have_strlcat.o
 
 # these temp files may be created (and removed) during the build of BUILD_C_SRC
 #
-UTIL_TMP= ll_tmp fpos_tmp fposv_tmp const_tmp uid_tmp newstr_tmp vs_tmp \
+UTIL_TMP= ll_tmp fpos_tmp fposval_tmp const_tmp uid_tmp newstr_tmp vs_tmp \
 	memmv_tmp offscl_tmp posscl_tmp newstr_tmp \
 	getsid_tmp gettime_tmp getprid_tmp rusage_tmp strdup_tmp
 
@@ -1894,7 +2015,8 @@ UTIL_PROGS= align32${EXT} fposval${EXT} have_uid_t${EXT} have_const${EXT} \
 	have_getpgid${EXT} have_gettime${EXT} have_getprid${EXT} \
 	ver_calc${EXT} have_strdup${EXT} \
 	have_unused${EXT} have_fpos${EXT} have_fpos_pos${EXT} \
-	have_offscl${EXT} have_rusage${EXT}
+	have_offscl${EXT} have_rusage${EXT} have_ban_pragma${EXT} \
+	have_strlcpy${EXT} have_strlcat${EXT}
 
 # these utility files and scripts may be created in the process of building
 # the BUILD_H_SRC file set
@@ -1930,6 +2052,7 @@ CUSTOM_PASSDOWN=  \
     CALC_SHAREDIR="${CALC_SHAREDIR}" \
     CAT=${CAT} \
     CC="${CC}" \
+    CCBAN="${CCBAN}" \
     CCERR="${CCERR}" \
     CCMISC="${CCMISC}" \
     CCOPT="${CCOPT}" \
@@ -1948,8 +2071,10 @@ CUSTOM_PASSDOWN=  \
     CUSTOMINCDIR="${CUSTOMINCDIR}" \
     DEBUG="${DEBUG}" \
     DEFAULT_LIB_INSTALL_PATH="${DEFAULT_LIB_INSTALL_PATH}" \
+    E="${E}" \
     FMT=${FMT} \
     GREP=${GREP} \
+    H="${H}" \
     HELPDIR="${HELPDIR}" \
     ICFLAGS="${ICFLAGS} -I.." \
     ILDFLAGS="${ILDFLAGS}" \
@@ -1972,14 +2097,19 @@ CUSTOM_PASSDOWN=  \
     RANLIB="${RANLIB}" \
     RM=${RM} \
     RMDIR=${RMDIR} \
+    S="${S}" \
     SCRIPTDIR="${SCRIPTDIR}" \
     SED=${SED} \
+    SHELL=${SHELL} \
     SORT=${SORT} \
     T=${T} \
     TOP_MAKE_FILE=${MAKE_FILE} \
     TOUCH=${TOUCH} \
     TRUE=${TRUE} \
     VERSION=${VERSION} \
+    WNO_IMPLICT=${WNO_IMPLICT} \
+    WNO_ERROR_LONG_LONG=${WNO_ERROR_LONG_LONG} \
+    WNO_LONG_LONG=${WNO_LONG_LONG} \
     target=${target}
 
 # The complete list of Makefile vars passed down to help/Makefile.
@@ -2001,6 +2131,7 @@ HELP_PASSDOWN= \
     EXT=${EXT} \
     FMT=${FMT} \
     GREP=${GREP} \
+    H="${H}" \
     HELPDIR="${HELPDIR}" \
     ICFLAGS="${ICFLAGS}" \
     ILDFLAGS="${ILDFLAGS}" \
@@ -2016,6 +2147,7 @@ HELP_PASSDOWN= \
     RMDIR=${RMDIR} \
     SCRIPTDIR="${SCRIPTDIR}" \
     SED=${SED} \
+    SHELL=${SHELL} \
     T=${T} \
     TOP_MAKE_FILE=${MAKE_FILE} \
     TOUCH=${TOUCH} \
@@ -2033,6 +2165,7 @@ CAL_PASSDOWN= \
     CMP=${CMP} \
     CO=${CO} \
     CP=${CP} \
+    H="${H}" \
     HELPDIR="${HELPDIR}" \
     INCDIR="${INCDIR}" \
     LANG=${LANG} \
@@ -2044,6 +2177,7 @@ CAL_PASSDOWN= \
     RM=${RM} \
     RMDIR=${RMDIR} \
     SCRIPTDIR="${SCRIPTDIR}" \
+    SHELL=${SHELL} \
     T=${T} \
     TOP_MAKE_FILE=${MAKE_FILE} \
     TOUCH=${TOUCH} \
@@ -2063,6 +2197,7 @@ CSCRIPT_PASSDOWN= \
     CP=${CP} \
     ECHON="${ECHON}" \
     FMT=${FMT} \
+    H="${H}" \
     HELPDIR="${HELPDIR}" \
     INCDIR="${INCDIR}" \
     LANG=${LANG} \
@@ -2075,6 +2210,7 @@ CSCRIPT_PASSDOWN= \
     RMDIR=${RMDIR} \
     SCRIPTDIR="${SCRIPTDIR}" \
     SED=${SED} \
+    SHELL=${SHELL} \
     SORT=${SORT} \
     T=${T} \
     TOP_MAKE_FILE=${MAKE_FILE} \
@@ -2177,7 +2313,7 @@ STATIC_FIRST_TARGETS= ${LICENSE} .static
 #if 0	/* start of skip for non-Gnu makefiles */
 ifdef ALLOW_CUSTOM
 #endif	/* end of skip for non-Gnu makefiles */
-EARLY_TARGETS= custom/Makefile hsrc .hsrc custom/.all
+EARLY_TARGETS= hsrc .hsrc custom/.all custom/Makefile
 #if 0	/* start of skip for non-Gnu makefiles */
 else
 EARLY_TARGETS= hsrc .hsrc
@@ -2203,7 +2339,7 @@ TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS}
 all: check_include ${BLD_TYPE} CHANGES
 
 check_include:
-	$(Q) if ! echo '#include <stdio.h>' | ${CC} -E - >/dev/null 2>&1; then \
+	${Q} if ! echo '#include <stdio.h>' | ${CC} -E - >/dev/null 2>&1; then \
 	    echo "ERROR: Missing critical <stdio.h> include file." 1>&2; \
 	    echo "Without critical include files, we cannot compile." 1>&2; \
 	    echo "Perhaps your system isn't setup to compile C source?" 1>&2; \
@@ -2407,67 +2543,67 @@ hsrc: ${BUILD_H_SRC} ${BUILD_C_SRC}
 	-${Q} ${TOUCH} .hsrc
 
 conf.h: ${MAKE_FILE}
-	${Q} ${RM} -f conf.h
-	${Q} echo 'forming conf.h'
-	${Q} echo '/*' > conf.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> conf.h
-	${Q} echo ' */' >> conf.h
-	${Q} echo '' >> conf.h
-	${Q} echo '' >> conf.h
-	${Q} echo '#if !defined(__CONF_H__)' >> conf.h
-	${Q} echo '#define __CONF_H__' >> conf.h
-	${Q} echo '' >> conf.h
-	${Q} echo '' >> conf.h
-	${Q} echo '/* the default :-separated search path */' >> conf.h
-	${Q} echo '#if !defined(DEFAULTCALCPATH)' >> conf.h
-	${Q} echo '#define DEFAULTCALCPATH "${CALCPATH}"' >> conf.h
-	${Q} echo '#endif /* DEFAULTCALCPATH */' >> conf.h
-	${Q} echo '' >> conf.h
-	${Q} echo '/* the default :-separated startup file list */' >> conf.h
-	${Q} echo '#if !defined(DEFAULTCALCRC)' >> conf.h
-	${Q} echo '#define DEFAULTCALCRC "${CALCRC}"' >> conf.h
-	${Q} echo '#endif /* DEFAULTCALCRC */' >> conf.h
-	${Q} echo '' >> conf.h
-	${Q} echo '/* the location of the help directory */' >> conf.h
-	${Q} echo '#if !defined(HELPDIR)' >> conf.h
+	${Q} ${RM} -f $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_CONF_H)' >> $@
+	${Q} echo '#define CALC_CONF_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* the default :-separated search path */' >> $@
+	${Q} echo '#if !defined(DEFAULTCALCPATH)' >> $@
+	${Q} echo '#define DEFAULTCALCPATH "${CALCPATH}"' >> $@
+	${Q} echo '#endif /* DEFAULTCALCPATH */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* the default :-separated startup file list */' >> $@
+	${Q} echo '#if !defined(DEFAULTCALCRC)' >> $@
+	${Q} echo '#define DEFAULTCALCRC "${CALCRC}"' >> $@
+	${Q} echo '#endif /* DEFAULTCALCRC */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* the location of the help directory */' >> $@
+	${Q} echo '#if !defined(HELPDIR)' >> $@
 #if 0	/* start of skip for non-Gnu makefiles */
 ifdef RPM_TOP
-	${Q} echo '#define HELPDIR "${HELPDIR}"' >> conf.h
+	${Q} echo '#define HELPDIR "${HELPDIR}"' >> $@
 else
 #endif	/* end of skip for non-Gnu makefiles */
-	${Q} echo '#define HELPDIR "${T}${HELPDIR}"' >> conf.h
+	${Q} echo '#define HELPDIR "${T}${HELPDIR}"' >> $@
 #if 0	/* start of skip for non-Gnu makefiles */
 endif
 #endif	/* end of skip for non-Gnu makefiles */
-	${Q} echo '#endif /* HELPDIR */' >> conf.h
-	${Q} echo '' >> conf.h
+	${Q} echo '#endif /* HELPDIR */' >> $@
+	${Q} echo '' >> $@
 #if 0	/* start of skip for non-Gnu makefiles */
 ifdef ALLOW_CUSTOM
 #endif	/* end of skip for non-Gnu makefiles */
-	${Q} echo '/* the location of the custom help directory */' >> conf.h
-	${Q} echo '#if !defined(CUSTOMHELPDIR)' >> conf.h
+	${Q} echo '/* the location of the custom help directory */' >> $@
+	${Q} echo '#if !defined(CUSTOMHELPDIR)' >> $@
 #if 0	/* start of skip for non-Gnu makefiles */
 ifdef RPM_TOP
-	${Q} echo '#define CUSTOMHELPDIR "${CUSTOMHELPDIR}"' >> conf.h
+	${Q} echo '#define CUSTOMHELPDIR "${CUSTOMHELPDIR}"' >> $@
 else
 #endif	/* end of skip for non-Gnu makefiles */
-	${Q} echo '#define CUSTOMHELPDIR "${T}${CUSTOMHELPDIR}"' >> conf.h
+	${Q} echo '#define CUSTOMHELPDIR "${T}${CUSTOMHELPDIR}"' >> $@
 #if 0	/* start of skip for non-Gnu makefiles */
 endif
 #endif	/* end of skip for non-Gnu makefiles */
-	${Q} echo '#endif /* CUSTOMHELPDIR */' >> conf.h
-	${Q} echo '' >> conf.h
+	${Q} echo '#endif /* CUSTOMHELPDIR */' >> $@
+	${Q} echo '' >> $@
 #if 0	/* start of skip for non-Gnu makefiles */
 endif
 #endif	/* end of skip for non-Gnu makefiles */
-	${Q} echo '/* the default pager to use */' >> conf.h
-	${Q} echo '#if !defined(DEFAULTCALCPAGER)' >> conf.h
-	${Q} echo '#define DEFAULTCALCPAGER "${CALCPAGER}"' >> conf.h
-	${Q} echo '#endif /* DEFAULTCALCPAGER */' >> conf.h
-	${Q} echo '' >> conf.h
-	${Q} echo '' >> conf.h
-	${Q} echo '#endif /* !__CONF_H__ */' >> conf.h
-	${Q} echo 'conf.h formed'
+	${Q} echo '/* the default pager to use */' >> $@
+	${Q} echo '#if !defined(DEFAULTCALCPAGER)' >> $@
+	${Q} echo '#define DEFAULTCALCPAGER "${CALCPAGER}"' >> $@
+	${Q} echo '#endif /* DEFAULTCALCPAGER */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_CONF_H */' >> $@
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -2478,41 +2614,48 @@ endif
 	    ${TRUE}; \
 	fi
 
-endian_calc.h: endian${EXT} ${MAKE_FILE}
-	${Q} ${RM} -f endian_calc.h
-	${Q} echo 'forming endian_calc.h'
-	${Q} echo '/*' > endian_calc.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> endian_calc.h
-	${Q} echo ' */' >> endian_calc.h
-	${Q} echo '' >> endian_calc.h
-	${Q} echo '' >> endian_calc.h
-	${Q} echo '#if !defined(__ENDIAN_CALC_H__)' >> endian_calc.h
-	${Q} echo '#define __ENDIAN_CALC_H__' >> endian_calc.h
-	${Q} echo '' >> endian_calc.h
-	${Q} echo '' >> endian_calc.h
-	${Q} echo '/* what byte order are we? */' >> endian_calc.h
+endian_calc.h: endian.c have_stdlib.h have_unistd.h \
+	banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f endian.o endian${EXT} $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(ENDIAN_CALC_H)' >> $@
+	${Q} echo '#define ENDIAN_CALC_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* what byte order are we? */' >> $@
 	-${Q} if [ X"${CALC_BYTE_ORDER}" = X ]; then \
-	    if echo '#include <endian.h>' | ${CC} -E - >/dev/null 2>&1; then \
-		echo '#include <endian.h>' >> endian_calc.h; \
-		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
+	    if echo '#include <endian.h>' | ${CC} -E - ${S}; then \
+		echo '#include <endian.h>' >> $@; \
+		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> $@; \
 	    elif echo '#include <machine/endian.h>' | \
-		 ${CC} -E - >/dev/null 2>&1; then \
-		echo '#include <machine/endian.h>' >> endian_calc.h; \
-		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
+		 ${CC} -E - ${S}; then \
+		echo '#include <machine/endian.h>' >> $@; \
+		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> $@; \
 	    elif echo '#include <sys/endian.h>' | \
-		 ${CC} -E- >/dev/null 2>&1; then \
-		echo '#include <sys/endian.h>' >> endian_calc.h; \
-		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> endian_calc.h; \
+		 ${CC} -E- ${S}; then \
+		echo '#include <sys/endian.h>' >> $@; \
+		echo '#define CALC_BYTE_ORDER BYTE_ORDER' >> $@; \
 	    else \
-		./endian${EXT} >> endian_calc.h; \
+		${LCC} ${ICFLAGS} ${CALC_BYTE_ORDER} endian.c -c ${S}; \
+		${LCC} ${ILDFLAGS} endian.o -o endian${EXT} ${S}; \
+		./endian${EXT} >> $@; \
+		${RM} -f endian.o endian${EXT}; \
 	    fi; \
 	else \
-	    ./endian${EXT} >> endian_calc.h; \
+	    ${LCC} ${ICFLAGS} ${CALC_BYTE_ORDER} endian.c -c ${S}; \
+	    ${LCC} ${ILDFLAGS} endian.o -o endian${EXT} ${S}; \
+	    ./endian${EXT} >> $@; \
+	    ${RM} -f endian.o endian${EXT}; \
 	fi
-	${Q} echo '' >> endian_calc.h
-	${Q} echo '' >> endian_calc.h
-	${Q} echo '#endif /* !__ENDIAN_CALC_H__ */' >> endian_calc.h
-	${Q} echo 'endian_calc.h formed'
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !ENDIAN_CALC_H */' >> $@
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -2523,23 +2666,27 @@ endian_calc.h: endian${EXT} ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-longbits.h: longbits${EXT} ${MAKE_FILE}
-	${Q} ${RM} -f longbits.h
-	${Q} echo 'forming longbits.h'
-	${Q} echo '/*' > longbits.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> longbits.h
-	${Q} echo ' */' >> longbits.h
-	${Q} echo '' >> longbits.h
-	${Q} echo '' >> longbits.h
-	${Q} echo '#if !defined(__LONGBITS_H__)' >> longbits.h
-	${Q} echo '#define __LONGBITS_H__' >> longbits.h
-	${Q} echo '' >> longbits.h
-	${Q} echo '' >> longbits.h
-	${Q} ./longbits${EXT} ${LONG_BITS} >> longbits.h
-	${Q} echo '' >> longbits.h
-	${Q} echo '' >> longbits.h
-	${Q} echo '#endif /* !__LONGBITS_H__ */' >> longbits.h
-	${Q} echo 'longbits.h formed'
+longbits.h: longbits.c have_unistd.h have_stdlib.h \
+	banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f longbits.o longbits${EXT} $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_LONGBITS_H)' >> $@
+	${Q} echo '#define CALC_LONGBITS_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} ${LCC} ${ICFLAGS} longbits.c -c ${S}
+	${Q} ${LCC} ${ILDFLAGS} longbits.o -o longbits${EXT} ${S}
+	${Q} ./longbits${EXT} ${LONG_BITS} >> $@ ${E}
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_LONGBITS_H */' >> $@
+	${H} echo '$@ formed'
+	${Q} ${RM} -f longbits.o longbits${EXT}
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -2551,58 +2698,61 @@ longbits.h: longbits${EXT} ${MAKE_FILE}
 	fi
 
 have_times.h: ${MAKE_FILE}
-	${Q} ${RM} -f have_times.h
-	${Q} echo 'forming have_times.h'
-	${Q} echo '/*' > have_times.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_times.h
-	${Q} echo ' */' >> have_times.h
-	${Q} echo '' >> have_times.h
-	${Q} echo '' >> have_times.h
-	${Q} echo '#if !defined(CALC_HAVE_TIMES_H)' >> have_times.h
-	${Q} echo '#define CALC_HAVE_TIMES_H' >> have_times.h
-	${Q} echo '' >> have_times.h
-	${Q} echo '' >> have_times.h
-	${Q} echo '/* do we have <times.h>? */' >> have_times.h
+	${Q} ${RM} -f $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_TIMES_H)' >> $@
+	${Q} echo '#define CALC_HAVE_TIMES_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have <times.h>? */' >> $@
 	-${Q} if [ X"${HAVE_TIMES_H}" = X"YES" ]; then \
-	    echo '#define HAVE_TIMES_H	/* yes */' >> have_times.h; \
+	    echo '#define HAVE_TIMES_H	/* yes */' >> $@; \
 	elif [ X"${HAVE_TIMES_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_TIMES_H  /* no */' >> have_times.h; \
-	elif echo '#include <times.h>' | ${CC} -E - >/dev/null 2>&1; then \
-	    echo '#define HAVE_TIMES_H	/* yes */' >> have_times.h; \
+	    echo '#undef HAVE_TIMES_H  /* no */' >> $@; \
+	elif echo '#include <times.h>' | ${CC} -E - ${S}; then \
+	    echo '#define HAVE_TIMES_H	/* yes */' >> $@; \
 	else \
-	    echo '#undef HAVE_TIMES_H  /* no */' >> have_times.h; \
+	    echo '#undef HAVE_TIMES_H  /* no */' >> $@; \
 	fi
+	${Q} echo '/* do we have <sys/times.h>? */' >> $@
 	-${Q} if [ X"${HAVE_SYS_TIMES_H}" = X"YES" ]; then \
-	    echo '#define HAVE_SYS_TIMES_H	/* yes */' >> have_times.h; \
+	    echo '#define HAVE_SYS_TIMES_H	/* yes */' >> $@; \
 	elif [ X"${HAVE_SYS_TIMES_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_SYS_TIMES_H  /* no */' >> have_times.h; \
-	elif echo '#include <sys/times.h>' | ${CC} -E - >/dev/null 2>&1; then \
-	    echo '#define HAVE_SYS_TIMES_H  /* yes */' >> have_times.h; \
+	    echo '#undef HAVE_SYS_TIMES_H  /* no */' >> $@; \
+	elif echo '#include <sys/times.h>' | ${CC} -E - ${S}; then \
+	    echo '#define HAVE_SYS_TIMES_H  /* yes */' >> $@; \
 	else \
-	    echo '#undef HAVE_SYS_TIMES_H  /* no */' >> have_times.h; \
+	    echo '#undef HAVE_SYS_TIMES_H  /* no */' >> $@; \
 	fi
+	${Q} echo '/* do we have <time.h>? */' >> $@
 	-${Q} if [ X"${HAVE_TIME_H}" = X"YES" ]; then \
-	    echo '#define HAVE_TIME_H	/* yes */' >> have_times.h; \
+	    echo '#define HAVE_TIME_H	/* yes */' >> $@; \
 	elif [ X"${HAVE_TIME_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_TIME_H  /* no */' >> have_times.h; \
-	elif echo '#include <time.h>' | ${CC} -E - >/dev/null 2>&1; then \
-	    echo '#define HAVE_TIME_H  /* yes */' >> have_times.h; \
+	    echo '#undef HAVE_TIME_H  /* no */' >> $@; \
+	elif echo '#include <time.h>' | ${CC} -E - ${S}; then \
+	    echo '#define HAVE_TIME_H  /* yes */' >> $@; \
 	else \
-	    echo '#undef HAVE_TIME_H  /* no */' >> have_times.h; \
+	    echo '#undef HAVE_TIME_H  /* no */' >> $@; \
 	fi
+	${Q} echo '/* do we have <sys/time.h>? */' >> $@
 	-${Q} if [ X"${HAVE_SYS_TIME_H}" = X"YES" ]; then \
-	    echo '#define HAVE_SYS_TIME_H	/* yes */' >> have_times.h; \
+	    echo '#define HAVE_SYS_TIME_H	/* yes */' >> $@; \
 	elif [ X"${HAVE_SYS_TIME_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_SYS_TIME_H  /* no */' >> have_times.h; \
-	elif echo '#include <sys/time.h>' | ${CC} -E - >/dev/null 2>&1; then \
-	    echo '#define HAVE_SYS_TIME_H  /* yes */' >> have_times.h; \
+	    echo '#undef HAVE_SYS_TIME_H  /* no */' >> $@; \
+	elif echo '#include <sys/time.h>' | ${CC} -E - ${S}; then \
+	    echo '#define HAVE_SYS_TIME_H  /* yes */' >> $@; \
 	else \
-	    echo '#undef HAVE_SYS_TIME_H  /* no */' >> have_times.h; \
+	    echo '#undef HAVE_SYS_TIME_H  /* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_times.h
-	${Q} echo '' >> have_times.h
-	${Q} echo '#endif /* !CALC_HAVE_TIMES_H */' >> have_times.h
-	${Q} echo 'have_times.h formed'
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_TIMES_H */' >> $@
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -2614,31 +2764,31 @@ have_times.h: ${MAKE_FILE}
 	fi
 
 have_stdlib.h: ${MAKE_FILE}
-	${Q} ${RM} -f have_stdlib.h
-	${Q} echo 'forming have_stdlib.h'
-	${Q} echo '/*' > have_stdlib.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_stdlib.h
-	${Q} echo ' */' >> have_stdlib.h
-	${Q} echo '' >> have_stdlib.h
-	${Q} echo '' >> have_stdlib.h
+	${Q} ${RM} -f $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
 	${Q} echo '#if !defined(CALC_HAVE_STDLIB_H)' >> have_stdlib.h
 	${Q} echo '#define CALC_HAVE_STDLIB_H' >> have_stdlib.h
-	${Q} echo '' >> have_stdlib.h
-	${Q} echo '' >> have_stdlib.h
-	${Q} echo '/* do we have <stdlib.h>? */' >> have_stdlib.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have <stdlib.h>? */' >> $@
 	-${Q} if [ X"${HAVE_STDLIB_H}" = X"YES" ]; then \
 	    echo '#define HAVE_STDLIB_H	/* yes */' >> have_stdlib.h; \
 	elif [ X"${HAVE_STDLIB_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_STDLIB_H  /* no */' >> have_stdlib.h; \
-	elif echo '#include <stdlib.h>' | ${CC} -E - >/dev/null 2>&1; then \
+	elif echo '#include <stdlib.h>' | ${CC} -E - ${S}; then \
 	    echo '#define HAVE_STDLIB_H	 /* yes */' >> have_stdlib.h; \
 	else \
 	    echo '#undef HAVE_STDLIB_H	/* no */' >> have_stdlib.h; \
 	fi
-	${Q} echo '' >> have_stdlib.h
-	${Q} echo '' >> have_stdlib.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
 	${Q} echo '#endif /* !CALC_HAVE_STDLIB_H */' >> have_stdlib.h
-	${Q} echo 'have_stdlib.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -2650,31 +2800,31 @@ have_stdlib.h: ${MAKE_FILE}
 	fi
 
 have_unistd.h: ${MAKE_FILE}
-	${Q} ${RM} -f have_unistd.h
-	${Q} echo 'forming have_unistd.h'
-	${Q} echo '/*' > have_unistd.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_unistd.h
-	${Q} echo ' */' >> have_unistd.h
-	${Q} echo '' >> have_unistd.h
-	${Q} echo '' >> have_unistd.h
-	${Q} echo '#if !defined(CALC_HAVE_UNISTD_H)' >> have_unistd.h
-	${Q} echo '#define CALC_HAVE_UNISTD_H' >> have_unistd.h
-	${Q} echo '' >> have_unistd.h
-	${Q} echo '' >> have_unistd.h
-	${Q} echo '/* do we have <unistd.h>? */' >> have_unistd.h
+	${Q} ${RM} -f $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_UNISTD_H)' >> $@
+	${Q} echo '#define CALC_HAVE_UNISTD_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have <unistd.h>? */' >> $@
 	-${Q} if [ X"${HAVE_UNISTD_H}" = X"YES" ]; then \
-	    echo '#define HAVE_UNISTD_H	/* yes */' >> have_unistd.h; \
+	    echo '#define $@	/* yes */' >> $@; \
 	elif [ X"${HAVE_UNISTD_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_UNISTD_H  /* no */' >> have_unistd.h; \
-	elif echo '#include <unistd.h>' | ${CC} -E - >/dev/null 2>&1; then \
-	    echo '#define HAVE_UNISTD_H	 /* yes */' >> have_unistd.h; \
+	    echo '#undef HAVE_UNISTD_H  /* no */' >> $@; \
+	elif echo '#include <unistd.h>' | ${CC} -E - ${S}; then \
+	    echo '#define HAVE_UNISTD_H	 /* yes */' >> $@; \
 	else \
-	    echo '#undef HAVE_UNISTD_H	/* no */' >> have_unistd.h; \
+	    echo '#undef HAVE_UNISTD_H	/* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_unistd.h
-	${Q} echo '' >> have_unistd.h
-	${Q} echo '#endif /* !CALC_HAVE_UNISTD_H */' >> have_unistd.h
-	${Q} echo 'have_unistd.h formed'
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_UNISTD_H */' >> $@
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -2686,31 +2836,31 @@ have_unistd.h: ${MAKE_FILE}
 	fi
 
 have_string.h: ${MAKE_FILE}
-	${Q} ${RM} -f have_string.h
-	${Q} echo 'forming have_string.h'
-	${Q} echo '/*' > have_string.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_string.h
-	${Q} echo ' */' >> have_string.h
-	${Q} echo '' >> have_string.h
-	${Q} echo '' >> have_string.h
-	${Q} echo '#if !defined(CALC_HAVE_STRING_H)' >> have_string.h
-	${Q} echo '#define CALC_HAVE_STRING_H' >> have_string.h
-	${Q} echo '' >> have_string.h
-	${Q} echo '' >> have_string.h
-	${Q} echo '/* do we have <string.h>? */' >> have_string.h
+	${Q} ${RM} -f $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_STRING_H)' >> $@
+	${Q} echo '#define CALC_HAVE_STRING_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have <string.h>? */' >> $@
 	-${Q} if [ X"${HAVE_STRING_H}" = X"YES" ]; then \
-	    echo '#define HAVE_STRING_H	/* yes */' >> have_string.h; \
+	    echo '#define $@	/* yes */' >> $@; \
 	elif [ X"${HAVE_STRING_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_STRING_H  /* no */' >> have_string.h; \
-	elif echo '#include <string.h>' | ${CC} -E - >/dev/null 2>&1; then \
-	    echo '#define HAVE_STRING_H	 /* yes */' >> have_string.h; \
+	    echo '#undef HAVE_STRING_H  /* no */' >> $@; \
+	elif echo '#include <string.h>' | ${CC} -E - ${S}; then \
+	    echo '#define HAVE_STRING_H	 /* yes */' >> $@; \
 	else \
-	    echo '#undef HAVE_STRING_H	/* no */' >> have_string.h; \
+	    echo '#undef HAVE_STRING_H	/* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_string.h
-	${Q} echo '' >> have_string.h
-	${Q} echo '#endif /* !CALC_HAVE_STRING_H */' >> have_string.h
-	${Q} echo 'have_string.h formed'
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_STRING_H */' >> $@
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -2722,49 +2872,49 @@ have_string.h: ${MAKE_FILE}
 	fi
 
 terminal.h: ${MAKE_FILE}
-	${Q} ${RM} -f terminal.h
-	${Q} echo 'forming terminal.h'
-	${Q} echo '/*' > terminal.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> terminal.h
-	${Q} echo ' */' >> terminal.h
-	${Q} echo '' >> terminal.h
-	${Q} echo '' >> terminal.h
-	${Q} echo '#if !defined(__TERMINAL_H__)' >> terminal.h
-	${Q} echo '#define __TERMINAL_H__' >> terminal.h
-	${Q} echo '' >> terminal.h
-	${Q} echo '' >> terminal.h
-	${Q} echo '/* determine the type of terminal interface */' >> terminal.h
-	${Q} echo '#if !defined(USE_TERMIOS)' >> terminal.h
-	${Q} echo '#if !defined(USE_TERMIO)' >> terminal.h
-	${Q} echo '#if !defined(USE_SGTTY)' >> terminal.h
+	${Q} ${RM} -f $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_TERMINAL_H)' >> $@
+	${Q} echo '#define CALC_TERMINAL_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* determine the type of terminal interface */' >> $@
+	${Q} echo '#if !defined(USE_TERMIOS)' >> $@
+	${Q} echo '#if !defined(USE_TERMIO)' >> $@
+	${Q} echo '#if !defined(USE_SGTTY)' >> $@
 	-${Q} if [ X"${TERMCONTROL}" = X"-DUSE_WIN32" ]; then \
-	    echo '/* windoz, use none of these modes */' >> terminal.h; \
-	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> terminal.h; \
-	    echo '#undef USE_TERMIO    /* <termio.h> */' >> terminal.h; \
-	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
-	elif echo '#include <termios.h>' | ${CC} -E - >/dev/null 2>&1; then \
-	    echo '/* use termios */' >> terminal.h; \
-	    echo '#define USE_TERMIOS  /* <termios.h> */' >> terminal.h; \
-	    echo '#undef USE_TERMIO    /* <termio.h> */' >> terminal.h; \
-	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
-	elif echo '#include <termio.h>' | ${CC} -E - >/dev/null 2>&1; then \
-	    echo '/* use termio */' >> terminal.h; \
-	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> terminal.h; \
-	    echo '#define USE_TERMIO   /* <termio.h> */' >> terminal.h; \
-	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> terminal.h; \
+	    echo '/* windoz, use none of these modes */' >> $@; \
+	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> $@; \
+	    echo '#undef USE_TERMIO    /* <termio.h> */' >> $@; \
+	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> $@; \
+	elif echo '#include <termios.h>' | ${CC} -E - ${S}; then \
+	    echo '/* use termios */' >> $@; \
+	    echo '#define USE_TERMIOS  /* <termios.h> */' >> $@; \
+	    echo '#undef USE_TERMIO    /* <termio.h> */' >> $@; \
+	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> $@; \
+	elif echo '#include <termio.h>' | ${CC} -E - ${S}; then \
+	    echo '/* use termio */' >> $@; \
+	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> $@; \
+	    echo '#define USE_TERMIO   /* <termio.h> */' >> $@; \
+	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> $@; \
 	else \
-	    echo '/* use sgtty */' >> terminal.h; \
-	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> terminal.h; \
-	    echo '#undef USE_TERMIO    /* <termio.h> */' >> terminal.h; \
-	    echo '#define USE_SGTTY    /* <sys/ioctl.h> */' >> terminal.h; \
+	    echo '/* use sgtty */' >> $@; \
+	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> $@; \
+	    echo '#undef USE_TERMIO    /* <termio.h> */' >> $@; \
+	    echo '#define USE_SGTTY    /* <sys/ioctl.h> */' >> $@; \
 	fi
-	${Q} echo '#endif' >> terminal.h
-	${Q} echo '#endif' >> terminal.h
-	${Q} echo '#endif' >> terminal.h
-	${Q} echo '' >> terminal.h
-	${Q} echo '' >> terminal.h
-	${Q} echo '#endif /* !__TERMINAL_H__ */' >> terminal.h
-	${Q} echo 'terminal.h formed'
+	${Q} echo '#endif' >> $@
+	${Q} echo '#endif' >> $@
+	${Q} echo '#endif' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_TERMINAL_H */' >> $@
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -2775,38 +2925,38 @@ terminal.h: ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_fpos.h: have_fpos.c ${MAKE_FILE}
-	${Q} ${RM} -f fpos_tmp have_fpos.h
-	${Q} echo 'forming have_fpos.h'
-	${Q} echo '/*' > have_fpos.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_fpos.h
-	${Q} echo ' */' >> have_fpos.h
-	${Q} echo '' >> have_fpos.h
-	${Q} echo '' >> have_fpos.h
-	${Q} echo '#if !defined(CALC_HAVE_FPOS_H)' >> have_fpos.h
-	${Q} echo '#define CALC_HAVE_FPOS_H' >> have_fpos.h
-	${Q} echo '' >> have_fpos.h
-	${Q} echo '' >> have_fpos.h
-	${Q} echo '/* do we have fgetpos & fsetpos functions? */' >> have_fpos.h
+have_fpos.h: have_fpos.c banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f fpos_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_FPOS_H)' >> $@
+	${Q} echo '#define CALC_HAVE_FPOS_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have fgetpos & fsetpos functions? */' >> $@
 	${Q} ${RM} -f have_fpos.o have_fpos${EXT}
-	-${Q} ${LCC} ${HAVE_FPOS} ${ICFLAGS} have_fpos.c -c \
-	    >/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_fpos.o -o have_fpos${EXT} \
-	    >/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_fpos${EXT} > fpos_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${HAVE_FPOS} ${ICFLAGS} have_fpos.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_fpos.o -o have_fpos${EXT} ${S} \
+		|| ${TRUE}
+	-${Q} ./have_fpos${EXT} > fpos_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s fpos_tmp ]; then \
-	    ${CAT} fpos_tmp >> have_fpos.h; \
+	    ${CAT} fpos_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_FPOS  /* no */' >> have_fpos.h; \
-	    echo '' >> have_fpos.h; \
-	    echo 'typedef long FILEPOS;' >> have_fpos.h; \
+	    echo '#undef HAVE_FPOS  /* no */' >> $@; \
+	    echo '' >> $@; \
+	    echo 'typedef long FILEPOS;' >> $@; \
 	fi
-	${Q} echo '' >> have_fpos.h
-	${Q} echo '' >> have_fpos.h
-	${Q} echo '#endif /* !CALC_HAVE_FPOS_H */' >> have_fpos.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_FPOS_H */' >> $@
 	${Q} ${RM} -f have_fpos${EXT} have_fpos.o fpos_tmp
-	${Q} echo 'have_fpos.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -2817,40 +2967,40 @@ have_fpos.h: have_fpos.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
-	${Q} ${RM} -f fpos_tmp have_fpos_pos.h
-	${Q} echo 'forming have_fpos_pos.h'
-	${Q} echo '/*' > have_fpos_pos.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' \
-		>> have_fpos_pos.h
-	${Q} echo ' */' >> have_fpos_pos.h
-	${Q} echo '' >> have_fpos_pos.h
-	${Q} echo '' >> have_fpos_pos.h
-	${Q} echo '#if !defined(CALC_HAVE_FPOS_POS_H)' >> have_fpos_pos.h
-	${Q} echo '#define CALC_HAVE_FPOS_POS_H' >> have_fpos_pos.h
-	${Q} echo '' >> have_fpos_pos.h
-	${Q} echo '' >> have_fpos_pos.h
-	${Q} echo '/* do we have fgetpos & fsetpos functions? */' \
-		>> have_fpos_pos.h
+have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h \
+		 banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f fpos_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_FPOS_POS_H)' >> $@
+	${Q} echo '#define CALC_HAVE_FPOS_POS_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have fgetpos & fsetpos functions? */' >> $@
 	${Q} ${RM} -f have_fpos_pos.o have_fpos_pos${EXT}
-	-${Q} ${LCC} ${HAVE_FPOS} ${HAVE_FPOS_POS} \
-		    ${ICFLAGS} have_fpos_pos.c -c >/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_fpos_pos.o -o have_fpos_pos${EXT} \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_fpos_pos${EXT} > fpos_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${HAVE_FPOS} ${HAVE_FPOS_POS} ${ICFLAGS} \
+		have_fpos_pos.c -c ${S} \
+			|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_fpos_pos.o -o have_fpos_pos${EXT} ${S} \
+		|| ${TRUE}
+	-${Q} ./have_fpos_pos${EXT} > fpos_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s fpos_tmp ]; then \
-	    ${CAT} fpos_tmp >> have_fpos_pos.h; \
+	    ${CAT} fpos_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_FPOS_POS  /* no */' >> have_fpos_pos.h; \
-	    echo '' >> have_fpos_pos.h; \
-	    echo '#undef FPOS_POS_BITS' >> have_fpos_pos.h; \
+	    echo '#undef HAVE_FPOS_POS  /* no */' >> $@; \
+	    echo '' >> $@; \
+	    echo '#undef FPOS_POS_BITS' >> $@; \
 	fi
-	${Q} echo '' >> have_fpos_pos.h
-	${Q} echo '' >> have_fpos_pos.h
-	${Q} echo '#endif /* !CALC_HAVE_FPOS_POS_H */' >> have_fpos_pos.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_FPOS_POS_H */' >> $@
 	${Q} ${RM} -f have_fpos_pos${EXT} have_fpos_pos.o fpos_tmp
-	${Q} echo 'have_fpos_pos.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -2862,31 +3012,39 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h ${MAKE_FILE}
 	fi
 
 fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
-	   endian_calc.h ${MAKE_FILE}
-	${Q} ${RM} -f fposv_tmp fposval.h
-	${Q} echo 'forming fposval.h'
-	${Q} echo '/*' > fposval.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> fposval.h
-	${Q} echo ' */' >> fposval.h
-	${Q} echo '' >> fposval.h
-	${Q} echo '' >> fposval.h
-	${Q} echo '#if !defined(__FPOSVAL_H__)' >> fposval.h
-	${Q} echo '#define __FPOSVAL_H__' >> fposval.h
-	${Q} echo '' >> fposval.h
-	${Q} echo '' >> fposval.h
-	${Q} echo '/* what are our file position & size types? */' >> fposval.h
+	   endian_calc.h banned.h have_ban_pragma.h fposval.h.def alloc.h \
+	   have_newstr.h have_memmv.h ${MAKE_FILE}
+	${Q} ${RM} -f fposval_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_FPOSVAL_H)' >> $@
+	${Q} echo '#define CALC_FPOSVAL_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* what are our file position & size types? */' >> $@
 	${Q} ${RM} -f fposval.o fposval${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${FPOS_BITS} ${OFF_T_BITS} \
-		${DEV_BITS} ${INODE_BITS} fposval.c -c >/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} fposval.o -o fposval${EXT} >/dev/null \
-	    2>&1; ${TRUE}
-	${Q} ${SHELL} -c "./fposval${EXT} fposv_tmp >> fposval.h 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
-	${Q} echo '' >> fposval.h
-	${Q} echo '' >> fposval.h
-	${Q} echo '#endif /* !__FPOSVAL_H__ */' >> fposval.h
-	${Q} ${RM} -f fposval${EXT} fposval.o fposv_tmp
-	${Q} echo 'fposval.h formed'
+		${DEV_BITS} ${INODE_BITS} fposval.c -c ${S} \
+			|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} fposval.o -o fposval${EXT} ${S} \
+		|| ${TRUE}
+	-${Q} ./fposval${EXT} > fposval_tmp ${E} \
+		|| ${TRUE}
+	-${Q} if [ -s fposval_tmp ]; then \
+	    ${CAT} fposval_tmp >> $@; \
+	else \
+	    echo 'WARNING!! ./fposval${EXT} failed, using fposval.h.def' 1>&2; \
+	    ${CAT} fposval.h.def >> $@; \
+	fi
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_FPOSVAL_H */' >> $@
+	${Q} ${RM} -f fposval${EXT} fposval.o fposval_tmp
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -2897,38 +3055,38 @@ fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	    ${TRUE}; \
 	fi
 
-have_const.h: have_const.c ${MAKE_FILE}
-	${Q} ${RM} -f have_const const_tmp have_const.h
-	${Q} echo 'forming have_const.h'
-	${Q} echo '/*' > have_const.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_const.h
-	${Q} echo ' */' >> have_const.h
-	${Q} echo '' >> have_const.h
-	${Q} echo '' >> have_const.h
-	${Q} echo '#if !defined(CALC_HAVE_CONST_H)' >> have_const.h
-	${Q} echo '#define CALC_HAVE_CONST_H' >> have_const.h
-	${Q} echo '' >> have_const.h
-	${Q} echo '' >> have_const.h
-	${Q} echo '/* do we have or want const? */' >> have_const.h
+have_const.h: have_const.c banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f have_const const_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_CONST_H)' >> $@
+	${Q} echo '#define CALC_HAVE_CONST_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have or want const? */' >> $@
 	${Q} ${RM} -f have_const.o have_const${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_CONST} have_const.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_const.o -o have_const${EXT} \
-	    >/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_const${EXT} > const_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_CONST} have_const.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_const.o -o have_const${EXT} ${S} \
+		|| ${TRUE}
+	-${Q} ./have_const${EXT} > const_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s const_tmp ]; then \
-	    ${CAT} const_tmp >> have_const.h; \
+	    ${CAT} const_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_CONST /* no */' >> have_const.h; \
-	    echo '#undef CONST' >> have_const.h; \
-	    echo '#define CONST /* no */' >> have_const.h; \
+	    echo '#undef HAVE_CONST /* no */' >> $@; \
+	    echo '#undef CONST' >> $@; \
+	    echo '#define CONST /* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_const.h
-	${Q} echo '' >> have_const.h
-	${Q} echo '#endif /* !CALC_HAVE_CONST_H */' >> have_const.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_CONST_H */' >> $@
 	${Q} ${RM} -f have_const${EXT} have_const.o const_tmp
-	${Q} echo 'have_const.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -2939,36 +3097,37 @@ have_const.h: have_const.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_offscl.h: have_offscl.c have_unistd.h ${MAKE_FILE}
-	${Q} ${RM} -f offscl_tmp have_offscl.h
-	${Q} echo 'forming have_offscl.h'
-	${Q} echo '/*' > have_offscl.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_offscl.h
-	${Q} echo ' */' >> have_offscl.h
-	${Q} echo '' >> have_offscl.h
-	${Q} echo '' >> have_offscl.h
-	${Q} echo '#if !defined(CALC_HAVE_OFFSCL_H)' >> have_offscl.h
-	${Q} echo '#define CALC_HAVE_OFFSCL_H' >> have_offscl.h
-	${Q} echo '' >> have_offscl.h
-	${Q} echo '' >> have_offscl.h
+have_offscl.h: have_offscl.c have_unistd.h \
+	banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f offscl_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_OFFSCL_H)' >> $@
+	${Q} echo '#define CALC_HAVE_OFFSCL_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
 	${Q} ${RM} -f have_offscl.o have_offscl${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_OFFSCL} have_offscl.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_offscl.o -o have_offscl${EXT} \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_offscl${EXT} > offscl_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_OFFSCL} have_offscl.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_offscl.o -o have_offscl${EXT} ${S} \
+		|| ${TRUE}
+	-${Q} ./have_offscl${EXT} > offscl_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s offscl_tmp ]; then \
-	    ${CAT} offscl_tmp >> have_offscl.h; \
+	    ${CAT} offscl_tmp >> $@; \
 	else \
 	    echo '#undef HAVE_OFF_T_SCALAR /* off_t is not a simple value */' \
-		>> have_offscl.h; \
+		>> $@; \
 	fi
-	${Q} echo '' >> have_offscl.h
-	${Q} echo '' >> have_offscl.h
-	${Q} echo '#endif /* !CALC_HAVE_OFFSCL_H */' >> have_offscl.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_OFFSCL_H */' >> $@
 	${Q} ${RM} -f have_offscl${EXT} have_offscl.o offscl_tmp
-	${Q} echo 'have_offscl.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -2979,36 +3138,37 @@ have_offscl.h: have_offscl.c have_unistd.h ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_posscl.h: have_posscl.c have_fpos.h have_unistd.h ${MAKE_FILE}
-	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp have_posscl.h
-	${Q} echo 'forming have_posscl.h'
-	${Q} echo '/*' > have_posscl.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_posscl.h
-	${Q} echo ' */' >> have_posscl.h
-	${Q} echo '' >> have_posscl.h
-	${Q} echo '' >> have_posscl.h
-	${Q} echo '#if !defined(CALC_HAVE_POSSCL_H)' >> have_posscl.h
-	${Q} echo '#define CALC_HAVE_POSSCL_H' >> have_posscl.h
-	${Q} echo '' >> have_posscl.h
-	${Q} echo '' >> have_posscl.h
+have_posscl.h: have_posscl.c have_fpos.h have_unistd.h \
+	banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_POSSCL_H)' >> $@
+	${Q} echo '#define CALC_HAVE_POSSCL_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
 	${Q} ${RM} -f have_posscl.o have_posscl
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_POSSCL} have_posscl.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_posscl.o -o have_posscl \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_posscl > posscl_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_POSSCL} have_posscl.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_posscl.o -o have_posscl ${S} \
+		|| ${TRUE}
+	-${Q} ./have_posscl > posscl_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s posscl_tmp ]; then \
-	    ${CAT} posscl_tmp >> have_posscl.h; \
+	    ${CAT} posscl_tmp >> $@; \
 	else \
-	    echo '/* FILEPOS is not a simple value */' >> have_posscl.h; \
-	    echo '#undef HAVE_FILEPOS_SCALAR' >> have_posscl.h; \
+	    echo '/* FILEPOS is not a simple value */' >> $@; \
+	    echo '#undef HAVE_FILEPOS_SCALAR' >> $@; \
 	fi
-	${Q} echo '' >> have_posscl.h
-	${Q} echo '' >> have_posscl.h
-	${Q} echo '#endif /* !CALC_HAVE_POSSCL_H */' >> have_posscl.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_POSSCL_H */' >> $@
 	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp
-	${Q} echo 'have_posscl.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3019,51 +3179,51 @@ have_posscl.h: have_posscl.c have_fpos.h have_unistd.h ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-align32.h: align32.c longbits.h have_unistd.h ${MAKE_FILE}
-	${Q} ${RM} -f align32 align32_tmp align32.h
-	${Q} echo 'forming align32.h'
-	${Q} echo '/*' > align32.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> align32.h
-	${Q} echo ' */' >> align32.h
-	${Q} echo '' >> align32.h
-	${Q} echo '' >> align32.h
-	${Q} echo '#if !defined(__MUST_ALIGN32_H__)' >> align32.h
-	${Q} echo '#define __MUST_ALIGN32_H__' >> align32.h
-	${Q} echo '' >> align32.h
-	${Q} echo '' >> align32.h
-	${Q} echo '/* must we always align 32 bit accesses? */' >> align32.h
+align32.h: align32.c longbits.h have_unistd.h \
+	banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f align32 align32_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_ALIGN32_H)' >> $@
+	${Q} echo '#define CALC_ALIGN32_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* must we always align 32 bit accesses? */' >> $@
 	-${Q} if [ X"-DMUST_ALIGN32" = X${ALIGN32} ]; then \
-	    echo '/* forced to align 32 bit values */' >> align32.h; \
-	    echo '#define MUST_ALIGN32' >> align32.h; \
+	    echo '/* forced to align 32 bit values */' >> $@; \
+	    echo '#define MUST_ALIGN32' >> $@; \
 	else \
 	    ${TRUE}; \
 	fi
 	-${Q} if [ X"-UMUST_ALIGN32" = X${ALIGN32} ]; then \
-	    echo '/* forced to not require 32 bit alignment */' >> align32.h; \
-	    echo '#undef MUST_ALIGN32' >> align32.h; \
+	    echo '/* forced to not require 32 bit alignment */' >> $@; \
+	    echo '#undef MUST_ALIGN32' >> $@; \
 	else \
 	    ${TRUE}; \
 	fi
 	-${Q} if [ X = X${ALIGN32} ]; then \
 	    ${RM} -f align32.o align32${EXT}; \
-	    ${LCC} ${ICFLAGS} ${ALIGN32} align32.c -c >/dev/null 2>&1; \
-	    ${LCC} ${ILDFLAGS} align32.o -o align32${EXT} >/dev/null 2>&1; \
-	    ${SHELL} -c \
-		  "./align32${EXT} >align32_tmp 2>/dev/null" >/dev/null 2>&1; \
+	    ${LCC} ${ICFLAGS} ${ALIGN32} align32.c -c ${S}; \
+	    ${LCC} ${ILDFLAGS} align32.o -o align32${EXT} ${S}; \
+	    ./align32${EXT} >align32_tmp ${E}; \
 	    if [ -s align32_tmp ]; then \
-		${CAT} align32_tmp >> align32.h; \
+		${CAT} align32_tmp >> $@; \
 	    else \
-		echo '/* guess we must align 32 bit values */' >> align32.h; \
-		echo '#define MUST_ALIGN32' >> align32.h; \
+		echo '/* guess we must align 32 bit values */' >> $@; \
+		echo '#define MUST_ALIGN32' >> $@; \
 	    fi; \
 	    ${RM} -f align32${EXT} align32.o align32_tmp core; \
 	else \
 	    ${TRUE}; \
 	fi
-	${Q} echo '' >> align32.h
-	${Q} echo '' >> align32.h
-	${Q} echo '#endif /* !__MUST_ALIGN32_H__ */' >> align32.h
-	${Q} echo 'align32.h formed'
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_ALIGN32_H */' >> $@
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3074,36 +3234,37 @@ align32.h: align32.c longbits.h have_unistd.h ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_uid_t.h: have_uid_t.c have_unistd.h ${MAKE_FILE}
-	${Q} ${RM} -f have_uid_t uid_tmp have_uid_t.h
-	${Q} echo 'forming have_uid_t.h'
-	${Q} echo '/*' > have_uid_t.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_uid_t.h
-	${Q} echo ' */' >> have_uid_t.h
-	${Q} echo '' >> have_uid_t.h
-	${Q} echo '' >> have_uid_t.h
-	${Q} echo '#if !defined(CALC_HAVE_UID_T_H)' >> have_uid_t.h
-	${Q} echo '#define CALC_HAVE_UID_T_H' >> have_uid_t.h
-	${Q} echo '' >> have_uid_t.h
-	${Q} echo '' >> have_uid_t.h
-	${Q} echo '/* do we have or want uid_t? */' >> have_uid_t.h
+have_uid_t.h: have_uid_t.c have_unistd.h \
+	banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f have_uid_t uid_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_UID_T_H)' >> $@
+	${Q} echo '#define CALC_HAVE_UID_T_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have or want uid_t? */' >> $@
 	${Q} ${RM} -f have_uid_t.o have_uid_t${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_UID_T} have_uid_t.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_uid_t.o -o have_uid_t${EXT} \
-	    >/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_uid_t${EXT} > uid_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_UID_T} have_uid_t.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_uid_t.o -o have_uid_t${EXT} ${S} \
+		|| ${TRUE}
+	-${Q} ./have_uid_t${EXT} > uid_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s uid_tmp ]; then \
-	    ${CAT} uid_tmp >> have_uid_t.h; \
+	    ${CAT} uid_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_UID_T /* no */' >> have_uid_t.h; \
+	    echo '#undef HAVE_UID_T /* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_uid_t.h
-	${Q} echo '' >> have_uid_t.h
-	${Q} echo '#endif /* !CALC_HAVE_UID_T_H */' >> have_uid_t.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_UID_T_H */' >> $@
 	${Q} ${RM} -f have_uid_t${EXT} have_uid_t.o uid_tmp
-	${Q} echo 'have_uid_t.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3114,37 +3275,36 @@ have_uid_t.h: have_uid_t.c have_unistd.h ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_newstr.h: have_newstr.c ${MAKE_FILE}
-	${Q} ${RM} -f newstr_tmp have_newstr.h
-	${Q} echo 'forming have_newstr.h'
-	${Q} echo '/*' > have_newstr.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_newstr.h
-	${Q} echo ' */' >> have_newstr.h
-	${Q} echo '' >> have_newstr.h
-	${Q} echo '' >> have_newstr.h
-	${Q} echo '#if !defined(CALC_HAVE_NEWSTR_H)' >> have_newstr.h
-	${Q} echo '#define CALC_HAVE_NEWSTR_H' >> have_newstr.h
-	${Q} echo '' >> have_newstr.h
-	${Q} echo '' >> have_newstr.h
-	${Q} echo '/* do we have or want memcpy(), memset() & strchr()? */' \
-							>> have_newstr.h
+have_newstr.h: have_newstr.c banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f newstr_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_NEWSTR_H)' >> $@
+	${Q} echo '#define CALC_HAVE_NEWSTR_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have/want memcpy(), memset() & strchr()? */' >> $@
 	${Q} ${RM} -f have_newstr.o have_newstr${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_NEWSTR} have_newstr.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_newstr.o -o have_newstr${EXT} \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_newstr${EXT} > newstr_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_NEWSTR} have_newstr.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_newstr.o -o have_newstr${EXT} ${S} \
+		|| ${TRUE}
+	-${Q} ./have_newstr${EXT} > newstr_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s newstr_tmp ]; then \
-	    ${CAT} newstr_tmp >> have_newstr.h; \
+	    ${CAT} newstr_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_NEWSTR /* no */' >> have_newstr.h; \
+	    echo '#undef HAVE_NEWSTR /* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_newstr.h
-	${Q} echo '' >> have_newstr.h
-	${Q} echo '#endif /* !CALC_HAVE_NEWSTR_H */' >> have_newstr.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_NEWSTR_H */' >> $@
 	${Q} ${RM} -f have_newstr${EXT} have_newstr.o newstr_tmp
-	${Q} echo 'have_newstr.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3155,36 +3315,36 @@ have_newstr.h: have_newstr.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_memmv.h: have_memmv.c ${MAKE_FILE}
-	${Q} ${RM} -f have_memmv have_memmv.o memmv_tmp have_memmv.h
-	${Q} echo 'forming have_memmv.h'
-	${Q} echo '/*' > have_memmv.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_memmv.h
-	${Q} echo ' */' >> have_memmv.h
-	${Q} echo '' >> have_memmv.h
-	${Q} echo '' >> have_memmv.h
-	${Q} echo '#if !defined(CALC_HAVE_MEMMV_H)' >> have_memmv.h
-	${Q} echo '#define CALC_HAVE_MEMMV_H' >> have_memmv.h
-	${Q} echo '' >> have_memmv.h
-	${Q} echo '' >> have_memmv.h
-	${Q} echo '/* do we have or want memmove()? */' >> have_memmv.h
+have_memmv.h: have_memmv.c banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f have_memmv have_memmv.o memmv_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_MEMMV_H)' >> $@
+	${Q} echo '#define CALC_HAVE_MEMMV_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have or want memmove()? */' >> $@
 	${Q} ${RM} -f have_memmv.o have_memmv
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_MEMMOVE} have_memmv.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_memmv.o -o have_memmv \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_memmv > memmv_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_MEMMOVE} have_memmv.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_memmv.o -o have_memmv ${S} \
+		|| ${TRUE}
+	-${Q} ./have_memmv > memmv_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s memmv_tmp ]; then \
-	    ${CAT} memmv_tmp >> have_memmv.h; \
+	    ${CAT} memmv_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_MEMMOVE /* no */' >> have_memmv.h; \
+	    echo '#undef HAVE_MEMMOVE /* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_memmv.h
-	${Q} echo '' >> have_memmv.h
-	${Q} echo '#endif /* !CALC_HAVE_MEMMV_H */' >> have_memmv.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_MEMMV_H */' >> $@
 	${Q} ${RM} -f have_memmv have_memmv.o memmv_tmp
-	${Q} echo 'have_memmv.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3195,36 +3355,35 @@ have_memmv.h: have_memmv.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_ustat.h: have_ustat.c ${MAKE_FILE}
-	${Q} ${RM} -f ustat_tmp have_ustat.h
-	${Q} echo 'forming have_ustat.h'
-	${Q} echo '/*' > have_ustat.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_ustat.h
-	${Q} echo ' */' >> have_ustat.h
-	${Q} echo '' >> have_ustat.h
-	${Q} echo '' >> have_ustat.h
-	${Q} echo '#if !defined(CALC_HAVE_USTAT_H)' >> have_ustat.h
-	${Q} echo '#define CALC_HAVE_USTAT_H' >> have_ustat.h
-	${Q} echo '' >> have_ustat.h
-	${Q} echo '' >> have_ustat.h
-	${Q} echo '/* do we have or want ustat()? */' >> have_ustat.h
+have_ustat.h: have_ustat.c banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f ustat_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_USTAT_H)' >> $@
+	${Q} echo '#define CALC_HAVE_USTAT_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have or want ustat()? */' >> $@
 	${Q} ${RM} -f have_ustat.o have_ustat${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_USTAT} have_ustat.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_ustat.o -o have_ustat${EXT} \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_ustat${EXT} > ustat_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} if echo '#include <ustat.h>' | ${CC} -E - ${S}; then \
+	    ${Q} ${LCC} ${ICFLAGS} ${HAVE_USTAT} have_ustat.c -c ${S}; \
+	    ${Q} ${LCC} ${ILDFLAGS} have_ustat.o -o have_ustat${EXT} ${S}; \
+	    ${Q} ./have_ustat${EXT} > ustat_tmp ${E}; \
+	fi
 	-${Q} if [ -s ustat_tmp ]; then \
-	    ${CAT} ustat_tmp >> have_ustat.h; \
+	    ${CAT} ustat_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_USTAT /* no */' >> have_ustat.h; \
+	    echo '#undef HAVE_USTAT /* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_ustat.h
-	${Q} echo '' >> have_ustat.h
-	${Q} echo '#endif /* !CALC_HAVE_USTAT_H */' >> have_ustat.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_USTAT_H */' >> $@
 	${Q} ${RM} -f have_ustat${EXT} have_ustat.o ustat_tmp
-	${Q} echo 'have_ustat.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3235,36 +3394,37 @@ have_ustat.h: have_ustat.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_getsid.h: have_getsid.c have_unistd.h ${MAKE_FILE}
-	${Q} ${RM} -f getsid_tmp have_getsid.h
-	${Q} echo 'forming have_getsid.h'
-	${Q} echo '/*' > have_getsid.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_getsid.h
-	${Q} echo ' */' >> have_getsid.h
-	${Q} echo '' >> have_getsid.h
-	${Q} echo '' >> have_getsid.h
-	${Q} echo '#if !defined(CALC_HAVE_GETSID_H)' >> have_getsid.h
-	${Q} echo '#define CALC_HAVE_GETSID_H' >> have_getsid.h
-	${Q} echo '' >> have_getsid.h
-	${Q} echo '' >> have_getsid.h
-	${Q} echo '/* do we have or want getsid()? */' >> have_getsid.h
+have_getsid.h: have_getsid.c have_unistd.h \
+	banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f getsid_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_GETSID_H)' >> $@
+	${Q} echo '#define CALC_HAVE_GETSID_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have or want getsid()? */' >> $@
 	${Q} ${RM} -f have_getsid.o have_getsid${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETSID} have_getsid.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_getsid.o -o have_getsid \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_getsid${EXT} > getsid_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETSID} have_getsid.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_getsid.o -o have_getsid ${S} \
+		|| ${TRUE}
+	-${Q} ./have_getsid${EXT} > getsid_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s getsid_tmp ]; then \
-	    ${CAT} getsid_tmp >> have_getsid.h; \
+	    ${CAT} getsid_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_GETSID /* no */' >> have_getsid.h; \
+	    echo '#undef HAVE_GETSID /* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_getsid.h
-	${Q} echo '' >> have_getsid.h
-	${Q} echo '#endif /* !CALC_HAVE_GETSID_H */' >> have_getsid.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_GETSID_H */' >> $@
 	${Q} ${RM} -f have_getsid${EXT} have_getsid.o getsid_tmp
-	${Q} echo 'have_getsid.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3275,37 +3435,37 @@ have_getsid.h: have_getsid.c have_unistd.h ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_getpgid.h: have_getpgid.c have_unistd.h ${MAKE_FILE}
-	${Q} ${RM} -f getpgid_tmp have_getpgid.h
-	${Q} echo 'forming have_getpgid.h'
-	${Q} echo '/*' > have_getpgid.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> \
-	    have_getpgid.h
-	${Q} echo ' */' >> have_getpgid.h
-	${Q} echo '' >> have_getpgid.h
-	${Q} echo '' >> have_getpgid.h
-	${Q} echo '#if !defined(CALC_HAVE_GETPGID_H)' >> have_getpgid.h
-	${Q} echo '#define CALC_HAVE_GETPGID_H' >> have_getpgid.h
-	${Q} echo '' >> have_getpgid.h
-	${Q} echo '' >> have_getpgid.h
-	${Q} echo '/* do we have or want getpgid()? */' >> have_getpgid.h
+have_getpgid.h: have_getpgid.c have_unistd.h \
+	banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f getpgid_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_GETPGID_H)' >> $@
+	${Q} echo '#define CALC_HAVE_GETPGID_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have or want getpgid()? */' >> $@
 	${Q} ${RM} -f have_getpgid.o have_getpgid${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETPGID} have_getpgid.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_getpgid.o -o have_getpgid${EXT} \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_getpgid${EXT} > getpgid_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETPGID} have_getpgid.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_getpgid.o -o have_getpgid${EXT} ${S} \
+		|| ${TRUE}
+	-${Q} ./have_getpgid${EXT} > getpgid_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s getpgid_tmp ]; then \
-	    ${CAT} getpgid_tmp >> have_getpgid.h; \
+	    ${CAT} getpgid_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_GETPGID /* no */' >> have_getpgid.h; \
+	    echo '#undef HAVE_GETPGID /* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_getpgid.h
-	${Q} echo '' >> have_getpgid.h
-	${Q} echo '#endif /* !CALC_HAVE_GETPGID_H */' >> have_getpgid.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_GETPGID_H */' >> $@
 	${Q} ${RM} -f have_getpgid${EXT} have_getpgid.o getpgid_tmp
-	${Q} echo 'have_getpgid.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3316,37 +3476,36 @@ have_getpgid.h: have_getpgid.c have_unistd.h ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_gettime.h: have_gettime.c ${MAKE_FILE}
-	${Q} ${RM} -f gettime_tmp have_gettime.h
-	${Q} echo 'forming have_gettime.h'
-	${Q} echo '/*' > have_gettime.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> \
-	    have_gettime.h
-	${Q} echo ' */' >> have_gettime.h
-	${Q} echo '' >> have_gettime.h
-	${Q} echo '' >> have_gettime.h
-	${Q} echo '#if !defined(CALC_HAVE_GETTIME_H)' >> have_gettime.h
-	${Q} echo '#define CALC_HAVE_GETTIME_H' >> have_gettime.h
-	${Q} echo '' >> have_gettime.h
-	${Q} echo '' >> have_gettime.h
-	${Q} echo '/* do we have or want clock_gettime()? */' >> have_gettime.h
+have_gettime.h: have_gettime.c banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f gettime_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_GETTIME_H)' >> $@
+	${Q} echo '#define CALC_HAVE_GETTIME_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have or want clock_gettime()? */' >> $@
 	${Q} ${RM} -f have_gettime.o have_gettime${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETTIME} have_gettime.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_gettime.o -o have_gettime \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_gettime${EXT} > gettime_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETTIME} have_gettime.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_gettime.o -o have_gettime ${S} \
+		|| ${TRUE}
+	-${Q} ./have_gettime${EXT} > gettime_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s gettime_tmp ]; then \
-	    ${CAT} gettime_tmp >> have_gettime.h; \
+	    ${CAT} gettime_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_GETTIME /* no */' >> have_gettime.h; \
+	    echo '#undef HAVE_GETTIME /* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_gettime.h
-	${Q} echo '' >> have_gettime.h
-	${Q} echo '#endif /* !CALC_HAVE_GETTIME_H */' >> have_gettime.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_GETTIME_H */' >> $@
 	${Q} ${RM} -f have_gettime${EXT} have_gettime.o gettime_tmp
-	${Q} echo 'have_gettime.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3357,37 +3516,37 @@ have_gettime.h: have_gettime.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_getprid.h: have_getprid.c have_unistd.h ${MAKE_FILE}
-	${Q} ${RM} -f getprid_tmp have_getprid.h
-	${Q} echo 'forming have_getprid.h'
-	${Q} echo '/*' > have_getprid.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> \
-	    have_getprid.h
-	${Q} echo ' */' >> have_getprid.h
-	${Q} echo '' >> have_getprid.h
-	${Q} echo '' >> have_getprid.h
-	${Q} echo '#if !defined(CALC_HAVE_GETPRID_H)' >> have_getprid.h
-	${Q} echo '#define CALC_HAVE_GETPRID_H' >> have_getprid.h
-	${Q} echo '' >> have_getprid.h
-	${Q} echo '' >> have_getprid.h
-	${Q} echo '/* do we have or want getprid()? */' >> have_getprid.h
+have_getprid.h: have_getprid.c have_unistd.h \
+	banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f getprid_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_GETPRID_H)' >> $@
+	${Q} echo '#define CALC_HAVE_GETPRID_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have or want getprid()? */' >> $@
 	${Q} ${RM} -f have_getprid.o have_getprid${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETPRID} have_getprid.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_getprid.o -o have_getprid${EXT} \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_getprid${EXT} > getprid_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETPRID} have_getprid.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_getprid.o -o have_getprid${EXT} ${S} \
+		|| ${TRUE}
+	-${Q} ./have_getprid${EXT} > getprid_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s getprid_tmp ]; then \
-	    ${CAT} getprid_tmp >> have_getprid.h; \
+	    ${CAT} getprid_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_GETPRID /* no */' >> have_getprid.h; \
+	    echo '#undef HAVE_GETPRID /* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_getprid.h
-	${Q} echo '' >> have_getprid.h
-	${Q} echo '#endif /* !CALC_HAVE_GETPRID_H */' >> have_getprid.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_GETPRID_H */' >> $@
 	${Q} ${RM} -f have_getprid${EXT} have_getprid.o getprid_tmp
-	${Q} echo 'have_getprid.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3399,32 +3558,31 @@ have_getprid.h: have_getprid.c have_unistd.h ${MAKE_FILE}
 	fi
 
 have_urandom.h: ${MAKE_FILE}
-	${Q} ${RM} -f have_urandom.h
-	${Q} echo 'forming have_urandom.h'
-	${Q} echo '/*' > have_urandom.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> \
-	    have_urandom.h
-	${Q} echo ' */' >> have_urandom.h
-	${Q} echo '' >> have_urandom.h
-	${Q} echo '' >> have_urandom.h
-	${Q} echo '#if !defined(CALC_HAVE_URANDOM_H)' >> have_urandom.h
-	${Q} echo '#define CALC_HAVE_URANDOM_H' >> have_urandom.h
-	${Q} echo '' >> have_urandom.h
-	${Q} echo '' >> have_urandom.h
-	${Q} echo '/* do we have /dev/urandom? */' >> have_urandom.h
-	-${Q} if [ X"${HAVE_URANDOM_H}" = X"YES" ]; then \
-	    echo '#define HAVE_URANDOM_H	/* yes */' >> have_urandom.h; \
-	elif [ X"${HAVE_URANDOM_H}" = X"NO" ]; then \
-	    echo '#undef HAVE_URANDOM_H  /* no */' >> have_urandom.h; \
+	${Q} ${RM} -f $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_URANDOM_H)' >> $@
+	${Q} echo '#define CALC_HAVE_URANDOM_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have /dev/urandom? */' >> $@
+	-${Q} if [ X"${HAVE_URANDOM}" = X"YES" ]; then \
+	    echo '#define $@	/* yes */' >> $@; \
+	elif [ X"${HAVE_URANDOM}" = X"NO" ]; then \
+	    echo '#undef HAVE_URANDOM  /* no */' >> $@; \
 	elif [ -r /dev/urandom ] 2>/dev/null; then \
-	    echo '#define HAVE_URANDOM_H  /* yes */' >> have_urandom.h; \
+	    echo '#define HAVE_URANDOM  /* yes */' >> $@; \
 	else \
-	    echo '#undef HAVE_URANDOM_H	 /* no */' >> have_urandom.h; \
+	    echo '#undef HAVE_URANDOM	 /* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_urandom.h
-	${Q} echo '' >> have_urandom.h
-	${Q} echo '#endif /* !CALC_HAVE_URANDOM_H */' >> have_urandom.h
-	${Q} echo 'have_urandom.h formed'
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_URANDOM_H */' >> $@
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3435,37 +3593,36 @@ have_urandom.h: ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_rusage.h: have_rusage.c ${MAKE_FILE}
-	${Q} ${RM} -f rusage_tmp have_rusage.h
-	${Q} echo 'forming have_rusage.h'
-	${Q} echo '/*' > have_rusage.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> \
-	    have_rusage.h
-	${Q} echo ' */' >> have_rusage.h
-	${Q} echo '' >> have_rusage.h
-	${Q} echo '' >> have_rusage.h
-	${Q} echo '#if !defined(CALC_HAVE_RUSAGE_H)' >> have_rusage.h
-	${Q} echo '#define CALC_HAVE_RUSAGE_H' >> have_rusage.h
-	${Q} echo '' >> have_rusage.h
-	${Q} echo '' >> have_rusage.h
-	${Q} echo '/* do we have or want getrusage()? */' >> have_rusage.h
+have_rusage.h: have_rusage.c banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f rusage_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_RUSAGE_H)' >> $@
+	${Q} echo '#define CALC_HAVE_RUSAGE_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have or want getrusage()? */' >> $@
 	${Q} ${RM} -f have_rusage.o have_rusage${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETRUSAGE} have_rusage.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_rusage.o -o have_rusage${EXT} \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_rusage${EXT} > rusage_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETRUSAGE} have_rusage.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_rusage.o -o have_rusage${EXT} ${S} \
+		|| ${TRUE}
+	-${Q} ./have_rusage${EXT} > rusage_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s rusage_tmp ]; then \
-	    ${CAT} rusage_tmp >> have_rusage.h; \
+	    ${CAT} rusage_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_GETRUSAGE /* no */' >> have_rusage.h; \
+	    echo '#undef HAVE_GETRUSAGE /* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_rusage.h
-	${Q} echo '' >> have_rusage.h
-	${Q} echo '#endif /* !CALC_HAVE_RUSAGE_H */' >> have_rusage.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_RUSAGE_H */' >> $@
 	${Q} ${RM} -f have_rusage${EXT} have_rusage.o rusage_tmp
-	${Q} echo 'have_rusage.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3476,36 +3633,36 @@ have_rusage.h: have_rusage.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_strdup.h: have_strdup.c ${MAKE_FILE}
-	${Q} ${RM} -f strdup_tmp have_strdup.h
-	${Q} echo 'forming have_strdup.h'
-	${Q} echo '/*' > have_strdup.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_strdup.h
-	${Q} echo ' */' >> have_strdup.h
-	${Q} echo '' >> have_strdup.h
-	${Q} echo '' >> have_strdup.h
-	${Q} echo '#if !defined(CALC_HAVE_STRDUP_H)' >> have_strdup.h
-	${Q} echo '#define CALC_HAVE_STRDUP_H' >> have_strdup.h
-	${Q} echo '' >> have_strdup.h
-	${Q} echo '' >> have_strdup.h
-	${Q} echo '/* do we have or want getstrdup()? */' >> have_strdup.h
+have_strdup.h: have_strdup.c banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f strdup_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_STRDUP_H)' >> $@
+	${Q} echo '#define CALC_HAVE_STRDUP_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have or want getstrdup()? */' >> $@
 	${Q} ${RM} -f have_strdup.o have_strdup${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_STRDUP} have_strdup.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_strdup.o -o have_strdup \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_strdup${EXT} > strdup_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_STRDUP} have_strdup.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_strdup.o -o have_strdup ${S} \
+		|| ${TRUE}
+	-${Q} ./have_strdup${EXT} > strdup_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s strdup_tmp ]; then \
-	    ${CAT} strdup_tmp >> have_strdup.h; \
+	    ${CAT} strdup_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_STRDUP /* no */' >> have_strdup.h; \
+	    echo '#undef HAVE_STRDUP /* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_strdup.h
-	${Q} echo '' >> have_strdup.h
-	${Q} echo '#endif /* !CALC_HAVE_STRDUP_H */' >> have_strdup.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_STRDUP_H */' >> $@
 	${Q} ${RM} -f have_strdup${EXT} have_strdup.o strdup_tmp
-	${Q} echo 'have_strdup.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3516,25 +3673,25 @@ have_strdup.h: have_strdup.c ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h \
-	have_stdlib.h
-	${Q} ${RM} -f args.h
-	${Q} echo 'forming args.h'
-	${Q} echo '/*' > args.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> args.h
-	${Q} echo ' */' >> args.h
-	${Q} echo '' >> args.h
-	${Q} echo '' >> args.h
-	${Q} echo '#if !defined(__ARGS_H__)' >> args.h
-	${Q} echo '#define __ARGS_H__' >> args.h
-	${Q} echo '' >> args.h
-	${Q} echo '' >> args.h
+args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h \
+	have_stdlib.h banned.h have_ban_pragma.h
+	${Q} ${RM} -f $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_ARGS_H)' >> $@
+	${Q} echo '#define CALC_ARGS_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
 	${Q} ${RM} -f have_stdvs.o have_stdvs${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_VSNPRINTF} have_stdvs.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_stdvs.o -o have_stdvs${EXT} \
-	    >/dev/null 2>&1; ${TRUE}
-	-${Q} if ./have_stdvs${EXT} >>args.h 2>/dev/null; then \
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_VSNPRINTF} have_stdvs.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_stdvs.o -o have_stdvs${EXT} ${S} \
+		|| ${TRUE}
+	-${Q} if ./have_stdvs${EXT} >>$@ ${E}; then \
 	    ${TOUCH} have_args.sh; \
 	else \
 	    ${TRUE}; \
@@ -3542,10 +3699,9 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h \
 	-${Q} if [ ! -f have_args.sh ] && [ X"${HAVE_VSNPRINTF}" = X ]; then \
 	    ${RM} -f have_stdvs.o have_stdvs${EXT} have_varvs.o; \
 	    ${RM} -f have_varvs${EXT}; \
-	    ${LCC} ${ICFLAGS} ${HAVE_VSNPRINTF} have_varvs.c -c \
-		    2>/dev/null; \
-	    ${LCC} ${ILDFLAGS} have_varvs.o -o have_varvs${EXT} 2>/dev/null; \
-	    if ./have_varvs${EXT} >>args.h 2>/dev/null; then \
+	    ${LCC} ${ICFLAGS} ${HAVE_VSNPRINTF} have_varvs.c -c ${S}; \
+	    ${LCC} ${ILDFLAGS} have_varvs.o -o have_varvs${EXT} ${E}; \
+	    if ./have_varvs${EXT} >>$@ 2>/dev/null; then \
 		${TOUCH} have_args.sh; \
 	    else \
 		${TRUE}; \
@@ -3562,12 +3718,12 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h \
 	    echo "the Makefile variable HAVE_VSNPRINTF."; \
 	fi
 	${Q} sh ./have_args.sh
-	${Q} echo '' >> args.h
-	${Q} echo '' >> args.h
-	${Q} echo '#endif /* !__ARGS_H__ */' >> args.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_ARGS_H */' >> $@
 	${Q} ${RM} -f have_stdvs.o have_varvs.o have_varvs${EXT} have_args.sh
 	${Q} ${RM} -f core
-	${Q} echo 'args.h formed'
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3580,24 +3736,24 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h have_string.h \
 
 calcerr.h: calcerr.tbl calcerr_h.sed calcerr_h.awk ${MAKE_FILE}
 	${Q} ${RM} -f calerr.h
-	${Q} echo 'forming calcerr.h'
-	${Q} echo '/*' > calcerr.h
-	${Q} echo ' * DO NOT EDIT' >> calcerr.h
-	${Q} echo ' *' >> calcerr.h
-	${Q} echo ' * generated by calcerr.tbl via Makefile' >> calcerr.h
-	${Q} echo ' */' >> calcerr.h
-	${Q} echo '' >> calcerr.h
-	${Q} echo '' >> calcerr.h
-	${Q} echo '#if !defined(__CALCERR_H__)' >> calcerr.h
-	${Q} echo '#define __CALCERR_H__' >> calcerr.h
-	${Q} echo '' >> calcerr.h
-	${Q} echo '' >> calcerr.h
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT' >> $@
+	${Q} echo ' *' >> $@
+	${Q} echo ' * generated by calcerr.tbl via Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_CALCERR_H)' >> $@
+	${Q} echo '#define CALC_CALCERR_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
 	${Q} ${SED} -f calcerr_h.sed < calcerr.tbl | \
-	    ${AWK} -f calcerr_h.awk >> calcerr.h
-	${Q} echo '' >> calcerr.h
-	${Q} echo '' >> calcerr.h
-	${Q} echo '#endif /* !__CALCERR_H__ */' >> calcerr.h
-	${Q} echo 'calcerr.h formed'
+	    ${AWK} -f calcerr_h.awk >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_CALCERR_H */' >> $@
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3610,16 +3766,16 @@ calcerr.h: calcerr.tbl calcerr_h.sed calcerr_h.awk ${MAKE_FILE}
 
 calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE}
 	${Q} ${RM} -f calerr.c
-	${Q} echo 'forming calcerr.c'
-	${Q} echo '/*' > calcerr.c
-	${Q} echo ' * DO NOT EDIT' >> calcerr.c
-	${Q} echo ' *' >> calcerr.c
-	${Q} echo ' * generated by calcerr.tbl via Makefile' >> calcerr.c
-	${Q} echo ' */' >> calcerr.c
-	${Q} echo '' >> calcerr.c
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT' >> $@
+	${Q} echo ' *' >> $@
+	${Q} echo ' * generated by calcerr.tbl via Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
 	${Q} ${SED} -f calcerr_c.sed < calcerr.tbl | \
-	    ${AWK} -f calcerr_c.awk >> calcerr.c
-	${Q} echo 'calcerr.c formed'
+	    ${AWK} -f calcerr_c.awk >> $@
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3630,38 +3786,162 @@ calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_unused.h: have_unused.c ${MAKE_FILE}
-	${Q} ${RM} -f unused_tmp have_unused.h
-	${Q} echo 'forming have_unused.h'
-	${Q} echo '/*' > have_unused.h
-	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> have_unused.h
-	${Q} echo ' */' >> have_unused.h
-	${Q} echo '' >> have_unused.h
-	${Q} echo '' >> have_unused.h
-	${Q} echo '#if !defined(CALC_HAVE_UNUSED_H)' >> have_unused.h
-	${Q} echo '#define CALC_HAVE_UNUSED_H' >> have_unused.h
-	${Q} echo '' >> have_unused.h
-	${Q} echo '' >> have_unused.h
-	${Q} echo '/* do we have/want the unused attribute? */' >> have_unused.h
+have_unused.h: have_unused.c have_stdlib.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f unused_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_UNUSED_H)' >> $@
+	${Q} echo '#define CALC_HAVE_UNUSED_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have/want the unused attribute? */' >> $@
 	${Q} ${RM} -f have_unused.o have_unused${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_UNUSED} have_unused.c -c \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_unused.o -o have_unused \
-		>/dev/null 2>&1; ${TRUE}
-	-${Q} ${SHELL} -c "./have_unused${EXT} > unused_tmp 2>/dev/null" \
-	    >/dev/null 2>&1; ${TRUE}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_UNUSED} have_unused.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_unused.o -o have_unused ${S} \
+		|| ${TRUE}
+	-${Q} ./have_unused${EXT} > unused_tmp ${E} \
+		|| ${TRUE}
 	-${Q} if [ -s unused_tmp ]; then \
-	    ${CAT} unused_tmp >> have_unused.h; \
+	    ${CAT} unused_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_UNUSED /* no */' >> have_unused.h; \
-	    echo '#undef UNUSED' >> have_unused.h; \
-	    echo '#define UNUSED /* no */' >> have_unused.h; \
+	    echo '#undef HAVE_UNUSED /* no */' >> $@; \
+	    echo '#undef UNUSED' >> $@; \
+	    echo '#define UNUSED /* no */' >> $@; \
 	fi
-	${Q} echo '' >> have_unused.h
-	${Q} echo '' >> have_unused.h
-	${Q} echo '#endif /* !CALC_HAVE_UNUSED_H */' >> have_unused.h
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_UNUSED_H */' >> $@
 	${Q} ${RM} -f have_unused${EXT} have_unused.o unused_tmp
-	${Q} echo 'have_unused.h formed'
+	${H} echo '$@ formed'
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= start of $@ =-=-='; \
+	    ${CAT} $@; \
+	    echo '=-=-= end of $@ =-=-='; \
+	    echo ''; \
+	else \
+	    ${TRUE}; \
+	fi
+
+have_ban_pragma.h: have_ban_pragma.c banned.h ${MAKE_FILE}
+	${Q} ${RM} -f unused_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_BAN_PRAGMA_H)' >> $@
+	${Q} echo '#define CALC_HAVE_BAN_PRAGMA_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have/want #pragma GCC poison func_name? */' >> $@
+	${Q} ${RM} -f have_ban_pragma.o have_ban_pragma${EXT}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_PRAGMA_GCC_POSION} \
+		have_ban_pragma.c -c ${S} \
+			|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_ban_pragma.o -o have_ban_pragma ${S} \
+		|| ${TRUE}
+	-${Q} ./have_ban_pragma${EXT} > unused_tmp ${E} \
+		|| ${TRUE}
+	-${Q} if [ -s unused_tmp ]; then \
+	    ${CAT} unused_tmp >> $@; \
+	else \
+	    echo '#undef HAVE_PRAGMA_GCC_POSION /* no */' \
+	         >> $@; \
+	fi
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_BAN_PRAGMA_H */' >> $@
+	${Q} ${RM} -f have_ban_pragma${EXT} have_ban_pragma.o unused_tmp
+	${H} echo '$@ formed'
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= start of $@ =-=-='; \
+	    ${CAT} $@; \
+	    echo '=-=-= end of $@ =-=-='; \
+	    echo ''; \
+	else \
+	    ${TRUE}; \
+	fi
+
+have_strlcpy.h: have_strlcpy.c banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f unused_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_STRLCPY_H)' >> $@
+	${Q} echo '#define CALC_HAVE_STRLCPY_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have/want the strlcpy() function? */' >> $@
+	${Q} ${RM} -f have_strlcpy.o have_strlcpy${EXT}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_NO_STRLCPY} have_strlcpy.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_strlcpy.o -o have_strlcpy ${S} \
+		|| ${TRUE}
+	-${Q} ./have_strlcpy${EXT} > unused_tmp ${E} \
+		|| ${TRUE}
+	-${Q} if [ -s unused_tmp ]; then \
+	    ${CAT} unused_tmp >> $@; \
+	else \
+	    echo '#undef HAVE_STRLCPY /* no */' \
+	         >> $@; \
+	fi
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_STRLCPY_H */' >> $@
+	${Q} ${RM} -f have_strlcpy${EXT} have_strlcpy.o unused_tmp
+	${H} echo '$@ formed'
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= start of $@ =-=-='; \
+	    ${CAT} $@; \
+	    echo '=-=-= end of $@ =-=-='; \
+	    echo ''; \
+	else \
+	    ${TRUE}; \
+	fi
+
+have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h ${MAKE_FILE}
+	${Q} ${RM} -f unused_tmp $@
+	${H} echo 'forming $@'
+	${Q} echo '/*' > $@
+	${Q} echo ' * DO NOT EDIT -- generated by the Makefile' >> $@
+	${Q} echo ' */' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_STRLCAT_H)' >> $@
+	${Q} echo '#define CALC_HAVE_STRLCAT_H' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '/* do we have/want the strlcat() function? */' >> $@
+	${Q} ${RM} -f have_strlcat.o have_strlcat${EXT}
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_NO_STRLCAT} have_strlcat.c -c ${S} \
+		|| ${TRUE}
+	-${Q} ${LCC} ${ILDFLAGS} have_strlcat.o -o have_strlcat ${S} \
+		|| ${TRUE}
+	-${Q} ./have_strlcat${EXT} > unused_tmp ${E} \
+		|| ${TRUE}
+	-${Q} if [ -s unused_tmp ]; then \
+	    ${CAT} unused_tmp >> $@; \
+	else \
+	    echo '#undef HAVE_STRLCAT /* no */' \
+	         >> $@; \
+	fi
+	${Q} echo '' >> $@
+	${Q} echo '' >> $@
+	${Q} echo '#endif /* !CALC_HAVE_STRLCAT_H */' >> $@
+	${Q} ${RM} -f have_strlcat${EXT} have_strlcat.o unused_tmp
+	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
 	    echo '=-=-= start of $@ =-=-='; \
@@ -3682,7 +3962,7 @@ have_unused.h: have_unused.c ${MAKE_FILE}
 ###
 
 win32_hsrc: win32.mkdef ${MAKE_FILE}
-	${Q} echo 'forming win32 directory'
+	${H} echo 'forming win32 directory'
 	${Q} ${RM} -rf win32
 	${Q} ${MKDIR} -p win32
 	${Q} ${CP} ${UTIL_C_SRC} win32
@@ -3697,27 +3977,7 @@ win32_hsrc: win32.mkdef ${MAKE_FILE}
 	 ${RM} -f ${UTIL_PROGS}; \
 	 ${RM} -f ${UTIL_FILES}; \
 	 ${RM} -f ${MAKE_FILE})
-	${Q} echo 'win32 directory formed'
-
-###
-#
-# These rules are used in the process of building the BUILD_H_SRC.
-#
-###
-
-endian.o: endian.c have_unistd.h
-	${LCC} ${ICFLAGS} ${CALC_BYTE_ORDER} endian.c -c
-
-endian${EXT}: endian.o
-	${RM} -f $@
-	${LCC} ${ICFLAGS} endian.o -o $@
-
-longbits.o: longbits.c have_unistd.h
-	${LCC} ${ICFLAGS} longbits.c -c
-
-longbits${EXT}: longbits.o
-	${RM} -f $@
-	${LCC} ${ICFLAGS} longbits.o -o $@
+	${H} echo 'win32 directory formed'
 
 ###
 #
@@ -3841,7 +4101,7 @@ sample_many-static${EXT}: sample_many.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
 #
 ###
 
-depend: custom/Makefile hsrc
+depend: hsrc custom/Makefile
 	${Q} if [ -f ${MAKE_FILE}.bak ]; then \
 		echo "${MAKE_FILE}.bak exists, remove or move it"; \
 		exit 1; \
@@ -3873,7 +4133,7 @@ depend: custom/Makefile hsrc
 	    fi; \
 	done
 	${Q} ${RM} -f skel/makedep.out
-	${Q} echo skel formed
+	${Q} echo top level skel formed
 	${Q} echo forming dependency list
 	${Q} :> skel/makedep.out
 	${Q} cd skel; ${MAKEDEPEND} \
@@ -3893,13 +4153,14 @@ depend: custom/Makefile hsrc
 	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' \
 		    ${MAKE_FILE}.bak > ${MAKE_FILE}
 	${Q} ${GREP} -v '^#' skel/makedep.out >> ${MAKE_FILE}
+	${Q} echo removing top level skel
 	${Q} ${RM} -rf skel
 	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
 	    echo 'top level ${MAKE_FILE} was already up to date'; \
 	    echo 'restoring original ${MAKE_FILE}'; \
 	    ${MV} -f ${MAKE_FILE}.bak ${MAKE_FILE}; \
 	else \
-	    echo 'previous ${MAKE_FILE} is now ${MAKE_FILE}.bak'; \
+	    echo 'old ${MAKE_FILE} is now ${MAKE_FILE}.bak'; \
 	    echo 'new top level ${MAKE_FILE} formed'; \
 	    echo 'try: diff -u ${MAKE_FILE}.bak ${MAKE_FILE}'; \
 	fi
@@ -3937,9 +4198,11 @@ calc_version: ver_calc${EXT}
 version:
 	@echo ${VERSION}
 
-ver_calc${EXT}: version.c have_unused.h
+ver_calc${EXT}: version.c strl.c have_string.h have_const.h have_newstr.h \
+	have_strlcpy.h have_memmv.h have_strlcat.h endian_calc.h longbits.h \
+	have_unused.h
 	${RM} -f $@
-	${LCC} ${ICFLAGS} -DCALC_VER ${ILDFLAGS} version.c -o $@
+	${LCC} ${ICFLAGS} -DCALC_VER ${ILDFLAGS} version.c strl.c -o $@
 
 ###
 #
@@ -3950,7 +4213,7 @@ ver_calc${EXT}: version.c have_unused.h
 #
 ###
 
-distlist: custom/Makefile ${DISTLIST}
+distlist: ${DISTLIST} custom/Makefile
 	${Q} (for i in ${DISTLIST} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo $$i; \
@@ -4139,6 +4402,7 @@ env:
 	@echo 'CATEXT=${CATEXT}'; echo ''
 	@echo 'CATMODE=${CATMODE}'; echo ''
 	@echo 'CC=${CC}'; echo ''
+	@echo 'CCBAN=${CCBAN}'; echo ''
 	@echo 'CCMISC=${CCMISC}'; echo ''
 	@echo 'CCOPT=${CCOPT}'; echo ''
 	@echo 'CCWARN=${CCWARN}'; echo ''
@@ -4166,11 +4430,13 @@ env:
 	@echo 'DEV_BITS=${DEV_BITS}'; echo ''
 	@echo 'DIFF=${DIFF}'; echo ''
 	@echo 'DISTLIST=${DISTLIST}'; echo ''
+	@echo 'E=${E}'; echo ''
 	@echo 'EXT=${EXT}'; echo ''
 	@echo 'FMT=${FMT}'; echo ''
 	@echo 'FPOS_BITS=${FPOS_BITS}'; echo ''
 	@echo 'FPOS_POS_BITS=${FPOS_POS_BITS}'; echo ''
 	@echo 'GREP=${GREP}'; echo ''
+	@echo 'H=${H}'; echo ''
 	@echo 'HAVE_CONST=${HAVE_CONST}'; echo ''
 	@echo 'HAVE_FPOS=${HAVE_FPOS}'; echo ''
 	@echo 'HAVE_FPOS_POS=${HAVE_FPOS_POS}'; echo ''
@@ -4183,9 +4449,12 @@ env:
 	@echo 'HAVE_NEWSTR=${HAVE_NEWSTR}'; echo ''
 	@echo 'HAVE_OFFSCL=${HAVE_OFFSCL}'; echo ''
 	@echo 'HAVE_POSSCL=${HAVE_POSSCL}'; echo ''
+	@echo 'HAVE_PRAGMA_GCC_POSION=${HAVE_PRAGMA_GCC_POSION}'; echo ''
 	@echo 'HAVE_STDLIB_H=${HAVE_STDLIB_H}'; echo ''
 	@echo 'HAVE_STRDUP=${HAVE_STRDUP}'; echo ''
 	@echo 'HAVE_STRING_H=${HAVE_STRING_H}'; echo ''
+	@echo 'HAVE_STRLCAT=${HAVE_STRLCAT}'; echo ''
+	@echo 'HAVE_STRLCPY=${HAVE_STRLCPY}'; echo ''
 	@echo 'HAVE_SYS_TIMES_H=${HAVE_SYS_TIMES_H}'; echo ''
 	@echo 'HAVE_SYS_TIME_H=${HAVE_SYS_TIME_H}'; echo ''
 	@echo 'HAVE_TIMES_H=${HAVE_TIMES_H}'; echo ''
@@ -4207,7 +4476,6 @@ env:
 	@echo 'LANG=${LANG}'; echo ''
 	@echo 'LCC=${LCC}'; echo ''
 	@echo 'LDCONFIG=${LDCONFIG}'; echo ''
-	@echo 'LDFLAGS=${LDFLAGS}'; echo ''
 	@echo 'LDFLAGS=${LDFLAGS}'; echo ''
 	@echo 'LD_DEBUG=${LD_DEBUG}'; echo ''
 	@echo 'LD_SHARE=${LD_SHARE}'; echo ''
@@ -4243,6 +4511,7 @@ env:
 	@echo 'READLINE_LIB=${READLINE_LIB}'; echo ''
 	@echo 'RM=${RM}'; echo ''
 	@echo 'RMDIR=${RMDIR}'; echo ''
+	@echo 'S=${S}'; echo ''
 	@echo 'SAMPLE_C_SRC=${SAMPLE_C_SRC}'; echo ''
 	@echo 'SAMPLE_H_SRC=${SAMPLE_H_SRC}'; echo ''
 	@echo 'SAMPLE_OBJ=${SAMPLE_OBJ}'; echo ''
@@ -4272,6 +4541,9 @@ env:
 	@echo 'UTIL_TMP=${UTIL_TMP}'; echo ''
 	@echo 'V=${V}'; echo ''
 	@echo 'VERSION=${VERSION}'; echo ''
+	@echo 'WNO_ERROR_LONG_LONG=${WNO_ERROR_LONG_LONG}; echo ''
+	@echo 'WNO_IMPLICT=${WNO_IMPLICT}; echo ''
+	@echo 'WNO_LONG_LONG=${WNO_LONG_LONG}; echo ''
 	@echo 'XARGS=${XARGS}'; echo ''
 	@echo 'target=${target}'; echo ''
 	@echo '=-=-=-=-= ${MAKE_FILE} end of major make variable dump =-=-=-=-='
@@ -4351,12 +4623,12 @@ gdb:
 
 rpm: clobber rpm-preclean rpm.mk calc.spec.in
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
-	${MAKE} -f rpm.mk all V=${V} RPM_TOP="${RPM_TOP}"
+	${MAKE} -f rpm.mk all V=${V} RPM_TOP="${RPM_TOP}" Q= S= E=
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 rpm-preclean:
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
-	${MAKE} -f rpm.mk $@ V=${V} RPM_TOP="${RPM_TOP}"
+	${MAKE} -f rpm.mk $@ V=${V} RPM_TOP="${RPM_TOP}" Q= S= E=
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # rpm static rules
@@ -4398,8 +4670,8 @@ rpm-clean-static:
 
 # Form the installed file list
 #
-inst_files: ${MAKE_FILE} help/Makefile cal/Makefile custom/Makefile \
-	    cscript/Makefile ver_calc${EXT}
+inst_files: ${MAKE_FILE} help/Makefile cal/Makefile \
+	    cscript/Makefile ver_calc${EXT} custom/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${Q} ${RM} -f inst_files
 	${Q} echo ${BINDIR}/calc${EXT} > inst_files
@@ -4491,7 +4763,7 @@ clean: custom/Makefile
 	${RM} -f win32dll.h have_malloc.h math_error.h string.h string.c
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-clobber: custom/Makefile clean
+clobber: clean custom/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${RM} -f ${SAMPLE_TARGETS}
 	${RM} -f ${SAMPLE_STATIC_TARGETS}
@@ -4507,7 +4779,8 @@ clobber: custom/Makefile clean
 	${RM} -f libcustcalc.a
 	${RM} -f calc.1 calc.usage
 	${RM} -f calc.pixie calc.rf calc.Counts calc.cord
-	${RM} -rf gen_h skel Makefile.bak tmp.patch
+	${RM} -f gen_h Makefile.bak tmp.patch
+	${RM} -rf skel
 	${RM} -f calc.spec inst_files rpm.mk.patch tmp
 	${RM} -f libcalc${LIB_EXT_VERSION}
 	${RM} -f libcalc*
@@ -4515,6 +4788,7 @@ clobber: custom/Makefile clean
 	${RM} -f libcustcalc*
 	${RM} -f calc-static${EXT}
 	${RM} -f ${CALC_STATIC_LIBS}
+	${RM} -f a.out
 	${RM} -f all
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	-cd help; ${RM} -f all; ${MAKE} -f Makefile ${HELP_PASSDOWN} $@
@@ -4548,7 +4822,7 @@ clobber: custom/Makefile clean
 #
 # NOTE: Keep the uninstall rule in the reverse order of the install rule
 #
-install: custom/Makefile ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all
+install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	-${Q} if [ ! -z "${T}" ]; then \
 	    if [ ! -d ${T} ]; then \
@@ -5080,6 +5354,7 @@ calc-unsymlink:
 
 addop.o: addop.c
 addop.o: alloc.h
+addop.o: banned.h
 addop.o: block.h
 addop.o: byteswap.h
 addop.o: calc.h
@@ -5090,6 +5365,7 @@ addop.o: decl.h
 addop.o: endian_calc.h
 addop.o: func.h
 addop.o: hash.h
+addop.o: have_ban_pragma.h
 addop.o: have_const.h
 addop.o: have_memmv.h
 addop.o: have_newstr.h
@@ -5107,10 +5383,13 @@ addop.o: token.h
 addop.o: value.h
 addop.o: zmath.h
 align32.o: align32.c
+align32.o: banned.h
+align32.o: have_ban_pragma.h
 align32.o: have_unistd.h
 align32.o: longbits.h
 assocfunc.o: alloc.h
 assocfunc.o: assocfunc.c
+assocfunc.o: banned.h
 assocfunc.o: block.h
 assocfunc.o: byteswap.h
 assocfunc.o: calcerr.h
@@ -5119,6 +5398,7 @@ assocfunc.o: config.h
 assocfunc.o: decl.h
 assocfunc.o: endian_calc.h
 assocfunc.o: hash.h
+assocfunc.o: have_ban_pragma.h
 assocfunc.o: have_const.h
 assocfunc.o: have_memmv.h
 assocfunc.o: have_newstr.h
@@ -5132,6 +5412,7 @@ assocfunc.o: str.h
 assocfunc.o: value.h
 assocfunc.o: zmath.h
 blkcpy.o: alloc.h
+blkcpy.o: banned.h
 blkcpy.o: blkcpy.c
 blkcpy.o: blkcpy.h
 blkcpy.o: block.h
@@ -5144,6 +5425,7 @@ blkcpy.o: decl.h
 blkcpy.o: endian_calc.h
 blkcpy.o: file.h
 blkcpy.o: hash.h
+blkcpy.o: have_ban_pragma.h
 blkcpy.o: have_const.h
 blkcpy.o: have_fpos.h
 blkcpy.o: have_memmv.h
@@ -5158,6 +5440,7 @@ blkcpy.o: str.h
 blkcpy.o: value.h
 blkcpy.o: zmath.h
 block.o: alloc.h
+block.o: banned.h
 block.o: block.c
 block.o: block.h
 block.o: byteswap.h
@@ -5167,6 +5450,7 @@ block.o: config.h
 block.o: decl.h
 block.o: endian_calc.h
 block.o: hash.h
+block.o: have_ban_pragma.h
 block.o: have_const.h
 block.o: have_memmv.h
 block.o: have_newstr.h
@@ -5180,11 +5464,13 @@ block.o: str.h
 block.o: value.h
 block.o: zmath.h
 byteswap.o: alloc.h
+byteswap.o: banned.h
 byteswap.o: byteswap.c
 byteswap.o: byteswap.h
 byteswap.o: cmath.h
 byteswap.o: decl.h
 byteswap.o: endian_calc.h
+byteswap.o: have_ban_pragma.h
 byteswap.o: have_const.h
 byteswap.o: have_memmv.h
 byteswap.o: have_newstr.h
@@ -5195,6 +5481,7 @@ byteswap.o: qmath.h
 byteswap.o: zmath.h
 calc.o: alloc.h
 calc.o: args.h
+calc.o: banned.h
 calc.o: block.h
 calc.o: byteswap.h
 calc.o: calc.c
@@ -5208,12 +5495,15 @@ calc.o: decl.h
 calc.o: endian_calc.h
 calc.o: func.h
 calc.o: hash.h
+calc.o: have_ban_pragma.h
 calc.o: have_const.h
 calc.o: have_memmv.h
 calc.o: have_newstr.h
 calc.o: have_stdlib.h
 calc.o: have_strdup.h
 calc.o: have_string.h
+calc.o: have_strlcat.h
+calc.o: have_strlcpy.h
 calc.o: have_uid_t.h
 calc.o: have_unistd.h
 calc.o: have_unused.h
@@ -5226,14 +5516,18 @@ calc.o: opcodes.h
 calc.o: qmath.h
 calc.o: sha1.h
 calc.o: str.h
+calc.o: strl.h
 calc.o: symbol.h
 calc.o: token.h
 calc.o: value.h
 calc.o: zmath.h
+calcerr.o: banned.h
 calcerr.o: calcerr.c
 calcerr.o: calcerr.h
+calcerr.o: have_ban_pragma.h
 calcerr.o: have_const.h
 codegen.o: alloc.h
+codegen.o: banned.h
 codegen.o: block.h
 codegen.o: byteswap.h
 codegen.o: calc.h
@@ -5246,11 +5540,14 @@ codegen.o: decl.h
 codegen.o: endian_calc.h
 codegen.o: func.h
 codegen.o: hash.h
+codegen.o: have_ban_pragma.h
 codegen.o: have_const.h
 codegen.o: have_memmv.h
 codegen.o: have_newstr.h
 codegen.o: have_stdlib.h
 codegen.o: have_string.h
+codegen.o: have_strlcat.h
+codegen.o: have_strlcpy.h
 codegen.o: have_unistd.h
 codegen.o: label.h
 codegen.o: lib_calc.h
@@ -5260,17 +5557,20 @@ codegen.o: opcodes.h
 codegen.o: qmath.h
 codegen.o: sha1.h
 codegen.o: str.h
+codegen.o: strl.h
 codegen.o: symbol.h
 codegen.o: token.h
 codegen.o: value.h
 codegen.o: zmath.h
 comfunc.o: alloc.h
+comfunc.o: banned.h
 comfunc.o: byteswap.h
 comfunc.o: cmath.h
 comfunc.o: comfunc.c
 comfunc.o: config.h
 comfunc.o: decl.h
 comfunc.o: endian_calc.h
+comfunc.o: have_ban_pragma.h
 comfunc.o: have_const.h
 comfunc.o: have_memmv.h
 comfunc.o: have_newstr.h
@@ -5281,11 +5581,13 @@ comfunc.o: nametype.h
 comfunc.o: qmath.h
 comfunc.o: zmath.h
 commath.o: alloc.h
+commath.o: banned.h
 commath.o: byteswap.h
 commath.o: cmath.h
 commath.o: commath.c
 commath.o: decl.h
 commath.o: endian_calc.h
+commath.o: have_ban_pragma.h
 commath.o: have_const.h
 commath.o: have_memmv.h
 commath.o: have_newstr.h
@@ -5295,6 +5597,7 @@ commath.o: longbits.h
 commath.o: qmath.h
 commath.o: zmath.h
 config.o: alloc.h
+config.o: banned.h
 config.o: block.h
 config.o: byteswap.h
 config.o: calc.h
@@ -5306,23 +5609,28 @@ config.o: custom.h
 config.o: decl.h
 config.o: endian_calc.h
 config.o: hash.h
+config.o: have_ban_pragma.h
 config.o: have_const.h
 config.o: have_memmv.h
 config.o: have_newstr.h
 config.o: have_stdlib.h
 config.o: have_strdup.h
 config.o: have_string.h
+config.o: have_strlcat.h
+config.o: have_strlcpy.h
 config.o: have_times.h
 config.o: longbits.h
 config.o: nametype.h
 config.o: qmath.h
 config.o: sha1.h
 config.o: str.h
+config.o: strl.h
 config.o: token.h
 config.o: value.h
 config.o: zmath.h
 config.o: zrand.h
 const.o: alloc.h
+const.o: banned.h
 const.o: block.h
 const.o: byteswap.h
 const.o: calc.h
@@ -5333,6 +5641,7 @@ const.o: const.c
 const.o: decl.h
 const.o: endian_calc.h
 const.o: hash.h
+const.o: have_ban_pragma.h
 const.o: have_const.h
 const.o: have_memmv.h
 const.o: have_newstr.h
@@ -5346,6 +5655,7 @@ const.o: str.h
 const.o: value.h
 const.o: zmath.h
 custom.o: alloc.h
+custom.o: banned.h
 custom.o: block.h
 custom.o: byteswap.h
 custom.o: calc.h
@@ -5357,6 +5667,7 @@ custom.o: custom.h
 custom.o: decl.h
 custom.o: endian_calc.h
 custom.o: hash.h
+custom.o: have_ban_pragma.h
 custom.o: have_const.h
 custom.o: have_memmv.h
 custom.o: have_newstr.h
@@ -5369,10 +5680,13 @@ custom.o: sha1.h
 custom.o: str.h
 custom.o: value.h
 custom.o: zmath.h
+endian.o: banned.h
 endian.o: endian.c
+endian.o: have_ban_pragma.h
 endian.o: have_stdlib.h
 endian.o: have_unistd.h
 file.o: alloc.h
+file.o: banned.h
 file.o: block.h
 file.o: byteswap.h
 file.o: calc.h
@@ -5385,6 +5699,7 @@ file.o: file.c
 file.o: file.h
 file.o: fposval.h
 file.o: hash.h
+file.o: have_ban_pragma.h
 file.o: have_const.h
 file.o: have_fpos.h
 file.o: have_fpos_pos.h
@@ -5392,21 +5707,31 @@ file.o: have_memmv.h
 file.o: have_newstr.h
 file.o: have_stdlib.h
 file.o: have_string.h
+file.o: have_strlcat.h
+file.o: have_strlcpy.h
 file.o: have_unistd.h
 file.o: longbits.h
 file.o: nametype.h
 file.o: qmath.h
 file.o: sha1.h
 file.o: str.h
+file.o: strl.h
 file.o: value.h
 file.o: zmath.h
+fposval.o: alloc.h
+fposval.o: banned.h
 fposval.o: endian_calc.h
 fposval.o: fposval.c
+fposval.o: have_ban_pragma.h
 fposval.o: have_fpos.h
 fposval.o: have_fpos_pos.h
+fposval.o: have_memmv.h
+fposval.o: have_newstr.h
 fposval.o: have_offscl.h
 fposval.o: have_posscl.h
+fposval.o: have_string.h
 func.o: alloc.h
+func.o: banned.h
 func.o: block.h
 func.o: byteswap.h
 func.o: calc.h
@@ -5420,6 +5745,7 @@ func.o: file.h
 func.o: func.c
 func.o: func.h
 func.o: hash.h
+func.o: have_ban_pragma.h
 func.o: have_const.h
 func.o: have_fpos.h
 func.o: have_memmv.h
@@ -5428,6 +5754,8 @@ func.o: have_rusage.h
 func.o: have_stdlib.h
 func.o: have_strdup.h
 func.o: have_string.h
+func.o: have_strlcat.h
+func.o: have_strlcpy.h
 func.o: have_times.h
 func.o: have_unistd.h
 func.o: have_unused.h
@@ -5439,6 +5767,7 @@ func.o: prime.h
 func.o: qmath.h
 func.o: sha1.h
 func.o: str.h
+func.o: strl.h
 func.o: symbol.h
 func.o: token.h
 func.o: value.h
@@ -5446,6 +5775,7 @@ func.o: zmath.h
 func.o: zrand.h
 func.o: zrandom.h
 hash.o: alloc.h
+hash.o: banned.h
 hash.o: block.h
 hash.o: byteswap.h
 hash.o: calc.h
@@ -5456,6 +5786,7 @@ hash.o: decl.h
 hash.o: endian_calc.h
 hash.o: hash.c
 hash.o: hash.h
+hash.o: have_ban_pragma.h
 hash.o: have_const.h
 hash.o: have_memmv.h
 hash.o: have_newstr.h
@@ -5470,39 +5801,90 @@ hash.o: value.h
 hash.o: zmath.h
 hash.o: zrand.h
 hash.o: zrandom.h
+have_ban_pragma.o: banned.h
+have_ban_pragma.o: have_ban_pragma.c
+have_ban_pragma.o: have_ban_pragma.h
+have_const.o: banned.h
+have_const.o: have_ban_pragma.h
 have_const.o: have_const.c
+have_fpos.o: banned.h
+have_fpos.o: have_ban_pragma.h
 have_fpos.o: have_fpos.c
+have_fpos_pos.o: banned.h
+have_fpos_pos.o: have_ban_pragma.h
 have_fpos_pos.o: have_fpos.h
 have_fpos_pos.o: have_fpos_pos.c
 have_fpos_pos.o: have_posscl.h
+have_getpgid.o: banned.h
+have_getpgid.o: have_ban_pragma.h
 have_getpgid.o: have_getpgid.c
 have_getpgid.o: have_unistd.h
+have_getprid.o: banned.h
+have_getprid.o: have_ban_pragma.h
 have_getprid.o: have_getprid.c
 have_getprid.o: have_unistd.h
+have_getsid.o: banned.h
+have_getsid.o: have_ban_pragma.h
 have_getsid.o: have_getsid.c
 have_getsid.o: have_unistd.h
+have_gettime.o: banned.h
+have_gettime.o: have_ban_pragma.h
 have_gettime.o: have_gettime.c
+have_memmv.o: banned.h
+have_memmv.o: have_ban_pragma.h
 have_memmv.o: have_memmv.c
+have_memmv.o: have_string.h
+have_newstr.o: banned.h
+have_newstr.o: have_ban_pragma.h
 have_newstr.o: have_newstr.c
+have_newstr.o: have_string.h
+have_offscl.o: banned.h
+have_offscl.o: have_ban_pragma.h
 have_offscl.o: have_offscl.c
 have_offscl.o: have_unistd.h
+have_posscl.o: banned.h
+have_posscl.o: have_ban_pragma.h
 have_posscl.o: have_fpos.h
 have_posscl.o: have_posscl.c
 have_posscl.o: have_unistd.h
+have_rusage.o: banned.h
+have_rusage.o: have_ban_pragma.h
 have_rusage.o: have_rusage.c
+have_stdvs.o: banned.h
+have_stdvs.o: have_ban_pragma.h
 have_stdvs.o: have_stdlib.h
 have_stdvs.o: have_stdvs.c
 have_stdvs.o: have_string.h
 have_stdvs.o: have_unistd.h
+have_strdup.o: banned.h
+have_strdup.o: have_ban_pragma.h
 have_strdup.o: have_strdup.c
+have_strdup.o: have_string.h
+have_strlcat.o: banned.h
+have_strlcat.o: have_ban_pragma.h
+have_strlcat.o: have_string.h
+have_strlcat.o: have_strlcat.c
+have_strlcpy.o: banned.h
+have_strlcpy.o: have_ban_pragma.h
+have_strlcpy.o: have_string.h
+have_strlcpy.o: have_strlcpy.c
+have_uid_t.o: banned.h
+have_uid_t.o: have_ban_pragma.h
 have_uid_t.o: have_uid_t.c
 have_uid_t.o: have_unistd.h
+have_unused.o: banned.h
+have_unused.o: have_ban_pragma.h
 have_unused.o: have_unused.c
+have_ustat.o: banned.h
+have_ustat.o: have_ban_pragma.h
 have_ustat.o: have_ustat.c
+have_varvs.o: banned.h
+have_varvs.o: have_ban_pragma.h
 have_varvs.o: have_string.h
 have_varvs.o: have_unistd.h
 have_varvs.o: have_varvs.c
 help.o: alloc.h
+help.o: banned.h
 help.o: block.h
 help.o: byteswap.h
 help.o: calc.h
@@ -5513,6 +5895,7 @@ help.o: config.h
 help.o: decl.h
 help.o: endian_calc.h
 help.o: hash.h
+help.o: have_ban_pragma.h
 help.o: have_const.h
 help.o: have_memmv.h
 help.o: have_newstr.h
@@ -5529,6 +5912,7 @@ help.o: str.h
 help.o: value.h
 help.o: zmath.h
 hist.o: alloc.h
+hist.o: banned.h
 hist.o: block.h
 hist.o: byteswap.h
 hist.o: calc.h
@@ -5538,12 +5922,15 @@ hist.o: config.h
 hist.o: decl.h
 hist.o: endian_calc.h
 hist.o: hash.h
+hist.o: have_ban_pragma.h
 hist.o: have_const.h
 hist.o: have_memmv.h
 hist.o: have_newstr.h
 hist.o: have_stdlib.h
 hist.o: have_strdup.h
 hist.o: have_string.h
+hist.o: have_strlcat.h
+hist.o: have_strlcpy.h
 hist.o: have_unistd.h
 hist.o: have_unused.h
 hist.o: hist.c
@@ -5554,9 +5941,11 @@ hist.o: nametype.h
 hist.o: qmath.h
 hist.o: sha1.h
 hist.o: str.h
+hist.o: strl.h
 hist.o: value.h
 hist.o: zmath.h
 input.o: alloc.h
+input.o: banned.h
 input.o: block.h
 input.o: byteswap.h
 input.o: calc.h
@@ -5567,11 +5956,14 @@ input.o: config.h
 input.o: decl.h
 input.o: endian_calc.h
 input.o: hash.h
+input.o: have_ban_pragma.h
 input.o: have_const.h
 input.o: have_memmv.h
 input.o: have_newstr.h
 input.o: have_stdlib.h
 input.o: have_string.h
+input.o: have_strlcat.h
+input.o: have_strlcpy.h
 input.o: have_unistd.h
 input.o: hist.h
 input.o: input.c
@@ -5580,13 +5972,17 @@ input.o: nametype.h
 input.o: qmath.h
 input.o: sha1.h
 input.o: str.h
+input.o: strl.h
 input.o: value.h
 input.o: zmath.h
+jump.o: banned.h
 jump.o: decl.h
+jump.o: have_ban_pragma.h
 jump.o: have_const.h
 jump.o: jump.c
 jump.o: jump.h
 label.o: alloc.h
+label.o: banned.h
 label.o: block.h
 label.o: byteswap.h
 label.o: calc.h
@@ -5597,6 +5993,7 @@ label.o: decl.h
 label.o: endian_calc.h
 label.o: func.h
 label.o: hash.h
+label.o: have_ban_pragma.h
 label.o: have_const.h
 label.o: have_memmv.h
 label.o: have_newstr.h
@@ -5614,6 +6011,7 @@ label.o: token.h
 label.o: value.h
 label.o: zmath.h
 lib_calc.o: alloc.h
+lib_calc.o: banned.h
 lib_calc.o: block.h
 lib_calc.o: byteswap.h
 lib_calc.o: calc.h
@@ -5626,12 +6024,15 @@ lib_calc.o: decl.h
 lib_calc.o: endian_calc.h
 lib_calc.o: func.h
 lib_calc.o: hash.h
+lib_calc.o: have_ban_pragma.h
 lib_calc.o: have_const.h
 lib_calc.o: have_memmv.h
 lib_calc.o: have_newstr.h
 lib_calc.o: have_stdlib.h
 lib_calc.o: have_strdup.h
 lib_calc.o: have_string.h
+lib_calc.o: have_strlcat.h
+lib_calc.o: have_strlcpy.h
 lib_calc.o: have_unistd.h
 lib_calc.o: label.h
 lib_calc.o: lib_calc.c
@@ -5641,6 +6042,7 @@ lib_calc.o: nametype.h
 lib_calc.o: qmath.h
 lib_calc.o: sha1.h
 lib_calc.o: str.h
+lib_calc.o: strl.h
 lib_calc.o: symbol.h
 lib_calc.o: terminal.h
 lib_calc.o: token.h
@@ -5648,9 +6050,11 @@ lib_calc.o: value.h
 lib_calc.o: zmath.h
 lib_calc.o: zrandom.h
 lib_util.o: alloc.h
+lib_util.o: banned.h
 lib_util.o: byteswap.h
 lib_util.o: decl.h
 lib_util.o: endian_calc.h
+lib_util.o: have_ban_pragma.h
 lib_util.o: have_const.h
 lib_util.o: have_memmv.h
 lib_util.o: have_newstr.h
@@ -5661,6 +6065,7 @@ lib_util.o: lib_util.h
 lib_util.o: longbits.h
 lib_util.o: zmath.h
 listfunc.o: alloc.h
+listfunc.o: banned.h
 listfunc.o: block.h
 listfunc.o: byteswap.h
 listfunc.o: calcerr.h
@@ -5669,6 +6074,7 @@ listfunc.o: config.h
 listfunc.o: decl.h
 listfunc.o: endian_calc.h
 listfunc.o: hash.h
+listfunc.o: have_ban_pragma.h
 listfunc.o: have_const.h
 listfunc.o: have_memmv.h
 listfunc.o: have_newstr.h
@@ -5683,10 +6089,13 @@ listfunc.o: str.h
 listfunc.o: value.h
 listfunc.o: zmath.h
 listfunc.o: zrand.h
+longbits.o: banned.h
+longbits.o: have_ban_pragma.h
 longbits.o: have_stdlib.h
 longbits.o: have_unistd.h
 longbits.o: longbits.c
 matfunc.o: alloc.h
+matfunc.o: banned.h
 matfunc.o: block.h
 matfunc.o: byteswap.h
 matfunc.o: calcerr.h
@@ -5695,6 +6104,7 @@ matfunc.o: config.h
 matfunc.o: decl.h
 matfunc.o: endian_calc.h
 matfunc.o: hash.h
+matfunc.o: have_ban_pragma.h
 matfunc.o: have_const.h
 matfunc.o: have_memmv.h
 matfunc.o: have_newstr.h
@@ -5712,6 +6122,7 @@ matfunc.o: zmath.h
 matfunc.o: zrand.h
 math_error.o: alloc.h
 math_error.o: args.h
+math_error.o: banned.h
 math_error.o: block.h
 math_error.o: byteswap.h
 math_error.o: calc.h
@@ -5721,6 +6132,7 @@ math_error.o: config.h
 math_error.o: decl.h
 math_error.o: endian_calc.h
 math_error.o: hash.h
+math_error.o: have_ban_pragma.h
 math_error.o: have_const.h
 math_error.o: have_memmv.h
 math_error.o: have_newstr.h
@@ -5736,6 +6148,7 @@ math_error.o: str.h
 math_error.o: value.h
 math_error.o: zmath.h
 obj.o: alloc.h
+obj.o: banned.h
 obj.o: block.h
 obj.o: byteswap.h
 obj.o: calc.h
@@ -5746,11 +6159,14 @@ obj.o: decl.h
 obj.o: endian_calc.h
 obj.o: func.h
 obj.o: hash.h
+obj.o: have_ban_pragma.h
 obj.o: have_const.h
 obj.o: have_memmv.h
 obj.o: have_newstr.h
 obj.o: have_stdlib.h
 obj.o: have_string.h
+obj.o: have_strlcat.h
+obj.o: have_strlcpy.h
 obj.o: label.h
 obj.o: longbits.h
 obj.o: nametype.h
@@ -5759,10 +6175,12 @@ obj.o: opcodes.h
 obj.o: qmath.h
 obj.o: sha1.h
 obj.o: str.h
+obj.o: strl.h
 obj.o: symbol.h
 obj.o: value.h
 obj.o: zmath.h
 opcodes.o: alloc.h
+opcodes.o: banned.h
 opcodes.o: block.h
 opcodes.o: byteswap.h
 opcodes.o: calc.h
@@ -5775,6 +6193,7 @@ opcodes.o: endian_calc.h
 opcodes.o: file.h
 opcodes.o: func.h
 opcodes.o: hash.h
+opcodes.o: have_ban_pragma.h
 opcodes.o: have_const.h
 opcodes.o: have_fpos.h
 opcodes.o: have_memmv.h
@@ -5798,9 +6217,11 @@ opcodes.o: zmath.h
 opcodes.o: zrand.h
 opcodes.o: zrandom.h
 pix.o: alloc.h
+pix.o: banned.h
 pix.o: byteswap.h
 pix.o: decl.h
 pix.o: endian_calc.h
+pix.o: have_ban_pragma.h
 pix.o: have_const.h
 pix.o: have_memmv.h
 pix.o: have_newstr.h
@@ -5812,6 +6233,7 @@ pix.o: prime.h
 pix.o: qmath.h
 pix.o: zmath.h
 poly.o: alloc.h
+poly.o: banned.h
 poly.o: block.h
 poly.o: byteswap.h
 poly.o: calcerr.h
@@ -5820,6 +6242,7 @@ poly.o: config.h
 poly.o: decl.h
 poly.o: endian_calc.h
 poly.o: hash.h
+poly.o: have_ban_pragma.h
 poly.o: have_const.h
 poly.o: have_memmv.h
 poly.o: have_newstr.h
@@ -5834,9 +6257,11 @@ poly.o: str.h
 poly.o: value.h
 poly.o: zmath.h
 prime.o: alloc.h
+prime.o: banned.h
 prime.o: byteswap.h
 prime.o: decl.h
 prime.o: endian_calc.h
+prime.o: have_ban_pragma.h
 prime.o: have_const.h
 prime.o: have_memmv.h
 prime.o: have_newstr.h
@@ -5849,10 +6274,12 @@ prime.o: prime.h
 prime.o: qmath.h
 prime.o: zmath.h
 qfunc.o: alloc.h
+qfunc.o: banned.h
 qfunc.o: byteswap.h
 qfunc.o: config.h
 qfunc.o: decl.h
 qfunc.o: endian_calc.h
+qfunc.o: have_ban_pragma.h
 qfunc.o: have_const.h
 qfunc.o: have_memmv.h
 qfunc.o: have_newstr.h
@@ -5866,10 +6293,12 @@ qfunc.o: qmath.h
 qfunc.o: zmath.h
 qio.o: alloc.h
 qio.o: args.h
+qio.o: banned.h
 qio.o: byteswap.h
 qio.o: config.h
 qio.o: decl.h
 qio.o: endian_calc.h
+qio.o: have_ban_pragma.h
 qio.o: have_const.h
 qio.o: have_memmv.h
 qio.o: have_newstr.h
@@ -5882,10 +6311,12 @@ qio.o: qio.c
 qio.o: qmath.h
 qio.o: zmath.h
 qmath.o: alloc.h
+qmath.o: banned.h
 qmath.o: byteswap.h
 qmath.o: config.h
 qmath.o: decl.h
 qmath.o: endian_calc.h
+qmath.o: have_ban_pragma.h
 qmath.o: have_const.h
 qmath.o: have_memmv.h
 qmath.o: have_newstr.h
@@ -5897,10 +6328,12 @@ qmath.o: qmath.c
 qmath.o: qmath.h
 qmath.o: zmath.h
 qmod.o: alloc.h
+qmod.o: banned.h
 qmod.o: byteswap.h
 qmod.o: config.h
 qmod.o: decl.h
 qmod.o: endian_calc.h
+qmod.o: have_ban_pragma.h
 qmod.o: have_const.h
 qmod.o: have_memmv.h
 qmod.o: have_newstr.h
@@ -5912,9 +6345,11 @@ qmod.o: qmath.h
 qmod.o: qmod.c
 qmod.o: zmath.h
 qtrans.o: alloc.h
+qtrans.o: banned.h
 qtrans.o: byteswap.h
 qtrans.o: decl.h
 qtrans.o: endian_calc.h
+qtrans.o: have_ban_pragma.h
 qtrans.o: have_const.h
 qtrans.o: have_memmv.h
 qtrans.o: have_newstr.h
@@ -5925,6 +6360,7 @@ qtrans.o: qmath.h
 qtrans.o: qtrans.c
 qtrans.o: zmath.h
 quickhash.o: alloc.h
+quickhash.o: banned.h
 quickhash.o: block.h
 quickhash.o: byteswap.h
 quickhash.o: calcerr.h
@@ -5933,6 +6369,7 @@ quickhash.o: config.h
 quickhash.o: decl.h
 quickhash.o: endian_calc.h
 quickhash.o: hash.h
+quickhash.o: have_ban_pragma.h
 quickhash.o: have_const.h
 quickhash.o: have_memmv.h
 quickhash.o: have_newstr.h
@@ -5949,6 +6386,7 @@ quickhash.o: zmath.h
 quickhash.o: zrand.h
 quickhash.o: zrandom.h
 sample_many.o: alloc.h
+sample_many.o: banned.h
 sample_many.o: block.h
 sample_many.o: byteswap.h
 sample_many.o: calc.h
@@ -5958,6 +6396,7 @@ sample_many.o: config.h
 sample_many.o: decl.h
 sample_many.o: endian_calc.h
 sample_many.o: hash.h
+sample_many.o: have_ban_pragma.h
 sample_many.o: have_const.h
 sample_many.o: have_memmv.h
 sample_many.o: have_newstr.h
@@ -5974,6 +6413,7 @@ sample_many.o: value.h
 sample_many.o: zmath.h
 sample_many.o: zrandom.h
 sample_rand.o: alloc.h
+sample_rand.o: banned.h
 sample_rand.o: block.h
 sample_rand.o: byteswap.h
 sample_rand.o: calc.h
@@ -5983,6 +6423,7 @@ sample_rand.o: config.h
 sample_rand.o: decl.h
 sample_rand.o: endian_calc.h
 sample_rand.o: hash.h
+sample_rand.o: have_ban_pragma.h
 sample_rand.o: have_const.h
 sample_rand.o: have_memmv.h
 sample_rand.o: have_newstr.h
@@ -5999,9 +6440,11 @@ sample_rand.o: value.h
 sample_rand.o: zmath.h
 sample_rand.o: zrandom.h
 seed.o: alloc.h
+seed.o: banned.h
 seed.o: byteswap.h
 seed.o: decl.h
 seed.o: endian_calc.h
+seed.o: have_ban_pragma.h
 seed.o: have_const.h
 seed.o: have_getpgid.h
 seed.o: have_getprid.h
@@ -6023,6 +6466,7 @@ seed.o: seed.c
 seed.o: zmath.h
 sha1.o: align32.h
 sha1.o: alloc.h
+sha1.o: banned.h
 sha1.o: block.h
 sha1.o: byteswap.h
 sha1.o: calcerr.h
@@ -6031,6 +6475,7 @@ sha1.o: config.h
 sha1.o: decl.h
 sha1.o: endian_calc.h
 sha1.o: hash.h
+sha1.o: have_ban_pragma.h
 sha1.o: have_const.h
 sha1.o: have_memmv.h
 sha1.o: have_newstr.h
@@ -6045,6 +6490,7 @@ sha1.o: str.h
 sha1.o: value.h
 sha1.o: zmath.h
 size.o: alloc.h
+size.o: banned.h
 size.o: block.h
 size.o: byteswap.h
 size.o: calcerr.h
@@ -6053,6 +6499,7 @@ size.o: config.h
 size.o: decl.h
 size.o: endian_calc.h
 size.o: hash.h
+size.o: have_ban_pragma.h
 size.o: have_const.h
 size.o: have_memmv.h
 size.o: have_newstr.h
@@ -6069,6 +6516,7 @@ size.o: zmath.h
 size.o: zrand.h
 size.o: zrandom.h
 str.o: alloc.h
+str.o: banned.h
 str.o: block.h
 str.o: byteswap.h
 str.o: calc.h
@@ -6078,20 +6526,37 @@ str.o: config.h
 str.o: decl.h
 str.o: endian_calc.h
 str.o: hash.h
+str.o: have_ban_pragma.h
 str.o: have_const.h
 str.o: have_memmv.h
 str.o: have_newstr.h
 str.o: have_stdlib.h
 str.o: have_string.h
+str.o: have_strlcat.h
+str.o: have_strlcpy.h
 str.o: longbits.h
 str.o: nametype.h
 str.o: qmath.h
 str.o: sha1.h
 str.o: str.c
 str.o: str.h
+str.o: strl.h
 str.o: value.h
 str.o: zmath.h
+strl.o: alloc.h
+strl.o: banned.h
+strl.o: decl.h
+strl.o: have_ban_pragma.h
+strl.o: have_const.h
+strl.o: have_memmv.h
+strl.o: have_newstr.h
+strl.o: have_string.h
+strl.o: have_strlcat.h
+strl.o: have_strlcpy.h
+strl.o: strl.c
+strl.o: strl.h
 symbol.o: alloc.h
+symbol.o: banned.h
 symbol.o: block.h
 symbol.o: byteswap.h
 symbol.o: calc.h
@@ -6102,6 +6567,7 @@ symbol.o: decl.h
 symbol.o: endian_calc.h
 symbol.o: func.h
 symbol.o: hash.h
+symbol.o: have_ban_pragma.h
 symbol.o: have_const.h
 symbol.o: have_memmv.h
 symbol.o: have_newstr.h
@@ -6121,6 +6587,7 @@ symbol.o: value.h
 symbol.o: zmath.h
 token.o: alloc.h
 token.o: args.h
+token.o: banned.h
 token.o: block.h
 token.o: byteswap.h
 token.o: calc.h
@@ -6130,6 +6597,7 @@ token.o: config.h
 token.o: decl.h
 token.o: endian_calc.h
 token.o: hash.h
+token.o: have_ban_pragma.h
 token.o: have_const.h
 token.o: have_memmv.h
 token.o: have_newstr.h
@@ -6146,6 +6614,7 @@ token.o: token.h
 token.o: value.h
 token.o: zmath.h
 value.o: alloc.h
+value.o: banned.h
 value.o: block.h
 value.o: byteswap.h
 value.o: calc.h
@@ -6157,6 +6626,7 @@ value.o: endian_calc.h
 value.o: file.h
 value.o: func.h
 value.o: hash.h
+value.o: have_ban_pragma.h
 value.o: have_const.h
 value.o: have_fpos.h
 value.o: have_memmv.h
@@ -6177,6 +6647,7 @@ value.o: zmath.h
 value.o: zrand.h
 value.o: zrandom.h
 version.o: alloc.h
+version.o: banned.h
 version.o: block.h
 version.o: byteswap.h
 version.o: calc.h
@@ -6186,24 +6657,30 @@ version.o: config.h
 version.o: decl.h
 version.o: endian_calc.h
 version.o: hash.h
+version.o: have_ban_pragma.h
 version.o: have_const.h
 version.o: have_memmv.h
 version.o: have_newstr.h
 version.o: have_stdlib.h
 version.o: have_string.h
+version.o: have_strlcat.h
+version.o: have_strlcpy.h
 version.o: have_unused.h
 version.o: longbits.h
 version.o: nametype.h
 version.o: qmath.h
 version.o: sha1.h
 version.o: str.h
+version.o: strl.h
 version.o: value.h
 version.o: version.c
 version.o: zmath.h
 zfunc.o: alloc.h
+zfunc.o: banned.h
 zfunc.o: byteswap.h
 zfunc.o: decl.h
 zfunc.o: endian_calc.h
+zfunc.o: have_ban_pragma.h
 zfunc.o: have_const.h
 zfunc.o: have_memmv.h
 zfunc.o: have_newstr.h
@@ -6214,10 +6691,12 @@ zfunc.o: zfunc.c
 zfunc.o: zmath.h
 zio.o: alloc.h
 zio.o: args.h
+zio.o: banned.h
 zio.o: byteswap.h
 zio.o: config.h
 zio.o: decl.h
 zio.o: endian_calc.h
+zio.o: have_ban_pragma.h
 zio.o: have_const.h
 zio.o: have_memmv.h
 zio.o: have_newstr.h
@@ -6229,9 +6708,11 @@ zio.o: qmath.h
 zio.o: zio.c
 zio.o: zmath.h
 zmath.o: alloc.h
+zmath.o: banned.h
 zmath.o: byteswap.h
 zmath.o: decl.h
 zmath.o: endian_calc.h
+zmath.o: have_ban_pragma.h
 zmath.o: have_const.h
 zmath.o: have_memmv.h
 zmath.o: have_newstr.h
@@ -6241,10 +6722,12 @@ zmath.o: longbits.h
 zmath.o: zmath.c
 zmath.o: zmath.h
 zmod.o: alloc.h
+zmod.o: banned.h
 zmod.o: byteswap.h
 zmod.o: config.h
 zmod.o: decl.h
 zmod.o: endian_calc.h
+zmod.o: have_ban_pragma.h
 zmod.o: have_const.h
 zmod.o: have_memmv.h
 zmod.o: have_newstr.h
@@ -6256,10 +6739,12 @@ zmod.o: qmath.h
 zmod.o: zmath.h
 zmod.o: zmod.c
 zmul.o: alloc.h
+zmul.o: banned.h
 zmul.o: byteswap.h
 zmul.o: config.h
 zmul.o: decl.h
 zmul.o: endian_calc.h
+zmul.o: have_ban_pragma.h
 zmul.o: have_const.h
 zmul.o: have_memmv.h
 zmul.o: have_newstr.h
@@ -6271,6 +6756,7 @@ zmul.o: qmath.h
 zmul.o: zmath.h
 zmul.o: zmul.c
 zprime.o: alloc.h
+zprime.o: banned.h
 zprime.o: block.h
 zprime.o: byteswap.h
 zprime.o: calcerr.h
@@ -6279,6 +6765,7 @@ zprime.o: config.h
 zprime.o: decl.h
 zprime.o: endian_calc.h
 zprime.o: hash.h
+zprime.o: have_ban_pragma.h
 zprime.o: have_const.h
 zprime.o: have_memmv.h
 zprime.o: have_newstr.h
@@ -6296,6 +6783,7 @@ zprime.o: zmath.h
 zprime.o: zprime.c
 zprime.o: zrand.h
 zrand.o: alloc.h
+zrand.o: banned.h
 zrand.o: block.h
 zrand.o: byteswap.h
 zrand.o: calcerr.h
@@ -6304,6 +6792,7 @@ zrand.o: config.h
 zrand.o: decl.h
 zrand.o: endian_calc.h
 zrand.o: hash.h
+zrand.o: have_ban_pragma.h
 zrand.o: have_const.h
 zrand.o: have_memmv.h
 zrand.o: have_newstr.h
@@ -6320,6 +6809,7 @@ zrand.o: zmath.h
 zrand.o: zrand.c
 zrand.o: zrand.h
 zrandom.o: alloc.h
+zrandom.o: banned.h
 zrandom.o: block.h
 zrandom.o: byteswap.h
 zrandom.o: calcerr.h
@@ -6328,6 +6818,7 @@ zrandom.o: config.h
 zrandom.o: decl.h
 zrandom.o: endian_calc.h
 zrandom.o: hash.h
+zrandom.o: have_ban_pragma.h
 zrandom.o: have_const.h
 zrandom.o: have_memmv.h
 zrandom.o: have_newstr.h

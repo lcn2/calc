@@ -1,7 +1,7 @@
 /*
  * zmath - declarations for extended precision integer arithmetic
  *
- * Copyright (C) 1999-2007,2014  David I. Bell
+ * Copyright (C) 1999-2007,2014,2021  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -121,6 +121,20 @@ typedef SB32 SFULL;			/* signed FULL */
 #define BASE1	(BASE - (FULL)1)		/* one less than base */
 #define BASEDIG ((BASEB/16)*5)			/* number of digits in base */
 #define FULL_BITS (2*BASEB)			/* bits in a FULL */
+#define HALF_LEN (sizeof(HALF))			/* length of HALF in bites */
+#define FULL_LEN (sizeof(FULL))			/* length of FULL in bites */
+
+/*
+ * ROUNDUP(value, mult) - round up value to the next multiple of mult
+ *
+ * NOTE: value and mult musty be of an integer type.
+ *
+ * NOTE: mult must != 0
+ *
+ * NOTE: If value is a multiple of mult, then ROUNDUP(value, mult)
+ *	 will just return value.
+ */
+#define ROUNDUP(value, mult) ( ( ((value)+(mult)-1) / (mult) ) * (mult) )
 
 #define TOPHALF ((FULL)1 << (BASEB-1))		/* highest bit in a HALF */
 #define MAXHALF (TOPHALF - (FULL)1)		/* largest SHALF value */

@@ -1,7 +1,7 @@
 /*
  * value - generic value manipulation routines
  *
- * Copyright (C) 1999-2007,2014,2017  David I. Bell
+ * Copyright (C) 1999-2007,2014,2017,2021  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -37,6 +37,10 @@
 #include "nametype.h"
 #include "file.h"
 #include "config.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 #define LINELEN 80		/* length of a typical tty line */
 

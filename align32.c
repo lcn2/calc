@@ -1,7 +1,7 @@
 /*
  * align32 - determine if 32 bit accesses must be aligned
  *
- * Copyright (C) 1999  Landon Curt Noll
+ * Copyright (C) 1999,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -33,6 +33,10 @@
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 static void buserr(void);	/* catch alignment errors */
 

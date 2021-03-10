@@ -1,7 +1,46 @@
 /*
- * banned - indicate which functions are banned in calc source
+ * banned - optionally ban dqngerious functions
  *
- * inspired by https://github.com/git/git/blob/master/banned.h
+ * Unless UNBAN is defined, this file will turn the use
+ * of certain dangerous functions into syntax errors.
+ *
+ * In the case of calc, we are motivated in part by the desire for
+ * calc to correctly calculate: even durings extremely long calculations.
+ *
+ * If UNBAN is NOT defined, then calling certain functions
+ * will result in a syntaxc error.
+ *
+ * If we define UNBAN, then the effect of this file is disabled.
+ *
+ * The banned.h attempts to ban the use of certain dangerous functions
+ * that, if improperly used, could compromise the computational integrity
+ * if calculations.
+ *
+ * In the case of calc, we are motivated in part by the desire for calc
+ * to correctly calculate: even durings extremely long calculations.
+ *
+ * If UNBAN is NOT defined, then calling certain functions
+ * will result in a call to a non-existent function (link error).
+ *
+ * While we do NOT encourage defining UNBAN, there may be
+ * a system / compiler environment where re-defining a
+ * function may lead to a fatal compiler complication.
+ * If that happens, consider compiling as:
+ *
+ *	make clobber all chk CCBAN=-DUNBAN
+ *
+ * as see if this is a work-a-round.
+ *
+ * If YOU discover a need for the -DUNBAN work-a-round, PLEASE tell us!
+ * Please send us a bug report.  See the file:
+ *
+ *	BUGS
+ *
+ * or the URL:
+ *
+ *	http://www.isthe.com/chongo/tech/comp/calc/calc-bugrept.html
+ *
+ * for how to send us such a bug report.
  *
  * Copyright (C) 2021  Landon Curt Noll
  *
@@ -27,56 +66,115 @@
  */
 
 
+#if !defined(PRE_HAVE_BAN_PRAGMA_H)
+#include "have_ban_pragma.h"
+#endif /* ! PRE_HAVE_BAN_PRAGMA_H */
+
+
 #if !defined(INCLUDE_BANNED_H)
 #define INCLUDE_BANNED_H
 
-#include "have_stdlib.h"
-#ifdef HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
+/*
+ * If we define UNBAN, then the effect of this file is disabled.
+ */
+#if !defined(UNBAN)
 
 /*
- * From: //github.com/git/git/blob/master/banned.h
+ * In the spirit of:
  *
- * This header lists functions that have been banned from our code base,
- * because they're too easy to misuse (and even if used correctly,
- * complicate audits). Including this header turns them into compile-time
- * errors.
+ *	https://github.com/git/git/blob/master/banned.h
+ *
+ * we will ban the use of certain unsafe functions by turning
+ * then into function calls that do not exist.
+ *
+ * In the case of calc, we are motivated in part by the desire
+ * for calc to correctly calculate: even durings extremely long
+ * calculations.
+ *
+ * If UNBAN is NOT defined, then calling certain functions
+ * will result in a syntaxc error.
+ *
+ * Unlike the above URL, we suggest an alternative function.
+ * In many cases, additional logic is required to use the
+ * alternative function, we cannot simply replace one function
+ * with another.
  */
 
-#define BANNED(func,better) sorry_##func##_is_a_banned_function_use_##better##_instead
-
+/*
+ * If one is not careful, strcpy() can lead to buffer overflows.
+ * Use strlcpy() instead.
+ */
+#if defined(HAVE_PRAGMA_GCC_POSION)
 #undef strcpy
-#define strcpy(x,y) BANNED(strcpy,strlcpy)
+#pragma GCC poison strcpy
+#endif /* HAVE_PRAGMA_GCC_POSION */
+
+/*
+ * If one is not careful, strcat() can lead to buffer overflows.
+ * Use strlcat() instead.
+ */
+#if defined(HAVE_PRAGMA_GCC_POSION)
 #undef strcat
-#define strcat(x,y) BANNED(strcat,strlcat)
+#pragma GCC poison strcat
+#endif /* HAVE_PRAGMA_GCC_POSION */
+
+/*
+ * If one is not careful, strncpy() can lead to buffer overflows.
+ * Use memccpy() instead.
+ */
+#if defined(HAVE_PRAGMA_GCC_POSION)
 #undef strncpy
-#define strncpy(x,y,n) BANNED(strncpy,memccpy)
+#pragma GCC poison strncpy
+#endif /* HAVE_PRAGMA_GCC_POSION */
+
+/*
+ * If one is not careful, strncat() can lead to buffer overflows.
+ * Use memccpy() instead.
+ */
+#if defined(HAVE_PRAGMA_GCC_POSION)
 #undef strncat
-#define strncat(x,y,n) BANNED(strncat,memccpy)
+#pragma GCC poison strncat
+#endif /* HAVE_PRAGMA_GCC_POSION */
 
-#if defined(STDARG)
-#define sprintf(...) BANNED(sprintf,snprintf)
-#define vsprintf(...) BANNED(vsprintf,vsnprintf)
-#else /* STDARG */
-#define sprintf(buf,fmt,arg) BANNED(sprintf,snprintf)
-#define vsprintf(buf,fmt,arg) BANNED(vsprintf,vsnprintf)
-#endif /* STDARG */
+/*
+ * If one is not careful, sprintf() can lead to buffer overflows.
+ * Use snprintf() instead.
+ */
+#if defined(HAVE_PRAGMA_GCC_POSION)
+#undef sprintf
+#pragma GCC poison sprintf
+#endif /* HAVE_PRAGMA_GCC_POSION */
 
-#if 0 /* the XYtimeZZY_s() c11 functions are not yet universal - so do not ban XYtimeZZY() just yet - XXX */
-#undef gmtime
-#define gmtime(t) BANNED(gmtime,gmtime_s)
-#undef localtime
-#define localtime(t) BANNED(localtime,localtime_s)
-#undef ctime
-#define ctime(t) BANNED(ctime,ctime_s)
-#undef ctime_r
-#define ctime_r(t, buf) BANNED(ctime_r,ctime_s)
-#undef asctime
-#define asctime(t) BANNED(asctime,asctime_s)
-#undef asctime_r
-#define asctime_r(t, buf) BANNED(asctime_r,asctime_s)
-#endif /* XXX */
+/*
+ * If one is not careful, vsprintf() can lead to buffer overflows.
+ * Use vsnprintf() instead.
+ */
+#if defined(HAVE_PRAGMA_GCC_POSION)
+#undef vsprintf
+#pragma GCC poison vsprintf
+#endif /* HAVE_PRAGMA_GCC_POSION */
 
+/*
+ * XXX - As of 2021, functions such as:
+ *
+ *	gmtime_s
+ *	localtime_s
+ *	ctime_s
+ *	asctime_s
+ *
+ * are not universal.  We cannot yet ban the following
+ * functions because we do not have a portable AND
+ * widely available alternative.  Therefore we just
+ * have to be extra careful when using:
+ *
+ *	gmtime
+ *	localtime
+ *	ctime
+ *	ctime_r
+ *	asctime
+ *	asctime_r
+ */
+
+#endif /* !UNBAN */
 
 #endif /* !INCLUDE_BANNED_H */

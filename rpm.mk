@@ -106,11 +106,30 @@ TMPDIR= ${RPM_TOP}/tmp
 # Q=@	do not echo internal Makefile actions (quiet mode)
 # Q=	echo internal Makefile actions (debug / verbose mode)
 #
+# H=@:	do not report hsrc file formation progress
+# H=@	do echo hsrc file formation progress
+#
+# S= >/dev/null 2>&1	slience ${CC} output during hsrc file formation
+# S=			full ${CC} output during hsrc file formation
+#
+# E= 2>/dev/null	slience command stderr during hsrc file formation
+# E=			full command stderr during hsrc file formation
+#
 # V=@:	do not echo debug statements (quiet mode)
 # V=@	do echo debug statements (debug / verbose mode)
 #
 #Q=
 Q=@
+#
+S= >/dev/null 2>&1
+#S=
+#
+E= 2>/dev/null
+#E=
+#
+#H=@:
+H=@
+#
 V=@:
 #V=@
 
@@ -121,20 +140,20 @@ all: ver_calc calc.spec
 	    -e '/^Release:/s/^Release: *//p' calc.spec.in`"; \
 	$(MAKE) -f rpm.mk rpm \
 	    PROJECT_VERSION="$$PROJECT_VERSION" \
-	    PROJECT_RELEASE="$$PROJECT_RELEASE"
+	    PROJECT_RELEASE="$$PROJECT_RELEASE" Q= S= E=
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 pkgme: $(PROJECT_NAME)-spec.${TAR}.bz2
 
 ver_calc:
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
-	$(MAKE) -f Makefile ver_calc
+	$(MAKE) -f Makefile ver_calc Q= S= E=
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: vers
 vers:
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
-	$(MAKE) -f Makefile ver_calc
+	$(MAKE) -f Makefile ver_calc Q= S= E=
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 calc.spec: calc.spec.in ver_calc
@@ -174,7 +193,7 @@ rpm: srcpkg calc.spec
 	${V} echo RPM_BUILD_ROOT="${RPM_BUILD_ROOT}"
 	${V} echo PROJECT_VERSION="${PROJECT_VERSION}"
 	${V} echo PROJECT_RELEASE="${PROJECT_RELEASE}"
-	$(MAKE) -f Makefile clean
+	$(MAKE) -f Makefile clean Q= S= E=
 	${CP} "$(SPECFILE)" "$(RPM_TOP)/SPECS/$(SPECFILE)"
 	${RM} -f "$(RPM_TOP)/RPMS/$(TARCH)/$(RPMx86_64)"
 	${RM} -f "$(RPM_TOP)/RPMS/$(TARCH)/$(DRPMx86_64)"
@@ -270,7 +289,8 @@ test: ver_calc
 	    echo "test needs to install, must be root to test" 1>&2; \
 	    exit 6; \
 	fi
-	$(MAKE) -f rpm.mk PROJECT_VERSION="`./ver_calc`" installrpm chksys
+	$(MAKE) -f rpm.mk PROJECT_VERSION="`./ver_calc`" installrpm \
+		chksys Q= S= E=
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: installrpm

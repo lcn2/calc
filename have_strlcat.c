@@ -1,7 +1,7 @@
 /*
- * have_fpos - Determine if have fgetpos and fsetpos functions
+ * have_strlcat - determine if we have strlcat()
  *
- * Copyright (C) 1999,2021  Landon Curt Noll
+ * Copyright (C) 2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -17,43 +17,60 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1994/11/05 03:19:52
- * File existed as early as:	1994
+ * Under source code control:	2021/03/08 20:34:13
+ * File existed as early as:	2021
  *
  * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
  * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 /*
- * If the symbol HAVE_NO_FPOS is defined, we will output nothing.
- * If we are able to compile this program, then we must have the
- * fgetpos and fsetpos functions and we will output the
- * appropriate have_fpos.h file body.
+ * usage:
+ *	have_strlcat
+ *
+ * Not all systems have the strlcat() function, so this may not
+ * compile on your system.
+ *
+ * This prog outputs several defines:
+ *
+ *	HAVE_STRLCAT
+ *		defined ==> use strlcat()
+ *		undefined ==> do not or cannot call strlcat()
  */
 
 #include <stdio.h>
+#include "have_string.h"
+#ifdef HAVE_STRING_H
+# include <string.h>
+#endif
 
 
 #include "banned.h"	/* include after system header <> includes */
 
 
+#define BUF_SIZ 5
+
+char src[BUF_SIZ+1] = "abcde";
+
+
 int
 main(void)
 {
-#if !defined(HAVE_NO_FPOS)
-	fpos_t pos;		/* file position */
+#if defined(HAVE_NO_STRLCAT)
 
-	/* get the current position */
-	(void) fgetpos(stdin, &pos);
+	printf("#undef HAVE_STRLCAT /* no */\n");
 
-	/* set the current position */
-	(void) fsetpos(stdin, &pos);
+#else /* HAVE_NO_STRLCAT */
+	char dst[BUF_SIZ+1+1];
 
-	/* print a have_fpos.h body that says we have the functions */
-	printf("#undef HAVE_FPOS\n");
-	printf("#define HAVE_FPOS 1  /* yes */\n\n");
-	printf("typedef fpos_t FILEPOS;\n");
-#endif
+	dst[0] = 'S';
+	dst[1] = '\0';
+	(void) strlcat(dst, src, sizeof(dst));
+
+	printf("#define HAVE_STRLCAT /* yes */\n");
+
+#endif /* HAVE_NO_STRLCAT */
+
 	/* exit(0); */
 	return 0;
 }

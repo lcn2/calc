@@ -64,6 +64,11 @@
 #include "have_offscl.h"
 #include "have_posscl.h"
 #include "have_fpos_pos.h"
+#include "alloc.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 char *program;			/* our name */
 

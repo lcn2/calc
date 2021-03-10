@@ -1,7 +1,7 @@
 /*
  * c_help - custom help function
  *
- * Copyright (C) 1999-2004  Landon Curt Noll
+ * Copyright (C) 1999-2004,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -39,6 +39,9 @@
 #include "have_unused.h"
 
 
+#include "banned.h"	/* include after system header <> includes */
+
+
 /*
  * c_help - custom help function
  *
@@ -58,7 +61,7 @@
  */
 /*ARGSUSED*/
 VALUE
-c_help(char UNUSED *name, int UNUSED count, VALUE **vals)
+c_help(char *UNUSED(name), int UNUSED(count), VALUE **vals)
 {
 	VALUE result;		/* what we will return */
 

@@ -29,10 +29,14 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include "calc.h"
+#include "alloc.h"
 #include "value.h"
 #include "file.h"
 #include "blkcpy.h"
 #include "str.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 /*

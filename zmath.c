@@ -1,7 +1,7 @@
 /*
  * zmath - extended precision integral arithmetic primitives
  *
- * Copyright (C) 1999-2007  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -27,7 +27,12 @@
 
 
 #include <stdio.h>
+#include "alloc.h"
 #include "zmath.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
+
 
 HALF _zeroval_[] = { 0 };
 HALF _oneval_[] = { 1 };

@@ -27,12 +27,16 @@
 
 
 #include <stdio.h>
+#include "alloc.h"
 #include "longbits.h"
 #include "align32.h"
 #include "endian_calc.h"
 #include "value.h"
 #include "hash.h"
 #include "sha1.h"
+
+
+#include "banned.h"	/* include after system header <> includes */
 
 
 /*

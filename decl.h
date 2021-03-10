@@ -1,7 +1,7 @@
 /*
  * decl - variable and function declaration macros
  *
- * Copyright (C) 2007,2014  Landon Curt Noll
+ * Copyright (C) 2007,2014,2021  Landon Curt Noll
  *
  * Primary author:  Landon Curt Noll
  *

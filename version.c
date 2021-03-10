@@ -29,7 +29,10 @@
 
 #include <stdio.h>
 #include <errno.h>
-#include <string.h>
+#include "have_string.h"
+#ifdef HAVE_STRING_H
+# include <string.h>
+#endif
 
 #if defined(CALC_VER)
 # include <stdlib.h>
@@ -39,13 +42,19 @@ static char *program;
 #else
 # include "calc.h"
 #endif
+#include "str.h"
+#include "strl.h"
 
 #include "have_unused.h"
 
+
+#include "banned.h"	/* include after system header <> includes */
+
+
 #define MAJOR_VER	2	/* major library version */
 #define MINOR_VER	12	/* minor library version */
-#define MAJOR_PATCH	8	/* major software version level */
-#define MINOR_PATCH	2	/* minor software version level */
+#define MAJOR_PATCH	9	/* major software version level */
+#define MINOR_PATCH	0	/* minor software version level */
 
 
 /*
@@ -131,22 +140,7 @@ version(void)
 		fprintf(stderr, "%s: cannot malloc version string\n", program);
 		exit(70);
 	}
-	/*
-	 * The next statement could be:
-	 *
-	 *	strncpy(stored_version, verbuf, len);
-	 *
-	 * however compilers like gcc would issue warnings such as:
-	 *
-	 * 	specified bound depends on the length of the
-	 * 	source argument
-	 *
-	 * even though we terminate the string by setting a NUL
-	 * byte following the copy.  Therefore we call memcpy()
-	 * instead to avoid such warnings.
-	 */
-	memcpy(stored_version, verbuf, len);
-	stored_version[len] = '\0';
+	strlcpy(stored_version, verbuf, len+1);
 
 	/*
 	 * return the newly malloced buffer

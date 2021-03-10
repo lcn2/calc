@@ -28,9 +28,27 @@
 # Makefile by Landon Curt Noll
 
 
-# our shell
+# The shell used by this Makefile
+#
+# On some systems, /bin/sh is a rather reduced shell with
+# deprecated behavor.
+#
+# If your system has a up to date, bash shell, then
+# you may wish to use:
+#
+#	SHELL= /bin/bash
+#
+# On some systems such as macOS, the bash shell is very
+# far behind to the point wehre is cannot be depended on.
+# On such systems, the zsh may be a much better alternative
+# shell for this Makefile to use:
+#
+#	SHELL= /bin/zsh
 #
 SHELL= /bin/sh
+#SHELL= /bin/bash
+#SHELL= /bin/zsh
+
 
 ####
 # Normally, the upper level makefile will set these values.  We provide
