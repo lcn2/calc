@@ -1,4 +1,11 @@
-The following are the changes from calc version 2.12.9.0 to date:
+The following are the changes from calc version 2.12.9.1 to date:
+
+    Fixed a typo typo in help/Makefile that caused the build of
+    2.12.9.0 to fail in a number of cases.  Thanks to a report by
+    <GitHub user balducci>.
+
+
+The following are the changes from calc version 2.12.8.2 to 2.12.9.0:
 
     Added notes to help/unexpected about:
 
