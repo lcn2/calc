@@ -1375,9 +1375,9 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 endif
 
-##############################
-# Apple OS X / Darwin target #
-##############################
+###############################
+# Apple macOS / Darwin target #
+###############################
 
 ifeq ($(target),Darwin)
 #
@@ -4551,9 +4551,9 @@ env:
 	@echo 'UTIL_TMP=${UTIL_TMP}'; echo ''
 	@echo 'V=${V}'; echo ''
 	@echo 'VERSION=${VERSION}'; echo ''
-	@echo 'WNO_ERROR_LONG_LONG=${WNO_ERROR_LONG_LONG}; echo ''
-	@echo 'WNO_IMPLICT=${WNO_IMPLICT}; echo ''
-	@echo 'WNO_LONG_LONG=${WNO_LONG_LONG}; echo ''
+	@echo 'WNO_ERROR_LONG_LONG=${WNO_ERROR_LONG_LONG}'; echo ''
+	@echo 'WNO_IMPLICT=${WNO_IMPLICT};' echo ''
+	@echo 'WNO_LONG_LONG=${WNO_LONG_LONG}'; echo ''
 	@echo 'XARGS=${XARGS}'; echo ''
 	@echo 'target=${target}'; echo ''
 	@echo '=-=-=-=-= ${MAKE_FILE} end of major make variable dump =-=-=-=-='
