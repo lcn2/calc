@@ -1149,7 +1149,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.9.0
+VERSION= 2.12.9.1
 
 # Names of shared libraries with versions
 #
@@ -2106,6 +2106,7 @@ CUSTOM_PASSDOWN=  \
     TOP_MAKE_FILE=${MAKE_FILE} \
     TOUCH=${TOUCH} \
     TRUE=${TRUE} \
+    V=${V} \
     VERSION=${VERSION} \
     WNO_IMPLICT=${WNO_IMPLICT} \
     WNO_ERROR_LONG_LONG=${WNO_ERROR_LONG_LONG} \
@@ -2128,6 +2129,7 @@ HELP_PASSDOWN= \
     COMMON_CFLAGS="${COMMON_CFLAGS}" \
     COMMON_LDFLAGS="${COMMON_LDFLAGS}" \
     CP=${CP} \
+    E="${E}" \
     EXT=${EXT} \
     FMT=${FMT} \
     GREP=${GREP} \
@@ -2145,13 +2147,15 @@ HELP_PASSDOWN= \
     Q="${Q}" \
     RM=${RM} \
     RMDIR=${RMDIR} \
+    S="${S}" \
     SCRIPTDIR="${SCRIPTDIR}" \
     SED=${SED} \
     SHELL=${SHELL} \
     T=${T} \
     TOP_MAKE_FILE=${MAKE_FILE} \
     TOUCH=${TOUCH} \
-    TRUE=${TRUE}
+    TRUE=${TRUE} \
+    V=${V}
 
 # The complete list of Makefile vars passed down to cal/Makefile.
 #
@@ -2165,6 +2169,7 @@ CAL_PASSDOWN= \
     CMP=${CMP} \
     CO=${CO} \
     CP=${CP} \
+    E="${E}" \
     H="${H}" \
     HELPDIR="${HELPDIR}" \
     INCDIR="${INCDIR}" \
@@ -2176,12 +2181,14 @@ CAL_PASSDOWN= \
     Q="${Q}" \
     RM=${RM} \
     RMDIR=${RMDIR} \
+    S="${S}" \
     SCRIPTDIR="${SCRIPTDIR}" \
     SHELL=${SHELL} \
     T=${T} \
     TOP_MAKE_FILE=${MAKE_FILE} \
     TOUCH=${TOUCH} \
-    TRUE=${TRUE}
+    TRUE=${TRUE} \
+    V=${V}
 
 # The complete list of Makefile vars passed down to cscript/Makefile.
 #
@@ -2195,6 +2202,7 @@ CSCRIPT_PASSDOWN= \
     CMP=${CMP} \
     CO=${CO} \
     CP=${CP} \
+    E="${E}" \
     ECHON="${ECHON}" \
     FMT=${FMT} \
     H="${H}" \
@@ -2208,6 +2216,7 @@ CSCRIPT_PASSDOWN= \
     Q="${Q}" \
     RM=${RM} \
     RMDIR=${RMDIR} \
+    S="${S}" \
     SCRIPTDIR="${SCRIPTDIR}" \
     SED=${SED} \
     SHELL=${SHELL} \
@@ -2215,7 +2224,8 @@ CSCRIPT_PASSDOWN= \
     T=${T} \
     TOP_MAKE_FILE=${MAKE_FILE} \
     TOUCH=${TOUCH} \
-    TRUE=${TRUE}
+    TRUE=${TRUE} \
+    V=${V}
 
 # complete list of .h files found (but not built) in the distribution
 #

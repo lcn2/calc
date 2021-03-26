@@ -176,11 +176,35 @@ T=
 
 # Makefile debug
 #
-# Q=@	do not echo internal makefile actions (quiet mode)
-# Q=	echo internal makefile actions (debug / verbose mode)
+# Q=@	do not echo internal Makefile actions (quiet mode)
+# Q=	echo internal Makefile actions (debug / verbose mode)
+#
+# H=@:	do not report hsrc file formation progress
+# H=@	do echo hsrc file formation progress
+#
+# S= >/dev/null 2>&1	slience ${CC} output during hsrc file formation
+# S=			full ${CC} output during hsrc file formation
+#
+# E= 2>/dev/null	slience command stderr during hsrc file formation
+# E=			full command stderr during hsrc file formation
+#
+# V=@:	do not echo debug statements (quiet mode)
+# V=@	do echo debug statements (debug / verbose mode)
 #
 #Q=
 Q=@
+#
+S= >/dev/null 2>&1
+#S=
+#
+E= 2>/dev/null
+#E=
+#
+#H=@:
+H=@
+#
+V=@:
+#V=@
 
 # standard tools
 #

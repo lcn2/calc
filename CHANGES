@@ -4,6 +4,9 @@ The following are the changes from calc version 2.12.9.1 to date:
     2.12.9.0 to fail in a number of cases.  Thanks to a report by
     <GitHub user balducci>.
 
+    Pass form Makefile variables ${Q}, ${S}, ${E}, ${H} and ${V} down
+    to all sub-directory Makefiles from the top level Makefile.
+
 
 The following are the changes from calc version 2.12.8.2 to 2.12.9.0:
 
@@ -37,7 +40,7 @@ The following are the changes from calc version 2.12.8.2 to 2.12.9.0:
     Changed the UNUSED define in have_unused.h to be a macro with
     a parameter.  Changed all use of UNUSED in *.c to be UNUSED(x).
 
-    Removed need for HAVE_UNUSED in building the have_unused.h file.
+    Removed the need for HAVE_UNUSED in building the have_unused.h file.
 
      CCBAN is given to ${CC} in order to control if banned.h is in effect.
 
