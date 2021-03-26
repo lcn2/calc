@@ -1,14 +1,14 @@
-The following are the changes from calc version 2.12.9.1 to date:
+The following are the changes from calc version 2.12.9.2 to date:
 
-    Fixed a typo typo in help/Makefile that caused the build of
-    2.12.9.0 to fail in a number of cases.  Thanks to a report by
-    <GitHub user balducci>.
+    Fixed typo (missing quotes) in the env rule.
 
-    Pass form Makefile variables ${Q}, ${S}, ${E}, ${H} and ${V} down
-    to all sub-directory Makefiles from the top level Makefile.
+    Fixed intendation problem in CHANGES.
+
+    Combined 2.12.9.1 changes into the 2.12.8.2 to 2.12.9.0
+    range, and thus renamed the range to 2.12.8.2 to 2.12.9.1.
 
 
-The following are the changes from calc version 2.12.8.2 to 2.12.9.0:
+The following are the changes from calc version 2.12.8.2 to 2.12.9.1:
 
     Added notes to help/unexpected about:
 
@@ -42,59 +42,59 @@ The following are the changes from calc version 2.12.8.2 to 2.12.9.0:
 
     Removed the need for HAVE_UNUSED in building the have_unused.h file.
 
-     CCBAN is given to ${CC} in order to control if banned.h is in effect.
+    CCBAN is given to ${CC} in order to control if banned.h is in effect.
 
-     The banned.h attempts to ban the use of certain dangerous functions
-     that, if improperly used, could compromise the computational integrity
-     if calculations.
+    The banned.h attempts to ban the use of certain dangerous functions
+    that, if improperly used, could compromise the computational integrity
+    if calculations.
 
-     In the case of calc, we are motivated in part by the desire for calc
-     to correctly calculate: even during extremely long calculations.
+    In the case of calc, we are motivated in part by the desire for calc
+    to correctly calculate: even during extremely long calculations.
 
-     If UNBAN is NOT defined, then calling certain functions
-     will result in a call to a non-existent function (link error).
+    If UNBAN is NOT defined, then calling certain functions
+    will result in a call to a non-existent function (link error).
 
-     While we do NOT encourage defining UNBAN, there may be
-     a system / compiler environment where re-defining a
-     function may lead to a fatal compiler complication.
-     If that happens, consider compiling as:
+    While we do NOT encourage defining UNBAN, there may be
+    a system / compiler environment where re-defining a
+    function may lead to a fatal compiler complication.
+    If that happens, consider compiling as:
 
 	make clobber all chk CCBAN=-DUNBAN
 
-     as see if this is a work-a-round.
+    as see if this is a work-a-round.
 
-     If YOU discover a need for the -DUNBAN work-a-round, PLEASE tell us!
-     Please send us a bug report.  See the file:
+    If YOU discover a need for the -DUNBAN work-a-round, PLEASE tell us!
+    Please send us a bug report.  See the file:
 
 	BUGS
 
-     or the URL:
+    or the URL:
 
 	http://www.isthe.com/chongo/tech/comp/calc/calc-bugrept.html
 
-     for how to send us such a bug report.
+    for how to send us such a bug report.
 
-     Added the building of have_ban_pragma.h, which will determine
-     if "#pragma GCC poison func_name" is supported.  If it is not,
-     or of HAVE_PRAGMA_GCC_POSION=-DHAVE_NO_PRAGMA_GCC_POSION, then
-     banned.h will have no effect.
+    Added the building of have_ban_pragma.h, which will determine
+    if "#pragma GCC poison func_name" is supported.  If it is not,
+    or of HAVE_PRAGMA_GCC_POSION=-DHAVE_NO_PRAGMA_GCC_POSION, then
+    banned.h will have no effect.
 
-     Fixed building of the have_getpgid.h file.
-     Fixed building of the have_getprid.h file.
-     Fixed building of the have_getsid.h file.
-     Fixed building of the have_gettime.h file.
-     Fixed building of the have_strdup.h file.
-     Fixed building of the have_ustat.h file.
-     Fixed building of the have_rusage.h file.
+    Fixed building of the have_getpgid.h file.
+    Fixed building of the have_getprid.h file.
+    Fixed building of the have_getsid.h file.
+    Fixed building of the have_gettime.h file.
+    Fixed building of the have_strdup.h file.
+    Fixed building of the have_ustat.h file.
+    Fixed building of the have_rusage.h file.
 
-     Added HAVE_NO_STRLCPY to control if we want to test if
-     the system has a strlcpy() function.  This in turn produces
-     the have_strlcpy.h file wherein the symbol HAVE_STRLCPY will
-     be defined, or not depending if the system comes with a
-     strlcpy() function.
+    Added HAVE_NO_STRLCPY to control if we want to test if
+    the system has a strlcpy() function.  This in turn produces
+    the have_strlcpy.h file wherein the symbol HAVE_STRLCPY will
+    be defined, or not depending if the system comes with a
+    strlcpy() function.
 
-     If the system does not have a strlcpy() function, we
-     compile our own strlcpy() function.  See strl.c for details.
+    If the system does not have a strlcpy() function, we
+    compile our own strlcpy() function.  See strl.c for details.
 
      Added HAVE_NO_STRLCAT to control if we want to test if
      the system has a strlcat() function.  This in turn produces
@@ -122,6 +122,13 @@ The following are the changes from calc version 2.12.8.2 to 2.12.9.0:
      to the rpm build process.
 
      Compile custom code, if needed, after main code is compiled.
+
+    Fixed a typo typo in help/Makefile that caused the build of
+    2.12.9.0 to fail in a number of cases.  Thanks to a report by
+    <GitHub user balducci>.
+
+    Pass form Makefile variables ${Q}, ${S}, ${E}, ${H} and ${V} down
+    to all sub-directory Makefiles from the top level Makefile.
 
 
 The following are the changes from calc version 2.12.8.1 to 2.12.8.2:
