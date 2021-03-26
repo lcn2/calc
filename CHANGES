@@ -7,6 +7,24 @@ The following are the changes from calc version 2.12.9.2 to date:
     Combined 2.12.9.1 changes into the 2.12.8.2 to 2.12.9.0
     range, and thus renamed the range to 2.12.8.2 to 2.12.9.1.
 
+    Fixed issues related to building Makefile.simple.
+
+    Fixed how the Makefile variable MANPATH is set for macOS.
+
+    Added a bunch of information to the near bottom of HOWTO.INSTALL
+    on calc Makefiles.  This information discusses the various
+    Makefiles found in the calc source.
+
+    Added comments in various calc Makefiles about their origin.
+    In particular, for Makefiles that are constructed such as
+    Makefile.simple, custom/Makefile and custom/Makefile.simple
+    there are comments about how they were made.
+
+    For all calc Makefiles, including those in sub-directories,
+    near the top there is now a line of the form:
+
+	# SRC: ... some message about the origin ...
+
 
 The following are the changes from calc version 2.12.8.2 to 2.12.9.1:
 

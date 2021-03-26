@@ -4,6 +4,14 @@
 #
 # Copyright (C) 1999-2006,2014,2017-2018,2021  Landon Curt Noll
 #
+# SRC: Makefile via make -f Makefile.ship custom/Makefile
+#
+#	The "# SRC: ... - ..." comment line above indicates
+#	the origin of this file.
+#
+# IMPORTANT: Please see the section on Makefiles near the
+#	     bottom of the HOWTO.INSTALL file.
+#
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
 # as published by the Free Software Foundation.
@@ -26,6 +34,25 @@
 #
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
+
+####################################################
+# NOTE: Start of section from custom/Makefile.head #
+####################################################
+
+#.###############################################################.#
+#.#								#.#
+#.# WARNING: This Makefile is generated from a combination of	#.#
+#.#	   custom/Makefile.head, Makefile.ship, and		#.#
+#.#	   custom/Makefile.tail.  We recommend that you NOT	#.#
+#.#	   edit this file, but instead edit the proper source	#.#
+#.#	   file and then make custom/Makefile:			#.#
+#.#								#.#
+#.#		make custom/Makefile				#.#
+#.#								#.#
+#.#	   See the '# NOTE .. section from ..' lines for	#.#
+#.#	   where the source file for the lines are from.	#.#
+#.#								#.#
+#.###############################################################.#
 
 
 # The shell used by this Makefile
@@ -517,7 +544,16 @@ ILDFLAGS= ${COMMON_LDFLAGS}
 LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 
 #endif	/* end of skip for non-Gnu makefiles */
+
+##################################################
+# NOTE: End of section from custom/Makefile.head #
+##################################################
 # start of host target cut - Do not remove this line
+
+###########################################################
+# NOTE: Start of section from the middle of Makefile.ship #
+###########################################################
+
 ##############################################################################
 #-=-=-=-=-=- host target section - targets that override defaults -=-=-=-=-=-#
 ##############################################################################
@@ -627,10 +663,8 @@ LIBCUSTCALC_STATIC=
 # This facility requires a Gnu Makefile, or a make command
 # that understands the += make operand.
 #
-#if 0	/* start of skip for non-Gnu makefiles */
 COMMON_CFLAGS+= ${COMMON_ADD}
 COMMON_LDFLAGS+= ${COMMON_ADD}
-#endif	/* end of skip for non-Gnu makefiles */
 #
 CCWARN= -Wall
 WNO_IMPLICT= -Wno-implicit
@@ -645,9 +679,9 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 endif
 
-##############################
-# Apple OS X / Darwin target #
-##############################
+###############################
+# Apple macOS / Darwin target #
+###############################
 
 ifeq ($(target),Darwin)
 #
@@ -695,10 +729,8 @@ LIBCUSTCALC_STATIC=
 # This facility requires a Gnu Makefile, or a make command
 # that understands the += make operand.
 #
-#if 0	/* start of skip for non-Gnu makefiles */
 COMMON_CFLAGS+= ${COMMON_ADD}
 COMMON_LDFLAGS+= ${COMMON_ADD}
-#endif	/* end of skip for non-Gnu makefiles */
 #
 CCWARN= -Wall
 WNO_IMPLICT= -Wno-implicit
@@ -765,10 +797,8 @@ LIBCUSTCALC_STATIC=
 # This facility requires a Gnu Makefile, or a make command
 # that understands the += make operand.
 #
-#if 0	/* start of skip for non-Gnu makefiles */
 COMMON_CFLAGS+= ${COMMON_ADD}
 COMMON_LDFLAGS+= ${COMMON_ADD}
-#endif	/* end of skip for non-Gnu makefiles */
 #
 CCWARN= -Wall
 WNO_IMPLICT= -Wno-implicit
@@ -827,10 +857,8 @@ LIBCUSTCALC_STATIC=
 # This facility requires a Gnu Makefile, or a make command
 # that understands the += make operand.
 #
-#if 0	/* start of skip for non-Gnu makefiles */
 COMMON_CFLAGS+= ${COMMON_ADD}
 COMMON_LDFLAGS+= ${COMMON_ADD}
-#endif	/* end of skip for non-Gnu makefiles */
 #
 CCWARN= -Wall
 WNO_IMPLICT= -Wno-implicit
@@ -883,10 +911,8 @@ LD_STATIC=
 # This facility requires a Gnu Makefile, or a make command
 # that understands the += make operand.
 #
-#if 0	/* start of skip for non-Gnu makefiles */
 COMMON_CFLAGS+= ${COMMON_ADD}
 COMMON_LDFLAGS+= ${COMMON_ADD}
-#endif	/* end of skip for non-Gnu makefiles */
 #
 CCWARN= -Wall
 WNO_IMPLICT= -Wno-implicit
@@ -937,10 +963,8 @@ LD_STATIC=
 # This facility requires a Gnu Makefile, or a make command
 # that understands the += make operand.
 #
-#if 0	/* start of skip for non-Gnu makefiles */
 COMMON_CFLAGS+= ${COMMON_ADD}
 COMMON_LDFLAGS+= ${COMMON_ADD}
-#endif	/* end of skip for non-Gnu makefiles */
 #
 CCWARN= -Wall
 WNO_IMPLICT= -Wno-implicit
@@ -1094,10 +1118,8 @@ LD_STATIC=
 # This facility requires a Gnu Makefile, or a make command
 # that understands the += make operand.
 #
-#if 0	/* start of skip for non-Gnu makefiles */
 COMMON_CFLAGS+= ${COMMON_ADD}
 COMMON_LDFLAGS+= ${COMMON_ADD}
-#endif	/* end of skip for non-Gnu makefiles */
 #
 CCWARN= -Wall
 WNO_IMPLICT= -Wno-implicit
@@ -1142,7 +1164,27 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 #######################################################################
 #-=-=-=-=-=- end of target section - only make rules below -=-=-=-=-=-#
 #######################################################################
+
+#########################################################
+# NOTE: End of section from the middle of Makefile.ship #
+#########################################################
+
 # end of host target cut - Do not remove this line
+#
+# Copyright (C) 1999-2006,2014,2017-2018,2021  Landon Curt Noll
+#
+# SRC: Makefile via make -f Makefile.ship custom/Makefile
+#
+#	The "# SRC: ... - ..." comment line above indicates
+#	the origin of this file.
+#
+# IMPORTANT: Please see the section on Makefiles near the
+#	     bottom of the HOWTO.INSTALL file.
+
+####################################################
+# NOTE: Start of section from custom/Makefile.tail #
+####################################################
+
 ##############################################################################
 #-=-=-=-=-=-=-=-=- Be careful if you change something below -=-=-=-=-=-=-=-=-#
 ##############################################################################
@@ -1293,7 +1335,10 @@ Makefile.simple: ${MAKE_FILE}
 	${V} echo '=-=-=-=-= custom/${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${Q} ${RM} -f $@
 	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
-	    ${MAKE_FILE} > $@
+	    ${MAKE_FILE} | \
+	    ${GREP} -v '#\.#' | \
+	    ${SED} -e 's;^# SRC:.*;# SRC: non-GNU Makefile via;' \
+		   -e 's;via$$;via ${MAKE} -f ${MAKE_FILE} custom/$@;' > $@
 	${Q} echo >> $@
 	${Q} echo 'Makefile.simple:' >> $@
 	${Q} echo '	$${Q} if [ ! -f Makefile.simple ]; then '"\\" >> $@
@@ -1894,3 +1939,7 @@ custtbl.o: ../str.h
 custtbl.o: ../value.h
 custtbl.o: ../zmath.h
 custtbl.o: custtbl.c
+
+##################################################
+# NOTE: End of section from custom/Makefile.tail #
+##################################################

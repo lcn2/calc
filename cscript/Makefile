@@ -3,6 +3,14 @@
 #
 # Copyright (C) 1999-2006,2014,2017,2021  Landon Curt Noll
 #
+# SRC: cscript/Makefile
+#
+#	The "# SRC: ... - ..." comment line above indicates
+#	the origin of this file.
+#
+# IMPORTANT: Please see the section on Makefiles near the
+#	     bottom of the HOWTO.INSTALL file.
+#
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
 # as published by the Free Software Foundation.

@@ -2,33 +2,15 @@
 #
 # calc - arbitrary precision calculator
 #
-# (Linux calc rpm building makefile)
-#
-#  NOTE: This Makefile is used to make the calc rpm.  In addition to these
-#	 comments, this Makefile differs from the non-rpm bzip2-ed tarball
-#	 source Makefile in the following ways:
-#
-#	 CCWERR= -Werror
-#	 USE_READLINE= -DUSE_READLINE
-#	 READLINE_LIB= -lreadline -lhistory -lncurses
-#
 # Copyright (C) 1999-2018,2021  Landon Curt Noll
 #
-# The Makefile.ship makefile becomes the Makefile found in the
-# calc-*.tar.bz2 bzip2 source tarball.
+# SRC: Makefile - Our calc build environment
 #
-# This Makefile drives the makefile: Makefile.ship.
+#	The "# SRC: ... - ..." comment line above indicates
+#	the origin of this file.
 #
-# This makefile mostly contains critical variables (such as SHELL, MAKE, etc.)
-# as well as those which we choose to override defaults found in
-# Makefile.ship.  Make variables unique to this Makefile start with X.
-#
-# This makefile contains only those critical rules (such as all, clean, etc.)
-# and the common rules needed in development (such as chk, check, etc.).
-# This makefile has a few special rules that are used to set the version
-# string in the shipped makefiles (such as Makefile.ship).
-
-# Copyright (C) 1999-2008,2014  Landon Curt Noll
+# IMPORTANT: Please see the section on Makefiles near the
+#	     bottom of the HOWTO.INSTALL file.
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -753,6 +735,11 @@ custom/Makefile:
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
 
 Makefile.simple:
+	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
+	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
+	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
+
+custom/Makefile.simple:
 	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='

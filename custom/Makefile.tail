@@ -1,3 +1,18 @@
+#
+# Copyright (C) 1999-2006,2014,2017-2018,2021  Landon Curt Noll
+#
+# SRC: custom/Makefile.tail
+#
+#	The "# SRC: ... - ..." comment line above indicates
+#	the origin of this file.
+#
+# IMPORTANT: Please see the section on Makefiles near the
+#	     bottom of the HOWTO.INSTALL file.
+
+####################################################
+# NOTE: Start of section from custom/Makefile.tail #
+####################################################
+
 ##############################################################################
 #-=-=-=-=-=-=-=-=- Be careful if you change something below -=-=-=-=-=-=-=-=-#
 ##############################################################################
@@ -148,7 +163,10 @@ Makefile.simple: ${MAKE_FILE}
 	${V} echo '=-=-=-=-= custom/${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${Q} ${RM} -f $@
 	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
-	    ${MAKE_FILE} > $@
+	    ${MAKE_FILE} | \
+	    ${GREP} -v '#\.#' | \
+	    ${SED} -e 's;^# SRC:.*;# SRC: non-GNU Makefile via;' \
+		   -e 's;via$$;via ${MAKE} -f ${MAKE_FILE} custom/$@;' > $@
 	${Q} echo >> $@
 	${Q} echo 'Makefile.simple:' >> $@
 	${Q} echo '	$${Q} if [ ! -f Makefile.simple ]; then '"\\" >> $@
@@ -749,3 +767,7 @@ custtbl.o: ../str.h
 custtbl.o: ../value.h
 custtbl.o: ../zmath.h
 custtbl.o: custtbl.c
+
+##################################################
+# NOTE: End of section from custom/Makefile.tail #
+##################################################

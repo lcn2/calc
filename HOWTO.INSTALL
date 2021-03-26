@@ -1,3 +1,7 @@
+
+IMPORTANT: Please see the section at the bottom of this file for
+	   some important information on Makefiles used in calc.
+
 Installing calc from the bzip2-ed tarball in 4 easy steps:
 
     0)  If your platform supports i686 RPMs, you may want to go to:
@@ -197,6 +201,213 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 
 We suggest that you might want to read the README.FIRST file and look at
 the calc help subsystem.  See also the README.md file.
+
+=-=
+
+On calc Makefiles:
+
+How to tell the origin of of a Makefile:
+
+    The "# SRC: ... - ..." comment line near the top
+    of the file indicates the origin of this file.
+    In each segment below, we indicate what the SRC
+    comment like will read.
+
+SHELL= ...
+
+    On some systems, /bin/sh is a rather reduced shell with
+    deprecated behavor.
+
+    If your system has a up to date, bash shell, then
+    you may wish to edit the Makefile to use:
+
+	    SHELL= /bin/bash
+
+    On some systems such as macOS, the bash shell is very
+    far behind to the point wehre is cannot be depended on.
+    On such systems, the zsh may be a much better alternative
+    shell for this Makefile to use:
+
+	    SHELL= /bin/zsh
+
+Makefile
+
+    # SRC: Makefile - Our calc build environment
+
+    This is our internal Makefile that drives how we build calc.
+    For critical rules in Makefile.ship, there is a corresponding
+    rule in Makefile that calls ${MAKE} -f Makefile.ship with,
+    additional commands, args and Makefile variables.  The ${XVAR}
+    Makefile variable, for example, is passed on each call to
+    ${MAKE} -f Makefile.ship so that the enviroment and parameters of
+    Makefile.ship may be managed for our build environment.
+
+    This Makefile is used to make the calc rpm.  In addition to these
+    comments, this Makefile differs from the non-rpm bzip2-ed tarball
+    source Makefile in at least the the following ways:
+
+	CCWERR= -Werror
+	USE_READLINE= -DUSE_READLINE
+	READLINE_LIB= -lreadline -lhistory -lncurses
+
+    If the Makefile is not suitable for you, then
+    you may wish to replace it with Makefile.ship:
+
+	mv -f -v Makefile.ship Makefile
+
+    This Makefile assumes you have a modern make command such as
+    the GNU make.  See Makefile.simple comment below if you do not
+    have such a modern make command.
+
+    In packages such as RPMs, and the tar.bz2 source tarball,
+    Makefile contains the contents of Makefile.ship.  If Makefile.ship
+    is missing it has likely moved to replace Makefile.
+
+    In the calc GitHub repo, Makefile is the calc build environment
+    and Makefile.ship is the top level Makefile:
+
+	https://github.com/lcn2/calc
+
+Makefile.ship
+
+    # SRC: Makefile.ship - top level Makefile
+
+    This is the main top level Makefile.
+
+    In calc packages such as RPMs, and the tar.bz2 source tarball,
+    Makefile.ship has been moved into Makefile.
+
+    In the calc GitHub repo, Makefile is the calc build environment
+    and Makefile.ship is the top level Makefile:
+
+	https://github.com/lcn2/calc
+
+    The Makefile.simple rule of Makefile.ship, when forming the
+    Makefile.simple file, removes lines from Makefile.ship between
+    pairs of '#if 0' AND '#endif':
+
+	#if 0
+	lines removed when forming Makefile.simple
+	...
+	lines removed when forming Makefile.simple
+	#endif
+
+    The '#if 0' AND '#endif' MUST be at the start of the line.
+    Any text after the '#if 0' OR '#endif' is ignored.
+
+    While they may look like a CPP directives, they are not.  The
+    inlike awk scritp of the Makefile.simple rule does NOT allow
+    them to nest:
+
+	#if 0 /* DO NOT DO THIS */
+	lines removed when forming Makefile.simple
+	...
+	#if 0 /* DO NOT DO THIS */
+	...
+	#endif /* DO NOT DO THIS */
+	...
+	#endif /* DO NOT DO THIS */
+
+    The custom/Makefile rule of Makefile.ship is used to form
+    the custom/Makefile.  In particular the Makefile.ship lines:
+
+	# start of host target cut
+	... these go inbetween custom/Makefile.head and custom/Makefile.tail
+	# end of host target cut
+
+Makefile.simple
+
+    # SRC: non-GNU Makefile via make -f Makefile.ship Makefile.simple
+
+    This is a non-GNU or simple Makefile designed for enviroments
+    that do not have a modern make command.
+
+    If you have a Makefile.simple file, use these commands to
+    form a Makefile:
+
+	if [ -f Makefile ]; then mv -f Makefile Makefile.orig; fi
+	cp Makefile.simple Makefile
+
+    The Makefile.simple rule from Makefile.ship is used to construct
+    this file from the contents of Makefile.ship.
+
+    In calc packages such as RPMs, and the tar.bz2 source the
+    Makefile.simple exists.  In the calc GitHub repo:
+
+	https://github.com/lcn2/calc
+
+    this file does NOT exist and must be made via the Makefile.simple
+    make rule.  Therefore, non-GNU and simple make comands are NOT
+    supported by the calc GitHub repo master branch.  Instead, you
+    need to extract Makefile.simple from one of the calc tar.bz2
+    source tarball source from a calc source mirror:
+
+	http://www.isthe.com/chongo/tech/comp/calc/calc-mirror.html
+
+custom/Makefile.head
+
+    # SRC: custom/Makefile.head
+
+    This file forms the top part of the custom/Makefile.
+
+custom/Makefile.tail
+
+    # SRC: custom/Makefile.tail
+
+    This file forms the bottom part of the custom/Makefile.
+
+custom/Makefile
+
+    # SRC: Makefile via make -f Makefile custom/Makefile
+
+    This is the custom directory Makefile.
+
+    The custom/Makefile rule of Makefile.ship is used to form
+    the custom/Makefile.  In particular the Makefile.ship lines:
+
+	# start of host target cut
+	... these go inbetween custom/Makefile.head and custom/Makefile.tail
+	# end of host target cut
+
+custom/Makefile.simple
+
+    # SRC: non-GNU Makefile via make -f Makefile custom/Makefile.simple
+
+    This is a non-GNU or simple Makefile for the custom direcory
+    that is designed for enviroments that do not have a modern make
+    command.
+
+    In calc packages such as RPMs, and the tar.bz2 source the
+    Makefile.simple exists.  In the calc GitHub repo:
+
+	https://github.com/lcn2/calc
+
+    this file does NOT exist and must be made via the
+    custom/Makefile.simple make rule.  Therefore, non-GNU and simple
+    make comands are NOT supported by the calc GitHub repo master
+    branch.  Instead, you need to extract custom/Makefile.simple
+    from one of the calc tar.bz2 source tarball source from a calc
+    source mirror:
+
+	http://www.isthe.com/chongo/tech/comp/calc/calc-mirror.html
+
+cal/Makefile
+
+    # SRC: cal/Makefile
+
+    The Makefile for the cal sub-directory.
+
+cscript/Makefile
+
+    # SRC: cscript/Makefile
+
+    The Makefile for the cscript sub-directory.
+
+help/Makefile
+
+    # SRC: help/Makefile
+
+    The Makefile for the help sub-directory.
 
 ## Copyright (C) 1999-2007,2021  Landon Curt Noll
 ##
