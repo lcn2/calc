@@ -216,6 +216,7 @@ EXTERN int havecommands;	/* TRUE if have cmd args) */
 EXTERN char *program;	/* our name */
 EXTERN char *base_name;	/* basename of our name */
 EXTERN char cmdbuf[];	/* command line expression */
+EXTERN char *script_name;	/* program name or -f filename arg or NULL */
 
 EXTERN int abortlevel;	/* current level of aborts */
 EXTERN BOOL inputwait;	/* TRUE if in a terminal input wait */

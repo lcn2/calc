@@ -1,14 +1,14 @@
-#!/usr/local/src/bin/calc/calc -q -s -f
+#!/usr/local/src/bin/calc/calc -q -f
 /*
  * fproduct - write the big Endian product of terms to a file
+ *
+ * Copyright (C) 2001,2014,2019,2021  Landon Curt Noll
  *
  * usage:
  *	fproduct filename term [term ...]
  *
  *	filename	where to write the product, use - for stdout
  *	term ...	terms to multiply
- *
- * Copyright (C) 2001,2014,2019  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License

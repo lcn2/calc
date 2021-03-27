@@ -1,8 +1,8 @@
-#!/usr/local/src/bin/calc/calc -q -s -f
+#!/usr/local/src/bin/calc/calc -q -p -f
 /*
  * sqaure - print the squares of input values
  *
- * Copyright (C) 2000-2007,2014,2019  Ernest Bowen
+ * Copyright (C) 2000-2007,2014,2019,2021  Ernest Bowen
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -48,6 +48,8 @@
  *               1522756
  *       ln(2)
  *               ~.48045301391820142467
+ *	 2i
+ *		 -4
  *       config("mode","frac"), bernoulli(10)
  *               25/4356
  *       config("mode", "hex"), 0xff

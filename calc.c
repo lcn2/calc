@@ -123,6 +123,11 @@ main(int argc, char **argv)
 	 * parse args
 	 */
 	program = argv[0];
+	script_name = strdup(argv[0]);
+	if (script_name == NULL) {
+		fprintf(stderr, "%s: failed to strdup(argv[0])\n", program);
+		exit(1);
+	}
 
 	cmdbuf[0] = '\0';
 	cmdlen = 0;
@@ -399,19 +404,35 @@ main(int argc, char **argv)
 						}
 					}
 					bp = cmdbuf + cmdlen;
+					/*
+					 * duplicate -f filename arg
+					 * as a new script_name value
+					 */
+					if (script_name != NULL) {
+						free(script_name);
+					}
+					script_name = NULL;
+					script_name = strdup(cp);
+					if (script_name == NULL) {
+						fprintf(stderr,
+							"strdup(-f argument)"
+							"failed\n");
+						exit(17);
+					}
+					/* process -f filename arg */
 					if (haveendstr) {
 						len = strlen(cp);
 						if (len == 0) {
 							fprintf(stderr,
 								"Null"
-								" filename!");
-							exit(17);
+								" filename!\n");
+							exit(18);
 						}
 						if (cmdlen + len + 2 > MAXCMD) {
 							fprintf(stderr,
 								"Commands too"
-								" long");
-							exit(18);
+								" long\n");
+							exit(19);
 						}
 						/* XXX - what if *cp = '\''? */
 						*bp++ = '\'';
@@ -423,10 +444,10 @@ main(int argc, char **argv)
 					} else {
 						do {
 							if (cmdlen > MAXCMD) {
-								fprintf(stderr,
-								   "Commands"
-								   " too long");
-								exit(19);
+							    fprintf(stderr,
+							       "Commands"
+							       " too long\n");
+							    exit(20);
 							}
 							*bp++ =  *cp++;
 							cmdlen++;
@@ -439,7 +460,10 @@ main(int argc, char **argv)
 					*bp++ = ';';
 					*bp = '\0';
 					cmdlen++;
-					s_flag = TRUE;	/* -f implies -s */
+
+					/* -f implies -s */
+					s_flag = TRUE;
+					maxindex = index + 1;
 					break;
 
 				case 's':
@@ -462,7 +486,7 @@ main(int argc, char **argv)
 		"usage: %s ... -f filename\n"
 		"1st cscript line: #/path/to/calc ... -s -f\n",
 		program, program);
-					exit(20);
+					exit(21);
 			}
 			if (havearg)
 				break;
@@ -488,7 +512,7 @@ main(int argc, char **argv)
 			fprintf(stderr,
 				"%s: commands too long\n",
 				program);
-			exit(21);
+			exit(22);
 		}
 		strlcpy(cmdbuf + cmdlen, cp, cplen+1);
 		cmdbuf[newcmdlen] = '\0';
@@ -511,7 +535,7 @@ main(int argc, char **argv)
 		}
 	}
 
-	argc_value = argc - maxindex;
+	argc_value = argc - maxindex + 1;
 	argv_value = argv + maxindex;
 
 	/*
@@ -799,7 +823,7 @@ calc_interrupt(char *fmt, ...)
 		 * don't call libcalc_call_me_last() -- we might loop
 		 * and besides ... this is an unusual internal error case
 		 */
-		exit(22);
+		exit(24);
 	}
 }
 

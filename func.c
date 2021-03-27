@@ -8464,11 +8464,23 @@ f_argv(int count, VALUE **vals)
 			/*NOTREACHED*/
 		}
 
-		/* return the n-th argv string */
+		/* determine the arg value of the argv() function */
 		arg = qtoi(vals[0]->v_num);
-		if (arg < argc_value && argv_value[arg] != NULL) {
+
+		/* argv(0) is program or script_name if -f filename was used */
+		if (arg == 0) {
+			if (script_name == NULL) {
+				/* paranoia */
+				result.v_type = V_NULL;
+			} else {
+				result.v_type = V_STR;
+				result.v_str = makenewstring(script_name);
+			}
+
+		/* return the n-th argv string */
+		} else if (arg < argc_value && argv_value[arg-1] != NULL) {
 			result.v_type = V_STR;
-			result.v_str = makestring(strdup(argv_value[arg]));
+			result.v_str = makestring(strdup(argv_value[arg-1]));
 		} else {
 			result.v_type = V_NULL;
 		}

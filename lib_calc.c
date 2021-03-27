@@ -119,6 +119,7 @@ char *program = "calc";		/* our name */
 char *base_name = "calc";	/* basename of our name */
 char cmdbuf[MAXCMD+1+1+1];	/* command line expression + "\n\0" + guard */
 run run_state = RUN_ZERO;	/* calc startup run state */
+char *script_name = NULL;	/* program name or -f filename arg or NULL */
 
 
 /*
@@ -613,6 +614,14 @@ libcalc_call_me_last(void)
 	 * free Blum generator state
 	 */
 	random_libcalc_cleanup();
+
+	/*
+	 * free script_name
+	 */
+	if (script_name != NULL) {
+		free(script_name);
+		script_name = NULL;
+	}
 
 	/*
 	 * restore all changed descriptor states

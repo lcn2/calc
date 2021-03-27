@@ -1,4 +1,4 @@
-#!/usr/local/src/bin/calc/calc -q -s -f
+#!/usr/local/src/bin/calc/calc -q -f
 /*
  * piforever - print digits of pi forever (or as long as your mem/CPU allow)
  *

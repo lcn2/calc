@@ -37,6 +37,7 @@ calc \- arbitrary precision calculator
 .RB [ -D\ \&calc_debug[:resource_debug[:user_debug]] ]
 .br
 .RB [ \-e ]
+.RB [ \-f\ \&filename ]
 .RB [ \-h ]
 .RB [ \-i ]
 .RB [ \-m\ \&mode ]
@@ -50,11 +51,12 @@ calc \- arbitrary precision calculator
 .RB [ [\-\-]\ calc_cmd\ \&.\|.\|. ]
 .in -5n
 .sp
-\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-s\fP \fB\-f\fP
+\fI#!${BINDIR}/calc\fP\ [optional_other_flags\ \&...] \fB\-f\fP
+
+.PP
+
 .SH DESCRIPTION
-\&
-.br
-CALC OPTIONS
+
 .PP
 
 .TP
@@ -218,48 +220,55 @@ Ignore any environment variables on startup.
 The getenv() builtin will still return values, however.
 
 .TP
-.B \-f
+.BR \-f " filename"
 This flag is normally only with calc shell scripts.
 .sp 1
 This flag is required when using calc in
 .BR "shell script mode" .
 It must be at the end of the initial
 .B #!
-line of the script
-and must be immediately preceded by the
-.B \-s
-flag.
-.sp 1
-If the first line of an executable file begins
-.B #!
-followed by the absolute pathname of the
-.B calc
-program and if the first line ends with the two flags
-.B \-s
-.B \-f
-as in:
+line of the script, as in:
 .sp 1
 .in +5n
 .nf
-\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-s\fP \fB\-f\fP
+\fI#!${BINDIR}/calc\fP\ [optional_other_flags\ \&...] \fB\-f\fP
 .fi
 .in -5n
 .sp 1
 the rest of the file will be processed in
 .BR "shell script mode" .
+
+.sp 1
+A common flag to use, prior to the
+.B \-f
+on the #! line is the
+.B \-q
+flag.
+For example:
+.sp 1
+.in +5n
+.nf
+\fI#!${BINDIR}/calc\fP \fB\-q\fP \fB\-f\fP
+.fi
+.in -5n
+.sp 1
+This allows the script to run independely of
+startup scripts.
+
+.sp 1
 See
 .B "SHELL SCRIPT MODE"
 section of this man page
 below for details.
 .sp 1
-The actual form of this flag is:
+While the actual form of this flag is:
 .sp 1
 .in +5n
-.B \-f
+.BR \-f
 filename
 .in -5n
 .sp 1
-On systems that treat an executable that begins with
+for systems that treat an executable that begins with
 .B #!
 as a script, the path of the executable is appended by the kernel
 as the final argument to the exec() system call.
@@ -270,12 +279,13 @@ flag at the very end of the
 line.
 .sp 1
 It is possible use
-.B \-f\ filename
+.B \-f
+filename
 on the command line:
 .sp 1
 .in +5n
 .nf
-\fIcalc\fP\ [other_flags\ \&...] \fB\-s\fP \fB\-f\fP filename
+\fIcalc\fP\ [optional_other_flags\ \&...] \fB\-f\fP filename
 .fi
 .in -5n
 .sp 1
@@ -283,28 +293,14 @@ This will cause calc to process lines in
 .B filename
 in
 .BR "shell script mode" .
-.sp 1
-Use of
-.B \-f
-implies
-.BR \-s .
-However in a calc shell script,
-one must include
-.B \-f
-before
-.B \-s
-on the initial
-.B #!
-line.
 
 .sp 1
-In addition,
-.B \-d
-and
-.B \-p
-are implied if
-.B \-i
-is not given.
+The use of
+.B \-f
+filename
+implies the
+.B \-s
+flag.
 
 .TP
 .B \-h
@@ -491,16 +487,16 @@ This is useful when entering negative values on the command line as in:
 .in +5n
 .nf
 calc \-p \-\- \-1 - -7
-.sp 1
 .fi
 .in -5n
+.sp 1
 
 .PP
 
-\&
-.br
-CALC COMMAND LINE
+.SH CALC COMMAND LINE
+
 .PP
+
 With no
 .I calc_cmd
 arguments,
@@ -638,10 +634,10 @@ to parse interactive commands, flushes data on standard input.
 
 .PP
 
-\&
-.br
-CALC STARTUP FILES
+.SH CALC STARTUP FILES
+
 .PP
+
 Normally on startup,
 if the environment variable
 .B $CALCRC
@@ -678,10 +674,12 @@ files is also disabled as if
 .B \-q
 was given.
 
-\&
-.br
-CALC FILE SEARCH PATH
 .PP
+
+.SH CALC FILE SEARCH PATH
+
+.PP
+
 If the environment variable
 .B $CALCPATH
 is undefined, or if it
@@ -758,24 +756,24 @@ help config
 .fi
 .in -5n
 .sp 1
+
 .PP
 
-\&
-.br
-SHELL SCRIPT MODE
+.SH SHELL SCRIPT MODE
+
 .PP
+
 If the first line of an executable file begins
 .B #!
 followed by the absolute pathname of the
 .B calc
-program and the first line ends with the two flags
-.B \-s
+program and the first line ends with the flag
 .B \-f
 as in:
 .sp 1
 .in +5n
 .nf
-\fI#!${BINDIR}/calc\fP\ [other_flags\ \&...] \fB\-s\fP \fB\-f\fP
+\fI#!${BINDIR}/calc\fP\ [optional_other_flags\ \&...] \fB\-f\fP
 .fi
 .in -5n
 .sp 1
@@ -786,11 +784,11 @@ Note that
 .B \-f
 must at the end of the initial ``#!'' line.
 Any other optional
-.B "other_flags"
+.B "optional_other_flags"
 must come before
 the
-.B \-s
-.BR \-f .
+.B \-f
+flag.
 .sp 1
 In
 .B "shell script mode"
@@ -799,7 +797,7 @@ executed as if they were in a file being processed by a read
 command, except that a "command" beginning with '#' followed by
 whitespace and ending at the next newline is treated as a comment.
 Any optional
-.B "other_flags"
+.B "optional_other_flags"
 will be parsed first followed by
 the later lines within the script itself.
 .sp 1
@@ -821,7 +819,7 @@ the file
 .sp 1
 .in +5n
 .nf
-\fI#!${BINDIR}/calc\fP\ \&\fB\-q\fP \&\fB\-s\fP \fB\-f\fP
+\fI#!${BINDIR}/calc\fP\ \&\fB\-q\fP \fB\-f\fP
 
 /* setup */
 argc = argv();
@@ -894,12 +892,13 @@ whereas
 .in -5n
 .sp 1
 will not.
+
 .PP
 
-\&
-.br
-DATA TYPES
+.SH DATA TYPES
+
 .PP
+
 Fundamental builtin data types include integers, real numbers,
 rational numbers, complex numbers and strings.
 .PP
@@ -922,12 +921,13 @@ help obj
 .br
 show objfuncs
 .in -1.0i
+
 .PP
 
-\&
-.br
-VARIABLES
+.SH VARIABLES
+
 .PP
+
 Variables in \fIcalc\fP are typeless.
 In other words, the fundamental type of a variable is determined by its content.
 Before a variable is assigned a value it has the value of zero.
@@ -950,12 +950,13 @@ help list
 .br
 show globals
 .in -1.0i
+
 .PP
 
-\&
-.br
-INPUT/OUTPUT
+.SH INPUT/OUTPUT
+
 .PP
+
 A leading ``0x'' implies a hexadecimal value,
 a leading ``0b'' implies a binary value,
 and a ``0'' followed by a digit implies an octal value.
@@ -985,12 +986,13 @@ command:
 .in 1.0i
 help file
 .in -1.0i
+
 .PP
 
-\&
-.br
-CALC LANGUAGE
+.SH CALC LANGUAGE
+
 .PP
+
 The \fIcalc\fP language is a C-like language.
 The language includes commands such as variable declarations,
 expressions, tests, labels, loops, file operations, function calls.
@@ -1017,10 +1019,13 @@ help operator
 .br
 help config
 .in -1.0i
+
 .PP
+
 .SH FILES
-\&
-.br
+
+.PP
+
 .PD 0
 .TP 5
 ${BINDIR}/calc
@@ -1062,9 +1067,13 @@ custom resource files
 ${CUSTOMHELPDIR}/*
 custom help files
 .sp 1
+
+.PP
+
 .SH ENVIRONMENT
-\&
-.br
+
+.PP
+
 .PD 0
 .TP 5
 CALCPATH
@@ -1123,9 +1132,13 @@ Location of the calc custom help directory.
 .sp
 Default value: ${CUSTOMHELPDIR}
 .sp
+
+.PP
+
 .SH CREDIT
-\&
-.br
+
+.PP
+
 The main chunk of
 .B calc
 was written by David I. Bell.
@@ -1154,10 +1167,13 @@ public domain arbitrarily precision routines which was posted
 to the net around 1984.
 By now, there is almost no recognizable
 code left from that original source.
-.sp
+
+.PP
+
 .SH "COPYING / CALC GNU LESSER GENERAL PUBLIC LICENSE"
-\&
-.sp
+
+.PP
+
 Calc is open software, and is
 covered under version 2.1 of the GNU Lesser General Public License.
 You are
@@ -1217,10 +1233,13 @@ Copyright (C) 1999-2021  Landon Curt Noll
 .sp
 and is covered under version 2.1 GNU Lesser General
 Public License.
-.sp
+
+.PP
+
 .SH "CALC QUESTIONS"
-\&
-.br
+
+.PP
+
 If you have a simple general question about calc, send Email to:
 .sp
 .in +0.5i
@@ -1276,11 +1295,13 @@ nor can we do your homework, nor can
 we do much more than answer short general questions about calc.
 .sp
 Please be patient as we cannot always respond to Email messages quickly.
-.sp
+
+.PP
+
 .SH "BUG REPORTS / BUG FIXES"
-\&
-.br
-.sp
+
+.PP
+
 Send bug reports and bug fixes to:
 .sp
 .in +0.5i
@@ -1346,11 +1367,13 @@ help bugs
 for more information about bug reporting.
 .sp
 Please be patient as we cannot always respond to Email messages quickly.
-.sp
+
+.PP
+
 .SH "CONTRIBUTING CODE TO CALC"
-\&
-.br
-.sp
+
+.PP
+
 .I Calc
 is open source.
 Contributions of code are welcome.
@@ -1473,10 +1496,13 @@ you have that
 somewhere in the subject line!
 .sp
 Please be patient as we cannot always respond to Email messages quickly.
-.sp
+
+.PP
+
 .SH "CALC WEB SITE"
-\&
-.br
+
+.PP
+
 Landon Noll maintains the
 .B calc
 web site is located at:

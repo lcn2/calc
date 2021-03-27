@@ -1,6 +1,8 @@
-#!/usr/local/src/bin/calc/calc -q -s -f
+#!/usr/local/src/bin/calc/calc -q -f
 /*
  * 4dsphere - determine if 6 points lie on the surface of a sphere in R^4
+ *
+ * Copyright (C) 2001,2014,2019,2021  Landon Curt Noll
  *
  * usage:
  *      4dsphere x0 y0 z0 w0 x1 y1 z1 w1 ... x5 y5 z5 w5
@@ -9,8 +11,6 @@
  *      x1 y1 z1 w1	point 1 in R^4
  *	...		...
  *      x5 y5 z5 w5	point 5 in R^4
- *
- * Copyright (C) 2001,2014,2019  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License

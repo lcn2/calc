@@ -1153,7 +1153,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.12.9.1
+VERSION= 2.13.0.0
 
 # Names of shared libraries with versions
 #
@@ -2823,7 +2823,7 @@ have_unistd.h: ${MAKE_FILE}
 	${Q} echo '' >> $@
 	${Q} echo '/* do we have <unistd.h>? */' >> $@
 	-${Q} if [ X"${HAVE_UNISTD_H}" = X"YES" ]; then \
-	    echo '#define $@	/* yes */' >> $@; \
+	    echo '#define HAVE_UNISTD_H	/* yes */' >> $@; \
 	elif [ X"${HAVE_UNISTD_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_UNISTD_H  /* no */' >> $@; \
 	elif echo '#include <unistd.h>' | ${CC} -E - ${S}; then \
@@ -2859,7 +2859,7 @@ have_string.h: ${MAKE_FILE}
 	${Q} echo '' >> $@
 	${Q} echo '/* do we have <string.h>? */' >> $@
 	-${Q} if [ X"${HAVE_STRING_H}" = X"YES" ]; then \
-	    echo '#define $@	/* yes */' >> $@; \
+	    echo '#define HAVE_STRING_H	/* yes */' >> $@; \
 	elif [ X"${HAVE_STRING_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_STRING_H  /* no */' >> $@; \
 	elif echo '#include <string.h>' | ${CC} -E - ${S}; then \
@@ -3581,7 +3581,7 @@ have_urandom.h: ${MAKE_FILE}
 	${Q} echo '' >> $@
 	${Q} echo '/* do we have /dev/urandom? */' >> $@
 	-${Q} if [ X"${HAVE_URANDOM}" = X"YES" ]; then \
-	    echo '#define $@	/* yes */' >> $@; \
+	    echo '#define HAVE_URANDOM	/* yes */' >> $@; \
 	elif [ X"${HAVE_URANDOM}" = X"NO" ]; then \
 	    echo '#undef HAVE_URANDOM  /* no */' >> $@; \
 	elif [ -r /dev/urandom ] 2>/dev/null; then \
@@ -3971,10 +3971,11 @@ have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h ${MAKE_FILE}
 #
 ###
 
-win32_hsrc: win32.mkdef ${MAKE_FILE}
+win32_hsrc: win32.mkdef banned.h have_ban_pragma.h alloc.h ${MAKE_FILE}
 	${H} echo 'forming win32 directory'
 	${Q} ${RM} -rf win32
 	${Q} ${MKDIR} -p win32
+	${Q} ${CP} banned.h have_ban_pragma.h alloc.h win32
 	${Q} ${CP} ${UTIL_C_SRC} win32
 	${Q} ${CP} ${UTIL_MISC_SRC} win32
 	${Q} ${CP} ${MAKE_FILE} win32/${MAKE_FILE}

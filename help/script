@@ -123,7 +123,7 @@ Calc shell scripts
 	    calc "-q -s" $* << +
 	    global i, n, s;
 	    n = argv();
-	    for (i = 0; i < n; i++)
+	    for (i = 1; i < n; i++)
 		    s += eval(argv(i));
 	    print "sum =", s;
 	    +
@@ -133,20 +133,24 @@ Calc shell scripts
 	    ./addall2 2 3 4
 
     the $* in this script expands to  2 3 4, and because of the "-s"
-    in the options, calc starts with argv(0) = "2", argv(1) = "3",
-    argv(2)= "4".  As there is only one calc process involved and
+    in the options, calc starts with argv(1) = "2", argv(2) = "3",
+    argv(3)= "4".  As there is only one calc process involved and
     the eval() function accepts as argument any string that
-    represents the body of a calc function, the strings argv(0),
-    argv(1), ... could evaluate to any value types for which the
+    represents the body of a calc function, the strings argv(1),
+    argv(2), ... could evaluate to any value types for which the
     additions to be performed are defined, and variables defined in
     one argv() can be used in later arguments.
+
+    In case you are wondering, argv(0) returns the program
+    or calc script name.  In the case of the above example,
+    argv(0) = "./addall2".
 
     For systems that support interpreter files, essentially the
     same thing may be done more efficiently by using calc as an
     interpreter.  Assuming the full path for calc is
     /usr/local/bin/calc, one could use the file addall3 with contents
 
-	    #!/usr/bin/calc -q -s -f
+	    #!/usr/bin/calc -q -f
 	    global i, n, s;
 	    n = argv();
 	    for (i = 1; i < n; i++)
@@ -161,9 +165,9 @@ Calc shell scripts
 
     After the command:
 
-	    addall3 2 3 4
+	    ./addall3 2 3 4
 
-    the arguments calc receives are argv(0) = "addall3", argv(1) =
+    the arguments calc receives are argv(0) = "./addall3", argv(1) =
     "2", argv(3) = "3", argv(4) = "4".
 
     Another kind of script that can be useful is sqrts1:

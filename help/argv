@@ -11,14 +11,33 @@ TYPES
 
 DESCRIPTION
     Without args, this builtin returns the number of calc command line
-    strings available.
+    strings available, including the program or script name.
 
     If the numeric arg is supplied, then the corresponding command line
     string is return, if it exists.  Otherwise a nul() value is returned.
 
     In keeping with the argc/argv convention of C, argv(0) will refer
-    to the 1st argv string, and argv(argv()-1) will refer to the last.
-    This differs from the way the param() builtin works.
+    to the name of the program.  If the -f filename argument is used,
+    then argv(0) will refer to the filename.  In the case of a #! script,
+    assuming the calc is located in /usr/local/bin/calc, the first
+    line of a calc script would be:
+
+	#!/usr/local/bin/calc -f
+	...
+
+    then argv(0) will refer to the filename of the script.
+
+    As it is common to use -q in a calc script, and using that same
+    /usr/local/bin/calc location:
+
+	#!/usr/local/bin/calc -q -f
+	...
+
+    and again, argv(0) will refer to the filename of the script.
+
+    The 1st argument to calc will be argv(1), and argv(argv()-1)
+    will refer to the last.  This differs from the way the param()
+    builtin works.
 
     By default, calc will evaluate all of its command line arguments.
     However, if calc is invoked with -s, all non-dashed options will
@@ -27,22 +46,26 @@ DESCRIPTION
 	calc -i 2+2
 
     will cause calc to print 4 and enter interactive mode.  In this case
-    argv() will return 0.
+    argv() will return 1.
 
     On the other hand:
 
 	calc -i -s 2+2
 
-    will cause calc to interactive mode.  The argv() builtin will return 1
-    and argv(0) will return the string "2+2".
+    will cause calc to interactive mode.  The argv() builtin will return 2
+    and argv(1) will return the string "2+2".
 
 EXAMPLE
     $ calc -s a bb ccc
     ; argc = argv();
-    ; for (i = 0; i < argc; i++) print "argv[": i : '] = "': argv(i) : '"';
-    argv[0] = "a"
-    argv[1] = "bb"
-    argv[2] = "ccc"
+    ; print "argc =", argc;
+    argc = 4
+    ; print 'argv[0] = "': argv(0) : '"';
+    argv[0] = "calc"
+    ; for (i = 1; i < argc; i++) print "argv[": i : '] = "': argv(i) : '"';
+    argv[1] = "a"
+    argv[2] = "bb"
+    argv[3] = "ccc"
 
 LIMITS
     0 <= n < 2^31
@@ -53,7 +76,7 @@ LINK LIBRARY
 SEE ALSO
     param, system, usage
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

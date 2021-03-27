@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.12.9.2 to date:
+The following are the changes from calc version 2.13.0 to date:
 
     Fixed typo (missing quotes) in the env rule.
 
@@ -30,6 +30,42 @@ The following are the changes from calc version 2.12.9.2 to date:
     Fixed how calc man page in ${CATDIR} is formed.
 
     Fixed how Makefile.simple is formed.
+
+    Fixed the #! calc script argument processing.  The initial #!
+    line must end in a -f.  For example, if calc is in /usr/local/bin/calc,
+    then the following would be the first line of a calc script:
+
+	#!/usr/local/bin/calc -f
+	...
+
+    It is common that -q be usde with a calc script, so assuming the
+    same /usr/local/bin/calc path:
+
+	#!/usr/local/bin/calc -q -f
+	...
+
+    Use of -s in the #! first line of a calc script is not needed
+    since -f implies -f.
+
+    The argv() will now return values more typical of C's main().
+    Before it returned one less than the number of arguments.  Now,
+    for example, when calc is given 2 args, argv() will return 3.
+
+    The value of argv(0) will be the path to calc, or in the
+    case of a #! calc cscript, it will return the name of the script.
+
+    Updated the calc man page and help/argv to reflect the
+    above changes.
+
+    Improved the formatting of the calc man page.
+
+    Fixed the formation of the win32 sub-directory via the win32_hsrc
+    Makefile rule.
+
+    Due to incompatible changes to the argv() function, and #! calc
+    scripts, we are setting the version to the next minor number:
+
+	2.13.0
 
 
 The following are the changes from calc version 2.12.8.2 to 2.12.9.1:

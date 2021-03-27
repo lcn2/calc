@@ -1,5 +1,5 @@
 /*
- * math_error - a simple libcalc math error routine
+ * lib_calc - calc link library initialization and shutdown routines
  *
  * Copyright (C) 1999-2007,2014,2021  Landon Curt Noll
  *

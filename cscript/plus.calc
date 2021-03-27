@@ -1,8 +1,8 @@
-#!/usr/local/src/bin/calc/calc -q -s -f
+#!/usr/local/src/bin/calc/calc -q -f
 /*
  * plus - add two or more arguments together
  *
- * Copyright (C) 1999-2007,2014,2019  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2019,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -47,7 +47,7 @@ if (argc < 2) {
  * Since args are strings, we must eval them before using them numerically.
  */
 sum = 0;
-for (i=1; i < argv(); ++i) {
+for (i=1; i < argc; ++i) {
     sum += eval(argv(i));
 }
 print sum;
