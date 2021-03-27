@@ -119,9 +119,6 @@ Known bugs in calc:
     The output of the alg_config.cal resource file is bogus.
     We would welcome a replacement for this code.
 
-    Calc shell scripts do not read from stdin properly,
-    we all as a number of the cscript examples.
-
     We are sure some more bugs exist.  When you find them, please let
     us know!  See the above for details on how to report and were to
     Email your bug reports and hopefully patches to fix them.
