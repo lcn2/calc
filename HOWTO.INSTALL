@@ -37,9 +37,9 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 	one must use gmake instead of make.
 
 	Some report that under macOS, one has to declare the target
-	to be darwin.  So for macOS, one might have to do:
+	to be Darwin.  So for macOS, one might have to do:
 
-	    # for macOS users only, force the target to be darwin
+	    # for macOS users only, force the target to be Darwin
 	    #
 	    make target=Darwin clobber
 	    make target=Darwin all
@@ -216,7 +216,7 @@ How to tell the origin of of a Makefile:
 SHELL= ...
 
     On some systems, /bin/sh is a rather reduced shell with
-    deprecated behavor.
+    deprecated behavior.
 
     If your system has a up to date, bash shell, then
     you may wish to edit the Makefile to use:
@@ -224,7 +224,7 @@ SHELL= ...
 	    SHELL= /bin/bash
 
     On some systems such as macOS, the bash shell is very
-    far behind to the point wehre is cannot be depended on.
+    far behind to the point where is cannot be depended on.
     On such systems, the zsh may be a much better alternative
     shell for this Makefile to use:
 
@@ -239,7 +239,7 @@ Makefile
     rule in Makefile that calls ${MAKE} -f Makefile.ship with,
     additional commands, args and Makefile variables.  The ${XVAR}
     Makefile variable, for example, is passed on each call to
-    ${MAKE} -f Makefile.ship so that the enviroment and parameters of
+    ${MAKE} -f Makefile.ship so that the environment and parameters of
     Makefile.ship may be managed for our build environment.
 
     This Makefile is used to make the calc rpm.  In addition to these
@@ -296,7 +296,7 @@ Makefile.ship
     Any text after the '#if 0' OR '#endif' is ignored.
 
     While they may look like a CPP directives, they are not.  The
-    inlike awk scritp of the Makefile.simple rule does NOT allow
+    inline awk script of the Makefile.simple rule does NOT allow
     them to nest:
 
 	#if 0 /* DO NOT DO THIS */
@@ -312,14 +312,14 @@ Makefile.ship
     the custom/Makefile.  In particular the Makefile.ship lines:
 
 	# start of host target cut
-	... these go inbetween custom/Makefile.head and custom/Makefile.tail
+	... these go in between custom/Makefile.head and custom/Makefile.tail
 	# end of host target cut
 
 Makefile.simple
 
     # SRC: non-GNU Makefile via make -f Makefile.ship Makefile.simple
 
-    This is a non-GNU or simple Makefile designed for enviroments
+    This is a non-GNU or simple Makefile designed for environments
     that do not have a modern make command.
 
     If you have a Makefile.simple file, use these commands to
@@ -337,7 +337,7 @@ Makefile.simple
 	https://github.com/lcn2/calc
 
     this file does NOT exist and must be made via the Makefile.simple
-    make rule.  Therefore, non-GNU and simple make comands are NOT
+    make rule.  Therefore, non-GNU and simple make commands are NOT
     supported by the calc GitHub repo master branch.  Instead, you
     need to extract Makefile.simple from one of the calc tar.bz2
     source tarball source from a calc source mirror:
@@ -366,7 +366,7 @@ custom/Makefile
     the custom/Makefile.  In particular the Makefile.ship lines:
 
 	# start of host target cut
-	... these go inbetween custom/Makefile.head and custom/Makefile.tail
+	... these go in between custom/Makefile.head and custom/Makefile.tail
 	# end of host target cut
 
     NOTE: The clobber rule does not remove this file. - XXX
@@ -375,8 +375,8 @@ custom/Makefile.simple
 
     # SRC: non-GNU Makefile via make -f Makefile custom/Makefile.simple
 
-    This is a non-GNU or simple Makefile for the custom direcory
-    that is designed for enviroments that do not have a modern make
+    This is a non-GNU or simple Makefile for the custom directory
+    that is designed for environments that do not have a modern make
     command.
 
     In calc packages such as RPMs, and the tar.bz2 source the
@@ -386,7 +386,7 @@ custom/Makefile.simple
 
     this file does NOT exist and must be made via the
     custom/Makefile.simple make rule.  Therefore, non-GNU and simple
-    make comands are NOT supported by the calc GitHub repo master
+    make commands are NOT supported by the calc GitHub repo master
     branch.  Instead, you need to extract custom/Makefile.simple
     from one of the calc tar.bz2 source tarball source from a calc
     source mirror:

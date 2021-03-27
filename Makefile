@@ -44,7 +44,7 @@ endif
 # The shell used by this Makefile
 #
 # On some systems, /bin/sh is a rather reduced shell with
-# deprecated behavor.
+# deprecated behavior.
 #
 # If your system has a up to date, bash shell, then
 # you may wish to use:
