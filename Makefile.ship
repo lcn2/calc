@@ -58,6 +58,26 @@ SHELL= /bin/sh
 #SHELL= /bin/zsh
 
 
+#if 0	/* start of skip for non-Gnu makefiles */
+##############################################################################
+#-=-=-=-=-=-=-=-=- Identify the target machine, if possible -=-=-=-=-=-=-=-=-#
+##############################################################################
+
+# NOTE: You can force a target value by defining target as in:
+#
+#	make ...__optional_arguments_... target=value
+
+# Try uname -s if the target was not already set on the make command line
+#
+ifeq ($(target),)
+target=$(shell uname -s 2>/dev/null)
+endif
+#endif	/* end of skip for non-Gnu makefiles */
+
+##############################################################################
+#-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
+##############################################################################
+
 # CCBAN is given to ${CC} in order to control if banned.h is in effect.
 #
 # The banned.h attempts to ban the use of certain dangerous functions
@@ -92,27 +112,6 @@ SHELL= /bin/sh
 #
 CCBAN= -UUNBAN
 #CCBAN= -DUNBAN
-
-
-#if 0	/* start of skip for non-Gnu makefiles */
-##############################################################################
-#-=-=-=-=-=-=-=-=- Identify the target machine, if possible -=-=-=-=-=-=-=-=-#
-##############################################################################
-
-# NOTE: You can force a target value by defining target as in:
-#
-#	make ...__optional_arguments_... target=value
-
-# Try uname -s if the target was not already set on the make command line
-#
-ifeq ($(target),)
-target=$(shell uname -s 2>/dev/null)
-endif
-#endif	/* end of skip for non-Gnu makefiles */
-
-##############################################################################
-#-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
-##############################################################################
 
 # Determine the type of terminal controls that you want to use
 #

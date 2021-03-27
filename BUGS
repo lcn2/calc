@@ -116,8 +116,6 @@ of a context diff patch).
 
 Known bugs in calc:
 
-    Under macOS, the installation of the calc man page fails.
-
     The output of the alg_config.cal resource file is bogus.
     We would welcome a replacement for this code.
 

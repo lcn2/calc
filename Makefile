@@ -35,6 +35,11 @@
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
 
+# Try uname -s if the target was not already set on the make command line
+#
+ifeq ($(target),)
+target=$(shell uname -s 2>/dev/null)
+endif
 
 # The shell used by this Makefile
 #
@@ -53,10 +58,15 @@
 #
 #	SHELL= /bin/zsh
 #
-#SHELL= /bin/sh
+ifeq ($(target),Darwin)
+SHELL= /bin/zsh
+else
 SHELL= /bin/bash
-#SHELL= /bin/zsh
+endif
 
+##############################################################################
+#-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
+##############################################################################
 
 # CCBAN is given to ${CC} in order to control if banned.h is in effect.
 #
@@ -93,16 +103,15 @@ SHELL= /bin/bash
 CCBAN= -UUNBAN
 #CCBAN= -DUNBAN
 
-
-# Try uname -s if the target was not already set on the make command line
+# where man section 1 pages are installed
 #
-ifeq ($(target),)
-target=$(shell uname -s 2>/dev/null)
+#if 0	/* start of skip for non-Gnu makefiles */
+ifeq ($(target),Darwin)
+MANDIR= /usr/local/share/man/man1
+else
+MANDIR= /usr/share/man/man1
+#if 0	/* start of skip for non-Gnu makefiles */
 endif
-
-##############################################################################
-#-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
-##############################################################################
 
 # Determine of the GNU-readline facility will be used instead of the
 # built-in calc binding method.
@@ -128,12 +137,6 @@ READLINE_INCLUDE=
 endif
 #READLINE_INCLUDE= -I/usr/gnu/include
 #READLINE_INCLUDE= -I/usr/local/include
-
-# Where man pages are installed
-#
-# Under macOS, we cannot modify /usr/share/man.
-#
-MANDIR= /usr/local/man/man1
 
 # Normally certain files depend on the Makefile.  If the Makefile is
 # changed, then certain steps should be redone.	 If MAKE_FILE is

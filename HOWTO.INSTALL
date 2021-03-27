@@ -4,7 +4,7 @@ IMPORTANT: Please see the section at the bottom of this file for
 
 Installing calc from the bzip2-ed tarball in 4 easy steps:
 
-    0)  If your platform supports i686 RPMs, you may want to go to:
+    (0)  If your platform supports i686 RPMs, you may want to go to:
 
 	    http://www.isthe.com/chongo/src/calc/
 
@@ -29,7 +29,7 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 		cd /var/tmp
 		bunzip2 -c /usr/src/redhat/SOURCES/calc-*.tar.bz2 | tar -xvf -
 
-    1)	Look at the makefile, and adjust it to suit your needs.
+    (1)	Look at the makefile, and adjust it to suit your needs.
 
 	The top level Makefile and the custom/Makefile require a GNU
 	Make (such as gmake) or an equivalently advanced make.	On many
@@ -152,7 +152,7 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 
 	   Adjust other Makefile variables as needed.
 
-    2)	build calc:
+    (2)	build calc:
 
 	The top level Makefile and the custom/Makefile require a GNU
 	Make (such as gmake) or an equivalently advanced make.	On many
@@ -184,7 +184,7 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 		make clobber
 		make calc-dynamic-only BLD_TYPE=calc-dynamic-only
 
-    3)	test calc:
+    (3)	test calc:
 
 	make check
 
@@ -195,7 +195,7 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 
 		make chk
 
-    4)	install calc:
+    (4)	install calc:
 
 	make install
 
@@ -368,6 +368,8 @@ custom/Makefile
 	# start of host target cut
 	... these go inbetween custom/Makefile.head and custom/Makefile.tail
 	# end of host target cut
+
+    NOTE: The clobber rule does not remove this file. - XXX
 
 custom/Makefile.simple
 
