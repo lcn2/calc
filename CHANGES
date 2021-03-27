@@ -27,6 +27,8 @@ The following are the changes from calc version 2.12.9.2 to date:
 
     Fixed how the calc(1) man page is installed under macOS.
 
+    Fixed how calc man page in ${CATDIR} is formed.
+
 
 The following are the changes from calc version 2.12.8.2 to 2.12.9.1:
 

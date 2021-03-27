@@ -866,6 +866,9 @@ endif
 #
 # Use CATDIR= to disable installation of the calc cat (formatted) page.
 #
+# NOTE: If CATDIR is non-empty, then one should have either the
+#	${NROFF} executable and/or the ${MANMAKE} executable.
+#
 CATDIR=
 #CATDIR= /usr/local/man/cat1
 #CATDIR= /usr/local/catman/cat1
@@ -4987,7 +4990,7 @@ endif
 #if 0	/* start of skip for non-Gnu makefiles */
 ifdef ALLOW_CUSTOM
 #endif	/* end of skip for non-Gnu makefiles */
-	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
+	${V} echo 'XXX =-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 #if 0	/* start of skip for non-Gnu makefiles */
@@ -5102,10 +5105,7 @@ endif
 	    if ${CMP} -s calc.1 ${T}${MANDIR}/calc.${MANEXT}; then \
 		${TRUE}; \
 	    else \
-		if [ -z "${NROFF}" ]; then \
-		    echo "${MANMAKE} calc.1 ${T}${CATDIR}"; \
-		    ${MANMAKE} calc.1 ${T}${CATDIR}; \
-		else \
+		if [ -n "${NROFF}" ]; then \
 		    ${RM} -f ${T}${CATDIR}/calc.${CATEXT}.new; \
 		    ${NROFF} ${NROFF_ARG} calc.1 > \
 			     ${T}${CATDIR}/calc.${CATEXT}.new; \
@@ -5113,6 +5113,12 @@ endif
 		    ${MV} -f ${T}${CATDIR}/calc.${CATEXT}.new \
 			  ${T}${CATDIR}/calc.${CATEXT}; \
 		    echo "installed ${T}${CATDIR}/calc.${CATEXT}"; \
+		elif [ -x "${MANNAME}" ]; then \
+		    echo "${MANMAKE} calc.1 ${T}${CATDIR}"; \
+		    ${MANMAKE} calc.1 ${T}${CATDIR}; \
+		else \
+		    echo "Notice: no ${MROFF} and no ${MANMAKE}: this is OK" 1>&2; \
+		    echo "Notice: skipping forming ${T}${MANDIR}/calc.${MANEXT}" 1>&2; \
 		fi; \
 	    fi; \
 	fi

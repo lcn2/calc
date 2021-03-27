@@ -103,16 +103,6 @@ endif
 CCBAN= -UUNBAN
 #CCBAN= -DUNBAN
 
-# where man section 1 pages are installed
-#
-#if 0	/* start of skip for non-Gnu makefiles */
-ifeq ($(target),Darwin)
-MANDIR= /usr/local/share/man/man1
-else
-MANDIR= /usr/share/man/man1
-#if 0	/* start of skip for non-Gnu makefiles */
-endif
-
 # Determine of the GNU-readline facility will be used instead of the
 # built-in calc binding method.
 #
@@ -250,7 +240,6 @@ XVAR= \
 	EXT='${EXT}' \
 	H='${H}' \
 	MAKE_FILE='${MAKE_FILE}' \
-	MANDIR='${MANDIR}' \
 	NROFF='${NROFF}' \
 	Q='${Q}' \
 	READLINE_INCLUDE='${READLINE_INCLUDE}' \
