@@ -4285,7 +4285,7 @@ Makefile.simple: ${MAKE_FILE} custom/Makefile.simple
 	${Q} ${RM} -f $@
 	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
 	    ${MAKE_FILE} | \
-	    ${SED} -e 's;cd custom; $${MAKE} -f Makefile/&.simple;g' \
+	    ${SED} -e 's/cd custom; $${MAKE} -f Makefile/&.simple/' \
 		   -e 's;^# SRC:.*;# SRC: non-GNU Makefile via;' \
 		   -e 's;via$$;via ${MAKE} -f ${MAKE_FILE} $@;' > $@
 	${Q} echo >> $@
@@ -4807,16 +4807,20 @@ clobber: clean custom/Makefile
 	${RM} -f a.out
 	${RM} -f all
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
-	-cd help; ${RM} -f all; ${MAKE} -f Makefile ${HELP_PASSDOWN} $@
+	-${RM} -f help/all; \
+	    cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cal =-=-=-=-='
-	-cd cal; ${RM} -f all; ${MAKE} -f Makefile ${CAL_PASSDOWN} $@
+	-${RM} -f cal/all; \
+	    cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
-	cd custom; ${RM} -f all; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} $@
+	-${RM} -f custom/all; \
+	    cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
-	cd cscript; ${RM} -f all; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} $@
+	-${RM} -f cscript/all; \
+	    cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo remove files that are obsolete
 	${RM} -rf win32 build
@@ -5116,9 +5120,6 @@ endif
 		elif [ -x "${MANNAME}" ]; then \
 		    echo "${MANMAKE} calc.1 ${T}${CATDIR}"; \
 		    ${MANMAKE} calc.1 ${T}${CATDIR}; \
-		else \
-		    echo "Notice: no ${MROFF} and no ${MANMAKE}: this is OK" 1>&2; \
-		    echo "Notice: skipping forming ${T}${MANDIR}/calc.${MANEXT}" 1>&2; \
 		fi; \
 	    fi; \
 	fi

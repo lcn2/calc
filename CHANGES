@@ -29,6 +29,8 @@ The following are the changes from calc version 2.12.9.2 to date:
 
     Fixed how calc man page in ${CATDIR} is formed.
 
+    Fixed how Makefile.simple is formed.
+
 
 The following are the changes from calc version 2.12.8.2 to 2.12.9.1:
 
