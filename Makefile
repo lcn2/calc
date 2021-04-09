@@ -68,6 +68,22 @@ endif
 #-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
 ##############################################################################
 
+# PREFIX - Top level location for calc
+#
+# The PREFIX is often prepended to paths within calc and calc Makefiles.
+#
+# Starting with calc v2.13.0.1, nearly all Makefile places that used
+# /usr/local now use ${PREFIX}.  An exception is the olduninstall rule
+# and, of course, this section. :-)
+#
+# When in doubt, try:
+#
+#	PREFIX= /usr/local
+#
+PREFIX= /usr/local
+#PREFIX= /usr
+#PREFIX= /usr/global
+
 # CCBAN is given to ${CC} in order to control if banned.h is in effect.
 #
 # The banned.h attempts to ban the use of certain dangerous functions
@@ -111,22 +127,22 @@ USE_READLINE= -DUSE_READLINE
 #
 #READLINE_LIB=
 #READLINE_LIB= -L/usr/gnu/lib -lreadline -lhistory -lncurses
-#READLINE_LIB= -L/usr/local/lib -lreadline -lhistory -lncurses
+#READLINE_LIB= -L${PREFIX}/lib -lreadline -lhistory -lncurses
 ifeq ($(target),Darwin)
-# homebrew installs readline & history libs in /usr/local/opt/readline/lib
-READLINE_LIB= -L/usr/local/opt/readline/lib -lreadline -lhistory -lncurses
+# homebrew installs readline & history libs in ${PREFIX}/opt/readline/lib
+READLINE_LIB= -L${PREFIX}/opt/readline/lib -lreadline -lhistory -lncurses
 else
 READLINE_LIB= -lreadline -lhistory -lncurses
 endif
 #
 ifeq ($(target),Darwin)
-# homebrew installs readline & history *.h under /usr/local/opt/readline/include
-READLINE_INCLUDE= -I/usr/local/opt/readline/include
+# homebrew installs readline & history *.h under ${PREFIX}/opt/readline/include
+READLINE_INCLUDE= -I${PREFIX}/opt/readline/include
 else
 READLINE_INCLUDE=
 endif
 #READLINE_INCLUDE= -I/usr/gnu/include
-#READLINE_INCLUDE= -I/usr/local/include
+#READLINE_INCLUDE= -I${PREFIX}/include
 
 # Normally certain files depend on the Makefile.  If the Makefile is
 # changed, then certain steps should be redone.	 If MAKE_FILE is
@@ -242,6 +258,7 @@ XVAR= \
 	MAKE_FILE='${MAKE_FILE}' \
 	NROFF='${NROFF}' \
 	Q='${Q}' \
+	PREFIX='${PREFIX}' \
 	READLINE_INCLUDE='${READLINE_INCLUDE}' \
 	READLINE_LIB='${READLINE_LIB}' \
 	RPM_TOP='${RPM_TOP}' \

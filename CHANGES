@@ -1,4 +1,19 @@
-The following are the changes from calc version 2.13.0 to date:
+The following are the changes from calc version 2.13.0.1 to date:
+
+    Replaced /usr/local with the use of ${PREFIX} in calc Makefiles.
+
+    The ${PREFIX} is not the same as ${T}.  The ${T} specifies
+    a top level directory under which calc installs things.
+    While usally ${T} is empty, it can be specific path
+    as if calc where "chrooted" during an install.
+    The ${PREFIX} value, during install, is a path between
+    the top level ${T} install directory and the object
+    such as an include file.
+
+    Corrected a few more typos in Makefile comments.
+
+
+The following are the changes from calc version 2.13.0.0 to date:
 
     Fixed typo (missing quotes) in the env rule.
 
@@ -65,7 +80,9 @@ The following are the changes from calc version 2.13.0 to date:
     Due to incompatible changes to the argv() function, and #! calc
     scripts, we are setting the version to the next minor number:
 
-	2.13.0
+	2.13.0.x
+
+    Updated BUGS file as per v2.13.0 fixes.
 
 
 The following are the changes from calc version 2.12.8.2 to 2.12.9.1:

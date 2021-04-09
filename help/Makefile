@@ -47,7 +47,7 @@
 #	SHELL= /bin/bash
 #
 # On some systems such as macOS, the bash shell is very
-# far behind to the point wehre is cannot be depended on.
+# far behind to the point where is cannot be depended on.
 # On such systems, the zsh may be a much better alternative
 # shell for this Makefile to use:
 #
@@ -62,6 +62,36 @@ SHELL= /bin/sh
 # Normally, the upper level makefile will set these values.  We provide
 # a default here just in case you want to build from this directory.
 ####
+
+# PREFIX - Top level location for calc
+#
+# The PREFIX is often prepended to paths within calc and calc Makefiles.
+#
+# Starting with calc v2.13.0.1, nearly all Makefile places that used
+# /usr/local now use ${PREFIX}.  An exception is the olduninstall rule
+# and, of course, this section. :-)
+#
+# NOTE: The ${PREFIX} is not the same as ${T}.  The ${T} specifies
+#	a top level directory under which calc installs things.
+#	While usually ${T} is empty, it can be specific path
+#	as if calc where "chrooted" during an install.
+#	The ${PREFIX} value, during install, is a path between
+#	the top level ${T} install directory and the object
+#	such as an include file.
+#
+# NOTE: See also, ${T}, below.
+#
+# There are some paths that do NOT call under ${PREFIX}, such as
+# ${CALCPATH}, that include paths not under ${PREFIX}, but those
+# too are exceptions to this general rule.
+#
+# When in doubt, try:
+#
+#	PREFIX= /usr/local
+#
+PREFIX= /usr/local
+#PREFIX= /usr
+#PREFIX= /usr/global
 
 # Normally certain files depend on the Makefile.  If the Makefile is
 # changed, then certain steps should be redone.  If MAKE_FILE is
@@ -118,15 +148,15 @@ INCDIR= /usr/include
 #	LIBDIR= /usr/lib
 #	CALC_SHAREDIR= /usr/share/calc
 #
-#BINDIR= /usr/local/bin
+#BINDIR= ${PREFIX}/bin
 #BINDIR= /dev/env/DJDIR/bin
 BINDIR= /usr/bin
 
-#LIBDIR= /usr/local/lib
+#LIBDIR= ${PREFIX}/lib
 #LIBDIR= /dev/env/DJDIR/lib
 LIBDIR= /usr/lib
 
-#CALC_SHAREDIR= /usr/local/lib/calc
+#CALC_SHAREDIR= ${PREFIX}/lib/calc
 #CALC_SHAREDIR= /dev/env/DJDIR/share/calc
 CALC_SHAREDIR= /usr/share/calc
 

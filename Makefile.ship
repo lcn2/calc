@@ -47,7 +47,7 @@
 #	SHELL= /bin/bash
 #
 # On some systems such as macOS, the bash shell is very
-# far behind to the point wehre is cannot be depended on.
+# far behind to the point where is cannot be depended on.
 # On such systems, the zsh may be a much better alternative
 # shell for this Makefile to use:
 #
@@ -78,6 +78,36 @@ endif
 #-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
 ##############################################################################
 
+# PREFIX - Top level location for calc
+#
+# The PREFIX is often prepended to paths within calc and calc Makefiles.
+#
+# Starting with calc v2.13.0.1, nearly all Makefile places that used
+# /usr/local now use ${PREFIX}.  An exception is the olduninstall rule
+# and, of course, this section. :-)
+#
+# NOTE: The ${PREFIX} is not the same as ${T}.  The ${T} specifies
+#	a top level directory under which calc installs things.
+#	While usually ${T} is empty, it can be specific path
+#	as if calc where "chrooted" during an install.
+#	The ${PREFIX} value, during install, is a path between
+#	the top level ${T} install directory and the object
+#	such as an include file.
+#
+# NOTE: See also, ${T}, below.
+#
+# There are some paths that do NOT call under ${PREFIX}, such as
+# ${CALCPATH}, that include paths not under ${PREFIX}, but those
+# too are exceptions to this general rule.
+#
+# When in doubt, try:
+#
+#	PREFIX= /usr/local
+#
+PREFIX= /usr/local
+#PREFIX= /usr
+#PREFIX= /usr/global
+
 # CCBAN is given to ${CC} in order to control if banned.h is in effect.
 #
 # The banned.h attempts to ban the use of certain dangerous functions
@@ -85,7 +115,7 @@ endif
 # if calculations.
 #
 # In the case of calc, we are motivated in part by the desire for calc
-# to correctly calculate: even durings extremely long calculations.
+# to correctly calculate: even during extremely long calculations.
 #
 # If UNBAN is NOT defined, then calling certain functions
 # will result in a call to a non-existent function (link error).
@@ -651,7 +681,7 @@ HAVE_STRLCAT=
 #
 # However, if you are on macOS then set:
 #
-#	INCDIR= /usr/local/include
+#	INCDIR= ${PREFIX}/include
 #if 0	/* start of skip for non-Gnu makefiles */
 ifeq ($(target),Darwin)
 
@@ -663,7 +693,7 @@ else
 
 # default INCDIR for non-macOS
 INCDIR= /usr/include
-#INCDIR= /usr/local/include
+#INCDIR= ${PREFIX}/include
 #INCDIR= /dev/env/DJDIR/include
 
 #if 0	/* start of skip for non-Gnu makefiles */
@@ -707,26 +737,26 @@ endif
 #
 # However, if you are on macOS then set:
 #
-#	BINDIR= /usr/local/bin
-#	LIBDIR= /usr/local/lib
-#	CALC_SHAREDIR= /usr/local/share/calc
+#	BINDIR= ${PREFIX}/bin
+#	LIBDIR= ${PREFIX}/lib
+#	CALC_SHAREDIR= ${PREFIX}/share/calc
 #
 # 	NOTE: Starting with macOS El Capitan OS X 10.11, root by default
 # 	      could not mkdir under system locations, so macOS must now
-# 	      use the /usr/local tree.
+# 	      use the ${PREFIX} tree.
 
 #if 0	/* start of skip for non-Gnu makefiles */
 ifeq ($(target),Darwin)
 
 # default BINDIR for macOS
-BINDIR= /usr/local/bin
+BINDIR= ${PREFIX}/bin
 
 else
 #endif	/* end of skip for non-Gnu makefiles */
 
 # default BINDIR for non-macOS
 BINDIR= /usr/bin
-#BINDIR= /usr/local/bin
+#BINDIR= ${PREFIX}/bin
 #BINDIR= /dev/env/DJDIR/bin
 
 #if 0	/* start of skip for non-Gnu makefiles */
@@ -735,14 +765,14 @@ endif
 ifeq ($(target),Darwin)
 
 # default LIBDIR for macOS
-LIBDIR= /usr/local/lib
+LIBDIR= ${PREFIX}/lib
 
 else
 #endif	/* end of skip for non-Gnu makefiles */
 
 # default LIBDIR for non-macOS
 LIBDIR= /usr/lib
-#LIBDIR= /usr/local/lib
+#LIBDIR= ${PREFIX}/lib
 #LIBDIR= /dev/env/DJDIR/lib
 
 #if 0	/* start of skip for non-Gnu makefiles */
@@ -751,25 +781,25 @@ endif
 ifeq ($(target),Darwin)
 
 # default CALC_SHAREDIR for macOS
-CALC_SHAREDIR= /usr/local/share/calc
+CALC_SHAREDIR= ${PREFIX}/share/calc
 
 else
 #endif	/* end of skip for non-Gnu makefiles */
 
 # default CALC_SHAREDIR for non-macOS
 CALC_SHAREDIR= /usr/share/calc
-#CALC_SHAREDIR= /usr/local/lib/calc
+#CALC_SHAREDIR= ${PREFIX}/lib/calc
 #CALC_SHAREDIR= /dev/env/DJDIR/share/calc
 
 #if 0	/* start of skip for non-Gnu makefiles */
 endif
 #endif	/* end of skip for non-Gnu makefiles */
 
-# NOTE: Do not set CALC_INCDIR to /usr/include or /usr/local/include!!!
+# NOTE: Do not set CALC_INCDIR to /usr/include or ${PREFIX}/include!!!
 #	Always be sure that the CALC_INCDIR path ends in /calc to avoid
 #	conflicts with system or other application include files!!!
 #
-#CALC_INCDIR= /usr/local/include/calc
+#CALC_INCDIR= ${PREFIX}/include/calc
 #CALC_INCDIR= /dev/env/DJDIR/include/calc
 CALC_INCDIR= ${INCDIR}/calc
 
@@ -828,6 +858,16 @@ SCRIPTDIR= ${BINDIR}/cscript
 # calc is installed under ${T}, as if one had to chroot under
 # ${T} for calc to operate.
 #
+# NOTE: The ${PREFIX} is not the same as ${T}.  The ${T} specifies
+#	a top level directory under which calc installs things.
+#	While usually ${T} is empty, it can be specific path
+#	as if calc where "chrooted" during an install.
+#	The ${PREFIX} value, during install, is a path between
+#	the top level ${T} install directory and the object
+#	such as an include file.
+#
+#	See ${PREFIX} above.
+#
 # If in doubt, use T=
 #
 T=
@@ -841,15 +881,15 @@ T=
 # NOTE: man pages not installed by macOS must go under,
 # (according to MANPATH as found in /private/etc/man.conf):
 #
-#	MANDIR= /usr/local/share/man/man1
+#	MANDIR= ${PREFIX}/share/man/man1
 #
 #MANDIR=
-#MANDIR= /usr/local/man/man1
+#MANDIR= ${PREFIX}/man/man1
 #MANDIR= /usr/man/man1
 #
 #if 0	/* start of skip for non-Gnu makefiles */
 ifeq ($(target),Darwin)
-MANDIR= /usr/local/share/man/man1
+MANDIR= ${PREFIX}/share/man/man1
 else
 #endif	/* end of skip for non-Gnu makefiles */
 MANDIR= /usr/share/man/man1
@@ -870,8 +910,8 @@ endif
 #	${NROFF} executable and/or the ${MANMAKE} executable.
 #
 CATDIR=
-#CATDIR= /usr/local/man/cat1
-#CATDIR= /usr/local/catman/cat1
+#CATDIR= ${PREFIX}/man/cat1
+#CATDIR= ${PREFIX}/catman/cat1
 #CATDIR= /usr/man/cat1
 #CATDIR= /usr/share/man/cat1
 #CATDIR= /dev/env/DJDIR/man/cat1
@@ -923,7 +963,7 @@ NROFF=
 #NROFF= groff
 NROFF_ARG= -man
 #NROFF_ARG= -mandoc
-MANMAKE= /usr/local/bin/manmake
+MANMAKE= ${PREFIX}/bin/manmake
 #MANMAKE= manmake
 MANMODE= 0444
 CATMODE= 0444
@@ -1005,7 +1045,7 @@ READLINE_EXTRAS=
 #READLINE_LIB= -L/usr/gnu/lib -lreadline
 #READLINE_EXTRAS= -lhistory -lncurses
 #
-#READLINE_LIB= -L/usr/local/lib -lreadline
+#READLINE_LIB= -L${PREFIX}/lib -lreadline
 #READLINE_EXTRAS= -lhistory -lncurses
 #
 # For Apple OS X: install fink from http://fink.sourceforge.net
@@ -1020,12 +1060,12 @@ READLINE_EXTRAS=
 #
 # and use:
 #
-#READLINE_LIB= -L/usr/local/opt/readline/lib -lreadline
+#READLINE_LIB= -L${PREFIX}/opt/readline/lib -lreadline
 #READLINE_EXTRAS= -lhistory -lncurses
 #
 READLINE_INCLUDE=
 #READLINE_INCLUDE= -I/usr/gnu/include
-#READLINE_INCLUDE= -I/usr/local/include
+#READLINE_INCLUDE= -I${PREFIX}/include
 
 # If $PAGER is not set, use this program to display a help file
 #
@@ -1153,7 +1193,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.13.0.0
+VERSION= 2.13.0.1
 
 # Names of shared libraries with versions
 #
@@ -1339,7 +1379,7 @@ ifeq ($(target),Linux)
 BLD_TYPE= calc-dynamic-only
 #
 CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
@@ -1391,7 +1431,7 @@ ifeq ($(target),Darwin)
 BLD_TYPE= calc-dynamic-only
 #
 CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:${LIBDIR}:/usr/local/lib
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= ${DARWIN_ARCH}
 #SET_INSTALL_NAME= no
 SET_INSTALL_NAME= yes
@@ -1473,7 +1513,7 @@ ifeq ($(target),FreeBSD)
 BLD_TYPE= calc-dynamic-only
 #
 CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
@@ -1533,7 +1573,7 @@ ifeq ($(target),OpenBSD)
 BLD_TYPE= calc-dynamic-only
 #
 CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
@@ -1587,7 +1627,7 @@ ifeq ($(target),SunOS)
 BLD_TYPE= calc-dynamic-only
 #
 CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
@@ -1639,7 +1679,7 @@ ifeq ($(target),Cygwin)
 BLD_TYPE= calc-static-only
 #
 CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
@@ -1695,7 +1735,7 @@ ifeq ($(target),simple)
 BLD_TYPE= calc-static-only
 #
 CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
@@ -1754,7 +1794,7 @@ CALCRC= ${CALC_SHAREDIR}/startup;~/.calcrc;./.calcinit
 BLD_TYPE= calc-static-only
 #
 CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
@@ -1794,7 +1834,7 @@ ifeq ($(target),)
 BLD_TYPE= calc-static-only
 #
 CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:/usr/local/lib
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
@@ -1959,7 +1999,7 @@ LIB_H_SRC= alloc.h banned.h blkcpy.h block.h byteswap.h calc.h cmath.h \
 
 # we build these .h files during the make
 #
-BUILD_H_SRC= align32.h args.h calcerr.c calcerr.h conf.h endian_calc.h \
+BUILD_H_SRC= align32.h args.h calcerr.h conf.h endian_calc.h \
 	fposval.h have_ban_pragma.h have_const.h have_fpos.h \
 	have_fpos_pos.h have_getpgid.h have_getprid.h have_getsid.h \
 	have_gettime.h have_memmv.h have_newstr.h have_offscl.h \
@@ -2092,6 +2132,7 @@ CUSTOM_PASSDOWN=  \
     MAKE_FILE=Makefile \
     MKDIR=${MKDIR} \
     MV=${MV} \
+    PREFIX="${PREFIX}" \
     PURIFY="${PURIFY}" \
     Q="${Q}" \
     RANLIB="${RANLIB}" \
@@ -2144,6 +2185,7 @@ HELP_PASSDOWN= \
     MAKE_FILE=Makefile \
     MKDIR=${MKDIR} \
     MV=${MV} \
+    PREFIX="${PREFIX}" \
     Q="${Q}" \
     RM=${RM} \
     RMDIR=${RMDIR} \
@@ -2178,6 +2220,7 @@ CAL_PASSDOWN= \
     MAKE_FILE=Makefile \
     MKDIR=${MKDIR} \
     MV=${MV} \
+    PREFIX="${PREFIX}" \
     Q="${Q}" \
     RM=${RM} \
     RMDIR=${RMDIR} \
@@ -2213,6 +2256,7 @@ CSCRIPT_PASSDOWN= \
     MAKE_FILE=Makefile \
     MKDIR=${MKDIR} \
     MV=${MV} \
+    PREFIX="${PREFIX}" \
     Q="${Q}" \
     RM=${RM} \
     RMDIR=${RMDIR} \
@@ -4522,6 +4566,7 @@ env:
 	@echo 'PWD=${PWD}'; echo ''
 	@echo 'PWDCMD=${PWDCMD}'; echo ''
 	@echo 'Q=${Q}'; echo ''
+	@echo 'PREFIX=${PREFIX}'; echo ''
 	@echo 'RANLIB=${RANLIB}'; echo ''
 	@echo 'READLINE_EXTRAS=${READLINE_EXTRAS}'; echo ''
 	@echo 'READLINE_INCLUDE=${READLINE_INCLUDE}'; echo ''
@@ -4722,9 +4767,14 @@ inst_files: ${MAKE_FILE} help/Makefile cal/Makefile \
 # then you can use this rule to clean out the older calc stuff under
 # the /usr/local directory.
 #
+# NOTE: This rule is an exception to the use of ${PREFIX}.
+#	In this rule we really to want to explicitly deal
+#	with legacy paths under /usr/local.
+#
 olduninstall:
 	${RM} -f inst_files
 	${MAKE} -f Makefile \
+		PREFIX=/usr/local \
 		BINDIR=/usr/local/bin \
 		INCDIR=/usr/local/include \
 		LIBDIR=/usr/local/lib/calc \
@@ -4745,6 +4795,7 @@ olduninstall:
 	-${RMDIR} /usr/local/include/calc
 	-${RMDIR} /usr/local/bin/cscript
 	${RM} -f inst_files
+	${RM} -f ${CALC_INCDIR}/calcerr.c
 
 tags: ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} ${MAKE_FILE}
 	-${CTAGS} ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} 2>&1 | \
@@ -5053,7 +5104,7 @@ endif
 		fi; \
 	    fi; \
 	fi
-	-${Q} for i in ${LIB_H_SRC} ${BUILD_H_SRC} /dev/null; do \
+	-${Q} for i in ${LIB_H_SRC} /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
@@ -5126,6 +5177,9 @@ endif
 	fi
 	${V} # NOTE: misc install cleanup
 	${Q} ${RM} -f tmp
+	${V} # NOTE: remove the calcerr.c that was installed by mistake
+	${V} #	     under ${INC_DIR} in calc v2.12.9.1
+	${Q} ${RM} -f ${T}${CALC_INCDIR}/calcerr.c
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # Try to remove everything that was installed
