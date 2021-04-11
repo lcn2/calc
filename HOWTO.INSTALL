@@ -31,7 +31,7 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 
     (1)	Look at the makefile, and adjust it to suit your needs.
 
-	The top level Makefile and the custom/Makefile require a GNU
+	The top level Makefile and the custom/Makefile require a modern
 	Make (such as gmake) or an equivalently advanced make.	On many
 	targets, the default make is sufficient.  On FreeBSD for example,
 	one must use gmake instead of make.
@@ -46,8 +46,8 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 	    make target=Darwin chk
 	    make target=Darwin install
 
-	If your target system does not have GNU Make (or equivalent), then
-	you should try using the Makefile.simple and custom/Makefile.simple
+	If your target system does not have a moderm Makefile (such as gmake),
+	then you should try using the Makefile.simple and custom/Makefile.simple
 	files:
 
 	    mv Makefile Makefile.gmake
@@ -59,6 +59,14 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 	Linux and Un*x-like environments.  For the most part, the default
 	values should work.  If in doubt, follow the 'When in doubt'
 	suggestion.
+
+	If you are using a modern make (such as gmake), you may override
+	any values set in the Mkefile by adding them to Makefile.local
+	using the := directive.  For example:
+
+	    HAVE_STRING_H:= YES
+	    HAVE_TIMES_H:= YES
+	    SED:= /usr/local/bin/nsed
 
 	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	! If you are building under Windoz or a Windoz-like environment !

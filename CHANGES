@@ -12,6 +12,22 @@ The following are the changes from calc version 2.13.0.1 to date:
 
     Corrected a few more typos in Makefile comments.
 
+    Added Makefile.local, a file with a single comment.  The main
+    Makefile includes Makefile.local just before the first all rule.
+    One may overtide any Makefile setting by modifying Makefile.local.
+    For example, Makefile.local could force BLD_TYPE:
+
+	HAVE_STRING_H:= YES
+	HAVE_TIMES_H:= YES
+	SED:= /usr/local/bin/nsed
+
+    Added ${LOC_MKF} to specify the make of the file that is
+    included just before the all file.  So one could place
+    the above override lines into a different file and call
+    make changing the ${LOC_MKF} value.  For example:
+
+	make LOC_MKF=Makefile.private clobber all chk
+
 
 The following are the changes from calc version 2.13.0.0 to date:
 

@@ -1121,6 +1121,11 @@ RANLIB=ranlib
 #
 MAKE_FILE= Makefile
 
+# Local file that is included just prior to the first rule,
+# that allows one to override any values set in this Makefile.
+#
+LOC_MKF= Makefile.local
+
 # Controlling file makefile basename (without the path)
 #
 # This is the basename same of the makefile that may/does/will drive
@@ -2287,7 +2292,8 @@ LICENSE= COPYING COPYING-LGPL
 #
 DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README.FIRST \
 	  README.WINDOWS calc.man HOWTO.INSTALL ${UTIL_MISC_SRC} ${LICENSE} \
-	  sample.README calc.spec.in rpm.mk README.md QUESTIONS CONTRIB-CODE
+	  sample.README calc.spec.in rpm.mk README.md QUESTIONS CONTRIB-CODE \
+	  ${LOC_MKF}
 
 # These files are used to make (but not build) a calc .a link library
 #
@@ -2384,6 +2390,16 @@ LATE_TARGETS= calc.1 calc.usage \
 #
 TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS}
 
+#if 0	/* start of skip for non-Gnu makefiles */
+###
+#
+# Allow Makefile.local to override any of the above settings
+#
+###
+
+include ${LOC_MKF}
+#endif	/* end of skip for non-Gnu makefiles */
+
 ###
 #
 # The reason for this Makefile	:-)
@@ -2415,7 +2431,7 @@ calc-dynamic-only: ${DYNAMIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 		   ${CALC_DYNAMIC_LIBS} ${SYM_DYNAMIC_LIBS} calc${EXT} \
 		   ${SAMPLE_TARGETS} ${LATE_TARGETS}
 
-.dynamic: ${MAKE_FILE}
+.dynamic: ${MAKE_FILE} ${LOC_MKF}
 	${Q} r="calc-dynamic-only"; \
 	    if [ "${BLD_TYPE}" != "$$r" ]; then \
 	    echo "NOTE: The host target $(target) defaults to a build" 1>&2; \
@@ -2461,7 +2477,7 @@ calc-static-only: ${STATIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 	    fi; \
 	done
 
-.static: ${MAKE_FILE}
+.static: ${MAKE_FILE} ${LOC_MKF}
 	${Q} r="calc-static-only"; \
 	    if [ "${BLD_TYPE}" != "$$r" ]; then \
 	    echo "NOTE: The host target $(target) defaults to a build" 1>&2; \
@@ -2495,12 +2511,12 @@ calc-static-only: ${STATIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 	done
 	 -${Q} ${TOUCH} $@
 
-calc${EXT}: .hsrc ${CALCOBJS} ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
+calc${EXT}: .hsrc ${CALCOBJS} ${CALC_DYNAMIC_LIBS} ${MAKE_FILE} ${LOC_MKF}
 	${RM} -f $@
 	${CC} ${CALCOBJS} ${LDFLAGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
-libcalc${LIB_EXT_VERSION}: ${LIBOBJS} ver_calc${EXT} ${MAKE_FILE}
+libcalc${LIB_EXT_VERSION}: ${LIBOBJS} ver_calc${EXT} ${MAKE_FILE} ${LOC_MKF}
 	${CC} ${LIBCALC_SHLIB} ${LIBOBJS} \
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o libcalc${LIB_EXT_VERSION}
 
@@ -2514,7 +2530,7 @@ libcalc${LIB_EXT}: libcalc${LIB_EXT_VERSION}
 #
 ###
 
-calc.1: calc.man ${MAKE_FILE}
+calc.1: calc.man ${MAKE_FILE} ${LOC_MKF}
 	${RM} -f $@
 	${Q} echo forming calc.1 from calc.man
 	@${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' \
@@ -2530,7 +2546,7 @@ calc.1: calc.man ${MAKE_FILE}
 	        -e 's,$${CALCRC},${CALCRC},g' < calc.man > calc.1
 	${Q} echo calc.1 formed
 
-calc.usage: calc.1 ${MAKE_FILE}
+calc.usage: calc.1 ${MAKE_FILE} ${LOC_MKF}
 	${RM} -f $@
 	${Q} echo forming calc.usage from calc.1
 	${Q} if [ -z "${NROFF}" ]; then \
@@ -2549,11 +2565,11 @@ calc.usage: calc.1 ${MAKE_FILE}
 
 sample: ${SAMPLE_TARGETS}
 
-sample_rand${EXT}: sample_rand.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
+sample_rand${EXT}: sample_rand.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE} ${LOC_MKF}
 	${CC} sample_rand.o ${LDFLAGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
-sample_many${EXT}: sample_many.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
+sample_many${EXT}: sample_many.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE} ${LOC_MKF}
 	${CC} sample_many.o ${LDFLAGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
@@ -2563,15 +2579,15 @@ sample_many${EXT}: sample_many.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE}
 #
 ###
 
-hist.o: hist.c ${MAKE_FILE}
+hist.o: hist.c ${MAKE_FILE} ${LOC_MKF}
 	${CC} ${CFLAGS} ${TERMCONTROL} ${USE_READLINE} ${READLINE_INCLUDE} \
 	    -c hist.c
 
-seed.o: seed.c ${MAKE_FILE}
+seed.o: seed.c ${MAKE_FILE} ${LOC_MKF}
 	${CC} ${CFLAGS} ${WNO_IMPLICT} ${WNO_ERROR_LONG_LONG} \
 	    ${WNO_LONG_LONG} -c seed.c
 
-file.o: file.c ${MAKE_FILE}
+file.o: file.c ${MAKE_FILE} ${LOC_MKF}
 	${CC} ${CFLAGS} ${WNO_ERROR_LONG_LONG} ${WNO_LONG_LONG} -c file.c
 
 ###
@@ -2596,7 +2612,7 @@ hsrc: ${BUILD_H_SRC} ${BUILD_C_SRC}
 	${Q} ${RM} -f .hsrc
 	-${Q} ${TOUCH} .hsrc
 
-conf.h: ${MAKE_FILE}
+conf.h: ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -2669,7 +2685,7 @@ endif
 	fi
 
 endian_calc.h: endian.c have_stdlib.h have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE}
+	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f endian.o endian${EXT} $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -2721,7 +2737,7 @@ endian_calc.h: endian.c have_stdlib.h have_unistd.h \
 	fi
 
 longbits.h: longbits.c have_unistd.h have_stdlib.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE}
+	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f longbits.o longbits${EXT} $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -2751,7 +2767,7 @@ longbits.h: longbits.c have_unistd.h have_stdlib.h \
 	    ${TRUE}; \
 	fi
 
-have_times.h: ${MAKE_FILE}
+have_times.h: ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -2817,7 +2833,7 @@ have_times.h: ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_stdlib.h: ${MAKE_FILE}
+have_stdlib.h: ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -2853,7 +2869,7 @@ have_stdlib.h: ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_unistd.h: ${MAKE_FILE}
+have_unistd.h: ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -2889,7 +2905,7 @@ have_unistd.h: ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_string.h: ${MAKE_FILE}
+have_string.h: ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -2925,7 +2941,7 @@ have_string.h: ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-terminal.h: ${MAKE_FILE}
+terminal.h: ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -2979,7 +2995,7 @@ terminal.h: ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_fpos.h: have_fpos.c banned.h have_ban_pragma.h ${MAKE_FILE}
+have_fpos.h: have_fpos.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f fpos_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3022,7 +3038,7 @@ have_fpos.h: have_fpos.c banned.h have_ban_pragma.h ${MAKE_FILE}
 	fi
 
 have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h \
-		 banned.h have_ban_pragma.h ${MAKE_FILE}
+		 banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f fpos_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3067,7 +3083,7 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h \
 
 fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	   endian_calc.h banned.h have_ban_pragma.h fposval.h.def alloc.h \
-	   have_newstr.h have_memmv.h ${MAKE_FILE}
+	   have_newstr.h have_memmv.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f fposval_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3109,7 +3125,7 @@ fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	    ${TRUE}; \
 	fi
 
-have_const.h: have_const.c banned.h have_ban_pragma.h ${MAKE_FILE}
+have_const.h: have_const.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f have_const const_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3152,7 +3168,7 @@ have_const.h: have_const.c banned.h have_ban_pragma.h ${MAKE_FILE}
 	fi
 
 have_offscl.h: have_offscl.c have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE}
+	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f offscl_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3193,7 +3209,7 @@ have_offscl.h: have_offscl.c have_unistd.h \
 	fi
 
 have_posscl.h: have_posscl.c have_fpos.h have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE}
+	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3234,7 +3250,7 @@ have_posscl.h: have_posscl.c have_fpos.h have_unistd.h \
 	fi
 
 align32.h: align32.c longbits.h have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE}
+	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f align32 align32_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3289,7 +3305,7 @@ align32.h: align32.c longbits.h have_unistd.h \
 	fi
 
 have_uid_t.h: have_uid_t.c have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE}
+	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f have_uid_t uid_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3329,7 +3345,7 @@ have_uid_t.h: have_uid_t.c have_unistd.h \
 	    ${TRUE}; \
 	fi
 
-have_newstr.h: have_newstr.c banned.h have_ban_pragma.h ${MAKE_FILE}
+have_newstr.h: have_newstr.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f newstr_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3369,7 +3385,7 @@ have_newstr.h: have_newstr.c banned.h have_ban_pragma.h ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_memmv.h: have_memmv.c banned.h have_ban_pragma.h ${MAKE_FILE}
+have_memmv.h: have_memmv.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f have_memmv have_memmv.o memmv_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3409,7 +3425,7 @@ have_memmv.h: have_memmv.c banned.h have_ban_pragma.h ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_ustat.h: have_ustat.c banned.h have_ban_pragma.h ${MAKE_FILE}
+have_ustat.h: have_ustat.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f ustat_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3449,7 +3465,7 @@ have_ustat.h: have_ustat.c banned.h have_ban_pragma.h ${MAKE_FILE}
 	fi
 
 have_getsid.h: have_getsid.c have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE}
+	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f getsid_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3490,7 +3506,7 @@ have_getsid.h: have_getsid.c have_unistd.h \
 	fi
 
 have_getpgid.h: have_getpgid.c have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE}
+	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f getpgid_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3530,7 +3546,8 @@ have_getpgid.h: have_getpgid.c have_unistd.h \
 	    ${TRUE}; \
 	fi
 
-have_gettime.h: have_gettime.c banned.h have_ban_pragma.h ${MAKE_FILE}
+have_gettime.h: have_gettime.c banned.h have_ban_pragma.h \
+		${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f gettime_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3571,7 +3588,7 @@ have_gettime.h: have_gettime.c banned.h have_ban_pragma.h ${MAKE_FILE}
 	fi
 
 have_getprid.h: have_getprid.c have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE}
+	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f getprid_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3611,7 +3628,7 @@ have_getprid.h: have_getprid.c have_unistd.h \
 	    ${TRUE}; \
 	fi
 
-have_urandom.h: ${MAKE_FILE}
+have_urandom.h: ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3647,7 +3664,7 @@ have_urandom.h: ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_rusage.h: have_rusage.c banned.h have_ban_pragma.h ${MAKE_FILE}
+have_rusage.h: have_rusage.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f rusage_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3687,7 +3704,7 @@ have_rusage.h: have_rusage.c banned.h have_ban_pragma.h ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_strdup.h: have_strdup.c banned.h have_ban_pragma.h ${MAKE_FILE}
+have_strdup.h: have_strdup.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f strdup_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3788,7 +3805,7 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h \
 	    ${TRUE}; \
 	fi
 
-calcerr.h: calcerr.tbl calcerr_h.sed calcerr_h.awk ${MAKE_FILE}
+calcerr.h: calcerr.tbl calcerr_h.sed calcerr_h.awk ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f calerr.h
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3818,7 +3835,7 @@ calcerr.h: calcerr.tbl calcerr_h.sed calcerr_h.awk ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE}
+calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f calerr.c
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3840,7 +3857,8 @@ calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_unused.h: have_unused.c have_stdlib.h have_ban_pragma.h ${MAKE_FILE}
+have_unused.h: have_unused.c have_stdlib.h have_ban_pragma.h \
+	       ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f unused_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3882,7 +3900,7 @@ have_unused.h: have_unused.c have_stdlib.h have_ban_pragma.h ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_ban_pragma.h: have_ban_pragma.c banned.h ${MAKE_FILE}
+have_ban_pragma.h: have_ban_pragma.c banned.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f unused_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3924,7 +3942,8 @@ have_ban_pragma.h: have_ban_pragma.c banned.h ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_strlcpy.h: have_strlcpy.c banned.h have_ban_pragma.h ${MAKE_FILE}
+have_strlcpy.h: have_strlcpy.c banned.h have_ban_pragma.h \
+		${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f unused_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3965,7 +3984,8 @@ have_strlcpy.h: have_strlcpy.c banned.h have_ban_pragma.h ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h ${MAKE_FILE}
+have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h \
+		${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f unused_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4015,14 +4035,15 @@ have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h ${MAKE_FILE}
 #
 ###
 
-win32_hsrc: win32.mkdef banned.h have_ban_pragma.h alloc.h ${MAKE_FILE}
+win32_hsrc: win32.mkdef banned.h have_ban_pragma.h alloc.h \
+	    ${MAKE_FILE} ${LOC_MKF}
 	${H} echo 'forming win32 directory'
 	${Q} ${RM} -rf win32
 	${Q} ${MKDIR} -p win32
 	${Q} ${CP} banned.h have_ban_pragma.h alloc.h win32
 	${Q} ${CP} ${UTIL_C_SRC} win32
 	${Q} ${CP} ${UTIL_MISC_SRC} win32
-	${Q} ${CP} ${MAKE_FILE} win32/${MAKE_FILE}
+	${Q} ${CP} ${MAKE_FILE} ${LOC_MKF}  win32
 	${Q} (cd win32; \
 	 echo "${MAKE} -f ${MAKE_FILE} hsrc `${CAT} win32.mkdef` EXT="; \
 	 ${MAKE} -f ${MAKE_FILE} hsrc `${CAT} win32.mkdef` EXT=; \
@@ -4031,7 +4052,7 @@ win32_hsrc: win32.mkdef banned.h have_ban_pragma.h alloc.h ${MAKE_FILE}
 	 ${RM} -f ${UTIL_OBJS}; \
 	 ${RM} -f ${UTIL_PROGS}; \
 	 ${RM} -f ${UTIL_FILES}; \
-	 ${RM} -f ${MAKE_FILE})
+	 ${RM} -f ${MAKE_FILE} ${LOC_MKF})
 	${H} echo 'win32 directory formed'
 
 ###
@@ -4112,7 +4133,7 @@ endif
 ###
 
 calc-static${EXT}: .hsrc ${CALCOBJS} \
-		   ${CALC_STATIC_LIBS} ${MAKE_FILE}
+		   ${CALC_STATIC_LIBS} ${MAKE_FILE} ${LOC_MKF}
 	${RM} -f $@
 	${CC} ${LDFLAGS} ${CALCOBJS} ${LD_STATIC} ${CALC_STATIC_LIBS} \
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
@@ -4121,7 +4142,7 @@ libcustcalc.a: custom/libcustcalc.a
 	${Q} ${RM} -f $@
 	${CP} -f $? $@
 
-libcalc.a: ${LIBOBJS} ${MAKE_FILE}
+libcalc.a: ${LIBOBJS} ${MAKE_FILE} ${LOC_MKF}
 	${RM} -f libcalc.a
 	${AR} qc libcalc.a ${LIBOBJS}
 	${RANLIB} libcalc.a
@@ -4136,11 +4157,13 @@ custom/libcustcalc.a: custom/Makefile
 endif
 #endif	/* end of skip for non-Gnu makefiles */
 
-sample_rand-static${EXT}: sample_rand.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
+sample_rand-static${EXT}: sample_rand.o ${CALC_STATIC_LIBS} \
+			  ${MAKE_FILE} ${LOC_MKF}
 	${CC} ${LDFLAGS} sample_rand.o ${LD_STATIC} \
 	      ${CALC_STATIC_LIBS} ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
-sample_many-static${EXT}: sample_many.o ${CALC_STATIC_LIBS} ${MAKE_FILE}
+sample_many-static${EXT}: sample_many.o ${CALC_STATIC_LIBS} \
+			  ${MAKE_FILE} ${LOC_MKF}
 	${CC} ${LDFLAGS} sample_many.o ${LD_STATIC} \
 	      ${CALC_STATIC_LIBS} ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
@@ -4548,6 +4571,7 @@ env:
 	@echo 'LIB_H_SRC=${LIB_H_SRC}'; echo ''
 	@echo 'LICENSE=${LICENSE}'; echo ''
 	@echo 'LN=${LN}'; echo ''
+	@echo 'LOC_MKF=${LOC_MKF}'; echo ''
 	@echo 'LONG_BITS=${LONG_BITS}'; echo ''
 	@echo 'MAKE=${MAKE}'; echo ''
 	@echo 'MAKEDEPEND=${MAKEDEPEND}'; echo ''
@@ -4612,6 +4636,9 @@ env:
 
 mkdebug: env version.c
 	@echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	@echo '=-=-=-= Contents of ${LOC_MKF} follows =-=-=-='
+	@${CAT} ${LOC_MKF}
+	@echo '=-=-=-= End of contents of ${LOC_MKF} =-=-=-='
 	@echo '=-=-=-= Determining the source version =-=-=-='
 	@${MAKE} -f Makefile Q= V=@ ver_calc${EXT}
 	-@./ver_calc${EXT}
@@ -4625,6 +4652,9 @@ mkdebug: env version.c
 
 debug: calcinfo env
 	@echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	@echo '=-=-=-= Contents of ${LOC_MKF} follows =-=-=-='
+	@${CAT} ${LOC_MKF}
+	@echo '=-=-=-= End of contents of ${LOC_MKF} =-=-=-='
 	@echo '=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ clobber =-=-=-='
 	@${MAKE} -f Makefile Q= V=@ clobber
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
@@ -4732,7 +4762,7 @@ rpm-clean-static:
 
 # Form the installed file list
 #
-inst_files: ${MAKE_FILE} help/Makefile cal/Makefile \
+inst_files: ${MAKE_FILE} ${LOC_MKF} help/Makefile cal/Makefile \
 	    cscript/Makefile ver_calc${EXT} custom/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${Q} ${RM} -f inst_files
