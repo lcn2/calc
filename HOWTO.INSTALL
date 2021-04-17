@@ -34,7 +34,7 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 	The top level Makefile and the custom/Makefile require a modern
 	Make (such as gmake) or an equivalently advanced make.	On many
 	targets, the default make is sufficient.  On FreeBSD for example,
-	one must use gmake instead of make.
+	probably want to use gmake instead of make.
 
 	Some report that under macOS, one has to declare the target
 	to be Darwin.  So for macOS, one might have to do:

@@ -28,6 +28,8 @@ The following are the changes from calc version 2.13.0.1 to date:
 
 	make LOC_MKF=Makefile.private clobber all chk
 
+    Updated HOWTO.INSTALL to mention Makefile.local.
+
 
 The following are the changes from calc version 2.13.0.0 to date:
 
