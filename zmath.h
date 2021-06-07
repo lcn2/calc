@@ -594,7 +594,8 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 #define MODE_OCTAL	6
 #define MODE_BINARY	7
 #define MODE_REAL_AUTO	8
-#define MODE_MAX	8
+#define MODE_ENG    9
+#define MODE_MAX	9
 #define MODE2_OFF	(MODE_MAX+1)
 
 /* XXX - perhaps we need the MODE_REAL_AUTO vs MODE_REAL as a config mode? */

@@ -165,8 +165,8 @@ DESCRIPTION
     config("display", int)
 
     The "display" parameter specifies the maximum number of digits after
-    the decimal point to be printed in real or exponential mode in
-    normal unformatted printing (print, strprint, fprint) or in
+    the decimal point to be printed in real, exponential or engineering
+    mode in normal unformatted printing (print, strprint, fprint) or in
     formatted printing (printf, strprintf, fprintf) when precision is not
     specified.	The initial value for oldstd is 20, for newstd 10.
     The parameter may be changed to the value d by either
@@ -233,6 +233,9 @@ DESCRIPTION
 	    "scientific"	base 10 scientific notation	base(1e20)
 	    "sci"
 	    "exp"
+
+	    "engineering"	base 10 notation with exponent	base(10e6)
+	    "eng"		multiple of 3
 
     Where multiple strings are given, the first string listed is what
     config("mode") will return.

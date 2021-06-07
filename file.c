@@ -1048,6 +1048,9 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 		case 'e':
 			newmode = MODE_EXP;
 			break;
+		case 'n':
+			newmode = MODE_ENG;
+			break;
 		case 'g':
 			newmode = MODE_REAL_AUTO;
 			break;
