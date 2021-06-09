@@ -275,7 +275,7 @@ qprintnum(NUMBER *q, int outmode, LEN outdigits)
 		zfree(tmpval.den);
 		qprintnum(q, MODE_REAL, outdigits);
 		qfree(q);
-		PRINTF1("e%ld", exp);
+		if (exp) PRINTF1("e%ld", exp);
         break;
 
 	case MODE_REAL_AUTO:
