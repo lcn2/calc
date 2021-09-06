@@ -247,6 +247,37 @@ qprintnum(NUMBER *q, int outmode, LEN outdigits)
 		PRINTF1("e%ld", exp);
 		break;
 
+    case MODE_ENG:
+		if (qiszero(q)) {
+			PUTCHAR('0');
+			return;
+		}
+		tmpval = *q;
+		tmpval.num.sign = 0;
+		exp = qilog10(&tmpval);
+		if (exp == 0) {		/* in range to output as real */
+			qprintnum(q, MODE_REAL, outdigits);
+			return;
+		}
+		tmpval.num = _one_;
+		tmpval.den = _one_;
+		if (exp > 0) {
+            exp -= exp % 3;
+			ztenpow(exp, &tmpval.den);
+        } else {
+            long remainder = exp % 3;
+            if (remainder)
+                exp -= remainder + 3;
+			ztenpow(-exp, &tmpval.num);
+        }
+		q = qmul(q, &tmpval);
+		zfree(tmpval.num);
+		zfree(tmpval.den);
+		qprintnum(q, MODE_REAL, outdigits);
+		qfree(q);
+		if (exp) PRINTF1("e%ld", exp);
+        break;
+
 	case MODE_REAL_AUTO:
 	{
 		const int P = conf->outdigits ? conf->outdigits : 1;

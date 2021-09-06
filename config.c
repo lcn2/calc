@@ -274,6 +274,8 @@ STATIC NAMETYPE modes[] = {
 	{"scientific",	MODE_EXP},
 	{"sci",		MODE_EXP},
 	{"exp",		MODE_EXP},
+	{"engineering",	MODE_ENG},
+	{"eng",		MODE_ENG},
 	{"hexadecimal", MODE_HEX},
 	{"hex",		MODE_HEX},
 	{"octal",	MODE_OCTAL},

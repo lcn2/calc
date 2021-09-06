@@ -44,6 +44,9 @@ DESCRIPTION
 			"sci"
 			"exp"
 
+	    1000	"engineering"	base 10 notation with exponent
+			"eng"		multiple of 3
+
     For convenience, any non-integer value is assumed to mean base 10
     fractions and any integer >= 2^64 is assumed to mean base 10
     scientific notation.
@@ -76,7 +79,7 @@ LINK LIBRARY
     int math_setmode(int newmode)
 
     NOTE: newmode must be one of MODE_DEFAULT, MODE_FRAC, MODE_INT,
-	  MODE_REAL, MODE_EXP, MODE_HEX, MODE_OCTAL, MODE_BINARY
+	  MODE_REAL, MODE_EXP, MODE_ENG, MODE_HEX, MODE_OCTAL, MODE_BINARY
 
 SEE ALSO
     base2, config, str

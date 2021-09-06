@@ -50,6 +50,9 @@ DESCRIPTION
 			"sci"
 			"exp"
 
+	    1000	"engineering"	base 10 notation with exponent
+			"eng"		multiple of 3
+
 	       0	"off"		disable double base output
 
     For convenience, any non-integer non-zero value is assumed to mean
@@ -87,7 +90,7 @@ LINK LIBRARY
     int math_setmode2(int newmode)
 
     NOTE: newmode must be one of MODE_DEFAULT, MODE_FRAC, MODE_INT,
-	  MODE_REAL, MODE_EXP, MODE_HEX, MODE_OCTAL, MODE_BINARY,
+	  MODE_REAL, MODE_EXP, MODE_ENG, MODE_HEX, MODE_OCTAL, MODE_BINARY,
 	  MODE2_OFF
 
 SEE ALSO

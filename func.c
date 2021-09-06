@@ -7839,6 +7839,9 @@ f_base(int count, NUMBER **vals)
 	case 16:
 		oldbase = math_setmode(MODE_HEX);
 		break;
+        case 1000:
+		oldbase = math_setmode(MODE_ENG);
+		break;
 	default:
 		math_error("Unsupported base");
 		/*NOTREACHED*/
@@ -7893,6 +7896,9 @@ f_base2(int count, NUMBER **vals)
 	case 16:
 		oldbase = math_setmode2(MODE_HEX);
 		break;
+        case 1000:
+		oldbase = math_setmode(MODE_ENG);
+		break;
 	default:
 		math_error("Unsupported base");
 		/*NOTREACHED*/
@@ -7933,6 +7939,9 @@ base_value(long mode, int defval)
 			result = qalloc();
 			ztenpow(20, &result->num);
 			break;
+		case MODE_ENG:
+			result = itoq(1000);
+			break;
 		case MODE_HEX:
 			result = itoq(16);
 			break;
@@ -7963,6 +7972,9 @@ base_value(long mode, int defval)
 	case MODE_EXP:
 		result = qalloc();
 		ztenpow(20, &result->num);
+		break;
+	case MODE_ENG:
+		result = itoq(1000);
 		break;
 	case MODE_HEX:
 		result = itoq(16);
