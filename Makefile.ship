@@ -1007,10 +1007,10 @@ endif
 # If the $CALCRC environment variable is not defined, then the following
 # path will be searched for calc resource files.
 #
-# Select CALCRC= ${CALC_SHAREDIR}/startup;~/.calcrc;./.calcinit for DJGPP.
+# Select CALCRC= ./.calcinit:~/.calcrc:${CALC_SHAREDIR}/startup for DJGPP.
 #
-CALCRC= ${CALC_SHAREDIR}/startup:~/.calcrc:./.calcinit
-#CALCRC= ${CALC_SHAREDIR}/startup;~/.calcrc;./.calcinit
+CALCRC= ./.calcinit:~/.calcrc:${CALC_SHAREDIR}/startup
+#CALCRC= ./.calcinit;~/.calcrc;${CALC_SHAREDIR}/startup
 
 # Determine of the GNU-readline facility will be used instead of the
 # builtin calc binding method.
@@ -1794,7 +1794,7 @@ CALCPATH= .;./cal;~/.cal;${T}${CALC_SHAREDIR};${T}${CUSTOMCALDIR}
 else
 CALCPATH= .;./cal;~/.cal;${T}${CALC_SHAREDIR}
 endif
-CALCRC= ${CALC_SHAREDIR}/startup;~/.calcrc;./.calcinit
+CALCRC= ./.calcinit;~/.calcrc;${CALC_SHAREDIR}/startup
 #
 BLD_TYPE= calc-static-only
 #

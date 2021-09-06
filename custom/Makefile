@@ -1077,7 +1077,7 @@ CALCPATH= .;./cal;~/.cal;${T}${CALC_SHAREDIR};${T}${CUSTOMCALDIR}
 else
 CALCPATH= .;./cal;~/.cal;${T}${CALC_SHAREDIR}
 endif
-CALCRC= ${CALC_SHAREDIR}/startup;~/.calcrc;./.calcinit
+CALCRC= ./.calcinit;~/.calcrc;${CALC_SHAREDIR}/startup
 #
 BLD_TYPE= calc-static-only
 #

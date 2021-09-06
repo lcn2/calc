@@ -126,7 +126,7 @@ recommends the following settings:
 	CATDIR= /dev/env/DJDIR/man/cat1
 	NROFF= groff
 	CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR}
-	CALCRC= ${CALC_SHAREDIR}/startup;~/.calcrc;./.calcinit
+	CALCRC= ./.calcinit;~/.calcrc;${CALC_SHAREDIR}/startup
 	CALCPAGER= less.exe -ci
 	DEBUG= -O2 -gstabs+ -DWINDOZ
 
