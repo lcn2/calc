@@ -356,7 +356,7 @@ BLT_HELP_FILES= ${BLT_HELP_FILES_3} ${BLT_HELP_FILES_5} \
 #
 # Please use:
 #
-#	make detail_help_list
+#	make clobber >/dev/null && make detail_help_list
 #
 # to keep this list in nice sorted order.
 #
@@ -364,32 +364,32 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd \
 	append appr arg argv arrow asec asech asin asinh assign atan atan2 \
 	atanh avg base base2 bernoulli bit blk blkcpy blkfree blocks bround \
 	btrunc calc_tty calclevel calcpath catalan ceil cfappr cfsim char \
-	cmdbuf cmp comb conj cos cosh cot coth count cp csc csch ctime delete \
-	den dereference det digit digits display dp epsilon errcount errmax \
-	errno error estr euler eval exp fact factor fclose fcnt feof ferror \
-	fflush fgetc fgetfield fgetfile fgetline fgets fgetstr fib files floor \
-	fopen forall fpathopen fprintf fputc fputs fputstr frac free \
-	freebernoulli freeeuler freeglobals freeredc freestatics frem freopen \
-	fscan fscanf fseek fsize ftell gcd gcdrem gd getenv hash head highbit \
-	hmean hnrmod hypot ilog ilog10 ilog2 im indices inputlevel insert int \
-	inverse iroot isalnum isalpha isassoc isatty isblk iscntrl isconfig \
-	isdefined isdigit iserror iseven isfile isgraph ishash isident isint \
-	islist islower ismat ismult isnull isnum isobj isobjtype isodd isprime \
-	isprint isptr ispunct isqrt isrand israndom isreal isrel issimple \
-	isspace issq isstr istype isupper isxdigit jacobi join lcm lcmfact \
-	lfactor ln log lowbit ltol makelist matdim matfill matmax matmin \
-	matsum mattrace mattrans max memsize meq min minv mmin mne mod modify \
-	name near newerror nextcand nextprime norm null num oldvalue ord param \
-	perm pfact pi pix places pmod polar poly pop popcnt pound power \
-	prevcand prevprime printf prompt protect ptest push putenv questions \
-	quo quomod rand randbit random randombit randperm rcin rcmul rcout \
-	rcpow rcsq re remove reverse rewind rm root round rsearch runtime \
-	saveval scale scan scanf search sec sech seed segment select sgn sha1 \
-	sin sinh size sizeof sleep sort sqrt srand srandom ssq stoponerror str \
-	strcasecmp strcat strcmp strcpy strerror strlen strncasecmp strncmp \
-	strncpy strpos strprintf strscan strscanf strtolower strtoupper substr \
-	sum swap system systime tail tan tanh test time trunc usertime version \
-	xor
+	cmdbuf cmp comb conj cos cosh cot coth count cp csc csch ctime d2g d2r \
+	delete den dereference det digit digits display dp epsilon errcount \
+	errmax errno error estr euler eval exp fact factor fclose fcnt feof \
+	ferror fflush fgetc fgetfield fgetfile fgetline fgets fgetstr fib \
+	files floor fopen forall fpathopen fprintf fputc fputs fputstr frac \
+	free freebernoulli freeeuler freeglobals freeredc freestatics frem \
+	freopen fscan fscanf fseek fsize ftell g2d g2d.bak g2r gcd gcdrem gd \
+	getenv hash head highbit hmean hnrmod hypot ilog ilog10 ilog2 im \
+	indices inputlevel insert int inverse iroot isalnum isalpha isassoc \
+	isatty isblk iscntrl isconfig isdefined isdigit iserror iseven isfile \
+	isgraph ishash isident isint islist islower ismat ismult isnull isnum \
+	isobj isobjtype isodd isprime isprint isptr ispunct isqrt isrand \
+	israndom isreal isrel issimple isspace issq isstr istype isupper \
+	isxdigit jacobi join lcm lcmfact lfactor ln log lowbit ltol makelist \
+	matdim matfill matmax matmin matsum mattrace mattrans max memsize meq \
+	min minv mmin mne mod modify name near newerror nextcand nextprime \
+	norm null num oldvalue ord param perm pfact pi pix places pmod polar \
+	poly pop popcnt pound power prevcand prevprime printf prompt protect \
+	ptest push putenv quo quomod r2d r2g rand randbit random randombit \
+	randperm rcin rcmul rcout rcpow rcsq re remove reverse rewind rm root \
+	round rsearch runtime saveval scale scan scanf search sec sech seed \
+	segment select sgn sha1 sin sinh size sizeof sleep sort sqrt srand \
+	srandom ssq stoponerror str strcasecmp strcat strcmp strcpy strerror \
+	strlen strncasecmp strncmp strncpy strpos strprintf strscan strscanf \
+	strtolower strtoupper substr sum swap system systime tail tan tanh \
+	test time trunc usertime version xor
 
 # This list is of files that are clones of DETAIL_HELP files.  They are
 # built from DETAIL_HELP files.

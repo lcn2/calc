@@ -1,0 +1,55 @@
+NAME
+    g2d - convert gradians to degrees
+
+SYNOPSIS
+    g2d(x [,eps])
+
+TYPES
+    x		number (real or complex)
+    eps		nonzero real, defaults to epsilon()
+
+    return	number
+
+DESCRIPTION
+    Given x gradians, return the equivalent number of degrees.
+
+    The eps argument is ignored.
+
+EXAMPLE
+    ; print g2d(50), g2d(200), g2d(30)
+    45 180 27
+
+    ; print g2d(3i+2)
+    1.8+2.7i
+
+LIMITS
+    none
+
+LINK LIBRARY
+    none
+
+SEE ALSO
+    d2r, r2d, g2r, r2g, d2g,
+    sin, cos, tan, sec, csc, cot, epsilon
+
+## Copyright (C) 2021  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+##
+## Under source code control:	2021/09/07 12:04:28
+## File existed as early as:	2021
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

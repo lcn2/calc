@@ -228,7 +228,7 @@ Unexpected
 
 	1<<8/2
 
-    evalues to 128, not 16, because <<8 is performed before the /2.
+    evaluates to 128, not 16, because <<8 is performed before the /2.
 
 
     &A[0] and A are different things in calc
@@ -527,6 +527,34 @@ Unexpected
 	; help fflush
 	; help fopen
 	; help fclose
+
+
+    trig functions use only radians
+    ===============================
+
+    Some might be surprised to discover that all of the trigonometric in calc:
+
+	sin, cos, tan, sec, csc, cot
+	asin, acos, atan, asec, acsc, acot
+
+    work in only radians.
+
+    Calc as builtin functions to convert between degrees, radians and gradians:
+
+	d2r(deg)	- given degrees returns radians
+	g2r(grad)	- given gradians returns radians
+
+	r2d(rad)	- given radians returns degrees
+	g2d(grad)	- given gradians returns degrees
+
+	r2g(rad)	- given radians returns gradians
+	d2g(deg)	- given degrees returns gradians
+
+    For example, if you want to take the sin of 30 degrees, convert
+    the 30 degrees into radians and pass the result to sin():
+
+	; print sin(d2r(30))
+	0.5
 
 
 ## Copyright (C) 1999-2007,2014,2017,2021  Landon Curt Noll

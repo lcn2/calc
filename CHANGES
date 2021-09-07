@@ -36,6 +36,25 @@ The following are the changes from calc version 2.14.0.0 to date:
     a call to base2(1000) would make calc unstable and likely to
     dump core.
 
+    Added builtin functions to convert between degrees, radians
+    and gradians:
+
+	d2r(deg)	- given degrees returns radians
+	g2r(grad)	- given gradians returns radians
+
+	r2d(rad)	- given radians returns degrees
+	g2d(grad)	- given gradians returns degrees
+
+	r2g(rad)	- given radians returns gradians
+	d2g(deg)	- given degrees returns gradians
+
+    Add 6 functions take a 2nd optional epsilon argument.
+    For d2r(deg, ep), r2d(rad, ep), the optional 2nd epsilon argument controls
+    the precision of the internal constant pi/180.
+    For g2r(grad, ep), r2g(rad, ep), the optional 2nd epsilon argument controls
+    the precision of the internal constant pi/200.
+    The optional 2nd argument is ignored by g2d(grad, ep) and d2g(deg, ep).
+
 
 The following are the changes from calc version 2.13.0.1 to 2.13.0.1:
 
@@ -74,7 +93,7 @@ The following are the changes from calc version 2.13.0.0 to 2.13.0.0:
 
     Fixed typo (missing quotes) in the env rule.
 
-    Fixed intendation problem in CHANGES.
+    Fixed indentation problem in CHANGES.
 
     Combined 2.12.9.1 changes into the 2.12.8.2 to 2.12.9.0
     range, and thus renamed the range to 2.12.8.2 to 2.12.9.1.
@@ -110,7 +129,7 @@ The following are the changes from calc version 2.13.0.0 to 2.13.0.0:
 	#!/usr/local/bin/calc -f
 	...
 
-    It is common that -q be usde with a calc script, so assuming the
+    It is common that -q be used with a calc script, so assuming the
     same /usr/local/bin/calc path:
 
 	#!/usr/local/bin/calc -q -f
