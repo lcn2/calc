@@ -370,7 +370,7 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd \
 	ferror fflush fgetc fgetfield fgetfile fgetline fgets fgetstr fib \
 	files floor fopen forall fpathopen fprintf fputc fputs fputstr frac \
 	free freebernoulli freeeuler freeglobals freeredc freestatics frem \
-	freopen fscan fscanf fseek fsize ftell g2d g2d.bak g2r gcd gcdrem gd \
+	freopen fscan fscanf fseek fsize ftell g2d g2r gcd gcdrem gd \
 	getenv hash head highbit hmean hnrmod hypot ilog ilog10 ilog2 im \
 	indices inputlevel insert int inverse iroot isalnum isalpha isassoc \
 	isatty isblk iscntrl isconfig isdefined isdigit iserror iseven isfile \
@@ -730,7 +730,7 @@ distlist: ${DISTLIST}
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo help/$$i; \
 	    fi; \
-	done | LANG=C ${SORT}
+	done | fgrep -v '.bak' | LANG=C ${SORT}
 
 distdir:
 	${Q} echo help
