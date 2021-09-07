@@ -2181,6 +2181,90 @@ f_cos(int count, VALUE **vals)
 }
 
 
+/*
+ * f_d2r - convert degrees to radians
+ */
+S_FUNC VALUE
+f_d2r(int count, VALUE **vals)
+{
+	VALUE result;
+	NUMBER *eps;
+	NUMBER *pidiv180;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/* firewall */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_D2R1);
+		eps = vals[1]->v_num;
+	}
+
+	/* calculate argument * (pi/180) */
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			pidiv180 = qpidiv180(eps);
+			result.v_num = qmul(vals[0]->v_num, pidiv180);
+			result.v_type = V_NUM;
+			qfree(pidiv180);
+			break;
+		case V_COM:
+			pidiv180 = qpidiv180(eps);
+			result.v_com = c_mulq(vals[0]->v_com, pidiv180);
+			result.v_type = V_COM;
+			qfree(pidiv180);
+			break;
+		default:
+			return error_value(E_D2R2);
+	}
+	return result;
+}
+
+
+/*
+ * f_r2d - convert radians to degrees
+ */
+S_FUNC VALUE
+f_r2d(int count, VALUE **vals)
+{
+	VALUE result;
+	NUMBER *eps;
+	NUMBER *pidiv180;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/* firewall */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_R2D1);
+		eps = vals[1]->v_num;
+	}
+
+	/* calculate argument / (pi/180) */
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			pidiv180 = qpidiv180(eps);
+			result.v_num = qqdiv(vals[0]->v_num, pidiv180);
+			result.v_type = V_NUM;
+			qfree(pidiv180);
+			break;
+		case V_COM:
+			pidiv180 = qpidiv180(eps);
+			result.v_com = c_divq(vals[0]->v_com, pidiv180);
+			result.v_type = V_COM;
+			qfree(pidiv180);
+			break;
+		default:
+			return error_value(E_R2D2);
+	}
+	return result;
+}
+
+
 S_FUNC VALUE
 f_sin(int count, VALUE **vals)
 {
@@ -8670,6 +8754,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "date and time as string"},
 	{"custom", 0, IN, 0, OP_NOP, 0, f_custom,
 	 "custom builtin function interface"},
+	{"d2r", 1, 2, 0, OP_NOP, 0, f_d2r,
+	 "convert degrees to radians"},
 	{"delete", 2, 2, FA, OP_NOP, 0, f_listdelete,
 	 "delete element from list a at position b"},
 	{"den", 1, 1, 0, OP_DENOMINATOR, qden, 0,
@@ -9027,6 +9113,8 @@ STATIC CONST struct builtin builtins[] = {
 	{"quomod", 4, 5, FA, OP_NOP, 0, f_quomod,
 	 "set c and d to quotient and remainder of a\n"
 	 "\t\t\tdivided by b"},
+	{"r2d", 1, 2, 0, OP_NOP, 0, f_r2d,
+	 "convert radians to degrees"},
 	{"rand", 0, 2, 0, OP_NOP, f_rand, 0,
 	 "additive 55 random number [0,2^64), [0,a), or [a,b)"},
 	{"randbit", 0, 1, 0, OP_NOP, f_randbit, 0,

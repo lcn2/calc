@@ -47,7 +47,26 @@ NUMBER _qlge_ = { { _qlgenum_, 1, 0 }, { _qlgeden_, 1, 0 }, 1, NULL };
 STATIC NUMBER *ln_10 = NULL;
 STATIC NUMBER *ln_10_epsilon = NULL;
 
-STATIC NUMBER *pivalue[2];
+/*
+ * cache pi
+ *
+ * pivalue[LAST_PI_EPSILON] - last epsilon used to calculate pi
+ * pivalue[LAST_PI_VALUE] - last calculated pi
+ *			      given pivalue[LAST_PI_EPSILON] epsilon
+ * pivalue[LAST_PI_DIV_180_EPSILON] last epsilon used to calculate pi/180
+ * pivalue[LAST_PI_DIV_180] - last calculated pi/180 given
+ *				pivalue[LAST_PI_DIV_180_EPSILON] epsilon
+ */
+#define PI_CACHE_LEN (4)
+#define LAST_PI_EPSILON (0)
+#define LAST_PI_VALUE (1)
+#define LAST_PI_DIV_180_EPSILON (2)
+#define LAST_PI_DIV_180 (3)
+STATIC NUMBER *pivalue[PI_CACHE_LEN];
+
+/*
+ * other static function decls
+ */
 STATIC NUMBER *qexprel(NUMBER *q, long bitnum);
 
 /*
@@ -725,16 +744,23 @@ qpi(NUMBER *epsilon)
 	long bits;			/* needed number of bits of precision */
 	long t;
 
+	/* firewall */
 	if (qiszero(epsilon)) {
 		math_error("zero epsilon value for pi");
 		/*NOTREACHED*/
 	}
-	if (epsilon == pivalue[0])
-		return qlink(pivalue[1]);
-	if (pivalue[0]) {
-		qfree(pivalue[0]);
-		qfree(pivalue[1]);
+
+	/* use pi cache if epsilon marches, else flush if needed */
+	if (epsilon == pivalue[LAST_PI_EPSILON]) {
+		return qlink(pivalue[LAST_PI_VALUE]);
 	}
+	if (pivalue[LAST_PI_EPSILON]) {
+		qfree(pivalue[LAST_PI_EPSILON]);
+	}
+	if (pivalue[LAST_PI_VALUE]) {
+		qfree(pivalue[LAST_PI_VALUE]);
+	}
+
 	bits = -qilog2(epsilon) + 4;
 	if (bits < 4)
 		bits = 4;
@@ -768,10 +794,53 @@ qpi(NUMBER *epsilon)
 	zfree(sum);
 	r = qmappr(t1, epsilon, 24L);
 	qfree(t1);
-	pivalue[0] = qlink(epsilon);
-	pivalue[1] = qlink(r);
+	pivalue[LAST_PI_EPSILON] = qlink(epsilon);
+	pivalue[LAST_PI_VALUE] = qlink(r);
 	return r;
 }
+
+
+/*
+ * qpidiv180 - calcucalte pi / 180
+ *
+ * This function returns pi/180 as used to covert between degrees and radians.
+ */
+NUMBER *
+qpidiv180(NUMBER *epsilon)
+{
+	NUMBER *pi, *pidiv180;
+
+	/* firewall */
+	if (qiszero(epsilon)) {
+		math_error("zero epsilon value for qpidiv180");
+		/*NOTREACHED*/
+	}
+
+	/* use pi/180 cache if epsilon marches, else flush if needed */
+	if (epsilon == pivalue[LAST_PI_DIV_180_EPSILON]) {
+		return qlink(pivalue[LAST_PI_DIV_180]);
+	}
+	if (pivalue[LAST_PI_DIV_180_EPSILON]) {
+		qfree(pivalue[LAST_PI_DIV_180_EPSILON]);
+	}
+	if (pivalue[LAST_PI_DIV_180]) {
+		qfree(pivalue[LAST_PI_DIV_180]);
+	}
+
+	/* let qpi() returned cached pi or calculate new as needed */
+	pi = qpi(epsilon);
+
+	/* now calculate pi/180 */
+	pidiv180 = qdivi(pi, 180);
+
+	/* cache epsilon and pi/180 */
+	pivalue[LAST_PI_DIV_180_EPSILON] = qlink(epsilon);
+	pivalue[LAST_PI_DIV_180] = qlink(pidiv180);
+
+	/* return pi/180 */
+	return pidiv180;
+}
+
 
 /*
  * Calculate the exponential function to the nearest or next to nearest

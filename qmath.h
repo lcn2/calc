@@ -213,6 +213,7 @@ E_FUNC NUMBER *qacsch(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qacoth(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qlegtoleg(NUMBER *q, NUMBER *epsilon, BOOL wantneg);
 E_FUNC NUMBER *qpi(NUMBER *epsilon);
+E_FUNC NUMBER *qpidiv180(NUMBER *epsilon);
 E_FUNC NUMBER *qcatalan(NUMBER *);
 E_FUNC NUMBER *qbern(ZVALUE z);
 E_FUNC void qfreebern(void);

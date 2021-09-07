@@ -496,3 +496,7 @@ E_ATANH3	Invalid value for calculating atan
 E_ACOTH3	Invalid value for calculating acot
 E_ASECH3	Invalid value for calculating asec
 E_ACSCH3	Invalid value for calculating acsc
+E_D2R1		Bad epsilon for converting degrees to radians
+E_D2R2		Bad first argument converting degrees to radians
+E_R2D1		Bad epsilon for converting radians to degrees
+E_R2D2		Bad first argument converting radians to degrees
