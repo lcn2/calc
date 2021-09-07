@@ -56,12 +56,17 @@ STATIC NUMBER *ln_10_epsilon = NULL;
  * pivalue[LAST_PI_DIV_180_EPSILON] - last epsilon used to calculate pi/180
  * pivalue[LAST_PI_DIV_180_VALUE] - last calculated pi/180 given
  *				      pivalue[LAST_PI_DIV_180_EPSILON] epsilon
+ * pivalue[LAST_PI_DIV_200_EPSILON] - last epsilon used to calculate pi/200
+ * pivalue[LAST_PI_DIV_200_VALUE] - last calculated pi/200 given
+ *				      pivalue[LAST_PI_DIV_200_EPSILON] epsilon
  */
 enum pi_cache {
 	LAST_PI_EPSILON = 0,
 	LAST_PI_VALUE,
 	LAST_PI_DIV_180_EPSILON,
 	LAST_PI_DIV_180_VALUE,
+	LAST_PI_DIV_200_EPSILON,
+	LAST_PI_DIV_200_VALUE,
 	PI_CACHE_LEN	/* must be last */
 };
 STATIC NUMBER *pivalue[PI_CACHE_LEN] = {
@@ -69,6 +74,8 @@ STATIC NUMBER *pivalue[PI_CACHE_LEN] = {
 	NULL,	/* LAST_PI_VALUE */
 	NULL,	/* LAST_PI_DIV_180_EPSILON */
 	NULL,	/* LAST_PI_DIV_180_VALUE */
+	NULL,	/* LAST_PI_DIV_200_EPSILON */
+	NULL,	/* LAST_PI_DIV_200_VALUE */
 };
 
 /*
@@ -812,7 +819,7 @@ qpi(NUMBER *epsilon)
 /*
  * qpidiv180 - calcucalte pi / 180
  *
- * This function returns pi/180 as used to covert between degrees and radians.
+ * This function returns pi/180 as used to covert between radians and degrees.
  */
 NUMBER *
 qpidiv180(NUMBER *epsilon)
@@ -850,6 +857,50 @@ qpidiv180(NUMBER *epsilon)
 
 	/* return pi/180 */
 	return pidiv180;
+}
+
+
+/*
+ * qpidiv200 - calcucalte pi / 200
+ *
+ * This function returns pi/200 as used to covert between radians and gradians.
+ */
+NUMBER *
+qpidiv200(NUMBER *epsilon)
+{
+	NUMBER *pi, *pidiv200;
+
+	/* firewall */
+	if (qiszero(epsilon)) {
+		math_error("zero epsilon value for qpidiv200");
+		/*NOTREACHED*/
+	}
+
+	/* use pi/200 cache if epsilon marches, else flush if needed */
+	if (pivalue[LAST_PI_DIV_200_EPSILON] != NULL &&
+	    pivalue[LAST_PI_DIV_200_VALUE] != NULL &&
+	    epsilon == pivalue[LAST_PI_DIV_200_EPSILON]) {
+		return qlink(pivalue[LAST_PI_DIV_200_VALUE]);
+	}
+	if (pivalue[LAST_PI_DIV_200_EPSILON] != NULL) {
+		qfree(pivalue[LAST_PI_DIV_200_EPSILON]);
+	}
+	if (pivalue[LAST_PI_DIV_200_VALUE] != NULL) {
+		qfree(pivalue[LAST_PI_DIV_200_VALUE]);
+	}
+
+	/* let qpi() returned cached pi or calculate new as needed */
+	pi = qpi(epsilon);
+
+	/* calculate pi/200 */
+	pidiv200 = qdivi(pi, 200);
+
+	/* cache epsilon and pi/200 */
+	pivalue[LAST_PI_DIV_200_EPSILON] = qlink(epsilon);
+	pivalue[LAST_PI_DIV_200_VALUE] = qlink(pidiv200);
+
+	/* return pi/200 */
+	return pidiv200;
 }
 
 

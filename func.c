@@ -2265,6 +2265,90 @@ f_r2d(int count, VALUE **vals)
 }
 
 
+/*
+ * f_d2r - convert gradians to radians
+ */
+S_FUNC VALUE
+f_g2r(int count, VALUE **vals)
+{
+	VALUE result;
+	NUMBER *eps;
+	NUMBER *pidiv200;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/* firewall */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_G2R1);
+		eps = vals[1]->v_num;
+	}
+
+	/* calculate argument * (pi/200) */
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			pidiv200 = qpidiv200(eps);
+			result.v_num = qmul(vals[0]->v_num, pidiv200);
+			result.v_type = V_NUM;
+			qfree(pidiv200);
+			break;
+		case V_COM:
+			pidiv200 = qpidiv200(eps);
+			result.v_com = c_mulq(vals[0]->v_com, pidiv200);
+			result.v_type = V_COM;
+			qfree(pidiv200);
+			break;
+		default:
+			return error_value(E_G2R2);
+	}
+	return result;
+}
+
+
+/*
+ * f_r2g - convert radians to gradians
+ */
+S_FUNC VALUE
+f_r2g(int count, VALUE **vals)
+{
+	VALUE result;
+	NUMBER *eps;
+	NUMBER *pidiv200;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/* firewall */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+			return error_value(E_R2G1);
+		eps = vals[1]->v_num;
+	}
+
+	/* calculate argument / (pi/200) */
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			pidiv200 = qpidiv200(eps);
+			result.v_num = qqdiv(vals[0]->v_num, pidiv200);
+			result.v_type = V_NUM;
+			qfree(pidiv200);
+			break;
+		case V_COM:
+			pidiv200 = qpidiv200(eps);
+			result.v_com = c_divq(vals[0]->v_com, pidiv200);
+			result.v_type = V_COM;
+			qfree(pidiv200);
+			break;
+		default:
+			return error_value(E_R2G2);
+	}
+	return result;
+}
+
+
 S_FUNC VALUE
 f_sin(int count, VALUE **vals)
 {
@@ -8866,6 +8950,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "return the file position"},
 	{"frac", 1, 1, 0, OP_FRAC, qfrac, 0,
 	 "fractional part of value"},
+	{"g2r", 1, 2, 0, OP_NOP, 0, f_g2r,
+	 "convert gradians to radians"},
 	{"gcd", 1, IN, 0, OP_NOP, f_gcd, 0,
 	 "greatest common divisor"},
 	{"gcdrem", 2, 2, 0, OP_NOP, qgcdrem, 0,
@@ -9115,6 +9201,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "\t\t\tdivided by b"},
 	{"r2d", 1, 2, 0, OP_NOP, 0, f_r2d,
 	 "convert radians to degrees"},
+	{"r2g", 1, 2, 0, OP_NOP, 0, f_r2g,
+	 "convert radians to gradians"},
 	{"rand", 0, 2, 0, OP_NOP, f_rand, 0,
 	 "additive 55 random number [0,2^64), [0,a), or [a,b)"},
 	{"randbit", 0, 1, 0, OP_NOP, f_randbit, 0,

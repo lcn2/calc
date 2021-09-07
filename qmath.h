@@ -1,7 +1,7 @@
 /*
  * qmath - declarations for extended precision rational arithmetic
  *
- * Copyright (C) 1999-2007,2014  David I. Bell
+ * Copyright (C) 1999-2007,2014,2021  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -214,6 +214,7 @@ E_FUNC NUMBER *qacoth(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qlegtoleg(NUMBER *q, NUMBER *epsilon, BOOL wantneg);
 E_FUNC NUMBER *qpi(NUMBER *epsilon);
 E_FUNC NUMBER *qpidiv180(NUMBER *epsilon);
+E_FUNC NUMBER *qpidiv200(NUMBER *epsilon);
 E_FUNC NUMBER *qcatalan(NUMBER *);
 E_FUNC NUMBER *qbern(ZVALUE z);
 E_FUNC void qfreebern(void);
