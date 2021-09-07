@@ -4831,7 +4831,7 @@ tags: ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} ${MAKE_FILE}
 	-${CTAGS} ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} 2>&1 | \
 	    ${GREP} -v 'Duplicate entry|Second entry ignored'
 
-clean: custom/Makefile
+clean:
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${RM} -f ${LIBOBJS}
 	${RM} -f ${CALCOBJS}
@@ -4852,6 +4852,7 @@ clean: custom/Makefile
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} clean
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
+	${MAKE} custom/Makefile
 	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} clean
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q} echo remove files that are obsolete
@@ -4861,7 +4862,7 @@ clean: custom/Makefile
 	${RM} -f win32dll.h have_malloc.h math_error.h string.h string.c
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-clobber: clean custom/Makefile
+clobber: clean
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${RM} -f ${SAMPLE_TARGETS}
 	${RM} -f ${SAMPLE_STATIC_TARGETS}
@@ -4898,6 +4899,7 @@ clobber: clean custom/Makefile
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	-${RM} -f custom/all; \
+	    ${MAKE} custom/Makefile; \
 	    cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
