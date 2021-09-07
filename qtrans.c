@@ -53,16 +53,23 @@ STATIC NUMBER *ln_10_epsilon = NULL;
  * pivalue[LAST_PI_EPSILON] - last epsilon used to calculate pi
  * pivalue[LAST_PI_VALUE] - last calculated pi
  *			      given pivalue[LAST_PI_EPSILON] epsilon
- * pivalue[LAST_PI_DIV_180_EPSILON] last epsilon used to calculate pi/180
- * pivalue[LAST_PI_DIV_180] - last calculated pi/180 given
- *				pivalue[LAST_PI_DIV_180_EPSILON] epsilon
+ * pivalue[LAST_PI_DIV_180_EPSILON] - last epsilon used to calculate pi/180
+ * pivalue[LAST_PI_DIV_180_VALUE] - last calculated pi/180 given
+ *				      pivalue[LAST_PI_DIV_180_EPSILON] epsilon
  */
-#define PI_CACHE_LEN (4)
-#define LAST_PI_EPSILON (0)
-#define LAST_PI_VALUE (1)
-#define LAST_PI_DIV_180_EPSILON (2)
-#define LAST_PI_DIV_180 (3)
-STATIC NUMBER *pivalue[PI_CACHE_LEN];
+enum pi_cache {
+	LAST_PI_EPSILON = 0,
+	LAST_PI_VALUE,
+	LAST_PI_DIV_180_EPSILON,
+	LAST_PI_DIV_180_VALUE,
+	PI_CACHE_LEN	/* must be last */
+};
+STATIC NUMBER *pivalue[PI_CACHE_LEN] = {
+	NULL,	/* LAST_PI_EPSILON */
+	NULL,	/* LAST_PI_VALUE */
+	NULL,	/* LAST_PI_DIV_180_EPSILON */
+	NULL,	/* LAST_PI_DIV_180_VALUE */
+};
 
 /*
  * other static function decls
@@ -751,13 +758,15 @@ qpi(NUMBER *epsilon)
 	}
 
 	/* use pi cache if epsilon marches, else flush if needed */
-	if (epsilon == pivalue[LAST_PI_EPSILON]) {
+	if (pivalue[LAST_PI_EPSILON] != NULL &&
+	    pivalue[LAST_PI_VALUE] != NULL &&
+	    epsilon == pivalue[LAST_PI_EPSILON]) {
 		return qlink(pivalue[LAST_PI_VALUE]);
 	}
-	if (pivalue[LAST_PI_EPSILON]) {
+	if (pivalue[LAST_PI_EPSILON] != NULL) {
 		qfree(pivalue[LAST_PI_EPSILON]);
 	}
-	if (pivalue[LAST_PI_VALUE]) {
+	if (pivalue[LAST_PI_VALUE] != NULL) {
 		qfree(pivalue[LAST_PI_VALUE]);
 	}
 
@@ -817,25 +826,27 @@ qpidiv180(NUMBER *epsilon)
 	}
 
 	/* use pi/180 cache if epsilon marches, else flush if needed */
-	if (epsilon == pivalue[LAST_PI_DIV_180_EPSILON]) {
-		return qlink(pivalue[LAST_PI_DIV_180]);
+	if (pivalue[LAST_PI_DIV_180_EPSILON] != NULL &&
+	    pivalue[LAST_PI_DIV_180_VALUE] != NULL &&
+	    epsilon == pivalue[LAST_PI_DIV_180_EPSILON]) {
+		return qlink(pivalue[LAST_PI_DIV_180_VALUE]);
 	}
-	if (pivalue[LAST_PI_DIV_180_EPSILON]) {
+	if (pivalue[LAST_PI_DIV_180_EPSILON] != NULL) {
 		qfree(pivalue[LAST_PI_DIV_180_EPSILON]);
 	}
-	if (pivalue[LAST_PI_DIV_180]) {
-		qfree(pivalue[LAST_PI_DIV_180]);
+	if (pivalue[LAST_PI_DIV_180_VALUE] != NULL) {
+		qfree(pivalue[LAST_PI_DIV_180_VALUE]);
 	}
 
 	/* let qpi() returned cached pi or calculate new as needed */
 	pi = qpi(epsilon);
 
-	/* now calculate pi/180 */
+	/* calculate pi/180 */
 	pidiv180 = qdivi(pi, 180);
 
 	/* cache epsilon and pi/180 */
 	pivalue[LAST_PI_DIV_180_EPSILON] = qlink(epsilon);
-	pivalue[LAST_PI_DIV_180] = qlink(pidiv180);
+	pivalue[LAST_PI_DIV_180_VALUE] = qlink(pidiv180);
 
 	/* return pi/180 */
 	return pidiv180;
