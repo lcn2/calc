@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.13.0.1 to date:
+The following are the changes from calc version 2.14.0.0 to date:
 
     The :-separated default CALCRC value has been reversed.
     The default CALCRC was:
@@ -37,7 +37,7 @@ The following are the changes from calc version 2.13.0.1 to date:
     dump core.
 
 
-The following are the changes from calc version 2.13.0.1:
+The following are the changes from calc version 2.13.0.1 to 2.13.0.1:
 
     Replaced /usr/local with the use of ${PREFIX} in calc Makefiles.
 
@@ -70,7 +70,7 @@ The following are the changes from calc version 2.13.0.1:
     Updated HOWTO.INSTALL to mention Makefile.local.
 
 
-The following are the changes from calc version 2.13.0.0:
+The following are the changes from calc version 2.13.0.0 to 2.13.0.0:
 
     Fixed typo (missing quotes) in the env rule.
 
