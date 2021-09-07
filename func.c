@@ -7897,7 +7897,7 @@ f_base2(int count, NUMBER **vals)
 		oldbase = math_setmode2(MODE_HEX);
 		break;
         case 1000:
-		oldbase = math_setmode(MODE_ENG);
+		oldbase = math_setmode2(MODE_ENG);
 		break;
 	default:
 		math_error("Unsupported base");
