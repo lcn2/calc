@@ -11,6 +11,31 @@ The following are the changes from calc version 2.13.0.1 to date:
 
     See "help environment" for details.
 
+    Added engineering mode as per a GitHub pull request from
+    <GitHub user heitzmann>.  Thank you!  For example:
+
+	; config("mode","eng"),
+	; 10^41
+		100e39
+
+    or for example:
+
+	; base(1000),
+	; 2^23209-1
+		~402.87411577898877818187e6984
+
+    For more information see:
+
+	help base
+
+    Added regression test code for engineering mode.  Improved and
+    expanded regression test code related to the base() and base2()
+    builtin functions.
+
+    Fixed a critical bug in the above mentioned pull request where
+    a call to base2(1000) would make calc unstable and likely to
+    dump core.
+
 
 The following are the changes from calc version 2.13.0.1:
 

@@ -1881,96 +1881,298 @@ define test_mode()
 	vrfy(tmp == "octal",		'1620: tmp == "octal"');
 	vrfy(base() == 2,		'1621: base() == 2');
 
-	tmp = config("mode", "real");
-	print				'1622: tmp = config("mode", "real")';
+	tmp = config("mode", "eng");
+	print				'1622: tmp = config("mode", "eng")';
 	vrfy(tmp == "binary",		'1623: tmp == "binary"');
+	vrfy(base() == 1000,		'1624: base() == 1000');
+
+	tmp = config("mode", "real");
+	print				'1625: tmp = config("mode", "real")';
+	vrfy(tmp == "engineering",	'1626: tmp == "engineering"');
 
 	tmp = base(1/3);
-	print				'1624: tmp = base(1/3)';
+	print				'1627: tmp = base(1/3)';
 	vrfy(config("mode") == "fraction",
-					'1625: config("mode") == "fraction"');
+					'1628: config("mode") == "fraction"');
 
 	tmp = base(-10);
-	print				'1626: tmp = base(-10)';
+	print				'1629: tmp = base(-10)';
 	vrfy(config("mode") == "integer",
-					'1627: config("mode") == "integer"');
+					'1630: config("mode") == "integer"');
 
 	tmp = base(10);
-	print				'1628: tmp = base(10)';
-	vrfy(config("mode") == "real",	'1629: config("mode") == "real"');
+	print				'1631: tmp = base(10)';
+	vrfy(config("mode") == "real",	'1632: config("mode") == "real"');
 
 	tmp = base(1e20);
-	print				'1630: tmp = base(1e20)';
+	print				'1633: tmp = base(1e20)';
 	vrfy(config("mode") == "scientific",
-					'1631: config("mode") == "scientific"');
+					'1634: config("mode") == "scientific"');
 
 	tmp = base(16);
-	print				'1632: tmp = base(16)';
+	print				'1635: tmp = base(16)';
 	vrfy(config("mode") == "hexadecimal", \
-		'1633: config("mode") == "hexadecimal"');
+		'1636: config("mode") == "hexadecimal"');
 
 	tmp = base(8);
-	print				'1634: tmp = base(8)';
-	vrfy(config("mode") == "octal", '1635: config("mode") == "octal"');
+	print				'1637: tmp = base(8)';
+	vrfy(config("mode") == "octal", '1638: config("mode") == "octal"');
 
 	tmp = base(2);
-	print				'1636: tmp = base(2)';
-	vrfy(config("mode") == "binary",'1637: config("mode") == "binary"');
+	print				'1639: tmp = base(2)';
+	vrfy(config("mode") == "binary",'1640: config("mode") == "binary"');
+
+	tmp = base(1000);
+	print				'1641: tmp = base(1000)';
+	vrfy(config("mode") == "engineering",
+		'1642: config("mode") == "engineering"');
+
+	tmp = base(1/3);
+	print				'1643: tmp = base(1/3)';
+	vrfy(str(0x80000000) == "2147483648", \
+		'1644: str(0x8000000) == \"2147483648\"');
+	vrfy(str(0xffffffff) == "4294967295", \
+		'1645: str(0xffffffff) == \"4294967295\"');
+	vrfy(str(3e9) == "3000000000", \
+		'1646: str(3e9) == \"3000000000\"');
+	vrfy(str(1/3) == "1/3", \
+		'1647: str(1/3) == \"1/3\"');
+	vrfy(str(2e8) == "200000000", \
+		'1648: str(2e8) == \"200000000"');
+	vrfy(str(200e6) == "200000000", \
+		'1649: str(200e6) == \"200000000"');
+	vrfy(str(0b100111) == "39", \
+		'1650: str(0b100111) == \"39"');
+	vrfy(str(07543) == "3939", \
+		'1651: str(07543) == \"3939"');
+	vrfy(str(7543) == "7543", \
+		'1652: str(7543) == \"7543"');
 
 	tmp = base(8);
-	print				'1638: tmp = base(8)';
+	print				'1653: tmp = base(8)';
 	vrfy(str(0x80000000) == "020000000000", \
-		'1639: str(0x8000000) == \"020000000000\"');
+		'1654: str(0x8000000) == \"020000000000\"');
 	vrfy(str(0xffffffff) == "037777777777", \
-		'1640: str(0xffffffff) == \"037777777777\"');
+		'1655: str(0xffffffff) == \"037777777777\"');
 	vrfy(str(3e9) == "026264057000", \
-		'1641: str(3e9) == \"026264057000\"');
+		'1656: str(3e9) == \"026264057000\"');
+	vrfy(str(1/3) == "1/3", \
+		'1657: str(1/3) == \"1/3\"');
+	vrfy(str(2e8) == "01372741000", \
+		'1658: str(2e8) == \"01372741000"');
+	vrfy(str(200e6) == "01372741000", \
+		'1659: str(200e6) == \"01372741000"');
+	vrfy(str(0b100111) == "047", \
+		'1660: str(0b100111) == \"047"');
+	vrfy(str(07543) == "07543", \
+		'1661: str(07543) == \"07543"');
+	vrfy(str(7543) == "016567", \
+		'1662: str(7543) == \"016567"');
 
 	tmp = base(16);
-	print				'1642: tmp = base(16)';
+	print				'1663: tmp = base(16)';
 	vrfy(str(0x80000000) == "0x80000000", \
-		'1643: str(0x8000000) == \"0x80000000\"');
+		'1664: str(0x8000000) == \"0x80000000\"');
 	vrfy(str(0xffffffff) == "0xffffffff", \
-		'1644: str(0xffffffff) == \"0xffffffff\"');
+		'1665: str(0xffffffff) == \"0xffffffff\"');
 	vrfy(str(3e9) == "0xb2d05e00", \
-		'1645: str(3e9) == \"0xb2d05e00\"');
+		'1666: str(3e9) == \"0xb2d05e00\"');
+	vrfy(str(1/3) == "1/3", \
+		'1667: str(1/3) == \"1/3\"');
+	vrfy(str(2e8) == "0xbebc200", \
+		'1668: str(2e8) == \"0xbebc200"');
+	vrfy(str(200e6) == "0xbebc200", \
+		'1669: str(200e6) == \"0xbebc200"');
+	vrfy(str(0b100111) == "0x27", \
+		'1670: str(0b100111) == \"0x27"');
+	vrfy(str(07543) == "0xf63", \
+		'1671: str(07543) == \"0xf63"');
+	vrfy(str(7543) == "0x1d77", \
+		'1672: str(7543) == \"0x1d77"');
+
+	tmp = base(2);
+	print				'1673: tmp = base(2)';
+	vrfy(str(0x80000000) == "0b10000000000000000000000000000000", \
+	    '1674: str(0x8000000) == \"0b10000000000000000000000000000000\"');
+	vrfy(str(0xffffffff) == "0b11111111111111111111111111111111", \
+	    '1675: str(0xffffffff) == \"0b11111111111111111111111111111111\"');
+	vrfy(str(3e9) == "0b10110010110100000101111000000000", \
+	    '1676: str(3e9) == \"0b10110010110100000101111000000000\"');
+	vrfy(str(1/3) == "1/0b11", \
+		'1677: str(1/3) == \"1/0b11\"');
+	vrfy(str(2e8) == "0b1011111010111100001000000000", \
+		'1678: str(2e8) == \"0b1011111010111100001000000000"');
+	vrfy(str(200e6) == "0b1011111010111100001000000000", \
+		'1679: str(200e6) == \"0b1011111010111100001000000000"');
+	vrfy(str(0b100111) == "0b100111", \
+		'1680: str(0b100111) == \"0b100111"');
+	vrfy(str(07543) == "0b111101100011", \
+		'1681: str(07543) == \"0b111101100011"');
+	vrfy(str(7543) == "0b1110101110111", \
+		'1682: str(7543) == \"0b1110101110111"');
+
+	tmp = base(1e20);
+	print				'1683: tmp = base(1e20)';
+	vrfy(str(0x80000000) == "2.147483648e9", \
+		'1684: str(0x8000000) == \"2.147483648e9\"');
+	vrfy(str(0xffffffff) == "4.294967295e9", \
+		'1685: str(0xffffffff) == \"4.294967295e9\"');
+	vrfy(str(3e9) == "3e9", \
+		'1686: str(3e9) == \"3e9\"');
+	vrfy(str(1/3) == "~3.33333333333333333333e-1", \
+		'1687: str(1/3) == \"~3.33333333333333333333e-1\"');
+	vrfy(str(2e8) == "2e8", \
+		'1688: str(2e8) == \"2e8"');
+	vrfy(str(200e6) == "2e8", \
+		'1689: str(200e6) == \"2e8"');
+	vrfy(str(0b100111) == "3.9e1", \
+		'1690: str(0b100111) == \"3.9e1"');
+	vrfy(str(07543) == "3.939e3", \
+		'1691: str(07543) == \"3.939e3"');
+	vrfy(str(7543) == "7.543e3", \
+		'1692: str(7543) == \"7.543e3"');
+
+	tmp = base(1000);
+	print				'1693: tmp = base(1000)';
+	vrfy(str(0x80000000) == "2.147483648e9", \
+		'1694: str(0x8000000) == \"2.147483648e9"');
+	vrfy(str(0xffffffff) == "4.294967295e9", \
+		'1695: str(0xffffffff) == \"4.294967295e9\"');
+	vrfy(str(3e9) == "3e9", \
+		'1696: str(3e9) == \"3e9\"');
+	vrfy(str(1/3) == "~333.33333333333333333333e-3", \
+		'1697: str(1/3) == \"~333.33333333333333333333e-3\"');
+	vrfy(str(2e8) == "200e6", \
+		'1698: str(2e8) == \"200e6"');
+	vrfy(str(200e6) == "200e6", \
+		'1699: str(200e6) == \"200e6"');
+	vrfy(str(0b100111) == "39", \
+		'1700: str(0b100111) == \"39"');
+	vrfy(str(07543) == "3.939e3", \
+		'1701: str(07543) == \"3.939e3"');
+	vrfy(str(7543) == "7.543e3", \
+		'1702: str(7543) == \"7.543e3"');
+
+	tmp = base(-10);
+	print				'1703: tmp = base(-10)';
+	vrfy(str(0x80000000) == "2147483648", \
+		'1704: str(0x8000000) == \"2147483648\"');
+	vrfy(str(0xffffffff) == "4294967295", \
+		'1705: str(0xffffffff) == \"4294967295\"');
+	vrfy(str(3e9) == "3000000000", \
+		'1706: str(3e9) == \"3000000000\"');
+	vrfy(str(1/3) == "~0", \
+		'1707: str(1/3) == \"~0\"');
+	vrfy(str(2e8) == "200000000", \
+		'1708: str(2e8) == \"200000000"');
+	vrfy(str(200e6) == "200000000", \
+		'1709: str(200e6) == \"200000000"');
+	vrfy(str(0b100111) == "39", \
+		'1710: str(0b100111) == \"39"');
+	vrfy(str(07543) == "3939", \
+		'1711: str(07543) == \"3939"');
+	vrfy(str(7543) == "7543", \
+		'1712: str(7543) == \"7543"');
 
 	tmp = base(10);
-	print				'1646: tmp = base(10)';
-	vrfy(config("mode") == "real", \
-		'1647: config("mode") == "real"');
-
+	print				'1713: tmp = base(10)';
 	vrfy(str(0x80000000) == "2147483648", \
-		'1648: str(0x80000000) == \"2147483648\"');
+		'1714: str(0x8000000) == \"2147483648\"');
 	vrfy(str(0xffffffff) == "4294967295", \
-		'1649: str(0xffffffff) == \"4294967295\"');
+		'1715: str(0xffffffff) == \"4294967295\"');
 	vrfy(str(3e9) == "3000000000", \
-		'1650: str(3e9) == \"3000000000\"');
+		'1716: str(3e9) == \"3000000000\"');
+	vrfy(str(1/3) == "~0.33333333333333333333", \
+		'1717: str(1/3) == \"~0.33333333333333333333"');
+	vrfy(str(2e8) == "200000000", \
+		'1718: str(2e8) == \"200000000"');
+	vrfy(str(200e6) == "200000000", \
+		'1719: str(200e6) == \"200000000"');
+	vrfy(str(0b100111) == "39", \
+		'1720: str(0b100111) == \"39"');
+	vrfy(str(07543) == "3939", \
+		'1721: str(07543) == \"3939"');
+	vrfy(str(7543) == "7543", \
+		'1722: str(7543) == \"7543"');
 
 	/* test base2() functionality */
-	vrfy(base2() == 0,		'1651: base2() == 0');
-	vrfy(base2(0) == 0,		'1652: base2(0) == 0');
-	vrfy(base2() == 0,		'1653: base2() == 0');
-	vrfy(base2(16) == 0,		'1654: base2(16) == 0');
-	vrfy(base2() == 16,		'1655: base2() == 16');
-	vrfy(str(3e9) == "3000000000 /* 0xb2d05e00 */",
-		'1656: str(3e9) == "3000000000 /* 0xb2d05e00 */"');
-	vrfy(base2(1/3) == 16,		'1657: base2(16) == 16');
-	vrfy(str(23209) == "23209 /* 23209 */",
-		'1658: str(23209) == "23209 /* 23209 */"');
-	vrfy(str(3/2) == "1.5 /* 3/2 */",
-		'1659: str(3/2) == "1.5 /* 3/2 */"');
-	vrfy(base() == 10,		'1660: base() == 10');
-	vrfy(base2(0) == 1/3,		'1661: base2(0) == 1/3');
+	vrfy(base2() == 0,		'1723: base2() == 0');
+	vrfy(base2(0) == 0,		'1724: base2(0) == 0');
+	vrfy(base2() == 0,		'1725: base2() == 0');
 
-	print '1662: Ending mode/base test';
+	vrfy(base2(16) == 0,		'1726: base2(16) == 0');
+	vrfy(base2() == 16,		'1727: base2() == 16');
+	vrfy(str(3e9) == "3000000000 /* 0xb2d05e00 */",
+		'1728: str(3e9) == "3000000000 /* 0xb2d05e00 */"');
+
+	vrfy(base2(1/3) == 16,		'1728: base2(16) == 16');
+	vrfy(base2() == 1/3,		'1729: base2() == 1/3');
+	vrfy(str(23209) == "23209 /* 23209 */",
+		'1730: str(23209) == "23209 /* 23209 */"');
+	vrfy(str(3/2) == "1.5 /* 3/2 */",
+		'1731: str(3/2) == "1.5 /* 3/2 */"');
+
+	vrfy(base2(8) == 1/3,		'1732: base2(8) == 1/3');
+	vrfy(base2() == 8,		'1733: base2() == 8');
+	vrfy(str(23209) == "23209 /* 055251 */",
+		'1734: str(23209) == "23209 /* 055251 */"');
+	vrfy(str(3/2) == "1.5 /* 3/2 */",
+		'1735: str(3/2) == "1.5 /* 3/2 */"');
+
+	vrfy(base2(2) == 8,		'1736: base2(2) == 8');
+	vrfy(base2() == 2,		'1737: base2() == 2');
+	vrfy(str(23209) == "23209 /* 0b101101010101001 */",
+		'1738: str(23209) == "23209 /* 0b101101010101001 */"');
+	vrfy(str(3/2) == "1.5 /* 0b11/0b10 */",
+		'1739: str(3/2) == "1.5 /* 0b11/0b10 */"');
+
+	vrfy(base2(1e20) == 2,		'1740: base2(1e20) == 2');
+	vrfy(base2() == 1e20,		'1741: base2() == 1e20');
+	vrfy(str(23209) == "23209 /* 2.3209e4 */",
+		'1742: str(23209) == "23209 /* 2.3209e4 */"');
+	vrfy(str(3/2) == "1.5 /* 1.5 */",
+		'1743: str(3/2) == "1.5 /* 1.5 */"');
+
+	vrfy(base2(-10) == 1e20,	'1744: base2(-10) == 1e20');
+	vrfy(base2() == -10,		'1745: base2() == -10');
+	vrfy(str(23209) == "23209 /* 23209 */",
+		'1746: str(23209) == "23209 /* 23209 */"');
+	vrfy(str(3/2) == "1.5 /* ~2 */",
+		'1747: str(3/2) == "1.5 /* ~2 */"');
+
+	vrfy(base2(1000) == -10,	'1748: base2(1000) == -1000');
+	vrfy(base2() == 1000,		'1749: base2() == 1000');
+	vrfy(str(23209) == "23209 /* 23.209e3 */",
+		'1750: str(23209) == "23209 /* 23.209e3 */"');
+	vrfy(str(3/2) == "1.5 /* 1.5 */",
+		'1751: str(3/2) == "1.5 /* 1.5 */"');
+
+	vrfy(base2(10) == 1000,		'1752: base2(10) == 1000');
+	vrfy(base2() == 10,		'1753: base2() == 10');
+	vrfy(str(23209) == "23209 /* 23209 */",
+		'1754: str(23209) == "23209 /* 23209 */"');
+	vrfy(str(3/2) == "1.5 /* 1.5 */",
+		'1755: str(3/2) == "1.5 /* 1.5 */"');
+
+	vrfy(base2(0) == 10,		'1756: base2(0) == 10');
+	vrfy(base2() == 0,		'1757: base2() == 0');
+	vrfy(str(23209) == "23209",
+		'1758: str(23209) == "23209"');
+	vrfy(str(3/2) == "1.5",
+		'1759: str(3/2) == "1.5"');
+
+	vrfy(base() == 10,		'1760: base() == 10');
+	vrfy(base2() == 0,		'1761: base2() == 0');
+
+	print '1762: Ending mode/base test';
 }
 print '026: parsed test_mode()';
 
 
 /*
- * The 1700's contain tests for reading resource files.	 These tests are
- * done inline near the bottom.
+ * The 1780's and 1790's contain tests for reading resource files.
+ *
+ * These tests are done inline near the bottom.
  */
 
 
@@ -7635,31 +7837,31 @@ print;
 return test_mode();
 print;
 
-print '1700: Beginning read test';
+print '1780: Beginning read test';
 value = 0;
-vrfy(value == 0,		  '1701: value == 0');
+vrfy(value == 0,		  '1781: value == 0');
 read "test1700";
-print				  '1702: read "test1700";';
-vrfy(value == 1,		  '1703: value == 1');
+print				  '1782: read "test1700";';
+vrfy(value == 1,		  '1783: value == 1');
 read -once "test1700";
-print				  '1704: read -once "test1700";';
-vrfy(value == 1,		  '1705: value == 1');
+print				  '1784: read -once "test1700";';
+vrfy(value == 1,		  '1785: value == 1');
 read "test1700.cal";
-print				  '1706: read "test1700.cal";';
-vrfy(value == 2,		  '1707: value == 2');
-read -once "test1700.cal";
-print				  '1708: read -once "test1700.cal";';
-vrfy(value == 2,		  '1709: value == 2');
+print				  '1786: read "test1700.cal";';
+vrfy(value == 2,		  '1787: value == 2');
+read -once "test1700.cal"
+print				  '1788: read -once "test1700.cal";';
+vrfy(value == 2,		  '1789: value == 2');
 read "test1700.cal";
-print				  '1710: read "test1700.cal";';
-vrfy(value == 3,		  '1711: value == 3');
+print				  '1790: read "test1700.cal";';
+vrfy(value == 3,		  '1791: value == 3');
 {++value;} read "test1700.cal";
-print				  '1712: {++value;} read "test1700.cal";';
-vrfy(value == 5,		  '1713: value == 5');
+print				  '1792: {++value;} read "test1700.cal";';
+vrfy(value == 5,		  '1793: value == 5');
 {++value;} read -once "test1700.cal";
-print				  '1714: {++value;} read -once "test1700.cal";';
-vrfy(value == 6,		  '1715: value == 6');
-print '1716: Ending read test';
+print				  '1794: {++value;} read -once "test1700.cal";';
+vrfy(value == 6,		  '1795: value == 6');
+print '1796: Ending read test';
 
 print;
 return test_obj();
