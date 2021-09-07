@@ -2,6 +2,14 @@
 IMPORTANT: Please see the section at the bottom of this file for
 	   some important information on Makefiles used in calc.
 
+###################################################################
+# IMPORTANT: DO NOT run GNU make in parallel mode!!!		  #
+###################################################################
+# Unfortunately due to the complex dependency issues between	  #
+# Makefile, Makefile.ship and custom/Makefile, parallel GNU make  #
+# is NOT recommended.  Sorry (tm Canada) :)			  #
+###################################################################
+
 Installing calc from the bzip2-ed tarball in 4 easy steps:
 
     (0)  If your platform supports i686 RPMs, you may want to go to:

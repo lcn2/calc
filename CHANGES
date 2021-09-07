@@ -55,6 +55,13 @@ The following are the changes from calc version 2.14.0.0 to date:
     the precision of the internal constant pi/200.
     The optional 2nd argument is ignored by g2d(grad, ep) and d2g(deg, ep).
 
+    The clean and clobber makefile rules no longer list custom/Makefile
+    as a dependecy.
+
+    Unfortunately due to the complex dependency issues between
+    Makefile, Makefile.ship and custom/Makefile, parallel GNU make
+    is NOT recommended.  Sorry (tm Canada) :)
+
 
 The following are the changes from calc version 2.13.0.1 to 2.13.0.1:
 
@@ -1379,12 +1386,12 @@ The following are the changes from calc version 2.12.1.10 to 2.12.2:
     The custom/Makefile is now constructed from 3 parts: custom/Makefile.head,
     the host target section in Makefile, and the custom/Makefile.tail.
 
-    The top level Makefile and the custom/Makefile require a GNU Make
+    The top level Makefile and the custom/Makefile require a GNU make
     (such as gmake) or an equivalently advanced make.  On many targets,
     the default make is sufficient.  On FreeBSD for example, one must
     use gmake instead of make.
 
-    If your target system does not have GNU Make (or equivalent), then
+    If your target system does not have GNU make (or equivalent), then
     you should try using the Makefile.simple and custom/Makefile.simple
     files:
 

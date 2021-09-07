@@ -35,6 +35,12 @@
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
 
+# Unfortunately due to the complex dependency issues between
+# Makefile, Makefile.ship and custom/Makefile, parallel GNU make
+# is NOT recommended.  Sorry.
+#
+.NOTPARALLEL:
+
 # Try uname -s if the target was not already set on the make command line
 #
 ifeq ($(target),)

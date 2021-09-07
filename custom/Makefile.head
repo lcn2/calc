@@ -145,6 +145,13 @@ CCBAN= -UUNBAN
 
 
 #if 0	/* start of skip for non-Gnu makefiles */
+
+# Unfortunately due to the complex dependency issues between
+# Makefile, Makefile.ship and custom/Makefile, parallel GNU make
+# is NOT recommended.  Sorry.
+#
+.NOTPARALLEL:
+
 ##############################################################################
 #-=-=-=-=-=-=-=-=- Identify the target machine, if possible -=-=-=-=-=-=-=-=-#
 ##############################################################################
