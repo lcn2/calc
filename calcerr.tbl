@@ -504,3 +504,5 @@ E_G2R1		Bad epsilon for converting gradians to radians
 E_G2R2		Bad first argument converting gradians to radians
 E_R2G1		Bad epsilon for converting radians to gradians
 E_R2G2		Bad first argument converting radians to gradians
+E_D2G1		Bad first argument converting degrees to gradians
+E_G2D1		Bad first argument converting gradians to degrees

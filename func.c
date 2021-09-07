@@ -2349,6 +2349,72 @@ f_r2g(int count, VALUE **vals)
 }
 
 
+/*
+ * f_d2g - convert degrees to gradians
+ *
+ * NOTE: The epsilon (vals[1]->v_num) argument is ignored.
+ */
+/*ARGSUSED*/
+S_FUNC VALUE
+f_d2g(int UNUSED(count), VALUE **vals)
+{
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/* NOTE: the epsilon (vals[1]->v_num) argument is ignored */
+
+	/* calculate argument * (10/9) */
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qmul(vals[0]->v_num, &_qtendivnine_);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			result.v_com = c_mulq(vals[0]->v_com, &_qtendivnine_);
+			result.v_type = V_COM;
+			break;
+		default:
+			return error_value(E_D2G1);
+	}
+	return result;
+}
+
+
+/*
+ * f_g2d - convert gradians to degrees
+ *
+ * NOTE: The epsilon (vals[1]->v_num) argument is ignored.
+ */
+/*ARGSUSED*/
+S_FUNC VALUE
+f_g2d(int UNUSED(count), VALUE **vals)
+{
+	VALUE result;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/* NOTE: the epsilon (vals[1]->v_num) argument is ignored */
+
+	/* calculate argument * (9/10) */
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qmul(vals[0]->v_num, &_qninedivten_);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			result.v_com = c_mulq(vals[0]->v_com, &_qninedivten_);
+			result.v_type = V_COM;
+			break;
+		default:
+			return error_value(E_G2D1);
+	}
+	return result;
+}
+
+
 S_FUNC VALUE
 f_sin(int count, VALUE **vals)
 {
@@ -8838,6 +8904,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "date and time as string"},
 	{"custom", 0, IN, 0, OP_NOP, 0, f_custom,
 	 "custom builtin function interface"},
+	{"d2g", 1, 2, 0, OP_NOP, 0, f_d2g,
+	 "convert degrees to gradians"},
 	{"d2r", 1, 2, 0, OP_NOP, 0, f_d2r,
 	 "convert degrees to radians"},
 	{"delete", 2, 2, FA, OP_NOP, 0, f_listdelete,
@@ -8950,6 +9018,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "return the file position"},
 	{"frac", 1, 1, 0, OP_FRAC, qfrac, 0,
 	 "fractional part of value"},
+	{"g2d", 1, 2, 0, OP_NOP, 0, f_g2d,
+	 "convert gradians to degrees"},
 	{"g2r", 1, 2, 0, OP_NOP, 0, f_g2r,
 	 "convert gradians to radians"},
 	{"gcd", 1, IN, 0, OP_NOP, f_gcd, 0,

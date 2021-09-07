@@ -35,7 +35,7 @@
 #endif
 
 
-#define INITCONSTCOUNT 9    /* number of initnumbs[] pre-defined constants */
+#define INITCONSTCOUNT 12    /* number of initnumbs[] pre-defined constants */
 
 /*
  * Rational arithmetic definitions.
@@ -275,6 +275,7 @@ static inline NUMBER* qlink(NUMBER* q) { if(q) { (q)->links++; } return q; }
  */
 EXTERN NUMBER _qzero_, _qone_, _qnegone_, _qonehalf_, _qneghalf_, _qonesqbase_;
 EXTERN NUMBER _qtwo_, _qthree_, _qfour_, _qten_;
+EXTERN NUMBER _qtendivnine_, _qninedivten_;
 EXTERN NUMBER * initnumbs[];
 
 

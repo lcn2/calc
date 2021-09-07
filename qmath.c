@@ -44,9 +44,12 @@ NUMBER _qnegone_ =	{ { _oneval_, 1, 1 }, { _oneval_, 1, 0 }, 1, NULL };
 NUMBER _qonehalf_ =	{ { _oneval_, 1, 0 }, { _twoval_, 1, 0 }, 1, NULL };
 NUMBER _qneghalf_ = 	{ { _oneval_, 1, 1 }, { _twoval_, 1, 0 }, 1, NULL };
 NUMBER _qonesqbase_ =	{ { _oneval_, 1, 0 }, { _sqbaseval_, 2, 0 }, 1, NULL };
+NUMBER _qtendivnine_ =	{ { _tenval_, 1, 0 }, { _nineval_, 1, 0 }, 1, NULL };
+NUMBER _qninedivten_ =	{ { _nineval_, 1, 0 }, { _tenval_, 1, 0 }, 1, NULL };
 
 NUMBER * initnumbs[INITCONSTCOUNT] = {&_qzero_, &_qone_, &_qtwo_, &_qthree_,
-	&_qfour_, &_qten_, &_qnegone_, &_qonehalf_, &_qneghalf_};
+	&_qfour_, &_qten_, &_qnegone_, &_qonehalf_, &_qneghalf_,
+	&_qonesqbase_, &_qtendivnine_, &_qninedivten_ };
 
 
 /*
