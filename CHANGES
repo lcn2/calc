@@ -62,6 +62,26 @@ The following are the changes from calc version 2.14.0.0 to date:
     Makefile, Makefile.ship and custom/Makefile, parallel GNU make
     is NOT recommended.  Sorry (tm Canada) :)
 
+    The clean and clobber makefile rules no longer list custom/Makefile
+    as a dependency.
+
+    Unfortunately due to the complex dependency issues between
+    Makefile, Makefile.ship and custom/Makefile, parallel GNU make
+    is NOT recommended.  Sorry (tm Canada) :)
+
+    Fixed a few typos in CHANGES.
+
+    As a side note: We stayed v2.13.x was kept for only a short time.
+    The move to 2.14.x was motivated by non-compatible changes due to
+    the default order of CALCRC, plus some new builtin functions.
+
+    More changes are likely, so we might see another v2.14.0.x release
+    before things are declared "recommended stable".
+
+    Not that we wan to discourage people from trying v2.14.0, you should
+    try it.  We just want things to become stable and well field tested
+    before we reach the "recommended stable" release state.
+
 
 The following are the changes from calc version 2.13.0.1 to 2.13.0.1:
 

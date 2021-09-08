@@ -54,7 +54,7 @@ static char *program;
 #define MAJOR_VER	2	/* major library version */
 #define MINOR_VER	14	/* minor library version */
 #define MAJOR_PATCH	0	/* major software version level */
-#define MINOR_PATCH	0	/* minor software version level */
+#define MINOR_PATCH	2	/* minor software version level */
 
 
 /*
