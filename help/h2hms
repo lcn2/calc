@@ -1,0 +1,132 @@
+NAME
+    h2hms - convert hours into hours, minutes, and seconds
+
+SYNOPSIS
+    h2hms(hours, h, m, s [,rnd])
+
+TYPES
+    hours	real
+    h		null-or-real-valued lvalue with assign-to permission
+    m		null-or-real-valued lvalue with assign-to permission
+    s		null-or-real-valued lvalue with assign-to permission
+    rnd		nonnegative integer, defaults to config("mod")
+
+    return	mod(hours, 24, rnd)
+
+DESCRIPTION
+    Convert hours hours into h hours, m minutes, and s seconds.
+
+    The return value is a normalized number of hours, and is equivalent
+    to the following:
+
+	return_value = mod(hours, 24, rnd);
+
+    The argument rnd, if not given, defaults to config("mod").
+    For more information on the effects of rnd, see "help mod".
+
+    Depending on the rounding mode, the return could be a real value
+    in the interval [0, 24) or a real value in the interval (-24, 0].
+    For the default round mode, the return value is in the interval [0, 24).
+
+    The h argument will be an integer number of hours.
+
+    The value h will be set as if the following were used:
+
+    	h = int(return_value);
+
+    For some rounding modes, h will be an integer in the interval [0, 24).
+    For other rounding modes, h will be an integer in the interval (-24, 0].
+    For the default round mode, h is in the interval [0, 24).
+
+    The m argument will be an integer number of minutes.
+
+    The value m will be set as if the following were used:
+
+	tmp = return_value - h;
+	tmp_m = tmp * 60;
+	free(tmp);
+	m = int(tmp_m);
+
+    For some rounding modes, m will be an integer in the interval [0, 60).
+    For other rounding modes, m will be an integer in the interval (-60, 0].
+    For the default round mode, m will be in the interval [0, 60).
+
+    The s argument will be a real number of seconds.
+
+    The value s will be set as if the following were used:
+
+	tmp = tmp_m - m;
+	free(tmp_m);
+	s = tmp * 60;
+	free(tmp);
+
+    For some rounding modes, s will be a real value in the interval [0, 60).
+    For other rounding modes, s will be a real value in the interval (-60, 0].
+    For the default round mode, s will be in the interval [0, 60).
+
+    The following shows relationship between the return value and the resulting
+    h, m, and s values:
+
+    	return_value == h + m/60 + s/3600;
+
+
+EXAMPLE
+    /* if args are undefined, pre-declare them or assign them as args */
+
+    ; global h, m, s;
+
+    ; print h2hms(12.3456,h,m,s), h, m, s;
+    12.3456 12 20 44.16
+    ; print h2hms(1234.5678,h,m,s), h, m, s;
+    10.5678 10 34 4.08
+    ; print h2hms(-1234.5678,h,m,s), h, m, s;
+    13.4322 13 25 55.92
+
+    ; print h2hms(654.321,hour=,min=,sec=), hour, min, sec;
+    6.321 6 19 15.6
+    ; print h2hms(-654.321,hour=,min=,sec=), hour, min, sec;
+    17.679 17 40 44.4
+    ; print h2hms(24.321,hour=,min=,sec=), hour, min, sec;
+    0.321 0 19 15.6
+
+    /* certain non-default rounding modes can return negative values */
+
+    ; print h2hms(654.321,hour=,min=,sec=,1), hour, min, sec;
+    -17.679 -17 -40 -44.4
+    ; print h2hms(-654.321,hour=,min=,sec=,1), hour, min, sec;
+    -6.321 -6 -19 -15.6
+    ; print h2hms(24.321,hour=,min=,sec=,1), hour, min, sec;
+    -23.679 -23 -40 -44.4
+
+
+LIMITS
+    none
+
+LINK LIBRARY
+    none
+
+SEE ALSO
+    config, d2dm, d2dms, dm2d, dms2d, g2gm, g2gms, gm2g, gms2g,
+    h2hm, hm2d, hms2d, mod
+
+## Copyright (C) 2021  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+##
+## Under source code control:	2021/09/25 17:24:51
+## File existed as early as:	2021
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

@@ -2,7 +2,7 @@ NAME
     quo - compute integer quotient of a value by a real number
 
 SYNOPSIS
-    quo(x, y, rnd) or x // y
+    quo(x, y [,rnd]) or x // y
 
 TYPES
     If x is a matrix or list, the returned value is a matrix or list v of

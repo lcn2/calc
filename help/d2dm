@@ -1,0 +1,117 @@
+NAME
+    d2dm - convert degrees into degrees, and minutes
+
+SYNOPSIS
+    d2dm(degs, d, m [,rnd])
+
+TYPES
+    degs	real
+    d		null-or-real-valued lvalue with assign-to permission
+    m		null-or-real-valued lvalue with assign-to permission
+    rnd		nonnegative integer, defaults to config("mod")
+
+    return	mod(degs, 360, rnd)
+
+DESCRIPTION
+    Convert degs degrees into d degrees, and m minutes.
+
+    The return value is a normalized number of degrees, and is equivalent
+    to the following:
+
+	return_value = mod(degs, 360, rnd);
+
+    The argument rnd, if not given, defaults to config("mod").
+    For more information on the effects of rnd, see "help mod".
+
+    Depending on the rounding mode, the return could be a real value
+    in the interval [0, 360) or a real value in the interval (-360, 0].
+    For the default round mode, the return value is in the interval [0, 360).
+
+    The d argument will be an integer number of degrees.
+
+    The value d will be set as if the following were used:
+
+    	d = int(return_value);
+
+    For some rounding modes, d will be an integer in the interval [0, 360).
+    For other rounding modes, d will be an integer in the interval (-360, 0].
+    For the default round mode, d is in the interval [0, 360).
+
+    The m argument will be a real number of minutes.
+
+    The value m will be set as if the following were used:
+
+	tmp = return_value - d;
+	m = tmp * 60;
+	free(tmp);
+
+    For some rounding modes, m will be a real value in the interval [0, 60).
+    For other rounding modes, m will be a real value in the interval (-60, 0].
+    For the default round mode, m will be in the interval [0, 60).
+
+    The following shows relationship between the return value and the resulting
+    d, and m values:
+
+    	return_value == d + m/60;
+
+
+EXAMPLE
+    /* if args are undefined, pre-declare them or assign them as args */
+
+    ; global d, m;
+
+    ; print d2dm(12.3456,d,m), d, m;
+    12.3456 12 20.736
+    ; print d2dm(1234.5678,d,m), d, m;
+    154.5678 154 34.068
+    ; print d2dm(-1234.5678,d,m), d, m;
+    205.4322 205 25.932
+
+    ; print d2dm(654.321,deg=,min=), deg, min;
+    294.321 294 19.26
+    ; print d2dm(-654.321,deg=,min=), deg, min;
+    65.679 65 40.74
+    ; print d2dm(360.321,deg=,min=), deg, min;
+    0.321 0 19.26
+
+    /* certain non-default rounding modes can return negative values */
+
+    ; print d2dm(654.321,deg=,min=,1), deg, min;
+    -65.679 -65 -40.74
+    ; print d2dm(-654.321,deg=,min=,1), deg, min;
+    -294.321 -294 -19.26
+    ; print d2dm(360.321,deg=,min=,1), deg, min;
+    -359.679 -359 -40.74
+
+
+LIMITS
+    none
+
+LINK LIBRARY
+    none
+
+SEE ALSO
+    config, d2dms, dm2d, dms2d, g2gm, g2gms, gm2g, gms2g,
+    h2hm, h2hms, hm2d, hms2d, mod
+
+## Copyright (C) 2021  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+##
+## Under source code control:	2021/09/25 17:24:51
+## File existed as early as:	2021
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

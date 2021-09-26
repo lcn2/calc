@@ -78,9 +78,70 @@ The following are the changes from calc version 2.14.0.0 to date:
     More changes are likely, so we might see another v2.14.0.x release
     before things are declared "recommended stable".
 
-    Not that we wan to discourage people from trying v2.14.0, you should
+    Not that we want to discourage people from trying v2.14.0, you should
     try it.  We just want things to become stable and well field tested
     before we reach the "recommended stable" release state.
+
+    Added builtin functions to convert between degrees and
+    degrees, minutes and seconds under the config("mod")
+    round rules:
+
+	d2dms(degs, d, m, s [,rnd]) - given degs, compute d, m, s
+	d2dm(degs, d, m [,rnd]) - given degs, compute d, m
+
+	See help/d2dms and help/d2dm.
+
+    Example:
+
+	; print d2dms(360.321,deg=,min=,sec=), deg, min, sec;
+	0.321 0 19 15.6
+
+	; print d2dm(360.321,deg=,min=), deg, min;
+	0.321 0 19.26
+
+    Added builtin functions to convert between gradians and
+    gradians, minutes and seconds under the config("mod")
+    round rules:
+
+	g2gms(grads, g, m, s [,rnd]) - given grads, compute g, m, s
+	g2gm(grads, g, m [,rnd]) - given grads, compute g, m
+
+	See help/g2gms and help/g2gm.
+
+    Example:
+
+	; print g2gms(400.321,grad=,min=,sec=), grad, min, sec;
+	0.321 0 19 15.6
+
+	; print g2gm(400.321,grad=,min=), grad, min;
+	0.321 0 19.26
+
+    Added builtin functions to convert between hours and
+    hours, minutes and seconds under the config("mod")
+    round rules:
+
+	h2hms(hours, h, m, s [,rnd]) - given hours, compute h, m, s
+	h2hm(hours, h, m [,rnd]) - given hours, compute h, m
+
+	See help/h2hms and help/h2hm.
+
+    Example:
+
+	; print h2hms(24.321,hour=,min=,sec=), hour, min, sec;
+	0.321 0 19 15.6
+
+	; print h2hm(24.321,hour=,min=), hour, min;
+	0.321 0 19.26
+
+    Renumbered regression tests 3408 thru 3437, to 9102 thru 9131.
+
+    Updated Added hms.cal resource file to use h2hms() builtin.
+    Updated Added dms.cal resource file to use d2dms() builtin.
+
+    Fix minor typo in help/mod SYNOPSIS.
+    Fix minor typo in help/quo SYNOPSIS.
+
+    Added a few more examples to help/strcmp.
 
 
 The following are the changes from calc version 2.13.0.1 to 2.13.0.1:

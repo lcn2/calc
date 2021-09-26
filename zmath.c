@@ -58,6 +58,9 @@ HALF _twentyval_[] = { 20 };
 HALF _sqbaseval_[] = { 0, 1 };
 HALF _pow4baseval_[] = { 0, 0, 1 };
 HALF _pow8baseval_[] = { 0, 0, 0, 0, 1 };
+HALF _threesixtyval_[] = { 360 };
+HALF _fourhundredval_[] = { 400 };
+HALF _twentyfourval_[] = { 24 };
 
 ZVALUE zconst[] = {
     { _zeroval_, 1, 0}, { _oneval_, 1, 0}, { _twoval_, 1, 0},
@@ -66,7 +69,9 @@ ZVALUE zconst[] = {
     { _nineval_, 1, 0}, { _tenval_, 1, 0}, { _elevenval_, 1, 0},
     { _twelveval_, 1, 0}, { _thirteenval_, 1, 0}, { _fourteenval_, 1, 0},
     { _fifteenval_, 1, 0}, { _sixteenval_, 1, 0}, { _seventeenval_, 1, 0},
-    { _eightteenval_, 1, 0}, { _nineteenval_, 1, 0}, { _twentyval_, 1, 0}
+    { _eightteenval_, 1, 0}, { _nineteenval_, 1, 0}, { _twentyval_, 1, 0},
+    { _threesixtyval_, 1, 0}, { _fourhundredval_, 1, 0},
+    { _twentyfourval_, 1, 0}
 };
 
 ZVALUE _zero_ = { _zeroval_, 1, 0};

@@ -352,24 +352,8 @@ define fixhms(a)
 	quit "attempt to fix a non hms object";
     }
 
-    /* force minutes to be integral */
-    a.min += frac(a.hour) * 60;
-    a.hour = int(a.hour);
-
-    /* force hours to be integral */
-    a.sec += frac(a.min) * 60;
-    a.min = int(a.min);
-
-    /* carry excess seconds into minutes */
-    a.min += a.sec // 60;
-    a.sec %= 60;
-
-    /* carry excess minutes into hours */
-    a.hour += a.min // 60;
-    a.min %= 60;
-
-    /* round hours by day */
-    a.hour %= 24;
+    /* use builtin h2hms function */
+    h2hms(a.hour + a.min/60 + a.sec/3600, a.hour, a.min, a.sec),;
 
     /* return normalized result */
     return a;

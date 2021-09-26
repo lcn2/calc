@@ -3936,6 +3936,658 @@ f_quomod(int count, VALUE **vals)
 	return result;
 }
 
+
+S_FUNC VALUE
+f_d2dms(int count, VALUE **vals)
+{
+	VALUE *v1, *v2, *v3, *v4, *v5;
+	NUMBER *tmp, *tmp_m;
+	VALUE result;
+	long rnd;
+	short s2, s3, s4; 	/* to preserve subtypes of v2, v3, v4 */
+
+	/* collect required args */
+	v1 = vals[0];
+	v2 = vals[1];
+	v3 = vals[2];
+	v4 = vals[3];
+
+	/* determine rounding mode */
+	if (count == 5) {
+		v5 = vals[4];
+		if (v5->v_type == V_ADDR) {
+			v5 = v5->v_addr;
+		}
+		if (v5->v_type != V_NUM || qisfrac(v5->v_num) ||
+			qisneg(v5->v_num) || zge31b(v5->v_num->num)) {
+				return error_value(E_D2DMS2);
+		}
+		rnd = qtoi(v5->v_num);
+	} else {
+		rnd = conf->quomod;
+	}
+
+	/* type parse args */
+	if (v2->v_type != V_ADDR || v3->v_type != V_ADDR ||
+	    v4->v_type != V_ADDR) {
+		return error_value(E_D2DMS1);
+	}
+	if (v1->v_type == V_ADDR) {
+		v1 = v1->v_addr;
+	}
+	v2 = v2->v_addr;
+	v3 = v3->v_addr;
+	v4 = v4->v_addr;
+	if (v1->v_type != V_NUM ||
+	    (v2->v_type != V_NUM && v2->v_type != V_NULL) ||
+	    (v3->v_type != V_NUM && v3->v_type != V_NULL) ||
+	    (v4->v_type != V_NUM && v4->v_type != V_NULL)) {
+		return error_value(E_D2DMS2);
+	}
+
+	/* remember arg subtypes */
+	s2 = v2->v_subtype;
+	s3 = v3->v_subtype;
+	s4 = v4->v_subtype;
+	if ((s2 | s3 | s4) & V_NOASSIGNTO) {
+		return error_value(E_D2DMS3);
+	}
+
+	/* free old args that will be modified */
+	freevalue(v2);
+	freevalue(v3);
+	freevalue(v4);
+
+	/* set args that will be modified */
+	v2->v_type = V_NUM;
+	v3->v_type = V_NUM;
+	v4->v_type = V_NUM;
+
+	/* restore arg subtypes */
+	v2->v_subtype = s2;
+	v3->v_subtype = s3;
+	v4->v_subtype = s4;
+
+	/*
+	 * calcuate the normalized return value
+	 *
+	 * return_value = mod(degs, 360, rnd);
+	 */
+	result.v_type = v1->v_type;
+	result.v_subtype = v1->v_subtype;
+	result.v_num = qmod(v1->v_num, &_qthreesixty, rnd);
+
+	/*
+	 * integer number of degrees
+	 *
+	 * d = int(return_value);
+	 */
+	v2->v_num = qint(result.v_num);
+
+	/*
+	 * integer number of minutes
+	 *
+	 * tmp = return_value - d;
+	 * tmp_m = tmp * 60;
+	 * free(tmp);
+	 * m = int(tmp_m);
+	 */
+	tmp = qsub(result.v_num, v2->v_num);
+	tmp_m = qmuli(tmp, 60);
+	qfree(tmp);
+	v3->v_num = qint(tmp_m);
+
+	/*
+	 * number of seconds
+	 *
+	 * tmp = tmp_m - m;
+	 * free(tmp_m);
+	 * s = tmp * 60;
+	 * free(tmp);
+	 */
+	tmp = qsub(tmp_m, v3->v_num);
+	qfree(tmp_m);
+	v4->v_num = qmuli(tmp, 60);
+	qfree(tmp);
+
+	/*
+	 * return the normalized value previously calculated
+	 */
+	return result;
+}
+
+
+S_FUNC VALUE
+f_d2dm(int count, VALUE **vals)
+{
+	VALUE *v1, *v2, *v3, *v4;
+	NUMBER *tmp;
+	VALUE result;
+	long rnd;
+	short s2, s3; 	/* to preserve subtypes of v2, v3 */
+
+	/* collect required args */
+	v1 = vals[0];
+	v2 = vals[1];
+	v3 = vals[2];
+
+	/* determine rounding mode */
+	if (count == 4) {
+		v4 = vals[3];
+		if (v4->v_type == V_ADDR) {
+			v4 = v4->v_addr;
+		}
+		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
+			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
+				return error_value(E_D2DM2);
+		}
+		rnd = qtoi(v4->v_num);
+	} else {
+		rnd = conf->quomod;
+	}
+
+	/* type parse args */
+	if (v2->v_type != V_ADDR || v3->v_type != V_ADDR) {
+		return error_value(E_D2DM1);
+	}
+	if (v1->v_type == V_ADDR) {
+		v1 = v1->v_addr;
+	}
+	v2 = v2->v_addr;
+	v3 = v3->v_addr;
+	if (v1->v_type != V_NUM ||
+	    (v2->v_type != V_NUM && v2->v_type != V_NULL) ||
+	    (v3->v_type != V_NUM && v3->v_type != V_NULL)) {
+		return error_value(E_D2DM2);
+	}
+
+	/* remember arg subtypes */
+	s2 = v2->v_subtype;
+	s3 = v3->v_subtype;
+	if ((s2 | s3) & V_NOASSIGNTO) {
+		return error_value(E_D2DM3);
+	}
+
+	/* free old args that will be modified */
+	freevalue(v2);
+	freevalue(v3);
+
+	/* set args that will be modified */
+	v2->v_type = V_NUM;
+	v3->v_type = V_NUM;
+
+	/* restore arg subtypes */
+	v2->v_subtype = s2;
+	v3->v_subtype = s3;
+
+	/*
+	 * calcuate the normalized return value
+	 *
+	 * return_value = mod(degs, 360, rnd);
+	 */
+	result.v_type = v1->v_type;
+	result.v_subtype = v1->v_subtype;
+	result.v_num = qmod(v1->v_num, &_qthreesixty, rnd);
+
+	/*
+	 * integer number of degrees
+	 *
+	 * d = int(return_value);
+	 */
+	v2->v_num = qint(result.v_num);
+
+	/*
+	 * integer number of minutes
+	 *
+	 * tmp = return_value - d;
+	 * m = tmp * 60;
+	 * free(tmp);
+	 */
+	tmp = qsub(result.v_num, v2->v_num);
+	v3->v_num = qmuli(tmp, 60);
+	qfree(tmp);
+
+	/*
+	 * return the normalized value previously calculated
+	 */
+	return result;
+}
+
+
+S_FUNC VALUE
+f_g2gms(int count, VALUE **vals)
+{
+	VALUE *v1, *v2, *v3, *v4, *v5;
+	NUMBER *tmp, *tmp_m;
+	VALUE result;
+	long rnd;
+	short s2, s3, s4; 	/* to preserve subtypes of v2, v3, v4 */
+
+	/* collect required args */
+	v1 = vals[0];
+	v2 = vals[1];
+	v3 = vals[2];
+	v4 = vals[3];
+
+	/* determine rounding mode */
+	if (count == 5) {
+		v5 = vals[4];
+		if (v5->v_type == V_ADDR) {
+			v5 = v5->v_addr;
+		}
+		if (v5->v_type != V_NUM || qisfrac(v5->v_num) ||
+			qisneg(v5->v_num) || zge31b(v5->v_num->num)) {
+				return error_value(E_G2GMS2);
+		}
+		rnd = qtoi(v5->v_num);
+	} else {
+		rnd = conf->quomod;
+	}
+
+	/* type parse args */
+	if (v2->v_type != V_ADDR || v3->v_type != V_ADDR ||
+	    v4->v_type != V_ADDR) {
+		return error_value(E_G2GMS1);
+	}
+	if (v1->v_type == V_ADDR) {
+		v1 = v1->v_addr;
+	}
+	v2 = v2->v_addr;
+	v3 = v3->v_addr;
+	v4 = v4->v_addr;
+	if (v1->v_type != V_NUM ||
+	    (v2->v_type != V_NUM && v2->v_type != V_NULL) ||
+	    (v3->v_type != V_NUM && v3->v_type != V_NULL) ||
+	    (v4->v_type != V_NUM && v4->v_type != V_NULL)) {
+		return error_value(E_G2GMS2);
+	}
+
+	/* remember arg subtypes */
+	s2 = v2->v_subtype;
+	s3 = v3->v_subtype;
+	s4 = v4->v_subtype;
+	if ((s2 | s3 | s4) & V_NOASSIGNTO) {
+		return error_value(E_G2GMS3);
+	}
+
+	/* free old args that will be modified */
+	freevalue(v2);
+	freevalue(v3);
+	freevalue(v4);
+
+	/* set args that will be modified */
+	v2->v_type = V_NUM;
+	v3->v_type = V_NUM;
+	v4->v_type = V_NUM;
+
+	/* restore arg subtypes */
+	v2->v_subtype = s2;
+	v3->v_subtype = s3;
+	v4->v_subtype = s4;
+
+	/*
+	 * calcuate the normalized return value
+	 *
+	 * return_value = mod(grads, 400, rnd);
+	 */
+	result.v_type = v1->v_type;
+	result.v_subtype = v1->v_subtype;
+	result.v_num = qmod(v1->v_num, &_qfourhundred, rnd);
+
+	/*
+	 * integer number of gradians
+	 *
+	 * g = int(return_value);
+	 */
+	v2->v_num = qint(result.v_num);
+
+	/*
+	 * integer number of minutes
+	 *
+	 * tmp = return_value - g;
+	 * tmp_m = tmp * 60;
+	 * free(tmp);
+	 * m = int(tmp_m);
+	 */
+	tmp = qsub(result.v_num, v2->v_num);
+	tmp_m = qmuli(tmp, 60);
+	qfree(tmp);
+	v3->v_num = qint(tmp_m);
+
+	/*
+	 * number of seconds
+	 *
+	 * tmp = tmp_m - m;
+	 * free(tmp_m);
+	 * s = tmp * 60;
+	 * free(tmp);
+	 */
+	tmp = qsub(tmp_m, v3->v_num);
+	qfree(tmp_m);
+	v4->v_num = qmuli(tmp, 60);
+	qfree(tmp);
+
+	/*
+	 * return the normalized value previously calculated
+	 */
+	return result;
+}
+
+
+S_FUNC VALUE
+f_g2gm(int count, VALUE **vals)
+{
+	VALUE *v1, *v2, *v3, *v4;
+	NUMBER *tmp;
+	VALUE result;
+	long rnd;
+	short s2, s3; 	/* to preserve subtypes of v2, v3 */
+
+	/* collect required args */
+	v1 = vals[0];
+	v2 = vals[1];
+	v3 = vals[2];
+
+	/* determine rounding mode */
+	if (count == 4) {
+		v4 = vals[3];
+		if (v4->v_type == V_ADDR) {
+			v4 = v4->v_addr;
+		}
+		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
+			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
+				return error_value(E_G2GM2);
+		}
+		rnd = qtoi(v4->v_num);
+	} else {
+		rnd = conf->quomod;
+	}
+
+	/* type parse args */
+	if (v2->v_type != V_ADDR || v3->v_type != V_ADDR) {
+		return error_value(E_G2GM1);
+	}
+	if (v1->v_type == V_ADDR) {
+		v1 = v1->v_addr;
+	}
+	v2 = v2->v_addr;
+	v3 = v3->v_addr;
+	if (v1->v_type != V_NUM ||
+	    (v2->v_type != V_NUM && v2->v_type != V_NULL) ||
+	    (v3->v_type != V_NUM && v3->v_type != V_NULL)) {
+		return error_value(E_G2GM2);
+	}
+
+	/* remember arg subtypes */
+	s2 = v2->v_subtype;
+	s3 = v3->v_subtype;
+	if ((s2 | s3) & V_NOASSIGNTO) {
+		return error_value(E_G2GM3);
+	}
+
+	/* free old args that will be modified */
+	freevalue(v2);
+	freevalue(v3);
+
+	/* set args that will be modified */
+	v2->v_type = V_NUM;
+	v3->v_type = V_NUM;
+
+	/* restore arg subtypes */
+	v2->v_subtype = s2;
+	v3->v_subtype = s3;
+
+	/*
+	 * calcuate the normalized return value
+	 *
+	 * return_value = mod(grads, 400, rnd);
+	 */
+	result.v_type = v1->v_type;
+	result.v_subtype = v1->v_subtype;
+	result.v_num = qmod(v1->v_num, &_qfourhundred, rnd);
+
+	/*
+	 * integer number of gradians
+	 *
+	 * g = int(return_value);
+	 */
+	v2->v_num = qint(result.v_num);
+
+	/*
+	 * integer number of minutes
+	 *
+	 * tmp = return_value - g;
+	 * m = tmp * 60;
+	 * free(tmp);
+	 */
+	tmp = qsub(result.v_num, v2->v_num);
+	v3->v_num = qmuli(tmp, 60);
+	qfree(tmp);
+
+	/*
+	 * return the normalized value previously calculated
+	 */
+	return result;
+}
+
+
+S_FUNC VALUE
+f_h2hms(int count, VALUE **vals)
+{
+	VALUE *v1, *v2, *v3, *v4, *v5;
+	NUMBER *tmp, *tmp_m;
+	VALUE result;
+	long rnd;
+	short s2, s3, s4; 	/* to preserve subtypes of v2, v3, v4 */
+
+	/* collect required args */
+	v1 = vals[0];
+	v2 = vals[1];
+	v3 = vals[2];
+	v4 = vals[3];
+
+	/* determine rounding mode */
+	if (count == 5) {
+		v5 = vals[4];
+		if (v5->v_type == V_ADDR) {
+			v5 = v5->v_addr;
+		}
+		if (v5->v_type != V_NUM || qisfrac(v5->v_num) ||
+			qisneg(v5->v_num) || zge31b(v5->v_num->num)) {
+				return error_value(E_H2HMS2);
+		}
+		rnd = qtoi(v5->v_num);
+	} else {
+		rnd = conf->quomod;
+	}
+
+	/* type parse args */
+	if (v2->v_type != V_ADDR || v3->v_type != V_ADDR ||
+	    v4->v_type != V_ADDR) {
+		return error_value(E_H2HMS1);
+	}
+	if (v1->v_type == V_ADDR) {
+		v1 = v1->v_addr;
+	}
+	v2 = v2->v_addr;
+	v3 = v3->v_addr;
+	v4 = v4->v_addr;
+	if (v1->v_type != V_NUM ||
+	    (v2->v_type != V_NUM && v2->v_type != V_NULL) ||
+	    (v3->v_type != V_NUM && v3->v_type != V_NULL) ||
+	    (v4->v_type != V_NUM && v4->v_type != V_NULL)) {
+		return error_value(E_H2HMS2);
+	}
+
+	/* remember arg subtypes */
+	s2 = v2->v_subtype;
+	s3 = v3->v_subtype;
+	s4 = v4->v_subtype;
+	if ((s2 | s3 | s4) & V_NOASSIGNTO) {
+		return error_value(E_H2HMS3);
+	}
+
+	/* free old args that will be modified */
+	freevalue(v2);
+	freevalue(v3);
+	freevalue(v4);
+
+	/* set args that will be modified */
+	v2->v_type = V_NUM;
+	v3->v_type = V_NUM;
+	v4->v_type = V_NUM;
+
+	/* restore arg subtypes */
+	v2->v_subtype = s2;
+	v3->v_subtype = s3;
+	v4->v_subtype = s4;
+
+	/*
+	 * calcuate the normalized return value
+	 *
+	 * return_value = mod(hours, 24, rnd);
+	 */
+	result.v_type = v1->v_type;
+	result.v_subtype = v1->v_subtype;
+	result.v_num = qmod(v1->v_num, &_qtwentyfour, rnd);
+
+	/*
+	 * integer number of hours
+	 *
+	 * h = int(return_value);
+	 */
+	v2->v_num = qint(result.v_num);
+
+	/*
+	 * integer number of minutes
+	 *
+	 * tmp = return_value - h;
+	 * tmp_m = tmp * 60;
+	 * free(tmp);
+	 * m = int(tmp_m);
+	 */
+	tmp = qsub(result.v_num, v2->v_num);
+	tmp_m = qmuli(tmp, 60);
+	qfree(tmp);
+	v3->v_num = qint(tmp_m);
+
+	/*
+	 * number of seconds
+	 *
+	 * tmp = tmp_m - m;
+	 * free(tmp_m);
+	 * s = tmp * 60;
+	 * free(tmp);
+	 */
+	tmp = qsub(tmp_m, v3->v_num);
+	qfree(tmp_m);
+	v4->v_num = qmuli(tmp, 60);
+	qfree(tmp);
+
+	/*
+	 * return the normalized value previously calculated
+	 */
+	return result;
+}
+
+
+S_FUNC VALUE
+f_h2hm(int count, VALUE **vals)
+{
+	VALUE *v1, *v2, *v3, *v4;
+	NUMBER *tmp;
+	VALUE result;
+	long rnd;
+	short s2, s3; 	/* to preserve subtypes of v2, v3 */
+
+	/* collect required args */
+	v1 = vals[0];
+	v2 = vals[1];
+	v3 = vals[2];
+
+	/* determine rounding mode */
+	if (count == 4) {
+		v4 = vals[3];
+		if (v4->v_type == V_ADDR) {
+			v4 = v4->v_addr;
+		}
+		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
+			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
+				return error_value(E_H2HM2);
+		}
+		rnd = qtoi(v4->v_num);
+	} else {
+		rnd = conf->quomod;
+	}
+
+	/* type parse args */
+	if (v2->v_type != V_ADDR || v3->v_type != V_ADDR) {
+		return error_value(E_H2HM1);
+	}
+	if (v1->v_type == V_ADDR) {
+		v1 = v1->v_addr;
+	}
+	v2 = v2->v_addr;
+	v3 = v3->v_addr;
+	if (v1->v_type != V_NUM ||
+	    (v2->v_type != V_NUM && v2->v_type != V_NULL) ||
+	    (v3->v_type != V_NUM && v3->v_type != V_NULL)) {
+		return error_value(E_H2HM2);
+	}
+
+	/* remember arg subtypes */
+	s2 = v2->v_subtype;
+	s3 = v3->v_subtype;
+	if ((s2 | s3) & V_NOASSIGNTO) {
+		return error_value(E_H2HM3);
+	}
+
+	/* free old args that will be modified */
+	freevalue(v2);
+	freevalue(v3);
+
+	/* set args that will be modified */
+	v2->v_type = V_NUM;
+	v3->v_type = V_NUM;
+
+	/* restore arg subtypes */
+	v2->v_subtype = s2;
+	v3->v_subtype = s3;
+
+	/*
+	 * calcuate the normalized return value
+	 *
+	 * return_value = mod(hours, 24, rnd);
+	 */
+	result.v_type = v1->v_type;
+	result.v_subtype = v1->v_subtype;
+	result.v_num = qmod(v1->v_num, &_qtwentyfour, rnd);
+
+	/*
+	 * integer number of gradians
+	 *
+	 * h = int(return_value);
+	 */
+	v2->v_num = qint(result.v_num);
+
+	/*
+	 * integer number of minutes
+	 *
+	 * tmp = return_value - h;
+	 * m = tmp * 60;
+	 * free(tmp);
+	 */
+	tmp = qsub(result.v_num, v2->v_num);
+	v3->v_num = qmuli(tmp, 60);
+	qfree(tmp);
+
+	/*
+	 * return the normalized value previously calculated
+	 */
+	return result;
+}
+
+
 S_FUNC VALUE
 f_mmin(VALUE *v1, VALUE *v2)
 {
@@ -8904,6 +9556,10 @@ STATIC CONST struct builtin builtins[] = {
 	 "date and time as string"},
 	{"custom", 0, IN, 0, OP_NOP, 0, f_custom,
 	 "custom builtin function interface"},
+	{"d2dm", 3, 4, FA, OP_NOP, 0, f_d2dm,
+	 "convert a to b deg, c min, rounding type d\n"},
+	{"d2dms", 4, 5, FA, OP_NOP, 0, f_d2dms,
+	 "convert a to b deg, c min, d sec, rounding type e\n"},
 	{"d2g", 1, 2, 0, OP_NOP, 0, f_d2g,
 	 "convert degrees to gradians"},
 	{"d2r", 1, 2, 0, OP_NOP, 0, f_d2r,
@@ -9020,6 +9676,10 @@ STATIC CONST struct builtin builtins[] = {
 	 "fractional part of value"},
 	{"g2d", 1, 2, 0, OP_NOP, 0, f_g2d,
 	 "convert gradians to degrees"},
+	{"g2gm", 3, 4, FA, OP_NOP, 0, f_g2gm,
+	 "convert a to b grads, c min, rounding type d\n"},
+	{"g2gms", 4, 5, FA, OP_NOP, 0, f_g2gms,
+	 "convert a to b grads, c min, d sec, rounding type e\n"},
 	{"g2r", 1, 2, 0, OP_NOP, 0, f_g2r,
 	 "convert gradians to radians"},
 	{"gcd", 1, IN, 0, OP_NOP, f_gcd, 0,
@@ -9030,6 +9690,10 @@ STATIC CONST struct builtin builtins[] = {
 	 "Gudermannian function"},
 	{"getenv", 1, 1, 0, OP_NOP, 0, f_getenv,
 	 "value of environment variable (or NULL)"},
+	{"h2hm", 3, 4, FA, OP_NOP, 0, f_h2hm,
+	 "convert a to b hours, c min, rounding type d\n"},
+	{"h2hms", 4, 5, FA, OP_NOP, 0, f_h2hms,
+	 "convert a to b hours, c min, d sec, rounding type e\n"},
 	{"hash", 1, IN, 0, OP_NOP, 0, f_hash,
 	 "return non-negative hash value for one or\n"
 	 "\t\t\tmore values"},

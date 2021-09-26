@@ -1,0 +1,117 @@
+NAME
+    g2gm - convert gradians into gradians, and minutes
+
+SYNOPSIS
+    g2gm(grads, g, m [,rnd])
+
+TYPES
+    grads	real
+    g		null-or-real-valued lvalue with assign-to permission
+    m		null-or-real-valued lvalue with assign-to permission
+    rnd		nonnegative integer, defaults to config("mod")
+
+    return	mod(grads, 400, rnd)
+
+DESCRIPTION
+    Convert grads gradians into g gradians, and m minutes.
+
+    The return value is a normalized number of gradians, and is equivalent
+    to the following:
+
+	return_value = mod(grads, 400, rnd);
+
+    The argument rnd, if not given, defaults to config("mod").
+    For more information on the effects of rnd, see "help mod".
+
+    Depending on the rounding mode, the return could be a real value
+    in the interval [0, 400) or a real value in the interval (-400, 0].
+    For the default round mode, the return value is in the interval [0, 400).
+
+    The g argument will be an integer number of gradians.
+
+    The value g will be set as if the following were used:
+
+    	g = int(return_value);
+
+    For some rounding modes, g will be an integer in the interval [0, 400).
+    For other rounding modes, g will be an integer in the interval (-400, 0].
+    For the default round mode, g is in the interval [0, 400).
+
+    The m argument will be a real number of minutes.
+
+    The value m will be set as if the following were used:
+
+	tmp = return_value - g;
+	m = tmp * 60;
+	free(tmp);
+
+    For some rounding modes, m will be a real value in the interval [0, 60).
+    For other rounding modes, m will be a real value in the interval (-60, 0].
+    For the default round mode, m will be in the interval [0, 60).
+
+    The following shows relationship between the return value and the resulting
+    g, and m values:
+
+    	return_value == g + m/60;
+
+
+EXAMPLE
+    /* if args are undefined, pre-declare them or assign them as args */
+
+    ; global g, m;
+
+    ; print g2gm(12.3456,g,m), g, m;
+    12.3456 12 20.736
+    ; print g2gm(1234.5678,g,m), g, m;
+    34.5678 34 34.068
+    ; print g2gm(-1234.5678,g,m), g, m;
+    365.4322 365 25.932
+
+    ; print g2gm(654.321,grad=,min=), grad, min;
+    254.321 254 19.26
+    ; print g2gm(-654.321,grad=,min=), grad, min;
+    145.679 145 40.74
+    ; print g2gm(400.321,grad=,min=), grad, min;
+    0.321 0 19.26
+
+    /* certain non-default rounding modes can return negative values */
+
+    ; print g2gm(654.321,grad=,min=,1), grad, min;
+    -145.679 -145 -40.74
+    ; print g2gm(-654.321,grad=,min=,1), grad, min;
+    -254.321 -254 -19.26
+    ; print g2gm(400.321,grad=,min=,1), grad, min;
+    -399.679 -399 -40.74
+
+
+LIMITS
+    none
+
+LINK LIBRARY
+    none
+
+SEE ALSO
+    config, d2dm, d2dms, dm2d, dms2d, g2gms, gm2g, gms2g,
+    h2hm, h2hms, hm2d, hms2d, mod
+
+## Copyright (C) 2021  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+##
+## Under source code control:	2021/09/25 17:24:51
+## File existed as early as:	2021
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

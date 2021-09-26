@@ -506,3 +506,21 @@ E_R2G1		Bad epsilon for converting radians to gradians
 E_R2G2		Bad first argument converting radians to gradians
 E_D2G1		Bad first argument converting degrees to gradians
 E_G2D1		Bad first argument converting gradians to degrees
+E_D2DMS1	Non-lvalue arguments 2, 3 or 4 for d2dms
+E_D2DMS2	Non-real-number arg 1 for d2dms
+E_D2DMS3	No-assign-to argument 2, 3 or 4 for d2dms
+E_D2DM1		Non-lvalue arguments 2 or 3 for d2dm
+E_D2DM2		Non-real-number arg 1 for d2dm
+E_D2DM3		No-assign-to argument 2 or 3 for d2dm
+E_G2GMS1	Non-lvalue arguments 2, 3 or 4 for g2gms
+E_G2GMS2	Non-real-number arg 1 for g2gms
+E_G2GMS3	No-assign-to argument 2 or 3 for g2gm
+E_G2GM1		Non-lvalue arguments 2 or 3 for g2gm
+E_G2GM2		Non-real-number arg 1 for g2gm
+E_G2GM3		No-assign-to argument 2, 3 or 4 for g2gms
+E_H2HMS1	Non-lvalue arguments 2, 3 or 4 for h2hms
+E_H2HMS2	Non-real-number arg 1 for h2hms
+E_H2HMS3	No-assign-to argument 2, 3 or 4 for h2hms
+E_H2HM1		Non-lvalue arguments 2 or 3 for h2hm
+E_H2HM2		Non-real-number arg 1 for h2hm
+E_H2HM3		No-assign-to argument 2 or 3 for h2hm

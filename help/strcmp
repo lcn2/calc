@@ -26,6 +26,8 @@ EXAMPLE
     strcmp("abc", "abb") == 1
     strcmp("abc", "abc") == 0
     strcmp("abc", "abd") == -1
+    strcmp("desk", "Shabisky") == 1
+    strcmp("Shabisky", "desk") == -1
     strcmp("abc\0", "abc") == 1
     strcmp("a\0b", "a\0c") == -1
 
@@ -39,7 +41,7 @@ SEE ALSO
     strcat, strcpy, strerror, strlen, strncmp, strncpy, strpos,
     strprintf, strscan, strscanf, substr
 
-## Copyright (C) 2006  Ernest Bowen
+## Copyright (C) 2006,2021  Ernest Bowen
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

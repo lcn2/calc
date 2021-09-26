@@ -648,6 +648,7 @@ EXTERN HALF _tenval_[], _elevenval_[], _twelveval_[], _thirteenval_[];
 EXTERN HALF _fourteenval_[], _fifteenval_[];
 EXTERN HALF _sqbaseval_[];
 EXTERN HALF _fourthbaseval_[];
+EXTERN HALF _threesixtyval_[], _fourhundredval_[], _twentyfourval_[];
 
 EXTERN ZVALUE zconst[];		/* ZVALUE integers from 0 thru 15 */
 

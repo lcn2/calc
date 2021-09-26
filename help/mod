@@ -2,7 +2,7 @@ NAME
     mod - compute the remainder for an integer quotient
 
 SYNOPSIS
-    mod(x, y, rnd)
+    mod(x, y [,rnd])
     x % y
 
 TYPES
