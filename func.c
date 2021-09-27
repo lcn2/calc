@@ -3960,7 +3960,7 @@ f_d2dms(int count, VALUE **vals)
 		}
 		if (v5->v_type != V_NUM || qisfrac(v5->v_num) ||
 			qisneg(v5->v_num) || zge31b(v5->v_num->num)) {
-				return error_value(E_D2DMS2);
+				return error_value(E_D2DMS4);
 		}
 		rnd = qtoi(v5->v_num);
 	} else {
@@ -4079,7 +4079,7 @@ f_d2dm(int count, VALUE **vals)
 		}
 		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
 			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
-				return error_value(E_D2DM2);
+				return error_value(E_D2DM4);
 		}
 		rnd = qtoi(v4->v_num);
 	} else {
@@ -4177,7 +4177,7 @@ f_g2gms(int count, VALUE **vals)
 		}
 		if (v5->v_type != V_NUM || qisfrac(v5->v_num) ||
 			qisneg(v5->v_num) || zge31b(v5->v_num->num)) {
-				return error_value(E_G2GMS2);
+				return error_value(E_G2GMS4);
 		}
 		rnd = qtoi(v5->v_num);
 	} else {
@@ -4296,7 +4296,7 @@ f_g2gm(int count, VALUE **vals)
 		}
 		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
 			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
-				return error_value(E_G2GM2);
+				return error_value(E_G2GM4);
 		}
 		rnd = qtoi(v4->v_num);
 	} else {
@@ -4394,7 +4394,7 @@ f_h2hms(int count, VALUE **vals)
 		}
 		if (v5->v_type != V_NUM || qisfrac(v5->v_num) ||
 			qisneg(v5->v_num) || zge31b(v5->v_num->num)) {
-				return error_value(E_H2HMS2);
+				return error_value(E_H2HMS4);
 		}
 		rnd = qtoi(v5->v_num);
 	} else {
@@ -4513,7 +4513,7 @@ f_h2hm(int count, VALUE **vals)
 		}
 		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
 			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
-				return error_value(E_H2HM2);
+				return error_value(E_H2HM4);
 		}
 		rnd = qtoi(v4->v_num);
 	} else {
