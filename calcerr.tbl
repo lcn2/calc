@@ -530,3 +530,15 @@ E_H2HM1		Non-lvalue arguments 2 or 3 for h2hm
 E_H2HM2		Non-real-number arg 1 for h2hm
 E_H2HM3		No-assign-to argument 2 or 3 for h2hm
 E_H2HM4		Invalid rounding arg 4 for h2hm
+E_DMS2D1	Non-real-number aarguments 1, 2 or 3 for dms2d
+E_DMS2D2	Invalid rounding arg 4 for dms2d
+E_DM2D1		Non-real-number aarguments 1 or 2 for dm2d
+E_DM2D2		Invalid rounding arg 4 for dm2d
+E_GMS2G1	Non-real-number aarguments 1, 2 or 3 for gms2g
+E_GMS2G2	Invalid rounding arg 4 for gms2g
+E_GM2G1		Non-real-number aarguments 1 or 2 for gm2g
+E_GM2G2		Invalid rounding arg 4 for gm2g
+E_HMS2H1	Non-real-number aarguments 1, 2 or 3 for hms2h
+E_HMS2H2	Invalid rounding arg 4 for hms2h
+E_HM2H1		Non-real-number aarguments 1 or 2 for hm2h
+E_HM2H2		Invalid rounding arg 4 for hm2h

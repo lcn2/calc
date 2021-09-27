@@ -4589,6 +4589,396 @@ f_h2hm(int count, VALUE **vals)
 
 
 S_FUNC VALUE
+f_dms2d(int count, VALUE **vals)
+{
+	VALUE *v1, *v2, *v3, *v4;
+	NUMBER *tmp, *tmp2, *tmp3, *tmp4;
+	VALUE result;
+	long rnd;
+
+	/* collect required args */
+	v1 = vals[0];
+	v2 = vals[1];
+	v3 = vals[2];
+
+	/* determine rounding mode */
+	if (count == 4) {
+		v4 = vals[3];
+		if (v4->v_type == V_ADDR) {
+			v4 = v4->v_addr;
+		}
+		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
+			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
+				return error_value(E_DMS2D2);
+		}
+		rnd = qtoi(v4->v_num);
+	} else {
+		rnd = conf->quomod;
+	}
+
+	/* type parse args */
+	if (v1->v_type != V_NUM || v2->v_type != V_NUM ||
+	    v3->v_type != V_NUM) {
+		return error_value(E_DMS2D1);
+	}
+
+	/*
+	 * compute s/3600
+	 */
+	tmp = qdivi(v3->v_num, 3600);
+
+	/*
+	 * compute m/60
+	 */
+	tmp2 = qdivi(v2->v_num, 60);
+
+	/*
+	 * compute m/60 + s/3600
+	 */
+	tmp3 = qqadd(tmp2, tmp);
+	qfree(tmp);
+	qfree(tmp2);
+
+	/*
+	 * compute d + m/60 + s/3600
+	 */
+	tmp4 = qqadd(v1->v_num, tmp3);
+	qfree(tmp3);
+
+	/*
+	 * compute mod(d + m/60 + s/3600, 360, rnd);
+	 */
+	result.v_type = v1->v_type;
+	result.v_subtype = v1->v_subtype;
+	result.v_num = qmod(tmp4, &_qthreesixty, rnd);
+	qfree(tmp4);
+
+	/*
+	 * return  mod(d + m/60 + s/3600, 360, rnd);
+	 */
+	return result;
+}
+
+
+S_FUNC VALUE
+f_dm2d(int count, VALUE **vals)
+{
+	VALUE *v1, *v2, *v3;
+	NUMBER *tmp, *tmp2;
+	VALUE result;
+	long rnd;
+
+	/* collect required args */
+	v1 = vals[0];
+	v2 = vals[1];
+
+	/* determine rounding mode */
+	if (count == 3) {
+		v3 = vals[2];
+		if (v3->v_type == V_ADDR) {
+			v3 = v3->v_addr;
+		}
+		if (v3->v_type != V_NUM || qisfrac(v3->v_num) ||
+			qisneg(v3->v_num) || zge31b(v3->v_num->num)) {
+				return error_value(E_DM2D2);
+		}
+		rnd = qtoi(v3->v_num);
+	} else {
+		rnd = conf->quomod;
+	}
+
+	/* type parse args */
+	if (v1->v_type != V_NUM || v2->v_type != V_NUM) {
+		return error_value(E_DM2D1);
+	}
+
+	/*
+	 * compute m/60
+	 */
+	tmp = qdivi(v2->v_num, 60);
+
+	/*
+	 * compute d + m/60
+	 */
+	tmp2 = qqadd(v1->v_num, tmp);
+	qfree(tmp);
+
+	/*
+	 * compute mod(d + m/60, 360, rnd);
+	 */
+	result.v_type = v1->v_type;
+	result.v_subtype = v1->v_subtype;
+	result.v_num = qmod(tmp2, &_qthreesixty, rnd);
+	qfree(tmp2);
+
+	/*
+	 * return mod(d + m/60, 360, rnd);
+	 */
+	return result;
+}
+
+
+S_FUNC VALUE
+f_gms2g(int count, VALUE **vals)
+{
+	VALUE *v1, *v2, *v3, *v4;
+	NUMBER *tmp, *tmp2, *tmp3, *tmp4;
+	VALUE result;
+	long rnd;
+
+	/* collect required args */
+	v1 = vals[0];
+	v2 = vals[1];
+	v3 = vals[2];
+
+	/* determine rounding mode */
+	if (count == 4) {
+		v4 = vals[3];
+		if (v4->v_type == V_ADDR) {
+			v4 = v4->v_addr;
+		}
+		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
+			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
+				return error_value(E_GMS2G2);
+		}
+		rnd = qtoi(v4->v_num);
+	} else {
+		rnd = conf->quomod;
+	}
+
+	/* type parse args */
+	if (v1->v_type != V_NUM || v2->v_type != V_NUM ||
+	    v3->v_type != V_NUM) {
+		return error_value(E_GMS2G1);
+	}
+
+	/*
+	 * compute s/3600
+	 */
+	tmp = qdivi(v3->v_num, 3600);
+
+	/*
+	 * compute m/60
+	 */
+	tmp2 = qdivi(v2->v_num, 60);
+
+	/*
+	 * compute m/60 + s/3600
+	 */
+	tmp3 = qqadd(tmp2, tmp);
+	qfree(tmp);
+	qfree(tmp2);
+
+	/*
+	 * compute g + m/60 + s/3600
+	 */
+	tmp4 = qqadd(v1->v_num, tmp3);
+	qfree(tmp3);
+
+	/*
+	 * compute mod(g + m/60 + s/3600, 400, rnd);
+	 */
+	result.v_type = v1->v_type;
+	result.v_subtype = v1->v_subtype;
+	result.v_num = qmod(tmp4, &_qfourhundred, rnd);
+	qfree(tmp4);
+
+	/*
+	 * return mod(g + m/60 + s/3600, 400, rnd);
+	 */
+	return result;
+}
+
+
+S_FUNC VALUE
+f_gm2g(int count, VALUE **vals)
+{
+	VALUE *v1, *v2, *v3;
+	NUMBER *tmp, *tmp2;
+	VALUE result;
+	long rnd;
+
+	/* collect required args */
+	v1 = vals[0];
+	v2 = vals[1];
+
+	/* determine rounding mode */
+	if (count == 3) {
+		v3 = vals[2];
+		if (v3->v_type == V_ADDR) {
+			v3 = v3->v_addr;
+		}
+		if (v3->v_type != V_NUM || qisfrac(v3->v_num) ||
+			qisneg(v3->v_num) || zge31b(v3->v_num->num)) {
+				return error_value(E_GM2G2);
+		}
+		rnd = qtoi(v3->v_num);
+	} else {
+		rnd = conf->quomod;
+	}
+
+	/* type parse args */
+	if (v1->v_type != V_NUM || v2->v_type != V_NUM) {
+		return error_value(E_GM2G1);
+	}
+
+	/*
+	 * compute m/60
+	 */
+	tmp = qdivi(v2->v_num, 60);
+
+	/*
+	 * compute g + m/60
+	 */
+	tmp2 = qqadd(v1->v_num, tmp);
+	qfree(tmp);
+
+	/*
+	 * compute mod(g + m/60, 400, rnd);
+	 */
+	result.v_type = v1->v_type;
+	result.v_subtype = v1->v_subtype;
+	result.v_num = qmod(tmp2, &_qfourhundred, rnd);
+	qfree(tmp2);
+
+	/*
+	 * return mod(g + m/60, 400, rnd);
+	 */
+	return result;
+}
+
+
+S_FUNC VALUE
+f_hms2h(int count, VALUE **vals)
+{
+	VALUE *v1, *v2, *v3, *v4;
+	NUMBER *tmp, *tmp2, *tmp3, *tmp4;
+	VALUE result;
+	long rnd;
+
+	/* collect required args */
+	v1 = vals[0];
+	v2 = vals[1];
+	v3 = vals[2];
+
+	/* determine rounding mode */
+	if (count == 4) {
+		v4 = vals[3];
+		if (v4->v_type == V_ADDR) {
+			v4 = v4->v_addr;
+		}
+		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
+			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
+				return error_value(E_HMS2H2);
+		}
+		rnd = qtoi(v4->v_num);
+	} else {
+		rnd = conf->quomod;
+	}
+
+	/* type parse args */
+	if (v1->v_type != V_NUM || v2->v_type != V_NUM ||
+	    v3->v_type != V_NUM) {
+		return error_value(E_HMS2H1);
+	}
+
+	/*
+	 * compute s/3600
+	 */
+	tmp = qdivi(v3->v_num, 3600);
+
+	/*
+	 * compute m/60
+	 */
+	tmp2 = qdivi(v2->v_num, 60);
+
+	/*
+	 * compute m/60 + s/3600
+	 */
+	tmp3 = qqadd(tmp2, tmp);
+	qfree(tmp);
+	qfree(tmp2);
+
+	/*
+	 * compute h + m/60 + s/3600
+	 */
+	tmp4 = qqadd(v1->v_num, tmp3);
+	qfree(tmp3);
+
+	/*
+	 * compute mod(h + m/60 + s/3600, 24, rnd);
+	 */
+	result.v_type = v1->v_type;
+	result.v_subtype = v1->v_subtype;
+	result.v_num = qmod(tmp4, &_qtwentyfour, rnd);
+	qfree(tmp4);
+
+	/*
+	 * return mod(d + m/60 + s/3600, 24, rnd);
+	 */
+	return result;
+}
+
+
+S_FUNC VALUE
+f_hm2h(int count, VALUE **vals)
+{
+	VALUE *v1, *v2, *v3;
+	NUMBER *tmp, *tmp2;
+	VALUE result;
+	long rnd;
+
+	/* collect required args */
+	v1 = vals[0];
+	v2 = vals[1];
+
+	/* determine rounding mode */
+	if (count == 3) {
+		v3 = vals[2];
+		if (v3->v_type == V_ADDR) {
+			v3 = v3->v_addr;
+		}
+		if (v3->v_type != V_NUM || qisfrac(v3->v_num) ||
+			qisneg(v3->v_num) || zge31b(v3->v_num->num)) {
+				return error_value(E_H2HM2);
+		}
+		rnd = qtoi(v3->v_num);
+	} else {
+		rnd = conf->quomod;
+	}
+
+	/* type parse args */
+	if (v1->v_type != V_NUM || v2->v_type != V_NUM) {
+		return error_value(E_H2HM1);
+	}
+
+	/*
+	 * compute m/60
+	 */
+	tmp = qdivi(v2->v_num, 60);
+
+	/*
+	 * compute d + m/60
+	 */
+	tmp2 = qqadd(v1->v_num, tmp);
+	qfree(tmp);
+
+	/*
+	 * compute mod(h + m/60, 24, rnd);
+	 */
+	result.v_type = v1->v_type;
+	result.v_subtype = v1->v_subtype;
+	result.v_num = qmod(tmp2, &_qtwentyfour, rnd);
+	qfree(tmp2);
+
+	/*
+	 * return mod(h + m/60, 24, rnd);
+	 */
+	return result;
+}
+
+
+S_FUNC VALUE
 f_mmin(VALUE *v1, VALUE *v2)
 {
 	VALUE sixteen, res;
@@ -9576,6 +9966,10 @@ STATIC CONST struct builtin builtins[] = {
 	 "number of digits in base b representation of a"},
 	{"display", 0, 1, 0, OP_NOP, 0, f_display,
 	 "number of decimal digits for displaying numbers"},
+	{"dm2d", 2, 3, 0, OP_NOP, 0, f_dm2d,
+	 "convert a deg, b min to degrees, rounding type c\n"},
+	{"dms2d", 3, 4, 0, OP_NOP, 0, f_dms2d,
+	 "convert a deg, b min, c sec to degrees, rounding type d\n"},
 	{"dp", 2, 2, 0, OP_NOP, 0, f_dp,
 	 "dot product of two vectors"},
 	{"epsilon", 0, 1, 0, OP_SETEPSILON, 0, 0,
@@ -9690,6 +10084,10 @@ STATIC CONST struct builtin builtins[] = {
 	 "Gudermannian function"},
 	{"getenv", 1, 1, 0, OP_NOP, 0, f_getenv,
 	 "value of environment variable (or NULL)"},
+	{"gm2g", 2, 3, 0, OP_NOP, 0, f_gm2g,
+	 "convert a grads, b min to grads, rounding type c\n"},
+	{"gms2g", 3, 4, 0, OP_NOP, 0, f_gms2g,
+	 "convert a grads, b min, c sec to grads, rounding type d\n"},
 	{"h2hm", 3, 4, FA, OP_NOP, 0, f_h2hm,
 	 "convert a to b hours, c min, rounding type d\n"},
 	{"h2hms", 4, 5, FA, OP_NOP, 0, f_h2hms,
@@ -9701,6 +10099,10 @@ STATIC CONST struct builtin builtins[] = {
 	 "return list of specified number at head of a list"},
 	{"highbit", 1, 1, 0, OP_HIGHBIT, 0, 0,
 	 "high bit number in base 2 representation"},
+	{"hm2h", 2, 3, 0, OP_NOP, 0, f_hm2h,
+	 "convert a hours, b min to hours, rounding type c\n"},
+	{"hms2h", 3, 4, 0, OP_NOP, 0, f_hms2h,
+	 "convert a hours, b min, c sec to hours, rounding type d\n"},
 	{"hmean", 0, IN, 0, OP_NOP, 0, f_hmean,
 	 "harmonic mean of values"},
 	{"hnrmod", 4, 4, 0, OP_NOP, f_hnrmod, 0,

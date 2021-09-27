@@ -76,7 +76,7 @@ EXAMPLE
     ; global d, m, s;
 
     ; print d2dms(12.3456,d,m,s), d, m, s;
-    12.3456, 12, 20, 44.16
+    12.3456 12 20 44.16
     ; print d2dms(1234.5678,d,m,s), d, m, s;
     154.5678 154 34 4.08
     ; print d2dms(-1234.5678,d,m,s), d, m, s;

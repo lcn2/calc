@@ -143,6 +143,54 @@ The following are the changes from calc version 2.14.0.0 to date:
 
     Added a few more examples to help/strcmp.
 
+    Added builtin functions to convert between degrees, minutes and
+    seconds and degrees under the config("mod") round rules:
+
+	dms2d(d, m, s [,rnd]) - convert deg, min, and secs to deg
+	dm2d(d, m [,rnd]) - convert deg, min to deg
+
+	See help/dms2d and help/dm2d.
+
+    Example:
+
+	; print dms2d(12, 20, 44.16);
+	12.3456
+
+	; print dm2d(3601, -25.5594);
+	0.57401
+
+    Added builtin functions to convert between gradians, minutes and
+    seconds and gradians under the config("mod") round rules:
+
+	gms2g(g, m, s [,rnd]) - convert grad, min, and secs to grad
+	gm2g(g, m [,rnd]) - convert grad and min to grad
+
+	See help/g2gms and help/g2gm.
+
+    Example:
+
+	; print gms2g(12, 20, 44.16);
+	12.3456
+
+	; print gm2g(4001, -25.5594);
+	0.57401
+
+    Added builtin functions to convert between hours, minutes and
+    seconds and hours under the config("mod") round rules:
+
+	hms2h(h, m, s [,rnd]) - convert hours, min, and secs to hours
+	hm2h(h, m [,rnd]) - convert hours, min to hours
+
+	See help/hms2h and help/hm2h.
+
+    Example:
+
+	; print hms2h(12, 20, 44.16);
+	12.3456
+
+	; print hm2h(241, -25.5594);
+	0.57401
+
 
 The following are the changes from calc version 2.13.0.1 to 2.13.0.1:
 

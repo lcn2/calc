@@ -365,17 +365,17 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd \
 	atanh avg base base2 bernoulli bit blk blkcpy blkfree blocks bround \
 	btrunc calc_tty calclevel calcpath catalan ceil cfappr cfsim char \
 	cmdbuf cmp comb conj cos cosh cot coth count cp csc csch ctime d2dm \
-	d2dms d2g d2r delete den dereference det digit digits display dp \
+	d2dms d2g d2r delete den dereference det digit digits display dms2d dp \
 	epsilon errcount errmax errno error estr euler eval exp fact factor \
 	fclose fcnt feof ferror fflush fgetc fgetfield fgetfile fgetline fgets \
 	fgetstr fib files floor fopen forall fpathopen fprintf fputc fputs \
 	fputstr frac free freebernoulli freeeuler freeglobals freeredc \
 	freestatics frem freopen fscan fscanf fseek fsize ftell g2d g2gm g2gms \
-	g2r gcd gcdrem gd getenv h2hm h2hms hash head highbit hmean hnrmod \
-	hypot ilog ilog10 ilog2 im indices inputlevel insert int inverse iroot \
-	isalnum isalpha isassoc isatty isblk iscntrl isconfig isdefined \
-	isdigit iserror iseven isfile isgraph ishash isident isint islist \
-	islower ismat ismult isnull isnum isobj isobjtype isodd isprime \
+	g2r gcd gcdrem gd getenv gms2g h2hm h2hms hash head highbit hmean \
+	hms2h hnrmod hypot ilog ilog10 ilog2 im indices inputlevel insert int \
+	inverse iroot isalnum isalpha isassoc isatty isblk iscntrl isconfig \
+	isdefined isdigit iserror iseven isfile isgraph ishash isident isint \
+	islist islower ismat ismult isnull isnum isobj isobjtype isodd isprime \
 	isprint isptr ispunct isqrt isrand israndom isreal isrel issimple \
 	isspace issq isstr istype isupper isxdigit jacobi join lcm lcmfact \
 	lfactor ln log lowbit ltol makelist matdim matfill matmax matmin \

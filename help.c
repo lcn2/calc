@@ -83,6 +83,9 @@ STATIC struct help_alias {
 	{"show", "command"},
 	{"stdlib", "resource"},
 	{"question", "questions"},
+	{"dm2d", "dms2d"},
+	{"gm2g", "gms2g"},
+	{"hm2d", "hms2d"},
 	{NULL, NULL}
 };
 
