@@ -49,11 +49,11 @@ initconstants(void)
 		math_error("Unable to allocate constant table");
 		/*NOTREACHED*/
 	}
-	for (i = 0; i < INITCONSTCOUNT; i++)
+	for (i = 0; consttable[i] != NULL; i++) {
 		consttable[i] = initnumbs[i];
-	consttable[INITCONSTCOUNT] = NULL;	/* firewall */
-	constcount = INITCONSTCOUNT;
-	constavail = CONSTALLOCSIZE - INITCONSTCOUNT;
+	}
+	constcount = i-1;
+	constavail = CONSTALLOCSIZE - constcount;
 }
 
 

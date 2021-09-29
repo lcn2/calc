@@ -35,8 +35,6 @@
 #endif
 
 
-#define INITCONSTCOUNT 15    /* number of initnumbs[] pre-defined constants */
-
 /*
  * Rational arithmetic definitions.
  */

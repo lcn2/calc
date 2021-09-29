@@ -53,10 +53,12 @@ NUMBER _qfourhundred =	{ { _fourhundredval_, 1, 0 },
 NUMBER _qtwentyfour =	{ { _twentyfourval_, 1, 0 },
 			  { _oneval_, 1, 0 }, 1, NULL };
 
-NUMBER * initnumbs[INITCONSTCOUNT] = {&_qzero_, &_qone_, &_qtwo_, &_qthree_,
+NUMBER * initnumbs[] = {&_qzero_, &_qone_, &_qtwo_, &_qthree_,
 	&_qfour_, &_qten_, &_qnegone_, &_qonehalf_, &_qneghalf_,
 	&_qonesqbase_, &_qtendivnine_, &_qninedivten_,
-	&_qthreesixty, &_qfourhundred, &_qtwentyfour };
+	&_qthreesixty, &_qfourhundred, &_qtwentyfour,
+	NULL	/* must be last */
+};
 
 
 /*
@@ -1488,7 +1490,7 @@ shownumbers(void)
 	printf("Index  Links  Digits	       Value\n");
 	printf("-----  -----  ------	       -----\n");
 
-	for (i = 0, k = 0; i < INITCONSTCOUNT; i++) {
+	for (i = 0, k = 0; initnumbs[i] != NULL; i++) {
 		count++;
 		vp = initnumbs[i];
 		printf("%6ld  %4ld  ", k++, vp->links);
