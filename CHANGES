@@ -191,6 +191,9 @@ The following are the changes from calc version 2.14.0.0 to date:
 	; print hm2h(241, -25.5594);
 	0.57401
 
+    Fixed typo in cal/statistics.cal thanks to a report by <GitHub user
+    dennisaldea>.
+
 
 The following are the changes from calc version 2.13.0.1 to 2.13.0.1:
 
