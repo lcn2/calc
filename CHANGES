@@ -194,6 +194,9 @@ The following are the changes from calc version 2.14.0.0 to date:
     Fixed typo in cal/statistics.cal thanks to a report by <GitHub user
     dennisaldea>.
 
+    Fixed an old Windoz pun in README.WINDOWS as requested by <GitHub
+    user marcodegio>.
+
 
 The following are the changes from calc version 2.13.0.1 to 2.13.0.1:
 
