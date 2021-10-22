@@ -197,6 +197,19 @@ The following are the changes from calc version 2.14.0.0 to date:
     Fixed an old Windoz pun in README.WINDOWS as requested by <GitHub
     user marcodegio>.
 
+    Fixed a really obscure bug in the internal initconstants()
+    function of const.c that has been sitting for over 31 years!
+
+	We are amazed that nobody has encountered this bug before
+	now.  Nevertheless, our very extensive regression and
+	multi-architecture testing found the bug.  Now, after all
+	those years, it is fixed.
+
+    Fixed issues identied by the default CodeUL GitHub security code scan:
+
+	Wrong type of arguments to printf in have_fpos_pos.c
+	Multiplication result converted to larger type in zfunc.c
+
 
 The following are the changes from calc version 2.13.0.1 to 2.13.0.1:
 

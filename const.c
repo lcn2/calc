@@ -49,7 +49,7 @@ initconstants(void)
 		math_error("Unable to allocate constant table");
 		/*NOTREACHED*/
 	}
-	for (i = 0; consttable[i] != NULL; i++) {
+	for (i = 0; initnumbs[i] != NULL; i++) {
 		consttable[i] = initnumbs[i];
 	}
 	constcount = i-1;
@@ -123,6 +123,9 @@ addqconstant(NUMBER *q)
 	tp = consttable;
 	for (index = 0; index < constcount; index++, tp++) {
 		t = *tp;
+		if (t == NULL) {	/* paranoia */
+			break;
+		}
 		if (t->links == 0) {
 			if (!havefirst) {
 				havefirst = TRUE;
