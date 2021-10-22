@@ -44,7 +44,7 @@ initconstants(void)
 {
 	int i;
 
-	consttable = (NUMBER **) malloc(sizeof(NUMBER *) * CONSTALLOCSIZE);
+	consttable = (NUMBER **) calloc(sizeof(NUMBER *), CONSTALLOCSIZE);
 	if (consttable == NULL) {
 		math_error("Unable to allocate constant table");
 		/*NOTREACHED*/
