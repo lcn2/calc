@@ -1034,7 +1034,7 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 				}
 				needw = FALSE;
 			}
-			g = *a0 * w;
+			g = (FULL) (*a0 * w);
 			if (h < BASEB) {
 			    g &= (1 << h) - 1;
 			} else {
@@ -1044,7 +1044,7 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 			g = 1;
 		}
 	    } else {
-		g = (HALF) *a0 * w;
+		g = (FULL) (*a0 * w);
 	    }
 	    a = a0;
 	    b = b0;

@@ -56,8 +56,8 @@ main(void)
 	printf("#define FPOS_POS_BITS %d\n", FPOS_POS_BITS);
 	printf("#define FPOS_POS_LEN %d\n", int(FPOS_POS_BITS/8));
 # else
-	printf("#define FPOS_POS_BITS %d\n", sizeof(pos.__pos)*8);
-	printf("#define FPOS_POS_LEN %d\n", sizeof(pos.__pos));
+	printf("#define FPOS_POS_BITS %lu\n", sizeof(pos.__pos)*8);
+	printf("#define FPOS_POS_LEN %lu\n", sizeof(pos.__pos));
 # endif
 
 #else
