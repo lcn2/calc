@@ -52,9 +52,9 @@ DESCRIPTION
     Names of files are subject to ~ expansion just like the C or
     Korn shell.	 For example, the file name:
 
-	~/lib/gleet
+	~/lib/fizzbin
 
-    refers to the file 'gleet' under the directory lib located
+    refers to the file 'fizzbin' under the directory lib located
     in your home directory.  The file name:
 
 	~chongo/was_here

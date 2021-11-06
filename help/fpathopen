@@ -46,10 +46,10 @@ DESCRIPTION
     to open files under the given mode.  If the mode allows for
     writing and a file can be created, then that file is returned.
 
-    This call open "./gleet" for writing if the current directory is
-    writable, even if "./gleet" did not previously exist:
+    This call open "./fizzbin" for writing if the current directory is
+    writable, even if "./fizzbin" did not previously exist:
 
-    	fpathopen("gleet", "r", ".:/tmp:/var/tmp:~chongo/pub:~/tmp");
+	fpathopen("fizzbin", "r", ".:/tmp:/var/tmp:~chongo/pub:~/tmp");
 
     This call will likely open (and create if needded) for appending,
     the file "/tmp/log" assuming that the user is not allowed to
@@ -106,9 +106,9 @@ DESCRIPTION
     Names of files are subject to ~ expansion just like the C or
     Korn shell.	 For example, the file name:
 
-	~/lib/gleet
+	~/lib/fizbin
 
-    refers to the file 'gleet' under the directory lib located
+    refers to the file 'fizbin' under the directory lib located
     in your home directory.  The file name:
 
 	~chongo/was_here
