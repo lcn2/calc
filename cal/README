@@ -879,6 +879,38 @@ natnumset.cal
     user-specified bound.
 
 
+palindrome.cal
+
+    digitof(val,place)
+    copalplace(d,place)
+    upperhalf(val)
+    mkpal(val)
+    mkpalmiddigit(val,digit)
+    ispal(val)
+    nextpal(val)
+    prevpal(val)
+    nextprimepal(val)
+    prevprimepal(val)
+
+    Functions to form and manipulate palendromes in base 10.
+
+    Important functions are:
+
+	Find the next / previous palindrome:
+
+	    nextpal(val)
+	    prevpal(val)
+
+	Test if a value is a palindrome:
+
+	    ispal(val)
+
+	Find the next / previous palindrome that is a (highly probable) prime:
+
+	    nextprimepal(val)
+	    prevprimepal(val)
+
+
 pell.cal
 
     pellx(D)

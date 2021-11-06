@@ -248,6 +248,12 @@ The following are the changes from calc version 2.13.0.1 to 2.13.0.1:
     The help and man builtin commands now return an error when a
     help file cannot be opened, such as when there is no help file.
 
+    Added palindrome.cal resource file.  For example, to find the
+    largest (highly probable) prime palindrome under 280 decimal
+    digits (text tweet limit):
+
+`	prevprimepal(1e280)
+
 
 The following are the changes from calc version 2.13.0.0 to 2.13.0.0:
 

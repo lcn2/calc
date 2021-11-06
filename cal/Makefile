@@ -275,17 +275,17 @@ CALC_FILES= README alg_config.cal beer.cal bernoulli.cal \
 	constants.cal deg.cal dms.cal dotest.cal ellip.cal factorial.cal \
 	factorial2.cal gvec.cal hello.cal hms.cal infinities.cal intfile.cal \
 	intnum.cal lambertw.cal linear.cal lnseries.cal lucas.cal \
-	lucas_chk.cal mersenne.cal mfactor.cal mod.cal natnumset.cal pell.cal \
-	pi.cal pix.cal pollard.cal poly.cal prompt.cal psqrt.cal qtime.cal \
-	quat.cal randbitrun.cal randmprime.cal randombitrun.cal randomrun.cal \
-	randrun.cal regress.cal repeat.cal screen.cal seedrandom.cal \
-	set8700.cal set8700.line smallfactors.cal solve.cal \
-	specialfunctions.cal statistics.cal strings.cal sumsq.cal sumtimes.cal \
-	surd.cal test1700.cal test2300.cal test2600.cal test2700.cal \
-	test3100.cal test3300.cal test3400.cal test3500.cal test4000.cal \
-	test4100.cal test4600.cal test5100.cal test5200.cal test8400.cal \
-	test8500.cal test8600.cal test8900.cal toomcook.cal unitfrac.cal \
-	varargs.cal xx_print.cal zeta2.cal
+	lucas_chk.cal mersenne.cal mfactor.cal mod.cal natnumset.cal \
+	palindrome.cal pell.cal pi.cal pix.cal pollard.cal poly.cal prompt.cal \
+	psqrt.cal qtime.cal quat.cal randbitrun.cal randmprime.cal \
+	randombitrun.cal randomrun.cal randrun.cal regress.cal repeat.cal \
+	screen.cal seedrandom.cal set8700.cal set8700.line smallfactors.cal \
+	solve.cal specialfunctions.cal statistics.cal strings.cal sumsq.cal \
+	sumtimes.cal surd.cal test1700.cal test2300.cal test2600.cal \
+	test2700.cal test3100.cal test3300.cal test3400.cal test3500.cal \
+	test4000.cal test4100.cal test4600.cal test5100.cal test5200.cal \
+	test8400.cal test8500.cal test8600.cal test8900.cal toomcook.cal \
+	unitfrac.cal varargs.cal xx_print.cal zeta2.cal
 
 # These calc files are now obsolete and are removed by the install rule.
 #
