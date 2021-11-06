@@ -243,6 +243,11 @@ The following are the changes from calc version 2.13.0.1 to 2.13.0.1:
 
     Updated HOWTO.INSTALL to mention Makefile.local.
 
+    Fizzbin is better. :-)
+
+    The help and man builtin commands now return an error when a
+    help file cannot be opened, such as when there is no help file.
+
 
 The following are the changes from calc version 2.13.0.0 to 2.13.0.0:
 

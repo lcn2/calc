@@ -29,6 +29,7 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <signal.h>
+#include <sys/errno.h>
 
 #include "calc.h"
 #include "conf.h"
@@ -262,6 +263,7 @@ givehelp(char *type)
 	}
 	snprintf(helppath, snprintf_len, "%s/%s", calc_helpdir, type);
 	helppath[snprintf_len] = '\0';	/* paranoia */
+	errno = 0;
 	stream = fopen(helppath, "r");
 	if (stream != NULL) {
 
@@ -276,30 +278,42 @@ givehelp(char *type)
 	 * open the helpfile (looking in CUSTOMHELPDIR last)
 	 */
 	} else {
-	    char *cust_helppath;	/* path to the custom help file */
-	    size_t cust_snprintf_len;	/* malloced custom snprintf buf len */
+		char *cust_helppath;	  /* path to the custom help file */
+		size_t cust_snprintf_len; /* malloced custom snprintf buf len */
 
-	    cust_snprintf_len = strlen(calc_customhelpdir)+1+strlen(type) + 1;
-	    cust_helppath = (char *)malloc(cust_snprintf_len+1);
-	    if (cust_helppath == NULL) {
-		    fprintf(stderr, "malloc failure for givehelp #1\n");
-		    return;
-	    }
-	    snprintf(cust_helppath, cust_snprintf_len,
-		     "%s/%s", calc_customhelpdir, type);
-	    cust_helppath[cust_snprintf_len] = '\0';	/* paranoia */
-	    stream = fopen(cust_helppath, "r");
-	    if (stream != NULL) {
+		cust_snprintf_len =
+		  strlen(calc_customhelpdir)+1+strlen(type) + 1;
+		cust_helppath = (char *)malloc(cust_snprintf_len+1);
+		if (cust_helppath == NULL) {
+			fprintf(stderr, "malloc failure for givehelp #1\n");
+			return;
+		}
+		snprintf(cust_helppath, cust_snprintf_len,
+			 "%s/%s", calc_customhelpdir, type);
+		cust_helppath[cust_snprintf_len] = '\0';	/* paranoia */
+		errno = 0;
+		stream = fopen(cust_helppath, "r");
+		if (stream != NULL) {
 
-		    /*
-		     * we have the help file open, now display it
-		     */
-		    page_file(stream);
-		    (void) fclose(stream);
-	    }
-	    free(cust_helppath);
-	    cust_helppath = NULL;
+			/*
+			 * we have the help file open, now display it
+			 */
+			page_file(stream);
+			(void) fclose(stream);
 
+		/* unable to open help file */
+		} else {
+			fprintf(stderr, "unable to open help file: %s - %s\n",
+					type, strerror(errno));
+		}
+		free(cust_helppath);
+		cust_helppath = NULL;
+
+#else /* CUSTOM */
+	/* unable to open help file */
+	} else {
+		fprintf(stderr, "unable to open help file: %s - %s\n",
+				type, strerror(errno));
 #endif /* CUSTOM */
 	}
 
