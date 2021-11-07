@@ -231,9 +231,6 @@ define nextpal(val)
      */
     newval = val+1;
     newvaldigits = digits(newval);
-    if (config("user_debug")) { print "DEBUG: val:", val; }
-    if (config("user_debug")) { print "DEBUG: newval:", newval; }
-    if (config("user_debug")) { print "DEBUG: newvaldigits:", newvaldigits; }
 
     /* case: single digit palindrome */
     if (newvaldigits < 2) {
@@ -244,7 +241,6 @@ define nextpal(val)
      * start with next upper half
      */
     half = upperhalf(newval);
-    if (config("user_debug")) { print "DEBUG: half:", half; }
 
     /*
      * form palindrome from upper half
@@ -271,7 +267,6 @@ define nextpal(val)
      * so we need to find an even larger palindrome
      */
     newhalf = half+1;
-    if (config("user_debug")) { print "DEBUG: newhalf:", newhalf; }
 
     /*
      * form palindrome from new upper half
