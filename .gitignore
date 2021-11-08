@@ -94,6 +94,7 @@ sample_rand
 tags
 terminal.h
 ver_calc
+win32/
 
 # other commonly excluded patterns
 #
