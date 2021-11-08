@@ -18,12 +18,12 @@ DESCRIPTION
 
     Note that issq() works on rational values, so:
 
-    	issq(25/16) == 1
+	issq(25/16) == 1
 
     If you want to test for prefect square integers, you need to exclude
     non-integer values before you test:
 
-    	isint(curds) && issq(curds)
+	isint(curds) && issq(curds)
 
 EXAMPLE
     ; print issq(25), issq(3), issq(0)
@@ -45,7 +45,7 @@ SEE ALSO
     isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
     issimple, isstr, istype
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

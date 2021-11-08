@@ -79,7 +79,7 @@ EXAMPLE
     10 /* 012 */
     ; base2(16),
     ; 131072
-    	131072 /* 0x20000 */
+	131072 /* 0x20000 */
     ; 2345
 	2345 /* 0x929 */
 
@@ -96,7 +96,7 @@ LINK LIBRARY
 SEE ALSO
     base, config, str
 
-## Copyright (C) 2002  Landon Curt Noll
+## Copyright (C) 2002,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

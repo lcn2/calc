@@ -866,10 +866,10 @@ DESCRIPTION
     when a variable name collides with an exist name of a higher scope.
     Examples of collisions are when:
 
-    	* both local and static variables have the same name
-    	* both local and global variables have the same name
-    	* both function parameter and local variables have the same name
-    	* both function parameter and global variables have the same name
+	* both local and static variables have the same name
+	* both local and global variables have the same name
+	* both function parameter and local variables have the same name
+	* both function parameter and global variables have the same name
 
     The initial "redecl_warn" value is 1.
 
@@ -895,7 +895,7 @@ EXAMPLE
 	1
 
     ; config("version")
-    		"2.12.0"
+		"2.12.0"
 
     ; config("all")
 	mode            "real"

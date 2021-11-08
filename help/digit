@@ -73,8 +73,8 @@ EXAMPLE
 	; for (n = 6; n >= -6; n--) print digit(a, n, 256),; print
 	0 0 0 0 1 226 64 201 251 231 108 139 67
 
-  	; for (n = 1; n >= -12; n++) print digit(10/7, n),; print
-    	; 0 1 4 2 8 5 7 1 4 2 8 5 7 1
+	; for (n = 1; n >= -12; n++) print digit(10/7, n),; print
+	; 0 1 4 2 8 5 7 1 4 2 8 5 7 1
 
 	; print digit(10/7, -7e1000, 1e6)
 	428571
@@ -92,7 +92,7 @@ LINK LIBRARY
 SEE ALSO
     bit
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

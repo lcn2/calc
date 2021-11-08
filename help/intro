@@ -13,7 +13,7 @@ What is calc?
 
     and the calculator will print:
 
-    	    15
+	    15
 
     Calc has the usual collection of arithmetic operators +, -, /, *
     as well as ^ (exponentiation), % (modulus) and // (integer divide).
@@ -27,7 +27,7 @@ What is calc?
 
     Notice that calc values can be very large.  For example:
 
-    	    2^23209-1
+	    2^23209-1
 
     will print:
 
@@ -60,7 +60,7 @@ What is calc?
 
     and the calculator prints:
 
-    	    13763753091226345046315979581580902400000000
+	    13763753091226345046315979581580902400000000
 
     The calculator also knows about complex numbers, so that typing:
 
@@ -69,7 +69,7 @@ What is calc?
 
     will print:
 
-    	    17+6i
+	    17+6i
 	    -55.50474777265624667147+193.9265235748927986537i
 
     The calculator can calculate transcendental functions, and accept and
@@ -81,19 +81,19 @@ What is calc?
 
     prints:
 
-    	0.8414709848078965066525023216302989996225630607983710656727517099919104
+	0.8414709848078965066525023216302989996225630607983710656727517099919104
 
     Calc can output values in terms of fractions, octal or hexadecimal.
     For example:
 
-    	    config("mode", "fraction"),
+	    config("mode", "fraction"),
 	    (17/19)^23
 	    base(16),
 	    (19/17)^29
 
      will print:
 
-     	    19967568900859523802559065713/257829627945307727248226067259
+	    19967568900859523802559065713/257829627945307727248226067259
 	    0x9201e65bdbb801eaf403f657efcf863/0x5cd2e2a01291ffd73bee6aa7dcf7d1
 
     All numbers are represented as fractions with arbitrarily large

@@ -939,9 +939,9 @@ stringcaserel(STRING *s1, STRING *s2)
 		c2++;
 	}
 	if ( (tolower(*c1)) > (tolower(*c2)))
-        	return 1;
+		return 1;
 	if ( (tolower(*c1)) <  (tolower(*c2)))
-        	return -1;
+		return -1;
 	if (i1 < i2) return -1;
 	return (i1 > i2);
 }

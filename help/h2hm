@@ -31,7 +31,7 @@ DESCRIPTION
 
     The value h will be set as if the following were used:
 
-    	h = int(return_value);
+	h = int(return_value);
 
     For some rounding modes, h will be an integer in the interval [0, 24).
     For other rounding modes, h will be an integer in the interval (-24, 0].
@@ -52,7 +52,7 @@ DESCRIPTION
     The following shows relationship between the return value and the resulting
     h, and m values:
 
-    	return_value == h + m/60;
+	return_value == h + m/60;
 
 
 EXAMPLE

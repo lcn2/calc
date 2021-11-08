@@ -839,7 +839,7 @@ The following are the changes from calc version 2.12.5.4 to 2.12.5.6:
     Rewrote gen_v1() in the lucas.cal resource file using the method
     based on a paper:
 
- 	"A note on primality tests for N = h*2^n-1", by Oystein J. Rodseth,
+	"A note on primality tests for N = h*2^n-1", by Oystein J. Rodseth,
 	Department of Mathematics, University of Bergen, BIT Numerical
 	Mathematics. 34 (3): pp 451-454.
 
@@ -898,13 +898,13 @@ The following are the changes from calc version 2.12.5.3 to 2.12.5.3:
     macOS (Darwin) users who installed calc version 2.12.5.2
     should, after installing version 2.12.5.3:
 
-    	rm -rf /opt/calc
+	rm -rf /opt/calc
 
 
 The following are the changes from calc version 2.12.5.1 to 2.12.5.2:
 
     NOTE: calc version 2.12.5.2, for macOS (Darwin) users,
-    	  installed under /opt/calc.  We neglected to mention this
+	  installed under /opt/calc.  We neglected to mention this
 	  AND /usr/local would have been a better choice.  Sorry!
 	  Fixed in calc version 2.12.5.3.
 
@@ -977,7 +977,7 @@ The following are the changes from calc version 2.12.4.14 to 2.12.5.0:
 
     For Apple OS X / Darwin target:
 
-    	MACOSX_DEPLOYMENT_TARGET is no longer defined
+	MACOSX_DEPLOYMENT_TARGET is no longer defined
 	using clang compiler
 
 	By default, -install-name is used when forming shared libs.
@@ -1021,9 +1021,9 @@ The following are the changes from calc version 2.12.4.14 to 2.12.5.0:
     for mul2, sq2, and pow2.  However, it has been shown that this
     code is not correct.  Suggestions for a replacement are welcome!
 
-   	calc -u 'read alg_config; config("user_debug", 2),; best_mul2();'
-   	calc -u 'read alg_config; config("user_debug", 2),; best_sq2();'
-   	calc -u 'read alg_config; config("user_debug", 2),; best_pow2();'
+	calc -u 'read alg_config; config("user_debug", 2),; best_mul2();'
+	calc -u 'read alg_config; config("user_debug", 2),; best_sq2();'
+	calc -u 'read alg_config; config("user_debug", 2),; best_pow2();'
 
     Fixed a number of pedantic compiler warnings.
 
@@ -1190,7 +1190,7 @@ The following are the changes from calc version 2.12.4.6 to version 2.12.4.10:
     With the exception of 3 source files, we became "picky" about
     line lengths and other issues reported by the picky tool:
 
-    	cal/test8900.cal
+	cal/test8900.cal
 	cal/set8700.line
 	help/errorcodes.sed
 
@@ -1246,7 +1246,7 @@ The following are the changes from calc version 2.12.4.0 to 2.12.4.2:
     Added prep makefile rule to make is easier to compile calc without
     an optimizer.  By doing:
 
-    	make clobber prep
+	make clobber prep
 
     one may build a calc binary that is easier to debug.
 
@@ -1403,7 +1403,7 @@ The following are the changes from calc version 2.12.1.1 to 2.12.2.2:
     what was calc-something.tar.gz is now calc-something.tar.bz2.
     To "uncompress" use:
 
-    	bunzip2 calc-something.tar.bz2
+	bunzip2 calc-something.tar.bz2
 
     On some systems, one may untar directly by:
 
@@ -1468,7 +1468,7 @@ The following are the changes from calc version 2.12.1.10 to 2.12.2:
     Renamed the following variables related to calc error processing:
 
 	int calc_jmp		==>    int calc_use_matherr_jmpbuf
-    	jmp_buf calc_jmp_buf	==>    jmp_buf calc_matherr_jmpbuf
+	jmp_buf calc_jmp_buf	==>    jmp_buf calc_matherr_jmpbuf
 
 	int post_init		==>    int calc_use_scanerr_jmpbuf
 	jmp_buf jmpbuf		==>    jmpbuf calc_scanerr_jmpbuf
@@ -1483,7 +1483,7 @@ The following are the changes from calc version 2.12.1.10 to 2.12.2:
     Parse/scan errors will not be printed if calc_print_scanerr_msg
     is zero.  By default:
 
-    	int calc_print_scanerr_msg = 1;
+	int calc_print_scanerr_msg = 1;
 
     This variable is declared in the lib_calc.h include file.  Storage
     comes from libcalc.
@@ -1491,7 +1491,7 @@ The following are the changes from calc version 2.12.1.10 to 2.12.2:
     Parse/scan warnings will not be printed if calc_print_scanwarn_msg
     is zero.  By default:
 
-    	int calc_print_scanwarn_msg = 1;
+	int calc_print_scanwarn_msg = 1;
 
     This variable is declared in the lib_calc.h include file.  Storage
     comes from libcalc.
@@ -1527,13 +1527,13 @@ The following are the changes from calc version 2.12.1.10 to 2.12.2:
     Replaced the concept of compiler sets in the Makefile with
     host target section in the Makefile.  Initial host targets are:
 
-    	Linux
+	Linux
 	Darwin
 	FreeBSD
 	(default)	<<== Target does not match any previous target name
 	Simple
 
-    	NOTE: If your target is not supported below and the default target
+	NOTE: If your target is not supported below and the default target
 	      is not suitable for your needs, please send to the:
 
 	      	calc-contrib at asthe dot com
@@ -1681,7 +1681,7 @@ The following are the changes from calc version 2.12.1.8 to 2.12.1.9:
     comments.  Improved calc comment documentation in "help unexpected"
     to help other avoid similar mistakes.  Calc comments are of the form:
 
-    	/* c style comments */
+	/* c style comments */
 	/*
 	 * multi-line
 	 * comments
@@ -1695,7 +1695,7 @@ The following are the changes from calc version 2.12.1.8 to 2.12.1.9:
 
     Documented these help commands in "help help":
 
-    	help ->
+	help ->
 	help *
 	help .
 	help %
@@ -1876,7 +1876,7 @@ The following are the changes from calc version 2.12.0 to 2.12.0.8:
     Added the builtin function fpathopen() to open a file while
     searching along a path:
 
-    	; fd2 = fpathopen("tmp/date", "r", ".:~:~sc:/tmp:/var/tmp:/var")
+	; fd2 = fpathopen("tmp/date", "r", ".:~:~sc:/tmp:/var/tmp:/var")
 	; print fd2
 	"/var/tmp/date"
 
@@ -1926,12 +1926,12 @@ The following are the changes from calc version 2.12.0 to 2.12.0.8:
     level.  When comparing with older source, one may use the -b argument
     of the diff command to ignore changes in amount of white space:
 
-    	diff -b -r -u calc-2.11.11 calc-2.12.0
+	diff -b -r -u calc-2.11.11 calc-2.12.0
 
     The read, write, and help commands use the value of global string
     variable if the symbol name starts with a $.  For example:
 
-    	global x = "lucas.cal";
+	global x = "lucas.cal";
 	read $x;	/* same as read lucas.cal or read "lucas.cal" */
 
     Added dotest.cal resource.  Based on a design by Ernest Bowen
@@ -2041,7 +2041,7 @@ The following are the changes from calc version 2.12.0 to 2.12.0.8:
 
     Changed the default values for the following config() parameters:
 
-    	config("mul2") == 1780
+	config("mul2") == 1780
 	config("sq2") == 3388
 	config("pow2") == 176
 
@@ -2136,10 +2136,10 @@ The following are the changes from calc version 2.12.0 to 2.12.0.8:
     value is TRUE by default.  Examples of variable name collisions
     include when:
 
-    	* both local and static variables have the same name
-    	* both local and global variables have the same name
-    	* both function parameter and local variables have the same name
-    	* both function parameter and global variables have the same name
+	* both local and static variables have the same name
+	* both local and global variables have the same name
+	* both function parameter and local variables have the same name
+	* both function parameter and global variables have the same name
 
     Fix of a bug which causes some static variables not to be correctly
     unscoped when their identifiers are used in a global declaration.
@@ -2159,7 +2159,7 @@ The following are the changes from calc version 2.12.0 to 2.12.0.8:
     Changed the definition of the function ssq() to enable list arguments
     to be processed in the same way as in sum().  For example:
 
-    	ssq(1,2, list(3,4,list(5,6)), list(), 7, 8)
+	ssq(1,2, list(3,4,list(5,6)), list(), 7, 8)
 
     returns the value of 1^2 + 2^2 + ... + 8^2 == 204.
 
@@ -2167,7 +2167,7 @@ The following are the changes from calc version 2.12.0 to 2.12.0.8:
     various ways of evaluating sums, sums of squares, etc, for large
     lists and matrices.  For example:
 
-    	read sumtimes
+	read sumtimes
 	doalltimes(1e6)
 
     Calc now ignores carriage returns (\r), vertical tabs (\v), and
@@ -2206,7 +2206,7 @@ The following are the changes from calc version 2.11.10.1 to 2.11.11:
 
     Fixed a bug reported by the sourceforge user: cedars where:
 
-    	ln(exp(6)) == 3		/* WRONG!!! */
+	ln(exp(6)) == 3		/* WRONG!!! */
 
     incorrectly returned 1.  This bug was fixed by Ernest Bowen
     <ebowen at une dot edu dot au>.  The regression test
@@ -2311,7 +2311,7 @@ The following are the changes from calc version 2.11.10 to 2.11.10:
 
     Fixed -d so that:
 
-    	calc -d 2/3
+	calc -d 2/3
 
     will print 0.66666666666666666667 without the leading tilde as
     advertised in the man page.
@@ -2331,7 +2331,7 @@ The following are the changes from calc version 2.11.10 to 2.11.10:
 
     Added custom function:
 
-    	custom("pmodm127", q)
+	custom("pmodm127", q)
 
     to compute 2^(2^127-1) mod q.  While currently slower than just
     doing pmod(2,2^127-1,q), it is added to give an example of a
@@ -2422,7 +2422,7 @@ The following are the changes from calc version 2.11.8.0 to 2.11.8.1:
     configuration (calc -n or config("all", "newstd")) is now the default
     calc configuration.  The flag:
 
-    	calc -O
+	calc -O
 
     was added to get the old classic calc configuration.  The flag command
     line flag, -n, now does nothing.  Use of -n is deprecated and may go
@@ -2599,16 +2599,16 @@ The following are the changes from calc version 2.11.5.5 to 2.11.5.9:
 
     Now using version numbers of one of these forms:
 
-    	x.y.z.w
-    	x.y.z
-    	x.y
+	x.y.z.w
+	x.y.z
+	x.y
 
     Changed the READLINE_LIB Makefile variable to not link with -lreadline
     by default.  If you do have readline, we recommend that you use it.
     If you can install the GNU readline:
 
 	http://freshmeat.net/projects/gnureadline/
-    	http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html
+	http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html
 
     we recommend it.  But if not, you should set the USE_READLINE,
     READLINE_LIB, and READLINE_INCLUDE Makefile variables to empty.
@@ -2680,7 +2680,7 @@ The following are the changes from calc version 2.11.5t4.1 to 2.11.5t4.4:
     Added subject requirements for the calc-tester-request and
     calc-bugs-mail Email aliases.  See:
 
-    	http://www.isthe.com/chongo/tech/comp/calc/email.html
+	http://www.isthe.com/chongo/tech/comp/calc/email.html
 
     for details.
 
@@ -2847,7 +2847,7 @@ The following are the changes from calc version 2.11.5t2 to 2.11.5t2.1:
     Applied a bug fix from Ernest Bowen <ernie at turing dot une dot
     edu dot au> dealing with one-line "static" declaration like:
 
-    	static a = 1, b;
+	static a = 1, b;
 
     Added regression test 8310 to test for the static bug fix.
 
@@ -2960,7 +2960,7 @@ The following are the changes from calc version 2.11.5t0 to 2.11.5t1.1:
     Configuration values that used to return "true" or "false" now return
     1 (a true value) or 0 (a false value).  Thus one can do:
 
-    	if (config("tab")) { ... } else { ... }
+	if (config("tab")) { ... } else { ... }
 
     The configuration values that now return 1 or 0 are:
 

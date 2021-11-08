@@ -25,11 +25,11 @@ TYPES
 DESCRIPTION
     The expression:
 
-    	x % y
+	x % y
 
     is equivalent to call:
 
-    	mod(x, y)
+	mod(x, y)
 
     The function:
 
@@ -37,7 +37,7 @@ DESCRIPTION
 
     is equivalent to:
 
-    	config("mod", rnd), x % y
+	config("mod", rnd), x % y
 
     except that the global config("mod") value does not change.
 
@@ -137,7 +137,7 @@ LINK LIBRARY
 SEE ALSO
     quo, quomod, //, %
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

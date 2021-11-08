@@ -85,7 +85,7 @@
 
     The man command is an alias for the help command.  Try:
 
-    	    man jacobi
+	    man jacobi
 
     Only calc help files may be displayed by the help and man commands.
 

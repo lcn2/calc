@@ -188,7 +188,7 @@ define hms_abs(a)
 
     /* firewall - just absolute value non hms objects */
     if (! istype(a, ans)) {
-    	return abs(a);
+	return abs(a);
     }
 
     /* compute hours */

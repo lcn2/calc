@@ -673,7 +673,7 @@ qdigit(NUMBER *q, ZVALUE dpos, ZVALUE base)
 	/*
 	 * In the first stage, q is expressed as base^k * N/D where
 	 *	gcd(D, base) = 1
-  	 * K is k as a ZVALUE
+	 * K is k as a ZVALUE
 	 */
 	base.sign = 0;
 	if (ziszero(base) || zisunit(base))

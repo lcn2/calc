@@ -156,7 +156,7 @@ define be2file(v, filename)
      */
     octlen = int((highbit(v)+8) / 8);
     for (i=octlen-1; i >= 0; --i) {
-    	fputc(fd, char(v >> (i*8)));
+	fputc(fd, char(v >> (i*8)));
     }
 
     /*

@@ -14,7 +14,7 @@ DESCRIPTION
     Generate a pseudo-random number using an subtractive 100 shuffle generator.
     We return a pseudo-random number over the half closed interval:
 
-    	[min,beyond)	((min <= return < beyond))
+	[min,beyond)	((min <= return < beyond))
 
     By default, min is 0 and beyond is 2^64.
 

@@ -17,8 +17,8 @@ DESCRIPTION
     If y is an odd prime, then the Legendre symbol (x/y) returns:
 
 	(x/y) == 0	x is divisible by y (0 == x % y)
-    	(x/y) == 1	if x is a quadratic residue modulo y
-    	(x/y) == -1	if x is not a quadratic residue modulo y
+	(x/y) == 1	if x is a quadratic residue modulo y
+	(x/y) == -1	if x is not a quadratic residue modulo y
 
     Legendre symbol often denoted as (x/y) as if x/y were a fraction.
 

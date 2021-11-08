@@ -374,12 +374,12 @@ Step 5: Write your custom function
 
     One is able to set bit 8 by way of the calc command line:
 
-    	calc -D 128
+	calc -D 128
 
     See the calc man page for details.  One may also set that bit
     while running calc by way of the config() builtin function:
 
-    	config("calc_debug", 128);
+	config("calc_debug", 128);
 
     See the help/config file for details on calc_debug.
 

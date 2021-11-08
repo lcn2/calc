@@ -13,7 +13,7 @@ DESCRIPTION
 
     This custom function will return the value:
 
-    	q mod 2^(2^127-1)
+	q mod 2^(2^127-1)
 
     This custom function serves as a demonstration of how to write
     a custom function.  It performs the equivalent of:

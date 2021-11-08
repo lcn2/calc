@@ -31,7 +31,7 @@ DESCRIPTION
 
     The value g will be set as if the following were used:
 
-    	g = int(return_value);
+	g = int(return_value);
 
     For some rounding modes, g will be an integer in the interval [0, 400).
     For other rounding modes, g will be an integer in the interval (-400, 0].
@@ -52,7 +52,7 @@ DESCRIPTION
     The following shows relationship between the return value and the resulting
     g, and m values:
 
-    	return_value == g + m/60;
+	return_value == g + m/60;
 
 
 EXAMPLE

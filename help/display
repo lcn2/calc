@@ -21,7 +21,7 @@ DESCRIPTION
 
     The builtin function:
 
-    	display(d)
+	display(d)
 	display()
 
     is an alias for:
@@ -96,7 +96,7 @@ LINK LIBRARY
 SEE ALSO
     config, epsilon, fprintf, printf, strprintf
 
-## Copyright (C) 2004,2018  Landon Curt Noll
+## Copyright (C) 2004,2018,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

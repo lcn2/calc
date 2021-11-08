@@ -38,7 +38,7 @@ DESCRIPTION
 
     (*) NOTE on 'b' / binary/text mode:
 
-    	The 'b' or fopen binary mode has no effect on POSIX / Linux
+	The 'b' or fopen binary mode has no effect on POSIX / Linux
 	/ Un*x-like systems.  On those systems a text file is the
 	same as a binary file (as it should be for any modern-day
 	operating system).  Adding 'b' to an fopen has no effect
@@ -107,7 +107,7 @@ SEE ALSO
     fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt,
     fpathopen, strerror
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

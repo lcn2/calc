@@ -31,7 +31,7 @@ DESCRIPTION
 
     The value d will be set as if the following were used:
 
-    	d = int(return_value);
+	d = int(return_value);
 
     For some rounding modes, d will be an integer in the interval [0, 360).
     For other rounding modes, d will be an integer in the interval (-360, 0].
@@ -52,7 +52,7 @@ DESCRIPTION
     The following shows relationship between the return value and the resulting
     d, and m values:
 
-    	return_value == d + m/60;
+	return_value == d + m/60;
 
 
 EXAMPLE

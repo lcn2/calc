@@ -14,7 +14,7 @@ DESCRIPTION
     Generate a pseudo-random number using a Blum-Blum-Shub generator.
     We return a pseudo-random number over the half closed interval:
 
-    	[min,beyond)	((min <= return < beyond))
+	[min,beyond)	((min <= return < beyond))
 
     By default, min is 0 and beyond is 2^64.
 
@@ -159,7 +159,7 @@ LINK LIBRARY
 SEE ALSO
     seed, srand, randbit, isrand, rand, srandom, israndom
 
-## Copyright (C) 1999-2007  Landon Curt Noll
+## Copyright (C) 1999-2007,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

@@ -186,7 +186,7 @@ bernoulli.cal
     Calculate the nth Bernoulli number.
 
     NOTE: There is now a bernoulli() builtin function.  This file is
-    	  left here for backward compatibility and now simply returns
+	  left here for backward compatibility and now simply returns
 	  the builtin function.
 
 
@@ -767,7 +767,7 @@ lucas.cal
     prove that h*2^n-1 is prime or not prime.
 
     NOTE: Some call this term u(0).  The function gen_u0(h, n, v1)
-    	  simply calls gen_u2(h, n, v1) for such people.  :-)
+	  simply calls gen_u2(h, n, v1) for such people.  :-)
 
     gen_v1(h, v)
 
@@ -1467,7 +1467,7 @@ sumtimes.cal
     the list or matrix to use.  The doalltimes() function will run
     all of the sumtimes tests.  For example:
 
-    	doalltimes(1e6);
+	doalltimes(1e6);
 
 
 surd.cal

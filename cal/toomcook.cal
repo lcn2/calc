@@ -336,7 +336,7 @@ define __CZ__produce_long_random_number(n)
   ret = 1;
   if(!isint(n) || n<1)
     return newerror("__CZ__produce_long_random_number(n): "
-    		    "n is not an integer >=1");
+		    "n is not an integer >=1");
   for(k=0;k<n;k++){
     ret += random();
     ret  = toomcook4square(ret);

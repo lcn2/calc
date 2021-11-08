@@ -56,7 +56,7 @@ define __CZ__factor_factorial(n,start){
   if(start){
     if(!isint(start) && start < 0 && start > n)
       return newerror("__CZ__factor_factorial(n,start): value of "
-      		      "parameter 'start' out of range");
+		      "parameter 'start' out of range");
     if(start == n && isprime(n)){
       prime_list = mat[1 , 2];
       prime_list[0,0] = n;
@@ -64,7 +64,7 @@ define __CZ__factor_factorial(n,start){
     }
     else if(!isprime(start) && nextprime(start) >n)
       return newerror("__CZ__factor_factorial(n,start): value of parameter "
-      		      "'start' out of range");
+		      "'start' out of range");
     else{
       if(!isprime(start))  prime = nextprime(start);
       else prime = start;
@@ -225,11 +225,11 @@ define __CZ__multiply_factored_factorial(matrix,stop){
 
   if(!ismat(matrix))
    return newerror("__CZ__multiply_factored_factorial(matrix): "
-   		   "argument matrix not a matrix ");
+		   "argument matrix not a matrix ");
   if(!matrix[0,0])
     return
       newerror("__CZ__multiply_factored_factorial(matrix): "
-      	       "matrix[0,0] is null/0");
+	       "matrix[0,0] is null/0");
 
   if(!isnull(stop))
     pix = stop;
@@ -376,7 +376,7 @@ define bigcatalan(n){
 
 /*
   df(-111) = -1/3472059605858239446587523014902616804783337112829102414124928
-  		7753332469144201839599609375
+		7753332469144201839599609375
 
  df(-3+1i) = 0.12532538977287649201-0.0502372106177184607i
  df(2n + 1) = (2*n)!/(n!*2^n)
@@ -427,7 +427,7 @@ define doublefactorial(n){
         */
        eps=epsilon(epsilon()*1e-2);
        ret =  2^(n/2-1/4 * cos(pi()* n)+1/4) * pi()^(1/4 *
-       	      cos(pi()* n)-1/4)* gamma(n/2+1);
+	      cos(pi()* n)-1/4)* gamma(n/2+1);
        epsilon(eps);
        return ret;
     }

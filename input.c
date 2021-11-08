@@ -1127,7 +1127,7 @@ addreadset(char *name, char *path, struct stat *sbuf)
 	 * like UNIX inodes. _fullpath also allocated the memory for
 	 * this new longer path name.
 	 */
- 	 {
+	 {
 		readset[ret].path = _fullpath(NULL, path, MSDOS_MAX_PATH);
 		if (readset[ret].path == NULL) {
 			return -1;

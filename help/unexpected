@@ -73,11 +73,11 @@ Unexpected
 
     Be careful about the precedence of operators.  Note that:
 
-    	-1 ^ 0.5 == -1
+	-1 ^ 0.5 == -1
 
     whereas:
 
-    	(-1) ^ 0.5 == 1i
+	(-1) ^ 0.5 == 1i
 
     because the above expression in parsed as:
 
@@ -85,7 +85,7 @@ Unexpected
 
     whereas:
 
-    	(-1) ^ 0.5 == 1i
+	(-1) ^ 0.5 == 1i
 
 
     op= operators associate left to right
@@ -277,7 +277,7 @@ Unexpected
     A single # is an calc operator, not a comment.  However two or more
     ##'s in a row is a comment.  See "help pound" for more information.
 
-    	#!/usr/local/src/bin/calc/calc -q -f
+	#!/usr/local/src/bin/calc/calc -q -f
 
 	/* a correct comment */
 	## another correct comment
@@ -289,7 +289,7 @@ Unexpected
 
     This next example is WRONG:
 
-    	#!/usr/local/src/bin/calc/calc -q -f
+	#!/usr/local/src/bin/calc/calc -q -f
 
 	# This is not a calc calc comment because it has only a single #
 	# You must to start comments with ## or /*
@@ -350,7 +350,7 @@ Unexpected
 
     In most interactive shells:
 
-    	calc 2 * 3
+	calc 2 * 3
 
     will frequently produce a "Missing operator" error because the '*' is
     evaluated as a "shell glob".  To avoid this you must quote or escape
@@ -358,11 +358,11 @@ Unexpected
 
     For example, bash / ksh / sh shell users should use:
 
-    	calc '2 * 3'
+	calc '2 * 3'
 
     or:
 
-    	calc 2 \* 3
+	calc 2 \* 3
 
     or some other form of shell meta-character escaping.
 
@@ -393,7 +393,7 @@ Unexpected
 
     To avoid this problem, use:
 
-    	seq 5 | while read i; do calc "($i+3)^2" </dev/null; done
+	seq 5 | while read i; do calc "($i+3)^2" </dev/null; done
 
     which produces the expected results:
 

@@ -18,7 +18,7 @@ DESCRIPTION
     takes into account more abstract concepts such as data types.
 
     WARNING: Use of FNV-0 is NOT recommended for general purposes.
-    	     Calc uses FNV-0 for internal objects such as associative
+	     Calc uses FNV-0 for internal objects such as associative
 	     arrays as well as other internal processes.  Calc
 	     maintains the use of FNV-0 for backwards compatibility.
 
@@ -47,7 +47,7 @@ LINK LIBRARY
 SEE ALSO
     ishash, fnv, sha1
 
-## Copyright (C) 1999-2007,2014  Landon Curt Noll
+## Copyright (C) 1999-2007,2014,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

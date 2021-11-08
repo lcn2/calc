@@ -40,7 +40,7 @@ define Z(x, eps_term)
 
     /* obtain the error term */
     if (isnull(eps_term)) {
-    	eps = epsilon();
+	eps = epsilon();
     } else {
 	eps = eps_term;
     }
@@ -81,7 +81,7 @@ define P(x, eps_term)
 
     /* obtain the error term */
     if (isnull(eps_term)) {
-    	eps = epsilon();
+	eps = epsilon();
     } else {
 	eps = eps_term;
     }

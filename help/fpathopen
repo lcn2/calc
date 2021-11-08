@@ -21,7 +21,7 @@ DESCRIPTION
     Absolute filenames, and filenames with an implied path are files
     that begin with:
 
-    	/	# absolute path
+	/	# absolute path
 	./	# implied path through the current working directory
 	../	# implied path through the current working directory parent
 	~	# absolute path going through a home directory
@@ -29,12 +29,12 @@ DESCRIPTION
     A search path is a :-separated list of directories used to search for
     a filename.  For example:
 
-    	fpathopen("whey", "r", ".:/tmp:/var/tmp:~chongo/pub:~/tmp");
+	fpathopen("whey", "r", ".:/tmp:/var/tmp:~chongo/pub:~/tmp");
 
     will cause this function to open the first readable file it
     files while searching through these paths in order:
 
-    	./whey
+	./whey
 	/tmp/whey
 	/var/tmp/whey
 	~chongo/pub/whey
@@ -55,7 +55,7 @@ DESCRIPTION
     the file "/tmp/log" assuming that the user is not allowed to
     create files in the previous system directories:
 
-    	fpathopen("log", "a", "/:/etc:/bin:/usr/bin:/tmp");
+	fpathopen("log", "a", "/:/etc:/bin:/usr/bin:/tmp");
 
     The CALCPATH search path is taken from the $CALCPATH environment
     variable or if no such variable exists, a compiled in default search
@@ -92,7 +92,7 @@ DESCRIPTION
 
     (*) NOTE on 'b' / binary/text mode:
 
-    	The 'b' or fopen binary mode has no effect on POSIX / Linux
+	The 'b' or fopen binary mode has no effect on POSIX / Linux
 	/ Un*x-like systems.  On those systems a text file is the
 	same as a binary file (as it should be for any modern-day
 	operating system).  Adding 'b' to an fopen has no effect
@@ -180,7 +180,7 @@ SEE ALSO
     fprintf, fputc, fputs, fseek, fsize, ftell, isfile, printf, prompt,
     environment, calcpath
 
-## Copyright (C) 2006  Landon Curt Noll
+## Copyright (C) 2006,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

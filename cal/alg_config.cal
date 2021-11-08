@@ -474,7 +474,7 @@ define best_mul2()
      */
     while (low+1 < high) {
 
-    	/* try the mid-point */
+	/* try the mid-point */
 	mid = int((low+high)/2);
 	if (config("user_debug") > 0) {
 	    printf("testing multiply alg1/alg2 ratio for len = %d\n", mid);
@@ -956,7 +956,7 @@ define best_sq2()
      */
     while (low+1 < high) {
 
-    	/* try the mid-point */
+	/* try the mid-point */
 	mid = int((low+high)/2);
 	if (config("user_debug") > 0) {
 	    printf("testing square alg1/alg2 ratio for len = %d\n", mid);
@@ -1455,7 +1455,7 @@ define best_pow2()
      */
     while (low+1 < high) {
 
-    	/* try the mid-point */
+	/* try the mid-point */
 	mid = int((low+high)/2);
 	if (config("user_debug") > 0) {
 	    printf("testing pow2 alg1/alg2 ratio for len = %d\n", mid);

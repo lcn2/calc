@@ -12,16 +12,16 @@ DESCRIPTION
 
     Calc version strings can be of the form:
 
-    	x.y.z.w
-    	x.y.z
-    	x.y
+	x.y.z.w
+	x.y.z
+	x.y
 
     where x, y, z, w, v are integers (without leading 0's) and,
     t is the literal character 't'.
 
 EXAMPLE
     ; version()
-    	    "2.11.5.4"
+	    "2.11.5.4"
 
 LIMITS
     none

@@ -188,7 +188,7 @@ define dms_abs(a)
 
     /* firewall - just absolute value non dms objects */
     if (! istype(a, ans)) {
-    	return abs(a);
+	return abs(a);
     }
 
     /* compute degrees */

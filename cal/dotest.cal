@@ -157,7 +157,7 @@ define dotest(dotest_file, dotest_code = 0, dotest_maxcond = -1)
      * test the close of the line file
      */
     printf("%d-: detected %d error condition(s), many of which may be OK\n",
-    	   dotest_code, dotest_old_errcount-dotest_errcnt);
+	   dotest_code, dotest_old_errcount-dotest_errcnt);
     printf("%d-: closing line file: %d\n", dotest_code, dotest_file);
     fclose(dotest_f_file);
 
