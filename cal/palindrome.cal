@@ -18,7 +18,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Under source code control:	2021/11/06 14:35:37
- * File existed as early as:	before 2021
+ * File existed as early as:	2021
  *
  * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
@@ -589,7 +589,7 @@ define prevprimepal(val)
 	 */
 	if (val < 10) {
 	    /*
-	     * Prevcand will return 0 if there is no previous prime
+	     * The prevcand() call will return 0 if there is no previous prime
 	     * such as the case when val < 2.
 	     */
 	    return prevcand(pal);
