@@ -1,4 +1,18 @@
-The following are the changes from calc version 2.14.0.0 to date:
+The following are the changes from calc version 2.14.0.7 to date:
+
+    Fizzbin is a better word. :-)
+
+    The help and man builtin commands now return an error when a
+    help file cannot be opened, such as when there is no help file.
+
+    Added palindrome.cal resource file.  For example, to find the
+    largest (highly probable) prime palindrome under 280 decimal
+    digits (text tweet limit):
+
+	prevprimepal(1e280)
+
+
+The following are the changes from calc version 2.14.0.0 to 2.14.0.6:
 
     The :-separated default CALCRC value has been reversed.
     The default CALCRC was:
@@ -210,12 +224,6 @@ The following are the changes from calc version 2.14.0.0 to date:
 	Wrong type of arguments to printf in have_fpos_pos.c
 	Multiplication result converted to larger type in zfunc.c
 
-    Added palindrome.cal resource file.  For example, to find the
-    largest (highly probable) prime palindrome under 280 decimal
-    digits (text tweet limit):
-
-	prevprimepal(1e280)
-
 
 The following are the changes from calc version 2.13.0.1 to 2.13.0.1:
 
@@ -248,11 +256,6 @@ The following are the changes from calc version 2.13.0.1 to 2.13.0.1:
 	make LOC_MKF=Makefile.private clobber all chk
 
     Updated HOWTO.INSTALL to mention Makefile.local.
-
-    Fizzbin is better. :-)
-
-    The help and man builtin commands now return an error when a
-    help file cannot be opened, such as when there is no help file.
 
 
 The following are the changes from calc version 2.13.0.0 to 2.13.0.0:
