@@ -79,6 +79,12 @@ SHELL= /bin/sh
 ifeq ($(target),)
 target=$(shell uname -s 2>/dev/null)
 endif
+ifeq ($(arch),)
+arch=$(shell uname -p 2>/dev/null)
+endif
+ifeq ($(hardware),)
+hardware=$(shell uname -m 2>/dev/null)
+endif
 #endif	/* end of skip for non-Gnu makefiles */
 
 ##############################################################################
@@ -1280,8 +1286,8 @@ EXTRA_LDFLAGS=
 # The ARCH_CFLAGS are ${CC} when compiling C files. They follow
 # CCMISC and precede EXTRA_CFLAGS.
 #
-ARCH_CFLAGS= -march=native
-#ARCH_CFLAGS=
+ARCH_CFLAGS=
+#ARCH_CFLAGS= -march=native
 
 # COMMON_CFLAGS are the common ${CC} flags used for all programs, both
 #	    intermediate and final calc and calc related programs

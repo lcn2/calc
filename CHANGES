@@ -1,4 +1,29 @@
-The following are the changes from calc version 2.14.0.7 to date:
+The following are the changes from calc version 2.14.0.9 to date:
+
+    Due to issues with clang and Apple Silicon, ARCH_CFLAGS is now,
+    by default, empty:
+
+	ARCH_CFLAGS=
+
+    If you want to use, say, -march=native, then either change
+    the Makefile or make with:
+
+	make all ARCH_CFLAGS='-march=native'
+
+    Added arch and hardware as GNU Makefile computed values.
+    As with ${target}, ${arch} and ${hardware} is computed by uname:
+
+	target: uname -a
+	arch: uname -p
+	hardware: uname -m
+
+    Fixed compiling calc on Apple Silicon with homebrew.  On Apple
+    Silicon, HomeBrew installs on into a different location.  The
+    Makefile checks if ${hardware} is arm64 and adjusts the location
+    of libraries such as readline and history accordingly.
+
+
+The following are the changes from calc version 2.14.0.7 to 2.14.0.8:
 
     Fizzbin is a better word. :-)
 
