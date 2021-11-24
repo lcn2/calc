@@ -142,11 +142,13 @@ USE_READLINE= -DUSE_READLINE
 #READLINE_LIB= -L${PREFIX}/lib -lreadline -lhistory -lncurses
 ifeq ($(target),Darwin)
 ifeq ($(hardware),arm64)
-# Darwin arm64 homebrew installs readline & history libs in /opt/homebrew/opt/readline/lib
+# Darwin arm64 homebrew installs readline & history
+#	libs in /opt/homebrew/opt/readline/lib
 READLINE_LIB= -L/opt/homebrew/opt/readline/lib -lreadline -lhistory -lncurses
 else
 # Assume Darwin non-arm64 is x86_64
-# Darwin x86_64 homebrew installs readline & history libs in ${PREFIX}/opt/readline/lib
+# Darwin x86_64 homebrew installs readline & history
+#	libs in ${PREFIX}/opt/readline/lib
 READLINE_LIB= -L${PREFIX}/opt/readline/lib -lreadline -lhistory -lncurses
 endif
 else
@@ -155,11 +157,13 @@ endif
 #
 ifeq ($(target),Darwin)
 ifeq ($(hardware),arm64)
-# Darwin arm64 homebrew installs readline & history *.h under /opt/homebrew/opt/readline/include
+# Darwin arm64 homebrew installs readline & history *.h
+#	under /opt/homebrew/opt/readline/include
 READLINE_INCLUDE= -I${PREFIX}/opt/homebrew/opt/readline/include
 else
 # Assume Darwin non-arm64 is x86_64
-# Darwin x86_64 homebrew installs readline & history *.h under ${PREFIX}/opt/readline/include
+# Darwin x86_64 homebrew installs readline & history *.h
+#	under ${PREFIX}/opt/readline/include
 READLINE_INCLUDE= -I${PREFIX}/opt/readline/include
 endif
 else
