@@ -1,2 +1,1 @@
 # Add below to override Makefile values (using :=) as in: HAVE_STRING_H:= YES
-DEBUG= -O0 -g
