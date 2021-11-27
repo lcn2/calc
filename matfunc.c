@@ -927,6 +927,7 @@ matindices(MATRIX *mp, long index)
 
 	lp = listalloc();
 	val.v_type = V_NUM;
+	val.v_subtype = V_NOSUBTYPE;
 	j = mp->m_dim;
 
 	while (--j >= 0) {
@@ -1068,6 +1069,7 @@ matident(MATRIX *m)
 	for (row = 0; row < rows; row++) {
 		for (col = 0; col < rows; col++) {
 			val->v_type = V_NUM;
+			val->v_subtype = V_NOSUBTYPE;
 			val->v_num = ((row == col) ? qlink(&_qone_) :
 						     qlink(&_qzero_));
 			val++;
@@ -1126,6 +1128,7 @@ matinv(MATRIX *m)
 			else
 				val->v_num = qlink(&_qzero_);
 			val->v_type = V_NUM;
+			val->v_subtype = V_NOSUBTYPE;
 			val++;
 		}
 	}

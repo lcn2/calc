@@ -1298,6 +1298,7 @@ f_digit(int count, VALUE **vals)
 		base = _ten_;
 	}
 	res.v_type = V_NUM;
+	res.v_subtype = V_NOSUBTYPE;
 	res.v_num = qdigit(vals[0]->v_num, vals[1]->v_num->num, base);
 	if (res.v_num == NULL)
 		return error_value(E_DGT3);
@@ -1323,6 +1324,7 @@ f_digits(int count, VALUE **vals)
 		base = _ten_;
 	}
 	res.v_type = V_NUM;
+	res.v_subtype = V_NOSUBTYPE;
 	res.v_num = itoq(qdigits(vals[0]->v_num, base));
 	return res;
 }
@@ -1346,6 +1348,7 @@ f_places(int count, VALUE **vals)
 		places = qdecplaces(vals[0]->v_num);
 
 	res.v_type = V_NUM;
+	res.v_subtype = V_NOSUBTYPE;
 	res.v_num = itoq(places);
 	return res;
 }
@@ -3606,6 +3609,7 @@ f_comb(VALUE *v1, VALUE *v2)
 	copyvalue(v1, &result);
 	decvalue(v1, &tmp1);
 	div.v_type = V_NUM;
+	div.v_subtype = V_NOSUBTYPE;
 	div.v_num = qlink(&_qtwo_);
 	n--;
 	for (;;) {
@@ -9039,6 +9043,7 @@ f_sleep(int count, VALUE **vals)
 	NUMBER *q1, *q2;
 
 	res.v_type = V_NULL;
+	res.v_subtype = V_NOSUBTYPE;
 #if !defined(_WIN32)
 	if (count > 0) {
 		if (vals[0]->v_type != V_NUM || qisneg(vals[0]->v_num))

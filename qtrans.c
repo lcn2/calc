@@ -1129,6 +1129,7 @@ qln(NUMBER *q, NUMBER *epsilon)
 	sum.sign = neg;
 	if (k + n >= m) {
 		zshift(sum, n - m, &qtmp->num);
+		zfree(sum);
 	} else {
 		if (k) {
 			zshift(sum, -k, &qtmp->num);

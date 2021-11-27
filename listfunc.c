@@ -161,7 +161,7 @@ removelistfirst(LIST *lp, VALUE *vp)
 	}
 	*vp = lp->l_first->e_value;
 	lp->l_first->e_value.v_type = V_NULL;
-	lp->l_first->e_value.v_type = V_NOSUBTYPE;
+	lp->l_first->e_value.v_subtype = V_NOSUBTYPE;
 	removelistelement(lp, lp->l_first);
 }
 

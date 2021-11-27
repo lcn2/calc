@@ -1439,6 +1439,8 @@ zlog10(ZVALUE z, BOOL *was_10_power)
 			if (was_10_power != NULL) {
 				*was_10_power = TRUE;
 			}
+			zfree(pow10);
+			zfree(temp);
 			return power;
 
 		/* ignore this entry if we went too large */
@@ -1452,6 +1454,7 @@ zlog10(ZVALUE z, BOOL *was_10_power)
 			pow10 = temp;
 		}
 	}
+	zfree(pow10);
 	return power;
 }
 
@@ -1647,8 +1650,10 @@ zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	}
 
 	zgcd(z1, z2, &tmp1);
-	if (zisunit(tmp1) || ziszero(tmp1))
+	if (zisunit(tmp1) || ziszero(tmp1)) {
+		zfree(tmp1);
 		return 0;
+	}
 	zequo(z1, tmp1, &tmp2);
 	count = 1;
 	z1 = tmp2;
@@ -1668,6 +1673,7 @@ zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 		zfree(z2);
 		z2 = tmp1;
 	}
+	zfree(z2);
 	*res = z1;
 	return count;
 }

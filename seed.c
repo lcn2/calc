@@ -373,6 +373,7 @@ pseudo_seed(void)
      *	  We do care (that much) if these calls fail.  We do not
      *	  need to process any data in the 'sdata' structure.
      */
+    memset(&sdata, 0, sizeof(sdata));
 #if defined(HAVE_GETTIME)
 # if defined(CLOCK_SGI_CYCLE)
     (void) clock_gettime(CLOCK_SGI_CYCLE, &sdata.sgi_cycle);

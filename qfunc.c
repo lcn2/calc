@@ -683,6 +683,7 @@ qdigit(NUMBER *q, ZVALUE dpos, ZVALUE base)
 		return qlink(&_qzero_);
 	k = zfacrem(q->num, base, &N);
 	if (k == 0) {
+		zfree(N);
 		k = zgcdrem(q->den, base, &D);
 		if (k > 0) {
 			zequo(q->den, D, &A);
