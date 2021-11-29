@@ -480,7 +480,7 @@ zmod6(ZVALUE z1, ZVALUE *res)
  * slightly faster.
  */
 void
-zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
+zpowermod(ZVALUE z1_arg, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 {
 	HALF *hp;		/* pointer to current word of the power */
 	REDC *rp;		/* REDC information to be used */
@@ -488,7 +488,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 	ZVALUE ans, temp;	/* calculation values */
 	ZVALUE modpow;		/* current small power */
 	ZVALUE lowpowers[POWNUMS];	/* low powers */
-	ZVALUE ztmp;
+	ZVALUE z1;
 	int curshift;		/* shift value for word of power */
 	HALF curhalf;		/* current word of power */
 	unsigned int curpow;	/* current low power */
@@ -508,7 +508,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 	/*
 	 * Check easy cases first.
 	 */
-	if ((ziszero(z1) && !ziszero(z2)) || zisunit(z3)) {
+	if ((ziszero(z1_arg) && !ziszero(z2)) || zisunit(z3)) {
 		/* 0^(non_zero) or x^y mod 1 always produces zero */
 		*res = _zero_;
 		return;
@@ -518,13 +518,13 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 		return;
 	}
 	if (zistwo(z3)) {			/* mod 2 */
-		if (zisodd(z1))
+		if (zisodd(z1_arg))
 			*res = _one_;
 		else
 			*res = _zero_;
 		return;
 	}
-	if (zisunit(z1) && (!z1.sign || ziseven(z2))) {
+	if (zisunit(z1_arg) && (!z1_arg.sign || ziseven(z2))) {
 		/* 1^x or (-1)^(2x) */
 		*res = _one_;
 		return;
@@ -534,20 +534,18 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 	 * Normalize the number being raised to be non-negative and to lie
 	 * within the modulo range.  Then check for zero or one specially.
 	 */
-	ztmp.len = 0;
-	if (zisneg(z1) || zrel(z1, z3) >= 0) {
-		zmod(z1, z3, &ztmp, 0);
-		z1 = ztmp;
+	if (zisneg(z1_arg) || zrel(z1_arg, z3) >= 0) {
+		zmod(z1_arg, z3, &z1, 0);
+	} else {
+		zcopy(z1_arg, &z1);
 	}
 	if (ziszero(z1)) {
-		if (ztmp.len)
-			zfree(ztmp);
+		zfree(z1);
 		*res = _zero_;
 		return;
 	}
 	if (zisone(z1)) {
-		if (ztmp.len)
-			zfree(ztmp);
+		zfree(z1);
 		*res = _one_;
 		return;
 	}
@@ -575,7 +573,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 			pp->v = NULL;
 		}
 		lowpowers[0] = _one_;
-		lowpowers[1] = z1;
+		zcopy(z1, &lowpowers[1]);
 		ans = _one_;
 
 		hp = &z2.v[z2.len - 1];
@@ -666,13 +664,11 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 			}
 		}
 
-		for (pp = &lowpowers[2]; pp <= &lowpowers[POWNUMS-1]; pp++) {
-			if (pp->v != NULL)
-				freeh(pp->v);
+		for (pp = &lowpowers[1]; pp <= &lowpowers[POWNUMS-1]; pp++) {
+			zfree(*pp);
 		}
 		*res = ans;
-		if (ztmp.len)
-			zfree(ztmp);
+		zfree(z1);
 		return;
 	}
 
@@ -689,6 +685,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 			powermodredc = zredcalloc(z3);
 		rp = powermodredc;
 		zredcencode(rp, z1, &temp);
+		zfree(z1);
 		zredcpower(rp, temp, z2, &z1);
 		zfree(temp);
 		zredcdecode(rp, z1, res);
@@ -705,7 +702,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 		pp->v = NULL;
 	}
 	lowpowers[0] = _one_;
-	lowpowers[1] = z1;
+	zcopy(z1, &lowpowers[1]);
 	ans = _one_;
 
 	hp = &z2.v[z2.len - 1];
@@ -747,9 +744,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 				}
 			}
 			pp = &lowpowers[curpow];
-			if (pp->v != NULL) {
-				zfree(*pp);
-			}
+			zfree(*pp);
 			*pp = modpow;
 		}
 
@@ -788,13 +783,12 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 		}
 	}
 
-	for (pp = &lowpowers[2]; pp <= &lowpowers[POWNUMS-1]; pp++) {
-		if (pp->v != NULL)
-			freeh(pp->v);
+	for (pp = &lowpowers[1]; pp <= &lowpowers[POWNUMS-1]; pp++) {
+		zfree(*pp);
 	}
 	*res = ans;
-	if (ztmp.len)
-		zfree(ztmp);
+	zfree(z1);
+	return;
 }
 
 /*
@@ -1135,8 +1129,7 @@ zredcdecode(REDC *rp, ZVALUE z1, ZVALUE *res)
 	if (ztop.len) {
 		zadd(*res, ztop, &tmp1);
 		zfree(*res);
-		if (ztmp.len)
-			zfree(ztmp);
+		zfree(ztmp);
 		*res = tmp1;
 	}
 
@@ -1504,15 +1497,13 @@ zredcsquare(REDC *rp, ZVALUE z1, ZVALUE *res)
 	}
 	if (ziszero(z1)) {
 		*res = _zero_;
-		if (ztmp.len)
-			zfree(ztmp);
+		zfree(ztmp);
 		return;
 	}
 	if ((z1.len == rp->one.len) && (z1.v[0] == rp->one.v[0]) &&
 		(zcmp(z1, rp->one) == 0)) {
 			zcopy(z1, res);
-			if (ztmp.len)
-				zfree(ztmp);
+			zfree(ztmp);
 			return;
 	}
 
@@ -1527,8 +1518,7 @@ zredcsquare(REDC *rp, ZVALUE z1, ZVALUE *res)
 		zsquare(z1, &tmp);
 		zredcdecode(rp, tmp, res);
 		zfree(tmp);
-		if (ztmp.len)
-			zfree(ztmp);
+		zfree(ztmp);
 		return;
 	}
 	modlen = rp->mod.len;
@@ -1633,8 +1623,7 @@ zredcsquare(REDC *rp, ZVALUE z1, ZVALUE *res)
 		}
 		res->len = len;
 		if  (zrel(*res, rp->mod) < 0) {
-			if (ztmp.len)
-				zfree(ztmp);
+			zfree(ztmp);
 			return;
 		}
 	}
@@ -1657,8 +1646,7 @@ zredcsquare(REDC *rp, ZVALUE z1, ZVALUE *res)
 		len--;
 	}
 	res->len = len;
-	if (ztmp.len)
-		zfree(ztmp);
+	zfree(ztmp);
 }
 
 
@@ -1717,8 +1705,7 @@ zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
 			*res = _one_;
 		else
 			*res = _zero_;
-		if (ztmp.len)
-			zfree(ztmp);
+		zfree(ztmp);
 		return;
 	}
 	if (zcmp(z1, rp->one) == 0) {
@@ -1726,8 +1713,7 @@ zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
 			zsub(rp->mod, rp->one, res);
 		else
 			zcopy(rp->one, res);
-		if (ztmp.len)
-			zfree(ztmp);
+		zfree(ztmp);
 		return;
 	}
 
@@ -1741,14 +1727,12 @@ zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
 		if (zcmp(z1, temp) == 0) {
 			if (zisodd(z2) ^ sign) {
 				*res = temp;
-				if (ztmp.len)
-					zfree(ztmp);
+				zfree(ztmp);
 				return;
 			}
 			zfree(temp);
 			zcopy(rp->one, res);
-			if (ztmp.len)
-				zfree(ztmp);
+			zfree(ztmp);
 			return;
 		}
 		zfree(temp);
@@ -1845,8 +1829,7 @@ zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	} else {
 		*res = ans;
 	}
-	if (ztmp.len)
-		zfree(ztmp);
+	zfree(ztmp);
 }
 
 

@@ -2296,19 +2296,19 @@ zsrandom1(CONST ZVALUE seed, BOOL need_ret)
 		last_r.v = NULL;
 		do {
 			/* free temp storage */
-			if (last_r.v != NULL) {
-				zfree_random(last_r);
-			}
+			zfree_random(last_r);
 
 			/*
 			 * last_r = r;
 			 * r = pmod(last_r, 2, n);
 			 */
-			last_r = r;
+			zcopy(r, &last_r);
+			zfree_random(r);
 			zsquaremod(last_r, blum.n, &r);
 		} while (zrel(r, last_r) > 0);
 		zfree_random(blum.r);
 		blum.r = r;
+
 		/* free temp storage */
 		zfree_random(last_r);
 
@@ -3062,6 +3062,7 @@ randomcopy(CONST RANDOM *state)
 void
 randomfree(RANDOM *state)
 {
+#if 0
 	/* avoid free of the pre-defined states */
 	if (state == &init_blum) {
 		return;
@@ -3070,6 +3071,7 @@ randomfree(RANDOM *state)
 	    state <= &random_pregen[BLUM_PREGEN-1]) {
 		return;
 	}
+#endif
 
 	/* free the values */
 	zfree_random(state->n);

@@ -1619,7 +1619,7 @@ zfacrem(ZVALUE z1, ZVALUE z2, ZVALUE *rem)
 long
 zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
-	ZVALUE tmp1, tmp2;
+	ZVALUE tmp1, tmp2, tmp3, tmp4;
 	long count, onecount;
 	long sh;
 
@@ -1663,15 +1663,17 @@ zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	 * the gcd becomes one.
 	 */
 	while (!zisunit(z2)) {
-		onecount = zfacrem(z1, z2, &tmp1);
+		onecount = zfacrem(z1, z2, &tmp3);
 		if (onecount) {
 			count += onecount;
 			zfree(z1);
-			z1 = tmp1;
+			z1 = tmp3;
+		} else {
+			zfree(tmp3);
 		}
-		zgcd(z1, z2, &tmp1);
+		zgcd(z1, z2, &tmp4);
 		zfree(z2);
-		z2 = tmp1;
+		z2 = tmp4;
 	}
 	zfree(z2);
 	*res = z1;
