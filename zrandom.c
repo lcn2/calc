@@ -2532,11 +2532,11 @@ zsrandom4(CONST ZVALUE seed, CONST ZVALUE ip, CONST ZVALUE iq, long trials)
 	/*
 	 * search the 'p' and 'q' Blum prime (3 mod 4) candidates
 	 */
-	if (!znextcand(ip, trials, _zero_, zconst[3], zconst[4], &p)) {
+	if (!znextcand(ip, trials, _zero_, _three_, _four_, &p)) {
 		math_error("failed to find 1st Blum prime");
 		/*NOTREACHED*/
 	}
-	if (!znextcand(iq, trials, _zero_, zconst[3], zconst[4], &q)) {
+	if (!znextcand(iq, trials, _zero_, _three_, _four_, &q)) {
 		math_error("failed to find 2nd Blum prime");
 		/*NOTREACHED*/
 	}

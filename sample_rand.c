@@ -93,7 +93,7 @@ main(int argc, char **argv)
 	/*
 	 * seed the generator
 	 */
-	prev_state = zsrandom2(seed, zconst[10]);
+	prev_state = zsrandom2(seed, _ten_);
 	if (prev_state == NULL) {
 		math_error("previous random state is NULL");
 		/*NOTREACHED*/

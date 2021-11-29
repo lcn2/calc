@@ -55,8 +55,7 @@
 
 
 #ifndef ALLOCTEST
-# define freeh(p) { if (((void *)p != (void *)_zeroval_) &&		\
-			 ((void *)p != (void *)_oneval_)) free((void *)p); }
+# define freeh(p) { if (!is_const(p)) { free((void *)(p)); } }
 #endif
 
 
@@ -289,6 +288,7 @@ typedef struct {
  * Function prototypes for integer math routines.
  */
 E_FUNC HALF * alloc(LEN len);
+E_FUNC int is_const(HALF* h);
 #ifdef	ALLOCTEST
 E_FUNC void freeh(HALF *);
 #endif
@@ -642,20 +642,97 @@ E_FUNC ZVALUE *swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all);
 /*
  * constants used often by the arithmetic routines
  */
-EXTERN HALF _zeroval_[], _oneval_[], _twoval_[], _threeval_[], _fourval_[];
-EXTERN HALF _fiveval_[], _sixval_[], _sevenval_[], _eightval_[], _nineval_[];
-EXTERN HALF _tenval_[], _elevenval_[], _twelveval_[], _thirteenval_[];
-EXTERN HALF _fourteenval_[], _fifteenval_[];
+EXTERN HALF _zeroval_[];
+EXTERN ZVALUE _zero_;
+
+EXTERN HALF _oneval_[];
+EXTERN ZVALUE _one_;
+EXTERN ZVALUE _neg_one_;
+
+EXTERN HALF _twoval_[];
+EXTERN ZVALUE _two_;
+
+EXTERN HALF _threeval_[];
+EXTERN ZVALUE _three_;
+
+EXTERN HALF _fourval_[];
+EXTERN ZVALUE _four_;
+
+#if 0
+EXTERN HALF _fiveval_[];
+EXTERN ZVALUE _five_;
+
+EXTERN HALF _sixval_[];
+EXTERN ZVALUE _six_;
+
+EXTERN HALF _sevenval_[];
+EXTERN ZVALUE _seven_;
+
+EXTERN HALF _eightval_[];
+EXTERN ZVALUE _eight_;
+#endif
+
+EXTERN HALF _nineval_[];
+EXTERN ZVALUE _nine_;
+
+EXTERN HALF _tenval_[];
+EXTERN ZVALUE _ten_;
+
+EXTERN HALF _elevenval_[];
+EXTERN ZVALUE _eleven_;
+
+EXTERN HALF _twelveval_[];
+EXTERN ZVALUE _twelve_;
+
+EXTERN HALF _thirteenval_[];
+EXTERN ZVALUE _thirteen_;
+
+EXTERN HALF _fourteenval_[];
+EXTERN ZVALUE _fourteen_;
+
+EXTERN HALF _fifteenval_[];
+EXTERN ZVALUE _fifteen_;
+
+EXTERN HALF _sixteenval_[];
+EXTERN ZVALUE _sixteen_;
+
+EXTERN HALF _seventeenval_[];
+EXTERN ZVALUE _seventeen_;
+
+EXTERN HALF _eightteenval_[];
+EXTERN ZVALUE _eightteen_;
+
+EXTERN HALF _nineteenval_[];
+EXTERN ZVALUE _nineteen_;
+
+EXTERN HALF _twentyval_[];
+EXTERN ZVALUE _twenty_;
+
 EXTERN HALF _sqbaseval_[];
-EXTERN HALF _fourthbaseval_[];
-EXTERN HALF _threesixtyval_[], _fourhundredval_[], _twentyfourval_[];
+EXTERN ZVALUE _sqbase_;
 
-EXTERN ZVALUE zconst[];		/* ZVALUE integers from 0 thru 15 */
+EXTERN HALF _pow4baseval_[];
+EXTERN ZVALUE _pow4base_;
 
-EXTERN ZVALUE _zero_, _one_, _two_, _ten_, _neg_one_;
-EXTERN ZVALUE _sqbase_, _pow4base_, _pow8base_;
+EXTERN HALF _pow8baseval_[];
+EXTERN ZVALUE _pow8base_;
 
-EXTERN ZVALUE _b32_, _b64_;
+EXTERN HALF _threesixtyval_[];
+EXTERN ZVALUE _threesixty_;
+
+EXTERN HALF _fourhundredval_[];
+EXTERN ZVALUE _fourhundred_;
+
+EXTERN HALF _twentyfourval_[];
+EXTERN ZVALUE _fourhundred_;
+
+/* _b32_ is _sqbaseval_ or _pow4baseval_ depending on BASEB */
+EXTERN ZVALUE _b32_;
+
+/* _b64_ is _pow4baseval_ or _pow8baseval_ depending on BASEB */
+EXTERN ZVALUE _b64_;
+
+EXTERN HALF *half_tbl[];	/* preset HALF constants, NULL termated list */
 
 EXTERN BOOL _math_abort_;	/* nonzero to abort calculations */
 EXTERN ZVALUE _tenpowers_[];	/* table of 10^2^n */

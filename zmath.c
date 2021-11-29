@@ -35,53 +35,44 @@
 
 
 HALF _zeroval_[] = { 0 };
-HALF _oneval_[] = { 1 };
-HALF _twoval_[] = { 2 };
-HALF _threeval_[] = { 3 };
-HALF _fourval_[] = { 4 };
-HALF _fiveval_[] = { 5 };
-HALF _sixval_[] = { 6 };
-HALF _sevenval_[] = { 7 };
-HALF _eightval_[] = { 8 };
-HALF _nineval_[] = { 9 };
-HALF _tenval_[] = { 10 };
-HALF _elevenval_[] = { 11 };
-HALF _twelveval_[] = { 12 };
-HALF _thirteenval_[] = { 13 };
-HALF _fourteenval_[] = { 14 };
-HALF _fifteenval_[] = { 15 };
-HALF _sixteenval_[] = { 16 };
-HALF _seventeenval_[] = { 17 };
-HALF _eightteenval_[] = { 18 };
-HALF _nineteenval_[] = { 19 };
-HALF _twentyval_[] = { 20 };
-HALF _sqbaseval_[] = { 0, 1 };
-HALF _pow4baseval_[] = { 0, 0, 1 };
-HALF _pow8baseval_[] = { 0, 0, 0, 0, 1 };
-HALF _threesixtyval_[] = { 360 };
-HALF _fourhundredval_[] = { 400 };
-HALF _twentyfourval_[] = { 24 };
-
-ZVALUE zconst[] = {
-    { _zeroval_, 1, 0}, { _oneval_, 1, 0}, { _twoval_, 1, 0},
-    { _threeval_, 1, 0}, { _fourval_, 1, 0}, { _fiveval_, 1, 0},
-    { _sixval_, 1, 0}, { _sevenval_, 1, 0}, { _eightval_, 1, 0},
-    { _nineval_, 1, 0}, { _tenval_, 1, 0}, { _elevenval_, 1, 0},
-    { _twelveval_, 1, 0}, { _thirteenval_, 1, 0}, { _fourteenval_, 1, 0},
-    { _fifteenval_, 1, 0}, { _sixteenval_, 1, 0}, { _seventeenval_, 1, 0},
-    { _eightteenval_, 1, 0}, { _nineteenval_, 1, 0}, { _twentyval_, 1, 0},
-    { _threesixtyval_, 1, 0}, { _fourhundredval_, 1, 0},
-    { _twentyfourval_, 1, 0}
-};
-
 ZVALUE _zero_ = { _zeroval_, 1, 0};
+
+HALF _oneval_[] = { 1 };
 ZVALUE _one_ = { _oneval_, 1, 0 };
-ZVALUE _two_ = { _twoval_, 1, 0 };
-ZVALUE _ten_ = { _tenval_, 1, 0 };
-ZVALUE _sqbase_ = { _sqbaseval_, 2, 0 };
-ZVALUE _pow4base_ = { _pow4baseval_, 4, 0 };
-ZVALUE _pow8base_ = { _pow8baseval_, 4, 0 };
 ZVALUE _neg_one_ = { _oneval_, 1, 1 };
+
+HALF _twoval_[] = { 2 };
+ZVALUE _two_ = { _twoval_, 1, 0 };
+
+HALF _threeval_[] = { 3 };
+ZVALUE _three_ = { _threeval_, 1, 0 };
+
+HALF _fourval_[] = { 4 };
+ZVALUE _four_ = { _fourval_, 1, 0 };
+
+HALF _nineval_[] = { 9 };
+ZVALUE _nine_ = { _nineval_, 1, 0 };
+
+HALF _tenval_[] = { 10 };
+ZVALUE _ten_ = { _tenval_, 1, 0 };
+
+HALF _sqbaseval_[] = { 0, 1 };
+ZVALUE _sqbase_ = { _sqbaseval_, 2, 0 };
+
+HALF _pow4baseval_[] = { 0, 0, 1 };
+ZVALUE _pow4base_ = { _pow4baseval_, 4, 0 };
+
+HALF _pow8baseval_[] = { 0, 0, 0, 0, 1 };
+ZVALUE _pow8base_ = { _pow8baseval_, 4, 0 };
+
+HALF _threesixtyval_[] = { 360 };
+ZVALUE _threesixty_ = { _threesixtyval_, 4, 0 };
+
+HALF _fourhundredval_[] = { 400 };
+ZVALUE _fourhundred_ = { _fourhundredval_, 4, 0 };
+
+HALF _twentyfourval_[] = { 24 };
+ZVALUE _twentyfour_ = { _twentyfourval_, 4, 0 };
 
 /*
  * 2^64 as a ZVALUE
@@ -95,6 +86,26 @@ ZVALUE _b64_ = { _pow8baseval_, 5, 0 };
 #else
 	-=@=- BASEB not 16 or 32 -=@=-
 #endif
+
+/*
+ * ZVALUE - values that should not be freed
+ */
+HALF *half_tbl[] = {
+    _zeroval_,
+    _oneval_,
+    _twoval_,
+    _threeval_,
+    _fourval_,
+    _nineval_,
+    _tenval_,
+    _sqbaseval_,
+    _pow4baseval_,
+    _pow8baseval_,
+    _threesixtyval_,
+    _fourhundredval_,
+    _twentyfourval_,
+    NULL	/* must be last */
+};
 
 
 /*
@@ -260,11 +271,38 @@ alloc(LEN len)
 }
 
 
+/*
+ * is_const - determine if a HALF array is an pre-allocated array
+ *
+ * given:
+ * 	h	pointer to the beginning of the HALF array
+ *
+ * returns:
+ * 	TRUE - h is found in the half_tbl array
+ * 	FALSE - is is not found in the half_tbl array
+ */
+int
+is_const(HALF* h)
+{
+	HALF **h_p;	/* half_tbl array pointer */
+
+	/* search the half_tbl for h */
+	for (h_p = &half_tbl[0]; *h_p != NULL; ++h_p) {
+		if (h == *h_p) {
+			return TRUE;	/* found in the half_tbl array */
+		}
+	}
+
+	/* not found in the half_tbl array */
+	return FALSE;
+}
+
+
 #ifdef ALLOCTEST
 void
 freeh(HALF *h)
 {
-	if ((h != _zeroval_) && (h != _oneval_)) {
+	if (!is_const(h)) {
 		free(h);
 		++nfree;
 	}

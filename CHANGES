@@ -26,6 +26,11 @@ The following are the changes from calc version 2.14.0.9 to date:
 
     Fixed a few cases where v_subtype was not properly initialuzed.
 
+    Improved the way that internal pre-defined constants are managed.
+    Removed unused internal pre-defined constants.  Added code to
+    prevent an internal pre-defined constant (that was never allocated)
+    from being freed.
+
 
 The following are the changes from calc version 2.14.0.7 to 2.14.0.8:
 
