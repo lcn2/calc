@@ -658,55 +658,11 @@ EXTERN ZVALUE _three_;
 EXTERN HALF _fourval_[];
 EXTERN ZVALUE _four_;
 
-#if 0
-EXTERN HALF _fiveval_[];
-EXTERN ZVALUE _five_;
-
-EXTERN HALF _sixval_[];
-EXTERN ZVALUE _six_;
-
-EXTERN HALF _sevenval_[];
-EXTERN ZVALUE _seven_;
-
-EXTERN HALF _eightval_[];
-EXTERN ZVALUE _eight_;
-#endif
-
 EXTERN HALF _nineval_[];
 EXTERN ZVALUE _nine_;
 
 EXTERN HALF _tenval_[];
 EXTERN ZVALUE _ten_;
-
-EXTERN HALF _elevenval_[];
-EXTERN ZVALUE _eleven_;
-
-EXTERN HALF _twelveval_[];
-EXTERN ZVALUE _twelve_;
-
-EXTERN HALF _thirteenval_[];
-EXTERN ZVALUE _thirteen_;
-
-EXTERN HALF _fourteenval_[];
-EXTERN ZVALUE _fourteen_;
-
-EXTERN HALF _fifteenval_[];
-EXTERN ZVALUE _fifteen_;
-
-EXTERN HALF _sixteenval_[];
-EXTERN ZVALUE _sixteen_;
-
-EXTERN HALF _seventeenval_[];
-EXTERN ZVALUE _seventeen_;
-
-EXTERN HALF _eightteenval_[];
-EXTERN ZVALUE _eightteen_;
-
-EXTERN HALF _nineteenval_[];
-EXTERN ZVALUE _nineteen_;
-
-EXTERN HALF _twentyval_[];
-EXTERN ZVALUE _twenty_;
 
 EXTERN HALF _sqbaseval_[];
 EXTERN ZVALUE _sqbase_;
