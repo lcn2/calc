@@ -43,6 +43,7 @@
 
 #define STR_TABLECHUNK	100	/* how often to reallocate string table */
 #define STR_CHUNK	(1<<11)	/* size of string storage allocation */
+#define OCTET_VALUES	256	/* number of different values an OCTET can have */
 #define STR_UNIQUE	(1<<7)	/* size of string to allocate separately */
 
 STRING _nullstring_ = {"", 0, 1, NULL};
@@ -68,12 +69,14 @@ void
 initstr(STRINGHEAD *hp)
 {
 	if (hp->h_list == NULL) {
-		hp->h_list = (char *)malloc(2000);
+		/* alloc + 1 guard paranoia */
+		hp->h_list = (char *)malloc(STR_CHUNK + 1);
 		if (hp->h_list == NULL) {
 			math_error("Cannot allocate string header");
 			/*NOTREACHED*/
 		}
-		hp->h_avail = 2000;
+		hp->h_list[STR_CHUNK] = '\0';	/* guard paranoia */
+		hp->h_avail = STR_CHUNK;
 		hp->h_used = 0;
 	}
 	hp->h_avail += hp->h_used;
@@ -105,11 +108,14 @@ addstr(STRINGHEAD *hp, char *str)
 	if ((str == NULL) || (*str == '\0'))
 		return NULL;
 	len = strlen(str) + 1;
-	if (hp->h_avail <= len) {
-		newsize = len + 2000 + hp->h_used + hp->h_avail;
-		list = (char *)realloc(hp->h_list, newsize);
+	if (len >= hp->h_avail) {
+		/* alloc + 1 guard paranoia */
+		newsize = len + STR_CHUNK + hp->h_used + hp->h_avail + 1;
+		/* alloc + 1 guard paranoia */
+		list = (char *)realloc(hp->h_list, newsize + 1);
 		if (list == NULL)
 			return NULL;
+		list[newsize] = '\0';	/* guard paranoia */
 		hp->h_list = list;
 		hp->h_avail = newsize - hp->h_used;
 	}
@@ -134,16 +140,19 @@ charstr(int ch)
 	int i;
 
 	if (chartable == NULL) {
-		cp = (char *)malloc(512);
+		/* alloc + 1 guard paranoia */
+		cp = (char *)malloc((OCTET_VALUES + 1)*2);
 		if (cp == NULL) {
 			math_error("Cannot allocate character table");
 			/*NOTREACHED*/
 		}
-		for (i = 0; i < 256; i++) {
+		for (i = 0; i < OCTET_VALUES; i++) {
 			*cp++ = (char)i;
 			*cp++ = '\0';
 		}
-		chartable = cp - 512;
+		chartable = cp - (OCTET_VALUES*2);
+		*cp++ = '\0';	/* guard paranoia */
+		*cp++ = '\0';	/* guard paranoia */
 	}
 	return &chartable[(ch & 0xff) * 2];
 }
@@ -274,11 +283,16 @@ addliteral(char *str)
 	 */
 	if (literals.l_count >= literals.l_maxcount) {
 		count = literals.l_maxcount + STR_TABLECHUNK;
-		if (literals.l_maxcount)
-			table = (char **) realloc(literals.l_table, count *
+		if (literals.l_maxcount) {
+			/* alloc + 1 guard paranoia */
+			table = (char **) realloc(literals.l_table, (count + 1) *
 						  sizeof(char *));
-		else
-			table = (char **) malloc(count * sizeof(char *));
+			table[count] = NULL;	/* guard paranoia */
+		} else {
+			/* alloc + 1 guard paranoia */
+			table = (char **) malloc((count + 1) * sizeof(char *));
+			table[count] = NULL;	/* guard paranoia */
+		}
 		if (table == NULL) {
 			math_error("Cannot allocate string literal table");
 			/*NOTREACHED*/
@@ -296,11 +310,13 @@ addliteral(char *str)
 	 */
 	len = ROUNDUP(len+1, FULL_LEN);
 	if (len >= STR_UNIQUE) {
-		newstr = (char *)malloc(len);
+		/* alloc + 1 guard paranoia */
+		newstr = (char *)malloc(len + 1);
 		if (newstr == NULL) {
 			math_error("Cannot allocate large literal string");
 			/*NOTREACHED*/
 		}
+		table[len] = '\0';	/* guard paranoia */
 		strlcpy(newstr, str, len);
 		table[literals.l_count++] = newstr;
 		return newstr;
@@ -310,11 +326,13 @@ addliteral(char *str)
 	 * then allocate a new one.
 	 */
 	if (literals.l_avail < len) {
-		newstr = (char *)malloc(STR_CHUNK);
+		/* alloc + 1 guard paranoia */
+		newstr = (char *)malloc(STR_CHUNK + 1);
 		if (newstr == NULL) {
 			math_error("Cannot allocate new literal string");
 			/*NOTREACHED*/
 		}
+		newstr[STR_CHUNK] = '\0';	/* guard paranoia */
 		literals.l_alloc = newstr;
 		literals.l_avail = STR_CHUNK;
 	}
@@ -1106,11 +1124,13 @@ stralloc(void)
 	STRING **newfn;
 
 	if (freeStr == NULL) {
-		freeStr = (STRING *) malloc(sizeof (STRING) * STRALLOC);
+		/* alloc + 1 guard paranoia */
+		freeStr = (STRING *) malloc(sizeof (STRING) * (STRALLOC + 1));
 		if (freeStr == NULL) {
 			math_error("Unable to allocate memory for stralloc");
 			/*NOTREACHED*/
 		}
+		memset(freeStr+STRALLOC, 0, sizeof(STRING));	/* guard paranoia */
 		freeStr[STRALLOC - 1].s_next = NULL;
 		freeStr[STRALLOC - 1].s_links = 0;
 
@@ -1132,10 +1152,14 @@ stralloc(void)
 
 		blockcount++;
 		if (firstStrs == NULL) {
-		    newfn = (STRING **) malloc( blockcount * sizeof(STRING *));
+		    /* alloc + 1 guard paranoia */
+		    newfn = (STRING **) malloc((blockcount + 1) * sizeof(STRING *));
+		    newfn[blockcount] = NULL;	/* guard paranoia */
 		} else {
+		    /* alloc + 1 guard paranoia */
 		    newfn = (STRING **)
-			    realloc(firstStrs, blockcount * sizeof(STRING *));
+			    realloc(firstStrs, (blockcount + 1) * sizeof(STRING *));
+		    newfn[blockcount] = NULL;	/* guard paranoia */
 		}
 		if (newfn == NULL) {
 			math_error("Cannot allocate new string block");
@@ -1274,11 +1298,13 @@ STATIC STRING	**stringconsttable;
 void
 initstrings(void)
 {
-	stringconsttable = (STRING **) malloc(sizeof(STRING *) * STRCONSTALLOC);
+	/* alloc + 1 guard paranoia */
+	stringconsttable = (STRING **) malloc(sizeof(STRING *) * (STRCONSTALLOC + 1));
 	if (stringconsttable == NULL) {
 		math_error("Unable to allocate constant table");
 		/*NOTREACHED*/
 	}
+	stringconsttable[STRCONSTALLOC] = NULL;	/* guard paranoia */
 	stringconsttable[0] = &_nullstring_;
 	stringconstcount = 1;
 	stringconstavail = STRCONSTALLOC - 1;
@@ -1305,13 +1331,15 @@ addstring(char *str, size_t len)
 		if (stringconsttable == NULL) {
 			initstrings();
 		} else {
+			/* alloc + 1 guard paranoia */
 			sp = (STRING **) realloc((char *) stringconsttable,
-			sizeof(STRING *) * (stringconstcount + STRCONSTALLOC));
+			sizeof(STRING *) * (stringconstcount + STRCONSTALLOC + 1));
 			if (sp == NULL) {
 				math_error("Unable to reallocate string "
 					   "const table");
 				/*NOTREACHED*/
 			}
+			sp[stringconstcount + STRCONSTALLOC] = NULL;	/* guard paranoia */
 			stringconsttable = sp;
 			stringconstavail = STRCONSTALLOC;
 		}
