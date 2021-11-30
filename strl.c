@@ -93,7 +93,7 @@ strlcpy(char * dst, const char * src, size_t dstsize)
 	/*
 	 * perform the size limited copy and NUL terminate
 	 */
-	if (srclen > dstsize-1) {
+	if (srclen+1 > dstsize) {
 	    memcpy(dst, src, dstsize-1);
 	    dst[dstsize-1] = '\0';
 #if defined(STRL_TEST)
