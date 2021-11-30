@@ -2663,6 +2663,9 @@ zrandomskip(long cnt)
 		free(p_blum);
 	}
 	loglogn = (long)blum.loglogn;
+	new_r.len = 0;	/* paranoia */
+	new_r.v = NULL;
+	new_r.sign = 0;
 
 	/*
 	 * skip required bits in the buffer
@@ -2769,6 +2772,9 @@ zrandom(long cnt, ZVALUE *res)
 	}
 	loglogn = blum.loglogn;
 	mask = blum.mask;
+	new_r.len = 0;	/* paranoia */
+	new_r.v = NULL;
+	new_r.sign = 0;
 
 	/*
 	 * allocate storage
@@ -3062,23 +3068,16 @@ randomcopy(CONST RANDOM *state)
 void
 randomfree(RANDOM *state)
 {
-#if 0
-	/* avoid free of the pre-defined states */
-	if (state == &init_blum) {
-		return;
-	}
-	if (state >= &random_pregen[0] &&
-	    state <= &random_pregen[BLUM_PREGEN-1]) {
-		return;
-	}
-#endif
-
 	/* free the values */
 	zfree_random(state->n);
 	zfree_random(state->r);
 
 	/* free it if it is not pre-defined */
 	state->seeded = 0;
+	state->bits = 0;	/* paranoia */
+	state->buffer = 0;
+
+	/* free it if it is not pre-defined */
 	if (state != &blum) {
 		free(state);
 	}
