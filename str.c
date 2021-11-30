@@ -316,7 +316,7 @@ addliteral(char *str)
 			math_error("Cannot allocate large literal string");
 			/*NOTREACHED*/
 		}
-		table[len] = '\0';	/* guard paranoia */
+		newstr[len] = '\0';	/* guard paranoia */
 		strlcpy(newstr, str, len);
 		table[literals.l_count++] = newstr;
 		return newstr;
