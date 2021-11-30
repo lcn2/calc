@@ -1106,6 +1106,9 @@ f_randombit(int count, NUMBER **vals)
 	long cnt;		/* bits needed or skipped */
 
 	/* parse args */
+	ztmp.len = 0;  /* paranoia */
+	ztmp.v = NULL;
+	ztmp.sign = 0;
 	if (count == 0) {
 		zrandom(1, &ztmp);
 		ans = ziszero(ztmp) ? qlink(&_qzero_) : qlink(&_qone_);
