@@ -446,7 +446,7 @@ qisqrt(NUMBER *q)
 	}
 	zquo(q->num, q->den, &tmp, 0);
 	(void) zsqrt(tmp, &r->num,0);
-	freeh(tmp.v);
+	zfree(tmp);
 	return r;
 }
 
