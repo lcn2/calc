@@ -31,6 +31,10 @@ The following are the changes from calc version 2.14.0.9 to date:
     prevent an internal pre-defined constant (that was never allocated)
     from being freed.
 
+    Remove unnecessary spaces inbetween or next to tabs.
+
+    Update copright dates to account for 2021 modifications.
+
 
 The following are the changes from calc version 2.14.0.7 to 2.14.0.8:
 
