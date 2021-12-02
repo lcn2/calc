@@ -1093,6 +1093,15 @@ STATIC RANDOM blum;
 
 
 /*
+ * static constants 3 and 4 used by zsrandom4
+ */
+STATIC HALF _threeval_[] = { 3 };
+STATIC ZVALUE _three_ = { _threeval_, 1, 0 };
+STATIC HALF _fourval_[] = { 4 };
+STATIC ZVALUE _four_ = { _fourval_, 1, 0 };
+
+
+/*
  * Default Blum generator
  *
  * The init_blum generator is established via the srandom(0) call.

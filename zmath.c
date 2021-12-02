@@ -44,15 +44,6 @@ ZVALUE _neg_one_ = { _oneval_, 1, 1 };
 HALF _twoval_[] = { 2 };
 ZVALUE _two_ = { _twoval_, 1, 0 };
 
-HALF _threeval_[] = { 3 };
-ZVALUE _three_ = { _threeval_, 1, 0 };
-
-HALF _fourval_[] = { 4 };
-ZVALUE _four_ = { _fourval_, 1, 0 };
-
-HALF _nineval_[] = { 9 };
-ZVALUE _nine_ = { _nineval_, 1, 0 };
-
 HALF _tenval_[] = { 10 };
 ZVALUE _ten_ = { _tenval_, 1, 0 };
 
@@ -64,15 +55,6 @@ ZVALUE _pow4base_ = { _pow4baseval_, 4, 0 };
 
 HALF _pow8baseval_[] = { 0, 0, 0, 0, 1 };
 ZVALUE _pow8base_ = { _pow8baseval_, 4, 0 };
-
-HALF _threesixtyval_[] = { 360 };
-ZVALUE _threesixty_ = { _threesixtyval_, 4, 0 };
-
-HALF _fourhundredval_[] = { 400 };
-ZVALUE _fourhundred_ = { _fourhundredval_, 4, 0 };
-
-HALF _twentyfourval_[] = { 24 };
-ZVALUE _twentyfour_ = { _twentyfourval_, 4, 0 };
 
 /*
  * 2^64 as a ZVALUE
@@ -94,16 +76,10 @@ HALF *half_tbl[] = {
     _zeroval_,
     _oneval_,
     _twoval_,
-    _threeval_,
-    _fourval_,
-    _nineval_,
     _tenval_,
     _sqbaseval_,
     _pow4baseval_,
     _pow8baseval_,
-    _threesixtyval_,
-    _fourhundredval_,
-    _twentyfourval_,
     NULL	/* must be last */
 };
 

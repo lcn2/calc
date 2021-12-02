@@ -652,15 +652,6 @@ EXTERN ZVALUE _neg_one_;
 EXTERN HALF _twoval_[];
 EXTERN ZVALUE _two_;
 
-EXTERN HALF _threeval_[];
-EXTERN ZVALUE _three_;
-
-EXTERN HALF _fourval_[];
-EXTERN ZVALUE _four_;
-
-EXTERN HALF _nineval_[];
-EXTERN ZVALUE _nine_;
-
 EXTERN HALF _tenval_[];
 EXTERN ZVALUE _ten_;
 
@@ -672,15 +663,6 @@ EXTERN ZVALUE _pow4base_;
 
 EXTERN HALF _pow8baseval_[];
 EXTERN ZVALUE _pow8base_;
-
-EXTERN HALF _threesixtyval_[];
-EXTERN ZVALUE _threesixty_;
-
-EXTERN HALF _fourhundredval_[];
-EXTERN ZVALUE _fourhundred_;
-
-EXTERN HALF _twentyfourval_[];
-EXTERN ZVALUE _fourhundred_;
 
 /* _b32_ is _sqbaseval_ or _pow4baseval_ depending on BASEB */
 EXTERN ZVALUE _b32_;

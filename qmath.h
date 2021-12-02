@@ -272,9 +272,7 @@ static inline NUMBER* qlink(NUMBER* q) { if(q) { (q)->links++; } return q; }
  * constants used often by the arithmetic routines
  */
 EXTERN NUMBER _qzero_, _qone_, _qnegone_, _qonehalf_, _qneghalf_, _qonesqbase_;
-EXTERN NUMBER _qtwo_, _qthree_, _qfour_, _qten_;
-EXTERN NUMBER _qtendivnine_, _qninedivten_;
-EXTERN NUMBER _qthreesixty, _qfourhundred, _qtwentyfour;
+EXTERN NUMBER _qtwo_, _qten_;
 EXTERN NUMBER * initnumbs[];
 
 
