@@ -232,6 +232,7 @@ showallglobals(void)
 		printf("No global variables\n");
 }
 
+
 S_FUNC void
 printtype(VALUE *vp)
 {
@@ -359,6 +360,7 @@ writeglobals(char *name)
 		return 1;
 	return 0;
 }
+
 
 /*
  * Free all non-null global and visible static variables
