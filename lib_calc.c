@@ -637,6 +637,11 @@ libcalc_call_me_last(void)
 	}
 
 	/*
+	 * free all globals
+	 */
+	freeglobals();
+
+	/*
 	 * all done
 	 */
 	init_done = 0;
