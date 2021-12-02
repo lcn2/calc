@@ -43,7 +43,7 @@
 
 #define STR_TABLECHUNK	100	/* how often to reallocate string table */
 #define STR_CHUNK	(1<<11)	/* size of string storage allocation */
-#define OCTET_VALUES	256	/* number of different values an OCTET can have */
+#define OCTET_VALUES	256	/* number of different values in a OCTET */
 #define STR_UNIQUE	(1<<7)	/* size of string to allocate separately */
 
 STRING _nullstring_ = {"", 0, 1, NULL};
@@ -285,8 +285,8 @@ addliteral(char *str)
 		count = literals.l_maxcount + STR_TABLECHUNK;
 		if (literals.l_maxcount) {
 			/* alloc + 1 guard paranoia */
-			table = (char **) realloc(literals.l_table, (count + 1) *
-						  sizeof(char *));
+			table = (char **) realloc(literals.l_table,
+						 (count + 1) * sizeof(char *));
 			table[count] = NULL;	/* guard paranoia */
 		} else {
 			/* alloc + 1 guard paranoia */
@@ -1130,7 +1130,8 @@ stralloc(void)
 			math_error("Unable to allocate memory for stralloc");
 			/*NOTREACHED*/
 		}
-		memset(freeStr+STRALLOC, 0, sizeof(STRING));	/* guard paranoia */
+		/* guard paranoia */
+		memset(freeStr+STRALLOC, 0, sizeof(STRING));
 		freeStr[STRALLOC - 1].s_next = NULL;
 		freeStr[STRALLOC - 1].s_links = 0;
 
@@ -1153,12 +1154,14 @@ stralloc(void)
 		blockcount++;
 		if (firstStrs == NULL) {
 		    /* alloc + 1 guard paranoia */
-		    newfn = (STRING **) malloc((blockcount + 1) * sizeof(STRING *));
+		    newfn = (STRING **)
+			    malloc((blockcount + 1) * sizeof(STRING *));
 		    newfn[blockcount] = NULL;	/* guard paranoia */
 		} else {
 		    /* alloc + 1 guard paranoia */
 		    newfn = (STRING **)
-			    realloc(firstStrs, (blockcount + 1) * sizeof(STRING *));
+			    realloc(firstStrs,
+				    (blockcount + 1) * sizeof(STRING *));
 		    newfn[blockcount] = NULL;	/* guard paranoia */
 		}
 		if (newfn == NULL) {
@@ -1299,7 +1302,8 @@ void
 initstrings(void)
 {
 	/* alloc + 1 guard paranoia */
-	stringconsttable = (STRING **) malloc(sizeof(STRING *) * (STRCONSTALLOC + 1));
+	stringconsttable = (STRING **)
+			   malloc(sizeof(STRING *) * (STRCONSTALLOC + 1));
 	if (stringconsttable == NULL) {
 		math_error("Unable to allocate constant table");
 		/*NOTREACHED*/
@@ -1332,14 +1336,17 @@ addstring(char *str, size_t len)
 			initstrings();
 		} else {
 			/* alloc + 1 guard paranoia */
-			sp = (STRING **) realloc((char *) stringconsttable,
-			sizeof(STRING *) * (stringconstcount + STRCONSTALLOC + 1));
+			sp = (STRING **)
+			     realloc((char *) stringconsttable,
+				     sizeof(STRING *) *
+				     (stringconstcount + STRCONSTALLOC + 1));
 			if (sp == NULL) {
 				math_error("Unable to reallocate string "
 					   "const table");
 				/*NOTREACHED*/
 			}
-			sp[stringconstcount + STRCONSTALLOC] = NULL;	/* guard paranoia */
+			/* guard paranoia */
+			sp[stringconstcount + STRCONSTALLOC] = NULL;
 			stringconsttable = sp;
 			stringconstavail = STRCONSTALLOC;
 		}

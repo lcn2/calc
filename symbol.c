@@ -110,7 +110,8 @@ addglobal(char *name, BOOL isstatic)
 		return NULL;
 	hp = &globalhash[HASHSYM(name, len)];
 	for (sp = *hp; sp; sp = sp->g_next) {
-		if ((sp->g_len == len) && (strncmp(sp->g_name, name, len+1) == 0)
+		if ((sp->g_len == len) &&
+		    (strncmp(sp->g_name, name, len+1) == 0)
 			&& (sp->g_filescope == newfilescope)
 			&& (sp->g_funcscope == newfuncscope))
 				return sp;
@@ -146,7 +147,8 @@ findglobal(char *name)
 	bestsp = NULL;
 	len = strlen(name);
 	for (sp = globalhash[HASHSYM(name, len)]; sp != NULL; sp = sp->g_next) {
-		if ((sp->g_len == len) && (strncmp(sp->g_name, name, len+1) == 0)) {
+		if ((sp->g_len == len) &&
+		   (strncmp(sp->g_name, name, len+1) == 0)) {
 			if ((bestsp == NULL) ||
 				(sp->g_filescope > bestsp->g_filescope) ||
 				 (sp->g_funcscope > bestsp->g_funcscope))

@@ -161,11 +161,16 @@ STATIC HALF _nineval_[] = { 9 };
 STATIC HALF _twentyfourval_[] = { 24 };
 STATIC HALF _threesixtyval_[] = { 360 };
 STATIC HALF _fourhundredval_[] = { 400 };
-STATIC NUMBER _qtendivnine_ = { { _tenval_, 1, 0 }, { _nineval_, 1, 0 }, 1, NULL };
-STATIC NUMBER _qninedivten_ = { { _nineval_, 1, 0 }, { _tenval_, 1, 0 }, 1, NULL };
-STATIC NUMBER _qtwentyfour = { { _twentyfourval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
-STATIC NUMBER _qthreesixty = { { _threesixtyval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
-STATIC NUMBER _qfourhundred = { { _fourhundredval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
+STATIC NUMBER _qtendivnine_ = { { _tenval_, 1, 0 },
+				{ _nineval_, 1, 0 }, 1, NULL };
+STATIC NUMBER _qninedivten_ = { { _nineval_, 1, 0 },
+				{ _tenval_, 1, 0 }, 1, NULL };
+STATIC NUMBER _qtwentyfour = { { _twentyfourval_, 1, 0 },
+			       { _oneval_, 1, 0 }, 1, NULL };
+STATIC NUMBER _qthreesixty = { { _threesixtyval_, 1, 0 },
+			       { _oneval_, 1, 0 }, 1, NULL };
+STATIC NUMBER _qfourhundred = { { _fourhundredval_, 1, 0 },
+				{ _oneval_, 1, 0 }, 1, NULL };
 
 
 /*

@@ -579,7 +579,12 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 #define zcopyval(z1,z2) memcpy((z2).v, (z1).v, (z1).len * sizeof(HALF))
 #define zquicktrim(z)	{if (((z).len > 1) && ((z).v[(z).len-1] == 0)) \
 				(z).len--;}
-#define zfree(z)	{if ((z).len != 0 && (z).v != NULL) { freeh((z).v); (z).v = NULL; (z).len = 0; (z).sign = 0; } }
+#define zfree(z)	{if ((z).len != 0 && (z).v != NULL) { \
+			    freeh((z).v); \
+			    (z).v = NULL; \
+			    (z).len = 0; \
+			    (z).sign = 0; } \
+			}
 
 
 /*
