@@ -216,7 +216,7 @@ Your program must handle parse/scan errors in one of two ways:
 		    /* report the parse/scan */
 		    if (calc_use_scanerr_jmpbuf == 0) {
 			    printf("parse error: %s\n", calc_err_msg);
-	    	    }
+		    }
 
 		    /* initialize calc after the longjmp */
 		    initialize();

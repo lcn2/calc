@@ -461,7 +461,7 @@ uninstall:
 		continue; \
 	    fi; \
 	    if [ -f "${T}${CALC_SHAREDIR}/$$i" ]; then \
-	    	${RM} -f "${T}${CALC_SHAREDIR}/$$i"; \
+		${RM} -f "${T}${CALC_SHAREDIR}/$$i"; \
 		if [ -f "${T}${CALC_SHAREDIR}/$$i" ]; then \
 		   echo "cannot uninstall ${T}${CALC_SHAREDIR}/$$i"; \
 		else \

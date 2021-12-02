@@ -49,7 +49,7 @@
 #	%_gpgbin	/usr/bin/gpg
 
 # IMPORTANT NOTE: Unless the package redhat-rpm-config is installed,
-#	 	  the calc-debuginfo rpm will not be created.
+#		  the calc-debuginfo rpm will not be created.
 #
 # IMPORTANT NOTE: These packages are important for general
 #		  rpm processing:
@@ -266,7 +266,7 @@ chkpkg:
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	for i in "$(RPM_TOP)/RPMS/$(TARCH)/$(RPMx86_64)" \
 		 "$(RPM_TOP)/RPMS/$(TARCH)/$(DRPMx86_64)" \
-	  	 "$(RPM_TOP)/SRPMS/$(SRPM)" ; do \
+		 "$(RPM_TOP)/SRPMS/$(SRPM)" ; do \
 	    echo "***** start $$i" ; \
 	    ${RPM_TOOL} -qpi "$$"i ; \
 	    echo "***** files $$i" ; \

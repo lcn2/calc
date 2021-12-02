@@ -163,7 +163,7 @@ DESCRIPTION
 				printf(" [%d,%d]: %e", i, j, A[i,j]);
 			if (i != matmax(A,1))
 				printf("\n");
-	 	}
+		}
 	}
 
     So that when one defines a 2D matrix such as:

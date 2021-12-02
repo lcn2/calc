@@ -497,7 +497,7 @@ uninstall:
 		continue; \
 	    fi; \
 	    if [ -f "${T}${SCRIPTDIR}/$$i" ]; then \
-	    	${RM} -f "${T}${SCRIPTDIR}/$$i"; \
+		${RM} -f "${T}${SCRIPTDIR}/$$i"; \
 		if [ -f "${T}${SCRIPTDIR}/$$i" ]; then \
 		   echo "cannot uninstall ${T}${SCRIPTDIR}/$$i"; \
 		else \

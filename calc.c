@@ -277,14 +277,14 @@ main(int argc, char **argv)
 					if (nextcp(&cp, &index, argc, argv,
 						   FALSE)) {
 					    fprintf(stderr,
-					    	    "-D expects argument\n");
+						    "-D expects argument\n");
 					    exit(5);
 					}
 					havearg = TRUE;
 					if (*cp != ':') {
 						if (*cp < '0' || *cp > '9') {
 						    fprintf(stderr,
-						    	    "-D expects"
+							    "-D expects"
 							    " integer\n");
 						    exit(6);
 						}
@@ -296,13 +296,13 @@ main(int argc, char **argv)
 						if (*cp != '\0' &&
 						    *cp != ' ' && *cp != ':') {
 						    fprintf(stderr,
-						    	    "Bad syntax im -D"
+							    "Bad syntax im -D"
 							    " arg\n");
 						    exit(7);
 						}
 						if (*cp != ':') {
 						    if (nextcp(&cp, &index,
-						    	       argc, argv,
+							       argc, argv,
 							       FALSE)
 								|| *cp != ':')
 							break;
@@ -318,7 +318,7 @@ main(int argc, char **argv)
 					if (*cp != ':') {
 						if (*cp < '0' || *cp > '9') {
 						    fprintf(stderr,
-						    	    "-D : expects"
+							    "-D : expects"
 							    " integer\n");
 						    exit(9);
 						}
@@ -330,13 +330,13 @@ main(int argc, char **argv)
 						if (*cp != '\0' &&
 						    *cp != ' ' && *cp != ':') {
 						    fprintf(stderr,
-						    	    "Bad syntax im -D"
+							    "Bad syntax im -D"
 							    " : arg\n");
 						    exit(10);
 						}
 						if (*cp != ':') {
 							if (nextcp(&cp, &index,
-						    	           argc, argv,
+								   argc, argv,
 							           FALSE)
 							    || *cp != ':') {
 								break;
@@ -346,12 +346,12 @@ main(int argc, char **argv)
 					if (nextcp(&cp, &index, argc, argv,
 						   FALSE)) {
 					    fprintf(stderr, "-D : : expects"
-					    	    " argument\n");
+						    " argument\n");
 					    exit(11);
 					}
 					if (*cp < '0' || *cp > '9') {
 					    fprintf(stderr, "-D :: expects"
-					    	    " integer\n");
+						    " integer\n");
 					    exit(12);
 					}
 					user_debug = cp;
@@ -398,7 +398,7 @@ main(int argc, char **argv)
 						if (nextcp(&cp, &index, argc,
 							   argv, haveendstr)) {
 						    fprintf(stderr, "-f -once"
-						    	    " expects"
+							    " expects"
 							    " filename\n");
 						    exit(16);
 						}

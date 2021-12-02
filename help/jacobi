@@ -75,7 +75,7 @@ DESCRIPTION
 
 	jacobi(x,y) == 0			if x <= 0
 	jacobi(x,y) == 0			if y <= 0
-	jacobi(x,y) == 0	    		if y is even
+	jacobi(x,y) == 0			if y is even
 
 	jacobi(x,b) == 0			if gcd(x,b) > 1
 
@@ -105,7 +105,7 @@ DESCRIPTION
 
     It is also worth noting that:
 
-	jacobi(x,y) == 0 			if gcd(y,x) != 1
+	jacobi(x,y) == 0			if gcd(y,x) != 1
 	jacobi(y,y) == 0			if y > 1
 
     Based on the generalization of the quadratic reciprocity theorem,
@@ -125,8 +125,8 @@ DESCRIPTION
 
     When b is odd:
 
-	jacobi(x^2,b) == 1 				if gcd(x,b) == 1
-	jacobi(x,b^2) == 1 				if gcd(x,b) == 1
+	jacobi(x^2,b) == 1				if gcd(x,b) == 1
+	jacobi(x,b^2) == 1				if gcd(x,b) == 1
 
 	jacobi(x0,b) == jacobi(x1,b)			if x0 == x1 % b
 
@@ -162,7 +162,7 @@ DESCRIPTION
 	j = 1;
 	while (x != 0) {
 	    while (iseven(x)) {
-	    	x = x / 2;
+		x = x / 2;
 		t = b % 8;
 		if (t == 3 || t == 5) {
 		    j = -j;
@@ -170,7 +170,7 @@ DESCRIPTION
 	    }
 	    swap(x,b);
 	    if (((x % 4) == 3) && ((b % 4) == 3)) {
-	    	j = -j;
+		j = -j;
 	    }
 	    x = x % b;
 	}

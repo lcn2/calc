@@ -497,7 +497,7 @@ define best_mul2()
 	    low = mid;
 	    high = mid;
 	    if (config("user_debug") > 0) {
-	    	printf("\twe are close enough to unity ratio at: %d\n", mid);
+		printf("\twe are close enough to unity ratio at: %d\n", mid);
 	    }
 	    break;
 	}
@@ -505,7 +505,7 @@ define best_mul2()
 	/* bump lower range up if we went over */
 	if (ratio > 1.0) {
 	    if (config("user_debug") > 2) {
-	    	printf("\tmove low from %d up to %d\n",
+		printf("\tmove low from %d up to %d\n",
 		    low, mid);
 	    }
 	    low = mid;
@@ -513,7 +513,7 @@ define best_mul2()
 	/* drop higher range down if we went under */
 	} else {
 	    if (config("user_debug") > 2) {
-	    	printf("\tmove high from %d down to %d\n",
+		printf("\tmove high from %d down to %d\n",
 		     high, mid);
 	    }
 	    high = mid;
@@ -522,7 +522,7 @@ define best_mul2()
 	/* report on test loop progress */
 	if (config("user_debug") > 1) {
 	    printf("\tsetting low: %d high: %d diff: %d\n",
-	    	   low, high, high-low);
+		   low, high, high-low);
 	}
     }
 
@@ -884,7 +884,7 @@ define best_sq2()
 	high *= expand;
 	if (config("user_debug") > 1) {
 	    printf("    expand the next test range by a factor of %d\n",
-	    	   expand);
+		   expand);
 	}
 
 	/*
@@ -979,7 +979,7 @@ define best_sq2()
 	    low = mid;
 	    high = mid;
 	    if (config("user_debug") > 0) {
-	    	printf("\twe are close enough to unity ratio at: %d\n", mid);
+		printf("\twe are close enough to unity ratio at: %d\n", mid);
 	    }
 	    break;
 	}
@@ -987,7 +987,7 @@ define best_sq2()
 	/* bump lower range up if we went over */
 	if (ratio > 1.0) {
 	    if (config("user_debug") > 2) {
-	    	printf("\tmove low from %d up to %d\n",
+		printf("\tmove low from %d up to %d\n",
 		    low, mid);
 	    }
 	    low = mid;
@@ -995,7 +995,7 @@ define best_sq2()
 	/* drop higher range down if we went under */
 	} else {
 	    if (config("user_debug") > 2) {
-	    	printf("\tmove high from %d down to %d\n",
+		printf("\tmove high from %d down to %d\n",
 		     high, mid);
 	    }
 	    high = mid;
@@ -1004,7 +1004,7 @@ define best_sq2()
 	/* report on test loop progress */
 	if (config("user_debug") > 1) {
 	    printf("\tsetting low: %d high: %d diff: %d\n",
-	    	   low, high, high-low);
+		   low, high, high-low);
 	}
     }
 
@@ -1385,7 +1385,7 @@ define best_pow2()
 	    printf("    pmod alg1/alg2 ratio = %.3f\n", ratio);
 	    if (ratio > 1.0 && ratio <= 1.02) {
 	    printf("    while alg1 is slightly better than alg2, "
-	    	   "it is not clearly better\n");
+		   "it is not clearly better\n");
 	    }
 	}
     } while (ratio <= 1.02);
@@ -1420,7 +1420,7 @@ define best_pow2()
 	high *= expand;
 	if (config("user_debug") > 1) {
 	    printf("    expand the next test range by a factor of %d\n",
-	    	   expand);
+		   expand);
 	}
 
 	/*
@@ -1478,7 +1478,7 @@ define best_pow2()
 	    low = mid;
 	    high = mid;
 	    if (config("user_debug") > 0) {
-	    	printf("\twe are close enough to unity ratio at: %d\n", mid);
+		printf("\twe are close enough to unity ratio at: %d\n", mid);
 	    }
 	    break;
 	}
@@ -1486,7 +1486,7 @@ define best_pow2()
 	/* bump lower range up if we went over */
 	if (ratio > 1.0) {
 	    if (config("user_debug") > 2) {
-	    	printf("\tmove low from %d up to %d\n",
+		printf("\tmove low from %d up to %d\n",
 		    low, mid);
 	    }
 	    low = mid;
@@ -1494,7 +1494,7 @@ define best_pow2()
 	/* drop higher range down if we went under */
 	} else {
 	    if (config("user_debug") > 2) {
-	    	printf("\tmove high from %d down to %d\n",
+		printf("\tmove high from %d down to %d\n",
 		     high, mid);
 	    }
 	    high = mid;
@@ -1503,7 +1503,7 @@ define best_pow2()
 	/* report on test loop progress */
 	if (config("user_debug") > 1) {
 	    printf("\tsetting low: %d high: %d diff: %d\n",
-	    	   low, high, high-low);
+		   low, high, high-low);
 	}
     }
 

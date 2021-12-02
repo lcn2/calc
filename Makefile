@@ -383,7 +383,7 @@ update_version:
 	    fi; \
 	    ${RM} -f "$$i.tmp"; \
 	    ${SED} -e 's/^VERSION=.*/VERSION= '"$$CALC_VERSION"'/' \
-	    	   $$i > $$i.tmp; \
+		   $$i > $$i.tmp; \
 	    if ${CMP} -s "$$i" "$$i.tmp"; then \
 		${RM} -f "$$i.tmp"; \
 		echo "versions already up to date in $$i"; \

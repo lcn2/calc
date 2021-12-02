@@ -135,7 +135,7 @@ Using objects
 	    xx_print    1	print value, default prints elements
 	    xx_one      1	multiplicative identity, default is 1
 	    xx_test     1	logical test (false,true => 0,1),
-	    			  default tests elements
+				  default tests elements
 	    xx_add      2
 	    xx_sub      2
 	    xx_neg      1	negative
@@ -146,10 +146,10 @@ Using objects
 	    xx_norm     1	square of absolute value
 	    xx_conj     1	conjugate
 	    xx_pow      2	integer power, default does multiply,
-	    			  square, inverse
+				  square, inverse
 	    xx_sgn      1	sign of value (-1, 0, 1)
 	    xx_cmp      2	equality (equal,nonequal => 0,1),
-	    			   default tests elements
+				   default tests elements
 	    xx_rel      2	relative order, positive for >, etc.
 	    xx_quo      3	integer quotient
 	    xx_mod      3	remainder of division

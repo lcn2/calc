@@ -29,13 +29,13 @@ Statements
 
 	    This works as expected:
 
-	    	if (expr) {
+		if (expr) {
 		    ...
 		}
 
 	    However this WILL NOT WORK AS EXPECTED:
 
-	    	if (expr)
+		if (expr)
 		{
 		    ...
 		}
@@ -43,7 +43,7 @@ Statements
 	    because calc will parse the if being terminated by
 	    an empty statement followed by a
 
-	    	if (expr) ;
+		if (expr) ;
 		{
 		    ...
 		}
@@ -294,7 +294,7 @@ Statements
 	    help command	top level commands
 	    help expression	calc expression syntax
 	    help builtin	calc builtin functions
-	    help usage	    	how to invoke the calc command and calc -options
+	    help usage		how to invoke the calc command and calc -options
 
     You may obtain help on individual builtin functions.  For example:
 

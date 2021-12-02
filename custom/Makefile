@@ -1708,7 +1708,7 @@ uninstall:
 		continue; \
 	    fi; \
 	    if [ -f "${T}${CUSTOMHELPDIR}/$$i" ]; then \
-	    	${RM} -f "${T}${CUSTOMHELPDIR}/$$i"; \
+		${RM} -f "${T}${CUSTOMHELPDIR}/$$i"; \
 		if [ -f "${T}${CUSTOMHELPDIR}/$$i" ]; then \
 		   echo "cannot uninstall ${T}${CUSTOMHELPDIR}/$$i"; \
 		else \
@@ -1721,7 +1721,7 @@ uninstall:
 		continue; \
 	    fi; \
 	    if [ -f "${T}${CUSTOMCALDIR}/$$i" ]; then \
-	    	${RM} -f "${T}${CUSTOMCALDIR}/$$i"; \
+		${RM} -f "${T}${CUSTOMCALDIR}/$$i"; \
 		if [ -f "${T}${CUSTOMCALDIR}/$$i" ]; then \
 		   echo "cannot uninstall ${T}${CUSTOMCALDIR}/$$i"; \
 		else \
@@ -1734,7 +1734,7 @@ uninstall:
 		continue; \
 	    fi; \
 	    if [ -f "${T}${CUSTOMINCDIR}/$$i" ]; then \
-	    	${RM} -f "${T}${CUSTOMINCDIR}/$$i"; \
+		${RM} -f "${T}${CUSTOMINCDIR}/$$i"; \
 		if [ -f "${T}${CUSTOMINCDIR}/$$i" ]; then \
 		   echo "cannot uninstall ${T}${CUSTOMINCDIR}/$$i"; \
 		else \

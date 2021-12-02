@@ -87,7 +87,7 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 	    BINDIR		Where to install calc binary files.
 	    LIBDIR		Where to install calc link library (*.a) files.
 	    CALC_SHAREDIR	Where to install calc help, .cal, startup, and
-	    			config files.
+				config files.
 
 	You may want to change the default installation locations for
 	these values, which are based on the 4 values listed above:
@@ -108,13 +108,13 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 
 	    For example, if:
 
-	    	BINDIR= /usr/bin
+		BINDIR= /usr/bin
 		LIBDIR= /usr/lib
 		CALC_SHAREDIR= /usr/share/calc
 
 	    and if:
 
-	    	T= /var/tmp/testing
+		T= /var/tmp/testing
 
 	    Then the installation locations will be:
 

@@ -96,16 +96,16 @@ S_FUNC QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
  *	the next 32 bit QCKHASH
  *
  * Example:
- * 	QCKHASH val;
- * 	int x;
+ *	QCKHASH val;
+ *	int x;
  *
- * 	quasi_fnv(x, val);
+ *	quasi_fnv(x, val);
  *
  * NOTE: The (x) argument may be an expression such as something with
- * 	 a ++ or --.  The macro must only use (x) once.
+ *	 a ++ or --.  The macro must only use (x) once.
  *
  * NOTE: The (val) argument just be a lvalue / something to which
- * 	 a value can be assigned.
+ *	 a value can be assigned.
  *
  * The careful observer will note that (x) need not be a simple
  * octet.  This is not a bug, but a feature.  The FNV hash was
@@ -366,7 +366,7 @@ randhash(RAND *r, QCKHASH val)
 		return V_RAND+val;
 	} else {
 		/* hash control values */
-	    	val += V_RAND;
+		val += V_RAND;
 		quasi_fnv(r->j, val);
 		quasi_fnv(r->k, val);
 		quasi_fnv(r->bits, val);

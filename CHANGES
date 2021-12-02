@@ -1573,7 +1573,7 @@ The following are the changes from calc version 2.12.1.10 to 2.12.2:
 	NOTE: If your target is not supported below and the default target
 	      is not suitable for your needs, please send to the:
 
-	      	calc-contrib at asthe dot com
+		calc-contrib at asthe dot com
 
 	      Email address an "ifeq ($(target),YOUR_TARGET_NAME)"
 	      ... "endif" set of lines from the Makefile so that
@@ -2472,7 +2472,7 @@ The following are the changes from calc version 2.11.8.0 to 2.11.8.1:
 	     and oldstd	     -n & newstd     classic cfg      default
 	     --------------------------------------------------------
     epsilon	1e-20		1e-10		1e-20		1e-20
-    quo	    	2		2		2		2
+    quo		2		2		2		2
     outround	2		24		2		24
     leadzero	0		1		0		1
     fullzero	0		1		0		0

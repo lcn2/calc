@@ -754,9 +754,9 @@ endif
 #	LIBDIR= ${PREFIX}/lib
 #	CALC_SHAREDIR= ${PREFIX}/share/calc
 #
-# 	NOTE: Starting with macOS El Capitan OS X 10.11, root by default
-# 	      could not mkdir under system locations, so macOS must now
-# 	      use the ${PREFIX} tree.
+#	NOTE: Starting with macOS El Capitan OS X 10.11, root by default
+#	      could not mkdir under system locations, so macOS must now
+#	      use the ${PREFIX} tree.
 
 #if 0	/* start of skip for non-Gnu makefiles */
 ifeq ($(target),Darwin)
@@ -955,12 +955,12 @@ CATEXT= 1
 #     If NROFF is non-empty, then
 #
 #	  ${NROFF} ${NROFF_ARG} calc.1 > ${CATDIR}/calc.${CATEXT}
-#	  	   is used to build and install the cat page
+#		   is used to build and install the cat page
 #
 #     else (NROFF is empty)
 #
 #	  ${MANMAKE} calc.1 ${CATDIR}
-#	  	     is used to build and install the cat page
+#		     is used to build and install the cat page
 # else
 #
 #     The cat page is not built or installed
@@ -5070,7 +5070,7 @@ endif
 	fi
 	-${Q} if [ -f calc-static${EXT} ]; then \
 	    if ${CMP} -s calc-static${EXT} \
-	    		 ${T}${BINDIR}/calc-static${EXT}; then \
+			 ${T}${BINDIR}/calc-static${EXT}; then \
 		${TRUE}; \
 	    else \
 		${RM} -f ${T}${BINDIR}/calc-static.new${EXT}; \
@@ -5123,23 +5123,23 @@ endif
 	else \
 	    ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
 	    ${CP} -f libcalc${LIB_EXT_VERSION} \
-	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
+		     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
 	    ${CHMOD} 0644 ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
 	    ${MV} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new \
-	    	     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}; \
+		     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
 	    ${LN} -f -s libcalc${LIB_EXT_VERSION} \
-	    		${T}${LIBDIR}/libcalc${LIB_EXT}; \
+			${T}${LIBDIR}/libcalc${LIB_EXT}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
 	    ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
 	    ${CP} -f custom/libcustcalc${LIB_EXT_VERSION} \
-	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
+		     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
 	    ${CHMOD} 0644 ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
 	    ${MV} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new \
-	    	     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}; \
+		     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}; \
 	    echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}"; \
 	    ${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
-	    		${T}${LIBDIR}/libcustcalc${LIB_EXT}; \
+			${T}${LIBDIR}/libcustcalc${LIB_EXT}; \
 	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
 	    if [ -z "${T}" -o "/" = "${T}" ]; then \
 		if [ ! -z "${LDCONFIG}" ]; then \
@@ -5402,7 +5402,7 @@ calc-symlink:
 			; do \
 	    if [ -e "${T}$$i" ]; then \
 		    if [ ! -L "$$i" -a "${T}$$i" -ef "$$i" ]; then \
-		    	echo "ERROR: ${T}$$i is the same as $$i" 1>&2; \
+			echo "ERROR: ${T}$$i is the same as $$i" 1>&2; \
 		    else \
 			if [ -e "$$i" ]; then \
 			    echo ${RM} -f "$$i"; \
@@ -5410,7 +5410,7 @@ calc-symlink:
 			fi; \
 			echo ${LN} -s "${T}$$i" "$$i"; \
 			${LN} -s "${T}$$i" "$$i"; \
-	    	    fi; \
+		    fi; \
 	    else \
 	        echo "Warning: not found: ${T}$$i" 1>&2; \
 	    fi; \

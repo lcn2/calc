@@ -926,7 +926,7 @@ printid(FILEID id, int flags)
 
 	if (get_open_pos(fp, &pos) < 0) {
 	    if (fileno(fp) > 2)
-	   	 math_str("Error while determining file position!");
+		 math_str("Error while determining file position!");
 	    math_chr(')');
 	    return 0;
 	}

@@ -894,7 +894,7 @@ uninstall:
 		continue; \
 	    fi; \
 	    if [ -f "${T}${HELPDIR}/$$i" ]; then \
-	    	${RM} -f "${T}${HELPDIR}/$$i"; \
+		${RM} -f "${T}${HELPDIR}/$$i"; \
 		if [ -f "${T}${HELPDIR}/$$i" ]; then \
 		   echo "cannot uninstall ${T}${HELPDIR}/$$i"; \
 		else \
