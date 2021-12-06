@@ -7,6 +7,9 @@ The following are the changes from calc version 2.14.0.11 to date:
     Minor improvement of various help files.  Made format of help
     files more consistent.
 
+    Corrected a few comments in zrandom.c, including a case where
+    the comment referred to 1007 when it should have used 2^32.
+
 
 The following are the changes from calc version 2.14.0.9 to 2.14.0.10:
 
