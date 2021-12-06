@@ -29,7 +29,7 @@
  *
  * This module contains a Blum-Blum-Shub generator:
  *
- *	We refer to this generator as the Blum generator.
+ *	To shorten the name, We refer to this generator as the Blum generator.
  *
  *	This generator is described in the papers:
  *
@@ -87,23 +87,23 @@
  *
  * The goals of this package are:
  *
- *	all magic numbers are explained
+ *	All magic numbers are explained:
  *
  *	    I distrust systems with constants (magic numbers) and tables
- *	    that have no justification (e.g., DES).  I believe that I have
+ *	    that have no justification.  I believe that I have
  *	    done my best to justify all of the magic numbers used.
  *
- *	 full documentation
+ *	Full documentation:
  *
  *	    You have this source file, plus background publications,
  *	    what more could you ask?
  *
- *	large selection of seeds
+ *	Large selection of seeds:
  *
  *	    Seeds are not limited to a small number of bits.  A seed
  *	    may be of any size.
  *
- *	the strength of the generators may be tuned to meet the need
+ *	The strength of the generators may be tuned to meet the need:
  *
  *	    By using the appropriate seed and other arguments, one may
  *	    increase the strength of the generator to suit the need of
@@ -133,21 +133,37 @@
  *
  *	Print a Blum generator random value over interval [min,beyond).
  *
+ *	This form returns integers of the form:
+ *
+ *		min <= value < beyond
+ *
  *   random()
  *
  *	Same as random(0, 2^64).  Print 64 bits.
  *
- *   random(lim)		(where 0 > lim)
+ *	This form returns integers of the form:
+ *
+ *		0 <= value < 2^64
+ *
+ *   random(lim)		(where lim > 0)
  *
  *	Same as random(0, lim).
+ *
+ *	This form returns integers of the form:
+ *
+ *		0 <= value < lim
  *
  *   randombit(x)		(where x > 0)
  *
  *	Same as random(0, 2^x).	 Print x bits.
  *
- *   randombit(skip)		(where skip < 0)
+ *	This form returns integers of the form:
  *
- *	Skip skip random bits and return the bit skip count (-skip).
+ *		0 <= value < 2^x
+ *
+ *   randombit(neg)		(where neg < 0)
+ *
+ *	Skip neg random bits and return the bit skip count.
  */
 
 /*
@@ -308,7 +324,7 @@
  *    -----------------------
  *	Reserved for future use.
  *
- *    any seed, 20 < newn < 1007:
+ *    any seed, 20 < newn < 2^32:
  *    ---------------------------
  *	Reserved for future use.
  *
