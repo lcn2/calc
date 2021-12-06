@@ -932,7 +932,7 @@ pi.cal
     as your free memory space and system up time allows.
 
     The piforever() function (written by Klaus Alexander Seistrup
-    <klaus@seistrup.dk>) was inspired by an algorithm conceived by
+    <klaus at seistrup dot dk>) was inspired by an algorithm conceived by
     Lambert Meertens.  See also the ABC Programmer's Handbook, by Geurts,
     Meertens & Pemberton, published by Prentice-Hall (UK) Ltd., 1990.
 

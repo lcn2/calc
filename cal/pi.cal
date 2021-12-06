@@ -1,7 +1,7 @@
 /*
  * pi - various routines to calculate pi
  *
- * Copyright (C) 1999-2004  David I. Bell
+ * Copyright (C) 1999-2004,2021  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -74,7 +74,7 @@ define qpi(epsilon)
 /*
  * Print digits of PI forever, neatly formatted, using calc.
  *
- * Written by Klaus Alexander Seistrup <klaus@seistrup.dk>
+ * Written by Klaus Alexander Seistrup <klaus at seistrup dot dk>
  * on a dull Friday evening in November 1999.
  *
  * Inspired by an algorithm conceived by Lambert Meertens.

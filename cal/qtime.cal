@@ -1,9 +1,9 @@
 /*
  * qtime - Display time as English sentence
  *
- * Copyright (C) 1999  Klaus Alexander Seistrup and Landon Curt Noll
+ * Copyright (C) 1999,2021  Klaus Alexander Seistrup and Landon Curt Noll
  *
- * Written by: Klaus Alexander Seistrup <kseis@magnetic-ink.dk>
+ * Written by: Klaus Alexander Seistrup <kseis at magnetic-ink dot dk>
  * With mods by: Landon Curt Noll <http://www.isthe.com/chongo/>
  *
  * Calc is open software; you can redistribute it and/or modify it under

@@ -1445,7 +1445,7 @@ Your code needs to be contributed under either the 2.1 of the
 .B GNU Lesser General Public License (LGPL 2.1)
 or be in the public domain.
 .sp
-If you do not want to use calc GitHub, then send EMail to:
+If you do not want to use calc GitHub, then send Email to:
 .sp
 .in +0.5i
 .nf

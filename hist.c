@@ -26,7 +26,7 @@
 /*
  * Adapted from code written by Stephen Rothwell.
  *
- * GNU readline support added by Martin Buck <mbuck@debian.org>
+ * GNU readline support added by Martin Buck <mbuck at debian dot org>
  *
  * Interactive readline module.	 This is called to read lines of input,
  * while using emacs-like editing commands within a command stack.
