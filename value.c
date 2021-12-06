@@ -2360,7 +2360,7 @@ testvalue(VALUE *vp)
 	case V_FILE:
 		return validid(vp->v_file);
 	case V_NULL:
-		break;	/* hack to get gcc on SunOS to be quiet */
+		break;
 	case V_OBJ:
 		val = objcall(OBJ_TEST, vp, NULL_VALUE, NULL_VALUE);
 		return (val.v_int != 0);
@@ -2385,7 +2385,6 @@ testvalue(VALUE *vp)
 	default:
 		return TRUE;
 	}
-	/* hack to get gcc on SunOS to be quiet */
 	return FALSE;
 }
 

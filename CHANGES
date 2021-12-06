@@ -2,6 +2,8 @@ The following are the changes from calc version 2.14.0.11 to date:
 
     Fixed a number of typos.
 
+    Drop support for SunOS, IRIX and MINGW32_NT-5.0 targets.
+
 
 The following are the changes from calc version 2.14.0.9 to 2.14.0.10:
 
