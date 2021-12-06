@@ -19,7 +19,7 @@ DESCRIPTION
 
 EXAMPLE
     ; print polar(2, 0), polar(1, 2, 1e-5), polar(1, 2, 1e-10)
-    2 -.41615+.9093i -.4161468365+.9092974268i
+    2 -0.41615+0.9093i -0.4161468365+0.9092974268i
 
     ; pi = pi(1e-10); eps = 1e-5
     ; print polar(2, pi/4, eps), polar(2, pi/2, eps), polar(2, 3*pi/4, eps)
@@ -34,7 +34,7 @@ LINK LIBRARY
 SEE ALSO
     abs, arg, re, im
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

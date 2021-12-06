@@ -49,7 +49,7 @@ DESCRIPTION
 
     The minimum value for memsize(x) occurs for the null and error values.
 
-EXAMPLES
+EXAMPLE
 
     The results for examples like these will depend to some extent on
     the system being used.  The following were for an SGI R4k machine

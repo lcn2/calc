@@ -21,13 +21,13 @@ DESCRIPTION
     new value.
 
 EXAMPLE
-    strncpy("abcdef", "xyz", 0) == "abcdef"
-    strncpy("abcdef", "xyz", 1) == "xbcdef"
-    strncpy("abcdef", "xyz", 2) == "xycdef"
-    strncpy("abcdef", "xyz", 3) == "xyzdef"
-    strncpy("abcdef", "xyz", 4) == "xyz\0ef"
-    strncpy("abcdef", "xyz", 5) == "xyz\0\0f"
-    strncpy("ab", "xyz", 3) == "xy"
+    ; strncpy("abcdef", "xyz", 0) == "abcdef"
+    ; strncpy("abcdef", "xyz", 1) == "xbcdef"
+    ; strncpy("abcdef", "xyz", 2) == "xycdef"
+    ; strncpy("abcdef", "xyz", 3) == "xyzdef"
+    ; strncpy("abcdef", "xyz", 4) == "xyz\0ef"
+    ; strncpy("abcdef", "xyz", 5) == "xyz\0\0f"
+    ; strncpy("ab", "xyz", 3) == "xy"
 
 LIMITS
     none

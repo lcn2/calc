@@ -19,7 +19,7 @@ DESCRIPTION
    The function returns the number of fields evaluated.
 
 EXAMPLE
-    global a,b
+    ; global a,b
     ; strscan(" 2+3  a^2  print(b)", a, b, 0);
     25
 	3
@@ -36,7 +36,7 @@ SEE ALSO
     strcat, strcpy, strerror, strlen, strncmp, strncpy, strpos,
     strprintf, strscanf, substr
 
-## Copyright (C) 1999-2006  Ernest Bowen
+## Copyright (C) 1999-2006,2021  Ernest Bowen
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

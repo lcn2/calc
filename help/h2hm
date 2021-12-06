@@ -54,9 +54,8 @@ DESCRIPTION
 
 	return_value == h + m/60;
 
-
 EXAMPLE
-    /* if args are undefined, pre-declare them or assign them as args */
+    ; ## if args are undefined, pre-declare them or assign them as args
 
     ; global h, m;
 
@@ -74,7 +73,7 @@ EXAMPLE
     ; print h2hm(24.321,hour=,min=), hour, min;
     0.321 0 19.26
 
-    /* certain non-default rounding modes can return negative values */
+    ; ## certain non-default rounding modes can return negative values
 
     ; print h2hm(654.321,hour=,min=,1), hour, min;
     -17.679 -17 -40.74
@@ -82,7 +81,6 @@ EXAMPLE
     -6.321 -6 -19.26
     ; print h2hm(24.321,hour=,min=,1), hour, min;
     -23.679 -23 -40.7
-
 
 LIMITS
     none

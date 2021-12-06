@@ -206,7 +206,7 @@ DESCRIPTION
 
 	1			The order of the elements is reversed
 
-EXAMPLES
+EXAMPLE
     ; A = list(1, 7, 2, 4, 2)
     ; print sort(A)
 

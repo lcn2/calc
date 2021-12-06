@@ -48,7 +48,8 @@ EXAMPLE
     ; config("tab", 0),;
     ; fmt1 = "%f";
 
-    ; /* NOTE: display has too few digits and epsilon is not small enough */
+    ; ## NOTE: display has too few digits and epsilon is not small enough
+
     ; display(12),;
     ; strprintf(fmt1, pi(1e-10));
     "3.1415926536"
@@ -56,7 +57,8 @@ EXAMPLE
     ; strprintf(fmt1, pi());
     "3.1415926536"
 
-    ; /* NOTE: display has too few digits yet epsilon is small enough */
+    ; ## NOTE: display has too few digits yet epsilon is small enough
+
     ; display(12),;
     ; strprintf(fmt1, pi(1e-72));
     "~3.141592653590"
@@ -64,7 +66,8 @@ EXAMPLE
     ; strprintf(fmt1, pi());
     ~3.141592653590
 
-    ; /* NOTE: display has enough digits but epsilon is not small enough */
+    ; ## NOTE: display has enough digits but epsilon is not small enough
+
     ; display(72),;
     ; strprintf(fmt1, pi(1e-10));
     "3.1415926536"
@@ -72,7 +75,8 @@ EXAMPLE
     ; strprintf(fmt1, pi());
     "3.1415926536"
 
-    /* NOTE: display has enough digits and epsilon is small enough */
+    ; ## NOTE: display has enough digits and epsilon is small enough
+
     ; display(72),;
     ; strprintf(fmt1, pi(1e-72));
     "3.141592653589793238462643383279502884197169399375105820974944592307816406"
@@ -91,7 +95,7 @@ SEE ALSO
     strlen, strncmp, strncpy, strpos, strscan, strscanf, substr,
     printf
 
-## Copyright (C) 1999-2006,2018  Landon Curt Noll
+## Copyright (C) 1999-2006,2018,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

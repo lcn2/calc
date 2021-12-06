@@ -407,7 +407,7 @@ LIMITS
     times as long to invert a 100 * 100 matrix.
 
 LINK LIBRARY
-    n/a
+    none
 
 SEE ALSO
     ismat, matdim, matmax, matmin, mattrans, mattrace, matsum, matfill,

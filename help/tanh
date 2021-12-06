@@ -18,7 +18,7 @@ DESCRIPTION
 
 EXAMPLE
     ; print tanh(1, 1e-5), tanh(1, 1e-10), tanh(1, 1e-15), tanh(1, 1e-20)
-    .76159 .761594156 .761594155955765 .76159415595576488812
+    0.76159 0.761594156 0.761594155955765 0.76159415595576488812
 
 LIMITS
     unlike sin and cos, x must be real
@@ -30,7 +30,7 @@ LINK LIBRARY
 SEE ALSO
     sinh, cosh, sech, csch, coth, epsilon
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

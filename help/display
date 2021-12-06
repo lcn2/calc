@@ -55,7 +55,8 @@ EXAMPLE
        */
     ; config("tilde", 1),;
 
-    ; /* NOTE: display has too few digits and epsilon is not small enough */
+    ; ## NOTE: display has too few digits and epsilon is not small enough
+
     ; display(12),;
     ; printf("%f\n", pi(1e-10));
     3.1415926536
@@ -63,7 +64,8 @@ EXAMPLE
     ; printf("%f\n", pi());
     3.1415926536
 
-    ; /* NOTE: display has too few digits yet epsilon is small enough */
+    ; ## NOTE: display has too few digits yet epsilon is small enough
+
     ; display(12),;
     ; printf("%f\n", pi(1e-72));
     ~3.141592653590
@@ -71,7 +73,8 @@ EXAMPLE
     ; printf("%f\n", pi());
     ~3.141592653590
 
-    ; /* NOTE: display has enough digits but epsilon is not small enough */
+    ; ## NOTE: display has enough digits but epsilon is not small enough
+
     ; display(72),;
     ; printf("%f\n", pi(1e-10));
     3.1415926536
@@ -79,7 +82,8 @@ EXAMPLE
     ; printf("%f\n", pi());
     3.1415926536
 
-    /* NOTE: display has enough digits and epsilon is small enough */
+    ; ## NOTE: display has enough digits and epsilon is small enough
+
     ; display(72),;
     ; printf("%f\n", pi(1e-72));
     3.141592653589793238462643383279502884197169399375105820974944592307816406

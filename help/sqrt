@@ -103,7 +103,6 @@ DESCRIPTION
     decimal digit being even when the part differs from a multiple
     of 1e-20 by 1/2 * 1e-20.
 
-
 EXAMPLE
     ; eps = 1e-4
     ; print sqrt(4,eps,0), sqrt(4,eps,64), sqrt(8i,eps,0), sqrt(8i, eps, 64)
@@ -117,7 +116,7 @@ EXAMPLE
     1.2346 1.2345678 -1.2345678
 
     ; print sqrt(.00005^2, eps, 24), sqrt(.00015^2, eps, 24)
-    0 .0002
+    0 0.0002
 
 LIMITS
     none

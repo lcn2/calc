@@ -68,7 +68,6 @@ DESCRIPTION
     argument is not as specified above, or if Q or R has no-assign-to
     protection, e.g. after protect(Q,1).
 
-
 EXAMPLE
     ; global u, v;
     ; global mat M[2];

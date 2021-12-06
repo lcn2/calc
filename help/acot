@@ -18,7 +18,7 @@ DESCRIPTION
 
 EXAMPLE
     ; print acot(2, 1e-5),  acot(2, 1e-10), acot(2, 1e-15), acot(2, 1e-20)
-    .46365 .463647609 .463647609000806 .46364760900080611621
+    0.46365 0.463647609 0.463647609000806 0.46364760900080611621
 
 LIMITS
     none
@@ -29,7 +29,7 @@ LINK LIBRARY
 SEE ALSO
     asin, acos, atan, asec, acsc, epsilon
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

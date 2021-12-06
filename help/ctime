@@ -16,6 +16,8 @@ DESCRIPTION
    The 25th ctime() character, '\n' is removed.
 
 EXAMPLE
+    ; ## NOTE: Your output will likely vary:
+
     ; printf("The time is now %s.\n", ctime())
     The time is now Mon Apr 15 12:41:44 1996.
 
@@ -28,7 +30,7 @@ LINK LIBRARY
 SEE ALSO
     runtime, time
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1996,1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

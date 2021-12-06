@@ -21,7 +21,6 @@ DESCRIPTION
     fs.	 A non-null value is returned only if the attempt fails.
 
 EXAMPLE
-
     ; f = fopen("/tmp/junk", "w")
     ; fputs(f, "Leonard Euler")
     ; freopen(f, "r")

@@ -54,9 +54,8 @@ DESCRIPTION
 
 	return_value == d + m/60;
 
-
 EXAMPLE
-    /* if args are undefined, pre-declare them or assign them as args */
+    ; ## if args are undefined, pre-declare them or assign them as args
 
     ; global d, m;
 
@@ -74,7 +73,7 @@ EXAMPLE
     ; print d2dm(360.321,deg=,min=), deg, min;
     0.321 0 19.26
 
-    /* certain non-default rounding modes can return negative values */
+    ; ## certain non-default rounding modes can return negative values
 
     ; print d2dm(654.321,deg=,min=,1), deg, min;
     -65.679 -65 -40.74
@@ -82,7 +81,6 @@ EXAMPLE
     -294.321 -294 -19.26
     ; print d2dm(360.321,deg=,min=,1), deg, min;
     -359.679 -359 -40.74
-
 
 LIMITS
     none

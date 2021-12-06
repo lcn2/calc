@@ -29,7 +29,6 @@ DESCRIPTION
 
     The gm2g(d, m, rnd) builtin is an alias for gms2g(d, m, 0, rnd).
 
-
 EXAMPLE
     ; print gm2g(203, 325.5594);
     208.42599
@@ -49,7 +48,6 @@ EXAMPLE
     -191.57401
     ; print gms2g(12, 20, 44.16, 1);
     -387.6544
-
 
 LIMITS
     none

@@ -69,9 +69,8 @@ DESCRIPTION
 
 	return_value == g + m/60 + s/3600;
 
-
 EXAMPLE
-    /* if args are undefined, pre-declare them or assign them as args */
+    ; ## if args are undefined, pre-declare them or assign them as args
 
     ; global g, m, s;
 
@@ -89,7 +88,7 @@ EXAMPLE
     ; print g2gms(400.321,grad=,min=,sec=), grad, min, sec;
     0.321 0 19 15.6
 
-    /* certain non-default rounding modes can return negative values */
+    ; ## certain non-default rounding modes can return negative values
 
     ; print g2gms(654.321,grad=,min=,sec=,1), grad, min, sec;
     -145.679 -145 -40 -44.4
@@ -97,7 +96,6 @@ EXAMPLE
     -254.321 -254 -19 -15.6
     ; print g2gms(400.321,grad=,min=,sec=,1), grad, min, sec;
     -399.679 -399 -40 -44.4
-
 
 LIMITS
     none

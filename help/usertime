@@ -17,8 +17,8 @@ DESCRIPTION
     POSIX system call and so this function will always return 0.
 
 EXAMPLE
-    The result for this example will depend on the speed of the CPU
-    and precision of the operating CPU time accounting sub-system:
+    ; ## The result for this example will depend on the speed of the CPU
+    ; ## and precision of the operating CPU time accounting sub-system:
 
     ; t = usertime();
     ; x = ptest(2^4253-1);
@@ -34,7 +34,7 @@ LINK LIBRARY
 SEE ALSO
     config, ctime, usertime, systime, time
 
-## Copyright (C) 2006  Landon Curt Noll
+## Copyright (C) 2006,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

@@ -106,7 +106,6 @@ DESCRIPTION
     and dsi refer to the double-bracket method of indexing, i.e. the
     matrix is as if its elements were indexed 0, 1, ..., size(M) - 1.
 
-
 EXAMPLE
     ; A = blk() = {1,2,3,4}
     ; B = blk()
@@ -190,7 +189,7 @@ LINK LIBRARY
 SEE ALSO
     blk, mat, file, list, str
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

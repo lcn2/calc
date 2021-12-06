@@ -165,7 +165,6 @@ DESCRIPTION
 
 	; fclose(fd);
 
-
 EXAMPLE
     ; config("epsilon", 1e-6),;
     : config("display", 6),;
@@ -179,11 +178,15 @@ EXAMPLE
 
     ; fd = fopen("/tmp/test.txt", "w+");
     ; fprintf(fd, "%d\n", 2^23209-1);
-    ; /* one must flush to be buffered output is written */
+
+    ; ## one must flush to be buffered output is written
+
     ; fflush(fd);
     ; display(10000),;
     ; fprintf(fd, "%d\n", pi(1e-10000));
-    ; /* closing the file will also flush the buffer */
+
+    ; ## closing the file will also flush the buffer
+
     ; fclose(fd);
 
     ; printf("%x\n", 1.2345);
@@ -207,7 +210,7 @@ EXAMPLE
     ; printf("%f%r",A,A);
     mat [4] (4 elements, 4 nonzero):
       [0] = 1.414214
-      [1] = .428571
+      [1] = 0.428571
       [2] = "undefined"
       [3] = NULL
 
@@ -262,7 +265,8 @@ EXAMPLE
        */
     ; config("tilde", 1),;
 
-    ; /* NOTE: display has too few digits and epsilon is not small enough */
+    ; ## NOTE: display has too few digits and epsilon is not small enough
+
     ; display(12),;
     ; printf("%f\n", pi(1e-10));
     3.1415926536
@@ -270,7 +274,8 @@ EXAMPLE
     ; printf("%f\n", pi());
     3.1415926536
 
-    ; /* NOTE: display has too few digits yet epsilon is small enough */
+    ; ## NOTE: display has too few digits yet epsilon is small enough
+
     ; display(12),;
     ; printf("%f\n", pi(1e-72));
     ~3.141592653590
@@ -278,7 +283,8 @@ EXAMPLE
     ; printf("%f\n", pi());
     ~3.141592653590
 
-    ; /* NOTE: display has enough digits but epsilon is not small enough */
+    ; ## NOTE: display has enough digits but epsilon is not small enough
+
     ; display(72),;
     ; printf("%f\n", pi(1e-10));
     3.1415926536
@@ -286,7 +292,8 @@ EXAMPLE
     ; printf("%f\n", pi());
     3.1415926536
 
-    /* NOTE: display has enough digits and epsilon is small enough */
+    ; ## NOTE: display has enough digits and epsilon is small enough
+
     ; display(72),;
     ; printf("%f\n", pi(1e-72));
     3.141592653589793238462643383279502884197169399375105820974944592307816406

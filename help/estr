@@ -24,7 +24,6 @@ DESCRIPTION
 
     For real x, estr(x) represents x in fractional mode.
 
-
 EXAMPLE
     ; estr("abc\0xyz\00023\n\xa5\r\n")
 	""abc\0xyz\00023\n\xa5\r\n""

@@ -25,7 +25,7 @@ DESCRIPTION
 
 EXAMPLE
     ; print inverse(5/4), inverse(-2/7), inverse(3 + 4i)
-    .8 -3.5 .12-.16i
+    0.8 -3.5 0.12-0.16i
 
     ; mat A[2,2] = {2,3,5,7}
     ; print inverse(A)
@@ -47,7 +47,7 @@ LINK LIBRARY
 
 SEE ALSO
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

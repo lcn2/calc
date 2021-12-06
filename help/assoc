@@ -66,12 +66,12 @@ EXAMPLE
     ; A["zero"] = 0; A["one"] = 1; A["two"] = 2; A["three"] = 3;
     ; A["smallest", "prime"] = 2;
     ; print A
-    assoc (5 elements);
-    ["two"] = 2
-    ["three"] = 3
-    ["one"] = 1
-    ["zero"] = 0
-    ["smallest","prime"] = 2
+     assoc (5 elements);
+     ["two"] = 2
+     ["three"] = 3
+     ["one"] = 1
+     ["zero"] = 0
+     ["smallest","prime"] = 2
 
 LIMITS
     none
@@ -82,7 +82,7 @@ LINK LIBRARY
 SEE ALSO
     isassoc, rsearch, search, size
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

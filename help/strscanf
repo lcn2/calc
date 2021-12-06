@@ -91,7 +91,6 @@ DESCRIPTION
     is assigned to the corresponding lvalue. (Any width or skip specification
     is ignored.)
 
-
 EXAMPLE
     ; global a, b, c, d
     ; A = "abc xyz 234.6 alpha"
@@ -115,7 +114,7 @@ SEE ALSO
     strcat, strcpy, strerror, strlen, strncmp, strncpy, strpos,
     strprintf, strscan, substr
 
-## Copyright (C) 1999-2006  Ernest Bowen
+## Copyright (C) 1999-2006,2021  Ernest Bowen
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

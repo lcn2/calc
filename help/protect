@@ -200,7 +200,6 @@ DESCRIPTION
     only when it is referred to by A.
 
 EXAMPLE
-
     ; A = 27
     ; protect(A,1)
     ; A = 45

@@ -24,7 +24,10 @@ DESCRIPTION
     of inputlevel() indicate reading at greater depths.
 
 EXAMPLE
-    n/a
+    ; ## NOTE: Your current input level may vary:
+
+    ; inputlevel()
+    0
 
 LIMITS
     none

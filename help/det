@@ -58,11 +58,13 @@ EXAMPLE
     ; print det(A)
     obj res {5}
 
-    Note that if A had been a 3 x 3 or larger matrix, res_div(a,b) for
-    non-zero b would have had to be defined (assuming at least one
-    division is necessary); for consistent results when md is composite,
-    res_div(a,b) should be defined only when b and md are relatively
-    prime; there is no problem when md is prime.
+    ; /*
+       * NOTE: if A had been a 3 x 3 or larger matrix, res_div(a,b) for
+       * non-zero b would have had to be defined (assuming at least one
+       * division is necessary); for consistent results when md is composite,
+       * res_div(a,b) should be defined only when b and md are relatively
+       * prime; there is no problem when md is prime.
+       */
 
 LIMITS
     none
@@ -73,7 +75,7 @@ LINK LIBRARY
 SEE ALSO
     matdim, matmax, matmin, inverse
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

@@ -16,7 +16,7 @@ DESCRIPTION
 
 EXAMPLE
     ; print cot(1, 1e-5), cot(1, 1e-10), cot(1, 1e-15), cot(1, 1e-20)
-    .64209 .6420926159 .642092615934331 .64209261593433070301
+    0.64209 0.6420926159 0.642092615934331 0.64209261593433070301
 
 LIMITS
     none
@@ -27,7 +27,7 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, sec, csc, epsilon
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

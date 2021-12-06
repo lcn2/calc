@@ -74,7 +74,6 @@ DESCRIPTION
     results in the value 3 being stored not only as the new value for A
     but also at the now unnamed location earlier used for A[0].
 
-
 EXAMPLE
     ; b = 3+1
     ; a = b

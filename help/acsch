@@ -18,10 +18,9 @@ DESCRIPTION
 
 		acsch(x) = ln((1 + sqrt(1 + x^2))/x)
 
-
 EXAMPLE
     ; print acsch(2, 1e-5), acsch(2, 1e-10), acsch(2, 1e-15), acsch(2, 1e-20)
-    .48121 .4812118251 .481211825059603 .4812118250596034475
+    0.48121 0.4812118251 0.481211825059603 0.4812118250596034475
 
 LIMITS
     none
@@ -32,7 +31,7 @@ LINK LIBRARY
 SEE ALSO
     asinh, acosh, atanh, asech, acoth, epsilon
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

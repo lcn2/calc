@@ -16,14 +16,14 @@ DESCRIPTION
 
 EXAMPLE
     ; print sin(1, 1e-5), sin(1, 1e-10), sin(1, 1e-15), sin(1, 1e-20)
-    .84147 .8414709848 .841470984807896 .84147098480789650665
+    0.84147 0.8414709848 0.841470984807896 0.84147098480789650665
 
     ; print sin(2 + 3i, 1e-5), sin(2 + 3i, 1e-10)
     9.1545-4.16891i 9.1544991469-4.16890696i
 
     ; pi = pi(1e-20)
     ; print sin(pi/6, 1e-10), sin(pi/2, 1e-10), sin(pi, 1e-10)
-    .5 1 0
+    0.5 1 0
 
 LIMITS
     eps > 0
@@ -35,7 +35,7 @@ LINK LIBRARY
 SEE ALSO
     cos, tan, sec, csc, cot, epsilon
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

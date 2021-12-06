@@ -108,7 +108,7 @@ EXAMPLE
     The integer x in this example is the smallest positive integer that is
     a strong pseudoprime to each of the first four primes 2, 3, 5, 7, but
     not to base 11.  The probability that ptest(x,-1,0) will return 1 is
-    about .23.
+    about 0.23.
 
     ; for (i = 0; i < 11; i++) print ptest(91,-1,0),:; print;
     0 0 0 1 0 0 0 0 0 0 1

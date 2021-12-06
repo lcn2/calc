@@ -20,8 +20,8 @@ DESCRIPTION
     'w' or bit 1 for writing, 'x' or bit 0 for execution.
 
 EXAMPLE
-    The system error-numbers and messages may differ for different
-	implementations
+    ; ## The system error-numbers and messages may differ
+    ; ## for different implementations
 
     ; !rm -f junk
     ; access("junk")
@@ -48,7 +48,7 @@ LINK LIBRARY
 SEE ALSO
     fopen, fclose, isfile, files
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

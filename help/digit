@@ -61,7 +61,6 @@ DESCRIPTION
 
     if r and q satisfy  n = q * b + r.
 
-
 EXAMPLE
 	; a = 123456.789
 	; for (n = 6; n >= -6; n++) print digit(a, n),; print

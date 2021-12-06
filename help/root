@@ -32,13 +32,13 @@ EXAMPLE
     1.62658 1.6265765617 1.626576561697786
 
     ; print root(1+3i, 3, 1e-5), root(1 + 3i, 3, 1e-10)
-    1.34241+.59361i 1.3424077452+.5936127825i
+    1.34241+0.59361i 1.3424077452+0.5936127825i
 
     ; print root(-8, 3, 1e-5), root(-8, 34, 1e-5)
-    -2 ~1.05853505050032399594+~.09807874962631613016i
+    -2 ~1.05853505050032399594+~0.09807874962631613016i
 
     ; print root(1i, 100, 1e-20)
-    .99987663248166059864+.01570731731182067575i
+    0.99987663248166059864+0.01570731731182067575i
 
 LIMITS
     n >= 0
@@ -52,7 +52,7 @@ LINK LIBRARY
 SEE ALSO
     power
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

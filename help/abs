@@ -6,8 +6,8 @@ SYNOPSIS
 
 TYPES
     If x is an object of type xx, the function xx_abs has to have
-	been defined; this will determine the types for x, eps and
-	the returned value.
+    been defined; this will determine the types for x, eps and
+    the returned value.
 
     For non-object x and eps:
 
@@ -44,7 +44,7 @@ LINK LIBRARY
 SEE ALSO
     cmp, epsilon, hypot, norm, near, obj
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

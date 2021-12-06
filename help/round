@@ -65,29 +65,29 @@ DESCRIPTION
 	changed by assignments; plcs and rnd are copied to temporary
 	variables, so their values are not changed by the call.
 
-EXAMPLES
+EXAMPLE
     ; a = 7/32, b = -7/32
 
     ; print a, b
-    .21875 -.21875
+    0.21875 -0.21875
 
     ; print round(a,3,0), round(a,3,1), round(a,3,2), print round(a,3,3)
-    .218, .219, .218, .219
+    0.218, 0.219, 0.218, 0.219
 
     ; print round(b,3,0), round(b,3,1), round(b,3,2), print round(b,3,3)
-    -.219, -.218, -.218, -.219
+    -0.219, -0.218, -0.218, -0.219
 
     ; print round(a,3,16), round(a,3,17), round(a,3,18), print round(a,3,19)
-    .2188 .2188 .2188 .2188
+    0.2188 0.2188 0.2188 0.2188
 
     ; print round(a,4,16), round(a,4,17), round(a,4,18), print round(a,4,19)
-    .2187 .2188 .2187 .2188
+    0.2187 0.2188 0.2187 0.2188
 
     ; print round(a,2,8), round(a,3,8), round(a,4,8), round(a,5,8)
-    .22 .218 .2188 .21875
+    0.22 0.218 0.2188 0.21875
 
     ; print round(a,2,24), round(a,3,24), round(a,4,24), round(a,5,24)
-    .22 .219 .2188 .21875
+    0.22 0.219 0.2188 0.21875
 
     ; c = 21875
     ; print round(c,-2,0), round(c,-2,1), round(c,-3,0), round(c,-3,16)
@@ -100,13 +100,13 @@ EXAMPLES
     ; print round(A,2,24)
 
     list(7 elements, 7 nonzero):
-	[[0]] = .12
-	[[1]] = .25
-	[[3]] = .38
-	[[4]] = .5
-	[[5]] = .62
-	[[6]] = .75
-	[[7]] = .88
+	[[0]] = 0.12
+	[[1]] = 0.25
+	[[3]] = 0.38
+	[[4]] = 0.5
+	[[5]] = 0.62
+	[[6]] = 0.75
+	[[7]] = 0.88
 
 LIMITS
     For non-object case:
@@ -122,7 +122,7 @@ LINK LIBRARY
 SEE ALSO
     bround, btrunc, trunc, int, appr
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

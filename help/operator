@@ -113,7 +113,7 @@ operators
 	    as division of real numbers, and think of '//' as division
 	    of integers (e.g., 8 / 3 is 8/3 whereas 8 // 3 is 2).
 	    The '%' is integral or fractional modulus (e.g., 11%4 is 3,
-	    and 10%pi() is ~.575222).
+	    and 10%pi() is ~0.575222).
 
     |	Bitwise OR.
 	    In a | b, both a and b are to be real integers;
@@ -128,7 +128,7 @@ operators
     ^  **  <<  >>
 	    Powers and shifts.
 	    The '^' and '**' are both exponentiation, e.g. 2^3
-	    returns 8, 2^-3 returns .125.  Note that in a^b, if
+	    returns 8, 2^-3 returns 0.125.  Note that in a^b, if
 	    'a' == 0 and 'b' is real, then is must be >= 0 as well.
 	    Also 0^0 and 0**0 return the value 1.
 

@@ -29,7 +29,6 @@ DESCRIPTION
 
     The hm2h(h, m, rnd) builtin is an alias for hms2h(h, m, 0, rnd).
 
-
 EXAMPLE
     ; print hm2h(203, 325.5594);
     16.42599
@@ -49,7 +48,6 @@ EXAMPLE
     -7.57401
     ; print hms2h(12, 20, 44.16, 1);
     -11.6544
-
 
 LIMITS
     none

@@ -25,7 +25,7 @@ EXAMPLE
     10686474600000 10686474581524 10686474581524.4621469905
 
     ; print exp(-20, 1e-5), exp(-20, 1e-10), exp(-20, 1e-15), exp(-20, 1e-20)
-    0 .0000000021 .000000002061154 .00000000206115362244
+    0 0.0000000021 0.000000002061154 0.00000000206115362244
 
     ; print exp(1+2i, 1e-5), exp(1+2i, 1e-10)
     -1.1312+2.47173i -1.1312043838+2.471726672i
@@ -40,7 +40,7 @@ LINK LIBRARY
 SEE ALSO
     ln, cosh, sinh, tanh
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

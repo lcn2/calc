@@ -21,7 +21,7 @@ EXAMPLE
     2.30259 2.302585093 2.302585092994046 2.30258509299404568402
 
     ; print ln(2+3i, 1e-5), ln(2+3i, 1e-10)
-    1.28247+.98279i 1.2824746787+.9827937232i
+    1.28247+0.98279i 1.2824746787+0.9827937232i
 
 LIMITS
     x != 0
@@ -34,7 +34,7 @@ LINK LIBRARY
 SEE ALSO
     exp, acosh, asinh, atanh, log
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

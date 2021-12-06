@@ -26,8 +26,8 @@ EXAMPLE
     ; a = 1/0; b = 2 + ""; c = error(27); d = newerror("alpha");
     Error 27 caused errcount to exceed errmax
 
-    ## Here global variables c and d were created when compiling the line
-    ## but execution was aborted before the intended assignments to c and d.
+    ; ## Here global variables c and d were created when compiling the line
+    ; ## but execution was aborted before the intended assignments to c and d.
 
     ; print c, d
     0 0
@@ -45,7 +45,7 @@ SEE ALSO
     errcount, error, strerror, iserror, errno, newerror, errorcodes,
     stoponerror
 
-## Copyright (C) 2006  Landon Curt Noll
+## Copyright (C) 2006,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

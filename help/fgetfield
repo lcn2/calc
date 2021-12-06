@@ -21,7 +21,6 @@ DESCRIPTION
     the file position will be that immediately after that character.
 
 EXAMPLE
-
     ; f = fopen("/tmp/junk", "w")
     ; fputs(f, " Alpha Beta \n")
     ; freopen(f, "r")

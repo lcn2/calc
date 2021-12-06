@@ -29,7 +29,6 @@ DESCRIPTION
 
     The dm2d(d, m, rnd) builtin is an alias for dms2d(d, m, 0, rnd).
 
-
 EXAMPLE
     ; print dm2d(203, 325.5594);
     208.42599
@@ -49,7 +48,6 @@ EXAMPLE
     -151.57401
     ; print dms2d(12, 20, 44.16, 1);
     -347.6544
-
 
 LIMITS
     none

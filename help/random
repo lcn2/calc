@@ -137,7 +137,6 @@ DESCRIPTION
     of the other compiled in Blum moduli or provide your own. See
     the srandom help page for details.
 
-
 EXAMPLE
     ; print srandom(0), random(), random(), random()
     RANDOM state 9203168135432720454 13391974640168007611 13954330032848846793

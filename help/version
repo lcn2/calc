@@ -20,8 +20,10 @@ DESCRIPTION
     t is the literal character 't'.
 
 EXAMPLE
+    ; ## NOTE: Your version will likely vary:
+
     ; version()
-	    "2.11.5.4"
+    "2.14.0.10"
 
 LIMITS
     none
@@ -30,7 +32,7 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    n/a
+    calclevel, calcpath, inputlevel
 
 ## Copyright (C) 2001,2021  Landon Curt Noll
 ##

@@ -21,17 +21,15 @@ DESCRIPTION
     to, or less than min(n2, n); in particular, if n1 and n2 are
     both greater than equal to n, 0 is returned.
 
-
 EXAMPLE
-strncmp("abc", "xyz", 0) == 0
-strncmp("abc", "xyz", 1) == -1
-strncmp("abc", "", 1) == 1
-strncmp("a", "b", 2) == -1
-strncmp("ab", "ac", 2) == -1
-strncmp("\0ac", "\0b", 2) == -1
-strncmp("ab", "abc", 2) == 0
-strncmp("abc", "abd", 2) == 0
-
+    ; strncmp("abc", "xyz", 0) == 0
+    ; strncmp("abc", "xyz", 1) == -1
+    ; strncmp("abc", "", 1) == 1
+    ; strncmp("a", "b", 2) == -1
+    ; strncmp("ab", "ac", 2) == -1
+    ; strncmp("\0ac", "\0b", 2) == -1
+    ; strncmp("ab", "abc", 2) == 0
+    ; strncmp("abc", "abd", 2) == 0
 
 LIMITS
     none
@@ -44,7 +42,7 @@ SEE ALSO
     strcat, strcpy, strerror, strlen, strncpy, strpos,
     strprintf, strscan, strscanf, substr
 
-## Copyright (C) 2006  Ernest Bowen
+## Copyright (C) 2006,2021  Ernest Bowen
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

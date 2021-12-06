@@ -17,7 +17,7 @@ DESCRIPTION
 
 EXAMPLE
     ; print arg(2), arg(2+3i, 1e-5), arg(2+3i, 1e-10), arg(2+3i, 1e-20)
-    0 .98279 .9827937232 .98279372324732906799
+    0 0.98279 0.9827937232 0.98279372324732906799
 
     ; pi = pi(1e-10); deg = pi/180; eps = deg/10000
     ; print arg(2+3i, eps)/deg, arg(-1 +1i, eps)/deg, arg(-1 - 1i,eps)/deg
@@ -32,7 +32,7 @@ LINK LIBRARY
 SEE ALSO
     conj, im, polar, re
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
