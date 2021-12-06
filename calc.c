@@ -49,7 +49,7 @@
 # endif
 # define strdup _strdup
 # define isatty _isatty
-#endif /* Windoz */
+#endif /* Windows */
 
 #define CALC_C
 #include "calc.h"
@@ -712,11 +712,11 @@ main(int argc, char **argv)
 						"Change operating systems\n"
 						"or don't use this calc mode "
 						"in the future, sorry!\n");
-#else /* Windoz free systems */
+#else /* Windows free systems */
 					fprintf(stderr,
 						"Unable to associate stdin"
 						" with /dev/tty");
-#endif /* Windoz free systems */
+#endif /* Windows free systems */
 					set_run_state(RUN_EXIT_WITH_ERROR);
 					break;
 				}
@@ -742,11 +742,11 @@ main(int argc, char **argv)
 						"Change operating systems\n"
 						"or don't use this calc mode "
 						"in the future, sorry!\n");
-#else /* Windoz free systems */
+#else /* Windows free systems */
 					fprintf(stderr,
 						"Unable to associate stdin"
 						" with /dev/tty");
-#endif /* Windoz free systems */
+#endif /* Windows free systems */
 					set_run_state(RUN_EXIT_WITH_ERROR);
 					break;
 				}

@@ -37,7 +37,7 @@
  * This prog outputs several defines:
  *
  *	HAVE_FILEPOS_SCALAR
- *		defined ==> ok to perform arithmetic ops, = and comparisons
+ *		defined ==> OK to perform arithmetic ops, = and comparisons
  *		undefined ==> convert to ZVALUE first
  */
 

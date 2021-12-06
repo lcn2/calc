@@ -1460,7 +1460,7 @@ qfreenum(NUMBER *q)
 		/*NOTREACHED*/
 	}
 	if (q->links != 0) {
-		math_error("Calling qfreenum with nozero links!!!");
+		math_error("Calling qfreenum with non-zero links!!!");
 		/*NOTREACHED*/
 	}
 	zfree(q->num);

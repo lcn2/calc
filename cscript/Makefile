@@ -219,10 +219,10 @@ T=
 # H=@:	do not report hsrc file formation progress
 # H=@	do echo hsrc file formation progress
 #
-# S= >/dev/null 2>&1	slience ${CC} output during hsrc file formation
+# S= >/dev/null 2>&1	silence ${CC} output during hsrc file formation
 # S=			full ${CC} output during hsrc file formation
 #
-# E= 2>/dev/null	slience command stderr during hsrc file formation
+# E= 2>/dev/null	silence command stderr during hsrc file formation
 # E=			full command stderr during hsrc file formation
 #
 # V=@:	do not echo debug statements (quiet mode)

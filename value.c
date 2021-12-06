@@ -2988,7 +2988,7 @@ config_print(CONFIG *cfg)
 {
 	NAMETYPE *cp;
 	VALUE tmp;
-	int tab_over;		/* TRUE => ok move over one tab stop */
+	int tab_over;		/* TRUE => OK move over one tab stop */
 	size_t len;
 
 	/*

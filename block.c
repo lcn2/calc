@@ -156,7 +156,7 @@ blk_free(BLOCK *blk)
  *	blk	- the BLOCK to check
  *
  * returns:
- *	if all is ok, otherwise math_error() is called and this
+ *	if all is OK, otherwise math_error() is called and this
  *	function does not return
  */
 S_FUNC void

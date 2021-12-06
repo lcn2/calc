@@ -33,7 +33,7 @@
  * This prog outputs several defines:
  *
  *	HAVE_UID_T
- *		defined ==> ok to use uid_t
+ *		defined ==> OK to use uid_t
  *		undefined ==> do not use uid_t
  */
 

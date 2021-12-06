@@ -56,7 +56,7 @@
  *	SB32	signed 32 bit value
  *
  *	HAVE_B64
- *		defined ==> ok to use USB64 (unsigned 64 bit value)
+ *		defined ==> OK to use USB64 (unsigned 64 bit value)
  *				  and SB64 (signed 64 bit value)
  *		undefined ==> do not use USB64 nor SB64
  *

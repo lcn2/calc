@@ -87,11 +87,11 @@ typedef struct {int fd;} ttystruct;
 #if !defined(_WIN32)
 # if !defined(USE_SGTTY) && !defined (USE_TERMIOS) && !defined(USE_TERMIO)
 
--=*#*=- A Windoz free system without termio, termios or sgtty!!! -=*#*=-
+-=*#*=- A Windows free system without termio, termios or sgtty!!! -=*#*=-
 -=*#*=- We do not know how to compile for such a host, sorry!!!! -=*#*=-
 
 # endif
-#endif /* Windoz */
+#endif /* Windows */
 
 
 #include "banned.h"	/* include after system header <> includes */
@@ -521,7 +521,7 @@ initenv(void)
 		/* just assume . is home if all else fails */
 		home = strdup(".");
 	}
-#else /* Windoz free systems */
+#else /* Windows free systems */
 	if (home == NULL || home[0] == '\0') {
 		/* free home if it was previously allocated, but empty */
 		if (home != NULL) {
@@ -538,7 +538,7 @@ initenv(void)
 			home = strdup(ent->pw_dir);
 		}
 	}
-#endif /* Windoz free systems */
+#endif /* Windows free systems */
 	/* paranoia */
 	if (home == NULL) {
 		math_error("Unable to allocate string for $HOME");

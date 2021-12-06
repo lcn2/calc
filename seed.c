@@ -161,7 +161,7 @@ typedef struct s_hash64 hash64;
 
 
 /*
- * prvate_hash64_buf - perform a Fowler/Noll/Vo-1 64 bit hash
+ * private_hash64_buf - perform a Fowler/Noll/Vo-1 64 bit hash
  *
  * input:
  *	buf	- start of buffer to hash
@@ -172,7 +172,7 @@ typedef struct s_hash64 hash64;
  *	64 bit hash as a static hash64 structure
  */
 S_FUNC hash64
-prvate_hash64_buf(char *buf, unsigned len)
+private_hash64_buf(char *buf, unsigned len)
 {
 	hash64 hval;		/* current hash value */
 #if !defined(HAVE_B64)
@@ -351,7 +351,7 @@ pseudo_seed(void)
 #endif
 #if defined(HAVE_GETRUSAGE)
 	struct rusage rusage;		/* resource utilization */
-	struct rusage rusage_chld;	/* resource utilization of children */
+	struct rusage rusage_child;	/* resource utilization of children */
 #endif
 #if defined(HAVE_SYS_TIME_H)
 	struct timeval tp2;		/* time of day again */
@@ -433,7 +433,7 @@ pseudo_seed(void)
 #endif
 #if defined(HAVE_GETRUSAGE)
     (void) getrusage(RUSAGE_SELF, &sdata.rusage);
-    (void) getrusage(RUSAGE_CHILDREN, &sdata.rusage_chld);
+    (void) getrusage(RUSAGE_CHILDREN, &sdata.rusage_child);
 #endif
 #if defined(HAVE_SYS_TIME_H)
     (void) gettimeofday(&sdata.tp2, NULL);
@@ -447,12 +447,12 @@ pseudo_seed(void)
     /*
      * seed the generator with the above data
      */
-    hash_val = prvate_hash64_buf((char *)&sdata, sizeof(sdata));
+    hash_val = private_hash64_buf((char *)&sdata, sizeof(sdata));
 
     /*
      * load the hash data into the ZVALUE
      *
-     * We do not care about byte-order or endian issues, we just
+     * We do not care about byte-order or Endian issues, we just
      * want to load in data.
      */
     hash.len = sizeof(hash_val) / sizeof(HALF);

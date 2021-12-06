@@ -220,7 +220,7 @@ Calc shell scripts
     features.  For example, for unquoted arguments or arguments in
     double quotes parameter expansion (indicated by unquoted '$') and
     command substitution (using backquotes) occur before lines are
-    compiled by calc.  For example, if doit is an executable
+    compiled by calc.  For example, if "doit" is an executable
     script with contents
 
 	    calc -q -- "$1($2)"

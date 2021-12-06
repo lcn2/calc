@@ -52,7 +52,7 @@
 
 
 /*
- * MS windoz macros
+ * MS Windows macros
  */
 #elif defined(_WIN32) || defined(WINDOZ)
 

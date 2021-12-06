@@ -8,7 +8,7 @@ SYNOPSIS
 TYPES
     d		real
     m		real
-    s		real (defauls to 0)
+    s		real (defaults to 0)
     rnd		nonnegative integer, defaults to config("mod")
 
     return	degrees
@@ -16,7 +16,7 @@ TYPES
 DESCRIPTION
     Convert degrees, m minutes, and s seconds returning degrees.
 
-    The return value in degrees, is quivalent to the following:
+    The return value in degrees, is equivalent to the following:
 
 	mod(d + m/60 + s/3600, 360, rnd);
 

@@ -466,7 +466,7 @@ qissquare(NUMBER *q)
 
 
 /*
- * Compute the greatest integer of the Kth root of a number.
+ * Compute the greatest integer of the K-th root of a number.
  * Example:  qiroot(85, 3) = 4.
  */
 NUMBER *

@@ -1,7 +1,7 @@
 /*
- * sumtimes - runtimes evaluating sums & squares of large lists and mats
+ * sumtimes - runtime evaluating sums & squares of large lists and mats
  *
- * Copyright (C) 2006  Ernest Bowen
+ * Copyright (C) 2006,2021  Ernest Bowen
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -160,7 +160,7 @@ define timehmean(N, M = 10) {
     v2 = hmean(sumtimes_A);
     sumtimes_t2 = usertime();
     print v1, v2;
-    print "List harmonic meanruntimes";
+    print "List harmonic mean runtimes";
     printf('\tStandard "for" loop:\t\t%.4f\n', sumtimes_t1 - sumtimes_t0);
     printf('\tUsing builtin "hmean":\t\t%.4f\n', sumtimes_t2 - sumtimes_t1);
 }

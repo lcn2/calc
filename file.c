@@ -338,7 +338,7 @@ init_fileio(FILEIO *fiop, char *name, char *mode,
  * NOTE: This function will not return 0, 1 or 2 since they are
  *	 reserved for stdin, stdout, stderr.  In fact, it must not
  *	 return 0, 1, or 2 because it will confuse those who call
- *	 the opensearchfiile() function
+ *	 the opensearchfile() function
  */
 FILEID
 openid(char *name, char *mode)
@@ -383,7 +383,7 @@ openid(char *name, char *mode)
 
 
 /*
- * openpathid - open the specified abse filename, or
+ * openpathid - open the specified base filename, or
  *	        relative filename along a search path
  *
  * given:
@@ -398,7 +398,7 @@ openid(char *name, char *mode)
  * NOTE: This function will not return 0, 1 or 2 since they are
  *	 reserved for stdin, stdout, stderr.  In fact, it must not
  *	 return 0, 1, or 2 because it will confuse those who call
- *	 the opensearchfiile() function
+ *	 the opensearchfile() function
  */
 FILEID
 openpathid(char *name, char *mode, char *pathlist)
@@ -744,7 +744,7 @@ flushall(void)
 	}
 	return err;
 }
-#endif /* Windoz free systems */
+#endif /* Windows free systems */
 
 
 /*
@@ -2328,7 +2328,7 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
 			var = *vals++;
 			count--;
 			if (var->v_type != V_ADDR)
-				math_error("Assigning to nonvariable");
+				math_error("Assigning to non-variable");
 			var = var->v_addr;
 			subtype = var->v_subtype;
 			freevalue(var);

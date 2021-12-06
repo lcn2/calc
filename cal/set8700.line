@@ -1,7 +1,7 @@
 ##
 ## set8700 - dotest line tests for the 8700 set of regress.cal
 ##
-## Copyright (C) 2006  Ernest Bowen and Landon Curt Noll
+## Copyright (C) 2006,2021  Ernest Bowen and Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -159,7 +159,7 @@ set8700_A = 42, protect(set8700_A,1024), set8700_B = set8700_A, protect(set8700_
 set8700_A = 6 * 7, protect(set8700_A) == 1024
 set8700_A == set8700_B
 
-## Testing matrix protectioon
+## Testing matrix protection
 set8700_A = mat [3] = {1, 2, list(3,4)}; 1
 protect(set8700_A, 65, 1), protect(set8700_A) == 1089
 protect(set8700_A[0]) == 65
@@ -261,7 +261,7 @@ protect(set8700_L[0]) == 0
 protect(set8700_L[1]) == 512		## protect(set8700_A) copied
 protect(set8700_L[1][1]) == 1024	## protect(set8700_A[1]) copied
 
-## Testing list with "intialization"
+## Testing list with "initialization"
 set8700_L = list(1,2,3), protect(set8700_L) == 0
 protect(set8700_L[0]) | protect(set8700_L[1]) | protect(set8700_L[2]) == 0	## All zero
 set8700_L = {1,set8700_A}, set8700_L[1] == set8700_A

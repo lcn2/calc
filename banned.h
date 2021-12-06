@@ -1,14 +1,14 @@
 /*
- * banned - optionally ban dqngerious functions
+ * banned - optionally ban dangerous functions
  *
  * Unless UNBAN is defined, this file will turn the use
  * of certain dangerous functions into syntax errors.
  *
  * In the case of calc, we are motivated in part by the desire for
- * calc to correctly calculate: even durings extremely long calculations.
+ * calc to correctly calculate: even during extremely long calculations.
  *
  * If UNBAN is NOT defined, then calling certain functions
- * will result in a syntaxc error.
+ * will result in a syntax error.
  *
  * If we define UNBAN, then the effect of this file is disabled.
  *
@@ -17,7 +17,7 @@
  * if calculations.
  *
  * In the case of calc, we are motivated in part by the desire for calc
- * to correctly calculate: even durings extremely long calculations.
+ * to correctly calculate: even during extremely long calculations.
  *
  * If UNBAN is NOT defined, then calling certain functions
  * will result in a call to a non-existent function (link error).
@@ -88,11 +88,11 @@
  * then into function calls that do not exist.
  *
  * In the case of calc, we are motivated in part by the desire
- * for calc to correctly calculate: even durings extremely long
+ * for calc to correctly calculate: even during extremely long
  * calculations.
  *
  * If UNBAN is NOT defined, then calling certain functions
- * will result in a syntaxc error.
+ * will result in a syntax error.
  *
  * Unlike the above URL, we suggest an alternative function.
  * In many cases, additional logic is required to use the

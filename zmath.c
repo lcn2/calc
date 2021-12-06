@@ -515,7 +515,7 @@ zadd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	while (len--) {
 		sival.ivalue = ((FULL) *p1++) + ((FULL) *p2++) + carry;
 		/* ignore Saber-C warning #112 - get ushort from uint */
-		/*	  ok to ignore on name zadd`sival */
+		/*	  OK to ignore on name zadd`sival */
 		*pd++ = sival.silow;
 		carry = sival.sihigh;
 	}
@@ -583,7 +583,7 @@ zsub(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	carry = 0;
 	while (--len2 >= 0) {
 		/* ignore Saber-C warning #112 - get ushort from uint */
-		/*	  ok to ignore on name zsub`sival */
+		/*	  OK to ignore on name zsub`sival */
 		sival.ivalue = (BASE1 - ((FULL) *h1++)) + *h2++ + carry;
 		*hd++ = (HALF)(BASE1 - sival.silow);
 		carry = sival.sihigh;
@@ -644,7 +644,7 @@ zmuli(ZVALUE z, long n, ZVALUE *res)
 	carry = 0;
 	while (len--) {
 		/* ignore Saber-C warning #112 - get ushort from uint */
-		/*	  ok to ignore on name zmuli`sival */
+		/*	  OK to ignore on name zmuli`sival */
 		sival.ivalue = ((FULL) *h1++) * low + carry;
 		*sd++ = sival.silow;
 		carry = sival.sihigh;
@@ -1587,7 +1587,7 @@ zlowbit(ZVALUE z)
 	dataval = *zp;
 	bitval = bitmask;
 	/* ignore Saber-C warning #530 about empty while statement */
-	/*	  ok to ignore in proc zlowbit */
+	/*	  OK to ignore in proc zlowbit */
 	while ((*(bitval++) & dataval) == 0) {
 	}
 	return (n*BASEB)+(bitval-bitmask-1);
@@ -1612,7 +1612,7 @@ zhighbit(ZVALUE z)
 	bitval = bitmask+BASEB;
 	if (dataval) {
 		/* ignore Saber-C warning #530 about empty while statement */
-		/*	  ok to ignore in proc zhighbit */
+		/*	  OK to ignore in proc zhighbit */
 		while ((*(--bitval) & dataval) == 0) {
 		}
 	}

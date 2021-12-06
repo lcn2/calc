@@ -8,7 +8,7 @@ SYNOPSIS
 TYPES
     d		real
     m		real
-    s		real (defauls to 0)
+    s		real (default to 0)
     rnd		nonnegative integer, defaults to config("mod")
 
     return	gradians
@@ -16,7 +16,7 @@ TYPES
 DESCRIPTION
     Convert gradians, m minutes, and s seconds returning gradians.
 
-    The return value in gradians, is quivalent to the following:
+    The return value in gradians, is equivalent to the following:
 
 	mod(d + m/60 + s/4000, 400, rnd);
 

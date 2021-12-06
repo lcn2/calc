@@ -142,7 +142,7 @@ sha1Init(HASH *state)
  *
  * Note that this code, like MD5, seems to break some optimizing compilers.
  * It may be necessary to split it into sections, e.g., based on the four
- * subrounds.  One may also want to roll each subround into a loop.
+ * sub-rounds.  One may also want to roll each sub-round into a loop.
  */
 S_FUNC void
 sha1Transform(USB32 *digest, USB32 *W)
@@ -510,7 +510,7 @@ sha1_type(int type, HASH *state)
  * sha1_init_state - initialize a hash state structure for this hash
  *
  * given:
- *	state	- pointer to the hfunction element to initialize
+ *	state	- pointer to the function element to initialize
  */
 void
 sha1_init_state(HASH *state)

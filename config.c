@@ -149,8 +149,8 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	SQ_ALG2,		/* size of number to use square alg 2 */
 	POW_ALG2,		/* size of modulus to use REDC for powers */
 	REDC_ALG2,		/* size of modulus to use REDC algorithm 2 */
-	TRUE,			/* ok to print a tilde on approximations */
-	TRUE,			/* ok to print tab before numeric values */
+	TRUE,			/* OK to print a tilde on approximations */
+	TRUE,			/* OK to print tab before numeric values */
 	0,			/* quomod() default rounding mode */
 	2,			/* quotient // default rounding mode */
 	0,			/* mod % default rounding mode */
@@ -160,8 +160,8 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	8,			/* cfsim() default rounding mode */
 	2,			/* output default rounding mode */
 	24,			/* round()/bround() default rounding mode */
-	FALSE,			/* ok to print leading 0 before decimal pt */
-	0,			/* ok to print trailing 0's */
+	FALSE,			/* OK to print leading 0 before decimal pt */
+	0,			/* OK to print trailing 0's */
 	MAXSCANCOUNT,		/* max scan errors before abort */
 	PROMPT1,		/* normal prompt */
 	PROMPT2,		/* prompt when inside multi-line input */
@@ -209,8 +209,8 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	SQ_ALG2,		/* size of number to use square alg 2 */
 	POW_ALG2,		/* size of modulus to use REDC for powers */
 	REDC_ALG2,		/* size of modulus to use REDC algorithm 2 */
-	TRUE,			/* ok to print a tilde on approximations */
-	TRUE,			/* ok to print tab before numeric values */
+	TRUE,			/* OK to print a tilde on approximations */
+	TRUE,			/* OK to print tab before numeric values */
 	0,			/* quomod() default rounding mode */
 	2,			/* quotient // default rounding mode */
 	0,			/* mod % default rounding mode */
@@ -220,8 +220,8 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	8,			/* cfsim() default rounding mode */
 	24,			/* output default rounding mode */
 	24,			/* round()/bround() default rounding mode */
-	TRUE,			/* ok to print leading 0 before decimal pt */
-	0,			/* ok to print trailing 0's */
+	TRUE,			/* OK to print leading 0 before decimal pt */
+	0,			/* OK to print trailing 0's */
 	MAXSCANCOUNT,		/* max scan errors before abort */
 	"; ",			/* normal prompt */
 	";; ",			/* prompt when inside multi-line input */

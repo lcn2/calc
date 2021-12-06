@@ -7101,9 +7101,10 @@ define test_sha1()
 	vrfy(sha1("x", "y", "z") == sha1("xyz"),
 	    '7208: sha1("x", "y", "z") == sha1("xyz")');
 
-	vrfy(sha1(sha1("this is",7^19-8,"a composit",3i+4.5,"hash")) ==
-	    0xc3e1b562bf45b3bcfc055ac65b5b39cdeb6a6c55,
-	'7209: sha1(sha1("this is",7^19-8,"a composit",3i+4.5,"hash")) == ...');
+	vrfy(sha1(sha1("this is",7^19-8,"a composite",3i+4.5,"hash")) ==
+	    0x68aa4fe0a9b6d1662f8d2dbdeee8879239185d09,
+	'7209: sha1(sha1("this is",7^19-8,"a composite",3i+4.5,"hash")) ' +
+	'== ...');
 
 
 	z = sha1(list(1,2,3), "curds and whey", 2^21701-1, pi(1e-100));

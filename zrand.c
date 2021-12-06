@@ -191,7 +191,7 @@
  *
  *	The following calc code produces the same effect:
  *
- *	    (* reload default subtractive table xored with low 64 seed bits *)
+ *	    (* reload default subtractive table xor-ed with low 64 seed bits *)
  *	    seed_xor = seed & ((1<<64)-1);
  *	    for (i=0; i < 100; ++i) {
  *		subtractive[i] = xor(default_subtractive[i], seed_xor);

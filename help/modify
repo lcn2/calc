@@ -5,7 +5,7 @@ SYNOPSIS
     modify(A, fname)
 
 TYPES
-    A		lvalue with list, matrix or objectvalue
+    A		lvalue with list, matrix or object value
     fname	string, the name of a user-defined function
 
     return	null value if successful, otherwise an error value
@@ -54,7 +54,7 @@ LINK LIBRARY
 SEE ALSO
     makelist
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

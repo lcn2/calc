@@ -36,7 +36,7 @@
  * swap_b8_in_HALFs - swap 8 and if needed, 16 bits in an array of HALFs
  *
  * given:
- *	dest	- pointer to where the swapped src wil be put or
+ *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a HALF array to swap
  *	len	- length of the src HALF array
@@ -76,7 +76,7 @@ swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len)
  * swap_b8_in_ZVALUE - swap 8 and if needed, 16 bits in a ZVALUE
  *
  * given:
- *	dest	- pointer to where the swapped src wil be put or
+ *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a ZVALUE to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
@@ -144,7 +144,7 @@ swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
  * swap_b8_in_NUMBER - swap 8 and if needed, 16 bits in a NUMBER
  *
  * given:
- *	dest	- pointer to where the swapped src wil be put or
+ *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a NUMBER to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
@@ -208,7 +208,7 @@ swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
  * swap_b8_in_COMPLEX - swap 8 and if needed, 16 bits in a COMPLEX
  *
  * given:
- *	dest	- pointer to where the swapped src wil be put or
+ *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a COMPLEX to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
@@ -272,7 +272,7 @@ swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
  * swap_b16_in_HALFs - swap 16 bits in an array of HALFs
  *
  * given:
- *	dest	- pointer to where the swapped src wil be put or
+ *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a HALF array to swap
  *	len	- length of the src HALF array
@@ -312,7 +312,7 @@ swap_b16_in_HALFs(HALF *dest, HALF *src, LEN len)
  * swap_b16_in_ZVALUE - swap 16 bits in a ZVALUE
  *
  * given:
- *	dest	- pointer to where the swapped src wil be put or
+ *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a ZVALUE to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
@@ -379,7 +379,7 @@ swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
  * swap_b16_in_NUMBER - swap 16 bits in a NUMBER
  *
  * given:
- *	dest	- pointer to where the swapped src wil be put or
+ *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a NUMBER to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
@@ -443,7 +443,7 @@ swap_b16_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
  * swap_b16_in_COMPLEX - swap 16 bits in a COMPLEX
  *
  * given:
- *	dest	- pointer to where the swapped src wil be put or
+ *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a COMPLEX to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
@@ -507,7 +507,7 @@ swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
  * swap_HALF_in_ZVALUE - swap HALFs in a ZVALUE
  *
  * given:
- *	dest	- pointer to where the swapped src wil be put or
+ *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a ZVALUE to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
@@ -575,7 +575,7 @@ swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
  * swap_HALF_in_NUMBER - swap HALFs in a NUMBER
  *
  * given:
- *	dest	- pointer to where the swapped src wil be put or
+ *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a NUMBER to swap
  *	all	- TRUE => swap every element, FALSE => swap only the
@@ -639,7 +639,7 @@ swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
  * swap_HALF_in_COMPLEX - swap HALFs in a COMPLEX
  *
  * given:
- *	dest	- pointer to where the swapped src wil be put or
+ *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a COMPLEX to swap
  *	all	- TRUE => swap every element, FALSE => swap only the

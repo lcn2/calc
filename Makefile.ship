@@ -164,7 +164,7 @@ CCBAN= -UUNBAN
 #	-DUSE_TERMIOS	  use struct termios from <termios.h>
 #	-DUSE_TERMIO	  use struct termios from <termio.h>
 #	-DUSE_SGTTY	  use struct sgttyb from <sys/ioctl.h>
-#	-DUSE_NOTHING	  windoz system, don't use any of them
+#	-DUSE_NOTHING	  Windows system, don't use any of them
 #
 # Select TERMCONTROL= -DUSE_TERMIOS for DJGPP.
 #
@@ -1067,7 +1067,7 @@ READLINE_EXTRAS=
 #READLINE_LIB= -L/sw/lib -lreadline
 #READLINE_EXTRAS= -lhistory -lncurses
 #
-# For Apple OS X: install homebrew and then:
+# For Apple OS X: install HomeBrew and then:
 #
 #	brew install readline
 #
@@ -1197,12 +1197,12 @@ CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help \
 
 # Some out of date operating systems require/want an executable to
 # end with a certain file extension.  Some compiler systems such as
-# windoz build calc as calc.exe.  The EXT variable is used to denote
+# Windows build calc as calc.exe.  The EXT variable is used to denote
 # the extension required by such.  Note that Cygwin requires EXT to be
-# the same as Linux/Un*x/GNU, even though it runs under windoz.
+# the same as Linux/Un*x/GNU, even though it runs under Windows.
 #
 # EXT=				# normal Un*x / Linux / GNU/Linux / Cygwin
-# EXT=.exe			# windoz
+# EXT=.exe			# Windows
 #
 # If in doubt, use EXT=
 #
@@ -1944,10 +1944,10 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 # H=@:	do not report hsrc file formation progress
 # H=@	do echo hsrc file formation progress
 #
-# S= >/dev/null 2>&1	slience ${CC} output during hsrc file formation
+# S= >/dev/null 2>&1	silence ${CC} output during hsrc file formation
 # S=			full ${CC} output during hsrc file formation
 #
-# E= 2>/dev/null	slience command stderr during hsrc file formation
+# E= 2>/dev/null	silence command stderr during hsrc file formation
 # E=			full command stderr during hsrc file formation
 #
 # V=@:	do not echo debug statements (quiet mode)
@@ -2971,7 +2971,7 @@ terminal.h: ${MAKE_FILE} ${LOC_MKF}
 	${Q} echo '#if !defined(USE_TERMIO)' >> $@
 	${Q} echo '#if !defined(USE_SGTTY)' >> $@
 	-${Q} if [ X"${TERMCONTROL}" = X"-DUSE_WIN32" ]; then \
-	    echo '/* windoz, use none of these modes */' >> $@; \
+	    echo '/* Windows, use none of these modes */' >> $@; \
 	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> $@; \
 	    echo '#undef USE_TERMIO    /* <termio.h> */' >> $@; \
 	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> $@; \
@@ -4041,7 +4041,7 @@ have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h \
 
 ###
 #
-# Build .h files for windoz based systems
+# Build .h files for Windows based systems
 #
 # This is really a internal utility rule that is used to create the
 # win32 sub-directory for distribution.
@@ -4182,7 +4182,7 @@ sample_many-static${EXT}: sample_many.o ${CALC_STATIC_LIBS} \
 
 ###
 #
-# Homegrown make dependency rules.  Your system may not support
+# Home grown make dependency rules.  Your system may not support
 # or have the needed tools.  You can ignore this section.
 #
 # We will form a skeleton tree of *.c files containing only #include "foo.h"

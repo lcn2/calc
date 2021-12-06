@@ -57,7 +57,7 @@ c_argv(char *UNUSED(name), int count, VALUE **vals)
 {
 	VALUE result;		/* what we will return */
 	ZVALUE zfilelen;	/* length of a file as a ZVALUE */
-	NUMBER *filelen;	/* pointer to length of a file as a NUMER */
+	NUMBER *filelen;	/* pointer to length of a file as a NUMBER */
 	char *type;		/* the name of the arg type */
 	int i;
 
@@ -103,7 +103,7 @@ c_argv(char *UNUSED(name), int count, VALUE **vals)
 			type = "assoc";
 			break;
 		case V_OBJ:	/* address of object structure */
-			type = "ocject";
+			type = "object";
 			break;
 		case V_FILE:	/* opened file id */
 			type = "file";

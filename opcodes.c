@@ -3910,7 +3910,7 @@ calculate(FUNC *fp, int argcount)
 		switch (op->o_type) {
 		case OPNUL:	/* no extra arguments */
 			/* ignore Saber-C warning #65 - has 1 arg, expected 0 */
-			/*	  ok to ignore in proc calculate */
+			/*	  OK to ignore in proc calculate */
 			(*op->o_func)(fp);
 			break;
 
@@ -3935,7 +3935,7 @@ calculate(FUNC *fp, int argcount)
 
 		case OPGLB:	/* global symbol reference (pointer arg) */
 			/* ignore Saber-C warning #68 - benign type mismatch */
-			/*	  ok to ignore in proc calculate */
+			/*	  OK to ignore in proc calculate */
 			(*op->o_func)(fp, *(&fp->f_opcodes[pc]));
 			pc += PTR_SIZE;
 			break;

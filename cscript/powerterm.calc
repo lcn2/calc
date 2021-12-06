@@ -92,7 +92,7 @@ if (base_lim <= 2^20+1) {		/* 2^20 requires ~96 Megs of memory */
 }
 
 /*
- * remove nestest powers
+ * remove nearest powers
  */
 while (abs(x) >= base_lim) {
 

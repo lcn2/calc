@@ -892,7 +892,7 @@ palindrome.cal
     nextprimepal(val)
     prevprimepal(val)
 
-    Functions to form and manipulate palendromes in base 10.
+    Functions to form and manipulate palindromes in base 10.
 
     Important functions are:
 

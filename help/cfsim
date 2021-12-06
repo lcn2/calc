@@ -34,7 +34,7 @@ DESCRIPTION
     consider the two cases rnd = 8 and rnd = 16.
 
     If den(x) > 2, cfsim(x, 8) returns the value of the penultimate simple
-    continued-fraction approximant to x, i.e. if:
+    continued-fraction approximate to x, i.e. if:
 
 	x = a_0 + 1/(a_1 + 1/(a_2 + ... + 1/a_n) ...)),
 
@@ -47,7 +47,7 @@ DESCRIPTION
     of x described above, this is given by replacing a_n by a_n - 1.
 
     If den(x) = 2, the definition adopted is to round towards zero for the
-    approximant case (rnd = 8) and from zero for the "nearest" case (rnd = 16).
+    approximate case (rnd = 8) and from zero for the "nearest" case (rnd = 16).
 
     For integral x, cfsim(x, 8) returns zero, cfsim(x,16) returns x - sgn(x).
 
@@ -55,7 +55,7 @@ DESCRIPTION
 
 	rnd		integer x	half-integer x		den(x) > 2
 
-	 8		0		x - sgn(x)/2		approximant
+	 8		0		x - sgn(x)/2		approximate
 	16		x - sgn(x)	x + sgn(x)/2		nearest
 
      From either cfsim(x, 0) and cfsim(x, 1), the other is easily
@@ -73,7 +73,7 @@ DESCRIPTION
      "good" approximations to x with decreasing denominators and
      correspondingly decreasing accuracy; each denominator is less than half
      the preceding denominator.	 (Unlike the "forward" sequence of
-     continued-fraction approximants these are not necessarily alternately
+     continued-fraction approximates these are not necessarily alternately
      greater than and less than x.)
 
      Some other properties:

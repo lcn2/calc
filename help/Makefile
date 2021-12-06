@@ -220,10 +220,10 @@ T=
 # H=@:	do not report hsrc file formation progress
 # H=@	do echo hsrc file formation progress
 #
-# S= >/dev/null 2>&1	slience ${CC} output during hsrc file formation
+# S= >/dev/null 2>&1	silence ${CC} output during hsrc file formation
 # S=			full ${CC} output during hsrc file formation
 #
-# E= 2>/dev/null	slience command stderr during hsrc file formation
+# E= 2>/dev/null	silence command stderr during hsrc file formation
 # E=			full command stderr during hsrc file formation
 #
 # V=@:	do not echo debug statements (quiet mode)
@@ -270,7 +270,7 @@ TRUE= true
 # the extension required by such.
 #
 # EXT=				# normal Un*x / Linux / GNU/Linux systems
-# EXT=.exe			# windoz / Cygwin
+# EXT=.exe			# Windows / Cygwin
 #
 # If in doubt, use EXT=
 #
@@ -685,7 +685,7 @@ ${SINGULAR_FILES}: ${PLURAL_FILES}
 # into a stand-alone program that generates a suitable function list
 # that is sandwiched between the top and bottom builtin help text.
 #
-# We form funclist.c by sedding out unwanted stuff from builtins table,
+# We form funclist.c by sed-ing out unwanted stuff from builtins table,
 # converting NUMBER* and VALUE into harmless types and converting
 # the showbuiltins() function into main().  Combined with the -DFUNCLIST
 # we will avoid all of the complex calc types, macros and defines and

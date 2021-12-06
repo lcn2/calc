@@ -3,12 +3,12 @@ Dear calc user on a Windows based system,
 See the HOWTO.INSTALL file for information on how to build and install calc.
 See also the README file.
 
-NOTE: The main developers do not have access to a Windoz based platform.
-      While we will make an effort to not break calc Windoz based system,
-      our lack of a Windoz test environment will mean we will make mistakes
-      from time to time.  Hopefully Windowz users can overcome these mistakes.
+NOTE: The main developers do not have access to a Windows based platform.
+      While we will make an effort to not break calc Windows based system,
+      our lack of a Windows test environment will mean we will make mistakes
+      from time to time.  Hopefully Windows users can overcome these mistakes.
       Of course you are welcome to send us any patches that fix your
-      Windoz build environment.
+      Windows build environment.
 
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -141,7 +141,7 @@ Follow those recommendations.  In cases where they conflict with
 the above Makefile list, follow the recommendation in the Makefile.
 
 
-## Copyright (C) 2002-2009  Landon Curt Noll and Thomas Jones-Low
+## Copyright (C) 2002-2009,2021  Landon Curt Noll and Thomas Jones-Low
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

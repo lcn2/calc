@@ -1,7 +1,7 @@
 #
 # calc.spec.in - template specfile for calc
 #
-# Copyright (C) 2003-2014  Petteri Kettunen and Landon Curt Noll
+# Copyright (C) 2003-2014,2021  Petteri Kettunen and Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -49,7 +49,7 @@ BuildRoot: %{_tmppath}/build-root
 Calc is arbitrary precision C-like arithmetic system that is a
 calculator, an algorithm prototype and mathematical research
 tool. Calc comes with a rich set of builtin mathematical and
-programmatic functions.
+programming functions.
 
 For the latest calc release, see the calc project home page:
 
@@ -165,11 +165,11 @@ echo '-=- calc.spec beginning make clean -=-'
 %attr(644, root, root) %{_libdir}/libcustcalc.a
 
 %changelog
-* Sun Mar 24 2019 cLandon Curt Noll http://www.isthe.com/chongo
+* Sun Mar 24 2019 Landon Curt Noll http://www.isthe.com/chongo
 - Release: 13
 - Disable compiling with the default ARCH_CFLAGS= -march=native
-  by clearking the ARCH_CFLAGS value in order to maximize
-  the RPM binary protability.
+  by clearing the ARCH_CFLAGS value in order to maximize
+  the RPM binary portability.
 
 * Mon Sep 01 2014 Landon Curt Noll http://www.isthe.com/chongo
 - Release: 12
@@ -178,7 +178,7 @@ echo '-=- calc.spec beginning make clean -=-'
   use -j1 while building these RPMs to avoid this make bug.
   This only impacts the speed of building the rpms.
 - Stopped removing %{_buildroot} at the beginning of install
-  as this, acording to a number of sources, was asking for trouble.
+  as this, according to a number of sources, was asking for trouble.
 - Clean removes tmp, BUILD, SPEC, and BUILDROOT dirs under topdir.
 - Fixed the building of the calc-debuginfo rpm.
 - Eliminated rpmbuild "bogus date" warnings due to inconsistent weekday,

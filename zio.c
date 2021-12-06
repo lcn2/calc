@@ -237,7 +237,7 @@ math_divertio(void)
 
 
 /*
- * Undivert output and return the saved output as a string.  This also
+ * Un-divert output and return the saved output as a string.  This also
  * restores the output state to what it was before the diversion began.
  * The string needs freeing by the caller when it is no longer needed.
  */

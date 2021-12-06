@@ -34,7 +34,7 @@
  * This prog outputs several defines:
  *
  *	HAVE_UNUSED
- *		defined ==> ok to use unused
+ *		defined ==> OK to use unused
  *		undefined ==> do not use unused
  *
  *	UNUSED

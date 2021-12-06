@@ -79,7 +79,7 @@ STATIC NUMBER *pivalue[PI_CACHE_LEN] = {
 };
 
 /*
- * other static function decls
+ * other static function declarations
  */
 STATIC NUMBER *qexprel(NUMBER *q, long bitnum);
 
@@ -817,7 +817,7 @@ qpi(NUMBER *epsilon)
 
 
 /*
- * qpidiv180 - calcucalte pi / 180
+ * qpidiv180 - calculate pi / 180
  *
  * This function returns pi/180 as used to covert between radians and degrees.
  */
@@ -861,7 +861,7 @@ qpidiv180(NUMBER *epsilon)
 
 
 /*
- * qpidiv200 - calcucalte pi / 200
+ * qpidiv200 - calculate pi / 200
  *
  * This function returns pi/200 as used to covert between radians and gradians.
  */
@@ -1343,7 +1343,7 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 
 
 /*
- * Calculate the Kth root of a number to within the specified accuracy.
+ * Calculate the K-th root of a number to within the specified accuracy.
  */
 NUMBER *
 qroot(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)

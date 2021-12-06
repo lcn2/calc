@@ -1212,7 +1212,7 @@ VALUE
 matdet(MATRIX *m)
 {
 	long n;			/* original matrix is n x n */
-	long k;			/* working submatrix is k x k */
+	long k;			/* working sub-matrix is k x k */
 	long i, j;
 	VALUE *pivot, *div, *val;
 	VALUE *vp, *vv;
@@ -1251,7 +1251,7 @@ matdet(MATRIX *m)
 		 * Find the first nonzero value in the rest of the column
 		 * downwards from pivot.  If there is no such value, then
 		 * the determinant is zero.  If the first nonzero entry is not
-		 * the pivot, then swap rows in the k * k submatrix, and
+		 * the pivot, then swap rows in the k * k sub-matrix, and
 		 * remember that the determinant changes sign.
 		 */
 		val = pivot;

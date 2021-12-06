@@ -1,4 +1,9 @@
-The following are the changes from calc version 2.14.0.9 to date:
+The following are the changes from calc version 2.14.0.11 to date:
+
+    Fixed a number of typos.
+
+
+The following are the changes from calc version 2.14.0.9 to 2.14.0.10:
 
     Due to issues with clang and Apple Silicon, ARCH_CFLAGS is now,
     by default, empty:
@@ -17,23 +22,23 @@ The following are the changes from calc version 2.14.0.9 to date:
 	arch: uname -p
 	hardware: uname -m
 
-    Fixed compiling calc on Apple Silicon with homebrew.  On Apple
+    Fixed compiling calc on Apple Silicon with HomeBrew.  On Apple
     Silicon, HomeBrew installs on into a different location.  The
     Makefile checks if ${hardware} is arm64 and adjusts the location
     of libraries such as readline and history accordingly.
 
-    Pluged a number of memory leaks.
+    Plugged a number of memory leaks.
 
-    Fixed a few cases where v_subtype was not properly initialuzed.
+    Fixed a few cases where v_subtype was not properly initialized.
 
     Improved the way that internal pre-defined constants are managed.
     Removed unused internal pre-defined constants.  Added code to
     prevent an internal pre-defined constant (that was never allocated)
     from being freed.
 
-    Remove unnecessary spaces inbetween or next to tabs.
+    Remove unnecessary spaces in-between or next to tabs.
 
-    Update copright dates to account for 2021 modifications.
+    Update Copyright dates to account for 2021 modifications.
 
 
 The following are the changes from calc version 2.14.0.7 to 2.14.0.8:
@@ -108,7 +113,7 @@ The following are the changes from calc version 2.14.0.0 to 2.14.0.6:
     The optional 2nd argument is ignored by g2d(grad, ep) and d2g(deg, ep).
 
     The clean and clobber makefile rules no longer list custom/Makefile
-    as a dependecy.
+    as a dependency.
 
     Unfortunately due to the complex dependency issues between
     Makefile, Makefile.ship and custom/Makefile, parallel GNU make
@@ -246,7 +251,7 @@ The following are the changes from calc version 2.14.0.0 to 2.14.0.6:
     Fixed typo in cal/statistics.cal thanks to a report by <GitHub user
     dennisaldea>.
 
-    Fixed an old Windoz pun in README.WINDOWS as requested by <GitHub
+    Fixed an old Windows pun in README.WINDOWS as requested by <GitHub
     user marcodegio>.
 
     Fixed a really obscure bug in the internal initconstants()
@@ -257,7 +262,7 @@ The following are the changes from calc version 2.14.0.0 to 2.14.0.6:
 	multi-architecture testing found the bug.  Now, after all
 	those years, it is fixed.
 
-    Fixed issues identied by the default CodeUL GitHub security code scan:
+    Fixed issues identified by the default CodeUL GitHub security code scan:
 
 	Wrong type of arguments to printf in have_fpos_pos.c
 	Multiplication result converted to larger type in zfunc.c
@@ -1304,7 +1309,7 @@ The following are the changes from calc version 2.12.4.0 to 2.12.4.2:
     dot org) for this patch.
 
     Michael Penk (mpenk at wuska dot com) reported success in installs
-    under windoz via Cygwin by making a change to the Cygwin target.
+    under Windows via Cygwin by making a change to the Cygwin target.
     These changes have been folded into the main calc Makefile.
     The old recommendation of using 'make win32_hsrc' is no longer
     required for Cygwin.  See the README.WINDOWS file for details.
@@ -1478,7 +1483,7 @@ The following are the changes from calc version 2.12.1.10 to 2.12.2:
     All extern functions are now declared with the symbol E_FUNC.
     The include file decl.h defines these 4 symbols by default
     to static, extern, static, and extern respectively.  Under
-    Windoz, DLL is also defined according to the _EXPORTING symbol
+    Windows, DLL is also defined according to the _EXPORTING symbol
     and is prepended to the EXTERN and E_FUNC symbols.  The decl.h
     file has replaced the win32dll.h file.
 
@@ -2212,8 +2217,8 @@ The following are the changes from calc version 2.12.0 to 2.12.0.8:
 	doalltimes(1e6)
 
     Calc now ignores carriage returns (\r), vertical tabs (\v), and
-    form feeds (\f) when token parsing.  Thus users on Windoz systems
-    can write files using their \r\n format and users on non-Windoz
+    form feeds (\f) when token parsing.  Thus users on Windows systems
+    can write files using their \r\n format and users on non-Windows
     systems can read them without errors.
 
     The quomod() builtin function now takes an optional 5th argument
@@ -2555,7 +2560,7 @@ The following are the changes from calc version 2.11.6.0 to 2.11.6.2:
 
     Fixed help typos reported by Marc Mezzarobba <mm at mm dot ovh dot org>.
 
-    Forced system("") to return 0 under windoz.
+    Forced system("") to return 0 under Windows.
 
     The direct.h include file is not used when compiling under Cygwin.
 
@@ -2865,10 +2870,10 @@ The following are the changes from calc version 2.11.5t2 to 2.11.5t2.1:
     The calc builtin function, fopen(), now allows one to specify
     opening files in binary modes.  On POSIX / Linux / Un*x-like systems,
     text file is the same as a binary file and so 'b' to an fopen has
-    no effect and is ignored.  However on systems such as MS Windoz
+    no effect and is ignored.  However on systems such as MS Windows
     the 'b' / binary mode has meaning.  See 'help fopen' for details.
 
-    On systems (such as MS Windoz), calc will produce a different error
+    On systems (such as MS Windows), calc will produce a different error
     message when it attempts to open /dev/tty.  This will condition
     will occur in things like calc scripts when they switch from ``batch
     processing'' commands from and want to start interactive mode.
@@ -2903,14 +2908,14 @@ The following are the changes from calc version 2.11.5t0 to 2.11.5t1.1:
     Thanks goes to Martin Buck <m at rtin-buck dot de> for reporting
     this bug and testing the fix.
 
-    An effort was made to make calc easier to build under Windoz
+    An effort was made to make calc easier to build under Windows
     using the Cygwin project (http://sources.redhat.com/cygwin/).
     Thanks to the work of Thomas Jones-Low (tjoneslo at softstart
     dot com), a number of #if defined(_WIN32)'s have been added
-    to calc source.  These changes should not effect Windoz
+    to calc source.  These changes should not effect Windows
     free system such as GNU/Linux, Solaris, POSIX-like, etc ...
 
-    Added windll.h to deal with Windoz related DLL issues.
+    Added windll.h to deal with Windows related DLL issues.
     Using the convention of 'extern DLL' instead of 'DLL extern'
     to deal with symbols that export to or import from a DLL.
 
@@ -2927,12 +2932,12 @@ The following are the changes from calc version 2.11.5t0 to 2.11.5t1.1:
     If HAVE_URANDOM is NO, then the Makefile will assume /dev/urandom does
     not exist.
 
-    If TERMCONTROL is -DUSE_WIN32, then the Windoz terminal control
+    If TERMCONTROL is -DUSE_WIN32, then the Windows terminal control
     (no TERMIOS, no TERMIO, no SGTTY) will be assumed.
 
     Added a win32_hsrc Makefile rule to create hsrc files appropriate
-    for a Windoz system using Cygwin gcc environment.  Added win32.mkdef
-    which is used by the win32_hsrc rule to set the Windoz specific
+    for a Windows system using Cygwin gcc environment.  Added win32.mkdef
+    which is used by the win32_hsrc rule to set the Windows specific
     Makefile values to build hsrc files.  The hsrc files are built
     under the win32 directory.
 
@@ -3013,7 +3018,7 @@ The following are the changes from calc version 2.11.5t0 to 2.11.5t1.1:
 	config("windows")
 
     Now shipping a win32 sub-directory that contains hsrc .h files
-    that have been attempted to be built for windoz.
+    that have been attempted to be built for Windows.
 
 
 The following are the changes from calc version 2.11.4t1 to 2.11.4t2:

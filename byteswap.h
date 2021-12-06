@@ -1,7 +1,7 @@
 /*
  * byteswap - byte swapping macros
  *
- * Copyright (C) 1999,2014  Landon Curt Noll
+ * Copyright (C) 1999,2014,2021  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -39,7 +39,7 @@
 /*
  * SWAP_B8_IN_B16 - swap 8 bits in 16 bits
  *
- *	dest	- pointer to where the swapped src wil be put
+ *	dest	- pointer to where the swapped src will be put
  *	src	- pointer to a 16 bit value to swap
  *
  * This macro will either switch to the opposite byte sex (Big Endian vs.
@@ -53,7 +53,7 @@
 /*
  * SWAP_B16_IN_B32 - swap 16 bits in 32 bits
  *
- *	dest	- pointer to where the swapped src wil be put
+ *	dest	- pointer to where the swapped src will be put
  *	src	- pointer to a 32 bit value to swap
  */
 #define SWAP_B16_IN_B32(dest, src) (					\
@@ -64,7 +64,7 @@
 /*
  * SWAP_B8_IN_B32 - swap 8 & 16 bits in 32 bits
  *
- *	dest	- pointer to where the swapped src wil be put
+ *	dest	- pointer to where the swapped src will be put
  *	src	- pointer to a 32 bit value to swap
  *
  * This macro will either switch to the opposite byte sex (Big Endian vs.
@@ -82,7 +82,7 @@
 /*
  * SWAP_B32_IN_B64 - swap 32 bits in 64 bits
  *
- *	dest	- pointer to where the swapped src wil be put
+ *	dest	- pointer to where the swapped src will be put
  *	src	- pointer to a 64 bit value to swap
  */
 #define SWAP_B32_IN_B64(dest, src) (					\
@@ -93,7 +93,7 @@
 /*
  * SWAP_B16_IN_B64 - swap 16 & 32 bits in 64 bits
  *
- *	dest	- pointer to where the swapped src wil be put
+ *	dest	- pointer to where the swapped src will be put
  *	src	- pointer to a 64 bit value to swap
  */
 #define SWAP_B16_IN_B64(dest, src) (					\
@@ -106,7 +106,7 @@
 /*
  * SWAP_B8_IN_B64 - swap 16 & 32 bits in 64 bits
  *
- *	dest	- pointer to where the swapped src wil be put
+ *	dest	- pointer to where the swapped src will be put
  *	src	- pointer to a 64 bit value to swap
  *
  * This macro will either switch to the opposite byte sex (Big Endian vs.
@@ -124,7 +124,7 @@
 /*
  * SWAP_B32_IN_B64 - swap 32 bits in 64 bits (simulated by 2 32 bit values)
  *
- *	dest	- pointer to where the swapped src wil be put
+ *	dest	- pointer to where the swapped src will be put
  *	src	- pointer to a 64 bit value to swap
  */
 #define SWAP_B32_IN_B64(dest, src) (					\
@@ -135,7 +135,7 @@
 /*
  * SWAP_B16_IN_B64 - swap 16 & 32 bits in 64 bits (simulated by 2 32 bit vals)
  *
- *	dest	- pointer to where the swapped src wil be put
+ *	dest	- pointer to where the swapped src will be put
  *	src	- pointer to a 64 bit value to swap
  */
 #define SWAP_B16_IN_B64(dest, src) (					\
@@ -146,7 +146,7 @@
 /*
  * SWAP_B8_IN_B64 - swap 16 & 32 bits in 64 bits (simulated by 2 32 bit vals)
  *
- *	dest	- pointer to where the swapped src wil be put
+ *	dest	- pointer to where the swapped src will be put
  *	src	- pointer to a 64 bit value to swap
  *
  * This macro will either switch to the opposite byte sex (Big Endian vs.

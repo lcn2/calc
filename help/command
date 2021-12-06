@@ -226,7 +226,7 @@ Command sequence
 		opcodes func	internal opcodes for function `func'
 		sizes		size in octets of calc value types
 		realglobals		numeric global variables
-		statics		unscoped static variables
+		statics		un-scoped static variables
 		numbers		calc number cache
 		redcdata		REDC data defined
 		strings		calc string cache

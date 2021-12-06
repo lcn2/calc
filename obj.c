@@ -214,7 +214,7 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 	char *namestr_ret;	/* namestr() return string */
 	size_t opi_name_len;	/* length of the oip name */
 
-	/* initilaize name */
+	/* initialize name */
 	memset(name, 0, sizeof(name));
 
 	/* initialize VALUEs */

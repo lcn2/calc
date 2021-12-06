@@ -1,6 +1,6 @@
 #!/usr/local/src/bin/calc/calc -q -p -f
 /*
- * sqaure - print the squares of input values
+ * square - print the squares of input values
  *
  * Copyright (C) 2000-2007,2014,2019,2021  Ernest Bowen
  *

@@ -891,7 +891,7 @@
  *
  *	pmod(ir,2,n) > pmod(pmod(ir,2,n),2,n)
  *
- * Thus, for thw Blum modulus 'n', the method outlined for srandom(ir) yields
+ * Thus, for the Blum modulus 'n', the method outlined for srandom(ir) yields
  * the initial quadratic residue of:
  *
  *    r = 0x748b6d882ff4b074e2f1e93a8627d626506c73ca5a62546c90f23fd7ed3e7b11e
@@ -934,7 +934,7 @@
  * be beyond the reach for a while.
  *
  * The lengths of the two Blum probable primes 'p' and 'q' used to make up
- * the 20 Blum modului 'n=p*q' differ slightly to avoid certain
+ * the 20 Blum moduli 'n=p*q' differ slightly to avoid certain
  * factorization attacks that work on numbers that are a perfect square,
  * or where the two primes are nearly the same.	 I elected to have the
  * sizes differ by up to 6% of the product size to avoid such attacks.
@@ -983,7 +983,7 @@
  * where 'ip', 'iq' and 'ir' are large integers that are unlikely to be
  * 'guessed' and where numbers around the size of iq*ir are beyond
  * the current reach of the best factoring methods on the fastest
- * SGI/Cray supercomuters.
+ * SGI/Cray supercomputers.
  *
  * Of course you can increase the '25' value if 1 of 4^25 odds of a
  * non-prime are too probable for you.
@@ -2807,7 +2807,7 @@ zrandom(long cnt, ZVALUE *res)
 		/*
 		 * If we need only part of the buffer, use
 		 * the top bits and keep the bottom in place.
-		 * If we need extactly all of the buffer,
+		 * If we need exactly all of the buffer,
 		 * process it as a partial buffer fill.
 		 */
 		if (dest.len <= blum.bits) {

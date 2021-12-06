@@ -4,7 +4,7 @@ Custom calc resource files
 The following custom calc resource files are provided because they serve
 as examples of how use the custom interface.  The custom interface
 allows for machine dependent and/or non-portable code to be added as
-builtins to the calc program.  A few example custom functions and
+built-ins to the calc program.  A few example custom functions and
 resource files are shipped with calc to provide you with examples.
 
 By default, the custom builtin returns an error.  Calc have been
@@ -41,7 +41,7 @@ pzasusb8.cal
     Run custom("pzasusb8") on a standard set of data, print Endian
     related information and print value size information.
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

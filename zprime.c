@@ -161,7 +161,7 @@ zisprime(ZVALUE z)
 	}
 
 	/* ignore Saber-C warning #530 about empty for statement */
-	/*	  ok to ignore in proc zisprime */
+	/*	  OK to ignore in proc zisprime */
 	/* a number >=2^16 and < 2^32 */
 	for (isqr=fsqrt(n), tp=prime; (*tp <= isqr) && (n % *tp); ++tp) {
 	}
@@ -279,8 +279,8 @@ next_prime(FULL n)
 		 */
 		do {
 			/* ignore Saber-C warning #530 - empty for statement */
-			/*	  ok to ignore in proc next_prime */
-			/* XXX - speed up test for large n by using gcds */
+			/*	  OK to ignore in proc next_prime */
+			/* XXX - speed up test for large n by using GCDs */
 			/* find a factor, or give up if not found */
 			for (tp=JPRIME; (*tp <= isqr) && (n % *tp); ++tp) {
 			}
@@ -368,8 +368,8 @@ zpprime(ZVALUE z)
 		/* factor values until we find a prime */
 		do {
 			/* ignore Saber-C warning #530 - empty for statement */
-			/*	  ok to ignore in proc zpprime */
-			/* XXX - speed up test for large n by using gcds */
+			/*	  OK to ignore in proc zpprime */
+			/* XXX - speed up test for large n by using GCDs */
 			/* find a factor, or give up if not found */
 			for (tp=prime; (*tp <= isqr) && (n % *tp); ++tp) {
 			}
@@ -684,7 +684,7 @@ small_factor(ZVALUE z, FULL limit)
 		 * bytes that indicate the offsets between odd values that
 		 * are not a multiple of 3,4,5,7 & 11.
 		 */
-		/* XXX - speed up test for large z by using gcds */
+		/* XXX - speed up test for large z by using GCDs */
 		j = jmp + jmpptr(NXT_MAP_PRIME);
 		for (top=NXT_MAP_PRIME; top <= limit; top += nxtjmp(j)) {
 			if ((val % top) == 0) {
@@ -870,7 +870,7 @@ zpfact(ZVALUE z, ZVALUE *dest)
 		}
 
 		/* ignore Saber-C warning #530 about empty for statement */
-		/*	  ok to ignore in proc zpfact */
+		/*	  OK to ignore in proc zpfact */
 		/* find the next prime */
 		for (tp=prime; (*tp <= isqr) && (p % (long)(*tp)); ++tp) {
 		}
@@ -1601,7 +1601,7 @@ fsqrt(FULL x)
 	}
 
 	/* ignore Saber-C warning #530 about empty for statement */
-	/*	  ok to ignore in proc fsqrt */
+	/*	  OK to ignore in proc fsqrt */
 	/* determine our initial guess */
 	for (i=0, y=x; y >= (FULL)256; i+=8, y>>=8) {
 	}

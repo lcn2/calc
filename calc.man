@@ -252,7 +252,7 @@ For example:
 .fi
 .in -5n
 .sp 1
-This allows the script to run independely of
+This allows the script to run independently of
 startup scripts.
 
 .sp 1

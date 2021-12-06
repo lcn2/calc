@@ -64,7 +64,7 @@ S_FUNC QCKHASH blk_hash(BLOCK *blk, QCKHASH val);
 /*
  * quasi_fnv - quasi Fowler/Noll/Vo-0 32 bit hash
  *
- * NOTE: General use of FNV-0 hadh
+ * NOTE: General use of FNV-0 hash
  *
  * The basis of this hash algorithm was taken from an idea sent
  * as reviewer comments to the IEEE POSIX P1003.2 committee by:

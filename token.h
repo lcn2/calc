@@ -1,7 +1,7 @@
 /*
  * token - token defines
  *
- * Copyright (C) 1999-2007,2014  David I. Bell
+ * Copyright (C) 1999-2007,2014,2021  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -54,7 +54,7 @@
 #define T_MOD			13	/* modulo sign "%" */
 #define T_POWER			14	/* power sign "^" or "**" */
 #define T_EQ			15	/* equality "==" */
-#define T_NE			16	/* notequal "!=" */
+#define T_NE			16	/* not-equal "!=" */
 #define T_LT			17	/* less than "<" */
 #define T_GT			18	/* greater than ">" */
 #define T_LE			19	/* less than or equals "<=" */
@@ -69,8 +69,8 @@
 #define T_MULTEQUALS		28	/* multiply equals "*=" */
 #define T_DIVEQUALS		29	/* divide equals "/=" */
 #define T_MODEQUALS		30	/* modulo equals "%=" */
-#define T_PLUSPLUS		31	/* plusplus "++" */
-#define T_MINUSMINUS		32	/* minusminus "--" */
+#define T_PLUSPLUS		31	/* plus-plus "++" */
+#define T_MINUSMINUS		32	/* minus-minus "--" */
 #define T_COMMA			33	/* comma "," */
 #define T_ANDAND		34	/* logical and "&&" */
 #define T_OROR			35	/* logical or "||" */

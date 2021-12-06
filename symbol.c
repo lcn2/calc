@@ -573,7 +573,7 @@ showstatics(void)
 	if (count > 0)
 		printf("\nNumber: %ld\n", count);
 	else
-		printf("No unscoped static variables\n");
+		printf("No un-scoped static variables\n");
 }
 
 /*

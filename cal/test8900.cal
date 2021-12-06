@@ -2867,7 +2867,7 @@ define t035()
 	epsilon(eps);
 	return 6;
     }
-/* Percentiles. Numbers shamlessly stolen from a question at stackoverflow*/
+/* Percentiles. Numbers shamelessly stolen from a question at stackoverflow */
     if (abs
 	(invbetainc(0.025, 10008, 151744) -
 	 0.060703546312525377697082321820950758320207425674954679415395) >
@@ -3081,7 +3081,7 @@ define test8900(verbose = 0, tnum, testnum = 8903)
 	return tnum;
     }
 
-    /* We will cause erors intentionally. A lot of them. */
+    /* We will cause errors intentionally. A lot of them. */
     old_errmax = errmax(-1);
 
     /*

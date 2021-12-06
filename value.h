@@ -403,7 +403,7 @@ E_FUNC VALUE *associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices);
 #define OBJ_ONE		1	/* create the multiplicative identity */
 #define OBJ_TEST	2	/* test a value for "zero" */
 #define OBJ_ADD		3	/* add two values */
-#define OBJ_SUB		4	/* subtrace one value from another */
+#define OBJ_SUB		4	/* sub-trace one value from another */
 #define OBJ_NEG		5	/* negate a value */
 #define OBJ_MUL		6	/* multiply two values */
 #define OBJ_DIV		7	/* divide one value by another */

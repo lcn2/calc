@@ -51,7 +51,7 @@ DESCRIPTION
 
 	fpathopen("fizzbin", "r", ".:/tmp:/var/tmp:~chongo/pub:~/tmp");
 
-    This call will likely open (and create if needded) for appending,
+    This call will likely open (and create if needed) for appending,
     the file "/tmp/log" assuming that the user is not allowed to
     create files in the previous system directories:
 
@@ -98,8 +98,8 @@ DESCRIPTION
 	operating system).  Adding 'b' to an fopen has no effect
 	and is ignored.
 
-	Some non-POSIX systems sucn as MS Windoz treat text files
-	and binary files differently.  In text mode MS Windoz consider
+	Some non-POSIX systems such as MS Windows treat text files
+	and binary files differently.  In text mode MS Windows consider
 	"\r\n" and end-of-line character.  On an Apple MAC, the
 	text mode end-of-line character is "\r".
 

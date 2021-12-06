@@ -879,7 +879,7 @@ DESCRIPTION
 
     Returns the rate at which the operating system advances the clock
     on POSIX based systems.  Returns 0 on non-POSIX based systems.
-    The non-zero value returned is in Hetrz.
+    The non-zero value returned is in Hertz.
 
     This config parameter is read-only and cannot be set.
 

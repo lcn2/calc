@@ -451,7 +451,7 @@ getsimplebody(void)
 
 
 /*
- * Get the body of a function, or a subbody of a function.
+ * Get the body of a function, or a sub-body of a function.
  * body = '{' [ declarations ] ... [ statement ] ... '}'
  *	| [ declarations ] ... [statement ] ... '\n'
  */
@@ -1516,7 +1516,7 @@ getexprlist(void)
 
 
 /*
- * Get an opassignment or possibly just an assignment or expression.
+ * Get an op-assignment or possibly just an assignment or expression.
  * Returns flags describing the type of assignment or expression found.
  * assignment = lvalue '=' assignment
  *	| lvalue '+=' assignment

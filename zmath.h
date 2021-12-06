@@ -149,7 +149,7 @@ typedef SB32 SFULL;			/* signed FULL */
 
 
 /*
- * other misc typedefs
+ * other miscellaneous typedefs
  */
 typedef USB32 QCKHASH;			/* 32 bit hash value */
 #if defined(HAVE_B64) && LONG_BITS == 32
@@ -397,7 +397,7 @@ E_FUNC void zlcmfact(ZVALUE z, ZVALUE *dest);
 
 
 /*
- * Misc misc functions. :-)
+ * miscellaneous functions. :-)
  */
 E_FUNC void zsquaremod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 E_FUNC void zminmod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
@@ -675,7 +675,7 @@ EXTERN ZVALUE _b32_;
 /* _b64_ is _pow4baseval_ or _pow8baseval_ depending on BASEB */
 EXTERN ZVALUE _b64_;
 
-EXTERN HALF *half_tbl[];	/* preset HALF constants, NULL termated list */
+EXTERN HALF *half_tbl[]; /* preset HALF constants, NULL terminated list */
 
 EXTERN BOOL _math_abort_;	/* nonzero to abort calculations */
 EXTERN ZVALUE _tenpowers_[];	/* table of 10^2^n */

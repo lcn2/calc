@@ -651,7 +651,7 @@ read_key(void)
 		cur_map = ent->next;
 	if (ent->func)
 		/* ignore Saber-C warning #65 - has 1 arg, expecting 0 */
-		/*	  ok to ignore in proc read_key */
+		/*	  OK to ignore in proc read_key */
 		(*ent->func)(key);
 	else
 		insert_char(key);

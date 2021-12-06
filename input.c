@@ -411,7 +411,7 @@ homeexpand(char *name)
 
 	return NULL;
 
-#else /* Windoz free systems */
+#else /* Windows free systems */
 
 	struct passwd *ent;	/* password entry */
 	char *home2;		/* fullpath of the home directory */
@@ -483,7 +483,7 @@ homeexpand(char *name)
 	snprintf(fullpath, snprintf_len, "%s%s", home2, after);
 	fullpath[snprintf_len] = '\0';	/* paranoia */
 	return fullpath;
-#endif /* Windoz free systems */
+#endif /* Windows free systems */
 }
 
 
@@ -603,7 +603,7 @@ curstream(void)
  *
  * given:
  *	str		string to be opened
- *	num		lengh of string to open
+ *	num		length of string to open
  */
 int
 openstring(char *str, size_t num)
@@ -1003,14 +1003,14 @@ isinoderead(struct stat *sbuf)
 			/* found a match */
 			return i;
 		}
-#else /* Windoz free systems */
+#else /* Windows free systems */
 		if (readset[i].active &&
 		    sbuf->st_dev == readset[i].inode.st_dev &&
 		    sbuf->st_ino == readset[i].inode.st_ino) {
 			/* found a match */
 			return i;
 		}
-#endif /* Windoz free systems */
+#endif /* Windows free systems */
 	}
 
 	/* no match found */
@@ -1133,14 +1133,14 @@ addreadset(char *name, char *path, struct stat *sbuf)
 			return -1;
 		}
 	 }
-#else /* Windoz free systems */
+#else /* Windows free systems */
 	path_len = strlen(path);
 	readset[ret].path = (char *)malloc(path_len+1);
 	if (readset[ret].path == NULL) {
 		return -1;
 	}
 	strlcpy(readset[ret].path, path, path_len+1);
-#endif /* Windoz free systems */
+#endif /* Windows free systems */
 	readset[ret].inode = *sbuf;
 	readset[ret].active = 1;
 

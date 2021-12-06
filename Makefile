@@ -64,7 +64,7 @@ endif
 #	SHELL= /bin/bash
 #
 # On some systems such as macOS, the bash shell is very
-# far behind to the point wehre is cannot be depended on.
+# far behind to the point where is cannot be depended on.
 # On such systems, the zsh may be a much better alternative
 # shell for this Makefile to use:
 #
@@ -103,7 +103,7 @@ PREFIX= /usr/local
 # if calculations.
 #
 # In the case of calc, we are motivated in part by the desire for calc
-# to correctly calculate: even durings extremely long calculations.
+# to correctly calculate: even during extremely long calculations.
 #
 # If UNBAN is NOT defined, then calling certain functions
 # will result in a call to a non-existent function (link error).
@@ -142,12 +142,12 @@ USE_READLINE= -DUSE_READLINE
 #READLINE_LIB= -L${PREFIX}/lib -lreadline -lhistory -lncurses
 ifeq ($(target),Darwin)
 ifeq ($(hardware),arm64)
-# Darwin arm64 homebrew installs readline & history
+# Darwin arm64 HomeBrew installs readline & history
 #	libs in /opt/homebrew/opt/readline/lib
 READLINE_LIB= -L/opt/homebrew/opt/readline/lib -lreadline -lhistory -lncurses
 else
 # Assume Darwin non-arm64 is x86_64
-# Darwin x86_64 homebrew installs readline & history
+# Darwin x86_64 HomeBrew installs readline & history
 #	libs in ${PREFIX}/opt/readline/lib
 READLINE_LIB= -L${PREFIX}/opt/readline/lib -lreadline -lhistory -lncurses
 endif
@@ -157,12 +157,12 @@ endif
 #
 ifeq ($(target),Darwin)
 ifeq ($(hardware),arm64)
-# Darwin arm64 homebrew installs readline & history *.h
+# Darwin arm64 HomeBrew installs readline & history *.h
 #	under /opt/homebrew/opt/readline/include
 READLINE_INCLUDE= -I${PREFIX}/opt/homebrew/opt/readline/include
 else
 # Assume Darwin non-arm64 is x86_64
-# Darwin x86_64 homebrew installs readline & history *.h
+# Darwin x86_64 HomeBrew installs readline & history *.h
 #	under ${PREFIX}/opt/readline/include
 READLINE_INCLUDE= -I${PREFIX}/opt/readline/include
 endif
@@ -240,10 +240,10 @@ CI= ci
 # H=@:	do not report hsrc file formation progress
 # H=@	do echo hsrc file formation progress
 #
-# S= >/dev/null 2>&1	slience ${CC} output during hsrc file formation
+# S= >/dev/null 2>&1	silence ${CC} output during hsrc file formation
 # S=			full ${CC} output during hsrc file formation
 #
-# E= 2>/dev/null	slience command stderr during hsrc file formation
+# E= 2>/dev/null	silence command stderr during hsrc file formation
 # E=			full command stderr during hsrc file formation
 #
 # V=@:	do not echo debug statements (quiet mode)
@@ -621,7 +621,7 @@ have_strlcat.h:
 
 ##
 #
-# Build .h files for windoz based systems
+# Build .h files for Windows based systems
 #
 # This is really a internal utility rule that is used to create the
 # win32 sub-directory for distribution.

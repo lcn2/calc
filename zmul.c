@@ -50,7 +50,7 @@ S_FUNC LEN dosquare(HALF *vp, LEN size, HALF *ans);
  * Multiply two numbers using the following formula recursively:
  *	(A*S+B)*(C*S+D) = (S^2+S)*A*C + S*(A-B)*(D-C) + (S+1)*B*D
  * where S is a power of 2^16, and so multiplies by it are shifts, and
- * A,B,C,D are the left and right halfs of the numbers to be multiplied.
+ * A,B,C,D are the left and right HALFs of the numbers to be multiplied.
  *
  * given:
  *	z1		numbers to multiply
@@ -126,7 +126,7 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	LEN sizeAB;		/* size of subtraction of A and B */
 	LEN sizeDC;		/* size of subtraction of D and C */
 	LEN sizeABDC;		/* size of product of above two results */
-	LEN subsize;		/* size of difference of halfs */
+	LEN subsize;		/* size of difference of HALFs */
 	LEN copysize;		/* size of number left to copy */
 	LEN sizetotal;		/* total size of product */
 	LEN len;		/* temporary length */
@@ -207,7 +207,7 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 			len -= 4;
 			sival.ivalue = ((FULL) *h1++) * digit + carry;
 			/* ignore Saber-C warning #112 - get ushort from uint */
-			/*	  ok to ignore on name domul`sival */
+			/*	  OK to ignore on name domul`sival */
 			*hd++ = sival.silow;
 			carry = sival.sihigh;
 			sival.ivalue = ((FULL) *h1++) * digit + carry;
@@ -375,7 +375,7 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	}
 
 	/*
-	 * Now we know that the high halfs of the numbers are nonzero,
+	 * Now we know that the high HALFs of the numbers are nonzero,
 	 * so we can use the complete formula.
 	 *	(A*S+B)*(C*S+D) = (S^2+S)*A*C + S*(A-B)*(D-C) + (S+1)*B*D.
 	 * The steps are done in the following order:
@@ -643,7 +643,7 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
  * Square a number by using the following formula recursively:
  *	(A*S+B)^2 = (S^2+S)*A^2 + (S+1)*B^2 - S*(A-B)^2
  * where S is a power of 2^16, and so multiplies by it are shifts,
- * and A and B are the left and right halfs of the number to square.
+ * and A and B are the left and right HALFs of the number to square.
  */
 void
 zsquare(ZVALUE z, ZVALUE *res)
@@ -715,7 +715,7 @@ dosquare(HALF *vp, LEN size, HALF *ans)
 	LEN sizeAABB;		/* size of sum of squares of A and B */
 	LEN sizeAB;		/* size of difference of A and B */
 	LEN sizeABAB;		/* size of square of difference of A and B */
-	LEN subsize;		/* size of difference of halfs */
+	LEN subsize;		/* size of difference of HALFs */
 	LEN copysize;		/* size of number left to copy */
 	LEN sumsize;		/* size of sum */
 	LEN sizetotal;		/* total size of square */
@@ -810,7 +810,7 @@ dosquare(HALF *vp, LEN size, HALF *ans)
 			digit = ((FULL) *hd);
 			sival.ivalue = digit + digit + carry;
 			/* ignore Saber-C warning #112 - get ushort from uint */
-			/*	  ok to ignore on name dosquare`sival */
+			/*	  OK to ignore on name dosquare`sival */
 			*hd++ = sival.silow;
 			carry = sival.sihigh;
 		}
@@ -887,7 +887,7 @@ dosquare(HALF *vp, LEN size, HALF *ans)
 	 *	(A-B)^2
 	 *	(S^2+S)*A^2 + (S+1)*B^2 - S*(A-B)^2.
 	 *
-	 * Begin by forming the squares of two the halfs concatenated
+	 * Begin by forming the squares of two the HALFs concatenated
 	 * together in the final result location.  Make sure that the
 	 * highest words of the results are zero.
 	 */
@@ -957,7 +957,7 @@ dosquare(HALF *vp, LEN size, HALF *ans)
 	}
 
 	/*
-	 * Calculate the absolute value of the difference of the two halfs
+	 * Calculate the absolute value of the difference of the two HALFs
 	 * into a temporary location.
 	 */
 	if (sizeA == sizeB) {

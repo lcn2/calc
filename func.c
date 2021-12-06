@@ -4035,7 +4035,7 @@ f_d2dms(int count, VALUE **vals)
 	v4->v_subtype = s4;
 
 	/*
-	 * calcuate the normalized return value
+	 * calculate the normalized return value
 	 *
 	 * return_value = mod(degs, 360, rnd);
 	 */
@@ -4147,7 +4147,7 @@ f_d2dm(int count, VALUE **vals)
 	v3->v_subtype = s3;
 
 	/*
-	 * calcuate the normalized return value
+	 * calculate the normalized return value
 	 *
 	 * return_value = mod(degs, 360, rnd);
 	 */
@@ -4252,7 +4252,7 @@ f_g2gms(int count, VALUE **vals)
 	v4->v_subtype = s4;
 
 	/*
-	 * calcuate the normalized return value
+	 * calculate the normalized return value
 	 *
 	 * return_value = mod(grads, 400, rnd);
 	 */
@@ -4364,7 +4364,7 @@ f_g2gm(int count, VALUE **vals)
 	v3->v_subtype = s3;
 
 	/*
-	 * calcuate the normalized return value
+	 * calculate the normalized return value
 	 *
 	 * return_value = mod(grads, 400, rnd);
 	 */
@@ -4469,7 +4469,7 @@ f_h2hms(int count, VALUE **vals)
 	v4->v_subtype = s4;
 
 	/*
-	 * calcuate the normalized return value
+	 * calculate the normalized return value
 	 *
 	 * return_value = mod(hours, 24, rnd);
 	 */
@@ -4581,7 +4581,7 @@ f_h2hm(int count, VALUE **vals)
 	v3->v_subtype = s3;
 
 	/*
-	 * calcuate the normalized return value
+	 * calculate the normalized return value
 	 *
 	 * return_value = mod(hours, 24, rnd);
 	 */
@@ -6826,8 +6826,8 @@ f_usertime(void)
 	int who = RUSAGE_SELF;		/* obtain time for just this process */
 	int status;			/* getrusage() return code */
 	NUMBER *ret;			/* CPU time to return */
-	NUMBER *secret;			/* whole sconds of CPU time to return */
-	NUMBER *usecret;		/* microseconds of CPU time to return */
+	NUMBER *secret;		/* whole seconds of CPU time to return */
+	NUMBER *usecret;	/* microseconds of CPU time to return */
 
 	/* get the resource information for ourself */
 	status = getrusage(who, &usage);
@@ -6865,8 +6865,8 @@ f_systime(void)
 	int who = RUSAGE_SELF;		/* obtain time for just this process */
 	int status;			/* getrusage() return code */
 	NUMBER *ret;			/* CPU time to return */
-	NUMBER *secret;			/* whole sconds of CPU time to return */
-	NUMBER *usecret;		/* microseconds of CPU time to return */
+	NUMBER *secret;		/* whole seconds of CPU time to return */
+	NUMBER *usecret;	/* microseconds of CPU time to return */
 
 	/* get the resource information for ourself */
 	status = getrusage(who, &usage);
@@ -6905,8 +6905,8 @@ f_runtime(void)
 	NUMBER *user;			/* user CPU time to return */
 	NUMBER *sys;			/* kernel CPU time to return */
 	NUMBER *ret;			/* total CPU time to return */
-	NUMBER *secret;			/* whole sconds of CPU time to return */
-	NUMBER *usecret;		/* microseconds of CPU time to return */
+	NUMBER *secret;		/* whole seconds of CPU time to return */
+	NUMBER *usecret;	/* microseconds of CPU time to return */
 
 	/* get the resource information for ourself */
 	status = getrusage(who, &usage);
@@ -7476,7 +7476,7 @@ f_fflush(int count, VALUE **vals)
 	if (count == 0) {
 #if !defined(_WIN32)
 		i = flushall();
-#endif /* Windoz free systems */
+#endif /* Windows free systems */
 	} else {
 		for (n = 0; n < count; n++) {
 			if (vals[n]->v_type != V_FILE)
@@ -9050,9 +9050,9 @@ f_system(VALUE *vp)
 	} else {
 		result.v_num = itoq((long)system(vp->v_str->s_str));
 	}
-#else /* Windoz free systems */
+#else /* Windows free systems */
 	result.v_num = itoq((long)system(vp->v_str->s_str));
-#endif /* Windoz free systems */
+#endif /* Windows free systems */
 	return result;
 }
 
@@ -9097,7 +9097,7 @@ f_sleep(int count, VALUE **vals)
 		res.v_type = V_NUM;
 		res.v_num = itoq(time);
 	}
-#endif /* Windoz free systems */
+#endif /* Windows free systems */
 	return res;
 }
 
@@ -10078,7 +10078,7 @@ STATIC CONST struct builtin builtins[] = {
 	{"freeredc", 0, 0, 0, OP_NOP, 0, f_freeredc,
 	 "free redc data cache"},
 	{"freestatics", 0, 0, 0, OP_NOP, 0, f_freestatics,
-	 "free all unscoped static variables"},
+	 "free all un-scoped static variables"},
 	{"freopen", 2, 3, 0, OP_NOP, 0, f_freopen,
 	 "reopen a file stream to a named file"},
 	{"fscan", 2, IN, FA, OP_NOP, 0, f_fscan,

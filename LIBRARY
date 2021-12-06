@@ -320,10 +320,10 @@ The arbitrary precision integer routines define a structure called a ZVALUE.
 This is defined in zmath.h.  A ZVALUE contains a pointer to an array of
 integers, the length of the array, and a sign flag.  The array is allocated
 using malloc, so you need to free this array when you are done with a
-ZVALUE.	 To do this, you should call zfree with the ZVALUE as an argument
-(or call freeh with the pointer as an argument) and never try to free the
-array yourself using free.  The reason for this is that sometimes the pointer
-points to one of two statically allocated arrays which should NOT be freed.
+ZVALUE.	 To do this, you should call zfree() with the ZVALUE as an argument
+and never try to free the array yourself using free().  The reason for this
+is that sometimes the pointer points to a statically allocated arrays which
+should NOT be freed.
 
 The ZVALUE structures are passed to routines by value, and are returned
 through pointers.  For example, to multiply two small integers together,
@@ -615,7 +615,7 @@ These have the values 0, 1, and i.
 LAST THINGS LAST
 ----------------
 
-If you wish, when you are all doen you can call libcalc_call_me_last()
+If you wish, when you are all done you can call libcalc_call_me_last()
 to free a small amount of storage associated with the libcalc_call_me_first()
 call.  This is not required, but is does bring things to a closure.
 

@@ -33,7 +33,7 @@
  * This prog outputs several defines:
  *
  *	HAVE_CONST
- *		defined ==> ok to use const
+ *		defined ==> OK to use const
  *		undefined ==> do not use const
  *
  *	CONST

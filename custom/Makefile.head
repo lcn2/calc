@@ -229,10 +229,10 @@ CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o c_pzasusb8.o \
 # H=@:	do not report hsrc file formation progress
 # H=@	do echo hsrc file formation progress
 #
-# S= >/dev/null 2>&1	slience ${CC} output during hsrc file formation
+# S= >/dev/null 2>&1	silence ${CC} output during hsrc file formation
 # S=			full ${CC} output during hsrc file formation
 #
-# E= 2>/dev/null	slience command stderr during hsrc file formation
+# E= 2>/dev/null	silence command stderr during hsrc file formation
 # E=			full command stderr during hsrc file formation
 #
 # V=@:	do not echo debug statements (quiet mode)
@@ -487,7 +487,7 @@ ALLOW_CUSTOM= -DCUSTOM
 # the extension required by such.
 #
 # EXT=				# normal Un*x / Linux / GNU/Linux systems
-# EXT=.exe			# windoz / Cygwin
+# EXT=.exe			# Windows / Cygwin
 #
 # If in doubt, use EXT=
 #

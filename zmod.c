@@ -1953,7 +1953,7 @@ zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
  *		break;
  *	    }
  *	} while (ret > modulus);
- *	ret = ((ret < 0) ? ret+modlus : ((ret == modulus) ? 0 : ret));
+ *	ret = ((ret < 0) ? ret+modulus : ((ret == modulus) ? 0 : ret));
  *
  *	return ret;
  *    }
@@ -2155,7 +2155,7 @@ zhnrmod(ZVALUE v, ZVALUE zh, ZVALUE zn, ZVALUE zr, ZVALUE *res)
 
 	/* ... while (abs(ret) > modulus); */
 	} while ((zrelval = zabsrel(ret, modulus)) > 0);
-	/* ret = ((ret < 0) ? ret+modlus : ((ret == modulus) ? 0 : ret)); */
+	/* ret = ((ret < 0) ? ret+modulus : ((ret == modulus) ? 0 : ret)); */
 	if (ret.sign) {
 		zadd(ret, modulus, &t);
 		zfree(ret);

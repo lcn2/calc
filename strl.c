@@ -160,7 +160,7 @@ strlcat(char * dst, const char * src, size_t dstsize)
 	 * firewall
 	 */
 	if (dst == NULL || src == NULL || dstsize <= 0) {
-		/* nothing can be concatinated */
+		/* nothing can be concatenated */
 #if defined(STRL_TEST)
 		printf("in %s: return 0\n", __FUNCTION__);
 #endif /* STRL_TEST */
@@ -195,7 +195,7 @@ strlcat(char * dst, const char * src, size_t dstsize)
 	catlen = dstsize - dstlen;
 
 	/*
-	 * perform the cancatimation
+	 * perform the concatenation
 	 */
 	dst += dstlen;
 #if defined(STRL_TEST)

@@ -2010,7 +2010,7 @@ done:	if (s == 0) {
 
 /*
  * Take an arbitrary root of a number (to the greatest integer).
- * This uses the following iteration to get the Kth root of N:
+ * This uses the following iteration to get the K-th root of N:
  *	x = ((K-1) * x + N / x^(K-1)) / K
  */
 void
@@ -2055,7 +2055,7 @@ zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest)
 	sival.ivalue = k - 1;
 	k1.v = &sival.silow;
 	/* ignore Saber-C warning #112 - get ushort from uint */
-	/*	  ok to ignore on name zroot`sival */
+	/*	  OK to ignore on name zroot`sival */
 	k1.len = 1 + (sival.sihigh != 0);
 	k1.sign = 0;
 	z1.sign = 0;

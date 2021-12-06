@@ -41,7 +41,7 @@ DESCRIPTION
 
     z bit 5    ((z & 32) > 0)
 
-	0:	return aprox square root
+	0:	return an approximation square root
 
 	1:	return exact square root when real & imaginary are rational
 
@@ -131,7 +131,7 @@ LINK LIBRARY
 SEE ALSO
    appr, epsilon
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

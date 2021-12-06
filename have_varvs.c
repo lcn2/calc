@@ -141,7 +141,7 @@ main(void)
 	puts(" *");
 	puts(" * Systems that do not have vsnprintf() need something. In some");
 	puts(" * cases the snprintf() function will deal correctly with the");
-	puts(" * va_alist 4th arg.  Same gors for a lack of an vsnprintf()");
+	puts(" * va_alist 4th arg.  Same goes for a lack of an vsnprintf()");
 	puts(" * function.  In either case we use the #defines below and");
 	puts(" * hope for the best!");
 	puts(" */");

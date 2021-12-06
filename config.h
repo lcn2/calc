@@ -130,8 +130,8 @@ struct config {
 	LEN sq2;		/* size of number to use square algorithm 2 */
 	LEN pow2;		/* size of modulus to use REDC for powers */
 	LEN redc2;		/* size of modulus to use REDC algorithm 2 */
-	BOOL tilde_ok;		/* ok to print a tilde on approximations */
-	BOOL tab_ok;		/* ok to print tab before numeric values */
+	BOOL tilde_ok;		/* OK to print a tilde on approximations */
+	BOOL tab_ok;		/* OK to print tab before numeric values */
 	LEN quomod;		/* quomod() default rounding mode */
 	LEN quo;		/* quotient // default rounding mode */
 	LEN mod;		/* mod % default rounding mode */
@@ -141,8 +141,8 @@ struct config {
 	LEN cfsim;		/* cfsim() default rounding mode */
 	LEN outround;		/* output default rounding mode */
 	LEN round;		/* round()/bround() default rounding mode */
-	BOOL leadzero;		/* ok to print leading 0 before decimal pt */
-	BOOL fullzero;		/* ok to print trailing 0's */
+	BOOL leadzero;		/* OK to print leading 0 before decimal pt */
+	BOOL fullzero;		/* OK to print trailing 0's */
 	long maxscancount;	/* max scan errors before abort */
 	char *prompt1;		/* normal prompt */
 	char *prompt2;		/* prompt when inside multi-line input */
