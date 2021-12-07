@@ -515,7 +515,7 @@ FMT= fmt
 GREP= egrep
 LN= ln
 MAKE= make
-MAKEDEPEND= makedepend
+MAKEDEPEND= /usr/bin/makedepend
 MKDIR= mkdir
 MV= mv
 RM= rm
@@ -1303,6 +1303,11 @@ depend:
 	else \
 	    ${TRUE}; \
 	fi
+	${Q} if [ ! -x "${MAKEDEPEND}" ]; then \
+		echo "makedepend command not found: ${MAKEDEPEND}"; \
+		echo "aborting depend rule"; \
+		exit 1; \
+	fi
 	${Q} echo forming custom/skel
 	${Q} ${RM} -rf skel
 	${Q} ${MKDIR} -p skel
@@ -1333,7 +1338,7 @@ depend:
 		    >> "skel/$$i"; \
 		echo '#endif /* '"$$tag"' */' >> "skel/$$i"; \
 	    done
-	${Q} ${RM} -f skel/custom/makedep.out
+	${Q} ${RM} -f skel/custom/makedep.out skel/custom/makedep.in
 	${Q} echo custom/skel formed
 	${Q} echo forming custom dependency list
 	${Q} :> skel/custom/makedep.out
@@ -1341,7 +1346,9 @@ depend:
 	    -I../../.. -w 1 -f makedep.out -- \
 	    ${CFLAGS} -- \
 	    ${C_SRC} 2>/dev/null
-	${Q} ${SED} -e 's|: ../../|: |' -E -i '' -l skel/custom/makedep.out
+	${Q} ${CP} -f skel/custom/makedep.out skel/custom/makedep.in
+	${Q} ${SED} -e 's|: ../../|: |' -E < skel/custom/makedep.in | \
+	    ${GREP} -v /usr/include > skel/custom/makedep.out
 	-${Q} for i in ${C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
