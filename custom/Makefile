@@ -522,6 +522,7 @@ RM= rm
 RMDIR= rmdir
 SED= sed
 SORT= sort
+TAIL= tail
 TOUCH= touch
 TRUE= true
 
@@ -1355,6 +1356,7 @@ depend:
 	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' \
 		    ${MAKE_FILE}.bak > ${MAKE_FILE}
 	${Q} ${GREP} -v '^#' skel/custom/makedep.out >> ${MAKE_FILE}
+	${Q} ${TAIL} -4 ${MAKE_FILE}.tail >> ${MAKE_FILE}
 	${Q} echo removing skel
 	${Q} ${RM} -rf skel
 	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
