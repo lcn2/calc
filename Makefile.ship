@@ -53,9 +53,12 @@
 #
 #	SHELL= /bin/zsh
 #
-SHELL= /bin/sh
-#SHELL= /bin/bash
-#SHELL= /bin/zsh
+SHELL= /bin/bash
+#if 0	/* start of skip for non-Gnu makefiles */
+ifeq ($(target),Darwin)
+SHELL:= /bin/zsh
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 
 #if 0	/* start of skip for non-Gnu makefiles */
@@ -1255,7 +1258,7 @@ LANG= C
 LDCONFIG= ldconfig
 LN= ln
 MAKE= make
-MAKEDEPEND= /usr/bin/makedepend
+MAKEDEPEND= makedepend
 MKDIR= mkdir
 MV= mv
 PWDCMD= pwd
@@ -4202,11 +4205,6 @@ depend: hsrc custom/Makefile
 	else \
 	    ${TRUE}; \
 	fi
-	${Q} if [ ! -x "${MAKEDEPEND}" ]; then \
-		echo "makedepend command not found: ${MAKEDEPEND}"; \
-		echo "aborting depend rule"; \
-		exit 1; \
-	fi
 	${V} echo '=-=-=-=-= Invoking depend rule for cscript =-=-=-=-='
 	${Q} cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} depend
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
@@ -5101,7 +5099,7 @@ endif
 #if 0	/* start of skip for non-Gnu makefiles */
 ifdef ALLOW_CUSTOM
 #endif	/* end of skip for non-Gnu makefiles */
-	${V} echo 'XXX =-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
+	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 #if 0	/* start of skip for non-Gnu makefiles */

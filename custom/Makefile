@@ -72,9 +72,12 @@
 #
 #	SHELL= /bin/zsh
 #
-SHELL= /bin/sh
-#SHELL= /bin/bash
-#SHELL= /bin/zsh
+SHELL= /bin/bash
+#if 0	/* start of skip for non-Gnu makefiles */
+ifeq ($(target),Darwin)
+SHELL:= /bin/zsh
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 
 # PREFIX - Top level location for calc
@@ -515,7 +518,7 @@ FMT= fmt
 GREP= egrep
 LN= ln
 MAKE= make
-MAKEDEPEND= /usr/bin/makedepend
+MAKEDEPEND= makedepend
 MKDIR= mkdir
 MV= mv
 RM= rm
@@ -1302,11 +1305,6 @@ depend:
 	    exit 1; \
 	else \
 	    ${TRUE}; \
-	fi
-	${Q} if [ ! -x "${MAKEDEPEND}" ]; then \
-		echo "makedepend command not found: ${MAKEDEPEND}"; \
-		echo "aborting depend rule"; \
-		exit 1; \
 	fi
 	${Q} echo forming custom/skel
 	${Q} ${RM} -rf skel

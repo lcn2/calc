@@ -25,6 +25,8 @@ The following are the changes from calc version 2.14.0.11 to date:
 
     Fixed depend rule for custom/Makefile.
 
+    Fixed how Makefile variable SHELL is set on macOS vs. linux.
+
 
 The following are the changes from calc version 2.14.0.9 to 2.14.0.10:
 

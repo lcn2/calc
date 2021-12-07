@@ -193,11 +193,6 @@ depend:
 	else \
 	    ${TRUE}; \
 	fi
-	${Q} if [ ! -x "${MAKEDEPEND}" ]; then \
-		echo "makedepend command not found: ${MAKEDEPEND}"; \
-		echo "aborting depend rule"; \
-		exit 1; \
-	fi
 	${Q} echo forming custom/skel
 	${Q} ${RM} -rf skel
 	${Q} ${MKDIR} -p skel
