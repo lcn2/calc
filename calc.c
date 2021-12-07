@@ -548,7 +548,6 @@ main(int argc, char **argv)
 		setbuf(stdout, NULL);
 	}
 
-
 	/*
 	 * initialize
 	 */
