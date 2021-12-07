@@ -81,7 +81,7 @@
 #if defined(HAVE_STDLIB_H)
 # include <stdlib.h>
 # define RANDOM_CNT (8)	/* double random() call repeat count */
-# define INITSTATE_SIZE (16)	/* initstate pool size */
+# define INITSTATE_SIZE (256)	/* initstate pool size */
 #endif
 #include <setjmp.h>
 #include "alloc.h"
@@ -103,7 +103,7 @@
 #if defined(HAVE_URANDOM)
 # include <fcntl.h>
 # define DEV_URANDOM "/dev/urandom"
-# define DEV_URANDOM_POOL 16
+# define DEV_URANDOM_POOL (16)
 #endif
 
 
@@ -129,7 +129,7 @@ extern char **environ;	/* user environment */
 #endif /* HAVE_ENVIRON */
 
 #if defined(HAVE_ARC4RANDOM)
-#define ARC4_BUFLEN (256)
+#define ARC4_BUFLEN (16)
 static char arc4_buf[ARC4_BUFLEN];
 #endif /* HAVE_ARC4RANDOM */
 
