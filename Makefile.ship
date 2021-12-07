@@ -3332,7 +3332,7 @@ have_arc4random.h: have_arc4random.c have_stdlib.h \
 	${Q} echo '' >> $@
 	${Q} echo '/* do we have or want arc4random? */' >> $@
 	${Q} ${RM} -f have_arc4random.o have_arc4random${EXT}
-	-${Q} ${LCC} ${ICFLAGS} ${HAVE_arc4random} have_arc4random.c -c ${S} \
+	-${Q} ${LCC} ${ICFLAGS} ${HAVE_ARC4RANDOM} have_arc4random.c -c ${S} \
 		|| ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_arc4random.o \
 		-o have_arc4random${EXT} ${S} \
@@ -3342,7 +3342,7 @@ have_arc4random.h: have_arc4random.c have_stdlib.h \
 	-${Q} if [ -s arc4random_tmp ]; then \
 	    ${CAT} arc4random_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_arc4random /* no */' >> $@; \
+	    echo '#undef HAVE_ARC4RANDOM /* no */' >> $@; \
 	fi
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
