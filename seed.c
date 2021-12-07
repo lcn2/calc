@@ -78,6 +78,11 @@
 #if !defined(_WIN32)
 # include <sys/resource.h>
 #endif
+#if defined(HAVE_STDLIB_H)
+# include <stdlib.h>
+# define RANDOM_CNT (32)	/* double random() call repeat count */
+# define INITSTATE_SIZE (256)	/* initstate pool size */
+#endif
 #include <setjmp.h>
 #include "alloc.h"
 #include "qmath.h"
@@ -339,7 +344,10 @@ private_hash64_buf(hash64 hval, char *buf, unsigned len)
 NUMBER *
 pseudo_seed(void)
 {
-    struct {			/* data used for quasi-random seed */
+    /*
+     * sdata - data used for quasi-random seed
+     */
+    struct {
 #if defined(HAVE_GETTIME)
 # if defined(CLOCK_REALTIME)
 	struct timespec realtime;	/* POSIX realtime clock */
@@ -399,20 +407,31 @@ pseudo_seed(void)
 	time_t time;			/* local time */
 	size_t size;			/* size of this data structure */
 	hash64 prev_hash64_copy;	/* copy if the previous hash value */
-	FULL call_count_copy;		/* count pf this funcation was called */
+	FULL call_count_copy;		/* call count of this funcation */
 	jmp_buf env;			/* setjmp() context */
 #if defined(HAVE_ENVIRON)
 	char **environ_copy;		/* copy of extern char **environ */
 #endif /* HAVE_ENVIRON */
 	char *sdata_p;			/* address of this structure */
     } sdata;
-    hash64 hash_val;			/* fnv64 hash of sdata */
-    ZVALUE hash;			/* hash_val as a ZVALUE */
-    NUMBER *ret;			/* return seed as a NUMBER */
+
+    /**/
+
+#if defined(HAVE_STDLIB_H)
+    unsigned past_hash;			/* prev hash or xor-folded prev hash */
+    long random_before[RANDOM_CNT];	/* random() pre initstate() */
+    char *initstate_ret;		/* return from initstate() call */
+    char initstate_tbl[INITSTATE_SIZE];	/* initstate pool */
+    long random_after[RANDOM_CNT];	/* random() post initstate() */
+    int j;
+#endif /* HAVE_STDLIB_H */
 #if defined(HAVE_ENVIRON)
     int i;
     size_t envlen;			/* length of an environment variable */
 #endif
+    hash64 hash_val;			/* fnv64 hash of sdata */
+    ZVALUE hash;			/* hash_val as a ZVALUE */
+    NUMBER *ret;			/* return seed as a NUMBER */
 
     /*
      * initialize the Fowler/Noll/Vo-1 64 bit hash
@@ -426,7 +445,7 @@ pseudo_seed(void)
      *	  We do NOT care (that much) if these calls fail.  We do not
      *	  need to process any data in the 'sdata' structure.
      */
-    memset(&sdata, 0, sizeof(sdata));
+    memset(&sdata, 0, sizeof(sdata));	/* zeroize sdata */
 #if defined(HAVE_GETTIME)
 # if defined(CLOCK_REALTIME)
     (void) clock_gettime(CLOCK_REALTIME, &sdata.realtime);
@@ -491,8 +510,8 @@ pseudo_seed(void)
 #endif
     sdata.time = time(NULL);
     sdata.size = sizeof(sdata);
-    sdata.prev_hash64_copy = prev_hash64;
-    sdata.call_count_copy = ++call_count;
+    sdata.prev_hash64_copy = prev_hash64;	/* load previous hash */
+    sdata.call_count_copy = ++call_count;	/* update call count */
     (void) setjmp(sdata.env);
 #if defined(HAVE_ENVIRON)
     sdata.environ_copy = environ;
@@ -500,13 +519,13 @@ pseudo_seed(void)
     sdata.sdata_p = (char *)&sdata;
 
     /*
-     * seed the generator with the above data
+     * seed the generator with the above sdata
      */
     hash_val = private_hash64_buf(hash_val, (char *)&sdata, sizeof(sdata));
 
 #if defined(HAVE_ENVIRON)
     /*
-     * seed each envinment variable
+     * mix in each envinment variable
      */
     for (i=0; environ[i] != NULL; ++i) {
 
@@ -520,10 +539,75 @@ pseudo_seed(void)
     }
 #endif /* HAVE_ENVIRON */
 
+#if defined(HAVE_STDLIB_H)
+    /*
+     * mix in data from 31-bit random() and friends
+     *
+     * While random() returns only 31 bit values, seeded by 32 bits,
+     * we use it twice: once seeded by time of day, count, prev hash
+     * and once seeded by FNV hash of sdata.  Both seeds are somewhat
+     * independent of each other, so we get the effect of 64 bits of seed.
+     *
+     * The 2nd seede uses the larger 256 byte state table to help
+     * differentiate the random() returns from the 1st seed.
+     *
+     * Because random() returns a 31-bit number, we call it twice
+     * and xor-shift the 2nd call with the 1st.
+     */
+
+    /* load or xor-fold previous hash */
+#if defined(HAVE_B64)
+    memcpy(&past_hash, &prev_hash64, sizeof(past_hash));
+#else /* HAVE_B64 */
+    pash_hash = (unsigned)(prev_hash64.w32[0] ^ prev_hash64.w32[1]);
+#endif /* HAVE_B64 */
+
+    /* classic random seeded with time of day, count, prev hash */
+    srandom((unsigned)(sdata.time) ^ (unsigned)call_count ^ past_hash);
+    for (j=0; j < RANDOM_CNT; ++j) {
+	random_before[j] = random();
+    }
+
+    /* initialize random state with the FNV hash of sdata */
+#if defined(HAVE_B64)
+    initstate_ret = initstate((unsigned)hash_val,
+			      initstate_tbl,
+			      INITSTATE_SIZE);
+#else /* HAVE_B64 */
+    initstate_ret = initstate((unsigned)(hash_val.w32[0] ^ hash_val.w32[1]),
+			      initstate_tbl,
+			      INITSTATE_SIZE);
+#endif /* HAVE_B64 */
+
+    /* use random again with the new random state */
+    for (j=0; j < RANDOM_CNT; ++j) {
+	random_after[j] = random() ^ (random() << 1);
+    }
+
+    /*
+     * hash all the data from random() and friends
+     */
+    hash_val = private_hash64_buf(hash_val,
+				 (char *)&past_hash,
+				 sizeof(past_hash));
+    hash_val = private_hash64_buf(hash_val,
+				 (char *)random_before,
+				 sizeof(random_before));
+    hash_val = private_hash64_buf(hash_val,
+				 (char *)initstate_ret,
+				 sizeof(initstate_ret));
+    hash_val = private_hash64_buf(hash_val,
+				 (char *)initstate_tbl,
+				 sizeof(initstate_tbl));
+    hash_val = private_hash64_buf(hash_val,
+				 (char *)random_after,
+				 sizeof(random_after));
+#endif /* HAVE_STDLIB_H */
+
     /*
      * load the hash data into the ZVALUE
      *
-     * We do not care about byte-order or Endian issues, we just
+     * We do not care about byte-order, nor Endian issues, we just
      * want to load in data.
      */
     hash.len = sizeof(hash_val) / sizeof(HALF);
