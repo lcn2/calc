@@ -80,7 +80,7 @@
 #endif
 #if defined(HAVE_STDLIB_H)
 # include <stdlib.h>
-# define RANDOM_CNT (8)	/* double random() call repeat count */
+# define RANDOM_CNT (16)	/* random() call repeat count */
 # define INITSTATE_SIZE (256)	/* initstate pool size */
 #endif
 #include <setjmp.h>
