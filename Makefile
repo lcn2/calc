@@ -534,6 +534,16 @@ have_uid_t.h:
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
 
+have_environ.h:
+	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
+	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
+	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
+
+have_arc4random.h:
+	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
+	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
+	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
+
 have_newstr.h:
 	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}

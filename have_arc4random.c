@@ -1,5 +1,5 @@
 /*
- * have_environ - Determine if we have the environ user environment synbol
+ * have_arc4random - Determine if we have the arc4random_buf() RNG
  *
  * Copyright (C) 2021  Landon Curt Noll
  *
@@ -17,7 +17,7 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	2021/12/06 19:34:32
+ * Under source code control:	2021/12/06 23:58:51
  * File existed as early as:	2021
  *
  * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
@@ -26,45 +26,46 @@
 
 /*
  * usage:
- *	have_environ
+ *	have_arc4random
  *
- * Not all enviroments have the user environment external:
- *
- *	extern char **environ;
- *
+ * Not all enviroments have the arc4random_buf() function,
  * so this may not compile on your system.
  *
  * This prog outputs:
  *
- *	HAVE_ENVIRON
- *		defined ==> environ is an non-NULL extern symbol
- *		undefined ==> environ is NOT an extern symbol or is NULL
+ *	HAVE_ARC4RANDOM
+ *		defined ==> have arc4random_buf() call
+ *		undefined ==> do not have arc4random_buf() call
  */
 
+#include "have_stdlib.h"
+#if defined(HAVE_STDLIB_H)
+#include <stdlib.h>
+#endif
 #include <stdio.h>
 
 
 #include "banned.h"	/* include after system header <> includes */
 
 
+#define BUFLEN (32)		/* length of the buffer to fill */
+
+
 int
 main(void)
 {
-#if defined(HAVE_NO_ENVIRON)
+#if defined(HAVE_NO_ARC4RANDOM)
 
-	printf("#undef HAVE_ENVIRON /* no */\n");
+	printf("#undef HAVE_ARC4RANDOM /* no */\n");
 
-#else /* HAVE_NO_ENVIRON */
+#else /* HAVE_NO_ARC4RANDOM */
 
-	extern char **environ;
+	static char buf[BUFLEN];	/* buffer for arc4random_buf() to fill */
 
-	if (environ == NULL) {
-		printf("#define HAVE_ENVIRON /* no */\n");
-	} else {
-		printf("#define HAVE_ENVIRON /* yes */\n");
-	}
+	arc4random_buf(buf, BUFLEN);
+	printf("#define HAVE_ARC4RANDOM /* yes */\n");
 
-#endif /* HAVE_NO_ENVIRON */
+#endif /* HAVE_NO_ARC4RANDOM */
 
 	/* exit(0); */
 	return 0;

@@ -80,7 +80,7 @@
 #endif
 #if defined(HAVE_STDLIB_H)
 # include <stdlib.h>
-# define RANDOM_CNT (32)	/* double random() call repeat count */
+# define RANDOM_CNT (64)	/* double random() call repeat count */
 # define INITSTATE_SIZE (256)	/* initstate pool size */
 #endif
 #include <setjmp.h>
@@ -96,6 +96,7 @@
 #include "have_rusage.h"
 #include "have_uid_t.h"
 #include "have_environ.h"
+#include "have_arc4random.h"
 #if defined(HAVE_USTAT)
 # include <ustat.h>
 #endif
@@ -126,6 +127,11 @@ static hash64 prev_hash64 = { 0, 0 };	/* previous pseudo_seed() return or 0 */
 #if defined(HAVE_ENVIRON)
 extern char **environ;	/* user environment */
 #endif /* HAVE_ENVIRON */
+
+#if defined(HAVE_ARC4RANDOM)
+#define ARC4_BUFLEN (256)
+static char arc4_buf[ARC4_BUFLEN];
+#endif /* HAVE_ARC4RANDOM */
 
 
 /*
@@ -562,10 +568,11 @@ pseudo_seed(void)
     pash_hash = (unsigned)(prev_hash64.w32[0] ^ prev_hash64.w32[1]);
 #endif /* HAVE_B64 */
 
-    /* classic random seeded with time of day, count, prev hash */
+    /* classic 31-bit random seeded with time of day, count, prev hash */
     srandom((unsigned)(sdata.time) ^ (unsigned)call_count ^ past_hash);
-    for (j=0; j < RANDOM_CNT; ++j) {
+    for (j=0; j < RANDOM_CNT; j += 2) {
 	random_before[j] = random();
+	random_before[j+1] = (random() << 1);
     }
 
     /* initialize random state with the FNV hash of sdata */
@@ -579,9 +586,10 @@ pseudo_seed(void)
 			      INITSTATE_SIZE);
 #endif /* HAVE_B64 */
 
-    /* use random again with the new random state */
-    for (j=0; j < RANDOM_CNT; ++j) {
-	random_after[j] = random() ^ (random() << 1);
+    /* use 31-bit random some more with the new random state */
+    for (j=0; j < RANDOM_CNT; j += 2) {
+	random_after[j] = random();
+	random_after[j+1] = (random() << 1);
     }
 
     /*
@@ -603,6 +611,16 @@ pseudo_seed(void)
 				 (char *)random_after,
 				 sizeof(random_after));
 #endif /* HAVE_STDLIB_H */
+
+#if defined(HAVE_ARC4RANDOM)
+    /*
+     * hash from a cryptographic pseudo-random number generator
+     */
+    arc4random_buf(arc4_buf, ARC4_BUFLEN);
+    hash_val = private_hash64_buf(hash_val,
+				 (char *)arc4_buf,
+				 ARC4_BUFLEN);
+#endif /* HAVE_ARC4RANDOM */
 
     /*
      * load the hash data into the ZVALUE
