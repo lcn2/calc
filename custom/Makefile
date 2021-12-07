@@ -73,6 +73,7 @@
 #	SHELL= /bin/zsh
 #
 SHELL= /bin/bash
+#SHELL= /bin/sh
 #if 0	/* start of skip for non-Gnu makefiles */
 ifeq ($(target),Darwin)
 SHELL:= /bin/zsh

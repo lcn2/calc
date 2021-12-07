@@ -47,14 +47,18 @@
 #
 # On some systems such as macOS, the bash shell is very
 # far behind to the point where is cannot be depended on.
-# On such systems, the zsh may be a much better alternative
+# On such systems, the sh may be a much better alternative
 # shell for this Makefile to use:
 #
-#	SHELL= /bin/zsh
+#	SHELL= /bin/sh
 #
-SHELL= /bin/sh
-#SHELL= /bin/bash
-#SHELL= /bin/zsh
+SHELL= /bin/bash
+#SHELL= /bin/sh
+#if 0	/* start of skip for non-Gnu makefiles */
+ifeq ($(target),Darwin)
+SHELL:= /bin/zsh
+endif
+#endif	/* end of skip for non-Gnu makefiles */
 
 
 ####
