@@ -1,5 +1,5 @@
 /*
- * seed - produce a pseudo-random seeds
+ * seed - produce pseudo-random seeds
  *
  * Copyright (C) 1999-2007,2021  Landon Curt Noll
  *
@@ -90,6 +90,7 @@
 #include "have_urandom.h"
 #include "have_rusage.h"
 #include "have_uid_t.h"
+#include "have_environ.h"
 #if defined(HAVE_USTAT)
 # include <ustat.h>
 #endif
@@ -108,12 +109,24 @@
  */
 #if defined(HAVE_B64)
 typedef USB64 hash64;
+static hash64 prev_hash64 = 0;	/* previous pseudo_seed() return or 0 */
 #else
 struct s_hash64 {
 	USB32 w32[2];
 };
 typedef struct s_hash64 hash64;
+static hash64 prev_hash64 = { 0, 0 };	/* previous pseudo_seed() return or 0 */
 #endif
+
+#if defined(HAVE_ENVIRON)
+extern char **environ;	/* user environment */
+#endif /* HAVE_ENVIRON */
+
+
+/*
+ * call counter - number of times pseudo_seed() as been called
+ */
+static FULL call_count = 0;
 
 
 /*
@@ -134,16 +147,16 @@ typedef struct s_hash64 hash64;
  * hashed.
  *
  * Yes, even with this non-zero virgin value there is a set of data
- * that will result in a zero hash value.  Worse, appending any
- * about of zero bytes will continue to produce a zero hash value.
- * But that would happen with any initial value so long as the
- * hash of the initial was the `inverse' of the virgin prefix string.
+ * that will result in a zero hash value.  Worse, appending some
+ * mount of zero value bytes will continue to produce a zero hash value.
+ * But that would happen with any initial value so long as the hash
+ * was the hash `inverse' of the virgin prefix string.
  *
  * But then again for any hash function, there exists sets of data
  * which that the hash of every member is the same value.  That is
- * life with many to few mapping functions.  All we do here is to
- * prevent sets whose members consist of 0 or more bytes of 0's from
- * being such an awkward set.
+ * life with mapping functions.  All we do here is to prevent sets
+ * whose members consist of 0 or more bytes of 0's from being such
+ * an awkward set.
  *
  * And yes, someone can figure out what the magic 'inverse' of the
  * 32 ASCII character are ... but this hash function is NOT intended
@@ -161,7 +174,65 @@ typedef struct s_hash64 hash64;
 
 
 /*
+ * initial_private_hash64 - initial basis of Fowler/Noll/Vo-1 64 bit hash
+ */
+S_FUNC hash64
+initial_private_hash64(void)
+{
+	hash64 hval;		/* current hash value */
+#if defined(HAVE_B64)
+	hval = PRIVATE_64_BASIS;
+#else /* HAVE_B64 */
+	USB32 val[4];		/* hash value in base 2^16 */
+
+	/* hash each octet of the buffer */
+	val[0] = PRIVATE_64_BASIS_0;
+	val[1] = PRIVATE_64_BASIS_1;
+	val[2] = PRIVATE_64_BASIS_2;
+	val[3] = PRIVATE_64_BASIS_3;
+
+	/* convert to hash64 */
+	/* hval.w32[1] = 0xffff&(val[3]<<16)+val[2]; */
+	hval.w32[1] = (val[3]<<16) + val[2];
+	hval.w32[0] = (val[1]<<16) + val[0];
+#endif /* HAVE_B64 */
+
+	/* return our initial hash value */
+	return hval;
+}
+
+
+/*
  * private_hash64_buf - perform a Fowler/Noll/Vo-1 64 bit hash
+ *
+ * FNV-1 - Fowler/Noll/Vo-1 64 bit hash
+ *
+ * The basis of this hash algorithm was taken from an idea sent
+ * as reviewer comments to the IEEE POSIX P1003.2 committee by:
+ *
+ *	Phong Vo (http://www.research.att.com/info/kpv/)
+ *	Glenn Fowler (http://www.research.att.com/~gsf/)
+ *
+ * In a subsequent ballot round:
+ *
+ *	Landon Curt Noll (http://www.isthe.com/chongo/)
+ *
+ * improved on their algorithm.	 Some people tried this hash
+ * and found that it worked rather well.  In an Email message
+ * to Landon, they named it ``Fowler/Noll/Vo'' or the FNV hash.
+ *
+ * FNV hashes are designed to be fast while maintaining a low
+ * collision rate. The FNV speed allows one to quickly hash lots
+ * of data while maintaining a reasonable collision rate.  See:
+ *
+ *	http://www.isthe.com/chongo/tech/comp/fnv/
+ *
+ * for more details as well as other forms of the FNV hash.
+ *
+ * NOTE: For general hash functions, we recommend using the
+ *	 FNV-1a hash function.  The use of FNV-1 is kept
+ *	 for backwards compatibility purposes and because
+ *	 the use of FNV-1 in this special purpose, suffices.
  *
  * input:
  *	buf	- start of buffer to hash
@@ -172,48 +243,18 @@ typedef struct s_hash64 hash64;
  *	64 bit hash as a static hash64 structure
  */
 S_FUNC hash64
-private_hash64_buf(char *buf, unsigned len)
+private_hash64_buf(hash64 hval, char *buf, unsigned len)
 {
-	hash64 hval;		/* current hash value */
 #if !defined(HAVE_B64)
 	USB32 val[4];		/* hash value in base 2^16 */
 	USB32 tmp[4];		/* tmp 64 bit value */
 #endif /* HAVE_B64 */
 	char *buf_end = buf+len;	/* beyond end of hash area */
 
-	/*
-	 * FNV-1 - Fowler/Noll/Vo-1 64 bit hash
-	 *
-	 * The basis of this hash algorithm was taken from an idea sent
-	 * as reviewer comments to the IEEE POSIX P1003.2 committee by:
-	 *
-	 *	Phong Vo (http://www.research.att.com/info/kpv/)
-	 *	Glenn Fowler (http://www.research.att.com/~gsf/)
-	 *
-	 * In a subsequent ballot round:
-	 *
-	 *	Landon Curt Noll (http://www.isthe.com/chongo/)
-	 *
-	 * improved on their algorithm.	 Some people tried this hash
-	 * and found that it worked rather well.  In an Email message
-	 * to Landon, they named it ``Fowler/Noll/Vo'' or the FNV hash.
-	 *
-	 * FNV hashes are designed to be fast while maintaining a low
-	 * collision rate. The FNV speed allows one to quickly hash lots
-	 * of data while maintaining a reasonable collision rate.  See:
-	 *
-	 *	http://www.isthe.com/chongo/tech/comp/fnv/
-	 *
-	 * for more details as well as other forms of the FNV hash.
-	 *
-	 * NOTE: For general hash functions, we recommend using the
-	 *	 FNV-1a hash function.  The use of FNV-1 is kept
-	 *	 for backwards compatibility purposes and because
-	 *	 the use of FNV-1 in this special purpose, suffices.
-	 */
 #if defined(HAVE_B64)
+
 	/* hash each octet of the buffer */
-	for (hval = PRIVATE_64_BASIS; buf < buf_end; ++buf) {
+	for (; buf < buf_end; ++buf) {
 
 	    /* multiply by 1099511628211ULL mod 2^64 using 64 bit longs */
 	    hval *= (hash64)1099511628211ULL;
@@ -224,11 +265,12 @@ private_hash64_buf(char *buf, unsigned len)
 
 #else /* HAVE_B64 */
 
-	/* hash each octet of the buffer */
-	val[0] = PRIVATE_64_BASIS_0;
-	val[1] = PRIVATE_64_BASIS_1;
-	val[2] = PRIVATE_64_BASIS_2;
-	val[3] = PRIVATE_64_BASIS_3;
+	/* load val array from hval argument */
+	val[0] = hval.w32[0] & 0xffff;
+	val[1] = (hval.w32[0]>>16) & 0xffff;
+	val[2] = hval.w32[1] & 0xffff;
+	val[3] = (hval.w32[1]>>16) & 0xffff;
+
 	for (; buf < buf_end; ++buf) {
 
 	    /*
@@ -241,7 +283,7 @@ private_hash64_buf(char *buf, unsigned len)
 	    /* multiply by the lowest order digit base 2^16 */
 	    tmp[0] = val[0] * 0x1b3;
 	    tmp[1] = val[1] * 0x1b3;
-	    tmp[2] = val[2] * 0x1b3;
+	    tmp[1] = val[2] * 0x1b3;
 	    tmp[3] = val[3] * 0x1b3;
 	    /* multiply by the other non-zero digit */
 	    tmp[2] += val[0] << 8;		/* tmp[2] += val[0] * 0x100 */
@@ -299,9 +341,6 @@ pseudo_seed(void)
 {
     struct {			/* data used for quasi-random seed */
 #if defined(HAVE_GETTIME)
-# if defined(CLOCK_SGI_CYCLE)
-	struct timespec sgi_cycle;	/* SGI hardware clock */
-# endif
 # if defined(CLOCK_REALTIME)
 	struct timespec realtime;	/* POSIX realtime clock */
 # endif
@@ -359,25 +398,36 @@ pseudo_seed(void)
 #endif
 	time_t time;			/* local time */
 	size_t size;			/* size of this data structure */
+	hash64 prev_hash64_copy;	/* copy if the previous hash value */
+	FULL call_count_copy;		/* count pf this funcation was called */
 	jmp_buf env;			/* setjmp() context */
+#if defined(HAVE_ENVIRON)
+	char **environ_copy;		/* copy of extern char **environ */
+#endif /* HAVE_ENVIRON */
 	char *sdata_p;			/* address of this structure */
     } sdata;
     hash64 hash_val;			/* fnv64 hash of sdata */
     ZVALUE hash;			/* hash_val as a ZVALUE */
     NUMBER *ret;			/* return seed as a NUMBER */
+#if defined(HAVE_ENVIRON)
+    int i;
+    size_t envlen;			/* length of an environment variable */
+#endif
+
+    /*
+     * initialize the Fowler/Noll/Vo-1 64 bit hash
+     */
+    hash_val = initial_private_hash64();
 
     /*
      * pick up process/system information
      *
      * NOTE:
-     *	  We do care (that much) if these calls fail.  We do not
+     *	  We do NOT care (that much) if these calls fail.  We do not
      *	  need to process any data in the 'sdata' structure.
      */
     memset(&sdata, 0, sizeof(sdata));
 #if defined(HAVE_GETTIME)
-# if defined(CLOCK_SGI_CYCLE)
-    (void) clock_gettime(CLOCK_SGI_CYCLE, &sdata.sgi_cycle);
-# endif
 # if defined(CLOCK_REALTIME)
     (void) clock_gettime(CLOCK_REALTIME, &sdata.realtime);
 # endif
@@ -441,13 +491,34 @@ pseudo_seed(void)
 #endif
     sdata.time = time(NULL);
     sdata.size = sizeof(sdata);
+    sdata.prev_hash64_copy = prev_hash64;
+    sdata.call_count_copy = ++call_count;
     (void) setjmp(sdata.env);
+#if defined(HAVE_ENVIRON)
+    sdata.environ_copy = environ;
+#endif /* HAVE_ENVIRON */
     sdata.sdata_p = (char *)&sdata;
 
     /*
      * seed the generator with the above data
      */
-    hash_val = private_hash64_buf((char *)&sdata, sizeof(sdata));
+    hash_val = private_hash64_buf(hash_val, (char *)&sdata, sizeof(sdata));
+
+#if defined(HAVE_ENVIRON)
+    /*
+     * seed each envinment variable
+     */
+    for (i=0; environ[i] != NULL; ++i) {
+
+	/* obtain length of this next environment variable string */
+	envlen = strlen(environ[i]);
+
+	/* hash any non-zero length environment variable string */
+	if (envlen > 0) {
+	    hash_val = private_hash64_buf(hash_val, environ[i], envlen);
+	}
+    }
+#endif /* HAVE_ENVIRON */
 
     /*
      * load the hash data into the ZVALUE
@@ -460,6 +531,11 @@ pseudo_seed(void)
     hash.sign = 0;
     memcpy((void *)hash.v, (void *)&hash_val, hash.len*sizeof(HALF));
     ztrim(&hash);
+
+    /*
+     * save hash value for next call
+     */
+    prev_hash64 = hash_val;
 
     /*
      * return a number

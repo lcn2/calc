@@ -3,12 +3,21 @@ The following are the changes from calc version 2.14.0.11 to date:
     Fixed a number of typos.
 
     Drop support for SunOS, IRIX and MINGW32_NT-5.0 targets.
+    Drop support for CLOCK_SGI_CYCLE.
 
     Minor improvement of various help files.  Made format of help
     files more consistent.
 
     Corrected a few comments in zrandom.c, including a case where
     the comment referred to 1007 when it should have used 2^32.
+
+    Improved seed() generation.  Improved some comments in seed.c.
+    Added have_environ.c to build have_environ.h in order to
+    determine if:
+
+	extern char **environ;	/* user environment */
+
+    is an valid external symbol.
 
 
 The following are the changes from calc version 2.14.0.9 to 2.14.0.10:

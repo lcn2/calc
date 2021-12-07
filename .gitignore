@@ -35,6 +35,7 @@ endian_calc.h
 fposval.h
 have_ban_pragma.h
 have_const.h
+have_environ.h
 have_fpos.h
 have_fpos_pos.h
 have_getpgid.h

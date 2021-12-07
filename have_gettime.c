@@ -34,10 +34,9 @@
  * This prog outputs several defines:
  *
  *	HAVE_GETTIME
- *		defined ==> use clock_gettime() for either CLOCK_SGI_CYCLE
- *			    and/or CLOCK_REALTIME
- *		undefined ==> clock_gettime() is not available for both
- *			      CLOCK_SGI_CYCLE and CLOCK_REALTIME
+ *		defined ==> use clock_gettime() from CLOCK_REALTIME
+ *		undefined ==> clock_gettime() is not available from
+ *			      CLOCK_REALTIME
  */
 
 #include <stdio.h>
@@ -56,13 +55,7 @@ main(void)
 
 #else /* HAVE_NO_GETTIME */
 
-# if defined(CLOCK_SGI_CYCLE)
-
-	struct timespec sgi_cycle;	/* SGI hardware clock */
-	(void) clock_gettime(CLOCK_SGI_CYCLE, &sgi_cycle);
-	printf("#define HAVE_GETTIME /* yes - w/CLOCK_SGI_CYCLE */\n");
-
-# elif defined(CLOCK_REALTIME)
+# if defined(CLOCK_REALTIME)
 
 	struct timespec realtime;	/* POSIX realtime clock */
 	(void) clock_gettime(CLOCK_REALTIME, &realtime);
@@ -70,7 +63,7 @@ main(void)
 
 # else
 
-	printf("#undef HAVE_GETTIME /* no - no SGI_CYCLE and no REALTIME */\n");
+	printf("#undef HAVE_GETTIME /* no - no CLOCK_REALTIME */\n");
 
 # endif /* CLOCK_REALTIME */
 

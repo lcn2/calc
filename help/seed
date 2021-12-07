@@ -25,8 +25,8 @@ DESCRIPTION
     sequence each time they are run.
 
     The return value of this builtin function should NOT be considered
-    a random or pseudo-random value.  The return value should be used
-    as an argument to a seed function such as srand() or srandom().
+    a random or pseudo-random value.  The return value could be used
+    as an argument to seed functions such as srand() or srandom().
 
 EXAMPLE
     ; print srand(seed())
@@ -44,7 +44,7 @@ LINK LIBRARY
 SEE ALSO
     seed, srand, randbit, isrand, rand, random, srandom, israndom
 
-## Copyright (C) 1999,2018  Landon Curt Noll
+## Copyright (C) 1999,2018,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
