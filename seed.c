@@ -384,17 +384,37 @@ pseudo_seed(void)
 	struct stat stat_dotdot;	/* stat of ".." */
 	struct stat stat_tmp;		/* stat of "/tmp" */
 	struct stat stat_root;		/* stat of "/" */
+	struct stat stat_tty;		/* stat of "/dev/tty" */
+	struct stat stat_console;	/* stat of "/dev/console" */
 	struct stat fstat_stdin;	/* stat of stdin */
 	struct stat fstat_stdout;	/* stat of stdout */
 	struct stat fstat_stderr;	/* stat of stderr */
+	struct stat stat_zero;		/* stat of "/dev/zero" */
+	struct stat stat_null;		/* stat of "/dev/null" */
+	struct stat stat_sh;		/* stat of "/bin/sh" */
+	struct stat stat_ls;		/* stat of "/bin/ls" */
+	/* stat of "/var/log/system.log" */
+	struct stat stat_system;
+	/* stat of "/var/log/messages" */
+	struct stat stat_messages;
 #if defined(HAVE_USTAT)
 	struct ustat ustat_dot;		/* usage stat of "." */
 	struct ustat ustat_dotdot;	/* usage stat of ".." */
 	struct ustat ustat_tmp;		/* usage stat of "/tmp" */
 	struct ustat ustat_root;	/* usage stat of "/" */
+	struct ustat ustat_tty;		/* usage stat of "/dev/tty" */
+	struct ustat ustat_console;	/* usage stat of "/dev/console" */
 	struct ustat ustat_stdin;	/* usage stat of stdin */
 	struct ustat ustat_stdout;	/* usage stat of stdout */
 	struct ustat ustat_stderr;	/* usage stat of stderr */
+	struct ustat ustat_zero;	/* usage stat of "/dev/zero" */
+	struct ustat ustat_null;	/* usage stat of "/dev/null" */
+	struct ustat ustat_sh;		/* usage stat of "/bin/sh" */
+	struct ustat ustat_ls;		/* usage stat of "/bin/ls" */
+	/* usage stat of "/var/log/system.log" */
+	struct ustat ustat_system;
+	/* usage stat of "/var/log/messages" */
+	struct ustat ustat_messages;
 #endif
 #if defined(HAVE_GETSID)
 	pid_t getsid;			/* session ID */
@@ -409,6 +429,26 @@ pseudo_seed(void)
 #if defined(HAVE_SYS_TIME_H)
 	struct timeval tp2;		/* time of day again */
 	struct tms times;		/* process times */
+	struct timeval times_dot[2];	/* access & mod files of "." */
+	struct timeval times_dotdot[2];	/* access & mod files of ".." */
+	struct timeval times_tmp[2];	/* access & mod files of "/tmp" */
+	struct timeval times_root[2];	/* access & mod files of "/" */
+	struct timeval times_tty[2];	/* access & mod files of "/dev/tty" */
+	/* access & mod files of "/dev/console" */
+	struct timeval times_console[2];
+	struct timeval times_stdin[2];	/* access & mod files of "/dev/stdin" */
+	/* access & mod files of "/dev/stdout" */
+	struct timeval times_stdout[2];
+	/* access & mod files of "/dev/stderr" */
+	struct timeval times_stderr[2];
+	struct timeval times_zero[2];	/* access & mod files of "/dev/zero" */
+	struct timeval times_null[2];	/* access & mod files of "/dev/null" */
+	struct timeval times_sh[2];	/* access & mod files of "/bin/sh" */
+	struct timeval times_ls[2];	/* access & mod files of "/bin/ls" */
+	/* access & mod files of "/var/log/system.log" */
+	struct timeval times_system[2];
+	/* access & mod files of "/var/log/messages" */
+	struct timeval times_messages[2];
 #endif
 	time_t time;			/* local time */
 	size_t size;			/* size of this data structure */
@@ -448,8 +488,8 @@ pseudo_seed(void)
      * pick up process/system information
      *
      * NOTE:
-     *	  We do NOT care (that much) if these calls fail.  We do not
-     *	  need to process any data in the 'sdata' structure.
+     *	  We do NOT care (that much) if these calls fail.  We only
+     *	  need to hash any results that might be store in the sdata structure.
      */
     memset(&sdata, 0, sizeof(sdata));	/* zeroize sdata */
 #if defined(HAVE_GETTIME)
@@ -488,17 +528,33 @@ pseudo_seed(void)
     (void) stat("..", &sdata.stat_dotdot);
     (void) stat("/tmp", &sdata.stat_tmp);
     (void) stat("/", &sdata.stat_root);
+    (void) stat("/dev/tty", &sdata.stat_tty);
+    (void) stat("/dev/console", &sdata.stat_console);
     (void) fstat(0, &sdata.fstat_stdin);
     (void) fstat(1, &sdata.fstat_stdout);
     (void) fstat(2, &sdata.fstat_stderr);
+    (void) stat("/dev/zero", &sdata.stat_zero);
+    (void) stat("/dev/null", &sdata.stat_null);
+    (void) stat("/bin/sh", &sdata.stat_sh);
+    (void) stat("/bin/ls", &sdata.stat_ls);
+    (void) stat("/var/log/system.log", &sdata.stat_system);
+    (void) stat("/var/log/messages", &sdata.stat_messages);
 #if defined(HAVE_USTAT)
     (void) ustat(sdata.stat_dotdot.st_dev, &sdata.ustat_dotdot);
     (void) ustat(sdata.stat_dot.st_dev, &sdata.ustat_dot);
     (void) ustat(sdata.stat_tmp.st_dev, &sdata.ustat_tmp);
     (void) ustat(sdata.stat_root.st_dev, &sdata.ustat_root);
+    (void) ustat(sdata.stat_tty.st_dev, &sdata.ustat_tty);
+    (void) ustat(sdata.stat_console.st_dev, &sdata.ustat_console);
     (void) ustat(sdata.fstat_stdin.st_dev, &sdata.ustat_stdin);
     (void) ustat(sdata.fstat_stdout.st_dev, &sdata.ustat_stdout);
     (void) ustat(sdata.fstat_stderr.st_dev, &sdata.ustat_stderr);
+    (void) ustat(sdata.stat_zero.st_dev, &sdata.ustat_zero);
+    (void) ustat(sdata.stat_null.st_dev, &sdata.ustat_dev);
+    (void) ustat(sdata.stat_sh.st_dev, &sdata.ustat_sh);
+    (void) ustat(sdata.stat_ls.st_dev, &sdata.ustat_ls);
+    (void) ustat(sdata.stat_system.st_dev, &sdata.ustat_system);
+    (void) ustat(sdata.stat_messages.st_dev, &sdata.ustat_messages);
 #endif
 #if defined(HAVE_GETSID)
     sdata.getsid = getsid((pid_t)0);
@@ -513,6 +569,21 @@ pseudo_seed(void)
 #if defined(HAVE_SYS_TIME_H)
     (void) gettimeofday(&sdata.tp2, NULL);
     (void) times(&sdata.times);
+    (void) utimes(".", sdata.times_dot);
+    (void) utimes("..", sdata.times_dotdot);
+    (void) utimes("/tmp", sdata.times_tmp);
+    (void) utimes("/", sdata.times_root);
+    (void) utimes("/dev/tty", sdata.times_tty);
+    (void) utimes("/dev/console", sdata.times_console);
+    (void) utimes("/dev/stdin", sdata.times_stdin);
+    (void) utimes("/dev/stdout", sdata.times_stdout);
+    (void) utimes("/dev/stderr", sdata.times_stderr);
+    (void) utimes("/dev/zero", sdata.times_zero);
+    (void) utimes("/dev/null", sdata.times_null);
+    (void) utimes("/bin/sh", sdata.times_sh);
+    (void) utimes("/bin/ls", sdata.times_ls);
+    (void) utimes("/var/log/system.log", sdata.times_system);
+    (void) utimes("/var/log/messages", sdata.times_messages);
 #endif
     sdata.time = time(NULL);
     sdata.size = sizeof(sdata);
