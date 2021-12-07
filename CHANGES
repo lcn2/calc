@@ -19,6 +19,10 @@ The following are the changes from calc version 2.14.0.11 to date:
 
     is an valid external symbol.
 
+    Fixed documentation that referred to the old additive 55
+    generator.  We have been using the subtractive 100 in place
+    of the additive 55 generator for a while now.
+
 
 The following are the changes from calc version 2.14.0.9 to 2.14.0.10:
 

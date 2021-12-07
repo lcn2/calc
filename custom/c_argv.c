@@ -108,7 +108,7 @@ c_argv(char *UNUSED(name), int count, VALUE **vals)
 		case V_FILE:	/* opened file id */
 			type = "file";
 			break;
-		case V_RAND:	/* address of additive 55 random state */
+		case V_RAND:	/* subtractive 100 random state */
 			type = "rand_state";
 			break;
 		case V_RANDOM:	/* address of Blum random state */

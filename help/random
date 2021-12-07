@@ -20,7 +20,7 @@ DESCRIPTION
 
     While the Blum-Blum-Shub generator is not painfully slow, it is not
     a fast generator.  For a faster, but lesser quality generator
-    (non-cryptographically strong) see the additive 55 generator
+    (non-cryptographically strong) see the subtractive 100 generator
     (see the rand help page).
 
     Other arg forms:

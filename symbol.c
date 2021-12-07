@@ -285,7 +285,7 @@ printtype(VALUE *vp)
 		s = "file id";
 		break;
 	case V_RAND:
-		s = "additive 55 random state";
+		s = "subtractive 100 random state";
 		break;
 	case V_RANDOM:
 		s = "Blum random state";

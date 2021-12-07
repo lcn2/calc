@@ -208,7 +208,7 @@ STATIC struct infoname sys_info[] = {
      (FULL)SBITS},
     {"SBYTES", "size of additive or shuffle entry in bytes", NULL,
      (FULL)SBYTES},
-    {"SCNT", "length of additive 55 table in FULLs", NULL,
+    {"SCNT", "length of subtractive 100 table in FULLs", NULL,
      (FULL)SCNT},
     {"SEEDXORBITS", "low bits of a55 seed devoted to xor", NULL,
      (FULL)SEEDXORBITS},

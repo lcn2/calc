@@ -23,7 +23,7 @@ DESCRIPTION
 
     If x is omitted, it is assumed to have the value of 1.
 
-    See the random() help page for details on the additive 55 shuffle
+    See the random() help page for details on the subtractive 100 shuffle
     pseudo-random number generator.
 
 EXAMPLE
@@ -41,7 +41,7 @@ LINK LIBRARY
 SEE ALSO
     seed, srand, randbit, isrand, rand, srandom, israndom
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

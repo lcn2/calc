@@ -33,7 +33,7 @@ EXAMPLE
     RAND state
 
     ; print srandom(seed())
-    RAND state
+    RANDOM state
 
 LIMITS
     none

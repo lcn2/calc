@@ -96,7 +96,7 @@ struct value {
 		ASSOC *vv_assoc;	/* 8: address of association */
 		OBJECT *vv_obj;		/* 9: address of object */
 		FILEID vv_file;		/* 10: id of opened file */
-		RAND *vv_rand;		/* 11: additive 55 random state */
+		RAND *vv_rand;		/* 11: subtractive 100 random state */
 		RANDOM *vv_random;	/* 12: Blum random state */
 		CONFIG *vv_config;	/* 13: configuration state */
 		HASH *vv_hash;		/* 14: hash state */
@@ -156,7 +156,7 @@ struct value {
 #define V_ASSOC 8	/* address of association structure */
 #define V_OBJ	9	/* address of object structure */
 #define V_FILE	10	/* opened file id */
-#define V_RAND	11	/* address of additive 55 random state */
+#define V_RAND	11	/* address of subtractive 100 random state */
 #define V_RANDOM 12	/* address of Blum random state */
 #define V_CONFIG 13	/* configuration state */
 #define V_HASH	14	/* hash state */

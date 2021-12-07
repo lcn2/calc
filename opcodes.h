@@ -143,7 +143,7 @@
 #define OP_ELEMINIT	102L	/* assign element of matrix or object */
 #define OP_ISCONFIG	103L	/* whether value is a configuration state */
 #define OP_ISHASH	104L	/* whether value is a hash state */
-#define OP_ISRAND	105L	/* whether value is additive 55 random state */
+#define OP_ISRAND	105L	/* whether value is subtractive 100 state */
 #define OP_ISRANDOM	106L	/* whether value is a Blum random state */
 #define OP_SHOW		107L	/* show data about current state */
 #define OP_INITFILL	108L	/* fill new matrix with copies of a value */

@@ -1048,7 +1048,7 @@ f_srand(int count, VALUE **vals)
 			break;
 
 		case V_MAT:
-			/* load additive 55 table and return previous state */
+			/* load subtractive 100 table and return prev state */
 			result.v_rand = zsrand(NULL, vals[0]->v_mat);
 			break;
 
@@ -10203,7 +10203,7 @@ STATIC CONST struct builtin builtins[] = {
 	{"isqrt", 1, 1, 0, OP_NOP, qisqrt, 0,
 	 "integer part of square root"},
 	{"isrand", 1, 1, 0, OP_ISRAND, 0, 0,
-	 "whether a value is a additive 55 state"},
+	 "whether a value is a subtractive 100 state"},
 	{"israndom", 1, 1, 0, OP_ISRANDOM, 0, 0,
 	 "whether a value is a Blum state"},
 	{"isreal", 1, 1, 0, OP_ISREAL, 0, 0,
@@ -10367,9 +10367,9 @@ STATIC CONST struct builtin builtins[] = {
 	{"r2g", 1, 2, 0, OP_NOP, 0, f_r2g,
 	 "convert radians to gradians"},
 	{"rand", 0, 2, 0, OP_NOP, f_rand, 0,
-	 "additive 55 random number [0,2^64), [0,a), or [a,b)"},
+	 "subtractive 100 random number [0,2^64), [0,a), or [a,b)"},
 	{"randbit", 0, 1, 0, OP_NOP, f_randbit, 0,
-	 "additive 55 random number [0,2^a)"},
+	 "subtractive 100 random number [0,2^a)"},
 	{"random", 0, 2, 0, OP_NOP, f_random, 0,
 	 "Blum-Blum-Shub random number [0,2^64), [0,a), or [a,b)"},
 	{"randombit", 0, 1, 0, OP_NOP, f_randombit, 0,

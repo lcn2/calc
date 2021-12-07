@@ -1720,7 +1720,7 @@ define test_rand()
 	print				  '1503: state0 = srand(0)';
 	vrfy(state0 == init,		  '1504: state0 == init');
 
-	/* test the additive 55 shuffle generator */
+	/* test the subtractive 100 shuffle generator */
 	tmp = srand(0);
 	print				  '1505: tmp = srand(0)';
 	vrfy(rand() == 0x1fe5b46fba7e069d, \
@@ -4750,7 +4750,7 @@ define test_random()
 	print				  '5303: state0 = srandom(0)';
 	vrfy(state0 == init,		  '5304: state0 == init');
 
-	/* test the additive 55 shuffle generator */
+	/* test the subtractive 100 shuffle generator */
 	tmp = srandom(0);
 	print				  '5305: tmp = srandom(0)';
 	vrfy(random() == 0x7fb838a8a0a95046, \

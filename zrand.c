@@ -69,7 +69,7 @@
  *	all magic numbers are explained
  *
  *	    I distrust systems with constants (magic numbers) and tables
- *	    that have no justification (e.g., DES).  I believe that I have
+ *	    that have no justification.  I believe that I have
  *	    done my best to justify all of the magic numbers used.
  *
  *	 full documentation
