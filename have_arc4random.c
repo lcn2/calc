@@ -60,7 +60,8 @@ main(void)
 
 #else /* HAVE_NO_ARC4RANDOM */
 
-	static char buf[BUFLEN];	/* buffer for arc4random_buf() to fill */
+	/* buffer for arc4random_buf() to fill */
+	static char buf[BUFLEN];
 
 	arc4random_buf(buf, BUFLEN);
 	printf("#define HAVE_ARC4RANDOM /* yes */\n");
