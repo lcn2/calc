@@ -80,8 +80,8 @@
 #endif
 #if defined(HAVE_STDLIB_H)
 # include <stdlib.h>
-# define RANDOM_CNT (64)	/* double random() call repeat count */
-# define INITSTATE_SIZE (256)	/* initstate pool size */
+# define RANDOM_CNT (8)	/* double random() call repeat count */
+# define INITSTATE_SIZE (16)	/* initstate pool size */
 #endif
 #include <setjmp.h>
 #include "alloc.h"
@@ -469,6 +469,7 @@ pseudo_seed(void)
     char *initstate_ret;		/* return from initstate() call */
     char initstate_tbl[INITSTATE_SIZE];	/* initstate pool */
     long random_after[RANDOM_CNT];	/* random() post initstate() */
+    char *setstate_ret;			/* return from setstate() call */
     int j;
 #endif /* HAVE_STDLIB_H */
 #if defined(HAVE_ENVIRON)
@@ -663,6 +664,9 @@ pseudo_seed(void)
 	random_after[j+1] = (random() << 1);
     }
 
+    /* restore previous state */
+    setstate_ret = setstate(initstate_ret);
+
     /*
      * hash all the data from random() and friends
      */
@@ -681,6 +685,9 @@ pseudo_seed(void)
     hash_val = private_hash64_buf(hash_val,
 				 (char *)random_after,
 				 sizeof(random_after));
+    hash_val = private_hash64_buf(hash_val,
+				 (char *)setstate_ret,
+				 sizeof(setstate_ret));
 #endif /* HAVE_STDLIB_H */
 
 #if defined(HAVE_ARC4RANDOM)
