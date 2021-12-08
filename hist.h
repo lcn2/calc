@@ -46,7 +46,7 @@
 #define HOMECHAR	'~'	/* char which indicates home directory */
 #define DOTCHAR		'.'	/* char which indicates current directory */
 #define PATHCHAR	'/'	/* char which separates path components */
-#if defined(__MSDOS__) || defined(__WIN32)
+#if defined(_WIN32) || defined(_WIN64)
 #define LISTCHAR	';'	/* char which separates paths in a list */
 #else
 #define LISTCHAR	':'	/* char which separates paths in a list */

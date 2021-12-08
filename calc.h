@@ -59,7 +59,7 @@
 #define HOMECHAR	'~'	/* char which indicates home directory */
 #define DOTCHAR		'.'	/* char which indicates current directory */
 #define PATHCHAR	'/'	/* char which separates path components */
-#if defined(__MSDOS__) || defined(__WIN32)
+#if defined(_WIN32) || defined(_WIN64)
 #define LISTCHAR	';'	/* char which separates paths in a list */
 #else
 #define LISTCHAR	':'	/* char which separates paths in a list */
@@ -123,7 +123,7 @@ E_FUNC int get_inode(FILEID id, ZVALUE *ino);
 E_FUNC FILEID reopenid(FILEID id, char *mode, char *name);
 E_FUNC int closeall(void);
 
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 E_FUNC int flushall(void);
 #endif
 
@@ -186,7 +186,7 @@ E_FUNC char *calc_strdup(CONST char *);
  */
 E_FUNC void initialize(void);
 E_FUNC void reinitialize(void);
-#if !defined (_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 E_FUNC int isatty(int tty);	/* TRUE if fd is a tty */
 #endif
 E_FUNC char *version(void);	/* return version string */

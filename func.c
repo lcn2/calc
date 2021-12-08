@@ -33,7 +33,7 @@
 #include <errno.h>
 
 
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(_WIN64)
 # include <io.h>
 # define _access access
 #endif
@@ -7474,7 +7474,7 @@ f_fflush(int count, VALUE **vals)
 	i = 0;
 	errno = 0;
 	if (count == 0) {
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 		i = flushall();
 #endif /* Windows free systems */
 	} else {
@@ -9043,7 +9043,7 @@ f_system(VALUE *vp)
 	if (conf->calc_debug & CALCDBG_SYSTEM) {
 		printf("%s\n", vp->v_str->s_str);
 	}
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(_WIN64)
 	/* if the execute length is 0 then just return 0 */
 	if (vp->v_str->s_len == 0) {
 		result.v_num = itoq((long)0);
@@ -9066,7 +9066,7 @@ f_sleep(int count, VALUE **vals)
 
 	res.v_type = V_NULL;
 	res.v_subtype = V_NOSUBTYPE;
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 	if (count > 0) {
 		if (vals[0]->v_type != V_NUM || qisneg(vals[0]->v_num))
 				return error_value(E_SLEEP);

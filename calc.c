@@ -29,14 +29,14 @@
 #include <stdio.h>
 #include <signal.h>
 
-#if !defined (_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 # include <pwd.h>
 #endif
 
 #include <sys/types.h>
 #include <ctype.h>
 
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(_WIN64)
 # include <io.h>
 # if !defined(NOTCYGWIN)
 /*
@@ -704,7 +704,7 @@ main(int argc, char **argv)
 			if (!p_flag && i_flag && !stdin_tty) {
 				closeinput();
 				if(!freopen("/dev/tty", "r", stdin)) {
-#if defined (_WIN32)
+#if defined(_WIN32) || defined(_WIN64)
 					fprintf(stderr,
 						"/dev/tty does not exist on "
 						"this operating system.  "
@@ -734,7 +734,7 @@ main(int argc, char **argv)
 					!p_flag && (!havecommands||i_flag)) {
 				closeinput();
 				if(!freopen("/dev/tty", "r", stdin)) {
-#if defined (_WIN32)
+#if defined(_WIN32) || defined(_WIN64)
 					fprintf(stderr,
 						"/dev/tty does not exist on "
 						"this operating system.  "

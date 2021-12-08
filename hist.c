@@ -36,7 +36,7 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 # include <pwd.h>
 #endif
 

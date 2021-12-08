@@ -3,7 +3,7 @@ The following are the changes from calc version 2.14.0.11 to date:
     Fixed a number of typos.
 
     Drop support for SunOS, IRIX and MINGW32_NT-5.0 targets.
-    Drop support for CLOCK_SGI_CYCLE.
+    Drop support for CLOCK_SGI_CYCLE.  Drop testing for __MSDOS__.
 
     Minor improvement of various help files.  Made format of help
     files more consistent.
@@ -32,6 +32,10 @@ The following are the changes from calc version 2.14.0.11 to date:
     from <limits.h> or 8 or a value set by the Makefile variable
     CALC_CHARBIT.  Added have_limits.h to determine if <limits.h>
     is a system include file.
+
+    Test for _WIN64 when testing for _WIN32.
+
+    Now assuming that <stdio.h> is availabke under _WIN32 and _WIN64.
 
 
 The following are the changes from calc version 2.14.0.9 to 2.14.0.10:

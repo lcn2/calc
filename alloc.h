@@ -42,9 +42,7 @@
 # include <string.h>
 
 #else
-#if defined(_WIN32) && defined(NOTCYGWIN)
 #include <stdio.h>
-#endif
 
 # if defined(HAVE_NEWSTR)
 E_FUNC void *memcpy();

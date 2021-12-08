@@ -69,7 +69,7 @@ main(void)
 	if (value > (FILEPOS)1) {
 		--value;
 	}
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 	if (value <= (FILEPOS)getppid()) {
 		--value;
 	}

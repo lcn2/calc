@@ -44,8 +44,10 @@
 #include "conf.h"
 #include "strl.h"
 
-#if defined(_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) || defined(_WIN64)
+#if !defined(__CYGWIN__)
 # include <direct.h>
+#endif
 #endif
 
 

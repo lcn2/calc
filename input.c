@@ -31,7 +31,7 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 # include <pwd.h>
 #else
 # include <stdlib.h>
@@ -407,7 +407,7 @@ f_pathopen(char *name, char *mode, char *pathlist, char **openpath)
 S_FUNC char *
 homeexpand(char *name)
 {
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(_WIN64)
 
 	return NULL;
 
@@ -969,12 +969,12 @@ runrcfiles(void)
  * a given device/inode, -1 otherwise.
  *
  *
- * WIN32 NOTE:
+ * _WIN32 and _WIN64 NOTE:
  *
- *	This function does not work under WIN32. The sbuf->st_ino is always
+ *	This function does not work under _WIN32 or _WIN64. The sbuf->st_ino is always
  *	zero because the FAT and NTFS filesystems do not support inodes.
  *	They also don't support links, which is why you need this function
- *	under UNIX. For WIN32, use _fullpath() to determine if you have
+ *	under UNIX. For _WIN32 or _WIN64, use _fullpath() to determine if you have
  *	already opened a file.
  *
  * given:
@@ -994,7 +994,7 @@ isinoderead(struct stat *sbuf)
 
 	/* scan the entire readset */
 	for (i=0; i < maxreadset; ++i) {
-#if defined(_WIN32) || defined(__MSDOS__)
+#if defined(_WIN32) || defined(_WIN64)
 		char tmp[MSDOS_MAX_PATH+1];
 		tmp[MSDOS_MAX_PATH] = '\0';
 		if (_fullpath(tmp, cip->i_name, MSDOS_MAX_PATH) &&
@@ -1120,10 +1120,10 @@ addreadset(char *name, char *path, struct stat *sbuf)
 		return -1;
 	}
 	strlcpy(readset[ret].name, name, name_len+1);
-#if defined(_WIN32) || defined(__MSDOS__)
+#if defined(_WIN32) || defined(_WIN64)
 	/*
-	 * For WIN32, _fullpath expands the path to a fully qualified
-	 * path name, which under WIN32 FAT and NTFS is unique, just
+	 * For _WIN32 or _WIN64, _fullpath expands the path to a fully qualified
+	 * path name, which under _WIN32 or _WIN64 FAT and NTFS is unique, just
 	 * like UNIX inodes. _fullpath also allocated the memory for
 	 * this new longer path name.
 	 */

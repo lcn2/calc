@@ -176,7 +176,7 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	CTRL_D_VIRGIN_EOF,	/* ^D only exits on virgin lines */
 	NULL,			/* our name */
 	NULL,			/* basename of our name */
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(_WIN64)
 	TRUE,			/* running under windows */
 #else
 	FALSE,			/* congrats, you are not using windows */
@@ -236,7 +236,7 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	CTRL_D_VIRGIN_EOF,	/* ^D only exits on virgin lines */
 	NULL,			/* our name */
 	NULL,			/* basename of our name */
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(_WIN64)
 	TRUE,			/* running under windows */
 #else
 	FALSE,			/* congrats, you are not using windows */

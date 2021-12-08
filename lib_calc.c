@@ -29,7 +29,7 @@
 #include <setjmp.h>
 #include <signal.h>
 
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 # include <pwd.h>
 #endif
 
@@ -84,7 +84,7 @@ typedef struct {int fd;} ttystruct;
 
 #endif
 
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 # if !defined(USE_SGTTY) && !defined (USE_TERMIOS) && !defined(USE_TERMIO)
 
 -=*#*=- A Windows free system without termio, termios or sgtty!!! -=*#*=-
@@ -240,7 +240,7 @@ libcalc_call_me_first(void)
 	 * Disable SIGPIPE so that the pipe to the help file pager will
 	 * not stop calc.
 	 */
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 	(void) signal(SIGPIPE, SIG_IGN);
 #endif
 
@@ -249,7 +249,7 @@ libcalc_call_me_first(void)
 	 */
 	if (program != NULL) {
 		p = strrchr(program, '/');
-#if defined(_WIN32) || defined(__MSDOS__)
+#if defined(_WIN32) || defined(_WIN64)
 		if (p == NULL) {
 			p = strrchr(program, '\\');
 		}
@@ -481,7 +481,7 @@ cvmalloc_error(char *message)
 S_FUNC void
 initenv(void)
 {
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 	struct passwd *ent;		/* our password entry */
 #endif
 	char *c;
@@ -512,7 +512,7 @@ initenv(void)
 	/* determine the $HOME value */
 	c = (no_env ? NULL : getenv(HOME));
 	home = (c ? strdup(c) : NULL);
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(_WIN64)
 	if (home == NULL || home[0] == '\0') {
 		/* free home if it was previously allocated, but empty */
 		if (home != NULL) {

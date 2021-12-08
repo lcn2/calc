@@ -47,7 +47,7 @@
 #include <unistd.h>
 #endif
 
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(_WIN64)
 # include <process.h>
 # define pid_t int
 #endif
@@ -75,7 +75,7 @@
 #if defined(HAVE_SYS_TIMES_H)
 #include <sys/times.h>
 #endif
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 # include <sys/resource.h>
 #endif
 #if defined(HAVE_STDLIB_H)
@@ -372,7 +372,7 @@ pseudo_seed(void)
 	struct timeval tp;		/* time of day */
 #endif
 	pid_t getpid;			/* process ID */
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 	pid_t getppid;			/* parent process ID */
 #endif
 #if defined(HAVE_UID_T)
@@ -518,7 +518,7 @@ pseudo_seed(void)
     (void) gettimeofday(&sdata.tp, NULL);
 #endif
     sdata.getpid = getpid();
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
     sdata.getppid = getppid();
 #endif
 #if defined(HAVE_UID_T)

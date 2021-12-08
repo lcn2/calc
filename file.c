@@ -46,7 +46,7 @@
 #include "calcerr.h"
 #include "strl.h"
 
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(_WIN64)
 # include <io.h>
 #endif
 
@@ -728,7 +728,7 @@ flushid(FILEID id)
 }
 
 
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(_WIN64)
 int
 flushall(void)
 {
