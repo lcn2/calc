@@ -631,13 +631,15 @@ pseudo_seed(void)
      * The 2nd seede uses the larger 256 byte state table to help
      * differentiate the random() returns from the 1st seed.
      *
-     * Because random() returns a 31-bit number, we call it twice
-     * and xor-shift the 2nd call with the 1st.
+     * Because random() returns a 31-bit number, we call it 32 times
+     * and circular shift around the results within a 32 bit word
+     * to mix where the missing bit, low order and high order bits land.
      */
 
-    /* load or xor-fold previous hash */
+    /* form the xor-fold of the previous hash */
 #if defined(HAVE_B64)
-    memcpy(&past_hash, &prev_hash64, sizeof(past_hash));
+    past_hash = (unsigned)(((prev_hash64 >> 32)&0xffffffff) ^
+			   (prev_hash64 & 0xffffffff));
 #else /* HAVE_B64 */
     pash_hash = (unsigned)(prev_hash64.w32[0] ^ prev_hash64.w32[1]);
 #endif /* HAVE_B64 */
@@ -650,9 +652,10 @@ pseudo_seed(void)
 	random_before[j] = (tmp << j) | (tmp >> (RANDOM_CNT-j));
     }
 
-    /* initialize random state with the FNV hash of sdata */
+    /* init with large random state with 32-bit xor fold FNV hash of sdata */
 #if defined(HAVE_B64)
-    initstate_ret = initstate((unsigned)hash_val,
+    initstate_ret = initstate((unsigned)(((hash_val >> 32)&0xffffffff) ^
+					 (hash_val & 0xffffffff)),
 			      initstate_tbl,
 			      INITSTATE_SIZE);
 #else /* HAVE_B64 */
@@ -668,7 +671,7 @@ pseudo_seed(void)
 	random_after[j] = (tmp << j) | (tmp >> (RANDOM_CNT-j));
     }
 
-    /* restore previous state */
+    /* restore standard table sized previous state */
     setstate_ret = setstate(initstate_ret);
 
     /*
