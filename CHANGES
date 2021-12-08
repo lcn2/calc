@@ -37,6 +37,20 @@ The following are the changes from calc version 2.14.0.11 to date:
 
     Now assuming that <stdio.h> is available under _WIN32 and _WIN64.
 
+    Added some preliminary notes about attempts to compile calc
+    under Windows 11.
+
+	BTW: While we are unable to use Windows 11, we welcome
+	     Windows 11 developers to try compiling calc natively
+	     (instead of via a Linux virtual machine).  If you are
+	     able to compile Windows 11 natively, we would welcome
+	     GitHub pull requests showing any needed modifications:
+
+		https://github.com/lcn2/calc/pulls
+
+	     Please also add notes to the 'Compiling calc under Windows 11'
+	     section in README.WINDOWS file.
+
 
 The following are the changes from calc version 2.14.0.9 to 2.14.0.10:
 

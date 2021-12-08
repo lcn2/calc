@@ -971,11 +971,12 @@ runrcfiles(void)
  *
  * _WIN32 and _WIN64 NOTE:
  *
- *	This function does not work under _WIN32 or _WIN64. The sbuf->st_ino is always
- *	zero because the FAT and NTFS filesystems do not support inodes.
- *	They also don't support links, which is why you need this function
- *	under UNIX. For _WIN32 or _WIN64, use _fullpath() to determine if you have
- *	already opened a file.
+ *	This function likely will not work under _WIN32 or _WIN64.
+ *
+ *	The sbuf->st_ino is always zero because the FAT and NTFS filesystems
+ *	do not support inodes.  Those filesystems don't support links, which
+ *	is why you need this function under UNIX. For _WIN32 or _WIN64, use
+ *	_fullpath() to determine if you have already opened a file.
  *
  * given:
  *	sbuf		stat of the inode in question

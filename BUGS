@@ -27,7 +27,16 @@ then it may be time to send in a bug report.
 
 =-=
 
-The BEST WAY TO SEND IN A BUG REPORT is via calc GitHub issue URL:
+If you encounter a warning or error in compiling, or if you
+find a calc bug and you wish to send is a fix, we recommend
+that you submit your change using the GitHub pull request:
+
+    https://github.com/lcn2/calc/pulls
+
+=-=
+
+If you just want to send us a bug report, we recommend
+doing so via the GitHub issue process:
 
     https://github.com/lcn2/calc/issues
 
@@ -118,6 +127,8 @@ Known bugs in calc:
 
     The output of the alg_config.cal resource file is bogus.
     We would welcome a replacement for this code.
+
+    Calc may not compile natively under Windows 11. See README.WINDOWS.
 
     We are sure some more bugs exist.  When you find them, please let
     us know!  See the above for details on how to report and were to

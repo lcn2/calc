@@ -3,20 +3,21 @@ IMPORTANT: Please see the section at the bottom of this file for
 	   some important information on Makefiles used in calc.
 
 ###################################################################
-# IMPORTANT: DO NOT run GNU make in parallel mode!!!		  #
+# IMPORTANT: DO NOT use make in parallel mode!!!		  #
 ###################################################################
 # Unfortunately due to the complex dependency issues between	  #
-# Makefile, Makefile.ship and custom/Makefile, parallel GNU make  #
+# Makefile, Makefile.ship and custom/Makefile, parallel make      #
 # is NOT recommended.  Sorry (tm Canada) :)			  #
 ###################################################################
 
-Installing calc from the bzip2-ed tarball in 4 easy steps:
+Installing calc from the bzip2-ed tarball: 4 easy steps:
 
-    (0)  If your platform supports i686 RPMs, you may want to go to:
+    (0) If your platform supports i686 RPMs, you may want to go to:
 
-	    http://www.isthe.com/chongo/src/calc/
+	    https://github.com/lcn2/calc/releases
 
-	and use these RPMs:
+	Open up the 'Assets' tag below a given release and
+	download these RPMs:
 
 	    * calc*.i686.rpm
 		- all that is needed if you just want to use calc
@@ -25,17 +26,26 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 	        - calc *.h header and *.a lib files for use in other programs
 
 	    * calc.*.src.rpm
-	        - calc source in RPM package form
+	        - calc source via a SRPM package
 
-	The following 4 steps apply to calc source tree that comes from either:
+	Alternately to the above github link, you might try looking at
+	the RPMs under:
 
-		bunzip2 -c calc-*.tar.bz2 | tar -xvf -
+	    http://www.isthe.com/chongo/src/calc/
 
-	or from:
+=-=
 
-		rpm -ivh calc-*.src.rpm
-		cd /var/tmp
-		bunzip2 -c /usr/src/redhat/SOURCES/calc-*.tar.bz2 | tar -xvf -
+The following 4 steps apply to calc source tree that comes from either:
+
+	bunzip2 -c calc-*.tar.bz2 | tar -xvf -
+
+or from:
+
+	rpm -ivh calc-*.src.rpm
+	cd /var/tmp
+	bunzip2 -c /usr/src/redhat/SOURCES/calc-*.tar.bz2 | tar -xvf -
+
+4 steps:
 
     (1)	Look at the makefile, and adjust it to suit your needs.
 
@@ -204,9 +214,6 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 
 	make check
 
-	==> If you run into problems, read the BUGS file and follow
-	    the instructions found in there.
-
 	NOTE: For a quiet check which only prints if something goes wrong:
 
 		make chk
@@ -217,6 +224,9 @@ Installing calc from the bzip2-ed tarball in 4 easy steps:
 
 We suggest that you might want to read the README.FIRST file and look at
 the calc help subsystem.  See also the README.md file.
+
+In general, if you run into problems, read the BUGS file and follow
+the instructions.
 
 =-=
 
@@ -241,10 +251,10 @@ SHELL= ...
 
     On some systems such as macOS, the bash shell is very
     far behind to the point where is cannot be depended on.
-    On such systems, the zsh may be a much better alternative
+    On such systems, the sh may be a much better alternative
     shell for this Makefile to use:
 
-	    SHELL= /bin/zsh
+	    SHELL= /bin/sh
 
 Makefile
 
@@ -252,7 +262,7 @@ Makefile
 
     This is our internal Makefile that drives how we build calc.
     For critical rules in Makefile.ship, there is a corresponding
-    rule in Makefile that calls ${MAKE} -f Makefile.ship with,
+    rule, Makefile, that calls ${MAKE} -f Makefile.ship with,
     additional commands, args and Makefile variables.  The ${XVAR}
     Makefile variable, for example, is passed on each call to
     ${MAKE} -f Makefile.ship so that the environment and parameters of
@@ -328,7 +338,7 @@ Makefile.ship
     the custom/Makefile.  In particular the Makefile.ship lines:
 
 	# start of host target cut
-	... these go in between custom/Makefile.head and custom/Makefile.tail
+	... these go between custom/Makefile.head and custom/Makefile.tail
 	# end of host target cut
 
 Makefile.simple

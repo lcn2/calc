@@ -3,6 +3,17 @@ Dear calc user on a Windows based system,
 See the HOWTO.INSTALL file for information on how to build and install calc.
 See also the README file.
 
+BTW: While we are unable to use Windows 11, we welcome
+     Windows 11 developers to try compiling calc natively
+     (instead of via a Linux virtual machine).  If you are
+     able to compile Windows 11 natively, we would welcome
+     GitHub pull requests showing any needed modifications:
+
+	https://github.com/lcn2/calc/pulls
+
+     Please also add notes to the 'Compiling calc under Windows 11'
+     section in README.WINDOWS file.
+
 NOTE: The main developers do not have access to a Windows based platform.
       While we will make an effort to not break calc Windows based system,
       our lack of a Windows test environment will mean we will make mistakes
@@ -10,10 +21,37 @@ NOTE: The main developers do not have access to a Windows based platform.
       Of course you are welcome to send us any patches that fix your
       Windows build environment.
 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-= Compiling calc under Windows 11 =-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-=-= compiling with Windows Subsystem for Linux (WSL) =-Cygwin =-=
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+We were given this advice from a Windows 11 developer:
+
+    Windows 11 users should try:
+
+	https://git-scm.com/downloads
+
+	    When you run the installer wizard, make sure you choose/check
+	    the git bash installer option.
+
+	https://www.mingw-w64.org/
+
+	    Runtime environment for GCC & LLVM for 32 and 64 bit Windows
+
+	    We suggest Windows 11 users consider using MINGW64.
+
+We would prefer a Windows 11 solution that does not require a Windows 11
+developer to install a Linux virtual machine.  Nevertheless, a Windows 11
+user might want to use the Microsoft Windows Subsystem (WSL) for Linux:
+
+	https://docs.microsoft.com/en-us/windows/wsl/
+
+    We have been told that you will need to turn on virtualization
+    to use this WSL subsystem.
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-= Compiling calc under Windows 10 via Windows Subsystem for Linux (WSL) =-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 It has been reported that calc version 2.12.6.4 has been successfully
 compiled, installed and running on Windows 10 on 2018 Jan 21.
@@ -78,9 +116,9 @@ needs.
 
 In particular:
 
-	Just copy the win32/*.[ch] files up into the top level calc
-	source directory, edit them (if needed) and build using the
-	Cygwin GCC compiler and Cygwin build environment.
+    Just copy the win32/*.[ch] files up into the top level calc
+    source directory, edit them (if needed) and build using the
+    Cygwin GCC compiler and Cygwin build environment.
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-= compiling under DJGPP =-=
