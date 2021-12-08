@@ -553,7 +553,7 @@ pseudo_seed(void)
     (void) ustat(sdata.fstat_stdout.st_dev, &sdata.ustat_stdout);
     (void) ustat(sdata.fstat_stderr.st_dev, &sdata.ustat_stderr);
     (void) ustat(sdata.stat_zero.st_dev, &sdata.ustat_zero);
-    (void) ustat(sdata.stat_null.st_dev, &sdata.ustat_dev);
+    (void) ustat(sdata.stat_null.st_dev, &sdata.ustat_null);
     (void) ustat(sdata.stat_sh.st_dev, &sdata.ustat_sh);
     (void) ustat(sdata.stat_ls.st_dev, &sdata.ustat_ls);
     (void) ustat(sdata.stat_system.st_dev, &sdata.ustat_system);
