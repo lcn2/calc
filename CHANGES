@@ -25,7 +25,7 @@ The following are the changes from calc version 2.14.0.11 to date:
 
     Fixed depend rule for custom/Makefile.
 
-    Fixed how Makefile variable SHELL is set on macOS vs. linux.
+    Fixed how Makefile variable SHELL is set on macOS vs. Linux.
     Using /bin/sh on macOS due to how zsh treats globs by default.
 
     Added charbit.h to define CALC_CHARBIT which is either CHAR_BIT
@@ -33,9 +33,9 @@ The following are the changes from calc version 2.14.0.11 to date:
     CALC_CHARBIT.  Added have_limits.h to determine if <limits.h>
     is a system include file.
 
-    Test for _WIN64 when testing for _WIN32.
+    Compiling now tests for _WIN64 as well when testing for _WIN32.
 
-    Now assuming that <stdio.h> is availabke under _WIN32 and _WIN64.
+    Now assuming that <stdio.h> is available under _WIN32 and _WIN64.
 
 
 The following are the changes from calc version 2.14.0.9 to 2.14.0.10:
