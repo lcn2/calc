@@ -179,7 +179,7 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 #if defined(_WIN32) || defined(_WIN64)
 	TRUE,			/* running under windows */
 #else
-	FALSE,			/* congrats, you are not using windows */
+	FALSE,			/* not using windows */
 #endif
 #if defined(__CYGWIN__)
 	TRUE,			/* compiled under cygwin */
@@ -239,7 +239,7 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 #if defined(_WIN32) || defined(_WIN64)
 	TRUE,			/* running under windows */
 #else
-	FALSE,			/* congrats, you are not using windows */
+	FALSE,			/* not using windows */
 #endif
 #if defined(__CYGWIN__)
 	TRUE,			/* compiled under cygwin */

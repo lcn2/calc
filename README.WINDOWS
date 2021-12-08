@@ -128,7 +128,9 @@ recommends the following settings:
 	CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR}
 	CALCRC= ./.calcinit;~/.calcrc;${CALC_SHAREDIR}/startup
 	CALCPAGER= less.exe -ci
-	DEBUG= -O2 -gstabs+ -DWINDOZ
+	DEBUG= -O2 -gstabs+ -D_WIN32
+	HAVE_ENVIRON=-DHAVE_NO_ENVIRON
+	HAVE_ARC4RANDOM=-DHAVE_NO_ARC4RANDOM
 
 The 'Linux set' or 'gcc set' (see the Select your compiler type section)
 should work for DJGPP systems if you set the above Makefile variables.
