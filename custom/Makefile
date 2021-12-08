@@ -374,7 +374,7 @@ T=
 
 # Debug/Optimize options for ${CC} and ${LCC}
 #
-# Select DEBUG= -O2 -gstabs+ -DWINDOZ for DJGPP.
+# Select DEBUG= -O2 -gstabs+ -D_WIN32 for DJGPP.
 #
 #DEBUG=
 #
@@ -403,7 +403,7 @@ DEBUG= -O3 -g3
 #DEBUG= -gx
 #DEBUG= -WM,-g
 #
-#DEBUG= -O2 -gstabs+ -DWINDOZ
+#DEBUG= -O2 -gstabs+ -D_WIN32
 
 # Some systems require one to use ranlib to add a symbol table to
 # a *.a link library.  Set RANLIB to the utility that performs this
