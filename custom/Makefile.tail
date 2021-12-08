@@ -159,11 +159,19 @@ calcliblist: ${CALCLIBLIST}
 	done
 
 #if 0	/* start of skip for non-Gnu makefiles */
-Makefile.simple: ${MAKE_FILE}
+Makefile.simple: Makefile ../Makefile ../Makefile.ship
 	${V} echo '=-=-=-=-= custom/${MAKE_FILE} start of $@ rule =-=-=-=-='
-	${Q} ${RM} -f $@
+	${Q} if [ -f $@.bak ]; then \
+		echo "custom/$@.bak exists, remove or move it"; \
+		exit 1; \
+	else \
+	    ${TRUE}; \
+	fi
+	-${Q} if [ -f $@ ]; then \
+	    ${MV} -f $@ $@.bak; \
+	fi
 	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
-	    ${MAKE_FILE} | \
+	    Makefile | \
 	    ${GREP} -v '#\.#' | \
 	    ${SED} -e 's;^# SRC:.*;# SRC: non-GNU Makefile via;' \
 		   -e 's;via$$;via ${MAKE} -f ${MAKE_FILE} custom/$@;' > $@
@@ -171,6 +179,19 @@ Makefile.simple: ${MAKE_FILE}
 	${Q} echo 'Makefile.simple:' >> $@
 	${Q} echo '	$${Q} if [ ! -f Makefile.simple ]; then '"\\" >> $@
 	${Q} echo '		$${CP} -f $${MAKE_FILE} $$@; fi' >> $@
+	-${Q} if [ -s $@.bak ]; then \
+	    if ${CMP} -s $@.bak $@; then \
+		echo 'custom/$@ was already up to date'; \
+		echo 'restoring original custom/$@'; \
+		${MV} -f $@.bak $@; \
+	    else \
+		echo 'old custom/$@ is now custom/$@.bak'; \
+		echo 'updated custom/$@ formed'; \
+		echo 'try: diff -u custom/$@.bak custom/$@'; \
+	    fi; \
+	else \
+	    echo 'new custom/$@ formed'; \
+	fi
 	${V} echo '=-=-=-=-= custom/${MAKE_FILE} end of $@ rule =-=-=-=-='
 #endif	/* end of skip for non-Gnu makefiles */
 
@@ -307,9 +328,6 @@ clobber: clean
 	${RM} -f libcustcalc*
 	${RM} -rf skel
 	${V} echo remove files that are obsolete
-#if 0	/* start of skip for non-Gnu makefiles */
-	${RM} -f Makefile.simple
-#endif	/* end of skip for non-Gnu makefiles */
 	-${Q} if [ -e .DS_Store ]; then \
 	    echo ${RM} -rf .DS_Store; \
 	    ${RM} -rf .DS_Store; \

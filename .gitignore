@@ -6,7 +6,6 @@
 #
 .dynamic
 .hsrc
-Makefile.simple
 NOTES
 align32.h
 args.h
@@ -29,7 +28,6 @@ cscript/powerterm
 cscript/simple
 cscript/square
 custom/.all
-custom/Makefile.simple
 custom/libcustcalc*
 endian
 endian_calc.h

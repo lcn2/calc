@@ -51,6 +51,10 @@ The following are the changes from calc version 2.14.0.11 to date:
 	     Please also add notes to the 'Compiling calc under Windows 11'
 	     section in README.WINDOWS file.
 
+    We added Makefile.simple as part of the master branch source
+    to help those who may be using a make tool that does not support
+    GNU Make-like features such as "ifeq" and ":=".
+
 
 The following are the changes from calc version 2.14.0.9 to 2.14.0.10:
 

@@ -784,17 +784,17 @@ calcliblistfmt:
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
 
-custom/Makefile:
+custom/Makefile: Makefile ${MAKE_FILE} custom/Makefile.head custom/Makefile.tail
 	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
 
-Makefile.simple:
+Makefile.simple: Makefile ${MAKE_FILE}
 	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
 
-custom/Makefile.simple:
+custom/Makefile.simple: Makefile ${MAKE_FILE} custom/Makefile
 	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
