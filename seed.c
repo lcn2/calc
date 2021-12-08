@@ -678,9 +678,6 @@ pseudo_seed(void)
      * hash all the data from random() and friends
      */
     hash_val = private_hash64_buf(hash_val,
-				 (char *)&past_hash,
-				 sizeof(past_hash));
-    hash_val = private_hash64_buf(hash_val,
 				 (char *)random_before,
 				 sizeof(random_before));
     hash_val = private_hash64_buf(hash_val,
