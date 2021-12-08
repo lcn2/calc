@@ -44,10 +44,9 @@
 #include <unistd.h>
 #endif
 
-#if defined(__MSDOS__)
+#if defined(_WIN32) || defined(_WIN64)
 #include <limits.h>
 #define _fullpath(f,n,s) (_fixpath(n,f),f)
-#define MSDOS_MAX_PATH PATH_MAX
 #endif
 
 #include "calc.h"
@@ -996,9 +995,9 @@ isinoderead(struct stat *sbuf)
 	/* scan the entire readset */
 	for (i=0; i < maxreadset; ++i) {
 #if defined(_WIN32) || defined(_WIN64)
-		char tmp[MSDOS_MAX_PATH+1];
-		tmp[MSDOS_MAX_PATH] = '\0';
-		if (_fullpath(tmp, cip->i_name, MSDOS_MAX_PATH) &&
+		char tmp[MAX_PATH+1];
+		tmp[MAX_PATH] = '\0';
+		if (_fullpath(tmp, cip->i_name, MAX_PATH) &&
 		    readset[i].active &&
 		    strcasecmp(readset[i].path, tmp) == 0) {
 			/* found a match */
@@ -1129,7 +1128,7 @@ addreadset(char *name, char *path, struct stat *sbuf)
 	 * this new longer path name.
 	 */
 	 {
-		readset[ret].path = _fullpath(NULL, path, MSDOS_MAX_PATH);
+		readset[ret].path = _fullpath(NULL, path, MAX_PATH);
 		if (readset[ret].path == NULL) {
 			return -1;
 		}
