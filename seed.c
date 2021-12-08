@@ -80,7 +80,8 @@
 #endif
 #if defined(HAVE_STDLIB_H)
 # include <stdlib.h>
-# define RANDOM_CNT (16)	/* random() call repeat count */
+/* NOTE: RANDOM_CNT should remain 32 to circular shift 31-bit returns */
+# define RANDOM_CNT (32) /* random() call repeat and circular shift */
 # define INITSTATE_SIZE (256)	/* initstate pool size */
 #endif
 #include <setjmp.h>
@@ -464,6 +465,7 @@ pseudo_seed(void)
     /**/
 
 #if defined(HAVE_STDLIB_H)
+    unsigned long tmp;			/* temp holder of 31-bit random() */
     unsigned past_hash;			/* prev hash or xor-folded prev hash */
     long random_before[RANDOM_CNT];	/* random() pre initstate() */
     char *initstate_ret;		/* return from initstate() call */
@@ -642,9 +644,10 @@ pseudo_seed(void)
 
     /* classic 31-bit random seeded with time of day, count, prev hash */
     srandom((unsigned)(sdata.time) ^ (unsigned)call_count ^ past_hash);
-    for (j=0; j < RANDOM_CNT; j += 2) {
-	random_before[j] = random();
-	random_before[j+1] = (random() << 1);
+    for (j=0; j < RANDOM_CNT; ++j) {
+	tmp = random();	/* 31-bit value */
+	/* we 32-bit circular shift to spread 31-bit returns around */
+	random_before[j] = (tmp << j) | (tmp >> (RANDOM_CNT-j));
     }
 
     /* initialize random state with the FNV hash of sdata */
@@ -659,9 +662,10 @@ pseudo_seed(void)
 #endif /* HAVE_B64 */
 
     /* use 31-bit random some more with the new random state */
-    for (j=0; j < RANDOM_CNT; j += 2) {
-	random_after[j] = random();
-	random_after[j+1] = (random() << 1);
+    for (j=0; j < RANDOM_CNT; ++j) {
+	tmp = random();	/* 31-bit value */
+	/* we 32-bit circular shift to spread 31-bit returns around */
+	random_after[j] = (tmp << j) | (tmp >> (RANDOM_CNT-j));
     }
 
     /* restore previous state */

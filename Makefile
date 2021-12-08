@@ -464,6 +464,10 @@ endian_calc.h:
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
 
+charbit.h:
+	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
+	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
+
 longbits.h:
 	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}

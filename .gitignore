@@ -16,6 +16,7 @@ calc.1
 calc.usage
 calcerr.c
 calcerr.h
+charbit.h
 conf.h
 cscript/.all
 cscript/4dsphere
@@ -43,6 +44,7 @@ have_getpgid.h
 have_getprid.h
 have_getsid.h
 have_gettime.h
+have_limits.h
 have_memmv.h
 have_newstr.h
 have_offscl.h

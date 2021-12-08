@@ -92,6 +92,8 @@
 # include <stdlib.h>
 #endif
 
+#include "charbit.h"
+
 
 #include "banned.h"	/* include after system header <> includes */
 
@@ -118,7 +120,7 @@ main(int argc, char **argv)
 		/* ignore empty or leading space args */
 		if (argv[1][0] == '\0' ||
 		    (isascii((int)argv[1][0]) && isspace((int)argv[1][0]))) {
-			long_bits = sizeof(long)*8;
+			long_bits = sizeof(long)*CALC_CHARBIT;
 		/* process the forced size arg */
 		} else {
 			forced_size = 1;

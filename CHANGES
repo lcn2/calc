@@ -28,6 +28,11 @@ The following are the changes from calc version 2.14.0.11 to date:
     Fixed how Makefile variable SHELL is set on macOS vs. linux.
     Using /bin/sh on macOS due to how zsh treats globs by default.
 
+    Added charbit.h to define CALC_CHARBIT which is either CHAR_BIT
+    from <limits.h> or 8 or a value set by the Makefile variable
+    CALC_CHARBIT.  Added have_limits.h to determine if <limits.h>
+    is a system include file.
+
 
 The following are the changes from calc version 2.14.0.9 to 2.14.0.10:
 
