@@ -488,6 +488,10 @@ have_unistd.h:
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
 	${V} echo '=-=-=-=-= private Makefile $@ rule end =-=-=-=-='
 
+have_limits.h:
+	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
+	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
+
 have_string.h:
 	${V} echo '=-=-=-=-= private Makefile $@ rule start =-=-=-=-='
 	${Q} ${MAKE} ${XARG} -f ${MAKE_FILE} $@ ${XVAR}
