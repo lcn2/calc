@@ -708,12 +708,14 @@ pseudo_seed(void)
      * load the hash data into the ZVALUE
      *
      * We do not care about byte-order, nor Endian issues, we just
-     * want to load in data.
+     * want to load in data.  We round up to the next HALF in size
+     * just in case hash_val is not a HALF multiple in length.
      */
-    hash.len = sizeof(hash_val) / sizeof(HALF);
+    hash.len = (sizeof(hash_val)+sizeof(HALF)-1) / sizeof(HALF);
     hash.v = alloc(hash.len);
+    memset(hash.v, 0, hash.len*sizeof(HALF));	/* paranoia */
     hash.sign = 0;
-    memcpy((void *)hash.v, (void *)&hash_val, hash.len*sizeof(HALF));
+    memcpy((void *)hash.v, (void *)&hash_val, sizeof(hash_val));
     ztrim(&hash);
 
     /*
