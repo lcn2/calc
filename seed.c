@@ -716,6 +716,18 @@ pseudo_seed(void)
     memset(hash.v, 0, hash.len*sizeof(HALF));	/* paranoia */
     hash.sign = 0;
     memcpy((void *)hash.v, (void *)&hash_val, sizeof(hash_val));
+
+    /*
+     * Force the hash as ZVALUE to be at most, 64 bits long.
+     * It is almost certainly the case that the hash as ZVALUE
+     * is at most 64 bits in length: this code guarantees it.
+     *
+     * BTW: One can safely assume that 64 is an integer multiple of BASEB:
+     *	    likely 4, 2, or 1 times BASEB.
+     */
+    if (hash.len > 64/BASEB) {
+	hash.len = 64/BASEB;
+    }
     ztrim(&hash);
 
     /*
