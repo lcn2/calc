@@ -20,6 +20,11 @@ TYPES
 DESCRIPTION
     Seed the pseudo-random number using the Blum-Blum-Shub generator.
 
+    It you want a quick and effective way to seed the generator,
+    we recommended that you call srandom() with the seed() value:
+
+	srandom(seed())
+
     There are two primary values contained inside generator state:
 
 	Blum modulus:
@@ -58,7 +63,7 @@ DESCRIPTION
 	call of srandom(0) will restore the generator to the state
 	found when calc starts.
 
-    1 arg (seed >= 2^32):		srandom(21609139158123209^9+17)
+    1 arg (seed >= 2^32):		srandom(seed())
 
 	The seed value is used to compute the new quadratic residue.
 	The seed passed will be successively squared mod the Blum
