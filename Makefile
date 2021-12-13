@@ -1297,7 +1297,7 @@ EXT=
 
 # The default calc versions
 #
-VERSION= 2.14.0.12
+VERSION= 2.14.0.13
 
 # Names of shared libraries with versions
 #
