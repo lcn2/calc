@@ -91,6 +91,7 @@ libcalc*
 libcustcalc*
 longbits
 longbits.h
+Makefile.our
 sample_many
 sample_rand
 tags

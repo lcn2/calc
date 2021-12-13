@@ -1,4 +1,85 @@
-The following are the changes from calc version 2.14.0.11 to date:
+The following are the changes from calc version 2.14.0.13 to date:
+
+    Minor tweak to seed() builtin.  Updated help/srand and help/srandom.
+
+    Moved Makefile.ship into Makefile.
+
+    Removed custom/Makefile.head and custom/Makefile.tail.
+
+    The custom/Makefile is now part of source and includes Makefile.
+    In particular, custom/Makefile makes use of the 'middle' of
+    the new top level Makefile where calc's top level Makefile
+    variables are defined.
+
+    Makefile.simple and custom/Makefile.simple are now part of the source
+    and are constructed from Makefile and custom/Makefile respectively.
+    The Makefile.simple and custom/Makefile.simple avoid using GNU
+    conditionals. They may be used with older/classic make commands.
+
+    Makefile.local will include comments about how to better use
+    it. Between releases, Makefile.local at the top of the master branch
+    will contain how we typically build calc and test calc (FYI: we
+    normally enable things such as -Werror -Wextra -pedantic).  When we
+    push out a release, Makefile.local will be stripped of non-comment
+    lines.  Thus, releases of calc, and, released "calc*.src.rpm"
+    files and the source tarballs, will have a Makefile.local with
+    only comments.
+
+    The "README.*" files and "HOWTO.INSTALL" file have been updated.
+
+    By default, compiler warnings have been turned up.  The Makefile
+    variable ${CCWARN} now defaults to:
+
+	CCWARN= -Wall -Wextra -pedantic
+
+    The previous level of compiler warnings can be easily restored by
+    adding to Makefile.local:
+
+	CCWARN:= -Wall
+
+    The readline, history and ncurses libraries are now default.
+    The Makefile variables ${USE_READLINE}, ${READLINE_LIB}, and
+    ${READLINE_EXTRAS} now default to:
+
+	USE_READLINE= -DUSE_READLINE
+	READLINE_LIB= -lreadline
+	READLINE_EXTRAS= -lhistory -lncurses
+
+    The previous mode where readline, history and ncurses libraries
+    were not compiled in by default can be easily restored by
+    adding to Makefile.local:
+
+	USE_READLINE:=
+	READLINE_LIB:=
+	READLINE_EXTRAS:=
+
+    We have renamed "stable" as "production".
+    We have renamed "unstable" as "tested".
+
+    On the web site:
+
+	http://www.isthe.com/chongo/src/calc/
+
+    these files has been renamed:
+
+	2.x.y.z_IS_LATEST_STABLE   ==> 2.x.y.z_IS_LATEST_PRODUCTION
+	2.x.y.z_IS_LATEST_UNSTABLE ==> 2.x.y.z_IS_LATEST_TESTED
+
+    The terms 'stable' and 'unstable' were both misleading and
+    inaccurate.  For details see the new documention file:
+
+	README.RELEASE
+
+    See also the help command:
+
+    	; help release
+
+    Fixed bug impacting how have_ustat.h was formed.
+
+    Updated help/archive to reflect GitHub use.
+
+
+The following are the changes from calc version 2.14.0.11 to 2.14.0.12:
 
     Fixed a number of typos.
 

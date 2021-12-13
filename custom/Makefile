@@ -4,7 +4,7 @@
 #
 # Copyright (C) 1999-2006,2014,2017-2018,2021  Landon Curt Noll
 #
-# SRC: Makefile via make -f Makefile.ship custom/Makefile
+# SRC: custom/Makefile
 #
 #	The "# SRC: ... - ..." comment line above indicates
 #	the origin of this file.
@@ -34,25 +34,6 @@
 #
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
-
-####################################################
-# NOTE: Start of section from custom/Makefile.head #
-####################################################
-
-#.###############################################################.#
-#.#								#.#
-#.# WARNING: This Makefile is generated from a combination of	#.#
-#.#	   custom/Makefile.head, Makefile.ship, and		#.#
-#.#	   custom/Makefile.tail.  We recommend that you NOT	#.#
-#.#	   edit this file, but instead edit the proper source	#.#
-#.#	   file and then make custom/Makefile:			#.#
-#.#								#.#
-#.#		make custom/Makefile				#.#
-#.#								#.#
-#.#	   See the '# NOTE .. section from ..' lines for	#.#
-#.#	   where the source file for the lines are from.	#.#
-#.#								#.#
-#.###############################################################.#
 
 
 # The shell used by this Makefile
@@ -151,8 +132,10 @@ CCBAN= -UUNBAN
 #if 0	/* start of skip for non-Gnu makefiles */
 
 # Unfortunately due to the complex dependency issues between
-# Makefile, Makefile.ship and custom/Makefile, parallel GNU make
-# is NOT recommended.  Sorry.
+# Makefile, and custom/Makefile, parallel GNU make
+# is NOT recommended.
+#
+# XXX - fix this - XXX
 #
 .NOTPARALLEL:
 
@@ -170,10 +153,6 @@ ifeq ($(target),)
 target=$(shell uname -s 2>/dev/null)
 endif
 #endif	/* end of skip for non-Gnu makefiles */
-
-##############################################################################
-#-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
-##############################################################################
 
 # The custom calc resource files to install
 #
@@ -217,6 +196,10 @@ CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c c_pzasusb8.c \
 #
 CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o c_pzasusb8.o \
 	c_pmodm127.o c_register.o
+
+##############################################################################
+#-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
+##############################################################################
 
 ##############################################################################
 #-=-=-=-=-=-=- Defaults in case you want to build from this dir -=-=-=-=-=-=-#
@@ -422,15 +405,6 @@ RANLIB=ranlib
 MAKE_FILE= Makefile
 #MAKE_FILE=
 
-# Controlling file makefile basename (without the path)
-#
-# This is the basename same of the makefile that may/does/will drive
-# this makefile.
-#
-# If in doubt, set TOP_MAKE_FILE to Makefile
-#
-TOP_MAKE_FILE= Makefile
-
 # If you do not wish to use purify, set PURIFY to an empty string.
 #
 # If in doubt, use PURIFY=
@@ -588,548 +562,21 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 
 #endif	/* end of skip for non-Gnu makefiles */
 
-##################################################
-# NOTE: End of section from custom/Makefile.head #
-##################################################
-# start of host target cut - Do not remove this line
-
-###########################################################
-# NOTE: Start of section from the middle of Makefile.ship #
-###########################################################
-
-##############################################################################
-#-=-=-=-=-=- host target section - targets that override defaults -=-=-=-=-=-#
-##############################################################################
-
-# Common values set in targets
-#
-# BLD_TYPE determines if calc is built with static and/or dynamic libs.
-#	       Set this value to one of:
-#
-#	BLD_TYPE= calc-dynamic-only
-#	BLD_TYPE= calc-static-only
-#
-# CC_SHARE are flags given to ${CC} to build .o files suitable for shared libs
-# DEFAULT_LIB_INSTALL_PATH is where calc programs look for calc shared libs
-# LD_SHARE are common flags given to ${CC} to link with shared libraries
-# LIBCALC_SHLIB are flags given to ${CC} to build libcalc shared libraries
-# LIBCUSTCALC_SHLIB are flags given to ${CC} to build libcustcalc shared lib
-#
-#	NOTE: The above 5 values are unused if BLD_TYPE= calc-static-only
-#
-# CC_STATIC are flags given to ${CC} to build .o files suitable for static libs
-# LD_STATIC are common flags given to ${CC} to link with static libraries
-# LIBCALC_STATIC are flags given to ${CC} to build libcalc static libraries
-# LIBCUSTCALC_STATIC are flags given to ${CC} to build libcustcalc static lib
-#
-#	NOTE: The above 4 values are unused if BLD_TYPE= calc-dynamic-only
-#
-# CCOPT are flags given to ${CC} for optimization
-# CCWARN are flags given to ${CC} for warning message control
-#
-# The following are given to ${CC}:
-#
-#	WNO_IMPLICT
-#	WNO_ERROR_LONG_LONG
-#	WNO_LONG_LONG
-#
-# when compiling special .o files that may need special compile options:
-#
-#	NOTE: These flags simply turn off certain compiler warnings,
-#	      which is useful only when CCWERR is set to -Werror.
-#
-#	NOTE: If your compiler does not have these -Wno files, just
-#	      set these variables to nothing as in:
-#
-#		WNO_IMPLICT=
-#		WNO_ERROR_LONG_LONG=
-#		WNO_LONG_LONG=
-#
-# CCWERR are flags given to ${CC} to make warnings fatal errors
-#	NOTE: CCWERR is only set in development Makefiles and must only be
-#	      used with ${CC}, not ${LCC}.  If you do not want the compiler
-#	      to abort on warnings, then leave CCWERR blank.
-# CCMISC are misc flags given to ${CC}
-#
-# CCBAN is given to ${CC} in order to control if banned.h is in effect.
-#	NOTE: See where CCBAN is defined above for details.
-#
-# LCC is how the C compiler is invoked on locally executed intermediate programs
-# CC is how the C compiler is invoked (with an optional Purify)
-#
-# Specific target overrides or modifications to default values
-
 ##########################################################################
-# NOTE: If your target is not supported below and the default target	 #
-#	is not suitable for your needs, please send to the:		 #
-#									 #
-#		calc-contrib at asthe dot com				 #
-#									 #
-#	Email address an "ifeq ($(target),YOUR_TARGET_NAME)" ... "endif" #
-#	set of lines so that we can consider them for the next release.  #
+#=-=-=-=-=- Be careful if you change something below this line -=-=-=-=-=#
 ##########################################################################
 
+# include start from top Makefile - keep this line
 #if 0	/* start of skip for non-Gnu makefiles */
-################
-# Linux target #
-################
-
-ifeq ($(target),Linux)
+###
 #
-BLD_TYPE= calc-dynamic-only
+# Allow Makefile.local to override any of the above settings
 #
-CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
-    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifdef ALLOW_CUSTOM
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
-#
-CC_STATIC=
-LD_STATIC=
-LIBCALC_STATIC=
-LIBCUSTCALC_STATIC=
-#
-# If you want to add flags to all compiler and linker
-# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
-# set ${COMMON_ADD}.
-#
-# For example to use gcc's -Werror to force warnings
-# to become errors, call make with:
-#
-#   make .. COMMON_ADD='-Werror'
-#
-# This facility requires a Gnu Makefile, or a make command
-# that understands the += make operand.
-#
-COMMON_CFLAGS+= ${COMMON_ADD}
-COMMON_LDFLAGS+= ${COMMON_ADD}
-#
-CCWARN= -Wall
-WNO_IMPLICT= -Wno-implicit
-WNO_ERROR_LONG_LONG= -Wno-error=long-long
-WNO_LONG_LONG= -Wno-long-long
-CCWERR=
-CCOPT= ${DEBUG}
-CCMISC=
-#
-LCC= gcc
-CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-endif
-
-###############################
-# Apple macOS / Darwin target #
-###############################
-
-ifeq ($(target),Darwin)
-#
-BLD_TYPE= calc-dynamic-only
-#
-CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= ${DARWIN_ARCH}
-#SET_INSTALL_NAME= no
-SET_INSTALL_NAME= yes
-ifeq ($(SET_INSTALL_NAME),yes)
-LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
-    -install_name ${LIBDIR}/libcalc${LIB_EXT_VERSION} ${DARWIN_ARCH}
-else
-LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
-    ${DARWIN_ARCH}
-endif
-ifdef ALLOW_CUSTOM
-ifeq ($(SET_INSTALL_NAME),yes)
-LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
-    -install_name ${LIBDIR}/libcustcalc${LIB_EXT_VERSION} ${DARWIN_ARCH}
-else
-LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
-    ${DARWIN_ARCH}
-endif
-else
-LIBCUSTCALC_SHLIB=
-endif
-#
-CC_STATIC=
-LD_STATIC= ${DARWIN_ARCH}
-LIBCALC_STATIC=
-LIBCUSTCALC_STATIC=
-#
-# If you want to add flags to all compiler and linker
-# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
-# set ${COMMON_ADD}.
-#
-# For example to use clang's -fsanitize for calc testing,
-# which requires a common set of flags to be passed to
-# every compile and link, then call make with:
-#
-#   make .. COMMON_ADD='-fsanitize=undefined -fsanitize=address'
-#
-# This facility requires a Gnu Makefile, or a make command
-# that understands the += make operand.
-#
-COMMON_CFLAGS+= ${COMMON_ADD}
-COMMON_LDFLAGS+= ${COMMON_ADD}
-#
-CCWARN= -Wall
-WNO_IMPLICT= -Wno-implicit
-WNO_ERROR_LONG_LONG= -Wno-error=long-long
-WNO_LONG_LONG= -Wno-long-long
-CCWERR=
-CCOPT= ${DEBUG}
-CCMISC= ${DARWIN_ARCH}
-#
-LCC= clang
-CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-# Darwin dynamic shared lib filenames
-LIB_EXT:= .dylib
-LIB_EXT_VERSION:= .${VERSION}${LIB_EXT}
-# LDCONFIG not required on this platform, so we redefine it to an empty string
-LDCONFIG:=
-# DARWIN_ARCH= -arch i386 -arch ppc	# Universal binary
-# DARWIN_ARCH= -arch i386		# Intel binary
-# DARWIN_ARCH= -arch ppc		# PPC binary
-# DARWIN_ARCH= -arch x86_64		# native 64-bit binary
-DARWIN_ARCH=				# native binary
-endif
-
-##################
-# FreeBSD target #
-##################
-
-########################################################################
-# NOTE: You MUST either use gmake (GNU Make) or you must try your luck #
-#       with Makefile.simple and custom/Makefile.simple versions.      #
-#	See HOWTO.INSTALL for more information.                        #
-########################################################################
-
-ifeq ($(target),FreeBSD)
-#
-BLD_TYPE= calc-dynamic-only
-#
-CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
-    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifdef ALLOW_CUSTOM
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
-#
-CC_STATIC=
-LD_STATIC=
-LIBCALC_STATIC=
-LIBCUSTCALC_STATIC=
-#
-# If you want to add flags to all compiler and linker
-# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
-# set ${COMMON_ADD}.
-#
-# For example to use gcc's -Werror to force warnings
-# to become errors, call make with:
-#
-#   make .. COMMON_ADD='-Werror'
-#
-# This facility requires a Gnu Makefile, or a make command
-# that understands the += make operand.
-#
-COMMON_CFLAGS+= ${COMMON_ADD}
-COMMON_LDFLAGS+= ${COMMON_ADD}
-#
-CCWARN= -Wall
-WNO_IMPLICT= -Wno-implicit
-WNO_ERROR_LONG_LONG= -Wno-error=long-long
-WNO_LONG_LONG= -Wno-long-long
-CCWERR=
-CCOPT= ${DEBUG}
-CCMISC=
-#
-LCC= gcc
-CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-MAKE= gmake
-#
-endif
-
-##################
-# OpenBSD target #
-##################
-
-########################################################################
-# NOTE: You MUST either use gmake (GNU Make) or you must try your luck #
-#       with Makefile.simple and custom/Makefile.simple versions.      #
-#	See HOWTO.INSTALL for more information.                        #
-########################################################################
-
-ifeq ($(target),OpenBSD)
-#
-BLD_TYPE= calc-dynamic-only
-#
-CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
-    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifdef ALLOW_CUSTOM
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
-#
-CC_STATIC=
-LD_STATIC=
-LIBCALC_STATIC=
-LIBCUSTCALC_STATIC=
-#
-# If you want to add flags to all compiler and linker
-# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
-# set ${COMMON_ADD}.
-#
-# For example to use gcc's -Werror to force warnings
-# to become errors, call make with:
-#
-#   make .. COMMON_ADD='-Werror'
-#
-# This facility requires a Gnu Makefile, or a make command
-# that understands the += make operand.
-#
-COMMON_CFLAGS+= ${COMMON_ADD}
-COMMON_LDFLAGS+= ${COMMON_ADD}
-#
-CCWARN= -Wall
-WNO_IMPLICT= -Wno-implicit
-WNO_ERROR_LONG_LONG= -Wno-error=long-long
-WNO_LONG_LONG= -Wno-long-long
-CCWERR=
-CCOPT= ${DEBUG}
-CCMISC=
-#
-LCC= gcc
-CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-MAKE= gmake
-#
-endif
-
-#################
-# Cygwin target #
-#################
-
-ifeq ($(target),Cygwin)
-#
-BLD_TYPE= calc-static-only
-#
-CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
-    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifdef ALLOW_CUSTOM
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
-#
-CC_STATIC=
-LIBCALC_STATIC=
-LIBCUSTCALC_STATIC=
-LD_STATIC=
-#
-# If you want to add flags to all compiler and linker
-# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
-# set ${COMMON_ADD}.
-#
-# For example to use gcc's -Werror to force warnings
-# to become errors, call make with:
-#
-#   make .. COMMON_ADD='-Werror'
-#
-# This facility requires a Gnu Makefile, or a make command
-# that understands the += make operand.
-#
-COMMON_CFLAGS+= ${COMMON_ADD}
-COMMON_LDFLAGS+= ${COMMON_ADD}
-#
-CCWARN= -Wall
-WNO_IMPLICT= -Wno-implicit
-WNO_ERROR_LONG_LONG= -Wno-error=long-long
-WNO_LONG_LONG= -Wno-long-long
-CCWERR=
-CCOPT= ${DEBUG}
-CCMISC=
-#
-LCC= gcc
-CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-endif
-
-#######################################################
-# simple target - values used to form Makefile.simple #
-#######################################################
-
-# NOTE: This is not a real host target.  The simple target
-#	exists only to form the Makefile.simple file.
-
-ifeq ($(target),simple)
+###
+EXCLUDE_FROM_CUSTOM_MAKEFILE=true	# include only middle of ../Makefile
+include ../Makefile
 #endif	/* end of skip for non-Gnu makefiles */
-#
-BLD_TYPE= calc-static-only
-#
-CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
-    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-#
-CC_STATIC=
-LD_STATIC=
-LIBCALC_STATIC=
-LIBCUSTCALC_STATIC=
-#
-CCWARN= -Wall
-WNO_IMPLICT= -Wno-implicit
-WNO_ERROR_LONG_LONG= -Wno-error=long-long
-WNO_LONG_LONG= -Wno-long-long
-CCWERR=
-CCOPT= ${DEBUG}
-CCMISC=
-#
-LCC= cc
-CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-# The simple makefile forces the use of static ${CC} flags
-#
-# ICFLAGS are given to ${CC} for intermediate programs used to help compile calc
-# CFLAGS are given to ${CC} for calc programs other than intermediate programs
-# ILDFLAGS for ${CC} in linking intermediate programs used to help compile calc
-# LDFLAGS for ${CC} in linking calc programs other than intermediate programs
-#
-ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
-CFLAGS= ${ICFLAGS} ${CCOPT}
-#
-ILDFLAGS= ${COMMON_LDFLAGS} ${LD_STATIC}
-LDFLAGS= ${LD_DEBUG} ${ILDFLAGS} ${LIBCALC_STATIC} ${LIBCUSTCALC_STATIC}
-#
-#if 0	/* start of skip for non-Gnu makefiles */
-endif
-
-###################################################
-# default target - when no specific target exists #
-###################################################
-
-# NOTE: This is the default generic host target.  Used when no other
-#	host target matches.
-
-ifeq ($(target),)
-#
-BLD_TYPE= calc-static-only
-#
-CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
-    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifdef ALLOW_CUSTOM
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
-#
-CC_STATIC=
-LIBCALC_STATIC=
-LIBCUSTCALC_STATIC=
-LD_STATIC=
-#
-# If you want to add flags to all compiler and linker
-# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
-# set ${COMMON_ADD}.
-#
-# For example to use gcc's -Werror to force warnings
-# to become errors, call make with:
-#
-#   make .. COMMON_ADD='-Werror'
-#
-# This facility requires a Gnu Makefile, or a make command
-# that understands the += make operand.
-#
-COMMON_CFLAGS+= ${COMMON_ADD}
-COMMON_LDFLAGS+= ${COMMON_ADD}
-#
-CCWARN= -Wall
-WNO_IMPLICT= -Wno-implicit
-WNO_ERROR_LONG_LONG= -Wno-error=long-long
-WNO_LONG_LONG= -Wno-long-long
-CCWERR=
-CCOPT= ${DEBUG}
-CCMISC=
-#
-LCC= gcc
-CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-endif
-
-###########################################
-# Set the default compile flags for ${CC} #
-###########################################
-
-# Required flags to compile C files for calc
-#
-# ICFLAGS are given to ${CC} for intermediate programs used to help compile calc
-# CFLAGS are given to ${CC} for calc programs other than intermediate programs
-#
-# NOTE: This does not work for: make-XYZ-only and BLD_TYPE != make-XYZ-only
-#
-ifeq ($(BLD_TYPE),calc-static-only)
-ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
-else
-ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_SHARE}
-endif
-CFLAGS= ${ICFLAGS} ${CCOPT}
-
-# Required flags to link files for calc
-#
-# ILDFLAGS for ${CC} in linking intermediate programs used to help compile calc
-# LDFLAGS for ${CC} in linking calc programs other than intermediate programs
-#
-ILDFLAGS= ${COMMON_LDFLAGS}
-LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
-#endif	/* end of skip for non-Gnu makefiles */
-
-#######################################################################
-#-=-=-=-=-=- end of target section - only make rules below -=-=-=-=-=-#
-#######################################################################
-
-#########################################################
-# NOTE: End of section from the middle of Makefile.ship #
-#########################################################
-
-# end of host target cut - Do not remove this line
-#
-# Copyright (C) 1999-2006,2014,2017-2018,2021  Landon Curt Noll
-#
-# SRC: Makefile via make -f Makefile.ship custom/Makefile
-#
-#	The "# SRC: ... - ..." comment line above indicates
-#	the origin of this file.
-#
-# IMPORTANT: Please see the section on Makefiles near the
-#	     bottom of the HOWTO.INSTALL file.
-
-####################################################
-# NOTE: Start of section from custom/Makefile.tail #
-####################################################
-
-##############################################################################
-#-=-=-=-=-=-=-=-=- Be careful if you change something below -=-=-=-=-=-=-=-=-#
-##############################################################################
+# include end from top Makefile - keep this line
 
 # These .c files are required for the main custom interface and
 # for the custom support functions for libcustcalc${LIB_EXT_VERSION}.
@@ -1171,8 +618,7 @@ H_SRC= ${CUSTOM_H_SRC}
 # directory but are installed as help files from the help/Makefile.
 #
 DISTLIST= ${CUSTCALC_SRC} ${CUSTOM_CALC_FILES} ${CUSTOM_HELP} \
-	${INSTALL_H_SRC} CUSTOM_CAL HOW_TO_ADD ${MAKE_FILE}.head \
-	${MAKE_FILE}.tail
+	${INSTALL_H_SRC} CUSTOM_CAL HOW_TO_ADD Makefile.simple
 
 # These files are used to make (but not built) a calc .a link library
 #
@@ -1192,7 +638,7 @@ TARGETS= ${BLD_TYPE} Makefile.simple
 
 ###
 #
-# The reason for this Makefile	:-)
+# The main reason for this Makefile	:-)
 #
 ###
 
@@ -1273,7 +719,7 @@ calcliblist: ${CALCLIBLIST}
 	done
 
 #if 0	/* start of skip for non-Gnu makefiles */
-Makefile.simple: Makefile ../Makefile ../Makefile.ship
+Makefile.simple: Makefile ../Makefile
 	${V} echo '=-=-=-=-= custom/${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${Q} if [ -f $@.bak ]; then \
 		echo "custom/$@.bak exists, remove or move it"; \
@@ -1285,14 +731,19 @@ Makefile.simple: Makefile ../Makefile ../Makefile.ship
 	    ${MV} -f $@ $@.bak; \
 	fi
 	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
-	    Makefile | \
-	    ${GREP} -v '#\.#' | \
-	    ${SED} -e 's;^# SRC:.*;# SRC: non-GNU Makefile via;' \
-		   -e 's;via$$;via ${MAKE} -f ${MAKE_FILE} custom/$@;' > $@
-	${Q} echo >> $@
-	${Q} echo 'Makefile.simple:' >> $@
-	${Q} echo '	$${Q} if [ ! -f Makefile.simple ]; then '"\\" >> $@
-	${Q} echo '		$${CP} -f $${MAKE_FILE} $$@; fi' >> $@
+	     Makefile | \
+	     ${SED} -e '/^# include start from top Makefile - keep /,$$d' > $@
+	${Q} echo '# include start from top Makefile - keep this line' \
+	     >> $@
+	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
+	     ../Makefile | \
+	    ${SED} -e '1,/^# include start from top Makefile - keep /d' \
+		   -e '/^# include end from top Makefile - keep /,$$d' >> $@
+	${Q} echo '# include end from top Makefile - keep this line' \
+	     >> $@
+	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
+	     Makefile | \
+	     ${SED} -e '1,/^# include end from top Makefile - keep /d' >> $@
 	-${Q} if [ -s $@.bak ]; then \
 	    if ${CMP} -s $@.bak $@; then \
 		echo 'custom/$@ was already up to date'; \
@@ -1347,8 +798,8 @@ depend:
 		>> "skel/custom/$$i"; \
 	    echo '#endif /* '"$$tag"' */' >> "skel/custom/$$i"; \
 	done
-	${Q} (cd ..; ${MAKE} -f ${TOP_MAKE_FILE} hsrc)
-	${MAKE} -f ../${TOP_MAKE_FILE} h_list 2>/dev/null | \
+	${Q} (cd ..; ${MAKE} -f ${MAKE_FILE} hsrc)
+	${MAKE} -f ../${MAKE_FILE} h_list 2>/dev/null | \
 	    while read i; do \
 		if [ ! -f "../$$i" ]; then continue; fi; \
 		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
@@ -1383,7 +834,6 @@ depend:
 	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' \
 		    ${MAKE_FILE}.bak > ${MAKE_FILE}
 	${Q} ${GREP} -v '^#' skel/custom/makedep.out >> ${MAKE_FILE}
-	${Q} ${TAIL} -4 ${MAKE_FILE}.tail >> ${MAKE_FILE}
 	${Q} echo removing skel
 	${Q} ${RM} -rf skel
 	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
@@ -1902,7 +1352,3 @@ custtbl.o: ../str.h
 custtbl.o: ../value.h
 custtbl.o: ../zmath.h
 custtbl.o: custtbl.c
-
-##################################################
-# NOTE: End of section from custom/Makefile.tail #
-##################################################

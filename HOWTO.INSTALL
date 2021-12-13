@@ -256,45 +256,33 @@ SHELL= ...
 
 	    SHELL= /bin/sh
 
-Makefile
+Makefile.local
 
-    # SRC: Makefile - Our calc build environment
+    # SRC: Makefile.local - tweaks to the top level Makefile
 
-    This is our internal Makefile that drives how we build calc.
-    For critical rules in Makefile.ship, there is a corresponding
-    rule, Makefile, that calls ${MAKE} -f Makefile.ship with,
-    additional commands, args and Makefile variables.  The ${XVAR}
-    Makefile variable, for example, is passed on each call to
-    ${MAKE} -f Makefile.ship so that the environment and parameters of
-    Makefile.ship may be managed for our build environment.
+    Between releases, Makefile.local at the top of the master branch
+    will contain how we typically build calc and test calc (FYI: we
+    normally enable things such as -Werror -Wextra -pedantic).  When we
+    push out a release, Makefile.local will be stripped of non-comment
+    lines.  Thus, releases of calc, and, released "calc*.src.rpm"
+    files and the source tarballs, will have a Makefile.local with
+    only comments.
 
-    This Makefile is used to make the calc rpm.  In addition to these
-    comments, this Makefile differs from the non-rpm bzip2-ed tarball
-    source Makefile in at least the the following ways:
+    If the Makefile is not suitable for you (say because you fetch it
+    from the top of the master branch between releases), then you may
+    wish to remove all non-comment lines.  I.e., lines that do not start
+    with the # character.
 
-	CCWERR= -Werror
-	USE_READLINE= -DUSE_READLINE
-	READLINE_LIB= -lreadline -lhistory -lncurses
-
-    If the Makefile is not suitable for you, then
-    you may wish to replace it with Makefile.ship:
-
-	mv -f -v Makefile.ship Makefile
-
-    This Makefile assumes you have a modern make command such as
+    This Makefile.local assumes you have a modern make command such as
     the GNU make.  See Makefile.simple comment below if you do not
     have such a modern make command.
-
-    In packages such as RPMs, and the tar.bz2 source tarball,
-    Makefile contains the contents of Makefile.ship.  If Makefile.ship
-    is missing it has likely moved to replace Makefile.
 
     In the calc GitHub repo, Makefile is the calc build environment
     and Makefile.ship is the top level Makefile:
 
 	https://github.com/lcn2/calc
 
-Makefile.ship
+Makefile
 
     # SRC: Makefile.ship - top level Makefile
 

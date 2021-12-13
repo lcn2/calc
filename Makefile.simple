@@ -35,7 +35,6 @@
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
 
-
 # The shell used by this Makefile
 #
 # On some systems, /bin/sh is a rather reduced shell with
@@ -1004,14 +1003,14 @@ CALCRC= ./.calcinit:~/.calcrc:${CALC_SHAREDIR}/startup
 #
 # If in doubt, set USE_READLINE, READLINE_LIB and READLINE_INCLUDE to nothing.
 #
-USE_READLINE=
-#USE_READLINE= -DUSE_READLINE
+#USE_READLINE=
+USE_READLINE= -DUSE_READLINE
 #
-READLINE_LIB=
-READLINE_EXTRAS=
+#READLINE_LIB=
+#READLINE_EXTRAS=
 #
-#READLINE_LIB= -lreadline
-#READLINE_EXTRAS= -lhistory -lncurses
+READLINE_LIB= -lreadline
+READLINE_EXTRAS= -lhistory -lncurses
 #
 #READLINE_LIB= -L/usr/gnu/lib -lreadline
 #READLINE_EXTRAS= -lhistory -lncurses
@@ -1097,15 +1096,6 @@ MAKE_FILE= Makefile
 #
 LOC_MKF= Makefile.local
 
-# Controlling file makefile basename (without the path)
-#
-# This is the basename same of the makefile that may/does/will drive
-# this makefile.
-#
-# If in doubt, set TOP_MAKE_FILE to Makefile
-#
-TOP_MAKE_FILE= Makefile
-
 # If you do not wish to use purify, set PURIFY to an empty string.
 #
 # If in doubt, use PURIFY=
@@ -1142,7 +1132,6 @@ LD_DEBUG=
 #
 CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help \
 	  CALCCUSTOMHELP=./custom
-
 
 # Some out of date operating systems require/want an executable to
 # end with a certain file extension.  Some compiler systems such as
@@ -1250,11 +1239,24 @@ COMMON_CFLAGS= -DCALC_SRC ${ALLOW_CUSTOM} ${CCWARN} \
 #
 COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
 
-# start of host target cut - Do not remove this line
-
-###########################################################
-# NOTE: Start of section from the middle of Makefile.ship #
-###########################################################
+###################################################
+# End skipping lines for the custom/Makefile      #
+#						  #
+# The lines in section are NOT used by the lower  #
+# level custom/Makefile's "include ../Makefile".  #
+#						  #
+# The section starts with the next line that has  #
+# a line that starts with '# Begin skipping ..'.  #
+###################################################
+# include start from top Makefile - keep this line
+######################################################
+# NOTE: Start of section from the middle of Makefile #
+#						     #
+# These lines are shared in common with the lower    #
+# custom/Makefile. That is, until the comment line   #
+# that starts with '# NOTE: End of section ..' line, #
+# these Makefile lines are used in BOTH Makefiles.   #
+######################################################
 
 ##############################################################################
 #-=-=-=-=-=- host target section - targets that override defaults -=-=-=-=-=-#
@@ -1343,7 +1345,8 @@ LD_STATIC=
 LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 #
-CCWARN= -Wall
+#CCWARN= -Wall
+CCWARN= -Wall -Wextra -pedantic
 WNO_IMPLICT= -Wno-implicit
 WNO_ERROR_LONG_LONG= -Wno-error=long-long
 WNO_LONG_LONG= -Wno-long-long
@@ -1372,15 +1375,21 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS} ${LIBCALC_STATIC} ${LIBCUSTCALC_STATIC}
 #-=-=-=-=-=- end of target section - only make rules below -=-=-=-=-=-#
 #######################################################################
 
-#########################################################
-# NOTE: End of section from the middle of Makefile.ship #
-#########################################################
+######################################################
+# NOTE: End of section from the middle of Makefile   #
+#						     #
+# These lines are shared in common with the lower    #
+# custom/Makefile. That is, starting with the line   #
+# that starts with '# NOTE: End of section ..' line, #
+# these Makefile lines are used in BOTH Makefiles.   #
+######################################################
+# include end from top Makefile - keep this line
 
 # end of host target cut - Do not remove this line
 
-###############################################################################
-#=-=-=-=-=- Be careful if you change something in this next section -=-=-=-=-=#
-###############################################################################
+##########################################################################
+#=-=-=-=-=- Be careful if you change something below this line -=-=-=-=-=#
+##########################################################################
 
 # Makefile debug
 #
@@ -1613,7 +1622,6 @@ CUSTOM_PASSDOWN=  \
     SORT=${SORT} \
     T=${T} \
     TAIL=${TAIL} \
-    TOP_MAKE_FILE=${MAKE_FILE} \
     TOUCH=${TOUCH} \
     TRUE=${TRUE} \
     V=${V} \
@@ -1663,7 +1671,6 @@ HELP_PASSDOWN= \
     SED=${SED} \
     SHELL=${SHELL} \
     T=${T} \
-    TOP_MAKE_FILE=${MAKE_FILE} \
     TOUCH=${TOUCH} \
     TRUE=${TRUE} \
     V=${V}
@@ -1697,7 +1704,6 @@ CAL_PASSDOWN= \
     SCRIPTDIR="${SCRIPTDIR}" \
     SHELL=${SHELL} \
     T=${T} \
-    TOP_MAKE_FILE=${MAKE_FILE} \
     TOUCH=${TOUCH} \
     TRUE=${TRUE} \
     V=${V}
@@ -1735,7 +1741,6 @@ CSCRIPT_PASSDOWN= \
     SHELL=${SHELL} \
     SORT=${SORT} \
     T=${T} \
-    TOP_MAKE_FILE=${MAKE_FILE} \
     TOUCH=${TOUCH} \
     TRUE=${TRUE} \
     V=${V}
@@ -1757,7 +1762,7 @@ LICENSE= COPYING COPYING-LGPL
 DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README.FIRST \
 	  README.WINDOWS calc.man HOWTO.INSTALL ${UTIL_MISC_SRC} ${LICENSE} \
 	  sample.README calc.spec.in rpm.mk README.md QUESTIONS CONTRIB-CODE \
-	  ${LOC_MKF}
+	  ${LOC_MKF} Makefile.simple README.RELEASE
 
 # These files are used to make (but not build) a calc .a link library
 #
@@ -1825,7 +1830,7 @@ TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS}
 
 ###
 #
-# The reason for this Makefile	:-)
+# The main reason for this Makefile	:-)
 #
 ###
 
@@ -2996,9 +3001,9 @@ have_ustat.h: have_ustat.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} echo '/* do we have or want ustat()? */' >> $@
 	${Q} ${RM} -f have_ustat.o have_ustat${EXT}
 	-${Q} if echo '#include <ustat.h>' | ${CC} -E - ${S}; then \
-	    ${Q} ${LCC} ${ICFLAGS} ${HAVE_USTAT} have_ustat.c -c ${S}; \
-	    ${Q} ${LCC} ${ILDFLAGS} have_ustat.o -o have_ustat${EXT} ${S}; \
-	    ${Q} ./have_ustat${EXT} > ustat_tmp ${E}; \
+	    ${LCC} ${ICFLAGS} ${HAVE_USTAT} have_ustat.c -c ${S}; \
+	    ${LCC} ${ILDFLAGS} have_ustat.o -o have_ustat${EXT} ${S}; \
+	    ./have_ustat${EXT} > ustat_tmp ${E}; \
 	fi
 	-${Q} if [ -s ustat_tmp ]; then \
 	    ${CAT} ustat_tmp >> $@; \
@@ -3768,6 +3773,17 @@ depend: hsrc custom/Makefile
 	    fi; \
 	done >> skel/makedep.out
 	${Q} LANG=C ${SORT} -u skel/makedep.out -o skel/makedep.out
+	echo '#if 0	/* start of skip for non-Gnu makefiles */' \
+	  >> skel/makedep.out
+	echo '###################################################' \
+	  >> skel/makedep.out
+	echo '# End 2nd skip of lines for the custom/Makefile   #' \
+	  >> skel/makedep.out
+	echo '###################################################' \
+	  >> skel/makedep.out
+	echo 'endif' >> skel/makedep.out
+	echo '#endif	/* end of skip for non-Gnu makefiles */' \
+	  >> skel/makedep.out
 	${Q} echo dependency list formed
 	${Q} echo forming new ${MAKE_FILE}
 	${Q} ${RM} -f ${MAKE_FILE}.bak
@@ -3876,6 +3892,37 @@ calcliblist: custom/Makefile
 calcliblistfmt:
 	${Q} ${MAKE} -f Makefile calcliblist | \
 	    ${FMT} -64 | ${SED} -e 's/^/	/'
+
+Makefile.simple: Makefile custom/Makefile.simple
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${Q} if [ -f $@.bak ]; then \
+		echo "$@.bak exists, remove or move it"; \
+		exit 1; \
+	else \
+	    ${TRUE}; \
+	fi
+	-${Q} if [ -f $@ ]; then \
+	    ${MV} -f $@ $@.bak; \
+	fi
+	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
+	    Makefile | \
+	    ${SED} -e 's/cd custom; $${MAKE} -f Makefile/&.simple/' \
+		   -e 's;^# SRC:.*;# SRC: non-GNU Makefile via;' \
+		   -e 's;via$$;via ${MAKE} -f $@ $@;' > $@
+	-${Q} if [ -s $@.bak ]; then \
+	    if ${CMP} -s $@.bak $@; then \
+		echo 'top level $@ was already up to date'; \
+		echo 'restoring original $@'; \
+		${MV} -f $@.bak $@; \
+	    else \
+		echo 'old $@ is now $@.bak'; \
+		echo 'updated top level $@ formed'; \
+		echo 'try: diff -u $@.bak $@'; \
+	    fi; \
+	else \
+	    echo 'new top level $@ formed'; \
+	fi
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 
 ###
@@ -4129,7 +4176,6 @@ env:
 	@echo 'TARGETS=${TARGETS}'; echo ''
 	@echo 'TEE=${TEE}'; echo ''
 	@echo 'TERMCONTROL=${TERMCONTROL}'; echo ''
-	@echo 'TOP_MAKE_FILE=${TOP_MAKE_FILE}'; echo ''
 	@echo 'TOUCH=${TOUCH}'; echo ''
 	@echo 'TRUE=${TRUE}'; echo ''
 	@echo 'UNAME=${UNAME}'; echo ''
@@ -6454,7 +6500,4 @@ zrandom.o: value.h
 zrandom.o: zmath.h
 zrandom.o: zrandom.c
 zrandom.o: zrandom.h
-
-Makefile.simple:
-	${Q} if [ ! -f Makefile.simple ]; then \
-		${CP} -f $@ $@; fi
+endif

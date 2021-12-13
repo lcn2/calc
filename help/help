@@ -48,6 +48,8 @@ following topics:
     copyright		calc copyright and the GNU LGPL
     copying		details on the Calc GNU Lesser General Public License
     copying-lgpl	calc GNU Lesser General Public License text
+    questions		how to ask simple general question about calc
+    release		on calc versions and releases
 
     full		all of the above (in the above order)
 
@@ -123,7 +125,7 @@ Any help file that the help command is able to display may be
 displayed by the man command.  The man command may only display
 calc help files.
 
-## Copyright (C) 1999-2007,2017  Landon Curt Noll
+## Copyright (C) 1999-2007,2017,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

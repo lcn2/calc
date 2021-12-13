@@ -105,15 +105,6 @@ PREFIX= /usr/local
 #
 MAKE_FILE= Makefile
 
-# Controlling file makefile basename (without the path)
-#
-# This is the basename same of the makefile that may/does/will drive
-# this makefile.
-#
-# If in doubt, set TOP_MAKE_FILE to Makefile
-#
-TOP_MAKE_FILE= Makefile
-
 # Where the system include (.h) files are kept
 #
 # For DJGPP, select:

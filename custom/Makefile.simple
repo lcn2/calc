@@ -4,7 +4,7 @@
 #
 # Copyright (C) 1999-2006,2014,2017-2018,2021  Landon Curt Noll
 #
-# SRC: non-GNU Makefile via make -f Makefile custom/Makefile.simple
+# SRC: custom/Makefile
 #
 #	The "# SRC: ... - ..." comment line above indicates
 #	the origin of this file.
@@ -34,11 +34,6 @@
 #
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
-
-####################################################
-# NOTE: Start of section from custom/Makefile.head #
-####################################################
-
 
 
 # The shell used by this Makefile
@@ -130,10 +125,6 @@ CCBAN= -UUNBAN
 
 
 
-##############################################################################
-#-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
-##############################################################################
-
 # The custom calc resource files to install
 #
 # Put your custom calc resource files here.
@@ -176,6 +167,10 @@ CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c c_pzasusb8.c \
 #
 CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o c_pzasusb8.o \
 	c_pmodm127.o c_register.o
+
+##############################################################################
+#-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
+##############################################################################
 
 ##############################################################################
 #-=-=-=-=-=-=- Defaults in case you want to build from this dir -=-=-=-=-=-=-#
@@ -381,15 +376,6 @@ RANLIB=ranlib
 MAKE_FILE= Makefile
 #MAKE_FILE=
 
-# Controlling file makefile basename (without the path)
-#
-# This is the basename same of the makefile that may/does/will drive
-# this makefile.
-#
-# If in doubt, set TOP_MAKE_FILE to Makefile
-#
-TOP_MAKE_FILE= Makefile
-
 # If you do not wish to use purify, set PURIFY to an empty string.
 #
 # If in doubt, use PURIFY=
@@ -522,14 +508,19 @@ COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
 ###########################################
 
 
-##################################################
-# NOTE: End of section from custom/Makefile.head #
-##################################################
-# start of host target cut - Do not remove this line
+##########################################################################
+#=-=-=-=-=- Be careful if you change something below this line -=-=-=-=-=#
+##########################################################################
 
-###########################################################
-# NOTE: Start of section from the middle of Makefile.ship #
-###########################################################
+# include start from top Makefile - keep this line
+######################################################
+# NOTE: Start of section from the middle of Makefile #
+#						     #
+# These lines are shared in common with the lower    #
+# custom/Makefile. That is, until the comment line   #
+# that starts with '# NOTE: End of section ..' line, #
+# these Makefile lines are used in BOTH Makefiles.   #
+######################################################
 
 ##############################################################################
 #-=-=-=-=-=- host target section - targets that override defaults -=-=-=-=-=-#
@@ -618,7 +609,8 @@ LD_STATIC=
 LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
 #
-CCWARN= -Wall
+#CCWARN= -Wall
+CCWARN= -Wall -Wextra -pedantic
 WNO_IMPLICT= -Wno-implicit
 WNO_ERROR_LONG_LONG= -Wno-error=long-long
 WNO_LONG_LONG= -Wno-long-long
@@ -647,29 +639,15 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS} ${LIBCALC_STATIC} ${LIBCUSTCALC_STATIC}
 #-=-=-=-=-=- end of target section - only make rules below -=-=-=-=-=-#
 #######################################################################
 
-#########################################################
-# NOTE: End of section from the middle of Makefile.ship #
-#########################################################
-
-# end of host target cut - Do not remove this line
-#
-# Copyright (C) 1999-2006,2014,2017-2018,2021  Landon Curt Noll
-#
-# SRC: non-GNU Makefile via make -f Makefile custom/Makefile.simple
-#
-#	The "# SRC: ... - ..." comment line above indicates
-#	the origin of this file.
-#
-# IMPORTANT: Please see the section on Makefiles near the
-#	     bottom of the HOWTO.INSTALL file.
-
-####################################################
-# NOTE: Start of section from custom/Makefile.tail #
-####################################################
-
-##############################################################################
-#-=-=-=-=-=-=-=-=- Be careful if you change something below -=-=-=-=-=-=-=-=-#
-##############################################################################
+######################################################
+# NOTE: End of section from the middle of Makefile   #
+#						     #
+# These lines are shared in common with the lower    #
+# custom/Makefile. That is, starting with the line   #
+# that starts with '# NOTE: End of section ..' line, #
+# these Makefile lines are used in BOTH Makefiles.   #
+######################################################
+# include end from top Makefile - keep this line
 
 # These .c files are required for the main custom interface and
 # for the custom support functions for libcustcalc${LIB_EXT_VERSION}.
@@ -711,8 +689,7 @@ H_SRC= ${CUSTOM_H_SRC}
 # directory but are installed as help files from the help/Makefile.
 #
 DISTLIST= ${CUSTCALC_SRC} ${CUSTOM_CALC_FILES} ${CUSTOM_HELP} \
-	${INSTALL_H_SRC} CUSTOM_CAL HOW_TO_ADD ${MAKE_FILE}.head \
-	${MAKE_FILE}.tail
+	${INSTALL_H_SRC} CUSTOM_CAL HOW_TO_ADD Makefile.simple
 
 # These files are used to make (but not built) a calc .a link library
 #
@@ -732,7 +709,7 @@ TARGETS= ${BLD_TYPE} Makefile.simple
 
 ###
 #
-# The reason for this Makefile	:-)
+# The main reason for this Makefile	:-)
 #
 ###
 
@@ -851,8 +828,8 @@ depend:
 		>> "skel/custom/$$i"; \
 	    echo '#endif /* '"$$tag"' */' >> "skel/custom/$$i"; \
 	done
-	${Q} (cd ..; ${MAKE} -f ${TOP_MAKE_FILE} hsrc)
-	${MAKE} -f ../${TOP_MAKE_FILE} h_list 2>/dev/null | \
+	${Q} (cd ..; ${MAKE} -f ${MAKE_FILE} hsrc)
+	${MAKE} -f ../${MAKE_FILE} h_list 2>/dev/null | \
 	    while read i; do \
 		if [ ! -f "../$$i" ]; then continue; fi; \
 		tag="`echo $$i | ${SED} 's/[\.+,:]/_/g'`"; \
@@ -887,7 +864,6 @@ depend:
 	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' \
 		    ${MAKE_FILE}.bak > ${MAKE_FILE}
 	${Q} ${GREP} -v '^#' skel/custom/makedep.out >> ${MAKE_FILE}
-	${Q} ${TAIL} -4 ${MAKE_FILE}.tail >> ${MAKE_FILE}
 	${Q} echo removing skel
 	${Q} ${RM} -rf skel
 	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \
@@ -1406,11 +1382,3 @@ custtbl.o: ../str.h
 custtbl.o: ../value.h
 custtbl.o: ../zmath.h
 custtbl.o: custtbl.c
-
-##################################################
-# NOTE: End of section from custom/Makefile.tail #
-##################################################
-
-Makefile.simple:
-	${Q} if [ ! -f Makefile.simple ]; then \
-		${CP} -f ${MAKE_FILE} $@; fi

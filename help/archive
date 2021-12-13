@@ -1,21 +1,27 @@
 Where to get the latest versions of calc
 
-    Landon Noll maintains the official calc home page at:
+    Official calc source is maintained on GitHub:
+
+	https://github.com/lcn2/calc
+
+    Calc releases may be found as GitHub tagged releases:
+
+	https://github.com/lcn2/calc/releases?page=2
+
+     At the bottom of a given release is a "> Assets" that may
+     be opened to reveal down-loadable files such as source
+     tarballs, source zip files and RPMs.
+
+    Landon Noll also maintains a calc home page at:
 
 	    http://www.isthe.com/chongo/tech/comp/calc/
-
-    See:
-
-	    http://www.isthe.com/chongo/tech/comp/calc/calc-download.html
-
-    for information on how to obtain up a recent version of calc.
 
 Landon Curt Noll
 http://www.isthe.com/chongo/
 
 chongo <was here> /\../\
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2021  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

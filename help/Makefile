@@ -106,15 +106,6 @@ PREFIX= /usr/local
 #
 MAKE_FILE= Makefile
 
-# Controlling file makefile basename (without the path)
-#
-# This is the basename same of the makefile that may/does/will drive
-# this makefile.
-#
-# If in doubt, set TOP_MAKE_FILE to Makefile
-#
-TOP_MAKE_FILE= Makefile
-
 # Where the system include (.h) files are kept
 #
 # For DJGPP, select:
@@ -318,7 +309,7 @@ BLT_HELP_FILES_13= bugs changes
 
 STD_HELP_FILES_14= credit
 
-BLT_HELP_FILES_14= contrib COPYING COPYING-LGPL questions
+BLT_HELP_FILES_14= contrib COPYING COPYING-LGPL questions releases
 
 STD_HELP_FILES_15= wishlist todo
 
@@ -529,7 +520,7 @@ usage: ../calc.usage
 	fi
 
 ../calc.usage:
-	(cd ..; ${MAKE} -f ${TOP_MAKE_FILE} calc.usage)
+	(cd ..; ${MAKE} -f ${MAKE_FILE} calc.usage)
 
 custom_cal: ../custom/CUSTOM_CAL
 	${RM} -f $@
@@ -631,6 +622,18 @@ cscript: ../cscript/README
 	${Q} echo "forming cscript/README"
 	${Q} ${RM} -f $@
 	(cd ../cscript; ${MAKE} -f Makefile README)
+
+releases: ../README.RELEASE
+	${RM} -f $@
+	${CP} ../README.RELEASE $@
+	${CHMOD} 0444 $@
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
+	    echo ''; \
+	else \
+	    ${TRUE}; \
+	fi
 
 full: ${FULL_HELP_FILES} ${MAKE_FILE}
 	${Q} echo "forming full"

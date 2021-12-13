@@ -87,6 +87,7 @@ STATIC struct help_alias {
 	{"dm2d", "dms2d"},
 	{"gm2g", "gms2g"},
 	{"hm2d", "hms2d"},
+	{"release", "releases"},
 	{NULL, NULL}
 };
 

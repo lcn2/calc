@@ -1,1 +1,18 @@
-# Add below to override Makefile values (using :=) as in: HAVE_STRING_H:= YES
+#
+# Makefile.local - local Makefile variables
+#
+# This file is included by Makefile after the last Makefile is set and
+# before the first make rule.  This makes this file suitable to override
+# Makefile variables.
+#
+# To replace a Makefile variale, use := symbols.  For example:
+#
+#	CCWERR:= -Werror
+#
+# NOTE: You need to remove the leading '#<whitespaces>' to take effect.
+# Comments start with a #-character.
+#
+# You can append to an existing Makefile variale using '+=' symbols.
+# For example:
+#
+#	CFLAGS+= -Ofast
