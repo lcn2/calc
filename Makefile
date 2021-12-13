@@ -55,13 +55,16 @@
 SHELL= /bin/bash
 #SHELL= /bin/sh
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifeq ($(target),Darwin)
 SHELL:= /bin/sh
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifndef EXCLUDE_FROM_CUSTOM_MAKEFILE
 ###################################################
 # Begin skipping lines for the custom/Makefile    #
@@ -100,6 +103,7 @@ endif
 ifeq ($(hardware),)
 hardware=$(shell uname -m 2>/dev/null)
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 ##############################################################################
@@ -764,12 +768,14 @@ HAVE_STRLCAT=
 #
 #	INCDIR= ${PREFIX}/include
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifeq ($(target),Darwin)
 
 # default INCDIR for macOS
 INCDIR= $(shell xcrun --show-sdk-path --sdk macosx)/usr/include
 
 else
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 # default INCDIR for non-macOS
@@ -778,7 +784,9 @@ INCDIR= /usr/include
 #INCDIR= /dev/env/DJDIR/include
 
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 # Where to install calc related things
@@ -827,12 +835,14 @@ endif
 #	      use the ${PREFIX} tree.
 
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifeq ($(target),Darwin)
 
 # default BINDIR for macOS
 BINDIR= ${PREFIX}/bin
 
 else
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 # default BINDIR for non-macOS
@@ -841,6 +851,7 @@ BINDIR= /usr/bin
 #BINDIR= /dev/env/DJDIR/bin
 
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 endif
 
 ifeq ($(target),Darwin)
@@ -849,6 +860,7 @@ ifeq ($(target),Darwin)
 LIBDIR= ${PREFIX}/lib
 
 else
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 # default LIBDIR for non-macOS
@@ -857,6 +869,7 @@ LIBDIR= /usr/lib
 #LIBDIR= /dev/env/DJDIR/lib
 
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 endif
 
 ifeq ($(target),Darwin)
@@ -865,6 +878,7 @@ ifeq ($(target),Darwin)
 CALC_SHAREDIR= ${PREFIX}/share/calc
 
 else
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 # default CALC_SHAREDIR for non-macOS
@@ -873,7 +887,9 @@ CALC_SHAREDIR= /usr/share/calc
 #CALC_SHAREDIR= /dev/env/DJDIR/share/calc
 
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 # NOTE: Do not set CALC_INCDIR to /usr/include or ${PREFIX}/include!!!
@@ -969,13 +985,17 @@ T=
 #MANDIR= /usr/man/man1
 #
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifeq ($(target),Darwin)
 MANDIR= ${PREFIX}/share/man/man1
 else
+#
 #endif	/* end of skip for non-Gnu makefiles */
 MANDIR= /usr/share/man/man1
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 #MANDIR= /dev/env/DJDIR/man/man1
 #MANDIR= /usr/man/u_man/man1
@@ -1068,6 +1088,7 @@ ALLOW_CUSTOM= -DCUSTOM
 # Select CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR} for DJGPP.
 #
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifdef RPM_TOP
 ifdef ALLOW_CUSTOM
 CALCPATH= .:./cal:~/.cal:${CALC_SHAREDIR}:${CUSTOMCALDIR}
@@ -1076,13 +1097,16 @@ CALCPATH= .:./cal:~/.cal:${CALC_SHAREDIR}
 endif
 else
 ifdef ALLOW_CUSTOM
+#
 #endif	/* end of skip for non-Gnu makefiles */
 CALCPATH= .:./cal:~/.cal:${T}${CALC_SHAREDIR}:${T}${CUSTOMCALDIR}
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 else
 CALCPATH= .:./cal:~/.cal:${T}${CALC_SHAREDIR}
 endif
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 # If the $CALCRC environment variable is not defined, then the following
@@ -1147,6 +1171,19 @@ READLINE_EXTRAS= -lhistory -lncurses
 READLINE_INCLUDE=
 #READLINE_INCLUDE= -I/usr/gnu/include
 #READLINE_INCLUDE= -I${PREFIX}/include
+
+#if 0   /* start of skip for non-Gnu makefiles */
+#
+#
+# Handle the case where macOS is being used with HomeBrew
+# # and using the readline, history, and ncurses libraries.
+# #
+ifneq ($(HOMEBREW_PREFIX),)
+READLINE_LIB:= -L${HOMEBREW_PREFIX}/opt/readline/lib -lreadline
+READLINE_INCLUDE:= -I${HOMEBREW_PREFIX}/opt/readline/include
+endif
+#
+#endif  /* end of skip for non-Gnu makefiles */
 
 # If $PAGER is not set, use this program to display a help file
 #
@@ -1343,15 +1380,19 @@ ARCH_CFLAGS=
 #	    intermediate and final calc and calc related programs
 #
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifdef ALLOW_CUSTOM
+#
 #endif	/* end of skip for non-Gnu makefiles */
 COMMON_CFLAGS= -DCALC_SRC ${ALLOW_CUSTOM} ${CCWARN} \
     ${CCMISC} ${ARCH_CFLAGS} ${EXTRA_CFLAGS}
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 else
 COMMON_CFLAGS= -DCALC_SRC -UCUSTOM ${CCWARN} \
     ${CCMISC} ${ARCH_CFLAGS} ${EXTRA_CFLAGS}
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 # COMMON_LDFLAGS are the common flags used for linking all programs, both
@@ -1369,7 +1410,9 @@ COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
 # a line that starts with '# Begin skipping ..'.  #
 ###################################################
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 # include start from top Makefile - keep this line
 ######################################################
@@ -1454,6 +1497,7 @@ endif
 ##########################################################################
 
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ################
 # Linux target #
 ################
@@ -1767,6 +1811,7 @@ endif
 #	exists only to form the Makefile.simple file.
 
 ifeq ($(target),simple)
+#
 #endif	/* end of skip for non-Gnu makefiles */
 #
 BLD_TYPE= calc-static-only
@@ -1809,6 +1854,7 @@ ILDFLAGS= ${COMMON_LDFLAGS} ${LD_STATIC}
 LDFLAGS= ${LD_DEBUG} ${ILDFLAGS} ${LIBCALC_STATIC} ${LIBCUSTCALC_STATIC}
 #
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 endif
 
 ###################################################
@@ -1891,6 +1937,7 @@ CFLAGS= ${ICFLAGS} ${CCOPT}
 #
 ILDFLAGS= ${COMMON_LDFLAGS}
 LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 #######################################################################
@@ -1908,6 +1955,7 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 # include end from top Makefile - keep this line
 
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifndef EXCLUDE_FROM_CUSTOM_MAKEFILE
 ###################################################
 # Begin 2nd skip of lines for the custom/Makefile #
@@ -1918,6 +1966,7 @@ ifndef EXCLUDE_FROM_CUSTOM_MAKEFILE
 # The section continues until the next line that  #
 # starts with the '# End 2nd skip ..' line.       #
 ###################################################
+#
 #endif	/* end of skip for non-Gnu makefiles */
 # end of host target cut - Do not remove this line
 
@@ -2310,38 +2359,51 @@ OBJS= ${LIBOBJS} ${CALCOBJS} ${UTIL_OBJS} ${SAMPLE_OBJ}
 # static library build
 #
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifdef ALLOW_CUSTOM
+#
 #endif	/* end of skip for non-Gnu makefiles */
 CALC_STATIC_LIBS= libcalc.a libcustcalc.a
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 else
 CALC_STATIC_LIBS= libcalc.a
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 # Libraries created and used to build calc
 #
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifdef ALLOW_CUSTOM
+#
 #endif	/* end of skip for non-Gnu makefiles */
 CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERSION} libcustcalc${LIB_EXT_VERSION}
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 else
 CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERSION}
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 # Symlinks of dynamic shared libraries
 #
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifdef ALLOW_CUSTOM
+#
+#
 #endif	/* end of skip for non-Gnu makefiles */
 SYM_DYNAMIC_LIBS= libcalc${LIB_EXT} \
 	libcustcalc${LIB_EXT_VERSION}  libcustcalc${LIB_EXT}
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 else
 SYM_DYNAMIC_LIBS= libcalc${LIB_EXT}
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 # list of sample programs that need to be built to satisfy sample rule
@@ -2374,13 +2436,17 @@ STATIC_FIRST_TARGETS= ${LICENSE} .static
 # early targets - things needed before the main build phase can begin
 #
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifdef ALLOW_CUSTOM
+#
 #endif	/* end of skip for non-Gnu makefiles */
 EARLY_TARGETS= hsrc .hsrc custom/.all custom/Makefile
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 else
 EARLY_TARGETS= hsrc .hsrc
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 # late targets - things needed after the main build phase is complete
@@ -2394,12 +2460,14 @@ LATE_TARGETS= calc.1 calc.usage \
 TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS}
 
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ###
 #
 # Allow Makefile.local to override any of the above settings
 #
 ###
 include ${LOC_MKF}
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 ###
@@ -2639,34 +2707,46 @@ conf.h: ${MAKE_FILE} ${LOC_MKF}
 	${Q} echo '/* the location of the help directory */' >> $@
 	${Q} echo '#if !defined(HELPDIR)' >> $@
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifdef RPM_TOP
 	${Q} echo '#define HELPDIR "${HELPDIR}"' >> $@
 else
+#
 #endif	/* end of skip for non-Gnu makefiles */
 	${Q} echo '#define HELPDIR "${T}${HELPDIR}"' >> $@
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 	${Q} echo '#endif /* HELPDIR */' >> $@
 	${Q} echo '' >> $@
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifdef ALLOW_CUSTOM
+#
 #endif	/* end of skip for non-Gnu makefiles */
 	${Q} echo '/* the location of the custom help directory */' >> $@
 	${Q} echo '#if !defined(CUSTOMHELPDIR)' >> $@
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifdef RPM_TOP
 	${Q} echo '#define CUSTOMHELPDIR "${CUSTOMHELPDIR}"' >> $@
 else
+#
 #endif	/* end of skip for non-Gnu makefiles */
 	${Q} echo '#define CUSTOMHELPDIR "${T}${CUSTOMHELPDIR}"' >> $@
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 	${Q} echo '#endif /* CUSTOMHELPDIR */' >> $@
 	${Q} echo '' >> $@
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 	${Q} echo '/* the default pager to use */' >> $@
 	${Q} echo '#if !defined(DEFAULTCALCPAGER)' >> $@
@@ -4255,7 +4335,9 @@ ${CSCRIPT_TARGETS}: cscript/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifdef ALLOW_CUSTOM
+#
 #endif	/* end of skip for non-Gnu makefiles */
 custom/.all: custom/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
@@ -4280,7 +4362,9 @@ libcustcalc${LIB_EXT}: libcustcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${LN} -s $? $@
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 ###
@@ -4306,12 +4390,16 @@ libcalc.a: ${LIBOBJS} ${MAKE_FILE} ${LOC_MKF}
 	${CHMOD} 0644 libcalc.a
 
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifdef ALLOW_CUSTOM
+#
 #endif	/* end of skip for non-Gnu makefiles */
 custom/libcustcalc.a: custom/Makefile
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} libcustcalc.a
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 sample_rand-static${EXT}: sample_rand.o ${CALC_STATIC_LIBS} \
@@ -4533,8 +4621,10 @@ Makefile.simple: Makefile custom/Makefile.simple
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 custom/Makefile.simple: Makefile custom/Makefile
 	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} Makefile.simple
+#
 #endif	/* end of skip for non-Gnu makefiles */
 
 ###
@@ -5153,7 +5243,9 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 	    ${TRUE}; \
 	fi
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifdef ALLOW_CUSTOM
+#
 #endif	/* end of skip for non-Gnu makefiles */
 	-${Q} if [ ! -d ${T}${CUSTOMCALDIR} ]; then \
 	    echo ${MKDIR} -p ${T}${CUSTOMCALDIR}; \
@@ -5180,7 +5272,9 @@ ifdef ALLOW_CUSTOM
 	    ${TRUE}; \
 	fi
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 	-${Q} if [ ! -d ${T}${SCRIPTDIR} ]; then \
 	    echo ${MKDIR} -p ${T}${SCRIPTDIR}; \
@@ -5244,13 +5338,17 @@ endif
 	${Q} cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifdef ALLOW_CUSTOM
+#
 #endif	/* end of skip for non-Gnu makefiles */
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 endif
+#
 #endif	/* end of skip for non-Gnu makefiles */
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
 	${Q} cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} install
