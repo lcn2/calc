@@ -735,6 +735,7 @@ Makefile.simple: Makefile ../Makefile
 	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
 	     Makefile | \
 	     ${SED} -e '/^# include start from top Makefile - keep /,$$d' \
+		    -e 's;^# SRC:.*;# SRC: custom/$@ - non-GNU version;' \
 		    -e '/^ifeq /d' \
 		    -e '/^ifneq /d' \
 		    -e '/^ifdef /d' \
@@ -747,7 +748,7 @@ Makefile.simple: Makefile ../Makefile
 	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
 	     ../Makefile | \
 	     ${SED} -e '1,/^# include start from top Makefile - keep /d' \
-		   -e '/^# include end from top Makefile - keep /,$$d' \
+		    -e '/^# include end from top Makefile - keep /,$$d' \
 		    -e '/^ifeq /d' \
 		    -e '/^ifneq /d' \
 		    -e '/^ifdef /d' \

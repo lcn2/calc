@@ -4,7 +4,7 @@
 #
 # Copyright (C) 1999-2006,2014,2017-2018,2021  Landon Curt Noll
 #
-# SRC: custom/Makefile
+# SRC: custom/Makefile.simple - non-GNU version
 #
 #	The "# SRC: ... - ..." comment line above indicates
 #	the origin of this file.

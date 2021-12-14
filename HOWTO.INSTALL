@@ -322,16 +322,9 @@ Makefile
 	...
 	#endif /* DO NOT DO THIS */
 
-    The custom/Makefile rule of Makefile.ship is used to form
-    the custom/Makefile.  In particular the Makefile.ship lines:
-
-	# start of host target cut
-	... these go between custom/Makefile.head and custom/Makefile.tail
-	# end of host target cut
-
 Makefile.simple
 
-    # SRC: non-GNU Makefile via make -f Makefile.ship Makefile.simple
+    # SRC: Makefile.simple - non-GNU version
 
     This is a non-GNU or simple Makefile designed for environments
     that do not have a modern make command.
@@ -358,36 +351,15 @@ Makefile.simple
 
 	http://www.isthe.com/chongo/tech/comp/calc/calc-mirror.html
 
-custom/Makefile.head
-
-    # SRC: custom/Makefile.head
-
-    This file forms the top part of the custom/Makefile.
-
-custom/Makefile.tail
-
-    # SRC: custom/Makefile.tail
-
-    This file forms the bottom part of the custom/Makefile.
-
 custom/Makefile
 
     # SRC: Makefile via make -f Makefile custom/Makefile
 
     This is the custom directory Makefile.
 
-    The custom/Makefile rule of Makefile.ship is used to form
-    the custom/Makefile.  In particular the Makefile.ship lines:
-
-	# start of host target cut
-	... these go in between custom/Makefile.head and custom/Makefile.tail
-	# end of host target cut
-
-    NOTE: The clobber rule does not remove this file. - XXX
-
 custom/Makefile.simple
 
-    # SRC: non-GNU Makefile via make -f Makefile custom/Makefile.simple
+    # SRC: custom/Makefile.simple - non-GNU version
 
     This is a non-GNU or simple Makefile for the custom directory
     that is designed for environments that do not have a modern make

@@ -15,12 +15,21 @@ Look at the end of the output, it should say something like:
 
 If it does not, then something is really broken!
 
-To be sure that your version of calc is up to date, check out:
+To be sure that your version of calc is up to date.
+Look for the latest release on GitHub:
 
-    http://www.isthe.com/chongo/tech/comp/calc/calc-mirror.html
+    https://github.com/lcn2/calc/releases
+
+Just below latest GitHub release sectiop is something called:
+
+    > Assets
+
+Click in the triangle to open up the Assets then click on
+the approptiate package to download.
 
 If you made and modifications to calc beyond the simple Makefile
-configuration, try backing them out and see if things get better.
+configuration, try backing those changges out and see if things get
+better.
 
 If you have tried all of the above and things still are not right,
 then it may be time to send in a bug report.

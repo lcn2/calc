@@ -4606,7 +4606,7 @@ Makefile.simple: Makefile custom/Makefile.simple
 	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
 	    Makefile | \
 	    ${SED} -e 's/cd custom; $${MAKE} -f Makefile/&.simple/' \
-		   -e 's;^# SRC:.*;# SRC: non-GNU Makefile via;' \
+		   -e 's;^# SRC:.*;# SRC: $@ - non-GNU version;' \
 		   -e '/^ifeq /d' \
 		   -e '/^ifneq /d' \
 		   -e '/^ifdef /d' \
