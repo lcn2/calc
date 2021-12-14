@@ -76,7 +76,7 @@ The following are the changes from calc version 2.14.0.13 to date:
 
     Fixed bug impacting how have_ustat.h was formed.
 
-    Updated help/archive to reflect GitHub use.
+    Updated help/archive, BUGS, HOWTO.INSTALL to reflect GitHub use.
 
 
 The following are the changes from calc version 2.14.0.11 to 2.14.0.12:
