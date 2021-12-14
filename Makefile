@@ -1323,6 +1323,7 @@ HOSTNAME= hostname
 LANG= C
 LDCONFIG= ldconfig
 LN= ln
+LS= ls
 MAKE= make
 MAKEDEPEND= makedepend
 MKDIR= mkdir
@@ -2171,6 +2172,7 @@ CUSTOM_PASSDOWN=  \
     CUSTOMINCDIR="${CUSTOMINCDIR}" \
     DEBUG="${DEBUG}" \
     DEFAULT_LIB_INSTALL_PATH="${DEFAULT_LIB_INSTALL_PATH}" \
+    DIFF="${DIFF}" \
     E="${E}" \
     FMT=${FMT} \
     GREP=${GREP} \
@@ -2187,6 +2189,7 @@ CUSTOM_PASSDOWN=  \
     LIBCUSTCALC_SHLIB="${LIBCUSTCALC_SHLIB}" \
     LIBDIR="${LIBDIR}" \
     LN=${LN} \
+    LS=${LS} \
     MAKE=${MAKE} \
     MAKEDEPEND=${MAKEDEPEND} \
     MAKE_FILE=Makefile \
@@ -4604,7 +4607,13 @@ Makefile.simple: Makefile custom/Makefile.simple
 	    Makefile | \
 	    ${SED} -e 's/cd custom; $${MAKE} -f Makefile/&.simple/' \
 		   -e 's;^# SRC:.*;# SRC: non-GNU Makefile via;' \
-		   -e 's;via$$;via ${MAKE} -f $@ $@;' > $@
+		   -e '/^ifeq /d' \
+		   -e '/^ifneq /d' \
+		   -e '/^ifdef /d' \
+		   -e '/^ifndef /d' \
+		   -e '/^else/d' \
+		   -e '/^endif/d' \
+		   -e 's;via Makefile'"'"';via $@'"'"';' > $@
 	-${Q} if [ -s $@.bak ]; then \
 	    if ${CMP} -s $@.bak $@; then \
 		echo 'top level $@ was already up to date'; \
@@ -4613,10 +4622,13 @@ Makefile.simple: Makefile custom/Makefile.simple
 	    else \
 		echo 'old $@ is now $@.bak'; \
 		echo 'updated top level $@ formed'; \
-		echo 'try: diff -u $@.bak $@'; \
-	    fi; \
+		${DIFF} -u $@.bak $@; \
+	    fi \
 	else \
 	    echo 'new top level $@ formed'; \
+	    echo; \
+	    ${LS} -l $@; \
+	    echo; \
 	fi
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
@@ -5615,6 +5627,12 @@ uninstall: custom/Makefile
 	    fi; \
 	 fi
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
+
+# unbak - remove any .bak files that may have been created
+#
+unbak:
+	${Q} ${RM} -f -v Makefile.bak Makefile.simple.bak
+	${Q} ${RM} -f -v custom/Makefile.bak custom/Makefile.simple.bak
 
 # splint - A tool for statically checking C programs
 #

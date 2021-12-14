@@ -489,9 +489,11 @@ CHMOD= chmod
 CMP= cmp
 CO= co
 CP= cp
+DIFF= diff
 FMT= fmt
 GREP= egrep
 LN= ln
+LS= ls
 MAKE= make
 MAKEDEPEND= makedepend
 MKDIR= mkdir
@@ -732,18 +734,39 @@ Makefile.simple: Makefile ../Makefile
 	fi
 	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
 	     Makefile | \
-	     ${SED} -e '/^# include start from top Makefile - keep /,$$d' > $@
+	     ${SED} -e '/^# include start from top Makefile - keep /,$$d' \
+		    -e '/^ifeq /d' \
+		    -e '/^ifneq /d' \
+		    -e '/^ifdef /d' \
+		    -e '/^ifndef /d' \
+		    -e '/^else/d' \
+		    -e '/^endif/d' \
+		    > $@
 	${Q} echo '# include start from top Makefile - keep this line' \
 	     >> $@
 	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
 	     ../Makefile | \
-	    ${SED} -e '1,/^# include start from top Makefile - keep /d' \
-		   -e '/^# include end from top Makefile - keep /,$$d' >> $@
+	     ${SED} -e '1,/^# include start from top Makefile - keep /d' \
+		   -e '/^# include end from top Makefile - keep /,$$d' \
+		    -e '/^ifeq /d' \
+		    -e '/^ifneq /d' \
+		    -e '/^ifdef /d' \
+		    -e '/^ifndef /d' \
+		    -e '/^else/d' \
+		    -e '/^endif/d' \
+		    >> $@
 	${Q} echo '# include end from top Makefile - keep this line' \
 	     >> $@
 	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
 	     Makefile | \
-	     ${SED} -e '1,/^# include end from top Makefile - keep /d' >> $@
+	     ${SED} -e '1,/^# include end from top Makefile - keep /d' \
+		    -e '/^ifeq /d' \
+		    -e '/^ifneq /d' \
+		    -e '/^ifdef /d' \
+		    -e '/^ifndef /d' \
+		    -e '/^else/d' \
+		    -e '/^endif/d' \
+		    >> $@
 	-${Q} if [ -s $@.bak ]; then \
 	    if ${CMP} -s $@.bak $@; then \
 		echo 'custom/$@ was already up to date'; \
@@ -752,10 +775,13 @@ Makefile.simple: Makefile ../Makefile
 	    else \
 		echo 'old custom/$@ is now custom/$@.bak'; \
 		echo 'updated custom/$@ formed'; \
-		echo 'try: diff -u custom/$@.bak custom/$@'; \
+		(cd .. ; ${DIFF} -u custom/$@.bak custom/$@); \
 	    fi; \
 	else \
 	    echo 'new custom/$@ formed'; \
+	    echo; \
+	    (cd .. ; ${LS} -l custom/$@); \
+	    echo; \
 	fi
 	${V} echo '=-=-=-=-= custom/${MAKE_FILE} end of $@ rule =-=-=-=-='
 #endif	/* end of skip for non-Gnu makefiles */
