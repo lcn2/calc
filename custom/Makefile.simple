@@ -691,7 +691,7 @@ H_SRC= ${CUSTOM_H_SRC}
 # directory but are installed as help files from the help/Makefile.
 #
 DISTLIST= ${CUSTCALC_SRC} ${CUSTOM_CALC_FILES} ${CUSTOM_HELP} \
-	${INSTALL_H_SRC} CUSTOM_CAL HOW_TO_ADD Makefile.simple
+	${INSTALL_H_SRC} CUSTOM_CAL HOW_TO_ADD Makefile Makefile.simple
 
 # These files are used to make (but not built) a calc .a link library
 #
