@@ -1,5 +1,8 @@
 The following are the changes from calc version 2.14.0.13 to date:
 
+    Made major changes to our release process in order to avoid
+    missing critical files that happened in calc v2.4.0.12.
+
     Minor tweak to seed() builtin.  Updated help/srand and help/srandom.
 
     Moved Makefile.ship into Makefile.
