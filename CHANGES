@@ -1,4 +1,14 @@
-The following are the changes from calc version 2.14.0.13 to date:
+The following are the changes from calc version 2.14.0.14 to date:
+
+    Fixed typo in Makefile.local comment.
+
+    Established a tagging procedure for a production release.
+    Production git tags will be of the form:
+
+	prod-2.x.y.z
+
+
+The following are the changes from calc version 2.14.0.13 to 2.14.0.13:
 
     Made major changes to our release process in order to avoid
     missing critical files that happened in calc v2.4.0.12.
