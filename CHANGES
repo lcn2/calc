@@ -1,4 +1,15 @@
-The following are the changes from calc version 2.14.0.14 to date:
+The following are the changes from calc version 2.14.0.15 to date:
+
+    Changed Makefile to set shell before setting the SHELL Makefile
+    variable.
+
+    Added text to HOWTO.INSTALL to help people with systems that
+    lack the readline package.
+
+    Trimmed long line in the CONTRIBUTING.md file.
+
+
+The following are the changes from calc version 2.14.0.14 to 2.14.0.14:
 
     Fixed typo in Makefile.local comment.
 

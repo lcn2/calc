@@ -47,22 +47,114 @@ or from:
 
 4 steps:
 
-    (1)	Look at the makefile, and adjust it to suit your needs.
+(1)	Look at the makefile, and adjust it to suit your needs.
 
 	The top level Makefile and the custom/Makefile require a modern
 	Make (such as gmake) or an equivalently advanced make.	On many
 	targets, the default make is sufficient.  On FreeBSD for example,
 	probably want to use gmake instead of make.
 
-	Some report that under macOS, one has to declare the target
-	to be Darwin.  So for macOS, one might have to do:
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	! By default, calc assumes you have the readline package installed !
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	! macOS does not have readline, so mac users need to make a choice !
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	    # for macOS users only, force the target to be Darwin
-	    #
-	    make target=Darwin clobber
-	    make target=Darwin all
-	    make target=Darwin chk
-	    make target=Darwin install
+	The readline package (-lreadline, -lhistory, -lncurses) used by and
+	linked into calc by default.  If your system does NOT have those
+	libaraies, then you have two options:
+
+	(1-with readline) Install the readline package 		<- Recommended
+
+	    Install the readline package first, then compile calc.
+
+	    For information on the readline package, see:
+
+		https://tiswww.case.edu/php/chet/readline/rltop.html
+
+	    MacOS users can use MacPorts or HomeBrew to install readline:
+
+		https://www.macports.org
+		https://brew.sh
+
+	    Or compile from the readline.git repo:
+
+		http://git.savannah.gnu.org/cgit/readline.git/
+
+	(1-w/o readline) Compile calc without readline 	(not recommended)
+
+	    Why do we not recommend (1b)?  Because using calc with readline
+	    provides a beter user experience.
+
+	    If you feel you must use calc without the readline package, then you
+	    will need to change your calc Makefile with this patch:
+
+--- Makefile.old	2021-12-29 14:57:56.000000000 -0800
++++ Makefile	2021-12-29 14:59:13.000000000 -0800
+@@ -1140,14 +1140,14 @@
+ #
+ # If in doubt, set USE_READLINE, READLINE_LIB and READLINE_INCLUDE to nothing.
+ #
+-#USE_READLINE=
+-USE_READLINE= -DUSE_READLINE
++USE_READLINE=
++#USE_READLINE= -DUSE_READLINE
+ #
+-#READLINE_LIB=
+-#READLINE_EXTRAS=
++READLINE_LIB=
++READLINE_EXTRAS=
+ #
+-READLINE_LIB= -lreadline
+-READLINE_EXTRAS= -lhistory -lncurses
++#READLINE_LIB= -lreadline
++#READLINE_EXTRAS= -lhistory -lncurses
+ #
+ #READLINE_LIB= -L/usr/gnu/lib -lreadline
+ #READLINE_EXTRAS= -lhistory -lncurses
+@@ -1181,8 +1181,8 @@
+ # # and using the readline, history, and ncurses libraries.
+ # #
+ ifneq ($(HOMEBREW_PREFIX),)
+-READLINE_LIB:= -L${HOMEBREW_PREFIX}/opt/readline/lib -lreadline
+-READLINE_INCLUDE:= -I${HOMEBREW_PREFIX}/opt/readline/include
++#READLINE_LIB:= -L${HOMEBREW_PREFIX}/opt/readline/lib -lreadline
++#READLINE_INCLUDE:= -I${HOMEBREW_PREFIX}/opt/readline/include
+ endif
+ #
+ #endif  /* end of skip for non-Gnu makefiles */
+
+	    If your target system does not have a modern Makefile
+	    (such as gmake), then you will need to change your
+	    Makefile.simple with this patch:
+
+--- Makefile.simple.orig	2021-12-29 15:00:53.000000000 -0800
++++ Makefile.simple	2021-12-29 15:01:00.000000000 -0800
+@@ -1005,14 +1005,14 @@
+ #
+ # If in doubt, set USE_READLINE, READLINE_LIB and READLINE_INCLUDE to nothing.
+ #
+-#USE_READLINE=
+-USE_READLINE= -DUSE_READLINE
++USE_READLINE=
++#USE_READLINE= -DUSE_READLINE
+ #
+-#READLINE_LIB=
+-#READLINE_EXTRAS=
++READLINE_LIB=
++READLINE_EXTRAS=
+ #
+-READLINE_LIB= -lreadline
+-READLINE_EXTRAS= -lhistory -lncurses
++#READLINE_LIB= -lreadline
++#READLINE_EXTRAS= -lhistory -lncurses
+ #
+ #READLINE_LIB= -L/usr/gnu/lib -lreadline
+ #READLINE_EXTRAS= -lhistory -lncurses
+
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	! By default, calc assumes you are using a modern gnu-like make tool !
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	If your target system does not have a modern Makefile (such as gmake),
 	then you should try using the Makefile.simple and custom/Makefile.simple
@@ -212,15 +304,15 @@ or from:
 
     (3)	test calc:
 
-	make check
+	    make check
 
 	NOTE: For a quiet check which only prints if something goes wrong:
 
-		make chk
+	    make chk
 
     (4)	install calc:
 
-	make install
+	    make install
 
 We suggest that you might want to read the README.FIRST file and look at
 the calc help subsystem.  See also the README.md file.

@@ -34,7 +34,10 @@
 #
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
+#
 
+
+#
 # The shell used by this Makefile
 #
 # On some systems, /bin/sh is a rather reduced shell with
@@ -54,7 +57,6 @@
 #
 SHELL= /bin/bash
 #SHELL= /bin/sh
-
 
 
 ##############################################################################
