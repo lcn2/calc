@@ -8,11 +8,23 @@
 # To replace a Makefile variable, use := symbols.  For example:
 #
 #	CCWERR:= -Werror
-#
-# NOTE: You need to remove the leading '#<whitespaces>' to take effect.
-# Comments start with a #-character.
-#
+
+###################################################################
+# NOTE: For this and other commended out examples in this file,	  #
+# you need to remove the leading '#<whitespaces>' to take effect. #
+#								  #
+# Comments start with a #-character.				  #
+###################################################################
+
 # You can append to an existing Makefile variable using '+=' symbols.
 # For example:
 #
 #	CFLAGS+= -Ofast
+
+# For example, on macOS 12.1, you can use the following lines to
+# invoke clang's AddressSanitizer.  You do NOT want to do this by
+# by default!  Do this only if you are debugging calc using clang.
+#
+#	CFLAGS+= -fsanitize=address -fno-omit-frame-pointer
+#	LDFLAGS+= -fsanitize=address -fno-omit-frame-pointer
+#	CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1

@@ -144,7 +144,7 @@ E_FUNC LIST* matindices(MATRIX *mp, long index);
 /*
  * malloced environment storage
  */
-#define ENV_POOL_CHUNK 10	/* env_pool elements to allocate at a time */
+#define ENV_POOL_CHUNK (1<8)	/* env_pool elements to allocate at a time */
 struct env_pool {
     char *getenv;	/* what getenv() would return, NULL => unused */
     char *putenv;	/* pointer given to putenv() */

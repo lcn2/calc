@@ -8,6 +8,17 @@ The following are the changes from calc version 2.14.0.15 to date:
 
     Trimmed long line in the CONTRIBUTING.md file.
 
+    Expanded the globalsymbol string table size: from 1024 to 65536.
+
+    Expanded the how often to reallocate string table is performed:
+    from 100 to 1024.
+
+    Expanded the number env_pool elements to allocate at a time:
+    from 10 to 256.
+
+    Improve comments on Makefile.local and add a few more examples
+    of how it might be used.
+
 
 The following are the changes from calc version 2.14.0.14 to 2.14.0.14:
 

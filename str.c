@@ -41,8 +41,8 @@
 #include "banned.h"	/* include after system header <> includes */
 
 
-#define STR_TABLECHUNK	100	/* how often to reallocate string table */
-#define STR_CHUNK	(1<<11)	/* size of string storage allocation */
+#define STR_TABLECHUNK	(1<<10)	/* how often to reallocate string table */
+#define STR_CHUNK	(1<<16)	/* size of string storage allocation */
 #define OCTET_VALUES	256	/* number of different values in a OCTET */
 #define STR_UNIQUE	(1<<7)	/* size of string to allocate separately */
 
