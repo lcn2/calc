@@ -1,7 +1,7 @@
 /*
  * c_sysinfo - names and values of selected #defines
  *
- * Copyright (C) 1999-2007,2021  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021,2022  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -57,6 +57,7 @@
 #include "have_unused.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -301,7 +302,7 @@ c_sysinfo(char *UNUSED(name), int count, VALUE **vals)
 		    qisfrac(vals[0]->v_num) ||
 		    zge31b(vals[0]->v_num->num)) {
 			math_error("sysinfo: arg must be string, 0, 1 or 2");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/*
@@ -319,7 +320,7 @@ c_sysinfo(char *UNUSED(name), int count, VALUE **vals)
 			break;
 		default:
 			math_error("sysinfo: arg must be string, 0, 1 or 2");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 	/*
@@ -368,7 +369,7 @@ c_sysinfo(char *UNUSED(name), int count, VALUE **vals)
 	 */
 	} else {
 		math_error("sysinfo: arg must be string, 0, 1 or 2");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*

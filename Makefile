@@ -2,7 +2,7 @@
 #
 # calc - arbitrary precision calculator
 #
-# Copyright (C) 1999-2018,2021  Landon Curt Noll
+# Copyright (C) 1999-2018,2021,2022  Landon Curt Noll
 #
 # SRC: Makefile - top level Makefile
 #
@@ -2054,7 +2054,7 @@ LIB_H_SRC= alloc.h banned.h blkcpy.h block.h byteswap.h calc.h cmath.h \
 	config.h custom.h decl.h file.h func.h hash.h hist.h jump.h \
 	label.h lib_util.h lib_calc.h nametype.h \
 	opcodes.h prime.h qmath.h sha1.h str.h strl.h \
-	symbol.h token.h value.h zmath.h zrand.h zrandom.h
+	symbol.h token.h value.h zmath.h zrand.h zrandom.h attribute.h
 
 # we build these .h files during the make
 #
@@ -2464,6 +2464,12 @@ LATE_TARGETS= calc.1 calc.usage \
 #
 TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS}
 
+# rules that are not also names of files
+#
+PHONY= all calcliblist calc_version check chk clobber debug depend distdir \
+	distlist hsrc install inst_files mkdebug rpm sample splint tags \
+	uninstall win32_hsrc
+
 #if 0	/* start of skip for non-Gnu makefiles */
 #
 ###
@@ -2482,6 +2488,8 @@ include ${LOC_MKF}
 ###
 
 all: check_include ${BLD_TYPE} CHANGES
+
+.PHONY: ${PHONY}
 
 check_include:
 	${Q} if ! echo '#include <stdio.h>' | ${CC} -E - >/dev/null 2>&1; then \
@@ -5747,6 +5755,7 @@ calc-unsymlink:
 
 addop.o: addop.c
 addop.o: alloc.h
+addop.o: attribute.h
 addop.o: banned.h
 addop.o: block.h
 addop.o: byteswap.h
@@ -5782,6 +5791,7 @@ align32.o: have_unistd.h
 align32.o: longbits.h
 assocfunc.o: alloc.h
 assocfunc.o: assocfunc.c
+assocfunc.o: attribute.h
 assocfunc.o: banned.h
 assocfunc.o: block.h
 assocfunc.o: byteswap.h
@@ -5805,6 +5815,7 @@ assocfunc.o: str.h
 assocfunc.o: value.h
 assocfunc.o: zmath.h
 blkcpy.o: alloc.h
+blkcpy.o: attribute.h
 blkcpy.o: banned.h
 blkcpy.o: blkcpy.c
 blkcpy.o: blkcpy.h
@@ -5833,6 +5844,7 @@ blkcpy.o: str.h
 blkcpy.o: value.h
 blkcpy.o: zmath.h
 block.o: alloc.h
+block.o: attribute.h
 block.o: banned.h
 block.o: block.c
 block.o: block.h
@@ -5857,6 +5869,7 @@ block.o: str.h
 block.o: value.h
 block.o: zmath.h
 byteswap.o: alloc.h
+byteswap.o: attribute.h
 byteswap.o: banned.h
 byteswap.o: byteswap.c
 byteswap.o: byteswap.h
@@ -5874,6 +5887,7 @@ byteswap.o: qmath.h
 byteswap.o: zmath.h
 calc.o: alloc.h
 calc.o: args.h
+calc.o: attribute.h
 calc.o: banned.h
 calc.o: block.h
 calc.o: byteswap.h
@@ -5924,6 +5938,7 @@ charbit.o: charbit.c
 charbit.o: have_ban_pragma.h
 charbit.o: have_limits.h
 codegen.o: alloc.h
+codegen.o: attribute.h
 codegen.o: banned.h
 codegen.o: block.h
 codegen.o: byteswap.h
@@ -5960,6 +5975,7 @@ codegen.o: token.h
 codegen.o: value.h
 codegen.o: zmath.h
 comfunc.o: alloc.h
+comfunc.o: attribute.h
 comfunc.o: banned.h
 comfunc.o: byteswap.h
 comfunc.o: cmath.h
@@ -5978,6 +5994,7 @@ comfunc.o: nametype.h
 comfunc.o: qmath.h
 comfunc.o: zmath.h
 commath.o: alloc.h
+commath.o: attribute.h
 commath.o: banned.h
 commath.o: byteswap.h
 commath.o: cmath.h
@@ -5994,6 +6011,7 @@ commath.o: longbits.h
 commath.o: qmath.h
 commath.o: zmath.h
 config.o: alloc.h
+config.o: attribute.h
 config.o: banned.h
 config.o: block.h
 config.o: byteswap.h
@@ -6027,6 +6045,7 @@ config.o: value.h
 config.o: zmath.h
 config.o: zrand.h
 const.o: alloc.h
+const.o: attribute.h
 const.o: banned.h
 const.o: block.h
 const.o: byteswap.h
@@ -6052,6 +6071,7 @@ const.o: str.h
 const.o: value.h
 const.o: zmath.h
 custom.o: alloc.h
+custom.o: attribute.h
 custom.o: banned.h
 custom.o: block.h
 custom.o: byteswap.h
@@ -6083,6 +6103,7 @@ endian.o: have_ban_pragma.h
 endian.o: have_stdlib.h
 endian.o: have_unistd.h
 file.o: alloc.h
+file.o: attribute.h
 file.o: banned.h
 file.o: block.h
 file.o: byteswap.h
@@ -6128,6 +6149,7 @@ fposval.o: have_offscl.h
 fposval.o: have_posscl.h
 fposval.o: have_string.h
 func.o: alloc.h
+func.o: attribute.h
 func.o: banned.h
 func.o: block.h
 func.o: byteswap.h
@@ -6172,6 +6194,7 @@ func.o: zmath.h
 func.o: zrand.h
 func.o: zrandom.h
 hash.o: alloc.h
+hash.o: attribute.h
 hash.o: banned.h
 hash.o: block.h
 hash.o: byteswap.h
@@ -6316,6 +6339,7 @@ help.o: str.h
 help.o: value.h
 help.o: zmath.h
 hist.o: alloc.h
+hist.o: attribute.h
 hist.o: banned.h
 hist.o: block.h
 hist.o: byteswap.h
@@ -6349,6 +6373,7 @@ hist.o: strl.h
 hist.o: value.h
 hist.o: zmath.h
 input.o: alloc.h
+input.o: attribute.h
 input.o: banned.h
 input.o: block.h
 input.o: byteswap.h
@@ -6415,6 +6440,7 @@ label.o: token.h
 label.o: value.h
 label.o: zmath.h
 lib_calc.o: alloc.h
+lib_calc.o: attribute.h
 lib_calc.o: banned.h
 lib_calc.o: block.h
 lib_calc.o: byteswap.h
@@ -6454,6 +6480,7 @@ lib_calc.o: value.h
 lib_calc.o: zmath.h
 lib_calc.o: zrandom.h
 lib_util.o: alloc.h
+lib_util.o: attribute.h
 lib_util.o: banned.h
 lib_util.o: byteswap.h
 lib_util.o: decl.h
@@ -6469,6 +6496,7 @@ lib_util.o: lib_util.h
 lib_util.o: longbits.h
 lib_util.o: zmath.h
 listfunc.o: alloc.h
+listfunc.o: attribute.h
 listfunc.o: banned.h
 listfunc.o: block.h
 listfunc.o: byteswap.h
@@ -6501,6 +6529,7 @@ longbits.o: have_stdlib.h
 longbits.o: have_unistd.h
 longbits.o: longbits.c
 matfunc.o: alloc.h
+matfunc.o: attribute.h
 matfunc.o: banned.h
 matfunc.o: block.h
 matfunc.o: byteswap.h
@@ -6554,6 +6583,7 @@ math_error.o: str.h
 math_error.o: value.h
 math_error.o: zmath.h
 obj.o: alloc.h
+obj.o: attribute.h
 obj.o: banned.h
 obj.o: block.h
 obj.o: byteswap.h
@@ -6586,6 +6616,7 @@ obj.o: symbol.h
 obj.o: value.h
 obj.o: zmath.h
 opcodes.o: alloc.h
+opcodes.o: attribute.h
 opcodes.o: banned.h
 opcodes.o: block.h
 opcodes.o: byteswap.h
@@ -6680,6 +6711,7 @@ prime.o: prime.h
 prime.o: qmath.h
 prime.o: zmath.h
 qfunc.o: alloc.h
+qfunc.o: attribute.h
 qfunc.o: banned.h
 qfunc.o: byteswap.h
 qfunc.o: config.h
@@ -6699,6 +6731,7 @@ qfunc.o: qmath.h
 qfunc.o: zmath.h
 qio.o: alloc.h
 qio.o: args.h
+qio.o: attribute.h
 qio.o: banned.h
 qio.o: byteswap.h
 qio.o: config.h
@@ -6717,6 +6750,7 @@ qio.o: qio.c
 qio.o: qmath.h
 qio.o: zmath.h
 qmath.o: alloc.h
+qmath.o: attribute.h
 qmath.o: banned.h
 qmath.o: byteswap.h
 qmath.o: config.h
@@ -6734,6 +6768,7 @@ qmath.o: qmath.c
 qmath.o: qmath.h
 qmath.o: zmath.h
 qmod.o: alloc.h
+qmod.o: attribute.h
 qmod.o: banned.h
 qmod.o: byteswap.h
 qmod.o: config.h
@@ -6751,6 +6786,7 @@ qmod.o: qmath.h
 qmod.o: qmod.c
 qmod.o: zmath.h
 qtrans.o: alloc.h
+qtrans.o: attribute.h
 qtrans.o: banned.h
 qtrans.o: byteswap.h
 qtrans.o: decl.h
@@ -6766,6 +6802,7 @@ qtrans.o: qmath.h
 qtrans.o: qtrans.c
 qtrans.o: zmath.h
 quickhash.o: alloc.h
+quickhash.o: attribute.h
 quickhash.o: banned.h
 quickhash.o: block.h
 quickhash.o: byteswap.h
@@ -6792,6 +6829,7 @@ quickhash.o: zmath.h
 quickhash.o: zrand.h
 quickhash.o: zrandom.h
 sample_many.o: alloc.h
+sample_many.o: attribute.h
 sample_many.o: banned.h
 sample_many.o: block.h
 sample_many.o: byteswap.h
@@ -6819,6 +6857,7 @@ sample_many.o: value.h
 sample_many.o: zmath.h
 sample_many.o: zrandom.h
 sample_rand.o: alloc.h
+sample_rand.o: attribute.h
 sample_rand.o: banned.h
 sample_rand.o: block.h
 sample_rand.o: byteswap.h
@@ -6874,6 +6913,7 @@ seed.o: seed.c
 seed.o: zmath.h
 sha1.o: align32.h
 sha1.o: alloc.h
+sha1.o: attribute.h
 sha1.o: banned.h
 sha1.o: block.h
 sha1.o: byteswap.h
@@ -6898,6 +6938,7 @@ sha1.o: str.h
 sha1.o: value.h
 sha1.o: zmath.h
 size.o: alloc.h
+size.o: attribute.h
 size.o: banned.h
 size.o: block.h
 size.o: byteswap.h
@@ -6924,6 +6965,7 @@ size.o: zmath.h
 size.o: zrand.h
 size.o: zrandom.h
 str.o: alloc.h
+str.o: attribute.h
 str.o: banned.h
 str.o: block.h
 str.o: byteswap.h
@@ -6964,6 +7006,7 @@ strl.o: have_strlcpy.h
 strl.o: strl.c
 strl.o: strl.h
 symbol.o: alloc.h
+symbol.o: attribute.h
 symbol.o: banned.h
 symbol.o: block.h
 symbol.o: byteswap.h
@@ -6995,6 +7038,7 @@ symbol.o: value.h
 symbol.o: zmath.h
 token.o: alloc.h
 token.o: args.h
+token.o: attribute.h
 token.o: banned.h
 token.o: block.h
 token.o: byteswap.h
@@ -7022,6 +7066,7 @@ token.o: token.h
 token.o: value.h
 token.o: zmath.h
 value.o: alloc.h
+value.o: attribute.h
 value.o: banned.h
 value.o: block.h
 value.o: byteswap.h
@@ -7084,6 +7129,7 @@ version.o: value.h
 version.o: version.c
 version.o: zmath.h
 zfunc.o: alloc.h
+zfunc.o: attribute.h
 zfunc.o: banned.h
 zfunc.o: byteswap.h
 zfunc.o: decl.h
@@ -7099,6 +7145,7 @@ zfunc.o: zfunc.c
 zfunc.o: zmath.h
 zio.o: alloc.h
 zio.o: args.h
+zio.o: attribute.h
 zio.o: banned.h
 zio.o: byteswap.h
 zio.o: config.h
@@ -7116,6 +7163,7 @@ zio.o: qmath.h
 zio.o: zio.c
 zio.o: zmath.h
 zmath.o: alloc.h
+zmath.o: attribute.h
 zmath.o: banned.h
 zmath.o: byteswap.h
 zmath.o: decl.h
@@ -7130,6 +7178,7 @@ zmath.o: longbits.h
 zmath.o: zmath.c
 zmath.o: zmath.h
 zmod.o: alloc.h
+zmod.o: attribute.h
 zmod.o: banned.h
 zmod.o: byteswap.h
 zmod.o: config.h
@@ -7147,6 +7196,7 @@ zmod.o: qmath.h
 zmod.o: zmath.h
 zmod.o: zmod.c
 zmul.o: alloc.h
+zmul.o: attribute.h
 zmul.o: banned.h
 zmul.o: byteswap.h
 zmul.o: config.h
@@ -7164,6 +7214,7 @@ zmul.o: qmath.h
 zmul.o: zmath.h
 zmul.o: zmul.c
 zprime.o: alloc.h
+zprime.o: attribute.h
 zprime.o: banned.h
 zprime.o: block.h
 zprime.o: byteswap.h
@@ -7191,6 +7242,7 @@ zprime.o: zmath.h
 zprime.o: zprime.c
 zprime.o: zrand.h
 zrand.o: alloc.h
+zrand.o: attribute.h
 zrand.o: banned.h
 zrand.o: block.h
 zrand.o: byteswap.h
@@ -7217,6 +7269,7 @@ zrand.o: zmath.h
 zrand.o: zrand.c
 zrand.o: zrand.h
 zrandom.o: alloc.h
+zrandom.o: attribute.h
 zrandom.o: banned.h
 zrandom.o: block.h
 zrandom.o: byteswap.h

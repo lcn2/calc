@@ -1,7 +1,7 @@
 /*
  * qmath - extended precision rational arithmetic primitive routines
  *
- * Copyright (C) 1999-2007,2014,2021  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2014,2021,2022  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -31,6 +31,7 @@
 #include "config.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -224,7 +225,7 @@ uutoq(FULL inum, FULL iden)
 
 	if (iden == 0) {
 		math_error("Division by zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (inum == 0)
 		return qlink(&_qzero_);
@@ -256,7 +257,7 @@ iitoq(long inum, long iden)
 
 	if (iden == 0) {
 		math_error("Division by zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (inum == 0)
 		return qlink(&_qzero_);
@@ -504,7 +505,7 @@ qmul(NUMBER *q1, NUMBER *q2)
 	d2 = q2->den;
 	if (ziszero(d1) || ziszero(d2)) {
 		math_error("Division by zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (ziszero(n1) || ziszero(n2))
 		return qlink(&_qzero_);
@@ -583,7 +584,7 @@ qqdiv(NUMBER *q1, NUMBER *q2)
 
 	if (qiszero(q2)) {
 		math_error("Division by zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if ((q1 == q2) || !qcmp(q1, q2))
 		return qlink(&_qone_);
@@ -611,7 +612,7 @@ qdivi(NUMBER *q, long n)
 
 	if (n == 0) {
 		math_error("Division by zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if ((n == 1) || qiszero(q))
 		return qlink(q);
@@ -734,7 +735,7 @@ qinv(NUMBER *q)
 	}
 	if (qiszero(q)) {
 		math_error("Division by zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	r = qalloc();
 	if (!zisunit(q->num))
@@ -861,7 +862,7 @@ qshift(NUMBER *q, long n)
 
 	if (qisfrac(q)) {
 		math_error("Shift of non-integer");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q) || (n == 0))
 		return qlink(q);
@@ -954,7 +955,7 @@ qor(NUMBER *q1, NUMBER *q2)
 
 	if (qisfrac(q1) || qisfrac(q2)) {
 		math_error("Non-integers for bitwise or");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qcmp(q1,q2) == 0 || qiszero(q2))
 		return qlink(q1);
@@ -1003,7 +1004,7 @@ qand(NUMBER *q1, NUMBER *q2)
 
 	if (qisfrac(q1) || qisfrac(q2)) {
 		math_error("Non-integers for bitwise and");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qcmp(q1, q2) == 0)
 		return qlink(q1);
@@ -1053,7 +1054,7 @@ qxor(NUMBER *q1, NUMBER *q2)
 
 	if (qisfrac(q1) || qisfrac(q2)) {
 		math_error("Non-integers for bitwise xor");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qcmp(q1,q2) == 0)
 		return qlink(&_qzero_);
@@ -1106,7 +1107,7 @@ qandnot(NUMBER *q1, NUMBER *q2)
 
 	if (qisfrac(q1) || qisfrac(q2)) {
 		math_error("Non-integers for bitwise xor");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qcmp(q1,q2) == 0 || qiszero(q1))
 		return qlink(&_qzero_);
@@ -1213,7 +1214,7 @@ qprecision(NUMBER *q)
 
 	if (qiszero(q) || qisneg(q)) {
 		math_error("Non-positive number for precision");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	r = - qilog2(q);
 	return (r < 0 ? 0 : r);
@@ -1408,7 +1409,7 @@ qalloc(void)
 		freeNum = (NUMBER *) malloc(sizeof (NUMBER) * NNALLOC);
 		if (freeNum == NULL) {
 			math_error("Not enough memory");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		freeNum[NNALLOC - 1].next = NULL;
 		freeNum[NNALLOC - 1].links = 0;
@@ -1438,7 +1439,7 @@ qalloc(void)
 		}
 		if (newfn == NULL) {
 			math_error("Cannot allocate new number block");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		firstNums = newfn;
 		firstNums[blockcount - 1] = freeNum;
@@ -1457,11 +1458,11 @@ qfreenum(NUMBER *q)
 {
 	if (q == NULL) {
 		math_error("Calling qfreenum with null argument!!!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (q->links != 0) {
 		math_error("Calling qfreenum with non-zero links!!!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	zfree(q->num);
 	zfree(q->den);

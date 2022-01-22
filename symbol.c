@@ -1,7 +1,7 @@
 /*
  * symbol - global and local symbol routines
  *
- * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -35,6 +35,7 @@
 #include "func.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -539,7 +540,7 @@ addstatic(GLOBAL *sp)
 				 (20 + staticcount) * sizeof(GLOBAL *));
 		if (stp == NULL) {
 			math_error("Cannot allocate static-variable table");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		statictable = stp;
 		staticavail = 20;

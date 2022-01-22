@@ -1,7 +1,7 @@
 /*
  * token - read input file characters into tokens
  *
- * Copyright (C) 1999-2007,2017,2021  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2017,2021,2022  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -37,6 +37,7 @@
 #include "lib_calc.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -537,7 +538,7 @@ eatstring(int quotechar)
 			str = (char *) malloc(len);
 		if (str == NULL) {
 			math_error("Out of memory for reading tokens");
-				/*NOTREACHED*/
+				not_reached();
 		}
 		memcpy(str + totlen, buf, len);
 		totlen += len;
@@ -628,7 +629,7 @@ eatnumber(void)
 			cp = (char *)realloc(numbuf, numbufsize + 1001);
 			if (cp == NULL) {
 				math_error("Cannot reallocate number buffer");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			numbuf = cp;
 			numbufsize += 1000;
@@ -745,7 +746,7 @@ scanerror(int skip, char *fmt, ...)
 	if ((!c_flag && !stoponerror) || stoponerror > 0) {
 		if (calc_use_scanerr_jmpbuf != 0) {
 			longjmp(calc_scanerr_jmpbuf, 60);
-			/*NOTREACHED*/
+			not_reached();
 		} else {
 			fprintf(stderr,
 			  "calc_scanerr_jmpbuf not setup, exiting code 60\n");
@@ -759,7 +760,7 @@ scanerror(int skip, char *fmt, ...)
 		fprintf(stderr, "Too many scan errors, compilation aborted.\n");
 		if (calc_use_scanerr_jmpbuf != 0) {
 			longjmp(calc_scanerr_jmpbuf, 61);
-			/*NOTREACHED*/
+			not_reached();
 		} else {
 			fprintf(stderr,
 			  "calc_scanerr_jmpbuf not ready: exit 61\n");

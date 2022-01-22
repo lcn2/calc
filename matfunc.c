@@ -1,7 +1,7 @@
 /*
  * matfunc - extended precision rational arithmetic matrix functions
  *
- * Copyright (C) 1999-2007,2021  David I. Bell
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -36,6 +36,7 @@
 #include "have_unused.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -63,7 +64,7 @@ matadd(MATRIX *m1, MATRIX *m2)
 
 	if (m1->m_dim != m2->m_dim) {
 		math_error("Incompatible matrix dimensions for add");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	tmp.m_dim = m1->m_dim;
 	tmp.m_size = m1->m_size;
@@ -75,7 +76,7 @@ matadd(MATRIX *m1, MATRIX *m2)
 		if ((min1 && min2 && (min1 != min2)) ||
 		    ((max1-min1) != (max2-min2))) {
 			math_error("Incompatible matrix bounds for add");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		tmp.m_min[dim] = (min1 ? min1 : min2);
 		tmp.m_max[dim] = tmp.m_min[dim] + (max1 - min1);
@@ -105,7 +106,7 @@ matsub(MATRIX *m1, MATRIX *m2)
 
 	if (m1->m_dim != m2->m_dim) {
 		math_error("Incompatible matrix dimensions for sub");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	tmp.m_dim = m1->m_dim;
 	tmp.m_size = m1->m_size;
@@ -117,7 +118,7 @@ matsub(MATRIX *m1, MATRIX *m2)
 		if ((min1 && min2 && (min1 != min2)) ||
 		    ((max1-min1) != (max2-min2))) {
 			math_error("Incompatible matrix bounds for sub");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		tmp.m_min[dim] = (min1 ? min1 : min2);
 		tmp.m_max[dim] = tmp.m_min[dim] + (max1 - min1);
@@ -187,7 +188,7 @@ matmul(MATRIX *m1, MATRIX *m2)
 	if (m1->m_dim == 1 && m2->m_dim == 1) {
 		if (m1->m_max[0]-m1->m_min[0] != m2->m_max[0]-m2->m_min[0]) {
 			math_error("Incompatible bounds for 1D * 1D  matmul");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		res = matalloc(m1->m_size);
 		*res = *m1;
@@ -201,7 +202,7 @@ matmul(MATRIX *m1, MATRIX *m2)
 	if (m1->m_dim == 1 && m2->m_dim == 2) {
 		if (m1->m_max[0]-m1->m_min[0] != m2->m_max[0]-m2->m_min[0]) {
 			math_error("Incompatible bounds for 1D * 2D matmul");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		res = matalloc(m2->m_size);
 		*res = *m2;
@@ -221,7 +222,7 @@ matmul(MATRIX *m1, MATRIX *m2)
 	if (m1->m_dim == 2 && m2->m_dim == 1) {
 		if (m1->m_max[1]-m1->m_min[1] != m2->m_max[0]-m2->m_min[0]) {
 			math_error("Incompatible bounds for 2D * 1D matmul");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		res = matalloc(m1->m_size);
 		*res = *m1;
@@ -240,11 +241,11 @@ matmul(MATRIX *m1, MATRIX *m2)
 
 	if ((m1->m_dim != 2) || (m2->m_dim != 2)) {
 		math_error("Matrix dimensions not compatible for mul");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if ((m1->m_max[1]-m1->m_min[1]) != (m2->m_max[0]-m2->m_min[0])) {
 		math_error("Incompatible bounds for 2D * 2D matrix mul");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	max1 = (m1->m_max[0] - m1->m_min[0] + 1);
 	max2 = (m2->m_max[1] - m2->m_min[1] + 1);
@@ -301,11 +302,11 @@ matsquare(MATRIX *m)
 	}
 	if (m->m_dim != 2) {
 		math_error("Matrix dimension exceeds two for square");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if ((m->m_max[0] - m->m_min[0]) != (m->m_max[1] - m->m_min[1])) {
 		math_error("Squaring non-square matrix");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	max = (m->m_max[0] - m->m_min[0] + 1);
 	res = matalloc(max * max);
@@ -357,20 +358,20 @@ matpowi(MATRIX *m, NUMBER *q)
 
 	if (m->m_dim > 2) {
 		math_error("Matrix dimension greater than 2 for power");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (m->m_dim == 2 && (m->m_max[0] - m->m_min[0] !=
 			 m->m_max[1] - m->m_min[1])) {
 		math_error("Raising non-square 2D matrix to a power");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisfrac(q)) {
 		math_error("Raising matrix to non-integral power");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zge31b(q->num)) {
 		math_error("Raising matrix to very large power");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	power = ztolong(q->num);
 	if (qisneg(q))
@@ -610,7 +611,7 @@ matquoval(MATRIX *m, VALUE *vp, VALUE *v3)
 
 	if ((vp->v_type == V_NUM) && qiszero(vp->v_num)) {
 		math_error("Division by zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	res = matalloc(m->m_size);
 	*res = *m;
@@ -640,7 +641,7 @@ matmodval(MATRIX *m, VALUE *vp, VALUE *v3)
 
 	if ((vp->v_type == V_NUM) && qiszero(vp->v_num)) {
 		math_error("Division by zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	res = matalloc(m->m_size);
 	*res = *m;
@@ -866,31 +867,31 @@ matindex(MATRIX *mp, BOOL UNUSED(create), long dim, VALUE *indices)
 
 	if (dim < 0) {
 		math_error("Negative dimension %ld for matrix", dim);
-		/*NOTREACHED*/
+		not_reached();
 	}
 	for (;;) {
 		if (dim <  mp->m_dim) {
 			math_error(
 			    "Indexing a %ldd matrix as a %ldd matrix",
 			    mp->m_dim, dim);
-			/*NOTREACHED*/
+			not_reached();
 		}
 		offset = 0;
 		for (i = 0; i < mp->m_dim; i++) {
 			if (indices->v_type != V_NUM) {
 				math_error("Non-numeric index for matrix");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			q = indices->v_num;
 			if (qisfrac(q)) {
 				math_error("Non-integral index for matrix");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			index = qtoi(q);
 			if (zge31b(q->num) || (index < mp->m_min[i]) ||
 			    (index > mp->m_max[i])) {
 				math_error("Index out of bounds for matrix");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			offset *= (mp->m_max[i] - mp->m_min[i] + 1);
 			offset += (index - mp->m_min[i]);
@@ -902,7 +903,7 @@ matindex(MATRIX *mp, BOOL UNUSED(create), long dim, VALUE *indices)
 			break;
 		if (vp->v_type != V_MAT) {
 			math_error("Non-matrix argument for matindex");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		mp = vp->v_mat;
 	}
@@ -953,7 +954,7 @@ matsearch(MATRIX *m, VALUE *vp, long i, long j, ZVALUE *index)
 	val = &m->m_table[i];
 	if (i < 0 || j > m->m_size) {
 		math_error("This should not happen in call to matsearch");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	while (i < j) {
 		if (acceptvalue(val++, vp)) {
@@ -978,7 +979,7 @@ matrsearch(MATRIX *m, VALUE *vp, long i, long j, ZVALUE *index)
 
 	if (i < 0 || j > m->m_size) {
 		math_error("This should not happen in call to matrsearch");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	val = &m->m_table[--j];
 	while (j >= i) {
@@ -1056,11 +1057,11 @@ matident(MATRIX *m)
 	if (m->m_dim != 2) {
 		math_error(
 		    "Matrix dimension must be two for setting to identity");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if ((m->m_max[0] - m->m_min[0]) != (m->m_max[1] - m->m_min[1])) {
 		math_error("Matrix must be square for setting to identity");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	res = matalloc(m->m_size);
 	*res = *m;
@@ -1108,11 +1109,11 @@ matinv(MATRIX *m)
 	}
 	if (m->m_dim != 2) {
 		math_error("Matrix dimension exceeds two for inverse");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if ((m->m_max[0] - m->m_min[0]) != (m->m_max[1] - m->m_min[1])) {
 		math_error("Inverting non-square matrix");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	/*
 	 * Begin by creating the identity matrix with the same attributes.
@@ -1154,7 +1155,7 @@ matinv(MATRIX *m)
 				matfree(m);
 				matfree(res);
 				math_error("Matrix is not invertible");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			val += rows;
 		}
@@ -1447,7 +1448,7 @@ matinit(MATRIX *m, VALUE *v1, VALUE *v2)
 		((res->m_max[0] - res->m_min[0]) !=
 		 (res->m_max[1] - res->m_min[1])))) {
 			math_error("Filling diagonals of non-square matrix");
-			/*NOTREACHED*/
+			not_reached();
 	}
 
 	/*
@@ -1489,7 +1490,7 @@ matalloc(long size)
 	if (m == NULL) {
 		math_error("Cannot get memory to allocate matrix of size %ld",
 			   size);
-		/*NOTREACHED*/
+		not_reached();
 	}
 	m->m_size = size;
 	for (i = size, vp = m->m_table; i > 0; i--, vp++)
@@ -1617,7 +1618,7 @@ matsort(MATRIX *m)
 	buf = (VALUE *) malloc(m->m_size * sizeof(VALUE));
 	if (buf == NULL) {
 		math_error("Not enough memory for matsort");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	next = m->m_table;
 	end = next + m->m_size;
@@ -1672,7 +1673,7 @@ matsort(MATRIX *m)
 	if (k >= LONG_BITS) {
 		/* this should never happen */
 		math_error("impossible k overflow in matsort!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 }
 

@@ -1,7 +1,7 @@
 /*
  * blkcpy - general values and related routines used by the calculator
  *
- * Copyright (C) 1999-2007,2021  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021,2022  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -36,6 +36,7 @@
 #include "str.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -298,7 +299,7 @@ copymat2mat(MATRIX *smat, long ssi, long num, MATRIX *dmat, long dsi)
 	vtemp = (VALUE *) malloc(num * sizeof(VALUE));
 	if (vtemp == NULL) {
 		math_error("Out of memory for mat-to-mat copy");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	vp = smat->m_table + ssi;
 	vq = vtemp;
@@ -347,7 +348,7 @@ copyblk2mat(BLOCK *blk, long ssi, long num, MATRIX *dmat, long dsi)
 	vtemp = (VALUE *) malloc(num * sizeof(VALUE));
 	if (vtemp == NULL) {
 		math_error("Out of memory for block-to-matrix copy");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	vp = vtemp;
 	i = num;
@@ -404,7 +405,7 @@ copymat2blk(MATRIX *smat, long ssi, long num, BLOCK *dblk, long dsi,
 		newdata = (USB8*) realloc(dblk->data, newsize);
 		if (newdata == NULL) {
 			math_error("Out of memory for matrix-to-block copy");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		dblk->data = newdata;
 		dblk->maxsize = newsize;
@@ -447,7 +448,7 @@ copymat2list(MATRIX *smat, long ssi, long num, LIST *lp, long dsi)
 	vtemp = (VALUE *) malloc(num * sizeof(VALUE));
 	if (vtemp == NULL) {
 		math_error("Out of memory for matrix-to-list copy");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	vp = smat->m_table + ssi;
 	vq = vtemp;
@@ -497,7 +498,7 @@ copylist2mat(LIST *lp, long ssi, long num, MATRIX *dmat, long dsi)
 	vtemp = (VALUE *) malloc(num * sizeof(VALUE));
 	if (vtemp == NULL) {
 		math_error("Out of memory for list-to-matrix copy");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	ep = listelement(lp, (long) ssi);
 	vp = vtemp;
@@ -547,7 +548,7 @@ copylist2list(LIST *slp, long ssi, long num, LIST *dlp, long dsi)
 	vtemp = (VALUE *) malloc(num * sizeof(VALUE));
 	if (vtemp == NULL) {
 		math_error("Out of memory for list-to-list copy");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	sep = listelement(slp, (long) ssi);
 	vp = vtemp;
@@ -662,7 +663,7 @@ copyfile2blk(FILEID id, long ssi, long num, BLOCK *dblk, long dsi, BOOL noreloc)
 		newdata = (USB8*) realloc(dblk->data, newsize);
 		if (newdata == NULL) {
 			math_error("Out of memory for block-to-block copy");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		dblk->data = newdata;
 		dblk->maxsize = newsize;
@@ -748,7 +749,7 @@ copyblk2blk(BLOCK *sblk, long ssi, long num, BLOCK *dblk, long dsi,
 		newdata = (USB8*) realloc(dblk->data, newsize);
 		if (newdata == NULL) {
 			math_error("Out of memory for block-to-block copy");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		dblk->data = newdata;
 		dblk->maxsize = newsize;
@@ -792,7 +793,7 @@ copystr2blk(STRING *str, long ssi, long num, BLOCK *dblk, long dsi,
 		newdata = (USB8*) realloc(dblk->data, newsize);
 		if (newdata == NULL) {
 			math_error("Out of memory for string-to-block copy");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		dblk->data = newdata;
 		dblk->maxsize = newsize;
@@ -913,7 +914,7 @@ copyostr2blk(char *str,long ssi,long num,BLOCK *dblk,long dsi,BOOL noreloc)
 		newdata = (USB8*) realloc(dblk->data, newsize);
 		if (newdata == NULL) {
 			math_error("Out of memory for string-to-block copy");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		dblk->data = newdata;
 		dblk->maxsize = newsize;
@@ -945,7 +946,7 @@ memmove(void *s1, CONST void *s2, MEMMOVE_SIZE_T n)
 	 */
 	if (s1 == NULL || s2 == NULL) {
 		math_error("bogus memmove NULL ptr");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (n <= 0) {
 		/* neg or 0 count does nothing */
@@ -1015,7 +1016,7 @@ copynum2blk(NUMBER *snum, long ssi, long num, BLOCK *dblk, long dsi,
 		newdata = (USB8*) realloc(dblk->data, newsize);
 		if (newdata == NULL) {
 			math_error("Out of memory for num-to-block copy");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		dblk->data = newdata;
 		dblk->maxsize = newsize;
@@ -1086,7 +1087,7 @@ copyblk2num(BLOCK *sblk, long ssi, long num, NUMBER *dnum, long dsi,
 	swapped = (HALF *)malloc(halflen * sizeof(HALF));
 	if (swapped == NULL) {
 		math_error("Out of memory for block-to-num copy");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	/* ensure that any trailing octets will be zero filled */
 	swapped[halflen-1] = 0;

@@ -1,7 +1,7 @@
 /*
  * size - size and sizeof functions are implemented here
  *
- * Copyright (C) 1999-2007,2021  David I. Bell
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -30,6 +30,7 @@
 #include "block.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -316,7 +317,7 @@ lsizeof(VALUE *vp)
 			break;
 		default:
 			math_error("sizeof not defined for value type");
-			/*NOTREACHED*/
+			not_reached();
 		}
 	}
 	return s;
@@ -436,7 +437,7 @@ memsize(VALUE *vp)
 			break;
 		default:
 			math_error("memsize not defined for value type");
-			/*NOTREACHED*/
+			not_reached();
 		}
 	}
 	return s;

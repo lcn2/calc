@@ -1,7 +1,7 @@
 /*
  * input - nested input source file reader
  *
- * Copyright (C) 1999-2007,2014,2018,2021  David I. Bell
+ * Copyright (C) 1999-2007,2014,2018,2021,2022  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -55,6 +55,7 @@
 #include "strl.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -148,7 +149,7 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 	/* firewall */
 	if (name == NULL) {
 		math_error("NULL name given to opensearchfile");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -190,7 +191,7 @@ opensearchfile(char *name, char *pathlist, char *extension, int rd_once)
 	path = malloc(path_alloc+1);
 	if (path == NULL) {
 		math_error("Cannot allocate filename path buffer");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	path[0] = '\0';	/* paranoia */
 	path[path_alloc] = '\0';	/* paranoia */
@@ -304,11 +305,11 @@ f_pathopen(char *name, char *mode, char *pathlist, char **openpath)
 	/* firewall */
 	if (name == NULL) {
 		math_error("NULL name given to f_pathopen");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (mode == NULL) {
 		math_error("NULL mode given to f_pathopen");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -342,7 +343,7 @@ f_pathopen(char *name, char *mode, char *pathlist, char **openpath)
 	path = malloc(pathlen+1 + 1 + namelen+1 + 1 + 1);
 	if (path == NULL) {
 		math_error("Cannot allocate f_pathopen buffer");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -375,7 +376,7 @@ f_pathopen(char *name, char *mode, char *pathlist, char **openpath)
 			}
 			fclose(ret);
 			math_error("cannot malloc return openpath buffer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 	}
 	free(path);
@@ -756,7 +757,7 @@ nextline(void)
 		cp = (char *)malloc(TTYSIZE + 1);
 		if (cp == NULL) {
 			math_error("Cannot allocate line buffer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		linebuf = cp;
 		linesize = TTYSIZE;
@@ -776,7 +777,7 @@ nextline(void)
 			cp = (char *)realloc(cp, linesize + TTYSIZE + 1);
 			if (cp == NULL) {
 				math_error("Cannot realloc line buffer");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			linebuf = cp;
 			linesize += TTYSIZE;

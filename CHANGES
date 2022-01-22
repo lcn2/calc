@@ -19,6 +19,10 @@ The following are the changes from calc version 2.14.0.15 to date:
     Improve comments on Makefile.local and add a few more examples
     of how it might be used.
 
+    Changed /*NOTREACHED*/ to not_reached(); and use "attribute.h".
+
+    Added .PHONY rule, just after all rule, to Makefiles.
+
 
 The following are the changes from calc version 2.14.0.14 to 2.14.0.14:
 
@@ -8219,7 +8223,7 @@ Following is a list of visible changes to calc from version 1.24.7 to 1.26.1:
 
     A small bug in the library file regress.cal was fixed.
 
-## Copyright (C) 2001-2017,2021  Landon Curt Noll
+## Copyright (C) 2001-2017,2021,2022  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

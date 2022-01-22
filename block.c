@@ -1,7 +1,7 @@
 /*
  * block - fixed, dynamic, fifo and circular memory blocks
  *
- * Copyright (C) 1999-2007,2021  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021,2022  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -42,6 +42,7 @@
 #include "calcerr.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -87,7 +88,7 @@ blkalloc(int len, int chunk)
 	nblk = (BLOCK *)malloc(sizeof(BLOCK));
 	if (nblk == NULL) {
 		math_error("cannot allocate block");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -98,7 +99,7 @@ blkalloc(int len, int chunk)
 	nblk->data = (USB8*)malloc(nblk->maxsize);
 	if (nblk->data == NULL) {
 		math_error("cannot allocate block data storage");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	memset(nblk->data, 0, nblk->maxsize);
 	nblk->datalen = len;
@@ -172,7 +173,7 @@ blkchk(BLOCK *blk)
 	}
 	if (blk == NULL) {
 		math_error("internal: blk ptr is NULL");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -180,7 +181,7 @@ blkchk(BLOCK *blk)
 	 */
 	if (blk->data == NULL) {
 		math_error("internal: blk->data ptr is NULL");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -188,7 +189,7 @@ blkchk(BLOCK *blk)
 	 */
 	if (blk->datalen < 0) {
 		math_error("internal: blk->datalen < 0");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -196,7 +197,7 @@ blkchk(BLOCK *blk)
 	 */
 	if (blk->datalen < 0) {
 		math_error("internal: blk->datalen < 0");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return;
 }
@@ -259,7 +260,7 @@ blkrealloc(BLOCK *blk, int newlen, int newchunk)
 		nblk = (USB8*)realloc(blk->data, newmax);
 		if (nblk == NULL) {
 			math_error("cannot reallocate block storage");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/* clear any new storage */
@@ -367,7 +368,7 @@ blktrunc(BLOCK *blk)
 	blk->data = (USB8*)malloc(1);
 	if (blk->data == NULL) {
 		math_error("cannot allocate truncated block storage");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	blk->data[0] = (USB8)0;
 	if (conf->calc_debug & CALCDBG_BLOCK) {
@@ -397,7 +398,7 @@ blk_copy(BLOCK *blk)
 	nblk = (BLOCK *)malloc(sizeof(BLOCK));
 	if (nblk == NULL) {
 		math_error("blk_copy: cannot malloc BLOCK");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -411,7 +412,7 @@ blk_copy(BLOCK *blk)
 	nblk->data = (USB8 *)malloc(blk->maxsize);
 	if (nblk->data == NULL) {
 		math_error("blk_copy: cannot duplicate block data");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	memcpy(nblk->data, blk->data, blk->maxsize);
 	return nblk;
@@ -539,7 +540,7 @@ reallocnblock(int id, int len, int chunk)
 	/* Fire wall */
 	if (id < 0 || id >= nblockcount) {
 		math_error("Bad id in call to reallocnblock");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	blk = nblocks[id]->blk;
@@ -556,13 +557,13 @@ reallocnblock(int id, int len, int chunk)
 		newdata = malloc(newsize);
 		if (newdata == NULL) {
 			math_error("Allocation failed");
-			/*NOTREACHED*/
+			not_reached();
 		}
 	} else if (newsize != oldsize) {
 		newdata = realloc(blk->data, newsize);
 		if (newdata == NULL) {
 			math_error("Reallocation failed");
-			/*NOTREACHED*/
+			not_reached();
 		}
 	}
 	memset(newdata + len, 0, newsize - len);
@@ -593,7 +594,7 @@ createnblock(char *name, int len, int chunk)
 			if (nblocks == NULL) {
 				maxnblockcount = 0;
 				math_error("unable to malloc new named blocks");
-				/*NOTREACHED*/
+				not_reached();
 			}
 		} else {
 			maxnblockcount += NBLOCKCHUNK;
@@ -602,7 +603,7 @@ createnblock(char *name, int len, int chunk)
 			if (nblocks == NULL) {
 				maxnblockcount = 0;
 				math_error("cannot malloc more named blocks");
-				/*NOTREACHED*/
+				not_reached();
 			}
 		}
 	}
@@ -610,18 +611,18 @@ createnblock(char *name, int len, int chunk)
 		initstr(&nblocknames);
 	if (findstr(&nblocknames, name) >= 0) {
 		math_error("Named block already exists!!!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	newname = addstr(&nblocknames, name);
 	if (newname == NULL) {
 		math_error("Block name allocation failed");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	res = (NBLOCK *) malloc(sizeof(NBLOCK));
 	if (res == NULL) {
 		math_error("Named block allocation failed");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	nblocks[nblockcount] = res;

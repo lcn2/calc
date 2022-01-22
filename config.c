@@ -1,7 +1,7 @@
 /*
  * config - configuration routines
  *
- * Copyright (C) 1999-2007,2021  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -62,6 +62,7 @@
 #endif /* HAVE_STRDUP */
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -488,11 +489,11 @@ setconfig(int type, VALUE *vp)
 				newconf = &newstd;
 			} else {
 				math_error("CONFIG alias not oldstd or newstd");
-				/*NOTREACHED*/
+				not_reached();
 			}
 		} else if (vp->v_type != V_CONFIG) {
 			math_error("non-CONFIG for all");
-			/*NOTREACHED*/
+			not_reached();
 		} else {
 			newconf = vp->v_config;
 		}
@@ -507,14 +508,14 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_TRACE:
 		if (vp->v_type != V_NUM) {
 			math_error("Non-numeric for trace");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		q = vp->v_num;
 		temp = qtoi(q);
 		if (qisfrac(q) || !zistiny(q->num) ||
 			((unsigned long) temp > TRACE_MAX)) {
 				math_error("Bad trace value");
-				/*NOTREACHED*/
+				not_reached();
 		}
 		conf->traceflags = (FLAG)temp;
 		break;
@@ -522,7 +523,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_DISPLAY:
 		if (getlen(vp, &len)) {
 			math_error("Bad value for display");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		math_setdigits(len);
 		break;
@@ -530,12 +531,12 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_MODE:
 		if (vp->v_type != V_STR) {
 			math_error("Non-string for mode");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		temp = lookup_long(modes, vp->v_str->s_str);
 		if (temp < 0) {
 			math_error("Unknown mode \"%s\"", vp->v_str->s_str);
-			/*NOTREACHED*/
+			not_reached();
 		}
 		math_setmode((int) temp);
 		break;
@@ -543,12 +544,12 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_MODE2:
 		if (vp->v_type != V_STR) {
 			math_error("Non-string for mode");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		temp = lookup_long(modes, vp->v_str->s_str);
 		if (temp < 0) {
 			math_error("Unknown mode \"%s\"", vp->v_str->s_str);
-			/*NOTREACHED*/
+			not_reached();
 		}
 		math_setmode2((int) temp);
 		break;
@@ -556,7 +557,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_EPSILON:
 		if (vp->v_type != V_NUM) {
 			math_error("Non-numeric for epsilon");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		setepsilon(vp->v_num);
 		break;
@@ -564,7 +565,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_MAXPRINT:
 		if (getlen(vp, &len)) {
 			math_error("Bad value for maxprint");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->maxprint = len;
 		break;
@@ -572,7 +573,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_MUL2:
 		if (getlen(vp, &len) || len < 0 || len == 1) {
 			math_error("Bad value for mul2");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (len == 0)
 			len = MUL_ALG2;
@@ -582,7 +583,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_SQ2:
 		if (getlen(vp, &len) || len < 0 || len == 1) {
 			math_error("Bad value for sq2");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (len == 0)
 			len = SQ_ALG2;
@@ -592,7 +593,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_POW2:
 		if (getlen(vp, &len) || len < 0 || len == 1) {
 			math_error("Bad value for pow2");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (len == 0)
 			len = POW_ALG2;
@@ -602,7 +603,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_REDC2:
 		if (getlen(vp, &len) || len < 0 || len == 1) {
 			math_error("Bad value for redc2");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (len == 0)
 			len = REDC_ALG2;
@@ -617,7 +618,7 @@ setconfig(int type, VALUE *vp)
 			temp = lookup_long(truth, vp->v_str->s_str);
 			if (temp < 0) {
 				math_error("Illegal truth value for tilde");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			conf->tilde_ok = (int)temp;
 		}
@@ -631,7 +632,7 @@ setconfig(int type, VALUE *vp)
 			temp = lookup_long(truth, vp->v_str->s_str);
 			if (temp < 0) {
 				math_error("Illegal truth value for tab");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			conf->tab_ok = (int)temp;
 		}
@@ -640,7 +641,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_QUOMOD:
 		if (getlen(vp, &len)) {
 			math_error("Illegal value for quomod");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->quomod = len;
 		break;
@@ -648,7 +649,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_QUO:
 		if (getlen(vp, &len)) {
 			math_error("Illegal value for quo");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->quo = len;
 		break;
@@ -656,7 +657,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_MOD:
 		if (getlen(vp, &len)) {
 			math_error("Illegal value for mod");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->mod = len;
 		break;
@@ -664,7 +665,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_SQRT:
 		if (getlen(vp, &len)) {
 			math_error("Illegal value for sqrt");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->sqrt = len;
 		break;
@@ -672,7 +673,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_APPR:
 		if (getlen(vp, &len)) {
 			math_error("Illegal value for appr");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->appr = len;
 		break;
@@ -680,7 +681,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_CFAPPR:
 		if (getlen(vp, &len)) {
 			math_error("Illegal value for cfappr");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->cfappr = len;
 		break;
@@ -688,7 +689,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_CFSIM:
 		if (getlen(vp, &len)) {
 			math_error("Illegal value for cfsim");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->cfsim = len;
 		break;
@@ -696,7 +697,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_OUTROUND:
 		if (getlen(vp, &len)) {
 			math_error("Illegal value for outround");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->outround = len;
 		break;
@@ -704,7 +705,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_ROUND:
 		if (getlen(vp, &len)) {
 			math_error("Illegal value for round");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->round = len;
 		break;
@@ -715,10 +716,9 @@ setconfig(int type, VALUE *vp)
 			conf->leadzero = !qiszero(q);
 		} else if (vp->v_type == V_STR) {
 			temp = lookup_long(truth, vp->v_str->s_str);
-			if (temp < 0) { {
+			if (temp < 0) {
 				math_error("Illegal truth value for leadzero");
-				/*NOTREACHED*/
-			}
+				not_reached();
 			}
 			conf->leadzero = (int)temp;
 		}
@@ -732,7 +732,7 @@ setconfig(int type, VALUE *vp)
 			temp = lookup_long(truth, vp->v_str->s_str);
 			if (temp < 0) { {
 				math_error("Illegal truth value for fullzero");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			}
 			conf->fullzero = (int)temp;
@@ -742,7 +742,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_MAXSCAN:
 		if (vp->v_type != V_NUM) {
 			math_error("Non-numeric for maxscancount");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		q = vp->v_num;
 		temp = qtoi(q);
@@ -750,7 +750,7 @@ setconfig(int type, VALUE *vp)
 			temp = -1;
 		if (temp < 0) {
 			math_error("Maxscan value is out of range");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->maxscancount = temp;
 		break;
@@ -758,12 +758,12 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_PROMPT:
 		if (vp->v_type != V_STR) {
 			math_error("Non-string for prompt");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		p = (char *)malloc(vp->v_str->s_len + 1);
 		if (p == NULL) {
 			math_error("Cannot duplicate new prompt");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		strlcpy(p, vp->v_str->s_str, vp->v_str->s_len + 1);
 		free(conf->prompt1);
@@ -773,12 +773,12 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_MORE:
 		if (vp->v_type != V_STR) {
 			math_error("Non-string for more prompt");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		p = (char *)malloc(vp->v_str->s_len + 1);
 		if (p == NULL) {
 			math_error("Cannot duplicate new more prompt");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		strlcpy(p, vp->v_str->s_str, vp->v_str->s_len + 1);
 		free(conf->prompt2);
@@ -788,7 +788,7 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_BLKMAXPRINT:
 		if (vp->v_type != V_NUM) {
 			math_error("Non-numeric for blkmaxprint");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		q = vp->v_num;
 		temp = qtoi(q);
@@ -796,7 +796,7 @@ setconfig(int type, VALUE *vp)
 			temp = -1;
 		if (temp < 0) {
 			math_error("Blkmaxprint value is out of range");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->blkmaxprint = temp;
 		break;
@@ -809,7 +809,7 @@ setconfig(int type, VALUE *vp)
 			temp = lookup_long(truth, vp->v_str->s_str);
 			if (temp < 0) {
 			    math_error("Illegal truth value for blkverbose");
-			    /*NOTREACHED*/
+			    not_reached();
 			}
 			conf->blkverbose = (int)temp;
 		}
@@ -818,13 +818,13 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_BLKBASE:
 		if (vp->v_type != V_STR) {
 			math_error("Non-string for blkbase");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		temp = lookup_long(blk_base, vp->v_str->s_str);
 		if (temp < 0) {
 			math_error("Unknown mode \"%s\" for blkbase",
 			    vp->v_str->s_str);
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->blkbase = temp;
 		break;
@@ -832,13 +832,13 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_BLKFMT:
 		if (vp->v_type != V_STR) {
 			math_error("Non-string for blkfmt");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		temp = lookup_long(blk_fmt, vp->v_str->s_str);
 		if (temp < 0) {
 			math_error("Unknown mode \"%s\" for blkfmt",
 			    vp->v_str->s_str);
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->blkfmt = temp;
 		break;
@@ -846,13 +846,13 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_CALC_DEBUG:
 		if (vp->v_type != V_NUM) {
 			math_error("Non numeric for calc_debug");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		q = vp->v_num;
 		temp = qtoi(q);
 		if (qisfrac(q) || !zistiny(q->num)) {
 			math_error("Illegal calc_debug parameter value");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->calc_debug = temp;
 		break;
@@ -860,13 +860,13 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_RESOURCE_DEBUG:
 		if (vp->v_type != V_NUM) {
 			math_error("Non numeric for resource_debug");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		q = vp->v_num;
 		temp = qtoi(q);
 		if (qisfrac(q) || !zistiny(q->num)) {
 			math_error("Illegal resource_debug parameter value");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->resource_debug = temp;
 		break;
@@ -874,13 +874,13 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_USER_DEBUG:
 		if (vp->v_type != V_NUM) {
 			math_error("Non numeric for user_debug");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		q = vp->v_num;
 		temp = qtoi(q);
 		if (qisfrac(q) || !zistiny(q->num)) {
 			math_error("Illegal user_debug parameter value");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->user_debug = temp;
 		break;
@@ -894,7 +894,7 @@ setconfig(int type, VALUE *vp)
 			if (temp < 0) {
 				math_error("Illegal truth value "
 					   "for verbose_quit");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			conf->verbose_quit = (int)temp;
 		}
@@ -903,56 +903,56 @@ setconfig(int type, VALUE *vp)
 	case CONFIG_CTRL_D:
 		if (vp->v_type != V_STR) {
 			math_error("Non-string for ctrl_d");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		temp = lookup_long(ctrl_d, vp->v_str->s_str);
 		if (temp < 0) {
 			math_error("Unknown mode \"%s\" for ctrl_d",
 			    vp->v_str->s_str);
-			/*NOTREACHED*/
+			not_reached();
 		}
 		conf->ctrl_d = temp;
 		break;
 
 	case CONFIG_PROGRAM:
 		math_error("The program config parameter is read-only");
-		/*NOTREACHED*/
-		abort();
+		not_reached();
+		break;
 
 	case CONFIG_BASENAME:
 		math_error("The basename config parameter is read-only");
-		/*NOTREACHED*/
-		abort();
+		not_reached();
+		break;
 
 	case CONFIG_WINDOWS:
 		math_error("The windows config parameter is read-only");
-		/*NOTREACHED*/
-		abort();
+		not_reached();
+		break;
 
 	case CONFIG_CYGWIN:
 		math_error("The cygwin config parameter is read-only");
-		/*NOTREACHED*/
-		abort();
+		not_reached();
+		break;
 
 	case CONFIG_COMPILE_CUSTOM:
 		math_error("The custom config parameter is read-only");
-		/*NOTREACHED*/
-		abort();
+		not_reached();
+		break;
 
 	case CONFIG_ALLOW_CUSTOM:
 		math_error("The allow_custom config parameter is read-only");
-		/*NOTREACHED*/
-		abort();
+		not_reached();
+		break;
 
 	case CONFIG_VERSION:
 		math_error("The version config parameter is read-only");
-		/*NOTREACHED*/
-		abort();
+		not_reached();
+		break;
 
 	case CONFIG_BASEB:
 		math_error("The baseb config parameter is read-only");
-		/*NOTREACHED*/
-		abort();
+		not_reached();
+		break;
 
 	case CONFIG_REDECL_WARN:
 		if (vp->v_type == V_NUM) {
@@ -963,7 +963,7 @@ setconfig(int type, VALUE *vp)
 			if (temp < 0) {
 				math_error("Illegal truth value for "
 					   "redecl_warn");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			conf->redecl_warn = (int)temp;
 		}
@@ -978,7 +978,7 @@ setconfig(int type, VALUE *vp)
 			if (temp < 0) {
 				math_error("Illegal truth value for "
 					   "dupvar_warn");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			conf->dupvar_warn = (int)temp;
 		}
@@ -986,13 +986,13 @@ setconfig(int type, VALUE *vp)
 
 	case CONFIG_HZ:
 		math_error("The clock tick rate config parameter is read-only");
-		/*NOTREACHED*/
-		abort();
+		not_reached();
+		break;
 
 	default:
 		math_error("Setting illegal config parameter");
-		/*NOTREACHED*/
-		abort();
+		not_reached();
+		break;
 	}
 }
 
@@ -1017,7 +1017,7 @@ config_copy(CONFIG *src)
 	if (src == NULL || src->epsilon == NULL || src->prompt1 == NULL ||
 	    src->prompt2 == NULL) {
 		math_error("bad CONFIG value");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -1026,7 +1026,7 @@ config_copy(CONFIG *src)
 	dest = (CONFIG *)malloc(sizeof(CONFIG));
 	if (dest == NULL) {
 		math_error("malloc of CONFIG failed");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -1134,7 +1134,7 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 	if (cfg == NULL || cfg->epsilon == NULL || cfg->prompt1 == NULL ||
 	    cfg->prompt2 == NULL) {
 		math_error("bad CONFIG value");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -1161,7 +1161,7 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		p = lookup_name(modes, cfg->outmode);
 		if (p == NULL) {
 			math_error("invalid output mode: %d", cfg->outmode);
-			/*NOTREACHED*/
+			not_reached();
 		}
 		vp->v_str = makenewstring(p);
 		return;
@@ -1172,7 +1172,7 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		if (p == NULL) {
 			math_error("invalid secondary output mode: %d",
 				   cfg->outmode2);
-			/*NOTREACHED*/
+			not_reached();
 		}
 		vp->v_str = makenewstring(p);
 		return;
@@ -1280,7 +1280,7 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		p = lookup_name(blk_base, cfg->blkbase);
 		if (p == NULL) {
 			math_error("invalid block base: %d", cfg->blkbase);
-			/*NOTREACHED*/
+			not_reached();
 		}
 		vp->v_str = makenewstring(p);
 		return;
@@ -1290,7 +1290,7 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		p = lookup_name(blk_fmt, cfg->blkfmt);
 		if (p == NULL) {
 			math_error("invalid block format: %d", cfg->blkfmt);
-			/*NOTREACHED*/
+			not_reached();
 		}
 		vp->v_str = makenewstring(p);
 		return;
@@ -1316,7 +1316,7 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		p = lookup_name(ctrl_d, cfg->ctrl_d);
 		if (p == NULL) {
 			math_error("invalid Control-D: %d", cfg->ctrl_d);
-			/*NOTREACHED*/
+			not_reached();
 		}
 		vp->v_str = makenewstring(p);
 		return;
@@ -1386,7 +1386,7 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 
 	default:
 		math_error("Getting illegal CONFIG element");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -1416,12 +1416,12 @@ config_cmp(CONFIG *cfg1, CONFIG *cfg2)
 	if (cfg1 == NULL || cfg1->epsilon == NULL || cfg1->prompt1 == NULL ||
 	    cfg1->prompt2 == NULL) {
 		math_error("CONFIG #1 value is invalid");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (cfg2 == NULL || cfg2->epsilon == NULL || cfg2->prompt1 == NULL ||
 	    cfg2->prompt2 == NULL) {
 		math_error("CONFIG #2 value is invalid");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*

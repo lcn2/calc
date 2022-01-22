@@ -1,7 +1,7 @@
 /*
  * value - generic value manipulation routines
  *
- * Copyright (C) 1999-2007,2014,2017,2021  David I. Bell
+ * Copyright (C) 1999-2007,2014,2017,2021,2022  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -39,6 +39,7 @@
 #include "config.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -109,7 +110,7 @@ freevalue(VALUE *vp)
 		break;
 	default:
 		math_error("Freeing unknown value type");
-		/*NOTREACHED*/
+		not_reached();
 	}
 }
 
@@ -242,7 +243,7 @@ copyvalue(VALUE *oldvp, VALUE *newvp)
 			break;
 		default:
 			math_error("Copying unknown value type");
-			/*NOTREACHED*/
+			not_reached();
 		}
 	}
 	newvp->v_subtype = oldvp->v_subtype;
@@ -434,7 +435,7 @@ addvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		q = v2->v_num;
 		if (qisfrac(q)) {
 			math_error("Adding non-integer to address");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		i = qtoi(q);
 		vres->v_addr = v1->v_addr + i;
@@ -444,7 +445,7 @@ addvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		q = v2->v_num;
 		if (qisfrac(q)) {
 			math_error("Adding non-integer to address");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		i = qtoi(q);
 		vres->v_octet = v1->v_octet + i;
@@ -513,7 +514,7 @@ subvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		q = v2->v_num;
 		if (qisfrac(q)) {
 			math_error("Subtracting non-integer from address");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		i = qtoi(q);
 		vres->v_addr = v1->v_addr - i;
@@ -523,7 +524,7 @@ subvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		q = v2->v_num;
 		if (qisfrac(q)) {
 			math_error("Adding non-integer to address");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		i = qtoi(q);
 		vres->v_octet = v1->v_octet - i;
@@ -2474,7 +2475,7 @@ comparevalue(VALUE *v1, VALUE *v2)
 		return (v1->v_num != v2->v_num);
 	default:
 		math_error("Illegal values for comparevalue");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return (r != 0);
 }
@@ -2859,7 +2860,7 @@ printvalue(VALUE *vp, int flags)
 		break;
 	default:
 		math_error("Printing unrecognized type of value");
-		/*NOTREACHED*/
+		not_reached();
 	}
 }
 
@@ -2996,7 +2997,7 @@ config_print(CONFIG *cfg)
 	if (cfg == NULL || cfg->epsilon == NULL || cfg->prompt1 == NULL ||
 	    cfg->prompt2 == NULL) {
 		math_error("CONFIG value is invalid");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*

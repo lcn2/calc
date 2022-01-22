@@ -1215,6 +1215,7 @@ c_devnull.o: ../value.h
 c_devnull.o: ../zmath.h
 c_devnull.o: c_devnull.c
 c_help.o: ../alloc.h
+c_help.o: ../attribute.h
 c_help.o: ../banned.h
 c_help.o: ../block.h
 c_help.o: ../byteswap.h
@@ -1242,6 +1243,7 @@ c_help.o: ../value.h
 c_help.o: ../zmath.h
 c_help.o: c_help.c
 c_pmodm127.o: ../alloc.h
+c_pmodm127.o: ../attribute.h
 c_pmodm127.o: ../banned.h
 c_pmodm127.o: ../block.h
 c_pmodm127.o: ../byteswap.h
@@ -1268,6 +1270,7 @@ c_pmodm127.o: ../value.h
 c_pmodm127.o: ../zmath.h
 c_pmodm127.o: c_pmodm127.c
 c_pzasusb8.o: ../alloc.h
+c_pzasusb8.o: ../attribute.h
 c_pzasusb8.o: ../banned.h
 c_pzasusb8.o: ../block.h
 c_pzasusb8.o: ../byteswap.h
@@ -1294,6 +1297,7 @@ c_pzasusb8.o: ../value.h
 c_pzasusb8.o: ../zmath.h
 c_pzasusb8.o: c_pzasusb8.c
 c_register.o: ../alloc.h
+c_register.o: ../attribute.h
 c_register.o: ../banned.h
 c_register.o: ../block.h
 c_register.o: ../byteswap.h
@@ -1321,6 +1325,7 @@ c_register.o: ../value.h
 c_register.o: ../zmath.h
 c_register.o: c_register.c
 c_sysinfo.o: ../alloc.h
+c_sysinfo.o: ../attribute.h
 c_sysinfo.o: ../banned.h
 c_sysinfo.o: ../block.h
 c_sysinfo.o: ../byteswap.h

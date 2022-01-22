@@ -1,7 +1,7 @@
 /*
  * byteswap - byte swapping routines
  *
- * Copyright (C) 1999,2021  Landon Curt Noll
+ * Copyright (C) 1999,2021,2022  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -29,6 +29,7 @@
 #include "byteswap.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -103,7 +104,7 @@ swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
 		if (dest == NULL) {
 			math_error("swap_b8_in_ZVALUE: swap_b8_in_ZVALUE: "
 				    "Not enough memory");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/*
@@ -170,7 +171,7 @@ swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
 		dest = malloc(sizeof(NUMBER));
 		if (dest == NULL) {
 			math_error("swap_b8_in_NUMBER: Not enough memory");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/*
@@ -234,7 +235,7 @@ swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
 		dest = malloc(sizeof(COMPLEX));
 		if (dest == NULL) {
 			math_error("swap_b8_in_COMPLEX: Not enough memory");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/*
@@ -338,7 +339,7 @@ swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
 		dest = malloc(sizeof(ZVALUE));
 		if (dest == NULL) {
 			math_error("swap_b16_in_ZVALUE: Not enough memory");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/*
@@ -405,7 +406,7 @@ swap_b16_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
 		dest = malloc(sizeof(NUMBER));
 		if (dest == NULL) {
 			math_error("swap_b16_in_NUMBER: Not enough memory");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/*
@@ -469,7 +470,7 @@ swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
 		dest = malloc(sizeof(COMPLEX));
 		if (dest == NULL) {
 			math_error("swap_b16_in_COMPLEX: Not enough memory");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/*
@@ -533,7 +534,7 @@ swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
 		dest = malloc(sizeof(ZVALUE));
 		if (dest == NULL) {
 			math_error("swap_HALF_in_ZVALUE: Not enough memory");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/*
@@ -601,7 +602,7 @@ swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
 		dest = malloc(sizeof(NUMBER));
 		if (dest == NULL) {
 			math_error("swap_HALF_in_NUMBER: Not enough memory");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/*
@@ -665,7 +666,7 @@ swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
 		dest = malloc(sizeof(COMPLEX));
 		if (dest == NULL) {
 			math_error("swap_HALF_in_COMPLEX: Not enough memory");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/*

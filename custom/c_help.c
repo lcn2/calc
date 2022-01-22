@@ -1,7 +1,7 @@
 /*
  * c_help - custom help function
  *
- * Copyright (C) 1999-2004,2021  Landon Curt Noll
+ * Copyright (C) 1999-2004,2021,2022  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -39,6 +39,7 @@
 #include "have_unused.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -70,7 +71,7 @@ c_help(char *UNUSED(name), int UNUSED(count), VALUE **vals)
 	 */
 	if (vals[0]->v_type != V_STR) {
 		math_error("custom help arg 1 must be a string");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*

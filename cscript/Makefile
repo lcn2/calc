@@ -1,7 +1,7 @@
 #
 # cscript - makefile for calc shell script files
 #
-# Copyright (C) 1999-2006,2014,2017,2021  Landon Curt Noll
+# Copyright (C) 1999-2006,2014,2017,2021,2022  Landon Curt Noll
 #
 # SRC: cscript/Makefile
 #
@@ -297,10 +297,16 @@ CALCLIBLIST=
 #
 CSCRIPT_TARGETS= ${SCRIPT}
 TARGETS= ${CSCRIPT_TARGETS} README
+#
+# rules that are not also names of files
+#
+PHONY= all clobber distlist install
 
 # The reason for this Makefile
 #
 all: ${TARGETS} .all
+
+.PHONY: ${PHONY}
 
 README: README.src
 	@${RM} -f $@

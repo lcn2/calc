@@ -1,7 +1,7 @@
 /*
  * opcodes - opcode execution module
  *
- * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -47,6 +47,7 @@
 #include "have_unused.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -153,7 +154,7 @@ o_localaddr(FUNC *fp, VALUE *locals, long index)
 {
 	if ((unsigned long)index >= fp->f_localcount) {
 		math_error("Bad local variable index");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	locals += index;
 	stack++;
@@ -170,7 +171,7 @@ o_globaladdr(FUNC *UNUSED(fp), GLOBAL *sp)
 	if (sp == NULL) {
 		math_error("Global variable \"%s\" not initialized",
 			    sp->g_name);
-		/*NOTREACHED*/
+		not_reached();
 	}
 	stack++;
 	stack->v_addr = &sp->g_value;
@@ -185,7 +186,7 @@ o_paramaddr(FUNC *UNUSED(fp), int argcount, VALUE *args, long index)
 {
 	if ((long)index >= argcount) {
 		math_error("Bad parameter index");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	args += index;
 	stack++;
@@ -204,7 +205,7 @@ o_localvalue(FUNC *fp, VALUE *locals, long index)
 {
 	if ((unsigned long)index >= fp->f_localcount) {
 		math_error("Bad local variable index");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	locals += index;
 	copyvalue(locals, ++stack);
@@ -217,7 +218,7 @@ o_globalvalue(FUNC *UNUSED(fp), GLOBAL *sp)
 {
 	if (sp == NULL) {
 		math_error("Global variable not defined");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	copyvalue(&sp->g_value, ++stack);
 }
@@ -229,7 +230,7 @@ o_paramvalue(FUNC *UNUSED(fp), int argcount, VALUE *args, long index)
 {
 	if ((long)index >= argcount) {
 		math_error("Bad parameter index");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	args += index;
 	if (args->v_type == V_ADDR)
@@ -250,7 +251,7 @@ o_argvalue(FUNC *fp, int argcount, VALUE *args)
 	if ((vp->v_type != V_NUM) || qisneg(vp->v_num) ||
 		qisfrac(vp->v_num)) {
 			math_error("Illegal argument for arg function");
-			/*NOTREACHED*/
+			not_reached();
 	}
 	if (qiszero(vp->v_num)) {
 		if (stack->v_type == V_NUM)
@@ -277,7 +278,7 @@ o_number(FUNC *UNUSED(fp), long arg)
 	q = constvalue(arg);
 	if (q == NULL) {
 		math_error("Numeric constant value not found");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	stack++;
 	stack->v_num = qlink(q);
@@ -296,7 +297,7 @@ o_imaginary(FUNC *UNUSED(fp), long arg)
 	q = constvalue(arg);
 	if (q == NULL) {
 		math_error("Numeric constant value not found");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	stack++;
 	stack->v_subtype = V_NOSUBTYPE;
@@ -349,7 +350,7 @@ o_matcreate(FUNC *UNUSED(fp), long dim)
 
 	if ((dim < 0) || (dim > MAXDIM)) {
 		math_error("Bad dimension %ld for matrix", dim);
-		/*NOTREACHED*/
+		not_reached();
 	}
 	size = 1;
 	for (i = dim - 1; i >= 0; i--) {
@@ -361,17 +362,17 @@ o_matcreate(FUNC *UNUSED(fp), long dim)
 			v2 = v2->v_addr;
 		if ((v1->v_type != V_NUM) || (v2->v_type != V_NUM)) {
 			math_error("Non-numeric bounds for matrix");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		num1 = v1->v_num;
 		num2 = v2->v_num;
 		if (qisfrac(num1) || qisfrac(num2)) {
 			math_error("Non-integral bounds for matrix");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (zge31b(num1->num) || zge31b(num2->num)) {
 			math_error("Very large bounds for matrix");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		min[i] = qtoi(num1);
 		max[i] = qtoi(num2);
@@ -383,7 +384,7 @@ o_matcreate(FUNC *UNUSED(fp), long dim)
 		size *= (max[i] - min[i] + 1);
 		if (size > 10000000) {
 			math_error("Very large size for matrix");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		freevalue(stack--);
 		freevalue(stack--);
@@ -558,13 +559,13 @@ o_indexaddr(FUNC *UNUSED(fp), long dim, long writeflag)
 	flag = (writeflag != 0);
 	if (dim < 0)  {
 		math_error("Negative dimension for indexing");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	val = &stack[-dim];
 	if (val->v_type != V_NBLOCK && val->v_type != V_FILE) {
 		if (val->v_type != V_ADDR) {
 			math_error("Non-pointer for indexaddr");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		val = val->v_addr;
 	}
@@ -593,7 +594,7 @@ o_indexaddr(FUNC *UNUSED(fp), long dim, long writeflag)
 			blk = val->v_nblock->blk;
 		if (blk->data == NULL) {
 			math_error("Freed block");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/*
@@ -601,26 +602,26 @@ o_indexaddr(FUNC *UNUSED(fp), long dim, long writeflag)
 		 */
 		if (dim != 1) {
 			math_error("block has only one dimension");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (indices[0].v_type != V_NUM) {
 			math_error("Non-numeric index for block");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (qisfrac(indices[0].v_num)) {
 			math_error("Non-integral index for block");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (zge31b(indices[0].v_num->num) ||
 		    zisneg(indices[0].v_num->num)) {
 			math_error("Index out of bounds for block");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		index = ztoi(indices[0].v_num->num);
 
 		if (index >= blk->maxsize) {
 			math_error("Index out of bounds for block");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (index >= blk->datalen)
 			blk->datalen = index + 1;
@@ -633,25 +634,25 @@ o_indexaddr(FUNC *UNUSED(fp), long dim, long writeflag)
 	case V_STR:
 		if (dim != 1) {
 			math_error("string has only one dimension");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (indices[0].v_type != V_NUM) {
 			math_error("Non-numeric index for string");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (qisfrac(indices[0].v_num)) {
 			math_error("Non-integral index for string");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (zge31b(indices[0].v_num->num) ||
 		    zisneg(indices[0].v_num->num)) {
 			math_error("Index out of bounds for string");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		index = ztoi(indices[0].v_num->num);
 		if (index < 0 || (size_t)index >= val->v_str->s_len) {
 			math_error("Index out of bounds for string");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		ret.v_type = V_OCTET;
 		ret.v_subtype = val->v_subtype;
@@ -662,31 +663,31 @@ o_indexaddr(FUNC *UNUSED(fp), long dim, long writeflag)
 	case V_LIST:
 		if (dim != 1) {
 			math_error("list has only one dimension");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (indices[0].v_type != V_NUM) {
 			math_error("Non-numeric index for list");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (qisfrac(indices[0].v_num)) {
 			math_error("Non-integral index for list");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (zge31b(indices[0].v_num->num) ||
 		    zisneg(indices[0].v_num->num)) {
 			math_error("Index out of bounds for list");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		index = ztoi(indices[0].v_num->num);
 		vp = listfindex(val->v_list, index);
 		if (vp == NULL) {
 			math_error("Index out of bounds for list");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		break;
 	default:
 		math_error("Illegal value for indexing");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	while (dim-- > 0)
 		freevalue(stack--);
@@ -712,7 +713,7 @@ o_elemaddr(FUNC *UNUSED(fp), long index)
 		mp = vp->v_mat;
 		if ((index < 0) || (index >= mp->m_size)) {
 			math_error("Non-existent element for matrix");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		vp = &mp->m_table[index];
 		break;
@@ -721,7 +722,7 @@ o_elemaddr(FUNC *UNUSED(fp), long index)
 		offset = objoffset(op, index);
 		if (offset < 0) {
 			math_error("Non-existent element for object");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		vp = &op->o_table[offset];
 		break;
@@ -729,12 +730,12 @@ o_elemaddr(FUNC *UNUSED(fp), long index)
 		vp = listfindex(vp->v_list, index);
 		if (vp == NULL) {
 			math_error("Index out of bounds for list");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		break;
 	default:
 		math_error("Not initializing matrix, object or list");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	stack->v_type = V_ADDR;
 	stack->v_addr = vp;
@@ -917,7 +918,7 @@ o_ptr(void)
 		break;
 	default:
 		math_error("Addressing non-addressable type");
-		/*NOTREACHED*/
+		not_reached();
 	}
 }
 
@@ -957,7 +958,7 @@ o_deref(void)
 	}
 	if (stack->v_type != V_ADDR) {
 		math_error("Dereferencing a non-variable");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	vp = vp->v_addr;
 	switch (vp->v_type) {
@@ -1578,7 +1579,7 @@ o_links(void)
 	}
 	if (links <= 0) {
 		math_error("Non-positive links!!!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	freevalue(stack);
 	if (!haveaddress)
@@ -2138,7 +2139,7 @@ o_isdefined(void)
 		vp = vp->v_addr;
 	if (vp->v_type != V_STR) {
 		math_error("Non-string argument for isdefined");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	r = 0;
 	index = getbuiltinfunc(vp->v_str->s_str);
@@ -2167,7 +2168,7 @@ o_isobjtype(void)
 		vp = vp->v_addr;
 	if (vp->v_type != V_STR) {
 		math_error("Non-string argument for isobjtype");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	index = checkobject(vp->v_str->s_str);
 	freevalue(stack);
@@ -2311,7 +2312,7 @@ o_re(void)
 	}
 	if (vp->v_type != V_COM) {
 		math_error("Taking real part of non-number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	q = qlink(vp->v_com->real);
 	if (stack->v_type == V_COM)
@@ -2341,7 +2342,7 @@ o_im(void)
 	}
 	if (vp->v_type != V_COM) {
 		math_error("Taking imaginary part of non-number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	q = qlink(vp->v_com->imag);
 	if (stack->v_type == V_COM)
@@ -2391,12 +2392,12 @@ o_fiaddr(void)
 		vp = vp->v_addr;
 	if (vp->v_type != V_NUM || qisfrac(vp->v_num)) {
 		math_error("Fast indexing by non-integer");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	index = qtoi(vp->v_num);
 	if (zge31b(vp->v_num->num) || (index < 0)) {
 		math_error("Index out of range for fast indexing");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (stack->v_type == V_NUM)
 		qfree(stack->v_num);
@@ -2404,14 +2405,14 @@ o_fiaddr(void)
 	vp = stack;
 	if (vp->v_type != V_ADDR) {
 		math_error("Non-pointer for fast indexing");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	vp = vp->v_addr;
 	switch (vp->v_type) {
 	case V_OBJ:
 		if (index >= vp->v_obj->o_actions->oa_count) {
 			math_error("Index out of bounds for object");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		res = vp->v_obj->o_table + index;
 		break;
@@ -2419,7 +2420,7 @@ o_fiaddr(void)
 		m = vp->v_mat;
 		if (index >= m->m_size) {
 			math_error("Index out of bounds for matrix");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		res = m->m_table + index;
 		break;
@@ -2428,7 +2429,7 @@ o_fiaddr(void)
 		res = listfindex(lp, index);
 		if (res == NULL) {
 			math_error("Index out of bounds for list");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		break;
 	case V_ASSOC:
@@ -2436,12 +2437,12 @@ o_fiaddr(void)
 		res = assocfindex(ap, index);
 		if (res == NULL) {
 			math_error("Index out of bounds for association");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		break;
 	default:
 		math_error("Bad variable type for fast indexing");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	stack->v_addr = res;
 }
@@ -2491,7 +2492,7 @@ o_numerator(void)
 		vp = vp->v_addr;
 	if (vp->v_type != V_NUM) {
 		math_error("Numerator of non-number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if ((stack->v_type == V_NUM) && qisint(vp->v_num))
 		return;
@@ -2515,7 +2516,7 @@ o_denominator(void)
 		vp = vp->v_addr;
 	if (vp->v_type != V_NUM) {
 		math_error("Denominator of non-number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	q = qden(vp->v_num);
 	if (stack->v_type == V_NUM)
@@ -2715,7 +2716,7 @@ o_usercall(FUNC *fp, long index, long argcount)
 	fp = findfunc(index);
 	if (fp == NULL) {
 		math_error("Function \"%s\" is undefined", namefunc(index));
-		/*NOTREACHED*/
+		not_reached();
 	}
 	calculate(fp, (int) argcount);
 }
@@ -3110,7 +3111,7 @@ o_debug(FUNC *UNUSED(fp), long line)
 	funcline = line;
 	if (abortlevel >= ABORT_STATEMENT) {
 		math_error("Calculation aborted at statement boundary");
-		/*NOTREACHED*/
+		not_reached();
 	}
 }
 
@@ -3319,7 +3320,7 @@ o_setepsilon(void)
 		vp = vp->v_addr;
 	if (vp->v_type != V_NUM) {
 		math_error("Non-numeric for epsilon");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	newep = vp->v_num;
 	stack->v_num = qlink(conf->epsilon);
@@ -3346,13 +3347,13 @@ o_setconfig(void)
 		v2 = v2->v_addr;
 	if (v1->v_type != V_STR) {
 		math_error("Non-string for config");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	type = configtype(v1->v_str->s_str);
 	if (type < 0) {
 		math_error("Unknown config name \"%s\"",
 				v1->v_str->s_str);
-		/*NOTREACHED*/
+		not_reached();
 	}
 	config_value(conf, type, &tmp);
 	setconfig(type, v2);
@@ -3373,13 +3374,13 @@ o_getconfig(void)
 		vp = vp->v_addr;
 	if (vp->v_type != V_STR) {
 		math_error("Non-string for config");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	type = configtype(vp->v_str->s_str);
 	if (type < 0) {
 		math_error("Unknown config name \"%s\"",
 			vp->v_str->s_str);
-		/*NOTREACHED*/
+		not_reached();
 	}
 	freevalue(stack);
 	config_value(conf, type, stack);
@@ -3416,7 +3417,7 @@ error_value(int e)
 		errcount++;
 	if (errmax >= 0 && errcount > errmax) {
 		math_error("Error %d caused errcount to exceed errmax", e);
-		/*NOTREACHED*/
+		not_reached();
 	}
 	res.v_type = (short) -e;
 	res.v_subtype = V_NOSUBTYPE;
@@ -3472,7 +3473,7 @@ o_initfill(void)
 		v2 = v2->v_addr;
 	if (v1->v_type != V_MAT) {
 		math_error("Non-matrix argument for o_initfill");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	s = v1->v_mat->m_size;
 	vp = v1->v_mat->m_table;
@@ -3868,7 +3869,7 @@ calculate(FUNC *fp, int argcount)
 		locals = (VALUE *) malloc(sizeof(VALUE) * fp->f_localcount);
 		if (locals == NULL) {
 			math_error("No memory for local variables");
-			/*NOTREACHED*/
+			not_reached();
 		}
 	}
 	for (i = 0; i < fp->f_localcount; i++) {
@@ -3882,20 +3883,20 @@ calculate(FUNC *fp, int argcount)
 	while (go) {
 		if (abortlevel >= ABORT_OPCODE) {
 			math_error("Calculation aborted in opcode");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (pc >= fp->f_opcodecount) {
 			math_error("Function pc out of range");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (stack > &stackarray[MAXSTACK-3]) {
 			math_error("Evaluation stack depth exceeded");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		opnum = fp->f_opcodes[pc];
 		if (opnum > MAX_OPCODE) {
 			math_error("Function opcode out of range");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		op = &opcodes[opnum];
 		if (conf->traceflags & TRACE_OPCODES) {
@@ -3961,7 +3962,7 @@ calculate(FUNC *fp, int argcount)
 				free(locals);
 			if (stack != &beginstack[1]) {
 				math_error("Misaligned stack");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			if (argcount > 0) {
 				retval = *stack--;
@@ -3980,7 +3981,7 @@ calculate(FUNC *fp, int argcount)
 
 		default:
 			math_error("Unknown opcode type: %d", op->o_type);
-			/*NOTREACHED*/
+			not_reached();
 		}
 	}
 	for (i = 0; i < fp->f_localcount; i++)
@@ -4125,12 +4126,12 @@ freenumbers(FUNC *fp)
 			continue;
 		default:
 			math_error("Unknown opcode type for freeing");
-			/*NOTREACHED*/
+			not_reached();
 		}
 	}
 	if (pc != fp->f_opcodecount) {
 		math_error("Incorrect opcodecount ???");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	trimconstants();
 }

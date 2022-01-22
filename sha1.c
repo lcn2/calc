@@ -36,6 +36,7 @@
 #include "sha1.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -367,7 +368,7 @@ sha1Final(HASH *state)
 	} else {
 		if (count % 4) {
 			math_error("This should not happen in sha1Final");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		data[count + 3] = 0x80;
 	}
@@ -563,7 +564,7 @@ sha1_final_state(HASH *state)
 		state = (HASH *)malloc(sizeof(HASH));
 		if (state == NULL) {
 			math_error("cannot malloc HASH");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		sha1_init_state(state);
 	}

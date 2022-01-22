@@ -1,7 +1,7 @@
 /*
  * qio - scanf and printf routines for arbitrary precision rational numbers
  *
- * Copyright (C) 1999-2007,2021  David I. Bell
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -31,6 +31,7 @@
 #include "have_unused.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -306,7 +307,7 @@ qprintnum(NUMBER *q, int outmode, LEN outdigits)
 
 	default:
 		math_error("Bad mode for print");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	if (outmode2 != MODE2_OFF) {
@@ -536,7 +537,7 @@ str2q(char *s)
 				exp = (exp * 10) + *t++ - '0';
 				if (exp > (MAXLONG/10L)) {
 					math_error("Exponent too large");
-					/*NOTREACHED*/
+					not_reached();
 				}
 			}
 		}

@@ -1,7 +1,7 @@
 /*
  * zrand - subtractive 100 shuffle generator
  *
- * Copyright (C) 1999-2007,2021  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021,2022  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -357,6 +357,7 @@
 #include "have_unused.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -1176,7 +1177,7 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat100)
 	 */
 	if (pseed != NULL && zisneg(*pseed)) {
 		math_error("neg seeds for srand reserved for future use");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -1192,7 +1193,7 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat100)
 	ret = (RAND *)malloc(sizeof(RAND));
 	if (ret == NULL) {
 		math_error("cannot allocate RAND state");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	*ret = s100;
 
@@ -1236,14 +1237,14 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat100)
 		 */
 		if (pmat100->m_size < S100) {
 			math_error("matrix for srand has < 100 elements");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		for (v=pmat100->m_table, i=0; i < S100; ++i, ++v) {
 
 			/* reject if not integer */
 			if (v->v_type != V_NUM || qisfrac(v->v_num)) {
 			    math_error("matrix for srand must contain ints");
-			    /*NOTREACHED*/
+			    not_reached();
 			}
 
 			/* load table element from matrix element mod 2^64 */
@@ -1927,12 +1928,12 @@ zrand(long cnt, ZVALUE *res)
 			return;
 		} else {
 			math_error("negative zrand bit count");
-			/*NOTREACHED*/
+			not_reached();
 		}
 #if LONG_BITS > 32
 	} else if (cnt > (1L<<31)) {
 		math_error("huge rand bit count in internal zrand function");
-		/*NOTREACHED*/
+		not_reached();
 #endif
 	}
 
@@ -2191,7 +2192,7 @@ zrandrange(CONST ZVALUE low, CONST ZVALUE beyond, ZVALUE *res)
 	 */
 	if (zrel(low, beyond) >= 0) {
 		math_error("srand low range >= beyond range");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -2251,7 +2252,7 @@ irand(long s)
 
 	if (s <= 0) {
 		math_error("Non-positive argument for irand()");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (s == 1)
 		return 0;
@@ -2284,7 +2285,7 @@ randcopy(CONST RAND *state)
 	ret = (RAND *)malloc(sizeof(RAND));
 	if (ret == NULL) {
 		math_error("can't allocate RAND state");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	memcpy(ret, state, sizeof(RAND));
 

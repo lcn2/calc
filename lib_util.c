@@ -1,7 +1,7 @@
 /*
  * lib_util - calc library utility routines
  *
- * Copyright (C) 1999-2006,2021  Landon Curt Noll
+ * Copyright (C) 1999-2006,2021,2022  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -35,6 +35,7 @@
 #include "lib_util.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -151,7 +152,7 @@ convstr2z(char *str)
 	v = (HALF *)malloc(len * sizeof(HALF));
 	if (v == NULL) {
 		math_error("convstr2z bad malloc");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	v[len-1] = 0;	/* deal with possible partial end of string HALF */
 
@@ -222,7 +223,7 @@ convhex2z(char *hex)
 	v = (HALF *)malloc(len * sizeof(HALF));
 	if (v == NULL) {
 		math_error("convhex2z bad malloc");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	v[len-1] = 0;	/* deal with possible partial end of string HALF */
 
@@ -313,7 +314,7 @@ convz2hex(ZVALUE z)
 		ret = (char *)malloc(sizeof("0"));
 		if (ret == NULL) {
 			math_error("convz2hex bad malloc of 0 value");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		ret[0] = '0';
 		ret[1] = '\0';
@@ -327,7 +328,7 @@ convz2hex(ZVALUE z)
 	ret = (char *)calloc(slen+1+1, sizeof(char));
 	if (ret == NULL) {
 		math_error("convz2hex bad malloc of string");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*

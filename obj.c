@@ -1,7 +1,7 @@
 /*
  * obj - object handling primitives
  *
- * Copyright (C) 1999-2007,2021  David I. Bell
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -38,6 +38,7 @@
 #include "strl.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -223,7 +224,7 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 
 	if ((unsigned)action > OBJ_MAXFUNC) {
 		math_error("Illegal action for object call");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	oip = &objectinfo[action];
 	if (v1->v_type == V_OBJ) {
@@ -232,20 +233,20 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 		oap = v2->v_obj->o_actions;
 	} else {
 		math_error("Object routine called with non-object");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	index = oap->oa_indices[action];
 	if (index < 0) {
 		namestr_ret = namestr(&objectnames, oap->oa_index);
 		if (namestr_ret == NULL) {
 			math_error("namestr returned NULL!!!");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		namestr_len = strlen(namestr_ret);
 		opi_name_len = strlen(oip->name);
 		if (namestr_len > (size_t)SYMBOLSIZE-1-opi_name_len) {
 			math_error("namestr returned a strong too long!!!");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		name[0] = '\0';
 		strlcpy(name, namestr_ret, namestr_len+1);
@@ -278,7 +279,7 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 		case ERR_POW:
 			if (v2->v_type != V_NUM) {
 				math_error("Non-real power");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			val = objpowi(v1, v2->v_num);
 			break;
@@ -312,7 +313,7 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 		default:
 			math_error("Function \"%s\" is undefined",
 				    namefunc(index));
-			/*NOTREACHED*/
+			not_reached();
 		}
 		return val;
 	}
@@ -345,7 +346,7 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 		break;
 	default:
 		math_error("Bad number of args to calculate");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	calculate(fp, oip->args);
 	switch (oip->retval) {
@@ -358,7 +359,7 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 	case A_INT:
 		if ((stack->v_type != V_NUM) || qisfrac(stack->v_num)) {
 			math_error("Integer return value required");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		index = qtoi(stack->v_num);
 		qfree(stack->v_num);
@@ -368,7 +369,7 @@ objcall(int action, VALUE *v1, VALUE *v2, VALUE *v3)
 		break;
 	default:
 		math_error("Bad object return");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return val;
 }
@@ -457,11 +458,11 @@ objpowi(VALUE *vp, NUMBER *q)
 
 	if (qisfrac(q)) {
 		math_error("Raising object to non-integral power");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zge31b(q->num)) {
 		math_error("Raising object to very large power");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	power = ztolong(q->num);
 	if (qisneg(q))
@@ -572,7 +573,7 @@ defineobject(char *name, int indices[], int count)
 		}
 		if (newobjects == NULL) {
 			math_error("Allocation failure for new object type");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		objects = newobjects;
 	}
@@ -580,12 +581,12 @@ defineobject(char *name, int indices[], int count)
 	oap = (OBJECTACTIONS *) malloc(objectactionsize(count));
 	if (oap == NULL) {
 		math_error("Cannot allocate object type #0");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	name = addstr(hp, name);
 	if (name == NULL) {
 		math_error("Cannot allocate object type #1");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	oap->oa_count = count;
 	for (index = OBJ_MAXFUNC; index >= 0; index--)
@@ -634,7 +635,7 @@ addelement(char *name)
 		return index;
 	if (addstr(hp, name) == NULL) {
 		math_error("Cannot allocate element name");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return findstr(hp, name);
 }
@@ -699,12 +700,12 @@ objalloc(long index)
 
 	if (index < 0 || index > maxobjcount) {
 		math_error("Allocating bad object index");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	oap = objects[index];
 	if (oap == NULL) {
 		math_error("Object type not defined");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	i = oap->oa_count;
 	if (i < USUAL_ELEMENTS)
@@ -715,7 +716,7 @@ objalloc(long index)
 		op = (OBJECT *) malloc(objectsize(i));
 	if (op == NULL) {
 		math_error("Cannot allocate object");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	op->o_actions = oap;
 	vp = op->o_table;
@@ -771,7 +772,7 @@ objcopy(OBJECT *op)
 		np = (OBJECT *) malloc(objectsize(i));
 	if (np == NULL) {
 		math_error("Cannot allocate object");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	np->o_actions = op->o_actions;
 	v1 = op->o_table;

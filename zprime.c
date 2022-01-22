@@ -1,7 +1,7 @@
 /*
  * zprime - rapid small prime routines
  *
- * Copyright (C) 1999-2007,2021  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021,2022  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -33,6 +33,7 @@
 #include "have_const.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -830,11 +831,11 @@ zpfact(ZVALUE z, ZVALUE *dest)
 	/* firewall */
 	if (zisneg(z)) {
 		math_error("Negative argument for factorial");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zge24b(z)) {
 		math_error("Very large factorial");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	n = ztolong(z);
 
@@ -1534,11 +1535,11 @@ zlcmfact(ZVALUE z, ZVALUE *dest)
 
 	if (zisneg(z) || ziszero(z)) {
 		math_error("Non-positive argument for lcmfact");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zge24b(z)) {
 		math_error("Very large lcmfact");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	n = ztolong(z);
 	/*

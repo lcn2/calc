@@ -1,7 +1,7 @@
 /*
  * hist - interactive readline module
  *
- * Copyright (C) 1999-2007,2021  David I. Bell
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -69,6 +69,7 @@
 #include "have_unused.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -1493,7 +1494,7 @@ hist_getline(char *prompt, char *buf, size_t len)
 		case CTRL_D_EMPTY_EOF:
 		default:
 			quit_calc();
-			/*NOTREACHED*/
+			not_reached();
 		}
 	}
 	strlcpy(buf, line, len);

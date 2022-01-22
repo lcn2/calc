@@ -1,8 +1,7 @@
 /*
  * zmod - modulo arithmetic routines
  *
- * Copyright (C) 1999-2007,2021  David I. Bell, Landon Curt Noll
- *				 and Ernest Bowen
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -42,6 +41,7 @@
 #include "zmath.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -76,9 +76,10 @@ zsquaremod(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	FULL prod;
 	FULL digit;
 
-	if (ziszero(z2) || zisneg(z2))
+	if (ziszero(z2) || zisneg(z2)) {
 		math_error("Mod of non-positive integer");
-		/*NOTREACHED*/
+		not_reached();
+	}
 	if (ziszero(z1) || zisunit(z2)) {
 		*res = _zero_;
 		return;
@@ -139,7 +140,7 @@ zminmod(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 
 	if (ziszero(z2) || zisneg(z2)) {
 		math_error("Mod of non-positive integer");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (ziszero(z1) || zisunit(z2)) {
 		*res = _zero_;
@@ -232,7 +233,7 @@ zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3)
 
 	if (zisneg(z3) || ziszero(z3)) {
 		math_error("Non-positive modulus in zcmpmod");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zistwo(z3))
 		return (((z1.v[0] + z2.v[0]) & 0x1) != 0);
@@ -363,7 +364,7 @@ zmod5(ZVALUE *zp)
 	z1.sign = z2.sign = z3.sign = 0;
 	if (z1.len > modlen + 1) {
 		math_error("Bad call to zmod5!!!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	z2.v = lastmodinv->v + modlen + 1 - z1.len;
 	z2.len = lastmodinv->len - modlen - 1 + z1.len;
@@ -400,7 +401,7 @@ zmod5(ZVALUE *zp)
 		subcount++;
 		if (subcount > 2) {
 			math_error("Too many subtractions in zmod5");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		j = modlen;
 		a = zp->v;
@@ -498,11 +499,11 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 
 	if (zisneg(z3) || ziszero(z3)) {
 		math_error("Non-positive modulus in zpowermod");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zisneg(z2)) {
 		math_error("Negative power in zpowermod");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 
@@ -884,13 +885,13 @@ zredcalloc(ZVALUE z1)
 
 	if (ziseven(z1) || zisneg(z1)) {
 		math_error("REDC requires positive odd modulus");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	rp = (REDC *) malloc(sizeof(REDC));
 	if (rp == NULL) {
 		math_error("Cannot allocate REDC structure");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -1708,7 +1709,7 @@ zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
 
 	if (zisneg(z2)) {
 		math_error("Negative power in zredcpower");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	if (zisunit(rp->mod)) {
@@ -1991,19 +1992,19 @@ zhnrmod(ZVALUE v, ZVALUE zh, ZVALUE zn, ZVALUE zr, ZVALUE *res)
 	 */
 	if (zisneg(zh) || ziszero(zh)) {
 		math_error("h must be > 0");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zisneg(zn) || ziszero(zn)) {
 		math_error("n must be > 0");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zge31b(zn)) {
 		math_error("n must be < 2^31");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (!zisabsleone(zr)) {
 		math_error("r must be -1, 0 or 1");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 

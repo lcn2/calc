@@ -1,7 +1,7 @@
 /*
  * commath - extended precision complex arithmetic primitive routines
  *
- * Copyright (C) 1999-2007,2021  David I. Bell
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -27,6 +27,7 @@
 #include "cmath.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -189,7 +190,7 @@ c_div(COMPLEX *c1, COMPLEX *c2)
 
 	if (ciszero(c2)) {
 		math_error("Division by zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if ((c1->real == c2->real) && (c1->imag == c2->imag))
 		return clink(&_cone_);
@@ -260,7 +261,7 @@ c_inv(COMPLEX *c)
 
 	if (ciszero(c)) {
 		math_error("Inverting zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	r = comalloc();
 	if (cisreal(c)) {
@@ -522,7 +523,7 @@ c_divq(COMPLEX *c, NUMBER *q)
 
 	if (qiszero(q)) {
 		math_error("Division by zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisone(q))
 		return clink(c);
@@ -605,7 +606,7 @@ comalloc(void)
 	r = (COMPLEX *) malloc(sizeof(COMPLEX));
 	if (r == NULL) {
 		math_error("Cannot allocate complex number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	r->links = 1;
 	r->real = qlink(&_qzero_);

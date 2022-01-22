@@ -1,7 +1,7 @@
 /*
  * c_register - set or print a custom register value
  *
- * Copyright (C) 2007,2021  Landon Curt Noll
+ * Copyright (C) 2007,2021,2022  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -39,6 +39,7 @@
 #include "have_unused.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -90,24 +91,24 @@ c_register(char *UNUSED(name), int count, VALUE **vals)
 	result.v_type = V_NULL;
 	if (vals[0]->v_type != V_NUM) {
 		math_error("Non-numeric register number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisfrac(vals[0]->v_num)) {
 		math_error("Non-integer register number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisneg(vals[0]->v_num)) {
 		math_error("register number < 0");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (! qistiny(vals[0]->v_num)) {
 		math_error("register is huge");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	reg = qtoi(vals[0]->v_num);
 	if (reg > CUSTOM_REG_MAX) {
 		math_error("register is larger than CUSTOM_REG_MAX");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*

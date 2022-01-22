@@ -2,7 +2,7 @@
 #
 # help - makefile for calc help files
 #
-# Copyright (C) 1999-2006,2017,2021  Landon Curt Noll
+# Copyright (C) 1999-2006,2017,2021,2022  Landon Curt Noll
 #
 # SRC: help/Makefile
 #
@@ -408,6 +408,10 @@ DISTLIST= ${STD_HELP_FILES} ${DETAIL_HELP} ${MAKE_FILE} \
 # These files are used to make (but not built) a calc .a link library
 #
 CALCLIBLIST=
+#
+# rules that are not also names of files
+#
+PHONY= all clobber distlist install
 
 all: ${FULL_HELP_FILES} full ${DETAIL_HELP} ${DETAIL_CLONE} \
      ${SINGULAR_FILES} .all
@@ -420,6 +424,8 @@ all: ${FULL_HELP_FILES} full ${DETAIL_HELP} ${DETAIL_CLONE} \
 .all:
 	${RM} -f .all
 	${TOUCH} .all
+
+.PHONY: ${PHONY}
 
 bindings: ../cal/bindings
 	${RM} -f $@
@@ -749,14 +755,6 @@ calcliblist:
 		echo help/$$i; \
 	    fi; \
 	done
-
-# The BSDI cdrom makefile expects all help files to be pre-built.  This rule
-# creates these files so that the release can be shipped off to BSDI.  You can
-# ignore this rule.
-#
-bsdi: all
-	${RM} -f obj
-	${CP} obj.file obj
 
 # These next rule help form the ${DETAIL_HELP} makefile variables above.
 #

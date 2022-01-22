@@ -1,7 +1,7 @@
 /*
  * str - string list routines
  *
- * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -38,6 +38,7 @@
 #include "strl.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -73,7 +74,7 @@ initstr(STRINGHEAD *hp)
 		hp->h_list = (char *)malloc(STR_CHUNK + 1);
 		if (hp->h_list == NULL) {
 			math_error("Cannot allocate string header");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		hp->h_list[STR_CHUNK] = '\0';	/* guard paranoia */
 		hp->h_avail = STR_CHUNK;
@@ -144,7 +145,7 @@ charstr(int ch)
 		cp = (char *)malloc((OCTET_VALUES + 1)*2);
 		if (cp == NULL) {
 			math_error("Cannot allocate character table");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		for (i = 0; i < OCTET_VALUES; i++) {
 			*cp++ = (char)i;
@@ -295,7 +296,7 @@ addliteral(char *str)
 		}
 		if (table == NULL) {
 			math_error("Cannot allocate string literal table");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		literals.l_table = table;
 		literals.l_maxcount = count;
@@ -314,7 +315,7 @@ addliteral(char *str)
 		newstr = (char *)malloc(len + 1);
 		if (newstr == NULL) {
 			math_error("Cannot allocate large literal string");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		newstr[len] = '\0';	/* guard paranoia */
 		strlcpy(newstr, str, len);
@@ -330,7 +331,7 @@ addliteral(char *str)
 		newstr = (char *)malloc(STR_CHUNK + 1);
 		if (newstr == NULL) {
 			math_error("Cannot allocate new literal string");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		newstr[STR_CHUNK] = '\0';	/* guard paranoia */
 		literals.l_alloc = newstr;
@@ -1128,7 +1129,7 @@ stralloc(void)
 		freeStr = (STRING *) malloc(sizeof (STRING) * (STRALLOC + 1));
 		if (freeStr == NULL) {
 			math_error("Unable to allocate memory for stralloc");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		/* guard paranoia */
 		memset(freeStr+STRALLOC, 0, sizeof(STRING));
@@ -1166,7 +1167,7 @@ stralloc(void)
 		}
 		if (newfn == NULL) {
 			math_error("Cannot allocate new string block");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		firstStrs = newfn;
 		firstStrs[blockcount - 1] = freeStr;
@@ -1204,7 +1205,7 @@ charstring(int ch)
 	c = (char *) malloc(2);
 	if (c == NULL) {
 		math_error("Allocation failure for charstring");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	s = stralloc();
 	s->s_len = 1;
@@ -1232,7 +1233,7 @@ makenewstring(char *str)
 	c = (char *) malloc(len + 1);
 	if (c == NULL) {
 		math_error("malloc for makenewstring failed");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	s = stralloc();
 	s->s_str = c;
@@ -1256,7 +1257,7 @@ stringcopy (STRING *s1)
 	c = malloc(len + 1);
 	if (c == NULL) {
 		math_error("Malloc failed for stringcopy");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	s = stralloc();
 	s->s_len = len;
@@ -1272,7 +1273,7 @@ slink(STRING *s)
 {
 	if (s->s_links <= 0) {
 		math_error("Argument for slink has non-positive links!!!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	++s->s_links;
 	return s;
@@ -1284,7 +1285,7 @@ sfree(STRING *s)
 {
 	if (s->s_links <= 0) {
 		math_error("Argument for sfree has non-positive links!!!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (--s->s_links > 0 || s->s_len == 0)
 		return;
@@ -1306,7 +1307,7 @@ initstrings(void)
 			   malloc(sizeof(STRING *) * (STRCONSTALLOC + 1));
 	if (stringconsttable == NULL) {
 		math_error("Unable to allocate constant table");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	stringconsttable[STRCONSTALLOC] = NULL;	/* guard paranoia */
 	stringconsttable[0] = &_nullstring_;
@@ -1343,7 +1344,7 @@ addstring(char *str, size_t len)
 			if (sp == NULL) {
 				math_error("Unable to reallocate string "
 					   "const table");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			/* guard paranoia */
 			sp[stringconstcount + STRCONSTALLOC] = NULL;
@@ -1373,7 +1374,7 @@ addstring(char *str, size_t len)
 	c = (char *) malloc(len + 1);
 	if (c == NULL) {
 		math_error("Unable to allocate string constant memory");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	s->s_str = c;
 	s->s_len = len;
@@ -1393,7 +1394,7 @@ findstring(long index)
 {
 	if (index < 0 || index >= stringconstcount) {
 		math_error("Bad index for findstring");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return stringconsttable[index];
 }

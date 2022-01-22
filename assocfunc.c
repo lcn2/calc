@@ -1,7 +1,7 @@
 /*
  * assocfunc - association table routines
  *
- * Copyright (C) 1999-2007,2021  David I. Bell
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -36,6 +36,7 @@
 #include "value.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -74,7 +75,7 @@ associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices)
 
 	if (dim < 0) {
 		math_error("Negative dimension for indexing association");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -112,7 +113,7 @@ associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices)
 	ep = (ASSOCELEM *) malloc(ELEMSIZE(dim));
 	if (ep == NULL) {
 		math_error("Cannot allocate association element");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	ep->e_dim = dim;
 	ep->e_hash = hash;
@@ -142,13 +143,13 @@ assocsearch(ASSOC *ap, VALUE *vp, long i, long j, ZVALUE *index)
 
 	if (i < 0 || j > ap->a_count) {
 		math_error("This should not happen in assocsearch");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	while (i < j) {
 		ep = elemindex(ap, i);
 		if (ep == NULL) {
 			math_error("This should not happen in assocsearch");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (acceptvalue(&ep->e_value, vp)) {
 			utoz(i, index);
@@ -172,14 +173,14 @@ assocrsearch(ASSOC *ap, VALUE *vp, long i, long j, ZVALUE *index)
 
 	if (i < 0 || j > ap->a_count) {
 		math_error("This should not happen in assocsearch");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	j--;
 	while (j >= i) {
 		ep = elemindex(ap, j);
 		if (ep == NULL) {
 			math_error("This should not happen in assocsearch");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (acceptvalue(&ep->e_value, vp)) {
 			utoz(j, index);
@@ -333,7 +334,7 @@ assoccopy(ASSOC *oldap)
 			if (ep == NULL) {
 				math_error("Cannot allocate "
 					   "association element");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			ep->e_dim = oldep->e_dim;
 			ep->e_hash = oldep->e_hash;
@@ -374,7 +375,7 @@ resize(ASSOC *ap, long newsize)
 	newtable = (ASSOCELEM **) malloc(sizeof(ASSOCELEM *) * newsize);
 	if (newtable == NULL) {
 		math_error("No memory to grow association");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	for (i = 0; i < newsize; i++)
 		newtable[i] = NULL;
@@ -430,7 +431,7 @@ assocalloc(long initsize)
 	ap = (ASSOC *) malloc(sizeof(ASSOC));
 	if (ap == NULL) {
 		math_error("No memory for association");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	ap->a_count = 0;
 	ap->a_size = initsize;
@@ -438,7 +439,7 @@ assocalloc(long initsize)
 	if (ap->a_table == NULL) {
 		free((char *) ap);
 		math_error("No memory for association");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	for (i = 0; i < initsize; i++)
 		ap->a_table[i] = NULL;

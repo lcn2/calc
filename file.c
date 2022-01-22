@@ -1,7 +1,7 @@
 /*
  * file - file I/O routines callable by users
  *
- * Copyright (C) 1999-2007,2018,2021  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2018,2021,2022  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -51,6 +51,7 @@
 #endif
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -179,7 +180,7 @@ file_init(void)
 			tname = (char *)malloc(snprintf_len+1);
 			if (tname == NULL) {
 				math_error("Out of memory for init_file");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			snprintf(tname, snprintf_len, "descriptor[%d]", i);
 			tname[snprintf_len] = '\0';	/* paranoia */
@@ -231,7 +232,7 @@ init_fileio(FILEIO *fiop, char *name, char *mode,
 		fiop->name = (char *)malloc(namelen + 1);
 		if (fiop->name == NULL) {
 			math_error("No memory for filename");
-			/*NOTREACHED*/
+			not_reached();
 		}
 	}
 
@@ -367,7 +368,7 @@ openid(char *name, char *mode)
 	}
 	if (fstat(fileno(fp), &sbuf) < 0) {
 		math_error("bad fstat");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/* get a new FILEID */
@@ -436,12 +437,12 @@ openpathid(char *name, char *mode, char *pathlist)
 			free(openpath);
 		}
 		math_error("bad fstat");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (openpath == NULL) {
 		fclose(fp);
 		math_error("bad openpath");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/* get a new FILEID */
@@ -482,7 +483,7 @@ reopenid(FILEID id, char *mode, char *name)
 	if ((id == FILEID_STDIN) || (id == FILEID_STDOUT) ||
 	    (id == FILEID_STDERR)) {
 		math_error("Cannot freopen stdin, stdout, or stderr");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/* reopen the file */
@@ -507,7 +508,7 @@ reopenid(FILEID id, char *mode, char *name)
 		}
 		if (i >= MAXFILES) {
 			math_error("This should not happen in reopenid");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		fp = f_open(name, mode);
 		if (fp == NULL) {
@@ -532,7 +533,7 @@ reopenid(FILEID id, char *mode, char *name)
 	}
 	if (fstat(fileno(fp), &sbuf) < 0) {
 		math_error("bad fstat");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/* initialize FILEIO structure */
@@ -632,7 +633,7 @@ closeid(FILEID id)
 	if ((id == FILEID_STDIN) || (id == FILEID_STDOUT) ||
 	    (id == FILEID_STDERR)) {
 		math_error("Cannot close stdin, stdout, or stderr");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/* get file structure */
@@ -832,7 +833,7 @@ readid(FILEID id, int flags, STRING **retstr)
 			str = (char *)malloc(n + 1);
 		if (str == NULL) {
 			math_error("Out of memory for readid");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (n > 0)
 			memcpy(&str[totlen], buf, n);
@@ -1536,7 +1537,7 @@ getloc(FILEID id, ZVALUE *res)
 	fp = fiop->fp;
 	if (fp == NULL) {
 		math_error("Bogus internal file pointer!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -1695,7 +1696,7 @@ setloc(FILEID id, ZVALUE zpos)
 	if ((id == FILEID_STDIN) || (id == FILEID_STDOUT) ||
 	    (id == FILEID_STDERR)) {
 		math_error("Cannot fseek stdin, stdout, or stderr");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -1709,7 +1710,7 @@ setloc(FILEID id, ZVALUE zpos)
 	fp = fiop->fp;
 	if (fp == NULL) {
 		math_error("Bogus internal file pointer!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	fiop->action = 0;
@@ -1960,7 +1961,7 @@ filesize(FILEIO *fiop)
 	/* return length */
 	if (fstat(fileno(fiop->fp), &sbuf) < 0) {
 		math_error("bad fstat");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return sbuf.st_size;
 }
@@ -2099,7 +2100,7 @@ getscanfield(FILE *fp, BOOL skip, unsigned int width, int scannum,
 				str = (char *) malloc(len + 1);
 			if (str == NULL) {
 				math_error("Out of memory for scanning");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			if (len)
 				memcpy(&str[totlen], buf, len);
@@ -2177,7 +2178,7 @@ getscanwhite(FILE *fp, BOOL skip, unsigned int width, int scannum,
 				str = (char *) malloc(len + 1);
 			if (str == NULL) {
 				math_error("Out of memory for scanning");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			if (len)
 				memcpy(&str[totlen], buf, len);
@@ -2721,7 +2722,7 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
 			while (k < tmp.len && tmp.v[k] == 0);
 			if (k == tmp.len) {
 				math_error("This should not happen");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			tmp.v[k]--;
 			if (tmp.v[tmp.len - 1] == 0)

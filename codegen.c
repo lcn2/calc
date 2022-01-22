@@ -1,7 +1,7 @@
 /*
  * codegen - module to generate opcodes from the input tokens
  *
- * Copyright (C) 1999-2007,2017,2021  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2017,2021,2022  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -51,6 +51,7 @@
 #endif
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -2383,16 +2384,16 @@ getfilename(char *name, size_t namelen, BOOL *once)
 						if (symstr == NULL) {
 							math_error(
 					"string value pointer is NULL!!");
-							/*NOTREACHED*/
+							not_reached();
 						}
 					} else {
 						math_error(
 				    "a filename variable must be a string");
-						/*NOTREACHED*/
+						not_reached();
 					}
 				} else {
 					math_error("no such global variable");
-					/*NOTREACHED*/
+					not_reached();
 				}
 			}
 

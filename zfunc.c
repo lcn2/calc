@@ -1,8 +1,7 @@
 /*
  * zfunc - extended precision integral arithmetic non-primitive routines
  *
- * Copyright (C) 1999-2007,2021  David I. Bell, Landon Curt Noll
- *				 and Ernest Bowen
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -31,6 +30,7 @@
 #include "alloc.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -196,11 +196,11 @@ zfact(ZVALUE z, ZVALUE *dest)
 
 	if (zisneg(z)) {
 		math_error("Negative argument for factorial");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zge31b(z)) {
 		math_error("Very large factorial");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	n = ztolong(z);
 	ptwo = 0;
@@ -249,15 +249,15 @@ zperm(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 
 	if (zisneg(z1) || zisneg(z2)) {
 		math_error("Negative argument for permutation");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zrel(z1, z2) < 0) {
 		math_error("Second arg larger than first in permutation");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zge31b(z2)) {
 		math_error("Very large permutation");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	count = ztolong(z2);
 	zcopy(z1, &ans);
@@ -468,7 +468,7 @@ zfib(ZVALUE z, ZVALUE *res)
 
 	if (zge31b(z)) {
 		math_error("Very large Fibonacci number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	n = ztolong(z);
 	if (n == 0) {
@@ -547,7 +547,7 @@ zpowi(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	}
 	if (zge31b(z2)) {
 		math_error("Raising to very large power");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	power = ztoulong(z2);
 	if (zistwo(z1)) {	/* two raised to a power */
@@ -669,7 +669,7 @@ ztenpow(long power, ZVALUE *res)
 				zsquare(_tenpowers_[i-1], &_tenpowers_[i]);
 			} else {
 				math_error("cannot compute 10^2^(TEN_MAX+1)");
-				/*NOTREACHED*/
+				not_reached();
 			}
 		}
 		if (power & 0x1) {
@@ -1267,7 +1267,7 @@ zlog(ZVALUE z, ZVALUE base)
 	 */
 	if (ziszero(z) || ziszero(base) || zisone(base)) {
 		math_error("Zero or too small argument argument for zlog!!!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -1337,7 +1337,7 @@ zlog10(ZVALUE z, BOOL *was_10_power)
 
 	if (ziszero(z)) {
 		math_error("Zero argument argument for zlog10");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/* Ignore sign of z */
@@ -1357,7 +1357,7 @@ zlog10(ZVALUE z, BOOL *was_10_power)
 		power10 = malloc(sizeof(long) * (max_power10_exp+1));
 		if (power10 == NULL) {
 			math_error("cannot malloc power10 table");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/* load power10 table */
@@ -1396,7 +1396,7 @@ zlog10(ZVALUE z, BOOL *was_10_power)
 	while (((zp->len * 2) - 1) <= z.len) {	/* while square not too large */
 		if (zp >= &_tenpowers_[TEN_MAX]) {
 			math_error("Maximum storable power of 10 reached!");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (zp[1].len == 0)
 			zsquare(*zp, zp + 1);
@@ -1420,7 +1420,7 @@ zlog10(ZVALUE z, BOOL *was_10_power)
 	} while (rel > 0 && --zp >= _tenpowers_);
 	if (zp < _tenpowers_) {
 		math_error("fell off bottom of tenpower table!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/* the tenpower value is now our starting comparison value */
@@ -1625,7 +1625,7 @@ zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 
 	if (ziszero(z1) || ziszero(z2)) {
 		math_error("Zero argument in call to zgcdrem!!!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	/*
 	 * Begin by taking the gcd for the first time.
@@ -1755,7 +1755,7 @@ zsqrt(ZVALUE z, ZVALUE *dest, long rnd)
 
 	if (z.sign) {
 		math_error("Square root of negative number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (ziszero(z)) {
 		*dest = _zero_;
@@ -2026,11 +2026,11 @@ zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest)
 	sign = z1.sign;
 	if (sign && ziseven(z2)) {
 		math_error("Even root of negative number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (ziszero(z2) || zisneg(z2)) {
 		math_error("Non-positive root");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (ziszero(z1)) {	/* root of zero */
 		*dest = _zero_;

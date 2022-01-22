@@ -1,7 +1,7 @@
 /*
  * listfunc - list handling routines
  *
- * Copyright (C) 1999-2007,2021  David I. Bell
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -37,6 +37,7 @@
 #include "zrand.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -129,7 +130,7 @@ insertlistmiddle(LIST *lp, long index, VALUE *vp)
 		oldep = listelement(lp, index);
 	if (oldep == NULL) {
 		math_error("Index out of bounds for list insertion");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	ep = elemalloc();
 	copyvalue(vp, &ep->e_value);
@@ -207,7 +208,7 @@ removelistmiddle(LIST *lp, long index, VALUE *vp)
 		ep = listelement(lp, index);
 	if (ep == NULL) {
 		math_error("Index out of bounds for list deletion");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	*vp = ep->e_value;
 	ep->e_value.v_type = V_NULL;
@@ -297,14 +298,14 @@ listsearch(LIST *lp, VALUE *vp, long i, long j, ZVALUE *index)
 
 	if (i < 0 || j > lp->l_count) {
 		math_error("This should not happen in call to listsearch");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	ep = listelement(lp, i);
 	while (i < j) {
 		if (!ep) {
 			math_error("This should not happen in listsearch");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (acceptvalue(&ep->e_value, vp)) {
 			lp->l_cache = ep;
@@ -331,14 +332,14 @@ listrsearch(LIST *lp, VALUE *vp, long i, long j, ZVALUE *index)
 
 	if (i < 0 || j > lp->l_count) {
 		math_error("This should not happen in call to listrsearch");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	ep = listelement(lp, --j);
 	while (j >= i) {
 		if (!ep) {
 			math_error("This should not happen in listsearch");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (acceptvalue(&ep->e_value, vp)) {
 			lp->l_cache = ep;
@@ -771,7 +772,7 @@ listsort(LIST *lp)
 	if (k >= LONG_BITS) {
 		/* this should never happen */
 		math_error("impossible k overflow in listsort!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	lp->l_first = start->e_next;
 	lp->l_first->e_prev = NULL;
@@ -812,7 +813,7 @@ elemalloc(void)
 	ep = (LISTELEM *) malloc(sizeof(LISTELEM));
 	if (ep == NULL) {
 		math_error("Cannot allocate list element");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	ep->e_next = NULL;
 	ep->e_prev = NULL;
@@ -845,7 +846,7 @@ listalloc(void)
 	lp = (LIST *) malloc(sizeof(LIST));
 	if (lp == NULL) {
 		math_error("Cannot allocate list header");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	lp->l_first = NULL;
 	lp->l_last = NULL;

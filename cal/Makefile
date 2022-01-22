@@ -2,7 +2,7 @@
 #
 # cal - makefile for calc standard resource files
 #
-# Copyright (C) 1999-2006,2017,2021  Landon Curt Noll
+# Copyright (C) 1999-2006,2017,2021,2022  Landon Curt Noll
 #
 # SRC: cal/Makefile
 #
@@ -293,6 +293,10 @@ DISTLIST= ${CALC_FILES} ${MAKE_FILE}
 # These files are used to make (but not built) a calc .a link library
 #
 CALCLIBLIST=
+#
+# rules that are not also names of files
+#
+PHONY= all clobber distlist install
 
 all: ${CALC_FILES} ${MAKE_FILE} .all
 
@@ -301,6 +305,8 @@ all: ${CALC_FILES} ${MAKE_FILE} .all
 .all:
 	${RM} -f .all
 	${TOUCH} .all
+
+.PHONY: ${PHONY}
 
 ##
 #

@@ -1,7 +1,7 @@
 /*
  * c_pzasusb8 - print numerator as a string of USB8s
  *
- * Copyright (C) 1999-2004,2021  Ernest Bowen
+ * Copyright (C) 1999-2004,2021,2022  Ernest Bowen
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -36,6 +36,7 @@
 #include "have_unused.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -67,7 +68,7 @@ c_pzasusb8(char *UNUSED(name), int UNUSED(count), VALUE **vals)
 	result.v_type = V_NULL;
 	if (vals[0]->v_type != V_NUM) {
 		math_error("Non-real argument for pzasusb8");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*

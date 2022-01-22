@@ -1,7 +1,7 @@
 /*
  * zmul - faster than usual multiplying and squaring routines
  *
- * Copyright (C) 1999-2007,2021  David I. Bell
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -37,6 +37,7 @@
 #include "zmath.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -1072,7 +1073,7 @@ zalloctemp(LEN len)
 	hp = (HALF *) malloc((len+1) * sizeof(HALF));
 	if (hp == NULL) {
 		math_error("No memory for temp buffer");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	bufptr = hp;
 	buflen = len;

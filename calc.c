@@ -1,8 +1,7 @@
 /*
  * calc - arbitrary precision calculator
  *
- * Copyright (C) 1999-2013,2021  David I. Bell, Landon Curt Noll
- *				 and Ernest Bowen
+ * Copyright (C) 1999-2013,2021,2022  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -85,6 +84,7 @@
 #include "have_unused.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -786,7 +786,7 @@ intint(int UNUSED(arg))
 	(void) signal(SIGINT, intint);
 	if (inputwait || (++abortlevel >= ABORT_NOW)) {
 		calc_interrupt("\nABORT");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (abortlevel >= ABORT_MATH)
 		_math_abort_ = TRUE;

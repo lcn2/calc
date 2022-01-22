@@ -1,7 +1,7 @@
 /*
  * zrandom - Blum-Blum-Shub pseudo-random generator
  *
- * Copyright (C) 1999-2007,2021  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021,2022  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -1099,6 +1099,7 @@
 #include "have_unused.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -2342,7 +2343,7 @@ zsrandom1(CONST ZVALUE seed, BOOL need_ret)
 	 */
 	} else {
 		math_error("srandom seed must be 0 or >= 2^32");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -2409,12 +2410,12 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 		 */
 		if (ziszero(newn)) {
 			math_error("srandom newn == 0 reserved for future use");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		set = (HALF)z1tol(newn);
 		if (!zistiny(newn) || set > BLUM_PREGEN) {
 			math_error("srandom small newn must be [1,20]");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		zfree_random(blum.n);
 		zcopy(random_pregen[set-1].n, &blum.n);
@@ -2452,7 +2453,7 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 		 */
 		if (newn.v[0] % 4 != 1) {
 			math_error("srandom large newn must be 1 mod 4");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/*
@@ -2498,7 +2499,7 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 	 */
 	} else {
 		math_error("srandom newn must be [1,20] or >= 2^32");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -2559,11 +2560,11 @@ zsrandom4(CONST ZVALUE seed, CONST ZVALUE ip, CONST ZVALUE iq, long trials)
 	 */
 	if (!znextcand(ip, trials, _zero_, _three_, _four_, &p)) {
 		math_error("failed to find 1st Blum prime");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (!znextcand(iq, trials, _zero_, _three_, _four_, &q)) {
 		math_error("failed to find 2nd Blum prime");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -2777,12 +2778,12 @@ zrandom(long cnt, ZVALUE *res)
 			return;
 		} else {
 			math_error("negative zrandom bit count");
-			/*NOTREACHED*/
+			not_reached();
 		}
 #if LONG_BITS > 32
 	} else if (cnt > (1L<<31)) {
 		math_error("huge random count in internal zrandom function");
-		/*NOTREACHED*/
+		not_reached();
 #endif
 	}
 
@@ -2955,7 +2956,7 @@ zrandomrange(CONST ZVALUE low, CONST ZVALUE beyond, ZVALUE *res)
 	 */
 	if (zrel(low, beyond) >= 0) {
 		math_error("srand low range >= beyond range");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -3015,7 +3016,7 @@ irandom(long s)
 
 	if (s <= 0) {
 		math_error("Non-positive argument for irandom()");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (s == 1)
 		return 0;
@@ -3048,7 +3049,7 @@ randomcopy(CONST RANDOM *state)
 	ret = (RANDOM *)malloc(sizeof(RANDOM));
 	if (ret == NULL) {
 		math_error("can't allocate RANDOM state");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*

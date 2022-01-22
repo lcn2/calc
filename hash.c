@@ -1,7 +1,7 @@
 /*
  * hash - one-way hash routines
  *
- * Copyright (C) 1999-2007,2021  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021,2022  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -40,6 +40,7 @@
 #include "hash.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -94,7 +95,7 @@ hash_init(int type, HASH *state)
 		state = (HASH *)malloc(sizeof(HASH));
 		if (state == NULL) {
 			math_error("hash_init: cannot malloc HASH");
-			/*NOTREACHED*/
+			not_reached();
 		}
 	}
 
@@ -119,7 +120,7 @@ hash_init(int type, HASH *state)
 			if (state->chunksize > MAX_CHUNKSIZE) {
 				math_error(
 				  "internal error: MAX_CHUNKSIZE is too small");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			return state;
 		}
@@ -174,7 +175,7 @@ hash_copy(HASH *state)
 	hnew = (HASH *)malloc(sizeof(HASH));
 	if (hnew == NULL) {
 		math_error("hash_init: cannot malloc HASH");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -1048,7 +1049,7 @@ hash_value(int type, void *v, HASH *state)
 
 	default:
 		math_error("hashing an unknown value");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return state;
 }

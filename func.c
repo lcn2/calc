@@ -1,8 +1,7 @@
 /*
  * func - built-in functions implemented here
  *
- * Copyright (C) 1999-2007,2018,2021  David I. Bell, Landon Curt Noll
- *				      and Ernest Bowen
+ * Copyright (C) 1999-2007,2018,2021,2022  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -114,6 +113,7 @@
 #endif
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -290,7 +290,7 @@ f_prompt(VALUE *vp)
 	newcp = (char *) malloc(len + 1);
 	if (newcp == NULL) {
 		math_error("Cannot allocate string");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	strlcpy(newcp, cp, len+1);
 	result.v_str = makestring(newcp);
@@ -486,7 +486,7 @@ f_isrel(NUMBER *val1, NUMBER *val2)
 {
 	if (qisfrac(val1) || qisfrac(val2)) {
 		math_error("Non-integer for isrel");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return itoq((long) zrelprime(val1->num, val2->num));
 }
@@ -508,7 +508,7 @@ f_isprime(int count, NUMBER **vals)
 	if (count == 2) {
 		if (qisfrac(vals[1])) {
 			math_error("2nd isprime arg must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		err = vals[1];
 	} else {
@@ -521,7 +521,7 @@ f_isprime(int count, NUMBER **vals)
 			return qlink(err);
 		}
 		math_error("non-integral arg for builtin function isprime");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/* test the integer */
@@ -533,7 +533,7 @@ f_isprime(int count, NUMBER **vals)
 	/* error return */
 	if (!err) {
 		math_error("isprime argument is an odd value > 2^32");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return qlink(err);
 }
@@ -549,7 +549,7 @@ f_nprime(int count, NUMBER **vals)
 	if (count == 2) {
 		if (qisfrac(vals[1])) {
 			math_error("2nd nextprime arg must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		err = vals[1];
 	} else {
@@ -562,7 +562,7 @@ f_nprime(int count, NUMBER **vals)
 			return qlink(err);
 		}
 		math_error("non-integral arg 1 for builtin function nextprime");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/* test the integer */
@@ -577,7 +577,7 @@ f_nprime(int count, NUMBER **vals)
 	/* error return */
 	if (!err) {
 		math_error("nextprime arg 1 is >= 2^32");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return qlink(err);
 }
@@ -593,7 +593,7 @@ f_pprime(int count, NUMBER **vals)
 	if (count == 2) {
 		if (qisfrac(vals[1])) {
 			math_error("2nd prevprime arg must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		err = vals[1];
 	} else {
@@ -606,7 +606,7 @@ f_pprime(int count, NUMBER **vals)
 			return qlink(err);
 		}
 		math_error("non-integral arg 1 for builtin function prevprime");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/* test the integer */
@@ -621,10 +621,10 @@ f_pprime(int count, NUMBER **vals)
 	if (!err) {
 		if (prev_prime == 0) {
 			math_error("prevprime arg 1 is <= 2");
-			/*NOTREACHED*/
+			not_reached();
 		} else {
 			math_error("prevprime arg 1 is >= 2^32");
-			/*NOTREACHED*/
+			not_reached();
 		}
 	}
 	return qlink(err);
@@ -646,7 +646,7 @@ f_factor(int count, NUMBER **vals)
 	if (count == 3) {
 		if (qisfrac(vals[2])) {
 			math_error("3rd factor arg must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		err = vals[2];
 	} else {
@@ -658,7 +658,7 @@ f_factor(int count, NUMBER **vals)
 				return qlink(err);
 			}
 			math_error("non-integral arg 2 for builtin factor");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		limit = vals[1]->num;
 	} else {
@@ -672,7 +672,7 @@ f_factor(int count, NUMBER **vals)
 			return qlink(err);
 		}
 		math_error("non-integral arg 1 for builtin pfactor");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	n = vals[0]->num;
 
@@ -687,7 +687,7 @@ f_factor(int count, NUMBER **vals)
 			return qlink(err);
 		}
 		math_error("limit >= 2^32 for builtin factor");
-		/*NOTREACHED*/
+		not_reached();
 	} else if (res == 0) {
 		if (count < 2)
 			zfree(limit);
@@ -714,7 +714,7 @@ f_pix(int count, NUMBER **vals)
 	if (count == 2) {
 		if (qisfrac(vals[1])) {
 			math_error("2nd pix arg must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		err = vals[1];
 	} else {
@@ -727,7 +727,7 @@ f_pix(int count, NUMBER **vals)
 			return qlink(err);
 		}
 		math_error("non-integral arg 1 for builtin function pix");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/* determine the number of primes <= x */
@@ -739,7 +739,7 @@ f_pix(int count, NUMBER **vals)
 	/* error return */
 	if (!err) {
 		math_error("pix arg 1 is >= 2^32");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return qlink(err);
 }
@@ -765,14 +765,14 @@ f_prevcand(int count, NUMBER **vals)
 	case 5:
 		if (!qisint(vals[4])) {
 			math_error( "prevcand 5th arg must both be integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		zmodulus = vals[4]->num;
 		/*FALLTHRU*/
 	case 4:
 		if (!qisint(vals[3])) {
 			math_error( "prevcand 4th arg must both be integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		zresidue = vals[3]->num;
 		/*FALLTHRU*/
@@ -780,7 +780,7 @@ f_prevcand(int count, NUMBER **vals)
 		if (!qisint(vals[2])) {
 			math_error(
 		    "prevcand skip arg (3rd) must be an integer or omitted");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		zskip = vals[2]->num;
 		/*FALLTHRU*/
@@ -788,7 +788,7 @@ f_prevcand(int count, NUMBER **vals)
 		if (!qisint(vals[1])) {
 			math_error(
 		    "prevcand count arg (2nd) must be an integer or omitted");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		zcount = &vals[1]->num;
 		/*FALLTHRU*/
@@ -796,12 +796,13 @@ f_prevcand(int count, NUMBER **vals)
 		if (!qisint(vals[0])) {
 			math_error(
 		    "prevcand search arg (1st) must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		break;
 	default:
 		math_error("invalid number of args passed to prevcand");
-		/*NOTREACHED*/
+		not_reached();
+		break;
 	}
 
 	if (zcount == NULL) {
@@ -809,7 +810,7 @@ f_prevcand(int count, NUMBER **vals)
 	} else {
 		if (zge24b(*zcount)) {
 			math_error("prevcand count arg (2nd) must be < 2^24");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		count = ztoi(*zcount);
 	}
@@ -847,7 +848,7 @@ f_nextcand(int count, NUMBER **vals)
 		if (!qisint(vals[4])) {
 			math_error(
 		    "nextcand 5th args must be integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		zmodulus = vals[4]->num;
 		/*FALLTHRU*/
@@ -855,7 +856,7 @@ f_nextcand(int count, NUMBER **vals)
 		if (!qisint(vals[3])) {
 			math_error(
 		    "nextcand 5th args must be integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		zresidue = vals[3]->num;
 		/*FALLTHRU*/
@@ -863,7 +864,7 @@ f_nextcand(int count, NUMBER **vals)
 		if (!qisint(vals[2])) {
 			math_error(
 		    "nextcand skip arg (3rd) must be an integer or omitted");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		zskip = vals[2]->num;
 		/*FALLTHRU*/
@@ -871,7 +872,7 @@ f_nextcand(int count, NUMBER **vals)
 		if (!qisint(vals[1])) {
 			math_error(
 		    "nextcand count arg (2nd) must be an integer or omitted");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		zcount = &vals[1]->num;
 		/*FALLTHRU*/
@@ -879,12 +880,12 @@ f_nextcand(int count, NUMBER **vals)
 		if (!qisint(vals[0])) {
 			math_error(
 		    "nextcand search arg (1st) must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		break;
 	default:
 		math_error("invalid number of args passed to nextcand");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -895,7 +896,7 @@ f_nextcand(int count, NUMBER **vals)
 	} else {
 		if (zge24b(*zcount)) {
 			math_error("prevcand count arg (2nd) must be < 2^24");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		count = ztoi(*zcount);
 	}
@@ -935,11 +936,11 @@ f_rand(int count, NUMBER **vals)
 	case 1:			/* rand(limit) */
 		if (!qisint(vals[0])) {
 			math_error("rand limit must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (zislezero(vals[0]->num)) {
 			math_error("rand limit must > 0");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		ans = qalloc();
 		zrandrange(_zero_, vals[0]->num, &ans->num);
@@ -949,7 +950,7 @@ f_rand(int count, NUMBER **vals)
 		/* firewall */
 		if (!qisint(vals[0]) || !qisint(vals[1])) {
 			math_error("rand range must be integers");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		ans = qalloc();
 		zrandrange(vals[0]->num, vals[1]->num, &ans->num);
@@ -957,7 +958,7 @@ f_rand(int count, NUMBER **vals)
 
 	default:
 		math_error("invalid number of args passed to rand");
-		/*NOTREACHED*/
+		not_reached();
 		return NULL;
 	}
 
@@ -986,11 +987,11 @@ f_randbit(int count, NUMBER **vals)
 	 */
 	if (!qisint(vals[0])) {
 		math_error("rand bit count must be an integer");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zge31b(vals[0]->num)) {
 		math_error("huge rand bit count");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -1037,7 +1038,7 @@ f_srand(int count, VALUE **vals)
 			if (!qisint(vals[0]->v_num)) {
 				math_error(
 				  "srand number seed must be an integer");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			result.v_rand = zsrand(&vals[0]->v_num->num, NULL);
 			break;
@@ -1054,14 +1055,14 @@ f_srand(int count, VALUE **vals)
 
 		default:
 			math_error("illegal type of arg passed to srand()");
-			/*NOTREACHED*/
+			not_reached();
 			break;
 		}
 		break;
 
 	default:
 		math_error("bad arg count to srand()");
-		/*NOTREACHED*/
+		not_reached();
 		break;
 	}
 
@@ -1086,11 +1087,11 @@ f_random(int count, NUMBER **vals)
 	case 1:			/* random(limit) */
 		if (!qisint(vals[0])) {
 			math_error("random limit must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (zislezero(vals[0]->num)) {
 			math_error("random limit must > 0");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		ans = qalloc();
 		zrandomrange(_zero_, vals[0]->num, &ans->num);
@@ -1100,7 +1101,7 @@ f_random(int count, NUMBER **vals)
 		/* firewall */
 		if (!qisint(vals[0]) || !qisint(vals[1])) {
 			math_error("random range must be integers");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		ans = qalloc();
 		zrandomrange(vals[0]->num, vals[1]->num, &ans->num);
@@ -1108,7 +1109,7 @@ f_random(int count, NUMBER **vals)
 
 	default:
 		math_error("invalid number of args passed to random");
-		/*NOTREACHED*/
+		not_reached();
 		return NULL;
 	}
 
@@ -1140,11 +1141,11 @@ f_randombit(int count, NUMBER **vals)
 	 */
 	if (!qisint(vals[0])) {
 		math_error("random bit count must be an integer");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zge31b(vals[0]->num)) {
 		math_error("huge random bit count");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -1191,7 +1192,7 @@ f_srandom(int count, VALUE **vals)
 			if (!qisint(vals[0]->v_num)) {
 				math_error(
 				  "srandom number seed must be an integer");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			result.v_random = zsrandom1(vals[0]->v_num->num, TRUE);
 			break;
@@ -1203,7 +1204,7 @@ f_srandom(int count, VALUE **vals)
 
 		default:
 			math_error("illegal type of arg passed to srandom()");
-			/*NOTREACHED*/
+			not_reached();
 			break;
 		}
 		break;
@@ -1211,11 +1212,11 @@ f_srandom(int count, VALUE **vals)
 	case 2:		/* srandom(seed, newn) */
 		if (vals[0]->v_type != V_NUM || !qisint(vals[0]->v_num)) {
 			math_error("srandom seed must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (vals[1]->v_type != V_NUM || !qisint(vals[1]->v_num)) {
 			math_error("srandom Blum modulus must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		result.v_random = zsrandom2(vals[0]->v_num->num,
 					    vals[1]->v_num->num);
@@ -1224,23 +1225,23 @@ f_srandom(int count, VALUE **vals)
 	case 4:		/* srandom(seed, ip, iq, trials) */
 		if (vals[0]->v_type != V_NUM || !qisint(vals[0]->v_num)) {
 			math_error("srandom seed must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (vals[1]->v_type != V_NUM || !qisint(vals[1]->v_num)) {
 			math_error("srandom 2nd arg must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (vals[2]->v_type != V_NUM || !qisint(vals[2]->v_num)) {
 			math_error("srandom 3rd arg must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (vals[3]->v_type != V_NUM || !qisint(vals[3]->v_num)) {
 			math_error("srandom 4th arg must be an integer");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		if (zge24b(vals[3]->v_num->num)) {
 			math_error("srandom trials count is excessive");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		result.v_random = zsrandom4(vals[0]->v_num->num,
 					    vals[1]->v_num->num,
@@ -1250,7 +1251,7 @@ f_srandom(int count, VALUE **vals)
 
 	default:
 		math_error("bad arg count to srandom()");
-		/*NOTREACHED*/
+		not_reached();
 		break;
 	}
 
@@ -1856,7 +1857,7 @@ f_fact(VALUE *vp)
 	}
 	if (vp->v_type != V_NUM) {
 		math_error("Non-real argument for fact()");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	res.v_num = qfact(vp->v_num);
 	return res;
@@ -1913,19 +1914,19 @@ f_hnrmod(NUMBER *val1, NUMBER *val2, NUMBER *val3, NUMBER *val4)
 	 */
 	if (qisfrac(val1)) {
 		math_error("1st arg of hnrmod (v) must be an integer");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisfrac(val2) || qisneg(val2) || qiszero(val2)) {
 		math_error("2nd arg of hnrmod (h) must be an integer > 0");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisfrac(val3) || qisneg(val3) || qiszero(val3)) {
 		math_error("3rd arg of hnrmod (n) must be an integer > 0");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisfrac(val4) || !zisabsleone(val4->num)) {
 		math_error("4th arg of hnrmod (r) must be -1, 0 or 1");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -5686,7 +5687,7 @@ f_strcat(int count, VALUE **vals)
 	c = (char *) malloc(len + 1) ;
 	if (c == NULL) {
 		math_error("No memory for strcat");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	result.v_str = stralloc();
 	result.v_str->s_str = c;
@@ -5774,7 +5775,7 @@ f_substr(VALUE *v1, VALUE *v2, VALUE *v3)
 	ccp = (char *) malloc(len + 1);
 	if (ccp == NULL) {
 		math_error("No memory for substr");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	result.v_str = stralloc();
 	result.v_str->s_len = len;
@@ -7144,7 +7145,7 @@ f_errno(int count, VALUE **vals)
 		if (vp->v_type != V_NUM || qisfrac(vp->v_num) ||
 		qisneg(vp->v_num) || zge16b(vp->v_num->num)) {
 			math_error("errno argument out of range");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		newerr = (int) ztoi(vp->v_num->num);
 	}
@@ -7174,7 +7175,7 @@ f_errcount(int count, VALUE **vals)
 		if (vp->v_type != V_NUM || qisfrac(vp->v_num) ||
 		qisneg(vp->v_num) || zge31b(vp->v_num->num)) {
 			math_error("errcount argument out of range");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		newcount = (int) ztoi(vp->v_num->num);
 	}
@@ -7395,7 +7396,7 @@ f_strerror(int count, VALUE **vals)
 		cp = (char *) malloc(snprintf_len+1);
 		if (cp == NULL) {
 			math_error("Out of memory for strerror");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		snprintf(cp, snprintf_len, "Unknown error %ld", i);
 		cp[snprintf_len] = '\0';	/* paranoia */
@@ -8297,7 +8298,7 @@ f_reverse(VALUE *val)
 			break;
 		default:
 			math_error("Bad argument type for reverse");
-			/*NOTREACHED*/
+			not_reached();
 	}
 	return res;
 }
@@ -8321,7 +8322,7 @@ f_sort(VALUE *val)
 			break;
 		default:
 			math_error("Bad argument type for sort");
-			/*NOTREACHED*/
+			not_reached();
 	}
 	return res;
 }
@@ -8562,12 +8563,12 @@ f_forall(VALUE *v1, VALUE *v2)
 
 	if (v2->v_type != V_STR) {
 		math_error("Non-string second argument for forall");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	fp = findfunc(adduserfunc(v2->v_str->s_str));
 	if (!fp) {
 		math_error("Undefined function for forall");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	switch (v1->v_type) {
 		case V_LIST:
@@ -8588,7 +8589,7 @@ f_forall(VALUE *v1, VALUE *v2)
 			break;
 		default:
 		    math_error("Non list or matrix first argument for forall");
-		    /*NOTREACHED*/
+		    not_reached();
 	}
 	return res;
 }
@@ -8608,16 +8609,16 @@ f_select(VALUE *v1, VALUE *v2)
 
 	if (v1->v_type != V_LIST) {
 		math_error("Non-list first argument for select");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (v2->v_type != V_STR) {
 		math_error("Non-string second argument for select");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	fp = findfunc(adduserfunc(v2->v_str->s_str));
 	if (!fp) {
 		math_error("Undefined function for select");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	lp = listalloc();
 	for (ep = v1->v_list->l_first; ep; ep = ep->e_next) {
@@ -8648,12 +8649,12 @@ f_count(VALUE *v1, VALUE *v2)
 
 	if (v2->v_type != V_STR) {
 		math_error("Non-string second argument for select");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	fp = findfunc(adduserfunc(v2->v_str->s_str));
 	if (!fp) {
 		math_error("Undefined function for select");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	switch (v1->v_type) {
 		case V_LIST:
@@ -8678,7 +8679,8 @@ f_count(VALUE *v1, VALUE *v2)
 			break;
 		default:
 			math_error("Bad argument type for count");
-			/*NOTREACHED*/
+			not_reached();
+			break;
 	}
 	res.v_num = itoq(n);
 	return res;
@@ -8698,11 +8700,11 @@ f_makelist(VALUE *v1)
 
 	if (v1->v_type != V_NUM || qisfrac(v1->v_num) || qisneg(v1->v_num)) {
 		math_error("Bad argument for makelist");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zge31b(v1->v_num->num)) {
 		math_error("makelist count >= 2^31");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	n = qtoi(v1->v_num);
 	lp = listalloc();
@@ -8734,7 +8736,7 @@ f_randperm(VALUE *val)
 			break;
 		default:
 			math_error("Bad argument type for randperm");
-			/*NOTREACHED*/
+			not_reached();
 	}
 	return res;
 }
@@ -8755,7 +8757,7 @@ f_cmdbuf(void)
 	newcp = (char *)malloc(cmdbuf_len+1);
 	if (newcp == NULL) {
 		math_error("Cannot allocate string in cmdbuf");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	strlcpy(newcp, cmdbuf, cmdbuf_len+1);
 	result.v_str = makestring(newcp);
@@ -8774,7 +8776,7 @@ f_getenv(VALUE *v1)
 
 	if (v1->v_type != V_STR) {
 		math_error("Non-string argument for getenv");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	result.v_type = V_STR;
 	str = getenv(v1->v_str->s_str);
@@ -8930,7 +8932,7 @@ f_putenv(int count, VALUE **vals)
 		/* firewall */
 		if (vals[0]->v_type != V_STR || vals[1]->v_type != V_STR) {
 			math_error("Non-string argument for putenv");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/* convert putenv("foo","bar") into putenv("foo=bar") */
@@ -8939,7 +8941,7 @@ f_putenv(int count, VALUE **vals)
 		putenv_str = (char *)malloc(snprintf_len+1);
 		if (putenv_str == NULL) {
 			math_error("Cannot allocate string in putenv");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		/*
 		 * The next statement could be:
@@ -8969,13 +8971,13 @@ f_putenv(int count, VALUE **vals)
 		/* firewall */
 		if (vals[0]->v_type != V_STR) {
 			math_error("Non-string argument for putenv");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/* putenv(arg) must be of the form "foo=bar" */
 		if ((char *)strchr(vals[0]->v_str->s_str, '=') == NULL) {
 			math_error("putenv single arg string missing =");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/*
@@ -8985,7 +8987,7 @@ f_putenv(int count, VALUE **vals)
 		putenv_str = (char *)malloc(vals[0]->v_str->s_len + 1);
 		if (putenv_str == NULL) {
 			math_error("Cannot allocate string in putenv");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		strlcpy(putenv_str, vals[0]->v_str->s_str,
 				   vals[0]->v_str->s_len+1);
@@ -9010,7 +9012,7 @@ f_strpos(VALUE *haystack, VALUE *needle)
 
 	if (haystack->v_type != V_STR || needle->v_type != V_STR) {
 		math_error("Non-string argument for index");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	cpointer = strstr(haystack->v_str->s_str,
 		needle->v_str->s_str);
@@ -9034,11 +9036,11 @@ f_system(VALUE *vp)
 
 	if (vp->v_type != V_STR) {
 		math_error("Non-string argument for system");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (!allow_exec) {
 		math_error("execution disallowed by -m");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (conf->calc_debug & CALCDBG_SYSTEM) {
 		printf("%s\n", vp->v_str->s_str);
@@ -9147,7 +9149,7 @@ f_base(int count, NUMBER **vals)
 		break;
 	default:
 		math_error("Unsupported base");
-		/*NOTREACHED*/
+		not_reached();
 		break;
 	}
 
@@ -9204,7 +9206,7 @@ f_base2(int count, NUMBER **vals)
 		break;
 	default:
 		math_error("Unsupported base");
-		/*NOTREACHED*/
+		not_reached();
 		break;
 	}
 
@@ -9333,7 +9335,7 @@ f_custom(int count, VALUE **vals)
 		/* firewall */
 		if (vals[0]->v_type != V_STR) {
 			math_error("custom: 1st arg not a string name");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/* perform the custom function */
@@ -9776,7 +9778,7 @@ f_argv(int count, VALUE **vals)
 			qisneg(vals[0]->v_num) || zge31b(vals[0]->v_num->num)) {
 
 			math_error("argv argument must be a integer [0,2^31)");
-			/*NOTREACHED*/
+			not_reached();
 		}
 
 		/* determine the arg value of the argv() function */
@@ -10609,18 +10611,18 @@ builtinfunc(long index, int argcount, VALUE *stck)
 	if ((unsigned long)index >=
 	    (sizeof(builtins) / sizeof(builtins[0])) - 1) {
 		math_error("Bad built-in function index");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	bp = &builtins[index];
 	if (argcount < bp->b_minargs) {
 		math_error("Too few arguments for builtin function \"%s\"",
 		    bp->b_name);
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if ((argcount > bp->b_maxargs) || (argcount > IN)) {
 		math_error("Too many arguments for builtin function \"%s\"",
 		    bp->b_name);
-		/*NOTREACHED*/
+		not_reached();
 	}
 	/*
 	 * If an address was passed, then point at the real variable,
@@ -10662,7 +10664,7 @@ builtinfunc(long index, int argcount, VALUE *stck)
 		if ((*vpp)->v_type != V_NUM) {
 			math_error("Non-real argument for builtin function %s",
 				   bp->b_name);
-			/*NOTREACHED*/
+			not_reached();
 		}
 		numargs[i] = (*vpp)->v_num;
 		vpp++;
@@ -10696,7 +10698,7 @@ builtinfunc(long index, int argcount, VALUE *stck)
 			break;
 		default:
 			math_error("Bad builtin function call");
-			/*NOTREACHED*/
+			not_reached();
 	}
 	return result;
 }
@@ -10745,7 +10747,7 @@ builtincheck(long index, int count)
 	if ((unsigned long)index >=
 	    (sizeof(builtins) / sizeof(builtins[0])) - 1) {
 		math_error("Unknown built in index");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	bp = &builtins[index];
 	if (count < bp->b_minargs)
@@ -10813,11 +10815,11 @@ malloced_putenv(char *str)
 	 */
 	if (str == NULL) {
 		math_error("malloced_putenv given a NULL pointer!!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (str[0] == '=') {
 		math_error("malloced_putenv = is first character in string!!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -10826,7 +10828,7 @@ malloced_putenv(char *str)
 	value = strchr(str, '=');
 	if (value == NULL) {
 		math_error("malloced_putenv = not found in string!!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	++value;
 
@@ -10876,7 +10878,7 @@ malloced_putenv(char *str)
 						sizeof(struct env_pool));
 		if (new == NULL) {
 			math_error("malloced_putenv malloc failed");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		e_pool = new;
 		env_pool_max = ENV_POOL_CHUNK;
@@ -10892,7 +10894,7 @@ malloced_putenv(char *str)
 					     sizeof(struct env_pool));
 		if (new == NULL) {
 			math_error("malloced_putenv realloc failed");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		e_pool = new;
 		for (i=env_pool_max; i <= env_pool_max + ENV_POOL_CHUNK; ++i) {
@@ -10919,7 +10921,7 @@ malloced_putenv(char *str)
 	}
 	if (i >= env_pool_max) {
 		math_error("malloced_putenv missed unused entry!!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*

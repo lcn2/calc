@@ -1,7 +1,7 @@
 /*
  * zio - scanf and printf routines for arbitrary precision integers
  *
- * Copyright (C) 1999-2007,2021  David I. Bell
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -31,6 +31,7 @@
 #include "args.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -105,7 +106,7 @@ math_chr(int ch)
 		cp = (char *)realloc(outbuf, outbufsize + OUTBUFSIZE + 1);
 		if (cp == NULL) {
 			math_error("Cannot realloc output string");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		outbuf = cp;
 		outbufsize += OUTBUFSIZE;
@@ -133,7 +134,7 @@ math_str(char *str)
 		cp = (char *)realloc(outbuf, outbufsize + len + OUTBUFSIZE + 1);
 		if (cp == NULL) {
 			math_error("Cannot realloc output string");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		outbuf = cp;
 		outbufsize += (len + OUTBUFSIZE);
@@ -211,7 +212,7 @@ math_divertio(void)
 	sp = (IOSTATE *) malloc(sizeof(IOSTATE));
 	if (sp == NULL) {
 		math_error("No memory for diverting output");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	sp->oldiostates = oldiostates;
 	sp->outdigits = conf->outdigits;
@@ -228,7 +229,7 @@ math_divertio(void)
 	outbuf = (char *) malloc(OUTBUFSIZE + 1);
 	if (outbuf == NULL) {
 		math_error("Cannot allocate divert string");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	outbufsize = OUTBUFSIZE;
 	outputisstring = TRUE;
@@ -250,7 +251,7 @@ math_getdivertedio(void)
 	sp = oldiostates;
 	if (sp == NULL) {
 		math_error("No diverted state to restore");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	cp = outbuf;
 	cp[outbufused] = '\0';
@@ -310,7 +311,7 @@ math_setmode(int newmode)
 
 	if ((newmode <= MODE_DEFAULT) || (newmode > MODE_MAX)) {
 		math_error("Setting illegal output mode");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	oldmode = conf->outmode;
 	conf->outmode = newmode;
@@ -330,7 +331,7 @@ math_setmode2(int newmode)
 	if (newmode != MODE2_OFF && ((newmode <= MODE_DEFAULT) ||
 	    (newmode > MODE_MAX))) {
 		math_error("Setting illegal secondary output mode");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	oldmode = conf->outmode2;
 	conf->outmode2 = newmode;
@@ -349,7 +350,7 @@ math_setdigits(LEN newdigits)
 
 	if (newdigits < 0) {
 		math_error("Setting illegal number of digits");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	olddigits = conf->outdigits;
 	conf->outdigits = newdigits;
@@ -630,7 +631,7 @@ zprintval(ZVALUE z, long decimals, long width)
 					 &_tenpowers_[depth]);
 			} else {
 				math_error("cannot compute 10^2^(TEN_MAX+1)");
-				/*NOTREACHED*/
+				not_reached();
 			}
 		}
 	}

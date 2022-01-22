@@ -1,7 +1,7 @@
 /*
  * qmod - modular arithmetic routines for normal numbers and REDC numbers
  *
- * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -31,6 +31,7 @@
 #include "config.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -371,7 +372,7 @@ qfindredc(NUMBER *q)
 	 */
 	if (qisfrac(q) || qisneg(q)) {
 		math_error("REDC modulus must be positive odd integer");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	bestrcp = NULL;

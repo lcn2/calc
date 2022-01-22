@@ -6,7 +6,7 @@
  *
  *	http://www.isthe.com/chongo/tech/comp/fnv/index.html
  *
- * Copyright (C) 1999-2007,2014,2021  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2021,2022  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -40,6 +40,7 @@
 #include "zrandom.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -231,7 +232,7 @@ hashvalue(VALUE *vp, QCKHASH val)
 		return blk_hash(vp->v_nblock->blk, val);
 	default:
 		math_error("Hashing unknown value");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return (QCKHASH)0;
 }

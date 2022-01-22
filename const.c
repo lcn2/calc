@@ -1,7 +1,7 @@
 /*
  * const - constant number storage module
  *
- * Copyright (C) 1999-2007,2021  David I. Bell
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -29,6 +29,7 @@
 #include "qmath.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -47,7 +48,7 @@ initconstants(void)
 	consttable = (NUMBER **) calloc(sizeof(NUMBER *), CONSTALLOCSIZE);
 	if (consttable == NULL) {
 		math_error("Unable to allocate constant table");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	for (i = 0; initnumbs[i] != NULL; i++) {
 		consttable[i] = initnumbs[i];
@@ -108,7 +109,7 @@ addqconstant(NUMBER *q)
 			sizeof(NUMBER *) * (constcount + CONSTALLOCSIZE));
 			if (tp == NULL) {
 				math_error("Unable to reallocate const table");
-				/*NOTREACHED*/
+				not_reached();
 			}
 			consttable = tp;
 			constavail = CONSTALLOCSIZE;
@@ -179,11 +180,11 @@ constvalue(unsigned long index)
 {
 	if (index >= constcount) {
 		math_error("Bad index value for constvalue");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (consttable[index]->links == 0) {
 		math_error("Constvalue has been freed!!!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return consttable[index];
 }
@@ -196,12 +197,12 @@ freeconstant(unsigned long index)
 
 	if (index >= constcount) {
 		math_error("Bad index value for freeconst");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	q = consttable[index];
 	if (q->links == 0) {
 		math_error("Attempting to free freed const location");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	qfree(q);
 	if (index == constcount - 1) {

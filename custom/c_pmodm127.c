@@ -1,7 +1,7 @@
 /*
  * c_pmodm127 - calculate q mod 2^(2^127-1)
  *
- * Copyright (C) 2004-2007,2021  Landon Curt Noll
+ * Copyright (C) 2004-2007,2021,2022  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -36,6 +36,7 @@
 #include "have_unused.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -88,15 +89,15 @@ c_pmodm127(char *UNUSED(name), int UNUSED(count), VALUE **vals)
 	result.v_type = V_NULL;
 	if (vals[0]->v_type != V_NUM) {
 		math_error("Non-numeric argument for pmodm127");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisfrac(vals[0]->v_num)) {
 		math_error("Non-integer argument for pmodm127");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisneg(vals[0]->v_num) || qiszero(vals[0]->v_num)) {
 		math_error("argument for pmodm127 <= 0");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -250,7 +251,7 @@ zmod5_or_zmod(ZVALUE *zp)
 		subcount++;
 		if (subcount > 2) {
 			math_error("Too many subtractions in zmod5_or_zmod");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		j = modlen;
 		a = zp->v;

@@ -1,7 +1,7 @@
 /*
  * zmath - extended precision integral arithmetic primitives
  *
- * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -31,6 +31,7 @@
 #include "zmath.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -233,12 +234,12 @@ alloc(LEN len)
 
 	if (_math_abort_) {
 		math_error("Calculation aborted");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	hp = (HALF *) malloc((len+1) * sizeof(HALF));
 	if (hp == 0) {
 		math_error("Not enough memory");
-		/*NOTREACHED*/
+		not_reached();
 	}
 #ifdef ALLOCTEST
 	++nalloc;
@@ -725,7 +726,7 @@ zdiv(ZVALUE z1, ZVALUE z2, ZVALUE *quo, ZVALUE *rem, long rnd)
 
 	if (ziszero(z2)) {
 		math_error("Division by zero in zdiv");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	m = z1.len;
 	n = z2.len;
@@ -998,7 +999,7 @@ zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	}
 	if (ziszero(z2)) {
 		math_error("Division by zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zisone(z2)) {
 		zcopy(z1, res);
@@ -1006,7 +1007,7 @@ zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	}
 	if (zhighbit(z1) < zhighbit(z2)) {
 		math_error("Bad call to zequo");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	B = z2.v;
 	o = 0;
@@ -1124,7 +1125,7 @@ zdivi(ZVALUE z, long n, ZVALUE *res)
 
 	if (n == 0) {
 		math_error("Division by zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (ziszero(z)) {
 		*res = _zero_;
@@ -1195,11 +1196,11 @@ zmodi(ZVALUE z, long n)
 
 	if (n == 0) {
 		math_error("Division by zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (n < 0) {
 		math_error("Non-positive modulus");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (ziszero(z) || (n == 1))
 		return 0;

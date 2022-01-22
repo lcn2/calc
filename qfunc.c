@@ -1,7 +1,7 @@
 /*
  * qfunc - extended precision rational arithmetic non-primitive functions
  *
- * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -31,6 +31,7 @@
 #include "prime.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -56,7 +57,7 @@ setepsilon(NUMBER *q)
 
 	if (qisneg(q) || qiszero(q)) {
 		math_error("Epsilon value must be greater than zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	old = conf->epsilon;
 	conf->epsilonprec = qprecision(q);
@@ -82,7 +83,7 @@ qminv(NUMBER *q1, NUMBER *q2)
 
 	if (qisfrac(q1) || qisfrac(q2)) {
 		math_error("Non-integers for minv");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q2)) {
 		if (qisunit(q1))
@@ -135,11 +136,11 @@ qpowermod(NUMBER *q1, NUMBER *q2, NUMBER *q3)
 
 	if (qisfrac(q1) || qisfrac(q2) || qisfrac(q3)) {
 		math_error("Non-integers for pmod");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisneg(q2)) {
 		math_error("Negative power for pmod");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q3))
 		return qpowi(q1, q2);
@@ -191,7 +192,7 @@ qpowi(NUMBER *q1, NUMBER *q2)
 
 	if (qisfrac(q2)) {
 		math_error("Raising number to fractional power");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	num = q1->num;
 	zden = q1->den;
@@ -206,7 +207,7 @@ qpowi(NUMBER *q1, NUMBER *q2)
 	if (ziszero(num) && !ziszero(z2)) {	/* zero raised to a power */
 		if (invert) {
 			math_error("Zero raised to negative power");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		return qlink(&_qzero_);
 	}
@@ -251,7 +252,7 @@ qhypot(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for hypot");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q1))
 		return qqabs(q2);
@@ -281,7 +282,7 @@ qlegtoleg(NUMBER *q, NUMBER *epsilon, BOOL wantneg)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for legtoleg");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisunit(q))
 		return qlink(&_qzero_);
@@ -294,7 +295,7 @@ qlegtoleg(NUMBER *q, NUMBER *epsilon, BOOL wantneg)
 	num.sign = 0;
 	if (zrel(num, q->den) >= 0) {
 		math_error("Leg too large in legtoleg");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	qtmp1 = qsquare(q);
 	qtmp2 = qsub(&_qone_, qtmp1);
@@ -329,14 +330,14 @@ qsqrt(NUMBER *q1, NUMBER *epsilon, long rnd)
 
 	if (qisneg(q1)) {
 		math_error("Square root of negative number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q1))
 		return qlink(&_qzero_);
 	sign = (rnd & 64) != 0;
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon for qsqrt");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	etemp = *epsilon;
@@ -435,7 +436,7 @@ qisqrt(NUMBER *q)
 
 	if (qisneg(q)) {
 		math_error("Square root of negative number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q))
 		return qlink(&_qzero_);
@@ -477,7 +478,7 @@ qiroot(NUMBER *q1, NUMBER *q2)
 
 	if (qisneg(q2) || qiszero(q2) || qisfrac(q2)) {
 		math_error("Taking number to bad root value");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q1))
 		return qlink(&_qzero_);
@@ -514,7 +515,7 @@ qilog2(NUMBER *q)
 
 	if (qiszero(q)) {
 		math_error("Zero argument for ilog2");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisint(q))
 		return zhighbit(q->num);
@@ -554,7 +555,7 @@ qilog10(NUMBER *q)
 
 	if (qiszero(q)) {
 		math_error("Zero argument for ilog10");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	tmp1 = q->num;
 	tmp1.sign = 0;
@@ -810,7 +811,7 @@ qfact(NUMBER *q)
 
 	if (qisfrac(q)) {
 		math_error("Non-integral factorial");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q) || zisone(q->num))
 		return qlink(&_qone_);
@@ -831,7 +832,7 @@ qpfact(NUMBER *q)
 
 	if (qisfrac(q)) {
 		math_error("Non-integral factorial");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	r = qalloc();
 	zpfact(q->num, &r->num);
@@ -850,7 +851,7 @@ qlcmfact(NUMBER *q)
 
 	if (qisfrac(q)) {
 		math_error("Non-integral lcmfact");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	r = qalloc();
 	zlcmfact(q->num, &r->num);
@@ -870,7 +871,7 @@ qperm(NUMBER *q1, NUMBER *q2)
 
 	if (qisfrac(q2)) {
 		math_error("Non-integral second arg for permutation");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q2))
 		return qlink(&_qone_);
@@ -887,7 +888,7 @@ qperm(NUMBER *q1, NUMBER *q2)
 	}
 	if (zge31b(q2->num)) {
 		math_error("Too large arg2 for permutation");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	i = qtoi(q2);
 	if (i > 0) {
@@ -934,7 +935,7 @@ qcomb(NUMBER *q, NUMBER *n)
 
 	if (!qisint(n) || qisneg(n)) {
 		math_error("Bad second arg in call to qcomb!");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisint(q)) {
 		switch (zcomb(q->num, n->num, &z)) {
@@ -1181,7 +1182,7 @@ qjacobi(NUMBER *q1, NUMBER *q2)
 {
 	if (qisfrac(q1) || qisfrac(q2)) {
 		math_error("Non-integral arguments for jacobi");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return itoq((long) zjacobi(q1->num, q2->num));
 }
@@ -1197,7 +1198,7 @@ qfib(NUMBER *q)
 
 	if (qisfrac(q)) {
 		math_error("Non-integral Fibonacci number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	r = qalloc();
 	zfib(q->num, &r->num);
@@ -1216,7 +1217,7 @@ qtrunc(NUMBER *q1, NUMBER *q2)
 
 	if (qisfrac(q2) || !zistiny(q2->num)) {
 		math_error("Bad number of places for qtrunc");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	places = qtoi(q2);
 	e = qtenpow(-places);
@@ -1240,7 +1241,7 @@ qbtrunc(NUMBER *q1, NUMBER *q2)
 
 	if (qisfrac(q2) || !zistiny(q2->num)) {
 		math_error("Bad number of places for qtrunc");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	places = qtoi(q2);
 	e = qbitvalue(-places);
@@ -1678,7 +1679,7 @@ qfacrem(NUMBER *q1, NUMBER *q2)
 
 	if (qisfrac(q1) || qisfrac(q2)) {
 		math_error("Non-integers for factor removal");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q2))
 		return qqabs(q1);
@@ -1711,7 +1712,7 @@ qgcdrem(NUMBER *q1, NUMBER *q2)
 
 	if (qisfrac(q1) || qisfrac(q2)) {
 		math_error("Non-integers for gcdrem");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q2))
 		return qlink(&_qone_);
@@ -1745,12 +1746,12 @@ qlowfactor(NUMBER *q1, NUMBER *q2)
 
 	if (qisfrac(q1) || qisfrac(q2)) {
 		math_error("Non-integers for lowfactor");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	count = ztoi(q2->num);
 	if (count > PIX_32B) {
 		math_error("lowfactor count is too large");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return utoq(zlowfactor(q1->num, count));
 }
@@ -1840,11 +1841,11 @@ qprimetest(NUMBER *q1, NUMBER *q2, NUMBER *q3)
 {
 	if (qisfrac(q1) || qisfrac(q2) || qisfrac(q3)) {
 		math_error("Bad arguments for ptest");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zge24b(q2->num)) {
 		math_error("ptest count >= 2^24");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return zprimetest(q1->num, ztoi(q2->num), q3->num);
 }

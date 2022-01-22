@@ -1,7 +1,7 @@
 /*
  * comfunc - extended precision complex arithmetic non-primitive routines
  *
- * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -30,6 +30,7 @@
 #include "cmath.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -60,16 +61,16 @@ c_powi(COMPLEX *c, NUMBER *q)
 
 	if (qisfrac(q)) {
 		math_error("Raising number to non-integral power");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (zge31b(q->num)) {
 		math_error("Raising number to very large power");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	power = ztolong(q->num);
 	if (ciszero(c) && (power == 0)) {
 		math_error("Raising zero to zeroth power");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	sign = 1;
 	if (qisneg(q))
@@ -381,7 +382,7 @@ c_root(COMPLEX *c, NUMBER *q, NUMBER *epsilon)
 
 	if (qisneg(q) || qiszero(q) || qisfrac(q)) {
 		math_error("Taking bad root of complex number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (cisone(c) || qisone(q))
 		return clink(c);
@@ -446,7 +447,7 @@ c_exp(COMPLEX *c, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon for cexp");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (cisreal(c)) {
 		tmp1 = qexp(c->real, epsilon);
@@ -502,7 +503,7 @@ c_ln(COMPLEX *c, NUMBER *epsilon)
 
 	if (ciszero(c)) {
 		math_error("logarithm of zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (cisone(c))
 		return clink(&_czero_);
@@ -599,7 +600,7 @@ c_cos(COMPLEX *c, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon for ccos");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	n = qilog2(epsilon);
 	ctmp1 = comalloc();
@@ -649,7 +650,7 @@ c_sin(COMPLEX *c, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon for csin");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (ciszero(c))
 		return clink(&_czero_);
@@ -1072,7 +1073,7 @@ c_polar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon for cpolar");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q1))
 		return clink(&_czero_);
@@ -1114,12 +1115,12 @@ c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon for cpower");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (ciszero(c1)) {
 		if (cisreal(c2) && qisneg(c2->real)) {
 			math_error ("Non-positive real exponent of zero");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		return clink(&_czero_);
 	}

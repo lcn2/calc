@@ -1,7 +1,7 @@
 /*
  * qtrans - transcendental functions for real numbers
  *
- * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -34,6 +34,7 @@
 #include "qmath.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -209,7 +210,7 @@ qcos(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for cosine");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q))
 		return qlink(&_qone_);
@@ -236,7 +237,7 @@ qsin(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for sine");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	n = -qilog2(epsilon);
 	if (qiszero(q) || n < 0)
@@ -260,7 +261,7 @@ qtan(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for tangent");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q))
 		return qlink(q);
@@ -301,11 +302,11 @@ qcot(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for cotangent");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q)) {
 		math_error("Zero argument for cotangent");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	k = -qilog2(q);
 	n = qilog2(epsilon);
@@ -347,7 +348,7 @@ qsec(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for secant");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q))
 		return qlink(&_qone_);
@@ -386,11 +387,11 @@ qcsc(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for cosecant");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q)) {
 		math_error("Zero argument for cosecant");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	k = -qilog2(q);
 	n = qilog2(epsilon);
@@ -431,7 +432,7 @@ qasin(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for asin");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q))
 		return qlink(&_qzero_);
@@ -480,7 +481,7 @@ qacos(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for acos");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisone(q))
 		return qlink(&_qzero_);
@@ -526,7 +527,7 @@ qatan(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for arctangent");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q))
 		return qlink(&_qzero_);
@@ -569,7 +570,7 @@ qatan(NUMBER *q, NUMBER *epsilon)
 	for (;;) {
 		if (d > BASE) {
 			math_error("Too many terms required for atan");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		zmul(X, mul, &ztmp1);
 		zfree(X);
@@ -644,7 +645,7 @@ qacot(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon for acot");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q)) {
 		epsilon1 = qscale(epsilon, 1L);
@@ -687,7 +688,7 @@ qatan2(NUMBER *qy, NUMBER *qx, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for atan2");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(qy) && qiszero(qx)) {
 		/* conform to 4.3BSD ANSI/IEEE 754-1985 math lib */
@@ -761,7 +762,7 @@ qpi(NUMBER *epsilon)
 	/* firewall */
 	if (qiszero(epsilon)) {
 		math_error("zero epsilon value for pi");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/* use pi cache if epsilon marches, else flush if needed */
@@ -829,7 +830,7 @@ qpidiv180(NUMBER *epsilon)
 	/* firewall */
 	if (qiszero(epsilon)) {
 		math_error("zero epsilon value for qpidiv180");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/* use pi/180 cache if epsilon marches, else flush if needed */
@@ -873,7 +874,7 @@ qpidiv200(NUMBER *epsilon)
 	/* firewall */
 	if (qiszero(epsilon)) {
 		math_error("zero epsilon value for qpidiv200");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/* use pi/200 cache if epsilon marches, else flush if needed */
@@ -916,7 +917,7 @@ qexp(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for exp");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q))
 		return qlink(&_qone_);
@@ -1048,7 +1049,7 @@ qln(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(q) || qiszero(epsilon)) {
 		math_error("logarithm of 0");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisunit(q))
 		return qlink(&_qzero_);
@@ -1160,7 +1161,7 @@ qlog(NUMBER *q, NUMBER *epsilon)
 	/* firewall */
 	if (qiszero(q) || qiszero(epsilon)) {
 		math_error("logarithm of 0");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	/*
@@ -1236,11 +1237,11 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon for power");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q1) && qisneg(q2)) {
 		math_error("Negative power of zero");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q2) || qisone(q1))
 		return qlink(&_qone_);
@@ -1248,7 +1249,7 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 		return qlink(&_qzero_);
 	if (qisneg(q1)) {
 		math_error("Negative base for qpower");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisone(q2))
 		return qmappr(q1, epsilon, 24);
@@ -1353,11 +1354,11 @@ qroot(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon for root");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisneg(q2) || qiszero(q2) || qisfrac(q2)) {
 		math_error("Taking bad root of number");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q1) || qisone(q1) || qisone(q2))
 		return qlink(q1);
@@ -1367,7 +1368,7 @@ qroot(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 	if (neg) {
 		if (ziseven(q2->num)) {
 			math_error("Taking even root of negative number");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		q1 = qqabs(q1);
 	}
@@ -1510,11 +1511,11 @@ qcoth(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for coth");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q)) {
 		math_error("Zero argument for coth");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	tmp1 = qscale(q, 1);
 	tmp2 = qqabs(tmp1);
@@ -1537,7 +1538,7 @@ qcoth(NUMBER *q, NUMBER *epsilon)
 	qfree(tmp1);
 	if (qiszero(tmp2)) {
 		math_error("This should not happen ????");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	tmp1 = qinv(tmp2);
 	qfree(tmp2);
@@ -1564,7 +1565,7 @@ qsech(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for sech");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q))
 		return qlink(&_qone_);
@@ -1605,11 +1606,11 @@ qcsch(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for csch");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q)) {
 		math_error("Zero argument for csch");
-		/*NOTREACHED*/
+		not_reached();
 	}
 
 	n = qilog2(epsilon);
@@ -1657,7 +1658,7 @@ qacosh(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for acosh");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qisone(q))
 		return qlink(&_qzero_);
@@ -1695,7 +1696,7 @@ qasinh(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for asinh");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q))
 		return qlink(&_qzero_);
@@ -1737,7 +1738,7 @@ qatanh(NUMBER *q, NUMBER *epsilon)
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for atanh");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	if (qiszero(q))
 		return qlink(&_qzero_);

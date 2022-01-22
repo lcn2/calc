@@ -1,7 +1,7 @@
 /*
  * custom - interface for custom software and hardware interfaces
  *
- * Copyright (C) 1999-2006,2018,2021  Landon Curt Noll
+ * Copyright (C) 1999-2006,2018,2021,2022  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -48,6 +48,7 @@
 #endif /* CUSTOM */
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -77,12 +78,12 @@ custom(char *name, int count, VALUE **vals)
 			if (count < p->minargs) {
 				math_error("Too few arguments for custom "
 				    "function \"%s\"", p->name);
-				/*NOTREACHED*/
+				not_reached();
 			}
 			if (count > p->maxargs) {
 				math_error("Too many arguments for custom "
 				    "function \"%s\"", p->name);
-				/*NOTREACHED*/
+				not_reached();
 			}
 
 			/* call the custom function */
@@ -200,7 +201,7 @@ customhelp(char *name)
 	customname = (char *)malloc(snprintf_len+1);
 	if (customname == NULL) {
 		math_error("bad malloc of customname");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	snprintf(customname, snprintf_len, "custhelp/%s", name);
 	customname[snprintf_len] = '\0';	/* paranoia */

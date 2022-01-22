@@ -1,7 +1,7 @@
 /*
  * addop - add opcodes to a function being compiled
  *
- * Copyright (C) 1999-2007,2021  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -37,6 +37,7 @@
 #include "symbol.h"
 
 
+#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -68,12 +69,12 @@ initfunctions(void)
 	functemplate = (FUNC *) malloc(funcsize(maxopcodes));
 	if (functemplate == NULL) {
 		math_error("Cannot allocate function template");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	functions = (FUNC **) malloc(sizeof(FUNC *) * FUNCALLOCSIZE);
 	if (functions == NULL) {
 		math_error("Cannot allocate function table");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	funccount = 0;
 	funcavail = FUNCALLOCSIZE;
@@ -155,7 +156,7 @@ beginfunc(char *name, BOOL newflag)
 		fp = (FUNC *) malloc(funcsize(maxopcodes));
 		if (fp == NULL) {
 			math_error("Cannot allocate temporary function");
-			/*NOTREACHED*/
+			not_reached();
 		}
 	}
 	fp->f_next = NULL;
@@ -203,7 +204,7 @@ endfunc(void)
 	fp = (FUNC *) malloc(size);
 	if (fp == NULL) {
 		math_error("Cannot commit function");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	memcpy((char *) fp, (char *) curfunc, size);
 	if (curfunc != functemplate)
@@ -257,13 +258,13 @@ adduserfunc(char *name)
 			sizeof(FUNC *) * (funcavail + FUNCALLOCSIZE));
 		if (functions == NULL) {
 			math_error("Failed to reallocate function table");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		funcavail += FUNCALLOCSIZE;
 	}
 	if (addstr(&funcnames, name) == NULL) {
 		math_error("Cannot save function name");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	index = funccount++;
 	functions[index] = NULL;
@@ -316,7 +317,7 @@ freefunc(FUNC *fp)
 		}
 		if (index == funccount) {
 			math_error("Bad call to freefunc!!!");
-			/*NOTREACHED*/
+			not_reached();
 		}
 	}
 	if (newname[0] != '*' && (conf->traceflags & TRACE_FNCODES)) {
@@ -386,7 +387,7 @@ findfunc(long index)
 {
 	if (index >= funccount) {
 		math_error("Undefined function");
-		/*NOTREACHED*/
+		not_reached();
 	}
 	return functions[index];
 }
@@ -438,7 +439,7 @@ addop(long op)
 		fp = (FUNC *) malloc(funcsize(maxopcodes));
 		if (fp == NULL) {
 			math_error("cannot malloc function");
-			/*NOTREACHED*/
+			not_reached();
 		}
 		memcpy((char *) fp, (char *) curfunc,
 			funcsize(curfunc->f_opcodecount));
