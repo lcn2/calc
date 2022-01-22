@@ -6311,6 +6311,7 @@ have_varvs.o: have_string.h
 have_varvs.o: have_unistd.h
 have_varvs.o: have_varvs.c
 help.o: alloc.h
+help.o: attribute.h
 help.o: banned.h
 help.o: block.h
 help.o: byteswap.h
@@ -6411,6 +6412,7 @@ jump.o: have_const.h
 jump.o: jump.c
 jump.o: jump.h
 label.o: alloc.h
+label.o: attribute.h
 label.o: banned.h
 label.o: block.h
 label.o: byteswap.h
@@ -6557,6 +6559,7 @@ matfunc.o: zmath.h
 matfunc.o: zrand.h
 math_error.o: alloc.h
 math_error.o: args.h
+math_error.o: attribute.h
 math_error.o: banned.h
 math_error.o: block.h
 math_error.o: byteswap.h
@@ -6654,6 +6657,7 @@ opcodes.o: zmath.h
 opcodes.o: zrand.h
 opcodes.o: zrandom.h
 pix.o: alloc.h
+pix.o: attribute.h
 pix.o: banned.h
 pix.o: byteswap.h
 pix.o: decl.h
@@ -6670,6 +6674,7 @@ pix.o: prime.h
 pix.o: qmath.h
 pix.o: zmath.h
 poly.o: alloc.h
+poly.o: attribute.h
 poly.o: banned.h
 poly.o: block.h
 poly.o: byteswap.h
@@ -6694,6 +6699,7 @@ poly.o: str.h
 poly.o: value.h
 poly.o: zmath.h
 prime.o: alloc.h
+prime.o: attribute.h
 prime.o: banned.h
 prime.o: byteswap.h
 prime.o: decl.h
@@ -6885,6 +6891,7 @@ sample_rand.o: value.h
 sample_rand.o: zmath.h
 sample_rand.o: zrandom.h
 seed.o: alloc.h
+seed.o: attribute.h
 seed.o: banned.h
 seed.o: byteswap.h
 seed.o: decl.h
@@ -7100,6 +7107,7 @@ value.o: zmath.h
 value.o: zrand.h
 value.o: zrandom.h
 version.o: alloc.h
+version.o: attribute.h
 version.o: banned.h
 version.o: block.h
 version.o: byteswap.h

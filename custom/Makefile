@@ -1161,6 +1161,7 @@ uninstall:
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 
 c_argv.o: ../alloc.h
+c_argv.o: ../attribute.h
 c_argv.o: ../banned.h
 c_argv.o: ../block.h
 c_argv.o: ../byteswap.h
@@ -1188,6 +1189,7 @@ c_argv.o: ../value.h
 c_argv.o: ../zmath.h
 c_argv.o: c_argv.c
 c_devnull.o: ../alloc.h
+c_devnull.o: ../attribute.h
 c_devnull.o: ../banned.h
 c_devnull.o: ../block.h
 c_devnull.o: ../byteswap.h
@@ -1360,6 +1362,7 @@ c_sysinfo.o: ../zrand.h
 c_sysinfo.o: ../zrandom.h
 c_sysinfo.o: c_sysinfo.c
 custtbl.o: ../alloc.h
+custtbl.o: ../attribute.h
 custtbl.o: ../banned.h
 custtbl.o: ../block.h
 custtbl.o: ../byteswap.h
