@@ -137,7 +137,7 @@ S_FUNC void uppercase_word(void);
 S_FUNC void lowercase_word(void);
 S_FUNC void ignore_char(void);
 S_FUNC void arrow_key(void);
-S_FUNC void quit_calc(void);
+S_FUNC void quit_calc(void) __attribute__((noreturn));
 
 
 STATIC	FUNC	funcs[] =

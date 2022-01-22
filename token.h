@@ -175,8 +175,8 @@ E_FUNC void inittokens(void);
 E_FUNC int tokenmode(int flag);
 E_FUNC int gettoken(void);
 E_FUNC void rescantoken(void);
-E_FUNC void scanerror(int, char *, ...) PRINTF_FORMAT(2, 3);
-E_FUNC void warning(char *, ...) PRINTF_FORMAT(1, 2);
+E_FUNC void scanerror(int, char *, ...) __attribute__((format(printf, 2, 3)));
+E_FUNC void warning(char *, ...) __attribute__((format(printf, 1, 2)));
 
 
 #endif /* !INCLUDE_TOKEN_H */

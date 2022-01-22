@@ -94,12 +94,5 @@
 
 #endif
 
-/* Perform printf-style argument type checking for known compilers */
-#ifdef __GNUC__
-# define PRINTF_FORMAT(fmt_idx, arg_idx) __attribute__ \
-         ((format (printf, fmt_idx, arg_idx)))
-#else
-# define PRINTF_FORMAT(fmt_idx, arg_idx)
-#endif
 
 #endif /* !INCLUDE_DECL_H */

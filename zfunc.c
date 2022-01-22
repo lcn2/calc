@@ -1411,7 +1411,7 @@ zlog10(ZVALUE z, BOOL *was_10_power)
 	do {
 		rel = zrel(*zp, z);
 		if (rel == 0) {
-			/* quick exit - we match a tenpower entry */
+			/* quick return - we match a tenpower entry */
 			if (was_10_power != NULL) {
 				*was_10_power = TRUE;
 			}

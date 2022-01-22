@@ -41,6 +41,7 @@
 # include "longbits.h"
 # include "byteswap.h"
 # include "have_stdlib.h"
+# include "attribute.h"
 #else
 # include <calc/decl.h>
 # include <calc/alloc.h>
@@ -48,6 +49,7 @@
 # include <calc/longbits.h>
 # include <calc/byteswap.h>
 # include <calc/have_stdlib.h>
+# include <calc/attribute.h>
 #endif
 #ifdef HAVE_STDLIB_H
 # include <stdlib.h>
@@ -625,13 +627,14 @@ E_FUNC char *math_getdivertedio(void);
 E_FUNC int math_setmode(int mode);
 E_FUNC int math_setmode2(int mode);
 E_FUNC LEN math_setdigits(LEN digits);
-E_FUNC void math_fmt(char *, ...) PRINTF_FORMAT(1, 2);
+E_FUNC void math_fmt(char *, ...) __attribute__((format(printf, 1, 2)));
 
 
 /*
  * The error routine.
  */
-E_FUNC void math_error(char *, ...) PRINTF_FORMAT(1, 2);
+E_FUNC void math_error(char *, ...) \
+	__attribute__((format(printf, 1, 2))) __attribute__((noreturn));
 
 
 /*
