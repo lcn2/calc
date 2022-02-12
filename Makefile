@@ -1811,7 +1811,7 @@ CCWERR=
 CCOPT= ${DEBUG}
 CCMISC=
 #
-LCC= gcc
+LCC= x86_64-w64-mingw32-gcc
 CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 endif

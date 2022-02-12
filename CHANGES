@@ -26,6 +26,9 @@ The following are the changes from calc version 2.14.0.15 to date:
     Added ${WINGM} Makefile variable for users under Windows 11 who
     use Cygwin and the MinGW64 packages.
 
+    Updated README.WINDOWS for Windows 11 users based on advice
+    form a Microsoft 11 developer.
+
     Fixed missing quotes in the PASSDOWN makefile variables.
 
 

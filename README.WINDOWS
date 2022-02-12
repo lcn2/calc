@@ -31,7 +31,8 @@ We were given this advice from a Windows 11 developer:
 
         https://cygwin.com/install.html
 
-    and include all MinGW64 packages.
+    IMPORTANT: While installing Cygwin, and during Cygwin Setup, be sure to
+	       select all the MinGW64 packages relating to gcc.
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-= Compiling calc via virtual machine under Windows 11 =-=
