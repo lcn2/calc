@@ -49,7 +49,7 @@
 int
 main(void)
 {
-#if defined(HAVE_NO_GETTIME)
+#if defined(HAVE_NO_GETTIME) || defined(_WIN32) || defined(_WIN64)
 
 	printf("#undef HAVE_GETTIME /* no */\n");
 
