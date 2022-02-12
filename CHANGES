@@ -26,6 +26,8 @@ The following are the changes from calc version 2.14.0.15 to date:
     Added ${MSYS} Makefile variable for users under Windows 11 who
     use MINGW64_NT.
 
+    Fixed missing quotes in the PASSDOWN makefile variables.
+
 
 The following are the changes from calc version 2.14.0.14 to 2.14.0.14:
 
