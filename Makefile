@@ -77,6 +77,9 @@ endif
 ifeq ($(hardware),)
 hardware=$(shell uname -m 2>/dev/null)
 endif
+ifeq ($(MSYS),)
+MSYS=$(shell uname -o 2>/dev/null)
+endif
 #
 #endif	/* end of skip for non-Gnu makefiles */
 #
@@ -103,6 +106,9 @@ SHELL= /bin/bash
 #
 ifeq ($(target),Darwin)
 SHELL:= /bin/sh
+endif
+ifeq ($(MSYS),Msys)
+SHELL:= "git-bash.exe"
 endif
 #
 #endif	/* end of skip for non-Gnu makefiles */
@@ -2197,6 +2203,7 @@ CUSTOM_PASSDOWN=  \
     MAKE_FILE=Makefile \
     MKDIR=${MKDIR} \
     MV=${MV} \
+    MSYS=${MSYS} \
     PREFIX="${PREFIX}" \
     PURIFY="${PURIFY}" \
     Q="${Q}" \
@@ -2249,6 +2256,7 @@ HELP_PASSDOWN= \
     LIBDIR="${LIBDIR}" \
     MAKE_FILE=Makefile \
     MKDIR=${MKDIR} \
+    MSYS=${MSYS} \
     MV=${MV} \
     PREFIX="${PREFIX}" \
     Q="${Q}" \
@@ -2283,6 +2291,7 @@ CAL_PASSDOWN= \
     LIBDIR="${LIBDIR}" \
     MAKE_FILE=Makefile \
     MKDIR=${MKDIR} \
+    MSYS=${MSYS} \
     MV=${MV} \
     PREFIX="${PREFIX}" \
     Q="${Q}" \
@@ -2318,6 +2327,7 @@ CSCRIPT_PASSDOWN= \
     LIBDIR="${LIBDIR}" \
     MAKE_FILE=Makefile \
     MKDIR=${MKDIR} \
+    MSYS=${MSYS} \
     MV=${MV} \
     PREFIX="${PREFIX}" \
     Q="${Q}" \
