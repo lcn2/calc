@@ -27,18 +27,15 @@ NOTE: The main developers do not have access to a Windows based platform.
 
 We were given this advice from a Windows 11 developer:
 
-    Windows 11 users should try:
+    Windows 11 users could use Cygwin:
 
-	https://git-scm.com/downloads
+        https://cygwin.com/install.html
 
-	    When you run the installer wizard, make sure you choose/check
-	    the git bash installer option.
+    and include all MinGW64 packages.
 
-	https://www.mingw-w64.org/
-
-	    Runtime environment for GCC & LLVM for 32 and 64 bit Windows
-
-	    We suggest Windows 11 users consider using MINGW64.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-= Compiling calc via virtual machine under Windows 11 =-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 We would prefer a Windows 11 solution that does not require a Windows 11
 developer to install a Linux virtual machine.  Nevertheless, a Windows 11

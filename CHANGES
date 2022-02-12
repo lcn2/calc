@@ -23,8 +23,8 @@ The following are the changes from calc version 2.14.0.15 to date:
 
     Added .PHONY rule, just after all rule, to Makefiles.
 
-    Added ${MSYS} Makefile variable for users under Windows 11 who
-    use MINGW64_NT.
+    Added ${WINGM} Makefile variable for users under Windows 11 who
+    use Cygwin and the MinGW64 packages.
 
     Fixed missing quotes in the PASSDOWN makefile variables.
 

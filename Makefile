@@ -77,8 +77,8 @@ endif
 ifeq ($(hardware),)
 hardware=$(shell uname -m 2>/dev/null)
 endif
-ifeq ($(MSYS),)
-MSYS=$(shell uname -o 2>/dev/null)
+ifeq ($(MINGW),)
+MINGW=$(shell uname -o 2>/dev/null)
 endif
 #
 #endif	/* end of skip for non-Gnu makefiles */
@@ -107,8 +107,13 @@ SHELL= /bin/bash
 ifeq ($(target),Darwin)
 SHELL:= /bin/sh
 endif
-ifeq ($(MSYS),Msys)
-SHELL:= "git-bash.exe"
+#
+# If you are using Cygwin with MinGW64 packages
+# then we will also need to use the Cygwin runtime enviroment
+# and the calc Cygwin make target.
+##
+ifeq ($(MINGW),Cygwin)
+target:= Cygwin
 endif
 #
 #endif	/* end of skip for non-Gnu makefiles */
@@ -2202,7 +2207,7 @@ CUSTOM_PASSDOWN=  \
     MAKE_FILE=Makefile \
     MKDIR="${MKDIR}" \
     MV="${MV}" \
-    MSYS="${MSYS}" \
+    MINGW="${MINGW}" \
     PREFIX="${PREFIX}" \
     PURIFY="${PURIFY}" \
     Q="${Q}" \
@@ -2255,7 +2260,7 @@ HELP_PASSDOWN= \
     LIBDIR="${LIBDIR}" \
     MAKE_FILE=Makefile \
     MKDIR="${MKDIR}" \
-    MSYS="${MSYS}" \
+    MINGW="${MINGW}" \
     MV="${MV}" \
     PREFIX="${PREFIX}" \
     Q="${Q}" \
@@ -2290,7 +2295,7 @@ CAL_PASSDOWN= \
     LIBDIR="${LIBDIR}" \
     MAKE_FILE=Makefile \
     MKDIR="${MKDIR}" \
-    MSYS="${MSYS}" \
+    MINGW="${MINGW}" \
     MV="${MV}" \
     PREFIX="${PREFIX}" \
     Q="${Q}" \
@@ -2326,7 +2331,7 @@ CSCRIPT_PASSDOWN= \
     LIBDIR="${LIBDIR}" \
     MAKE_FILE=Makefile \
     MKDIR="${MKDIR}" \
-    MSYS="${MSYS}" \
+    MINGW="${MINGW}" \
     MV="${MV}" \
     PREFIX="${PREFIX}" \
     Q="${Q}" \
@@ -4876,7 +4881,7 @@ env:
 	@echo 'MANMAKE=${MANMAKE}'; echo ''
 	@echo 'MANMODE=${MANMODE}'; echo ''
 	@echo 'MKDIR=${MKDIR}'; echo ''
-	@echo 'MSYS=${MSYS}'; echo ''
+	@echo 'MINGW=${MINGW}'; echo ''
 	@echo 'MV=${MV}'; echo ''
 	@echo 'NROFF=${NROFF}'; echo ''
 	@echo 'NROFF_ARG=${NROFF_ARG}'; echo ''
