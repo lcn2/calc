@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+Calc bug report template version: 1.2 2022-02-24
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
@@ -31,7 +33,7 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**make debug attachment**
+**Attach make debug output**
 IMPORTANT: Please attach the output from `make debug`.
 
 **Screenshots**
