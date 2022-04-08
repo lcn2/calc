@@ -15,5 +15,5 @@ FYI: please review the BUGS file, or enter the calc command:
 Please create a calc GitHub repo issue:
 
     https://github.com/lcn2/calc/issues
-    
+
 Click on ((New issue)) and follow the issue template.
