@@ -1,4 +1,13 @@
-The following are the changes from calc version 2.14.0.15 to date:
+The following are the changes from calc version 2.14.1.0 to date:
+
+    Fixed alignment of show item section of help command.
+
+    Bug fix: While 0^0 == 1, now for y > 0, 0^y == 0.
+    Adjusted cal/test8900.cal to reflect this bug fix.
+    Added tests to cal/regress.cal to help verify bug fix is fixed.
+
+
+The following are the changes from calc version 2.14.0.15 to 2.14.0.15:
 
     Changed Makefile to set shell before setting the SHELL Makefile
     variable.
@@ -22,6 +31,8 @@ The following are the changes from calc version 2.14.0.15 to date:
     Changed /*NOTREACHED*/ to not_reached(); and use "attribute.h".
 
     Added .PHONY rule, just after all rule, to Makefiles.
+
+    Made minor format update on help/commands.
 
     Added ${WINGM} Makefile variable for users under Windows 11 who
     use Cygwin and the MinGW64 packages.
