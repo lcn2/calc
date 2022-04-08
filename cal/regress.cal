@@ -305,6 +305,8 @@ print '008: parsed test_variables()';
  */
 define test_arithmetic()
 {
+	local x;
+
 	print '400: Beginning test_arithmetic';
 
 	vrfy(3+4==7,		'401: 3 + 4 == 7');
@@ -366,8 +368,18 @@ define test_arithmetic()
 	vrfy((2^23209-1)^(2-2) == 1,	'457: (2^23209-1)^(2-2) == 1');
 	vrfy((2^23209-1)^((2^23209-1)-(2^23209-1)) == 1,
 			'458: (2^23209-1)^((2^23209-1)-(2^23209-1)) == 1');
+	vrfy(0^2 == 0,		'459: 0^2 == 0');
+	vrfy(0^3 == 0,		'460: 0^3 == 0');
+	vrfy(0^12 == 0,		'461: 0^12 == 0');
+	vrfy(0^13 == 0,		'462: 0^13 == 0');
+	x = 0;
+	vrfy(x == 0,		'463: x == 0');
+	vrfy(0^2 == 0,		'464: 0^2 == 0');
+	vrfy(0^3 == 0,		'465: 0^3 == 0');
+	vrfy(0^12 == 0,		'466: 0^12 == 0');
+	vrfy(x^13 == 0,		'467: x^13 == 0');
 
-	print '459: Ending test_arithmetic';
+	print '462: Ending test_arithmetic';
 }
 print '009: parsed test_arithmetic()';
 

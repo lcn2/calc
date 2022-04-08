@@ -2058,11 +2058,17 @@ define t010()
 	return 5;
     }
     /*
-     * Once, when an expression such as 0^(6-6) returned 0,
+     * When an expression such as 0^(6-6) returned 0,
      * then stirling2(10, 5) == 42525.  However when we made9
-     * 0^(6-6) == 0^0 == 1, then stirling2(10, 5) == 5102999/120.
+     * 0^(6-6) == 0^0 == 1, then stirling2(10, 5) == 5102999/120
+     * as in:
+     *
+     * if ((stirling2(10, 5) - (5102999/120)) != 0) {
+     *    epsilon(eps);
+     *    return 6;
+     * }
      */
-    if ((stirling2(10, 5) - (5102999/120)) != 0) {
+    if ((stirling2(10, 5) - 42525) != 0) {
 	epsilon(eps);
 	return 6;
     }

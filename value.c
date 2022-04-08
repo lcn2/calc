@@ -1884,9 +1884,14 @@ powvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 					*vres = error_value(E_1OVER0);
 					break;
 				}
-				/* 0 ^ non-neg is 1, including 0^0 */
 				vres->v_type = V_NUM;
-				vres->v_num = qlink(&_qone_);
+				if (qiszero(v2->v_num)) {
+					/* 0 ^ 0 is 1 */
+					vres->v_num = qlink(&_qone_);
+				} else {
+					/* 0 ^ (exp>0) is 0 */
+					vres->v_num = qlink(&_qzero_);
+				}
 			} else if (qisint(real_v2)) {
 				vres->v_num = qpowi(v1->v_num, real_v2);
 			} else {
