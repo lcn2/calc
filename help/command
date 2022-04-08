@@ -215,22 +215,22 @@ Command sequence
 		blocks		unfreed named blocks
 		builtin		built in functions
 		config		config parameters and values
-		constants		cache of numeric constants
+		constants	cache of numeric constants
 		custom		custom functions if calc -C was used
 		errors		new error-values created
 		files		open files, file position and sizes
-		function		user-defined functions
-		globaltypes		global variables
+		function	user-defined functions
+		globaltypes	global variables
 		objfunctions	possible object functions
-		objtypes		defined objects
-		opcodes func	internal opcodes for function `func'
+		objtypes	defined objects
+		opcodes 	internal opcodes for function `func'
 		sizes		size in octets of calc value types
-		realglobals		numeric global variables
+		realglobals	numeric global variables
 		statics		un-scoped static variables
 		numbers		calc number cache
-		redcdata		REDC data defined
+		redcdata	REDC data defined
 		strings		calc string cache
-		literals		calc literal cache
+		literals	calc literal cache
 
 	Only the first 4 characters of item are examined, so:
 
