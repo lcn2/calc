@@ -428,7 +428,8 @@ define fprint_comma(fd, x, group, decimal)
      * print converted string
      */
     if (isstr(ret) && isfile(fd)) {
-	fprintf(fd, "%s\n", ret);
+	fprintf(fd, "%s", ret);
+	fflush(fd);
     }
     return ret;
 }
