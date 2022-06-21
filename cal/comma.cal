@@ -366,7 +366,7 @@ define set_default_decimal_separator(decimal)
  */
 define print_comma(x, group, decimal)
 {
-    local ret;		/* base 10 string with 3-digit group separators
+    local ret;		/* base 10 string with 3-digit group and integer-fraction separators */
 
     /*
      * convert to string
@@ -419,7 +419,7 @@ define print_comma(x, group, decimal)
  */
 define fprint_comma(fd, x, group, decimal)
 {
-    local ret;	/* base 10 string with 3-digit group and integer-fraction separators */
+    local ret;		/* base 10 string with 3-digit group and integer-fraction separators */
 
     /*
      * convert to string
