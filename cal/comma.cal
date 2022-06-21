@@ -88,7 +88,7 @@ static default_decimal_separator = ".";	/* default integer-fraction separator */
  *
  * This function converts a real number into a base 10 string, where
  * groups of 3 digits are separated by a 3-digit group separator and
- * a separator is printed between integer and decimal fraction.
+ * a integer-fraction separator is printed between integer and decimal fraction.
  *
  * For example:
  *
@@ -113,8 +113,8 @@ static default_decimal_separator = ".";	/* default integer-fraction separator */
  *
  * optional args:
  *
- *	group		3-digit group separator (def: ",")
- *	decimal		separator between decimal integer and decimal fraction (def: ".")
+ *	group		use this 3-digit group separator
+ *	decimal		use this integer-fraction separator
  *
  * returns:
  *
@@ -244,7 +244,7 @@ define str_comma(x, group, decimal)
     } else {
 
 	/*
-	 * add separator
+	 * add integer-fraction separator
 	 */
 	ret += decimal_separator;
 
@@ -264,7 +264,7 @@ define str_comma(x, group, decimal)
 
 
 /*
- * set_default_group_separator - change the default integer-fraction separator
+ * set_default_group_separator - change the default 3-digit group separator
  *
  * If group is not a string, then the default 3-digit group separator
  * is not changed.  Thus, this will only return the default 3-digit group separator:
@@ -289,7 +289,7 @@ define set_default_group_separator(group)
     old_default_group_separator = default_group_separator;
 
     /*
-     * change 3-digit group separator is group is a string
+     * change 3-digit group separator if group is a string
      */
     if (isstr(group)) {
 	default_group_separator = group;
@@ -316,15 +316,15 @@ define set_default_group_separator(group)
  */
 define set_default_decimal_separator(decimal)
 {
-    local old_default_decimal_separator;	/* previous default 3-digit decimal separator */
+    local old_default_decimal_separator;	/* previous default integer-fraction separator */
 
     /*
-     * save current 3-digit decimal separator
+     * save current integer-fraction separator
      */
     old_default_decimal_separator = default_decimal_separator;
 
     /*
-     * change 3-digit decimal separator is decimal is a string
+     * change 3-digit decimal integer-fraction if decimal is a string
      */
     if (isstr(decimal)) {
 	default_decimal_separator = decimal;
@@ -352,8 +352,8 @@ define set_default_decimal_separator(decimal)
  *
  * optional args:
  *
- *	group		3-digit group separator (def: ",")
- *	decimal		separator between decimal integer and decimal fraction (def: ".")
+ *	group		use this 3-digit group separator
+ *	decimal		use this integer-fraction separator
  *
  * returns:
  *
@@ -395,6 +395,8 @@ define print_comma(x, group, decimal)
  *
  * If str_comma() does not return a string, this function prints nothing.
  *
+ * This function flushes output to the open file before returning.
+ *
  * NOTE: To print with a newline, use print_comma(x, group, decimal).
  *
  * given:
@@ -403,12 +405,12 @@ define print_comma(x, group, decimal)
  *
  * optional args:
  *
- *	group		3-digit group separator (def: ",")
- *	decimal		separator between decimal integer and decimal fraction (def: ".")
+ *	group		use this 3-digit group separator
+ *	decimal		use this integer-fraction separator
  *
  * returns:
  *
- *	string containing the base 10 digits with group and decimal separators, OR
+ *	string containing the base 10 digits with group and integer-fraction separators, OR
  *	null() if x is not a number, OR
  *	null() if group is neither null() (not given) nor a string, OR
  *	null() if group is null() (not given) AND default_group_separator is not a string, OR
@@ -417,7 +419,7 @@ define print_comma(x, group, decimal)
  */
 define fprint_comma(fd, x, group, decimal)
 {
-    local ret;	/* base 10 string with 3-digit group separators
+    local ret;	/* base 10 string with 3-digit group and integer-fraction separators */
 
     /*
      * convert to string
