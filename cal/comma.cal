@@ -281,7 +281,7 @@ define str_comma(x, group, decimal)
  */
 define set_default_group_separator(group)
 {
-    local old_default_group_separator;	/* previous default 3-digit group separator to return */
+    local old_default_group_separator;		/* previous default 3-digit group separator to return */
 
     /*
      * save current 3-digit group separator
@@ -299,10 +299,10 @@ define set_default_group_separator(group)
 
 
 /*
- * set_default_decimal_separator - change the default 3-digit decimal separator
+ * set_default_decimal_separator - change the default integer-fraction separator
  *
- * If decimal is not a string, then the default 3-digit decimal separator
- * is not changed.  Thus, this will only return the default 3-digit decimal separator:
+ * If decimal is not a string, then the default integer-fraction separator
+ * is not changed.  Thus, this will only return the integer-fraction separator:
  *
  *	set_default_decimal_separator(null());
  *
@@ -312,7 +312,7 @@ define set_default_group_separator(group)
  *
  * returns:
  *
- *	previous 3-digit decimal separator value
+ *	previous integer-fraction separator value
  */
 define set_default_decimal_separator(decimal)
 {
