@@ -138,6 +138,8 @@ define str_comma(x, group, decimal)
     local frac_str;		/* fraction as a string */
     local frac_len;		/* number of digits in frac_str including leading 0. */
     local ret;			/* string to return */
+    local config_leadzero;	/* config("leadzero") to restore */
+    local config_tilde;		/* config("tilde") to restore */
     local i;
 
     /*
@@ -173,9 +175,15 @@ define str_comma(x, group, decimal)
 
     /*
      * convert digits
+     *
+     * Avoid printing ~ and leading zeros for factional part.
      */
     int_str = strprintf("%d", integer);
+    config_leadzero = config("leadzero", 0);
+    config_tilde = config("tilde", 0);
     frac_str = strprintf("%d", fraction);
+    config("leadzero", config_leadzero),;
+    config("tilde", config_tilde),;
 
     /*
      * determine number of digits in the integer part
@@ -245,7 +253,7 @@ define str_comma(x, group, decimal)
 	 *
 	 * Skip over the leading 0. in frac_str
 	 */
-	ret += substr(frac_str, 3, frac_len-2);
+	ret += substr(frac_str, 2, frac_len-1);
     }
 
     /*
