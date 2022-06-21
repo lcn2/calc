@@ -384,7 +384,7 @@ define print_comma(x, group, decimal)
 
 
 /*
- * print_comma - print base 10 string with 3-digit group separators & integer-fraction separator w/o newline
+ * fprint_comma - print base 10 string with 3-digit group separators & integer-fraction separator w/o newline
  *
  * This function prints the result of str_comma(x, group, decimal) on an open file, without a trailing newline.
  * For example:
