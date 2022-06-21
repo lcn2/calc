@@ -263,6 +263,64 @@ chrem.cal
     Chinese remainder theorem/problem solver.
 
 
+comma.cal
+
+    Convert numbers into strings with 3-digit group and integer-fraction
+    separators.
+
+    If the value is an integer, the integer-fraction separator is not used.
+
+    str_comma(x, [group, [decimal]])
+
+	Convert x into a string.
+
+	If group is given and is a string, group will be used as
+	the 3-digit group separator, otherwise the default 3-digit
+	group separator will be used.
+
+	If decimal is given and is a string, group will be used as
+	the integer-fraction separator, otherwise the default
+	integer-fraction separator will be used.
+
+	The decimal and group arguments are optional.
+
+    set_default_group_separator(group)
+
+	Change the default 3-digit group separator if group is a string,
+	otherwise the default 3-digit group separator will not be
+	changed.  Return the old 3-digit group separator.
+
+    set_default_decimal_separator(decimal)
+
+	Change the default 3-digit group separator if decimal is a
+	string, otherwise the default integer-fraction separator
+	will not be changed.  Return the old integer-fraction separator.
+
+    print_comma(x, [group, [decimal]])
+
+	Print the value produced by str_comma(x, [group, [decimal]])
+	followed by a newline.
+
+	If the str_comma() does not return a string, nothing is printed.
+
+	The decimal and group arguments are optional.
+
+	The value produced by str_comma() is returned.
+
+    fprint_comma(fd, x, [group, [decimal]])
+
+	Print the value produced by str_comma(x, [group, [decimal]]),
+	without a trailing newline, on file fd.
+
+	If the str_comma() does not return a string, nothing is printed.
+
+	If fd is not an open file, nothing is printed.
+
+	The decimal and group arguments are optional.
+
+	The value produced by str_comma() is returned.
+
+
 deg.cal
 
     deg(deg, min, sec)
