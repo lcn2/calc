@@ -175,7 +175,7 @@ define str_comma(x, group, decimal)
      * convert digits
      */
     int_str = strprintf("%d", integer);
-    frac_str = strprintf("%f", fraction);
+    frac_str = strprintf("%d", fraction);
 
     /*
      * determine number of digits in the integer part
