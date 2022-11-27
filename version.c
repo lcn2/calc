@@ -51,10 +51,40 @@ static char *program;
 #include "banned.h"	/* include after system header <> includes */
 
 
+/*
+ * MAJOR_VER
+ *
+ *      The MAJOR_VER remains at 2.  That are concepts for version 3 calc,
+ *      but that is a long way off.  One of the main reasons why MAJOR_VER
+ *      might incremented is if fundamental calc data objects (such as when ZVALUE
+ *      or NUMBER or COMPLEX need to change) that would cause an incompatibility
+ *      with existing hardware accelerators that are using fundamental calc data objects.
+ *
+ * MINOR_VER
+ *
+ *      The MINOR_VER changes when there are incompatible changes to the calc library
+ *      or calc custom library.   The MINOR_VER might change if we need to make a major
+ *      change to the math engine.  For example, when the way 0^x was evaluated, we
+ *      changed MINOR_VER from 13 to 14.
+ *
+ * MAJOR_PATCH
+ *
+ *      The MAJOR_PATCH changes when there is an update to the calc library
+ *      or calc custom library.  For example, the MAJOR_PATCH might increment when there
+ *      are new builtin functions available, or when there is a change to how existing
+ *      builtin functions process arguments.
+ *
+ * MINOR_PATCH
+ *
+ *      The MINOR_PATCH changes whenever there is any change in the calc release.
+ *      For example, when the documentation changes, the MINOR_PATCH will increment.
+ *      Moreover, when we are working towards a new production release,
+ *      bug fix and improvement updates will cause MINOR_PATCH to increment.
+ */
 #define MAJOR_VER	2	/* major library version */
 #define MINOR_VER	14	/* minor library version */
 #define MAJOR_PATCH	1	/* major software version level */
-#define MINOR_PATCH	0	/* minor software version level */
+#define MINOR_PATCH	1	/* minor software version level */
 
 
 /*

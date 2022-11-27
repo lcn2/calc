@@ -59,12 +59,19 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "have_string.h"
+#ifdef HAVE_STRING_H
+# include <string.h>
+#endif
+#include "decl.h"
 #include "have_fpos.h"
 #include "endian_calc.h"
 #include "have_offscl.h"
 #include "have_posscl.h"
 #include "have_fpos_pos.h"
 #include "alloc.h"
+#include "have_unused.h"
+#include "have_memmv.h"
 
 
 #include "banned.h"	/* include after system header <> includes */
@@ -73,7 +80,7 @@
 char *program;			/* our name */
 
 int
-main(int argc, char **argv)
+main(int UNUSED(argc), char **argv)
 {
 	int stsizelen;		/* bit length of st_size in buf */
 	int fileposlen;		/* bit length of FILEPOS */

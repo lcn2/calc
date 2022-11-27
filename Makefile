@@ -3264,7 +3264,8 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h \
 
 fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	   endian_calc.h banned.h have_ban_pragma.h fposval.h.def alloc.h \
-	   have_newstr.h have_memmv.h ${MAKE_FILE} ${LOC_MKF}
+	   have_newstr.h have_memmv.h have_string.h have_const.h have_string.h \
+	   have_unused.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f fposval_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3431,7 +3432,7 @@ have_posscl.h: have_posscl.c have_fpos.h have_unistd.h \
 	fi
 
 align32.h: align32.c longbits.h have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+	banned.h have_ban_pragma.h have_unused.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f align32 align32_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3609,7 +3610,7 @@ have_arc4random.h: have_arc4random.c have_stdlib.h \
 	    ${TRUE}; \
 	fi
 
-have_newstr.h: have_newstr.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+have_newstr.h: have_newstr.c banned.h have_ban_pragma.h have_string.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f newstr_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3649,7 +3650,7 @@ have_newstr.h: have_newstr.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-have_memmv.h: have_memmv.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+have_memmv.h: have_memmv.c banned.h have_ban_pragma.h have_string.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f have_memmv have_memmv.o memmv_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3968,7 +3969,7 @@ have_rusage.h: have_rusage.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-have_strdup.h: have_strdup.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+have_strdup.h: have_strdup.c banned.h have_ban_pragma.h have_string.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f strdup_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4206,7 +4207,7 @@ have_ban_pragma.h: have_ban_pragma.c banned.h ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-have_strlcpy.h: have_strlcpy.c banned.h have_ban_pragma.h \
+have_strlcpy.h: have_strlcpy.c banned.h have_ban_pragma.h have_string.h \
 		${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f unused_tmp $@
 	${H} echo 'forming $@'
@@ -4248,7 +4249,7 @@ have_strlcpy.h: have_strlcpy.c banned.h have_ban_pragma.h \
 	    ${TRUE}; \
 	fi
 
-have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h \
+have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h have_string.h \
 		${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f unused_tmp $@
 	${H} echo 'forming $@'
@@ -5802,7 +5803,9 @@ addop.o: zmath.h
 align32.o: align32.c
 align32.o: banned.h
 align32.o: have_ban_pragma.h
+align32.o: have_stdlib.h
 align32.o: have_unistd.h
+align32.o: have_unused.h
 align32.o: longbits.h
 assocfunc.o: alloc.h
 assocfunc.o: assocfunc.c
@@ -6153,9 +6156,11 @@ file.o: value.h
 file.o: zmath.h
 fposval.o: alloc.h
 fposval.o: banned.h
+fposval.o: decl.h
 fposval.o: endian_calc.h
 fposval.o: fposval.c
 fposval.o: have_ban_pragma.h
+fposval.o: have_const.h
 fposval.o: have_fpos.h
 fposval.o: have_fpos_pos.h
 fposval.o: have_memmv.h
@@ -6163,6 +6168,7 @@ fposval.o: have_newstr.h
 fposval.o: have_offscl.h
 fposval.o: have_posscl.h
 fposval.o: have_string.h
+fposval.o: have_unused.h
 func.o: alloc.h
 func.o: attribute.h
 func.o: banned.h

@@ -65,6 +65,8 @@ main(void)
 	extern uid_t geteuid();
 
 	curds = geteuid();
+	/* force curds to be used, but do not print much info about our UID */
+	printf("/* geteuid() mod 2 == %ld */\n", ((long)curds) & 0x1);
 
 	printf("#define HAVE_UID_T /* yes */\n");
 

@@ -27,6 +27,11 @@
 
 #include <stdio.h>
 #include <signal.h>
+#include "have_stdlib.h"
+#if defined(HAVE_STDLIB_H)
+#include <stdlib.h>
+#endif
+
 #include "longbits.h"
 
 #include "have_unistd.h"
@@ -34,11 +39,13 @@
 #include <unistd.h>
 #endif
 
+#include "have_unused.h"
+
 
 #include "banned.h"	/* include after system header <> includes */
 
 
-static void buserr(void);	/* catch alignment errors */
+static void buserr(int arg);	/* catch alignment errors */
 
 
 int
@@ -46,7 +53,7 @@ main(void)
 {
 	char byte[2*sizeof(USB32)];	/* mis-alignment buffer */
 	USB32 *p;			/* mis-alignment pointer */
-	int i;
+	unsigned long i;
 
 #if defined(MUST_ALIGN32)
 	/* force alignment */
@@ -82,7 +89,7 @@ main(void)
  */
 /*ARGSUSED*/
 static void
-buserr(int arg)
+buserr(int UNUSED(arg))
 {
 	/* alignment is required */
 	printf("#define MUST_ALIGN32\t%c* must align 32 bit values *%c\n",
