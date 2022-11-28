@@ -114,14 +114,14 @@ main(int UNUSED(argc), char **argv)
 	 * Big Endian
 	 */
 	if (fileposlen == 64) {
-		printf("#define SWAP_HALF_IN_FILEPOS(dest, src)\t\t%s\n",
-		    "SWAP_HALF_IN_B64(dest, src)");
+		printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
+		       "\tSWAP_HALF_IN_B64(dest, src)\n");
 	} else if (fileposlen == 32) {
-		printf("#define SWAP_HALF_IN_FILEPOS(dest, src)\t\t%s\n",
-		    "SWAP_HALF_IN_B32(dest, src)");
+		printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
+		       "\tSWAP_HALF_IN_B32(dest, src)\n");
 	} else if (fileposlen%BASEB == 0) {
-		printf("#define SWAP_HALF_IN_FILEPOS(dest, src)\t\t"
-		       "swap_HALFs((HALF *)dest, (HALF *)src, (LEN)%d)\n",
+		printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
+		       "\tswap_HALFs(dest, src, %d)\n",
 		       fileposlen/BASEB);
 	} else {
 		fprintf(stderr, "%s: unexpected BIG_ENDIAN FILEPOS bit size: %d\n",
@@ -133,15 +133,15 @@ main(int UNUSED(argc), char **argv)
 	 * Little Endian
 	 */
 #if defined(HAVE_FILEPOS_SCALAR)
-	printf("#define SWAP_HALF_IN_FILEPOS(dest, src)\t\t%s\n",
-	    "(*(dest) = *(src))");
+	printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
+	       "\t(*(dest) = *(src))\n");
 #else /* HAVE_FILEPOS_SCALAR */
 	/*
 	 * Normally a "(*(dest) = *(src))" would do, but on some
 	 * systems a FILEPOS is not a scalar hence we must memcpy.
 	 */
-	printf("#define SWAP_HALF_IN_FILEPOS(dest, src)\t%s\n",
-	    "\\\n\tmemcpy((void *)(dest), (void *)(src), FILEPOS_LEN)");
+	printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
+	       "\tmemcpy((void *)(dest), (void *)(src), FILEPOS_LEN)\n");
 #endif /* HAVE_FILEPOS_SCALAR */
 #endif /* CALC_BYTE_ORDER == BIG_ENDIAN */
 	putchar('\n');
