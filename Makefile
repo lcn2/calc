@@ -1993,7 +1993,7 @@ ifndef EXCLUDE_FROM_CUSTOM_MAKEFILE
 # Q=	echo internal Makefile actions (debug / verbose mode)
 #
 # H=@:	do not report hsrc file formation progress
-# H=@	do echo hsrc file formation progress
+# H=@	echo hsrc file formation progress
 #
 # S= >/dev/null 2>&1	silence ${CC} output during hsrc file formation
 # S=			full ${CC} output during hsrc file formation
@@ -2002,7 +2002,7 @@ ifndef EXCLUDE_FROM_CUSTOM_MAKEFILE
 # E=			full command stderr during hsrc file formation
 #
 # V=@:	do not echo debug statements (quiet mode)
-# V=@	do echo debug statements (debug / verbose mode)
+# V=@	echo debug statements (debug / verbose mode)
 #
 #Q=
 Q=@
@@ -4701,11 +4701,14 @@ chk: ./cal/regress.cal
 #	* print major Makefile variables
 #	* build anything not yet built
 #
-# make debug:
+# make full_debug:
 #	* remove everything that was previously built
 #	* print major Makefile variables
 #	* make everything
 #	* run the regression tests
+#
+# make debug:
+# 	* run 'make full_debug' and write stdout and stderr to debug.out
 ###
 
 calcinfo:
@@ -4944,27 +4947,27 @@ mkdebug: env version.c
 	@${MAKE} -f Makefile Q= V=@ ver_calc${EXT}
 	-@./ver_calc${EXT}
 	@echo '=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ all =-=-=-='
-	@${MAKE} -f Makefile Q= V=@ all
+	@${MAKE} -f Makefile Q= H=@ S= E= V=@ all
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@echo '=-=-=-= Determining the binary version =-=-=-='
 	-@./calc${EXT} -e -q -v
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-debug: calcinfo env
+full_debug: calcinfo env
 	@echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	@echo '=-=-=-= Contents of ${LOC_MKF} follows =-=-=-='
 	@${CAT} ${LOC_MKF}
 	@echo '=-=-=-= End of contents of ${LOC_MKF} =-=-=-='
 	@echo '=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ clobber =-=-=-='
-	@${MAKE} -f Makefile Q= V=@ clobber
+	@${MAKE} -f Makefile Q= H=@ S= E= V=@ clobber
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@echo '=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ all =-=-=-='
 	@echo '=-=-= this may take a bit of time =-=-='
-	@${MAKE} -f Makefile Q= V=@ all
+	@${MAKE} -f Makefile Q= H=@ S= E= V=@ all
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@echo '=-=-=-= Determining the source version =-=-=-='
-	@${MAKE} -f Makefile Q= V=@ ver_calc${EXT}
+	@${MAKE} -f Makefile Q= H=@ S= E= V=@ ver_calc${EXT}
 	-@./ver_calc${EXT}
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@${ECHON} '=-=-=-= Print #defile values if custom functions '
@@ -4976,6 +4979,19 @@ debug: calcinfo env
 	@${MAKE} -f Makefile Q= V=@ check
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
+
+debug:
+	${RM} -f debug.out
+	${MAKE} -f Makefile full_debug 2>&1 | ${TEE} debug.out
+	@echo
+	@echo 'To file a bug report / open a GitHub Issue, visit:'
+	@echo
+	@echo '    https://github.com/lcn2/calc/issues'
+	@echo
+	@echo 'Click the ((New issue)) button to file a bug report.'
+	@echo
+	@echo 'Please attch the debug.out file to the bug report.'
+	@echo
 
 ###
 #

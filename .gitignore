@@ -29,6 +29,7 @@ cscript/simple
 cscript/square
 custom/.all
 custom/libcustcalc*
+debug.out
 endian
 endian_calc.h
 fposval.h

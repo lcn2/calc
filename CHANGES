@@ -1,4 +1,54 @@
-The following are the changes from calc version 2.14.1.0 to date:
+The following are the changes from calc version 2.14.1.2 to date:
+
+    Added a few remarks on calc version numbers to version.c.
+
+    Fixed how fposval.h is built.  On a number of systems, the fposval.c
+    file failed to compile incorrectly.  This caused problems for systems in
+    which fposval.h.def was not correct.
+
+    Fixed how have_memmv.h is built.  On a number of systems, the have_memmv.c
+    file failed to compile incorrectly, producing a potentially incorrect
+    have_memmv.h file for such systems.
+
+    Fixed how align32.h is built.  On a number of systems, the align32.c
+    file failed to compile incorrectly, producing a potentially incorrect
+    align32.h file for such systems.
+
+    Fixed how have_newstr.h is built.  On a number of systems, the have_newstr.c
+    failed to compile incorrectly, producing a potentially incorrect
+    have_newstr.h file for such systems.
+
+    Fixed how have_strdup.h is built.  On a number of systems, the have_strdup.c
+    file failed to compile incorrectly, producing a potentially incorrect
+    have_strdup.h file for such systems.
+
+    Fixed how have_strlcat.h is built.  On a number of systems, the have_strlcat.c
+    file failed to compile incorrectly, producing a potentially incorrect
+    have_strlcat.h file for such systems.
+
+    Fixed how have_strlcpy.h is built.  On a number of systems, the have_strlcpy.c
+    file failed to compile incorrectly, producing a potentially incorrect
+    have_strlcpy.h file for such systems.
+
+    Fixed how have_uid_t.h is built.  On a number of systems, the have_uid_t.c
+    file failed to compile incorrectly, producing a potentially incorrect
+    have_uid_t.h file for such systems.
+
+    Fixed how have_uid_t.h is built.  On a number of systems, the have_uid_t.c
+    file failed to compile incorrectly, producing a potentially incorrect
+    have_uid_t.h file for such systems.
+
+    Renamed #define FPOS_POS_LEN symbol to FPOSPOS_LEN.
+
+    Added full_debug rule to Makefile.  This does the work of the
+    old debug rule in a more verbose mode by using Q= H=@ S= E= V=@.
+
+    The debug rule in the Makefile now pre-removes debug.out and then
+    runs make full_debug sending stdout and stderr to debug.out.  It then
+    prints a few instructions about filing a GitHub issue bug report.
+
+
+The following are the changes from calc version 2.14.1.0 to 2.14.1.0:
 
     Fixed alignment of show item section of help command.
 
@@ -64,46 +114,6 @@ The following are the changes from calc version 2.14.1.0 to date:
 	    The decimal and group arguments are optional.
 
 	    The value produced by str_comma() is returned.
-
-    Added a few remarks on calc version numbers to version.c.
-
-    Fixed how fposval.h is built.  On a number of systems, the fposval.c
-    file failed to compile incorrectly.  This caused problems for systems in
-    which fposval.h.def was not correct.
-
-    Fixed how have_memmv.h is built.  On a number of systems, the have_memmv.c
-    file failed to compile incorrectly, producing a potentially incorrect
-    have_memmv.h file for such systems.
-
-    Fixed how align32.h is built.  On a number of systems, the align32.c
-    file failed to compile incorrectly, producing a potentially incorrect
-    align32.h file for such systems.
-
-    Fixed how have_newstr.h is built.  On a number of systems, the have_newstr.c
-    failed to compile incorrectly, producing a potentially incorrect
-    have_newstr.h file for such systems.
-
-    Fixed how have_strdup.h is built.  On a number of systems, the have_strdup.c
-    file failed to compile incorrectly, producing a potentially incorrect
-    have_strdup.h file for such systems.
-
-    Fixed how have_strlcat.h is built.  On a number of systems, the have_strlcat.c
-    file failed to compile incorrectly, producing a potentially incorrect
-    have_strlcat.h file for such systems.
-
-    Fixed how have_strlcpy.h is built.  On a number of systems, the have_strlcpy.c
-    file failed to compile incorrectly, producing a potentially incorrect
-    have_strlcpy.h file for such systems.
-
-    Fixed how have_uid_t.h is built.  On a number of systems, the have_uid_t.c
-    file failed to compile incorrectly, producing a potentially incorrect
-    have_uid_t.h file for such systems.
-
-    Fixed how have_uid_t.h is built.  On a number of systems, the have_uid_t.c
-    file failed to compile incorrectly, producing a potentially incorrect
-    have_uid_t.h file for such systems.
-
-    Renamed #define FPOS_POS_LEN symbol to FPOSPOS_LEN.
 
 
 The following are the changes from calc version 2.14.0.15 to 2.14.0.15:
