@@ -24,12 +24,6 @@
  * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
-/*
- * If the symbol HAVE_NO_FPOS is defined, we will output nothing.
- * If the HAVE_FILEPOS_SCALAR is defined, we will output nothing.
- * If we are able to compile this program, then we must have the
- * __pos element in a non-scalar FILEPOS.
- */
 
 #include <stdio.h>
 #include "have_fpos.h"
@@ -42,29 +36,43 @@
 int
 main(void)
 {
-#if !defined(HAVE_NO_FPOS) && !defined(HAVE_FILEPOS_SCALAR)
-	fpos_t pos;		/* file position */
+#if defined(HAVE_FILEPOS_SCALAR)
 
-	/* print a __pos element in fpos_t */
-	printf("#undef HAVE_FPOS_POS\n");
-	printf("#define HAVE_FPOS_POS 1  /* yes */\n\n");
-
-	/* determine __pos element size */
-	printf("#undef FPOS_POS_BITS\n");
-	printf("#undef FPOSPOS_LEN\n");
-# if defined(FPOS_POS_BITS)
-	printf("#define FPOS_POS_BITS %d\n", FPOS_POS_BITS);
-	printf("#define FPOSPOS_LEN %d\n", int(FPOS_POS_BITS/8));
-# else
-	printf("#define FPOS_POS_BITS %lu\n", sizeof(pos.__pos)*8);
-	printf("#define FPOSPOS_LEN %lu\n", sizeof(pos.__pos));
-# endif
-
-#else
-	/* we have no __pos element */
+	printf("/* HAVE_FILEPOS_SCALAR is defined, we assume FILEPOS is scalar */\n");
+	printf("/* we assume we have no __pos in FILEPOS */\n");
 	printf("#undef HAVE_FPOS_POS\t/* no */\n");
 	printf("#undef FPOS_POS_BITS\n");
-	printf("#undef FPOSPOS_LEN\n");
+	printf("#undef FPOS_POS_LEN\n");
+
+#else
+
+	printf("/* HAVE_FILEPOS_SCALAR is undefined, we assume FILEPOS is not scalar */\n");
+# if defined(HAVE_NO_FPOS_POS)
+	printf("/* HAVE_NO_FPOS_POS defiled, we assume we have no __pos in FILEPOS */\n");
+	printf("#undef HAVE_FPOS_POS\t/* no */\n");
+	printf("#undef FPOS_POS_BITS\n");
+	printf("#undef FPOS_POS_LEN\n");
+
+# elif defined(FPOS_POS_BITS)
+	printf("/* FPOS_POS_BITS defiled, assume we have __pos in FILEPOS */\n");
+	printf("#undef HAVE_FPOS_POS\n");
+	printf("#define HAVE_FPOS_POS 1  /* yes */\n");
+	printf("#undef FPOS_POS_BITS\n");
+	printf("#define FPOS_POS_BITS %d\n", FPOS_POS_BITS);
+	printf("#undef FPOS_POS_LEN\n");
+	printf("#define FPOS_POS_LEN %d\n", int(FPOS_POS_BITS/8));
+# else
+	fpos_t pos;		/* file position */
+
+	memset(&pos, 0, sizeof(pos));	/* zeroize pos to "set it" */
+	printf("/* we successfully compiled with a fpos_t type wit an __pos element */\n");
+	printf("#undef HAVE_FPOS_POS\n");
+	printf("#define HAVE_FPOS_POS 1  /* yes */\n");
+	printf("#undef FPOS_POS_BITS\n");
+	printf("#define FPOS_POS_BITS %lu\n", sizeof(pos.__pos)*8);
+	printf("#undef FPOS_POS_LEN\n");
+	printf("#define FPOS_POS_LEN %lu\n", sizeof(pos.__pos));
+# endif
 #endif
 	/* exit(0); */
 	return 0;

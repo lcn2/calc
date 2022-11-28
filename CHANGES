@@ -38,8 +38,6 @@ The following are the changes from calc version 2.14.1.2 to date:
     file failed to compile incorrectly, producing a potentially incorrect
     have_uid_t.h file for such systems.
 
-    Renamed #define FPOS_POS_LEN symbol to FPOSPOS_LEN.
-
     Added full_debug rule to Makefile.  This does the work of the
     old debug rule in a more verbose mode by using Q= H=@ S= E= V=@.
 
@@ -49,6 +47,29 @@ The following are the changes from calc version 2.14.1.2 to date:
 
     The full_debug rule will no longer stop when one of the sub-tasks
     failed (exit non-zero).
+
+    Restored use of the #define FPOS_POS_LEN symbol.  This refers to
+    the length of the __pos element (if the __pos element exists),
+    the fpos_t type (if that type exists).
+
+    Changed SWAP_HALF_IN_FILEPOS(dest, src) mato to use FILEPOS_LEN Little
+    Endian when FILEPOS is a simple scalar type (i.e., HAVE_FILEPOS_SCALAR
+    is defined).
+
+    Changed #define HAVE_FPOS to HAVE_FGETSETPOS.
+
+    Corrected comment in have_fpos_pos.h.  The HAVE_FPOS_POS symbol was
+    NOT related to fgetpos & fsetpos but rather if we we have an __pos
+    element in FILEPOS.
+
+    Changed #define HAVE_NO_FPOS to HAVE_NO_FGETSETPOS.
+
+    Improved comments in have_fpos_pos.h to show why and how
+    HAVE_FPOS_POS, FPOS_POS_BITS, and FPOS_POS_LEN were defined or undefed.
+
+    Changed showfiles builtin to print sizes cast to (long int) with
+    the "%ld" printf format to avoid implementations that do not support
+    the "%lld" printf format specifier.
 
 
 The following are the changes from calc version 2.14.1.0 to 2.14.1.0:

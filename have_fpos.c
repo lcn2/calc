@@ -25,7 +25,7 @@
  */
 
 /*
- * If the symbol HAVE_NO_FPOS is defined, we will output nothing.
+ * If the symbol HAVE_NO_FGETSETPOS is defined, we will output nothing.
  * If we are able to compile this program, then we must have the
  * fgetpos and fsetpos functions and we will output the
  * appropriate have_fpos.h file body.
@@ -40,7 +40,7 @@
 int
 main(void)
 {
-#if !defined(HAVE_NO_FPOS)
+#if !defined(HAVE_NO_FGETSETPOS)
 	fpos_t pos;		/* file position */
 
 	/* get the current position */
@@ -50,8 +50,8 @@ main(void)
 	(void) fsetpos(stdin, &pos);
 
 	/* print a have_fpos.h body that says we have the functions */
-	printf("#undef HAVE_FPOS\n");
-	printf("#define HAVE_FPOS 1  /* yes */\n\n");
+	printf("#undef HAVE_FGETSETPOS\n");
+	printf("#define HAVE_FGETSETPOS 1  /* yes */\n\n");
 	printf("typedef fpos_t FILEPOS;\n");
 #endif
 	/* exit(0); */

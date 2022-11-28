@@ -137,8 +137,7 @@ main(int UNUSED(argc), char **argv)
 	 * systems a FILEPOS is not a scalar hence we must memcpy.
 	 */
 	printf("#define SWAP_HALF_IN_FILEPOS(dest, src)\t%s\n",
-	    "\\\n\tmemcpy((void *)(dest), (void *)(src), "
-	    "sizeof(FPOSPOS_LEN))");
+	    "\\\n\tmemcpy((void *)(dest), (void *)(src), FILEPOS_LEN)");
 #endif /* HAVE_FILEPOS_SCALAR */
 #endif /* CALC_BYTE_ORDER == BIG_ENDIAN */
 	putchar('\n');

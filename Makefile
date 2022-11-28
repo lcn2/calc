@@ -280,14 +280,14 @@ LONG_BITS=
 # Determine if we have the ANSI C fgetpos and fsetpos alternate interface
 # to the ftell() and fseek() (with whence set to SEEK_SET) functions.
 #
-# If HAVE_FPOS is empty, this Makefile will run the have_fpos program
-# to determine if there is are fgetpos and fsetpos functions.  If HAVE_FPOS
-# is set to -DHAVE_NO_FPOS, then calc will use ftell() and fseek().
+# If HAVE_FGETSETPOS is empty, this Makefile will run the have_fpos program
+# to determine if there is are fgetpos and fsetpos functions.  If HAVE_FGETSETPOS
+# is set to -DHAVE_NO_FGETSETPOS, then calc will use ftell() and fseek().
 #
-# If in doubt, leave HAVE_FPOS empty and this Makefile will figure it out.
+# If in doubt, leave HAVE_FGETSETPOS empty and this Makefile will figure it out.
 #
-HAVE_FPOS=
-#HAVE_FPOS= -DHAVE_NO_FPOS
+HAVE_FGETSETPOS=
+#HAVE_FGETSETPOS= -DHAVE_NO_FGETSETPOS
 
 # Determine if we have an __pos element of a file position (fpos_t) structure.
 #
@@ -3190,7 +3190,7 @@ have_fpos.h: have_fpos.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} echo '' >> $@
 	${Q} echo '/* do we have fgetpos & fsetpos functions? */' >> $@
 	${Q} ${RM} -f have_fpos.o have_fpos${EXT}
-	-${Q} ${LCC} ${HAVE_FPOS} ${ICFLAGS} have_fpos.c -c ${S} \
+	-${Q} ${LCC} ${HAVE_FGETSETPOS} ${ICFLAGS} have_fpos.c -c ${S} \
 		|| ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_fpos.o -o have_fpos${EXT} ${S} \
 		|| ${TRUE}
@@ -3199,7 +3199,7 @@ have_fpos.h: have_fpos.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	-${Q} if [ -s fpos_tmp ]; then \
 	    ${CAT} fpos_tmp >> $@; \
 	else \
-	    echo '#undef HAVE_FPOS  /* no */' >> $@; \
+	    echo '#undef HAVE_FGETSETPOS  /* no */' >> $@; \
 	    echo '' >> $@; \
 	    echo 'typedef long FILEPOS;' >> $@; \
 	fi
@@ -3231,9 +3231,9 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h \
 	${Q} echo '#define CALC_HAVE_FPOS_POS_H' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
-	${Q} echo '/* do we have fgetpos & fsetpos functions? */' >> $@
+	${Q} echo '/* do we have an __pos element in FILEPOS? */' >> $@
 	${Q} ${RM} -f have_fpos_pos.o have_fpos_pos${EXT}
-	-${Q} ${LCC} ${HAVE_FPOS} ${HAVE_FPOS_POS} ${ICFLAGS} \
+	-${Q} ${LCC} ${HAVE_FGETSETPOS} ${HAVE_FPOS_POS} ${ICFLAGS} \
 		have_fpos_pos.c -c ${S} \
 			|| ${TRUE}
 	-${Q} ${LCC} ${ILDFLAGS} have_fpos_pos.o -o have_fpos_pos${EXT} ${S} \
@@ -4825,7 +4825,7 @@ env:
 	@echo 'HAVE_ARC4RANDOM=${HAVE_ARC4RANDOM}'; echo ''
 	@echo 'HAVE_CONST=${HAVE_CONST}'; echo ''
 	@echo 'HAVE_ENVIRON=${HAVE_ENVIRON}'; echo ''
-	@echo 'HAVE_FPOS=${HAVE_FPOS}'; echo ''
+	@echo 'HAVE_FGETSETPOS=${HAVE_FGETSETPOS}'; echo ''
 	@echo 'HAVE_FPOS_POS=${HAVE_FPOS_POS}'; echo ''
 	@echo 'HAVE_GETPGID=${HAVE_GETPGID}'; echo ''
 	@echo 'HAVE_GETPRID=${HAVE_GETPRID}'; echo ''

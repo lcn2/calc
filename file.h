@@ -71,7 +71,7 @@ typedef struct {
  * Some obscure systems without fgetpos/fsetpos may not have a simple
  * scalar type.	 In these cases the f_tell macro below will fail.
  */
-#if defined(HAVE_FPOS)
+#if defined(HAVE_FGETSETPOS)
 
 #define f_seek_set(stream, loc) fsetpos((FILE*)(stream), (FILEPOS*)(loc))
 #define f_tell(stream, loc) fgetpos((FILE*)(stream), (FILEPOS*)(loc))

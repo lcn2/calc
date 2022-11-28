@@ -2022,7 +2022,7 @@ showfiles(void)
 			math_chr('\n');
 			continue;
 		}
-		printf(" size = %lld\n", (long long int)sizes[i]);
+		printf(" size = %ld\n", (long int)sizes[i]);
 		for (j = i + 1; j < idnum; j++) {
 			if (listed[j] || sizes[j] == -1)
 				continue;
