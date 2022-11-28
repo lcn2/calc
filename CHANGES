@@ -103,6 +103,8 @@ The following are the changes from calc version 2.14.1.0 to date:
     file failed to compile incorrectly, producing a potentially incorrect
     have_uid_t.h file for such systems.
 
+    Renamed #define FPOS_POS_LEN symbol to FPOSPOS_LEN.
+
 
 The following are the changes from calc version 2.14.0.15 to 2.14.0.15:
 

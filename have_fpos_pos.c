@@ -51,20 +51,20 @@ main(void)
 
 	/* determine __pos element size */
 	printf("#undef FPOS_POS_BITS\n");
-	printf("#undef FPOS_POS_LEN\n");
+	printf("#undef FPOSPOS_LEN\n");
 # if defined(FPOS_POS_BITS)
 	printf("#define FPOS_POS_BITS %d\n", FPOS_POS_BITS);
-	printf("#define FPOS_POS_LEN %d\n", int(FPOS_POS_BITS/8));
+	printf("#define FPOSPOS_LEN %d\n", int(FPOS_POS_BITS/8));
 # else
 	printf("#define FPOS_POS_BITS %lu\n", sizeof(pos.__pos)*8);
-	printf("#define FPOS_POS_LEN %lu\n", sizeof(pos.__pos));
+	printf("#define FPOSPOS_LEN %lu\n", sizeof(pos.__pos));
 # endif
 
 #else
 	/* we have no __pos element */
 	printf("#undef HAVE_FPOS_POS\t/* no */\n");
 	printf("#undef FPOS_POS_BITS\n");
-	printf("#undef FPOS_POS_LEN\n");
+	printf("#undef FPOSPOS_LEN\n");
 #endif
 	/* exit(0); */
 	return 0;

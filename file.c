@@ -1459,7 +1459,7 @@ z2filepos(ZVALUE zpos)
 	if (zpos.len >= FILEPOS_BITS/BASEB) {
 		/* copy the lower FILEPOS_BITS of the ZVALUE */
 		memset(&tmp, 0, sizeof(tmp)); /* FILEPOS could be non-scalar */
-		memcpy(&tmp, zpos.v, MIN(sizeof(tmp), FILEPOS_LEN);
+		memcpy(&tmp, zpos.v, MIN(sizeof(tmp), FILEPOS_LEN));
 	} else {
 		/* copy what bits we can into the temp value */
 		memset(&tmp, 0, sizeof(tmp)); /* FILEPOS could be non-scalar */

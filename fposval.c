@@ -138,7 +138,7 @@ main(int UNUSED(argc), char **argv)
 	 */
 	printf("#define SWAP_HALF_IN_FILEPOS(dest, src)\t%s\n",
 	    "\\\n\tmemcpy((void *)(dest), (void *)(src), "
-	    "sizeof(FPOS_POS_LEN))");
+	    "sizeof(FPOSPOS_LEN))");
 #endif /* HAVE_FILEPOS_SCALAR */
 #endif /* CALC_BYTE_ORDER == BIG_ENDIAN */
 	putchar('\n');
