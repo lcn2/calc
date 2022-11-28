@@ -643,6 +643,7 @@ E_FUNC void math_error(char *, ...) \
 E_FUNC HALF *swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len);
 E_FUNC ZVALUE *swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all);
 E_FUNC HALF *swap_b16_in_HALFs(HALF *dest, HALF *src, LEN len);
+E_FUNC HALF *swap_HALFs(HALF *dest, HALF *src, LEN len);
 E_FUNC ZVALUE *swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all);
 E_FUNC ZVALUE *swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all);
 

@@ -96,7 +96,7 @@ main(int UNUSED(argc), char **argv)
 	/*
 	 * print the file position information
 	 */
-#if defined(HAVE_FPOS_POS)
+#if defined(HAVE_FPOS_POS) && defined(FPOS_POS_BITS)
 	fileposlen = FPOS_POS_BITS;
 #else /* ! HAVE_FPOS_POS */
 # if defined(FPOS_BITS)
@@ -119,8 +119,12 @@ main(int UNUSED(argc), char **argv)
 	} else if (fileposlen == 32) {
 		printf("#define SWAP_HALF_IN_FILEPOS(dest, src)\t\t%s\n",
 		    "SWAP_HALF_IN_B32(dest, src)");
+	} else if (fileposlen%BASEB == 0) {
+		printf("#define SWAP_HALF_IN_FILEPOS(dest, src)\t\t"
+		       "swap_HALFs((HALF *)dest, (HALF *)src, (LEN)%d)\n",
+		       fileposlen/BASEB);
 	} else {
-		fprintf(stderr, "%s: unexpected FILEPOS bit size: %d\n",
+		fprintf(stderr, "%s: unexpected BIG_ENDIAN FILEPOS bit size: %d\n",
 		    program, fileposlen);
 		exit(1);
 	}

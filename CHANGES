@@ -27,6 +27,14 @@ The following are the changes from calc version 2.14.1.2 to date:
     to CALC_HAVE_FGETSETPOS_H.  The make install and the olduninstall
     rules remove the any old have_fpos.h that was previously installed.
 
+    Added swap_HALFs(dest, src, len) function to byteswap.c.
+
+    Calc can now handle Big Engian file position sizes that are a
+    multiple of BASEB bits in length.  Before handle Big Engian file
+    positions could only be 32 and 64 bits in length.  This will allow,
+    for example, a Big Engian file position size of 128 (assuming that
+    128/BASEB is is an integer).
+
 
 The following are the changes from calc version 2.14.1.1 to 2.14.1.1:
 

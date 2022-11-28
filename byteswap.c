@@ -40,7 +40,7 @@
  *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a HALF array to swap
- *	len	- length of the src HALF array
+ *	len	- length of the src HALF array in HALFs
  *
  * returns:
  *	pointer to where the swapped src has been put
@@ -276,7 +276,7 @@ swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
  *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a HALF array to swap
- *	len	- length of the src HALF array
+ *	len	- length of the src HALF array in HALFs
  *
  * returns:
  *	pointer to where the swapped src has been put
@@ -300,6 +300,50 @@ swap_b16_in_HALFs(HALF *dest, HALF *src, LEN len)
 	 */
 	for (i=0; i < len; ++i, ++dest, ++src) {
 		SWAP_B16_IN_HALF(dest, src);
+	}
+
+	/*
+	 * return the result
+	 */
+	return ret;
+}
+
+
+/*
+ * swap_HALFs - swap HALFs in an array of HALFs
+ *
+ * given:
+ *	dest	- pointer to where the swapped src will be put or
+ *		  NULL to allocate the storage
+ *	src	- pointer to a HALF array to swap
+ *	len	- length of the src HALF array in HALFs
+ *
+ * returns:
+ *	pointer to where the swapped src has been put
+ */
+HALF *
+swap_HALFs(HALF *dest, HALF *src, LEN len)
+{
+	HALF *s;	/* src swap pointer */
+	HALF *d;	/* dest swap pointer */
+	HALF *ret;
+	LEN i;
+
+	/*
+	 * allocate storage if needed
+	 */
+	if (dest == NULL) {
+		dest = alloc(len);
+	}
+	ret = dest;
+
+	/*
+	 * swap HALFs in the array
+	 */
+	s = src;
+	d = &dest[len-1];
+	for (i=0; i < len; ++i, --d, ++s) {
+		*d = *s;
 	}
 
 	/*
