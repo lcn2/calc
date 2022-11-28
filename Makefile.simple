@@ -3996,7 +3996,7 @@ chk: ./cal/regress.cal
 #	* run the regression tests
 #
 # make debug:
-# 	* run 'make full_debug' and write stdout and stderr to debug.out
+#	* run 'make full_debug' and write stdout and stderr to debug.out
 ###
 
 calcinfo:
@@ -4229,10 +4229,10 @@ env:
 mkdebug: env version.c
 	@echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	@echo '=-=-=-= Contents of ${LOC_MKF} follows =-=-=-='
-	@${CAT} ${LOC_MKF}
+	-@${CAT} ${LOC_MKF}
 	@echo '=-=-=-= End of contents of ${LOC_MKF} =-=-=-='
 	@echo '=-=-=-= Determining the source version =-=-=-='
-	@${MAKE} -f Makefile Q= V=@ ver_calc${EXT}
+	-@${MAKE} -f Makefile Q= V=@ ver_calc${EXT}
 	-@./ver_calc${EXT}
 	@echo '=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ all =-=-=-='
 	@${MAKE} -f Makefile Q= H=@ S= E= V=@ all
@@ -4245,32 +4245,32 @@ mkdebug: env version.c
 full_debug: calcinfo env
 	@echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	@echo '=-=-=-= Contents of ${LOC_MKF} follows =-=-=-='
-	@${CAT} ${LOC_MKF}
+	-@${CAT} ${LOC_MKF}
 	@echo '=-=-=-= End of contents of ${LOC_MKF} =-=-=-='
 	@echo '=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ clobber =-=-=-='
-	@${MAKE} -f Makefile Q= H=@ S= E= V=@ clobber
+	-@${MAKE} -f Makefile Q= H=@ S= E= V=@ clobber
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@echo '=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ all =-=-=-='
 	@echo '=-=-= this may take a bit of time =-=-='
-	@${MAKE} -f Makefile Q= H=@ S= E= V=@ all
+	-@${MAKE} -f Makefile Q= H=@ S= E= V=@ all
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@echo '=-=-=-= Determining the source version =-=-=-='
-	@${MAKE} -f Makefile Q= H=@ S= E= V=@ ver_calc${EXT}
+	-@${MAKE} -f Makefile Q= H=@ S= E= V=@ ver_calc${EXT}
 	-@./ver_calc${EXT}
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
-	@${ECHON} '=-=-=-= Print #defile values if custom functions '
+	-@${ECHON} '=-=-=-= Print #defile values if custom functions '
 	@echo 'are allowed =-=-=-='
 	-@${CALC_ENV} ./calc${EXT} -e -q -C 'print custom("sysinfo", 2);'
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@echo '=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ check =-=-=-='
 	@echo '=-=-= this may take a while =-=-='
-	@${MAKE} -f Makefile Q= V=@ check
+	-@${MAKE} -f Makefile Q= V=@ check
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
 	@echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 debug:
-	${RM} -f debug.out
-	${MAKE} -f Makefile full_debug 2>&1 | ${TEE} debug.out
+	-${RM} -f debug.out
+	-${MAKE} -f Makefile full_debug 2>&1 | ${TEE} debug.out
 	@echo
 	@echo 'To file a bug report / open a GitHub Issue, visit:'
 	@echo

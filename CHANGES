@@ -47,6 +47,9 @@ The following are the changes from calc version 2.14.1.2 to date:
     runs make full_debug sending stdout and stderr to debug.out.  It then
     prints a few instructions about filing a GitHub issue bug report.
 
+    The full_debug rule will no longer stop when one of the sub-tasks
+    failed (exit non-zero).
+
 
 The following are the changes from calc version 2.14.1.0 to 2.14.1.0:
 
