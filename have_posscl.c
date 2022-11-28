@@ -48,7 +48,7 @@
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
-#include "have_fpos.h"
+#include "have_fgetsetpos.h"
 
 
 #include "banned.h"	/* include after system header <> includes */

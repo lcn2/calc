@@ -32,9 +32,9 @@
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
-# include "have_fpos.h"
+# include "have_fgetsetpos.h"
 #else
-# include <calc/have_fpos.h>
+# include <calc/have_fgetsetpos.h>
 #endif
 
 

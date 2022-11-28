@@ -38,7 +38,7 @@
 #include "file.h"
 #include "zrand.h"
 #include "zrandom.h"
-#include "have_fpos.h"
+#include "have_fgetsetpos.h"
 #include "custom.h"
 #include "lib_calc.h"
 #include "block.h"

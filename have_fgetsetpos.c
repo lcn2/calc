@@ -1,7 +1,7 @@
 /*
  * have_fpos - Determine if have fgetpos and fsetpos functions
  *
- * Copyright (C) 1999,2021  Landon Curt Noll
+ * Copyright (C) 1999,2021,2022  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -28,7 +28,7 @@
  * If the symbol HAVE_NO_FGETSETPOS is defined, we will output nothing.
  * If we are able to compile this program, then we must have the
  * fgetpos and fsetpos functions and we will output the
- * appropriate have_fpos.h file body.
+ * appropriate have_fgetsetpos.h file body.
  */
 
 #include <stdio.h>
@@ -49,7 +49,7 @@ main(void)
 	/* set the current position */
 	(void) fsetpos(stdin, &pos);
 
-	/* print a have_fpos.h body that says we have the functions */
+	/* print a have_fgetsetpos.h body that says we have the functions */
 	printf("#undef HAVE_FGETSETPOS\n");
 	printf("#define HAVE_FGETSETPOS 1  /* yes */\n\n");
 	printf("typedef fpos_t FILEPOS;\n");

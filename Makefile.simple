@@ -1476,7 +1476,7 @@ LIB_H_SRC= alloc.h banned.h blkcpy.h block.h byteswap.h calc.h cmath.h \
 # we build these .h files during the make
 #
 BUILD_H_SRC= align32.h args.h calcerr.h conf.h endian_calc.h \
-	fposval.h have_ban_pragma.h have_const.h have_fpos.h \
+	fposval.h have_ban_pragma.h have_const.h have_fgetsetpos.h \
 	have_fpos_pos.h have_getpgid.h have_getprid.h have_getsid.h \
 	have_gettime.h have_memmv.h have_newstr.h have_offscl.h \
 	have_posscl.h have_rusage.h have_stdlib.h have_strdup.h \
@@ -1494,7 +1494,7 @@ BUILD_C_SRC= calcerr.c
 # There MUST be a .c for every .o in UTIL_OBJS.
 #
 UTIL_C_SRC= align32.c endian.c longbits.c have_newstr.c have_uid_t.c \
-	have_const.c have_stdvs.c have_varvs.c fposval.c have_fpos.c \
+	have_const.c have_stdvs.c have_varvs.c fposval.c have_fgetsetpos.c \
 	have_fpos_pos.c have_offscl.c have_posscl.c have_memmv.c \
 	have_ustat.c have_getsid.c have_getpgid.c have_environ.c \
 	have_gettime.c have_getprid.c have_rusage.c have_strdup.c \
@@ -1512,7 +1512,7 @@ UTIL_MISC_SRC= calcerr_h.sed calcerr_h.awk calcerr_c.sed calcerr_c.awk \
 # There MUST be a .o for every .c in UTIL_C_SRC.
 #
 UTIL_OBJS= endian.o longbits.o have_newstr.o have_uid_t.o \
-	have_const.o fposval.o have_fpos.o have_fpos_pos.o \
+	have_const.o fposval.o have_fgetsetpos.o have_fpos_pos.o \
 	try_strarg.o have_stdvs.o have_varvs.o have_posscl.o have_memmv.o \
 	have_ustat.o have_getsid.o have_getpgid.o have_environ.o \
 	have_gettime.o have_getprid.o ver_calc.o have_rusage.o have_strdup.o \
@@ -2490,7 +2490,7 @@ terminal.h: ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-have_fpos.h: have_fpos.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+have_fgetsetpos.h: have_fgetsetpos.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f fpos_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -2498,15 +2498,15 @@ have_fpos.h: have_fpos.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} echo ' */' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
-	${Q} echo '#if !defined(CALC_HAVE_FPOS_H)' >> $@
-	${Q} echo '#define CALC_HAVE_FPOS_H' >> $@
+	${Q} echo '#if !defined(CALC_HAVE_FGETSETPOS_H)' >> $@
+	${Q} echo '#define CALC_HAVE_FGETSETPOS_H' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
 	${Q} echo '/* do we have fgetpos & fsetpos functions? */' >> $@
-	${Q} ${RM} -f have_fpos.o have_fpos${EXT}
-	-${Q} ${LCC} ${HAVE_FGETSETPOS} ${ICFLAGS} have_fpos.c -c ${S} \
+	${Q} ${RM} -f have_fgetsetpos.o have_fpos${EXT}
+	-${Q} ${LCC} ${HAVE_FGETSETPOS} ${ICFLAGS} have_fgetsetpos.c -c ${S} \
 		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_fpos.o -o have_fpos${EXT} ${S} \
+	-${Q} ${LCC} ${ILDFLAGS} have_fgetsetpos.o -o have_fpos${EXT} ${S} \
 		|| ${TRUE}
 	-${Q} ./have_fpos${EXT} > fpos_tmp ${E} \
 		|| ${TRUE}
@@ -2519,8 +2519,8 @@ have_fpos.h: have_fpos.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	fi
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
-	${Q} echo '#endif /* !CALC_HAVE_FPOS_H */' >> $@
-	${Q} ${RM} -f have_fpos${EXT} have_fpos.o fpos_tmp
+	${Q} echo '#endif /* !CALC_HAVE_FGETSETPOS_H */' >> $@
+	${Q} ${RM} -f have_fpos${EXT} have_fgetsetpos.o fpos_tmp
 	${H} echo '$@ formed'
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -2532,7 +2532,7 @@ have_fpos.h: have_fpos.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h \
+have_fpos_pos.h: have_fpos_pos.c have_fgetsetpos.h have_posscl.h \
 		 banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f fpos_tmp $@
 	${H} echo 'forming $@'
@@ -2576,7 +2576,7 @@ have_fpos_pos.h: have_fpos_pos.c have_fpos.h have_posscl.h \
 	    ${TRUE}; \
 	fi
 
-fposval.h: fposval.c have_fpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
+fposval.h: fposval.c have_fgetsetpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	   endian_calc.h banned.h have_ban_pragma.h fposval.h.def alloc.h \
 	   have_newstr.h have_memmv.h have_string.h have_const.h have_string.h \
 	   have_unused.h ${MAKE_FILE} ${LOC_MKF}
@@ -2704,7 +2704,7 @@ have_offscl.h: have_offscl.c have_unistd.h \
 	    ${TRUE}; \
 	fi
 
-have_posscl.h: have_posscl.c have_fpos.h have_unistd.h \
+have_posscl.h: have_posscl.c have_fgetsetpos.h have_unistd.h \
 	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp $@
 	${H} echo 'forming $@'
@@ -4431,6 +4431,7 @@ olduninstall:
 	-${RMDIR} /usr/local/bin/cscript
 	${RM} -f inst_files
 	${RM} -f ${CALC_INCDIR}/calcerr.c
+	${RM} -f ${CALC_INCDIR}/have_fgetsetpos.h
 
 tags: ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} ${MAKE_FILE}
 	-${CTAGS} ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} 2>&1 | \
@@ -4797,6 +4798,9 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 	fi
 	${V} # NOTE: misc install cleanup
 	${Q} ${RM} -f tmp
+	${V} # NOTE: have_fgetsetpos.h has been renamed to have_fgetsetpos.h so we
+	${V} #       remove the old have_fgetsetpos.h include file.
+	${Q} ${RM} -f ${CALC_INCDIR}/have_fgetsetpos.h
 	${V} # NOTE: remove the calcerr.c that was installed by mistake
 	${V} #	     under ${INC_DIR} in calc v2.12.9.1
 	${Q} ${RM} -f ${T}${CALC_INCDIR}/calcerr.c
@@ -5133,7 +5137,7 @@ blkcpy.o: file.h
 blkcpy.o: hash.h
 blkcpy.o: have_ban_pragma.h
 blkcpy.o: have_const.h
-blkcpy.o: have_fpos.h
+blkcpy.o: have_fgetsetpos.h
 blkcpy.o: have_memmv.h
 blkcpy.o: have_newstr.h
 blkcpy.o: have_stdlib.h
@@ -5421,7 +5425,7 @@ file.o: fposval.h
 file.o: hash.h
 file.o: have_ban_pragma.h
 file.o: have_const.h
-file.o: have_fpos.h
+file.o: have_fgetsetpos.h
 file.o: have_fpos_pos.h
 file.o: have_memmv.h
 file.o: have_newstr.h
@@ -5445,7 +5449,7 @@ fposval.o: endian_calc.h
 fposval.o: fposval.c
 fposval.o: have_ban_pragma.h
 fposval.o: have_const.h
-fposval.o: have_fpos.h
+fposval.o: have_fgetsetpos.h
 fposval.o: have_fpos_pos.h
 fposval.o: have_memmv.h
 fposval.o: have_newstr.h
@@ -5471,7 +5475,7 @@ func.o: func.h
 func.o: hash.h
 func.o: have_ban_pragma.h
 func.o: have_const.h
-func.o: have_fpos.h
+func.o: have_fgetsetpos.h
 func.o: have_memmv.h
 func.o: have_newstr.h
 func.o: have_rusage.h
@@ -5539,12 +5543,12 @@ have_const.o: have_const.c
 have_environ.o: banned.h
 have_environ.o: have_ban_pragma.h
 have_environ.o: have_environ.c
-have_fpos.o: banned.h
-have_fpos.o: have_ban_pragma.h
-have_fpos.o: have_fpos.c
+have_fgetsetpos.o: banned.h
+have_fgetsetpos.o: have_ban_pragma.h
+have_fgetsetpos.o: have_fgetsetpos.c
 have_fpos_pos.o: banned.h
 have_fpos_pos.o: have_ban_pragma.h
-have_fpos_pos.o: have_fpos.h
+have_fpos_pos.o: have_fgetsetpos.h
 have_fpos_pos.o: have_fpos_pos.c
 have_fpos_pos.o: have_posscl.h
 have_getpgid.o: banned.h
@@ -5576,7 +5580,7 @@ have_offscl.o: have_offscl.c
 have_offscl.o: have_unistd.h
 have_posscl.o: banned.h
 have_posscl.o: have_ban_pragma.h
-have_posscl.o: have_fpos.h
+have_posscl.o: have_fgetsetpos.h
 have_posscl.o: have_posscl.c
 have_posscl.o: have_unistd.h
 have_rusage.o: banned.h
@@ -5940,7 +5944,7 @@ opcodes.o: func.h
 opcodes.o: hash.h
 opcodes.o: have_ban_pragma.h
 opcodes.o: have_const.h
-opcodes.o: have_fpos.h
+opcodes.o: have_fgetsetpos.h
 opcodes.o: have_memmv.h
 opcodes.o: have_newstr.h
 opcodes.o: have_stdlib.h
@@ -6393,7 +6397,7 @@ value.o: func.h
 value.o: hash.h
 value.o: have_ban_pragma.h
 value.o: have_const.h
-value.o: have_fpos.h
+value.o: have_fgetsetpos.h
 value.o: have_memmv.h
 value.o: have_newstr.h
 value.o: have_stdlib.h

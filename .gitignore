@@ -37,7 +37,7 @@ have_arc4random.h
 have_ban_pragma.h
 have_const.h
 have_environ.h
-have_fpos.h
+have_fgetsetpos.h
 have_fpos_pos.h
 have_getpgid.h
 have_getprid.h

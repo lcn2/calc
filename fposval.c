@@ -64,7 +64,7 @@
 # include <string.h>
 #endif
 #include "decl.h"
-#include "have_fpos.h"
+#include "have_fgetsetpos.h"
 #include "endian_calc.h"
 #include "have_offscl.h"
 #include "have_posscl.h"

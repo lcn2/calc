@@ -39,7 +39,7 @@
 #include "calc.h"
 #include "alloc.h"
 #include "longbits.h"
-#include "have_fpos.h"
+#include "have_fgetsetpos.h"
 #include "have_fpos_pos.h"
 #include "fposval.h"
 #include "file.h"

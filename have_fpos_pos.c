@@ -26,7 +26,7 @@
 
 
 #include <stdio.h>
-#include "have_fpos.h"
+#include "have_fgetsetpos.h"
 #include "have_posscl.h"
 
 
