@@ -592,7 +592,6 @@ pseudo_seed(void)
     sdata.size = sizeof(sdata);
     sdata.prev_hash64_copy = prev_hash64;	/* load previous hash */
     sdata.call_count_copy = ++call_count;	/* update call count */
-    (void) setjmp(sdata.env);
 #if defined(HAVE_ENVIRON)
     sdata.environ_copy = environ;
 #endif /* HAVE_ENVIRON */

@@ -14,6 +14,15 @@ The following are the changes from calc version 2.14.2.0 to date:
     pre-modified copy of fd_setup.  We realloc the fd_orig array and copy
     the fd_setup into it first, before touching the fd_setup array.
 
+    In pseudo_seed(), we removed a call to setjmp() that was only
+    there to add more information to mix into the seed.  For compilers
+    such as gcc that used -Wclobbered, the call to setjmp() gave the
+    impression that the hash_val might be clobbered by a longjmp().
+    Where there is no longjmp() that would use the previous setjmp(),
+    the gcc compiler has nil ways to notice that. So to avoid confusion
+    we removed the setjmp() call.  Thanks to <GitHub user mattdm> for
+    raising this potential concern.
+
 
 The following are the changes from calc version 2.14.1.2 to date:
 
