@@ -213,7 +213,7 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	POW_ALG2,		/* size of modulus to use REDC for powers */
 	REDC_ALG2,		/* size of modulus to use REDC algorithm 2 */
 	TRUE,			/* OK to print a tilde on approximations */
-	TRUE,			/* OK to print a space after tilde on approximations */
+	FALSE,			/* OK to print a space after tilde on approximations */
 	TRUE,			/* OK to print tab before numeric values */
 	0,			/* quomod() default rounding mode */
 	2,			/* quotient // default rounding mode */

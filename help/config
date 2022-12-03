@@ -135,7 +135,7 @@ DESCRIPTION
 	    config("display", 50);	    50 digits of output
 	    epsilon(epsilon() / 8);	    3 bits more accuracy
 	    config("tilde", 0)		    disable roundoff tilde printing
-	    config("tilde_space", 0)	    disable printing space after roundoff tilde
+	    config("tilde_space", 1)	    enable printing space after roundoff tilde
 	    config("tab", "off")	    disable leading tab printing
 
     =-=
@@ -382,7 +382,7 @@ DESCRIPTION
     printed after leading tilde ('~').  See config("tilde") above.
     If config("tilde") is false, then config("tilde_space") has no effect.
 
-    The initial "tilde_space" value is 1.
+    The initial "tilde_space" value is 0.
 
     =-=
 
@@ -924,6 +924,7 @@ EXAMPLE
 	pow2            40
 	redc2           50
 	tilde           1
+	tilde_space     0
 	tab             1
 	quomod          0
 	quo             2
