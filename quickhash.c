@@ -439,6 +439,7 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->pow2);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->redc2);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->tilde_ok);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->tilde_space);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->tab_ok);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->quomod);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->quo);

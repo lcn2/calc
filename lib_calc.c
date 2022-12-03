@@ -321,6 +321,7 @@ libcalc_call_me_first(void)
 	if (d_flag) {
 		conf->resource_debug = 0;
 		conf->tilde_ok = 0;
+		conf->tilde_space = 0;
 	}
 
 	/*

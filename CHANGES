@@ -23,6 +23,27 @@ The following are the changes from calc version 2.14.2.0 to date:
     we removed the setjmp() call.  Thanks to <GitHub user mattdm> for
     raising this potential concern.
 
+    Added config("tilde_space", boolean).  The "tilde_space" controls
+    whether or not a space (' ') is printed after leading tilde ('~').
+    By default, config("tilde_space") is true, which is a change
+    from past behavior.  For example, now:
+
+	; 1/3
+		~ 0.33333333333333333333
+
+    With config("tilde_space", 0):
+
+	; 1/3
+		~0.33333333333333333333
+
+    To disable "tilde_space", use config("tilde_space", 0) on the
+    command line and/or use config("tilde_space", 0),; in your ~/.calcrc.
+    Thanks goes to <GitHub use ljramalho> for this suggestion.
+
+    Added config("tilde_space", boolean) to help/config, along with
+    a few few minor text improvements.  Updated cal/regress to test
+    config("tilde_space") and to account for the new default.
+
 
 The following are the changes from calc version 2.14.1.2 to date:
 

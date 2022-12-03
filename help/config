@@ -34,6 +34,7 @@ DESCRIPTION
 	    "pow2"		sets size for alternate powering.
 	    "redc2"		sets size for alternate REDC.
 	    "tilde"		enable/disable printing of the roundoff '~'
+	    "tilde_space"	enable/disable printing space after roundoff tilde '~ '
 	    "tab"		enable/disable printing of leading tabs
 	    "quomod"		sets rounding mode for quomod
 	    "quo"		sets rounding mode for //, default for quo
@@ -134,6 +135,7 @@ DESCRIPTION
 	    config("display", 50);	    50 digits of output
 	    epsilon(epsilon() / 8);	    3 bits more accuracy
 	    config("tilde", 0)		    disable roundoff tilde printing
+	    config("tilde_space", 0)	    disable printing space after roundoff tilde
 	    config("tab", "off")	    disable leading tab printing
 
     =-=
@@ -264,7 +266,7 @@ DESCRIPTION
     config("mul2", int)
     config("sq2", int)
 
-    Mul2 and sq2 specify the sizes of numbers at which calc switches
+    Both "mul2" and "sq2" specify the sizes of numbers at which calc switches
     from its first to its second algorithm for multiplying and squaring.
     The first algorithm is the usual method of cross multiplying, which
     runs in a time of O(N^2).  The second method is a recursive and
@@ -305,7 +307,7 @@ DESCRIPTION
 
     config("pow2", int)
 
-    Pow2 specifies the sizes of numbers at which calc switches from
+    The "pow2" specifies the sizes of numbers at which calc switches from
     its first to its second algorithm for calculating powers modulo
     another number.  The first algorithm for calculating modular powers
     is by repeated squaring and multiplying and dividing by the modulus.
@@ -334,7 +336,7 @@ DESCRIPTION
 
     config("redc2", int)
 
-    Redc2 specifies the sizes of numbers at which calc switches from
+    The "redc2" specifies the sizes of numbers at which calc switches from
     its first to its second algorithm when using the REDC algorithm.
     The first algorithm performs a multiply and a modular reduction
     together in one loop which runs in O(N^2).	The second algorithm
@@ -363,16 +365,30 @@ DESCRIPTION
 
     config("tilde", boolean)
 
-    Config("tilde") controls whether or not a leading tilde ('~') is
+    The "tilde" controls whether or not a leading tilde ('~') is
     printed to indicate that a number has not been printed exactly
     because the number of decimal digits required would exceed the
-    specified maximum number.  The initial "tilde" value is 1.
+    specified maximum number.
+
+    If config("tilde") is false, then config("tilde_space") has no effect.
+
+    The initial "tilde" value is 1.
+
+    =-=
+
+    config("tilde_space", boolean)
+
+    The "tilde_space" controls whether or not a space (' ') is
+    printed after leading tilde ('~').  See config("tilde") above.
+    If config("tilde") is false, then config("tilde_space") has no effect.
+
+    The initial "tilde_space" value is 1.
 
     =-=
 
     config("tab", boolean)
 
-    Config ("tab") controls the printing of a tab before results
+    config("tab") controls the printing of a tab before results
     automatically displayed when working interactively.	 It does not
     affect the printing by the functions print, printf, etc.  The initial
     "tab" value is 1.

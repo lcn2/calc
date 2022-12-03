@@ -2033,8 +2033,8 @@ define test_mode()
 		'1685: str(0xffffffff) == \"4.294967295e9\"');
 	vrfy(str(3e9) == "3e9", \
 		'1686: str(3e9) == \"3e9\"');
-	vrfy(str(1/3) == "~3.33333333333333333333e-1", \
-		'1687: str(1/3) == \"~3.33333333333333333333e-1\"');
+	vrfy(str(1/3) == "~ 3.33333333333333333333e-1", \
+		'1687: str(1/3) == \"~ 3.33333333333333333333e-1\"');
 	vrfy(str(2e8) == "2e8", \
 		'1688: str(2e8) == \"2e8"');
 	vrfy(str(200e6) == "2e8", \
@@ -2054,8 +2054,8 @@ define test_mode()
 		'1695: str(0xffffffff) == \"4.294967295e9\"');
 	vrfy(str(3e9) == "3e9", \
 		'1696: str(3e9) == \"3e9\"');
-	vrfy(str(1/3) == "~333.33333333333333333333e-3", \
-		'1697: str(1/3) == \"~333.33333333333333333333e-3\"');
+	vrfy(str(1/3) == "~ 333.33333333333333333333e-3", \
+		'1697: str(1/3) == \"~ 333.33333333333333333333e-3\"');
 	vrfy(str(2e8) == "200e6", \
 		'1698: str(2e8) == \"200e6"');
 	vrfy(str(200e6) == "200e6", \
@@ -2075,8 +2075,8 @@ define test_mode()
 		'1705: str(0xffffffff) == \"4294967295\"');
 	vrfy(str(3e9) == "3000000000", \
 		'1706: str(3e9) == \"3000000000\"');
-	vrfy(str(1/3) == "~0", \
-		'1707: str(1/3) == \"~0\"');
+	vrfy(str(1/3) == "~ 0", \
+		'1707: str(1/3) == \"~ 0\"');
 	vrfy(str(2e8) == "200000000", \
 		'1708: str(2e8) == \"200000000"');
 	vrfy(str(200e6) == "200000000", \
@@ -2096,8 +2096,8 @@ define test_mode()
 		'1715: str(0xffffffff) == \"4294967295\"');
 	vrfy(str(3e9) == "3000000000", \
 		'1716: str(3e9) == \"3000000000\"');
-	vrfy(str(1/3) == "~0.33333333333333333333", \
-		'1717: str(1/3) == \"~0.33333333333333333333"');
+	vrfy(str(1/3) == "~ 0.33333333333333333333", \
+		'1717: str(1/3) == \"~ 0.33333333333333333333"');
 	vrfy(str(2e8) == "200000000", \
 		'1718: str(2e8) == \"200000000"');
 	vrfy(str(200e6) == "200000000", \
@@ -2151,8 +2151,8 @@ define test_mode()
 	vrfy(base2() == -10,		'1745: base2() == -10');
 	vrfy(str(23209) == "23209 /* 23209 */",
 		'1746: str(23209) == "23209 /* 23209 */"');
-	vrfy(str(3/2) == "1.5 /* ~2 */",
-		'1747: str(3/2) == "1.5 /* ~2 */"');
+	vrfy(str(3/2) == "1.5 /* ~ 2 */",
+		'1747: str(3/2) == "1.5 /* ~ 2 */"');
 
 	vrfy(base2(1000) == -10,	'1748: base2(1000) == -1000');
 	vrfy(base2() == 1000,		'1749: base2() == 1000');
@@ -4296,84 +4296,114 @@ define test_strprintf()
 	print				    '4804: c = config("display", 2)';
 	c = config("tilde", 0);
 	print				    '4805: c = config("tilde", 0)';
+	c = config("tilde_space", 1);
+	print				    '4806: c = config("tilde_space", 1)';
 	c = config("leadzero", 0);
-	print				    '4806: c = config("leadzero", 0)';
+	print				    '4807: c = config("leadzero", 0)';
 	c = config("fullzero", 0);
-	print				    '4807: c = config("fullzero", 0)';
+	print				    '4808: c = config("fullzero", 0)';
 
 	/* tests with tilde == 0 */
 	vrfy(strprintf("%d%d", 27, 29) == "2729",
-			'4808: strprintf("%d%d", 27, 29) == "2729"');
+			'4809: strprintf("%d%d", 27, 29) == "2729"');
 	vrfy(strprintf("%5d%3d", 27, 29) == "   27 29",
-			'4809: strprintf("%5d%3d", 27, 29) == "   27 29"; ');
+			'4810: strprintf("%5d%3d", 27, 29) == "   27 29"; ');
 	vrfy(strprintf("%-5d%-3d", 27, 29) == "27   29 ",
-			'4810: strprintf("%-5d%-3d", 27, 29) == "27   29 "');
+			'4811: strprintf("%-5d%-3d", 27, 29) == "27   29 "');
 	vrfy(strprintf("%f", 1.375) == "1.38",
-			'4811: strprintf("%f", 1.375) == "1.38"');
+			'4812: strprintf("%f", 1.375) == "1.38"');
 	vrfy(strprintf("%f", 1.385) == "1.38",
-			'4812: strprintf("%f", 1.385) == "1.38"');
+			'4813: strprintf("%f", 1.385) == "1.38"');
 	vrfy(strprintf("%f", .375) == ".38",
-			'4813: strprintf("%f", .375) == ".38"');
+			'4814: strprintf("%f", .375) == ".38"');
 	vrfy(strprintf("%f", .385) == ".38",
-			'4814: strprintf("%f", .385) == ".38"');
+			'4815: strprintf("%f", .385) == ".38"');
 
 	/* tests with tilde == 1 */
 	c = config("tilde", 1);
-	print		'4815: c = config("tilde", 1)';
-	vrfy(strprintf("%f", 1.375) == "~1.38",
-			'4816: strprintf("%f", 1.375) == "~1.38"');
-	vrfy(strprintf("%f", 27/29) == "~.93",
-			'4817: strprintf("%f", 27/29) == "~.93"');
+	print		'4816: c = config("tilde", 1)';
+	vrfy(strprintf("%f", 1.375) == "~ 1.38",
+			'4817: strprintf("%f", 1.375) == "~ 1.38"');
+	vrfy(strprintf("%f", 27/29) == "~ .93",
+			'4818: strprintf("%f", 27/29) == "~ .93"');
 	vrfy(strprintf("%r", 27/29) == "27/29",
-			'4818: strprintf("%r", 27/29) == "27/29"');
+			'4819: strprintf("%r", 27/29) == "27/29"');
 	vrfy(strprintf("%o", 27/29) == "033/035",
-			'4819: strprintf("%o", 27/29) == "033/035"');
+			'4820: strprintf("%o", 27/29) == "033/035"');
 	vrfy(strprintf("%x", 27/29) == "0x1b/0x1d",
-			'4820: strprintf("%x", 27/29) == "0x1b/0x1d"');
+			'4821: strprintf("%x", 27/29) == "0x1b/0x1d"');
 	vrfy(strprintf("%b", 27/29) == "0b11011/0b11101",
-			'4821: strprintf("%b", 27/29) == "0b11011/0b11101"');
+			'4822: strprintf("%b", 27/29) == "0b11011/0b11101"');
+	vrfy(strprintf("%e", 12345) == "~ 1.23e4",
+			'4823: strprintf("%e", 12345) == "~ 1.23e4"');
+	vrfy(strprintf("%g", .385) == "~ .38",
+			'4824: strprintf("%g", .385) == "~ .38"');
+	vrfy(strprintf("%g", 385) == "~ 3.8e2",
+			'4825: strprintf("%g", 385) == "~ 3.8e2"');
+
+	/* tests with tilde == 1 and tilde_space == 0 */
+	c = config("tilde_space", 0);
+	print		'4826: c = config("tilde_space", 0)';
+	vrfy(strprintf("%f", 1.375) == "~1.38",
+			'4827: strprintf("%f", 1.375) == "~1.38"');
+	vrfy(strprintf("%f", 27/29) == "~.93",
+			'4828: strprintf("%f", 27/29) == "~.93"');
 	vrfy(strprintf("%e", 12345) == "~1.23e4",
-			'4822: strprintf("%e", 12345) == "~1.23e4"');
+			'4829: strprintf("%e", 12345) == "~1.23e4"');
 	vrfy(strprintf("%g", .385) == "~.38",
-			'4823: strprintf("%g", .385) == "~.38"');
+			'4830: strprintf("%g", .385) == "~.38"');
 	vrfy(strprintf("%g", 385) == "~3.8e2",
-			'4824: strprintf("%g", 385) == "~3.8e2"');
+			'4831: strprintf("%g", 385) == "~3.8e2"');
+
+	/* tests with tilde_space == 0 */
+	c = config("tilde_space", 1);
+	print		'4832: c = config("tilde_space", 1)';
+	vrfy(strprintf("%f", 1.375) == "~ 1.38",
+			'4833: strprintf("%f", 1.375) == "~ 1.38"');
+	vrfy(strprintf("%f", 27/29) == "~ .93",
+			'4834: strprintf("%f", 27/29) == "~ .93"');
+	vrfy(strprintf("%e", 12345) == "~ 1.23e4",
+			'4835: strprintf("%e", 12345) == "~ 1.23e4"');
+	vrfy(strprintf("%g", .385) == "~ .38",
+			'4836: strprintf("%g", .385) == "~ .38"');
+	vrfy(strprintf("%g", 385) == "~ 3.8e2",
+			'4837: strprintf("%g", 385) == "~ 3.8e2"');
 
 	/* mode tests with tilde == 0 */
 	c = config("tilde", 0);
-	print		'4825: c = config("tilde", 0)';
+	print		'4838: c = config("tilde", 0)';
 	vrfy(strprintf("%e", 12345) == "1.23e4",
-			'4826: strprintf("%e", 12345) == "1.23e4"');
+			'4839: strprintf("%e", 12345) == "1.23e4"');
 	vrfy(strprintf("%.3e", 12345) == "1.234e4",
-			'4827: strprintf("%.3e", 12345) == "1.234e4"');
+			'4840: strprintf("%.3e", 12345) == "1.234e4"');
 	vrfy(strprintf("%e", .00012345) == "1.23e-4",
-			'4828: strprintf("%e", .00012345) == "1.23e-4"');
+			'4841: strprintf("%e", .00012345) == "1.23e-4"');
 	vrfy(strprintf("%d %d", 27) == "27 ",
-			'4829: strprintf("%d %d", 27) == "27 "');
+			'4842: strprintf("%d %d", 27) == "27 "');
 	vrfy(strprintf("%d", 27, 29) == "27",
-			'4830: strprintf("%d", 27, 29) == "27"');
+			'4843: strprintf("%d", 27, 29) == "27"');
 	vrfy(strprintf("%r = %f", 27/29, 27/29) == "27/29 = .93",
-		'4831: strprintf("%r = %f", 27/29, 27/29) == "27/29 = .93"');
+		'4844: strprintf("%r = %f", 27/29, 27/29) == "27/29 = .93"');
 	vrfy(strprintf("%s", "abc") == "abc",
-		'4832: strprintf("%s", "abc") == "abc"');
+		'4845: strprintf("%s", "abc") == "abc"');
 	vrfy(strprintf("%f", "abc") == "abc",
-		'4833: strprintf("%f", "abc") == "abc"');
+		'4846: strprintf("%f", "abc") == "abc"');
 	vrfy(strprintf("%e", "abc") == "abc",
-		'4834: strprintf("%e", "abc") == "abc"');
+		'4847: strprintf("%e", "abc") == "abc"');
 	vrfy(strprintf("%5s", "abc") == "  abc",
-		'4835: strprintf("%5s", "abc") == "  abc"');
+		'4848: strprintf("%5s", "abc") == "  abc"');
 	vrfy(strprintf("%-5s", "abc") == "abc  ",
-		'4836: strprintf("%-5s", "abc") == "abc	 "');
+		'4849: strprintf("%-5s", "abc") == "abc	 "');
 	vrfy(strprintf("%g", .385) == ".38",
-			'4837: strprintf("%g", .385) == ".38"');
+			'4850: strprintf("%g", .385) == ".38"');
 	vrfy(strprintf("%g", 385) == "3.8e2",
-			'4838: strprintf("%g", 385) == "3.8e2"');
+			'4851: strprintf("%g", 385) == "3.8e2"');
 
 	/* restore config */
 	c = config("all", callcfg);
-	print				    '4839: c = config("all", callcfg)';
+	print				    '4852: c = config("all", callcfg)';
 
-	print '4840: Ending test_strprintf';
+	print '4853: Ending test_strprintf';
 }
 print '088: parsed test_fileop()';
 

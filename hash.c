@@ -956,6 +956,7 @@ hash_value(int type, void *v, HASH *state)
 		state = hash_len(type, value->v_config->pow2, state);
 		state = hash_len(type, value->v_config->redc2, state);
 		state = hash_bool(type, value->v_config->tilde_ok, state);
+		state = hash_bool(type, value->v_config->tilde_space, state);
 		state = hash_bool(type, value->v_config->tab_ok, state);
 		state = hash_long(type, (long)value->v_config->quomod, state);
 		state = hash_long(type, (long)value->v_config->quo, state);

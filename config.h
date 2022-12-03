@@ -94,6 +94,7 @@
 #define CONFIG_REDECL_WARN	44
 #define CONFIG_DUPVAR_WARN	45
 #define CONFIG_HZ	46
+#define CONFIG_TILDE_SPACE	47
 
 
 /*
@@ -131,6 +132,7 @@ struct config {
 	LEN pow2;		/* size of modulus to use REDC for powers */
 	LEN redc2;		/* size of modulus to use REDC algorithm 2 */
 	BOOL tilde_ok;		/* OK to print a tilde on approximations */
+	BOOL tilde_space;	/* print space after tilde on approximations */
 	BOOL tab_ok;		/* OK to print tab before numeric values */
 	LEN quomod;		/* quomod() default rounding mode */
 	LEN quo;		/* quotient // default rounding mode */

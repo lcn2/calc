@@ -201,16 +201,24 @@ qprintnum(NUMBER *q, int outmode, LEN outdigits)
 	}
 	switch (outmode) {
 	case MODE_INT:
-		if (conf->tilde_ok && qisfrac(q))
+		if (conf->tilde_ok && qisfrac(q)) {
 			PUTCHAR('~');
+			if (conf->tilde_space && qisfrac(q)) {
+				PUTCHAR(' ');
+			}
+		}
 		qprintfd(q, 0L);
 		break;
 
 	case MODE_REAL:
 		prec = qdecplaces(q);
 		if ((prec < 0) || (prec > outdigits)) {
-			if (conf->tilde_ok)
+			if (conf->tilde_ok) {
 			    PUTCHAR('~');
+			    if (conf->tilde_space) {
+				PUTCHAR(' ');
+			    }
+			}
 		}
 		if (conf->fullzero || (prec < 0) ||
 		    (prec > outdigits))

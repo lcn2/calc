@@ -93,6 +93,7 @@ NAMETYPE configs[] = {
 	{"pow2",	CONFIG_POW2},
 	{"redc2",	CONFIG_REDC2},
 	{"tilde",	CONFIG_TILDE},
+	{"tilde_space",	CONFIG_TILDE_SPACE},
 	{"tab",		CONFIG_TAB},
 	{"quomod",	CONFIG_QUOMOD},
 	{"quo",		CONFIG_QUO},
@@ -151,6 +152,7 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	POW_ALG2,		/* size of modulus to use REDC for powers */
 	REDC_ALG2,		/* size of modulus to use REDC algorithm 2 */
 	TRUE,			/* OK to print a tilde on approximations */
+	FALSE,			/* OK to print a space after tilde on approximations */
 	TRUE,			/* OK to print tab before numeric values */
 	0,			/* quomod() default rounding mode */
 	2,			/* quotient // default rounding mode */
@@ -211,6 +213,7 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	POW_ALG2,		/* size of modulus to use REDC for powers */
 	REDC_ALG2,		/* size of modulus to use REDC algorithm 2 */
 	TRUE,			/* OK to print a tilde on approximations */
+	TRUE,			/* OK to print a space after tilde on approximations */
 	TRUE,			/* OK to print tab before numeric values */
 	0,			/* quomod() default rounding mode */
 	2,			/* quotient // default rounding mode */
@@ -621,6 +624,20 @@ setconfig(int type, VALUE *vp)
 				not_reached();
 			}
 			conf->tilde_ok = (int)temp;
+		}
+		break;
+
+	case CONFIG_TILDE_SPACE:
+		if (vp->v_type == V_NUM) {
+			q = vp->v_num;
+			conf->tilde_space = !qiszero(q);
+		} else if (vp->v_type == V_STR) {
+			temp = lookup_long(truth, vp->v_str->s_str);
+			if (temp < 0) {
+				math_error("Illegal truth value for tilde_space");
+				not_reached();
+			}
+			conf->tilde_space = (int)temp;
 		}
 		break;
 
@@ -1203,6 +1220,10 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 
 	case CONFIG_TILDE:
 		i = (cfg->tilde_ok ? 1 : 0);
+		break;
+
+	case CONFIG_TILDE_SPACE:
+		i = (cfg->tilde_space ? 1 : 0);
 		break;
 
 	case CONFIG_TAB:
