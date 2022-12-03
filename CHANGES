@@ -10,6 +10,10 @@ The following are the changes from calc version 2.14.2.0 to date:
     in find_tty_state() could move the fd_setup array.  Thanks goes to
     <GitHub user mattdm> for reporting this bug!
 
+    In find_tty_state(), we changed how we expand fd_orig as an original
+    pre-modified copy of fd_setup.  We realloc the fd_orig array and copy
+    the fd_setup into it first, before touching the fd_setup array.
+
 
 The following are the changes from calc version 2.14.1.2 to date:
 

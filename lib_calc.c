@@ -796,6 +796,15 @@ find_tty_state(int fd)
 	/*
 	 * no empty slots exist, realloc another slot
 	 */
+	/* expand fd_orig as an original pre-modified copy of fd_setup */
+	new_fd_orig = (ttystruct *)realloc(fd_orig, sizeof(fd_orig[0]) *
+					    (fd_setup_len+1));
+	if (new_fd_orig == NULL) {
+		return -1;
+	}
+	fd_orig = new_fd_orig;
+	memcpy(fd_orig, fd_setup, sizeof(fd_orig[0]) * (fd_setup_len+1));
+
 	/* expand fd_setup */
 	new_fd_setup = (int *)realloc(fd_setup, sizeof(fd_setup[0]) *
 				      (fd_setup_len+1));
@@ -804,14 +813,6 @@ find_tty_state(int fd)
 	}
 	fd_setup = new_fd_setup;
 	new_fd_setup[fd_setup_len] = -1;
-
-	/* expand fd_orig */
-	new_fd_orig = (ttystruct *)realloc(fd_orig, sizeof(fd_orig[0]) *
-					    (fd_setup_len+1));
-	if (new_fd_orig == NULL) {
-		return -1;
-	}
-	fd_orig = new_fd_orig;
 
 	/* expand fd_cur */
 	new_fd_cur = (ttystruct *)realloc(fd_cur, sizeof(fd_cur[0]) *
