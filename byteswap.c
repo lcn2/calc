@@ -575,7 +575,7 @@ swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
 		/*
 		 * allocate the storage
 		 */
-		dest = malloc(sizeof(ZVALUE));
+		dest = calloc(1, sizeof(ZVALUE));
 		if (dest == NULL) {
 			math_error("swap_HALF_in_ZVALUE: Not enough memory");
 			not_reached();
