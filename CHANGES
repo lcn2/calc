@@ -1,3 +1,16 @@
+The following are the changes from calc version 2.14.2.0 to date:
+
+    Attempted to address a paranoid compiler warning -Wmaybe-uninitialized
+    in swap_HALF_in_ZVALUE() where the gcc compiler seems to ignore the
+    fact that calling not_reached() above the call to zcopyval()
+    should prevent dest from being NULL to the 1st zcopyval() call.
+    Thanks to <GitHub user mattdm> for raising this potential concern.
+
+    Fixed a -Wuse-after-free warning that identified a call to realloc()
+    in find_tty_state() could move the fd_setup array.  Thanks goes to
+    <GitHub user mattdm> for reporting this bug!
+
+
 The following are the changes from calc version 2.14.1.2 to date:
 
     Restored use of the #define FPOS_POS_LEN symbol.  This refers to

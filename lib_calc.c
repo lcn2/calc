@@ -693,7 +693,7 @@ calc_strdup(CONST char *s1)
 #else /* HAVE_STRDUP */
 
 	char *ret;	/* return string */
-	size_t s1_len; 	/* length of string to duplicate */
+	size_t s1_len;	/* length of string to duplicate */
 
 	/*
 	 * firewall
@@ -737,7 +737,7 @@ S_FUNC int
 find_tty_state(int fd)
 {
 	int *new_fd_setup;		/* new fd_setup array */
-	ttystruct *new_fd_orig; /* new fd_orig array */
+	ttystruct *new_fd_orig;		/* new fd_orig array */
 	ttystruct *new_fd_cur;		/* new fd_cur array */
 	int i;
 
@@ -764,7 +764,7 @@ find_tty_state(int fd)
 		if (fd_orig == NULL) {
 			return -1;
 		}
-		fd_cur = (ttystruct *)malloc(sizeof(fd_orig[0]));
+		fd_cur = (ttystruct *)malloc(sizeof(fd_cur[0]));
 		if (fd_cur == NULL) {
 			return -1;
 		}
@@ -796,26 +796,34 @@ find_tty_state(int fd)
 	/*
 	 * no empty slots exist, realloc another slot
 	 */
+	/* expand fd_setup */
 	new_fd_setup = (int *)realloc(fd_setup, sizeof(fd_setup[0]) *
 				      (fd_setup_len+1));
 	if (new_fd_setup == NULL) {
 		return -1;
 	}
+	fd_setup = new_fd_setup;
 	new_fd_setup[fd_setup_len] = -1;
-	new_fd_orig = (ttystruct *)realloc(fd_setup, sizeof(fd_orig[0]) *
+
+	/* expand fd_orig */
+	new_fd_orig = (ttystruct *)realloc(fd_orig, sizeof(fd_orig[0]) *
 					    (fd_setup_len+1));
 	if (new_fd_orig == NULL) {
 		return -1;
 	}
+	fd_orig = new_fd_orig;
+
+	/* expand fd_cur */
 	new_fd_cur = (ttystruct *)realloc(fd_cur, sizeof(fd_cur[0]) *
 					  (fd_setup_len+1));
 	if (new_fd_cur == NULL) {
 		return -1;
 	}
-	fd_setup = new_fd_setup;
-	fd_orig = new_fd_orig;
 	fd_cur = new_fd_cur;
+
+	/* expand fd setup length */
 	++fd_setup_len;
+
 	/* return the new slot */
 	return fd_setup_len-1;
 }
