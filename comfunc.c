@@ -1223,7 +1223,13 @@ cprintfr(COMPLEX *c)
 	zprintval(i->num, 0L, 0L);
 	math_chr('i');
 	if (qisfrac(i)) {
+		if (conf->fraction_space) {
+		    math_chr(' ');
+		}
 		math_chr('/');
+		if (conf->fraction_space) {
+		    math_chr(' ');
+		}
 		zprintval(i->den, 0L, 0L);
 	}
 }

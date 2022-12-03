@@ -420,7 +420,13 @@ qprintfr(NUMBER *q, long width, BOOL force)
 {
 	zprintval(q->num, 0L, width);
 	if (force || qisfrac(q)) {
+		if (conf->fraction_space) {
+		    PUTCHAR(' ');
+		}
 		PUTCHAR('/');
+		if (conf->fraction_space) {
+		    PUTCHAR(' ');
+		}
 		zprintval(q->den, 0L, width);
 	}
 }
@@ -454,7 +460,13 @@ qprintfx(NUMBER *q, long width)
 {
 	zprintx(q->num, width);
 	if (qisfrac(q)) {
+		if (conf->fraction_space) {
+		    PUTCHAR(' ');
+		}
 		PUTCHAR('/');
+		if (conf->fraction_space) {
+		    PUTCHAR(' ');
+		}
 		zprintx(q->den, 0L);
 	}
 }
@@ -469,7 +481,13 @@ qprintfb(NUMBER *q, long width)
 {
 	zprintb(q->num, width);
 	if (qisfrac(q)) {
+		if (conf->fraction_space) {
+		    PUTCHAR(' ');
+		}
 		PUTCHAR('/');
+		if (conf->fraction_space) {
+		    PUTCHAR(' ');
+		}
 		zprintb(q->den, 0L);
 	}
 }
@@ -484,7 +502,13 @@ qprintfo(NUMBER *q, long width)
 {
 	zprinto(q->num, width);
 	if (qisfrac(q)) {
+		if (conf->fraction_space) {
+		    PUTCHAR(' ');
+		}
 		PUTCHAR('/');
+		if (conf->fraction_space) {
+		    PUTCHAR(' ');
+		}
 		zprinto(q->den, 0L);
 	}
 }
@@ -757,6 +781,12 @@ fitprint(NUMBER *q, long width)
 		width1 = width - width2;
 	}
 	fitzprint(q->num, numdigits, width1);
+	if (conf->fraction_space) {
+	    PUTCHAR(' ');
+	}
 	PUTCHAR('/');
+	if (conf->fraction_space) {
+	    PUTCHAR(' ');
+	}
 	fitzprint(q->den, dendigits, width2);
 }

@@ -132,6 +132,7 @@ NAMETYPE configs[] = {
 	{"redecl_warn",	CONFIG_REDECL_WARN},
 	{"dupvar_warn",	CONFIG_DUPVAR_WARN},
 	{"hz",		CONFIG_HZ},
+	{"fraction_space",	CONFIG_FRACTION_SPACE},
 	{NULL,		0}
 };
 
@@ -199,6 +200,7 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	BASEB,			/* base for calculations */
 	TRUE,			/* warn when redeclaring */
 	TRUE,			/* warn when variable names collide */
+	FALSE,			/* print spaces around / in fractions */
 };
 CONFIG newstd = {	/* new non-backward compatible configuration */
 	MODE_INITIAL,		/* current output mode */
@@ -260,6 +262,7 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	BASEB,			/* base for calculations */
 	TRUE,			/* warn when redeclaring */
 	TRUE,			/* warn when variable names collide */
+	FALSE,			/* print spaces around / in fractions */
 };
 CONFIG *conf = NULL;	/* loaded in at startup - current configuration */
 
@@ -1006,6 +1009,20 @@ setconfig(int type, VALUE *vp)
 		not_reached();
 		break;
 
+	case CONFIG_FRACTION_SPACE:
+		if (vp->v_type == V_NUM) {
+			q = vp->v_num;
+			conf->fraction_space = !qiszero(q);
+		} else if (vp->v_type == V_STR) {
+			temp = lookup_long(truth, vp->v_str->s_str);
+			if (temp < 0) {
+				math_error("Illegal truth value for fraction_space");
+				not_reached();
+			}
+			conf->fraction_space = (int)temp;
+		}
+		break;
+
 	default:
 		math_error("Setting illegal config parameter");
 		not_reached();
@@ -1403,6 +1420,10 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 
 	case CONFIG_HZ:
 		i = CALC_HZ;
+		break;
+
+	case CONFIG_FRACTION_SPACE:
+		i = (cfg->fraction_space ? 1 : 0);
 		break;
 
 	default:

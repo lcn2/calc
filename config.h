@@ -95,6 +95,7 @@
 #define CONFIG_DUPVAR_WARN	45
 #define CONFIG_HZ	46
 #define CONFIG_TILDE_SPACE	47
+#define CONFIG_FRACTION_SPACE	48
 
 
 /*
@@ -167,6 +168,7 @@ struct config {
 	int baseb;		/* base for calculations */
 	BOOL redecl_warn;	/* TRUE => warn of redeclaring variables */
 	BOOL dupvar_warn;	/* TRUE => warn of var name collisions */
+	BOOL fraction_space;	/* TRUE => print spaces around / in fractions */
 };
 typedef struct config CONFIG;
 

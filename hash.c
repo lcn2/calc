@@ -1002,6 +1002,7 @@ hash_value(int type, void *v, HASH *state)
 		state = hash_int(type, value->v_config->baseb, state);
 		state = hash_bool(type, value->v_config->redecl_warn, state);
 		state = hash_bool(type, value->v_config->dupvar_warn, state);
+		state = hash_bool(type, value->v_config->fraction_space, state);
 		break;
 
 	case V_HASH:

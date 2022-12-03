@@ -541,7 +541,14 @@ define test_config()
 	vrfy(issimple(config("dupvar_warn")),
 		'562: issimple(config("rdupvar_warn"))');
 
-	print '563: Ending test_config';
+
+	/* test new space modes */
+	vrfy(config("tilde_space") == 0,
+		'563: config("tilde_space") == 0');
+	vrfy(config("fraction_space") == 0,
+		'564: config("fraction_space") == 0');
+
+	print '565: Ending test_config';
 }
 print '010: parsed test_config()';
 
@@ -3924,7 +3931,7 @@ define test_fileops()
 	vrfy(!iserror(p=fopen("tmp4200","r")),
 			'4274: !iserror(p=fopen("tmp4200","r"))');
 	vrfy(!iserror(s=fgetline(p)),	  '4275: !iserror(s=fgetline(p))');
-	vrfy(strcmp(s,"chongo") == 0, 	  '4276: strcmp(s,"chongo") == 0');
+	vrfy(strcmp(s,"chongo") == 0,	  '4276: strcmp(s,"chongo") == 0');
 	vrfy(!iserror(s=fgetfile(p)),	  '4277: !iserror(s=fgetfile(p))');
 	vrfy(strcmp(s,"w\0a\0s\nhere\n") == 0,
 			'4278: strcmp(s,"w\0a\0s\nhere\n") == 0');
@@ -4399,11 +4406,16 @@ define test_strprintf()
 	vrfy(strprintf("%g", 385) == "3.8e2",
 			'4851: strprintf("%g", 385) == "3.8e2"');
 
+	c = config("fraction_space", 1);
+	print				    '4852: c = config("fraction_space", 1)';
+	vrfy(strprintf("%r = %f", 27/29, 27/29) == "27 / 29 = .93",
+		'4853: strprintf("%r = %f", 27/29, 27/29) == "27 / 29 = .93"');
+
 	/* restore config */
 	c = config("all", callcfg);
-	print				    '4852: c = config("all", callcfg)';
+	print				    '4854: c = config("all", callcfg)';
 
-	print '4853: Ending test_strprintf';
+	print '4855: Ending test_strprintf';
 }
 print '088: parsed test_fileop()';
 
@@ -8159,7 +8171,7 @@ vrfy(config("redecl_warn",0),	  '8651: config("redecl_warn",0)');
 vrfy(config("dupvar_warn",0),	  '8652: config("dupvar_warn",0)');
 vrfy(u_glob == 6,		  '8653: u_glob == 6');
 global u_glob = 555;
-print 				  '8654: declare u_glob';
+print				  '8654: declare u_glob';
 vrfy(u_glob == 555,		  '8655: u_glob == 555');
 define func_8650(u_glob) { local u_glob; return u_glob; }
 print				  '8656: u_glob as both local and parameter';
