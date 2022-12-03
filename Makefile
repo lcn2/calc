@@ -2004,6 +2004,14 @@ ifndef EXCLUDE_FROM_CUSTOM_MAKEFILE
 # V=@:	do not echo debug statements (quiet mode)
 # V=@	echo debug statements (debug / verbose mode)
 #
+# To turn all messages, use:
+#
+# Q=
+# H=@
+# S=
+# E=
+# V=@
+#
 #Q=
 Q=@
 #

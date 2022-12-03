@@ -1411,6 +1411,14 @@ LDFLAGS= ${LD_DEBUG} ${ILDFLAGS} ${LIBCALC_STATIC} ${LIBCUSTCALC_STATIC}
 # V=@:	do not echo debug statements (quiet mode)
 # V=@	echo debug statements (debug / verbose mode)
 #
+# To turn all messages, use:
+#
+# Q=
+# H=@
+# S=
+# E=
+# V=@
+#
 #Q=
 Q=@
 #
