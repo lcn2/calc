@@ -94,6 +94,7 @@ NAMETYPE configs[] = {
 	{"redc2",	CONFIG_REDC2},
 	{"tilde",	CONFIG_TILDE},
 	{"tilde_space",	CONFIG_TILDE_SPACE},
+	{"fraction_space",	CONFIG_FRACTION_SPACE},
 	{"tab",		CONFIG_TAB},
 	{"quomod",	CONFIG_QUOMOD},
 	{"quo",		CONFIG_QUO},
@@ -132,7 +133,6 @@ NAMETYPE configs[] = {
 	{"redecl_warn",	CONFIG_REDECL_WARN},
 	{"dupvar_warn",	CONFIG_DUPVAR_WARN},
 	{"hz",		CONFIG_HZ},
-	{"fraction_space",	CONFIG_FRACTION_SPACE},
 	{NULL,		0}
 };
 
@@ -644,6 +644,20 @@ setconfig(int type, VALUE *vp)
 		}
 		break;
 
+	case CONFIG_FRACTION_SPACE:
+		if (vp->v_type == V_NUM) {
+			q = vp->v_num;
+			conf->fraction_space = !qiszero(q);
+		} else if (vp->v_type == V_STR) {
+			temp = lookup_long(truth, vp->v_str->s_str);
+			if (temp < 0) {
+				math_error("Illegal truth value for fraction_space");
+				not_reached();
+			}
+			conf->fraction_space = (int)temp;
+		}
+		break;
+
 	case CONFIG_TAB:
 		if (vp->v_type == V_NUM) {
 			q = vp->v_num;
@@ -1009,20 +1023,6 @@ setconfig(int type, VALUE *vp)
 		not_reached();
 		break;
 
-	case CONFIG_FRACTION_SPACE:
-		if (vp->v_type == V_NUM) {
-			q = vp->v_num;
-			conf->fraction_space = !qiszero(q);
-		} else if (vp->v_type == V_STR) {
-			temp = lookup_long(truth, vp->v_str->s_str);
-			if (temp < 0) {
-				math_error("Illegal truth value for fraction_space");
-				not_reached();
-			}
-			conf->fraction_space = (int)temp;
-		}
-		break;
-
 	default:
 		math_error("Setting illegal config parameter");
 		not_reached();
@@ -1243,6 +1243,10 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		i = (cfg->tilde_space ? 1 : 0);
 		break;
 
+	case CONFIG_FRACTION_SPACE:
+		i = (cfg->fraction_space ? 1 : 0);
+		break;
+
 	case CONFIG_TAB:
 		i = (cfg->tab_ok ? 1 : 0);
 		break;
@@ -1420,10 +1424,6 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 
 	case CONFIG_HZ:
 		i = CALC_HZ;
-		break;
-
-	case CONFIG_FRACTION_SPACE:
-		i = (cfg->fraction_space ? 1 : 0);
 		break;
 
 	default:

@@ -372,7 +372,7 @@ DESCRIPTION
 
     If config("tilde") is false, then config("tilde_space") has no effect.
 
-    The initial "tilde" value is 1.
+    The initial "tilde" value is 1 (on).
 
     =-=
 
@@ -385,7 +385,22 @@ DESCRIPTION
     NOTE: Use of config("tilde_space", 1) can break printing and scanning
 	  of complex values via "%c".
 
-    The initial "tilde_space" value is 0.
+    The initial "tilde_space" value is 0 (off)
+
+    =-=
+
+    config("fraction_space", boolean)
+
+    The "fraction_space" controls whether or not a space (' ') is
+    printed both before and after '/' when printing a fraction.
+
+    NOTE: Use of config("fraction_space", 1) can break printing and scanning
+	  of fractional values via "%r".
+
+    NOTE: Use of config("fraction_space", 1) can break printing and scanning
+	  of complex values via "%c".
+
+    The initial "fraction_space" value is 0 (off).
 
     =-=
 
@@ -901,21 +916,6 @@ DESCRIPTION
     The non-zero value returned is in Hertz.
 
     This config parameter is read-only and cannot be set.
-
-    =-=
-
-    config("fraction_space", boolean)
-
-    The "fraction_space" controls whether or not a space (' ') is
-    printed both before and after '/' when printing a fraction.
-
-    NOTE: Use of config("fraction_space", 1) can break printing and scanning
-	  of fractional values via "%r".
-
-    NOTE: Use of config("fraction_space", 1) can break printing and scanning
-	  of complex values via "%c".
-
-    The initial "fraction_space" value is 0.
 
 EXAMPLE
     ; current_cfg = config("all");
