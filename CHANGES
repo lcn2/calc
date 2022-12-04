@@ -52,6 +52,16 @@ The following are the changes from calc version 2.14.2.0 to date:
     a few few minor text improvements.  Updated cal/regress to test
     config("tilde_space").
 
+    For example, with the default, config("tilde_space", 0):
+
+	; pi(1e-50)
+		~3.14159265358979323846
+
+    With config("tilde_space", 1):
+
+	; pi(1e-50)
+		~ 3.14159265358979323846
+
     Added config("fraction_space", boolean).  The "fraction_space" controls
     whether or not a space (' ') is printed before and after fractions.
     By default, config("fraction_space") is false.
@@ -77,6 +87,32 @@ The following are the changes from calc version 2.14.2.0 to date:
     Added config("fraction_space", boolean) to help/config, along with
     a few few minor text improvements.  Updated cal/regress to test
     config("tilde_space").
+
+    Added config("complex_space", boolean).  The "complex_space" controls
+    whether or not a space (' ') is printed before and after the + or -
+    in complex values.
+
+    By default, config("complex_space") is false.
+
+    For example, with the default, config("complex_space", 0):
+
+	; asin(2)
+		1.57079632679489661923-1.31695789692481670863i
+
+    With config("complex_space", 1):
+
+	; asin(2)
+		1.57079632679489661923 - 1.31695789692481670863i
+
+    NOTE: Use of config("complex_space", 1) can break printing and scanning
+	  of fractional values via "%r".
+
+    NOTE: Use of config("complex_space", 1) can break printing and scanning
+	  of complex values via "%c".
+
+    Added config("complex_space", boolean) to help/config, along with
+    a few few minor text improvements.  Updated cal/regress to test
+    config("complex_space").
 
     Clarify in the calc man page, the relationship between -q and
     calc start scripts such as the ~/.calcrc file.

@@ -96,6 +96,7 @@
 #define CONFIG_HZ	46
 #define CONFIG_TILDE_SPACE	47
 #define CONFIG_FRACTION_SPACE	48
+#define CONFIG_COMPLEX_SPACE	49
 
 
 /*
@@ -125,7 +126,7 @@ struct config {
 	int outmode2;		/* current secondary output mode */
 	LEN outdigits;		/* current output digits for float or exp */
 	NUMBER *epsilon;	/* default error for real functions */
-	    long epsilonprec;	/* epsilon binary precision (tied to epsilon) */
+	long epsilonprec;	/* epsilon binary precision (tied to epsilon) */
 	FLAG traceflags;	/* tracing flags */
 	LEN maxprint;		/* number of elements to print */
 	LEN mul2;		/* size of number to use multiply algorithm 2 */
@@ -134,6 +135,8 @@ struct config {
 	LEN redc2;		/* size of modulus to use REDC algorithm 2 */
 	BOOL tilde_ok;		/* OK to print a tilde on approximations */
 	BOOL tilde_space;	/* print space after tilde on approximations */
+	BOOL fraction_space;	/* TRUE => print spaces around / in fractions */
+	BOOL complex_space;	/* TRUE => print spaces around + or - in complex values */
 	BOOL tab_ok;		/* OK to print tab before numeric values */
 	LEN quomod;		/* quomod() default rounding mode */
 	LEN quo;		/* quotient // default rounding mode */
@@ -168,7 +171,6 @@ struct config {
 	int baseb;		/* base for calculations */
 	BOOL redecl_warn;	/* TRUE => warn of redeclaring variables */
 	BOOL dupvar_warn;	/* TRUE => warn of var name collisions */
-	BOOL fraction_space;	/* TRUE => print spaces around / in fractions */
 };
 typedef struct config CONFIG;
 

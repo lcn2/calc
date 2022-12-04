@@ -547,8 +547,10 @@ define test_config()
 		'563: config("tilde_space") == 0');
 	vrfy(config("fraction_space") == 0,
 		'564: config("fraction_space") == 0');
+	vrfy(config("complex_space") == 0,
+		'565: config("complex_space") == 0');
 
-	print '565: Ending test_config';
+	print '566: Ending test_config';
 }
 print '010: parsed test_config()';
 

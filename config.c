@@ -95,6 +95,7 @@ NAMETYPE configs[] = {
 	{"tilde",	CONFIG_TILDE},
 	{"tilde_space",	CONFIG_TILDE_SPACE},
 	{"fraction_space",	CONFIG_FRACTION_SPACE},
+	{"complex_space",	CONFIG_COMPLEX_SPACE},
 	{"tab",		CONFIG_TAB},
 	{"quomod",	CONFIG_QUOMOD},
 	{"quo",		CONFIG_QUO},
@@ -152,9 +153,11 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	SQ_ALG2,		/* size of number to use square alg 2 */
 	POW_ALG2,		/* size of modulus to use REDC for powers */
 	REDC_ALG2,		/* size of modulus to use REDC algorithm 2 */
-	TRUE,			/* OK to print a tilde on approximations */
-	FALSE,			/* OK to print a space after tilde on approximations */
-	TRUE,			/* OK to print tab before numeric values */
+	TRUE,			/* TRUE ==> print a tilde on approximations */
+	FALSE,			/* TRUE ==> print a space after tilde on approximations */
+	FALSE,			/* TRUE ==> print spaces around / in fractions */
+	FALSE,			/* TRUE ==> print spaces around + or - in complex values */
+	TRUE,			/* TRUE ==> print tab before numeric values */
 	0,			/* quomod() default rounding mode */
 	2,			/* quotient // default rounding mode */
 	0,			/* mod % default rounding mode */
@@ -164,8 +167,8 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	8,			/* cfsim() default rounding mode */
 	2,			/* output default rounding mode */
 	24,			/* round()/bround() default rounding mode */
-	FALSE,			/* OK to print leading 0 before decimal pt */
-	0,			/* OK to print trailing 0's */
+	FALSE,			/* TRUE ==> print leading 0 before decimal pt */
+	0,			/* TRUE ==> print trailing 0's */
 	MAXSCANCOUNT,		/* max scan errors before abort */
 	PROMPT1,		/* normal prompt */
 	PROMPT2,		/* prompt when inside multi-line input */
@@ -176,31 +179,30 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	0,			/* internal calc debug level */
 	3,			/* calc resource file debug level */
 	0,			/* user defined debug level */
-	FALSE,			/* print Quit or abort executed messages */
+	FALSE,			/* TRUE ==> print Quit or abort executed messages */
 	CTRL_D_VIRGIN_EOF,	/* ^D only exits on virgin lines */
 	NULL,			/* our name */
 	NULL,			/* basename of our name */
 #if defined(_WIN32) || defined(_WIN64)
-	TRUE,			/* running under windows */
+	TRUE,			/* TRUE ==> running under windows */
 #else
-	FALSE,			/* not using windows */
+	FALSE,			/* FALSE ==> not using windows */
 #endif
 #if defined(__CYGWIN__)
-	TRUE,			/* compiled under cygwin */
+	TRUE,			/* TRUE ==> compiled under cygwin */
 #else
-	FALSE,			/* not compiled with cygwin */
+	FALSE,			/* FALSE ==> not compiled with cygwin */
 #endif
 #if defined(CUSTOM)
-	TRUE,			/* compiled with -DCUSTOM */
+	TRUE,			/* TRUE ==> compiled with -DCUSTOM */
 #else
-	FALSE,			/* compiled without -DCUSTOM */
+	FALSE,			/* FALSE ==> compiled without -DCUSTOM */
 #endif
 	&allow_custom,		/* *TRUE=> custom functions are enabled */
 	NULL,			/* version */
 	BASEB,			/* base for calculations */
-	TRUE,			/* warn when redeclaring */
-	TRUE,			/* warn when variable names collide */
-	FALSE,			/* print spaces around / in fractions */
+	TRUE,			/* TRUE ==> warn when redeclaring */
+	TRUE,			/* TRUE ==> warn when variable names collide */
 };
 CONFIG newstd = {	/* new non-backward compatible configuration */
 	MODE_INITIAL,		/* current output mode */
@@ -214,9 +216,11 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	SQ_ALG2,		/* size of number to use square alg 2 */
 	POW_ALG2,		/* size of modulus to use REDC for powers */
 	REDC_ALG2,		/* size of modulus to use REDC algorithm 2 */
-	TRUE,			/* OK to print a tilde on approximations */
-	FALSE,			/* OK to print a space after tilde on approximations */
-	TRUE,			/* OK to print tab before numeric values */
+	TRUE,			/* TRUE ==> print a tilde on approximations */
+	FALSE,			/* TRUE ==> print spaces around / in fractions */
+	FALSE,			/* TRUE ==> print a space after tilde on approximations */
+	FALSE,			/* TRUE ==> print spaces around + or - in complex values */
+	TRUE,			/* TRUE ==> print tab before numeric values */
 	0,			/* quomod() default rounding mode */
 	2,			/* quotient // default rounding mode */
 	0,			/* mod % default rounding mode */
@@ -226,8 +230,8 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	8,			/* cfsim() default rounding mode */
 	24,			/* output default rounding mode */
 	24,			/* round()/bround() default rounding mode */
-	TRUE,			/* OK to print leading 0 before decimal pt */
-	0,			/* OK to print trailing 0's */
+	TRUE,			/* TRUE ==> print leading 0 before decimal pt */
+	0,			/* TRUE ==> print trailing 0's */
 	MAXSCANCOUNT,		/* max scan errors before abort */
 	"; ",			/* normal prompt */
 	";; ",			/* prompt when inside multi-line input */
@@ -238,31 +242,30 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	0,			/* internal calc debug level */
 	3,			/* calc resource file debug level */
 	0,			/* user defined debug level */
-	FALSE,			/* print Quit or abort executed messages */
+	FALSE,			/* TRUE ==> print Quit or abort executed messages */
 	CTRL_D_VIRGIN_EOF,	/* ^D only exits on virgin lines */
 	NULL,			/* our name */
 	NULL,			/* basename of our name */
 #if defined(_WIN32) || defined(_WIN64)
-	TRUE,			/* running under windows */
+	TRUE,			/* TRUE ==> running under windows */
 #else
-	FALSE,			/* not using windows */
+	FALSE,			/* FALSE ==> not using windows */
 #endif
 #if defined(__CYGWIN__)
-	TRUE,			/* compiled under cygwin */
+	TRUE,			/* TRUE ==> compiled under cygwin */
 #else
-	FALSE,			/* not compiled with cygwin */
+	FALSE,			/* FALSE ==> not compiled with cygwin */
 #endif
 #if defined(CUSTOM)
-	TRUE,			/* compiled with -DCUSTOM */
+	TRUE,			/* TRUE ==> compiled with -DCUSTOM */
 #else
-	FALSE,			/* compiled without -DCUSTOM */
+	FALSE,			/* FALSE ==> compiled without -DCUSTOM */
 #endif
-	&allow_custom,		/* *TRUE=> custom functions are enabled */
+	&allow_custom,		/* *TRUE ==> custom functions are enabled */
 	NULL,			/* version */
 	BASEB,			/* base for calculations */
-	TRUE,			/* warn when redeclaring */
-	TRUE,			/* warn when variable names collide */
-	FALSE,			/* print spaces around / in fractions */
+	TRUE,			/* TRUE ==> warn when redeclaring */
+	TRUE,			/* TRUE ==> warn when variable names collide */
 };
 CONFIG *conf = NULL;	/* loaded in at startup - current configuration */
 
@@ -655,6 +658,20 @@ setconfig(int type, VALUE *vp)
 				not_reached();
 			}
 			conf->fraction_space = (int)temp;
+		}
+		break;
+
+	case CONFIG_COMPLEX_SPACE:
+		if (vp->v_type == V_NUM) {
+			q = vp->v_num;
+			conf->complex_space = !qiszero(q);
+		} else if (vp->v_type == V_STR) {
+			temp = lookup_long(truth, vp->v_str->s_str);
+			if (temp < 0) {
+				math_error("Illegal truth value for complex_space");
+				not_reached();
+			}
+			conf->complex_space = (int)temp;
 		}
 		break;
 
@@ -1245,6 +1262,10 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 
 	case CONFIG_FRACTION_SPACE:
 		i = (cfg->fraction_space ? 1 : 0);
+		break;
+
+	case CONFIG_COMPLEX_SPACE:
+		i = (cfg->complex_space ? 1 : 0);
 		break;
 
 	case CONFIG_TAB:

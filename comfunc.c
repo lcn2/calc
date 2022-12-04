@@ -1191,11 +1191,17 @@ comprint(COMPLEX *c)
 	qtmp = c->imag[0];
 	if (qiszero(&qtmp))
 		return;
+	if (conf->complex_space) {
+	    math_chr(' ');
+	}
 	if (!qiszero(c->real) && !qisneg(&qtmp))
 		math_chr('+');
 	if (qisneg(&qtmp)) {
 		math_chr('-');
 		qtmp.num.sign = 0;
+	}
+	if (conf->complex_space) {
+	    math_chr(' ');
 	}
 	qprintnum(&qtmp, MODE_DEFAULT, conf->outdigits);
 	math_chr('i');
