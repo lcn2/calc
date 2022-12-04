@@ -78,6 +78,11 @@ The following are the changes from calc version 2.14.2.0 to date:
     a few few minor text improvements.  Updated cal/regress to test
     config("tilde_space").
 
+    Clarify in the calc man page, the relationship between -q and
+    calc start scripts such as the ~/.calcrc file.
+
+    Fixed in the calc man page, the issue of -f not implying -q.
+
 
 The following are the changes from calc version 2.14.1.2 to date:
 

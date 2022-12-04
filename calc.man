@@ -251,9 +251,6 @@ For example:
 \fI#!${BINDIR}/calc\fP \fB\-q\fP \fB\-f\fP
 .fi
 .in -5n
-.sp 1
-This allows the script to run independently of
-startup scripts.
 
 .sp 1
 See
@@ -293,6 +290,24 @@ This will cause calc to process lines in
 .B filename
 in
 .BR "shell script mode" .
+
+.sp 1
+.B NOTE:
+The use of
+.BR \-f
+does
+.B NOT
+imply
+.BR \-q
+and thus one would need to use
+.sp 1
+.in +5n
+.nf
+\fIcalc\fP\ [optional_other_flags\ \&...] \fB\-q\fP \fB\-f\fP filename
+.fi
+.in -5n
+.sp 1
+to disable the use of calc startup files as well.
 
 .sp 1
 The use of
@@ -458,6 +473,13 @@ flag overrides
 .TP
 .B \-q
 Disable the reading of the startup scripts.
+.sp 1
+This allows the script to run independently of
+startup scripts such those managed by the
+.B $CALCRC
+environment variable.
+For example, this will disable the use of the common calcrc file
+(usually ~/.calcrc).
 
 .TP
 .B \-s
@@ -812,6 +834,23 @@ and
 are automatically set if
 .B \-i
 is not given.
+.sp 1
+.B NOTE:
+The use of
+.BR \-f
+does
+.B NOT
+imply
+.BR \-q
+and thus one would need to use
+.sp 1
+.in +5n
+.nf
+\fIcalc\fP\ [optional_other_flags\ \&...] \fB\-q\fP \fB\-f\fP filename
+.fi
+.in -5n
+.sp 1
+to disable the use of calc startup files as well.
 .sp 1
 For example, if
 the file
