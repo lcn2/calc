@@ -72,28 +72,19 @@ and Un*x tools for Windows.
 The major porting work for Cygwin was performed by Thomas Jones-Low
 (tjoneslo at softstart dot com).
 
-In March 2009, Michael Penk (mpenk at wuska dot com) reported success in
-installs under Cygwin:
+In December 2022, Leoongithub successfully compiled calc-2.14.1.2 under
+cygwin 2.924 (64 bit). The following are the compilation steps.
 
-    On my fairly complete Cygwin installs, everything compiles,
-    checks, and installs correctly.  My Cygwin is configured
-    in a very standard way (out of the box, using all of Cygwin's
-    defaults).  The install worked on 5 different machines with
-    Cygwin on them: one XP home, one XP professional, and three
-    Vista professionals.
+Install the latest version of cygwin (https://cygwin.com/install.html).
+In addition to the default packages, you also need to check these three
+packages: gcc-core, make, and libreadline-devel. The version of these
+packages does not matter. Just choose the latest version.
 
-Using the calc Makefile, he did the following:
+Execute following commands in the source code directory:
 
-    make all target=Cygwin
+    make all
     make check
     make install
-
-He also reports:
-
-    Of course, one should be logged in as an Administrator when
-    one builds and installs calc.
-
-He was compiling calc 2.12.4.0 with Cygwin version 1.5.25-15.
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-= If all else fails, for Cygwin =-=
