@@ -3,16 +3,8 @@ Dear calc user on a Windows based system,
 See the HOWTO.INSTALL file for information on how to build and install calc.
 See also the README file.
 
-BTW: While we are unable to use Windows 11, we welcome
-     Windows 11 developers to try compiling calc natively
-     (instead of via a Linux virtual machine).  If you are
-     able to compile Windows 11 natively, we would welcome
-     GitHub pull requests showing any needed modifications:
-
-	https://github.com/lcn2/calc/pulls
-
      Please also add notes to the 'Compiling calc under Windows 11'
-     section in README.WINDOWS file.
+     and 'Compiling with Cygwin' section in README.WINDOWS file.
 
 NOTE: The main developers do not have access to a Windows based platform.
       While we will make an effort to not break calc Windows based system,
@@ -21,9 +13,17 @@ NOTE: The main developers do not have access to a Windows based platform.
       Of course you are welcome to send us any patches that fix your
       Windows build environment.
 
+
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-= Compiling calc under Windows 11 =-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+BTW: While we are unable to use Windows 11, we welcome Windows 11
+     developers to try compiling calc natively (instead of via a Linux
+     virtual machine).  If you are able to compile Windows 11 natively,
+     we would welcome GitHub pull requests showing any needed modifications:
+
+	https://github.com/lcn2/calc/pulls
 
 We were given this advice from a Windows 11 developer:
 
@@ -34,57 +34,78 @@ We were given this advice from a Windows 11 developer:
     IMPORTANT: While installing Cygwin, and during Cygwin Setup, be sure to
 	       select all the MinGW64 packages relating to gcc.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-=-= Compiling calc via virtual machine under Windows 11 =-=
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+	       See the "Compiling with Cygwin" section below.
 
-We would prefer a Windows 11 solution that does not require a Windows 11
-developer to install a Linux virtual machine.  Nevertheless, a Windows 11
-user might want to use the Microsoft Windows Subsystem (WSL) for Linux:
+NOTE: Compiling calc under Windows 11 is work in progress.  If you run into
+      problems, consider the "Compiling with Cygwin" section below.
 
-	https://docs.microsoft.com/en-us/windows/wsl/
-
-    We have been told that you will need to turn on virtualization
-    to use this WSL subsystem.
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-=-= Compiling calc under Windows 10 via Windows Subsystem for Linux (WSL) =-=
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-It has been reported that calc version 2.12.6.4 has been successfully
-compiled, installed and running on Windows 10 on 2018 Jan 21.
-
-We were told:
-
-  "The Windows Subsystem for Linux (WSL) is a new Windows 10 feature that
-   enables you to run native Linux command-line tools directly on Windows"
-
-   https://docs.microsoft.com/cs-cz/windows/wsl/about
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-=-= compiling with Cygwin =-=
+=-= Compiling with Cygwin =-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 An effort is being made to allow windows users to compile calc using the
 Cygwin project (http://sources.redhat.com/cygwin/) with the GCC compiler
-and Un*x tools for Windows.
+and Unix tools for Windows.
 
 The major porting work for Cygwin was performed by Thomas Jones-Low
 (tjoneslo at softstart dot com).
 
-In December 2022, Leoongithub successfully compiled calc-2.14.1.2 under
-cygwin 2.924 (64 bit). The following are the compilation steps.
+In December 2022, GitHub user @Leoongithub successfully compiled
+calc-2.14.1.2 under cygwin 2.924 (64 bit). The following are the
+compilation steps that GitHub user @Leoongithub recommends:
 
-Install the latest version of cygwin (https://cygwin.com/install.html).
-In addition to the default packages, you also need to check these three
-packages: gcc-core, make, and libreadline-devel. The version of these
-packages does not matter. Just choose the latest version.
+0. Install the latest version of cygwin (https://cygwin.com/install.html).
 
-Execute following commands in the source code directory:
+    NOTE: In addition to the default packages, you also need to check these
+	  three packages: gcc-core, make, and libreadline-devel. The version
+	  of these packages does not matter. Just choose the latest version.
 
-    make all
-    make check
-    make install
+    NOTE: The addition of "target=Cygwin" to make commands below
+	  is done just in case the target is not set properly by make.
+
+1. Change (cd) into the top of the source code directory of calc.
+
+   NOTE: The make command assume you are at the top of the calc source directory.
+
+2. make clobber target=Cygwin
+
+   NOTE: This helps ensure that you are starting from a so-called "clean slate",
+	 and that you have nothing hanging around from previous attempts to compile.
+
+3. make all target=Cygwin
+
+   NOTE: If successful, you should have a calc executable.  However that executable
+	 may not be working properly.  Advance to step (4) to test.
+
+4. make chk target=Cygwin
+
+   NOTE: If you want this command be be verbose, try:
+
+	    make check target=Cygwin
+
+   NOTE: This will run calc with the regress.cal regression suite.  This step could take
+	 for a while to run, depending on the speed/performance of your machine.
+	 If all is well (all regression tests pass), you will see at the end:
+
+	    chk OK
+
+         Otherwise you may see calc exit non-zero after it prints some lines with '****'
+	 error messages followed by a line including a final error count of the form:
+
+	   **** 2 error(s) found  \/++\/
+
+         If you see some errors that may relate to files and I/O, all may not be lost.
+	 It could simply mean that your Windows environment is not conforming to standard
+	 I/O and file operations.  The calc mathematical engine may be just fine.  On the
+	 other hand if you see mathematical related regression test failures, this is
+	 bad sign that your calc executable under Windows is not usable.
+
+5. make install target=Cygwin
+
+   NOTE: This step is optional.  While calc is usable at the top of the source code directory
+         of calc, installing calc may be of benefit so you can use calc elsewhere on your system.
+
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-= If all else fails, for Cygwin =-=
@@ -108,6 +129,10 @@ In particular:
     Just copy the win32/*.[ch] files up into the top level calc
     source directory, edit them (if needed) and build using the
     Cygwin GCC compiler and Cygwin build environment.
+
+NOTE: The use of win32_hsrc and this method has been deprecated.
+      It may go away once the Windows 11 methods are stable.
+
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-= compiling under DJGPP =-=
@@ -169,8 +194,43 @@ Look for Makefile comments of the form:
 Follow those recommendations.  In cases where they conflict with
 the above Makefile list, follow the recommendation in the Makefile.
 
+NOTE: The use of DJGPP and this method has been deprecated.
+      It may go away once the Windows 11 methods are stable.
 
-## Copyright (C) 2002-2009,2021  Landon Curt Noll and Thomas Jones-Low
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-= Compiling calc via virtual machine under Windows 11 =-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+We would prefer a Windows 11 solution that does not require a Windows 11
+developer to install a Linux virtual machine.  Nevertheless, a Windows 11
+user might want to use the Microsoft Windows Subsystem (WSL) for Linux:
+
+	https://docs.microsoft.com/en-us/windows/wsl/
+
+    We have been told that you will need to turn on virtualization
+    to use this WSL subsystem.
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-= Compiling calc under Windows 10 via Windows Subsystem for Linux (WSL) =-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+It has been reported that calc version 2.12.6.4 has been successfully
+compiled, installed and running on Windows 10 on 2018 Jan 21.
+
+We were told:
+
+  "The Windows Subsystem for Linux (WSL) is a new Windows 10 feature that
+   enables you to run native Linux command-line tools directly on Windows"
+
+   https://docs.microsoft.com/cs-cz/windows/wsl/about
+
+NOTE: The use of calc under Windows 10 has been deprecated in favor of one
+      of the Windows 11 methods above.
+
+
+## Copyright (C) 2002-2009,2021,2022  Landon Curt Noll and Thomas Jones-Low
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
