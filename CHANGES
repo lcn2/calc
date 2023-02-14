@@ -1,4 +1,11 @@
-The following are the changes from calc version 2.14.2.0 to date:
+The following are the changes from calc version 2.14.2.3 to date:
+
+    Change calc version from 2.14.1.2 to 2.14.2.3 as part of a test to
+    build calc RPMs on a reference RHEL8.7 platform (formerly a RHEL7.9
+    platform).
+
+
+The following are the changes from calc version 2.14.2.0 to 2.14.1.2:
 
     Attempted to address a paranoid compiler warning -Wmaybe-uninitialized
     in swap_HALF_in_ZVALUE() where the gcc compiler seems to ignore the

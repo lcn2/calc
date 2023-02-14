@@ -84,7 +84,7 @@ static char *program;
 #define MAJOR_VER	2	/* major library version */
 #define MINOR_VER	14	/* minor library version */
 #define MAJOR_PATCH	1	/* major software version level */
-#define MINOR_PATCH	2	/* minor software version level */
+#define MINOR_PATCH	3	/* minor software version level */
 
 
 /*
@@ -108,7 +108,7 @@ STATIC char *stored_version = NULL;	/* version formed if != NULL */
 char *Copyright = "\n"
   "calc - arbitrary precision calculator\n"
   "\n"
-  "Copyright (C) 1999-2021  David I. Bell, Landon Curt Noll "
+  "Copyright (C) 1999-2023  David I. Bell, Landon Curt Noll "
 					   "and Ernest Bowen\n"
   "\n"
   "Initial author:  David I. Bell\n"
