@@ -6291,6 +6291,7 @@ have_fpos_pos.o: have_ban_pragma.h
 have_fpos_pos.o: have_fgetsetpos.h
 have_fpos_pos.o: have_fpos_pos.c
 have_fpos_pos.o: have_posscl.h
+have_fpos_pos.o: have_string.h
 have_getpgid.o: banned.h
 have_getpgid.o: have_ban_pragma.h
 have_getpgid.o: have_getpgid.c
