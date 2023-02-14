@@ -3226,7 +3226,7 @@ have_fgetsetpos.h: have_fgetsetpos.c banned.h have_ban_pragma.h ${MAKE_FILE} ${L
 	    ${TRUE}; \
 	fi
 
-have_fpos_pos.h: have_fpos_pos.c have_fgetsetpos.h have_posscl.h \
+have_fpos_pos.h: have_fpos_pos.c have_fgetsetpos.h have_posscl.h have_string.h \
 		 banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	${Q} ${RM} -f fpos_tmp $@
 	${H} echo 'forming $@'

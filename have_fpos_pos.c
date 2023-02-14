@@ -28,6 +28,10 @@
 #include <stdio.h>
 #include "have_fgetsetpos.h"
 #include "have_posscl.h"
+#include "have_string.h"
+#ifdef HAVE_STRING_H
+# include <string.h>
+#endif
 
 
 #include "banned.h"	/* include after system header <> includes */
