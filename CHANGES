@@ -1,5 +1,7 @@
 The following are the changes from calc version 2.14.2.3 to date:
 
+    Fixed missing <string.h include in have_fpos_pos.c.
+
     Change calc version from 2.14.1.2 to 2.14.2.3 as part of a test to
     build calc RPMs on a reference RHEL8.7 platform (formerly a RHEL7.9
     platform).
