@@ -6,6 +6,10 @@ The following are the changes from calc version 2.14.2.3 to date:
     build calc RPMs on a reference RHEL8.7 platform (formerly a RHEL7.9
     platform).
 
+    Changes #! lines in Makefiles to "#!/usr/bin/env make".
+
+    Set SHELL in Makefiles to the basename of the shell.
+
 
 The following are the changes from calc version 2.14.2.0 to 2.14.1.2:
 

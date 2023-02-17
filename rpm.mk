@@ -1,9 +1,8 @@
-#!/bin/make
-#****h* calc/rpm.mk
+#!/usr/bin/env make
 #
 # rpm.mk - Makefile for building rpm packages for calc
 #
-# Copyright (C) 2003,2014,2021  Petteri Kettunen and Landon Curt Noll
+# Copyright (C) 2003,2014,2021,2023  Petteri Kettunen and Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -63,7 +62,7 @@
 
 # setup
 #
-SHELL= /bin/sh
+SHELL= bash
 RPMBUILD_TOOL= rpmbuild
 TARCH= x86_64
 RPMBUILD_OPTION= -ba --target=$(TARCH) --buildroot=${RPM_BUILD_ROOT}

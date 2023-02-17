@@ -1,8 +1,8 @@
-#!/bin/make
+#!/usr/bin/env make
 #
 # calc - arbitrary precision calculator
 #
-# Copyright (C) 1999-2018,2021,2022  Landon Curt Noll
+# Copyright (C) 1999-2018,2021-2023  Landon Curt Noll
 #
 # SRC: Makefile - top level Makefile
 #
@@ -49,6 +49,7 @@ ifndef EXCLUDE_FROM_CUSTOM_MAKEFILE
 # The section continues until the next line that  #
 # starts with a '# End skipping ..' comment line. #
 ###################################################
+#endif	/* end of skip for non-Gnu makefiles */
 
 # Unfortunately due to the complex dependency issues between
 # Makefile, Makefile.ship and custom/Makefile, parallel GNU make
@@ -65,7 +66,8 @@ ifndef EXCLUDE_FROM_CUSTOM_MAKEFILE
 # NOTE: You can force a target value by defining target as in:
 #
 #	make ...__optional_arguments_... target=value
-
+#
+#if 0	/* start of skip for non-Gnu makefiles */
 # Try uname -s if the target was not already set on the make command line
 #
 ifeq ($(target),)
@@ -80,9 +82,8 @@ endif
 ifeq ($(MINGW),)
 MINGW=$(shell uname -o 2>/dev/null)
 endif
-#
 #endif	/* end of skip for non-Gnu makefiles */
-#
+
 # The shell used by this Makefile
 #
 # On some systems, /bin/sh is a rather reduced shell with
@@ -91,17 +92,17 @@ endif
 # If your system has a up to date, bash shell, then
 # you may wish to use:
 #
-#	SHELL= /bin/bash
+#	SHELL= bash
 #
 # On some systems such as macOS, the bash shell is very
 # far behind to the point where is cannot be depended on.
 # On such systems, the sh may be a much better alternative
 # shell for this Makefile to use:
 #
-#	SHELL= /bin/sh
+#	SHELL= sh
 #
-SHELL= /bin/bash
-#SHELL= /bin/sh
+SHELL= bash
+#SHELL= sh
 #if 0	/* start of skip for non-Gnu makefiles */
 #
 ifeq ($(target),Darwin)
@@ -117,6 +118,7 @@ target:= Cygwin
 endif
 #
 #endif	/* end of skip for non-Gnu makefiles */
+
 
 ##############################################################################
 #-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#

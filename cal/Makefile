@@ -1,8 +1,8 @@
-#!/bin/make
+#!/usr/bin/env make
 #
 # cal - makefile for calc standard resource files
 #
-# Copyright (C) 1999-2006,2017,2021,2022  Landon Curt Noll
+# Copyright (C) 1999-2006,2017,2021-2023  Landon Curt Noll
 #
 # SRC: cal/Makefile
 #
@@ -44,20 +44,21 @@
 # If your system has a up to date, bash shell, then
 # you may wish to use:
 #
-#	SHELL= /bin/bash
+#	SHELL= bash
 #
 # On some systems such as macOS, the bash shell is very
 # far behind to the point where is cannot be depended on.
 # On such systems, the sh may be a much better alternative
 # shell for this Makefile to use:
 #
-#	SHELL= /bin/sh
+#	SHELL= sh
 #
-SHELL= /bin/bash
-#SHELL= /bin/sh
+SHELL= bash
+#SHELL= sh
 #if 0	/* start of skip for non-Gnu makefiles */
+#
 ifeq ($(target),Darwin)
-SHELL:= /bin/zsh
+SHELL:= /bin/sh
 endif
 #endif	/* end of skip for non-Gnu makefiles */
 

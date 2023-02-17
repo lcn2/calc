@@ -1,8 +1,8 @@
-#!/bin/make
+#!/usr/bin/env make
 #
 # custom - makefile for calc custom routines
 #
-# Copyright (C) 1999-2006,2014,2017-2018,2021  Landon Curt Noll
+# Copyright (C) 1999-2006,2014,2017-2018,2021,2023  Landon Curt Noll
 #
 # SRC: custom/Makefile.simple - non-GNU version
 #
@@ -44,17 +44,17 @@
 # If your system has a up to date, bash shell, then
 # you may wish to use:
 #
-#	SHELL= /bin/bash
+#	SHELL= bash
 #
 # On some systems such as macOS, the bash shell is very
 # far behind to the point where is cannot be depended on.
-# On such systems, the zsh may be a much better alternative
+# On such systems, the sh may be a much better alternative
 # shell for this Makefile to use:
 #
-#	SHELL= /bin/zsh
+#	SHELL= sh
 #
-SHELL= /bin/bash
-#SHELL= /bin/sh
+SHELL= bash
+#SHELL= sh
 
 
 # PREFIX - Top level location for calc
