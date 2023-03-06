@@ -2,11 +2,11 @@ s/VALUE/int/
 s/NUMBER[	 ]*\*/int /
 s/NUMBER/int/
 s/STRINGHEAD/int/
-s/\(".*",.*,.*\),.*,.*,.*,.*,/\1, 0, 0, 0, 0,/
+s/\(".*",.*,.*\),.*,.*,.*,.*,/\1, 0, 0, {.null = NULL}, {.null = NULL},/
 s/[	 ][	 ]*$//
 p
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
