@@ -5823,6 +5823,12 @@ have_posscl.o: have_unistd.h
 have_rusage.o: banned.h
 have_rusage.o: have_ban_pragma.h
 have_rusage.o: have_rusage.c
+have_statfs.o: banned.h
+have_statfs.o: have_ban_pragma.h
+have_statfs.o: have_statfs.c
+have_statfs.o: have_sys_mount.h
+have_statfs.o: have_sys_param.h
+have_statfs.o: have_sys_vfs.h
 have_stdvs.o: banned.h
 have_stdvs.o: have_ban_pragma.h
 have_stdvs.o: have_stdlib.h
@@ -6453,8 +6459,12 @@ seed.o: have_gettime.h
 seed.o: have_memmv.h
 seed.o: have_newstr.h
 seed.o: have_rusage.h
+seed.o: have_statfs.h
 seed.o: have_stdlib.h
 seed.o: have_string.h
+seed.o: have_sys_mount.h
+seed.o: have_sys_param.h
+seed.o: have_sys_vfs.h
 seed.o: have_times.h
 seed.o: have_uid_t.h
 seed.o: have_unistd.h
