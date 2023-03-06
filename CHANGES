@@ -74,6 +74,9 @@ The following are the changes from calc version 2.14.2.3 to date:
     The pseudo_seed() function will also try to call statfs() if
     possible and permitted by the HAVE_STATFS value.
 
+    Test if makedepend command is available before trying to build
+    the Makefile dependency list via "make depend".
+
 
 The following are the changes from calc version 2.14.2.0 to 2.14.1.2:
 

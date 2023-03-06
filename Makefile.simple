@@ -3985,6 +3985,12 @@ depend: hsrc custom/Makefile
 	else \
 	    ${TRUE}; \
 	fi
+	${Q} if type -f ${MAKEDEPEND}; then \
+	    ${TRUE}; \
+	else \
+	    echo "make depend failed: cannot find makedepend command: ${MAKEDEPEND}" 1>&2; \
+	    exit 1; \
+	fi
 	${V} echo '=-=-=-=-= Invoking depend rule for cscript =-=-=-=-='
 	${Q} cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} depend
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
