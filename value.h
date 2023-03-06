@@ -167,7 +167,8 @@ struct value {
 #define V_OPTR	19	/* octet address as pointer */
 #define V_SPTR	20	/* string address as pointer */
 #define V_NPTR	21	/* number address as pointer */
-#define V_MAX	21	/* highest legal value */
+
+#define V_MAX	V_NPTR	/* highest legal value - must be last and match highest V_something value */
 
 #define V_NOSUBTYPE	0	/* subtype has no meaning */
 #define V_NOASSIGNTO	1	/* protection status 1 */
@@ -189,7 +190,46 @@ struct value {
  */
 
 
-#define TWOVAL(a,b) ((a) << 5 | (b))	/* for switch of two values */
+/*
+ * NOTE: The shift of 8 in TWOVAL() macro below assumes V_MAX < 1<<8
+ *
+ * The macro TWOVAL_ARGS_OK(a,b) will return true if both a and b are in range,
+ * otherwise it will return false.
+ *
+ * The TWOVAL_INVALID is a value that TWOVAL_ARGS_OK(a,b) is true,
+ * will never match a TWOVAL(a,b) value (i.e., using V_something defined values).
+ *
+ * The TWOVAL_AS_UINT(a,b) may be assigned to a unsigned int value so that
+ * with one switches on that unsigned int, cases with a and/or b being
+ * out of range will fall into the default (non-matching) case.
+ *
+ *	unsigned int twoval_as_uint;
+ *
+ *	...
+ *
+ *	twoval_as_uint = TWOVAL_AS_UINT(a,b);
+ *	switch (twoval_as_uint) {
+ *		case TWOVAL(V_INT,V_INT):
+ *			...
+ *			break;
+ *		case TWOVAL(V_INT,V_NUM):
+ *			...
+ *			break;
+ *		default:
+ *			...
+ *			break;
+ *	}
+ *
+ *	 If a is NOT 0 <= a <= V_MAX or if b is NOT 0 <= b <= V_MAX,
+ *	 when () macro returns -1 (all bits set) in order to
+ *	 not match and true TWOVAL() macro combination that uses
+ *	 uses a V_something defined value above.
+ */
+
+#define TWOVAL(a,b) ((unsigned int)(((a) << 8) | (b)))	/* logical OR for switch of two V_something values */
+#define TWOVAL_ARGS_OK(a,b) (((a) >= 0) && ((a) <= V_MAX) && ((b) >= 0) && ((b) <= V_MAX))
+#define TWOVAL_INVALID  ((unsigned int)(-1))		/* never a valid TWOVAL(a,b) value when a and b are in range */
+#define TWOVAL_AS_UINT(a,b) (TWOVAL_ARGS_OK(a,b) ? TWOVAL(a,b) : TWOVAL_INVALID)
 
 #define NULL_VALUE	((VALUE *) 0)
 

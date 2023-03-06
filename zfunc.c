@@ -1036,7 +1036,7 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 			}
 			g = (FULL) (*a0 * w);
 			if (h < BASEB) {
-			    g &= (1 << h) - 1;
+			    g &= (FULL)lowhalf[h];
 			} else {
 			    g &= BASE1;
 			}
@@ -1354,14 +1354,14 @@ zlog10(ZVALUE z, BOOL *was_10_power)
 		}
 
 		/* create power10 table */
-		power10 = malloc(sizeof(long) * (max_power10_exp+1));
+		power10 = calloc(max_power10_exp+1, sizeof(long));
 		if (power10 == NULL) {
 			math_error("cannot malloc power10 table");
 			not_reached();
 		}
 
 		/* load power10 table */
-		for (i=0, v = 1L; i <= max_power10_exp; ++i, v *= 10L) {
+		for (i=0, v = 1L; i < max_power10_exp; ++i, v *= 10L) {
 			power10[i] = v;
 		}
 	}

@@ -76,7 +76,7 @@ long funcline;			/* function line being executed */
  */
 S_FUNC void showsizes(void);
 S_FUNC void o_paramaddr(FUNC *fp, int argcnt, VALUE *args, long index);
-S_FUNC void o_getvalue(void);
+S_FUNC void o_getvalue(FUNC *fp);
 
 
 /*
@@ -98,8 +98,22 @@ S_FUNC void o_getvalue(void);
 /*
  * opcode - info about each opcode
  */
+typedef union {
+	void (*func_nul)(FUNC *);			/* OPNUL */
+	void (*func_one)(FUNC *, long);			/* OPONE */
+	void (*func_two)(FUNC *, long, long);		/* OPTWO */
+	void (*func_jmp)(FUNC *, BOOL *);		/* OPJMP */
+	void (*func_ret)(FUNC *);			/* OPRET */
+	void (*func_glb)(FUNC *, GLOBAL *);		/* OPGLB */
+	void (*func_par)(FUNC *, int, VALUE *, long);	/* OPPAR */
+	void (*func_loc)(FUNC *, VALUE *, long);	/* OPLOC */
+	/* has a string constant arg is unused */	/* OPSTR */
+	void (*func_arg)(FUNC *, int, VALUE *);		/* OPARG */
+	void (*func_sti)(FUNC *);			/* OPSTI */
+} opfunc;
+
 struct opcode {
-	void (*o_func)();	/* routine to call for opcode */
+	opfunc o_func;		/* routine to call for opcode */
 	int o_type;		/* type of opcode */
 	char *o_name;		/* name of opcode */
 };
@@ -144,7 +158,7 @@ initstack(void)
  * The various opcodes
  */
 S_FUNC void
-o_nop(void)
+o_nop(FUNC *UNUSED(fp))
 {
 }
 
@@ -164,7 +178,6 @@ o_localaddr(FUNC *fp, VALUE *locals, long index)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_globaladdr(FUNC *UNUSED(fp), GLOBAL *sp)
 {
@@ -180,7 +193,6 @@ o_globaladdr(FUNC *UNUSED(fp), GLOBAL *sp)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_paramaddr(FUNC *UNUSED(fp), int argcount, VALUE *args, long index)
 {
@@ -212,7 +224,6 @@ o_localvalue(FUNC *fp, VALUE *locals, long index)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_globalvalue(FUNC *UNUSED(fp), GLOBAL *sp)
 {
@@ -224,7 +235,6 @@ o_globalvalue(FUNC *UNUSED(fp), GLOBAL *sp)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_paramvalue(FUNC *UNUSED(fp), int argcount, VALUE *args, long index)
 {
@@ -269,7 +279,6 @@ o_argvalue(FUNC *fp, int argcount, VALUE *args)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_number(FUNC *UNUSED(fp), long arg)
 {
@@ -287,7 +296,6 @@ o_number(FUNC *UNUSED(fp), long arg)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_imaginary(FUNC *UNUSED(fp), long arg)
 {
@@ -314,7 +322,6 @@ o_imaginary(FUNC *UNUSED(fp), long arg)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_string(FUNC *UNUSED(fp), long arg)
 {
@@ -326,7 +333,7 @@ o_string(FUNC *UNUSED(fp), long arg)
 
 
 S_FUNC void
-o_undef(void)
+o_undef(FUNC *UNUSED(fp))
 {
 	stack++;
 	stack->v_type = V_NULL;
@@ -334,7 +341,6 @@ o_undef(void)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_matcreate(FUNC *UNUSED(fp), long dim)
 {
@@ -402,7 +408,6 @@ o_matcreate(FUNC *UNUSED(fp), long dim)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_eleminit(FUNC *UNUSED(fp), long index)
 {
@@ -543,7 +548,6 @@ o_eleminit(FUNC *UNUSED(fp), long index)
  *	dim		dimension of matrix
  *	writeflag	nonzero if element will be written
  */
-/*ARGSUSED*/
 S_FUNC void
 o_indexaddr(FUNC *UNUSED(fp), long dim, long writeflag)
 {
@@ -696,7 +700,6 @@ o_indexaddr(FUNC *UNUSED(fp), long dim, long writeflag)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_elemaddr(FUNC *UNUSED(fp), long index)
 {
@@ -751,7 +754,6 @@ o_elemvalue(FUNC *fp, long index)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_objcreate(FUNC *UNUSED(fp), long arg)
 {
@@ -763,7 +765,7 @@ o_objcreate(FUNC *UNUSED(fp), long arg)
 
 
 S_FUNC void
-o_assign(void)
+o_assign(FUNC *UNUSED(fp))
 {
 	VALUE *var;		/* variable value */
 	VALUE *vp;
@@ -879,27 +881,27 @@ o_assign(void)
 
 
 S_FUNC void
-o_assignback(void)
+o_assignback(FUNC *fp)
 {
 	VALUE tmp;
 
 	tmp = stack[-1];
 	stack[-1] = stack[0];
 	stack[0] = tmp;
-	o_assign();
+	o_assign(fp);
 }
 
 
 S_FUNC void
-o_assignpop(void)
+o_assignpop(FUNC *fp)
 {
-	o_assign();
+	o_assign(fp);
 	stack--;
 }
 
 
 S_FUNC void
-o_ptr(void)
+o_ptr(FUNC *UNUSED(fp))
 {
 	switch (stack->v_type) {
 	case V_ADDR:
@@ -924,7 +926,7 @@ o_ptr(void)
 
 
 S_FUNC void
-o_deref(void)
+o_deref(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 
@@ -994,7 +996,7 @@ o_deref(void)
 
 
 S_FUNC void
-o_swap(void)
+o_swap(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;		/* variables to be swapped */
 	VALUE tmp;
@@ -1034,7 +1036,7 @@ o_swap(void)
 
 
 S_FUNC void
-o_add(void)
+o_add(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -1071,7 +1073,7 @@ o_add(void)
 
 
 S_FUNC void
-o_sub(void)
+o_sub(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -1108,7 +1110,7 @@ o_sub(void)
 
 
 S_FUNC void
-o_mul(void)
+o_mul(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -1144,7 +1146,7 @@ o_mul(void)
 
 
 S_FUNC void
-o_power(void)
+o_power(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -1163,7 +1165,7 @@ o_power(void)
 
 
 S_FUNC void
-o_div(void)
+o_div(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -1199,7 +1201,7 @@ o_div(void)
 
 
 S_FUNC void
-o_quo(void)
+o_quo(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp, null;
@@ -1220,7 +1222,7 @@ o_quo(void)
 
 
 S_FUNC void
-o_mod(void)
+o_mod(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp, null;
@@ -1241,7 +1243,7 @@ o_mod(void)
 
 
 S_FUNC void
-o_and(void)
+o_and(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -1261,7 +1263,7 @@ o_and(void)
 
 
 S_FUNC void
-o_or(void)
+o_or(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -1280,7 +1282,7 @@ o_or(void)
 }
 
 S_FUNC void
-o_xor (void)
+o_xor(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -1301,7 +1303,7 @@ o_xor (void)
 
 
 S_FUNC void
-o_comp (void)
+o_comp(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	VALUE tmp;
@@ -1316,7 +1318,7 @@ o_comp (void)
 
 
 S_FUNC void
-o_not(void)
+o_not(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	VALUE val;
@@ -1340,7 +1342,7 @@ o_not(void)
 
 
 S_FUNC void
-o_plus (void)
+o_plus(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	VALUE tmp;
@@ -1367,7 +1369,7 @@ o_plus (void)
 
 
 S_FUNC void
-o_negate(void)
+o_negate(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	NUMBER *q;
@@ -1392,7 +1394,7 @@ o_negate(void)
 
 
 S_FUNC void
-o_invert(void)
+o_invert(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	VALUE tmp;
@@ -1408,7 +1410,7 @@ o_invert(void)
 
 
 S_FUNC void
-o_scale(void)
+o_scale(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -1427,7 +1429,7 @@ o_scale(void)
 
 
 S_FUNC void
-o_int(void)
+o_int(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	VALUE tmp;
@@ -1442,7 +1444,7 @@ o_int(void)
 
 
 S_FUNC void
-o_frac(void)
+o_frac(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	VALUE tmp;
@@ -1457,7 +1459,7 @@ o_frac(void)
 
 
 S_FUNC void
-o_abs(void)
+o_abs(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	NUMBER *q;
@@ -1492,7 +1494,7 @@ o_abs(void)
 
 
 S_FUNC void
-o_norm(void)
+o_norm(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	NUMBER *q;
@@ -1517,7 +1519,7 @@ o_norm(void)
 
 
 S_FUNC void
-o_square(void)
+o_square(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	NUMBER *q;
@@ -1542,7 +1544,7 @@ o_square(void)
 
 
 S_FUNC void
-o_test(void)
+o_test(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	int i;
@@ -1559,7 +1561,7 @@ o_test(void)
 
 
 S_FUNC void
-o_links(void)
+o_links(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	long links;
@@ -1591,7 +1593,7 @@ o_links(void)
 
 
 S_FUNC void
-o_bit (void)
+o_bit(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	long index;
@@ -1640,7 +1642,7 @@ o_bit (void)
 }
 
 S_FUNC void
-o_highbit (void)
+o_highbit(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	long index;
@@ -1688,7 +1690,7 @@ o_highbit (void)
 
 
 S_FUNC void
-o_lowbit (void)
+o_lowbit(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	long index;
@@ -1740,7 +1742,7 @@ o_lowbit (void)
 
 
 S_FUNC void
-o_content (void)
+o_content(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	VALUE tmp;
@@ -1755,7 +1757,7 @@ o_content (void)
 
 
 S_FUNC void
-o_hashop (void)
+o_hashop(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -1774,7 +1776,7 @@ o_hashop (void)
 
 
 S_FUNC void
-o_backslash (void)
+o_backslash(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	VALUE tmp;
@@ -1789,7 +1791,7 @@ o_backslash (void)
 
 
 S_FUNC void
-o_setminus (void)
+o_setminus(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -1808,7 +1810,7 @@ o_setminus (void)
 
 
 S_FUNC void
-o_istype(void)
+o_istype(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	int r;
@@ -1832,7 +1834,7 @@ o_istype(void)
 
 
 S_FUNC void
-o_isint(void)
+o_isint(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	NUMBER *q;
@@ -1860,7 +1862,7 @@ o_isint(void)
 
 
 S_FUNC void
-o_isnum(void)
+o_isnum(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 
@@ -1890,7 +1892,7 @@ o_isnum(void)
 
 
 S_FUNC void
-o_ismat(void)
+o_ismat(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 
@@ -1912,7 +1914,7 @@ o_ismat(void)
 
 
 S_FUNC void
-o_islist(void)
+o_islist(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	int r;
@@ -1929,7 +1931,7 @@ o_islist(void)
 
 
 S_FUNC void
-o_isobj(void)
+o_isobj(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	int r;
@@ -1946,7 +1948,7 @@ o_isobj(void)
 
 
 S_FUNC void
-o_isstr(void)
+o_isstr(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	int r;
@@ -1963,7 +1965,7 @@ o_isstr(void)
 
 
 S_FUNC void
-o_isfile(void)
+o_isfile(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	int r;
@@ -1980,7 +1982,7 @@ o_isfile(void)
 
 
 S_FUNC void
-o_isrand(void)
+o_isrand(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	int r;
@@ -1997,7 +1999,7 @@ o_isrand(void)
 
 
 S_FUNC void
-o_israndom(void)
+o_israndom(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	int r;
@@ -2014,7 +2016,7 @@ o_israndom(void)
 
 
 S_FUNC void
-o_isconfig(void)
+o_isconfig(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	int r;
@@ -2031,7 +2033,7 @@ o_isconfig(void)
 
 
 S_FUNC void
-o_ishash(void)
+o_ishash(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	int r;
@@ -2050,7 +2052,7 @@ o_ishash(void)
 
 
 S_FUNC void
-o_isassoc(void)
+o_isassoc(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	int r;
@@ -2067,7 +2069,7 @@ o_isassoc(void)
 
 
 S_FUNC void
-o_isblock(void)
+o_isblock(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	long r;
@@ -2088,7 +2090,7 @@ o_isblock(void)
 
 
 S_FUNC void
-o_isoctet(void)
+o_isoctet(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	long r;
@@ -2105,7 +2107,7 @@ o_isoctet(void)
 
 
 S_FUNC void
-o_isptr(void)
+o_isptr(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	long r;
@@ -2128,7 +2130,7 @@ o_isptr(void)
 
 
 S_FUNC void
-o_isdefined(void)
+o_isdefined(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	long r;
@@ -2158,7 +2160,7 @@ o_isdefined(void)
 
 
 S_FUNC void
-o_isobjtype(void)
+o_isobjtype(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	long index;
@@ -2179,7 +2181,7 @@ o_isobjtype(void)
 
 
 S_FUNC void
-o_issimple(void)
+o_issimple(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	int r;
@@ -2203,7 +2205,7 @@ o_issimple(void)
 
 
 S_FUNC void
-o_isodd(void)
+o_isodd(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 
@@ -2226,7 +2228,7 @@ o_isodd(void)
 
 
 S_FUNC void
-o_iseven(void)
+o_iseven(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 
@@ -2249,7 +2251,7 @@ o_iseven(void)
 
 
 S_FUNC void
-o_isreal(void)
+o_isreal(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 
@@ -2272,7 +2274,7 @@ o_isreal(void)
 
 
 S_FUNC void
-o_isnull(void)
+o_isnull(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 
@@ -2294,7 +2296,7 @@ o_isnull(void)
 
 
 S_FUNC void
-o_re(void)
+o_re(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	NUMBER *q;
@@ -2324,7 +2326,7 @@ o_re(void)
 
 
 S_FUNC void
-o_im(void)
+o_im(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	NUMBER *q;
@@ -2354,7 +2356,7 @@ o_im(void)
 
 
 S_FUNC void
-o_conjugate(void)
+o_conjugate(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	VALUE tmp;
@@ -2377,7 +2379,7 @@ o_conjugate(void)
 
 
 S_FUNC void
-o_fiaddr(void)
+o_fiaddr(FUNC *UNUSED(fp))
 {
 	register MATRIX *m;	/* current matrix element */
 	LIST *lp;		/* list header */
@@ -2449,15 +2451,15 @@ o_fiaddr(void)
 
 
 S_FUNC void
-o_fivalue(void)
+o_fivalue(FUNC *fp)
 {
-	(void) o_fiaddr();
-	(void) o_getvalue();
+	(void) o_fiaddr(fp);
+	(void) o_getvalue(fp);
 }
 
 
 S_FUNC void
-o_sgn(void)
+o_sgn(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	NUMBER *q;
@@ -2482,7 +2484,7 @@ o_sgn(void)
 
 
 S_FUNC void
-o_numerator(void)
+o_numerator(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	NUMBER *q;
@@ -2506,7 +2508,7 @@ o_numerator(void)
 
 
 S_FUNC void
-o_denominator(void)
+o_denominator(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	NUMBER *q;
@@ -2528,7 +2530,7 @@ o_denominator(void)
 
 
 S_FUNC void
-o_duplicate(void)
+o_duplicate(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 
@@ -2538,7 +2540,7 @@ o_duplicate(void)
 
 
 S_FUNC void
-o_dupvalue(void)
+o_dupvalue(FUNC *UNUSED(fp))
 {
 	if (stack->v_type == V_ADDR)
 		copyvalue(stack->v_addr, stack + 1);
@@ -2549,19 +2551,18 @@ o_dupvalue(void)
 
 
 S_FUNC void
-o_pop(void)
+o_pop(FUNC *UNUSED(fp))
 {
 	freevalue(stack--);
 }
 
 
 S_FUNC void
-o_return(void)
+o_return(FUNC *UNUSED(fp))
 {
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_jumpz(FUNC *UNUSED(fp), BOOL *dojump)
 {
@@ -2585,7 +2586,6 @@ o_jumpz(FUNC *UNUSED(fp), BOOL *dojump)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_jumpnz(FUNC *UNUSED(fp), BOOL *dojump)
 {
@@ -2612,7 +2612,6 @@ o_jumpnz(FUNC *UNUSED(fp), BOOL *dojump)
 /*
  * jumpnn invokes a jump if top value points to a null value
  */
-/*ARGSUSED*/
 S_FUNC void
 o_jumpnn(FUNC *UNUSED(fp), BOOL *dojump)
 {
@@ -2623,7 +2622,6 @@ o_jumpnn(FUNC *UNUSED(fp), BOOL *dojump)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_condorjump(FUNC *UNUSED(fp), BOOL *dojump)
 {
@@ -2649,7 +2647,6 @@ o_condorjump(FUNC *UNUSED(fp), BOOL *dojump)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_condandjump(FUNC *UNUSED(fp), BOOL *dojump)
 {
@@ -2680,7 +2677,6 @@ o_condandjump(FUNC *UNUSED(fp), BOOL *dojump)
  * different, popping off the top element, leaving the first one on the stack.
  * If they are equal, pop both values and do not jump.
  */
-/*ARGSUSED*/
 S_FUNC void
 o_casejump(FUNC *UNUSED(fp), BOOL *dojump)
 {
@@ -2702,7 +2698,6 @@ o_casejump(FUNC *UNUSED(fp), BOOL *dojump)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_jump(FUNC *UNUSED(fp), BOOL *dojump)
 {
@@ -2722,7 +2717,6 @@ o_usercall(FUNC *fp, long index, long argcount)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_call(FUNC *UNUSED(fp), long index, long argcount)
 {
@@ -2737,7 +2731,7 @@ o_call(FUNC *UNUSED(fp), long index, long argcount)
 
 
 S_FUNC void
-o_getvalue(void)
+o_getvalue(FUNC *UNUSED(fp))
 {
 	if (stack->v_type == V_ADDR)
 		copyvalue(stack->v_addr, stack);
@@ -2745,7 +2739,7 @@ o_getvalue(void)
 
 
 S_FUNC void
-o_cmp(void)
+o_cmp(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -2764,7 +2758,7 @@ o_cmp(void)
 
 
 S_FUNC void
-o_eq(void)
+o_eq(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	int r;
@@ -2785,7 +2779,7 @@ o_eq(void)
 
 
 S_FUNC void
-o_ne(void)
+o_ne(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	int r;
@@ -2806,7 +2800,7 @@ o_ne(void)
 
 
 S_FUNC void
-o_le(void)
+o_le(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -2836,7 +2830,7 @@ o_le(void)
 
 
 S_FUNC void
-o_ge(void)
+o_ge(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -2865,7 +2859,7 @@ o_ge(void)
 
 
 S_FUNC void
-o_lt(void)
+o_lt(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -2894,7 +2888,7 @@ o_lt(void)
 
 
 S_FUNC void
-o_gt(void)
+o_gt(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -2923,7 +2917,7 @@ o_gt(void)
 
 
 S_FUNC void
-o_preinc(void)
+o_preinc(FUNC *UNUSED(fp))
 {
 	VALUE *vp, tmp;
 
@@ -2953,7 +2947,7 @@ o_preinc(void)
 
 
 S_FUNC void
-o_predec(void)
+o_predec(FUNC *UNUSED(fp))
 {
 	VALUE *vp, tmp;
 
@@ -2982,7 +2976,7 @@ o_predec(void)
 
 
 S_FUNC void
-o_postinc(void)
+o_postinc(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	VALUE tmp;
@@ -3025,7 +3019,7 @@ o_postinc(void)
 
 
 S_FUNC void
-o_postdec(void)
+o_postdec(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	VALUE tmp;
@@ -3067,7 +3061,7 @@ o_postdec(void)
 
 
 S_FUNC void
-o_leftshift(void)
+o_leftshift(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -3086,7 +3080,7 @@ o_leftshift(void)
 
 
 S_FUNC void
-o_rightshift(void)
+o_rightshift(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	VALUE tmp;
@@ -3104,7 +3098,6 @@ o_rightshift(void)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_debug(FUNC *UNUSED(fp), long line)
 {
@@ -3117,7 +3110,7 @@ o_debug(FUNC *UNUSED(fp), long line)
 
 
 S_FUNC void
-o_printresult(void)
+o_printresult(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 
@@ -3145,7 +3138,6 @@ o_printresult(void)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_print(FUNC *UNUSED(fp), long flags)
 {
@@ -3163,7 +3155,7 @@ o_print(FUNC *UNUSED(fp), long flags)
 
 
 S_FUNC void
-o_printeol(void)
+o_printeol(FUNC *UNUSED(fp))
 {
 	math_chr('\n');
 	math_flush();
@@ -3171,7 +3163,7 @@ o_printeol(void)
 
 
 S_FUNC void
-o_printspace(void)
+o_printspace(FUNC *UNUSED(fp))
 {
 	math_chr(' ');
 	if (conf->traceflags & TRACE_OPCODES)
@@ -3179,7 +3171,6 @@ o_printspace(void)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_printstring(FUNC *UNUSED(fp), long index)
 {
@@ -3196,7 +3187,7 @@ o_printstring(FUNC *UNUSED(fp), long index)
 
 
 S_FUNC void
-o_zero(void)
+o_zero(FUNC *UNUSED(fp))
 {
 	stack++;
 	stack->v_type = V_NUM;
@@ -3206,7 +3197,7 @@ o_zero(void)
 
 
 S_FUNC void
-o_one(void)
+o_one(FUNC *UNUSED(fp))
 {
 	stack++;
 	stack->v_type = V_NUM;
@@ -3231,7 +3222,7 @@ o_save(FUNC *fp)
 
 
 S_FUNC void
-o_oldvalue(void)
+o_oldvalue(FUNC *UNUSED(fp))
 {
 	++stack;
 	stack->v_type = V_ADDR;
@@ -3240,7 +3231,7 @@ o_oldvalue(void)
 
 
 void
-o_setsaveval(void)
+o_setsaveval(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 
@@ -3300,7 +3291,7 @@ o_abort(FUNC *fp, long index)
 
 
 S_FUNC void
-o_getepsilon(void)
+o_getepsilon(FUNC *UNUSED(fp))
 {
 	stack++;
 	stack->v_type = V_NUM;
@@ -3310,7 +3301,7 @@ o_getepsilon(void)
 
 
 S_FUNC void
-o_setepsilon(void)
+o_setepsilon(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	NUMBER *newep;
@@ -3333,7 +3324,7 @@ o_setepsilon(void)
 
 
 S_FUNC void
-o_setconfig(void)
+o_setconfig(FUNC *UNUSED(fp))
 {
 	int type;
 	VALUE *v1, *v2;
@@ -3364,7 +3355,7 @@ o_setconfig(void)
 
 
 S_FUNC void
-o_getconfig(void)
+o_getconfig(FUNC *UNUSED(fp))
 {
 	int type;
 	VALUE *vp;
@@ -3458,7 +3449,7 @@ set_errcount(int e)
  * Fill a newly created matrix at v1 with copies of value at v2.
  */
 S_FUNC void
-o_initfill(void)
+o_initfill(FUNC *UNUSED(fp))
 {
 	VALUE *v1, *v2;
 	int s;
@@ -3483,7 +3474,6 @@ o_initfill(void)
 }
 
 
-/*ARGSUSED*/
 S_FUNC void
 o_show(FUNC *fp, long arg)
 {
@@ -3559,269 +3549,532 @@ showsizes(void)
  * Information about each opcode.
  */
 STATIC struct opcode opcodes[MAX_OPCODE+1] = {
-	{o_nop,		OPNUL,
+	{{.func_nul = o_nop},
+	 OPNUL,
 	 "NOP"},		/* no operation */
-	{o_localaddr,	OPLOC,
+
+	{{.func_loc = o_localaddr},
+	 OPLOC,
 	 "LOCALADDR"},	/* address of local variable */
-	{o_globaladdr,	OPGLB,
+
+	{{.func_glb = o_globaladdr},
+	 OPGLB,
 	 "GLOBALADDR"},	/* address of global variable */
-	{o_paramaddr,	OPPAR,
+
+	{{.func_par = o_paramaddr},
+	 OPPAR,
 	 "PARAMADDR"},	/* address of parameter variable */
-	{o_localvalue,	OPLOC,
+
+	{{.func_loc = o_localvalue},
+	 OPLOC,
 	 "LOCALVALUE"},	/* value of local variable */
-	{o_globalvalue, OPGLB,
+
+	{{.func_glb = o_globalvalue},
+	 OPGLB,
 	 "GLOBALVALUE"}, /* value of global variable */
-	{o_paramvalue,	OPPAR,
+
+	{{.func_par = o_paramvalue},
+	 OPPAR,
 	 "PARAMVALUE"},	/* value of parameter variable */
-	{o_number,	OPONE,
+
+	{{.func_one = o_number},
+	 OPONE,
 	 "NUMBER"},	/* constant real numeric value */
-	{o_indexaddr,	OPTWO,
+
+	{{.func_two = o_indexaddr},
+	 OPTWO,
 	 "INDEXADDR"},	/* array index address */
-	{o_printresult, OPNUL,
+
+	{{.func_nul = o_printresult},
+	 OPNUL,
 	 "PRINTRESULT"}, /* print result of top-level expression */
-	{o_assign,	OPNUL,
+
+	{{.func_nul = o_assign},
+	 OPNUL,
 	 "ASSIGN"},	/* assign value to variable */
-	{o_add,		OPNUL,
+
+	{{.func_nul = o_add},
+	 OPNUL,
 	 "ADD"},		/* add top two values */
-	{o_sub,		OPNUL,
+
+	{{.func_nul = o_sub},
+	 OPNUL,
 	 "SUB"},		/* subtract top two values */
-	{o_mul,		OPNUL,
+
+	{{.func_nul = o_mul},
+	 OPNUL,
 	 "MUL"},		/* multiply top two values */
-	{o_div,		OPNUL,
+
+	{{.func_nul = o_div},
+	 OPNUL,
 	 "DIV"},		/* divide top two values */
-	{o_mod,		OPNUL,
+
+	{{.func_nul = o_mod},
+	 OPNUL,
 	 "MOD"},		/* take mod of top two values */
-	{o_save,	OPNUL,
+
+	{{.func_nul = o_save},
+	 OPNUL,
 	 "SAVE"},	/* save value for later use */
-	{o_negate,	OPNUL,
+
+	{{.func_nul = o_negate},
+	 OPNUL,
 	 "NEGATE"},	/* negate top value */
-	{o_invert,	OPNUL,
+
+	{{.func_nul = o_invert},
+	 OPNUL,
 	 "INVERT"},	/* invert top value */
-	{o_int,		OPNUL,
+
+	{{.func_nul = o_int},
+	 OPNUL,
 	 "INT"},		/* take integer part */
-	{o_frac,	OPNUL,
+
+	{{.func_nul = o_frac},
+	 OPNUL,
 	 "FRAC"},	/* take fraction part */
-	{o_numerator,	OPNUL,
+
+	{{.func_nul = o_numerator},
+	 OPNUL,
 	 "NUMERATOR"},	/* take numerator */
-	{o_denominator, OPNUL,
+
+	{{.func_nul = o_denominator},
+	 OPNUL,
 	 "DENOMINATOR"}, /* take denominator */
-	{o_duplicate,	OPNUL,
+
+	{{.func_nul = o_duplicate},
+	 OPNUL,
 	 "DUPLICATE"},	/* duplicate top value */
-	{o_pop,		OPNUL,
+
+	{{.func_nul = o_pop},
+	 OPNUL,
 	 "POP"},		/* pop top value */
-	{o_return,	OPRET,
+
+	{{.func_ret = o_return},
+	 OPRET,
 	 "RETURN"},	/* return value of function */
-	{o_jumpz,	OPJMP,
+
+	{{.func_jmp = o_jumpz},
+	 OPJMP,
 	 "JUMPZ"},	/* jump if value zero */
-	{o_jumpnz,	OPJMP,
+
+	{{.func_jmp = o_jumpnz},
+	 OPJMP,
 	 "JUMPNZ"},	/* jump if value nonzero */
-	{o_jump,	OPJMP,
+
+	{{.func_jmp = o_jump},
+	 OPJMP,
 	 "JUMP"},	/* jump unconditionally */
-	{o_usercall,	OPTWO,
+
+	{{.func_two = o_usercall},
+	 OPTWO,
 	 "USERCALL"},	/* call a user function */
-	{o_getvalue,	OPNUL,
+
+	{{.func_nul = o_getvalue},
+	 OPNUL,
 	 "GETVALUE"},	/* convert address to value */
-	{o_eq,		OPNUL,
+
+	{{.func_nul = o_eq},
+	 OPNUL,
 	 "EQ"},		/* test elements for equality */
-	{o_ne,		OPNUL,
+
+	{{.func_nul = o_ne},
+	 OPNUL,
 	 "NE"},		/* test elements for inequality */
-	{o_le,		OPNUL,
-	 "LE"},		/* test elements for <= */
-	{o_ge,		OPNUL,
-	 "GE"},		/* test elements for >= */
-	{o_lt,		OPNUL,
+
+	{{.func_nul = o_le},
+	 OPNUL,
+	 "LE"},		/* test elements for < =  */
+
+	{{.func_nul = o_ge},
+	 OPNUL,
+	 "GE"},		/* test elements for > =  */
+
+	{{.func_nul = o_lt},
+	 OPNUL,
 	 "LT"},		/* test elements for < */
-	{o_gt,		OPNUL,
+
+	{{.func_nul = o_gt},
+	 OPNUL,
 	 "GT"},		/* test elements for > */
-	{o_preinc,	OPNUL,
+
+	{{.func_nul = o_preinc},
+	 OPNUL,
 	 "PREINC"},	/* add one to variable (++x) */
-	{o_predec,	OPNUL,
+
+	{{.func_nul = o_predec},
+	 OPNUL,
 	 "PREDEC"},	/* subtract one from variable (--x) */
-	{o_postinc,	OPNUL,
+
+	{{.func_nul = o_postinc},
+	 OPNUL,
 	 "POSTINC"},	/* add one to variable (x++) */
-	{o_postdec,	OPNUL,
+
+	{{.func_nul = o_postdec},
+	 OPNUL,
 	 "POSTDEC"},	/* subtract one from variable (x--) */
-	{o_debug,	OPONE,
+
+	{{.func_one = o_debug},
+	 OPONE,
 	 "DEBUG"},	/* debugging point */
-	{o_print,	OPONE,
+
+	{{.func_one = o_print},
+	 OPONE,
 	 "PRINT"},	/* print value */
-	{o_assignpop,	OPNUL,
+
+	{{.func_nul = o_assignpop},
+	 OPNUL,
 	 "ASSIGNPOP"},	/* assign to variable and pop it */
-	{o_zero,	OPNUL,
+
+	{{.func_nul = o_zero},
+	 OPNUL,
 	 "ZERO"},	/* put zero on the stack */
-	{o_one,		OPNUL,
+
+	{{.func_nul = o_one},
+	 OPNUL,
 	 "ONE"},		/* put one on the stack */
-	{o_printeol,	OPNUL,
+
+	{{.func_nul = o_printeol},
+	 OPNUL,
 	 "PRINTEOL"},	/* print end of line */
-	{o_printspace,	OPNUL,
+
+	{{.func_nul = o_printspace},
+	 OPNUL,
 	 "PRINTSPACE"},	/* print a space */
-	{o_printstring, OPONE,
+
+	{{.func_one = o_printstring},
+	 OPONE,
 	 "PRINTSTR"},	/* print constant string */
-	{o_dupvalue,	OPNUL,
+
+	{{.func_nul = o_dupvalue},
+	 OPNUL,
 	 "DUPVALUE"},	/* duplicate value of top value */
-	{o_oldvalue,	OPNUL,
+
+	{{.func_nul = o_oldvalue},
+	 OPNUL,
 	 "OLDVALUE"},	/* old value from previous calc */
-	{o_quo,		OPNUL,
+
+	{{.func_nul = o_quo},
+	 OPNUL,
 	 "QUO"},		/* integer quotient of top values */
-	{o_power,	OPNUL,
+
+	{{.func_nul = o_power},
+	 OPNUL,
 	 "POWER"},	/* value raised to a power */
-	{o_quit,	OPONE,
+
+	{{.func_one = o_quit},
+	 OPONE,
 	 "QUIT"},	/* quit program */
-	{o_call,	OPTWO,
+
+	{{.func_two = o_call},
+	 OPTWO,
 	 "CALL"},	/* call built-in routine */
-	{o_getepsilon,	OPNUL,
+
+	{{.func_nul = o_getepsilon},
+	 OPNUL,
 	 "GETEPSILON"},	/* get allowed error for calculations */
-	{o_and,		OPNUL,
+
+	{{.func_nul = o_and},
+	 OPNUL,
 	 "AND"},		/* arithmetic and or top two values */
-	{o_or,		OPNUL,
+
+	{{.func_nul = o_or},
+	 OPNUL,
 	 "OR"},		/* arithmetic or of top two values */
-	{o_not,		OPNUL,
+
+	{{.func_nul = o_not},
+	 OPNUL,
 	 "NOT"},		/* logical not or top value */
-	{o_abs,		OPNUL,
+
+	{{.func_nul = o_abs},
+	 OPNUL,
 	 "ABS"},		/* absolute value of top value */
-	{o_sgn,		OPNUL,
+
+	{{.func_nul = o_sgn},
+	 OPNUL,
 	 "SGN"},		/* sign of number */
-	{o_isint,	OPNUL,
+
+	{{.func_nul = o_isint},
+	 OPNUL,
 	 "ISINT"},	/* whether number is an integer */
-	{o_condorjump,	OPJMP,
+
+	{{.func_jmp = o_condorjump},
+	 OPJMP,
 	 "CONDORJUMP"},	/* conditional or jump */
-	{o_condandjump, OPJMP,
+
+	{{.func_jmp = o_condandjump},
+	 OPJMP,
 	 "CONDANDJUMP"}, /* conditional and jump */
-	{o_square,	OPNUL,
+
+	{{.func_nul = o_square},
+	 OPNUL,
 	 "SQUARE"},	/* square top value */
-	{o_string,	OPONE,
+
+	{{.func_one = o_string},
+	 OPONE,
 	 "STRING"},	/* string constant value */
-	{o_isnum,	OPNUL,
+
+	{{.func_nul = o_isnum},
+	 OPNUL,
 	 "ISNUM"},	/* whether value is a number */
-	{o_undef,	OPNUL,
+
+	{{.func_nul = o_undef},
+	 OPNUL,
 	 "UNDEF"},	/* load undefined value on stack */
-	{o_isnull,	OPNUL,
+
+	{{.func_nul = o_isnull},
+	 OPNUL,
 	 "ISNULL"},	/* whether value is the null value */
-	{o_argvalue,	OPARG,
+
+	{{.func_arg = o_argvalue},
+	 OPARG,
 	 "ARGVALUE"},	/* load value of arg (parameter) n */
-	{o_matcreate,	OPONE,
+
+	{{.func_one = o_matcreate},
+	 OPONE,
 	 "MATCREATE"},	/* create matrix */
-	{o_ismat,	OPNUL,
+
+	{{.func_nul = o_ismat},
+	 OPNUL,
 	 "ISMAT"},	/* whether value is a matrix */
-	{o_isstr,	OPNUL,
+
+	{{.func_nul = o_isstr},
+	 OPNUL,
 	 "ISSTR"},	/* whether value is a string */
-	{o_getconfig,	OPNUL,
+
+	{{.func_nul = o_getconfig},
+	 OPNUL,
 	 "GETCONFIG"},	/* get value of configuration parameter */
-	{o_leftshift,	OPNUL,
+
+	{{.func_nul = o_leftshift},
+	 OPNUL,
 	 "LEFTSHIFT"},	/* left shift of integer */
-	{o_rightshift,	OPNUL,
+
+	{{.func_nul = o_rightshift},
+	 OPNUL,
 	 "RIGHTSHIFT"},	/* right shift of integer */
-	{o_casejump,	OPJMP,
+
+	{{.func_jmp = o_casejump},
+	 OPJMP,
 	 "CASEJUMP"},	/* test case and jump if not matched */
-	{o_isodd,	OPNUL,
+
+	{{.func_nul = o_isodd},
+	 OPNUL,
 	 "ISODD"},	/* whether value is odd integer */
-	{o_iseven,	OPNUL,
+
+	{{.func_nul = o_iseven},
+	 OPNUL,
 	 "ISEVEN"},	/* whether value is even integer */
-	{o_fiaddr,	OPNUL,
+
+	{{.func_nul = o_fiaddr},
+	 OPNUL,
 	 "FIADDR"},	/* 'fast index' matrix address */
-	{o_fivalue,	OPNUL,
+
+	{{.func_nul = o_fivalue},
+	 OPNUL,
 	 "FIVALUE"},	/* 'fast index' matrix value */
-	{o_isreal,	OPNUL,
+
+	{{.func_nul = o_isreal},
+	 OPNUL,
 	 "ISREAL"},	/* whether value is real number */
-	{o_imaginary,	OPONE,
+
+	{{.func_one = o_imaginary},
+	 OPONE,
 	 "IMAGINARY"},	/* constant imaginary numeric value */
-	{o_re,		OPNUL,
+
+	{{.func_nul = o_re},
+	 OPNUL,
 	 "RE"},		/* real part of complex number */
-	{o_im,		OPNUL,
+
+	{{.func_nul = o_im},
+	 OPNUL,
 	 "IM"},		/* imaginary part of complex number */
-	{o_conjugate,	OPNUL,
+
+	{{.func_nul = o_conjugate},
+	 OPNUL,
 	 "CONJUGATE"},	/* complex conjugate */
-	{o_objcreate,	OPONE,
+
+	{{.func_one = o_objcreate},
+	 OPONE,
 	 "OBJCREATE"},	/* create object */
-	{o_isobj,	OPNUL,
+
+	{{.func_nul = o_isobj},
+	 OPNUL,
 	 "ISOBJ"},	/* whether value is an object */
-	{o_norm,	OPNUL,
+
+	{{.func_nul = o_norm},
+	 OPNUL,
 	 "NORM"},	/* norm of value (square of abs) */
-	{o_elemaddr,	OPONE,
+
+	{{.func_one = o_elemaddr},
+	 OPONE,
 	 "ELEMADDR"},	/* address of element of object */
-	{o_elemvalue,	OPONE,
+
+	{{.func_one = o_elemvalue},
+	 OPONE,
 	 "ELEMVALUE"},	/* value of element of object */
-	{o_istype,	OPNUL,
+
+	{{.func_nul = o_istype},
+	 OPNUL,
 	 "ISTYPE"},	/* whether types are the same */
-	{o_scale,	OPNUL,
+
+	{{.func_nul = o_scale},
+	 OPNUL,
 	 "SCALE"},	/* scale value by a power of two */
-	{o_islist,	OPNUL,
+
+	{{.func_nul = o_islist},
+	 OPNUL,
 	 "ISLIST"},	/* whether value is a list */
-	{o_swap,	OPNUL,
+
+	{{.func_nul = o_swap},
+	 OPNUL,
 	 "SWAP"},	/* swap values of two variables */
-	{o_issimple,	OPNUL,
+
+	{{.func_nul = o_issimple},
+	 OPNUL,
 	 "ISSIMPLE"},	/* whether value is simple type */
-	{o_cmp,		OPNUL,
+
+	{{.func_nul = o_cmp},
+	 OPNUL,
 	 "CMP"},		/* compare values returning -1, 0, 1 */
-	{o_setconfig,	OPNUL,
+
+	{{.func_nul = o_setconfig},
+	 OPNUL,
 	 "SETCONFIG"},	/* set configuration parameter */
-	{o_setepsilon,	OPNUL,
+
+	{{.func_nul = o_setepsilon},
+	 OPNUL,
 	 "SETEPSILON"},	/* set allowed error for calculations */
-	{o_isfile,	OPNUL,
+
+	{{.func_nul = o_isfile},
+	 OPNUL,
 	 "ISFILE"},	/* whether value is a file */
-	{o_isassoc,	OPNUL,
+
+	{{.func_nul = o_isassoc},
+	 OPNUL,
 	 "ISASSOC"},	/* whether value is an association */
-	{o_nop,		OPSTI,
+
+	{{.func_sti = o_nop},
+	 OPSTI,
 	 "INITSTATIC"},	/* once only code for static init */
-	{o_eleminit,	OPONE,
+
+	{{.func_one = o_eleminit},
+	 OPONE,
 	 "ELEMINIT"},	/* assign element of matrix or object */
-	{o_isconfig,	OPNUL,
+
+	{{.func_nul = o_isconfig},
+	 OPNUL,
 	 "ISCONFIG"},	/* whether value is a configuration state */
-	{o_ishash,	OPNUL,
+
+	{{.func_nul = o_ishash},
+	 OPNUL,
 	 "ISHASH"},	/* whether value is a hash state */
-	{o_isrand,	OPNUL,
+
+	{{.func_nul = o_isrand},
+	 OPNUL,
 	 "ISRAND"},	/* whether value is a rand element */
-	{o_israndom,	OPNUL,
+
+	{{.func_nul = o_israndom},
+	 OPNUL,
 	 "ISRANDOM"},	/* whether value is a random element */
-	{o_show,	OPONE,
+
+	{{.func_one = o_show},
+	 OPONE,
 	 "SHOW"},	/* show current state data */
-	{o_initfill,	OPNUL,
+
+	{{.func_nul = o_initfill},
+	 OPNUL,
 	 "INITFILL"},	/* initially fill matrix */
-	{o_assignback,	OPNUL,
+
+	{{.func_nul = o_assignback},
+	 OPNUL,
 	 "ASSIGNBACK"},	/* assign in reverse order */
-	{o_test,	OPNUL,
+
+	{{.func_nul = o_test},
+	 OPNUL,
 	 "TEST"},	 /* test that value is "nonzero" */
-	{o_isdefined,	OPNUL,
+
+	{{.func_nul = o_isdefined},
+	 OPNUL,
 	 "ISDEFINED"},	/* whether a string names a function */
-	{o_isobjtype,	OPNUL,
+
+	{{.func_nul = o_isobjtype},
+	 OPNUL,
 	 "ISOBJTYPE"},	/* whether a string names an object type */
-	{o_isblock,	OPNUL,
+
+	{{.func_nul = o_isblock},
+	 OPNUL,
 	 "ISBLK"},	/* whether value is a block */
-	{o_ptr,		OPNUL,
+
+	{{.func_nul = o_ptr},
+	 OPNUL,
 	 "PTR"},		/* octet pointer */
-	{o_deref,	OPNUL,
+
+	{{.func_nul = o_deref},
+	 OPNUL,
 	 "DEREF"},	/* dereference an octet pointer */
-	{o_isoctet,	OPNUL,
+
+	{{.func_nul = o_isoctet},
+	 OPNUL,
 	 "ISOCTET"},	/* whether a value is an octet */
-	{o_isptr,	OPNUL,
+
+	{{.func_nul = o_isptr},
+	 OPNUL,
 	 "ISPTR"},	/* whether a value is a pointer */
-	{o_setsaveval,	OPNUL,
+
+	{{.func_nul = o_setsaveval},
+	 OPNUL,
 	 "SAVEVAL"},	/* enable or disable saving */
-	{o_links,	OPNUL,
+
+	{{.func_nul = o_links},
+	 OPNUL,
 	 "LINKS"},	/* links to number or string */
-	{o_bit,		OPNUL,
+
+	{{.func_nul = o_bit},
+	 OPNUL,
 	 "BIT"},		/* whether bit is set */
-	{o_comp,	OPNUL,
+
+	{{.func_nul = o_comp},
+	 OPNUL,
 	 "COMP"},	/* complement value */
-	{o_xor,		OPNUL,
+
+	{{.func_nul = o_xor},
+	 OPNUL,
 	 "XOR"},		/* xor (~) of values */
-	{o_highbit,	OPNUL,
+
+	{{.func_nul = o_highbit},
+	 OPNUL,
 	 "HIGHBIT"},	/* highbit of value */
-	{o_lowbit,	OPNUL,
+
+	{{.func_nul = o_lowbit},
+	 OPNUL,
 	 "LOWBIT"},	/* lowbit of value */
-	{o_content,	OPNUL,
+
+	{{.func_nul = o_content},
+	 OPNUL,
 	 "CONTENT"},	/* unary hash op */
-	{o_hashop,	OPNUL,
+
+	{{.func_nul = o_hashop},
+	 OPNUL,
 	 "HASHOP"},	/* binary hash op */
-	{o_backslash,	OPNUL,
+
+	{{.func_nul = o_backslash},
+	 OPNUL,
 	 "BACKSLASH"},	/* unary backslash op */
-	{o_setminus,	OPNUL,
+
+	{{.func_nul = o_setminus},
+	 OPNUL,
 	 "SETMINUS"},	/* binary backslash op */
-	{o_plus,	OPNUL,
+
+	{{.func_nul = o_plus},
+	 OPNUL,
 	 "PLUS"},	/* unary + op */
-	{o_jumpnn,	OPJMP,
+
+	{{.func_jmp = o_jumpnn},
+	 OPJMP,
 	 "JUMPNN"},	/* jump if non-null */
-	{o_abort,	OPONE,
+
+	{{.func_one = o_abort},
+	 OPONE,
 	 "ABORT"}	/* abort operation */
 };
 
@@ -3910,24 +4163,22 @@ calculate(FUNC *fp, int argcount)
 		pc++;
 		switch (op->o_type) {
 		case OPNUL:	/* no extra arguments */
-			/* ignore Saber-C warning #65 - has 1 arg, expected 0 */
-			/*	  OK to ignore in proc calculate */
-			(*op->o_func)(fp);
+			(*op->o_func.func_nul)(fp);
 			break;
 
 		case OPONE:	/* one extra integer argument */
-			(*op->o_func)(fp, fp->f_opcodes[pc++]);
+			(*op->o_func.func_one)(fp, fp->f_opcodes[pc++]);
 			break;
 
 		case OPTWO:	/* two extra integer arguments */
-			(*op->o_func)(fp, fp->f_opcodes[pc],
+			(*op->o_func.func_two)(fp, fp->f_opcodes[pc],
 				fp->f_opcodes[pc+1]);
 			pc += 2;
 			break;
 
 		case OPJMP:	/* jump opcodes (one extra pointer arg) */
 			dojump = FALSE;
-			(*op->o_func)(fp, &dojump);
+			(*op->o_func.func_jmp)(fp, &dojump);
 			if (dojump)
 				pc = fp->f_opcodes[pc];
 			else
@@ -3935,22 +4186,20 @@ calculate(FUNC *fp, int argcount)
 			break;
 
 		case OPGLB:	/* global symbol reference (pointer arg) */
-			/* ignore Saber-C warning #68 - benign type mismatch */
-			/*	  OK to ignore in proc calculate */
-			(*op->o_func)(fp, *(&fp->f_opcodes[pc]));
+			(*op->o_func.func_glb)(fp, (GLOBAL *)(*(&fp->f_opcodes[pc])));
 			pc += PTR_SIZE;
 			break;
 
 		case OPLOC:	/* local variable reference */
-			(*op->o_func)(fp, locals, fp->f_opcodes[pc++]);
+			(*op->o_func.func_loc)(fp, locals, fp->f_opcodes[pc++]);
 			break;
 
 		case OPPAR:	/* parameter variable reference */
-			(*op->o_func)(fp, argcount, args, fp->f_opcodes[pc++]);
+			(*op->o_func.func_par)(fp, argcount, args, fp->f_opcodes[pc++]);
 			break;
 
 		case OPARG:	/* parameter variable reference */
-			(*op->o_func)(fp, origargcount, args);
+			(*op->o_func.func_arg)(fp, origargcount, args);
 			break;
 
 		case OPRET:	/* return from function */

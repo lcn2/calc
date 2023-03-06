@@ -1225,6 +1225,7 @@ The calc commands:
 help copyright
 help copying
 help copying-lgpl
+help credit
 .fi
 .in -0.5i
 .sp
@@ -1259,6 +1260,10 @@ Copyright (C) year  David I. Bell, Landon Curt Noll and Ernest Bowen
 Copyright (C) year  Landon Curt Noll
 Copyright (C) year  Ernest Bowen and Landon Curt Noll
 Copyright (C) year  Ernest Bowen
+Copyright (C) year  Petteri Kettunen and Landon Curt Noll
+Copyright (C) year  Christoph Zurnieden
+Copyright (C) year  Landon Curt Noll and Thomas Jones-Low
+Copyright (C) year  Klaus Alexander Seistrup and Landon Curt Noll
 .fi
 .in -0.5i
 .sp
@@ -1266,12 +1271,22 @@ This man page is:
 .sp
 .in +0.5i
 .nf
-Copyright (C) 1999-2021  Landon Curt Noll
+Copyright (C) 1999-2023  Landon Curt Noll
 .fi
 .in -0.5i
 .sp
 and is covered under version 2.1 GNU Lesser General
 Public License.
+.sp
+A few files in calc are covered under "The Unlicense".
+For more information on this license, see:
+.sp
+.in +0.5i
+.nf
+https://unlicense.org
+.fi
+.in -0.5i
+.sp
 
 .PP
 
@@ -1279,61 +1294,27 @@ Public License.
 
 .PP
 
-If you have a simple general question about calc, send Email to:
-.sp
-.in +0.5i
-calc-quest-mail at asthe dot com
-.sp
-NOTE: Remove spaces and replace 'at' with @, and 'dot' with .
-.in -0.5i
-.sp
-.in +0.5i
-NOTE: Yes, the Email address uses 'asthe',
-while the web site uses 'isthe'.
-.in -0.5i
-.sp
-.B PLEASE
-put following the
-.B SPECIAL PHRASE
-somewhere in your Email Subject line:
-.sp
-.in +0.5i
-.B calc question
-.in -0.5i
-.sp
-You may add additional words to your subject line.
-.sp
-.B IMPORTANT:
-If your Email doesn't contain the above phrase,
-then we
-.B WILL NOT SEE
-your Email.
-.sp
-.B PLEASE BE SURE
-you have that
-.B SPECIAL PHRASE
-somewhere in the subject line!
-.sp
-.B Suggestion:
-.sp
-.in +0.5i
-From time to time, the Email address and Subject
-.B SPECIAL PHRASE
-may change so verify you have the current info by visiting:
+To ask the calc maintainers a general question about calc,
+see the output of:
+
 .sp
 .in +0.5i
 .nf
-http://www.isthe.com/chongo/tech/comp/calc/calc-question.html
+; help question
 .fi
-.in -0.5i
-.in -0.5i
+.in +0.5i
 .sp
-Please limit your questions to general questions about calc.
-We cannot go into great detail in our answers,
-nor can we do your homework, nor can
-we do much more than answer short general questions about calc.
+.PP
+
+or read the source file:
+
 .sp
-Please be patient as we cannot always respond to Email messages quickly.
+.in +0.5i
+.nf
+QUESTIONS
+.fi
+.in +0.5i
+.sp
 
 .PP
 
@@ -1341,71 +1322,27 @@ Please be patient as we cannot always respond to Email messages quickly.
 
 .PP
 
-Send bug reports and bug fixes to:
+To inform the calc maintainers about a bug,
+or to submit a bug fix, see the output of:
+
 .sp
 .in +0.5i
 .nf
-calc-bugrept at asthe dot com
+; help bugs
 .fi
-.sp
-NOTE: Remove spaces and replace 'at' with @, 'dot' with .
-.sp
-NOTE: Yes, the Email address uses 'asthe',
-while the web site uses 'isthe'.
-.in -0.5i
-.sp
-You
-.B MUST
-use following
-.B SPECIAL PHRASE
-in your Email Subject line:
-.sp
 .in +0.5i
-.B calc bug report
-.in -0.5i
 .sp
-You may add additional words to your subject line.
-.sp
-.B Suggestion:
-.sp
-.in +0.5i
-From time to time, the Email address and Subject
-.B SPECIAL PHRASE
-may change so verify you have the current info by visiting:
+.PP
+
+or read the source file:
+
 .sp
 .in +0.5i
 .nf
-http://www.isthe.com/chongo/tech/comp/calc/calc-bugrept.html
+BUGS
 .fi
-.in -0.5i
-.in -0.5i
-.sp
-.B IMPORTANT:
-If your Email doesn't contain the above phrase,
-then we
-.B WILL NOT SEE
-your Email.
-.sp
-.B PLEASE BE SURE
-you have that
-.B SPECIAL PHRASE
-somewhere in the subject line!
-.sp
-See the
-.I BUGS
-source file or use the
-.I calc
-command:
-.sp
 .in +0.5i
-.nf
-help bugs
-.fi
-.in -0.5i
 .sp
-for more information about bug reporting.
-.sp
-Please be patient as we cannot always respond to Email messages quickly.
 
 .PP
 
@@ -1415,126 +1352,27 @@ Please be patient as we cannot always respond to Email messages quickly.
 
 .I Calc
 is open source.
-Contributions of code are welcome.
+You are welcome to contribute code to calc, or submit bug fixes to to calc.
 .sp
-We welcome and encourage you to send us:
-.sp
-.sp
-.in +0.5i
-.nf
-* calc resource files (cal/*.cal)
-* calc shell scripts (cscript/*.calc)
-* builtin functions that you have modified or written, i.e.:
-  assocfunc.c comfunc.c func.c func.h
-  listfunc.c matfunc.c qfunc.c zfunc.c
-* custom functions that you have modified or written (custom/*)
-* help files modified or written (help/*)
-* brief description of you added, fixed, improved in CHANGES
-* regression test cases (cal/regress.cal)
-* Makefile improvements (Makefile, */Makefile)
-* other source code modifications (*.c, *.h)
-* etc. (* */* :) )
-.fi
-.in -0.5i
-.sp
-If you add functionality to calc, please be sure to modify/patch/add
-Makefiles, help files, cal/regress.cal test code as well.
-Regression test cases are vital to maintaining calc's level
-of correctness and helps us avoid code bug regression.
-.sp
-In order to consider integrating your code, we need:
-.sp
-.nf
-.in +0.5i
-* calc version you are working with (please try use the latest version)
-* new help files or help file patches, if applicable (documentation)
-* proposed text for the CHANGES file (brief description of what it does)
-* regress.cal test patch as needed
-* your source code and/or source code changes (:-))
-.in -0.5i
-.fi
-.sp
-The best way to send us new code, if your changes are small, is
-via a patch (diff -c from the latest alpha code to your code).
-If your change is large, you should send entire files (either
-as a diff -c /dev/null your-file patch, or as a uuencoded and
-gziped (or compressed) tar file).
-.sp
-Please try to generate a patch against the most recent
-version of calc, and if you use GitHub, the top of the
-master branch:
-.sp
-.nf
-.in +0.5i
-https://github.com/lcn2/calc
-.in -0.5i
-.fi
-.sp
-.sp
-The best way contribute to calc bug is to generate calc
-GitHub pull request:
-.sp
-.nf
-.in +0.5i
-https://github.com/lcn2/calc/pulls
-.in -0.5i
-.fi
-.sp
-Your code needs to be contributed under either the 2.1 of the
-.B GNU Lesser General Public License (LGPL 2.1)
-or be in the public domain.
-.sp
-If you do not want to use calc GitHub, then send Email to:
+To contribute code to calc, please see see the output of:
+
 .sp
 .in +0.5i
 .nf
-calc-contrib at asthe dot com
+; help contrib
 .fi
-.sp
-NOTE: Remove spaces and replace 'at' with @, 'dot' with .
-.sp
-NOTE: Yes, the Email address uses 'asthe',
-while the web site uses 'isthe'.
-.in -0.5i
-.sp
-You
-.B MUST
-use following
-.B SPECIAL PHRASE
-in your Email Subject line:
-.sp
 .in +0.5i
-.B calc contribution
-.in -0.5i
 .sp
-You may add additional words to your subject line.
-.sp
-.B Suggestion:
-.sp
-.in +0.5i
-From time to time, the Email address and Subject
-.B SPECIAL PHRASE
-may change so verify you have the current info by visiting:
+.PP
+
+or read the source file:
+
 .sp
 .in +0.5i
 .nf
-http://www.isthe.com/chongo/tech/comp/calc/calc-contrib.html
+CONTRIB-CODE
 .fi
-.in -0.5i
-.in -0.5i
-.sp
-.B IMPORTANT:
-If your Email doesn't contain the above phrase,
-then we
-.B WILL NOT SEE
-your Email.
-.sp
-.B PLEASE BE SURE
-you have that
-.B SPECIAL PHRASE
-somewhere in the subject line!
-.sp
-Please be patient as we cannot always respond to Email messages quickly.
+.in +0.5i
 
 .PP
 

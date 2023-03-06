@@ -1,7 +1,7 @@
 /*
  * version - determine the version of calc
  *
- * Copyright (C) 1999-2021  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2023  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -84,7 +84,7 @@ static char *program;
 #define MAJOR_VER	2	/* major library version */
 #define MINOR_VER	14	/* minor library version */
 #define MAJOR_PATCH	1	/* major software version level */
-#define MINOR_PATCH	3	/* minor software version level */
+#define MINOR_PATCH	4	/* minor software version level */
 
 
 /*

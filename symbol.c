@@ -373,7 +373,6 @@ freeglobals(void)
 {
 	GLOBAL **hp;		/* hash table head address */
 	GLOBAL *sp;		/* current global symbol pointer */
-	long count;		/* number of global variables freed */
 
 	/*
 	 * We prevent the hp pointer from walking behind globalhash
@@ -384,12 +383,10 @@ freeglobals(void)
 	 * short and running the loop one last time manually helps make
 	 * code checkers such as insure happy.
 	 */
-	count = 0;
 	for (hp = &globalhash[HASHSIZE-1]; hp > globalhash; hp--) {
 		for (sp = *hp; sp; sp = sp->g_next) {
 			if (sp->g_value.v_type != V_NULL) {
 				freevalue(&sp->g_value);
-				count++;
 			}
 		}
 	}
@@ -397,7 +394,6 @@ freeglobals(void)
 	for (sp = *hp; sp; sp = sp->g_next) {
 		if (sp->g_value.v_type != V_NULL) {
 			freevalue(&sp->g_value);
-			count++;
 		}
 	}
 }

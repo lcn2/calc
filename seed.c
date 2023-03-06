@@ -66,24 +66,30 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "have_times.h"
+
 #if defined(HAVE_TIME_H)
 #include <time.h>
-#endif
+#endif /* HAVE_TIME_H */
+
 #if defined(HAVE_SYS_TIME_H)
 #include <sys/time.h>
-#endif
+#endif /* HAVE_SYS_TIME_H */
+
 #if defined(HAVE_SYS_TIMES_H)
 #include <sys/times.h>
-#endif
+#endif /* HAVE_SYS_TIMES_H */
+
 #if !defined(_WIN32) && !defined(_WIN64)
 # include <sys/resource.h>
 #endif
+
 #if defined(HAVE_STDLIB_H)
 # include <stdlib.h>
 /* NOTE: RANDOM_CNT should remain 32 to circular shift 31-bit returns */
 # define RANDOM_CNT (32) /* random() call repeat and circular shift */
 # define INITSTATE_SIZE (256)	/* initstate pool size */
-#endif
+#endif /* HAVE_STDLIB_H */
+
 #include <setjmp.h>
 #include "alloc.h"
 #include "qmath.h"
@@ -98,15 +104,33 @@
 #include "have_uid_t.h"
 #include "have_environ.h"
 #include "have_arc4random.h"
+
 #if defined(HAVE_USTAT)
 # include <ustat.h>
-#endif
+#endif /* HAVE_USTAT */
+
 #if defined(HAVE_URANDOM)
 # include <fcntl.h>
 # define DEV_URANDOM "/dev/urandom"
 # define DEV_URANDOM_POOL (16)
-#endif
+#endif /* HAVE_URANDOM */
 
+#include "have_sys_vfs.h"
+#if defined(HAVE_SYS_VFS_H)
+# include <sys/vfs.h>
+#endif /* HAVE_SYS_VFS_H */
+
+#include "have_sys_param.h"
+#if defined(HAVE_SYS_PARAM_H)
+# include <sys/param.h>
+#endif /* HAVE_SYS_PARAM_H */
+
+#include "have_sys_mount.h"
+#if defined(HAVE_SYS_MOUNT_H)
+# include <sys/mount.h>
+#endif /* HAVE_SYS_MOUNT_H */
+
+#include "have_statfs.h"
 
 #include "banned.h"	/* include after system header <> includes */
 
@@ -417,6 +441,25 @@ pseudo_seed(void)
 	/* usage stat of "/var/log/messages" */
 	struct ustat ustat_messages;
 #endif
+#if defined(HAVE_STATFS)
+	struct statfs statfs_dot;	/* filesystem stat of "." */
+	struct statfs statfs_dotdot;	/* filesystem stat of ".." */
+	struct statfs statfs_tmp;	/* filesystem stat of "/tmp" */
+	struct statfs statfs_root;	/* filesystem stat of "/" */
+	struct statfs statfs_tty;	/* filesystem stat of "/dev/tty" */
+	struct statfs statfs_console;	/* filesystem stat of "/dev/console" */
+	struct statfs statfs_stdin;	/* filesystem stat of stdin */
+	struct statfs statfs_stdout;	/* filesystem stat of stdout */
+	struct statfs statfs_stderr;	/* filesystem stat of stderr */
+	struct statfs statfs_zero;	/* filesystem stat of "/dev/zero" */
+	struct statfs statfs_null;	/* filesystem stat of "/dev/null" */
+	struct statfs statfs_sh;	/* filesystem stat of "/bin/sh" */
+	struct statfs statfs_ls;	/* filesystem stat of "/bin/ls" */
+	/* filesystem stat of "/var/log/system.log" */
+	struct statfs statfs_system;
+	/* filesystem stat of "/var/log/messages" */
+	struct statfs statfs_messages;
+#endif
 #if defined(HAVE_GETSID)
 	pid_t getsid;			/* session ID */
 #endif
@@ -558,6 +601,23 @@ pseudo_seed(void)
     (void) ustat(sdata.stat_ls.st_dev, &sdata.ustat_ls);
     (void) ustat(sdata.stat_system.st_dev, &sdata.ustat_system);
     (void) ustat(sdata.stat_messages.st_dev, &sdata.ustat_messages);
+#endif
+#if defined(HAVE_STATFS)
+    (void) statfs("..", &sdata.statfs_dot);
+    (void) statfs(".", &sdata.statfs_dotdot);
+    (void) statfs("/tmp", &sdata.statfs_tmp);
+    (void) statfs("/", &sdata.statfs_root);
+    (void) statfs("/dev/tty", &sdata.statfs_tty);
+    (void) statfs("/dev/console", &sdata.statfs_console);
+    (void) statfs(".dev/stdin", &sdata.statfs_stdin);
+    (void) statfs("/dev/stdout", &sdata.statfs_stdout);
+    (void) statfs("/dev/stderr", &sdata.statfs_stderr);
+    (void) statfs("/dev/zero", &sdata.statfs_zero);
+    (void) statfs("/dev/null", &sdata.statfs_null);
+    (void) statfs("/bin/sh", &sdata.statfs_sh);
+    (void) statfs("/dev/ls", &sdata.statfs_ls);
+    (void) statfs("/var/log/system.log", &sdata.statfs_system);
+    (void) statfs("/var/log/messages", &sdata.statfs_messages);
 #endif
 #if defined(HAVE_GETSID)
     sdata.getsid = getsid((pid_t)0);

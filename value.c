@@ -377,6 +377,7 @@ negvalue(VALUE *vp, VALUE *vres)
 void
 addvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
+	unsigned int twoval_as_uint;	/* TWOVAL(a,b) or TWOVAL_INVALID */
 	COMPLEX *c;
 	VALUE tmp;
 	NUMBER *q;
@@ -403,7 +404,8 @@ addvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		return;
 	}
 	vres->v_type = v1->v_type;
-	switch (TWOVAL(v1->v_type, v2->v_type)) {
+	twoval_as_uint = TWOVAL_AS_UINT(v1->v_type, v2->v_type);
+	switch (twoval_as_uint) {
 	case TWOVAL(V_NUM, V_NUM):
 		vres->v_num = qqadd(v1->v_num, v2->v_num);
 		return;
@@ -474,13 +476,15 @@ addvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 void
 subvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
+	unsigned int twoval_as_uint;	/* TWOVAL(a,b) or TWOVAL_INVALID */
 	COMPLEX *c;
 	NUMBER *q;
 	int i;
 
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
-	switch (TWOVAL(v1->v_type, v2->v_type)) {
+	twoval_as_uint = TWOVAL_AS_UINT(v1->v_type, v2->v_type);
+	switch (twoval_as_uint) {
 	case TWOVAL(V_NUM, V_NUM):
 		vres->v_num = qsub(v1->v_num, v2->v_num);
 		return;
@@ -562,11 +566,13 @@ subvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 void
 mulvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
+	unsigned int twoval_as_uint;	/* TWOVAL(a,b) or TWOVAL_INVALID */
 	COMPLEX *c;
 
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
-	switch (TWOVAL(v1->v_type, v2->v_type)) {
+	twoval_as_uint = TWOVAL_AS_UINT(v1->v_type, v2->v_type);
+	switch (twoval_as_uint) {
 	case TWOVAL(V_NUM, V_NUM):
 		vres->v_num = qmul(v1->v_num, v2->v_num);
 		return;
@@ -727,6 +733,8 @@ invertvalue(VALUE *vp, VALUE *vres)
 void
 andvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
+	unsigned int twoval_as_uint;	/* TWOVAL(a,b) or TWOVAL_INVALID */
+
 	vres->v_subtype = V_NOSUBTYPE;
 	if (v1->v_type == V_NULL) {
 		copyvalue(v2, vres);
@@ -737,7 +745,8 @@ andvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		return;
 	}
 	vres->v_type = v1->v_type;
-	switch (TWOVAL(v1->v_type, v2->v_type)) {
+	twoval_as_uint = TWOVAL_AS_UINT(v1->v_type, v2->v_type);
+	switch (twoval_as_uint) {
 	case TWOVAL(V_NUM, V_NUM):
 		vres->v_num = qand(v1->v_num, v2->v_num);
 		return;
@@ -783,6 +792,8 @@ andvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 void
 orvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
+	unsigned int twoval_as_uint;	/* TWOVAL(a,b) or TWOVAL_INVALID */
+
 	if (v1->v_type == V_NULL) {
 		copyvalue(v2, vres);
 		return;
@@ -793,7 +804,8 @@ orvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	}
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
-	switch (TWOVAL(v1->v_type, v2->v_type)) {
+	twoval_as_uint = TWOVAL_AS_UINT(v1->v_type, v2->v_type);
+	switch (twoval_as_uint) {
 	case TWOVAL(V_NUM, V_NUM):
 		vres->v_num = qor(v1->v_num, v2->v_num);
 		return;
@@ -840,9 +852,12 @@ orvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 void
 xorvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
+	unsigned int twoval_as_uint;	/* TWOVAL(a,b) or TWOVAL_INVALID */
+
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
-	switch (TWOVAL(v1->v_type, v2->v_type)) {
+	twoval_as_uint = TWOVAL_AS_UINT(v1->v_type, v2->v_type);
+	switch (twoval_as_uint) {
 	case (TWOVAL(V_NUM, V_NUM)):
 		vres->v_num = qxor(v1->v_num, v2->v_num);
 		return;
@@ -886,11 +901,13 @@ xorvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 void
 hashopvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
+	unsigned int twoval_as_uint;	/* TWOVAL(a,b) or TWOVAL_INVALID */
 	NUMBER *q;
 
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
-	switch (TWOVAL(v1->v_type, v2->v_type)) {
+	twoval_as_uint = TWOVAL_AS_UINT(v1->v_type, v2->v_type);
+	switch (twoval_as_uint) {
 	case TWOVAL(V_NUM, V_NUM):
 		q = qsub(v1->v_num, v2->v_num);
 		vres->v_num = qqabs(q);
@@ -952,9 +969,12 @@ backslashvalue(VALUE *vp, VALUE *vres)
 void
 setminusvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
+	unsigned int twoval_as_uint;	/* TWOVAL(a,b) or TWOVAL_INVALID */
+
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
-	switch (TWOVAL(v1->v_type, v2->v_type)) {
+	twoval_as_uint = TWOVAL_AS_UINT(v1->v_type, v2->v_type);
+	switch (twoval_as_uint) {
 	case TWOVAL(V_NUM, V_NUM):
 		vres->v_num = qandnot(v1->v_num, v2->v_num);
 		return;
@@ -2010,6 +2030,7 @@ powvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 void
 powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 {
+	unsigned int twoval_as_uint;	/* TWOVAL(a,b) or TWOVAL_INVALID */
 	NUMBER *epsilon;
 	COMPLEX *c, ctmp1, ctmp2;
 
@@ -2042,7 +2063,8 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		return;
 	}
 
-	switch (TWOVAL(v1->v_type, v2->v_type)) {
+	twoval_as_uint = TWOVAL_AS_UINT(v1->v_type, v2->v_type);
+	switch (twoval_as_uint) {
 	case TWOVAL(V_NUM, V_NUM):
 		if (qisneg(v1->v_num)) {
 			ctmp1.real = v1->v_num;
@@ -2098,6 +2120,7 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 void
 divvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 {
+	unsigned int twoval_as_uint;	/* TWOVAL(a,b) or TWOVAL_INVALID */
 	COMPLEX *c;
 	COMPLEX ctmp;
 	NUMBER *q;
@@ -2124,7 +2147,8 @@ divvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		return;
 	}
 	vres->v_type = v1->v_type;
-	switch (TWOVAL(v1->v_type, v2->v_type)) {
+	twoval_as_uint = TWOVAL_AS_UINT(v1->v_type, v2->v_type);
+	switch (twoval_as_uint) {
 	case TWOVAL(V_NUM, V_NUM):
 		vres->v_num = qqdiv(v1->v_num, v2->v_num);
 		return;

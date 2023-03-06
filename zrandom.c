@@ -2861,7 +2861,7 @@ zrandom(long cnt, ZVALUE *res)
 			t = blum.bits-(dest.bit+1);
 			*dest.loc-- = (blum.buffer >> t);
 			dest.bit = BASEB-t-1;
-			*dest.loc = ((blum.buffer&lowhalf[t]) << (dest.bit+1));
+			*dest.loc = (HALF)(((unsigned long)(blum.buffer&lowhalf[t])) << (dest.bit+1));
 		}
 		dest.len -= blum.bits;
 	}
@@ -2896,7 +2896,7 @@ zrandom(long cnt, ZVALUE *res)
 			t = loglogn-(dest.bit+1);
 			*dest.loc-- |= (blum.buffer >> t);
 			dest.bit = BASEB-t-1;
-			*dest.loc = ((blum.buffer&lowhalf[t]) << (dest.bit+1));
+			*dest.loc = (HALF)(((unsigned long)(blum.buffer&lowhalf[t])) << (dest.bit+1));
 		}
 		dest.len -= loglogn;
 	}

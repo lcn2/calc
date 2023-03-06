@@ -492,7 +492,7 @@ CO= co
 CP= cp
 DIFF= diff
 FMT= fmt
-GREP= egrep
+GREP= grep
 LN= ln
 LS= ls
 MAKE= make
@@ -847,7 +847,7 @@ depend:
 	    ${C_SRC} 2>/dev/null
 	${Q} ${CP} -f skel/custom/makedep.out skel/custom/makedep.in
 	${Q} ${SED} -e 's|: ../../|: |' -E < skel/custom/makedep.in | \
-	    ${GREP} -v /usr/include > skel/custom/makedep.out
+	    ${GREP} -E -v /usr/include > skel/custom/makedep.out
 	-${Q} for i in ${C_SRC} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo "$$i" | ${SED} 's/^\(.*\)\.c/\1.o: \1.c/'; \
@@ -861,7 +861,7 @@ depend:
 	${Q} ${MV} ${MAKE_FILE} ${MAKE_FILE}.bak
 	${Q} ${SED} -n '1,/^# DO NOT DELETE THIS LINE/p' \
 		    ${MAKE_FILE}.bak > ${MAKE_FILE}
-	${Q} ${GREP} -v '^#' skel/custom/makedep.out >> ${MAKE_FILE}
+	${Q} ${GREP} -E -v '^#' skel/custom/makedep.out >> ${MAKE_FILE}
 	${Q} echo removing skel
 	${Q} ${RM} -rf skel
 	-${Q} if ${CMP} -s ${MAKE_FILE}.bak ${MAKE_FILE}; then \

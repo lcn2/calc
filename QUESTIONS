@@ -1,37 +1,28 @@
-If you have a simple general question about calc, send Email to:
+If you have a general question about calc, consider opening
+a new Github discussion under:
 
-    calc-quest-mail at asthe dot com
+	https://github.com/lcn2/calc/discussions
 
-    NOTE: Remove spaces and replace 'at' with @, and 'dot' with .
+Look over the existing discussions to see of your question fits
+under one of those exiting discussions.
 
-PLEASE put following the SPECIAL PHRASE somewhere in your Email Subject line:
+You may wish to add your question as a comment to an existing discussion.
+Otherwise click on:
 
-    calc question
+    ((New discussion))
 
-You may add additional words to your subject line.
-
-IMPORTANT: If your Email doesn't contain the above phrase,
-	   then we WILL NOT SEE your Email.
-
-PLEASE BE SURE you have that SPECIAL PHRASE somewhere in the subject line!
-
-Suggestion:
-
-    From time to time, the Email address and Subject SPECIAL PHRASE
-    may change so verify you have the current info by visiting:
-
-	http://www.isthe.com/chongo/tech/comp/calc/calc-question.html
+and ask your question in that new discussion.
 
 Please limit your questions to general questions about calc.  We
 cannot go into great detail in our answers, nor can we do your
-homework, nor can we do much more than answer short general questions
+homework, nor can we do much more than answer general questions
 about calc.
 
-Please be patient as we cannot always respond to Email messages quickly.
+Please be patient as we cannot always respond to discussion messages quickly.
 
 =-=
 
-## Copyright (C) 2021  Landon Curt Noll
+## Copyright (C) 2021,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

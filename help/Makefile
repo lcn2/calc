@@ -247,7 +247,7 @@ CHMOD= chmod
 CMP= cmp
 CP= cp
 FMT= fmt
-GREP= egrep
+GREP= grep
 ICFLAGS=
 ILDFLAGS=
 LCC= cc
@@ -717,7 +717,7 @@ builtin: builtin.top builtin.end ../func.c funclist.sed
 	    -I.. funclist.c -c ${S}
 	${Q} ${LCC} ${ILDFLAGS} funclist.o -o funclist${EXT} ${S}
 	${Q} ${RM} -f builtin
-	${Q} ${GREP} -v '^#'  builtin.top > builtin
+	${Q} ${GREP} -E -v '^#'  builtin.top > builtin
 	${Q} ./funclist${EXT} | \
 	    ${SED} -e 's/^/	/' -e 's/[	 ][	 ]*$$//' >> builtin
 	${Q} ${CAT} builtin.end >> builtin

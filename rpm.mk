@@ -75,7 +75,6 @@ RM= rm
 LS= ls
 CPIO= cpio
 CP= cp
-EGREP= egrep
 MKDIR= mkdir
 GREP= grep
 SORT= sort
@@ -171,8 +170,8 @@ srcpkg: make_rhdir
 	${V} echo PROJECT_RELEASE="${PROJECT_RELEASE}"
 	${RM} -rf "$(TMPDIR)/$(PROJECT)"
 	${FIND} . -depth -print | \
-	    ${EGREP} -v '/RCS|/CVS|/NOTES|/\.|\.out$$|\.safe$$\.tar\.bz2$$' | \
-	    ${EGREP} -v '/old[._-]|\.old$$|\.tar\.gz$$|/ver_calc$$' | \
+	    ${GREP} -E -v '/RCS|/CVS|/NOTES|/\.|\.out$$|\.safe$$\.tar\.bz2$$' | \
+	    ${GREP} -E -v '/old[._-]|\.old$$|\.tar\.gz$$|/ver_calc$$' | \
 	    LANG=C ${SORT} | \
 	    ${CPIO} -dumpv "$(TMPDIR)/$(PROJECT)"
 	${RM} -f "$(TMPDIR)/$(PROJECT)/Makefile"
@@ -277,8 +276,8 @@ chkpkg:
 .PHONY: chksys
 chksys:
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
-	${RPM_TOOL} -qa | ${GREP} "$(PROJECT_NAME)"
-	${RPM_TOOL} -qa | ${GREP} "$(PROJECT_NAME)-devel"
+	${RPM_TOOL} -qa | ${GREP} -E "$(PROJECT_NAME)"
+	${RPM_TOOL} -qa | ${GREP} -E "$(PROJECT_NAME)-devel"
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
 .PHONY: test

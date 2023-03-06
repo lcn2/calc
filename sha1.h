@@ -3,26 +3,37 @@
  *
  * Written 2 September 1992, Peter C. Gutmann.
  *
- * This file and been extensively modified by:
- *
- *	Landon Curt Noll
- *	http://www.isthe.com/chongo/
- *
- *	chongo <was here> /\../\
- *
- * This code has been placed in the public domain.  Please do not
- * copyright this code.
- *
- * LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH  REGARD  TO
- * THIS	 SOFTWARE,  INCLUDING  ALL IMPLIED WARRANTIES OF MER-
- * CHANTABILITY AND FITNESS.  IN NO EVENT SHALL	 LANDON	 CURT
- * NOLL	 BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
- * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  LOSS  OF
- * USE,	 DATA  OR  PROFITS, WHETHER IN AN ACTION OF CONTRACT,
- * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  IN
- * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- *
  * This file is not covered under version 2.1 of the GNU LGPL.
+ * This file is covered under "The unlicense":
+ *
+ *	https://unlicense.org
+ *
+ * In particular:
+ *
+ * This is free and unencumbered software released into the public domain.
+ *
+ * Anyone is free to copy, modify, publish, use, compile, sell, or
+ * distribute this software, either in source code form or as a compiled
+ * binary, for any purpose, commercial or non-commercial, and by any
+ * means.
+ *
+ * In jurisdictions that recognize copyright laws, the author or authors
+ * of this software dedicate any and all copyright interest in the
+ * software to the public domain. We make this dedication for the benefit
+ * of the public at large and to the detriment of our heirs and
+ * successors. We intend this dedication to be an overt act of
+ * relinquishment in perpetuity of all present and future rights to this
+ * software under copyright law.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * For more information, please refer to <http://unlicense.org/>
  */
 
 

@@ -88,9 +88,11 @@ HALF *half_tbl[] = {
 /*
  * highhalf[i] - masks off the upper i bits of a HALF
  * rhighhalf[i] - masks off the upper BASEB-i bits of a HALF
- * lowhalf[i] - masks off the upper i bits of a HALF
- * rlowhalf[i] - masks off the upper BASEB-i bits of a HALF
+ * lowhalf[i] - masks off the lower i bits of a HALF
+ * rlowhalf[i] - masks off the lower BASEB-i bits of a HALF
  * bitmask[i] - (1 << i) for  0 <= i <= BASEB*2
+ *
+ * NOTE: In all cases 0 <= i <= BASEB
  */
 HALF highhalf[BASEB+1] = {
 #if BASEB == 32

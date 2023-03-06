@@ -26,13 +26,22 @@ Credits
 
     Most of this source and binary has one of the following copyrights:
 
-	    Copyright (C) year David I. Bell
-	    Copyright (C) year David I. Bell and Landon Curt Noll
-	    Copyright (C) year David I. Bell and Ernest Bowen
-	    Copyright (C) year David I. Bell, Landon Curt Noll and Ernest Bowen
-	    Copyright (C) year Landon Curt Noll
-	    Copyright (C) year Ernest Bowen and Landon Curt Noll
-	    Copyright (C) year Ernest Bowen
+	Copyright (C) year  David I. Bell
+	Copyright (C) year  David I. Bell and Landon Curt Noll
+	Copyright (C) year  David I. Bell and Ernest Bowen
+	Copyright (C) year  David I. Bell, Landon Curt Noll and Ernest Bowen
+	Copyright (C) year  Landon Curt Noll
+	Copyright (C) year  Ernest Bowen and Landon Curt Noll
+	Copyright (C) year  Ernest Bowen
+	Copyright (C) year  Petteri Kettunen and Landon Curt Noll
+	Copyright (C) year  Christoph Zurnieden
+	Copyright (C) year  Landon Curt Noll and Thomas Jones-Low
+	Copyright (C) year  Klaus Alexander Seistrup and Landon Curt Noll
+
+    A few files in calc are covered under "The Unlicense".  For more
+    information on this license, see:
+
+            https://unlicense.org
 
 
 Copying / Calc GNU Lesser General Public License
@@ -61,11 +70,11 @@ Copying / Calc GNU Lesser General Public License
 
 See also:
 
-    help copyright
-    help copying
-    help copying-lgpl
+	help copyright
+	help copying
+	help copying-lgpl
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

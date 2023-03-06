@@ -4,9 +4,10 @@
 This file is Copyrighted
 ------------------------
 
+    This file is not covered under version 2.1 of the GNU LGPL.
     This file is covered under the following Copyright:
 
-	Copyright (C) 1999-2022  Landon Curt Noll
+	Copyright (C) 1999-2023  Landon Curt Noll
 	All rights reserved.
 
 	Everyone is permitted to copy and distribute verbatim copies
@@ -121,11 +122,12 @@ Calc copyrights and exception files
 	Copyright (C) year  Petteri Kettunen and Landon Curt Noll
 	Copyright (C) year  Christoph Zurnieden
 	Copyright (C) year  Landon Curt Noll and Thomas Jones-Low
+	Copyright (C) year  Klaus Alexander Seistrup and Landon Curt Noll
 
     These files are not covered under one of the Copyrights listed above:
 
 	    sha1.c		sha1.h		COPYING
-	    COPYING-LGPL	cal/qtime.cal	cal/screen.cal
+	    COPYING-LGPL	cal/screen.cal
 
     The file COPYING-LGPL, which contains a copy of the version 2.1
     GNU Lesser General Public License, is itself Copyrighted by the
@@ -137,8 +139,16 @@ Calc copyrights and exception files
     top of this file.  It is important to note that you may distribute
     verbatim copies of this file but you may not modify this file.
 
-    Some of these exception files are in the public domain.  Other files
-    are under the LGPL but have different authors that those listed above.
+    These files are covered under "The Unlicense":
+
+	    sha1.c
+	    sha1.h
+	    cal/dotest.cal
+	    cal/screen.cal
+
+    For more information on this license, see:
+
+	    https://unlicense.org
 
     In all cases one may use and distribute these exception files freely.
     And because one may freely distribute the LGPL covered files, the

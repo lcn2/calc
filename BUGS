@@ -28,7 +28,7 @@ Click in the triangle to open up the Assets then click on
 the approptiate package to download.
 
 If you made and modifications to calc beyond the simple Makefile
-configuration, try backing those changges out and see if things get
+configuration, try backing those changes out and see if things get
 better.
 
 If you have tried all of the above and things still are not right,
@@ -60,44 +60,7 @@ GitHub web page, click on this button:
 
     ((New Issue))
 
-=-=
-
-If you prefer to not use GitHub, then you
-may send bug and bug fixes reports to:
-
-    calc-bugrept-mail at asthe dot com
-
-    NOTE: Remove spaces and replace 'at' with @, 'dot' with .
-
-    NOTE: This replaces the old calc-bugs at asthe dot com address.
-
-PLEASE put following the SPECIAL PHRASE somewhere in your Email Subject line:
-
-    calc bug report
-
-You may add additional words to your subject line.
-
-Suggestion:
-
-    From time to time, the Email address and Subject SPECIAL PHRASE
-    may change so verify you have the current info by visiting:
-
-	http://www.isthe.com/chongo/tech/comp/calc/calc-bugrept.html
-
-IMPORTANT:
-
-    PLEASE use the above SPECIAL PHRASE somewhere in the Subject line or
-    the mail system won't deliver your Email message.
-
-Keep in mind that the best way to report on a calc bug is
-via the above mentioned calc GitHub issue URL.
-
-Please be patient as we cannot always respond to Email messages quickly.
-
-=-=
-
-When you send your report, via the calc GitHub issue URL or Email,
-please include the following information:
+Please include the following information in the new issue:
 
     * A description of the problem
 
@@ -123,12 +86,13 @@ please include the following information:
     * If calc dumped core, try to send us a core dump stack trace
 
     * cd to the calc source directory, and send the contents
-      of debug.out produced by this command:
+      of debug.out.txt produced by this command:
 
-	make debug > debug.out 2>&1
+	make debug > debug.out.txt 2>&1
 
-Fell free to use the above address to send in bug fixes (in the form
-of a context diff patch).
+PLEASE attach the debug.out.txt file to your GitHub issue (bug report)!!
+
+Please be patient as we cannot always respond to pull requests quickly.
 
 =-=
 
@@ -192,9 +156,18 @@ mis-features in calc:
 
       will not.
 
+    * The numerator is assumed
+
+	The numerator value of 1 appears to be assumed.  In calc:
+
+	     / 2
+
+	will produce a value of 0.5 as if the numerator 1 was given.
+
+
 =-=
 
-## Copyright (C) 1999-2014,2021  Landon Curt Noll
+## Copyright (C) 1999-2014,2021,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

@@ -25,16 +25,16 @@
 # For example, a AddressSanitizer.  You do NOT want to do this by
 # by default!  Do this only if you are debugging with libasan:
 #
-# For Linux gcc version 4.8.5 with libasan-4.8.5-4 you might try:
+# For Linux gcc version 11.3.1 with libasan-11.3.1-2.1 you might try:
 #
-#	CDEBUG:= -O0 -g
+#	DEBUG:= -O0 -g
 #	CFLAGS+= -fsanitize=address -fno-omit-frame-pointer
 #	LDFLAGS+= -fsanitize=address -fno-omit-frame-pointer
 #	CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1
 #
-# For macOS 12.1 with clang version 13.0.0 (clang-1300.0.29.30) you might try:
+# For macOS 13.2.1 with clang version 14.0.0 (clang-1400.0.29.202) you might try:
 #
-#	CDEBUG:= -O0 -g
+#	DEBUG:= -O0 -g
 #	CFLAGS+= -fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined
 #	LDFLAGS+= -fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined
 #	CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1

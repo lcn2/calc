@@ -6,6 +6,7 @@
 #
 .dynamic
 .hsrc
+Makefile.our
 NOTES
 align32.h
 args.h
@@ -49,12 +50,16 @@ have_newstr.h
 have_offscl.h
 have_posscl.h
 have_rusage.h
+have_statfs.h
 have_stdlib.h
 have_stdvs
 have_strdup.h
 have_string.h
 have_strlcat.h
 have_strlcpy.h
+have_sys_mount.h
+have_sys_param.h
+have_sys_vfs.h
 have_times.h
 have_uid_t.h
 have_unistd.h
@@ -93,7 +98,6 @@ libcalc*
 libcustcalc*
 longbits
 longbits.h
-Makefile.our
 sample_many
 sample_rand
 tags
