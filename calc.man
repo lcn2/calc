@@ -1295,7 +1295,7 @@ https://unlicense.org
 .PP
 
 To ask the calc maintainers a general question about calc,
-see the output of:
+see the output of the following calc command:
 
 .sp
 .in +0.5i
@@ -1318,12 +1318,23 @@ QUESTIONS
 
 .PP
 
+or visit the following URL:
+.sp
+.in +0.5i
+.nf
+https://github.com/lcn2/calc/blob/master/QUESTIONS
+.fi
+.in +0.5i
+.sp
+
+.PP
+
 .SH "BUG REPORTS / BUG FIXES"
 
 .PP
 
-To inform the calc maintainers about a bug,
-or to submit a bug fix, see the output of:
+To inform the calc maintainers about a bug, or to submit a bug fix,
+see the output of the following calc command:
 
 .sp
 .in +0.5i
@@ -1343,6 +1354,16 @@ BUGS
 .fi
 .in +0.5i
 .sp
+.PP
+
+or visit the following URL:
+.sp
+.in +0.5i
+.nf
+https://github.com/lcn2/calc/blob/master/BUGS
+.fi
+.in +0.5i
+.sp
 
 .PP
 
@@ -1354,7 +1375,8 @@ BUGS
 is open source.
 You are welcome to contribute code to calc, or submit bug fixes to to calc.
 .sp
-To contribute code to calc, please see see the output of:
+To contribute code to calc, please see see the output of
+the following calc command:
 
 .sp
 .in +0.5i
@@ -1363,6 +1385,7 @@ To contribute code to calc, please see see the output of:
 .fi
 .in +0.5i
 .sp
+
 .PP
 
 or read the source file:
@@ -1373,6 +1396,17 @@ or read the source file:
 CONTRIB-CODE
 .fi
 .in +0.5i
+
+.PP
+
+or visit the following URL:
+.sp
+.in +0.5i
+.nf
+https://github.com/lcn2/calc/blob/master/CONTRIB-CODE
+.fi
+.in +0.5i
+.sp
 
 .PP
 
@@ -1387,5 +1421,30 @@ web site is located at:
 .in +0.5i
 www.isthe.com/chongo/tech/comp/calc/
 .in -0.5i
+
+.SH "CALC SOURCE CODE"
+
+The latest version of calc source code may be obtained at
+the following GitHub repo:
 .sp
-Share and Enjoy! :\-)
+.in +0.5i
+https://github.com/lcn2/calc
+.in -0.5i
+.sp
+The very latest calc souece is found at the top master branch.
+
+.PP
+
+You may download the calc releases from:
+.sp
+.in +0.5i
+https://github.com/lcn2/calc/releases
+.in -0.5i
+.sp
+The releases marked
+.B ((Pre-release))
+are beta releases.
+.sp
+The most recent release that is NOT  marked
+.B ((Pre-release))
+is the recommended stable release.
