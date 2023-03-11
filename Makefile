@@ -79,8 +79,8 @@ endif
 ifeq ($(hardware),)
 hardware=$(shell uname -m 2>/dev/null)
 endif
-ifeq ($(MINGW),)
-MINGW=$(shell uname -o 2>/dev/null)
+ifeq ($(OSNAME),)
+OSNAME=$(shell uname -o 2>/dev/null)
 endif
 #endif	/* end of skip for non-Gnu makefiles */
 
@@ -113,7 +113,7 @@ endif
 # then we will also need to use the Cygwin runtime enviroment
 # and the calc Cygwin make target.
 ##
-ifeq ($(MINGW),Cygwin)
+ifeq ($(OSNAME),Cygwin)
 target:= Cygwin
 endif
 #
