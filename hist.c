@@ -106,38 +106,38 @@ typedef struct {
 } FUNC;
 
 /* declare binding functions */
-S_FUNC void flush_input(void);
-S_FUNC void start_of_line(void);
-S_FUNC void end_of_line(void);
-S_FUNC void forward_char(void);
-S_FUNC void backward_char(void);
-S_FUNC void forward_word(void);
-S_FUNC void backward_word(void);
-S_FUNC void delete_char(void);
-S_FUNC void forward_kill_char(void);
-S_FUNC void backward_kill_char(void);
-S_FUNC void forward_kill_word(void);
-S_FUNC void kill_line(void);
-S_FUNC void new_line(void);
-S_FUNC void save_line(void);
-S_FUNC void forward_history(void);
-S_FUNC void backward_history(void);
+S_FUNC void flush_input(int key);
+S_FUNC void start_of_line(int key);
+S_FUNC void end_of_line(int key);
+S_FUNC void forward_char(int key);
+S_FUNC void backward_char(int key);
+S_FUNC void forward_word(int key);
+S_FUNC void backward_word(int key);
+S_FUNC void delete_char(int key);
+S_FUNC void forward_kill_char(int key);
+S_FUNC void backward_kill_char(int key);
+S_FUNC void forward_kill_word(int key);
+S_FUNC void kill_line(int key);
+S_FUNC void new_line(int key);
+S_FUNC void save_line(int key);
+S_FUNC void forward_history(int key);
+S_FUNC void backward_history(int key);
 S_FUNC void insert_char(int key);
-S_FUNC void goto_line(void);
-S_FUNC void list_history(void);
-S_FUNC void refresh_line(void);
-S_FUNC void swap_chars(void);
-S_FUNC void set_mark(void);
-S_FUNC void yank(void);
-S_FUNC void save_region(void);
-S_FUNC void kill_region(void);
-S_FUNC void reverse_search(void);
-S_FUNC void quote_char(void);
-S_FUNC void uppercase_word(void);
-S_FUNC void lowercase_word(void);
-S_FUNC void ignore_char(void);
-S_FUNC void arrow_key(void);
-S_FUNC void quit_calc(void) __attribute__((noreturn));
+S_FUNC void goto_line(int key);
+S_FUNC void list_history(int key);
+S_FUNC void refresh_line(int key);
+S_FUNC void swap_chars(int key);
+S_FUNC void set_mark(int key);
+S_FUNC void yank(int key);
+S_FUNC void save_region(int key);
+S_FUNC void kill_region(int key);
+S_FUNC void reverse_search(int key);
+S_FUNC void quote_char(int key);
+S_FUNC void uppercase_word(int key);
+S_FUNC void lowercase_word(int key);
+S_FUNC void ignore_char(int key);
+S_FUNC void arrow_key(int key);
+S_FUNC void quit_calc(int key) __attribute__((noreturn));
 
 
 STATIC	FUNC	funcs[] =
@@ -218,7 +218,7 @@ STATIC	KEY_MAP		*cur_map;
 STATIC	KEY_MAP		*base_map;
 STATIC	KEY_ENT		key_table[MAX_KEYS];
 STATIC  HIST*		hist_first = NULL;
-STATIC  HIST		hist_last = NULL;
+STATIC  HIST*		hist_last = NULL;
 STATIC	char		save_buffer[SAVE_SIZE];
 
 /* declare other static functions */
@@ -796,20 +796,20 @@ find_func(char *name)
 
 
 S_FUNC void
-arrow_key(void)
+arrow_key(int UNUSED(key))
 {
 	switch (fgetc(stdin)) {
 	case 'A':
-		backward_history();
+		backward_history(0);
 		break;
 	case 'B':
-		forward_history();
+		forward_history(0);
 		break;
 	case 'C':
-		forward_char();
+		forward_char(0);
 		break;
 	case 'D':
-		backward_char();
+		backward_char(0);
 		break;
 	}
 }
@@ -866,13 +866,13 @@ decrement_end(int n)
 
 
 S_FUNC void
-ignore_char(void)
+ignore_char(int UNUSED(key))
 {
 }
 
 
 S_FUNC void
-flush_input(void)
+flush_input(int UNUSED(key))
 {
 	echo_rest_of_line();
 	while (HS.end > HS.buf)
@@ -883,21 +883,21 @@ flush_input(void)
 
 
 S_FUNC void
-start_of_line(void)
+start_of_line(int UNUSED(key))
 {
 	goto_start_of_line();
 }
 
 
 S_FUNC void
-end_of_line(void)
+end_of_line(int UNUSED(key))
 {
 	goto_end_of_line();
 }
 
 
 S_FUNC void
-forward_char(void)
+forward_char(int UNUSED(key))
 {
 	if (HS.pos < HS.end)
 		echo_char(*HS.pos++);
@@ -905,7 +905,7 @@ forward_char(void)
 
 
 S_FUNC void
-backward_char(void)
+backward_char(int UNUSED(key))
 {
 	if (HS.pos > HS.buf)
 		back_over_char((int)(*--HS.pos));
@@ -913,7 +913,7 @@ backward_char(void)
 
 
 S_FUNC void
-uppercase_word(void)
+uppercase_word(int UNUSED(key))
 {
 	while ((HS.pos < HS.end) && !in_word((int)(*HS.pos)))
 		echo_char(*HS.pos++);
@@ -926,7 +926,7 @@ uppercase_word(void)
 
 
 S_FUNC void
-lowercase_word(void)
+lowercase_word(int UNUSED(key))
 {
 	while ((HS.pos < HS.end) && !in_word((int)(*HS.pos)))
 		echo_char(*HS.pos++);
@@ -939,7 +939,7 @@ lowercase_word(void)
 
 
 S_FUNC void
-forward_word(void)
+forward_word(int UNUSED(key))
 {
 	while ((HS.pos < HS.end) && !in_word((int)(*HS.pos)))
 		echo_char(*HS.pos++);
@@ -949,7 +949,7 @@ forward_word(void)
 
 
 S_FUNC void
-backward_word(void)
+backward_word(int UNUSED(key))
 {
 	if ((HS.pos > HS.buf) && in_word((int)(*HS.pos)))
 		back_over_char((int)(*--HS.pos));
@@ -963,7 +963,7 @@ backward_word(void)
 
 
 S_FUNC void
-forward_kill_char(void)
+forward_kill_char(int UNUSED(key))
 {
 	int	rest;
 	char	ch;
@@ -985,7 +985,7 @@ forward_kill_char(void)
 
 
 S_FUNC void
-delete_char(void)
+delete_char(int UNUSED(key))
 {
 	/*
 	 * quit delete_char (usually ^D) is at start of line and we are allowed
@@ -996,30 +996,30 @@ delete_char(void)
 	if ((HS.end == HS.buf) &&
 	    (conf->ctrl_d == CTRL_D_EMPTY_EOF ||
 	     (conf->ctrl_d == CTRL_D_VIRGIN_EOF && HS.virgin_line == TRUE))) {
-		quit_calc();
+		quit_calc(0);
 	}
 
 	/*
 	 * normal case: just forward_kill_char
 	 */
 	if (HS.end > HS.buf)
-		forward_kill_char();
+		forward_kill_char(0);
 }
 
 
 S_FUNC void
-backward_kill_char(void)
+backward_kill_char(int UNUSED(key))
 {
 	if (HS.pos > HS.buf) {
 		HS.pos--;
 		back_over_char((int)(*HS.pos));
-		forward_kill_char();
+		forward_kill_char(0);
 	}
 }
 
 
 S_FUNC void
-forward_kill_word(void)
+forward_kill_word(int UNUSED(key))
 {
 	char	*cp;
 
@@ -1043,7 +1043,7 @@ forward_kill_word(void)
 
 
 S_FUNC void
-kill_line(void)
+kill_line(int UNUSED(key))
 {
 	if (HS.end <= HS.pos)
 		return;
@@ -1062,7 +1062,7 @@ kill_line(void)
  * decide whether or not this should be done.
  */
 S_FUNC void
-new_line(void)
+new_line(int UNUSED(key))
 {
 	int	len;
 
@@ -1086,21 +1086,21 @@ new_line(void)
 
 
 S_FUNC void
-save_line(void)
+save_line(int UNUSED(key))
 {
 	int	len;
 
 	len = HS.end - HS.buf;
 	if (len > 0) {
 		hist_saveline(HS.buf, len);
-		flush_input();
+		flush_input(0);
 	}
 	HS.curhist = HS.histcount;
 }
 
 
 S_FUNC void
-goto_line(void)
+goto_line(int UNUSED(key))
 {
 	int	num;
 	char	*cp;
@@ -1114,7 +1114,7 @@ goto_line(void)
 		beep();
 		return;
 	}
-	flush_input();
+	flush_input(0);
 	HS.curhist = HS.histcount - num;
 	hp = get_event(HS.curhist);
 	memcpy(HS.buf, hp->data, hp->len);
@@ -1124,11 +1124,11 @@ goto_line(void)
 
 
 S_FUNC void
-forward_history(void)
+forward_history(int UNUSED(key))
 {
 	HIST	*hp;
 
-	flush_input();
+	flush_input(0);
 	if (++HS.curhist >= HS.histcount)
 		HS.curhist = 0;
 	hp = get_event(HS.curhist);
@@ -1141,11 +1141,11 @@ forward_history(void)
 
 
 S_FUNC void
-backward_history(void)
+backward_history(int UNUSED(key))
 {
 	HIST	*hp;
 
-	flush_input();
+	flush_input(0);
 	if (--HS.curhist < 0)
 		HS.curhist = HS.histcount - 1;
 	hp = get_event(HS.curhist);
@@ -1207,7 +1207,7 @@ insert_string(char *str, int len)
 
 
 S_FUNC void
-list_history(void)
+list_history(int UNUSED(key))
 {
 	HIST	*hp;
 	int	hnum;
@@ -1217,12 +1217,12 @@ list_history(void)
 		printf("\n%3d: ", HS.histcount - hnum);
 		echo_string(hp->data, hp->len);
 	}
-	refresh_line();
+	refresh_line(0);
 }
 
 
 S_FUNC void
-refresh_line(void)
+refresh_line(int UNUSED(key))
 {
 	char	*cp;
 
@@ -1238,7 +1238,7 @@ refresh_line(void)
 
 
 S_FUNC void
-swap_chars(void)
+swap_chars(int UNUSED(key))
 {
 	char	ch1;
 	char	ch2;
@@ -1257,14 +1257,14 @@ swap_chars(void)
 
 
 S_FUNC void
-set_mark(void)
+set_mark(int UNUSED(key))
 {
 	HS.mark = HS.pos;
 }
 
 
 S_FUNC void
-save_region(void)
+save_region(int UNUSED(key))
 {
 	int	len;
 
@@ -1279,7 +1279,7 @@ save_region(void)
 
 
 S_FUNC void
-kill_region(void)
+kill_region(int UNUSED(key))
 {
 	char	*cp;
 	char	*left;
@@ -1311,14 +1311,14 @@ kill_region(void)
 
 
 S_FUNC void
-yank(void)
+yank(int UNUSED(key))
 {
 	insert_string(save_buffer, save_len);
 }
 
 
 S_FUNC void
-reverse_search(void)
+reverse_search(int UNUSED(key))
 {
 	int	len;
 	int	count;
@@ -1344,7 +1344,7 @@ reverse_search(void)
 
 	HS.curhist = testhist;
 	save_pos = HS.pos;
-	flush_input();
+	flush_input(0);
 	memcpy(HS.buf, hp->data, hp->len);
 	HS.end = &HS.buf[hp->len];
 	goto_end_of_line();
@@ -1354,7 +1354,7 @@ reverse_search(void)
 
 
 S_FUNC void
-quote_char(void)
+quote_char(int UNUSED(key))
 {
 	int	ch;
 
@@ -1450,7 +1450,7 @@ memrcpy(char *dest, char *src, int len)
 #endif /* !USE_READLINE */
 
 S_FUNC void
-quit_calc(void)
+quit_calc(int UNUSED(ch))
 {
 	hist_term();
 	putchar('\n');
@@ -1492,7 +1492,7 @@ hist_getline(char *prompt, char *buf, size_t len)
 		case CTRL_D_VIRGIN_EOF:
 		case CTRL_D_EMPTY_EOF:
 		default:
-			quit_calc();
+			quit_calc(0);
 			not_reached();
 		}
 	}

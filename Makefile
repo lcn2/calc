@@ -1202,11 +1202,25 @@ CALCRC= ./.calcinit:~/.calcrc:${CALC_SHAREDIR}/startup
 #	READLINE_INCLUDE	Where the readline include files reside
 #				(leave blank if they are /usr/include/readline)
 #
+# NOTE: If you select the 'USE_READLINE=' mode, then we recommend you set:
+#
+#	READLINE_EXTRAS=
+#	READLINE_INCLUDE=
+#	READLINE_LIB=
+#
 # NOTE: The GNU-readline code is not shipped with calc.  You must have
 #	the appropriate headers and link libs installed on your system in
 #	order to use it.
 #
-# If in doubt, set USE_READLINE, READLINE_LIB and READLINE_INCLUDE to nothing.
+# To disable the use of the GNU-readline facility (as well as ncurses), set:
+#
+#	USE_READLINE=
+#	READLINE_EXTRAS=
+#	READLINE_INCLUDE=
+#	READLINE_LIB=
+#
+# If in doubt, set USE_READLINE, READLINE_EXTRAS, READLINE_INCLUDE, and
+# READLINE_LIB to nothing.
 #
 #USE_READLINE=
 USE_READLINE= -DUSE_READLINE
@@ -5688,7 +5702,7 @@ endif
 		continue; \
 	    fi; \
 	    ${RM} -f tmp; \
-	    ${SED} -e 's/^\(#[ 	]*include[ 	][ 	]*\)"/\1"calc\//' \
+	    ${SED} -e 's/^\(#[	 ]*include[	 ][	 ]*\)"/\1"calc\//' \
 	              $$i > tmp; \
 	    if ${CMP} -s tmp ${T}${CALC_INCDIR}/$$i; then \
 		${TRUE}; \

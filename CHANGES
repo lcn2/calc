@@ -8,6 +8,12 @@ The following are the changes from calc version 2.14.1.5 to date:
 
     Fixed FUNCPTR typedef in hist.c to fix deprecated compiler warnings.
 
+    Fixed when USE_READLINE, READLINE_LIB, READLINE_EXTRAS, and
+    READLINE_INCLUDE are set to empty (disable use of the GNU-readline
+    facility).
+
+    Fix cases of spaces before tabs in Makefile and Makefile.simple.
+
 
 The following are the changes from calc version 2.14.1.3 to 2.14.1.4:
 
