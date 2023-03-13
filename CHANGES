@@ -6,6 +6,8 @@ The following are the changes from calc version 2.14.1.5 to date:
     Rename MINGW Makefile variable (a holdover from MINGW32_NT-5.0)
     to OSNAME.
 
+    Fixed FUNCPTR typedef in hist.c to fix deprecated compiler warnings.
+
 
 The following are the changes from calc version 2.14.1.3 to 2.14.1.4:
 

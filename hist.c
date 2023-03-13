@@ -98,7 +98,7 @@ STATIC	struct {
 } HS;
 
 
-typedef void (*FUNCPTR)();
+typedef void (*FUNCPTR)(char *);
 
 typedef struct {
 	char	*name;
@@ -217,8 +217,8 @@ STATIC	int		save_len;
 STATIC	KEY_MAP		*cur_map;
 STATIC	KEY_MAP		*base_map;
 STATIC	KEY_ENT		key_table[MAX_KEYS];
-STATIC  HIST*    	hist_first = NULL;
-STATIC  HIST*   	hist_last = NULL;
+STATIC  HIST*		hist_first = NULL;
+STATIC  HIST		hist_last = NULL;
 STATIC	char		save_buffer[SAVE_SIZE];
 
 /* declare other static functions */
