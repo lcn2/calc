@@ -98,7 +98,7 @@ STATIC	struct {
 } HS;
 
 
-typedef void (*FUNCPTR)(char *);
+typedef void (*FUNCPTR)(int);
 
 typedef struct {
 	char	*name;
@@ -650,12 +650,11 @@ read_key(void)
 		ent = &cur_map->default_ent;
 	if (ent->next)
 		cur_map = ent->next;
-	if (ent->func)
-		/* ignore Saber-C warning #65 - has 1 arg, expecting 0 */
-		/*	  OK to ignore in proc read_key */
+	if (ent->func != NULL) {
 		(*ent->func)(key);
-	else
+	} else {
 		insert_char(key);
+	}
 }
 
 
