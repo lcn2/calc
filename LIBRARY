@@ -344,7 +344,7 @@ values of 0 and 1 are so common that special checks are made for them.
 
 For initial values besides 0 or 1, you need to call itoz to convert a long
 value into a ZVALUE, as shown in the above example.  Or alternatively,
-for larger numbers you can use the atoz routine to convert a string which
+for larger numbers you can use the str2z routine to convert a string which
 represents a number into a ZVALUE.  The string can be in decimal, octal,
 hex, or binary according to the leading digits.
 
@@ -357,7 +357,7 @@ over a long sequence of operations.
 	ZVALUE z1, z2, z3;
 
 	z1 = _one_;
-	atoz("12345678987654321", &z2);
+	str2z("12345678987654321", &z2);
 	zadd(z1, z2, &z3);
 	zfree(z1);
 	zfree(z2);
@@ -446,10 +446,10 @@ to free them first.  The following illustrates this:
 	itoz(55L, &q->num);
 
 A better way to create NUMBERs with particular values is to use the itoq,
-iitoq, or atoq functions.  Using itoq makes a long value into a NUMBER,
+iitoq, or str2q functions.  Using itoq makes a long value into a NUMBER,
 using iitoq makes a pair of longs into the numerator and denominator of a
-NUMBER (reducing them first if needed), and atoq converts a string representing
-a number into the corresponding NUMBER.	 The atoq function accepts input in
+NUMBER (reducing them first if needed), and str2q converts a string representing
+a number into the corresponding NUMBER.	 The str2q function accepts input in
 integral, fractional, real, or exponential formats.  Examples of allocating
 numbers are:
 
@@ -457,7 +457,7 @@ numbers are:
 
 	q1 = itoq(66L);
 	q2 = iitoq(2L, 3L);
-	q3 = atoq("456.78");
+	q3 = str2q("456.78");
 
 Also unlike ZVALUEs, NUMBERs are quickly copied.  This is because they contain
 a link count, which is the number of pointers there are to the NUMBER.	The
@@ -504,8 +504,8 @@ For example, to calculate sin(0.5) to 100 decimal places, you could do:
 
 	NUMBER *q, *ans, *epsilon;
 
-	q = atoq("0.5");
-	epsilon = atoq("1e-100");
+	q = str2q("0.5");
+	epsilon = str2q("1e-100");
 	ans = qsin(q, epsilon);
 
 There are many convenience macros similar to the ones for ZVALUEs which can
