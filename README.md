@@ -1,4 +1,4 @@
-# What is calc?
+# What is calculator?
 
 Calc is an interactive calculator which provides for easy large
 numeric calculations, but which also can be easily programmed
@@ -11,7 +11,7 @@ evaluated.  For example, the following line can be input:
 
 ```sh
 3 * (4 + 1)
-```
+```s
 
 and the calculator will print:
 
