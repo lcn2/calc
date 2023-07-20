@@ -1,21 +1,23 @@
-# Try it yourself
+# TL:DR Try calc
 
-Debian/Ubuntu
-
-```
-sudo apt install calc
-```
-
-Termux
+## TL;DR Install calc
 
 ```
-apt install calc
+misc linux: sudo yum install calc
+on Debian:  sudo apt install calc
+on RHEL:    sudo dnf install calc
+on Ubuntu:  sudo apt install calc
+via Termux: apt install calc
+via src:    sudo make clobber all chk instsll
 ```
 
-Then run
+## TL:DR run calc
 
 ```
-calc
+misc shell:   calc
+via bash:     calc
+via misc app: launch calc via Termux
+via zsh:      calc
 ```
 
 # What is calc?
