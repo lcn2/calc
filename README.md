@@ -1,4 +1,4 @@
-# TL:DR Try calc
+# TL;DR Try calc
 
 ## TL;DR Install calc
 
@@ -11,7 +11,7 @@ via Termux: apt install calc
 via src:    sudo make clobber all chk instsll
 ```
 
-## TL:DR run calc
+## TL;DR Run calc
 
 ```
 misc shell:   calc
