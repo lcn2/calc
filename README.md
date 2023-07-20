@@ -1,3 +1,23 @@
+# Try it yourself
+
+Debian/Ubuntu
+
+```
+sudo apt install calc
+```
+
+Termux
+
+```
+apt install calc
+```
+
+Then run
+
+```
+calc
+```
+
 # What is calc?
 
 Calc is an interactive calculator which provides for easy large
