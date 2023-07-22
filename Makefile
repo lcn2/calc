@@ -6415,7 +6415,9 @@ file.o: strl.h
 file.o: value.h
 file.o: zmath.h
 fposval.o: alloc.h
+fposval.o: attribute.h
 fposval.o: banned.h
+fposval.o: byteswap.h
 fposval.o: decl.h
 fposval.o: endian_calc.h
 fposval.o: fposval.c
@@ -6427,8 +6429,11 @@ fposval.o: have_memmv.h
 fposval.o: have_newstr.h
 fposval.o: have_offscl.h
 fposval.o: have_posscl.h
+fposval.o: have_stdlib.h
 fposval.o: have_string.h
 fposval.o: have_unused.h
+fposval.o: longbits.h
+fposval.o: zmath.h
 func.o: alloc.h
 func.o: attribute.h
 func.o: banned.h
