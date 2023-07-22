@@ -1433,6 +1433,60 @@ specialfunctions.cal
     on the script zeta2.cal.
 
 
+splitbits.cal
+
+    splitbits(x, b)
+
+    Given an integer x, split the value into a list of integers,
+    each of which is at most b bits long.
+
+    The value b must be an integer > 0.
+
+    The number of elements in the returned list is:
+
+	ceil((highbit(x) + 1) / b)
+
+    If x == 0, then a list of 1 element containing 0 is returned.
+
+    If x < 0, then the two's compliment of abs(x) is returned.
+    Even though calc represents negative integers as positive values
+    with sign bit, the bits returned by this function are as if
+    the integer converted as if the integer was a two's compliment
+    value.  For example:
+
+	; L = splitbits(-1, 8);
+	; print L[[0]]
+	255
+
+	; L = splitbits(-2, 8);
+	; print L[[0]]
+	254
+
+	; L = splitbits(-3, 8);
+	; print L[[0]]
+	253
+
+    The first element of the list contains the lowest order bits
+    of x.  The last element of the list contains the highest number
+    bits of x.
+
+    For example:
+
+	; x = 2^23209-1
+	; L = splitbits(x, 16);
+	; print size(L), L[[0]]
+
+	; print istype(2, 3i), istype(2, "2"), istype(2, null())
+	0 0 0
+
+	; mat a[2]
+	; b = list(1,2,3)
+	; c = assoc()
+	; obj chongo {was, here} d;
+	; print istype(a,b), istype(b,c), istype(c,d)
+	0 0 0
+
+
 statistics.cal
 
     gammaincoctave(z,a)

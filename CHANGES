@@ -2,6 +2,30 @@ The following are the changes from calc version 2.14.2.0 to date:
 
     Ported calc to the s390x IBM Mainframe running RHEL9.1.
 
+    Added cal/splitbits.cal:
+
+	splitbits(x, b)
+
+	Given an integer x, split the value into a list of integers,
+	each of which is at most b bits long.
+
+	The value b must be an integer > 0.
+
+	The number of elements in the returned list is:
+
+	    ceil((highbit(x) + 1) / b)
+
+	If x == 0, then a list of 1 element containing 0 is returned.
+
+	If x < 0, then the two's compliment of abs(x) is returned.
+	Even though calc represents negative integers as positive values
+	with sign bit, the bits returned by this function are as if
+	the integer converted as if the integer was a two's compliment value.
+
+	See also the help command:
+
+	    ; help resource
+
 
 The following are the changes from calc version 2.14.1.5 to 2.14.1.6:
 
