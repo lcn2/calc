@@ -22,7 +22,7 @@
  *
  * For more information on the FNV hash see:
  *
- *	https://en.wikipedia.org/wiki/Fowler–Noll–Vo_hash_function
+ *	https://en.wikipedia.org/wiki/Fowler-Noll-Vo_hash_function
  *	http://www.isthe.com/chongo/tech/comp/fnv/index.html
  *
  * IMPORTANT NOTE:
