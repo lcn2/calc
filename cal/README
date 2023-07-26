@@ -388,6 +388,13 @@ dotest.cal
 	dotest("set8700.line");
 
 
+ellip.cal
+
+    efactor(iN, ia, B, force)
+
+    Attempt to factor using the elliptic functions: y^2 = x^3 + a*x + b.
+
+
 factorial.cal
 
     factorial(n)
@@ -548,12 +555,65 @@ factorial2.cal
     for information on falling factorials.
 
 
-ellip.cal
+fnv_util.cal
 
-    efactor(iN, ia, B, force)
+    Utility tools for FNV hash and "FNV-style" hash operations.
 
-    Attempt to factor using the elliptic functions: y^2 = x^3 + a*x + b.
+    These functions, if given non-standard values, will produce bogus results.
+    In some cases, such as specifying the number of bits in the hash,
+    using a non-power of 2 bit will produce a result that may work,
+    but the hash will be only an "FNV-style" hash and not a true FNV hash.
 
+    find_fnv_prime(bits)
+
+	If bits == null(), this function will attempt to prompt stdin
+	for a value and provide commends on the value of bits.
+
+	given:
+	    bits	number of bits in the hash, null() ==> prompt for value
+
+	returns:
+	    0 ==> no FNV prime found
+	    >0 ==> FNV prime
+
+    deprecated_fnv0(bits, fnv_prime, string)
+
+	If fnv_prime == null(), this function will try to compute the FNV prime
+	for a hash of size bits.
+
+	given:
+	    bits	number of bits in FNV hash
+	    fnv_prime	FNV prime, null() ==> generate suitable FNV prime if possible
+	    string	string to hash
+
+	returns:
+	    FNV-0 hash, for size bytes, of string
+
+	NOTE: This function does NOT attempt to determine that fnv_prime is prime.
+
+    fnv_offset_basis(bits, fnv_prime)
+
+	given:
+	    bits	number of bits in FNV hash
+	    fnv_prime	FNV prime, null() ==> generate suitable FNV prime if possible
+
+	returns:
+	    FNV offset basis for a hash size of bits and an FNV prime of fnv_prime
+
+	NOTE: This function does NOT attempt to determine that fnv_prime is prime.
+
+    fnv1a_style_hash(bits, fnv_prime, prev_hash, string)
+
+	given:
+	    bits	number of bits in FNV hash
+	    fnv_prime	FNV prime, null() ==> generate suitable FNV prime if possible
+	    prev_hash	previous hash value, null() ==> generate FNV offset basis
+	    string	string to hash
+
+	returns:
+	    "FNV-style" hash of bits
+
+	NOTE: This function does NOT attempt to determine that fnv_prime is prime.
 
 gvec.cal
 

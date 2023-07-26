@@ -267,9 +267,9 @@ TRUE= true
 # to keep this list in nice sorted order.
 #
 CALC_FILES= README alg_config.cal beer.cal bernoulli.cal \
-	bernpoly.cal bigprime.cal bindings brentsolve.cal chi.cal \
-	chrem.cal comma.cal constants.cal deg.cal dms.cal dotest.cal \
-	ellip.cal factorial.cal factorial2.cal gvec.cal hello.cal hms.cal \
+	bernpoly.cal bigprime.cal bindings brentsolve.cal chi.cal chrem.cal \
+	comma.cal constants.cal deg.cal dms.cal dotest.cal ellip.cal \
+	factorial.cal factorial2.cal fnv_tool.cal gvec.cal hello.cal hms.cal \
 	infinities.cal intfile.cal intnum.cal lambertw.cal linear.cal \
 	lnseries.cal lucas.cal lucas_chk.cal mersenne.cal mfactor.cal mod.cal \
 	natnumset.cal palindrome.cal pell.cal pi.cal pix.cal pollard.cal \
