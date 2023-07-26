@@ -66,7 +66,7 @@
  * NOTE: For n that is a power of 2 and n > 1024, you will find that
  *	 that FNV primes become so rare that that one may not find a suitable
  *	 FNV prime.  For n = 2048, 4096, 8192, 16384, 32768, 65536, 131072
- *	 and 262144, there is NO suitable FNV prime.
+ *	 262144, and 524288, there is NO suitable FNV prime.
  *
  *	 As for as hashing goes, large values of n, even if an
  *	 FNV hash may be found, are unlikely to be truly useful.  :-)
@@ -174,7 +174,7 @@ define find_fnv_prime(bits)
 	if (popcnt(bits) == 1) {
 	    if (bits > 1024) {
 		print "# WARNING: FNV primes for powers of 2  > 1024 are extremely rare.";
-		print "# WARNING: There are no FNV primes for 2048, 4096, 8192, 16384, 327678, 65536, 131072, nor 262144.";
+		print "# WARNING: There are no FNV primes for 2048, 4096, 8192, 16384, 327678, 65536, 131072, 262144, nor 524288.";
 	    }
 	    print "# NOTE: bits a power of 2 and bits >= 32: bits is suitable for a true FNV hash";
 	    print "n =", bits;
@@ -208,17 +208,17 @@ define find_fnv_prime(bits)
 	}
 
 	/*
-	 * reject potential p value that is not prime
+	 * reject p if p mod (2^40 - 2^24 - 1) <= (2^24 + 2^8 + 2^7)
 	 */
 	p = p_minus_b + b;
-	if (ptest(p) == 0) {
+	if ((p % (2^40 - 2^24 - 1)) <= (2^24 + 2^8 + 2^7)) {
 	    continue;
 	}
 
 	/*
-	 * accept p if p mod (2^40 - 2^24 - 1) > (2^24 + 2^8 + 2^7)
+	 * accept potential p value that is prime
 	 */
-	if ((p % (2^40 - 2^24 - 1)) > (2^24 + 2^8 + 2^7)) {
+	if (ptest(p) == 1) {
 	    return p;
 	}
     }
