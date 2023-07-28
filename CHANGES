@@ -9,6 +9,8 @@ The following are the changes from calc version 2.14.2.1 to date:
 
     Fixed sorted order of cal/README.
 
+    Removed references to obsolete Email addresses.
+
 
 The following are the changes from calc version 2.14.2.0 to 2.14.2.0:
 
@@ -1604,9 +1606,9 @@ The following are the changes from calc version 2.12.5.0 to 2.12.5.1:
 
     There is a new calc bug report Email address:
 
-	    calc-bug-report at asthe dot com
+NOTE:	    calc-bug-report Email address no longer in use
 
-	This replaces the old calc-bugs at asthe dot com address.
+	This replaces the old calc-bugs Email address.
 
 	To be sure we see your Email reporting a calc bug, please use the
 	following phase in your Email Subject line:
@@ -2200,7 +2202,7 @@ The following are the changes from calc version 2.12.1.10 to 2.12.2:
 	NOTE: If your target is not supported below and the default target
 	      is not suitable for your needs, please send to the:
 
-		calc-contrib at asthe dot com
+NOTE:		calc-contrib Email address no longer in use
 
 	      Email address an "ifeq ($(target),YOUR_TARGET_NAME)"
 	      ... "endif" set of lines from the Makefile so that
@@ -3923,9 +3925,9 @@ The following are the changes from calc version 2.11.2t0 to 2.11.2t1.0:
     www.isthe.com.  NOTE: The Email address uses 'asthe' and the web
     site URL uses 'isthe'.
 
-    Using calc-bugs at asthe dot com for calc bug reports,
-    calc-contrib at asthe dot com for calc contributions,
-    calc-tester-request at asthe dot com for requests to join calc-tester and
+NOTE:	calc-bugs Email address no longer in use
+NOTE:	calc-contrib Email address no longer in use
+NOTE:	calc-tester-request Email address no longer in use
 
     Replaced explicit Email addresses found this file with the <user at
     site dot domain> notation to reduce the potential for those folks

@@ -1571,16 +1571,6 @@ endif
 #
 # Specific target overrides or modifications to default values
 
-##########################################################################
-# NOTE: If your target is not supported below and the default target	 #
-#	is not suitable for your needs, please send to the:		 #
-#									 #
-#		calc-contrib at asthe dot com				 #
-#									 #
-#	Email address an "ifeq ($(target),YOUR_TARGET_NAME)" ... "endif" #
-#	set of lines so that we can consider them for the next release.  #
-##########################################################################
-
 #if 0	/* start of skip for non-Gnu makefiles */
 #
 ################
