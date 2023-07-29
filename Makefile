@@ -1688,7 +1688,7 @@ CCWERR=
 CCOPT= ${DEBUG}
 CCMISC= ${DARWIN_ARCH}
 #
-LCC= clang
+LCC= cc
 CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 # Darwin dynamic shared lib filenames

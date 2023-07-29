@@ -11,6 +11,8 @@ The following are the changes from calc version 2.14.2.1 to date:
 
     Removed references to obsolete Email addresses.
 
+    macOS Darwin defaults LCC to "cc".
+
 
 The following are the changes from calc version 2.14.2.0 to 2.14.2.0:
 
