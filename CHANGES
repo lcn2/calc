@@ -16,6 +16,30 @@ The following are the changes from calc version 2.14.2.1 to date:
     Updated COPYING to include the actual text of "The Unlicense".
     Made minor formatting changes to the file.
 
+    The Darwin specific ${DARWIN_ARCH}, thay by default was unset,
+    is now the ${ARCH_CFLAGS} Makefile variable.  Comments about
+    various "-arch name" have been moved to the ${ARCH_CFLAGS} area.
+
+    For old Apple Power PC systems, the following is added:
+
+	COMMON_CFLAGS+= -std=gnu99
+	COMMON_LDFLAGS+= -std=gnu99
+	ARCH_CFLAGS+= -arch ppc
+
+    Old Apple Power PC systems should be detected by the
+    "uname -m" command returning "ppc".  One may force the
+    Power PC mode by adding to the end of any make command:
+
+	target=Darwin hardware=ppc
+
+    or by adding the following in the Makefile.local file:
+
+	target= Darwin
+	hardware= ppc
+
+    Improved the output of the calcinfo rule by adding echos
+    of various uname values as well as some top Makefile variables.
+
 
 The following are the changes from calc version 2.14.2.0 to 2.14.2.0:
 

@@ -1316,8 +1316,15 @@ EXTRA_LDFLAGS=
 # The ARCH_CFLAGS are ${CC} when compiling C files. They follow
 # CCMISC and precede EXTRA_CFLAGS.
 #
+# When ARCH_CFLAGS is empty, the native binary architecture is assumed.
+#
 ARCH_CFLAGS=
-#ARCH_CFLAGS= -march=native
+# ARCH_CFLAGS= -arch i386		# old Intel binary
+# ARCH_CFLAGS= -arch ppc		# Power PC binary
+# ARCH_CFLAGS= -arch x86_64		# Intel 64-bit binary
+# ARCH_CFLAGS= -arch arm64		# Apple Silicon binary
+# ARCH_CFLAGS= -arch arm64 -arch x86_64	# Apple Silicon and Intel 64-bit binary
+# ARCH_CFLAGS= -arch i386 -arch ppc	# old Intel and Power PC binary
 
 # COMMON_CFLAGS are the common ${CC} flags used for all programs, both
 #	    intermediate and final calc and calc related programs
@@ -4249,6 +4256,30 @@ calcinfo:
 	@echo '=-=-= output of $${UNAME} -a follows =-=-='
 	-@${UNAME} -a
 	@echo '=-=-= end of output of $${UNAME} -a =-=-='
+	@echo
+	@echo '=-=-= output of $${UNAME} -s follows =-=-='
+	-@${UNAME} -s
+	@echo '=-=-= end of output of $${UNAME} -s =-=-='
+	@echo
+	@echo '=-=-= output of $${UNAME} -p follows =-=-='
+	-@${UNAME} -p
+	@echo '=-=-= end of output of $${UNAME} -p =-=-='
+	@echo
+	@echo '=-=-= output of $${UNAME} -m follows =-=-='
+	-@${UNAME} -m
+	@echo '=-=-= end of output of $${UNAME} -m =-=-='
+	@echo
+	@echo '=-=-= output of $${UNAME} -o follows =-=-='
+	-@${UNAME} -o
+	@echo '=-=-= end of output of $${UNAME} -o =-=-='
+	@echo
+	@echo '=-=-= output of top makefile variables follows =-=-='
+	@echo "target= ${target}"
+	@echo "arch= ${arch}"
+	@echo "hardware= ${hardware}"
+	@echo "OSNAME= ${OSNAME}"
+	@echo "SHELL= ${SHELL}"
+	@echo '=-=-= end of output top makefile variables =-=-='
 	@echo
 	@echo '=-=-= HOSTNAME=${HOSTNAME} =-=-='
 	@echo

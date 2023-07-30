@@ -1458,8 +1458,15 @@ EXTRA_LDFLAGS=
 # The ARCH_CFLAGS are ${CC} when compiling C files. They follow
 # CCMISC and precede EXTRA_CFLAGS.
 #
+# When ARCH_CFLAGS is empty, the native binary architecture is assumed.
+#
 ARCH_CFLAGS=
-#ARCH_CFLAGS= -march=native
+# ARCH_CFLAGS= -arch i386		# old Intel binary
+# ARCH_CFLAGS= -arch ppc		# Power PC binary
+# ARCH_CFLAGS= -arch x86_64		# Intel 64-bit binary
+# ARCH_CFLAGS= -arch arm64		# Apple Silicon binary
+# ARCH_CFLAGS= -arch arm64 -arch x86_64	# Apple Silicon and Intel 64-bit binary
+# ARCH_CFLAGS= -arch i386 -arch ppc	# old Intel and Power PC binary
 
 # COMMON_CFLAGS are the common ${CC} flags used for all programs, both
 #	    intermediate and final calc and calc related programs
@@ -1630,39 +1637,48 @@ endif
 # Apple macOS / Darwin target #
 ###############################
 
+# For old Apple Power PC systems, we need to add:
+#
+#	-std=gnu99 -arch ppc
+#
+ifeq ($(hardware),ppc)
+COMMON_CFLAGS+= -std=gnu99
+COMMON_LDFLAGS+= -std=gnu99
+ARCH_CFLAGS+= -arch ppc
+endif
+
 ifeq ($(target),Darwin)
 #
 BLD_TYPE= calc-dynamic-only
 #
 CC_SHARE= -fPIC
 DEFAULT_LIB_INSTALL_PATH= ${PWD}:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= ${DARWIN_ARCH}
+LD_SHARE= ${ARCH_CFLAGS}
 #SET_INSTALL_NAME= no
 SET_INSTALL_NAME= yes
 ifeq ($(SET_INSTALL_NAME),yes)
 LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
-    -install_name ${LIBDIR}/libcalc${LIB_EXT_VERSION} ${DARWIN_ARCH}
+    -install_name ${LIBDIR}/libcalc${LIB_EXT_VERSION} ${ARCH_CFLAGS}
 else
 LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
-    ${DARWIN_ARCH}
+    ${ARCH_CFLAGS}
 endif
 ifdef ALLOW_CUSTOM
 ifeq ($(SET_INSTALL_NAME),yes)
 LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
-    -install_name ${LIBDIR}/libcustcalc${LIB_EXT_VERSION} ${DARWIN_ARCH}
+    -install_name ${LIBDIR}/libcustcalc${LIB_EXT_VERSION} ${ARCH_CFLAGS}
 else
 LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
-    ${DARWIN_ARCH}
+    ${ARCH_CFLAGS}
 endif
 else
 LIBCUSTCALC_SHLIB=
 endif
 #
 CC_STATIC=
-LD_STATIC= ${DARWIN_ARCH}
+LD_STATIC= ${ARCH_CFLAGS}
 LIBCALC_STATIC=
 LIBCUSTCALC_STATIC=
-#
 # If you want to add flags to all compiler and linker
 # run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
 # set ${COMMON_ADD}.
@@ -1686,7 +1702,7 @@ WNO_ERROR_LONG_LONG= -Wno-error=long-long
 WNO_LONG_LONG= -Wno-long-long
 CCWERR=
 CCOPT= ${DEBUG}
-CCMISC= ${DARWIN_ARCH}
+CCMISC= ${ARCH_CFLAGS}
 #
 LCC= cc
 CC= ${PURIFY} ${LCC} ${CCWERR}
@@ -1696,11 +1712,6 @@ LIB_EXT:= .dylib
 LIB_EXT_VERSION:= .${VERSION}${LIB_EXT}
 # LDCONFIG not required on this platform, so we redefine it to an empty string
 LDCONFIG:=
-# DARWIN_ARCH= -arch i386 -arch ppc	# Universal binary
-# DARWIN_ARCH= -arch i386		# Intel binary
-# DARWIN_ARCH= -arch ppc		# PPC binary
-# DARWIN_ARCH= -arch x86_64		# native 64-bit binary
-DARWIN_ARCH=				# native binary
 endif
 
 ##################
@@ -4945,6 +4956,30 @@ calcinfo:
 	@echo '=-=-= output of $${UNAME} -a follows =-=-='
 	-@${UNAME} -a
 	@echo '=-=-= end of output of $${UNAME} -a =-=-='
+	@echo
+	@echo '=-=-= output of $${UNAME} -s follows =-=-='
+	-@${UNAME} -s
+	@echo '=-=-= end of output of $${UNAME} -s =-=-='
+	@echo
+	@echo '=-=-= output of $${UNAME} -p follows =-=-='
+	-@${UNAME} -p
+	@echo '=-=-= end of output of $${UNAME} -p =-=-='
+	@echo
+	@echo '=-=-= output of $${UNAME} -m follows =-=-='
+	-@${UNAME} -m
+	@echo '=-=-= end of output of $${UNAME} -m =-=-='
+	@echo
+	@echo '=-=-= output of $${UNAME} -o follows =-=-='
+	-@${UNAME} -o
+	@echo '=-=-= end of output of $${UNAME} -o =-=-='
+	@echo
+	@echo '=-=-= output of top makefile variables follows =-=-='
+	@echo "target= ${target}"
+	@echo "arch= ${arch}"
+	@echo "hardware= ${hardware}"
+	@echo "OSNAME= ${OSNAME}"
+	@echo "SHELL= ${SHELL}"
+	@echo '=-=-= end of output top makefile variables =-=-='
 	@echo
 	@echo '=-=-= HOSTNAME=${HOSTNAME} =-=-='
 	@echo
