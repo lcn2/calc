@@ -65,8 +65,8 @@
  *
  * NOTE: For n that is a power of 2 and n > 1024, you will find that
  *	 that FNV primes become so rare that that one may not find a suitable
- *	 FNV prime.  For n = 2048, 4096, 8192, 16384, 32768, 65536, 131072
- *	 262144, and 524288, there is NO suitable FNV prime.
+ *	 FNV prime.  For n = powers of 2 >= 2048 and <= 1048576,
+ *	 there is NO FNV primes.
  *
  *	 As for as hashing goes, large values of n, even if an
  *	 FNV hash may be found, are unlikely to be truly useful.  :-)
@@ -173,10 +173,9 @@ define find_fnv_prime(bits)
     if (interactive) {
 	if (popcnt(bits) == 1) {
 	    if (bits > 1024) {
-		print "# WARNING: FNV primes for powers of 2  > 1024 are extremely rare.";
-		print "# WARNING: There are no FNV primes for 2048, 4096, 8192, 16384, 327678, 65536, 131072, 262144, nor 524288.";
+		print "# WARNING: FNV primes for bit size powers of 2  > 1024 are extremely rare.";
+		print "# WARNING: There are no FNV primes for bit size powers of 2 >= 2048 and <= 1048576.";
 	    }
-	    print "# NOTE: bits a power of 2 and bits >= 32: bits is suitable for a true FNV hash";
 	    print "n =", bits;
 	} else {
 	    if (bits < 32) {
