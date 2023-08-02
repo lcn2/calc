@@ -40,6 +40,10 @@ The following are the changes from calc version 2.14.2.1 to date:
     Improved the output of the calcinfo rule by adding echos
     of various uname values as well as some top Makefile variables.
 
+    Fixed the BUGS file with respect to using `make debug`.
+
+    Added a final ls of `debug.out` for `make debug`.
+
 
 The following are the changes from calc version 2.14.2.0 to 2.14.2.0:
 
