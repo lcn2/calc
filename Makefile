@@ -5268,7 +5268,9 @@ debug:
 	@echo
 	@echo 'Click the ((New issue)) button to file a bug report.'
 	@echo
-	@echo 'Please attch the debug.out file to the bug report.'
+	@echo 'Please attch the debug.out file to the bug report:'
+	@echo
+	-@${LS} -l debug.out
 	@echo
 
 ###

@@ -88,7 +88,7 @@ Please include the following information in the new issue:
     * cd to the calc source directory, and send the contents
       of debug.out.txt produced by this command:
 
-	make debug > debug.out.txt 2>&1
+	make debug
 
 PLEASE attach the debug.out.txt file to your GitHub issue (bug report)!!
 
