@@ -841,8 +841,21 @@ HAVE_STRLCAT=
 #
 ifeq ($(target),Darwin)
 
-# default INCDIR for macOS
-INCDIR= $(shell xcrun --show-sdk-path --sdk macosx)/usr/include
+# determine default INCDIR for macOS
+#
+ifeq ($(arch),powerpc)
+#
+# Default location for old systems such as Mac OS X 10.6 Snow Leopard
+#
+INCDIR= /usr/include
+#
+else
+#
+# Modern macOS such as macOS 10.11.6 and later
+#
+INCDIR= $(shell xcrun --sdk macosx --show-sdk-path 2>/dev/null)/usr/include
+#
+endif
 
 else
 #
@@ -1641,7 +1654,7 @@ endif
 #
 #	-std=gnu99 -arch ppc
 #
-ifeq ($(hardware),ppc)
+ifeq ($(arch),powerpc)
 COMMON_CFLAGS+= -std=gnu99
 COMMON_LDFLAGS+= -std=gnu99
 ARCH_CFLAGS+= -arch ppc

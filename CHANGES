@@ -27,15 +27,15 @@ The following are the changes from calc version 2.14.2.1 to date:
 	ARCH_CFLAGS+= -arch ppc
 
     Old Apple Power PC systems should be detected by the
-    "uname -m" command returning "ppc".  One may force the
+    "uname -p" command returning "powerpc".  One may force the
     Power PC mode by adding to the end of any make command:
 
-	target=Darwin hardware=ppc
+	make ...make_args... target=Darwin arch=powerpc
 
     or by adding the following in the Makefile.local file:
 
 	target= Darwin
-	hardware= ppc
+	arch= powerpc
 
     Improved the output of the calcinfo rule by adding echos
     of various uname values as well as some top Makefile variables.
