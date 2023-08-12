@@ -19,6 +19,9 @@ The following are the changes from calc version 2.14.3.1 to date:
     Thanks to GitHub user @TurtleWilly for bringing to our attention,
     problems related to building a statically linked calc under macOS.
 
+    Updated comments in Makefile.local for how to Diagnosing memory,
+    thread, and crash issues under RHEL and macOS.
+
 
 The following are the changes from calc version 2.14.2.1 to 2.14.3.0:
 

@@ -9,6 +9,12 @@
 # To replace a Makefile variable, use := symbols.  For example:
 #
 #	CCWERR:= -Werror
+#
+# You can append to an existing Makefile variable using '+=' symbols.
+# For example:
+#
+#	CFLAGS+= -Ofast
+####
 
 ###################################################################
 # NOTE: For this and other commended out examples in this file,	  #
@@ -17,24 +23,61 @@
 # Comments start with a #-character.				  #
 ###################################################################
 
-# You can append to an existing Makefile variable using '+=' symbols.
-# For example:
+####
+# RHEL Diagnosing memory, thread, and crash issues
 #
-#	CFLAGS+= -Ofast
+# This comment block was tested for:
+#
+#	RHEL9 gcc version 11.3.1 20221121 (Red Hat 11.3.1-4) (GCC)
+#
+# with:
+#
+#	libasan-11.3.1-4.3.el9.x86_64 libubsan-11.3.1-4.3.el9.x86_64
+#
+# NOTE: With the above version, these are NOT supported:
+#
+#    UNSUPPORTED_FSANITIZE:= -fsanitize=nullability-arg -fsanitize=nullability-assign
+#
+# Uncomment these values to disnose memory, thread, and crash issues on RHEL:
+#
+# DEBUG:= -O0 -g
+# FSANITIZE:= -fsanitize=undefined -fsanitize=address -fsanitize=bool -fsanitize=bounds
+# FSANITIZE+= -fsanitize=enum -fsanitize=vptr -fsanitize=integer-divide-by-zero
+# FSANITIZE+= -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow
+# FSANITIZE+= -fsanitize=nonnull-attribute -fsanitize=returns-nonnull-attribute
+# FSANITIZE+= -fsanitize=null -fsanitize=shift -fsanitize=signed-integer-overflow
+# FSANITIZE+= -fsanitize=unreachable -fsanitize=vla-bound
+# CFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
+# LDFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
+# CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1
+####
 
-# For example, a AddressSanitizer.  You do NOT want to do this by
-# by default!  Do this only if you are debugging with libasan:
+####
+# macOS Diagnosing memory, thread, and crash issues
 #
-# For Linux gcc version 11.3.1 with libasan-11.3.1-2.1 you might try:
+# This comment block was tested for:
 #
-#	DEBUG:= -O0 -g
-#	CFLAGS+= -fsanitize=address -fno-omit-frame-pointer
-#	LDFLAGS+= -fsanitize=address -fno-omit-frame-pointer
-#	CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1
+#	macOS 13.5 with clang version 14.0.3 (clang-1403.0.22.14.1)
 #
-# For macOS 13.2.1 with clang version 14.0.0 (clang-1400.0.29.202) you might try:
+# For more info for clang to Diagnosing memory, thread, and crash issues early, see:
 #
-#	DEBUG:= -O0 -g
-#	CFLAGS+= -fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined
-#	LDFLAGS+= -fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined
-#	CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1
+#    https://developer.apple.com/documentation/xcode/diagnosing-memory-thread-and-crash-issues-early
+#
+# NOTE: With the above version, these are NOT supported:
+#
+#    UNSUPPORTED_FSANITIZE:= -fsanitize-nullability-return
+#
+# Uncomment these values to disnose memory, thread, and crash issues on macOS:
+#
+# DEBUG:= -O0 -g
+# FSANITIZE:= -fsanitize=undefined -fsanitize=address -fsanitize=bool -fsanitize=bounds
+# FSANITIZE+= -fsanitize=enum -fsanitize=vptr -fsanitize=integer-divide-by-zero
+# FSANITIZE+= -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow
+# FSANITIZE+= -fsanitize=nonnull-attribute -fsanitize=nullability-arg
+# FSANITIZE+= -fsanitize=nullability-assign -fsanitize=returns-nonnull-attribute
+# FSANITIZE+= -fsanitize=null -fsanitize=object-size -fsanitize=shift
+# FSANITIZE+= -fsanitize=signed-integer-overflow -fsanitize=unreachable -fsanitize=vla-bound
+# CFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
+# LDFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
+# CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1
+####
