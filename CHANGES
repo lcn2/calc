@@ -11,12 +11,12 @@ The following are the changes from calc version 2.14.3.1 to date:
 
     When installing with BLD_TYPE=calc-static-only, the
     installed calc and calc-static are links to each other.
-    Thanks to GitHub user @urtleWilly for this suggestion.
+    Thanks to GitHub user @TurtleWilly for this suggestion.
 
     The dynamic shared libraries are not installed if they are not
     built.  So when installing with BLD_TYPE=calc-static-only, the
     install rule will not attempt to install dynamic shared libraries.
-    Thanks to GitHub user @urtleWilly for bringing to our attention,
+    Thanks to GitHub user @TurtleWilly for bringing to our attention,
     problems related to building a statically linked calc under macOS.
 
 
