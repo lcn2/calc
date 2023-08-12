@@ -24,7 +24,7 @@
 ###################################################################
 
 ####
-# RHEL Diagnosing memory, thread, and crash issues
+# RHEL Diagnosing memory, thread, and crash issues:
 #
 # For more info see: https://github.com/google/sanitizers/wiki/AddressSanitizer
 #
@@ -55,7 +55,7 @@
 ####
 
 ####
-# macOS Diagnosing memory, thread, and crash issues
+# macOS Diagnosing memory, thread, and crash issues:
 #
 # For more info see: https://github.com/google/sanitizers/wiki/AddressSanitizer
 #
@@ -93,5 +93,5 @@
 #
 #	macOS 13.5 with clang version 14.0.3 (clang-1403.0.22.14.1)
 #
-# LDFLAGS+= '-Wl,-dead_strip_dylibs -Wl,-dead_strip'
+# LDFLAGS+= -Wl,-dead_strip_dylibs -Wl,-dead_strip
 ####
