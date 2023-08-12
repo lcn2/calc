@@ -2624,32 +2624,38 @@ calc-dynamic-only: ${DYNAMIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 		   ${SAMPLE_TARGETS} ${LATE_TARGETS}
 
 .dynamic: ${MAKE_FILE} ${LOC_MKF}
-	${Q} r="calc-dynamic-only"; \
-	    if [ "${BLD_TYPE}" != "$$r" ]; then \
+	${Q} d="calc-dynamic-only"; \
+	    s="calc-static-only"; \
+	    if [ "${BLD_TYPE}" != "$$d" ]; then \
 	    echo "NOTE: The host target $(target) defaults to a build" 1>&2; \
 	    echo "      type of: ${BLD_TYPE}, so you need to use" 1>&2; \
 	    echo "      the following make command:" 1>&2; \
 	    echo "" 1>&2; \
 	    echo "      ${MAKE} -f ${MAKE_FILE} clobber" 1>&2; \
-	    echo "      ${MAKE} -f ${MAKE_FILE} $$r BLD_TYPE=$$r" 1>&2; \
+	    echo "      ${MAKE} -f ${MAKE_FILE} $$d BLD_TYPE=$$d" 1>&2; \
 	    echo "" 1>&2; \
 	    echo "NOTE: It is a very good idea to first clobber any" 1>&2; \
 	    echo "      previously built .o, libs and executables" 1>&2; \
-	    echo "      before switching to $$r!" 1>&2; \
+	    echo "      before switching to $$d ." 1>&2; \
 	    echo "" 1>&2; \
 	    echo "=== aborting make ===" 1>&2; \
 	    exit 1; \
 	fi
 	${Q} for i in .static calc-static${EXT} ${SAMPLE_STATIC_TARGETS} \
 		      libcalc.a custom/libcustcalc.a; do \
-	    r="calc-dynamic-only"; \
-	    if [ -r "$$i" ]; then \
-		echo "Found the static target $$i file.  You must:" 1>&2; \
+	    d="calc-dynamic-only"; \
+	    s="calc-static-only"; \
+	    if [ -e "$$i" ]; then \
+		echo "Found the static target $$i file." 1>&2; \
+		echo "" 1>&2; \
+		echo "If you are trying to install the static calc, you must install using:" 1>&2; \
+		echo "" 1>&2; \
+		echo "      ${MAKE} -f ${MAKE_FILE} $$s install BLD_TYPE=$$s" 1>&2; \
+		echo "" 1>&2; \
+		echo "Otherwise you need to first clean out previously built static files" 1>&2; \
+		echo "before trying to build and/or install dynamic calc:" 1>&2; \
 		echo "" 1>&2; \
 		echo "      ${MAKE} -f ${MAKE_FILE} clobber" 1>&2; \
-		echo "      ${MAKE} -f ${MAKE_FILE} $$r BLD_TYPE=$$r" 1>&2; \
-		echo "" 1>&2; \
-		echo "to clean out any previously built static files." 1>&2; \
 		echo "" 1>&2; \
 		echo "=== aborting make ===" 1>&2; \
 		exit 2; \
@@ -2670,32 +2676,38 @@ calc-static-only: ${STATIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 	done
 
 .static: ${MAKE_FILE} ${LOC_MKF}
-	${Q} r="calc-static-only"; \
-	    if [ "${BLD_TYPE}" != "$$r" ]; then \
+	${Q} d="calc-static-only"; \
+	    s="calc-static-only"; \
+	    if [ "${BLD_TYPE}" != "$$s" ]; then \
 	    echo "NOTE: The host target $(target) defaults to a build" 1>&2; \
 	    echo "      type of: ${BLD_TYPE}, so you need to use" 1>&2; \
 	    echo "      the following make command:" 1>&2; \
 	    echo "" 1>&2; \
 	    echo "      ${MAKE} -f ${MAKE_FILE} clobber" 1>&2; \
-	    echo "      ${MAKE} -f ${MAKE_FILE} $$r BLD_TYPE=$$r" 1>&2; \
+	    echo "      ${MAKE} -f ${MAKE_FILE} $$s BLD_TYPE=$$s" 1>&2; \
 	    echo "" 1>&2; \
 	    echo "NOTE: It is a very good idea to first clobber any" 1>&2; \
 	    echo "      previously built .o, libs and executables" 1>&2; \
-	    echo "      before switching to $$r!" 1>&2; \
+	    echo "      before switching to $$s ." 1>&2; \
 	    echo "" 1>&2; \
 	    echo "=== aborting make ===" 1>&2; \
 	    exit 3; \
 	fi
 	${Q} for i in .dynamic ${CALC_DYNAMIC_LIBS} ${SYM_DYNAMIC_LIBS} \
 		      custom/libcustcalc${LIB_EXT_VERSION}; do \
-	    r="calc-static-only"; \
+	    d="calc-dynamic-only"; \
+	    s="calc-static-only"; \
 	    if [ -r "$$i" ]; then \
 		echo "Found the dynamic target $$i file.  You must:" 1>&2; \
 		echo "" 1>&2; \
-		echo "      ${MAKE} -f ${MAKE_FILE} clobber" 1>&2; \
-		echo "      ${MAKE} -f ${MAKE_FILE} $$r BLD_TYPE=$$r" 1>&2; \
+		echo "If you are trying to install the dynamic calc, you must install using:" 1>&2; \
 		echo "" 1>&2; \
-		echo "to clean out any previously built dynamic files." 1>&2; \
+		echo "      ${MAKE} -f ${MAKE_FILE} $$d install BLD_TYPE=$$d" 1>&2; \
+		echo "" 1>&2; \
+		echo "Otherwise you need to first clean out previously built dynamic files" 1>&2; \
+		echo "before trying to build and/or install static calc:" 1>&2; \
+		echo "" 1>&2; \
+		echo "      ${MAKE} -f ${MAKE_FILE} clobber" 1>&2; \
 		echo "" 1>&2; \
 		echo "=== aborting make ===" 1>&2; \
 		exit 4; \
@@ -4898,7 +4910,7 @@ Makefile.simple: Makefile custom/Makefile.simple
 		echo 'old $@ is now $@.bak'; \
 		echo 'updated top level $@ formed'; \
 		${DIFF} -u $@.bak $@; \
-	    fi \
+	    fi; \
 	else \
 	    echo 'new top level $@ formed'; \
 	    echo; \
@@ -5643,28 +5655,49 @@ endif
 	else \
 	    ${TRUE}; \
 	fi
-	-${Q} if ${CMP} -s calc${EXT} ${T}${BINDIR}/calc${EXT}; then \
-	    ${TRUE}; \
-	else \
-	    ${RM} -f ${T}${BINDIR}/calc.new${EXT}; \
-	    ${CP} -f calc${EXT} ${T}${BINDIR}/calc.new${EXT}; \
-	    ${CHMOD} 0755 ${T}${BINDIR}/calc.new${EXT}; \
-	    ${MV} -f ${T}${BINDIR}/calc.new${EXT} ${T}${BINDIR}/calc${EXT}; \
-	    echo "installed ${T}${BINDIR}/calc${EXT}"; \
-	fi
 	-${Q} if [ -f calc-static${EXT} ]; then \
 	    if ${CMP} -s calc-static${EXT} \
 			 ${T}${BINDIR}/calc-static${EXT}; then \
 		${TRUE}; \
 	    else \
+		echo ${RM} -f ${T}${BINDIR}/calc-static.new${EXT}; \
 		${RM} -f ${T}${BINDIR}/calc-static.new${EXT}; \
+		echo ${CP} -f calc-static${EXT} \
+			 ${T}${BINDIR}/calc-static.new${EXT}; \
 		${CP} -f calc-static${EXT} \
 			 ${T}${BINDIR}/calc-static.new${EXT}; \
+		echo ${CHMOD} 0755 ${T}${BINDIR}/calc-static.new${EXT}; \
 		${CHMOD} 0755 ${T}${BINDIR}/calc-static.new${EXT}; \
+		echo ${MV} -f ${T}${BINDIR}/calc-static.new${EXT} \
+			 ${T}${BINDIR}/calc-static${EXT}; \
 		${MV} -f ${T}${BINDIR}/calc-static.new${EXT} \
 			 ${T}${BINDIR}/calc-static${EXT}; \
 		echo "installed ${T}${BINDIR}/calc-static${EXT}"; \
+		echo ${RM} -f ${T}${BINDIR}/calc.new${EXT}; \
+		${RM} -f ${T}${BINDIR}/calc.new${EXT}; \
+		echo ${LN} -f ${T}${BINDIR}/calc-static${EXT} \
+			 ${T}${BINDIR}/calc.new${EXT}; \
+		${LN} -f ${T}${BINDIR}/calc-static${EXT} \
+			 ${T}${BINDIR}/calc.new${EXT}; \
+		echo "${MV} -f ${T}${BINDIR}/calc.new${EXT}" \
+			 "${T}${BINDIR}/calc${EXT}"; \
+		${MV} -f ${T}${BINDIR}/calc.new${EXT} \
+			 ${T}${BINDIR}/calc${EXT}; \
+		echo "linked ${T}${BINDIR}/calc-static${EXT}" \
+		     "to ${T}${BINDIR}/calc${EXT}"; \
 	    fi; \
+	elif ${CMP} -s calc${EXT} ${T}${BINDIR}/calc${EXT}; then \
+	    ${TRUE}; \
+	else \
+	    echo ${RM} -f ${T}${BINDIR}/calc.new${EXT}; \
+	    ${RM} -f ${T}${BINDIR}/calc.new${EXT}; \
+	    echo ${CP} -f calc${EXT} ${T}${BINDIR}/calc.new${EXT}; \
+	    ${CP} -f calc${EXT} ${T}${BINDIR}/calc.new${EXT}; \
+	    echo ${CHMOD} 0755 ${T}${BINDIR}/calc.new${EXT}; \
+	    ${CHMOD} 0755 ${T}${BINDIR}/calc.new${EXT}; \
+	    echo ${MV} -f ${T}${BINDIR}/calc.new${EXT} ${T}${BINDIR}/calc${EXT}; \
+	    ${MV} -f ${T}${BINDIR}/calc.new${EXT} ${T}${BINDIR}/calc${EXT}; \
+	    echo "installed ${T}${BINDIR}/calc${EXT}"; \
 	fi
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	${Q} cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} install
@@ -5689,13 +5722,18 @@ endif
 	${Q} cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	-${Q} if [ -f libcalc.a ]; then \
-		if ${CMP} -s libcalc.a ${T}${LIBDIR}/libcalc.a; then \
+	    if ${CMP} -s libcalc.a ${T}${LIBDIR}/libcalc.a; then \
 		${TRUE}; \
-	        else \
+	    else \
+		echo ${RM} -f ${T}${LIBDIR}/libcalc.a.new; \
 		${RM} -f ${T}${LIBDIR}/libcalc.a.new; \
+		echo ${CP} -f libcalc.a ${T}${LIBDIR}/libcalc.a.new; \
 		${CP} -f libcalc.a ${T}${LIBDIR}/libcalc.a.new; \
+		echo ${CHMOD} 0644 ${T}${LIBDIR}/libcalc.a.new; \
 		${CHMOD} 0644 ${T}${LIBDIR}/libcalc.a.new; \
+		echo ${MV} -f ${T}${LIBDIR}/libcalc.a.new ${T}${LIBDIR}/libcalc.a; \
 		${MV} -f ${T}${LIBDIR}/libcalc.a.new ${T}${LIBDIR}/libcalc.a; \
+		echo ${RANLIB} ${T}${LIBDIR}/libcalc.a; \
 		${RANLIB} ${T}${LIBDIR}/libcalc.a; \
 		echo "installed ${T}${LIBDIR}/libcalc.a"; \
 	   fi; \
@@ -5703,37 +5741,62 @@ endif
 	${Q}# NOTE: The this makefile installs libcustcalc${LIB_EXT_VERSION}
 	${Q}#       because we only want to perform one ${LDCONFIG} for both
 	${Q}#       libcalc${LIB_EXT_VERSION} and libcustcalc${LIB_EXT_VERSION}.
-	-${Q} if ${CMP} -s libcalc${LIB_EXT_VERSION} \
-		     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION} && \
-	   ${CMP} -s custom/libcustcalc${LIB_EXT_VERSION} \
-		     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}; then \
-	    ${TRUE}; \
-	else \
-	    ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
-	    ${CP} -f libcalc${LIB_EXT_VERSION} \
-		     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
-	    ${CHMOD} 0644 ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
-	    ${MV} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new \
-		     ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}; \
-	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
-	    ${LN} -f -s libcalc${LIB_EXT_VERSION} \
-			${T}${LIBDIR}/libcalc${LIB_EXT}; \
-	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
-	    ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
-	    ${CP} -f custom/libcustcalc${LIB_EXT_VERSION} \
-		     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
-	    ${CHMOD} 0644 ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
-	    ${MV} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new \
-		     ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}; \
-	    echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}"; \
-	    ${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
-			${T}${LIBDIR}/libcustcalc${LIB_EXT}; \
-	    echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
-	    if [ -z "${T}" -o "/" = "${T}" ]; then \
-		if [ ! -z "${LDCONFIG}" ]; then \
-		    echo "running ${LDCONFIG}"; \
-		    ${LDCONFIG} -v; \
-		    echo "finished ${LDCONFIG}"; \
+	-${Q} if [ -f libcalc${LIB_EXT_VERSION} ]; then \
+	    if ${CMP} -s libcalc${LIB_EXT_VERSION} \
+			 ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}; then \
+		${TRUE}; \
+	    else \
+		echo ${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
+		${RM} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
+		echo ${CP} -f libcalc${LIB_EXT_VERSION} \
+			 ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
+		${CP} -f libcalc${LIB_EXT_VERSION} \
+			 ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
+		echo ${CHMOD} 0644 ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
+		${CHMOD} 0644 ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new; \
+		echo ${MV} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new \
+			 ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}; \
+		${MV} -f ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}.new \
+			 ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}; \
+		echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}"; \
+		echo ${LN} -f -s libcalc${LIB_EXT_VERSION} \
+			    ${T}${LIBDIR}/libcalc${LIB_EXT}; \
+		${LN} -f -s libcalc${LIB_EXT_VERSION} \
+			    ${T}${LIBDIR}/libcalc${LIB_EXT}; \
+		echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
+	    fi; \
+	fi
+	-${Q} if [ -f custom/libcustcalc${LIB_EXT_VERSION} ]; then \
+	    if ${CMP} -s custom/libcustcalc${LIB_EXT_VERSION} \
+			 ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}; then \
+		${TRUE}; \
+	    else \
+		echo ${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
+		${RM} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
+		echo ${CP} -f custom/libcustcalc${LIB_EXT_VERSION} \
+			 ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
+		${CP} -f custom/libcustcalc${LIB_EXT_VERSION} \
+			 ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
+		echo ${CHMOD} 0644 ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
+		${CHMOD} 0644 ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new; \
+		echo ${MV} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new \
+			 ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}; \
+		${MV} -f ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}.new \
+			 ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}; \
+		echo "installed ${T}${LIBDIR}/libcustcalc${LIB_EXT_VERSION}"; \
+		echo ${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
+			    ${T}${LIBDIR}/libcustcalc${LIB_EXT}; \
+		${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
+			    ${T}${LIBDIR}/libcustcalc${LIB_EXT}; \
+		echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
+		if [ -z "${T}" -o "/" = "${T}" ]; then \
+		    if [ ! -z "${LDCONFIG}" ]; then \
+			echo "running ${LDCONFIG}"; \
+			${LDCONFIG} -v; \
+			echo "finished ${LDCONFIG}"; \
+		    else \
+			echo "use of ${LDCONFIG} is not required on this platform"; \
+		    fi; \
 		fi; \
 	    fi; \
 	fi

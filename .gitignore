@@ -6,12 +6,14 @@
 #
 .dynamic
 .hsrc
+.static
 Makefile.our
 NOTES
 align32.h
 args.h
 cal/.all
 calc
+calc-static
 calc.1
 calc.usage
 calcerr.c
@@ -99,7 +101,9 @@ libcustcalc*
 longbits
 longbits.h
 sample_many
+sample_many-static
 sample_rand
+sample_rand-static
 tags
 terminal.h
 ver_calc

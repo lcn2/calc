@@ -2,6 +2,23 @@ The following are the changes from calc version 2.14.3.1 to date:
 
     Fix typo in the `make debug` Makefile rule.
 
+    Improved .gitignore to ignore .static, calc-static,
+    sample_many-static and sample_rand-static.
+
+    Improved error messages when trying to compile with
+    with one calc type (when BLD_TYPE=calc-dynamic-only or
+    BLD_TYPE=calc-static-only) and install with the other.
+
+    When installing with BLD_TYPE=calc-static-only, the
+    installed calc and calc-static are links to each other.
+    Thanks to GitHub user @urtleWilly for this suggestion.
+
+    The dynamic shared libraries are not installed if they are not
+    built.  So when installing with BLD_TYPE=calc-static-only, the
+    install rule will not attempt to install dynamic shared libraries.
+    Thanks to GitHub user @urtleWilly for bringing to our attention,
+    problems related to building a statically linked calc under macOS.
+
 
 The following are the changes from calc version 2.14.2.1 to 2.14.3.0:
 
