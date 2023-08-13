@@ -1,7 +1,7 @@
 /*
  * custom - interface for custom software and hardware interfaces
  *
- * Copyright (C) 1999-2007,2021  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021,2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -26,7 +26,7 @@
 
 /*
  * Be careful what you put in this file, upper .c files include
- * this file even when CUSTOM is not defined (ALLOW_CUSTOM is empty).
+ * this file even when CUSTOM is not defined (ALLOW_CUSTOM="-UCUSTOM").
  *
  * Don't include anything, let the including .c file bring in:
  *

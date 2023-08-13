@@ -168,8 +168,7 @@ Step 5: Write your custom function
 		#endif /* CUSTOM */
 
 	   This allows this code to 'go away' when the upper Makefile
-	   disables the custom code (because ALLOW_CUSTOM no longer
-	   has the -DCUSTOM define).
+	   disables the custom code when CUSTOM is not defined.
 
 	b) The function type must be:
 

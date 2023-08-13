@@ -1158,12 +1158,12 @@ CATMODE= 0444
 # disable custom builtin functions by not compiling any custom code
 #
 # ALLOW_CUSTOM= -DCUSTOM	# allow custom only if -C is given
-# ALLOW_CUSTOM=			# disable custom even if -C is given
+# ALLOW_CUSTOM= -UCUSTOM	# disable custom even if -C is given
 #
 # If in doubt, use ALLOW_CUSTOM= -DCUSTOM
 #
 ALLOW_CUSTOM= -DCUSTOM
-#ALLOW_CUSTOM=
+#ALLOW_CUSTOM= -UCUSTOM
 
 # If the $CALCPATH environment variable is not defined, then the following
 # path will be searched for calc resource file routines.
@@ -1173,13 +1173,13 @@ ALLOW_CUSTOM= -DCUSTOM
 #if 0	/* start of skip for non-Gnu makefiles */
 #
 ifdef RPM_TOP
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 CALCPATH= .:./cal:~/.cal:${CALC_SHAREDIR}:${CUSTOMCALDIR}
 else
 CALCPATH= .:./cal:~/.cal:${CALC_SHAREDIR}
 endif
 else
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 #
 #endif	/* end of skip for non-Gnu makefiles */
 CALCPATH= .:./cal:~/.cal:${T}${CALC_SHAREDIR}:${T}${CUSTOMCALDIR}
@@ -1375,8 +1375,16 @@ LD_DEBUG=
 #
 #	CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=.:./custom DYLD_LIBRARY_PATH=.
 #
+#if 0   /* start of skip for non-Gnu makefiles */
+#
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help \
 	  CALCCUSTOMHELP=./custom
+else
+CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help
+endif
+#
+#endif  /* end of skip for non-Gnu makefiles */
 
 # Some out of date operating systems require/want an executable to
 # end with a certain file extension.  Some compiler systems such as
@@ -1486,7 +1494,7 @@ ARCH_CFLAGS=
 #
 #if 0	/* start of skip for non-Gnu makefiles */
 #
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 #
 #endif	/* end of skip for non-Gnu makefiles */
 COMMON_CFLAGS= -DCALC_SRC ${ALLOW_CUSTOM} ${CCWARN} \
@@ -1606,7 +1614,7 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
 else
 LIBCUSTCALC_SHLIB=
@@ -1676,7 +1684,7 @@ else
 LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
     ${ARCH_CFLAGS}
 endif
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 ifeq ($(SET_INSTALL_NAME),yes)
 LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
     -install_name ${LIBDIR}/libcustcalc${LIB_EXT_VERSION} ${ARCH_CFLAGS}
@@ -1746,7 +1754,7 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
 else
 LIBCUSTCALC_SHLIB=
@@ -1807,7 +1815,7 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
 else
 LIBCUSTCALC_SHLIB=
@@ -1862,7 +1870,7 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
 else
 LIBCUSTCALC_SHLIB=
@@ -1972,7 +1980,7 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
 else
 LIBCUSTCALC_SHLIB=
@@ -2474,7 +2482,7 @@ OBJS= ${LIBOBJS} ${CALCOBJS} ${UTIL_OBJS} ${SAMPLE_OBJ}
 #
 #if 0	/* start of skip for non-Gnu makefiles */
 #
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 #
 #endif	/* end of skip for non-Gnu makefiles */
 CALC_STATIC_LIBS= libcalc.a libcustcalc.a
@@ -2490,7 +2498,7 @@ endif
 #
 #if 0	/* start of skip for non-Gnu makefiles */
 #
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 #
 #endif	/* end of skip for non-Gnu makefiles */
 CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERSION} libcustcalc${LIB_EXT_VERSION}
@@ -2506,7 +2514,7 @@ endif
 #
 #if 0	/* start of skip for non-Gnu makefiles */
 #
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 #
 #
 #endif	/* end of skip for non-Gnu makefiles */
@@ -2551,7 +2559,7 @@ STATIC_FIRST_TARGETS= ${LICENSE} .static
 #
 #if 0	/* start of skip for non-Gnu makefiles */
 #
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 #
 #endif	/* end of skip for non-Gnu makefiles */
 EARLY_TARGETS= hsrc .hsrc custom/.all custom/Makefile
@@ -2857,7 +2865,7 @@ endif
 	${Q} echo '' >> $@
 #if 0	/* start of skip for non-Gnu makefiles */
 #
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 #
 #endif	/* end of skip for non-Gnu makefiles */
 	${Q} echo '/* the location of the custom help directory */' >> $@
@@ -4620,7 +4628,7 @@ ${CSCRIPT_TARGETS}: cscript/Makefile
 
 #if 0	/* start of skip for non-Gnu makefiles */
 #
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 #
 #endif	/* end of skip for non-Gnu makefiles */
 custom/.all: custom/Makefile
@@ -4675,7 +4683,7 @@ libcalc.a: ${LIBOBJS} ${MAKE_FILE} ${LOC_MKF}
 
 #if 0	/* start of skip for non-Gnu makefiles */
 #
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 #
 #endif	/* end of skip for non-Gnu makefiles */
 custom/libcustcalc.a: custom/Makefile
@@ -5102,6 +5110,7 @@ env:
 	@echo 'DIFF=${DIFF}'; echo ''
 	@echo 'DISTLIST=${DISTLIST}'; echo ''
 	@echo 'E=${E}'; echo ''
+	@echo 'EARLY_TARGETS=${EARLY_TARGETS}'; echo ''
 	@echo 'EXT=${EXT}'; echo ''
 	@echo 'FMT=${FMT}'; echo ''
 	@echo 'FPOS_BITS=${FPOS_BITS}'; echo ''
@@ -5152,6 +5161,7 @@ env:
 	@echo 'INCDIR=${INCDIR}'; echo ''
 	@echo 'INODE_BITS=${INODE_BITS}'; echo ''
 	@echo 'LANG=${LANG}'; echo ''
+	@echo 'LATE_TARGETS=${LATE_TARGETS}'; echo ''
 	@echo 'LCC=${LCC}'; echo ''
 	@echo 'LDCONFIG=${LDCONFIG}'; echo ''
 	@echo 'LDFLAGS=${LDFLAGS}'; echo ''
@@ -5591,7 +5601,7 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 	fi
 #if 0	/* start of skip for non-Gnu makefiles */
 #
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 #
 #endif	/* end of skip for non-Gnu makefiles */
 	-${Q} if [ ! -d ${T}${CUSTOMCALDIR} ]; then \
@@ -5707,7 +5717,7 @@ endif
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 #if 0	/* start of skip for non-Gnu makefiles */
 #
-ifdef ALLOW_CUSTOM
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 #
 #endif	/* end of skip for non-Gnu makefiles */
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='

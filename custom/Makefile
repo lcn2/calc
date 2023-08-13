@@ -453,12 +453,13 @@ CALC_ENV= CALCPATH=./cal
 # disable custom builtin functions by not compiling any of code
 #
 # ALLOW_CUSTOM= -DCUSTOM	# allow custom only if -C is given
-# ALLOW_CUSTOM=			# disable custom even if -C is given
+# ALLOW_CUSTOM= -UCUSTOM	# disable custom even if -C is given
 #
 # If in doubt, use ALLOW_CUSTOM= -DCUSTOM
 #
 ALLOW_CUSTOM= -DCUSTOM
-#ALLOW_CUSTOM=
+#ALLOW_CUSTOM= -UCUSTOM
+
 
 # Some out of date operating systems require / want an executable to
 # end with a certain file extension.  Some compile systems such as
@@ -1079,7 +1080,7 @@ install: all
 	    ${RM} -f ${T}${CUSTOMCALDIR}/libcustcalc.a; \
 	    echo "removed old ${T}${CUSTOMCALDIR}/libcustcalc.a"; \
 	fi
-	-${Q} if [ ! -z ${ALLOW_CUSTOM} ]; then \
+	-${Q} if [ X"${ALLOW_CUSTOM}" = "X-DCUSTOM" ]; then \
 	  if [ -f libcustcalc.a ]; then \
 	    if ${CMP} -s libcustcalc.a ${T}${LIBDIR}/libcustcalc.a; then \
 		${TRUE}; \

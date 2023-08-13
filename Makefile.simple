@@ -1035,12 +1035,12 @@ CATMODE= 0444
 # disable custom builtin functions by not compiling any custom code
 #
 # ALLOW_CUSTOM= -DCUSTOM	# allow custom only if -C is given
-# ALLOW_CUSTOM=			# disable custom even if -C is given
+# ALLOW_CUSTOM= -UCUSTOM	# disable custom even if -C is given
 #
 # If in doubt, use ALLOW_CUSTOM= -DCUSTOM
 #
 ALLOW_CUSTOM= -DCUSTOM
-#ALLOW_CUSTOM=
+#ALLOW_CUSTOM= -UCUSTOM
 
 # If the $CALCPATH environment variable is not defined, then the following
 # path will be searched for calc resource file routines.
@@ -1220,8 +1220,6 @@ LD_DEBUG=
 #
 #	CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=.:./custom DYLD_LIBRARY_PATH=.
 #
-CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help \
-	  CALCCUSTOMHELP=./custom
 
 # Some out of date operating systems require/want an executable to
 # end with a certain file extension.  Some compiler systems such as
@@ -4389,6 +4387,7 @@ env:
 	@echo 'DIFF=${DIFF}'; echo ''
 	@echo 'DISTLIST=${DISTLIST}'; echo ''
 	@echo 'E=${E}'; echo ''
+	@echo 'EARLY_TARGETS=${EARLY_TARGETS}'; echo ''
 	@echo 'EXT=${EXT}'; echo ''
 	@echo 'FMT=${FMT}'; echo ''
 	@echo 'FPOS_BITS=${FPOS_BITS}'; echo ''
@@ -4439,6 +4438,7 @@ env:
 	@echo 'INCDIR=${INCDIR}'; echo ''
 	@echo 'INODE_BITS=${INODE_BITS}'; echo ''
 	@echo 'LANG=${LANG}'; echo ''
+	@echo 'LATE_TARGETS=${LATE_TARGETS}'; echo ''
 	@echo 'LCC=${LCC}'; echo ''
 	@echo 'LDCONFIG=${LDCONFIG}'; echo ''
 	@echo 'LDFLAGS=${LDFLAGS}'; echo ''

@@ -22,8 +22,17 @@ The following are the changes from calc version 2.14.3.1 to date:
     Updated comments in Makefile.local for how to Diagnosing memory,
     thread, and crash issues under RHEL and macOS.
 
+    We no longer support the Makefile variable ${ALLOW_CUSTOM} to be empty.
+    Normally ${ALLOW_CUSTOM} is:
+
+	ALLOW_CUSTOM= -DCUSTOM
+
+    Now, to disable custom disable custom even if -C is given, use:
+
+	ALLOW_CUSTOM="-UCUSTOM"
+
     Added comments in Makefile.local for how to reduce dependency chains
-    under macOS
+    under macOS.  XXX - this doesn't yet work so don't uncomment - XXX.
 
 
 The following are the changes from calc version 2.14.2.1 to 2.14.3.0:

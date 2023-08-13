@@ -68,7 +68,8 @@ DESCRIPTION
 	    help contrib
 
 EXAMPLE
-    If calc compiled with ALLOW_CUSTOM= (custom disabled):
+    If calc compiled with ALLOW_CUSTOM="-UCUSTOM", the custom system
+    is disabled, even when -C is used on the command line:
 
     ; print custom("sysinfo", "baseb")
 	    Calc was built with custom functions disabled
@@ -94,7 +95,7 @@ LINK LIBRARY
 SEE ALSO
     custom_cal, new_custom, contrib
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
