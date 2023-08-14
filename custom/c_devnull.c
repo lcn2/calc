@@ -1,7 +1,7 @@
 /*
  * c_devnull - a custom function that does nothing
  *
- * Copyright (C) 1999-2004,2021  Landon Curt Noll
+ * Copyright (C) 1999-2004,2021,2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -32,7 +32,7 @@
 #if defined(CUSTOM)
 int c_devnull_allowed = 1;	/* CUSTOM defined */
 #else /* CUSTOM */
-int c_devnull_allowed = 0;	/* CUSTOM defined */
+int c_devnull_allowed = 0;	/* CUSTOM undefined */
 #endif /* CUSTOM */
 
 

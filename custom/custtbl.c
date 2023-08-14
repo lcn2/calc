@@ -1,7 +1,7 @@
 /*
  * custtbl - custom interface table
  *
- * Copyright (C) 1999-2007,2021  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021,2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -24,6 +24,18 @@
  * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+
+/*
+ * ISO C requires a translation unit to contain at least one declaration,
+ * so we declare a global variable whose value is based on if CUSTOM is defined.
+ */
+#if defined(CUSTOM)
+int custtbl_allowed = 1;	/* CUSTOM defined */
+#else /* CUSTOM */
+int custtbl_allowed = 0;	/* CUSTOM undefined */
+#endif /* CUSTOM */
+
+
 #include <unistd.h>
 
 #include "../have_const.h"
@@ -35,8 +47,7 @@
 
 
 /*
- * NOTE: See the file CUSTOM for instructions on how to add
- *	 custom functions.
+ * NOTE: See the file HOW_TO_ADD for instructions on how to add custom functions.
  */
 
 

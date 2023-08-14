@@ -73,6 +73,7 @@ struct custom {
  *
  * These are the required interfaces.  The dummy.c stubs these interfaces too.
  */
+EXTERN int custtbl_allowed;		/* 1 ==> CUSTOM defined, 0 ==> CUSTOM undefined */
 E_FUNC VALUE custom(char*, int, VALUE**);	/* master custom interface */
 EXTERN BOOL allow_custom;		/* TRUE => custom builtins allowed */
 E_FUNC void showcustom(void);		/* print custom functions */
