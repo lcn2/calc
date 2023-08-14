@@ -31,18 +31,46 @@ The following are the changes from calc version 2.14.3.1 to date:
 
 	ALLOW_CUSTOM="-UCUSTOM"
 
-    Added comments in Makefile.local for how to reduce dependency chains
-    under macOS.  XXX - this doesn't yet work so don't uncomment - XXX.
-
     Dropped support of Makefile.simple and custom/Makefile.simple.
     The calc version 2.14.3.0 is the last release that supported
     the Makefile.simple and custom/Makefile.simple files.
     Now, a make that supports makefile conditional syntax is required.
 
-    The platform target section from the old Makefile has been moved
-    to a new file, Makefile.target.  The Makefile.target is shared
-    by both Makefile and custom/Makefile.  The custom/Makefile no
-    longer includes Makefile (instead it includes ../Makefile.target).
+    Moved makefile variables that configure calc and configure how to
+    compile calc from Makefile into a new Makefile.config file.
+
+    The Makeifle includes the Makefile.config file.
+    The cal/Makeifle includes the Makefile.config file.
+    The cscript/Makeifle includes the Makefile.config file.
+    The custom/Makeifle includes the Makefile.config file.
+    The help/Makeifle includes the Makefile.config file.
+
+    Now, the Makefile.config file will consistently configure
+    calc and how calc is compiled and built by all calc Makefiles.
+
+    The platform target section from the old Makefile has been moved to
+    a new file, Makefile.target.  The custom/Makefile no longer includes
+    Makefile.
+
+    The Makeifle includes the Makefile.target file.
+    The cal/Makeifle includes the Makefile.target file.
+    The cscript/Makeifle includes the Makefile.target file.
+    The custom/Makeifle includes the Makefile.target file.
+    The help/Makeifle includes the Makefile.target file.
+
+    Now, the Makefile.target file will consistently set
+    target information for all calc Makefiles.
+
+    The cal/Makeifle includes the Makefile.local file.
+    The cscript/Makeifle includes the Makefile.local file.
+    The custom/Makeifle includes the Makefile.local file.
+    The help/Makeifle includes the Makefile.local file.
+
+    Thus, one may modify or append many Makefile variables
+    in all calc Makefiles.
+
+    Added comments in Makefile.local for how to reduce dependency chains
+    under macOS.  XXX - this doesn't yet work so don't uncomment - XXX.
 
 
 The following are the changes from calc version 2.14.2.1 to 2.14.3.0:

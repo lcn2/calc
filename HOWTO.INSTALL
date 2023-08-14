@@ -9,6 +9,7 @@ and see if there is a pre-compiled version of calc that you may install.
 Open up the 'Assets' tag below a given release and download these RPMs:
 
     * calc*.rpm
+
 	- all that is needed if you just want to use calc
 
 If your platform supports rpm and matches one of the "calc*.rpm" files, you
@@ -23,6 +24,7 @@ In addition, if your platform supports rpm and matches one of the
 files for use in other programs:
 
     * calc-devel-*.rpm
+
 	- calc *.h header and *.a lib files for use in other programs
 
 Alternately to the above github link, you might try looking at the RPMs under:
@@ -81,9 +83,6 @@ than the top of the master branch.
 
 ## Step 1: Makefile considerations
 
-Look at Makefile, and adjust it to suit your needs.
-
-
 
 ### IMPORTANT: Make support of conditional syntax required:
 
@@ -100,21 +99,48 @@ The Gnu Make is not required per-se, just a modern make tool
 that supports "Conditional syntax".
 
 
+### Review Makefiles
 
-### Suggestion: Modify Makefile.local instead of Makefile:
+Review Makefile.config and Makefile.target.
+
+If you are curious, review Makefile as well, although
+there may be little in the main Makefile that you may
+want to change.
+
+Consider modifying Makefile.local by replace values or
+appending values found in Makefile.config and Makefile.target.
+
+If you are adding custom functions, review custom/Makefile
+and modify custom/Makefile as needed.
+
+
+
+### Suggestion: Modify Makefile.local
+
+All Makefiles include Makefile.local just before the
+first and default all rule.  So Makefile.local may be
+used to modify, replace or append values to Makefile variables.
 
 In most cases, to change the way that calc is made, consider
-adding lines to Makefile.local instead of modifying Makefile.
+adding lines to Makefile.local instead of modifying other Makefiles.
 
-A recommened way to adjust it is to add lines to: Makefile.local
+A recommended way to adjust it is to add lines to: Makefile.local
 using the := syntax to replace values such as:
 
     DEBUG:= -O0 -g
 
 or by using the += syntax to append to values such as:
 
-    CFLAGS+= -UCUSTOM
+    DEBUG+= -ipa
 
+You can, of course, modify other Makefiles.  We only
+suggest using Makefile.local to minimize the number
+of source files you modify.
+
+And finally, you can always just add arguments to your
+make command line instead of modifying a Makefile.  For example:
+
+    make clobber all DEBUG="-O0 -g"
 
 
 ## readline package assumed by default:
@@ -167,6 +193,8 @@ or add to Makefile.local, these lines:
     READLINE_INCLUDE=
     READLINE_LIB=
 
+See the "Suggestion: Modify Makefile.local" section above for
+information on the Makefile.local file.
 
 
 ### Windows or a Windows-like environments:
@@ -230,6 +258,8 @@ instead of Makefile" above.  For example:
 
     T:= /var/tmp/testing
 
+See the "Suggestion: Modify Makefile.local" section above for
+information on the Makefile.local file.
 
 
 ### platform target section
@@ -286,11 +316,11 @@ See the BUGS file if you find any compiler warning or errors.
 
 You may run the calc regression test suite, after successfully compiling, by:
 
-	make check
+    make check
 
 For a more quiet check which only prints if something goes wrong, use:
 
-	make chk
+    make chk
 
 
 

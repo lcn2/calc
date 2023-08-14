@@ -4,13 +4,7 @@
 #
 # Copyright (C) 1999-2006,2014,2017-2018,2021,2023  Landon Curt Noll
 #
-# SRC: custom/Makefile
-#
-#	The "# SRC: ... - ..." comment line above indicates
-#	the origin of this file.
-#
-# IMPORTANT: Please see the section on Makefiles near the
-#	     bottom of the HOWTO.INSTALL file.
+# Suggestion: Read the ../HOWTO.INSTALL file.
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -36,140 +30,53 @@
 # Makefile by Landon Curt Noll
 
 
-# The shell used by this Makefile
-#
-# On some systems, /bin/sh is a rather reduced shell with
-# deprecated behavior.
-#
-# If your system has a up to date, bash shell, then
-# you may wish to use:
-#
-#	SHELL= bash
-#
-# On some systems such as macOS, the bash shell is very
-# far behind to the point where is cannot be depended on.
-# On such systems, the sh may be a much better alternative
-# shell for this Makefile to use:
-#
-#	SHELL= sh
-#
-SHELL= bash
-#SHELL= sh
+###########################################
+# Files used or included by this Makefile #
+###########################################
 
-# Darwin shell default
+# Normally certain files depend on the Makefile.  If the Makefile is
+# changed, then certain steps should be redone.  If MAKE_FILE is
+# set to Makefile, then these files will depend on Makefile.  If
+# MAKE_FILE is empty, then they won't.
 #
-ifeq ($(target),Darwin)
-SHELL:= /bin/sh
-endif	# ($(target),Darwin)
+# If in doubt, set MAKE_FILE to Makefile
+#
+MAKE_FILE= Makefile
 
-# If you are using Cygwin with MinGW64 packages
-# then we will also need to use the Cygwin runtime enviroment
-# and the calc Cygwin make target.
-##
-ifeq ($(OSNAME),Cygwin)
-target:= Cygwin
-endif	# ($(OSNAME),Cygwin)
+# Calc configuration and compile configuration values
+#
+CONFIG_MKF= ../Makefile.config
+
+# Host targets that are shared in common with both Makefile
+# and custom/Makefile.
+#
+TARGET_MKF= ../Makefile.target
+
+# Local file that is included just prior to the first rule,
+# that allows one to override any values set in this Makefile.
+#
+LOCAL_MKF= ../Makefile.local
+
+# The set of Makefiles
+#
+MK_SET= ${MAKE_FILE} ${CONFIG_MKF} ${TARGET_MKF} ${LOCAL_MKF}
 
 
-# PREFIX - Top level location for calc
-#
-# The PREFIX is often prepended to paths within calc and calc Makefiles.
-#
-# Starting with calc v2.13.0.1, nearly all Makefile places that used
-# /usr/local now use ${PREFIX}.  An exception is the olduninstall rule
-# and, of course, this section. :-)
-#
-# NOTE: The ${PREFIX} is not the same as ${T}.  The ${T} specifies
-#	a top level directory under which calc installs things.
-#	While usually ${T} is empty, it can be specific path
-#	as if calc where "chrooted" during an install.
-#	The ${PREFIX} value, during install, is a path between
-#	the top level ${T} install directory and the object
-#	such as an include file.
-#
-# NOTE: See also, ${T}, below.
-#
-# There are some paths that do NOT call under ${PREFIX}, such as
-# ${CALCPATH}, that include paths not under ${PREFIX}, but those
-# too are exceptions to this general rule.
-#
-# When in doubt, try:
-#
-#	PREFIX= /usr/local
-#
-PREFIX= /usr/local
-#PREFIX= /usr
-#PREFIX= /usr/global
+#######################################################
+# Calc configuration and compile configuration values #
+#######################################################
+include ${CONFIG_MKF}
 
 
-# CCBAN is given to ${CC} in order to control if banned.h is in effect.
-#
-# The banned.h attempts to ban the use of certain dangerous functions
-# that, if improperly used, could compromise the computational integrity
-# if calculations.
-#
-# In the case of calc, we are motivated in part by the desire for calc
-# to correctly calculate: even during extremely long calculations.
-#
-# If UNBAN is NOT defined, then calling certain functions
-# will result in a call to a non-existent function (link error).
-#
-# While we do NOT encourage defining UNBAN, there may be
-# a system / compiler environment where re-defining a
-# function may lead to a fatal compiler complication.
-# If that happens, consider compiling as:
-#
-#	make clobber all chk CCBAN=-DUNBAN
-#
-# as see if this is a work-a-round.
-#
-# If YOU discover a need for the -DUNBAN work-a-round, PLEASE tell us!
-# Please send us a bug report.  See the file:
-#
-#	BUGS
-#
-# or the URL:
-#
-#	http://www.isthe.com/chongo/tech/comp/calc/calc-bugrept.html
-#
-# for how to send us such a bug report.
-#
-CCBAN= -UUNBAN
-#CCBAN= -DUNBAN
+###############################
+# host target section include #
+###############################
+include ${TARGET_MKF}
 
 
-# We do not support parallel make of calc.  We have found most
-# parallel make systems do not get the rule dependency order
-# correct, resulting in a failed attempt to compile calc.
-#
-# If you believe you have a way to get a parallel make of calc
-# to work, consider submitting a pull request with a
-# proposed change.
-#
-.NOTPARALLEL:
-
-##############################################################################
-#-=-=-=-=-=-=-=-=- Identify the target machine, if possible -=-=-=-=-=-=-=-=-#
-##############################################################################
-
-# NOTE: You can force a target value by defining target as in:
-#
-#	make ...__optional_arguments_... target=value
-
-# Try uname -s if the target was not already set on the make command line
-#
-ifeq ($(target),)
-target=$(shell uname -s 2>/dev/null)
-endif	# ($(target),)
-ifeq ($(arch),)
-arch=$(shell uname -p 2>/dev/null)
-endif	# ($(arch),)
-ifeq ($(hardware),)
-hardware=$(shell uname -m 2>/dev/null)
-endif	# ($(hardware),)
-ifeq ($(OSNAME),)
-OSNAME=$(shell uname -o 2>/dev/null)
-endif	# ($(OSNAME),)
+##################################
+# Files managed by this Makefile #
+##################################
 
 # The custom calc resource files to install
 #
@@ -214,16 +121,10 @@ CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c c_pzasusb8.c \
 CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o c_pzasusb8.o \
 	c_pmodm127.o c_register.o
 
-##############################################################################
-#-=-=-=-=-=-=-=-=- You may want to change some values below -=-=-=-=-=-=-=-=-#
-##############################################################################
 
-##############################################################################
-#-=-=-=-=-=-=- Defaults in case you want to build from this dir -=-=-=-=-=-=-#
-##############################################################################
-
-# Normally, the upper level makefile will set these values.  We provide
-# a default here just in case you want to build from this directory.
+##########################################################################
+#=-=-=-=-=- Be careful if you change something below this line -=-=-=-=-=#
+##########################################################################
 
 # Makefile debug
 #
@@ -256,337 +157,6 @@ H=@
 #
 V=@:
 #V=@
-
-####
-# Normally, the upper level makefile will set these values.  We provide
-# a default here just in case you want to build from this directory.
-####
-
-# Where the system include (.h) files are kept
-#
-# For DJGPP, select:
-#
-#	INCDIR= /dev/env/DJDIR/include
-#
-# If in doubt, set:
-#
-#	INCDIR= /usr/include
-#
-
-#INCDIR= ${PREFIX}/include
-#INCDIR= /dev/env/DJDIR/include
-INCDIR= /usr/include
-
-# where to install calc related things
-#
-# ${BINDIR}		where to install calc binary files
-# ${LIBDIR}		where calc link library (*.a) files are installed
-# ${CALC_SHAREDIR}	where to install calc help, .cal, startup, config files
-#
-# NOTE: The install rule prepends installation paths with ${T}, which
-#	by default is empty.  If ${T} is non-empty, then installation
-#	locations will be relative to the ${T} directory.
-#
-# For DJGPP, select:
-#
-#	BINDIR= /dev/env/DJDIR/bin
-#	LIBDIR= /dev/env/DJDIR/lib
-#	CALC_SHAREDIR= /dev/env/DJDIR/share/calc
-#
-# If in doubt, set:
-#
-#	BINDIR= /usr/bin
-#	LIBDIR= /usr/lib
-#	CALC_SHAREDIR= /usr/share/calc
-#
-#BINDIR= ${PREFIX}/bin
-#BINDIR= /dev/env/DJDIR/bin
-BINDIR= /usr/bin
-
-#LIBDIR= ${PREFIX}/lib
-#LIBDIR= /dev/env/DJDIR/lib
-LIBDIR= /usr/lib
-
-#CALC_SHAREDIR= ${PREFIX}/lib/calc
-#CALC_SHAREDIR= /dev/env/DJDIR/share/calc
-CALC_SHAREDIR= /usr/share/calc
-
-# By default, these values are based CALC_SHAREDIR, INCDIR, BINDIR
-# ---------------------------------------------------------------
-# ${HELPDIR}		where the help directory is installed
-# ${CALC_INCDIR}	where the calc include files are installed
-# ${CUSTOMCALDIR}	where custom *.cal files are installed
-# ${CUSTOMHELPDIR}	where custom help files are installed
-# ${CUSTOMINCDIR}	where custom .h files are installed
-# ${SCRIPTDIR}		where calc shell scripts are installed
-#
-# NOTE: The install rule prepends installation paths with ${T}, which
-#	by default is empty.  If ${T} is non-empty, then installation
-#	locations will be relative to the ${T} directory.
-#
-# If in doubt, set:
-#
-#	HELPDIR= ${CALC_SHAREDIR}/help
-#	CALC_INCDIR= ${INCDIR}/calc
-#	CUSTOMCALDIR= ${CALC_SHAREDIR}/custom
-#	CUSTOMHELPDIR= ${CALC_SHAREDIR}/custhelp
-#	CUSTOMINCDIR= ${CALC_INCDIR}/custom
-#	SCRIPTDIR= ${BINDIR}/cscript
-#
-HELPDIR= ${CALC_SHAREDIR}/help
-CALC_INCDIR= ${INCDIR}/calc
-CUSTOMCALDIR= ${CALC_SHAREDIR}/custom
-CUSTOMHELPDIR= ${CALC_SHAREDIR}/custhelp
-CUSTOMINCDIR= ${CALC_INCDIR}/custom
-SCRIPTDIR= ${BINDIR}/cscript
-
-# T - top level directory under which calc will be installed
-#
-# The calc install is performed under ${T}, the calc build is
-# performed under /.	The purpose for ${T} is to allow someone
-# to install calc somewhere other than into the system area.
-#
-# For example, if:
-#
-#     BINDIR= /usr/bin
-#     LIBDIR= /usr/lib
-#     CALC_SHAREDIR= /usr/share/calc
-#
-# and if:
-#
-#     T= /var/tmp/testing
-#
-# Then the installation locations will be:
-#
-#     calc binary files:	/var/tmp/testing/usr/bin
-#     calc link library:	/var/tmp/testing/usr/lib
-#     calc help, .cal ...:	/var/tmp/testing/usr/share/calc
-#     ... etc ...		/var/tmp/testing/...
-#
-# If ${T} is empty, calc is installed under /, which is the same
-# top of tree for which it was built.  If ${T} is non-empty, then
-# calc is installed under ${T}, as if one had to chroot under
-# ${T} for calc to operate.
-#
-# If in doubt, use T=
-#
-T=
-
-# Debug/Optimize options for ${CC} and ${LCC}
-#
-# Select DEBUG= -O2 -gstabs+ -D_WIN32 for DJGPP.
-#
-#DEBUG=
-#
-#DEBUG= -O
-#DEBUG= -O -g
-#DEBUG= -O -g3
-#
-#DEBUG= -O1
-#DEBUG= -O1 -g
-#DEBUG= -O1 -g3
-#
-#DEBUG= -O2
-#DEBUG= -O2 -g
-#DEBUG= -O2 -g3
-#DEBUG= -O2 -ipa
-#DEBUG= -O2 -g3 -ipa
-#
-#DEBUG= -O3
-#DEBUG= -O3 -g
-DEBUG= -O3 -g3
-#DEBUG= -O3 -ipa
-#DEBUG= -O3 -g3 -ipa
-#
-#DEBUG= -g
-#DEBUG= -g3
-#DEBUG= -gx
-#DEBUG= -WM,-g
-#
-#DEBUG= -O2 -gstabs+ -D_WIN32
-
-# Some systems require one to use ranlib to add a symbol table to
-# a *.a link library.  Set RANLIB to the utility that performs this
-# action.  Set RANLIB to : if your system does not need such a utility.
-#
-RANLIB=ranlib
-#RANLIB=:
-
-# Normally certain files depend on the Makefile.  If the Makefile is
-# changed, then certain steps should be redone.	 If MAKE_FILE is
-# set to Makefile, then these files will depend on Makefile.  If
-# MAKE_FILE is empty, then they wont.
-#
-# If in doubt, set MAKE_FILE to Makefile
-#
-MAKE_FILE= Makefile
-#MAKE_FILE=
-
-# If you do not wish to use purify, set PURIFY to an empty string.
-#
-# If in doubt, use PURIFY=
-#
-#PURIFY= purify
-#PURIFY= purify -m71-engine
-#PURIFY= purify -logfile=pure.out
-#PURIFY= purify -m71-engine -logfile=pure.out
-PURIFY=
-
-# If you want to use a debugging link library such as a malloc debug link
-# library, or need to add special ld flags after the calc link libraries
-# are included, set ${LD_DEBUG} below.
-#
-# If in doubt, set LD_DEBUG to empty.
-#
-#LD_DEBUG= -lmalloc_cv
-LD_DEBUG=
-
-# When doing a:
-#
-#	make check
-#	make chk
-#	make debug
-#
-# the ${CALC_ENV} is used to supply the proper environment variables
-# to calc.  Most people will simply need 'CALCPATH=./cal' to ensure
-# that these debug rules will only use calc resource files under the
-# local source directory.  The longer lines (with MALLOC_VERBOSE=1 ...)
-# are useful for SGI IRIX people who have 'WorkShop Performance Tools'
-# and who also set 'LD_DEBUG= -lmalloc_cv' above.
-#
-# If in doubt, use CALC_ENV= CALCPATH=./cal.
-#
-CALC_ENV= CALCPATH=./cal
-#CALC_ENV= CALCPATH=./cal MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
-#	  MALLOC_FASTCHK=1 MALLOC_FULLWARN=1
-#CALC_ENV= CALCPATH=./cal MALLOC_VERBOSE=1 MALLOC_TRACING=1 \
-#	  MALLOC_FASTCHK=1 MALLOC_FULLWARN=1 MALLOC_CLEAR_FREE=1 \
-#	  MALLOC_CLEAR_MALLOC=1
-
-# By default, custom builtin functions may only be executed if calc
-# is given the -C option.  This is because custom builtin functions
-# may invoke non-standard or non-portable code.	 One may completely
-# disable custom builtin functions by not compiling any of code
-#
-# ALLOW_CUSTOM= -DCUSTOM	# allow custom only if -C is given
-# ALLOW_CUSTOM= -UCUSTOM	# disable custom even if -C is given
-#
-# If in doubt, use ALLOW_CUSTOM= -DCUSTOM
-#
-ALLOW_CUSTOM= -DCUSTOM
-#ALLOW_CUSTOM= -UCUSTOM
-
-
-# Some out of date operating systems require / want an executable to
-# end with a certain file extension.  Some compile systems such as
-# Cygwin build calc as calc.exe.  The EXT variable is used to denote
-# the extension required by such.
-#
-# EXT=				# normal Un*x / Linux / GNU/Linux systems
-# EXT=.exe			# Windows / Cygwin
-#
-# If in doubt, use EXT=
-#
-EXT=
-#EXT=.exe
-
-# The default calc versions
-#
-VERSION= 2.14.3.1
-
-# Names of shared libraries with versions
-#
-LIB_EXT= .so
-LIB_EXT_VERSION= ${LIB_EXT}.${VERSION}
-
-# standard tools
-#
-AR= ar
-AWK= awk
-CHMOD= chmod
-CMP= cmp
-CO= co
-CP= cp
-DIFF= diff
-FMT= fmt
-GREP= grep
-LN= ln
-LS= ls
-MAKE= make
-MAKEDEPEND= makedepend
-MKDIR= mkdir
-MV= mv
-RM= rm
-RMDIR= rmdir
-SED= sed
-SORT= sort
-TAIL= tail
-TOUCH= touch
-TRUE= true
-
-# EXTRA_CFLAGS are flags given to ${CC} when compiling C files
-# EXTRA_LDFLAGS are flags given to ${CC} when linking progs
-#
-# Both CFLAGS and LDFLAGS are left blank in this Makefile by
-# default so that users may use them on the make command line
-# to always the way that C is compiled and files are linked
-# respectively.  For example:
-#
-#	make all EXTRA_CFLAGS="-DMAGIC" EXTRA_LDFLAGS="-lmagic"
-#
-# NOTE: These should be left blank in this Makefile to make it
-#       easier to add stuff on the command line.  If you want to
-#	to change the way calc is compiled by this Makefile, change
-#	the appropriate host target section below or a flag above.
-#
-EXTRA_CFLAGS=
-EXTRA_LDFLAGS=
-
-# COMMON_CFLAGS are the common ${CC} flags used for all progs, both
-#	    intermediate and final calc and calc related progs
-#
-COMMON_CFLAGS= -DCALC_SRC ${ALLOW_CUSTOM} ${CCWARN} ${CCMISC} ${EXTRA_CFLAGS}
-
-# COMMON_LDFLAGS are the common flags used for linking all progs, both
-#	     intermediate and final calc and calc related progs
-#
-COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
-
-###########################################
-# Set the default compile flags for ${CC} #
-###########################################
-
-# Required flags to compile C files for calc
-#
-# ICFLAGS are given to ${CC} for intermediate progs used to help compile calc
-# CFLAGS are given to ${CC} for calc progs other than intermediate progs
-#
-# NOTE: This does not work for: make-XYZ-only and BLD_TYPE != make-XYZ-only
-#
-ifeq ($(BLD_TYPE),calc-static-only)
-ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
-else	# ($(BLD_TYPE),calc-static-only)
-ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_SHARE}
-endif	# ($(BLD_TYPE),calc-static-only)
-CFLAGS= ${ICFLAGS} ${CCOPT}
-
-# Required flags to link files for calc
-#
-# ILDFLAGS for ${CC} in linking intermediate progs used to help compile calc
-# LDFLAGS for ${CC} in linking calc progs other than intermediate progs
-#
-ILDFLAGS= ${COMMON_LDFLAGS}
-LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
-
-##########################################################################
-#=-=-=-=-=- Be careful if you change something below this line -=-=-=-=-=#
-##########################################################################
-
-# Host targets that are shared in common with both Makefile
-# and custom/Makefile (if ALLOW_CUSTOM is -DCUSTOM).
-#
-TARGET_MKF= ../Makefile.target
-include ${TARGET_MKF}
 
 # These .c files are required for the main custom interface and
 # for the custom support functions for libcustcalc${LIB_EXT_VERSION}.
@@ -646,14 +216,24 @@ CALC_STATIC_LIBCUSTCALC= libcustcalc.a
 #
 TARGETS= ${BLD_TYPE}
 
-###
-#
-# The main reason for this Makefile	:-)
-#
-###
+
+############################################################
+# Allow Makefile.local to change any of the above settings #
+############################################################
+include ${LOCAL_MKF}
+
+
+###########################################
+# all - First and default Makefile target #
+###########################################
 
 all: ${TARGETS} ${INSTALL_H_SRC} ${CUSTOM_CALC_FILES} \
 	${CUSTOM_HELP} ${MAKE_FILE} .all
+
+
+###############################
+# additional Makefile targets #
+###############################
 
 calc-dynamic-only: ${CUSTCALC_OBJ} ${CALC_DYNAMIC_LIBCUSTCALC}
 
@@ -673,12 +253,6 @@ libcustcalc${LIB_EXT_VERSION}: ${CUSTCALC_OBJ} ${MAKE_FILE}
 
 c_sysinfo.o: c_sysinfo.c ${MAKE_FILE}
 	${CC} ${CFLAGS} c_sysinfo.c -c
-
-##
-#
-# used by the upper level Makefile
-#
-##
 
 # to determine of we have done all
 #
