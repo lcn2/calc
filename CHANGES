@@ -84,8 +84,11 @@ The following are the changes from calc version 2.14.3.1 to date:
     Dropped the use of Makefile variable ${SET_INSTALL_NAME}.
     Under macOS it was always needed, elsewhere it was not.
 
+    Added Makefile variable ${VER} to holdthe calc major release version.
+    The calc major release version is a 3 level version (x.y.z).
+
     Under macOS, the current version of both libcalc and
-    libcustcalc are set to the current calc release version.
+    libcustcalc are set to the current calc major release version.
 
     Under macOS, to reduce dependency chains, we remove functions and
     data that are unreachable by the entry point or exported symbols.

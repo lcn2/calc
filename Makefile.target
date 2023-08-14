@@ -166,11 +166,11 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= ${ARCH_CFLAGS}
 LIBCALC_SHLIB= -dynamiclib -undefined dynamic_lookup \
     -install_name ${LIBDIR}/libcalc${LIB_EXT_VERSION} \
-    -current_version ${VERSION} \
+    -current_version ${VER} \
     ${ARCH_CFLAGS}
 LIBCUSTCALC_SHLIB= -dynamiclib -undefined dynamic_lookup \
     -install_name ${LIBDIR}/libcustcalc${LIB_EXT_VERSION} \
-    -current_version ${VERSION} \
+    -current_version ${VER} \
     ${ARCH_CFLAGS}
 
 # To reduce dependency chains under macOS, we remove functions and
