@@ -35,6 +35,8 @@ The following are the changes from calc version 2.14.3.1 to date:
     The calc version 2.14.3.0 is the last release that supported
     the Makefile.simple and custom/Makefile.simple files.
     Now, a make that supports makefile conditional syntax is required.
+    The simple target, a target that only was used for Makefile.simple
+    was removed.
 
     Moved makefile variables that configure calc and configure how to
     compile calc from Makefile into a new Makefile.config file.
@@ -47,10 +49,11 @@ The following are the changes from calc version 2.14.3.1 to date:
 
     Now, the Makefile.config file will consistently configure
     calc and how calc is compiled and built by all calc Makefiles.
+    The custom/Makefile no longer includes Makefile.
 
-    The platform target section from the old Makefile has been moved to
-    a new file, Makefile.target.  The custom/Makefile no longer includes
-    Makefile.
+    The platform target section from the old Makefile has been moved
+    to a new file, Makefile.target.  Improved the format and comments
+    in target information.
 
     The Makeifle includes the Makefile.target file.
     The cal/Makeifle includes the Makefile.target file.
@@ -78,8 +81,15 @@ The following are the changes from calc version 2.14.3.1 to date:
     of the $(ALLOW_CUSTOM} Makefile variable.  However when CUSTOM
     is undefined, the bulk of custom functions are not defined.
 
-    Added comments in Makefile.local for how to reduce dependency chains
-    under macOS.  XXX - this doesn't yet work so don't uncomment - XXX.
+    Dropped the use of Makefile variable ${SET_INSTALL_NAME}.
+    Under macOS it was always needed, elsewhere it was not.
+
+    Under macOS, the current version of both libcalc and
+    libcustcalc are set to the current calc release version.
+
+    Under macOS, to reduce dependency chains, we remove functions and
+    data that are unreachable by the entry point or exported symbols.
+    In particular, the linker is run with "-dead_strip".
 
 
 The following are the changes from calc version 2.14.2.1 to 2.14.3.0:

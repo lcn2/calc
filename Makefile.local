@@ -85,13 +85,3 @@
 # LDFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
 # CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1
 ####
-
-####
-# To reduce dependency chains under macOS:
-#
-# This comment block was tested under:
-#
-#	macOS 13.5 with clang version 14.0.3 (clang-1403.0.22.14.1)
-#
-# LDFLAGS+= -Wl,-dead_strip_dylibs -Wl,-dead_strip
-####
