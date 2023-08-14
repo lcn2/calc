@@ -238,7 +238,7 @@ The file, Makefile.target, contains information about various platforms.
 The current list of targets in Makefile.target are:
 
 - Linux target
-- Apple macOS / Darwin target 
+- Apple macOS / Darwin target
 - FreeBSD target
 - OpenBSD target
 - Cygwin target
