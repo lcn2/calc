@@ -84,7 +84,6 @@ include ${TARGET_MKF}
 #=-=-=-=-=- Be careful if you change something below this line -=-=-=-=-=#
 ##########################################################################
 
-
 # Makefile debug
 #
 # Q=@	do not echo internal Makefile actions (quiet mode)
