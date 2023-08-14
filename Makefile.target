@@ -1,0 +1,523 @@
+#!/usr/bin/env make
+#
+# Makefile.target - platform target section
+#
+# Copyright (C) 2023  Landon Curt Noll
+#
+# Suggestion: Read the HOWTO.INSTALL file.
+#
+# Calc is open software; you can redistribute it and/or modify it under
+# the terms of version 2.1 of the GNU Lesser General Public License
+# as published by the Free Software Foundation.
+#
+# Calc is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+# Public License for more details.
+#
+# A copy of version 2.1 of the GNU Lesser General Public License is
+# distributed with calc under the filename COPYING-LGPL.  You should have
+# received a copy with calc; if not, write to Free Software Foundation, Inc.
+# 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+
+#######################################################################
+# NOTE: These lines are included by both Makefile and custom/Makefile #
+#######################################################################
+
+##################################################################################
+#-=-=-=-=-=- platform target section - targets that override defaults -=-=-=-=-=-#
+##################################################################################
+
+# Common values set in targets
+#
+# BLD_TYPE determines if calc is built with static and/or dynamic libs.
+#	       Set this value to one of:
+#
+#	BLD_TYPE= calc-dynamic-only
+#	BLD_TYPE= calc-static-only
+#
+# CC_SHARE are flags given to ${CC} to build .o files suitable for shared libs
+# DEFAULT_LIB_INSTALL_PATH is where calc programs look for calc shared libs
+# LD_SHARE are common flags given to ${CC} to link with shared libraries
+# LIBCALC_SHLIB are flags given to ${CC} to build libcalc shared libraries
+# LIBCUSTCALC_SHLIB are flags given to ${CC} to build libcustcalc shared lib
+#
+#	NOTE: The above 5 values are unused if BLD_TYPE= calc-static-only
+#
+# CC_STATIC are flags given to ${CC} to build .o files suitable for static libs
+# LD_STATIC are common flags given to ${CC} to link with static libraries
+# LIBCALC_STATIC are flags given to ${CC} to build libcalc static libraries
+# LIBCUSTCALC_STATIC are flags given to ${CC} to build libcustcalc static lib
+#
+#	NOTE: The above 4 values are unused if BLD_TYPE= calc-dynamic-only
+#
+# CCOPT are flags given to ${CC} for optimization
+# CCWARN are flags given to ${CC} for warning message control
+#
+# The following are given to ${CC}:
+#
+#	WNO_IMPLICT
+#	WNO_ERROR_LONG_LONG
+#	WNO_LONG_LONG
+#
+# when compiling special .o files that may need special compile options:
+#
+#	NOTE: These flags simply turn off certain compiler warnings,
+#	      which is useful only when CCWERR is set to -Werror.
+#
+#	NOTE: If your compiler does not have these -Wno files, just
+#	      set these variables to nothing as in:
+#
+#		WNO_IMPLICT=
+#		WNO_ERROR_LONG_LONG=
+#		WNO_LONG_LONG=
+#
+# CCWERR are flags given to ${CC} to make warnings fatal errors
+#	NOTE: CCWERR is only set in development Makefiles and must only be
+#	      used with ${CC}, not ${LCC}.  If you do not want the compiler
+#	      to abort on warnings, then leave CCWERR blank.
+# CCMISC are misc flags given to ${CC}
+#
+# CCBAN is given to ${CC} in order to control if banned.h is in effect.
+#	NOTE: See where CCBAN is defined above for details.
+#
+# LCC is how the C compiler is invoked on locally executed intermediate programs
+# CC is how the C compiler is invoked (with an optional Purify)
+#
+# Specific target overrides or modifications to default values
+
+################
+# Linux target #
+################
+
+ifeq ($(target),Linux)
+#
+BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
+#
+CC_STATIC=
+LD_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+#
+# If you want to add flags to all compiler and linker
+# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
+# set ${COMMON_ADD}.
+#
+# For example to use gcc's -Werror to force warnings
+# to become errors, call make with:
+#
+#   make .. COMMON_ADD='-Werror'
+#
+# This facility requires a Gnu Makefile, or a make command
+# that understands the += make operand.
+#
+COMMON_CFLAGS+= ${COMMON_ADD}
+COMMON_LDFLAGS+= ${COMMON_ADD}
+#
+#CCWARN= -Wall
+CCWARN= -Wall -Wextra -pedantic
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+endif
+
+###############################
+# Apple macOS / Darwin target #
+###############################
+
+# For old Apple Power PC systems, we need to add:
+#
+#	-std=gnu99 -arch ppc
+#
+ifeq ($(arch),powerpc)
+COMMON_CFLAGS+= -std=gnu99
+COMMON_LDFLAGS+= -std=gnu99
+ARCH_CFLAGS+= -arch ppc
+endif
+
+ifeq ($(target),Darwin)
+#
+BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:${LIBDIR}:${PREFIX}/lib
+LD_SHARE= ${ARCH_CFLAGS}
+#SET_INSTALL_NAME= no
+SET_INSTALL_NAME= yes
+ifeq ($(SET_INSTALL_NAME),yes)
+LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
+    -install_name ${LIBDIR}/libcalc${LIB_EXT_VERSION} ${ARCH_CFLAGS}
+else
+LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
+    ${ARCH_CFLAGS}
+endif
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
+ifeq ($(SET_INSTALL_NAME),yes)
+LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
+    -install_name ${LIBDIR}/libcustcalc${LIB_EXT_VERSION} ${ARCH_CFLAGS}
+else
+LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
+    ${ARCH_CFLAGS}
+endif
+else
+LIBCUSTCALC_SHLIB=
+endif
+#
+CC_STATIC=
+LD_STATIC= ${ARCH_CFLAGS}
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+# If you want to add flags to all compiler and linker
+# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
+# set ${COMMON_ADD}.
+#
+# For example to use clang's -fsanitize for calc testing,
+# which requires a common set of flags to be passed to
+# every compile and link, then call make with:
+#
+#   make .. COMMON_ADD='-fsanitize=undefined -fsanitize=address'
+#
+# This facility requires a Gnu Makefile, or a make command
+# that understands the += make operand.
+#
+COMMON_CFLAGS+= ${COMMON_ADD}
+COMMON_LDFLAGS+= ${COMMON_ADD}
+#
+#CCWARN= -Wall
+CCWARN= -Wall -Wextra -pedantic
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC= ${ARCH_CFLAGS}
+#
+LCC= cc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+# Darwin dynamic shared lib filenames
+LIB_EXT:= .dylib
+LIB_EXT_VERSION:= .${VERSION}${LIB_EXT}
+# LDCONFIG not required on this platform, so we redefine it to an empty string
+LDCONFIG:=
+endif
+
+##################
+# FreeBSD target #
+##################
+
+ifeq ($(target),FreeBSD)
+#
+BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
+#
+CC_STATIC=
+LD_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+#
+# If you want to add flags to all compiler and linker
+# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
+# set ${COMMON_ADD}.
+#
+# For example to use gcc's -Werror to force warnings
+# to become errors, call make with:
+#
+#   make .. COMMON_ADD='-Werror'
+#
+# This facility requires a Gnu Makefile, or a make command
+# that understands the += make operand.
+#
+COMMON_CFLAGS+= ${COMMON_ADD}
+COMMON_LDFLAGS+= ${COMMON_ADD}
+#
+#CCWARN= -Wall
+CCWARN= -Wall -Wextra -pedantic
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+MAKE= gmake
+#
+endif
+
+##################
+# OpenBSD target #
+##################
+
+ifeq ($(target),OpenBSD)
+#
+BLD_TYPE= calc-dynamic-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
+#
+CC_STATIC=
+LD_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+#
+# If you want to add flags to all compiler and linker
+# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
+# set ${COMMON_ADD}.
+#
+# For example to use gcc's -Werror to force warnings
+# to become errors, call make with:
+#
+#   make .. COMMON_ADD='-Werror'
+#
+# This facility requires a Gnu Makefile, or a make command
+# that understands the += make operand.
+#
+COMMON_CFLAGS+= ${COMMON_ADD}
+COMMON_LDFLAGS+= ${COMMON_ADD}
+#
+#CCWARN= -Wall
+CCWARN= -Wall -Wextra -pedantic
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+MAKE= gmake
+#
+endif
+
+#################
+# Cygwin target #
+#################
+
+ifeq ($(target),Cygwin)
+#
+BLD_TYPE= calc-static-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
+#
+CC_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+LD_STATIC=
+#
+# If you want to add flags to all compiler and linker
+# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
+# set ${COMMON_ADD}.
+#
+# For example to use gcc's -Werror to force warnings
+# to become errors, call make with:
+#
+#   make .. COMMON_ADD='-Werror'
+#
+# This facility requires a Gnu Makefile, or a make command
+# that understands the += make operand.
+#
+COMMON_CFLAGS+= ${COMMON_ADD}
+COMMON_LDFLAGS+= ${COMMON_ADD}
+#
+#CCWARN= -Wall
+CCWARN= -Wall -Wextra -pedantic
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= cc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+endif
+
+#################
+# simple target #
+#################
+
+# NOTE: This is not a real host target.  It is just a best
+#	attempt is a generic host not otherwise found above.
+
+ifeq ($(target),simple)
+#
+BLD_TYPE= calc-static-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
+#
+CC_STATIC=
+LD_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+#
+#CCWARN= -Wall
+CCWARN= -Wall -Wextra -pedantic
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= cc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+#
+# The simple makefile forces the use of static ${CC} flags
+#
+# ICFLAGS are given to ${CC} for intermediate programs used to help compile calc
+# CFLAGS are given to ${CC} for calc programs other than intermediate programs
+# ILDFLAGS for ${CC} in linking intermediate programs used to help compile calc
+# LDFLAGS for ${CC} in linking calc programs other than intermediate programs
+#
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
+CFLAGS= ${ICFLAGS} ${CCOPT}
+#
+ILDFLAGS= ${COMMON_LDFLAGS} ${LD_STATIC}
+LDFLAGS= ${LD_DEBUG} ${ILDFLAGS} ${LIBCALC_STATIC} ${LIBCUSTCALC_STATIC}
+#
+endif
+
+###########################################
+# default target - (when target is empty) #
+###########################################
+
+# NOTE: This is the default generic host target.  Used when no other
+#	host target matches.
+
+ifeq ($(target),)
+#
+BLD_TYPE= calc-static-only
+#
+CC_SHARE= -fPIC
+DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
+LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
+    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
+LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
+LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
+else
+LIBCUSTCALC_SHLIB=
+endif
+#
+CC_STATIC=
+LIBCALC_STATIC=
+LIBCUSTCALC_STATIC=
+LD_STATIC=
+#
+# If you want to add flags to all compiler and linker
+# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
+# set ${COMMON_ADD}.
+#
+# For example to use gcc's -Werror to force warnings
+# to become errors, call make with:
+#
+#   make .. COMMON_ADD='-Werror'
+#
+# This facility requires a Gnu Makefile, or a make command
+# that understands the += make operand.
+#
+COMMON_CFLAGS+= ${COMMON_ADD}
+COMMON_LDFLAGS+= ${COMMON_ADD}
+#
+#CCWARN= -Wall
+CCWARN= -Wall -Wextra -pedantic
+WNO_IMPLICT= -Wno-implicit
+WNO_ERROR_LONG_LONG= -Wno-error=long-long
+WNO_LONG_LONG= -Wno-long-long
+CCWERR=
+CCOPT= ${DEBUG}
+CCMISC=
+#
+LCC= gcc
+CC= ${PURIFY} ${LCC} ${CCWERR}
+endif
+
+###########################################
+# Set the default compile flags for ${CC} #
+###########################################
+
+# Required flags to compile C files for calc
+#
+# ICFLAGS are given to ${CC} for intermediate programs used to help compile calc
+# CFLAGS are given to ${CC} for calc programs other than intermediate programs
+#
+# NOTE: This does not work for: make-XYZ-only and BLD_TYPE != make-XYZ-only
+#
+ifeq ($(BLD_TYPE),calc-static-only)
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
+else
+ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_SHARE}
+endif
+CFLAGS= ${ICFLAGS} ${CCOPT}
+
+# Required flags to link files for calc
+#
+# ILDFLAGS for ${CC} in linking intermediate programs used to help compile calc
+# LDFLAGS for ${CC} in linking calc programs other than intermediate programs
+#
+ILDFLAGS= ${COMMON_LDFLAGS}
+LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
+
+#######################################################################
+#-=-=-=-=-=- end of target section - only make rules below -=-=-=-=-=-#
+#######################################################################

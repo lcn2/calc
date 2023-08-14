@@ -4,13 +4,7 @@
 #
 # Copyright (C) 1999-2018,2021-2023  Landon Curt Noll
 #
-# SRC: Makefile - top level Makefile
-#
-#	The "# SRC: ... - ..." comment line above indicates
-#	the origin of this file.
-#
-# IMPORTANT: Please see the section on Makefiles near the
-#	     bottom of the HOWTO.INSTALL file.
+# Suggestion: Read the HOWTO.INSTALL file.
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of version 2.1 of the GNU Lesser General Public License
@@ -34,28 +28,15 @@
 #
 # calculator by David I. Bell with help/mods from others
 # Makefile by Landon Curt Noll
-#
 
 
-#if 0	/* start of skip for non-Gnu makefiles */
+# We do not support parallel make of calc.  We have found most
+# parallel make systems do not get the rule dependency order
+# correct, resulting in a failed attempt to compile calc.
 #
-ifndef EXCLUDE_FROM_CUSTOM_MAKEFILE
-###################################################
-# Begin skipping lines for the custom/Makefile    #
-#						  #
-# The lines in section are NOT used by the lower  #
-# level custom/Makefile's "include ../Makefile".  #
-#						  #
-# The section continues until the next line that  #
-# starts with a '# End skipping ..' comment line. #
-###################################################
-#endif	/* end of skip for non-Gnu makefiles */
-
-# Unfortunately due to the complex dependency issues between
-# Makefile, Makefile.ship and custom/Makefile, parallel GNU make
-# is NOT recommended.  Sorry.
-#
-# XXX - fix this - XXX
+# If you believe you have a way to get a parallel make of calc
+# to work, consider submitting a pull request with a
+# proposed change.
 #
 .NOTPARALLEL:
 
@@ -67,22 +48,20 @@ ifndef EXCLUDE_FROM_CUSTOM_MAKEFILE
 #
 #	make ...__optional_arguments_... target=value
 #
-#if 0	/* start of skip for non-Gnu makefiles */
 # Try uname -s if the target was not already set on the make command line
 #
 ifeq ($(target),)
 target=$(shell uname -s 2>/dev/null)
-endif
+endif	# ($(target),)
 ifeq ($(arch),)
 arch=$(shell uname -p 2>/dev/null)
-endif
+endif	# ($(arch),)
 ifeq ($(hardware),)
 hardware=$(shell uname -m 2>/dev/null)
-endif
+endif	# ($(hardware),)
 ifeq ($(OSNAME),)
 OSNAME=$(shell uname -o 2>/dev/null)
-endif
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# ($(OSNAME),)
 
 # The shell used by this Makefile
 #
@@ -103,21 +82,20 @@ endif
 #
 SHELL= bash
 #SHELL= sh
-#if 0	/* start of skip for non-Gnu makefiles */
+
+# Darwin shell default
 #
 ifeq ($(target),Darwin)
 SHELL:= /bin/sh
-endif
-#
+endif	# ($(target),Darwin)
+
 # If you are using Cygwin with MinGW64 packages
 # then we will also need to use the Cygwin runtime enviroment
 # and the calc Cygwin make target.
 ##
 ifeq ($(OSNAME),Cygwin)
 target:= Cygwin
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# ($(OSNAME),Cygwin)
 
 
 ##############################################################################
@@ -837,40 +815,27 @@ HAVE_STRLCAT=
 # However, if you are on macOS then set:
 #
 #	INCDIR= ${PREFIX}/include
-#if 0	/* start of skip for non-Gnu makefiles */
-#
 ifeq ($(target),Darwin)
 
 # determine default INCDIR for macOS
 #
 ifeq ($(arch),powerpc)
-#
 # Default location for old systems such as Mac OS X 10.6 Snow Leopard
-#
 INCDIR= /usr/include
-#
-else
-#
+else	# ($(arch),powerpc)
 # Modern macOS such as macOS 10.11.6 and later
-#
 INCDIR= $(shell xcrun --sdk macosx --show-sdk-path 2>/dev/null)/usr/include
-#
-endif
-
-else
-#
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# ($(arch),powerpc)
 
 # default INCDIR for non-macOS
+#
+else	# ($(target),Darwin)
+
 INCDIR= /usr/include
 #INCDIR= ${PREFIX}/include
 #INCDIR= /dev/env/DJDIR/include
 
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# ($(target),Darwin)
 
 # Where to install calc related things
 #
@@ -917,63 +882,27 @@ endif
 #	      could not mkdir under system locations, so macOS must now
 #	      use the ${PREFIX} tree.
 
-#if 0	/* start of skip for non-Gnu makefiles */
-#
+# defaults for macOS
 ifeq ($(target),Darwin)
-
-# default BINDIR for macOS
 BINDIR= ${PREFIX}/bin
+LIBDIR= ${PREFIX}/lib
+CALC_SHAREDIR= ${PREFIX}/share/calc
 
-else
-#
-#endif	/* end of skip for non-Gnu makefiles */
-
+# defaults for non-macOS
+else	# ($(target),Darwin)
 # default BINDIR for non-macOS
 BINDIR= /usr/bin
 #BINDIR= ${PREFIX}/bin
 #BINDIR= /dev/env/DJDIR/bin
-
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-endif
-
-ifeq ($(target),Darwin)
-
-# default LIBDIR for macOS
-LIBDIR= ${PREFIX}/lib
-
-else
-#
-#endif	/* end of skip for non-Gnu makefiles */
-
 # default LIBDIR for non-macOS
 LIBDIR= /usr/lib
 #LIBDIR= ${PREFIX}/lib
 #LIBDIR= /dev/env/DJDIR/lib
-
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-endif
-
-ifeq ($(target),Darwin)
-
-# default CALC_SHAREDIR for macOS
-CALC_SHAREDIR= ${PREFIX}/share/calc
-
-else
-#
-#endif	/* end of skip for non-Gnu makefiles */
-
 # default CALC_SHAREDIR for non-macOS
 CALC_SHAREDIR= /usr/share/calc
 #CALC_SHAREDIR= ${PREFIX}/lib/calc
 #CALC_SHAREDIR= /dev/env/DJDIR/share/calc
-
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# ($(target),Darwin)
 
 # NOTE: Do not set CALC_INCDIR to /usr/include or ${PREFIX}/include!!!
 #	Always be sure that the CALC_INCDIR path ends in /calc to avoid
@@ -1067,19 +996,11 @@ T=
 #MANDIR= ${PREFIX}/man/man1
 #MANDIR= /usr/man/man1
 #
-#if 0	/* start of skip for non-Gnu makefiles */
-#
 ifeq ($(target),Darwin)
 MANDIR= ${PREFIX}/share/man/man1
-else
-#
-#endif	/* end of skip for non-Gnu makefiles */
+else	# ($(target),Darwin)
 MANDIR= /usr/share/man/man1
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# ($(target),Darwin)
 #MANDIR= /dev/env/DJDIR/man/man1
 #MANDIR= /usr/man/u_man/man1
 #MANDIR= /usr/contrib/man/man1
@@ -1170,27 +1091,21 @@ ALLOW_CUSTOM= -DCUSTOM
 #
 # Select CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR} for DJGPP.
 #
-#if 0	/* start of skip for non-Gnu makefiles */
+ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
+CALCPATH= .:./cal:~/.cal:${T}${CALC_SHAREDIR}:${T}${CUSTOMCALDIR}
+else	# ($(ALLOW_CUSTOM),-DCUSTOM)
+CALCPATH= .:./cal:~/.cal:${T}${CALC_SHAREDIR}
+endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
+
+# When RPM_TOP is defined, we do not use ${T}
 #
 ifdef RPM_TOP
 ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-CALCPATH= .:./cal:~/.cal:${CALC_SHAREDIR}:${CUSTOMCALDIR}
-else
-CALCPATH= .:./cal:~/.cal:${CALC_SHAREDIR}
-endif
-else
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-#
-#endif	/* end of skip for non-Gnu makefiles */
-CALCPATH= .:./cal:~/.cal:${T}${CALC_SHAREDIR}:${T}${CUSTOMCALDIR}
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-else
-CALCPATH= .:./cal:~/.cal:${T}${CALC_SHAREDIR}
-endif
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
+CALCPATH:= .:./cal:~/.cal:${CALC_SHAREDIR}:${CUSTOMCALDIR}
+else	# ($(ALLOW_CUSTOM),-DCUSTOM)
+CALCPATH:= .:./cal:~/.cal:${CALC_SHAREDIR}
+endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
+endif	# RPM_TOP
 
 # If the $CALCRC environment variable is not defined, then the following
 # path will be searched for calc resource files.
@@ -1269,18 +1184,13 @@ READLINE_INCLUDE=
 #READLINE_INCLUDE= -I/usr/gnu/include
 #READLINE_INCLUDE= -I${PREFIX}/include
 
-#if 0   /* start of skip for non-Gnu makefiles */
-#
-#
 # Handle the case where macOS is being used with HomeBrew
 # # and using the readline, history, and ncurses libraries.
 # #
 ifneq ($(HOMEBREW_PREFIX),)
 READLINE_LIB:= -L${HOMEBREW_PREFIX}/opt/readline/lib -lreadline
 READLINE_INCLUDE:= -I${HOMEBREW_PREFIX}/opt/readline/include
-endif
-#
-#endif  /* end of skip for non-Gnu makefiles */
+endif	# ($(HOMEBREW_PREFIX),)
 
 # If $PAGER is not set, use this program to display a help file
 #
@@ -1336,10 +1246,19 @@ RANLIB=ranlib
 #
 MAKE_FILE= Makefile
 
+# Host targets that are shared in common with both Makefile
+# and custom/Makefile.
+#
+TARGET_MKF= Makefile.target
+
 # Local file that is included just prior to the first rule,
 # that allows one to override any values set in this Makefile.
 #
 LOC_MKF= Makefile.local
+
+# The set of Makefiles
+#
+MK_SET= ${MAKE_FILE} ${TARGET_MKF} ${LOC_MKF}
 
 # If you do not wish to use purify, set PURIFY to an empty string.
 #
@@ -1375,16 +1294,12 @@ LD_DEBUG=
 #
 #	CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=.:./custom DYLD_LIBRARY_PATH=.
 #
-#if 0   /* start of skip for non-Gnu makefiles */
-#
 ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help \
 	  CALCCUSTOMHELP=./custom
-else
+else	# ($(ALLOW_CUSTOM),-DCUSTOM)
 CALC_ENV= CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help
-endif
-#
-#endif  /* end of skip for non-Gnu makefiles */
+endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 
 # Some out of date operating systems require/want an executable to
 # end with a certain file extension.  Some compiler systems such as
@@ -1492,590 +1407,23 @@ ARCH_CFLAGS=
 # COMMON_CFLAGS are the common ${CC} flags used for all programs, both
 #	    intermediate and final calc and calc related programs
 #
-#if 0	/* start of skip for non-Gnu makefiles */
-#
 ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-#
-#endif	/* end of skip for non-Gnu makefiles */
-COMMON_CFLAGS= -DCALC_SRC ${ALLOW_CUSTOM} ${CCWARN} \
-    ${CCMISC} ${ARCH_CFLAGS} ${EXTRA_CFLAGS}
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-else
-COMMON_CFLAGS= -DCALC_SRC -UCUSTOM ${CCWARN} \
-    ${CCMISC} ${ARCH_CFLAGS} ${EXTRA_CFLAGS}
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
+COMMON_CFLAGS= -DCALC_SRC ${ALLOW_CUSTOM} ${CCWARN} ${CCMISC} ${ARCH_CFLAGS} ${EXTRA_CFLAGS}
+else	# ($(ALLOW_CUSTOM),-DCUSTOM)
+COMMON_CFLAGS= -DCALC_SRC -UCUSTOM ${CCWARN} ${CCMISC} ${ARCH_CFLAGS} ${EXTRA_CFLAGS}
+endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 
 # COMMON_LDFLAGS are the common flags used for linking all programs, both
 #	     intermediate and final calc and calc related programs
 #
 COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
 
-###################################################
-# End skipping lines for the custom/Makefile      #
-#						  #
-# The lines in section are NOT used by the lower  #
-# level custom/Makefile's "include ../Makefile".  #
-#						  #
-# The section starts with the next line that has  #
-# a line that starts with '# Begin skipping ..'.  #
-###################################################
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
-# include start from top Makefile - keep this line
-######################################################
-# NOTE: Start of section from the middle of Makefile #
-#						     #
-# These lines are shared in common with the lower    #
-# custom/Makefile. That is, until the comment line   #
-# that starts with '# NOTE: End of section ..' line, #
-# these Makefile lines are used in BOTH Makefiles.   #
-######################################################
-
-##############################################################################
-#-=-=-=-=-=- host target section - targets that override defaults -=-=-=-=-=-#
-##############################################################################
-
-# Common values set in targets
-#
-# BLD_TYPE determines if calc is built with static and/or dynamic libs.
-#	       Set this value to one of:
-#
-#	BLD_TYPE= calc-dynamic-only
-#	BLD_TYPE= calc-static-only
-#
-# CC_SHARE are flags given to ${CC} to build .o files suitable for shared libs
-# DEFAULT_LIB_INSTALL_PATH is where calc programs look for calc shared libs
-# LD_SHARE are common flags given to ${CC} to link with shared libraries
-# LIBCALC_SHLIB are flags given to ${CC} to build libcalc shared libraries
-# LIBCUSTCALC_SHLIB are flags given to ${CC} to build libcustcalc shared lib
-#
-#	NOTE: The above 5 values are unused if BLD_TYPE= calc-static-only
-#
-# CC_STATIC are flags given to ${CC} to build .o files suitable for static libs
-# LD_STATIC are common flags given to ${CC} to link with static libraries
-# LIBCALC_STATIC are flags given to ${CC} to build libcalc static libraries
-# LIBCUSTCALC_STATIC are flags given to ${CC} to build libcustcalc static lib
-#
-#	NOTE: The above 4 values are unused if BLD_TYPE= calc-dynamic-only
-#
-# CCOPT are flags given to ${CC} for optimization
-# CCWARN are flags given to ${CC} for warning message control
-#
-# The following are given to ${CC}:
-#
-#	WNO_IMPLICT
-#	WNO_ERROR_LONG_LONG
-#	WNO_LONG_LONG
-#
-# when compiling special .o files that may need special compile options:
-#
-#	NOTE: These flags simply turn off certain compiler warnings,
-#	      which is useful only when CCWERR is set to -Werror.
-#
-#	NOTE: If your compiler does not have these -Wno files, just
-#	      set these variables to nothing as in:
-#
-#		WNO_IMPLICT=
-#		WNO_ERROR_LONG_LONG=
-#		WNO_LONG_LONG=
-#
-# CCWERR are flags given to ${CC} to make warnings fatal errors
-#	NOTE: CCWERR is only set in development Makefiles and must only be
-#	      used with ${CC}, not ${LCC}.  If you do not want the compiler
-#	      to abort on warnings, then leave CCWERR blank.
-# CCMISC are misc flags given to ${CC}
-#
-# CCBAN is given to ${CC} in order to control if banned.h is in effect.
-#	NOTE: See where CCBAN is defined above for details.
-#
-# LCC is how the C compiler is invoked on locally executed intermediate programs
-# CC is how the C compiler is invoked (with an optional Purify)
-#
-# Specific target overrides or modifications to default values
-
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-################
-# Linux target #
-################
-
-ifeq ($(target),Linux)
-#
-BLD_TYPE= calc-dynamic-only
-#
-CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
-    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
-#
-CC_STATIC=
-LD_STATIC=
-LIBCALC_STATIC=
-LIBCUSTCALC_STATIC=
-#
-# If you want to add flags to all compiler and linker
-# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
-# set ${COMMON_ADD}.
-#
-# For example to use gcc's -Werror to force warnings
-# to become errors, call make with:
-#
-#   make .. COMMON_ADD='-Werror'
-#
-# This facility requires a Gnu Makefile, or a make command
-# that understands the += make operand.
-#
-COMMON_CFLAGS+= ${COMMON_ADD}
-COMMON_LDFLAGS+= ${COMMON_ADD}
-#
-#CCWARN= -Wall
-CCWARN= -Wall -Wextra -pedantic
-WNO_IMPLICT= -Wno-implicit
-WNO_ERROR_LONG_LONG= -Wno-error=long-long
-WNO_LONG_LONG= -Wno-long-long
-CCWERR=
-CCOPT= ${DEBUG}
-CCMISC=
-#
-LCC= gcc
-CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-endif
 
 ###############################
-# Apple macOS / Darwin target #
+# host target section include #
 ###############################
+include ${TARGET_MKF}
 
-# For old Apple Power PC systems, we need to add:
-#
-#	-std=gnu99 -arch ppc
-#
-ifeq ($(arch),powerpc)
-COMMON_CFLAGS+= -std=gnu99
-COMMON_LDFLAGS+= -std=gnu99
-ARCH_CFLAGS+= -arch ppc
-endif
-
-ifeq ($(target),Darwin)
-#
-BLD_TYPE= calc-dynamic-only
-#
-CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= ${ARCH_CFLAGS}
-#SET_INSTALL_NAME= no
-SET_INSTALL_NAME= yes
-ifeq ($(SET_INSTALL_NAME),yes)
-LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
-    -install_name ${LIBDIR}/libcalc${LIB_EXT_VERSION} ${ARCH_CFLAGS}
-else
-LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
-    ${ARCH_CFLAGS}
-endif
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-ifeq ($(SET_INSTALL_NAME),yes)
-LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
-    -install_name ${LIBDIR}/libcustcalc${LIB_EXT_VERSION} ${ARCH_CFLAGS}
-else
-LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
-    ${ARCH_CFLAGS}
-endif
-else
-LIBCUSTCALC_SHLIB=
-endif
-#
-CC_STATIC=
-LD_STATIC= ${ARCH_CFLAGS}
-LIBCALC_STATIC=
-LIBCUSTCALC_STATIC=
-# If you want to add flags to all compiler and linker
-# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
-# set ${COMMON_ADD}.
-#
-# For example to use clang's -fsanitize for calc testing,
-# which requires a common set of flags to be passed to
-# every compile and link, then call make with:
-#
-#   make .. COMMON_ADD='-fsanitize=undefined -fsanitize=address'
-#
-# This facility requires a Gnu Makefile, or a make command
-# that understands the += make operand.
-#
-COMMON_CFLAGS+= ${COMMON_ADD}
-COMMON_LDFLAGS+= ${COMMON_ADD}
-#
-#CCWARN= -Wall
-CCWARN= -Wall -Wextra -pedantic
-WNO_IMPLICT= -Wno-implicit
-WNO_ERROR_LONG_LONG= -Wno-error=long-long
-WNO_LONG_LONG= -Wno-long-long
-CCWERR=
-CCOPT= ${DEBUG}
-CCMISC= ${ARCH_CFLAGS}
-#
-LCC= cc
-CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-# Darwin dynamic shared lib filenames
-LIB_EXT:= .dylib
-LIB_EXT_VERSION:= .${VERSION}${LIB_EXT}
-# LDCONFIG not required on this platform, so we redefine it to an empty string
-LDCONFIG:=
-endif
-
-##################
-# FreeBSD target #
-##################
-
-########################################################################
-# NOTE: You MUST either use gmake (GNU Make) or you must try your luck #
-#       with Makefile.simple and custom/Makefile.simple versions.      #
-#	See HOWTO.INSTALL for more information.                        #
-########################################################################
-
-ifeq ($(target),FreeBSD)
-#
-BLD_TYPE= calc-dynamic-only
-#
-CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
-    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
-#
-CC_STATIC=
-LD_STATIC=
-LIBCALC_STATIC=
-LIBCUSTCALC_STATIC=
-#
-# If you want to add flags to all compiler and linker
-# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
-# set ${COMMON_ADD}.
-#
-# For example to use gcc's -Werror to force warnings
-# to become errors, call make with:
-#
-#   make .. COMMON_ADD='-Werror'
-#
-# This facility requires a Gnu Makefile, or a make command
-# that understands the += make operand.
-#
-COMMON_CFLAGS+= ${COMMON_ADD}
-COMMON_LDFLAGS+= ${COMMON_ADD}
-#
-#CCWARN= -Wall
-CCWARN= -Wall -Wextra -pedantic
-WNO_IMPLICT= -Wno-implicit
-WNO_ERROR_LONG_LONG= -Wno-error=long-long
-WNO_LONG_LONG= -Wno-long-long
-CCWERR=
-CCOPT= ${DEBUG}
-CCMISC=
-#
-LCC= gcc
-CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-MAKE= gmake
-#
-endif
-
-##################
-# OpenBSD target #
-##################
-
-########################################################################
-# NOTE: You MUST either use gmake (GNU Make) or you must try your luck #
-#       with Makefile.simple and custom/Makefile.simple versions.      #
-#	See HOWTO.INSTALL for more information.                        #
-########################################################################
-
-ifeq ($(target),OpenBSD)
-#
-BLD_TYPE= calc-dynamic-only
-#
-CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
-    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
-#
-CC_STATIC=
-LD_STATIC=
-LIBCALC_STATIC=
-LIBCUSTCALC_STATIC=
-#
-# If you want to add flags to all compiler and linker
-# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
-# set ${COMMON_ADD}.
-#
-# For example to use gcc's -Werror to force warnings
-# to become errors, call make with:
-#
-#   make .. COMMON_ADD='-Werror'
-#
-# This facility requires a Gnu Makefile, or a make command
-# that understands the += make operand.
-#
-COMMON_CFLAGS+= ${COMMON_ADD}
-COMMON_LDFLAGS+= ${COMMON_ADD}
-#
-#CCWARN= -Wall
-CCWARN= -Wall -Wextra -pedantic
-WNO_IMPLICT= -Wno-implicit
-WNO_ERROR_LONG_LONG= -Wno-error=long-long
-WNO_LONG_LONG= -Wno-long-long
-CCWERR=
-CCOPT= ${DEBUG}
-CCMISC=
-#
-LCC= gcc
-CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-MAKE= gmake
-#
-endif
-
-#################
-# Cygwin target #
-#################
-
-ifeq ($(target),Cygwin)
-#
-BLD_TYPE= calc-static-only
-#
-CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
-    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
-#
-CC_STATIC=
-LIBCALC_STATIC=
-LIBCUSTCALC_STATIC=
-LD_STATIC=
-#
-# If you want to add flags to all compiler and linker
-# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
-# set ${COMMON_ADD}.
-#
-# For example to use gcc's -Werror to force warnings
-# to become errors, call make with:
-#
-#   make .. COMMON_ADD='-Werror'
-#
-# This facility requires a Gnu Makefile, or a make command
-# that understands the += make operand.
-#
-COMMON_CFLAGS+= ${COMMON_ADD}
-COMMON_LDFLAGS+= ${COMMON_ADD}
-#
-#CCWARN= -Wall
-CCWARN= -Wall -Wextra -pedantic
-WNO_IMPLICT= -Wno-implicit
-WNO_ERROR_LONG_LONG= -Wno-error=long-long
-WNO_LONG_LONG= -Wno-long-long
-CCWERR=
-CCOPT= ${DEBUG}
-CCMISC=
-#
-LCC= cc
-CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-endif
-
-#######################################################
-# simple target - values used to form Makefile.simple #
-#######################################################
-
-# NOTE: This is not a real host target.  The simple target
-#	exists only to form the Makefile.simple file.
-
-ifeq ($(target),simple)
-#
-#endif	/* end of skip for non-Gnu makefiles */
-#
-BLD_TYPE= calc-static-only
-#
-CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
-    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-#
-CC_STATIC=
-LD_STATIC=
-LIBCALC_STATIC=
-LIBCUSTCALC_STATIC=
-#
-#CCWARN= -Wall
-CCWARN= -Wall -Wextra -pedantic
-WNO_IMPLICT= -Wno-implicit
-WNO_ERROR_LONG_LONG= -Wno-error=long-long
-WNO_LONG_LONG= -Wno-long-long
-CCWERR=
-CCOPT= ${DEBUG}
-CCMISC=
-#
-LCC= cc
-CC= ${PURIFY} ${LCC} ${CCWERR}
-#
-# The simple makefile forces the use of static ${CC} flags
-#
-# ICFLAGS are given to ${CC} for intermediate programs used to help compile calc
-# CFLAGS are given to ${CC} for calc programs other than intermediate programs
-# ILDFLAGS for ${CC} in linking intermediate programs used to help compile calc
-# LDFLAGS for ${CC} in linking calc programs other than intermediate programs
-#
-ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
-CFLAGS= ${ICFLAGS} ${CCOPT}
-#
-ILDFLAGS= ${COMMON_LDFLAGS} ${LD_STATIC}
-LDFLAGS= ${LD_DEBUG} ${ILDFLAGS} ${LIBCALC_STATIC} ${LIBCUSTCALC_STATIC}
-#
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-endif
-
-###################################################
-# default target - when no specific target exists #
-###################################################
-
-# NOTE: This is the default generic host target.  Used when no other
-#	host target matches.
-
-ifeq ($(target),)
-#
-BLD_TYPE= calc-static-only
-#
-CC_SHARE= -fPIC
-DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
-LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
-    "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
-LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
-#
-CC_STATIC=
-LIBCALC_STATIC=
-LIBCUSTCALC_STATIC=
-LD_STATIC=
-#
-# If you want to add flags to all compiler and linker
-# run (via ${COMMON_CFLAGS} and ${COMMON_LDFLAGS}),
-# set ${COMMON_ADD}.
-#
-# For example to use gcc's -Werror to force warnings
-# to become errors, call make with:
-#
-#   make .. COMMON_ADD='-Werror'
-#
-# This facility requires a Gnu Makefile, or a make command
-# that understands the += make operand.
-#
-COMMON_CFLAGS+= ${COMMON_ADD}
-COMMON_LDFLAGS+= ${COMMON_ADD}
-#
-#CCWARN= -Wall
-CCWARN= -Wall -Wextra -pedantic
-WNO_IMPLICT= -Wno-implicit
-WNO_ERROR_LONG_LONG= -Wno-error=long-long
-WNO_LONG_LONG= -Wno-long-long
-CCWERR=
-CCOPT= ${DEBUG}
-CCMISC=
-#
-LCC= gcc
-CC= ${PURIFY} ${LCC} ${CCWERR}
-endif
-
-###########################################
-# Set the default compile flags for ${CC} #
-###########################################
-
-# Required flags to compile C files for calc
-#
-# ICFLAGS are given to ${CC} for intermediate programs used to help compile calc
-# CFLAGS are given to ${CC} for calc programs other than intermediate programs
-#
-# NOTE: This does not work for: make-XYZ-only and BLD_TYPE != make-XYZ-only
-#
-ifeq ($(BLD_TYPE),calc-static-only)
-ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
-else
-ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_SHARE}
-endif
-CFLAGS= ${ICFLAGS} ${CCOPT}
-
-# Required flags to link files for calc
-#
-# ILDFLAGS for ${CC} in linking intermediate programs used to help compile calc
-# LDFLAGS for ${CC} in linking calc programs other than intermediate programs
-#
-ILDFLAGS= ${COMMON_LDFLAGS}
-LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
-#
-#endif	/* end of skip for non-Gnu makefiles */
-
-#######################################################################
-#-=-=-=-=-=- end of target section - only make rules below -=-=-=-=-=-#
-#######################################################################
-
-######################################################
-# NOTE: End of section from the middle of Makefile   #
-#						     #
-# These lines are shared in common with the lower    #
-# custom/Makefile. That is, starting with the line   #
-# that starts with '# NOTE: End of section ..' line, #
-# these Makefile lines are used in BOTH Makefiles.   #
-######################################################
-# include end from top Makefile - keep this line
-
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-ifndef EXCLUDE_FROM_CUSTOM_MAKEFILE
-###################################################
-# Begin 2nd skip of lines for the custom/Makefile #
-#						  #
-# The lines in section are NOT used by the lower  #
-# level custom/Makefile's "include ../Makefile".  #
-#						  #
-# The section continues until the next line that  #
-# starts with the '# End 2nd skip ..' line.       #
-###################################################
-#
-#endif	/* end of skip for non-Gnu makefiles */
-# end of host target cut - Do not remove this line
 
 ##########################################################################
 #=-=-=-=-=- Be careful if you change something below this line -=-=-=-=-=#
@@ -2464,69 +1812,37 @@ LICENSE= COPYING COPYING-LGPL
 
 # These files are found (but not built) in the distribution
 #
-DISTLIST= ${C_SRC} ${H_SRC} ${MAKE_FILE} BUGS CHANGES LIBRARY README.FIRST \
+DISTLIST= ${C_SRC} ${H_SRC} ${MK_SET} BUGS CHANGES LIBRARY README.FIRST \
 	  README.WINDOWS calc.man HOWTO.INSTALL ${UTIL_MISC_SRC} ${LICENSE} \
 	  sample.README calc.spec.in rpm.mk README.md QUESTIONS CONTRIB-CODE \
-	  ${LOC_MKF} Makefile.simple README.RELEASE
+	  README.RELEASE
 
 # These files are used to make (but not build) a calc .a link library
 #
-CALCLIBLIST= ${LIBSRC} ${UTIL_C_SRC} ${LIB_H_SRC} ${MAKE_FILE} \
+CALCLIBLIST= ${LIBSRC} ${UTIL_C_SRC} ${LIB_H_SRC} ${MK_SET} \
 	     ${UTIL_MISC_SRC} BUGS CHANGES LIBRARY
 
 # complete list of .o files
 #
 OBJS= ${LIBOBJS} ${CALCOBJS} ${UTIL_OBJS} ${SAMPLE_OBJ}
 
-# static library build
-#
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-#
-#endif	/* end of skip for non-Gnu makefiles */
-CALC_STATIC_LIBS= libcalc.a libcustcalc.a
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-else
-CALC_STATIC_LIBS= libcalc.a
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
-
+# Static library build
 # Libraries created and used to build calc
-#
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-#
-#endif	/* end of skip for non-Gnu makefiles */
-CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERSION} libcustcalc${LIB_EXT_VERSION}
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-else
-CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERSION}
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
-
 # Symlinks of dynamic shared libraries
-#
-#if 0	/* start of skip for non-Gnu makefiles */
+# Early targets - things needed before the main build phase can begin
 #
 ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-#
-#
-#endif	/* end of skip for non-Gnu makefiles */
+CALC_STATIC_LIBS= libcalc.a libcustcalc.a
+CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERSION} libcustcalc${LIB_EXT_VERSION}
 SYM_DYNAMIC_LIBS= libcalc${LIB_EXT} \
 	libcustcalc${LIB_EXT_VERSION}  libcustcalc${LIB_EXT}
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-else
+EARLY_TARGETS= hsrc .hsrc custom/.all custom/Makefile
+else	# ($(ALLOW_CUSTOM),-DCUSTOM)
+CALC_STATIC_LIBS= libcalc.a
+CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERSION}
 SYM_DYNAMIC_LIBS= libcalc${LIB_EXT}
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
+EARLY_TARGETS= hsrc .hsrc
+endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 
 # list of sample programs that need to be built to satisfy sample rule
 #
@@ -2555,27 +1871,10 @@ DYNAMIC_FIRST_TARGETS= ${LICENSE} .dynamic
 #
 STATIC_FIRST_TARGETS= ${LICENSE} .static
 
-# early targets - things needed before the main build phase can begin
-#
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-#
-#endif	/* end of skip for non-Gnu makefiles */
-EARLY_TARGETS= hsrc .hsrc custom/.all custom/Makefile
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-else
-EARLY_TARGETS= hsrc .hsrc
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
-
 # late targets - things needed after the main build phase is complete
 #
 LATE_TARGETS= calc.1 calc.usage \
-	      cal/.all help/.all help/builtin cscript/.all \
-	      Makefile.simple
+	      cal/.all help/.all help/builtin cscript/.all
 
 # complete list of targets
 #
@@ -2587,16 +1886,12 @@ PHONY= all calcliblist calc_version check chk clobber debug depend distdir \
 	distlist hsrc install inst_files mkdebug rpm sample splint tags \
 	uninstall win32_hsrc
 
-#if 0	/* start of skip for non-Gnu makefiles */
-#
 ###
 #
 # Allow Makefile.local to override any of the above settings
 #
 ###
 include ${LOC_MKF}
-#
-#endif	/* end of skip for non-Gnu makefiles */
 
 ###
 #
@@ -2631,7 +1926,7 @@ calc-dynamic-only: ${DYNAMIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 		   ${CALC_DYNAMIC_LIBS} ${SYM_DYNAMIC_LIBS} calc${EXT} \
 		   ${SAMPLE_TARGETS} ${LATE_TARGETS}
 
-.dynamic: ${MAKE_FILE} ${LOC_MKF}
+.dynamic: ${MK_SET}
 	${Q} d="calc-dynamic-only"; \
 	    s="calc-static-only"; \
 	    if [ "${BLD_TYPE}" != "$$d" ]; then \
@@ -2683,7 +1978,7 @@ calc-static-only: ${STATIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 	    fi; \
 	done
 
-.static: ${MAKE_FILE} ${LOC_MKF}
+.static: ${MK_SET}
 	${Q} d="calc-static-only"; \
 	    s="calc-static-only"; \
 	    if [ "${BLD_TYPE}" != "$$s" ]; then \
@@ -2723,12 +2018,12 @@ calc-static-only: ${STATIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 	done
 	 -${Q} ${TOUCH} $@
 
-calc${EXT}: .hsrc ${CALCOBJS} ${CALC_DYNAMIC_LIBS} ${MAKE_FILE} ${LOC_MKF}
+calc${EXT}: .hsrc ${CALCOBJS} ${CALC_DYNAMIC_LIBS} ${MK_SET}
 	${RM} -f $@
 	${CC} ${CALCOBJS} ${LDFLAGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
-libcalc${LIB_EXT_VERSION}: ${LIBOBJS} ver_calc${EXT} ${MAKE_FILE} ${LOC_MKF}
+libcalc${LIB_EXT_VERSION}: ${LIBOBJS} ver_calc${EXT} ${MK_SET}
 	${CC} ${LIBCALC_SHLIB} ${LIBOBJS} \
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o libcalc${LIB_EXT_VERSION}
 
@@ -2742,7 +2037,7 @@ libcalc${LIB_EXT}: libcalc${LIB_EXT_VERSION}
 #
 ###
 
-calc.1: calc.man ${MAKE_FILE} ${LOC_MKF}
+calc.1: calc.man ${MK_SET}
 	${RM} -f $@
 	${Q} echo forming calc.1 from calc.man
 	@${SED} -e 's:$${LIBDIR}:${LIBDIR}:g' \
@@ -2758,7 +2053,7 @@ calc.1: calc.man ${MAKE_FILE} ${LOC_MKF}
 	        -e 's,$${CALCRC},${CALCRC},g' < calc.man > calc.1
 	${Q} echo calc.1 formed
 
-calc.usage: calc.1 ${MAKE_FILE} ${LOC_MKF}
+calc.usage: calc.1 ${MK_SET}
 	${RM} -f $@
 	${Q} echo forming calc.usage from calc.1
 	${Q} if [ -z "${NROFF}" ]; then \
@@ -2777,11 +2072,11 @@ calc.usage: calc.1 ${MAKE_FILE} ${LOC_MKF}
 
 sample: ${SAMPLE_TARGETS}
 
-sample_rand${EXT}: sample_rand.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE} ${LOC_MKF}
+sample_rand${EXT}: sample_rand.o ${CALC_DYNAMIC_LIBS} ${MK_SET}
 	${CC} sample_rand.o ${LDFLAGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
-sample_many${EXT}: sample_many.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE} ${LOC_MKF}
+sample_many${EXT}: sample_many.o ${CALC_DYNAMIC_LIBS} ${MK_SET}
 	${CC} sample_many.o ${LDFLAGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
@@ -2791,15 +2086,15 @@ sample_many${EXT}: sample_many.o ${CALC_DYNAMIC_LIBS} ${MAKE_FILE} ${LOC_MKF}
 #
 ###
 
-hist.o: hist.c ${MAKE_FILE} ${LOC_MKF}
+hist.o: hist.c ${MK_SET}
 	${CC} ${CFLAGS} ${TERMCONTROL} ${USE_READLINE} ${READLINE_INCLUDE} \
 	    -c hist.c
 
-seed.o: seed.c ${MAKE_FILE} ${LOC_MKF}
+seed.o: seed.c ${MK_SET}
 	${CC} ${CFLAGS} ${WNO_IMPLICT} ${WNO_ERROR_LONG_LONG} \
 	    ${WNO_LONG_LONG} -c seed.c
 
-file.o: file.c ${MAKE_FILE} ${LOC_MKF}
+file.o: file.c ${MK_SET}
 	${CC} ${CFLAGS} ${WNO_ERROR_LONG_LONG} ${WNO_LONG_LONG} -c file.c
 
 ###
@@ -2824,7 +2119,7 @@ hsrc: ${BUILD_H_SRC} ${BUILD_C_SRC}
 	${Q} ${RM} -f .hsrc
 	-${Q} ${TOUCH} .hsrc
 
-conf.h: ${MAKE_FILE} ${LOC_MKF}
+conf.h: ${MK_SET}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -2848,48 +2143,24 @@ conf.h: ${MAKE_FILE} ${LOC_MKF}
 	${Q} echo '' >> $@
 	${Q} echo '/* the location of the help directory */' >> $@
 	${Q} echo '#if !defined(HELPDIR)' >> $@
-#if 0	/* start of skip for non-Gnu makefiles */
-#
 ifdef RPM_TOP
 	${Q} echo '#define HELPDIR "${HELPDIR}"' >> $@
-else
-#
-#endif	/* end of skip for non-Gnu makefiles */
+else	# RPM_TOP
 	${Q} echo '#define HELPDIR "${T}${HELPDIR}"' >> $@
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# RPM_TOP
 	${Q} echo '#endif /* HELPDIR */' >> $@
 	${Q} echo '' >> $@
-#if 0	/* start of skip for non-Gnu makefiles */
-#
 ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-#
-#endif	/* end of skip for non-Gnu makefiles */
 	${Q} echo '/* the location of the custom help directory */' >> $@
 	${Q} echo '#if !defined(CUSTOMHELPDIR)' >> $@
-#if 0	/* start of skip for non-Gnu makefiles */
-#
 ifdef RPM_TOP
 	${Q} echo '#define CUSTOMHELPDIR "${CUSTOMHELPDIR}"' >> $@
-else
-#
-#endif	/* end of skip for non-Gnu makefiles */
+else	# RPM_TOP
 	${Q} echo '#define CUSTOMHELPDIR "${T}${CUSTOMHELPDIR}"' >> $@
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# RPM_TOP
 	${Q} echo '#endif /* CUSTOMHELPDIR */' >> $@
 	${Q} echo '' >> $@
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 	${Q} echo '/* the default pager to use */' >> $@
 	${Q} echo '#if !defined(DEFAULTCALCPAGER)' >> $@
 	${Q} echo '#define DEFAULTCALCPAGER "${CALCPAGER}"' >> $@
@@ -2909,7 +2180,7 @@ endif
 	fi
 
 endian_calc.h: endian.c have_stdlib.h have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f endian.o endian${EXT} $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -2961,7 +2232,7 @@ endian_calc.h: endian.c have_stdlib.h have_unistd.h \
 	fi
 
 charbit.h: charbit.c have_limits.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f charbit.o charbit${EXT} $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -2997,7 +2268,7 @@ charbit.h: charbit.c have_limits.h \
 	fi
 
 longbits.h: longbits.c charbit.h have_unistd.h have_stdlib.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f longbits.o longbits${EXT} $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3027,7 +2298,7 @@ longbits.h: longbits.c charbit.h have_unistd.h have_stdlib.h \
 	    ${TRUE}; \
 	fi
 
-have_times.h: ${MAKE_FILE} ${LOC_MKF}
+have_times.h: ${MK_SET}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3093,7 +2364,7 @@ have_times.h: ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-have_stdlib.h: ${MAKE_FILE} ${LOC_MKF}
+have_stdlib.h: ${MK_SET}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3129,7 +2400,7 @@ have_stdlib.h: ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-have_unistd.h: ${MAKE_FILE} ${LOC_MKF}
+have_unistd.h: ${MK_SET}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3165,7 +2436,7 @@ have_unistd.h: ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-have_limits.h: ${MAKE_FILE} ${LOC_MKF}
+have_limits.h: ${MK_SET}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3201,7 +2472,7 @@ have_limits.h: ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-have_string.h: ${MAKE_FILE} ${LOC_MKF}
+have_string.h: ${MK_SET}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3237,7 +2508,7 @@ have_string.h: ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-terminal.h: ${MAKE_FILE} ${LOC_MKF}
+terminal.h: ${MK_SET}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3291,7 +2562,7 @@ terminal.h: ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-have_fgetsetpos.h: have_fgetsetpos.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+have_fgetsetpos.h: have_fgetsetpos.c banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f fpos_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3334,7 +2605,7 @@ have_fgetsetpos.h: have_fgetsetpos.c banned.h have_ban_pragma.h ${MAKE_FILE} ${L
 	fi
 
 have_fpos_pos.h: have_fpos_pos.c have_fgetsetpos.h have_posscl.h have_string.h \
-		 banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+		 banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f fpos_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3380,7 +2651,7 @@ have_fpos_pos.h: have_fpos_pos.c have_fgetsetpos.h have_posscl.h have_string.h \
 fposval.h: fposval.c have_fgetsetpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	   endian_calc.h banned.h have_ban_pragma.h fposval.h.def alloc.h \
 	   have_newstr.h have_memmv.h have_string.h have_const.h have_string.h \
-	   have_unused.h ${MAKE_FILE} ${LOC_MKF}
+	   have_unused.h ${MK_SET}
 	${Q} ${RM} -f fposval_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3422,7 +2693,7 @@ fposval.h: fposval.c have_fgetsetpos.h have_fpos_pos.h have_offscl.h have_posscl
 	    ${TRUE}; \
 	fi
 
-have_const.h: have_const.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+have_const.h: have_const.c banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f have_const const_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3465,7 +2736,7 @@ have_const.h: have_const.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	fi
 
 have_offscl.h: have_offscl.c have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f offscl_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3506,7 +2777,7 @@ have_offscl.h: have_offscl.c have_unistd.h \
 	fi
 
 have_posscl.h: have_posscl.c have_fgetsetpos.h have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f have_posscl have_posscl.o posscl_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3547,7 +2818,7 @@ have_posscl.h: have_posscl.c have_fgetsetpos.h have_unistd.h \
 	fi
 
 align32.h: align32.c longbits.h have_unistd.h \
-	banned.h have_ban_pragma.h have_unused.h ${MAKE_FILE} ${LOC_MKF}
+	banned.h have_ban_pragma.h have_unused.h ${MK_SET}
 	${Q} ${RM} -f align32 align32_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3602,7 +2873,7 @@ align32.h: align32.c longbits.h have_unistd.h \
 	fi
 
 have_uid_t.h: have_uid_t.c have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f have_uid_t uid_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3643,7 +2914,7 @@ have_uid_t.h: have_uid_t.c have_unistd.h \
 	fi
 
 have_environ.h: have_environ.c \
-	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f have_environ environ_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3684,7 +2955,7 @@ have_environ.h: have_environ.c \
 	fi
 
 have_arc4random.h: have_arc4random.c have_stdlib.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f have_arc4random arc4random_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3725,7 +2996,7 @@ have_arc4random.h: have_arc4random.c have_stdlib.h \
 	    ${TRUE}; \
 	fi
 
-have_newstr.h: have_newstr.c banned.h have_ban_pragma.h have_string.h ${MAKE_FILE} ${LOC_MKF}
+have_newstr.h: have_newstr.c banned.h have_ban_pragma.h have_string.h ${MK_SET}
 	${Q} ${RM} -f newstr_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3765,7 +3036,7 @@ have_newstr.h: have_newstr.c banned.h have_ban_pragma.h have_string.h ${MAKE_FIL
 	    ${TRUE}; \
 	fi
 
-have_memmv.h: have_memmv.c banned.h have_ban_pragma.h have_string.h ${MAKE_FILE} ${LOC_MKF}
+have_memmv.h: have_memmv.c banned.h have_ban_pragma.h have_string.h ${MK_SET}
 	${Q} ${RM} -f have_memmv have_memmv.o memmv_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3805,7 +3076,7 @@ have_memmv.h: have_memmv.c banned.h have_ban_pragma.h have_string.h ${MAKE_FILE}
 	    ${TRUE}; \
 	fi
 
-have_ustat.h: have_ustat.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+have_ustat.h: have_ustat.c banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f ustat_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3845,7 +3116,7 @@ have_ustat.h: have_ustat.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	fi
 
 have_statfs.h: have_statfs.c banned.h have_ban_pragma.h have_sys_vfs.h have_sys_param.h \
-	have_sys_mount.h ${MAKE_FILE} ${LOC_MKF}
+	have_sys_mount.h ${MK_SET}
 	${Q} ${RM} -f statfs_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3885,7 +3156,7 @@ have_statfs.h: have_statfs.c banned.h have_ban_pragma.h have_sys_vfs.h have_sys_
 	    ${TRUE}; \
 	fi
 
-have_sys_vfs.h: ${MAKE_FILE} ${LOC_MKF}
+have_sys_vfs.h: ${MK_SET}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3921,7 +3192,7 @@ have_sys_vfs.h: ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-have_sys_param.h: ${MAKE_FILE} ${LOC_MKF}
+have_sys_param.h: ${MK_SET}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3957,7 +3228,7 @@ have_sys_param.h: ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-have_sys_mount.h: ${MAKE_FILE} ${LOC_MKF}
+have_sys_mount.h: ${MK_SET}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -3994,7 +3265,7 @@ have_sys_mount.h: ${MAKE_FILE} ${LOC_MKF}
 	fi
 
 have_getsid.h: have_getsid.c have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f getsid_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4035,7 +3306,7 @@ have_getsid.h: have_getsid.c have_unistd.h \
 	fi
 
 have_getpgid.h: have_getpgid.c have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f getpgid_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4076,7 +3347,7 @@ have_getpgid.h: have_getpgid.c have_unistd.h \
 	fi
 
 have_gettime.h: have_gettime.c banned.h have_ban_pragma.h \
-		${MAKE_FILE} ${LOC_MKF}
+		${MK_SET}
 	${Q} ${RM} -f gettime_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4117,7 +3388,7 @@ have_gettime.h: have_gettime.c banned.h have_ban_pragma.h \
 	fi
 
 have_getprid.h: have_getprid.c have_unistd.h \
-	banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+	banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f getprid_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4157,7 +3428,7 @@ have_getprid.h: have_getprid.c have_unistd.h \
 	    ${TRUE}; \
 	fi
 
-have_urandom.h: ${MAKE_FILE} ${LOC_MKF}
+have_urandom.h: ${MK_SET}
 	${Q} ${RM} -f $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4193,7 +3464,7 @@ have_urandom.h: ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-have_rusage.h: have_rusage.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
+have_rusage.h: have_rusage.c banned.h have_ban_pragma.h ${MK_SET}
 	${Q} ${RM} -f rusage_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4233,7 +3504,7 @@ have_rusage.h: have_rusage.c banned.h have_ban_pragma.h ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-have_strdup.h: have_strdup.c banned.h have_ban_pragma.h have_string.h ${MAKE_FILE} ${LOC_MKF}
+have_strdup.h: have_strdup.c banned.h have_ban_pragma.h have_string.h ${MK_SET}
 	${Q} ${RM} -f strdup_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4334,7 +3605,7 @@ args.h: have_stdvs.c have_varvs.c have_string.h have_unistd.h \
 	    ${TRUE}; \
 	fi
 
-calcerr.h: calcerr.tbl calcerr_h.sed calcerr_h.awk ${MAKE_FILE} ${LOC_MKF}
+calcerr.h: calcerr.tbl calcerr_h.sed calcerr_h.awk ${MK_SET}
 	${Q} ${RM} -f calerr.h
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4364,7 +3635,7 @@ calcerr.h: calcerr.tbl calcerr_h.sed calcerr_h.awk ${MAKE_FILE} ${LOC_MKF}
 	    ${TRUE}; \
 	fi
 
-calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE} ${LOC_MKF}
+calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MK_SET}
 	${Q} ${RM} -f calerr.c
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4387,7 +3658,7 @@ calcerr.c: calcerr.tbl calcerr_c.sed calcerr_c.awk ${MAKE_FILE} ${LOC_MKF}
 	fi
 
 have_unused.h: have_unused.c have_stdlib.h have_ban_pragma.h \
-	       ${MAKE_FILE} ${LOC_MKF}
+	       ${MK_SET}
 	${Q} ${RM} -f unused_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4429,7 +3700,7 @@ have_unused.h: have_unused.c have_stdlib.h have_ban_pragma.h \
 	    ${TRUE}; \
 	fi
 
-have_ban_pragma.h: have_ban_pragma.c banned.h ${MAKE_FILE} ${LOC_MKF}
+have_ban_pragma.h: have_ban_pragma.c banned.h ${MK_SET}
 	${Q} ${RM} -f unused_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4472,7 +3743,7 @@ have_ban_pragma.h: have_ban_pragma.c banned.h ${MAKE_FILE} ${LOC_MKF}
 	fi
 
 have_strlcpy.h: have_strlcpy.c banned.h have_ban_pragma.h have_string.h \
-		${MAKE_FILE} ${LOC_MKF}
+		${MK_SET}
 	${Q} ${RM} -f unused_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4514,7 +3785,7 @@ have_strlcpy.h: have_strlcpy.c banned.h have_ban_pragma.h have_string.h \
 	fi
 
 have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h have_string.h \
-		${MAKE_FILE} ${LOC_MKF}
+		${MK_SET}
 	${Q} ${RM} -f unused_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -4565,14 +3836,14 @@ have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h have_string.h \
 ###
 
 win32_hsrc: win32.mkdef banned.h have_ban_pragma.h alloc.h \
-	    ${MAKE_FILE} ${LOC_MKF}
+	    ${MK_SET}
 	${H} echo 'forming win32 directory'
 	${Q} ${RM} -rf win32
 	${Q} ${MKDIR} -p win32
 	${Q} ${CP} banned.h have_ban_pragma.h alloc.h win32
 	${Q} ${CP} ${UTIL_C_SRC} win32
 	${Q} ${CP} ${UTIL_MISC_SRC} win32
-	${Q} ${CP} ${MAKE_FILE} ${LOC_MKF}  win32
+	${Q} ${CP} ${MK_SET} win32
 	${Q} (cd win32; \
 	 echo "${MAKE} -f ${MAKE_FILE} hsrc `${CAT} win32.mkdef` EXT="; \
 	 ${MAKE} -f ${MAKE_FILE} hsrc `${CAT} win32.mkdef` EXT=; \
@@ -4581,7 +3852,7 @@ win32_hsrc: win32.mkdef banned.h have_ban_pragma.h alloc.h \
 	 ${RM} -f ${UTIL_OBJS}; \
 	 ${RM} -f ${UTIL_PROGS}; \
 	 ${RM} -f ${UTIL_FILES}; \
-	 ${RM} -f ${MAKE_FILE} ${LOC_MKF})
+	 ${RM} -f ${MK_SET})
 	${H} echo 'win32 directory formed'
 
 ###
@@ -4626,11 +3897,7 @@ ${CSCRIPT_TARGETS}: cscript/Makefile
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-#if 0	/* start of skip for non-Gnu makefiles */
-#
 ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-#
-#endif	/* end of skip for non-Gnu makefiles */
 custom/.all: custom/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for custom =-=-=-=-='
@@ -4653,11 +3920,7 @@ libcustcalc${LIB_EXT_VERSION}: custom/libcustcalc${LIB_EXT_VERSION}
 libcustcalc${LIB_EXT}: libcustcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${LN} -s $? $@
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 
 ###
 #
@@ -4666,7 +3929,7 @@ endif
 ###
 
 calc-static${EXT}: .hsrc ${CALCOBJS} \
-		   ${CALC_STATIC_LIBS} ${MAKE_FILE} ${LOC_MKF}
+		   ${CALC_STATIC_LIBS} ${MK_SET}
 	${RM} -f $@
 	${CC} ${LDFLAGS} ${CALCOBJS} ${LD_STATIC} ${CALC_STATIC_LIBS} \
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
@@ -4675,32 +3938,24 @@ libcustcalc.a: custom/libcustcalc.a
 	${Q} ${RM} -f $@
 	${CP} -f $? $@
 
-libcalc.a: ${LIBOBJS} ${MAKE_FILE} ${LOC_MKF}
+libcalc.a: ${LIBOBJS} ${MK_SET}
 	${RM} -f libcalc.a
 	${AR} qc libcalc.a ${LIBOBJS}
 	${RANLIB} libcalc.a
 	${CHMOD} 0644 libcalc.a
 
-#if 0	/* start of skip for non-Gnu makefiles */
-#
 ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-#
-#endif	/* end of skip for non-Gnu makefiles */
 custom/libcustcalc.a: custom/Makefile
 	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} libcustcalc.a
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 
 sample_rand-static${EXT}: sample_rand.o ${CALC_STATIC_LIBS} \
-			  ${MAKE_FILE} ${LOC_MKF}
+			  ${MK_SET}
 	${CC} ${LDFLAGS} sample_rand.o ${LD_STATIC} \
 	      ${CALC_STATIC_LIBS} ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
 sample_many-static${EXT}: sample_many.o ${CALC_STATIC_LIBS} \
-			  ${MAKE_FILE} ${LOC_MKF}
+			  ${MK_SET}
 	${CC} ${LDFLAGS} sample_many.o ${LD_STATIC} \
 	      ${CALC_STATIC_LIBS} ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
@@ -4767,17 +4022,6 @@ depend: hsrc custom/Makefile
 	    fi; \
 	done >> skel/makedep.out
 	${Q} LANG=C ${SORT} -u skel/makedep.out -o skel/makedep.out
-	echo '#if 0	/* start of skip for non-Gnu makefiles */' \
-	  >> skel/makedep.out
-	echo '###################################################' \
-	  >> skel/makedep.out
-	echo '# End 2nd skip of lines for the custom/Makefile   #' \
-	  >> skel/makedep.out
-	echo '###################################################' \
-	  >> skel/makedep.out
-	echo 'endif' >> skel/makedep.out
-	echo '#endif	/* end of skip for non-Gnu makefiles */' \
-	  >> skel/makedep.out
 	${Q} echo dependency list formed
 	${Q} echo forming new ${MAKE_FILE}
 	${Q} ${RM} -f ${MAKE_FILE}.bak
@@ -4887,52 +4131,11 @@ calcliblistfmt:
 	${Q} ${MAKE} -f Makefile calcliblist | \
 	    ${FMT} -64 | ${SED} -e 's/^/	/'
 
-Makefile.simple: Makefile custom/Makefile.simple
-	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
-	${Q} if [ -f $@.bak ]; then \
-		echo "$@.bak exists, remove or move it"; \
-		exit 1; \
-	else \
-	    ${TRUE}; \
-	fi
-	-${Q} if [ -f $@ ]; then \
-	    ${MV} -f $@ $@.bak; \
-	fi
-	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
-	    Makefile | \
-	    ${SED} -e 's/cd custom; $${MAKE} -f Makefile/&.simple/' \
-		   -e 's;^# SRC:.*;# SRC: $@ - non-GNU version;' \
-		   -e '/^ifeq /d' \
-		   -e '/^ifneq /d' \
-		   -e '/^ifdef /d' \
-		   -e '/^ifndef /d' \
-		   -e '/^else/d' \
-		   -e '/^endif/d' \
-		   -e 's;via Makefile'"'"';via $@'"'"';' > $@
-	-${Q} if [ -s $@.bak ]; then \
-	    if ${CMP} -s $@.bak $@; then \
-		echo 'top level $@ was already up to date'; \
-		echo 'restoring original $@'; \
-		${MV} -f $@.bak $@; \
-	    else \
-		echo 'old $@ is now $@.bak'; \
-		echo 'updated top level $@ formed'; \
-		${DIFF} -u $@.bak $@; \
-	    fi; \
-	else \
-	    echo 'new top level $@ formed'; \
-	    echo; \
-	    ${LS} -l $@; \
-	    echo; \
-	fi
-	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
+Makefile.simple:
+	${Q} echo Support for $@ was dropped after the the release of calc v2.14.3.0.
 
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-custom/Makefile.simple: Makefile custom/Makefile
-	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} Makefile.simple
-#
-#endif	/* end of skip for non-Gnu makefiles */
+custom/Makefile.simple:
+	${Q} echo Support for $@ was dropped after the the release of calc v2.14.3.0.
 
 ###
 #
@@ -5191,6 +4394,7 @@ env:
 	@echo 'NROFF_ARG=${NROFF_ARG}'; echo ''
 	@echo 'OBJS=${OBJS}'; echo ''
 	@echo 'OFF_T_BITS=${OFF_T_BITS}'; echo ''
+	@echo 'OSNAME=${OSNAME}'; echo ''
 	@echo 'PREFIX=${PREFIX}'; echo ''
 	@echo 'PURIFY=${PURIFY}'; echo ''
 	@echo 'PWD=${PWD}'; echo ''
@@ -5217,6 +4421,7 @@ env:
 	@echo 'SYM_DYNAMIC_LIBS=${SYM_DYNAMIC_LIBS}'; echo ''
 	@echo 'T=${T}'; echo ''
 	@echo 'TARGETS=${TARGETS}'; echo ''
+	@echo 'TARGET_MKF=${TARGET_MKF}'; echo ''
 	@echo 'TEE=${TEE}'; echo ''
 	@echo 'TERMCONTROL=${TERMCONTROL}'; echo ''
 	@echo 'TOUCH=${TOUCH}'; echo ''
@@ -5235,6 +4440,8 @@ env:
 	@echo 'WNO_IMPLICT=${WNO_IMPLICT};' echo ''
 	@echo 'WNO_LONG_LONG=${WNO_LONG_LONG}'; echo ''
 	@echo 'XARGS=${XARGS}'; echo ''
+	@echo 'arch=${arch}'; echo ''
+	@echo 'hardware=${hardware}'; echo ''
 	@echo 'target=${target}'; echo ''
 	@echo '=-=-=-=-= ${MAKE_FILE} end of major make variable dump =-=-=-=-='
 
@@ -5243,6 +4450,9 @@ mkdebug: env version.c
 	@echo '=-=-=-= Contents of ${LOC_MKF} follows =-=-=-='
 	-@${CAT} ${LOC_MKF}
 	@echo '=-=-=-= End of contents of ${LOC_MKF} =-=-=-='
+	@echo '=-=-=-= Contents of ${TARGET_MKF} follows =-=-=-='
+	-@${CAT} ${TARGET_MKF}
+	@echo '=-=-=-= End of contents of ${TARGET_MKF} =-=-=-='
 	@echo '=-=-=-= Determining the source version =-=-=-='
 	-@${MAKE} -f Makefile Q= V=@ ver_calc${EXT}
 	-@./ver_calc${EXT}
@@ -5259,6 +4469,9 @@ full_debug: calcinfo env
 	@echo '=-=-=-= Contents of ${LOC_MKF} follows =-=-=-='
 	-@${CAT} ${LOC_MKF}
 	@echo '=-=-=-= End of contents of ${LOC_MKF} =-=-=-='
+	@echo '=-=-=-= Contents of ${TARGET_MKF} follows =-=-=-='
+	-@${CAT} ${TARGET_MKF}
+	@echo '=-=-=-= End of contents of ${TARGET_MKF} =-=-=-='
 	@echo '=-=-=-= Invoking ${MAKE} -f Makefile Q= V=@ clobber =-=-=-='
 	-@${MAKE} -f Makefile Q= H=@ S= E= V=@ clobber
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
@@ -5381,7 +4594,7 @@ rpm-clean-static:
 
 # Form the installed file list
 #
-inst_files: ${MAKE_FILE} ${LOC_MKF} help/Makefile cal/Makefile \
+inst_files: ${MAKE_FILE} ${LOC_MKF} ${TARGET_MKF} help/Makefile cal/Makefile \
 	    cscript/Makefile ver_calc${EXT} custom/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${Q} ${RM} -f inst_files
@@ -5446,6 +4659,8 @@ olduninstall:
 	${RM} -f inst_files
 	${RM} -f ${CALC_INCDIR}/calcerr.c
 	${RM} -f ${CALC_INCDIR}/have_fgetsetpos.h
+	${RM} -f -v Makefile.simple Makefile.simple.bak
+	${RM} -f -v custom/Makefile.simple custom/Makefile.simple.bak
 
 tags: ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} ${MAKE_FILE}
 	-${CTAGS} ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} 2>&1 | \
@@ -5599,11 +4814,7 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 	else \
 	    ${TRUE}; \
 	fi
-#if 0	/* start of skip for non-Gnu makefiles */
-#
 ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-#
-#endif	/* end of skip for non-Gnu makefiles */
 	-${Q} if [ ! -d ${T}${CUSTOMCALDIR} ]; then \
 	    echo ${MKDIR} -p ${T}${CUSTOMCALDIR}; \
 	    ${MKDIR} -p ${T}${CUSTOMCALDIR}; \
@@ -5628,11 +4839,7 @@ ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 	else \
 	    ${TRUE}; \
 	fi
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 	-${Q} if [ ! -d ${T}${SCRIPTDIR} ]; then \
 	    echo ${MKDIR} -p ${T}${SCRIPTDIR}; \
 	    ${MKDIR} -p ${T}${SCRIPTDIR}; \
@@ -5715,19 +4922,11 @@ endif
 	${V} echo '=-=-=-=-= Invoking $@ rule for cal =-=-=-=-='
 	${Q} cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-#if 0	/* start of skip for non-Gnu makefiles */
-#
 ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
-#
-#endif	/* end of skip for non-Gnu makefiles */
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-#if 0	/* start of skip for non-Gnu makefiles */
-#
-endif
-#
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
 	${Q} cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
@@ -6030,8 +5229,8 @@ uninstall: custom/Makefile
 # unbak - remove any .bak files that may have been created
 #
 unbak:
-	${Q} ${RM} -f -v Makefile.bak Makefile.simple.bak
-	${Q} ${RM} -f -v custom/Makefile.bak custom/Makefile.simple.bak
+	${Q} ${RM} -f -v Makefile.bak
+	${Q} ${RM} -f -v custom/Makefile.bak
 
 # splint - A tool for statically checking C programs
 #
@@ -7713,4 +6912,3 @@ zrandom.o: value.h
 zrandom.o: zmath.h
 zrandom.o: zrandom.c
 zrandom.o: zrandom.h
-endif

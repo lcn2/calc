@@ -55,12 +55,20 @@
 #
 SHELL= bash
 #SHELL= sh
-#if 0	/* start of skip for non-Gnu makefiles */
+
+# Darwin shell default
 #
 ifeq ($(target),Darwin)
 SHELL:= /bin/sh
-endif
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# ($(target),Darwin)
+
+# If you are using Cygwin with MinGW64 packages
+# then we will also need to use the Cygwin runtime enviroment
+# and the calc Cygwin make target.
+##
+ifeq ($(OSNAME),Cygwin)
+target:= Cygwin
+endif	# ($(OSNAME),Cygwin)
 
 
 # PREFIX - Top level location for calc
@@ -130,13 +138,13 @@ CCBAN= -UUNBAN
 #CCBAN= -DUNBAN
 
 
-#if 0	/* start of skip for non-Gnu makefiles */
-
-# Unfortunately due to the complex dependency issues between
-# Makefile, and custom/Makefile, parallel GNU make
-# is NOT recommended.
+# We do not support parallel make of calc.  We have found most
+# parallel make systems do not get the rule dependency order
+# correct, resulting in a failed attempt to compile calc.
 #
-# XXX - fix this - XXX
+# If you believe you have a way to get a parallel make of calc
+# to work, consider submitting a pull request with a
+# proposed change.
 #
 .NOTPARALLEL:
 
@@ -152,8 +160,16 @@ CCBAN= -UUNBAN
 #
 ifeq ($(target),)
 target=$(shell uname -s 2>/dev/null)
-endif
-#endif	/* end of skip for non-Gnu makefiles */
+endif	# ($(target),)
+ifeq ($(arch),)
+arch=$(shell uname -p 2>/dev/null)
+endif	# ($(arch),)
+ifeq ($(hardware),)
+hardware=$(shell uname -m 2>/dev/null)
+endif	# ($(hardware),)
+ifeq ($(OSNAME),)
+OSNAME=$(shell uname -o 2>/dev/null)
+endif	# ($(OSNAME),)
 
 # The custom calc resource files to install
 #
@@ -540,8 +556,6 @@ COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
 # Set the default compile flags for ${CC} #
 ###########################################
 
-#if 0	/* start of skip for non-Gnu makefiles */
-
 # Required flags to compile C files for calc
 #
 # ICFLAGS are given to ${CC} for intermediate progs used to help compile calc
@@ -551,9 +565,9 @@ COMMON_LDFLAGS= ${EXTRA_LDFLAGS}
 #
 ifeq ($(BLD_TYPE),calc-static-only)
 ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
-else
+else	# ($(BLD_TYPE),calc-static-only)
 ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_SHARE}
-endif
+endif	# ($(BLD_TYPE),calc-static-only)
 CFLAGS= ${ICFLAGS} ${CCOPT}
 
 # Required flags to link files for calc
@@ -564,23 +578,15 @@ CFLAGS= ${ICFLAGS} ${CCOPT}
 ILDFLAGS= ${COMMON_LDFLAGS}
 LDFLAGS= ${LD_DEBUG} ${ILDFLAGS}
 
-#endif	/* end of skip for non-Gnu makefiles */
-
 ##########################################################################
 #=-=-=-=-=- Be careful if you change something below this line -=-=-=-=-=#
 ##########################################################################
 
-# include start from top Makefile - keep this line
-#if 0	/* start of skip for non-Gnu makefiles */
-###
+# Host targets that are shared in common with both Makefile
+# and custom/Makefile (if ALLOW_CUSTOM is -DCUSTOM).
 #
-# Allow Makefile.local to override any of the above settings
-#
-###
-EXCLUDE_FROM_CUSTOM_MAKEFILE=true	# include only middle of ../Makefile
-include ../Makefile
-#endif	/* end of skip for non-Gnu makefiles */
-# include end from top Makefile - keep this line
+TARGET_MKF= ../Makefile.target
+include ${TARGET_MKF}
 
 # These .c files are required for the main custom interface and
 # for the custom support functions for libcustcalc${LIB_EXT_VERSION}.
@@ -622,7 +628,7 @@ H_SRC= ${CUSTOM_H_SRC}
 # directory but are installed as help files from the help/Makefile.
 #
 DISTLIST= ${CUSTCALC_SRC} ${CUSTOM_CALC_FILES} ${CUSTOM_HELP} \
-	${INSTALL_H_SRC} CUSTOM_CAL HOW_TO_ADD Makefile Makefile.simple
+	${INSTALL_H_SRC} CUSTOM_CAL HOW_TO_ADD Makefile
 
 # These files are used to make (but not built) a calc .a link library
 #
@@ -638,7 +644,7 @@ CALC_STATIC_LIBCUSTCALC= libcustcalc.a
 
 # complete list of targets
 #
-TARGETS= ${BLD_TYPE} Makefile.simple
+TARGETS= ${BLD_TYPE}
 
 ###
 #
@@ -722,72 +728,8 @@ calcliblist: ${CALCLIBLIST}
 	    fi; \
 	done
 
-#if 0	/* start of skip for non-Gnu makefiles */
-Makefile.simple: Makefile ../Makefile
-	${V} echo '=-=-=-=-= custom/${MAKE_FILE} start of $@ rule =-=-=-=-='
-	${Q} if [ -f $@.bak ]; then \
-		echo "custom/$@.bak exists, remove or move it"; \
-		exit 1; \
-	else \
-	    ${TRUE}; \
-	fi
-	-${Q} if [ -f $@ ]; then \
-	    ${MV} -f $@ $@.bak; \
-	fi
-	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
-	     Makefile | \
-	     ${SED} -e '/^# include start from top Makefile - keep /,$$d' \
-		    -e 's;^# SRC:.*;# SRC: custom/$@ - non-GNU version;' \
-		    -e '/^ifeq /d' \
-		    -e '/^ifneq /d' \
-		    -e '/^ifdef /d' \
-		    -e '/^ifndef /d' \
-		    -e '/^else/d' \
-		    -e '/^endif/d' \
-		    > $@
-	${Q} echo '# include start from top Makefile - keep this line' \
-	     >> $@
-	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
-	     ../Makefile | \
-	     ${SED} -e '1,/^# include start from top Makefile - keep /d' \
-		    -e '/^# include end from top Makefile - keep /,$$d' \
-		    -e '/^ifeq /d' \
-		    -e '/^ifneq /d' \
-		    -e '/^ifdef /d' \
-		    -e '/^ifndef /d' \
-		    -e '/^else/d' \
-		    -e '/^endif/d' \
-		    >> $@
-	${Q} echo '# include end from top Makefile - keep this line' \
-	     >> $@
-	${Q} ${AWK} '/^#if 0/{skp=1} {if(!skp){print $$0}} /^#endif/{skp=0}' \
-	     Makefile | \
-	     ${SED} -e '1,/^# include end from top Makefile - keep /d' \
-		    -e '/^ifeq /d' \
-		    -e '/^ifneq /d' \
-		    -e '/^ifdef /d' \
-		    -e '/^ifndef /d' \
-		    -e '/^else/d' \
-		    -e '/^endif/d' \
-		    >> $@
-	-${Q} if [ -s $@.bak ]; then \
-	    if ${CMP} -s $@.bak $@; then \
-		echo 'custom/$@ was already up to date'; \
-		echo 'restoring original custom/$@'; \
-		${MV} -f $@.bak $@; \
-	    else \
-		echo 'old custom/$@ is now custom/$@.bak'; \
-		echo 'updated custom/$@ formed'; \
-		(cd .. ; ${DIFF} -u custom/$@.bak custom/$@); \
-	    fi; \
-	else \
-	    echo 'new custom/$@ formed'; \
-	    echo; \
-	    (cd .. ; ${LS} -l custom/$@); \
-	    echo; \
-	fi
-	${V} echo '=-=-=-=-= custom/${MAKE_FILE} end of $@ rule =-=-=-=-='
-#endif	/* end of skip for non-Gnu makefiles */
+Makefile.simple:
+	${Q} echo Support for custom/$@ was dropped after the the release of calc v2.14.3.0.
 
 ##
 #

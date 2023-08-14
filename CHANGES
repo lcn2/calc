@@ -34,6 +34,16 @@ The following are the changes from calc version 2.14.3.1 to date:
     Added comments in Makefile.local for how to reduce dependency chains
     under macOS.  XXX - this doesn't yet work so don't uncomment - XXX.
 
+    Dropped support of Makefile.simple and custom/Makefile.simple.
+    The calc version 2.14.3.0 is the last release that supported
+    the Makefile.simple and custom/Makefile.simple files.
+    Now, a make that supports makefile conditional syntax is required.
+
+    The platform target section from the old Makefile has been moved
+    to a new file, Makefile.target.  The Makefile.target is shared
+    by both Makefile and custom/Makefile.  The custom/Makefile no
+    longer includes Makefile (instead it includes ../Makefile.target).
+
 
 The following are the changes from calc version 2.14.2.1 to 2.14.3.0:
 

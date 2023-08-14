@@ -27,7 +27,7 @@ If you run into problems, see the BUGS file.
 Calc is distributed with an extensive collection of help files that
 are accessible from the command line.  The following assume that you
 are running calc from the distribution directory or that you have
-installed calc.	 In these examples, the ">" is the calc prompt, not
+installed calc.	 In these examples, the "; " is the calc prompt, not
 something that you type in.
 
 For list of help topics:
@@ -48,7 +48,7 @@ For list of builtin functions:
 
     ; help builtin
 
-C programmers should note some unexpected differences in the calc syntax:
+C programmers should note some unexpected differences with the calc syntax:
 
     ; help unexpected
 

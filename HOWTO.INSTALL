@@ -1,495 +1,360 @@
+# Installing a pre-compiled calc from an RPM
 
-IMPORTANT: Please see the section at the bottom of this file for
-	   some important information on Makefiles used in calc.
+If your platform supports RPMs, you may want to go to:
 
-###################################################################
-# IMPORTANT: DO NOT use make in parallel mode!!!		  #
-###################################################################
-# Unfortunately due to the complex dependency issues between	  #
-# Makefile, Makefile.ship and custom/Makefile, parallel make      #
-# is NOT recommended.  Sorry (tm Canada) :)			  #
-###################################################################
+    https://github.com/lcn2/calc/releases
 
-Installing calc from the bzip2-ed tarball: 4 easy steps:
+and see if there is a pre-compiled version of calc that you may install.
 
-    (0) If your platform supports i686 RPMs, you may want to go to:
+Open up the 'Assets' tag below a given release and download these RPMs:
 
-	    https://github.com/lcn2/calc/releases
+    * calc*.rpm
+	- all that is needed if you just want to use calc
 
-	Open up the 'Assets' tag below a given release and
-	download these RPMs:
+If your platform supports rpm and matches one of the "calc*.rpm" files, you
+may just install that "calc*.rpm".  For exammple on an x86_64 system:
 
-	    * calc*.i686.rpm
-		- all that is needed if you just want to use calc
+    dnf install calc-x.y.z.cv-ww.x86_64.rpm
 
-	    * calc-devel-*.i686.rpm
-	        - calc *.h header and *.a lib files for use in other programs
+where "calc-x.y.z.cv-ww.x86_64.rpm" is the name of the calc RPM.
 
-	    * calc.*.src.rpm
-	        - calc source via a SRPM package
+In addition, if your platform supports rpm and matches one of the
+"calc*.rpm" files, you may also install the calc *.h header and *.a lib
+files for use in other programs:
 
-	Alternately to the above github link, you might try looking at
-	the RPMs under:
+    * calc-devel-*.rpm
+	- calc *.h header and *.a lib files for use in other programs
 
-	    http://www.isthe.com/chongo/src/calc/
+Alternately to the above github link, you might try looking at the RPMs under:
 
-=-=
+    http://www.isthe.com/chongo/src/calc/
 
-The following 4 steps apply to calc source tree that comes from either:
 
-	bunzip2 -c calc-*.tar.bz2 | tar -xvf -
 
-or from:
-
-	rpm -ivh calc-*.src.rpm
-	cd /var/tmp
-	bunzip2 -c /usr/src/redhat/SOURCES/calc-*.tar.bz2 | tar -xvf -
-
-4 steps:
-
-(1)	Look at the makefile, and adjust it to suit your needs.
-
-	The top level Makefile and the custom/Makefile require a modern
-	Make (such as gmake) or an equivalently advanced make.	On many
-	targets, the default make is sufficient.  On FreeBSD for example,
-	probably want to use gmake instead of make.
-
-	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	! By default, calc assumes you have the readline package installed !
-	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	! macOS does not have readline, so mac users need to make a choice !
-	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-	The readline package (-lreadline, -lhistory, -lncurses) used by and
-	linked into calc by default.  If your system does NOT have those
-	libaraies, then you have two options:
-
-	(1-with readline) Install the readline package 		<- Recommended
-
-	    Install the readline package first, then compile calc.
-
-	    For information on the readline package, see:
-
-		https://tiswww.case.edu/php/chet/readline/rltop.html
-
-	    MacOS users can use MacPorts or HomeBrew to install readline:
-
-		https://www.macports.org
-		https://brew.sh
-
-	    Or compile from the readline.git repo:
-
-		http://git.savannah.gnu.org/cgit/readline.git/
-
-	(1-w/o readline) Compile calc without readline 	(not recommended)
-
-	    Why do we not recommend (1b)?  Because using calc with readline
-	    provides a beter user experience.
-
-	    If you feel you must use calc without the readline package, then you
-	    will need to change your calc Makefile with this patch:
-
---- Makefile.old	2021-12-29 14:57:56.000000000 -0800
-+++ Makefile	2021-12-29 14:59:13.000000000 -0800
-@@ -1140,14 +1140,14 @@
- #
- # If in doubt, set USE_READLINE, READLINE_LIB and READLINE_INCLUDE to nothing.
- #
--#USE_READLINE=
--USE_READLINE= -DUSE_READLINE
-+USE_READLINE=
-+#USE_READLINE= -DUSE_READLINE
- #
--#READLINE_LIB=
--#READLINE_EXTRAS=
-+READLINE_LIB=
-+READLINE_EXTRAS=
- #
--READLINE_LIB= -lreadline
--READLINE_EXTRAS= -lhistory -lncurses
-+#READLINE_LIB= -lreadline
-+#READLINE_EXTRAS= -lhistory -lncurses
- #
- #READLINE_LIB= -L/usr/gnu/lib -lreadline
- #READLINE_EXTRAS= -lhistory -lncurses
-@@ -1181,8 +1181,8 @@
- # # and using the readline, history, and ncurses libraries.
- # #
- ifneq ($(HOMEBREW_PREFIX),)
--READLINE_LIB:= -L${HOMEBREW_PREFIX}/opt/readline/lib -lreadline
--READLINE_INCLUDE:= -I${HOMEBREW_PREFIX}/opt/readline/include
-+#READLINE_LIB:= -L${HOMEBREW_PREFIX}/opt/readline/lib -lreadline
-+#READLINE_INCLUDE:= -I${HOMEBREW_PREFIX}/opt/readline/include
- endif
- #
- #endif  /* end of skip for non-Gnu makefiles */
-
-	    If your target system does not have a modern Makefile
-	    (such as gmake), then you will need to change your
-	    Makefile.simple with this patch:
-
---- Makefile.simple.orig	2021-12-29 15:00:53.000000000 -0800
-+++ Makefile.simple	2021-12-29 15:01:00.000000000 -0800
-@@ -1005,14 +1005,14 @@
- #
- # If in doubt, set USE_READLINE, READLINE_LIB and READLINE_INCLUDE to nothing.
- #
--#USE_READLINE=
--USE_READLINE= -DUSE_READLINE
-+USE_READLINE=
-+#USE_READLINE= -DUSE_READLINE
- #
--#READLINE_LIB=
--#READLINE_EXTRAS=
-+READLINE_LIB=
-+READLINE_EXTRAS=
- #
--READLINE_LIB= -lreadline
--READLINE_EXTRAS= -lhistory -lncurses
-+#READLINE_LIB= -lreadline
-+#READLINE_EXTRAS= -lhistory -lncurses
- #
- #READLINE_LIB= -L/usr/gnu/lib -lreadline
- #READLINE_EXTRAS= -lhistory -lncurses
-
-	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	! By default, calc assumes you are using a modern gnu-like make tool !
-	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-	If your target system does not have a modern Makefile (such as gmake),
-	then you should try using the Makefile.simple and custom/Makefile.simple
-	files:
-
-	    mv Makefile Makefile.gmake
-	    cp Makefile.simple Makefile
-	    mv custom/Makefile custom/Makefile.gmake
-	    cp custom/Makefile.simple custom/Makefile
-
-	The Makefile, as shipped, is suitable for installation under
-	Linux and Un*x-like environments.  For the most part, the default
-	values should work.  If in doubt, follow the 'When in doubt'
-	suggestion.
-
-	If you are using a modern make (such as gmake), you may override
-	any values set in the Makefile by adding them to Makefile.local
-	using the := directive.  For example:
-
-	    HAVE_STRING_H:= YES
-	    HAVE_TIMES_H:= YES
-	    SED:= /usr/local/bin/nsed
-
-	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	! If you are building under Windows or a Windows-like environment !
-	! (such as Cygwin or DJGPP), read the README.WINDOWS file.        !
-	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-	You should determine if these Makefile variables are reasonable:
-
-	    INCDIR		Where the system include (.h) files are kept.
-	    BINDIR		Where to install calc binary files.
-	    LIBDIR		Where to install calc link library (*.a) files.
-	    CALC_SHAREDIR	Where to install calc help, .cal, startup, and
-				config files.
-
-	You may want to change the default installation locations for
-	these values, which are based on the 4 values listed above:
-
-	    HELPDIR            where the help directory is installed
-	    CALC_INCDIR        where the calc include files are installed
-	    CUSTOMCALDIR       where custom *.cal files are installed
-	    CUSTOMHELPDIR      where custom help files are installed
-	    CUSTOMINCDIR       where custom .h files are installed
-	    SCRIPTDIR          where calc shell scripts are installed
-
-	If you want to install calc files under a top level directory,
-	then set the T value:
-
-	    The calc install is performed under ${T}, the calc build is
-	    performed under /.	The purpose for ${T} is to allow someone
-	    to install calc somewhere other than into the system area.
-
-	    For example, if:
-
-		BINDIR= /usr/bin
-		LIBDIR= /usr/lib
-		CALC_SHAREDIR= /usr/share/calc
-
-	    and if:
-
-		T= /var/tmp/testing
-
-	    Then the installation locations will be:
-
-		calc binary files:	/var/tmp/testing/usr/bin
-		calc link library:	/var/tmp/testing/usr/lib
-		calc help, .cal ...:	/var/tmp/testing/usr/share/calc
-		... etc ...		/var/tmp/testing/...
-
-	    If ${T} is empty, calc is installed under /, which is the same
-	    top of tree for which it was built.  If ${T} is non-empty, then
-	    calc is installed under ${T}, as if one had to chroot under
-	    ${T} for calc to operate.
-
-	Look for the section that starts:
-
-	    ################
-	    # compiler set #
-	    ################
-
-	    Select a compiler set by commenting in the appropriate set
-	    of cc options.  As shipped the Makefile assumes a gcc-like
-	    environment such as Linux.  If a more appropriate cc set if
-	    found below, comment out the Linux set and comment in that
-	    set or edit the gcc set or the common cc set as needed.
-
-	You may want to change these Makefile variables from their defaults:
-
-	    RANLIB
-
-		You may or may not need RANLIB when building libraries.
-		As shipped the Makefile assumes RANLIB is needed.
-		Comment the in/out the RANLIB value if ranlib does
-		not work or does not exist.
-
-	    CALCPAGER
-
-		You may want to change the default pager used by calc.
-		As shipped the Makefile assumes 'more'.  On your system
-		you may find 'less' to be a better pager.
-
-	    DEBUG
-
-	       Some compilers (to put it mildly) have bugs.  Sometimes the
-	       DEBUG Makefile variable causes the compiler / optimizer to
-	       produce bad code.  Other compilers do just fine.
-
-	       If possible try to use DEBUG=-O3 -g3 (maximum optimization
-	       and debug symbols).  If the calc test fails (see step 3),
-	       try lowering either the -O value and/or the -g3.  Also try
-	       using -Osomething without -g.
-
-	   Adjust other Makefile variables as needed.
-
-    (2)	build calc:
-
-	The top level Makefile and the custom/Makefile require a GNU
-	Make (such as gmake) or an equivalently advanced make.	On many
-	targets, the default make is sufficient.  On FreeBSD for example,
-	one must use gmake instead of make.
-
-	If your target system does not have GNU Make (or equivalent), then
-	you should try using the Makefile.simple and custom/Makefile.simple
-	files:
-
-	    mv Makefile Makefile.gmake
-	    cp Makefile.simple Makefile
-	    mv custom/Makefile custom/Makefile.gmake
-	    cp custom/Makefile.simple custom/Makefile
-
-	make all
-
-	==> We are interested in any compiler warnings (and errors) that
-	    you may find.  See the BUGS file if you find any compiler
-	    warning or errors.
-
-	NOTE: You can force calc to build with only static libs:
-
-		make clobber
-		make calc-static-only BLD_TYPE=calc-static-only
-
-	      or force calc to build with only dynamic libs:
-
-		make clobber
-		make calc-dynamic-only BLD_TYPE=calc-dynamic-only
-
-    (3)	test calc:
-
-	    make check
-
-	NOTE: For a quiet check which only prints if something goes wrong:
-
-	    make chk
-
-    (4)	install calc:
-
-	    make install
+# Building calc from a source tree
+
+
+
+## Step 0: Obtain the calc source tree
+
+Go to the site:
+
+    https://github.com/lcn2/calc/releases
+
+Look for release with a file of the form:
+
+    calc-x.y.z.v.tar.bz2
+
+A release marked with a green "(Latest)" is a production release
+that as undergone a fair amount of testing.
+
+A release marked with an orange "(Pre-release)" is likly to be
+more stable than the top of the master branch, as they do undergo
+thru a reasonable level of regression testing, just not to
+the level of a  "(Latest)" production release.
+
+Use the followig command to uncompress the bzip2 compressed tarball:
+
+    bunzip2 -c calc-*.tar.bz2 | tar -xvf -
+
+NOTE: An alternate location for calc bzip2 compressed tarballs is:
+
+    http://www.isthe.com/chongo/src/calc/
+
+
+
+### Obtaining the experimental top of the master branch calc source
+
+You may also fetch the top of the master branch of the GitHub repo
+if you wish to see what the latest source code looks like:
+
+    git clone https://github.com/lcn2/calc.git
+
+IMPORTANT:
+
+The latest source code may be "experimental in nature".   You may be
+better off using a released bzip2 compressed tarball instead.
+Released bzip2 compressed tarballs tend to be more well tested
+than the top of the master branch.
+
+
+
+## Step 1: Makefile considerations
+
+Look at Makefile, and adjust it to suit your needs.
+
+
+
+### IMPORTANT: Make support of conditional syntax required:
+
+To compile calc, you must use a make that supports the use of
+"Conditional syntax".  As nearly all modern make tools
+support "Conditional syntax", thus should not be a problem
+for you.  If for some reason your make tool does not support
+"Conditional syntax", consider upgraded to a make that does,
+such as the Gnu Make tool:
+
+    https://www.gnu.org/software/make/
+
+The Gnu Make is not required per-se, just a modern make tool
+that supports "Conditional syntax".
+
+
+
+### Suggestion: Modify Makefile.local instead of Makefile:
+
+In most cases, to change the way that calc is made, consider
+adding lines to Makefile.local instead of modifying Makefile.
+
+A recommened way to adjust it is to add lines to: Makefile.local
+using the := syntax to replace values such as:
+
+    DEBUG:= -O0 -g
+
+or by using the += syntax to append to values such as:
+
+    CFLAGS+= -UCUSTOM
+
+
+
+## readline package assumed by default:
+
+By "readline package" we refer to the combination of the
+readline library, the history library, and the ncurses library.
+
+By default, calc assumes you have the readline package installed.
+The readline package (-lreadline, -lhistory, -lncurses) used by and
+linked into calc by default.
+
+If your system (such as macOS) does NOT have those libaraies, then
+you have two options:
+
+
+
+### Install the readline package:
+
+We recommend that you install the readline package first, then compile calc.
+
+For information on the readline package, see:
+
+    https://tiswww.case.edu/php/chet/readline/rltop.html
+
+MacOS users can use MacPorts or HomeBrew to install readline:
+
+    https://www.macports.org
+    https://brew.sh
+
+Or compile from the readline.git repo:
+
+    http://git.savannah.gnu.org/cgit/readline.git/
+
+
+
+### Compile calc without readline:
+
+Why do we not recommend this option because using calc with readline
+provides a beter user experience.
+
+If you feel you must use calc without the readline package, then you
+will need to compile with:
+
+    make clobber all USE_READLINE= READLINE_EXTRAS= READLINE_INCLUDE= READLINE_LIB=
+
+or add to Makefile.local, these lines:
+
+    USE_READLINE=
+    READLINE_EXTRAS=
+    READLINE_INCLUDE=
+    READLINE_LIB=
+
+
+
+### Windows or a Windows-like environments:
+
+Currently Windows is not a well supported platform for calc.  There are
+people within Microsoft who plan to assist us in being able to allow
+the standard Microsoft Windows developor environment to compile calc.
+
+
+
+### Makefile variables to consider:
+
+You should determine if these Makefile variables are reasonable:
+
+    INCDIR		Where the system include (.h) files are kept.
+    BINDIR		Where to install calc binary files.
+    LIBDIR		Where to install calc link library (*.a) files.
+    CALC_SHAREDIR	Where to install calc help, .cal, startup, and config files.
+
+You may want to change the default installation locations for
+these values, which are based on the 4 values listed above:
+
+    HELPDIR            where the help directory is installed
+    CALC_INCDIR        where the calc include files are installed
+    CUSTOMCALDIR       where custom *.cal files are installed
+    CUSTOMHELPDIR      where custom help files are installed
+    CUSTOMINCDIR       where custom .h files are installed
+    SCRIPTDIR          where calc shell scripts are installed
+
+If you want to install calc files under a top level directory, then set the T value:
+
+    The calc install is performed under ${T}, the calc build is
+    performed under /.	The purpose for ${T} is to allow someone
+    to install calc somewhere other than into the system area.
+
+    For example, if:
+
+	BINDIR= /usr/bin
+	LIBDIR= /usr/lib
+	CALC_SHAREDIR= /usr/share/calc
+
+    and if:
+
+	T= /var/tmp/testing
+
+    Then the installation locations will be:
+
+	calc binary files:	/var/tmp/testing/usr/bin
+	calc link library:	/var/tmp/testing/usr/lib
+	calc help, .cal ...:	/var/tmp/testing/usr/share/calc
+	... etc ...		/var/tmp/testing/...
+
+    If ${T} is empty, calc is installed under /, which is the same
+    top of tree for which it was built.  If ${T} is non-empty, then
+    calc is installed under ${T}, as if one had to chroot under
+    ${T} for calc to operate.
+
+Again, consider adding replacement lines or append linbes to
+the Makefile.local file.  See "Suggestion Modify Makefile.local
+instead of Makefile" above.  For example:
+
+    T:= /var/tmp/testing
+
+
+
+### platform target section
+
+The file, Makefile.target, contains information about various platforms.
+The current list of targets in Makefile.target are:
+
+- Linux target
+- Apple macOS / Darwin target 
+- FreeBSD target
+- OpenBSD target
+- Cygwin target
+- simple target
+- default target (when target is empty)
+
+If you wish to modiy your target platform, consider doing
+so via the Makefile.local file.  See "Suggestion Modify Makefile.local
+instead of Makefile" above.
+
+
+
+## Step 2: compile calc
+
+Remove any previous compile attempts and compile by default:
+
+    make clobber all
+
+
+
+### Force calc to build with only static libs:
+
+You may force calc to build with only static libs:
+
+    make clobber calc-static-only BLD_TYPE=calc-static-only
+
+
+
+### Force calc to build with only dynamic shared libs:
+
+You may force calc to build with only dynamic libs:
+
+    make clobber calc-dynamic-only BLD_TYPE=calc-dynamic-only
+
+
+
+### Reports of compiler warnings (and errors) as welcome
+
+We are interested learning about any compiler warnings (and errors) that you may find.
+See the BUGS file if you find any compiler warning or errors.
+
+
+
+### Step 3: test calc
+
+You may run the calc regression test suite, after successfully compiling, by:
+
+	make check
+
+For a more quiet check which only prints if something goes wrong, use:
+
+	make chk
+
+
+
+### Step 4: install calc
+
+Depending on permissions, you may need to become the super-user:
+
+    sudo -s
+
+before you install:
+
+    make install
+
+
+
+### Step n: calc help - getting started
+
+Calc is distributed with an extensive collection of help files that
+are accessible from the command line.  The following assume that you
+are running calc from the distribution directory or that you have
+installed calc.	 In these examples, the "; " is the calc prompt, not
+something that you type.
+
+For list of help topics:
+
+    ; help
+
+For overview of calc overview:
+
+    ; help intro
+    ; help overview
+    ; help command
+    ; help define
+    ; help statement
+    ; help variable
+    ; help usage
+
+For list of builtin functions:
+
+    ; help builtin
+
+C programmers should note some unexpected differences with the calc syntax:
+
+    ; help unexpected
+
+Calc is shipped with a standard collection of calc resource files.
+For a list of calc standard resource files see:
+
+    ; help resource
 
 We suggest that you might want to read the README.FIRST file and look at
 the calc help subsystem.  See also the README.md file.
 
-In general, if you run into problems, read the BUGS file and follow
-the instructions.
+In general, if you run into problems, read the BUGS file and follow the instructions.
 
-=-=
+# IMPORTANT: parallel make not supported
 
-On calc Makefiles:
+We do not support making calc using a parallel make as most parallel
+make systems fail to understand the depedency relationships between
+a numner of important make rules and thus fail to properly compile calc.
 
-How to tell the origin of of a Makefile:
 
-    The "# SRC: ... - ..." comment line near the top
-    of the file indicates the origin of this file.
-    In each segment below, we indicate what the SRC
-    comment like will read.
 
-SHELL= ...
-
-    On some systems, /bin/sh is a rather reduced shell with
-    deprecated behavior.
-
-    If your system has a up to date, bash shell, then
-    you may wish to edit the Makefile to use:
-
-	    SHELL= /bin/bash
-
-    On some systems such as macOS, the bash shell is very
-    far behind to the point where is cannot be depended on.
-    On such systems, the sh may be a much better alternative
-    shell for this Makefile to use:
-
-	    SHELL= /bin/sh
-
-Makefile.local
-
-    # SRC: Makefile.local - tweaks to the top level Makefile
-
-    Between releases, Makefile.local at the top of the master branch
-    will contain how we typically build calc and test calc (FYI: we
-    normally enable things such as -Werror -Wextra -pedantic).  When we
-    push out a release, Makefile.local will be stripped of non-comment
-    lines.  Thus, releases of calc, and, released "calc*.src.rpm"
-    files and the source tarballs, will have a Makefile.local with
-    only comments.
-
-    If the Makefile is not suitable for you (say because you fetch it
-    from the top of the master branch between releases), then you may
-    wish to remove all non-comment lines.  I.e., lines that do not start
-    with the # character.
-
-    This Makefile.local assumes you have a modern make command such as
-    the GNU make.  See Makefile.simple comment below if you do not
-    have such a modern make command.
-
-    In the calc GitHub repo, Makefile is the calc build environment
-    and Makefile.ship is the top level Makefile:
-
-	https://github.com/lcn2/calc
-
-Makefile
-
-    # SRC: Makefile.ship - top level Makefile
-
-    This is the main top level Makefile.
-
-    In calc packages such as RPMs, and the tar.bz2 source tarball,
-    Makefile.ship has been moved into Makefile.
-
-    In the calc GitHub repo, Makefile is the calc build environment
-    and Makefile.ship is the top level Makefile:
-
-	https://github.com/lcn2/calc
-
-    The Makefile.simple rule of Makefile.ship, when forming the
-    Makefile.simple file, removes lines from Makefile.ship between
-    pairs of '#if 0' AND '#endif':
-
-	#if 0
-	lines removed when forming Makefile.simple
-	...
-	lines removed when forming Makefile.simple
-	#endif
-
-    The '#if 0' AND '#endif' MUST be at the start of the line.
-    Any text after the '#if 0' OR '#endif' is ignored.
-
-    While they may look like a CPP directives, they are not.  The
-    inline awk script of the Makefile.simple rule does NOT allow
-    them to nest:
-
-	#if 0 /* DO NOT DO THIS */
-	lines removed when forming Makefile.simple
-	...
-	#if 0 /* DO NOT DO THIS */
-	...
-	#endif /* DO NOT DO THIS */
-	...
-	#endif /* DO NOT DO THIS */
-
-Makefile.simple
-
-    # SRC: Makefile.simple - non-GNU version
-
-    This is a non-GNU or simple Makefile designed for environments
-    that do not have a modern make command.
-
-    If you have a Makefile.simple file, use these commands to
-    form a Makefile:
-
-	if [ -f Makefile ]; then mv -f Makefile Makefile.orig; fi
-	cp Makefile.simple Makefile
-
-    The Makefile.simple rule from Makefile.ship is used to construct
-    this file from the contents of Makefile.ship.
-
-    In calc packages such as RPMs, and the tar.bz2 source the
-    Makefile.simple exists.  In the calc GitHub repo:
-
-	https://github.com/lcn2/calc
-
-    this file does NOT exist and must be made via the Makefile.simple
-    make rule.  Therefore, non-GNU and simple make commands are NOT
-    supported by the calc GitHub repo master branch.  Instead, you
-    need to extract Makefile.simple from one of the calc tar.bz2
-    source tarball source from a calc source mirror:
-
-	http://www.isthe.com/chongo/tech/comp/calc/calc-mirror.html
-
-custom/Makefile
-
-    # SRC: Makefile via make -f Makefile custom/Makefile
-
-    This is the custom directory Makefile.
-
-custom/Makefile.simple
-
-    # SRC: custom/Makefile.simple - non-GNU version
-
-    This is a non-GNU or simple Makefile for the custom directory
-    that is designed for environments that do not have a modern make
-    command.
-
-    In calc packages such as RPMs, and the tar.bz2 source the
-    Makefile.simple exists.  In the calc GitHub repo:
-
-	https://github.com/lcn2/calc
-
-    this file does NOT exist and must be made via the
-    custom/Makefile.simple make rule.  Therefore, non-GNU and simple
-    make commands are NOT supported by the calc GitHub repo master
-    branch.  Instead, you need to extract custom/Makefile.simple
-    from one of the calc tar.bz2 source tarball source from a calc
-    source mirror:
-
-	http://www.isthe.com/chongo/tech/comp/calc/calc-mirror.html
-
-cal/Makefile
-
-    # SRC: cal/Makefile
-
-    The Makefile for the cal sub-directory.
-
-cscript/Makefile
-
-    # SRC: cscript/Makefile
-
-    The Makefile for the cscript sub-directory.
-
-help/Makefile
-
-    # SRC: help/Makefile
-
-    The Makefile for the help sub-directory.
-
-## Copyright (C) 1999-2007,2021  Landon Curt Noll
+## Copyright (C) 1999-2007,2021,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
