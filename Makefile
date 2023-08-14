@@ -23,11 +23,15 @@
 # Under source code control:	1990/02/15 01:48:41
 # File existed as early as:	before 1990
 #
+# This calculator first developed by David I. Bell with help/mods from others.
+#
 # chongo <was here> /\oo/\	http://www.isthe.com/chongo/
 # Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
-#
-# calculator by David I. Bell with help/mods from others
-# Makefile by Landon Curt Noll
+
+
+# SUGGESTION: Instead of modifying this file, consider adding
+#	      statements to modify, replace or append Makefile
+#	      variables in the Makefile.local file.
 
 
 ###########################################

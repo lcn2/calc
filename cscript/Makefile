@@ -4,13 +4,7 @@
 #
 # Copyright (C) 1999-2006,2014,2017,2021-2023  Landon Curt Noll
 #
-# SRC: cscript/Makefile
-#
-#	The "# SRC: ... - ..." comment line above indicates
-#	the origin of this file.
-#
-# IMPORTANT: Please see the section on Makefiles near the
-#	     bottom of the HOWTO.INSTALL file.
+# Suggestion: Read the ../HOWTO.INSTALL file.
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -29,11 +23,15 @@
 # Under source code control:	1999/11/29 11:10:26
 # File existed as early as:	1999
 #
-# chongo <was here> /\oo/\	http://www.isthe.com/chongo/
-# Share and enjoy!  :-) http://www.isthe.com/chongo/tech/comp/calc/
+# This calculator first developed by David I. Bell with help/mods from others.
 #
-# calculator by David I. Bell with help/mods from others
-# Makefile by Landon Curt Noll
+# chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+# Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+
+
+# SUGGESTION: Instead of modifying this file, consider adding
+#	      statements to modify, replace or append Makefile
+#	      variables in the ../Makefile.local file.
 
 
 ###########################################
