@@ -25,40 +25,51 @@
  */
 
 
+/*
+ * ISO C requires a translation unit to contain at least one declaration,
+ * so we declare a global variable whose value is based on if CUSTOM is defined.
+ */
+#if defined(CUSTOM)
+int c_sysinfo_allowed = 1;	/* CUSTOM defined */
+#else /* CUSTOM */
+int c_sysinfo_allowed = 0;	/* CUSTOM defined */
+#endif /* CUSTOM */
+
+
 #if defined(CUSTOM)
 
 #include <stdio.h>
 #include <ctype.h>
 
-#include "have_string.h"
+#include "../have_string.h"
 #if defined(HAVE_STRING_H)
 #include <string.h>
 #endif
 
-#include "have_const.h"
-#include "value.h"
-#include "custom.h"
+#include "../have_const.h"
+#include "../value.h"
+#include "../custom.h"
 
-#include "config.h"
-#include "lib_calc.h"
-#include "calc.h"
-#include "longbits.h"
+#include "../config.h"
+#include "../lib_calc.h"
+#include "../calc.h"
+#include "../longbits.h"
 #define CHECK_L_FORMAT
-#include "block.h"
-#include "calcerr.h"
-#include "conf.h"
-#include "endian_calc.h"
-#include "fposval.h"
-#include "hist.h"
-#include "prime.h"
-#include "zrand.h"
-#include "zrandom.h"
+#include "../block.h"
+#include "../calcerr.h"
+#include "../conf.h"
+#include "../endian_calc.h"
+#include "../fposval.h"
+#include "../hist.h"
+#include "../prime.h"
+#include "../zrand.h"
+#include "../zrandom.h"
 
-#include "have_unused.h"
+#include "../have_unused.h"
 
 
-#include "attribute.h"
-#include "banned.h"	/* include after system header <> includes */
+#include "../attribute.h"
+#include "../banned.h"	/* include after system header <> includes */
 
 
 /*

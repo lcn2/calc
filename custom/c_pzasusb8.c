@@ -24,20 +24,31 @@
  */
 
 
+/*
+ * ISO C requires a translation unit to contain at least one declaration,
+ * so we declare a global variable whose value is based on if CUSTOM is defined.
+ */
+#if defined(CUSTOM)
+int c_pzasusb8_allowed = 1;	/* CUSTOM defined */
+#else /* CUSTOM */
+int c_pzasusb8_allowed = 0;	/* CUSTOM defined */
+#endif /* CUSTOM */
+
+
 #if defined(CUSTOM)
 
 #include <stdio.h>
 
-#include "have_const.h"
-#include "value.h"
-#include "custom.h"
-#include "zmath.h"
+#include "../have_const.h"
+#include "../value.h"
+#include "../custom.h"
+#include "../zmath.h"
 
-#include "have_unused.h"
+#include "../have_unused.h"
 
 
-#include "attribute.h"
-#include "banned.h"	/* include after system header <> includes */
+#include "../attribute.h"
+#include "../banned.h"	/* include after system header <> includes */
 
 
 /*

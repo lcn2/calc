@@ -99,11 +99,7 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
 #
 CC_STATIC=
 LD_STATIC=
@@ -137,7 +133,7 @@ CCMISC=
 LCC= gcc
 CC= ${PURIFY} ${LCC} ${CCWERR}
 #
-endif
+endif	# ($(target),Linux)
 
 ###############################
 # Apple macOS / Darwin target #
@@ -151,7 +147,7 @@ ifeq ($(arch),powerpc)
 COMMON_CFLAGS+= -std=gnu99
 COMMON_LDFLAGS+= -std=gnu99
 ARCH_CFLAGS+= -arch ppc
-endif
+endif	# ($(arch),powerpc)
 
 ifeq ($(target),Darwin)
 #
@@ -165,21 +161,17 @@ SET_INSTALL_NAME= yes
 ifeq ($(SET_INSTALL_NAME),yes)
 LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
     -install_name ${LIBDIR}/libcalc${LIB_EXT_VERSION} ${ARCH_CFLAGS}
-else
+else	# ($(SET_INSTALL_NAME),yes)
 LIBCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
     ${ARCH_CFLAGS}
-endif
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
+endif	# ($(SET_INSTALL_NAME),yes)
 ifeq ($(SET_INSTALL_NAME),yes)
 LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
     -install_name ${LIBDIR}/libcustcalc${LIB_EXT_VERSION} ${ARCH_CFLAGS}
-else
+else	# ($(SET_INSTALL_NAME),yes)
 LIBCUSTCALC_SHLIB= -single_module -undefined dynamic_lookup -dynamiclib \
     ${ARCH_CFLAGS}
-endif
-else
-LIBCUSTCALC_SHLIB=
-endif
+endif	# ($(SET_INSTALL_NAME),yes)
 #
 CC_STATIC=
 LD_STATIC= ${ARCH_CFLAGS}
@@ -218,7 +210,7 @@ LIB_EXT:= .dylib
 LIB_EXT_VERSION:= .${VERSION}${LIB_EXT}
 # LDCONFIG not required on this platform, so we redefine it to an empty string
 LDCONFIG:=
-endif
+endif	# ($(target),Darwin)
 
 ##################
 # FreeBSD target #
@@ -233,11 +225,7 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
 #
 CC_STATIC=
 LD_STATIC=
@@ -273,7 +261,7 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 MAKE= gmake
 #
-endif
+endif	# ($(target),FreeBSD)
 
 ##################
 # OpenBSD target #
@@ -288,11 +276,7 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
 #
 CC_STATIC=
 LD_STATIC=
@@ -328,7 +312,7 @@ CC= ${PURIFY} ${LCC} ${CCWERR}
 #
 MAKE= gmake
 #
-endif
+endif	# ($(target),OpenBSD)
 
 #################
 # Cygwin target #
@@ -343,11 +327,7 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
 #
 CC_STATIC=
 LIBCALC_STATIC=
@@ -381,7 +361,7 @@ CCMISC=
 LCC= cc
 CC= ${PURIFY} ${LCC} ${CCWERR}
 #
-endif
+endif	# ($(target),Cygwin)
 
 #################
 # simple target #
@@ -399,11 +379,7 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
 #
 CC_STATIC=
 LD_STATIC=
@@ -435,7 +411,7 @@ CFLAGS= ${ICFLAGS} ${CCOPT}
 ILDFLAGS= ${COMMON_LDFLAGS} ${LD_STATIC}
 LDFLAGS= ${LD_DEBUG} ${ILDFLAGS} ${LIBCALC_STATIC} ${LIBCUSTCALC_STATIC}
 #
-endif
+endif	# ($(target),simple)
 
 ###########################################
 # default target - (when target is empty) #
@@ -453,11 +429,7 @@ DEFAULT_LIB_INSTALL_PATH= ${PWD}:/lib:/usr/lib:${LIBDIR}:${PREFIX}/lib
 LD_SHARE= "-Wl,-rpath,${DEFAULT_LIB_INSTALL_PATH}" \
     "-Wl,-rpath-link,${DEFAULT_LIB_INSTALL_PATH}"
 LIBCALC_SHLIB= -shared "-Wl,-soname,libcalc${LIB_EXT_VERSION}"
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 LIBCUSTCALC_SHLIB= -shared "-Wl,-soname,libcustcalc${LIB_EXT_VERSION}"
-else
-LIBCUSTCALC_SHLIB=
-endif
 #
 CC_STATIC=
 LIBCALC_STATIC=
@@ -490,7 +462,7 @@ CCMISC=
 #
 LCC= gcc
 CC= ${PURIFY} ${LCC} ${CCWERR}
-endif
+endif	# ($(target),)
 
 ###########################################
 # Set the default compile flags for ${CC} #
@@ -505,9 +477,9 @@ endif
 #
 ifeq ($(BLD_TYPE),calc-static-only)
 ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_STATIC}
-else
+else	# ($(BLD_TYPE),calc-static-only)
 ICFLAGS= ${COMMON_CFLAGS} ${CCBAN} ${CC_SHARE}
-endif
+endif	# ($(BLD_TYPE),calc-static-only)
 CFLAGS= ${ICFLAGS} ${CCOPT}
 
 # Required flags to link files for calc

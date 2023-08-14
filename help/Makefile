@@ -58,8 +58,7 @@ CONFIG_MKF= ../Makefile.config
 #
 TARGET_MKF= ../Makefile.target
 
-# Local file that is included just prior to the first rule,
-# that allows one to override any values set in this Makefile.
+# Host target information.
 #
 LOCAL_MKF= ../Makefile.local
 

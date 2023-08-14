@@ -53,8 +53,7 @@ MAKE_FILE= Makefile
 #
 CONFIG_MKF= ../Makefile.config
 
-# Host targets that are shared in common with both Makefile
-# and custom/Makefile.
+# Host target information.
 #
 TARGET_MKF= ../Makefile.target
 

@@ -77,7 +77,9 @@ E_FUNC VALUE custom(char*, int, VALUE**);	/* master custom interface */
 EXTERN BOOL allow_custom;		/* TRUE => custom builtins allowed */
 E_FUNC void showcustom(void);		/* print custom functions */
 E_FUNC void customhelp(char *);		/* direct custom help */
+#if defined(CUSTOM)
 EXTERN CONST struct custom cust[];	/* custom interface table */
+#endif /* CUSTOM */
 E_FUNC void init_custreg(void);		/* initialize custom registers */
 
 #endif /* !CUSTOM_H */

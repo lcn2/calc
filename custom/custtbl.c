@@ -26,12 +26,12 @@
 
 #include <unistd.h>
 
-#include "have_const.h"
-#include "value.h"
-#include "custom.h"
+#include "../have_const.h"
+#include "../value.h"
+#include "../custom.h"
 
 
-#include "banned.h"	/* include after system header <> includes */
+#include "../banned.h"	/* include after system header <> includes */
 
 
 /*

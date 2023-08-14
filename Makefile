@@ -47,8 +47,7 @@ MAKE_FILE= Makefile
 #
 CONFIG_MKF= Makefile.config
 
-# Host targets that are shared in common with both Makefile
-# and custom/Makefile.
+# Host target information.
 #
 TARGET_MKF= Makefile.target
 
@@ -252,201 +251,6 @@ SAMPLE_C_SRC= sample_many.c sample_rand.c
 #
 SAMPLE_OBJ= sample_many.o sample_rand.o
 
-# The complete list of Makefile vars passed down to custom/Makefile.
-#
-CUSTOM_PASSDOWN=  \
-    ALLOW_CUSTOM="${ALLOW_CUSTOM}" \
-    AR="${AR}" \
-    ARCH_CFLAGS="${ARCH_CFLAGS}" \
-    AWK="${AWK}" \
-    BINDIR="${BINDIR}" \
-    BLD_TYPE="${BLD_TYPE}" \
-    CALC_INCDIR="${CALC_INCDIR}" \
-    CALC_SHAREDIR="${CALC_SHAREDIR}" \
-    CAT="${CAT}" \
-    CC="${CC}" \
-    CCBAN="${CCBAN}" \
-    CCERR="${CCERR}" \
-    CCMISC="${CCMISC}" \
-    CCOPT="${CCOPT}" \
-    CCWARN="${CCWARN}" \
-    CC_SHARE="${CC_SHARE}" \
-    CFLAGS="${CFLAGS} -I.." \
-    CHMOD="${CHMOD}" \
-    CMP="${CMP}" \
-    CO="${CO}" \
-    COMMON_ADD="${COMMON_ADD}" \
-    COMMON_CFLAGS="${COMMON_CFLAGS} -I.." \
-    COMMON_LDFLAGS="${COMMON_LDFLAGS}" \
-    CP="${CP}" \
-    CUSTOMCALDIR="${CUSTOMCALDIR}" \
-    CUSTOMHELPDIR="${CUSTOMHELPDIR}" \
-    CUSTOMINCDIR="${CUSTOMINCDIR}" \
-    DEBUG="${DEBUG}" \
-    DEFAULT_LIB_INSTALL_PATH="${DEFAULT_LIB_INSTALL_PATH}" \
-    DIFF="${DIFF}" \
-    E="${E}" \
-    FMT="${FMT}" \
-    GREP="${GREP}" \
-    H="${H}" \
-    HELPDIR="${HELPDIR}" \
-    ICFLAGS="${ICFLAGS} -I.." \
-    ILDFLAGS="${ILDFLAGS}" \
-    INCDIR="${INCDIR}" \
-    LANG="${LANG}" \
-    LCC="${LCC}" \
-    LDCONFIG="${LDCONFIG}" \
-    LDFLAGS="${LDFLAGS}" \
-    LD_SHARE="${LD_SHARE}" \
-    LIBCUSTCALC_SHLIB="${LIBCUSTCALC_SHLIB}" \
-    LIBDIR="${LIBDIR}" \
-    LN="${LN}" \
-    LS="${LS}" \
-    MAKE="${MAKE}" \
-    MAKEDEPEND="${MAKEDEPEND}" \
-    MAKE_FILE=Makefile \
-    MKDIR="${MKDIR}" \
-    MV="${MV}" \
-    MINGW="${MINGW}" \
-    PREFIX="${PREFIX}" \
-    PURIFY="${PURIFY}" \
-    Q="${Q}" \
-    RANLIB="${RANLIB}" \
-    RM="${RM}" \
-    RMDIR="${RMDIR}" \
-    S="${S}" \
-    SCRIPTDIR="${SCRIPTDIR}" \
-    SED="${SED}" \
-    SHELL="${SHELL}" \
-    SORT="${SORT}" \
-    T="${T}" \
-    TAIL="${TAIL}" \
-    TOUCH="${TOUCH}" \
-    TRUE="${TRUE}" \
-    V="${V}" \
-    VERSION="${VERSION}" \
-    WNO_IMPLICT="${WNO_IMPLICT}" \
-    WNO_ERROR_LONG_LONG="${WNO_ERROR_LONG_LONG}" \
-    WNO_LONG_LONG="${WNO_LONG_LONG}" \
-    target="${target}"
-
-# The complete list of Makefile vars passed down to help/Makefile.
-#
-HELP_PASSDOWN= \
-    AR="${AR}" \
-    BINDIR="${BINDIR}" \
-    CALC_INCDIR="${CALC_INCDIR}" \
-    CALC_SHAREDIR="${CALC_SHAREDIR}" \
-    CAT="${CAT}" \
-    CFLAGS="${CFLAGS}" \
-    CHMOD="${CHMOD}" \
-    CMP="${CMP}" \
-    CO="${CO}" \
-    COMMON_ADD="${COMMON_ADD}" \
-    COMMON_CFLAGS="${COMMON_CFLAGS}" \
-    COMMON_LDFLAGS="${COMMON_LDFLAGS}" \
-    CP="${CP}" \
-    E="${E}" \
-    EXT="${EXT}" \
-    FMT="${FMT}" \
-    GREP="${GREP}" \
-    H="${H}" \
-    HELPDIR="${HELPDIR}" \
-    ICFLAGS="${ICFLAGS}" \
-    ILDFLAGS="${ILDFLAGS}" \
-    INCDIR="${INCDIR}" \
-    LANG="${LANG}" \
-    LCC="${LCC}" \
-    LIBDIR="${LIBDIR}" \
-    MAKE_FILE=Makefile \
-    MKDIR="${MKDIR}" \
-    MINGW="${MINGW}" \
-    MV="${MV}" \
-    PREFIX="${PREFIX}" \
-    Q="${Q}" \
-    RM="${RM}" \
-    RMDIR="${RMDIR}" \
-    S="${S}" \
-    SCRIPTDIR="${SCRIPTDIR}" \
-    SED="${SED}" \
-    SHELL="${SHELL}" \
-    T="${T}" \
-    TOUCH="${TOUCH}" \
-    TRUE="${TRUE}" \
-    V="${V}"
-
-# The complete list of Makefile vars passed down to cal/Makefile.
-#
-CAL_PASSDOWN= \
-    AR="${AR}" \
-    BINDIR="${BINDIR}" \
-    CALC_INCDIR="${CALC_INCDIR}" \
-    CALC_SHAREDIR="${CALC_SHAREDIR}" \
-    CAT="${CAT}" \
-    CHMOD="${CHMOD}" \
-    CMP="${CMP}" \
-    CO="${CO}" \
-    CP="${CP}" \
-    E="${E}" \
-    H="${H}" \
-    HELPDIR="${HELPDIR}" \
-    INCDIR="${INCDIR}" \
-    LANG="${LANG}" \
-    LIBDIR="${LIBDIR}" \
-    MAKE_FILE=Makefile \
-    MKDIR="${MKDIR}" \
-    MINGW="${MINGW}" \
-    MV="${MV}" \
-    PREFIX="${PREFIX}" \
-    Q="${Q}" \
-    RM="${RM}" \
-    RMDIR="${RMDIR}" \
-    S="${S}" \
-    SCRIPTDIR="${SCRIPTDIR}" \
-    SHELL="${SHELL}" \
-    T="${T}" \
-    TOUCH="${TOUCH}" \
-    TRUE="${TRUE}" \
-    V="${V}"
-
-# The complete list of Makefile vars passed down to cscript/Makefile.
-#
-CSCRIPT_PASSDOWN= \
-    AR="${AR}" \
-    BINDIR="${BINDIR}" \
-    CALC_INCDIR="${CALC_INCDIR}" \
-    CALC_SHAREDIR="${CALC_SHAREDIR}" \
-    CAT="${CAT}" \
-    CHMOD="${CHMOD}" \
-    CMP="${CMP}" \
-    CO="${CO}" \
-    CP="${CP}" \
-    E="${E}" \
-    ECHON="${ECHON}" \
-    FMT="${FMT}" \
-    H="${H}" \
-    HELPDIR="${HELPDIR}" \
-    INCDIR="${INCDIR}" \
-    LANG="${LANG}" \
-    LIBDIR="${LIBDIR}" \
-    MAKE_FILE=Makefile \
-    MKDIR="${MKDIR}" \
-    MINGW="${MINGW}" \
-    MV="${MV}" \
-    PREFIX="${PREFIX}" \
-    Q="${Q}" \
-    RM="${RM}" \
-    RMDIR="${RMDIR}" \
-    S="${S}" \
-    SCRIPTDIR="${SCRIPTDIR}" \
-    SED="${SED}" \
-    SHELL="${SHELL}" \
-    SORT="${SORT}" \
-    T="${T}" \
-    TOUCH="${TOUCH}" \
-    TRUE="${TRUE}" \
-    V="${V}"
-
 # complete list of .h files found (but not built) in the distribution
 #
 H_SRC= ${LIB_H_SRC} ${SAMPLE_H_SRC}
@@ -480,18 +284,11 @@ OBJS= ${LIBOBJS} ${CALCOBJS} ${UTIL_OBJS} ${SAMPLE_OBJ}
 # Symlinks of dynamic shared libraries
 # Early targets - things needed before the main build phase can begin
 #
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 CALC_STATIC_LIBS= libcalc.a libcustcalc.a
 CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERSION} libcustcalc${LIB_EXT_VERSION}
 SYM_DYNAMIC_LIBS= libcalc${LIB_EXT} \
-	libcustcalc${LIB_EXT_VERSION}  libcustcalc${LIB_EXT}
+	libcustcalc${LIB_EXT_VERSION} libcustcalc${LIB_EXT}
 EARLY_TARGETS= hsrc .hsrc custom/.all custom/Makefile
-else	# ($(ALLOW_CUSTOM),-DCUSTOM)
-CALC_STATIC_LIBS= libcalc.a
-CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERSION}
-SYM_DYNAMIC_LIBS= libcalc${LIB_EXT}
-EARLY_TARGETS= hsrc .hsrc
-endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 
 # list of sample programs that need to be built to satisfy sample rule
 #
@@ -801,7 +598,6 @@ else	# RPM_TOP
 endif	# RPM_TOP
 	${Q} echo '#endif /* HELPDIR */' >> $@
 	${Q} echo '' >> $@
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 	${Q} echo '/* the location of the custom help directory */' >> $@
 	${Q} echo '#if !defined(CUSTOMHELPDIR)' >> $@
 ifdef RPM_TOP
@@ -811,7 +607,6 @@ else	# RPM_TOP
 endif	# RPM_TOP
 	${Q} echo '#endif /* CUSTOMHELPDIR */' >> $@
 	${Q} echo '' >> $@
-endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 	${Q} echo '/* the default pager to use */' >> $@
 	${Q} echo '#if !defined(DEFAULTCALCPAGER)' >> $@
 	${Q} echo '#define DEFAULTCALCPAGER "${CALCPAGER}"' >> $@
@@ -2517,7 +2312,7 @@ cal/.all: cal/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for cal =-=-=-=-='
 	${RM} -f $@
-	cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} all
+	cd cal; ${MAKE} -f Makefile all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
@@ -2525,7 +2320,7 @@ help/.all: help/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for help =-=-=-=-='
 	${RM} -f $@
-	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} all
+	cd help; ${MAKE} -f Makefile all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
@@ -2534,7 +2329,7 @@ help/builtin: help/Makefile \
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking builtin rule for help =-=-=-=-='
 	${RM} -f $@
-	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} builtin
+	cd help; ${MAKE} -f Makefile builtin
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
@@ -2544,23 +2339,22 @@ ${CSCRIPT_TARGETS}: cscript/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for cscript =-=-=-=-='
 	${RM} -f cscript/.all
-	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} all
+	cd cscript; ${MAKE} -f Makefile all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 custom/.all: custom/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for custom =-=-=-=-='
 	${RM} -f $@
-	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} all
+	cd custom; ${MAKE} -f Makefile all
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 custom/libcustcalc${LIB_EXT_VERSION}: custom/Makefile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking all rule for custom =-=-=-=-='
-	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} $@
+	cd custom; ${MAKE} -f Makefile $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
@@ -2571,7 +2365,6 @@ libcustcalc${LIB_EXT_VERSION}: custom/libcustcalc${LIB_EXT_VERSION}
 libcustcalc${LIB_EXT}: libcustcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${LN} -s $? $@
-endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 
 ###
 #
@@ -2585,20 +2378,18 @@ calc-static${EXT}: .hsrc ${CALCOBJS} \
 	${CC} ${LDFLAGS} ${CALCOBJS} ${LD_STATIC} ${CALC_STATIC_LIBS} \
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
-libcustcalc.a: custom/libcustcalc.a
-	${Q} ${RM} -f $@
-	${CP} -f $? $@
-
 libcalc.a: ${LIBOBJS} ${MK_SET}
 	${RM} -f libcalc.a
 	${AR} qc libcalc.a ${LIBOBJS}
 	${RANLIB} libcalc.a
 	${CHMOD} 0644 libcalc.a
 
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
+libcustcalc.a: custom/libcustcalc.a
+	${Q} ${RM} -f $@
+	${CP} -f $? $@
+
 custom/libcustcalc.a: custom/Makefile
-	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} libcustcalc.a
-endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
+	cd custom; ${MAKE} -f Makefile libcustcalc.a
 
 sample_rand-static${EXT}: sample_rand.o ${CALC_STATIC_LIBS} \
 			  ${MK_SET}
@@ -2636,10 +2427,10 @@ depend: hsrc custom/Makefile
 	    exit 1; \
 	fi
 	${V} echo '=-=-=-=-= Invoking depend rule for cscript =-=-=-=-='
-	${Q} cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} depend
+	${Q} cd cscript; ${MAKE} -f Makefile depend
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking depend rule for custom =-=-=-=-='
-	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} depend
+	${Q} cd custom; ${MAKE} -f Makefile depend
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q} echo forming skel
 	${Q} ${RM} -rf skel
@@ -2751,19 +2542,19 @@ distlist: ${DISTLIST} custom/Makefile
 		echo win32/$$i; \
 	    fi; \
 	done; \
-	(cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} $@); \
-	(cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} $@); \
-	(cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} $@); \
-	(cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} $@) \
+	(cd help; ${MAKE} -f Makefile $@); \
+	(cd cal; ${MAKE} -f Makefile $@); \
+	(cd custom; ${MAKE} -f Makefile $@); \
+	(cd cscript; ${MAKE} -f Makefile $@) \
 	) | LANG=C ${SORT}
 
 distdir: custom/Makefile
 	${Q} (echo .; \
 	echo win32; \
-	(cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} $@); \
-	(cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} $@); \
-	(cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} $@); \
-	(cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} $@) \
+	(cd help; ${MAKE} -f Makefile $@); \
+	(cd cal; ${MAKE} -f Makefile $@); \
+	(cd custom; ${MAKE} -f Makefile $@); \
+	(cd cscript; ${MAKE} -f Makefile $@) \
 	) | LANG=C ${SORT}
 
 calcliblist: custom/Makefile
@@ -2772,10 +2563,10 @@ calcliblist: custom/Makefile
 		echo $$i; \
 	    fi; \
 	done; \
-	(cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} $@); \
-	(cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} $@); \
-	(cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} $@); \
-	(cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} $@) \
+	(cd help; ${MAKE} -f Makefile $@); \
+	(cd cal; ${MAKE} -f Makefile $@); \
+	(cd custom; ${MAKE} -f Makefile $@); \
+	(cd cscript; ${MAKE} -f Makefile $@) \
 	) | LANG=C ${SORT}
 
 calcliblistfmt:
@@ -2930,7 +2721,6 @@ env:
 	@echo 'CALC_SHAREDIR=${CALC_SHAREDIR}'; echo ''
 	@echo 'CALCSRC=${CALCSRC}'; echo ''
 	@echo 'CALC_STATIC_LIBS=${CALC_STATIC_LIBS}'; echo ''
-	@echo 'CAL_PASSDOWN=${CAL_PASSDOWN}'; echo ''
 	@echo 'CAT=${CAT}'; echo ''
 	@echo 'CATDIR=${CATDIR}'; echo ''
 	@echo 'CATEXT=${CATEXT}'; echo ''
@@ -2951,14 +2741,12 @@ env:
 	@echo 'COMMON_LDFLAGS=${COMMON_LDFLAGS}'; echo ''
 	@echo 'CONFIG_MKF=${CONFIG_MKF}'; echo ''
 	@echo 'CP=${CP}'; echo ''
-	@echo 'CSCRIPT_PASSDOWN=${CSCRIPT_PASSDOWN}'; echo ''
 	@echo 'CSCRIPT_TARGETS=${CSCRIPT_TARGETS}'; echo ''
 	@echo 'C_SRC=${C_SRC}'; echo ''
 	@echo 'CTAGS=${CTAGS}'; echo ''
 	@echo 'CUSTOMCALDIR=${CUSTOMCALDIR}'; echo ''
 	@echo 'CUSTOMHELPDIR=${CUSTOMHELPDIR}'; echo ''
 	@echo 'CUSTOMINCDIR=${CUSTOMINCDIR}'; echo ''
-	@echo 'CUSTOM_PASSDOWN=${CUSTOM_PASSDOWN}'; echo ''
 	@echo 'DATE=${DATE}'; echo ''
 	@echo 'DEBUG=${DEBUG}'; echo ''
 	@echo 'DEFAULT_LIB_INSTALL_PATH=${DEFAULT_LIB_INSTALL_PATH}'; echo ''
@@ -3010,7 +2798,6 @@ env:
 	@echo 'HAVE_USTAT=${HAVE_USTAT}'; echo ''
 	@echo 'HAVE_VSNPRINTF=${HAVE_VSNPRINTF}'; echo ''
 	@echo 'HELPDIR=${HELPDIR}'; echo ''
-	@echo 'HELP_PASSDOWN=${HELP_PASSDOWN}'; echo ''
 	@echo 'HOSTNAME=${HOSTNAME}'; echo ''
 	@echo 'H_SRC=${H_SRC}'; echo ''
 	@echo 'ICFLAGS=${ICFLAGS}'; echo ''
@@ -3220,7 +3007,8 @@ rpm-hide-static:
 	${RM} -rf static
 	${MKDIR} -p static
 	${CP} -f -p calc-static${EXT} ${SAMPLE_STATIC_TARGETS} static
-	${CP} -f -p libcalc.a custom/libcustcalc.a static
+	${CP} -f -p libcalc.a static
+	${CP} -f -p custom/libcustcalc.a static
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 rpm-unhide-static:
@@ -3258,16 +3046,16 @@ inst_files: ${MK_SET} help/Makefile cal/Makefile \
 	${Q} ${RM} -f inst_files
 	${Q} echo ${BINDIR}/calc${EXT} > inst_files
 	${Q} cd help; LANG=C \
-	    ${MAKE} -f Makefile ${HELP_PASSDOWN} echo_inst_files | \
+	    ${MAKE} -f Makefile echo_inst_files | \
 	    ${GREP} -E '__file__..' | ${SED} -e s'/.*__file__ //' >> ../inst_files
 	${Q} cd cal; LANG=C \
-	    ${MAKE} -f Makefile ${CAL_PASSDOWN} echo_inst_files | \
+	    ${MAKE} -f Makefile echo_inst_files | \
 	    ${GREP} -E '__file__..' | ${SED} -e s'/.*__file__ //' >> ../inst_files
 	${Q} cd custom; LANG=C \
-	    ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} echo_inst_files | \
+	    ${MAKE} -f Makefile echo_inst_files | \
 	    ${GREP} -E '__file__..' | ${SED} -e s'/.*__file__ //' >> ../inst_files
 	${Q} cd cscript; LANG=C \
-	    ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} echo_inst_files | \
+	    ${MAKE} -f Makefile echo_inst_files | \
 	    ${GREP} -E '__file__..' | ${SED} -e s'/.*__file__ //' >> ../inst_files
 	${Q} echo ${LIBDIR}/libcalc.a >> inst_files
 	${Q} for i in ${LIB_H_SRC} ${BUILD_H_SRC} /dev/null; do \
@@ -3336,17 +3124,16 @@ clean:
 	${RM} -f .libcustcalc_error
 	${RM} -f calc.spec.sed
 	${Q} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
-	cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} clean
+	cd help; ${MAKE} -f Makefile clean
 	${Q} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q} echo '=-=-=-=-= Invoking $@ rule for cal =-=-=-=-='
-	cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} clean
+	cd cal; ${MAKE} -f Makefile clean
 	${Q} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
-	cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} clean
+	cd custom; ${MAKE} -f Makefile clean
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
-	${MAKE} custom/Makefile
-	cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} clean
+	cd cscript; ${MAKE} -f Makefile clean
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${Q} echo remove files that are obsolete
 	${RM} -rf lib
@@ -3384,20 +3171,20 @@ clobber: clean
 	${RM} -f all
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
 	-${RM} -f help/all; \
-	    cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} $@
+	    cd help; ${MAKE} -f Makefile $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cal =-=-=-=-='
 	-${RM} -f cal/all; \
-	    cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} $@
+	    cd cal; ${MAKE} -f Makefile $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
 	-${RM} -f custom/all; \
 	    ${MAKE} custom/Makefile; \
-	    cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} $@
+	    cd custom; ${MAKE} -f Makefile $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
 	-${RM} -f cscript/all; \
-	    cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} $@
+	    cd cscript; ${MAKE} -f Makefile $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo remove files that are obsolete
 	${RM} -rf win32 build
@@ -3472,7 +3259,6 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 	else \
 	    ${TRUE}; \
 	fi
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 	-${Q} if [ ! -d ${T}${CUSTOMCALDIR} ]; then \
 	    echo ${MKDIR} -p ${T}${CUSTOMCALDIR}; \
 	    ${MKDIR} -p ${T}${CUSTOMCALDIR}; \
@@ -3497,7 +3283,6 @@ ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 	else \
 	    ${TRUE}; \
 	fi
-endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 	-${Q} if [ ! -d ${T}${SCRIPTDIR} ]; then \
 	    echo ${MKDIR} -p ${T}${SCRIPTDIR}; \
 	    ${MKDIR} -p ${T}${SCRIPTDIR}; \
@@ -3575,18 +3360,16 @@ endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 	    echo "installed ${T}${BINDIR}/calc${EXT}"; \
 	fi
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
-	${Q} cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} install
+	${Q} cd help; ${MAKE} -f Makefile install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cal =-=-=-=-='
-	${Q} cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} install
+	${Q} cd cal; ${MAKE} -f Makefile install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-ifeq ($(ALLOW_CUSTOM),-DCUSTOM)
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
-	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} install
+	${Q} cd custom; ${MAKE} -f Makefile install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
-endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
-	${Q} cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} install
+	${Q} cd cscript; ${MAKE} -f Makefile install
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	-${Q} if [ -f libcalc.a ]; then \
 	    if ${CMP} -s libcalc.a ${T}${LIBDIR}/libcalc.a; then \
@@ -3841,16 +3624,16 @@ uninstall: custom/Makefile
 	    fi; \
 	fi
 	${V} echo '=-=-=-=-= Invoking $@ rule for cscript =-=-=-=-='
-	${Q} cd cscript; ${MAKE} -f Makefile ${CSCRIPT_PASSDOWN} uninstall
+	${Q} cd cscript; ${MAKE} -f Makefile uninstall
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for custom =-=-=-=-='
-	${Q} cd custom; ${MAKE} -f Makefile ${CUSTOM_PASSDOWN} uninstall
+	${Q} cd custom; ${MAKE} -f Makefile uninstall
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for cal =-=-=-=-='
-	${Q} cd cal; ${MAKE} -f Makefile ${CAL_PASSDOWN} uninstall
+	${Q} cd cal; ${MAKE} -f Makefile uninstall
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= Invoking $@ rule for help =-=-=-=-='
-	${Q} cd help; ${MAKE} -f Makefile ${HELP_PASSDOWN} uninstall
+	${Q} cd help; ${MAKE} -f Makefile uninstall
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	-${Q} if [ -f "${T}${BINDIR}/calc-static${EXT}" ]; then \
 	    ${RM} -f "${T}${BINDIR}/calc-static${EXT}"; \

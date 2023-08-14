@@ -69,6 +69,15 @@ The following are the changes from calc version 2.14.3.1 to date:
     Thus, one may modify or append many Makefile variables
     in all calc Makefiles.
 
+    Removed the ${CAL_PASSDOWN}, ${HELP_PASSDOWN}, ${HELP_PASSDOWN},
+    ${CSCRIPT_PASSDOWN} Makefile variables as the new Makefile
+    include files keep Makefile variables in sync.
+
+    Fixed the ability of calc to compile when CUSTOM is undefined
+    (i.e., -UCUSTOM).  The libcustcalc is always built, regardless
+    of the $(ALLOW_CUSTOM} Makefile variable.  However when CUSTOM
+    is undefined, the bulk of custom functions are not defined.
+
     Added comments in Makefile.local for how to reduce dependency chains
     under macOS.  XXX - this doesn't yet work so don't uncomment - XXX.
 
