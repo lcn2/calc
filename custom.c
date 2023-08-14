@@ -96,8 +96,8 @@ custom(char *name, int count, VALUE **vals)
 	 */
 	if (custtbl_allowed == 0) {
 	    fprintf(stderr,
-		"%sCalc was built with custom functions enabled but custtbl_allowed is 0\n",
-		(conf->tab_ok ? "\t" : ""));
+		"%sCalc was built with custom functions enabled but custtbl_allowed: %d == 0\n",
+		(conf->tab_ok ? "\t" : ""), custtbl_allowed);
 	    return error_value(E_NO_CUSTOM);
 	}
 
@@ -123,8 +123,8 @@ custom(char *name, int count, VALUE **vals)
 	 */
 	if (custtbl_allowed != 0) {
 	    fprintf(stderr,
-		"%sCalc was built with custom functions disabled but custtbl_allowed is != 0\n",
-		(conf->tab_ok ? "\t" : ""));
+		"%sCalc was built with custom functions disabled but custtbl_allowed: %d != 0\n",
+		(conf->tab_ok ? "\t" : ""), custtbl_allowed);
 	}
 	return error_value(E_NO_CUSTOM);
 

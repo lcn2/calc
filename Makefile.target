@@ -177,13 +177,7 @@ LIBCUSTCALC_SHLIB= -dynamiclib -undefined dynamic_lookup \
 # data that are unreachable by the entry point or exported symbols.
 #
 COMMON_LDFLAGS+= -Wl,-dead_strip
-
-# We cannot use: COMMON_LDFLAGS+= -Wl,-dead_strip_dylibs
-#
-# The macOS ld documentation states that option should not be used
-# when linking against a dylib which is required at runtime for some
-# indirect reason such as the dylib has an important initializer.
-# The libcustcalc appears to have such an initializer.
+COMMON_LDFLAGS+= -Wl,-dead_strip_dylibs
 
 # static library option
 #

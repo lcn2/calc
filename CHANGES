@@ -89,7 +89,8 @@ The following are the changes from calc version 2.14.3.1 to date:
 
     Under macOS, to reduce dependency chains, we remove functions and
     data that are unreachable by the entry point or exported symbols.
-    In particular, the linker is run with "-dead_strip".
+    In particular, the linker is run with "-dead_strip" and with
+    "-dead_strip_dylibs".
 
 
 The following are the changes from calc version 2.14.2.1 to 2.14.3.0:

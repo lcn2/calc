@@ -164,9 +164,33 @@ main(int argc, char **argv)
 				switch (c) {
 				case 'C':
 #if defined(CUSTOM)
+					/*
+					 * validate custtbl_allowed value
+					 */
+					if (custtbl_allowed == 0) {
+					    fprintf(stderr, "%s: calc was built with "
+							    "custom functions enabled, "
+							    "but custtbl_allowed: %d == 0\n",
+							    program, custtbl_allowed);
+					    exit(1);
+					}
+
+					/*
+					 * indicate that custom functions are now allowed
+					 */
 					allow_custom = TRUE;
 					break;
 #else /* CUSTOM */
+					/*
+					 * validate custtbl_allowed value
+					 */
+					if (custtbl_allowed != 0) {
+					    fprintf(stderr, "%s: calc was built with "
+							    "custom functions disabled, "
+							    "but custtbl_allowed: %d != 0\n",
+							    program, custtbl_allowed);
+					}
+
 					/*
 					 * we are too early in processing to
 					 * call libcalc_call_me_last() -
