@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.14.3.1 to date:
+The following are the changes from calc version 2.14.3.1 to 2.14.3.2:
 
     Fix typo in the `make debug` Makefile rule.
 
