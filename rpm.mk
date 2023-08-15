@@ -134,10 +134,12 @@ V=@:
 all: ver_calc calc.spec
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	PROJECT_VERSION="`./ver_calc`"; \
+	PROJECT_VER="`./ver_calc -V`"; \
 	PROJECT_RELEASE="`${SED} -n \
 	    -e '/^Release:/s/^Release: *//p' calc.spec.in`"; \
 	$(MAKE) -f rpm.mk rpm \
 	    PROJECT_VERSION="$$PROJECT_VERSION" \
+	    PROJECT_VER="$$PROJECT_VER" \
 	    PROJECT_RELEASE="$$PROJECT_RELEASE" Q= S= E=
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
@@ -158,6 +160,7 @@ calc.spec: calc.spec.in ver_calc
 	${V} echo '=-=-=-=-= rpm.mk start of $@ rule =-=-=-=-='
 	${RM} -f calc.spec
 	${SED} -e 's/<<<PROJECT_VERSION>>>/'"`./ver_calc`"/g \
+	       -e 's/<<<PROJECT_VER>>>/'"`./ver_calc -V`"/g \
 	    calc.spec.in > calc.spec
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
@@ -167,6 +170,7 @@ srcpkg: make_rhdir
 	${V} echo RPM_TOP="${RPM_TOP}"
 	${V} echo RPM_BUILD_ROOT="${RPM_BUILD_ROOT}"
 	${V} echo PROJECT_VERSION="${PROJECT_VERSION}"
+	${V} echo PROJECT_VER="${PROJECT_VER}"
 	${V} echo PROJECT_RELEASE="${PROJECT_RELEASE}"
 	${RM} -rf "$(TMPDIR)/$(PROJECT)"
 	${FIND} . -depth -print | \
@@ -190,6 +194,7 @@ rpm: srcpkg calc.spec
 	${V} echo RPM_TOP="${RPM_TOP}"
 	${V} echo RPM_BUILD_ROOT="${RPM_BUILD_ROOT}"
 	${V} echo PROJECT_VERSION="${PROJECT_VERSION}"
+	${V} echo PROJECT_VER="${PROJECT_VER}"
 	${V} echo PROJECT_RELEASE="${PROJECT_RELEASE}"
 	$(MAKE) -f Makefile clean Q= S= E=
 	${CP} "$(SPECFILE)" "$(RPM_TOP)/SPECS/$(SPECFILE)"
@@ -210,6 +215,7 @@ make_rhdir:
 	${V} echo RPM_TOP="${RPM_TOP}"
 	${V} echo RPM_BUILD_ROOT="${RPM_BUILD_ROOT}"
 	${V} echo PROJECT_VERSION="${PROJECT_VERSION}"
+	${V} echo PROJECT_VER="${PROJECT_VER}"
 	${V} echo PROJECT_RELEASE="${PROJECT_RELEASE}"
 	for subdir in "" BUILD RPMS SOURCES SPECS SRPMS tmp; do \
 	    i="$(RPM_TOP)/$$subdir"; \
@@ -287,7 +293,10 @@ test: ver_calc
 	    echo "test needs to install, must be root to test" 1>&2; \
 	    exit 6; \
 	fi
-	$(MAKE) -f rpm.mk PROJECT_VERSION="`./ver_calc`" installrpm \
+	$(MAKE) -f rpm.mk \
+		PROJECT_VERSION="`./ver_calc`" \
+		PROJECT_VER="`./ver_calc -V`" \
+		installrpm \
 		chksys Q= S= E=
 	${V} echo '=-=-=-=-= rpm.mk end of $@ rule =-=-=-=-='
 
