@@ -92,8 +92,13 @@ The following are the changes from calc version 2.14.3.1 to date:
 
     Under macOS, to reduce dependency chains, we remove functions and
     data that are unreachable by the entry point or exported symbols.
-    In particular, the linker is run with "-dead_strip" and with
-    "-dead_strip_dylibs".
+    In particular, the macOS linker is used with "-dead_strip".
+
+    While calc on macOS will execute if linker used with "-dead_strip_dylibs"
+    and CUSTOM is defined, other applications that use libcalc but not
+    libcustcalc (such as sample_many and sample_rand) will fail to execute
+    due to missile symbols.  Therefore "-dead_strip_dylibs" is not used
+    by default when ALLOW_CUSTOM is "-DCUSTOM" under macOS.
 
 
 The following are the changes from calc version 2.14.2.1 to 2.14.3.0:

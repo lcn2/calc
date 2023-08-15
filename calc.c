@@ -166,6 +166,11 @@ main(int argc, char **argv)
 #if defined(CUSTOM)
 					/*
 					 * validate custtbl_allowed value
+					 *
+					 * We make an explicit reference to the custtbl_allowed symbol
+					 * in libcustcalc (see custom/custtbl.c) so that the use
+					 * of "-dead_strip_dylibs" with the macOS linker won't cause
+					 * the calc to fail to load due to a missing symbol.
 					 */
 					if (custtbl_allowed == 0) {
 					    fprintf(stderr, "%s: calc was built with "
@@ -183,6 +188,11 @@ main(int argc, char **argv)
 #else /* CUSTOM */
 					/*
 					 * validate custtbl_allowed value
+					 *
+					 * We make an explicit reference to the custtbl_allowed symbol
+					 * in libcustcalc (see custom/custtbl.c) so that the use
+					 * of "-dead_strip_dylibs" with the macOS linker won't cause
+					 * the calc to fail to load due to a missing symbol.
 					 */
 					if (custtbl_allowed != 0) {
 					    fprintf(stderr, "%s: calc was built with "
