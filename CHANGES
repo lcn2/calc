@@ -84,21 +84,27 @@ The following are the changes from calc version 2.14.3.1 to date:
     Dropped the use of Makefile variable ${SET_INSTALL_NAME}.
     Under macOS it was always needed, elsewhere it was not.
 
-    Added Makefile variable ${VER} to holdthe calc major release version.
+    Added Makefile variable ${VER} to hold the calc major release version.
     The calc major release version is a 3 level version (x.y.z).
 
-    Under macOS, the current version of both libcalc and
-    libcustcalc are set to the current calc major release version.
+    Under macOS, the current version of both libcalc and libcustcalc
+    shared libraries are set to the current calc major release version.
 
     Under macOS, to reduce dependency chains, we remove functions and
     data that are unreachable by the entry point or exported symbols.
-    In particular, the macOS linker is used with "-dead_strip".
+    In particular, the macOS linker is used with "-dead_strip" by default.
 
     While calc on macOS will execute if linker used with "-dead_strip_dylibs"
     and CUSTOM is defined, other applications that use libcalc but not
     libcustcalc (such as sample_many and sample_rand) will fail to execute
     due to missile symbols.  Therefore "-dead_strip_dylibs" is not used
     by default when ALLOW_CUSTOM is "-DCUSTOM" under macOS.
+    Thanks to GitHub user @TurtleWilly for bringing to our attention,
+    problems related to use of  "-dead_strip_dylibs".
+
+    When installing shared libraries, libcalc.x.y.z will be a link
+    to the libcalc shared library and libcustcalc.x.y.z will be a link
+    to the libcustcal shared library.
 
 
 The following are the changes from calc version 2.14.2.1 to 2.14.3.0:

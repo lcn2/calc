@@ -290,8 +290,8 @@ OBJS= ${LIBOBJS} ${CALCOBJS} ${UTIL_OBJS} ${SAMPLE_OBJ}
 #
 CALC_STATIC_LIBS= libcalc.a libcustcalc.a
 CALC_DYNAMIC_LIBS= libcalc${LIB_EXT_VERSION} libcustcalc${LIB_EXT_VERSION}
-SYM_DYNAMIC_LIBS= libcalc${LIB_EXT} \
-	libcustcalc${LIB_EXT_VERSION} libcustcalc${LIB_EXT}
+SYM_DYNAMIC_LIBS= libcalc${LIB_EXT} libcustcalc${LIB_EXT} \
+	libcalc${LIB_EXT_VER} libcustcalc${LIB_EXT_VER}
 EARLY_TARGETS= hsrc .hsrc custom/.all custom/Makefile
 
 # list of sample programs that need to be built to satisfy sample rule
@@ -480,6 +480,10 @@ libcalc${LIB_EXT_VERSION}: ${LIBOBJS} ver_calc${EXT} ${MK_SET}
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o libcalc${LIB_EXT_VERSION}
 
 libcalc${LIB_EXT}: libcalc${LIB_EXT_VERSION}
+	${Q} ${RM} -f $@
+	${LN} -s $? $@
+
+libcalc${LIB_EXT_VER}: libcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${LN} -s $? $@
 
@@ -2370,6 +2374,10 @@ libcustcalc${LIB_EXT}: libcustcalc${LIB_EXT_VERSION}
 	${Q} ${RM} -f $@
 	${LN} -s $? $@
 
+libcustcalc${LIB_EXT_VER}: libcustcalc${LIB_EXT_VERSION}
+	${Q} ${RM} -f $@
+	${LN} -s $? $@
+
 ###
 #
 # building calc-static and static lib*.a libraries
@@ -3392,9 +3400,6 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 		echo "installed ${T}${LIBDIR}/libcalc.a"; \
 	   fi; \
 	fi
-	${Q}# NOTE: The this makefile installs libcustcalc${LIB_EXT_VERSION}
-	${Q}#       because we only want to perform one ${LDCONFIG} for both
-	${Q}#       libcalc${LIB_EXT_VERSION} and libcustcalc${LIB_EXT_VERSION}.
 	-${Q} if [ -f libcalc${LIB_EXT_VERSION} ]; then \
 	    if ${CMP} -s libcalc${LIB_EXT_VERSION} \
 			 ${T}${LIBDIR}/libcalc${LIB_EXT_VERSION}; then \
@@ -3418,6 +3423,11 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 		${LN} -f -s libcalc${LIB_EXT_VERSION} \
 			    ${T}${LIBDIR}/libcalc${LIB_EXT}; \
 		echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
+		echo ${LN} -f -s libcalc${LIB_EXT_VERSION} \
+			    ${T}${LIBDIR}/libcalc${LIB_EXT_VER}; \
+		${LN} -f -s libcalc${LIB_EXT_VERSION} \
+			    ${T}${LIBDIR}/libcalc${LIB_EXT_VER}; \
+		echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VER}"; \
 	    fi; \
 	fi
 	-${Q} if [ -f custom/libcustcalc${LIB_EXT_VERSION} ]; then \
@@ -3443,6 +3453,11 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 		${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
 			    ${T}${LIBDIR}/libcustcalc${LIB_EXT}; \
 		echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT}"; \
+		echo ${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
+			    ${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}; \
+		${LN} -f -s libcustcalc${LIB_EXT_VERSION} \
+			    ${T}${LIBDIR}/libcustcalc${LIB_EXT_VER}; \
+		echo "installed ${T}${LIBDIR}/libcalc${LIB_EXT_VER}"; \
 		if [ -z "${T}" -o "/" = "${T}" ]; then \
 		    if [ ! -z "${LDCONFIG}" ]; then \
 			echo "running ${LDCONFIG}"; \
