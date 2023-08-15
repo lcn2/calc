@@ -27,7 +27,7 @@
 
 # BUGS
 #  - Uninstalling calc and calc-devel leaves empty dirs /usr/include/calc
-#    and /usr/share/calc and its subdirs. In case e.g. %{_includedir}/calc
+#    and /usr/share/calc and its subdirs. In case e.g., _includedir/calc
 #    is defined in `files devel' section, then rpmbuild complains that
 #    header files are defined twice - rpmbuild bug or bug in specfile conf???
 
@@ -37,7 +37,7 @@ Version: <<<PROJECT_VERSION>>>
 Release: 14
 License: LGPL
 Group: Applications/Engineering
-Source: https://github.com/lcn2/calc/releases/download/v${version}/${name}-${version}.tar.bz2
+Source: https://github.com/lcn2/calc/releases/download/v<<<PROJECT_VERSION>>>/%{name}-%{version}.tar.bz2
 URL: https://github.com/lcn2/calc
 Vendor: Landon Noll and Associates
 Packager: Landon Noll and Associates (http://www.isthe.com/chongo/index.html)
