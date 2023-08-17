@@ -69,6 +69,14 @@ custom(char *name, int count, VALUE **vals)
 	CONST struct custom *p;		/* current function */
 
 	/*
+	 * error if libcustcalc was compiled with CUSTOM undefined
+	 */
+	if (custom_compiled() == 0) {
+	    math_error("libcustcalc was compiled CUSTOM undefined");
+	    not_reached();
+	}
+
+	/*
 	 * search the custom interface table for a function
 	 */
 	for (p = cust; p->name != NULL; ++p) {
@@ -99,6 +107,14 @@ custom(char *name, int count, VALUE **vals)
 	return error_value(E_UNK_CUSTOM);
 
 #else /* CUSTOM */
+
+	/*
+	 * error if libcustcalc was compiled with CUSTOM defined
+	 */
+	if (custom_compiled() == 1) {
+	    math_error("libcustcalc was compiled with CUSTOM defined");
+	    not_reached();
+	}
 
 	fprintf(stderr,
 	    "%sCalc was built with custom functions disabled\n",

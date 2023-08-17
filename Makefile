@@ -475,8 +475,8 @@ calc${EXT}: .hsrc ${CALCOBJS} ${CALC_DYNAMIC_LIBS} ${MK_SET}
 	${CC} ${CALCOBJS} ${LDFLAGS} ${LD_SHARE} ${CALC_DYNAMIC_LIBS} \
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o $@
 
-libcalc${LIB_EXT_VERSION}: ${LIBOBJS} ver_calc${EXT} ${MK_SET}
-	${CC} ${LIBCALC_SHLIB} ${LIBOBJS} \
+libcalc${LIB_EXT_VERSION}: ${LIBOBJS} ver_calc${EXT} ${MK_SET} libcustcalc${LIB_EXT_VERSION}
+	${CC} ${LIBCALC_SHLIB} ${LIBOBJS} libcustcalc${LIB_EXT_VERSION} \
 	      ${READLINE_LIB} ${READLINE_EXTRAS} -o libcalc${LIB_EXT_VERSION}
 
 libcalc${LIB_EXT}: libcalc${LIB_EXT_VERSION}

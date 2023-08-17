@@ -177,22 +177,7 @@ LIBCUSTCALC_SHLIB= -dynamiclib -undefined dynamic_lookup \
 # data that are unreachable by the entry point or exported symbols.
 #
 COMMON_LDFLAGS+= -Wl,-dead_strip
-
-# Do not link with "-dead_strip_dylibs" if CUSTOM is defined
-# (i.e., ${ALLOW_CUSTOM} is "-DCUSTOM).  This is because unless
-# the application makes an explicit symbol reference to some symbol
-# in libcustcalc, the application will fail to execute due to
-# a missing symbol.
-#
-# The calc application will run with CUSTOM defined under
-# "-dead_strip_dylibs" because calc.o (in main()) makes an explicit
-# reference to custtbl_allowed (see custom/custtbl.c) in libcustcalc.
-# However applications such as sample_many and sample_rand will
-# fail to load when CUSTOM is defined and "-dead_strip_dylibs" is used..
-#
-ifneq ($(ALLOW_CUSTOM),-DCUSTOM)
 COMMON_LDFLAGS+= -Wl,-dead_strip_dylibs
-endif	# ($(ALLOW_CUSTOM),-DCUSTOM)
 
 # static library option
 #

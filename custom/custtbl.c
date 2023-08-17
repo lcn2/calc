@@ -25,17 +25,6 @@
  */
 
 
-/*
- * ISO C requires a translation unit to contain at least one declaration,
- * so we declare a global variable whose value is based on if CUSTOM is defined.
- */
-#if defined(CUSTOM)
-int custtbl_allowed = 1;	/* CUSTOM defined */
-#else /* CUSTOM */
-int custtbl_allowed = 0;	/* CUSTOM undefined */
-#endif /* CUSTOM */
-
-
 #include <unistd.h>
 
 #include "../have_const.h"
@@ -44,6 +33,24 @@ int custtbl_allowed = 0;	/* CUSTOM undefined */
 
 
 #include "../banned.h"	/* include after system header <> includes */
+
+
+/*
+ * custom_compiled - determine if custom functions are compiled into libcustcalc
+ *
+ * returns:
+s*	1 ==> libcustcalc was compiled with CUSTOM defined
+ *	0 ==> libcustcalc was compiled with CUSTOM undefined
+ */
+E_FUNC int
+custom_compiled(void)
+{
+#if defined(CUSTOM)
+	return 1;
+#else /* CUSTOM */
+	return 0;
+#endif /* CUSTOM */
+}
 
 
 /*

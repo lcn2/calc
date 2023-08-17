@@ -164,19 +164,13 @@ main(int argc, char **argv)
 				switch (c) {
 				case 'C':
 #if defined(CUSTOM)
+
 					/*
-					 * validate custtbl_allowed value
-					 *
-					 * We make an explicit reference to the custtbl_allowed symbol
-					 * in libcustcalc (see custom/custtbl.c) so that the use
-					 * of "-dead_strip_dylibs" with the macOS linker won't cause
-					 * the calc to fail to load due to a missing symbol.
+					 * error if libcustcalc was compiled with CUSTOM undefined
 					 */
-					if (custtbl_allowed == 0) {
-					    fprintf(stderr, "%s: calc was built with "
-							    "custom functions enabled, "
-							    "but custtbl_allowed: %d == 0\n",
-							    program, custtbl_allowed);
+					if (custom_compiled() == 0) {
+					    fprintf(stderr, "%s: calc was built with custom functions enabled, "
+							    "however custom_compiled() retuned 0", program);
 					    exit(1);
 					}
 
@@ -186,19 +180,13 @@ main(int argc, char **argv)
 					allow_custom = TRUE;
 					break;
 #else /* CUSTOM */
+
 					/*
-					 * validate custtbl_allowed value
-					 *
-					 * We make an explicit reference to the custtbl_allowed symbol
-					 * in libcustcalc (see custom/custtbl.c) so that the use
-					 * of "-dead_strip_dylibs" with the macOS linker won't cause
-					 * the calc to fail to load due to a missing symbol.
+					 * error if libcustcalc was compiled with CUSTOM defined
 					 */
-					if (custtbl_allowed != 0) {
-					    fprintf(stderr, "%s: calc was built with "
-							    "custom functions disabled, "
-							    "but custtbl_allowed: %d != 0\n",
-							    program, custtbl_allowed);
+					if (custom_compiled() == 1) {
+					    fprintf(stderr, "%s: calc was built with custom functions disabled, "
+							    "however custom_compiled() retuned 1", program);
 					}
 
 					/*
