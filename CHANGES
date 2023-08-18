@@ -1,3 +1,10 @@
+The following are the changes from calc version 2.14.3.5 to date:
+
+    As Msys2 is a fork of Cygwin, if the OSNAME is Msys, the Cygwin
+    target will be used.  Thanks to GitHub user @iahung2 for the
+    pull request.
+
+
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 
     Under macOS, to reduce dependency chains, we remove functions

@@ -271,7 +271,7 @@ The current list of targets in Makefile.target are:
 - Apple macOS / Darwin target
 - FreeBSD target
 - OpenBSD target
-- Cygwin target
+- Cygwin target (as well as Msys2 / Msys OSNAME)
 - simple target
 - default target (when target is empty)
 
