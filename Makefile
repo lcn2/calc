@@ -1126,6 +1126,7 @@ fposval.h: fposval.c have_fgetsetpos.h have_fpos_pos.h have_offscl.h have_posscl
 	else \
 	    echo 'WARNING!! ./fposval${EXT} failed, using fposval.h.def' 1>&2; \
 	    ${CAT} fposval.h.def >> $@; \
+	    echo 'WARNING!! for more info try: rm -f $@ ; ${MAKE} $@ S= Q=' 1>&2; \
 	fi
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
