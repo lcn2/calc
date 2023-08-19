@@ -217,15 +217,15 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd \
 	islist islower ismat ismult isnull isnum isobj isobjtype isodd isprime \
 	isprint isptr ispunct isqrt isrand israndom isreal isrel issimple \
 	isspace issq isstr istype isupper isxdigit jacobi join lcm lcmfact \
-	lfactor ln log lowbit ltol makelist matdim matfill matmax matmin \
-	matsum mattrace mattrans max memsize meq min minv mmin mne mod modify \
-	name near newerror nextcand nextprime norm null num oldvalue ord param \
-	perm pfact pi pix places pmod polar poly pop popcnt pound power \
-	prevcand prevprime printf prompt protect ptest push putenv quo quomod \
-	r2d r2g rand randbit random randombit randperm rcin rcmul rcout rcpow \
-	rcsq re remove reverse rewind rm root round rsearch runtime saveval \
-	scale scan scanf search sec sech seed segment select sgn sha1 sin sinh \
-	size sizeof sleep sort sqrt srand srandom ssq stoponerror str \
+	lfactor ln log log2 logn lowbit ltol makelist matdim matfill matmax \
+	matmin matsum mattrace mattrans max memsize meq min minv mmin mne mod \
+	modify name near newerror nextcand nextprime norm null num oldvalue \
+	ord param perm pfact pi pix places pmod polar poly pop popcnt pound \
+	power prevcand prevprime printf prompt protect ptest push putenv quo \
+	quomod r2d r2g rand randbit random randombit randperm rcin rcmul rcout \
+	rcpow rcsq re remove reverse rewind rm root round rsearch runtime \
+	saveval scale scan scanf search sec sech seed segment select sgn sha1 \
+	sin sinh size sizeof sleep sort sqrt srand srandom ssq stoponerror str \
 	strcasecmp strcat strcmp strcpy strerror strlen strncasecmp strncmp \
 	strncpy strpos strprintf strscan strscanf strtolower strtoupper substr \
 	sum swap system systime tail tan tanh test time trunc usertime version \
@@ -234,7 +234,7 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd \
 # This list is of files that are clones of DETAIL_HELP files.  They are
 # built from DETAIL_HELP files.
 #
-DETAIL_CLONE= copy
+DETAIL_CLONE= copy ilogn
 
 # Singular files
 #
@@ -492,6 +492,18 @@ cscript: ../cscript/README
 releases: ../README.RELEASE
 	${RM} -f $@
 	${CP} ../README.RELEASE $@
+	${CHMOD} 0444 $@
+	-@if [ -z "${Q}" ]; then \
+	    echo ''; \
+	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
+	    echo ''; \
+	else \
+	    ${TRUE}; \
+	fi
+
+ilogn: ilog
+	${RM} -f $@
+	${CP} ilog $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \

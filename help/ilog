@@ -1,8 +1,10 @@
 NAME
     ilog - floor of logarithm to specified integer base
+    ilogn - floor of logarithm to specified integer base
 
 SYNOPSIS
     ilog(x, b)
+    ilogn(x, b)
 
 TYPES
     x		nonzero real
@@ -13,8 +15,13 @@ TYPES
 DESCRIPTION
     Returns the greatest integer n for which b^n <= abs(x).
 
+    The ilogn function is an alias for ilog.
+
 EXAMPLE
     ; print ilog(2, 3), ilog(8, 3), ilog(8.9, 3), ilog(1/8, 3)
+    0 1 1 -2
+
+    ; print ilogn(2, 3), ilogn(8, 3), ilogn(8.9, 3), ilogn(1/8, 3)
     0 1 1 -2
 
 LIMITS
@@ -25,9 +32,9 @@ LINK LIBRARY
     long zlog(ZVALUE x, ZVALUE b)
 
 SEE ALSO
-    ilog2, ilog10
+    ilog10, ilog2, ln, log, log2, logn
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

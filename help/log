@@ -13,8 +13,9 @@ TYPES
 DESCRIPTION
     Approximate the base 10 logarithm function of x by a multiple of
     epsilon, the error having absolute value less than 0.75 * eps.
-    If n is a positive integer, log(x, 10^-n) will usually be correct
-    to the n-th decimal place.
+
+    If y is a positive integer, log(x, 10^-y) will usually be correct
+    to the y-th decimal place.
 
 EXAMPLE
     ; print log(10), log(100), log(1e10), log(1e500)
@@ -35,7 +36,7 @@ LINK LIBRARY
     COMPLEX *c_log(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
-    ln
+    ilog, ilogn, ilog10, ilog2, ln, log2, logn
 
 ## Copyright (C) 2006  Landon Curt Noll
 ##

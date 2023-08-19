@@ -1,40 +1,51 @@
 NAME
-    ln	-  logarithm function
+    logn -  base n logarithm
 
 SYNOPSIS
-    ln(x [,eps])
+    logn(x, n [,eps])
 
 TYPES
     x		nonzero real or complex
+    n		nonzero real or complex
     eps		nonzero real, defaults to epsilon()
 
     return	real or complex
 
 DESCRIPTION
-    Approximate the natural logarithm function of x by a multiple of
+    Approximate the base n logarithm function of x by a multiple of
     epsilon, the error having absolute value less than 0.75 * eps.
-    If n is a positive integer, ln(x, 10^-n) will usually be correct
-    to the n-th decimal place.
+
+    The base, n, must not be 0 nor 1.
+
+    If y is a positive integer, log(x, n^-y) will usually be correct
+    to the y-th decimal place.
 
 EXAMPLE
-    ; print ln(10, 1e-5), ln(10, 1e-10), ln(10, 1e-15), ln(10, 1e-20)
-    2.30259 2.302585093 2.302585092994046 2.30258509299404568402
+    ; print logn(15.625, 2.5), logn(15.625, 2.5, 1e-25)
+    ~ 3.00000000000000000001 3
 
-    ; print ln(2+3i, 1e-5), ln(2+3i, 1e-10)
-    1.28247+0.98279i 1.2824746787+0.9827937232i
+    ; print logn(127, 1/13), log(23209, sqrt(3)), logn(2^17-19, 17)
+    ~ -1.88860925162778125111 6 ~ 4.15900804831225415076
+
+    ; print logn(-1, 1i), logn(2+3i, 3i+2), logn(2+3i, 3i)
+    2 1 ~ 0.80360095345990217753 - ~ 0.25441159318835790311i
+
+    ; print logn(22+3i, 3i, 1e-50)
+    ~ 0.98489914201047045408 - ~ 1.28484657882287682702i
 
 LIMITS
     x != 0
+    n != 0 && n != 1
     eps > 0
 
 LINK LIBRARY
-    NUMBER *qln(NUMBER *x, NUMBER *eps)
-    COMPLEX *c_ln(COMPLEX *x, NUMBER *eps)
+    NUMBER *qlogn(NUMBER *x, NUMBER *n, NUMBER *eps)
+    COMPLEX *c_logn(COMPLEX *x, COMPLEX *n, NUMBER *eps)
 
 SEE ALSO
-    acosh, asinh, atanh, exp, ilog, ilogn, ilog10, ilog2, log, log2, logn
+    ilog, ilogn, ilog10, ilog2, ln, log, log2
 
-## Copyright (C) 1999,2021,2023  Landon Curt Noll
+## Copyright (C) 2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -50,8 +61,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/10/11 04:41:26
-## File existed as early as:	1995
+## Under source code control:	2023/08/19 09:14:04
+## File existed as early as:	2023
 ##
 ## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
 ## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

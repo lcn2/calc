@@ -1,8 +1,8 @@
 NAME
-    ln	-  logarithm function
+    log2 -  base 10 logarithm
 
 SYNOPSIS
-    ln(x [,eps])
+    log2(x [,eps])
 
 TYPES
     x		nonzero real or complex
@@ -11,30 +11,37 @@ TYPES
     return	real or complex
 
 DESCRIPTION
-    Approximate the natural logarithm function of x by a multiple of
+    Approximate the base 2 logarithm function of x by a multiple of
     epsilon, the error having absolute value less than 0.75 * eps.
-    If n is a positive integer, ln(x, 10^-n) will usually be correct
-    to the n-th decimal place.
+
+    If y is a positive integer, log(x, 2^-y) will usually be correct
+    to the y-th decimal place.
+
+    When x if a power of 2, log2(x) will return an integer regardless
+    of the value of eps or epsilon().
 
 EXAMPLE
-    ; print ln(10, 1e-5), ln(10, 1e-10), ln(10, 1e-15), ln(10, 1e-20)
-    2.30259 2.302585093 2.302585092994046 2.30258509299404568402
+    ; print log2(2), log2(4), log2(1024), log2(2^500)
+    1 2 10 500
 
-    ; print ln(2+3i, 1e-5), ln(2+3i, 1e-10)
-    1.28247+0.98279i 1.2824746787+0.9827937232i
+    ; print log(127), log(23209), log(2^17-19)
+    ~ 6.98868468677216585326 ~ 14.50239674255407864468 ~ 16.99979085393743521984
+
+    ; print log(2+3i, 1e-5)
+    ~ 1.85020558320709803073 + ~ 1.41786049195700786266i
 
 LIMITS
     x != 0
     eps > 0
 
 LINK LIBRARY
-    NUMBER *qln(NUMBER *x, NUMBER *eps)
-    COMPLEX *c_ln(COMPLEX *x, NUMBER *eps)
+    NUMBER *qlog2(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_log2(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
-    acosh, asinh, atanh, exp, ilog, ilogn, ilog10, ilog2, log, log2, logn
+    ilog, ilogn, ilog10, ilog2, ln, log, logn
 
-## Copyright (C) 1999,2021,2023  Landon Curt Noll
+## Copyright (C) 2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -50,8 +57,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/10/11 04:41:26
-## File existed as early as:	1995
+## Under source code control:	2023/08/19 09:14:04
+## File existed as early as:	2023
 ##
 ## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
 ## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
