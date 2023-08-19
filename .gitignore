@@ -86,6 +86,7 @@ help/errorcodes
 help/full
 help/funclist
 help/funclist.c
+help/ilogn
 help/libcalc
 help/man
 help/new_custom
