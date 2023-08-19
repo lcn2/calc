@@ -73,7 +73,7 @@ struct custom {
  *
  * These are the required interfaces.  The dummy.c stubs these interfaces too.
  */
-E_FUNC int custom_compiled(void);	/* return 1 ==> libcustcalc compiled w/CUSTOM defined, else return 0 */
+E_FUNC BOOL custom_compiled(void);	/* return TRUE if libcustcalc compiled CUSTOM defined, FALSE otherwise */
 E_FUNC VALUE custom(char*, int, VALUE**);	/* master custom interface */
 EXTERN BOOL allow_custom;		/* TRUE => custom builtins allowed */
 E_FUNC void showcustom(void);		/* print custom functions */

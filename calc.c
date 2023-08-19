@@ -168,9 +168,10 @@ main(int argc, char **argv)
 					/*
 					 * error if libcustcalc was compiled with CUSTOM undefined
 					 */
-					if (custom_compiled() == 0) {
-					    fprintf(stderr, "%s: calc was built with custom functions enabled, "
-							    "however custom_compiled() retuned 0", program);
+					if (custom_compiled() != TRUE) {
+					    math_error("%s: calc was built with custom functions enabled, "
+						       "custom_compiled() returned: %d != %d",
+						       program, custom_compiled(), TRUE);
 					    exit(1);
 					}
 
@@ -184,9 +185,10 @@ main(int argc, char **argv)
 					/*
 					 * error if libcustcalc was compiled with CUSTOM defined
 					 */
-					if (custom_compiled() == 1) {
-					    fprintf(stderr, "%s: calc was built with custom functions disabled, "
-							    "however custom_compiled() retuned 1", program);
+					if (custom_compiled() != FALSE) {
+					    math_error("%s: calc was built with custom functions disabled, "
+						       "custom_compiled() returned: %d != %d",
+						       program, custom_compiled(), FALSE);
 					}
 
 					/*

@@ -71,8 +71,10 @@ custom(char *name, int count, VALUE **vals)
 	/*
 	 * error if libcustcalc was compiled with CUSTOM undefined
 	 */
-	if (custom_compiled() == 0) {
-	    math_error("libcustcalc was compiled CUSTOM undefined");
+	if (custom_compiled() != TRUE) {
+	    math_error("libcustcalc was compiled with CUSTOM undefined "
+		       "custom_compiled() returned: %d != %d",
+		       custom_compiled(), TRUE);
 	    not_reached();
 	}
 
@@ -111,8 +113,10 @@ custom(char *name, int count, VALUE **vals)
 	/*
 	 * error if libcustcalc was compiled with CUSTOM defined
 	 */
-	if (custom_compiled() == 1) {
-	    math_error("libcustcalc was compiled with CUSTOM defined");
+	if (custom_compiled() != FALSE) {
+	    math_error("libcustcalc was compiled with CUSTOM defined "
+		       "custom_compiled() returned: %d != %d",
+		       custom_compiled(), FALSE);
 	    not_reached();
 	}
 
