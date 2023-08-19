@@ -1,7 +1,7 @@
 /*
  * longbits - Determine the number if bits in a char, short, int or long
  *
- * Copyright (C) 1999-2007,2014,2021  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2021,2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -43,8 +43,13 @@
  * This prog outputs several defines and typedefs:
  *
  *	LONG_BITS
- *		Number of bits in a long.  Not all (in fact very few) C
- *		pre-processors can do #if sizeof(long) == 8.
+ *		Number of bits in a long.
+ *
+ *	PTR_LEN
+ *		Length of a pointer in bytes.  We use void * as a generic pointer.
+ *
+ *	PTR_BITS
+ *		Length of a pointer in bits.  We use void * as a generic pointer.
  *
  *	USB8	unsigned 8 bit value
  *	SB8	signed 8 bit value
@@ -60,7 +65,7 @@
  *				  and SB64 (signed 64 bit value)
  *		undefined ==> do not use USB64 nor SB64
  *
- *	BOOL_B84
+ *	BOOL_B64
  *		If HAVE_B64 undefined ==> FALSE
  *		If HAVE_B64 defined ==> TRUE
  *
@@ -138,11 +143,24 @@ main(int argc, char **argv)
 	}
 
 	/*
-	 * report size of long
+	 * report size of a long
 	 */
 	printf("#undef LONG_BITS\n");
 	printf("#define LONG_BITS %ld\t\t/%s/\n",
 	  (long int)long_bits, "* bit length of a long *");
+	putchar('\n');
+
+	/*
+	 * report size of a pointer
+	 *
+	 * We use "void *" as the size of a generic pointer.
+	 */
+	printf("#undef PTR_LEN\n");
+	printf("#define PTR_LEN %ld\t\t/%s/\n",
+	  (long int)sizeof(void *), "* length of a pointer *");
+	printf("#undef PTR_BITS\n");
+	printf("#define PTR_BITS %ld\t\t/%s/\n",
+	  (long int)sizeof(void *)*CALC_CHARBIT, "* bit length of a pointer *");
 	putchar('\n');
 
 	/*

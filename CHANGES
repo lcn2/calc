@@ -17,6 +17,9 @@ The following are the changes from calc version 2.14.3.5 to date:
     Until someone can test such systems, we prefer to wait
     until someone is able to test and supply a pull request.
 
+    Added PTR_LEN (length of a pointer) and PTR_BITS (bit length
+    of a pointer) to longbits.h.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 
