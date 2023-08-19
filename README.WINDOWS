@@ -40,6 +40,27 @@ NOTE: Compiling calc under Windows 11 is work in progress.  If you run into
       problems, consider the "Compiling with Cygwin" section below.
 
 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-= Compiling with Msys =-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+The MSYS2 Software Distribution and Building Platform for Windows:
+
+    https://www.msys2.org
+
+is a fork of Cygwin.  In `Makefile.config`, when the OSNAME is "Msys",
+the Cygwin target it set.  MSYS2 Software Distribution users should be
+sure that the following command prints "Msys".
+
+    uname -o
+
+Or call make with OSNAME set as in:
+
+    make ... OSNAME=Msys
+
+Follow the "Compiling with Cygwin" instructions below.
+
+
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-= Compiling with Cygwin =-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -107,97 +128,6 @@ compilation steps that GitHub user @Leoongithub recommends:
          of calc, installing calc may be of benefit so you can use calc elsewhere on your system.
 
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-=-= If all else fails, for Cygwin =-=
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-Much earlier (2001?) Thomas Jones-Low (tjoneslo at softstart dot com)
-recommended that you generate by hand all of the header files that
-by the Makefile.  This has been done for you via the makefile rule:
-
-	make win32_hsrc
-
-which uses the Makefile variables in win32.mkdef to form these header
-files under win32 directory.
-
-You will find generated versions of these files located in the win32
-sub-directory.  These files may be appropriate for your Cygwin building
-needs.
-
-In particular:
-
-    Just copy the win32/*.[ch] files up into the top level calc
-    source directory, edit them (if needed) and build using the
-    Cygwin GCC compiler and Cygwin build environment.
-
-NOTE: The use of win32_hsrc and this method has been deprecated.
-      It may go away once the Windows 11 methods are stable.
-
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-=-= compiling under DJGPP =-=
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-You might want to try using the DJGPP system to compile calc.  See:
-
-	http://www.delorie.com/djgpp/
-
-for DJGPP details and availability.
-
-To compile with DJGPP, one needs to select a number of Makefile
-variable changes.  Eli Zaretskii <eliz at is dot elta dot co dot il>
-recommends the following settings:
-
-	TERMCONTROL= -DUSE_TERMIOS
-	BYTE_ORDER= -DLITTLE_ENDIAN
-	LONG_BITS= 32
-	HAVE_FPOS_POS= -DHAVE_NO_FPOS_POS
-	FPOS_BITS= 32
-	OFF_T_BITS= 32
-	DEV_BITS= 32
-	INODE_BITS= 32
-	HAVE_USTAT= -DHAVE_NO_USTAT
-	HAVE_GETSID= -DHAVE_NO_GETSID
-	HAVE_GETPGID= -DHAVE_NO_GETPGID
-	HAVE_GETTIME= -DHAVE_NO_GETTIME
-	HAVE_GETPRID= -DHAVE_NO_GETPRID
-	HAVE_URANDOM_H= NO
-	ALIGN32= -UMUST_ALIGN32
-	HAVE_MALLOC_H= YES
-	HAVE_STDLIB_H= YES
-	HAVE_STRING_H= YES
-	HAVE_TIMES_H= NO
-	HAVE_SYS_TIMES_H= YES
-	HAVE_TIME_H= YES
-	HAVE_SYS_TIME_H= YES
-	HAVE_UNISTD_H= YES
-	BINDIR= /dev/env/DJDIR/bin
-	INCDIR= /dev/env/DJDIR/include
-	LIBDIR= /dev/env/DJDIR/lib
-	MANDIR= /dev/env/DJDIR/man/man1
-	CATDIR= /dev/env/DJDIR/man/cat1
-	NROFF= groff
-	CALCPATH= .;./cal;~/.cal;${CALC_SHAREDIR};${CUSTOMCALDIR}
-	CALCRC= ./.calcinit;~/.calcrc;${CALC_SHAREDIR}/startup
-	CALCPAGER= less.exe -ci
-	DEBUG= -O2 -gstabs+ -D_WIN32
-	HAVE_ENVIRON=-DHAVE_NO_ENVIRON
-	HAVE_ARC4RANDOM=-DHAVE_NO_ARC4RANDOM
-
-The 'Linux set' or 'gcc set' (see the Select your compiler type section)
-should work for DJGPP systems if you set the above Makefile variables.
-
-Look for Makefile comments of the form:
-
-	# Select ...something... for DJGPP.
-
-Follow those recommendations.  In cases where they conflict with
-the above Makefile list, follow the recommendation in the Makefile.
-
-NOTE: The use of DJGPP and this method has been deprecated.
-      It may go away once the Windows 11 methods are stable.
-
-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-= Compiling calc via virtual machine under Windows 11 =-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -230,7 +160,7 @@ NOTE: The use of calc under Windows 10 has been deprecated in favor of one
       of the Windows 11 methods above.
 
 
-## Copyright (C) 2002-2009,2021,2022  Landon Curt Noll and Thomas Jones-Low
+## Copyright (C) 2002-2009,2021-2023  Landon Curt Noll and Thomas Jones-Low
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

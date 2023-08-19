@@ -201,7 +201,7 @@ UTIL_C_SRC= align32.c endian.c longbits.c have_newstr.c have_uid_t.c \
 # and BUILD_C_SRC
 #
 UTIL_MISC_SRC= calcerr_h.sed calcerr_h.awk calcerr_c.sed calcerr_c.awk \
-	calcerr.tbl check.awk win32.mkdef fposval.h.def
+	calcerr.tbl check.awk fposval.h.def
 
 # these .o files may get built in the process of building BUILD_H_SRC
 #
@@ -334,7 +334,7 @@ TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS}
 #
 PHONY= all calcliblist calc_version check chk clobber debug depend distdir \
 	distlist hsrc install inst_files mkdebug rpm sample splint tags \
-	uninstall win32_hsrc
+	uninstall
 
 ############################################################
 # Allow Makefile.local to change any of the above settings #
@@ -978,12 +978,7 @@ terminal.h: ${MK_SET}
 	${Q} echo '#if !defined(USE_TERMIOS)' >> $@
 	${Q} echo '#if !defined(USE_TERMIO)' >> $@
 	${Q} echo '#if !defined(USE_SGTTY)' >> $@
-	-${Q} if [ X"${TERMCONTROL}" = X"-DUSE_WIN32" ]; then \
-	    echo '/* Windows, use none of these modes */' >> $@; \
-	    echo '#undef USE_TERMIOS   /* <termios.h> */' >> $@; \
-	    echo '#undef USE_TERMIO    /* <termio.h> */' >> $@; \
-	    echo '#undef USE_SGTTY     /* <sys/ioctl.h> */' >> $@; \
-	elif echo '#include <termios.h>' | ${CC} -E - ${S}; then \
+	-${Q} if echo '#include <termios.h>' | ${CC} -E - ${S}; then \
 	    echo '/* use termios */' >> $@; \
 	    echo '#define USE_TERMIOS  /* <termios.h> */' >> $@; \
 	    echo '#undef USE_TERMIO    /* <termio.h> */' >> $@; \
@@ -2282,35 +2277,6 @@ have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h have_string.h \
 
 ###
 #
-# Build .h files for Windows based systems
-#
-# This is really a internal utility rule that is used to create the
-# win32 sub-directory for distribution.
-#
-###
-
-win32_hsrc: win32.mkdef banned.h have_ban_pragma.h alloc.h \
-	    ${MK_SET}
-	${H} echo 'forming win32 directory'
-	${Q} ${RM} -rf win32
-	${Q} ${MKDIR} -p win32
-	${Q} ${CP} banned.h have_ban_pragma.h alloc.h win32
-	${Q} ${CP} ${UTIL_C_SRC} win32
-	${Q} ${CP} ${UTIL_MISC_SRC} win32
-	${Q} ${CP} ${MK_SET} win32
-	${Q} (cd win32; \
-	 echo "${MAKE} -f ${MAKE_FILE} hsrc `${CAT} win32.mkdef` EXT="; \
-	 ${MAKE} -f ${MAKE_FILE} hsrc `${CAT} win32.mkdef` EXT=; \
-	 ${RM} -f ${UTIL_C_SRC}; \
-	 ${RM} -f ${UTIL_MISC_SRC}; \
-	 ${RM} -f ${UTIL_OBJS}; \
-	 ${RM} -f ${UTIL_PROGS}; \
-	 ${RM} -f ${UTIL_FILES}; \
-	 ${RM} -f ${MK_SET})
-	${H} echo 'win32 directory formed'
-
-###
-#
 # These two .all rules are used to determine of the lower level
 # directory has had its all rule performed.
 #
@@ -2549,11 +2515,6 @@ distlist: ${DISTLIST} custom/Makefile
 		echo $$i; \
 	    fi; \
 	done; \
-	for i in ${BUILD_H_SRC} ${BUILD_C_SRC} /dev/null; do \
-	    if [ X"$$i" != X"/dev/null" ]; then \
-		echo win32/$$i; \
-	    fi; \
-	done; \
 	(cd help; ${MAKE} -f Makefile $@); \
 	(cd cal; ${MAKE} -f Makefile $@); \
 	(cd custom; ${MAKE} -f Makefile $@); \
@@ -2562,7 +2523,6 @@ distlist: ${DISTLIST} custom/Makefile
 
 distdir: custom/Makefile
 	${Q} (echo .; \
-	echo win32; \
 	(cd help; ${MAKE} -f Makefile $@); \
 	(cd cal; ${MAKE} -f Makefile $@); \
 	(cd custom; ${MAKE} -f Makefile $@); \
@@ -3151,7 +3111,7 @@ clean:
 	${RM} -rf lib
 	${RM} -f endian.h stdarg.h libcalcerr.a cal/obj help/obj
 	${RM} -f have_vs.c std_arg.h try_stdarg.c fnvhash.c
-	${RM} -f win32dll.h have_malloc.h math_error.h string.h string.c
+	${RM} -f have_malloc.h math_error.h string.h string.c
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 clobber: clean
@@ -3199,7 +3159,7 @@ clobber: clean
 	    cd cscript; ${MAKE} -f Makefile $@
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo remove files that are obsolete
-	${RM} -rf win32 build
+	${RM} -rf build
 	${RM} -f no_implicit.arg
 	${RM} -f no_implicit.c no_implicit.o no_implicit${EXT}
 	${RM} -f .static .dynamic calc-dynamic-only calc-static-only
@@ -3488,10 +3448,6 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 	    if [ -f "${T}${CALC_INCDIR}/std_arg.h" ]; then \
 		${RM} -f ${T}${CALC_INCDIR}/std_arg.h; \
 		echo "removed old ${T}${CALC_INCDIR}/std_arg.h"; \
-	    fi; \
-	    if [ -f "${T}${CALC_INCDIR}/win32dll.h" ]; then \
-		${RM} -f ${T}${CALC_INCDIR}/win32dll.h; \
-		echo "removed old ${T}${CALC_INCDIR}/win32dll.h"; \
 	    fi; \
 	    if [ -f "${T}${CALC_INCDIR}/have_malloc.h" ]; then \
 		${RM} -f ${T}${CALC_INCDIR}/have_malloc.h; \

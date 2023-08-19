@@ -4,6 +4,19 @@ The following are the changes from calc version 2.14.3.5 to date:
     target will be used.  Thanks to GitHub user @iahung2 for the
     pull request.
 
+    Support for win32 and DJGPP has been dropped.  Calc version
+    2.14.3.5 was the last to make references to win32 and make
+    references to DJGPP.  Future versions of calc may work under
+    those systems, we just elected to remove the somewhat out of
+    date and awkward `win32.mkdef` and related win32 references.
+
+    If you are a win32 user, please feel free to create a win32
+    target in Makefile.target and submit as a pull request.
+    If you are a DJGPP user, please feel free to create a DJGPP
+    target in Makefile.target and submit as a pull request.
+    Until someone can test such systems, we prefer to wait
+    until someone is able to test and supply a pull request.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 
