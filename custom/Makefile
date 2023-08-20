@@ -694,6 +694,7 @@ c_argv.o: ../block.h
 c_argv.o: ../byteswap.h
 c_argv.o: ../calc.h
 c_argv.o: ../calcerr.h
+c_argv.o: ../charbit.h
 c_argv.o: ../cmath.h
 c_argv.o: ../config.h
 c_argv.o: ../custom.h
@@ -702,6 +703,7 @@ c_argv.o: ../endian_calc.h
 c_argv.o: ../hash.h
 c_argv.o: ../have_ban_pragma.h
 c_argv.o: ../have_const.h
+c_argv.o: ../have_limits.h
 c_argv.o: ../have_memmv.h
 c_argv.o: ../have_newstr.h
 c_argv.o: ../have_stdlib.h
@@ -713,6 +715,7 @@ c_argv.o: ../qmath.h
 c_argv.o: ../sha1.h
 c_argv.o: ../str.h
 c_argv.o: ../value.h
+c_argv.o: ../version.h
 c_argv.o: ../zmath.h
 c_argv.o: c_argv.c
 c_devnull.o: ../alloc.h
@@ -721,6 +724,7 @@ c_devnull.o: ../banned.h
 c_devnull.o: ../block.h
 c_devnull.o: ../byteswap.h
 c_devnull.o: ../calcerr.h
+c_devnull.o: ../charbit.h
 c_devnull.o: ../cmath.h
 c_devnull.o: ../config.h
 c_devnull.o: ../custom.h
@@ -729,6 +733,7 @@ c_devnull.o: ../endian_calc.h
 c_devnull.o: ../hash.h
 c_devnull.o: ../have_ban_pragma.h
 c_devnull.o: ../have_const.h
+c_devnull.o: ../have_limits.h
 c_devnull.o: ../have_memmv.h
 c_devnull.o: ../have_newstr.h
 c_devnull.o: ../have_stdlib.h
@@ -741,6 +746,7 @@ c_devnull.o: ../qmath.h
 c_devnull.o: ../sha1.h
 c_devnull.o: ../str.h
 c_devnull.o: ../value.h
+c_devnull.o: ../version.h
 c_devnull.o: ../zmath.h
 c_devnull.o: c_devnull.c
 c_help.o: ../alloc.h
@@ -749,6 +755,7 @@ c_help.o: ../banned.h
 c_help.o: ../block.h
 c_help.o: ../byteswap.h
 c_help.o: ../calcerr.h
+c_help.o: ../charbit.h
 c_help.o: ../cmath.h
 c_help.o: ../config.h
 c_help.o: ../custom.h
@@ -757,6 +764,7 @@ c_help.o: ../endian_calc.h
 c_help.o: ../hash.h
 c_help.o: ../have_ban_pragma.h
 c_help.o: ../have_const.h
+c_help.o: ../have_limits.h
 c_help.o: ../have_memmv.h
 c_help.o: ../have_newstr.h
 c_help.o: ../have_stdlib.h
@@ -769,6 +777,7 @@ c_help.o: ../qmath.h
 c_help.o: ../sha1.h
 c_help.o: ../str.h
 c_help.o: ../value.h
+c_help.o: ../version.h
 c_help.o: ../zmath.h
 c_help.o: c_help.c
 c_pmodm127.o: ../alloc.h
@@ -777,6 +786,7 @@ c_pmodm127.o: ../banned.h
 c_pmodm127.o: ../block.h
 c_pmodm127.o: ../byteswap.h
 c_pmodm127.o: ../calcerr.h
+c_pmodm127.o: ../charbit.h
 c_pmodm127.o: ../cmath.h
 c_pmodm127.o: ../config.h
 c_pmodm127.o: ../custom.h
@@ -785,6 +795,7 @@ c_pmodm127.o: ../endian_calc.h
 c_pmodm127.o: ../hash.h
 c_pmodm127.o: ../have_ban_pragma.h
 c_pmodm127.o: ../have_const.h
+c_pmodm127.o: ../have_limits.h
 c_pmodm127.o: ../have_memmv.h
 c_pmodm127.o: ../have_newstr.h
 c_pmodm127.o: ../have_stdlib.h
@@ -796,6 +807,7 @@ c_pmodm127.o: ../qmath.h
 c_pmodm127.o: ../sha1.h
 c_pmodm127.o: ../str.h
 c_pmodm127.o: ../value.h
+c_pmodm127.o: ../version.h
 c_pmodm127.o: ../zmath.h
 c_pmodm127.o: c_pmodm127.c
 c_pzasusb8.o: ../alloc.h
@@ -804,6 +816,7 @@ c_pzasusb8.o: ../banned.h
 c_pzasusb8.o: ../block.h
 c_pzasusb8.o: ../byteswap.h
 c_pzasusb8.o: ../calcerr.h
+c_pzasusb8.o: ../charbit.h
 c_pzasusb8.o: ../cmath.h
 c_pzasusb8.o: ../config.h
 c_pzasusb8.o: ../custom.h
@@ -812,6 +825,7 @@ c_pzasusb8.o: ../endian_calc.h
 c_pzasusb8.o: ../hash.h
 c_pzasusb8.o: ../have_ban_pragma.h
 c_pzasusb8.o: ../have_const.h
+c_pzasusb8.o: ../have_limits.h
 c_pzasusb8.o: ../have_memmv.h
 c_pzasusb8.o: ../have_newstr.h
 c_pzasusb8.o: ../have_stdlib.h
@@ -823,6 +837,7 @@ c_pzasusb8.o: ../qmath.h
 c_pzasusb8.o: ../sha1.h
 c_pzasusb8.o: ../str.h
 c_pzasusb8.o: ../value.h
+c_pzasusb8.o: ../version.h
 c_pzasusb8.o: ../zmath.h
 c_pzasusb8.o: c_pzasusb8.c
 c_register.o: ../alloc.h
@@ -832,6 +847,7 @@ c_register.o: ../block.h
 c_register.o: ../byteswap.h
 c_register.o: ../calc.h
 c_register.o: ../calcerr.h
+c_register.o: ../charbit.h
 c_register.o: ../cmath.h
 c_register.o: ../config.h
 c_register.o: ../custom.h
@@ -840,6 +856,7 @@ c_register.o: ../endian_calc.h
 c_register.o: ../hash.h
 c_register.o: ../have_ban_pragma.h
 c_register.o: ../have_const.h
+c_register.o: ../have_limits.h
 c_register.o: ../have_memmv.h
 c_register.o: ../have_newstr.h
 c_register.o: ../have_stdlib.h
@@ -851,6 +868,7 @@ c_register.o: ../qmath.h
 c_register.o: ../sha1.h
 c_register.o: ../str.h
 c_register.o: ../value.h
+c_register.o: ../version.h
 c_register.o: ../zmath.h
 c_register.o: c_register.c
 c_sysinfo.o: ../alloc.h
@@ -860,6 +878,7 @@ c_sysinfo.o: ../block.h
 c_sysinfo.o: ../byteswap.h
 c_sysinfo.o: ../calc.h
 c_sysinfo.o: ../calcerr.h
+c_sysinfo.o: ../charbit.h
 c_sysinfo.o: ../cmath.h
 c_sysinfo.o: ../conf.h
 c_sysinfo.o: ../config.h
@@ -870,6 +889,7 @@ c_sysinfo.o: ../fposval.h
 c_sysinfo.o: ../hash.h
 c_sysinfo.o: ../have_ban_pragma.h
 c_sysinfo.o: ../have_const.h
+c_sysinfo.o: ../have_limits.h
 c_sysinfo.o: ../have_memmv.h
 c_sysinfo.o: ../have_newstr.h
 c_sysinfo.o: ../have_stdlib.h
@@ -884,6 +904,7 @@ c_sysinfo.o: ../qmath.h
 c_sysinfo.o: ../sha1.h
 c_sysinfo.o: ../str.h
 c_sysinfo.o: ../value.h
+c_sysinfo.o: ../version.h
 c_sysinfo.o: ../zmath.h
 c_sysinfo.o: ../zrand.h
 c_sysinfo.o: ../zrandom.h
@@ -894,6 +915,7 @@ custtbl.o: ../banned.h
 custtbl.o: ../block.h
 custtbl.o: ../byteswap.h
 custtbl.o: ../calcerr.h
+custtbl.o: ../charbit.h
 custtbl.o: ../cmath.h
 custtbl.o: ../config.h
 custtbl.o: ../custom.h
@@ -902,6 +924,7 @@ custtbl.o: ../endian_calc.h
 custtbl.o: ../hash.h
 custtbl.o: ../have_ban_pragma.h
 custtbl.o: ../have_const.h
+custtbl.o: ../have_limits.h
 custtbl.o: ../have_memmv.h
 custtbl.o: ../have_newstr.h
 custtbl.o: ../have_stdlib.h
@@ -912,5 +935,6 @@ custtbl.o: ../qmath.h
 custtbl.o: ../sha1.h
 custtbl.o: ../str.h
 custtbl.o: ../value.h
+custtbl.o: ../version.h
 custtbl.o: ../zmath.h
 custtbl.o: custtbl.c

@@ -1126,7 +1126,8 @@ fposval.h: fposval.c have_fgetsetpos.h have_fpos_pos.h have_offscl.h have_posscl
 	else \
 	    echo 'WARNING!! ./fposval${EXT} failed, using fposval.h.def' 1>&2; \
 	    ${CAT} fposval.h.def >> $@; \
-	    echo 'WARNING!! for more info try: rm -f $@ ; ${MAKE} $@ S= Q=' 1>&2; \
+	    echo 'WARNING!! While this might be OK, it might be a sign something is wrong' 1>&2; \
+	    echo 'WARNING!! For more on what went wrong try: rm -f $@ ; ${MAKE} $@ S= Q=' 1>&2; \
 	fi
 	${Q} echo '' >> $@
 	${Q} echo '' >> $@
@@ -3766,6 +3767,7 @@ addop.o: block.h
 addop.o: byteswap.h
 addop.o: calc.h
 addop.o: calcerr.h
+addop.o: charbit.h
 addop.o: cmath.h
 addop.o: config.h
 addop.o: decl.h
@@ -3774,6 +3776,7 @@ addop.o: func.h
 addop.o: hash.h
 addop.o: have_ban_pragma.h
 addop.o: have_const.h
+addop.o: have_limits.h
 addop.o: have_memmv.h
 addop.o: have_newstr.h
 addop.o: have_stdlib.h
@@ -3803,6 +3806,7 @@ assocfunc.o: banned.h
 assocfunc.o: block.h
 assocfunc.o: byteswap.h
 assocfunc.o: calcerr.h
+assocfunc.o: charbit.h
 assocfunc.o: cmath.h
 assocfunc.o: config.h
 assocfunc.o: decl.h
@@ -3810,6 +3814,7 @@ assocfunc.o: endian_calc.h
 assocfunc.o: hash.h
 assocfunc.o: have_ban_pragma.h
 assocfunc.o: have_const.h
+assocfunc.o: have_limits.h
 assocfunc.o: have_memmv.h
 assocfunc.o: have_newstr.h
 assocfunc.o: have_stdlib.h
@@ -3830,6 +3835,7 @@ blkcpy.o: block.h
 blkcpy.o: byteswap.h
 blkcpy.o: calc.h
 blkcpy.o: calcerr.h
+blkcpy.o: charbit.h
 blkcpy.o: cmath.h
 blkcpy.o: config.h
 blkcpy.o: decl.h
@@ -3839,6 +3845,7 @@ blkcpy.o: hash.h
 blkcpy.o: have_ban_pragma.h
 blkcpy.o: have_const.h
 blkcpy.o: have_fgetsetpos.h
+blkcpy.o: have_limits.h
 blkcpy.o: have_memmv.h
 blkcpy.o: have_newstr.h
 blkcpy.o: have_stdlib.h
@@ -3857,6 +3864,7 @@ block.o: block.c
 block.o: block.h
 block.o: byteswap.h
 block.o: calcerr.h
+block.o: charbit.h
 block.o: cmath.h
 block.o: config.h
 block.o: decl.h
@@ -3864,6 +3872,7 @@ block.o: endian_calc.h
 block.o: hash.h
 block.o: have_ban_pragma.h
 block.o: have_const.h
+block.o: have_limits.h
 block.o: have_memmv.h
 block.o: have_newstr.h
 block.o: have_stdlib.h
@@ -3880,11 +3889,13 @@ byteswap.o: attribute.h
 byteswap.o: banned.h
 byteswap.o: byteswap.c
 byteswap.o: byteswap.h
+byteswap.o: charbit.h
 byteswap.o: cmath.h
 byteswap.o: decl.h
 byteswap.o: endian_calc.h
 byteswap.o: have_ban_pragma.h
 byteswap.o: have_const.h
+byteswap.o: have_limits.h
 byteswap.o: have_memmv.h
 byteswap.o: have_newstr.h
 byteswap.o: have_stdlib.h
@@ -3901,6 +3912,7 @@ calc.o: byteswap.h
 calc.o: calc.c
 calc.o: calc.h
 calc.o: calcerr.h
+calc.o: charbit.h
 calc.o: cmath.h
 calc.o: conf.h
 calc.o: config.h
@@ -3911,6 +3923,7 @@ calc.o: func.h
 calc.o: hash.h
 calc.o: have_ban_pragma.h
 calc.o: have_const.h
+calc.o: have_limits.h
 calc.o: have_memmv.h
 calc.o: have_newstr.h
 calc.o: have_stdlib.h
@@ -3951,6 +3964,7 @@ codegen.o: block.h
 codegen.o: byteswap.h
 codegen.o: calc.h
 codegen.o: calcerr.h
+codegen.o: charbit.h
 codegen.o: cmath.h
 codegen.o: codegen.c
 codegen.o: conf.h
@@ -3961,6 +3975,7 @@ codegen.o: func.h
 codegen.o: hash.h
 codegen.o: have_ban_pragma.h
 codegen.o: have_const.h
+codegen.o: have_limits.h
 codegen.o: have_memmv.h
 codegen.o: have_newstr.h
 codegen.o: have_stdlib.h
@@ -3985,6 +4000,7 @@ comfunc.o: alloc.h
 comfunc.o: attribute.h
 comfunc.o: banned.h
 comfunc.o: byteswap.h
+comfunc.o: charbit.h
 comfunc.o: cmath.h
 comfunc.o: comfunc.c
 comfunc.o: config.h
@@ -3992,6 +4008,7 @@ comfunc.o: decl.h
 comfunc.o: endian_calc.h
 comfunc.o: have_ban_pragma.h
 comfunc.o: have_const.h
+comfunc.o: have_limits.h
 comfunc.o: have_memmv.h
 comfunc.o: have_newstr.h
 comfunc.o: have_stdlib.h
@@ -4004,12 +4021,14 @@ commath.o: alloc.h
 commath.o: attribute.h
 commath.o: banned.h
 commath.o: byteswap.h
+commath.o: charbit.h
 commath.o: cmath.h
 commath.o: commath.c
 commath.o: decl.h
 commath.o: endian_calc.h
 commath.o: have_ban_pragma.h
 commath.o: have_const.h
+commath.o: have_limits.h
 commath.o: have_memmv.h
 commath.o: have_newstr.h
 commath.o: have_stdlib.h
@@ -4024,6 +4043,7 @@ config.o: block.h
 config.o: byteswap.h
 config.o: calc.h
 config.o: calcerr.h
+config.o: charbit.h
 config.o: cmath.h
 config.o: config.c
 config.o: config.h
@@ -4033,6 +4053,7 @@ config.o: endian_calc.h
 config.o: hash.h
 config.o: have_ban_pragma.h
 config.o: have_const.h
+config.o: have_limits.h
 config.o: have_memmv.h
 config.o: have_newstr.h
 config.o: have_stdlib.h
@@ -4058,6 +4079,7 @@ const.o: block.h
 const.o: byteswap.h
 const.o: calc.h
 const.o: calcerr.h
+const.o: charbit.h
 const.o: cmath.h
 const.o: config.h
 const.o: const.c
@@ -4066,6 +4088,7 @@ const.o: endian_calc.h
 const.o: hash.h
 const.o: have_ban_pragma.h
 const.o: have_const.h
+const.o: have_limits.h
 const.o: have_memmv.h
 const.o: have_newstr.h
 const.o: have_stdlib.h
@@ -4084,6 +4107,7 @@ custom.o: block.h
 custom.o: byteswap.h
 custom.o: calc.h
 custom.o: calcerr.h
+custom.o: charbit.h
 custom.o: cmath.h
 custom.o: config.h
 custom.o: custom.c
@@ -4093,6 +4117,7 @@ custom.o: endian_calc.h
 custom.o: hash.h
 custom.o: have_ban_pragma.h
 custom.o: have_const.h
+custom.o: have_limits.h
 custom.o: have_memmv.h
 custom.o: have_newstr.h
 custom.o: have_stdlib.h
@@ -4116,6 +4141,7 @@ file.o: block.h
 file.o: byteswap.h
 file.o: calc.h
 file.o: calcerr.h
+file.o: charbit.h
 file.o: cmath.h
 file.o: config.h
 file.o: decl.h
@@ -4128,6 +4154,7 @@ file.o: have_ban_pragma.h
 file.o: have_const.h
 file.o: have_fgetsetpos.h
 file.o: have_fpos_pos.h
+file.o: have_limits.h
 file.o: have_memmv.h
 file.o: have_newstr.h
 file.o: have_stdlib.h
@@ -4147,6 +4174,7 @@ fposval.o: alloc.h
 fposval.o: attribute.h
 fposval.o: banned.h
 fposval.o: byteswap.h
+fposval.o: charbit.h
 fposval.o: decl.h
 fposval.o: endian_calc.h
 fposval.o: fposval.c
@@ -4154,6 +4182,7 @@ fposval.o: have_ban_pragma.h
 fposval.o: have_const.h
 fposval.o: have_fgetsetpos.h
 fposval.o: have_fpos_pos.h
+fposval.o: have_limits.h
 fposval.o: have_memmv.h
 fposval.o: have_newstr.h
 fposval.o: have_offscl.h
@@ -4170,6 +4199,7 @@ func.o: block.h
 func.o: byteswap.h
 func.o: calc.h
 func.o: calcerr.h
+func.o: charbit.h
 func.o: cmath.h
 func.o: config.h
 func.o: custom.h
@@ -4182,6 +4212,7 @@ func.o: hash.h
 func.o: have_ban_pragma.h
 func.o: have_const.h
 func.o: have_fgetsetpos.h
+func.o: have_limits.h
 func.o: have_memmv.h
 func.o: have_newstr.h
 func.o: have_rusage.h
@@ -4215,6 +4246,7 @@ hash.o: block.h
 hash.o: byteswap.h
 hash.o: calc.h
 hash.o: calcerr.h
+hash.o: charbit.h
 hash.o: cmath.h
 hash.o: config.h
 hash.o: decl.h
@@ -4223,6 +4255,7 @@ hash.o: hash.c
 hash.o: hash.h
 hash.o: have_ban_pragma.h
 hash.o: have_const.h
+hash.o: have_limits.h
 hash.o: have_memmv.h
 hash.o: have_newstr.h
 hash.o: have_stdlib.h
@@ -4339,6 +4372,7 @@ help.o: block.h
 help.o: byteswap.h
 help.o: calc.h
 help.o: calcerr.h
+help.o: charbit.h
 help.o: cmath.h
 help.o: conf.h
 help.o: config.h
@@ -4347,6 +4381,7 @@ help.o: endian_calc.h
 help.o: hash.h
 help.o: have_ban_pragma.h
 help.o: have_const.h
+help.o: have_limits.h
 help.o: have_memmv.h
 help.o: have_newstr.h
 help.o: have_stdlib.h
@@ -4368,6 +4403,7 @@ hist.o: block.h
 hist.o: byteswap.h
 hist.o: calc.h
 hist.o: calcerr.h
+hist.o: charbit.h
 hist.o: cmath.h
 hist.o: config.h
 hist.o: decl.h
@@ -4375,6 +4411,7 @@ hist.o: endian_calc.h
 hist.o: hash.h
 hist.o: have_ban_pragma.h
 hist.o: have_const.h
+hist.o: have_limits.h
 hist.o: have_memmv.h
 hist.o: have_newstr.h
 hist.o: have_stdlib.h
@@ -4402,6 +4439,7 @@ input.o: block.h
 input.o: byteswap.h
 input.o: calc.h
 input.o: calcerr.h
+input.o: charbit.h
 input.o: cmath.h
 input.o: conf.h
 input.o: config.h
@@ -4410,6 +4448,7 @@ input.o: endian_calc.h
 input.o: hash.h
 input.o: have_ban_pragma.h
 input.o: have_const.h
+input.o: have_limits.h
 input.o: have_memmv.h
 input.o: have_newstr.h
 input.o: have_stdlib.h
@@ -4440,6 +4479,7 @@ label.o: block.h
 label.o: byteswap.h
 label.o: calc.h
 label.o: calcerr.h
+label.o: charbit.h
 label.o: cmath.h
 label.o: config.h
 label.o: decl.h
@@ -4448,6 +4488,7 @@ label.o: func.h
 label.o: hash.h
 label.o: have_ban_pragma.h
 label.o: have_const.h
+label.o: have_limits.h
 label.o: have_memmv.h
 label.o: have_newstr.h
 label.o: have_stdlib.h
@@ -4470,6 +4511,7 @@ lib_calc.o: block.h
 lib_calc.o: byteswap.h
 lib_calc.o: calc.h
 lib_calc.o: calcerr.h
+lib_calc.o: charbit.h
 lib_calc.o: cmath.h
 lib_calc.o: conf.h
 lib_calc.o: config.h
@@ -4480,6 +4522,7 @@ lib_calc.o: func.h
 lib_calc.o: hash.h
 lib_calc.o: have_ban_pragma.h
 lib_calc.o: have_const.h
+lib_calc.o: have_limits.h
 lib_calc.o: have_memmv.h
 lib_calc.o: have_newstr.h
 lib_calc.o: have_stdlib.h
@@ -4507,10 +4550,12 @@ lib_util.o: alloc.h
 lib_util.o: attribute.h
 lib_util.o: banned.h
 lib_util.o: byteswap.h
+lib_util.o: charbit.h
 lib_util.o: decl.h
 lib_util.o: endian_calc.h
 lib_util.o: have_ban_pragma.h
 lib_util.o: have_const.h
+lib_util.o: have_limits.h
 lib_util.o: have_memmv.h
 lib_util.o: have_newstr.h
 lib_util.o: have_stdlib.h
@@ -4525,6 +4570,7 @@ listfunc.o: banned.h
 listfunc.o: block.h
 listfunc.o: byteswap.h
 listfunc.o: calcerr.h
+listfunc.o: charbit.h
 listfunc.o: cmath.h
 listfunc.o: config.h
 listfunc.o: decl.h
@@ -4532,6 +4578,7 @@ listfunc.o: endian_calc.h
 listfunc.o: hash.h
 listfunc.o: have_ban_pragma.h
 listfunc.o: have_const.h
+listfunc.o: have_limits.h
 listfunc.o: have_memmv.h
 listfunc.o: have_newstr.h
 listfunc.o: have_stdlib.h
@@ -4558,6 +4605,7 @@ matfunc.o: banned.h
 matfunc.o: block.h
 matfunc.o: byteswap.h
 matfunc.o: calcerr.h
+matfunc.o: charbit.h
 matfunc.o: cmath.h
 matfunc.o: config.h
 matfunc.o: decl.h
@@ -4565,6 +4613,7 @@ matfunc.o: endian_calc.h
 matfunc.o: hash.h
 matfunc.o: have_ban_pragma.h
 matfunc.o: have_const.h
+matfunc.o: have_limits.h
 matfunc.o: have_memmv.h
 matfunc.o: have_newstr.h
 matfunc.o: have_stdlib.h
@@ -4587,6 +4636,7 @@ math_error.o: block.h
 math_error.o: byteswap.h
 math_error.o: calc.h
 math_error.o: calcerr.h
+math_error.o: charbit.h
 math_error.o: cmath.h
 math_error.o: config.h
 math_error.o: decl.h
@@ -4594,6 +4644,7 @@ math_error.o: endian_calc.h
 math_error.o: hash.h
 math_error.o: have_ban_pragma.h
 math_error.o: have_const.h
+math_error.o: have_limits.h
 math_error.o: have_memmv.h
 math_error.o: have_newstr.h
 math_error.o: have_stdlib.h
@@ -4614,6 +4665,7 @@ obj.o: block.h
 obj.o: byteswap.h
 obj.o: calc.h
 obj.o: calcerr.h
+obj.o: charbit.h
 obj.o: cmath.h
 obj.o: config.h
 obj.o: decl.h
@@ -4622,6 +4674,7 @@ obj.o: func.h
 obj.o: hash.h
 obj.o: have_ban_pragma.h
 obj.o: have_const.h
+obj.o: have_limits.h
 obj.o: have_memmv.h
 obj.o: have_newstr.h
 obj.o: have_stdlib.h
@@ -4647,6 +4700,7 @@ opcodes.o: block.h
 opcodes.o: byteswap.h
 opcodes.o: calc.h
 opcodes.o: calcerr.h
+opcodes.o: charbit.h
 opcodes.o: cmath.h
 opcodes.o: config.h
 opcodes.o: custom.h
@@ -4658,6 +4712,7 @@ opcodes.o: hash.h
 opcodes.o: have_ban_pragma.h
 opcodes.o: have_const.h
 opcodes.o: have_fgetsetpos.h
+opcodes.o: have_limits.h
 opcodes.o: have_memmv.h
 opcodes.o: have_newstr.h
 opcodes.o: have_stdlib.h
@@ -4682,10 +4737,12 @@ pix.o: alloc.h
 pix.o: attribute.h
 pix.o: banned.h
 pix.o: byteswap.h
+pix.o: charbit.h
 pix.o: decl.h
 pix.o: endian_calc.h
 pix.o: have_ban_pragma.h
 pix.o: have_const.h
+pix.o: have_limits.h
 pix.o: have_memmv.h
 pix.o: have_newstr.h
 pix.o: have_stdlib.h
@@ -4701,6 +4758,7 @@ poly.o: banned.h
 poly.o: block.h
 poly.o: byteswap.h
 poly.o: calcerr.h
+poly.o: charbit.h
 poly.o: cmath.h
 poly.o: config.h
 poly.o: decl.h
@@ -4708,6 +4766,7 @@ poly.o: endian_calc.h
 poly.o: hash.h
 poly.o: have_ban_pragma.h
 poly.o: have_const.h
+poly.o: have_limits.h
 poly.o: have_memmv.h
 poly.o: have_newstr.h
 poly.o: have_stdlib.h
@@ -4724,10 +4783,12 @@ prime.o: alloc.h
 prime.o: attribute.h
 prime.o: banned.h
 prime.o: byteswap.h
+prime.o: charbit.h
 prime.o: decl.h
 prime.o: endian_calc.h
 prime.o: have_ban_pragma.h
 prime.o: have_const.h
+prime.o: have_limits.h
 prime.o: have_memmv.h
 prime.o: have_newstr.h
 prime.o: have_stdlib.h
@@ -4742,11 +4803,13 @@ qfunc.o: alloc.h
 qfunc.o: attribute.h
 qfunc.o: banned.h
 qfunc.o: byteswap.h
+qfunc.o: charbit.h
 qfunc.o: config.h
 qfunc.o: decl.h
 qfunc.o: endian_calc.h
 qfunc.o: have_ban_pragma.h
 qfunc.o: have_const.h
+qfunc.o: have_limits.h
 qfunc.o: have_memmv.h
 qfunc.o: have_newstr.h
 qfunc.o: have_stdlib.h
@@ -4762,11 +4825,13 @@ qio.o: args.h
 qio.o: attribute.h
 qio.o: banned.h
 qio.o: byteswap.h
+qio.o: charbit.h
 qio.o: config.h
 qio.o: decl.h
 qio.o: endian_calc.h
 qio.o: have_ban_pragma.h
 qio.o: have_const.h
+qio.o: have_limits.h
 qio.o: have_memmv.h
 qio.o: have_newstr.h
 qio.o: have_stdlib.h
@@ -4781,11 +4846,13 @@ qmath.o: alloc.h
 qmath.o: attribute.h
 qmath.o: banned.h
 qmath.o: byteswap.h
+qmath.o: charbit.h
 qmath.o: config.h
 qmath.o: decl.h
 qmath.o: endian_calc.h
 qmath.o: have_ban_pragma.h
 qmath.o: have_const.h
+qmath.o: have_limits.h
 qmath.o: have_memmv.h
 qmath.o: have_newstr.h
 qmath.o: have_stdlib.h
@@ -4799,11 +4866,13 @@ qmod.o: alloc.h
 qmod.o: attribute.h
 qmod.o: banned.h
 qmod.o: byteswap.h
+qmod.o: charbit.h
 qmod.o: config.h
 qmod.o: decl.h
 qmod.o: endian_calc.h
 qmod.o: have_ban_pragma.h
 qmod.o: have_const.h
+qmod.o: have_limits.h
 qmod.o: have_memmv.h
 qmod.o: have_newstr.h
 qmod.o: have_stdlib.h
@@ -4817,10 +4886,12 @@ qtrans.o: alloc.h
 qtrans.o: attribute.h
 qtrans.o: banned.h
 qtrans.o: byteswap.h
+qtrans.o: charbit.h
 qtrans.o: decl.h
 qtrans.o: endian_calc.h
 qtrans.o: have_ban_pragma.h
 qtrans.o: have_const.h
+qtrans.o: have_limits.h
 qtrans.o: have_memmv.h
 qtrans.o: have_newstr.h
 qtrans.o: have_stdlib.h
@@ -4835,6 +4906,7 @@ quickhash.o: banned.h
 quickhash.o: block.h
 quickhash.o: byteswap.h
 quickhash.o: calcerr.h
+quickhash.o: charbit.h
 quickhash.o: cmath.h
 quickhash.o: config.h
 quickhash.o: decl.h
@@ -4842,6 +4914,7 @@ quickhash.o: endian_calc.h
 quickhash.o: hash.h
 quickhash.o: have_ban_pragma.h
 quickhash.o: have_const.h
+quickhash.o: have_limits.h
 quickhash.o: have_memmv.h
 quickhash.o: have_newstr.h
 quickhash.o: have_stdlib.h
@@ -4863,6 +4936,7 @@ sample_many.o: block.h
 sample_many.o: byteswap.h
 sample_many.o: calc.h
 sample_many.o: calcerr.h
+sample_many.o: charbit.h
 sample_many.o: cmath.h
 sample_many.o: config.h
 sample_many.o: decl.h
@@ -4870,6 +4944,7 @@ sample_many.o: endian_calc.h
 sample_many.o: hash.h
 sample_many.o: have_ban_pragma.h
 sample_many.o: have_const.h
+sample_many.o: have_limits.h
 sample_many.o: have_memmv.h
 sample_many.o: have_newstr.h
 sample_many.o: have_stdlib.h
@@ -4891,6 +4966,7 @@ sample_rand.o: block.h
 sample_rand.o: byteswap.h
 sample_rand.o: calc.h
 sample_rand.o: calcerr.h
+sample_rand.o: charbit.h
 sample_rand.o: cmath.h
 sample_rand.o: config.h
 sample_rand.o: decl.h
@@ -4898,6 +4974,7 @@ sample_rand.o: endian_calc.h
 sample_rand.o: hash.h
 sample_rand.o: have_ban_pragma.h
 sample_rand.o: have_const.h
+sample_rand.o: have_limits.h
 sample_rand.o: have_memmv.h
 sample_rand.o: have_newstr.h
 sample_rand.o: have_stdlib.h
@@ -4916,6 +4993,7 @@ seed.o: alloc.h
 seed.o: attribute.h
 seed.o: banned.h
 seed.o: byteswap.h
+seed.o: charbit.h
 seed.o: decl.h
 seed.o: endian_calc.h
 seed.o: have_arc4random.h
@@ -4926,6 +5004,7 @@ seed.o: have_getpgid.h
 seed.o: have_getprid.h
 seed.o: have_getsid.h
 seed.o: have_gettime.h
+seed.o: have_limits.h
 seed.o: have_memmv.h
 seed.o: have_newstr.h
 seed.o: have_rusage.h
@@ -4951,6 +5030,7 @@ sha1.o: banned.h
 sha1.o: block.h
 sha1.o: byteswap.h
 sha1.o: calcerr.h
+sha1.o: charbit.h
 sha1.o: cmath.h
 sha1.o: config.h
 sha1.o: decl.h
@@ -4958,6 +5038,7 @@ sha1.o: endian_calc.h
 sha1.o: hash.h
 sha1.o: have_ban_pragma.h
 sha1.o: have_const.h
+sha1.o: have_limits.h
 sha1.o: have_memmv.h
 sha1.o: have_newstr.h
 sha1.o: have_stdlib.h
@@ -4976,6 +5057,7 @@ size.o: banned.h
 size.o: block.h
 size.o: byteswap.h
 size.o: calcerr.h
+size.o: charbit.h
 size.o: cmath.h
 size.o: config.h
 size.o: decl.h
@@ -4983,6 +5065,7 @@ size.o: endian_calc.h
 size.o: hash.h
 size.o: have_ban_pragma.h
 size.o: have_const.h
+size.o: have_limits.h
 size.o: have_memmv.h
 size.o: have_newstr.h
 size.o: have_stdlib.h
@@ -5004,6 +5087,7 @@ str.o: block.h
 str.o: byteswap.h
 str.o: calc.h
 str.o: calcerr.h
+str.o: charbit.h
 str.o: cmath.h
 str.o: config.h
 str.o: decl.h
@@ -5011,6 +5095,7 @@ str.o: endian_calc.h
 str.o: hash.h
 str.o: have_ban_pragma.h
 str.o: have_const.h
+str.o: have_limits.h
 str.o: have_memmv.h
 str.o: have_newstr.h
 str.o: have_stdlib.h
@@ -5045,6 +5130,7 @@ symbol.o: block.h
 symbol.o: byteswap.h
 symbol.o: calc.h
 symbol.o: calcerr.h
+symbol.o: charbit.h
 symbol.o: cmath.h
 symbol.o: config.h
 symbol.o: decl.h
@@ -5053,6 +5139,7 @@ symbol.o: func.h
 symbol.o: hash.h
 symbol.o: have_ban_pragma.h
 symbol.o: have_const.h
+symbol.o: have_limits.h
 symbol.o: have_memmv.h
 symbol.o: have_newstr.h
 symbol.o: have_stdlib.h
@@ -5077,6 +5164,7 @@ token.o: block.h
 token.o: byteswap.h
 token.o: calc.h
 token.o: calcerr.h
+token.o: charbit.h
 token.o: cmath.h
 token.o: config.h
 token.o: decl.h
@@ -5084,6 +5172,7 @@ token.o: endian_calc.h
 token.o: hash.h
 token.o: have_ban_pragma.h
 token.o: have_const.h
+token.o: have_limits.h
 token.o: have_memmv.h
 token.o: have_newstr.h
 token.o: have_stdlib.h
@@ -5105,6 +5194,7 @@ value.o: block.h
 value.o: byteswap.h
 value.o: calc.h
 value.o: calcerr.h
+value.o: charbit.h
 value.o: cmath.h
 value.o: config.h
 value.o: decl.h
@@ -5115,6 +5205,7 @@ value.o: hash.h
 value.o: have_ban_pragma.h
 value.o: have_const.h
 value.o: have_fgetsetpos.h
+value.o: have_limits.h
 value.o: have_memmv.h
 value.o: have_newstr.h
 value.o: have_stdlib.h
@@ -5139,6 +5230,7 @@ version.o: block.h
 version.o: byteswap.h
 version.o: calc.h
 version.o: calcerr.h
+version.o: charbit.h
 version.o: cmath.h
 version.o: config.h
 version.o: decl.h
@@ -5146,6 +5238,7 @@ version.o: endian_calc.h
 version.o: hash.h
 version.o: have_ban_pragma.h
 version.o: have_const.h
+version.o: have_limits.h
 version.o: have_memmv.h
 version.o: have_newstr.h
 version.o: have_stdlib.h
@@ -5166,10 +5259,12 @@ zfunc.o: alloc.h
 zfunc.o: attribute.h
 zfunc.o: banned.h
 zfunc.o: byteswap.h
+zfunc.o: charbit.h
 zfunc.o: decl.h
 zfunc.o: endian_calc.h
 zfunc.o: have_ban_pragma.h
 zfunc.o: have_const.h
+zfunc.o: have_limits.h
 zfunc.o: have_memmv.h
 zfunc.o: have_newstr.h
 zfunc.o: have_stdlib.h
@@ -5182,11 +5277,13 @@ zio.o: args.h
 zio.o: attribute.h
 zio.o: banned.h
 zio.o: byteswap.h
+zio.o: charbit.h
 zio.o: config.h
 zio.o: decl.h
 zio.o: endian_calc.h
 zio.o: have_ban_pragma.h
 zio.o: have_const.h
+zio.o: have_limits.h
 zio.o: have_memmv.h
 zio.o: have_newstr.h
 zio.o: have_stdlib.h
@@ -5200,10 +5297,12 @@ zmath.o: alloc.h
 zmath.o: attribute.h
 zmath.o: banned.h
 zmath.o: byteswap.h
+zmath.o: charbit.h
 zmath.o: decl.h
 zmath.o: endian_calc.h
 zmath.o: have_ban_pragma.h
 zmath.o: have_const.h
+zmath.o: have_limits.h
 zmath.o: have_memmv.h
 zmath.o: have_newstr.h
 zmath.o: have_stdlib.h
@@ -5215,11 +5314,13 @@ zmod.o: alloc.h
 zmod.o: attribute.h
 zmod.o: banned.h
 zmod.o: byteswap.h
+zmod.o: charbit.h
 zmod.o: config.h
 zmod.o: decl.h
 zmod.o: endian_calc.h
 zmod.o: have_ban_pragma.h
 zmod.o: have_const.h
+zmod.o: have_limits.h
 zmod.o: have_memmv.h
 zmod.o: have_newstr.h
 zmod.o: have_stdlib.h
@@ -5233,11 +5334,13 @@ zmul.o: alloc.h
 zmul.o: attribute.h
 zmul.o: banned.h
 zmul.o: byteswap.h
+zmul.o: charbit.h
 zmul.o: config.h
 zmul.o: decl.h
 zmul.o: endian_calc.h
 zmul.o: have_ban_pragma.h
 zmul.o: have_const.h
+zmul.o: have_limits.h
 zmul.o: have_memmv.h
 zmul.o: have_newstr.h
 zmul.o: have_stdlib.h
@@ -5253,6 +5356,7 @@ zprime.o: banned.h
 zprime.o: block.h
 zprime.o: byteswap.h
 zprime.o: calcerr.h
+zprime.o: charbit.h
 zprime.o: cmath.h
 zprime.o: config.h
 zprime.o: decl.h
@@ -5260,6 +5364,7 @@ zprime.o: endian_calc.h
 zprime.o: hash.h
 zprime.o: have_ban_pragma.h
 zprime.o: have_const.h
+zprime.o: have_limits.h
 zprime.o: have_memmv.h
 zprime.o: have_newstr.h
 zprime.o: have_stdlib.h
@@ -5281,6 +5386,7 @@ zrand.o: banned.h
 zrand.o: block.h
 zrand.o: byteswap.h
 zrand.o: calcerr.h
+zrand.o: charbit.h
 zrand.o: cmath.h
 zrand.o: config.h
 zrand.o: decl.h
@@ -5288,6 +5394,7 @@ zrand.o: endian_calc.h
 zrand.o: hash.h
 zrand.o: have_ban_pragma.h
 zrand.o: have_const.h
+zrand.o: have_limits.h
 zrand.o: have_memmv.h
 zrand.o: have_newstr.h
 zrand.o: have_stdlib.h
@@ -5308,6 +5415,7 @@ zrandom.o: banned.h
 zrandom.o: block.h
 zrandom.o: byteswap.h
 zrandom.o: calcerr.h
+zrandom.o: charbit.h
 zrandom.o: cmath.h
 zrandom.o: config.h
 zrandom.o: decl.h
@@ -5315,6 +5423,7 @@ zrandom.o: endian_calc.h
 zrandom.o: hash.h
 zrandom.o: have_ban_pragma.h
 zrandom.o: have_const.h
+zrandom.o: have_limits.h
 zrandom.o: have_memmv.h
 zrandom.o: have_newstr.h
 zrandom.o: have_stdlib.h

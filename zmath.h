@@ -35,6 +35,7 @@
 
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
+# include "version.h"
 # include "decl.h"
 # include "alloc.h"
 # include "endian_calc.h"
@@ -42,7 +43,9 @@
 # include "byteswap.h"
 # include "have_stdlib.h"
 # include "attribute.h"
+# include "charbit.h"
 #else
+# include <calc/version.h>
 # include <calc/decl.h>
 # include <calc/alloc.h>
 # include <calc/endian_calc.h>
@@ -50,6 +53,7 @@
 # include <calc/byteswap.h>
 # include <calc/have_stdlib.h>
 # include <calc/attribute.h>
+# include <calc/charbit.h>
 #endif
 #ifdef HAVE_STDLIB_H
 # include <stdlib.h>
@@ -58,14 +62,6 @@
 
 #ifndef ALLOCTEST
 # define freeh(p) { if (!is_const(p)) { free((void *)(p)); } }
-#endif
-
-
-#if !defined(TRUE)
-#define TRUE	((BOOL) 1)			/* booleans */
-#endif
-#if !defined(FALSE)
-#define FALSE	((BOOL) 0)
 #endif
 
 
@@ -125,6 +121,30 @@ typedef SB32 SFULL;			/* signed FULL */
 #define HALF_LEN (sizeof(HALF))			/* length of HALF in bites */
 #define FULL_LEN (sizeof(FULL))			/* length of FULL in bites */
 
+
+/*
+ * calc historic booleans
+ */
+#if defined(CALC2_COMPAT)
+typedef SB32 BOOL;			/* calc v2 compatible TRUE or FALSE value */
+#else /* CALC2_COMPAT */
+typedef bool BOOL;			/* TRUE or FALSE value as C boolean */
+#endif /* CALC2_COMPAT */
+
+/*
+ * calc historic booleans
+ */
+#undef TRUE
+#undef FALSE
+#if defined(CALC2_COMPAT)
+#define TRUE	((BOOL) 1)			/* booleans */
+#define FALSE	((BOOL) 0)
+#else
+#define TRUE	((bool) true)
+#define FALSE	((bool) false)
+#endif
+
+
 /*
  * ROUNDUP(value, mult) - round up value to the next multiple of mult
  *
@@ -164,8 +184,19 @@ typedef FULL PRINT;			/* cast for zio printing functions */
 #define SWAP_B8_IN_PRINT(dest, src)	SWAP_B8_IN_FULL(dest, src)
 #endif
 typedef SB32 FLAG;			/* small value (e.g. comparison) */
-typedef SB32 BOOL;			/* TRUE or FALSE value */
-typedef SB32 LEN;			/* unit of length storage */
+
+/*
+ * length of internal integer values in units of HALF
+ */
+#if defined(CALC2_COMPAT)
+typedef SB32 LEN;			/* calc v2 compatible unit of length storage */
+#elif PTR_LEN >= 8
+typedef SB64 LEN;			/* use unit of length storage for 8 or more octet pointers */
+#elif PTR_LEN == 4
+typedef SB32 LEN;			/* use unit of length storage for 4 octet pointers */
+#else
+typedef SB32 LEN;			/* else assume we can support at least 4 octet pointers */
+#endif
 
 #define SWAP_B32_IN_HASH(dest, src)	(*(dest) = *(src))
 #define SWAP_B16_IN_HASH(dest, src)	SWAP_B16_IN_B32(dest, src)
@@ -235,9 +266,29 @@ typedef SB32 LEN;			/* unit of length storage */
 
 
 /*
- * LEN storage size must be <= FULL storage size
+ * MAXDATA - largest data object in bytes we will use
+ *
+ * We start with MAXDATA as 1/16 of the maximum address space.
+ * We limit to 1/16 because for a maximum complex value we
+ * will need 4 huge integers, plus other data, code and stack space.
  */
-#define MAXLEN	((LEN) 0x7fffffff >> 3) /* longest value allowed */
+#if defined(CALC2_COMPAT)
+#define MAXDATA (0x80000000>>3)		/* calc v2 compatible supported address space */
+#elif PTR_LEN >= 8
+#define MAXDATA ((LEN) 1<<(64-4))	/* 1/16 of a 64-bit address space */
+#elif PTR_LEN >= 4 && PTR_LEN < 8
+#define MAXDATA ((LEN) 1<<(32-2))	/* 1/16 of a 32-bit address space */
+#else
+   /\oo/\ unsupproted PTR_LEN /\oo/\ !!	/* firewall - reject PTR_LEN as unsupported */
+#endif
+
+/*
+ * MAXLEN - maximum length of internal integer values in units of HALF
+ *
+ * We limit MAXLEN based on 1 less than the number of HALFs that
+ * will fit into MAXDATA bytes.
+ */
+#define MAXLEN ((LEN) ((MAXDATA / HALF_LEN) - 1))	/* longest value allowed */
 
 
 #define MAXREDC 256			/* number of entries in REDC cache */
