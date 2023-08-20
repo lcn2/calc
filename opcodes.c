@@ -1,7 +1,7 @@
 /*
  * opcodes - opcode execution module
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -56,17 +56,17 @@
 
 STATIC VALUE stackarray[MAXSTACK];	/* storage for stack */
 STATIC VALUE oldvalue;			/* previous calculation value */
-STATIC BOOL saveval = TRUE;		/* to enable or disable saving */
+STATIC bool saveval = true;		/* to enable or disable saving */
 STATIC int calc_errno;			/* most recent error-number */
 STATIC int errcount;			/* counts calls to error_value */
-STATIC BOOL go;
+STATIC bool go;
 STATIC long calc_depth;
 
 /*
  * global symbols
  */
 VALUE *stack;			/* current location of top of stack */
-int dumpnames;			/* names if TRUE, otherwise indices */
+int dumpnames;			/* names if true, otherwise indices */
 char *funcname;			/* function being executed */
 long funcline;			/* function line being executed */
 
@@ -102,7 +102,7 @@ typedef union {
 	void (*func_nul)(FUNC *);			/* OPNUL */
 	void (*func_one)(FUNC *, long);			/* OPONE */
 	void (*func_two)(FUNC *, long, long);		/* OPTWO */
-	void (*func_jmp)(FUNC *, BOOL *);		/* OPJMP */
+	void (*func_jmp)(FUNC *, bool *);		/* OPJMP */
 	void (*func_ret)(FUNC *);			/* OPRET */
 	void (*func_glb)(FUNC *, GLOBAL *);		/* OPGLB */
 	void (*func_par)(FUNC *, int, VALUE *, long);	/* OPPAR */
@@ -552,7 +552,7 @@ S_FUNC void
 o_indexaddr(FUNC *UNUSED(fp), long dim, long writeflag)
 {
 	int i;
-	BOOL flag;
+	bool flag;
 	VALUE *val;
 	VALUE *vp;
 	VALUE indices[MAXDIM];	/* index values */
@@ -1565,7 +1565,7 @@ o_links(FUNC *UNUSED(fp))
 {
 	VALUE *vp;
 	long links;
-	BOOL haveaddress;
+	bool haveaddress;
 
 	vp = stack;
 	haveaddress = (vp->v_type == V_ADDR);
@@ -2564,7 +2564,7 @@ o_return(FUNC *UNUSED(fp))
 
 
 S_FUNC void
-o_jumpz(FUNC *UNUSED(fp), BOOL *dojump)
+o_jumpz(FUNC *UNUSED(fp), bool *dojump)
 {
 	VALUE *vp;
 	int i;			/* result of comparison */
@@ -2582,12 +2582,12 @@ o_jumpz(FUNC *UNUSED(fp), BOOL *dojump)
 	}
 	stack--;
 	if (!i)
-		*dojump = TRUE;
+		*dojump = true;
 }
 
 
 S_FUNC void
-o_jumpnz(FUNC *UNUSED(fp), BOOL *dojump)
+o_jumpnz(FUNC *UNUSED(fp), bool *dojump)
 {
 	VALUE *vp;
 	int i;			/* result of comparison */
@@ -2605,7 +2605,7 @@ o_jumpnz(FUNC *UNUSED(fp), BOOL *dojump)
 	}
 	stack--;
 	if (i)
-		*dojump = TRUE;
+		*dojump = true;
 }
 
 
@@ -2613,17 +2613,17 @@ o_jumpnz(FUNC *UNUSED(fp), BOOL *dojump)
  * jumpnn invokes a jump if top value points to a null value
  */
 S_FUNC void
-o_jumpnn(FUNC *UNUSED(fp), BOOL *dojump)
+o_jumpnn(FUNC *UNUSED(fp), bool *dojump)
 {
 	if (stack->v_addr->v_type) {
-		*dojump = TRUE;
+		*dojump = true;
 		stack--;
 	}
 }
 
 
 S_FUNC void
-o_condorjump(FUNC *UNUSED(fp), BOOL *dojump)
+o_condorjump(FUNC *UNUSED(fp), bool *dojump)
 {
 	VALUE *vp;
 
@@ -2632,7 +2632,7 @@ o_condorjump(FUNC *UNUSED(fp), BOOL *dojump)
 		vp = vp->v_addr;
 	if (vp->v_type == V_NUM) {
 		if (!qiszero(vp->v_num)) {
-			*dojump = TRUE;
+			*dojump = true;
 			return;
 		}
 		if (stack->v_type == V_NUM)
@@ -2641,14 +2641,14 @@ o_condorjump(FUNC *UNUSED(fp), BOOL *dojump)
 		return;
 	}
 	if (testvalue(vp))
-		*dojump = TRUE;
+		*dojump = true;
 	else
 		freevalue(stack--);
 }
 
 
 S_FUNC void
-o_condandjump(FUNC *UNUSED(fp), BOOL *dojump)
+o_condandjump(FUNC *UNUSED(fp), bool *dojump)
 {
 	VALUE *vp;
 
@@ -2657,7 +2657,7 @@ o_condandjump(FUNC *UNUSED(fp), BOOL *dojump)
 		vp = vp->v_addr;
 	if (vp->v_type == V_NUM) {
 		if (qiszero(vp->v_num)) {
-			*dojump = TRUE;
+			*dojump = true;
 			return;
 		}
 		if (stack->v_type == V_NUM)
@@ -2666,7 +2666,7 @@ o_condandjump(FUNC *UNUSED(fp), BOOL *dojump)
 		return;
 	}
 	if (!testvalue(vp))
-		*dojump = TRUE;
+		*dojump = true;
 	else
 		freevalue(stack--);
 }
@@ -2678,7 +2678,7 @@ o_condandjump(FUNC *UNUSED(fp), BOOL *dojump)
  * If they are equal, pop both values and do not jump.
  */
 S_FUNC void
-o_casejump(FUNC *UNUSED(fp), BOOL *dojump)
+o_casejump(FUNC *UNUSED(fp), bool *dojump)
 {
 	VALUE *v1, *v2;
 	int r;
@@ -2692,16 +2692,16 @@ o_casejump(FUNC *UNUSED(fp), BOOL *dojump)
 	r = comparevalue(v1, v2);
 	freevalue(stack--);
 	if (r)
-		*dojump = TRUE;
+		*dojump = true;
 	else
 		freevalue(stack--);
 }
 
 
 S_FUNC void
-o_jump(FUNC *UNUSED(fp), BOOL *dojump)
+o_jump(FUNC *UNUSED(fp), bool *dojump)
 {
-	*dojump = TRUE;
+	*dojump = true;
 }
 
 
@@ -3072,7 +3072,7 @@ o_leftshift(FUNC *UNUSED(fp))
 		v1 = v1->v_addr;
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
-	shiftvalue(v1, v2, FALSE, &tmp);
+	shiftvalue(v1, v2, false, &tmp);
 	freevalue(stack--);
 	freevalue(stack);
 	*stack = tmp;
@@ -3091,7 +3091,7 @@ o_rightshift(FUNC *UNUSED(fp))
 		v1 = v1->v_addr;
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
-	shiftvalue(v1, v2, TRUE, &tmp);
+	shiftvalue(v1, v2, true, &tmp);
 	freevalue(stack--);
 	freevalue(stack);
 	*stack = tmp;
@@ -3278,14 +3278,14 @@ o_quit(FUNC *fp, long index)
 		printf("quit or abort executed\n");
 	if (!inputisterminal() && !strcmp(fp->f_name, "*"))
 		closeinput();
-	go = FALSE;
+	go = false;
 }
 
 
 S_FUNC void
 o_abort(FUNC *fp, long index)
 {
-	abort_now = TRUE;
+	abort_now = true;
 	o_quit(fp, index);
 }
 
@@ -3504,7 +3504,7 @@ o_show(FUNC *fp, long arg)
 		printf("Function not defined\n");
 		return;
 	}
-	dumpnames = FALSE;
+	dumpnames = false;
 	for (size = 0; size < fp->f_opcodecount; ) {
 		printf("%ld: ", (long)size);
 		size += dumpop(&fp->f_opcodes[size]);
@@ -4097,7 +4097,7 @@ calculate(FUNC *fp, int argcount)
 	unsigned int opnum;		/* current opcode number */
 	int origargcount;		/* original number of arguments */
 	unsigned int i;			/* loop counter */
-	BOOL dojump;			/* TRUE if jump is to occur */
+	bool dojump;			/* true if jump is to occur */
 	char *oldname;			/* old function name being executed */
 	VALUE *beginstack;		/* beginning of stack frame */
 	VALUE *args;			/* pointer to function arguments */
@@ -4108,7 +4108,7 @@ calculate(FUNC *fp, int argcount)
 	oldline = funcline;
 	funcname = fp->f_name;
 	funcline = 0;
-	go = TRUE;
+	go = true;
 	++calc_depth;
 	origargcount = argcount;
 	while ((unsigned)argcount < fp->f_paramcount) {
@@ -4153,7 +4153,7 @@ calculate(FUNC *fp, int argcount)
 		}
 		op = &opcodes[opnum];
 		if (conf->traceflags & TRACE_OPCODES) {
-			dumpnames = FALSE;
+			dumpnames = false;
 			printf("%8s, pc %4ld:  ", fp->f_name, pc);
 			(void)dumpop(&fp->f_opcodes[pc]);
 		}
@@ -4177,7 +4177,7 @@ calculate(FUNC *fp, int argcount)
 			break;
 
 		case OPJMP:	/* jump opcodes (one extra pointer arg) */
-			dojump = FALSE;
+			dojump = false;
 			(*op->o_func.func_jmp)(fp, &dojump);
 			if (dojump)
 				pc = fp->f_opcodes[pc];

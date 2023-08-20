@@ -1,7 +1,7 @@
 /*
  * lib_calc - calc link library initialization and shutdown routines
  *
- * Copyright (C) 1999-2007,2018,2021,2022  Landon Curt Noll
+ * Copyright (C) 1999-2007,2018,2021-2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -113,9 +113,9 @@ E_FUNC uid_t geteuid();
 /*
  * Common definitions
  */
-int use_old_std = FALSE;	/* TRUE => use old classic configuration */
+int use_old_std = false;	/* true => use old classic configuration */
 int abortlevel;			/* current level of aborts */
-BOOL inputwait;			/* TRUE if in a terminal input wait */
+bool inputwait;			/* true if in a terminal input wait */
 char *program = "calc";		/* our name */
 char *base_name = "calc";	/* basename of our name */
 char cmdbuf[MAXCMD+1+1+1];	/* command line expression + "\n\0" + guard */
@@ -126,21 +126,21 @@ char *script_name = NULL;	/* program name or -f filename arg or NULL */
 /*
  * global permissions
  */
-int allow_read = TRUE;	/* FALSE => may not open any files for reading */
-int allow_write = TRUE; /* FALSE => may not open any files for writing */
-int allow_exec = TRUE;	/* FALSE => may not execute any commands */
+int allow_read = true;	/* false => may not open any files for reading */
+int allow_write = true; /* false => may not open any files for writing */
+int allow_exec = true;	/* false => may not execute any commands */
 
 
 /*
  * global flags
  */
-int p_flag = FALSE;	/* TRUE => pipe mode */
-int q_flag = FALSE;	/* TRUE => don't execute rc files */
-int u_flag = FALSE;	/* TRUE => unbuffer stdin and stdout */
-int d_flag = FALSE;	/* TRUE => disable heading, resource_debug == 0 */
-int c_flag = FALSE;	/* TRUE => continue on error if permitted */
-int i_flag = FALSE;	/* TRUE => go interactive if permitted */
-int s_flag = FALSE;	/* TRUE => keep args as strings for argv() */
+int p_flag = false;	/* true => pipe mode */
+int q_flag = false;	/* true => don't execute rc files */
+int u_flag = false;	/* true => unbuffer stdin and stdout */
+int d_flag = false;	/* true => disable heading, resource_debug == 0 */
+int c_flag = false;	/* true => continue on error if permitted */
+int i_flag = false;	/* true => go interactive if permitted */
+int s_flag = false;	/* true => keep args as strings for argv() */
 
 
 /*
@@ -156,10 +156,10 @@ char *calc_history = NULL;	/* $CALCHISTFILE or ~/.calc_history */
 char *calc_helpdir = NULL;	/* $CALCHELP or /usr/local/share/calc/help */
 /* $CALCCUSTOMHELP or /usr/local/share/calc/custhelp */
 char *calc_customhelpdir = NULL;
-int stdin_tty = FALSE;		/* TRUE if stdin is a tty */
-int havecommands = FALSE;	/* TRUE if have one or more cmd args */
+int stdin_tty = false;		/* true if stdin is a tty */
+int havecommands = false;	/* true if have one or more cmd args */
 long stoponerror = 0;		/* >0 => stop, <0 => continue, ==0 => use -c */
-BOOL abort_now = FALSE;		/* TRUE => go interactive now, if permitted */
+bool abort_now = false;		/* true => go interactive now, if permitted */
 
 /* non-zero => calc_scanerr_jmpbuf ready */
 int calc_use_scanerr_jmpbuf = 0;
@@ -186,7 +186,7 @@ unsigned long calc_warn_cnt = 0;
 int argc_value = 0;		/* count of argv[] strings for argv() builtin */
 char **argv_value = NULL;	/* argv[] strings for argv() builtin */
 
-int no_env = FALSE;		/* TRUE (-e) => ignore env vars on startup */
+int no_env = false;		/* true (-e) => ignore env vars on startup */
 long errmax = ERRMAX;		/* if >= 0,  maximum value for errcount */
 
 NUMBER *epsilon_default;	/* default allowed error for float calcs */
@@ -216,7 +216,7 @@ STATIC ttystruct *fd_orig = NULL;	/* fd original state */
 STATIC ttystruct *fd_cur = NULL;	/* fd current state */
 S_FUNC void initenv(void);		/* setup calc environment */
 S_FUNC int find_tty_state(int fd);	/* find slot for saved tty state */
-STATIC BOOL initialized = FALSE;	/* TRUE => initialize() has been run */
+STATIC bool initialized = false;	/* true => initialize() has been run */
 
 
 /*
@@ -301,7 +301,7 @@ libcalc_call_me_first(void)
 		exit(85);
 	}
 	conf = config_copy(&newstd); /* more magic to fake early str2q() */
-	conf->tab_ok = FALSE;
+	conf->tab_ok = false;
 	newstd.epsilon = str2q(EPSILON_DEFAULT);
 	oldstd.epsilon = str2q(EPSILON_DEFAULT);
 
@@ -425,7 +425,7 @@ initialize(void)
 	/*
 	 * note that we are done
 	 */
-	initialized = TRUE;
+	initialized = true;
 }
 
 
@@ -439,8 +439,8 @@ reinitialize(void)
 	 * process commands (from stdin, not the command line)
 	 */
 	abortlevel = 0;
-	_math_abort_ = FALSE;
-	inputwait = FALSE;
+	_math_abort_ = false;
+	inputwait = false;
 	math_cleardiversions();
 	math_setfp(stdout);
 	resetscopes();
@@ -840,10 +840,10 @@ find_tty_state(int fd)
  *	fd	the descriptor for calc's interactive use
  *
  * Returns:
- *	TRUE	state change was successful
- *	FALSE	unable to change state of descriptor for interactive use
+ *	true	state change was successful
+ *	false	unable to change state of descriptor for interactive use
  */
-BOOL
+bool
 calc_tty(int fd)
 {
 	int slot;	/* the saved descriptor slot or -1 */
@@ -855,7 +855,7 @@ calc_tty(int fd)
 	if (slot < 0) {
 		if (conf->calc_debug & CALCDBG_TTY)
 			printf("calc_tty: Cannot get saved descriptor slot\n");
-		return FALSE;
+		return false;
 	}
 
 #if defined(USE_SGTTY)
@@ -867,7 +867,7 @@ calc_tty(int fd)
 	if (fd_setup[slot] < 0 && ioctl(fd, TIOCGETP, fd_orig+slot) < 0) {
 		if (conf->calc_debug & CALCDBG_TTY)
 			printf("calc_tty: Cannot TIOCGETP fd %d\n", fd);
-		return FALSE;
+		return false;
 	}
 	/* setup for new state */
 	fd_cur[slot] = fd_orig[slot];
@@ -877,7 +877,7 @@ calc_tty(int fd)
 	if (ioctl(fd, TIOCSETP, fd_cur+slot) < 0) {
 		if (conf->calc_debug & CALCDBG_TTY)
 			printf("calc_tty: Cannot TIOCSETP fd %d\n", fd);
-		return FALSE;
+		return false;
 	}
 	if (conf->calc_debug & CALCDBG_TTY)
 		printf("calc_tty: stty -ECHO +CBREAK: fd %d\n", fd);
@@ -890,7 +890,7 @@ calc_tty(int fd)
 	if (fd_setup[slot] < 0 && ioctl(fd, TCGETA, fd_orig+slot) < 0) {
 		if (conf->calc_debug & CALCDBG_TTY)
 			printf("calc_tty: Cannot TCGETA fd %d\n", fd);
-		return FALSE;
+		return false;
 	}
 	/* setup for new state */
 	fd_cur[slot] = fd_orig[slot];
@@ -903,7 +903,7 @@ calc_tty(int fd)
 	if (ioctl(fd, TCSETAW, fd_cur+slot) < 0) {
 		if (conf->calc_debug & CALCDBG_TTY)
 			printf("calc_tty: Cannot TCSETAW fd %d\n", fd);
-		return FALSE;
+		return false;
 	}
 	if (conf->calc_debug & CALCDBG_TTY)
 		printf("calc_tty: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
@@ -917,7 +917,7 @@ calc_tty(int fd)
 	if (fd_setup[slot] < 0 && tcgetattr(fd, fd_orig+slot) < 0) {
 		if (conf->calc_debug & CALCDBG_TTY)
 			printf("calc_tty: Cannot tcgetattr fd %d\n", fd);
-		return FALSE;
+		return false;
 	}
 	/* setup for new state */
 	fd_cur[slot] = fd_orig[slot];
@@ -930,7 +930,7 @@ calc_tty(int fd)
 	if (tcsetattr(fd, TCSANOW, fd_cur+slot) < 0) {
 		if (conf->calc_debug & CALCDBG_TTY)
 			printf("calc_tty: Cannot tcsetattr fd %d\n", fd);
-		return FALSE;
+		return false;
 	}
 	if (conf->calc_debug & CALCDBG_TTY)
 		printf("calc_tty: stty -ECHO -ECHOE -ECHOK -ICANON +ISTRIP "
@@ -945,7 +945,7 @@ calc_tty(int fd)
 	 * note that the tty slot is on use
 	 */
 	fd_setup[slot] = fd;
-	return TRUE;
+	return true;
 }
 
 
@@ -959,10 +959,10 @@ calc_tty(int fd)
  *	fd	the descriptor to restore
  *
  * Returns:
- *	TRUE	restore was successful
- *	FALSE	unable to restore descriptor to original state
+ *	true	restore was successful
+ *	false	unable to restore descriptor to original state
  */
-BOOL
+bool
 orig_tty(int fd)
 {
 	int slot;	/* the saved descriptor slot or -1 */
@@ -974,7 +974,7 @@ orig_tty(int fd)
 	if (slot < 0) {
 		if (conf->calc_debug & CALCDBG_TTY)
 			printf("orig_tty: Cannot get saved descriptor slot\n");
-		return FALSE;
+		return false;
 	}
 
 	/*
@@ -983,7 +983,7 @@ orig_tty(int fd)
 	if (fd_setup[slot] < 0) {
 		if (conf->calc_debug & CALCDBG_TTY)
 			printf("orig_tty: no state saved for fd %d\n", fd);
-		return FALSE;
+		return false;
 	}
 
 #if defined(USE_SGTTY)
@@ -1031,5 +1031,5 @@ orig_tty(int fd)
 	 * libcalc_call_me_last() function from re-restoring it.
 	 */
 	fd_setup[slot] = -1;
-	return TRUE;
+	return true;
 }

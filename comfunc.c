@@ -1,7 +1,7 @@
 /*
  * comfunc - extended precision complex arithmetic non-primitive routines
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -538,7 +538,7 @@ c_ln(COMPLEX *c, NUMBER *epsilon)
 COMPLEX *
 c_log(COMPLEX *c, NUMBER *epsilon)
 {
-	int need_new_cln_10 = TRUE;	/* FALSE => use cached cln_10 value */
+	int need_new_cln_10 = true;	/* false => use cached cln_10 value */
 	COMPLEX *ln_c;			/* ln(x) */
 	COMPLEX *ret;			/* base 10 logarithm of x */
 
@@ -557,19 +557,19 @@ c_log(COMPLEX *c, NUMBER *epsilon)
 	if (cln_10_epsilon == NULL) {
 		/* first time call */
 		cln_10_epsilon = qcopy(epsilon);
-	} else if (qcmp(cln_10_epsilon, epsilon) == TRUE) {
+	} else if (qcmp(cln_10_epsilon, epsilon) == true) {
 		/* replaced cached value with epsilon arg */
 		qfree(cln_10_epsilon);
 		cln_10_epsilon = qcopy(epsilon);
 	} else if (cln_10 != NULL) {
 		/* the previously computed ln(2) is OK to use */
-		need_new_cln_10 = FALSE;
+		need_new_cln_10 = false;
 	}
 
 	/*
 	 * compute ln(10) if needed
 	 */
-	if (need_new_cln_10 == TRUE) {
+	if (need_new_cln_10 == true) {
 		if (cln_10 != NULL) {
 			comfree(cln_10);
 		}
@@ -596,7 +596,7 @@ c_cos(COMPLEX *c, NUMBER *epsilon)
 	COMPLEX *r, *ctmp1, *ctmp2, *ctmp3;
 	NUMBER *epsilon1;
 	long n;
-	BOOL neg;
+	bool neg;
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon for ccos");
@@ -646,7 +646,7 @@ c_sin(COMPLEX *c, NUMBER *epsilon)
 	COMPLEX *r, *ctmp1, *ctmp2, *ctmp3;
 	NUMBER *qtmp, *epsilon1;
 	long n;
-	BOOL neg;
+	bool neg;
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon for csin");
@@ -775,7 +775,7 @@ COMPLEX *
 c_asinh(COMPLEX *c, NUMBER *epsilon)
 {
 	COMPLEX *tmp1, *tmp2, *tmp3;
-	BOOL neg;
+	bool neg;
 
 	neg = qisneg(c->real);
 	tmp1 = neg ? c_neg(c) : clink(c);
@@ -952,7 +952,7 @@ c_gd(COMPLEX *c, NUMBER *epsilon)
 	NUMBER *sin, *cos;
 	NUMBER *eps;
 	int n, n1;
-	BOOL neg;
+	bool neg;
 
 	if (cisreal(c)) {
 		q1 = qscale(c->real, -1);
@@ -1221,7 +1221,7 @@ cprintfr(COMPLEX *c)
 	r = c->real;
 	i = c->imag;
 	if (!qiszero(r) || qiszero(i))
-		qprintfr(r, 0L, FALSE);
+		qprintfr(r, 0L, false);
 	if (qiszero(i))
 		return;
 	if (!qiszero(r) && !qisneg(i))

@@ -1,7 +1,7 @@
 /*
  * const - constant number storage module
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -99,7 +99,7 @@ addqconstant(NUMBER *q)
 	HALF numlow;		/* bottom value of numerator */
 	HALF denlow;		/* bottom value of denominator */
 	long first;		/* first non-null position found */
-	BOOL havefirst;
+	bool havefirst;
 
 	if (constavail <= 0) {
 		if (consttable == NULL) {
@@ -120,7 +120,7 @@ addqconstant(NUMBER *q)
 	numlow = q->num.v[0];
 	denlow = q->den.v[0];
 	first = 0;
-	havefirst = FALSE;
+	havefirst = false;
 	tp = consttable;
 	for (index = 0; index < constcount; index++, tp++) {
 		t = *tp;
@@ -129,7 +129,7 @@ addqconstant(NUMBER *q)
 		}
 		if (t->links == 0) {
 			if (!havefirst) {
-				havefirst = TRUE;
+				havefirst = true;
 				first = index;
 			}
 			continue;
@@ -140,7 +140,7 @@ addqconstant(NUMBER *q)
 					*tp = consttable[first];
 					consttable[first] = q;
 				} else {
-					havefirst = TRUE;
+					havefirst = true;
 					first = index;
 				}
 				continue;

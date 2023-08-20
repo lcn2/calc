@@ -1,7 +1,7 @@
 /*
  * value - generic value manipulation routines
  *
- * Copyright (C) 1999-2007,2014,2017,2021,2022  David I. Bell
+ * Copyright (C) 1999-2007,2014,2017,2021-2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -1723,11 +1723,11 @@ normvalue(VALUE *vp, VALUE *vres)
  * given:
  *	v1		value to shift
  *	v2		shift amount
- *	rightshift	TRUE if shift right instead of left
+ *	rightshift	true if shift right instead of left
  *	vres		result
  */
 void
-shiftvalue(VALUE *v1, VALUE *v2, BOOL rightshift, VALUE *vres)
+shiftvalue(VALUE *v1, VALUE *v2, bool rightshift, VALUE *vres)
 {
 	COMPLEX *c;
 	long n = 0;
@@ -2361,9 +2361,9 @@ modvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
  * Test an arbitrary value to see if it is equal to "zero".
  * The definition of zero varies depending on the value type.  For example,
  * the null string is "zero", and a matrix with zero values is "zero".
- * Returns TRUE if value is not equal to zero.
+ * Returns true if value is not equal to zero.
  */
-BOOL
+bool
 testvalue(VALUE *vp)
 {
 	VALUE val;
@@ -2382,9 +2382,9 @@ testvalue(VALUE *vp)
 	case V_LIST:
 		for (ep = vp->v_list->l_first; ep; ep = ep->e_next) {
 			if (testvalue(&ep->e_value))
-				return TRUE;
+				return true;
 		}
-		return FALSE;
+		return false;
 	case V_ASSOC:
 		return (vp->v_assoc->a_count != 0);
 	case V_FILE:
@@ -2397,36 +2397,36 @@ testvalue(VALUE *vp)
 	case V_BLOCK:
 		for (i=0; i < vp->v_block->datalen; ++i) {
 			if (vp->v_block->data[i]) {
-				return TRUE;
+				return true;
 			}
 		}
-		return FALSE;
+		return false;
 	case V_OCTET:
 		return (*vp->v_octet != 0);
 	case V_NBLOCK:
 		if (vp->v_nblock->blk->data == NULL)
-			return FALSE;
+			return false;
 		for (i=0; i < vp->v_nblock->blk->datalen; ++i) {
 			if (vp->v_nblock->blk->data[i]) {
-				return TRUE;
+				return true;
 			}
 		}
-		return FALSE;
+		return false;
 	default:
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
 /*
  * Compare two values for equality.
- * Returns TRUE if the two values differ.
+ * Returns true if the two values differ.
  */
-BOOL
+bool
 comparevalue(VALUE *v1, VALUE *v2)
 {
-	int r = FALSE;
+	int r = false;
 	VALUE val;
 
 	if ((v1->v_type == V_OBJ) || (v2->v_type == V_OBJ)) {
@@ -2434,7 +2434,7 @@ comparevalue(VALUE *v1, VALUE *v2)
 		return (val.v_int != 0);
 	}
 	if (v1 == v2)
-		return FALSE;
+		return false;
 	if (v1->v_type ==  V_OCTET) {
 		if (v2->v_type == V_OCTET)
 			return (*v1->v_octet != *v2->v_octet);
@@ -2443,15 +2443,15 @@ comparevalue(VALUE *v1, VALUE *v2)
 				|| (v2->v_str->s_len != 1);
 		if (v2->v_type != V_NUM || qisfrac(v2->v_num) ||
 			qisneg(v2->v_num) || v2->v_num->num.len > 1)
-				return TRUE;
+				return true;
 		return (*v2->v_num->num.v != *v1->v_octet);
 	}
 	if (v2->v_type == V_OCTET)
 		return comparevalue(v2, v1);
 	if (v1->v_type != v2->v_type)
-		return TRUE;
+		return true;
 	if (v1->v_type <= 0)
-		return FALSE;
+		return false;
 	switch (v1->v_type) {
 	case V_NUM:
 		r = qcmp(v1->v_num, v2->v_num);
@@ -2509,12 +2509,12 @@ comparevalue(VALUE *v1, VALUE *v2)
 	return (r != 0);
 }
 
-BOOL
+bool
 acceptvalue(VALUE *v1, VALUE *v2)
 {
 	long index;
 	FUNC *fp;
-	BOOL ret;
+	bool ret;
 
 	index = adduserfunc("accept");
 	fp = findfunc(index);
@@ -2536,14 +2536,14 @@ acceptvalue(VALUE *v1, VALUE *v2)
 }
 
 
-BOOL
+bool
 precvalue(VALUE *v1, VALUE *v2)
 {
 	VALUE val;
 	long index;
 	int r = 0;
 	FUNC *fp;
-	BOOL ret;
+	bool ret;
 
 	index = adduserfunc("precedes");
 	fp = findfunc(index);
@@ -3017,7 +3017,7 @@ config_print(CONFIG *cfg)
 {
 	NAMETYPE *cp;
 	VALUE tmp;
-	int tab_over;		/* TRUE => OK move over one tab stop */
+	int tab_over;		/* true => OK move over one tab stop */
 	size_t len;
 
 	/*
@@ -3032,7 +3032,7 @@ config_print(CONFIG *cfg)
 	/*
 	 * print each element
 	 */
-	tab_over = FALSE;
+	tab_over = false;
 	for (cp = configs; cp->name; cp++) {
 
 		/* skip if special all or duplicate maxerr value */
@@ -3044,7 +3044,7 @@ config_print(CONFIG *cfg)
 		if (tab_over) {
 			math_str("\t");
 		} else if (conf->tab_ok) {
-			tab_over = TRUE;	/* tab next time */
+			tab_over = true;	/* tab next time */
 		}
 
 		/* print name and spaces */

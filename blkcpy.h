@@ -37,21 +37,21 @@ E_FUNC int copystod(VALUE *, long, long, VALUE *, long);
 /*
  * specific copy functions
  */
-E_FUNC int copyblk2blk(BLOCK *, long, long, BLOCK *, long, BOOL);
+E_FUNC int copyblk2blk(BLOCK *, long, long, BLOCK *, long, bool);
 E_FUNC int copyblk2file(BLOCK *, long, long, FILEID, long);
 E_FUNC int copyblk2mat(BLOCK *, long, long, MATRIX *, long);
 E_FUNC int copyblk2num(BLOCK *, long, long, NUMBER *, long, NUMBER **);
 E_FUNC int copyblk2str(BLOCK *, long, long, STRING *, long);
-E_FUNC int copyfile2blk(FILEID, long, long, BLOCK *, long, BOOL);
+E_FUNC int copyfile2blk(FILEID, long, long, BLOCK *, long, bool);
 E_FUNC int copylist2list(LIST *, long, long, LIST *, long);
 E_FUNC int copylist2mat(LIST *, long, long, MATRIX *, long);
-E_FUNC int copymat2blk(MATRIX *, long, long, BLOCK *, long, BOOL);
+E_FUNC int copymat2blk(MATRIX *, long, long, BLOCK *, long, bool);
 E_FUNC int copymat2list(MATRIX *, long, long, LIST *, long);
 E_FUNC int copymat2mat(MATRIX *, long, long, MATRIX *, long);
-E_FUNC int copynum2blk(NUMBER *, long, long, BLOCK *, long, BOOL);
-E_FUNC int copyostr2blk(char *, long, long, BLOCK *, long, BOOL);
+E_FUNC int copynum2blk(NUMBER *, long, long, BLOCK *, long, bool);
+E_FUNC int copyostr2blk(char *, long, long, BLOCK *, long, bool);
 E_FUNC int copyostr2str(char *, long, long, STRING *, long);
-E_FUNC int copystr2blk(STRING *, long, long, BLOCK *, long, BOOL);
+E_FUNC int copystr2blk(STRING *, long, long, BLOCK *, long, bool);
 E_FUNC int copystr2file(STRING *, long, long, FILEID, long);
 E_FUNC int copystr2str(STRING *, long, long, STRING *, long);
 

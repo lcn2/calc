@@ -691,6 +691,7 @@ c_argv.o: ../alloc.h
 c_argv.o: ../attribute.h
 c_argv.o: ../banned.h
 c_argv.o: ../block.h
+c_argv.o: ../bool.h
 c_argv.o: ../byteswap.h
 c_argv.o: ../calc.h
 c_argv.o: ../calcerr.h
@@ -722,6 +723,7 @@ c_devnull.o: ../alloc.h
 c_devnull.o: ../attribute.h
 c_devnull.o: ../banned.h
 c_devnull.o: ../block.h
+c_devnull.o: ../bool.h
 c_devnull.o: ../byteswap.h
 c_devnull.o: ../calcerr.h
 c_devnull.o: ../charbit.h
@@ -753,6 +755,7 @@ c_help.o: ../alloc.h
 c_help.o: ../attribute.h
 c_help.o: ../banned.h
 c_help.o: ../block.h
+c_help.o: ../bool.h
 c_help.o: ../byteswap.h
 c_help.o: ../calcerr.h
 c_help.o: ../charbit.h
@@ -784,6 +787,7 @@ c_pmodm127.o: ../alloc.h
 c_pmodm127.o: ../attribute.h
 c_pmodm127.o: ../banned.h
 c_pmodm127.o: ../block.h
+c_pmodm127.o: ../bool.h
 c_pmodm127.o: ../byteswap.h
 c_pmodm127.o: ../calcerr.h
 c_pmodm127.o: ../charbit.h
@@ -814,6 +818,7 @@ c_pzasusb8.o: ../alloc.h
 c_pzasusb8.o: ../attribute.h
 c_pzasusb8.o: ../banned.h
 c_pzasusb8.o: ../block.h
+c_pzasusb8.o: ../bool.h
 c_pzasusb8.o: ../byteswap.h
 c_pzasusb8.o: ../calcerr.h
 c_pzasusb8.o: ../charbit.h
@@ -844,6 +849,7 @@ c_register.o: ../alloc.h
 c_register.o: ../attribute.h
 c_register.o: ../banned.h
 c_register.o: ../block.h
+c_register.o: ../bool.h
 c_register.o: ../byteswap.h
 c_register.o: ../calc.h
 c_register.o: ../calcerr.h
@@ -875,6 +881,7 @@ c_sysinfo.o: ../alloc.h
 c_sysinfo.o: ../attribute.h
 c_sysinfo.o: ../banned.h
 c_sysinfo.o: ../block.h
+c_sysinfo.o: ../bool.h
 c_sysinfo.o: ../byteswap.h
 c_sysinfo.o: ../calc.h
 c_sysinfo.o: ../calcerr.h
@@ -913,6 +920,7 @@ custtbl.o: ../alloc.h
 custtbl.o: ../attribute.h
 custtbl.o: ../banned.h
 custtbl.o: ../block.h
+custtbl.o: ../bool.h
 custtbl.o: ../byteswap.h
 custtbl.o: ../calcerr.h
 custtbl.o: ../charbit.h

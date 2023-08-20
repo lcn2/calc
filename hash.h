@@ -1,7 +1,7 @@
 /*
  * hash - one-way hash routines
  *
- * Copyright (C) 1999-2007,2014  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -60,13 +60,13 @@
 typedef struct hashstate HASH;
 struct hashstate {
 	int hashtype;		/* XYZ_HASH_TYPE debug value */
-	BOOL bytes;		/* TRUE => reading bytes rather than words */
+	bool bytes;		/* true => reading bytes rather than words */
 	void (*update)(HASH*, USB8*, USB32);	/* update arbitrary length */
 	void (*chkpt)(HASH*);			/* checkpoint a state */
 	void (*note)(int, HASH*);		/* note a special value */
 	void (*type)(int, HASH*);		/* note a VALUE type */
 	ZVALUE (*final)(HASH*);		/* complete hash state */
-	int (*cmp)(HASH*,HASH*);	/* compare to states, TRUE => a!=b */
+	int (*cmp)(HASH*,HASH*);	/* compare to states, true => a!=b */
 	void (*print)(HASH*);		/* print the value of a hash */
 	int base;			/* XYZ_BASE special hash value */
 	int chunksize;			/* XYZ_CHUNKSIZE input chunk size */

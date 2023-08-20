@@ -1,7 +1,7 @@
 /*
  * byteswap - byte swapping routines
  *
- * Copyright (C) 1999,2021,2022  Landon Curt Noll
+ * Copyright (C) 1999,2021-2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -80,7 +80,7 @@ swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len)
  *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a ZVALUE to swap
- *	all	- TRUE => swap every element, FALSE => swap only the
+ *	all	- true => swap every element, false => swap only the
  *		  multi-precision storage
  *
  * returns:
@@ -90,7 +90,7 @@ swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len)
  * Little Endian) the elements of a ZVALUE.
  */
 ZVALUE *
-swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
+swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all)
 {
 	/*
 	 * allocate storage if needed
@@ -128,7 +128,7 @@ swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
 	 */
 	if (all) {
 		SWAP_B8_IN_LEN(&dest->len, &src->len);
-		SWAP_B8_IN_BOOL(&dest->sign, &src->sign);
+		SWAP_B8_IN_bool(&dest->sign, &src->sign);
 	} else {
 		dest->len = src->len;
 		dest->sign = src->sign;
@@ -148,7 +148,7 @@ swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
  *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a NUMBER to swap
- *	all	- TRUE => swap every element, FALSE => swap only the
+ *	all	- true => swap every element, false => swap only the
  *		  multi-precision storage
  *
  * returns:
@@ -158,7 +158,7 @@ swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
  * Little Endian) the elements of a NUMBER.
  */
 NUMBER *
-swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
+swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, bool all)
 {
 	/*
 	 * allocate storage if needed
@@ -212,7 +212,7 @@ swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
  *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a COMPLEX to swap
- *	all	- TRUE => swap every element, FALSE => swap only the
+ *	all	- true => swap every element, false => swap only the
  *		  multi-precision storage
  *
  * returns:
@@ -222,7 +222,7 @@ swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
  * Little Endian) the elements of a COMPLEX.
  */
 COMPLEX *
-swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
+swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all)
 {
 	/*
 	 * allocate storage if needed
@@ -360,7 +360,7 @@ swap_HALFs(HALF *dest, HALF *src, LEN len)
  *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a ZVALUE to swap
- *	all	- TRUE => swap every element, FALSE => swap only the
+ *	all	- true => swap every element, false => swap only the
  *		  multi-precision storage
  *
  * returns:
@@ -370,7 +370,7 @@ swap_HALFs(HALF *dest, HALF *src, LEN len)
  * Little Endian) the elements of a ZVALUE.
  */
 ZVALUE *
-swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
+swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all)
 {
 	/*
 	 * allocate storage if needed
@@ -407,7 +407,7 @@ swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
 	 */
 	if (all) {
 		SWAP_B16_IN_LEN(&dest->len, &src->len);
-		SWAP_B16_IN_BOOL(&dest->sign, &src->sign);
+		SWAP_B16_IN_bool(&dest->sign, &src->sign);
 	} else {
 		dest->len = src->len;
 		dest->sign = src->sign;
@@ -427,7 +427,7 @@ swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
  *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a NUMBER to swap
- *	all	- TRUE => swap every element, FALSE => swap only the
+ *	all	- true => swap every element, false => swap only the
  *		  multi-precision storage
  *
  * returns:
@@ -437,7 +437,7 @@ swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
  * Little Endian) the elements of a NUMBER.
  */
 NUMBER *
-swap_b16_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
+swap_b16_in_NUMBER(NUMBER *dest, NUMBER *src, bool all)
 {
 	/*
 	 * allocate storage if needed
@@ -491,7 +491,7 @@ swap_b16_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
  *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a COMPLEX to swap
- *	all	- TRUE => swap every element, FALSE => swap only the
+ *	all	- true => swap every element, false => swap only the
  *		  multi-precision storage
  *
  * returns:
@@ -501,7 +501,7 @@ swap_b16_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
  * Little Endian) the elements of a COMPLEX.
  */
 COMPLEX *
-swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
+swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all)
 {
 	/*
 	 * allocate storage if needed
@@ -555,7 +555,7 @@ swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
  *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a ZVALUE to swap
- *	all	- TRUE => swap every element, FALSE => swap only the
+ *	all	- true => swap every element, false => swap only the
  *		  multi-precision storage
  *
  * returns:
@@ -565,7 +565,7 @@ swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
  * Little Endian) the elements of a ZVALUE.
  */
 ZVALUE *
-swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
+swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all)
 {
 	/*
 	 * allocate storage if needed
@@ -603,7 +603,7 @@ swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
 	 */
 	if (all) {
 		SWAP_HALF_IN_LEN(&dest->len, &src->len);
-		SWAP_HALF_IN_BOOL(&dest->sign, &src->sign);
+		SWAP_HALF_IN_bool(&dest->sign, &src->sign);
 	} else {
 		dest->len = src->len;
 		dest->sign = src->sign;
@@ -623,7 +623,7 @@ swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
  *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a NUMBER to swap
- *	all	- TRUE => swap every element, FALSE => swap only the
+ *	all	- true => swap every element, false => swap only the
  *		  multi-precision storage
  *
  * returns:
@@ -633,7 +633,7 @@ swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all)
  * Little Endian) the elements of a NUMBER.
  */
 NUMBER *
-swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
+swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, bool all)
 {
 	/*
 	 * allocate storage if needed
@@ -687,7 +687,7 @@ swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
  *	dest	- pointer to where the swapped src will be put or
  *		  NULL to allocate the storage
  *	src	- pointer to a COMPLEX to swap
- *	all	- TRUE => swap every element, FALSE => swap only the
+ *	all	- true => swap every element, false => swap only the
  *		  multi-precision storage
  *
  * returns:
@@ -697,7 +697,7 @@ swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all)
  * Little Endian) the elements of a COMPLEX.
  */
 COMPLEX *
-swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all)
+swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all)
 {
 	/*
 	 * allocate storage if needed

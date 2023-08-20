@@ -1,7 +1,7 @@
 /*
  * custom - interface for custom software and hardware interfaces
  *
- * Copyright (C) 1999-2006,2018,2021,2022  Landon Curt Noll
+ * Copyright (C) 1999-2006,2018,2021-2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -54,7 +54,7 @@ EXTERN CONST struct custom cust[];	/* custom interface table */
 #include "banned.h"	/* include after system header <> includes */
 
 
-BOOL allow_custom = FALSE;	 /* TRUE => custom builtins allowed */
+bool allow_custom = false;	 /* true => custom builtins allowed */
 
 
 /*
@@ -71,10 +71,10 @@ custom(char *name, int count, VALUE **vals)
 	/*
 	 * error if libcustcalc was compiled with CUSTOM undefined
 	 */
-	if (custom_compiled() != TRUE) {
+	if (custom_compiled() != true) {
 	    math_error("libcustcalc was compiled with CUSTOM undefined "
 		       "custom_compiled() returned: %d != %d",
-		       custom_compiled(), TRUE);
+		       custom_compiled(), true);
 	    not_reached();
 	}
 
@@ -113,10 +113,10 @@ custom(char *name, int count, VALUE **vals)
 	/*
 	 * error if libcustcalc was compiled with CUSTOM defined
 	 */
-	if (custom_compiled() != FALSE) {
+	if (custom_compiled() != false) {
 	    math_error("libcustcalc was compiled with CUSTOM defined "
 		       "custom_compiled() returned: %d != %d",
-		       custom_compiled(), FALSE);
+		       custom_compiled(), false);
 	    not_reached();
 	}
 

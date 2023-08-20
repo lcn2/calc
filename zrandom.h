@@ -70,7 +70,7 @@ struct random {
 /*
  * Blum generator function declarations
  */
-E_FUNC RANDOM *zsrandom1(CONST ZVALUE seed, BOOL need_ret);
+E_FUNC RANDOM *zsrandom1(CONST ZVALUE seed, bool need_ret);
 E_FUNC RANDOM *zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn);
 E_FUNC RANDOM *zsrandom4(CONST ZVALUE seed,
 			 CONST ZVALUE ip, CONST ZVALUE iq, long trials);
@@ -82,7 +82,7 @@ E_FUNC void zrandomrange(CONST ZVALUE low, CONST ZVALUE beyond, ZVALUE *res);
 E_FUNC long irandom(long s);
 E_FUNC RANDOM *randomcopy(CONST RANDOM *random);
 E_FUNC void randomfree(RANDOM *random);
-E_FUNC BOOL randomcmp(CONST RANDOM *s1, CONST RANDOM *s2);
+E_FUNC bool randomcmp(CONST RANDOM *s1, CONST RANDOM *s2);
 E_FUNC void randomprint(CONST RANDOM *state, int flags);
 E_FUNC void random_libcalc_cleanup(void);
 

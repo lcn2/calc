@@ -1,7 +1,7 @@
 /*
  * zrandom - Blum-Blum-Shub pseudo-random generator
  *
- * Copyright (C) 1999-2007,2021,2022  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021-2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -2256,13 +2256,13 @@ S_FUNC void zfree_random(ZVALUE z);
  *
  * given:
  *	pseed	 - seed of the generator
- *	need_ret - TRUE=>malloc return previous Blum state, FALSE=>return NULL
+ *	need_ret - true=>malloc return previous Blum state, false=>return NULL
  *
  * returns:
  *	previous Blum state
  */
 RANDOM *
-zsrandom1(CONST ZVALUE seed, BOOL need_ret)
+zsrandom1(CONST ZVALUE seed, bool need_ret)
 {
 	RANDOM *ret;		/* previous Blum state */
 	ZVALUE r;		/* quadratic residue */
@@ -2291,7 +2291,7 @@ zsrandom1(CONST ZVALUE seed, BOOL need_ret)
 	/*
 	 * srandom(seed == 0)
 	 *
-	 * If the init arg is TRUE, then restore the initial state and
+	 * If the init arg is true, then restore the initial state and
 	 * modulus of the Blum generator.  After this call, the Blum
 	 * generator is restored to its initial state after calc started.
 	 */
@@ -2433,7 +2433,7 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 		 * Otherwise non-zero seeds are processed as 1 arg calls
 		 */
 		} else {
-			zsrandom1(seed, FALSE);
+			zsrandom1(seed, false);
 		}
 
 	/*
@@ -2485,13 +2485,13 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 		 * as if this value is given as a 1 arg call
 		 */
 		if (ziszero(seed)) {
-			(void) zsrandom1(z_rdefault, FALSE);
+			(void) zsrandom1(z_rdefault, false);
 
 		/*
 		 * Otherwise non-zero seeds are processed as 1 arg calls
 		 */
 		} else {
-			(void) zsrandom1(seed, FALSE);
+			(void) zsrandom1(seed, false);
 		}
 
 	/*
@@ -2594,13 +2594,13 @@ zsrandom4(CONST ZVALUE seed, CONST ZVALUE ip, CONST ZVALUE iq, long trials)
 	 * as if this value is given as a 1 arg call
 	 */
 	if (ziszero(seed)) {
-		(void) zsrandom1(z_rdefault, FALSE);
+		(void) zsrandom1(z_rdefault, false);
 
 	/*
 	 * Otherwise non-zero seeds are processed as 1 arg calls
 	 */
 	} else {
-		(void) zsrandom1(seed, FALSE);
+		(void) zsrandom1(seed, false);
 	}
 
 	/*
@@ -3118,9 +3118,9 @@ randomfree(RANDOM *state)
  *	s2 - second state to compare
  *
  * return:
- *	TRUE if states differ
+ *	true if states differ
  */
-BOOL
+bool
 randomcmp(CONST RANDOM *s1, CONST RANDOM *s2)
 {
 	/*
@@ -3129,7 +3129,7 @@ randomcmp(CONST RANDOM *s1, CONST RANDOM *s2)
 	if (!s1->seeded) {
 		if (!s2->seeded) {
 			/* uninitialized == uninitialized */
-			return FALSE;
+			return false;
 		} else {
 			/* uninitialized only equals default state */
 			return randomcmp(s2, &init_blum);
@@ -3143,14 +3143,14 @@ randomcmp(CONST RANDOM *s1, CONST RANDOM *s2)
 	 * compare operating mask parameters
 	 */
 	if ((s1->loglogn != s2->loglogn) || (s1->mask != s2->mask)) {
-		return TRUE;
+		return true;
 	}
 
 	/*
 	 * compare bit buffer
 	 */
 	if ((s1->bits != s2->bits) || (s1->buffer != s2->buffer)) {
-		return TRUE;
+		return true;
 	}
 
 	/*

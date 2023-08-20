@@ -1,7 +1,7 @@
 /*
  * zprime - rapid small prime routines
  *
- * Copyright (C) 1999-2007,2021,2022  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021-2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -890,16 +890,16 @@ zpfact(ZVALUE z, ZVALUE *dest)
 
 /*
  * Perform a probabilistic primality test (algorithm P in Knuth vol2, 4.5.4).
- * Returns FALSE if definitely not prime, or TRUE if probably prime.
+ * Returns false if definitely not prime, or true if probably prime.
  * Count determines how many times to check for primality.
  * The chance of a non-prime passing this test is less than (1/4)^count.
  * For example, a count of 100 fails for only 1 in 10^60 numbers.
  *
  * It is interesting to note that ptest(a,1,x) (for any x >= 0) of this
- * test will always return TRUE for a prime, and rarely return TRUE for
+ * test will always return true for a prime, and rarely return true for
  * a non-prime.	 The 1/4 is appears in practice to be a poor upper
- * bound.  Even so the only result that is EXACT and TRUE is when
- * this test returns FALSE for a non-prime.  When ptest returns TRUE,
+ * bound.  Even so the only result that is EXACT and true is when
+ * this test returns false for a non-prime.  When ptest returns true,
  * one cannot determine if the value in question is prime, or the value
  * is one of those rare non-primes that produces a false positive.
  *
@@ -910,7 +910,7 @@ zpfact(ZVALUE z, ZVALUE *dest)
  * skip = 1 uses prime bases 2, 3, 5, ...
  * skip > 1 or < 0 uses bases skip, skip + 1, ...
  */
-BOOL
+bool
 zprimetest(ZVALUE z, long count, ZVALUE skip)
 {
 	long limit = 0;		/* test odd values from skip up to limit */
@@ -958,7 +958,7 @@ zprimetest(ZVALUE z, long count, ZVALUE skip)
 		 */
 		if (small_factor(z, PTEST_PRECHECK) != 0) {
 			/* a tiny factor was found */
-			return FALSE;
+			return false;
 		}
 
 		/*
@@ -966,7 +966,7 @@ zprimetest(ZVALUE z, long count, ZVALUE skip)
 		 */
 		if (count == 0) {
 			/* no test was done, so no test failed! */
-			return TRUE;
+			return true;
 		}
 
 	} else {
@@ -1013,7 +1013,7 @@ zprimetest(ZVALUE z, long count, ZVALUE skip)
 			if (*pr == 1 || (long)*pr >= limit) {
 				zfree(z1);
 				zfree(zm1);
-				return TRUE;
+				return true;
 			}
 			itoz((long) *pr++, &zbase);
 			break;
@@ -1035,7 +1035,7 @@ zprimetest(ZVALUE z, long count, ZVALUE skip)
 					zfree(zm1);
 					zfree(z1);
 					zfree(zbase);
-					return FALSE;
+					return false;
 				}
 				break;
 			}
@@ -1047,7 +1047,7 @@ zprimetest(ZVALUE z, long count, ZVALUE skip)
 				zfree(zm1);
 				zfree(z1);
 				zfree(zbase);
-				return FALSE;
+				return false;
 			}
 			zsquare(z3, &z2);
 			zfree(z3);
@@ -1061,7 +1061,7 @@ zprimetest(ZVALUE z, long count, ZVALUE skip)
 	zfree(zbase);
 
 	/* number might be prime */
-	return TRUE;
+	return true;
 }
 
 
@@ -1069,7 +1069,7 @@ zprimetest(ZVALUE z, long count, ZVALUE skip)
  * Called by zprimetest when simple cases have been eliminated
  * and z.len < conf->redc2.  Here count > 0, z is odd and > 3.
  */
-BOOL
+bool
 zredcprimetest(ZVALUE z, long count, ZVALUE skip)
 {
 	long limit = 0;		/* test odd values from skip up to limit */
@@ -1127,7 +1127,7 @@ zredcprimetest(ZVALUE z, long count, ZVALUE skip)
 					zredcfree(rp);
 					zfree(zredcm1);
 				}
-				return TRUE;
+				return true;
 			}
 			itoz((long) *pr++, &z3);
 			zredcencode(rp, z3, &zbase);
@@ -1158,7 +1158,7 @@ zredcprimetest(ZVALUE z, long count, ZVALUE skip)
 					zfree(zbase);
 					zredcfree(rp);
 					zfree(zredcm1);
-					return FALSE;
+					return false;
 				}
 				break;
 			}
@@ -1172,7 +1172,7 @@ zredcprimetest(ZVALUE z, long count, ZVALUE skip)
 				zfree(zbase);
 				zredcfree(rp);
 				zfree(zredcm1);
-				return FALSE;
+				return false;
 			}
 			zredcsquare(rp, z3, &z2);
 			zfree(z3);
@@ -1187,7 +1187,7 @@ zredcprimetest(ZVALUE z, long count, ZVALUE skip)
 	zfree(z1);
 
 	/* number might be prime */
-	return TRUE;
+	return true;
 }
 
 
@@ -1205,7 +1205,7 @@ zredcprimetest(ZVALUE z, long count, ZVALUE skip)
  *	mod		congruent to res modulo abs(mod)
  *	cand		candidate found
  */
-BOOL
+bool
 znextcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
 	  ZVALUE *cand)
 {
@@ -1217,13 +1217,13 @@ znextcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
 	if (ziszero(mod)) {
 		if (zrel(res, z) > 0 && zprimetest(res, count, skip)) {
 			zcopy(res, cand);
-			return TRUE;
+			return true;
 		}
-		return FALSE;
+		return false;
 	}
 	if (ziszero(z) && zisone(mod)) {
 		zcopy(_two_, cand);
-		return TRUE;
+		return true;
 	}
 	zsub(res, z, &tmp1);
 	if (zmod(tmp1, mod, &tmp2, 0))
@@ -1238,12 +1238,12 @@ znextcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
 	zfree(tmp1);
 	zfree(tmp2);
 	if (zprimetest(*cand, count, skip))
-		return TRUE;
+		return true;
 	zgcd(*cand, mod, &tmp1);
 	if (!zisone(tmp1)) {
 		zfree(tmp1);
 		zfree(*cand);
-		return FALSE;
+		return false;
 	}
 	zfree(tmp1);
 	if (ziseven(*cand)) {
@@ -1251,7 +1251,7 @@ znextcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
 		zfree(*cand);
 		*cand = tmp1;
 		if (zprimetest(*cand, count, skip))
-			return TRUE;
+			return true;
 	}
 	/*
 	 * *cand is now least odd integer > abs(z) and congruent to
@@ -1267,7 +1267,7 @@ znextcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
 		*cand = tmp2;
 	} while (!zprimetest(*cand, count, skip));
 	zfree(tmp1);
-	return TRUE;
+	return true;
 }
 
 
@@ -1285,7 +1285,7 @@ znextcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
  *	mod		congruent to res modulo abs(mod)
  *	cand		candidate found
  */
-BOOL
+bool
 zprevcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
 	  ZVALUE *cand)
 {
@@ -1297,9 +1297,9 @@ zprevcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
 	if (ziszero(mod)) {
 		if (zispos(res)&&zrel(res, z)<0 && zprimetest(res,count,skip)) {
 			zcopy(res, cand);
-			return TRUE;
+			return true;
 		}
-		return FALSE;
+		return false;
 	}
 	zsub(z, res, &tmp1);
 	if (zmod(tmp1, mod, &tmp2, 0))
@@ -1314,10 +1314,10 @@ zprevcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
 	zfree(tmp2);
 	if (zisneg(*cand)) {
 		zfree(*cand);
-		return FALSE;
+		return false;
 	}
 	if (zprimetest(*cand, count, skip))
-		return TRUE;
+		return true;
 	zgcd(*cand, mod, &tmp1);
 	if (!zisone(tmp1)) {
 		zfree(tmp1);
@@ -1325,18 +1325,18 @@ zprevcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
 		zfree(*cand);
 		if (zprimetest(tmp1, count, skip)) {
 			*cand = tmp1;
-			return TRUE;
+			return true;
 		}
 		if (ziszero(tmp1)) {
 			zfree(tmp1);
 			if (zprimetest(mod, count, skip)) {
 				zcopy(mod, cand);
-				return TRUE;
+				return true;
 			}
-			return FALSE;
+			return false;
 		}
 		zfree(tmp1);
-		return FALSE;
+		return false;
 	}
 	zfree(tmp1);
 	if (ziseven(*cand)) {
@@ -1344,11 +1344,11 @@ zprevcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
 		zfree(*cand);
 		if (zisneg(tmp1)) {
 			zfree(tmp1);
-			return FALSE;
+			return false;
 		}
 		*cand = tmp1;
 		if (zprimetest(*cand, count, skip))
-			return TRUE;
+			return true;
 	}
 	/*
 	 * *cand is now the greatest odd integer < z that is congruent to
@@ -1370,11 +1370,11 @@ zprevcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
 			zfree(*cand);
 			*cand = tmp1;
 			if (zistwo(*cand))
-				return TRUE;
+				return true;
 			zfree(*cand);
-			return FALSE;
+			return false;
 	}
-	return TRUE;
+	return true;
 }
 
 

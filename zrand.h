@@ -214,7 +214,7 @@ E_FUNC void zrandrange(CONST ZVALUE low, CONST ZVALUE beyond, ZVALUE *res);
 E_FUNC long irand(long s);
 E_FUNC RAND *randcopy(CONST RAND *rand);
 E_FUNC void randfree(RAND *rand);
-E_FUNC BOOL randcmp(CONST RAND *s1, CONST RAND *s2);
+E_FUNC bool randcmp(CONST RAND *s1, CONST RAND *s2);
 E_FUNC void randprint(CONST RAND *state, int flags);
 
 

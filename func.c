@@ -256,7 +256,7 @@ f_eval(VALUE *vp)
 	enterfilescope();
 	temp_stoponerror = stoponerror;
 	stoponerror = -1;
-	if (evaluate(TRUE)) {
+	if (evaluate(true)) {
 		stoponerror = temp_stoponerror;
 		closeinput();
 		exitfilescope();
@@ -1219,7 +1219,7 @@ f_srandom(int count, VALUE **vals)
 				  "srandom number seed must be an integer");
 				not_reached();
 			}
-			result.v_random = zsrandom1(vals[0]->v_num->num, TRUE);
+			result.v_random = zsrandom1(vals[0]->v_num->num, true);
 			break;
 
 		case V_RANDOM:		/* srandom(state) */
@@ -1303,7 +1303,7 @@ f_primetest(int count, NUMBER **vals)
 S_FUNC VALUE
 f_setbit(int count, VALUE **vals)
 {
-	BOOL r;
+	bool r;
 	long index;
 	VALUE result;
 
@@ -3793,7 +3793,7 @@ f_arg(int count, VALUE **vals)
 S_FUNC NUMBER *
 f_legtoleg(NUMBER *val1, NUMBER *val2)
 {
-	return qlegtoleg(val1, val2, FALSE);
+	return qlegtoleg(val1, val2, false);
 }
 
 
@@ -3932,7 +3932,7 @@ f_quomod(int count, VALUE **vals)
 	VALUE *v1, *v2, *v3, *v4, *v5;
 	VALUE result;
 	long rnd;
-	BOOL res;
+	bool res;
 	short s3, s4;	/* to preserve subtypes of v3, v4 */
 
 	v1 = vals[0];
@@ -6177,7 +6177,7 @@ f_protect(int count, VALUE **vals)
 	VALUE *v1, *v2, *v3;
 
 	VALUE result;
-	BOOL have_nblock;
+	bool have_nblock;
 
 	/* initialize VALUE */
 	result.v_type = V_NULL;
@@ -7306,7 +7306,7 @@ S_FUNC VALUE
 f_rm(int count, VALUE **vals)
 {
 	VALUE result;
-	int force;	/* TRUE -> -f was given as 1st arg */
+	int force;	/* true -> -f was given as 1st arg */
 	int i;
 	int j;
 
@@ -10165,6 +10165,10 @@ STATIC CONST struct builtin builtins[] = {
 	 "hypotenuse of right triangle within accuracy c"},
 	{"ilog", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_ilog},
 	 "integral log of a to integral base b"},
+#if 0 /* XXX - to be added later */
+	{"ilogn", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_ilog},
+	 "same is ilog"},
+#endif /* XXX */
 	{"ilog10", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ilog10},
 	 "integral log of a number base 10"},
 	{"ilog2", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ilog2},

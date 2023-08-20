@@ -1,7 +1,7 @@
 /*
  * qio - scanf and printf routines for arbitrary precision rational numbers
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -114,7 +114,7 @@ qprintf(char *fmt, ...)
 		case 'r':
 		case 'R':
 			q = va_arg(ap, NUMBER *);
-			qprintfr(q, width, (BOOL) (ch == 'R'));
+			qprintfr(q, width, (bool) (ch == 'R'));
 			break;
 		case 'N':
 			q = va_arg(ap, NUMBER *);
@@ -227,7 +227,7 @@ qprintnum(NUMBER *q, int outmode, LEN outdigits)
 		break;
 
 	case MODE_FRAC:
-		qprintfr(q, 0L, FALSE);
+		qprintfr(q, 0L, false);
 		break;
 
 	case MODE_EXP:
@@ -416,7 +416,7 @@ qprintfe(NUMBER *q, long UNUSED(width), long precision)
  * Example: 397/37
  */
 void
-qprintfr(NUMBER *q, long width, BOOL force)
+qprintfr(NUMBER *q, long width, bool force)
 {
 	zprintval(q->num, 0L, width);
 	if (force || qisfrac(q)) {
@@ -526,18 +526,18 @@ str2q(char *s)
 	register char *t;
 	ZVALUE div, newnum, newden, tmp;
 	long decimals, exp;
-	BOOL hex, negexp;
+	bool hex, negexp;
 
 	q = qalloc();
 	decimals = 0;
 	exp = 0;
-	negexp = FALSE;
-	hex = FALSE;
+	negexp = false;
+	hex = false;
 	t = s;
 	if ((*t == '+') || (*t == '-'))
 		t++;
 	if ((*t == '0') && ((t[1] == 'x') || (t[1] == 'X'))) {
-		hex = TRUE;
+		hex = true;
 		t += 2;
 	}
 	while (((*t >= '0') && (*t <= '9')) || (hex &&
@@ -562,7 +562,7 @@ str2q(char *s)
 			if (*t == '+')
 				t++;
 			else if (*t == '-') {
-				negexp = TRUE;
+				negexp = true;
 				t++;
 			}
 			while ((*t >= '0') && (*t <= '9')) {

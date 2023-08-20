@@ -1,7 +1,7 @@
 /*
  * blkcpy - general values and related routines used by the calculator
  *
- * Copyright (C) 1999-2007,2021,2022  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -56,7 +56,7 @@ copystod(VALUE *svp, long ssi, long num, VALUE *dvp, long dsi)
 {
 	BLOCK *sblk;
 	BLOCK *dblk;
-	BOOL noreloc;
+	bool noreloc;
 
 	sblk = NULL;
 	dblk = NULL;
@@ -376,7 +376,7 @@ copyblk2mat(BLOCK *blk, long ssi, long num, MATRIX *dmat, long dsi)
  */
 int
 copymat2blk(MATRIX *smat, long ssi, long num, BLOCK *dblk, long dsi,
-	    BOOL noreloc)
+	    bool noreloc)
 {
 	long i;
 	long newlen;
@@ -589,7 +589,7 @@ copyblk2file(BLOCK *sblk, long ssi, long num, FILEID id, long dsi)
 	if (num == 0)
 		return 0;
 
-	fiop = findid(id, TRUE);
+	fiop = findid(id, true);
 	if (fiop == NULL)
 		return E_COPYF1;
 	fp = fiop->fp;
@@ -613,7 +613,7 @@ copyblk2file(BLOCK *sblk, long ssi, long num, FILEID id, long dsi)
  * copyfile2blk - copy file to block
  */
 int
-copyfile2blk(FILEID id, long ssi, long num, BLOCK *dblk, long dsi, BOOL noreloc)
+copyfile2blk(FILEID id, long ssi, long num, BLOCK *dblk, long dsi, bool noreloc)
 {
 	FILEIO	*fiop;
 	FILE	*fp;
@@ -626,7 +626,7 @@ copyfile2blk(FILEID id, long ssi, long num, BLOCK *dblk, long dsi, BOOL noreloc)
 
 	if (id < 3)			/* excludes copying from stdin */
 		return E_COPYF1;
-	fiop = findid(id, FALSE);
+	fiop = findid(id, false);
 	if (fiop == NULL)
 		return E_COPYF1;
 
@@ -698,7 +698,7 @@ copystr2file(STRING *str, long ssi, long num, FILEID id, long dsi)
 		return 0;
 	if (ssi + num > len)
 		return E_COPY5;		/* Insufficient memory in str */
-	fiop = findid(id, TRUE);
+	fiop = findid(id, true);
 	if (fiop == NULL)
 		return E_COPYF1;
 	fp = fiop->fp;
@@ -723,7 +723,7 @@ copystr2file(STRING *str, long ssi, long num, FILEID id, long dsi)
  */
 int
 copyblk2blk(BLOCK *sblk, long ssi, long num, BLOCK *dblk, long dsi,
-	    BOOL noreloc)
+	    bool noreloc)
 {
 	long	newlen;
 	long	newsize;
@@ -766,7 +766,7 @@ copyblk2blk(BLOCK *sblk, long ssi, long num, BLOCK *dblk, long dsi,
  */
 int
 copystr2blk(STRING *str, long ssi, long num, BLOCK *dblk, long dsi,
-	    BOOL noreloc)
+	    bool noreloc)
 {
 	long	len;
 	long	newlen;
@@ -887,7 +887,7 @@ copyostr2str(char *sstr, long ssi, long num, STRING *dstr, long dsi)
  * copyostr2blk - copy octet-specified string to block
  */
 int
-copyostr2blk(char *str,long ssi,long num,BLOCK *dblk,long dsi,BOOL noreloc)
+copyostr2blk(char *str,long ssi,long num,BLOCK *dblk,long dsi,bool noreloc)
 {
 	size_t	len;
 	size_t	newlen;
@@ -987,7 +987,7 @@ memmove(void *s1, CONST void *s2, MEMMOVE_SIZE_T n)
  */
 int
 copynum2blk(NUMBER *snum, long ssi, long num, BLOCK *dblk, long dsi,
-	    BOOL noreloc)
+	    bool noreloc)
 {
 	size_t	newlen;
 	size_t	newsize;
@@ -1024,7 +1024,7 @@ copynum2blk(NUMBER *snum, long ssi, long num, BLOCK *dblk, long dsi,
 #if CALC_BYTE_ORDER == LITTLE_ENDIAN
 	memmove(dblk->data+dsi, (char *)(snum->num.v+ssi), num*sizeof(HALF));
 #else
-	swnum = swap_b8_in_ZVALUE(NULL, &(snum->num), FALSE);
+	swnum = swap_b8_in_ZVALUE(NULL, &(snum->num), false);
 	memmove(dblk->data+dsi, (char *)(swnum->v+ssi), num*sizeof(HALF));
 	zfree(*swnum);
 #endif

@@ -1,7 +1,7 @@
 /*
  * addop - add opcodes to a function being compiled
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -136,16 +136,16 @@ showfunctions(void)
 
 /*
  * Initialize a function for definition.
- * Newflag is TRUE if we should allocate a new function structure,
+ * Newflag is true if we should allocate a new function structure,
  * instead of the usual overwriting of the template function structure.
  * The new structure is returned in the global curfunc variable.
  *
  * given:
  *	name		name of function
- *	newflag		TRUE if need new structure
+ *	newflag		true if need new structure
  */
 void
-beginfunc(char *name, BOOL newflag)
+beginfunc(char *name, bool newflag)
 {
 	register FUNC *fp;		/* current function */
 
@@ -210,7 +210,7 @@ endfunc(void)
 	if (curfunc != functemplate)
 		free(curfunc);
 	if (newname[0] != '*' && (conf->traceflags & TRACE_FNCODES)) {
-		dumpnames = TRUE;
+		dumpnames = true;
 		for (size = 0; size < fp->f_opcodecount; ) {
 			printf("%ld: ", (unsigned long)size);
 			size += dumpop(&fp->f_opcodes[size]);
@@ -322,7 +322,7 @@ freefunc(FUNC *fp)
 	}
 	if (newname[0] != '*' && (conf->traceflags & TRACE_FNCODES)) {
 		printf("Freeing function \"%s\"\n",namestr(&funcnames,index));
-		dumpnames = FALSE;
+		dumpnames = false;
 		for (i = 0; i < fp->f_opcodecount; ) {
 			printf("%ld: ", i);
 			i += dumpop(&fp->f_opcodes[i]);
@@ -411,7 +411,7 @@ void
 writeindexop(void)
 {
 	if (oldop == OP_INDEXADDR)
-		curfunc->f_opcodes[curfunc->f_opcodecount - 1] = TRUE;
+		curfunc->f_opcodes[curfunc->f_opcodecount - 1] = true;
 }
 
 
@@ -426,12 +426,12 @@ addop(long op)
 	register FUNC *fp;		/* current function */
 	NUMBER *q, *q1, *q2;
 	unsigned long count;
-	BOOL cut;
+	bool cut;
 	int diff;
 
 	fp = curfunc;
 	count = fp->f_opcodecount;
-	cut = TRUE;
+	cut = true;
 	diff = 2;
 	q = NULL;
 	if ((count + 5) >= maxopcodes) {
@@ -488,7 +488,7 @@ addop(long op)
 			oldop = OP_ELEMVALUE;
 			break;
 		default:
-			cut = FALSE;
+			cut = false;
 
 		}
 		if (cut) {
@@ -522,7 +522,7 @@ addop(long op)
 			oldoldop = OP_NOP;
 			return;
 		default:
-			cut = FALSE;
+			cut = false;
 		}
 		if (cut) {
 			fp->f_opcodecount -= diff;
@@ -547,7 +547,7 @@ addop(long op)
 			switch (op) {
 			case OP_DIV:
 				if (qiszero(q2)) {
-					cut = FALSE;
+					cut = false;
 					break;
 				}
 				q = qqdiv(q1,q2);
@@ -563,12 +563,12 @@ addop(long op)
 				break;
 			case OP_POWER:
 				if (qisfrac(q2) || qisneg(q2))
-					cut = FALSE;
+					cut = false;
 				else
 					q = qpowi(q1,q2);
 				break;
 			default:
-				cut = FALSE;
+				cut = false;
 			}
 			if (cut) {
 				qfree(q1);

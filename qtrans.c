@@ -1,7 +1,7 @@
 /*
  * qtrans - transcendental functions for real numbers
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -427,7 +427,7 @@ qasin(NUMBER *q, NUMBER *epsilon)
 {
 	NUMBER *qtmp1, *qtmp2, *epsilon1;
 	ZVALUE ztmp;
-	BOOL neg;
+	bool neg;
 	FLAG r;
 
 	if (qiszero(epsilon)) {
@@ -523,7 +523,7 @@ qatan(NUMBER *q, NUMBER *epsilon)
 	FULL d;
 	ZVALUE X, D, DD, sum, mul, term, ztmp1, ztmp2;
 	NUMBER *qtmp, *res;
-	BOOL sign;
+	bool sign;
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for arctangent");
@@ -1045,7 +1045,7 @@ qln(NUMBER *q, NUMBER *epsilon)
 	long m, n, k, h, d;
 	ZVALUE term, sum, mul, pow, X, D, B, ztmp;
 	NUMBER *qtmp, *res;
-	BOOL neg;
+	bool neg;
 
 	if (qiszero(q) || qiszero(epsilon)) {
 		math_error("logarithm of 0");
@@ -1154,7 +1154,7 @@ qln(NUMBER *q, NUMBER *epsilon)
 NUMBER *
 qlog(NUMBER *q, NUMBER *epsilon)
 {
-	int need_new_ln_10 = TRUE;	/* FALSE => use cached ln_10 value */
+	int need_new_ln_10 = true;	/* false => use cached ln_10 value */
 	NUMBER *ln_q;			/* ln(x) */
 	NUMBER *ret;			/* base 10 logarithm of x */
 
@@ -1168,12 +1168,12 @@ qlog(NUMBER *q, NUMBER *epsilon)
 	 * shortcut for small integer powers of 10
 	 */
 	if (qisint(q) && qispos(q) && !zge8192b(q->num) && ziseven(q->num)) {
-		BOOL is_10_power;	/* TRUE ==> q is a power of 10 */
+		bool is_10_power;	/* true ==> q is a power of 10 */
 		long ilog_10;		/* integer log base 10 */
 
 		/* try for a quick small power of 10 log */
 		ilog_10 = zlog10(q->num, &is_10_power );
-		if (is_10_power == TRUE) {
+		if (is_10_power == true) {
 			/* is small power of 10, return log */
 			return itoq(ilog_10);
 		}
@@ -1195,19 +1195,19 @@ qlog(NUMBER *q, NUMBER *epsilon)
 	if (ln_10_epsilon == NULL) {
 		/* first time call */
 		ln_10_epsilon = qcopy(epsilon);
-	} else if (qcmp(ln_10_epsilon, epsilon) == TRUE) {
+	} else if (qcmp(ln_10_epsilon, epsilon) == true) {
 		/* replaced cached value with epsilon arg */
 		qfree(ln_10_epsilon);
 		ln_10_epsilon = qcopy(epsilon);
 	} else if (ln_10 != NULL) {
 		/* the previously computed ln(2) is OK to use */
-		need_new_ln_10 = FALSE;
+		need_new_ln_10 = false;
 	}
 
 	/*
 	 * compute ln(10) if needed
 	 */
-	if (need_new_ln_10 == TRUE) {
+	if (need_new_ln_10 == true) {
 		if (ln_10 != NULL) {
 			qfree(ln_10);
 		}
@@ -1692,7 +1692,7 @@ qasinh(NUMBER *q, NUMBER *epsilon)
 {
 	NUMBER *tmp1, *tmp2, *epsilon1;
 	long n;
-	BOOL neg;
+	bool neg;
 
 	if (qiszero(epsilon)) {
 		math_error("Zero epsilon value for asinh");

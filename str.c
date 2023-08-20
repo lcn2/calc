@@ -1,7 +1,7 @@
 /*
  * str - string list routines
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -427,7 +427,7 @@ stringmul(NUMBER *q, STRING *str)
 	NUMBER *tmp1, *tmp2;
 	char *c, *c1;
 	STRING *s;
-	BOOL neg;
+	bool neg;
 
 	if (str->s_len == 0)
 		return slink(str);
@@ -671,7 +671,7 @@ stringshift(STRING *s1, long n)
 	char *c1, *c;
 	STRING *s;
 	long len, i, j, k;
-	BOOL right;
+	bool right;
 	char ch;
 
 	len = s1->s_len;
@@ -866,27 +866,27 @@ stringlowbit(STRING *s)
 
 /*
  * stringcompare compares first len characters of strings starting at c1, c2
- * Returns TRUE if and only if a difference is encountered.
+ * Returns true if and only if a difference is encountered.
  * Essentially a local version of memcmp.
  */
-S_FUNC BOOL
+S_FUNC bool
 stringcompare(char *c1, char *c2, long len)
 {
 	while (len-- > 0) {
 		if (*c1++ != *c2++)
-			return TRUE;
+			return true;
 	}
-	return FALSE;
+	return false;
 }
 
 /*
- * stringcmp returns TRUE if strings differ, FALSE if strings equal
+ * stringcmp returns true if strings differ, false if strings equal
  */
-BOOL
+bool
 stringcmp(STRING *s1, STRING *s2)
 {
 	if (s1->s_len != s2->s_len)
-		return TRUE;
+		return true;
 	return stringcompare(s1->s_str, s2->s_str, s1->s_len);
 }
 
@@ -988,7 +988,7 @@ stringbit(STRING *s, long index)
 }
 
 
-BOOL
+bool
 stringtest(STRING *s)
 {
 	long i;
@@ -998,18 +998,18 @@ stringtest(STRING *s)
 	c = s->s_str;
 	while (i-- > 0) {
 		if (*c++)
-			return TRUE;
+			return true;
 	}
-	return FALSE;
+	return false;
 }
 
 /*
  * If index is in acceptable range, stringsetbit sets or resets specified
- * bit in string s according as val is TRUE or FALSE, and returns 0.
+ * bit in string s according as val is true or false, and returns 0.
  * Returns 1 if index < 0; 2 if index too large.
  */
 int
-stringsetbit(STRING *s, long index, BOOL val)
+stringsetbit(STRING *s, long index, bool val)
 {
 	char *c;
 	int bit;
@@ -1327,7 +1327,7 @@ addstring(char *str, size_t len)
 	char *c;
 	long index;		/* index into constant table */
 	long first;		/* first non-null position found */
-	BOOL havefirst;
+	bool havefirst;
 
 	if (len < 1) {
 		math_error("addstring length including trailing NUL < 1");
@@ -1354,13 +1354,13 @@ addstring(char *str, size_t len)
 	}
 	len--;
 	first = 0;
-	havefirst = FALSE;
+	havefirst = false;
 	sp = stringconsttable;
 	for (index = 0; index < stringconstcount; index++, sp++) {
 		s = *sp;
 		if (s->s_links == 0) {
 			if (!havefirst) {
-				havefirst = TRUE;
+				havefirst = true;
 				first = index;
 			}
 			continue;

@@ -1,7 +1,7 @@
 /*
  * assocfunc - association table routines
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -47,15 +47,15 @@
 
 
 S_FUNC ASSOCELEM *elemindex(ASSOC *ap, long index);
-S_FUNC BOOL compareindices(VALUE *v1, VALUE *v2, long dim);
+S_FUNC bool compareindices(VALUE *v1, VALUE *v2, long dim);
 S_FUNC void resize(ASSOC *ap, long newsize);
 S_FUNC void assoc_elemfree(ASSOCELEM *ep);
 
 
 /*
  * Return the address of the value specified by normal indexing of
- * an association.  The create flag is TRUE if a value is going to be
- * assigned into the specified indexing location.  If create is FALSE and
+ * an association.  The create flag is true if a value is going to be
+ * assigned into the specified indexing location.  If create is false and
  * the index value doesn't exist, a pointer to a NULL value is returned.
  *
  * given:
@@ -65,7 +65,7 @@ S_FUNC void assoc_elemfree(ASSOCELEM *ep);
  *	indices		table of values being indexed by
  */
 VALUE *
-associndex(ASSOC *ap, BOOL create, long dim, VALUE *indices)
+associndex(ASSOC *ap, bool create, long dim, VALUE *indices)
 {
 	ASSOCELEM **listhead;
 	ASSOCELEM *ep;
@@ -266,9 +266,9 @@ associndices(ASSOC *ap, long index)
 
 /*
  * Compare two associations to see if they are identical.
- * Returns TRUE if they are different.
+ * Returns true if they are different.
  */
-BOOL
+bool
 assoccmp(ASSOC *ap1, ASSOC *ap2)
 {
 	ASSOCELEM **table1;
@@ -280,9 +280,9 @@ assoccmp(ASSOC *ap1, ASSOC *ap2)
 	long dim;
 
 	if (ap1 == ap2)
-		return FALSE;
+		return false;
 	if (ap1->a_count != ap2->a_count)
-		return TRUE;
+		return true;
 
 	table1 = ap1->a_table;
 	size1 = ap1->a_size;
@@ -294,7 +294,7 @@ assoccmp(ASSOC *ap1, ASSOC *ap2)
 			for (ep2 = ap2->a_table[hash % size2]; ;
 				ep2 = ep2->e_next) {
 				if (ep2 == NULL)
-					return TRUE;
+					return true;
 				if (ep2->e_hash != hash)
 					continue;
 				if (ep2->e_dim != dim)
@@ -304,10 +304,10 @@ assoccmp(ASSOC *ap1, ASSOC *ap2)
 						break;
 			}
 			if (comparevalue(&ep1->e_value, &ep2->e_value))
-				return TRUE;
+				return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -520,20 +520,20 @@ assocprint(ASSOC *ap, long max_print)
 
 /*
  * Compare two lists of index values to see if they are identical.
- * Returns TRUE if they are the same.
+ * Returns true if they are the same.
  */
-S_FUNC BOOL
+S_FUNC bool
 compareindices(VALUE *v1, VALUE *v2, long dim)
 {
 	int i;
 
 	for (i = 0; i < dim; i++)
 		if (v1[i].v_type != v2[i].v_type)
-			return FALSE;
+			return false;
 
 	while (dim-- > 0)
 		if (comparevalue(v1++, v2++))
-			return FALSE;
+			return false;
 
-	return TRUE;
+	return true;
 }

@@ -1,7 +1,7 @@
 /*
  * file - file I/O routines callable by users
  *
- * Copyright (C) 1999-2007,2018,2021,2022  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2018,2021-2023  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -73,11 +73,11 @@ E_FUNC FILE *f_open(char *name, char *mode);
  */
 STATIC FILEIO files[MAXFILES] = {
 	{FILEID_STDIN,	NULL,  (dev_t)0, (ino_t)0,
-	 "(stdin)",  TRUE, FALSE, FALSE, FALSE, 'r', "r"},
+	 "(stdin)",  true, false, false, false, 'r', "r"},
 	{FILEID_STDOUT, NULL, (dev_t)0, (ino_t)0,
-	 "(stdout)", FALSE,  TRUE, FALSE, FALSE, 'w', "w"},
+	 "(stdout)", false,  true, false, false, 'w', "w"},
 	{FILEID_STDERR, NULL, (dev_t)0, (ino_t)0,
-	 "(stderr)", FALSE,  TRUE, FALSE, FALSE, 'w', "w"}
+	 "(stderr)", false,  true, false, false, 'w', "w"}
 };
 
 
@@ -94,9 +94,9 @@ S_FUNC int get_open_pos(FILE *fp, ZVALUE *res);
 S_FUNC ZVALUE off_t2z(off_t siz);
 S_FUNC ZVALUE dev2z(dev_t dev);
 S_FUNC ZVALUE inode2z(ino_t inode);
-S_FUNC void getscanfield(FILE *fp, BOOL skip, unsigned int width,
+S_FUNC void getscanfield(FILE *fp, bool skip, unsigned int width,
 			 int scannum, char *scanptr, char **strptr);
-S_FUNC void getscanwhite(FILE *fp, BOOL skip, unsigned int width,
+S_FUNC void getscanwhite(FILE *fp, bool skip, unsigned int width,
 			 int scannum, char **strptr);
 S_FUNC int fscanfile(FILE *fp, char *fmt, int count, VALUE **vals);
 S_FUNC void freadnum(FILE *fp, VALUE *valptr);
@@ -145,8 +145,8 @@ file_init(void)
 		char *tname;
 
 		fiop->name = NULL;
-		files[idnum].reading = TRUE;
-		files[idnum].writing = TRUE;
+		files[idnum].reading = true;
+		files[idnum].writing = true;
 		files[idnum].action = 0;
 		memset(files[idnum].mode, 0, MODE_LEN+1);
 		/*
@@ -163,13 +163,13 @@ file_init(void)
 				if (fp) {
 					strlcpy(files[idnum].mode, "r",
 						sizeof(files[idnum].mode));
-					files[idnum].writing = FALSE;
+					files[idnum].writing = false;
 				} else {
 					fp = (FILE *) fdopen(i, "w");
 					if (fp) {
 						strlcpy(files[idnum].mode, "w",
 						    sizeof(files[idnum].mode));
-						files[idnum].reading = FALSE;
+						files[idnum].reading = false;
 					}
 					else
 						continue;
@@ -244,10 +244,10 @@ init_fileio(FILEIO *fiop, char *name, char *mode,
 	fiop->fp = fp;
 	fiop->dev = sbufp->st_dev;
 	fiop->inode = sbufp->st_ino;
-	fiop->reading = FALSE;
-	fiop->writing = FALSE;
-	fiop->appending = FALSE;
-	fiop->binary = FALSE;
+	fiop->reading = false;
+	fiop->writing = false;
+	fiop->appending = false;
+	fiop->binary = false;
 	fiop->action = 0;
 	memset(fiop->mode, 0, sizeof(fiop->mode));
 
@@ -264,7 +264,7 @@ init_fileio(FILEIO *fiop, char *name, char *mode,
 
 		/* note read mode */
 		strlcpy(modestr, "r", sizeof(modestr));
-		fiop->reading = TRUE;
+		fiop->reading = true;
 
 		/* note binary mode even though mode is not used / ignored */
 		if (strchr(mode, 'b') != NULL) {
@@ -273,7 +273,7 @@ init_fileio(FILEIO *fiop, char *name, char *mode,
 
 		/* note if reading and writing */
 		if (strchr(mode, '+') != NULL) {
-			fiop->writing = TRUE;
+			fiop->writing = true;
 			strlcat(modestr, "+", sizeof(modestr));
 		}
 
@@ -282,7 +282,7 @@ init_fileio(FILEIO *fiop, char *name, char *mode,
 
 		/* note write mode */
 		strlcpy(modestr, "w", sizeof(modestr));
-		fiop->writing = TRUE;
+		fiop->writing = true;
 
 		/* note binary mode even though mode is not used / ignored */
 		if (strchr(mode, 'b') != NULL) {
@@ -291,7 +291,7 @@ init_fileio(FILEIO *fiop, char *name, char *mode,
 
 		/* note if reading and writing */
 		if (strchr(mode, '+') != NULL) {
-			fiop->reading = TRUE;
+			fiop->reading = true;
 			strlcat(modestr, "+", sizeof(modestr));
 		}
 
@@ -300,8 +300,8 @@ init_fileio(FILEIO *fiop, char *name, char *mode,
 
 		/* note append mode */
 		strlcpy(modestr, "a", sizeof(modestr));
-		fiop->writing = TRUE;
-		fiop->appending = TRUE;
+		fiop->writing = true;
+		fiop->appending = true;
 
 		/* note binary mode even though mode is not used / ignored */
 		if (strchr(mode, 'b') != NULL) {
@@ -310,7 +310,7 @@ init_fileio(FILEIO *fiop, char *name, char *mode,
 
 		/* note if reading and writing */
 		if (strchr(mode, '+') != NULL) {
-			fiop->reading = TRUE;
+			fiop->reading = true;
 			strlcat(modestr, "+", sizeof(modestr));
 		}
 
@@ -591,7 +591,7 @@ findid(FILEID id, int writable)
 /*
  * Return whether or not a file id is valid.  This is used for if tests.
  */
-BOOL
+bool
 validid(FILEID id)
 {
 	return (findid(id, -1) != NULL);
@@ -616,7 +616,7 @@ indexid(long index)
 
 
 /*
- * Close the specified file id.	 Returns TRUE if there was an error.
+ * Close the specified file id.	 Returns true if there was an error.
  * Closing of stdin, stdout, or stderr is illegal, but closing of already
  * closed files is allowed.
  */
@@ -685,7 +685,7 @@ closeall(void)
 /*
  * Return whether or not an error occurred to a file.
  */
-BOOL
+bool
 errorid(FILEID id)
 {
 	FILEIO *fiop;		/* file structure */
@@ -700,7 +700,7 @@ errorid(FILEID id)
 /*
  * Return whether or not end of file occurred to a file.
  */
-BOOL
+bool
 eofid(FILEID id)
 {
 	FILEIO *fiop;		/* file structure */
@@ -777,14 +777,14 @@ readid(FILEID id, int flags, STRING **retstr)
 	char buf[READSIZE];	/* temporary buffer */
 	char *b;
 	int c;
-	BOOL nlstop, nullstop, wsstop, rmstop, done;
+	bool nlstop, nullstop, wsstop, rmstop, done;
 	FILEPOS fpos;
 	STRING *newstr;
 
 	totlen = 0;
 	str = NULL;
 
-	fiop = findid(id, FALSE);
+	fiop = findid(id, false);
 	if (fiop == NULL)
 		return 1;
 	nlstop = (flags & 1);
@@ -868,7 +868,7 @@ getcharid(FILEID id)
 	FILEIO *fiop;
 	FILEPOS fpos;
 
-	fiop = findid(id, FALSE);
+	fiop = findid(id, false);
 	if (fiop == NULL)
 		return -2;
 	if (fiop->action == 'w') {
@@ -973,12 +973,12 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 	int oldmode, newmode;
 	long olddigits, newdigits;
 	long width, precision;
-	BOOL didneg, didprecision;
+	bool didneg, didprecision;
 	FILEPOS fpos;
-	BOOL printstring;
-	BOOL printchar;
+	bool printstring;
+	bool printchar;
 
-	fiop = findid(id, TRUE);
+	fiop = findid(id, true);
 	if (fiop == NULL)
 		return 1;
 	if (fiop->action == 'r') {
@@ -989,8 +989,8 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 
 	fiop->action = 'w';
 
-	printstring = FALSE;
-	printchar = FALSE;
+	printstring = false;
+	printchar = false;
 
 	math_setfp(fiop->fp);
 
@@ -1003,14 +1003,14 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 		/*
 		 * Here to handle formats.
 		 */
-		didneg = FALSE;
-		didprecision = FALSE;
+		didneg = false;
+		didprecision = false;
 		width = 0;
 		precision = 0;
 
 		ch = *fmt++;
 		if (ch == '-') {
-			didneg = TRUE;
+			didneg = true;
 			ch = *fmt++;
 		}
 		while ((ch >= '0') && (ch <= '9')) {
@@ -1018,7 +1018,7 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 			ch = *fmt++;
 		}
 		if (ch == '.') {
-			didprecision = TRUE;
+			didprecision = true;
 			ch = *fmt++;
 			while ((ch >= '0') && (ch <= '9')) {
 				precision = precision * 10 + (ch - '0');
@@ -1037,10 +1037,10 @@ idprintf(FILEID id, char *fmt, int count, VALUE **vals)
 
 		switch (ch) {
 		case 's':
-			printstring = TRUE;
+			printstring = true;
 			/*FALLTHRU*/
 		case 'c':
-			printchar = TRUE;
+			printchar = true;
 		case 'd':
 			break;
 		case 'f':
@@ -1212,7 +1212,7 @@ idfputc(FILEID id, int ch)
 	FILEPOS fpos;
 
 	/* get the file info pointer */
-	fiop = findid(id, TRUE);
+	fiop = findid(id, true);
 	if (fiop == NULL)
 		return 1;
 	if (fiop->action == 'r') {
@@ -1247,7 +1247,7 @@ idungetc(FILEID id, int ch)
 {
 	FILEIO *fiop;
 
-	fiop = findid(id, FALSE);
+	fiop = findid(id, false);
 	if (fiop == NULL)
 		return -2;
 	if (fiop->action != 'r')
@@ -1273,7 +1273,7 @@ idfputs(FILEID id, STRING *str)
 	long len;
 
 	/* get the file info pointer */
-	fiop = findid(id, TRUE);
+	fiop = findid(id, true);
 	if (fiop == NULL)
 		return 1;
 
@@ -1310,7 +1310,7 @@ idfputstr(FILEID id, char *str)
 	FILEPOS fpos;
 
 	/* get the file info pointer */
-	fiop = findid(id, TRUE);
+	fiop = findid(id, true);
 	if (fiop == NULL)
 		return 1;
 
@@ -1992,7 +1992,7 @@ zfilesize(FILEID id)
 void
 showfiles(void)
 {
-	BOOL listed[MAXFILES];
+	bool listed[MAXFILES];
 	FILEIO *fiop;
 	FILE *fp;
 	struct stat sbuf;
@@ -2001,7 +2001,7 @@ showfiles(void)
 	int i, j;
 
 	for (i = 0; i < idnum; i++) {
-		listed[i] = FALSE;
+		listed[i] = false;
 		fiop = &files[ioindex[i]];
 		fp = fiop->fp;
 		if (fstat(fileno(fp), &sbuf) < 0) {
@@ -2027,7 +2027,7 @@ showfiles(void)
 			if (listed[j] || sizes[j] == -1)
 				continue;
 			if (inodes[j] == inodes[i]) {
-				listed[j] = TRUE;
+				listed[j] = true;
 				fiop = &files[ioindex[j]];
 				printf("\t  = ");
 				printid(fiop->id, PRINT_UNAMBIG);
@@ -2052,7 +2052,7 @@ showfiles(void)
  *	strptr		pointer to where the new field pointer may be found
  */
 S_FUNC void
-getscanfield(FILE *fp, BOOL skip, unsigned int width, int scannum,
+getscanfield(FILE *fp, bool skip, unsigned int width, int scannum,
 	     char *scanptr, char **strptr)
 {
 	char *str;		/* current string */
@@ -2061,7 +2061,7 @@ getscanfield(FILE *fp, BOOL skip, unsigned int width, int scannum,
 	char buf[READSIZE];	/* temporary buffer */
 	int c;
 	char *b;
-	BOOL comp;		/* Use complement of scanset */
+	bool comp;		/* Use complement of scanset */
 	unsigned int chnum;
 
 	totlen = 0;
@@ -2131,7 +2131,7 @@ getscanfield(FILE *fp, BOOL skip, unsigned int width, int scannum,
  *	strptr		pointer to where the new field pointer may be found
  */
 S_FUNC void
-getscanwhite(FILE *fp, BOOL skip, unsigned int width, int scannum,
+getscanwhite(FILE *fp, bool skip, unsigned int width, int scannum,
 	     char **strptr)
 {
 	char *str;		/* current string */
@@ -2140,7 +2140,7 @@ getscanwhite(FILE *fp, BOOL skip, unsigned int width, int scannum,
 	char buf[READSIZE];	/* temporary buffer */
 	int c;
 	char *b;
-	BOOL comp;		/* Use complement of scanset */
+	bool comp;		/* Use complement of scanset */
 	unsigned int chnum;
 
 	totlen = 0;
@@ -2207,8 +2207,8 @@ fscanfile(FILE *fp, char *fmt, int count, VALUE **vals)
 	int scannum;	/* Number of characters in scanlist */
 	char *scanptr;	/* Start of scanlist */
 	char *str;
-	BOOL comp;	/* True scanset is complementary */
-	BOOL skip;	/* True if string to be skipped rather than read */
+	bool comp;	/* True scanset is complementary */
+	bool skip;	/* True if string to be skipped rather than read */
 	int width;
 	VALUE *var;	/* lvalue to be assigned to */
 	unsigned short subtype;	/* for var->v_subtype */
@@ -2347,7 +2347,7 @@ fscanfid(FILEID id, char *fmt, int count, VALUE **vals)
 	FILE *fp;
 	FILEPOS fpos;
 
-	fiop = findid(id, FALSE);
+	fiop = findid(id, false);
 	if (fiop == NULL)
 		return -2;
 
@@ -2404,20 +2404,20 @@ freadnum(FILE *fp, VALUE *valptr)
 	HALF *a;
 	FULL f;
 	long decimals, exp;
-	BOOL sign, negexp, havedp, imag, exptoobig;
+	bool sign, negexp, havedp, imag, exptoobig;
 
 	decimals = 0;
 	exp = 0;
-	sign = FALSE;
-	negexp = FALSE;
-	havedp = FALSE;
-	imag = FALSE;
-	exptoobig = FALSE;
+	sign = false;
+	negexp = false;
+	havedp = false;
+	imag = false;
+	exptoobig = false;
 
 	ch = fgetc(fp);
 	if (ch == '+' || ch == '-') {
 		if (ch == '-')
-			sign = TRUE;
+			sign = true;
 		ch = fgetc(fp);
 	}
 	num.v = alloc(1);
@@ -2446,7 +2446,7 @@ freadnum(FILE *fp, VALUE *valptr)
 				decimals++;
 		}
 		else if (ch == '.')
-			havedp = TRUE;
+			havedp = true;
 		else
 			break;
 		ch = fgetc(fp);
@@ -2455,20 +2455,20 @@ freadnum(FILE *fp, VALUE *valptr)
 		ch = fgetc(fp);
 		if (ch == '+' || ch == '-') {
 			if (ch == '-')
-				negexp = TRUE;
+				negexp = true;
 			ch = fgetc(fp);
 		}
 		while (ch >= '0' && ch <= '9') {
 			if (!exptoobig) {
 				exp = (exp * 10) + ch - '0';
 				if (exp > 1000000)
-					exptoobig = TRUE;
+					exptoobig = true;
 			}
 			ch = fgetc(fp);
 		}
 	}
 	if (ch == 'i' || ch == 'I') {
-		imag = TRUE;
+		imag = true;
 	} else {
 		ungetc(ch, fp);
 	}
@@ -2648,7 +2648,7 @@ fsearch(FILEID id, char *str, ZVALUE start, ZVALUE end, ZVALUE *res)
 	long k = 0;
 
 	/* get FILEIO */
-	fiop = findid(id, FALSE);
+	fiop = findid(id, false);
 	if (fiop == NULL)
 		return -2;
 
@@ -2767,7 +2767,7 @@ frsearch(FILEID id, char *str, ZVALUE first, ZVALUE last, ZVALUE *res)
 	char *s;		/* str comparison pointer */
 
 	/* get FILEIO */
-	fiop = findid(id, FALSE);
+	fiop = findid(id, false);
 	if (fiop == NULL)
 		return -2;
 

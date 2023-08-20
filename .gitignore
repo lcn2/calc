@@ -52,6 +52,7 @@ have_offscl.h
 have_posscl.h
 have_rusage.h
 have_statfs.h
+have_stdbool.h
 have_stdlib.h
 have_stdvs
 have_strdup.h

@@ -68,7 +68,7 @@ E_FUNC void qfreenum(NUMBER *q);
 E_FUNC void qprintnum(NUMBER *q, int mode, LEN outdigits);
 E_FUNC void qprintff(NUMBER *q, long width, long precision);
 E_FUNC void qprintfe(NUMBER *q, long width, long precision);
-E_FUNC void qprintfr(NUMBER *q, long width, BOOL force);
+E_FUNC void qprintfr(NUMBER *q, long width, bool force);
 E_FUNC void qprintfd(NUMBER *q, long width);
 E_FUNC void qprintfx(NUMBER *q, long width);
 E_FUNC void qprintfb(NUMBER *q, long width);
@@ -119,12 +119,12 @@ E_FUNC NUMBER *qround(NUMBER *q, long places, long rnd);
 E_FUNC NUMBER *qbtrunc(NUMBER *q1, NUMBER *q2);
 E_FUNC NUMBER *qbround(NUMBER *q, long places, long rnd);
 E_FUNC NUMBER *qscale(NUMBER *q, long i);
-E_FUNC BOOL qdivides(NUMBER *q1, NUMBER *q2);
-E_FUNC BOOL qcmp(NUMBER *q1, NUMBER *q2);
-E_FUNC BOOL qcmpi(NUMBER *q, long i);
+E_FUNC bool qdivides(NUMBER *q1, NUMBER *q2);
+E_FUNC bool qcmp(NUMBER *q1, NUMBER *q2);
+E_FUNC bool qcmpi(NUMBER *q, long i);
 E_FUNC FLAG qrel(NUMBER *q1, NUMBER *q2);
 E_FUNC FLAG qreli(NUMBER *q, long i);
-E_FUNC BOOL qisset(NUMBER *q, long i);
+E_FUNC bool qisset(NUMBER *q, long i);
 
 
 /*
@@ -153,13 +153,13 @@ E_FUNC NUMBER *qredcout(NUMBER *q1, NUMBER *q2);
 E_FUNC NUMBER *qredcmul(NUMBER *q1, NUMBER *q2, NUMBER *q3);
 E_FUNC NUMBER *qredcsquare(NUMBER *q1, NUMBER *q2);
 E_FUNC NUMBER *qredcpower(NUMBER *q1, NUMBER *q2, NUMBER *q3);
-E_FUNC BOOL qprimetest(NUMBER *q1, NUMBER *q2, NUMBER *q3);
-E_FUNC BOOL qissquare(NUMBER *q);
+E_FUNC bool qprimetest(NUMBER *q1, NUMBER *q2, NUMBER *q3);
+E_FUNC bool qissquare(NUMBER *q);
 E_FUNC long qilog2(NUMBER *q);
 E_FUNC long qilog10(NUMBER *q);
 E_FUNC NUMBER *qilog(NUMBER *q, ZVALUE base);
-E_FUNC BOOL qcmpmod(NUMBER *q1, NUMBER *q2, NUMBER *q3);
-E_FUNC BOOL qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod,
+E_FUNC bool qcmpmod(NUMBER *q1, NUMBER *q2, NUMBER *q3);
+E_FUNC bool qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod,
 		    long rnd);
 E_FUNC FLAG qnear(NUMBER *q1, NUMBER *q2, NUMBER *epsilon);
 E_FUNC NUMBER *qdigit(NUMBER *q, ZVALUE dpos, ZVALUE base);
@@ -209,7 +209,7 @@ E_FUNC NUMBER *qatanh(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qasech(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qacsch(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qacoth(NUMBER *q, NUMBER *epsilon);
-E_FUNC NUMBER *qlegtoleg(NUMBER *q, NUMBER *epsilon, BOOL wantneg);
+E_FUNC NUMBER *qlegtoleg(NUMBER *q, NUMBER *epsilon, bool wantneg);
 E_FUNC NUMBER *qpi(NUMBER *epsilon);
 E_FUNC NUMBER *qpidiv180(NUMBER *epsilon);
 E_FUNC NUMBER *qpidiv200(NUMBER *epsilon);
@@ -229,9 +229,9 @@ E_FUNC NUMBER *pseudo_seed(void);
 /*
  * external swap functions
  */
-E_FUNC NUMBER *swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all);
-E_FUNC NUMBER *swap_b16_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all);
-E_FUNC NUMBER *swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, BOOL all);
+E_FUNC NUMBER *swap_b8_in_NUMBER(NUMBER *dest, NUMBER *src, bool all);
+E_FUNC NUMBER *swap_b16_in_NUMBER(NUMBER *dest, NUMBER *src, bool all);
+E_FUNC NUMBER *swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, bool all);
 
 
 /*

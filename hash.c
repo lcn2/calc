@@ -1,7 +1,7 @@
 /*
  * hash - one-way hash routines
  *
- * Copyright (C) 1999-2007,2021,2022  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021-2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -53,7 +53,7 @@ E_FUNC void MD5_init_state(HASH*);
 
 
 /*
- * hash_long can deal with BOOL's, int's, FLAGS's and LEN's
+ * hash_long can deal with bool's, int's, FLAGS's and LEN's
  */
 #define hash_bool(type, val, state) (hash_long((type), (long)(val), (state)))
 #define hash_int(type, val, state) (hash_long((type), (long)(val), (state)))
@@ -103,7 +103,7 @@ hash_init(int type, HASH *state)
 	 * clear hash value
 	 */
 	memset((void*)state, 0, sizeof(HASH));
-	state->bytes = TRUE;
+	state->bytes = true;
 
 	/*
 	 * search for the hash_setup function
@@ -194,8 +194,8 @@ hash_copy(HASH *state)
  *	b	second hash state
  *
  * returns:
- *	TRUE => hash states are different
- *	FALSE => hash states are the same
+ *	true => hash states are different
+ *	false => hash states are the same
  */
 int
 hash_cmp(HASH *a, HASH *b)
@@ -205,15 +205,15 @@ hash_cmp(HASH *a, HASH *b)
 	 */
 	if (a == b) {
 		/* pointers to the same object */
-		return FALSE;
+		return false;
 	}
 	if (a == NULL || b == NULL) {
 		/* one pointer is NULL, so they differ */
-		return TRUE;
+		return true;
 	}
 	if (a->cmp == NULL || b->cmp == NULL) {
 		/* one cmp function is NULL, so they differ */
-		return TRUE;
+		return true;
 	}
 
 	/*
@@ -221,7 +221,7 @@ hash_cmp(HASH *a, HASH *b)
 	 */
 	if (a->hashtype != b->hashtype) {
 		/* different hash types are different */
-		return TRUE;
+		return true;
 	}
 
 	/*
@@ -278,7 +278,7 @@ hash_final(HASH *state)
  * The input is a long.	 If a long is smaller than 64 bits, we will
  * hash a final 32 bits of zeros.
  *
- * This function is OK to hash BOOL's, unsigned long's, unsigned int's
+ * This function is OK to hash bool's, unsigned long's, unsigned int's
  * signed int's as well as FLAG's and LEN's.
  */
 HASH *
@@ -297,7 +297,7 @@ hash_long(int type, long longval, HASH *state)
 	 * setup for the hash_long
 	 */
 	(state->chkpt)(state);
-	state->bytes = FALSE;	/* data to be read as words */
+	state->bytes = false;	/* data to be read as words */
 
 	/*
 	 * catch the zero numeric value special case
@@ -363,7 +363,7 @@ hash_zvalue(int type, ZVALUE zval, HASH *state)
 	 * setup for the ZVALUE hash
 	 */
 	(state->chkpt)(state);
-	state->bytes = FALSE;	/* data to be read as words */
+	state->bytes = false;	/* data to be read as words */
 
 	/*
 	 * catch the zero numeric value special case
@@ -470,7 +470,7 @@ HASH *
 hash_number(int type, void *n, HASH *state)
 {
 	NUMBER *number = (NUMBER *)n;	/* n as a NUMBER pointer */
-	BOOL sign;			/* sign of the denominator */
+	bool sign;			/* sign of the denominator */
 
 	/*
 	 * initialize if state is NULL
@@ -483,7 +483,7 @@ hash_number(int type, void *n, HASH *state)
 	 * setup for the NUMBER hash
 	 */
 	(state->chkpt)(state);
-	state->bytes = FALSE;
+	state->bytes = false;
 
 	/*
 	 * process the numerator
@@ -543,7 +543,7 @@ hash_complex(int type, void *c, HASH *state)
 	 * setup for the COMPLEX hash
 	 */
 	(state->chkpt)(state);
-	state->bytes = FALSE;
+	state->bytes = false;
 
 	/*
 	 * catch the zero special case
@@ -612,7 +612,7 @@ hash_str(int type, char *str, HASH *state)
 	 */
 	if (!state->bytes) {
 		(state->chkpt)(state);
-		state->bytes = TRUE;
+		state->bytes = true;
 	}
 
 	len = strlen(str);
@@ -655,7 +655,7 @@ hash_STR(int type, STRING *str, HASH *state)
 	 */
 	if (!state->bytes) {
 		(state->chkpt)(state);
-		state->bytes = TRUE;
+		state->bytes = true;
 	}
 
 	/*
@@ -697,7 +697,7 @@ hash_usb8(int type, USB8 *byte, int len, HASH *state)
 	 */
 	if (!state->bytes) {
 		(state->chkpt)(state);
-		state->bytes = TRUE;
+		state->bytes = true;
 	}
 
 	/*
@@ -748,7 +748,7 @@ hash_value(int type, void *v, HASH *state)
 	switch (value->v_type) {
 	case V_NULL:
 		(state->chkpt)(state);
-		state->bytes = TRUE;
+		state->bytes = true;
 		break;
 
 	case V_INT:
@@ -790,7 +790,7 @@ hash_value(int type, void *v, HASH *state)
 		/* setup for the this value type */
 		(state->chkpt)(state);
 		(state->type)(value->v_type, state);
-		state->bytes = TRUE;
+		state->bytes = true;
 
 		/* hash all the elements of the matrix */
 		for (i=0; i < value->v_mat->m_size; ++i) {
@@ -798,7 +798,7 @@ hash_value(int type, void *v, HASH *state)
 			/* hash the next matrix value */
 			state = hash_value(type,
 					value->v_mat->m_table+i, state);
-			state->bytes = FALSE;	/* as if reading words */
+			state->bytes = false;	/* as if reading words */
 		}
 		break;
 
@@ -814,7 +814,7 @@ hash_value(int type, void *v, HASH *state)
 
 			/* hash the next list value */
 			state = hash_value(type, &ep->e_value, state);
-			state->bytes = FALSE;	/* as if reading words */
+			state->bytes = false;	/* as if reading words */
 		}
 		break;
 
@@ -822,7 +822,7 @@ hash_value(int type, void *v, HASH *state)
 		/* setup for the this value type */
 		(state->chkpt)(state);
 		(state->type)(value->v_type, state);
-		state->bytes = TRUE;
+		state->bytes = true;
 
 		/* hash the association */
 		assochead = value->v_assoc->a_table;
@@ -834,7 +834,7 @@ hash_value(int type, void *v, HASH *state)
 
 				/* hash the next association value */
 				state = hash_value(type, &aep->e_value, state);
-				state->bytes = FALSE; /* as if reading words */
+				state->bytes = false; /* as if reading words */
 			}
 			assochead++;
 		}
@@ -844,7 +844,7 @@ hash_value(int type, void *v, HASH *state)
 		/* setup for the this value type */
 		(state->chkpt)(state);
 		(state->type)(value->v_type, state);
-		state->bytes = TRUE;	/* reading bytes */
+		state->bytes = true;	/* reading bytes */
 
 		/* hash the object name and then the element values */
 
@@ -859,7 +859,7 @@ hash_value(int type, void *v, HASH *state)
 
 			/* hash the next object value */
 			state = hash_value(type, vp, state);
-			state->bytes = FALSE;	/* as if reading words */
+			state->bytes = false;	/* as if reading words */
 		}
 		break;
 
@@ -919,7 +919,7 @@ hash_value(int type, void *v, HASH *state)
 			(USB8 *)value->v_rand->slot, SCNT*FULL_BITS/8);
 		(state->update)(state,
 			(USB8*)value->v_rand->shuf, SHUFLEN*FULL_BITS/8);
-		state->bytes = FALSE;	/* as if reading words */
+		state->bytes = false;	/* as if reading words */
 		break;
 
 	case V_RANDOM:
@@ -934,7 +934,7 @@ hash_value(int type, void *v, HASH *state)
 			(USB8 *)&(value->v_random->buffer), BASEB/8);
 		state = hash_zvalue(type, value->v_random->r, state);
 		state = hash_zvalue(type, value->v_random->n, state);
-		state->bytes = FALSE;	/* as if reading words */
+		state->bytes = false;	/* as if reading words */
 		break;
 
 	case V_CONFIG:
@@ -972,9 +972,9 @@ hash_value(int type, void *v, HASH *state)
 		state = hash_long(type,
 			(long)value->v_config->maxscancount, state);
 		state = hash_str(type, value->v_config->prompt1, state);
-		state->bytes = FALSE;	/* as if just read words */
+		state->bytes = false;	/* as if just read words */
 		state = hash_str(type, value->v_config->prompt2, state);
-		state->bytes = FALSE;	/* as if just read words */
+		state->bytes = false;	/* as if just read words */
 		state = hash_int(type, value->v_config->blkmaxprint, state);
 		state = hash_bool(type, value->v_config->blkverbose, state);
 		state = hash_int(type, value->v_config->blkbase, state);
@@ -994,9 +994,9 @@ hash_value(int type, void *v, HASH *state)
 		state = hash_bool(type, value->v_config->compile_custom, state);
 		if (value->v_config->allow_custom != NULL &&
 		    *(value->v_config->allow_custom)) {
-			state = hash_bool(type, TRUE, state);
+			state = hash_bool(type, true, state);
 		} else {
-			state = hash_bool(type, FALSE, state);
+			state = hash_bool(type, false, state);
 		}
 		state = hash_str(type, value->v_config->version, state);
 		state = hash_int(type, value->v_config->baseb, state);
@@ -1018,7 +1018,7 @@ hash_value(int type, void *v, HASH *state)
 		state = hash_int(type, value->v_hash->unionsize, state);
 		(state->update)(state,
 		    value->v_hash->h_union.data, state->unionsize);
-		state->bytes = FALSE;	/* as if reading words */
+		state->bytes = false;	/* as if reading words */
 		break;
 
 	case V_BLOCK:

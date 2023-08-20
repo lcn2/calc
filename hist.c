@@ -1,7 +1,7 @@
 /*
  * hist - interactive readline module
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -94,7 +94,7 @@ STATIC	struct {
 	int	linelen;
 	int	histcount;	/* valid history entries */
 	int	curhist;
-	BOOL	virgin_line;	/* 1 => never typed chars, 0 => chars typed */
+	bool	virgin_line;	/* 1 => never typed chars, 0 => chars typed */
 } HS;
 
 
@@ -277,7 +277,7 @@ hist_getline(char *prompt, char *buf, size_t len)
 	HS.end = buf;
 	HS.mark = NULL;
 	HS.linelen = -1;
-	HS.virgin_line = TRUE;
+	HS.virgin_line = true;
 
 	/*
 	 * prep the I/O
@@ -303,7 +303,7 @@ hist_getline(char *prompt, char *buf, size_t len)
 		read_key();
 
 		/* chars typed, no longer virgin */
-		HS.virgin_line = FALSE;
+		HS.virgin_line = false;
 	}
 
 	/*
@@ -348,7 +348,7 @@ hist_init(char *filename)
 	 */
 	if (filename == NULL)
 		filename = HIST_BINDING_FILE;
-	if (opensearchfile(filename, calcpath, NULL, FALSE) > 0)
+	if (opensearchfile(filename, calcpath, NULL, false) > 0)
 		return HIST_NOFILE;
 
 	/*
@@ -995,7 +995,7 @@ delete_char(int UNUSED(key))
 	 */
 	if ((HS.end == HS.buf) &&
 	    (conf->ctrl_d == CTRL_D_EMPTY_EOF ||
-	     (conf->ctrl_d == CTRL_D_VIRGIN_EOF && HS.virgin_line == TRUE))) {
+	     (conf->ctrl_d == CTRL_D_VIRGIN_EOF && HS.virgin_line == true))) {
 		quit_calc(0);
 	}
 

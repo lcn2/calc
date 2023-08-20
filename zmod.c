@@ -1,7 +1,7 @@
 /*
  * zmod - modulo arithmetic routines
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -54,7 +54,7 @@ S_FUNC void zredcmodinv(ZVALUE z1, ZVALUE *res);
 
 STATIC REDC *powermodredc = NULL;	/* REDC info for raising to power */
 
-BOOL havelastmod = FALSE;
+bool havelastmod = false;
 STATIC ZVALUE lastmod[1];
 STATIC ZVALUE lastmodinv[1];
 
@@ -177,7 +177,7 @@ zminmod(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	}
 	tmp1 = z1;
 	if (cv > 0) {
-		z1.sign = (BOOL)sign;
+		z1.sign = (bool)sign;
 		zmod(z1, z2, &tmp1, 0);
 		if (tmp1.len < z2.len - 1) {
 			*res = tmp1;
@@ -197,7 +197,7 @@ zminmod(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	cv = zrel(tmp1, tmp2);
 	if (cv < 0) {
 		zfree(tmp2);
-		tmp1.sign = (BOOL)sign;
+		tmp1.sign = (bool)sign;
 		if (tmp1.v == z1.v)
 			zcopy(tmp1, res);
 		else
@@ -215,7 +215,7 @@ zminmod(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 /*
  * Compare two numbers for equality modulo a third number.
  * The two numbers to be compared can be negative or out of modulo range.
- * Returns TRUE if the numbers are not congruent, and FALSE if they are
+ * Returns true if the numbers are not congruent, and false if they are
  * congruent.
  *
  * given:
@@ -223,7 +223,7 @@ zminmod(ZVALUE z1, ZVALUE z2, ZVALUE *res)
  *	z2		second number to be compared
  *	z3		modulus
  */
-BOOL
+bool
 zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3)
 {
 	ZVALUE tmp1, tmp2, tmp3;
@@ -243,7 +243,7 @@ zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3)
 	 */
 	if ((z1.sign == z2.sign) && (z1.len == z2.len) &&
 		(z1.v[0] == z2.v[0]) && (zcmp(z1, z2) == 0))
-			return FALSE;
+			return false;
 
 	/*
 	 * If both numbers are negative, then we can make them positive.
@@ -279,7 +279,7 @@ zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3)
 			zfree(tmp1);
 		if (tmp2.v != z2.v)
 			zfree(tmp2);
-		return FALSE;
+		return false;
 	}
 
 	/*
@@ -293,7 +293,7 @@ zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3)
 			zfree(tmp1);
 		if (tmp2.v != z2.v)
 			zfree(tmp2);
-		return TRUE;
+		return true;
 	}
 
 	/*
@@ -315,11 +315,11 @@ zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3)
 	cv = zrel(tmp3, z3);
 	if (cv == 0) {
 		zfree(tmp3);
-		return FALSE;
+		return false;
 	}
 	if (cv < 0) {
 		zfree(tmp3);
-		return TRUE;
+		return true;
 	}
 
 	/*
@@ -330,10 +330,10 @@ zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3)
 	zfree(tmp3);
 	if (ziszero(tmp1)) {
 		zfree(tmp1);
-		return FALSE;
+		return false;
 	} else {
 		zfree(tmp1);
-		return TRUE;
+		return true;
 	}
 }
 
@@ -494,7 +494,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 	HALF curhalf;		/* current word of power */
 	unsigned int curpow;	/* current low power */
 	unsigned int curbit;	/* current bit of low power */
-	BOOL free_z1;		/* TRUE => need to free z1 */
+	bool free_z1;		/* true => need to free z1 */
 	int i;
 
 	if (zisneg(z3) || ziszero(z3)) {
@@ -537,12 +537,12 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 	 * within the modulo range.  Then check for zero or one specially.
 	 */
 	ztmp.len = 0;
-	free_z1 = FALSE;
+	free_z1 = false;
 	if (zisneg(z1) || zrel(z1, z3) >= 0) {
 		zmod(z1, z3, &ztmp, 0);
 		zfree(z1);
 		z1 = ztmp;
-		free_z1 = TRUE;
+		free_z1 = true;
 	}
 	if (ziszero(z1)) {
 		zfree(z1);
@@ -566,14 +566,14 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 		if (havelastmod && zcmp(z3, *lastmod)) {
 			zfree(*lastmod);
 			zfree(*lastmodinv);
-			havelastmod = FALSE;
+			havelastmod = false;
 		}
 		if (!havelastmod) {
 			zcopy(z3, lastmod);
 			zbitvalue(2 * z3.len * BASEB, &temp);
 			zquo(temp, z3, lastmodinv, 0);
 			zfree(temp);
-			havelastmod = TRUE;
+			havelastmod = true;
 		}
 
 		/* zzz */
@@ -607,7 +607,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 			if (pp->v == NULL) {
 				if (curpow & 0x1) {
 					zcopy(z1, &modpow);
-					free_z1 = FALSE;
+					free_z1 = false;
 				} else {
 					modpow = _one_;
 				}
@@ -697,7 +697,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 			powermodredc = zredcalloc(z3);
 		rp = powermodredc;
 		zredcencode(rp, z1, &temp);
-		if (free_z1 == TRUE) {
+		if (free_z1 == true) {
 			zfree(z1);
 		}
 		zredcpower(rp, temp, z2, &z1);
@@ -740,7 +740,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 		if (pp->v == NULL) {
 			if (curpow & 0x1) {
 				zcopy(z1, &modpow);
-				free_z1 = FALSE;
+				free_z1 = false;
 			} else {
 				modpow = _one_;
 			}
@@ -807,7 +807,7 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 	*res = ans;
 	if (ztmp.len)
 		zfree(ztmp);
-	if (free_z1 == TRUE) {
+	if (free_z1 == true) {
 		zfree(z1);
 	}
 }
@@ -958,14 +958,14 @@ zredcencode(REDC *rp, ZVALUE z1, ZVALUE *res)
 		if (havelastmod && zcmp(rp->mod, *lastmod)) {
 			zfree(*lastmod);
 			zfree(*lastmodinv);
-			havelastmod = FALSE;
+			havelastmod = false;
 		}
 		if (!havelastmod) {
 			zcopy(rp->mod, lastmod);
 			zbitvalue(2 * rp->len * BASEB, &tmp1);
 			zquo(tmp1, rp->mod, lastmodinv, 0);
 			zfree(tmp1);
-			havelastmod = TRUE;
+			havelastmod = true;
 		}
 	}
 	/*

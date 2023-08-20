@@ -1,7 +1,7 @@
 /*
  * obj - object handling primitives
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -173,8 +173,8 @@ STATIC OBJECTACTIONS **objects; /* table of actions for objects */
 STATIC long maxobjcount = 0;
 
 S_FUNC VALUE objpowi(VALUE *vp, NUMBER *q);
-S_FUNC BOOL objtest(OBJECT *op);
-S_FUNC BOOL objcmp(OBJECT *op1, OBJECT *op2);
+S_FUNC bool objtest(OBJECT *op);
+S_FUNC bool objcmp(OBJECT *op1, OBJECT *op2);
 S_FUNC void objprint(OBJECT *op);
 
 
@@ -402,9 +402,9 @@ objprint(OBJECT *op)
 /*
  * Test an object for being "nonzero".
  * This is the default routine if the user's is not defined.
- * Returns TRUE if any of the elements are "nonzero".
+ * Returns true if any of the elements are "nonzero".
  */
-S_FUNC BOOL
+S_FUNC bool
 objtest(OBJECT *op)
 {
 	int i;			/* loop counter */
@@ -412,30 +412,30 @@ objtest(OBJECT *op)
 	i = op->o_actions->oa_count;
 	while (--i >= 0) {
 		if (testvalue(&op->o_table[i]))
-			return TRUE;
+			return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
 /*
- * Compare two objects for equality, returning TRUE if they differ.
+ * Compare two objects for equality, returning true if they differ.
  * This is the default routine if the user's is not defined.
  * For equality, all elements must be equal.
  */
-S_FUNC BOOL
+S_FUNC bool
 objcmp(OBJECT *op1, OBJECT *op2)
 {
 	int i;			/* loop counter */
 
 	if (op1->o_actions != op2->o_actions)
-		return TRUE;
+		return true;
 	i = op1->o_actions->oa_count;
 	while (--i >= 0) {
 		if (comparevalue(&op1->o_table[i], &op2->o_table[i]))
-			return TRUE;
+			return true;
 	}
-	return FALSE;
+	return false;
 }
 
 

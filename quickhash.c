@@ -6,7 +6,7 @@
  *
  *	http://www.isthe.com/chongo/tech/comp/fnv/index.html
  *
- * Copyright (C) 1999-2007,2014,2021,2022  Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2021-2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -470,9 +470,9 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->cygwin);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->compile_custom);
 	if (cfg->allow_custom != NULL && *(cfg->allow_custom)) {
-		value = (((value>>5) | (value<<27)) ^ (USB32)TRUE);
+		value = (((value>>5) | (value<<27)) ^ (USB32)true);
 	} else {
-		value = (((value>>5) | (value<<27)) ^ (USB32)FALSE);
+		value = (((value>>5) | (value<<27)) ^ (USB32)false);
 	}
 	/* version is handled out of order */
 

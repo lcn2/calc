@@ -1,7 +1,7 @@
 /*
  * commath - extended precision complex arithmetic primitive routines
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -560,13 +560,13 @@ qqtoc(NUMBER *q1, NUMBER *q2)
 
 
 /*
- * Compare two complex numbers for equality, returning FALSE if they are equal,
- * and TRUE if they differ.
+ * Compare two complex numbers for equality, returning false if they are equal,
+ * and true if they differ.
  */
-BOOL
+bool
 c_cmp(COMPLEX *c1, COMPLEX *c2)
 {
-	BOOL i;
+	bool i;
 
 	i = qcmp(c1->real, c2->real);
 	if (!i)

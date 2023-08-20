@@ -1,7 +1,7 @@
 /*
  * config - configuration routines
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -147,17 +147,17 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	20,			/* current output digits for float or exp */
 	NULL,	/* loaded in at startup - default error for real functions */
 	EPSILONPREC_DEFAULT,	/* binary precision of epsilon */
-	FALSE,			/* tracing flags */
+	false,			/* tracing flags */
 	MAXPRINT_DEFAULT,	/* number of elements to print */
 	MUL_ALG2,		/* size of number to use multiply alg 2 */
 	SQ_ALG2,		/* size of number to use square alg 2 */
 	POW_ALG2,		/* size of modulus to use REDC for powers */
 	REDC_ALG2,		/* size of modulus to use REDC algorithm 2 */
-	TRUE,			/* TRUE ==> print a tilde on approximations */
-	FALSE,			/* TRUE ==> print a space after tilde on approximations */
-	FALSE,			/* TRUE ==> print spaces around / in fractions */
-	FALSE,			/* TRUE ==> print spaces around + or - in complex values */
-	TRUE,			/* TRUE ==> print tab before numeric values */
+	true,			/* true ==> print a tilde on approximations */
+	false,			/* true ==> print a space after tilde on approximations */
+	false,			/* true ==> print spaces around / in fractions */
+	false,			/* true ==> print spaces around + or - in complex values */
+	true,			/* true ==> print tab before numeric values */
 	0,			/* quomod() default rounding mode */
 	2,			/* quotient // default rounding mode */
 	0,			/* mod % default rounding mode */
@@ -167,42 +167,42 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	8,			/* cfsim() default rounding mode */
 	2,			/* output default rounding mode */
 	24,			/* round()/bround() default rounding mode */
-	FALSE,			/* TRUE ==> print leading 0 before decimal pt */
-	0,			/* TRUE ==> print trailing 0's */
+	false,			/* true ==> print leading 0 before decimal pt */
+	0,			/* true ==> print trailing 0's */
 	MAXSCANCOUNT,		/* max scan errors before abort */
 	PROMPT1,		/* normal prompt */
 	PROMPT2,		/* prompt when inside multi-line input */
 	BLK_DEF_MAXPRINT,	/* number of octets of a block to print */
-	FALSE,			/* skip duplicate block output lines */
+	false,			/* skip duplicate block output lines */
 	BLK_BASE_HEX,		/* block octet print base */
 	BLK_FMT_HD_STYLE,	/* block output format */
 	0,			/* internal calc debug level */
 	3,			/* calc resource file debug level */
 	0,			/* user defined debug level */
-	FALSE,			/* TRUE ==> print Quit or abort executed messages */
+	false,			/* true ==> print Quit or abort executed messages */
 	CTRL_D_VIRGIN_EOF,	/* ^D only exits on virgin lines */
 	NULL,			/* our name */
 	NULL,			/* basename of our name */
 #if defined(_WIN32) || defined(_WIN64)
-	TRUE,			/* TRUE ==> running under windows */
+	true,			/* true ==> running under windows */
 #else
-	FALSE,			/* FALSE ==> not using windows */
+	false,			/* false ==> not using windows */
 #endif
 #if defined(__CYGWIN__)
-	TRUE,			/* TRUE ==> compiled under cygwin */
+	true,			/* true ==> compiled under cygwin */
 #else
-	FALSE,			/* FALSE ==> not compiled with cygwin */
+	false,			/* false ==> not compiled with cygwin */
 #endif
 #if defined(CUSTOM)
-	TRUE,			/* TRUE ==> compiled with -DCUSTOM */
+	true,			/* true ==> compiled with -DCUSTOM */
 #else
-	FALSE,			/* FALSE ==> compiled without -DCUSTOM */
+	false,			/* false ==> compiled without -DCUSTOM */
 #endif
-	&allow_custom,		/* *TRUE=> custom functions are enabled */
+	&allow_custom,		/* *true=> custom functions are enabled */
 	NULL,			/* version */
 	BASEB,			/* base for calculations */
-	TRUE,			/* TRUE ==> warn when redeclaring */
-	TRUE,			/* TRUE ==> warn when variable names collide */
+	true,			/* true ==> warn when redeclaring */
+	true,			/* true ==> warn when variable names collide */
 };
 CONFIG newstd = {	/* new non-backward compatible configuration */
 	MODE_INITIAL,		/* current output mode */
@@ -210,17 +210,17 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	20,			/* current output digits for float or exp */
 	NULL,	/* loaded in at startup - default error for real functions */
 	EPSILONPREC_DEFAULT,	/* binary precision of epsilon */
-	FALSE,			/* tracing flags */
+	false,			/* tracing flags */
 	MAXPRINT_DEFAULT,	/* number of elements to print */
 	MUL_ALG2,		/* size of number to use multiply alg 2 */
 	SQ_ALG2,		/* size of number to use square alg 2 */
 	POW_ALG2,		/* size of modulus to use REDC for powers */
 	REDC_ALG2,		/* size of modulus to use REDC algorithm 2 */
-	TRUE,			/* TRUE ==> print a tilde on approximations */
-	FALSE,			/* TRUE ==> print spaces around / in fractions */
-	FALSE,			/* TRUE ==> print a space after tilde on approximations */
-	FALSE,			/* TRUE ==> print spaces around + or - in complex values */
-	TRUE,			/* TRUE ==> print tab before numeric values */
+	true,			/* true ==> print a tilde on approximations */
+	false,			/* true ==> print spaces around / in fractions */
+	false,			/* true ==> print a space after tilde on approximations */
+	false,			/* true ==> print spaces around + or - in complex values */
+	true,			/* true ==> print tab before numeric values */
 	0,			/* quomod() default rounding mode */
 	2,			/* quotient // default rounding mode */
 	0,			/* mod % default rounding mode */
@@ -230,42 +230,42 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	8,			/* cfsim() default rounding mode */
 	24,			/* output default rounding mode */
 	24,			/* round()/bround() default rounding mode */
-	TRUE,			/* TRUE ==> print leading 0 before decimal pt */
-	0,			/* TRUE ==> print trailing 0's */
+	true,			/* true ==> print leading 0 before decimal pt */
+	0,			/* true ==> print trailing 0's */
 	MAXSCANCOUNT,		/* max scan errors before abort */
 	"; ",			/* normal prompt */
 	";; ",			/* prompt when inside multi-line input */
 	BLK_DEF_MAXPRINT,	/* number of octets of a block to print */
-	FALSE,			/* skip duplicate block output lines */
+	false,			/* skip duplicate block output lines */
 	BLK_BASE_HEX,		/* block octet print base */
 	BLK_FMT_HD_STYLE,	/* block output format */
 	0,			/* internal calc debug level */
 	3,			/* calc resource file debug level */
 	0,			/* user defined debug level */
-	FALSE,			/* TRUE ==> print Quit or abort executed messages */
+	false,			/* true ==> print Quit or abort executed messages */
 	CTRL_D_VIRGIN_EOF,	/* ^D only exits on virgin lines */
 	NULL,			/* our name */
 	NULL,			/* basename of our name */
 #if defined(_WIN32) || defined(_WIN64)
-	TRUE,			/* TRUE ==> running under windows */
+	true,			/* true ==> running under windows */
 #else
-	FALSE,			/* FALSE ==> not using windows */
+	false,			/* false ==> not using windows */
 #endif
 #if defined(__CYGWIN__)
-	TRUE,			/* TRUE ==> compiled under cygwin */
+	true,			/* true ==> compiled under cygwin */
 #else
-	FALSE,			/* FALSE ==> not compiled with cygwin */
+	false,			/* false ==> not compiled with cygwin */
 #endif
 #if defined(CUSTOM)
-	TRUE,			/* TRUE ==> compiled with -DCUSTOM */
+	true,			/* true ==> compiled with -DCUSTOM */
 #else
-	FALSE,			/* FALSE ==> compiled without -DCUSTOM */
+	false,			/* false ==> compiled without -DCUSTOM */
 #endif
-	&allow_custom,		/* *TRUE ==> custom functions are enabled */
+	&allow_custom,		/* *true ==> custom functions are enabled */
 	NULL,			/* version */
 	BASEB,			/* base for calculations */
-	TRUE,			/* TRUE ==> warn when redeclaring */
-	TRUE,			/* TRUE ==> warn when variable names collide */
+	true,			/* true ==> warn when redeclaring */
+	true,			/* true ==> warn when variable names collide */
 };
 CONFIG *conf = NULL;	/* loaded in at startup - current configuration */
 
@@ -358,23 +358,23 @@ STATIC NAMETYPE ctrl_d[] = {
 /*
  * Possible binary config state values
  */
-#define TRUE_STRING	"true"
-#define FALSE_STRING	"false"
+#define true_STRING	"true"
+#define false_STRING	"false"
 STATIC NAMETYPE truth[] = {
-	{TRUE_STRING,	TRUE},
-	{"t",		TRUE},
-	{"on",		TRUE},
-	{"yes",		TRUE},
-	{"y",		TRUE},
-	{"set",		TRUE},
-	{"1",		TRUE},
-	{FALSE_STRING,	FALSE},
-	{"f",		FALSE},
-	{"off",		FALSE},
-	{"no",		FALSE},
-	{"n",		FALSE},
-	{"unset",	FALSE},
-	{"0",		FALSE},
+	{true_STRING,	true},
+	{"t",		true},
+	{"on",		true},
+	{"yes",		true},
+	{"y",		true},
+	{"set",		true},
+	{"1",		true},
+	{false_STRING,	false},
+	{"f",		false},
+	{"off",		false},
+	{"no",		false},
+	{"n",		false},
+	{"unset",	false},
+	{"0",		false},
 	{NULL,		0}
 };
 
@@ -1468,9 +1468,9 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
  *	cfg2 - 2nd CONFIG to compare
  *
  * return:
- *	TRUE if configurations differ
+ *	true if configurations differ
  */
-BOOL
+bool
 config_cmp(CONFIG *cfg1, CONFIG *cfg2)
 {
 	/*

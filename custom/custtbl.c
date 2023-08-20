@@ -39,16 +39,16 @@
  * custom_compiled - determine if custom functions are compiled into libcustcalc
  *
  * returns:
-s*	TRUE  ==> libcustcalc was compiled with CUSTOM defined
- *	FALSE ==> libcustcalc was compiled with CUSTOM undefined
+s*	true  ==> libcustcalc was compiled with CUSTOM defined
+ *	false ==> libcustcalc was compiled with CUSTOM undefined
  */
-E_FUNC BOOL
+E_FUNC bool
 custom_compiled(void)
 {
 #if defined(CUSTOM)
-	return TRUE;
+	return true;
 #else /* CUSTOM */
-	return FALSE;
+	return false;
 #endif /* CUSTOM */
 }
 

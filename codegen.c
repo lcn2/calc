@@ -1,7 +1,7 @@
 /*
  * codegen - module to generate opcodes from the input tokens
  *
- * Copyright (C) 1999-2007,2017,2021,2022  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2017,2021-2023  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -55,13 +55,13 @@
 #include "banned.h"	/* include after system header <> includes */
 
 
-STATIC BOOL rdonce;	/* TRUE => do not reread this file */
+STATIC bool rdonce;	/* true => do not reread this file */
 
 FUNC *curfunc;
 
 S_FUNC int getsymvalue(char *name, VALUE *v_p);
-S_FUNC int getfilename(char *name, size_t namelen, BOOL *once);
-S_FUNC BOOL getid(char *buf);
+S_FUNC int getfilename(char *name, size_t namelen, bool *once);
+S_FUNC bool getid(char *buf);
 S_FUNC void getshowstatement(void);
 S_FUNC void getfunction(void);
 S_FUNC void ungetfunction(void);
@@ -101,7 +101,7 @@ S_FUNC int getshiftexpr(void);
 S_FUNC int getreference(void);
 S_FUNC int getincdecexpr(void);
 S_FUNC int getterm(void);
-S_FUNC int getidexpr(BOOL okmat, int autodef);
+S_FUNC int getidexpr(bool okmat, int autodef);
 S_FUNC long getinitlist(void);
 
 #define INDICALLOC 8
@@ -121,14 +121,14 @@ STATIC int maxindices;
  * The toplevel flag indicates whether we are at the top interactive level.
  */
 void
-getcommands(BOOL toplevel)
+getcommands(bool toplevel)
 {
 	char name[MAXCMD+1+1];	/* program name */
 
 	/* firewall */
 	name[0] = '\0';
 	name[MAXCMD+1] = '\0';
-	abort_now = FALSE;
+	abort_now = false;
 
 	/* getcommands */
 	if (!toplevel)
@@ -184,7 +184,7 @@ getcommands(BOOL toplevel)
 						          CALCEXT,rdonce);
 				switch (open_ret) {
 				case 0:
-					getcommands(FALSE);
+					getcommands(false);
 					closeinput();
 					continue;
 				case 1:
@@ -227,7 +227,7 @@ getcommands(BOOL toplevel)
 		default:
 			rescantoken();
 			initstack();
-			if (evaluate(FALSE))
+			if (evaluate(false))
 				updateoldvalue(curfunc);
 			freefunc(curfunc);
 			if (abort_now) {
@@ -252,18 +252,18 @@ getcommands(BOOL toplevel)
 /*
  * Evaluate a line of statements.
  * This is done by treating the current line as a function body,
- * compiling it, and then executing it.	 Returns TRUE if the line
+ * compiling it, and then executing it.	 Returns true if the line
  * successfully compiled and executed.	The last expression result
  * is saved in the f_savedvalue element of the current function.
- * The nestflag variable should be FALSE for the outermost evaluation
- * level, and TRUE for all other calls (such as the 'eval' function).
+ * The nestflag variable should be false for the outermost evaluation
+ * level, and true for all other calls (such as the 'eval' function).
  * The function name begins with an asterisk to indicate specialness.
  *
  * given:
- *	nestflag		TRUE if this is a nested evaluation
+ *	nestflag		true if this is a nested evaluation
  */
-BOOL
-evaluate(BOOL nestflag)
+bool
+evaluate(bool nestflag)
 {
 	char *funcname;
 	int loop = 1;		/* 0 => end the main while loop */
@@ -296,9 +296,9 @@ evaluate(BOOL nestflag)
 	addop(OP_RETURN);
 	checklabels();
 	if (errorcount)
-		return FALSE;
+		return false;
 	calculate(curfunc, 0);
-	return TRUE;
+	return true;
 }
 
 /*
@@ -334,7 +334,7 @@ ungetfunction(void)
 				return;
 			}
 			name = tokensymbol();
-			endscope(name, FALSE);
+			endscope(name, false);
 			continue;
 
 		case T_NEWLINE:
@@ -374,7 +374,7 @@ getfunction(void)
 		scanerror(T_SEMICOLON, "Using builtin function name");
 		return;
 	}
-	beginfunc(name, FALSE);
+	beginfunc(name, false);
 	enterfuncscope();
 	if (gettoken() != T_LEFTPAREN) {
 		scanerror(T_SEMICOLON,
@@ -466,7 +466,7 @@ getbody(LABEL *contlabel, LABEL *breaklabel, LABEL *nextcaselabel,
 	int oldmode;
 
 	oldmode = tokenmode(TM_DEFAULT);
-	while (TRUE) {
+	while (true) {
 		switch (gettoken()) {
 		case T_RIGHTBRACE:
 			(void) tokenmode(oldmode);
@@ -495,7 +495,7 @@ getdeclarations(int symtype)
 {
 	int res = 0;
 
-	while (TRUE) {
+	while (true) {
 		switch (gettoken()) {
 		case T_COMMA:
 			continue;
@@ -631,7 +631,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel,
 	LABEL label;
 	LABEL label1, label2, label3, label4;	/* locations for jumps */
 	int type;
-	BOOL printeol;
+	bool printeol;
 	int oldmode;
 
 	addopone(OP_DEBUG, linenumber());
@@ -960,7 +960,7 @@ getstatement(LABEL *contlabel, LABEL *breaklabel,
 		break;
 
 	case T_PRINT:
-		printeol = TRUE;
+		printeol = true;
 		for (;;) {
 			switch (gettoken()) {
 			case T_RIGHTPAREN:
@@ -979,14 +979,14 @@ getstatement(LABEL *contlabel, LABEL *breaklabel,
 				addop(OP_PRINTSPACE);
 				/*FALLTHRU*/
 			case T_COLON:
-				printeol = FALSE;
+				printeol = false;
 				break;
 			case T_STRING:
-				printeol = TRUE;
+				printeol = true;
 				addopone(OP_PRINTSTRING, tokenstring());
 				break;
 			default:
-				printeol = TRUE;
+				printeol = true;
 				rescantoken();
 				(void) getopassignment();
 				addopone(OP_PRINT, (long) PRINT_NORMAL);
@@ -1195,7 +1195,7 @@ getoneobj(long index, int symtype)
 	if (gettoken() == T_SYMBOL) {
 		if (symtype == SYM_UNDEFINED) {
 			rescantoken();
-			(void) getidexpr(TRUE, 1);
+			(void) getidexpr(true, 1);
 		} else {
 			symname = tokensymbol();
 			definesymbol(symname, symtype);
@@ -1278,7 +1278,7 @@ getonematrix(int symtype)
 	if (gettoken() == T_SYMBOL) {
 		if (symtype == SYM_UNDEFINED) {
 			rescantoken();
-			(void) getidexpr(FALSE, 1);
+			(void) getidexpr(false, 1);
 		} else {
 			name = tokensymbol();
 			definesymbol(name, symtype);
@@ -2141,7 +2141,7 @@ getterm(void)
 
 	case T_SYMBOL:
 		rescantoken();
-		type = getidexpr(TRUE, 0);
+		type = getidexpr(true, 0);
 		break;
 
 	case T_MULT:
@@ -2164,7 +2164,7 @@ getterm(void)
 			break;
 		}
 		rescantoken();
-		type = getidexpr(TRUE, T_GLOBAL);
+		type = getidexpr(true, T_GLOBAL);
 		break;
 
 	case T_LOCAL:
@@ -2174,7 +2174,7 @@ getterm(void)
 			break;
 		}
 		rescantoken();
-		type = getidexpr(TRUE, T_LOCAL);
+		type = getidexpr(true, T_LOCAL);
 		break;
 
 	case T_STATIC:
@@ -2184,7 +2184,7 @@ getterm(void)
 			break;
 		}
 		rescantoken();
-		type = getidexpr(TRUE, T_STATIC);
+		type = getidexpr(true, T_STATIC);
 		break;
 
 	case T_LEFTBRACKET:
@@ -2238,7 +2238,7 @@ getterm(void)
  * Returns the type of expression found.
  */
 S_FUNC int
-getidexpr(BOOL okmat, int autodef)
+getidexpr(bool okmat, int autodef)
 {
 	int type;
 	char name[SYMBOLSIZE+1];	/* symbol name */
@@ -2339,15 +2339,15 @@ getsymvalue(char *name, VALUE *v_p)
  * Read in a filename for a read or write command.
  * Both quoted and unquoted filenames are handled here.
  * The name must be terminated by an end of line or semicolon.
- * Returns TRUE if the filename was successfully parsed.
+ * Returns true if the filename was successfully parsed.
  *
  * given:
  *	name		filename to read
  *	namelen		length of filename buffer including NUL byte
- *	once		non-NULL => set to TRUE of -once read
+ *	once		non-NULL => set to true of -once read
  */
 S_FUNC int
-getfilename(char *name, size_t namelen, BOOL *once)
+getfilename(char *name, size_t namelen, bool *once)
 {
 	STRING *s;
 	char *symstr;	/* symbol string */
@@ -2532,7 +2532,7 @@ getmatargs(void)
 	 */
 	dim = 0;
 	if (gettoken() == T_RIGHTBRACKET) {
-		addoptwo(OP_INDEXADDR, (long) dim, (long) FALSE);
+		addoptwo(OP_INDEXADDR, (long) dim, (long) false);
 		return;
 	}
 	rescantoken();
@@ -2542,7 +2542,7 @@ getmatargs(void)
 		switch (gettoken()) {
 		case T_RIGHTBRACKET:
 			addoptwo(OP_INDEXADDR, (long) dim,
-					(long) FALSE);
+					(long) false);
 			return;
 		case T_COMMA:
 			break;
@@ -2580,9 +2580,9 @@ getelement(void)
 
 /*
  * Read in a single symbol name and copy its value into the given buffer.
- * Returns TRUE if a valid symbol id was found.
+ * Returns true if a valid symbol id was found.
  */
-S_FUNC BOOL
+S_FUNC bool
 getid(char *buf)
 {
 	int type;
@@ -2592,16 +2592,16 @@ getid(char *buf)
 		scanerror(T_NULL, "Reserved keyword used as symbol name");
 		type = T_SYMBOL;
 		*buf = '\0';
-		return FALSE;
+		return false;
 	}
 	if (type != T_SYMBOL) {
 		rescantoken();
 		scanerror(T_NULL, "Symbol name expected");
 		*buf = '\0';
-		return FALSE;
+		return false;
 	}
 	strlcpy(buf, tokensymbol(), SYMBOLSIZE+1);
-	return TRUE;
+	return true;
 }
 
 
@@ -2687,11 +2687,11 @@ usesymbol(char *name, int autodef)
 		if (type == SYM_GLOBAL) {
 			warning("Unnecessary global specifier");
 		}
-		addopptr(OP_GLOBALADDR, (char *) addglobal(name, FALSE));
+		addopptr(OP_GLOBALADDR, (char *) addglobal(name, false));
 		return;
 	}
 	if (autodef == T_STATIC) {
-		addopptr(OP_GLOBALADDR, (char *) addglobal(name, TRUE));
+		addopptr(OP_GLOBALADDR, (char *) addglobal(name, true));
 		return;
 	}
 	if (autodef == T_LOCAL) {
@@ -2721,7 +2721,7 @@ usesymbol(char *name, int autodef)
 		scanerror(T_NULL, "\"%s\" is undefined", name);
 		return;
 	}
-	(void) addglobal(name, FALSE);
+	(void) addglobal(name, false);
 	addopptr(OP_GLOBALADDR, (char *) findglobal(name));
 }
 
@@ -2740,7 +2740,7 @@ getcallargs(char *name)
 	long index;		/* function index */
 	long op;		/* opcode to add */
 	int argcount;		/* number of arguments */
-	BOOL addrflag;
+	bool addrflag;
 
 	op = OP_CALL;
 	index = getbuiltinfunc(name);

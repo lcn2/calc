@@ -415,7 +415,7 @@ the low order bits converted.
 
 There are two types of comparisons you can make on ZVALUEs.  This is whether
 or not they are equal, or the ordering on size of the numbers.	The zcmp
-function tests whether two ZVALUEs are equal, returning TRUE if they differ.
+function tests whether two ZVALUEs are equal, returning true if they differ.
 The zrel function tests the relative sizes of two ZVALUEs, returning -1 if
 the first one is smaller, 0 if they are the same, and 1 if the first one
 is larger.
@@ -605,7 +605,7 @@ only used for complex numbers.	Examples of macros are:
 	cisodd(c)	(number is has odd real and imaginary parts)
 
 There is only one comparison you can make for COMPLEX values, and that is
-for equality.  The ccmp function returns TRUE if two complex numbers differ.
+for equality.  The ccmp function returns true if two complex numbers differ.
 
 There are three predefined values for complex numbers.	You should clink
 them when you want to use them.	 They are _czero_, _cone_, and _conei_.
@@ -622,7 +622,7 @@ call.  This is not required, but is does bring things to a closure.
 The function libcalc_call_me_last() takes no args and returns void.  You
 need call libcalc_call_me_last() only once.
 
-## Copyright (C) 1999,2021  David I. Bell and Landon Curt Noll
+## Copyright (C) 1999,2021,2023  David I. Bell and Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

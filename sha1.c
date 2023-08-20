@@ -531,7 +531,7 @@ sha1_init_state(HASH *state)
 	 * initialize state
 	 */
 	state->hashtype = SHA1_HASH_TYPE;
-	state->bytes = TRUE;
+	state->bytes = true;
 	state->update = sha1Update;
 	state->chkpt = sha1_chkpt;
 	state->note = sha1_note;
@@ -622,8 +622,8 @@ sha1_final_state(HASH *state)
  *	b	second hash state
  *
  * returns:
- *	TRUE => hash states are different
- *	FALSE => hash states are the same
+ *	true => hash states are different
+ *	false => hash states are the same
  */
 S_FUNC int
 sha1_cmp(HASH *a, HASH *b)
@@ -633,18 +633,18 @@ sha1_cmp(HASH *a, HASH *b)
 	 */
 	if (a == b) {
 		/* pointers to the same object */
-		return FALSE;
+		return false;
 	}
 	if (a == NULL || b == NULL) {
 		/* one is NULL, so they differ */
-		return TRUE;
+		return true;
 	}
 
 	/*
 	 * compare data-reading modes
 	 */
 	if (a->bytes != b->bytes)
-		return TRUE;
+		return true;
 
 	/*
 	 * compare bit counts
@@ -652,7 +652,7 @@ sha1_cmp(HASH *a, HASH *b)
 	if (a->h_union.h_sha1.countLo != b->h_union.h_sha1.countLo ||
 	    a->h_union.h_sha1.countHi != b->h_union.h_sha1.countHi) {
 		/* counts differ */
-		return TRUE;
+		return true;
 	}
 
 	/*
@@ -660,13 +660,13 @@ sha1_cmp(HASH *a, HASH *b)
 	 */
 	if (a->h_union.h_sha1.datalen != b->h_union.h_sha1.datalen) {
 		/* buffer lengths differ */
-		return TRUE;
+		return true;
 	}
 	if (memcmp((USB8*)a->h_union.h_sha1.data,
 		   (USB8*)b->h_union.h_sha1.data,
 		   a->h_union.h_sha1.datalen) != 0) {
 		/* buffer contents differ */
-		return TRUE;
+		return true;
 	}
 
 	/*

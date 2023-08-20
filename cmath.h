@@ -77,7 +77,7 @@ E_FUNC COMPLEX *c_neg(COMPLEX *c);
 E_FUNC COMPLEX *c_inv(COMPLEX *c);
 E_FUNC COMPLEX *c_int(COMPLEX *c);
 E_FUNC COMPLEX *c_frac(COMPLEX *c);
-E_FUNC BOOL c_cmp(COMPLEX *c1, COMPLEX *c2);
+E_FUNC bool c_cmp(COMPLEX *c1, COMPLEX *c2);
 
 
 /*
@@ -123,9 +123,9 @@ E_FUNC COMPLEX *c_agd(COMPLEX *c, NUMBER *epsilon);
 /*
  * external functions
  */
-E_FUNC COMPLEX *swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all);
-E_FUNC COMPLEX *swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all);
-E_FUNC COMPLEX *swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, BOOL all);
+E_FUNC COMPLEX *swap_b8_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all);
+E_FUNC COMPLEX *swap_b16_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all);
+E_FUNC COMPLEX *swap_HALF_in_COMPLEX(COMPLEX *dest, COMPLEX *src, bool all);
 
 
 /*

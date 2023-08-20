@@ -70,7 +70,7 @@ ZVALUE p255 = {
 
 /* static declarations */
 S_FUNC void zmod5_or_zmod(ZVALUE *zp);
-STATIC BOOL havelastmod = FALSE;
+STATIC bool havelastmod = false;
 STATIC ZVALUE lastmod[1];
 STATIC ZVALUE lastmodinv[1];
 
@@ -122,14 +122,14 @@ c_pmodm127(char *UNUSED(name), int UNUSED(count), VALUE **vals)
 	if (havelastmod && zcmp(q, *lastmod)) {
 		zfree(*lastmod);
 		zfree(*lastmodinv);
-		havelastmod = FALSE;
+		havelastmod = false;
 	}
 	if (!havelastmod) {
 		zcopy(q, lastmod);
 		zbitvalue(2 * q.len * BASEB, &temp);
 		zquo(temp, q, lastmodinv, 0);
 		zfree(temp);
-		havelastmod = TRUE;
+		havelastmod = true;
 	}
 
 	/*

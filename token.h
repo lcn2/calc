@@ -1,7 +1,7 @@
 /*
  * token - token defines
  *
- * Copyright (C) 1999-2007,2014,2021  David I. Bell
+ * Copyright (C) 1999-2007,2014,2021,2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -138,7 +138,7 @@
 #define T_ABORT			127	/* abort operation */
 
 
-#define iskeyword(n) ((n) > 100)	/* TRUE if token is a keyword */
+#define iskeyword(n) ((n) > 100)	/* true if token is a keyword */
 
 
 /*
@@ -148,13 +148,13 @@
 #define EXPR_CONST	0x0002		/* result is constant */
 #define EXPR_ASSIGN	0x0004		/* result is an assignment */
 
-/* TRUE if expression is rvalue */
+/* true if expression is rvalue */
 #define isrvalue(n)	((n) & EXPR_RVALUE)
-/* TRUE if expr is lvalue */
+/* true if expr is lvalue */
 #define islvalue(n)	(((n) & EXPR_RVALUE) == 0)
-/* TRUE if expr is constant */
+/* true if expr is constant */
 #define isconst(n)	((n) & EXPR_CONST)
-/* TRUE if expr is an assignment */
+/* true if expr is an assignment */
 #define isassign(n)	((n) & EXPR_ASSIGN)
 
 

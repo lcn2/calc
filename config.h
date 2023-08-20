@@ -1,7 +1,7 @@
 /*
  * config - configuration routines
  *
- * Copyright (C) 1999-2007,2014,2021  Landon Curt Noll and David I. Bell
+ * Copyright (C) 1999-2007,2014,2021,2023  Landon Curt Noll and David I. Bell
  *
  * Primary author:  Landon Curt Noll
  *
@@ -133,11 +133,11 @@ struct config {
 	LEN sq2;		/* size of number to use square algorithm 2 */
 	LEN pow2;		/* size of modulus to use REDC for powers */
 	LEN redc2;		/* size of modulus to use REDC algorithm 2 */
-	BOOL tilde_ok;		/* OK to print a tilde on approximations */
-	BOOL tilde_space;	/* print space after tilde on approximations */
-	BOOL fraction_space;	/* TRUE => print spaces around / in fractions */
-	BOOL complex_space;	/* TRUE => print spaces around + or - in complex values */
-	BOOL tab_ok;		/* OK to print tab before numeric values */
+	bool tilde_ok;		/* OK to print a tilde on approximations */
+	bool tilde_space;	/* print space after tilde on approximations */
+	bool fraction_space;	/* true => print spaces around / in fractions */
+	bool complex_space;	/* true => print spaces around + or - in complex values */
+	bool tab_ok;		/* OK to print tab before numeric values */
 	LEN quomod;		/* quomod() default rounding mode */
 	LEN quo;		/* quotient // default rounding mode */
 	LEN mod;		/* mod % default rounding mode */
@@ -147,30 +147,30 @@ struct config {
 	LEN cfsim;		/* cfsim() default rounding mode */
 	LEN outround;		/* output default rounding mode */
 	LEN round;		/* round()/bround() default rounding mode */
-	BOOL leadzero;		/* OK to print leading 0 before decimal pt */
-	BOOL fullzero;		/* OK to print trailing 0's */
+	bool leadzero;		/* OK to print leading 0 before decimal pt */
+	bool fullzero;		/* OK to print trailing 0's */
 	long maxscancount;	/* max scan errors before abort */
 	char *prompt1;		/* normal prompt */
 	char *prompt2;		/* prompt when inside multi-line input */
 	int blkmaxprint;	/* octets of a block to print, 0 => all */
-	BOOL blkverbose;	/* TRUE => print all lines if a block */
+	bool blkverbose;	/* true => print all lines if a block */
 	int blkbase;		/* block output base */
 	int blkfmt;		/* block output style */
 	long calc_debug;	/* internal debug, see CALC_DEBUG_XYZ below */
 	long resource_debug;	/* resource debug, see RSCDBG_XYZ below */
 	long user_debug;	/* user defined debug value: 0 default */
-	BOOL verbose_quit;	/* TRUE => print Quit or abort executed msg */
+	bool verbose_quit;	/* true => print Quit or abort executed msg */
 	int ctrl_d;		/* see CTRL_D_xyz below */
 	char *program;		/* our name */
 	char *base_name;	/* basename of our name */
-	BOOL windows;		/* TRUE => running under MS windows */
-	BOOL cygwin;		/* TRUE => compiled with cygwin */
-	BOOL compile_custom;	/* TRUE => compiled with -DCUSTOM */
-	BOOL *allow_custom;	/* ptr to if custom functions are allowed */
+	bool windows;		/* true => running under MS windows */
+	bool cygwin;		/* true => compiled with cygwin */
+	bool compile_custom;	/* true => compiled with -DCUSTOM */
+	bool *allow_custom;	/* ptr to if custom functions are allowed */
 	char *version;		/* calc version string */
 	int baseb;		/* base for calculations */
-	BOOL redecl_warn;	/* TRUE => warn of redeclaring variables */
-	BOOL dupvar_warn;	/* TRUE => warn of var name collisions */
+	bool redecl_warn;	/* true => warn of redeclaring variables */
+	bool dupvar_warn;	/* true => warn of var name collisions */
 };
 typedef struct config CONFIG;
 
@@ -225,7 +225,7 @@ E_FUNC void config_free(CONFIG *cfg);
 E_FUNC void config_print(CONFIG *cfg);
 E_FUNC int configtype(char*);
 E_FUNC void config_print(CONFIG*);
-E_FUNC BOOL config_cmp(CONFIG*, CONFIG*);
+E_FUNC bool config_cmp(CONFIG*, CONFIG*);
 
 
 #endif /* !INCLUDE_CONFIG_H */

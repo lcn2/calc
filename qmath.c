@@ -1,7 +1,7 @@
 /*
  * qmath - extended precision rational arithmetic primitive routines
  *
- * Copyright (C) 1999-2007,2014,2021,2022  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2014,2021-2023  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -221,7 +221,7 @@ uutoq(FULL inum, FULL iden)
 {
 	register NUMBER *q;
 	FULL d;
-	BOOL sign;
+	bool sign;
 
 	if (iden == 0) {
 		math_error("Division by zero");
@@ -253,7 +253,7 @@ iitoq(long inum, long iden)
 {
 	register NUMBER *q;
 	long d;
-	BOOL sign;
+	bool sign;
 
 	if (iden == 0) {
 		math_error("Division by zero");
@@ -441,7 +441,7 @@ qaddi(NUMBER *q1, long n)
 {
 	NUMBER addnum;		/* temporary number */
 	HALF addval[2];		/* value of small number */
-	BOOL neg;		/* TRUE if number is neg */
+	bool neg;		/* true if number is neg */
 #if LONG_BITS > BASEB
 	FULL nf;
 #endif
@@ -1223,16 +1223,16 @@ qprecision(NUMBER *q)
 
 /*
  * Determine whether or not one number exactly divides another one.
- * Returns TRUE if the first number is an integer multiple of the second one.
+ * Returns true if the first number is an integer multiple of the second one.
  */
-BOOL
+bool
 qdivides(NUMBER *q1, NUMBER *q2)
 {
 	if (qiszero(q1))
-		return TRUE;
+		return true;
 	if (qisint(q1) && qisint(q2)) {
 		if (qisunit(q2))
-			return TRUE;
+			return true;
 		return zdivides(q1->num, q2->num);
 	}
 	return zdivides(q1->num, q2->num) && zdivides(q2->den, q1->den);
@@ -1305,21 +1305,21 @@ qrel(NUMBER *q1, NUMBER *q2)
 /*
  * Compare two numbers to see if they are equal.
  * This differs from qrel in that the numbers are not ordered.
- * Returns TRUE if they differ.
+ * Returns true if they differ.
  */
-BOOL
+bool
 qcmp(NUMBER *q1, NUMBER *q2)
 {
 	if (q1 == q2)
-		return FALSE;
+		return false;
 	if ((q1->num.sign != q2->num.sign) || (q1->num.len != q2->num.len) ||
 		(q1->den.len != q2->den.len) || (*q1->num.v != *q2->num.v) ||
 		(*q1->den.v != *q2->den.v))
-			return TRUE;
+			return true;
 	if (zcmp(q1->num, q2->num))
-		return TRUE;
+		return true;
 	if (qisint(q1))
-		return FALSE;
+		return false;
 	return zcmp(q1->den, q2->den);
 }
 
@@ -1361,9 +1361,9 @@ qreli(NUMBER *q, long n)
 
 /*
  * Compare a number against a small integer to see if they are equal.
- * Returns TRUE if they differ.
+ * Returns true if they differ.
  */
-BOOL
+bool
 qcmpi(NUMBER *q, long n)
 {
 	long len;
@@ -1373,11 +1373,11 @@ qcmpi(NUMBER *q, long n)
 
 	len = q->num.len;
 	if (qisfrac(q) || (q->num.sign != (n < 0)))
-		return TRUE;
+		return true;
 	if (n < 0)
 		n = -n;
 	if (((HALF)(n)) != q->num.v[0])
-		return TRUE;
+		return true;
 #if LONG_BITS > BASEB
 	nf = ((FULL) n) >> BASEB;
 	return ((nf != 0 || len > 1) && (len != 2 || nf != q->num.v[1]));

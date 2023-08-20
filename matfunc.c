@@ -1,7 +1,7 @@
 /*
  * matfunc - extended precision rational arithmetic matrix functions
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -563,7 +563,7 @@ matshift(MATRIX *m, long n)
 	val = m->m_table;
 	vres = res->m_table;
 	for (index = m->m_size; index > 0; index--)
-		shiftvalue(val++, &temp, FALSE, vres++);
+		shiftvalue(val++, &temp, false, vres++);
 	qfree(temp.v_num);
 	return res;
 }
@@ -846,18 +846,18 @@ matfrac(MATRIX *m)
 /*
  * Index a matrix normally by the specified set of index values.
  * Returns the address of the matrix element if it is valid, or generates
- * an error if the index values are out of range.  The create flag is TRUE
+ * an error if the index values are out of range.  The create flag is true
  * if the element is to be written, but this is ignored here.
  *
  * given:
  *	mp		matrix to operate on
- *	create		TRUE => create if element does not exist
+ *	create		true => create if element does not exist
  *	dim		dimension of the indexing
  *	indices		table of values being indexed by
  */
 /*ARGSUSED*/
 VALUE *
-matindex(MATRIX *mp, BOOL UNUSED(create), long dim, VALUE *indices)
+matindex(MATRIX *mp, bool UNUSED(create), long dim, VALUE *indices)
 {
 	NUMBER *q;		/* index value */
 	VALUE *vp;
@@ -1218,7 +1218,7 @@ matdet(MATRIX *m)
 	VALUE *pivot, *div, *val;
 	VALUE *vp, *vv;
 	VALUE tmp1, tmp2, tmp3;
-	BOOL neg;		/* whether to negate determinant */
+	bool neg;		/* whether to negate determinant */
 
 	if (m->m_dim < 2) {
 		vp = m->m_table;
@@ -1243,7 +1243,7 @@ matdet(MATRIX *m)
 	 * corresponding column by using row operations.  Copy the original
 	 * matrix so that we don't destroy it.
 	 */
-	neg = FALSE;
+	neg = false;
 	m = matcopy(m);
 	n = (m->m_max[0] - m->m_min[0] + 1);
 	pivot = div = m->m_table;
@@ -1518,9 +1518,9 @@ matfree(MATRIX *m)
 
 /*
  * Test whether a matrix has any "nonzero" values.
- * Returns TRUE if so.
+ * Returns true if so.
  */
-BOOL
+bool
 mattest(MATRIX *m)
 {
 	register VALUE *vp;
@@ -1530,9 +1530,9 @@ mattest(MATRIX *m)
 	i = m->m_size;
 	while (i-- > 0) {
 		if (testvalue(vp++))
-			return TRUE;
+			return true;
 	}
-	return FALSE;
+	return false;
 }
 
 /*
@@ -1562,31 +1562,31 @@ matsum(MATRIX *m, VALUE *vres)
 /*
  * Test whether or not two matrices are equal.
  * Equality is determined by the shape and values of the matrices,
- * but not by their index bounds.  Returns TRUE if they differ.
+ * but not by their index bounds.  Returns true if they differ.
  */
-BOOL
+bool
 matcmp(MATRIX *m1, MATRIX *m2)
 {
 	VALUE *v1, *v2;
 	long i;
 
 	if (m1 == m2)
-		return FALSE;
+		return false;
 	if ((m1->m_dim != m2->m_dim) || (m1->m_size != m2->m_size))
-		return TRUE;
+		return true;
 	for (i = 0; i < m1->m_dim; i++) {
 		if ((m1->m_max[i] - m1->m_min[i]) !=
 		    (m2->m_max[i] - m2->m_min[i]))
-		return TRUE;
+		return true;
 	}
 	v1 = m1->m_table;
 	v2 = m2->m_table;
 	i = m1->m_size;
 	while (i-- > 0) {
 		if (comparevalue(v1++, v2++))
-			return TRUE;
+			return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -1698,9 +1698,9 @@ matrandperm(MATRIX *m)
 
 /*
  * Test whether or not a matrix is the identity matrix.
- * Returns TRUE if so.
+ * Returns true if so.
  */
-BOOL
+bool
 matisident(MATRIX *m)
 {
 	register VALUE *val;	/* current value */
@@ -1713,13 +1713,13 @@ matisident(MATRIX *m)
 	if (m->m_dim == 1) {
 		for (row = m->m_min[0]; row <= m->m_max[0]; row++, val++) {
 			if (val->v_type != V_NUM || !qisone(val->v_num))
-				return FALSE;
+				return false;
 		}
-		return TRUE;
+		return true;
 	}
 	if ((m->m_dim != 2) ||
 		((m->m_max[0] - m->m_min[0]) != (m->m_max[1] - m->m_min[1])))
-			return FALSE;
+			return false;
 	for (row = m->m_min[0]; row <= m->m_max[0]; row++) {
 		/*
 		 * We could use col = m->m_min[1]; col < m->m_max[1]
@@ -1729,18 +1729,18 @@ matisident(MATRIX *m)
 		 */
 		for (col = m->m_min[0]; col <= m->m_max[0]; col++) {
 			if (val->v_type != V_NUM)
-				return FALSE;
+				return false;
 			if (row == col) {
 				if (!qisone(val->v_num))
-					return FALSE;
+					return false;
 			} else {
 				if (!qiszero(val->v_num))
-					return FALSE;
+					return false;
 			}
 			val++;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 

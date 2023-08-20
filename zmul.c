@@ -1,7 +1,7 @@
 /*
  * zmul - faster than usual multiplying and squaring routines
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -144,7 +144,7 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	FULL carryACBD;		/* carry from addition of A*C and B*D */
 	FULL digit;		/* single digit multiplying by */
 	HALF *temp;		/* base for temporary calculations */
-	BOOL neg;		/* whether intermediate term is negative */
+	bool neg;		/* whether intermediate term is negative */
 	register HALF *hd, *h1=NULL, *h2=NULL;	/* for inner loops */
 	SIUNION sival;		/* for addition of digits */
 
@@ -401,7 +401,7 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	 * location at position 0 of the result.  Negate the sign if A is
 	 * smaller than B.
 	 */
-	neg = FALSE;
+	neg = false;
 	if (sizeA == sizeB) {
 		len = sizeA;
 		h1 = &baseA[len - 1];

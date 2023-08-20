@@ -1,7 +1,7 @@
 /*
  * zmath - declarations for extended precision integer arithmetic
  *
- * Copyright (C) 1999-2007,2014,2021  David I. Bell
+ * Copyright (C) 1999-2007,2014,2021,2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -36,6 +36,7 @@
 
 #if defined(CALC_SRC)	/* if we are building from the calc source tree */
 # include "version.h"
+# include "bool.h"
 # include "decl.h"
 # include "alloc.h"
 # include "endian_calc.h"
@@ -46,6 +47,7 @@
 # include "charbit.h"
 #else
 # include <calc/version.h>
+# include <calc/bool.h>
 # include <calc/decl.h>
 # include <calc/alloc.h>
 # include <calc/endian_calc.h>
@@ -83,7 +85,7 @@ typedef SB64 SFULL;			/* signed FULL */
 #define SWAP_HALF_IN_FULL(dest, src)	SWAP_B32_IN_B64(dest, src)
 #define SWAP_HALF_IN_HASH(dest, src)	SWAP_B16_IN_HASH(dest, src)
 #define SWAP_HALF_IN_FLAG(dest, src)	SWAP_B16_IN_FLAG(dest, src)
-#define SWAP_HALF_IN_BOOL(dest, src)	SWAP_B16_IN_BOOL(dest, src)
+#define SWAP_HALF_IN_bool(dest, src)	SWAP_B16_IN_bool(dest, src)
 #define SWAP_HALF_IN_LEN(dest, src)	SWAP_B16_IN_LEN(dest, src)
 #define SWAP_B32_IN_FULL(dest, src)	SWAP_B32_IN_B64(dest, src)
 #define SWAP_B16_IN_FULL(dest, src)	SWAP_B16_IN_B64(dest, src)
@@ -104,7 +106,7 @@ typedef SB32 SFULL;			/* signed FULL */
 #define SWAP_HALF_IN_FULL(dest, src)	SWAP_B16_IN_B32(dest, src)
 #define SWAP_HALF_IN_HASH(dest, src)	SWAP_B16_IN_HASH(dest, src)
 #define SWAP_HALF_IN_FLAG(dest, src)	SWAP_B16_IN_FLAG(dest, src)
-#define SWAP_HALF_IN_BOOL(dest, src)	SWAP_B16_IN_BOOL(dest, src)
+#define SWAP_HALF_IN_bool(dest, src)	SWAP_B16_IN_bool(dest, src)
 #define SWAP_HALF_IN_LEN(dest, src)	SWAP_B16_IN_LEN(dest, src)
 #define SWAP_B32_IN_FULL(dest, src)	(*(dest) = *(src))
 #define SWAP_B16_IN_FULL(dest, src)	SWAP_B16_IN_B32(dest, src)
@@ -120,29 +122,6 @@ typedef SB32 SFULL;			/* signed FULL */
 #define FULL_BITS (2*BASEB)			/* bits in a FULL */
 #define HALF_LEN (sizeof(HALF))			/* length of HALF in bites */
 #define FULL_LEN (sizeof(FULL))			/* length of FULL in bites */
-
-
-/*
- * calc historic booleans
- */
-#if defined(CALC2_COMPAT)
-typedef SB32 BOOL;			/* calc v2 compatible TRUE or FALSE value */
-#else /* CALC2_COMPAT */
-typedef bool BOOL;			/* TRUE or FALSE value as C boolean */
-#endif /* CALC2_COMPAT */
-
-/*
- * calc historic booleans
- */
-#undef TRUE
-#undef FALSE
-#if defined(CALC2_COMPAT)
-#define TRUE	((BOOL) 1)			/* booleans */
-#define FALSE	((BOOL) 0)
-#else
-#define TRUE	((bool) true)
-#define FALSE	((bool) false)
-#endif
 
 
 /*
@@ -206,9 +185,9 @@ typedef SB32 LEN;			/* else assume we can support at least 4 octet pointers */
 #define SWAP_B16_IN_FLAG(dest, src)	SWAP_B16_IN_B32(dest, src)
 #define SWAP_B8_IN_FLAG(dest, src)	SWAP_B8_IN_B32(dest, src)
 
-#define SWAP_B32_IN_BOOL(dest, src)	(*(dest) = *(src))
-#define SWAP_B16_IN_BOOL(dest, src)	SWAP_B16_IN_B32(dest, src)
-#define SWAP_B8_IN_BOOL(dest, src)	SWAP_B8_IN_B32(dest, src)
+#define SWAP_B32_IN_bool(dest, src)	(*(dest) = *(src))
+#define SWAP_B16_IN_bool(dest, src)	SWAP_B16_IN_B32(dest, src)
+#define SWAP_B8_IN_bool(dest, src)	SWAP_B8_IN_B32(dest, src)
 
 #define SWAP_B32_IN_LEN(dest, src)	(*(dest) = *(src))
 #define SWAP_B16_IN_LEN(dest, src)	SWAP_B16_IN_B32(dest, src)
@@ -329,10 +308,19 @@ typedef union {
 #endif
 
 
+
+/*
+ * ZVALUE - multi-prevision integer
+ */
+#if defined(CALC2_COMPAT)
+typedef SB32 SIGN;			/* calc v2 compatible sign type */
+#else /* CALC2_COMPAT */
+typedef bool SIGN;			/* sign as a C boolean */
+#endif /* CALC2_COMPAT */
 typedef struct {
 	HALF	*v;		/* pointer to array of values */
 	LEN	len;		/* number of values in array */
-	BOOL	sign;		/* sign, nonzero is negative */
+	SIGN	sign;		/* sign, nonzero is negative */
 } ZVALUE;
 
 
@@ -378,7 +366,7 @@ E_FUNC long zdiv(ZVALUE z1, ZVALUE z2, ZVALUE *res, ZVALUE *rem, long R);
 E_FUNC long zquo(ZVALUE z1, ZVALUE z2, ZVALUE *res, long R);
 E_FUNC long zmod(ZVALUE z1, ZVALUE z2, ZVALUE *rem, long R);
 E_FUNC void zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC BOOL zdivides(ZVALUE z1, ZVALUE z2);
+E_FUNC bool zdivides(ZVALUE z1, ZVALUE z2);
 E_FUNC void zor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 E_FUNC void zand(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 E_FUNC void zxor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
@@ -389,13 +377,13 @@ E_FUNC void zsquare(ZVALUE z, ZVALUE *res);
 E_FUNC long zlowbit(ZVALUE z);
 E_FUNC LEN zhighbit(ZVALUE z);
 E_FUNC void zbitvalue(long n, ZVALUE *res);
-E_FUNC BOOL zisset(ZVALUE z, long n);
-E_FUNC BOOL zisonebit(ZVALUE z);
-E_FUNC BOOL zisallbits(ZVALUE z);
+E_FUNC bool zisset(ZVALUE z, long n);
+E_FUNC bool zisonebit(ZVALUE z);
+E_FUNC bool zisallbits(ZVALUE z);
 E_FUNC FLAG ztest(ZVALUE z);
 E_FUNC FLAG zrel(ZVALUE z1, ZVALUE z2);
 E_FUNC FLAG zabsrel(ZVALUE z1, ZVALUE z2);
-E_FUNC BOOL zcmp(ZVALUE z1, ZVALUE z2);
+E_FUNC bool zcmp(ZVALUE z1, ZVALUE z2);
 
 
 /*
@@ -414,10 +402,10 @@ E_FUNC void zfib(ZVALUE z, ZVALUE *res);
 E_FUNC void zpowi(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 E_FUNC void ztenpow(long power, ZVALUE *res);
 E_FUNC void zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res);
-E_FUNC BOOL zmodinv(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC BOOL zrelprime(ZVALUE z1, ZVALUE z2);
+E_FUNC bool zmodinv(ZVALUE z1, ZVALUE z2, ZVALUE *res);
+E_FUNC bool zrelprime(ZVALUE z1, ZVALUE z2);
 E_FUNC long zlog(ZVALUE z1, ZVALUE z2);
-E_FUNC long zlog10(ZVALUE z, BOOL *was_10_power);
+E_FUNC long zlog10(ZVALUE z, bool *was_10_power);
 E_FUNC long zdivcount(ZVALUE z1, ZVALUE z2);
 E_FUNC long zfacrem(ZVALUE z1, ZVALUE z2, ZVALUE *rem);
 E_FUNC long zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res);
@@ -425,7 +413,7 @@ E_FUNC long zdigits(ZVALUE z1);
 E_FUNC long zdigit(ZVALUE z1, long n);
 E_FUNC FLAG zsqrt(ZVALUE z1, ZVALUE *dest, long R);
 E_FUNC void zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest);
-E_FUNC BOOL zissquare(ZVALUE z);
+E_FUNC bool zissquare(ZVALUE z);
 E_FUNC void zhnrmod(ZVALUE v, ZVALUE h, ZVALUE zn, ZVALUE zr, ZVALUE *res);
 
 
@@ -437,11 +425,11 @@ E_FUNC FULL znprime(ZVALUE z);
 E_FUNC FULL next_prime(FULL v);
 E_FUNC FULL zpprime(ZVALUE z);
 E_FUNC void zpfact(ZVALUE z, ZVALUE *dest);
-E_FUNC BOOL zprimetest(ZVALUE z, long count, ZVALUE skip);
-E_FUNC BOOL zredcprimetest(ZVALUE z, long count, ZVALUE skip);
-E_FUNC BOOL znextcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res,
+E_FUNC bool zprimetest(ZVALUE z, long count, ZVALUE skip);
+E_FUNC bool zredcprimetest(ZVALUE z, long count, ZVALUE skip);
+E_FUNC bool znextcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res,
 		      ZVALUE mod, ZVALUE *cand);
-E_FUNC BOOL zprevcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res,
+E_FUNC bool zprevcand(ZVALUE z1, long count, ZVALUE skip, ZVALUE res,
 		      ZVALUE mod, ZVALUE *cand);
 E_FUNC FULL zlowfactor(ZVALUE z, long count);
 E_FUNC FLAG zfactor(ZVALUE z1, ZVALUE z2, ZVALUE *res);
@@ -454,7 +442,7 @@ E_FUNC void zlcmfact(ZVALUE z, ZVALUE *dest);
  */
 E_FUNC void zsquaremod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
 E_FUNC void zminmod(ZVALUE z1, ZVALUE z2, ZVALUE *res);
-E_FUNC BOOL zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3);
+E_FUNC bool zcmpmod(ZVALUE z1, ZVALUE z2, ZVALUE z3);
 E_FUNC void zio_init(void);
 
 
@@ -510,18 +498,18 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 #define zistiny(z)	((z).len == 1)
 
 /*
- * zgtmaxfull(z)	TRUE if abs(z) > MAXFULL
+ * zgtmaxfull(z)	true if abs(z) > MAXFULL
  */
 #define zgtmaxfull(z)	(((z).len > 2) || (((z).len == 2) && \
 			 (((SHALF)(z).v[1]) < 0)))
 
 /*
- * zgtmaxufull(z)	TRUE if abs(z) will not fit into a FULL (> MAXUFULL)
+ * zgtmaxufull(z)	true if abs(z) will not fit into a FULL (> MAXUFULL)
  */
 #define zgtmaxufull(z)	((z).len > 2)
 
 /*
- * zgtmaxulong(z)	TRUE if abs(z) > MAXULONG
+ * zgtmaxulong(z)	true if abs(z) > MAXULONG
  */
 #if BASEB >= LONG_BITS
 #define zgtmaxulong(z)	((z).len > 1)
@@ -530,7 +518,7 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 #endif
 
 /*
- * zgtmaxlong(z)	TRUE if abs(z) > MAXLONG
+ * zgtmaxlong(z)	true if abs(z) > MAXLONG
  */
 #if BASEB >= LONG_BITS
 #define zgtmaxlong(z)	(((z).len > 1) || (((z).len == 1) && \
@@ -546,18 +534,18 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
  * against a different power of 2 on a 64 bit machine.	The macros below
  * provide a tests against powers of 2 that are independent of the work size.
  *
- *	zge16b(z)	TRUE if abs(z) >= 2^16
- *	zge24b(z)	TRUE if abs(z) >= 2^24
- *	zge31b(z)	TRUE if abs(z) >= 2^31
- *	zge32b(z)	TRUE if abs(z) >= 2^32
- *	zge64b(z)	TRUE if abs(z) >= 2^64
- *	zge128b(z)	TRUE if abs(z) >= 2^128
- *	zge256b(z)	TRUE if abs(z) >= 2^256
- *	zge512b(z)	TRUE if abs(z) >= 2^512
- *	zge1024b(z)	TRUE if abs(z) >= 2^1024
- *	zge2048b(z)	TRUE if abs(z) >= 2^2048
- *	zge4096b(z)	TRUE if abs(z) >= 2^4096
- *	zge8192b(z)	TRUE if abs(z) >= 2^8192
+ *	zge16b(z)	true if abs(z) >= 2^16
+ *	zge24b(z)	true if abs(z) >= 2^24
+ *	zge31b(z)	true if abs(z) >= 2^31
+ *	zge32b(z)	true if abs(z) >= 2^32
+ *	zge64b(z)	true if abs(z) >= 2^64
+ *	zge128b(z)	true if abs(z) >= 2^128
+ *	zge256b(z)	true if abs(z) >= 2^256
+ *	zge512b(z)	true if abs(z) >= 2^512
+ *	zge1024b(z)	true if abs(z) >= 2^1024
+ *	zge2048b(z)	true if abs(z) >= 2^2048
+ *	zge4096b(z)	true if abs(z) >= 2^4096
+ *	zge8192b(z)	true if abs(z) >= 2^8192
  */
 #if BASEB == 32
 
@@ -692,11 +680,11 @@ E_FUNC void math_error(char *, ...) \
  * external swap functions
  */
 E_FUNC HALF *swap_b8_in_HALFs(HALF *dest, HALF *src, LEN len);
-E_FUNC ZVALUE *swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all);
+E_FUNC ZVALUE *swap_b8_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all);
 E_FUNC HALF *swap_b16_in_HALFs(HALF *dest, HALF *src, LEN len);
 E_FUNC HALF *swap_HALFs(HALF *dest, HALF *src, LEN len);
-E_FUNC ZVALUE *swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all);
-E_FUNC ZVALUE *swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, BOOL all);
+E_FUNC ZVALUE *swap_b16_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all);
+E_FUNC ZVALUE *swap_HALF_in_ZVALUE(ZVALUE *dest, ZVALUE *src, bool all);
 
 
 /*
@@ -732,7 +720,7 @@ EXTERN ZVALUE _b64_;
 
 EXTERN HALF *half_tbl[]; /* preset HALF constants, NULL terminated list */
 
-EXTERN BOOL _math_abort_;	/* nonzero to abort calculations */
+EXTERN bool _math_abort_;	/* nonzero to abort calculations */
 EXTERN ZVALUE _tenpowers_[];	/* table of 10^2^n */
 
 /*

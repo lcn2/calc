@@ -1,7 +1,7 @@
 /*
  * qmod - modular arithmetic routines for normal numbers and REDC numbers
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -110,7 +110,7 @@ qmod(NUMBER *q1, NUMBER *q2, long rnd)
  * If rnd is zero, the remainder has the sign of q2
  * and the quotient is rounded towards zero.
  *
- * The function returns TRUE or FALSE according as the remainder is
+ * The function returns true or false according as the remainder is
  * nonzero or zero
  *
  * Given:
@@ -120,7 +120,7 @@ qmod(NUMBER *q1, NUMBER *q2, long rnd)
  *	mod		remainder
  *      rnd		rounding-type specifier
  */
-BOOL
+bool
 qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod, long rnd)
 {
 	NUMBER *qq, *qm;
@@ -181,9 +181,9 @@ qquomod(NUMBER *q1, NUMBER *q2, NUMBER **quo, NUMBER **mod, long rnd)
 
 /*
  * Return whether or not two integers are congruent modulo a third integer.
- * Returns TRUE if the numbers are not congruent, and FALSE if they are.
+ * Returns true if the numbers are not congruent, and false if they are.
  */
-BOOL
+bool
 qcmpmod(NUMBER *q1, NUMBER *q2, NUMBER *q3)
 {
 	if (qisneg(q3) || qiszero(q3))
@@ -191,7 +191,7 @@ qcmpmod(NUMBER *q1, NUMBER *q2, NUMBER *q3)
 	if (qisfrac(q1) || qisfrac(q2) || qisfrac(q3))
 		math_error("Non-integers for qcmpmod");
 	if (q1 == q2)
-		return FALSE;
+		return false;
 	return zcmpmod(q1->num, q2->num, q3->num);
 }
 

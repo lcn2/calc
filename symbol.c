@@ -1,7 +1,7 @@
 /*
  * symbol - global and local symbol routines
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -89,10 +89,10 @@ initglobals(void)
  *
  * given:
  *	name		name of global variable
- *	isstatic	TRUE if symbol is static
+ *	isstatic	true if symbol is static
  */
 GLOBAL *
-addglobal(char *name, BOOL isstatic)
+addglobal(char *name, bool isstatic)
 {
 	GLOBAL *sp;		/* current symbol pointer */
 	GLOBAL **hp;		/* hash table head address */
@@ -493,7 +493,7 @@ exitfuncscope(void)
  * variable is at the same file and function level.
  */
 void
-endscope(char *name, BOOL isglobal)
+endscope(char *name, bool isglobal)
 {
 	GLOBAL *sp;
 	GLOBAL *prevsp;

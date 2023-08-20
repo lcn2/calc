@@ -1,7 +1,7 @@
 /*
  * token - read input file characters into tokens
  *
- * Copyright (C) 1999-2007,2017,2021,2022  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2017,2021-2023  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -61,9 +61,9 @@ STATIC struct {
 } curtoken;
 
 
-STATIC BOOL rescan;		/* TRUE to reread current token */
-STATIC BOOL newlines;		/* TRUE to return newlines as tokens */
-STATIC BOOL allsyms;		/* TRUE if always want a symbol token */
+STATIC bool rescan;		/* true to reread current token */
+STATIC bool newlines;		/* true to return newlines as tokens */
+STATIC bool allsyms;		/* true if always want a symbol token */
 STATIC STRINGHEAD strings;	/* list of constant strings */
 STATIC char *numbuf;		/* buffer for numeric tokens */
 STATIC long numbufsize;		/* current size of numeric buffer */
@@ -127,9 +127,9 @@ void
 inittokens(void)
 {
 	initstr(&strings);
-	newlines = FALSE;
-	allsyms = FALSE;
-	rescan = FALSE;
+	newlines = false;
+	allsyms = false;
+	rescan = false;
 	setprompt(conf->prompt1);
 }
 
@@ -148,12 +148,12 @@ tokenmode(int flag)
 		oldflag |= TM_NEWLINES;
 	if (allsyms)
 		oldflag |= TM_ALLSYMS;
-	newlines = FALSE;
-	allsyms = FALSE;
+	newlines = false;
+	allsyms = false;
 	if (flag & TM_NEWLINES)
-		newlines = TRUE;
+		newlines = true;
 	if (flag & TM_ALLSYMS)
-		allsyms = TRUE;
+		allsyms = true;
 	setprompt(newlines ? conf->prompt1 : conf->prompt2);
 	return oldflag;
 }
@@ -171,7 +171,7 @@ gettoken(void)
 	int type;		/* token type */
 
 	if (rescan) {		/* rescanning */
-		rescan = FALSE;
+		rescan = false;
 		return curtoken.t_type;
 	}
 	curtoken.t_sym = NULL;
@@ -437,11 +437,11 @@ eatstring(int quotechar)
 	long len;		/* length in buffer */
 	long totlen;		/* total length, including '\0' */
 	char *str;
-	BOOL done;
+	bool done;
 
 	str = buf;
 	totlen = 0;
-	done = FALSE;
+	done = false;
 
 	while (!done) {
 	    cp = buf;
@@ -457,7 +457,7 @@ eatstring(int quotechar)
 			reread();
 			scanerror(T_NULL,
 				  "Unterminated string constant");
-			done = TRUE;
+			done = true;
 			ch = '\0';
 			break;
 
@@ -522,7 +522,7 @@ eatstring(int quotechar)
 					continue;
 				}
 				reread();
-				done = TRUE;
+				done = true;
 				ch = '\0';
 			}
 			break;
@@ -702,7 +702,7 @@ tokensymbol(void)
 void
 rescantoken(void)
 {
-	rescan = TRUE;
+	rescan = true;
 }
 
 
@@ -774,7 +774,7 @@ scanerror(int skip, char *fmt, ...)
 	case T_NULL:
 		return;
 	case T_COMMA:
-		rescan = TRUE;
+		rescan = true;
 		for (;;) {
 			switch (gettoken()) {
 			case T_NEWLINE:
@@ -783,7 +783,7 @@ scanerror(int skip, char *fmt, ...)
 			case T_RIGHTBRACE:
 			case T_EOF:
 			case T_COMMA:
-				rescan = TRUE;
+				rescan = true;
 				return;
 			}
 		}
@@ -797,7 +797,7 @@ scanerror(int skip, char *fmt, ...)
 		/* fall into semicolon case */
 		/*FALLTHRU*/
 	case T_SEMICOLON:
-		rescan = TRUE;
+		rescan = true;
 		for (;;) {
 			switch (gettoken()) {
 			case T_NEWLINE:
@@ -805,7 +805,7 @@ scanerror(int skip, char *fmt, ...)
 			case T_LEFTBRACE:
 			case T_RIGHTBRACE:
 			case T_EOF:
-				rescan = TRUE;
+				rescan = true;
 				return;
 			}
 		}

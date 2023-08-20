@@ -1,7 +1,7 @@
 /*
  * calc - definitions for calculator program
  *
- * Copyright (C) 1999-2007,2014,2021  David I. Bell
+ * Copyright (C) 1999-2007,2014,2021,2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -104,9 +104,9 @@
 E_FUNC FILEID openid(char *name, char *mode);
 E_FUNC FILEID openpathid(char *name, char *mode, char *pathlist);
 E_FUNC FILEID indexid(long index);
-E_FUNC BOOL validid(FILEID id);
-E_FUNC BOOL errorid(FILEID id);
-E_FUNC BOOL eofid(FILEID id);
+E_FUNC bool validid(FILEID id);
+E_FUNC bool errorid(FILEID id);
+E_FUNC bool eofid(FILEID id);
 E_FUNC int closeid(FILEID id);
 E_FUNC int getcharid(FILEID id);
 E_FUNC int idprintf(FILEID id, char *fmt, int count, VALUE **vals);
@@ -157,7 +157,7 @@ E_FUNC int nextchar(void);
 E_FUNC void reread(void);
 E_FUNC void resetinput(void);
 E_FUNC void setprompt(char *);
-E_FUNC BOOL inputisterminal(void);
+E_FUNC bool inputisterminal(void);
 E_FUNC int inputlevel(void);
 E_FUNC long calclevel(void);
 E_FUNC char *inputname(void);
@@ -172,12 +172,12 @@ E_FUNC NUMBER *constvalue(unsigned long index);
 E_FUNC long addnumber(char *str);
 E_FUNC long addqconstant(NUMBER *q);
 E_FUNC void initstack(void);
-E_FUNC void getcommands(BOOL toplevel);
+E_FUNC void getcommands(bool toplevel);
 E_FUNC void givehelp(char *type);
 E_FUNC void libcalc_call_me_first(void);
 E_FUNC void libcalc_call_me_last(void);
-E_FUNC BOOL calc_tty(int fd);
-E_FUNC BOOL orig_tty(int fd);
+E_FUNC bool calc_tty(int fd);
+E_FUNC bool orig_tty(int fd);
 E_FUNC void showerrors(void);
 E_FUNC char *calc_strdup(CONST char *);
 
@@ -187,7 +187,7 @@ E_FUNC char *calc_strdup(CONST char *);
 E_FUNC void initialize(void);
 E_FUNC void reinitialize(void);
 #if !defined(_WIN32) && !defined(_WIN64)
-E_FUNC int isatty(int tty);	/* TRUE if fd is a tty */
+E_FUNC int isatty(int tty);	/* true if fd is a tty */
 #endif
 E_FUNC char *version(void);	/* return version string */
 
@@ -195,33 +195,33 @@ E_FUNC char *version(void);	/* return version string */
  * global flags and definitions
  */
 EXTERN int abortlevel;	/* current level of aborts */
-EXTERN BOOL inputwait;	/* TRUE if in a terminal input wait */
+EXTERN bool inputwait;	/* true if in a terminal input wait */
 
-EXTERN int p_flag;		/* TRUE => pipe mode */
-EXTERN int q_flag;		/* TRUE => don't execute rc files */
-EXTERN int u_flag;		/* TRUE => unbuffer stdin and stdout */
-EXTERN int d_flag;		/* TRUE => disable heading, resource_debug */
-EXTERN int c_flag;		/* TRUE => continue after error if permitted */
-EXTERN int i_flag;		/* TRUE => try to go interactive after error */
-E_FUNC int s_flag;		/* TRUE => keep args as strings for argv() */
+EXTERN int p_flag;		/* true => pipe mode */
+EXTERN int q_flag;		/* true => don't execute rc files */
+EXTERN int u_flag;		/* true => unbuffer stdin and stdout */
+EXTERN int d_flag;		/* true => disable heading, resource_debug */
+EXTERN int c_flag;		/* true => continue after error if permitted */
+EXTERN int i_flag;		/* true => try to go interactive after error */
+E_FUNC int s_flag;		/* true => keep args as strings for argv() */
 EXTERN long stoponerror;	/* >0 => stop, <0 => continue, ==0 => use -c */
-EXTERN BOOL abort_now;	/* TRUE => try to go interactive */
+EXTERN bool abort_now;	/* true => try to go interactive */
 
 E_FUNC int argc_value;	/* count of argv[] strings for argv() builtin */
 E_FUNC char **argv_value;	/* argv[] strings for argv() builtin */
 
 EXTERN char *pager;		/* $PAGER or default */
-EXTERN int stdin_tty;	/* TRUE if stdin is a tty */
-EXTERN int havecommands;	/* TRUE if have cmd args) */
+EXTERN int stdin_tty;	/* true if stdin is a tty */
+EXTERN int havecommands;	/* true if have cmd args) */
 EXTERN char *program;	/* our name */
 EXTERN char *base_name;	/* basename of our name */
 EXTERN char cmdbuf[];	/* command line expression */
 EXTERN char *script_name;	/* program name or -f filename arg or NULL */
 
 EXTERN int abortlevel;	/* current level of aborts */
-EXTERN BOOL inputwait;	/* TRUE if in a terminal input wait */
+EXTERN bool inputwait;	/* true if in a terminal input wait */
 EXTERN VALUE *stack;	/* execution stack */
-EXTERN int dumpnames;	/* TRUE => dump names rather than indices */
+EXTERN int dumpnames;	/* true => dump names rather than indices */
 
 EXTERN char *calcpath;	/* $CALCPATH or default */
 EXTERN char *calcrc;	/* $CALCRC or default */
@@ -229,13 +229,13 @@ EXTERN char *calcbindings;	/* $CALCBINDINGS or default */
 EXTERN char *home;		/* $HOME or default */
 EXTERN char *shell;		/* $SHELL or default */
 
-EXTERN int no_env;	/* TRUE (-e) => ignore env vars on startup */
+EXTERN int no_env;	/* true (-e) => ignore env vars on startup */
 EXTERN long errmax;	/* if >= 0, error when errcount exceeds errmax */
-EXTERN int use_old_std;	/* TRUE (-O) => use classic configuration */
+EXTERN int use_old_std;	/* true (-O) => use classic configuration */
 
-EXTERN int allow_read;	/* FALSE => don't open any files for reading */
-EXTERN int allow_write; 	/* FALSE => don't open any files for writing */
-EXTERN int allow_exec;	/* FALSE => may not execute any commands */
+EXTERN int allow_read;	/* false => don't open any files for reading */
+EXTERN int allow_write; 	/* false => don't open any files for writing */
+EXTERN int allow_exec;	/* false => may not execute any commands */
 
 /*
  * calc startup and run state

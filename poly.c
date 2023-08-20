@@ -1,7 +1,7 @@
 /*
  * poly - polynomial functions
  *
- * Copyright (C) 1999,2021  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2021,2023  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *
@@ -33,13 +33,13 @@
 #include "banned.h"	/* include after system header <> includes */
 
 
-BOOL
+bool
 evp(LISTELEM *cp, LISTELEM *x, VALUE *vres)
 {
 	VALUE v, tmp1, tmp2;
-	BOOL s;
+	bool s;
 
-	s = FALSE;
+	s = false;
 	while (cp) {
 		if (s) {
 			mulvalue(vres, &x->e_value, &tmp1);
@@ -55,7 +55,7 @@ evp(LISTELEM *cp, LISTELEM *x, VALUE *vres)
 					freevalue(vres);
 					*vres = tmp2;
 				} else {
-					s = TRUE;
+					s = true;
 					*vres = tmp1;
 				}
 			}
@@ -65,7 +65,7 @@ evp(LISTELEM *cp, LISTELEM *x, VALUE *vres)
 				freevalue(vres);
 				*vres = tmp1;
 			} else {
-				s = TRUE;
+				s = true;
 				copyvalue(&v, vres);
 			}
 		}
@@ -75,7 +75,7 @@ evp(LISTELEM *cp, LISTELEM *x, VALUE *vres)
 }
 
 
-BOOL
+bool
 evalpoly(LIST *clist, LISTELEM *x, VALUE *vres)
 {
 	LISTELEM *cp;
@@ -83,13 +83,13 @@ evalpoly(LIST *clist, LISTELEM *x, VALUE *vres)
 
 	cp = clist->l_first;
 	if (cp == NULL)
-		return FALSE;
+		return false;
 	if (x == NULL) {
 		v = cp->e_value;
 		if (v.v_type == V_LIST)
 			return evalpoly(v.v_list, x->e_next, vres);
 		copyvalue(&v, vres);
-		return TRUE;
+		return true;
 	}
 	return evp(clist->l_last, x, vres);
 }

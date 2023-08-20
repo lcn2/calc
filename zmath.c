@@ -1,7 +1,7 @@
 /*
  * zmath - extended precision integral arithmetic primitives
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -196,7 +196,7 @@ HALF bitmask[(2*BASEB)+1] = {
 #endif
 };		/* actual rotation thru 8 cycles */
 
-BOOL _math_abort_;		/* nonzero to abort calculations */
+bool _math_abort_;		/* nonzero to abort calculations */
 
 
 /*
@@ -257,8 +257,8 @@ alloc(LEN len)
  * 	h	pointer to the beginning of the HALF array
  *
  * returns:
- * 	TRUE - h is found in the half_tbl array
- * 	FALSE - is is not found in the half_tbl array
+ * 	true - h is found in the half_tbl array
+ * 	false - is is not found in the half_tbl array
  */
 int
 is_const(HALF* h)
@@ -268,12 +268,12 @@ is_const(HALF* h)
 	/* search the half_tbl for h */
 	for (h_p = &half_tbl[0]; *h_p != NULL; ++h_p) {
 		if (h == *h_p) {
-			return TRUE;	/* found in the half_tbl array */
+			return true;	/* found in the half_tbl array */
 		}
 	}
 
 	/* not found in the half_tbl array */
-	return FALSE;
+	return false;
 }
 
 
@@ -722,7 +722,7 @@ zdiv(ZVALUE z1, ZVALUE z2, ZVALUE *quo, ZVALUE *rem, long rnd)
 	HALF s, u;
 	HALF *A, *B, *a1, *b0;
 	FULL f, g, h, x;
-	BOOL adjust, onebit;
+	bool adjust, onebit;
 	LEN m, n, len, i, p, j1, j2, k;
 	long t, val;
 
@@ -782,7 +782,7 @@ zdiv(ZVALUE z1, ZVALUE z2, ZVALUE *quo, ZVALUE *rem, long rnd)
 	j1 = BASEB - k;
 	j2 = BASEB + j1;
 	h = j1 ? ((FULL) B[n - 1] << j1 | B[n - 2] >> k) : B[n-1];
-	onebit = (BOOL)((B[n - 2] >> (k - 1)) & 1);
+	onebit = (bool)((B[n - 2] >> (k - 1)) & 1);
 	m++;
 	while (m > n) {
 		m--;
@@ -837,9 +837,9 @@ done:	while (m > 0 && A[m - 1] == 0)
 		return val;
 	}
 	if (rnd & 8)
-		adjust = (((*a1 ^ rnd) & 1) ? TRUE : FALSE);
+		adjust = (((*a1 ^ rnd) & 1) ? true : false);
 	else
-		adjust = (((rnd & 1) ^ z1.sign ^ z2.sign) ? TRUE : FALSE);
+		adjust = (((rnd & 1) ^ z1.sign ^ z2.sign) ? true : false);
 	if (rnd & 2)
 		adjust ^= z1.sign ^ z2.sign;
 	if (rnd & 4)
@@ -1243,31 +1243,31 @@ zmodi(ZVALUE z, long n)
 
 /*
  * Return whether or not one number exactly divides another one.
- * Returns TRUE if division occurs with no remainder.
+ * Returns true if division occurs with no remainder.
  * z1 is the number to be divided by z2.
  */
 
-BOOL
+bool
 zdivides(ZVALUE z1, ZVALUE z2)
 {
 	LEN i, j, k, m, n;
 	HALF u, v, w, x;
 	HALF *a, *a0, *A, *b, *B, *c, *d;
 	FULL f;
-	BOOL ans;
+	bool ans;
 
-	if (zisunit(z2) || ziszero(z1)) return TRUE;
-	if (ziszero(z2)) return FALSE;
+	if (zisunit(z2) || ziszero(z1)) return true;
+	if (ziszero(z2)) return false;
 
 	m = z1.len;
 	n = z2.len;
-	if (m < n) return FALSE;
+	if (m < n) return false;
 
 	c = z1.v;
 	d = z2.v;
 
 	while (!*d) {
-		if (*c++) return FALSE;
+		if (*c++) return false;
 		d++;
 		m--;
 		n--;
@@ -1277,20 +1277,20 @@ zdivides(ZVALUE z1, ZVALUE z2)
 	u = *c;
 	v = *d;
 	while (!(v & 1)) {	/* Counting and checking zero bits */
-		if (u & 1) return FALSE;
+		if (u & 1) return false;
 		u >>= 1;
 		v >>= 1;
 		j++;
 	}
 
-	if (n == 1 && v == 1) return TRUE;
+	if (n == 1 && v == 1) return true;
 	if (!*c) {			/* Removing any further zeros */
 		while(!*++c)
 			m--;
 		c--;
 	}
 
-	if (m < n) return FALSE;
+	if (m < n) return false;
 
 	if (j) {
 		B = alloc((LEN)n);	/* Array for shifted z2 */
@@ -1347,11 +1347,11 @@ zdivides(ZVALUE z1, ZVALUE z2)
 		}
 		a0++;
 	}
-	ans = FALSE;
+	ans = false;
 	if (A[m + 1]) {
 		a = A + m;
 		while (--n && !*--a);
-		if (!n) ans = TRUE;
+		if (!n) ans = true;
 	}
 	freeh(A);
 	if (j) freeh(B);
@@ -1627,37 +1627,37 @@ zhighbit(ZVALUE z)
  * Return whether or not the specified bit number is set in a number.
  * Rightmost bit of a number is bit 0.
  */
-BOOL
+bool
 zisset(ZVALUE z, long n)
 {
 	if ((n < 0) || ((n / BASEB) >= z.len))
-		return FALSE;
+		return false;
 	return ((z.v[n / BASEB] & (((HALF) 1) << (n % BASEB))) != 0);
 }
 
 
 /*
  * Check whether or not a number has exactly one bit set, and
- * thus is an exact power of two.  Returns TRUE if so.
+ * thus is an exact power of two.  Returns true if so.
  */
-BOOL
+bool
 zisonebit(ZVALUE z)
 {
 	register HALF *hp;
 	register LEN len;
 
 	if (ziszero(z) || zisneg(z))
-		return FALSE;
+		return false;
 	hp = z.v;
 	len = z.len;
 	while (len > 4) {
 		len -= 4;
 		if (*hp++ || *hp++ || *hp++ || *hp++)
-			return FALSE;
+			return false;
 	}
 	while (--len > 0) {
 		if (*hp++)
-			return FALSE;
+			return false;
 	}
 	return ((*hp & -*hp) == *hp);		/* NEEDS 2'S COMPLEMENT */
 }
@@ -1666,9 +1666,9 @@ zisonebit(ZVALUE z)
 /*
  * Check whether or not a number has all of its bits set below some
  * bit position, and thus is one less than an exact power of two.
- * Returns TRUE if so.
+ * Returns true if so.
  */
-BOOL
+bool
 zisallbits(ZVALUE z)
 {
 	register HALF *hp;
@@ -1676,18 +1676,18 @@ zisallbits(ZVALUE z)
 	HALF digit;
 
 	if (ziszero(z) || zisneg(z))
-		return FALSE;
+		return false;
 	hp = z.v;
 	len = z.len;
 	while (len > 4) {
 		len -= 4;
 		if ((*hp++ != BASE1) || (*hp++ != BASE1) ||
 			(*hp++ != BASE1) || (*hp++ != BASE1))
-				return FALSE;
+				return false;
 	}
 	while (--len > 0) {
 		if (*hp++ != BASE1)
-			return FALSE;
+			return false;
 	}
 	digit = (HALF)(*hp + 1);
 	return ((digit & -digit) == digit);	/* NEEDS 2'S COMPLEMENT */
@@ -1802,24 +1802,24 @@ zabsrel(ZVALUE z1, ZVALUE z2)
 
 /*
  * Compare two numbers to see if they are equal or not.
- * Returns TRUE if they differ.
+ * Returns true if they differ.
  */
-BOOL
+bool
 zcmp(ZVALUE z1, ZVALUE z2)
 {
 	register HALF *h1, *h2;
 	register long len;
 
 	if ((z1.sign != z2.sign) || (z1.len != z2.len) || (*z1.v != *z2.v))
-		return TRUE;
+		return true;
 	len = z1.len;
 	h1 = z1.v;
 	h2 = z2.v;
 	while (--len > 0) {
 		if (*++h1 != *++h2)
-			return TRUE;
+			return true;
 	}
-	return FALSE;
+	return false;
 }
 
 

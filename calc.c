@@ -1,9 +1,7 @@
 /*
  * calc - arbitrary precision calculator
  *
- * Copyright (C) 1999-2013,2021,2022  David I. Bell, Landon Curt Noll and Ernest Bowen
- *
- * Primary author:  David I. Bell
+ * Copyright (C) 1999-2013,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -93,7 +91,7 @@
  */
 S_FUNC void intint(int arg);	/* interrupt routine */
 S_FUNC void calc_interrupt(char *fmt, ...);
-S_FUNC int nextcp(char **cpp, int *ip, int argc, char **argv, BOOL haveendstr);
+S_FUNC int nextcp(char **cpp, int *ip, int argc, char **argv, bool haveendstr);
 S_FUNC void set_run_state(run state);
 
 /*
@@ -111,10 +109,10 @@ main(int argc, char **argv)
 	char *cp;
 	char *endcp;
 	char *bp;
-	BOOL done = FALSE;
-	BOOL havearg;
-	BOOL haveendstr;
-	BOOL stdin_closed = FALSE;
+	bool done = false;
+	bool havearg;
+	bool haveendstr;
+	bool stdin_closed = false;
 	size_t len;
 
 	/*
@@ -135,7 +133,7 @@ main(int argc, char **argv)
 	index = 1;
 	cp = endcp = NULL;
 	maxindex = argc;
-	havecommands = FALSE;
+	havecommands = false;
 	while (index < maxindex && !done) {
 		cp = argv[index];
 		if (*cp == '\0') {
@@ -143,9 +141,9 @@ main(int argc, char **argv)
 			continue;
 		}
 		for (;;) {
-			havearg = FALSE;
+			havearg = false;
 			if (*cp != '-') {
-				done = TRUE;
+				done = true;
 				break;
 			}
 			++cp;
@@ -153,7 +151,7 @@ main(int argc, char **argv)
 				cp++;
 				while (*cp == ' ')
 					++cp;
-				done = TRUE;
+				done = true;
 				break;
 			}
 
@@ -168,27 +166,27 @@ main(int argc, char **argv)
 					/*
 					 * error if libcustcalc was compiled with CUSTOM undefined
 					 */
-					if (custom_compiled() != TRUE) {
+					if (custom_compiled() != true) {
 					    math_error("%s: calc was built with custom functions enabled, "
 						       "custom_compiled() returned: %d != %d",
-						       program, custom_compiled(), TRUE);
+						       program, custom_compiled(), true);
 					    exit(1);
 					}
 
 					/*
 					 * indicate that custom functions are now allowed
 					 */
-					allow_custom = TRUE;
+					allow_custom = true;
 					break;
 #else /* CUSTOM */
 
 					/*
 					 * error if libcustcalc was compiled with CUSTOM defined
 					 */
-					if (custom_compiled() != FALSE) {
+					if (custom_compiled() != false) {
 					    math_error("%s: calc was built with custom functions disabled, "
 						       "custom_compiled() returned: %d != %d",
-						       program, custom_compiled(), FALSE);
+						       program, custom_compiled(), false);
 					}
 
 					/*
@@ -203,13 +201,13 @@ main(int argc, char **argv)
 					exit(1);
 #endif /* CUSTOM */
 				case 'e':
-					no_env = TRUE;
+					no_env = true;
 					break;
 				case 'h':
 					want_defhelp = 1;
 					break;
 				case 'i':
-					i_flag = TRUE;
+					i_flag = true;
 					break;
 				case 'm':
 					cp++;
@@ -246,7 +244,7 @@ main(int argc, char **argv)
 						fprintf(stderr, "??? m-arg");
 						exit(4);
 					}
-					havearg = TRUE;
+					havearg = true;
 					break;
 				case 'n':
 					/*
@@ -255,22 +253,22 @@ main(int argc, char **argv)
 					 */
 					break;
 				case 'O':
-					use_old_std = TRUE;
+					use_old_std = true;
 					break;
 				case 'p':
-					p_flag = TRUE;
+					p_flag = true;
 					break;
 				case 'q':
-					q_flag = TRUE;
+					q_flag = true;
 					break;
 				case 'u':
-					u_flag = TRUE;
+					u_flag = true;
 					break;
 				case 'c':
-					c_flag = TRUE;
+					c_flag = true;
 					break;
 				case 'd':
-					d_flag = TRUE;
+					d_flag = true;
 					break;
 				case 'v':
 					/*
@@ -297,12 +295,12 @@ main(int argc, char **argv)
 					 * calc_debug:resource_debug:user_debug
 					 */
 					if (nextcp(&cp, &index, argc, argv,
-						   FALSE)) {
+						   false)) {
 					    fprintf(stderr,
 						    "-D expects argument\n");
 					    exit(5);
 					}
-					havearg = TRUE;
+					havearg = true;
 					if (*cp != ':') {
 						if (*cp < '0' || *cp > '9') {
 						    fprintf(stderr,
@@ -323,13 +321,13 @@ main(int argc, char **argv)
 						if (*cp != ':') {
 						    if (nextcp(&cp, &index,
 							       argc, argv,
-							       FALSE)
+							       false)
 								|| *cp != ':')
 							break;
 						}
 					}
 					if (nextcp(&cp, &index, argc, argv,
-						   FALSE)) {
+						   false)) {
 						fprintf(stderr,
 							"-D : expects"
 							" argument\n");
@@ -355,14 +353,14 @@ main(int argc, char **argv)
 						if (*cp != ':') {
 							if (nextcp(&cp, &index,
 								   argc, argv,
-							           FALSE)
+							           false)
 							    || *cp != ':') {
 								break;
 							}
 						}
 					}
 					if (nextcp(&cp, &index, argc, argv,
-						   FALSE)) {
+						   false)) {
 					    fprintf(stderr, "-D : : expects"
 						    " argument\n");
 					    exit(11);
@@ -395,7 +393,7 @@ main(int argc, char **argv)
 							" filename\n");
 						exit(15);
 					}
-					havearg = TRUE;
+					havearg = true;
 					if (cmdlen > 0)
 						cmdbuf[cmdlen++] = ' ';
 					strlcpy(cmdbuf + cmdlen, "read ",
@@ -479,12 +477,12 @@ main(int argc, char **argv)
 					cmdlen++;
 
 					/* -f implies -s */
-					s_flag = TRUE;
+					s_flag = true;
 					maxindex = index + 1;
 					break;
 
 				case 's':
-					s_flag = TRUE;
+					s_flag = true;
 					maxindex = index + 1;
 					break;
 				default:
@@ -544,11 +542,11 @@ main(int argc, char **argv)
 	if (havecommands) {
 		cmdbuf[cmdlen++] = '\n';
 		cmdbuf[cmdlen] = '\0';
-		if (p_flag != TRUE) {
+		if (p_flag != true) {
 			if (fclose(stdin)) {
 				perror("main(): fclose(stdin) failed:");
 			}
-			stdin_closed = TRUE;
+			stdin_closed = true;
 		}
 	}
 
@@ -559,7 +557,7 @@ main(int argc, char **argv)
 	 * unbuffered mode
 	 */
 	if (u_flag) {
-		if (stdin_closed == FALSE) {
+		if (stdin_closed == false) {
 			setbuf(stdin, NULL);
 		}
 		setbuf(stdout, NULL);
@@ -571,7 +569,7 @@ main(int argc, char **argv)
 	libcalc_call_me_first();
 	if (u_flag) {
 		if (conf->calc_debug & CALCDBG_TTY) {
-			if (stdin_closed == FALSE) {
+			if (stdin_closed == false) {
 				printf("main: stdin set to unbuffered before "
 				       "calling libcalc_call_me_first()\n");
 			} else {
@@ -647,7 +645,7 @@ main(int argc, char **argv)
 	while (run_state == RUN_RCFILES) {
 		fprintf(stderr, "Error in rcfiles\n");
 		if ((c_flag && !stoponerror) || stoponerror < 0) {
-			getcommands(FALSE);
+			getcommands(false);
 			if (inputlevel() == 0) {
 				closeinput();
 				runrcfiles();
@@ -668,7 +666,7 @@ main(int argc, char **argv)
 		if (havecommands) {
 			set_run_state(RUN_CMD_ARGS);
 			(void) openstring(cmdbuf, strlen(cmdbuf));
-			getcommands(FALSE);
+			getcommands(false);
 			closeinput();
 		}
 		set_run_state(RUN_PRE_TOP_LEVEL);
@@ -677,7 +675,7 @@ main(int argc, char **argv)
 	while (run_state == RUN_CMD_ARGS) {
 		fprintf(stderr, "Error in commands\n");
 		if ((c_flag && !stoponerror) || stoponerror < 0) {
-			getcommands(FALSE);
+			getcommands(false);
 			if (inputlevel() == 0)
 				set_run_state(RUN_PRE_TOP_LEVEL);
 			closeinput();
@@ -703,7 +701,7 @@ main(int argc, char **argv)
 				openterminal();
 			}
 			set_run_state(RUN_TOP_LEVEL);
-			getcommands(TRUE);
+			getcommands(true);
 		}
 		if (p_flag || (!i_flag && havecommands))
 			set_run_state(RUN_EXIT);
@@ -713,7 +711,7 @@ main(int argc, char **argv)
 		if (conf->calc_debug & CALCDBG_RUNSTATE)
 			printf("main: run_state = TOP_LEVEL\n");
 		if ((c_flag && !stoponerror) || stoponerror < 0) {
-			getcommands(TRUE);
+			getcommands(true);
 			if (!inputisterminal()) {
 				closeinput();
 				continue;
@@ -737,7 +735,7 @@ main(int argc, char **argv)
 					break;
 				}
 
-				stdin_tty = TRUE;
+				stdin_tty = true;
 				if (conf->calc_debug & CALCDBG_TTY)
 					printf("main: stdin_tty is %d\n",
 					       stdin_tty);
@@ -746,7 +744,7 @@ main(int argc, char **argv)
 		} else {
 			if (stdin_tty) {
 				reinitialize();
-				getcommands(TRUE);
+				getcommands(true);
 			} else if (inputisterminal() &&
 					!p_flag && (!havecommands||i_flag)) {
 				closeinput();
@@ -766,7 +764,7 @@ main(int argc, char **argv)
 					set_run_state(RUN_EXIT_WITH_ERROR);
 					break;
 				}
-				stdin_tty = TRUE;
+				stdin_tty = true;
 				if (conf->calc_debug & CALCDBG_TTY)
 					printf("main: stdin_tty is %d\n",
 					       stdin_tty);
@@ -804,7 +802,7 @@ intint(int UNUSED(arg))
 		not_reached();
 	}
 	if (abortlevel >= ABORT_MATH)
-		_math_abort_ = TRUE;
+		_math_abort_ = true;
 	printf("\n[Abort level %d]\n", abortlevel);
 }
 
@@ -842,7 +840,7 @@ calc_interrupt(char *fmt, ...)
 }
 
 S_FUNC int
-nextcp(char **cpp, int *ip, int argc, char **argv, BOOL haveendstr)
+nextcp(char **cpp, int *ip, int argc, char **argv, bool haveendstr)
 {
 	char *cp;
 	int index;

@@ -66,8 +66,8 @@
  *		undefined ==> do not use USB64 nor SB64
  *
  *	BOOL_B64
- *		If HAVE_B64 undefined ==> FALSE
- *		If HAVE_B64 defined ==> TRUE
+ *		If HAVE_B64 undefined ==> false
+ *		If HAVE_B64 defined ==> true
  *
  *	USB64	unsigned 64 bit value if HAVE_B64 is defined
  *	SB64	signed 64 bit value if HAVE_B64 is defined

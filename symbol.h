@@ -62,7 +62,7 @@ struct global {
 /*
  * Routines to search for global symbols.
  */
-E_FUNC GLOBAL *addglobal(char *name, BOOL isstatic);
+E_FUNC GLOBAL *addglobal(char *name, bool isstatic);
 E_FUNC GLOBAL *findglobal(char *name);
 
 
@@ -82,7 +82,7 @@ E_FUNC void enterfilescope(void);
 E_FUNC void exitfilescope(void);
 E_FUNC void enterfuncscope(void);
 E_FUNC void exitfuncscope(void);
-E_FUNC void endscope (char *name, BOOL isglobal);
+E_FUNC void endscope (char *name, bool isglobal);
 
 
 /*

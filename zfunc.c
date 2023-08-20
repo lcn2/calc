@@ -1,7 +1,7 @@
 /*
  * zfunc - extended precision integral arithmetic non-primitive routines
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell, Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -478,7 +478,7 @@ zfib(ZVALUE z, ZVALUE *res)
 	sign = z.sign && ((n & 0x1) == 0);
 	if (n <= 2) {
 		*res = _one_;
-		res->sign = (BOOL)sign;
+		res->sign = (bool)sign;
 		return;
 	}
 	i = TOPFULL;
@@ -512,7 +512,7 @@ zfib(ZVALUE z, ZVALUE *res)
 	zfree(fnm1);
 	zfree(fnp1);
 	*res = fn;
-	res->sign = (BOOL)sign;
+	res->sign = (bool)sign;
 }
 
 
@@ -539,7 +539,7 @@ zpowi(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	}
 	if (zisabsleone(z1)) {	/* 0, 1, or -1 raised to a power */
 		ans = _one_;
-		ans.sign = (BOOL)sign;
+		ans.sign = (bool)sign;
 		if (*z1.v == 0)
 			ans = _zero_;
 		*res = ans;
@@ -559,7 +559,7 @@ zpowi(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	 */
 	if (zistiny(z1) && (*z1.v == 10)) {
 		ztenpow((long) power, res);
-		res->sign = (BOOL)sign;
+		res->sign = (bool)sign;
 		return;
 	}
 	/*
@@ -571,7 +571,7 @@ zpowi(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 			ans.len = z1.len;
 			ans.v = alloc(ans.len);
 			zcopyval(z1, ans);
-			ans.sign = (BOOL)sign;
+			ans.sign = (bool)sign;
 			*res = ans;
 			return;
 		case 2:
@@ -581,7 +581,7 @@ zpowi(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 			zsquare(z1, &temp);
 			zmul(z1, temp, res);
 			zfree(temp);
-			res->sign = (BOOL)sign;
+			res->sign = (bool)sign;
 			return;
 		case 4:
 			zsquare(z1, &temp);
@@ -641,7 +641,7 @@ zpowi(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 		ans = temp;
 		zfree(z1);
 	}
-	ans.sign = (BOOL)sign;
+	ans.sign = (bool)sign;
 	*res = ans;
 }
 
@@ -687,10 +687,10 @@ ztenpow(long power, ZVALUE *res)
  * Calculate modular inverse suppressing unnecessary divisions.
  * This is based on the Euclidean algorithm for large numbers.
  * (Algorithm X from Knuth Vol 2, section 4.5.2. and exercise 17)
- * Returns TRUE if there is no solution because the numbers
+ * Returns true if there is no solution because the numbers
  * are not relatively prime.
  */
-BOOL
+bool
 zmodinv(ZVALUE u, ZVALUE v, ZVALUE *res)
 {
 	FULL	q1, q2, ui3, vi3, uh, vh, A, B, C, D, T;
@@ -813,7 +813,7 @@ zmodinv(ZVALUE u, ZVALUE v, ZVALUE *res)
 		zfree(v3);
 		zfree(u2);
 		zfree(v2);
-		return TRUE;
+		return true;
 	}
 	ui3 = ztofull(u3);
 	vi3 = ztofull(v3);
@@ -834,15 +834,15 @@ zmodinv(ZVALUE u, ZVALUE v, ZVALUE *res)
 	zfree(v2);
 	if (ui3 != 1) {
 		zfree(u2);
-		return TRUE;
+		return true;
 	}
 	if (zisneg(u2)) {
 		zadd(v, u2, res);
 		zfree(u2);
-		return FALSE;
+		return false;
 	}
 	*res = u2;
-	return FALSE;
+	return false;
 }
 
 
@@ -858,7 +858,7 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	HALF *a, *a0, *A, *b, *b0, *B, *c, *d;
 	FULL f, g;
 	ZVALUE gcd;
-	BOOL needw;
+	bool needw;
 
 	if (zisunit(z1) || zisunit(z2)) {
 		*res = _one_;
@@ -979,7 +979,7 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	k = (n	- 1) * BASEB;
 	while (u >>= 1) k++;
 
-	needw = TRUE;
+	needw = true;
 
 	w = 0;
 	j = 0;
@@ -1019,7 +1019,7 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 			b0 = a;
 			k = j;
 			h = -h;
-			needw = TRUE;
+			needw = true;
 		}
 		if (h > 1) {
 			if (needw) {		/* find w = minv(*b0, h0) */
@@ -1032,7 +1032,7 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 					if (u & x) { u -= v * x; w |= x;}
 					x <<= 1;
 				}
-				needw = FALSE;
+				needw = false;
 			}
 			g = (FULL) (*a0 * w);
 			if (h < BASEB) {
@@ -1190,23 +1190,23 @@ zlcm(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 /*
  * Return whether or not two numbers are relatively prime to each other.
  */
-BOOL
+bool
 zrelprime(ZVALUE z1, ZVALUE z2)
 {
 	FULL rem1, rem2;		/* remainders */
 	ZVALUE rem;
-	BOOL result;
+	bool result;
 
 	z1.sign = 0;
 	z2.sign = 0;
 	if (ziseven(z1) && ziseven(z2)) /* false if both even */
-		return FALSE;
+		return false;
 	if (zisunit(z1) || zisunit(z2)) /* true if either is a unit */
-		return TRUE;
+		return true;
 	if (ziszero(z1) || ziszero(z2)) /* false if either is zero */
-		return FALSE;
+		return false;
 	if (zistwo(z1) || zistwo(z2))	/* true if either is two */
-		return TRUE;
+		return true;
 	/*
 	 * Try reducing each number by the product of the first few odd primes
 	 * to see if any of them are a common factor.
@@ -1214,26 +1214,26 @@ zrelprime(ZVALUE z1, ZVALUE z2)
 	rem1 = zmodi(z1, (FULL)3 * 5 * 7 * 11 * 13);
 	rem2 = zmodi(z2, (FULL)3 * 5 * 7 * 11 * 13);
 	if (((rem1 % 3) == 0) && ((rem2 % 3) == 0))
-		return FALSE;
+		return false;
 	if (((rem1 % 5) == 0) && ((rem2 % 5) == 0))
-		return FALSE;
+		return false;
 	if (((rem1 % 7) == 0) && ((rem2 % 7) == 0))
-		return FALSE;
+		return false;
 	if (((rem1 % 11) == 0) && ((rem2 % 11) == 0))
-		return FALSE;
+		return false;
 	if (((rem1 % 13) == 0) && ((rem2 % 13) == 0))
-		return FALSE;
+		return false;
 	/*
 	 * Try a new batch of primes now
 	 */
 	rem1 = zmodi(z1, (FULL)17 * 19 * 23);
 	rem2 = zmodi(z2, (FULL)17 * 19 * 23);
 	if (((rem1 % 17) == 0) && ((rem2 % 17) == 0))
-		return FALSE;
+		return false;
 	if (((rem1 % 19) == 0) && ((rem2 % 19) == 0))
-		return FALSE;
+		return false;
 	if (((rem1 % 23) == 0) && ((rem2 % 23) == 0))
-		return FALSE;
+		return false;
 	/*
 	 * Yuk, we must actually compute the gcd to know the answer
 	 */
@@ -1322,11 +1322,11 @@ zlog(ZVALUE z, ZVALUE base)
 /*
  * Return the integral log base 10 of a number.
  *
- * If was_10_power != NULL, then this flag is set to TRUE if the
- * value was a power of 10, FALSE otherwise.
+ * If was_10_power != NULL, then this flag is set to true if the
+ * value was a power of 10, false otherwise.
  */
 long
-zlog10(ZVALUE z, BOOL *was_10_power)
+zlog10(ZVALUE z, bool *was_10_power)
 {
 	ZVALUE *zp;			/* current square */
 	long power;			/* current power */
@@ -1368,7 +1368,7 @@ zlog10(ZVALUE z, BOOL *was_10_power)
 
 	/* assume not a power of ten unless we find out otherwise */
 	if (was_10_power != NULL) {
-		*was_10_power = FALSE;
+		*was_10_power = false;
 	}
 
 	/* quick exit for small values */
@@ -1378,7 +1378,7 @@ zlog10(ZVALUE z, BOOL *was_10_power)
 		for (i=0; i <= max_power10_exp; ++i) {
 			if (value == power10[i]) {
 				if (was_10_power != NULL) {
-					*was_10_power = TRUE;
+					*was_10_power = true;
 				}
 				return i;
 			} else if (value < power10[i]) {
@@ -1413,7 +1413,7 @@ zlog10(ZVALUE z, BOOL *was_10_power)
 		if (rel == 0) {
 			/* quick return - we match a tenpower entry */
 			if (was_10_power != NULL) {
-				*was_10_power = TRUE;
+				*was_10_power = true;
 			}
 			return (1L << (zp - _tenpowers_));
 		}
@@ -1437,7 +1437,7 @@ zlog10(ZVALUE z, BOOL *was_10_power)
 			/* exact power of 10 match */
 			power += (1L << (zp - _tenpowers_));
 			if (was_10_power != NULL) {
-				*was_10_power = TRUE;
+				*was_10_power = true;
 			}
 			zfree(pow10);
 			zfree(temp);
@@ -1750,7 +1750,7 @@ zsqrt(ZVALUE z, ZVALUE *dest, long rnd)
 	int i, j, j1, j2, k, k1, m, m0, m1, n, n0, o;
 	FULL d, e, f, g, h, s, t, x, topbit;
 	int remsign;
-	BOOL up, onebit;
+	bool up, onebit;
 	ZVALUE sqrt;
 
 	if (z.sign) {
@@ -1874,7 +1874,7 @@ zsqrt(ZVALUE z, ZVALUE *dest, long rnd)
 		k1 = 1;
 	}
 	h = e >> k;
-	onebit = ((e & ((FULL)1 << (k - 1))) ? TRUE : FALSE);
+	onebit = ((e & ((FULL)1 << (k - 1))) ? true : false);
 	j2 = BASEB - k1;
 	j1 = BASEB + j2;
 	while (m > n0) {
@@ -1980,9 +1980,9 @@ done:	if (s == 0) {
 	}
 	else
 	if (rnd & 8)
-		up = (((rnd ^ *a0) & 1) ? TRUE : FALSE);
+		up = (((rnd ^ *a0) & 1) ? true : false);
 	else
-		up = ((rnd & 1) ? TRUE : FALSE);
+		up = ((rnd & 1) ? true : false);
 	if (up) {
 		remsign = -1;
 		i = n;
@@ -2042,14 +2042,14 @@ zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest)
 	}
 	if (zge31b(z2)) {	/* humongous root */
 		*dest = _one_;
-		dest->sign = (BOOL)((HALF)sign);
+		dest->sign = (bool)((HALF)sign);
 		return;
 	}
 	k = (LEN)ztolong(z2);
 	highbit = zhighbit(z1);
 	if (highbit < k) {	/* too high a root */
 		*dest = _one_;
-		dest->sign = (BOOL)((HALF)sign);
+		dest->sign = (bool)((HALF)sign);
 		return;
 	}
 	sival.ivalue = k - 1;
@@ -2095,7 +2095,7 @@ zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest)
 			if ((i == 0) || (zcmp(old, ztry) == 0)) {
 				zfree(quo);
 				zfree(old);
-				ztry.sign = (BOOL)((HALF)sign);
+				ztry.sign = (bool)((HALF)sign);
 				zquicktrim(ztry);
 				*dest = ztry;
 				return;
@@ -2118,7 +2118,7 @@ zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest)
 /*
  * Test to see if a number is an exact square or not.
  */
-BOOL
+bool
 zissquare(ZVALUE z)
 {
 	long n;
@@ -2126,7 +2126,7 @@ zissquare(ZVALUE z)
 
 	/* negative values are never perfect squares */
 	if (zisneg(z)) {
-		return FALSE;
+		return false;
 	}
 
 	/* ignore trailing zero words */
@@ -2137,16 +2137,38 @@ zissquare(ZVALUE z)
 
 	/* zero or one is a perfect square */
 	if (zisabsleone(z)) {
-		return TRUE;
+		return true;
 	}
 
 	/* check mod 4096 values */
 	if (issq_mod4k[(int)(*z.v & 0xfff)] == 0) {
-		return FALSE;
+		return false;
 	}
 
 	/* must do full square root test now */
 	n = !zsqrt(z, &tmp, 0);
 	zfree(tmp);
-	return (n ? TRUE : FALSE);
+	return (n ? true : false);
 }
+
+
+#if 0 /* XXX - to be added later */
+/*
+ * test if a number is a power of 2
+ *
+ * given:
+ *	z	value to check if it is a power of 2
+ *	zlog2	set to log base 2 of z if z is a power of 2, 0 otherwise
+ */
+bool
+zispowerof2(ZVALUE z, ZVALUE *zlog2)
+{
+
+	/* zero and negative values are never powers of 2 */
+	if (ziszero(z) || zisneg(z)) {
+		return false;
+	}
+
+	/* XXX - add code here - XXX */
+}
+#endif /* XXX */

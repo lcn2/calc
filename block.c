@@ -1,7 +1,7 @@
 /*
  * block - fixed, dynamic, fifo and circular memory blocks
  *
- * Copyright (C) 1999-2007,2021,2022  Landon Curt Noll and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  Landon Curt Noll
  *
@@ -427,8 +427,8 @@ blk_copy(BLOCK *blk)
  *	b	second BLOCK
  *
  * returns:
- *	TRUE => BLOCKs are different
- *	FALSE => BLOCKs are the same
+ *	true => BLOCKs are different
+ *	false => BLOCKs are the same
  */
 int
 blk_cmp(BLOCK *a, BLOCK *b)
@@ -438,11 +438,11 @@ blk_cmp(BLOCK *a, BLOCK *b)
 	 */
 	if (a == b) {
 		/* pointers to the same object */
-		return FALSE;
+		return false;
 	}
 	if (a == NULL || b == NULL) {
 		/* one pointer is NULL, so they differ */
-		return TRUE;
+		return true;
 	}
 
 	/*
@@ -450,7 +450,7 @@ blk_cmp(BLOCK *a, BLOCK *b)
 	 */
 	if (a->datalen != b->datalen) {
 		/* different lengths are different */
-		return TRUE;
+		return true;
 	}
 
 	/*
@@ -460,13 +460,13 @@ blk_cmp(BLOCK *a, BLOCK *b)
 	 */
 	if (memcmp(a->data, b->data, a->datalen) != 0) {
 		/* different sections are different */
-		return TRUE;
+		return true;
 	}
 
 	/*
 	 * the blocks are the same
 	 */
-	return FALSE;
+	return false;
 }
 
 
@@ -479,7 +479,7 @@ void
 blk_print(BLOCK *blk)
 {
 	long i;
-	BOOL havetail;
+	bool havetail;
 	USB8 *ptr;
 
 	/* XXX - should use the config parameters for better print control */

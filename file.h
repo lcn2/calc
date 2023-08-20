@@ -1,7 +1,7 @@
 /*
  * file - file I/O routines callable by users
  *
- * Copyright (C) 1999-2007,2014,2021  David I. Bell and Landon Curt Noll
+ * Copyright (C) 1999-2007,2014,2021,2023  David I. Bell and Landon Curt Noll
  *
  * Primary author:  David I. Bell
  *
@@ -48,10 +48,10 @@ typedef struct {
 	dev_t dev;		/* file device */
 	ino_t inode;		/* file inode */
 	char *name;		/* file name */
-	BOOL reading;		/* TRUE if opened for reading */
-	BOOL writing;		/* TRUE if opened for writing */
-	BOOL appending;		/* TRUE if also opened for appending */
-	BOOL binary;		/* TRUE if binary mode - mode ignored/unused */
+	bool reading;		/* true if opened for reading */
+	bool writing;		/* true if opened for writing */
+	bool appending;		/* true if also opened for appending */
+	bool binary;		/* true if binary mode - mode ignored/unused */
 	char action;		/* most recent use for 'r', 'w' or 0 */
 	char mode[MODE_LEN+1];	/* open mode */
 } FILEIO;

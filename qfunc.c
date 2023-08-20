@@ -1,7 +1,7 @@
 /*
  * qfunc - extended precision rational arithmetic non-primitive functions
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -112,7 +112,7 @@ qminv(NUMBER *q1, NUMBER *q2)
 	r = qalloc();
 	if (s) {
 		zfree(z1);
-		z2.sign = TRUE;
+		z2.sign = true;
 		r->num = z2;
 		return r;
 	}
@@ -168,7 +168,7 @@ qpowermod(NUMBER *q1, NUMBER *q2, NUMBER *q3)
 	r = qalloc();
 	if (s) {
 		zfree(z1);
-		z2.sign = TRUE;
+		z2.sign = true;
 		r->num = z2;
 		return r;
 	}
@@ -187,7 +187,7 @@ NUMBER *
 qpowi(NUMBER *q1, NUMBER *q2)
 {
 	register NUMBER *r;
-	BOOL invert, sign;
+	bool invert, sign;
 	ZVALUE num, zden, z2;
 
 	if (qisfrac(q2)) {
@@ -275,7 +275,7 @@ qhypot(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
  * If the wantneg flag is nonzero, then negative square root is returned.
  */
 NUMBER *
-qlegtoleg(NUMBER *q, NUMBER *epsilon, BOOL wantneg)
+qlegtoleg(NUMBER *q, NUMBER *epsilon, bool wantneg)
 {
 	NUMBER *res, *qtmp1, *qtmp2;
 	ZVALUE num;
@@ -454,10 +454,10 @@ qisqrt(NUMBER *q)
 /*
  * Return whether or not a number is an exact square.
  */
-BOOL
+bool
 qissquare(NUMBER *q)
 {
-	BOOL flag;
+	bool flag;
 
 	flag = zissquare(q->num);
 	if (qisint(q) || !flag)
@@ -765,18 +765,18 @@ qdigit(NUMBER *q, ZVALUE dpos, ZVALUE base)
  * bit position.  Negative bit positions indicate bits to the right of the
  * binary decimal point.  Examples: qdigit(17.1, 0) = 1, qdigit(17.1, -1) = 0.
  */
-BOOL
+bool
 qisset(NUMBER *q, long n)
 {
 	NUMBER *qtmp1, *qtmp2;
 	ZVALUE ztmp;
-	BOOL res;
+	bool res;
 
 	/*
 	 * Zero number or negative bit position place of integer is trivial.
 	 */
 	if (qiszero(q) || (qisint(q) && (n < 0)))
-		return FALSE;
+		return false;
 	/*
 	 * For non-negative bit positions, answer is easy.
 	 */
@@ -1337,10 +1337,10 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 	ZVALUE tmp1, tmp2, tmp3, tmp4;
 	ZVALUE denbnd;
 	ZVALUE f, g, k;
-	BOOL esign;
+	bool esign;
 	int s;
-	BOOL bnddencase;
-	BOOL useold = FALSE;
+	bool bnddencase;
+	bool useold = false;
 
 	if (qiszero(epsilon) || qisint(q))
 		return qlink(q);
@@ -1416,7 +1416,7 @@ qcfappr(NUMBER *q, NUMBER *epsilon, long rnd)
 	}
 	if (bnddencase) {
 		if (s > 0) {
-			useold = TRUE;
+			useold = true;
 		} else {
 			zsub(zden, denbnd, &tmp1);
 			zquo(tmp1, oldden, &k, 1);
@@ -1829,14 +1829,14 @@ qplaces(NUMBER *q, ZVALUE base)
 
 /*
  * Perform a probabilistic primality test (algorithm P in Knuth).
- * Returns FALSE if definitely not prime, or TRUE if probably prime.
+ * Returns false if definitely not prime, or true if probably prime.
  *
  * The absolute value of the 2nd arg determines how many times
  * to check for primality.  If 2nd arg < 0, then the trivial
  * check is omitted.  The 3rd arg determines how tests to
  * initially skip.
  */
-BOOL
+bool
 qprimetest(NUMBER *q1, NUMBER *q2, NUMBER *q3)
 {
 	if (qisfrac(q1) || qisfrac(q2) || qisfrac(q3)) {

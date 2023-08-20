@@ -76,12 +76,12 @@ E_FUNC FUNC *curfunc;	/* NOTE: This is a function pointer, we need E_FUNC */
  */
 E_FUNC FUNC *findfunc(long index);
 E_FUNC char *namefunc(long index);
-E_FUNC BOOL evaluate(BOOL nestflag);
+E_FUNC bool evaluate(bool nestflag);
 E_FUNC long adduserfunc(char *name);
 E_FUNC void rmuserfunc(char *name);
 E_FUNC void rmalluserfunc(void);
 E_FUNC long getuserfunc(char *name);
-E_FUNC void beginfunc(char *name, BOOL newflag);
+E_FUNC void beginfunc(char *name, bool newflag);
 E_FUNC int builtinopcode(long index);
 E_FUNC char *builtinname(long index);
 E_FUNC int dumpop(unsigned long *pc);

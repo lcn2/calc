@@ -3,8 +3,6 @@
  *
  * Copyright (C) 2023  David I. Bell and Landon Curt Noll
  *
- * Primary author:  David I. Bell
- *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
  * as published by the Free Software Foundation.
@@ -19,8 +17,8 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1990/05/22 11:00:58
- * File existed as early as:	1990
+ * Under source code control:	2023/08/19 17:32:42
+ * File existed as early as:	2023
  *
  * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
  * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

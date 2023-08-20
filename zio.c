@@ -1,7 +1,7 @@
 /*
  * zio - scanf and printf routines for arbitrary precision integers
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -58,14 +58,14 @@ struct iostate {
 	char *outbuf;			/* output string buffer (if any) */
 	size_t outbufsize;		/* current size of string buffer */
 	size_t outbufused;		/* space used in string buffer */
-	BOOL outputisstring;		/* TRUE if output is to string buffer */
+	bool outputisstring;		/* true if output is to string buffer */
 };
 
 
 STATIC IOSTATE	*oldiostates = NULL;	/* list of saved output states */
 STATIC FILE	*outfp = NULL;		/* file unit for output */
 STATIC char	*outbuf = NULL;		/* current diverted buffer */
-STATIC BOOL	outputisstring = FALSE;
+STATIC bool	outputisstring = false;
 STATIC size_t	outbufsize;
 STATIC size_t	outbufused;
 
@@ -232,7 +232,7 @@ math_divertio(void)
 		not_reached();
 	}
 	outbufsize = OUTBUFSIZE;
-	outputisstring = TRUE;
+	outputisstring = true;
 	oldiostates = sp;
 }
 
@@ -602,8 +602,8 @@ zprintval(ZVALUE z, long decimals, long width)
 	long leadspaces;	/* number of leading spaces to print */
 	long putpoint;		/* digits until print decimal point */
 	long digits;		/* number of digits of raw number */
-	BOOL output;		/* TRUE if have output something */
-	BOOL neg;		/* TRUE if negative */
+	bool output;		/* true if have output something */
+	bool neg;		/* true if negative */
 	ZVALUE quo, rem;	/* quotient and remainder */
 	ZVALUE leftnums[32];	/* left parts of the number */
 	ZVALUE rightnums[32];	/* right parts of the number */
@@ -642,7 +642,7 @@ zprintval(ZVALUE z, long decimals, long width)
 	 * we visit left nodes first.  We do the needed recursion in line.
 	 */
 	digits = 1;
-	output = FALSE;
+	output = false;
 	n = 0;
 	putpoint = 0;
 	rightnums[0].len = 0;
@@ -660,7 +660,7 @@ zprintval(ZVALUE z, long decimals, long width)
 		i = (long)(leftnums[n].v[0]);
 		if (output || i || (n == 0)) {
 			if (!output) {
-				output = TRUE;
+				output = true;
 				if (decimals < digits)
 					leadspaces -= digits;
 				else
@@ -711,15 +711,15 @@ str2z(char *s, ZVALUE *res)
 {
 	ZVALUE z, ztmp, digit;
 	HALF digval;
-	BOOL minus;
+	bool minus;
 	long shift;
 
-	minus = FALSE;
+	minus = false;
 	shift = 0;
 	if (*s == '+')
 		s++;
 	else if (*s == '-') {
-		minus = TRUE;
+		minus = true;
 		s++;
 	}
 	if (*s == '0') {		/* possibly hex, octal, or binary */

@@ -1,7 +1,7 @@
 /*
  * listfunc - list handling routines
  *
- * Copyright (C) 1999-2007,2021,2022  David I. Bell
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -392,7 +392,7 @@ listelement(LIST *lp, long index)
 	register LISTELEM *ep;	/* current list element */
 	long dist;		/* distance to element */
 	long temp;		/* temporary distance */
-	BOOL forward;		/* TRUE if need to walk forwards */
+	bool forward;		/* true if need to walk forwards */
 
 	if (index < 0)
 		index += lp->l_count;
@@ -430,12 +430,12 @@ listelement(LIST *lp, long index)
 		if ((temp >= 0) && (temp < dist)) {
 			dist = temp;
 			ep = lp->l_cache;
-			forward = TRUE;
+			forward = true;
 		}
 		if ((temp < 0) && (-temp < dist)) {
 			dist = -temp;
 			ep = lp->l_cache;
-			forward = FALSE;
+			forward = false;
 		}
 	}
 	/*
@@ -458,28 +458,28 @@ listelement(LIST *lp, long index)
 
 /*
  * Compare two lists to see if they are identical.
- * Returns TRUE if they are different.
+ * Returns true if they are different.
  */
-BOOL
+bool
 listcmp(LIST *lp1, LIST *lp2)
 {
 	LISTELEM *e1, *e2;
 	long count;
 
 	if (lp1 == lp2)
-		return FALSE;
+		return false;
 	if (lp1->l_count != lp2->l_count)
-		return TRUE;
+		return true;
 	e1 = lp1->l_first;
 	e2 = lp2->l_first;
 	count = lp1->l_count;
 	while (count-- > 0) {
 		if (comparevalue(&e1->e_value, &e2->e_value))
-			return TRUE;
+			return true;
 		e1 = e1->e_next;
 		e2 = e2->e_next;
 	}
-	return FALSE;
+	return false;
 }
 
 

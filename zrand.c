@@ -1,7 +1,7 @@
 /*
  * zrand - subtractive 100 shuffle generator
  *
- * Copyright (C) 1999-2007,2021,2022  Landon Curt Noll
+ * Copyright (C) 1999-2007,2021-2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -2318,9 +2318,9 @@ randfree(RAND *state)
  *	s2 - second state to compare
  *
  * return:
- *	TRUE if states differ
+ *	true if states differ
  */
-BOOL
+bool
 randcmp(CONST RAND *s1, CONST RAND *s2)
 {
 	/*
@@ -2329,7 +2329,7 @@ randcmp(CONST RAND *s1, CONST RAND *s2)
 	if (!s1->seeded) {
 		if (!s2->seeded) {
 			/* uninitialized == uninitialized */
-			return FALSE;
+			return false;
 		} else {
 			/* uninitialized only equals default state */
 			return randcmp(s2, &init_s100);
@@ -2340,7 +2340,7 @@ randcmp(CONST RAND *s1, CONST RAND *s2)
 	}
 
 	/* compare states */
-	return (BOOL)(memcmp(s1, s2, sizeof(RAND)) != 0);
+	return (bool)(memcmp(s1, s2, sizeof(RAND)) != 0);
 }
 
 
