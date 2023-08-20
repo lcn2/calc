@@ -277,7 +277,7 @@ typedef SB32 LEN;			/* else assume we can support at least 4 octet pointers */
 #elif PTR_LEN >= 8
 #define MAXDATA ((LEN) 1<<(64-4))	/* 1/16 of a 64-bit address space */
 #elif PTR_LEN >= 4 && PTR_LEN < 8
-#define MAXDATA ((LEN) 1<<(32-2))	/* 1/16 of a 32-bit address space */
+#define MAXDATA ((LEN) 1<<(32-4))	/* 1/16 of a 32-bit address space */
 #else
    /\oo/\ unsupproted PTR_LEN /\oo/\ !!	/* firewall - reject PTR_LEN as unsupported */
 #endif
