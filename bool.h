@@ -39,29 +39,25 @@
 /*
  * standard truth :-)
  */
-#if !defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
+#if !defined(HAVE_STDBOOL_H)
 
-/* have a C99 compiler - we should have <stdbool.h>, true, false */
-
-#elif !defined(__cplusplus)
-
-/* do not have a C99 compiler - fake a <stdbool.h> header file */
-typedef unsigned char bool;
+/* fake a <stdbool.h> header file */
+typedef unsigned char bool;	/* fake boolean value */
 #undef true
 #define true ((bool)(1))
 #undef false
 #define false ((bool)(0))
 
-#endif /* standard truth :-) */
+#endif /* !HAVE_STDBOOL_H */
 
 
 /*
  * calc historic booleans
  */
 #undef TRUE
-#define TRUE	((bool) true)
+#define TRUE (true)
 #undef FALSE
-#define FALSE	((bool) false)
+#define FALSE (false)
 #undef BOOL
 #define BOOL bool
 
@@ -78,7 +74,7 @@ typedef unsigned char bool;
  * strtobool - convert a string to a boolean
  */
 #if !defined(strtobool)
-#define strtobool(x) ((bool) ((x) != NULL && !strcmp((x), "true")))
+#define strtobool(x) ((bool) ((x) != NULL && strcmp((x), "true") == 0))
 #endif
 
 
