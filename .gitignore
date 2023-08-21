@@ -11,16 +11,17 @@ align32.h
 args.h
 cal/.all
 calc
+calc-static
 calc.1
+calc.spec
+calc.usage
 calcerr.c
 calcerr.h
-calc.spec
-calc-static
-calc.usage
 charbit.h
+chk_c
 conf.h
-cscript/4dsphere
 cscript/.all
+cscript/4dsphere
 cscript/fproduct
 cscript/mersenne
 cscript/piforever
@@ -45,6 +46,7 @@ have_getpgid.h
 have_getprid.h
 have_getsid.h
 have_gettime.h
+have_inttypes.h
 have_limits.h
 have_memmv.h
 have_newstr.h
@@ -53,6 +55,7 @@ have_posscl.h
 have_rusage.h
 have_statfs.h
 have_stdbool.h
+have_stdint.h
 have_stdlib.h
 have_stdvs
 have_strdup.h

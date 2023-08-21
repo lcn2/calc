@@ -42,7 +42,9 @@
 #if !defined(HAVE_STDBOOL_H)
 
 /* fake a <stdbool.h> header file */
-typedef unsigned char bool;	/* fake boolean value */
+#if __STDC_VERSION__ <= 201710
+typedef unsigned int bool;	/* fake boolean typedef */
+#endif /* __STDC_VERSION__ <= 201710 */
 #undef true
 #define true ((bool)(1))
 #undef false

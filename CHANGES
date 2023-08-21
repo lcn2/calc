@@ -42,6 +42,34 @@ The following are the changes from calc version 2.14.3.5 to date:
     Replaced in C source, TRUE with true, FALSE with false, and
     BOOL with bool.
 
+    Fixed have_statfs optional executable file extension ${EXT{ in
+    the ${UTIL_PROGS} make variable.
+
+    Prevented the "fake boolean value" when <stdbool.h> is missing,
+    from complicating C compilers post c17 standard.
+
+    Test if <stdint.h> exists and set HAVE_STDINT_H accordingly
+    in have_stdint.h.  Added HAVE_STDINT_H to allow one to force
+    this value.
+
+    Test if <inttypes.h> exists and set HAVE_INTTYPES_H accordingly
+    in have_inttypes.h.  Added HAVE_INTTYPES_H to allow one to force
+    this value.
+
+    Added c_chk.c to check the compiler and C include for calc
+    requirements.  If you are unable to compile this program, or
+    if this program when compiles does not exit 0, then your C
+    compiler and/or C include fails to meet calc requirements.
+    Compilers that are at least c99 MUST be able to compile this
+    program such that when run will exit 0.
+
+    The "make hsrc" file will attempt to compile and run c_chk and
+    will warn if the C compiler and/or C include fails to meet
+    calc requirements.  The "make debug" system will run c_chk -c
+    to print information about the C compiler and C include.
+    Currently failure to compile cc_chk.c or c_chk exiting non-0
+    will just print "WARNING!!" strings to stderr.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 
