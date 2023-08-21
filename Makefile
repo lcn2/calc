@@ -1209,7 +1209,7 @@ have_fpos_pos.h: have_fpos_pos.c have_fgetsetpos.h have_posscl.h have_string.h \
 fposval.h: fposval.c have_fgetsetpos.h have_fpos_pos.h have_offscl.h have_posscl.h \
 	   endian_calc.h banned.h have_ban_pragma.h fposval.h.def alloc.h \
 	   have_newstr.h have_memmv.h have_string.h have_const.h have_string.h \
-	   have_unused.h ${MK_SET}
+	   have_unused.h have_stdbool.h ${MK_SET}
 	${Q} ${RM} -f fposval_tmp $@
 	${H} echo 'forming $@'
 	${Q} echo '/*' > $@
@@ -2385,6 +2385,8 @@ have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h have_string.h \
 	else \
 	    ${TRUE}; \
 	fi
+
+bool.h: have_stdbool.h
 
 chk_c${EXT}: chk_c.c have_stdint.h have_inttypes.h have_stdlib.h bool.h have_ban_pragma.h banned.h
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
@@ -3919,6 +3921,7 @@ addop.o: have_const.h
 addop.o: have_limits.h
 addop.o: have_memmv.h
 addop.o: have_newstr.h
+addop.o: have_stdbool.h
 addop.o: have_stdlib.h
 addop.o: have_string.h
 addop.o: label.h
@@ -3958,6 +3961,7 @@ assocfunc.o: have_const.h
 assocfunc.o: have_limits.h
 assocfunc.o: have_memmv.h
 assocfunc.o: have_newstr.h
+assocfunc.o: have_stdbool.h
 assocfunc.o: have_stdlib.h
 assocfunc.o: have_string.h
 assocfunc.o: longbits.h
@@ -3990,6 +3994,7 @@ blkcpy.o: have_fgetsetpos.h
 blkcpy.o: have_limits.h
 blkcpy.o: have_memmv.h
 blkcpy.o: have_newstr.h
+blkcpy.o: have_stdbool.h
 blkcpy.o: have_stdlib.h
 blkcpy.o: have_string.h
 blkcpy.o: longbits.h
@@ -4018,6 +4023,7 @@ block.o: have_const.h
 block.o: have_limits.h
 block.o: have_memmv.h
 block.o: have_newstr.h
+block.o: have_stdbool.h
 block.o: have_stdlib.h
 block.o: have_string.h
 block.o: longbits.h
@@ -4042,6 +4048,7 @@ byteswap.o: have_const.h
 byteswap.o: have_limits.h
 byteswap.o: have_memmv.h
 byteswap.o: have_newstr.h
+byteswap.o: have_stdbool.h
 byteswap.o: have_stdlib.h
 byteswap.o: have_string.h
 byteswap.o: longbits.h
@@ -4071,6 +4078,7 @@ calc.o: have_const.h
 calc.o: have_limits.h
 calc.o: have_memmv.h
 calc.o: have_newstr.h
+calc.o: have_stdbool.h
 calc.o: have_stdlib.h
 calc.o: have_strdup.h
 calc.o: have_string.h
@@ -4106,6 +4114,7 @@ chk_c.o: banned.h
 chk_c.o: bool.h
 chk_c.o: chk_c.c
 chk_c.o: have_ban_pragma.h
+chk_c.o: have_stdbool.h
 chk_c.o: have_stdint.h
 chk_c.o: have_stdlib.h
 codegen.o: alloc.h
@@ -4130,6 +4139,7 @@ codegen.o: have_const.h
 codegen.o: have_limits.h
 codegen.o: have_memmv.h
 codegen.o: have_newstr.h
+codegen.o: have_stdbool.h
 codegen.o: have_stdlib.h
 codegen.o: have_string.h
 codegen.o: have_strlcat.h
@@ -4164,6 +4174,7 @@ comfunc.o: have_const.h
 comfunc.o: have_limits.h
 comfunc.o: have_memmv.h
 comfunc.o: have_newstr.h
+comfunc.o: have_stdbool.h
 comfunc.o: have_stdlib.h
 comfunc.o: have_string.h
 comfunc.o: longbits.h
@@ -4185,6 +4196,7 @@ commath.o: have_const.h
 commath.o: have_limits.h
 commath.o: have_memmv.h
 commath.o: have_newstr.h
+commath.o: have_stdbool.h
 commath.o: have_stdlib.h
 commath.o: have_string.h
 commath.o: longbits.h
@@ -4211,6 +4223,7 @@ config.o: have_const.h
 config.o: have_limits.h
 config.o: have_memmv.h
 config.o: have_newstr.h
+config.o: have_stdbool.h
 config.o: have_stdlib.h
 config.o: have_strdup.h
 config.o: have_string.h
@@ -4247,6 +4260,7 @@ const.o: have_const.h
 const.o: have_limits.h
 const.o: have_memmv.h
 const.o: have_newstr.h
+const.o: have_stdbool.h
 const.o: have_stdlib.h
 const.o: have_string.h
 const.o: longbits.h
@@ -4277,6 +4291,7 @@ custom.o: have_const.h
 custom.o: have_limits.h
 custom.o: have_memmv.h
 custom.o: have_newstr.h
+custom.o: have_stdbool.h
 custom.o: have_stdlib.h
 custom.o: have_string.h
 custom.o: longbits.h
@@ -4315,6 +4330,7 @@ file.o: have_fpos_pos.h
 file.o: have_limits.h
 file.o: have_memmv.h
 file.o: have_newstr.h
+file.o: have_stdbool.h
 file.o: have_stdlib.h
 file.o: have_string.h
 file.o: have_strlcat.h
@@ -4346,6 +4362,7 @@ fposval.o: have_memmv.h
 fposval.o: have_newstr.h
 fposval.o: have_offscl.h
 fposval.o: have_posscl.h
+fposval.o: have_stdbool.h
 fposval.o: have_stdlib.h
 fposval.o: have_string.h
 fposval.o: have_unused.h
@@ -4376,6 +4393,7 @@ func.o: have_limits.h
 func.o: have_memmv.h
 func.o: have_newstr.h
 func.o: have_rusage.h
+func.o: have_stdbool.h
 func.o: have_stdlib.h
 func.o: have_strdup.h
 func.o: have_string.h
@@ -4419,6 +4437,7 @@ hash.o: have_const.h
 hash.o: have_limits.h
 hash.o: have_memmv.h
 hash.o: have_newstr.h
+hash.o: have_stdbool.h
 hash.o: have_stdlib.h
 hash.o: have_string.h
 hash.o: longbits.h
@@ -4546,6 +4565,7 @@ help.o: have_const.h
 help.o: have_limits.h
 help.o: have_memmv.h
 help.o: have_newstr.h
+help.o: have_stdbool.h
 help.o: have_stdlib.h
 help.o: have_string.h
 help.o: have_unistd.h
@@ -4577,6 +4597,7 @@ hist.o: have_const.h
 hist.o: have_limits.h
 hist.o: have_memmv.h
 hist.o: have_newstr.h
+hist.o: have_stdbool.h
 hist.o: have_stdlib.h
 hist.o: have_strdup.h
 hist.o: have_string.h
@@ -4615,6 +4636,7 @@ input.o: have_const.h
 input.o: have_limits.h
 input.o: have_memmv.h
 input.o: have_newstr.h
+input.o: have_stdbool.h
 input.o: have_stdlib.h
 input.o: have_string.h
 input.o: have_strlcat.h
@@ -4656,6 +4678,7 @@ label.o: have_const.h
 label.o: have_limits.h
 label.o: have_memmv.h
 label.o: have_newstr.h
+label.o: have_stdbool.h
 label.o: have_stdlib.h
 label.o: have_string.h
 label.o: label.c
@@ -4691,6 +4714,7 @@ lib_calc.o: have_const.h
 lib_calc.o: have_limits.h
 lib_calc.o: have_memmv.h
 lib_calc.o: have_newstr.h
+lib_calc.o: have_stdbool.h
 lib_calc.o: have_stdlib.h
 lib_calc.o: have_strdup.h
 lib_calc.o: have_string.h
@@ -4725,6 +4749,7 @@ lib_util.o: have_const.h
 lib_util.o: have_limits.h
 lib_util.o: have_memmv.h
 lib_util.o: have_newstr.h
+lib_util.o: have_stdbool.h
 lib_util.o: have_stdlib.h
 lib_util.o: have_string.h
 lib_util.o: lib_util.c
@@ -4749,6 +4774,7 @@ listfunc.o: have_const.h
 listfunc.o: have_limits.h
 listfunc.o: have_memmv.h
 listfunc.o: have_newstr.h
+listfunc.o: have_stdbool.h
 listfunc.o: have_stdlib.h
 listfunc.o: have_string.h
 listfunc.o: listfunc.c
@@ -4785,6 +4811,7 @@ matfunc.o: have_const.h
 matfunc.o: have_limits.h
 matfunc.o: have_memmv.h
 matfunc.o: have_newstr.h
+matfunc.o: have_stdbool.h
 matfunc.o: have_stdlib.h
 matfunc.o: have_string.h
 matfunc.o: have_unused.h
@@ -4817,6 +4844,7 @@ math_error.o: have_const.h
 math_error.o: have_limits.h
 math_error.o: have_memmv.h
 math_error.o: have_newstr.h
+math_error.o: have_stdbool.h
 math_error.o: have_stdlib.h
 math_error.o: have_string.h
 math_error.o: lib_calc.h
@@ -4848,6 +4876,7 @@ obj.o: have_const.h
 obj.o: have_limits.h
 obj.o: have_memmv.h
 obj.o: have_newstr.h
+obj.o: have_stdbool.h
 obj.o: have_stdlib.h
 obj.o: have_string.h
 obj.o: have_strlcat.h
@@ -4887,6 +4916,7 @@ opcodes.o: have_fgetsetpos.h
 opcodes.o: have_limits.h
 opcodes.o: have_memmv.h
 opcodes.o: have_newstr.h
+opcodes.o: have_stdbool.h
 opcodes.o: have_stdlib.h
 opcodes.o: have_string.h
 opcodes.o: have_unused.h
@@ -4918,6 +4948,7 @@ pix.o: have_const.h
 pix.o: have_limits.h
 pix.o: have_memmv.h
 pix.o: have_newstr.h
+pix.o: have_stdbool.h
 pix.o: have_stdlib.h
 pix.o: have_string.h
 pix.o: longbits.h
@@ -4943,6 +4974,7 @@ poly.o: have_const.h
 poly.o: have_limits.h
 poly.o: have_memmv.h
 poly.o: have_newstr.h
+poly.o: have_stdbool.h
 poly.o: have_stdlib.h
 poly.o: have_string.h
 poly.o: longbits.h
@@ -4966,6 +4998,7 @@ prime.o: have_const.h
 prime.o: have_limits.h
 prime.o: have_memmv.h
 prime.o: have_newstr.h
+prime.o: have_stdbool.h
 prime.o: have_stdlib.h
 prime.o: have_string.h
 prime.o: jump.h
@@ -4988,6 +5021,7 @@ qfunc.o: have_const.h
 qfunc.o: have_limits.h
 qfunc.o: have_memmv.h
 qfunc.o: have_newstr.h
+qfunc.o: have_stdbool.h
 qfunc.o: have_stdlib.h
 qfunc.o: have_string.h
 qfunc.o: longbits.h
@@ -5011,6 +5045,7 @@ qio.o: have_const.h
 qio.o: have_limits.h
 qio.o: have_memmv.h
 qio.o: have_newstr.h
+qio.o: have_stdbool.h
 qio.o: have_stdlib.h
 qio.o: have_string.h
 qio.o: have_unused.h
@@ -5033,6 +5068,7 @@ qmath.o: have_const.h
 qmath.o: have_limits.h
 qmath.o: have_memmv.h
 qmath.o: have_newstr.h
+qmath.o: have_stdbool.h
 qmath.o: have_stdlib.h
 qmath.o: have_string.h
 qmath.o: longbits.h
@@ -5054,6 +5090,7 @@ qmod.o: have_const.h
 qmod.o: have_limits.h
 qmod.o: have_memmv.h
 qmod.o: have_newstr.h
+qmod.o: have_stdbool.h
 qmod.o: have_stdlib.h
 qmod.o: have_string.h
 qmod.o: longbits.h
@@ -5074,6 +5111,7 @@ qtrans.o: have_const.h
 qtrans.o: have_limits.h
 qtrans.o: have_memmv.h
 qtrans.o: have_newstr.h
+qtrans.o: have_stdbool.h
 qtrans.o: have_stdlib.h
 qtrans.o: have_string.h
 qtrans.o: longbits.h
@@ -5098,6 +5136,7 @@ quickhash.o: have_const.h
 quickhash.o: have_limits.h
 quickhash.o: have_memmv.h
 quickhash.o: have_newstr.h
+quickhash.o: have_stdbool.h
 quickhash.o: have_stdlib.h
 quickhash.o: have_string.h
 quickhash.o: longbits.h
@@ -5129,6 +5168,7 @@ sample_many.o: have_const.h
 sample_many.o: have_limits.h
 sample_many.o: have_memmv.h
 sample_many.o: have_newstr.h
+sample_many.o: have_stdbool.h
 sample_many.o: have_stdlib.h
 sample_many.o: have_string.h
 sample_many.o: lib_util.h
@@ -5160,6 +5200,7 @@ sample_rand.o: have_const.h
 sample_rand.o: have_limits.h
 sample_rand.o: have_memmv.h
 sample_rand.o: have_newstr.h
+sample_rand.o: have_stdbool.h
 sample_rand.o: have_stdlib.h
 sample_rand.o: have_string.h
 sample_rand.o: lib_util.h
@@ -5193,6 +5234,7 @@ seed.o: have_memmv.h
 seed.o: have_newstr.h
 seed.o: have_rusage.h
 seed.o: have_statfs.h
+seed.o: have_stdbool.h
 seed.o: have_stdlib.h
 seed.o: have_string.h
 seed.o: have_sys_mount.h
@@ -5226,6 +5268,7 @@ sha1.o: have_const.h
 sha1.o: have_limits.h
 sha1.o: have_memmv.h
 sha1.o: have_newstr.h
+sha1.o: have_stdbool.h
 sha1.o: have_stdlib.h
 sha1.o: have_string.h
 sha1.o: longbits.h
@@ -5254,6 +5297,7 @@ size.o: have_const.h
 size.o: have_limits.h
 size.o: have_memmv.h
 size.o: have_newstr.h
+size.o: have_stdbool.h
 size.o: have_stdlib.h
 size.o: have_string.h
 size.o: longbits.h
@@ -5285,6 +5329,7 @@ str.o: have_const.h
 str.o: have_limits.h
 str.o: have_memmv.h
 str.o: have_newstr.h
+str.o: have_stdbool.h
 str.o: have_stdlib.h
 str.o: have_string.h
 str.o: have_strlcat.h
@@ -5330,6 +5375,7 @@ symbol.o: have_const.h
 symbol.o: have_limits.h
 symbol.o: have_memmv.h
 symbol.o: have_newstr.h
+symbol.o: have_stdbool.h
 symbol.o: have_stdlib.h
 symbol.o: have_string.h
 symbol.o: label.h
@@ -5364,6 +5410,7 @@ token.o: have_const.h
 token.o: have_limits.h
 token.o: have_memmv.h
 token.o: have_newstr.h
+token.o: have_stdbool.h
 token.o: have_stdlib.h
 token.o: have_string.h
 token.o: lib_calc.h
@@ -5398,6 +5445,7 @@ value.o: have_fgetsetpos.h
 value.o: have_limits.h
 value.o: have_memmv.h
 value.o: have_newstr.h
+value.o: have_stdbool.h
 value.o: have_stdlib.h
 value.o: have_string.h
 value.o: label.h
@@ -5432,6 +5480,7 @@ version.o: have_const.h
 version.o: have_limits.h
 version.o: have_memmv.h
 version.o: have_newstr.h
+version.o: have_stdbool.h
 version.o: have_stdlib.h
 version.o: have_string.h
 version.o: have_strlcat.h
@@ -5459,6 +5508,7 @@ zfunc.o: have_const.h
 zfunc.o: have_limits.h
 zfunc.o: have_memmv.h
 zfunc.o: have_newstr.h
+zfunc.o: have_stdbool.h
 zfunc.o: have_stdlib.h
 zfunc.o: have_string.h
 zfunc.o: longbits.h
@@ -5479,6 +5529,7 @@ zio.o: have_const.h
 zio.o: have_limits.h
 zio.o: have_memmv.h
 zio.o: have_newstr.h
+zio.o: have_stdbool.h
 zio.o: have_stdlib.h
 zio.o: have_string.h
 zio.o: longbits.h
@@ -5499,6 +5550,7 @@ zmath.o: have_const.h
 zmath.o: have_limits.h
 zmath.o: have_memmv.h
 zmath.o: have_newstr.h
+zmath.o: have_stdbool.h
 zmath.o: have_stdlib.h
 zmath.o: have_string.h
 zmath.o: longbits.h
@@ -5518,6 +5570,7 @@ zmod.o: have_const.h
 zmod.o: have_limits.h
 zmod.o: have_memmv.h
 zmod.o: have_newstr.h
+zmod.o: have_stdbool.h
 zmod.o: have_stdlib.h
 zmod.o: have_string.h
 zmod.o: longbits.h
@@ -5539,6 +5592,7 @@ zmul.o: have_const.h
 zmul.o: have_limits.h
 zmul.o: have_memmv.h
 zmul.o: have_newstr.h
+zmul.o: have_stdbool.h
 zmul.o: have_stdlib.h
 zmul.o: have_string.h
 zmul.o: longbits.h
@@ -5564,6 +5618,7 @@ zprime.o: have_const.h
 zprime.o: have_limits.h
 zprime.o: have_memmv.h
 zprime.o: have_newstr.h
+zprime.o: have_stdbool.h
 zprime.o: have_stdlib.h
 zprime.o: have_string.h
 zprime.o: jump.h
@@ -5595,6 +5650,7 @@ zrand.o: have_const.h
 zrand.o: have_limits.h
 zrand.o: have_memmv.h
 zrand.o: have_newstr.h
+zrand.o: have_stdbool.h
 zrand.o: have_stdlib.h
 zrand.o: have_string.h
 zrand.o: have_unused.h
@@ -5625,6 +5681,7 @@ zrandom.o: have_const.h
 zrandom.o: have_limits.h
 zrandom.o: have_memmv.h
 zrandom.o: have_newstr.h
+zrandom.o: have_stdbool.h
 zrandom.o: have_stdlib.h
 zrandom.o: have_string.h
 zrandom.o: have_unused.h

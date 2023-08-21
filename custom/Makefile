@@ -707,6 +707,7 @@ c_argv.o: ../have_const.h
 c_argv.o: ../have_limits.h
 c_argv.o: ../have_memmv.h
 c_argv.o: ../have_newstr.h
+c_argv.o: ../have_stdbool.h
 c_argv.o: ../have_stdlib.h
 c_argv.o: ../have_string.h
 c_argv.o: ../have_unused.h
@@ -738,6 +739,7 @@ c_devnull.o: ../have_const.h
 c_devnull.o: ../have_limits.h
 c_devnull.o: ../have_memmv.h
 c_devnull.o: ../have_newstr.h
+c_devnull.o: ../have_stdbool.h
 c_devnull.o: ../have_stdlib.h
 c_devnull.o: ../have_string.h
 c_devnull.o: ../have_unistd.h
@@ -770,6 +772,7 @@ c_help.o: ../have_const.h
 c_help.o: ../have_limits.h
 c_help.o: ../have_memmv.h
 c_help.o: ../have_newstr.h
+c_help.o: ../have_stdbool.h
 c_help.o: ../have_stdlib.h
 c_help.o: ../have_string.h
 c_help.o: ../have_unistd.h
@@ -802,6 +805,7 @@ c_pmodm127.o: ../have_const.h
 c_pmodm127.o: ../have_limits.h
 c_pmodm127.o: ../have_memmv.h
 c_pmodm127.o: ../have_newstr.h
+c_pmodm127.o: ../have_stdbool.h
 c_pmodm127.o: ../have_stdlib.h
 c_pmodm127.o: ../have_string.h
 c_pmodm127.o: ../have_unused.h
@@ -833,6 +837,7 @@ c_pzasusb8.o: ../have_const.h
 c_pzasusb8.o: ../have_limits.h
 c_pzasusb8.o: ../have_memmv.h
 c_pzasusb8.o: ../have_newstr.h
+c_pzasusb8.o: ../have_stdbool.h
 c_pzasusb8.o: ../have_stdlib.h
 c_pzasusb8.o: ../have_string.h
 c_pzasusb8.o: ../have_unused.h
@@ -865,6 +870,7 @@ c_register.o: ../have_const.h
 c_register.o: ../have_limits.h
 c_register.o: ../have_memmv.h
 c_register.o: ../have_newstr.h
+c_register.o: ../have_stdbool.h
 c_register.o: ../have_stdlib.h
 c_register.o: ../have_string.h
 c_register.o: ../have_unused.h
@@ -899,6 +905,7 @@ c_sysinfo.o: ../have_const.h
 c_sysinfo.o: ../have_limits.h
 c_sysinfo.o: ../have_memmv.h
 c_sysinfo.o: ../have_newstr.h
+c_sysinfo.o: ../have_stdbool.h
 c_sysinfo.o: ../have_stdlib.h
 c_sysinfo.o: ../have_string.h
 c_sysinfo.o: ../have_unused.h
@@ -935,6 +942,7 @@ custtbl.o: ../have_const.h
 custtbl.o: ../have_limits.h
 custtbl.o: ../have_memmv.h
 custtbl.o: ../have_newstr.h
+custtbl.o: ../have_stdbool.h
 custtbl.o: ../have_stdlib.h
 custtbl.o: ../have_string.h
 custtbl.o: ../longbits.h

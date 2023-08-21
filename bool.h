@@ -20,7 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Under source code control:	2023/07/19 17:58:42
- * File existed as early as:	1990
+ * File existed as early as:	2023
  *
  * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
  * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
@@ -30,7 +30,7 @@
 #if !defined(INCLUDE_BOOL_H)
 #define INCLUDE_BOOL_H
 
-
+#include "have_stdbool.h"
 #if defined(HAVE_STDBOOL_H)
 #include <stdbool.h>
 #endif /* HAVE_STDBOOL_H */
