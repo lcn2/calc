@@ -37,7 +37,8 @@
 # You can append to an existing Makefile variable using '+=' symbols.
 # For example:
 #
-#	CFLAGS+= -Ofast
+#	CCOPT+= -Ofast
+#	COMMON_CFLAGS+= -std=gnu2x
 ####
 
 ###################################################################
