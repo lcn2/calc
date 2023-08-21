@@ -16,7 +16,7 @@
  *
  * be able to sum values from all of those files,
  * plus the INTX_C(val) and UINTX_C(val) composing macros,
- * and be able to print for signed and unsigned 32-bit, 64-bit and max-bit values.
+ * and be able to print for signed and unsigned values.
  *
  * If you are unable to compile this program, or if this program when
  * compiles does not exit 0, then your C compiler and/or C include
@@ -121,8 +121,8 @@ main(int argc, char *argv[])
     uint64_t ui64 = UINT64_C(64);	/* unsigned 64-bit test value */
     intmax_t imax = INTMAX_C(-256);	/* maximum sized signed int test value */
     uintmax_t uimax = UINTMAX_C(256);	/* maximum sized unsigned int test value */
-    uintmax_t isum = 0;		/* sum of all test values as signed value */
-    uintmax_t uisum = 0;	/* sum of all test values as unsigned value */
+    uintmax_t isum = 0;			/* sum of all test values as signed value */
+    uintmax_t uisum = 0;		/* sum of all test values as unsigned value */
 #endif /* HAVE_STDINT_H && HAVE_INTTYPES_H */
 
     /*
@@ -196,7 +196,7 @@ main(int argc, char *argv[])
     /*
      * check for __STDC_VERSION__ defined
      */
-#if !defined(__STDC__)
+#if !defined(__STDC_VERSION__)
     fprintf(stderr, "__STDC_VERSION__ is not defined\n");
     exit(1);
 #endif /* __STDC_VERSION__ */
@@ -244,49 +244,71 @@ main(int argc, char *argv[])
      */
     if (c_flag == true) {
 	printf("\nsigned integer MIN and MAX\n");
-	printf("INT32_MIN: %+"PRId32"\n", INT32_MIN);
-	printf("INT32_MAX: %+"PRId32"\n", INT32_MAX);
-	printf("INT64_MIN: %+"PRId64"\n", INT64_MIN);
-	printf("INT64_MAX: %+"PRId64"\n", INT64_MAX);
-	printf("INTMAX_MIN: %+"PRIdMAX"\n", INTMAX_MIN);
-	printf("INTMAX_MAX: %+"PRIdMAX"\n", INTMAX_MAX);
+	printf("INT8_MIN: %+"PRId8"\n", (int8_t)INT8_MIN);
+	printf("INT8_MAX: %+"PRId8"\n", (int8_t)INT8_MAX);
+	printf("INT16_MIN: %+"PRId16"\n", (int16_t)INT16_MIN);
+	printf("INT16_MAX: %+"PRId16"\n", (int16_t)INT16_MAX);
+	printf("INT32_MIN: %+"PRId32"\n", (int32_t)INT32_MIN);
+	printf("INT32_MAX: %+"PRId32"\n", (int32_t)INT32_MAX);
+	printf("INT64_MIN: %+"PRId64"\n", (int64_t)INT64_MIN);
+	printf("INT64_MAX: %+"PRId64"\n", (int64_t)INT64_MAX);
+	printf("INTMAX_MIN: %+"PRIdMAX"\n", (intmax_t)INTMAX_MIN);
+	printf("INTMAX_MAX: %+"PRIdMAX"\n", (intmax_t)INTMAX_MAX);
 
 	printf("\nunsigned integer MAX\n");
-	printf("UINT32_MAX: %"PRIu32"\n", UINT32_MAX);
-	printf("UINT64_MAX: %"PRIu64"\n", UINT64_MAX);
-	printf("UINTMAX_MAX: %"PRIuMAX"\n", UINTMAX_MAX);
+	printf("UINT8_MAX: %"PRIu8"\n", (uint8_t)UINT8_MAX);
+	printf("UINT16_MAX: %"PRIu16"\n", (uint16_t)UINT16_MAX);
+	printf("UINT32_MAX: %"PRIu32"\n", (uint32_t)UINT32_MAX);
+	printf("UINT64_MAX: %"PRIu64"\n", (uint64_t)UINT64_MAX);
+	printf("UINTMAX_MAX: %"PRIuMAX"\n", (uintmax_t)UINTMAX_MAX);
 
 	printf("\ninteger MIN and MAX\n");
-	printf("INT32_MIN: %"PRIi32"\n", INT32_MIN);
-	printf("INT32_MAX: %"PRIi32"\n", INT32_MAX);
-	printf("INT64_MIN: %"PRIi64"\n", INT64_MIN);
-	printf("INT64_MAX: %"PRIi64"\n", INT64_MAX);
-	printf("INTMAX_MIN: %"PRIiMAX"\n", INTMAX_MIN);
-	printf("INTMAX_MAX: %"PRIiMAX"\n", INTMAX_MAX);
+	printf("INT8_MIN: %"PRIi8"\n", (int8_t)INT8_MIN);
+	printf("INT8_MAX: %"PRIi8"\n", (int8_t)INT8_MAX);
+	printf("INT16_MIN: %"PRIi16"\n", (int16_t)INT16_MIN);
+	printf("INT16_MAX: %"PRIi16"\n", (int16_t)INT16_MAX);
+	printf("INT32_MIN: %"PRIi32"\n", (int32_t)INT32_MIN);
+	printf("INT32_MAX: %"PRIi32"\n", (int32_t)INT32_MAX);
+	printf("INT64_MIN: %"PRIi64"\n", (int64_t)INT64_MIN);
+	printf("INT64_MAX: %"PRIi64"\n", (int64_t)INT64_MAX);
+	printf("INTMAX_MIN: %"PRIiMAX"\n", (intmax_t)INTMAX_MIN);
+	printf("INTMAX_MAX: %"PRIiMAX"\n", (intmax_t)INTMAX_MAX);
 
 	printf("\noctal MIN and MAX\n");
-	printf("INT32_MIN: %"PRIo32"\n", INT32_MIN);
-	printf("INT32_MAX: %"PRIo32"\n", INT32_MAX);
-	printf("INT64_MIN: %"PRIo64"\n", INT64_MIN);
-	printf("INT64_MAX: %"PRIo64"\n", INT64_MAX);
-	printf("INTMAX_MIN: %"PRIoMAX"\n", INTMAX_MIN);
-	printf("INTMAX_MAX: %"PRIoMAX"\n", INTMAX_MAX);
+	printf("INT8_MIN: %"PRIo8"\n", (int8_t)INT8_MIN);
+	printf("INT8_MAX: %"PRIo8"\n", (int8_t)INT8_MAX);
+	printf("INT16_MIN: %"PRIo16"\n", (int16_t)INT16_MIN);
+	printf("INT16_MAX: %"PRIo16"\n", (int16_t)INT16_MAX);
+	printf("INT32_MIN: %"PRIo32"\n", (int32_t)INT32_MIN);
+	printf("INT32_MAX: %"PRIo32"\n", (int32_t)INT32_MAX);
+	printf("INT64_MIN: %"PRIo64"\n", (int64_t)INT64_MIN);
+	printf("INT64_MAX: %"PRIo64"\n", (int64_t)INT64_MAX);
+	printf("INTMAX_MIN: %"PRIoMAX"\n", (intmax_t)INTMAX_MIN);
+	printf("INTMAX_MAX: %"PRIoMAX"\n", (intmax_t)INTMAX_MAX);
 
 	printf("\nhex MIN and MAX\n");
-	printf("INT32_MIN: %"PRIx32"\n", INT32_MIN);
-	printf("INT32_MAX: %"PRIx32"\n", INT32_MAX);
-	printf("INT64_MIN: %"PRIx64"\n", INT64_MIN);
-	printf("INT64_MAX: %"PRIx64"\n", INT64_MAX);
-	printf("INTMAX_MIN: %"PRIxMAX"\n", INTMAX_MIN);
-	printf("INTMAX_MAX: %"PRIxMAX"\n", INTMAX_MAX);
+	printf("INT8_MIN: %"PRIx8"\n", (int8_t)INT8_MIN);
+	printf("INT8_MAX: %"PRIx8"\n", (int8_t)INT8_MAX);
+	printf("INT16_MIN: %"PRIx16"\n", (int16_t)INT16_MIN);
+	printf("INT16_MAX: %"PRIx16"\n", (int16_t)INT16_MAX);
+	printf("INT32_MIN: %"PRIx32"\n", (int32_t)INT32_MIN);
+	printf("INT32_MAX: %"PRIx32"\n", (int32_t)INT32_MAX);
+	printf("INT64_MIN: %"PRIx64"\n", (int64_t)INT64_MIN);
+	printf("INT64_MAX: %"PRIx64"\n", (int64_t)INT64_MAX);
+	printf("INTMAX_MIN: %"PRIxMAX"\n", (intmax_t)INTMAX_MIN);
+	printf("INTMAX_MAX: %"PRIxMAX"\n", (intmax_t)INTMAX_MAX);
 
 	printf("\nHEX MIN and MAX\n");
-	printf("INT32_MIN: %"PRIX32"\n", INT32_MIN);
-	printf("INT32_MAX: %"PRIX32"\n", INT32_MAX);
-	printf("INT64_MIN: %"PRIX64"\n", INT64_MIN);
-	printf("INT64_MAX: %"PRIX64"\n", INT64_MAX);
-	printf("INTMAX_MIN: %"PRIXMAX"\n", INTMAX_MIN);
-	printf("INTMAX_MAX: %"PRIXMAX"\n", INTMAX_MAX);
+	printf("INT8_MIN: %"PRIX8"\n", (int8_t)INT8_MIN);
+	printf("INT8_MAX: %"PRIX8"\n", (int8_t)INT8_MAX);
+	printf("INT16_MIN: %"PRIX16"\n", (int16_t)INT16_MIN);
+	printf("INT16_MAX: %"PRIX16"\n", (int16_t)INT16_MAX);
+	printf("INT32_MIN: %"PRIX32"\n", (int32_t)INT32_MIN);
+	printf("INT32_MAX: %"PRIX32"\n", (int32_t)INT32_MAX);
+	printf("INT64_MIN: %"PRIX64"\n", (int64_t)INT64_MIN);
+	printf("INT64_MAX: %"PRIX64"\n", (int64_t)INT64_MAX);
+	printf("INTMAX_MIN: %"PRIXMAX"\n", (intmax_t)INTMAX_MIN);
+	printf("INTMAX_MAX: %"PRIXMAX"\n", (intmax_t)INTMAX_MAX);
 
 	printf("\nsizes\n");
 	printf("sizeof(int8_t): %lu\n", sizeof(int8_t));
