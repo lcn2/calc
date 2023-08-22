@@ -327,7 +327,7 @@ main(int argc, char *argv[])
      * All Done!! -- Jessica Noll, age 2
      */
     if (c_flag == true) {
-	printf("\nC compiler and C include appears to support calc\n");
+	printf("\nC compiler and select include files appear to support calc.\n");
     }
     exit(0);
 #endif /* HAVE_INTTYPES_H */

@@ -67,6 +67,11 @@ The following are the changes from calc version 2.14.3.5 to date:
     Currently failure to compile cc_chk.c or c_chk exiting non-0
     will just print "WARNING!!" strings to stderr.
 
+    The make chk_c file also forms status.chk_c.h which either
+    defines CHK_C when the C compiler and select include files
+    appear to meet calc requirements, or undefines CHK_C
+    when it does not.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

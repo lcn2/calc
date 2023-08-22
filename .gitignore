@@ -110,6 +110,7 @@ sample_many
 sample_many-static
 sample_rand
 sample_rand-static
+status.chk_c.h
 tags
 terminal.h
 ver_calc
