@@ -1,6 +1,11 @@
 /*
  * int - integer types and integer macros used in calc
  *
+ * For general information on C integers, see:
+ *
+ *	https://en.cppreference.com/w/c/language/arithmetic_types
+ *	https://en.cppreference.com/w/c/types/integer
+ *
  * Copyright (C) 2023  Landon Curt Noll
  *
  * Primary author:  Landon Curt Noll
@@ -119,7 +124,6 @@
 #endif /* UINTMAX_WIDTH */
 
 
-
 /*
  * case: C compiler and/or select include files do not meet calc requirements
  */
@@ -130,7 +134,7 @@
  * calc v2 is the last version where one might be able to use an old C compiler
  *	   and/or tolerate missing include files
  */
-#if defined(CALC2_COMPAT)
+#if MAJOR_VER < 3
 
 
 /*
@@ -195,18 +199,16 @@
 #endif /* UINTMAX_WIDTH */
 
 
-
-#else /* CALC2_COMPAT */
+#else /* MAJOR_VER < 3 */
 
 
 /*
- * CHK_C undefuned and not calc v2 is an error
+ * calc v3 or later and CHK_C is undefined
  */
-#pragma GCC error "CHK_C undefined: C compiler and/or select include files do not meet calc requirements"
-#pragma GCC error "CALC2_COMPAT undefined: calc v3 and later requires CHK_C"
+#pragma GCC error "calc v3 and later require C compiler and include files that support CHK_C"
 
 
-#endif /* CALC2_COMPAT */
+#endif /* MAJOR_VER < 3 */
 #endif /* CHK_C */
 
 

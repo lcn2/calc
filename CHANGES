@@ -72,7 +72,7 @@ The following are the changes from calc version 2.14.3.5 to date:
     appear to meet calc requirements, or undefines CHK_C
     when it does not.
 
-    Added int.h as a centeral place for calc integer types and
+    Added int.h as a central place for calc integer types and
     integer macros.
 
 
