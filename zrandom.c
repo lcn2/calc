@@ -2635,6 +2635,8 @@ zsetrandom(CONST RANDOM *state)
 	RANDOM *ret;		/* previous Blum state */
 	RANDOM *p_blum;		/* malloced RANDOM by randomcopy() */
 
+	/* NOTE: It is OK for state == NULL */
+
 	/*
 	 * initialize state if first call
 	 */
@@ -2767,6 +2769,12 @@ zrandom(long cnt, ZVALUE *res)
 	ZVALUE new_r;		/* new quadratic residue */
 	RANDOM *p_blum;		/* malloced RANDOM by randomcopy() */
 	int t;			/* temp shift value */
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	/*
 	 * firewall
@@ -2951,6 +2959,12 @@ zrandomrange(CONST ZVALUE low, CONST ZVALUE beyond, ZVALUE *res)
 	ZVALUE rangem1;		/* range - 1 */
 	long bitlen;		/* smallest power of 2 >= diff */
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	/*
 	 * firewall
 	 */
@@ -3043,6 +3057,12 @@ randomcopy(CONST RANDOM *state)
 {
 	RANDOM *ret;	/* return copy of state */
 
+	/* firewall */
+	if (state == NULL) {
+		math_error("%s: state NULL", __func__);
+		not_reached();
+	}
+
 	/*
 	 * malloc state
 	 */
@@ -3094,6 +3114,12 @@ randomcopy(CONST RANDOM *state)
 void
 randomfree(RANDOM *state)
 {
+	/* firewall */
+	if (state == NULL) {
+		math_error("%s: state NULL", __func__);
+		not_reached();
+	}
+
 	/* free the values */
 	zfree_random(state->n);
 	zfree_random(state->r);
@@ -3123,6 +3149,16 @@ randomfree(RANDOM *state)
 bool
 randomcmp(CONST RANDOM *s1, CONST RANDOM *s2)
 {
+	/* firewall */
+	if (s1 == NULL) {
+		math_error("%s: s1 NULL", __func__);
+		not_reached();
+	}
+	if (s2 == NULL) {
+		math_error("%s: s2 NULL", __func__);
+		not_reached();
+	}
+
 	/*
 	 * assume uninitialized state == the default seeded state
 	 */
@@ -3171,6 +3207,7 @@ randomcmp(CONST RANDOM *s1, CONST RANDOM *s2)
 void
 randomprint(CONST RANDOM *UNUSED(state), int UNUSED(flags))
 {
+	/* NOTE: It is OK for state == NULL */
 	math_str("RANDOM state");
 }
 

@@ -125,6 +125,12 @@ math_str(char *str)
 	char	*cp;
 	size_t	len;
 
+	/* firewall */
+	if (str == NULL) {
+		math_error("%s: str NULL", __func__);
+		not_reached();
+	}
+
 	if (!outputisstring) {
 		fputs(str, outfp);
 		return;
@@ -155,6 +161,12 @@ math_str(char *str)
 void
 math_fill(char *str, long width)
 {
+	/* firewall */
+	if (str == NULL) {
+		math_error("%s: str NULL", __func__);
+		not_reached();
+	}
+
 	if (width > 0) {
 		width -= (long)strlen(str);
 		while (width-- > 0)
@@ -178,6 +190,12 @@ math_fmt(char *fmt, ...)
 {
 	va_list ap;
 	char buf[BUFSIZ+1];
+
+	/* firewall */
+	if (fmt == NULL) {
+		math_error("%s: fmt NULL", __func__);
+		not_reached();
+	}
 
 	va_start(ap, fmt);
 	vsnprintf(buf, BUFSIZ, fmt, ap);
@@ -295,6 +313,12 @@ math_cleardiversions(void)
 void
 math_setfp(FILE *newfp)
 {
+	/* firewall */
+	if (newfp == NULL) {
+		math_error("%s: newfp NULL", __func__);
+		not_reached();
+	}
+
 	outfp = newfp;
 	outputisstring = (oldiostates && (newfp == stdout));
 }
@@ -713,6 +737,16 @@ str2z(char *s, ZVALUE *res)
 	HALF digval;
 	bool minus;
 	long shift;
+
+	/* firewall */
+	if (s == NULL) {
+		math_error("%s: s NULL", __func__);
+		not_reached();
+	}
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	minus = false;
 	shift = 0;

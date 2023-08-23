@@ -547,6 +547,12 @@ zfactor(ZVALUE n, ZVALUE zlimit, ZVALUE *res)
 {
 	FULL f;			/* factor found, or 0 */
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	/*
 	 * determine the limit
 	 */
@@ -827,6 +833,12 @@ zpfact(ZVALUE z, ZVALUE *dest)
 	CONST unsigned short *tp;	/* pointer to a tiny prime */
 	CONST unsigned char *j;		/* current jump increment */
 	ZVALUE res, temp;
+
+	/* firewall */
+	if (dest == NULL) {
+		math_error("%s: dest NULL", __func__);
+		not_reached();
+	}
 
 	/* firewall */
 	if (zisneg(z)) {
@@ -1212,6 +1224,12 @@ znextcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
 	ZVALUE tmp1;
 	ZVALUE tmp2;
 
+	/* firewall */
+	if (cand == NULL) {
+		math_error("%s: cand NULL", __func__);
+		not_reached();
+	}
+
 	z.sign	= 0;
 	mod.sign = 0;
 	if (ziszero(mod)) {
@@ -1291,6 +1309,12 @@ zprevcand(ZVALUE z, long count, ZVALUE skip, ZVALUE res, ZVALUE mod,
 {
 	ZVALUE tmp1;
 	ZVALUE tmp2;
+
+	/* firewall */
+	if (cand == NULL) {
+		math_error("%s: cand NULL", __func__);
+		not_reached();
+	}
 
 	z.sign	= 0;
 	mod.sign = 0;
@@ -1532,6 +1556,12 @@ zlcmfact(ZVALUE z, ZVALUE *dest)
 	long i;				/* test value */
 	CONST unsigned short *pr;	/* pointer to a small prime */
 	ZVALUE res, temp;
+
+	/* firewall */
+	if (dest == NULL) {
+		math_error("%s: dest NULL", __func__);
+		not_reached();
+	}
 
 	if (zisneg(z) || ziszero(z)) {
 		math_error("Non-positive argument for lcmfact");

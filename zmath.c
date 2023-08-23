@@ -255,16 +255,22 @@ alloc(LEN len)
  * is_const - determine if a HALF array is an pre-allocated array
  *
  * given:
- * 	h	pointer to the beginning of the HALF array
+ *	h	pointer to the beginning of the HALF array
  *
  * returns:
- * 	true - h is found in the half_tbl array
- * 	false - is is not found in the half_tbl array
+ *	true - h is found in the half_tbl array
+ *	false - is is not found in the half_tbl array
  */
 int
-is_const(HALF* h)
+is_const(HALF *h)
 {
 	HALF **h_p;	/* half_tbl array pointer */
+
+	/* firewall */
+	if (h == NULL) {
+		math_error("%s: h NULL", __func__);
+		not_reached();
+	}
 
 	/* search the half_tbl for h */
 	for (h_p = &half_tbl[0]; *h_p != NULL; ++h_p) {
@@ -282,6 +288,13 @@ is_const(HALF* h)
 void
 freeh(HALF *h)
 {
+	/* firewall */
+	if (h == NULL) {
+		math_error("%s: h NULL", __func__);
+		not_reached();
+	}
+
+	/* free h is not a constant */
 	if (!is_const(h)) {
 		free(h);
 		++nfree;
@@ -305,6 +318,12 @@ void
 itoz(long i, ZVALUE *res)
 {
 	long diddle, len;
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	res->len = 1;
 	res->sign = 0;
@@ -360,6 +379,12 @@ utoz(FULL i, ZVALUE *res)
 {
 	long len;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	res->len = 1;
 	res->sign = 0;
 	if (i == 0) {
@@ -386,6 +411,12 @@ void
 stoz(SFULL i, ZVALUE *res)
 {
 	long diddle, len;
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	res->len = 1;
 	res->sign = 0;
@@ -471,6 +502,13 @@ ztos(ZVALUE z)
 void
 zcopy(ZVALUE z, ZVALUE *res)
 {
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
+	/* make copy */
 	res->sign = z.sign;
 	res->len = z.len;
 	if (zisabsleone(z)) {	/* zero or plus or minus one are easy */
@@ -493,6 +531,12 @@ zadd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	long len;
 	FULL carry;
 	SIUNION sival;
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	if (z1.sign && !z2.sign) {
 		z1.sign = 0;
@@ -546,6 +590,12 @@ zsub(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	FULL carry;
 	SIUNION sival;
 	ZVALUE dest;
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	if (z1.sign != z2.sign) {
 		z2.sign = z1.sign;
@@ -616,6 +666,12 @@ zmuli(ZVALUE z, long n, ZVALUE *res)
 	long len;
 	SIUNION sival;
 	ZVALUE dest;
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	if ((n == 0) || ziszero(z)) {
 		*res = _zero_;
@@ -695,6 +751,16 @@ zreduce(ZVALUE z1, ZVALUE z2, ZVALUE *z1res, ZVALUE *z2res)
 {
 	ZVALUE tmp;
 
+	/* firewall */
+	if (z1res == NULL) {
+		math_error("%s: z1res NULL", __func__);
+		not_reached();
+	}
+	if (z2res == NULL) {
+		math_error("%s: z2res NULL", __func__);
+		not_reached();
+	}
+
 	if (zisabsleone(z1) || zisabsleone(z2))
 		tmp = _one_;
 	else
@@ -726,6 +792,16 @@ zdiv(ZVALUE z1, ZVALUE z2, ZVALUE *quo, ZVALUE *rem, long rnd)
 	bool adjust, onebit;
 	LEN m, n, len, i, p, j1, j2, k;
 	long t, val;
+
+	/* firewall */
+	if (quo == NULL) {
+		math_error("%s: quo NULL", __func__);
+		not_reached();
+	}
+	if (rem == NULL) {
+		math_error("%s: rem NULL", __func__);
+		not_reached();
+	}
 
 	if (ziszero(z2)) {
 		math_error("Division by zero in zdiv");
@@ -959,6 +1035,12 @@ zquo(ZVALUE z1, ZVALUE z2, ZVALUE *res, long rnd)
 	ZVALUE tmp;
 	long val;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	val = zdiv(z1, z2, res, &tmp, rnd);
 	if (z2.sign)
 		val = -val;
@@ -978,6 +1060,12 @@ zmod(ZVALUE z1, ZVALUE z2, ZVALUE *res, long rnd)
 	ZVALUE tmp;
 	long val;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	val = zdiv(z1, z2, &tmp, res, rnd);
 	zfree(tmp);
 	return val;
@@ -995,6 +1083,12 @@ zequo(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	LEN i, j, k, len, m, n, o, p;
 	HALF *a, *a0, *A, *b, *B, u, v, w, x;
 	FULL f, g;
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	if (ziszero(z1)) {
 		*res = _zero_;
@@ -1125,6 +1219,12 @@ zdivi(ZVALUE z, long n, ZVALUE *res)
 	ZVALUE div;
 	ZVALUE dest;
 	LEN len;
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	if (n == 0) {
 		math_error("Division by zero");
@@ -1370,6 +1470,12 @@ zor(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	long len;
 	ZVALUE bz, lz, dest;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	if (z1.len >= z2.len) {
 		bz = z1;
 		lz = z2;
@@ -1400,6 +1506,12 @@ zand(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	LEN len;
 	ZVALUE dest;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	len = ((z1.len <= z2.len) ? z1.len : z2.len);
 	h1 = &z1.v[len-1];
 	h2 = &z2.v[len-1];
@@ -1429,6 +1541,12 @@ zxor(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	HALF *dp, *h1, *h2;
 	LEN len, j, k;
 	ZVALUE dest;
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	h1 = z1.v;
 	h2 = z2.v;
@@ -1467,6 +1585,12 @@ zandnot(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	LEN len, j, k;
 	ZVALUE dest;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	len = z1.len;
 	if (z2.len >= len) {
 		while (len > 1 && (z1.v[len-1] & ~z2.v[len-1]) == 0)
@@ -1501,6 +1625,12 @@ zshift(ZVALUE z, long n, ZVALUE *res)
 {
 	ZVALUE ans;
 	LEN hc;		/* number of halfwords shift is by */
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	if (ziszero(z)) {
 		*res = _zero_;
@@ -1705,6 +1835,12 @@ zbitvalue(long n, ZVALUE *res)
 {
 	ZVALUE z;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	if (n < 0) n = 0;
 	z.sign = 0;
 	z.len = (LEN)((n / BASEB) + 1);
@@ -1866,6 +2002,12 @@ ztrim(ZVALUE *z)
 	HALF *h;
 	LEN len;
 
+	/* firewall */
+	if (z == NULL) {
+		math_error("%s: z NULL", __func__);
+		not_reached();
+	}
+
 	h = z->v + z->len - 1;
 	len = z->len;
 	while (*h == 0 && len > 1) {
@@ -2021,3 +2163,34 @@ zpopcnt(ZVALUE z, int bitval)
 	 */
 	return cnt;
 }
+
+
+#if 0 /* XXX - to be added later */
+/*
+ * test if a number is a power of 2
+ *
+ * given:
+ *	z	value to check if it is a power of 2
+ *	zlog2	set to log base 2 of z if z is a power of 2, 0 otherwise
+ *
+ * returns:
+ *	true	z is a power of 2
+ *	false	z is not a power of 2
+ */
+bool
+zispowerof2(ZVALUE z, ZVALUE *zlog2)
+{
+	/* firewall */
+	if (zlog2 == NULL) {
+		math_error("%s: zlog2 NULL", __func__);
+		not_reached();
+	}
+
+	/* zero and negative values are never powers of 2 */
+	if (ziszero(z) || zisneg(z)) {
+		return false;
+	}
+
+	/* XXX - add code here - XXX */
+}
+#endif /* XXX */

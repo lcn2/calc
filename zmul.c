@@ -148,6 +148,16 @@ domul(HALF *v1, LEN size1, HALF *v2, LEN size2, HALF *ans)
 	register HALF *hd, *h1=NULL, *h2=NULL;	/* for inner loops */
 	SIUNION sival;		/* for addition of digits */
 
+	/* firewall */
+	if (v1 == NULL) {
+		math_error("%s: v1 NULL", __func__);
+		not_reached();
+	}
+	if (ans == NULL) {
+		math_error("%s: ans NULL", __func__);
+		not_reached();
+	}
+
 	/*
 	 * Trim the numbers of leading zeroes and initialize the
 	 * estimated size of the result.
@@ -651,6 +661,12 @@ zsquare(ZVALUE z, ZVALUE *res)
 {
 	LEN len;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	if (ziszero(z)) {
 		*res = _zero_;
 		return;
@@ -734,6 +750,16 @@ dosquare(HALF *vp, LEN size, HALF *ans)
 	HALF *baseABAB;		/* base of square of difference of A and B */
 	register HALF *hd, *h1, *h2, *h3;	/* for inner loops */
 	SIUNION sival;		/* for addition of digits */
+
+	/* firewall */
+	if (vp == NULL) {
+		math_error("%s: vp NULL", __func__);
+		not_reached();
+	}
+	if (ans == NULL) {
+		math_error("%s: ans NULL", __func__);
+		not_reached();
+	}
 
 	/*
 	 * First trim the number of leading zeroes.

@@ -76,6 +76,12 @@ zsquaremod(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	FULL prod;
 	FULL digit;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	if (ziszero(z2) || zisneg(z2)) {
 		math_error("Mod of non-positive integer");
 		not_reached();
@@ -137,6 +143,12 @@ zminmod(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	ZVALUE tmp1, tmp2;
 	int sign;
 	int cv;
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	if (ziszero(z2) || zisneg(z2)) {
 		math_error("Mod of non-positive integer");
@@ -353,6 +365,12 @@ zmod5(ZVALUE *zp)
 	FULL f;
 	HALF u;
 
+	/* firewall */
+	if (zp == NULL) {
+		math_error("%s: zp NULL", __func__);
+		not_reached();
+	}
+
 	int subcount = 0;
 
 	if (zrel(*zp, *lastmod) < 0)
@@ -431,6 +449,12 @@ zmod6(ZVALUE z1, ZVALUE *res)
 	int sign;
 	ZVALUE zp0, ztmp;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	if (ziszero(z1) || zisone(*lastmod)) {
 		*res = _zero_;
 		return;
@@ -496,6 +520,12 @@ zpowermod(ZVALUE z1, ZVALUE z2, ZVALUE z3, ZVALUE *res)
 	unsigned int curbit;	/* current bit of low power */
 	bool free_z1;		/* true => need to free z1 */
 	int i;
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	if (zisneg(z3) || ziszero(z3)) {
 		math_error("Non-positive modulus in zpowermod");
@@ -824,6 +854,12 @@ zredcmodinv(ZVALUE z, ZVALUE *res)
 	FULL f;
 	LEN N, i, j, len;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	N = z.len;
 	tmp.sign = 0;
 	tmp.len = N;
@@ -923,6 +959,12 @@ zredcalloc(ZVALUE z1)
 void
 zredcfree(REDC *rp)
 {
+	/* firewall */
+	if (rp == NULL) {
+		math_error("%s: rp NULL", __func__);
+		not_reached();
+	}
+
 	zfree(rp->mod);
 	zfree(rp->inv);
 	zfree(rp->one);
@@ -948,6 +990,16 @@ void
 zredcencode(REDC *rp, ZVALUE z1, ZVALUE *res)
 {
 	ZVALUE tmp1;
+
+	/* firewall */
+	if (rp == NULL) {
+		math_error("%s: rp NULL", __func__);
+		not_reached();
+	}
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	/*
 	 * Confirm or initialize lastmod information when modulus is a
@@ -1037,6 +1089,16 @@ zredcdecode(REDC *rp, ZVALUE z1, ZVALUE *res)
 	LEN len;
 	FULL f;
 	int sign;
+
+	/* firewall */
+	if (rp == NULL) {
+		math_error("%s: rp NULL", __func__);
+		not_reached();
+	}
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 	int i, j;
 
 	/*
@@ -1212,6 +1274,16 @@ zredcmul(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	ZVALUE tmp;
 	ZVALUE z1tmp, z2tmp;
 	int sign;
+
+	/* firewall */
+	if (rp == NULL) {
+		math_error("%s: rp NULL", __func__);
+		not_reached();
+	}
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	sign = z1.sign ^ z2.sign;
 	z1.sign = 0;
@@ -1511,6 +1583,16 @@ zredcsquare(REDC *rp, ZVALUE z1, ZVALUE *res)
 	FULL f;
 	int i, j;
 
+	/* firewall */
+	if (rp == NULL) {
+		math_error("%s: rp NULL", __func__);
+		not_reached();
+	}
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	ztmp.len = 0;
 	z1.sign = 0;
 	if (zrel(z1, rp->mod) >= 0) {
@@ -1706,6 +1788,16 @@ zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	unsigned int curbit;	/* current bit of low power */
 	int sign;
 	int i;
+
+	/* firewall */
+	if (rp == NULL) {
+		math_error("%s: rp NULL", __func__);
+		not_reached();
+	}
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	if (zisneg(z2)) {
 		math_error("Negative power in zredcpower");
@@ -1986,6 +2078,12 @@ zhnrmod(ZVALUE v, ZVALUE zh, ZVALUE zn, ZVALUE zr, ZVALUE *res)
 	long lbit;		/* lowbit(h) */
 	int zrelval;		/* return value of zrel() */
 	int hisone;		/* 1 => h == 1, 0 => h != 1 */
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	/*
 	 * firewall

@@ -284,7 +284,7 @@
  * of the digitization of chaotic system that consisted of a noisy
  * digital camera and 6 Lava Lite(R) lamps.
  *
- * 	BTW: Lava Lite(R) is a trademark of Haggerty Enterprises, Inc.
+ *	BTW: Lava Lite(R) is a trademark of Haggerty Enterprises, Inc.
  *
  * The first 100 groups of 64 bit bits were used to initialize init_s100.slot.
  *
@@ -1044,6 +1044,12 @@ randreseed64(ZVALUE seed, ZVALUE *res)
 	HALF *v64;		/* 64 bit array of HALFs */
 	long chunknum;		/* 64 bit chunk number */
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	/*
 	 * quickly return 0 if seed is 0
 	 */
@@ -1171,6 +1177,9 @@ zsrand(CONST ZVALUE *pseed, CONST MATRIX *pmat100)
 	FULL shufxor[SLEN];	/* zshufxor as an 64 bit array of FULLs */
 	long indx;		/* index to shuffle slots for seeding */
 	int i;
+
+	/* NOTE: It is OK for pseed == NULL */
+	/* NOTE: It is OK for pmat100 == NULL */
 
 	/*
 	 * firewall
@@ -1394,6 +1403,12 @@ zsetrand(CONST RAND *state)
 {
 	RAND *ret;		/* previous s100 state */
 
+	/* firewall */
+	if (state == NULL) {
+		math_error("%s: state NULL", __func__);
+		not_reached();
+	}
+
 	/*
 	 * initialize state if first call
 	 */
@@ -1448,6 +1463,12 @@ slotcp(BITSTR *bitstr, FULL *src, int count)
 	int dnxtbit;		/* next bit beyond most significant in dh */
 	int need;		/* number of bits we need to transfer */
 	int ret;		/* bits transferred */
+
+	/* firewall */
+	if (src == NULL) {
+		math_error("%s: src NULL", __func__);
+		not_reached();
+	}
 
 	/*
 	 * determine how many bits we actually need to transfer
@@ -1621,6 +1642,16 @@ slotcp64(BITSTR *bitstr, FULL *src)
 {
 	HALF *dh = bitstr->loc;	     /* most significant HALF in dest */
 	int dnxtbit = bitstr->bit+1; /* next dh bit beyond most significant */
+
+	/* firewall */
+	if (bitstr == NULL) {
+		math_error("%s: bitstr NULL", __func__);
+		not_reached();
+	}
+	if (src == NULL) {
+		math_error("%s: src NULL", __func__);
+		not_reached();
+	}
 
 	/*
 	 * prepare for the return
@@ -1918,6 +1949,12 @@ zrand(long cnt, ZVALUE *res)
 	int trans;		/* bits transferred */
 	int indx;		/* shuffle entry index */
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	/*
 	 * firewall
 	 */
@@ -2187,6 +2224,12 @@ zrandrange(CONST ZVALUE low, CONST ZVALUE beyond, ZVALUE *res)
 	ZVALUE rangem1;		/* range - 1 */
 	long bitlen;		/* smallest power of 2 >= diff */
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	/*
 	 * firewall
 	 */
@@ -2279,6 +2322,12 @@ randcopy(CONST RAND *state)
 {
 	RAND *ret;	/* return copy of state */
 
+	/* firewall */
+	if (state == NULL) {
+		math_error("%s: state NULL", __func__);
+		not_reached();
+	}
+
 	/*
 	 * malloc state
 	 */
@@ -2323,6 +2372,16 @@ randfree(RAND *state)
 bool
 randcmp(CONST RAND *s1, CONST RAND *s2)
 {
+	/* firewall */
+	if (s1 == NULL) {
+		math_error("%s: s1 NULL", __func__);
+		not_reached();
+	}
+	if (s2 == NULL) {
+		math_error("%s: s2 NULL", __func__);
+		not_reached();
+	}
+
 	/*
 	 * assume uninitialized state == the default seeded state
 	 */
@@ -2355,5 +2414,6 @@ randcmp(CONST RAND *s1, CONST RAND *s2)
 void
 randprint(CONST RAND *UNUSED(state), int UNUSED(flags))
 {
+	/* NOTE: It is OK for state == NULL */
 	math_str("RAND state");
 }

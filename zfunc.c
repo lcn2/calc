@@ -194,6 +194,12 @@ zfact(ZVALUE z, ZVALUE *dest)
 	long mul;		/* collected value to multiply by */
 	ZVALUE res, temp;
 
+	/* firewall */
+	if (dest == NULL) {
+		math_error("%s: dest NULL", __func__);
+		not_reached();
+	}
+
 	if (zisneg(z)) {
 		math_error("Negative argument for factorial");
 		not_reached();
@@ -247,6 +253,12 @@ zperm(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	SFULL count;
 	ZVALUE cur, tmp, ans;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	if (zisneg(z1) || zisneg(z2)) {
 		math_error("Negative argument for permutation");
 		not_reached();
@@ -288,6 +300,12 @@ docomb(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 #else
 	HALF dh[1];
 #endif
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	if (zrel(z2, z1) > 0)
 		return 0;
@@ -346,6 +364,12 @@ zcomb(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
 	ZVALUE z3, z4;
 	int r;
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	if (z2.sign || (!z1.sign && zrel(z2, z1) > 0))
 		return 0;
@@ -466,6 +490,12 @@ zfib(ZVALUE z, ZVALUE *res)
 	ZVALUE t1, t2, t3;
 	FULL i;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	if (zge31b(z)) {
 		math_error("Very large Fibonacci number");
 		not_reached();
@@ -529,6 +559,12 @@ zpowi(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	FULL bit;		/* current bit value */
 	long twos;		/* count of times 2 is in result */
 	ZVALUE ans, temp;
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	sign = (z1.sign && zisodd(z2));
 	z1.sign = 0;
@@ -657,6 +693,12 @@ ztenpow(long power, ZVALUE *res)
 	ZVALUE ans;
 	ZVALUE temp;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	if (power <= 0) {
 		*res = _one_;
 		return;
@@ -695,6 +737,12 @@ zmodinv(ZVALUE u, ZVALUE v, ZVALUE *res)
 {
 	FULL	q1, q2, ui3, vi3, uh, vh, A, B, C, D, T;
 	ZVALUE	u2, u3, v2, v3, qz, tmp1, tmp2, tmp3;
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	v.sign = 0;
 	if (zisneg(u) || (zrel(u, v) >= 0))
@@ -859,6 +907,12 @@ zgcd(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	FULL f, g;
 	ZVALUE gcd;
 	bool needw;
+
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
 
 	if (zisunit(z1) || zisunit(z2)) {
 		*res = _one_;
@@ -1179,6 +1233,12 @@ zlcm(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 {
 	ZVALUE temp1, temp2;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	zgcd(z1, z2, &temp1);
 	zequo(z1, temp1, &temp2);
 	zfree(temp1);
@@ -1334,6 +1394,8 @@ zlog10(ZVALUE z, bool *was_10_power)
 	ZVALUE pow10;			/* power of 10 */
 	FLAG rel;			/* relationship */
 	int i;
+
+	/* NOTE: It is OK if was_10_power == NULL */
 
 	if (ziszero(z)) {
 		math_error("Zero argument argument for zlog10");
@@ -1493,6 +1555,12 @@ zfacrem(ZVALUE z1, ZVALUE z2, ZVALUE *rem)
 	ZVALUE temp1, temp2, temp3;	/* temporaries */
 	ZVALUE squares[32];		/* table of squares of factor */
 
+	/* firewall */
+	if (rem == NULL) {
+		math_error("%s: rem NULL", __func__);
+		not_reached();
+	}
+
 	z1.sign = 0;
 	z2.sign = 0;
 	/*
@@ -1623,6 +1691,12 @@ zgcdrem(ZVALUE z1, ZVALUE z2, ZVALUE *res)
 	long count, onecount;
 	long sh;
 
+	/* firewall */
+	if (res == NULL) {
+		math_error("%s: res NULL", __func__);
+		not_reached();
+	}
+
 	if (ziszero(z1) || ziszero(z2)) {
 		math_error("Zero argument in call to zgcdrem!!!");
 		not_reached();
@@ -1752,6 +1826,12 @@ zsqrt(ZVALUE z, ZVALUE *dest, long rnd)
 	int remsign;
 	bool up, onebit;
 	ZVALUE sqrt;
+
+	/* firewall */
+	if (dest == NULL) {
+		math_error("%s: dest NULL", __func__);
+		not_reached();
+	}
 
 	if (z.sign) {
 		math_error("Square root of negative number");
@@ -2023,6 +2103,12 @@ zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest)
 	LEN highbit, k;
 	SIUNION sival;
 
+	/* firewall */
+	if (dest == NULL) {
+		math_error("%s: dest NULL", __func__);
+		not_reached();
+	}
+
 	sign = z1.sign;
 	if (sign && ziseven(z2)) {
 		math_error("Even root of negative number");
@@ -2150,25 +2236,3 @@ zissquare(ZVALUE z)
 	zfree(tmp);
 	return (n ? true : false);
 }
-
-
-#if 0 /* XXX - to be added later */
-/*
- * test if a number is a power of 2
- *
- * given:
- *	z	value to check if it is a power of 2
- *	zlog2	set to log base 2 of z if z is a power of 2, 0 otherwise
- */
-bool
-zispowerof2(ZVALUE z, ZVALUE *zlog2)
-{
-
-	/* zero and negative values are never powers of 2 */
-	if (ziszero(z) || zisneg(z)) {
-		return false;
-	}
-
-	/* XXX - add code here - XXX */
-}
-#endif /* XXX */
