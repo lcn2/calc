@@ -12,6 +12,7 @@
  *	int16_t		uint16_t
  *	int32_t		uint32_t
  *	int64_t		uint64_t
+ *	intptr_t	uintptr_t
  *	intmax_t	uintmax_t
  *
  * be able to sum values from all of those files,
@@ -119,6 +120,8 @@ main(int argc, char *argv[])
     uint32_t ui32 = UINT32_C(32);	/* unsigned 32-bit test value */
     int64_t i64 = INT64_C(-64);		/* signed 64-bit test value */
     uint64_t ui64 = UINT64_C(64);	/* unsigned 64-bit test value */
+    intptr_t iptr = -128;		/* integer type capable of holding a pointer */
+    intptr_t uiptr = 128;		/* unsigned integer type capable of holding a pointer */
     intmax_t imax = INTMAX_C(-256);	/* maximum sized signed int test value */
     uintmax_t uimax = UINTMAX_C(256);	/* maximum sized unsigned int test value */
     uintmax_t isum = 0;			/* sum of all test values as signed value */
@@ -218,7 +221,7 @@ main(int argc, char *argv[])
     /*
      * calculate sum of all test values as signed value
      */
-    isum = i + ui + l + ul + ll + ull + i8 + ui8 + i16 + ui16 + i32 + ui32 + i64 + ui64 + imax + uimax;
+    isum = i + ui + l + ul + ll + ull + i8 + ui8 + i16 + ui16 + i32 + ui32 + i64 + ui64 + iptr + uiptr + imax + uimax;
     if (c_flag == true) {
 	printf("\nzero valued isum: %jd\n", isum);
     }
@@ -230,7 +233,7 @@ main(int argc, char *argv[])
     /*
      * calculate sum of all test values as unsigned value
      */
-    uisum = i + ui + l + ul + ll + ull + i8 + ui8 + i16 + ui16 + i32 + ui32 + i64 + ui64 + imax + uimax;
+    uisum = i + ui + l + ul + ll + ull + i8 + ui8 + i16 + ui16 + i32 + ui32 + i64 + ui64 + iptr + uiptr + imax + uimax;
     if (c_flag == true) {
 	printf("zero valued uisum: %ju\n", uisum);
     }
@@ -252,6 +255,8 @@ main(int argc, char *argv[])
 	printf("INT32_MAX: %+"PRId32"\n", (int32_t)INT32_MAX);
 	printf("INT64_MIN: %+"PRId64"\n", (int64_t)INT64_MIN);
 	printf("INT64_MAX: %+"PRId64"\n", (int64_t)INT64_MAX);
+	printf("INTPTR_MIN: %+"PRIdMAX"\n", (intptr_t)INTPTR_MIN);
+	printf("INTPTR_MAX: %+"PRIdMAX"\n", (intptr_t)INTPTR_MAX);
 	printf("INTMAX_MIN: %+"PRIdMAX"\n", (intmax_t)INTMAX_MIN);
 	printf("INTMAX_MAX: %+"PRIdMAX"\n", (intmax_t)INTMAX_MAX);
 
@@ -260,6 +265,7 @@ main(int argc, char *argv[])
 	printf("UINT16_MAX: %"PRIu16"\n", (uint16_t)UINT16_MAX);
 	printf("UINT32_MAX: %"PRIu32"\n", (uint32_t)UINT32_MAX);
 	printf("UINT64_MAX: %"PRIu64"\n", (uint64_t)UINT64_MAX);
+	printf("UINTPTR_MAX: %"PRIuMAX"\n", (uintptr_t)UINTPTR_MAX);
 	printf("UINTMAX_MAX: %"PRIuMAX"\n", (uintmax_t)UINTMAX_MAX);
 
 	printf("\ninteger MIN and MAX\n");
@@ -271,6 +277,8 @@ main(int argc, char *argv[])
 	printf("INT32_MAX: %"PRIi32"\n", (int32_t)INT32_MAX);
 	printf("INT64_MIN: %"PRIi64"\n", (int64_t)INT64_MIN);
 	printf("INT64_MAX: %"PRIi64"\n", (int64_t)INT64_MAX);
+	printf("INTPTR_MIN: %"PRIiMAX"\n", (intptr_t)INTPTR_MIN);
+	printf("INTPTR_MAX: %"PRIiMAX"\n", (intptr_t)INTPTR_MAX);
 	printf("INTMAX_MIN: %"PRIiMAX"\n", (intmax_t)INTMAX_MIN);
 	printf("INTMAX_MAX: %"PRIiMAX"\n", (intmax_t)INTMAX_MAX);
 
@@ -283,6 +291,8 @@ main(int argc, char *argv[])
 	printf("INT32_MAX: %"PRIo32"\n", (int32_t)INT32_MAX);
 	printf("INT64_MIN: %"PRIo64"\n", (int64_t)INT64_MIN);
 	printf("INT64_MAX: %"PRIo64"\n", (int64_t)INT64_MAX);
+	printf("INTPTR_MIN: %"PRIoMAX"\n", (intptr_t)INTPTR_MIN);
+	printf("INTPTR_MAX: %"PRIoMAX"\n", (intptr_t)INTPTR_MAX);
 	printf("INTMAX_MIN: %"PRIoMAX"\n", (intmax_t)INTMAX_MIN);
 	printf("INTMAX_MAX: %"PRIoMAX"\n", (intmax_t)INTMAX_MAX);
 
@@ -295,6 +305,8 @@ main(int argc, char *argv[])
 	printf("INT32_MAX: %"PRIx32"\n", (int32_t)INT32_MAX);
 	printf("INT64_MIN: %"PRIx64"\n", (int64_t)INT64_MIN);
 	printf("INT64_MAX: %"PRIx64"\n", (int64_t)INT64_MAX);
+	printf("INTPTR_MIN: %"PRIxMAX"\n", (intptr_t)INTPTR_MIN);
+	printf("INTPTR_MAX: %"PRIxMAX"\n", (intptr_t)INTPTR_MAX);
 	printf("INTMAX_MIN: %"PRIxMAX"\n", (intmax_t)INTMAX_MIN);
 	printf("INTMAX_MAX: %"PRIxMAX"\n", (intmax_t)INTMAX_MAX);
 
@@ -307,6 +319,8 @@ main(int argc, char *argv[])
 	printf("INT32_MAX: %"PRIX32"\n", (int32_t)INT32_MAX);
 	printf("INT64_MIN: %"PRIX64"\n", (int64_t)INT64_MIN);
 	printf("INT64_MAX: %"PRIX64"\n", (int64_t)INT64_MAX);
+	printf("INTPTR_MIN: %"PRIXMAX"\n", (intptr_t)INTPTR_MIN);
+	printf("INTPTR_MAX: %"PRIXMAX"\n", (intptr_t)INTPTR_MAX);
 	printf("INTMAX_MIN: %"PRIXMAX"\n", (intmax_t)INTMAX_MIN);
 	printf("INTMAX_MAX: %"PRIXMAX"\n", (intmax_t)INTMAX_MAX);
 
@@ -319,6 +333,8 @@ main(int argc, char *argv[])
 	printf("sizeof(uint32_t): %lu\n", sizeof(uint32_t));
 	printf("sizeof(int64_t): %lu\n", sizeof(int64_t));
 	printf("sizeof(uint64_t): %lu\n", sizeof(uint64_t));
+	printf("sizeof(intptr_t): %lu\n", sizeof(intptr_t));
+	printf("sizeof(uintptr_t): %lu\n", sizeof(uintptr_t));
 	printf("sizeof(intmax_t): %lu\n", sizeof(intmax_t));
 	printf("sizeof(uintmax_t): %lu\n", sizeof(uintmax_t));
     }

@@ -164,7 +164,7 @@ CALCOBJS= calc.o
 #
 LIB_H_SRC= alloc.h banned.h blkcpy.h block.h bool.h byteswap.h calc.h \
 	cmath.h config.h custom.h decl.h file.h func.h hash.h hist.h \
-	jump.h label.h lib_util.h lib_calc.h nametype.h \
+	int.h jump.h label.h lib_util.h lib_calc.h nametype.h \
 	opcodes.h prime.h qmath.h sha1.h str.h strl.h \
 	symbol.h token.h value.h zmath.h zrand.h zrandom.h attribute.h
 
@@ -5570,9 +5570,12 @@ zmath.o: have_limits.h
 zmath.o: have_memmv.h
 zmath.o: have_newstr.h
 zmath.o: have_stdbool.h
+zmath.o: have_stdint.h
 zmath.o: have_stdlib.h
 zmath.o: have_string.h
+zmath.o: int.h
 zmath.o: longbits.h
+zmath.o: status.chk_c.h
 zmath.o: zmath.c
 zmath.o: zmath.h
 zmod.o: alloc.h

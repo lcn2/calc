@@ -27,6 +27,7 @@
 
 
 #include <stdio.h>
+#include "int.h"
 #include "alloc.h"
 #include "zmath.h"
 
