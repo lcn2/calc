@@ -75,6 +75,11 @@ The following are the changes from calc version 2.14.3.5 to date:
     Added int.h as a central place for calc integer types and
     integer macros.
 
+    Removed `-R release_file` and `-r release_file` command
+    line options from `ver_calc`.  Add `-h` option.  Updated
+    comments in "README.RELEASE", which serves as the contents
+    of the calc command "help release".
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

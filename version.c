@@ -53,7 +53,7 @@ static char *program;
 
 
 /*
- * calc version constants
+     * calc version constants
  */
 int calc_major_ver = MAJOR_VER;
 int calc_minor_ver = MINOR_VER;
@@ -130,7 +130,7 @@ version(void)
 	 * save the versions string into a newly malloced buffer
 	 */
 	len = strlen(verbuf);
-	stored_version = (char *)malloc(len+1);
+	stored_version = (char *)calloc(len+1, sizeof(verbuf[0]));
 	if (stored_version == NULL) {
 		fprintf(stderr, "%s: cannot malloc version string\n", program);
 		exit(70);
@@ -148,109 +148,20 @@ version(void)
 
 
 /*
- * print_rpm_version - print just the version string, rpm style
- *
- * This function prints a version string, rpm style:
- *
- *		x.y.z.w-r
- *
- * where 'r' comes from the content of the release file.
- */
-void
-print_rpm_version(char *release)
-{
-	FILE *file;		/* open file */
-	char buf[BUFSIZ+1];	/* release file buffer */
-	char *p;
-
-	/*
-	 * obtain the release
-	 */
-	file = fopen(release, "r");
-	if (file == NULL) {
-		fprintf(stderr, "%s: cannot open %s: %s\n",
-		    program, release, strerror(errno));
-		exit(71);
-	}
-	buf[BUFSIZ] = '\0';
-	if (fgets(buf, BUFSIZ, file) == NULL) {
-		fprintf(stderr, "%s: cannot read %s: %s\n",
-		    program, release, strerror(errno));
-		exit(72);
-	}
-	p = strchr(buf, '\n');
-	if (p != NULL) {
-		*p = '\0';
-	}
-
-	/*
-	 * form the version buffer
-	 */
-	printf("%d.%d.%d.%d-%s\n", calc_major_ver, calc_minor_ver,
-			      calc_major_patch, calc_minor_patch, buf);
-	return;
-}
-
-
-/*
- * print_rpm_major - print just the major part version string
+ * print_3_level_version - print just the major part version string
  *
  * This function prints the major part version string:
  *
  *		x.y.z
  */
 void
-print_rpm_major(void)
+print_3_level_version(void)
 {
 	/*
 	 * form the version buffer
 	 */
 	printf("%d.%d.%d\n", calc_major_ver, calc_minor_ver,
 			     calc_major_patch);
-	return;
-}
-
-
-/*
- * print_rpm_release - print just the rpm release
- *
- * This function prints the rpm release:
- *
- *		r
- *
- * where 'r' comes from the content of the release file.
- */
-void
-print_rpm_release(char *release)
-{
-	FILE *file;		/* open file */
-	char buf[BUFSIZ+1];	/* release file buffer */
-	char *p;
-
-	/*
-	 * obtain the release
-	 */
-	file = fopen(release, "r");
-	if (file == NULL) {
-		fprintf(stderr, "%s: cannot open %s: %s\n",
-		    program, release, strerror(errno));
-		exit(73);
-	}
-	buf[BUFSIZ] = '\0';
-	if (fgets(buf, BUFSIZ, file) == NULL) {
-		fprintf(stderr, "%s: cannot read %s: %s\n",
-		    program, release, strerror(errno));
-		exit(74);
-	}
-	p = strchr(buf, '\n');
-	if (p != NULL) {
-		*p = '\0';
-	}
-
-	/*
-	 * form the version buffer
-	 */
-	printf("%s\n", buf);
 	return;
 }
 
@@ -263,21 +174,27 @@ int
 main(int argc, char *argv[])
 {
 	program = argv[0];
-	if (argc == 3 && strcmp(argv[1], "-r") == 0) {
-		print_rpm_version(argv[2]);
+	/*
+	 * case: -V - print 3-level version
+	 */
+	if (argc == 2 && strcmp(argv[1], "-V") == 0) {
+		print_3_level_version();
 
-	} else if (argc == 3 && strcmp(argv[1], "-R") == 0) {
-		print_rpm_release(argv[2]);
-
-	} else if (argc == 2 && strcmp(argv[1], "-V") == 0) {
-		print_rpm_major();
-
+	/*
+	 * case: no args - print 4-level version
+	 */
 	} else if (argc == 1) {
 		printf("%s\n", version());
 
+	/*
+	 * case: -h or wrong number of args or invalid options
+	 */
 	} else {
 		fprintf(stderr,
-		    "usage: %s [-V] [-R release_file] [-r release_file]\n",
+		    "usage: %s [-V | -h]\n"
+		    "\n"
+		    "    -h	print this message and exit non-zero\n"
+		    "    -V	print 3-level version (def: print 4-level version)\n",
 		    program);
 		exit(75);
 	}

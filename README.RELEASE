@@ -16,6 +16,10 @@ The top version level (e.g., 2) refers to the internal representation
 of values.  Any library or hardware linked/built for calc 2 will be able
 to use values from other 2.x.y.z versions.
 
+When top version level is 2, the symbol "CALC2_COMPAT" is defined
+by "version.h".  See "version.h" for constants used to define the
+calc version.
+
 The top 2 levels (e.g., 2.14) refers to a specific compatible set of
 builtin functions.  Calc interpreted code (such as calc resource files)
 written for, say calc 2.14, will be able to use the same set of builtin
@@ -32,9 +36,32 @@ neither a change to the internal representation format (a top level
 version change), nor were there new calc builtins introduced in such
 a top 3 level release.
 
-There are 3 classes of changes to the calc source tree:
 
-alpha		=> untagged GitHub commit
+The program "ver_calc" will print information about the compiled
+calc version as defined "version.h" when "ver_calc" was compiled:
+
+    usage: ./ver_calc [-h] [-V]
+
+	-h	print this message and exit non-zero
+	-V	print 3-level version (def: print 4-level version)
+
+Also "calc -v" will print the calc version as defined "version.h" when
+"calc" was compiled.
+
+The master branch:
+
+    The public repository of calc source code is:
+
+	http://github.com/lcn2/calc
+
+    On that GitHub site you may find released version of calc,
+    "production", "tested" and "alpha".  All commits on the master
+    branch that are not associated with a release are "alpha".
+
+    Any "alpha" commit is likely future code for a future
+    "tested" or "production" version of calc.
+
+alpha		==> untagged GitHub commit
 
 	Any untagged commit to the GitHub master branch should be
 	considered as alpha code that may make calc unstable.
@@ -43,7 +70,17 @@ alpha		=> untagged GitHub commit
 	there is a risk that picking up such a change could
 	negatively impact the code.
 
-tested		=> tagged GitHub pre-release commit
+	NOTE: The calc version found in "version.h", and printed
+	      by both "ver_calc [-V]" and "calc -v" for an untagged
+	      commit is the previous "tested" or "production" version
+	      of calc.  Any "alpha" changes that remain are code
+	      for some future version of calc.
+
+	      At the last stage of the release process, "version.h"
+	      will be updated as well as the top level version range
+	      listed in "CHANGES".
+
+tested		==> tagged GitHub pre-release commit
 
 	A new version of calc has been released and has recently passed
 	regression testing on at least to different platforms and chip
@@ -63,7 +100,7 @@ tested		=> tagged GitHub pre-release commit
 	 At the bottom of a given release is a "> Assets" that may
 	 be opened to reveal down-loadable files.
 
-production	=> tagged GitHub release commit
+production	==> tagged GitHub release commit
 
 	A new version of calc has been released and has undergone
 	extensive testing over time over a number of platforms.
@@ -87,14 +124,14 @@ production	=> tagged GitHub release commit
 
 A historical note and apology:
 
-In the past, some version number changes were made that did not fully
-reflect the above version number or change class.  Moreover older terms
-such as "stable" and "unstable" were misleading and did not properly
-reflect the nature of the change.  Sorry!  The purpose of this document
-is to try and bring a better level of conformity to source code updates,
-tagged releases and version numbers.
+    In the past, some version number changes were made that did not
+    fully reflect the above version number or change class.  Moreover
+    older terms such as "stable" and "unstable" were misleading and
+    did not properly reflect the nature of the change.  Sorry!  The
+    purpose of this document is to try and bring a better level of
+    conformity to source code updates, tagged releases and version numbers.
 
-## Copyright (C) 2021  Landon Curt Noll
+## Copyright (C) 2021,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
