@@ -1,7 +1,7 @@
 /*
  * zmath - extended precision integral arithmetic primitives
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -2163,34 +2163,3 @@ zpopcnt(ZVALUE z, int bitval)
 	 */
 	return cnt;
 }
-
-
-#if 0 /* XXX - to be added later */
-/*
- * test if a number is a power of 2
- *
- * given:
- *	z	value to check if it is a power of 2
- *	zlog2	set to log base 2 of z if z is a power of 2, 0 otherwise
- *
- * returns:
- *	true	z is a power of 2
- *	false	z is not a power of 2
- */
-bool
-zispowerof2(ZVALUE z, ZVALUE *zlog2)
-{
-	/* firewall */
-	if (zlog2 == NULL) {
-		math_error("%s: zlog2 NULL", __func__);
-		not_reached();
-	}
-
-	/* zero and negative values are never powers of 2 */
-	if (ziszero(z) || zisneg(z)) {
-		return false;
-	}
-
-	/* XXX - add code here - XXX */
-}
-#endif /* XXX */

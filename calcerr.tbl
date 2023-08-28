@@ -1,7 +1,7 @@
 #
 # calcerr - error codes and messages
 #
-# Copyright (C) 1999-2006,2021  Ernest Bowen
+# Copyright (C) 1999-2006,2021,2023  Ernest Bowen and Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -542,3 +542,6 @@ E_HMS2H1	Non-real-number arguments 1, 2 or 3 for hms2h
 E_HMS2H2	Invalid rounding arg 4 for hms2h
 E_HM2H1		Non-real-number arguments 1 or 2 for hm2h
 E_HM2H2		Invalid rounding arg 4 for hm2h
+E_LOG2_1	Bad epsilon argument for log2
+E_LOG2_2	Non-numeric first argument for log2
+E_LOG2_3	Cannot calculate log2 for this value

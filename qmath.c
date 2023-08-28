@@ -1,7 +1,7 @@
 /*
  * qmath - extended precision rational arithmetic primitive routines
  *
- * Copyright (C) 1999-2007,2014,2021-2023  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2014,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -41,7 +41,7 @@ NUMBER _qtwo_ =		{ { _twoval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
 NUMBER _qten_ =		{ { _tenval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
 NUMBER _qnegone_ =	{ { _oneval_, 1, 1 }, { _oneval_, 1, 0 }, 1, NULL };
 NUMBER _qonehalf_ =	{ { _oneval_, 1, 0 }, { _twoval_, 1, 0 }, 1, NULL };
-NUMBER _qneghalf_ = 	{ { _oneval_, 1, 1 }, { _twoval_, 1, 0 }, 1, NULL };
+NUMBER _qneghalf_ =	{ { _oneval_, 1, 1 }, { _twoval_, 1, 0 }, 1, NULL };
 NUMBER _qonesqbase_ =	{ { _oneval_, 1, 0 }, { _sqbaseval_, 2, 0 }, 1, NULL };
 
 NUMBER * initnumbs[] = {&_qzero_, &_qone_, &_qtwo_,

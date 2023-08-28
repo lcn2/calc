@@ -80,6 +80,10 @@ The following are the changes from calc version 2.14.3.5 to date:
     comments in "README.RELEASE", which serves as the contents
     of the calc command "help release".
 
+    Added log2(x [,eps]) builtin function.  When x is an integer
+    power of 2, log2(x) will return an integer, otherwise it will
+    return the equivalent of ln(x)/ln(2).
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

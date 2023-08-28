@@ -1,7 +1,7 @@
 /*
  * qmath - declarations for extended precision rational arithmetic
  *
- * Copyright (C) 1999-2007,2014,2021  David I. Bell
+ * Copyright (C) 1999-2007,2014,2021,2023  David I. Bell and Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -185,6 +185,7 @@ E_FUNC NUMBER *qsin(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qexp(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qln(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qlog(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qlog2(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qtan(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qsec(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qcot(NUMBER *q, NUMBER *epsilon);
@@ -248,12 +249,12 @@ E_FUNC NUMBER *swap_HALF_in_NUMBER(NUMBER *dest, NUMBER *src, bool all);
 #define qistwo(q)	(zistwo((q)->num) && zisunit((q)->den))
 #define qiseven(q)	(zisunit((q)->den) && ziseven((q)->num))
 #define qisodd(q)	(zisunit((q)->den) && zisodd((q)->num))
-#define qistwopower(q)	(zisunit((q)->den) && zistwopower((q)->num))
 #define qistiny(q)	(zistiny((q)->num))
 
 #define qhighbit(q)	(zhighbit((q)->num))
 #define qlowbit(q)	(zlowbit((q)->num))
 #define qdivcount(q1, q2)	(zdivcount((q1)->num, (q2)->num))
+#define qisreciprocal(q)	(zisunit((q)->num) && !ziszero((q)->den))
 /* operation on #q may be undefined, so replace with an inline-function */
 /* was: #define qlink(q)	((q)->links++, (q)) */
 static inline NUMBER* qlink(NUMBER* q) { if(q) { (q)->links++; } return q; }

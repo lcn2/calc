@@ -1,4 +1,4 @@
-	USING THE ARBITRARY PRECISION ROUTINES IN A C PROGRAM
+USING THE ARBITRARY PRECISION ROUTINES IN A C PROGRAM
 
 Part of the calc release consists of an arbitrary precision math link library.
 This link library is used by the calc program to perform its own calculations.
@@ -393,6 +393,12 @@ ZVALUE yourself.  Examples of such checks are:
 	zge32b(z)	(number is >= 2^32)
 	zge64b(z)	(number is >= 2^64)
 
+Return true if z an integer power of 2: set zlog2 to log base 2 of z.
+Return false if a is NOT integer power of 2: set zlog2 to 0.
+The zlog2 arg must be a non-NULL pointer to a ZVALUE.
+
+	zispowerof2(z, &zlog2)
+
 Typically the largest unsigned long is typedefed to FULL.  The following
 macros are useful in dealing with this data type:
 
@@ -513,18 +519,18 @@ give quick information about NUMBERs.  In addition, there are some new ones
 applicable to fractions.  These are all defined in qmath.h.  Some of these
 macros are:
 
-	qiszero(q)	(number is zero)
-	qisneg(q)	(number is negative)
-	qispos(q)	(number is positive)
-	qisint(q)	(number is an integer)
-	qisfrac(q)	(number is fractional)
-	qisunit(q)	(number is 1 or -1)
-	qisone(q)	(number is 1)
-	qisnegone(q)	(number is -1)
-	qistwo(q)	(number is 2)
-	qiseven(q)	(number is an even integer)
-	qisodd(q)	(number is an odd integer)
-	qistwopower(q)	(number is a power of 2 >= 1)
+	qiszero(q)		(number is zero)
+	qisneg(q)		(number is negative)
+	qispos(q)		(number is positive)
+	qisint(q)		(number is an integer)
+	qisfrac(q)		(number is fractional)
+	qisunit(q)		(number is 1 or -1)
+	qisone(q)		(number is 1)
+	qisnegone(q)		(number is -1)
+	qistwo(q)		(number is 2)
+	qiseven(q)		(number is an even integer)
+	qisodd(q)		(number is an odd integer)
+	qisreciprocal(q)	(number is 1 / an integer and q != 0)
 
 The comparisons for NUMBERs are similar to the ones for ZVALUEs.  You use the
 qcmp and qrel functions.

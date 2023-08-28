@@ -14,21 +14,30 @@ DESCRIPTION
     Approximate the base 2 logarithm function of x by a multiple of
     epsilon, the error having absolute value less than 0.75 * eps.
 
+    When x is an integer power of 2, log2(x) will return an integer
+    regardless of the value of eps or epsilon().
+
     If y is a positive integer, log(x, 2^-y) will usually be correct
     to the y-th decimal place.
 
-    When x if a power of 2, log2(x) will return an integer regardless
-    of the value of eps or epsilon().
-
 EXAMPLE
-    ; print log2(2), log2(4), log2(1024), log2(2^500)
-    1 2 10 500
+    ; print log2(2), log2(4), log2(1024), log2(2^500), log2(1/2^23209)
+    1 2 10 500 -23209
 
-    ; print log(127), log(23209), log(2^17-19)
-    ~6.98868468677216585326 ~14.50239674255407864468 ~16.99979085393743521984
+    ; print log2(127), log2(23209), log2(2^17-19)
+    6.98868468677216585326 14.50239674255407864468 16.99979085393743521984
 
-    ; print log(2+3i, 1e-5)
-    ~1.85020558320709803073+~1.41786049195700786266i
+    ; print log2(-127)
+    6.98868468677216585326+4.53236014182719380961i
+
+    ; print log2(2+3i), log2(-2+3i)
+    1.85021985907054608020+1.41787163074572199658i 1.85021985907054608020+3.11448851108147181304i
+
+    ; print log2(2-3i), log2(-2-3i)
+    1.85021985907054608020-1.41787163074572199658i 1.85021985907054608020-3.11448851108147181304i
+
+    ; print log2(17+0.3i, 1e-75), log2(-17-0.3i, 1e-75)
+    4.08768744737521449955+0.02545668190826163773i 4.08768744737521449955-4.50690345991893217190i
 
 LIMITS
     x != 0

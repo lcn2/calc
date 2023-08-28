@@ -1,7 +1,7 @@
 /*
  * zmath - declarations for extended precision integer arithmetic
  *
- * Copyright (C) 1999-2007,2014,2021,2023  David I. Bell
+ * Copyright (C) 1999-2007,2014,2021,2023  David I. Bell and Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -415,6 +415,7 @@ E_FUNC FLAG zsqrt(ZVALUE z1, ZVALUE *dest, long R);
 E_FUNC void zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest);
 E_FUNC bool zissquare(ZVALUE z);
 E_FUNC void zhnrmod(ZVALUE v, ZVALUE h, ZVALUE zn, ZVALUE zr, ZVALUE *res);
+E_FUNC bool zispowerof2(ZVALUE z, ZVALUE *zlog2);
 
 
 /*

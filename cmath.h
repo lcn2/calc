@@ -1,7 +1,7 @@
 /*
  * cmath - data structures for extended precision complex arithmetic
  *
- * Copyright (C) 1999-2007,2014  David I. Bell
+ * Copyright (C) 1999-2007,2014,2023  David I. Bell and Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -97,6 +97,7 @@ E_FUNC COMPLEX *c_root(COMPLEX *c, NUMBER *q, NUMBER *epsilon);
 E_FUNC COMPLEX *c_exp(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_ln(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_log(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_log2(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_cos(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_sin(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_cosh(COMPLEX *c, NUMBER *epsilon);

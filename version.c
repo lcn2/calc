@@ -3,7 +3,7 @@
  *
  * Copyright (C) 1999-2023  David I. Bell and Landon Curt Noll
  *
- * Primary author:  David I. Bell
+ * See "version.h" for the actual calc version constants.
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -53,7 +53,7 @@ static char *program;
 
 
 /*
-     * calc version constants
+ * calc version constants
  */
 int calc_major_ver = MAJOR_VER;
 int calc_minor_ver = MINOR_VER;

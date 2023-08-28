@@ -1,7 +1,7 @@
 /*
  * comfunc - extended precision complex arithmetic non-primitive routines
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -39,9 +39,13 @@
  */
 STATIC COMPLEX *cln_10 = NULL;
 STATIC NUMBER *cln_10_epsilon = NULL;
+STATIC COMPLEX *cln_2 = NULL;
+STATIC NUMBER *cln_2_epsilon = NULL;
 STATIC NUMBER _q10_ = { { _tenval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
+STATIC NUMBER _q2_ = { { _twoval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
 STATIC NUMBER _q0_ = { { _zeroval_, 1, 0 }, { _oneval_, 1, 0 }, 1, NULL };
 COMPLEX _cten_ = { &_q10_, &_q0_, 1 };
+COMPLEX _ctwo_ = { &_q2_, &_q0_, 1 };
 
 
 /*
@@ -530,6 +534,7 @@ c_ln(COMPLEX *c, NUMBER *epsilon)
 	return r;
 }
 
+
 /*
  * Calculate base 10 logarithm by:
  *
@@ -546,7 +551,7 @@ c_log(COMPLEX *c, NUMBER *epsilon)
 	 * compute ln(c) first
 	 */
 	ln_c = c_ln(c, epsilon);
-	/* log(1) == 0 */
+	/* quick return for log(1) == 0 */
 	if (ciszero(ln_c)) {
 		return ln_c;
 	}
@@ -580,6 +585,61 @@ c_log(COMPLEX *c, NUMBER *epsilon)
 	 * return ln(c) / ln(10)
 	 */
 	ret = c_div(ln_c, cln_10);
+	comfree(ln_c);
+	return ret;
+}
+
+
+/*
+ * Calculate base 2 logarithm by:
+ *
+ *	log(c) = ln(c) / ln(2)
+ */
+COMPLEX *
+c_log2(COMPLEX *c, NUMBER *epsilon)
+{
+	int need_new_cln_2 = true;	/* false => use cached cln_2 value */
+	COMPLEX *ln_c;			/* ln(x) */
+	COMPLEX *ret;			/* base 2 of x */
+
+	/*
+	 * compute ln(c) first
+	 */
+	ln_c = c_ln(c, epsilon);
+	/* quick return for log(1) == 0 */
+	if (ciszero(ln_c)) {
+		return ln_c;
+	}
+
+	/*
+	 * save epsilon for ln(2) if needed
+	 */
+	if (cln_2_epsilon == NULL) {
+		/* first time call */
+		cln_2_epsilon = qcopy(epsilon);
+	} else if (qcmp(cln_2_epsilon, epsilon) == true) {
+		/* replaced cached value with epsilon arg */
+		qfree(cln_2_epsilon);
+		cln_2_epsilon = qcopy(epsilon);
+	} else if (cln_2 != NULL) {
+		/* the previously computed ln(2) is OK to use */
+		need_new_cln_2 = false;
+	}
+
+	/*
+	 * compute ln(2) if needed
+	 */
+	if (need_new_cln_2 == true) {
+		if (cln_2 != NULL) {
+			comfree(cln_2);
+		}
+		cln_2 = c_ln(&_ctwo_, cln_2_epsilon);
+	}
+
+	/*
+	 * return ln(c) / ln(2)
+	 */
+	ret = c_div(ln_c, cln_2);
 	comfree(ln_c);
 	return ret;
 }

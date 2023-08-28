@@ -2193,6 +2193,55 @@ f_log(int count, VALUE **vals)
 
 
 S_FUNC VALUE
+f_log2(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX ctmp, *c;
+	NUMBER *err;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	err = conf->epsilon;
+	if (count == 2) {
+		if (vals[1]->v_type != V_NUM)
+			return error_value(E_LOG2_1);
+		err = vals[1]->v_num;
+	}
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			if (!qisneg(vals[0]->v_num) &&
+			    !qiszero(vals[0]->v_num)) {
+				result.v_num = qlog2(vals[0]->v_num, err);
+				result.v_type = V_NUM;
+				return result;
+			}
+			ctmp.real = vals[0]->v_num;
+			ctmp.imag = qlink(&_qzero_);
+			ctmp.links = 1;
+			c = c_log2(&ctmp, err);
+			break;
+		case V_COM:
+			c = c_log2(vals[0]->v_com, err);
+			break;
+		default:
+			return error_value(E_LOG2_2);
+	}
+	if (c == NULL) {
+		return error_value(E_LOG2_3);
+	}
+	result.v_type = V_COM;
+	result.v_com = c;
+	if (cisreal(c)) {
+		result.v_num = qlink(c->real);
+		result.v_type = V_NUM;
+		comfree(c);
+	}
+	return result;
+}
+
+
+S_FUNC VALUE
 f_cos(int count, VALUE **vals)
 {
 	VALUE result;
@@ -10165,10 +10214,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "hypotenuse of right triangle within accuracy c"},
 	{"ilog", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_ilog},
 	 "integral log of a to integral base b"},
-#if 0 /* XXX - to be added later */
 	{"ilogn", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_ilog},
 	 "same is ilog"},
-#endif /* XXX */
 	{"ilog10", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ilog10},
 	 "integral log of a number base 10"},
 	{"ilog2", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ilog2},
@@ -10268,6 +10315,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "natural logarithm of value a within accuracy b"},
 	{"log", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_log},
 	 "base 10 logarithm of value a within accuracy b"},
+	{"log2", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_log2},
+	 "base 2 logarithm of value a within accuracy b"},
 	{"lowbit", 1, 1, 0, OP_LOWBIT, {.null = NULL}, {.null = NULL},
 	 "low bit number in base 2 representation"},
 	{"ltol", 1, 2, FE, OP_NOP, {.numfunc_2 = f_legtoleg}, {.null = NULL},

@@ -2236,3 +2236,81 @@ zissquare(ZVALUE z)
 	zfree(tmp);
 	return (n ? true : false);
 }
+
+
+/*
+ * test if a number is an integer power of 2
+ *
+ * given:
+ *	z	value to check if it is a power of 2
+ *	zlog2	>= 0 ==> *zlog2 power of 2 of z (return true)
+ *		< 0 z is not a power of 2 (return false)
+ *
+ * returns:
+ *	true	z is a power of 2
+ *	false	z is not a power of 2
+ */
+bool
+zispowerof2(ZVALUE z, ZVALUE *zlog2)
+{
+	FULL ilogz=0;		/* potential log base 2 return value or -1 */
+	HALF tophalf;		/* most significant HALF in z */
+	LEN len;		/* length of z in HALFs */
+	int i;
+
+	/* firewall */
+	if (zlog2 == NULL) {
+		math_error("%s: zlog2 NULL", __func__);
+		not_reached();
+	}
+
+	/* zero and negative values are never integer powers of 2 */
+	if (ziszero(z) || zisneg(z)) {
+		*zlog2 = _neg_one_;
+		return false;
+	}
+
+	/*
+	 * trim z just in case
+	 *
+	 * An untrimmed z will give incorrect results.
+	 */
+	ztrim(&z);
+
+	/*
+	 * all HALFs below the top HALF must be zero
+	 */
+	len = z.len;
+	for (i=0, ilogz=0; i < len-1; ++i, ilogz+=BASEB) {
+		if (z.v[i] != 0) {
+			*zlog2 = _neg_one_;
+			return false;
+		}
+	}
+
+	/*
+	 * top HALF must be a power of 2
+	 *
+	 * For non-zero values of tophalf,
+	 * (tophalf & (tophalf-1)) == 0 ==> tophalf is a power of 2,
+	 * (tophalf & (tophalf-1)) != 0 ==> tophalf is NOT a power of 2.
+	 */
+	tophalf = z.v[len-1];
+	if ((tophalf == 0) || ((tophalf & (tophalf-1)) != 0)) {
+		*zlog2 = _neg_one_;
+		return false;
+	}
+
+	/*
+	 * count the bits in the top HALF which is a power of 2
+	 */
+	for (i=0; i < BASEB && tophalf != ((HALF)1 << i); ++i) {
+		++ilogz;
+	}
+
+	/*
+	 * return power of 2
+	 */
+	utoz(ilogz, zlog2);
+	return true;
+}

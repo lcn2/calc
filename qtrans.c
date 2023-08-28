@@ -1,7 +1,7 @@
 /*
  * qtrans - transcendental functions for real numbers
  *
- * Copyright (C) 1999-2007,2021-2023  David I. Bell and Ernest Bowen
+ * Copyright (C) 1999-2007,2021-2023  David I. Bell, Landon Curt Noll and Ernest Bowen
  *
  * Primary author:  David I. Bell
  *
@@ -43,10 +43,12 @@ HALF _qlgeden_[] = { 25469 };
 NUMBER _qlge_ = { { _qlgenum_, 1, 0 }, { _qlgeden_, 1, 0 }, 1, NULL };
 
 /*
- * cache the natural logarithm of 10
+ * cache the natural logarithm of 10 and 2
  */
 STATIC NUMBER *ln_10 = NULL;
 STATIC NUMBER *ln_10_epsilon = NULL;
+STATIC NUMBER *ln_2 = NULL;
+STATIC NUMBER *ln_2_epsilon = NULL;
 
 /*
  * cache pi
@@ -1184,7 +1186,7 @@ qlog(NUMBER *q, NUMBER *epsilon)
 	 * compute ln(c) first
 	 */
 	ln_q = qln(q, epsilon);
-	/* log(1) == 0 */
+	/* quick return for log(1) == 0 */
 	if (qiszero(ln_q)) {
 		return ln_q;
 	}
@@ -1218,6 +1220,142 @@ qlog(NUMBER *q, NUMBER *epsilon)
 	 * return ln(q) / ln(10)
 	 */
 	ret = qqdiv(ln_q, ln_10);
+	qfree(ln_q);
+	return ret;
+}
+
+
+/*
+ * Calculate the base 2 logarithm
+ *
+ *	log(q) = ln(q) / ln(2)
+ */
+NUMBER *
+qlog2(NUMBER *q, NUMBER *epsilon)
+{
+	int need_new_ln_2 = true;	/* false => use cached ln_2 value */
+	NUMBER *ln_q;			/* ln(x) */
+	NUMBER *ret;			/* base 2 logarithm of x */
+
+	/* firewall */
+	if (qiszero(q) || qiszero(epsilon)) {
+		math_error("logarithm of 0");
+		not_reached();
+	}
+
+	/*
+	 * special case: q is integer power of 2
+	 *
+	 * When q is integer power of 2, the base 2 logarithm is an integer.
+	 * We return a base 2 logarithm that is in integer in this case.
+	 *
+	 * From above we know that q != 0, so we need to check that q>0.
+	 *
+	 * We have two cases for a power of two: a positive power of 2, and a
+	 * negative power of 2 (i.e., 1 over a power of 2).
+	 */
+	if (qispos(q)) {
+		ZVALUE zlog2;		/* base 2 logarithm when q is power of 2 */
+
+		/*
+		 * case: q>0 is an integer
+		 */
+		if (qisint(q)) {
+
+			/*
+			 * check if q is an integer power of 2
+			 */
+			if (zispowerof2(q->num, &zlog2)) {
+
+				/*
+				 * case: q>0 is an integer power of 2
+				 *
+				 * Return zlog2, which is an integer power of 2 as a NUMBER.
+				 */
+				ret = qalloc();
+				zcopy(zlog2, &ret->num);
+				zfree(zlog2);
+				return ret;
+
+			/*
+			 * case: integer q is not an integer power of 2
+			 */
+			} else {
+
+				/* free the zispowerof2() 2nd arg and proceed to calculate ln(q)/ln(2) */
+				zfree(zlog2);
+			}
+
+		/*
+		 * case: q>0 is 1 over an integer
+		 */
+		} else if (qisreciprocal(q)) {
+
+			/*
+			 * check if q is 1 over an integer power of 2
+			 */
+			if (zispowerof2(q->den, &zlog2)) {
+
+				/*
+				 * case: q>0 is an integer power of 2
+				 *
+				 * Return zlog2, which is an negative integer power of 2 as a NUMBER.
+				 */
+				ret = qalloc();
+				zlog2.sign = !zlog2.sign;	/* zlog2 = -zlog2 */
+				zcopy(zlog2, &ret->num);
+				zfree(zlog2);
+				return ret;
+
+			/*
+			 * case: reciprocal q is not an integer power of 2
+			 */
+			} else {
+
+				/* free the zispowerof2() 2nd arg and proceed to calculate ln(q)/ln(2) */
+				zfree(zlog2);
+			}
+		}
+	}
+
+	/*
+	 * compute ln(c) first
+	 */
+	ln_q = qln(q, epsilon);
+	/* quick return for log(1) == 0 */
+	if (qiszero(ln_q)) {
+		return ln_q;
+	}
+
+	/*
+	 * save epsilon for ln(2) if needed
+	 */
+	if (ln_2_epsilon == NULL) {
+		/* first time call */
+		ln_2_epsilon = qcopy(epsilon);
+	} else if (qcmp(ln_2_epsilon, epsilon) == true) {
+		/* replaced cached value with epsilon arg */
+		qfree(ln_2_epsilon);
+		ln_2_epsilon = qcopy(epsilon);
+	} else if (ln_2 != NULL) {
+		/* the previously computed ln(2) is OK to use */
+		need_new_ln_2 = false;
+	}
+
+	/*
+	 * compute ln(2) if needed
+	 */
+	if (need_new_ln_2 == true) {
+		if (ln_2 != NULL) {
+			qfree(ln_2);
+		}
+		ln_2 = qln(&_qtwo_, ln_2_epsilon);
+	}
+
+	/*
+	 * return ln(q) / ln(2)
+	 */
+	ret = qqdiv(ln_q, ln_2);
 	qfree(ln_q);
 	return ret;
 }
