@@ -170,6 +170,7 @@ E_FUNC long qdigits(NUMBER *q, ZVALUE base);
 E_FUNC void setepsilon(NUMBER *q);
 E_FUNC NUMBER *qbitvalue(long i);
 E_FUNC NUMBER *qtenpow(long i);
+E_FUNC bool qispowerof2(NUMBER *q, NUMBER **qlog2);
 
 
 /*

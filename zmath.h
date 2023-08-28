@@ -415,7 +415,7 @@ E_FUNC FLAG zsqrt(ZVALUE z1, ZVALUE *dest, long R);
 E_FUNC void zroot(ZVALUE z1, ZVALUE z2, ZVALUE *dest);
 E_FUNC bool zissquare(ZVALUE z);
 E_FUNC void zhnrmod(ZVALUE v, ZVALUE h, ZVALUE zn, ZVALUE zr, ZVALUE *res);
-E_FUNC bool zispowerof2(ZVALUE z, ZVALUE *zlog2);
+E_FUNC bool zispowerof2(ZVALUE z, FULL *log2);
 
 
 /*

@@ -2243,30 +2243,29 @@ zissquare(ZVALUE z)
  *
  * given:
  *	z	value to check if it is a power of 2
- *	zlog2	>= 0 ==> *zlog2 power of 2 of z (return true)
- *		< 0 z is not a power of 2 (return false)
+ *	log2	when z is an integer power of 2 (true return), *log2 is set to log base 2 of z
+ *		when z is NOT an integer power of 2 (false return), *log2 is not touched
  *
  * returns:
  *	true	z is a power of 2
  *	false	z is not a power of 2
  */
 bool
-zispowerof2(ZVALUE z, ZVALUE *zlog2)
+zispowerof2(ZVALUE z, FULL *log2)
 {
-	FULL ilogz=0;		/* potential log base 2 return value or -1 */
+	FULL ilogz;		/* potential log base 2 return value or -1 */
 	HALF tophalf;		/* most significant HALF in z */
 	LEN len;		/* length of z in HALFs */
 	int i;
 
 	/* firewall */
-	if (zlog2 == NULL) {
-		math_error("%s: zlog2 NULL", __func__);
+	if (log2 == NULL) {
+		math_error("%s: log2 NULL", __func__);
 		not_reached();
 	}
 
 	/* zero and negative values are never integer powers of 2 */
 	if (ziszero(z) || zisneg(z)) {
-		*zlog2 = _neg_one_;
 		return false;
 	}
 
@@ -2283,7 +2282,6 @@ zispowerof2(ZVALUE z, ZVALUE *zlog2)
 	len = z.len;
 	for (i=0, ilogz=0; i < len-1; ++i, ilogz+=BASEB) {
 		if (z.v[i] != 0) {
-			*zlog2 = _neg_one_;
 			return false;
 		}
 	}
@@ -2297,7 +2295,6 @@ zispowerof2(ZVALUE z, ZVALUE *zlog2)
 	 */
 	tophalf = z.v[len-1];
 	if ((tophalf == 0) || ((tophalf & (tophalf-1)) != 0)) {
-		*zlog2 = _neg_one_;
 		return false;
 	}
 
@@ -2311,6 +2308,6 @@ zispowerof2(ZVALUE z, ZVALUE *zlog2)
 	/*
 	 * return power of 2
 	 */
-	utoz(ilogz, zlog2);
+	*log2 = ilogz;
 	return true;
 }

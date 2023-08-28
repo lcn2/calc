@@ -1245,78 +1245,12 @@ qlog2(NUMBER *q, NUMBER *epsilon)
 
 	/*
 	 * special case: q is integer power of 2
-	 *
-	 * When q is integer power of 2, the base 2 logarithm is an integer.
-	 * We return a base 2 logarithm that is in integer in this case.
-	 *
-	 * From above we know that q != 0, so we need to check that q>0.
-	 *
-	 * We have two cases for a power of two: a positive power of 2, and a
-	 * negative power of 2 (i.e., 1 over a power of 2).
 	 */
-	if (qispos(q)) {
-		ZVALUE zlog2;		/* base 2 logarithm when q is power of 2 */
-
-		/*
-		 * case: q>0 is an integer
-		 */
-		if (qisint(q)) {
-
-			/*
-			 * check if q is an integer power of 2
-			 */
-			if (zispowerof2(q->num, &zlog2)) {
-
-				/*
-				 * case: q>0 is an integer power of 2
-				 *
-				 * Return zlog2, which is an integer power of 2 as a NUMBER.
-				 */
-				ret = qalloc();
-				zcopy(zlog2, &ret->num);
-				zfree(zlog2);
-				return ret;
-
-			/*
-			 * case: integer q is not an integer power of 2
-			 */
-			} else {
-
-				/* free the zispowerof2() 2nd arg and proceed to calculate ln(q)/ln(2) */
-				zfree(zlog2);
-			}
-
-		/*
-		 * case: q>0 is 1 over an integer
-		 */
-		} else if (qisreciprocal(q)) {
-
-			/*
-			 * check if q is 1 over an integer power of 2
-			 */
-			if (zispowerof2(q->den, &zlog2)) {
-
-				/*
-				 * case: q>0 is an integer power of 2
-				 *
-				 * Return zlog2, which is an negative integer power of 2 as a NUMBER.
-				 */
-				ret = qalloc();
-				zlog2.sign = !zlog2.sign;	/* zlog2 = -zlog2 */
-				zcopy(zlog2, &ret->num);
-				zfree(zlog2);
-				return ret;
-
-			/*
-			 * case: reciprocal q is not an integer power of 2
-			 */
-			} else {
-
-				/* free the zispowerof2() 2nd arg and proceed to calculate ln(q)/ln(2) */
-				zfree(zlog2);
-			}
-		}
+	ret = qalloc();
+	if (qispowerof2(q, &ret)) {
+		return ret;
 	}
+	qfree(ret);
 
 	/*
 	 * compute ln(c) first

@@ -393,12 +393,6 @@ ZVALUE yourself.  Examples of such checks are:
 	zge32b(z)	(number is >= 2^32)
 	zge64b(z)	(number is >= 2^64)
 
-Return true if z an integer power of 2: set zlog2 to log base 2 of z.
-Return false if a is NOT integer power of 2: set zlog2 to 0.
-The zlog2 arg must be a non-NULL pointer to a ZVALUE.
-
-	zispowerof2(z, &zlog2)
-
 Typically the largest unsigned long is typedefed to FULL.  The following
 macros are useful in dealing with this data type:
 
@@ -425,6 +419,18 @@ function tests whether two ZVALUEs are equal, returning true if they differ.
 The zrel function tests the relative sizes of two ZVALUEs, returning -1 if
 the first one is smaller, 0 if they are the same, and 1 if the first one
 is larger.
+
+To determine if z is an integer power of 2, use zispowerof2:
+
+	ZVALUE z;		/* value to check if it is a power of */
+	FULL log2;		/* set to log base 2 of z when is_power_of_2 is true */
+	bool is_power_of_2;
+
+	is_power_of_2 = zispowerof2(z, &log2)
+
+Returns true if z an integer power of 2: set log2 to log base 2 of z.
+Returns false if z is NOT integer power of 2 and leave log2 untouched.
+The log2 arg must be a non-NULL pointer to a ZVALUE.
 
 ---------------
 USING FRACTIONS
@@ -459,11 +465,12 @@ a number into the corresponding NUMBER.	 The str2q function accepts input in
 integral, fractional, real, or exponential formats.  Examples of allocating
 numbers are:
 
-	NUMBER *q1, *q2, *q3;
+	NUMBER *q1, *q2, *q3, *q4;
 
 	q1 = itoq(66L);
 	q2 = iitoq(2L, 3L);
 	q3 = str2q("456.78");
+	q4 = utoq((FULL) 1234567890L);
 
 Also unlike ZVALUEs, NUMBERs are quickly copied.  This is because they contain
 a link count, which is the number of pointers there are to the NUMBER.	The
@@ -479,11 +486,13 @@ the ZVALUEs contained within the NUMBER, and then puts the NUMBER structure
 onto a free list for quick reuse.  The following is an example of allocating
 NUMBERs, copying them, adding them, and finally deleting them again.
 
-	NUMBER *q1, *q2, *q3;
+	NUMBER *q1, *q2, *q3, *q4;
 
 	q1 = itoq(111L);
 	q2 = qlink(q1);
 	q3 = qqadd(q1, q2);
+	q4 = qnum(q2, q3);
+
 	qfree(q1);
 	qfree(q2);
 	qfree(q3);
@@ -543,6 +552,20 @@ These have the values 0, 1, -1, and 1/2.  An example of using them is:
 
 	q1 = qlink(&_qonehalf_);
 	q2 = qlink(&_qone_);
+
+To determine if q is an integer power of 2, use qispowerof2:
+
+	NUMBER *q;		/* value to check if it is a power of */
+	NUMBER *qlog2;		/* set to log base 2 of q when is_power_of_2 is true */
+	bool is_power_of_2;
+
+	q = utoq((FULL) 1234567890L);
+	qlog2 = qalloc();
+	is_power_of_2 = qispowerof2(q, &qlog2);
+
+Returns true if q an integer power of 2: set *qlog2 to log base 2 of q.
+Returns false if q is NOT integer power of 2 and leave *qlog2 untouched.
+Use qalloc() to setup the qlog2 arg before calling.
 
 ---------------------
 USING COMPLEX NUMBERS

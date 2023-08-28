@@ -1849,3 +1849,90 @@ qprimetest(NUMBER *q1, NUMBER *q2, NUMBER *q3)
 	}
 	return zprimetest(q1->num, ztoi(q2->num), q3->num);
 }
+
+
+/*
+ * test if a number is an integer power of 2
+ *
+ * given:
+ *	q	value to check if it is a power of 2
+ *	qlog2	when q is an integer power of 2 (return true), set to log base 2 of q
+ *		when q is NOT an integer power of 2 (return false), *qlog2 is not set
+ *
+ * returns:
+ *	true	q is a power of 2
+ *	false	q is not a power of 2
+ */
+bool
+qispowerof2(NUMBER *q, NUMBER **qlog2)
+{
+	FULL log2;		/* base 2 logarithm as a ZVALUE */
+
+	/* firewall */
+	if (q == NULL) {
+		math_error("%s: q NULL", __func__);
+		not_reached();
+	}
+	if (qlog2 == NULL) {
+		math_error("%s: qlog2 NULL", __func__);
+		not_reached();
+	}
+	if (*qlog2 == NULL) {
+		math_error("%s: *qlog2 NULL", __func__);
+		not_reached();
+	}
+
+	/* zero and negative values are never integer powers of 2 */
+	if (qiszero(q) || qisneg(q)) {
+		/* leave *qlog2 untouched and return false */
+		return false;
+	}
+
+	/*
+	 * case: q>0 is an integer
+	 */
+	if (qisint(q)) {
+
+		/*
+		 * check if q is an integer power of 2
+		 */
+		if (zispowerof2(q->num, &log2)) {
+
+			/*
+			 * case: q is an integer power of 2
+			 *
+			 * Set *qlog2 to base 2 logarithm of q and return true.
+			 */
+			*qlog2 = utoq(log2);
+			return true;
+		}
+
+	/*
+	 * case: q>0 is 1 over an integer
+	 */
+	} else if (qisreciprocal(q)) {
+
+		/*
+		 * check if q is 1 over an integer power of 2
+		 */
+		if (zispowerof2(q->den, &log2)) {
+
+			/*
+			 * case: q>0 is an integer power of 2
+			 *
+			 * Set *qlog2 to base 2 logarithm of q, which will be a negative value,
+			 * and return true.
+			 */
+			*qlog2 = utoq(log2);
+			(*qlog2)->num.sign = !(*qlog2)->num.sign;		/* set *qlog2 to -log2 */
+			return true;
+		}
+	}
+
+	/*
+	 * q is not an integer power of 2
+	 *
+	 * Leave *qlog2 untouched and return false.
+	 */
+	return false;
+}
