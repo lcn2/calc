@@ -47,8 +47,28 @@ STATIC long E_num;
 /*
  * verify_epsilon - verify that 0 < epsilon < 1
  *
- * This function is called via the OP_SETEPSILON op code, config("epsilon",
- * and from various builtin functions that take an epsilon argument.
+ * given:
+ *	q	epsilon or eps argument
+ *
+ * returns:
+ *	false	q is NULL or q <= 0 or q >= 1
+ *	true	0 < q < 1
+ */
+bool
+check_epsilon(NUMBER *q)
+{
+        /* verify that 0 < epsilon < 1 */
+        if (q == NULL || qisneg(q) || qiszero(q) || qisone(q) || qreli(q, 1) > 0) {
+		return false;
+	}
+	return true;
+}
+
+
+/*
+ * verify_epsilon - verify that 0 < epsilon < 1
+ *
+ * This function is called via the OP_SETEPSILON op code, config("epsilon").
  *
  * If all is well, this function just returns.  If the arg passed is
  * out of range, then a math_error() is triggered causing this function
@@ -58,7 +78,7 @@ void
 verify_epsilon(NUMBER *q)
 {
 	/* verify that 0 < epsilon < 1 */
-	if (q == NULL || qisneg(q) || qiszero(q) || qisone(q) || qreli(q, 1) > 0) {
+	if (check_epsilon(q) == false) {
 		math_error("Invalid value for epsilon: must be: 0 < epsilon < 1");
 		not_reached();
 	}
