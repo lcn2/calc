@@ -9,6 +9,11 @@
 #
 #	settings set target.load-cwd-lldbinit true
 #
+# Optimizing calc may make it harder to trace what calc is doing,
+# To turn off optimization while debugging, try:
+#
+#	make clobber all DEBUG="-g3"
+#
 # To debug calc with lldb from this directory, just run:
 #
 #	lldb
