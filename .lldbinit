@@ -1,0 +1,18 @@
+#
+# lldb calc
+#
+# IMPORTANT: Under macOS, use this local ./lldbinit file, your home directory file:
+#
+#	~/.lldbinit
+#
+# must contain this line (w/o the leading # and whitespace):
+#
+#	settings set target.load-cwd-lldbinit true
+#
+# To debug calc with lldb from this directory, just run:
+#
+#	lldb
+#
+target create "./calc"
+process launch -tty --environment CALCPATH=./cal --environment LD_LIBRARY_PATH=. --environment DYLD_LIBRARY_PATH=. --environment CALCHELP=./help --environment CALCCUSTOMHELP=./custom -- -q -d
+b main

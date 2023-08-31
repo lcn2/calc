@@ -98,7 +98,7 @@
 #
 # Uncomment these lines:
 #
-# DEBUG:= -O0 -g
+# DEBUG:= -O0 -g3
 # FSANITIZE:= -fsanitize=undefined -fsanitize=address -fsanitize=bool -fsanitize=bounds
 # FSANITIZE+= -fsanitize=enum -fsanitize=vptr -fsanitize=integer-divide-by-zero
 # FSANITIZE+= -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow
