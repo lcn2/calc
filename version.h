@@ -33,7 +33,6 @@
  * MAJOR_VER
  *
  *	The MAJOR_VER is 2 is the classical version of calc.
- *	By default, MAJOR_VER == 2 also defines CALC2_COMPAT.
  *
  *      One of the main reasons why MAJOR_VER might incremented is
  *	if fundamental calc data objects (such as when ZVALUE or NUMBER
@@ -62,19 +61,10 @@
  *      Moreover, when we are working towards a new production release,
  *      bug fix and improvement updates will cause MINOR_PATCH to increment.
  */
-#define MAJOR_VER	2	/* major library version */
-#define MINOR_VER	14	/* minor library version */
-#define MAJOR_PATCH	3	/* major software version level */
-#define MINOR_PATCH	5	/* minor software version level */
-
-/*
- * calc version 2 compatibility
- *
- * Set MAJOR_VER <= 2 OR define CALC2_COMPAT.
- */
-#if MAJOR_VER <= 2
-#define CALC2_COMPAT	/* enable calc version 2 compatibility */
-#endif
+#define MAJOR_VER	2	/* level 1: major library version */
+#define MINOR_VER	14	/* level 2: minor library version */
+#define MAJOR_PATCH	3	/* level 3: major software version level */
+#define MINOR_PATCH	5	/* level 4: minor software version level */
 
 
 #endif /* !INCLUDE_VERSION_H*/

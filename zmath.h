@@ -167,15 +167,11 @@ typedef SB32 FLAG;			/* small value (e.g. comparison) */
 /*
  * length of internal integer values in units of HALF
  */
-#if defined(CALC2_COMPAT)
+#if MAJOR_VER < 3
 typedef SB32 LEN;			/* calc v2 compatible unit of length storage */
-#elif PTR_LEN >= 8
-typedef SB64 LEN;			/* use unit of length storage for 8 or more octet pointers */
-#elif PTR_LEN == 4
-typedef SB32 LEN;			/* use unit of length storage for 4 octet pointers */
-#else
-typedef SB32 LEN;			/* else assume we can support at least 4 octet pointers */
-#endif
+#else /* MAJOR_VER < 3 */
+typedef uintptr_t LEN;			/* unit of length storage */
+#endif /* MAJOR_VER < 3 */
 
 #define SWAP_B32_IN_HASH(dest, src)	(*(dest) = *(src))
 #define SWAP_B16_IN_HASH(dest, src)	SWAP_B16_IN_B32(dest, src)
@@ -251,15 +247,11 @@ typedef SB32 LEN;			/* else assume we can support at least 4 octet pointers */
  * We limit to 1/16 because for a maximum complex value we
  * will need 4 huge integers, plus other data, code and stack space.
  */
-#if defined(CALC2_COMPAT)
+#if MAJOR_VER < 3
 #define MAXDATA (0x80000000>>3)		/* calc v2 compatible supported address space */
-#elif PTR_LEN >= 8
-#define MAXDATA ((LEN) 1<<(64-4))	/* 1/16 of a 64-bit address space */
-#elif PTR_LEN >= 4 && PTR_LEN < 8
-#define MAXDATA ((LEN) 1<<(32-4))	/* 1/16 of a 32-bit address space */
-#else
-   /\oo/\ unsupproted PTR_LEN /\oo/\ !!	/* firewall - reject PTR_LEN as unsupported */
-#endif
+#else /* MAJOR_VER < 3 */
+#define MAXDATA ((LEN) 1<<(UINTPTR_WIDTH-4))	/* 1/16 of address space */
+#endif /* MAJOR_VER < 3 */
 
 /*
  * MAXLEN - maximum length of internal integer values in units of HALF
@@ -312,11 +304,11 @@ typedef union {
 /*
  * ZVALUE - multi-prevision integer
  */
-#if defined(CALC2_COMPAT)
+#if MAJOR_VER < 3
 typedef SB32 SIGN;			/* calc v2 compatible sign type */
-#else /* CALC2_COMPAT */
+#else /* MAJOR_VER < 3 */
 typedef bool SIGN;			/* sign as a C boolean */
-#endif /* CALC2_COMPAT */
+#endif /* MAJOR_VER < 3 */
 typedef struct {
 	HALF	*v;		/* pointer to array of values */
 	LEN	len;		/* number of values in array */
@@ -645,12 +637,7 @@ E_FUNC void zredcpower(REDC *rp, ZVALUE z1, ZVALUE z2, ZVALUE *res);
 #define MODE_MAX	9
 #define MODE2_OFF	(MODE_MAX+1)
 
-/* XXX - perhaps we need the MODE_REAL_AUTO vs MODE_REAL as a config mode? */
-#if 0	/* XXX - can we safely set MODE_INITIAL to MODE_REAL_AUTO ?? */
-#define MODE_INITIAL	MODE_REAL_AUTO
-#else
 #define MODE_INITIAL	MODE_REAL
-#endif
 #define MODE2_INITIAL	MODE2_OFF
 
 

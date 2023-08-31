@@ -156,8 +156,12 @@ main(int argc, char **argv)
 	 * We use "void *" as the size of a generic pointer.
 	 */
 	printf("#undef PTR_LEN\n");
+#if MAJOR_VER < 3
 	printf("#define PTR_LEN %ld\t\t/%s/\n",
 	  (long int)sizeof(void *), "* length of a pointer *");
+#else /* MAJOR_VER < 3 */
+	printf("#define PTR_LEN UINTPTR_WIDTH\t\t/%s/\n", "* length of a pointer *");
+#endif /* MAJOR_VER < 3 */
 	printf("#undef PTR_BITS\n");
 	printf("#define PTR_BITS %ld\t\t/%s/\n",
 	  (long int)sizeof(void *)*CALC_CHARBIT, "* bit length of a pointer *");

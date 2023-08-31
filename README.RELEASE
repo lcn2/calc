@@ -16,10 +16,6 @@ The top version level (e.g., 2) refers to the internal representation
 of values.  Any library or hardware linked/built for calc 2 will be able
 to use values from other 2.x.y.z versions.
 
-When top version level is 2, the symbol "CALC2_COMPAT" is defined
-by "version.h".  See "version.h" for constants used to define the
-calc version.
-
 The top 2 levels (e.g., 2.14) refers to a specific compatible set of
 builtin functions.  Calc interpreted code (such as calc resource files)
 written for, say calc 2.14, will be able to use the same set of builtin
@@ -35,6 +31,14 @@ the code base such as a bug fix or performance improvement.  There was
 neither a change to the internal representation format (a top level
 version change), nor were there new calc builtins introduced in such
 a top 3 level release.
+
+
+The file, "version.h" defines the 4 version levels:
+
+    MAJOR_VER		/* level 1: major library version */
+    MINOR_VER		/* level 2: minor library version */
+    MAJOR_PATCH		/* level 3: major software version level */
+    MINOR_PATCH		/* level 4: minor software version level */
 
 
 The program "ver_calc" will print information about the compiled

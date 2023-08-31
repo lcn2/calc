@@ -21,9 +21,6 @@ The following are the changes from calc version 2.14.3.5 to date:
     of a pointer) to longbits.h.
 
     Moved calc version definition from version.c to version.h.
-    Added CALC2_COMPAT, that when defined attempts to maintain calc
-    version 2 compatibility.  When MAJOR_VER <= 2, CALC2_COMPAT is
-    defined.  This is anticipation for a future calc version 3 code.
 
     Sorted the order of symbols printed by "make env".
 
@@ -35,9 +32,6 @@ The following are the changes from calc version 2.14.3.5 to date:
     true and false for pre-c99 C compilers.  The "bool.h" include
     file defines TRUE as true, FALSE as false, and BOOL as bool:
     for backward compatibility.
-
-    The sign in a ZVALUE is now of type SIGN, whcih is either
-    SB32 when CALC2_COMPAT is defined, or a bool.
 
     Replaced in C source, TRUE with true, FALSE with false, and
     BOOL with bool.
@@ -83,6 +77,14 @@ The following are the changes from calc version 2.14.3.5 to date:
     Added log2(x [,eps]) builtin function.  When x is an integer
     power of 2, log2(x) will return an integer, otherwise it will
     return the equivalent of ln(x)/ln(2).
+
+    Removed CALC2_COMPAT in favor of ckecking if MAJOR_VER < 3.
+
+    The sign element in a ZVALUE is now of type SIGN, which is either
+    SB32 when MAJOR_VER < 3, or a bool otherwise.
+
+    The len element in a ZVALUE is of type LEN.  LEN type is SB32 when
+    MAJOR_VER < 3, or a uintptr_t otherwise.
 
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:

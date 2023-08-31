@@ -1,12 +1,25 @@
+# common excluded patterns
+#
+*~
+*.BAK
+core*
+.DS_Store
+*.dSYM/
+*.[oa]
+.*.swp
+*,v
+
 # files and directories created during the building of calc and other Makefile actions
 #
 # NOTE: While many of these might be part of a released calc tarball, they are
 #	not consider development source.  Some other file(s) and/or programs
 #	generate these files.
+# We sort this list via: sort -u -f
 #
 .dynamic
 .hsrc
 .static
+align32
 align32.h
 args.h
 cal/.all
@@ -18,8 +31,10 @@ calc.usage
 calcerr.c
 calcerr.h
 charbit.h
+chatbit
 chk_c
 conf.h
+const_tmp
 cscript/.all
 cscript/4dsphere
 cscript/fproduct
@@ -35,42 +50,65 @@ custom/libcustcalc*
 debug.out
 endian
 endian_calc.h
+fposval
 fposval.h
+have_arc4random
 have_arc4random.h
+have_ban_pragma
 have_ban_pragma.h
+have_const
 have_const.h
+have_environ
 have_environ.h
 have_fgetsetpos.h
+have_fpos
+have_fpos_pos
 have_fpos_pos.h
+have_getpgid
 have_getpgid.h
+have_getprid
 have_getprid.h
 have_getsid.h
+have_gettime
 have_gettime.h
 have_inttypes.h
 have_limits.h
+have_memmv
 have_memmv.h
+have_newstr
 have_newstr.h
+have_offscl
 have_offscl.h
+have_posscl
 have_posscl.h
+have_rusage
 have_rusage.h
+have_statfs
 have_statfs.h
 have_stdbool.h
 have_stdint.h
 have_stdlib.h
 have_stdvs
+have_strdup
 have_strdup.h
 have_string.h
+have_strlcat
 have_strlcat.h
+have_strlcpy
 have_strlcpy.h
 have_sys_mount.h
 have_sys_param.h
 have_sys_vfs.h
 have_times.h
+have_uid_t
 have_uid_t.h
 have_unistd.h
+have_unused
 have_unused.h
 have_urandom.h
+have_ustat
 have_ustat.h
+have_varvs
 help/.all
 help/binding
 help/bindings
@@ -115,14 +153,3 @@ tags
 terminal.h
 ver_calc
 win32/
-
-# other commonly excluded patterns
-#
-*~
-*.BAK
-core*
-.DS_Store
-*.dSYM/
-*.[oa]
-.*.swp
-*,v
