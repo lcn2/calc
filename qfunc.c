@@ -43,6 +43,29 @@ STATIC long E_num;
 
 #define QALLOCNUM 64
 
+
+/*
+ * verify_epsilon - verify that 0 < epsilon < 1
+ *
+ * This function is called via the OP_SETEPSILON op code, config("epsilon",
+ * and from various builtin functions that take an epsilon argument.
+ *
+ * If all is well, this function just returns.  If the arg passed is
+ * out of range, then a math_error() is triggered causing this function
+ * to not return.
+ */
+void
+verify_epsilon(NUMBER *q)
+{
+	/* verify that 0 < epsilon < 1 */
+	if (q == NULL || qisneg(q) || qiszero(q) || qisone(q) || qreli(q, 1) > 0) {
+		math_error("Invalid value for epsilon: must be: 0 < epsilon < 1");
+		not_reached();
+	}
+	return;
+}
+
+
 /*
  * Set the default epsilon for approximate calculations.
  * This must be greater than zero.
@@ -55,10 +78,7 @@ setepsilon(NUMBER *q)
 {
 	NUMBER *old;
 
-	if (qisneg(q) || qiszero(q)) {
-		math_error("Epsilon value must be greater than zero");
-		not_reached();
-	}
+	verify_epsilon(q);
 	old = conf->epsilon;
 	conf->epsilonprec = qprecision(q);
 	conf->epsilon = qlink(q);

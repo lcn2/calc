@@ -167,6 +167,7 @@ E_FUNC long qprecision(NUMBER *q);
 E_FUNC long qplaces(NUMBER *q, ZVALUE base);
 E_FUNC long qdecplaces(NUMBER *q);
 E_FUNC long qdigits(NUMBER *q, ZVALUE base);
+E_FUNC void verify_epsilon(NUMBER *q);
 E_FUNC void setepsilon(NUMBER *q);
 E_FUNC NUMBER *qbitvalue(long i);
 E_FUNC NUMBER *qtenpow(long i);
