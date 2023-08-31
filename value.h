@@ -131,7 +131,8 @@ struct value {
 
 
 /*
- * Value types.
+ * Value types.		XXX - for calc v3, make this and short v_type an enum - XXX
+ *			XXX - consider CALC2_COMPAT in this regard as well - XXX
  *
  * NOTE: The following files should be checked/adjusted for a new type:
  *
