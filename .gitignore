@@ -1,20 +1,24 @@
-# common excluded patterns
+# generic excluded patterns
 #
-*~
-*.BAK
-core*
-.DS_Store
-*.dSYM/
-*.[oa]
-.*.swp
+# We sort the list below via: sort -u -f
+#
 *,v
+*.BAK
+*.dSYM/
+*.exe
+*.[oa]
+*~
+.*.swp
+.DS_Store
+core*
 
 # files and directories created during the building of calc and other Makefile actions
 #
 # NOTE: While many of these might be part of a released calc tarball, they are
 #	not consider development source.  Some other file(s) and/or programs
 #	generate these files.
-# We sort this list via: sort -u -f
+#
+# We sort the list below via: sort -u -f
 #
 .dynamic
 .hsrc
@@ -138,8 +142,8 @@ help/releases
 help/resource
 help/type
 help/usage
-libcalc*
-libcustcalc*
+libcalc.*
+libcustcalc.*
 longbits
 longbits.h
 Makefile.our

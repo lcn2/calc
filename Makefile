@@ -1352,9 +1352,9 @@ have_posscl.h: have_posscl.c have_fgetsetpos.h have_unistd.h \
 	${Q} ${RM} -f have_posscl.o have_posscl
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_POSSCL} have_posscl.c -c ${S} \
 		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_posscl.o -o have_posscl ${S} \
+	-${Q} ${LCC} ${ILDFLAGS} have_posscl.o -o have_posscl${EXT} ${S} \
 		|| ${TRUE}
-	-${Q} ./have_posscl > posscl_tmp ${E} \
+	-${Q} ./have_posscl${EXT} > posscl_tmp ${E} \
 		|| ${TRUE}
 	-${Q} if [ -s posscl_tmp ]; then \
 	    ${CAT} posscl_tmp >> $@; \
@@ -1612,9 +1612,9 @@ have_memmv.h: have_memmv.c banned.h have_ban_pragma.h have_string.h ${MK_SET}
 	${Q} ${RM} -f have_memmv.o have_memmv
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_MEMMOVE} have_memmv.c -c ${S} \
 		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_memmv.o -o have_memmv ${S} \
+	-${Q} ${LCC} ${ILDFLAGS} have_memmv.o -o have_memmv${EXT} ${S} \
 		|| ${TRUE}
-	-${Q} ./have_memmv > memmv_tmp ${E} \
+	-${Q} ./have_memmv${EXT} > memmv_tmp ${E} \
 		|| ${TRUE}
 	-${Q} if [ -s memmv_tmp ]; then \
 	    ${CAT} memmv_tmp >> $@; \
@@ -1692,7 +1692,7 @@ have_statfs.h: have_statfs.c banned.h have_ban_pragma.h have_sys_vfs.h have_sys_
 	${Q} ${RM} -f have_statfs.o have_statfs${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_STATFS} have_statfs.c -c ${S} \
 		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_statfs.o -o have_statfs ${S} \
+	-${Q} ${LCC} ${ILDFLAGS} have_statfs.o -o have_statfs${EXT} ${S} \
 		|| ${TRUE}
 	-${Q} ./have_statfs${EXT} > statfs_tmp ${E} \
 		|| ${TRUE}
@@ -1841,7 +1841,7 @@ have_getsid.h: have_getsid.c have_unistd.h \
 	${Q} ${RM} -f have_getsid.o have_getsid${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETSID} have_getsid.c -c ${S} \
 		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_getsid.o -o have_getsid ${S} \
+	-${Q} ${LCC} ${ILDFLAGS} have_getsid.o -o have_getsid${EXT} ${S} \
 		|| ${TRUE}
 	-${Q} ./have_getsid${EXT} > getsid_tmp ${E} \
 		|| ${TRUE}
@@ -1923,7 +1923,7 @@ have_gettime.h: have_gettime.c banned.h have_ban_pragma.h \
 	${Q} ${RM} -f have_gettime.o have_gettime${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_GETTIME} have_gettime.c -c ${S} \
 		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_gettime.o -o have_gettime ${S} \
+	-${Q} ${LCC} ${ILDFLAGS} have_gettime.o -o have_gettime${EXT} ${S} \
 		|| ${TRUE}
 	-${Q} ./have_gettime${EXT} > gettime_tmp ${E} \
 		|| ${TRUE}
@@ -2080,7 +2080,7 @@ have_strdup.h: have_strdup.c banned.h have_ban_pragma.h have_string.h ${MK_SET}
 	${Q} ${RM} -f have_strdup.o have_strdup${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_STRDUP} have_strdup.c -c ${S} \
 		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_strdup.o -o have_strdup ${S} \
+	-${Q} ${LCC} ${ILDFLAGS} have_strdup.o -o have_strdup${EXT} ${S} \
 		|| ${TRUE}
 	-${Q} ./have_strdup${EXT} > strdup_tmp ${E} \
 		|| ${TRUE}
@@ -2234,7 +2234,7 @@ have_unused.h: have_unused.c have_stdlib.h have_ban_pragma.h \
 	${Q} ${RM} -f have_unused.o have_unused${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_UNUSED} have_unused.c -c ${S} \
 		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_unused.o -o have_unused ${S} \
+	-${Q} ${LCC} ${ILDFLAGS} have_unused.o -o have_unused${EXT} ${S} \
 		|| ${TRUE}
 	-${Q} ./have_unused${EXT} > unused_tmp ${E} \
 		|| ${TRUE}
@@ -2277,7 +2277,7 @@ have_ban_pragma.h: have_ban_pragma.c banned.h ${MK_SET}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_PRAGMA_GCC_POSION} \
 		have_ban_pragma.c -c ${S} \
 			|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_ban_pragma.o -o have_ban_pragma ${S} \
+	-${Q} ${LCC} ${ILDFLAGS} have_ban_pragma.o -o have_ban_pragma${EXT} ${S} \
 		|| ${TRUE}
 	-${Q} ./have_ban_pragma${EXT} > unused_tmp ${E} \
 		|| ${TRUE}
@@ -2319,7 +2319,7 @@ have_strlcpy.h: have_strlcpy.c banned.h have_ban_pragma.h have_string.h \
 	${Q} ${RM} -f have_strlcpy.o have_strlcpy${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_NO_STRLCPY} have_strlcpy.c -c ${S} \
 		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_strlcpy.o -o have_strlcpy ${S} \
+	-${Q} ${LCC} ${ILDFLAGS} have_strlcpy.o -o have_strlcpy${EXT} ${S} \
 		|| ${TRUE}
 	-${Q} ./have_strlcpy${EXT} > unused_tmp ${E} \
 		|| ${TRUE}
@@ -2361,7 +2361,7 @@ have_strlcat.h: have_strlcat.c banned.h have_ban_pragma.h have_string.h \
 	${Q} ${RM} -f have_strlcat.o have_strlcat${EXT}
 	-${Q} ${LCC} ${ICFLAGS} ${HAVE_NO_STRLCAT} have_strlcat.c -c ${S} \
 		|| ${TRUE}
-	-${Q} ${LCC} ${ILDFLAGS} have_strlcat.o -o have_strlcat ${S} \
+	-${Q} ${LCC} ${ILDFLAGS} have_strlcat.o -o have_strlcat${EXT} ${S} \
 		|| ${TRUE}
 	-${Q} ./have_strlcat${EXT} > unused_tmp ${E} \
 		|| ${TRUE}
