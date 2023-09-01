@@ -545,3 +545,8 @@ E_HM2H2		Invalid rounding arg 4 for hm2h
 E_LOG2_1	Bad epsilon argument for log2
 E_LOG2_2	Non-numeric first argument for log2
 E_LOG2_3	Cannot calculate log2 for this value
+E_LOGN_1	Bad epsilon argument for logn
+E_LOGN_2	Non-numeric first argument for logn
+E_LOGN_3	Cannot calculate logn for this value
+E_LOGN_4	Cannot calculate logn for this log base
+E_LOGN_5	Non-numeric second argument for logn

@@ -6,7 +6,7 @@ SYNOPSIS
 
 TYPES
     x		nonzero real or complex
-    eps		nonzero real, defaults to epsilon()
+    eps		0 < real < 1, defaults to epsilon()
 
     return	real or complex
 
@@ -17,7 +17,7 @@ DESCRIPTION
     When x is an integer power of 2, log2(x) will return an integer
     regardless of the value of eps or epsilon().
 
-    If y is a positive integer, log(x, 2^-y) will usually be correct
+    If y is a positive integer, log2(x, 2^-y) will usually be correct
     to the y-th decimal place.
 
 EXAMPLE
@@ -41,7 +41,7 @@ EXAMPLE
 
 LIMITS
     x != 0
-    eps > 0
+    0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qlog2(NUMBER *x, NUMBER *eps)

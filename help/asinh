@@ -6,7 +6,7 @@ SYNOPSIS
 
 TYPES
     x		real
-    eps		nonzero real, defaults to epsilon()
+    eps		0 < real < 1, defaults to epsilon()
 
     return	real
 
@@ -23,7 +23,7 @@ EXAMPLE
     1.44363 1.4436354752 1.44363547517881 1.44363547517881034249
 
 LIMITS
-    none
+    0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qasinh(NUMBER *x, NUMBER *eps)
@@ -31,7 +31,7 @@ LINK LIBRARY
 SEE ALSO
     acosh, atanh, asech, acsch, acoth, epsilon
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

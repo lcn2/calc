@@ -6,7 +6,7 @@ SYNOPSIS
 
 TYPES
     x		nonzero real or complex
-    eps		nonzero real, defaults to epsilon()
+    eps		0 < real < 1, defaults to epsilon()
 
     return	real or complex
 
@@ -25,7 +25,7 @@ EXAMPLE
 
 LIMITS
     x != 0
-    eps > 0
+    0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qln(NUMBER *x, NUMBER *eps)

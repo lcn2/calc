@@ -189,6 +189,7 @@ E_FUNC NUMBER *qexp(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qln(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qlog(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qlog2(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qlogn(NUMBER *q, NUMBER *n, NUMBER *epsilon);
 E_FUNC NUMBER *qtan(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qsec(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qcot(NUMBER *q, NUMBER *epsilon);

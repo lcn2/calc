@@ -6,7 +6,7 @@ SYNOPSIS
 
 TYPES
     x		nonzero real or complex
-    eps		nonzero real, defaults to epsilon()
+    eps		0 < real < 1, defaults to epsilon()
 
     return	real or complex
 
@@ -29,7 +29,7 @@ EXAMPLE
 
 LIMITS
     x != 0
-    eps > 0
+    0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qlog(NUMBER *x, NUMBER *eps)
@@ -38,7 +38,7 @@ LINK LIBRARY
 SEE ALSO
     ilog, ilogn, ilog10, ilog2, ln, log2, logn
 
-## Copyright (C) 2006  Landon Curt Noll
+## Copyright (C) 2006,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

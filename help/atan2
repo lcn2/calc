@@ -28,7 +28,7 @@ EXAMPLE
     0 ~0.52359877559829887307 ~0.31038740713235146535
 
 LIMITS
-    none
+    eps != 0
 
 LINK LIBRARY
     NUMBER *qatan2(NUMBER *y, *x, *acc)
@@ -36,7 +36,7 @@ LINK LIBRARY
 SEE ALSO
     acos, asin, atan, cos, epsilon, sin, tan
 
-## Copyright (C) 1999,2021  Landon Curt Noll
+## Copyright (C) 1999,2021,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

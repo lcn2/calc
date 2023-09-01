@@ -6,7 +6,7 @@ SYNOPSIS
 
 TYPES
     x		real, -1 <= x <= 1
-    eps		nonzero real, defaults to epsilon()
+    eps		0 < real < 1, defaults to epsilon()
 
     return	real
 
@@ -21,7 +21,7 @@ EXAMPLE
     1.0472 1.0471975512 1.047197551196598 1.04719755119659774615
 
 LIMITS
-    none
+    0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qacos(NUMBER *x, NUMBER *eps)
@@ -29,7 +29,7 @@ LINK LIBRARY
 SEE ALSO
     asin, atan, asec, acsc, acot, epsilon
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

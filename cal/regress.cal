@@ -3007,8 +3007,6 @@ define test_2600()
 			    strcat(str(tnum++), ': log2(2^500) == 500'));
 	vrfy(log2(1/2^23209) == -23209,
 			    strcat(str(tnum++), ': log2(1/2^23209) == -23209'));
-	vrfy(isint(log2(1/2^23209)),
-			    strcat(str(tnum++), ': isint(log2(1/2^23209))'));
 	vrfy(round(log2(127),10) == 6.9886846868,
 	    strcat(str(tnum++),
 		   ': round(log2(127),10) == 6.9886846868'));
@@ -3036,6 +3034,48 @@ define test_2600()
 	vrfy(round(log2(17+0.3i),10) == 4.0876874474+0.0254566819i,
 	    strcat(str(tnum++),
 		   ': round(log2(17+0.3i),10) == 4.0876874474+0.0254566819i'));
+	vrfy(logn(2, 2) == 1,
+			    strcat(str(tnum++), ': logn(2, 2) == 1'));
+	vrfy(logn(4, 2) == 2,
+			    strcat(str(tnum++), ': logn(4, 2) == 2'));
+	vrfy(logn(1024, 2) == 10,
+			    strcat(str(tnum++), ': logn(1024, 2) == 10'));
+	vrfy(logn(2^500, 2) == 500,
+			    strcat(str(tnum++), ': logn(2^500, 2) == 500'));
+	vrfy(logn(1/2^23209, 2) == -23209,
+			    strcat(str(tnum++), ': logn(1/2^23209, 2) == -23209'));
+	vrfy(round(logn(127, 1/13),10) == -1.8886092516,
+	    strcat(str(tnum++),
+		   ': round(logn(127, 1/13),10) == -1.8886092516'));
+	vrfy(round(logn(23209, sqrt(3)),10) == 18.299987206,
+	    strcat(str(tnum++),
+		   ': round(logn(23209, sqrt(3)),10) == 18.299987206'));
+	vrfy(round(logn(2, 42),10) == 0.1854490234,
+	    strcat(str(tnum++),
+		   ': round(logn(2, 42),10) == 0.1854490234'));
+	vrfy(round(logn(1024, 42),10) == 1.8544902342,
+	    strcat(str(tnum++),
+		   ': round(logn(1024, 42),10) == 1.8544902342'));
+	vrfy(round(logn(2^500, 42),10) == 92.7245117077,
+	    strcat(str(tnum++),
+		   ': round(logn(2^500, 42),10) == 92.7245117077'));
+	vrfy(round(logn(1/2^23209, 42),10) == -4304.0863844473,
+	    strcat(str(tnum++),
+		   ': round(logn(1/2^23209, 42),10) == -4304.0863844473'));
+	vrfy(logn(-1, 1i) == 2,
+		   strcat(str(tnum++), ': logn(-1, 1i) == 2'));
+	vrfy(round(logn(22+3i, 3i),10) == 0.984899142-1.2848465788i,
+	    strcat(str(tnum++),
+		   ': round(logn(22+3i, 3i),10) == 0.984899142-1.2848465788i'));
+	vrfy(round(logn(22.2+3.3i, -4-3.3i),10) == 0.5456929478+0.9025545623i,
+	    strcat(str(tnum++),
+		   ': round(logn(22.2+3.3i, -4-3.3i),10) == 0.5456929478+0.9025545623i'));
+	vrfy(round(logn(-127, 7),10) == 2.4894197139+1.6144592571i,
+	    strcat(str(tnum++),
+		   ': round(logn(-127, 7),10) == 2.4894197139+1.6144592571i'));
+	vrfy(round(logn(-127, 7i),10) == 2.2963271277-0.2392040372i,
+	    strcat(str(tnum++),
+		   ': round(logn(-127, 7i),10) == 2.2963271277-0.2392040372i'));
         epsilon(i),;
 	print tnum++: ': epsilon(i),;';
 

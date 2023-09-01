@@ -6,7 +6,7 @@ SYNOPSIS
 
 TYPES
     x		real, with absolute value >= 1
-    eps		nonzero real, defaults to epsilon()
+    eps		0 < real < 1, defaults to epsilon()
 
     return	real
 
@@ -21,7 +21,7 @@ EXAMPLE
     0.5236 0.5235987756 0.523598775598299 0.52359877559829887308
 
 LIMITS
-    none
+    0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qacsc(NUMBER *x, NUMBER *eps)
@@ -29,7 +29,7 @@ LINK LIBRARY
 SEE ALSO
     asin, acos, atan, asec, acot, epsilon
 
-## Copyright (C) 1999,2021  Landon Curt Noll
+## Copyright (C) 1999,2021,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

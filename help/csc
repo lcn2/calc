@@ -6,7 +6,7 @@ SYNOPSIS
 
 TYPES
     x		real
-    eps		nonzero real, defaults to epsilon()
+    eps		0 < real < 1, defaults to epsilon()
 
     return	real
 
@@ -19,7 +19,7 @@ EXAMPLE
     1.1884 1.1883951058 1.188395105778121 1.18839510577812121626
 
 LIMITS
-    none
+    0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qcsc(NUMBER *x, NUMBER *eps)
@@ -27,7 +27,7 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, sec, cot, epsilon
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

@@ -45,7 +45,7 @@ LIMITS
     except in the case of y = 0; power(0, 0, eps) is the multiple of
     eps nearest 1.
 
-    eps > 0
+    eps != 0
 
 LINK LIBRARY
     void powervalue(VALUE *x, VALUE *y, VALUE *eps, VALUE *result)
@@ -55,7 +55,7 @@ LINK LIBRARY
 SEE ALSO
     root
 
-## Copyright (C) 1999,2021  Landon Curt Noll
+## Copyright (C) 1999,2021,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

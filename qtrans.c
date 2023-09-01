@@ -49,6 +49,8 @@ STATIC NUMBER *ln_10 = NULL;
 STATIC NUMBER *ln_10_epsilon = NULL;
 STATIC NUMBER *ln_2 = NULL;
 STATIC NUMBER *ln_2_epsilon = NULL;
+STATIC NUMBER *ln_n = NULL;
+STATIC NUMBER *ln_n_epsilon = NULL;
 
 /*
  * cache pi
@@ -1049,8 +1051,12 @@ qln(NUMBER *q, NUMBER *epsilon)
 	NUMBER *qtmp, *res;
 	bool neg;
 
-	if (qiszero(q) || qiszero(epsilon)) {
+	if (qiszero(q)) {
 		math_error("logarithm of 0");
+		not_reached();
+	}
+	if (qiszero(epsilon)) {
+		math_error("Zero epsilon value for ln");
 		not_reached();
 	}
 	if (qisunit(q))
@@ -1161,8 +1167,12 @@ qlog(NUMBER *q, NUMBER *epsilon)
 	NUMBER *ret;			/* base 10 logarithm of x */
 
 	/* firewall */
-	if (qiszero(q) || qiszero(epsilon)) {
+	if (qiszero(q)) {
 		math_error("logarithm of 0");
+		not_reached();
+	}
+	if (qiszero(epsilon)) {
+		math_error("Zero epsilon value for log");
 		not_reached();
 	}
 
@@ -1238,8 +1248,12 @@ qlog2(NUMBER *q, NUMBER *epsilon)
 	NUMBER *ret;			/* base 2 logarithm of x */
 
 	/* firewall */
-	if (qiszero(q) || qiszero(epsilon)) {
+	if (qiszero(q)) {
 		math_error("logarithm of 0");
+		not_reached();
+	}
+	if (qiszero(epsilon)) {
+		math_error("Zero epsilon value for log2");
 		not_reached();
 	}
 
@@ -1256,7 +1270,7 @@ qlog2(NUMBER *q, NUMBER *epsilon)
 	 * compute ln(c) first
 	 */
 	ln_q = qln(q, epsilon);
-	/* quick return for log(1) == 0 */
+	/* quick return for ln(1) == 0 */
 	if (qiszero(ln_q)) {
 		return ln_q;
 	}
@@ -1290,6 +1304,89 @@ qlog2(NUMBER *q, NUMBER *epsilon)
 	 * return ln(q) / ln(2)
 	 */
 	ret = qqdiv(ln_q, ln_2);
+	qfree(ln_q);
+	return ret;
+}
+
+
+/*
+ * Calculate the base n logarithm
+ *
+ *	logn(q, n) = ln(q) / ln(n)
+ */
+NUMBER *
+qlogn(NUMBER *q, NUMBER *n, NUMBER *epsilon)
+{
+	int need_new_ln_n = true;	/* false => use cached ln_n value */
+	NUMBER *ln_q;			/* ln(x) */
+	NUMBER *ret;			/* base 2 logarithm of x */
+
+	/* firewall */
+	if (qiszero(q)) {
+		math_error("logarithm of 0");
+		not_reached();
+	}
+	if (qiszero(epsilon)) {
+		math_error("Zero epsilon value for logn");
+		not_reached();
+	}
+	if (qiszero(n)) {
+		math_error("invalid logarithm base of 0 for logn");
+		not_reached();
+	}
+	if (qisone(n)) {
+		math_error("invalid logarithm base of 1 for logn");
+		not_reached();
+	}
+
+	/*
+	 * special case: q is integer power of 2
+	 */
+	ret = qalloc();
+	if (qispowerof2(q, &ret)) {
+		return ret;
+	}
+	/* XXX - deal with n is integer power of 2 - XXX */
+	qfree(ret);
+
+	/*
+	 * compute ln(q) first
+	 */
+	ln_q = qln(q, epsilon);
+	/* quick return for ln(1) == 0 */
+	if (qiszero(ln_q)) {
+		return ln_q;
+	}
+
+	/*
+	 * save epsilon for ln(n) if needed
+	 */
+	if (ln_n_epsilon == NULL) {
+		/* first time call */
+		ln_n_epsilon = qcopy(epsilon);
+	} else if (qcmp(ln_n_epsilon, epsilon) == true) {
+		/* replaced cached value with epsilon arg */
+		qfree(ln_n_epsilon);
+		ln_n_epsilon = qcopy(epsilon);
+	} else if (ln_n != NULL) {
+		/* the previously computed ln(2) is OK to use */
+		need_new_ln_n = false;
+	}
+
+	/*
+	 * compute ln(n) if needed
+	 */
+	if (need_new_ln_n == true) {
+		if (ln_n != NULL) {
+			qfree(ln_n);
+		}
+		ln_n = qln(&_qtwo_, ln_n_epsilon);
+	}
+
+	/*
+	 * return ln(q) / ln(2)
+	 */
+	ret = qqdiv(ln_q, ln_n);
 	qfree(ln_q);
 	return ret;
 }

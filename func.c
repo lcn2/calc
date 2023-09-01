@@ -232,6 +232,51 @@ struct builtin {
 
 #if !defined(FUNCLIST)
 
+/*
+ * verify_eps - verify that the eps argument is a valid error value
+ *
+ * The eps argument, when given to a builtin function, overrides
+ * the global epsilon value.  As such, the numeric value of eps must be:
+ *
+ *	0 < eps < 1
+ *
+ * given:
+ *	veps	a eps VALUE passed to a builtin function
+ *
+ * returns:
+ *	true	veps is a non-NULL pointer to a VALUE, and
+ *		VALUE type is V_NUM,
+ *		eps value is 0 < eps < 1
+ *	false	otherwise
+ */
+S_FUNC bool
+verify_eps(VALUE *veps)
+{
+	NUMBER *eps;		/* VALUE as a NUMBER */
+
+	/*
+	 * firewall - must be a non-NULL VALUE ptr for a V_NUM
+	 */
+	if (veps == NULL) {
+		return false;
+	}
+	if (veps->v_type != V_NUM) {
+		return false;
+	}
+
+	/*
+	 * numeric value must be valid for an epsilon value
+	 *
+	 *	0 < eps < 1
+	 */
+	eps = veps->v_num;
+	if (check_epsilon(eps) == false) {
+		return false;
+	}
+	return true;
+}
+
+
 S_FUNC VALUE
 f_eval(VALUE *vp)
 {
@@ -2064,12 +2109,22 @@ f_exp(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	eps = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_EXP1);
+		}
 		eps = vals[1]->v_num;
 	}
+
+	/*
+	 * compute e^x to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			q = qexp(vals[0]->v_num, eps);
@@ -2107,12 +2162,22 @@ f_ln(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM)
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_LN1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute natural logarithm to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (!qisneg(vals[0]->v_num) &&
@@ -2132,6 +2197,8 @@ f_ln(int count, VALUE **vals)
 		default:
 			return error_value(E_LN2);
 	}
+
+	/* determine if we will return a numeric or complex value */
 	result.v_type = V_COM;
 	result.v_com = c;
 	if (cisreal(c)) {
@@ -2153,12 +2220,22 @@ f_log(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM)
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_LOG1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute logarithm base 10 to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (!qisneg(vals[0]->v_num) &&
@@ -2181,6 +2258,8 @@ f_log(int count, VALUE **vals)
 	if (c == NULL) {
 		return error_value(E_LOG3);
 	}
+
+	/* determine if we will return a numeric or complex value */
 	result.v_type = V_COM;
 	result.v_com = c;
 	if (cisreal(c)) {
@@ -2202,12 +2281,22 @@ f_log2(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM)
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_LOG2_1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute base 2 logarithm to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (!qisneg(vals[0]->v_num) &&
@@ -2230,6 +2319,8 @@ f_log2(int count, VALUE **vals)
 	if (c == NULL) {
 		return error_value(E_LOG2_3);
 	}
+
+	/* determine if we will return a numeric or complex value */
 	result.v_type = V_COM;
 	result.v_com = c;
 	if (cisreal(c)) {
@@ -2237,6 +2328,269 @@ f_log2(int count, VALUE **vals)
 		result.v_type = V_NUM;
 		comfree(c);
 	}
+	return result;
+}
+
+
+S_FUNC VALUE
+f_logn(int count, VALUE **vals)
+{
+	VALUE result;			/* return value */
+	COMPLEX ctmp;			/* intermediate COMPLEX temporary value */
+	COMPLEX *p_cval;		/* pointer to a COMPLEX value */
+	NUMBER *err;			/* epsilon error value */
+	bool ln_of_x_is_complex = false;	/* taking to value of a COMPLEX x */
+	COMPLEX *ln_x_c;		/* ln(x) where ln_of_x_is_complex is true */
+	NUMBER *ln_x_r;			/* ln(x) where ln_of_x_is_complex is false */
+	bool ln_of_n_is_complex = false;	/* taking to value of a COMPLEX base n */
+	COMPLEX *ln_n_c;		/* ln(n) where ln_of_n_is_complex is true */
+	NUMBER *ln_n_r;			/* ln(n) where ln_of_n_is_complex is false */
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
+	err = conf->epsilon;
+	if (count == 3) {
+		if (verify_eps(vals[2]) == false) {
+			return error_value(E_LOGN_1);
+		}
+		err = vals[2]->v_num;
+	}
+
+	/*
+	 * special case: x and n are both integer powers of 2 and n log 2 != 0
+	 *
+	 * If this is the case, we return the integer formed by log2(n) / log2(x).
+	 */
+	ln_x_r = qalloc();
+	ln_n_r = qalloc();
+	if (vals[0]->v_type == V_NUM && qispowerof2(vals[0]->v_num, &ln_x_r) == true) {
+		if (vals[1]->v_type == V_NUM && qispowerof2(vals[1]->v_num, &ln_n_r) == true) {
+			if (!qiszero(ln_n_r)) {
+				result.v_num = qqdiv(ln_x_r, ln_n_r);
+				if (result.v_com == NULL) {
+					return error_value(E_LOGN_4);
+				}
+				result.v_type = V_NUM;
+				qfree(ln_x_r);
+				qfree(ln_n_r);
+				return result;
+			} else {
+				qfree(ln_x_r);
+				qfree(ln_n_r);
+				return error_value(E_LOGN_4);
+			}
+		}
+	}
+	qfree(ln_x_r);
+	qfree(ln_n_r);
+
+	/*
+	 * take the natural log of x (value)
+	 *
+	 * Look for the case where the natural log of x complex is a real.
+	 */
+	switch (vals[0]->v_type) {
+	case V_NUM:
+		if (qiszero(vals[0]->v_num)) {
+			return error_value(E_LOGN_3);
+		}
+		if (qisneg(vals[0]->v_num)) {
+			ctmp.real = vals[0]->v_num;
+			ctmp.imag = qlink(&_qzero_);
+			ctmp.links = 1;
+			ln_x_c = c_ln(&ctmp, err);
+			if (ln_x_c == NULL) {
+				return error_value(E_LOGN_3);
+			}
+			if (cisreal(ln_x_c)) {
+				ln_x_r = qcopy(ln_x_c->real);
+				comfree(ln_x_c);
+			} else {
+				ln_of_x_is_complex = true;
+			}
+		} else {
+			ln_x_r = qln(vals[0]->v_num, err);
+			if (ln_x_r == NULL) {
+				return error_value(E_LOGN_3);
+			}
+		}
+		break;
+	case V_COM:
+		if (ciszero(vals[0]->v_com)) {
+			return error_value(E_LOGN_3);
+		}
+		ln_x_c = c_ln(vals[0]->v_com, err);
+		if (ln_x_c == NULL) {
+			return error_value(E_LOGN_3);
+		}
+		if (cisreal(ln_x_c)) {
+			ln_x_r = qcopy(ln_x_c->real);
+			comfree(ln_x_c);
+		} else {
+			ln_of_x_is_complex = true;
+		}
+		break;
+	default:
+		return error_value(E_LOGN_2);
+	}
+
+	/*
+	 * take the natural log of n (base)
+	 *
+	 * Look for the case where the natural log of n complex is a real.
+	 * Also report an error if the case where the natural log of n is zero.
+	 */
+	switch (vals[1]->v_type) {
+	case V_NUM:
+		if (qiszero(vals[1]->v_num)) {
+			return error_value(E_LOGN_4);
+		}
+		if (qisneg(vals[1]->v_num)) {
+			ctmp.real = vals[1]->v_num;
+			ctmp.imag = qlink(&_qzero_);
+			ctmp.links = 1;
+			ln_n_c = c_ln(&ctmp, err);
+			if (ln_n_c == NULL) {
+				return error_value(E_LOGN_4);
+			}
+			if (ciszero(ln_n_c)) {
+				comfree(ln_n_c);
+				return error_value(E_LOGN_4);
+			}
+			if (cisreal(ln_n_c)) {
+				ln_n_r = qcopy(ln_n_c->real);
+				comfree(ln_n_c);
+			} else {
+				ln_of_n_is_complex = true;
+			}
+		} else {
+			ln_n_r = qln(vals[1]->v_num, err);
+			if (ln_n_r == NULL) {
+				return error_value(E_LOGN_4);
+			}
+			if (qiszero(ln_n_r)) {
+				qfree(ln_n_r);
+				return error_value(E_LOGN_4);
+			}
+		}
+		break;
+	case V_COM:
+		if (ciszero(vals[1]->v_com)) {
+			return error_value(E_LOGN_4);
+		}
+		ln_n_c = c_ln(vals[1]->v_com, err);
+		if (ln_n_c == NULL) {
+			return error_value(E_LOGN_4);
+		}
+		if (ciszero(ln_n_c)) {
+			comfree(ln_n_c);
+			return error_value(E_LOGN_4);
+		}
+		if (cisreal(ln_n_c)) {
+			ln_n_r = qcopy(ln_n_c->real);
+			comfree(ln_n_c);
+		} else {
+			ln_of_n_is_complex = true;
+		}
+		break;
+	default:
+		return error_value(E_LOGN_5);
+	}
+
+	/*
+	 * compute ln(x) / ln(n)
+	 */
+	if (ln_of_x_is_complex == true) {
+		if (ln_of_n_is_complex == true) {
+
+			/*
+			 * case: ln(x) is COMPLEX, ln(n) is COMPLEX
+			 */
+			p_cval = c_div(ln_x_c, ln_n_c);
+			if (p_cval == NULL) {
+				return error_value(E_LOGN_3);
+			}
+			/* check if division is COMPLEX or NUMBER */
+			if (cisreal(p_cval)) {
+				/* ln(x) / ln(n) was NUMBER, not COMPLEX */
+				result.v_num = qlink(p_cval->real);
+				result.v_type = V_NUM;
+				comfree(p_cval);
+			} else {
+				/* ln(x) / ln(n) is COMPLEX */
+				result.v_type = V_COM;
+				result.v_com = p_cval;
+			}
+
+		} else {
+
+			/*
+			 * case: ln(x) is COMPLEX, ln(n) is NUMBER
+			 */
+			p_cval = c_divq(ln_x_c, ln_n_r);
+			if (p_cval == NULL) {
+				return error_value(E_LOGN_3);
+			}
+			/* check if division is COMPLEX or NUMBER */
+			if (cisreal(p_cval)) {
+				/* ln(x) / ln(n) was NUMBER, not COMPLEX */
+				result.v_num = qlink(p_cval->real);
+				result.v_type = V_NUM;
+				comfree(p_cval);
+			} else {
+				/* ln(x) / ln(n) is COMPLEX */
+				result.v_type = V_COM;
+				result.v_com = p_cval;
+			}
+		}
+
+	} else {
+		if (ln_of_n_is_complex == true) {
+
+			/*
+			 * case: ln(x) is NUMBER, ln(n) is COMPLEX
+			 */
+			/* convert ln_x_r into COMPLEX so we can divide */
+			ctmp.real = ln_x_r;
+			ctmp.imag = qlink(&_qzero_);
+			ctmp.links = 1;
+			p_cval = c_div(&ctmp, ln_n_c);
+			if (result.v_com == NULL) {
+				return error_value(E_LOGN_3);
+			}
+			/* check if division is COMPLEX or NUMBER */
+			if (cisreal(p_cval)) {
+				/* ln(x) / ln(n) was NUMBER, not COMPLEX */
+				result.v_num = qlink(p_cval->real);
+				result.v_type = V_NUM;
+				comfree(p_cval);
+			} else {
+				/* ln(x) / ln(n) is COMPLEX */
+				result.v_type = V_COM;
+				result.v_com = p_cval;
+			}
+
+		} else {
+
+			/*
+			 * case: ln(x) is NUMBER, ln(n) is NUMBER
+			 */
+			result.v_num = qqdiv(ln_x_r, ln_n_r);
+			if (result.v_com == NULL) {
+				return error_value(E_LOGN_3);
+			}
+			/* ln(x) / ln(n) is NUMBER */
+			result.v_type = V_NUM;
+		}
+	}
+
+	/* return the resulting logarithm */
 	return result;
 }
 
@@ -2251,12 +2605,22 @@ f_cos(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	eps = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_COS1);
+		}
 		eps = vals[1]->v_num;
 	}
+
+	/*
+	 * compute cosinr to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			result.v_num = qcos(vals[0]->v_num, eps);
@@ -2294,15 +2658,22 @@ f_d2r(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
-	/* firewall */
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	eps = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_D2R1);
+		}
 		eps = vals[1]->v_num;
 	}
 
-	/* calculate argument * (pi/180) */
+	/*
+	 * compute argument*(pi/180) to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			pidiv180 = qpidiv180(eps);
@@ -2336,15 +2707,22 @@ f_r2d(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
-	/* firewall */
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	eps = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_R2D1);
+		}
 		eps = vals[1]->v_num;
 	}
 
-	/* calculate argument / (pi/180) */
+	/*
+	 * compute argument/(pi/180) to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			pidiv180 = qpidiv180(eps);
@@ -2378,15 +2756,22 @@ f_g2r(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
-	/* firewall */
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	eps = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_G2R1);
+		}
 		eps = vals[1]->v_num;
 	}
 
-	/* calculate argument * (pi/200) */
+	/*
+	 * compute argument*(pi/200) to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			pidiv200 = qpidiv200(eps);
@@ -2420,15 +2805,22 @@ f_r2g(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
-	/* firewall */
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	eps = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_R2G1);
+		}
 		eps = vals[1]->v_num;
 	}
 
-	/* calculate argument / (pi/200) */
+	/*
+	 * compute argument/(pi/200) to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			pidiv200 = qpidiv200(eps);
@@ -2525,12 +2917,22 @@ f_sin(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	eps = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_SIN1);
+		}
 		eps = vals[1]->v_num;
 	}
+
+	/*
+	 * compute sine to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			result.v_num = qsin(vals[0]->v_num, eps);
@@ -2567,12 +2969,21 @@ f_tan(int count, VALUE **vals)
 	tmp1.v_subtype = V_NOSUBTYPE;
 	tmp2.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_TAN1);
+		}
 		err = vals[1]->v_num;
 	}
+	/*
+	 * compute tangent to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			result.v_num = qtan(vals[0]->v_num, err);
@@ -2611,12 +3022,22 @@ f_sec(int count, VALUE **vals)
 	result.v_subtype = V_NOSUBTYPE;
 	tmp.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_SEC1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute secant to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			result.v_num = qsec(vals[0]->v_num, err);
@@ -2650,12 +3071,22 @@ f_cot(int count, VALUE **vals)
 	tmp1.v_subtype = V_NOSUBTYPE;
 	tmp2.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_COT1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute cotangent to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (qiszero(vals[0]->v_num))
@@ -2697,12 +3128,22 @@ f_csc(int count, VALUE **vals)
 	result.v_subtype = V_NOSUBTYPE;
 	tmp.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_CSC1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute cosecant to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (qiszero(vals[0]->v_num))
@@ -2736,12 +3177,22 @@ f_sinh(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	eps = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_SINH1);
+		}
 		eps = vals[1]->v_num;
 	}
+
+	/*
+	 * compute hyperbolic sine to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			q = qsinh(vals[0]->v_num, eps);
@@ -2779,12 +3230,22 @@ f_cosh(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	eps = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_COSH1);
+		}
 		eps = vals[1]->v_num;
 	}
+
+	/*
+	 * compute hyperbolic cosine to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			q = qcosh(vals[0]->v_num, eps);
@@ -2824,12 +3285,22 @@ f_tanh(int count, VALUE **vals)
 	tmp1.v_subtype = V_NOSUBTYPE;
 	tmp2.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_TANH1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute hyperbolic tangent to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			result.v_num = qtanh(vals[0]->v_num, err);
@@ -2870,12 +3341,22 @@ f_coth(int count, VALUE **vals)
 	tmp1.v_subtype = V_NOSUBTYPE;
 	tmp2.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_COTH1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute hyperbolic cotangent to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (qiszero(vals[0]->v_num))
@@ -2917,12 +3398,22 @@ f_sech(int count, VALUE **vals)
 	result.v_subtype = V_NOSUBTYPE;
 	tmp.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_SECH1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute hyperbolic secant to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			result.v_num = qsech(vals[0]->v_num, err);
@@ -2955,12 +3446,22 @@ f_csch(int count, VALUE **vals)
 	result.v_subtype = V_NOSUBTYPE;
 	tmp.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_CSCH1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute hyperbolic cosecant to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (qiszero(vals[0]->v_num))
@@ -2994,12 +3495,22 @@ f_atan(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_ATAN1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute inverse tangent to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			result.v_num = qatan(vals[0]->v_num, err);
@@ -3034,12 +3545,22 @@ f_acot(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_ACOT1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute inverse cotangent to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			result.v_num = qacot(vals[0]->v_num, err);
@@ -3074,12 +3595,22 @@ f_asin(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_ASIN1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute inverse sine to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			result.v_num = qasin(vals[0]->v_num, err);
@@ -3123,12 +3654,22 @@ f_acos(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_ACOS1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute inverse cosine to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			result.v_num = qacos(vals[0]->v_num, err);
@@ -3173,12 +3714,22 @@ f_asec(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_ASEC1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute inverse secant to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (qiszero(vals[0]->v_num))
@@ -3227,12 +3778,22 @@ f_acsc(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_ACSC1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute inverse cosecant to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (qiszero(vals[0]->v_num))
@@ -3280,12 +3841,22 @@ f_asinh(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_ASINH1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute inverse hyperbolic sine to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			result.v_num = qasinh(vals[0]->v_num, err);
@@ -3322,12 +3893,22 @@ f_acosh(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_ACOSH1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute inverse hyperbolic cosine to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			result.v_num = qacosh(vals[0]->v_num, err);
@@ -3372,12 +3953,22 @@ f_atanh(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_ATANH1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute inverse hyperbolic tangent to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			result.v_num = qatanh(vals[0]->v_num, err);
@@ -3424,12 +4015,22 @@ f_acoth(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_ACOTH1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute inverse hyperbolic cotangent to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			result.v_num = qacoth(vals[0]->v_num, err);
@@ -3476,12 +4077,22 @@ f_asech(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_SECH1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute inverse hyperbolic secant to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (qiszero(vals[0]->v_num))
@@ -3530,12 +4141,22 @@ f_acsch(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_ACSCH1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute inverse hyperbolic cosecant to a given error tolerance
+	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (qiszero(vals[0]->v_num))
@@ -3584,12 +4205,22 @@ f_gd(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
 	eps = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (verify_eps(vals[1]) == false) {
 			return error_value(E_GD1);
+		}
 		eps = vals[1]->v_num;
 	}
+
+	/*
+	 * compute Gudermannian function to a given error tolerance
+	 */
 	result.v_type = V_COM;
 	switch (vals[0]->v_type) {
 		case V_NUM:
@@ -3633,12 +4264,22 @@ f_agd(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given as a NUMBER and != 0.
+	 */
 	eps = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num)) {
 			return error_value(E_AGD1);
+		}
 		eps = vals[1]->v_num;
 	}
+
+	/*
+	 * compute inverse Gudermannian function to a given error tolerance
+	 */
 	result.v_type = V_COM;
 	switch (vals[0]->v_type) {
 		case V_NUM:
@@ -3811,12 +4452,22 @@ f_arg(int count, VALUE **vals)
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given as a NUMBER and != 0.
+	 */
 	err = conf->epsilon;
 	if (count == 2) {
-		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num))
+		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num)) {
 			return error_value(E_ARG1);
+		}
 		err = vals[1]->v_num;
 	}
+
+	/*
+	 * compute argument (the angle or phase) of a complex number to a given error tolerance
+	 */
 	result.v_type = V_NUM;
 	switch (vals[0]->v_type) {
 		case V_NUM:
@@ -3842,6 +4493,7 @@ f_arg(int count, VALUE **vals)
 S_FUNC NUMBER *
 f_legtoleg(NUMBER *val1, NUMBER *val2)
 {
+	/* qlegtoleg() performs the val2 != 0 check */
 	return qlegtoleg(val1, val2, false);
 }
 
@@ -5099,12 +5751,30 @@ f_mmin(VALUE *v1, VALUE *v2)
 S_FUNC NUMBER *
 f_near(int count, NUMBER **vals)
 {
-	NUMBER *val;
+	NUMBER *err;		/* epsilon error tolerance */
+	FLAG near;		/* qnear() return value */
+	NUMBER *ret;		/* return value as NUMBER */
 
-	val = conf->epsilon;
-	if (count == 3)
-		val = vals[2];
-	return itoq((long) qnear(vals[0], vals[1], val));
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
+	err = conf->epsilon;
+	if (count == 3) {
+		if (check_epsilon(vals[2]) == false) {
+			math_error("Invalid value for near epsilon: must be: 0 < epsilon < 1");
+			not_reached();
+		}
+		err = vals[2];
+	}
+
+	/*
+	 * compute compare nearness of two numbers to a given error tolerance
+	 */
+	near = qnear(vals[0], vals[1], err);
+	ret = itoq((long) near);
+	return ret;
 }
 
 
@@ -5122,11 +5792,21 @@ S_FUNC NUMBER *
 f_cfappr(int count, NUMBER **vals)
 {
 	long R;
-	NUMBER *q;
+	NUMBER *q;	/* approximation limit */
 
-	R = (count > 2) ? qtoi(vals[2]) : conf->cfappr;
+	/*
+	 * determine epsilon or and approximation limit
+	 *
+	 * NOTE: q is not purely an err (epsilon) value.
+	 *	 When q is >= 1, it is approximation limit.
+	 *	 Moreover q can be < 0.  No value check on q is needed.
+	 */
 	q = (count > 1) ? vals[1] : conf->epsilon;
 
+	/*
+	 * compute approximation using continued fractions
+	 */
+	R = (count > 2) ? qtoi(vals[2]) : conf->cfappr;
 	return qcfappr(vals[0], q, R);
 }
 
@@ -5198,6 +5878,11 @@ f_root(int count, VALUE **vals)
 	err.v_subtype = V_NOSUBTYPE;
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is != 0.
+	 */
 	if (count > 2) {
 		vp = vals[2];
 	} else {
@@ -5205,6 +5890,13 @@ f_root(int count, VALUE **vals)
 		err.v_type = V_NUM;
 		vp = &err;
 	}
+	if (vp->v_type != V_NUM || qiszero(vp->v_num)) {
+		return error_value(E_ROOT3);
+	}
+
+	/*
+	 * compute root of a number to a given error tolerance
+	 */
 	rootvalue(vals[0], vals[1], vp, &result);
 	return result;
 }
@@ -5219,6 +5911,11 @@ f_power(int count, VALUE **vals)
 	err.v_subtype = V_NOSUBTYPE;
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is != 0.
+	 */
 	if (count > 2) {
 		vp = vals[2];
 	} else {
@@ -5226,6 +5923,13 @@ f_power(int count, VALUE **vals)
 		err.v_type = V_NUM;
 		vp = &err;
 	}
+	if ((vp->v_type != V_NUM) || qisneg(vp->v_num) || qiszero(vp->v_num)) {
+		return error_value(E_POWER3);
+	}
+
+	/*
+	 * compute evaluate a numerical power to a given error tolerance
+	 */
 	powervalue(vals[0], vals[1], vp, &result);
 	return result;
 }
@@ -5241,17 +5945,30 @@ f_polar(int count, VALUE **vals)
 	err.v_subtype = V_NOSUBTYPE;
 	result.v_subtype = V_NOSUBTYPE;
 
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is != 0.
+	 */
 	if (count > 2) {
 		vp = vals[2];
+		if ((vp->v_type != V_NUM) || qisneg(vp->v_num) || qiszero(vp->v_num)) {
+			return error_value(E_POLAR2);
+		}
 	} else {
 		err.v_num = conf->epsilon;
 		err.v_type = V_NUM;
 		vp = &err;
 	}
+	if ((vp->v_type != V_NUM) || qisneg(vp->v_num) || qiszero(vp->v_num)) {
+		return error_value(E_POLAR2);
+	}
+
+	/*
+	 * compute complex number by modulus (radius) and argument (angle) to a given error tolerance
+	 */
 	if ((vals[0]->v_type != V_NUM) || (vals[1]->v_type != V_NUM))
 		return error_value(E_POLAR1);
-	if ((vp->v_type != V_NUM) || qisneg(vp->v_num) || qiszero(vp->v_num))
-		return error_value(E_POLAR2);
 	c = c_polar(vals[0]->v_num, vals[1]->v_num, vp->v_num);
 	result.v_com = c;
 	result.v_type = V_COM;
@@ -10317,6 +11034,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "base 10 logarithm of value a within accuracy b"},
 	{"log2", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_log2},
 	 "base 2 logarithm of value a within accuracy b"},
+	{"logn", 2, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_logn},
+	 "base b logarithm of value a within accuracy c"},
 	{"lowbit", 1, 1, 0, OP_LOWBIT, {.null = NULL}, {.null = NULL},
 	 "low bit number in base 2 representation"},
 	{"ltol", 1, 2, FE, OP_NOP, {.numfunc_2 = f_legtoleg}, {.null = NULL},

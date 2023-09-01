@@ -7,7 +7,7 @@ SYNOPSIS
 TYPES
     x		real
     y		real
-    eps		real, defaults to epsilon()
+    eps		0 < real < 1, defaults to epsilon()
 
     return	-1, 0 or 1
 
@@ -22,7 +22,7 @@ EXAMPLE
     -1 1
 
 LIMITS
-    eps >= 0
+    0 < eps < 1
 
 LINK LIBRARY
     FLAG qnear(NUMBER *x, NUMBER *y, NUMBER *eps)
@@ -30,7 +30,7 @@ LINK LIBRARY
 SEE ALSO
     epsilon, abs
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

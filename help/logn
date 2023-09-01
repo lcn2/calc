@@ -7,7 +7,7 @@ SYNOPSIS
 TYPES
     x		nonzero real or complex
     n		nonzero real or complex
-    eps		nonzero real, defaults to epsilon()
+    eps		0 < real < 1, defaults to epsilon()
 
     return	real or complex
 
@@ -17,26 +17,45 @@ DESCRIPTION
 
     The base, n, must not be 0 nor 1.
 
-    If y is a positive integer, log(x, n^-y) will usually be correct
+    When x = 2^a is an integer power of 2 and when n = 2^b is an
+    integer power of 2, then log2(x, n) will return a/b
+    regardless of the value of eps or epsilon().
+
+    If y is a positive integer, logn(x, n, m^-y) will usually be correct
     to the y-th decimal place.
 
 EXAMPLE
-    ; print logn(15.625, 2.5), logn(15.625, 2.5, 1e-25)
-    ~3.00000000000000000001 3
+    ; print logn(2, 2), logn(4, 2), logn(1024, 2), logn(2^500, 2), logn(1/2^23209, 2)
+    1 2 10 500 -23209
 
-    ; print logn(127, 1/13), log(23209, sqrt(3)), logn(2^17-19, 17)
-    ~-1.88860925162778125111 6 ~4.15900804831225415076
+    ; print logn(2, 42), logn(1024, 42), logn(2^500, 42), logn(1/2^23209, 42)
+    0.18544902341536890054 1.85449023415368900542 92.72451170768445027095 -4304.08638444729681267682
+
+    ; print logn(127, 1/13), logn(23209, sqrt(3)), logn(2^17-19, 17)
+    -1.88860925162778125111 18.29998720595030380546 4.15900804831225415076
 
     ; print logn(-1, 1i), logn(2+3i, 3i+2), logn(2+3i, 3i)
-    2 1 ~0.80360095345990217753-~0.25441159318835790311i
+    2 1 0.80360095345990217753-0.25441159318835790311i
 
-    ; print logn(22+3i, 3i, 1e-50)
-    ~0.98489914201047045408-~1.28484657882287682702i
+    ; print logn(22+3i, 3i), logn(22+3i, 3i, 1e-50)
+    0.98489914201047045409-1.28484657882287682702i 0.98489914201047045408-1.28484657882287682702i
+
+    ; print logn(-127, 7), logn(-127i, 7i)
+    2.48941971386002223933+1.61445925708078115429i 1.11272593230445294959-1.70545496954177392315i
+
+    ; print logn(2+3i, 4), logn(-2+3i, 4i)
+    0.92510992953527304010+0.70893581537286099830i 1.17764179178059522911+0.22287007593665359808i
+
+    ; print logn(2-3i, 4), logn(-2-3i, 4i)
+    0.92510992953527304010-0.70893581537286099830i -0.36752510241663632776-1.14080522421220596732i
+
+    ; print logn(17+0.3i, 17, 1e-75), logn(-17-0.3i, 17i, 1e-75)
+    1.00005495001021376506+0.00622799102938744640i 0.29734185630294053511-1.26746929577868497155i
 
 LIMITS
     x != 0
     n != 0 && n != 1
-    eps > 0
+    0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qlogn(NUMBER *x, NUMBER *n, NUMBER *eps)

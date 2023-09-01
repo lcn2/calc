@@ -36,7 +36,7 @@ EXAMPLE
     5 6.40312 6.4031242374
 
 LIMITS
-    none
+    when x is complex, eps != 0
 
 LINK LIBRARY
     NUMBER *qqabs(NUMBER *x)
@@ -44,7 +44,7 @@ LINK LIBRARY
 SEE ALSO
     cmp, epsilon, hypot, norm, near, obj
 
-## Copyright (C) 1999,2021  Landon Curt Noll
+## Copyright (C) 1999,2021,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

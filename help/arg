@@ -24,7 +24,7 @@ EXAMPLE
     56.3099 135 -135
 
 LIMITS
-    none
+    eps != 0
 
 LINK LIBRARY
     none

@@ -5,7 +5,7 @@ SYNOPSIS
     pi([eps])
 
 TYPES
-    eps		nonzero real, defaults to epsilon()
+    eps		0 < real < 1, defaults to epsilon()
 
     return	real
 
@@ -18,7 +18,7 @@ EXAMPLE
     3.14159 3.1415926536 3.141592653589793 3.14159265358979323846
 
 LIMITS
-    eps > 0
+    0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qpi(NUMBER *eps)
@@ -26,7 +26,7 @@ LINK LIBRARY
 SEE ALSO
     atan2
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

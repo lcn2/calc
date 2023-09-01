@@ -6,7 +6,7 @@ SYNOPSIS
 
 TYPES
     x		real, x >= 1
-    eps		nonzero real, defaults to epsilon()
+    eps		0 < real < 1, defaults to epsilon()
 
     return	nonnegative real
 
@@ -24,7 +24,7 @@ EXAMPLE
     1.31696 1.3169578969 1.316957896924817 1.31695789692481670862
 
 LIMITS
-    none
+    0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qacosh(NUMBER *x, NUMBER *eps)
@@ -32,7 +32,7 @@ LINK LIBRARY
 SEE ALSO
     asinh, atanh, asech, acsch, acoth, epsilon
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
