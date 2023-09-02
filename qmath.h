@@ -168,7 +168,6 @@ E_FUNC long qplaces(NUMBER *q, ZVALUE base);
 E_FUNC long qdecplaces(NUMBER *q);
 E_FUNC long qdigits(NUMBER *q, ZVALUE base);
 E_FUNC bool check_epsilon(NUMBER *q);
-E_FUNC void verify_epsilon(NUMBER *q);
 E_FUNC void setepsilon(NUMBER *q);
 E_FUNC NUMBER *qbitvalue(long i);
 E_FUNC NUMBER *qtenpow(long i);
@@ -223,6 +222,8 @@ E_FUNC NUMBER *qbern(ZVALUE z);
 E_FUNC void qfreebern(void);
 E_FUNC NUMBER *qeuler(ZVALUE z);
 E_FUNC void qfreeeuler(void);
+E_FUNC NUMBER *qversin(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qvercos(NUMBER *q, NUMBER *epsilon);
 
 
 /*

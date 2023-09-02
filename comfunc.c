@@ -449,8 +449,8 @@ c_exp(COMPLEX *c, NUMBER *epsilon)
 	NUMBER *sin, *cos, *tmp1, *tmp2, *epsilon1;
 	long k, n;
 
-	if (qiszero(epsilon)) {
-		math_error("Zero epsilon for cexp");
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon value for complex exp");
 		not_reached();
 	}
 	if (cisreal(c)) {
@@ -505,8 +505,8 @@ c_ln(COMPLEX *c, NUMBER *epsilon)
 	COMPLEX *r;
 	NUMBER *a2b2, *tmp1, *tmp2, *epsilon1;
 
-	if (ciszero(c)) {
-		math_error("logarithm of zero");
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon value for complex ln");
 		not_reached();
 	}
 	if (cisone(c))
@@ -658,8 +658,8 @@ c_cos(COMPLEX *c, NUMBER *epsilon)
 	long n;
 	bool neg;
 
-	if (qiszero(epsilon)) {
-		math_error("Zero epsilon for ccos");
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon value for complex cos");
 		not_reached();
 	}
 	n = qilog2(epsilon);
@@ -708,12 +708,13 @@ c_sin(COMPLEX *c, NUMBER *epsilon)
 	long n;
 	bool neg;
 
-	if (qiszero(epsilon)) {
-		math_error("Zero epsilon for csin");
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon value for complex sin");
 		not_reached();
 	}
-	if (ciszero(c))
+	if (ciszero(c)) {
 		return clink(&_czero_);
+	}
 	n = qilog2(epsilon);
 	ctmp1 = comalloc();
 	neg = qisneg(c->imag);
@@ -725,8 +726,9 @@ c_sin(COMPLEX *c, NUMBER *epsilon)
 	ctmp2 = c_exp(ctmp1, epsilon1);
 	comfree(ctmp1);
 	qfree(epsilon1);
-	if (ctmp2 == NULL)
+	if (ctmp2 == NULL) {
 		return NULL;
+	}
 	if (ciszero(ctmp2)) {
 		comfree(ctmp2);
 		return clink(&_czero_);
@@ -1131,8 +1133,8 @@ c_polar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 	NUMBER *tmp, *cos, *sin;
 	long m, n;
 
-	if (qiszero(epsilon)) {
-		math_error("Zero epsilon for cpolar");
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon value for complex polar");
 		not_reached();
 	}
 	if (qiszero(q1))
@@ -1173,13 +1175,13 @@ c_power(COMPLEX *c1, COMPLEX *c2, NUMBER *epsilon)
 	long k1, k2, k, m1, m2, m, n;
 	NUMBER *a2b2, *qtmp1, *qtmp2, *epsilon1;
 
-	if (qiszero(epsilon)) {
-		math_error("Zero epsilon for cpower");
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon value for complex power");
 		not_reached();
 	}
 	if (ciszero(c1)) {
 		if (cisreal(c2) && qisneg(c2->real)) {
-			math_error ("Non-positive real exponent of zero");
+			math_error ("Non-positive real exponent of zero for complex power");
 			not_reached();
 		}
 		return clink(&_czero_);
@@ -1322,4 +1324,82 @@ c_ilog(COMPLEX *c, ZVALUE base)
 	}
 	qfree(qr);
 	return qi;
+}
+
+
+/*
+ * Calculate the complex versed sine within the specified accuracy.
+ *
+ * This uses the formula:
+ *
+ *	versin(x) = 1 - cos(x)
+ */
+COMPLEX *
+c_versin(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;		/* return COMPLEX value */
+	COMPLEX *ctmp;		/* complex cos(c) */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon value for complex versin");
+		not_reached();
+	}
+
+	/*
+	 * return r = 1 - cos(x)
+	 */
+	ctmp = c_cos(c, epsilon);
+	if (ctmp == NULL) {
+		math_error("Failed to compute complex cos for complex versin");
+		not_reached();
+	}
+	r = c_sub(&_cone_, ctmp);
+	comfree(ctmp);
+	return r;
+}
+
+
+/*
+ * Calculate the complex versed cosine within the specified accuracy.
+ *
+ * This uses the formula:
+ *
+ *	vercos(x) = 1 - sin(x)
+ */
+COMPLEX *
+c_vercos(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;		/* return COMPLEX value */
+	COMPLEX *ctmp;		/* complex sin(c) */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon value for complex vercos");
+		not_reached();
+	}
+
+	/*
+	 * return r = 1 - sin(x)
+	 */
+	ctmp = c_sin(c, epsilon);
+	if (ctmp == NULL) {
+		math_error("Failed to compute complex sin for complex vercos");
+		not_reached();
+	}
+	r = c_sub(&_cone_, ctmp);
+	comfree(ctmp);
+	return r;
 }

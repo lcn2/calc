@@ -89,7 +89,7 @@ The following are the changes from calc version 2.14.3.5 to date:
     Setting an invalid epsilon via the epsilon(value) or confiv("epsilon",
     value) triggers an error.  The epsilon value must be: 0 < epsilon < 1.
 
-    Add new logn(x, n [,eps]) builtin to compute logarithms to base n.
+    Added new logn(x, n [,eps]) builtin to compute logarithms to base n.
 
     Verify that eps arguments (error tolerance arguments that override
     the default epsilon value) to builtin functions have proper values.
@@ -98,6 +98,9 @@ The following are the changes from calc version 2.14.3.5 to date:
 
     Document in help files for builtin functions that take eps arguments,
     the LIMIT range for such eps values.
+
+    Added new versin(x, [,eps]) for versed sine and vercos(x, [,eps])
+    for versed cosine.
 
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:

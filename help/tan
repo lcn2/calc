@@ -24,9 +24,11 @@ LIMITS
 
 LINK LIBRARY
     NUMBER *qtan(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_atan(COMPLEX *c, NUMBER *eps);
 
 SEE ALSO
     sin, cos, sec, csc, cot, epsilon
+    versin, vercos
 
 ## Copyright (C) 1999,2023  Landon Curt Noll
 ##

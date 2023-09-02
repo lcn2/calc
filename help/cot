@@ -23,9 +23,11 @@ LIMITS
 
 LINK LIBRARY
     NUMBER *qcot(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_acot(COMPLEX *c, NUMBER *eps);
 
 SEE ALSO
     sin, cos, tan, sec, csc, epsilon
+    versin, vercos
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll
 ##

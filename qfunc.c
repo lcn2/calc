@@ -45,7 +45,7 @@ STATIC long E_num;
 
 
 /*
- * verify_epsilon - verify that 0 < epsilon < 1
+ * check_epsilon - verify that 0 < epsilon < 1
  *
  * given:
  *	q	epsilon or eps argument
@@ -66,27 +66,6 @@ check_epsilon(NUMBER *q)
 
 
 /*
- * verify_epsilon - verify that 0 < epsilon < 1
- *
- * This function is called via the OP_SETEPSILON op code, config("epsilon").
- *
- * If all is well, this function just returns.  If the arg passed is
- * out of range, then a math_error() is triggered causing this function
- * to not return.
- */
-void
-verify_epsilon(NUMBER *q)
-{
-	/* verify that 0 < epsilon < 1 */
-	if (check_epsilon(q) == false) {
-		math_error("Invalid value for epsilon: must be: 0 < epsilon < 1");
-		not_reached();
-	}
-	return;
-}
-
-
-/*
  * Set the default epsilon for approximate calculations.
  * This must be greater than zero.
  *
@@ -98,7 +77,18 @@ setepsilon(NUMBER *q)
 {
 	NUMBER *old;
 
-	verify_epsilon(q);
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(q) == false) {
+		math_error("Invalid value for epsilon: must be: 0 < epsilon < 1");
+		not_reached();
+	}
+
 	old = conf->epsilon;
 	conf->epsilonprec = qprecision(q);
 	conf->epsilon = qlink(q);
@@ -321,7 +311,7 @@ qlegtoleg(NUMBER *q, NUMBER *epsilon, bool wantneg)
 	ZVALUE num;
 
 	if (qiszero(epsilon)) {
-		math_error("Zero epsilon value for legtoleg");
+		math_error("Zero epsilon value for ltol");
 		not_reached();
 	}
 	if (qisunit(q))
@@ -334,7 +324,7 @@ qlegtoleg(NUMBER *q, NUMBER *epsilon, bool wantneg)
 	num = q->num;
 	num.sign = 0;
 	if (zrel(num, q->den) >= 0) {
-		math_error("Leg too large in legtoleg");
+		math_error("Leg too large for ltol");
 		not_reached();
 	}
 	qtmp1 = qsquare(q);
@@ -369,7 +359,7 @@ qsqrt(NUMBER *q1, NUMBER *epsilon, long rnd)
 	int sign;
 
 	if (qisneg(q1)) {
-		math_error("Square root of negative number");
+		math_error("Square root of negative number for qsqrt");
 		not_reached();
 	}
 	if (qiszero(q1))
@@ -475,7 +465,7 @@ qisqrt(NUMBER *q)
 	ZVALUE tmp;
 
 	if (qisneg(q)) {
-		math_error("Square root of negative number");
+		math_error("Square root of negative number for isqrt");
 		not_reached();
 	}
 	if (qiszero(q))
@@ -1910,15 +1900,15 @@ qispowerof2(NUMBER *q, NUMBER **qlog2)
 
 	/* firewall */
 	if (q == NULL) {
-		math_error("%s: q NULL", __func__);
+		math_error("%s: q is NULL", __func__);
 		not_reached();
 	}
 	if (qlog2 == NULL) {
-		math_error("%s: qlog2 NULL", __func__);
+		math_error("%s: qlog2 is NULL", __func__);
 		not_reached();
 	}
 	if (*qlog2 == NULL) {
-		math_error("%s: *qlog2 NULL", __func__);
+		math_error("%s: *qlog2 is NULL", __func__);
 		not_reached();
 	}
 

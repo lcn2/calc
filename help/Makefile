@@ -228,8 +228,8 @@ DETAIL_HELP= abs access acos acosh acot acoth acsc acsch address agd \
 	sin sinh size sizeof sleep sort sqrt srand srandom ssq stoponerror str \
 	strcasecmp strcat strcmp strcpy strerror strlen strncasecmp strncmp \
 	strncpy strpos strprintf strscan strscanf strtolower strtoupper substr \
-	sum swap system systime tail tan tanh test time trunc usertime version \
-	xor
+	sum swap system systime tail tan tanh test time trunc usertime vercos \
+	versin version xor
 
 # This list is of files that are clones of DETAIL_HELP files.  They are
 # built from DETAIL_HELP files.

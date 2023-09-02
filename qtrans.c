@@ -229,7 +229,6 @@ qcos(NUMBER *q, NUMBER *epsilon)
 }
 
 
-
 /*
  * This calls qsincos() and discards the value of cos.
  */
@@ -1971,5 +1970,63 @@ qacoth(NUMBER *q, NUMBER *epsilon)
 	tmp = qinv(q);
 	res = qatanh(tmp, epsilon);
 	qfree(tmp);
+	return res;
+}
+
+
+/*
+ * versed sine - this calls qsincos() and discards the value of sin.
+ *
+ * This uses the formula: versin(x) = 1 - cos(x).
+ */
+NUMBER *
+qversin(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *sin, *cos, *res;
+	NUMBER *versin;
+	long n;
+
+	if (qiszero(epsilon)) {
+		math_error("Zero epsilon value for %s", __func__);
+		not_reached();
+	}
+	n = -qilog2(epsilon);
+	if (qiszero(q) || n < 0)
+		return qlink(&_qzero_);
+	qsincos(q, n + 2, &sin, &cos);
+	qfree(sin);
+	versin = qsub(&_qone_, cos);
+	qfree(cos);
+	res = qmappr(versin, epsilon, 24);
+	qfree(versin);
+	return res;
+}
+
+
+/*
+ * versed cosine - this calls qsincos() and discards the value of cos.
+ *
+ * This uses the formula: vercos(x) = 1 - sin(x).
+ */
+NUMBER *
+qvercos(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *sin, *cos, *res;
+	NUMBER *vercos;
+	long n;
+
+	if (qiszero(epsilon)) {
+		math_error("Zero epsilon value for %s", __func__);
+		not_reached();
+	}
+	n = -qilog2(epsilon);
+	if (qiszero(q) || n < 0)
+		return qlink(&_qzero_);
+	qsincos(q, n + 2, &sin, &cos);
+	qfree(cos);
+	vercos = qsub(&_qone_, sin);
+	qfree(sin);
+	res = qmappr(vercos, epsilon, 24);
+	qfree(vercos);
 	return res;
 }

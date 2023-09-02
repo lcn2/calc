@@ -118,6 +118,8 @@ E_FUNC COMPLEX *c_asech(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_acsch(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_gd(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_agd(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_versin(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_vercos(COMPLEX *c, NUMBER *epsilon);
 
 
 

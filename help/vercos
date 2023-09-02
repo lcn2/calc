@@ -1,8 +1,8 @@
 NAME
-    cos - cosine
+    vercos - versed cosine
 
 SYNOPSIS
-    cos(x [,eps])
+    vercos(x [,eps])
 
 TYPES
     x		number (real or complex)
@@ -11,32 +11,40 @@ TYPES
     return	number
 
 DESCRIPTION
-    Calculate the cosine of x to a multiple of eps with error less in
+    Calculate the versed cosine of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-EXAMPLE
-    ; print cos(1, 1e-5), cos(1, 1e-10), cos(1, 1e-15), cos(1, 1e-20)
-    0.5403 0.5403023059 0.54030230586814 0.5403023058681397174
+    The versed cosine function is sometimes called coversin, sometimes called cvs,
+    may be defined as:
 
-    ; print cos(2 + 3i, 1e-5), cos(2 + 3i, 1e-10)
-    -4.18963-9.10923i -4.189625691-9.1092278938i
+    	vercos(x) = 1 - sin(x)
+
+EXAMPLE
+    ; print vercos(0.2), vercos(3/7), vercos(-31)
+    0.80133066920493878454 0.58442814500694799193 0.59596235467693499395
+
+    ; print vercos(1, 1e-5), vercos(1, 1e-10), vercos(1, 1e-15), vercos(1, 1e-20)
+    0.15853 0.1585290152 0.158529015192104 0.15852901519210349335
+
+    ; print vercos(2 + 3i, 1e-5), vercos(2 + 3i, 1e-10)
+    -8.1545+4.16891i -8.1544991469+4.16890696i
 
     ; pi = pi(1e-20)
-    ; print cos(pi/3, 1e-10), cos(pi/2, 1e-10), cos(pi, 1e-10)
-    0.5 0 -1
+    ; print vercos(pi/6, 1e-10), vercos(pi/2, 1e-10), vercos(pi, 1e-10), vercos(3*pi/2, 1e-10)
+    0.5 0 1 2
 
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
-    NUMBER *qcos(NUMBER *x, NUMBER *eps)
-    COMPLEX *c_cos(COMPLEX *x, NUMBER *eps)
+    NUMBER *qvercos(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_vercos(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
-    sin, tan, sec, csc, cot, epsilon
-    versin, vercos
+    sin, cos, tan, sec, csc, cot, epsilon
+    versin
 
-## Copyright (C) 1999,2021,2023  Landon Curt Noll
+## Copyright (C) 2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -52,8 +60,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/03/19 01:40:27
-## File existed as early as:	1994
+## Under source code control:	2023/08/31 23:07:08
+## File existed as early as:	2023
 ##
 ## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
 ## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

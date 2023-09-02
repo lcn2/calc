@@ -26,6 +26,7 @@ LINK LIBRARY
 
 SEE ALSO
     sin, cos, tan, sec, cot, epsilon
+    versin, vercos
 
 ## Copyright (C) 1999,2023  Landon Curt Noll
 ##
