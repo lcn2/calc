@@ -99,7 +99,7 @@ The following are the changes from calc version 2.14.3.5 to date:
     Document in help files for builtin functions that take eps arguments,
     the LIMIT range for such eps values.
 
-    Added new versin(x, [,eps]) for versed sine and vercos(x, [,eps])
+    Added new versin(x, [,eps]) for versed sine and coversin(x, [,eps])
     for versed cosine.
 
 

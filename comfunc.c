@@ -1371,10 +1371,10 @@ c_versin(COMPLEX *c, NUMBER *epsilon)
  *
  * This uses the formula:
  *
- *	vercos(x) = 1 - sin(x)
+ *	coversin(x) = 1 - sin(x)
  */
 COMPLEX *
-c_vercos(COMPLEX *c, NUMBER *epsilon)
+c_coversin(COMPLEX *c, NUMBER *epsilon)
 {
 	COMPLEX *r;		/* return COMPLEX value */
 	COMPLEX *ctmp;		/* complex sin(c) */
@@ -1387,7 +1387,7 @@ c_vercos(COMPLEX *c, NUMBER *epsilon)
 		not_reached();
 	}
 	if (check_epsilon(epsilon) == false) {
-		math_error("Invalid epsilon value for complex vercos");
+		math_error("Invalid epsilon value for complex coversin");
 		not_reached();
 	}
 
@@ -1396,7 +1396,7 @@ c_vercos(COMPLEX *c, NUMBER *epsilon)
 	 */
 	ctmp = c_sin(c, epsilon);
 	if (ctmp == NULL) {
-		math_error("Failed to compute complex sin for complex vercos");
+		math_error("Failed to compute complex sin for complex coversin");
 		not_reached();
 	}
 	r = c_sub(&_cone_, ctmp);

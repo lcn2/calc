@@ -34,7 +34,7 @@ LINK LIBRARY
 
 SEE ALSO
     cos, tan, sec, csc, cot, epsilon
-    versin, vercos
+    versin, coversin
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll
 ##

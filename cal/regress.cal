@@ -3533,31 +3533,31 @@ define test_trig()
 	    strcat(str(tnum++),
 		   ': round(versin(2 + 3i, 1e-10), 10) == 5.189625691+9.1092278938i'));
 
-	/* test versed cosine */
+	/* test coversed sine */
 	pi = pi(1e-20);
-	vrfy(round(vercos(0.2, 1e-10), 10) == 0.8013306692,
+	vrfy(round(coversin(0.2, 1e-10), 10) == 0.8013306692,
 	    strcat(str(tnum++),
-		   ': round(vercos(0.2, 1e-10), 10) == 0.8013306692'));
-	vrfy(round(vercos(3/7, 1e-10), 10) == 0.584428145,
+		   ': round(coversin(0.2, 1e-10), 10) == 0.8013306692'));
+	vrfy(round(coversin(3/7, 1e-10), 10) == 0.584428145,
 	    strcat(str(tnum++),
-		   ': round(vercos(3/7, 1e-10), 10) == 0.584428145'));
-	vrfy(round(vercos(-31, 1e-10), 10) == 0.5959623547,
+		   ': round(coversin(3/7, 1e-10), 10) == 0.584428145'));
+	vrfy(round(coversin(-31, 1e-10), 10) == 0.5959623547,
 	    strcat(str(tnum++),
-		   ': round(vercos(-31, 1e-10), 10) == 0.5959623547'));
-	vrfy(vercos(pi/6, 1e-10) == 0.5,
-				strcat(str(tnum++), ': vercos(pi/6, 1e-10) == 0.5'));
-	vrfy(vercos(pi/2, 1e-10) == 0,
-				strcat(str(tnum++), ': vercos(pi/2, 1e-10) == 0'));
-	vrfy(vercos(pi, 1e-10) == 1,
-				strcat(str(tnum++), ': vercos(pi, 1e-10) == 1'));
-	vrfy(vercos(3*pi/2, 1e-10) == 2,
-				strcat(str(tnum++), ': vercos(3*pi/2, 1e-10) == 2'));
-	vrfy(round(vercos(1, 1e-10), 10) == 0.1585290152,
+		   ': round(coversin(-31, 1e-10), 10) == 0.5959623547'));
+	vrfy(coversin(pi/6, 1e-10) == 0.5,
+				strcat(str(tnum++), ': coversin(pi/6, 1e-10) == 0.5'));
+	vrfy(coversin(pi/2, 1e-10) == 0,
+				strcat(str(tnum++), ': coversin(pi/2, 1e-10) == 0'));
+	vrfy(coversin(pi, 1e-10) == 1,
+				strcat(str(tnum++), ': coversin(pi, 1e-10) == 1'));
+	vrfy(coversin(3*pi/2, 1e-10) == 2,
+				strcat(str(tnum++), ': coversin(3*pi/2, 1e-10) == 2'));
+	vrfy(round(coversin(1, 1e-10), 10) == 0.1585290152,
 	    strcat(str(tnum++),
-		   ': round(vercos(1, 1e-10), 10) == 0.1585290152'));
-	vrfy(round(vercos(2 + 3i, 1e-10), 10) == -8.1544991469+4.16890696i,
+		   ': round(coversin(1, 1e-10), 10) == 0.1585290152'));
+	vrfy(round(coversin(2 + 3i, 1e-10), 10) == -8.1544991469+4.16890696i,
 	    strcat(str(tnum++),
-		   ': round(vercos(2 + 3i, 1e-10), 10) == -8.1544991469+4.16890696i'));
+		   ': round(coversin(2 + 3i, 1e-10), 10) == -8.1544991469+4.16890696i'));
 
 	print strcat(str(tnum++), ': Ending test_trig');
 }

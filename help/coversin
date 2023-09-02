@@ -1,8 +1,8 @@
 NAME
-    vercos - versed cosine
+    coversin - coversed sine
 
 SYNOPSIS
-    vercos(x [,eps])
+    coversin(x [,eps])
 
 TYPES
     x		number (real or complex)
@@ -14,31 +14,31 @@ DESCRIPTION
     Calculate the versed cosine of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    The versed cosine function is sometimes called coversin, sometimes called cvs,
+    The coversed sine function is sometimes called covers, or cosiv, or cvs,
     may be defined as:
 
-    	vercos(x) = 1 - sin(x)
+	coversin(x) = 1 - sin(x)
 
 EXAMPLE
-    ; print vercos(0.2), vercos(3/7), vercos(-31)
+    ; print coversin(0.2), coversin(3/7), coversin(-31)
     0.80133066920493878454 0.58442814500694799193 0.59596235467693499395
 
-    ; print vercos(1, 1e-5), vercos(1, 1e-10), vercos(1, 1e-15), vercos(1, 1e-20)
+    ; print coversin(1, 1e-5), coversin(1, 1e-10), coversin(1, 1e-15), coversin(1, 1e-20)
     0.15853 0.1585290152 0.158529015192104 0.15852901519210349335
 
-    ; print vercos(2 + 3i, 1e-5), vercos(2 + 3i, 1e-10)
+    ; print coversin(2 + 3i, 1e-5), coversin(2 + 3i, 1e-10)
     -8.1545+4.16891i -8.1544991469+4.16890696i
 
     ; pi = pi(1e-20)
-    ; print vercos(pi/6, 1e-10), vercos(pi/2, 1e-10), vercos(pi, 1e-10), vercos(3*pi/2, 1e-10)
+    ; print coversin(pi/6, 1e-10), coversin(pi/2, 1e-10), coversin(pi, 1e-10), coversin(3*pi/2, 1e-10)
     0.5 0 1 2
 
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
-    NUMBER *qvercos(NUMBER *x, NUMBER *eps)
-    COMPLEX *c_vercos(COMPLEX *x, NUMBER *eps)
+    NUMBER *qcoversin(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_coversin(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
     sin, cos, tan, sec, csc, cot, epsilon

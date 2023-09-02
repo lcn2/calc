@@ -17,7 +17,7 @@ DESCRIPTION
     The versed sine function is sometimes called vers, sometimes called ver,
     may be defined as:
 
-    	versin(x) = 1 - cos(x)
+	versin(x) = 1 - cos(x)
 
 EXAMPLE
     ; print versin(0.2), versin(3/7), versin(-31)
@@ -42,7 +42,7 @@ LINK LIBRARY
 
 SEE ALSO
     sin, cos, tan, sec, csc, cot, epsilon
-    vercos
+    coversin
 
 ## Copyright (C) 2023  Landon Curt Noll
 ##

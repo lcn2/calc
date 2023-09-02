@@ -223,7 +223,7 @@ E_FUNC void qfreebern(void);
 E_FUNC NUMBER *qeuler(ZVALUE z);
 E_FUNC void qfreeeuler(void);
 E_FUNC NUMBER *qversin(NUMBER *q, NUMBER *epsilon);
-E_FUNC NUMBER *qvercos(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qcoversin(NUMBER *q, NUMBER *epsilon);
 
 
 /*

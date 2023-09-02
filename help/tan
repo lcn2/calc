@@ -28,7 +28,7 @@ LINK LIBRARY
 
 SEE ALSO
     sin, cos, sec, csc, cot, epsilon
-    versin, vercos
+    versin, coversin
 
 ## Copyright (C) 1999,2023  Landon Curt Noll
 ##

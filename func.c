@@ -3538,7 +3538,7 @@ f_versin(int count, VALUE **vals)
 
 
 S_FUNC VALUE
-f_vercos(int count, VALUE **vals)
+f_coversin(int count, VALUE **vals)
 {
 	VALUE result;
 	COMPLEX *c;
@@ -3555,7 +3555,7 @@ f_vercos(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_VERCOS1);
+			return error_value(E_COVERSIN1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -3565,13 +3565,13 @@ f_vercos(int count, VALUE **vals)
 	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
-			result.v_num = qvercos(vals[0]->v_num, eps);
+			result.v_num = qcoversin(vals[0]->v_num, eps);
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			c = c_vercos(vals[0]->v_com, eps);
+			c = c_coversin(vals[0]->v_com, eps);
 			if (c == NULL) {
-				return error_value(E_VERCOS3);
+				return error_value(E_COVERSIN3);
 			}
 			result.v_com = c;
 			result.v_type = V_COM;
@@ -3582,7 +3582,7 @@ f_vercos(int count, VALUE **vals)
 			}
 			break;
 		default:
-			return error_value(E_VERCOS2);
+			return error_value(E_COVERSIN2);
 	}
 	return result;
 }
@@ -10859,6 +10859,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "hyperbolic cotangent of a within accuracy b"},
 	{"count", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_count},
 	 "count listr/matrix elements satisfying some condition"},
+	{"coversin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_coversin},
+	 "coversed sine of value a within accuracy b"},
 	{"cp", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_cp},
 	 "cross product of two vectors"},
 	{"csc", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_csc},
@@ -11416,8 +11418,6 @@ STATIC CONST struct builtin builtins[] = {
 	 "unget char read from file"},
 	{"usertime", 0, 0, 0, OP_NOP, {.numfunc_0 = f_usertime}, {.null = NULL},
 	 "user mode CPU time in seconds"},
-	{"vercos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_vercos},
-	 "versed cosine of value a within accuracy b"},
 	{"versin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_versin},
 	 "versed sine of value a within accuracy b"},
 	{"version", 0, 0, 0, OP_NOP, {.null = NULL}, {.valfunc_0 = f_version},

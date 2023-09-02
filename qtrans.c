@@ -1977,7 +1977,9 @@ qacoth(NUMBER *q, NUMBER *epsilon)
 /*
  * versed sine - this calls qsincos() and discards the value of sin.
  *
- * This uses the formula: versin(x) = 1 - cos(x).
+ * This uses the formula:
+ *
+ *	versin(x) = 1 - cos(x)
  */
 NUMBER *
 qversin(NUMBER *q, NUMBER *epsilon)
@@ -2006,13 +2008,15 @@ qversin(NUMBER *q, NUMBER *epsilon)
 /*
  * versed cosine - this calls qsincos() and discards the value of cos.
  *
- * This uses the formula: vercos(x) = 1 - sin(x).
+ * This uses the formula:
+ *
+ *	coversin(x) = 1 - sin(x)
  */
 NUMBER *
-qvercos(NUMBER *q, NUMBER *epsilon)
+qcoversin(NUMBER *q, NUMBER *epsilon)
 {
 	NUMBER *sin, *cos, *res;
-	NUMBER *vercos;
+	NUMBER *coversin;
 	long n;
 
 	if (qiszero(epsilon)) {
@@ -2024,9 +2028,9 @@ qvercos(NUMBER *q, NUMBER *epsilon)
 		return qlink(&_qzero_);
 	qsincos(q, n + 2, &sin, &cos);
 	qfree(cos);
-	vercos = qsub(&_qone_, sin);
+	coversin = qsub(&_qone_, sin);
 	qfree(sin);
-	res = qmappr(vercos, epsilon, 24);
-	qfree(vercos);
+	res = qmappr(coversin, epsilon, 24);
+	qfree(coversin);
 	return res;
 }
