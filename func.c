@@ -3487,108 +3487,6 @@ f_csch(int count, VALUE **vals)
 
 
 S_FUNC VALUE
-f_versin(int count, VALUE **vals)
-{
-	VALUE result;
-	COMPLEX *c;
-	NUMBER *eps;
-
-	/* initialize VALUE */
-	result.v_subtype = V_NOSUBTYPE;
-
-	/*
-	 * set error tolerance for builtin function
-	 *
-	 * Use eps VALUE arg if given and value is in a valid range.
-	 */
-	eps = conf->epsilon;
-	if (count == 2) {
-		if (verify_eps(vals[1]) == false) {
-			return error_value(E_VERSIN1);
-		}
-		eps = vals[1]->v_num;
-	}
-
-	/*
-	 * compute sine to a given error tolerance
-	 */
-	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qversin(vals[0]->v_num, eps);
-			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			c = c_versin(vals[0]->v_com, eps);
-			if (c == NULL) {
-				return error_value(E_VERSIN3);
-			}
-			result.v_com = c;
-			result.v_type = V_COM;
-			if (cisreal(c)) {
-				result.v_num = qlink(c->real);
-				result.v_type = V_NUM;
-				comfree(c);
-			}
-			break;
-		default:
-			return error_value(E_VERSIN2);
-	}
-	return result;
-}
-
-
-S_FUNC VALUE
-f_coversin(int count, VALUE **vals)
-{
-	VALUE result;
-	COMPLEX *c;
-	NUMBER *eps;
-
-	/* initialize VALUE */
-	result.v_subtype = V_NOSUBTYPE;
-
-	/*
-	 * set error tolerance for builtin function
-	 *
-	 * Use eps VALUE arg if given and value is in a valid range.
-	 */
-	eps = conf->epsilon;
-	if (count == 2) {
-		if (verify_eps(vals[1]) == false) {
-			return error_value(E_COVERSIN1);
-		}
-		eps = vals[1]->v_num;
-	}
-
-	/*
-	 * compute cosinr to a given error tolerance
-	 */
-	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qcoversin(vals[0]->v_num, eps);
-			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			c = c_coversin(vals[0]->v_com, eps);
-			if (c == NULL) {
-				return error_value(E_COVERSIN3);
-			}
-			result.v_com = c;
-			result.v_type = V_COM;
-			if (cisreal(c)) {
-				result.v_num = qlink(c->real);
-				result.v_type = V_NUM;
-				comfree(c);
-			}
-			break;
-		default:
-			return error_value(E_COVERSIN2);
-	}
-	return result;
-}
-
-
-S_FUNC VALUE
 f_atan(int count, VALUE **vals)
 {
 	VALUE result;
@@ -10712,6 +10610,108 @@ f_version(void)
 	result.v_subtype = V_NOSUBTYPE;
 	result.v_str = makestring(strdup(version()));
 
+	return result;
+}
+
+
+S_FUNC VALUE
+f_versin(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *c;
+	NUMBER *eps;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_VERSIN1);
+		}
+		eps = vals[1]->v_num;
+	}
+
+	/*
+	 * compute sine to a given error tolerance
+	 */
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qversin(vals[0]->v_num, eps);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			c = c_versin(vals[0]->v_com, eps);
+			if (c == NULL) {
+				return error_value(E_VERSIN3);
+			}
+			result.v_com = c;
+			result.v_type = V_COM;
+			if (cisreal(c)) {
+				result.v_num = qlink(c->real);
+				result.v_type = V_NUM;
+				comfree(c);
+			}
+			break;
+		default:
+			return error_value(E_VERSIN2);
+	}
+	return result;
+}
+
+
+S_FUNC VALUE
+f_coversin(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *c;
+	NUMBER *eps;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_COVERSIN1);
+		}
+		eps = vals[1]->v_num;
+	}
+
+	/*
+	 * compute cosinr to a given error tolerance
+	 */
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qcoversin(vals[0]->v_num, eps);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			c = c_coversin(vals[0]->v_com, eps);
+			if (c == NULL) {
+				return error_value(E_COVERSIN3);
+			}
+			result.v_com = c;
+			result.v_type = V_COM;
+			if (cisreal(c)) {
+				result.v_num = qlink(c->real);
+				result.v_type = V_NUM;
+				comfree(c);
+			}
+			break;
+		default:
+			return error_value(E_COVERSIN2);
+	}
 	return result;
 }
 

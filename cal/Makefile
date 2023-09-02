@@ -120,7 +120,7 @@ V=@:
 #
 # Please use:
 #
-#	make calc_files_list
+#	make clobber >/dev/null && make calc_files_list
 #
 # to keep this list in nice sorted order.
 #
@@ -137,10 +137,10 @@ CALC_FILES= README alg_config.cal beer.cal bernoulli.cal \
 	smallfactors.cal solve.cal specialfunctions.cal splitbits.cal \
 	statistics.cal strings.cal sumsq.cal sumtimes.cal surd.cal \
 	test1700.cal test2300.cal test2600.cal test2700.cal test3100.cal \
-	test3300.cal test3400.cal test3500.cal test4000.cal test4100.cal \
-	test4600.cal test5100.cal test5200.cal test8400.cal test8500.cal \
-	test8600.cal test8900.cal toomcook.cal unitfrac.cal varargs.cal \
-	xx_print.cal zeta2.cal
+	test3300.cal test3400.cal test4000.cal test4100.cal test4600.cal \
+	test5100.cal test5200.cal test8400.cal test8500.cal test8600.cal \
+	test8900.cal test9300.cal toomcook.cal unitfrac.cal varargs.cal \
+	w2f.cal xx_print.cal zeta2.cal
 
 # These calc files are now obsolete and are removed by the install rule.
 #

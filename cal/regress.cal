@@ -3566,17 +3566,20 @@ print '051: parsed test_trig()';
 
 /*
  * test_frem - tests of the functions frem, fcnt, gcdrem
+ *
+ * NOTE: We haved test3500 to test9300.  We parse this code here,
+ *	 however we execute this code as a 9300 test.
  */
-read -once "test3500";
-print '052: read -once test3500';
+read -once "test9300";
+print '052: read -once test9300';
 /**/
 define test_frem()
 {
 	local tnum;	/* test number */
 
-	print '3500: Beginning test_frem';
+	print '9300: Beginning test_frem';
 
-	tnum = test3500(1, 3501, 200, 61);
+	tnum = test9300(1, 9301, 200, 61);
 
 	print tnum: ': Ending test_frem';
 }
@@ -8085,8 +8088,6 @@ return test_det();
 print;
 return test_trig();
 print;
-return test_frem();
-print;
 return test_error();
 print;
 return test_param();
@@ -8866,6 +8867,15 @@ print;
 print '9100: parsed test_functions3()';
 print;
 return test_functions3();
+
+/*
+ * test_frem - tests of the functions frem, fcnt, gcdrem
+ *
+ * NOTE: We haved test3500 to test9300.  We parse this code here,
+ *	 however we execute this code as a 9300 test.
+ */
+print;
+return test_frem();
 
 
 /*

@@ -1,7 +1,7 @@
 /*
- * test3500 - 3500 series of the regress.cal test suite
+ * test9300 - 9300 series of the regress.cal test suite
  *
- * Copyright (C) 1999  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2023  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *
@@ -255,16 +255,16 @@ define testh(str,n,N,verbose)
 }
 
 /*
- * test3500 - perform all of the above tests a bunch of times
+ * test9300 - perform all of the above tests a bunch of times
  */
-define test3500(verbose, tnum, n, N)
+define test9300(verbose, tnum, n, N)
 {
 	/* set test parameters */
 	if (isnull(verbose)) {
 		verbose = defaultverbose;
 	}
 	if (isnull(tnum)) {
-		tnum = 3501;	/* default test number */
+		tnum = 9301;	/* default test number */
 	}
 	if (isnull(n)) {
 		n = 200;
@@ -276,7 +276,7 @@ define test3500(verbose, tnum, n, N)
 	/*
 	 * test a lot of stuff
 	 */
-	srand(3500e3500);
+	srand(9300e9300);
 	err += testf(strcat(str(tnum++), ": frem/fcnt"), n, verbose);
 	err += testg(strcat(str(tnum++), ": gcdrem"), n, verbose);
 	err += testh(strcat(str(tnum++),": gcdrem #2"), n, N, verbose);
