@@ -1328,11 +1328,18 @@ c_ilog(COMPLEX *c, ZVALUE base)
 
 
 /*
- * Calculate the complex versed sine within the specified accuracy.
+ * c_versin - versed sine for COMPLEX values
  *
  * This uses the formula:
  *
  *	versin(x) = 1 - cos(x)
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
  */
 COMPLEX *
 c_versin(COMPLEX *c, NUMBER *epsilon)
@@ -1367,11 +1374,18 @@ c_versin(COMPLEX *c, NUMBER *epsilon)
 
 
 /*
- * Calculate the complex versed cosine within the specified accuracy.
+ * c_coversin - coversed sine for COMPLEX values
  *
  * This uses the formula:
  *
  *	coversin(x) = 1 - sin(x)
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
  */
 COMPLEX *
 c_coversin(COMPLEX *c, NUMBER *epsilon)

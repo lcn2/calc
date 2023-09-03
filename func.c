@@ -10614,6 +10614,9 @@ f_version(void)
 }
 
 
+/*
+ * f_versin - versed sine
+ */
 S_FUNC VALUE
 f_versin(int count, VALUE **vals)
 {
@@ -10665,6 +10668,9 @@ f_versin(int count, VALUE **vals)
 }
 
 
+/*
+ * f_coversin - coversed sine
+ */
 S_FUNC VALUE
 f_coversin(int count, VALUE **vals)
 {

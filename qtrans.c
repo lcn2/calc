@@ -1975,11 +1975,20 @@ qacoth(NUMBER *q, NUMBER *epsilon)
 
 
 /*
- * versed sine - this calls qsincos() and discards the value of sin.
+ * qversin - versed sine for NUMBER values
  *
  * This uses the formula:
  *
  *	versin(x) = 1 - cos(x)
+ *
+ * This calls qsincos() and discards the value of sin.
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
  */
 NUMBER *
 qversin(NUMBER *q, NUMBER *epsilon)
@@ -2006,11 +2015,20 @@ qversin(NUMBER *q, NUMBER *epsilon)
 
 
 /*
- * versed cosine - this calls qsincos() and discards the value of cos.
+ * qversin - coversed sine for NUMBER values
  *
  * This uses the formula:
  *
  *	coversin(x) = 1 - sin(x)
+ *
+ * This calls qsincos() and discards the value of cos.
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
  */
 NUMBER *
 qcoversin(NUMBER *q, NUMBER *epsilon)
