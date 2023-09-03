@@ -1955,6 +1955,17 @@ varargs.cal
     Example program to use 'varargs'.  Program to sum the cubes of all
     the specified numbers.
 
+write2file.cal
+
+    w2f(filename,stream,fmt,value) defined
+    wd2f(value) defined
+    wx2f(value) defined
+
+    write results to file
+
+    This resource file serves as an example of how to perform file
+    I/O. This write2file hows how to perform file I/O and is provided
+    as an illustrative example.
 
 xx_print.cal
 
@@ -1983,7 +1994,7 @@ zeta2.cal
     for information on this special zeta function.
 
 
-## Copyright (C) 2000,2014,2017,2021  David I. Bell and Landon Curt Noll
+## Copyright (C) 2000,2014,2017,2021,2023  David I. Bell and Landon Curt Noll
 ##
 ## Primary author: Landon Curt Noll
 ##

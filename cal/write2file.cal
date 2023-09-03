@@ -1,0 +1,121 @@
+/*
+ * write2file - write results to file
+ *
+ * This resource file serves as an example of how to perform file I/O.
+ * This write2file hows how to perform file I/O and is provided as
+ * an illustrative example.
+ *
+ * Copyright (C) 2023  Landon Curt Noll
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * Under source code control:	2023/08/20 13:13:11
+ * File existed as early as:	2023
+ *
+ * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+ * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+ */
+
+
+static outfilename;  /* where to write stuff */
+static outfile;      /* open file stream on which to write */
+static stderr;       /* write errors to standard error */
+
+
+/*
+ * setup
+ */
+if (!isstr(outfilename)) {
+    outfilename = "./outfile";
+}
+if (!isfile(stderr)) {
+    stderr = files(2);
+    if (!isfile(stderr)) {
+        printf("Warning: stderr as files(2) is not a file!\n");
+    }
+}
+
+
+/*
+ * try to create or open and truncate the outfile
+ */
+if (!isfile(outfile)) {
+    /* open outfilename for writing at the beginning */
+    outfile = fopen(outfilename, "w");
+
+    /* firewall - check for failing to open */
+    if (!isfile(outfile)) {
+        fprintf(stderr, "failed to open: %s error(%d): %s\n", outfilename, errno(outfile), strerror(outfile));
+    }
+}
+
+
+/*
+ * write a value to a file given a format
+ */
+define w2f(filename, stream, fmt, value) {
+
+    /* firewall */
+    if (!isfile(stderr)) {
+        printf("stderr is not an open file\n");
+        return;
+    }
+    if (!isstr(filename)) {
+        fprintf(stderr, "filename argument is not a string\n");
+        return;
+    }
+    if (!isfile(stream)) {
+        fprintf(stderr, "stream argument is not an open file\n");
+        return;
+    }
+    if (!isstr(fmt)) {
+        fprintf(stderr, "fmt argument is not a string\n");
+        return;
+    }
+    if (!isnum(value)) {
+        fprintf(stderr, "value argument is not a numeric value\n");
+        return;
+    }
+
+    /* write value in decimal */
+    fprintf(stream, fmt, value);
+    if (ferror(stream)) {
+        fprintf(stderr, "error in writing to file: %s error(%d): %s\n", filename, errno(stream), strerror(stream));
+        return;
+    }
+
+    /* flush to be sure it is completely written */
+    fflush(outfile);
+    if (ferror(outfile)) {
+        fprintf(stderr, "error in flushing to file: %s error(%d): %s\n", filename, errno(stream), strerror(stream));
+    }
+    return;
+}
+
+
+/*
+ * wd2f - write a value to an open file in decimal
+ */
+define wd2f(value) {
+    return w2f(outfilename, outfile, "%d\n", value);
+}
+
+
+/*
+ * wx2f - write a value to an open file in hexadecimal
+ */
+define wx2f(value) {
+    return w2f(outfilename, outfile, "%x\n", value);
+}
