@@ -140,7 +140,7 @@ CALC_FILES= README alg_config.cal beer.cal bernoulli.cal \
 	test3300.cal test3400.cal test4000.cal test4100.cal test4600.cal \
 	test5100.cal test5200.cal test8400.cal test8500.cal test8600.cal \
 	test8900.cal test9300.cal toomcook.cal unitfrac.cal varargs.cal \
-	write2file.cal.cal xx_print.cal zeta2.cal
+	write2file.cal xx_print.cal zeta2.cal
 
 # These calc files are now obsolete and are removed by the install rule.
 #
