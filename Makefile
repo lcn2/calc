@@ -2726,9 +2726,11 @@ check: all ./cal/regress.cal
 
 chk: ./cal/regress.cal
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${Q} echo
 	${CALC_ENV} ./calc${EXT} -d -q read regress 2>&1 | ${AWK} -f check.awk
 	@${MAKE} -f Makefile Q= V=@ distdir >/dev/null 2>&1
 	@${MAKE} -f Makefile Q= V=@ distlist >/dev/null 2>&1
+	${Q} echo
 	${Q} echo 'chk OK'
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
@@ -3142,33 +3144,56 @@ testfuncsort: ./calc${EXT}
 	@${RM} -f func.show func.sort
 
 prep:
-	echo '=-=-= start of ${MAKE} clobber =-=-='
+	${Q}echo '=-=-=-=-=-= start of ${MAKE} clobber =-=-=-=-=-='
+	${Q}echo
 	${MAKE} clobber
-	echo '=-=-= end of ${MAKE} clobber =-=-='
-	echo '=-=-= start of ${TRAILBLANK} =-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= end of ${MAKE} clobber =-=-=-=-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= start of ${TRAILBLANK} =-=-=-=-=-='
+	${Q}echo
 	./${TRAILBLANK}
-	echo '=-=-= end of ${TRAILBLANK} =-=-='
-	echo '=-=-= start of ${MAKE} all CCWERR=-Werror =-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= end of ${TRAILBLANK} =-=-=-=-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= start of ${MAKE} all CCWERR=-Werror =-=-=-=-=-='
+	${Q}echo
 	${MAKE} all CCWERR=-Werror
-	echo '=-=-= end of ${MAKE} all CCWERR=-Werror =-=-='
-	echo '=-=-= start of ${MAKE} tags =-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= end of ${MAKE} all CCWERR=-Werror =-=-=-=-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= start of ${MAKE} tags =-=-=-=-=-='
+	${Q}echo
 	${MAKE} tags
-	echo '=-=-= end of ${MAKE} tags =-=-='
-	echo '=-=-= start of ${MAKE} depend =-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= end of ${MAKE} tags =-=-=-=-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= start of ${MAKE} depend =-=-=-=-=-='
+	${Q}echo
 	${MAKE} depend
-	echo '=-=-= end of ${MAKE} depend =-=-='
-	echo '=-=-= start of ${MAKE} testfuncsort =-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= end of ${MAKE} depend =-=-=-=-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= start of ${MAKE} testfuncsort =-=-=-=-=-='
+	${Q}echo
 	${MAKE} testfuncsort
-	echo '=-=-= end of ${MAKE} testfuncsort =-=-='
-	echo '=-=-= start of ${UPDATE_VER} =-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= end of ${MAKE} testfuncsort =-=-=-=-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= start of ${UPDATE_VER} =-=-=-=-=-='
+	${Q}echo
 	./${UPDATE_VER}
-	echo '=-=-= end of ${UPDATE_VER} =-=-='
-	echo '=-=-= start of ${MAKE} chk =-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= end of ${UPDATE_VER} =-=-=-=-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= start of ${MAKE} chk =-=-=-=-=-='
+	${Q}echo
 	${MAKE} chk
-	echo '=-=-= end of ${MAKE} chk =-=-='
-	@echo
-	@echo All is OK
-	@echo
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= end of ${MAKE} chk =-=-=-=-=-='
+	${Q}echo
+	${Q}echo All is OK
+	${Q}echo
 
 run:
 	CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help CALCCUSTOMHELP=./custom ./calc${EXT} -q
