@@ -10641,7 +10641,7 @@ f_versin(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute sine to a given error tolerance
+	 * compute trig function to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
@@ -10655,6 +10655,10 @@ f_versin(int count, VALUE **vals)
 			}
 			result.v_com = c;
 			result.v_type = V_COM;
+
+			/*
+			 * case: complex trig function returned real, convert result to NUMBER
+			 */
 			if (cisreal(c)) {
 				result.v_num = qlink(c->real);
 				result.v_type = V_NUM;
@@ -10663,6 +10667,88 @@ f_versin(int count, VALUE **vals)
 			break;
 		default:
 			return error_value(E_VERSIN2);
+	}
+	return result;
+}
+
+
+/*
+ * f_aversin - inverse versed sine
+ */
+S_FUNC VALUE
+f_aversin(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *c;
+	NUMBER *eps;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_AVERSIN1);
+		}
+		eps = vals[1]->v_num;
+	}
+
+	/*
+	 * compute inverse trig function to a given error tolerance
+	 */
+	if (vals[0]->v_type == V_NUM) {
+
+		/* try to compute result using real triv function */
+		result.v_num = qaversin_or_NULL(vals[0]->v_num, eps);
+
+		/*
+		 * case: trig function returned a NUMBER
+		 */
+		if (result.v_num != NULL) {
+			result.v_type = V_NUM;
+
+		/*
+		 * case: trig function returned NULL - need to try COMPLEX trig function
+		 */
+		} else {
+			/* convert NUMBER argument from NUMBER to COMPLEX */
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qone_);
+			vals[0]->v_type = V_COM;
+		}
+	}
+	if (vals[0]->v_type == V_COM) {
+
+		/*
+		 * case: argument was COMPLEX or
+		 *	 trig function returned NULL and argument was converted to COMPLEX
+		 */
+		c = c_aversin(vals[0]->v_com, eps);
+		if (c == NULL) {
+			return error_value(E_AVERSIN3);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+
+		/*
+		 * case: complex trig function returned real, convert result to NUMBER
+		 */
+		if (cisreal(c)) {
+			result.v_num = qlink(c->real);
+			result.v_type = V_NUM;
+			comfree(c);
+		}
+	}
+	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
+
+		/*
+		 * case: argument type is not valid for this function
+		 */
+		return error_value(E_AVERSIN2);
 	}
 	return result;
 }
@@ -10695,7 +10781,7 @@ f_coversin(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute cosinr to a given error tolerance
+	 * compute trig function to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
@@ -10709,6 +10795,10 @@ f_coversin(int count, VALUE **vals)
 			}
 			result.v_com = c;
 			result.v_type = V_COM;
+
+			/*
+			 * case: complex trig function returned real, convert result to NUMBER
+			 */
 			if (cisreal(c)) {
 				result.v_num = qlink(c->real);
 				result.v_type = V_NUM;
@@ -10717,6 +10807,88 @@ f_coversin(int count, VALUE **vals)
 			break;
 		default:
 			return error_value(E_COVERSIN2);
+	}
+	return result;
+}
+
+
+/*
+ * f_acoversin - inverse coversed sine
+ */
+S_FUNC VALUE
+f_acoversin(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *c;
+	NUMBER *eps;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_ACOVERSIN1);
+		}
+		eps = vals[1]->v_num;
+	}
+
+	/*
+	 * compute inverse trig function to a given error tolerance
+	 */
+	if (vals[0]->v_type == V_NUM) {
+
+		/* try to compute result using real triv function */
+		result.v_num = qacoversin_or_NULL(vals[0]->v_num, eps);
+
+		/*
+		 * case: trig function returned a NUMBER
+		 */
+		if (result.v_num != NULL) {
+			result.v_type = V_NUM;
+
+		/*
+		 * case: trig function returned NULL - need to try COMPLEX trig function
+		 */
+		} else {
+			/* convert NUMBER argument from NUMBER to COMPLEX */
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qone_);
+			vals[0]->v_type = V_COM;
+		}
+	}
+	if (vals[0]->v_type == V_COM) {
+
+		/*
+		 * case: argument was COMPLEX or
+		 *	 trig function returned NULL and argument was converted to COMPLEX
+		 */
+		c = c_acoversin(vals[0]->v_com, eps);
+		if (c == NULL) {
+			return error_value(E_ACOVERSIN3);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+
+		/*
+		 * case: complex trig function returned real, convert result to NUMBER
+		 */
+		if (cisreal(c)) {
+			result.v_num = qlink(c->real);
+			result.v_type = V_NUM;
+			comfree(c);
+		}
+	}
+	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
+
+		/*
+		 * case: argument type is not valid for this function
+		 */
+		return error_value(E_ACOVERSIN2);
 	}
 	return result;
 }
@@ -10767,15 +10939,17 @@ STATIC CONST struct builtin builtins[] = {
 	{"access", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_access},
 	 "determine accessibility of file a for mode b"},
 	{"acos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acos},
-	 "arccosine of a within accuracy b"},
+	 "inverse cosine of a within accuracy b"},
 	{"acosh", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acosh},
 	 "inverse hyperbolic cosine of a within accuracy b"},
 	{"acot", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acot},
-	 "arccotangent of a within accuracy b"},
+	 "inverse cotangent of a within accuracy b"},
 	{"acoth", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acoth},
 	 "inverse hyperbolic cotangent of a within accuracy b"},
+	{"acoversin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acoversin},
+	 "inverse coversed sine of a within accuracy b"},
 	{"acsc", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acsc},
-	 "arccosecant of a within accuracy b"},
+	 "inverse cosecant of a within accuracy b"},
 	{"acsch", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acsch},
 	 "inverse csch of a within accuracy b"},
 	{"agd", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_agd},
@@ -10789,21 +10963,23 @@ STATIC CONST struct builtin builtins[] = {
 	{"argv", 0, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_argv},
 	 "calc argc or argv string"},
 	{"asec", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_asec},
-	 "arcsecant of a within accuracy b"},
+	 "inverse secant of a within accuracy b"},
 	{"asech", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_asech},
 	 "inverse hyperbolic secant of a within accuracy b"},
 	{"asin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_asin},
-	 "arcsine of a within accuracy b"},
+	 "inverse sine of a within accuracy b"},
 	{"asinh", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_asinh},
 	 "inverse hyperbolic sine of a within accuracy b"},
 	{"assoc", 0, 0, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_assoc},
 	 "create new association array"},
 	{"atan", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_atan},
-	 "arctangent of a within accuracy b"},
+	 "inverse tangent of a within accuracy b"},
 	{"atan2", 2, 3, FE, OP_NOP, {.numfunc_3 = qatan2}, {.null = NULL},
 	 "angle to point (b,a) within accuracy c"},
 	{"atanh", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_atanh},
 	 "inverse hyperbolic tangent of a within accuracy b"},
+	{"aversin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_aversin},
+	 "inverse versed sine of a within accuracy b"},
 	{"avg", 0, IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_avg},
 	 "arithmetic mean of values"},
 	{"base", 0, 1, 0, OP_NOP, {.numfunc_cnt = f_base}, {.null = NULL},
@@ -10826,12 +11002,12 @@ STATIC CONST struct builtin builtins[] = {
 	 "round value a to b number of binary places"},
 	{"btrunc", 1, 2, 0, OP_NOP, {.numfunc_cnt = f_btrunc}, {.null = NULL},
 	 "truncate a to b number of binary places"},
-	{"calc_tty", 0, 0, 0, OP_NOP, {.null = NULL}, {.valfunc_0 = f_calc_tty},
-	 "set tty for interactivity"},
 	{"calclevel", 0, 0, 0, OP_NOP, {.null = NULL}, {.valfunc_0 = f_calclevel},
 	 "current calculation level"},
 	{"calcpath", 0, 0, 0, OP_NOP, {.null = NULL}, {.valfunc_0 = f_calcpath},
 	 "current CALCPATH search path value"},
+	{"calc_tty", 0, 0, 0, OP_NOP, {.null = NULL}, {.valfunc_0 = f_calc_tty},
+	 "set tty for interactivity"},
 	{"catalan", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_catalan},
 	 "catalan number for index a"},
 	{"ceil", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ceil},
@@ -10921,20 +11097,14 @@ STATIC CONST struct builtin builtins[] = {
 	 "evaluate expression from string to value"},
 	{"exp", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_exp},
 	 "exponential of value a within accuracy b"},
-	{"factor", 1, 3, 0, OP_NOP, {.numfunc_cnt = f_factor}, {.null = NULL},
-	 "lowest prime factor < b of a, return c if error"},
-	{"fcnt", 2, 2, 0, OP_NOP, {.numfunc_2 = f_faccnt}, {.null = NULL},
-	 "count of times one number divides another"},
-	{"fib", 1, 1, 0, OP_NOP, {.numfunc_1 = qfib}, {.null = NULL},
-	 "Fibonacci number F(n)"},
-	{"forall", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_forall},
-	 "do function for all elements of list or matrix"},
-	{"frem", 2, 2, 0, OP_NOP, {.numfunc_2 = qfacrem}, {.null = NULL},
-	 "number with all occurrences of factor removed"},
 	{"fact", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_fact},
 	 "factorial"},
+	{"factor", 1, 3, 0, OP_NOP, {.numfunc_cnt = f_factor}, {.null = NULL},
+	 "lowest prime factor < b of a, return c if error"},
 	{"fclose", 0, IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_fclose},
 	 "close file"},
+	{"fcnt", 2, 2, 0, OP_NOP, {.numfunc_2 = f_faccnt}, {.null = NULL},
+	 "count of times one number divides another"},
 	{"feof", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_feof},
 	 "whether EOF reached for file"},
 	{"ferror", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ferror},
@@ -10954,12 +11124,16 @@ STATIC CONST struct builtin builtins[] = {
 	{"fgetstr", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_fgetstr},
 	 "read next null-terminated string from file, null\n"
 	 "\t\t\tcharacter is kept"},
+	{"fib", 1, 1, 0, OP_NOP, {.numfunc_1 = qfib}, {.null = NULL},
+	 "Fibonacci number F(n)"},
 	{"files", 0, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_files},
 	 "return opened file or max number of opened files"},
 	{"floor", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_floor},
 	 "greatest integer less than or equal to number"},
 	{"fopen", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_fopen},
 	 "open file name a in mode b"},
+	{"forall", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_forall},
+	 "do function for all elements of list or matrix"},
 	{"fpathopen", 2, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_fpathopen},
 	 "open file name a in mode b, search for a along\n"
 	 "\t\t\tCALCPATH or path c"},
@@ -10971,6 +11145,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "write one or more strings to a file"},
 	{"fputstr", 2, IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_fputstr},
 	 "write one or more null-terminated strings to a file"},
+	{"frac", 1, 1, 0, OP_FRAC, {.numfunc_1 = qfrac}, {.null = NULL},
+	 "fractional part of value"},
 	{"free", 0, IN, FA, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_free},
 	 "free listed or all global variables"},
 	{"freebernoulli", 0, 0, 0, OP_NOP, {.null = NULL}, {.valfunc_0 = f_freebern},
@@ -10983,6 +11159,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "free redc data cache"},
 	{"freestatics", 0, 0, 0, OP_NOP, {.null = NULL}, {.valfunc_0 = f_freestatics},
 	 "free all un-scoped static variables"},
+	{"frem", 2, 2, 0, OP_NOP, {.numfunc_2 = qfacrem}, {.null = NULL},
+	 "number with all occurrences of factor removed"},
 	{"freopen", 2, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_freopen},
 	 "reopen a file stream to a named file"},
 	{"fscan", 2, IN, FA, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_fscan},
@@ -10997,8 +11175,6 @@ STATIC CONST struct builtin builtins[] = {
 	 "return the size of the file"},
 	{"ftell", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ftell},
 	 "return the file position"},
-	{"frac", 1, 1, 0, OP_FRAC, {.numfunc_1 = qfrac}, {.null = NULL},
-	 "fractional part of value"},
 	{"g2d", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_g2d},
 	 "convert gradians to degrees"},
 	{"g2gm", 3, 4, FA, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_g2gm},
@@ -11032,22 +11208,22 @@ STATIC CONST struct builtin builtins[] = {
 	 "high bit number in base 2 representation"},
 	{"hm2h", 2, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_hm2h},
 	 "convert a hours, b min to hours, rounding type c\n"},
-	{"hms2h", 3, 4, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_hms2h},
-	 "convert a hours, b min, c sec to hours, rounding type d\n"},
 	{"hmean", 0, IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_hmean},
 	 "harmonic mean of values"},
+	{"hms2h", 3, 4, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_hms2h},
+	 "convert a hours, b min, c sec to hours, rounding type d\n"},
 	{"hnrmod", 4, 4, 0, OP_NOP, {.numfunc_4 = f_hnrmod}, {.null = NULL},
 	 "v mod h*2^n+r, h>0, n>0, r  =  -1, 0 or 1"},
 	{"hypot", 2, 3, FE, OP_NOP, {.numfunc_3 = qhypot}, {.null = NULL},
 	 "hypotenuse of right triangle within accuracy c"},
 	{"ilog", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_ilog},
 	 "integral log of a to integral base b"},
-	{"ilogn", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_ilog},
-	 "same is ilog"},
 	{"ilog10", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ilog10},
 	 "integral log of a number base 10"},
 	{"ilog2", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ilog2},
 	 "integral log of a number base 2"},
+	{"ilogn", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_ilog},
+	 "same is ilog"},
 	{"im", 1, 1, 0, OP_IM, {.null = NULL}, {.null = NULL},
 	 "imaginary part of complex number"},
 	{"indices", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_indices},
@@ -11062,22 +11238,32 @@ STATIC CONST struct builtin builtins[] = {
 	 "multiplicative inverse of value"},
 	{"iroot", 2, 2, 0, OP_NOP, {.numfunc_2 = qiroot}, {.null = NULL},
 	 "integer b'th root of a"},
+	{"isalnum", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isalnum},
+	 "whether character is alpha-numeric"},
+	{"isalpha", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isalpha},
+	 "whether character is alphabetic"},
 	{"isassoc", 1, 1, 0, OP_ISASSOC, {.null = NULL}, {.null = NULL},
 	 "whether a value is an association"},
 	{"isatty", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isatty},
 	 "whether a file is a tty"},
 	{"isblk", 1, 1, 0, OP_ISBLK, {.null = NULL}, {.null = NULL},
 	 "whether a value is a block"},
+	{"iscntrl", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_iscntrl},
+	 "whether character is a control character"},
 	{"isconfig", 1, 1, 0, OP_ISCONFIG, {.null = NULL}, {.null = NULL},
 	 "whether a value is a config state"},
 	{"isdefined", 1, 1, 0, OP_ISDEFINED, {.null = NULL}, {.null = NULL},
 	 "whether a string names a function"},
+	{"isdigit", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isdigit},
+	 "whether character is a digit"},
 	{"iserror", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_iserror},
 	 "where a value is an error"},
 	{"iseven", 1, 1, 0, OP_ISEVEN, {.null = NULL}, {.null = NULL},
 	 "whether a value is an even integer"},
 	{"isfile", 1, 1, 0, OP_ISFILE, {.null = NULL}, {.null = NULL},
 	 "whether a value is a file"},
+	{"isgraph", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isgraph},
+	 "whether character is a graphical character"},
 	{"ishash", 1, 1, 0, OP_ISHASH, {.null = NULL}, {.null = NULL},
 	 "whether a value is a hash state"},
 	{"isident", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isident},
@@ -11086,6 +11272,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "whether a value is an integer"},
 	{"islist", 1, 1, 0, OP_ISLIST, {.null = NULL}, {.null = NULL},
 	 "whether a value is a list"},
+	{"islower", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_islower},
+	 "whether character is lower case"},
 	{"ismat", 1, 1, 0, OP_ISMAT, {.null = NULL}, {.null = NULL},
 	 "whether a value is a matrix"},
 	{"ismult", 2, 2, 0, OP_NOP, {.numfunc_2 = f_ismult}, {.null = NULL},
@@ -11098,14 +11286,18 @@ STATIC CONST struct builtin builtins[] = {
 	 "whether a value is an object"},
 	{"isobjtype", 1, 1, 0, OP_ISOBJTYPE, {.null = NULL}, {.null = NULL},
 	 "whether a string names an object type"},
-	{"isodd", 1, 1, 0, OP_ISODD, {.null = NULL}, {.null = NULL},
-	 "whether a value is an odd integer"},
 	{"isoctet", 1, 1, 0, OP_ISOCTET, {.null = NULL}, {.null = NULL},
 	 "whether a value is an octet"},
+	{"isodd", 1, 1, 0, OP_ISODD, {.null = NULL}, {.null = NULL},
+	 "whether a value is an odd integer"},
 	{"isprime", 1, 2, 0, OP_NOP, {.numfunc_cnt = f_isprime}, {.null = NULL},
 	 "whether a is a small prime, return b if error"},
+	{"isprint", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isprint},
+	 "whether character is printable"},
 	{"isptr", 1, 1, 0, OP_ISPTR, {.null = NULL}, {.null = NULL},
 	 "whether a value is a pointer"},
+	{"ispunct", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ispunct},
+	 "whether character is a punctuation"},
 	{"isqrt", 1, 1, 0, OP_NOP, {.numfunc_1 = qisqrt}, {.null = NULL},
 	 "integer part of square root"},
 	{"isrand", 1, 1, 0, OP_ISRAND, {.null = NULL}, {.null = NULL},
@@ -11116,14 +11308,20 @@ STATIC CONST struct builtin builtins[] = {
 	 "whether a value is a real number"},
 	{"isrel", 2, 2, 0, OP_NOP, {.numfunc_2 = f_isrel}, {.null = NULL},
 	 "whether two numbers are relatively prime"},
-	{"isstr", 1, 1, 0, OP_ISSTR, {.null = NULL}, {.null = NULL},
-	 "whether a value is a string"},
 	{"issimple", 1, 1, 0, OP_ISSIMPLE, {.null = NULL}, {.null = NULL},
 	 "whether value is a simple type"},
+	{"isspace", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isspace},
+	 "whether character is a space character"},
 	{"issq", 1, 1, 0, OP_NOP, {.numfunc_1 = f_issquare}, {.null = NULL},
 	 "whether or not number is a square"},
+	{"isstr", 1, 1, 0, OP_ISSTR, {.null = NULL}, {.null = NULL},
+	 "whether a value is a string"},
 	{"istype", 2, 2, 0, OP_ISTYPE, {.null = NULL}, {.null = NULL},
 	 "whether the type of a is same as the type of b"},
+	{"isupper", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isupper},
+	 "whether character is upper case"},
+	{"isxdigit", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isxdigit},
+	 "whether character is a hexadecimal digit"},
 	{"jacobi", 2, 2, 0, OP_NOP, {.numfunc_2 = qjacobi}, {.null = NULL},
 	 "-1  = > a is not quadratic residue mod b\n"
 	 "\t\t\t1  = > b is composite, or a is quad residue of b"},
@@ -11203,37 +11401,11 @@ STATIC CONST struct builtin builtins[] = {
 	 "numerator of fraction"},
 	{"ord", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ord},
 	 "integer corresponding to character value"},
-	{"isupper", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isupper},
-	 "whether character is upper case"},
-	{"islower", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_islower},
-	 "whether character is lower case"},
-	{"isalnum", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isalnum},
-	 "whether character is alpha-numeric"},
-	{"isalpha", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isalpha},
-	 "whether character is alphabetic"},
-	{"iscntrl", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_iscntrl},
-	 "whether character is a control character"},
-	{"isdigit", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isdigit},
-	 "whether character is a digit"},
-	{"isgraph", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isgraph},
-	 "whether character is a graphical character"},
-	{"isprint", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isprint},
-	 "whether character is printable"},
-	{"ispunct", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ispunct},
-	 "whether character is a punctuation"},
-	{"isspace", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isspace},
-	 "whether character is a space character"},
-	{"isxdigit", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_isxdigit},
-	 "whether character is a hexadecimal digit"},
 	{"param", 1, 1, 0, OP_ARGVALUE, {.null = NULL}, {.null = NULL},
 	 "value of parameter n (or parameter count if n\n"
 	 "\t\t\tis zero)"},
 	{"perm", 2, 2, 0, OP_NOP, {.numfunc_2 = qperm}, {.null = NULL},
 	 "permutation number a!/(a-b)!"},
-	{"prevcand", 1, 5, 0, OP_NOP, {.numfunc_cnt = f_prevcand}, {.null = NULL},
-	 "largest value  =  =  d mod e < a, ptest(a,b,c) true"},
-	{"prevprime", 1, 2, 0, OP_NOP, {.numfunc_cnt = f_pprime}, {.null = NULL},
-	 "return previous small prime, return b if err"},
 	{"pfact", 1, 1, 0, OP_NOP, {.numfunc_1 = qpfact}, {.null = NULL},
 	 "product of primes up till number"},
 	{"pi", 0, 1, FE, OP_NOP, {.numfunc_1 = qpi}, {.null = NULL},
@@ -11255,14 +11427,18 @@ STATIC CONST struct builtin builtins[] = {
 	 "number of bits in a that match b (or 1)"},
 	{"power", 2, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_power},
 	 "value a raised to the power b within accuracy c"},
-	{"protect", 1, 3, FA, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_protect},
-	 "read or set protection level for variable"},
-	{"ptest", 1, 3, 0, OP_NOP, {.numfunc_cnt = f_primetest}, {.null = NULL},
-	 "probabilistic primality test"},
+	{"prevcand", 1, 5, 0, OP_NOP, {.numfunc_cnt = f_prevcand}, {.null = NULL},
+	 "largest value  =  =  d mod e < a, ptest(a,b,c) true"},
+	{"prevprime", 1, 2, 0, OP_NOP, {.numfunc_cnt = f_pprime}, {.null = NULL},
+	 "return previous small prime, return b if err"},
 	{"printf", 1, IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_printf},
 	 "print formatted output to stdout"},
 	{"prompt", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_prompt},
 	 "prompt for input line using value a"},
+	{"protect", 1, 3, FA, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_protect},
+	 "read or set protection level for variable"},
+	{"ptest", 1, 3, 0, OP_NOP, {.numfunc_cnt = f_primetest}, {.null = NULL},
+	 "probabilistic primality test"},
 	{"push", 1, IN, FA, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_listpush},
 	 "push values onto front of list"},
 	{"putenv", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_putenv},
@@ -11368,26 +11544,22 @@ STATIC CONST struct builtin builtins[] = {
 	 "assign value to stoponerror flag"},
 	{"str", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_str},
 	 "simple value converted to string"},
-        {"strtoupper", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_strtoupper},
-         "Make string upper case"},
-        {"strtolower", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_strtolower},
-         "Make string lower case"},
+	{"strcasecmp", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_strcasecmp},
+	 "compare two strings case independent"},
 	{"strcat", 1,IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_strcat},
 	 "concatenate strings together"},
 	{"strcmp", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_strcmp},
 	 "compare two strings"},
-	{"strcasecmp", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_strcasecmp},
-	 "compare two strings case independent"},
 	{"strcpy", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_strcpy},
 	 "copy string to string"},
 	{"strerror", 0, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_strerror},
 	 "string describing error type"},
 	{"strlen", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_strlen},
 	 "length of string"},
-	{"strncmp", 3, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_3 = f_strncmp},
-	 "compare strings a, b to c characters"},
 	{"strncasecmp", 3, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_3 = f_strncasecmp},
 	 "compare strings a, b to c characters case independent"},
+	{"strncmp", 3, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_3 = f_strncmp},
+	 "compare strings a, b to c characters"},
 	{"strncpy", 3, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_3 = f_strncpy},
 	 "copy up to c characters from string to string"},
 	{"strpos", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_strpos},
@@ -11398,6 +11570,10 @@ STATIC CONST struct builtin builtins[] = {
 	 "scan a string for assignments to one or more variables"},
 	{"strscanf", 2, IN, FA, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_strscanf},
 	 "formatted scan of string for assignments to variables"},
+        {"strtolower", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_strtolower},
+         "Make string lower case"},
+        {"strtoupper", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_strtoupper},
+         "Make string upper case"},
 	{"substr", 3, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_3 = f_substr},
 	 "substring of a from position b for c chars"},
 	{"sum", 0, IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_sum},

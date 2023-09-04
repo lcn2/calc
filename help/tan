@@ -27,8 +27,11 @@ LINK LIBRARY
     COMPLEX *c_atan(COMPLEX *c, NUMBER *eps);
 
 SEE ALSO
-    sin, cos, sec, csc, cot, epsilon
+    sin, cos, cot, sec, csc
+    asin, acos, atan, acot, asec, acsc
     versin, coversin
+    aversin. acoversin
+    epsilon
 
 ## Copyright (C) 1999,2023  Landon Curt Noll
 ##

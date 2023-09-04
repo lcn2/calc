@@ -33,8 +33,11 @@ LINK LIBRARY
     COMPLEX *c_sin(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
-    cos, tan, sec, csc, cot, epsilon
+    cos, tan, cot, sec, csc
+    asin, acos, atan, acot, asec, acsc
     versin, coversin
+    aversin. acoversin
+    epsilon
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll
 ##

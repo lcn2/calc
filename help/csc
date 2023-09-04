@@ -1,5 +1,5 @@
 NAME
-    csc - trigonometric cosecant function
+    csc - trigonometric cosecant
 
 SYNOPSIS
     csc(x [,eps])
@@ -25,8 +25,11 @@ LINK LIBRARY
     NUMBER *qcsc(NUMBER *x, NUMBER *eps)
 
 SEE ALSO
-    sin, cos, tan, sec, cot, epsilon
+    sin, cos, tan, cot, sec
+    asin, acos, atan, acot, asec, acsc
     versin, coversin
+    aversin. acoversin
+    epsilon
 
 ## Copyright (C) 1999,2023  Landon Curt Noll
 ##

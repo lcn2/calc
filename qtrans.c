@@ -421,6 +421,8 @@ qcsc(NUMBER *q, NUMBER *epsilon)
 	qfree(csc);
 	return res;
 }
+
+
 /*
  * Calculate the arcsine function.
  * The result is in the range -pi/2 to pi/2.
@@ -437,14 +439,16 @@ qasin(NUMBER *q, NUMBER *epsilon)
 		math_error("Zero epsilon value for asin");
 		not_reached();
 	}
-	if (qiszero(q))
+	if (qiszero(q)) {
 		return qlink(&_qzero_);
+	}
 	ztmp = q->num;
 	neg = ztmp.sign;
 	ztmp.sign = 0;
 	r = zrel(ztmp, q->den);
-	if (r > 0)
+	if (r > 0) {
 		return NULL;
+	}
 	if (r == 0) {
 		epsilon1 = qscale(epsilon, 1L);
 		qtmp2 = qpi(epsilon1);
@@ -1981,8 +1985,6 @@ qacoth(NUMBER *q, NUMBER *epsilon)
  *
  *	versin(x) = 1 - cos(x)
  *
- * This calls qsincos() and discards the value of sin.
- *
  * given:
  *	q	    real value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
@@ -1997,31 +1999,147 @@ qversin(NUMBER *q, NUMBER *epsilon)
 	NUMBER *versin;
 	long n;
 
-	if (qiszero(epsilon)) {
-		math_error("Zero epsilon value for %s", __func__);
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
 		not_reached();
 	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate trig function value
+	 */
 	n = -qilog2(epsilon);
-	if (qiszero(q) || n < 0)
-		return qlink(&_qzero_);
 	qsincos(q, n + 2, &sin, &cos);
 	qfree(sin);
 	versin = qsub(&_qone_, cos);
 	qfree(cos);
+
+	/*
+	 * round value to nearest epsilon
+	 */
 	res = qmappr(versin, epsilon, 24);
 	qfree(versin);
+
+	/*
+	 * return 1 - cos(x)
+	 */
 	return res;
 }
 
 
 /*
- * qversin - coversed sine for NUMBER values
+ * qaversin_or_NULL - inverse versed sine for NUMBER values
  *
  * This uses the formula:
  *
- *	coversin(x) = 1 - sin(x)
+ *	aversin(x) = acos(1 - x)
  *
- * This calls qsincos() and discards the value of cos.
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	!= NULL ==> real value result of trig function on q with error epsilon,
+ *	NULL    ==> trig function value cannot be expressed as a NUMBER
+ *
+ * NOTE: If this function returns NULL, consider calling the equivalent
+ *	 COMPLEX function from comfunc.c.  See the help file for the
+ *	 related builtin for details.
+ */
+NUMBER *
+qaversin_or_NULL(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *x;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	x = qsub(&_qone_, q);
+	res = qacos(x, epsilon);
+	qfree(x);
+	if (res == NULL) {
+		return NULL;
+	}
+
+	/*
+	 * return acos(1 - x)
+	 */
+	return res;
+}
+
+
+/*
+ * qaversin - inverse versed sine for NUMBER values
+ *
+ * This uses the formula:
+ *
+ *	aversin(x) = acos(1 - x)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qaversin(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	res = qaversin_or_NULL(q, epsilon);
+	if (res == NULL) {
+		math_error("cannot compute inverse cos for aversin");
+		not_reached();
+	}
+
+	/*
+	 * return acos(1 - x)
+	 */
+	return res;
+}
+
+
+/*
+ * qcoversin - coversed sine for NUMBER values
+ *
+ * This uses the formula:
+ *
+ *	coversin((x) = 1 - sin(x)
  *
  * given:
  *	q	    real value to pass to the trig function
@@ -2037,10 +2155,21 @@ qcoversin(NUMBER *q, NUMBER *epsilon)
 	NUMBER *coversin;
 	long n;
 
-	if (qiszero(epsilon)) {
-		math_error("Zero epsilon value for %s", __func__);
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
 		not_reached();
 	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate trig function value
+	 */
 	n = -qilog2(epsilon);
 	if (qiszero(q) || n < 0)
 		return qlink(&_qzero_);
@@ -2048,7 +2177,119 @@ qcoversin(NUMBER *q, NUMBER *epsilon)
 	qfree(cos);
 	coversin = qsub(&_qone_, sin);
 	qfree(sin);
+
+	/*
+	 * round value to nearest epsilon
+	 */
 	res = qmappr(coversin, epsilon, 24);
 	qfree(coversin);
+
+	/*
+	 * return 1 - sin(x)
+	 */
+	return res;
+}
+
+
+/*
+ * qacoversin_or_NULL - inverse coversed sine for NUMBER values
+ *
+ * This uses the formula:
+ *
+ *	acoversin(x) = asin(1 - x)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ *
+ * returns:
+ *	!= NULL ==> real value result of trig function on q with error epsilon,
+ *	NULL    ==> trig function value cannot be expressed as a NUMBER
+ *
+ * NOTE: If this function returns NULL, consider calling the equivalent
+ *	 COMPLEX function from comfunc.c.  See the help file for the
+ *	 related builtin for details.
+ */
+NUMBER *
+qacoversin_or_NULL(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *x;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	x = qsub(&_qone_, q);
+	res = qasin(x, epsilon);
+	qfree(x);
+	if (res == NULL) {
+		return NULL;
+	}
+
+	/*
+	 * return asin(1 - x)
+	 */
+	return res;
+}
+
+
+/*
+ * qacoversin - inverse coversed sine for NUMBER values
+ *
+ * This uses the formula:
+ *
+ *	acoversin(x) = asin(1 - x)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qacoversin(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	res = qacoversin_or_NULL(q, epsilon);
+	if (res == NULL) {
+		math_error("cannot compute inverse sin for acoversin");
+		not_reached();
+	}
+
+	/*
+	 * return asin(1 - x)
+	 */
 	return res;
 }

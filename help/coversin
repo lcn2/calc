@@ -1,5 +1,5 @@
 NAME
-    coversin - coversed sine
+    coversin - coversed trigonometric sine
 
 SYNOPSIS
     coversin(x [,eps])
@@ -11,7 +11,7 @@ TYPES
     return	number
 
 DESCRIPTION
-    Calculate the versed cosine of x to a multiple of eps with error less in
+    Calculate the coversed sine of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
     The coversed sine function is sometimes called covers, or cosiv, or cvs,
@@ -41,8 +41,11 @@ LINK LIBRARY
     COMPLEX *c_coversin(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
-    sin, cos, tan, sec, csc, cot, epsilon
+    sin, cos, tan, cot, sec, csc
+    asin, acos, atan, acot, asec, acsc
     versin
+    aversin. acoversin
+    epsilon
 
 ## Copyright (C) 2023  Landon Curt Noll
 ##

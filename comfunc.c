@@ -1355,12 +1355,12 @@ c_versin(COMPLEX *c, NUMBER *epsilon)
 		not_reached();
 	}
 	if (check_epsilon(epsilon) == false) {
-		math_error("Invalid epsilon value for complex versin");
+		math_error("Invalid epsilon arg for %s", __func__);
 		not_reached();
 	}
 
 	/*
-	 * return r = 1 - cos(x)
+	 * calculate complex trig function value
 	 */
 	ctmp = c_cos(c, epsilon);
 	if (ctmp == NULL) {
@@ -1368,7 +1368,57 @@ c_versin(COMPLEX *c, NUMBER *epsilon)
 		not_reached();
 	}
 	r = c_sub(&_cone_, ctmp);
+
+	/*
+	 * return complex 1 - cos(x)
+	 */
 	comfree(ctmp);
+	return r;
+}
+
+
+/*
+ * c_aversin - inverse versed sine for COMPLEX values
+ *
+ * This uses the formula:
+ *
+ *	aversin(x) = acos(1 - x)
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_aversin(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;	/* inverse trig value result */
+	COMPLEX *x;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex inverse trig function value
+	 */
+	x = c_sub(&_cone_, c);
+	r = c_acos(x, epsilon);
+	comfree(x);
+
+	/*
+	 * return complex acos(1 - x)
+	 */
 	return r;
 }
 
@@ -1401,12 +1451,12 @@ c_coversin(COMPLEX *c, NUMBER *epsilon)
 		not_reached();
 	}
 	if (check_epsilon(epsilon) == false) {
-		math_error("Invalid epsilon value for complex coversin");
+		math_error("Invalid epsilon arg for %s", __func__);
 		not_reached();
 	}
 
 	/*
-	 * return r = 1 - sin(x)
+	 * calculate complex trig function value
 	 */
 	ctmp = c_sin(c, epsilon);
 	if (ctmp == NULL) {
@@ -1414,6 +1464,56 @@ c_coversin(COMPLEX *c, NUMBER *epsilon)
 		not_reached();
 	}
 	r = c_sub(&_cone_, ctmp);
+
+	/*
+	 * return complex 1 - sin(x)
+	 */
 	comfree(ctmp);
+	return r;
+}
+
+
+/*
+ * c_acoversin - inverse versed sine for COMPLEX values
+ *
+ * This uses the formula:
+ *
+ *	acoversin(x) = asin(1 - x)
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_acoversin(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;	/* inverse trig value result */
+	COMPLEX *x;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex inverse trig function value
+	 */
+	x = c_sub(&_cone_, c);
+	r = c_asin(x, epsilon);
+	comfree(x);
+
+	/*
+	 * return complex asin(1 - x)
+	 */
 	return r;
 }

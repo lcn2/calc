@@ -5,29 +5,38 @@ SYNOPSIS
     atan(x [,eps])
 
 TYPES
-    x		real
+    x		number (real or complex)
     eps		0 < real < 1, defaults to epsilon()
 
     return	real
 
 DESCRIPTION
-    Returns the atan of x to a multiple of eps with error less in
+    Returns the inverse tangent of x to a multiple of eps with error less in
     absolute value than .75 * eps.
-
-    v = atan(x) is the number in (-pi/2, pi/2) for which tan(v) = x.
 
 EXAMPLE
     ; print atan(2, 1e-5), atan(2, 1e-10), atan(2, 1e-15), atan(2, 1e-20)
     1.10715 1.1071487178 1.107148717794091 1.10714871779409050302
+
+    ; print atan(5), atan(5i)
+    1.37340076694501586086 1.57079632679489661923+0.20273255405408219099i
+
+    ; print acos(5+5i)
+    0.79039774680951249644-2.64919617780647114961i
 
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qatan(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_atan(COMPLEX *c, NUMBER *epsilon)
 
 SEE ALSO
-    asin, acos, asec, acsc, acot, epsilon
+    sin, cos, tan, cot, sec, csc
+    asin, acos, acot, asec, acsc
+    versin, coversin
+    aversin. acoversin
+    epsilon
 
 ## Copyright (C) 1999,2023  Landon Curt Noll
 ##

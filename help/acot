@@ -5,29 +5,38 @@ SYNOPSIS
     acot(x [,eps])
 
 TYPES
-    x		real
+    x		number (real or complex)
     eps		0 < real < 1, defaults to epsilon()
 
     return	real
 
 DESCRIPTION
-    Returns the acot of x to a multiple of eps with error less in
+    Returns the inverse cotangent of x to a multiple of eps with error less in
     absolute value than .75 * eps.
-
-    v = acot(x) is the number in (0, pi) for which cot(v) = x.
 
 EXAMPLE
     ; print acot(2, 1e-5),  acot(2, 1e-10), acot(2, 1e-15), acot(2, 1e-20)
     0.46365 0.463647609 0.463647609000806 0.46364760900080611621
+
+    ; print acot(5), acot(5i)
+    0.19739555984988075837 -0.20273255405408219099i
+
+    ; print acos(5+5i)
+    0.79039774680951249644-2.64919617780647114961i
 
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qacot(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_acot(COMPLEX *c, NUMBER *epsilon)
 
 SEE ALSO
-    asin, acos, atan, asec, acsc, epsilon
+    sin, cos, tan, cot, sec, csc
+    asin, acos, atan, asec, acsc
+    versin, coversin
+    aversin. acoversin
+    epsilon
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll
 ##

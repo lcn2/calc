@@ -1,38 +1,47 @@
 NAME
-    sec - trigonometric secant
+    aversin - inverse versed trigonometric sine
 
 SYNOPSIS
-    sec(x [,eps])
+    aversin(x [,eps])
 
 TYPES
-    x		real
+    x		number (real or complex)
     eps		0 < real < 1, defaults to epsilon()
 
     return	real
 
 DESCRIPTION
-    Calculate the secant of x to a multiple of eps, with error less
-    in absolute value than .75 * eps.
+    Returns the inverse versed sine of x to a multiple of eps with error less in
+    absolute value than .75 * eps.
+
+    The inverse versed sine function is sometimes called avers, sometimes called aver,
+    may be defined as:
+
+	aversin(x) = acos(1 - x)
 
 EXAMPLE
-    ; print sec(1, 1e-5), sec(1, 1e-10), sec(1, 1e-15), sec(1, 1e-20)
-    1.85082 1.8508157177 1.850815717680926 1.85081571768092561791
+    ; print aversin(.5, 1e-5), aversin(.5, 1e-10), aversin(.5, 1e-15), aversin(.5, 1e-20)
+    1.0472 1.0471975512 1.047197551196598 1.04719755119659774615
+
+    ; print aversin(0), aversin(-5), aversin(2 + 3i)
+    0 0.16738295495563874081+2.49215996813383545614i 1.87839997632560786916+1.86416154415788242831i
 
 LIMITS
-    unlike sin and cos, x must be real
     0 < eps < 1
 
 LINK LIBRARY
-    NUMBER *qsec(NUMBER *x, NUMBER *eps)
+    NUMBER *qaversin_or_NULL(NUMBER *q, NUMBER *epsilon);
+    NUMBER *qaversin(NUMBER *q, NUMBER *epsilon);
+    COMPLEX *c_aversin(COMPLEX *c, NUMBER *epsilon);
 
 SEE ALSO
-    sin, cos, tan, cot, csc
+    sin, cos, tan, cot, sec, csc
     asin, acos, atan, acot, asec, acsc
     versin, coversin
-    aversin. acoversin
+    acoversin
     epsilon
 
-## Copyright (C) 1999,2023  Landon Curt Noll
+## Copyright (C) 2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -48,8 +57,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/11/13 03:49:00
-## File existed as early as:	1995
+## Under source code control:	2023/09/03 00:26:24
+## File existed as early as:	2023
 ##
 ## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
 ## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

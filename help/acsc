@@ -5,29 +5,38 @@ SYNOPSIS
     acsc(x [,eps])
 
 TYPES
-    x		real, with absolute value >= 1
+    x		number (real or complex)
     eps		0 < real < 1, defaults to epsilon()
 
     return	real
 
 DESCRIPTION
-    Returns the acsc of x to a multiple of eps with error less in
+    Returns the inverse cosecant of x to a multiple of eps with error less in
     absolute value than .75 * eps.
-
-    v = acsc(x) is the number in [-pi/2, pi/2] for which csc(v) = x.
 
 EXAMPLE
     ; print acsc(2, 1e-5), acsc(2, 1e-10), acsc(2, 1e-15), acsc(2, 1e-20)
     0.5236 0.5235987756 0.523598775598299 0.52359877559829887308
+
+    ; print acsc(5), acsc(5i)
+    0.20135792079033079145 -0.19869011034924140648i
+
+    ; print acos(5+5i)
+    0.79039774680951249644-2.64919617780647114961i
 
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qacsc(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_acsc(COMPLEX *c, NUMBER *epsilon)
 
 SEE ALSO
-    asin, acos, atan, asec, acot, epsilon
+    sin, cos, tan, cot, sec, csc
+    asin, acos, atan, acot, asec
+    versin, coversin
+    aversin. acoversin
+    epsilon
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll
 ##

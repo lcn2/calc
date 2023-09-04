@@ -227,7 +227,11 @@ E_FUNC void qfreeeuler(void);
  * historical trig functions
  */
 E_FUNC NUMBER *qversin(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qaversin_or_NULL(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qaversin(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qcoversin(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qacoversin_or_NULL(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qacoversin(NUMBER *q, NUMBER *epsilon);
 
 
 /*

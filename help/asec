@@ -5,29 +5,38 @@ SYNOPSIS
     asec(x [,eps])
 
 TYPES
-    x		real, with absolute value >= 1
+    x		number (real or complex)
     eps		0 < real < 1, defaults to epsilon()
 
     return	real
 
 DESCRIPTION
-    Returns the asec of x to a multiple of eps with error less in
+    Returns the inverse secant of x to a multiple of eps with error less in
     absolute value than .75 * eps.
-
-    v = asec(x) is the number in [0, pi] for which sec(v) = x.
 
 EXAMPLE
     ; print asec(2, 1e-5), asec(2, 1e-10), asec(2, 1e-15), asec(2, 1e-20)
     1.0472 1.0471975512 1.047197551196598 1.04719755119659774615
+
+    ; print asec(5), asec(5i)
+    1.36943840600456582778 1.57079632679489661923+0.19869011034924140647i
+
+    ; print acos(5+5i)
+    0.79039774680951249644-2.64919617780647114961i
 
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qasec(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_asec(COMPLEX *c, NUMBER *epsilon)
 
 SEE ALSO
-    asin, acos, atan, acsc, acot, epsilon
+    sin, cos, tan, cot, sec, csc
+    asin, acos, atan, acot, acsc
+    versin, coversin
+    aversin. acoversin
+    epsilon
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll
 ##

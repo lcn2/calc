@@ -100,7 +100,31 @@ The following are the changes from calc version 2.14.3.5 to date:
     the LIMIT range for such eps values.
 
     Added new versin(x, [,eps]) for versed sine and coversin(x, [,eps])
-    for versed cosine.
+    for inverse versed sine.
+
+    Added new aversin(x, [,eps]) for inverse versed sine and acoversin(x, [,eps])
+    for inverse coversed sine.
+
+    Improved trig function help files to reference use of complex arguments
+    that while supported were not documented.
+
+    Removed old Makefile testing rules for make dbx and make gdb.
+
+    Improved "make run" to execute calccalc using shared libraries
+    from the local directory, and with reading of the startup scripts
+    disabled.
+
+    Changed "make prep" to perform various tests that are used to
+    help verify that calc is ready for a release.  Added the
+    update_ver tool, (formerly verupdate) and the trailblank tool
+    that existed outside of the calc source base but neverthless
+    used in the calc release process.  Both of these tools are used
+    by "make prep".
+
+    Added Makefile testing rule "make testfuncsort" to check for
+    the sort of the builtin function list.  Changed the order that
+    builtin functions are listed by "show builtin" and the help/builtin
+    to match the sorting of "LANG=C LC_ALL=C sort -d -u".
 
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:

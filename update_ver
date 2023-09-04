@@ -1,0 +1,189 @@
+#!/bin/bash
+#
+# update_ver - update version numbers in Makefile.config
+#
+# This tools is used by "make prep".
+#
+# The original name for this tool was verupdate.
+#
+# Copyright (C) 2021-2023  Landon Curt Noll
+#
+# Calc is open software; you can redistribute it and/or modify it under
+# the terms of version 2.1 of the GNU Lesser General Public License
+# as published by the Free Software Foundation.
+#
+# Calc is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+# Public License for more details.
+#
+# A copy of version 2.1 of the GNU Lesser General Public License is
+# distributed with calc under the filename COPYING-LGPL.  You should have
+# received a copy with calc; if not, write to Free Software Foundation, Inc.
+# 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+#
+# Under source code control:	2021/12/12 15:32:43
+# File existed as early as:	2021
+#
+# chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+# Share and enjoy!  :-)		http://www.isthe.com/chongo/tech/comp/calc/
+
+# setup
+#
+MK_SET1="Makefile.config"
+
+#####################
+# utility functions #
+#####################
+
+# firewall - must have primary Makefiles
+#
+check_primary() {
+    echo "check for primary Makefiles: $MK_SET1"
+    for i in $MK_SET1; do
+	if [[ ! -f $i ]]; then
+	    echo "$0: FATAL: Missing critical: $i" 1>&2
+	fi
+	if [[ ! -s $i ]]; then
+	    echo "$0: FATAL: empty: $i" 1>&2
+	fi
+    done
+    for i in $MK_SET1; do
+	if [[ ! -f $i ]]; then
+	    echo "$0: FATAL: exit 1"
+	    exit 1
+	fi
+	if [[ ! -s $i ]]; then
+	    echo "$0: FATAL: exit 2"
+	    exit 2
+	fi
+    done
+}
+
+# firewall - bak files must not pre-exist
+#
+no_bak() {
+    for i in $MK_SET1; do
+	if [[ -f $i.bak ]]; then
+	    echo "$0: FATAL: bak copy found: $i.bak" 1>&2
+	    echo "$0: FATAL: try: diff -u $i.bak $i" 1>&2
+	    echo "$0: FATAL: consider: rm -f $i.bak" 1>&2
+	fi
+    done
+    for i in $MK_SET1; do
+	if [[ -f $i.bak ]]; then
+	    echo "$0: FATAL: exit 5"
+	    exit 5
+	fi
+    done
+}
+
+# firewall
+#
+check_primary
+no_bak
+
+# generate the version
+#
+echo "make ver_calc >/dev/null 2>&1"
+make ver_calc >/dev/null 2>&1
+status="$?"
+if [[ $status -ne 0 ]]; then
+    echo "$0: FATAL: make ver_calc non-zero exit code: $status" 1>&2
+    echo "$0: FATAL: exit 4"
+    exit 4
+fi
+if [[ ! -x ver_calc ]]; then
+    echo "$0: FATAL: cannot find / did not make ver_calc executable" 1>&2
+    echo "$0: FATAL: exit 5"
+    exit 5
+fi
+CALC_VERSION=$(./ver_calc)
+export CALC_VERSION
+if [[ -z $CALC_VERSION ]]; then
+    echo "$0: FATAL: unable to determine calc version" 1>&2
+    echo "$0: FATAL: exit 6"
+    exit 6
+fi
+CALC_VER=$(./ver_calc -V)
+export CALC_VER
+if [[ -z $CALC_VER ]]; then
+    echo "$0: FATAL: unable to determine calc major version" 1>&2
+    echo "$0: FATAL: exit 7"
+    exit 7
+fi
+
+# re-firewall
+#
+# Just in case the 'make ver_calc' causes some Makefile.config
+# to be reformed, and thus a bak file was created.
+#
+check_primary
+no_bak
+
+# modify version lines
+#
+echo "about to modify: $MK_SET1"
+echo "changing version line to use VERSION= $CALC_VERSION"
+echo "changing major version line to use VER= $CALC_VER"
+perl -p -i -e \
+	's/^VERSION= .*/VERSION= '"$CALC_VERSION"'/; s/^VER= .*/VER= '"$CALC_VER"'/' \
+	$MK_SET1
+status="$?"
+if [[ $status -ne 0 ]]; then
+    echo "$0: FATAL: perl version change for non-zero exit code: $status" 1>&2
+    echo "$0: FATAL: exit 8"
+    exit 8
+fi
+
+# print calc version
+#
+echo
+export VERSION_STRING=
+export VERSION_ERR=
+for i in $MK_SET1; do
+    VERSION_STRING=$(egrep '^VERSION= [1-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*$' "$i")
+    if [[ -z $VERSION_STRING ]]; then
+	echo "$0: FATAL: cannot find VERSION= in $i"
+	VERSION_ERR="$i"
+    else
+	echo "$i: $VERSION_STRING"
+    fi
+done
+if [[ -n $VERSION_ERR ]]; then
+    echo "$0: FATAL: error in finding calc version string"
+    echo "$0: FATAL: exit 9"
+    exit 9
+fi
+
+# print calc major version
+#
+export VER_STRING=
+export VER_ERR=
+for i in $MK_SET1; do
+    VER_STRING=$(egrep '^VER= [1-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*$' "$i")
+    if [[ -z $VER_STRING ]]; then
+	echo "$0: FATAL: cannot find VER= in $i"
+	VER_ERR="$i"
+    else
+	echo "$i: $VER_STRING"
+    fi
+done
+if [[ -n $VER_ERR ]]; then
+    echo "$0: FATAL: error in finding calc major version string"
+    echo "$0: FATAL: exit 10"
+    exit 10
+fi
+
+# print other useful calc strings
+#
+echo
+echo "calc $(./ver_calc) release"
+echo
+echo "Release v$(./ver_calc)"
+
+# All Done!!! -- Jessica Noll, Age 2
+#
+echo
+echo "VERSION in Makefile.config is up to date"
+exit 0

@@ -56,6 +56,8 @@ endian
 endian_calc.h
 fposval
 fposval.h
+func.show
+func.sort
 have_arc4random
 have_arc4random.h
 have_ban_pragma

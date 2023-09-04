@@ -327,9 +327,18 @@ STATIC_FIRST_TARGETS= ${LICENSE} .static
 LATE_TARGETS= calc.1 calc.usage \
 	      cal/.all help/.all help/builtin cscript/.all
 
+# calc tools - tools used by the maintainers of the calc source base
+#
+# trailblank - find trailing blanks and other file format picky issues
+# update_ver - update version numbers in Makefile.config
+#
+TRAILBLANK= trailblank
+UPDATE_VER= update_ver
+CALC_TOOLS= ${TRAILBLANK} ${UPDATE_VER}
+
 # complete list of targets
 #
-TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS}
+TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS} ${CALC_TOOLS}
 
 # rules that are not also names of files
 #
@@ -371,9 +380,6 @@ check_include:
 	    echo 1>&2; \
 	    exit 1; \
 	fi
-
-prep:
-	${Q} ${MAKE} -f ${MAKE_FILE} all DEBUG='-g3'
 
 calc-dynamic-only: ${DYNAMIC_FIRST_TARGETS} ${EARLY_TARGETS} \
 		   ${CALC_DYNAMIC_LIBS} ${SYM_DYNAMIC_LIBS} calc${EXT} \
@@ -2979,6 +2985,7 @@ env:
 	@echo 'SAMPLE_STATIC_TARGETS=${SAMPLE_STATIC_TARGETS}'; echo ''
 	@echo 'SAMPLE_TARGETS=${SAMPLE_TARGETS}'; echo ''
 	@echo 'SCRIPTDIR=${SCRIPTDIR}'; echo ''
+	@echo 'SDIFF=${SDIFF}'; echo ''
 	@echo 'SED=${SED}'; echo ''
 	@echo 'SHELL=${SHELL}'; echo ''
 	@echo 'SORT=${SORT}'; echo ''
@@ -3089,27 +3096,82 @@ debug:
 
 ###
 #
-# testing rules
+# maintainer rules - rules that are useful for people who maintain the calc source
 #
-# make run
-#	* only run calc interactively with the ${CALC_ENV} environment
+# testfuncsort
 #
-# make dbx
-#	* run the dbx debugger on calc with the ${CALC_ENV} environment
+#    Check on the sort of the builtin function list.
+#    If the builtins[] array in func.c is in dictionary sorted order,
+#    this rule prints nothing.  If there is a builtin function that
+#    is out of order, sdiff is used to print the builtin function sort
+#    problem and does an exit 1.
 #
-# make gdb
-#	* run the gdb debugger on calc with the ${CALC_ENV} environment
+# prep
+#
+#    Perform tests and build actions that are needed prior to a release
+#    of calc.  The "make prep" should NOT exit non-zero but instead it
+#    should print "All is OK" and exit 0.
+#
+# run
+#
+#    Execute calc using shared libraries from the local directory.
+#    Run calc with reading of the startup scripts disabled.
 #
 ###
 
+testfuncsort: ./calc${EXT}
+	@${RM} -f func.show func.sort
+	@CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help CALCCUSTOMHELP=./custom \
+		./calc${EXT} -d -u show builtin | grep '^[A-Za-z0-9]' > func.show
+	@CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help CALCCUSTOMHELP=./custom \
+		./calc${EXT} -d -u show builtin | grep '^[A-Za-z0-9]' | LANG=C LC_ALL=C ${SORT} -d -u > func.sort
+	@-if ! cmp -s func.show func.sort; then \
+	    echo 1>&2; \
+	    echo "ERROR: builtins[] arrray in func.c is not in dictionary sorted order" 1>&2; \
+	    echo 1>&2; \
+	    echo "CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help CALCCUSTOMHELP=./custom" \
+		 "./calc${EXT} -d -u show builtin | grep '^[A-Za-z0-9]' > func.show" 1>&2; \
+	    echo "CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help CALCCUSTOMHELP=./custom" \
+		 "./calc${EXT} -d -u show builtin | grep '^[A-Za-z0-9]' | LANG=C LC_ALL=C ${SORT} -d -u > func.sort" 1>&2; \
+	    echo 1>&2; \
+	    echo ${SDIFF} func.show func.sort 1>&2; \
+	    echo 1>&2; \
+	    ${SDIFF} func.show func.sort 1>&2; \
+	    exit 1; \
+	fi
+	@${RM} -f func.show func.sort
+
+prep:
+	echo '=-=-= start of ${MAKE} clobber =-=-='
+	${MAKE} clobber
+	echo '=-=-= end of ${MAKE} clobber =-=-='
+	echo '=-=-= start of ${TRAILBLANK} =-=-='
+	./${TRAILBLANK}
+	echo '=-=-= end of ${TRAILBLANK} =-=-='
+	echo '=-=-= start of ${MAKE} all CCWERR=-Werror =-=-='
+	${MAKE} all CCWERR=-Werror
+	echo '=-=-= end of ${MAKE} all CCWERR=-Werror =-=-='
+	echo '=-=-= start of ${MAKE} tags =-=-='
+	${MAKE} tags
+	echo '=-=-= end of ${MAKE} tags =-=-='
+	echo '=-=-= start of ${MAKE} depend =-=-='
+	${MAKE} depend
+	echo '=-=-= end of ${MAKE} depend =-=-='
+	echo '=-=-= start of ${MAKE} testfuncsort =-=-='
+	${MAKE} testfuncsort
+	echo '=-=-= end of ${MAKE} testfuncsort =-=-='
+	echo '=-=-= start of ${UPDATE_VER} =-=-='
+	./${UPDATE_VER}
+	echo '=-=-= end of ${UPDATE_VER} =-=-='
+	echo '=-=-= start of ${MAKE} chk =-=-='
+	${MAKE} chk
+	echo '=-=-= end of ${MAKE} chk =-=-='
+	@echo
+	@echo All is OK
+	@echo
+
 run:
-	${CALC_ENV} ./calc${EXT}
-
-dbx:
-	${CALC_ENV} dbx ./calc${EXT}
-
-gdb:
-	${CALC_ENV} gdb ./calc${EXT}
+	CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help CALCCUSTOMHELP=./custom ./calc${EXT} -q
 
 ###
 #
@@ -3329,6 +3391,7 @@ clobber: clean
 	    echo ${RM} -rf .DS_Store; \
 	    ${RM} -rf .DS_Store; \
 	fi
+	${RM} -f func.show func.sort
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # install everything

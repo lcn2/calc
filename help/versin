@@ -1,5 +1,5 @@
 NAME
-    versin - versed sine
+    versin - versed trigonometric sine
 
 SYNOPSIS
     versin(x [,eps])
@@ -41,8 +41,11 @@ LINK LIBRARY
     COMPLEX *c_versin(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
-    sin, cos, tan, sec, csc, cot, epsilon
+    sin, cos, tan, cot, sec, csc
+    asin, acos, atan, acot, asec, acsc
     coversin
+    aversin. acoversin
+    epsilon
 
 ## Copyright (C) 2023  Landon Curt Noll
 ##

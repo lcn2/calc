@@ -553,6 +553,12 @@ E_LOGN_5	Non-numeric second argument for logn
 E_VERSIN1	Bad epsilon for versin
 E_VERSIN2	Bad first argument for versin
 E_VERSIN3	Too-large im(argument) for versin
+E_AVERSIN1	Bad epsilon for aversin
+E_AVERSIN2	Bad first argument for aversin
+E_AVERSIN3	Too-large im(argument) for aversin
 E_COVERSIN1	Bad epsilon for coversin
 E_COVERSIN2	Bad first argument for coversin
 E_COVERSIN3	Too-large im(argument) for coversin
+E_ACOVERSIN1	Bad epsilon for acoversin
+E_ACOVERSIN2	Bad first argument for acoversin
+E_ACOVERSIN3	Too-large im(argument) for acoversin
