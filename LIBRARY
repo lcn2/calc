@@ -636,6 +636,23 @@ only used for complex numbers.	Examples of macros are:
 There is only one comparison you can make for COMPLEX values, and that is
 for equality.  The ccmp function returns true if two complex numbers differ.
 
+Sometimes to results of a COMPLEX based calculation is a real number.
+That is, the imaginary part of the COMPLEX is 0.  You may convert the
+COMPLEX into a new allocated NUMBER that is real part of the COMPLEX value.
+For example:
+
+	COMPLEX *c;
+	NUMBER *q;
+	bool ok_to_free;	/* true ==> free COMPLEX value, false ==> do not */
+
+	if (cisreal(c)) {
+		q = c_to_q(c, ok_to_free);
+	}
+
+The 2nd argument to c_to_q() determines if the complex argument should be freed
+or not.  Pass a false value as the 2nd arg if you wish to continue to use the
+COMPLEX value.
+
 There are three predefined values for complex numbers.	You should clink
 them when you want to use them.	 They are _czero_, _cone_, and _conei_.
 These have the values 0, 1, and i.

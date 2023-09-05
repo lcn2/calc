@@ -126,6 +126,10 @@ The following are the changes from calc version 2.14.3.5 to date:
     builtin functions are listed by "show builtin" and the help/builtin
     to match the sorting of "LANG=C LC_ALL=C sort -d -u".
 
+    Added c_to_q(COMPLEX *c, bool cfree) to make is easier to convert
+    a COMPLEX value that is real (imag part is 0) into a NUMBER and
+    optionally free the COMPLEX value.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

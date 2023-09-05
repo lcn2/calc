@@ -397,6 +397,65 @@ c_real(COMPLEX *c)
 
 
 /*
+ * c_to_q - convert a real part of a COMPLEX to a NUMBER
+ *
+ * given:
+ *	c	complex number for which the real part will be used
+ *	cfree	true ==> free c, false ==> do not free c
+ *
+ * returns:
+ *	allocated NUMBER that the equivalent of the real part of a complex number
+ *
+ * NOTE: Any imaginary part of the COMPLEX value is ignored.
+ *
+ * NOTE: To avoid a loss of value, test with cisreal(c) first:
+ *
+ *	COMPLEX *c;
+ *	NUMBER *q;
+ *	bool ok_to_free;
+ *
+ *	if (cisreal(c)) {
+ *		q = c_to_q(c, ok_to_free);
+ *	}
+ */
+NUMBER *
+c_to_q(COMPLEX *c, bool cfree)
+{
+	NUMBER *r;	/* allocated NUMBER equivalent to return */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+
+	/*
+	 * allocate a new NUMBER
+	 */
+	r = qalloc();
+
+	/*
+	 * link in the real part of the COMPLEX value
+	 */
+	r = qlink(c->real);
+
+	/*
+	 * free c if requested
+	 */
+	if (cfree == true) {
+		comfree(c);
+	}
+
+	/*
+	 * return the allocated equivalent NUMBER
+	 */
+	return r;
+}
+
+
+/*
  * Return the imaginary part of a complex number as a real.
  */
 COMPLEX *

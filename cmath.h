@@ -72,6 +72,7 @@ E_FUNC COMPLEX *c_shift(COMPLEX *c, long i);
 E_FUNC COMPLEX *c_square(COMPLEX *c);
 E_FUNC COMPLEX *c_conj(COMPLEX *c);
 E_FUNC COMPLEX *c_real(COMPLEX *c);
+E_FUNC NUMBER *c_to_q(COMPLEX *c, bool cfree);
 E_FUNC COMPLEX *c_imag(COMPLEX *c);
 E_FUNC COMPLEX *c_neg(COMPLEX *c);
 E_FUNC COMPLEX *c_inv(COMPLEX *c);

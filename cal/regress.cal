@@ -3565,9 +3565,9 @@ define test_trig()
 		   ': round(aversin(0.5, 1e-10), 10) == 1.0471975512'));
 	vrfy(aversin(0) == 0,
 		    strcat(str(tnum++), ': aversin(0) == 0'));
-	vrfy(round(aversin(-5, 1e-10), 10) == 0.1673829554+2.4921599676i,
+	vrfy(round(aversin(-5, 1e-10), 10) == 2.4778887303i,
 	    strcat(str(tnum++),
-		   ': round(aversin(0.5, 1e-10), 10) == 0.1673829554+2.4921599676i'));
+		   ': round(aversin(-5, 1e-10), 10) == 2.4778887303i'));
 	vrfy(round(aversin(2 + 3i, 1e-10), 10) == 1.8783999763+1.8641615439i,
 	    strcat(str(tnum++),
 		   ': round(aversin(2 + 3i, 1e-10), 10) == 1.8783999763+1.8641615439i'));
@@ -3578,9 +3578,9 @@ define test_trig()
 		   ': round(acoversin(0.5, 1e-10), 10) == 0.5235987756'));
 	vrfy(acoversin(1) == 0,
 		    strcat(str(tnum++), ': acoversin(1) == 0'));
-	vrfy(round(acoversin(-5, 1e-10), 10) == 1.4034133718-2.4921599681i,
+	vrfy(round(acoversin(-5, 1e-10), 10) == 1.5707963268-2.4778887303i,
 	    strcat(str(tnum++),
-		   ': round(acoversin(0.5, 1e-10), 10) == 1.4034133718-2.4921599681i'));
+		   ': round(acoversin(-5, 1e-10), 10) == 1.5707963268-2.4778887303i'));
 	vrfy(round(acoversin(2 + 3i, 1e-10), 10) == -0.3076036495-1.8641615442i,
 	    strcat(str(tnum++),
 		   ': round(acoversin(2 + 3i, 1e-10), 10) == -0.3076036495-1.8641615442i'));

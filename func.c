@@ -2140,9 +2140,8 @@ f_exp(int count, VALUE **vals)
 			result.v_com = c;
 			result.v_type = V_COM;
 			if (cisreal(c)) {
-				result.v_num = qlink(c->real);
+				result.v_num = c_to_q(c, true);
 				result.v_type = V_NUM;
-				comfree(c);
 			}
 			break;
 		default:
@@ -2202,9 +2201,8 @@ f_ln(int count, VALUE **vals)
 	result.v_type = V_COM;
 	result.v_com = c;
 	if (cisreal(c)) {
-		result.v_num = qlink(c->real);
+		result.v_num = c_to_q(c, true);
 		result.v_type = V_NUM;
-		comfree(c);
 	}
 	return result;
 }
@@ -2263,9 +2261,8 @@ f_log(int count, VALUE **vals)
 	result.v_type = V_COM;
 	result.v_com = c;
 	if (cisreal(c)) {
-		result.v_num = qlink(c->real);
+		result.v_num = c_to_q(c, true);
 		result.v_type = V_NUM;
-		comfree(c);
 	}
 	return result;
 }
@@ -2324,9 +2321,8 @@ f_log2(int count, VALUE **vals)
 	result.v_type = V_COM;
 	result.v_com = c;
 	if (cisreal(c)) {
-		result.v_num = qlink(c->real);
+		result.v_num = c_to_q(c, true);
 		result.v_type = V_NUM;
-		comfree(c);
 	}
 	return result;
 }
@@ -2409,8 +2405,7 @@ f_logn(int count, VALUE **vals)
 				return error_value(E_LOGN_3);
 			}
 			if (cisreal(ln_x_c)) {
-				ln_x_r = qcopy(ln_x_c->real);
-				comfree(ln_x_c);
+				ln_x_r = c_to_q(ln_x_c, true);
 			} else {
 				ln_of_x_is_complex = true;
 			}
@@ -2430,8 +2425,7 @@ f_logn(int count, VALUE **vals)
 			return error_value(E_LOGN_3);
 		}
 		if (cisreal(ln_x_c)) {
-			ln_x_r = qcopy(ln_x_c->real);
-			comfree(ln_x_c);
+			ln_x_r = c_to_q(ln_x_c, true);
 		} else {
 			ln_of_x_is_complex = true;
 		}
@@ -2464,8 +2458,7 @@ f_logn(int count, VALUE **vals)
 				return error_value(E_LOGN_4);
 			}
 			if (cisreal(ln_n_c)) {
-				ln_n_r = qcopy(ln_n_c->real);
-				comfree(ln_n_c);
+				ln_n_r = c_to_q(ln_n_c, true);
 			} else {
 				ln_of_n_is_complex = true;
 			}
@@ -2493,8 +2486,7 @@ f_logn(int count, VALUE **vals)
 			return error_value(E_LOGN_4);
 		}
 		if (cisreal(ln_n_c)) {
-			ln_n_r = qcopy(ln_n_c->real);
-			comfree(ln_n_c);
+			ln_n_r = c_to_q(ln_n_c, true);
 		} else {
 			ln_of_n_is_complex = true;
 		}
@@ -2519,9 +2511,8 @@ f_logn(int count, VALUE **vals)
 			/* check if division is COMPLEX or NUMBER */
 			if (cisreal(p_cval)) {
 				/* ln(x) / ln(n) was NUMBER, not COMPLEX */
-				result.v_num = qlink(p_cval->real);
+				result.v_num = c_to_q(p_cval, true);
 				result.v_type = V_NUM;
-				comfree(p_cval);
 			} else {
 				/* ln(x) / ln(n) is COMPLEX */
 				result.v_type = V_COM;
@@ -2540,9 +2531,8 @@ f_logn(int count, VALUE **vals)
 			/* check if division is COMPLEX or NUMBER */
 			if (cisreal(p_cval)) {
 				/* ln(x) / ln(n) was NUMBER, not COMPLEX */
-				result.v_num = qlink(p_cval->real);
+				result.v_num = c_to_q(p_cval, true);
 				result.v_type = V_NUM;
-				comfree(p_cval);
 			} else {
 				/* ln(x) / ln(n) is COMPLEX */
 				result.v_type = V_COM;
@@ -2567,9 +2557,8 @@ f_logn(int count, VALUE **vals)
 			/* check if division is COMPLEX or NUMBER */
 			if (cisreal(p_cval)) {
 				/* ln(x) / ln(n) was NUMBER, not COMPLEX */
-				result.v_num = qlink(p_cval->real);
+				result.v_num = c_to_q(p_cval, true);
 				result.v_type = V_NUM;
-				comfree(p_cval);
 			} else {
 				/* ln(x) / ln(n) is COMPLEX */
 				result.v_type = V_COM;
@@ -2633,9 +2622,8 @@ f_cos(int count, VALUE **vals)
 			result.v_com = c;
 			result.v_type = V_COM;
 			if (cisreal(c)) {
-				result.v_num = qlink(c->real);
+				result.v_num = c_to_q(c, true);
 				result.v_type = V_NUM;
-				comfree(c);
 			}
 			break;
 		default:
@@ -2945,9 +2933,8 @@ f_sin(int count, VALUE **vals)
 			result.v_com = c;
 			result.v_type = V_COM;
 			if (cisreal(c)) {
-				result.v_num = qlink(c->real);
+				result.v_num = c_to_q(c, true);
 				result.v_type = V_NUM;
-				comfree(c);
 			}
 			break;
 		default:
@@ -3208,8 +3195,7 @@ f_sinh(int count, VALUE **vals)
 			result.v_com = c;
 			result.v_type = V_COM;
 			if (cisreal(c)) {
-				result.v_num = qlink(c->real);
-				comfree(c);
+				result.v_num = c_to_q(c, true);
 				result.v_type = V_NUM;
 			}
 			break;
@@ -3262,8 +3248,7 @@ f_cosh(int count, VALUE **vals)
 			result.v_com = c;
 			result.v_type = V_COM;
 			if (cisreal(c)) {
-				result.v_num = qlink(c->real);
-				comfree(c);
+				result.v_num = c_to_q(c, true);
 				result.v_type = V_NUM;
 			}
 			break;
@@ -3524,9 +3509,8 @@ f_atan(int count, VALUE **vals)
 			result.v_type = V_COM;
 			result.v_com = tmp;
 			if (cisreal(tmp)) {
-				result.v_num = qlink(tmp->real);
+				result.v_num = c_to_q(tmp, true);
 				result.v_type = V_NUM;
-				comfree(tmp);
 			}
 			break;
 		default:
@@ -3574,9 +3558,8 @@ f_acot(int count, VALUE **vals)
 			result.v_type = V_COM;
 			result.v_com = tmp;
 			if (cisreal(tmp)) {
-				result.v_num = qlink(tmp->real);
+				result.v_num = c_to_q(tmp, true);
 				result.v_type = V_NUM;
-				comfree(tmp);
 			}
 			break;
 		default:
@@ -3591,7 +3574,6 @@ f_asin(int count, VALUE **vals)
 	VALUE result;
 	COMPLEX *tmp;
 	NUMBER *err;
-	NUMBER *q;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
@@ -3636,10 +3618,8 @@ f_asin(int count, VALUE **vals)
 		return error_value(E_ASIN3);
 	}
 	if (result.v_type == V_COM && cisreal(result.v_com)) {
-		q = qlink(result.v_com->real);
-		comfree(result.v_com);
+		result.v_num = c_to_q(result.v_com, true);
 		result.v_type = V_NUM;
-		result.v_num = q;
 	}
 	return result;
 }
@@ -3650,7 +3630,6 @@ f_acos(int count, VALUE **vals)
 	VALUE result;
 	COMPLEX *tmp;
 	NUMBER *err;
-	NUMBER *q;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
@@ -3695,10 +3674,8 @@ f_acos(int count, VALUE **vals)
 		return error_value(E_ACOS3);
 	}
 	if (result.v_type == V_COM && cisreal(result.v_com)) {
-		q = qlink(result.v_com->real);
-		comfree(result.v_com);
+		result.v_num = c_to_q(result.v_com, true);
 		result.v_type = V_NUM;
-		result.v_num = q;
 	}
 	return result;
 }
@@ -3710,7 +3687,6 @@ f_asec(int count, VALUE **vals)
 	VALUE result;
 	COMPLEX *tmp;
 	NUMBER *err;
-	NUMBER *q;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
@@ -3758,10 +3734,8 @@ f_asec(int count, VALUE **vals)
 	}
 	if (result.v_type == V_COM) {
 		if (cisreal(result.v_com)) {
-			q = qlink(result.v_com->real);
-			comfree(result.v_com);
+			result.v_num = c_to_q(result.v_com, true);
 			result.v_type = V_NUM;
-			result.v_num = q;
 		}
 	}
 	return result;
@@ -3774,7 +3748,6 @@ f_acsc(int count, VALUE **vals)
 	VALUE result;
 	COMPLEX *tmp;
 	NUMBER *err;
-	NUMBER *q;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
@@ -3822,10 +3795,8 @@ f_acsc(int count, VALUE **vals)
 	}
 	if (result.v_type == V_COM) {
 		if (cisreal(result.v_com)) {
-			q = qlink(result.v_com->real);
-			comfree(result.v_com);
+			result.v_num = c_to_q(result.v_com, true);
 			result.v_type = V_NUM;
-			result.v_num = q;
 		}
 	}
 	return result;
@@ -3871,9 +3842,8 @@ f_asinh(int count, VALUE **vals)
 			result.v_type = V_COM;
 			result.v_com = tmp;
 			if (cisreal(tmp)) {
-				result.v_num = qlink(tmp->real);
+				result.v_num = c_to_q(tmp, true);
 				result.v_type = V_NUM;
-				comfree(tmp);
 			}
 			break;
 		default:
@@ -3889,7 +3859,6 @@ f_acosh(int count, VALUE **vals)
 	VALUE result;
 	COMPLEX *tmp;
 	NUMBER *err;
-	NUMBER *q;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
@@ -3934,10 +3903,8 @@ f_acosh(int count, VALUE **vals)
 		return error_value(E_ACOSH3);
 	}
 	if (result.v_type == V_COM && cisreal(result.v_com)) {
-		q = qlink(result.v_com->real);
-		comfree(result.v_com);
+		result.v_num = c_to_q(result.v_com, true);
 		result.v_type = V_NUM;
-		result.v_num = q;
 	}
 	return result;
 }
@@ -3949,7 +3916,6 @@ f_atanh(int count, VALUE **vals)
 	VALUE result;
 	COMPLEX *tmp;
 	NUMBER *err;
-	NUMBER *q;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
@@ -3995,10 +3961,8 @@ f_atanh(int count, VALUE **vals)
 	}
 	if (result.v_type == V_COM) {
 		if (cisreal(result.v_com)) {
-			q = qlink(result.v_com->real);
-			comfree(result.v_com);
+			result.v_num = c_to_q(result.v_com, true);
 			result.v_type = V_NUM;
-			result.v_num = q;
 		}
 	}
 	return result;
@@ -4011,7 +3975,6 @@ f_acoth(int count, VALUE **vals)
 	VALUE result;
 	COMPLEX *tmp;
 	NUMBER *err;
-	NUMBER *q;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
@@ -4057,10 +4020,8 @@ f_acoth(int count, VALUE **vals)
 	}
 	if (result.v_type == V_COM) {
 		if (cisreal(result.v_com)) {
-			q = qlink(result.v_com->real);
-			comfree(result.v_com);
+			result.v_num = c_to_q(result.v_com, true);
 			result.v_type = V_NUM;
-			result.v_num = q;
 		}
 	}
 	return result;
@@ -4073,7 +4034,6 @@ f_asech(int count, VALUE **vals)
 	VALUE result;
 	COMPLEX *tmp;
 	NUMBER *err;
-	NUMBER *q;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
@@ -4121,10 +4081,8 @@ f_asech(int count, VALUE **vals)
 	}
 	if (result.v_type == V_COM) {
 		if (cisreal(result.v_com)) {
-			q = qlink(result.v_com->real);
-			comfree(result.v_com);
+			result.v_num = c_to_q(result.v_com, true);
 			result.v_type = V_NUM;
-			result.v_num = q;
 		}
 	}
 	return result;
@@ -4137,7 +4095,6 @@ f_acsch(int count, VALUE **vals)
 	VALUE result;
 	COMPLEX *tmp;
 	NUMBER *err;
-	NUMBER *q;
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
@@ -4185,10 +4142,8 @@ f_acsch(int count, VALUE **vals)
 	}
 	if (result.v_type == V_COM) {
 		if (cisreal(result.v_com)) {
-			q = qlink(result.v_com->real);
-			comfree(result.v_com);
+			result.v_num = c_to_q(result.v_com, true);
 			result.v_type = V_NUM;
-			result.v_num = q;
 		}
 	}
 	return result;
@@ -4200,7 +4155,6 @@ f_gd(int count, VALUE **vals)
 {
 	VALUE result;
 	NUMBER *eps;
-	NUMBER *q;
 	COMPLEX *tmp;
 
 	/* initialize VALUE */
@@ -4245,9 +4199,7 @@ f_gd(int count, VALUE **vals)
 	if (result.v_com == NULL)
 		return error_value(E_GD3);
 	if (cisreal(result.v_com)) {
-		q = qlink(result.v_com->real);
-		comfree(result.v_com);
-		result.v_num = q;
+		result.v_num = c_to_q(result.v_com, true);
 		result.v_type = V_NUM;
 	}
 	return result;
@@ -4259,7 +4211,6 @@ f_agd(int count, VALUE **vals)
 {
 	VALUE result;
 	NUMBER *eps;
-	NUMBER *q;
 	COMPLEX *tmp;
 
 	/* initialize VALUE */
@@ -4304,9 +4255,7 @@ f_agd(int count, VALUE **vals)
 	if (result.v_com == NULL)
 		return error_value(E_AGD3);
 	if (cisreal(result.v_com)) {
-		q = qlink(result.v_com->real);
-		comfree(result.v_com);
-		result.v_num = q;
+		result.v_num = c_to_q(result.v_com, true);
 		result.v_type = V_NUM;
 	}
 	return result;
@@ -5974,9 +5923,8 @@ f_polar(int count, VALUE **vals)
 	result.v_com = c;
 	result.v_type = V_COM;
 	if (cisreal(c)) {
-		result.v_num = qlink(c->real);
+		result.v_num = c_to_q(c, true);
 		result.v_type = V_NUM;
-		comfree(c);
 	}
 	return result;
 }
@@ -10660,9 +10608,8 @@ f_versin(int count, VALUE **vals)
 			 * case: complex trig function returned real, convert result to NUMBER
 			 */
 			if (cisreal(c)) {
-				result.v_num = qlink(c->real);
+				result.v_num = c_to_q(c, true);
 				result.v_type = V_NUM;
-				comfree(c);
 			}
 			break;
 		default:
@@ -10717,7 +10664,8 @@ f_aversin(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qone_);
+			/* XXX - WRONG - do not change the arg! */
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
 			vals[0]->v_type = V_COM;
 		}
 	}
@@ -10738,9 +10686,8 @@ f_aversin(int count, VALUE **vals)
 		 * case: complex trig function returned real, convert result to NUMBER
 		 */
 		if (cisreal(c)) {
-			result.v_num = qlink(c->real);
+			result.v_num = c_to_q(c, true);
 			result.v_type = V_NUM;
-			comfree(c);
 		}
 	}
 	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
@@ -10800,9 +10747,8 @@ f_coversin(int count, VALUE **vals)
 			 * case: complex trig function returned real, convert result to NUMBER
 			 */
 			if (cisreal(c)) {
-				result.v_num = qlink(c->real);
+				result.v_num = c_to_q(c, true);
 				result.v_type = V_NUM;
-				comfree(c);
 			}
 			break;
 		default:
@@ -10857,7 +10803,8 @@ f_acoversin(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qone_);
+			/* XXX - WRONG - do not change the arg! */
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
 			vals[0]->v_type = V_COM;
 		}
 	}
@@ -10878,9 +10825,8 @@ f_acoversin(int count, VALUE **vals)
 		 * case: complex trig function returned real, convert result to NUMBER
 		 */
 		if (cisreal(c)) {
-			result.v_num = qlink(c->real);
+			result.v_num = c_to_q(c, true);
 			result.v_type = V_NUM;
-			comfree(c);
 		}
 	}
 	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
