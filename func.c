@@ -123,7 +123,6 @@
 S_FUNC NUMBER *base_value(long mode, int defval);
 S_FUNC int strscan(char *s, int count, VALUE **vals);
 S_FUNC int filescan(FILEID id, int count, VALUE **vals);
-S_FUNC VALUE f_eval(VALUE *vp);
 S_FUNC VALUE f_fsize(VALUE *vp);
 S_FUNC int malloced_putenv(char *str);
 
@@ -250,7 +249,7 @@ struct builtin {
  *	false	otherwise
  */
 S_FUNC bool
-verify_eps(VALUE *veps)
+verify_eps(VALUE CONST *veps)
 {
 	NUMBER *eps;		/* VALUE as a NUMBER */
 
@@ -10625,9 +10624,10 @@ f_versin(int count, VALUE **vals)
 S_FUNC VALUE
 f_aversin(int count, VALUE **vals)
 {
-	VALUE result;
-	COMPLEX *c;
-	NUMBER *eps;
+	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
+	VALUE result;		/* value to return */
+	COMPLEX *c;		/* COMPLEX trig result */
+	NUMBER *eps;		/* epsilon error tolerance */
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
@@ -10648,10 +10648,11 @@ f_aversin(int count, VALUE **vals)
 	/*
 	 * compute inverse trig function to a given error tolerance
 	 */
-	if (vals[0]->v_type == V_NUM) {
+	arg1 = *vals[0];
+	if (arg1.v_type == V_NUM) {
 
 		/* try to compute result using real triv function */
-		result.v_num = qaversin_or_NULL(vals[0]->v_num, eps);
+		result.v_num = qaversin_or_NULL(arg1.v_num, eps);
 
 		/*
 		 * case: trig function returned a NUMBER
@@ -10664,18 +10665,17 @@ f_aversin(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			/* XXX - WRONG - do not change the arg! */
-			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
-			vals[0]->v_type = V_COM;
+			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
+			arg1.v_type = V_COM;
 		}
 	}
-	if (vals[0]->v_type == V_COM) {
+	if (arg1.v_type == V_COM) {
 
 		/*
 		 * case: argument was COMPLEX or
 		 *	 trig function returned NULL and argument was converted to COMPLEX
 		 */
-		c = c_aversin(vals[0]->v_com, eps);
+		c = c_aversin(arg1.v_com, eps);
 		if (c == NULL) {
 			return error_value(E_AVERSIN3);
 		}
@@ -10690,7 +10690,7 @@ f_aversin(int count, VALUE **vals)
 			result.v_type = V_NUM;
 		}
 	}
-	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
+	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
 
 		/*
 		 * case: argument type is not valid for this function
@@ -10764,9 +10764,10 @@ f_coversin(int count, VALUE **vals)
 S_FUNC VALUE
 f_acoversin(int count, VALUE **vals)
 {
-	VALUE result;
-	COMPLEX *c;
-	NUMBER *eps;
+	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
+	VALUE result;		/* value to return */
+	COMPLEX *c;		/* COMPLEX trig result */
+	NUMBER *eps;		/* epsilon error tolerance */
 
 	/* initialize VALUE */
 	result.v_subtype = V_NOSUBTYPE;
@@ -10787,10 +10788,11 @@ f_acoversin(int count, VALUE **vals)
 	/*
 	 * compute inverse trig function to a given error tolerance
 	 */
-	if (vals[0]->v_type == V_NUM) {
+	arg1 = *vals[0];
+	if (arg1.v_type == V_NUM) {
 
 		/* try to compute result using real triv function */
-		result.v_num = qacoversin_or_NULL(vals[0]->v_num, eps);
+		result.v_num = qacoversin_or_NULL(arg1.v_num, eps);
 
 		/*
 		 * case: trig function returned a NUMBER
@@ -10803,18 +10805,17 @@ f_acoversin(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			/* XXX - WRONG - do not change the arg! */
-			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
-			vals[0]->v_type = V_COM;
+			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
+			arg1.v_type = V_COM;
 		}
 	}
-	if (vals[0]->v_type == V_COM) {
+	if (arg1.v_type == V_COM) {
 
 		/*
 		 * case: argument was COMPLEX or
 		 *	 trig function returned NULL and argument was converted to COMPLEX
 		 */
-		c = c_acoversin(vals[0]->v_com, eps);
+		c = c_acoversin(arg1.v_com, eps);
 		if (c == NULL) {
 			return error_value(E_ACOVERSIN3);
 		}
@@ -10829,7 +10830,7 @@ f_acoversin(int count, VALUE **vals)
 			result.v_type = V_NUM;
 		}
 	}
-	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
+	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
 
 		/*
 		 * case: argument type is not valid for this function
