@@ -10841,6 +10841,286 @@ f_acoversin(int count, VALUE **vals)
 }
 
 
+/*
+ * f_vercos - versed cosine
+ */
+S_FUNC VALUE
+f_vercos(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *c;
+	NUMBER *eps;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_VERCOS1);
+		}
+		eps = vals[1]->v_num;
+	}
+
+	/*
+	 * compute trig function to a given error tolerance
+	 */
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qvercos(vals[0]->v_num, eps);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			c = c_vercos(vals[0]->v_com, eps);
+			if (c == NULL) {
+				return error_value(E_VERCOS3);
+			}
+			result.v_com = c;
+			result.v_type = V_COM;
+
+			/*
+			 * case: complex trig function returned real, convert result to NUMBER
+			 */
+			if (cisreal(c)) {
+				result.v_num = c_to_q(c, true);
+				result.v_type = V_NUM;
+			}
+			break;
+		default:
+			return error_value(E_VERCOS2);
+	}
+	return result;
+}
+
+
+/*
+ * f_avercos - inverse versed cosine
+ */
+S_FUNC VALUE
+f_avercos(int count, VALUE **vals)
+{
+	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
+	VALUE result;		/* value to return */
+	COMPLEX *c;		/* COMPLEX trig result */
+	NUMBER *eps;		/* epsilon error tolerance */
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_AVERCOS1);
+		}
+		eps = vals[1]->v_num;
+	}
+
+	/*
+	 * compute inverse trig function to a given error tolerance
+	 */
+	arg1 = *vals[0];
+	if (arg1.v_type == V_NUM) {
+
+		/* try to compute result using real triv function */
+		result.v_num = qavercos_or_NULL(arg1.v_num, eps);
+
+		/*
+		 * case: trig function returned a NUMBER
+		 */
+		if (result.v_num != NULL) {
+			result.v_type = V_NUM;
+
+		/*
+		 * case: trig function returned NULL - need to try COMPLEX trig function
+		 */
+		} else {
+			/* convert NUMBER argument from NUMBER to COMPLEX */
+			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
+			arg1.v_type = V_COM;
+		}
+	}
+	if (arg1.v_type == V_COM) {
+
+		/*
+		 * case: argument was COMPLEX or
+		 *	 trig function returned NULL and argument was converted to COMPLEX
+		 */
+		c = c_avercos(arg1.v_com, eps);
+		if (c == NULL) {
+			return error_value(E_AVERCOS3);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+
+		/*
+		 * case: complex trig function returned real, convert result to NUMBER
+		 */
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
+			result.v_type = V_NUM;
+		}
+	}
+	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+
+		/*
+		 * case: argument type is not valid for this function
+		 */
+		return error_value(E_AVERCOS2);
+	}
+	return result;
+}
+
+
+/*
+ * f_covercos - coversed cosine
+ */
+S_FUNC VALUE
+f_covercos(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *c;
+	NUMBER *eps;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_COVERCOS1);
+		}
+		eps = vals[1]->v_num;
+	}
+
+	/*
+	 * compute trig function to a given error tolerance
+	 */
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			result.v_num = qcovercos(vals[0]->v_num, eps);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			c = c_covercos(vals[0]->v_com, eps);
+			if (c == NULL) {
+				return error_value(E_COVERCOS3);
+			}
+			result.v_com = c;
+			result.v_type = V_COM;
+
+			/*
+			 * case: complex trig function returned real, convert result to NUMBER
+			 */
+			if (cisreal(c)) {
+				result.v_num = c_to_q(c, true);
+				result.v_type = V_NUM;
+			}
+			break;
+		default:
+			return error_value(E_COVERCOS2);
+	}
+	return result;
+}
+
+
+/*
+ * f_acovercos - inverse coversed cosine
+ */
+S_FUNC VALUE
+f_acovercos(int count, VALUE **vals)
+{
+	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
+	VALUE result;		/* value to return */
+	COMPLEX *c;		/* COMPLEX trig result */
+	NUMBER *eps;		/* epsilon error tolerance */
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_ACOVERCOS1);
+		}
+		eps = vals[1]->v_num;
+	}
+
+	/*
+	 * compute inverse trig function to a given error tolerance
+	 */
+	arg1 = *vals[0];
+	if (arg1.v_type == V_NUM) {
+
+		/* try to compute result using real triv function */
+		result.v_num = qacovercos_or_NULL(arg1.v_num, eps);
+
+		/*
+		 * case: trig function returned a NUMBER
+		 */
+		if (result.v_num != NULL) {
+			result.v_type = V_NUM;
+
+		/*
+		 * case: trig function returned NULL - need to try COMPLEX trig function
+		 */
+		} else {
+			/* convert NUMBER argument from NUMBER to COMPLEX */
+			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
+			arg1.v_type = V_COM;
+		}
+	}
+	if (arg1.v_type == V_COM) {
+
+		/*
+		 * case: argument was COMPLEX or
+		 *	 trig function returned NULL and argument was converted to COMPLEX
+		 */
+		c = c_acovercos(arg1.v_com, eps);
+		if (c == NULL) {
+			return error_value(E_ACOVERCOS3);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+
+		/*
+		 * case: complex trig function returned real, convert result to NUMBER
+		 */
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
+			result.v_type = V_NUM;
+		}
+	}
+	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+
+		/*
+		 * case: argument type is not valid for this function
+		 */
+		return error_value(E_ACOVERCOS2);
+	}
+	return result;
+}
+
+
 #endif /* !FUNCLIST */
 
 
@@ -10893,6 +11173,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "inverse cotangent of a within accuracy b"},
 	{"acoth", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acoth},
 	 "inverse hyperbolic cotangent of a within accuracy b"},
+	{"acovercos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acovercos},
+	 "inverse coversed cosine of a within accuracy b"},
 	{"acoversin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acoversin},
 	 "inverse coversed sine of a within accuracy b"},
 	{"acsc", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acsc},
@@ -10925,6 +11207,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "angle to point (b,a) within accuracy c"},
 	{"atanh", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_atanh},
 	 "inverse hyperbolic tangent of a within accuracy b"},
+	{"avercos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_avercos},
+	 "inverse versed cosine of a within accuracy b"},
 	{"aversin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_aversin},
 	 "inverse versed sine of a within accuracy b"},
 	{"avg", 0, IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_avg},
@@ -10988,6 +11272,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "hyperbolic cotangent of a within accuracy b"},
 	{"count", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_count},
 	 "count listr/matrix elements satisfying some condition"},
+	{"covercos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_covercos},
+	 "coversed cosine of value a within accuracy b"},
 	{"coversin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_coversin},
 	 "coversed sine of value a within accuracy b"},
 	{"cp", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_cp},
@@ -11547,6 +11833,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "unget char read from file"},
 	{"usertime", 0, 0, 0, OP_NOP, {.numfunc_0 = f_usertime}, {.null = NULL},
 	 "user mode CPU time in seconds"},
+	{"vercos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_vercos},
+	 "versed cosine of value a within accuracy b"},
 	{"versin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_versin},
 	 "versed sine of value a within accuracy b"},
 	{"version", 0, 0, 0, OP_NOP, {.null = NULL}, {.valfunc_0 = f_version},

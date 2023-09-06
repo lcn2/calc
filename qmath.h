@@ -232,6 +232,12 @@ E_FUNC NUMBER *qaversin(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qcoversin(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qacoversin_or_NULL(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qacoversin(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qvercos(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qavercos_or_NULL(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qavercos(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qcovercos(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qacovercos_or_NULL(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qacovercos(NUMBER *q, NUMBER *epsilon);
 
 
 /*

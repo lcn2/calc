@@ -1428,7 +1428,7 @@ c_aversin(COMPLEX *c, NUMBER *epsilon)
  *
  * This uses the formula:
  *
- *	coversin(x) = 1 - sin(x)
+ *	coversin(x) = 1 - cos(x)
  *
  * given:
  *	q	    complex value to pass to the trig function
@@ -1514,6 +1514,198 @@ c_acoversin(COMPLEX *c, NUMBER *epsilon)
 
 	/*
 	 * return complex asin(1 - x)
+	 */
+	return r;
+}
+
+
+/*
+ * c_vercos - versed sine for COMPLEX values
+ *
+ * This uses the formula:
+ *
+ *	vercos(x) = 1 + cos(x)
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_vercos(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;		/* return COMPLEX value */
+	COMPLEX *ctmp;		/* complex cos(c) */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex trig function value
+	 */
+	ctmp = c_cos(c, epsilon);
+	if (ctmp == NULL) {
+		math_error("Failed to compute complex cos for complex vercos");
+		not_reached();
+	}
+	r = c_add(&_cone_, ctmp);
+
+	/*
+	 * return complex 1 + cos(x)
+	 */
+	comfree(ctmp);
+	return r;
+}
+
+
+/*
+ * c_avercos - inverse versed sine for COMPLEX values
+ *
+ * This uses the formula:
+ *
+ *	avercos(x) = acos(x - 1)
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_avercos(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;	/* inverse trig value result */
+	COMPLEX *x;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex inverse trig function value
+	 */
+	x = c_sub(c, &_cone_);
+	r = c_acos(x, epsilon);
+	comfree(x);
+
+	/*
+	 * return complex acos(1 - x)
+	 */
+	return r;
+}
+
+
+/*
+ * c_covercos - coversed sine for COMPLEX values
+ *
+ * This uses the formula:
+ *
+ *	covercos(x) = 1 + sin(x)
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_covercos(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;		/* return COMPLEX value */
+	COMPLEX *ctmp;		/* complex sin(c) */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex trig function value
+	 */
+	ctmp = c_sin(c, epsilon);
+	if (ctmp == NULL) {
+		math_error("Failed to compute complex sin for complex covercos");
+		not_reached();
+	}
+	r = c_add(&_cone_, ctmp);
+
+	/*
+	 * return complex 1 + sin(x)
+	 */
+	comfree(ctmp);
+	return r;
+}
+
+
+/*
+ * c_acovercos - inverse versed sine for COMPLEX values
+ *
+ * This uses the formula:
+ *
+ *	acovercos(x) = asin(x - 1)
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_acovercos(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;	/* inverse trig value result */
+	COMPLEX *x;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex inverse trig function value
+	 */
+	x = c_sub(c, &_cone_);
+	r = c_asin(x, epsilon);
+	comfree(x);
+
+	/*
+	 * return complex asin(x - 1)
 	 */
 	return r;
 }

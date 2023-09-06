@@ -127,6 +127,10 @@ E_FUNC COMPLEX *c_versin(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_aversin(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_coversin(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_acoversin(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_vercos(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_avercos(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_covercos(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_acovercos(COMPLEX *c, NUMBER *epsilon);
 
 
 

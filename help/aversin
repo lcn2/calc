@@ -11,11 +11,10 @@ TYPES
     return	real
 
 DESCRIPTION
-    Returns the inverse versed sine of x to a multiple of eps with error less in
+    Returns the inverse versed trigonometric sine of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    The inverse versed sine function is sometimes called avers, sometimes called aver,
-    may be defined as:
+    This function is sometimes called avers, or arcversin, is equivalent to:
 
 	aversin(x) = acos(1 - x)
 

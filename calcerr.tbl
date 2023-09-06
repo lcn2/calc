@@ -562,3 +562,15 @@ E_COVERSIN3	Too-large im(argument) for coversin
 E_ACOVERSIN1	Bad epsilon for acoversin
 E_ACOVERSIN2	Bad first argument for acoversin
 E_ACOVERSIN3	Too-large im(argument) for acoversin
+E_VERCOS1	Bad epsilon for vercos
+E_VERCOS2	Bad first argument for vercos
+E_VERCOS3	Too-large im(argument) for vercos
+E_AVERCOS1	Bad epsilon for avercos
+E_AVERCOS2	Bad first argument for avercos
+E_AVERCOS3	Too-large im(argument) for avercos
+E_COVERCOS1	Bad epsilon for covercos
+E_COVERCOS2	Bad first argument for covercos
+E_COVERCOS3	Too-large im(argument) for covercos
+E_ACOVERCOS1	Bad epsilon for acovercos
+E_ACOVERCOS2	Bad first argument for acovercos
+E_ACOVERCOS3	Too-large im(argument) for acovercos

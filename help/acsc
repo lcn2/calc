@@ -34,8 +34,8 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, cot, sec, csc
     asin, acos, atan, acot, asec
-    versin, coversin
-    aversin. acoversin
+    versin, coversin, vercos, avercos
+    aversin, acoversin, covercos, acovercos
     epsilon
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll

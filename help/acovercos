@@ -1,46 +1,45 @@
 NAME
-    acos - inverse trigonometric cosine
+    acovercos - inverse coversed trigonometric cosine
 
 SYNOPSIS
-    acos(x [,eps])
+    acovercos(x [,eps])
 
 TYPES
     x		number (real or complex)
     eps		0 < real < 1, defaults to epsilon()
 
-    return	real
+    return	number
 
 DESCRIPTION
-    Returns the inverse cosine of x to a multiple of eps with error less in
+    Calculate the inverse coversed trigonometric cosine of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    v = acos(x) is the number in [0, pi] for which cos(v) = x.
+    This function is sometimes called acvc, or arccovercos, is equivalent to:
+
+	acovercos(x) = asin(x - 1)
 
 EXAMPLE
-    ; print acos(.5, 1e-5), acos(.5, 1e-10), acos(.5, 1e-15), acos(.5, 1e-20)
-    1.0472 1.0471975512 1.047197551196598 1.04719755119659774615
+    ; print acovercos(.5, 1e-5), acovercos(.5, 1e-10), acovercos(.5, 1e-15), acovercos(.5, 1e-20)
+    0.5236 0.5235987756 0.523598775598299 0.52359877559829887308
 
-    ; print acos(5), acos(5i)
-    2.29243166956117768776i 1.57079632679489661923-2.31243834127275262025i
-
-    ; print acos(5+5i)
-    0.79039774680951249644-2.64919617780647114961i
+    ; print acovercos(1), acovercos(-5), acovercos(2 + 3i)
+    0 -1.57079632679489661923+2.47788873028847500485i 0.30760364953071124992+1.86416154415788242834i
 
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
-    NUMBER *qacos(NUMBER *x, NUMBER *eps)
-    COMPLEX *c_acos(COMPLEX *c, NUMBER *epsilon)
+    NUMBER *qacovercos(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_acovercos(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
     sin, cos, tan, cot, sec, csc
-    asin, atan, acot, asec, acsc
+    asin, acos, atan, acot, asec, acsc
     versin, coversin, vercos, avercos
     aversin, acoversin, covercos, acovercos
     epsilon
 
-## Copyright (C) 1999,2023  Landon Curt Noll
+## Copyright (C) 2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -56,8 +55,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1994/03/19 01:40:23
-## File existed as early as:	1994
+## Under source code control:	2023/09/05 23:30:08
+## File existed as early as:	2023
 ##
 ## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
 ## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

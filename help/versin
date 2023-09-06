@@ -11,11 +11,10 @@ TYPES
     return	number
 
 DESCRIPTION
-    Calculate the versed sine of x to a multiple of eps with error less in
+    Calculate the versed trigonometric sine of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    The versed sine function is sometimes called vers, sometimes called ver,
-    may be defined as:
+    This function is sometimes called vers, is equivalent to:
 
 	versin(x) = 1 - cos(x)
 
@@ -43,8 +42,8 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, cot, sec, csc
     asin, acos, atan, acot, asec, acsc
-    coversin
-    aversin. acoversin
+    versin, coversin, vercos, avercos
+    aversin, acoversin, covercos, acovercos
     epsilon
 
 ## Copyright (C) 2023  Landon Curt Noll
