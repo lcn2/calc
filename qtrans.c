@@ -1995,9 +1995,8 @@ qacoth(NUMBER *q, NUMBER *epsilon)
 NUMBER *
 qversin(NUMBER *q, NUMBER *epsilon)
 {
-	NUMBER *sin, *cos, *res;
-	NUMBER *versin;
-	long n;
+	NUMBER *res;
+	NUMBER *cos;
 
 	/*
 	 * firewall
@@ -2014,17 +2013,9 @@ qversin(NUMBER *q, NUMBER *epsilon)
 	/*
 	 * calculate trig function value
 	 */
-	n = -qilog2(epsilon);
-	qsincos(q, n + 2, &sin, &cos);
-	qfree(sin);
-	versin = qsub(&_qone_, cos);
+	cos = qcos(q, epsilon);
+	res = qsub(&_qone_, cos);
 	qfree(cos);
-
-	/*
-	 * round value to nearest epsilon
-	 */
-	res = qmappr(versin, epsilon, 24);
-	qfree(versin);
 
 	/*
 	 * return 1 - cos(x)
@@ -2151,9 +2142,7 @@ qaversin(NUMBER *q, NUMBER *epsilon)
 NUMBER *
 qcoversin(NUMBER *q, NUMBER *epsilon)
 {
-	NUMBER *sin, *cos, *res;
-	NUMBER *coversin;
-	long n;
+	NUMBER *sin, *res;
 
 	/*
 	 * firewall
@@ -2170,19 +2159,9 @@ qcoversin(NUMBER *q, NUMBER *epsilon)
 	/*
 	 * calculate trig function value
 	 */
-	n = -qilog2(epsilon);
-	if (qiszero(q) || n < 0)
-		return qlink(&_qzero_);
-	qsincos(q, n + 2, &sin, &cos);
-	qfree(cos);
-	coversin = qsub(&_qone_, sin);
+	sin = qsin(q, epsilon);
+	res = qsub(&_qone_, sin);
 	qfree(sin);
-
-	/*
-	 * round value to nearest epsilon
-	 */
-	res = qmappr(coversin, epsilon, 24);
-	qfree(coversin);
 
 	/*
 	 * return 1 - sin(x)
@@ -2312,9 +2291,7 @@ qacoversin(NUMBER *q, NUMBER *epsilon)
 NUMBER *
 qvercos(NUMBER *q, NUMBER *epsilon)
 {
-	NUMBER *sin, *cos, *res;
-	NUMBER *vercos;
-	long n;
+	NUMBER *cos, *res;
 
 	/*
 	 * firewall
@@ -2331,17 +2308,9 @@ qvercos(NUMBER *q, NUMBER *epsilon)
 	/*
 	 * calculate trig function value
 	 */
-	n = -qilog2(epsilon);
-	qsincos(q, n + 2, &sin, &cos);
-	qfree(sin);
-	vercos = qqadd(&_qone_, cos);
+	cos = qcos(q, epsilon);
+	res = qqadd(&_qone_, cos);
 	qfree(cos);
-
-	/*
-	 * round value to nearest epsilon
-	 */
-	res = qmappr(vercos, epsilon, 24);
-	qfree(vercos);
 
 	/*
 	 * return 1 + cos(x)
@@ -2468,9 +2437,7 @@ qavercos(NUMBER *q, NUMBER *epsilon)
 NUMBER *
 qcovercos(NUMBER *q, NUMBER *epsilon)
 {
-	NUMBER *sin, *cos, *res;
-	NUMBER *covercos;
-	long n;
+	NUMBER *sin, *res;
 
 	/*
 	 * firewall
@@ -2487,19 +2454,9 @@ qcovercos(NUMBER *q, NUMBER *epsilon)
 	/*
 	 * calculate trig function value
 	 */
-	n = -qilog2(epsilon);
-	if (qiszero(q) || n < 0)
-		return qlink(&_qzero_);
-	qsincos(q, n + 2, &sin, &cos);
-	qfree(cos);
-	covercos = qqadd(&_qone_, sin);
+	sin = qsin(q, epsilon);
+	res = qqadd(&_qone_, sin);
 	qfree(sin);
-
-	/*
-	 * round value to nearest epsilon
-	 */
-	res = qmappr(covercos, epsilon, 24);
-	qfree(covercos);
 
 	/*
 	 * return 1 + sin(x)

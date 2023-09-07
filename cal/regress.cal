@@ -3509,6 +3509,8 @@ define test_trig()
 	pi = pi(1e-20);
 
 	/* test versed trigonometric sine */
+	vrfy(versin(0, 1e-10) == 0,
+				strcat(str(tnum++), ': versin(0, 1e-10) == 0'));
 	vrfy(round(versin(0.2, 1e-10), 10) == 0.0199334222,
 	    strcat(str(tnum++),
 		   ': round(versin(0.2, 1e-10), 10) == 0.0199334222'));
@@ -3534,11 +3536,11 @@ define test_trig()
 		   ': round(versin(2 + 3i, 1e-10), 10) == 5.189625691+9.1092278938i'));
 
 	/* test inverse versed trigonometric sine */
+	vrfy(aversin(0) == 0,
+		    strcat(str(tnum++), ': aversin(0) == 0'));
 	vrfy(round(aversin(0.5, 1e-10), 10) == 1.0471975512,
 	    strcat(str(tnum++),
 		   ': round(aversin(0.5, 1e-10), 10) == 1.0471975512'));
-	vrfy(aversin(0) == 0,
-		    strcat(str(tnum++), ': aversin(0) == 0'));
 	vrfy(round(aversin(-5, 1e-10), 10) == 2.4778887303i,
 	    strcat(str(tnum++),
 		   ': round(aversin(-5, 1e-10), 10) == 2.4778887303i'));
@@ -3547,6 +3549,8 @@ define test_trig()
 		   ': round(aversin(2 + 3i, 1e-10), 10) == 1.8783999763+1.8641615439i'));
 
 	/* test coversed trigonometric sine */
+	vrfy(coversin(0, 1e-10) == 1,
+				strcat(str(tnum++), ': coversin(0, 1e-10) == 1'));
 	vrfy(round(coversin(0.2, 1e-10), 10) == 0.8013306692,
 	    strcat(str(tnum++),
 		   ': round(coversin(0.2, 1e-10), 10) == 0.8013306692'));
@@ -3572,6 +3576,9 @@ define test_trig()
 		   ': round(coversin(2 + 3i, 1e-10), 10) == -8.1544991469+4.16890696i'));
 
 	/* test inverse coversed trigonometric sine */
+	vrfy(round(acoversin(0, 1e-10), 10) == 1.5707963268,
+	    strcat(str(tnum++),
+		   ': round(acoversin(0.5, 1e-10), 10) == 1.5707963268'));
 	vrfy(round(acoversin(0.5, 1e-10), 10) == 0.5235987756,
 	    strcat(str(tnum++),
 		   ': round(acoversin(0.5, 1e-10), 10) == 0.5235987756'));
@@ -3585,6 +3592,8 @@ define test_trig()
 		   ': round(acoversin(2 + 3i, 1e-10), 10) == -0.3076036495-1.8641615442i'));
 
 	/* test versed trigonometric cosine */
+	vrfy(vercos(0, 1e-10) == 2,
+				strcat(str(tnum++), ': vercos(0, 1e-10) == 2'));
 	vrfy(round(vercos(0.2, 1e-10), 10) == 1.9800665778,
 	    strcat(str(tnum++),
 		   ': round(vercos(0.2, 1e-10), 10) == 1.9800665778'));
@@ -3610,6 +3619,9 @@ define test_trig()
 		   ': round(vercos(2 + 3i, 1e-10), 10) == -3.189625691-9.1092278938i'));
 
 	/* test inverse versed trigonometric cosine */
+	vrfy(round(avercos(0, 1e-10), 10) == 3.1415926536,
+	    strcat(str(tnum++),
+		   ': round(avercos(0, 1e-10), 10) == 3.1415926536'));
 	vrfy(round(avercos(0.5, 1e-10), 10) == 2.0943951024,
 	    strcat(str(tnum++),
 		   ': round(avercos(0.5, 1e-10), 10) == 2.0943951024'));
@@ -3623,6 +3635,8 @@ define test_trig()
 		   ': round(avercos(2 + 3i, 1e-10), 10) == 1.2631926773-1.8641615442i'));
 
 	/* test coversed trigonometric cosine */
+	vrfy(covercos(0, 1e-10) == 1,
+				strcat(str(tnum++), ': covercos(0, 1e-10) == 1'));
 	vrfy(round(covercos(0.2, 1e-10), 10) == 1.1986693308,
 	    strcat(str(tnum++),
 		   ': round(covercos(0.2, 1e-10), 10) == 1.1986693308'));
@@ -3648,6 +3662,9 @@ define test_trig()
 		   ': round(covercos(2 + 3i, 1e-10), 10) == 10.1544991469-4.16890696i'));
 
 	/* test inverse coversed trigonometric cosine */
+	vrfy(round(acovercos(0, 1e-10), 10) == 1.5707963268,
+	    strcat(str(tnum++),
+		   ': round(acovercos(0, 1e-10), 10) == 1.5707963268'));
 	vrfy(round(acovercos(0.5, 1e-10), 10) == 0.5235987756,
 	    strcat(str(tnum++),
 		   ': round(acovercos(0.5, 1e-10), 10) == 0.5235987756'));
