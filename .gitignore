@@ -59,6 +59,7 @@ fposval
 fposval.h
 func.show
 func.sort
+getpgid_tmp
 have_arc4random
 have_arc4random.h
 have_ban_pragma

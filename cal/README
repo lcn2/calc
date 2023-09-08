@@ -1268,18 +1268,6 @@ seedrandom.cal
     Blum primes for the modulus.
 
 
-set8700.cal
-
-    set8700_getA1() defined
-    set8700_getA2() defined
-    set8700_getvar() defined
-    set8700_f(set8700_x) defined
-    set8700_g(set8700_x) defined
-
-    Declare globals and define functions needed by dotest() (see
-    dotest.cal) to evaluate set8700.line a line at a time.
-
-
 set8700.line
 
     A line-by-line evaluation file for dotest() (see dotest.cal).
@@ -1667,15 +1655,7 @@ surd.cal
     Calculate using quadratic surds of the form: a + b * sqrt(D).
 
 
-test1700.cal
-
-    value
-
-    This resource files is used by regress.cal to test the read and
-    use keywords.
-
-
-test2600.cal
+test2600.numfunc.cal
 
     global defaultverbose
     global err
@@ -1701,7 +1681,7 @@ test2600.cal
     functions in terms of accuracy and roundoff.
 
 
-test2700.cal
+test2700.isqrt.cal
 
     global defaultverbose
     mknonnegreal()
@@ -1724,7 +1704,7 @@ test2700.cal
     complex values.
 
 
-test3100.cal
+test3100.matobj.cal
 
     obj res
     global md
@@ -1739,7 +1719,7 @@ test3100.cal
     a matrix.
 
 
-test3300.cal
+test3300.det.cal
 
     global defaultverbose
     global err
@@ -1751,7 +1731,7 @@ test3300.cal
     determinant tests.
 
 
-test3400.cal
+test3400.trig.cal
 
     global defaultverbose
     global err
@@ -1766,22 +1746,8 @@ test3400.cal
     This resource file is used by regress.cal to test trig functions.
     containing objects.
 
-test3500.cal
 
-    global defaultverbose
-    global err
-    testfrem(x, y, verbose)
-    testgcdrem(x, y, verbose)
-    testf(str, n, verbose)
-    testg(str, n, verbose)
-    testh(str, n, N, verbose)
-    test3500(verbose, n, N)
-
-    This resource file is used by regress.cal to test the functions frem,
-    fcnt, gcdrem.
-
-
-test4000.cal
+test4000.ptest.cal
 
     global defaultverbose
     global err
@@ -1814,7 +1780,7 @@ test4000.cal
     prevcand builtins.
 
 
-test4100.cal
+test4100.redc.cal
 
     global defaultverbose
     global err
@@ -1834,7 +1800,7 @@ test4100.cal
     This resource file is used by regress.cal to test REDC operations.
 
 
-test4600.cal
+test4600.fileop.cal
 
     stest(str [, verbose]) defined
     ttest([m, [n [,verbose]]]) defined
@@ -1846,7 +1812,7 @@ test4600.cal
     This resource file is used by regress.cal to test searching in files.
 
 
-test5100.cal
+test5100.newdecl.cal
 
     global a5100
     global b5100
@@ -1856,7 +1822,7 @@ test5100.cal
     declaration scope and order.
 
 
-test5200.cal
+test5200.globstat.cal
 
     global a5200
     static a5200
@@ -1868,7 +1834,7 @@ test5200.cal
     global/static bug.
 
 
-test8400.cal
+test8400.quit.cal
 
     test8400() defined
 
@@ -1876,7 +1842,7 @@ test8400.cal
     memory leaks.
 
 
-test8500.cal
+test8500.divmod.cal
 
     global err_8500
     global L_8500
@@ -1889,7 +1855,7 @@ test8500.cal
     This resource file is used by regress.cal to the // and % operators.
 
 
-test8600.cal
+test8600.maxargs.cal
 
     global min_8600
     global max_8600
@@ -1900,7 +1866,19 @@ test8600.cal
     allowing up to 1024 args to be passed to a builtin function.
 
 
-test8900.cal
+test8700.dotest.cal
+
+    set8700_getA1() defined
+    set8700_getA2() defined
+    set8700_getvar() defined
+    set8700_f(set8700_x) defined
+    set8700_g(set8700_x) defined
+
+    Declare globals and define functions needed by dotest() (see
+    dotest.cal) to evaluate set8700.line a line at a time.
+
+
+test8900.special.cal
 
     This function tests a number of calc resource functions contributed
     by Christoph Zurnieden.  These include:
@@ -1918,11 +1896,19 @@ test8900.cal
 	zeta2.cal
 
 
-unitfrac.cal
+test9300.frem.cal
 
-    unitfrac(x)
+    global defaultverbose
+    global err
+    testfrem(x, y, verbose)
+    testgcdrem(x, y, verbose)
+    testf(str, n, verbose)
+    testg(str, n, verbose)
+    testh(str, n, N, verbose)
+    test3500(verbose, n, N)
 
-    Represent a fraction as sum of distinct unit fractions.
+    This resource file is used by regress.cal to test the functions frem,
+    fcnt, gcdrem.
 
 
 toomcook.cal
@@ -1946,6 +1932,13 @@ toomcook.cal
     The function toomCook4(a,b) calls the function toomCook3(a,b) which
     calls built-in multiplication at a specific cut-off point. The
     squaring functions act in the same way.
+
+
+unitfrac.cal
+
+    unitfrac(x)
+
+    Represent a fraction as sum of distinct unit fractions.
 
 
 varargs.cal

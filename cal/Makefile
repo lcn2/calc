@@ -146,7 +146,10 @@ CALC_FILES= README alg_config.cal beer.cal bernoulli.cal \
 
 # These calc files are now obsolete and are removed by the install rule.
 #
-DEAD_CALC_FILES= lucas_tbl.cal
+DEAD_CALC_FILES= lucas_tbl.cal set8700.cal test1700.cal test2300.cal test2600.cal \
+	test2700.cal test3100.cal test3300.cal test3400.cal test3500.cal test4000.cal \
+	test4100.cal test4600.cal test5100.cal test5200.cal test8400.cal test8500.cal \
+	test8600.cal test8900.cal
 
 # These files are found (but not built) in the distribution
 #
