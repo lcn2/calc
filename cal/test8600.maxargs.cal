@@ -1,5 +1,5 @@
 /*
- * test8600 - 8600 series of the regress.cal test suite
+ * test8600.maxargs - test up to 1024 args being passed to a builtin function for test 86dd
  *
  * Copyright (C) 2000  Landon Curt Noll
  *

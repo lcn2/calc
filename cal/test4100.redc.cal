@@ -1,7 +1,7 @@
 /*
- * test4100 - 4100 series of the regress.cal test suite
+ * test4100.redc - test REDC operations for test 41dd
  *
- * Copyright (C) 1999  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2023  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *

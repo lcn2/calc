@@ -1,7 +1,7 @@
 /*
- * test4600 - 4600 series of the regress.cal test suite
+ *  test4600.fileop - 4600 series of the regress.cal test suite
  *
- * Copyright (C) 1999  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2023  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *

@@ -2594,12 +2594,12 @@ print '032: parsed test_newop()';
 
 
 /*
- * test 033-034: define test_xx_incdec and read test2300 for test 23dd
+ * test 033-034: define test_xx_incdec and read test2300.obj_incdec for test 23dd
  *
  * This function tests object increment/decrement.
  */
-read -once "test2300";
-print '033: read -once test2300';
+read -once "test2300.obj_incdec";
+print '033: read -once test2300.obj_incdec';
 /**/
 define test_xx_incdec()
 {
@@ -2945,15 +2945,15 @@ print '035: parsed test_round()';
 
 
 /*
- * test 036-037: define test_2600 and read test2600 for test 26dd
+ * test 036-037: define test_2600 and read test2600.numfunc for test 26dd
  *
  * This function tests certain numeric functions extensively.
  *
  * Test multiplication, sqrt(), exp(), ln(), power(), gcd(), complex
  * power, complex exp, complex log.
  */
-read -once "test2600";
-print '036: read -once test2600';
+read -once "test2600.numfunc";
+print '036: read -once test2600.numfunc';
 define test_2600()
 {
 	local tnum;	/* test number */
@@ -3110,12 +3110,12 @@ print '037: parsed test_2600()';
 
 
 /*
- * test 038-039: define test_2700 and read test2700 for test 27dd
+ * test 038-039: define test_2700 and read test2700.isqrt for test 27dd
  *
  * This function tests complex sqrt.
  */
-read -once "test2700";
-print '038: read -once test2700';
+read -once "test2700.isqrt";
+print '038: read -once test2700.isqrt';
 define test_2700()
 {
 	local tnum;	/* test number */
@@ -3380,12 +3380,12 @@ print '044: parsed test_strings()';
 
 
 /*
- * test 045-046: define test_matobj and read test3100 for test 31dd
+ * test 045-046: define test_matobj and read test3100.matobj for test 31dd
  *
  * This function tests determinants of a matrix containing objects.
  */
-read -once "test3100";
-print '045: read -once test3100';
+read -once "test3100.matobj";
+print '045: read -once test3100.matobj';
 /**/
 define test_matobj()
 {
@@ -3505,12 +3505,12 @@ print '047: parsed test_poly()';
 
 
 /*
- * test 048-049: define test_det for test 33dd
+ * test 048-049: define test3300.det for test 33dd
  *
  * This function tests more determinant functionality.
  */
-read -once "test3300";
-print '048: read -once test3300';
+read -once "test3300.det";
+print '048: read -once test3300.det';
 /**/
 define test_det()
 {
@@ -3527,12 +3527,12 @@ print '049: parsed test_det()';
 
 
 /*
- * test 050-051: define test_trig and read test3400 for test 34dd
+ * test 050-051: define test_trig and read test3400.trig for test 34dd
  *
  * This function tests common trig functions.
  */
-read -once "test3400";
-print '050: read -once test3400';
+read -once "test3400.trig";
+print '050: read -once test3400.trig';
 /**/
 define test_trig()
 {
@@ -3722,15 +3722,15 @@ print '051: parsed test_trig()';
 
 
 /*
- * test 052-052: define test_frem and read test9300 for test 93dd
+ * test 052-052: define test_frem and read test9300.frem for test 93dd
  *
- * This function tests of the functions frem, fcnt, gcdrem.
+ * This function tests of functions frem, fcnt, gcdrem.
  *
  * NOTE: We moved test3500 to test9300.  We parse this code here,
  *	 however we execute this code as a 9300 test.
  */
-read -once "test9300";
-print '052: read -once test9300';
+read -once "test9300.frem";
+print '052: read -once test9300.frem';
 /**/
 define test_frem()
 {
@@ -4049,12 +4049,12 @@ print '066: parsed test_noarg()';
 
 
 /*
- * test 067-068: define test_ptest and read test4000 for test 40dd
+ * test 067-068: define test_ptest and read test4000.ptest for test 40dd
  *
  * This function tests more the functions such as ptest, nextcand, prevcand.
  */
-read -once "test4000";
-print '067: read -once test4000';
+read -once "test4000.ptest";
+print '067: read -once test4000.ptest';
 /**/
 define test_ptest()
 {
@@ -4070,12 +4070,12 @@ print '068: parsed test_ptest()';
 
 
 /*
- * test 069-070: define test_redc and read test4100 for test 41dd
+ * test 069-070: define test_redc and read test4100.redc for test 41dd
  *
  * This function test REDC operations.
  */
-read -once "test4100";
-print '069: read -once test4100';
+read -once "test4100.redc";
+print '069: read -once test4100.redc';
 /**/
 define test_redc()
 {
@@ -4525,12 +4525,12 @@ print '076: parsed test_objmat()';
 
 
 /*
- * test 077-078: define test_fileop and variables for test 46dd
+ * test 077-078: define test_fileop and variables and read test4600.fileop for test 46dd
  *
  * This function tests file operations.
  */
-read -once "test4600";
-print '077: read -once test4600';
+read -once "test4600.fileop";
+print '077: read -once  test4600.fileop';
 /**/
 define test_fileop()
 {
@@ -4976,12 +4976,12 @@ print '125: parsed test_filesearch()';
 
 
 /*
- * test 126-127: define test_newdecl and read test5100 for test 51dd
+ * test 126-127: define test_newdecl and read test5100.newdecl for test 51dd
  *
  * This function tests the code generator declaration scope and order.
  */
-read -once "test5100";
-print '126: read -once test5100';
+read -once "test5100.newdecl";
+print '126: read -once test5100.newdecl';
 /**/
 define test_newdecl()
 {
@@ -5039,12 +5039,12 @@ print '127: parsed test_newdecl()';
 
 
 /*
- * test 128-129: define test_globstat for test 52dd
+ * test 128-129: define test_globstat and read test5200.globstat for test 52dd
  *
  * This function tests the fix of an old global/static bug.
  */
-read -once "test5200";
-print '128: read -once test5200';
+read -once "test5200.globstat";
+print '128: read -once test5200.globstat';
 /**/
 define test_globstat()
 {
@@ -7995,7 +7995,7 @@ print '186: parsed test_bigcomb()';
 
 
 /*
- * test 187-188: define test_natnumset for test 81dd
+ * test 187-188: define test_natnumset and read natnumset for test 81dd
  *
  * The test_natnumset is used to test natural numbers not exceeding a fixed bound.
  */
@@ -8730,26 +8730,26 @@ print;
 print '8000: Beginning read test';
 value = 0;
 vrfy(value == 0,		  '8001: value == 0');
-read "test1700";
-print				  '8002: read "test1700";';
+read "test8000.read";
+print				  '8002: read "test8000.read";';
 vrfy(value == 1,		  '8003: value == 1');
-read -once "test1700";
-print				  '8004: read -once "test1700";';
+read -once "test8000.read";
+print				  '8004: read -once "test8000.read";';
 vrfy(value == 1,		  '8005: value == 1');
-read "test1700.cal";
-print				  '8006: read "test1700.cal";';
+read "test8000.read.cal";
+print				  '8006: read "test8000.read.cal";';
 vrfy(value == 2,		  '8007: value == 2');
-read -once "test1700.cal"
-print				  '8008: read -once "test1700.cal";';
+read -once "test8000.read.cal"
+print				  '8008: read -once "test8000.read.cal";';
 vrfy(value == 2,		  '8009: value == 2');
-read "test1700.cal";
-print				  '8010: read "test1700.cal";';
+read "test8000.read.cal";
+print				  '8010: read "test8000.read.cal";';
 vrfy(value == 3,		  '8011: value == 3');
-{++value;} read "test1700.cal";
-print				  '8012: {++value;} read "test1700.cal";';
+{++value;} read "test8000.read.cal";
+print				  '8012: {++value;} read "test8000.read.cal";';
 vrfy(value == 5,		  '8013: value == 5');
-{++value;} read -once "test1700.cal";
-print				  '8014: {++value;} read -once "test1700.cal";';
+{++value;} read -once "test8000.read.cal";
+print				  '8014: {++value;} read -once "test8000.read.cal";';
 vrfy(value == 6,		  '8015: value == 6');
 print '8016: Ending read test';
 
@@ -8791,43 +8791,43 @@ print	'8311: Ending define tests';
 
 
 /*
- * test 84dd: quit tests
+ * test 84dd: quit tests and read test8400.quit
  */
 print;
 return test_quit();
-read -once test8400;
-print	'8404: read -once test8400';
+read -once test8400.quit;
+print	'8404: read -once test8400.quit';
 vrfy(test8400() == 64434,	'8405: test8400() == 64434');
 print	'8406: Ending test_quit';
 
 
 /*
- * test 85dd: test_divmod - pseudo-random tests on the // and % with various rounding modes
+ * test 85dd: pseudo-random tests on the // and % with various rounding modes and read test8500.divmod
  */
 print;
 print '8500: Starting test of divmod'
-read -once "test8500";
+read -once "test8500.divmod";
 
 
 /*
- * test 86dd: test_maxargs - test up to 1024 args being passed to a builtin function
+ * test 86dd: test up to 1024 args being passed to a builtin function and read test8600.maxargs
  */
 print;
 print '8600: Starting test of up to 1024 args'
-read -once "test8600";
+read -once "test8600.maxargs";
 
 
 /*
- * test 87dd: read dotest, set8700 for test 78dd
+ * test 87dd: read dotest, test8700.dotest
  *
- * We use the dotest driver to evaluate test-97xx data files.
+ * We use the dotest driver to evaluate set8700.line data files.
  */
 print;
 print '8700: Starting dotest runs'
 print '8701: read -once "dotest"';
 read -once "dotest";
-print '8702: read -once "set8700"';
-read -once "set8700";
+print '8702: read -once "test8700.dotest"';
+read -once "test8700.dotest";
 vrfy(dotest("set8700.line", 8703) == 0,
      '8703: dotest("set8700.line", 8703) == 0');
 
@@ -8840,17 +8840,17 @@ return test_exponentiation();
 
 
 /*
- * test 89dd: calc resource functions by Christoph Zurnieden
+ * test 89dd: test calc resource functions by Christoph Zurnieden and read test8900.special
  */
 print;
 print '8900: Starting test of calc resource functions by Christoph Zurnieden';
-print '8901: read -once "test8900"';
-read -once "test8900";
+print '8901: read -once "test8900.special"';
+read -once "test8900.special";
 print '8902: about to run test8900(1,,8903)';
 testnum = test8900(1,,8903);
 print "8941: ecnt ==", ecnt;
-print '8942: ecnt = 211;'
-ecnt = 211;
+print '8942: ecnt = 214;'
+ecnt = 214;
 
 
 /*
@@ -9376,128 +9376,262 @@ return test_frem();
 
 
 /*
- * test 94dd: read various calc resource files
+ * test 94dd + 95dd: read various calc resource files
  *
  * We read most of the standard calc resource files.  There are a few
- * resource files that are not read:
- *
- *	beer.cal	- prints a bunch of things when loaded
- *	hello.cal	- designed to go into an infinite loop
- *	lucas.cal	- already read by this file
- *	lucas_chk.cal	- already read by this file
- *	regress.cal	- this file
- *	surd.cal	- already read by this file
- *	test9999.cal	- files of this form are already read by this file
- *	xx_print.cal	- prints a bunch of things when loaded
+ * resource files that are not read because their are infinite loops,
+ * or print lots of stuff when loaded, or were read by test8900.special.cal,
+ * or were already read by regressl.cal.
  *
  * We want to do this 2nd to last; ahead of any final cleanup and behind
  * all of real actions of regress.cal.
  */
 print;
 print	'9400: Starting read of selected calc resource files';
+
+read -once alg_config;
+print	'9401: read -once alg_config';
+
+print	'9402: skipping read -once beer because it is an infinite loop';
+
 read -once bernoulli;
-print	'9401: read -once bernoulli';
+print	'9403: read -once bernoulli';
+
+print	'9404: skipping read -once bernpoly - will be read via test8900.special';
+
 read -once bigprime;
-print	'9402: read -once bigprime';
-read -once chrem;
-print	'9403: read -once chrem';
-read -once deg;
-print	'9404: read -once deg';
-read -once ellip;
-print	'9405: read -once ellip';
-read -once mersenne;
-print	'9406: read -once mersenne';
-read -once mfactor;
-print	'9407: read -once mfactor';
-read -once mod;
-print	'9408: read -once mod';
-read -once natnumset;
-print	'9409: read -once natnumset';
-read -once pell;
-print	'9410: read -once pell';
-read -once pi;
-print	'9411: read -once pi';
-read -once pix;
-print	'9412: read -once pix';
-read -once pollard;
-print	'9413: read -once pollard';
-read -once poly;
-print	'9414: read -once poly';
-read -once prompt;
-print	'9415: read -once prompt';
-read -once psqrt;
-print	'9416: read -once psqrt';
-read -once quat;
-print	'9417: read -once quat';
-read -once randbitrun;
-print	'9418: read -once randbitrun';
-read -once randmprime;
-print	'9419: read -once randmprime';
-read -once randombitrun;
-print	'9420: read -once randombitrun';
-read -once randomrun;
-print	'9421: read -once randomrun';
-read -once randrun;
-print	'9422: read -once randrun';
-read -once seedrandom;
-print	'9423: read -once seedrandom';
-read -once solve;
-print	'9424: read -once solve';
-read -once sumsq;
-print	'9425: read -once sumsq';
-read -once unitfrac;
-print	'9426: read -once unitfrac';
-read -once varargs;
-print	'9427: read -once varargs';
-read -once qtime;
-print	'9428: read -once qtime';
+print	'9405: read -once bigprime';
+
+print	'9406: skipping read -once brentsolve - will be read via test8900.special';
+
 read -once chi;
-print	'9429: read -once chi';
-read -once intfile;
-print	'9430: read -once intfile';
-read -once lucas;
-print	'9431: read -once lucas';
-read -once natnumset;
-print	'9433: read -once natnumset';
-read -once repeat;
-print	'9434: read -once repeat';
-read -once screen;
-print	'9435: read -once screen';
-read -once linear;
-print	'9436: read -once linear';
-print	'9437: skipping read -once beer.cal because it is an infinite loop';
-print	'9438: skipping read -once hello.cal because it is an infinite loop';
-print	'9439: skipping read -once xx_print.cal because it is a printing demo';
-read -once sumtimes;
-print	'9440: read -once sumtimes';
+print	'9407: read -once chi';
+
+read -once chrem;
+print	'9408: read -once chrem';
+
+read -once comma;
+print	'9409: read -once comma';
+
+print	'9410: skipping read -once constants - will be read via test8900.special';
+
+read -once deg;
+print	'9411: read -once deg';
+
 read -once dms;
-print	'9441: read -once dms';
+print	'9412: read -once dms';
+
+print	'9413: skipping read -once dotest - will be read via test8700.dotest';
+
+read -once ellip;
+print	'9414: read -once ellip';
+
+print	'9415: skipping read -once factorial - will be read via test8900.special';
+
+print	'9416: skipping read -once factorial2 - will be read via test8900.special';
+
+read -once fnv_tool;
+print	'9417: read -once fnv_tool';
+
+read -once gvec;
+print	'9418: read -once gvec';
+
+print	'9419: skipping read -once hello.cal because it is an infinite loop';
+
 read -once hms;
-print	'9442: read -once hms';
-print	'9443: Ending read of selected calc resource files';
+print	'9420: read -once hms';
+
+print	'9421: skipping read -once infinities - will be read via test8900.special';
+
+read -once intfile;
+print	'9422: read -once intfile';
+
+print	'9423: skipping read -once intnum - will be read via test8900.special';
+
+print	'9424: skipping read -once lambertw - will be read via test8900.special';
+
+read -once linear;
+print	'9425: read -once linear';
+
+read -once lnseries;
+print	'9426: read -once lnseries';
+
+print	'9427: skipping read -once lucas - will be read via regress';
+
+print	'9428: skipping read -once lucas_chk - will be read via regress';
+
+read -once mersenne;
+print	'9429: read -once mersenne';
+
+read -once mfactor;
+print	'9430: read -once mfactor';
+
+read -once mod;
+print	'9431: read -once mod';
+
+read -once natnumset;
+print	'9432: read -once natnumset';
+
+read -once palindrome;
+print	'9433: read -once palindrome';
+
+read -once pell;
+print	'9434: read -once pell';
+
+read -once pi;
+print	'9435: read -once pi';
+
+read -once pix;
+print	'9436: read -once pix';
+
+read -once pollard;
+print	'9437: read -once pollard';
+
+read -once poly;
+print	'9438: read -once poly';
+
+read -once prompt;
+print	'9439: read -once prompt';
+
+read -once psqrt;
+print	'9440: read -once psqrt';
+
+read -once qtime;
+print	'9441: read -once qtime';
+
+read -once quat;
+print	'9442: read -once quat';
+
+read -once randbitrun;
+print	'9443: read -once randbitrun';
+
+read -once randmprime;
+print	'9444: read -once randmprime';
+
+read -once randombitrun;
+print	'9445: read -once randombitrun';
+
+read -once randomrun;
+print	'9446: read -once randomrun';
+
+read -once randrun;
+print	'9447: read -once randrun';
+
+print	'9448: skipping read -once regress - will be read via regress';
+
+read -once repeat;
+print	'9449: read -once repeat';
+
+read -once screen;
+print	'9450: read -once screen';
+
+read -once seedrandom;
+print	'9451: read -once seedrandom';
+
+read -once smallfactors;
+print	'9452: read -once smallfactors';
+
+read -once solve;
+print	'9453: read -once solve';
+
+print	'9454: skipping read -once specialfunctions - will be read via test8900.special';
+
+read -once splitbits;
+print	'9455: read -once splitbits';
+
+print	'9456: skipping read -once statistics - will be read via test8900.special';
+
+read -once strings;
+print	'9457: read -once strings';
+
+read -once sumsq;
+print	'9458: read -once sumsq';
+
+read -once sumtimes;
+print	'9459: read -once sumtimes';
+
+print	'9460: skipping read -once surd - will be read via regress';
+
+print   '9461: skipping read -once test2300.obj_incdec - will be read via regress';
+
+print   '9462: skipping read -once test2600.numfunc - will be read via regress';
+
+print   '9463: skipping read -once test2700.isqrt - will be read via regress';
+
+print   '9464: skipping read -once test3100.matobj - will be read via regress';
+
+print   '9465: skipping read -once test3300.det - will be read via regress';
+
+print   '9466: skipping read -once test3400.trig - will be read via regress';
+
+print   '9467: skipping read -once test4000.ptest - will be read via regress';
+
+print   '9468: skipping read -once test4100.redc - will be read via regress';
+
+print   '9469: skipping read -once test4600 - will be read via regress';
+
+print   '9470: skipping read -once test5100.newdecl - will be read via regress';
+
+print   '9471: skipping read -once test5200.globstat - will be read via regress';
+
+print   '9472: skipping read -once test8000.read - will be read via regress';
+
+print   '9473: skipping read -once test8400.quit - will be read via regress';
+
+print   '9474: skipping read -once test8500.divmod - will be read via regress';
+
+print   '9475: skipping read -once test8600.maxargs - will be read via regress';
+
+print   '9476: skipping read -once test8700.dotest - will be read via regress';
+
+print   '9477: skipping read -once test8900.special - will be read via regress';
+
+print   '9478: skipping read -once test9300.frem - will be read via regress';
+
+print	'9479: skipping read -once toomcook - will be read via test8900.special';
+
+read -once unitfrac;
+print	'9480: read -once unitfrac';
+
+read -once varargs;
+print	'9481: read -once varargs';
+
+read -once write2file;
+print	'9482: read -once write2file';
+
+print	'9483: skipping read -once xx_print.cal because it is a printing demo';
+
+print	'9484: skipping read -once zeta2 - will be read via test8900.special';
+
+print	'9485: Ending read of selected calc resource files';
+
+
+/* ********************************************************* */
+/* NOTE: ==> Reserved for more read tests 9500-9599 here <== */
+/* ********************************************************* */
 
 
 /*
- * test 95dd: dupvar_warn and redecl_warn testing
+ * test 96dd: dupvar_warn and redecl_warn testing
  */
 print;
-print '9500: Starting test of dupvar_warn and redecl_warn config parameters';
-vrfy(config("redecl_warn",0),	  '9501: config("redecl_warn",0)');
-vrfy(config("dupvar_warn",0),	  '9502: config("dupvar_warn",0)');
-vrfy(u_glob == 6,		  '9503: u_glob == 6');
+print '9600: Starting test of dupvar_warn and redecl_warn config parameters';
+vrfy(config("redecl_warn",0),	  '9601: config("redecl_warn",0)');
+vrfy(config("dupvar_warn",0),	  '9602: config("dupvar_warn",0)');
+vrfy(u_glob == 6,		  '9603: u_glob == 6');
 global u_glob = 555;
-print				  '9504: declare u_glob';
-vrfy(u_glob == 555,		  '9505: u_glob == 555');
+print				  '9604: declare u_glob';
+vrfy(u_glob == 555,		  '9605: u_glob == 555');
 define func_8650(u_glob) { local u_glob; return u_glob; }
-print				  '9506: u_glob as both local and parameter';
+print				  '9606: u_glob as both local and parameter';
 define func_8650a(u_glob) { static u_glob; return u_glob; }
-print				  '9507: u_glob as both static and parameter';
-vrfy(config("redecl_warn",1)==0,  '9508: config("redecl_warn",1)==0');
-vrfy(config("dupvar_warn",1)==0,  '9509: config("dupvar_warn",1)==0');
+print				  '9607: u_glob as both static and parameter';
+vrfy(config("redecl_warn",1)==0,  '9608: config("redecl_warn",1)==0');
+vrfy(config("dupvar_warn",1)==0,  '9609: config("dupvar_warn",1)==0');
 
 
 /* ************************************************ */
-/* NOTE: ==> Room for new tests 9600-98899 here <== */
+/* NOTE: ==> Room for new tests 9700-98899 here <== */
 /* ************************************************ */
 
 

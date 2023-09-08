@@ -1,7 +1,7 @@
 /*
- * test8900 - 8900 series of the regress.cal test suite
+ * test8900.special - test calc resource functions by Christoph Zurnieden for test 89dd
  *
- * Copyright (C) 2013,2021 Christoph Zurnieden
+ * Copyright (C) 2013,2021,2023 Christoph Zurnieden
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License

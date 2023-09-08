@@ -1,9 +1,7 @@
 /*
- * test5200 - 5200 series of the regress.cal test suite
+ * test8400.quit - test quit for test 84dd
  *
- * Copyright (C) 1999  Ernest Bowen and Landon Curt Noll
- *
- * Primary author:  Ernest Bowen
+ * Copyright (C) 1999,2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -19,30 +17,28 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1997/02/07 02:48:10
- * File existed as early as:	1997
+ * Under source code control:	1999/10/31 01:00:03
+ * File existed as early as:	1999
  *
+ * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
  * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
-defaultverbose = 1;	/* default verbose value */
+print "8401: in test8400.cal";
 
 /*
- * test the fix of a global/static bug
- *
- * Given the following:
- *
- *	global a = 10;
- *	static a = 20;
- *	define f(x) = a + x;
- *	define g(x) {global a = 30; return a + x;}
- *	define h(x) = a + x;
- *
- * Older versions of
+ * test8400 - dummy function to allow a check of quit-based memory leaks
  */
-global a5200 = 10;
-static a5200 = 20;
-define f5200(x) = a5200 + x;
-define g5200(x) {global a5200 = 30; return a5200 + x;}
-define h5200(x) = a5200 + x;
+define test8400()
+{
+    local x8401 = 19937;    /* watch for lost memory */
+    static s8401 = 44497;   /* watch for lost memory */
+
+    return x8401+s8401;
+}
+print "8402: parsed test8400()";
+vrfy(test8400() == 64434,	    '8403: test8400() == 64434');
+
+quit;
+prob('quit did not end test8400.cal');

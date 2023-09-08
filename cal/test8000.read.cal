@@ -1,9 +1,7 @@
 /*
- * test3100 - 3100 series of the regress.cal test suite
+ * test8000.read - test read operation for test 80dd
  *
- * Copyright (C) 1999  Ernest Bowen and Landon Curt Noll
- *
- * Primary author:  Ernest Bowen
+ * Copyright (C) 1999,2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -19,18 +17,12 @@
  * received a copy with calc; if not, write to Free Software Foundation, Inc.
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Under source code control:	1995/11/28 11:56:57
- * File existed as early as:	1995
+ * Under source code control:	1994/03/14 23:12:51
+ * File existed as early as:	1994
  *
+ * chongo <was here> /\oo/\	http://www.isthe.com/chongo/
  * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
 
-obj res {r};
-global md;
-define res_test(a) = !ismult(a.r, md);
-define res_sub(a,b) {local obj res v = {(a.r - b.r) % md}; return v;};
-define res_mul(a,b) {local obj res v = {(a.r * b.r) % md}; return v;};
-define res_neg(a) {local obj res v = {(-a.r) % md}; return v;};
-define res_inv(a) {local obj res v = {minv(a.r, md)}; return v;};
-define res(x) {local obj res v = {x % md}; return v;};
+++value;

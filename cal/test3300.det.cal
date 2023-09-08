@@ -1,7 +1,7 @@
 /*
- * test3300 - 3300 series of the regress.cal test suite
+ * test3300.det - test determinants of a matrix containing objects for test 31dd
  *
- * Copyright (C) 1999  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2023  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *

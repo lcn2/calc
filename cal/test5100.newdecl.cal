@@ -1,7 +1,7 @@
 /*
- * test5100 - 5100 series of the regress.cal test suite
+ * test5100.newdecl - test code generator declaration scope and order for test 51dd
  *
- * Copyright (C) 1999,2021  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2021,2023  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *

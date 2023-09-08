@@ -133,14 +133,16 @@ CALC_FILES= README alg_config.cal beer.cal bernoulli.cal \
 	natnumset.cal palindrome.cal pell.cal pi.cal pix.cal pollard.cal \
 	poly.cal prompt.cal psqrt.cal qtime.cal quat.cal randbitrun.cal \
 	randmprime.cal randombitrun.cal randomrun.cal randrun.cal regress.cal \
-	repeat.cal screen.cal seedrandom.cal set8700.cal set8700.line \
-	smallfactors.cal solve.cal specialfunctions.cal splitbits.cal \
-	statistics.cal strings.cal sumsq.cal sumtimes.cal surd.cal \
-	test1700.cal test2300.cal test2600.cal test2700.cal test3100.cal \
-	test3300.cal test3400.cal test4000.cal test4100.cal test4600.cal \
-	test5100.cal test5200.cal test8400.cal test8500.cal test8600.cal \
-	test8900.cal test9300.cal toomcook.cal unitfrac.cal varargs.cal \
-	write2file.cal xx_print.cal zeta2.cal
+	repeat.cal screen.cal seedrandom.cal set8700.line smallfactors.cal \
+	solve.cal specialfunctions.cal splitbits.cal statistics.cal \
+	strings.cal sumsq.cal sumtimes.cal surd.cal test2300.obj_incdec.cal \
+	test2600.numfunc.cal test2700.isqrt.cal test3100.matobj.cal \
+	test3300.det.cal test3400.trig.cal test4000.ptest.cal \
+	test4100.redc.cal test4600.fileop.cal test5100.newdecl.cal \
+	test5200.globstat.cal test8000.read.cal test8400.quit.cal \
+	test8500.divmod.cal test8600.maxargs.cal test8700.dotest.cal \
+	test8900.special.cal test9300.frem.cal toomcook.cal unitfrac.cal \
+	varargs.cal write2file.cal xx_print.cal zeta2.cal
 
 # These calc files are now obsolete and are removed by the install rule.
 #
@@ -256,7 +258,7 @@ clobber: clean
 	    echo ${RM} -rf .DS_Store; \
 	    ${RM} -rf .DS_Store; \
 	fi
-	-${Q} for i in ${DEAD_CALC_FILES} /dev/null; do \
+	-${Q} for i in ${DEAD_CALC_FILES} test082.cal outfile /dev/null; do \
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \

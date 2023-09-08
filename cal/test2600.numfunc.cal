@@ -1,7 +1,7 @@
 /*
- * test2600 - 2600 series of the regress.cal test suite
+ * test2600.builtin0 - test numeric functions extensively for test 26dd
  *
- * Copyright (C) 1999,2021  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2021,2023  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *

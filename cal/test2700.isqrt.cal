@@ -1,7 +1,7 @@
 /*
- * test2700 - 2700 series of the regress.cal test suite
+ * test2700.isqrt - test complex sqrt for test 27dd
  *
- * Copyright (C) 1999,2021  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2021,2023  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *

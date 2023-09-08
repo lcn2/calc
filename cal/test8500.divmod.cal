@@ -1,7 +1,7 @@
 /*
- * test8500 - 8500 series of the regress.cal test suite
+ * test8500.divmod - test // and % with various rounding mode for test 85dd
  *
- * Copyright (C) 1999,2021  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2021,2023  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *

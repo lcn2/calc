@@ -1,7 +1,7 @@
 /*
- * test3400 - 3400 series of the regress.cal test suite
+ * test3400.trig - test common trig functions for test 34dd
  *
- * Copyright (C) 1999  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2023  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *

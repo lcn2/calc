@@ -1,7 +1,7 @@
 /*
- * test4000 - 4000 series of the regress.cal test suite
+ * test4000.ptest - test ptest, nextcand, prevcand for test 40dd
  *
- * Copyright (C) 1999  Ernest Bowen and Landon Curt Noll
+ * Copyright (C) 1999,2023  Ernest Bowen and Landon Curt Noll
  *
  * Primary author:  Ernest Bowen
  *

@@ -27,6 +27,7 @@ align32
 align32.h
 args.h
 cal/.all
+cal/test082.cal
 calc
 calc-static
 calc.1
@@ -150,6 +151,7 @@ longbits
 longbits.h
 Makefile.our
 NOTES
+outfile
 sample_many
 sample_many-static
 sample_rand

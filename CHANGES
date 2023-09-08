@@ -145,6 +145,31 @@ The following are the changes from calc version 2.14.3.5 to date:
     which code.  Indicated where there is room for new tests.
     Expanded the end of test numbers from 9999 to  99999.
 
+    To make the meaning a bit more clear in cal/regress.cal, we have
+    renamed the following test calc resource files that are related to
+    the calc regression test suite:
+
+	cal/test1700.cal -> cal/test8000.read.cal
+	cal/test2300.cal -> cal/test2300.obj_incdec.cal
+	cal/test2600.cal -> cal/test2600.numfunc.cal
+	cal/test2700.cal -> cal/test2700.isqrt.cal
+	cal/test3100.cal -> cal/test3100.matobj.cal
+	cal/test3400.cal -> cal/test3400.trig.cal
+	cal/test4000.cal -> cal/test4000.ptest.cal
+	cal/test4100.cal -> cal/test4100.redc.cal
+	cal/test4600.cal -> cal/test4600.fileop.cal
+	cal/test5100.cal -> cal/test5100.newdecl.cal
+	cal/test5200.cal -> cal/test5200.globstat.cal
+	cal/test8400.cal -> cal/test8400.quit.cal
+	cal/test8500.cal -> cal/test8500.divmod.cal
+	cal/test8600.cal -> cal/test8600.maxargs.cal
+	cal/set8700.cal -> cal/test8700.dotest.cal
+	cal/test8900.cal -> cal/test8900.special.cal
+	cal/test9300.cal -> cal/test9300.frem.cal
+
+    Added to test 94dd, read of a number of new calc resource files
+    that are not already read as a result of the calc regression test suite.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

@@ -1,5 +1,5 @@
 /*
- * test9300 - 9300 series of the regress.cal test suite
+ * test9300.frem - test of functions frem, fcnt, gcdrem for test 93dd
  *
  * Copyright (C) 1999,2023  Ernest Bowen and Landon Curt Noll
  *
