@@ -23,7 +23,16 @@
  * Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
  */
 
+
 /*
+ * IMPORTANT NOTE: When adding new tests, look for comments with:
+ *
+ *	* *********************************************** *
+ *	* NOTE: ==> Room for new tests ....-.... <== here *
+ *	* *********************************************** *
+ *
+ * Select test numbers using a new block of a multiple of 100 test numbers.
+ *
  * Test the correct execution of the calculator by reading this resource file.
  * Errors are reported with '****' messages, or worse.	:-)
  *
@@ -34,32 +43,36 @@
  */
 
 
+/*
+ * test 000-002: Start of the regression test suite
+ */
 print '000: Beginning regression tests';
 print '001: Some of these tests may take a while ...';
 print '002: Within each section, output should be numbered sequentially';
 
 
+/*
+ * test 003: define regression test global variables and error counts
+ */
 global prob;				/* libregress.cal problem counter */
 prob = 0;				/* clear problem counter */
-
 errcount(0),;				/* clear error count */
 errmax(-1),;				/* prevent errcount from aborting */
-
 global ecnt;				/* expected value of errcount() */
 ecnt = 0;				/* clear expected errcount() value */
-
 initcfg = config("all", "newstd");	/* set config to startup default */
 defcfg = config("all");			/* capture the default config */
 config("resource_debug", 0),;		/* disable resource startup messages */
 config("calc_debug", 0),;		/* disable internal debugging */
 config("verbose_quit", 0),;		/* disable quit messages */
 startcfg = config("all");		/* save state for later use */
-
 print '003: parsed global definitions';
 
 
 /*
- * vrfy - vrfy that a test is true
+ * test 004: define vrfy
+ *
+ * This function verifies that a regress test is true and passed.
  *
  * Counts and reports errors or prints test string if successful.
  *
@@ -87,30 +100,22 @@ print '004: parsed vrfy()';
 
 
 /*
- * prob - alternate error notification and count
+ * test 005: define prob
+ *
+ * This function is used as a regress test error notification and error count.
  */
 define prob(str)
 {
 	print '****' , str;
 	++prob;
 }
-print '005: parsed prob(str)';
+print '005: parsed prob()';
 
 
 /*
- * getglobalvar - used to return a global value
- */
-define getglobalvar()
-{
-	global	globalvar;
-
-	return globalvar;
-}
-print '006: parsed getglobalvar()';
-
-
-/*
- * Test boolean operations and IF tests.
+ * test 006: define test_booleans for test 30d + 31d + 32d
+ *
+ * This function tests boolean operations and IF statements.
  *
  * Some of these tests are done twice, once to print the message and
  * once to count any errors.  This means that some successful tests
@@ -186,11 +191,23 @@ define test_booleans()
 
 	print '323: Ending test_booleans';
 }
-print '007: parsed test_booleans()';
+print '006: parsed test_booleans()';
 
 
 /*
- * Test variables, simple assignments, AND and OR operators, short-circuit eval
+ * test 007-008: define test_variables, test_variables for test 35d + 36d + 37d + 38d
+ *
+ * This function tests return of a global value.
+ */
+define getglobalvar()
+{
+	global globalvar;
+
+	return globalvar;
+}
+print '007: parsed getglobalvar()';
+/*
+ * This function tests variables, simple assignments, AND and OR operators, short-circuit eval.
  */
 define test_variables()
 {
@@ -301,7 +318,9 @@ print '008: parsed test_variables()';
 
 
 /*
- * Test simple arithmetic operations and expressions.
+ * test 009: define test_arithmetic for test 4dd
+ *
+ * This function tests simple arithmetic operations and expressions.
  */
 define test_arithmetic()
 {
@@ -385,7 +404,9 @@ print '009: parsed test_arithmetic()';
 
 
 /*
- * test_config - test config control
+ * test 010: define test_config for test 5dd
+ *
+ * This function tests config control
  */
 define test_config()
 {
@@ -542,7 +563,7 @@ define test_config()
 		'562: issimple(config("rdupvar_warn"))');
 
 
-	/* test new space modes */
+	/* test space modes */
 	vrfy(config("tilde_space") == 0,
 		'563: config("tilde_space") == 0');
 	vrfy(config("fraction_space") == 0,
@@ -555,10 +576,10 @@ define test_config()
 print '010: parsed test_config()';
 
 
-
 /*
- * Do multiplication and division on three numbers in various ways
- * and vrfy the results agree.
+ * test 011-016: define muldivcheck, squarecheck, fraccheck, powercheck, algcheck, test_bignums for test 6dd
+ *
+ * This function tests multiplication and division on three numbers in various ways.
  */
 define muldivcheck(a, b, c, str)
 {
@@ -581,12 +602,9 @@ define muldivcheck(a, b, c, str)
 	if (abc/c != a*b) {print '**** abc/c != ab:', str; ++prob;}
 	print str;
 }
-print '011: parsed muldivcheck(a, b, c, str)';
-
-
+print '011: parsed muldivcheck()';
 /*
- * Use the identity for squaring the sum of two squares to check
- * multiplication and squaring.
+ * This function tests identity for squaring the sum of two squares to check multiplication and squaring.
  */
 define squarecheck(a, b, str)
 {
@@ -613,12 +631,9 @@ define squarecheck(a, b, str)
 	if (a2*b2 != (a*b)^2) {print '**** a^2*b^2 != (ab)^2:', str; ++prob;}
 	print str;
 }
-print '012: parsed squarecheck(a, b, str)';
-
-
+print '012: parsed squarecheck()';
 /*
- * Use the raising of numbers to large powers to check multiplication
- * and exponentiation.
+ * This function tests the use the raising of numbers to large powers to check multiplication and exponentiation.
  */
 define powercheck(a, p1, p2, str)
 {
@@ -637,12 +652,9 @@ define powercheck(a, p1, p2, str)
 	if (b1 != b3) {print '**** (b^p1)^p2 != b^(p1*p2):', str; ++prob;}
 	print str;
 }
-print '013: parsed powercheck(a, p1, p2, str)';
-
-
+print '013: parsed powercheck()';
 /*
- * Test fraction reductions.
- * Arguments MUST be relatively prime.
+ * This function tests fraction reductions for arguments that are relatively prime.
  */
 define fraccheck(a, b, c, str)
 {
@@ -663,11 +675,9 @@ define fraccheck(a, b, c, str)
 	if (aob*boc != aoc) {print '**** aob*boc != aoc;', str; ++prob;}
 	print str;
 }
-print '014: parsed fraccheck(a, b, c, str)';
-
-
+print '014: parsed fraccheck()';
 /*
- * Test multiplication and squaring algorithms.
+ * This function tests multiplication and squaring algorithms.
  */
 define algcheck(a, b, str)
 {
@@ -709,11 +719,9 @@ define algcheck(a, b, str)
 	config("sq2", oldsq2);
 	print str;
 }
-print '015: parsed algcheck(a, b, str)';
-
-
+print '015: parsed algcheck()';
 /*
- * Test big numbers using some identities.
+ * This function tests big numbers using some identities.
  */
 define test_bignums()
 {
@@ -794,7 +802,9 @@ print '016: parsed test_bignums()';
 
 
 /*
- * Test many of the built-in functions.
+ * test 017: define test_functions for test 7dd + 8dd + 9dd + 10dd + 11dd + 12dd
+ *
+ * This function tests many of the built-in functions.
  *
  * See test_functions() (test 700 - 1238) for other built-in function tests.
  * See test_functions2() (test 9000 - 9063) for other built-in function tests.
@@ -1487,7 +1497,9 @@ print '017: parsed test_functions()';
 
 
 /*
- * _test_underscore - test use of _'s in identifiers
+ * test 018-020: define _test_underscore and variables for test 45dd
+ *
+ * This function tests use of _'s in identifiers.
  */
 _ = 49;
 print '018: _ = 49';
@@ -1498,27 +1510,27 @@ define _test_underscore()
 	local _a = 27;
 	local __a = 23209;
 
-	print "1294: Beginning _test_underscore";
+	print "4500: Beginning _test_underscore";
 
-	vrfy(_a == 27,			    '1295: _a == 27');
-	vrfy(_ == 49,			    '1296: _ == 49');
-	vrfy(__ == 63,			    '1297: __ == 63');
-	vrfy(__a == 23209,		    '1298: __a == 23209');
+	vrfy(_a == 27,			    '4501: _a == 27');
+	vrfy(_ == 49,			    '4502: _ == 49');
+	vrfy(__ == 63,			    '4503: __ == 63');
+	vrfy(__a == 23209,		    '4504: __a == 23209');
 
-	print "1299: Ending _test_underscore";
+	print "4505: Ending _test_underscore";
 }
-print '020: parsed _test_underscore';
+print '020: parsed _test_underscore()';
+
+
+/* ********************************************************************* */
+/* NOTE: ==> Room for special start of regression tests 021-022 here <== */
+/* ********************************************************************* */
 
 
 /*
- * place holder for any print items
- */
-print "021:", "reserved for future use";
-print "022:": " reserved for future use";
-
-
-/*
- * Test associations
+ * test 023: define test_assoc for test 13dd
+ *
+ * This function tests associations.
  */
 define test_assoc()
 {
@@ -1568,7 +1580,9 @@ print '023: parsed test_assoc()';
 
 
 /*
- * Test lists
+ * test 024: define test_list for test 14dd
+ *
+ * This function tests lists.
  */
 define test_list()
 {
@@ -1721,7 +1735,9 @@ print '024: parsed test_list()';
 
 
 /*
- * Test rand - a55 shuffle pseudo-random number generator
+ * test 025: define test_rand for test 15dd
+ *
+ * This function tests the a55 shuffle pseudo-random number generator.
  */
 define test_rand()
 {
@@ -1860,7 +1876,9 @@ print '025: parsed test_rand()';
 
 
 /*
- * Config mode/base testing
+ * test 026: define test_mode for test 16dd
+ *
+ * This function tests config mode and base.
  */
 define test_mode()
 {
@@ -2193,14 +2211,9 @@ print '026: parsed test_mode()';
 
 
 /*
- * The 1780's and 1790's contain tests for reading resource files.
+ * test 027-028: define test_obj and read surd for test 18dd
  *
- * These tests are done inline near the bottom.
- */
-
-
-/*
- * Test objects
+ * This function tests objects.
  */
 read -once "surd";
 print '027: read -once surd';
@@ -2256,7 +2269,9 @@ print '028: parsed test_obj()';
 
 
 /*
- * Prime builtin function testing
+ * test 029: define test_prime for test 19dd + 20dd
+ *
+ * This function tests prime related functionality.
  */
 define test_prime()
 {
@@ -2458,7 +2473,9 @@ print '029: parsed test_prime()';
 
 
 /*
- * Test the Lucas primality test resource file
+ * test 030-031: define test_lucas and read lucas_chk for test 21dd
+ *
+ * This function performs the Lucas primality test suite.
  */
 read -once "lucas_chk";		/* obtain our needed Lucas resource file */
 print '030: read lucas_chk';
@@ -2475,7 +2492,9 @@ print '031: parsed test_lucas()';
 
 
 /*
- * Test new operator functionality
+ * test 032: define test_newop for test 22dd
+ *
+ * This function tests operator functionality.
  */
 define test_newop()
 {
@@ -2486,7 +2505,7 @@ define test_newop()
 	local a;
 	local b;
 
-	print '2200: Beginning new operator functionality test';
+	print '2200: Beginning operator functionality test';
 
 	(v = 3) = 4;
 	print			'2201: (v = 3) = 4';
@@ -2569,13 +2588,15 @@ define test_newop()
 	vrfy(a == -6,		'2260: a == -6');
 	vrfy(v == 6,		'2261: v == 6');
 
-	print '2262: Ending new operator functionality test';
+	print '2262: Ending operator functionality test';
 }
 print '032: parsed test_newop()';
 
 
 /*
- * Test object increment/decrement
+ * test 033-034: define test_xx_incdec and read test2300 for test 23dd
+ *
+ * This function tests object increment/decrement.
  */
 read -once "test2300";
 print '033: read -once test2300';
@@ -2636,7 +2657,9 @@ print '034: parsed test_xx_incdec()';
 
 
 /*
- * testing rounding config modes
+ * test 035: define test_round for test 24dd + 25dd
+ *
+ * This function tests rounding config modes.
  */
 define test_round()
 {
@@ -2922,7 +2945,9 @@ print '035: parsed test_round()';
 
 
 /*
- * Test certain numeric functions extensively
+ * test 036-037: define test_2600 and read test2600 for test 26dd
+ *
+ * This function tests certain numeric functions extensively.
  *
  * Test multiplication, sqrt(), exp(), ln(), power(), gcd(), complex
  * power, complex exp, complex log.
@@ -3085,7 +3110,9 @@ print '037: parsed test_2600()';
 
 
 /*
- * Test complex sqrt
+ * test 038-039: define test_2700 and read test2700 for test 27dd
+ *
+ * This function tests complex sqrt.
  */
 read -once "test2700";
 print '038: read -once test2700';
@@ -3103,7 +3130,9 @@ print '039: parsed test_2700()';
 
 
 /*
- * Test matrix operations
+ * test 040-430: define test_matrix and variables for test 28dd + 29dd
+ *
+ * This function tests matrix operations.
  */
 mat mat_C[2] = {1,2};
 print '040: mat mat_C[2] = {1,2}';
@@ -3313,7 +3342,9 @@ print '043: parsed test_matrix()';
 
 
 /*
- * Test string constants and comparisons
+ * test 044: define test_strings for test 30dd
+ *
+ * This function tests string constants and comparisons.
  */
 define test_strings()
 {
@@ -3349,7 +3380,9 @@ print '044: parsed test_strings()';
 
 
 /*
- * test_matobj - test determinants of a matrix containing objects
+ * test 045-046: define test_matobj and read test3100 for test 31dd
+ *
+ * This function tests determinants of a matrix containing objects.
  */
 read -once "test3100";
 print '045: read -once test3100';
@@ -3430,7 +3463,9 @@ print '046: parsed test_matobj()';
 
 
 /*
- * test_poly - test the polynomial function
+ * test 047: define test_poly for test 32dd
+ *
+ * This function tests the polynomial function.
  */
 define test_poly()
 {
@@ -3470,7 +3505,9 @@ print '047: parsed test_poly()';
 
 
 /*
- * test_det - more determinant testing
+ * test 048-049: define test_det for test 33dd
+ *
+ * This function tests more determinant functionality.
  */
 read -once "test3300";
 print '048: read -once test3300';
@@ -3490,7 +3527,9 @@ print '049: parsed test_det()';
 
 
 /*
- * test_trig - trig function testing
+ * test 050-051: define test_trig and read test3400 for test 34dd
+ *
+ * This function tests common trig functions.
  */
 read -once "test3400";
 print '050: read -once test3400';
@@ -3683,9 +3722,11 @@ print '051: parsed test_trig()';
 
 
 /*
- * test_frem - tests of the functions frem, fcnt, gcdrem
+ * test 052-052: define test_frem and read test9300 for test 93dd
  *
- * NOTE: We haved test3500 to test9300.  We parse this code here,
+ * This function tests of the functions frem, fcnt, gcdrem.
+ *
+ * NOTE: We moved test3500 to test9300.  We parse this code here,
  *	 however we execute this code as a 9300 test.
  */
 read -once "test9300";
@@ -3705,7 +3746,9 @@ print '053: parsed test_frem()';
 
 
 /*
- * test_error - test the error() builtin
+ * test 054: define test_error for test 36dd + 37dd
+ *
+ * This function tests the error builtin.
  *
  * This function is designed to trigger 148 errors, so we bump the
  * errmax by 148 during this call.
@@ -3922,7 +3965,9 @@ print '054: parsed test_error()';
 
 
 /*
- * test_param - test new param() functionality.
+ * test 055-065: define test_param and variables and related parameter functions for test 38dd
+ *
+ * This function tests param functionality.
  */
 define g_param() = (param(2) = param(1));
 print '055: define g_param() = (param(2) = param(1))';
@@ -3963,7 +4008,9 @@ print '065: parsed test_param()';
 
 
 /*
- * test_noarg - test missing argument functionality
+ * test 066: define test_noarg for test 39dd
+ *
+ * This function tests missing argument functionality.
  */
 define test_noarg()
 {
@@ -3998,11 +4045,13 @@ define test_noarg()
 	vrfy(size(D) == 1,		'3918: size(D) == 1');
 	print '3919: Ending test_noarg';
 }
-print '066: parsed test_noarg';
+print '066: parsed test_noarg()';
 
 
 /*
- * test_ptest - more tests of the functions ptest, nextcand, prevcand
+ * test 067-068: define test_ptest and read test4000 for test 40dd
+ *
+ * This function tests more the functions such as ptest, nextcand, prevcand.
  */
 read -once "test4000";
 print '067: read -once test4000';
@@ -4021,7 +4070,9 @@ print '068: parsed test_ptest()';
 
 
 /*
- * test_redc - REDC operation tests
+ * test 069-070: define test_redc and read test4100 for test 41dd
+ *
+ * This function test REDC operations.
  */
 read -once "test4100";
 print '069: read -once test4100';
@@ -4040,7 +4091,9 @@ print '070: parsed test_redc()';
 
 
 /*
- * test_fileops - test various file operations
+ * test 071: define test_fileops for test 42dd
+ *
+ * This function tests various file operations.
  */
 define test_fileops()
 {
@@ -4206,7 +4259,9 @@ print '071: parsed test_fileops()';
 
 
 /*
- * test_matdcl - test new matrix declaration syntax
+ * test 072-075: define test_matdcl and variables for test 43dd
+ *
+ * This function tests matrix declaration syntax.
  */
 mat_X0 = mat[4];
 print '072: mat_X = mat[4]';
@@ -4314,7 +4369,9 @@ print '075: parsed test_matdcl()';
 
 
 /*
- * test_objmat - test combined obj and mat operations
+ * test 076: define test_objmat for test 44dd
+ *
+ * This function tests combined obj and mat operations.
  */
 define test_objmat()
 {
@@ -4463,14 +4520,14 @@ define test_objmat()
 			'4464: B[0,0] == (mat[2,2] = {118, 132, 166, 188})');
 
 	print '4465: Ending test_objmat';
-	print;
-	print '4500: reserved for future expansion of test_objmat';
 }
 print '076: parsed test_objmat()';
 
 
 /*
- * test_fileop - test file operations
+ * test 077-078: define test_fileop and variables for test 46dd
+ *
+ * This function tests file operations.
  */
 read -once "test4600";
 print '077: read -once test4600';
@@ -4489,7 +4546,7 @@ print '078: parsed test_fileop()';
 
 
 /*
- * test write/read
+ * test 079-086: test write/read
  */
 x_081 = isqrt(2e5000);
 print '079: x_081 = isqrt(2e5000)'
@@ -4508,7 +4565,9 @@ vrfy(x_081 == isqrt(2e5000),		    '086: x_081 == isqrt(2e5000)');
 
 
 /*
- * test_charset - test the ASCII character set and \'s
+ * test 087: define test_charset
+ *
+ * This function tests the ASCII character set and \'s.
  */
 define test_charset()
 {
@@ -4534,11 +4593,13 @@ define test_charset()
 
 	print '4717: Ending test_charset';
 }
-print '087: parsed test_fileop()';
+print '087: parsed test_charset()';
 
 
 /*
- * test_strprintf - test strprintf calls
+ * test 088: define test_strprintf for test 48dd
+ *
+ * This function tests strprintf calls.
  */
 define test_strprintf()
 {
@@ -4672,11 +4733,11 @@ define test_strprintf()
 
 	print '4855: Ending test_strprintf';
 }
-print '088: parsed test_fileop()';
+print '088: parsed test_strprintf()';
 
 
 /*
- * global and static assignment tests
+ * test 089-123: global and static assignment tests
  */
 global a = 10, b, c d = 20, e;
 print			'089: global a = 10, b, c d = 20, e, f';
@@ -4729,7 +4790,9 @@ vrfy(S.y == 0,		'123: S.y == 0');
 
 
 /*
- * test_listsearch - test searching in lists
+ * test 124: define test_listsearch for test 49dd
+ *
+ * This function tests searching in lists.
  */
 define test_listsearch()
 {
@@ -4758,16 +4821,18 @@ define test_listsearch()
 	vrfy(isnull(rsearch(L,3,20,2)), '4917: isnull(rsearch(L,3,20,2)');
 	vrfy(rsearch(L,3,-20,20) == 7,	'4918: rsearch(L,3,-20,20) == 7');
 
-	print '4919: Ending test_strprintf';
+	print '4919: Ending test_listsearch';
 }
 print '124: parsed test_listsearch()';
 
 
 /*
- * test_filesearch - test searching in files
+ * test 125: define test_filesearch for test 55dd
+ *
+ * This function tests searching in files.
  *
  * This function is designed to trigger 22 errors, so we bump the
- * errmax by 22 during this call.
+ * errmax by 22 during the function call in test 55dd.
  */
 define test_filesearch()
 {
@@ -4911,7 +4976,9 @@ print '125: parsed test_filesearch()';
 
 
 /*
- * test_newdecl - test the new code generator declaration scope and order
+ * test 126-127: define test_newdecl and read test5100 for test 51dd
+ *
+ * This function tests the code generator declaration scope and order.
  */
 read -once "test5100";
 print '126: read -once test5100';
@@ -4972,7 +5039,9 @@ print '127: parsed test_newdecl()';
 
 
 /*
- * test_globstat - test the fix of a global/static bug
+ * test 128-129: define test_globstat for test 52dd
+ *
+ * This function tests the fix of an old global/static bug.
  */
 read -once "test5200";
 print '128: read -once test5200';
@@ -5010,7 +5079,9 @@ print '129: parsed test_globstat()';
 
 
 /*
- * test_newop2 - test new label stuff
+ * test 130-132: define test_newop2 and test label stuff
+ *
+ * This function tests label stuff.
  */
 define test_newop2(x) {if (x < 0) goto l130; ++x; l130: return x;}
 print '130: define test_newop3(x) {if (x < 0) goto l130; ++x; l130: return x;}'
@@ -5019,7 +5090,9 @@ vrfy(test_newop2(-100) == -100,		'132: test_newop2(-100) == -100');
 
 
 /*
- * test_newop3 - test new label stuff
+ * test 133-136: define test_newop3 and test more label stuff
+ *
+ * This function tests more label stuff.
  */
 define test_newop3(x) {
 	if (x < 4)
@@ -5038,7 +5111,9 @@ vrfy(test_newop3(4) == 3,		'136: test_newop3(4) == 3');
 
 
 /*
- * Test random - Blum-Blum-Shub pseudo-random number generator
+ * test 137: define test_random for test 53dd + 54dd
+ *
+ * This function test the Blum-Blum-Shub pseudo-random number generator
  */
 define test_random()
 {
@@ -5376,7 +5451,9 @@ print '137: parsed test_random()';
 
 
 /*
- * test_newsyn - test new command completion syntax and scope rules
+ * test 138-151: define test_newsyn and variables for test 55dd
+ *
+ * This function tests command completion syntax and scope rules.
  */
 for (s5500 = 0, i = 0; i < 5; i++) s5500 += i;
 print "138: for (s5500 = 0, i = 0; i < 5; i++) s5500 += i;";
@@ -5571,7 +5648,9 @@ vrfy(i == 9,		'151: i == 9');
 
 
 /*
- * test_commaeq - test changes to = and ,
+ * test 152-155: define test_commaeq and variables for test 56dd
+ *
+ * This fucntion will test = and , operator functionality.
  */
 obj xx5600 {} xx5600;
 print '152: obj xx5600 {} xx5600';
@@ -5660,7 +5739,7 @@ print '155: parsed test_commaeq()';
 
 
 /*
- * test_size - test what we can about sizes
+ * test 156: test_size - test sizes of calc variables
  *
  * Since sizeof() and memsize() deal with machine specific sizes and
  * compiler structure layout issues, we cannot just determine if
@@ -5840,7 +5919,9 @@ print '156: parsed test_size()';
 
 
 /*
- * test_assign - test assignment of constants and variables
+ * test 158-160: define test_assign and variables for test 58dd
+ *
+ * This function tests assignment of constants and variables.
  */
 global X5800, Y5800;	/* X5800, Y5800 for "variables" */
 print '158: global X5800, Y5800';
@@ -5888,7 +5969,9 @@ print '160: test_assign()';
 
 
 /*
- * test_is - test is functions
+ * test 161-168: define test_is for test 59dd + 60dd + 61dd + 62dd + 63dd + 64dd + 65dd + 66dd
+ *
+ * This function tests is related functions.
  */
 vrfy(isobjtype("xy5900") == 0,	  '161: isobjtype("xy5900") == 0');
 obj xy5900 {x, y};
@@ -6944,7 +7027,9 @@ print '168: test_is()';
 
 
 /*
- * test_blk - test block of octets
+ * test 169: test_blk - test blk (block of octets) facility
+ *
+ * This function tests the blk (block of octets) facility.
  */
 define test_blk()
 {
@@ -7134,15 +7219,15 @@ define test_blk()
 	vrfy(A1[1] == B1,		  '6785: A1[1] == B1');
 	vrfy(A1[0][100] == 0xff,	  '6786: A1[0][100] == 0xff');
 
-	print '6800: reserved for future expansion of test_blk';
-
-	print '6899: Ending test_blk';
+	print '6787: Ending test_blk';
 }
 print '169: parsed test_blk()';
 
 
 /*
- * test_blkcpy - test the new copy builtin function
+ * test 170: define test_blkcpy for tess 68dd
+ *
+ * This function tests the copy builtin function.
  */
 define test_blkcpy()
 {
@@ -7303,7 +7388,9 @@ print '170: parsed test_blkcpy()';
 
 
 /*
- * test_name - test the name builtin
+ * test 171: define test_name for test 69dd
+ *
+ * This function tests the name builtin.
  */
 define test_name()
 {
@@ -7347,7 +7434,9 @@ print '171: parsed test_name()';
 
 
 /*
- * test_blkprintf - test blk printf
+ * test 172: test_blkprintf - define test_blkprintf for test 70dd
+ *
+ * This function tests blk printf.
  */
 define test_blkprintf()
 {
@@ -7388,8 +7477,16 @@ define test_blkprintf()
 print '172: parsed test_blkprintf()';
 
 
+/* **************************************************************** */
+/* NOTE: ==> Room for special start of regression test 173 here <== */
+/* **************************************************************** */
+
+
 /*
- * test_sha1 - test the sha1 hash
+ * test 174: test_sha1 - define test_sha1 for test 72dd
+ *
+ *
+ * This function tests the SHA1 hash.
  */
 define test_sha1()
 {
@@ -7475,14 +7572,13 @@ define test_sha1()
 print '174: parsed test_sha1()';
 
 
-/*
- * The 7400's contain tests for saveval and dot.  These tests are
- * done inline near the bottom.
- */
+/* **************************************************************** */
+/* NOTE: ==> Room for special start of regression test 175 here <== */
+/* **************************************************************** */
 
 
 /*
- * test_ptr - test pointers
+ * test 176-180: test_ptr - define test functions for pointers for test_ptr and test 75dd + 76dd
  */
 define g7500a(a,b) = a = b;
 print '176: define g7500a(a,b) = a = b';
@@ -7494,6 +7590,13 @@ define g7500d(a) = &a;
 print '179: define g7500d(a) = &a';
 define g7500e(a,b) = *a = b;
 print '180: define g7500e(a,b) = *a = b'
+
+
+/*
+ * test 181: define test_ptr for test 75dd + 76dd
+ *
+ * This function tests pointers as well as "inline" defined functions.
+ */
 define test_ptr()
 {
 	local a, b, c, A, B, B1, B2, M, L, p, q, p0, q0;
@@ -7694,7 +7797,9 @@ print '181: parsed test_ptr()';
 
 
 /*
- * test_newstring - test new string operations
+ * test 182: define test_newstring for test 77dd
+ *
+ * This function tests new string operations.
  */
 define test_newstring()
 {
@@ -7804,11 +7909,14 @@ print '182: parsed test_newstring()';
 
 
 /*
- * test_newcomb - test combinatoric and permutation functions
+ * test 183: define test_newcomb for test 78dd
+ *
+ * This function tests combinatoric and permutation functions.
  */
 define test_newcomb()
 {
 	print '7800: Beginning test_newcomb';
+
 	vrfy(comb(2, 5) == 0,		'7801: comb(2, 5) == 0');
 	vrfy(comb(2, -2) == 0,		'7802: comb(2, -2) == 0');
 	vrfy(comb(1/2, 4) == -5/128,	'7803: comb(1/2, 4) == -5/128');
@@ -7828,6 +7936,8 @@ print '183: parsed test_newcomb()';
 
 
 /*
+ * test 184-185: define f7900 functions for test 79dd
+ *
  * The following functions f, g should be equal when b-a is an
  * integer, and n is any integer other than -1.
  */
@@ -7841,14 +7951,16 @@ define f7900(a,b,n)
 		s += perm(x, n);
 	return s;
 }
-print '184: define f7900(a,b,n) {... }';
+print '184: parsed f7900()';
 /**/
 define g7900(a,b,n) = (perm(b, n + 1) - perm(a, n + 1))/(n + 1);
 print '185: define g7900(a,b,n) = ...';
 
 
 /*
- * test_bigcomb - test big combinations and permutations
+ * test 186: test_bigcomb - define test_bigcomb for test 79dd
+ *
+ * This function tests big combinations and permutations.
  */
 define test_bigcomb()
 {
@@ -7883,7 +7995,9 @@ print '186: parsed test_bigcomb()';
 
 
 /*
- * natnumset - test natural numbers not exceeding a fixed bound
+ * test 187-188: define test_natnumset for test 81dd
+ *
+ * The test_natnumset is used to test natural numbers not exceeding a fixed bound.
  */
 read -once natnumset;
 print '187: read -once natnumset;';
@@ -7892,7 +8006,7 @@ define test_natnumset()
 {
 	local A, B, C, D, P, P1, L1, L2;
 
-	print '8000: Starting test_natnumset';
+	print '8100: Starting test_natnumset';
 
 	A = set(17, 2, 0, 24, 2);
 	print				'8101: A = set(17, 2, 0, 24, 2);';
@@ -7955,7 +8069,9 @@ print '188: parsed test_natnumset()';
 
 
 /*
- * test_somenew - test some new features
+ * test 189-190: define test_somenew for test 82dd
+ *
+ * This function tests some new features.
  */
 define func8200(x,y) {if (x>0) return calclevel()+func8200(x-1,y)-y; return 0;}
 print '189: define func8200(x,y)';
@@ -8008,13 +8124,15 @@ print '190: parsed test_somenew()';
 
 
 /*
- * test_exponentiation - test new exponentiation functionality
+ * test 191: define test_exponentiation for test 88dd
+ *
+ * This function tests new exponentiation functionality.
  */
 define test_exponentiation()
 {
 	local a;
 
-	print	'8800: Starting test_somenew';
+	print	'8800: Starting test_exponentiation';
 
 	/* unexpected help file cases */
 	vrfy(2^3 == 8,			'8801: 2^3 == 8');
@@ -8081,13 +8199,15 @@ define test_exponentiation()
 	vrfy((exp(1)+pi()*1i) ^ asin(-2) == power(exp(1)+pi()*1i, asin(-2)),
 	'8834: (exp(1)+pi()*1i) ^ asin(-2) == power(exp(1)+pi()*1i, asin(-2))');
 
-	print '8835: Ending test_somenew';
+	print '8835: Ending test_exponentiation';
 }
 print '191: parsed test_exponentiation()';
 
 
 /*
- * test_quit - test the QUIT functionality
+ * test 192: define test_quit for test 84dd
+ *
+ * This function tests the QUIT functionality.
  */
 define test_quit()
 {
@@ -8101,156 +8221,338 @@ define test_quit()
 
 	/* 8400 series continued after return, do not print end here */
 }
-print '191: parsed test_quit()';
+print '192: parsed test_quit()';
+
+
+
+/* ********************************************************************* */
+/* NOTE: ==> Room for special start of regression tests 193-298 here <== */
+/* ********************************************************************* */
 
 
 /*
- * Reserved for top level test use
+ * test 299: End of main part of regression test suite read
  */
-print '200: Reserved for top level test use';
-
-
-/*
- * Report the number of errors found.
- */
-define count_errors()
-{
-	if (prob  ==  0) {
-		print "9997: passed all tests  /\\../\\";
-	} else {
-		print "****", prob, "error(s) found  \\/++\\/";
-	}
-}
-print '298: parsed count_errors()';
-
-
 print '299: Ending main part of regression test suite read';
 
 
+/*
+ * test 30d + 31d + 32d: test boolean operations and IF statements
+ */
 print;
 return test_booleans();
-print;
-return test_variables();
-print;
-return test_arithmetic();
-print;
-return test_config();
-print;
-return test_bignums();
-print;
-return test_functions();
-print;
-return _test_underscore();
-print;
-return test_assoc();
-print;
-return test_list();
-print;
-return test_rand();
-print;
-return test_mode();
-print;
 
-print '1780: Beginning read test';
-value = 0;
-vrfy(value == 0,		  '1781: value == 0');
-read "test1700";
-print				  '1782: read "test1700";';
-vrfy(value == 1,		  '1783: value == 1');
-read -once "test1700";
-print				  '1784: read -once "test1700";';
-vrfy(value == 1,		  '1785: value == 1');
-read "test1700.cal";
-print				  '1786: read "test1700.cal";';
-vrfy(value == 2,		  '1787: value == 2');
-read -once "test1700.cal"
-print				  '1788: read -once "test1700.cal";';
-vrfy(value == 2,		  '1789: value == 2');
-read "test1700.cal";
-print				  '1790: read "test1700.cal";';
-vrfy(value == 3,		  '1791: value == 3');
-{++value;} read "test1700.cal";
-print				  '1792: {++value;} read "test1700.cal";';
-vrfy(value == 5,		  '1793: value == 5');
-{++value;} read -once "test1700.cal";
-print				  '1794: {++value;} read -once "test1700.cal";';
-vrfy(value == 6,		  '1795: value == 6');
-print '1796: Ending read test';
-
-print;
-return test_obj();
-print;
-return test_prime();
-print;
-return test_lucas();
-print;
-return test_newop();
-print;
-return test_xx_incdec();
-print;
-return test_round();
-print;
-return test_2600();
-print;
-return test_2700();
-print;
-return test_matrix();
-print;
-return test_strings();
-print;
-return test_matobj();
-print;
-return test_poly();
-print;
-return test_det();
-print;
-return test_trig();
-print;
-return test_error();
-print;
-return test_param();
-print;
-return test_noarg();
-print;
-return test_ptest();
-print;
-return test_redc();
-print;
-return test_fileops();
-print;
-return test_matdcl();
-print;
-return test_objmat();
-print;
-return test_fileop();
-print;
-return test_charset();
-print;
-return test_strprintf();
-print;
-return test_listsearch();
-print;
-return test_filesearch();
-print;
-return test_newdecl();
-print;
-return test_globstat();
-print;
-return test_random();
-print;
-return test_newsyn();
-
-vrfy(s5500 == 78,		  '5548: s5500 == 78');
-
-print;
-return test_commaeq();
-print;
-return test_size();
-print;
 
 /*
- * 5800 assignment tests
+ * test 35d + 36d + 37d + 38d: test global variables, simple assignments, AND and OR operators, short-circuit eval
  */
+print;
+return test_variables();
+
+
+/*
+ * test 4dd: test simple arithmetic operations and expressions
+ */
+print;
+return test_arithmetic();
+
+
+/*
+ * test 5dd: test config control
+ */
+print;
+return test_config();
+
+
+/*
+ * test 6dd: test multiplication and division on three numbers in various ways
+ */
+print;
+return test_bignums();
+
+
+/*
+ * test 7dd + 8dd + 9dd + 10dd + 11dd + 12dd: test many of the built-in functions
+ *
+ * See test_functions() (test 700 - 1238) for other built-in function tests.
+ * See test_functions2() (test 9000 - 9063) for other built-in function tests.
+ * See test_functions3() (test 9100 - 9214) for other built-in function tests.
+ */
+print;
+return test_functions();
+
+
+/*
+ * test 13dd: test associations
+ */
+print;
+return test_assoc();
+
+
+/*
+ * test 14dd: test lists
+ */
+print;
+return test_list();
+
+
+/*
+ * test 15dd: test the a55 shuffle pseudo-random number generator
+ */
+print;
+return test_rand();
+
+
+/*
+ * test 16dd + 17dd: test config mode and base
+ */
+print;
+return test_mode();
+
+
+/*
+ * test 18dd: test objects
+ */
+print;
+return test_obj();
+
+
+/*
+ * test 19dd + 20dd: test prime related functionality
+ */
+print;
+return test_prime();
+
+
+/*
+ * test 21dd: perfor the Lucas primality test suite
+ */
+print;
+return test_lucas();
+
+
+/*
+ * test 22dd: test operator functionality
+ */
+print;
+return test_newop();
+
+
+/*
+ * test 23dd: test object increment/decrement
+ */
+print;
+return test_xx_incdec();
+
+
+/*
+ * test 24dd + 25dd: test rounding config modes
+ */
+print;
+return test_round();
+
+
+/*
+ * test 26dd: test certain numeric functions extensively
+ */
+print;
+return test_2600();
+
+
+/*
+ * test 27dd: test complex sqrt
+ */
+print;
+return test_2700();
+
+
+/*
+ * test 28dd + 29dd: test matrix operations
+ */
+print;
+return test_matrix();
+
+
+/*
+ * test 30dd: test string constants and comparisons
+ */
+print;
+return test_strings();
+
+
+/*
+ * test 31dd: test determinants of a matrix containing objects
+ */
+print;
+return test_matobj();
+
+
+/*
+ * test 32dd: test the polynomial function
+ */
+print;
+return test_poly();
+
+
+/*
+ * test 33dd: test more determinant functionality
+ */
+print;
+return test_det();
+
+
+/*
+ * test 34dd: test common trig functions
+ */
+print;
+return test_trig();
+
+
+/*
+ * test 36dd + 37dd: test the error builtin
+ */
+print;
+return test_error();
+
+
+/*
+ * test 38dd: test param functionality
+ */
+print;
+return test_param();
+
+
+/*
+ * test 39dd: test missing argument functionality
+ */
+print;
+return test_noarg();
+
+
+/*
+ * test 40dd: test more the functions such as ptest, nextcand, prevcand
+ */
+print;
+return test_ptest();
+
+
+/*
+ * test 41dd: test REDC operations
+ */
+print;
+return test_redc();
+
+
+/*
+ * test 42dd: test various file operations
+ */
+print;
+return test_fileops();
+
+
+/*
+ * test 43dd: test matrix declaration syntax
+ */
+print;
+return test_matdcl();
+
+
+/*
+ * test 44dd: test combined obj and mat operations
+ */
+print;
+return test_objmat();
+
+
+/*
+ * test 45dd: test use of _'s in identifiers
+ */
+print;
+return _test_underscore();
+
+
+/*
+ * test 46dd: test file operations
+ */
+print;
+return test_fileop();
+
+
+/*
+ * test 47dd: test the ASCII character set and \'s
+ */
+print;
+return test_charset();
+
+
+/*
+ * test 48dd: test strprintf calls
+ */
+print;
+return test_strprintf();
+
+
+/*
+ * test 49dd: test searching in lists
+ */
+print;
+return test_listsearch();
+
+
+/*
+ * test 50dd: test searching in files
+ */
+print;
+return test_filesearch();
+
+
+/*
+ * test 51dd: test code generator declaration scope and order
+ */
+print;
+return test_newdecl();
+
+
+/*
+ * test 52dd: test the fix of an old global/static bug
+ */
+print;
+return test_globstat();
+
+
+/*
+ * test 53dd + 54dd: test Blum-Blum-Shub pseudo-random number generator
+ */
+print;
+return test_random();
+
+
+/*
+ * test 55dd: test command completion syntax and scope rules
+ */
+print;
+return test_newsyn();
+vrfy(s5500 == 78,		  '5548: s5500 == 78');
+
+
+/*
+ * test 56dd: test = and , operator functionality
+ */
+print;
+return test_commaeq();
+
+
+/*
+ * test 57dd: test sizes of calc variables
+ */
+print;
+return test_size();
+
+
+/*
+ * test 58dd: assignment tests
+ */
+print;
 return test_assign(5800, 1);
 define xy5800_assign(a,b) { };
 print '5812: define xy5800_assign(a,b) { }';
@@ -8300,20 +8602,63 @@ print		'5866: define f5800(a5800 = mat[2] = {3,4}) = 5 * a5800;'
 vrfy(f5800() == (mat[] = {15,20}),'5867: f5800() == (mat[] = {15,20})');
 print '5868: End of 5800 sequence';
 
+
+/*
+ * test 59dd + 60dd + 61dd + 62dd + 63dd + 64dd + 65dd + 66dd: test is related functions
+ */
 print;
 return test_is();
+
+
+/*
+ * test 67dd: test blk (block of octets) facility
+ */
 print;
 return test_blk();
+
+
+/*
+ * test 68dd: test the copy builtin function
+ */
 print;
 return test_blkcpy();
+
+
+/*
+ * test 69dd: test the name builtin
+ */
 print;
 return test_name();
+
+
+/*
+ * test 70dd: Test blk printf
+ */
 print;
 return test_blkprintf();
+
+
+/* *********************************************** */
+/* NOTE: ==> Room for new tests 7100-7199 here <== */
+/* *********************************************** */
+
+
+/*
+ * test 72dd: test SHA1 hash
+ */
 print;
 return test_sha1();
-print;
 
+
+/* *********************************************** */
+/* NOTE: ==> Room for new tests 7300-7399 here <== */
+/* *********************************************** */
+
+
+/*
+ * test 74dd: savedot tests
+ */
+print;
 print '7400: Beginning test_savedot';
 print				'7401: saveval(1);';
 saveval(1);
@@ -8344,28 +8689,87 @@ a7400 = 4;
 vrfy(isnull(.),			'7418: isnull(.)');
 print				'7419: saveval(1);';
 saveval(1);
-
 print				'7420: obj pair7400 {one,two} = {1,2};';
 obj pair7400 {one,two} = {1,2};
 vrfy(. .one == 1,		'7421: . .one == 1');
 print '7422: Ending test_savedot';
 
+
+/*
+ * test 75dd + 76dd: test pointers well as "inline" defined functions
+ */
 print;
 return test_ptr();
+
+
+/*
+ * test 77dd: test new string operations
+ */
 print;
 return test_newstring();
+
+
+/*
+ * test 78dd: test combinatoric and permutation functions
+ */
 print;
 return test_newcomb();
+
+
+/*
+ * test 79dd: test big combinations and permutations
+ */
 print;
 return test_bigcomb();
+
+
+/*
+ * test 80dd: test read of calc resource files
+ */
+print;
+print '8000: Beginning read test';
+value = 0;
+vrfy(value == 0,		  '8001: value == 0');
+read "test1700";
+print				  '8002: read "test1700";';
+vrfy(value == 1,		  '8003: value == 1');
+read -once "test1700";
+print				  '8004: read -once "test1700";';
+vrfy(value == 1,		  '8005: value == 1');
+read "test1700.cal";
+print				  '8006: read "test1700.cal";';
+vrfy(value == 2,		  '8007: value == 2');
+read -once "test1700.cal"
+print				  '8008: read -once "test1700.cal";';
+vrfy(value == 2,		  '8009: value == 2');
+read "test1700.cal";
+print				  '8010: read "test1700.cal";';
+vrfy(value == 3,		  '8011: value == 3');
+{++value;} read "test1700.cal";
+print				  '8012: {++value;} read "test1700.cal";';
+vrfy(value == 5,		  '8013: value == 5');
+{++value;} read -once "test1700.cal";
+print				  '8014: {++value;} read -once "test1700.cal";';
+vrfy(value == 6,		  '8015: value == 6');
+print '8016: Ending read test';
+
+
+/*
+ * test 81dd: test natural numbers not exceeding a fixed bound
+ */
 print;
 return test_natnumset();
+
+
+/*
+ * test 82dd: test new exponentiation functionality
+ */
 print;
 return test_somenew();
 
 
 /*
- * misc define tests
+ * test 83dd: misc define tests
  */
 print;
 print	'8300: Starting define tests';
@@ -8387,7 +8791,7 @@ print	'8311: Ending define tests';
 
 
 /*
- * quit tests
+ * test 84dd: quit tests
  */
 print;
 return test_quit();
@@ -8398,45 +8802,23 @@ print	'8406: Ending test_quit';
 
 
 /*
- * test_divmod - pseudo-random tests on the // and % with various rounding modes
+ * test 85dd: test_divmod - pseudo-random tests on the // and % with various rounding modes
  */
 print;
 print '8500: Starting test of divmod'
 read -once "test8500";
-/* 85xx: Ending test of divmod is printed by test8500.cal */
 
 
 /*
- * test_maxargs - test up to 1024 args being passed to a builtin function
+ * test 86dd: test_maxargs - test up to 1024 args being passed to a builtin function
  */
 print;
 print '8600: Starting test of up to 1024 args'
 read -once "test8600";
-/* 860x: Ending test of up to 1024 args is printed by test8600.cal */
 
 
 /*
- * dupvar_warn and redecl_warn testing
- */
-print;
-print '8650: Starting test of dupvar_warn and redecl_warn config parameters';
-vrfy(config("redecl_warn",0),	  '8651: config("redecl_warn",0)');
-vrfy(config("dupvar_warn",0),	  '8652: config("dupvar_warn",0)');
-vrfy(u_glob == 6,		  '8653: u_glob == 6');
-global u_glob = 555;
-print				  '8654: declare u_glob';
-vrfy(u_glob == 555,		  '8655: u_glob == 555');
-define func_8650(u_glob) { local u_glob; return u_glob; }
-print				  '8656: u_glob as both local and parameter';
-define func_8650a(u_glob) { static u_glob; return u_glob; }
-print				  '8657: u_glob as both static and parameter';
-vrfy(config("redecl_warn",1)==0,  '8658: config("redecl_warn",1)==0');
-vrfy(config("dupvar_warn",1)==0,  '8659: config("dupvar_warn",1)==0');
-/* 865x: Ending test of up to 1024 args is printed by test8600.cal */
-
-
-/*
- * dotest scripts
+ * test 87dd: read dotest, set8700 for test 78dd
  *
  * We use the dotest driver to evaluate test-97xx data files.
  */
@@ -8448,19 +8830,17 @@ print '8702: read -once "set8700"';
 read -once "set8700";
 vrfy(dotest("set8700.line", 8703) == 0,
      '8703: dotest("set8700.line", 8703) == 0');
-/* 87xx: Ending dotest runs is printed by set8700.test */
 
 
 /*
- * new exponentiation functionality
+ * test 88dd: new exponentiation functionality
  */
 print;
 return test_exponentiation();
-/* 88xx: test exponentiation */
 
 
 /*
- * calc resource functions by Christoph Zurnieden
+ * test 89dd: calc resource functions by Christoph Zurnieden
  */
 print;
 print '8900: Starting test of calc resource functions by Christoph Zurnieden';
@@ -8468,13 +8848,13 @@ print '8901: read -once "test8900"';
 read -once "test8900";
 print '8902: about to run test8900(1,,8903)';
 testnum = test8900(1,,8903);
-print '8999: ecnt = 211;'
+print "8941: ecnt ==", ecnt;
+print '8942: ecnt = 211;'
 ecnt = 211;
-/* 89xx: test calc resource functions by Christoph Zurnieden */
 
 
 /*
- * Test more of the built-in functions.
+ * test 90dd: Test more of the built-in functions.
  *
  * See test_functions() (test 700 - 1238) for other built-in function tests.
  * See test_functions2() (test 9000 - 9063) for other built-in function tests.
@@ -8588,12 +8968,11 @@ define test_functions2()
 }
 print;
 print '9000: parsed test_functions2()';
-print;
 return test_functions2();
 
 
 /*
- * Test even more of the built-in functions.
+ * test 91dd + 92dd: Test even more of the built-in functions.
  *
  * See test_functions() (test 700 - 1238) for other built-in function tests.
  * See test_functions2() (test 9000 - 9063) for other built-in function tests.
@@ -8983,13 +9362,13 @@ define test_functions3()
 }
 print;
 print '9100: parsed test_functions3()';
-print;
 return test_functions3();
 
+
 /*
- * test_frem - tests of the functions frem, fcnt, gcdrem
+ * test 93dd: test_frem - tests of the functions frem, fcnt, gcdrem
  *
- * NOTE: We haved test3500 to test9300.  We parse this code here,
+ * NOTE: We moved test3500 to test9300.  We parse this code here,
  *	 however we execute this code as a 9300 test.
  */
 print;
@@ -8997,7 +9376,7 @@ return test_frem();
 
 
 /*
- * read various calc resource files
+ * test 94dd: read various calc resource files
  *
  * We read most of the standard calc resource files.  There are a few
  * resource files that are not read:
@@ -9015,98 +9394,142 @@ return test_frem();
  * all of real actions of regress.cal.
  */
 print;
-print	'9800: Starting read of selected calc resource files';
+print	'9400: Starting read of selected calc resource files';
 read -once bernoulli;
-print	'9801: read -once bernoulli';
+print	'9401: read -once bernoulli';
 read -once bigprime;
-print	'9802: read -once bigprime';
+print	'9402: read -once bigprime';
 read -once chrem;
-print	'9803: read -once chrem';
+print	'9403: read -once chrem';
 read -once deg;
-print	'9804: read -once deg';
+print	'9404: read -once deg';
 read -once ellip;
-print	'9805: read -once ellip';
+print	'9405: read -once ellip';
 read -once mersenne;
-print	'9806: read -once mersenne';
+print	'9406: read -once mersenne';
 read -once mfactor;
-print	'9807: read -once mfactor';
+print	'9407: read -once mfactor';
 read -once mod;
-print	'9808: read -once mod';
+print	'9408: read -once mod';
 read -once natnumset;
-print	'9809: read -once natnumset';
+print	'9409: read -once natnumset';
 read -once pell;
-print	'9810: read -once pell';
+print	'9410: read -once pell';
 read -once pi;
-print	'9811: read -once pi';
+print	'9411: read -once pi';
 read -once pix;
-print	'9812: read -once pix';
+print	'9412: read -once pix';
 read -once pollard;
-print	'9813: read -once pollard';
+print	'9413: read -once pollard';
 read -once poly;
-print	'9814: read -once poly';
+print	'9414: read -once poly';
 read -once prompt;
-print	'9815: read -once prompt';
+print	'9415: read -once prompt';
 read -once psqrt;
-print	'9816: read -once psqrt';
+print	'9416: read -once psqrt';
 read -once quat;
-print	'9817: read -once quat';
+print	'9417: read -once quat';
 read -once randbitrun;
-print	'9818: read -once randbitrun';
+print	'9418: read -once randbitrun';
 read -once randmprime;
-print	'9819: read -once randmprime';
+print	'9419: read -once randmprime';
 read -once randombitrun;
-print	'9820: read -once randombitrun';
+print	'9420: read -once randombitrun';
 read -once randomrun;
-print	'9821: read -once randomrun';
+print	'9421: read -once randomrun';
 read -once randrun;
-print	'9822: read -once randrun';
+print	'9422: read -once randrun';
 read -once seedrandom;
-print	'9823: read -once seedrandom';
+print	'9423: read -once seedrandom';
 read -once solve;
-print	'9824: read -once solve';
+print	'9424: read -once solve';
 read -once sumsq;
-print	'9825: read -once sumsq';
+print	'9425: read -once sumsq';
 read -once unitfrac;
-print	'9826: read -once unitfrac';
+print	'9426: read -once unitfrac';
 read -once varargs;
-print	'9827: read -once varargs';
+print	'9427: read -once varargs';
 read -once qtime;
-print	'9828: read -once qtime';
+print	'9428: read -once qtime';
 read -once chi;
-print	'9829: read -once chi';
+print	'9429: read -once chi';
 read -once intfile;
-print	'9830: read -once intfile';
+print	'9430: read -once intfile';
 read -once lucas;
-print	'9831: read -once lucas';
+print	'9431: read -once lucas';
 read -once natnumset;
-print	'9833: read -once natnumset';
+print	'9433: read -once natnumset';
 read -once repeat;
-print	'9834: read -once repeat';
+print	'9434: read -once repeat';
 read -once screen;
-print	'9835: read -once screen';
+print	'9435: read -once screen';
 read -once linear;
-print	'9836: read -once linear';
-print	'9837: skipping read -once beer.cal because it is an infinite loop';
-print	'9838: skipping read -once hello.cal because it is an infinite loop';
-print	'9839: skipping read -once xx_print.cal because it is a printing demo';
+print	'9436: read -once linear';
+print	'9437: skipping read -once beer.cal because it is an infinite loop';
+print	'9438: skipping read -once hello.cal because it is an infinite loop';
+print	'9439: skipping read -once xx_print.cal because it is a printing demo';
 read -once sumtimes;
-print	'9840: read -once sumtimes';
+print	'9440: read -once sumtimes';
 read -once dms;
-print	'9841: read -once dms';
+print	'9441: read -once dms';
 read -once hms;
-print	'9842: read -once hms';
-print	'9843: Ending read of selected calc resource files';
+print	'9442: read -once hms';
+print	'9443: Ending read of selected calc resource files';
 
 
 /*
- * cleanup and report the results
+ * test 95dd: dupvar_warn and redecl_warn testing
  */
 print;
+print '9500: Starting test of dupvar_warn and redecl_warn config parameters';
+vrfy(config("redecl_warn",0),	  '9501: config("redecl_warn",0)');
+vrfy(config("dupvar_warn",0),	  '9502: config("dupvar_warn",0)');
+vrfy(u_glob == 6,		  '9503: u_glob == 6');
+global u_glob = 555;
+print				  '9504: declare u_glob';
+vrfy(u_glob == 555,		  '9505: u_glob == 555');
+define func_8650(u_glob) { local u_glob; return u_glob; }
+print				  '9506: u_glob as both local and parameter';
+define func_8650a(u_glob) { static u_glob; return u_glob; }
+print				  '9507: u_glob as both static and parameter';
+vrfy(config("redecl_warn",1)==0,  '9508: config("redecl_warn",1)==0');
+vrfy(config("dupvar_warn",1)==0,  '9509: config("dupvar_warn",1)==0');
+
+
+/* ************************************************ */
+/* NOTE: ==> Room for new tests 9600-98899 here <== */
+/* ************************************************ */
+
+
+/* ********************************************************* */
+/* NOTE: ==> Room for special end tests 99000-99992 here <== */
+/* ********************************************************* */
+/* NOTE: Reserve test 99ddd for end of regression test suite */
+/* ********************************************************* */
+
+
+/*
+ * test 99993-99999: Final regression test suite cleanup and report test results
+ *
+ * NOTE: This section !!! ==> MUST BE LAST <== !!!
+ */
+print;
+print '99993: Final regression test suite cleanup and report test results';
+define count_errors()
+{
+	if (prob  ==  0) {
+		print "99997: passed all tests  /\\../\\";
+	} else {
+		print "****", prob, "error(s) found  \\/++\\/";
+	}
+}
+print '99994: parsed count_errors()';
 freeredc();
-print '9995: freeredc()';
+print '99995: freeredc()';
 freestatics();
-print '9996: freestatics()';
+print '99996: freestatics()';
+/* test 99997: reports the number of errors found */
 return count_errors();
 freeglobals();
-print '9998: freeglobals()';
-print '9999: Ending regression tests';
+print '99998: freeglobals()';
+print '99999: Ending regression tests';	/* !!! ==> MUST BE LAST LINE <== !!! */

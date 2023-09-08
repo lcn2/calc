@@ -136,6 +136,15 @@ The following are the changes from calc version 2.14.3.5 to date:
     Added new avercos(x, [,eps]) for inverse versed cosine and acovercos(x, [,eps])
     for inverse coversed cosine.
 
+    Improve comments about use of the ${CALC_ENV} Makefile variable.
+    Noted in Makefile.cal where and how the ${CALC_ENV} is used.
+    Use ${CALC_ENV} Makefile variable were needed.
+
+    Modified regression test cal/regress.cal: in some cases test numbers
+    were adjusted.  Add comments indicate which test numbers apply to
+    which code.  Indicated where there is room for new tests.
+    Expanded the end of test numbers from 9999 to  99999.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

@@ -2712,11 +2712,12 @@ custom/Makefile.simple:
 ###
 #
 # Doing a 'make check' will cause the regression test suite to be executed.
-# This rule will try to build anything that needs to be built as well.
+# This rule will try to build anything that needs to be built before
+# executing the regression test suite.
 #
-# Doing a 'make chk' will cause only the context around interesting
+# Doing a 'make chk' will cause ONLY the context around interesting
 # (and error) messages to be printed.  Unlike 'make check', this
-# rule does not cause things to be built.  i.e., the all rule is
+# rule does NOT cause things to be built.  I.e., the all rule is
 # not invoked.
 #
 ###
@@ -3123,18 +3124,15 @@ debug:
 
 testfuncsort: ./calc${EXT}
 	@${RM} -f func.show func.sort
-	@CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help CALCCUSTOMHELP=./custom \
-		./calc${EXT} -d -u show builtin | grep '^[A-Za-z0-9]' > func.show
-	@CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help CALCCUSTOMHELP=./custom \
-		./calc${EXT} -d -u show builtin | grep '^[A-Za-z0-9]' | LANG=C LC_ALL=C ${SORT} -d -u > func.sort
+	@${CALC_ENV} ./calc${EXT} -d -u show builtin | grep '^[A-Za-z0-9]' > func.show
+	@${CALC_ENV} ./calc${EXT} -d -u show builtin | grep '^[A-Za-z0-9]' | LANG=C LC_ALL=C ${SORT} -d -u > func.sort
 	@-if ! cmp -s func.show func.sort; then \
 	    echo 1>&2; \
 	    echo "ERROR: builtins[] arrray in func.c is not in dictionary sorted order" 1>&2; \
 	    echo 1>&2; \
-	    echo "CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help CALCCUSTOMHELP=./custom" \
-		 "./calc${EXT} -d -u show builtin | grep '^[A-Za-z0-9]' > func.show" 1>&2; \
-	    echo "CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help CALCCUSTOMHELP=./custom" \
-		 "./calc${EXT} -d -u show builtin | grep '^[A-Za-z0-9]' | LANG=C LC_ALL=C ${SORT} -d -u > func.sort" 1>&2; \
+	    echo "${CALC_ENV} ./calc${EXT} -d -u show builtin | grep '^[A-Za-z0-9]' > func.show" 1>&2; \
+	    echo "${CALC_ENV} ./calc${EXT} -d -u show builtin | grep '^[A-Za-z0-9]' |" \
+	         "LANG=C LC_ALL=C ${SORT} -d -u > func.sort" 1>&2; \
 	    echo 1>&2; \
 	    echo ${SDIFF} func.show func.sort 1>&2; \
 	    echo 1>&2; \
@@ -3196,7 +3194,7 @@ prep:
 	${Q}echo
 
 run:
-	CALCPATH=./cal LD_LIBRARY_PATH=. DYLD_LIBRARY_PATH=. CALCHELP=./help CALCCUSTOMHELP=./custom ./calc${EXT} -q
+	${CALC_ENV} ./calc${EXT} -q
 
 ###
 #
