@@ -5,7 +5,7 @@ SYNOPSIS
     cot(x [,eps])
 
 TYPES
-    x		nonzero real
+    x		number (real or complex)
     eps		0 < real < 1, defaults to epsilon()
 
     return	real
@@ -18,12 +18,21 @@ EXAMPLE
     ; print cot(1, 1e-5), cot(1, 1e-10), cot(1, 1e-15), cot(1, 1e-20)
     0.64209 0.6420926159 0.642092615934331 0.64209261593433070301
 
+    ; print cot(2 + 3i, 1e-5), cot(2 + 3i, 1e-10)
+    ~-0.00373977357605613583-~0.99675796378381737782i ~-0.00373971037383300017-~0.99675779657435500069i
+
+    ; pi = pi(1e-20)
+    ; print cot(pi/12, 1e-10), cot(pi/6, 1e-10), cot(pi/3, 1e-10), cot(pi/2, 1e-10)
+    3.7320508076 1.7320508076 0.5773502692 0
+
+    ; print cot(1/2), cot(5/7), cot(42/7)
+    1.83048772171245191927 1.15339160419695060142 -3.43635300418012783207
+
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qcot(NUMBER *x, NUMBER *eps)
-    COMPLEX *c_acot(COMPLEX *c, NUMBER *eps);
 
 SEE ALSO
     sin, cos, tan, sec, csc

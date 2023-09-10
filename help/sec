@@ -5,7 +5,7 @@ SYNOPSIS
     sec(x [,eps])
 
 TYPES
-    x		real
+    x		number (real or complex)
     eps		0 < real < 1, defaults to epsilon()
 
     return	real
@@ -18,8 +18,17 @@ EXAMPLE
     ; print sec(1, 1e-5), sec(1, 1e-10), sec(1, 1e-15), sec(1, 1e-20)
     1.85082 1.8508157177 1.850815717680926 1.85081571768092561791
 
+    ; print sec(2 + 3i, 1e-5), sec(2 + 3i, 1e-10)
+    ~-0.04167497639869547021+~0.09061109101765280898i ~-0.04167496441100888150+~0.09061113719571288336i
+
+    ; pi = pi(1e-20)
+    ; print 1e-10), sec(pi/6, 1e-10), sec(pi/3, 1e-10), sec(pi, 1e-10)
+    1.1547005384 2 -1
+
+    ; print sec(1/2), sec(5/7), sec(42/7)
+    1.13949392732454912231 1.3235192673191814545 1.04148192659510767648
+
 LIMITS
-    unlike sin and cos, x must be real
     0 < eps < 1
 
 LINK LIBRARY

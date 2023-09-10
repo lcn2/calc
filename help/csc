@@ -5,7 +5,7 @@ SYNOPSIS
     csc(x [,eps])
 
 TYPES
-    x		real
+    x		number (real or complex)
     eps		0 < real < 1, defaults to epsilon()
 
     return	real
@@ -17,6 +17,16 @@ DESCRIPTION
 EXAMPLE
     ; print csc(1, 1e-5), csc(1, 1e-10), csc(1, 1e-15), csc(1, 1e-20)
     1.1884 1.1883951058 1.188395105778121 1.18839510577812121626
+
+    ; print csc(2 + 3i, 1e-5), csc(2 + 3i, 1e-10)
+    ~0.09047318155450436310+~0.04120099965201690801i ~0.09047320975303232503+~0.04120098628887626238i
+
+    ; pi = pi(1e-20)
+    ; print csc(pi/6, 1e-10), csc(pi/3, 1e-10), csc(4*pi/3, 1e-10)
+    2 1.1547005384 -1.1547005384
+
+    ; print csc(1/2), csc(5/7), csc(42/7)
+    2.08582964293348818577 1.52653601091884339347 -3.57889954725440563736
 
 LIMITS
     0 < eps < 1

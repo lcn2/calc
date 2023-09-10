@@ -176,6 +176,15 @@ The following are the changes from calc version 2.14.3.5 to date:
     number generator in place of the additive 55 generator for a
     while now.
 
+    Improved help files for sin, cos, tan, cot, sec, csc.  In case
+    of tan, cot, sec, csc corrected help file was corrected to
+    indicate that complex arguments are allowed.  This was a help
+    file oversight from long ago when those trigonometric functions
+    were expanded to include complex arguments.
+
+    Expanded the calc regression test suite test 34dd to test various
+    real and complex values for sin, cos, tan, cot, sec, csc.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

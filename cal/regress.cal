@@ -2959,6 +2959,14 @@ define test_2600()
 	local tnum;	/* test number */
 	local i;
 
+	/*
+	 * NOTE: The various functions test in this are often accurate to
+	 *	 eps (epsilon) or better, which defaults to about 20 decimal
+	 *	 digits.  We test a number of functions to 10 digits using
+	 *	 round(..., 10) because we do not want to have to put lots
+	 *	 of digits in the verify identities.
+	 */
+
 	print '2600: Beginning extensive numeric function test';
 
 	i = config("sqrt");
@@ -3529,6 +3537,7 @@ print '049: parsed test_det()';
 /*
  * test 050-051: define test_trig and read test3400.trig for test 34dd
  *
+ *
  * This function tests common trig functions.
  */
 read -once "test3400.trig";
@@ -3540,6 +3549,14 @@ define test_trig()
 	local pi;       /* pi to 1e-20 precision */
 	local i;
 
+	/*
+	 * NOTE: The various functions test in this are often accurate to
+	 *	 eps (epsilon) or better, which defaults to about 20 decimal
+	 *	 digits.  We test a number of functions to 10 digits using
+	 *	 round(..., 10) because we do not want to have to put lots
+	 *	 of digits in the verify identities.
+	 */
+
 	print '3400: Beginning test_trig';
 
 	/* test 3401-3407 */
@@ -3550,8 +3567,146 @@ define test_trig()
 	/* test trigonometric sine */
 	vrfy(sin(0, 1e-10) == 0,
 				strcat(str(tnum++), ': sin(0, 1e-10) == 0'));
+	vrfy(round(sin(1, 1e-10), 10) == 0.8414709848,
+	    strcat(str(tnum++),
+		   ': round(sin(1, 1e-10), 10) == 0.8414709848'));
+	vrfy(round(sin(2 + 3i, 1e-10), 10) == 9.1544991469-4.16890696i,
+	    strcat(str(tnum++),
+		   ': round(sin(2 + 3i, 1e-10), 10) == 9.1544991469-4.16890696i'));
 	vrfy(sin(pi/6, 1e-10) == 0.5,
 				strcat(str(tnum++), ': sin(pi/6, 1e-10) == 0.5'));
+	vrfy(sin(pi/2, 1e-10) == 1,
+				strcat(str(tnum++), ': sin(pi/2, 1e-10) == 1'));
+	vrfy(sin(pi, 1e-10) == 0,
+				strcat(str(tnum++), ': sin(pi, 1e-10) == 1'));
+	vrfy(round(sin(1/2, 1e-10), 10) == 0.4794255386,
+	    strcat(str(tnum++),
+		   ': round(sin(1/2, 1e-10), 10) == 0.4794255386'));
+	vrfy(round(sin(5/7, 1e-10), 10) == 0.6550778972,
+	    strcat(str(tnum++),
+		   ': round(sin(5/7, 1e-10), 10) == 0.6550778972'));
+	vrfy(round(sin(42/7, 1e-10), 10) == -0.2794154982,
+	    strcat(str(tnum++),
+		   ': round(sin(42/7, 1e-10), 10) == -0.2794154982'));
+
+	/* test trigonometric cosine */
+	vrfy(cos(0, 1e-10) == 1,
+				strcat(str(tnum++), ': cos(0, 1e-10) == 1'));
+	vrfy(round(cos(1, 1e-10), 10) == 0.5403023059,
+	    strcat(str(tnum++),
+		   ': round(cos(0.2, 1e-10), 10) == 0.5403023059'));
+	vrfy(cos(pi/3, 1e-10) == 0.5,
+				strcat(str(tnum++), ': cos(pi/3, 1e-10) == 0.5'));
+	vrfy(cos(pi/2, 1e-10) == 0,
+				strcat(str(tnum++), ': cos(pi/2, 1e-10) == 0'));
+	vrfy(cos(pi, 1e-10) == -1,
+				strcat(str(tnum++), ': cos(pi, 1e-10) == -1'));
+	vrfy(round(cos(2 + 3i, 1e-10), 10) == -4.189625691-9.1092278938i,
+	    strcat(str(tnum++),
+		   ': round(cos(2 + 3i, 1e-10), 10) == -4.189625691-9.1092278938i'));
+	vrfy(round(cos(1/2, 1e-10), 10) == 0.8775825619,
+	    strcat(str(tnum++),
+		   ': round(cos(1/2, 1e-10), 10) == 0.8775825619'));
+	vrfy(round(cos(5/7, 1e-10), 10) == 0.7555613467,
+	    strcat(str(tnum++),
+		   ': round(cos(5/7, 1e-10), 10) == 0.7555613467'));
+	vrfy(round(cos(42/7, 1e-10), 10) == 0.9601702866,
+	    strcat(str(tnum++),
+		   ': round(cos(42/7, 1e-10), 10) == 0.9601702866'));
+
+	/* test trigonometric tangent */
+	vrfy(tan(0, 1e-10) == 0,
+				strcat(str(tnum++), ': tan(0, 1e-10) == 0'));
+	vrfy(round(tan(1, 1e-10), 10) == 1.5574077247,
+	    strcat(str(tnum++),
+		   ': round(tan(0.2, 1e-10), 10) == 1.5574077247'));
+	vrfy(round(tan(pi/6, 1e-10), 10) == 0.5773502692,
+	    strcat(str(tnum++),
+		   ': round(tan(pi/6, 1e-10), 10) == 0.5773502692'));
+	vrfy(round(tan(pi/3, 1e-10), 10) == 1.7320508076,
+	    strcat(str(tnum++),
+		   ': round(tan(pi/3, 1e-10), 10) == 1.7320508076'));
+	vrfy(tan(pi, 1e-10) == 0,
+				strcat(str(tnum++), ': tan(pi, 1e-10) == 0'));
+	vrfy(round(tan(1/2, 1e-10), 10) == 0.5463024898,
+	    strcat(str(tnum++),
+		   ': round(tan(1/2, 1e-10), 10) == 0.5463024898'));
+	vrfy(round(tan(5/7, 1e-10), 10) == 0.8670082185,
+	    strcat(str(tnum++),
+		   ': round(tan(5/7, 1e-10), 10) == 0.8670082185'));
+	vrfy(round(tan(42/7, 1e-10), 10) == -0.2910061914,
+	    strcat(str(tnum++),
+		   ': round(tan(42/7, 1e-10), 10) == -0.2910061914'));
+
+	/* test trigonometric cotangent */
+	vrfy(round(cot(1, 1e-10), 10) == 0.6420926159,
+	    strcat(str(tnum++),
+		   ': round(cot(0.2, 1e-10), 10) == 0.6420926159'));
+	vrfy(round(cot(pi/12, 1e-10), 10) == 3.7320508076,
+	    strcat(str(tnum++),
+		   ': round(cot(pi/12, 1e-10), 10) == 3.7320508076'));
+	vrfy(round(cot(pi/6, 1e-10), 10) == 1.7320508076,
+	    strcat(str(tnum++),
+		   ': round(cot(pi/6, 1e-10), 10) == 1.7320508076'));
+	vrfy(round(cot(pi/3, 1e-10), 10) == 0.5773502692,
+	    strcat(str(tnum++),
+		   ': round(cot(pi/3, 1e-10), 10) == 0.5773502692'));
+	vrfy(cot(pi/2, 1e-10) == 0,
+				strcat(str(tnum++), ': cot(pi/2, 1e-10) == 0'));
+	vrfy(round(cot(1/2, 1e-10), 10) == 1.8304877217,
+	    strcat(str(tnum++),
+		   ': round(cot(1/2, 1e-10), 10) == 1.8304877217'));
+	vrfy(round(cot(5/7, 1e-10), 10) == 1.1533916042,
+	    strcat(str(tnum++),
+		   ': round(cot(5/7, 1e-10), 10) == 1.1533916042'));
+	vrfy(round(cot(42/7, 1e-10), 10) == -3.4363530042,
+	    strcat(str(tnum++),
+		   ': round(cot(42/7, 1e-10), 10) == -3.4363530042'));
+
+	/* test trigonometric cosecant */
+	vrfy(round(csc(1, 1e-10), 10) == 1.1883951058,
+	    strcat(str(tnum++),
+		   ': round(csc(0.2, 1e-10), 10) == 1.1883951058'));
+	vrfy(csc(pi/6, 1e-10) == 2,
+				strcat(str(tnum++), ': csc(pi/6, 1e-10) == 2'));
+	vrfy(round(csc(pi/3, 1e-10), 10) == 1.1547005384,
+	    strcat(str(tnum++),
+		   ': round(csc(pi/3, 1e-10), 10) == 1.1547005384'));
+	vrfy(round(csc(4*pi/3, 1e-10), 10) == -1.1547005384,
+	    strcat(str(tnum++),
+		   ': round(csc(4*pi/3, 1e-10), 10) == -1.1547005384'));
+	vrfy(round(csc(1/2, 1e-10), 10) == 2.0858296429,
+	    strcat(str(tnum++),
+		   ': round(csc(1/2, 1e-10), 10) == 2.0858296429'));
+	vrfy(round(csc(5/7, 1e-10), 10) == 1.5265360109,
+	    strcat(str(tnum++),
+		   ': round(csc(5/7, 1e-10), 10) == 1.5265360109'));
+	vrfy(round(csc(42/7, 1e-10), 10) == -3.5788995473,
+	    strcat(str(tnum++),
+		   ': round(csc(42/7, 1e-10), 10) == -3.5788995473'));
+
+	/* test trigonometric secant */
+	vrfy(sec(0, 1e-10) == 1,
+				strcat(str(tnum++), ': sec(0, 1e-10) == 1'));
+	vrfy(round(sec(1, 1e-10), 10) == 1.8508157177,
+	    strcat(str(tnum++),
+		   ': round(sec(0.2, 1e-10), 10) == 1.8508157177'));
+	vrfy(round(sec(pi/6, 1e-10), 10) == 1.1547005384,
+	    strcat(str(tnum++),
+		   ': round(sec(pi/6, 1e-10), 10) == 1.1547005384'));
+	vrfy(sec(pi/3, 1e-10) == 2,
+				strcat(str(tnum++), ': sec(pi/2, 1e-10) == 2'));
+	vrfy(sec(pi, 1e-10) == -1,
+				strcat(str(tnum++), ': sec(pi, 1e-10) == -1'));
+	vrfy(round(sec(1/2, 1e-10), 10) == 1.1394939273,
+	    strcat(str(tnum++),
+		   ': round(sec(1/2, 1e-10), 10) == 1.1394939273'));
+	vrfy(round(sec(5/7, 1e-10), 10) == 1.3235192673,
+	    strcat(str(tnum++),
+		   ': round(sec(5/7, 1e-10), 10) == 1.3235192673'));
+	vrfy(round(sec(42/7, 1e-10), 10) == 1.0414819266,
+	    strcat(str(tnum++),
+		   ': round(sec(42/7, 1e-10), 10) == 1.0414819266'));
 
 	/* test versed trigonometric sine */
 	vrfy(versin(0, 1e-10) == 0,

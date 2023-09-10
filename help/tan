@@ -5,7 +5,7 @@ SYNOPSIS
     tan(x [,eps])
 
 TYPES
-    x		real
+    x		number (real or complex)
     eps		0 < real < 1, defaults to epsilon()
 
     return	real
@@ -18,13 +18,21 @@ EXAMPLE
     ; print tan(1, 1e-5), tan(1, 1e-10), tan(1, 1e-15), tan(1, 1e-20)
     1.55741 1.5574077247 1.557407724654902 1.55740772465490223051
 
+    ; print tan(2 + 3i, 1e-5), tan(2 + 3i, 1e-10)
+    ~-0.00376408798745471014+~1.00323845857938817252i ~-0.00376402563894634508+~1.00323862734859967572i
+
+    ; pi = pi(1e-20)
+    ; print tan(0, 1e-10), tan(pi/6, 1e-10), tan(pi/3, 1e-10), tan(pi, 1e-10)
+    0 0.5773502692 1.7320508076 0
+
+    ; print tan(1/2), tan(5/7), tan(42/7)
+    0.54630248984379051326 0.8670082185107029875 -0.29100619138474915705
+
 LIMITS
-    unlike sin and cos, x must be real
     0 < eps < 1
 
 LINK LIBRARY
     NUMBER *qtan(NUMBER *x, NUMBER *eps)
-    COMPLEX *c_atan(COMPLEX *c, NUMBER *eps);
 
 SEE ALSO
     sin, cos, cot, sec, csc
