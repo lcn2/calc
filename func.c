@@ -997,7 +997,7 @@ f_rand(int count, NUMBER **vals)
 	/* parse args */
 	switch (count) {
 	case 0:			/* rand() == rand(2^64) */
-		/* generate an a55 random number */
+		/* generate an subtractive 100 shuffle pseudo-random number */
 		ans = qalloc();
 		zrand(SBITS, &ans->num);
 		break;
@@ -1031,7 +1031,7 @@ f_rand(int count, NUMBER **vals)
 		return NULL;
 	}
 
-	/* return the a55 random number */
+	/* return the subtractive 100 shuffle pseudo-random number */
 	return ans;
 }
 
@@ -1064,7 +1064,7 @@ f_randbit(int count, NUMBER **vals)
 	}
 
 	/*
-	 * generate an a55 random number or skip random bits
+	 * generate an subtractive 100 shuffle pseudo-random number or skip random bits
 	 */
 	ans = qalloc();
 	cnt = ztolong(vals[0]->num);
@@ -1078,7 +1078,7 @@ f_randbit(int count, NUMBER **vals)
 	}
 
 	/*
-	 * return the a55 random number
+	 * return the subtractive 100 shuffle pseudo-random number
 	 */
 	return ans;
 }
@@ -1096,14 +1096,14 @@ f_srand(int count, VALUE **vals)
 	/* parse args */
 	switch (count) {
 	case 0:
-		/* get the current a55 state */
+		/* get the current subtractive 100 shuffle pseudo-random number generator state */
 		result.v_rand = zsrand(NULL, NULL);
 		break;
 
 	case 1:
 		switch (vals[0]->v_type) {
 		case V_NUM:		/* srand(seed) */
-			/* seed a55 and return previous state */
+			/* seed subtractive 100 shuffle pseudo-random number generator and return previous state */
 			if (!qisint(vals[0]->v_num)) {
 				math_error(
 				  "srand number seed must be an integer");
@@ -1113,7 +1113,7 @@ f_srand(int count, VALUE **vals)
 			break;
 
 		case V_RAND:		/* srand(state) */
-			/* set a55 state and return previous state */
+			/* set subtractive 100 shuffle pseudo-random number generator state and return previous state */
 			result.v_rand = zsetrand(vals[0]->v_rand);
 			break;
 
@@ -1267,7 +1267,7 @@ f_srandom(int count, VALUE **vals)
 			break;
 
 		case V_RANDOM:		/* srandom(state) */
-			/* set a55 state and return previous state */
+			/* set subtractive 100 shuffle pseudo-random number generator state and return previous state */
 			result.v_random = zsetrandom(vals[0]->v_random);
 			break;
 

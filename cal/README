@@ -1130,7 +1130,7 @@ randbitrun.cal
     the number and length of identical bits runs match what is expected.
     By default, run_cnt is to test the next 65536 random values.
 
-    This tests the a55 generator.
+    This tests the subtractive 100 shuffle pseudo-random number generator.
 
 
 randmprime.cal
@@ -1177,7 +1177,7 @@ randrun.cal
     64 bit values.  By default, run_cnt is to test the next 65536
     random values.
 
-    This tests the a55 generator.
+    This tests the subtractive 100 shuffle pseudo-random number generator.
 
 repeat.cal
 

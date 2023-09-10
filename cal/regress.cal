@@ -1737,7 +1737,7 @@ print '024: parsed test_list()';
 /*
  * test 025: define test_rand for test 15dd
  *
- * This function tests the a55 shuffle pseudo-random number generator.
+ * This function tests the subtractive 100 shuffle pseudo-random number generator.
  */
 define test_rand()
 {
@@ -3546,6 +3546,12 @@ define test_trig()
 	tnum = test3400(1, 3401);
 	vrfy(tnum++ == 3407,	'3407: tnum == 3407');
 	pi = pi(1e-20);
+
+	/* test trigonometric sine */
+	vrfy(sin(0, 1e-10) == 0,
+				strcat(str(tnum++), ': sin(0, 1e-10) == 0'));
+	vrfy(sin(pi/6, 1e-10) == 0.5,
+				strcat(str(tnum++), ': sin(pi/6, 1e-10) == 0.5'));
 
 	/* test versed trigonometric sine */
 	vrfy(versin(0, 1e-10) == 0,
@@ -8297,7 +8303,7 @@ return test_list();
 
 
 /*
- * test 15dd: test the a55 shuffle pseudo-random number generator
+ * test 15dd: test the subtractive 100 shuffle pseudo-random number generator
  */
 print;
 return test_rand();

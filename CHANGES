@@ -170,6 +170,12 @@ The following are the changes from calc version 2.14.3.5 to date:
     Added to test 94dd, read of a number of new calc resource files
     that are not already read as a result of the calc regression test suite.
 
+    Fixed more documentation and code comments that referred to the
+    old additive 55 (a55) shuffle pseudo-random number generator.
+    We have been using the subtractive 100 shuffle pseudo-random
+    number generator in place of the additive 55 generator for a
+    while now.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 
