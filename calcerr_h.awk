@@ -2,7 +2,7 @@
 #
 # calcerr_h - help produce calcerr.h from calcerr.tbl
 #
-# Copyright (C) 1999  Landon Curt Noll
+# Copyright (C) 1999,2023  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -42,7 +42,7 @@ NF > 1 {
 }
 END {
     printf("\n#define E__HIGHEST\t%d\t/* highest calc error */\n", NR+ebase);
-    printf("#define E__COUNT\t\t%d\t/* number of calc errors */\n", NR);
+    printf("#define E__COUNT\t%d\t/* number of calc errors */\n", NR);
     printf("#define E_USERDEF\t20000\t/* base of user defined errors */\n\n");
     printf("/* names of calc error values */\n");
 }

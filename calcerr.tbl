@@ -154,8 +154,8 @@ E_UNGETC1	Non-file argument for ungetc
 E_UNGETC2	File not open for reading for ungetc
 E_UNGETC3	Bad second argument or other error for ungetc
 E_BIGEXP	Exponent too big in scanning
-E_ISATTY1	E_ISATTY1 is no longer used
-E_ISATTY2	E_ISATTY2 is no longer used
+E_ISATTY1	UNUSED ERROR: E_ISATTY1 is no longer used
+E_ISATTY2	UNUSED ERROR: E_ISATTY2 is no longer used
 E_ACCESS1	Non-string first argument for access
 E_ACCESS2	Bad second argument for access
 E_SEARCH1	Bad first argument for search
@@ -183,12 +183,12 @@ E_ARG1		Bad epsilon for arg
 E_ARG2		Bad first argument for arg
 E_POLAR1	Non-real argument for polar
 E_POLAR2	Bad epsilon for polar
-E_FCNT		Non-integral argument for fcnt
+E_FCNT		UNUSED ERROR: Non-integral argument for fcnt
 E_MATFILL1	Non-variable first argument for matfill
 E_MATFILL2	Non-matrix first argument-value for matfill
 E_MATDIM	Non-matrix argument for matdim
 E_MATSUM	Non-matrix argument for matsum
-E_ISIDENT	E_ISIDENT is no longer used
+E_ISIDENT	UNUSED ERROR: E_ISIDENT is no longer used
 E_MATTRANS1	Non-matrix argument for mattrans
 E_MATTRANS2	Non-two-dimensional matrix for mattrans
 E_DET1		Non-matrix argument for det
@@ -227,10 +227,10 @@ E_ERROR2	Argument outside range for error
 E_EVAL3		Attempt to eval at maximum input depth
 E_EVAL4		Unable to open string for reading
 E_RM1		First argument for rm is not a non-empty string
-E_RM2		Unable to remove a file
-E_RDPERM	Operation allowed because calc mode disallows read operations
+E_RM2		UNUSED ERROR: Unable to remove a file
+E_RDPERM	UNUSED ERROR: Operation allowed because calc mode disallows read operations
 E_WRPERM	Operation allowed because calc mode disallows write operations
-E_EXPERM	Operation allowed because calc mode disallows exec operations
+E_EXPERM	UNUSED ERROR: Operation allowed because calc mode disallows exec operations
 E_MIN		Unordered arguments for min
 E_MAX		Unordered arguments for max
 E_LISTMIN	Unordered items for minimum of list
@@ -252,7 +252,7 @@ E_BLOCKS1	Non-integer argument for blocks
 E_BLOCKS2	Non-allocated index number for blocks
 E_COPY1		Non-integer or negative source index for copy
 E_COPY2		Source index too large for copy
-E_COPY3		E_COPY3 is no longer used
+E_COPY3		UNUSED ERROR: E_COPY3 is no longer used
 E_COPY4		Non-integer or negative number for copy
 E_COPY5		Number too large for copy
 E_COPY6		Non-integer or negative destination index for copy
@@ -319,7 +319,7 @@ E_ATANH1	Bad epsilon for atanh
 E_ATANH2	Bad argument for atanh
 E_ACOTH1	Bad epsilon for acoth
 E_ACOTH2	Bad argument for acoth
-E_ASECH1	Bad epsilon for asech
+E_ASECH1	UNUSED ERROR: Bad epsilon for asech
 E_ASECH2	Bad argument for asech
 E_ACSCH1	Bad epsilon for acsch
 E_ACSCH2	Bad argument for acsch
@@ -359,7 +359,7 @@ E_HEAD1		Bad first argument for head
 E_HEAD2		Bad second argument for head
 E_STRHEAD	Failure for strhead
 E_TAIL1		Bad first argument for tail
-E_TAIL2		Bad second argument for tail
+E_TAIL2		UNUSED ERROR: Bad second argument for tail
 E_STRTAIL	Failure for strtail
 E_STRSHIFT	Failure for strshift
 E_STRCMP	Non-string argument for strcmp
@@ -455,7 +455,7 @@ E_LOG3		Cannot calculate log for this value
 E_FGETFILE1	Non-file argument for fgetfile
 E_FGETFILE2	File argument for fgetfile not open for reading
 E_FGETFILE3	Unable to set file position in fgetfile
-E_ESTR		Non-representable type for estr
+E_ESTR		UNUSED ERROR: Non-representable type for estr
 E_STRCASECMP	Non-string argument for strcasecmp
 E_STRNCASECMP	Bad argument type for strncasecmp
 E_ISUPPER	Bad argument for isupper
@@ -540,8 +540,8 @@ E_GM2G1		Non-real-number arguments 1 or 2 for gm2g
 E_GM2G2		Invalid rounding arg 4 for gm2g
 E_HMS2H1	Non-real-number arguments 1, 2 or 3 for hms2h
 E_HMS2H2	Invalid rounding arg 4 for hms2h
-E_HM2H1		Non-real-number arguments 1 or 2 for hm2h
-E_HM2H2		Invalid rounding arg 4 for hm2h
+E_HM2H1		UNUSED ERROR: Non-real-number arguments 1 or 2 for hm2h
+E_HM2H2		UNUSED ERROR: Invalid rounding arg 4 for hm2h
 E_LOG2_1	Bad epsilon argument for log2
 E_LOG2_2	Non-numeric first argument for log2
 E_LOG2_3	Cannot calculate log2 for this value
