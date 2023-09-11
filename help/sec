@@ -14,6 +14,10 @@ DESCRIPTION
     Calculate the secant of x to a multiple of eps, with error less
     in absolute value than .75 * eps.
 
+    This function is equivalent to:
+
+	sec(x) = 1 / cos(x)
+
 EXAMPLE
     ; print sec(1, 1e-5), sec(1, 1e-10), sec(1, 1e-15), sec(1, 1e-20)
     1.85082 1.8508157177 1.850815717680926 1.85081571768092561791
@@ -33,6 +37,7 @@ LIMITS
 
 LINK LIBRARY
     NUMBER *qsec(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_sec(COMPLEX *c, NUMBER *eps)
 
 SEE ALSO
     sin, cos, tan, cot, csc

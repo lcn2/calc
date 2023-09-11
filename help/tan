@@ -14,6 +14,10 @@ DESCRIPTION
     Calculate the tangent of x to a multiple of eps, with error less
     in absolute value than .75 * eps.
 
+    This function is equivalent to:
+
+	tan(x) = sin(x) / cos(x)
+
 EXAMPLE
     ; print tan(1, 1e-5), tan(1, 1e-10), tan(1, 1e-15), tan(1, 1e-20)
     1.55741 1.5574077247 1.557407724654902 1.55740772465490223051
@@ -33,6 +37,7 @@ LIMITS
 
 LINK LIBRARY
     NUMBER *qtan(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_tan(COMPLEX *c, NUMBER *eps)
 
 SEE ALSO
     sin, cos, cot, sec, csc

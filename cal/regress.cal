@@ -4112,10 +4112,10 @@ define test_error()
 	n = 8191;
 	print				'3727: n = 8191';
 	/* test 3728 removed due to non-portable strerror() output */
-	vrfy(tan(2e9i) == error(10435),	'3729: tan(2e9i) == error(10435)');
-	vrfy(cot(2e9i) == error(10437),	'3730: cot(2e9i) == error(10437)');
-	vrfy(sec(2e9i) == error(10439),	'3731: sec(2e9i) == error(10439)');
-	vrfy(csc(2e9i) == error(10440),	'3732: csc(2e9i) == error(10440)');
+	vrfy(tan(2e9i) == error(10537),	'3729: tan(2e9i) == error(10537)');
+	vrfy(cot(2e9i) == error(10539),	'3730: cot(2e9i) == error(10539)');
+	vrfy(sec(2e9i) == error(10540),	'3731: sec(2e9i) == error(10540)');
+	vrfy(csc(2e9i) == error(10542),	'3732: csc(2e9i) == error(10542)');
 
 	/* errmax and errcount should be bumped up the 148 errors above */
 	vrfy(errcount() == ecnt,	'3733: errcount() == ecnt');

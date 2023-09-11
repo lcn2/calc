@@ -878,6 +878,96 @@ c_acosh(COMPLEX *c, NUMBER *epsilon)
 }
 
 
+/*
+ * c_tan - complex trigonometric tangent
+ *
+ * This uses the formula:
+ *
+ *	tan(x) = sin(x) / cos(x)
+ *
+ * given:
+ *	c	    argument to the trigonometric function
+ *	epsilon	    precision of the trigonometric calculation
+ *
+ * returns:
+ *	!= NULL ==> allocated pointer to COMPLEX result
+ *	NULL ==> invalid trigonometric argument
+ *
+ * NOTE: When the trigonometric result is returned as non-NULL result,
+ *	 the value may be a real value.  The caller may wish to:
+ *
+ *		COMPLEX *c;	(* return result of this function *)
+ *		NUMBER *q;	(* COMPLEX result when c is a real number *)
+ *
+ *		if (c == NULL) {
+ *			math_error("... some error message");
+ *			not_reached();
+ *		}
+ *		if (cisreal(c)) {
+ *			q = c_to_q(c, ok_to_free);
+ *		}
+ */
+COMPLEX *
+c_tan(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *denom;	/* trigonometric identity numerator */
+	COMPLEX *numer;	/* trigonometric identity denominator */
+	COMPLEX *res;	/* trigonometric result */
+
+	/*
+	 * firewall - check args
+	 */
+	if (c == NULL) {
+		return NULL;
+	}
+	if (check_epsilon(epsilon) == false) {
+		return NULL;
+	}
+
+	/*
+	 * evaluate the cos(x) denominator
+	 *
+	 * Return NULL if cos(x) failed or we otherwise divide by zero.
+	 */
+	denom = c_cos(c, epsilon);
+	if (denom == NULL || ciszero(denom)) {
+		return NULL;
+	}
+
+	/*
+	 * evaluate the sin(x) numerator
+	 *
+	 * Return NULL if sin(x) failed.
+	 */
+	numer = c_sin(c, epsilon);
+	if (numer == NULL) {
+		comfree(denom);
+		return NULL;
+	}
+
+	/*
+	 * catch the special case of numerator of 0
+	 */
+	if (ciszero(numer)) {
+		comfree(denom);
+		comfree(numer);
+		return clink(&_czero_);
+	}
+
+	/*
+	 * compute the trigonometric function value
+	 */
+	res = c_div(numer, denom);
+	comfree(denom);
+	comfree(numer);
+
+	/*
+	 * return the trigonometric result
+	 */
+	return res;
+}
+
+
 COMPLEX *
 c_atan(COMPLEX *c, NUMBER *epsilon)
 {
@@ -897,6 +987,96 @@ c_atan(COMPLEX *c, NUMBER *epsilon)
 	tmp1 = c_div(tmp2, &_conei_);
 	comfree(tmp2);
 	return tmp1;
+}
+
+
+/*
+ * c_cot - complex trigonometric cotangent
+ *
+ * This uses the formula:
+ *
+ *	cot(x) = cos(x) / sin(x)
+ *
+ * given:
+ *	c	    argument to the trigonometric function
+ *	epsilon	    precision of the trigonometric calculation
+ *
+ * returns:
+ *	!= NULL ==> allocated pointer to COMPLEX result
+ *	NULL ==> invalid trigonometric argument
+ *
+ * NOTE: When the trigonometric result is returned as non-NULL result,
+ *	 the value may be a real value.  The caller may wish to:
+ *
+ *		COMPLEX *c;	(* return result of this function *)
+ *		NUMBER *q;	(* COMPLEX result when c is a real number *)
+ *
+ *		if (c == NULL) {
+ *			math_error("... some error message");
+ *			not_reached();
+ *		}
+ *		if (cisreal(c)) {
+ *			q = c_to_q(c, ok_to_free);
+ *		}
+ */
+COMPLEX *
+c_cot(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *denom;	/* trigonometric identity numerator */
+	COMPLEX *numer;	/* trigonometric identity denominator */
+	COMPLEX *res;	/* trigonometric result */
+
+	/*
+	 * firewall - check args
+	 */
+	if (c == NULL) {
+		return NULL;
+	}
+	if (check_epsilon(epsilon) == false) {
+		return NULL;
+	}
+
+	/*
+	 * evaluate the sin(x) denominator
+	 *
+	 * Return NULL if sin(x) failed or we otherwise divide by zero.
+	 */
+	denom = c_sin(c, epsilon);
+	if (denom == NULL || ciszero(denom)) {
+		return NULL;
+	}
+
+	/*
+	 * evaluate the cos(x) numerator
+	 *
+	 * Return NULL if cos(x) failed.
+	 */
+	numer = c_cos(c, epsilon);
+	if (numer == NULL) {
+		comfree(denom);
+		return NULL;
+	}
+
+	/*
+	 * catch the special case of numerator of 0
+	 */
+	if (ciszero(numer)) {
+		comfree(denom);
+		comfree(numer);
+		return clink(&_czero_);
+	}
+
+	/*
+	 * compute the trigonometric function value
+	 */
+	res = c_div(numer, denom);
+	comfree(denom);
+	comfree(numer);
+
+	/*
+	 * return the trigonometric result
+	 */
+	return res;
 }
 
 
@@ -921,6 +1101,75 @@ c_acot(COMPLEX *c, NUMBER *epsilon)
 	return tmp1;
 }
 
+
+/*
+ * c_sec - complex trigonometric tangent
+ *
+ * This uses the formula:
+ *
+ *	sec(x) = 1 / cos(x)
+ *
+ * given:
+ *	c	    argument to the trigonometric function
+ *	epsilon	    precision of the trigonometric calculation
+ *
+ * returns:
+ *	!= NULL ==> allocated pointer to COMPLEX result
+ *	NULL ==> invalid trigonometric argument
+ *
+ * NOTE: When the trigonometric result is returned as non-NULL result,
+ *	 the value may be a real value.  The caller may wish to:
+ *
+ *		COMPLEX *c;	(* return result of this function *)
+ *		NUMBER *q;	(* COMPLEX result when c is a real number *)
+ *
+ *		if (c == NULL) {
+ *			math_error("... some error message");
+ *			not_reached();
+ *		}
+ *		if (cisreal(c)) {
+ *			q = c_to_q(c, ok_to_free);
+ *		}
+ */
+COMPLEX *
+c_sec(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *denom;	/* trigonometric identity numerator */
+	COMPLEX *res;	/* trigonometric result */
+
+	/*
+	 * firewall - check args
+	 */
+	if (c == NULL) {
+		return NULL;
+	}
+	if (check_epsilon(epsilon) == false) {
+		return NULL;
+	}
+
+	/*
+	 * evaluate the cos(x) denominator
+	 *
+	 * Return NULL if cos(x) failed or we otherwise divide by zero.
+	 */
+	denom = c_cos(c, epsilon);
+	if (denom == NULL || ciszero(denom)) {
+		return NULL;
+	}
+
+	/*
+	 * compute the trigonometric function value
+	 */
+	res = c_div(&_cone_, denom);
+	comfree(denom);
+
+	/*
+	 * return the trigonometric result
+	 */
+	return res;
+}
+
+
 COMPLEX *
 c_asec(COMPLEX *c, NUMBER *epsilon)
 {
@@ -931,6 +1180,75 @@ c_asec(COMPLEX *c, NUMBER *epsilon)
 	comfree(tmp1);
 	return tmp2;
 }
+
+
+/*
+ * c_sec - complex trigonometric cosecant
+ *
+ * This uses the formula:
+ *
+ *	csc(x) = 1 / sin(x)
+ *
+ * given:
+ *	c	    argument to the trigonometric function
+ *	epsilon	    precision of the trigonometric calculation
+ *
+ * returns:
+ *	!= NULL ==> allocated pointer to COMPLEX result
+ *	NULL ==> invalid trigonometric argument
+ *
+ * NOTE: When the trigonometric result is returned as non-NULL result,
+ *	 the value may be a real value.  The caller may wish to:
+ *
+ *		COMPLEX *c;	(* return result of this function *)
+ *		NUMBER *q;	(* COMPLEX result when c is a real number *)
+ *
+ *		if (c == NULL) {
+ *			math_error("... some error message");
+ *			not_reached();
+ *		}
+ *		if (cisreal(c)) {
+ *			q = c_to_q(c, ok_to_free);
+ *		}
+ */
+COMPLEX *
+c_csc(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *denom;	/* trigonometric identity numerator */
+	COMPLEX *res;	/* trigonometric result */
+
+	/*
+	 * firewall - check args
+	 */
+	if (c == NULL) {
+		return NULL;
+	}
+	if (check_epsilon(epsilon) == false) {
+		return NULL;
+	}
+
+	/*
+	 * evaluate the sin(x) denominator
+	 *
+	 * Return NULL if sin(x) failed or we otherwise divide by zero.
+	 */
+	denom = c_sin(c, epsilon);
+	if (denom == NULL || ciszero(denom)) {
+		return NULL;
+	}
+
+	/*
+	 * compute the trigonometric function value
+	 */
+	res = c_div(&_cone_, denom);
+	comfree(denom);
+
+	/*
+	 * return the trigonometric result
+	 */
+	return res;
+}
+
 
 COMPLEX *
 c_acsc(COMPLEX *c, NUMBER *epsilon)
@@ -983,6 +1301,7 @@ c_acoth(COMPLEX *c, NUMBER *epsilon)
 	return tmp2;
 }
 
+
 COMPLEX *
 c_asech(COMPLEX *c, NUMBER *epsilon)
 {
@@ -993,6 +1312,7 @@ c_asech(COMPLEX *c, NUMBER *epsilon)
 	comfree(tmp1);
 	return tmp2;
 }
+
 
 COMPLEX *
 c_acsch(COMPLEX *c, NUMBER *epsilon)

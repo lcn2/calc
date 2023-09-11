@@ -472,12 +472,12 @@ E_ISSPACE	Bad argument for isspace
 E_ISXDIGIT	Bad argument for isxdigit
 E_STRTOUPPER    Bad argument type for strtoupper
 E_STRTOLOWER    Bad argument type for strtolower
-E_TAN3		Invalid value for calculating the sin numerator for tan
-E_TAN4		Invalid value for calculating the cos denominator for tan
-E_COT3		Invalid value for calculating the sin numerator for cot
-E_COT4		Invalid value for calculating the cos denominator for cot
-E_SEC3		Invalid value for calculating the cos reciprocal for sec
-E_CSC3		Invalid value for calculating the sin reciprocal for csc
+E_TAN3		UNUSED ERROR: Invalid value for calculating the sin numerator for tan
+E_TAN4		UNUSED ERROR: Invalid value for calculating the cos denominator for tan
+E_COT3		UNUSED ERROR: Invalid value for calculating the sin numerator for cot
+E_COT4		UNUSED ERROR: Invalid value for calculating the cos denominator for cot
+E_SEC3		UNUSED ERROR: Invalid value for calculating the cos reciprocal for sec
+E_CSC3		UNUSED ERROR: Invalid value for calculating the sin reciprocal for csc
 E_TANH3		Invalid value for calculating the sinh numerator for tanh
 E_TANH4		Invalid value for calculating the cosh denominator for tanh
 E_COTH3		Invalid value for calculating the sinh numerator for coth
@@ -574,3 +574,9 @@ E_COVERCOS3	Too-large im(argument) for covercos
 E_ACOVERCOS1	Bad epsilon for acovercos
 E_ACOVERCOS2	Bad first argument for acovercos
 E_ACOVERCOS3	Too-large im(argument) for acovercos
+E_TAN5		Invalid complex argument for tan
+E_COT5		Invalid zero argument for cot
+E_COT6		Invalid complex argument for cot
+E_SEC5		Invalid complex argument for sec
+E_CSC5		Invalid zero argument for cot
+E_CSC6		Invalid complex argument for csc

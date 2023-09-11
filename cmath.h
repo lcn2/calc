@@ -48,6 +48,7 @@ typedef struct {
 /*
  * Input, output, and conversion routines.
  */
+E_FUNC COMPLEX *cmappr(COMPLEX *c, NUMBER *e, long rnd, bool cfree);
 E_FUNC COMPLEX *comalloc(void);
 E_FUNC COMPLEX *qqtoc(NUMBER *q1, NUMBER *q2);
 E_FUNC void comfree(COMPLEX *c);
@@ -107,9 +108,13 @@ E_FUNC COMPLEX *c_polar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon);
 E_FUNC COMPLEX *c_rel(COMPLEX *c1, COMPLEX *c2);
 E_FUNC COMPLEX *c_asin(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_acos(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_tan(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_atan(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_cot(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_acot(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_sec(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_asec(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_csc(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_acsc(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_asinh(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_acosh(COMPLEX *c, NUMBER *epsilon);

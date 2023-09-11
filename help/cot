@@ -14,6 +14,10 @@ DESCRIPTION
     Calculate the cotangent of x to a multiple of eps, with error less
     in absolute value than .75 * eps.
 
+    This function is equivalent to:
+
+	cot(x) = cos(x) / sin(x)
+
 EXAMPLE
     ; print cot(1, 1e-5), cot(1, 1e-10), cot(1, 1e-15), cot(1, 1e-20)
     0.64209 0.6420926159 0.642092615934331 0.64209261593433070301
@@ -33,6 +37,7 @@ LIMITS
 
 LINK LIBRARY
     NUMBER *qcot(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_cot(COMPLEX *c, NUMBER *eps)
 
 SEE ALSO
     sin, cos, tan, sec, csc

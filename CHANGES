@@ -185,6 +185,34 @@ The following are the changes from calc version 2.14.3.5 to date:
     Expanded the calc regression test suite test 34dd to test various
     real and complex values for sin, cos, tan, cot, sec, csc.
 
+    Added complex multiple approximation function to commath.c so
+    that users of libcalc may directly round complex number to
+    nearest multiple of a given real number:
+
+	E_FUNC COMPLEX *cmappr(COMPLEX *c, NUMBER *e, long rnd, bool cfree);
+
+    For example:
+
+	COMPLEX *c;             /* complex number to round to nearest epsilon */
+	NUMBER *eps;            /* epsilon rounding precision */
+	COMPLEX *res;           /* c rounded to nearest epsilon */
+	long rnd = 24L;         /* a common rounding mode */
+	bool ok_to_free;        /* true ==> free c, false ==> do not free c */
+
+	...
+
+	res = cmappr(c, eps, ok_to_free);
+
+    The complex trigonometric functions tan, cot, sec, csc were
+    implemented in func.c as calls to complex sin and complex cos.
+    We added the following direct calls to comfunc.c so that users
+    of libcalc may call them directly:
+
+	E_FUNC COMPLEX *c_tan(COMPLEX *c, NUMBER *eps);
+	E_FUNC COMPLEX *c_cot(COMPLEX *c, NUMBER *eps);
+	E_FUNC COMPLEX *c_sec(COMPLEX *c, NUMBER *eps);
+	E_FUNC COMPLEX *c_cot(COMPLEX *c, NUMBER *eps);
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

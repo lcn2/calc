@@ -2927,8 +2927,9 @@ f_sin(int count, VALUE **vals)
 			break;
 		case V_COM:
 			c = c_sin(vals[0]->v_com, eps);
-			if (c == NULL)
+			if (c == NULL) {
 				return error_value(E_SIN3);
+			}
 			result.v_com = c;
 			result.v_type = V_COM;
 			if (cisreal(c)) {
@@ -2947,18 +2948,16 @@ S_FUNC VALUE
 f_tan(int count, VALUE **vals)
 {
 	VALUE result;
-	VALUE tmp1, tmp2;
+	COMPLEX *c;
 	NUMBER *err;
 
 	/* initialize VALUEs */
 	result.v_subtype = V_NOSUBTYPE;
-	tmp1.v_subtype = V_NOSUBTYPE;
-	tmp2.v_subtype = V_NOSUBTYPE;
 
 	/*
 	 * set error tolerance for builtin function
 	 *
-	 * Use eps VALUE arg if given and value is in a valid range.
+	 * Use err VALUE arg if given and value is in a valid range.
 	 */
 	err = conf->epsilon;
 	if (count == 2) {
@@ -2967,6 +2966,7 @@ f_tan(int count, VALUE **vals)
 		}
 		err = vals[1]->v_num;
 	}
+
 	/*
 	 * compute tangent to a given error tolerance
 	 */
@@ -2976,20 +2976,16 @@ f_tan(int count, VALUE **vals)
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			tmp1.v_type = V_COM;
-			tmp1.v_com = c_sin(vals[0]->v_com, err);
-			if (tmp1.v_com == NULL) {
-				return error_value(E_TAN3);
+			c = c_tan(vals[0]->v_com, err);
+			if (c == NULL) {
+				return error_value(E_TAN5);
 			}
-			tmp2.v_type = V_COM;
-			tmp2.v_com = c_cos(vals[0]->v_com, err);
-			if (tmp2.v_com == NULL) {
-				comfree(tmp1.v_com);
-				return error_value(E_TAN4);
+			result.v_com = c;
+			result.v_type = V_COM;
+			if (cisreal(c)) {
+				result.v_num = c_to_q(c, true);
+				result.v_type = V_NUM;
 			}
-			divvalue(&tmp1, &tmp2, &result);
-			comfree(tmp1.v_com);
-			comfree(tmp2.v_com);
 			break;
 		default:
 			return error_value(E_TAN2);
@@ -2997,21 +2993,77 @@ f_tan(int count, VALUE **vals)
 	return result;
 }
 
+
 S_FUNC VALUE
-f_sec(int count, VALUE **vals)
+f_cot(int count, VALUE **vals)
 {
 	VALUE result;
-	VALUE tmp;
+	COMPLEX *c;
 	NUMBER *err;
 
 	/* initialize VALUEs */
 	result.v_subtype = V_NOSUBTYPE;
-	tmp.v_subtype = V_NOSUBTYPE;
 
 	/*
 	 * set error tolerance for builtin function
 	 *
-	 * Use eps VALUE arg if given and value is in a valid range.
+	 * Use err VALUE arg if given and value is in a valid range.
+	 */
+	err = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_COT1);
+		}
+		err = vals[1]->v_num;
+	}
+
+	/*
+	 * compute cotangent to a given error tolerance
+	 */
+	switch (vals[0]->v_type) {
+		case V_NUM:
+			if (qiszero(vals[0]->v_num)) {
+				return error_value(E_COT5);
+			}
+			result.v_num = qcot(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			break;
+		case V_COM:
+			if (ciszero(vals[0]->v_com)) {
+				return error_value(E_COT5);
+			}
+			c = c_cot(vals[0]->v_com, err);
+			if (c == NULL) {
+				return error_value(E_COT6);
+			}
+			result.v_com = c;
+			result.v_type = V_COM;
+			if (cisreal(c)) {
+				result.v_num = c_to_q(c, true);
+				result.v_type = V_NUM;
+			}
+			break;
+		default:
+			return error_value(E_COT2);
+	}
+	return result;
+}
+
+
+S_FUNC VALUE
+f_sec(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *c;
+	NUMBER *err;
+
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use err VALUE arg if given and value is in a valid range.
 	 */
 	err = conf->epsilon;
 	if (count == 2) {
@@ -3030,13 +3082,16 @@ f_sec(int count, VALUE **vals)
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			tmp.v_type = V_COM;
-			tmp.v_com = c_cos(vals[0]->v_com, err);
-			if (tmp.v_com == NULL) {
-				return error_value(E_SEC3);
+			c = c_sec(vals[0]->v_com, err);
+			if (c == NULL) {
+				return error_value(E_SEC5);
 			}
-			invertvalue(&tmp, &result);
-			comfree(tmp.v_com);
+			result.v_com = c;
+			result.v_type = V_COM;
+			if (cisreal(c)) {
+				result.v_num = c_to_q(c, true);
+				result.v_type = V_NUM;
+			}
 			break;
 		default:
 			return error_value(E_SEC2);
@@ -3046,78 +3101,19 @@ f_sec(int count, VALUE **vals)
 
 
 S_FUNC VALUE
-f_cot(int count, VALUE **vals)
-{
-	VALUE result;
-	VALUE tmp1, tmp2;
-	NUMBER *err;
-
-	/* initialize VALUEs */
-	result.v_subtype = V_NOSUBTYPE;
-	tmp1.v_subtype = V_NOSUBTYPE;
-	tmp2.v_subtype = V_NOSUBTYPE;
-
-	/*
-	 * set error tolerance for builtin function
-	 *
-	 * Use eps VALUE arg if given and value is in a valid range.
-	 */
-	err = conf->epsilon;
-	if (count == 2) {
-		if (verify_eps(vals[1]) == false) {
-			return error_value(E_COT1);
-		}
-		err = vals[1]->v_num;
-	}
-
-	/*
-	 * compute cotangent to a given error tolerance
-	 */
-	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (qiszero(vals[0]->v_num))
-				return error_value(E_1OVER0);
-			result.v_num = qcot(vals[0]->v_num, err);
-			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			tmp1.v_type = V_COM;
-			tmp1.v_com = c_cos(vals[0]->v_com, err);
-			if (tmp1.v_com == NULL) {
-				return error_value(E_COT3);
-			}
-			tmp2.v_type = V_COM;
-			tmp2.v_com = c_sin(vals[0]->v_com, err);
-			if (tmp2.v_com == NULL) {
-				comfree(tmp1.v_com);
-				return error_value(E_COT4);
-			}
-			divvalue(&tmp1, &tmp2, &result);
-			comfree(tmp1.v_com);
-			comfree(tmp2.v_com);
-			break;
-		default:
-			return error_value(E_COT2);
-	}
-	return result;
-}
-
-
-S_FUNC VALUE
 f_csc(int count, VALUE **vals)
 {
 	VALUE result;
-	VALUE tmp;
+	COMPLEX *c;
 	NUMBER *err;
 
 	/* initialize VALUEs */
 	result.v_subtype = V_NOSUBTYPE;
-	tmp.v_subtype = V_NOSUBTYPE;
 
 	/*
 	 * set error tolerance for builtin function
 	 *
-	 * Use eps VALUE arg if given and value is in a valid range.
+	 * Use err VALUE arg if given and value is in a valid range.
 	 */
 	err = conf->epsilon;
 	if (count == 2) {
@@ -3132,19 +3128,26 @@ f_csc(int count, VALUE **vals)
 	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
-			if (qiszero(vals[0]->v_num))
-				return error_value(E_1OVER0);
+			if (qiszero(vals[0]->v_num)) {
+				return error_value(E_CSC5);
+			}
 			result.v_num = qcsc(vals[0]->v_num, err);
 			result.v_type = V_NUM;
 			break;
 		case V_COM:
-			tmp.v_type = V_COM;
-			tmp.v_com = c_sin(vals[0]->v_com, err);
-			if (tmp.v_com == NULL) {
-				return error_value(E_CSC3);
+			if (ciszero(vals[0]->v_com)) {
+				return error_value(E_CSC5);
 			}
-			invertvalue(&tmp, &result);
-			comfree(tmp.v_com);
+			c = c_csc(vals[0]->v_com, err);
+			if (c == NULL) {
+				return error_value(E_CSC6);
+			}
+			result.v_com = c;
+			result.v_type = V_COM;
+			if (cisreal(c)) {
+				result.v_num = c_to_q(c, true);
+				result.v_type = V_NUM;
+			}
 			break;
 		default:
 			return error_value(E_CSC2);

@@ -39,6 +39,77 @@ STATIC COMPLEX _cnegone_ =	{ &_qnegone_, &_qzero_, 1 };
 
 
 /*
+ * cmappr - complex multiple approximation
+ *
+ * Approximate a number to nearest multiple of a given real number. Whether
+ * rounding is down, up, etc. is determined by rnd.
+ *
+ * This function is useful to round a result to the nearest epsilon:
+ *
+ *	COMPLEX *c;		(* complex number to round to nearest epsilon *)
+ *	NUMBER *eps;		(* epsilon rounding precision *)
+ *	COMPLEX *res;		(* c rounded to nearest epsilon *)
+ *	long rnd = 24L;		(* a common rounding mode *)
+ *	bool ok_to_free;	(* true ==> free c, false ==> do not free c *)
+ *
+ *	...
+ *
+ *	res = cmappr(c, eps, ok_to_free);
+ *
+ * given:
+ *	c	pointer to COMPLEX value to round
+ *	e	pointer to NUMBER multiple
+ *	rnd	rounding mode
+ *	cfree	true ==> free c, false ==> do not free c
+ *
+ * returns:
+ *	allocated pointer to COMPLEX multiple of e approximation of c
+ */
+COMPLEX *
+cmappr(COMPLEX *c, NUMBER *e, long rnd, bool cfree)
+{
+	COMPLEX *r;	/* COMPLEX multiple of e approximation of c */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (e == NULL) {
+		math_error("%s: e is NULL", __func__);
+		not_reached();
+	}
+
+	/*
+	 * allocate return result
+	 */
+	r = comalloc();
+
+	/*
+	 * round c to multiple of e
+	 */
+	qfree(r->real);
+	r->real = qmappr(c->real, e, rnd);
+	qfree(r->imag);
+	r->imag = qmappr(c->imag, e, rnd);
+
+	/*
+	 * free c if requested
+	 */
+	if (cfree == true) {
+		comfree(c);
+	}
+
+	/*
+	  * return the allocated multiple of e approximation of c
+         */
+        return r;
+}
+
+
+/*
  * Add two complex numbers.
  */
 COMPLEX *

@@ -14,6 +14,10 @@ DESCRIPTION
     Calculate the cosecant of x to a multiple of eps, with error less
     in absolute value than .75 * eps.
 
+    This function is equivalent to:
+
+	csc(x) = 1 / sin(x)
+
 EXAMPLE
     ; print csc(1, 1e-5), csc(1, 1e-10), csc(1, 1e-15), csc(1, 1e-20)
     1.1884 1.1883951058 1.188395105778121 1.18839510577812121626
@@ -33,6 +37,7 @@ LIMITS
 
 LINK LIBRARY
     NUMBER *qcsc(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_csc(COMPLEX *c, NUMBER *eps)
 
 SEE ALSO
     sin, cos, tan, cot, sec
