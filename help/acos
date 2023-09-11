@@ -14,7 +14,13 @@ DESCRIPTION
     Returns the inverse cosine of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    v = acos(x) is the number in [0, pi] for which cos(v) = x.
+    This function is sometimes called arccos, is such that:
+
+	cos(acos(x)) = x
+
+    and such that:
+
+	acos(x) = asrc(1/x)
 
 EXAMPLE
     ; print acos(.5, 1e-5), acos(.5, 1e-10), acos(.5, 1e-15), acos(.5, 1e-20)

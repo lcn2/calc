@@ -14,6 +14,14 @@ DESCRIPTION
     Returns the inverse secant of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
+    This function is sometimes called arcsec, is such that:
+
+	sec(asec(x)) = x
+
+    and such that:
+
+	asec(x) = acos(1/x)
+
 EXAMPLE
     ; print asec(2, 1e-5), asec(2, 1e-10), asec(2, 1e-15), asec(2, 1e-20)
     1.0472 1.0471975512 1.047197551196598 1.04719755119659774615

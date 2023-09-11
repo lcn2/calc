@@ -14,6 +14,14 @@ DESCRIPTION
     Returns the inverse cosecant of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
+    This function is sometimes called arccsc, is such that:
+
+	csc(acsc(x)) = x
+
+    and such that:
+
+	acsc(x) = asin(1/x)
+
 EXAMPLE
     ; print acsc(2, 1e-5), acsc(2, 1e-10), acsc(2, 1e-15), acsc(2, 1e-20)
     0.5236 0.5235987756 0.523598775598299 0.52359877559829887308

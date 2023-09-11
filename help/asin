@@ -14,7 +14,13 @@ DESCRIPTION
     Returns the inverse sine of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    v = asin(x) is the number in [-pi/2, pi/2] for which sin(v) = x.
+    This function is sometimes called arcsin, is such that:
+
+	sin(asin(x)) = x
+
+    and such that:
+
+	asin(x) = acsc(1/x)
 
 EXAMPLE
     ; print asin(.5, 1e-5), asin(.5, 1e-10), asin(.5, 1e-15), asin(.5, 1e-20)

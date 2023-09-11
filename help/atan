@@ -14,6 +14,14 @@ DESCRIPTION
     Returns the inverse tangent of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
+    This function is sometimes called arctan, is such that:
+
+	tan(atan(x)) = x
+
+    and such that:
+
+	atan(x) = acot(1/x)
+
 EXAMPLE
     ; print atan(2, 1e-5), atan(2, 1e-10), atan(2, 1e-15), atan(2, 1e-20)
     1.10715 1.1071487178 1.107148717794091 1.10714871779409050302
