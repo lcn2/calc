@@ -5,30 +5,97 @@ SYNOPSIS
     error([n])
 
 TYPES
-    n		integer, 0 <= n <= 32767; defaults to errno()
+    n		integer, defaults to errno()
 
     return	null value or error value
 
 DESCRIPTION
+    If n == 0:
 
-    If n is zero,  error(n) returns the null value.
+	error(n) returns the null value.
 
-    For positive n, error(n) returns a value of error type n.
+	The "global calc_errno value" is set to 0.
 
-    error(n) sets calc_errno to n so that until another error-value
-    is returned by some function, errno() will return the value n.
+	The global calc error count is not changed.
+
+    For 0 < n <= 32767:
+
+	error(n) returns a value that is of a special type called
+	"error".  The "error" return value, when given to iserror()
+	will cause that function to return a true value that happens
+	to match the "global calc_errno value".
+
+	The "global calc_errno value" is then set to n.
+
+	The global calc error count (see help errcount) is incremented.
+	If the global calc error count exceeds the maximum count
+	(see help errmax), any ongoing calc execution is aborted.
+
+    All other values of n are reserved for future use and currently
+    will generate an error.
+
+    The term "global calc_errno value" is an internal calc state.
+    This is NOT a calc variable called calc_errno.
+
+    The "global calc_errno value" be set to some other non-zero
+    value by other builtin functions and calculations, especially
+    if they result in an error.  Thus, while calling errno(n) may
+    set calc_errno, some other error may later overwrite the
+    "global calc_errno value".
+
+    By convention, the "global calc_errno value" has the following ranges:
+
+	n < 0			Reserved for future use
+
+	n == 0			calc_errno cleared: libc errno codes above here
+
+	1 <= n <= 9999		system error and libc errno codes
+
+	n == 10000		Reserved for "No error" calc internal state
+
+	10001 <= n <= E__HIGHEST	calc computation error codes
+
+	E__HIGHEST < n < 20000		Reserved for future calc error codes
+
+	20000 < n <= 32767		User defined error codes start here
+
+	n >= 32768		Reserved for future use
+
+    The following constants are part of the calc error code mechanism:
+
+	E__BASE == 10000
+	E_USERDEF == 20000
+	E_USERMAX == 32767
+	E__BASE < E__HIGHEST < E_USERDEF
+	E__COUNT == E__HIGHEST - E__BASE
+
+    See help errorcodes for the actual values of the above constants.
 
 EXAMPLE
-    ; errmax(errcount()+1)
-	   20
+    ; errcount(0),; errmax(20),;
+    ; print errcount(), errmax()
+    0 20
+
     ; a = error(10009)
-    ; a
-	   Error 10009
+
+    ; print errcount(), errmax()
+    1 20
+    ; print a
+    Error 10009
+    ; print iserror(a)
+    10009
     ; strerror(a)
 	   "Bad argument for inverse"
 
+    ; b = error(0)
+
+    ; print errcount(), errmax()
+    1 20
+    ; print isnull(b)
+    1
+
 LIMITS
-    none
+    0 <= n <= 32767
 
 LINK LIBRARY
     none
@@ -37,7 +104,7 @@ SEE ALSO
     errcount, errmax, errorcodes, iserror, errno, strerror, newerror,
     stoponerror
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

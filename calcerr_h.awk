@@ -43,6 +43,7 @@ NF > 1 {
 END {
     printf("\n#define E__HIGHEST\t%d\t/* highest calc error */\n", NR+ebase);
     printf("#define E__COUNT\t%d\t/* number of calc errors */\n", NR);
-    printf("#define E_USERDEF\t20000\t/* base of user defined errors */\n\n");
+    printf("#define E_USERDEF\t20000\t/* base of user defined errors */\n");
+    printf("#define E_USERMAX\t32767\t/* maximum user defined error value */\n\n");
     printf("/* names of calc error values */\n");
 }

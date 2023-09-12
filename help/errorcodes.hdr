@@ -1,6 +1,6 @@
 Calc generated error codes (see the error help file):
 
-## Copyright (C) 1999  Landon Curt Noll
+## Copyright (C) 1999,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -21,3 +21,5 @@ Calc generated error codes (see the error help file):
 ##
 ## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
 ## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/
+    0		calc_errno cleared: libc errno codes above here
+    10000	calc errors start above here

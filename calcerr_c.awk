@@ -2,7 +2,7 @@
 #
 # calcerr_c - help produce calcerr.c from calcerr.tbl
 #
-# Copyright (C) 1999  Landon Curt Noll
+# Copyright (C) 1999,2023  Landon Curt Noll
 #
 # Calc is open software; you can redistribute it and/or modify it under
 # the terms of the version 2.1 of the GNU Lesser General Public License
@@ -34,12 +34,12 @@ BEGIN {
     printf(" * names of calc error values\n");
     printf(" */\n");
     printf("CONST char *error_table[E__COUNT+2] = {\n");
-    printf("	\"No error\",\n");
+    printf("    \"No error\",\t\t/* MUST be first */\n");
 }
 {
     print $0;
 }
 END {
-    printf("	NULL\n");
+    printf("    NULL\t/* MUST be last */\n");
     printf("};\n");
 }

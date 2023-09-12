@@ -213,6 +213,14 @@ The following are the changes from calc version 2.14.3.5 to date:
 	E_FUNC COMPLEX *c_sec(COMPLEX *c, NUMBER *eps);
 	E_FUNC COMPLEX *c_cot(COMPLEX *c, NUMBER *eps);
 
+    Added help/errorcodes rule to the top level Makefile.
+
+    Added E_USERMAX symbol (== 32767) to indicate the maximum value
+    allowed for user error codes.
+
+    Improve help/error.  Added text about error code ranges and
+    range symbols.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

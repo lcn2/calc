@@ -325,7 +325,8 @@ STATIC_FIRST_TARGETS= ${LICENSE} .static
 # late targets - things needed after the main build phase is complete
 #
 LATE_TARGETS= calc.1 calc.usage \
-	      cal/.all help/.all help/builtin cscript/.all
+	      cal/.all help/.all help/builtin help/errorcodes \
+	      cscript/.all
 
 # calc tools - tools used by the maintainers of the calc source base
 #
@@ -2462,6 +2463,15 @@ help/builtin: help/Makefile \
 	${V} echo '=-=-=-=-= Invoking builtin rule for help =-=-=-=-='
 	${RM} -f $@
 	cd help; ${MAKE} -f Makefile builtin
+	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
+
+help/errorcodes: help/Makefile \
+	      calcerr.h help/errorcodes.hdr help/errorcodes.sed
+	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${V} echo '=-=-=-=-= Invoking builtin rule for help =-=-=-=-='
+	${RM} -f $@
+	cd help; ${MAKE} -f Makefile errorcodes
 	${V} echo '=-=-=-=-= Back to the main Makefile for $@ rule =-=-=-=-='
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
