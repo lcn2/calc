@@ -1,5 +1,5 @@
 NAME
-    errno - return or set a stored error-number
+    errno - return or set a the global calc_errno value
 
 SYNOPSIS
     errno([errnum])

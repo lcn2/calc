@@ -1,5 +1,5 @@
 NAME
-    newerror - create or recall a described error-value
+    newerror - create or recall a user defined error condition
 
 SYNOPSIS
     newerror([str])

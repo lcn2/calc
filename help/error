@@ -1,5 +1,5 @@
 NAME
-    error - generate a value of specified error type
+    error - raise a calc error condition
 
 SYNOPSIS
     error([errnum])
