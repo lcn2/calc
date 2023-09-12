@@ -2,72 +2,82 @@ NAME
     error - generate a value of specified error type
 
 SYNOPSIS
-    error([n])
+    error([errnum])
 
 TYPES
-    n		integer, defaults to errno()
+    errnum	integer, defaults to errno()
 
     return	null value or error value
 
 DESCRIPTION
-    If n == 0:
+    If errnum == 0:
 
-	error(n) returns the null value.
+	error(errnum) returns the null value.
 
 	The "global calc_errno value" is set to 0.
 
 	The global calc error count is not changed.
 
-    For 0 < n <= 32767:
+    For 0 < errnum <= 32767:
 
-	error(n) returns a value that is of a special type called
+	error(errnum) returns a value that is of a special type called
 	"error".  The "error" return value, when given to iserror()
 	will cause that function to return a true value that happens
 	to match the "global calc_errno value".
 
-	The "global calc_errno value" is then set to n.
+	The "global calc_errno value" is then set to errnum.
 
 	The global calc error count (see help errcount) is incremented.
 	If the global calc error count exceeds the maximum count
 	(see help errmax), any ongoing calc execution is aborted.
 
-    All other values of n are reserved for future use and currently
+    All other values of errnum are reserved for future use and currently
     will generate an error.
 
+    NOTE:
+
+	Calling error() without an argument will return the current
+	"global calc_errno value" AND will also increment the
+	global calc error count.
+
+    Use errno() instead of error() to return the "global calc_errno
+    value" without incrementing the global calc error count.
+
     The term "global calc_errno value" is an internal calc state.
-    This is NOT a calc variable called calc_errno.
+    This is NOT a calc variable called calc_errno.  The value of the
+    "global calc_errno value" may be returned by errno() (see help errno).
 
     The "global calc_errno value" be set to some other non-zero
     value by other builtin functions and calculations, especially
-    if they result in an error.  Thus, while calling errno(n) may
+    if they result in an error.  Thus, while calling errno(errnum) may
     set calc_errno, some other error may later overwrite the
     "global calc_errno value".
 
     By convention, the "global calc_errno value" has the following ranges:
 
-	n < 0			Reserved for future use
+	errnum < 0			Reserved for future use
 
-	n == 0			calc_errno cleared: libc errno codes above here
+	errnum == 0			calc_errno cleared: libc errno codes above here
 
-	1 <= n <= 9999		system error and libc errno codes
+	1 <= errnum <= 9999		system error and libc errno codes
 
-	n == 10000		Reserved for "No error" calc internal state
+	errnum == 10000			Reserved for "No error" calc internal state
 
-	10001 <= n <= E__HIGHEST	calc computation error codes
+	10001 <= errnum <= E__HIGHEST	calc computation error codes
 
-	E__HIGHEST < n < 20000		Reserved for future calc error codes
+	E__HIGHEST < errnum < 20000	Reserved for future calc error codes
 
-	20000 < n <= 32767		User defined error codes start here
+	20000 < errnum <= 32767		User defined error codes start here
 
-	n >= 32768		Reserved for future use
+	errnum >= 32768			Reserved for future use
 
     The following constants are part of the calc error code mechanism:
 
-	E__BASE == 10000
-	E_USERDEF == 20000
-	E_USERMAX == 32767
-	E__BASE < E__HIGHEST < E_USERDEF
-	E__COUNT == E__HIGHEST - E__BASE
+	E__BASE == 10000			# 1 less than the 1st calc computation error code
+	E_USERDEF == 20000			# User defined error codes start
+	E_USERMAX == 32767			# maximum user defined error code
+	E__BASE < E__HIGHEST < E_USERDEF	# How E__HIGHEST is bounded
+	E__COUNT == E__HIGHEST - E__BASE	# Number of calc computation error codes
 
     See help errorcodes for the actual values of the above constants.
 
@@ -84,8 +94,10 @@ EXAMPLE
     Error 10009
     ; print iserror(a)
     10009
-    ; strerror(a)
-	   "Bad argument for inverse"
+    ; print strerror(a)
+    "Bad argument for inverse"
+    ; print errno()
+    10009
 
     ; b = error(0)
 
@@ -93,12 +105,14 @@ EXAMPLE
     1 20
     ; print isnull(b)
     1
+    ; print errno()
+    0
 
 LIMITS
-    0 <= n <= 32767
+    0 <= errnum <= 32767
 
 LINK LIBRARY
-    none
+    int calc_errno;	/* global calc_errno value */
 
 SEE ALSO
     errcount, errmax, errorcodes, iserror, errno, strerror, newerror,

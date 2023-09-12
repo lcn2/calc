@@ -2,51 +2,85 @@ NAME
     strerror - returns a string describing an error value
 
 SYNOPSIS
-    strerror([x])
+    strerror([errnum])
 
 TYPES
-    x		error-value or integer in [0, 32767], defaults to errno()
+    errnum	integer
 
     return	string
 
 DESCRIPTION
-    If x is the error-value with index n, strerror(x) and strerror(n)
-    return one of:
+    If 0 <= errnum <= 32767 then strerror(errnum) will return one of:
 
-		a system-generated message,
-		a calc-generated description,
-		a user-defined description created by newerror(str),
-		the string "Error n",
+	* system error and libc errno value related string
+	* calc computation error code string
+	* user-defined description string created by newerror(str)
+	* "Unknown error errnum" (where errnum is in decimal)
 
-    where, in the last form, n is represented decimally.
+    Without a argument, strerror() returns as if it were called with:
+
+	strerror(errno())
+
+    That is, the string associated with the "global calc_errno value"
+    is returned.
+
+    The term "global calc_errno value" is an internal calc state.
+    This is NOT a calc variable called calc_errno.
+
+    The system error and libc errno value related string may be
+    different for different systems.
+
+    For users of libcalc:
+
+	The libcalc array error_table[] contains the hard coded
+	calc-generated error array of E__COUNT+2 pointers to strings
+	starting with E__BASE, ending with E__HIGHEST and terminated
+	by a NULL pointer.
+
+	The error_table[0] is for errnum of E__BASE, and is the
+	string "No error".
+
+	The error_table[E__COUNT] is string associated with the
+	highest calc-generated error message.
+
+	The error_table[E__COUNT+1] is a NULL pointer.
+
+     See help error for more information on the ranges of errnum and
+     the meaning of the above mentioned constants.
 
 EXAMPLE
-    System error messages may be different for different systems.
-    ; errmax(errcount()+3)
-	    0
-    ; strerror(2)
-	"No such file or directory"
+    ; errcount(0),; errmax(20),;
+    ; print errcount(), errmax()
+    0 20
 
-    ; x = 3 * ("a" + "b")
-    ; print strerror(x)
-    Bad arguments for +
+    ; print strerror(2)
+    No such file or directory
+    ; print errcount(), errmax()
+    0 20
 
-    ; a = newerror("alpha")
-    ; print strerror(a)
-    alpha
-
-    ; print strerror(999)
-    Error 999
-
-    ; a = 1/0
+    ; x = 3 / 0;
+    ; print errcount(), errmax()
+    1 20
     ; print strerror()
     Division by zero
 
+    ; a = newerror("alpha")
+    ; print errcount(), errmax()
+    2 20
+    ; print strerror()
+    alpha
+
+    ; print strerror(999)
+    Unknown error: 999
+    ; print errcount(), errmax()
+    2 20
+
 LIMITS
-    none
+    0 <= errnum <= 32767
 
 LINK LIBRARY
-    none
+    int calc_errno;				/* global calc_errno value */
+    CONST char *error_table[E__COUNT+2];	/* calc coded error messages */
 
 SEE ALSO
     strcat, strcpy, strlen, strncmp, strncpy, strpos,
@@ -55,7 +89,7 @@ SEE ALSO
     errcount, errmax, error, iserror, errno, newerror, errorcodes,
     stoponerror
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

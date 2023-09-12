@@ -15,6 +15,11 @@ DESCRIPTION
     that any future use of newerror(str) with the same str will return
     the same error-value.
 
+    When this function is called, the  global calc error count (see
+    help errcount) is incremented.  If the global calc error count
+    exceeds the maximum count (see help errmax), any ongoing calc
+    execution is aborted.
+
     If x = newerror(str), both strerror(x) and strerror(iserro(x)) will
     return str and iserror(x) will return the error code value of the
     new error.
@@ -61,7 +66,8 @@ EXAMPLE
     triangle side length <= 0: 20000
 
 LIMITS
-    The number of new described error-values is not to exceed 12767.
+    The number of new described error-values is not to exceed E_USERMAX-E_USERDEF
+    (which is usually 12767 calls to the newerror function).
 
 LINK LIBRARY
     none
@@ -70,7 +76,7 @@ SEE ALSO
     errmax, errcount, error, strerror, iserror, errno, errorcodes,
     stoponerror
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

@@ -221,6 +221,14 @@ The following are the changes from calc version 2.14.3.5 to date:
     Improve help/error.  Added text about error code ranges and
     range symbols.
 
+    Changed calc_errno a global int variable so that is may be directly
+    accessed by libcalc users.
+
+    Further improve help files for help/errno, help/error, help/newerror,
+    help/stoponerror and help/strerror by adding to documentation
+    of the calc error code system as well as libcalc interface
+    where applicable.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

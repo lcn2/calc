@@ -222,6 +222,7 @@ EXTERN int abortlevel;	/* current level of aborts */
 EXTERN bool inputwait;	/* true if in a terminal input wait */
 EXTERN VALUE *stack;	/* execution stack */
 EXTERN int dumpnames;	/* true => dump names rather than indices */
+EXTERN int calc_errno;	/* global calc_errno value */
 
 EXTERN char *calcpath;	/* $CALCPATH or default */
 EXTERN char *calcrc;	/* $CALCRC or default */

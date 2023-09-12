@@ -57,7 +57,6 @@
 STATIC VALUE stackarray[MAXSTACK];	/* storage for stack */
 STATIC VALUE oldvalue;			/* previous calculation value */
 STATIC bool saveval = true;		/* to enable or disable saving */
-STATIC int calc_errno;			/* most recent error-number */
 STATIC int errcount;			/* counts calls to error_value */
 STATIC bool go;
 STATIC long calc_depth;
@@ -65,10 +64,11 @@ STATIC long calc_depth;
 /*
  * global symbols
  */
-VALUE *stack;			/* current location of top of stack */
-int dumpnames;			/* names if true, otherwise indices */
-char *funcname;			/* function being executed */
-long funcline;			/* function line being executed */
+VALUE *stack = NULL;		/* current location of top of stack */
+int dumpnames = false;		/* names if true, otherwise indices */
+char *funcname = NULL;		/* function being executed */
+long funcline = 0;		/* function line being executed */
+int calc_errno = 0;		/* global calc_errno value */
 
 
 /*
