@@ -270,6 +270,25 @@ The following are the changes from calc version 2.14.3.5 to date:
     The Makefile uses ./errcode -d to generate the contents of the
     errsym.h include file.
 
+    Code that used the old array error_table[] of error message strings
+    such as:
+
+	#include "calcerr.h"
+
+	char *msg;	/* calc computation error message */
+
+	msg = error_table[errnum - E__BASE];
+
+    where errnum is the calc computation error code
+    E__BASE <= errnum <= E__HIGHEST, may now use:
+
+	#include "errtbl.h"
+	#include "errsym.h"
+
+	char *msg;	/* calc computation error message */
+
+	msg = error_table[errnum - E__BASE].errmsg;
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 
