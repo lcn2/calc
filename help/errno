@@ -2,10 +2,11 @@ NAME
     errno - return or set a the global calc_errno value
 
 SYNOPSIS
-    errno([errnum])
+    errno([errnum | "E_STRING"])
 
 TYPES
     errnum	integer
+    E_STRING	string
 
     return	integer
 
@@ -67,6 +68,8 @@ LIMITS
 
 LINK LIBRARY
     int calc_errno;	/* global calc_errno value */
+
+    E_STRING is C string matching the regular expression: "^E_[A-Z0-9_]+$"
 
 SEE ALSO
     errmax, errcount, error, strerror, iserror, newerror, errorcodes,

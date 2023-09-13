@@ -570,10 +570,10 @@ Step 9: Add the Make dependency tools
 	u_curds.o: ../alloc.h
 	u_curds.o: ../block.h
 	u_curds.o: ../byteswap.h
-	u_curds.o: ../calcerr.h
 	u_curds.o: ../cmath.h
 	u_curds.o: ../config.h
 	u_curds.o: ../endian_calc.h
+	u_curds.o: ../errsym.h
 	u_curds.o: ../hash.h
 	u_curds.o: ../have_const.h
 	u_curds.o: ../have_malloc.h

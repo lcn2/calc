@@ -31,7 +31,7 @@
 #include "alloc.h"
 #include "value.h"
 #include "zrand.h"
-#include "calcerr.h"
+#include "errsym.h"
 
 #include "have_unused.h"
 

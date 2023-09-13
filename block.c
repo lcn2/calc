@@ -39,7 +39,7 @@
 #include "block.h"
 #include "nametype.h"
 #include "str.h"
-#include "calcerr.h"
+#include "errsym.h"
 
 
 #include "attribute.h"

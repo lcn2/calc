@@ -56,7 +56,6 @@ int c_sysinfo_allowed = 0;	/* CUSTOM undefined */
 #include "../longbits.h"
 #define CHECK_L_FORMAT
 #include "../block.h"
-#include "../calcerr.h"
 #include "../conf.h"
 #include "../endian_calc.h"
 #include "../fposval.h"
@@ -128,14 +127,6 @@ STATIC struct infoname sys_info[] = {
      EPSILON_DEFAULT, (FULL)0},
     {"ERRMAX", "default errmax value", NULL,
      (FULL)ERRMAX},
-    {"E_USERDEF", "base of user defined errors", NULL,
-     (FULL)E_USERDEF},
-    {"E__BASE", "calc errors start above here", NULL,
-     (FULL)E__BASE},
-    {"E__COUNT", "number of calc errors", NULL,
-     (FULL)E__COUNT},
-    {"E__HIGHEST", "highest calc error", NULL,
-     (FULL)E__HIGHEST},
     {"false", "boolean false", NULL,
      (FULL)false},
     {"FILEPOS_BITS", "file position size in bits", NULL,

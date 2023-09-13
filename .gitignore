@@ -33,8 +33,6 @@ calc-static
 calc.1
 calc.spec
 calc.usage
-calcerr.c
-calcerr.h
 charbit.h
 chatbit
 chk_c
@@ -55,6 +53,8 @@ custom/libcustcalc*
 debug.out
 endian
 endian_calc.h
+errcode
+errsym.h
 fposval
 fposval.h
 func.show

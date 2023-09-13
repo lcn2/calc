@@ -247,8 +247,7 @@ SINGULAR_FILES= binding bug change errorcode type
 # These files are found (but not built) in the distribution
 #
 DISTLIST= ${STD_HELP_FILES} ${DETAIL_HELP} ${MAKE_FILE} \
-	obj.file builtin.top builtin.end funclist.sed \
-	errorcodes.hdr errorcodes.sed
+	obj.file builtin.top builtin.end funclist.sed
 
 # These files are used to make (but not built) a calc .a link library
 #
@@ -361,10 +360,9 @@ contrib: ../CONTRIB-CODE
 	    ${TRUE}; \
 	fi
 
-errorcodes: ../calcerr.h errorcodes.hdr errorcodes.sed
+errorcodes: ../errcode${EXT}
 	${RM} -f $@
-	${CAT} errorcodes.hdr > $@
-	${SED} -n -f errorcodes.sed < ../calcerr.h >> $@
+	../errcode${EXT} -e > $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
@@ -639,8 +637,7 @@ detail_help_list:
 		 ! -name archive ! -name assoc ! -name builtin.end \
 		 ! -name builtin.top ! -name command ! -name config \
 		 ! -name contrib ! -name credit ! -name custom ! -name define \
-		 ! -name environment ! -name errorcodes.hdr \
-		 ! -name errorcodes.sed ! -name expression ! -name file \
+		 ! -name environment ! -name expression ! -name file \
 		 ! -name funclist.c ! -name funclist.sed ! -name help \
 		 ! -name history ! -name interrupt ! -name intro ! -name list \
 		 ! -name mat ! -name obj.file ! -name operator \

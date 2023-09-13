@@ -93,7 +93,8 @@
 #include "have_const.h"
 #include "have_unused.h"
 #include "calc.h"
-#include "calcerr.h"
+#include "errsym.h"
+#include "errtbl.h"
 #include "opcodes.h"
 #include "token.h"
 #include "func.h"
@@ -132,7 +133,6 @@ S_FUNC int malloced_putenv(char *str);
  * external declarations
  */
 EXTERN char cmdbuf[];				/* command line expression */
-EXTERN CONST char *error_table[E__COUNT+2];	/* calc coded error messages */
 E_FUNC void matrandperm(MATRIX *M);
 E_FUNC void listrandperm(LIST *lp);
 E_FUNC int idungetc(FILEID id, int ch);
@@ -175,7 +175,7 @@ STATIC NUMBER _qfourhundred = { { _fourhundredval_, 1, 0 },
 /*
  * user-defined error strings
  */
-STATIC short nexterrnum = E_USERDEF;
+STATIC short nexterrnum = E__USERDEF;
 STATIC STRINGHEAD newerrorstr;
 
 #endif /* !FUNCLIST */
@@ -8081,11 +8081,11 @@ f_newerror(int count, VALUE **vals)
 		str = vals[0]->v_str->s_str;
 	if (str == NULL || str[0] == '\0')
 		str = "???";
-	if (nexterrnum == E_USERDEF)
+	if (nexterrnum == E__USERDEF)
 		initstr(&newerrorstr);
 	index = findstr(&newerrorstr, str);
 	if (index >= 0) {
-		errnum = E_USERDEF + index;
+		errnum = E__USERDEF + index;
 	} else {
 		if (nexterrnum == 32767)
 			math_error("Too many new error values");
@@ -8131,7 +8131,7 @@ f_strerror(int count, VALUE **vals)
 		i = E__BASE;
 
 	/* firewall - return generic error string if it is not assigned */
-	if (i >= nexterrnum || (i > E__HIGHEST && i < E_USERDEF)
+	if (i >= nexterrnum || (i > E__HIGHEST && i < E__USERDEF)
 			|| (i < E__BASE && strerror(i) == NULL)) {
 		size_t snprintf_len;	/* malloced snprintf buffer length */
 		snprintf_len = sizeof("Unknown error 12345678901234567890")+1;
@@ -8151,12 +8151,12 @@ f_strerror(int count, VALUE **vals)
 		cp = strerror(i);
 
 	/* user-described error */
-	} else if (i >= E_USERDEF) {
-		cp = namestr(&newerrorstr, i - E_USERDEF);
+	} else if (i >= E__USERDEF) {
+		cp = namestr(&newerrorstr, i - E__USERDEF);
 
 	/* calc-described error */
 	} else {
-		cp = (char *)error_table[i - E__BASE];
+		cp = (char *)error_table[i - E__BASE].errmsg;
 	}
 
 	/* return result as a V_STR */
@@ -12105,11 +12105,11 @@ showerrors(void)
 {
 	int i;
 
-	if (nexterrnum == E_USERDEF)
+	if (nexterrnum == E__USERDEF)
 		printf("No new error-values created\n");
-	for (i = E_USERDEF; i < nexterrnum; i++)
+	for (i = E__USERDEF; i < nexterrnum; i++)
 		printf("%d: %s\n", i,
-			namestr(&newerrorstr, i - E_USERDEF));
+			namestr(&newerrorstr, i - E__USERDEF));
 }
 
 

@@ -33,7 +33,7 @@
 # include "cmath.h"
 # include "config.h"
 # include "sha1.h"
-# include "calcerr.h"
+# include "errsym.h"
 # include "hash.h"
 # include "block.h"
 # include "nametype.h"
@@ -43,7 +43,7 @@
 # include <calc/cmath.h>
 # include <calc/config.h>
 # include <calc/sha1.h>
-# include <calc/calcerr.h>
+# include <calc/errsym.h>
 # include <calc/hash.h>
 # include <calc/block.h>
 # include <calc/nametype.h>

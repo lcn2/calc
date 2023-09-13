@@ -2,10 +2,11 @@ NAME
     strerror - returns a string describing an error value
 
 SYNOPSIS
-    strerror([errnum])
+    strerror([errnum | "E_STRING"])
 
 TYPES
     errnum	integer
+    E_STRING	string
 
     return	string
 
@@ -77,6 +78,8 @@ EXAMPLE
 
 LIMITS
     0 <= errnum <= 32767
+
+    E_STRING is C string matching the regular expression: "^E_[A-Z0-9_]+$"
 
 LINK LIBRARY
     int calc_errno;				/* global calc_errno value */

@@ -229,6 +229,47 @@ The following are the changes from calc version 2.14.3.5 to date:
     of the calc error code system as well as libcalc interface
     where applicable.
 
+    Changed #define E_USERDEF to #define E__USERDEF.
+
+    Removed use of E_USERDEF, E__BASE, E__COUNT, and E__HIGHEST
+    from custom/c_sysinfo because the c_sysinfo is just a demo
+    and this will simplify the custom/Makefile.
+
+    The include file calcerr.h is now the errsym.h include file.
+    The calcerr.tbl has been replaced by errtbl.c and errtbl.h.
+
+    The calcerr_c.awk, calcerr_c.sed, calcerr_h.awk, and
+    calcerr_h.sed files are now obsolete and have been removed.
+    The calcerr.c and calcerr.h now obsolete and are no longer built.
+
+    The calc computation error codes, symbols and messages are now in
+    a error_table[] array of struct errtbl.
+
+    An E_STRING is a string corresponds to an error code #define.
+    For example, the E_STRING for the calc error E_STRCAT,
+    is the string "E_STRING".  An E_STRING must now match
+    the regular expression: "^E_[A-Z0-9_]+$".
+
+    The old array error_table[] of error message strings has been
+    replaced by a new error_table[] array of struct errtbl.  The struct
+    errtbl array holds calc errnum error codes, the related E_STRING
+    symbol as a string, and the original related error message.
+    To add new computation error codes, add them near the bottom of the
+    error_table[] array, just before the NULL entry.
+
+    The ./errcode utility, when run, will verify the consistency of
+    the error_table[] array.
+
+    The Makefile uses ./errcode -e to generate the contents of
+    help/errorcodes file.  The help errorcodes now prints
+    information from the new cstruct errtbl error_table[] array.
+
+    The help/errorcodes.hdr and help/errorcodes.sed files are
+    now obsolete and have been removed.
+
+    The Makefile uses ./errcode -d to generate the contents of the
+    errsym.h include file.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

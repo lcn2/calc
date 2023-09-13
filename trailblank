@@ -47,11 +47,10 @@ LEADING_SPACES_BEFORE_TAB=$(
 	      -name '*.orig' -o -name '*.rej' -o -name '*.bak' -o \
 	      -name '*.ptch' -o -name 'core.*' -o \
 	      -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
-	      -name 'sample_many' -o -name 'sample_rand' -o \
+	      -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
 	      -path './help/funclist' -o -path './have_stdvs' -o \
 	      -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
 	      -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
-	      -path './help/errorcodes.sed' -o -path './cal/set8700.line' -o \
 	      -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
 	      -name 'sample_many-static' -o -name 'sample_rand-static' -o \
 	      -name 'codeql-analysis.yml' -o -name tags -o -name debug.out \
@@ -79,11 +78,10 @@ TRAILING_WHITESPACE=$(
 	      -name '*.orig' -o -name '*.rej' -o -name '*.bak' -o \
 	      -name '*.ptch' -o -name 'core.*' -o \
 	      -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
-	      -name 'sample_many' -o -name 'sample_rand' -o \
+	      -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
 	      -path './help/funclist' -o -path './have_stdvs' -o \
 	      -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
 	      -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
-	      -path './help/errorcodes.sed' -o -path './cal/set8700.line' -o \
 	      -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
 	      -name 'sample_many-static' -o -name 'sample_rand-static' -o \
 	      -name 'codeql-analysis.yml' -o -name tags -o -name debug.out \
@@ -102,7 +100,7 @@ fi
 # Some of these files must have long lines.  Some of these files may not exist.
 #
 if [[ -x /usr/local/bin/picky ]]; then
-    PICKY_PHASE_0A=$(/usr/local/bin/picky -w -s -v ./help/errorcodes.sed ./cal/set8700.line \
+    PICKY_PHASE_0A=$(/usr/local/bin/picky -w -s -v ./cal/set8700.line \
 						   .gitignore README.md .lldbinit 2>&1)
     status="$?"
     if [[ $status -ne 0 ]]; then
@@ -121,12 +119,12 @@ if [[ -x /usr/local/bin/picky ]]; then
 	    EXIT_CODE=4
 	fi
     fi
-    if [[ -e calcerr.h ]]; then
-	PICKY_PHASE_0C=$(/usr/local/bin/picky -w -s -v calcerr.h 2>&1)
+    if [[ -e errsym.h ]]; then
+	PICKY_PHASE_0C=$(/usr/local/bin/picky -w -s -v errsym.h 2>&1)
 	status="$?"
 	if [[ $status -ne 0 ]]; then
 	    echo
-	    echo '# picky failed on calcerr.h'
+	    echo '# picky failed on errsym.h'
 	    echo "$PICKY_PHASE_0C" | sed -e 's/\.\///'
 	    EXIT_CODE=5
 	fi
@@ -150,16 +148,13 @@ PICKY_PHASE_1=$(
 	      -name '*.orig' -o -name '*.rej' -o -name '*.bak' -o \
 	      -name '*.ptch' -o -name 'core.*' -o \
 	      -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
-	      -name 'sample_many' -o -name 'sample_rand' -o \
+	      -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
 	      -path './help/funclist' -o -path './have_stdvs' -o \
 	      -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
 	      -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
-	      -path './help/errorcodes.sed' -o -path './cal/set8700.line' -o \
 	      -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
 	      -name 'sample_many-static' -o -name 'sample_rand-static' -o \
-	      -name 'codeql-analysis.yml' -o -name tags -o -name debug.out \
-	      -o \
-	      -path './help/errorcodes.sed' -o -path './help/errorcodes.sed' -o \
+	      -name 'codeql-analysis.yml' -o -name tags -o -name debug.out -o \
 	      -name '.gitignore' -o -name 'README.md' -o -name '.lldbinit' \
 	   \) -prune -o -type f -print0 | \
     if [[ -x /usr/local/bin/picky ]]; then

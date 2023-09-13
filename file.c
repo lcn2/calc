@@ -43,7 +43,7 @@
 #include "have_fpos_pos.h"
 #include "fposval.h"
 #include "file.h"
-#include "calcerr.h"
+#include "errsym.h"
 #include "strl.h"
 
 #if defined(_WIN32) || defined(_WIN64)
