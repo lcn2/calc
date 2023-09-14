@@ -827,13 +827,13 @@ print_errorcodes(void)
 	}
 
 	/*
-	 * print the help/errorcodes.h file trailer
+	 * print the help/errorcodes file trailer
 	 */
 	printf("\n"
-	       "\"E__HIGHEST\"\t%ld\thighest assigned calc computation error code\n"
-	       "\"E__USERDEF\"\t%d\tuser defined error codes start here\n"
-	       "\"E__USERMAX\"\t%d\tmaximum user defined error code\n",
-	       MY_E__HIGHEST, E__USERDEF, E__USERMAX);
+	      "\"E__HIGHEST\"\t%ld\thighest assigned calc computation error code\n"
+	      "\"E__USERDEF\"\t%d\tuser defined error codes start here\n"
+	      "\"E__USERMAX\"\t%d\tmaximum user defined error code\n",
+	      MY_E__HIGHEST, E__USERDEF, E__USERMAX);
 	printf("\n"
 	       "## Copyright (C) %d  Landon Curt Noll\n"
 	       "##\n"
@@ -905,10 +905,6 @@ print_errsym(void)
 	       "\n"
 	       "\n",
 	       ERRTBL_COPYRIGHT_YEAR);
-	printf("#define E__NONE\t\t%d\t/* calc_errno cleared: libc errno codes above here */\n"
-	       "#define E__BASE\t\t%d\t/* Reserved for \"No error\" calc internal state */\n"
-	       "\n",
-	       E__NONE, E__BASE);
 
 	/*
 	 * print the #define lines
@@ -929,11 +925,9 @@ print_errsym(void)
 	 */
 	printf("\n"
 	       "#define E__HIGHEST\t%ld\t/* highest assigned calc computation error code */\n"
-	       "#define E__USERDEF\t%d\t/* user defined error codes start here */\n"
-	       "#define E__USERMAX\t%d\t/* maximum user defined error code */\n"
 	       "\n"
 	       "#define ECOUNT\t%ld\t/* number of calc computation error codes w/o E__BASE */\n",
-	       MY_E__HIGHEST, E__USERDEF, E__USERMAX, MY_ECOUNT);
+	       MY_E__HIGHEST, MY_ECOUNT);
 	printf("\n"
 	       "\n"
 	       "#endif /* !INCLUDE_ERRSYM_H */\n");

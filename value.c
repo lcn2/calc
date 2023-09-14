@@ -37,6 +37,7 @@
 #include "nametype.h"
 #include "file.h"
 #include "config.h"
+#include "errtbl.h"
 
 
 #include "attribute.h"

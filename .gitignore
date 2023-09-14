@@ -23,8 +23,6 @@ core*
 .dynamic
 .hsrc
 .static
-Makefile.our
-NOTES
 align32
 align32.h
 args.h
@@ -42,12 +40,12 @@ conf.h
 const_tmp
 cscript/.all
 cscript/4dsphere
-cscript/README
 cscript/fproduct
 cscript/mersenne
 cscript/piforever
 cscript/plus
 cscript/powerterm
+cscript/README
 cscript/simple
 cscript/square
 custom/.all
@@ -120,8 +118,6 @@ have_ustat
 have_ustat.h
 have_varvs
 help/.all
-help/COPYING
-help/COPYING-LGPL
 help/binding
 help/bindings
 help/bug
@@ -131,6 +127,8 @@ help/change
 help/changes
 help/contrib
 help/copy
+help/COPYING
+help/COPYING-LGPL
 help/cscript
 help/custom_cal
 help/errorcode
@@ -152,12 +150,15 @@ libcalc.*
 libcustcalc.*
 longbits
 longbits.h
+Makefile.our
+NOTES
 outfile
 sample_many
 sample_many-static
 sample_rand
 sample_rand-static
 status.chk_c.h
+strdup_tmp
 tags
 terminal.h
 unused_tmp

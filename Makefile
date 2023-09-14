@@ -5519,6 +5519,7 @@ value.o: config.h
 value.o: decl.h
 value.o: endian_calc.h
 value.o: errsym.h
+value.o: errtbl.h
 value.o: file.h
 value.o: func.h
 value.o: hash.h

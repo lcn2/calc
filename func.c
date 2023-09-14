@@ -8087,7 +8087,7 @@ f_newerror(int count, VALUE **vals)
 	if (index >= 0) {
 		errnum = E__USERDEF + index;
 	} else {
-		if (nexterrnum == 32767)
+		if (nexterrnum == E__USERMAX)
 			math_error("Too many new error values");
 		errnum = nexterrnum++;
 		addstr(&newerrorstr, str);
@@ -8116,7 +8116,7 @@ f_strerror(int count, VALUE **vals)
 			if (vp->v_type != V_NUM || qisfrac(vp->v_num))
 				return error_value(E_STRERROR1);
 			i = qtoi(vp->v_num);
-			if (i < 0 || i > 32767)
+			if (i < 0 || i > E__USERMAX)
 				return error_value(E_STRERROR2);
 		}
 	} else {
