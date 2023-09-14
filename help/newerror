@@ -69,8 +69,6 @@ LIMITS
     The number of new described error-values is not to exceed E__USERMAX-E__USERDEF
     (which is usually 12767 calls to the newerror function).
 
-    E_STRING is string matching the regular expression: "^E_[A-Z0-9]+$"
-
 LINK LIBRARY
     none
 

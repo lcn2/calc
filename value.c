@@ -688,7 +688,7 @@ invertvalue(VALUE *vp, VALUE *vres)
 	switch (vp->v_type) {
 	case V_NUM:
 		if (qiszero(vp->v_num))
-			*vres = error_value(E_1OVER0);
+			*vres = error_value(E_DIVBYZERO);
 		else
 			vres->v_num = qinv(vp->v_num);
 		return;
@@ -700,7 +700,7 @@ invertvalue(VALUE *vp, VALUE *vres)
 		return;
 	case V_OCTET:
 		if (*vp->v_octet == 0) {
-			*vres = error_value(E_1OVER0);
+			*vres = error_value(E_DIVBYZERO);
 			return;
 		}
 		q1 = itoq((long) *vp->v_octet);
@@ -713,7 +713,7 @@ invertvalue(VALUE *vp, VALUE *vres)
 		*vres = objcall(OBJ_INV, vp, NULL_VALUE, NULL_VALUE);
 		return;
 	default:
-		if (vp->v_type == -E_1OVER0) {
+		if (vp->v_type == -E_DIVBYZERO) {
 			vres->v_type = V_NUM;
 			vres->v_num = qlink(&_qzero_);
 			return;
@@ -1874,7 +1874,7 @@ powvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	}
 	vres->v_type = v1->v_type;
 	vres->v_subtype = V_NOSUBTYPE;
-	if (v1->v_type <= 0 && v1->v_type != -E_1OVER0)
+	if (v1->v_type <= 0 && v1->v_type != -E_DIVBYZERO)
 		return;
 	if (v2->v_type <= 0) {
 		vres->v_type = v2->v_type;
@@ -1887,12 +1887,12 @@ powvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	case V_NUM:
 
 		/* deal with the division by 0 value */
-		if (v1->v_type == -E_1OVER0) {
+		if (v1->v_type == -E_DIVBYZERO) {
 			if (qisneg(real_v2)) {
 				vres->v_type = V_NUM;
 				vres->v_num = qlink(&_qzero_);
 			} else {
-				vres->v_type = -E_1OVER0;
+				vres->v_type = -E_DIVBYZERO;
 			}
 			break;
 		}
@@ -1902,7 +1902,7 @@ powvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		case V_NUM:
 			if (qiszero(v1->v_num)) {
 				if (qisneg(real_v2)) {
-					*vres = error_value(E_1OVER0);
+					*vres = error_value(E_DIVBYZERO);
 					break;
 				}
 				vres->v_type = V_NUM;
@@ -1950,12 +1950,12 @@ powvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	case V_COM:
 
 		/* deal with the division by 0 value */
-		if (v1->v_type == -E_1OVER0) {
+		if (v1->v_type == -E_DIVBYZERO) {
 			if (cisreal(v2->v_com) && qisneg(real_v2)) {
 				vres->v_type = V_NUM;
 				vres->v_num = qlink(&_qzero_);
 			} else {
-				vres->v_type = -E_1OVER0;
+				vres->v_type = -E_DIVBYZERO;
 			}
 			break;
 		}
@@ -1965,7 +1965,7 @@ powvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		case V_NUM:
 			if (qiszero(v1->v_num)) {
 				if (cisreal(v2->v_com) && qisneg(real_v2)) {
-					*vres = error_value(E_1OVER0);
+					*vres = error_value(E_DIVBYZERO);
 					break;
 				}
 				/*
@@ -2132,7 +2132,7 @@ divvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	if (v1->v_type <= 0)
 		return;
 	if (v2->v_type <= 0) {
-		if (testvalue(v1) && v2->v_type == -E_1OVER0) {
+		if (testvalue(v1) && v2->v_type == -E_DIVBYZERO) {
 			vres->v_type = V_NUM;
 			vres->v_num = qlink(&_qzero_);
 		}
@@ -2142,9 +2142,9 @@ divvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 	}
 	if (!testvalue(v2)) {
 		if (testvalue(v1))
-			*vres = error_value(E_1OVER0);
+			*vres = error_value(E_DIVBYZERO);
 		else
-			*vres = error_value(E_0OVER0);
+			*vres = error_value(E_ZERODIVZERO);
 		return;
 	}
 	vres->v_type = v1->v_type;

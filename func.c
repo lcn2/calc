@@ -3348,7 +3348,7 @@ f_coth(int count, VALUE **vals)
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (qiszero(vals[0]->v_num))
-				return error_value(E_1OVER0);
+				return error_value(E_DIVBYZERO);
 			result.v_num = qcoth(vals[0]->v_num, err);
 			result.v_type = V_NUM;
 			break;
@@ -3453,7 +3453,7 @@ f_csch(int count, VALUE **vals)
 	switch (vals[0]->v_type) {
 		case V_NUM:
 			if (qiszero(vals[0]->v_num))
-				return error_value(E_1OVER0);
+				return error_value(E_DIVBYZERO);
 			result.v_num = qcsch(vals[0]->v_num, err);
 			result.v_type = V_NUM;
 			break;

@@ -3341,6 +3341,7 @@ clean:
 
 clobber: clean
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	${RM} -f errcode${EXT}
 	${RM} -f ${SAMPLE_TARGETS}
 	${RM} -f ${SAMPLE_STATIC_TARGETS}
 	${RM} -f tags .hsrc hsrc

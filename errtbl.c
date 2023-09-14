@@ -63,6 +63,18 @@
  *
  * The final entry must have an errnum of -1, errsym of NULL and errmsg of NULL.
  *
+ * With exception to the 1st E__BASE entry, all other errsym strings
+ * must match the following regular expression:
+ *
+ *	^E_[A-Z][A-Z0-9_]+$
+ *
+ * NOTE: The above regular expression is more restrictive them the
+ *	 "E_STRING" regular expression from help/errno, help/error,
+ *	 and help/strerror.  This is because errsym strings that
+ *	 start with "E__" are special symbols that #define-d in errtbl.h,
+ *	 AND because errsym strings that are "^E_[0-9]+$" reserved for
+ *	 numeric aliases for errnum.
+ *
  * Keep the errmsg short enough that lines in this table are not too long.
  * You might want to keep the length of the errmsg to 80 characters or less.
  */
@@ -70,8 +82,8 @@ CONST struct errtbl error_table[] = {
 
 	/* The E__BASE entry below must start with 10000 and must be first!! */
 	{ 10000,	"E__BASE",		"No error" },
-	{ 10001,	"E_1OVER0",		"Division by zero" },
-	{ 10002,	"E_0OVER0",		"Indeterminate (0/0)" },
+	{ 10001,	"E_DIVBYZERO",		"Division by zero" },
+	{ 10002,	"E_ZERODIVZERO",	"Indeterminate (0/0)" },
 	{ 10003,	"E_ADD",		"Bad arguments for +" },
 	{ 10004,	"E_SUB",		"Bad arguments for binary -" },
 	{ 10005,	"E_MUL",		"Bad arguments for *" },
@@ -745,12 +757,20 @@ verify_error_table(void)
 				program, i, error_table[i].errsym);
 			exit(19);
 		}
-		for (p = error_table[i].errsym+2; *p != '\0'; ++p) {
+		p = error_table[i].errsym+2;
+		if (!isascii(*p) || !isupper(*p)) {
+			fprintf(stderr, "**** %s ERROR: error_table[%zu].errsym: %s "
+					"3rd E_STRING char is not UPPER letter, "
+					"must match the regular expression: %s\n",
+				program, i, error_table[i].errsym, "^E_[A-Z][A-Z0-9_]+$");
+			exit(20);
+		}
+		for (p = error_table[i].errsym+3; *p != '\0'; ++p) {
 			if (!isascii(*p) || !(isupper(*p) || isdigit(*p) || *p == '_')) {
 				fprintf(stderr, "**** %s ERROR: error_table[%zu].errsym: %s "
-						"must match the regular expression: %s\n",
+						"E_STRING must match the regular expression: %s\n",
 					program, i, error_table[i].errsym, "^E_[A-Z0-9_]+$");
-				exit(20);
+				exit(21);
 			}
 		}
 
@@ -760,7 +780,7 @@ verify_error_table(void)
 		if (strlen(error_table[i].errmsg) <= 0) {
 			fprintf(stderr, "**** %s ERROR: error_table[%zu].errmsg length: %zu must be > 0\n",
 				program, i, strlen(error_table[i].errmsg));
-			exit(21);
+			exit(22);
 		}
 	}
 
@@ -770,17 +790,17 @@ verify_error_table(void)
 	if (error_table[len-1].errnum != -1) {
 		fprintf(stderr, "**** %s ERROR: final NULL entry error_table[%zu].errnum: %d != -1\n",
 			program, len-1, error_table[len-1].errnum);
-		exit(22);
+		exit(23);
 	}
 	if (error_table[len-1].errsym != NULL) {
 		fprintf(stderr, "**** %s ERROR: final NULL entry error_table[%zu].errsym != NULL\n",
 			program, len-1);
-		exit(23);
+		exit(24);
 	}
 	if (error_table[len-1].errmsg != NULL) {
 		fprintf(stderr, "**** %s ERROR: final NULL entry error_table[%zu].errmsg != NULL\n",
 			program, len-1);
-		exit(24);
+		exit(25);
 	}
 	return;
 }
