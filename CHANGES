@@ -289,6 +289,9 @@ The following are the changes from calc version 2.14.3.5 to date:
 
 	msg = error_table[errnum - E__BASE].errmsg;
 
+    Rename the #define E__COUNT to ECOUNT to avoid confusion
+    with "E_STRING" error symbols.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

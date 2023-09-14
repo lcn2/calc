@@ -35,10 +35,10 @@
 /*
  * primary error code defines
  */
-#define E__NONE 0		/* calc_errno cleared: libc errno codes above here */
-#define E__BASE 10000		/* calc errors start above here */
-#define E__USERDEF 20000	/* user defined error codes start here */
-#define E__USERMAX 32767	/* maximum user defined error code */
+#define E__NONE		0	/* calc_errno cleared: libc errno codes above here */
+#define E__BASE		10000	/* calc errors start above here */
+#define E__USERDEF	20000	/* user defined error codes start here */
+#define E__USERMAX	32767	/* maximum user defined error code */
 
 
 /*

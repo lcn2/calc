@@ -35,10 +35,10 @@
 #define ERRTBL_COPYRIGHT_YEAR 2023	/* Copyright (C) year for generated files */
 
 /* number of calc computation error codes */
-#define MY_E__COUNT ((sizeof(error_table) / sizeof(error_table[0])) - 2)
+#define MY_ECOUNT ((sizeof(error_table) / sizeof(error_table[0])) - 2)
 
 /* highest assigned calc computation error code */
-#define MY_E__HIGHEST (E__BASE + MY_E__COUNT)
+#define MY_E__HIGHEST (E__BASE + MY_ECOUNT)
 
 
 /************************************************************************/
@@ -669,7 +669,7 @@ S_FUNC void
 verify_error_table(void)
 {
 	size_t len;		/* length of the error_table */
-	size_t e__count;	/* computed E__COUNT value */
+	size_t e__count;	/* computed ECOUNT value */
 	char *p;
 	size_t i;
 
@@ -678,9 +678,9 @@ verify_error_table(void)
 	 */
 	len = sizeof(error_table) / sizeof(error_table[0]);
 	e__count = len - 2;
-	if (e__count != MY_E__COUNT) {
-		fprintf(stderr, "**** %s ERROR: error_table length: %zu != MY_E__COUNT+2: %lu\n",
-			program, len, MY_E__COUNT+2);
+	if (e__count != MY_ECOUNT) {
+		fprintf(stderr, "**** %s ERROR: error_table length: %zu != MY_ECOUNT+2: %lu\n",
+			program, len, MY_ECOUNT+2);
 		exit(10);
 	}
 
@@ -929,10 +929,11 @@ print_errsym(void)
 	 */
 	printf("\n"
 	       "#define E__HIGHEST\t%ld\t/* highest assigned calc computation error code */\n"
-	       "#define E__COUNT\t%ld\t/* number of calc computation error codes w/o E__BASE */\n"
 	       "#define E__USERDEF\t%d\t/* user defined error codes start here */\n"
-	       "#define E__USERMAX\t%d\t/* maximum user defined error code */\n",
-	       MY_E__HIGHEST, MY_E__COUNT, E__USERDEF, E__USERMAX);
+	       "#define E__USERMAX\t%d\t/* maximum user defined error code */\n"
+	       "\n"
+	       "#define ECOUNT\t%ld\t/* number of calc computation error codes w/o E__BASE */\n",
+	       MY_E__HIGHEST, E__USERDEF, E__USERMAX, MY_ECOUNT);
 	printf("\n"
 	       "\n"
 	       "#endif /* !INCLUDE_ERRSYM_H */\n");

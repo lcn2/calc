@@ -18,6 +18,10 @@ DESCRIPTION
 	* user-defined description string created by newerror(str)
 	* "Unknown error errnum" (where errnum is in decimal)
 
+    With strerror("E_STRING") string argument:
+
+	XXX - fill in - XXX
+
     Without a argument, strerror() returns as if it were called with:
 
 	strerror(errno())
@@ -34,17 +38,17 @@ DESCRIPTION
     For users of libcalc:
 
 	The libcalc array error_table[] contains the hard coded
-	calc-generated error array of E__COUNT+2 pointers to strings
+	calc-generated error array of ECOUNT+2 pointers to strings
 	starting with E__BASE, ending with E__HIGHEST and terminated
 	by a NULL pointer.
 
 	The error_table[0] is for errnum of E__BASE, and is the
 	string "No error".
 
-	The error_table[E__COUNT] is string associated with the
+	The error_table[ECOUNT] is string associated with the
 	highest calc-generated error message.
 
-	The error_table[E__COUNT+1] is a NULL pointer.
+	The error_table[ECOUNT+1] is a NULL pointer.
 
      See help error for more information on the ranges of errnum and
      the meaning of the above mentioned constants.
@@ -79,11 +83,12 @@ EXAMPLE
 LIMITS
     0 <= errnum <= 32767
 
-    E_STRING is C string matching the regular expression: "^E_[A-Z0-9_]+$"
+    E_STRING is string matching the regular expression: "^E_[A-Z0-9_]+$"
 
 LINK LIBRARY
     int calc_errno;				/* global calc_errno value */
-    CONST char *error_table[E__COUNT+2];	/* calc coded error messages */
+
+    CONST struct errtbl error_table[ECOUNT+2];	/* calc error codes, error symbols and error messages */
 
 SEE ALSO
     strcat, strcpy, strlen, strncmp, strncpy, strpos,

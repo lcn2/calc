@@ -11,11 +11,22 @@ TYPES
     return	integer
 
 DESCRIPTION
-    Whenever an operation or evaluation of function returns an error-value,
-    the numerical code for that value is stored as "global calc_errno value".
+    With errno(errnum) numeric argument:
 
-    The term "global calc_errno value" is an internal calc state.
-    This is NOT a calc variable called calc_errno.
+	errno(errnum) sets "global calc_errno value" to the value
+	errnum and returns its previous value.  Unlike error(errnum)
+	calling errno(errnum) does NOT increment the global calc
+	error count (see help errcount).
+
+    With errno("E_STRING") string argument:
+
+	XXX - fill in - XXX
+
+    With errno() no argument:
+
+	errno() returns the current value of "global calc_errno
+	value".  Unlike error() calling errno() does NOT increment
+	the global calc error count (see help errcount).
 
     NOTE:
 
@@ -27,14 +38,11 @@ DESCRIPTION
     Unlike error() calling errno() does NOT increment the global
     calc error count (see help errcount).
 
-    errno() returns the current value of "global calc_errno value".
-    Unlike error() calling errno() does NOT increment the global
-    calc error count (see help errcount).
+    Whenever an operation or evaluation of function returns an error-value,
+    the numerical code for that value is stored as "global calc_errno value".
 
-    errno(errnum) sets "global calc_errno value" to the value errnum
-    and returns its previous value.  Unlike error(errnum) calling
-    errno(errnum) does NOT increment the global calc error count
-    (see help errcount).
+    The term "global calc_errno value" is an internal calc state.
+    This is NOT a calc variable called calc_errno.
 
     To detect whether an error occurs during some sequence of operations,
     one may immediately before that sequence set the stored error-number
@@ -66,10 +74,12 @@ EXAMPLE
 LIMITS
     0 <= errnum <= 32767
 
-LINK LIBRARY
-    int calc_errno;	/* global calc_errno value */
+    E_STRING is string matching the regular expression: "^E_[A-Z0-9_]+$"
 
-    E_STRING is C string matching the regular expression: "^E_[A-Z0-9_]+$"
+LINK LIBRARY
+    int calc_errno;				/* global calc_errno value */
+
+    CONST struct errtbl error_table[ECOUNT+2];	/* calc error codes, error symbols and error messages */
 
 SEE ALSO
     errmax, errcount, error, strerror, iserror, newerror, errorcodes,
