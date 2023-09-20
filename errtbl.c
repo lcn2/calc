@@ -1684,6 +1684,12 @@ errsym_2_errnum(CONST char *errsym)
 
 
 /*
+ * The code below is not compatible with the errcode executable
+ */
+#if !defined(ERRCODE_SRC)
+
+
+/*
  * errnum_2_errsym - convert an errnum value into an errsym E_STRING, possibly malloced
  *
  * given:
@@ -1932,6 +1938,9 @@ errsym_2_errmsg(CONST char *errsym, bool *palloced)
 	ret = errnum_2_errmsg(errnum, palloced);
 	return ret;
 }
+
+
+#endif /* !ERRCODE_SRC */
 
 
 /*
