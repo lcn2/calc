@@ -93,8 +93,6 @@
 #include "have_const.h"
 #include "have_unused.h"
 #include "calc.h"
-#include "errsym.h"
-#include "errtbl.h"
 #include "opcodes.h"
 #include "token.h"
 #include "func.h"
@@ -114,7 +112,7 @@
 #endif
 
 
-#include "attribute.h"
+#include "errtbl.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -231,6 +229,7 @@ struct builtin {
 
 #if !defined(FUNCLIST)
 
+
 /*
  * verify_eps - verify that the eps argument is a valid error value
  *
@@ -276,6 +275,61 @@ verify_eps(VALUE CONST *veps)
 }
 
 
+/*
+ * name_newerrorstr - obtain the name string for a user-described error code
+ *
+ * given:
+ *	errnum	errnum code to convert
+ *
+ * returns:
+ *	!= NULL ==> non-empty name string for a user-described error
+ *	== NULL ==> errnum is not valid, or name string is empty, or name string not found
+ */
+char *
+name_newerrorstr(int errnum)
+{
+	char *cp;	/* name string lookup result */
+
+	/*
+	 * firewall
+	 */
+	if (is_valid_errnum(errnum) == false) {
+		/* errnum is not a valid code */
+                return NULL;
+	}
+
+	/*
+	 * case: errnum is not a user-described code
+	 */
+	if (errnum < E__USERDEF || errnum > E__USERMAX) {
+		/* errnum is not a user-described code */
+                return NULL;
+	}
+
+	/*
+	 * case: errnum is outside the current range of user-described codes
+	 */
+	if (errnum >= nexterrnum) {
+		/* errnum is refers to an unassigned user-described code */
+		return NULL;
+	}
+
+	/*
+	 * attempt to fetch the name string for a user-described error code
+	 */
+	cp = namestr(&newerrorstr, errnum - E__USERDEF);
+	if (cp == NULL || cp[0] == '\0') {
+		/* name string was not found or was empty for the user-described error code */
+		return NULL;
+	}
+
+	/*
+	 * return the name string for the user-described error code
+	 */
+	return cp;
+}
+
+
 S_FUNC VALUE
 f_eval(VALUE *vp)
 {
@@ -287,14 +341,14 @@ f_eval(VALUE *vp)
 	long	temp_stoponerror;	/* temp value of stoponerror */
 
 	if (vp->v_type != V_STR)
-		return error_value(E_EVAL2);
+		return error_value(E_EVAL_2);
 	str = vp->v_str->s_str;
 	num = vp->v_str->s_len;
 	switch (openstring(str, num)) {
 	case -2:
-		return error_value(E_EVAL3);
+		return error_value(E_EVAL_3);
 	case -1:
-		return error_value(E_EVAL4);
+		return error_value(E_EVAL_4);
 	}
 	oldfunc = curfunc;
 	enterfilescope();
@@ -1358,14 +1412,14 @@ f_setbit(int count, VALUE **vals)
 	r = (count == 3) ? testvalue(vals[2]) : 1;
 
 	if (vals[1]->v_type != V_NUM || qisfrac(vals[1]->v_num))
-		return error_value(E_SETBIT1);
+		return error_value(E_SETBIT_1);
 	if (zge31b(vals[1]->v_num->num))
-		return error_value(E_SETBIT2);
+		return error_value(E_SETBIT_2);
 	if (vals[0]->v_type != V_STR)
-		return error_value(E_SETBIT3);
+		return error_value(E_SETBIT_3);
 	index = qtoi(vals[1]->v_num);
 	if (stringsetbit(vals[0]->v_str, index, r))
-		return error_value(E_SETBIT2);
+		return error_value(E_SETBIT_2);
 	return result;
 }
 
@@ -1377,14 +1431,14 @@ f_digit(int count, VALUE **vals)
 	ZVALUE base;
 
 	if (vals[0]->v_type != V_NUM)
-		return error_value(E_DGT1);
+		return error_value(E_DGT_1);
 
 	if (vals[1]->v_type != V_NUM || qisfrac(vals[1]->v_num))
-		return error_value(E_DGT2);
+		return error_value(E_DGT_2);
 
 	if (count == 3) {
 		if (vals[2]->v_type != V_NUM || qisfrac(vals[2]->v_num))
-			return error_value(E_DGT3);
+			return error_value(E_DGT_3);
 		base = vals[2]->v_num->num;
 	} else {
 		base = _ten_;
@@ -1393,7 +1447,7 @@ f_digit(int count, VALUE **vals)
 	res.v_subtype = V_NOSUBTYPE;
 	res.v_num = qdigit(vals[0]->v_num, vals[1]->v_num->num, base);
 	if (res.v_num == NULL)
-		return error_value(E_DGT3);
+		return error_value(E_DGT_3);
 
 	return res;
 }
@@ -1406,11 +1460,11 @@ f_digits(int count, VALUE **vals)
 	VALUE res;
 
 	if (vals[0]->v_type != V_NUM)
-		return error_value(E_DGTS1);
+		return error_value(E_DGTS_1);
 	if (count > 1) {
 		if (vals[1]->v_type != V_NUM || qisfrac(vals[1]->v_num)
 			|| qiszero(vals[1]->v_num) || qisunit(vals[1]->v_num))
-			return error_value(E_DGTS2);
+			return error_value(E_DGTS_2);
 		base = vals[1]->v_num->num;
 	} else {
 		base = _ten_;
@@ -1429,13 +1483,13 @@ f_places(int count, VALUE **vals)
 	VALUE res;
 
 	if (vals[0]->v_type != V_NUM)
-		return error_value(E_PLCS1);
+		return error_value(E_PLCS_1);
 	if (count > 1) {
 		if (vals[1]->v_type != V_NUM || qisfrac(vals[1]->v_num))
-			return error_value(E_PLCS2);
+			return error_value(E_PLCS_2);
 		places = qplaces(vals[0]->v_num, vals[1]->v_num->num);
 		if (places == -2)
-			return error_value(E_PLCS2);
+			return error_value(E_PLCS_2);
 	} else
 		places = qdecplaces(vals[0]->v_num);
 
@@ -1484,29 +1538,29 @@ f_xor(int count, VALUE **vals)
 	result.v_subtype = vals[0]->v_subtype;
 	for (i = 1; i < count; i++) {
 		if (vals[i]->v_type != type)
-			return error_value(E_XOR1);
+			return error_value(E_XOR_1);
 	}
 	switch (type) {
-		case V_NUM:
-			q = qlink(vals[0]->v_num);
-			for (i = 1; i < count; i++) {
-				qtmp = qxor(q, vals[i]->v_num);
-				qfree(q);
-				q = qtmp;
-			}
-			result.v_num = q;
-			break;
-		case V_STR:
-			s = slink(vals[0]->v_str);
-			for (i = 1; i < count; i++) {
-				stmp = stringxor(s, vals[i]->v_str);
-				sfree(s);
-				s = stmp;
-			}
-			result.v_str = s;
-			break;
-		default:
-			return error_value(E_XOR2);
+	case V_NUM:
+		q = qlink(vals[0]->v_num);
+		for (i = 1; i < count; i++) {
+			qtmp = qxor(q, vals[i]->v_num);
+			qfree(q);
+			q = qtmp;
+		}
+		result.v_num = q;
+		break;
+	case V_STR:
+		s = slink(vals[0]->v_str);
+		for (i = 1; i < count; i++) {
+			stmp = stringxor(s, vals[i]->v_str);
+			sfree(s);
+			s = stmp;
+		}
+		result.v_str = s;
+		break;
+	default:
+		return error_value(E_XOR_2);
 	}
 	return result;
 }
@@ -1530,15 +1584,15 @@ minlistitems(LIST *lp)
 	for (ep = lp->l_first; ep; ep = ep->e_next) {
 		vp = &ep->e_value;
 		switch(vp->v_type) {
-			case V_LIST:
-				term = minlistitems(vp->v_list);
-				break;
-			case V_OBJ:
-				term = objcall(OBJ_MIN, vp,
-					       NULL_VALUE, NULL_VALUE);
-				break;
-			default:
-				copyvalue(vp, &term);
+		case V_LIST:
+			term = minlistitems(vp->v_list);
+			break;
+		case V_OBJ:
+			term = objcall(OBJ_MIN, vp,
+				       NULL_VALUE, NULL_VALUE);
+			break;
+		default:
+			copyvalue(vp, &term);
 		}
 		if (min.v_type == V_NULL) {
 			min = term;
@@ -1583,15 +1637,15 @@ maxlistitems(LIST *lp)
 	for (ep = lp->l_first; ep; ep = ep->e_next) {
 		vp = &ep->e_value;
 		switch(vp->v_type) {
-			case V_LIST:
-				term = maxlistitems(vp->v_list);
-				break;
-			case V_OBJ:
-				term = objcall(OBJ_MAX, vp,
-					       NULL_VALUE, NULL_VALUE);
-				break;
-			default:
-				copyvalue(vp, &term);
+		case V_LIST:
+			term = maxlistitems(vp->v_list);
+			break;
+		case V_OBJ:
+			term = objcall(OBJ_MAX, vp,
+				       NULL_VALUE, NULL_VALUE);
+			break;
+		default:
+			copyvalue(vp, &term);
 		}
 		if (max.v_type == V_NULL) {
 			max = term;
@@ -1635,15 +1689,15 @@ f_min(int count, VALUE **vals)
 	while (count-- > 0) {
 		vp = *vals++;
 		switch(vp->v_type) {
-			case V_LIST:
-				term = minlistitems(vp->v_list);
-				break;
-			case V_OBJ:
-				term = objcall(OBJ_MIN, vp,
-					      NULL_VALUE, NULL_VALUE);
-				break;
-			default:
-				copyvalue(vp, &term);
+		case V_LIST:
+			term = minlistitems(vp->v_list);
+			break;
+		case V_OBJ:
+			term = objcall(OBJ_MIN, vp,
+				      NULL_VALUE, NULL_VALUE);
+			break;
+		default:
+			copyvalue(vp, &term);
 		}
 		if (min.v_type == V_NULL) {
 			min = term;
@@ -1691,15 +1745,15 @@ f_max(int count, VALUE **vals)
 	while (count-- > 0) {
 		vp = *vals++;
 		switch(vp->v_type) {
-			case V_LIST:
-				term = maxlistitems(vp->v_list);
-				break;
-			case V_OBJ:
-				term = objcall(OBJ_MAX, vp,
-					       NULL_VALUE, NULL_VALUE);
-				break;
-			default:
-				copyvalue(vp, &term);
+		case V_LIST:
+			term = maxlistitems(vp->v_list);
+			break;
+		case V_OBJ:
+			term = objcall(OBJ_MAX, vp,
+				       NULL_VALUE, NULL_VALUE);
+			break;
+		default:
+			copyvalue(vp, &term);
 		}
 		if (max.v_type == V_NULL) {
 			max = term;
@@ -1800,20 +1854,20 @@ sumlistitems(LIST *lp)
 	for (ep = lp->l_first; ep; ep = ep->e_next) {
 		vp = &ep->e_value;
 		switch(vp->v_type) {
-			case V_LIST:
-				term = sumlistitems(vp->v_list);
-				break;
-			case V_OBJ:
-				term = objcall(OBJ_SUM, vp,
-					       NULL_VALUE, NULL_VALUE);
-				break;
-			default:
-				addvalue(&sum, vp, &tmp);
-				freevalue(&sum);
-				if (tmp.v_type < 0)
-					return tmp;
-				sum = tmp;
-				continue;
+		case V_LIST:
+			term = sumlistitems(vp->v_list);
+			break;
+		case V_OBJ:
+			term = objcall(OBJ_SUM, vp,
+				       NULL_VALUE, NULL_VALUE);
+			break;
+		default:
+			addvalue(&sum, vp, &tmp);
+			freevalue(&sum);
+			if (tmp.v_type < 0)
+				return tmp;
+			sum = tmp;
+			continue;
 		}
 		addvalue(&sum, &term, &tmp);
 		freevalue(&sum);
@@ -1844,20 +1898,20 @@ f_sum(int count, VALUE **vals)
 	while (count-- > 0) {
 		vp = *vals++;
 		switch(vp->v_type) {
-			case V_LIST:
-				term = sumlistitems(vp->v_list);
-				break;
-			case V_OBJ:
-				term = objcall(OBJ_SUM, vp,
-					      NULL_VALUE, NULL_VALUE);
-				break;
-			default:
-				addvalue(&sum, vp, &tmp);
-				freevalue(&sum);
-				if (tmp.v_type < 0)
-					return tmp;
-				sum = tmp;
-				continue;
+		case V_LIST:
+			term = sumlistitems(vp->v_list);
+			break;
+		case V_OBJ:
+			term = objcall(OBJ_SUM, vp,
+				      NULL_VALUE, NULL_VALUE);
+			break;
+		default:
+			addvalue(&sum, vp, &tmp);
+			freevalue(&sum);
+			if (tmp.v_type < 0)
+				return tmp;
+			sum = tmp;
+			continue;
 		}
 		addvalue(&sum, &term, &tmp);
 		freevalue(&term);
@@ -2116,7 +2170,7 @@ f_exp(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_EXP1);
+			return error_value(E_EXP_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -2125,26 +2179,26 @@ f_exp(int count, VALUE **vals)
 	 * compute e^x to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			q = qexp(vals[0]->v_num, eps);
-			if (q == NULL)
-				return error_value(E_EXP3);
-			result.v_num = q;
+	case V_NUM:
+		q = qexp(vals[0]->v_num, eps);
+		if (q == NULL)
+			return error_value(E_EXP_3);
+		result.v_num = q;
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		c = c_exp(vals[0]->v_com, eps);
+		if (c == NULL)
+			return error_value(E_EXP_3);
+		result.v_com = c;
+		result.v_type = V_COM;
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
 			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			c = c_exp(vals[0]->v_com, eps);
-			if (c == NULL)
-				return error_value(E_EXP3);
-			result.v_com = c;
-			result.v_type = V_COM;
-			if (cisreal(c)) {
-				result.v_num = c_to_q(c, true);
-				result.v_type = V_NUM;
-			}
-			break;
-		default:
-			return error_value(E_EXP2);
+		}
+		break;
+	default:
+		return error_value(E_EXP_2);
 	}
 	return result;
 }
@@ -2168,7 +2222,7 @@ f_ln(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_LN1);
+			return error_value(E_LN_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -2177,23 +2231,23 @@ f_ln(int count, VALUE **vals)
 	 * compute natural logarithm to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (!qisneg(vals[0]->v_num) &&
-			    !qiszero(vals[0]->v_num)) {
-				result.v_num = qln(vals[0]->v_num, err);
-				result.v_type = V_NUM;
-				return result;
-			}
-			ctmp.real = vals[0]->v_num;
-			ctmp.imag = qlink(&_qzero_);
-			ctmp.links = 1;
-			c = c_ln(&ctmp, err);
-			break;
-		case V_COM:
-			c = c_ln(vals[0]->v_com, err);
-			break;
-		default:
-			return error_value(E_LN2);
+	case V_NUM:
+		if (!qisneg(vals[0]->v_num) &&
+		    !qiszero(vals[0]->v_num)) {
+			result.v_num = qln(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			return result;
+		}
+		ctmp.real = vals[0]->v_num;
+		ctmp.imag = qlink(&_qzero_);
+		ctmp.links = 1;
+		c = c_ln(&ctmp, err);
+		break;
+	case V_COM:
+		c = c_ln(vals[0]->v_com, err);
+		break;
+	default:
+		return error_value(E_LN_2);
 	}
 
 	/* determine if we will return a numeric or complex value */
@@ -2225,7 +2279,7 @@ f_log(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_LOG1);
+			return error_value(E_LOG_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -2234,26 +2288,26 @@ f_log(int count, VALUE **vals)
 	 * compute logarithm base 10 to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (!qisneg(vals[0]->v_num) &&
-			    !qiszero(vals[0]->v_num)) {
-				result.v_num = qlog(vals[0]->v_num, err);
-				result.v_type = V_NUM;
-				return result;
-			}
-			ctmp.real = vals[0]->v_num;
-			ctmp.imag = qlink(&_qzero_);
-			ctmp.links = 1;
-			c = c_log(&ctmp, err);
-			break;
-		case V_COM:
-			c = c_log(vals[0]->v_com, err);
-			break;
-		default:
-			return error_value(E_LOG2);
+	case V_NUM:
+		if (!qisneg(vals[0]->v_num) &&
+		    !qiszero(vals[0]->v_num)) {
+			result.v_num = qlog(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			return result;
+		}
+		ctmp.real = vals[0]->v_num;
+		ctmp.imag = qlink(&_qzero_);
+		ctmp.links = 1;
+		c = c_log(&ctmp, err);
+		break;
+	case V_COM:
+		c = c_log(vals[0]->v_com, err);
+		break;
+	default:
+		return error_value(E_LOG_2);
 	}
 	if (c == NULL) {
-		return error_value(E_LOG3);
+		return error_value(E_LOG_3);
 	}
 
 	/* determine if we will return a numeric or complex value */
@@ -2294,23 +2348,23 @@ f_log2(int count, VALUE **vals)
 	 * compute base 2 logarithm to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (!qisneg(vals[0]->v_num) &&
-			    !qiszero(vals[0]->v_num)) {
-				result.v_num = qlog2(vals[0]->v_num, err);
-				result.v_type = V_NUM;
-				return result;
-			}
-			ctmp.real = vals[0]->v_num;
-			ctmp.imag = qlink(&_qzero_);
-			ctmp.links = 1;
-			c = c_log2(&ctmp, err);
-			break;
-		case V_COM:
-			c = c_log2(vals[0]->v_com, err);
-			break;
-		default:
-			return error_value(E_LOG2_2);
+	case V_NUM:
+		if (!qisneg(vals[0]->v_num) &&
+		    !qiszero(vals[0]->v_num)) {
+			result.v_num = qlog2(vals[0]->v_num, err);
+			result.v_type = V_NUM;
+			return result;
+		}
+		ctmp.real = vals[0]->v_num;
+		ctmp.imag = qlink(&_qzero_);
+		ctmp.links = 1;
+		c = c_log2(&ctmp, err);
+		break;
+	case V_COM:
+		c = c_log2(vals[0]->v_com, err);
+		break;
+	default:
+		return error_value(E_LOG2_2);
 	}
 	if (c == NULL) {
 		return error_value(E_LOG2_3);
@@ -2601,7 +2655,7 @@ f_cos(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_COS1);
+			return error_value(E_COS_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -2610,23 +2664,23 @@ f_cos(int count, VALUE **vals)
 	 * compute cosinr to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qcos(vals[0]->v_num, eps);
+	case V_NUM:
+		result.v_num = qcos(vals[0]->v_num, eps);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		c = c_cos(vals[0]->v_com, eps);
+		if (c == NULL)
+			return error_value(E_COS_3);
+		result.v_com = c;
+		result.v_type = V_COM;
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
 			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			c = c_cos(vals[0]->v_com, eps);
-			if (c == NULL)
-				return error_value(E_COS3);
-			result.v_com = c;
-			result.v_type = V_COM;
-			if (cisreal(c)) {
-				result.v_num = c_to_q(c, true);
-				result.v_type = V_NUM;
-			}
-			break;
-		default:
-			return error_value(E_COS2);
+		}
+		break;
+	default:
+		return error_value(E_COS_2);
 	}
 	return result;
 }
@@ -2653,7 +2707,7 @@ f_d2r(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_D2R1);
+			return error_value(E_D2R_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -2662,20 +2716,20 @@ f_d2r(int count, VALUE **vals)
 	 * compute argument*(pi/180) to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			pidiv180 = qpidiv180(eps);
-			result.v_num = qmul(vals[0]->v_num, pidiv180);
-			result.v_type = V_NUM;
-			qfree(pidiv180);
-			break;
-		case V_COM:
-			pidiv180 = qpidiv180(eps);
-			result.v_com = c_mulq(vals[0]->v_com, pidiv180);
-			result.v_type = V_COM;
-			qfree(pidiv180);
-			break;
-		default:
-			return error_value(E_D2R2);
+	case V_NUM:
+		pidiv180 = qpidiv180(eps);
+		result.v_num = qmul(vals[0]->v_num, pidiv180);
+		result.v_type = V_NUM;
+		qfree(pidiv180);
+		break;
+	case V_COM:
+		pidiv180 = qpidiv180(eps);
+		result.v_com = c_mulq(vals[0]->v_com, pidiv180);
+		result.v_type = V_COM;
+		qfree(pidiv180);
+		break;
+	default:
+		return error_value(E_D2R_2);
 	}
 	return result;
 }
@@ -2702,7 +2756,7 @@ f_r2d(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_R2D1);
+			return error_value(E_R2D_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -2711,20 +2765,20 @@ f_r2d(int count, VALUE **vals)
 	 * compute argument/(pi/180) to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			pidiv180 = qpidiv180(eps);
-			result.v_num = qqdiv(vals[0]->v_num, pidiv180);
-			result.v_type = V_NUM;
-			qfree(pidiv180);
-			break;
-		case V_COM:
-			pidiv180 = qpidiv180(eps);
-			result.v_com = c_divq(vals[0]->v_com, pidiv180);
-			result.v_type = V_COM;
-			qfree(pidiv180);
-			break;
-		default:
-			return error_value(E_R2D2);
+	case V_NUM:
+		pidiv180 = qpidiv180(eps);
+		result.v_num = qqdiv(vals[0]->v_num, pidiv180);
+		result.v_type = V_NUM;
+		qfree(pidiv180);
+		break;
+	case V_COM:
+		pidiv180 = qpidiv180(eps);
+		result.v_com = c_divq(vals[0]->v_com, pidiv180);
+		result.v_type = V_COM;
+		qfree(pidiv180);
+		break;
+	default:
+		return error_value(E_R2D_2);
 	}
 	return result;
 }
@@ -2751,7 +2805,7 @@ f_g2r(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_G2R1);
+			return error_value(E_G2R_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -2760,20 +2814,20 @@ f_g2r(int count, VALUE **vals)
 	 * compute argument*(pi/200) to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			pidiv200 = qpidiv200(eps);
-			result.v_num = qmul(vals[0]->v_num, pidiv200);
-			result.v_type = V_NUM;
-			qfree(pidiv200);
-			break;
-		case V_COM:
-			pidiv200 = qpidiv200(eps);
-			result.v_com = c_mulq(vals[0]->v_com, pidiv200);
-			result.v_type = V_COM;
-			qfree(pidiv200);
-			break;
-		default:
-			return error_value(E_G2R2);
+	case V_NUM:
+		pidiv200 = qpidiv200(eps);
+		result.v_num = qmul(vals[0]->v_num, pidiv200);
+		result.v_type = V_NUM;
+		qfree(pidiv200);
+		break;
+	case V_COM:
+		pidiv200 = qpidiv200(eps);
+		result.v_com = c_mulq(vals[0]->v_com, pidiv200);
+		result.v_type = V_COM;
+		qfree(pidiv200);
+		break;
+	default:
+		return error_value(E_G2R_2);
 	}
 	return result;
 }
@@ -2800,7 +2854,7 @@ f_r2g(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_R2G1);
+			return error_value(E_R2G_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -2809,20 +2863,20 @@ f_r2g(int count, VALUE **vals)
 	 * compute argument/(pi/200) to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			pidiv200 = qpidiv200(eps);
-			result.v_num = qqdiv(vals[0]->v_num, pidiv200);
-			result.v_type = V_NUM;
-			qfree(pidiv200);
-			break;
-		case V_COM:
-			pidiv200 = qpidiv200(eps);
-			result.v_com = c_divq(vals[0]->v_com, pidiv200);
-			result.v_type = V_COM;
-			qfree(pidiv200);
-			break;
-		default:
-			return error_value(E_R2G2);
+	case V_NUM:
+		pidiv200 = qpidiv200(eps);
+		result.v_num = qqdiv(vals[0]->v_num, pidiv200);
+		result.v_type = V_NUM;
+		qfree(pidiv200);
+		break;
+	case V_COM:
+		pidiv200 = qpidiv200(eps);
+		result.v_com = c_divq(vals[0]->v_com, pidiv200);
+		result.v_type = V_COM;
+		qfree(pidiv200);
+		break;
+	default:
+		return error_value(E_R2G_2);
 	}
 	return result;
 }
@@ -2846,16 +2900,16 @@ f_d2g(int UNUSED(count), VALUE **vals)
 
 	/* calculate argument * (10/9) */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qmul(vals[0]->v_num, &_qtendivnine_);
-			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			result.v_com = c_mulq(vals[0]->v_com, &_qtendivnine_);
-			result.v_type = V_COM;
-			break;
-		default:
-			return error_value(E_D2G1);
+	case V_NUM:
+		result.v_num = qmul(vals[0]->v_num, &_qtendivnine_);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		result.v_com = c_mulq(vals[0]->v_com, &_qtendivnine_);
+		result.v_type = V_COM;
+		break;
+	default:
+		return error_value(E_D2G_1);
 	}
 	return result;
 }
@@ -2879,16 +2933,16 @@ f_g2d(int UNUSED(count), VALUE **vals)
 
 	/* calculate argument * (9/10) */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qmul(vals[0]->v_num, &_qninedivten_);
-			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			result.v_com = c_mulq(vals[0]->v_com, &_qninedivten_);
-			result.v_type = V_COM;
-			break;
-		default:
-			return error_value(E_G2D1);
+	case V_NUM:
+		result.v_num = qmul(vals[0]->v_num, &_qninedivten_);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		result.v_com = c_mulq(vals[0]->v_com, &_qninedivten_);
+		result.v_type = V_COM;
+		break;
+	default:
+		return error_value(E_G2D_1);
 	}
 	return result;
 }
@@ -2912,7 +2966,7 @@ f_sin(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_SIN1);
+			return error_value(E_SIN_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -2921,24 +2975,24 @@ f_sin(int count, VALUE **vals)
 	 * compute sine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qsin(vals[0]->v_num, eps);
+	case V_NUM:
+		result.v_num = qsin(vals[0]->v_num, eps);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		c = c_sin(vals[0]->v_com, eps);
+		if (c == NULL) {
+			return error_value(E_SIN_3);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
 			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			c = c_sin(vals[0]->v_com, eps);
-			if (c == NULL) {
-				return error_value(E_SIN3);
-			}
-			result.v_com = c;
-			result.v_type = V_COM;
-			if (cisreal(c)) {
-				result.v_num = c_to_q(c, true);
-				result.v_type = V_NUM;
-			}
-			break;
-		default:
-			return error_value(E_SIN2);
+		}
+		break;
+	default:
+		return error_value(E_SIN_2);
 	}
 	return result;
 }
@@ -2962,7 +3016,7 @@ f_tan(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_TAN1);
+			return error_value(E_TAN_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -2971,24 +3025,24 @@ f_tan(int count, VALUE **vals)
 	 * compute tangent to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qtan(vals[0]->v_num, err);
+	case V_NUM:
+		result.v_num = qtan(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		c = c_tan(vals[0]->v_com, err);
+		if (c == NULL) {
+			return error_value(E_TAN_5);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
 			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			c = c_tan(vals[0]->v_com, err);
-			if (c == NULL) {
-				return error_value(E_TAN5);
-			}
-			result.v_com = c;
-			result.v_type = V_COM;
-			if (cisreal(c)) {
-				result.v_num = c_to_q(c, true);
-				result.v_type = V_NUM;
-			}
-			break;
-		default:
-			return error_value(E_TAN2);
+		}
+		break;
+	default:
+		return error_value(E_TAN_2);
 	}
 	return result;
 }
@@ -3012,7 +3066,7 @@ f_cot(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_COT1);
+			return error_value(E_COT_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3021,30 +3075,30 @@ f_cot(int count, VALUE **vals)
 	 * compute cotangent to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (qiszero(vals[0]->v_num)) {
-				return error_value(E_COT5);
-			}
-			result.v_num = qcot(vals[0]->v_num, err);
+	case V_NUM:
+		if (qiszero(vals[0]->v_num)) {
+			return error_value(E_COT_5);
+		}
+		result.v_num = qcot(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		if (ciszero(vals[0]->v_com)) {
+			return error_value(E_COT_5);
+		}
+		c = c_cot(vals[0]->v_com, err);
+		if (c == NULL) {
+			return error_value(E_COT_6);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
 			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			if (ciszero(vals[0]->v_com)) {
-				return error_value(E_COT5);
-			}
-			c = c_cot(vals[0]->v_com, err);
-			if (c == NULL) {
-				return error_value(E_COT6);
-			}
-			result.v_com = c;
-			result.v_type = V_COM;
-			if (cisreal(c)) {
-				result.v_num = c_to_q(c, true);
-				result.v_type = V_NUM;
-			}
-			break;
-		default:
-			return error_value(E_COT2);
+		}
+		break;
+	default:
+		return error_value(E_COT_2);
 	}
 	return result;
 }
@@ -3068,7 +3122,7 @@ f_sec(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_SEC1);
+			return error_value(E_SEC_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3077,24 +3131,24 @@ f_sec(int count, VALUE **vals)
 	 * compute secant to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qsec(vals[0]->v_num, err);
+	case V_NUM:
+		result.v_num = qsec(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		c = c_sec(vals[0]->v_com, err);
+		if (c == NULL) {
+			return error_value(E_SEC_5);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
 			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			c = c_sec(vals[0]->v_com, err);
-			if (c == NULL) {
-				return error_value(E_SEC5);
-			}
-			result.v_com = c;
-			result.v_type = V_COM;
-			if (cisreal(c)) {
-				result.v_num = c_to_q(c, true);
-				result.v_type = V_NUM;
-			}
-			break;
-		default:
-			return error_value(E_SEC2);
+		}
+		break;
+	default:
+		return error_value(E_SEC_2);
 	}
 	return result;
 }
@@ -3118,7 +3172,7 @@ f_csc(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_CSC1);
+			return error_value(E_CSC_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3127,30 +3181,30 @@ f_csc(int count, VALUE **vals)
 	 * compute cosecant to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (qiszero(vals[0]->v_num)) {
-				return error_value(E_CSC5);
-			}
-			result.v_num = qcsc(vals[0]->v_num, err);
+	case V_NUM:
+		if (qiszero(vals[0]->v_num)) {
+			return error_value(E_CSC_5);
+		}
+		result.v_num = qcsc(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		if (ciszero(vals[0]->v_com)) {
+			return error_value(E_CSC_5);
+		}
+		c = c_csc(vals[0]->v_com, err);
+		if (c == NULL) {
+			return error_value(E_CSC_6);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
 			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			if (ciszero(vals[0]->v_com)) {
-				return error_value(E_CSC5);
-			}
-			c = c_csc(vals[0]->v_com, err);
-			if (c == NULL) {
-				return error_value(E_CSC6);
-			}
-			result.v_com = c;
-			result.v_type = V_COM;
-			if (cisreal(c)) {
-				result.v_num = c_to_q(c, true);
-				result.v_type = V_NUM;
-			}
-			break;
-		default:
-			return error_value(E_CSC2);
+		}
+		break;
+	default:
+		return error_value(E_CSC_2);
 	}
 	return result;
 }
@@ -3174,7 +3228,7 @@ f_sinh(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_SINH1);
+			return error_value(E_SINH_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -3183,26 +3237,26 @@ f_sinh(int count, VALUE **vals)
 	 * compute hyperbolic sine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			q = qsinh(vals[0]->v_num, eps);
-			if (q == NULL)
-				return error_value(E_SINH3);
-			result.v_num = q;
+	case V_NUM:
+		q = qsinh(vals[0]->v_num, eps);
+		if (q == NULL)
+			return error_value(E_SINH_3);
+		result.v_num = q;
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		c = c_sinh(vals[0]->v_com, eps);
+		if (c == NULL)
+			return error_value(E_SINH_3);
+		result.v_com = c;
+		result.v_type = V_COM;
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
 			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			c = c_sinh(vals[0]->v_com, eps);
-			if (c == NULL)
-				return error_value(E_SINH3);
-			result.v_com = c;
-			result.v_type = V_COM;
-			if (cisreal(c)) {
-				result.v_num = c_to_q(c, true);
-				result.v_type = V_NUM;
-			}
-			break;
-		default:
-			return error_value(E_SINH2);
+		}
+		break;
+	default:
+		return error_value(E_SINH_2);
 	}
 	return result;
 }
@@ -3227,7 +3281,7 @@ f_cosh(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_COSH1);
+			return error_value(E_COSH_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -3236,26 +3290,26 @@ f_cosh(int count, VALUE **vals)
 	 * compute hyperbolic cosine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			q = qcosh(vals[0]->v_num, eps);
-			if (q == NULL)
-				return error_value(E_COSH3);
-			result.v_num = q;
+	case V_NUM:
+		q = qcosh(vals[0]->v_num, eps);
+		if (q == NULL)
+			return error_value(E_COSH_3);
+		result.v_num = q;
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		c = c_cosh(vals[0]->v_com, eps);
+		if (c == NULL)
+			return error_value(E_COSH_3);
+		result.v_com = c;
+		result.v_type = V_COM;
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
 			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			c = c_cosh(vals[0]->v_com, eps);
-			if (c == NULL)
-				return error_value(E_COSH3);
-			result.v_com = c;
-			result.v_type = V_COM;
-			if (cisreal(c)) {
-				result.v_num = c_to_q(c, true);
-				result.v_type = V_NUM;
-			}
-			break;
-		default:
-			return error_value(E_COSH2);
+		}
+		break;
+	default:
+		return error_value(E_COSH_2);
 	}
 	return result;
 }
@@ -3281,7 +3335,7 @@ f_tanh(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_TANH1);
+			return error_value(E_TANH_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3290,28 +3344,28 @@ f_tanh(int count, VALUE **vals)
 	 * compute hyperbolic tangent to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qtanh(vals[0]->v_num, err);
-			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			tmp1.v_type = V_COM;
-			tmp1.v_com = c_sinh(vals[0]->v_com, err);
-			if (tmp1.v_com == NULL) {
-				return error_value(E_TANH3);
-			}
-			tmp2.v_type = V_COM;
-			tmp2.v_com = c_cosh(vals[0]->v_com, err);
-			if (tmp2.v_com == NULL) {
-				comfree(tmp1.v_com);
-				return error_value(E_TANH4);
-			}
-			divvalue(&tmp1, &tmp2, &result);
+	case V_NUM:
+		result.v_num = qtanh(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		tmp1.v_type = V_COM;
+		tmp1.v_com = c_sinh(vals[0]->v_com, err);
+		if (tmp1.v_com == NULL) {
+			return error_value(E_TANH_3);
+		}
+		tmp2.v_type = V_COM;
+		tmp2.v_com = c_cosh(vals[0]->v_com, err);
+		if (tmp2.v_com == NULL) {
 			comfree(tmp1.v_com);
-			comfree(tmp2.v_com);
-			break;
-		default:
-			return error_value(E_TANH2);
+			return error_value(E_TANH_4);
+		}
+		divvalue(&tmp1, &tmp2, &result);
+		comfree(tmp1.v_com);
+		comfree(tmp2.v_com);
+		break;
+	default:
+		return error_value(E_TANH_2);
 	}
 	return result;
 }
@@ -3337,7 +3391,7 @@ f_coth(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_COTH1);
+			return error_value(E_COTH_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3346,30 +3400,30 @@ f_coth(int count, VALUE **vals)
 	 * compute hyperbolic cotangent to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (qiszero(vals[0]->v_num))
-				return error_value(E_DIVBYZERO);
-			result.v_num = qcoth(vals[0]->v_num, err);
-			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			tmp1.v_type = V_COM;
-			tmp1.v_com = c_cosh(vals[0]->v_com, err);
-			if (tmp1.v_com == NULL) {
-				return error_value(E_COTH3);
-			}
-			tmp2.v_type = V_COM;
-			tmp2.v_com = c_sinh(vals[0]->v_com, err);
-			if (tmp2.v_com == NULL) {
-				comfree(tmp1.v_com);
-				return error_value(E_COTH4);
-			}
-			divvalue(&tmp1, &tmp2, &result);
+	case V_NUM:
+		if (qiszero(vals[0]->v_num))
+			return error_value(E_DIVBYZERO);
+		result.v_num = qcoth(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		tmp1.v_type = V_COM;
+		tmp1.v_com = c_cosh(vals[0]->v_com, err);
+		if (tmp1.v_com == NULL) {
+			return error_value(E_COTH_3);
+		}
+		tmp2.v_type = V_COM;
+		tmp2.v_com = c_sinh(vals[0]->v_com, err);
+		if (tmp2.v_com == NULL) {
 			comfree(tmp1.v_com);
-			comfree(tmp2.v_com);
-			break;
-		default:
-			return error_value(E_COTH2);
+			return error_value(E_COTH_4);
+		}
+		divvalue(&tmp1, &tmp2, &result);
+		comfree(tmp1.v_com);
+		comfree(tmp2.v_com);
+		break;
+	default:
+		return error_value(E_COTH_2);
 	}
 	return result;
 }
@@ -3394,7 +3448,7 @@ f_sech(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_SECH1);
+			return error_value(E_SECH_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3403,21 +3457,21 @@ f_sech(int count, VALUE **vals)
 	 * compute hyperbolic secant to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qsech(vals[0]->v_num, err);
-			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			tmp.v_type = V_COM;
-			tmp.v_com = c_cosh(vals[0]->v_com, err);
-			if (tmp.v_com == NULL) {
-				return error_value(E_SECH3);
-			}
-			invertvalue(&tmp, &result);
-			comfree(tmp.v_com);
-			break;
-		default:
-			return error_value(E_SECH2);
+	case V_NUM:
+		result.v_num = qsech(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		tmp.v_type = V_COM;
+		tmp.v_com = c_cosh(vals[0]->v_com, err);
+		if (tmp.v_com == NULL) {
+			return error_value(E_SECH_3);
+		}
+		invertvalue(&tmp, &result);
+		comfree(tmp.v_com);
+		break;
+	default:
+		return error_value(E_SECH_2);
 	}
 	return result;
 }
@@ -3442,7 +3496,7 @@ f_csch(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_CSCH1);
+			return error_value(E_CSCH_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3451,23 +3505,23 @@ f_csch(int count, VALUE **vals)
 	 * compute hyperbolic cosecant to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (qiszero(vals[0]->v_num))
-				return error_value(E_DIVBYZERO);
-			result.v_num = qcsch(vals[0]->v_num, err);
-			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			tmp.v_type = V_COM;
-			tmp.v_com = c_sinh(vals[0]->v_com, err);
-			if (tmp.v_com == NULL) {
-				return error_value(E_CSCH3);
-			}
-			invertvalue(&tmp, &result);
-			comfree(tmp.v_com);
-			break;
-		default:
-			return error_value(E_CSCH2);
+	case V_NUM:
+		if (qiszero(vals[0]->v_num))
+			return error_value(E_DIVBYZERO);
+		result.v_num = qcsch(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		tmp.v_type = V_COM;
+		tmp.v_com = c_sinh(vals[0]->v_com, err);
+		if (tmp.v_com == NULL) {
+			return error_value(E_CSCH_3);
+		}
+		invertvalue(&tmp, &result);
+		comfree(tmp.v_com);
+		break;
+	default:
+		return error_value(E_CSCH_2);
 	}
 	return result;
 }
@@ -3491,7 +3545,7 @@ f_atan(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_ATAN1);
+			return error_value(E_ATAN_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3500,23 +3554,23 @@ f_atan(int count, VALUE **vals)
 	 * compute inverse tangent to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qatan(vals[0]->v_num, err);
+	case V_NUM:
+		result.v_num = qatan(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		tmp = c_atan(vals[0]->v_com, err);
+		if (tmp == NULL)
+			return error_value(E_ATAN_3);
+		result.v_type = V_COM;
+		result.v_com = tmp;
+		if (cisreal(tmp)) {
+			result.v_num = c_to_q(tmp, true);
 			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			tmp = c_atan(vals[0]->v_com, err);
-			if (tmp == NULL)
-				return error_value(E_ATAN3);
-			result.v_type = V_COM;
-			result.v_com = tmp;
-			if (cisreal(tmp)) {
-				result.v_num = c_to_q(tmp, true);
-				result.v_type = V_NUM;
-			}
-			break;
-		default:
-			return error_value(E_ATAN2);
+		}
+		break;
+	default:
+		return error_value(E_ATAN_2);
 	}
 	return result;
 }
@@ -3540,7 +3594,7 @@ f_acot(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_ACOT1);
+			return error_value(E_ACOT_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3549,23 +3603,23 @@ f_acot(int count, VALUE **vals)
 	 * compute inverse cotangent to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qacot(vals[0]->v_num, err);
+	case V_NUM:
+		result.v_num = qacot(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		tmp = c_acot(vals[0]->v_com, err);
+		if (tmp == NULL)
+			return error_value(E_ACOT_3);
+		result.v_type = V_COM;
+		result.v_com = tmp;
+		if (cisreal(tmp)) {
+			result.v_num = c_to_q(tmp, true);
 			result.v_type = V_NUM;
-			break;
-		case V_COM:
-			tmp = c_acot(vals[0]->v_com, err);
-			if (tmp == NULL)
-				return error_value(E_ACOT3);
-			result.v_type = V_COM;
-			result.v_com = tmp;
-			if (cisreal(tmp)) {
-				result.v_num = c_to_q(tmp, true);
-				result.v_type = V_NUM;
-			}
-			break;
-		default:
-			return error_value(E_ACOT2);
+		}
+		break;
+	default:
+		return error_value(E_ACOT_2);
 	}
 	return result;
 }
@@ -3588,7 +3642,7 @@ f_asin(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_ASIN1);
+			return error_value(E_ASIN_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3597,27 +3651,27 @@ f_asin(int count, VALUE **vals)
 	 * compute inverse sine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qasin(vals[0]->v_num, err);
-			result.v_type = V_NUM;
-			if (result.v_num == NULL) {
-				tmp = comalloc();
-				qfree(tmp->real);
-				tmp->real = qlink(vals[0]->v_num);
-				result.v_type = V_COM;
-				result.v_com = c_asin(tmp, err);
-				comfree(tmp);
-			}
-			break;
-		case V_COM:
-			result.v_com = c_asin(vals[0]->v_com, err);
+	case V_NUM:
+		result.v_num = qasin(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		if (result.v_num == NULL) {
+			tmp = comalloc();
+			qfree(tmp->real);
+			tmp->real = qlink(vals[0]->v_num);
 			result.v_type = V_COM;
-			break;
-		default:
-			return error_value(E_ASIN2);
+			result.v_com = c_asin(tmp, err);
+			comfree(tmp);
+		}
+		break;
+	case V_COM:
+		result.v_com = c_asin(vals[0]->v_com, err);
+		result.v_type = V_COM;
+		break;
+	default:
+		return error_value(E_ASIN_2);
 	}
 	if (result.v_com == NULL) {
-		return error_value(E_ASIN3);
+		return error_value(E_ASIN_3);
 	}
 	if (result.v_type == V_COM && cisreal(result.v_com)) {
 		result.v_num = c_to_q(result.v_com, true);
@@ -3644,7 +3698,7 @@ f_acos(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_ACOS1);
+			return error_value(E_ACOS_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3653,27 +3707,27 @@ f_acos(int count, VALUE **vals)
 	 * compute inverse cosine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qacos(vals[0]->v_num, err);
-			result.v_type = V_NUM;
-			if (result.v_num == NULL) {
-				tmp = comalloc();
-				qfree(tmp->real);
-				tmp->real = qlink(vals[0]->v_num);
-				result.v_type = V_COM;
-				result.v_com = c_acos(tmp, err);
-				comfree(tmp);
-			}
-			break;
-		case V_COM:
-			result.v_com = c_acos(vals[0]->v_com, err);
+	case V_NUM:
+		result.v_num = qacos(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		if (result.v_num == NULL) {
+			tmp = comalloc();
+			qfree(tmp->real);
+			tmp->real = qlink(vals[0]->v_num);
 			result.v_type = V_COM;
-			break;
-		default:
-			return error_value(E_ACOS2);
+			result.v_com = c_acos(tmp, err);
+			comfree(tmp);
+		}
+		break;
+	case V_COM:
+		result.v_com = c_acos(vals[0]->v_com, err);
+		result.v_type = V_COM;
+		break;
+	default:
+		return error_value(E_ACOS_2);
 	}
 	if (result.v_com == NULL) {
-		return error_value(E_ACOS3);
+		return error_value(E_ACOS_3);
 	}
 	if (result.v_type == V_COM && cisreal(result.v_com)) {
 		result.v_num = c_to_q(result.v_com, true);
@@ -3701,7 +3755,7 @@ f_asec(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_ASEC1);
+			return error_value(E_ASEC_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3710,29 +3764,29 @@ f_asec(int count, VALUE **vals)
 	 * compute inverse secant to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (qiszero(vals[0]->v_num))
-				return error_value(E_ASEC3);
-			result.v_num = qasec(vals[0]->v_num, err);
-			result.v_type = V_NUM;
-			if (result.v_num == NULL) {
-				tmp = comalloc();
-				qfree(tmp->real);
-				tmp->real = qlink(vals[0]->v_num);
-				result.v_com = c_asec(tmp, err);
-				result.v_type = V_COM;
-				comfree(tmp);
-			}
-			break;
-		case V_COM:
-			result.v_com = c_asec(vals[0]->v_com, err);
+	case V_NUM:
+		if (qiszero(vals[0]->v_num))
+			return error_value(E_ASEC_3);
+		result.v_num = qasec(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		if (result.v_num == NULL) {
+			tmp = comalloc();
+			qfree(tmp->real);
+			tmp->real = qlink(vals[0]->v_num);
+			result.v_com = c_asec(tmp, err);
 			result.v_type = V_COM;
-			break;
-		default:
-			return error_value(E_ASEC2);
+			comfree(tmp);
+		}
+		break;
+	case V_COM:
+		result.v_com = c_asec(vals[0]->v_com, err);
+		result.v_type = V_COM;
+		break;
+	default:
+		return error_value(E_ASEC_2);
 	}
 	if (result.v_com == NULL) {
-		return error_value(E_ASEC3);
+		return error_value(E_ASEC_3);
 	}
 	if (result.v_type == V_COM) {
 		if (cisreal(result.v_com)) {
@@ -3762,7 +3816,7 @@ f_acsc(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_ACSC1);
+			return error_value(E_ACSC_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3771,29 +3825,29 @@ f_acsc(int count, VALUE **vals)
 	 * compute inverse cosecant to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (qiszero(vals[0]->v_num))
-				return error_value(E_ACSC3);
-			result.v_num = qacsc(vals[0]->v_num, err);
-			result.v_type = V_NUM;
-			if (result.v_num == NULL) {
-				tmp = comalloc();
-				qfree(tmp->real);
-				tmp->real = qlink(vals[0]->v_num);
-				result.v_com = c_acsc(tmp, err);
-				result.v_type = V_COM;
-				comfree(tmp);
-			}
-			break;
-		case V_COM:
-			result.v_com = c_acsc(vals[0]->v_com, err);
+	case V_NUM:
+		if (qiszero(vals[0]->v_num))
+			return error_value(E_ACSC_3);
+		result.v_num = qacsc(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		if (result.v_num == NULL) {
+			tmp = comalloc();
+			qfree(tmp->real);
+			tmp->real = qlink(vals[0]->v_num);
+			result.v_com = c_acsc(tmp, err);
 			result.v_type = V_COM;
-			break;
-		default:
-			return error_value(E_ACSC2);
+			comfree(tmp);
+		}
+		break;
+	case V_COM:
+		result.v_com = c_acsc(vals[0]->v_com, err);
+		result.v_type = V_COM;
+		break;
+	default:
+		return error_value(E_ACSC_2);
 	}
 	if (result.v_com == NULL) {
-		return error_value(E_ACSC3);
+		return error_value(E_ACSC_3);
 	}
 	if (result.v_type == V_COM) {
 		if (cisreal(result.v_com)) {
@@ -3823,7 +3877,7 @@ f_asinh(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_ASINH1);
+			return error_value(E_ASINH_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3839,7 +3893,7 @@ f_asinh(int count, VALUE **vals)
 		case V_COM:
 			tmp = c_asinh(vals[0]->v_com, err);
 			if (tmp == NULL) {
-				return error_value(E_ASINH3);
+				return error_value(E_ASINH_3);
 			}
 			result.v_type = V_COM;
 			result.v_com = tmp;
@@ -3849,7 +3903,7 @@ f_asinh(int count, VALUE **vals)
 			}
 			break;
 		default:
-			return error_value(E_ASINH2);
+			return error_value(E_ASINH_2);
 	}
 	return result;
 }
@@ -3873,7 +3927,7 @@ f_acosh(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_ACOSH1);
+			return error_value(E_ACOSH_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3882,27 +3936,27 @@ f_acosh(int count, VALUE **vals)
 	 * compute inverse hyperbolic cosine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qacosh(vals[0]->v_num, err);
-			result.v_type = V_NUM;
-			if (result.v_num == NULL) {
-				tmp = comalloc();
-				qfree(tmp->real);
-				tmp->real = qlink(vals[0]->v_num);
-				result.v_com = c_acosh(tmp, err);
-				result.v_type = V_COM;
-				comfree(tmp);
-			}
-			break;
-		case V_COM:
-			result.v_com = c_acosh(vals[0]->v_com, err);
+	case V_NUM:
+		result.v_num = qacosh(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		if (result.v_num == NULL) {
+			tmp = comalloc();
+			qfree(tmp->real);
+			tmp->real = qlink(vals[0]->v_num);
+			result.v_com = c_acosh(tmp, err);
 			result.v_type = V_COM;
-			break;
-		default:
-			return error_value(E_ACOSH2);
+			comfree(tmp);
+		}
+		break;
+	case V_COM:
+		result.v_com = c_acosh(vals[0]->v_com, err);
+		result.v_type = V_COM;
+		break;
+	default:
+		return error_value(E_ACOSH_2);
 	}
 	if (result.v_com == NULL) {
-		return error_value(E_ACOSH3);
+		return error_value(E_ACOSH_3);
 	}
 	if (result.v_type == V_COM && cisreal(result.v_com)) {
 		result.v_num = c_to_q(result.v_com, true);
@@ -3930,7 +3984,7 @@ f_atanh(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_ATANH1);
+			return error_value(E_ATANH_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3939,27 +3993,27 @@ f_atanh(int count, VALUE **vals)
 	 * compute inverse hyperbolic tangent to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qatanh(vals[0]->v_num, err);
-			result.v_type = V_NUM;
-			if (result.v_num == NULL) {
-				tmp = comalloc();
-				qfree(tmp->real);
-				tmp->real = qlink(vals[0]->v_num);
-				result.v_com = c_atanh(tmp, err);
-				result.v_type = V_COM;
-				comfree(tmp);
-			}
-			break;
-		case V_COM:
-			result.v_com = c_atanh(vals[0]->v_com, err);
+	case V_NUM:
+		result.v_num = qatanh(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		if (result.v_num == NULL) {
+			tmp = comalloc();
+			qfree(tmp->real);
+			tmp->real = qlink(vals[0]->v_num);
+			result.v_com = c_atanh(tmp, err);
 			result.v_type = V_COM;
-			break;
-		default:
-			return error_value(E_ATANH2);
+			comfree(tmp);
+		}
+		break;
+	case V_COM:
+		result.v_com = c_atanh(vals[0]->v_com, err);
+		result.v_type = V_COM;
+		break;
+	default:
+		return error_value(E_ATANH_2);
 	}
 	if (result.v_com == NULL) {
-		return error_value(E_ATANH3);
+		return error_value(E_ATANH_3);
 	}
 	if (result.v_type == V_COM) {
 		if (cisreal(result.v_com)) {
@@ -3989,7 +4043,7 @@ f_acoth(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_ACOTH1);
+			return error_value(E_ACOTH_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -3998,27 +4052,27 @@ f_acoth(int count, VALUE **vals)
 	 * compute inverse hyperbolic cotangent to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			result.v_num = qacoth(vals[0]->v_num, err);
-			result.v_type = V_NUM;
-			if (result.v_num == NULL) {
-				tmp = comalloc();
-				qfree(tmp->real);
-				tmp->real = qlink(vals[0]->v_num);
-				result.v_com = c_acoth(tmp, err);
-				result.v_type = V_COM;
-				comfree(tmp);
-			}
-			break;
-		case V_COM:
-			result.v_com = c_acoth(vals[0]->v_com, err);
+	case V_NUM:
+		result.v_num = qacoth(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		if (result.v_num == NULL) {
+			tmp = comalloc();
+			qfree(tmp->real);
+			tmp->real = qlink(vals[0]->v_num);
+			result.v_com = c_acoth(tmp, err);
 			result.v_type = V_COM;
-			break;
-		default:
-			return error_value(E_ACOTH2);
+			comfree(tmp);
+		}
+		break;
+	case V_COM:
+		result.v_com = c_acoth(vals[0]->v_com, err);
+		result.v_type = V_COM;
+		break;
+	default:
+		return error_value(E_ACOTH_2);
 	}
 	if (result.v_com == NULL) {
-		return error_value(E_ACOTH3);
+		return error_value(E_ACOTH_3);
 	}
 	if (result.v_type == V_COM) {
 		if (cisreal(result.v_com)) {
@@ -4048,7 +4102,7 @@ f_asech(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_SECH1);
+			return error_value(E_SECH_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -4057,29 +4111,29 @@ f_asech(int count, VALUE **vals)
 	 * compute inverse hyperbolic secant to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (qiszero(vals[0]->v_num))
-				return error_value(E_ASECH3);
-			result.v_num = qasech(vals[0]->v_num, err);
-			result.v_type = V_NUM;
-			if (result.v_num == NULL) {
-				tmp = comalloc();
-				qfree(tmp->real);
-				tmp->real = qlink(vals[0]->v_num);
-				result.v_com = c_asech(tmp, err);
-				result.v_type = V_COM;
-				comfree(tmp);
-			}
-			break;
-		case V_COM:
-			result.v_com = c_asech(vals[0]->v_com, err);
+	case V_NUM:
+		if (qiszero(vals[0]->v_num))
+			return error_value(E_ASECH_3);
+		result.v_num = qasech(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		if (result.v_num == NULL) {
+			tmp = comalloc();
+			qfree(tmp->real);
+			tmp->real = qlink(vals[0]->v_num);
+			result.v_com = c_asech(tmp, err);
 			result.v_type = V_COM;
-			break;
-		default:
-			return error_value(E_ASECH2);
+			comfree(tmp);
+		}
+		break;
+	case V_COM:
+		result.v_com = c_asech(vals[0]->v_com, err);
+		result.v_type = V_COM;
+		break;
+	default:
+		return error_value(E_ASECH_2);
 	}
 	if (result.v_com == NULL) {
-		return error_value(E_ASECH3);
+		return error_value(E_ASECH_3);
 	}
 	if (result.v_type == V_COM) {
 		if (cisreal(result.v_com)) {
@@ -4109,7 +4163,7 @@ f_acsch(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_ACSCH1);
+			return error_value(E_ACSCH_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -4118,29 +4172,29 @@ f_acsch(int count, VALUE **vals)
 	 * compute inverse hyperbolic cosecant to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (qiszero(vals[0]->v_num))
-				return error_value(E_ACSCH3);
-			result.v_num = qacsch(vals[0]->v_num, err);
-			result.v_type = V_NUM;
-			if (result.v_num == NULL) {
-				tmp = comalloc();
-				qfree(tmp->real);
-				tmp->real = qlink(vals[0]->v_num);
-				result.v_com = c_acsch(tmp, err);
-				result.v_type = V_COM;
-				comfree(tmp);
-			}
-			break;
-		case V_COM:
-			result.v_com = c_acsch(vals[0]->v_com, err);
+	case V_NUM:
+		if (qiszero(vals[0]->v_num))
+			return error_value(E_ACSCH_3);
+		result.v_num = qacsch(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		if (result.v_num == NULL) {
+			tmp = comalloc();
+			qfree(tmp->real);
+			tmp->real = qlink(vals[0]->v_num);
+			result.v_com = c_acsch(tmp, err);
 			result.v_type = V_COM;
-			break;
-		default:
-			return error_value(E_ACSCH2);
+			comfree(tmp);
+		}
+		break;
+	case V_COM:
+		result.v_com = c_acsch(vals[0]->v_com, err);
+		result.v_type = V_COM;
+		break;
+	default:
+		return error_value(E_ACSCH_2);
 	}
 	if (result.v_com == NULL) {
-		return error_value(E_ACSCH3);
+		return error_value(E_ACSCH_3);
 	}
 	if (result.v_type == V_COM) {
 		if (cisreal(result.v_com)) {
@@ -4170,7 +4224,7 @@ f_gd(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_GD1);
+			return error_value(E_GD_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -4180,26 +4234,26 @@ f_gd(int count, VALUE **vals)
 	 */
 	result.v_type = V_COM;
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (qiszero(vals[0]->v_num)) {
-				result.v_type = V_NUM;
-				result.v_num = qlink(&_qzero_);
-				return result;
-			}
-			tmp = comalloc();
-			qfree(tmp->real);
-			tmp->real = qlink(vals[0]->v_num);
-			result.v_com = c_gd(tmp, eps);
-			comfree(tmp);
-			break;
-		case V_COM:
-			result.v_com = c_gd(vals[0]->v_com, eps);
-			break;
-		default:
-			return error_value(E_GD2);
+	case V_NUM:
+		if (qiszero(vals[0]->v_num)) {
+			result.v_type = V_NUM;
+			result.v_num = qlink(&_qzero_);
+			return result;
+		}
+		tmp = comalloc();
+		qfree(tmp->real);
+		tmp->real = qlink(vals[0]->v_num);
+		result.v_com = c_gd(tmp, eps);
+		comfree(tmp);
+		break;
+	case V_COM:
+		result.v_com = c_gd(vals[0]->v_com, eps);
+		break;
+	default:
+		return error_value(E_GD_2);
 	}
 	if (result.v_com == NULL)
-		return error_value(E_GD3);
+		return error_value(E_GD_3);
 	if (cisreal(result.v_com)) {
 		result.v_num = c_to_q(result.v_com, true);
 		result.v_type = V_NUM;
@@ -4226,7 +4280,7 @@ f_agd(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num)) {
-			return error_value(E_AGD1);
+			return error_value(E_AGD_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -4236,26 +4290,26 @@ f_agd(int count, VALUE **vals)
 	 */
 	result.v_type = V_COM;
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (qiszero(vals[0]->v_num)) {
-				result.v_type = V_NUM;
-				result.v_num = qlink(&_qzero_);
-				return result;
-			}
-			tmp = comalloc();
-			qfree(tmp->real);
-			tmp->real = qlink(vals[0]->v_num);
-			result.v_com = c_agd(tmp, eps);
-			comfree(tmp);
-			break;
-		case V_COM:
-			result.v_com = c_agd(vals[0]->v_com, eps);
-			break;
-		default:
-			return error_value(E_AGD2);
+	case V_NUM:
+		if (qiszero(vals[0]->v_num)) {
+			result.v_type = V_NUM;
+			result.v_num = qlink(&_qzero_);
+			return result;
+		}
+		tmp = comalloc();
+		qfree(tmp->real);
+		tmp->real = qlink(vals[0]->v_num);
+		result.v_com = c_agd(tmp, eps);
+		comfree(tmp);
+		break;
+	case V_COM:
+		result.v_com = c_agd(vals[0]->v_com, eps);
+		break;
+	default:
+		return error_value(E_AGD_2);
 	}
 	if (result.v_com == NULL)
-		return error_value(E_AGD3);
+		return error_value(E_AGD_3);
 	if (cisreal(result.v_com)) {
 		result.v_num = c_to_q(result.v_com, true);
 		result.v_type = V_NUM;
@@ -4272,7 +4326,7 @@ f_comb(VALUE *v1, VALUE *v2)
 	VALUE tmp1, tmp2, div;
 
 	if (v2->v_type != V_NUM || qisfrac(v2->v_num))
-		return error_value(E_COMB1);
+		return error_value(E_COMB_1);
 	result.v_subtype = V_NOSUBTYPE;
 	result.v_type = V_NUM;
 	if (qisneg(v2->v_num)) {
@@ -4290,11 +4344,11 @@ f_comb(VALUE *v1, VALUE *v2)
 	if (v1->v_type == V_NUM) {
 		result.v_num = qcomb(v1->v_num, v2->v_num);
 		if (result.v_num == NULL)
-			return error_value(E_COMB2);
+			return error_value(E_COMB_2);
 		return result;
 	}
 	if (zge24b(v2->v_num->num))
-		return error_value(E_COMB2);
+		return error_value(E_COMB_2);
 	n = qtoi(v2->v_num);
 	copyvalue(v1, &result);
 	decvalue(v1, &tmp1);
@@ -4412,7 +4466,7 @@ f_arg(int count, VALUE **vals)
 	err = conf->epsilon;
 	if (count == 2) {
 		if (vals[1]->v_type != V_NUM || qiszero(vals[1]->v_num)) {
-			return error_value(E_ARG1);
+			return error_value(E_ARG_1);
 		}
 		err = vals[1]->v_num;
 	}
@@ -4422,21 +4476,21 @@ f_arg(int count, VALUE **vals)
 	 */
 	result.v_type = V_NUM;
 	switch (vals[0]->v_type) {
-		case V_NUM:
-			if (qisneg(vals[0]->v_num))
-				result.v_num = qpi(err);
-			else
-				result.v_num = qlink(&_qzero_);
-			break;
-		case V_COM:
-			c = vals[0]->v_com;
-			if (ciszero(c))
-				result.v_num = qlink(&_qzero_);
-			else
-				result.v_num = qatan2(c->imag, c->real, err);
-			break;
-		default:
-			return error_value(E_ARG2);
+	case V_NUM:
+		if (qisneg(vals[0]->v_num))
+			result.v_num = qpi(err);
+		else
+			result.v_num = qlink(&_qzero_);
+		break;
+	case V_COM:
+		c = vals[0]->v_com;
+		if (ciszero(c))
+			result.v_num = qlink(&_qzero_);
+		else
+			result.v_num = qatan2(c->imag, c->real, err);
+		break;
+	default:
+		return error_value(E_ARG_2);
 	}
 	return result;
 }
@@ -4595,14 +4649,14 @@ f_quomod(int count, VALUE **vals)
 
 	if (v3->v_type != V_ADDR || v4->v_type != V_ADDR ||
 		 v3->v_addr == v4->v_addr)
-			return error_value(E_QUOMOD1);
+			return error_value(E_QUOMOD_1);
 	if (count == 5) {
 		v5 = vals[4];
 		if (v5->v_type == V_ADDR)
 			v5 = v5->v_addr;
 		if (v5->v_type != V_NUM || qisfrac(v5->v_num) ||
 			qisneg(v5->v_num) || zge31b(v5->v_num->num))
-				return error_value(E_QUOMOD2);
+				return error_value(E_QUOMOD_2);
 		rnd = qtoi(v5->v_num);
 	} else
 		rnd = conf->quomod;
@@ -4617,13 +4671,13 @@ f_quomod(int count, VALUE **vals)
 	if (v1->v_type != V_NUM || v2->v_type != V_NUM ||
 		(v3->v_type != V_NUM && v3->v_type != V_NULL) ||
 		(v4->v_type != V_NUM && v4->v_type != V_NULL))
-			return error_value(E_QUOMOD2);
+			return error_value(E_QUOMOD_2);
 
 	s3 = v3->v_subtype;
 	s4 = v4->v_subtype;
 
 	if ((s3 | s4) & V_NOASSIGNTO)
-		return error_value(E_QUOMOD3);
+		return error_value(E_QUOMOD_3);
 
 	freevalue(v3);
 	freevalue(v4);
@@ -4665,7 +4719,7 @@ f_d2dms(int count, VALUE **vals)
 		}
 		if (v5->v_type != V_NUM || qisfrac(v5->v_num) ||
 			qisneg(v5->v_num) || zge31b(v5->v_num->num)) {
-				return error_value(E_D2DMS4);
+				return error_value(E_D2DMS_4);
 		}
 		rnd = qtoi(v5->v_num);
 	} else {
@@ -4675,7 +4729,7 @@ f_d2dms(int count, VALUE **vals)
 	/* type parse args */
 	if (v2->v_type != V_ADDR || v3->v_type != V_ADDR ||
 	    v4->v_type != V_ADDR) {
-		return error_value(E_D2DMS1);
+		return error_value(E_D2DMS_1);
 	}
 	if (v1->v_type == V_ADDR) {
 		v1 = v1->v_addr;
@@ -4687,7 +4741,7 @@ f_d2dms(int count, VALUE **vals)
 	    (v2->v_type != V_NUM && v2->v_type != V_NULL) ||
 	    (v3->v_type != V_NUM && v3->v_type != V_NULL) ||
 	    (v4->v_type != V_NUM && v4->v_type != V_NULL)) {
-		return error_value(E_D2DMS2);
+		return error_value(E_D2DMS_2);
 	}
 
 	/* remember arg subtypes */
@@ -4695,7 +4749,7 @@ f_d2dms(int count, VALUE **vals)
 	s3 = v3->v_subtype;
 	s4 = v4->v_subtype;
 	if ((s2 | s3 | s4) & V_NOASSIGNTO) {
-		return error_value(E_D2DMS3);
+		return error_value(E_D2DMS_3);
 	}
 
 	/* free old args that will be modified */
@@ -4784,7 +4838,7 @@ f_d2dm(int count, VALUE **vals)
 		}
 		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
 			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
-				return error_value(E_D2DM4);
+				return error_value(E_D2DM_4);
 		}
 		rnd = qtoi(v4->v_num);
 	} else {
@@ -4793,7 +4847,7 @@ f_d2dm(int count, VALUE **vals)
 
 	/* type parse args */
 	if (v2->v_type != V_ADDR || v3->v_type != V_ADDR) {
-		return error_value(E_D2DM1);
+		return error_value(E_D2DM_1);
 	}
 	if (v1->v_type == V_ADDR) {
 		v1 = v1->v_addr;
@@ -4803,14 +4857,14 @@ f_d2dm(int count, VALUE **vals)
 	if (v1->v_type != V_NUM ||
 	    (v2->v_type != V_NUM && v2->v_type != V_NULL) ||
 	    (v3->v_type != V_NUM && v3->v_type != V_NULL)) {
-		return error_value(E_D2DM2);
+		return error_value(E_D2DM_2);
 	}
 
 	/* remember arg subtypes */
 	s2 = v2->v_subtype;
 	s3 = v3->v_subtype;
 	if ((s2 | s3) & V_NOASSIGNTO) {
-		return error_value(E_D2DM3);
+		return error_value(E_D2DM_3);
 	}
 
 	/* free old args that will be modified */
@@ -4882,7 +4936,7 @@ f_g2gms(int count, VALUE **vals)
 		}
 		if (v5->v_type != V_NUM || qisfrac(v5->v_num) ||
 			qisneg(v5->v_num) || zge31b(v5->v_num->num)) {
-				return error_value(E_G2GMS4);
+				return error_value(E_G2GMS_4);
 		}
 		rnd = qtoi(v5->v_num);
 	} else {
@@ -4892,7 +4946,7 @@ f_g2gms(int count, VALUE **vals)
 	/* type parse args */
 	if (v2->v_type != V_ADDR || v3->v_type != V_ADDR ||
 	    v4->v_type != V_ADDR) {
-		return error_value(E_G2GMS1);
+		return error_value(E_G2GMS_1);
 	}
 	if (v1->v_type == V_ADDR) {
 		v1 = v1->v_addr;
@@ -4904,7 +4958,7 @@ f_g2gms(int count, VALUE **vals)
 	    (v2->v_type != V_NUM && v2->v_type != V_NULL) ||
 	    (v3->v_type != V_NUM && v3->v_type != V_NULL) ||
 	    (v4->v_type != V_NUM && v4->v_type != V_NULL)) {
-		return error_value(E_G2GMS2);
+		return error_value(E_G2GMS_2);
 	}
 
 	/* remember arg subtypes */
@@ -4912,7 +4966,7 @@ f_g2gms(int count, VALUE **vals)
 	s3 = v3->v_subtype;
 	s4 = v4->v_subtype;
 	if ((s2 | s3 | s4) & V_NOASSIGNTO) {
-		return error_value(E_G2GMS3);
+		return error_value(E_G2GMS_3);
 	}
 
 	/* free old args that will be modified */
@@ -5001,7 +5055,7 @@ f_g2gm(int count, VALUE **vals)
 		}
 		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
 			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
-				return error_value(E_G2GM4);
+				return error_value(E_G2GM_4);
 		}
 		rnd = qtoi(v4->v_num);
 	} else {
@@ -5010,7 +5064,7 @@ f_g2gm(int count, VALUE **vals)
 
 	/* type parse args */
 	if (v2->v_type != V_ADDR || v3->v_type != V_ADDR) {
-		return error_value(E_G2GM1);
+		return error_value(E_G2GM_1);
 	}
 	if (v1->v_type == V_ADDR) {
 		v1 = v1->v_addr;
@@ -5020,14 +5074,14 @@ f_g2gm(int count, VALUE **vals)
 	if (v1->v_type != V_NUM ||
 	    (v2->v_type != V_NUM && v2->v_type != V_NULL) ||
 	    (v3->v_type != V_NUM && v3->v_type != V_NULL)) {
-		return error_value(E_G2GM2);
+		return error_value(E_G2GM_2);
 	}
 
 	/* remember arg subtypes */
 	s2 = v2->v_subtype;
 	s3 = v3->v_subtype;
 	if ((s2 | s3) & V_NOASSIGNTO) {
-		return error_value(E_G2GM3);
+		return error_value(E_G2GM_3);
 	}
 
 	/* free old args that will be modified */
@@ -5099,7 +5153,7 @@ f_h2hms(int count, VALUE **vals)
 		}
 		if (v5->v_type != V_NUM || qisfrac(v5->v_num) ||
 			qisneg(v5->v_num) || zge31b(v5->v_num->num)) {
-				return error_value(E_H2HMS4);
+				return error_value(E_H2HMS_4);
 		}
 		rnd = qtoi(v5->v_num);
 	} else {
@@ -5109,7 +5163,7 @@ f_h2hms(int count, VALUE **vals)
 	/* type parse args */
 	if (v2->v_type != V_ADDR || v3->v_type != V_ADDR ||
 	    v4->v_type != V_ADDR) {
-		return error_value(E_H2HMS1);
+		return error_value(E_H2HMS_1);
 	}
 	if (v1->v_type == V_ADDR) {
 		v1 = v1->v_addr;
@@ -5121,7 +5175,7 @@ f_h2hms(int count, VALUE **vals)
 	    (v2->v_type != V_NUM && v2->v_type != V_NULL) ||
 	    (v3->v_type != V_NUM && v3->v_type != V_NULL) ||
 	    (v4->v_type != V_NUM && v4->v_type != V_NULL)) {
-		return error_value(E_H2HMS2);
+		return error_value(E_H2HMS_2);
 	}
 
 	/* remember arg subtypes */
@@ -5129,7 +5183,7 @@ f_h2hms(int count, VALUE **vals)
 	s3 = v3->v_subtype;
 	s4 = v4->v_subtype;
 	if ((s2 | s3 | s4) & V_NOASSIGNTO) {
-		return error_value(E_H2HMS3);
+		return error_value(E_H2HMS_3);
 	}
 
 	/* free old args that will be modified */
@@ -5218,7 +5272,7 @@ f_h2hm(int count, VALUE **vals)
 		}
 		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
 			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
-				return error_value(E_H2HM4);
+				return error_value(E_H2HM_4);
 		}
 		rnd = qtoi(v4->v_num);
 	} else {
@@ -5227,7 +5281,7 @@ f_h2hm(int count, VALUE **vals)
 
 	/* type parse args */
 	if (v2->v_type != V_ADDR || v3->v_type != V_ADDR) {
-		return error_value(E_H2HM1);
+		return error_value(E_H2HM_1);
 	}
 	if (v1->v_type == V_ADDR) {
 		v1 = v1->v_addr;
@@ -5237,14 +5291,14 @@ f_h2hm(int count, VALUE **vals)
 	if (v1->v_type != V_NUM ||
 	    (v2->v_type != V_NUM && v2->v_type != V_NULL) ||
 	    (v3->v_type != V_NUM && v3->v_type != V_NULL)) {
-		return error_value(E_H2HM2);
+		return error_value(E_H2HM_2);
 	}
 
 	/* remember arg subtypes */
 	s2 = v2->v_subtype;
 	s3 = v3->v_subtype;
 	if ((s2 | s3) & V_NOASSIGNTO) {
-		return error_value(E_H2HM3);
+		return error_value(E_H2HM_3);
 	}
 
 	/* free old args that will be modified */
@@ -5314,7 +5368,7 @@ f_dms2d(int count, VALUE **vals)
 		}
 		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
 			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
-				return error_value(E_DMS2D2);
+				return error_value(E_DMS2D_2);
 		}
 		rnd = qtoi(v4->v_num);
 	} else {
@@ -5324,7 +5378,7 @@ f_dms2d(int count, VALUE **vals)
 	/* type parse args */
 	if (v1->v_type != V_NUM || v2->v_type != V_NUM ||
 	    v3->v_type != V_NUM) {
-		return error_value(E_DMS2D1);
+		return error_value(E_DMS2D_1);
 	}
 
 	/*
@@ -5385,7 +5439,7 @@ f_dm2d(int count, VALUE **vals)
 		}
 		if (v3->v_type != V_NUM || qisfrac(v3->v_num) ||
 			qisneg(v3->v_num) || zge31b(v3->v_num->num)) {
-				return error_value(E_DM2D2);
+				return error_value(E_DM2D_2);
 		}
 		rnd = qtoi(v3->v_num);
 	} else {
@@ -5394,7 +5448,7 @@ f_dm2d(int count, VALUE **vals)
 
 	/* type parse args */
 	if (v1->v_type != V_NUM || v2->v_type != V_NUM) {
-		return error_value(E_DM2D1);
+		return error_value(E_DM2D_1);
 	}
 
 	/*
@@ -5444,7 +5498,7 @@ f_gms2g(int count, VALUE **vals)
 		}
 		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
 			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
-				return error_value(E_GMS2G2);
+				return error_value(E_GMS2G_2);
 		}
 		rnd = qtoi(v4->v_num);
 	} else {
@@ -5454,7 +5508,7 @@ f_gms2g(int count, VALUE **vals)
 	/* type parse args */
 	if (v1->v_type != V_NUM || v2->v_type != V_NUM ||
 	    v3->v_type != V_NUM) {
-		return error_value(E_GMS2G1);
+		return error_value(E_GMS2G_1);
 	}
 
 	/*
@@ -5515,7 +5569,7 @@ f_gm2g(int count, VALUE **vals)
 		}
 		if (v3->v_type != V_NUM || qisfrac(v3->v_num) ||
 			qisneg(v3->v_num) || zge31b(v3->v_num->num)) {
-				return error_value(E_GM2G2);
+				return error_value(E_GM2G_2);
 		}
 		rnd = qtoi(v3->v_num);
 	} else {
@@ -5524,7 +5578,7 @@ f_gm2g(int count, VALUE **vals)
 
 	/* type parse args */
 	if (v1->v_type != V_NUM || v2->v_type != V_NUM) {
-		return error_value(E_GM2G1);
+		return error_value(E_GM2G_1);
 	}
 
 	/*
@@ -5574,7 +5628,7 @@ f_hms2h(int count, VALUE **vals)
 		}
 		if (v4->v_type != V_NUM || qisfrac(v4->v_num) ||
 			qisneg(v4->v_num) || zge31b(v4->v_num->num)) {
-				return error_value(E_HMS2H2);
+				return error_value(E_HMS2H_2);
 		}
 		rnd = qtoi(v4->v_num);
 	} else {
@@ -5584,7 +5638,7 @@ f_hms2h(int count, VALUE **vals)
 	/* type parse args */
 	if (v1->v_type != V_NUM || v2->v_type != V_NUM ||
 	    v3->v_type != V_NUM) {
-		return error_value(E_HMS2H1);
+		return error_value(E_HMS2H_1);
 	}
 
 	/*
@@ -5645,7 +5699,7 @@ f_hm2h(int count, VALUE **vals)
 		}
 		if (v3->v_type != V_NUM || qisfrac(v3->v_num) ||
 			qisneg(v3->v_num) || zge31b(v3->v_num->num)) {
-				return error_value(E_H2HM2);
+				return error_value(E_H2HM_2);
 		}
 		rnd = qtoi(v3->v_num);
 	} else {
@@ -5654,7 +5708,7 @@ f_hm2h(int count, VALUE **vals)
 
 	/* type parse args */
 	if (v1->v_type != V_NUM || v2->v_type != V_NUM) {
-		return error_value(E_H2HM1);
+		return error_value(E_H2HM_1);
 	}
 
 	/*
@@ -5843,7 +5897,7 @@ f_root(int count, VALUE **vals)
 		vp = &err;
 	}
 	if (vp->v_type != V_NUM || qiszero(vp->v_num)) {
-		return error_value(E_ROOT3);
+		return error_value(E_ROOT_3);
 	}
 
 	/*
@@ -5876,7 +5930,7 @@ f_power(int count, VALUE **vals)
 		vp = &err;
 	}
 	if ((vp->v_type != V_NUM) || qisneg(vp->v_num) || qiszero(vp->v_num)) {
-		return error_value(E_POWER3);
+		return error_value(E_POWER_3);
 	}
 
 	/*
@@ -5905,7 +5959,7 @@ f_polar(int count, VALUE **vals)
 	if (count > 2) {
 		vp = vals[2];
 		if ((vp->v_type != V_NUM) || qisneg(vp->v_num) || qiszero(vp->v_num)) {
-			return error_value(E_POLAR2);
+			return error_value(E_POLAR_2);
 		}
 	} else {
 		err.v_num = conf->epsilon;
@@ -5913,14 +5967,14 @@ f_polar(int count, VALUE **vals)
 		vp = &err;
 	}
 	if ((vp->v_type != V_NUM) || qisneg(vp->v_num) || qiszero(vp->v_num)) {
-		return error_value(E_POLAR2);
+		return error_value(E_POLAR_2);
 	}
 
 	/*
 	 * compute complex number by modulus (radius) and argument (angle) to a given error tolerance
 	 */
 	if ((vals[0]->v_type != V_NUM) || (vals[1]->v_type != V_NUM))
-		return error_value(E_POLAR1);
+		return error_value(E_POLAR_1);
 	c = c_polar(vals[0]->v_num, vals[1]->v_num, vp->v_num);
 	result.v_com = c;
 	result.v_type = V_COM;
@@ -5974,7 +6028,7 @@ f_ilog2(VALUE *vp)
 		res.v_num = c_ilog(vp->v_com, _two_);
 		break;
 	default:
-		return error_value(E_ILOG2);
+		return error_value(E_IBASE2_LOG);
 	}
 
 	if (res.v_num == NULL)
@@ -5992,14 +6046,14 @@ f_ilog10(VALUE *vp)
 	VALUE res;
 
 	switch(vp->v_type) {
-		case V_NUM:
-			res.v_num = qilog(vp->v_num, _ten_);
-			break;
-		case V_COM:
-			res.v_num = c_ilog(vp->v_com, _ten_);
-			break;
-		default:
-			return error_value(E_ILOG10);
+	case V_NUM:
+		res.v_num = qilog(vp->v_num, _ten_);
+		break;
+	case V_COM:
+		res.v_num = c_ilog(vp->v_com, _ten_);
+		break;
+	default:
+		return error_value(E_IBASE10_LOG);
 	}
 
 	if (res.v_num == NULL)
@@ -6032,22 +6086,22 @@ f_matfill(int count, VALUE **vals)
 	v1 = vals[0];
 	v2 = vals[1];
 	if (v1->v_type != V_ADDR)
-		return error_value(E_MATFILL1);
+		return error_value(E_MATFILL_1);
 	v1 = v1->v_addr;
 	if (v1->v_subtype & V_NOCOPYTO)
-		return error_value(E_MATFILL3);
+		return error_value(E_MATFILL_3);
 	if (v1->v_type != V_MAT)
-		return error_value(E_MATFILL2);
+		return error_value(E_MATFILL_2);
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
 	if (v2->v_subtype & V_NOASSIGNFROM)
-		return error_value(E_MATFILL4);
+		return error_value(E_MATFILL_4);
 	if (count == 3) {
 		v3 = vals[2];
 		if (v3->v_type == V_ADDR)
 			v3 = v3->v_addr;
 		if (v3->v_subtype & V_NOASSIGNFROM)
-			return error_value(E_MATFILL4);
+			return error_value(E_MATFILL_4);
 	}
 	else
 		v3 = NULL;
@@ -6097,7 +6151,7 @@ S_FUNC VALUE
 f_mattrace(VALUE *vp)
 {
 	if (vp->v_type != V_MAT)
-		return error_value(E_MATTRACE1);
+		return error_value(E_MATTRACE_1);
 	return mattrace(vp->v_mat);
 }
 
@@ -6111,9 +6165,9 @@ f_mattrans(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vp->v_type != V_MAT)
-		return error_value(E_MATTRANS1);
+		return error_value(E_MATTRANS_1);
 	if (vp->v_mat->m_dim > 2)
-		return error_value(E_MATTRANS2);
+		return error_value(E_MATTRANS_2);
 	result.v_type = V_MAT;
 	result.v_mat = mattrans(vp->v_mat);
 	return result;
@@ -6124,7 +6178,7 @@ S_FUNC VALUE
 f_det(VALUE *vp)
 {
 	if (vp->v_type != V_MAT)
-		return error_value(E_DET1);
+		return error_value(E_DET_1);
 
 	return matdet(vp->v_mat);
 }
@@ -6140,14 +6194,14 @@ f_matdim(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_OBJ:
-			result.v_num = itoq(vp->v_obj->o_actions->oa_count);
-			break;
-		case V_MAT:
-			result.v_num = itoq((long) vp->v_mat->m_dim);
-			break;
-		default:
-			return error_value(E_MATDIM);
+	case V_OBJ:
+		result.v_num = itoq(vp->v_obj->o_actions->oa_count);
+		break;
+	case V_MAT:
+		result.v_num = itoq((long) vp->v_mat->m_dim);
+		break;
+	default:
+		return error_value(E_MATDIM);
 	}
 	return result;
 }
@@ -6164,15 +6218,15 @@ f_matmin(VALUE *v1, VALUE *v2)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (v1->v_type != V_MAT)
-		return error_value(E_MATMIN1);
+		return error_value(E_MATMIN_1);
 	if (v2->v_type != V_NUM)
-		return error_value(E_MATMIN2);
+		return error_value(E_MATMIN_2);
 	q = v2->v_num;
 	if (qisfrac(q) || qisneg(q) || qiszero(q))
-		return error_value(E_MATMIN2);
+		return error_value(E_MATMIN_2);
 	i = qtoi(q);
 	if (i > v1->v_mat->m_dim)
-		return error_value(E_MATMIN3);
+		return error_value(E_MATMIN_3);
 	result.v_type = V_NUM;
 	result.v_num = itoq(v1->v_mat->m_min[i - 1]);
 	return result;
@@ -6190,15 +6244,15 @@ f_matmax(VALUE *v1, VALUE *v2)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (v1->v_type != V_MAT)
-		return error_value(E_MATMAX1);
+		return error_value(E_MATMAX_1);
 	if (v2->v_type != V_NUM)
-		return error_value(E_MATMAX2);
+		return error_value(E_MATMAX_2);
 	q = v2->v_num;
 	if (qisfrac(q) || qisneg(q) || qiszero(q))
-		return error_value(E_MATMAX2);
+		return error_value(E_MATMAX_2);
 	i = qtoi(q);
 	if (i > v1->v_mat->m_dim)
-		return error_value(E_MATMAX3);
+		return error_value(E_MATMAX_3);
 	result.v_type = V_NUM;
 	result.v_num = itoq(v1->v_mat->m_max[i - 1]);
 	return result;
@@ -6215,13 +6269,13 @@ f_cp(VALUE *v1, VALUE *v2)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if ((v1->v_type != V_MAT) || (v2->v_type != V_MAT))
-		return error_value(E_CP1);
+		return error_value(E_CP_1);
 	m1 = v1->v_mat;
 	m2 = v2->v_mat;
 	if ((m1->m_dim != 1) || (m2->m_dim != 1))
-		return error_value(E_CP2);
+		return error_value(E_CP_2);
 	if ((m1->m_size != 3) || (m2->m_size != 3))
-		return error_value(E_CP3);
+		return error_value(E_CP_3);
 	result.v_type = V_MAT;
 	result.v_mat = matcross(m1, m2);
 	return result;
@@ -6234,13 +6288,13 @@ f_dp(VALUE *v1, VALUE *v2)
 	MATRIX *m1, *m2;
 
 	if ((v1->v_type != V_MAT) || (v2->v_type != V_MAT))
-		return error_value(E_DP1);
+		return error_value(E_DP_1);
 	m1 = v1->v_mat;
 	m2 = v2->v_mat;
 	if ((m1->m_dim != 1) || (m2->m_dim != 1))
-		return error_value(E_DP2);
+		return error_value(E_DP_2);
 	if (m1->m_size != m2->m_size)
-		return error_value(E_DP3);
+		return error_value(E_DP_3);
 	return matdot(m1, m2);
 }
 
@@ -6495,13 +6549,13 @@ f_substr(VALUE *v1, VALUE *v2, VALUE *v3)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (v1->v_type != V_STR)
-		return error_value(E_SUBSTR1);
+		return error_value(E_SUBSTR_1);
 	if ((v2->v_type != V_NUM) || (v3->v_type != V_NUM))
-		return error_value(E_SUBSTR2);
+		return error_value(E_SUBSTR_2);
 	q1 = v2->v_num;
 	q2 = v3->v_num;
 	if (qisfrac(q1) || qisneg(q1) || qisfrac(q2) || qisneg(q2))
-		return error_value(E_SUBSTR2);
+		return error_value(E_SUBSTR_2);
 	start = qtoi(q1);
 	len = qtoi(q2);
 	if (start > 0)
@@ -6538,21 +6592,21 @@ f_char(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_NUM:
-			if (qisfrac(vp->v_num))
-				return error_value(E_CHAR);
-			ch = (char) vp->v_num->num.v[0];
-			if (qisneg(vp->v_num))
-				ch = -ch;
-			break;
-		case V_OCTET:
-			ch = *vp->v_octet;
-			break;
-		case V_STR:
-			ch = *vp->v_str->s_str;
-			break;
-		default:
+	case V_NUM:
+		if (qisfrac(vp->v_num))
 			return error_value(E_CHAR);
+		ch = (char) vp->v_num->num.v[0];
+		if (qisneg(vp->v_num))
+			ch = -ch;
+		break;
+	case V_OCTET:
+		ch = *vp->v_octet;
+		break;
+	case V_STR:
+		ch = *vp->v_str->s_str;
+		break;
+	default:
+		return error_value(E_CHAR);
 	}
 	result.v_type = V_STR;
 	result.v_str = charstring(ch);
@@ -6570,14 +6624,14 @@ f_ord(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_STR:
-			c = (OCTET *)vp->v_str->s_str;
-			break;
-		case V_OCTET:
-			c = vp->v_octet;
-			break;
-		default:
-			return error_value(E_ORD);
+	case V_STR:
+		c = (OCTET *)vp->v_str->s_str;
+		break;
+	case V_OCTET:
+		c = vp->v_octet;
+		break;
+	default:
+		return error_value(E_ORD);
 	}
 
 	result.v_type = V_NUM;
@@ -6595,14 +6649,14 @@ f_isupper(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_STR:
-			c = *vp->v_str->s_str;
-			break;
-		case V_OCTET:
-			c = *vp->v_octet;
-			break;
-		default:
-			return error_value(E_ISUPPER);
+	case V_STR:
+		c = *vp->v_str->s_str;
+		break;
+	case V_OCTET:
+		c = *vp->v_octet;
+		break;
+	default:
+		return error_value(E_ISUPPER);
 	}
 
 	result.v_type = V_NUM;
@@ -6620,14 +6674,14 @@ f_islower(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_STR:
-			c = *vp->v_str->s_str;
-			break;
-		case V_OCTET:
-			c = *vp->v_octet;
-			break;
-		default:
-			return error_value(E_ISLOWER);
+	case V_STR:
+		c = *vp->v_str->s_str;
+		break;
+	case V_OCTET:
+		c = *vp->v_octet;
+		break;
+	default:
+		return error_value(E_ISLOWER);
 	}
 
 	result.v_type = V_NUM;
@@ -6645,14 +6699,14 @@ f_isalnum(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_STR:
-			c = *vp->v_str->s_str;
-			break;
-		case V_OCTET:
-			c = *vp->v_octet;
-			break;
-		default:
-			return error_value(E_ISALNUM);
+	case V_STR:
+		c = *vp->v_str->s_str;
+		break;
+	case V_OCTET:
+		c = *vp->v_octet;
+		break;
+	default:
+		return error_value(E_ISALNUM);
 	}
 
 	result.v_type = V_NUM;
@@ -6670,14 +6724,14 @@ f_isalpha(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_STR:
-			c = *vp->v_str->s_str;
-			break;
-		case V_OCTET:
-			c = *vp->v_octet;
-			break;
-		default:
-			return error_value(E_ISALPHA);
+	case V_STR:
+		c = *vp->v_str->s_str;
+		break;
+	case V_OCTET:
+		c = *vp->v_octet;
+		break;
+	default:
+		return error_value(E_ISALPHA);
 	}
 
 	result.v_type = V_NUM;
@@ -6685,8 +6739,7 @@ f_isalpha(VALUE *vp)
 	return result;
 }
 
-#if 0
-/* Not in C-standard, marked as obsolete in POSIX.1-2008 */
+#if 0 /* XXX - add isascii builtin funcion - XXX */
 S_FUNC VALUE
 f_isascii(VALUE *vp)
 {
@@ -6696,14 +6749,14 @@ f_isascii(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_STR:
-			c = *vp->v_str->s_str;
-			break;
-		case V_OCTET:
-			c = *vp->v_octet;
-			break;
-		default:
-			return error_value(E_ISASCII);
+	case V_STR:
+		c = *vp->v_str->s_str;
+		break;
+	case V_OCTET:
+		c = *vp->v_octet;
+		break;
+	default:
+		return error_value(E_ISASCII);
 	}
 
 	result.v_type = V_NUM;
@@ -6722,14 +6775,14 @@ f_iscntrl(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_STR:
-			c = *vp->v_str->s_str;
-			break;
-		case V_OCTET:
-			c = *vp->v_octet;
-			break;
-		default:
-			return error_value(E_ISCNTRL);
+	case V_STR:
+		c = *vp->v_str->s_str;
+		break;
+	case V_OCTET:
+		c = *vp->v_octet;
+		break;
+	default:
+		return error_value(E_ISCNTRL);
 	}
 
 	result.v_type = V_NUM;
@@ -6747,14 +6800,14 @@ f_isdigit(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_STR:
-			c = *vp->v_str->s_str;
-			break;
-		case V_OCTET:
-			c = *vp->v_octet;
-			break;
-		default:
-			return error_value(E_ISDIGIT);
+	case V_STR:
+		c = *vp->v_str->s_str;
+		break;
+	case V_OCTET:
+		c = *vp->v_octet;
+		break;
+	default:
+		return error_value(E_ISDIGIT);
 	}
 
 	result.v_type = V_NUM;
@@ -6772,14 +6825,14 @@ f_isgraph(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_STR:
-			c = *vp->v_str->s_str;
-			break;
-		case V_OCTET:
-			c = *vp->v_octet;
-			break;
-		default:
-			return error_value(E_ISGRAPH);
+	case V_STR:
+		c = *vp->v_str->s_str;
+		break;
+	case V_OCTET:
+		c = *vp->v_octet;
+		break;
+	default:
+		return error_value(E_ISGRAPH);
 	}
 
 	result.v_type = V_NUM;
@@ -6797,14 +6850,14 @@ f_isprint(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_STR:
-			c = *vp->v_str->s_str;
-			break;
-		case V_OCTET:
-			c = *vp->v_octet;
-			break;
-		default:
-			return error_value(E_ISPRINT);
+	case V_STR:
+		c = *vp->v_str->s_str;
+		break;
+	case V_OCTET:
+		c = *vp->v_octet;
+		break;
+	default:
+		return error_value(E_ISPRINT);
 	}
 
 	result.v_type = V_NUM;
@@ -6822,14 +6875,14 @@ f_ispunct(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_STR:
-			c = *vp->v_str->s_str;
-			break;
-		case V_OCTET:
-			c = *vp->v_octet;
-			break;
-		default:
-			return error_value(E_ISPUNCT);
+	case V_STR:
+		c = *vp->v_str->s_str;
+		break;
+	case V_OCTET:
+		c = *vp->v_octet;
+		break;
+	default:
+		return error_value(E_ISPUNCT);
 	}
 
 	result.v_type = V_NUM;
@@ -6847,14 +6900,14 @@ f_isspace(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_STR:
-			c = *vp->v_str->s_str;
-			break;
-		case V_OCTET:
-			c = *vp->v_octet;
-			break;
-		default:
-			return error_value(E_ISSPACE);
+	case V_STR:
+		c = *vp->v_str->s_str;
+		break;
+	case V_OCTET:
+		c = *vp->v_octet;
+		break;
+	default:
+		return error_value(E_ISSPACE);
 	}
 
 	result.v_type = V_NUM;
@@ -6872,14 +6925,14 @@ f_isxdigit(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	switch(vp->v_type) {
-		case V_STR:
-			c = *vp->v_str->s_str;
-			break;
-		case V_OCTET:
-			c = *vp->v_octet;
-			break;
-		default:
-			return error_value(E_ISXDIGIT);
+	case V_STR:
+		c = *vp->v_str->s_str;
+		break;
+	case V_OCTET:
+		c = *vp->v_octet;
+		break;
+	default:
+		return error_value(E_ISXDIGIT);
 	}
 
 	result.v_type = V_NUM;
@@ -6904,7 +6957,7 @@ f_protect(int count, VALUE **vals)
 	have_nblock = (v1->v_type == V_NBLOCK);
 	if (!have_nblock) {
 		if (v1->v_type != V_ADDR)
-			return error_value(E_PROTECT1);
+			return error_value(E_PROTECT_1);
 		v1 = v1->v_addr;
 	}
 	if (count == 1) {
@@ -6919,7 +6972,7 @@ f_protect(int count, VALUE **vals)
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
 	if (v2->v_type != V_NUM||qisfrac(v2->v_num)||zge16b(v2->v_num->num))
-		return error_value(E_PROTECT2);
+		return error_value(E_PROTECT_2);
 	i = qtoi(v2->v_num);
 	depth = 0;
 	if (count > 2) {
@@ -6928,7 +6981,7 @@ f_protect(int count, VALUE **vals)
 			v3 = v3->v_addr;
 		if (v3->v_type != V_NUM || qisfrac(v3->v_num) ||
 				qisneg(v3->v_num) || zge31b(v3->v_num->num))
-			return error_value(E_PROTECT3);
+			return error_value(E_PROTECT_3);
 		depth = qtoi(v3->v_num);
 	}
 	protecttodepth(v1, i, depth);
@@ -7027,32 +7080,32 @@ f_search(int count, VALUE **vals)
 	v2 = *vals++;
 	if ((v1->v_type == V_FILE || v1->v_type == V_STR) &&
 		 v2->v_type != V_STR)
-			return error_value(E_SEARCH2);
+			return error_value(E_SEARCH_2);
 	start = end = NULL;
 	if (count > 2) {
 		v3 = *vals++;
 		if (v3->v_type != V_NUM && v3->v_type != V_NULL)
-			return error_value(E_SEARCH3);
+			return error_value(E_SEARCH_3);
 		if (v3->v_type == V_NUM) {
 			start = v3->v_num;
 			if (qisfrac(start))
-				return error_value(E_SEARCH3);
+				return error_value(E_SEARCH_3);
 		}
 	}
 	if (count > 3) {
 		v4 = *vals;
 		if (v4->v_type != V_NUM && v4->v_type != V_NULL)
-			return error_value(E_SEARCH4);
+			return error_value(E_SEARCH_4);
 		if (v4->v_type == V_NUM) {
 			end = v4->v_num;
 			if (qisfrac(end))
-				return error_value(E_SEARCH4);
+				return error_value(E_SEARCH_4);
 		}
 	}
 	result.v_type = V_NULL;
 	vsize = f_size(v1);
 	if (vsize.v_type != V_NUM)
-		return error_value(E_SEARCH5);
+		return error_value(E_SEARCH_5);
 	size = vsize.v_num;
 	if (start) {
 		if (qisneg(start)) {
@@ -7085,7 +7138,7 @@ f_search(int count, VALUE **vals)
 					qfree(start);
 				if (end)
 					qfree(end);
-				return error_value(E_SEARCH5);
+				return error_value(E_SEARCH_5);
 			}
 			if (count == 2 || (count == 4 && end != NULL)) {
 				start = qalloc();
@@ -7119,7 +7172,7 @@ f_search(int count, VALUE **vals)
 		if (i == EOF)
 			return error_value(errno);
 		if (i < 0)
-			return error_value(E_SEARCH6);
+			return error_value(E_SEARCH_6);
 		if (i == 0) {
 			result.v_type = V_NUM;
 			result.v_num = qalloc();
@@ -7141,23 +7194,23 @@ f_search(int count, VALUE **vals)
 	l_start = ztolong(start->num);
 	l_end = ztolong(end->num);
 	switch (v1->v_type) {
-		case V_MAT:
-			i = matsearch(v1->v_mat, v2, l_start, l_end, &indx);
-			break;
-		case V_LIST:
-			i = listsearch(v1->v_list, v2, l_start, l_end, &indx);
-			break;
-		case V_ASSOC:
-			i = assocsearch(v1->v_assoc, v2, l_start, l_end, &indx);
-			break;
-		case V_STR:
-			i = stringsearch(v1->v_str, v2->v_str, l_start, l_end,
-					&indx);
-			break;
-		default:
-			qfree(start);
-			qfree(end);
-			return error_value(E_SEARCH1);
+	case V_MAT:
+		i = matsearch(v1->v_mat, v2, l_start, l_end, &indx);
+		break;
+	case V_LIST:
+		i = listsearch(v1->v_list, v2, l_start, l_end, &indx);
+		break;
+	case V_ASSOC:
+		i = assocsearch(v1->v_assoc, v2, l_start, l_end, &indx);
+		break;
+	case V_STR:
+		i = stringsearch(v1->v_str, v2->v_str, l_start, l_end,
+				&indx);
+		break;
+	default:
+		qfree(start);
+		qfree(end);
+		return error_value(E_SEARCH_1);
 	}
 	qfree(start);
 	qfree(end);
@@ -7193,32 +7246,32 @@ f_rsearch(int count, VALUE **vals)
 	v2 = *vals++;
 	if ((v1->v_type == V_FILE || v1->v_type == V_STR) &&
 		v2->v_type != V_STR)
-			return error_value(E_RSEARCH2);
+			return error_value(E_RSEARCH_2);
 	start = end = NULL;
 	if (count > 2) {
 		v3 = *vals++;
 		if (v3->v_type != V_NUM && v3->v_type != V_NULL)
-			return error_value(E_RSEARCH3);
+			return error_value(E_RSEARCH_3);
 		if (v3->v_type == V_NUM) {
 			start = v3->v_num;
 			if (qisfrac(start))
-				return error_value(E_RSEARCH3);
+				return error_value(E_RSEARCH_3);
 		}
 	}
 	if (count > 3) {
 		v4 = *vals;
 		if (v4->v_type != V_NUM && v4->v_type != V_NULL)
-			return error_value(E_RSEARCH4);
+			return error_value(E_RSEARCH_4);
 		if (v4->v_type == V_NUM) {
 			end = v4->v_num;
 			if (qisfrac(end))
-				return error_value(E_RSEARCH3);
+				return error_value(E_RSEARCH_3);
 		}
 	}
 	result.v_type = V_NULL;
 	vsize = f_size(v1);
 	if (vsize.v_type != V_NUM)
-		return error_value(E_RSEARCH5);
+		return error_value(E_RSEARCH_5);
 	size = vsize.v_num;
 	if (start) {
 		if (qisneg(start)) {
@@ -7251,7 +7304,7 @@ f_rsearch(int count, VALUE **vals)
 					qfree(start);
 				if (end)
 					qfree(end);
-				return error_value(E_RSEARCH5);
+				return error_value(E_RSEARCH_5);
 			}
 			if (count == 2 || (count == 4 && end != NULL)) {
 				start = qalloc();
@@ -7295,7 +7348,7 @@ f_rsearch(int count, VALUE **vals)
 		if (i == EOF)
 			return error_value(errno);
 		if (i < 0)
-			return error_value(E_RSEARCH6);
+			return error_value(E_RSEARCH_6);
 		if (i == 0) {
 			result.v_type = V_NUM;
 			result.v_num = qalloc();
@@ -7327,24 +7380,24 @@ f_rsearch(int count, VALUE **vals)
 	l_start = ztolong(start->num);
 	l_end = ztolong(end->num);
 	switch (v1->v_type) {
-		case V_MAT:
-			i = matrsearch(v1->v_mat, v2, l_start, l_end, &indx);
-			break;
-		case V_LIST:
-			i = listrsearch(v1->v_list, v2, l_start, l_end, &indx);
-			break;
-		case V_ASSOC:
-			i = assocrsearch(v1->v_assoc, v2, l_start,
-				         l_end, &indx);
-			break;
-		case V_STR:
-			i = stringrsearch(v1->v_str, v2->v_str, l_start,
-				l_end, &indx);
-			break;
-		default:
-			qfree(start);
-			qfree(end);
-			return error_value(E_RSEARCH1);
+	case V_MAT:
+		i = matrsearch(v1->v_mat, v2, l_start, l_end, &indx);
+		break;
+	case V_LIST:
+		i = listrsearch(v1->v_list, v2, l_start, l_end, &indx);
+		break;
+	case V_ASSOC:
+		i = assocrsearch(v1->v_assoc, v2, l_start,
+				 l_end, &indx);
+		break;
+	case V_STR:
+		i = stringrsearch(v1->v_str, v2->v_str, l_start,
+			l_end, &indx);
+		break;
+	default:
+		qfree(start);
+		qfree(end);
+		return error_value(E_RSEARCH_1);
 	}
 	qfree(start);
 	qfree(end);
@@ -7395,17 +7448,17 @@ f_indices(VALUE *v1, VALUE *v2)
 	LIST *lp;
 
 	if (v2->v_type != V_NUM || zge31b(v2->v_num->num))
-		return error_value(E_INDICES2);
+		return error_value(E_INDICES_2);
 
 	switch (v1->v_type) {
-		case V_ASSOC:
-			lp = associndices(v1->v_assoc, qtoi(v2->v_num));
-			break;
-		case V_MAT:
-			lp = matindices(v1->v_mat, qtoi(v2->v_num));
-			break;
-		default:
-			return error_value(E_INDICES1);
+	case V_ASSOC:
+		lp = associndices(v1->v_assoc, qtoi(v2->v_num));
+		break;
+	case V_MAT:
+		lp = matindices(v1->v_mat, qtoi(v2->v_num));
+		break;
+	default:
+		return error_value(E_INDICES_1);
 	}
 
 	result.v_type = V_NULL;
@@ -7430,15 +7483,15 @@ f_listinsert(int count, VALUE **vals)
 
 	v1 = *vals++;
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
-		return error_value(E_INSERT1);
+		return error_value(E_INSERT_1);
 	if (v1->v_addr->v_subtype & V_NOREALLOC)
-		return error_value(E_LIST1);
+		return error_value(E_LIST_1);
 
 	v2 = *vals++;
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
 	if ((v2->v_type != V_NUM) || qisfrac(v2->v_num))
-		return error_value(E_INSERT2);
+		return error_value(E_INSERT_2);
 	pos = qtoi(v2->v_num);
 	count--;
 	while (--count > 0) {
@@ -7465,7 +7518,7 @@ f_listpush(int count, VALUE **vals)
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
 		return error_value(E_PUSH);
 	if (v1->v_addr->v_subtype & V_NOREALLOC)
-		return error_value(E_LIST3);
+		return error_value(E_LIST_3);
 
 	while (--count > 0) {
 		v2 = *vals++;
@@ -7491,7 +7544,7 @@ f_listappend(int count, VALUE **vals)
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
 		return error_value(E_APPEND);
 	if (v1->v_addr->v_subtype & V_NOREALLOC)
-		return error_value(E_LIST4);
+		return error_value(E_LIST_4);
 
 	while (--count > 0) {
 		v2 = *vals++;
@@ -7513,14 +7566,14 @@ f_listdelete(VALUE *v1, VALUE *v2)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if ((v1->v_type != V_ADDR) || (v1->v_addr->v_type != V_LIST))
-		return error_value(E_DELETE1);
+		return error_value(E_DELETE_1);
 	if (v1->v_addr->v_subtype & V_NOREALLOC)
-		return error_value(E_LIST2);
+		return error_value(E_LIST_2);
 
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
 	if ((v2->v_type != V_NUM) || qisfrac(v2->v_num))
-		return error_value(E_DELETE2);
+		return error_value(E_DELETE_2);
 	removelistmiddle(v1->v_addr->v_list, qtoi(v2->v_num), &result);
 	return result;
 }
@@ -7535,7 +7588,7 @@ f_listpop(VALUE *vp)
 		return error_value(E_POP);
 
 	if (vp->v_addr->v_subtype & V_NOREALLOC)
-		return error_value(E_LIST5);
+		return error_value(E_LIST_5);
 
 	removelistfirst(vp->v_addr->v_list, &result);
 	return result;
@@ -7551,7 +7604,7 @@ f_listremove(VALUE *vp)
 		return error_value(E_REMOVE);
 
 	if (vp->v_addr->v_subtype & V_NOREALLOC)
-		return error_value(E_LIST6);
+		return error_value(E_LIST_6);
 
 	removelistlast(vp->v_addr->v_list, &result);
 	return result;
@@ -7729,19 +7782,19 @@ f_fopen(VALUE *v1, VALUE *v2)
 
 	/* check for a valid mode [rwa][b+\0][b+\0] */
 	if (v1->v_type != V_STR || v2->v_type != V_STR)
-		return error_value(E_FOPEN1);
+		return error_value(E_FOPEN_1);
 	mode = v2->v_str->s_str;
 	if ((*mode != 'r') && (*mode != 'w') && (*mode != 'a'))
-		return error_value(E_FOPEN2);
+		return error_value(E_FOPEN_2);
 	if (mode[1] != '\0') {
 		if (mode[1] != '+' && mode[1] != 'b')
-			return error_value(E_FOPEN2);
+			return error_value(E_FOPEN_2);
 		if (mode[2] != '\0') {
 			if ((mode[2] != '+' && mode[2] != 'b') ||
 			    mode[1] == mode[2])
-				return error_value(E_FOPEN2);
+				return error_value(E_FOPEN_2);
 			if (mode[3] != '\0')
-				return error_value(E_FOPEN2);
+				return error_value(E_FOPEN_2);
 		}
 	}
 
@@ -7770,25 +7823,25 @@ f_fpathopen(int count, VALUE **vals)
 
 	/* check for valid strong */
 	if (vals[0]->v_type != V_STR || vals[1]->v_type != V_STR) {
-		return error_value(E_FPATHOPEN1);
+		return error_value(E_FPATHOPEN_1);
 	}
 	if (count == 3 && vals[2]->v_type != V_STR) {
-		return error_value(E_FPATHOPEN1);
+		return error_value(E_FPATHOPEN_1);
 	}
 
 	/* check for a valid mode [rwa][b+\0][b+\0] */
 	mode = vals[1]->v_str->s_str;
 	if ((*mode != 'r') && (*mode != 'w') && (*mode != 'a'))
-		return error_value(E_FPATHOPEN2);
+		return error_value(E_FPATHOPEN_2);
 	if (mode[1] != '\0') {
 		if (mode[1] != '+' && mode[1] != 'b')
-			return error_value(E_FPATHOPEN2);
+			return error_value(E_FPATHOPEN_2);
 		if (mode[2] != '\0') {
 			if ((mode[2] != '+' && mode[2] != 'b') ||
 			    mode[1] == mode[2])
-				return error_value(E_FPATHOPEN2);
+				return error_value(E_FPATHOPEN_2);
 			if (mode[3] != '\0')
-				return error_value(E_FPATHOPEN2);
+				return error_value(E_FPATHOPEN_2);
 		}
 	}
 
@@ -7825,21 +7878,21 @@ f_freopen(int count, VALUE **vals)
 
 	/* check for a valid mode [rwa][b+\0][b+\0] */
 	if (vals[0]->v_type != V_FILE)
-		return error_value(E_FREOPEN1);
+		return error_value(E_FREOPEN_1);
 	if (vals[1]->v_type != V_STR)
-		return error_value(E_FREOPEN2);
+		return error_value(E_FREOPEN_2);
 	mode = vals[1]->v_str->s_str;
 	if ((*mode != 'r') && (*mode != 'w') && (*mode != 'a'))
-		return error_value(E_FREOPEN2);
+		return error_value(E_FREOPEN_2);
 	if (mode[1] != '\0') {
 		if (mode[1] != '+' && mode[1] != 'b')
-			return error_value(E_FREOPEN2);
+			return error_value(E_FREOPEN_2);
 		if (mode[2] != '\0') {
 			if ((mode[2] != '+' && mode[2] != 'b') ||
 			    mode[1] == mode[2])
-				return error_value(E_FOPEN2);
+				return error_value(E_FOPEN_2);
 			if (mode[3] != '\0')
-				return error_value(E_FREOPEN2);
+				return error_value(E_FREOPEN_2);
 		}
 	}
 
@@ -7849,7 +7902,7 @@ f_freopen(int count, VALUE **vals)
 		id = reopenid(vals[0]->v_file, mode, NULL);
 	} else {
 		if (vals[2]->v_type != V_STR)
-			return error_value(E_FREOPEN3);
+			return error_value(E_FREOPEN_3);
 		id = reopenid(vals[0]->v_file, mode,
 			vals[2]->v_str->s_str);
 	}
@@ -7862,41 +7915,359 @@ f_freopen(int count, VALUE **vals)
 
 
 S_FUNC VALUE
+f_fclose(int count, VALUE **vals)
+{
+	VALUE result;
+	VALUE *vp;
+	int n, i=0;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	errno = 0;
+	if (count == 0) {
+		i = closeall();
+	} else {
+		for (n = 0; n < count; n++) {
+			vp = vals[n];
+			if (vp->v_type != V_FILE)
+				return error_value(E_FCLOSE_1);
+		}
+		for (n = 0; n < count; n++) {
+			vp = vals[n];
+			i = closeid(vp->v_file);
+			if (i < 0)
+				return error_value(E_REWIND_2);
+		}
+	}
+	if (i < 0)
+		return error_value(errno);
+	result.v_type = V_NULL;
+	return result;
+}
+
+
+S_FUNC VALUE
+f_rm(int count, VALUE **vals)
+{
+	VALUE result;
+	int force;	/* true -> -f was given as 1st arg */
+	int i;
+	int j;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * firewall
+	 */
+	if (!allow_write)
+		return error_value(E_WRPERM);
+
+	/*
+	 * check on each arg
+	 */
+	for (i=0; i < count; ++i) {
+		if (vals[i]->v_type != V_STR)
+			return error_value(E_RM_1);
+		if (vals[i]->v_str->s_str[0] == '\0')
+			return error_value(E_RM_1);
+	}
+
+	/*
+	 * look for a leading -f option
+	 */
+	force = (strcmp(vals[0]->v_str->s_str, "-f") == 0);
+	if (force) {
+		--count;
+		++vals;
+	}
+
+	/*
+	 * remove file(s)
+	 */
+	for (i=0; i < count; ++i) {
+		j = remove(vals[i]->v_str->s_str);
+		if (!force && j < 0)
+			return error_value(errno);
+	}
+	result.v_type = V_NULL;
+	result.v_subtype = V_NOSUBTYPE;
+	return result;
+}
+
+
+S_FUNC VALUE
+f_error(int count, VALUE **vals)
+{
+	VALUE *vp;
+	long r;
+
+	/*
+	 * case: error() no args
+	 */
+	if (count == 0) {
+
+		/* fetch but do NOT set errno */
+		r = set_errno(NULL_ERRNUM);
+
+	/*
+	 * case: 1 arg
+	 */
+	} else {
+		vp = vals[0];	/* get 1st arg */
+
+		/*
+		 * case: negative or 0 v_type
+		 */
+		if (vp->v_type <= 0) {
+			r = (long) -vp->v_type;
+			if (is_valid_errnum(r) == false) {
+				error_value(E_ERROR_2);
+				math_error("Numeric argument is outside valid errnum range for error");
+				not_reached();
+			}
+
+		/*
+		 * case: error(errnum | "E_STRING") arg
+		 */
+		} else {
+			switch (vp->v_type) {
+
+			/*
+			 * case: error("E_STRING")
+			 */
+			case V_STR:
+				r = errsym_2_errnum(vp->v_str->s_str);
+				if (is_valid_errnum(r) == false) {
+					error_value(E_ERROR_3);
+					math_error("String argument is not a valid E_STRING for error");
+					not_reached();
+				}
+				break;
+
+			/*
+			 * case: error(errnum)
+			 */
+			case V_NUM:
+				r = qtoi(vp->v_num);
+				if (is_valid_errnum(r) == false) {
+					error_value(E_ERROR_2);
+					math_error("Numeric argument is outside valid errnum range for error");
+					not_reached();
+				}
+				break;
+
+			/*
+			 * case: invalid type
+			 */
+			default:
+				error_value(E_ERROR_1);
+				math_error("Invalid argument type for error");
+				not_reached();
+			}
+		}
+	}
+
+	/*
+	 * return error
+	 */
+	return error_value(r);
+}
+
+
+S_FUNC VALUE
 f_errno(int count, VALUE **vals)
 {
-	int newerr, olderr;
-	VALUE *vp;
-	VALUE result;
+	int olderr;			/* previous errno value */
+	int newerr = NULL_ERRNUM;	/* new errno to set */
+	VALUE *vp;			/* arg[1] */
+	VALUE result;			/* errno as a VALUE */
 
 	/* initialize VALUE */
 	result.v_type = V_NUM;
 	result.v_subtype = V_NOSUBTYPE;
 
-	newerr = -1;
-	if (count > 0) {
-		vp = vals[0];
+	/*
+	 * case: errno() no args
+	 */
+	if (count == 0) {
 
+		/* fetch but do NOT set errno */
+		olderr = set_errno(NULL_ERRNUM);
+
+	/*
+	 * case: 1 arg
+	 */
+	} else {
+		vp = vals[0];	/* get 1st arg */
+
+		/*
+		 * case: negative or 0 v_type
+		 */
 		if (vp->v_type <= 0) {
 			newerr = (int) -vp->v_type;
-			(void) set_errno(newerr);
-			result.v_num = itoq((long) newerr);
-			return result;
-		}
+			if (is_valid_errnum(newerr) == false) {
+				error_value(E_ERRNO_2);
+				math_error("Numeric argument is outside valid errnum range for errno");
+				not_reached();
+			}
 
-		/* arg must be an integer */
-		if (vp->v_type != V_NUM || qisfrac(vp->v_num) ||
-		qisneg(vp->v_num) || zge16b(vp->v_num->num)) {
-			math_error("errno argument out of range");
-			not_reached();
+		/*
+		 * case: errno(errnum | "E_STRING") arg
+		 */
+		} else {
+			switch (vp->v_type) {
+
+			/*
+			 * case: errno("E_STRING")
+			 */
+			case V_STR:
+				newerr = errsym_2_errnum(vp->v_str->s_str);
+				if (is_valid_errnum(newerr) == false) {
+					error_value(E_ERRNO_3);
+					math_error("String argument is not a valid E_STRING for errno");
+					not_reached();
+				}
+				break;
+
+			/*
+			 * case: errno(errnum)
+			 */
+			case V_NUM:
+				newerr = qtoi(vp->v_num);
+				if (is_valid_errnum(newerr) == false) {
+					error_value(E_ERRNO_2);
+					math_error("Numeric argument is outside valid errnum range for errno");
+					not_reached();
+				}
+				break;
+
+			/*
+			 * case: invalid type
+			 */
+			default:
+				error_value(E_ERRNO_1);
+				math_error("Invalid argument type for errno");
+				not_reached();
+			}
 		}
-		newerr = (int) ztoi(vp->v_num->num);
 	}
-	olderr = set_errno(newerr);
 
+	/*
+	 * return errno
+	 */
+	olderr = set_errno(newerr);
 	result.v_num = itoq((long) olderr);
 	return result;
 }
 
+
+S_FUNC VALUE
+f_strerror(int count, VALUE **vals)
+{
+	int errnum = NULL_ERRNUM;	/* errnum to convert */
+	char *errmsg;			/* errnum converted into errmsg string, or NULL */
+	bool alloced = false;		/* true ==> errmsg was allocated, false ==> errmsg is static */
+	VALUE *vp;			/* arg[1] */
+	VALUE result;			/* errmsg string as a VALUE */
+
+	/* initialize VALUE */
+	result.v_type = V_STR;
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * case: strerror() no args
+	 */
+	if (count == 0) {
+
+		/* fetch but do NOT set errno */
+		errnum = set_errno(NULL_ERRNUM);
+
+	/*
+	 * case: 1 arg
+	 */
+	} else {
+		vp = vals[0];	/* get 1st arg */
+
+		/*
+		 * case: negative or 0 v_type
+		 */
+		if (vp->v_type <= 0) {
+			errnum = (int) -vp->v_type;
+			if (is_valid_errnum(errnum) == false) {
+				error_value(E_STRERROR_2);
+				math_error("Numeric argument is outside valid errnum range for strerror");
+				not_reached();
+			}
+
+		/*
+		 * case: strerror(errnum | "E_STRING") arg
+		 */
+		} else {
+			switch (vp->v_type) {
+
+			/*
+			 * case: strerror("E_STRING")
+			 */
+			case V_STR:
+				errnum = errsym_2_errnum(vp->v_str->s_str);
+				if (is_valid_errnum(errnum) == false) {
+					error_value(E_STRERROR_3);
+					math_error("String argument is not a valid E_STRING for strerror");
+					not_reached();
+				}
+				break;
+
+			/*
+			 * case: strerror(errnum)
+			 */
+			case V_NUM:
+				errnum = qtoi(vp->v_num);
+				if (is_valid_errnum(errnum) == false) {
+					error_value(E_STRERROR_2);
+					math_error("Numeric argument is outside valid errnum range for strerror");
+					not_reached();
+				}
+				break;
+
+			/*
+			 * case: invalid type
+			 */
+			default:
+				error_value(E_STRERROR_1);
+				math_error("Invalid argument type for strerror");
+				not_reached();
+			}
+		}
+	}
+
+	/*
+	 * convert errnum into errmsg string
+	 */
+	errmsg = errnum_2_errmsg(errnum, &alloced);
+	if (errmsg == NULL) {
+		/* this should not happen: but in case it does we will throw an error */
+		error_value(E_STRERROR_4);
+		math_error("errnum_2_errmsg returned NULL as called from strerror");
+		not_reached();
+	}
+	result.v_str = makenewstring(errmsg);
+
+	/*
+	 * free errmsg is it was allocated
+	 */
+	if (alloced == true) {
+		free(errmsg);
+		alloced = false;
+		errmsg = NULL;
+	}
+
+	/*
+	 * return errmsg result as a V_STR
+	 */
+	return result;
+}
 
 
 S_FUNC VALUE
@@ -7986,86 +8357,18 @@ f_stoponerror(int count, VALUE **vals)
 	return result;
 }
 
-S_FUNC VALUE
-f_fclose(int count, VALUE **vals)
-{
-	VALUE result;
-	VALUE *vp;
-	int n, i=0;
-
-	/* initialize VALUE */
-	result.v_subtype = V_NOSUBTYPE;
-
-	errno = 0;
-	if (count == 0) {
-		i = closeall();
-	} else {
-		for (n = 0; n < count; n++) {
-			vp = vals[n];
-			if (vp->v_type != V_FILE)
-				return error_value(E_FCLOSE1);
-		}
-		for (n = 0; n < count; n++) {
-			vp = vals[n];
-			i = closeid(vp->v_file);
-			if (i < 0)
-				return error_value(E_REWIND2);
-		}
-	}
-	if (i < 0)
-		return error_value(errno);
-	result.v_type = V_NULL;
-	return result;
-}
-
 
 S_FUNC VALUE
-f_rm(int count, VALUE **vals)
+f_iserror(VALUE *vp)
 {
-	VALUE result;
-	int force;	/* true -> -f was given as 1st arg */
-	int i;
-	int j;
+	VALUE res;
 
 	/* initialize VALUE */
-	result.v_subtype = V_NOSUBTYPE;
+	res.v_subtype = V_NOSUBTYPE;
 
-	/*
-	 * firewall
-	 */
-	if (!allow_write)
-		return error_value(E_WRPERM);
-
-	/*
-	 * check on each arg
-	 */
-	for (i=0; i < count; ++i) {
-		if (vals[i]->v_type != V_STR)
-			return error_value(E_RM1);
-		if (vals[i]->v_str->s_str[0] == '\0')
-			return error_value(E_RM1);
-	}
-
-	/*
-	 * look for a leading -f option
-	 */
-	force = (strcmp(vals[0]->v_str->s_str, "-f") == 0);
-	if (force) {
-		--count;
-		++vals;
-	}
-
-	/*
-	 * remove file(s)
-	 */
-	for (i=0; i < count; ++i) {
-		j = remove(vals[i]->v_str->s_str);
-		if (!force && j < 0)
-			return error_value(errno);
-	}
-	result.v_type = V_NULL;
-	result.v_subtype = V_NOSUBTYPE;
-	return result;
+	res.v_type = V_NUM;
+	res.v_num = itoq((long)((vp->v_type < 0) ? - vp->v_type : 0));
+	return res;
 }
 
 
@@ -8097,75 +8400,6 @@ f_newerror(int count, VALUE **vals)
 
 
 S_FUNC VALUE
-f_strerror(int count, VALUE **vals)
-{
-	VALUE *vp;
-	VALUE result;
-	long i;
-	char *cp;
-
-	/* initialize VALUE */
-	result.v_subtype = V_NOSUBTYPE;
-
-	/* parse args */
-	if (count > 0) {
-		vp = vals[0];
-		if (vp->v_type < 0) {
-			i = (long) -vp->v_type;
-		} else {
-			if (vp->v_type != V_NUM || qisfrac(vp->v_num))
-				return error_value(E_STRERROR1);
-			i = qtoi(vp->v_num);
-			if (i < 0 || i > E__USERMAX)
-				return error_value(E_STRERROR2);
-		}
-	} else {
-		i = set_errno(-1);
-	}
-
-	/* setup return type */
-	result.v_type = V_STR;
-
-	/* change the meaning of error 0 */
-	if (i == 0)
-		i = E__BASE;
-
-	/* firewall - return generic error string if it is not assigned */
-	if (i >= nexterrnum || (i > E__HIGHEST && i < E__USERDEF)
-			|| (i < E__BASE && strerror(i) == NULL)) {
-		size_t snprintf_len;	/* malloced snprintf buffer length */
-		snprintf_len = sizeof("Unknown error 12345678901234567890")+1;
-		cp = (char *) malloc(snprintf_len+1);
-		if (cp == NULL) {
-			math_error("Out of memory for strerror");
-			not_reached();
-		}
-		snprintf(cp, snprintf_len, "Unknown error %ld", i);
-		cp[snprintf_len] = '\0';	/* paranoia */
-		result.v_str = makestring(cp);
-		return result;
-	}
-
-	/* system error */
-	if (i < E__BASE) {
-		cp = strerror(i);
-
-	/* user-described error */
-	} else if (i >= E__USERDEF) {
-		cp = namestr(&newerrorstr, i - E__USERDEF);
-
-	/* calc-described error */
-	} else {
-		cp = (char *)error_table[i - E__BASE].errmsg;
-	}
-
-	/* return result as a V_STR */
-	result.v_str = makenewstring(cp);
-	return result;
-}
-
-
-S_FUNC VALUE
 f_ferror(VALUE *vp)
 {
 	VALUE result;
@@ -8175,10 +8409,10 @@ f_ferror(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vp->v_type != V_FILE)
-		return error_value(E_FERROR1);
+		return error_value(E_FERROR_1);
 	i = errorid(vp->v_file);
 	if (i < 0)
-		return error_value(E_FERROR2);
+		return error_value(E_FERROR_2);
 	result.v_type = V_NUM;
 	result.v_num = itoq((long) i);
 	return result;
@@ -8195,10 +8429,10 @@ f_feof(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vp->v_type != V_FILE)
-		return error_value(E_FEOF1);
+		return error_value(E_FEOF_1);
 	i = eofid(vp->v_file);
 	if (i < 0)
-		return error_value(E_FEOF2);
+		return error_value(E_FEOF_2);
 	result.v_type = V_NUM;
 	result.v_num = itoq((long) i);
 	return result;
@@ -8237,48 +8471,6 @@ f_fflush(int count, VALUE **vals)
 
 
 S_FUNC VALUE
-f_error(int count, VALUE **vals)
-{
-	VALUE *vp;
-	long r;
-
-	if (count > 0) {
-		vp = vals[0];
-
-		if (vp->v_type <= 0) {
-			r = (long) -vp->v_type;
-		} else {
-			if (vp->v_type != V_NUM || qisfrac(vp->v_num)) {
-				r = E_ERROR1;
-			} else {
-				r = qtoi(vp->v_num);
-				if (r < 0 || r >= 32768)
-					r = E_ERROR2;
-			}
-		}
-	} else {
-		r = set_errno(-1);
-	}
-
-	return error_value(r);
-}
-
-
-S_FUNC VALUE
-f_iserror(VALUE *vp)
-{
-	VALUE res;
-
-	/* initialize VALUE */
-	res.v_subtype = V_NOSUBTYPE;
-
-	res.v_type = V_NUM;
-	res.v_num = itoq((long)((vp->v_type < 0) ? - vp->v_type : 0));
-	return res;
-}
-
-
-S_FUNC VALUE
 f_fsize(VALUE *vp)
 {
 	VALUE result;
@@ -8289,12 +8481,12 @@ f_fsize(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vp->v_type != V_FILE)
-		return error_value(E_FSIZE1);
+		return error_value(E_FSIZE_1);
 	i = getsize(vp->v_file, &len);
 	if (i == EOF)
 		return error_value(errno);
 	if (i)
-		return error_value(E_FSIZE2);
+		return error_value(E_FSIZE_2);
 	result.v_type = V_NUM;
 	result.v_num = qalloc();
 	result.v_num->num = len;
@@ -8315,20 +8507,20 @@ f_fseek(int count, VALUE **vals)
 	/* firewalls */
 	errno = 0;
 	if (vals[0]->v_type != V_FILE)
-		return error_value(E_FSEEK1);
+		return error_value(E_FSEEK_1);
 	if (vals[1]->v_type != V_NUM || qisfrac(vals[1]->v_num))
-		return error_value(E_FSEEK2);
+		return error_value(E_FSEEK_2);
 	if (count == 2) {
 		whence = 0;
 	} else {
 		if (vals[2]->v_type != V_NUM || qisfrac(vals[2]->v_num) ||
 			qisneg(vals[2]->v_num))
-			return error_value(E_FSEEK2);
+			return error_value(E_FSEEK_2);
 		if (vals[2]->v_num->num.len > 1)
-			return error_value (E_FSEEK2);
+			return error_value (E_FSEEK_2);
 		whence = (int)(unsigned int)(vals[2]->v_num->num.v[0]);
 		if (whence > 2)
-			return error_value (E_FSEEK2);
+			return error_value (E_FSEEK_2);
 	}
 
 	i = fseekid(vals[0]->v_file, vals[1]->v_num->num, whence);
@@ -8336,7 +8528,7 @@ f_fseek(int count, VALUE **vals)
 	if (i == EOF)
 		return error_value(errno);
 	if (i < 0)
-		return error_value(E_FSEEK3);
+		return error_value(E_FSEEK_3);
 	return result;
 }
 
@@ -8353,10 +8545,10 @@ f_ftell(VALUE *vp)
 
 	errno = 0;
 	if (vp->v_type != V_FILE)
-		return error_value(E_FTELL1);
+		return error_value(E_FTELL_1);
 	i = ftellid(vp->v_file, &pos);
 	if (i < 0)
-		return error_value(E_FTELL2);
+		return error_value(E_FTELL_2);
 
 	result.v_type = V_NUM;
 	result.v_num = qalloc();
@@ -8380,11 +8572,11 @@ f_rewind(int count, VALUE **vals)
 	} else {
 		for (n = 0; n < count; n++) {
 			if (vals[n]->v_type != V_FILE)
-				return error_value(E_REWIND1);
+				return error_value(E_REWIND_1);
 		}
 		for (n = 0; n < count; n++) {
 			if (rewindid(vals[n]->v_file) != 0) {
-				return error_value(E_REWIND2);
+				return error_value(E_REWIND_2);
 			}
 		}
 	}
@@ -8403,13 +8595,13 @@ f_fprintf(int count, VALUE **vals)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vals[0]->v_type != V_FILE)
-		return error_value(E_FPRINTF1);
+		return error_value(E_FPRINTF_1);
 	if (vals[1]->v_type != V_STR)
-		return error_value(E_FPRINTF2);
+		return error_value(E_FPRINTF_2);
 	i = idprintf(vals[0]->v_file, vals[1]->v_str->s_str,
 			 count - 2, vals + 2);
 	if (i > 0)
-		return error_value(E_FPRINTF3);
+		return error_value(E_FPRINTF_3);
 	result.v_type = V_NULL;
 	return result;
 }
@@ -8558,14 +8750,14 @@ f_fscan(int count, VALUE **vals)
 	if (vp->v_type == V_ADDR)
 		vp = vp->v_addr;
 	if (vp->v_type != V_FILE)
-		return error_value(E_FSCAN1);
+		return error_value(E_FSCAN_1);
 
 	i = filescan(vp->v_file, count - 1, vals + 1);
 
 	if (i == EOF)
 		return error_value(errno);
 	if (i < 0)
-		return error_value(E_FSCAN2);
+		return error_value(E_FSCAN_2);
 
 	result.v_type = V_NUM;
 	result.v_num = itoq((long) i);
@@ -8587,14 +8779,14 @@ f_scanf(int count, VALUE **vals)
 	if (vp->v_type == V_ADDR)
 		vp = vp->v_addr;
 	if (vp->v_type != V_STR)
-		return error_value(E_SCANF1);
+		return error_value(E_SCANF_1);
 	for (i = 1; i < count; i++) {
 		if (vals[i]->v_type != V_ADDR)
-			return error_value(E_SCANF2);
+			return error_value(E_SCANF_2);
 	}
 	i = fscanfid(FILEID_STDIN, vp->v_str->s_str, count - 1, vals + 1);
 	if (i < 0)
-		return error_value(E_SCANF3);
+		return error_value(E_SCANF_3);
 	result.v_type = V_NUM;
 	result.v_num = itoq((long) i);
 	return result;
@@ -8616,22 +8808,22 @@ f_strscanf(int count, VALUE **vals)
 	if (vp->v_type == V_ADDR)
 		vp = vp->v_addr;
 	if (vp->v_type != V_STR)
-		return error_value(E_STRSCANF1);
+		return error_value(E_STRSCANF_1);
 	vq = vals[1];
 	if (vq->v_type == V_ADDR)
 		vq = vq->v_addr;
 	if (vq->v_type != V_STR)
-		return error_value(E_STRSCANF2);
+		return error_value(E_STRSCANF_2);
 	for (i = 2; i < count; i++) {
 		if (vals[i]->v_type != V_ADDR)
-			return error_value(E_STRSCANF3);
+			return error_value(E_STRSCANF_3);
 	}
 	i = scanfstr(vp->v_str->s_str, vq->v_str->s_str,
 			 count - 2, vals + 2);
 	if (i == EOF)
 		return error_value(errno);
 	if (i < 0)
-		return error_value(E_STRSCANF4);
+		return error_value(E_STRSCANF_4);
 	result.v_type = V_NUM;
 	result.v_num = itoq((long) i);
 	return result;
@@ -8652,15 +8844,15 @@ f_fscanf(int count, VALUE **vals)
 	if (vp->v_type == V_ADDR)
 		vp = vp->v_addr;
 	if (vp->v_type != V_FILE)
-		return error_value(E_FSCANF1);
+		return error_value(E_FSCANF_1);
 	sp = *vals++;
 	if (sp->v_type == V_ADDR)
 		sp = sp->v_addr;
 	if (sp->v_type != V_STR)
-		return error_value(E_FSCANF2);
+		return error_value(E_FSCANF_2);
 	for (i = 0; i < count - 2; i++) {
 		if (vals[i]->v_type != V_ADDR)
-			return error_value(E_FSCANF3);
+			return error_value(E_FSCANF_3);
 	}
 	i = fscanfid(vp->v_file, sp->v_str->s_str, count - 2, vals);
 	if (i == EOF) {
@@ -8668,7 +8860,7 @@ f_fscanf(int count, VALUE **vals)
 		return result;
 	}
 	if (i < 0)
-		return error_value(E_FSCANF4);
+		return error_value(E_FSCANF_4);
 	result.v_type = V_NUM;
 	result.v_num = itoq((long) i);
 	return result;
@@ -8687,7 +8879,7 @@ f_fputc(VALUE *v1, VALUE *v2)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (v1->v_type != V_FILE)
-		return error_value(E_FPUTC1);
+		return error_value(E_FPUTC_1);
 	switch (v2->v_type) {
 		case V_STR:
 			ch = v2->v_str->s_str[0];
@@ -8695,7 +8887,7 @@ f_fputc(VALUE *v1, VALUE *v2)
 		case V_NUM:
 			q = v2->v_num;
 			if (!qisint(q))
-				return error_value(E_FPUTC2);
+				return error_value(E_FPUTC_2);
 
 			ch = qisneg(q) ? (int)(-q->num.v[0] & 0xff) :
 					 (int)(q->num.v[0] & 0xff);
@@ -8704,11 +8896,11 @@ f_fputc(VALUE *v1, VALUE *v2)
 			ch = 0;
 			break;
 		default:
-			return error_value(E_FPUTC2);
+			return error_value(E_FPUTC_2);
 	}
 	i = idfputc(v1->v_file, ch);
 	if (i > 0)
-		return error_value(E_FPUTC3);
+		return error_value(E_FPUTC_3);
 	result.v_type = V_NULL;
 	return result;
 }
@@ -8724,15 +8916,15 @@ f_fputs(int count, VALUE **vals)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vals[0]->v_type != V_FILE)
-		return error_value(E_FPUTS1);
+		return error_value(E_FPUTS_1);
 	for (i = 1; i < count; i++) {
 		if (vals[i]->v_type != V_STR)
-			return error_value(E_FPUTS2);
+			return error_value(E_FPUTS_2);
 	}
 	for (i = 1; i < count; i++) {
 		err = idfputs(vals[0]->v_file, vals[i]->v_str);
 		if (err > 0)
-			return error_value(E_FPUTS3);
+			return error_value(E_FPUTS_3);
 	}
 	result.v_type = V_NULL;
 	return result;
@@ -8749,16 +8941,16 @@ f_fputstr(int count, VALUE **vals)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vals[0]->v_type != V_FILE)
-		return error_value(E_FPUTSTR1);
+		return error_value(E_FPUTSTR_1);
 	for (i = 1; i < count; i++) {
 		if (vals[i]->v_type != V_STR)
-			return error_value(E_FPUTSTR2);
+			return error_value(E_FPUTSTR_2);
 	}
 	for (i = 1; i < count; i++) {
 		err = idfputstr(vals[0]->v_file,
 			vals[i]->v_str->s_str);
 		if (err > 0)
-			return error_value(E_FPUTSTR3);
+			return error_value(E_FPUTSTR_3);
 	}
 	result.v_type = V_NULL;
 	return result;
@@ -8775,11 +8967,11 @@ f_printf(int count, VALUE **vals)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vals[0]->v_type != V_STR)
-		return error_value(E_PRINTF1);
+		return error_value(E_PRINTF_1);
 	i = idprintf(FILEID_STDOUT, vals[0]->v_str->s_str,
 			 count - 1, vals + 1);
 	if (i)
-		return error_value(E_PRINTF2);
+		return error_value(E_PRINTF_2);
 	result.v_type = V_NULL;
 	return result;
 }
@@ -8796,13 +8988,13 @@ f_strprintf(int count, VALUE **vals)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vals[0]->v_type != V_STR)
-		return error_value(E_STRPRINTF1);
+		return error_value(E_STRPRINTF_1);
 	math_divertio();
 	i = idprintf(FILEID_STDOUT, vals[0]->v_str->s_str,
 		 count - 1, vals + 1);
 	if (i) {
 		free(math_getdivertedio());
-		return error_value(E_STRPRINTF2);
+		return error_value(E_STRPRINTF_2);
 	}
 	cp = math_getdivertedio();
 	result.v_type = V_STR;
@@ -8822,10 +9014,10 @@ f_fgetc(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vp->v_type != V_FILE)
-		return error_value(E_FGETC1);
+		return error_value(E_FGETC_1);
 	ch = getcharid(vp->v_file);
 	if (ch == -2)
-		return error_value(E_FGETC2);
+		return error_value(E_FGETC_2);
 	result.v_type = V_NULL;
 	if (ch != EOF) {
 		result.v_type = V_STR;
@@ -8848,7 +9040,7 @@ f_ungetc(VALUE *v1, VALUE *v2)
 
 	errno = 0;
 	if (v1->v_type != V_FILE)
-		return error_value(E_UNGETC1);
+		return error_value(E_UNGETC_1);
 	switch (v2->v_type) {
 		case V_STR:
 			ch = v2->v_str->s_str[0];
@@ -8856,18 +9048,18 @@ f_ungetc(VALUE *v1, VALUE *v2)
 		case V_NUM:
 			q = v2->v_num;
 			if (!qisint(q))
-				return error_value(E_UNGETC2);
+				return error_value(E_UNGETC_2);
 			ch = qisneg(q) ? (int)(-q->num.v[0] & 0xff) :
 					 (int)(q->num.v[0] & 0xff);
 			break;
 		default:
-			return error_value(E_UNGETC2);
+			return error_value(E_UNGETC_2);
 	}
 	i = idungetc(v1->v_file, ch);
 	if (i == EOF)
 		return error_value(errno);
 	if (i == -2)
-		return error_value(E_UNGETC3);
+		return error_value(E_UNGETC_3);
 	result.v_type = V_NULL;
 	return result;
 }
@@ -8884,10 +9076,10 @@ f_fgetline(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vp->v_type != V_FILE)
-		return error_value(E_FGETLINE1);
+		return error_value(E_FGETLINE_1);
 	i = readid(vp->v_file, 9, &str);
 	if (i > 0)
-		return error_value(E_FGETLINE2);
+		return error_value(E_FGETLINE_2);
 	result.v_type = V_NULL;
 	if (i == 0) {
 		result.v_type = V_STR;
@@ -8908,10 +9100,10 @@ f_fgets(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vp->v_type != V_FILE)
-		return error_value(E_FGETS1);
+		return error_value(E_FGETS_1);
 	i = readid(vp->v_file, 1, &str);
 	if (i > 0)
-		return error_value(E_FGETS2);
+		return error_value(E_FGETS_2);
 	result.v_type = V_NULL;
 	if (i == 0) {
 		result.v_type = V_STR;
@@ -8932,10 +9124,10 @@ f_fgetstr(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vp->v_type != V_FILE)
-		return error_value(E_FGETSTR1);
+		return error_value(E_FGETSTR_1);
 	i = readid(vp->v_file, 10, &str);
 	if (i > 0)
-		return error_value(E_FGETSTR2);
+		return error_value(E_FGETSTR_2);
 	result.v_type = V_NULL;
 	if (i == 0) {
 		result.v_type = V_STR;
@@ -8956,10 +9148,10 @@ f_fgetfield(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vp->v_type != V_FILE)
-		return error_value(E_FGETFIELD1);
+		return error_value(E_FGETFIELD_1);
 	i = readid(vp->v_file, 14, &str);
 	if (i > 0)
-		return error_value(E_FGETFIELD2);
+		return error_value(E_FGETFIELD_2);
 	result.v_type = V_NULL;
 	if (i == 0) {
 		result.v_type = V_STR;
@@ -8979,12 +9171,12 @@ f_fgetfile(VALUE *vp)
 	result.v_subtype = V_NOSUBTYPE;
 
 	if (vp->v_type != V_FILE)
-		return error_value(E_FGETFILE1);
+		return error_value(E_FGETFILE_1);
 	i = readid(vp->v_file, 0, &str);
 	if (i == 1)
-		return error_value(E_FGETFILE2);
+		return error_value(E_FGETFILE_2);
 	if (i == 3)
-		return error_value(E_FGETFILE3);
+		return error_value(E_FGETFILE_3);
 	result.v_type = V_NULL;
 	if (i == 0) {
 		result.v_type = V_STR;
@@ -9109,7 +9301,7 @@ f_head(VALUE *v1, VALUE *v2)
 
 	if (v2->v_type != V_NUM || qisfrac(v2->v_num) ||
 		zge31b(v2->v_num->num))
-			return error_value(E_HEAD2);
+			return error_value(E_HEAD_2);
 	n = qtoi(v2->v_num);
 
 	res.v_type = v1->v_type;
@@ -9133,7 +9325,7 @@ f_head(VALUE *v1, VALUE *v2)
 				return error_value(E_STRHEAD);
 			return res;
 		default:
-			return error_value(E_HEAD1);
+			return error_value(E_HEAD_1);
 	}
 }
 
@@ -9149,7 +9341,7 @@ f_tail(VALUE *v1, VALUE *v2)
 
 	if (v2->v_type != V_NUM || qisfrac(v2->v_num) ||
 		zge31b(v2->v_num->num))
-			return error_value(E_TAIL1);
+			return error_value(E_TAIL_1);
 	n = qtoi(v2->v_num);
 	res.v_type = v1->v_type;
 	switch (v1->v_type) {
@@ -9182,7 +9374,7 @@ f_tail(VALUE *v1, VALUE *v2)
 				return error_value(E_STRTAIL);
 			return res;
 		default:
-			return error_value(E_TAIL1);
+			return error_value(E_TAIL_1);
 	}
 }
 
@@ -9200,14 +9392,14 @@ f_segment(int count, VALUE **vals)
 	vp = vals[1];
 
 	if (vp->v_type != V_NUM || qisfrac(vp->v_num) || zge31b(vp->v_num->num))
-		return error_value(E_SEG2);
+		return error_value(E_SEG_2);
 	n1 = qtoi(vp->v_num);
 	n2 = n1;
 	if (count == 3) {
 		vp = vals[2];
 		if (vp->v_type != V_NUM || qisfrac(vp->v_num) ||
 			zge31b(vp->v_num->num))
-				return error_value(E_SEG3);
+				return error_value(E_SEG_3);
 		n2 = qtoi(vp->v_num);
 	}
 	vp = vals[0];
@@ -9222,7 +9414,7 @@ f_segment(int count, VALUE **vals)
 				return error_value(E_STRSEG);
 			return result;
 		default:
-			return error_value(E_SEG1);
+			return error_value(E_SEG_1);
 	}
 }
 
@@ -9238,17 +9430,17 @@ f_modify(VALUE *v1, VALUE *v2)
 	unsigned short subtype;
 
 	if (v1->v_type != V_ADDR)
-		return error_value(E_MODIFY1);
+		return error_value(E_MODIFY_1);
 	v1 = v1->v_addr;
 	if (v2->v_type == V_ADDR)
 		v2 = v2->v_addr;
 	if (v2->v_type != V_STR)
-		return error_value(E_MODIFY2);
+		return error_value(E_MODIFY_2);
 	if (v1->v_subtype & V_NONEWVALUE)
-		return error_value(E_MODIFY3);
+		return error_value(E_MODIFY_3);
 	fp = findfunc(adduserfunc(v2->v_str->s_str));
 	if (!fp)
-		return error_value(E_MODIFY4);
+		return error_value(E_MODIFY_4);
 	switch (v1->v_type) {
 		case V_LIST:
 			for (ep = v1->v_list->l_first; ep; ep = ep->e_next) {
@@ -9282,7 +9474,7 @@ f_modify(VALUE *v1, VALUE *v2)
 			}
 			break;
 		default:
-			return error_value(E_MODIFY5);
+			return error_value(E_MODIFY_5);
 	}
 	res.v_type = V_NULL;
 	res.v_subtype = V_NOSUBTYPE;
@@ -9619,7 +9811,7 @@ f_access(int count, VALUE **vals)
 
 	errno = 0;
 	if (vals[0]->v_type != V_STR)
-		return error_value(E_ACCESS1);
+		return error_value(E_ACCESS_1);
 	fname = vals[0]->v_str->s_str;
 	m = 0;
 	if (count == 2) {
@@ -9627,7 +9819,7 @@ f_access(int count, VALUE **vals)
 			case V_NUM:
 				q = vals[1]->v_num;
 				if (qisfrac(q) || qisneg(q))
-					return error_value(E_ACCESS2);
+					return error_value(E_ACCESS_2);
 				m = (int)(q->num.v[0] & 7);
 				break;
 			case V_STR:
@@ -9638,14 +9830,14 @@ f_access(int count, VALUE **vals)
 					case 'r': m |= 4; break;
 					case 'w': m |= 2; break;
 					case 'x': m |= 1; break;
-					default: return error_value(E_ACCESS2);
+					default: return error_value(E_ACCESS_2);
 					}
 				}
 				break;
 			case V_NULL:
 				break;
 			default:
-				return error_value(E_ACCESS2);
+				return error_value(E_ACCESS_2);
 		}
 	}
 	i = access(fname, m);
@@ -10120,17 +10312,17 @@ f_blk(int count, VALUE **vals)
 	if (count > 0 && vals[0]->v_type != V_NULL) {
 		/* parse len */
 		if (vals[0]->v_type != V_NUM || qisfrac(vals[0]->v_num))
-			return error_value(E_BLK1);
+			return error_value(E_BLK_1);
 		if (qisneg(vals[0]->v_num) || zge31b(vals[0]->v_num->num))
-			return error_value(E_BLK2);
+			return error_value(E_BLK_2);
 		len = qtoi(vals[0]->v_num);
 	}
 	if (count > 1 && vals[1]->v_type != V_NULL) {
 		/* parse chunk */
 		if (vals[1]->v_type != V_NUM || qisfrac(vals[1]->v_num))
-			return error_value(E_BLK3);
+			return error_value(E_BLK_3);
 		if (qisneg(vals[1]->v_num) || zge31b(vals[1]->v_num->num))
-			return error_value(E_BLK4);
+			return error_value(E_BLK_4);
 		chunk = qtoi(vals[1]->v_num);
 	}
 
@@ -10186,17 +10378,17 @@ f_blkfree(VALUE *vp)
 		case V_STR:
 			id = findnblockid(vp->v_str->s_str);
 			if (id < 0)
-				return error_value(E_BLKFREE1);
+				return error_value(E_BLKFREE_1);
 			break;
 		case V_NUM:
 			if (qisfrac(vp->v_num) || qisneg(vp->v_num))
-				return error_value(E_BLKFREE2);
+				return error_value(E_BLKFREE_2);
 			if (zge31b(vp->v_num->num))
-				return error_value(E_BLKFREE3);
+				return error_value(E_BLKFREE_3);
 			id = qtoi(vp->v_num);
 			break;
 		default:
-			return error_value(E_BLKFREE4);
+			return error_value(E_BLKFREE_4);
 	}
 	id = removenblock(id);
 	if (id)
@@ -10221,13 +10413,13 @@ f_blocks(int count, VALUE **vals)
 		return result;
 	}
 	if (vals[0]->v_type != V_NUM || qisfrac(vals[0]->v_num))
-		return error_value(E_BLOCKS1);
+		return error_value(E_BLOCKS_1);
 	id = (int) qtoi(vals[0]->v_num);
 
 	nblk = findnblock(id);
 
 	if (nblk == NULL) {
-		return error_value(E_BLOCKS2);
+		return error_value(E_BLOCKS_2);
 	} else {
 		result.v_type = V_NBLOCK;
 		result.v_nblock = nblk;
@@ -10328,10 +10520,10 @@ f_copy(int count, VALUE **vals)
 			if (vals[4]->v_type != V_NUM ||
 			    qisfrac(vals[4]->v_num) ||
 			    qisneg(vals[4]->v_num)) {
-				return error_value(E_COPY6);
+				return error_value(E_COPY_06);
 			}
 			if (zge31b(vals[4]->v_num->num)) {
-				return error_value(E_COPY7);
+				return error_value(E_COPY_07);
 			}
 			dsi = qtoi(vals[4]->v_num);
 		}
@@ -10343,10 +10535,10 @@ f_copy(int count, VALUE **vals)
 			if (vals[3]->v_type != V_NUM ||
 			    qisfrac(vals[3]->v_num) ||
 			    qisneg(vals[3]->v_num)) {
-				return error_value(E_COPY1);
+				return error_value(E_COPY_01);
 			}
 			if (zge31b(vals[3]->v_num->num)) {
-				return error_value(E_COPY2);
+				return error_value(E_COPY_02);
 			}
 			num = qtoi(vals[3]->v_num);
 		}
@@ -10358,10 +10550,10 @@ f_copy(int count, VALUE **vals)
 			if (vals[2]->v_type != V_NUM ||
 			    qisfrac(vals[2]->v_num) ||
 			    qisneg(vals[2]->v_num)) {
-				return error_value(E_COPY4);
+				return error_value(E_COPY_04);
 			}
 			if (zge31b(vals[2]->v_num->num)) {
-				return error_value(E_COPY5);
+				return error_value(E_COPY_05);
 			}
 			ssi = qtoi(vals[2]->v_num);
 		}
@@ -10585,7 +10777,7 @@ f_versin(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_VERSIN1);
+			return error_value(E_VERSIN_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -10601,7 +10793,7 @@ f_versin(int count, VALUE **vals)
 		case V_COM:
 			c = c_versin(vals[0]->v_com, eps);
 			if (c == NULL) {
-				return error_value(E_VERSIN3);
+				return error_value(E_VERSIN_3);
 			}
 			result.v_com = c;
 			result.v_type = V_COM;
@@ -10615,7 +10807,7 @@ f_versin(int count, VALUE **vals)
 			}
 			break;
 		default:
-			return error_value(E_VERSIN2);
+			return error_value(E_VERSIN_2);
 	}
 	return result;
 }
@@ -10643,7 +10835,7 @@ f_aversin(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_AVERSIN1);
+			return error_value(E_AVERSIN_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -10680,7 +10872,7 @@ f_aversin(int count, VALUE **vals)
 		 */
 		c = c_aversin(arg1.v_com, eps);
 		if (c == NULL) {
-			return error_value(E_AVERSIN3);
+			return error_value(E_AVERSIN_3);
 		}
 		result.v_com = c;
 		result.v_type = V_COM;
@@ -10698,7 +10890,7 @@ f_aversin(int count, VALUE **vals)
 		/*
 		 * case: argument type is not valid for this function
 		 */
-		return error_value(E_AVERSIN2);
+		return error_value(E_AVERSIN_2);
 	}
 	return result;
 }
@@ -10725,7 +10917,7 @@ f_coversin(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_COVERSIN1);
+			return error_value(E_COVERSIN_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -10741,7 +10933,7 @@ f_coversin(int count, VALUE **vals)
 		case V_COM:
 			c = c_coversin(vals[0]->v_com, eps);
 			if (c == NULL) {
-				return error_value(E_COVERSIN3);
+				return error_value(E_COVERSIN_3);
 			}
 			result.v_com = c;
 			result.v_type = V_COM;
@@ -10755,7 +10947,7 @@ f_coversin(int count, VALUE **vals)
 			}
 			break;
 		default:
-			return error_value(E_COVERSIN2);
+			return error_value(E_COVERSIN_2);
 	}
 	return result;
 }
@@ -10783,7 +10975,7 @@ f_acoversin(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_ACOVERSIN1);
+			return error_value(E_ACOVERSIN_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -10820,7 +11012,7 @@ f_acoversin(int count, VALUE **vals)
 		 */
 		c = c_acoversin(arg1.v_com, eps);
 		if (c == NULL) {
-			return error_value(E_ACOVERSIN3);
+			return error_value(E_ACOVERSIN_3);
 		}
 		result.v_com = c;
 		result.v_type = V_COM;
@@ -10838,7 +11030,7 @@ f_acoversin(int count, VALUE **vals)
 		/*
 		 * case: argument type is not valid for this function
 		 */
-		return error_value(E_ACOVERSIN2);
+		return error_value(E_ACOVERSIN_2);
 	}
 	return result;
 }
@@ -10865,7 +11057,7 @@ f_vercos(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_VERCOS1);
+			return error_value(E_VERCOS_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -10881,7 +11073,7 @@ f_vercos(int count, VALUE **vals)
 		case V_COM:
 			c = c_vercos(vals[0]->v_com, eps);
 			if (c == NULL) {
-				return error_value(E_VERCOS3);
+				return error_value(E_VERCOS_3);
 			}
 			result.v_com = c;
 			result.v_type = V_COM;
@@ -10895,7 +11087,7 @@ f_vercos(int count, VALUE **vals)
 			}
 			break;
 		default:
-			return error_value(E_VERCOS2);
+			return error_value(E_VERCOS_2);
 	}
 	return result;
 }
@@ -10923,7 +11115,7 @@ f_avercos(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_AVERCOS1);
+			return error_value(E_AVERCOS_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -10960,7 +11152,7 @@ f_avercos(int count, VALUE **vals)
 		 */
 		c = c_avercos(arg1.v_com, eps);
 		if (c == NULL) {
-			return error_value(E_AVERCOS3);
+			return error_value(E_AVERCOS_3);
 		}
 		result.v_com = c;
 		result.v_type = V_COM;
@@ -10978,7 +11170,7 @@ f_avercos(int count, VALUE **vals)
 		/*
 		 * case: argument type is not valid for this function
 		 */
-		return error_value(E_AVERCOS2);
+		return error_value(E_AVERCOS_2);
 	}
 	return result;
 }
@@ -11005,7 +11197,7 @@ f_covercos(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_COVERCOS1);
+			return error_value(E_COVERCOS_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -11021,7 +11213,7 @@ f_covercos(int count, VALUE **vals)
 		case V_COM:
 			c = c_covercos(vals[0]->v_com, eps);
 			if (c == NULL) {
-				return error_value(E_COVERCOS3);
+				return error_value(E_COVERCOS_3);
 			}
 			result.v_com = c;
 			result.v_type = V_COM;
@@ -11035,7 +11227,7 @@ f_covercos(int count, VALUE **vals)
 			}
 			break;
 		default:
-			return error_value(E_COVERCOS2);
+			return error_value(E_COVERCOS_2);
 	}
 	return result;
 }
@@ -11063,7 +11255,7 @@ f_acovercos(int count, VALUE **vals)
 	eps = conf->epsilon;
 	if (count == 2) {
 		if (verify_eps(vals[1]) == false) {
-			return error_value(E_ACOVERCOS1);
+			return error_value(E_ACOVERCOS_1);
 		}
 		eps = vals[1]->v_num;
 	}
@@ -11100,7 +11292,7 @@ f_acovercos(int count, VALUE **vals)
 		 */
 		c = c_acovercos(arg1.v_com, eps);
 		if (c == NULL) {
-			return error_value(E_ACOVERCOS3);
+			return error_value(E_ACOVERCOS_3);
 		}
 		result.v_com = c;
 		result.v_type = V_COM;
@@ -11118,7 +11310,7 @@ f_acovercos(int count, VALUE **vals)
 		/*
 		 * case: argument type is not valid for this function
 		 */
-		return error_value(E_ACOVERCOS2);
+		return error_value(E_ACOVERCOS_2);
 	}
 	return result;
 }

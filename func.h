@@ -74,6 +74,7 @@ E_FUNC FUNC *curfunc;	/* NOTE: This is a function pointer, we need E_FUNC */
 /*
  * Functions to handle functions.
  */
+E_FUNC char *name_newerrorstr(int errnum);
 E_FUNC FUNC *findfunc(long index);
 E_FUNC char *namefunc(long index);
 E_FUNC bool evaluate(bool nestflag);

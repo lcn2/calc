@@ -13,14 +13,34 @@ TYPES
 DESCRIPTION
     With errno(errnum) numeric argument:
 
-	errno(errnum) sets "global calc_errno value" to the value
-	errnum and returns its previous value.  Unlike error(errnum)
-	calling errno(errnum) does NOT increment the global calc
-	error count (see help errcount).
+	For 0 < errnum <= 32767:
+
+	    errno(errnum) sets "global calc_errno value" to the value
+	    errnum and returns its previous value.  Unlike error(errnum)
+	    calling errno(errnum) does NOT increment the global calc
+	    error count (see help errcount).
+
+	For all other errnum values:
+
+	    An error error condition is raised about the valid errnum.
 
     With errno("E_STRING") string argument:
 
-	XXX - fill in - XXX
+	If E_STRING is a valid errsym code, then the E_STRING errsym
+	is converted into an equivalent errnum and errno is set to errnum.
+
+	If E_STRING is not a valid errsym code, an error error condition
+	is raised about the invalid E_STRING.
+
+	For example, these two calls are equivalent:
+
+	    errno(10003);	/* error 10003 has a E_STRING of "E_ADD" */
+	    errno("E_ADD");	/* error 10003 has a E_STRING of "E_ADD" */
+
+	See help errstr for information on E_STRING errsym codes.
+
+	For a list of the E_STRING associated with calc computation error
+	codes, see help errorcodes.
 
     With errno() no argument:
 
@@ -74,16 +94,16 @@ EXAMPLE
 LIMITS
     0 <= errnum <= 32767
 
-    E_STRING is string matching the regular expression: "^E_[A-Z0-9_]+$"
+    E_STRING is string that must match the regular expression: ^E_[A-Z0-9_]+$
 
 LINK LIBRARY
     int calc_errno;				/* global calc_errno value */
+    int set_errno(int e);
 
     CONST struct errtbl error_table[ECOUNT+2];	/* calc error codes, error symbols and error messages */
 
 SEE ALSO
-    errmax, errcount, error, strerror, iserror, newerror, errorcodes,
-    stoponerror
+    errcount, errmax, errorcodes, errstr, iserror, newerror, stoponerror, strerror
 
 ## Copyright (C) 1999-2006,2021,2023  Landon Curt Noll
 ##

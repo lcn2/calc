@@ -25,13 +25,14 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    error, errorcodes, stoponerror,
+    errcount, errmax, errno, errorcodes, errstr, newerror, stoponerror, strerror
+
     isassoc, isatty, isblk, isconfig, isdefined, iseven, isfile,
     ishash, isident, isint, islist, ismat, ismult, isnull, isnum, isobj,
     isobjtype, isodd, isprime, isrand, israndom, isreal, isrel,
     issimple, issq, isstr, istype
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999-2006,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

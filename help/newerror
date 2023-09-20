@@ -73,8 +73,7 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    errmax, errcount, error, strerror, iserror, errno, errorcodes,
-    stoponerror
+    errcount, errmax, errno, errorcodes, errstr, iserror, stoponerror, strerror
 
 ## Copyright (C) 1999-2006,2023  Landon Curt Noll
 ##

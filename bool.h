@@ -62,20 +62,4 @@ typedef unsigned char bool;	/* fake boolean typedef */
 #define BOOL bool
 
 
-/*
- * booltostr - convert a boolean to a string
- */
-#if !defined(booltostr)
-#define booltostr(x) ((x) ? "true" : "false")
-#endif
-
-
-/*
- * strtobool - convert a string to a boolean
- */
-#if !defined(strtobool)
-#define strtobool(x) ((bool) ((x) != NULL && strcmp((x), "true") == 0))
-#endif
-
-
 #endif /* !INCLUDE_BOOL_H*/

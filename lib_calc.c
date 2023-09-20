@@ -94,7 +94,7 @@ typedef struct {int fd;} ttystruct;
 #endif /* Windows */
 
 
-#include "attribute.h"
+#include "errtbl.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -348,6 +348,11 @@ libcalc_call_me_first(void)
 	 * initialize
 	 */
 	initialize();
+
+	/*
+	 * verify error_table[] array and setup private_error_alias[] array
+	 */
+	verify_error_table();
 
 	/*
 	 * ready to rock & roll ..

@@ -31,12 +31,11 @@
 #include "alloc.h"
 #include "value.h"
 #include "zrand.h"
-#include "errsym.h"
 
 #include "have_unused.h"
 
 
-#include "attribute.h"
+#include "errtbl.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -666,11 +665,11 @@ mattrace(MATRIX *m)
 		return sum;
 	}
 	if (m->m_dim != 2)
-		return error_value(E_MATTRACE2);
+		return error_value(E_MATTRACE_2);
 	i = (m->m_max[0] - m->m_min[0] + 1);
 	j = (m->m_max[1] - m->m_min[1] + 1);
 	if (i != j)
-		return error_value(E_MATTRACE3);
+		return error_value(E_MATTRACE_3);
 	vp = m->m_table;
 	copyvalue(vp, &sum);
 	j++;
@@ -1234,9 +1233,9 @@ matdet(MATRIX *m)
 	}
 
 	if (m->m_dim != 2)
-		return error_value(E_DET2);
+		return error_value(E_DET_2);
 	if ((m->m_max[0] - m->m_min[0]) != (m->m_max[1] - m->m_min[1]))
-		return error_value(E_DET3);
+		return error_value(E_DET_3);
 
 	/*
 	 * Loop over each row, and eliminate all lower entries in the

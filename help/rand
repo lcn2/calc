@@ -18,13 +18,13 @@ DESCRIPTION
 
     By default, min is 0 and beyond is 2^64.
 
-    The shuffle method is fast and serves as a fairly good standard
-    pseudo-random generator.   If you need a fast generator and do not
-    need a cryptographically strong one, this generator is likely to do
+    The shuffle method is fast and serves as a very good pseudo-random
+    generator.   If you need a fast generator and do not need a
+    cryptographically strong one, this generator is likely to do
     the job.  Casual direct use of the shuffle generator may be
-    acceptable.	 For a much higher quality cryptographically strong
-    (but slower) generator use the Blum-Blum-Shub generator (see the
-    random help page).
+    acceptable.  For a much higher quality cryptographically strong
+    (but slower) generator use the Blum-Blum-Shub generator (see
+    help random for more information).
 
     Other arg forms:
 
@@ -185,7 +185,7 @@ DESCRIPTION
 	10239951819489363767 ==> 1363042948800878693
 
     One might object to the complexity of the seed scramble/mapping via
-    the randreseed64 process.  But Calling srand(0) with the randreseed64
+    the randreseed64 process.  Calling srand(0) with the randreseed64
     process would be the same as calling srand(10239951819489363767)
     without it.	 No extra security is gained or reduced by using the
     randreseed64 process.  The meaning of seeds are exchanged, but not
@@ -194,12 +194,6 @@ DESCRIPTION
     The randreseed64 process does not reduce the security of the rand
     generator.	Every seed is converted into a different unique seed.
     No seed is ignored or favored.
-
-    The truly paranoid might suggest that my claims in the MAGIC NUMBERS
-    section are a lie intended to entrap people.  Well they are not, but
-    if you that paranoid why would you use a non-cryptographically strong
-    pseudo-random number generator in the first place?  You would be
-    better off using the random() builtin function.
 
     The two constants that were picked from the Rand Book of Random Numbers
     The random numbers from the Rand Book of Random Numbers can be
@@ -243,7 +237,7 @@ LINK LIBRARY
 SEE ALSO
     seed, srand, randbit, isrand, random, srandom, israndom
 
-## Copyright (C) 1999-2007,2021  Landon Curt Noll
+## Copyright (C) 1999-2007,2021,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

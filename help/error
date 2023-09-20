@@ -19,14 +19,20 @@ DESCRIPTION
 
 	The global calc error count is not changed.
 
-    For 0 < errnum <= 32767:
+    With error(errnum) numeric argument:
 
-	error(errnum) returns a value that is of a special type called
-	"error".  The "error" return value, when given to iserror()
-	will cause that function to return a true value that happens
-	to match the "global calc_errno value".
+	For 0 < errnum <= 32767:
 
-	The "global calc_errno value" is then set to errnum.
+	    error(errnum) returns a value that is of a special type called
+	    "error".  The "error" return value, when given to iserror()
+	    will cause that function to return a true value that happens
+	    to match the "global calc_errno value".
+
+	    The "global calc_errno value" is then set to errnum.
+
+	For all other errnum values:
+
+	    An error error condition is raised about the valid errnum.
 
 	The global calc error count (see help errcount) is incremented.
 	If the global calc error count exceeds the maximum count
@@ -34,7 +40,22 @@ DESCRIPTION
 
     With error("E_STRING") string argument:
 
-	XXX - fill in - XXX
+	If E_STRING is a valid errsym code, then the E_STRING errsym
+	is converted into an equivalent errnum and respective calc
+	error condition is raised.
+
+	If E_STRING is not a valid errsym code, an error error condition
+	is raised about the invalid E_STRING.
+
+	For example, these two calls are equivalent:
+
+	    error(10003);	/* error 10003 has a E_STRING of "E_ADD" */
+	    error("E_ADD");	/* error 10003 has a E_STRING of "E_ADD" */
+
+	See help errstr for information on E_STRING errsym codes.
+
+	For a list of the E_STRING associated with calc computation error
+	codes, see help errorcodes.
 
     For no errnum arg:
 
@@ -110,7 +131,7 @@ EXAMPLE
 LIMITS
     0 <= errnum <= 32767
 
-    E_STRING is string matching the regular expression: "^E_[A-Z0-9_]+$"
+    E_STRING is string that must match the regular expression: ^E_[A-Z0-9_]+$
 
 LINK LIBRARY
     int calc_errno;				/* global calc_errno value */

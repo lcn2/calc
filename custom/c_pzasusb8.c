@@ -47,7 +47,7 @@ int c_pzasusb8_allowed = 0;	/* CUSTOM undefined */
 #include "../have_unused.h"
 
 
-#include "../attribute.h"
+#include "../errtbl.h"
 #include "../banned.h"	/* include after system header <> includes */
 
 

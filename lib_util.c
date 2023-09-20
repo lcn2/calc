@@ -1,7 +1,7 @@
 /*
  * lib_util - calc library utility routines
  *
- * Copyright (C) 1999-2006,2021,2022  Landon Curt Noll
+ * Copyright (C) 1999-2006,2021-2023  Landon Curt Noll
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -35,7 +35,7 @@
 #include "lib_util.h"
 
 
-#include "attribute.h"
+#include "errtbl.h"
 #include "banned.h"	/* include after system header <> includes */
 
 

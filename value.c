@@ -37,10 +37,9 @@
 #include "nametype.h"
 #include "file.h"
 #include "config.h"
+
+
 #include "errtbl.h"
-
-
-#include "attribute.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -1066,12 +1065,12 @@ apprvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	case V_NULL:	e = conf->epsilon;
 			break;
 	default:
-		*vres = error_value(E_APPR2);
+		*vres = error_value(E_APPR_2);
 		return;
 	}
 	switch(v3->v_type) {
 	case V_NUM:	if (qisfrac(v3->v_num)) {
-				*vres = error_value(E_APPR3);
+				*vres = error_value(E_APPR_3);
 				return;
 			}
 			R = qtoi(v3->v_num);
@@ -1079,7 +1078,7 @@ apprvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	case V_NULL:	R = conf->appr;
 			break;
 	default:
-		*vres = error_value(E_APPR3);
+		*vres = error_value(E_APPR_3);
 		return;
 	}
 
@@ -1114,7 +1113,7 @@ apprvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		vres->v_com = c;
 		return;
 	default:
-		*vres = error_value(E_APPR);
+		*vres = error_value(E_APPR_1);
 		return;
 	}
 }
@@ -1149,7 +1148,7 @@ roundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	switch (v2->v_type) {
 	case V_NUM:
 		if (qisfrac(v2->v_num)) {
-			*vres = error_value(E_ROUND2);
+			*vres = error_value(E_ROUND_2);
 			return;
 		}
 		places = qtoi(v2->v_num);
@@ -1157,14 +1156,14 @@ roundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	case V_NULL:
 		break;
 	default:
-		*vres = error_value(E_ROUND2);
+		*vres = error_value(E_ROUND_2);
 		return;
 	}
 	rnd = 0;
 	switch (v3->v_type) {
 	case V_NUM:
 		if (qisfrac(v3->v_num)) {
-			*vres = error_value(E_ROUND3);
+			*vres = error_value(E_ROUND_3);
 			return;
 		}
 		rnd = qtoi(v3->v_num);
@@ -1173,7 +1172,7 @@ roundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		rnd = conf->round;
 		break;
 	default:
-		*vres = error_value(E_ROUND3);
+		*vres = error_value(E_ROUND_3);
 		return;
 	}
 	switch(v1->v_type) {
@@ -1199,7 +1198,7 @@ roundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	default:
 		if (v1->v_type <= 0)
 			return;
-		*vres = error_value(E_ROUND);
+		*vres = error_value(E_ROUND_1);
 		return;
 	}
 }
@@ -1235,7 +1234,7 @@ broundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	switch (v2->v_type) {
 	case V_NUM:
 		if (qisfrac(v2->v_num)) {
-			*vres = error_value(E_BROUND2);
+			*vres = error_value(E_BROUND_2);
 			return;
 		}
 		places = qtoi(v2->v_num);
@@ -1243,14 +1242,14 @@ broundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	case V_NULL:
 		break;
 	default:
-		*vres = error_value(E_BROUND2);
+		*vres = error_value(E_BROUND_2);
 		return;
 	}
 	rnd = 0;
 	switch (v3->v_type) {
 	case V_NUM:
 		if (qisfrac(v3->v_num)) {
-			*vres = error_value(E_BROUND3);
+			*vres = error_value(E_BROUND_3);
 			return;
 		}
 		rnd = qtoi(v3->v_num);
@@ -1259,7 +1258,7 @@ broundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		rnd = conf->round;
 		break;
 	default:
-		*vres = error_value(E_BROUND3);
+		*vres = error_value(E_BROUND_3);
 		return;
 	}
 	switch(v1->v_type) {
@@ -1518,7 +1517,7 @@ sqrtvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		q = conf->epsilon;
 	} else {
 		if (v2->v_type != V_NUM || qiszero(v2->v_num)) {
-			*vres = error_value(E_SQRT2);
+			*vres = error_value(E_SQRT_2);
 			return;
 		}
 		q = v2->v_num;
@@ -1527,7 +1526,7 @@ sqrtvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		R = conf->sqrt;
 	} else {
 		if (v3->v_type != V_NUM || qisfrac(v3->v_num)) {
-			*vres = error_value(E_SQRT3);
+			*vres = error_value(E_SQRT_3);
 			return;
 		}
 		R = qtoi(v3->v_num);
@@ -1550,7 +1549,7 @@ sqrtvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		vres->v_com = c_sqrt(v1->v_com, q, R);
 		break;
 	default:
-		*vres = error_value(E_SQRT);
+		*vres = error_value(E_SQRT_1);
 		return;
 	}
 	c = vres->v_com;
@@ -1585,16 +1584,16 @@ rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		return;
 	}
 	if (v2->v_type != V_NUM) {
-		*vres = error_value(E_ROOT2);
+		*vres = error_value(E_ROOT_2);
 		return;
 	}
 	q2 = v2->v_num;
 	if (qisneg(q2) || qiszero(q2) || qisfrac(q2)) {
-		*vres = error_value(E_ROOT2);
+		*vres = error_value(E_ROOT_2);
 		return;
 	}
 	if (v3->v_type != V_NUM || qiszero(v3->v_num)) {
-		*vres = error_value(E_ROOT3);
+		*vres = error_value(E_ROOT_3);
 		return;
 	}
 	q3 = v3->v_num;
@@ -1603,7 +1602,7 @@ rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		if (!qisneg(v1->v_num)) {
 			vres->v_num = qroot(v1->v_num, q2, q3);
 			if (vres->v_num == NULL)
-				*vres = error_value(E_ROOT4);
+				*vres = error_value(E_ROOT_4);
 			vres->v_type = V_NUM;
 			return;
 		}
@@ -1619,11 +1618,11 @@ rootvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		*vres = objcall(OBJ_ROOT, v1, v2, v3);
 		return;
 	default:
-		*vres = error_value(E_ROOT);
+		*vres = error_value(E_ROOT_1);
 		return;
 	}
 	if (c == NULL) {
-		*vres = error_value(E_ROOT4);
+		*vres = error_value(E_ROOT_4);
 		return;
 	}
 	vres->v_com = c;
@@ -1663,13 +1662,13 @@ absvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		break;
 	case V_COM:
 		if (v2->v_type != V_NUM || qiszero(v2->v_num)) {
-			*vres = error_value(E_ABS2);
+			*vres = error_value(E_ABS_2);
 			return;
 		}
 		q = qhypot(v1->v_com->real, v1->v_com->imag, v2->v_num);
 		break;
 	default:
-		*vres = error_value(E_ABS);
+		*vres = error_value(E_ABS_1);
 		return;
 	}
 	vres->v_num = q;
@@ -1741,12 +1740,12 @@ shiftvalue(VALUE *v1, VALUE *v2, bool rightshift, VALUE *vres)
 		return;
 	}
 	if ((v2->v_type != V_NUM) || (qisfrac(v2->v_num))) {
-		*vres = error_value(E_SHIFT2);
+		*vres = error_value(E_SHIFT_2);
 		return;
 	}
 	if (v1->v_type != V_OBJ) {
 		if (zge31b(v2->v_num->num)) {
-			*vres = error_value(E_SHIFT2);
+			*vres = error_value(E_SHIFT_2);
 			return;
 		}
 		n = qtoi(v2->v_num);
@@ -1757,7 +1756,7 @@ shiftvalue(VALUE *v1, VALUE *v2, bool rightshift, VALUE *vres)
 	switch (v1->v_type) {
 	case V_NUM:
 		if (qisfrac(v1->v_num)) {
-			*vres = error_value(E_SHIFT);
+			*vres = error_value(E_SHIFT_1);
 			return;
 		}
 		vres->v_num = qshift(v1->v_num, n);
@@ -1765,7 +1764,7 @@ shiftvalue(VALUE *v1, VALUE *v2, bool rightshift, VALUE *vres)
 	case V_COM:
 		if (qisfrac(v1->v_com->real) ||
 				qisfrac(v1->v_com->imag)) {
-			*vres = error_value(E_SHIFT);
+			*vres = error_value(E_SHIFT_1);
 			return;
 		}
 		c = c_shift(v1->v_com, n);
@@ -1806,7 +1805,7 @@ shiftvalue(VALUE *v1, VALUE *v2, bool rightshift, VALUE *vres)
 		qfree(tmp.v_num);
 		return;
 	default:
-		*vres = error_value(E_SHIFT);
+		*vres = error_value(E_SHIFT_1);
 		return;
 	}
 }
@@ -1827,12 +1826,12 @@ scalevalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		return;
 	}
 	if ((v2->v_type != V_NUM) || qisfrac(v2->v_num)) {
-		*vres = error_value(E_SCALE2);
+		*vres = error_value(E_SCALE_2);
 		return;
 	}
 	if (v1->v_type != V_OBJ) {
 		if (zge31b(v2->v_num->num)) {
-			*vres = error_value(E_SCALE2);
+			*vres = error_value(E_SCALE_2);
 			return;
 		}
 		n = qtoi(v2->v_num);
@@ -1852,7 +1851,7 @@ scalevalue(VALUE *v1, VALUE *v2, VALUE *vres)
 		*vres = objcall(OBJ_SCALE, v1, v2, NULL_VALUE);
 		return;
 	default:
-		*vres = error_value(E_SCALE);
+		*vres = error_value(E_SCALE_1);
 		return;
 	}
 }
@@ -1942,7 +1941,7 @@ powvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			vres->v_mat = matpowi(v1->v_mat, real_v2);
 			break;
 		default:
-			*vres = error_value(E_POWI);
+			*vres = error_value(E_POWI_1);
 			break;
 		}
 		break;
@@ -2009,14 +2008,14 @@ powvalue(VALUE *v1, VALUE *v2, VALUE *vres)
 			}
 			break;
 		default:
-			*vres = error_value(E_POWI);
+			*vres = error_value(E_POWI_1);
 			break;
 		}
 		break;
 
 	/* unsupported exponent type */
 	default:
-		*vres = error_value(E_POWI2);
+		*vres = error_value(E_POWI_2);
 		break;
 	}
 	return;
@@ -2041,11 +2040,11 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		return;
 	}
 	if (v1->v_type != V_NUM && v1->v_type != V_COM) {
-		*vres = error_value(E_POWER);
+		*vres = error_value(E_POWER_1);
 		return;
 	}
 	if (v2->v_type != V_NUM && v2->v_type != V_COM) {
-		*vres = error_value(E_POWER2);
+		*vres = error_value(E_POWER_2);
 		return;
 	}
 
@@ -2054,13 +2053,13 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		epsilon = conf->epsilon;
 	} else {
 		if (v3->v_type != V_NUM || qiszero(v3->v_num)) {
-			*vres = error_value(E_POWER3);
+			*vres = error_value(E_POWER_3);
 			return;
 		}
 		epsilon = v3->v_num;
 	}
 	if (qiszero(epsilon)) {
-		*vres = error_value(E_POWER3);
+		*vres = error_value(E_POWER_3);
 		return;
 	}
 
@@ -2080,7 +2079,7 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		vres->v_num = qpower(v1->v_num, v2->v_num, epsilon);
 		vres->v_type = V_NUM;
 		if (vres->v_num == NULL)
-			*vres = error_value(E_POWER4);
+			*vres = error_value(E_POWER_4);
 		return;
 	case TWOVAL(V_NUM, V_COM):
 		ctmp1.real = v1->v_num;
@@ -2098,7 +2097,7 @@ powervalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		c = c_power(v1->v_com, v2->v_com, epsilon);
 		break;
 	default:
-		*vres = error_value(E_POWER);
+		*vres = error_value(E_POWER_1);
 		return;
 	}
 	/*
@@ -2233,14 +2232,14 @@ quovalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		return;
 	}
 	if (v2->v_type != V_NUM) {
-		*vres = error_value(E_QUO2);
+		*vres = error_value(E_QUO_2);
 		return;
 	}
 	rnd = 0;
 	switch (v3->v_type) {
 	case V_NUM:
 		if (qisfrac(v3->v_num)) {
-			*vres = error_value(E_QUO3);
+			*vres = error_value(E_QUO_3);
 			return;
 		}
 		rnd = qtoi(v3->v_num);
@@ -2249,7 +2248,7 @@ quovalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		rnd = conf->quo;
 		break;
 	default:
-		*vres = error_value(E_QUO3);
+		*vres = error_value(E_QUO_3);
 		return;
 	}
 	switch (v1->v_type) {
@@ -2273,7 +2272,7 @@ quovalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		vres->v_com = c;
 		return;
 	default:
-		*vres = error_value(E_QUO);
+		*vres = error_value(E_QUO_1);
 		return;
 	}
 }
@@ -2312,14 +2311,14 @@ modvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		return;
 	}
 	if (v2->v_type != V_NUM) {
-		*vres = error_value(E_MOD2);
+		*vres = error_value(E_MOD_2);
 		return;
 	}
 	rnd = 0;
 	switch (v3->v_type) {
 	case V_NUM:
 		if (qisfrac(v3->v_num)) {
-			*vres = error_value(E_MOD3);
+			*vres = error_value(E_MOD_3);
 			return;
 		}
 		rnd = qtoi(v3->v_num);
@@ -2328,7 +2327,7 @@ modvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		rnd = conf->mod;
 		break;
 	default:
-		*vres = error_value(E_MOD3);
+		*vres = error_value(E_MOD_3);
 		return;
 	}
 	switch (v1->v_type) {
@@ -2352,7 +2351,7 @@ modvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 		vres->v_com = c;
 		return;
 	default:
-		*vres = error_value(E_MOD);
+		*vres = error_value(E_MOD_1);
 		return;
 	}
 }

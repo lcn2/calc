@@ -11,7 +11,9 @@ TYPES
     return	string
 
 DESCRIPTION
-    If 0 <= errnum <= 32767 then strerror(errnum) will return one of:
+    With errno(errnum) numeric argument:
+
+	strerror(errnum) will return one of:
 
 	* system error and libc errno value related string
 	* calc computation error code string
@@ -20,7 +22,21 @@ DESCRIPTION
 
     With strerror("E_STRING") string argument:
 
-	XXX - fill in - XXX
+	If E_STRING is a valid errsym code, then the E_STRING errsym
+	is converted into strerror(errnum).
+
+	If E_STRING is not a valid errsym code, an error error condition
+	is raised about the invalid E_STRING.
+
+	For example, these two calls are equivalent:
+
+	    cstrerror(10003);	/* error 10003 has a E_STRING of "E_ADD" */
+	    cstrerror("E_ADD");	/* error 10003 has a E_STRING of "E_ADD" */
+
+	See help errstr for information on E_STRING errsym codes.
+
+	For a list of the E_STRING associated with calc computation error
+	codes, see help errorcodes.
 
     Without a argument, strerror() returns as if it were called with:
 
@@ -83,7 +99,7 @@ EXAMPLE
 LIMITS
     0 <= errnum <= 32767
 
-    E_STRING is string matching the regular expression: "^E_[A-Z0-9_]+$"
+    E_STRING is string that must match the regular expression: ^E_[A-Z0-9_]+$
 
 LINK LIBRARY
     int calc_errno;				/* global calc_errno value */
@@ -91,11 +107,10 @@ LINK LIBRARY
     CONST struct errtbl error_table[ECOUNT+2];	/* calc error codes, error symbols and error messages */
 
 SEE ALSO
+    errcount, errmax, errno, errorcodes, errstr, iserror, newerror, stoponerror
+
     strcat, strcpy, strlen, strncmp, strncpy, strpos,
     strprintf, strscan, strscanf, substr,
-
-    errcount, errmax, error, iserror, errno, newerror, errorcodes,
-    stoponerror
 
 ## Copyright (C) 1999-2006,2023  Landon Curt Noll
 ##

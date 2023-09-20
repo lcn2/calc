@@ -47,7 +47,7 @@
 #include "have_unused.h"
 
 
-#include "attribute.h"
+#include "errtbl.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -423,19 +423,19 @@ o_eleminit(FUNC *UNUSED(fp), long index)
 		vp = vp->v_addr;
 	if (vp->v_type < 0) {
 		freevalue(stack--);
-		error_value(E_INIT1);
+		error_value(E_INIT_01);
 		return;
 	}
 	if (vp->v_subtype & V_NOCOPYTO) {
 		freevalue(stack--);
-		error_value(E_INIT2);
+		error_value(E_INIT_02);
 		return;
 	}
 	switch (vp->v_type) {
 	case V_MAT:
 		if ((index < 0) || (index >= vp->v_mat->m_size)) {
 			freevalue(stack--);
-			error_value(E_INIT3);
+			error_value(E_INIT_03);
 			return;
 		}
 		oldvp = &vp->v_mat->m_table[index];
@@ -443,7 +443,7 @@ o_eleminit(FUNC *UNUSED(fp), long index)
 	case V_OBJ:
 		if (index < 0 || index >= vp->v_obj->o_actions->oa_count) {
 			freevalue(stack--);
-			error_value(E_INIT3);
+			error_value(E_INIT_03);
 			return;
 		}
 		oldvp = &vp->v_obj->o_table[index];
@@ -452,14 +452,14 @@ o_eleminit(FUNC *UNUSED(fp), long index)
 		oldvp = listfindex(vp->v_list, index);
 		if (oldvp == NULL) {
 			freevalue(stack--);
-			error_value(E_INIT3);
+			error_value(E_INIT_03);
 			return;
 		}
 		break;
 	case V_STR:
 		if (index < 0 || (size_t)index >= vp->v_str->s_len) {
 			freevalue(stack--);
-			error_value(E_INIT3);
+			error_value(E_INIT_03);
 			return;
 		}
 		ptr = (OCTET *)(&vp->v_str->s_str[index]);
@@ -475,7 +475,7 @@ o_eleminit(FUNC *UNUSED(fp), long index)
 			blk = vp->v_nblock->blk;
 			if (blk->data == NULL) {
 				freevalue(stack--);
-				error_value(E_INIT4);
+				error_value(E_INIT_04);
 				return;
 			}
 		}
@@ -483,7 +483,7 @@ o_eleminit(FUNC *UNUSED(fp), long index)
 			blk = vp->v_block;
 		if (index >= blk->maxsize) {
 			freevalue(stack--);
-			error_value(E_INIT3);
+			error_value(E_INIT_03);
 			return;
 		}
 		ptr = blk->data + index;
@@ -497,14 +497,14 @@ o_eleminit(FUNC *UNUSED(fp), long index)
 		return;
 	default:
 		freevalue(stack--);
-		error_value(E_INIT5);
+		error_value(E_INIT_05);
 		return;
 	}
 	vp = stack--;
 	subtype = oldvp->v_subtype;
 	if (subtype & V_NOASSIGNTO) {
 		freevalue(vp);
-		error_value(E_INIT6);
+		error_value(E_INIT_06);
 		return;
 	}
 	if (vp->v_type == V_ADDR) {
@@ -517,21 +517,21 @@ o_eleminit(FUNC *UNUSED(fp), long index)
 		tmp = *vp;
 	if ((subtype & V_NONEWVALUE) && comparevalue(oldvp, &tmp)) {
 		freevalue(&tmp);
-		error_value(E_INIT7);
+		error_value(E_INIT_07);
 		return;
 	}
 	if ((subtype & V_NONEWTYPE) && oldvp->v_type != tmp.v_type) {
 		freevalue(&tmp);
-		error_value(E_INIT8);
+		error_value(E_INIT_08);
 		return;
 	}
 	if ((subtype & V_NOERROR) && tmp.v_type < 0) {
-		error_value(E_INIT9);
+		error_value(E_INIT_09);
 		return;
 	}
 	if (tmp.v_subtype & (V_NOASSIGNFROM | V_NOCOPYFROM)) {
 		freevalue(&tmp);
-		error_value(E_INIT10);
+		error_value(E_INIT_10);
 		return;
 	}
 	tmp.v_subtype |= oldvp->v_subtype;
@@ -787,7 +787,7 @@ o_assign(FUNC *UNUSED(fp))
 	if (var->v_type == V_OCTET) {
 		if (var->v_subtype & V_NOCOPYTO) {
 			freevalue(stack--);
-			*stack = error_value(E_ASSIGN1);
+			*stack = error_value(E_ASSIGN_1);
 			return;
 		}
 		vp = stack;
@@ -795,13 +795,13 @@ o_assign(FUNC *UNUSED(fp))
 			vp = vp->v_addr;
 		if (vp->v_subtype & V_NOCOPYFROM || vp->v_type < 0) {
 			freevalue(stack--);
-			*stack = error_value(E_ASSIGN2);
+			*stack = error_value(E_ASSIGN_2);
 			return;
 		}
 		copy2octet(vp, &octet);
 		freevalue(stack--);
 		if ((var->v_subtype & V_NONEWVALUE) && *var->v_octet != octet) {
-			*stack = error_value(E_ASSIGN3);
+			*stack = error_value(E_ASSIGN_3);
 			return;
 		}
 		*var->v_octet = octet;
@@ -809,7 +809,7 @@ o_assign(FUNC *UNUSED(fp))
 	}
 	if (var->v_type != V_ADDR) {
 		freevalue(stack--);
-		*stack = error_value(E_ASSIGN4);
+		*stack = error_value(E_ASSIGN_4);
 		return;
 	}
 
@@ -817,7 +817,7 @@ o_assign(FUNC *UNUSED(fp))
 	subtype = var->v_subtype;
 	if (subtype & V_NOASSIGNTO) {
 		freevalue(stack--);
-		*stack = error_value(E_ASSIGN5);
+		*stack = error_value(E_ASSIGN_5);
 		return;
 	}
 
@@ -843,7 +843,7 @@ o_assign(FUNC *UNUSED(fp))
 		if (vp == var)
 			return;
 		if (vp->v_subtype & V_NOASSIGNFROM) {
-			*stack = error_value(E_ASSIGN6);
+			*stack = error_value(E_ASSIGN_6);
 			return;
 		}
 		copyvalue(vp, &tmp);
@@ -858,16 +858,16 @@ o_assign(FUNC *UNUSED(fp))
 	 */
 	if ((subtype & V_NONEWVALUE) && comparevalue(var, &tmp)) {
 		freevalue(&tmp);
-		*stack = error_value(E_ASSIGN7);
+		*stack = error_value(E_ASSIGN_7);
 		return;
 	}
 	if ((subtype & V_NONEWTYPE) && var->v_type != tmp.v_type) {
 		freevalue(&tmp);
-		*stack = error_value(E_ASSIGN8);
+		*stack = error_value(E_ASSIGN_8);
 		return;
 	}
 	if ((subtype & V_NOERROR) && tmp.v_type < 0) {
-		*stack = error_value(E_ASSIGN9);
+		*stack = error_value(E_ASSIGN_9);
 		return;
 	}
 
@@ -1009,7 +1009,7 @@ o_swap(FUNC *UNUSED(fp))
 		if (v1->v_octet != v2->v_octet &&
 				((v1->v_subtype | v2->v_subtype) &
 			(V_NOCOPYTO | V_NOCOPYFROM))) {
-			*stack = error_value(E_SWAP1);
+			*stack = error_value(E_SWAP_1);
 			return;
 		}
 		usb = *v1->v_octet;
@@ -1020,14 +1020,14 @@ o_swap(FUNC *UNUSED(fp))
 		v2 = v2->v_addr;
 		if (v1 != v2 && ((v1->v_subtype | v2->v_subtype) &
 				(V_NOASSIGNTO | V_NOASSIGNFROM))) {
-			*stack = error_value(E_SWAP2);
+			*stack = error_value(E_SWAP_2);
 			return;
 		}
 		tmp = *v1;
 		*v1 = *v2;
 		*v2 = tmp;
 	} else {
-		*stack = error_value(E_SWAP3);
+		*stack = error_value(E_SWAP_3);
 		return;
 	}
 	stack->v_type = V_NULL;
@@ -1608,13 +1608,13 @@ o_bit(FUNC *UNUSED(fp))
 	if (v2->v_type != V_NUM || qisfrac(v2->v_num)) {
 		freevalue(stack--);
 		freevalue(stack);
-		*stack = error_value(E_BIT1);
+		*stack = error_value(E_BIT_1);
 		return;
 	}
 	if (zge31b(v2->v_num->num)) {
 		freevalue(stack--);
 		freevalue(stack);
-		*stack = error_value(E_BIT2);
+		*stack = error_value(E_BIT_2);
 		return;
 	}
 	index = qtoi(v2->v_num);
@@ -1631,7 +1631,7 @@ o_bit(FUNC *UNUSED(fp))
 	freevalue(stack--);
 	freevalue(stack);
 	if (r > 1) {
-		*stack = error_value(E_BIT1);
+		*stack = error_value(E_BIT_1);
 	} else if (r < 0) {
 		stack->v_type = V_NULL;
 	} else {
@@ -1676,10 +1676,10 @@ o_highbit(FUNC *UNUSED(fp))
 	freevalue(stack);
 	switch (index) {
 	case -3:
-		*stack = error_value(E_HIGHBIT1);
+		*stack = error_value(E_HIGHBIT_1);
 		return;
 	case -2:
-		*stack = error_value(E_HIGHBIT2);
+		*stack = error_value(E_HIGHBIT_2);
 		return;
 	default:
 		stack->v_type = V_NUM;
@@ -1728,10 +1728,10 @@ o_lowbit(FUNC *UNUSED(fp))
 	freevalue(stack);
 	switch (index) {
 	case -3:
-		*stack = error_value(E_LOWBIT1);
+		*stack = error_value(E_LOWBIT_1);
 		return;
 	case -2:
-		*stack = error_value(E_LOWBIT2);
+		*stack = error_value(E_LOWBIT_2);
 		return;
 	default:
 		stack->v_type = V_NUM;
@@ -2923,7 +2923,7 @@ o_preinc(FUNC *UNUSED(fp))
 
 	if (stack->v_type == V_OCTET) {
 		if (stack->v_subtype & (V_NONEWVALUE | V_NOCOPYTO)) {
-			*stack = error_value(E_PREINC1);
+			*stack = error_value(E_PREINC_1);
 			return;
 		}
 		stack->v_octet[0] = stack->v_octet[0] + 1;
@@ -2931,13 +2931,13 @@ o_preinc(FUNC *UNUSED(fp))
 	}
 	if (stack->v_type != V_ADDR) {
 		freevalue(stack);
-		*stack = error_value(E_PREINC2);
+		*stack = error_value(E_PREINC_2);
 		return;
 	}
 	vp = stack->v_addr;
 
 	if (vp->v_subtype & (V_NONEWVALUE | V_NOASSIGNTO)) {
-		*stack = error_value(E_PREINC3);
+		*stack = error_value(E_PREINC_3);
 		return;
 	}
 	incvalue(vp, &tmp);
@@ -2953,7 +2953,7 @@ o_predec(FUNC *UNUSED(fp))
 
 	if (stack->v_type == V_OCTET) {
 		if (stack->v_subtype & (V_NONEWVALUE | V_NOCOPYTO)) {
-			*stack = error_value(E_PREDEC1);
+			*stack = error_value(E_PREDEC_1);
 			return;
 		}
 		--(*stack->v_octet);
@@ -2961,12 +2961,12 @@ o_predec(FUNC *UNUSED(fp))
 	}
 	if (stack->v_type != V_ADDR) {
 		freevalue(stack);
-		*stack = error_value(E_PREDEC2);
+		*stack = error_value(E_PREDEC_2);
 		return;
 	}
 	vp = stack->v_addr;
 	if (vp->v_subtype & (V_NONEWVALUE | V_NOASSIGNTO)) {
-		*stack = error_value(E_PREDEC3);
+		*stack = error_value(E_PREDEC_3);
 		return;
 	}
 	decvalue(vp, &tmp);
@@ -2983,7 +2983,7 @@ o_postinc(FUNC *UNUSED(fp))
 
 	if (stack->v_type == V_OCTET) {
 		if (stack->v_subtype & (V_NONEWVALUE | V_NOCOPYTO)) {
-			*stack++ = error_value(E_POSTINC1);
+			*stack++ = error_value(E_POSTINC_1);
 			stack->v_type = V_NULL;
 			return;
 		}
@@ -2997,14 +2997,14 @@ o_postinc(FUNC *UNUSED(fp))
 	}
 	if (stack->v_type != V_ADDR) {
 		stack[1] = *stack;
-		*stack = error_value(E_POSTINC2);
+		*stack = error_value(E_POSTINC_2);
 		stack++;
 		return;
 	}
 	vp = stack->v_addr;
 	if (vp->v_subtype & V_NONEWVALUE) {
 		stack[1] = *stack;
-		*stack = error_value(E_POSTINC3);
+		*stack = error_value(E_POSTINC_3);
 		stack++;
 		return;
 	}
@@ -3026,7 +3026,7 @@ o_postdec(FUNC *UNUSED(fp))
 
 	if (stack->v_type == V_OCTET) {
 		if (stack->v_subtype & (V_NONEWVALUE | V_NOCOPYTO)) {
-			*stack++ = error_value(E_POSTDEC1);
+			*stack++ = error_value(E_POSTDEC_1);
 			stack->v_type = V_NULL;
 			return;
 		}
@@ -3039,14 +3039,14 @@ o_postdec(FUNC *UNUSED(fp))
 	}
 	if (stack->v_type != V_ADDR) {
 		stack[1] = *stack;
-		*stack = error_value(E_POSTDEC2);
+		*stack = error_value(E_POSTDEC_2);
 		stack++;
 		return;
 	}
 	vp = stack->v_addr;
 	if (vp->v_subtype & (V_NONEWVALUE | V_NOASSIGNTO)) {
 		stack[1] = *stack;
-		*stack = error_value(E_POSTDEC3);
+		*stack = error_value(E_POSTDEC_3);
 		stack++;
 		return;
 	}
@@ -3403,6 +3403,10 @@ error_value(int e)
 
 	if (-e > 0)
 		e = 0;
+	if (is_valid_errnum(e) == false) {
+		math_error("Error %d is not a valid errnum in %s", e, __func__);
+		not_reached();
+	}
 	calc_errno = e;
 	if (e > 0)
 		errcount++;
@@ -3416,7 +3420,7 @@ error_value(int e)
 }
 
 /*
- * set_errno - return and set calc_errno
+ * set_errno - return and set calc_errno if e is a valid errnum value
  */
 int
 set_errno(int e)
@@ -3424,8 +3428,9 @@ set_errno(int e)
 	int res;
 
 	res = calc_errno;
-	if (e >= 0)
+	if (is_valid_errnum(e) == true) {
 		calc_errno = e;
+	}
 	return res;
 }
 

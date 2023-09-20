@@ -1,0 +1,176 @@
+NAME
+    errstr - convert between "E_STRING" errsym into a errnum number
+
+SYNOPSIS
+    errstr(errnum | "E_STRING")
+
+TYPES
+    errnum	integer
+    E_STRING	string
+
+    return	integer or string or error value
+
+DESCRIPTION
+    When called with in integer errnum argument:
+
+	When E__BASE < errnum <= E__HIGHEST, the corresponding errsym E_STRING
+	from the error_table[] array is returned.
+
+	For example:
+
+	    ; print errstr(10003)
+	    E_ADD
+
+	When an errnum that matches one of the following errtbl.h #define,
+	then the #define string is returned:
+
+	    E__NONE
+	    E__BASE
+	    E__USERDEF
+	    E__USERMAX
+
+	    NOTE: For errnum == E__HIGHEST, the corresponding E_STRING that
+	    is returned is NOT "E__HIGHEST".  Instead the E_STRING corresponding
+	    to the highest errnum number from the error_table[] array is returned.
+
+	For example:
+
+	    ; print errstr(0)
+	    E_NONE
+
+	When E__NONE <= errnum < E__BASE, or when E__USERDEF <= errnum <= E__USERMAX,
+	an "E_STRING" errsym of the form "E_digits" is returned where "digits"
+	are the ASCII digits of the decimal value of errnum.
+
+	For example:
+
+	    ; print errstr(123)
+	    E_123
+
+	For all other errnum values, an error is returned.
+
+    When called with E_STRING string argument:
+
+       When the E_STRING starts with "E_" followed by only decimal digits:
+
+	    If E_STRING is "E_0", 0 is returned.
+
+	    If E_STRING matches the regular expression:
+
+		^E_[1-9][0-9]+$
+
+	    where digits 0 < errnum <= 32767, the errnum value is returned.
+
+	    For all other cases of "E_" by only decimal digits, an error is returned.
+
+	When the E_STRING matches one of the following special
+	symbols, the symbol's numeric value as #define-d in errsym.h
+	or errtbl.h is returned:
+
+	    E__NONE
+	    E__BASE
+	    E__HIGHEST
+	    E__USERDEF
+	    E__USERMAX
+
+	For example:
+
+	    ; print errstr("E_NONE")
+	    0
+
+	For all other E_STRING strings that start with "E__", an error is returned.
+
+	When the E_STRING starts with "E_" followed by an UPPER CASE LETTER that
+	also matches the regular expression:
+
+	    ^E_[A-Z][A-Z0-9_]+$
+
+	The error_table[] is searched for an errsym that exactly matches
+	the E_STRING.  If a match is found, the corresponding errnum number
+	is returned.  If no match is found, an error is returned.
+
+	For example:
+
+	    ; print errstr("E_ADD")
+	    10003
+
+	For all other string arguments, an error is returned.
+
+    When errstr returns an integer, the global calc error count (see help errcount)
+    is NOT changed.  And of course, when errstr("E_STRING") returns an error, the
+    global calc error count is incremented by 1.
+
+    Consider the E_MUL calc error condition:
+
+	Given a E_STRING errsym, errstr("E_STRING") will return the errnum integer
+	error code that is associated with the E_STRING errsym.
+
+	The 4th entry of struct errtbl error_table is:
+
+	    { 10005,        "E_MUL",                "Bad arguments for +" },
+
+	And errcode -d produces a errsym.h with the following #define:
+
+	    #define E_MUL           10005   /* Bad arguments for * */
+
+	Thus 10005 is the errnum, "E_MUL" is the E_STRING errsym that is
+	associated with the errmsg error message: "Bad arguments for +".
+
+	In the above example, errstr("E_MUL") will return 10005.
+	Also errstr("E_10005") will also return 10005.
+
+	To complete the E_STRING use in the above example:
+
+	    Both error(10005) and error("E_MUL") both raise the E_MUL calc error condition
+
+	    Both errno(10005) and errno("E_MUL") both return 10005
+
+	    Both strerror(10005) and strerror("E_MUL") both return "Bad arguments for *"
+
+EXAMPLE
+    ; print errstr("E_ADD"), errstr("E_SUB"), errstr("E_MUL"), errstr("E_DIV")
+    10003 10004 10005 10006
+
+    ; print errstr("E__NONE"), errstr("E__BASE"), errstr("E__USERDEF"), errstr("E__USERMAX")
+    0 10000 20000 32767
+
+    ; print errstr(10003), errstr(10004), errstr(10005), errstr(10006)
+    E_ADD E_SUB E_MUL E_DIV
+
+    ; print errstr(0), errstr(10000), errstr(20000), errstr(32767)
+    E__NONE E__BASE E__USERDEF E__USERMAX
+
+LIMITS
+    0 <= errnum < 32767
+
+    E_STRING is string that must match the regular expression: ^E_[A-Z0-9_]+$
+
+LINK LIBRARY
+    int calc_errno;				/* global calc_errno value */
+
+    CONST struct errtbl error_table[ECOUNT+2];	/* calc error codes, error symbols and error messages */
+
+SEE ALSO
+    errcount, errmax, errno, errorcodes, iserror, newerror, stoponerror, strerror
+
+## Copyright (C) 1999-2006,2023  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+##
+## Under source code control:	1995/12/18 03:30:59
+## File existed as early as:	1995
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

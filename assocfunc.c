@@ -36,7 +36,7 @@
 #include "value.h"
 
 
-#include "attribute.h"
+#include "errtbl.h"
 #include "banned.h"	/* include after system header <> includes */
 
 

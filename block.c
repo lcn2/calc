@@ -39,10 +39,9 @@
 #include "block.h"
 #include "nametype.h"
 #include "str.h"
-#include "errsym.h"
 
 
-#include "attribute.h"
+#include "errtbl.h"
 #include "banned.h"	/* include after system header <> includes */
 
 
@@ -653,12 +652,12 @@ removenblock(int id)
 	NBLOCK *nblk;
 
 	if (id < 0 || id >= nblockcount)
-		return E_BLKFREE3;
+		return E_BLKFREE_3;
 	nblk = nblocks[id];
 	if (nblk->blk->data == NULL)
 		return 0;
 	if (nblk->subtype & V_NOREALLOC)
-		return E_BLKFREE5;
+		return E_BLKFREE_5;
 	free(nblk->blk->data);
 	nblk->blk->data = NULL;
 	nblk->blk->maxsize = 0;

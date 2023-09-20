@@ -701,6 +701,7 @@ c_argv.o: ../custom.h
 c_argv.o: ../decl.h
 c_argv.o: ../endian_calc.h
 c_argv.o: ../errsym.h
+c_argv.o: ../errtbl.h
 c_argv.o: ../hash.h
 c_argv.o: ../have_ban_pragma.h
 c_argv.o: ../have_const.h
@@ -733,6 +734,7 @@ c_devnull.o: ../custom.h
 c_devnull.o: ../decl.h
 c_devnull.o: ../endian_calc.h
 c_devnull.o: ../errsym.h
+c_devnull.o: ../errtbl.h
 c_devnull.o: ../hash.h
 c_devnull.o: ../have_ban_pragma.h
 c_devnull.o: ../have_const.h
@@ -766,6 +768,7 @@ c_help.o: ../custom.h
 c_help.o: ../decl.h
 c_help.o: ../endian_calc.h
 c_help.o: ../errsym.h
+c_help.o: ../errtbl.h
 c_help.o: ../hash.h
 c_help.o: ../have_ban_pragma.h
 c_help.o: ../have_const.h
@@ -799,6 +802,7 @@ c_pmodm127.o: ../custom.h
 c_pmodm127.o: ../decl.h
 c_pmodm127.o: ../endian_calc.h
 c_pmodm127.o: ../errsym.h
+c_pmodm127.o: ../errtbl.h
 c_pmodm127.o: ../hash.h
 c_pmodm127.o: ../have_ban_pragma.h
 c_pmodm127.o: ../have_const.h
@@ -831,6 +835,7 @@ c_pzasusb8.o: ../custom.h
 c_pzasusb8.o: ../decl.h
 c_pzasusb8.o: ../endian_calc.h
 c_pzasusb8.o: ../errsym.h
+c_pzasusb8.o: ../errtbl.h
 c_pzasusb8.o: ../hash.h
 c_pzasusb8.o: ../have_ban_pragma.h
 c_pzasusb8.o: ../have_const.h
@@ -864,6 +869,7 @@ c_register.o: ../custom.h
 c_register.o: ../decl.h
 c_register.o: ../endian_calc.h
 c_register.o: ../errsym.h
+c_register.o: ../errtbl.h
 c_register.o: ../hash.h
 c_register.o: ../have_ban_pragma.h
 c_register.o: ../have_const.h
@@ -898,6 +904,7 @@ c_sysinfo.o: ../custom.h
 c_sysinfo.o: ../decl.h
 c_sysinfo.o: ../endian_calc.h
 c_sysinfo.o: ../errsym.h
+c_sysinfo.o: ../errtbl.h
 c_sysinfo.o: ../fposval.h
 c_sysinfo.o: ../hash.h
 c_sysinfo.o: ../have_ban_pragma.h
@@ -936,6 +943,7 @@ custtbl.o: ../custom.h
 custtbl.o: ../decl.h
 custtbl.o: ../endian_calc.h
 custtbl.o: ../errsym.h
+custtbl.o: ../errtbl.h
 custtbl.o: ../hash.h
 custtbl.o: ../have_ban_pragma.h
 custtbl.o: ../have_const.h

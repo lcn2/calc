@@ -295,6 +295,40 @@ The following are the changes from calc version 2.14.3.5 to date:
     Renamed "E_1OVER0" to "E_DIVBYZERO".
     Renamed "E_0OVER0" to "E_ZERODIVZERO".
 
+    The verify_error_table() function that does a verification
+    the error_table[] array and setup private_error_alias[] array
+    is now called by libcalc_call_me_first().
+
+    Fix comment about wrong include file in have_sys_mount.h.
+
+    Removed unused booltostr() and strtobool() macros from bool.h.
+
+    Moved define of math_error(char *, ...) from zmath.h to errtbl.h.
+    The errtbl.h include file, unless ERRCODE_SRC is defined
+    also includes attribute.h and errsym.h.
+
+    Passing an invalid argument to error(), errno() or strerror() will
+    set errno AND throw a math error.  Before errno would be set and
+    an error value was returned.  Before there was no way to tell if
+    the error value was a result of the arg or if an error detected.
+
+    Added E_STRING to error([errnum | "E_STRING"]) builtin function.
+    Added E_STRING to errno([errnum | "E_STRING"]) builtin function.
+    Added E_STRING to strerror([errnum | "E_STRING"]) builtin function.
+    Calling these functions with an E_STRING errsym is the same as calling
+    them with the matching errnum code.
+
+    Standardized on calc computation error related E_STRING strings
+    where there are a set of related codes.  Changed "E_...digits" into
+    "E_..._digits".  For example, E_FPUTC1 became E_FPUTC_1, E_FPUTC2
+    became E_FPUTC_2, and E_FPUTC3 became E_FPUTC_3.  In a few cases
+    such as E_APPR became E_APPR_1, because there was a E_APPR2 (which
+    became E_APPR_2) and E_APPR3 (which became E_APPR_3).  To other
+    special cases, E_ILOG10 became E_IBASE10_LOG and E_ILOG2 became
+    E_IBASE2_LOG because E_ILOG10 and E_ILOG2 are both independent calc
+    computation error related E_STRING strings.  Now related sets of
+    E_STRING strings end in _ (underscore) followed by digits.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 
@@ -1108,7 +1142,7 @@ The following are the changes from calc version 2.14.0.9 to 2.14.0.10:
 
     Remove unnecessary spaces in-between or next to tabs.
 
-    Update Copyright dates to account for 2021 modifications.
+    Update copyright dates to account for 2021 modifications.
 
 
 The following are the changes from calc version 2.14.0.7 to 2.14.0.8:
@@ -3299,7 +3333,7 @@ The following are the changes from calc version 2.12.0 to 2.12.0.8:
     Added a "make uninstall" rule which will attempt to remove everything
     that was installed by a "make install".
 
-    Changed the "Copyright" line in the rpm spec file to a "License" line
+    Changed the copyright line in the rpm spec file to a "License" line
     as per new rpm v4.4 syntax.
 
     The quomod() builtin function does not allow constants for its 3rd

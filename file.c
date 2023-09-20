@@ -43,7 +43,6 @@
 #include "have_fpos_pos.h"
 #include "fposval.h"
 #include "file.h"
-#include "errsym.h"
 #include "strl.h"
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -51,7 +50,7 @@
 #endif
 
 
-#include "attribute.h"
+#include "errtbl.h"
 #include "banned.h"	/* include after system header <> includes */
 
 

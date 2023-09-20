@@ -1,7 +1,7 @@
 /*
  * value - definitions of general values  and related routines used by calc
  *
- * Copyright (C) 1999-2007,2014,2021  David I. Bell
+ * Copyright (C) 1999-2007,2014,2021,2023  David I. Bell
  *
  * Calc is open software; you can redistribute it and/or modify it under
  * the terms of the version 2.1 of the GNU Lesser General Public License
@@ -33,21 +33,21 @@
 # include "cmath.h"
 # include "config.h"
 # include "sha1.h"
-# include "errsym.h"
 # include "hash.h"
 # include "block.h"
 # include "nametype.h"
 # include "str.h"
+# include "errtbl.h"
 #else
 # include <calc/decl.h>
 # include <calc/cmath.h>
 # include <calc/config.h>
 # include <calc/sha1.h>
-# include <calc/errsym.h>
 # include <calc/hash.h>
 # include <calc/block.h>
 # include <calc/nametype.h>
 # include <calc/str.h>
+# include <calc/errtbl.h>
 #endif
 
 
@@ -81,9 +81,14 @@ typedef struct random RANDOM;
  * calc values
  *
  * See below for information on what needs to be added for a new type.
+ *
+ * NOTE: The v_type can be a negative value.  This happens when
+ *	 an error is returned as a VALUE.
+ *
+ * XXX - calc v3 wish: make v_type and v_subtype an int32_t - XXX
  */
 struct value {
-	short v_type;			/* type of value */
+	short v_type;			/* type of value - IMPORTANT: v_type < 0 is an error code */
 	unsigned short v_subtype;	/* other data related to some types */
 	union {				/* types of values (see V_XYZ below) */
 		long vv_int;		/* 1: small integer value */
@@ -131,7 +136,7 @@ struct value {
 
 
 /*
- * Value types.		XXX - calc v3 wish: make this and short v_type an enum - XXX
+ * Value types.
  *
  * NOTE: The following files should be checked/adjusted for a new type:
  *
@@ -170,23 +175,28 @@ struct value {
 
 #define V_MAX	V_NPTR	/* highest legal value - must be last and match highest V_something value */
 
+/*
+ * v_subtype values
+ */
 #define V_NOSUBTYPE	0	/* subtype has no meaning */
-#define V_NOASSIGNTO	1	/* protection status 1 */
-#define V_NONEWVALUE	2	/* protection status 2 */
-#define V_NONEWTYPE	4	/* protection status 4 */
-#define V_NOERROR	8	/* protection status 8 */
-#define V_NOCOPYTO	16	/* protection status 16 */
-#define V_NOREALLOC	32	/* protection status 32 */
-#define V_NOASSIGNFROM	64	/* protection status 64 */
-#define V_NOCOPYFROM	128	/* protection status 128 */
-#define V_PROTECTALL	256	/* protection status 256 */
+#define V_NOASSIGNTO	0x001	/* protection status 1 */
+#define V_NONEWVALUE	0x002	/* protection status 2 */
+#define V_NONEWTYPE	0x004	/* protection status 4 */
+#define V_NOERROR	0x008	/* protection status 8 */
+#define V_NOCOPYTO	0x010	/* protection status 16 */
+#define V_NOREALLOC	0x020	/* protection status 32 */
+#define V_NOASSIGNFROM	0x040	/* protection status 64 */
+#define V_NOCOPYFROM	0x080	/* protection status 128 */
+#define V_PROTECTALL	0x100	/* protection status 256 */
 
-#define MAXPROTECT	511
+#define MAXPROTECT	0x1ff	/* OR of all of the above protection statuses */
 
 /*
  * At present protect(var, sts) determines bits in var->v_subtype
  * corresponding to 4 * sts.  MAXPROTECT is the sum of the simple
  * (power of two) protection status values.
+ *
+ * XXX - consider isseu #52 with respect to protect - XXX
  */
 
 
