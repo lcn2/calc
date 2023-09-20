@@ -1328,7 +1328,7 @@ verify_error_table(void)
 	e__count = len - 2;
 	if (e__count != MY_ECOUNT) {
 		fprintf(stderr, "**** %s ERROR: error_table length: %zu != MY_ECOUNT+2: %lu\n",
-			program, len, MY_ECOUNT+2);
+			program, len, (unsigned long)MY_ECOUNT+2);
 		exit(10); /*coo*/
 	}
 
@@ -1369,9 +1369,9 @@ verify_error_table(void)
 		/*
 		 * check errnum - must be consecutive starting with E__BASE
 		 */
-		if ((unsigned long)(error_table[i].errnum) != E__BASE+i) {
-			fprintf(stderr, "**** %s ERROR: error_table[%zu].errnum: %d != %ld\n",
-				program, i, error_table[i].errnum, E__BASE+i);
+		if ((size_t)error_table[i].errnum != E__BASE+i) {
+			fprintf(stderr, "**** %s ERROR: error_table[%zu].errnum: %d != %lu\n",
+				program, i, error_table[i].errnum, (unsigned long)E__BASE+i);
 			exit(16);
 		}
 
@@ -1418,8 +1418,8 @@ verify_error_table(void)
 	 */
 	if (error_table[len-2].errnum != MY_E__HIGHEST) {
 		fprintf(stderr, "**** %s ERROR: highest assigned calc computation error code entry "
-				"error_table[%zu].errnum: %d must == %ld\n",
-			program, len-2, error_table[len-2].errnum, MY_E__HIGHEST);
+				"error_table[%zu].errnum: %d must == %lu\n",
+			program, len-2, error_table[len-2].errnum, (unsigned long)MY_E__HIGHEST);
 		exit(21);
 	}
 
@@ -1449,7 +1449,7 @@ verify_error_table(void)
 	priv_e__count = priv_len - 1;
 	if (priv_e__count != MY_PRIV_ECOUNT) {
 		fprintf(stderr, "**** %s ERROR: private_error_alias length: %zu must == MY_PRIV_ECOUNT+1: %lu\n",
-			program, priv_len, MY_PRIV_ECOUNT+1);
+			program, priv_len, (unsigned long)MY_PRIV_ECOUNT+1);
 		exit(25);
 	}
 
@@ -1579,7 +1579,7 @@ verify_error_table(void)
 	}
 	if (i != USERMAX_DIGITS) {
 		fprintf(stderr, "**** %s ERROR: USERMAX_DIGITS: %d must be == %ld\n",
-			program, USERMAX_DIGITS, i);
+			program, USERMAX_DIGITS, (unsigned long)i);
 		exit(40);
 	}
 
@@ -1592,7 +1592,7 @@ verify_error_table(void)
 	test.v_type = -E__USERMAX;
 	if (-E__USERMAX != test.v_type) {
 		fprintf(stderr, "**** %s ERROR: E__USERMAX: %d cannot fit into a value.v_type of size: %lu\n",
-			program, E__USERMAX, sizeof(test.v_type));
+			program, E__USERMAX, (unsigned long)sizeof(test.v_type));
 		exit(41);
 	}
 	return;
@@ -2013,10 +2013,10 @@ print_errorcodes(void)
 	 * print the help/errorcodes file trailer
 	 */
 	printf("\n"
-	      "\"E__HIGHEST\"\t%ld\thighest assigned calc computation error code\n"
-	      "\"E__USERDEF\"\t%d\tuser defined error codes start here\n"
-	      "\"E__USERMAX\"\t%d\tmaximum user defined error code\n",
-	      MY_E__HIGHEST, E__USERDEF, E__USERMAX);
+	      "\"E__HIGHEST\"\t%lu\thighest assigned calc computation error code\n"
+	      "\"E__USERDEF\"\t%lu\tuser defined error codes start here\n"
+	      "\"E__USERMAX\"\t%lu\tmaximum user defined error code\n",
+	      (unsigned long)MY_E__HIGHEST, (unsigned long)E__USERDEF, (unsigned long)E__USERMAX);
 	printf("\n"
 	       "## Copyright (C) %d  Landon Curt Noll\n"
 	       "##\n"
@@ -2107,10 +2107,10 @@ print_errsym(void)
 	 * print the errsym.h file trailer
 	 */
 	printf("\n"
-	       "#define E__HIGHEST\t%ld\t/* highest assigned calc computation error code */\n"
+	       "#define E__HIGHEST\t%lu\t/* highest assigned calc computation error code */\n"
 	       "\n"
-	       "#define ECOUNT\t%ld\t/* number of calc computation error codes w/o E__BASE */\n",
-	       MY_E__HIGHEST, MY_ECOUNT);
+	       "#define ECOUNT\t%lu\t/* number of calc computation error codes w/o E__BASE */\n",
+	       (unsigned long)MY_E__HIGHEST, (unsigned long)MY_ECOUNT);
 	printf("\n"
 	       "\n"
 	       "#endif /* !INCLUDE_ERRSYM_H */\n");
