@@ -109,5 +109,5 @@
 # CFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
 # LDFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
 # CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1
-DEBUG:= -O0 -g3
+# DEBUG:= -O0 -g3
 ####
