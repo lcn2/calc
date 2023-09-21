@@ -338,6 +338,10 @@ The following are the changes from calc version 2.14.3.5 to date:
     verify that the errnum calc computation error codes and their
     E_STRING values have not changed.
 
+    Improve the ciarify of calc regression suite (regress.cal) to mostly
+    use E_STRING errsym instead of numeric errnum values for error()
+    and errno() related tests.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

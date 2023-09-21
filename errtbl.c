@@ -169,7 +169,7 @@ CONST struct errtbl error_table[] = {
 	{ 10018,	"E_ROUND_1",		"Bad first argument for round" },
 	{ 10019,	"E_ROUND_2",		"Bad second argument for round" },
 	{ 10020,	"E_ROUND_3",		"Bad third argument for round" },
-	{ 10021,	"E_BROUND",		"Bad first argument for bround" },
+	{ 10021,	"E_BROUND_1",		"Bad first argument for bround" },
 	{ 10022,	"E_BROUND_2",		"Bad second argument for bround" },
 	{ 10023,	"E_BROUND_3",		"Bad third argument for bround" },
 	{ 10024,	"E_SQRT_1",		"Bad first argument for sqrt" },

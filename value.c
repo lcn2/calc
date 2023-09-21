@@ -1284,7 +1284,7 @@ broundvalue(VALUE *v1, VALUE *v2, VALUE *v3, VALUE *vres)
 	default:
 		if (v1->v_type <= 0)
 			return;
-		*vres = error_value(E_BROUND);
+		*vres = error_value(E_BROUND_1);
 		return;
 	}
 }

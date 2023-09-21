@@ -3923,202 +3923,202 @@ define test_error()
 
 	/* bump ecnt up by 156 */
 	ecnt += 156;
-	print				'3601: ecnt += 156';
+	print					'3601: ecnt += 156';
 
 	strx = "x";
-	print				'3602: strx = "x"';
+	print					'3602: strx = "x"';
 	e99 = error(99);
-	print				'3603: e99 = error(99)';
-	vrfy(1/0 == error(10001),	'3604: 1/0 == error(10001)');
-	vrfy(0/0 == error(10002),	'3605: 0/0 == error(10002)');
-	vrfy(2 + "x" == error(10003),	'3606: 2 + "x" == error(10003)');
-	vrfy("x" - 2 == error(10004),	'3607: "x" - 2 == error(10004)');
-	vrfy("x" * "y" == error(10005), '3608: "x" * "y" == error(10005)');
-	vrfy("x" / "y" == error(10006), '3609: "x" / "y" == error(10006)');
-	vrfy(-list(1) == error(10007),	'3610: -list(1) == error(10007)');
-	vrfy("x"^2 == error(10008),	'3611: "x"^2 == error(10008)');
-	vrfy(inverse("x")==error(10009),'3612: inverse("x") == error(10009)');
-	vrfy(++strx == error(10010),	'3613: ++strx == error(10010)');
-	vrfy(strx == error(10010),	'3614: strx == error(10010)');
+	print					'3603: e99 = error(99)';
+	vrfy(1/0 == error("E_DIVBYZERO"),	'3604: 1/0 == error("E_DIVBYZERO")');
+	vrfy(0/0 == error("E_ZERODIVZERO"),	'3605: 0/0 == error("E_ZERODIVZERO")');
+	vrfy(2 + "x" == error("E_ADD"),		'3606: 2 + "x" == error("E_ADD")');
+	vrfy("x" - 2 == error("E_SUB"),		'3607: "x" - 2 == error("E_SUB")');
+	vrfy("x" * "y" == error("E_MUL"),	'3608: "x" * "y" == error("E_MUL")');
+	vrfy("x" / "y" == error("E_DIV"),	'3609: "x" / "y" == error("E_DIV")');
+	vrfy(-list(1) == error("E_NEG"),	'3610: -list(1) == error("E_NEG")');
+	vrfy("x"^2 == error("E_SQUARE"),	'3611: "x"^2 == error("E_SQUARE")');
+	vrfy(inverse("x")==error("E_INV"),	'3612: inverse("x") == error("E_INV")');
+	vrfy(++strx == error("E_INCV"),		'3613: ++strx == error("E_INCV")');
+	vrfy(strx == error("E_INCV"),		'3614: strx == error("E_INCV")');
 	strx = "x";
-	print				'3615: strx = "x"';
-	vrfy(strx++ == "x",		'3616: strx++ == "x"');
-	vrfy(strx == error(10010),	'3617: strx == error(10010)');
+	print					'3615: strx = "x"';
+	vrfy(strx++ == "x",			'3616: strx++ == "x"');
+	vrfy(strx == error("E_INCV"),		'3617: strx == error("E_INCV")');
 	strx = "x";
-	print				'3618: strx = "x"';
-	vrfy(--strx == error(10011),	'3619: strx == error(10011)');
-	vrfy(int("x") == error(10012),	'3620: int("x") == error(10012)');
-	vrfy(frac("x") == error(10013), '3621: frac("x") == error(10013)');
-	vrfy(conj("x") == error(10014), '3622: conj("x") == error(10014)');
-	vrfy(appr("x",.1) == error(10015),
-				    '3623: appr("x",.1) == error(10015)');
-	vrfy(appr(1.27,.1i) == error(10016),
-				    '3624: appr(1.27,.1i) == error(10016)');
-	vrfy(appr(1.27,.1,.1) == error(10017),
-				    '3625: appr(1.27,.1,.1) == error(10017)');
-	vrfy(round("x") == error(10018),
-				    '3626: round("x") == error(10018)');
-	vrfy(round(1.25,.1) == error(10019),
-				    '3627: round(1.25,.1) == error(10019)');
-	vrfy(round(1.25,"x") == error(10019),
-				    '3628: round(1.25,"x") == error(10019)');
-	vrfy(round(1.25,1,.1) == error(10020),
-				    '3629: round(1.25,1,.1) == error(10020)');
-	vrfy(bround("x") == error(10021),
-				    '3630: bround("x") == error(10021)');
-	vrfy(bround(1.25,.1) == error(10022),
-				    '3631: bround(1.25,.1) == error(10022)');
-	vrfy(bround(1.25,"x") == error(10022),
-				    '3632: bround(1.25,"x") == error(10022)');
-	vrfy(bround(1.25,1,.1) == error(10023),
-				    '3633: bround(1.25,1,.1) == error(10023)');
-	vrfy(sqrt("x") == error(10024),
-				    '3634: sqrt("x") == error(10024)');
-	vrfy(sqrt(2,"x") == error(10025),
-				    '3635: sqrt(2,"x") == error(10025)');
-	vrfy(sqrt(2,0) == error(10025),
-				    '3636: sqrt(2,0) == error(10025)');
-	vrfy(sqrt(2,.1,.1) == error(10026),
-				    '3637: sqrt(2,.1,.1) == error(10026)');
-	vrfy(root("x",3) == error(10027),
-				    '3638: root("x",3) == error(10027)');
-	vrfy(root(3,"x") == error(10028),
-				    '3639: root(3,"x") == error(10028)');
-	vrfy(root(3,-2) == error(10028),
-				    '3640: root(3,-2) == error(10028)');
-	vrfy(root(3,0) == error(10028),
-				    '3641: root(3,0) == error(10028)');
-	vrfy(root(3,.1) == error(10028),
-				    '3642: root(3,.1) == error(10028)');
-	vrfy(root(3,2,"x") == error(10029),
-				    '3643: root(3,2,"x") == error(10029)');
-	vrfy(root(3,2,0) == error(10029),
-				    '3644: root(3,2,0) == error(10029)');
-	vrfy(norm("x") == error(10030), '3645: norm("x") == error(10030)');
-	vrfy(list() << 2 == error(10031),'3646: list() << 2 == error(10031)');
-	vrfy(1.5 << 2 == error(10031),	'3647: 1.5 << 2 == error(10031)');
-	vrfy(3 << "x" == error(10032),	'3648: 3 << "x" == error(10032)');
-	vrfy(3 << 1.5 == error(10032),	'3649: 3 << 1.5 == error(10032)');
-	vrfy(3 << 2^31 == error(10032), '3650: 3 << 2^31 == error(10032)');
-	vrfy(scale("x",2) == error(10033),
-				    '3651: scale("x",2) == error(10033)');
-	vrfy(scale(3,"x") == error(10034),
-				    '3652: scale(3,"x") == error(10034)');
-	vrfy(scale(3,1.5) == error(10034),
-				    '3653: scale(3,1.5) == error(10034)');
-	vrfy(scale(3,2^31) == error(10034),
-				    '3654: scale(3,2^31) == error(10034)');
-	vrfy("x" ^ 3 == error(10035),	'3655: "x" ^ 3 == error(10035)');
-	vrfy(2 ^ "x" == error(10036),	'3656: 2 ^ "x" == error(10036)');
-	vrfy(2 ^ "2" == error(10036),   '3657: 2 ^ "2" == error(10036)');
-	vrfy(power("x",2.1) == error(10037),
-					'3658: power("x",2.1) == error(10037)');
-	vrfy(power(2,"x") == error(10038),
-				    '3659: power(2,"x") == error(10038)');
-	vrfy(power(2,2.1,"x") == error(10039),
-				    '3660: power(2,2.1,"x") == error(10039)');
-	vrfy(quo("x",3) == error(10040),
-				    '3661: quo("x",3) == error(10040)');
-	vrfy(quo(8,"x") == error(10041),
-				    '3662: quo(8,"x") == error(10041)');
-	vrfy(quo(8,3,"x") == error(10042),
-				    '3663: quo(8,3,"x") == error(10042)');
-	vrfy(quo(8,3,2.1) == error(10042),
-				    '3664: quo(8,3,2.1) == error(10042)');
-	vrfy(mod("x",3) == error(10043),
-				    '3665: mod("x",3) == error(10043)');
-	vrfy(mod(8,"x") == error(10044),
-				    '3666: mod(8,"x") == error(10044)');
-	vrfy(mod(8,3,"x") == error(10045),
-				    '3667: mod(8,3,"x") == error(10045)');
-	vrfy(mod(8,3,2.1) == error(10045),
-				    '3668: mod(8,3,2.1) == error(10045)');
-	vrfy(sgn("x") == error(10046),
-				    '3669: sgn("x") == error(10046)');
-	vrfy(abs("x") == error(10047),
-				    '3670: abs("x") == error(10047)');
-	vrfy(abs(2+3i,"x") == error(10048),
-				    '3671: abs(2+3i,"x") == error(10048)');
-	vrfy(abs(2+3i,0) == error(10048),
-				    '3672: abs(2+3i,0) == error(10048)');
+	print					'3618: strx = "x"';
+	vrfy(--strx == error("E_DECV"),		'3619: strx == error("E_DECV")');
+	vrfy(int("x") == error("E_INT"),	'3620: int("x") == error("E_INT")');
+	vrfy(frac("x") == error("E_FRAC"),	'3621: frac("x") == error("E_FRAC")');
+	vrfy(conj("x") == error("E_CONJ"),	'3622: conj("x") == error("E_CONJ")');
+	vrfy(appr("x",.1) == error("E_APPR_1"),
+						'3623: appr("x",.1) == error("E_APPR_1")');
+	vrfy(appr(1.27,.1i) == error("E_APPR_2"),
+						'3624: appr(1.27,.1i) == error("E_APPR_2")');
+	vrfy(appr(1.27,.1,.1) == error("E_APPR_3"),
+						'3625: appr(1.27,.1,.1) == error("E_APPR_3")');
+	vrfy(round("x") == error("E_ROUND_1"),
+						'3626: round("x") == error("E_ROUND_1")');
+	vrfy(round(1.25,.1) == error("E_ROUND_2"),
+						'3627: round(1.25,.1) == error("E_ROUND_2")');
+	vrfy(round(1.25,"x") == error("E_ROUND_2"),
+						'3628: round(1.25,"x") == error("E_ROUND_2")');
+	vrfy(round(1.25,1,.1) == error("E_ROUND_3"),
+						'3629: round(1.25,1,.1) == error("E_ROUND_3")');
+	vrfy(bround("x") == error("E_BROUND_1"),
+						'3630: bround("x") == error("E_BROUND_1")');
+	vrfy(bround(1.25,.1) == error("E_BROUND_2"),
+						'3631: bround(1.25,.1) == error("E_BROUND_2")');
+	vrfy(bround(1.25,"x") == error("E_BROUND_2"),
+						'3632: bround(1.25,"x") == error("E_BROUND_2")');
+	vrfy(bround(1.25,1,.1) == error("E_BROUND_3"),
+						'3633: bround(1.25,1,.1) == error("E_BROUND_3")');
+	vrfy(sqrt("x") == error("E_SQRT_1"),
+						'3634: sqrt("x") == error("E_SQRT_1")');
+	vrfy(sqrt(2,"x") == error("E_SQRT_2"),
+						'3635: sqrt(2,"x") == error("E_SQRT_2")');
+	vrfy(sqrt(2,0) == error("E_SQRT_2"),
+						'3636: sqrt(2,0) == error("E_SQRT_2")');
+	vrfy(sqrt(2,.1,.1) == error("E_SQRT_3"),
+						'3637: sqrt(2,.1,.1) == error("E_SQRT_3")');
+	vrfy(root("x",3) == error("E_ROOT_1"),
+						'3638: root("x",3) == error("E_ROOT_1")');
+	vrfy(root(3,"x") == error("E_ROOT_2"),
+						'3639: root(3,"x") == error("E_ROOT_2")');
+	vrfy(root(3,-2) == error("E_ROOT_2"),
+						'3640: root(3,-2) == error("E_ROOT_2")');
+	vrfy(root(3,0) == error("E_ROOT_2"),
+						'3641: root(3,0) == error("E_ROOT_2")');
+	vrfy(root(3,.1) == error("E_ROOT_2"),
+						'3642: root(3,.1) == error("E_ROOT_2")');
+	vrfy(root(3,2,"x") == error("E_ROOT_3"),
+						'3643: root(3,2,"x") == error("E_ROOT_3")');
+	vrfy(root(3,2,0) == error("E_ROOT_3"),
+						'3644: root(3,2,0) == error("E_ROOT_3")');
+	vrfy(norm("x") == error("E_NORM"),	'3645: norm("x") == error("E_NORM")');
+	vrfy(list() << 2 == error("E_SHIFT_1"),	'3646: list() << 2 == error("E_SHIFT_1")');
+	vrfy(1.5 << 2 == error("E_SHIFT_1"),	'3647: 1.5 << 2 == error("E_SHIFT_1")');
+	vrfy(3 << "x" == error("E_SHIFT_2"),	'3648: 3 << "x" == error("E_SHIFT_2")');
+	vrfy(3 << 1.5 == error("E_SHIFT_2"),	'3649: 3 << 1.5 == error("E_SHIFT_2")');
+	vrfy(3 << 2^31 == error("E_SHIFT_2"),	'3650: 3 << 2^31 == error("E_SHIFT_2")');
+	vrfy(scale("x",2) == error("E_SCALE_1"),
+						'3651: scale("x",2) == error("E_SCALE_1")');
+	vrfy(scale(3,"x") == error("E_SCALE_2"),
+						'3652: scale(3,"x") == error("E_SCALE_2")');
+	vrfy(scale(3,1.5) == error("E_SCALE_2"),
+						'3653: scale(3,1.5) == error("E_SCALE_2")');
+	vrfy(scale(3,2^31) == error("E_SCALE_2"),
+						'3654: scale(3,2^31) == error("E_SCALE_2")');
+	vrfy("x" ^ 3 == error("E_POWI_1"),	'3655: "x" ^ 3 == error("E_POWI_1")');
+	vrfy(2 ^ "x" == error("E_POWI_2"),	'3656: 2 ^ "x" == error("E_POWI_2")');
+	vrfy(2 ^ "2" == error("E_POWI_2"),	'3657: 2 ^ "2" == error("E_POWI_2")');
+	vrfy(power("x",2.1) == error("E_POWER_1"),
+						'3658: power("x",2.1) == error("E_POWER_1")');
+	vrfy(power(2,"x") == error("E_POWER_2"),
+						'3659: power(2,"x") == error("E_POWER_2")');
+	vrfy(power(2,2.1,"x") == error("E_POWER_3"),
+						'3660: power(2,2.1,"x") == error("E_POWER_3")');
+	vrfy(quo("x",3) == error("E_QUO_1"),
+						'3661: quo("x",3) == error("E_QUO_1")');
+	vrfy(quo(8,"x") == error("E_QUO_2"),
+						'3662: quo(8,"x") == error("E_QUO_2")');
+	vrfy(quo(8,3,"x") == error("E_QUO_3"),
+						'3663: quo(8,3,"x") == error("E_QUO_3")');
+	vrfy(quo(8,3,2.1) == error("E_QUO_3"),
+						'3664: quo(8,3,2.1) == error("E_QUO_3")');
+	vrfy(mod("x",3) == error("E_MOD_1"),
+						'3665: mod("x",3) == error("E_MOD_1")');
+	vrfy(mod(8,"x") == error("E_MOD_2"),
+						'3666: mod(8,"x") == error("E_MOD_2")');
+	vrfy(mod(8,3,"x") == error("E_MOD_3"),
+						'3667: mod(8,3,"x") == error("E_MOD_3")');
+	vrfy(mod(8,3,2.1) == error("E_MOD_3"),
+						'3668: mod(8,3,2.1) == error("E_MOD_3")');
+	vrfy(sgn("x") == error("E_SGN"),
+						'3669: sgn("x") == error("E_SGN")');
+	vrfy(abs("x") == error("E_ABS_1"),
+						'3670: abs("x") == error("E_ABS_1")');
+	vrfy(abs(2+3i,"x") == error("E_ABS_2"),
+						'3671: abs(2+3i,"x") == error("E_ABS_2")');
+	vrfy(abs(2+3i,0) == error("E_ABS_2"),
+						'3672: abs(2+3i,0) == error("E_ABS_2")');
 	list1 = list(2,3,"x",4,5);
-	print			    '3673: list1 = list(2,3,"x",4,5)';
-	vrfy(avg(list1) == error(10003),
-				    '3674: avg(list1) == error(10003)');
+	print					'3673: list1 = list(2,3,"x",4,5)';
+	vrfy(avg(list1) == error("E_ADD"),
+						'3674: avg(list1) == error("E_ADD")');
 
-	vrfy(iserror(e99)==99,		'3675: iserror(e99) == 99');
-	vrfy(e99 + 2 == e99,		'3676: e99 + 2 == e99');
-	vrfy(e99 - 2 == e99,		'3677: e99 - 2 == e99');
-	vrfy(e99 * 2 == e99,		'3678: e99 * 2 == e99');
-	vrfy(e99 / 2 == e99,		'3679: e99 / 2 == e99');
-	vrfy(e99 // 2 == e99,		'3680: e99 // 2 == e99');
-	vrfy(e99 % 2 == e99,		'3681: e99 % 2 == e99');
-	vrfy(e99 ^ 2 == e99,		'3682: e99 ^ 2 == e99');
-	vrfy(2 + e99 == e99,		'3683: 2 + e99 == e99');
-	vrfy(2 - e99 == e99,		'3684: 2 - e99 == e99');
-	vrfy(2 * e99 == e99,		'3685: 2 * e99 == e99');
-	vrfy(2 / e99 == e99,		'3686: 2 / e99 == e99');
-	vrfy(2 // e99 == e99,		'3687: 2 // e99 == e99');
-	vrfy(2 % e99 == e99,		'3688: 2 % e99 == e99');
-	vrfy(2 ^ e99 == e99,		'3689: 2 ^ e99 == e99');
-	vrfy(- e99 == e99,		'3690: -e99 == e99');
-	vrfy(inverse(e99) == e99,	'3691: inverse(e99) == e99');
-	vrfy(++e99 == e99,		'3692: ++e99 == e99');
-	vrfy(--e99 == e99,		'3693: --e99 == e99');
-	vrfy(int(e99) == e99,		'3694: int(e99) == e99');
-	vrfy(frac(e99) == e99,		'3695: frac(e99) == e99');
-	vrfy(conj(e99) == e99,		'3696: conj(e99) == e99');
-	vrfy(norm(e99) == e99,		'3697: norm(e99) == e99');
-	vrfy(sgn(e99) == e99,		'3698: sgn(e99) == e99');
-	vrfy(appr(e99,1,0) == e99,	'3699: appr(e99,1,0) == e99');
-	vrfy(round(e99) == e99,		'3700: round(e99) == e99');
-	vrfy(bround(e99) == e99,	'3701: bround(e99) == e99');
-	vrfy(sqrt(e99) == e99,		'3702: sqrt(e99) == e99');
-	print				'3703: a = newerror("alpha")';
+	vrfy(iserror(e99)==99,			'3675: iserror(e99) == 99');
+	vrfy(e99 + 2 == e99,			'3676: e99 + 2 == e99');
+	vrfy(e99 - 2 == e99,			'3677: e99 - 2 == e99');
+	vrfy(e99 * 2 == e99,			'3678: e99 * 2 == e99');
+	vrfy(e99 / 2 == e99,			'3679: e99 / 2 == e99');
+	vrfy(e99 // 2 == e99,			'3680: e99 // 2 == e99');
+	vrfy(e99 % 2 == e99,			'3681: e99 % 2 == e99');
+	vrfy(e99 ^ 2 == e99,			'3682: e99 ^ 2 == e99');
+	vrfy(2 + e99 == e99,			'3683: 2 + e99 == e99');
+	vrfy(2 - e99 == e99,			'3684: 2 - e99 == e99');
+	vrfy(2 * e99 == e99,			'3685: 2 * e99 == e99');
+	vrfy(2 / e99 == e99,			'3686: 2 / e99 == e99');
+	vrfy(2 // e99 == e99,			'3687: 2 // e99 == e99');
+	vrfy(2 % e99 == e99,			'3688: 2 % e99 == e99');
+	vrfy(2 ^ e99 == e99,			'3689: 2 ^ e99 == e99');
+	vrfy(- e99 == e99,			'3690: -e99 == e99');
+	vrfy(inverse(e99) == e99,		'3691: inverse(e99) == e99');
+	vrfy(++e99 == e99,			'3692: ++e99 == e99');
+	vrfy(--e99 == e99,			'3693: --e99 == e99');
+	vrfy(int(e99) == e99,			'3694: int(e99) == e99');
+	vrfy(frac(e99) == e99,			'3695: frac(e99) == e99');
+	vrfy(conj(e99) == e99,			'3696: conj(e99) == e99');
+	vrfy(norm(e99) == e99,			'3697: norm(e99) == e99');
+	vrfy(sgn(e99) == e99,			'3698: sgn(e99) == e99');
+	vrfy(appr(e99,1,0) == e99,		'3699: appr(e99,1,0) == e99');
+	vrfy(round(e99) == e99,			'3700: round(e99) == e99');
+	vrfy(bround(e99) == e99,		'3701: bround(e99) == e99');
+	vrfy(sqrt(e99) == e99,			'3702: sqrt(e99) == e99');
+	print					'3703: a = newerror("alpha")';
 	a = newerror("alpha");
-	print				'3704: b = newerror("beta")';
+	print					'3704: b = newerror("beta")';
 	b = newerror("beta");
-	print				'3705: c = newerror("alpha")';
+	print					'3705: c = newerror("alpha")';
 	c = newerror("alpha");
-	vrfy(a == c,			'3706: a == c');
-	vrfy(strerror(a) == "alpha",	'3707: strerror(a) == "alpha"');
-	print				'3708: n = iserror(a)';
+	vrfy(a == c,				'3706: a == c');
+	vrfy(strerror(a) == "alpha",		'3707: strerror(a) == "alpha"');
+	print					'3708: n = iserror(a)';
 	n = iserror(a);
-	vrfy(a == error(n),		'3709: a == error(n)');
+	vrfy(a == error(n),			'3709: a == error(n)');
 	vrfy(newerror() == newerror("???"),
-					'3710: newerror() == newerror("???")');
+						'3710: newerror() == newerror("???")');
 	vrfy(newerror("") == newerror(),
-					'3711: newerror("") == newerror()');
-	e9999 = error(9999);
-	print				'3712: e9999 = error(9999)';
-	vrfy(errno() == 9999,		'3713: errno() == 9999');
-	vrfy(error() == e9999,		'3714: error() == e9999');
+						'3711: newerror("") == newerror()');
+	e9999 = error("E_9999");
+	print					'3712: e9999 = error("E_9999")';
+	vrfy(errno() == 9999,			'3713: errno() == 9999');
+	vrfy(error() == e9999,			'3714: error() == e9999');
 	/* test 3715 removed due to non-portable strerror() output */
 	x = newerror("Alpha");
-	print				'3716: x = newerror("Alpha")';
+	print					'3716: x = newerror("Alpha")';
 	n = iserror(x);
-	print				'3717: n = iserror(x)';
-	vrfy(errno() == n,		'3718: errno() == n');
-	vrfy(error() == x,		'3719: error() == x');
-	vrfy(strerror() == "Alpha",	'3720: strerror() == "Alpha"');
-	vrfy(errno(9999) == n,		'3721: errno() == n');
-	vrfy(errno() == 9999,		'3722: errno() == 9999');
-	vrfy(error() == e9999,		'3723: error() == e9999');
+	print					'3717: n = iserror(x)';
+	vrfy(errno() == n,			'3718: errno() == n');
+	vrfy(error() == x,			'3719: error() == x');
+	vrfy(strerror() == "Alpha",		'3720: strerror() == "Alpha"');
+	vrfy(errno("E_9999") == n,		'3721: errno("E_9999") == n');
+	vrfy(errno() == 9999,			'3722: errno() == 9999');
+	vrfy(error() == e9999,			'3723: error() == e9999');
 	/* test 3724 removed due to non-portable strerror() output */
 	a = 1/0;
-	print				'3725: a = 1/0';
+	print					'3725: a = 1/0';
 	vrfy(strerror() == "Division by zero",
-				'3726: strerror() == "Division by zero"');
+						'3726: strerror() == "Division by zero"');
 	n = 8191;
-	print				'3727: n = 8191';
-	/* test 3728 removed due to non-portable strerror() output */
-	vrfy(tan(2e9i) == error(10537),	'3729: tan(2e9i) == error(10537)');
-	vrfy(cot(2e9i) == error(10539),	'3730: cot(2e9i) == error(10539)');
-	vrfy(sec(2e9i) == error(10540),	'3731: sec(2e9i) == error(10540)');
-	vrfy(csc(2e9i) == error(10542),	'3732: csc(2e9i) == error(10542)');
+	print					'3727: n = 8191';
+	print					'3728: test removed due to non-portable strerror() output';
+	vrfy(tan(2e9i) == error("E_TAN_5"),	'3729: tan(2e9i) == error("E_TAN_5")');
+	vrfy(cot(2e9i) == error("E_COT_6"),	'3730: cot(2e9i) == error("E_COT_6")');
+	vrfy(sec(2e9i) == error("E_SEC_5"),	'3731: sec(2e9i) == error("E_SEC_5")');
+	vrfy(csc(2e9i) == error("E_CSC_6"),	'3732: csc(2e9i) == error("E_CSC_6")');
 
 	/* errmax and errcount should be bumped up the 148 errors above */
-	vrfy(errcount() == ecnt,	'3733: errcount() == ecnt');
+	vrfy(errcount() == ecnt,		'3733: errcount() == ecnt');
 
 	print '3734: Ending test_error';
 }
@@ -4488,7 +4488,7 @@ define test_matdcl()
 	print				    '4340: ecnt += 2';
 	mat_Y3 += 2;
 	print				    '4341: mat_Y3 += 2';
-	vrfy(mat_Y3 == error(10003),	    '4342: mat_Y3 == error(10003)');
+	vrfy(mat_Y3 == error("E_ADD"),	    '4342: mat_Y3 == error("E_ADD")');
 	vrfy(errcount() == ecnt,	    '4343: errcount() == ecnt');
 	mat_Z0 += { };
 	print				    '4344: mat_Z0 += { }';
@@ -5029,22 +5029,22 @@ define test_filesearch()
 	ecnt += 16;
 	print				'5008: ecnt += 16';
 
-	vrfy(search(f, 45) == error(10122),
-			'5009: search(f, 45) == error(10122)');
-	vrfy(search(f, "a", 1/2) == error(10123),
-			'5010: search(f, "a", 1/2) == error(10123)');
-	vrfy(search(f, "a", 0, "b") == error(10124),
-			'5011: search(f, "a", 0, "b") == error(10124)');
-	vrfy(search(f, "a", 0) == error(10126),
-			'5012: search(f, "a") == error(10126)');
-	vrfy(rsearch(f, 45) == error(10128),
-			'5013: rsearch(f, 45) == error(10128)');
-	vrfy(rsearch(f, "a", "b") == error(10129),
-			'5014: rsearch(f, "a", "b") == error(10129)');
-	vrfy(rsearch(f, "a", 0, "b") == error(10130),
-			'5015: rsearch(f, "a", 0, "b") == error(10130)');
-	vrfy(rsearch(f, "a", 0) == error(10132),
-			'5016: rsearch(f,"a",0) == error(10132)');
+	vrfy(search(f, 45) == error("E_SEARCH_2"),
+					'5009: search(f, 45) == error("E_SEARCH_2")');
+	vrfy(search(f, "a", 1/2) == error("E_SEARCH_3"),
+					'5010: search(f, "a", 1/2) == error(E_SEARCH_3")');
+	vrfy(search(f, "a", 0, "b") == error("E_SEARCH_4"),
+					'5011: search(f, "a", 0, "b") == error("E_SEARCH_4")');
+	vrfy(search(f, "a", 0) == error("E_SEARCH_6"),
+					'5012: search(f, "a") == error("E_SEARCH_6")');
+	vrfy(rsearch(f, 45) == error("E_RSEARCH_2"),
+					'5013: rsearch(f, 45) == error("E_RSEARCH_2")');
+	vrfy(rsearch(f, "a", "b") == error("E_RSEARCH_3"),
+					'5014: rsearch(f, "a", "b") == error("E_RSEARCH_3")');
+	vrfy(rsearch(f, "a", 0, "b") == error("E_RSEARCH_4"),
+					'5015: rsearch(f, "a", 0, "b") == error("E_RSEARCH_4")');
+	vrfy(rsearch(f, "a", 0) == error("E_RSEARCH_6"),
+					'5016: rsearch(f,"a",0) == error("E_RSEARCH_6")');
 
 	/* errmax and errcount should be bumped up the 16 errors above */
 	vrfy(errcount() == ecnt,	'5017: errcount() == ecnt');
@@ -6206,8 +6206,8 @@ define test_is()
 	print				  '5907: cfg = config("all")';
 	ecnt += 2;
 	print				  '5908: ecnt += 2';
-	serr = error(1);
-	print				  '5909: serr = error(1)';
+	serr = error("E_1");
+	print				  '5909: serr = error("E_1")';
 	nerr = newerror("curds");
 	print				  '5910: nerr = newerror("curds")';
 	odd = 23209;
@@ -8312,11 +8312,11 @@ define test_exponentiation()
 	print				'8807: ecnt += 2';
 	vrfy((1/0) ^ -1 == 0,		'8808: (1/0) ^ -1 == 0');
 	vrfy((1/0) ^ -2 == 0,		'8809: (1/0) ^ -2 == 0');
-	vrfy((1/0) ^ 0 == error(10001),	'8810: (1/0) ^ 0 == error(10001)');
-	vrfy((1/0) ^ 3 == error(10001),	'8811: (1/0) ^ 3 == error(10001)');
-	vrfy(0 ^ -2 == error(10001),	'8812: 0 ^ -2 == error(10001)');
-	vrfy((1/0) ^ 1i == error(10001),'8813: (1/0) ^ 1i == error(10001)');
-	vrfy((1/0) ^ 0i == error(10001),'8814: (1/0) ^ 0i == error(10001)');
+	vrfy((1/0) ^ 0 == error("E_DIVBYZERO"),	'8810: (1/0) ^ 0 == error("E_DIVBYZERO")');
+	vrfy((1/0) ^ 3 == error("E_DIVBYZERO"),	'8811: (1/0) ^ 3 == error("E_DIVBYZERO")');
+	vrfy(0 ^ -2 == error("E_DIVBYZERO"),	'8812: 0 ^ -2 == error("E_DIVBYZERO")');
+	vrfy((1/0) ^ 1i == error("E_DIVBYZERO"),'8813: (1/0) ^ 1i == error("E_DIVBYZERO")');
+	vrfy((1/0) ^ 0i == error("E_DIVBYZERO"),'8814: (1/0) ^ 0i == error("E_DIVBYZERO")');
 
 	/* real ^ real */
 	vrfy(5^6 == 15625,		'8815: 5^6 == 15625');
@@ -9922,7 +9922,28 @@ vrfy(errsym("E__USERMAX") == 32767,
 vrfy_errsym(
 	 9919, 32767, "E_32767");
 
-print	'9920: ending test of error("E_STRING") errno("E_STRING"), strerror("E_STRING") and errsym("E_STRING")';
+vrfy_errsym(
+	 9920, 1, "E_1");
+vrfy_errsym(
+	 9921, 7, "E_7");
+vrfy_errsym(
+	 9922, 10, "E_10");
+vrfy_errsym(
+	 9923, 31, "E_31");
+vrfy_errsym(
+	 9924, 100, "E_100");
+vrfy_errsym(
+	 9925, 127, "E_127");
+vrfy_errsym(
+	 9926, 1000, "E_1000");
+vrfy_errsym(
+	 9927, 2203, "E_2203");
+vrfy_errsym(
+	 9928, 19937, "E_19937");
+vrfy_errsym(
+	 9929, 23209, "E_23209");
+
+print	'9930: ending test of error("E_STRING") errno("E_STRING"), strerror("E_STRING") and errsym("E_STRING")';
 
 
 /*
@@ -9954,7 +9975,7 @@ vrfy_errsym(10017, 10017, "E_APPR_3");
 vrfy_errsym(10018, 10018, "E_ROUND_1");
 vrfy_errsym(10019, 10019, "E_ROUND_2");
 vrfy_errsym(10020, 10020, "E_ROUND_3");
-vrfy_errsym(10021, 10021, "E_BROUND");
+vrfy_errsym(10021, 10021, "E_BROUND_1");
 vrfy_errsym(10022, 10022, "E_BROUND_2");
 vrfy_errsym(10023, 10023, "E_BROUND_3");
 vrfy_errsym(10024, 10024, "E_SQRT_1");
