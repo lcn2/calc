@@ -1,8 +1,8 @@
 NAME
-    errstr - convert between "E_STRING" errsym into a errnum number
+    errsym - convert between "E_STRING" errsym into a errnum number
 
 SYNOPSIS
-    errstr(errnum | "E_STRING")
+    errsym(errnum | "E_STRING")
 
 TYPES
     errnum	integer
@@ -18,7 +18,7 @@ DESCRIPTION
 
 	For example:
 
-	    ; print errstr(10003)
+	    ; print errsym(10003)
 	    E_ADD
 
 	When an errnum that matches one of the following errtbl.h #define,
@@ -35,7 +35,7 @@ DESCRIPTION
 
 	For example:
 
-	    ; print errstr(0)
+	    ; print errsym(0)
 	    E_NONE
 
 	When E__NONE <= errnum < E__BASE, or when E__USERDEF <= errnum <= E__USERMAX,
@@ -44,7 +44,7 @@ DESCRIPTION
 
 	For example:
 
-	    ; print errstr(123)
+	    ; print errsym(123)
 	    E_123
 
 	For all other errnum values, an error is returned.
@@ -75,7 +75,7 @@ DESCRIPTION
 
 	For example:
 
-	    ; print errstr("E_NONE")
+	    ; print errsym("E_NONE")
 	    0
 
 	For all other E_STRING strings that start with "E__", an error is returned.
@@ -91,18 +91,18 @@ DESCRIPTION
 
 	For example:
 
-	    ; print errstr("E_ADD")
+	    ; print errsym("E_ADD")
 	    10003
 
 	For all other string arguments, an error is returned.
 
-    When errstr returns an integer, the global calc error count (see help errcount)
-    is NOT changed.  And of course, when errstr("E_STRING") returns an error, the
+    When errsym returns an integer, the global calc error count (see help errcount)
+    is NOT changed.  And of course, when errsym("E_STRING") returns an error, the
     global calc error count is incremented by 1.
 
     Consider the E_MUL calc error condition:
 
-	Given a E_STRING errsym, errstr("E_STRING") will return the errnum integer
+	Given a E_STRING errsym, errsym("E_STRING") will return the errnum integer
 	error code that is associated with the E_STRING errsym.
 
 	The 4th entry of struct errtbl error_table is:
@@ -116,8 +116,8 @@ DESCRIPTION
 	Thus 10005 is the errnum, "E_MUL" is the E_STRING errsym that is
 	associated with the errmsg error message: "Bad arguments for +".
 
-	In the above example, errstr("E_MUL") will return 10005.
-	Also errstr("E_10005") will also return 10005.
+	In the above example, errsym("E_MUL") will return 10005.
+	Also errsym("E_10005") will also return 10005.
 
 	To complete the E_STRING use in the above example:
 
@@ -128,16 +128,16 @@ DESCRIPTION
 	    Both strerror(10005) and strerror("E_MUL") both return "Bad arguments for *"
 
 EXAMPLE
-    ; print errstr("E_ADD"), errstr("E_SUB"), errstr("E_MUL"), errstr("E_DIV")
+    ; print errsym("E_ADD"), errsym("E_SUB"), errsym("E_MUL"), errsym("E_DIV")
     10003 10004 10005 10006
 
-    ; print errstr("E__NONE"), errstr("E__BASE"), errstr("E__USERDEF"), errstr("E__USERMAX")
+    ; print errsym("E__NONE"), errsym("E__BASE"), errsym("E__USERDEF"), errsym("E__USERMAX")
     0 10000 20000 32767
 
-    ; print errstr(10003), errstr(10004), errstr(10005), errstr(10006)
+    ; print errsym(10003), errsym(10004), errsym(10005), errsym(10006)
     E_ADD E_SUB E_MUL E_DIV
 
-    ; print errstr(0), errstr(10000), errstr(20000), errstr(32767)
+    ; print errsym(0), errsym(10000), errsym(20000), errsym(32767)
     E__NONE E__BASE E__USERDEF E__USERMAX
 
 LIMITS
@@ -150,10 +150,23 @@ LINK LIBRARY
 
     CONST struct errtbl error_table[ECOUNT+2];	/* calc error codes, error symbols and error messages */
 
+    bool is_e_digits(CONST char *errsym);
+    bool is_valid_errnum(int errnum);
+    bool is_errnum_in_error_table(int errnum);
+    bool is_e_1string(CONST char *errsym);
+    bool is_e_2string(CONST char *errsym);
+    struct errtbl *find_errsym_in_errtbl(CONST char *errsym, CONST struct errtbl *tbl);
+    struct errtbl *find_errnum_in_errtbl(int errnum, CONST struct errtbl *tbl);
+    CONST struct errtbl *lookup_errnum_in_error_table(int errnum);
+    int errsym_2_errnum(CONST char *errsym);
+    char *errnum_2_errsym(int errnum, bool *palloced);
+    char *errnum_2_errmsg(int errnum, bool *palloced);
+    char *errsym_2_errmsg(CONST char *errsym, bool *palloced);
+
 SEE ALSO
     errcount, errmax, errno, errorcodes, iserror, newerror, stoponerror, strerror
 
-## Copyright (C) 1999-2006,2023  Landon Curt Noll
+## Copyright (C) 2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

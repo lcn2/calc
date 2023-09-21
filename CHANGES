@@ -329,6 +329,16 @@ The following are the changes from calc version 2.14.3.5 to date:
     computation error related E_STRING strings.  Now related sets of
     E_STRING strings end in _ (underscore) followed by digits.
 
+    Added errsym builtin function.  The errsym(errnum | "E_STRING")
+    builtin, , when given a valid integer errnum that corresponds to a
+    calc error condition, will return an E_STRING string, AND when given
+    a valid E_STRING string that is associated with a calc error
+    condition, will return errnum integer that corresponds to a calc
+    error condition.
+
+    Supplying a non-integer numeric errnum code to error(), errno(),
+    strerror(), or errsym() will result in an error.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

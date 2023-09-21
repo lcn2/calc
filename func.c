@@ -8001,7 +8001,7 @@ S_FUNC VALUE
 f_error(int count, VALUE **vals)
 {
 	VALUE *vp;
-	long r;
+	long newerr;
 
 	/*
 	 * case: error() no args
@@ -8009,7 +8009,7 @@ f_error(int count, VALUE **vals)
 	if (count == 0) {
 
 		/* fetch but do NOT set errno */
-		r = set_errno(NULL_ERRNUM);
+		newerr = set_errno(NULL_ERRNUM);
 
 	/*
 	 * case: 1 arg
@@ -8021,8 +8021,8 @@ f_error(int count, VALUE **vals)
 		 * case: negative or 0 v_type
 		 */
 		if (vp->v_type <= 0) {
-			r = (long) -vp->v_type;
-			if (is_valid_errnum(r) == false) {
+			newerr = (long) -vp->v_type;
+			if (is_valid_errnum(newerr) == false) {
 				error_value(E_ERROR_2);
 				math_error("Numeric argument is outside valid errnum range for error");
 				not_reached();
@@ -8038,8 +8038,8 @@ f_error(int count, VALUE **vals)
 			 * case: error("E_STRING")
 			 */
 			case V_STR:
-				r = errsym_2_errnum(vp->v_str->s_str);
-				if (is_valid_errnum(r) == false) {
+				newerr = errsym_2_errnum(vp->v_str->s_str);
+				if (is_valid_errnum(newerr) == false) {
 					error_value(E_ERROR_3);
 					math_error("String argument is not a valid E_STRING for error");
 					not_reached();
@@ -8050,8 +8050,13 @@ f_error(int count, VALUE **vals)
 			 * case: error(errnum)
 			 */
 			case V_NUM:
-				r = qtoi(vp->v_num);
-				if (is_valid_errnum(r) == false) {
+				if (qisfrac(vp->v_num)) {
+					error_value(E_ERROR_4);
+					math_error("Numeric argument is not an integer for error");
+					not_reached();
+				}
+				newerr = qtoi(vp->v_num);
+				if (is_valid_errnum(newerr) == false) {
 					error_value(E_ERROR_2);
 					math_error("Numeric argument is outside valid errnum range for error");
 					not_reached();
@@ -8072,7 +8077,7 @@ f_error(int count, VALUE **vals)
 	/*
 	 * return error
 	 */
-	return error_value(r);
+	return error_value(newerr);
 }
 
 
@@ -8135,6 +8140,11 @@ f_errno(int count, VALUE **vals)
 			 * case: errno(errnum)
 			 */
 			case V_NUM:
+				if (qisfrac(vp->v_num)) {
+					error_value(E_ERRNO_4);
+					math_error("Numeric argument is not an integer for errno");
+					not_reached();
+				}
 				newerr = qtoi(vp->v_num);
 				if (is_valid_errnum(newerr) == false) {
 					error_value(E_ERRNO_2);
@@ -8223,6 +8233,11 @@ f_strerror(int count, VALUE **vals)
 			 * case: strerror(errnum)
 			 */
 			case V_NUM:
+				if (qisfrac(vp->v_num)) {
+					error_value(E_STRERROR_5);
+					math_error("Numeric argument is not an integer for strerror");
+					not_reached();
+				}
 				errnum = qtoi(vp->v_num);
 				if (is_valid_errnum(errnum) == false) {
 					error_value(E_STRERROR_2);
@@ -8265,6 +8280,95 @@ f_strerror(int count, VALUE **vals)
 
 	/*
 	 * return errmsg result as a V_STR
+	 */
+	return result;
+}
+
+
+S_FUNC VALUE
+f_errsym(VALUE *vp)
+{
+	int errnum = NULL_ERRNUM;	/* global calc_errno value */
+	bool alloced = false;		/* true ==> errsym is allocated, false ==> errsym is static */
+	char *errsym;			/* converted errsym or NULL */
+	VALUE result;			/* errno as a VALUE */
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * case: negative or 0 v_type OR errno(errnum)
+	 */
+	if (vp->v_type <= 0 || vp->v_type == V_NUM) {
+
+		/*
+		 * case: negative or 0 v_type
+		 */
+		if (vp->v_type <= 0) {
+
+			/* convert negative type into a errnum calc_errno-like value */
+			errnum = (int) -vp->v_type;
+
+		/*
+		 * case: errno(errnum)
+		 */
+		} else {
+
+			/* use arg[1] integer */
+			if (qisfrac(vp->v_num)) {
+				error_value(E_ERRSYM_4);
+				math_error("Numeric argument is not an integer for errsym");
+				not_reached();
+			}
+			errnum = qtoi(vp->v_num);
+		}
+
+		/*
+		 * case: invalid errnum
+		 */
+		if (is_valid_errnum(errnum) == false) {
+			error_value(E_ERRSYM_2);
+			math_error("Numeric argument is outside valid errnum range for errsym");
+			not_reached();
+		}
+
+		/*
+		 * convert errnum code into errsym "E_STRING"
+		 */
+		errsym = errnum_2_errsym(errnum, &alloced);
+		if (errsym == NULL) {
+			error_value(E_ERRSYM_5);
+			math_error("Unable to create a valid E_STRING from the errnum for errsym");
+			not_reached();
+		}
+		result.v_type = V_STR;
+		result.v_str = makenewstring(errsym);
+		if (alloced == true) {
+			free(errsym);
+			errsym = NULL;
+			alloced = false;
+		}
+
+	/*
+	 * case: errno("E_STRING") arg
+	 */
+	} else if (vp->v_type == V_STR) {
+
+		/*
+		 * convert E_STRING errsym to errno
+		 */
+		errnum = errsym_2_errnum(vp->v_str->s_str);
+		if (is_valid_errnum(errnum) == false) {
+			error_value(E_ERRSYM_3);
+			math_error("String argument is not a valid E_STRING for errsym");
+			not_reached();
+		}
+		result.v_type = V_NUM;
+		result.v_num = itoq((long) errnum);
+	}
+
+	/*
+	 * return result
 	 */
 	return result;
 }
@@ -11517,6 +11621,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "set or read calc_errno"},
 	{"error", 0, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_error},
 	 "generate error value"},
+	{"errsym", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_errsym},
+	 "convert between E_STRING errsym into a errnum number"},
 	{"estr", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_estr},
 	 "exact text string representation of value"},
 	{"euler", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_euler},

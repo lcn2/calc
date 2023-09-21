@@ -42,7 +42,7 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    errcount, errno, errorcodes, errstr, iserror, newerror, stoponerror, strerror
+    errcount, errno, errorcodes, errsym, iserror, newerror, stoponerror, strerror
 
 ## Copyright (C) 2006,2021,2023  Landon Curt Noll
 ##

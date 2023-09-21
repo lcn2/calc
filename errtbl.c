@@ -133,7 +133,7 @@
  * is needed, add a new code to the bottom (just above the final NULL entry).
  *
  * Starting with calc version 2.15 the E_STRING errsym values became visible
- * via the error, errno, errstr and strerror builtin interface.  DO NOT change
+ * via the error, errno, errsym and strerror builtin interface.  DO NOT change
  * the existing E_STRING errsym codes once a new code is released in a calc
  * stable version.  If a different E_STRING errsym code is needed, add a new
  * entry to the bottom (just above the final NULL entry).
@@ -692,11 +692,19 @@ CONST struct errtbl error_table[] = {
 	{ 10541,	"E_CSC_5",		"Invalid zero argument for cot" },
 	{ 10542,	"E_CSC_6",		"Invalid complex argument for csc" },
 	{ 10543,	"E_ERROR_3",		"String argument is not a valid E_STRING for error" },
-	{ 10544,	"E_STRERROR_3",		"String argument is not a valid E_STRING for strerror" },
-	{ 10545,	"E_STRERROR_4",		"errnum_2_errmsg returned NULL as called from strerror" },
-	{ 10546,	"E_ERRNO_1",		"Invalid argument type for errno" },
-	{ 10547,	"E_ERRNO_2",		"Numeric argument is outside valid errnum range for errno" },
-	{ 10548,	"E_ERRNO_3",		"String argument is not a valid E_STRING for errno" },
+	{ 10544,	"E_ERROR_4",		"Numeric argument is not an integer for error" },
+	{ 10545,	"E_STRERROR_3",		"String argument is not a valid E_STRING for strerror" },
+	{ 10546,	"E_STRERROR_4",		"errnum_2_errmsg returned NULL as called from strerror" },
+	{ 10547,	"E_STRERROR_5",		"Numeric argument is not an integer for strerror" },
+	{ 10548,	"E_ERRNO_1",		"Invalid argument type for errno" },
+	{ 10549,	"E_ERRNO_2",		"Numeric argument is outside valid errnum range for errno" },
+	{ 10550,	"E_ERRNO_3",		"String argument is not a valid E_STRING for errno" },
+	{ 10551,	"E_ERRNO_4",		"Numeric argument is not an integer for errno" },
+	{ 10552,	"E_ERRSYM_1",		"Invalid argument type for errsym" },
+	{ 10553,	"E_ERRSYM_2",		"Numeric argument is outside valid errnum range for errsym" },
+	{ 10554,	"E_ERRSYM_3",		"String argument is not a valid E_STRING for errsym" },
+	{ 10555,	"E_ERRSYM_4",		"Numeric argument is not an integer for errsym" },
+	{ 10556,	"E_ERRSYM_5",		"Unable to create a valid E_STRING from the errnum for errsym" },
 	/* IMPORTANT NOTE: add new entries above here and be sure their errnum numeric value is consecutive! */
 
 	/* The next NULL entry must be last */
@@ -813,7 +821,7 @@ is_e_digits(CONST char *errsym)
  *	E__NONE <= errnum <= E__USERMAX
  *
  * NOTE: This functions does NOT check of the errnum is in
- * some struct errtbl array.  For that see find_estring_in_errtbl().
+ * some struct errtbl array.  For that see find_errsym_in_errtbl().
  *
  * given:
  *	errnum	errnum to check
@@ -1107,7 +1115,7 @@ is_e_2string(CONST char *errsym)
 
 
 /*
- * find_estring_in_errtbl - given an E_STRING find it in a struct errtbl array
+ * find_errsym_in_errtbl - given an E_STRING find it in a struct errtbl array
  *
  * given:
  *	errsym	E_STRING to check
@@ -1118,7 +1126,7 @@ is_e_2string(CONST char *errsym)
  *	NULL ==> NULL arg, or errsym not found
  */
 struct errtbl *
-find_estring_in_errtbl(CONST char *errsym, CONST struct errtbl *tbl)
+find_errsym_in_errtbl(CONST char *errsym, CONST struct errtbl *tbl)
 {
 	CONST struct errtbl *ret;	/* pointer to struct errtbl entry with matching errsym */
 
@@ -1457,7 +1465,7 @@ verify_error_table(void)
 	 * setup the E__HIGHEST entry in private_error_alias[] to be an alias for
 	 * the highest assigned calc computation error code from error_table[].
 	 */
-	found = find_estring_in_errtbl("E__HIGHEST", private_error_alias);
+	found = find_errsym_in_errtbl("E__HIGHEST", private_error_alias);
 	if (found == NULL) {
 		fprintf(stderr, "**** %s ERROR: private_error_alias missing E__HIGHEST errsym entry",
 			program);
@@ -1654,7 +1662,7 @@ errsym_2_errnum(CONST char *errsym)
 		/*
 		 * look in private_error_alias[] for E__ errsym
 		 */
-		found = find_estring_in_errtbl(errsym, private_error_alias);
+		found = find_errsym_in_errtbl(errsym, private_error_alias);
 		if (found != NULL) {
 			/* return matching errnum */
 			return found->errnum;
@@ -1669,7 +1677,7 @@ errsym_2_errnum(CONST char *errsym)
 		/*
 		 * look in error_table[] for E_ errsym
 		 */
-		found = find_estring_in_errtbl(errsym, error_table);
+		found = find_errsym_in_errtbl(errsym, error_table);
 		if (found != NULL) {
 			/* return matching errnum */
 			return found->errnum;

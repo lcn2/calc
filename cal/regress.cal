@@ -9791,9 +9791,143 @@ vrfy(config("redecl_warn",1)==0,  '9608: config("redecl_warn",1)==0');
 vrfy(config("dupvar_warn",1)==0,  '9609: config("dupvar_warn",1)==0');
 
 
-/* ************************************************ */
-/* NOTE: ==> Room for new tests 9700-98899 here <== */
-/* ************************************************ */
+/* *********************************************** */
+/* NOTE: ==> Room for new tests 9700-9899 here <== */
+/* *********************************************** */
+
+
+/*
+ * test 99dd: define vrfy_errsym and test E_STRING in error, errno, strerror, errsym
+ */
+print;
+print	'9900: Prep to test of error("E_STRING") errno("E_STRING"), strerror("E_STRING") and errsym("E_STRING")';
+/*
+ * vrfy_errsym - verify errsym builtin function for valid errnum codes and errsym "E_STRING" strings
+ */
+define vrfy_errsym(testnum, errnum, e_string)
+{
+	local res_errnum;	/* errnum result of errsym(e_string) */
+	local res_errsym;	/* errnum result of errsym(errnum) */
+
+	/*
+	 * firewall
+	 */
+	if (!isint(testnum) || testnum <= 0) {
+		print '**** Non-true result (' : testnum : \
+		      '): invalid vrfy_errsym testnum (must be int > 0) 1st arg:', testnum;
+		++prob;
+		return;
+	}
+	if (!isint(errnum) || errnum < 0) {
+		print '**** Non-true result (' : testnum : \
+		      '): invalid vrfy_errsym errnum (must be int >= 0) 2nd arg:', errnum;
+		++prob;
+		return;
+	}
+	if (!isstr(e_string) || strlen(e_string) < 3 || strncmp(e_string, "E_", 2) != 0) {
+		print '**** Non-true result (' : testnum : \
+		      '): invalid vrfy_errsym e_string (must be string starting with E_) 3rd arg:', e_string;
+		++prob;
+		return;
+	}
+
+	/*
+	 * try errsym("E_STRING")
+	 */
+	res_errnum = errsym(e_string);
+	if (!isint(res_errnum)) {
+		print '**** Non-true result (' : testnum : \
+		      '): errsym("' : e_string : '") returned non-integer:', res_errnum;
+		++prob;
+		return;
+	}
+
+	/*
+	 * try errsym(errnum)
+	 */
+	res_errsym = errsym(errnum);
+	if (!isstr(res_errsym)) {
+		print '**** Non-true result (' : testnum : \
+		      '): errsym(' : errnum : ') returned non-string:', res_errsym;
+		++prob;
+		return;
+	}
+
+	/*
+	 * compare errnum and res_errnum
+	 */
+	if (errnum != res_errnum) {
+		print '**** Non-true result (' : testnum : \
+		      '): vrfy_errsym errnum 2nd arg:', errnum, '!= errsym("' : e_string : '"):', res_errnum;
+		++prob;
+		return;
+	}
+
+	/*
+	 * compare errsym and res_errsym
+	 */
+	if (strcmp(e_string, res_errsym) != 0) {
+		print '**** Non-true result (' : testnum : \
+		      '): vrfy_errsym errsym 3rd arg: "' : e_string : '" != errsym(' : errnum : '): "' : res_errsym : '"';
+		++prob;
+		return;
+	}
+
+	/*
+	 * report success
+	 */
+	print testnum : ': vrfy_errsym(' : testnum : ',', errnum : ', "' : e_string : '") passed';
+	return;
+}
+print	'9901: parsed vrfy_errsym()';
+
+++ecnt,;
+print	'9902: ++ecnt';
+res = error("E_ADD");
+print	'9903: res = error("E_ADD")';
+vrfy(iserror(res) == errsym("E_ADD"),
+	'9904: iserror(res) == errsym("E_ADD")');
+vrfy(errno("E_ADD") == errsym("E_ADD"),
+	'9905: errno("E_ADD") == errsym("E_ADD")');
+vrfy(errno() == errsym("E_ADD"),
+	'9906: errno() == errsym("E_ADD")');
+vrfy(strerror("E_ADD") == "Bad arguments for +",
+	'9907: strerror("E_ADD") == "Bad arguments for +"');
+
+vrfy(errsym("E__NONE") == 0,
+	'9909: errsym("E__NONE") == 0');
+vrfy_errsym(
+	 9910, 0, "E_0");
+
+vrfy(errsym("E__BASE") == 10000,
+	'9911: errsym("E__BASE") == 10000');
+vrfy_errsym(
+	 9912, 10000, "E__BASE");
+
+vrfy(errsym("E__HIGHEST") > errsym("E__BASE"),
+	'9913: errsym("E__HIGHEST") > errsym("E__BASE")');
+vrfy(errsym("E__USERDEF") > errsym("E__HIGHEST"),
+	'9914: errsym("E__USERDEF") > errsym("E__HIGHEST")');
+
+vrfy(errsym("E__USERDEF") == 20000,
+	'9915: errsym("E__USERDEF") == 20000');
+vrfy_errsym(
+	 9916, 20000, "E_20000");
+
+vrfy(errsym("E__USERMAX") > errsym("E__USERDEF"),
+	'9917: errsym("E__USERMAX") > errsym("E__USERDEF")');
+
+vrfy(errsym("E__USERMAX") == 32767,
+	'9918: errsym("E__USERMAX") == 32767');
+vrfy_errsym(
+	 9919, 32767, "E_32767");
+
+print	'9920: ending test of error("E_STRING") errno("E_STRING"), strerror("E_STRING") and errsym("E_STRING")';
+
+
+/* ************************************************* */
+/* NOTE: ==> Room for new tests 11000-98899 here <== */
+/* ************************************************* */
 
 
 /* ********************************************************* */

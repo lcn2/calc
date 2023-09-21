@@ -100,7 +100,7 @@ E_FUNC bool is_errnum_in_error_table(int errnum);
 E_FUNC int e_digits_2_errnum(CONST char *errsym);
 E_FUNC bool is_e_1string(CONST char *errsym);
 E_FUNC bool is_e_2string(CONST char *errsym);
-E_FUNC struct errtbl *find_estring_in_errtbl(CONST char *errsym, CONST struct errtbl *tbl);
+E_FUNC struct errtbl *find_errsym_in_errtbl(CONST char *errsym, CONST struct errtbl *tbl);
 E_FUNC struct errtbl *find_errnum_in_errtbl(int errnum, CONST struct errtbl *tbl);
 E_FUNC CONST struct errtbl *lookup_errnum_in_error_table(int errnum);
 E_FUNC void verify_error_table(void);

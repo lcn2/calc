@@ -206,7 +206,7 @@ DETAIL_HELP= abs access acos acosh acot acoth acovercos acoversin \
 	calcpath catalan ceil cfappr cfsim char cmdbuf cmp comb conj cos cosh \
 	cot coth count covercos coversin cp csc csch ctime d2dm d2dms d2g d2r \
 	delete den dereference det digit digits display dms2d dp epsilon \
-	errcount errmax errno error errstr estr euler eval exp fact factor \
+	errcount errmax errno error errsym estr euler eval exp fact factor \
 	fclose fcnt feof ferror fflush fgetc fgetfield fgetfile fgetline fgets \
 	fgetstr fib files floor fopen forall fpathopen fprintf fputc fputs \
 	fputstr frac free freebernoulli freeeuler freeglobals freeredc \

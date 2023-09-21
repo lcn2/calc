@@ -25,7 +25,7 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    errcount, errmax, errno, errorcodes, errstr, newerror, stoponerror, strerror
+    errcount, errmax, errno, errorcodes, errsym, newerror, stoponerror, strerror
 
     isassoc, isatty, isblk, isconfig, isdefined, iseven, isfile,
     ishash, isident, isint, islist, ismat, ismult, isnull, isnum, isobj,

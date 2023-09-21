@@ -33,6 +33,7 @@
 # To replace a Makefile variable, use := symbols.  For example:
 #
 #	CCWERR:= -Werror
+#	DEBUG:= -O0 -g
 #
 # You can append to an existing Makefile variable using '+=' symbols.
 # For example:
@@ -67,7 +68,6 @@
 #
 # Uncomment these lines:
 #
-# DEBUG:= -O0 -g
 # FSANITIZE:= -fsanitize=undefined -fsanitize=address -fsanitize=bool -fsanitize=bounds
 # FSANITIZE+= -fsanitize=enum -fsanitize=vptr -fsanitize=integer-divide-by-zero
 # FSANITIZE+= -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow
@@ -77,6 +77,7 @@
 # CFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
 # LDFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
 # CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1
+# DEBUG:= -O0 -g
 ####
 
 ####
@@ -98,7 +99,6 @@
 #
 # Uncomment these lines:
 #
-# DEBUG:= -O0 -g3
 # FSANITIZE:= -fsanitize=undefined -fsanitize=address -fsanitize=bool -fsanitize=bounds
 # FSANITIZE+= -fsanitize=enum -fsanitize=vptr -fsanitize=integer-divide-by-zero
 # FSANITIZE+= -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow
@@ -109,4 +109,5 @@
 # CFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
 # LDFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
 # CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1
+DEBUG:= -O0 -g3
 ####

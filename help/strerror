@@ -33,7 +33,7 @@ DESCRIPTION
 	    cstrerror(10003);	/* error 10003 has a E_STRING of "E_ADD" */
 	    cstrerror("E_ADD");	/* error 10003 has a E_STRING of "E_ADD" */
 
-	See help errstr for information on E_STRING errsym codes.
+	See help errsym for information on E_STRING errsym codes.
 
 	For a list of the E_STRING associated with calc computation error
 	codes, see help errorcodes.
@@ -106,8 +106,21 @@ LINK LIBRARY
 
     CONST struct errtbl error_table[ECOUNT+2];	/* calc error codes, error symbols and error messages */
 
+    bool is_e_digits(CONST char *errsym);
+    bool is_valid_errnum(int errnum);
+    bool is_errnum_in_error_table(int errnum);
+    bool is_e_1string(CONST char *errsym);
+    bool is_e_2string(CONST char *errsym);
+    struct errtbl *find_errsym_in_errtbl(CONST char *errsym, CONST struct errtbl *tbl);
+    struct errtbl *find_errnum_in_errtbl(int errnum, CONST struct errtbl *tbl);
+    CONST struct errtbl *lookup_errnum_in_error_table(int errnum);
+    int errsym_2_errnum(CONST char *errsym);
+    char *errnum_2_errsym(int errnum, bool *palloced);
+    char *errnum_2_errmsg(int errnum, bool *palloced);
+    char *errsym_2_errmsg(CONST char *errsym, bool *palloced);
+
 SEE ALSO
-    errcount, errmax, errno, errorcodes, errstr, iserror, newerror, stoponerror
+    errcount, errmax, errno, errorcodes, errsym, iserror, newerror, stoponerror
 
     strcat, strcpy, strlen, strncmp, strncpy, strpos,
     strprintf, strscan, strscanf, substr,
