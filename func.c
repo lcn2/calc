@@ -2422,7 +2422,7 @@ f_logn(int count, VALUE **vals)
 		if (vals[1]->v_type == V_NUM && qispowerof2(vals[1]->v_num, &ln_n_r) == true) {
 			if (!qiszero(ln_n_r)) {
 				result.v_num = qqdiv(ln_x_r, ln_n_r);
-				if (result.v_com == NULL) {
+				if (result.v_num == NULL) {
 					return error_value(E_LOGN_4);
 				}
 				result.v_type = V_NUM;
@@ -2604,7 +2604,7 @@ f_logn(int count, VALUE **vals)
 			ctmp.imag = qlink(&_qzero_);
 			ctmp.links = 1;
 			p_cval = c_div(&ctmp, ln_n_c);
-			if (result.v_com == NULL) {
+			if (p_cval == NULL) {
 				return error_value(E_LOGN_3);
 			}
 			/* check if division is COMPLEX or NUMBER */
