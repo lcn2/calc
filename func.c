@@ -8023,9 +8023,7 @@ f_error(int count, VALUE **vals)
 		if (vp->v_type <= 0) {
 			newerr = (long) -vp->v_type;
 			if (is_valid_errnum(newerr) == false) {
-				error_value(E_ERROR_2);
-				math_error("Numeric argument is outside valid errnum range for error");
-				not_reached();
+				return error_value(E_ERROR_2);
 			}
 
 		/*
@@ -8040,9 +8038,7 @@ f_error(int count, VALUE **vals)
 			case V_STR:
 				newerr = errsym_2_errnum(vp->v_str->s_str);
 				if (is_valid_errnum(newerr) == false) {
-					error_value(E_ERROR_3);
-					math_error("String argument is not a valid E_STRING for error");
-					not_reached();
+					return error_value(E_ERROR_3);
 				}
 				break;
 
@@ -8051,15 +8047,11 @@ f_error(int count, VALUE **vals)
 			 */
 			case V_NUM:
 				if (qisfrac(vp->v_num)) {
-					error_value(E_ERROR_4);
-					math_error("Numeric argument is not an integer for error");
-					not_reached();
+					return error_value(E_ERROR_4);
 				}
 				newerr = qtoi(vp->v_num);
 				if (is_valid_errnum(newerr) == false) {
-					error_value(E_ERROR_2);
-					math_error("Numeric argument is outside valid errnum range for error");
-					not_reached();
+					return error_value(E_ERROR_2);
 				}
 				break;
 
@@ -8067,9 +8059,7 @@ f_error(int count, VALUE **vals)
 			 * case: invalid type
 			 */
 			default:
-				error_value(E_ERROR_1);
-				math_error("Invalid argument type for error");
-				not_reached();
+				return error_value(E_ERROR_1);
 			}
 		}
 	}
@@ -8113,9 +8103,7 @@ f_errno(int count, VALUE **vals)
 		if (vp->v_type <= 0) {
 			newerr = (int) -vp->v_type;
 			if (is_valid_errnum(newerr) == false) {
-				error_value(E_ERRNO_2);
-				math_error("Numeric argument is outside valid errnum range for errno");
-				not_reached();
+				return error_value(E_ERRNO_2);
 			}
 
 		/*
@@ -8130,9 +8118,7 @@ f_errno(int count, VALUE **vals)
 			case V_STR:
 				newerr = errsym_2_errnum(vp->v_str->s_str);
 				if (is_valid_errnum(newerr) == false) {
-					error_value(E_ERRNO_3);
-					math_error("String argument is not a valid E_STRING for errno");
-					not_reached();
+					return error_value(E_ERRNO_3);
 				}
 				break;
 
@@ -8141,15 +8127,11 @@ f_errno(int count, VALUE **vals)
 			 */
 			case V_NUM:
 				if (qisfrac(vp->v_num)) {
-					error_value(E_ERRNO_4);
-					math_error("Numeric argument is not an integer for errno");
-					not_reached();
+					return error_value(E_ERRNO_4);
 				}
 				newerr = qtoi(vp->v_num);
 				if (is_valid_errnum(newerr) == false) {
-					error_value(E_ERRNO_2);
-					math_error("Numeric argument is outside valid errnum range for errno");
-					not_reached();
+					return error_value(E_ERRNO_2);
 				}
 				break;
 
@@ -8157,9 +8139,7 @@ f_errno(int count, VALUE **vals)
 			 * case: invalid type
 			 */
 			default:
-				error_value(E_ERRNO_1);
-				math_error("Invalid argument type for errno");
-				not_reached();
+				return error_value(E_ERRNO_1);
 			}
 		}
 	}
@@ -8206,9 +8186,7 @@ f_strerror(int count, VALUE **vals)
 		if (vp->v_type <= 0) {
 			errnum = (int) -vp->v_type;
 			if (is_valid_errnum(errnum) == false) {
-				error_value(E_STRERROR_2);
-				math_error("Numeric argument is outside valid errnum range for strerror");
-				not_reached();
+				return error_value(E_STRERROR_2);
 			}
 
 		/*
@@ -8223,9 +8201,7 @@ f_strerror(int count, VALUE **vals)
 			case V_STR:
 				errnum = errsym_2_errnum(vp->v_str->s_str);
 				if (is_valid_errnum(errnum) == false) {
-					error_value(E_STRERROR_3);
-					math_error("String argument is not a valid E_STRING for strerror");
-					not_reached();
+					return error_value(E_STRERROR_3);
 				}
 				break;
 
@@ -8234,15 +8210,11 @@ f_strerror(int count, VALUE **vals)
 			 */
 			case V_NUM:
 				if (qisfrac(vp->v_num)) {
-					error_value(E_STRERROR_5);
-					math_error("Numeric argument is not an integer for strerror");
-					not_reached();
+					return error_value(E_STRERROR_5);
 				}
 				errnum = qtoi(vp->v_num);
 				if (is_valid_errnum(errnum) == false) {
-					error_value(E_STRERROR_2);
-					math_error("Numeric argument is outside valid errnum range for strerror");
-					not_reached();
+					return error_value(E_STRERROR_2);
 				}
 				break;
 
@@ -8250,9 +8222,7 @@ f_strerror(int count, VALUE **vals)
 			 * case: invalid type
 			 */
 			default:
-				error_value(E_STRERROR_1);
-				math_error("Invalid argument type for strerror");
-				not_reached();
+				return error_value(E_STRERROR_1);
 			}
 		}
 	}
@@ -8263,9 +8233,7 @@ f_strerror(int count, VALUE **vals)
 	errmsg = errnum_2_errmsg(errnum, &alloced);
 	if (errmsg == NULL) {
 		/* this should not happen: but in case it does we will throw an error */
-		error_value(E_STRERROR_4);
-		math_error("errnum_2_errmsg returned NULL as called from strerror");
-		not_reached();
+		return error_value(E_STRERROR_4);
 	}
 	result.v_str = makenewstring(errmsg);
 
@@ -8316,9 +8284,7 @@ f_errsym(VALUE *vp)
 
 			/* use arg[1] integer */
 			if (qisfrac(vp->v_num)) {
-				error_value(E_ERRSYM_4);
-				math_error("Numeric argument is not an integer for errsym");
-				not_reached();
+				return error_value(E_ERRSYM_4);
 			}
 			errnum = qtoi(vp->v_num);
 		}
@@ -8327,9 +8293,7 @@ f_errsym(VALUE *vp)
 		 * case: invalid errnum
 		 */
 		if (is_valid_errnum(errnum) == false) {
-			error_value(E_ERRSYM_2);
-			math_error("Numeric argument is outside valid errnum range for errsym");
-			not_reached();
+			return error_value(E_ERRSYM_2);
 		}
 
 		/*
@@ -8337,9 +8301,7 @@ f_errsym(VALUE *vp)
 		 */
 		errsym = errnum_2_errsym(errnum, &alloced);
 		if (errsym == NULL) {
-			error_value(E_ERRSYM_5);
-			math_error("Unable to create a valid E_STRING from the errnum for errsym");
-			not_reached();
+			return error_value(E_ERRSYM_5);
 		}
 		result.v_type = V_STR;
 		result.v_str = makenewstring(errsym);
@@ -8359,9 +8321,7 @@ f_errsym(VALUE *vp)
 		 */
 		errnum = errsym_2_errnum(vp->v_str->s_str);
 		if (is_valid_errnum(errnum) == false) {
-			error_value(E_ERRSYM_3);
-			math_error("String argument is not a valid E_STRING for errsym");
-			not_reached();
+			return error_value(E_ERRSYM_3);
 		}
 		result.v_type = V_NUM;
 		result.v_num = itoq((long) errnum);

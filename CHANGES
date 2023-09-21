@@ -307,11 +307,6 @@ The following are the changes from calc version 2.14.3.5 to date:
     The errtbl.h include file, unless ERRCODE_SRC is defined
     also includes attribute.h and errsym.h.
 
-    Passing an invalid argument to error(), errno() or strerror() will
-    set errno AND throw a math error.  Before errno would be set and
-    an error value was returned.  Before there was no way to tell if
-    the error value was a result of the arg or if an error detected.
-
     Added E_STRING to error([errnum | "E_STRING"]) builtin function.
     Added E_STRING to errno([errnum | "E_STRING"]) builtin function.
     Added E_STRING to strerror([errnum | "E_STRING"]) builtin function.
