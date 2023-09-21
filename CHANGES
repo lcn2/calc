@@ -339,6 +339,10 @@ The following are the changes from calc version 2.14.3.5 to date:
     Supplying a non-integer numeric errnum code to error(), errno(),
     strerror(), or errsym() will result in an error.
 
+    Added tests to the calc regression test suite (cal/regress.cal) to
+    verify that the errnum calc computation error codes and their
+    E_STRING values have not changed.
+
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 

@@ -735,7 +735,7 @@ STATIC struct errtbl private_error_alias[] = {
 
 	/* The E__NONE entry below must start with E__NONE (0) and must be first!! */
 	{ E__NONE,	"E__NONE",		"calc_errno cleared: libc errno codes above here" },
-	{ E__BASE,	"E__BASE",		"calc errors start above here" },
+	{ E__BASE,	"E__BASE",		"calc computation error codes start above here" },
 	/* In the next E__HIGHEST entry, errnum and errmsg are changed when verify_error_table() is called */
 	{ INV_ERRNUM,	"E__HIGHEST",		"replace this with the E__HIGHEST errmsg" },
 	{ E__USERDEF,	"E__USERDEF",		"user defined error codes start here" },
