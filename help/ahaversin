@@ -1,0 +1,81 @@
+NAME
+    ahaversin - inverse half versed trigonometric sine
+
+SYNOPSIS
+    ahaversin(x [,eps])
+
+TYPES
+    x		number (real or complex)
+    eps		0 < real < 1, defaults to epsilon()
+
+    return	real
+
+DESCRIPTION
+    Returns the inverse half versed trigonometric sine of x to a multiple of eps with error less in
+    absolute value than .75 * eps.
+
+    This function is sometimes called ahavers, or archaversin, is equivalent to:
+
+	ahaversin(x) = acos(1 - 2*x)
+
+EXAMPLE
+    ; print ahaversin(0), ahaversin(0.5), ahaversin(1)
+    0 1.57079632679489661923 3.14159265358979323846
+
+    ; print ahaversin(-0.5), ahaversin(-1)
+    1.31695789692481670863i 1.76274717403908605045i
+
+    ; print ahaversin(.5, 1e-5), ahaversin(.5, 1e-10), ahaversin(.5, 1e-15), ahaversin(.5, 1e-20)
+    1.5708 1.5707963268 1.570796326794897 1.57079632679489661923
+
+    ; print ahaversin(5), ahaversin(5i)
+    3.14159265358979323846-2.88727095035762068499i 1.47161428291640388291+3.0031252437131292174i
+
+    ; print ahaversin(5+5i)
+    2.30223844993908362988+3.29254348147605425081i
+
+    ; pi = pi(1e-20)
+    ; print ahaversin(pi/6), ahaversin(pi/3)
+    1.61801141852728010475 3.14159265358979323846-0.4311526751624601302i
+
+    ; print ahaversin(4*pi/3)
+    3.14159265358979323846-2.68696776930293700505i
+
+LIMITS
+    0 < eps < 1
+
+LINK LIBRARY
+    NUMBER *qahaversin_or_NULL(NUMBER *q, NUMBER *epsilon);
+    NUMBER *qahaversin(NUMBER *q, NUMBER *epsilon);
+    COMPLEX *c_ahaversin(COMPLEX *c, NUMBER *epsilon);
+
+SEE ALSO
+    sin, cos, tan, cot, sec, csc
+    asin, acos, atan, acot, asec, acsc
+    versin, coversin, vercos, covercos
+    aversin, acoversin, avercos, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    hacoversin, havercos, ahacovercos
+    epsilon
+
+## Copyright (C) 2023  Landon Curt Noll
+##
+## Calc is open software; you can redistribute it and/or modify it under
+## the terms of the version 2.1 of the GNU Lesser General Public License
+## as published by the Free Software Foundation.
+##
+## Calc is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+## Public License for more details.
+##
+## A copy of version 2.1 of the GNU Lesser General Public License is
+## distributed with calc under the filename COPYING-LGPL.  You should have
+## received a copy with calc; if not, write to Free Software Foundation, Inc.
+## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+##
+## Under source code control:	2023/09/24 11:19:54
+## File existed as early as:	2023
+##
+## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

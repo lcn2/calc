@@ -11,10 +11,13 @@ TYPES
     return	number
 
 DESCRIPTION
-    Calculate the sine of x to a multiple of eps with error less in
+    Calculate the trigonometric sine of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
 EXAMPLE
+    ; print sin(1/2), sin(5/7), sin(42/7)
+    0.47942553860420300027 0.6550778971785185742 -0.27941549819892587281
+
     ; print sin(1, 1e-5), sin(1, 1e-10), sin(1, 1e-15), sin(1, 1e-20)
     0.84147 0.8414709848 0.841470984807896 0.84147098480789650665
 
@@ -22,11 +25,8 @@ EXAMPLE
     9.1545-4.16891i 9.1544991469-4.16890696i
 
     ; pi = pi(1e-20)
-    ; print sin(pi/6, 1e-10), sin(pi/2, 1e-10), sin(pi, 1e-10)
+    ; print sin(pi/6), sin(pi/2), sin(pi)
     0.5 1 0
-
-    ; print sin(1/2), sin(5/7), sin(42/7)
-    0.47942553860420300027 0.6550778971785185742 -0.27941549819892587281
 
 LIMITS
     0 < eps < 1
@@ -38,8 +38,10 @@ LINK LIBRARY
 SEE ALSO
     cos, tan, cot, sec, csc
     asin, acos, atan, acot, asec, acsc
-    versin, coversin, vercos, avercos
-    aversin, acoversin, covercos, acovercos
+    versin, coversin, vercos, covercos
+    aversin, acoversin, avercos, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll

@@ -11,7 +11,7 @@ TYPES
     return	real
 
 DESCRIPTION
-    Calculate the cotangent of x to a multiple of eps, with error less
+    Calculate the trigonometric cotangent of x to a multiple of eps, with error less
     in absolute value than .75 * eps.
 
     This function is equivalent to:
@@ -19,6 +19,9 @@ DESCRIPTION
 	cot(x) = cos(x) / sin(x)
 
 EXAMPLE
+    ; print cot(1/2), cot(5/7), cot(42/7)
+    1.83048772171245191927 1.15339160419695060142 -3.43635300418012783207
+
     ; print cot(1, 1e-5), cot(1, 1e-10), cot(1, 1e-15), cot(1, 1e-20)
     0.64209 0.6420926159 0.642092615934331 0.64209261593433070301
 
@@ -26,11 +29,10 @@ EXAMPLE
     ~-0.00373977357605613583-~0.99675796378381737782i ~-0.00373971037383300017-~0.99675779657435500069i
 
     ; pi = pi(1e-20)
-    ; print cot(pi/12, 1e-10), cot(pi/6, 1e-10), cot(pi/3, 1e-10), cot(pi/2, 1e-10)
-    3.7320508076 1.7320508076 0.5773502692 0
+    ; print cot(pi/6), cot(pi/2), cot(pi)
+    1.73205080756887729353 0 -378303066284076833726.92240766640467212978
 
-    ; print cot(1/2), cot(5/7), cot(42/7)
-    1.83048772171245191927 1.15339160419695060142 -3.43635300418012783207
+    ; # NOTE: The huge value for cot(pi) is due to the fact that pi is not exact.
 
 LIMITS
     0 < eps < 1
@@ -42,8 +44,10 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, sec, csc
     asin, acos, atan, acot, asec, acsc
-    versin, coversin, vercos, avercos
-    aversin, acoversin, covercos, acovercos
+    versin, coversin, vercos, covercos
+    aversin, acoversin, avercos, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll

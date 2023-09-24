@@ -11,26 +11,33 @@ TYPES
     return	real
 
 DESCRIPTION
-    Returns the inverse cotangent of x to a multiple of eps with error less in
+    Returns the inverse trigonometric cotangent of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    This function is sometimes called arccot, is such that:
-
-	cot(acot(x)) = x
-
-    and such that:
-
-	acot(x) = atan(1/x)
+    This function is sometimes called arccot.
 
 EXAMPLE
-    ; print acot(2, 1e-5),  acot(2, 1e-10), acot(2, 1e-15), acot(2, 1e-20)
-    0.46365 0.463647609 0.463647609000806 0.46364760900080611621
+    ; print acot(0), acot(0.5), acot(1)
+    1.57079632679489661923 1.10714871779409050302 0.78539816339744830962
+
+    ; print acot(-0.5), acot(-1)
+    2.03444393579570273544 2.35619449019234492885
+
+    ; print acot(.5, 1e-5), acot(.5, 1e-10), acot(.5, 1e-15), acot(.5, 1e-20)
+    1.10715 1.1071487178 1.107148717794091 1.10714871779409050302
 
     ; print acot(5), acot(5i)
     0.19739555984988075837 -0.20273255405408219099i
 
-    ; print acos(5+5i)
-    0.79039774680951249644-2.64919617780647114961i
+    ; print acot(5+5i)
+    0.10065855418732038003-0.09932544936725086122i
+
+    ; pi = pi(1e-20)
+    ; print acot(pi/6), acot(pi/3)
+    1.08844841969387164375 0.76234753416487458792
+
+    ; print acot(4*pi/3)
+    0.23434608748833616077
 
 LIMITS
     0 < eps < 1
@@ -42,8 +49,10 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, cot, sec, csc
     asin, acos, atan, asec, acsc
-    versin, coversin, vercos, avercos
-    aversin, acoversin, covercos, acovercos
+    versin, coversin, vercos, covercos
+    aversin, acoversin, avercos, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll

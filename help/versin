@@ -19,8 +19,8 @@ DESCRIPTION
 	versin(x) = 1 - cos(x)
 
 EXAMPLE
-    ; print versin(0.2), versin(3/7), versin(-31)
-    0.01993342215875836888 0.09043964832583332597 0.08525764219546872104
+    ; print versin(1/2), versin(5/7), versin(42/7)
+    0.12241743810962728388 0.24443865329930340153 0.03982971334963397945
 
     ; print versin(1, 1e-5), versin(1, 1e-10), versin(1, 1e-15), versin(1, 1e-20)
     0.4597 0.4596976941 0.45969769413186 0.4596976941318602826
@@ -29,8 +29,8 @@ EXAMPLE
     5.18963+9.10923i 5.189625691+9.1092278938i
 
     ; pi = pi(1e-20)
-    ; print versin(pi/3, 1e-10), versin(pi/2, 1e-10), versin(pi, 1e-10), versin(3*pi/2, 1e-10)
-    0.5 1 2 1
+    ; print versin(pi/6), versin(pi/2), versin(pi)
+    0.13397459621556135324 1 2
 
 LIMITS
     0 < eps < 1
@@ -42,8 +42,10 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, cot, sec, csc
     asin, acos, atan, acot, asec, acsc
-    versin, coversin, vercos, avercos
-    aversin, acoversin, covercos, acovercos
+    coversin, vercos, covercos
+    aversin, acoversin, avercos, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 2023  Landon Curt Noll

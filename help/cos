@@ -11,10 +11,13 @@ TYPES
     return	number
 
 DESCRIPTION
-    Calculate the cosine of x to a multiple of eps with error less in
+    Calculate the trigonometric cosine of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
 EXAMPLE
+    ; print cos(1/2), cos(5/7), cos(42/7)
+    0.87758256189037271612 0.75556134670069659847 0.96017028665036602055
+
     ; print cos(1, 1e-5), cos(1, 1e-10), cos(1, 1e-15), cos(1, 1e-20)
     0.5403 0.5403023059 0.54030230586814 0.5403023058681397174
 
@@ -22,11 +25,8 @@ EXAMPLE
     -4.18963-9.10923i -4.189625691-9.1092278938i
 
     ; pi = pi(1e-20)
-    ; print cos(pi/3, 1e-10), cos(pi/2, 1e-10), cos(pi, 1e-10)
-    0.5 0 -1
-
-    ; print cos(1/2), cos(5/7), cos(42/7)
-    0.87758256189037271612 0.75556134670069659847 0.96017028665036602055
+    ; print cos(pi/6), cos(pi/2), cos(pi)
+    0.86602540378443864676 0 -1
 
 LIMITS
     0 < eps < 1
@@ -38,8 +38,10 @@ LINK LIBRARY
 SEE ALSO
     sin, tan, cot, sec, csc
     asin, acos, atan, acot, asec, acsc
-    versin, coversin, vercos, avercos
-    aversin, acoversin, covercos, acovercos
+    versin, coversin, vercos, covercos
+    aversin, acoversin, avercos, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll

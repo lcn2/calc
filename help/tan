@@ -11,7 +11,7 @@ TYPES
     return	real
 
 DESCRIPTION
-    Calculate the tangent of x to a multiple of eps, with error less
+    Calculate the trigonometric tangent of x to a multiple of eps, with error less
     in absolute value than .75 * eps.
 
     This function is equivalent to:
@@ -19,6 +19,9 @@ DESCRIPTION
 	tan(x) = sin(x) / cos(x)
 
 EXAMPLE
+    ; print tan(1/2), tan(5/7), tan(42/7)
+    0.54630248984379051326 0.8670082185107029875 -0.29100619138474915705
+
     ; print tan(1, 1e-5), tan(1, 1e-10), tan(1, 1e-15), tan(1, 1e-20)
     1.55741 1.5574077247 1.557407724654902 1.55740772465490223051
 
@@ -26,11 +29,10 @@ EXAMPLE
     ~-0.00376408798745471014+~1.00323845857938817252i ~-0.00376402563894634508+~1.00323862734859967572i
 
     ; pi = pi(1e-20)
-    ; print tan(0, 1e-10), tan(pi/6, 1e-10), tan(pi/3, 1e-10), tan(pi, 1e-10)
-    0 0.5773502692 1.7320508076 0
+    ; print tan(pi/6), tan(pi/2), tan(pi)
+    0.57735026918962576451 756606132568153667453.84481533280934425956 0
 
-    ; print tan(1/2), tan(5/7), tan(42/7)
-    0.54630248984379051326 0.8670082185107029875 -0.29100619138474915705
+    ; # NOTE: The huge value for tan(pi/2) is due to the fact that pi is not exact.
 
 LIMITS
     0 < eps < 1
@@ -42,8 +44,10 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, cot, sec, csc
     asin, acos, atan, acot, asec, acsc
-    versin, coversin, vercos, avercos
-    aversin, acoversin, covercos, acovercos
+    versin, coversin, vercos, covercos
+    aversin, acoversin, avercos, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 1999,2023  Landon Curt Noll

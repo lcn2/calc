@@ -1,61 +1,54 @@
 NAME
-    asec - inverse trigonometric secant
+    haversin - half versed trigonometric sine
 
 SYNOPSIS
-    asec(x [,eps])
+    haversin(x [,eps])
 
 TYPES
     x		number (real or complex)
     eps		0 < real < 1, defaults to epsilon()
 
-    return	real
+    return	number
 
 DESCRIPTION
-    Returns the inverse trigonometric secant of x to a multiple of eps with error less in
+    Calculate the half versed trigonometric sine of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    This function is sometimes called arcsec.
+    This function is sometimes called havers, is equivalent to:
+
+	haversin(x) = versin(x) / 2 = (1 - cos(x)) / 2
 
 EXAMPLE
-    ; print asec(0), asec(0.5), asec(1)
-    Error 10453 1.31695789692481670863i 0
+    ; print haversin(1/2), haversin(5/7), haversin(42/7)
+    0.06120871905481364194 ~0.12221932664965170076 ~0.01991485667481698972
 
-    ; print asec(-0.5), asec(-1)
-    3.14159265358979323846-1.31695789692481670863i 3.14159265358979323846
+    ; print haversin(1, 1e-5), haversin(1, 1e-10), haversin(1, 1e-15), haversin(1, 1e-20)
+    0.22985 0.22984884705 0.22984884706593 0.2298488470659301413
 
-    ; print asec(.5, 1e-5), asec(.5, 1e-10), asec(.5, 1e-15), asec(.5, 1e-20)
-    1.31695i 1.316957897i 1.316957896924816i 1.31695789692481670863i
-
-    ; print asec(5), asec(5i)
-    1.36943840600456582778 1.57079632679489661923+0.19869011034924140647i
-
-    ; print asec(5+5i)
-    1.4711326239351014592+0.10033029811220500594i
+    ; print haversin(2 + 3i, 1e-5), haversin(2 + 3i, 1e-10)
+    2.594815+4.554615i 2.5948128455+4.5546139469i
 
     ; pi = pi(1e-20)
-    ; print asec(pi/6), asec(pi/3)
-    1.26327680856656556836i 0.30137360974529145454
-
-    ; print asec(4*pi/3)
-    1.32973601406082299099
+    ; print haversin(pi/6), haversin(pi/2), haversin(pi)
+    0.06698729810778067662 0.5 1
 
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
-    NUMBER *qasec(NUMBER *x, NUMBER *eps)
-    COMPLEX *c_asec(COMPLEX *c, NUMBER *epsilon)
+    NUMBER *qhaversin(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_haversin(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
     sin, cos, tan, cot, sec, csc
-    asin, acos, atan, acot, acsc
+    asin, acos, atan, acot, asec, acsc
     versin, coversin, vercos, covercos
     aversin, acoversin, avercos, acovercos
-    haversin, hacoversin, havercos, hacovercos
+    hacoversin, havercos, hacovercos
     ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
-## Copyright (C) 1999,2021,2023  Landon Curt Noll
+## Copyright (C) 2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -71,8 +64,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/11/13 03:49:00
-## File existed as early as:	1995
+## Under source code control:	2023/09/24 11:14:48
+## File existed as early as:	2023
 ##
 ## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
 ## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

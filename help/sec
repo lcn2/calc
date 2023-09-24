@@ -11,7 +11,7 @@ TYPES
     return	real
 
 DESCRIPTION
-    Calculate the secant of x to a multiple of eps, with error less
+    Calculate the trigonometric secant of x to a multiple of eps, with error less
     in absolute value than .75 * eps.
 
     This function is equivalent to:
@@ -19,6 +19,9 @@ DESCRIPTION
 	sec(x) = 1 / cos(x)
 
 EXAMPLE
+    ; print sec(1/2), sec(5/7), sec(42/7)
+    1.13949392732454912231 1.3235192673191814545 1.04148192659510767648
+
     ; print sec(1, 1e-5), sec(1, 1e-10), sec(1, 1e-15), sec(1, 1e-20)
     1.85082 1.8508157177 1.850815717680926 1.85081571768092561791
 
@@ -26,11 +29,10 @@ EXAMPLE
     ~-0.04167497639869547021+~0.09061109101765280898i ~-0.04167496441100888150+~0.09061113719571288336i
 
     ; pi = pi(1e-20)
-    ; print 1e-10), sec(pi/6, 1e-10), sec(pi/3, 1e-10), sec(pi, 1e-10)
-    1.1547005384 2 -1
+    ; print sec(pi/6), sec(pi/2), sec(pi)
+    1.15470053837925152902 756606132568153667453.84481533280934425956 -1
 
-    ; print sec(1/2), sec(5/7), sec(42/7)
-    1.13949392732454912231 1.3235192673191814545 1.04148192659510767648
+    ; # NOTE: The huge value for sec(pi/2) is because pi, as calculated, is not exact.
 
 LIMITS
     0 < eps < 1
@@ -42,8 +44,10 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, cot, csc
     asin, acos, atan, acot, asec, acsc
-    versin, coversin, vercos, avercos
-    aversin, acoversin, covercos, acovercos
+    versin, coversin, vercos, covercos
+    aversin, acoversin, avercos, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 1999,2023  Landon Curt Noll

@@ -11,7 +11,7 @@ TYPES
     return	real
 
 DESCRIPTION
-    Calculate the cosecant of x to a multiple of eps, with error less
+    Calculate the trigonometric cosecant of x to a multiple of eps, with error less
     in absolute value than .75 * eps.
 
     This function is equivalent to:
@@ -19,6 +19,9 @@ DESCRIPTION
 	csc(x) = 1 / sin(x)
 
 EXAMPLE
+    ; print csc(1/2), csc(5/7), csc(42/7)
+    2.08582964293348818577 1.52653601091884339347 -3.57889954725440563736
+
     ; print csc(1, 1e-5), csc(1, 1e-10), csc(1, 1e-15), csc(1, 1e-20)
     1.1884 1.1883951058 1.188395105778121 1.18839510577812121626
 
@@ -26,11 +29,10 @@ EXAMPLE
     ~0.09047318155450436310+~0.04120099965201690801i ~0.09047320975303232503+~0.04120098628887626238i
 
     ; pi = pi(1e-20)
-    ; print csc(pi/6, 1e-10), csc(pi/3, 1e-10), csc(4*pi/3, 1e-10)
-    2 1.1547005384 -1.1547005384
+    ; print csc(pi/6), csc(pi/2), csc(pi)
+    2 1 378303066284076833726.92240766640467212978
 
-    ; print csc(1/2), csc(5/7), csc(42/7)
-    2.08582964293348818577 1.52653601091884339347 -3.57889954725440563736
+    ; # NOTE: The huge value for csc(pi) is because pi, as calculated, is not exact.
 
 LIMITS
     0 < eps < 1
@@ -42,8 +44,10 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, cot, sec
     asin, acos, atan, acot, asec, acsc
-    versin, coversin, vercos, avercos
-    aversin, acoversin, covercos, acovercos
+    versin, coversin, vercos, covercos
+    aversin, acoversin, avercos, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 1999,2023  Landon Curt Noll

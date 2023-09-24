@@ -1,8 +1,8 @@
 NAME
-    vercos - versed trigonometric cosine
+    ahacoversin - inverse half coversed trigonometric sine
 
 SYNOPSIS
-    vercos(x [,eps])
+    ahacoversin(x [,eps])
 
 TYPES
     x		number (real or complex)
@@ -11,41 +11,50 @@ TYPES
     return	number
 
 DESCRIPTION
-    Calculate the versed trigonometric cosine of x to a multiple of eps with error less in
+    Calculate the inverse half coversed trigonometric sine of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    This function is sometimes called verc, or vercosin, is equivalent to:
+    This function is sometimes called ahacovers, or ahacvs, or archacoversin, is equivalent to:
 
-	vercos(x) = 1 + cos(x)
+	ahacoversin(x) = asin(1 - 2*x)
 
 EXAMPLE
-    ; print vercos(1/2), vercos(5/7), vercos(42/7)
-    1.87758256189037271612 1.75556134670069659847 1.96017028665036602055
+    ; print ahacoversin(0), ahacoversin(0.5), ahacoversin(1)
+    1.57079632679489661923 0 -1.57079632679489661923
 
-    ; print vercos(1, 1e-5), vercos(1, 1e-10), vercos(1, 1e-15), vercos(1, 1e-20)
-    1.5403 1.5403023059 1.54030230586814 1.5403023058681397174
+    ; print ahacoversin(-0.5), ahacoversin(-1)
+    1.57079632679489661923-1.31695789692481670863i 1.57079632679489661923-1.76274717403908605046i
 
-    ; print vercos(2 + 3i, 1e-5), vercos(2 + 3i, 1e-10)
-    -3.18963-9.10923i -3.189625691-9.1092278938i
+    ; print ahacoversin(.5, 1e-5), ahacoversin(.5, 1e-10), ahacoversin(.5, 1e-15), ahacoversin(.5, 1e-20)
+    0 0 0 0
+
+    ; print ahacoversin(5), ahacoversin(5i)
+    -1.57079632679489661923+2.88727095035762068505i 0.09918204387849273625-3.00312524371312921749i
+
+    ; print ahacoversin(5+5i)
+    -0.73144212314418701068-3.29254348147605425075i
 
     ; pi = pi(1e-20)
-    ; print vercos(pi/6), vercos(pi/2), vercos(pi)
-    1.86602540378443864676 1 0
+    ; print ahacoversin(pi/6), ahacoversin(pi/3)
+    -0.04721509173238348552 -1.57079632679489661923+0.4311526751624601302i
+
+    ; print ahacoversin(4*pi/3)
+    -1.57079632679489661923+2.6869677693029370051i
 
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
-    NUMBER *qvercos(NUMBER *x, NUMBER *eps)
-    COMPLEX *c_vercos(COMPLEX *x, NUMBER *eps)
+    NUMBER *qahacoversin(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_ahacoversin(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
     sin, cos, tan, cot, sec, csc
     asin, acos, atan, acot, asec, acsc
-    versin, coversin, covercos
+    versin, coversin, vercos, covercos
     aversin, acoversin, avercos, acovercos
     haversin, hacoversin, havercos, hacovercos
-    ahaversin, hacoversin, havercos, ahacovercos
+    ahaversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 2023  Landon Curt Noll
@@ -64,7 +73,7 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2023/09/05 23:25:28
+## Under source code control:	2023/09/24 11:17:28
 ## File existed as early as:	2023
 ##
 ## chongo <was here> /\oo/\	http://www.isthe.com/chongo/

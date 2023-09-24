@@ -19,11 +19,24 @@ DESCRIPTION
 	avercos(x) = acos(x - 1)
 
 EXAMPLE
+    ; print avercos(0), avercos(0.5), avercos(1)
+    3.14159265358979323846 2.09439510239319549231 1.57079632679489661923
+
+    ; print avercos(-0.5), avercos(-1)
+    3.14159265358979323846-0.96242365011920689499i 3.14159265358979323846-1.31695789692481670863i
+
     ; print avercos(.5, 1e-5), avercos(.5, 1e-10), avercos(.5, 1e-15), avercos(.5, 1e-20)
     2.0944 2.0943951024 2.094395102393195 2.09439510239319549231
 
-    ; print avercos(2), avercos(-5), avercos(2 + 3i)
-    0 3.14159265358979323846-2.47788873028847500481i 1.26319267726418536931-1.86416154415788242834i
+    ; print avercos(5), avercos(5i)
+    2.06343706889556054673i 1.76458946334982880901-2.33097465304931241744i
+
+    ; print avercos(5+5i)
+    0.90197975146896932949-2.5513216254756988588i
+
+    ; pi = pi(1e-20)
+    ; print avercos(pi/6), avercos(pi/3), avercos(4*pi/3)
+    2.06735337024267487468 1.52358123506251313372 1.82724307729474887792i
 
 LIMITS
     0 < eps < 1
@@ -36,8 +49,10 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, cot, sec, csc
     asin, acos, atan, acot, asec, acsc
-    versin, coversin, vercos, avercos
-    aversin, acoversin, covercos, acovercos
+    versin, coversin, vercos, covercos
+    aversin, acoversin, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 2023  Landon Curt Noll

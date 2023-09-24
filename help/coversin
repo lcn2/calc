@@ -19,8 +19,8 @@ DESCRIPTION
 	coversin(x) = 1 - sin(x)
 
 EXAMPLE
-    ; print coversin(0.2), coversin(3/7), coversin(-31)
-    0.80133066920493878454 0.58442814500694799193 0.59596235467693499395
+    ; print coversin(1/2), coversin(5/7), coversin(42/7)
+    0.52057446139579699973 0.3449221028214814258 1.27941549819892587281
 
     ; print coversin(1, 1e-5), coversin(1, 1e-10), coversin(1, 1e-15), coversin(1, 1e-20)
     0.15853 0.1585290152 0.158529015192104 0.15852901519210349335
@@ -29,8 +29,8 @@ EXAMPLE
     -8.1545+4.16891i -8.1544991469+4.16890696i
 
     ; pi = pi(1e-20)
-    ; print coversin(pi/6, 1e-10), coversin(pi/2, 1e-10), coversin(pi, 1e-10), coversin(3*pi/2, 1e-10)
-    0.5 0 1 2
+    ; print coversin(pi/6), coversin(pi/2), coversin(pi)
+    0.5 0 1
 
 LIMITS
     0 < eps < 1
@@ -42,8 +42,10 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, cot, sec, csc
     asin, acos, atan, acot, asec, acsc
-    versin, coversin, vercos, avercos
-    aversin, acoversin, covercos, acovercos
+    versin, vercos, covercos
+    aversin, acoversin, avercos, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 2023  Landon Curt Noll

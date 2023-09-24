@@ -1,61 +1,54 @@
 NAME
-    asec - inverse trigonometric secant
+    hacovercos - half coversed trigonometric cosine
 
 SYNOPSIS
-    asec(x [,eps])
+    hacovercos(x [,eps])
 
 TYPES
     x		number (real or complex)
     eps		0 < real < 1, defaults to epsilon()
 
-    return	real
+    return	number
 
 DESCRIPTION
-    Returns the inverse trigonometric secant of x to a multiple of eps with error less in
+    Calculate the half coversed trigonometric cosine of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    This function is sometimes called arcsec.
+    This function is sometimes called hacvc, or hacovercosine, is equivalent to:
+
+	hacovercos(x) = covercos(x) / 2 = (1 + sin(x)) / 2
 
 EXAMPLE
-    ; print asec(0), asec(0.5), asec(1)
-    Error 10453 1.31695789692481670863i 0
+    ; print hacovercos(1/2), hacovercos(5/7), hacovercos(42/7)
+    ~0.73971276930210150014 0.8275389485892592871 ~0.36029225090053706360
 
-    ; print asec(-0.5), asec(-1)
-    3.14159265358979323846-1.31695789692481670863i 3.14159265358979323846
+    ; print hacovercos(1, 1e-5), hacovercos(1, 1e-10), hacovercos(1, 1e-15), hacovercos(1, 1e-20)
+    0.920735 0.9207354924 0.920735492403948 ~0.92073549240394825332
 
-    ; print asec(.5, 1e-5), asec(.5, 1e-10), asec(.5, 1e-15), asec(.5, 1e-20)
-    1.31695i 1.316957897i 1.316957896924816i 1.31695789692481670863i
-
-    ; print asec(5), asec(5i)
-    1.36943840600456582778 1.57079632679489661923+0.19869011034924140647i
-
-    ; print asec(5+5i)
-    1.4711326239351014592+0.10033029811220500594i
+    ; print hacovercos(2 + 3i, 1e-5), hacovercos(2 + 3i, 1e-10)
+    5.07725-2.084455i 5.07724957345-2.08445348i
 
     ; pi = pi(1e-20)
-    ; print asec(pi/6), asec(pi/3)
-    1.26327680856656556836i 0.30137360974529145454
-
-    ; print asec(4*pi/3)
-    1.32973601406082299099
+    ; print hacovercos(pi/6), hacovercos(pi/2), hacovercos(pi)
+    0.75 1 0.5
 
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
-    NUMBER *qasec(NUMBER *x, NUMBER *eps)
-    COMPLEX *c_asec(COMPLEX *c, NUMBER *epsilon)
+    NUMBER *qhacovercos(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_hacovercos(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
     sin, cos, tan, cot, sec, csc
-    asin, acos, atan, acot, acsc
+    asin, acos, atan, acot, asec, acsc
     versin, coversin, vercos, covercos
     aversin, acoversin, avercos, acovercos
-    haversin, hacoversin, havercos, hacovercos
+    haversin, hacoversin, havercos
     ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
-## Copyright (C) 1999,2021,2023  Landon Curt Noll
+## Copyright (C) 2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -71,8 +64,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/11/13 03:49:00
-## File existed as early as:	1995
+## Under source code control:	2023/09/24 11:10:08
+## File existed as early as:	2023
 ##
 ## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
 ## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

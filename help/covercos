@@ -14,13 +14,13 @@ DESCRIPTION
     Calculate the coversed trigonometric cosine of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    This function is sometimes called cvc, is equivalent to:
+    This function is sometimes called cvc, or covercosine, is equivalent to:
 
 	covercos(x) = 1 + sin(x)
 
 EXAMPLE
-    ; print covercos(0.2), covercos(3/7), covercos(-31)
-    1.19866933079506121546 1.41557185499305200807 1.40403764532306500605
+    ; print covercos(1/2), covercos(5/7), covercos(42/7)
+    1.47942553860420300027 1.6550778971785185742 0.72058450180107412719
 
     ; print covercos(1, 1e-5), covercos(1, 1e-10), covercos(1, 1e-15), covercos(1, 1e-20)
     1.84147 1.8414709848 1.841470984807896 1.84147098480789650665
@@ -29,8 +29,8 @@ EXAMPLE
     10.1545-4.16891i 10.1544991469-4.16890696i
 
     ; pi = pi(1e-20)
-    ; print covercos(pi/6, 1e-10), covercos(pi/2, 1e-10), covercos(pi, 1e-10), covercos(3*pi/2, 1e-10)
-    1.5 2 1 0
+    ; print covercos(pi/6), covercos(pi/2), covercos(pi)
+    1.5 2 1
 
 LIMITS
     0 < eps < 1
@@ -42,8 +42,10 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, cot, sec, csc
     asin, acos, atan, acot, asec, acsc
-    versin, coversin, vercos, avercos
-    aversin, acoversin, covercos, acovercos
+    versin, coversin, vercos
+    aversin, acoversin, avercos, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 2023  Landon Curt Noll

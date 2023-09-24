@@ -11,26 +11,36 @@ TYPES
     return	real
 
 DESCRIPTION
-    Returns the inverse cosecant of x to a multiple of eps with error less in
+    Returns the inverse trigonometric cosecant of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    This function is sometimes called arccsc, is such that:
-
-	csc(acsc(x)) = x
-
-    and such that:
-
-	acsc(x) = asin(1/x)
+    This function is sometimes called arccsc.
 
 EXAMPLE
-    ; print acsc(2, 1e-5), acsc(2, 1e-10), acsc(2, 1e-15), acsc(2, 1e-20)
-    0.5236 0.5235987756 0.523598775598299 0.52359877559829887308
+    ; print acsc(0), acsc(0.5), acsc(1)
+    Error 10454 1.57079632679489661923-1.31695789692481670863i 1.57079632679489661923
+
+    ; print acsc(-0.5), acsc(-1)
+    -1.57079632679489661923+1.31695789692481670863i -1.57079632679489661923
+
+    ; print acsc(.5, 1e-5), acsc(.5, 1e-10), acsc(.5, 1e-15)
+    1.5708-1.31696i 1.5707963268-1.3169578969i 1.570796326794897-1.316957896924817i
+
+    ; print acsc(.5, 1e-20)
+    1.57079632679489661923-1.31695789692481670863i
 
     ; print acsc(5), acsc(5i)
     0.20135792079033079145 -0.19869011034924140648i
 
-    ; print acos(5+5i)
-    0.79039774680951249644-2.64919617780647114961i
+    ; print acsc(5+5i)
+    0.09966370285979516002-0.10033029811220500594i
+
+    ; pi = pi(1e-20)
+    ; print acsc(pi/6), acsc(pi/3)
+    1.57079632679489661923-1.26327680856656556834i 1.2694227170496051647
+
+    ; print acsc(4*pi/3)
+    0.24106031273407362824
 
 LIMITS
     0 < eps < 1
@@ -42,8 +52,10 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, cot, sec, csc
     asin, acos, atan, acot, asec
-    versin, coversin, vercos, avercos
-    aversin, acoversin, covercos, acovercos
+    versin, coversin, vercos, covercos
+    aversin, acoversin, avercos, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll

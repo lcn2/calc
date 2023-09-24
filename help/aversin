@@ -19,11 +19,24 @@ DESCRIPTION
 	aversin(x) = acos(1 - x)
 
 EXAMPLE
+    ; print aversin(0), aversin(0.5), aversin(1)
+    0 1.04719755119659774615 1.57079632679489661923
+
+    ; print aversin(-0.5), aversin(-1)
+    0.96242365011920689498i 1.31695789692481670863i
+
     ; print aversin(.5, 1e-5), aversin(.5, 1e-10), aversin(.5, 1e-15), aversin(.5, 1e-20)
     1.0472 1.0471975512 1.047197551196598 1.04719755119659774615
 
-    ; print aversin(0), aversin(-5), aversin(2 + 3i)
-    0 2.47788873028847500485i 1.87839997632560786916+1.86416154415788242831i
+    ; print aversin(5), aversin(5i)
+    3.14159265358979323846-2.06343706889556054673i 1.37700319023996442947+2.33097465304931241742i
+
+    ; print aversin(5+5i)
+    2.23961290212082390892+2.55132162547569885882i
+
+    ; pi = pi(1e-20)
+    ; print aversin(pi/6), aversin(pi/3), aversin(4*pi/3)
+    1.07423928334711836378 1.61801141852728010475 3.14159265358979323846-1.82724307729474887791i
 
 LIMITS
     0 < eps < 1
@@ -36,8 +49,10 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, cot, sec, csc
     asin, acos, atan, acot, asec, acsc
-    versin, coversin
-    acoversin
+    versin, coversin, vercos, covercos
+    acoversin, avercos, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 2023  Landon Curt Noll

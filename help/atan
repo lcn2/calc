@@ -11,26 +11,33 @@ TYPES
     return	real
 
 DESCRIPTION
-    Returns the inverse tangent of x to a multiple of eps with error less in
+    Returns the inverse trigonometric tangent of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    This function is sometimes called arctan, is such that:
-
-	tan(atan(x)) = x
-
-    and such that:
-
-	atan(x) = acot(1/x)
+    This function is sometimes called arctan.
 
 EXAMPLE
-    ; print atan(2, 1e-5), atan(2, 1e-10), atan(2, 1e-15), atan(2, 1e-20)
-    1.10715 1.1071487178 1.107148717794091 1.10714871779409050302
+    ; print atan(0), atan(0.5), atan(1)
+    0 0.46364760900080611621 0.78539816339744830962
+
+    ; print atan(-0.5), atan(-1)
+    -0.46364760900080611621 -0.78539816339744830962
+
+    ; print atan(.5, 1e-5), atan(.5, 1e-10), atan(.5, 1e-15), atan(.5, 1e-20)
+    0.46365 0.463647609 0.463647609000806 0.46364760900080611621
 
     ; print atan(5), atan(5i)
     1.37340076694501586086 1.57079632679489661923+0.20273255405408219099i
 
-    ; print acos(5+5i)
-    0.79039774680951249644-2.64919617780647114961i
+    ; print atan(5+5i)
+    ~1.47013777260757623920+0.09932544936725086122i
+
+    ; pi = pi(1e-20)
+    ; print atan(pi/6), atan(pi/3)
+    0.48234790710102497548 0.80844879263002203131
+
+    ; print atan(4*pi/3)
+    1.33645023930656045846
 
 LIMITS
     0 < eps < 1
@@ -42,8 +49,10 @@ LINK LIBRARY
 SEE ALSO
     sin, cos, tan, cot, sec, csc
     asin, acos, acot, asec, acsc
-    versin, coversin, vercos, avercos
-    aversin, acoversin, covercos, acovercos
+    versin, coversin, vercos, covercos
+    aversin, acoversin, avercos, acovercos
+    haversin, hacoversin, havercos, hacovercos
+    ahaversin, hacoversin, havercos, ahacovercos
     epsilon
 
 ## Copyright (C) 1999,2023  Landon Curt Noll
