@@ -1648,7 +1648,7 @@ c_ilog(COMPLEX *c, ZVALUE base)
 
 
 /*
- * c_versin - versed sine for COMPLEX values
+ * c_versin - COMPLEX valued versed trigonometric sine
  *
  * This uses the formula:
  *
@@ -1684,13 +1684,13 @@ c_versin(COMPLEX *c, NUMBER *epsilon)
 	 */
 	ctmp = c_cos(c, epsilon);
 	if (ctmp == NULL) {
-		math_error("Failed to compute complex cos for complex versin");
+		math_error("Failed to compute complex cosine for complex versin");
 		not_reached();
 	}
 	r = c_sub(&_cone_, ctmp);
 
 	/*
-	 * return complex 1 - cos(x)
+	 * return trigonometric result
 	 */
 	comfree(ctmp);
 	return r;
@@ -1698,7 +1698,7 @@ c_versin(COMPLEX *c, NUMBER *epsilon)
 
 
 /*
- * c_aversin - inverse versed sine for COMPLEX values
+ * c_aversin - COMPLEX valued inverse versed trigonometric sine
  *
  * This uses the formula:
  *
@@ -1715,7 +1715,7 @@ COMPLEX *
 c_aversin(COMPLEX *c, NUMBER *epsilon)
 {
 	COMPLEX *r;	/* inverse trig value result */
-	COMPLEX *x;	/* argument to inverse trig function */
+	COMPLEX *ctmp;	/* argument to inverse trig function */
 
 	/*
 	 * firewall
@@ -1732,19 +1732,19 @@ c_aversin(COMPLEX *c, NUMBER *epsilon)
 	/*
 	 * calculate complex inverse trig function value
 	 */
-	x = c_sub(&_cone_, c);
-	r = c_acos(x, epsilon);
-	comfree(x);
+	ctmp = c_sub(&_cone_, c);
+	r = c_acos(ctmp, epsilon);
+	comfree(ctmp);
 
 	/*
-	 * return complex acos(1 - x)
+	 * return inverse trigonometric result
 	 */
 	return r;
 }
 
 
 /*
- * c_coversin - coversed sine for COMPLEX values
+ * c_coversin - COMPLEX valued coversed trigonometric sine
  *
  * This uses the formula:
  *
@@ -1780,21 +1780,21 @@ c_coversin(COMPLEX *c, NUMBER *epsilon)
 	 */
 	ctmp = c_sin(c, epsilon);
 	if (ctmp == NULL) {
-		math_error("Failed to compute complex sin for complex coversin");
+		math_error("Failed to compute complex sine for complex coversin");
 		not_reached();
 	}
 	r = c_sub(&_cone_, ctmp);
+	comfree(ctmp);
 
 	/*
-	 * return complex 1 - sin(x)
+	 * return trigonometric result
 	 */
-	comfree(ctmp);
 	return r;
 }
 
 
 /*
- * c_acoversin - inverse versed sine for COMPLEX values
+ * c_acoversin - COMPLEX valued inverse coversed trigonometric sine
  *
  * This uses the formula:
  *
@@ -1811,7 +1811,7 @@ COMPLEX *
 c_acoversin(COMPLEX *c, NUMBER *epsilon)
 {
 	COMPLEX *r;	/* inverse trig value result */
-	COMPLEX *x;	/* argument to inverse trig function */
+	COMPLEX *ctmp;	/* argument to inverse trig function */
 
 	/*
 	 * firewall
@@ -1828,19 +1828,19 @@ c_acoversin(COMPLEX *c, NUMBER *epsilon)
 	/*
 	 * calculate complex inverse trig function value
 	 */
-	x = c_sub(&_cone_, c);
-	r = c_asin(x, epsilon);
-	comfree(x);
+	ctmp = c_sub(&_cone_, c);
+	r = c_asin(ctmp, epsilon);
+	comfree(ctmp);
 
 	/*
-	 * return complex asin(1 - x)
+	 * return inverse trigonometric result
 	 */
 	return r;
 }
 
 
 /*
- * c_vercos - versed sine for COMPLEX values
+ * c_vercos - COMPLEX valued versed trigonometric cosine
  *
  * This uses the formula:
  *
@@ -1876,21 +1876,21 @@ c_vercos(COMPLEX *c, NUMBER *epsilon)
 	 */
 	ctmp = c_cos(c, epsilon);
 	if (ctmp == NULL) {
-		math_error("Failed to compute complex cos for complex vercos");
+		math_error("Failed to compute complex cosine for complex vercos");
 		not_reached();
 	}
 	r = c_add(&_cone_, ctmp);
+	comfree(ctmp);
 
 	/*
-	 * return complex 1 + cos(x)
+	 * return trigonometric result
 	 */
-	comfree(ctmp);
 	return r;
 }
 
 
 /*
- * c_avercos - inverse versed sine for COMPLEX values
+ * c_avercos - COMPLEX valued inverse versed trigonometric cosine
  *
  * This uses the formula:
  *
@@ -1907,7 +1907,7 @@ COMPLEX *
 c_avercos(COMPLEX *c, NUMBER *epsilon)
 {
 	COMPLEX *r;	/* inverse trig value result */
-	COMPLEX *x;	/* argument to inverse trig function */
+	COMPLEX *ctmp;	/* argument to inverse trig function */
 
 	/*
 	 * firewall
@@ -1924,19 +1924,19 @@ c_avercos(COMPLEX *c, NUMBER *epsilon)
 	/*
 	 * calculate complex inverse trig function value
 	 */
-	x = c_sub(c, &_cone_);
-	r = c_acos(x, epsilon);
-	comfree(x);
+	ctmp = c_sub(c, &_cone_);
+	r = c_acos(ctmp, epsilon);
+	comfree(ctmp);
 
 	/*
-	 * return complex acos(1 - x)
+	 * return inverse trigonometric result
 	 */
 	return r;
 }
 
 
 /*
- * c_covercos - coversed sine for COMPLEX values
+ * c_covercos - COMPLEX valued coversed trigonometric cosine
  *
  * This uses the formula:
  *
@@ -1972,21 +1972,21 @@ c_covercos(COMPLEX *c, NUMBER *epsilon)
 	 */
 	ctmp = c_sin(c, epsilon);
 	if (ctmp == NULL) {
-		math_error("Failed to compute complex sin for complex covercos");
+		math_error("Failed to compute complex sine for complex covercos");
 		not_reached();
 	}
 	r = c_add(&_cone_, ctmp);
+	comfree(ctmp);
 
 	/*
-	 * return complex 1 + sin(x)
+	 * return trigonometric result
 	 */
-	comfree(ctmp);
 	return r;
 }
 
 
 /*
- * c_acovercos - inverse versed sine for COMPLEX values
+ * c_acovercos - COMPLEX valued inverse coversed trigonometric cosine
  *
  * This uses the formula:
  *
@@ -2003,7 +2003,7 @@ COMPLEX *
 c_acovercos(COMPLEX *c, NUMBER *epsilon)
 {
 	COMPLEX *r;	/* inverse trig value result */
-	COMPLEX *x;	/* argument to inverse trig function */
+	COMPLEX *ctmp;	/* argument to inverse trig function */
 
 	/*
 	 * firewall
@@ -2020,12 +2020,408 @@ c_acovercos(COMPLEX *c, NUMBER *epsilon)
 	/*
 	 * calculate complex inverse trig function value
 	 */
-	x = c_sub(c, &_cone_);
-	r = c_asin(x, epsilon);
-	comfree(x);
+	ctmp = c_sub(c, &_cone_);
+	r = c_asin(ctmp, epsilon);
+	comfree(ctmp);
 
 	/*
-	 * return complex asin(x - 1)
+	 * return inverse trigonometric result
+	 */
+	return r;
+}
+
+
+/*
+ * c_haversin - COMPLEX valued half versed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	haversin(x) = versin(x) / 2
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_haversin(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;		/* return COMPLEX value */
+	COMPLEX *ctmp;		/* complex cos(c) */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex trig function value
+	 */
+	ctmp = c_versin(c, epsilon);
+	if (ctmp == NULL) {
+		math_error("Failed to compute complex versed sine for complex haversin");
+		not_reached();
+	}
+	r = c_divq(ctmp, &_qtwo_);
+	comfree(ctmp);
+
+	/*
+	 * return trigonometric result
+	 */
+	return r;
+}
+
+
+/*
+ * c_ahaversin - COMPLEX valued inverse half versed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	ahaversin(x) = acos(1 - 2*x)
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_ahaversin(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;	/* inverse trig value result */
+	COMPLEX *ctmp;	/* argument to inverse trig function */
+	COMPLEX *x2;	/* twice x */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex inverse trig function value
+	 */
+	x2 = c_mulq(c, &_qtwo_);
+	ctmp = c_sub(&_cone_, x2);
+	comfree(x2);
+	r = c_acos(ctmp, epsilon);
+	comfree(ctmp);
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return r;
+}
+
+
+/*
+ * c_hacoversin - COMPLEX valued half coversed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	hacoversin(x) = coversin(x) / 2
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_hacoversin(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;		/* return COMPLEX value */
+	COMPLEX *ctmp;		/* complex sin(c) */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex trig function value
+	 */
+	ctmp = c_coversin(c, epsilon);
+	if (ctmp == NULL) {
+		math_error("Failed to compute complex coversed sine for complex hacoversin");
+		not_reached();
+	}
+	r = c_divq(ctmp, &_qtwo_);
+	comfree(ctmp);
+
+	/*
+	 * return trigonometric result
+	 */
+	return r;
+}
+
+
+/*
+ * c_ahacoversin - COMPLEX valued inverse half coversed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	ahacoversin(x) = asin(1 - 2*x)
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_ahacoversin(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;	/* inverse trig value result */
+	COMPLEX *ctmp;	/* argument to inverse trig function */
+	COMPLEX *x2;	/* twice x */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex inverse trig function value
+	 */
+	x2 = c_mulq(c, &_qtwo_);
+	ctmp = c_sub(&_cone_, x2);
+	comfree(x2);
+	r = c_asin(ctmp, epsilon);
+	comfree(ctmp);
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return r;
+}
+
+
+/*
+ * c_havercos - COMPLEX valued half coversed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	havercos(x) = vercos(x) / 2
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_havercos(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;		/* return COMPLEX value */
+	COMPLEX *ctmp;		/* complex sin(c) */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex trig function value
+	 */
+	ctmp = c_vercos(c, epsilon);
+	if (ctmp == NULL) {
+		math_error("Failed to compute complex versed cosine for complex havercos");
+		not_reached();
+	}
+	r = c_divq(ctmp, &_qtwo_);
+	comfree(ctmp);
+
+	/*
+	 * return trigonometric result
+	 */
+	return r;
+}
+
+
+/*
+ * c_ahavercos - COMPLEX valued inverse half coversed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	ahavercos(x) = acos(2*x - 1)
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_ahavercos(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;	/* inverse trig value result */
+	COMPLEX *ctmp;	/* argument to inverse trig function */
+	COMPLEX *x2;	/* twice x */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex inverse trig function value
+	 */
+	x2 = c_mulq(c, &_qtwo_);
+	ctmp = c_sub(&_cone_, x2);
+	comfree(x2);
+	r = c_acos(ctmp, epsilon);
+	comfree(ctmp);
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return r;
+}
+
+
+/*
+ * c_hacovercos - COMPLEX valued half coversed trigonometric cosine
+ *
+ * This uses the formula:
+ *
+ *	hacovercos(x) = covercos(x) / 2
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_hacovercos(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;		/* return COMPLEX value */
+	COMPLEX *ctmp;		/* complex sin(c) */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex trig function value
+	 */
+	ctmp = c_covercos(c, epsilon);
+	if (ctmp == NULL) {
+		math_error("Failed to compute complex coversed cosine for complex hacovercos");
+		not_reached();
+	}
+	r = c_divq(ctmp, &_qtwo_);
+	comfree(ctmp);
+
+	/*
+	 * return trigonometric result
+	 */
+	return r;
+}
+
+
+/*
+ * c_ahacovercos - COMPLEX valued inverse half coversed trigonometric cosine
+ *
+ * This uses the formula:
+ *
+ *	ahacovercos(x) = asin(2*x - 1)
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_ahacovercos(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;	/* inverse trig value result */
+	COMPLEX *ctmp;	/* argument to inverse trig function */
+	COMPLEX *x2;	/* twice x */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex inverse trig function value
+	 */
+	x2 = c_mulq(c, &_qtwo_);
+	ctmp = c_sub(&_cone_, x2);
+	comfree(x2);
+	r = c_asin(ctmp, epsilon);
+	comfree(ctmp);
+
+	/*
+	 * return inverse trigonometric result
 	 */
 	return r;
 }

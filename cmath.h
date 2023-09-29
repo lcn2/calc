@@ -136,6 +136,14 @@ E_FUNC COMPLEX *c_vercos(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_avercos(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_covercos(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_acovercos(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_haversin(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_ahaversin(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_hacoversin(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_ahacoversin(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_havercos(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_ahavercos(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_hacovercos(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_ahacovercos(COMPLEX *c, NUMBER *epsilon);
 
 
 

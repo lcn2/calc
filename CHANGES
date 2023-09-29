@@ -99,15 +99,6 @@ The following are the changes from calc version 2.14.3.5 to date:
     Document in help files for builtin functions that take eps arguments,
     the LIMIT range for such eps values.
 
-    Added new versin(x, [,eps]) for versed sine and coversin(x, [,eps])
-    for inverse versed sine.
-
-    Added new aversin(x, [,eps]) for inverse versed sine and acoversin(x, [,eps])
-    for inverse coversed sine.
-
-    Improved trig function help files to reference use of complex arguments
-    that while supported were not documented.
-
     Removed old Makefile testing rules for make dbx and make gdb.
 
     Improved "make run" to execute calccalc using shared libraries
@@ -176,14 +167,15 @@ The following are the changes from calc version 2.14.3.5 to date:
     number generator in place of the additive 55 generator for a
     while now.
 
-    Improved help files for sin, cos, tan, cot, sec, csc.  In case
-    of tan, cot, sec, csc corrected help file was corrected to
-    indicate that complex arguments are allowed.  This was a help
-    file oversight from long ago when those trigonometric functions
-    were expanded to include complex arguments.
+    Improved help files trigonometric functions.  They were corrected
+    to indicate that complex arguments are allowed: an oversight
+    from long ago when those trigonometric functions were expanded
+    to include complex arguments.  The EXAMPLE sections were expanded
+    and made consistent, where applicable, across the trigonometric
+    help files.  Documented libcalc functions in the SEE ALSO sections.
 
     Expanded the calc regression test suite test 34dd to test various
-    real and complex values for sin, cos, tan, cot, sec, csc.
+    real and complex values for trigonometric functions.
 
     Added complex multiple approximation function to commath.c so
     that users of libcalc may directly round complex number to
@@ -338,9 +330,35 @@ The following are the changes from calc version 2.14.3.5 to date:
     verify that the errnum calc computation error codes and their
     E_STRING values have not changed.
 
-    Improve the ciarify of calc regression suite (regress.cal) to mostly
+    Improve the clarity of calc regression suite (regress.cal) to mostly
     use E_STRING errsym instead of numeric errnum values for error()
     and errno() related tests.
+
+    Fixed SEE ALSO typo in help randperm.
+
+    Added the following new trigonometric functions:
+
+	versin(x [,eps])	versed trigonometric sine
+	coversin(x [,eps])	coversed trigonometric sine
+	vercos(x [,eps])	versed trigonometric cosine
+	covercos(x [,eps])	coversed trigonometric cosine
+	aversin(x [,eps])	inverse versed trigonometric sine
+	acoversin(x [,eps])	inverse coversed trigonometric sine
+	avercos(x [,eps])	inverse versed trigonometric cosine
+	acovercos(x [,eps])	inverse coversed trigonometric cosine
+	haversin(x [,eps])	half versed trigonometric sine
+	hacoversin(x [,eps])	half coversed trigonometric sine
+	havercos(x [,eps])	half versed trigonometric cosine
+	hacovercos(x [,eps])	half coversed trigonometric cosine
+	ahaversin(x [,eps])	inverse half versed trigonometric sine
+	ahacoversin(x [,eps])	inverse half coversed trigonometric sine
+	ahavercos(x [,eps])	inverse half versed trigonometric cosine
+	ahacovercos(x [,eps])	inverse half coversed trigonometric cosine
+
+    Fixed calc regression test 42dd to set the display value back to 20.
+
+    Added test 95dd and test9500.trigeq.cal to the calc regression test
+    suite to perform extensive test of trigonometric functions.
 
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:

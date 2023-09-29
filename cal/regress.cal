@@ -89,7 +89,7 @@ define vrfy(test, str)
 		++prob;
 	}
 	if (test != 1) {
-		print '**** Non-true result (' : test : '): ' : str;
+		print '**** Non-true result:', str;
 		++prob;
 	} else {
 		print str;
@@ -3877,6 +3877,114 @@ define test_trig()
 	    strcat(str(tnum++),
 		   ': round(acovercos(2 + 3i, 1e-10), 10) == 0.3076036495+1.8641615442i'));
 
+	/* test half versed trigonometric sine */
+	vrfy(haversin(0, 1e-10) == 0,
+				strcat(str(tnum++), ': haversin(0, 1e-10) == 0'));
+	vrfy(round(haversin(0.2, 1e-10), 10) == 0.0099667111,
+	    strcat(str(tnum++),
+		   ': round(haversin(0.2, 1e-10), 10) == 0.0099667111'));
+	vrfy(round(haversin(3/7, 1e-10), 10) == 0.0452198242,
+	    strcat(str(tnum++),
+		   ': round(haversin(3/7, 1e-10), 10) == 0.0452198242'));
+	vrfy(round(haversin(-31, 1e-10), 10) == 0.0426288211,
+	    strcat(str(tnum++),
+		   ': round(haversin(-31, 1e-10), 10) == 0.0426288211'));
+	vrfy(haversin(pi/3, 1e-10) == 0.25,
+				strcat(str(tnum++), ': haversin(pi/3, 1e-10) == 0.25'));
+	vrfy(haversin(pi/2, 1e-10) == 0.5,
+				strcat(str(tnum++), ': haversin(pi/2, 1e-10) == 0.5'));
+	vrfy(haversin(pi, 1e-10) == 1,
+				strcat(str(tnum++), ': haversin(pi, 1e-10) == 1'));
+	vrfy(haversin(3*pi/2, 1e-10) == 0.5,
+				strcat(str(tnum++), ': haversin(3*pi/2, 1e-10) == 0.5'));
+	vrfy(round(haversin(1, 1e-10), 10) == 0.229848847,
+	    strcat(str(tnum++),
+		   ': round(haversin(1, 1e-10), 10) == 0.229848847'));
+	vrfy(round(haversin(2 + 3i, 1e-10), 10) == 2.5948128455+4.5546139469i,
+	    strcat(str(tnum++),
+		   ': round(haversin(2 + 3i, 1e-10), 10) == 2.5948128455+4.5546139469i'));
+
+	/* test half coversed trigonometric sine */
+	vrfy(hacoversin(0, 1e-10) == 0.5,
+				strcat(str(tnum++), ': hacoversin(0, 1e-10) == 0.5'));
+	vrfy(round(hacoversin(0.2, 1e-10), 10) == 0.4006653346,
+	    strcat(str(tnum++),
+		   ': round(hacoversin(0.2, 1e-10), 10) == 0.4006653346'));
+	vrfy(round(hacoversin(3/7, 1e-10), 10) == 0.2922140725,
+	    strcat(str(tnum++),
+		   ': round(hacoversin(3/7, 1e-10), 10) == 0.2922140725'));
+	vrfy(round(hacoversin(-31, 1e-10), 10) == 0.2979811774,
+	    strcat(str(tnum++),
+		   ': round(hacoversin(-31, 1e-10), 10) == 0.2979811774'));
+	vrfy(hacoversin(pi/6, 1e-10) == 0.25,
+				strcat(str(tnum++), ': hacoversin(pi/6, 1e-10) == 0.25'));
+	vrfy(hacoversin(pi/2, 1e-10) == 0,
+				strcat(str(tnum++), ': hacoversin(pi/2, 1e-10) == 0'));
+	vrfy(hacoversin(pi, 1e-10) == 0.5,
+				strcat(str(tnum++), ': hacoversin(pi, 1e-10) == 0.5'));
+	vrfy(hacoversin(3*pi/2, 1e-10) == 1,
+				strcat(str(tnum++), ': hacoversin(3*pi/2, 1e-10) == 1'));
+	vrfy(round(hacoversin(1, 1e-10), 10) == 0.0792645076,
+	    strcat(str(tnum++),
+		   ': round(hacoversin(1, 1e-10), 10) == 0.0792645076'));
+	vrfy(round(hacoversin(2 + 3i, 1e-10), 10) == -4.0772495734+2.08445348i,
+	    strcat(str(tnum++),
+		   ': round(hacoversin(2 + 3i, 1e-10), 10) == -4.0772495734+2.08445348i'));
+
+	/* test half versed trigonometric cosine */
+	vrfy(havercos(0, 1e-10) == 1,
+				strcat(str(tnum++), ': havercos(0, 1e-10) == 1'));
+	vrfy(round(havercos(0.2, 1e-10), 10) == 0.9900332889,
+	    strcat(str(tnum++),
+		   ': round(havercos(0.2, 1e-10), 10) == 0.9900332889'));
+	vrfy(round(havercos(3/7, 1e-10), 10) == 0.9547801758,
+	    strcat(str(tnum++),
+		   ': round(havercos(3/7, 1e-10), 10) == 0.9547801758'));
+	vrfy(round(havercos(-31, 1e-10), 10) == 0.9573711789,
+	    strcat(str(tnum++),
+		   ': round(havercos(-31, 1e-10), 10) == 0.9573711789'));
+	vrfy(havercos(pi/3, 1e-10) == 0.75,
+				strcat(str(tnum++), ': havercos(pi/3, 1e-10) == 0.75'));
+	vrfy(havercos(pi/2, 1e-10) == 0.5,
+				strcat(str(tnum++), ': havercos(pi/2, 1e-10) == 0.5'));
+	vrfy(havercos(pi, 1e-10) == 0,
+				strcat(str(tnum++), ': havercos(pi, 1e-10) == 0'));
+	vrfy(havercos(3*pi/2, 1e-10) == 0.5,
+				strcat(str(tnum++), ': havercos(3*pi/2, 1e-10) == 0.5'));
+	vrfy(round(havercos(1, 1e-10), 10) == 0.770151153,
+	    strcat(str(tnum++),
+		   ': round(havercos(1, 1e-10), 10) == 0.770151153'));
+	vrfy(round(havercos(2 + 3i, 1e-10), 10) == -1.5948128455-4.5546139469i,
+	    strcat(str(tnum++),
+		   ': round(havercos(2 + 3i, 1e-10), 10) == -1.5948128455-4.5546139469i'));
+
+	/* test half coversed trigonometric cosine */
+	vrfy(hacovercos(0, 1e-10) == 0.5,
+				strcat(str(tnum++), ': hacovercos(0, 1e-10) == 0.5'));
+	vrfy(round(hacovercos(0.2, 1e-10), 10) == 0.5993346654,
+	    strcat(str(tnum++),
+		   ': round(hacovercos(0.2, 1e-10), 10) == 0.5993346654'));
+	vrfy(round(hacovercos(3/7, 1e-10), 10) == 0.7077859275,
+	    strcat(str(tnum++),
+		   ': round(hacovercos(3/7, 1e-10), 10) == 0.7077859275'));
+	vrfy(round(hacovercos(-31, 1e-10), 10) == 0.7020188226,
+	    strcat(str(tnum++),
+		   ': round(hacovercos(-31, 1e-10), 10) == 0.7020188226'));
+	vrfy(hacovercos(pi/6, 1e-10) == 0.75,
+				strcat(str(tnum++), ': hacovercos(pi/6, 1e-10) == 0.75'));
+	vrfy(hacovercos(pi/2, 1e-10) == 1,
+				strcat(str(tnum++), ': hacovercos(pi/2, 1e-10) == 1'));
+	vrfy(hacovercos(pi, 1e-10) == 0.5,
+				strcat(str(tnum++), ': hacovercos(pi, 1e-10) == 0.5'));
+	vrfy(hacovercos(3*pi/2, 1e-10) == 0,
+				strcat(str(tnum++), ': hacovercos(3*pi/2, 1e-10) == 0'));
+	vrfy(round(hacovercos(1, 1e-10), 10) == 0.9207354924,
+	    strcat(str(tnum++),
+		   ': round(hacovercos(1, 1e-10), 10) == 0.9207354924'));
+	vrfy(round(hacovercos(2 + 3i, 1e-10), 10) == 5.0772495734-2.08445348i,
+	    strcat(str(tnum++),
+		   ': round(hacovercos(2 + 3i, 1e-10), 10) == 5.0772495734-2.08445348i'));
+
 	print strcat(str(tnum++), ': Ending test_trig');
 }
 print '051: parsed test_trig()';
@@ -4413,8 +4521,10 @@ define test_fileops()
 	print				  '4280: x = rm("junk4200")';
 	x = rm("tmp4200");
 	print				  '4281: x = rm("tmp4200")';
+	x = config("display", 20);
+	print				  '4282: x = config("display", 20)';
 
-	print '4282: Ending test_fileops';
+	print '4283: Ending test_fileops';
 }
 print '071: parsed test_fileops()';
 
@@ -9767,9 +9877,29 @@ print	'9484: skipping read -once zeta2 - will be read via test8900.special';
 print	'9485: Ending read of selected calc resource files';
 
 
-/* ********************************************************* */
-/* NOTE: ==> Reserved for more read tests 9500-9599 here <== */
-/* ********************************************************* */
+/*
+ * test 95dd: read test9500.trigeq, test of trigonometric identities
+ */
+print;
+print '9500: Starting trigonometric identities test set';
+epsilon(1e-20),;
+print '9501: epsilon(1e-20)';
+read -once test9500.trigeq;
+print '9502: read -once test9500.trigeq';
+vrfy(verify_tan(9503) == 0,		'9503: verify_tan(9503) == 0');
+vrfy(verify_cot(9504) == 0,		'9504: verify_cot(9504) == 0');
+vrfy(verify_sec(9505) == 0,		'9505: verify_sec(9505) == 0');
+vrfy(verify_csc(9506) == 0,		'9506: verify_csc(9506) == 0');
+vrfy(verify_versin(9507) == 0,		'9507: verify_versin(9507) == 0');
+vrfy(verify_coversin(9508) == 0,	'9508: verify_coversin(9508) == 0');
+vrfy(verify_vercos(9509) == 0,		'9509: verify_vercos(9509) == 0');
+vrfy(verify_covercos(9510) == 0,	'9510: verify_covercos(9510) == 0');
+vrfy(verify_haversin(9511) == 0,	'9511: verify_haversin(9511) == 0');
+vrfy(verify_hacoversin(9512) == 0,	'9512: verify_hacoversin(9512) == 0');
+vrfy(verify_havercos(9513) == 0,	'9513: verify_havercos(9513) == 0');
+vrfy(verify_hacovercos(9514) == 0,	'9514: verify_hacovercos(9514) == 0');
+
+print '9515: Ending trigonometric identities test set';
 
 
 /*
@@ -9789,6 +9919,8 @@ define func_8650a(u_glob) { static u_glob; return u_glob; }
 print				  '9607: u_glob as both static and parameter';
 vrfy(config("redecl_warn",1)==0,  '9608: config("redecl_warn",1)==0');
 vrfy(config("dupvar_warn",1)==0,  '9609: config("dupvar_warn",1)==0');
+
+print '9610: Ending test of dupvar_warn and redecl_warn config parameters';
 
 
 /* *********************************************** */
@@ -10511,6 +10643,12 @@ vrfy_errsym(10553, 10553, "E_ERRSYM_2");
 vrfy_errsym(10554, 10554, "E_ERRSYM_3");
 vrfy_errsym(10555, 10555, "E_ERRSYM_4");
 vrfy_errsym(10556, 10556, "E_ERRSYM_5");
+vrfy_errsym(10557, 10557, "E_HAVERSIN_1");
+vrfy_errsym(10558, 10558, "E_HAVERSIN_2");
+vrfy_errsym(10559, 10559, "E_HAVERSIN_3");
+vrfy_errsym(10560, 10560, "E_AHAVERSIN_1");
+vrfy_errsym(10561, 10561, "E_AHAVERSIN_2");
+vrfy_errsym(10562, 10562, "E_AHAVERSIN_3");
 
 /* ************************************************************** */
 /* NOTE: Reserve thru test 10998 for calc computation error codes */

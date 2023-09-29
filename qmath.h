@@ -238,7 +238,18 @@ E_FUNC NUMBER *qavercos(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qcovercos(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qacovercos_or_NULL(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qacovercos(NUMBER *q, NUMBER *epsilon);
-
+E_FUNC NUMBER *qhaversin(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qahaversin_or_NULL(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qahaversin(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qhacoversin(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qahacoversin_or_NULL(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qahacoversin(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qhavercos(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qahavercos_or_NULL(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qahavercos(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qhacovercos(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qahacovercos_or_NULL(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qahacovercos(NUMBER *q, NUMBER *epsilon);
 
 /*
  * pseudo-seed generator

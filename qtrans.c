@@ -1979,7 +1979,7 @@ qacoth(NUMBER *q, NUMBER *epsilon)
 
 
 /*
- * qversin - versed sine for NUMBER values
+ * qversin - versed trigonometric sine
  *
  * This uses the formula:
  *
@@ -1995,8 +1995,8 @@ qacoth(NUMBER *q, NUMBER *epsilon)
 NUMBER *
 qversin(NUMBER *q, NUMBER *epsilon)
 {
-	NUMBER *res;
-	NUMBER *cos;
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
 
 	/*
 	 * firewall
@@ -2013,19 +2013,19 @@ qversin(NUMBER *q, NUMBER *epsilon)
 	/*
 	 * calculate trig function value
 	 */
-	cos = qcos(q, epsilon);
-	res = qsub(&_qone_, cos);
-	qfree(cos);
+	qtmp = qcos(q, epsilon);
+	res = qsub(&_qone_, qtmp);
+	qfree(qtmp);
 
 	/*
-	 * return 1 - cos(x)
+	 * return trigonometric result
 	 */
 	return res;
 }
 
 
 /*
- * qaversin_or_NULL - inverse versed sine for NUMBER values
+ * qaversin_or_NULL - return NULL or non-complex inverse versed trigonometric sine
  *
  * This uses the formula:
  *
@@ -2047,7 +2047,7 @@ NUMBER *
 qaversin_or_NULL(NUMBER *q, NUMBER *epsilon)
 {
 	NUMBER *res;	/* inverse trig value result */
-	NUMBER *x;	/* argument to inverse trig function */
+	NUMBER *qtmp;	/* argument to inverse trig function */
 
 	/*
 	 * firewall
@@ -2064,22 +2064,22 @@ qaversin_or_NULL(NUMBER *q, NUMBER *epsilon)
 	/*
 	 * calculate inverse trig function value
 	 */
-	x = qsub(&_qone_, q);
-	res = qacos(x, epsilon);
-	qfree(x);
+	qtmp = qsub(&_qone_, q);
+	res = qacos(qtmp, epsilon);
+	qfree(qtmp);
 	if (res == NULL) {
 		return NULL;
 	}
 
 	/*
-	 * return acos(1 - x)
+	 * return inverse trigonometric result
 	 */
 	return res;
 }
 
 
 /*
- * qaversin - inverse versed sine for NUMBER values
+ * qaversin - non-complex inverse versed trigonometric sine
  *
  * This uses the formula:
  *
@@ -2114,19 +2114,19 @@ qaversin(NUMBER *q, NUMBER *epsilon)
 	 */
 	res = qaversin_or_NULL(q, epsilon);
 	if (res == NULL) {
-		math_error("cannot compute inverse cos for aversin");
+		math_error("cannot compute inverse cosine for aversin");
 		not_reached();
 	}
 
 	/*
-	 * return acos(1 - x)
+	 * return inverse trigonometric result
 	 */
 	return res;
 }
 
 
 /*
- * qcoversin - coversed sine for NUMBER values
+ * qcoversin - coversed trigonometric sine
  *
  * This uses the formula:
  *
@@ -2142,7 +2142,8 @@ qaversin(NUMBER *q, NUMBER *epsilon)
 NUMBER *
 qcoversin(NUMBER *q, NUMBER *epsilon)
 {
-	NUMBER *sin, *res;
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
 
 	/*
 	 * firewall
@@ -2159,19 +2160,19 @@ qcoversin(NUMBER *q, NUMBER *epsilon)
 	/*
 	 * calculate trig function value
 	 */
-	sin = qsin(q, epsilon);
-	res = qsub(&_qone_, sin);
-	qfree(sin);
+	qtmp = qsin(q, epsilon);
+	res = qsub(&_qone_, qtmp);
+	qfree(qtmp);
 
 	/*
-	 * return 1 - sin(x)
+	 * return trigonometric result
 	 */
 	return res;
 }
 
 
 /*
- * qacoversin_or_NULL - inverse coversed sine for NUMBER values
+ * qacoversin_or_NULL - return NULL or non-complex inverse coversed trigonometric sine
  *
  * This uses the formula:
  *
@@ -2196,7 +2197,7 @@ NUMBER *
 qacoversin_or_NULL(NUMBER *q, NUMBER *epsilon)
 {
 	NUMBER *res;	/* inverse trig value result */
-	NUMBER *x;	/* argument to inverse trig function */
+	NUMBER *qtmp;	/* argument to inverse trig function */
 
 	/*
 	 * firewall
@@ -2213,22 +2214,22 @@ qacoversin_or_NULL(NUMBER *q, NUMBER *epsilon)
 	/*
 	 * calculate inverse trig function value
 	 */
-	x = qsub(&_qone_, q);
-	res = qasin(x, epsilon);
-	qfree(x);
+	qtmp = qsub(&_qone_, q);
+	res = qasin(qtmp, epsilon);
+	qfree(qtmp);
 	if (res == NULL) {
 		return NULL;
 	}
 
 	/*
-	 * return asin(1 - x)
+	 * return inverse trigonometric result
 	 */
 	return res;
 }
 
 
 /*
- * qacoversin - inverse coversed sine for NUMBER values
+ * qacoversin - non-complex inverse coversed trigonometric sine
  *
  * This uses the formula:
  *
@@ -2263,19 +2264,19 @@ qacoversin(NUMBER *q, NUMBER *epsilon)
 	 */
 	res = qacoversin_or_NULL(q, epsilon);
 	if (res == NULL) {
-		math_error("cannot compute inverse sin for acoversin");
+		math_error("cannot compute inverse sine for acoversin");
 		not_reached();
 	}
 
 	/*
-	 * return asin(1 - x)
+	 * return inverse trigonometric result
 	 */
 	return res;
 }
 
 
 /*
- * qvercos - versed sine for NUMBER values
+ * qvercos - versed trigonometric cosine
  *
  * This uses the formula:
  *
@@ -2291,7 +2292,8 @@ qacoversin(NUMBER *q, NUMBER *epsilon)
 NUMBER *
 qvercos(NUMBER *q, NUMBER *epsilon)
 {
-	NUMBER *cos, *res;
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
 
 	/*
 	 * firewall
@@ -2308,19 +2310,19 @@ qvercos(NUMBER *q, NUMBER *epsilon)
 	/*
 	 * calculate trig function value
 	 */
-	cos = qcos(q, epsilon);
-	res = qqadd(&_qone_, cos);
-	qfree(cos);
+	qtmp = qcos(q, epsilon);
+	res = qqadd(&_qone_, qtmp);
+	qfree(qtmp);
 
 	/*
-	 * return 1 + cos(x)
+	 * return trigonometric result
 	 */
 	return res;
 }
 
 
 /*
- * qavercos_or_NULL - inverse versed sine for NUMBER values
+ * qavercos_or_NULL - return NULL or non-complex inverse versed trigonometric cosine
  *
  * This uses the formula:
  *
@@ -2342,7 +2344,7 @@ NUMBER *
 qavercos_or_NULL(NUMBER *q, NUMBER *epsilon)
 {
 	NUMBER *res;	/* inverse trig value result */
-	NUMBER *x;	/* argument to inverse trig function */
+	NUMBER *qtmp;	/* argument to inverse trig function */
 
 	/*
 	 * firewall
@@ -2359,22 +2361,22 @@ qavercos_or_NULL(NUMBER *q, NUMBER *epsilon)
 	/*
 	 * calculate inverse trig function value
 	 */
-	x = qsub(q, &_qone_);
-	res = qacos(x, epsilon);
-	qfree(x);
+	qtmp = qsub(q, &_qone_);
+	res = qacos(qtmp, epsilon);
+	qfree(qtmp);
 	if (res == NULL) {
 		return NULL;
 	}
 
 	/*
-	 * return acos(x - 1)
+	 * return inverse trigonometric result
 	 */
 	return res;
 }
 
 
 /*
- * qavercos - inverse versed sine for NUMBER values
+ * qavercos - non-complex inverse versed trigonometric cosine
  *
  * This uses the formula:
  *
@@ -2409,19 +2411,19 @@ qavercos(NUMBER *q, NUMBER *epsilon)
 	 */
 	res = qavercos_or_NULL(q, epsilon);
 	if (res == NULL) {
-		math_error("cannot compute inverse cos for avercos");
+		math_error("cannot compute inverse cosine for avercos");
 		not_reached();
 	}
 
 	/*
-	 * return acos(x - 1)
+	 * return inverse trigonometric result
 	 */
 	return res;
 }
 
 
 /*
- * qcovercos - coversed sine for NUMBER values
+ * qcovercos - coversed trigonometric cosine
  *
  * This uses the formula:
  *
@@ -2437,7 +2439,8 @@ qavercos(NUMBER *q, NUMBER *epsilon)
 NUMBER *
 qcovercos(NUMBER *q, NUMBER *epsilon)
 {
-	NUMBER *sin, *res;
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
 
 	/*
 	 * firewall
@@ -2454,19 +2457,19 @@ qcovercos(NUMBER *q, NUMBER *epsilon)
 	/*
 	 * calculate trig function value
 	 */
-	sin = qsin(q, epsilon);
-	res = qqadd(&_qone_, sin);
-	qfree(sin);
+	qtmp = qsin(q, epsilon);
+	res = qqadd(&_qone_, qtmp);
+	qfree(qtmp);
 
 	/*
-	 * return 1 + sin(x)
+	 * return trigonometric result
 	 */
 	return res;
 }
 
 
 /*
- * qacovercos_or_NULL - inverse coversed sine for NUMBER values
+ * qacovercos_or_NULL - return NULL or non-complex inverse coversed trigonometric cosine
  *
  * This uses the formula:
  *
@@ -2491,7 +2494,7 @@ NUMBER *
 qacovercos_or_NULL(NUMBER *q, NUMBER *epsilon)
 {
 	NUMBER *res;	/* inverse trig value result */
-	NUMBER *x;	/* argument to inverse trig function */
+	NUMBER *qtmp;	/* argument to inverse trig function */
 
 	/*
 	 * firewall
@@ -2508,22 +2511,22 @@ qacovercos_or_NULL(NUMBER *q, NUMBER *epsilon)
 	/*
 	 * calculate inverse trig function value
 	 */
-	x = qsub(&_qone_, q);
-	res = qasin(x, epsilon);
-	qfree(x);
+	qtmp = qsub(&_qone_, q);
+	res = qasin(qtmp, epsilon);
+	qfree(qtmp);
 	if (res == NULL) {
 		return NULL;
 	}
 
 	/*
-	 * return asin(x - 1)
+	 * return inverse trigonometric result
 	 */
 	return res;
 }
 
 
 /*
- * qacovercos - inverse coversed sine for NUMBER values
+ * qacovercos - non-complex inverse coversed trigonometric cosine
  *
  * This uses the formula:
  *
@@ -2558,12 +2561,612 @@ qacovercos(NUMBER *q, NUMBER *epsilon)
 	 */
 	res = qacovercos_or_NULL(q, epsilon);
 	if (res == NULL) {
-		math_error("cannot compute inverse sin for acovercos");
+		math_error("cannot compute inverse sine for acovercos");
 		not_reached();
 	}
 
 	/*
-	 * return asin(x - 1)
+	 * return inverse trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qhaversin - half versed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	haversin(x) = versin(x) / 2
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qhaversin(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate trig function value
+	 */
+	qtmp = qversin(q, epsilon);
+	res = qdivi(qtmp, 2);
+	qfree(qtmp);
+
+	/*
+	 * return trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qahaversin_or_NULL - return NULL or non-complex inverse half versed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	ahaversin(x) = acos(1 - 2*x)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	!= NULL ==> real value result of trig function on q with error epsilon,
+ *	NULL    ==> trig function value cannot be expressed as a NUMBER
+ *
+ * NOTE: If this function returns NULL, consider calling the equivalent
+ *	 COMPLEX function from comfunc.c.  See the help file for the
+ *	 related builtin for details.
+ */
+NUMBER *
+qahaversin_or_NULL(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
+	NUMBER *x2;	/* twice x */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	x2 = qmuli(q, 2);
+	qtmp = qsub(&_qone_, x2);
+	qfree(x2);
+	res = qacos(qtmp, epsilon);
+	qfree(qtmp);
+	if (res == NULL) {
+		return NULL;
+	}
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qahaversin - non-complex inverse half versed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	ahaversin(x) = acos(1 - 2*x)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qahaversin(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	res = qahaversin_or_NULL(q, epsilon);
+	if (res == NULL) {
+		math_error("cannot compute inverse cosine for ahaversin");
+		not_reached();
+	}
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qhacoversin - coversed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	hacoversin((x) = coversin(x) / 2
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qhacoversin(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate trig function value
+	 */
+	qtmp = qcoversin(q, epsilon);
+	res = qdivi(qtmp, 2);
+	qfree(qtmp);
+
+	/*
+	 * return trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qahacoversin_or_NULL - return NULL or non-complex inverse coversed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	ahacoversin(x) = asin(1 - 2*x)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ *
+ * returns:
+ *	!= NULL ==> real value result of trig function on q with error epsilon,
+ *	NULL    ==> trig function value cannot be expressed as a NUMBER
+ *
+ * NOTE: If this function returns NULL, consider calling the equivalent
+ *	 COMPLEX function from comfunc.c.  See the help file for the
+ *	 related builtin for details.
+ */
+NUMBER *
+qahacoversin_or_NULL(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	qtmp = qsub(&_qone_, q);
+	res = qasin(qtmp, epsilon);
+	qfree(qtmp);
+	if (res == NULL) {
+		return NULL;
+	}
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qahacoversin - non-complex inverse coversed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	ahacoversin(x) = asin(1 - 2*x)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qahacoversin(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	res = qahacoversin_or_NULL(q, epsilon);
+	if (res == NULL) {
+		math_error("cannot compute inverse sine for ahacoversin");
+		not_reached();
+	}
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qhavercos - half versed trigonometric cosine
+ *
+ * This uses the formula:
+ *
+ *	havercos(x) = vercos(x) / 2
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qhavercos(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate trig function value
+	 */
+	qtmp = qvercos(q, epsilon);
+	res = qdivi(qtmp, 2);
+	qfree(qtmp);
+
+	/*
+	 * return trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qahavercos_or_NULL - return NULL or non-complex inverse half versed trigonometric cosine
+ *
+ * This uses the formula:
+ *
+ *	ahavercos(x) = acos(1 - 2*x)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	!= NULL ==> real value result of trig function on q with error epsilon,
+ *	NULL    ==> trig function value cannot be expressed as a NUMBER
+ *
+ * NOTE: If this function returns NULL, consider calling the equivalent
+ *	 COMPLEX function from comfunc.c.  See the help file for the
+ *	 related builtin for details.
+ */
+NUMBER *
+qahavercos_or_NULL(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
+	NUMBER *x2;	/* twice x */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	x2 = qmuli(q, 2);
+	qtmp = qsub(&_qone_, x2);
+	qfree(x2);
+	res = qacos(qtmp, epsilon);
+	qfree(qtmp);
+	if (res == NULL) {
+		return NULL;
+	}
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qahavercos - non-complex inverse half versed trigonometric cosine
+ *
+ * This uses the formula:
+ *
+ *	ahavercos(x) = acos(1 - 2*x)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qahavercos(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	res = qahaversin_or_NULL(q, epsilon);
+	if (res == NULL) {
+		math_error("cannot compute inverse cocosine for ahavercos");
+		not_reached();
+	}
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qhacovercos - half coversed trigonometric cosine
+ *
+ * This uses the formula:
+ *
+ *	hacovercos((x) = covercos(x) / 2
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qhacovercos(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate trig function value
+	 */
+	qtmp = qcovercos(q, epsilon);
+	res = qdivi(qtmp, 2);
+	qfree(qtmp);
+
+	/*
+	 * return trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qahacovercos_or_NULL - return NULL or non-complex inverse half coversed trigonometric cosine
+ *
+ * This uses the formula:
+ *
+ *	ahacovercos(x) = acos(2*x - 1)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ *
+ * returns:
+ *	!= NULL ==> real value result of trig function on q with error epsilon,
+ *	NULL    ==> trig function value cannot be expressed as a NUMBER
+ *
+ * NOTE: If this function returns NULL, consider calling the equivalent
+ *	 COMPLEX function from comfunc.c.  See the help file for the
+ *	 related builtin for details.
+ */
+NUMBER *
+qahacovercos_or_NULL(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	qtmp = qsub(&_qone_, q);
+	res = qacos(qtmp, epsilon);
+	qfree(qtmp);
+	if (res == NULL) {
+		return NULL;
+	}
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qahacovercos - non-complex inverse half coversed trigonometric cosine
+ *
+ * This uses the formula:
+ *
+ *	ahacovercos(x) = acos(2*x - 1)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qahacovercos(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	res = qahacoversin_or_NULL(q, epsilon);
+	if (res == NULL) {
+		math_error("cannot compute inverse cosine for ahacovercos");
+		not_reached();
+	}
+
+	/*
+	 * return inverse trigonometric result
 	 */
 	return res;
 }

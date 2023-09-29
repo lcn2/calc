@@ -3103,7 +3103,7 @@ testfuncsort: ./calc${EXT}
 	@${RM} -f func.show func.sort
 	@${CALC_ENV} ./calc${EXT} -d -u show builtin | grep '^[A-Za-z0-9]' > func.show
 	@${CALC_ENV} ./calc${EXT} -d -u show builtin | grep '^[A-Za-z0-9]' | LANG=C LC_ALL=C ${SORT} -d -u > func.sort
-	@-if ! cmp -s func.show func.sort; then \
+	@if ! cmp -s func.show func.sort; then \
 	    echo 1>&2; \
 	    echo "ERROR: builtins[] arrray in func.c is not in dictionary sorted order" 1>&2; \
 	    echo 1>&2; \

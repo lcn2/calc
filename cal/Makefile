@@ -141,8 +141,9 @@ CALC_FILES= README alg_config.cal beer.cal bernoulli.cal \
 	test4100.redc.cal test4600.fileop.cal test5100.newdecl.cal \
 	test5200.globstat.cal test8000.read.cal test8400.quit.cal \
 	test8500.divmod.cal test8600.maxargs.cal test8700.dotest.cal \
-	test8900.special.cal test9300.frem.cal toomcook.cal unitfrac.cal \
-	varargs.cal write2file.cal xx_print.cal zeta2.cal
+	test8900.special.cal test9300.frem.cal test9500.trigeq.cal \
+	toomcook.cal unitfrac.cal varargs.cal write2file.cal xx_print.cal \
+	zeta2.cal
 
 # These calc files are now obsolete and are removed by the install rule.
 #
