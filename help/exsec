@@ -1,8 +1,8 @@
 NAME
-    sec - trigonometric secant
+    exsec - exterior trigonometric secant
 
 SYNOPSIS
-    sec(x [,eps])
+    exsec(x [,eps])
 
 TYPES
     x		number (real or complex)
@@ -11,47 +11,47 @@ TYPES
     return	real
 
 DESCRIPTION
-    Calculate the trigonometric secant of x to a multiple of eps, with error less
+    Calculate the exterior trigonometric secant of x to a multiple of eps, with error less
     in absolute value than .75 * eps.
 
     This function is equivalent to:
 
-	sec(x) = 1 / cos(x)
+	exsec(x) = sec(x) - 1
 
 EXAMPLE
-    ; print sec(1/2), sec(5/7), sec(42/7)
-    1.13949392732454912231 1.3235192673191814545 1.04148192659510767648
+    ; print exsec(1/2), exsec(5/7), exsec(42/7)
+    0.13949392732454912231 0.3235192673191814545 0.04148192659510767648
 
-    ; print sec(1, 1e-5), sec(1, 1e-10), sec(1, 1e-15), sec(1, 1e-20)
-    1.85082 1.8508157177 1.850815717680926 1.85081571768092561791
+    ; print exsec(1, 1e-5), exsec(1, 1e-10), exsec(1, 1e-15), exsec(1, 1e-20)
+    0.85082 0.8508157177 0.850815717680926 0.85081571768092561791
 
-    ; print sec(2 + 3i, 1e-5), sec(2 + 3i, 1e-10)
-    ~-0.04167497639869547021+~0.09061109101765280898i ~-0.04167496441100888150+~0.09061113719571288336i
+    ; print exsec(2 + 3i, 1e-5), exsec(2 + 3i, 1e-10)
+    ~-1.04167497639869547021+~0.09061109101765280898i ~-1.04167496441100888150+~0.09061113719571288336i
 
     ; pi = pi(1e-20)
-    ; print sec(pi/6), sec(pi/2), sec(pi)
-    1.15470053837925152902 756606132568153667453.84481533280934425956 -1
+    ; print exsec(pi/6), exsec(pi/2), exsec(pi)
+    0.15470053837925152902 756606132568153667452.84481533280934425956 -2
 
-    ; # NOTE: The huge value for sec(pi/2) is because the pi variable is not exactly pi.
+    ; # NOTE: The huge value for exsec(pi/2) is because the pi variable is not exactly pi.
 
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
-    NUMBER *qsec(NUMBER *x, NUMBER *eps)
-    COMPLEX *c_sec(COMPLEX *c, NUMBER *eps)
+    NUMBER *qexsec(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_exsec(COMPLEX *c, NUMBER *eps)
 
 SEE ALSO
-    sin, cos, tan, cot, csc
+    sin, cos, tan, cot, sec, csc
     asin, acos, atan, acot, asec, acsc
     versin, coversin, vercos, covercos
     aversin, acoversin, avercos, acovercos
     haversin, hacoversin, havercos, hacovercos
     ahaversin, hacoversin, havercos, ahacovercos
-    exsec, aexsec, excsc, aexcsc
+    aexsec, excsc, aexcsc
     epsilon
 
-## Copyright (C) 1999,2023  Landon Curt Noll
+## Copyright (C) 2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -67,8 +67,8 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/11/13 03:49:00
-## File existed as early as:	1995
+## Under source code control:	2023/10/01 00:19:00
+## File existed as early as:	2023
 ##
 ## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
 ## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

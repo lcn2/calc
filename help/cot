@@ -32,7 +32,7 @@ EXAMPLE
     ; print cot(pi/6), cot(pi/2), cot(pi)
     1.73205080756887729353 0 -378303066284076833726.92240766640467212978
 
-    ; # NOTE: The huge value for cot(pi) is due to the fact that pi is not exact.
+    ; # NOTE: The huge value for cot(pi) is because the pi variable is not exactly pi.
 
 LIMITS
     0 < eps < 1
@@ -48,6 +48,7 @@ SEE ALSO
     aversin, acoversin, avercos, acovercos
     haversin, hacoversin, havercos, hacovercos
     ahaversin, hacoversin, havercos, ahacovercos
+    exsec, aexsec, excsc, aexcsc
     epsilon
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll

@@ -250,6 +250,12 @@ E_FUNC NUMBER *qahavercos(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qhacovercos(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qahacovercos_or_NULL(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qahacovercos(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qexsec(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qaexsec_or_NULL(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qaexsec(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qexcsc(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qaexcsc_or_NULL(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qaexcsc(NUMBER *q, NUMBER *epsilon);
 
 /*
  * pseudo-seed generator

@@ -2425,3 +2425,195 @@ c_ahacovercos(COMPLEX *c, NUMBER *epsilon)
 	 */
 	return r;
 }
+
+
+/*
+ * c_exsec - COMPLEX valued exterior trigonometric secant
+ *
+ * This uses the formula:
+ *
+ *	exsec(x) = sec(x) - 1
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_exsec(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;		/* return COMPLEX value */
+	COMPLEX *ctmp;		/* complex sec(c) */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex trig function value
+	 */
+	ctmp = c_sec(c, epsilon);
+	if (ctmp == NULL) {
+		math_error("Failed to compute complex cosine for complex exsec");
+		not_reached();
+	}
+	r = c_sub(ctmp, &_cone_);
+	comfree(ctmp);
+
+	/*
+	 * return trigonometric result
+	 */
+	return r;
+}
+
+
+/*
+ * c_aexsec - COMPLEX valued inverse exterior trigonometric secant
+ *
+ * This uses the formula:
+ *
+ *	aexsec(x) = asec(x + 1)
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_aexsec(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;	/* inverse trig value result */
+	COMPLEX *ctmp;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex inverse trig function value
+	 */
+	ctmp = c_addq(c, &_qone_);
+	r = c_asec(ctmp, epsilon);
+	comfree(ctmp);
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return r;
+}
+
+
+/*
+ * c_excsc - COMPLEX valued exterior trigonometric cosecant
+ *
+ * This uses the formula:
+ *
+ *	excsc(x) = csc(x) - 1
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_excsc(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;		/* return COMPLEX value */
+	COMPLEX *ctmp;		/* complex sin(c) */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex trig function value
+	 */
+	ctmp = c_csc(c, epsilon);
+	if (ctmp == NULL) {
+		math_error("Failed to compute complex sine for complex excsc");
+		not_reached();
+	}
+	r = c_sub(ctmp, &_cone_);
+	comfree(ctmp);
+
+	/*
+	 * return trigonometric result
+	 */
+	return r;
+}
+
+
+/*
+ * c_aexcsc - COMPLEX valued inverse exterior trigonometric cosecant
+ *
+ * This uses the formula:
+ *
+ *	aexcsc(x) = acsc(x + 1)
+ *
+ * given:
+ *	q	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_aexcsc(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;	/* inverse trig value result */
+	COMPLEX *ctmp;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex inverse trig function value
+	 */
+	ctmp = c_addq(c, &_qone_);
+	r = c_acsc(ctmp, epsilon);
+	comfree(ctmp);
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return r;
+}

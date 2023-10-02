@@ -3170,3 +3170,300 @@ qahacovercos(NUMBER *q, NUMBER *epsilon)
 	 */
 	return res;
 }
+
+
+/*
+ * qexsec - exterior trigonometric secant
+ *
+ * This uses the formula:
+ *
+ *	exsec(x) = sec(x) - 1
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qexsec(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate trig function value
+	 */
+	qtmp = qsec(q, epsilon);
+	res = qsub(qtmp, &_qone_);
+	qfree(qtmp);
+
+	/*
+	 * return trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qaexsec_or_NULL - return NULL or non-complex inverse versed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	aexsec(x) = asec(x + 1)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	!= NULL ==> real value result of trig function on q with error epsilon,
+ *	NULL    ==> trig function value cannot be expressed as a NUMBER
+ *
+ * NOTE: If this function returns NULL, consider calling the equivalent
+ *	 COMPLEX function from comfunc.c.  See the help file for the
+ *	 related builtin for details.
+ */
+NUMBER *
+qaexsec_or_NULL(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	qtmp = qaddi(q, 1);
+	res = qasec(qtmp, epsilon);
+	qfree(qtmp);
+	if (res == NULL) {
+		return NULL;
+	}
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qaexsec - non-complex inverse versed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	aexsec(x) = asec(x + 1)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qaexsec(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	res = qaexsec_or_NULL(q, epsilon);
+	if (res == NULL) {
+		math_error("cannot compute inverse cosine for aexsec");
+		not_reached();
+	}
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qexcsc - coversed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	excsc(x) = csc(x) - 1
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qexcsc(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate trig function value
+	 */
+	qtmp = qcsc(q, epsilon);
+	res = qsub(qtmp, &_qone_);
+	qfree(qtmp);
+
+	/*
+	 * return trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qaexcsc_or_NULL - return NULL or non-complex inverse coversed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	aexcsc(x) = acsc(x + 1)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ *
+ * returns:
+ *	!= NULL ==> real value result of trig function on q with error epsilon,
+ *	NULL    ==> trig function value cannot be expressed as a NUMBER
+ *
+ * NOTE: If this function returns NULL, consider calling the equivalent
+ *	 COMPLEX function from comfunc.c.  See the help file for the
+ *	 related builtin for details.
+ */
+NUMBER *
+qaexcsc_or_NULL(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qtmp;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	qtmp = qaddi(q, 1);
+	res = qacsc(qtmp, epsilon);
+	qfree(qtmp);
+	if (res == NULL) {
+		return NULL;
+	}
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qaexcsc - non-complex inverse coversed trigonometric sine
+ *
+ * This uses the formula:
+ *
+ *	aexcsc(x) = acsc(x + 1)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qaexcsc(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	res = qaexcsc_or_NULL(q, epsilon);
+	if (res == NULL) {
+		math_error("cannot compute inverse sine for aexcsc");
+		not_reached();
+	}
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return res;
+}

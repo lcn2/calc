@@ -32,7 +32,7 @@ EXAMPLE
     ; print tan(pi/6), tan(pi/2), tan(pi)
     0.57735026918962576451 756606132568153667453.84481533280934425956 0
 
-    ; # NOTE: The huge value for tan(pi/2) is due to the fact that pi is not exact.
+    ; # NOTE: The huge value for tan(pi/2) is because the pi variable is not exactly pi.
 
 LIMITS
     0 < eps < 1
@@ -48,6 +48,7 @@ SEE ALSO
     aversin, acoversin, avercos, acovercos
     haversin, hacoversin, havercos, hacovercos
     ahaversin, hacoversin, havercos, ahacovercos
+    exsec, aexsec, excsc, aexcsc
     epsilon
 
 ## Copyright (C) 1999,2023  Landon Curt Noll

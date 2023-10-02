@@ -354,11 +354,17 @@ The following are the changes from calc version 2.14.3.5 to date:
 	ahacoversin(x [,eps])	inverse half coversed trigonometric sine
 	ahavercos(x [,eps])	inverse half versed trigonometric cosine
 	ahacovercos(x [,eps])	inverse half coversed trigonometric cosine
+	exsec(x [,eps])		exterior trigonometric secant
+	aexsec(x [,eps])	inverse exterior trigonometric secant
+	excsc(x [,eps])		exterior trigonometric cosecant
+	aexcsc(x [,eps])	inverse exterior trigonometric cosecant
 
     Fixed calc regression test 42dd to set the display value back to 20.
 
-    Added test 95dd and test9500.trigeq.cal to the calc regression test
+    Added to test 95dd and test9500.trigeq.cal to the calc regression test
     suite to perform extensive test of trigonometric functions.
+
+    Added to test 34dd, some if the missing inverse trigonometric tests.
 
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:

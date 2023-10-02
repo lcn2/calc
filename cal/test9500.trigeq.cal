@@ -1124,3 +1124,123 @@ define verify_hacovercos(testnum)
 	}
 	return error_count;
 }
+
+
+/*
+ * verify_exsec - exterior trigonometric secant
+ *
+ * We use the following trigonometric identity:
+ *
+ *	exsec(x) = sec(x) - 1 = (1 / cos(x)) - 1
+ *
+ * given:
+ *	testnum		regression test number being performed
+ *
+ * returns:
+ *	number of tests that failed
+ */
+define verify_exsec(testnum)
+{
+	local tval_len;		/* current length of the tval[] array */
+	local ident_val;	/* computed trig value trigonometric identity */
+	local trig_val;		/* computed value from the trigonometric function */
+	local error_count;	/* number of compare errors detected */
+	local i;
+
+	/*
+	 * firewall
+	 */
+	if (size(cos_tval) <= 0) {
+		precompute_trig();
+	}
+
+	/*
+	 * for each test value, verify the trigonometric identity within epsilon
+	 */
+	tval_len = size(tval);
+	for (i=0; i < tval_len; ++i) {
+
+		/* skip test when cos(x) within epsilon of 0 */
+		if (not_near_zero(cos_tval[i])) {
+
+			/* compute trigonometric identity */
+			ident_val = (1 / cos_tval[i]) - 1;
+
+			/* compute trigonometric function */
+			trig_val = exsec(tval[i]);
+
+			/* compare trigonometric identity with trigonometric function value */
+			if (compare(ident_val, trig_val, "exsec", i, testnum)) {
+				++error_count;
+			}
+		}
+	}
+
+	/*
+	 * report test results
+	 */
+	if (error_count != 0) {
+		print '**** test', testnum : ': exsec test failure count:', error_count;
+	}
+	return error_count;
+}
+
+
+/*
+ * verify_excsc - verify trigonometric cosecant
+ *
+ * We use the following trigonometric identity:
+ *
+ *	excsc(x) = csc(x) - 1 = (1 / sin(x)) - 1
+ *
+ * given:
+ *	testnum		regression test number being performed
+ *
+ * returns:
+ *	number of tests that failed
+ */
+define verify_excsc(testnum)
+{
+	local tval_len;		/* current length of the tval[] array */
+	local ident_val;	/* computed trig value trigonometric identity */
+	local trig_val;		/* computed value from the trigonometric function */
+	local error_count;	/* number of compare errors detected */
+	local i;
+
+	/*
+	 * firewall
+	 */
+	if (size(sin_tval) <= 0) {
+		precompute_trig();
+	}
+
+	/*
+	 * for each test value, verify the trigonometric identity within epsilon
+	 */
+	tval_len = size(tval);
+	for (i=0; i < tval_len; ++i) {
+
+		/* skip test when sin(x) within epsilon of 0 */
+		if (not_near_zero(sin_tval[i])) {
+
+			/* compute trigonometric identity */
+			ident_val = (1 / sin_tval[i]) - 1;
+
+			/* compute trigonometric function */
+			trig_val = excsc(tval[i]);
+
+			/* compare trigonometric identity with trigonometric function value */
+			if (compare(ident_val, trig_val, "excsc", i, testnum)) {
+				++error_count;
+			}
+		}
+	}
+
+	/*
+	 * report test results
+	 */
+	if (error_count != 0) {
+		print '**** test', testnum : ': excsc test failure count:', error_count;
+	}
+	return error_count;
+}

@@ -32,7 +32,7 @@ EXAMPLE
     ; print csc(pi/6), csc(pi/2), csc(pi)
     2 1 378303066284076833726.92240766640467212978
 
-    ; # NOTE: The huge value for csc(pi) is because pi, as calculated, is not exact.
+    ; # NOTE: The huge value for csc(pi) is because the pi variable is not exactly pi.
 
 LIMITS
     0 < eps < 1
@@ -48,6 +48,7 @@ SEE ALSO
     aversin, acoversin, avercos, acovercos
     haversin, hacoversin, havercos, hacovercos
     ahaversin, hacoversin, havercos, ahacovercos
+    exsec, aexsec, excsc, aexcsc
     epsilon
 
 ## Copyright (C) 1999,2023  Landon Curt Noll

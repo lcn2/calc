@@ -3209,6 +3209,7 @@ f_csc(int count, VALUE **vals)
 	return result;
 }
 
+
 S_FUNC VALUE
 f_sinh(int count, VALUE **vals)
 {
@@ -11940,6 +11941,284 @@ f_ahacovercos(int count, VALUE **vals)
 }
 
 
+/*
+ * f_exsec - exterior trigonometric secant
+ */
+S_FUNC VALUE
+f_exsec(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *c;
+	NUMBER *err;
+
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use err VALUE arg if given and value is in a valid range.
+	 */
+	err = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_EXSEC_1);
+		}
+		err = vals[1]->v_num;
+	}
+
+	/*
+	 * compute exterior trigonometric secant to a given error tolerance
+	 */
+	switch (vals[0]->v_type) {
+	case V_NUM:
+		result.v_num = qexsec(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		c = c_exsec(vals[0]->v_com, err);
+		if (c == NULL) {
+			return error_value(E_EXSEC_3);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
+			result.v_type = V_NUM;
+		}
+		break;
+	default:
+		return error_value(E_EXSEC_2);
+	}
+	return result;
+}
+
+
+/*
+ * f_aexsec - inverse exterior trigonometric secant
+ */
+S_FUNC VALUE
+f_aexsec(int count, VALUE **vals)
+{
+	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
+	VALUE result;		/* value to return */
+	COMPLEX *c;		/* COMPLEX trig result */
+	NUMBER *eps;		/* epsilon error tolerance */
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_AEXSEC_1);
+		}
+		eps = vals[1]->v_num;
+	}
+
+	/*
+	 * compute inverse trig function to a given error tolerance
+	 */
+	arg1 = *vals[0];
+	if (arg1.v_type == V_NUM) {
+
+		/* try to compute result using real trig function */
+		result.v_num = qaexsec_or_NULL(arg1.v_num, eps);
+
+		/*
+		 * case: trig function returned a NUMBER
+		 */
+		if (result.v_num != NULL) {
+			result.v_type = V_NUM;
+
+		/*
+		 * case: trig function returned NULL - need to try COMPLEX trig function
+		 */
+		} else {
+			/* convert NUMBER argument from NUMBER to COMPLEX */
+			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
+			arg1.v_type = V_COM;
+		}
+	}
+	if (arg1.v_type == V_COM) {
+
+		/*
+		 * case: argument was COMPLEX or
+		 *	 trig function returned NULL and argument was converted to COMPLEX
+		 */
+		c = c_aexsec(arg1.v_com, eps);
+		if (c == NULL) {
+			return error_value(E_AEXSEC_3);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+
+		/*
+		 * case: complex trig function returned real, convert result to NUMBER
+		 */
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
+			result.v_type = V_NUM;
+		}
+	}
+	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+
+		/*
+		 * case: argument type is not valid for this function
+		 */
+		return error_value(E_AEXSEC_2);
+	}
+	return result;
+}
+
+
+/*
+ * f_excsc - exterior trigonometric cosecant
+ */
+S_FUNC VALUE
+f_excsc(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *c;
+	NUMBER *err;
+
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use err VALUE arg if given and value is in a valid range.
+	 */
+	err = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_EXCSC_1);
+		}
+		err = vals[1]->v_num;
+	}
+
+	/*
+	 * compute cosecant to a given error tolerance
+	 */
+	switch (vals[0]->v_type) {
+	case V_NUM:
+		if (qiszero(vals[0]->v_num)) {
+			return error_value(E_EXCSC_3);
+		}
+		result.v_num = qexcsc(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		if (ciszero(vals[0]->v_com)) {
+			return error_value(E_EXCSC_3);
+		}
+		c = c_excsc(vals[0]->v_com, err);
+		if (c == NULL) {
+			return error_value(E_EXCSC_4);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
+			result.v_type = V_NUM;
+		}
+		break;
+	default:
+		return error_value(E_EXCSC_2);
+	}
+	return result;
+}
+
+
+/*
+ * f_aexcsc - exterior trigonometric cosecant
+ */
+S_FUNC VALUE
+f_aexcsc(int count, VALUE **vals)
+{
+	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
+	VALUE result;		/* value to return */
+	COMPLEX *c;		/* COMPLEX trig result */
+	NUMBER *eps;		/* epsilon error tolerance */
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_AEXCSC_1);
+		}
+		eps = vals[1]->v_num;
+	}
+
+	/*
+	 * compute inverse trig function to a given error tolerance
+	 */
+	arg1 = *vals[0];
+	if (arg1.v_type == V_NUM) {
+
+		/* try to compute result using real trig function */
+		result.v_num = qaexcsc_or_NULL(arg1.v_num, eps);
+
+		/*
+		 * case: trig function returned a NUMBER
+		 */
+		if (result.v_num != NULL) {
+			result.v_type = V_NUM;
+
+		/*
+		 * case: trig function returned NULL - need to try COMPLEX trig function
+		 */
+		} else {
+			/* convert NUMBER argument from NUMBER to COMPLEX */
+			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
+			arg1.v_type = V_COM;
+		}
+	}
+	if (arg1.v_type == V_COM) {
+
+		/*
+		 * case: argument was COMPLEX or
+		 *	 trig function returned NULL and argument was converted to COMPLEX
+		 */
+		c = c_aexcsc(arg1.v_com, eps);
+		if (c == NULL) {
+			return error_value(E_AEXCSC_3);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+
+		/*
+		 * case: complex trig function returned real, convert result to NUMBER
+		 */
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
+			result.v_type = V_NUM;
+		}
+	}
+	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+
+		/*
+		 * case: argument type is not valid for this function
+		 */
+		return error_value(E_AEXCSC_2);
+	}
+	return result;
+}
+
+
 #endif /* !FUNCLIST */
 
 
@@ -12000,6 +12279,10 @@ STATIC CONST struct builtin builtins[] = {
 	 "inverse cosecant of a within accuracy b"},
 	{"acsch", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acsch},
 	 "inverse csch of a within accuracy b"},
+	{"aexcsc", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_aexcsc},
+	 "inverse exterior cosecant of a within accuracy b"},
+	{"aexsec", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_aexsec},
+	 "inverse exterior secant of a within accuracy b"},
 	{"agd", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_agd},
 	 "inverse Gudermannian function"},
 	{"ahacovercos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_ahacovercos},
@@ -12157,8 +12440,12 @@ STATIC CONST struct builtin builtins[] = {
 	 "Euler number"},
 	{"eval", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_eval},
 	 "evaluate expression from string to value"},
+	{"excsc", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_excsc},
+	 "exterior cosecant of a within accuracy b"},
 	{"exp", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_exp},
 	 "exponential of value a within accuracy b"},
+	{"exsec", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_exsec},
+	 "exterior secant of a within accuracy b"},
 	{"fact", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_fact},
 	 "factorial"},
 	{"factor", 1, 3, 0, OP_NOP, {.numfunc_cnt = f_factor}, {.null = NULL},
@@ -12575,7 +12862,7 @@ STATIC CONST struct builtin builtins[] = {
 	 "search matrix or list for value b starting\n"
 	 "\t\t\tat index c"},
 	{"sec", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_sec},
-	 "sec of a within accuracy b"},
+	 "secant of a within accuracy b"},
 	{"sech", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_sech},
 	 "hyperbolic secant of a within accuracy b"},
 	{"seed", 0, 0, 0, OP_NOP, {.numfunc_0 = f_seed}, {.null = NULL},

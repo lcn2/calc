@@ -689,7 +689,7 @@ CONST struct errtbl error_table[] = {
 	{ 10538,	"E_COT_5",		"Invalid zero argument for cot" },
 	{ 10539,	"E_COT_6",		"Invalid complex argument for cot" },
 	{ 10540,	"E_SEC_5",		"Invalid complex argument for sec" },
-	{ 10541,	"E_CSC_5",		"Invalid zero argument for cot" },
+	{ 10541,	"E_CSC_5",		"Invalid zero argument for csc" },
 	{ 10542,	"E_CSC_6",		"Invalid complex argument for csc" },
 	{ 10543,	"E_ERROR_3",		"String argument is not a valid E_STRING for error" },
 	{ 10544,	"E_ERROR_4",		"Numeric argument is not an integer for error" },
@@ -729,6 +729,19 @@ CONST struct errtbl error_table[] = {
 	{ 10578,	"E_AHACOVERCOS_1",	"Bad epsilon for ahacovercos" },
 	{ 10579,	"E_AHACOVERCOS_2",	"Bad first argument for achaovercos" },
 	{ 10580,	"E_AHACOVERCOS_3",	"Too-large im(argument) for ahacovercos" },
+	{ 10581,	"E_EXSEC_1",		"Bad epsilon for exsec" },
+	{ 10582,	"E_EXSEC_2",		"Bad argument for exsec" },
+	{ 10583,	"E_EXSEC_3",		"Invalid complex argument for exsec" },
+	{ 10584,	"E_AEXSEC_1",		"Bad epsilon for aexsec" },
+	{ 10585,	"E_AEXSEC_2",		"Bad argument for aexsec" },
+	{ 10586,	"E_AEXSEC_3",		"Invalid value for calculating aexsec" },
+	{ 10587,	"E_EXCSC_1",		"Bad epsilon for excsc" },
+	{ 10588,	"E_EXCSC_2",		"Bad argument for excsc" },
+	{ 10589,	"E_EXCSC_3",		"Invalid zero argument for excsc" },
+	{ 10590,	"E_EXCSC_4",		"Invalid complex argument for excsc" },
+	{ 10591,	"E_AEXCSC_1",		"Bad epsilon for aexcsc" },
+	{ 10592,	"E_AEXCSC_2",		"Bad argument for aexcsc" },
+	{ 10593,	"E_AEXCSC_3",		"Invalid value for calculating aexcsc" },
 	/* IMPORTANT NOTE: add new entries above here and be sure their errnum numeric value is consecutive! */
 
 	/* The next NULL entry must be last */

@@ -1,52 +1,55 @@
 NAME
-    ahacovercos - inverse half coversed trigonometric cosine
+    aexcsc - inverse exterior trigonometric cosecant
 
 SYNOPSIS
-    ahacovercos(x [,eps])
+    aexcsc(x [,eps])
 
 TYPES
     x		number (real or complex)
     eps		0 < real < 1, defaults to epsilon()
 
-    return	number
+    return	real
 
 DESCRIPTION
-    Calculate the inverse half coversed trigonometric cosine of x to a multiple of eps with error less in
+    Returns the inverse exterior trigonometric cscant of x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    This function is sometimes called ahacvc, or archacovercos, or archacovercosine, is equivalent to:
+    This function is sometimes called arcexcsc, is equivalent to:
 
-	ahacovercos(x) = asin(2*x - 1)
+	aexcsc(x) = acsc(x + 1)
 
 EXAMPLE
-    ; print ahacovercos(0), ahacovercos(0.5), ahacovercos(1)
-    -1.57079632679489661923 0 1.57079632679489661923
+    ; print aexcsc(0), aexcsc(0.5), aexcsc(1)
+    1.57079632679489661923 0.72972765622696636345 0.52359877559829887308
 
-    ; print ahacovercos(-0.5), ahacovercos(-1)
-    -1.57079632679489661923+1.31695789692481670863i -1.57079632679489661923+1.76274717403908605045i
+    ; print aexcsc(-0.5), aexcsc(-1)
+    1.57079632679489661923-1.31695789692481670863i Error 10454
 
-    ; print ahacovercos(.5, 1e-5), ahacovercos(.5, 1e-10), ahacovercos(.5, 1e-15), ahacovercos(.5, 1e-20)
-    0 0 0 0
+    ; print aexcsc(.5, 1e-5), aexcsc(.5, 1e-10), aexcsc(.5, 1e-15)
+    0.72973 0.7297276562 0.729727656226966
 
-    ; print ahacovercos(5), ahacovercos(5i)
-    1.57079632679489661923-2.88727095035762068499i -0.09918204387849273625+3.00312524371312921749i
+    ; print aexcsc(.5, 1e-20)
+    0.72972765622696636345
 
-    ; print ahacovercos(5+5i)
-    0.73144212314418701068+3.29254348147605425075i
+    ; print aexcsc(5), aexcsc(5i)
+    0.16744807921968933055 0.03777750167037411869-0.19127650074191792629i
+
+    ; print aexcsc(5+5i)
+    0.09818639956668015454-0.08227107131216428877i
 
     ; pi = pi(1e-20)
-    ; print ahacovercos(pi/6), ahacovercos(pi/3)
-    0.04721509173238348552 1.57079632679489661923-0.4311526751624601302i
+    ; print aexcsc(pi/6), aexcsc(pi/3)
+    0.7159583700300961063 0.51033850088317613655
 
-    ; print ahacovercos(4*pi/3)
-    1.57079632679489661923-2.68696776930293700505i
+    ; print aexcsc(4*pi/3)
+    0.19393657131001704582
 
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
-    NUMBER *qahacovercos(NUMBER *x, NUMBER *eps)
-    COMPLEX *c_ahacovercos(COMPLEX *x, NUMBER *eps)
+    NUMBER *qaexcsc(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_aexcsc(COMPLEX *c, NUMBER *epsilon)
 
 SEE ALSO
     sin, cos, tan, cot, sec, csc
@@ -54,8 +57,8 @@ SEE ALSO
     versin, coversin, vercos, covercos
     aversin, acoversin, avercos, acovercos
     haversin, hacoversin, havercos, hacovercos
-    ahaversin, hacoversin, havercos
-    exsec, aexsec, excsc, aexcsc
+    ahaversin, hacoversin, havercos, ahacovercos
+    exsec, aexsec, excsc
     epsilon
 
 ## Copyright (C) 2023  Landon Curt Noll
@@ -74,7 +77,7 @@ SEE ALSO
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2023/09/24 11:16:08
+## Under source code control:	2023/09/30 23:22:21
 ## File existed as early as:	2023
 ##
 ## chongo <was here> /\oo/\	http://www.isthe.com/chongo/

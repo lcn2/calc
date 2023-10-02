@@ -55,6 +55,7 @@ SEE ALSO
     aversin, acoversin, avercos, acovercos
     haversin, hacoversin, havercos, hacovercos
     ahaversin, havercos, ahacovercos
+    exsec, aexsec, excsc, aexcsc
     epsilon
 
 ## Copyright (C) 2023  Landon Curt Noll

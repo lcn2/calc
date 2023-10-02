@@ -144,6 +144,10 @@ E_FUNC COMPLEX *c_havercos(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_ahavercos(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_hacovercos(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_ahacovercos(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_exsec(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_aexsec(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_excsc(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_aexcsc(COMPLEX *c, NUMBER *epsilon);
 
 
 
