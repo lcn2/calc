@@ -148,6 +148,9 @@ The following are the changes from calc version 2.14.3.5 to date:
     a COMPLEX value that is real (imag part is 0) into a NUMBER and
     optionally free the COMPLEX value.  The func.c code now uses c_to_q().
 
+    Added q_to_c(NUMBER *q) to make it easier to convert a NUMBER
+    into an allocated COMPLEX value.
+
     Added new vercos(x, [,eps]) for versed cosine and covercos(x, [,eps])
     for inverse versed cosine.
 

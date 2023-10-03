@@ -653,6 +653,13 @@ The 2nd argument to c_to_q() determines if the complex argument should be freed
 or not.  Pass a false value as the 2nd arg if you wish to continue to use the
 COMPLEX value.
 
+To convert a NUMBER into a COMPLEX value, use:
+
+	COMPLEX *c;
+	NUMBER *q;
+
+	c = q_to_c(q);
+
 There are three predefined values for complex numbers.	You should clink
 them when you want to use them.	 They are _czero_, _cone_, and _conei_.
 These have the values 0, 1, and i.
