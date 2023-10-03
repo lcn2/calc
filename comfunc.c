@@ -2719,3 +2719,112 @@ c_acrd(COMPLEX *c, NUMBER *epsilon)
 	 */
 	return r;
 }
+
+
+/*
+ * c_cas - COMPLEX valued cosine plus sine
+ *
+ * This uses the formula:
+ *
+ *	cas(x) = cos(x) + sin(x)
+ *
+ * given:
+ *	c	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_cas(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;		/* return COMPLEX value */
+	COMPLEX *csin;		/* complex sin(c) */
+	COMPLEX *ccos;		/* complex cos(c) */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex trig function value
+	 */
+	csin = c_sin(c, epsilon);
+	if (csin == NULL) {
+		math_error("Failed to compute complex sine for complex cas");
+		not_reached();
+	}
+	ccos = c_cos(c, epsilon);
+	if (ccos == NULL) {
+		comfree(csin);
+		math_error("Failed to compute complex cosine for complex cas");
+		not_reached();
+	}
+	r = c_add(csin, ccos);
+	comfree(csin);
+	comfree(ccos);
+
+	/*
+	 * return trigonometric result
+	 */
+	return r;
+}
+
+
+/*
+ * c_cis - COMPLEX valued Euler's formula
+ *
+ * This uses the formula:
+ *
+ *	cis(x) = cos(x) + 1i*sin(x)
+ *	cis(x) = exp(1i * x)
+ *
+ * given:
+ *	c	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_cis(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;		/* return COMPLEX value */
+	COMPLEX *ctmp;		/* 1i * c */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex trig function value
+	 */
+	ctmp = c_mul(c, &_conei_);
+	r = c_exp(ctmp, epsilon);
+	comfree(ctmp);
+	if (r == NULL) {
+		math_error("Failed to compute complex exp for complex cis");
+		not_reached();
+	}
+
+	/*
+	 * return trigonometric result
+	 */
+	return r;
+}

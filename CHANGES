@@ -24,6 +24,8 @@ The following are the changes from calc version 2.14.3.5 to date:
 	aexcsc(x [,eps])	inverse exterior trigonometric cosecant
 	crd(x [,eps])		trigonometric chord of a unit circle
 	acrd(x [,eps])		inverse trigonometric chord of a unit circle
+	cas(x [,eps])		trigonometric cosine plus sine
+	cis(x [,eps])		Euler's formula
 
     As Msys2 is a fork of Cygwin, if the OSNAME is Msys, the Cygwin
     target will be used.  Thanks to GitHub user @iahung2 for the

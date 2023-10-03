@@ -202,6 +202,7 @@ qsincos(NUMBER *q, long bitnum, NUMBER **vs, NUMBER **vc)
 	return;
 }
 
+
 /*
  * Calculate the cosine of a number to a near multiple of epsilon.
  * This calls qsincos() and discards the value of sin.
@@ -3620,6 +3621,72 @@ qacrd(NUMBER *q, NUMBER *epsilon)
 
 	/*
 	 * return inverse trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qcas - trigonometric chord of a unit circle
+ *
+ * This uses the formula:
+ *
+ *	cas(x) = cos(x) + sin(x)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qcas(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *sin;	/* sin(x) */
+	NUMBER *tsin;	/* sin(x) rounded to nearest epsilon multiple */
+	NUMBER *cos;	/* cos(x) */
+	NUMBER *tcos;	/* cos(x) rounded to nearest epsilon multiple */
+	NUMBER *res;
+	long n;
+
+	/*
+	 * firewall
+	 */
+	if (qiszero(epsilon)) {
+		math_error("Zero epsilon value for cosine");
+		not_reached();
+	}
+
+	/*
+	 * case 0: quick return 1
+	 */
+	if (qiszero(q)) {
+		return qlink(&_qone_);
+	}
+
+	/*
+	 * case epsilon > 1: quick return 0
+	 */
+	n = -qilog2(epsilon);
+	if (n < 0) {
+		return qlink(&_qzero_);
+	}
+
+	/*
+	 * compute cosine and sine
+	 */
+	qsincos(q, n + 2, &sin, &cos);
+	tcos = qmappr(cos, epsilon, 24);
+	qfree(cos);
+	tsin = qmappr(sin, epsilon, 24);
+	qfree(sin);
+	res = qqadd(tcos, tsin);
+	qfree(tcos);
+	qfree(tsin);
+
+	/*
+	 * return trigonometric result
 	 */
 	return res;
 }

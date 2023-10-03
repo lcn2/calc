@@ -2661,7 +2661,7 @@ f_cos(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute cosinr to a given error tolerance
+	 * compute cosine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
 	case V_NUM:
@@ -10848,7 +10848,7 @@ f_versin(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute trig function to a given error tolerance
+	 * compute versed trigonometric sine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
@@ -10906,7 +10906,7 @@ f_aversin(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute inverse trig function to a given error tolerance
+	 * compute inverse versed trigonometric sine to a given error tolerance
 	 */
 	arg1 = *vals[0];
 	if (arg1.v_type == V_NUM) {
@@ -10988,7 +10988,7 @@ f_coversin(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute trig function to a given error tolerance
+	 * compute coversed trigonometric sine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
@@ -11046,7 +11046,7 @@ f_acoversin(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute inverse trig function to a given error tolerance
+	 * compute inverse coversed trigonometric sine to a given error tolerance
 	 */
 	arg1 = *vals[0];
 	if (arg1.v_type == V_NUM) {
@@ -11128,7 +11128,7 @@ f_vercos(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute trig function to a given error tolerance
+	 * compute versed trigonometric cosine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
@@ -11186,7 +11186,7 @@ f_avercos(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute inverse trig function to a given error tolerance
+	 * compute inverse versed trigonometric cosine to a given error tolerance
 	 */
 	arg1 = *vals[0];
 	if (arg1.v_type == V_NUM) {
@@ -11268,7 +11268,7 @@ f_covercos(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute trig function to a given error tolerance
+	 * compute coversed trigonometric cosine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
@@ -11326,7 +11326,7 @@ f_acovercos(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute inverse trig function to a given error tolerance
+	 * compute inverse coversed trigonometric cosine to a given error tolerance
 	 */
 	arg1 = *vals[0];
 	if (arg1.v_type == V_NUM) {
@@ -11408,7 +11408,7 @@ f_haversin(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute trig function to a given error tolerance
+	 * compute half versed trigonometric sine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
@@ -11466,7 +11466,7 @@ f_ahaversin(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute inverse trig function to a given error tolerance
+	 * compute inverse half versed trigonometric sine to a given error tolerance
 	 */
 	arg1 = *vals[0];
 	if (arg1.v_type == V_NUM) {
@@ -11548,7 +11548,7 @@ f_hacoversin(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute trig function to a given error tolerance
+	 * compute half coversed trigonometric sine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
@@ -11606,7 +11606,7 @@ f_ahacoversin(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute inverse trig function to a given error tolerance
+	 * compute inverse half coversed trigonometric sine to a given error tolerance
 	 */
 	arg1 = *vals[0];
 	if (arg1.v_type == V_NUM) {
@@ -11688,7 +11688,7 @@ f_havercos(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute trig function to a given error tolerance
+	 * compute half versed trigonometric cosine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
@@ -11746,7 +11746,7 @@ f_ahavercos(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute inverse trig function to a given error tolerance
+	 * compute inverse half versed trigonometric cosine to a given error tolerance
 	 */
 	arg1 = *vals[0];
 	if (arg1.v_type == V_NUM) {
@@ -11828,7 +11828,7 @@ f_hacovercos(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute trig function to a given error tolerance
+	 * compute half coversed trigonometric cosine to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
 		case V_NUM:
@@ -11886,7 +11886,7 @@ f_ahacovercos(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute inverse trig function to a given error tolerance
+	 * compute inverse half coversed trigonometric cosine to a given error tolerance
 	 */
 	arg1 = *vals[0];
 	if (arg1.v_type == V_NUM) {
@@ -12022,7 +12022,7 @@ f_aexsec(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute inverse trig function to a given error tolerance
+	 * compute inverse exterior trigonometric secant to a given error tolerance
 	 */
 	arg1 = *vals[0];
 	if (arg1.v_type == V_NUM) {
@@ -12104,7 +12104,7 @@ f_excsc(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute cosecant to a given error tolerance
+	 * compute exterior trigonometric cosecant to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
 	case V_NUM:
@@ -12164,7 +12164,7 @@ f_aexcsc(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute inverse trig function to a given error tolerance
+	 * compute inverse exterior trigonometric cosecant to a given error tolerance
 	 */
 	arg1 = *vals[0];
 	if (arg1.v_type == V_NUM) {
@@ -12220,7 +12220,7 @@ f_aexcsc(int count, VALUE **vals)
 
 
 /*
- * f_crd - exterior trigonometric cosecant
+ * f_crd - trigonometric chord of a unit circle
  */
 S_FUNC VALUE
 f_crd(int count, VALUE **vals)
@@ -12246,7 +12246,7 @@ f_crd(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute cosecant to a given error tolerance
+	 * compute chord of a unit circle to a given error tolerance
 	 */
 	switch (vals[0]->v_type) {
 	case V_NUM:
@@ -12273,7 +12273,7 @@ f_crd(int count, VALUE **vals)
 
 
 /*
- * f_acrd - exterior trigonometric cosecant
+ * f_acrd - inverse trigonometric chord of a unit circle
  */
 S_FUNC VALUE
 f_acrd(int count, VALUE **vals)
@@ -12300,7 +12300,7 @@ f_acrd(int count, VALUE **vals)
 	}
 
 	/*
-	 * compute inverse trig function to a given error tolerance
+	 * compute inverse trigonometric chord of a unit circle to a given error tolerance
 	 */
 	arg1 = *vals[0];
 	if (arg1.v_type == V_NUM) {
@@ -12351,6 +12351,137 @@ f_acrd(int count, VALUE **vals)
 		 */
 		return error_value(E_ACRD_2);
 	}
+	return result;
+}
+
+
+/*
+ * f_cas - trigonometric chord of a unit circle
+ */
+S_FUNC VALUE
+f_cas(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *c;
+	NUMBER *err;
+
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use err VALUE arg if given and value is in a valid range.
+	 */
+	err = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_CAS_1);
+		}
+		err = vals[1]->v_num;
+	}
+
+	/*
+	 * compute chord of a unit circle to a given error tolerance
+	 */
+	switch (vals[0]->v_type) {
+	case V_NUM:
+		result.v_num = qcas(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		c = c_cas(vals[0]->v_com, err);
+		if (c == NULL) {
+			return error_value(E_CAS_3);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
+			result.v_type = V_NUM;
+		}
+		break;
+	default:
+		return error_value(E_CAS_2);
+	}
+	return result;
+}
+
+
+/*
+ * f_cis - Euler's formula
+ */
+S_FUNC VALUE
+f_cis(int count, VALUE **vals)
+{
+	VALUE result;
+	NUMBER *eps;
+	COMPLEX *c;
+	COMPLEX *ctmp;
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_CIS_1);
+		}
+		eps = vals[1]->v_num;
+	}
+
+	/*
+	 * compute Euler's formula to a given error tolerance
+	 */
+	switch (vals[0]->v_type) {
+	case V_NUM:
+		/*
+		 * convert arg to COMPLEX
+		 */
+		ctmp = q_to_c(vals[0]->v_num);
+
+		/*
+		 * compute cis of argument
+		 */
+		c = c_cis(ctmp, eps);
+		comfree(ctmp);
+		if (c == NULL) {
+			return error_value(E_CIS_3);
+		}
+		break;
+	case V_COM:
+
+		/*
+		 * compute cis of argument
+		 */
+		c = c_cis(vals[0]->v_com, eps);
+		if (c == NULL) {
+			return error_value(E_CIS_3);
+		}
+		break;
+	default:
+		return error_value(E_CIS_2);
+	}
+
+	/*
+	 * case: return NUMBER value
+	 */
+	if (cisreal(c)) {
+		result.v_num = c_to_q(c, true);
+		result.v_type = V_NUM;
+		return result;
+	}
+
+	/*
+	 * case: return COMPLEX value
+	 */
+	result.v_com = c;
+	result.v_type = V_COM;
 	return result;
 }
 
@@ -12487,6 +12618,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "current CALCPATH search path value"},
 	{"calc_tty", 0, 0, 0, OP_NOP, {.null = NULL}, {.valfunc_0 = f_calc_tty},
 	 "set tty for interactivity"},
+	{"cas", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_cas},
+	 "cosine plus sine, within accuracy b"},
 	{"catalan", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_catalan},
 	 "catalan number for index a"},
 	{"ceil", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ceil},
@@ -12498,6 +12631,8 @@ STATIC CONST struct builtin builtins[] = {
 	 "simplify number using continued fractions"},
 	{"char", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_char},
 	 "character corresponding to integer value"},
+	{"cis", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_cis},
+	 "Euler's formula, within accuracy b"},
 	{"cmdbuf", 0, 0, 0, OP_NOP, {.null = NULL}, {.valfunc_0 = f_cmdbuf},
 	 "command buffer"},
 	{"cmp", 2, 2, 0, OP_CMP, {.null = NULL}, {.null = NULL},

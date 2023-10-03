@@ -204,9 +204,9 @@ DETAIL_HELP= abs access acos acosh acot acoth acovercos acoversin \
 	ahavercos ahaversin append appr arg argv arrow asec asech asin asinh \
 	assign atan atan2 atanh avercos aversin avg base base2 bernoulli bit \
 	blk blkcpy blkfree blocks bround btrunc calc_tty calclevel calcpath \
-	catalan ceil cfappr cfsim char cmdbuf cmp comb conj cos cosh cot coth \
-	count covercos coversin cp crd csc csch ctime d2dm d2dms d2g d2r \
-	delete den dereference det digit digits display dms2d dp epsilon \
+	cas catalan ceil cfappr cfsim char cis cmdbuf cmp comb conj cos cosh \
+	cot coth count covercos coversin cp crd csc csch ctime d2dm d2dms d2g \
+	d2r delete den dereference det digit digits display dms2d dp epsilon \
 	errcount errmax errno error errsym estr euler eval excsc exp exsec \
 	fact factor fclose fcnt feof ferror fflush fgetc fgetfield fgetfile \
 	fgetline fgets fgetstr fib files floor fopen forall fpathopen fprintf \

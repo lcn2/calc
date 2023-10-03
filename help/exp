@@ -39,7 +39,7 @@ LINK LIBRARY
     COMPLEX *c_exp(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
-    ln, cosh, sinh, tanh
+    ln, log, log2, logn, cosh, sinh, tanh
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll
 ##

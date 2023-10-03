@@ -74,6 +74,7 @@ E_FUNC COMPLEX *c_square(COMPLEX *c);
 E_FUNC COMPLEX *c_conj(COMPLEX *c);
 E_FUNC COMPLEX *c_real(COMPLEX *c);
 E_FUNC NUMBER *c_to_q(COMPLEX *c, bool cfree);
+E_FUNC COMPLEX *q_to_c(NUMBER *q);
 E_FUNC COMPLEX *c_imag(COMPLEX *c);
 E_FUNC COMPLEX *c_neg(COMPLEX *c);
 E_FUNC COMPLEX *c_inv(COMPLEX *c);
@@ -150,6 +151,8 @@ E_FUNC COMPLEX *c_excsc(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_aexcsc(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_crd(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_acrd(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_cas(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_cis(COMPLEX *c, NUMBER *epsilon);
 
 
 

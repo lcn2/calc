@@ -527,6 +527,38 @@ c_to_q(COMPLEX *c, bool cfree)
 
 
 /*
+ * q_to_c - convert a NUMBER into an allocated COMPLEX
+ *
+ * given:
+ *	q	NUMBER to be converted
+ *
+ * returns:
+ *	allocated COMPLEX number whose real part is NUMBER and imag part is 0
+ */
+COMPLEX *
+q_to_c(NUMBER *q)
+{
+	COMPLEX *res;	/* COMPLEX number to return */
+
+	/*
+	 * allocate complex number
+	 */
+	res = comalloc();
+
+	/*
+	 * assign NUMBER to real part
+	 */
+	qfree(res->real);
+	res->real = qlink(q);
+
+	/*
+	 * return the allocated equivalent COMPLEX
+	 */
+	return res;
+}
+
+
+/*
  * Return the imaginary part of a complex number as a real.
  */
 COMPLEX *

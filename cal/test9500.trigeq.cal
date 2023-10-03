@@ -1312,3 +1312,122 @@ define verify_crd(testnum)
 	}
 	return error_count;
 }
+
+
+/*
+ * verify_cas - verify cosine plus sine
+ *
+ * We use the following trigonometric identity:
+ *
+ *	cas(x) = cos(x) + sin(x)
+ *
+ * given:
+ *	testnum		regression test number being performed
+ *
+ * returns:
+ *	number of tests that failed
+ */
+define verify_cas(testnum)
+{
+	local tval_len;		/* current length of the tval[] array */
+	local ident_val;	/* computed trig value trigonometric identity */
+	local trig_val;		/* computed value from the trigonometric function */
+	local error_count;	/* number of compare errors detected */
+	local i;
+
+	/*
+	 * firewall
+	 */
+	if (size(sin_tval) <= 0) {
+		precompute_trig();
+	}
+	if (size(cos_tval) <= 0) {
+		precompute_trig();
+	}
+
+	/*
+	 * for each test value, verify the trigonometric identity within epsilon
+	 */
+	tval_len = size(tval);
+	for (i=0; i < tval_len; ++i) {
+
+		/* compute trigonometric identity */
+		ident_val = cos_tval[i] + sin_tval[i];
+
+		/* compute trigonometric function */
+		trig_val = cas(tval[i]);
+
+		/* compare trigonometric identity with trigonometric function value */
+		if (compare(ident_val, trig_val, "cas", i, testnum)) {
+			++error_count;
+		}
+	}
+
+	/*
+	 * report test results
+	 */
+	if (error_count != 0) {
+		print '**** test', testnum : ': cas test failure count:', error_count;
+	}
+	return error_count;
+}
+
+
+/*
+ * verify_cis - verify Euler's formula
+ *
+ * We use the following trigonometric identity:
+ *
+ *	cis(x) = cos(x) + i*sin(x)
+ *	cis(x) = exp(1i * x)
+ *
+ * given:
+ *	testnum		regression test number being performed
+ *
+ * returns:
+ *	number of tests that failed
+ */
+define verify_cis(testnum)
+{
+	local tval_len;		/* current length of the tval[] array */
+	local ident_val;	/* computed trig value trigonometric identity */
+	local trig_val;		/* computed value from the trigonometric function */
+	local error_count;	/* number of compare errors detected */
+	local i;
+
+	/*
+	 * firewall
+	 */
+	if (size(sin_tval) <= 0) {
+		precompute_trig();
+	}
+	if (size(cos_tval) <= 0) {
+		precompute_trig();
+	}
+
+	/*
+	 * for each test value, verify the trigonometric identity within epsilon
+	 */
+	tval_len = size(tval);
+	for (i=0; i < tval_len; ++i) {
+
+		/* compute trigonometric identity */
+		ident_val = cos_tval[i] + 1i*sin_tval[i];
+
+		/* compute trigonometric function */
+		trig_val = cis(tval[i]);
+
+		/* compare trigonometric identity with trigonometric function value */
+		if (compare(ident_val, trig_val, "cis", i, testnum)) {
+			++error_count;
+		}
+	}
+
+	/*
+	 * report test results
+	 */
+	if (error_count != 0) {
+		print '**** test', testnum : ': cis test failure count:', error_count;
+	}
+	return error_count;
+}

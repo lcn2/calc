@@ -1,48 +1,46 @@
 NAME
-    csc - trigonometric cosecant
+    cas - trigonometric cosine plus sine
 
 SYNOPSIS
-    csc(x [,eps])
+    cas(x [,eps])
 
 TYPES
     x		number (real or complex)
     eps		0 < real < 1, defaults to epsilon()
 
-    return	real
+    return	number
 
 DESCRIPTION
-    Calculate the trigonometric cosecant of x to a multiple of eps, with error less
-    in absolute value than .75 * eps.
+    Calculate the trigonometric cosine plus sine of x to a multiple of eps with error less in
+    absolute value than .75 * eps.
 
-    This function is equivalent to:
+    This function is sometimes called cosine and sine, is equivalent to:
 
-	csc(x) = 1 / sin(x)
+	cas(x) = cos(x) + sin(x)
 
 EXAMPLE
-    ; print csc(1/2), csc(5/7), csc(42/7)
-    2.08582964293348818577 1.52653601091884339347 -3.57889954725440563736
+    ; print cas(1/2), cas(5/7), cas(42/7)
+    1.35700810049457571639 1.41063924387921517267 0.68075478845144014774
 
-    ; print csc(1, 1e-5), csc(1, 1e-10), csc(1, 1e-15), csc(1, 1e-20)
-    1.1884 1.1883951058 1.188395105778121 1.18839510577812121626
+    ; print cas(1, 1e-5), cas(1, 1e-10), cas(1, 1e-15), cas(1, 1e-20)
+    1.38177 1.3817732907 1.381773290676036 1.38177329067603622405
 
-    ; print csc(2 + 3i, 1e-5), csc(2 + 3i, 1e-10)
-    ~0.09047318155450436310+~0.04120099965201690801i ~0.09047320975303232503+~0.04120098628887626238i
+    ; print cas(2 + 3i, 1e-5), cas(2 + 3i, 1e-10)
+    4.96487-13.27814i 4.9648734559-13.2781348538i
 
     ; pi = pi(1e-20)
-    ; print csc(pi/6), csc(pi/2), csc(pi)
-    2 1 378303066284076833726.92240766640467212978
-
-    ; # NOTE: The huge value for csc(pi) is because the pi variable is not exactly pi.
+    ; print cas(pi/6), cas(pi/2), cas(pi)
+    1.36602540378443864676 1 -1
 
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
-    NUMBER *qcsc(NUMBER *x, NUMBER *eps)
-    COMPLEX *c_csc(COMPLEX *c, NUMBER *eps)
+    NUMBER *qcas(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_cas(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
-    sin, cos, tan, cot, sec
+    cos, tan, cot, sec, csc
     asin, acos, atan, acot, asec, acsc
     versin, coversin, vercos, covercos
     aversin, acoversin, avercos, acovercos
@@ -50,7 +48,7 @@ SEE ALSO
     ahaversin, hacoversin, havercos, ahacovercos
     exsec, aexsec, excsc, aexcsc
     crd, acrd
-    cas, cis
+    cis
     epsilon
 
 EXTERNAL RESOURCES
@@ -65,7 +63,7 @@ EXTERNAL RESOURCES
 	https://en.wikipedia.org/wiki/Hartley_transform#cas
 	https://en.wikipedia.org/wiki/Cis_(mathematics)
 
-## Copyright (C) 1999,2023  Landon Curt Noll
+## Copyright (C) 2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License
@@ -81,8 +79,8 @@ EXTERNAL RESOURCES
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	1995/11/13 03:49:00
-## File existed as early as:	1995
+## Under source code control:	2023/10/02 23:11:18
+## File existed as early as:	2023
 ##
 ## chongo <was here> /\oo/\	http://www.isthe.com/chongo/
 ## Share and enjoy!  :-)	http://www.isthe.com/chongo/tech/comp/calc/

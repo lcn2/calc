@@ -259,12 +259,12 @@ E_FUNC NUMBER *qaexcsc(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qcrd(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qacrd_or_NULL(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qacrd(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qcas(NUMBER *q, NUMBER *epsilon);
 
 /*
  * pseudo-seed generator
  */
 E_FUNC NUMBER *pseudo_seed(void);
-
 
 /*
  * external swap functions

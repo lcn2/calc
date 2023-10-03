@@ -749,6 +749,12 @@ CONST struct errtbl error_table[] =
 	{ 10597,	"E_ACRD_1",		"Bad epsilon for acrd" },
 	{ 10598,	"E_ACRD_2",		"Bad argument for acrd" },
 	{ 10599,	"E_ACRD_3",		"Invalid value for calculating acrd" },
+	{ 10600,	"E_CAS_1",		"Bad epsilon for cas" },
+	{ 10601,	"E_CAS_2",		"Bad argument for cas" },
+	{ 10602,	"E_CAS_3",		"Invalid complex argument for cas" },
+	{ 10603,	"E_CIS_1",		"Non-real epsilon for cis" },
+	{ 10604,	"E_CIS_2",		"Bad first argument for cis" },
+	{ 10605,	"E_CIS_3",		"Too-large re(argument) for cis" },
 	/* IMPORTANT NOTE: add new entries above here and be sure their errnum numeric value is consecutive! */
 
 	/* The next NULL entry must be last */

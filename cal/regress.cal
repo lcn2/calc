@@ -4182,6 +4182,52 @@ define test_trig()
 	    strcat(str(tnum++),
 		   ': round(acrd(2 + 3i, 1e-10), 10) == 1.0471975512+2.6339157938i'));
 
+	/* test cosine plus sine */
+	vrfy(cas(0, 1e-10) == 1,
+				strcat(str(tnum++), ': cas(0, 1e-10) == 1'));
+	vrfy(round(cas(0.2, 1e-10), 10) == 1.1787359086,
+	    strcat(str(tnum++),
+		   ': round(cas(0.2, 1e-10), 10) == 1.1787359086'));
+	vrfy(round(cas(3/7, 1e-10), 10) == 1.3251322067,
+	    strcat(str(tnum++),
+		   ': round(cas(3/7, 1e-10), 10) == 1.3251322067'));
+	vrfy(round(cas(-31, 1e-10), 10) == 1.3187800031,
+	    strcat(str(tnum++),
+		   ': round(cas(-31, 1e-10), 10) == 1.3187800031'));
+	vrfy(cas(pi/2, 1e-10) == 1,
+				strcat(str(tnum++), ': cas(pi/2, 1e-10) == 1'));
+	vrfy(cas(pi, 1e-10) == -1,
+				strcat(str(tnum++), ': cas(pi, 1e-10) == -1'));
+	vrfy(cas(3*pi/2, 1e-10) == -1,
+				strcat(str(tnum++), ': cas(3*pi/2, 1e-10) == -1'));
+	vrfy(round(cas(1, 1e-10), 10) == 1.3817732907,
+	    strcat(str(tnum++),
+		   ': round(cas(1, 1e-10), 10) == 1.3817732907'));
+	vrfy(round(cas(2 + 3i, 1e-10), 10) == 4.9648734559-13.2781348538i,
+	    strcat(str(tnum++),
+		   ': round(cas(2 + 3i, 1e-10), 10) == 4.9648734559-13.2781348538i'));
+
+	/* test Euler's formula */
+	vrfy(cis(0, 1e-10) == 1,
+				strcat(str(tnum++), ': cis(0, 1e-10) == 1'));
+	vrfy(cis(pi/2, 1e-10) == 1i,
+				strcat(str(tnum++), ': cis(pi/2, 1e-10) == 1i'));
+	vrfy(round(cis(0.2, 1e-10), 10) == 0.9800665778+0.1986693308i,
+	    strcat(str(tnum++),
+		   ': round(cis(0.2, 1e-10), 10) == 0.9800665778+0.1986693308i'));
+	vrfy(round(cis(3/7, 1e-10), 10) == 0.9095603517+0.415571855i,
+	    strcat(str(tnum++),
+		   ': round(cis(3/7, 1e-10), 10) == 0.9095603517+0.415571855i'));
+	vrfy(round(cis(-31, 1e-10), 10) == 0.9147423578+0.4040376453i,
+	    strcat(str(tnum++),
+		   ': round(cis(-31, 1e-10), 10) == 0.9147423578+0.4040376453i'));
+	vrfy(round(cis(1, 1e-10), 10) == 0.5403023059+0.8414709848i,
+	    strcat(str(tnum++),
+		   ': round(cis(1, 1e-10), 10) == 0.5403023059+0.8414709848i'));
+	vrfy(round(cis(2 + 3i, 1e-10), 10) == -0.020718731+0.0452712532i,
+	    strcat(str(tnum++),
+		   ': round(cis(2 + 3i, 1e-10), 10) == -0.020718731+0.0452712532i'));
+
 	print strcat(str(tnum++), ': Ending test_trig');
 }
 print '051: parsed test_trig()';
@@ -9879,9 +9925,11 @@ vrfy(verify_havercos(9513) == 0,	'9513: verify_havercos(9513) == 0');
 vrfy(verify_hacovercos(9514) == 0,	'9514: verify_hacovercos(9514) == 0');
 vrfy(verify_exsec(9515) == 0,		'9515: verify_exsec(9515) == 0');
 vrfy(verify_excsc(9516) == 0,		'9516: verify_excsc(9516) == 0');
-vrfy(verify_crd(9517) == 0,		'9516: verify_excsc(9517) == 0');
+vrfy(verify_crd(9517) == 0,		'9517: verify_crd(9517) == 0');
+vrfy(verify_cas(9518) == 0,		'9518: verify_cas(9518) == 0');
+vrfy(verify_cis(9519) == 0,		'9519: verify_cis(9519) == 0');
 
-print '9518: Ending trigonometric identities test set';
+print '9520: Ending trigonometric identities test set';
 
 
 /*
@@ -10890,6 +10938,12 @@ vrfy_errsym(10596, 10596, "E_CRD_3");
 vrfy_errsym(10597, 10597, "E_ACRD_1");
 vrfy_errsym(10598, 10598, "E_ACRD_2");
 vrfy_errsym(10599, 10599, "E_ACRD_3");
+vrfy_errsym(10600, 10600, "E_CAS_1");
+vrfy_errsym(10601, 10601, "E_CAS_2");
+vrfy_errsym(10602, 10602, "E_CAS_3");
+vrfy_errsym(10603, 10603, "E_CIS_1");
+vrfy_errsym(10604, 10604, "E_CIS_2");
+vrfy_errsym(10605, 10605, "E_CIS_3");
 
 /* ************************************************************** */
 /* NOTE: Reserve thru test 10998 for calc computation error codes */
