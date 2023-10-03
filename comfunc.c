@@ -1655,7 +1655,7 @@ c_ilog(COMPLEX *c, ZVALUE base)
  *	versin(x) = 1 - cos(x)
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -1705,7 +1705,7 @@ c_versin(COMPLEX *c, NUMBER *epsilon)
  *	aversin(x) = acos(1 - x)
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -1751,7 +1751,7 @@ c_aversin(COMPLEX *c, NUMBER *epsilon)
  *	coversin(x) = 1 - cos(x)
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -1801,7 +1801,7 @@ c_coversin(COMPLEX *c, NUMBER *epsilon)
  *	acoversin(x) = asin(1 - x)
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -1847,7 +1847,7 @@ c_acoversin(COMPLEX *c, NUMBER *epsilon)
  *	vercos(x) = 1 + cos(x)
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -1897,7 +1897,7 @@ c_vercos(COMPLEX *c, NUMBER *epsilon)
  *	avercos(x) = acos(x - 1)
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -1943,7 +1943,7 @@ c_avercos(COMPLEX *c, NUMBER *epsilon)
  *	covercos(x) = 1 + sin(x)
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -1993,7 +1993,7 @@ c_covercos(COMPLEX *c, NUMBER *epsilon)
  *	acovercos(x) = asin(x - 1)
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -2039,7 +2039,7 @@ c_acovercos(COMPLEX *c, NUMBER *epsilon)
  *	haversin(x) = versin(x) / 2
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -2089,7 +2089,7 @@ c_haversin(COMPLEX *c, NUMBER *epsilon)
  *	ahaversin(x) = acos(1 - 2*x)
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -2138,7 +2138,7 @@ c_ahaversin(COMPLEX *c, NUMBER *epsilon)
  *	hacoversin(x) = coversin(x) / 2
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -2188,7 +2188,7 @@ c_hacoversin(COMPLEX *c, NUMBER *epsilon)
  *	ahacoversin(x) = asin(1 - 2*x)
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -2237,7 +2237,7 @@ c_ahacoversin(COMPLEX *c, NUMBER *epsilon)
  *	havercos(x) = vercos(x) / 2
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -2287,7 +2287,7 @@ c_havercos(COMPLEX *c, NUMBER *epsilon)
  *	ahavercos(x) = acos(2*x - 1)
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -2336,7 +2336,7 @@ c_ahavercos(COMPLEX *c, NUMBER *epsilon)
  *	hacovercos(x) = covercos(x) / 2
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -2386,7 +2386,7 @@ c_hacovercos(COMPLEX *c, NUMBER *epsilon)
  *	ahacovercos(x) = asin(2*x - 1)
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -2435,7 +2435,7 @@ c_ahacovercos(COMPLEX *c, NUMBER *epsilon)
  *	exsec(x) = sec(x) - 1
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -2485,7 +2485,7 @@ c_exsec(COMPLEX *c, NUMBER *epsilon)
  *	aexsec(x) = asec(x + 1)
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -2531,7 +2531,7 @@ c_aexsec(COMPLEX *c, NUMBER *epsilon)
  *	excsc(x) = csc(x) - 1
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -2581,7 +2581,7 @@ c_excsc(COMPLEX *c, NUMBER *epsilon)
  *	aexcsc(x) = acsc(x + 1)
  *
  * given:
- *	q	    complex value to pass to the trig function
+ *	c	    complex value to pass to the trig function
  *	epsilon	    error tolerance / precision for trig calculation
  *
  * returns:
@@ -2610,6 +2610,108 @@ c_aexcsc(COMPLEX *c, NUMBER *epsilon)
 	 */
 	ctmp = c_addq(c, &_qone_);
 	r = c_acsc(ctmp, epsilon);
+	comfree(ctmp);
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return r;
+}
+
+
+/*
+ * c_crd - COMPLEX valued trigonometric chord of a unit circle
+ *
+ * This uses the formula:
+ *
+ *	crd(x) = 2 * sin(x / 2)
+ *
+ * given:
+ *	c	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_crd(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;		/* return COMPLEX value */
+	COMPLEX *cdiv2;		/* complex c/2 */
+	COMPLEX *ctmp;		/* complex sin(c/2) */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex trig function value
+	 */
+	cdiv2 = c_divq(c, &_qtwo_);
+	ctmp = c_sin(cdiv2, epsilon);
+	comfree(cdiv2);
+	if (ctmp == NULL) {
+		math_error("Failed to compute complex sine for complex crd");
+		not_reached();
+	}
+	r = c_mulq(ctmp, &_qtwo_);
+	comfree(ctmp);
+
+	/*
+	 * return trigonometric result
+	 */
+	return r;
+}
+
+
+/*
+ * c_acrd - COMPLEX valued inverse trigonometric chord of a unit circle
+ *
+ * This uses the formula:
+ *
+ *	acrd(x) = 2 * asin(x / 2)
+ *
+ * given:
+ *	c	    complex value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	complex value result of trig function on q with error epsilon
+ */
+COMPLEX *
+c_acrd(COMPLEX *c, NUMBER *epsilon)
+{
+	COMPLEX *r;		/* inverse trig value result */
+	COMPLEX *cdiv2;		/* complex c/2 */
+	COMPLEX *ctmp;		/* complex asin(c/2) */
+
+	/*
+	 * firewall
+	 */
+	if (c == NULL) {
+		math_error("%s: c is NULL", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate complex inverse trig function value
+	 */
+	cdiv2 = c_divq(c, &_qtwo_);
+	ctmp = c_asin(cdiv2, epsilon);
+	comfree(cdiv2);
+	r = c_mulq(ctmp, &_qtwo_);
 	comfree(ctmp);
 
 	/*

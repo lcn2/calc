@@ -365,6 +365,16 @@ define compare(ident_val, trig_val, name, index, testnum)
 	local abs_diff;		/* absolute difference between ident_val and trig_val */
 
 	/*
+	 * firewall
+	 */
+	if (!isnum(trig_val)) {
+		printf("**** trig test %d-%d failed: %s(tval[%d]): ",
+		       testnum, index, name, index);
+		printf("%d returned a non-numeric value\n", trig_val);
+		return 1;
+	}
+
+	/*
 	 * compute absolute difference
 	 */
 	abs_diff = abs(ident_val - trig_val);
@@ -1241,6 +1251,64 @@ define verify_excsc(testnum)
 	 */
 	if (error_count != 0) {
 		print '**** test', testnum : ': excsc test failure count:', error_count;
+	}
+	return error_count;
+}
+
+
+/*
+ * verify_crd - verify trigonometric chord of a unit circle
+ *
+ * We use the following trigonometric identity:
+ *
+ *	crd(x) = 2 * sin(x / 2)
+ *
+ * given:
+ *	testnum		regression test number being performed
+ *
+ * returns:
+ *	number of tests that failed
+ */
+define verify_crd(testnum)
+{
+	local tval_len;		/* current length of the tval[] array */
+	local ident_val;	/* computed trig value trigonometric identity */
+	local trig_val;		/* computed value from the trigonometric function */
+	local error_count;	/* number of compare errors detected */
+	local i;
+
+	/*
+	 * firewall
+	 */
+	if (size(sin_tval) <= 0) {
+		precompute_trig();
+	}
+
+	/*
+	 * for each test value, verify the trigonometric identity within epsilon
+	 */
+	tval_len = size(tval);
+	for (i=0; i < tval_len; ++i) {
+
+		/* NOTE: We actually check the identity: crd(x*2) = 2 * sin(x) */
+
+		/* compute trigonometric identity */
+		ident_val = 2 * sin_tval[i];
+
+		/* compute trigonometric function */
+		trig_val = crd(tval[i] * 2);
+
+		/* compare trigonometric identity with trigonometric function value */
+		if (compare(ident_val, trig_val, "crd", i, testnum)) {
+			++error_count;
+		}
+	}
+
+	/*
+	 * report test results
+	 */
+	if (error_count != 0) {
+		print '**** test', testnum : ': crd test failure count:', error_count;
 	}
 	return error_count;
 }

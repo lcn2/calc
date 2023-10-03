@@ -1,8 +1,8 @@
 NAME
-    acoversin - inverse coversed trigonometric sine
+    crd - trigonometric chord of a unit circle
 
 SYNOPSIS
-    acoversin(x [,eps])
+    crd(x [,eps])
 
 TYPES
     x		number (real or complex)
@@ -11,49 +11,46 @@ TYPES
     return	number
 
 DESCRIPTION
-    Calculate the inverse coversed trigonometric sine of x to a multiple of eps with error less in
+    Calculate length of unit circle chord with angle x to a multiple of eps with error less in
     absolute value than .75 * eps.
 
-    This function is sometimes called acovers, or acvs, or arccoversin, is equivalent to:
+    A chord of a circle is a straight line segment whose endpoints lie on a arc of a circle.
+    A chord extended infinitely on both directions into a line would produce a secant line.
 
-	acoversin(x) = asin(1 - x)
+    This function is sometimes called chord, is equivalent to:
+
+	crd(x) = 2 * sin(x / 2)
 
 EXAMPLE
-    ; print acoversin(0), acoversin(0.5), acoversin(1)
-    1.57079632679489661923 0.52359877559829887308 0
+    ; print crd(1/2), crd(5/7), crd(42/7)
+    0.4948079185090458592 0.6991976162706840944 0.2822400161197344442
 
-    ; print acoversin(-0.5), acoversin(-1)
-    1.57079632679489661923-0.96242365011920689499i 1.57079632679489661923-1.31695789692481670863i
+    ; print crd(1, 1e-5), crd(1, 1e-10), crd(1, 1e-15), crd(1, 1e-20)
+    0.95886 0.9588510772 0.958851077208406 0.95885107720840600054
 
-    ; print acoversin(.5, 1e-5), acoversin(.5, 1e-10), acoversin(.5, 1e-15), acoversin(.5, 1e-20)
-    0.5236 0.5235987756 0.523598775598299 0.52359877559829887308
-
-    ; print acoversin(5), acoversin(5i)
-    -1.57079632679489661923+2.06343706889556054673i 0.19379313655493218978-2.33097465304931241744i
-
-    ; print acoversin(5+5i)
-    -0.66881657532592728975-2.5513216254756988588i
+    ; print crd(2 + 3i, 1e-5), crd(2 + 3i, 1e-10)
+    3.95896+2.3009i 3.9589688712+2.3009091988i
 
     ; pi = pi(1e-20)
-    ; print acoversin(pi/6), acoversin(pi/3), acoversin(4*pi/3)
-    0.49655704344777825545 -0.04721509173238348552 -1.57079632679489661923+1.82724307729474887792i
+    ; print crd(pi/6), crd(pi/2), crd(pi)
+    0.5176380902050415247 1.4142135623730950488 2
 
 LIMITS
     0 < eps < 1
 
 LINK LIBRARY
-    NUMBER *qacoversin(NUMBER *x, NUMBER *eps)
-    COMPLEX *c_acoversin(COMPLEX *x, NUMBER *eps)
+    NUMBER *qcrd(NUMBER *x, NUMBER *eps)
+    COMPLEX *c_crd(COMPLEX *x, NUMBER *eps)
 
 SEE ALSO
     sin, cos, tan, cot, sec, csc
     asin, acos, atan, acot, asec, acsc
-    versin, coversin, vercos, covercos
-    aversin, avercos, acovercos
+    coversin, vercos, covercos
+    aversin, acoversin, avercos, acovercos
     haversin, hacoversin, havercos, hacovercos
     ahaversin, hacoversin, havercos, ahacovercos
     exsec, aexsec, excsc, aexcsc
-    crd, acrd
+    acrd
     epsilon
 
 EXTERNAL RESOURCES
@@ -84,7 +81,7 @@ EXTERNAL RESOURCES
 ## received a copy with calc; if not, write to Free Software Foundation, Inc.
 ## 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ##
-## Under source code control:	2023/08/31 23:07:08
+## Under source code control:	2023/10/02 16:49:42
 ## File existed as early as:	2023
 ##
 ## chongo <was here> /\oo/\	http://www.isthe.com/chongo/

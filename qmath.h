@@ -256,6 +256,9 @@ E_FUNC NUMBER *qaexsec(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qexcsc(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qaexcsc_or_NULL(NUMBER *q, NUMBER *epsilon);
 E_FUNC NUMBER *qaexcsc(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qcrd(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qacrd_or_NULL(NUMBER *q, NUMBER *epsilon);
+E_FUNC NUMBER *qacrd(NUMBER *q, NUMBER *epsilon);
 
 /*
  * pseudo-seed generator

@@ -145,7 +145,8 @@
  * Do not remove such computation error codes, nor change their errnum values,
  * not change their E_STRING errsym codes.
  */
-CONST struct errtbl error_table[] = {
+CONST struct errtbl error_table[] =
+{
 
 	/* The E__BASE entry below must start with 10000 and must be first!! */
 	{ 10000,	"E__BASE",		"No error" },
@@ -742,6 +743,12 @@ CONST struct errtbl error_table[] = {
 	{ 10591,	"E_AEXCSC_1",		"Bad epsilon for aexcsc" },
 	{ 10592,	"E_AEXCSC_2",		"Bad argument for aexcsc" },
 	{ 10593,	"E_AEXCSC_3",		"Invalid value for calculating aexcsc" },
+	{ 10594,	"E_CRD_1",		"Bad epsilon for crd" },
+	{ 10595,	"E_CRD_2",		"Bad argument for crd" },
+	{ 10596,	"E_CRD_3",		"Invalid complex argument for crd" },
+	{ 10597,	"E_ACRD_1",		"Bad epsilon for acrd" },
+	{ 10598,	"E_ACRD_2",		"Bad argument for acrd" },
+	{ 10599,	"E_ACRD_3",		"Invalid value for calculating acrd" },
 	/* IMPORTANT NOTE: add new entries above here and be sure their errnum numeric value is consecutive! */
 
 	/* The next NULL entry must be last */

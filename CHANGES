@@ -1,5 +1,30 @@
 The following are the changes from calc version 2.14.3.5 to date:
 
+    Added the following new trigonometric functions:
+
+	versin(x [,eps])	versed trigonometric sine
+	coversin(x [,eps])	coversed trigonometric sine
+	vercos(x [,eps])	versed trigonometric cosine
+	covercos(x [,eps])	coversed trigonometric cosine
+	aversin(x [,eps])	inverse versed trigonometric sine
+	acoversin(x [,eps])	inverse coversed trigonometric sine
+	avercos(x [,eps])	inverse versed trigonometric cosine
+	acovercos(x [,eps])	inverse coversed trigonometric cosine
+	haversin(x [,eps])	half versed trigonometric sine
+	hacoversin(x [,eps])	half coversed trigonometric sine
+	havercos(x [,eps])	half versed trigonometric cosine
+	hacovercos(x [,eps])	half coversed trigonometric cosine
+	ahaversin(x [,eps])	inverse half versed trigonometric sine
+	ahacoversin(x [,eps])	inverse half coversed trigonometric sine
+	ahavercos(x [,eps])	inverse half versed trigonometric cosine
+	ahacovercos(x [,eps])	inverse half coversed trigonometric cosine
+	exsec(x [,eps])		exterior trigonometric secant
+	aexsec(x [,eps])	inverse exterior trigonometric secant
+	excsc(x [,eps])		exterior trigonometric cosecant
+	aexcsc(x [,eps])	inverse exterior trigonometric cosecant
+	crd(x [,eps])		trigonometric chord of a unit circle
+	acrd(x [,eps])		inverse trigonometric chord of a unit circle
+
     As Msys2 is a fork of Cygwin, if the OSNAME is Msys, the Cygwin
     target will be used.  Thanks to GitHub user @iahung2 for the
     pull request.
@@ -336,35 +361,15 @@ The following are the changes from calc version 2.14.3.5 to date:
 
     Fixed SEE ALSO typo in help randperm.
 
-    Added the following new trigonometric functions:
-
-	versin(x [,eps])	versed trigonometric sine
-	coversin(x [,eps])	coversed trigonometric sine
-	vercos(x [,eps])	versed trigonometric cosine
-	covercos(x [,eps])	coversed trigonometric cosine
-	aversin(x [,eps])	inverse versed trigonometric sine
-	acoversin(x [,eps])	inverse coversed trigonometric sine
-	avercos(x [,eps])	inverse versed trigonometric cosine
-	acovercos(x [,eps])	inverse coversed trigonometric cosine
-	haversin(x [,eps])	half versed trigonometric sine
-	hacoversin(x [,eps])	half coversed trigonometric sine
-	havercos(x [,eps])	half versed trigonometric cosine
-	hacovercos(x [,eps])	half coversed trigonometric cosine
-	ahaversin(x [,eps])	inverse half versed trigonometric sine
-	ahacoversin(x [,eps])	inverse half coversed trigonometric sine
-	ahavercos(x [,eps])	inverse half versed trigonometric cosine
-	ahacovercos(x [,eps])	inverse half coversed trigonometric cosine
-	exsec(x [,eps])		exterior trigonometric secant
-	aexsec(x [,eps])	inverse exterior trigonometric secant
-	excsc(x [,eps])		exterior trigonometric cosecant
-	aexcsc(x [,eps])	inverse exterior trigonometric cosecant
-
     Fixed calc regression test 42dd to set the display value back to 20.
 
     Added to test 95dd and test9500.trigeq.cal to the calc regression test
     suite to perform extensive test of trigonometric functions.
 
     Added to test 34dd, some if the missing inverse trigonometric tests.
+
+    Improve builtin function strings, as printed by help builtin,
+    that use an optional accuracy (epsilon) arg by adding a comma.
 
 
 The following are the changes from calc version 2.14.3.4 to 2.14.3.5:

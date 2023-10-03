@@ -43,7 +43,20 @@ SEE ALSO
     haversin, hacoversin, havercos, hacovercos
     ahaversin, hacoversin, havercos, ahacovercos
     exsec, aexsec, excsc, aexcsc
+    crd, acrd
     epsilon
+
+EXTERNAL RESOURCES
+    For general information on trigonometric functions, see:
+
+	https://en.wikipedia.org/wiki/Trigonometric_functions#Unit-circle_definitions
+	https://en.wikipedia.org/wiki/Versine
+	https://en.wikipedia.org/wiki/Exsecant
+	https://en.wikipedia.org/wiki/Inverse_trigonometric_functions
+	https://en.wikipedia.org/wiki/Chord_(geometry)
+	https://en.wikipedia.org/wiki/Secant_line
+	https://en.wikipedia.org/wiki/Hartley_transform#cas
+	https://en.wikipedia.org/wiki/Cis_(mathematics)
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll
 ##

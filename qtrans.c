@@ -3467,3 +3467,159 @@ qaexcsc(NUMBER *q, NUMBER *epsilon)
 	 */
 	return res;
 }
+
+
+/*
+ * qcrd - trigonometric chord of a unit circle
+ *
+ * This uses the formula:
+ *
+ *	crd(x) = 2 * sin(x / 2)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qcrd(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qdiv2;	/* q/2 */
+	NUMBER *qtmp;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate trig function value
+	 */
+	qdiv2 = qdivi(q, 2);
+	qtmp = qsin(qdiv2, epsilon);
+	qfree(qdiv2);
+	res = qmuli(qtmp, 2);
+	qfree(qtmp);
+
+	/*
+	 * return trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qacrd_or_NULL - return NULL or non-complex inverse trigonometric chord of a unit circle
+ *
+ * This uses the formula:
+ *
+ *	acrd(x) = 2 * asin(x / 2)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ *
+ * returns:
+ *	!= NULL ==> real value result of trig function on q with error epsilon,
+ *	NULL    ==> trig function value cannot be expressed as a NUMBER
+ *
+ * NOTE: If this function returns NULL, consider calling the equivalent
+ *	 COMPLEX function from comfunc.c.  See the help file for the
+ *	 related builtin for details.
+ */
+NUMBER *
+qacrd_or_NULL(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+	NUMBER *qdiv2;	/* q/2 */
+	NUMBER *qtmp;	/* argument to inverse trig function */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	qdiv2 = qdivi(q, 2);
+	qtmp = qasin(qdiv2, epsilon);
+	qfree(qdiv2);
+	if (qtmp == NULL) {
+		return NULL;
+	}
+	res = qmuli(qtmp, 2);
+	qfree(qtmp);
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return res;
+}
+
+
+/*
+ * qacrd - non-complex inverse trigonometric chord of a unit circle
+ *
+ * This uses the formula:
+ *
+ *	acrd(x) = 2 * asin(x / 2)
+ *
+ * given:
+ *	q	    real value to pass to the trig function
+ *	epsilon	    error tolerance / precision for trig calculation
+ *
+ * returns:
+ *	real value result of trig function on q with error epsilon
+ */
+NUMBER *
+qacrd(NUMBER *q, NUMBER *epsilon)
+{
+	NUMBER *res;	/* inverse trig value result */
+
+	/*
+	 * firewall
+	 */
+	if (q == NULL) {
+		math_error("q is NULL for %s", __func__);
+		not_reached();
+	}
+	if (check_epsilon(epsilon) == false) {
+		math_error("Invalid epsilon arg for %s", __func__);
+		not_reached();
+	}
+
+	/*
+	 * calculate inverse trig function value
+	 */
+	res = qacrd_or_NULL(q, epsilon);
+	if (res == NULL) {
+		math_error("cannot compute inverse sine for acrd");
+		not_reached();
+	}
+
+	/*
+	 * return inverse trigonometric result
+	 */
+	return res;
+}

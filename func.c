@@ -12219,6 +12219,142 @@ f_aexcsc(int count, VALUE **vals)
 }
 
 
+/*
+ * f_crd - exterior trigonometric cosecant
+ */
+S_FUNC VALUE
+f_crd(int count, VALUE **vals)
+{
+	VALUE result;
+	COMPLEX *c;
+	NUMBER *err;
+
+	/* initialize VALUEs */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use err VALUE arg if given and value is in a valid range.
+	 */
+	err = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_CRD_1);
+		}
+		err = vals[1]->v_num;
+	}
+
+	/*
+	 * compute cosecant to a given error tolerance
+	 */
+	switch (vals[0]->v_type) {
+	case V_NUM:
+		result.v_num = qcrd(vals[0]->v_num, err);
+		result.v_type = V_NUM;
+		break;
+	case V_COM:
+		c = c_crd(vals[0]->v_com, err);
+		if (c == NULL) {
+			return error_value(E_CRD_3);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
+			result.v_type = V_NUM;
+		}
+		break;
+	default:
+		return error_value(E_CRD_2);
+	}
+	return result;
+}
+
+
+/*
+ * f_acrd - exterior trigonometric cosecant
+ */
+S_FUNC VALUE
+f_acrd(int count, VALUE **vals)
+{
+	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
+	VALUE result;		/* value to return */
+	COMPLEX *c;		/* COMPLEX trig result */
+	NUMBER *eps;		/* epsilon error tolerance */
+
+	/* initialize VALUE */
+	result.v_subtype = V_NOSUBTYPE;
+
+	/*
+	 * set error tolerance for builtin function
+	 *
+	 * Use eps VALUE arg if given and value is in a valid range.
+	 */
+	eps = conf->epsilon;
+	if (count == 2) {
+		if (verify_eps(vals[1]) == false) {
+			return error_value(E_ACRD_1);
+		}
+		eps = vals[1]->v_num;
+	}
+
+	/*
+	 * compute inverse trig function to a given error tolerance
+	 */
+	arg1 = *vals[0];
+	if (arg1.v_type == V_NUM) {
+
+		/* try to compute result using real trig function */
+		result.v_num = qacrd_or_NULL(arg1.v_num, eps);
+
+		/*
+		 * case: trig function returned a NUMBER
+		 */
+		if (result.v_num != NULL) {
+			result.v_type = V_NUM;
+
+		/*
+		 * case: trig function returned NULL - need to try COMPLEX trig function
+		 */
+		} else {
+			/* convert NUMBER argument from NUMBER to COMPLEX */
+			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
+			arg1.v_type = V_COM;
+		}
+	}
+	if (arg1.v_type == V_COM) {
+
+		/*
+		 * case: argument was COMPLEX or
+		 *	 trig function returned NULL and argument was converted to COMPLEX
+		 */
+		c = c_acrd(arg1.v_com, eps);
+		if (c == NULL) {
+			return error_value(E_ACRD_3);
+		}
+		result.v_com = c;
+		result.v_type = V_COM;
+
+		/*
+		 * case: complex trig function returned real, convert result to NUMBER
+		 */
+		if (cisreal(c)) {
+			result.v_num = c_to_q(c, true);
+			result.v_type = V_NUM;
+		}
+	}
+	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+
+		/*
+		 * case: argument type is not valid for this function
+		 */
+		return error_value(E_ACRD_2);
+	}
+	return result;
+}
+
+
 #endif /* !FUNCLIST */
 
 
@@ -12260,39 +12396,41 @@ f_aexcsc(int count, VALUE **vals)
  */
 STATIC CONST struct builtin builtins[] = {
 	{"abs", 1, 2, 0, OP_ABS, {.null = NULL}, {.null = NULL},
-	 "absolute value within accuracy b"},
+	 "absolute value, within accuracy b"},
 	{"access", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_access},
 	 "determine accessibility of file a for mode b"},
 	{"acos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acos},
-	 "inverse cosine of a within accuracy b"},
+	 "inverse cosine of a, within accuracy b"},
 	{"acosh", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acosh},
-	 "inverse hyperbolic cosine of a within accuracy b"},
+	 "inverse hyperbolic cosine of a, within accuracy b"},
 	{"acot", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acot},
-	 "inverse cotangent of a within accuracy b"},
+	 "inverse cotangent of a, within accuracy b"},
 	{"acoth", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acoth},
-	 "inverse hyperbolic cotangent of a within accuracy b"},
+	 "inverse hyperbolic cotangent of a, within accuracy b"},
 	{"acovercos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acovercos},
-	 "inverse coversed cosine of a within accuracy b"},
+	 "inverse coversed cosine of a, within accuracy b"},
 	{"acoversin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acoversin},
-	 "inverse coversed sine of a within accuracy b"},
+	 "inverse coversed sine of a, within accuracy b"},
+	{"acrd", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acrd},
+	 "angle of unit circle chord with length a, within accuracy b"},
 	{"acsc", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acsc},
-	 "inverse cosecant of a within accuracy b"},
+	 "inverse cosecant of a, within accuracy b"},
 	{"acsch", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_acsch},
-	 "inverse csch of a within accuracy b"},
+	 "inverse csch of a, within accuracy b"},
 	{"aexcsc", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_aexcsc},
-	 "inverse exterior cosecant of a within accuracy b"},
+	 "inverse exterior cosecant of a, within accuracy b"},
 	{"aexsec", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_aexsec},
-	 "inverse exterior secant of a within accuracy b"},
+	 "inverse exterior secant of a, within accuracy b"},
 	{"agd", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_agd},
 	 "inverse Gudermannian function"},
 	{"ahacovercos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_ahacovercos},
-	 "inverse half coversed cosine of a within accuracy b"},
+	 "inverse half coversed cosine of a, within accuracy b"},
 	{"ahacoversin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_ahacoversin},
-	 "inverse half coversed sine of a within accuracy b"},
+	 "inverse half coversed sine of a, within accuracy b"},
 	{"ahavercos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_ahavercos},
-	 "inverse half versed cosine of a within accuracy b"},
+	 "inverse half versed cosine of a, within accuracy b"},
 	{"ahaversin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_ahaversin},
-	 "inverse half versed sine of a within accuracy b"},
+	 "inverse half versed sine of a, within accuracy b"},
 	{"append", 1, IN, FA, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_listappend},
 	 "append values to end of list"},
 	{"appr", 1, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_appr},
@@ -12302,25 +12440,25 @@ STATIC CONST struct builtin builtins[] = {
 	{"argv", 0, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_argv},
 	 "calc argc or argv string"},
 	{"asec", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_asec},
-	 "inverse secant of a within accuracy b"},
+	 "inverse secant of a, within accuracy b"},
 	{"asech", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_asech},
-	 "inverse hyperbolic secant of a within accuracy b"},
+	 "inverse hyperbolic secant of a, within accuracy b"},
 	{"asin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_asin},
-	 "inverse sine of a within accuracy b"},
+	 "inverse sine of a, within accuracy b"},
 	{"asinh", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_asinh},
-	 "inverse hyperbolic sine of a within accuracy b"},
+	 "inverse hyperbolic sine of a, within accuracy b"},
 	{"assoc", 0, 0, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_assoc},
 	 "create new association array"},
 	{"atan", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_atan},
-	 "inverse tangent of a within accuracy b"},
+	 "inverse tangent of a, within accuracy b"},
 	{"atan2", 2, 3, FE, OP_NOP, {.numfunc_3 = qatan2}, {.null = NULL},
 	 "angle to point (b,a) within accuracy c"},
 	{"atanh", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_atanh},
-	 "inverse hyperbolic tangent of a within accuracy b"},
+	 "inverse hyperbolic tangent of a, within accuracy b"},
 	{"avercos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_avercos},
-	 "inverse versed cosine of a within accuracy b"},
+	 "inverse versed cosine of a, within accuracy b"},
 	{"aversin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_aversin},
-	 "inverse versed sine of a within accuracy b"},
+	 "inverse versed sine of a, within accuracy b"},
 	{"avg", 0, IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_avg},
 	 "arithmetic mean of values"},
 	{"base", 0, 1, 0, OP_NOP, {.numfunc_cnt = f_base}, {.null = NULL},
@@ -12354,7 +12492,7 @@ STATIC CONST struct builtin builtins[] = {
 	{"ceil", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ceil},
 	 "smallest integer greater than or equal to number"},
 	{"cfappr", 1, 3, 0, OP_NOP, {.numfunc_cnt = f_cfappr}, {.null = NULL},
-	 "approximate a within accuracy b using\n"
+	 "approximate a, within accuracy b using\n"
 	 "\t\t\tcontinued fractions"},
 	{"cfsim", 1, 2, 0, OP_NOP, {.numfunc_cnt = f_cfsim}, {.null = NULL},
 	 "simplify number using continued fractions"},
@@ -12373,25 +12511,27 @@ STATIC CONST struct builtin builtins[] = {
 	{"copy", 2, 5, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_copy},
 	 "copy value to/from a block: copy(s,d,len,si,di)"},
 	{"cos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_cos},
-	 "cosine of value a within accuracy b"},
+	 "cosine of value a, within accuracy b"},
 	{"cosh", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_cosh},
-	 "hyperbolic cosine of a within accuracy b"},
+	 "hyperbolic cosine of a, within accuracy b"},
 	{"cot", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_cot},
-	 "cotangent of a within accuracy b"},
+	 "cotangent of a, within accuracy b"},
 	{"coth", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_coth},
-	 "hyperbolic cotangent of a within accuracy b"},
+	 "hyperbolic cotangent of a, within accuracy b"},
 	{"count", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_count},
 	 "count listr/matrix elements satisfying some condition"},
 	{"covercos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_covercos},
-	 "coversed cosine of value a within accuracy b"},
+	 "coversed cosine of value a, within accuracy b"},
 	{"coversin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_coversin},
-	 "coversed sine of value a within accuracy b"},
+	 "coversed sine of value a, within accuracy b"},
 	{"cp", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_cp},
 	 "cross product of two vectors"},
+	{"crd", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_crd},
+	 "length of unit circle chord with angle a, within accuracy b"},
 	{"csc", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_csc},
-	 "cosecant of a within accuracy b"},
+	 "cosecant of a, within accuracy b"},
 	{"csch", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_csch},
-	 "hyperbolic cosecant of a within accuracy b"},
+	 "hyperbolic cosecant of a, within accuracy b"},
 	{"ctime", 0, 0, 0, OP_NOP, {.null = NULL}, {.valfunc_0 = f_ctime},
 	 "date and time as string"},
 	{"custom", 0, IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_custom},
@@ -12441,11 +12581,11 @@ STATIC CONST struct builtin builtins[] = {
 	{"eval", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_eval},
 	 "evaluate expression from string to value"},
 	{"excsc", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_excsc},
-	 "exterior cosecant of a within accuracy b"},
+	 "exterior cosecant of a, within accuracy b"},
 	{"exp", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_exp},
-	 "exponential of value a within accuracy b"},
+	 "exponential of value a, within accuracy b"},
 	{"exsec", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_exsec},
-	 "exterior secant of a within accuracy b"},
+	 "exterior secant of a, within accuracy b"},
 	{"fact", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_fact},
 	 "factorial"},
 	{"factor", 1, 3, 0, OP_NOP, {.numfunc_cnt = f_factor}, {.null = NULL},
@@ -12549,16 +12689,16 @@ STATIC CONST struct builtin builtins[] = {
 	{"h2hms", 4, 5, FA, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_h2hms},
 	 "convert a to b hours, c min, d sec, rounding type e\n"},
 	{"hacovercos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_hacovercos},
-	 "half coversed cosine of value a within accuracy b"},
+	 "half coversed cosine of value a, within accuracy b"},
 	{"hacoversin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_hacoversin},
-	 "half coversed sine of value a within accuracy b"},
+	 "half coversed sine of value a, within accuracy b"},
 	{"hash", 1, IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_hash},
 	 "return non-negative hash value for one or\n"
 	 "\t\t\tmore values"},
 	{"havercos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_havercos},
-	 "half versed cosine of value a within accuracy b"},
+	 "half versed cosine of value a, within accuracy b"},
 	{"haversin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_haversin},
-	 "half versed sine of value a within accuracy b"},
+	 "half versed sine of value a, within accuracy b"},
 	{"head", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_head},
 	 "return list of specified number at head of a list"},
 	{"highbit", 1, 1, 0, OP_HIGHBIT, {.null = NULL}, {.null = NULL},
@@ -12572,7 +12712,7 @@ STATIC CONST struct builtin builtins[] = {
 	{"hnrmod", 4, 4, 0, OP_NOP, {.numfunc_4 = f_hnrmod}, {.null = NULL},
 	 "v mod h*2^n+r, h>0, n>0, r  =  -1, 0 or 1"},
 	{"hypot", 2, 3, FE, OP_NOP, {.numfunc_3 = qhypot}, {.null = NULL},
-	 "hypotenuse of right triangle within accuracy c"},
+	 "hypotenuse of right triangle, within accuracy c"},
 	{"ilog", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_ilog},
 	 "integral log of a to integral base b"},
 	{"ilog10", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_ilog10},
@@ -12695,13 +12835,13 @@ STATIC CONST struct builtin builtins[] = {
 	{"list", 0, IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_list},
 	 "create list of specified values"},
 	{"ln", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_ln},
-	 "natural logarithm of value a within accuracy b"},
+	 "natural logarithm of value a, within accuracy b"},
 	{"log", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_log},
-	 "base 10 logarithm of value a within accuracy b"},
+	 "base 10 logarithm of value a, within accuracy b"},
 	{"log2", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_log2},
-	 "base 2 logarithm of value a within accuracy b"},
+	 "base 2 logarithm of value a, within accuracy b"},
 	{"logn", 2, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_logn},
-	 "base b logarithm of value a within accuracy c"},
+	 "base b logarithm of value a, within accuracy c"},
 	{"lowbit", 1, 1, 0, OP_LOWBIT, {.null = NULL}, {.null = NULL},
 	 "low bit number in base 2 representation"},
 	{"ltol", 1, 2, FE, OP_NOP, {.numfunc_2 = f_legtoleg}, {.null = NULL},
@@ -12766,7 +12906,7 @@ STATIC CONST struct builtin builtins[] = {
 	{"pfact", 1, 1, 0, OP_NOP, {.numfunc_1 = qpfact}, {.null = NULL},
 	 "product of primes up till number"},
 	{"pi", 0, 1, FE, OP_NOP, {.numfunc_1 = qpi}, {.null = NULL},
-	 "value of pi accurate to within epsilon"},
+	 "value of pi, within accuracy a"},
 	{"pix", 1, 2, 0, OP_NOP, {.numfunc_cnt = f_pix}, {.null = NULL},
 	 "number of primes < =  a < 2^32, return b if error"},
 	{"places", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_places},
@@ -12783,7 +12923,7 @@ STATIC CONST struct builtin builtins[] = {
 	{"popcnt", 1, 2, 0, OP_NOP, {.numfunc_cnt = f_popcnt}, {.null = NULL},
 	 "number of bits in a that match b (or 1)"},
 	{"power", 2, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_power},
-	 "value a raised to the power b within accuracy c"},
+	 "value a raised to the power b, within accuracy c"},
 	{"prevcand", 1, 5, 0, OP_NOP, {.numfunc_cnt = f_prevcand}, {.null = NULL},
 	 "largest value  =  =  d mod e < a, ptest(a,b,c) true"},
 	{"prevprime", 1, 2, 0, OP_NOP, {.numfunc_cnt = f_pprime}, {.null = NULL},
@@ -12840,7 +12980,7 @@ STATIC CONST struct builtin builtins[] = {
 	{"rm", 1, IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_rm},
 	 "remove file(s), -f turns off no-such-file errors"},
 	{"root", 2, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_root},
-	 "value a taken to the b'th root within accuracy c"},
+	 "value a taken to the b'th root, within accuracy c"},
 	{"round", 1, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_round},
 	 "round value a to b number of decimal places"},
 	{"rsearch", 2, 4, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_rsearch},
@@ -12862,9 +13002,9 @@ STATIC CONST struct builtin builtins[] = {
 	 "search matrix or list for value b starting\n"
 	 "\t\t\tat index c"},
 	{"sec", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_sec},
-	 "secant of a within accuracy b"},
+	 "secant of a, within accuracy b"},
 	{"sech", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_sech},
-	 "hyperbolic secant of a within accuracy b"},
+	 "hyperbolic secant of a, within accuracy b"},
 	{"seed", 0, 0, 0, OP_NOP, {.numfunc_0 = f_seed}, {.null = NULL},
 	 "return a 64 bit seed for a pseudo-random generator"},
 	{"segment", 2, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_segment},
@@ -12878,9 +13018,9 @@ STATIC CONST struct builtin builtins[] = {
 	{"sha1", 0, IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_sha1},
 	 "Secure Hash Algorithm (SHS-1 FIPS Pub 180-1)"},
 	{"sin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_sin},
-	 "sine of value a within accuracy b"},
+	 "sine of value a, within accuracy b"},
 	{"sinh", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_sinh},
-	 "hyperbolic sine of a within accuracy b"},
+	 "hyperbolic sine of a, within accuracy b"},
 	{"size", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_size},
 	 "total number of elements in value"},
 	{"sizeof", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_sizeof},
@@ -12890,7 +13030,7 @@ STATIC CONST struct builtin builtins[] = {
 	{"sort", 1, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_1 = f_sort},
 	 "sort a copy of a matrix or list"},
 	{"sqrt", 1, 3, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_sqrt},
-	 "square root of value a within accuracy b"},
+	 "square root of value a, within accuracy b"},
 	{"srand", 0, 1, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_srand},
 	 "seed the rand() function"},
 	{"srandom", 0, 4, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_srandom},
@@ -12944,9 +13084,9 @@ STATIC CONST struct builtin builtins[] = {
 	{"tail", 2, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_2 = f_tail},
 	 "retain list of specified number at tail of list"},
 	{"tan", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_tan},
-	 "tangent of a within accuracy b"},
+	 "tangent of a, within accuracy b"},
 	{"tanh", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_tanh},
-	 "hyperbolic tangent of a within accuracy b"},
+	 "hyperbolic tangent of a, within accuracy b"},
 	{"test", 1, 1, 0, OP_TEST, {.null = NULL}, {.null = NULL},
 	 "test that value is nonzero"},
 	{"time", 0, 0, 0, OP_NOP, {.numfunc_0 = f_time}, {.null = NULL},
@@ -12958,9 +13098,9 @@ STATIC CONST struct builtin builtins[] = {
 	{"usertime", 0, 0, 0, OP_NOP, {.numfunc_0 = f_usertime}, {.null = NULL},
 	 "user mode CPU time in seconds"},
 	{"vercos", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_vercos},
-	 "versed cosine of value a within accuracy b"},
+	 "versed cosine of value a, within accuracy b"},
 	{"versin", 1, 2, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_versin},
-	 "versed sine of value a within accuracy b"},
+	 "versed sine of value a, within accuracy b"},
 	{"version", 0, 0, 0, OP_NOP, {.null = NULL}, {.valfunc_0 = f_version},
 	 "calc version string"},
 	{"xor", 1, IN, 0, OP_NOP, {.null = NULL}, {.valfunc_cnt = f_xor},

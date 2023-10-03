@@ -148,6 +148,8 @@ E_FUNC COMPLEX *c_exsec(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_aexsec(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_excsc(COMPLEX *c, NUMBER *epsilon);
 E_FUNC COMPLEX *c_aexcsc(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_crd(COMPLEX *c, NUMBER *epsilon);
+E_FUNC COMPLEX *c_acrd(COMPLEX *c, NUMBER *epsilon);
 
 
 

@@ -4138,6 +4138,50 @@ define test_trig()
 	    strcat(str(tnum++),
 		   ': round(aexcsc(2 + 3i, 1e-10), 10) == 0.1650861985-0.1681700706i'));
 
+	/* test trigonometric chord of a unit circle */
+	vrfy(crd(0, 1e-10) == 0,
+				strcat(str(tnum++), ': crd(0, 1e-10) == 0'));
+	vrfy(round(crd(0.2, 1e-10), 10) == 0.1996668332,
+	    strcat(str(tnum++),
+		   ': round(crd(0.2, 1e-10), 10) == 0.1996668332'));
+	vrfy(round(crd(3/7, 1e-10), 10) == 0.4252990674,
+	    strcat(str(tnum++),
+		   ': round(crd(3/7, 1e-10), 10) == 0.4252990674'));
+	vrfy(round(crd(-31, 1e-10), 10) == -0.4129349638,
+	    strcat(str(tnum++),
+		   ': round(crd(-31, 1e-10), 10) == -0.4129349638'));
+	vrfy(crd(pi/3, 1e-10) == 1,
+				strcat(str(tnum++), ': crd(pi/3, 1e-10) == 1'));
+	vrfy(crd(pi, 1e-10) == 2,
+				strcat(str(tnum++), ': crd(pi, 1e-10) == 2'));
+	vrfy(crd(5*pi/3, 1e-10) == 1,
+				strcat(str(tnum++), ': crd(5*pi/3, 1e-10) == 1'));
+	vrfy(round(crd(1, 1e-10), 10) == 0.9588510772,
+	    strcat(str(tnum++),
+		   ': round(crd(1, 1e-10), 10) == 0.9588510772'));
+	vrfy(round(crd(2 + 3i, 1e-10), 10) == 3.9589688712+2.3009091988i,
+	    strcat(str(tnum++),
+		   ': round(crd(2 + 3i, 1e-10), 10) == 3.9589688712+2.3009091988i'));
+
+	/* test inverse trigonometric chord of a unit circle */
+	vrfy(acrd(0, 1e-10) == 0,
+				strcat(str(tnum++), ': acrd(0, 1e-10) == 0'));
+	vrfy(round(acrd(0.2, 1e-10), 10) == 0.2003348424,
+	    strcat(str(tnum++),
+		   ': round(acrd(0.2, 1e-10), 10) == 0.2003348424'));
+	vrfy(round(acrd(3/7, 1e-10), 10) == 0.4319209974,
+	    strcat(str(tnum++),
+		   ': round(acrd(3/7, 1e-10), 10) == 0.4319209974'));
+	vrfy(round(acrd(-31, 1e-10), 10) == -3.1415926536+6.8658899902i,
+	    strcat(str(tnum++),
+		   ': round(acrd(-31, 1e-10), 10) == -3.1415926536+6.8658899902i'));
+	vrfy(round(acrd(1, 1e-10), 10) == 1.0471975512,
+	    strcat(str(tnum++),
+		   ': round(acrd(1, 1e-10), 10) == 1.0471975512'));
+	vrfy(round(acrd(2 + 3i, 1e-10), 10) == 1.0471975512+2.6339157938i,
+	    strcat(str(tnum++),
+		   ': round(acrd(2 + 3i, 1e-10), 10) == 1.0471975512+2.6339157938i'));
+
 	print strcat(str(tnum++), ': Ending test_trig');
 }
 print '051: parsed test_trig()';
@@ -9835,8 +9879,9 @@ vrfy(verify_havercos(9513) == 0,	'9513: verify_havercos(9513) == 0');
 vrfy(verify_hacovercos(9514) == 0,	'9514: verify_hacovercos(9514) == 0');
 vrfy(verify_exsec(9515) == 0,		'9515: verify_exsec(9515) == 0');
 vrfy(verify_excsc(9516) == 0,		'9516: verify_excsc(9516) == 0');
+vrfy(verify_crd(9517) == 0,		'9516: verify_excsc(9517) == 0');
 
-print '9517: Ending trigonometric identities test set';
+print '9518: Ending trigonometric identities test set';
 
 
 /*
@@ -10839,6 +10884,12 @@ vrfy_errsym(10590, 10590, "E_EXCSC_4");
 vrfy_errsym(10591, 10591, "E_AEXCSC_1");
 vrfy_errsym(10592, 10592, "E_AEXCSC_2");
 vrfy_errsym(10593, 10593, "E_AEXCSC_3");
+vrfy_errsym(10594, 10594, "E_CRD_1");
+vrfy_errsym(10595, 10595, "E_CRD_2");
+vrfy_errsym(10596, 10596, "E_CRD_3");
+vrfy_errsym(10597, 10597, "E_ACRD_1");
+vrfy_errsym(10598, 10598, "E_ACRD_2");
+vrfy_errsym(10599, 10599, "E_ACRD_3");
 
 /* ************************************************************** */
 /* NOTE: Reserve thru test 10998 for calc computation error codes */
