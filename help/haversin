@@ -16,7 +16,8 @@ DESCRIPTION
 
     This function is sometimes called havers, is equivalent to:
 
-	haversin(x) = versin(x) / 2 = (1 - cos(x)) / 2
+	haversin(x) = versin(x) / 2
+	haversin(x) = (1 - cos(x)) / 2
 
 EXAMPLE
     ; print haversin(1/2), haversin(5/7), haversin(42/7)

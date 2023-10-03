@@ -16,7 +16,8 @@ DESCRIPTION
 
     This function is sometimes called hacovers, or hacvs, is equivalent to:
 
-	hacoversin(x) = coversin(x) / 2 = (1 - sin(x)) / 2
+	hacoversin(x) = coversin(x) / 2
+	hacoversin(x) = (1 - sin(x)) / 2
 
 EXAMPLE
     ; print hacoversin(1/2), hacoversin(5/7), hacoversin(42/7)

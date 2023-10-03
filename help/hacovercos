@@ -16,7 +16,8 @@ DESCRIPTION
 
     This function is sometimes called hacvc, or hacovercosine, is equivalent to:
 
-	hacovercos(x) = covercos(x) / 2 = (1 + sin(x)) / 2
+	hacovercos(x) = covercos(x) / 2
+	hacovercos(x) = (1 + sin(x)) / 2
 
 EXAMPLE
     ; print hacovercos(1/2), hacovercos(5/7), hacovercos(42/7)

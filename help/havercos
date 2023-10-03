@@ -16,7 +16,8 @@ DESCRIPTION
 
     This function is sometimes called haverc, or haverconsine, is equivalent to:
 
-	havercos(x) = vercos(x) / 2 = (1 + cos(x)) / 2
+	havercos(x) = vercos(x) / 2
+	havercos(x) = (1 + cos(x)) / 2
 
 EXAMPLE
     ; print havercos(1/2), havercos(5/7), havercos(42/7)
