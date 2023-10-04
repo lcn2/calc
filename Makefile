@@ -2631,7 +2631,7 @@ version:
 
 ver_calc${EXT}: version.c strl.c have_string.h have_const.h have_newstr.h \
 	have_strlcpy.h have_memmv.h have_strlcat.h endian_calc.h longbits.h \
-	have_unused.h charbit.h
+	have_unused.h charbit.h have_stdbool.h
 	${RM} -f $@
 	${LCC} ${ICFLAGS} -DCALC_VER ${ILDFLAGS} version.c strl.c -o $@
 
