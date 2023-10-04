@@ -180,6 +180,8 @@ fi
 echo
 echo "calc $(./ver_calc) release"
 echo
+echo 'calc-*'$(./ver_calc)'*'
+echo
 echo "Release v$(./ver_calc)"
 
 # All Done!!! -- Jessica Noll, Age 2
