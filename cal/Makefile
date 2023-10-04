@@ -266,10 +266,6 @@ clobber: clean
 	    if [ "$$i" = "/dev/null" ]; then \
 		continue; \
 	    fi; \
-	    if [ -e "${T}${CALC_SHAREDIR}/$$i" ]; then \
-		echo "${RM} -f ${T}${CALC_SHAREDIR}/$$i"; \
-		${RM} -f ${T}${CALC_SHAREDIR}/$$i; \
-	    fi; \
 	    if [ -e "./$$i" ]; then \
 		echo "${RM} -f ./$$i"; \
 		${RM} -f ./$$i; \
