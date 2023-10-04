@@ -27,7 +27,9 @@ LINK LIBRARY
     NUMBER *qcsch(NUMBER *x, NUMBER *eps)
 
 SEE ALSO
-    sinh, cosh, tanh, sech, coth, epsilon
+    sinh, cosh, tanh, coth, sech
+    asinh, acosh, atanh, acoth, asech, acsch
+    epsilon
 
 ## Copyright (C) 1999,2021,2023  Landon Curt Noll
 ##

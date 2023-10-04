@@ -32,6 +32,7 @@
 
 
 #include "qmath.h"
+#include "config.h"
 
 
 #include "errtbl.h"
@@ -126,7 +127,7 @@ qsincos(NUMBER *q, long bitnum, NUMBER **vs, NUMBER **vc)
 		m++;
 	}			/* m is working number of bits */
 	qtmp1 = qscale(q, m - n);
-	zquo(qtmp1->num, qtmp1->den, &X, 24);
+	zquo(qtmp1->num, qtmp1->den, &X, conf->triground);
 	qfree(qtmp1);
 	if (ziszero(X)) {
 		zfree(X);
@@ -224,7 +225,7 @@ qcos(NUMBER *q, NUMBER *epsilon)
 		return qlink(&_qzero_);
 	qsincos(q, n + 2, &sin, &cos);
 	qfree(sin);
-	res = qmappr(cos, epsilon, 24);
+	res = qmappr(cos, epsilon, conf->triground);
 	qfree(cos);
 	return res;
 }
@@ -248,7 +249,7 @@ qsin(NUMBER *q, NUMBER *epsilon)
 		return qlink(&_qzero_);
 	qsincos(q, n + 2, &sin, &cos);
 	qfree(cos);
-	res = qmappr(sin, epsilon, 24);
+	res = qmappr(sin, epsilon, conf->triground);
 	qfree(sin);
 	return res;
 }
@@ -289,7 +290,7 @@ qtan(NUMBER *q, NUMBER *epsilon)
 	tan = qqdiv(sin, cos);
 	qfree(sin);
 	qfree(cos);
-	res = qmappr(tan, epsilon, 24);
+	res = qmappr(tan, epsilon, conf->triground);
 	qfree(tan);
 	return res;
 }
@@ -335,7 +336,7 @@ qcot(NUMBER *q, NUMBER *epsilon)
 	cot = qqdiv(cos, sin);
 	qfree(sin);
 	qfree(cos);
-	res = qmappr(cot, epsilon, 24);
+	res = qmappr(cot, epsilon, conf->triground);
 	qfree(cot);
 	return res;
 }
@@ -374,7 +375,7 @@ qsec(NUMBER *q, NUMBER *epsilon)
 	}
 	sec = qinv(cos);
 	qfree(cos);
-	res = qmappr(sec, epsilon, 24);
+	res = qmappr(sec, epsilon, conf->triground);
 	qfree(sec);
 	return res;
 }
@@ -418,7 +419,7 @@ qcsc(NUMBER *q, NUMBER *epsilon)
 	}
 	csc = qinv(sin);
 	qfree(sin);
-	res = qmappr(csc, epsilon, 24);
+	res = qmappr(csc, epsilon, conf->triground);
 	qfree(csc);
 	return res;
 }
@@ -461,7 +462,7 @@ qasin(NUMBER *q, NUMBER *epsilon)
 		zsquare(q->den, &ztmp);
 		zsub(ztmp, qtmp1->num, &qtmp1->den);
 		zfree(ztmp);
-		qtmp2 = qsqrt(qtmp1, epsilon1, 24);
+		qtmp2 = qsqrt(qtmp1, epsilon1, conf->triground);
 		qfree(qtmp1);
 		qtmp1 = qatan(qtmp2, epsilon);
 	}
@@ -504,7 +505,7 @@ qacos(NUMBER *q, NUMBER *epsilon)
 	q1 = qalloc();
 	zsub(q->den, q->num, &q1->num);
 	zadd(q->den, q->num, &q1->den);
-	q2 = qsqrt(q1, epsilon1, 24L);
+	q2 = qsqrt(q1, epsilon1, conf->triground);
 	qfree(q1);
 	qfree(epsilon1);
 	epsilon1 = qscale(epsilon, -1L);
@@ -544,7 +545,7 @@ qatan(NUMBER *q, NUMBER *epsilon)
 	if (m < 8)
 		m = 8;		/* m is number of working binary digits */
 	qtmp = qscale(q, m);
-	zquo(qtmp->num, qtmp->den, &X, 24);
+	zquo(qtmp->num, qtmp->den, &X, conf->triground);
 	qfree(qtmp);
 	zbitvalue(m, &D);	/* q has become X/D */
 	zsquare(D, &DD);
@@ -553,13 +554,13 @@ qatan(NUMBER *q, NUMBER *epsilon)
 		zsquare(X, &ztmp1);
 		zadd(ztmp1, DD, &ztmp2);
 		zfree(ztmp1);
-		zsqrt(ztmp2, &ztmp1, 24L);
+		zsqrt(ztmp2, &ztmp1, conf->triground);
 		zfree(ztmp2);
 		zadd(ztmp1, D, &ztmp2);
 		zfree(ztmp1);
 		zshift(X, m, &ztmp1);
 		zfree(X);
-		zquo(ztmp1, ztmp2, &X, 24L);
+		zquo(ztmp1, ztmp2, &X, conf->triground);
 		zfree(ztmp1);
 		zfree(ztmp2);
 	}
@@ -608,7 +609,7 @@ qatan(NUMBER *q, NUMBER *epsilon)
 		qtmp->num = sum;
 	}
 	zbitvalue(m - 4 - k, &qtmp->den);
-	res = qmappr(qtmp, epsilon, 24L);
+	res = qmappr(qtmp, epsilon, conf->triground);
 	qfree(qtmp);
 	return res;
 }
@@ -677,7 +678,7 @@ qacot(NUMBER *q, NUMBER *epsilon)
 	tmp3 = qqadd(tmp1, tmp2);
 	qfree(tmp1);
 	qfree(tmp2);
-	tmp1 = qmappr(tmp3, epsilon, 24L);
+	tmp1 = qmappr(tmp3, epsilon, conf->triground);
 	qfree(tmp3);
 	return tmp1;
 }
@@ -817,7 +818,7 @@ qpi(NUMBER *epsilon)
 	qtmp.den = sum;
 	t1 = qscale(&qtmp, shift);
 	zfree(sum);
-	r = qmappr(t1, epsilon, 24L);
+	r = qmappr(t1, epsilon, conf->triground);
 	qfree(t1);
 	pivalue[LAST_PI_EPSILON] = qlink(epsilon);
 	pivalue[LAST_PI_VALUE] = qlink(r);
@@ -949,7 +950,7 @@ qexp(NUMBER *q, NUMBER *epsilon)
 		qfree(tmp2);
 		tmp2 = tmp1;
 	}
-	tmp1 = qmappr(tmp2, epsilon, 24L);
+	tmp1 = qmappr(tmp2, epsilon, conf->triground);
 	qfree(tmp2);
 	return tmp1;
 }
@@ -992,7 +993,7 @@ qexprel(NUMBER *q, long bitnum)
 		m++;
 	}			/* m is working number of bits */
 	qtmp1 = qscale(q, m - n);
-	zquo(qtmp1->num, qtmp1->den, &X, 24);
+	zquo(qtmp1->num, qtmp1->den, &X, conf->triground);
 	qfree(qtmp1);
 	if (ziszero(X)) {
 		zfree(X);
@@ -1083,7 +1084,7 @@ qln(NUMBER *q, NUMBER *epsilon)
 	}
 	m += 18;	/* 8 more sqrts, 8 for rounding, 2 for epsilon/4 */
 	qtmp = qscale(q, m - k);
-	zquo(qtmp->num, qtmp->den, &X, 24L);
+	zquo(qtmp->num, qtmp->den, &X, conf->triground);
 	qfree(q);
 	qfree(qtmp);
 
@@ -1098,7 +1099,7 @@ qln(NUMBER *q, NUMBER *epsilon)
 		n++;
 		zshift(X, m + (k & 1), &ztmp);
 		zfree(X);
-		zsqrt(ztmp, &X, 24);
+		zsqrt(ztmp, &X, conf->triground);
 		zfree(ztmp)
 		k /= 2;
 	}
@@ -1109,7 +1110,7 @@ qln(NUMBER *q, NUMBER *epsilon)
 	zfree(D);
 	zshift(pow, m, &ztmp);
 	zfree(pow);
-	zquo(ztmp, mul, &pow, 24);	/* pow now (X - D)/(X + D) */
+	zquo(ztmp, mul, &pow, conf->triground);	/* pow now (X - D)/(X + D) */
 	zfree(ztmp);
 	zfree(mul);
 
@@ -1152,7 +1153,7 @@ qln(NUMBER *q, NUMBER *epsilon)
 		}
 		zbitvalue(m - k - n, &qtmp->den);
 	}
-	res = qmappr(qtmp, epsilon, 24L);
+	res = qmappr(qtmp, epsilon, conf->triground);
 	qfree(qtmp);
 	return res;
 }
@@ -1425,7 +1426,7 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 		not_reached();
 	}
 	if (qisone(q2))
-		return qmappr(q1, epsilon, 24);
+		return qmappr(q1, epsilon, conf->triground);
 	if (zrel(q1->num, q1->den) < 0) {
 		q1tmp = qinv(q1);
 		q2tmp = qneg(q2);
@@ -1435,7 +1436,7 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 	}
 	if (qisone(q2tmp)) {
 		qfree(q2tmp);
-		q2tmp = qmappr(q1tmp, epsilon, 24);
+		q2tmp = qmappr(q1tmp, epsilon, conf->triground);
 		qfree(q1tmp);
 		return q2tmp;
 	}
@@ -1510,7 +1511,7 @@ qpower(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 		}
 	}
 	qfree(tmp2);
-	tmp2 = qmappr(tmp1, epsilon, 24L);
+	tmp2 = qmappr(tmp1, epsilon, conf->triground);
 	qfree(tmp1);
 	return tmp2;
 }
@@ -1536,7 +1537,7 @@ qroot(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 	if (qiszero(q1) || qisone(q1) || qisone(q2))
 		return qlink(q1);
 	if (qistwo(q2))
-		return qsqrt(q1, epsilon, 24L);
+		return qsqrt(q1, epsilon, conf->triground);
 	neg = qisneg(q1);
 	if (neg) {
 		if (ziseven(q2->num)) {
@@ -1581,7 +1582,7 @@ qcosh(NUMBER *q, NUMBER *epsilon)
 	qfree(tmp2)
 	tmp1 = qscale(tmp3, -1);
 	qfree(tmp3);
-	tmp2 = qmappr(tmp1, epsilon, 24L);
+	tmp2 = qmappr(tmp1, epsilon, conf->triground);
 	qfree(tmp1);
 	return tmp2;
 }
@@ -1612,7 +1613,7 @@ qsinh(NUMBER *q, NUMBER *epsilon)
 	qfree(tmp2)
 	tmp1 = qscale(tmp3, -1);
 	qfree(tmp3);
-	tmp2 = qmappr(tmp1, epsilon, 24L);
+	tmp2 = qmappr(tmp1, epsilon, conf->triground);
 	qfree(tmp1);
 	return tmp2;
 }
@@ -1661,7 +1662,7 @@ qtanh(NUMBER *q, NUMBER *epsilon)
 		qfree(tmp2);
 		qfree(tmp3);
 	}
-	tmp2 = qmappr(tmp1, epsilon, 24L);
+	tmp2 = qmappr(tmp1, epsilon, conf->triground);
 	qfree(tmp1);
 	if (qisneg(q)) {
 		tmp1 = qneg(tmp2);
@@ -1724,7 +1725,7 @@ qcoth(NUMBER *q, NUMBER *epsilon)
 		qfree(tmp1);
 		tmp1 = tmp2;
 	}
-	res = qmappr(tmp1, epsilon, 24L);
+	res = qmappr(tmp1, epsilon, conf->triground);
 	qfree(tmp1);
 	return res;
 }
@@ -1765,7 +1766,7 @@ qsech(NUMBER *q, NUMBER *epsilon)
 	qfree(tmp3);
 	tmp2 = qscale(tmp1, 1);
 	qfree(tmp1);
-	res = qmappr(tmp2, epsilon, 24L);
+	res = qmappr(tmp2, epsilon, conf->triground);
 	qfree(tmp2);
 	return res;
 }
@@ -1812,7 +1813,7 @@ qcsch(NUMBER *q, NUMBER *epsilon)
 	qfree(tmp3)
 	tmp2 = qscale(tmp1, 1);
 	qfree(tmp1);
-	res = qmappr(tmp2, epsilon, 24L);
+	res = qmappr(tmp2, epsilon, conf->triground);
 	qfree(tmp2);
 	return res;
 }
@@ -1842,14 +1843,14 @@ qacosh(NUMBER *q, NUMBER *epsilon)
 	tmp1 = qsquare(q);
 	tmp2 = qdec(tmp1);
 	qfree(tmp1);
-	tmp1 = qsqrt(tmp2, epsilon1, 24L);
+	tmp1 = qsqrt(tmp2, epsilon1, conf->triground);
 	qfree(tmp2);
 	tmp2 = qqadd(tmp1, q);
 	qfree(tmp1);
 	tmp1 = qln(tmp2, epsilon1);
 	qfree(tmp2);
 	qfree(epsilon1);
-	tmp2 = qmappr(tmp1, epsilon, 24L);
+	tmp2 = qmappr(tmp1, epsilon, conf->triground);
 	qfree(tmp1);
 	return tmp2;
 }
@@ -1880,7 +1881,7 @@ qasinh(NUMBER *q, NUMBER *epsilon)
 	tmp1 = qsquare(q);
 	tmp2 = qinc(tmp1);
 	qfree(tmp1);
-	tmp1 = qsqrt(tmp2, epsilon1, 24L);
+	tmp1 = qsqrt(tmp2, epsilon1, conf->triground);
 	qfree(tmp2);
 	tmp2 = qqadd(tmp1, q);
 	qfree(tmp1);
@@ -1888,7 +1889,7 @@ qasinh(NUMBER *q, NUMBER *epsilon)
 	qfree(tmp2);
 	qfree(q);
 	qfree(epsilon1);
-	tmp2 = qmappr(tmp1, epsilon, 24L);
+	tmp2 = qmappr(tmp1, epsilon, conf->triground);
 	if (neg) {
 		tmp1 = qneg(tmp2);
 		qfree(tmp2);
@@ -3677,9 +3678,9 @@ qcas(NUMBER *q, NUMBER *epsilon)
 	 * compute cosine and sine
 	 */
 	qsincos(q, n + 2, &sin, &cos);
-	tcos = qmappr(cos, epsilon, 24);
+	tcos = qmappr(cos, epsilon, conf->triground);
 	qfree(cos);
-	tsin = qmappr(sin, epsilon, 24);
+	tsin = qmappr(sin, epsilon, conf->triground);
 	qfree(sin);
 	res = qqadd(tcos, tsin);
 	qfree(tcos);

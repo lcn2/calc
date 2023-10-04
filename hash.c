@@ -967,6 +967,7 @@ hash_value(int type, void *v, HASH *state)
 		state = hash_long(type, (long)value->v_config->cfsim, state);
 		state = hash_long(type, (long)value->v_config->outround, state);
 		state = hash_long(type, (long)value->v_config->round, state);
+		state = hash_long(type, (long)value->v_config->triground, state);
 		state = hash_bool(type, value->v_config->leadzero, state);
 		state = hash_bool(type, value->v_config->fullzero, state);
 		state = hash_long(type,

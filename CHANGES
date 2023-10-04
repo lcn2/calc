@@ -204,6 +204,8 @@ The following are the changes from calc version 2.14.3.5 to date:
     and made consistent, where applicable, across the trigonometric
     help files.  Documented libcalc functions in the SEE ALSO sections.
 
+    Improved "SEE ALSO" for the hyperbolic function help files.
+
     Expanded the calc regression test suite test 34dd to test various
     real and complex values for trigonometric functions.
 
@@ -385,6 +387,37 @@ The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
     "-dead_strip" and "-dead_strip_dylibs".
 
     The libcalc shared library is now linked with libcustcalc.
+
+    The config("triground") controls rounding for the following
+    trigonometric and hyperbolic functions:
+
+	sin, cos, tan, cot, sec, csc
+	asin, acos, atan, acot, asec, acsc
+	versin, coversin, vercos, covercos
+	aversin, acoversin, avercos, acovercos
+	haversin, hacoversin, havercos, hacovercos
+	ahaversin, hacoversin, havercos, ahacovercos
+	exsec, aexsec, excsc, aexcsc
+	crd, acrd
+	cas, cis
+	sinh, cosh, tanh, coth, sech, csch
+	asinh, acosh, atanh, acoth, asech, acsch
+
+    In addition to taking a complex root (such as via the power
+    function on a complex value), "triground" is used for:
+
+	exp, polar
+
+    For the above mentioned functions, the rounding mode used to
+    round the result to the nearest epsilon value is controlled by,
+    and defaults to:
+
+	config("triground", 24)
+
+    As with other config options, the call returns the previous mode,
+    without a 2nd argument, returns the current mode without changing it:
+
+	config("triground")
 
 
 The following are the changes from calc version 2.14.3.0 to 2.14.3.4:

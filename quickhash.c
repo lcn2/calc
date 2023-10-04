@@ -450,6 +450,7 @@ config_hash(CONFIG *cfg, QCKHASH val)
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->cfsim);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->outround);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->round);
+	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->triground);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->leadzero);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->fullzero);
 	value = (((value>>5) | (value<<27)) ^ (USB32)cfg->maxscancount);

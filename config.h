@@ -97,6 +97,7 @@
 #define CONFIG_TILDE_SPACE	47
 #define CONFIG_FRACTION_SPACE	48
 #define CONFIG_COMPLEX_SPACE	49
+#define CONFIG_TRIGROUND	50
 
 
 /*
@@ -120,6 +121,7 @@
  *			  config_value(), config_cmp(),
  *			  and perhaps config_copy(), config_free()
  *	config.h	- CONFIG_XYZ_SYMBOL (see above)
+ *	help/config	- document new config option
  */
 struct config {
 	int outmode;		/* current output mode */
@@ -147,6 +149,7 @@ struct config {
 	LEN cfsim;		/* cfsim() default rounding mode */
 	LEN outround;		/* output default rounding mode */
 	LEN round;		/* round()/bround() default rounding mode */
+	LEN triground;		/* trigonometric and hyperbolic function rounding mode */
 	bool leadzero;		/* OK to print leading 0 before decimal pt */
 	bool fullzero;		/* OK to print trailing 0's */
 	long maxscancount;	/* max scan errors before abort */

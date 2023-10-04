@@ -5251,6 +5251,7 @@ qtrans.o: banned.h
 qtrans.o: bool.h
 qtrans.o: byteswap.h
 qtrans.o: charbit.h
+qtrans.o: config.h
 qtrans.o: decl.h
 qtrans.o: endian_calc.h
 qtrans.o: errsym.h
@@ -5264,6 +5265,7 @@ qtrans.o: have_stdbool.h
 qtrans.o: have_stdlib.h
 qtrans.o: have_string.h
 qtrans.o: longbits.h
+qtrans.o: nametype.h
 qtrans.o: qmath.h
 qtrans.o: qtrans.c
 qtrans.o: zmath.h

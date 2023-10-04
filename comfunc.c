@@ -391,7 +391,7 @@ c_root(COMPLEX *c, NUMBER *q, NUMBER *epsilon)
 	if (cisone(c) || qisone(q))
 		return clink(c);
 	if (qistwo(q))
-		return c_sqrt(c, epsilon, 24L);
+		return c_sqrt(c, epsilon, conf->triground);
 	if (cisreal(c) && !qisneg(c->real)) {
 		tmp1 = qroot(c->real, q, epsilon);
 		if (tmp1 == NULL)
@@ -482,13 +482,13 @@ c_exp(COMPLEX *c, NUMBER *epsilon)
 	qfree(cos);
 	r = comalloc();
 	qfree(r->real);
-	r->real = qmappr(tmp2, epsilon, 24L);
+	r->real = qmappr(tmp2, epsilon, conf->triground);
 	qfree(tmp2);
 	tmp2 = qmul(tmp1, sin);
 	qfree(tmp1);
 	qfree(sin);
 	qfree(r->imag);
-	r->imag = qmappr(tmp2, epsilon, 24L);
+	r->imag = qmappr(tmp2, epsilon, conf->triground);
 	qfree(tmp2);
 	return r;
 }
@@ -687,9 +687,9 @@ c_cos(COMPLEX *c, NUMBER *epsilon)
 	comfree(ctmp3);
 	r = comalloc();
 	qfree(r->real);
-	r->real = qmappr(ctmp1->real, epsilon, 24L);
+	r->real = qmappr(ctmp1->real, epsilon, conf->triground);
 	qfree(r->imag);
-	r->imag = qmappr(ctmp1->imag, epsilon, 24L);
+	r->imag = qmappr(ctmp1->imag, epsilon, conf->triground);
 	comfree(ctmp1);
 	return r;
 }
@@ -742,11 +742,11 @@ c_sin(COMPLEX *c, NUMBER *epsilon)
 	r = comalloc();
 	qtmp = neg ? qlink(ctmp1->imag) : qneg(ctmp1->imag);
 	qfree(r->real);
-	r->real = qmappr(qtmp, epsilon, 24L);
+	r->real = qmappr(qtmp, epsilon, conf->triground);
 	qfree(qtmp);
 	qtmp = neg ? qneg(ctmp1->real) : qlink(ctmp1->real);
 	qfree(r->imag);
-	r->imag = qmappr(qtmp, epsilon, 24L);
+	r->imag = qmappr(qtmp, epsilon, conf->triground);
 	qfree(qtmp);
 	comfree(ctmp1);
 	return r;
@@ -819,7 +819,7 @@ c_acos(COMPLEX *c, NUMBER *epsilon)
 	tmp1 = c_square(c);
 	tmp2 = c_sub(&_cone_, tmp1);
 	comfree(tmp1);
-	tmp1 = c_sqrt(tmp2, epsilon, 24);
+	tmp1 = c_sqrt(tmp2, epsilon, conf->triground);
 	comfree(tmp2);
 	tmp2 = c_mul(&_conei_, tmp1);
 	comfree(tmp1);
@@ -844,7 +844,7 @@ c_asinh(COMPLEX *c, NUMBER *epsilon)
 	tmp2 = c_square(tmp1);
 	tmp3 = c_add(&_cone_, tmp2);
 	comfree(tmp2);
-	tmp2 = c_sqrt(tmp3, epsilon, 24);
+	tmp2 = c_sqrt(tmp3, epsilon, conf->triground);
 	comfree(tmp3);
 	tmp3 = c_add(tmp2, tmp1);
 	comfree(tmp1);
@@ -868,7 +868,7 @@ c_acosh(COMPLEX *c, NUMBER *epsilon)
 	tmp1 = c_square(c);
 	tmp2 = c_sub(tmp1, &_cone_);
 	comfree(tmp1);
-	tmp1 = c_sqrt(tmp2, epsilon, 24);
+	tmp1 = c_sqrt(tmp2, epsilon, conf->triground);
 	comfree(tmp2);
 	tmp2 = c_add(c, tmp1);
 	comfree(tmp1);
@@ -1473,12 +1473,12 @@ c_polar(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 	tmp = qmul(q1, cos);
 	qfree(cos);
 	qfree(r->real);
-	r->real = qmappr(tmp, epsilon, 24L);
+	r->real = qmappr(tmp, epsilon, conf->triground);
 	qfree(tmp);
 	tmp = qmul(q1, sin);
 	qfree(sin);
 	qfree(r->imag);
-	r->imag = qmappr(tmp, epsilon, 24L);
+	r->imag = qmappr(tmp, epsilon, conf->triground);
 	qfree(tmp);
 	return r;
 }

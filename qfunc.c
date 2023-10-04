@@ -293,7 +293,7 @@ qhypot(NUMBER *q1, NUMBER *q2, NUMBER *epsilon)
 	tmp3 = qqadd(tmp1, tmp2);
 	qfree(tmp1);
 	qfree(tmp2);
-	tmp1 = qsqrt(tmp3, epsilon, 24L);
+	tmp1 = qsqrt(tmp3, epsilon, conf->triground);
 	qfree(tmp3);
 	return tmp1;
 }
@@ -330,7 +330,7 @@ qlegtoleg(NUMBER *q, NUMBER *epsilon, bool wantneg)
 	qtmp1 = qsquare(q);
 	qtmp2 = qsub(&_qone_, qtmp1);
 	qfree(qtmp1);
-	res = qsqrt(qtmp2, epsilon, 24L);
+	res = qsqrt(qtmp2, epsilon, conf->triground);
 	qfree(qtmp2);
 	if (wantneg) {
 		qtmp1 = qneg(res);

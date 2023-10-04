@@ -106,6 +106,7 @@ NAMETYPE configs[] = {
 	{"cfsim",	CONFIG_CFSIM},
 	{"outround",	CONFIG_OUTROUND},
 	{"round",	CONFIG_ROUND},
+	{"triground",	CONFIG_TRIGROUND},
 	{"leadzero",	CONFIG_LEADZERO},
 	{"fullzero",	CONFIG_FULLZERO},
 	{"maxscan",	CONFIG_MAXSCAN},
@@ -167,6 +168,7 @@ CONFIG oldstd = {	/* backward compatible standard configuration */
 	8,			/* cfsim() default rounding mode */
 	2,			/* output default rounding mode */
 	24,			/* round()/bround() default rounding mode */
+	24,			/* trigonometric and hyperbolic function rounding mode */
 	false,			/* true ==> print leading 0 before decimal pt */
 	0,			/* true ==> print trailing 0's */
 	MAXSCANCOUNT,		/* max scan errors before abort */
@@ -230,6 +232,7 @@ CONFIG newstd = {	/* new non-backward compatible configuration */
 	8,			/* cfsim() default rounding mode */
 	24,			/* output default rounding mode */
 	24,			/* round()/bround() default rounding mode */
+	24,			/* trigonometric and hyperbolic function rounding mode */
 	true,			/* true ==> print leading 0 before decimal pt */
 	0,			/* true ==> print trailing 0's */
 	MAXSCANCOUNT,		/* max scan errors before abort */
@@ -759,6 +762,14 @@ setconfig(int type, VALUE *vp)
 			not_reached();
 		}
 		conf->round = len;
+		break;
+
+	case CONFIG_TRIGROUND:
+		if (getlen(vp, &len)) {
+			math_error("Illegal value for triground");
+			not_reached();
+		}
+		conf->triground = len;
 		break;
 
 	case CONFIG_LEADZERO:
@@ -1308,6 +1319,10 @@ config_value(CONFIG *cfg, int type, VALUE *vp)
 		i = cfg->round;
 		break;
 
+	case CONFIG_TRIGROUND:
+		i = cfg->triground;
+		break;
+
 	case CONFIG_LEADZERO:
 		i = (cfg->leadzero ? 1 : 0);
 		break;
@@ -1512,6 +1527,7 @@ config_cmp(CONFIG *cfg1, CONFIG *cfg2)
 	       cfg1->cfsim != cfg2->cfsim ||
 	       cfg1->outround != cfg2->outround ||
 	       cfg1->round != cfg2->round ||
+	       cfg1->triground != cfg2->triground ||
 	       cfg1->leadzero != cfg2->leadzero ||
 	       cfg1->fullzero != cfg2->fullzero ||
 	       cfg1->maxscancount != cfg2->maxscancount ||
