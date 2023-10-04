@@ -157,7 +157,7 @@ The following are the changes from calc version 2.14.3.5 to 2.15.0.0:
     Added new avercos(x, [,eps]) for inverse versed cosine and acovercos(x, [,eps])
     for inverse coversed cosine.
 
-    Improve comments about use of the ${CALC_ENV} Makefile variable.
+    Improved comments about use of the ${CALC_ENV} Makefile variable.
     Noted in Makefile.cal where and how the ${CALC_ENV} is used.
     Use ${CALC_ENV} Makefile variable were needed.
 
@@ -242,7 +242,7 @@ The following are the changes from calc version 2.14.3.5 to 2.15.0.0:
     Added E_USERMAX symbol (== 32767) to indicate the maximum value
     allowed for user error codes.
 
-    Improve help/error.  Added text about error code ranges and
+    Improved help/error.  Added text about error code ranges and
     range symbols.
 
     Changed calc_errno a global int variable so that is may be directly
@@ -362,7 +362,7 @@ The following are the changes from calc version 2.14.3.5 to 2.15.0.0:
     verify that the errnum calc computation error codes and their
     E_STRING values have not changed.
 
-    Improve the clarity of calc regression suite (regress.cal) to mostly
+    Improved the clarity of calc regression suite (regress.cal) to mostly
     use E_STRING errsym instead of numeric errnum values for error()
     and errno() related tests.
 
@@ -375,7 +375,7 @@ The following are the changes from calc version 2.14.3.5 to 2.15.0.0:
 
     Added to test 34dd, some if the missing inverse trigonometric tests.
 
-    Improve builtin function strings, as printed by help builtin,
+    Improved builtin function strings, as printed by help builtin,
     that use an optional accuracy (epsilon) arg by adding a comma.
 
 
