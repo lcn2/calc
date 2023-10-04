@@ -2794,15 +2794,31 @@ printvalue(VALUE *vp, int flags)
 {
 	NUMBER *qtemp;
 	int type;
+	char *errsym;
+	bool alloced;
 
 	type = vp->v_type;
 	if (type < 0) {
-		if (userfunc("error_print", vp))
+		if (userfunc("error_print", vp)) {
 			return;
-		if (-type >= E__BASE)
-			math_fmt("Error %d", -type);
-		else
-			math_fmt("System error %d", -type);
+		}
+		errsym = errnum_2_errsym(-type, &alloced);
+		if (errsym == NULL) {
+			if (-type >= E__BASE) {
+				math_fmt("Error %d", -type);
+			} else {
+				math_fmt("System error %d", -type);
+			}
+		} else {
+			if (-type >= E__BASE) {
+				math_fmt("Error %s", errsym);
+			} else {
+				math_fmt("System error %s", errsym);
+			}
+			if (alloced == true) {
+				free(errsym);
+			}
+		}
 		return;
 	}
 	switch (type) {

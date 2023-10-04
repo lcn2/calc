@@ -40,7 +40,7 @@ EXAMPLE
     ; iserror(e1)
 	    20000
     ; error(20000)
-	    Error 20000
+	    Error E_20000
     ; strerror(error(20000))
 	    "triangle side length <= 0"
     ; strerror(e1);

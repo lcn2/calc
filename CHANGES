@@ -419,6 +419,21 @@ The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 
 	config("triground")
 
+    When printing an error, calc used to print the errnum (error number):
+
+	; 1/0
+		Error 10001
+
+    Calc now prints the errsym (errsym):
+
+	; 1/0
+		Error E_DIVBYZERO
+
+    Added errsym E_LN_3 for ln(0).
+    Added errsym E_LOG_5 for log(0).
+    Added errsym E_LOG2_4 for log2(0).
+    Added errsym E_LOGN_6 for logn(0,base).
+
 
 The following are the changes from calc version 2.14.3.0 to 2.14.3.4:
 

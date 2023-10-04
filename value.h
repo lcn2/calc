@@ -84,8 +84,6 @@ typedef struct random RANDOM;
  *
  * NOTE: The v_type can be a negative value.  This happens when
  *	 an error is returned as a VALUE.
- *
- * XXX - calc v3 wish: make v_type and v_subtype an int32_t - XXX
  */
 struct value {
 	short v_type;			/* type of value - IMPORTANT: v_type < 0 is an error code */

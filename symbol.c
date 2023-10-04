@@ -241,10 +241,20 @@ printtype(VALUE *vp)
 {
 	int	type;
 	char	*s;
+	char *errsym;
+	bool alloced;
 
 	type = vp->v_type;
 	if (type < 0) {
-		printf("Error %d", -type);
+		errsym = errnum_2_errsym(-type, &alloced);
+		if (errsym == NULL) {
+			printf("Error %d", -type);
+		} else {
+			printf("Error %s", errsym);
+			if (alloced == true) {
+				free(errsym);
+			}
+		}
 		return;
 	}
 	switch (type) {

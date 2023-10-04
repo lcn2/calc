@@ -1057,7 +1057,7 @@ qln(NUMBER *q, NUMBER *epsilon)
 	bool neg;
 
 	if (qiszero(q)) {
-		math_error("logarithm of 0");
+		math_error("ln of 0");
 		not_reached();
 	}
 	if (qiszero(epsilon)) {
@@ -1173,7 +1173,7 @@ qlog(NUMBER *q, NUMBER *epsilon)
 
 	/* firewall */
 	if (qiszero(q)) {
-		math_error("logarithm of 0");
+		math_error("log of 0");
 		not_reached();
 	}
 	if (qiszero(epsilon)) {
@@ -1254,7 +1254,7 @@ qlog2(NUMBER *q, NUMBER *epsilon)
 
 	/* firewall */
 	if (qiszero(q)) {
-		math_error("logarithm of 0");
+		math_error("log2 of 0");
 		not_reached();
 	}
 	if (qiszero(epsilon)) {
@@ -1328,7 +1328,7 @@ qlogn(NUMBER *q, NUMBER *n, NUMBER *epsilon)
 
 	/* firewall */
 	if (qiszero(q)) {
-		math_error("logarithm of 0");
+		math_error("log base n of 0");
 		not_reached();
 	}
 	if (qiszero(epsilon)) {

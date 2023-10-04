@@ -2232,8 +2232,10 @@ f_ln(int count, VALUE **vals)
 	 */
 	switch (vals[0]->v_type) {
 	case V_NUM:
-		if (!qisneg(vals[0]->v_num) &&
-		    !qiszero(vals[0]->v_num)) {
+		if (qiszero(vals[0]->v_num)) {
+			return error_value(E_LN_3);
+		}
+		if (!qisneg(vals[0]->v_num)) {
 			result.v_num = qln(vals[0]->v_num, err);
 			result.v_type = V_NUM;
 			return result;
@@ -2244,6 +2246,9 @@ f_ln(int count, VALUE **vals)
 		c = c_ln(&ctmp, err);
 		break;
 	case V_COM:
+		if (ciszero(vals[0]->v_com)) {
+			return error_value(E_LN_3);
+		}
 		c = c_ln(vals[0]->v_com, err);
 		break;
 	default:
@@ -2289,8 +2294,10 @@ f_log(int count, VALUE **vals)
 	 */
 	switch (vals[0]->v_type) {
 	case V_NUM:
-		if (!qisneg(vals[0]->v_num) &&
-		    !qiszero(vals[0]->v_num)) {
+		if (qiszero(vals[0]->v_num)) {
+			return error_value(E_LOG_5);
+		}
+		if (!qisneg(vals[0]->v_num)) {
 			result.v_num = qlog(vals[0]->v_num, err);
 			result.v_type = V_NUM;
 			return result;
@@ -2301,6 +2308,9 @@ f_log(int count, VALUE **vals)
 		c = c_log(&ctmp, err);
 		break;
 	case V_COM:
+		if (ciszero(vals[0]->v_com)) {
+			return error_value(E_LOG_5);
+		}
 		c = c_log(vals[0]->v_com, err);
 		break;
 	default:
@@ -2349,6 +2359,9 @@ f_log2(int count, VALUE **vals)
 	 */
 	switch (vals[0]->v_type) {
 	case V_NUM:
+		if (qiszero(vals[0]->v_num)) {
+			return error_value(E_LOG2_4);
+		}
 		if (!qisneg(vals[0]->v_num) &&
 		    !qiszero(vals[0]->v_num)) {
 			result.v_num = qlog2(vals[0]->v_num, err);
@@ -2361,6 +2374,9 @@ f_log2(int count, VALUE **vals)
 		c = c_log2(&ctmp, err);
 		break;
 	case V_COM:
+		if (ciszero(vals[0]->v_com)) {
+			return error_value(E_LOG2_4);
+		}
 		c = c_log2(vals[0]->v_com, err);
 		break;
 	default:
@@ -2447,7 +2463,7 @@ f_logn(int count, VALUE **vals)
 	switch (vals[0]->v_type) {
 	case V_NUM:
 		if (qiszero(vals[0]->v_num)) {
-			return error_value(E_LOGN_3);
+			return error_value(E_LOGN_6);
 		}
 		if (qisneg(vals[0]->v_num)) {
 			ctmp.real = vals[0]->v_num;
@@ -2471,7 +2487,7 @@ f_logn(int count, VALUE **vals)
 		break;
 	case V_COM:
 		if (ciszero(vals[0]->v_com)) {
-			return error_value(E_LOGN_3);
+			return error_value(E_LOGN_6);
 		}
 		ln_x_c = c_ln(vals[0]->v_com, err);
 		if (ln_x_c == NULL) {
@@ -12027,6 +12043,11 @@ f_aexsec(int count, VALUE **vals)
 	arg1 = *vals[0];
 	if (arg1.v_type == V_NUM) {
 
+		/* firewall */
+		if (qisnegone(arg1.v_num)) {
+			return error_value(E_AEXSEC_3);
+		}
+
 		/* try to compute result using real trig function */
 		result.v_num = qaexsec_or_NULL(arg1.v_num, eps);
 
@@ -12168,6 +12189,11 @@ f_aexcsc(int count, VALUE **vals)
 	 */
 	arg1 = *vals[0];
 	if (arg1.v_type == V_NUM) {
+
+		/* firewall */
+		if (qisnegone(arg1.v_num)) {
+			return error_value(E_AEXCSC_3);
+		}
 
 		/* try to compute result using real trig function */
 		result.v_num = qaexcsc_or_NULL(arg1.v_num, eps);

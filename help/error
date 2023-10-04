@@ -111,7 +111,7 @@ EXAMPLE
     ; print errcount(), errmax()
     1 20
     ; print a
-    Error 10009
+    Error E_INV
     ; print iserror(a)
     10009
     ; print strerror(a)

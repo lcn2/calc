@@ -228,7 +228,7 @@ EXAMPLE
 	    "No-type-change destination for assign"
     ; B = 45
     ; swap(A,B)
-	    Error 10372
+	    Error E_SWAP_2
     ; strerror()
 	    "No-assign-to-or-from argument for swap"
     ; protect(A,-64)
@@ -244,21 +244,21 @@ EXAMPLE
     ; B = list(5,6,7,8)
     ; protect(A,16)
     ; copy(B,A)
-	    Error 10226
+	    Error E_COPY_14
     ; strerror()
 	    "No-copy-to destination variable"
 
     ; A = list(1,2,3)
     ; protect(A,32)
     ; append(A,4)
-	    Error 10402
+	    Error E_LIST_4
     ; strerror()
 	    "No-relocate for list append"
 
     ; A = blk(0,5)
     ; copy("abc", A)
     ; copy("de",A)
-	    Error 10229
+	    Error E_COPY_17
     ; strerror()
 	    "No-relocate destination variable"
 
@@ -266,7 +266,7 @@ EXAMPLE
     ; protect(A,0)
     ; protect(*A, 16)
     ; copy("abc", A)
-	    Error 10228
+	    Error E_COPY_16
     ; strerror()
 	    "No-copy-to destination named block"
 
@@ -279,7 +279,7 @@ LINK LIBRARY
 SEE ALSO
     assign, copy, blk, error, errno, strerror
 
-## Copyright (C) 1999-2006,2021  Landon Curt Noll
+## Copyright (C) 1999-2006,2021,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

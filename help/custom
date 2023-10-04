@@ -73,13 +73,13 @@ EXAMPLE
 
     ; print custom("sysinfo", "baseb")
 	    Calc was built with custom functions disabled
-    Error 10195
+    Error E_NO_C_ARG
 
     If calc compiled with ALLOW_CUSTOM= -DCUSTOM and is invoked without -C:
 
     ; print custom("sysinfo", "baseb")
 	    Calc must be run with a -C argument to use custom function
-    Error 10194
+    Error E_NO_C_ARG
 
     If calc compiled with ALLOW_CUSTOM= -DCUSTOM and is invoked with -C:
 

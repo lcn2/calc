@@ -20,7 +20,7 @@ DESCRIPTION
 
 EXAMPLE
     ; errmax(2)
-	0
+	20
     ; errcount()
 	0
     ; a = 1/0; b = 2 + ""; c = error(27); d = newerror("alpha");

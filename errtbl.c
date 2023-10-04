@@ -755,6 +755,10 @@ CONST struct errtbl error_table[] =
 	{ 10603,	"E_CIS_1",		"Non-real epsilon for cis" },
 	{ 10604,	"E_CIS_2",		"Bad first argument for cis" },
 	{ 10605,	"E_CIS_3",		"Too-large re(argument) for cis" },
+	{ 10606,	"E_LN_3",		"Cannot calculate ln of 0" },
+	{ 10607,	"E_LOG_5",		"Cannot calculate log of 0" },
+	{ 10608,	"E_LOG2_4",		"Cannot calculate log base 2 of 0" },
+	{ 10609,	"E_LOGN_6",		"Cannot calculate log base n of 0" },
 	/* IMPORTANT NOTE: add new entries above here and be sure their errnum numeric value is consecutive! */
 
 	/* The next NULL entry must be last */

@@ -36,7 +36,7 @@ EXAMPLE
 	    0
     ; a = 1/0; b = 2 + ""; c = error(27); d = newerror("a");
     ; print errcount(), a, errcount(), errmax();
-    4 Error 10001 4 10
+    4 Error E_DIVBYZERO 4 10
 
 LIMITS
     0 <= num < 2^32
