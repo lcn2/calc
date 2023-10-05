@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.14.3.5 to date:
+The following are the changes from calc version 2.14.3.5 to 2.15.0.1:
 
     The tarball for calc version 2.15.0.0 was missing version.h.
     The version.h is now listed as part of the calc distribution.
