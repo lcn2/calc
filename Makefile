@@ -2839,6 +2839,7 @@ env:
 	@echo 'AWK=${AWK}'; echo ''
 	@echo 'BINDIR=${BINDIR}'; echo ''
 	@echo 'BLD_TYPE=${BLD_TYPE}'; echo ''
+	@echo 'BUILD_ALL=${BUILD_ALL}'; echo ''
 	@echo 'BUILD_C_SRC=${BUILD_C_SRC}'; echo ''
 	@echo 'BUILD_H_SRC=${BUILD_H_SRC}'; echo ''
 	@echo 'BYTE_ORDER=${BYTE_ORDER}'; echo ''
@@ -3045,6 +3046,15 @@ mkdebug: env version.c
 
 full_debug: calcinfo env
 	@echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
+	@echo '=-=-=-= Output of ${MAKE} -s distdir follows =-=-=-='
+	-@${MAKE} -f Makefile -s distdir
+	@echo '=-=-=-= End of output of {MAKE} -s distdir =-=-=-='
+	@echo '=-=-=-= Output of ${MAKE} -s distlist follows =-=-=-='
+	-@${MAKE} -f Makefile -s distlist
+	@echo '=-=-=-= End of output of {MAKE} -s distlist =-=-=-='
+	@echo '=-=-=-= Output of ${MAKE} -s buildlist follows =-=-=-='
+	-@${MAKE} -f Makefile -s buildlist
+	@echo '=-=-=-= End of output of {MAKE} -s buildlist =-=-=-='
 	@echo '=-=-=-= Contents of ${LOCAL_MKF} follows =-=-=-='
 	-@${CAT} ${LOCAL_MKF}
 	@echo '=-=-=-= End of contents of ${LOCAL_MKF} =-=-=-='
@@ -3057,6 +3067,9 @@ full_debug: calcinfo env
 	@echo '=-=-= Invoking ${MAKE} -f Makefile Q= V=@ clobber =-=-=-='
 	-@${MAKE} -f Makefile Q= H=@ S= E= V=@ clobber
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
+	@echo '=-=-=-= start of chk_tree pass #0 =-=-=-=-=-='
+	-@./chk_tree
+	@echo '=-=-=-=-=-= end of chk_tree pass #0 =-=-=-=-=-='
 	@echo '=-=-= Invoking ${MAKE} -f Makefile Q= V=@ all =-=-=-='
 	@echo '=-=-= this may take a bit of time =-=-='
 	-@${MAKE} -f Makefile Q= H=@ S= E= V=@ all
@@ -3076,6 +3089,9 @@ full_debug: calcinfo env
 	@echo 'are allowed =-=-=-='
 	-@${CALC_ENV} ./calc${EXT} -e -q -C 'print custom("sysinfo", 2);'
 	@echo '=-=-=-= Back to the main Makefile for $@ rule =-=-=-='
+	@echo '=-=-=-= start of chk_tree pass #1 =-=-=-=-=-='
+	-@./chk_tree
+	@echo '=-=-=-=-=-= end of chk_tree pass #1 =-=-=-=-=-='
 	@echo '=-=-= Invoking ${MAKE} -f Makefile Q= V=@ check =-=-=-='
 	@echo '=-=-= this may take a while =-=-='
 	-@${MAKE} -f Makefile Q= V=@ check
