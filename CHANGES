@@ -454,8 +454,13 @@ The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
 
     Added make verifydist to make prep.
 
-    Added a chk_tree double check, one after make clobber, one before the
-    final make chk, to make prep.
+    Added a chk_tree double check, one after make clobber, one before
+    the final make chk, to make prep.  Added double pass of chk_tree to
+    make full_debug (and thus to the make debug output).
+
+    Improved notes for install locations in Makefile.config.
+
+    Added printing of ${BUILD_ALL} to make env output.
 
 
 The following are the changes from calc version 2.14.3.0 to 2.14.3.4:
