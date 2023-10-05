@@ -215,9 +215,22 @@ CALC_DYNAMIC_LIBCUSTCALC= libcustcalc${LIB_EXT_VERSION}
 #
 CALC_STATIC_LIBCUSTCALC= libcustcalc.a
 
+# complete list of files that may be created as part of the build process
+#
+# Used by chk_tree via make prep
+#
+BUILD_ALL= ${REQUIRED_OBJ} ${CUSTOM_OBJ} \
+	${CALC_DYNAMIC_LIBCUSTCALC} ${CALC_STATIC_LIBCUSTCALC} \
+	.all
+
 # complete list of targets
 #
 TARGETS= ${BLD_TYPE}
+
+# rules that are not also names of files
+#
+PHONY= all distlist buildlist distdir calcliblist depend echo_inst_files clean \
+	clobber install uninstall
 
 
 ############################################################
@@ -237,6 +250,8 @@ all: ${TARGETS} ${INSTALL_H_SRC} ${CUSTOM_CALC_FILES} \
 ###############################
 # additional Makefile targets #
 ###############################
+
+.PHONY: ${PHONY}
 
 calc-dynamic-only: ${CUSTCALC_OBJ} ${CALC_DYNAMIC_LIBCUSTCALC}
 
@@ -294,6 +309,13 @@ distlist: ${DISTLIST}
 		echo custom/$$i; \
 	    fi; \
 	done
+
+buildlist:
+	${Q} for i in ${BUILD_ALL} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo custom/$$i; \
+	    fi; \
+	done | fgrep -v '.bak' | LANG=C ${SORT}
 
 distdir:
 	${Q} echo custom

@@ -1,4 +1,7 @@
-The following are the changes from calc version 2.14.3.5 to 2.15.0.0:
+The following are the changes from calc version 2.14.3.5 to date:
+
+    The tarball for calc version 2.15.0.0 was missing version.h.
+    The version.h is now listed as part of the calc distribution.
 
     Added the following new trigonometric functions:
 
@@ -433,6 +436,26 @@ The following are the changes from calc version 2.14.3.4 to 2.14.3.5:
     Added errsym E_LOG_5 for log(0).
     Added errsym E_LOG2_4 for log2(0).
     Added errsym E_LOGN_6 for logn(0,base).
+
+    Added a chk_tree tool to help look for problems such as files that are
+    result of building calc that are also part of the calc distribution,
+    and files that are part of the calc source that are missing from the
+    calc distribution, and files that are of unknown status that are either
+    result of building calc nor missing from the calc distribution.
+
+    Updated file lists in Makefile, sorting as needed.
+
+    Updated Makefile PHONY rule to include Makefile rules that are NOT files.
+
+    Reduced make chatter for rules that build lists.
+
+    Added make verifydist to verify the existence of files that are part of
+    the calc distribution.
+
+    Added make verifydist to make prep.
+
+    Added a chk_tree double check, one after make clobber, one before the
+    final make chk, to make prep.
 
 
 The following are the changes from calc version 2.14.3.0 to 2.14.3.4:

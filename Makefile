@@ -162,25 +162,23 @@ CALCOBJS= calc.o
 
 # these .h files are needed to build the math link library
 #
-LIB_H_SRC= alloc.h banned.h blkcpy.h block.h bool.h byteswap.h calc.h \
-	cmath.h config.h custom.h decl.h errtbl.h file.h func.h hash.h \
-	hist.h int.h jump.h label.h lib_util.h lib_calc.h nametype.h \
-	opcodes.h prime.h qmath.h sha1.h str.h strl.h \
-	symbol.h token.h value.h zmath.h zrand.h zrandom.h attribute.h
+LIB_H_SRC= alloc.h attribute.h banned.h blkcpy.h block.h bool.h byteswap.h \
+	calc.h cmath.h config.h custom.h decl.h errtbl.h file.h func.h \
+	hash.h hist.h int.h jump.h label.h lib_calc.h lib_util.h nametype.h \
+	opcodes.h prime.h qmath.h sha1.h str.h strl.h symbol.h token.h \
+	value.h version.h zmath.h zrand.h zrandom.h
 
 # we build these .h files during the make
 #
-BUILD_H_SRC= align32.h args.h conf.h endian_calc.h errsym.h \
-	fposval.h have_ban_pragma.h have_const.h have_fgetsetpos.h \
-	have_fpos_pos.h have_getpgid.h have_getprid.h have_getsid.h \
-	have_gettime.h have_memmv.h have_newstr.h have_offscl.h \
-	have_posscl.h have_rusage.h have_stdlib.h have_strdup.h \
-	have_string.h have_strlcat.h have_strlcpy.h have_times.h \
-	have_uid_t.h have_unistd.h have_unused.h have_urandom.h \
-	have_ustat.h longbits.h terminal.h have_environ.h \
-	have_arc4random.h have_limits.h charbit.h have_sys_vfs.h \
-	have_sys_param.h have_sys_mount.h have_statfs.h have_stdbool.h \
-	have_stdint.h status.chk_c.h
+BUILD_H_SRC= align32.h args.h charbit.h conf.h endian_calc.h errsym.h fposval.h \
+	have_arc4random.h have_ban_pragma.h have_const.h have_environ.h \
+	have_fgetsetpos.h have_fpos_pos.h have_getpgid.h have_getprid.h \
+	have_getsid.h have_gettime.h have_inttypes.h have_limits.h have_memmv.h \
+	have_newstr.h have_offscl.h have_posscl.h have_rusage.h have_statfs.h \
+	have_stdbool.h have_stdint.h have_stdlib.h have_strdup.h have_string.h \
+	have_strlcat.h have_strlcpy.h have_sys_mount.h have_sys_param.h \
+	have_sys_vfs.h have_times.h have_uid_t.h have_unistd.h have_unused.h \
+	have_urandom.h have_ustat.h longbits.h status.chk_c.h terminal.h
 
 # we build these .c files during the make
 #
@@ -190,13 +188,13 @@ BUILD_C_SRC=
 #
 # There MUST be a .c for every .o in UTIL_OBJS.
 #
-UTIL_C_SRC= align32.c endian.c longbits.c have_newstr.c have_uid_t.c \
-	have_const.c have_stdvs.c have_varvs.c fposval.c have_fgetsetpos.c \
-	have_fpos_pos.c have_offscl.c have_posscl.c have_memmv.c \
-	have_ustat.c have_getsid.c have_getpgid.c have_environ.c \
-	have_gettime.c have_getprid.c have_rusage.c have_strdup.c \
-	have_unused.c have_ban_pragma.c have_strlcpy.c have_strlcat.c \
-	have_arc4random.c charbit.c have_statfs.c chk_c.c
+UTIL_C_SRC= align32.c charbit.c chk_c.c endian.c fposval.c have_arc4random.c \
+	have_ban_pragma.c have_const.c have_environ.c have_fgetsetpos.c \
+	have_fpos_pos.c have_getpgid.c have_getprid.c have_getsid.c \
+	have_gettime.c have_memmv.c have_newstr.c have_offscl.c have_posscl.c \
+	have_rusage.c have_statfs.c have_stdvs.c have_strdup.c have_strlcat.c \
+	have_strlcpy.c have_uid_t.c have_unused.c have_ustat.c have_varvs.c \
+	longbits.c
 
 # these awk and sed tools are used in the process of building BUILD_H_SRC
 # and BUILD_C_SRC
@@ -269,10 +267,10 @@ LICENSE= COPYING COPYING-LGPL
 
 # These files are found (but not built) in the distribution
 #
-DISTLIST= ${C_SRC} ${H_SRC} ${MK_SET} BUGS CHANGES LIBRARY README.FIRST \
-	  README.WINDOWS calc.man HOWTO.INSTALL ${UTIL_MISC_SRC} ${LICENSE} \
-	  sample.README calc.spec.in rpm.mk README.md QUESTIONS CONTRIB-CODE \
-	  README.RELEASE
+DISTLIST= ${C_SRC} ${H_SRC} ${MK_SET} ${UTIL_MISC_SRC} ${LICENSE} \
+	BUGS calc.man calc.spec.in CHANGES check.awk chk_tree CONTRIB-CODE \
+	HOWTO.INSTALL LIBRARY .lldbinit QUESTIONS README.FIRST README.md \
+	README.RELEASE README.WINDOWS rpm.mk sample.README trailblank update_ver
 
 # These files are used to make (but not build) a calc .a link library
 #
@@ -336,15 +334,27 @@ TRAILBLANK= trailblank
 UPDATE_VER= update_ver
 CALC_TOOLS= ${TRAILBLANK} ${UPDATE_VER}
 
+# complete list of files that may be created as part of the build process
+#
+# Used by chk_tree via make prep
+#
+BUILD_ALL= ${LIBOBJS} ${CALCOBJS} ${BUILD_H_SRC} ${BUILD_C_SRC} \
+	   ${UTIL_OBJS} ${UTIL_TMP} ${UTIL_PROGS} ${SAMPLE_OBJ} \
+	   ${CALC_STATIC_LIBS} ${CALC_DYNAMIC_LIBS} ${SYM_DYNAMIC_LIBS} \
+	   ${SAMPLE_TARGETS} ${SAMPLE_STATIC_TARGETS} ${CSCRIPT_TARGETS} \
+	   .dynamic .static ${LATE_TARGETS} calc${EXT} errcode${EXT} \
+	   tags .hsrc outfile
+
 # complete list of targets
 #
 TARGETS= ${EARLY_TARGETS} ${BLD_TYPE} ${LATE_TARGETS} ${CALC_TOOLS}
 
 # rules that are not also names of files
 #
-PHONY= all calcliblist calc_version check chk clobber debug depend distdir \
-	distlist hsrc install inst_files mkdebug rpm sample splint tags \
-	uninstall
+PHONY= all check_include sample hsrc depend h_list calc_version version distlist \
+	buildlist distdir calcliblist calcliblistfmt verifydist check chk calcinfo \
+	env mkdebug full_debug debug testfuncsort prep run rpm inst_files \
+	olduninstall clean clobber install uninstall unbak splint strip
 
 ############################################################
 # Allow Makefile.local to change any of the above settings #
@@ -2389,7 +2399,7 @@ chk_c${EXT}: chk_c.c have_stdint.h have_inttypes.h have_stdlib.h bool.h have_ban
 		echo "#undef CHK_C /* chk_c failed to validate C compiler and/or include files */" >> status.chk_c.h; \
 	    else \
 		echo "Good news everyone! :-)" \
-		     "The C compiler and select include files appear to meet calc requirements." 1>&2; \
+		     "The C compiler and select include files appear to meet calc requirements."; \
 		echo "#define CHK_C" \
 		     "/* C compiler and select include files appear to meet calc requirements */" >> status.chk_c.h; \
 	    fi; \
@@ -2650,19 +2660,31 @@ distlist: ${DISTLIST} custom/Makefile
 		echo $$i; \
 	    fi; \
 	done; \
-	(cd help; ${MAKE} -f Makefile $@); \
-	(cd cal; ${MAKE} -f Makefile $@); \
-	(cd custom; ${MAKE} -f Makefile $@); \
-	(cd cscript; ${MAKE} -f Makefile $@) \
-	) | LANG=C ${SORT}
+	(cd help; ${MAKE} -f Makefile -s $@); \
+	(cd cal; ${MAKE} -f Makefile -s $@); \
+	(cd custom; ${MAKE} -f Makefile -s $@); \
+	(cd cscript; ${MAKE} -f Makefile -s $@) \
+	) | LANG=C ${SORT} -u
+
+buildlist:
+	${Q} (for i in ${BUILD_ALL} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo $$i; \
+	    fi; \
+	done; \
+	(cd help; ${MAKE} -f Makefile -s $@); \
+	(cd cal; ${MAKE} -f Makefile -s $@); \
+	(cd custom; ${MAKE} -f Makefile -s $@); \
+	(cd cscript; ${MAKE} -f Makefile -s $@) \
+	) | LANG=C ${SORT} -u
 
 distdir: custom/Makefile
 	${Q} (echo .; \
-	(cd help; ${MAKE} -f Makefile $@); \
-	(cd cal; ${MAKE} -f Makefile $@); \
-	(cd custom; ${MAKE} -f Makefile $@); \
-	(cd cscript; ${MAKE} -f Makefile $@) \
-	) | LANG=C ${SORT}
+	(cd help; ${MAKE} -f Makefile -s $@); \
+	(cd cal; ${MAKE} -f Makefile -s $@); \
+	(cd custom; ${MAKE} -f Makefile -s $@); \
+	(cd cscript; ${MAKE} -f Makefile -s $@) \
+	) | LANG=C ${SORT} -u
 
 calcliblist: custom/Makefile
 	${Q} (for i in ${CALCLIBLIST} /dev/null; do \
@@ -2670,11 +2692,11 @@ calcliblist: custom/Makefile
 		echo $$i; \
 	    fi; \
 	done; \
-	(cd help; ${MAKE} -f Makefile $@); \
-	(cd cal; ${MAKE} -f Makefile $@); \
-	(cd custom; ${MAKE} -f Makefile $@); \
-	(cd cscript; ${MAKE} -f Makefile $@) \
-	) | LANG=C ${SORT}
+	(cd help; ${MAKE} -f Makefile -s $@); \
+	(cd cal; ${MAKE} -f Makefile -s $@); \
+	(cd custom; ${MAKE} -f Makefile -s $@); \
+	(cd cscript; ${MAKE} -f Makefile -s $@) \
+	) | LANG=C ${SORT} -u
 
 calcliblistfmt:
 	${Q} ${MAKE} -f Makefile calcliblist | \
@@ -2685,6 +2707,10 @@ Makefile.simple:
 
 custom/Makefile.simple:
 	${Q} echo Support for $@ was dropped after the the release of calc v2.14.3.0.
+
+verifydist:
+	@${MAKE} -f Makefile Q= V=@ distdir >/dev/null 2>&1
+	@${MAKE} -f Makefile Q= V=@ distlist >/dev/null 2>&1
 
 ###
 #
@@ -2704,10 +2730,7 @@ check: all ./cal/regress.cal
 
 chk: ./cal/regress.cal
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
-	${Q} echo
 	${CALC_ENV} ./calc${EXT} -d -q read regress 2>&1 | ${AWK} -f check.awk
-	@${MAKE} -f Makefile Q= V=@ distdir >/dev/null 2>&1
-	@${MAKE} -f Makefile Q= V=@ distlist >/dev/null 2>&1
 	${Q} echo
 	${Q} echo 'chk OK'
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
@@ -3125,6 +3148,18 @@ prep:
 	${Q}echo
 	${Q}echo '=-=-=-=-=-= end of ${MAKE} clobber =-=-=-=-=-='
 	${Q}echo
+	${Q}echo '=-=-=-=-=-= start of ${MAKE} verifydist =-=-=-=-=-='
+	${Q}echo
+	${MAKE} -s verifydist
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= end of ${MAKE} verifydist =-=-=-=-=-='
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= start of chk_tree pass #0 =-=-=-=-=-='
+	${Q}echo
+	-./chk_tree
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= end of chk_tree pass #0 =-=-=-=-=-='
+	${Q}echo
 	${Q}echo '=-=-=-=-=-= start of ${TRAILBLANK} =-=-=-=-=-='
 	${Q}echo
 	./${TRAILBLANK}
@@ -3139,19 +3174,22 @@ prep:
 	${Q}echo
 	${Q}echo '=-=-=-=-=-= start of ${MAKE} tags =-=-=-=-=-='
 	${Q}echo
-	${MAKE} tags
+	${MAKE} -s tags
 	${Q}echo
 	${Q}echo '=-=-=-=-=-= end of ${MAKE} tags =-=-=-=-=-='
 	${Q}echo
 	${Q}echo '=-=-=-=-=-= start of ${MAKE} depend =-=-=-=-=-='
 	${Q}echo
-	${MAKE} depend
+	${MAKE} -s depend
 	${Q}echo
+	@if [[ -f ${MAKE_FILE}.bak ]]; then echo ${MAKE_FILE}.bak exists 1>&2; exit 1; fi
+	@if [[ -f cscript/${MAKE_FILE}.bak ]]; then echo cscript/${MAKE_FILE}.bak exists 1>&2; exit 2; fi
+	@if [[ -f custom/${MAKE_FILE}.bak ]]; then echo custom/${MAKE_FILE}.bak exists 1>&2; exit 3; fi
 	${Q}echo '=-=-=-=-=-= end of ${MAKE} depend =-=-=-=-=-='
 	${Q}echo
 	${Q}echo '=-=-=-=-=-= start of ${MAKE} testfuncsort =-=-=-=-=-='
 	${Q}echo
-	${MAKE} testfuncsort
+	${MAKE} -s testfuncsort
 	${Q}echo
 	${Q}echo '=-=-=-=-=-= end of ${MAKE} testfuncsort =-=-=-=-=-='
 	${Q}echo
@@ -3161,9 +3199,15 @@ prep:
 	${Q}echo
 	${Q}echo '=-=-=-=-=-= end of ${UPDATE_VER} =-=-=-=-=-='
 	${Q}echo
+	${Q}echo '=-=-=-=-=-= start of chk_tree pass #1 =-=-=-=-=-='
+	${Q}echo
+	-./chk_tree
+	${Q}echo
+	${Q}echo '=-=-=-=-=-= end of chk_tree pass #1 =-=-=-=-=-='
+	${Q}echo
 	${Q}echo '=-=-=-=-=-= start of ${MAKE} chk =-=-=-=-=-='
 	${Q}echo
-	${MAKE} chk
+	${MAKE} -s chk
 	${Q}echo
 	${Q}echo '=-=-=-=-=-= end of ${MAKE} chk =-=-=-=-=-='
 	${Q}echo
@@ -3306,8 +3350,7 @@ olduninstall:
 	${RM} -f -v custom/Makefile.simple custom/Makefile.simple.bak
 
 tags: ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} ${MAKE_FILE}
-	-${CTAGS} ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC} 2>&1 | \
-	    ${GREP} -E -v 'Duplicate entry|Second entry ignored'
+	${CTAGS} -w ${CALCSRC} ${LIBSRC} ${H_SRC} ${BUILD_H_SRC}
 
 clean:
 	${V} echo '=-=-=-=-= ${MAKE_FILE} start of $@ rule =-=-=-=-='
@@ -3395,6 +3438,7 @@ clobber: clean
 	    ${RM} -rf .DS_Store; \
 	fi
 	${RM} -f func.show func.sort
+	${RM} -f outfile
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # install everything
@@ -4020,6 +4064,7 @@ addop.o: str.h
 addop.o: symbol.h
 addop.o: token.h
 addop.o: value.h
+addop.o: version.h
 addop.o: zmath.h
 align32.o: align32.c
 align32.o: banned.h
@@ -4057,6 +4102,7 @@ assocfunc.o: qmath.h
 assocfunc.o: sha1.h
 assocfunc.o: str.h
 assocfunc.o: value.h
+assocfunc.o: version.h
 assocfunc.o: zmath.h
 blkcpy.o: alloc.h
 blkcpy.o: attribute.h
@@ -4091,6 +4137,7 @@ blkcpy.o: qmath.h
 blkcpy.o: sha1.h
 blkcpy.o: str.h
 blkcpy.o: value.h
+blkcpy.o: version.h
 blkcpy.o: zmath.h
 block.o: alloc.h
 block.o: attribute.h
@@ -4121,6 +4168,7 @@ block.o: qmath.h
 block.o: sha1.h
 block.o: str.h
 block.o: value.h
+block.o: version.h
 block.o: zmath.h
 byteswap.o: alloc.h
 byteswap.o: attribute.h
@@ -4144,6 +4192,7 @@ byteswap.o: have_stdlib.h
 byteswap.o: have_string.h
 byteswap.o: longbits.h
 byteswap.o: qmath.h
+byteswap.o: version.h
 byteswap.o: zmath.h
 calc.o: alloc.h
 calc.o: args.h
@@ -4192,6 +4241,7 @@ calc.o: strl.h
 calc.o: symbol.h
 calc.o: token.h
 calc.o: value.h
+calc.o: version.h
 calc.o: zmath.h
 charbit.o: banned.h
 charbit.o: charbit.c
@@ -4201,6 +4251,7 @@ chk_c.o: banned.h
 chk_c.o: bool.h
 chk_c.o: chk_c.c
 chk_c.o: have_ban_pragma.h
+chk_c.o: have_inttypes.h
 chk_c.o: have_stdbool.h
 chk_c.o: have_stdint.h
 chk_c.o: have_stdlib.h
@@ -4245,6 +4296,7 @@ codegen.o: strl.h
 codegen.o: symbol.h
 codegen.o: token.h
 codegen.o: value.h
+codegen.o: version.h
 codegen.o: zmath.h
 comfunc.o: alloc.h
 comfunc.o: attribute.h
@@ -4270,6 +4322,7 @@ comfunc.o: have_string.h
 comfunc.o: longbits.h
 comfunc.o: nametype.h
 comfunc.o: qmath.h
+comfunc.o: version.h
 comfunc.o: zmath.h
 commath.o: alloc.h
 commath.o: attribute.h
@@ -4293,6 +4346,7 @@ commath.o: have_stdlib.h
 commath.o: have_string.h
 commath.o: longbits.h
 commath.o: qmath.h
+commath.o: version.h
 commath.o: zmath.h
 config.o: alloc.h
 config.o: attribute.h
@@ -4331,6 +4385,7 @@ config.o: str.h
 config.o: strl.h
 config.o: token.h
 config.o: value.h
+config.o: version.h
 config.o: zmath.h
 config.o: zrand.h
 const.o: alloc.h
@@ -4363,6 +4418,7 @@ const.o: qmath.h
 const.o: sha1.h
 const.o: str.h
 const.o: value.h
+const.o: version.h
 const.o: zmath.h
 custom.o: alloc.h
 custom.o: attribute.h
@@ -4395,6 +4451,7 @@ custom.o: qmath.h
 custom.o: sha1.h
 custom.o: str.h
 custom.o: value.h
+custom.o: version.h
 custom.o: zmath.h
 endian.o: banned.h
 endian.o: endian.c
@@ -4431,6 +4488,7 @@ errtbl.o: qmath.h
 errtbl.o: sha1.h
 errtbl.o: str.h
 errtbl.o: value.h
+errtbl.o: version.h
 errtbl.o: zmath.h
 file.o: alloc.h
 file.o: attribute.h
@@ -4470,6 +4528,7 @@ file.o: sha1.h
 file.o: str.h
 file.o: strl.h
 file.o: value.h
+file.o: version.h
 file.o: zmath.h
 fposval.o: alloc.h
 fposval.o: banned.h
@@ -4493,6 +4552,7 @@ fposval.o: have_stdlib.h
 fposval.o: have_string.h
 fposval.o: have_unused.h
 fposval.o: longbits.h
+fposval.o: version.h
 fposval.o: zmath.h
 func.o: alloc.h
 func.o: attribute.h
@@ -4541,6 +4601,7 @@ func.o: strl.h
 func.o: symbol.h
 func.o: token.h
 func.o: value.h
+func.o: version.h
 func.o: zmath.h
 func.o: zrand.h
 func.o: zrandom.h
@@ -4574,6 +4635,7 @@ hash.o: qmath.h
 hash.o: sha1.h
 hash.o: str.h
 hash.o: value.h
+hash.o: version.h
 hash.o: zmath.h
 hash.o: zrand.h
 hash.o: zrandom.h
@@ -4706,6 +4768,7 @@ help.o: qmath.h
 help.o: sha1.h
 help.o: str.h
 help.o: value.h
+help.o: version.h
 help.o: zmath.h
 hist.o: alloc.h
 hist.o: attribute.h
@@ -4745,6 +4808,7 @@ hist.o: sha1.h
 hist.o: str.h
 hist.o: strl.h
 hist.o: value.h
+hist.o: version.h
 hist.o: zmath.h
 input.o: alloc.h
 input.o: attribute.h
@@ -4782,6 +4846,7 @@ input.o: sha1.h
 input.o: str.h
 input.o: strl.h
 input.o: value.h
+input.o: version.h
 input.o: zmath.h
 jump.o: banned.h
 jump.o: decl.h
@@ -4823,6 +4888,7 @@ label.o: sha1.h
 label.o: str.h
 label.o: token.h
 label.o: value.h
+label.o: version.h
 label.o: zmath.h
 lib_calc.o: alloc.h
 lib_calc.o: attribute.h
@@ -4867,6 +4933,7 @@ lib_calc.o: symbol.h
 lib_calc.o: terminal.h
 lib_calc.o: token.h
 lib_calc.o: value.h
+lib_calc.o: version.h
 lib_calc.o: zmath.h
 lib_calc.o: zrandom.h
 lib_util.o: alloc.h
@@ -4890,6 +4957,7 @@ lib_util.o: have_string.h
 lib_util.o: lib_util.c
 lib_util.o: lib_util.h
 lib_util.o: longbits.h
+lib_util.o: version.h
 lib_util.o: zmath.h
 listfunc.o: alloc.h
 listfunc.o: attribute.h
@@ -4920,6 +4988,7 @@ listfunc.o: qmath.h
 listfunc.o: sha1.h
 listfunc.o: str.h
 listfunc.o: value.h
+listfunc.o: version.h
 listfunc.o: zmath.h
 listfunc.o: zrand.h
 longbits.o: banned.h
@@ -4959,6 +5028,7 @@ matfunc.o: qmath.h
 matfunc.o: sha1.h
 matfunc.o: str.h
 matfunc.o: value.h
+matfunc.o: version.h
 matfunc.o: zmath.h
 matfunc.o: zrand.h
 math_error.o: alloc.h
@@ -4993,6 +5063,7 @@ math_error.o: qmath.h
 math_error.o: sha1.h
 math_error.o: str.h
 math_error.o: value.h
+math_error.o: version.h
 math_error.o: zmath.h
 obj.o: alloc.h
 obj.o: attribute.h
@@ -5031,6 +5102,7 @@ obj.o: str.h
 obj.o: strl.h
 obj.o: symbol.h
 obj.o: value.h
+obj.o: version.h
 obj.o: zmath.h
 opcodes.o: alloc.h
 opcodes.o: attribute.h
@@ -5072,6 +5144,7 @@ opcodes.o: sha1.h
 opcodes.o: str.h
 opcodes.o: symbol.h
 opcodes.o: value.h
+opcodes.o: version.h
 opcodes.o: zmath.h
 opcodes.o: zrand.h
 opcodes.o: zrandom.h
@@ -5094,6 +5167,7 @@ pix.o: longbits.h
 pix.o: pix.c
 pix.o: prime.h
 pix.o: qmath.h
+pix.o: version.h
 pix.o: zmath.h
 poly.o: alloc.h
 poly.o: attribute.h
@@ -5124,6 +5198,7 @@ poly.o: qmath.h
 poly.o: sha1.h
 poly.o: str.h
 poly.o: value.h
+poly.o: version.h
 poly.o: zmath.h
 prime.o: alloc.h
 prime.o: banned.h
@@ -5145,6 +5220,7 @@ prime.o: longbits.h
 prime.o: prime.c
 prime.o: prime.h
 prime.o: qmath.h
+prime.o: version.h
 prime.o: zmath.h
 qfunc.o: alloc.h
 qfunc.o: attribute.h
@@ -5170,6 +5246,7 @@ qfunc.o: nametype.h
 qfunc.o: prime.h
 qfunc.o: qfunc.c
 qfunc.o: qmath.h
+qfunc.o: version.h
 qfunc.o: zmath.h
 qio.o: alloc.h
 qio.o: args.h
@@ -5196,6 +5273,7 @@ qio.o: longbits.h
 qio.o: nametype.h
 qio.o: qio.c
 qio.o: qmath.h
+qio.o: version.h
 qio.o: zmath.h
 qmath.o: alloc.h
 qmath.o: attribute.h
@@ -5220,6 +5298,7 @@ qmath.o: longbits.h
 qmath.o: nametype.h
 qmath.o: qmath.c
 qmath.o: qmath.h
+qmath.o: version.h
 qmath.o: zmath.h
 qmod.o: alloc.h
 qmod.o: attribute.h
@@ -5244,6 +5323,7 @@ qmod.o: longbits.h
 qmod.o: nametype.h
 qmod.o: qmath.h
 qmod.o: qmod.c
+qmod.o: version.h
 qmod.o: zmath.h
 qtrans.o: alloc.h
 qtrans.o: attribute.h
@@ -5268,6 +5348,7 @@ qtrans.o: longbits.h
 qtrans.o: nametype.h
 qtrans.o: qmath.h
 qtrans.o: qtrans.c
+qtrans.o: version.h
 qtrans.o: zmath.h
 quickhash.o: alloc.h
 quickhash.o: attribute.h
@@ -5298,6 +5379,7 @@ quickhash.o: quickhash.c
 quickhash.o: sha1.h
 quickhash.o: str.h
 quickhash.o: value.h
+quickhash.o: version.h
 quickhash.o: zmath.h
 quickhash.o: zrand.h
 quickhash.o: zrandom.h
@@ -5332,6 +5414,7 @@ sample_many.o: sample_many.c
 sample_many.o: sha1.h
 sample_many.o: str.h
 sample_many.o: value.h
+sample_many.o: version.h
 sample_many.o: zmath.h
 sample_many.o: zrandom.h
 sample_rand.o: alloc.h
@@ -5365,6 +5448,7 @@ sample_rand.o: sample_rand.c
 sample_rand.o: sha1.h
 sample_rand.o: str.h
 sample_rand.o: value.h
+sample_rand.o: version.h
 sample_rand.o: zmath.h
 sample_rand.o: zrandom.h
 seed.o: alloc.h
@@ -5401,6 +5485,7 @@ seed.o: have_ustat.h
 seed.o: longbits.h
 seed.o: qmath.h
 seed.o: seed.c
+seed.o: version.h
 seed.o: zmath.h
 sha1.o: align32.h
 sha1.o: alloc.h
@@ -5432,6 +5517,7 @@ sha1.o: sha1.c
 sha1.o: sha1.h
 sha1.o: str.h
 sha1.o: value.h
+sha1.o: version.h
 sha1.o: zmath.h
 size.o: alloc.h
 size.o: attribute.h
@@ -5462,6 +5548,7 @@ size.o: sha1.h
 size.o: size.c
 size.o: str.h
 size.o: value.h
+size.o: version.h
 size.o: zmath.h
 size.o: zrand.h
 size.o: zrandom.h
@@ -5498,6 +5585,7 @@ str.o: str.c
 str.o: str.h
 str.o: strl.h
 str.o: value.h
+str.o: version.h
 str.o: zmath.h
 strl.o: alloc.h
 strl.o: banned.h
@@ -5546,6 +5634,7 @@ symbol.o: symbol.c
 symbol.o: symbol.h
 symbol.o: token.h
 symbol.o: value.h
+symbol.o: version.h
 symbol.o: zmath.h
 token.o: alloc.h
 token.o: args.h
@@ -5580,6 +5669,7 @@ token.o: str.h
 token.o: token.c
 token.o: token.h
 token.o: value.h
+token.o: version.h
 token.o: zmath.h
 value.o: alloc.h
 value.o: attribute.h
@@ -5617,6 +5707,7 @@ value.o: str.h
 value.o: symbol.h
 value.o: value.c
 value.o: value.h
+value.o: version.h
 value.o: zmath.h
 value.o: zrand.h
 value.o: zrandom.h
@@ -5654,6 +5745,7 @@ version.o: str.h
 version.o: strl.h
 version.o: value.h
 version.o: version.c
+version.o: version.h
 version.o: zmath.h
 zfunc.o: alloc.h
 zfunc.o: attribute.h
@@ -5674,6 +5766,7 @@ zfunc.o: have_stdbool.h
 zfunc.o: have_stdlib.h
 zfunc.o: have_string.h
 zfunc.o: longbits.h
+zfunc.o: version.h
 zfunc.o: zfunc.c
 zfunc.o: zmath.h
 zio.o: alloc.h
@@ -5699,6 +5792,7 @@ zio.o: have_string.h
 zio.o: longbits.h
 zio.o: nametype.h
 zio.o: qmath.h
+zio.o: version.h
 zio.o: zio.c
 zio.o: zmath.h
 zmath.o: alloc.h
@@ -5713,6 +5807,7 @@ zmath.o: errsym.h
 zmath.o: errtbl.h
 zmath.o: have_ban_pragma.h
 zmath.o: have_const.h
+zmath.o: have_inttypes.h
 zmath.o: have_limits.h
 zmath.o: have_memmv.h
 zmath.o: have_newstr.h
@@ -5723,6 +5818,7 @@ zmath.o: have_string.h
 zmath.o: int.h
 zmath.o: longbits.h
 zmath.o: status.chk_c.h
+zmath.o: version.h
 zmath.o: zmath.c
 zmath.o: zmath.h
 zmod.o: alloc.h
@@ -5747,6 +5843,7 @@ zmod.o: have_string.h
 zmod.o: longbits.h
 zmod.o: nametype.h
 zmod.o: qmath.h
+zmod.o: version.h
 zmod.o: zmath.h
 zmod.o: zmod.c
 zmul.o: alloc.h
@@ -5771,6 +5868,7 @@ zmul.o: have_string.h
 zmul.o: longbits.h
 zmul.o: nametype.h
 zmul.o: qmath.h
+zmul.o: version.h
 zmul.o: zmath.h
 zmul.o: zmul.c
 zprime.o: alloc.h
@@ -5803,6 +5901,7 @@ zprime.o: qmath.h
 zprime.o: sha1.h
 zprime.o: str.h
 zprime.o: value.h
+zprime.o: version.h
 zprime.o: zmath.h
 zprime.o: zprime.c
 zprime.o: zrand.h
@@ -5835,6 +5934,7 @@ zrand.o: qmath.h
 zrand.o: sha1.h
 zrand.o: str.h
 zrand.o: value.h
+zrand.o: version.h
 zrand.o: zmath.h
 zrand.o: zrand.c
 zrand.o: zrand.h
@@ -5867,6 +5967,7 @@ zrandom.o: qmath.h
 zrandom.o: sha1.h
 zrandom.o: str.h
 zrandom.o: value.h
+zrandom.o: version.h
 zrandom.o: zmath.h
 zrandom.o: zrandom.c
 zrandom.o: zrandom.h

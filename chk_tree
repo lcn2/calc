@@ -1,0 +1,243 @@
+#!/usr/bin/env bash
+#
+# chk_tree - verify that the source tree and git and Makefiles are in sync
+#
+# This tools is used by "make prep".
+#
+# Copyright (C) 2023 Landon Curt Noll
+#
+# Calc is open software; you can redistribute it and/or modify it under
+# the terms of version 2.1 of the GNU Lesser General Public License
+# as published by the Free Software Foundation.
+#
+# Calc is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
+# Public License for more details.
+#
+# A copy of version 2.1 of the GNU Lesser General Public License is
+# distributed with calc under the filename COPYING-LGPL.  You should have
+# received a copy with calc; if not, write to Free Software Foundation, Inc.
+# 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
+#
+# Under source code control:	2023/10/04 21:04:44
+# File existed as early as:	2023
+#
+# chongo <was here> /\oo/\	http://www.isthe.com/chongo/
+# Share and enjoy!  :-)		http://www.isthe.com/chongo/tech/comp/calc/
+
+# setup
+#
+EXIT_CODE=0
+
+# firewall - verify that the "make distdir" directories exist
+#
+make distdir >/dev/null 2>&1
+status="$?"
+if [[ $status -ne 0 ]]; then
+    echo "$0: ERROR: make distdir exit code: $status" 1>&2
+    EXIT_CODE=10
+    echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+fi
+
+# collect make distdir directory list
+#
+# We ignore make action lines.
+#
+declare -a DISTDIR
+mapfile -t DISTDIR < <(make -s distdir | grep -v '^make\[[0-9]*\]: ' | sort -u)
+
+# collect directories
+#
+# We ignore NOTES because it contains notes that are not part of calc source.
+# We ignore .git and GitHub because they are not part of the calc source tarball.
+#
+declare -a FINDDIR
+mapfile -t FINDDIR < <(find . -type d \
+	! -path './NOTES/*' ! -name NOTES \
+	! -path './.git/*' ! -name .git \
+	! -path './.github/*' ! -name .github | \
+	sed -e 's/^\.\///' | sort -u)
+
+# compare DISTDIR and FINDDIR
+#
+declare -a DIFF_DISTDIR_FINDDIR
+mapfile -t DIFF_DISTDIR_FINDDIR < <(printf '%s\n' "${DISTDIR[@]}" "${FINDDIR[@]}" |
+				    tr ' ' '\n' | sort | uniq -u)
+if [[ ${#DIFF_DISTDIR_FINDDIR[@]} -ne 0 ]]; then
+
+    # report that DISTDIR and FINDDIR differ
+    #
+    echo "$0: ERROR: distdir and find dir differ for critical directories" 1>&2
+    declare -a ONLY_FINDDIR
+    mapfile -t ONLY_FINDDIR < <(printf '%s\n' "${DISTDIR[@]}" "${DISTDIR[@]}" "${FINDDIR[@]}" |
+				tr ' ' '\n' | sort | uniq -u)
+    if [[ ${#ONLY_FINDDIR[@]} -ne 0 ]]; then
+	echo "$0: ERROR: found only in find dir: ${ONLY_FINDDIR[*]}" 1>&2
+    fi
+    declare -a ONLY_DISTDIR
+    mapfile -t ONLY_DISTDIR < <(printf '%s\n' "${FINDDIR[@]}" "${FINDDIR[@]}" "${DISTDIR[@]}" |
+				tr ' ' '\n' | sort | uniq -u)
+    if [[ ${#ONLY_DISTDIR[@]} -ne 0 ]]; then
+	echo "$0: ERROR: found only in distdir: ${ONLY_DISTDIR[*]}" 1>&2
+    fi
+    EXIT_CODE=11
+    echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+fi
+
+# firewall - verify that the "make distlist" files exist
+#
+make distlist >/dev/null 2>&1
+status="$?"
+if [[ $status -ne 0 ]]; then
+    echo "$0: ERROR: make distlist exit code: $status" 1>&2
+    EXIT_CODE=12
+    echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+fi
+
+# collect make distlist file list
+#
+declare -a DISTLIST
+mapfile -t DISTLIST < <(make -s distlist | grep -v '^make\[[0-9]*\]: ' | sort -u)
+declare -A DISTLIST_A
+for i in "${DISTLIST[@]}"; do
+    DISTLIST_A["$i"]="$i"
+done
+
+# case: under git control
+#
+if [[ -d .git ]]; then
+
+    # obtain the list of files under git
+    #
+    # We ignore .git and GitHub related files because they are not part of the calc source tarball.
+    #
+    declare -a GITLS
+    mapfile -t GITLS < <(git ls |
+	grep -v -E '^\.github/|^\.gitignore$|^CODE_OF_CONDUCT\.md$|^CONTRIBUTING\.md$|^SECURITY\.md$' |
+	sort -u)
+
+    # compare DISTLIST and GITLS
+    #
+    declare -a DIFF_DISTLIST_GITLS
+    mapfile -t DIFF_DISTLIST_GITLS < <(printf '%s\n' "${DISTLIST[@]}" "${GITLS[@]}" |
+				       tr ' ' '\n' | sort | uniq -u)
+    if [[ ${#DIFF_DISTLIST_GITLS[@]} -ne 0 ]]; then
+
+	# report that DISTLIST and GITLS differ
+	#
+	echo "$0: ERROR: distlist and git ls differ for critical files" 1>&2
+	declare -a ONLY_GITLS
+	mapfile -t ONLY_GITLS < <(printf '%s\n' "${DISTLIST[@]}" "${DISTLIST[@]}" "${GITLS[@]}" |
+				  tr ' ' '\n' | sort | uniq -u)
+	if [[ ${#ONLY_GITLS[@]} -ne 0 ]]; then
+	    echo "$0: ERROR: found only in git ls: ${ONLY_GITLS[*]}" 1>&2
+	fi
+	declare -a ONLY_DISTLIST
+	mapfile -t ONLY_DISTLIST < <(printf '%s\n' "${GITLS[@]}" "${GITLS[@]}" "${DISTLIST[@]}" |
+				     tr ' ' '\n' | sort | uniq -u)
+	if [[ ${#ONLY_DISTLIST[@]} -ne 0 ]]; then
+	    echo "$0: ERROR: found only in distlist: ${ONLY_DISTLIST[*]}" 1>&2
+	fi
+	EXIT_CODE=13
+	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+    fi
+fi
+
+# collect make buildlist file list
+#
+declare -a BUILDLIST
+mapfile -t BUILDLIST < <(make -s buildlist | grep -v '^make\[[0-9]*\]: ' | sort -u)
+declare -A BUILDLIST_A
+for i in "${BUILDLIST[@]}"; do
+    BUILDLIST_A["$i"]="$i"
+done
+
+# look for something in DISTLIST that is also in BUILDLIST
+#
+# The BUILDLIST are a set of files that are result of building calc
+# and thus should NOT be part of the DISTLIST (list of files used
+# to form the calc source distribtion).
+#
+declare -a DISTLIST_ALSO_IN_BUILDLIST
+mapfile -t DISTLIST_ALSO_IN_BUILDLIST < <(
+    for i in "${DISTLIST_A[@]}"; do
+	if [[ -n "${BUILDLIST_A[$i]}" ]]; then
+	    echo "$i";
+	fi
+    done
+)
+if [[ ${#DISTLIST_ALSO_IN_BUILDLIST[@]} -ne 0 ]]; then
+
+    # report that something in DISTLIST was found in BUILDLIST
+    #
+    echo "$0: ERROR: distlist files found in buildlist" 1>&2
+    echo "$0: ERROR: distlist files found in buildlist: ${DISTLIST_ALSO_IN_BUILDLIST[*]}" 1>&2
+    EXIT_CODE=14
+    echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+fi
+
+# collect list of files
+#
+# We ignore NOTES because it contains notes that are not part of calc source.
+# We ignore .git and GitHub because they are not part of the calc source tarball.
+# We ignore .*.swp files as they are a result of vim sessions.
+# We ignore *.out files as they are used to collect information.
+# We ignore single letter files as they are used for temporary files.
+#
+declare -a FINDFILE
+mapfile -t FINDFILE < <(find . -type f \
+	! -path './NOTES/*' ! -name NOTES \
+	! -path './.git/*' ! -name .git \
+	! -path './.github/*' ! -name .github \
+	! -name 'CODE_OF_CONDUCT.md' ! -name 'CONTRIBUTING.md' ! -name '.gitignore' ! -name 'SECURITY.md'  \
+	! -name '*.swp' ! -name '*.out' ! -name '?' |
+	sed -e 's/^\.\///' | sort -u)
+
+# look for something in FINDFILE that in neither DISTLIST nor BUILDLIST
+#
+# We look for a file that is neither a file that neither a result of building calc,
+# nor part of the calc distribution list in a file list.
+#
+# NOTE that the file list has already excluded certain files (see previous section).
+#
+# We flag any file in the list that is neither a result of building calc,
+# nor part of the calc distribution list in a file list.
+#
+declare -a UNKNOWN_FILE
+mapfile -t UNKNOWN_FILE < <(
+    for i in "${FINDFILE[@]}"; do
+
+	# skip if this is a file that is result of building calc
+	#
+	if [[ -n ${BUILDLIST_A["$i"]} ]]; then
+	    continue
+	fi
+
+	# skip if this is a file that is calc distribution list
+	#
+	if [[ -n ${DISTLIST_A["$i"]} ]]; then
+	    continue
+	fi
+
+	# print the file of unknown status
+	#
+	echo "$i"
+    done
+)
+if [[ ${#UNKNOWN_FILE[@]} -ne 0 ]]; then
+
+    # report that something in DISTLIST was found in BUILDLIST
+    #
+    echo "$0: ERROR: files that are neither built nor distlist are found" 1>&2
+    echo "$0: ERROR: distlist files found in buildlist: ${UNKNOWN_FILE[*]}" 1>&2
+    EXIT_CODE=15
+    echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+fi
+
+# All Done!!! -- Jessica Noll, Age 2
+#
+if [[ $EXIT_CODE -ne 0 ]]; then
+    echo "$0: Warning: about to exit $EXIT_CODE" 1>&2
+fi
+exit "$EXIT_CODE"

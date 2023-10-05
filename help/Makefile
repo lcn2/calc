@@ -254,10 +254,18 @@ DISTLIST= ${STD_HELP_FILES} ${DETAIL_HELP} ${MAKE_FILE} \
 # These files are used to make (but not built) a calc .a link library
 #
 CALCLIBLIST=
+
+# complete list of files that may be created as part of the build process
 #
+# Used by chk_tree via make prep
+#
+BUILD_ALL= ${BLT_HELP_FILES} ${SINGULAR_FILES} ${DETAIL_CLONE} \
+	   full funclist${EXT} funclist.c funclist.o
+
 # rules that are not also names of files
 #
-PHONY= all clobber distlist install
+PHONY= all distlist buildlist distdir calcliblist detail_help_list \
+	echo_inst_files clean clobber install uninstall
 
 
 ############################################################
@@ -278,6 +286,8 @@ all: ${FULL_HELP_FILES} full ${DETAIL_HELP} ${DETAIL_CLONE} \
 # additional Makefile targets #
 ###############################
 
+.PHONY: ${PHONY}
+
 # used by the upper level Makefile to determine of we have done all
 #
 # NOTE: Due to bogus shells found on one common system we must have
@@ -286,8 +296,6 @@ all: ${FULL_HELP_FILES} full ${DETAIL_HELP} ${DETAIL_CLONE} \
 .all:
 	${RM} -f .all
 	${TOUCH} .all
-
-.PHONY: ${PHONY}
 
 bindings: ../cal/bindings
 	${RM} -f $@
@@ -614,6 +622,13 @@ builtin: builtin.top builtin.end ../func.c funclist.sed
 
 distlist: ${DISTLIST}
 	${Q} for i in ${DISTLIST} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo help/$$i; \
+	    fi; \
+	done | fgrep -v '.bak' | LANG=C ${SORT}
+
+buildlist:
+	${Q} for i in ${BUILD_ALL} /dev/null; do \
 	    if [ X"$$i" != X"/dev/null" ]; then \
 		echo help/$$i; \
 	    fi; \

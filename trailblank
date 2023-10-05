@@ -53,7 +53,7 @@ LEADING_SPACES_BEFORE_TAB=$(
 	      -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
 	      -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
 	      -name 'sample_many-static' -o -name 'sample_rand-static' -o \
-	      -name 'codeql-analysis.yml' -o -name tags -o -name debug.out \
+	      -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' \
 	   \) -prune -o -type f -print0 | \
     xargs -0 egrep -l '^	*  *	'
 )
@@ -84,7 +84,7 @@ TRAILING_WHITESPACE=$(
 	      -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
 	      -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
 	      -name 'sample_many-static' -o -name 'sample_rand-static' -o \
-	      -name 'codeql-analysis.yml' -o -name tags -o -name debug.out \
+	      -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' \
 	   \) -prune -o -type f -print0 | \
     xargs -0 egrep -l '[	 ]$'
 )
@@ -154,7 +154,7 @@ PICKY_PHASE_1=$(
 	      -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
 	      -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
 	      -name 'sample_many-static' -o -name 'sample_rand-static' -o \
-	      -name 'codeql-analysis.yml' -o -name tags -o -name debug.out -o \
+	      -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' -o \
 	      -name '.gitignore' -o -name 'README.md' -o -name '.lldbinit' \
 	   \) -prune -o -type f -print0 | \
     if [[ -x /usr/local/bin/picky ]]; then

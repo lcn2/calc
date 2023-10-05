@@ -142,6 +142,12 @@ DISTLIST= ${SCRIPT_SRC} ${MAKE_FILE} README.src
 #
 CALCLIBLIST=
 
+# complete list of files that may be created as part of the build process
+#
+# Used by chk_tree via make prep
+#
+BUILD_ALL= ${SCRIPT} README
+
 # complete list of targets
 #
 # NOTE: This list MUST be coordinated with the ${CSCRIPT_TARGETS} variable
@@ -149,10 +155,11 @@ CALCLIBLIST=
 #
 CSCRIPT_TARGETS= ${SCRIPT}
 TARGETS= ${CSCRIPT_TARGETS} README
-#
+
 # rules that are not also names of files
 #
-PHONY= all clobber distlist install
+PHONY= all distlist buildlist distdir calcliblist detaillist depend \
+	echo_inst_files clean clobber install uninstall
 
 
 ############################################################
@@ -205,6 +212,13 @@ distlist: ${DISTLIST}
 		echo cscript/$$i; \
 	    fi; \
 	done | LANG=C ${SORT}
+
+buildlist:
+	${Q} for i in ${BUILD_ALL} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo cscript/$$i; \
+	    fi; \
+	done | fgrep -v '.bak' | LANG=C ${SORT}
 
 distdir:
 	${Q} echo cscript

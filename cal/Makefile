@@ -159,10 +159,11 @@ DISTLIST= ${CALC_FILES} ${MAKE_FILE}
 # These files are used to make (but not built) a calc .a link library
 #
 CALCLIBLIST=
-#
+
 # rules that are not also names of files
 #
-PHONY= all clobber distlist install
+PHONY= all distlist buildlist distdir calcliblist calc_files_list echo_inst_files \
+	clean clobber install uninstall
 
 
 ############################################################
@@ -182,13 +183,13 @@ all: ${CALC_FILES} ${MAKE_FILE} .all
 # additional Makefile targets #
 ###############################
 
+.PHONY: ${PHONY}
+
 # used by the upper level Makefile to determine of we have done all
 #
 .all:
 	${RM} -f .all
 	${TOUCH} .all
-
-.PHONY: ${PHONY}
 
 ##
 #
@@ -209,6 +210,13 @@ distlist: ${DISTLIST}
 		echo cal/$$i; \
 	    fi; \
 	done
+
+buildlist:
+	${Q} for i in ${BUILD_ALL} /dev/null; do \
+	    if [ X"$$i" != X"/dev/null" ]; then \
+		echo cal/$$i; \
+	    fi; \
+	done | fgrep -v '.bak' | LANG=C ${SORT}
 
 distdir:
 	${Q} echo cal
