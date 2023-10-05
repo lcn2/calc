@@ -50,6 +50,17 @@
 ###################################################################
 
 ####
+#
+# Force calc to install under /usr/local
+#
+# BINDIR:= /usr/local/bin
+# LIBDIR:= /usr/local/lib
+# CALC_SHAREDIR:= /usr/local/share/calc
+# CALC_INCDIR:= /usr/local/include/calc
+#
+####
+
+####
 # RHEL Diagnosing memory, thread, and crash issues:
 #
 # For more info see: https://github.com/google/sanitizers/wiki/AddressSanitizer
