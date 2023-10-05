@@ -855,7 +855,7 @@ is_e_digits(CONST char *errsym)
 	 * check for only digits remaining
 	 */
 	for (p = errsym+2; *p != '\0'; ++p) {
-		if (!isascii(*p) || !isdigit(*p)) {
+		if (!isascii((int)*p) || !isdigit((int)*p)) {
 			return false;
 		}
 	}
@@ -1090,7 +1090,7 @@ is_e_1string(CONST char *errsym)
 	 * must match regular expression: ^E_[A-Z][A-Z0-9_]+$
 	 */
 	for (p = errsym+3; *p != '\0'; ++p) {
-		if (!isascii(*p) || !(isupper(*p) || isdigit(*p) || *p == '_')) {
+		if (!isascii((int)*p) || !(isupper((int)*p) || isdigit((int)*p) || *p == '_')) {
 			return false;
 		}
 	}
@@ -2183,8 +2183,8 @@ print_errsym(void)
 int
 main(int argc, char *argv[])
 {
-	extern char *optarg;		/* argv index of the next arg */
-	extern int optind;		/* argv index of the next arg */
+	EXTERN char *optarg;		/* argv index of the next arg */
+	EXTERN int optind;		/* argv index of the next arg */
 	int e_flag = 0;			/* 1 ==> -e flag was used */
 	int d_flag = 0;			/* 1 ==> -s flag was used */
 	int i;
