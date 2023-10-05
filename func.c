@@ -2577,7 +2577,7 @@ f_logn(int count, VALUE **vals)
 			if (p_cval == NULL) {
 				return error_value(E_LOGN_3);
 			}
-			/* check if division is COMPLEX or NUMBER */
+			/* check for COMPLEX or NUMBER division */
 			if (cisreal(p_cval)) {
 				/* ln(x) / ln(n) was NUMBER, not COMPLEX */
 				result.v_num = c_to_q(p_cval, true);
@@ -2597,7 +2597,7 @@ f_logn(int count, VALUE **vals)
 			if (p_cval == NULL) {
 				return error_value(E_LOGN_3);
 			}
-			/* check if division is COMPLEX or NUMBER */
+			/* check for COMPLEX or NUMBER division */
 			if (cisreal(p_cval)) {
 				/* ln(x) / ln(n) was NUMBER, not COMPLEX */
 				result.v_num = c_to_q(p_cval, true);
@@ -2623,13 +2623,13 @@ f_logn(int count, VALUE **vals)
 			if (p_cval == NULL) {
 				return error_value(E_LOGN_3);
 			}
-			/* check if division is COMPLEX or NUMBER */
+			/* check for COMPLEX or NUMBER division */
 			if (cisreal(p_cval)) {
 				/* ln(x) / ln(n) was NUMBER, not COMPLEX */
 				result.v_num = c_to_q(p_cval, true);
 				result.v_type = V_NUM;
 			} else {
-				/* ln(x) / ln(n) is COMPLEX */
+				/* ln(x) / ln(n) is COMPLEX result */
 				result.v_type = V_COM;
 				result.v_com = p_cval;
 			}
@@ -2643,7 +2643,7 @@ f_logn(int count, VALUE **vals)
 			if (result.v_com == NULL) {
 				return error_value(E_LOGN_3);
 			}
-			/* ln(x) / ln(n) is NUMBER */
+			/* ln(x) / ln(n) is NUMBER result */
 			result.v_type = V_NUM;
 		}
 	}
