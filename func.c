@@ -2479,6 +2479,7 @@ f_logn(int count, VALUE **vals)
 				ln_of_x_is_complex = true;
 			}
 		} else {
+			ln_x_c = NULL;	/* avoid ln_x_c may be uninitialized warning later on */
 			ln_x_r = qln(vals[0]->v_num, err);
 			if (ln_x_r == NULL) {
 				return error_value(E_LOGN_3);
@@ -2512,6 +2513,11 @@ f_logn(int count, VALUE **vals)
 	switch (vals[1]->v_type) {
 	case V_NUM:
 		if (qiszero(vals[1]->v_num)) {
+			if (ln_of_x_is_complex == true) {
+				comfree(ln_x_c);
+			} else {
+				qfree(ln_x_r);
+			}
 			return error_value(E_LOGN_4);
 		}
 		if (qisneg(vals[1]->v_num)) {
@@ -2520,10 +2526,20 @@ f_logn(int count, VALUE **vals)
 			ctmp.links = 1;
 			ln_n_c = c_ln(&ctmp, err);
 			if (ln_n_c == NULL) {
+				if (ln_of_x_is_complex == true) {
+					comfree(ln_x_c);
+				} else {
+					qfree(ln_x_r);
+				}
 				return error_value(E_LOGN_4);
 			}
 			if (ciszero(ln_n_c)) {
 				comfree(ln_n_c);
+				if (ln_of_x_is_complex == true) {
+					comfree(ln_x_c);
+				} else {
+					qfree(ln_x_r);
+				}
 				return error_value(E_LOGN_4);
 			}
 			if (cisreal(ln_n_c)) {
@@ -2534,24 +2550,49 @@ f_logn(int count, VALUE **vals)
 		} else {
 			ln_n_r = qln(vals[1]->v_num, err);
 			if (ln_n_r == NULL) {
+				if (ln_of_x_is_complex == true) {
+					comfree(ln_x_c);
+				} else {
+					qfree(ln_x_r);
+				}
 				return error_value(E_LOGN_4);
 			}
 			if (qiszero(ln_n_r)) {
 				qfree(ln_n_r);
+				if (ln_of_x_is_complex == true) {
+					comfree(ln_x_c);
+				} else {
+					qfree(ln_x_r);
+				}
 				return error_value(E_LOGN_4);
 			}
 		}
 		break;
 	case V_COM:
 		if (ciszero(vals[1]->v_com)) {
+			if (ln_of_x_is_complex == true) {
+				comfree(ln_x_c);
+			} else {
+				qfree(ln_x_r);
+			}
 			return error_value(E_LOGN_4);
 		}
 		ln_n_c = c_ln(vals[1]->v_com, err);
 		if (ln_n_c == NULL) {
+			if (ln_of_x_is_complex == true) {
+				comfree(ln_x_c);
+			} else {
+				qfree(ln_x_r);
+			}
 			return error_value(E_LOGN_4);
 		}
 		if (ciszero(ln_n_c)) {
 			comfree(ln_n_c);
+			if (ln_of_x_is_complex == true) {
+				comfree(ln_x_c);
+			} else {
+				qfree(ln_x_r);
+			}
 			return error_value(E_LOGN_4);
 		}
 		if (cisreal(ln_n_c)) {
@@ -2561,6 +2602,11 @@ f_logn(int count, VALUE **vals)
 		}
 		break;
 	default:
+		if (ln_of_x_is_complex == true) {
+			comfree(ln_x_c);
+		} else {
+			qfree(ln_x_r);
+		}
 		return error_value(E_LOGN_5);
 	}
 
@@ -2574,6 +2620,8 @@ f_logn(int count, VALUE **vals)
 			 * case: ln(x) is COMPLEX, ln(n) is COMPLEX
 			 */
 			p_cval = c_div(ln_x_c, ln_n_c);
+			comfree(ln_x_c);
+			comfree(ln_n_c);
 			if (p_cval == NULL) {
 				return error_value(E_LOGN_3);
 			}
@@ -2594,6 +2642,8 @@ f_logn(int count, VALUE **vals)
 			 * case: ln(x) is COMPLEX, ln(n) is NUMBER
 			 */
 			p_cval = c_divq(ln_x_c, ln_n_r);
+			comfree(ln_x_c);
+			qfree(ln_n_r);
 			if (p_cval == NULL) {
 				return error_value(E_LOGN_3);
 			}
@@ -2620,6 +2670,8 @@ f_logn(int count, VALUE **vals)
 			ctmp.imag = qlink(&_qzero_);
 			ctmp.links = 1;
 			p_cval = c_div(&ctmp, ln_n_c);
+			comfree(&ctmp);
+			comfree(ln_n_c);
 			if (p_cval == NULL) {
 				return error_value(E_LOGN_3);
 			}
@@ -2640,6 +2692,8 @@ f_logn(int count, VALUE **vals)
 			 * case: ln(x) is NUMBER, ln(n) is NUMBER
 			 */
 			result.v_num = qqdiv(ln_x_r, ln_n_r);
+			qfree(ln_x_r);
+			qfree(ln_n_r);
 			if (result.v_com == NULL) {
 				return error_value(E_LOGN_3);
 			}
