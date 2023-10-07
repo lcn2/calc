@@ -143,21 +143,21 @@ if [[ -d .git ]]; then
 	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 
-    # verify that there are no uncommitted changes under git
+    # verify that there are no staged uncommitted changes under git
     #
     GIT_STATUS=$(git status --untracked-files=no --porcelain 2>&1)
-    if [[ -n $GIT_STATUS ]] || ! diff --quiet --exit-code; then
-	echo "$0: ERROR: there are unstaged changes" 1>&2
-	git status --untracked-files=no --porcelain --short
+    if [[ -n $GIT_STATUS ]] || ! git diff --cached --quiet --exit-code; then
+	echo "$0: ERROR: there are staged uncommitted changes" 1>&2
+	git status --short
 	EXIT_CODE=14
 	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 
-    # verify that there are no staged uncommitted changes under git
+    # verify that there are no uncommitted changes under git
     #
-    if ! git diff --cached --quiet --exit-code; then
-	echo "$0: ERROR: there are staged uncommitted changes" 1>&2
-	git status --short
+    if ! git diff --quiet --exit-code; then
+	echo "$0: ERROR: there are unstaged changes" 1>&2
+	git status --untracked-files=no --porcelain --short
 	EXIT_CODE=15
 	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
