@@ -11,7 +11,9 @@ The following are the changes from calc version 2.15.0.2 to date:
     macOS 14.0 that, when uncommented and calc is recompiled (i.e.,
     make clobber all) will enable the Address Sanitizer (ASAN) for calc.
 
-    Fixed a memory leak in the logn builtin function.
+    Fixed memory leaks in the logn, aversin, acoversin, avercos,
+    acovercos, ahaversin, ahavercos, ahacovercos, aexsec,
+    aexcsc, and acrd.
 
 
 The following are the changes from calc version 2.14.3.5 to 2.15.0.1:

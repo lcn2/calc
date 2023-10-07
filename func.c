@@ -10954,7 +10954,6 @@ f_versin(int count, VALUE **vals)
 S_FUNC VALUE
 f_aversin(int count, VALUE **vals)
 {
-	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
 	VALUE result;		/* value to return */
 	COMPLEX *c;		/* COMPLEX trig result */
 	NUMBER *eps;		/* epsilon error tolerance */
@@ -10978,11 +10977,10 @@ f_aversin(int count, VALUE **vals)
 	/*
 	 * compute inverse versed trigonometric sine to a given error tolerance
 	 */
-	arg1 = *vals[0];
-	if (arg1.v_type == V_NUM) {
+	if (vals[0]->v_type == V_NUM) {
 
 		/* try to compute result using real trig function */
-		result.v_num = qaversin_or_NULL(arg1.v_num, eps);
+		result.v_num = qaversin_or_NULL(vals[0]->v_num, eps);
 
 		/*
 		 * case: trig function returned a NUMBER
@@ -10995,17 +10993,17 @@ f_aversin(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
-			arg1.v_type = V_COM;
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
+			vals[0]->v_type = V_COM;
 		}
 	}
-	if (arg1.v_type == V_COM) {
+	if (vals[0]->v_type == V_COM) {
 
 		/*
 		 * case: argument was COMPLEX or
 		 *	 trig function returned NULL and argument was converted to COMPLEX
 		 */
-		c = c_aversin(arg1.v_com, eps);
+		c = c_aversin(vals[0]->v_com, eps);
 		if (c == NULL) {
 			return error_value(E_AVERSIN_3);
 		}
@@ -11020,7 +11018,7 @@ f_aversin(int count, VALUE **vals)
 			result.v_type = V_NUM;
 		}
 	}
-	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
 
 		/*
 		 * case: argument type is not valid for this function
@@ -11094,7 +11092,6 @@ f_coversin(int count, VALUE **vals)
 S_FUNC VALUE
 f_acoversin(int count, VALUE **vals)
 {
-	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
 	VALUE result;		/* value to return */
 	COMPLEX *c;		/* COMPLEX trig result */
 	NUMBER *eps;		/* epsilon error tolerance */
@@ -11118,11 +11115,10 @@ f_acoversin(int count, VALUE **vals)
 	/*
 	 * compute inverse coversed trigonometric sine to a given error tolerance
 	 */
-	arg1 = *vals[0];
-	if (arg1.v_type == V_NUM) {
+	if (vals[0]->v_type == V_NUM) {
 
 		/* try to compute result using real trig function */
-		result.v_num = qacoversin_or_NULL(arg1.v_num, eps);
+		result.v_num = qacoversin_or_NULL(vals[0]->v_num, eps);
 
 		/*
 		 * case: trig function returned a NUMBER
@@ -11135,17 +11131,17 @@ f_acoversin(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
-			arg1.v_type = V_COM;
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
+			vals[0]->v_type = V_COM;
 		}
 	}
-	if (arg1.v_type == V_COM) {
+	if (vals[0]->v_type == V_COM) {
 
 		/*
 		 * case: argument was COMPLEX or
 		 *	 trig function returned NULL and argument was converted to COMPLEX
 		 */
-		c = c_acoversin(arg1.v_com, eps);
+		c = c_acoversin(vals[0]->v_com, eps);
 		if (c == NULL) {
 			return error_value(E_ACOVERSIN_3);
 		}
@@ -11160,7 +11156,7 @@ f_acoversin(int count, VALUE **vals)
 			result.v_type = V_NUM;
 		}
 	}
-	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
 
 		/*
 		 * case: argument type is not valid for this function
@@ -11234,7 +11230,6 @@ f_vercos(int count, VALUE **vals)
 S_FUNC VALUE
 f_avercos(int count, VALUE **vals)
 {
-	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
 	VALUE result;		/* value to return */
 	COMPLEX *c;		/* COMPLEX trig result */
 	NUMBER *eps;		/* epsilon error tolerance */
@@ -11258,11 +11253,10 @@ f_avercos(int count, VALUE **vals)
 	/*
 	 * compute inverse versed trigonometric cosine to a given error tolerance
 	 */
-	arg1 = *vals[0];
-	if (arg1.v_type == V_NUM) {
+	if (vals[0]->v_type == V_NUM) {
 
 		/* try to compute result using real trig function */
-		result.v_num = qavercos_or_NULL(arg1.v_num, eps);
+		result.v_num = qavercos_or_NULL(vals[0]->v_num, eps);
 
 		/*
 		 * case: trig function returned a NUMBER
@@ -11275,17 +11269,17 @@ f_avercos(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
-			arg1.v_type = V_COM;
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
+			vals[0]->v_type = V_COM;
 		}
 	}
-	if (arg1.v_type == V_COM) {
+	if (vals[0]->v_type == V_COM) {
 
 		/*
 		 * case: argument was COMPLEX or
 		 *	 trig function returned NULL and argument was converted to COMPLEX
 		 */
-		c = c_avercos(arg1.v_com, eps);
+		c = c_avercos(vals[0]->v_com, eps);
 		if (c == NULL) {
 			return error_value(E_AVERCOS_3);
 		}
@@ -11300,7 +11294,7 @@ f_avercos(int count, VALUE **vals)
 			result.v_type = V_NUM;
 		}
 	}
-	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
 
 		/*
 		 * case: argument type is not valid for this function
@@ -11374,7 +11368,6 @@ f_covercos(int count, VALUE **vals)
 S_FUNC VALUE
 f_acovercos(int count, VALUE **vals)
 {
-	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
 	VALUE result;		/* value to return */
 	COMPLEX *c;		/* COMPLEX trig result */
 	NUMBER *eps;		/* epsilon error tolerance */
@@ -11398,11 +11391,10 @@ f_acovercos(int count, VALUE **vals)
 	/*
 	 * compute inverse coversed trigonometric cosine to a given error tolerance
 	 */
-	arg1 = *vals[0];
-	if (arg1.v_type == V_NUM) {
+	if (vals[0]->v_type == V_NUM) {
 
 		/* try to compute result using real trig function */
-		result.v_num = qacovercos_or_NULL(arg1.v_num, eps);
+		result.v_num = qacovercos_or_NULL(vals[0]->v_num, eps);
 
 		/*
 		 * case: trig function returned a NUMBER
@@ -11415,17 +11407,17 @@ f_acovercos(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
-			arg1.v_type = V_COM;
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
+			vals[0]->v_type = V_COM;
 		}
 	}
-	if (arg1.v_type == V_COM) {
+	if (vals[0]->v_type == V_COM) {
 
 		/*
 		 * case: argument was COMPLEX or
 		 *	 trig function returned NULL and argument was converted to COMPLEX
 		 */
-		c = c_acovercos(arg1.v_com, eps);
+		c = c_acovercos(vals[0]->v_com, eps);
 		if (c == NULL) {
 			return error_value(E_ACOVERCOS_3);
 		}
@@ -11440,7 +11432,7 @@ f_acovercos(int count, VALUE **vals)
 			result.v_type = V_NUM;
 		}
 	}
-	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
 
 		/*
 		 * case: argument type is not valid for this function
@@ -11514,7 +11506,6 @@ f_haversin(int count, VALUE **vals)
 S_FUNC VALUE
 f_ahaversin(int count, VALUE **vals)
 {
-	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
 	VALUE result;		/* value to return */
 	COMPLEX *c;		/* COMPLEX trig result */
 	NUMBER *eps;		/* epsilon error tolerance */
@@ -11538,11 +11529,10 @@ f_ahaversin(int count, VALUE **vals)
 	/*
 	 * compute inverse half versed trigonometric sine to a given error tolerance
 	 */
-	arg1 = *vals[0];
-	if (arg1.v_type == V_NUM) {
+	if (vals[0]->v_type == V_NUM) {
 
 		/* try to compute result using real trig function */
-		result.v_num = qahaversin_or_NULL(arg1.v_num, eps);
+		result.v_num = qahaversin_or_NULL(vals[0]->v_num, eps);
 
 		/*
 		 * case: trig function returned a NUMBER
@@ -11555,17 +11545,17 @@ f_ahaversin(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
-			arg1.v_type = V_COM;
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
+			vals[0]->v_type = V_COM;
 		}
 	}
-	if (arg1.v_type == V_COM) {
+	if (vals[0]->v_type == V_COM) {
 
 		/*
 		 * case: argument was COMPLEX or
 		 *	 trig function returned NULL and argument was converted to COMPLEX
 		 */
-		c = c_ahaversin(arg1.v_com, eps);
+		c = c_ahaversin(vals[0]->v_com, eps);
 		if (c == NULL) {
 			return error_value(E_AHAVERSIN_3);
 		}
@@ -11580,7 +11570,7 @@ f_ahaversin(int count, VALUE **vals)
 			result.v_type = V_NUM;
 		}
 	}
-	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
 
 		/*
 		 * case: argument type is not valid for this function
@@ -11654,7 +11644,6 @@ f_hacoversin(int count, VALUE **vals)
 S_FUNC VALUE
 f_ahacoversin(int count, VALUE **vals)
 {
-	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
 	VALUE result;		/* value to return */
 	COMPLEX *c;		/* COMPLEX trig result */
 	NUMBER *eps;		/* epsilon error tolerance */
@@ -11678,11 +11667,10 @@ f_ahacoversin(int count, VALUE **vals)
 	/*
 	 * compute inverse half coversed trigonometric sine to a given error tolerance
 	 */
-	arg1 = *vals[0];
-	if (arg1.v_type == V_NUM) {
+	if (vals[0]->v_type == V_NUM) {
 
 		/* try to compute result using real trig function */
-		result.v_num = qahacoversin_or_NULL(arg1.v_num, eps);
+		result.v_num = qahacoversin_or_NULL(vals[0]->v_num, eps);
 
 		/*
 		 * case: trig function returned a NUMBER
@@ -11695,17 +11683,17 @@ f_ahacoversin(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
-			arg1.v_type = V_COM;
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
+			vals[0]->v_type = V_COM;
 		}
 	}
-	if (arg1.v_type == V_COM) {
+	if (vals[0]->v_type == V_COM) {
 
 		/*
 		 * case: argument was COMPLEX or
 		 *	 trig function returned NULL and argument was converted to COMPLEX
 		 */
-		c = c_ahacoversin(arg1.v_com, eps);
+		c = c_ahacoversin(vals[0]->v_com, eps);
 		if (c == NULL) {
 			return error_value(E_AHACOVERSIN_3);
 		}
@@ -11720,7 +11708,7 @@ f_ahacoversin(int count, VALUE **vals)
 			result.v_type = V_NUM;
 		}
 	}
-	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
 
 		/*
 		 * case: argument type is not valid for this function
@@ -11794,7 +11782,6 @@ f_havercos(int count, VALUE **vals)
 S_FUNC VALUE
 f_ahavercos(int count, VALUE **vals)
 {
-	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
 	VALUE result;		/* value to return */
 	COMPLEX *c;		/* COMPLEX trig result */
 	NUMBER *eps;		/* epsilon error tolerance */
@@ -11818,11 +11805,10 @@ f_ahavercos(int count, VALUE **vals)
 	/*
 	 * compute inverse half versed trigonometric cosine to a given error tolerance
 	 */
-	arg1 = *vals[0];
-	if (arg1.v_type == V_NUM) {
+	if (vals[0]->v_type == V_NUM) {
 
 		/* try to compute result using real trig function */
-		result.v_num = qahavercos_or_NULL(arg1.v_num, eps);
+		result.v_num = qahavercos_or_NULL(vals[0]->v_num, eps);
 
 		/*
 		 * case: trig function returned a NUMBER
@@ -11835,17 +11821,17 @@ f_ahavercos(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
-			arg1.v_type = V_COM;
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
+			vals[0]->v_type = V_COM;
 		}
 	}
-	if (arg1.v_type == V_COM) {
+	if (vals[0]->v_type == V_COM) {
 
 		/*
 		 * case: argument was COMPLEX or
 		 *	 trig function returned NULL and argument was converted to COMPLEX
 		 */
-		c = c_ahavercos(arg1.v_com, eps);
+		c = c_ahavercos(vals[0]->v_com, eps);
 		if (c == NULL) {
 			return error_value(E_AHAVERCOS_3);
 		}
@@ -11860,7 +11846,7 @@ f_ahavercos(int count, VALUE **vals)
 			result.v_type = V_NUM;
 		}
 	}
-	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
 
 		/*
 		 * case: argument type is not valid for this function
@@ -11934,7 +11920,6 @@ f_hacovercos(int count, VALUE **vals)
 S_FUNC VALUE
 f_ahacovercos(int count, VALUE **vals)
 {
-	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
 	VALUE result;		/* value to return */
 	COMPLEX *c;		/* COMPLEX trig result */
 	NUMBER *eps;		/* epsilon error tolerance */
@@ -11958,11 +11943,10 @@ f_ahacovercos(int count, VALUE **vals)
 	/*
 	 * compute inverse half coversed trigonometric cosine to a given error tolerance
 	 */
-	arg1 = *vals[0];
-	if (arg1.v_type == V_NUM) {
+	if (vals[0]->v_type == V_NUM) {
 
 		/* try to compute result using real trig function */
-		result.v_num = qahacovercos_or_NULL(arg1.v_num, eps);
+		result.v_num = qahacovercos_or_NULL(vals[0]->v_num, eps);
 
 		/*
 		 * case: trig function returned a NUMBER
@@ -11975,17 +11959,17 @@ f_ahacovercos(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
-			arg1.v_type = V_COM;
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
+			vals[0]->v_type = V_COM;
 		}
 	}
-	if (arg1.v_type == V_COM) {
+	if (vals[0]->v_type == V_COM) {
 
 		/*
 		 * case: argument was COMPLEX or
 		 *	 trig function returned NULL and argument was converted to COMPLEX
 		 */
-		c = c_ahacovercos(arg1.v_com, eps);
+		c = c_ahacovercos(vals[0]->v_com, eps);
 		if (c == NULL) {
 			return error_value(E_AHACOVERCOS_3);
 		}
@@ -12000,7 +11984,7 @@ f_ahacovercos(int count, VALUE **vals)
 			result.v_type = V_NUM;
 		}
 	}
-	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
 
 		/*
 		 * case: argument type is not valid for this function
@@ -12070,7 +12054,6 @@ f_exsec(int count, VALUE **vals)
 S_FUNC VALUE
 f_aexsec(int count, VALUE **vals)
 {
-	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
 	VALUE result;		/* value to return */
 	COMPLEX *c;		/* COMPLEX trig result */
 	NUMBER *eps;		/* epsilon error tolerance */
@@ -12094,16 +12077,15 @@ f_aexsec(int count, VALUE **vals)
 	/*
 	 * compute inverse exterior trigonometric secant to a given error tolerance
 	 */
-	arg1 = *vals[0];
-	if (arg1.v_type == V_NUM) {
+	if (vals[0]->v_type == V_NUM) {
 
 		/* firewall */
-		if (qisnegone(arg1.v_num)) {
+		if (qisnegone(vals[0]->v_num)) {
 			return error_value(E_AEXSEC_3);
 		}
 
 		/* try to compute result using real trig function */
-		result.v_num = qaexsec_or_NULL(arg1.v_num, eps);
+		result.v_num = qaexsec_or_NULL(vals[0]->v_num, eps);
 
 		/*
 		 * case: trig function returned a NUMBER
@@ -12116,17 +12098,17 @@ f_aexsec(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
-			arg1.v_type = V_COM;
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
+			vals[0]->v_type = V_COM;
 		}
 	}
-	if (arg1.v_type == V_COM) {
+	if (vals[0]->v_type == V_COM) {
 
 		/*
 		 * case: argument was COMPLEX or
 		 *	 trig function returned NULL and argument was converted to COMPLEX
 		 */
-		c = c_aexsec(arg1.v_com, eps);
+		c = c_aexsec(vals[0]->v_com, eps);
 		if (c == NULL) {
 			return error_value(E_AEXSEC_3);
 		}
@@ -12141,7 +12123,7 @@ f_aexsec(int count, VALUE **vals)
 			result.v_type = V_NUM;
 		}
 	}
-	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
 
 		/*
 		 * case: argument type is not valid for this function
@@ -12217,7 +12199,6 @@ f_excsc(int count, VALUE **vals)
 S_FUNC VALUE
 f_aexcsc(int count, VALUE **vals)
 {
-	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
 	VALUE result;		/* value to return */
 	COMPLEX *c;		/* COMPLEX trig result */
 	NUMBER *eps;		/* epsilon error tolerance */
@@ -12241,16 +12222,15 @@ f_aexcsc(int count, VALUE **vals)
 	/*
 	 * compute inverse exterior trigonometric cosecant to a given error tolerance
 	 */
-	arg1 = *vals[0];
-	if (arg1.v_type == V_NUM) {
+	if (vals[0]->v_type == V_NUM) {
 
 		/* firewall */
-		if (qisnegone(arg1.v_num)) {
+		if (qisnegone(vals[0]->v_num)) {
 			return error_value(E_AEXCSC_3);
 		}
 
 		/* try to compute result using real trig function */
-		result.v_num = qaexcsc_or_NULL(arg1.v_num, eps);
+		result.v_num = qaexcsc_or_NULL(vals[0]->v_num, eps);
 
 		/*
 		 * case: trig function returned a NUMBER
@@ -12263,17 +12243,17 @@ f_aexcsc(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
-			arg1.v_type = V_COM;
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
+			vals[0]->v_type = V_COM;
 		}
 	}
-	if (arg1.v_type == V_COM) {
+	if (vals[0]->v_type == V_COM) {
 
 		/*
 		 * case: argument was COMPLEX or
 		 *	 trig function returned NULL and argument was converted to COMPLEX
 		 */
-		c = c_aexcsc(arg1.v_com, eps);
+		c = c_aexcsc(vals[0]->v_com, eps);
 		if (c == NULL) {
 			return error_value(E_AEXCSC_3);
 		}
@@ -12288,7 +12268,7 @@ f_aexcsc(int count, VALUE **vals)
 			result.v_type = V_NUM;
 		}
 	}
-	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
 
 		/*
 		 * case: argument type is not valid for this function
@@ -12358,7 +12338,6 @@ f_crd(int count, VALUE **vals)
 S_FUNC VALUE
 f_acrd(int count, VALUE **vals)
 {
-	VALUE arg1;		/* 1st arg if it is a COMPLEX value */
 	VALUE result;		/* value to return */
 	COMPLEX *c;		/* COMPLEX trig result */
 	NUMBER *eps;		/* epsilon error tolerance */
@@ -12382,11 +12361,10 @@ f_acrd(int count, VALUE **vals)
 	/*
 	 * compute inverse trigonometric chord of a unit circle to a given error tolerance
 	 */
-	arg1 = *vals[0];
-	if (arg1.v_type == V_NUM) {
+	if (vals[0]->v_type == V_NUM) {
 
 		/* try to compute result using real trig function */
-		result.v_num = qacrd_or_NULL(arg1.v_num, eps);
+		result.v_num = qacrd_or_NULL(vals[0]->v_num, eps);
 
 		/*
 		 * case: trig function returned a NUMBER
@@ -12399,17 +12377,17 @@ f_acrd(int count, VALUE **vals)
 		 */
 		} else {
 			/* convert NUMBER argument from NUMBER to COMPLEX */
-			arg1.v_com = qqtoc(arg1.v_num, &_qzero_);
-			arg1.v_type = V_COM;
+			vals[0]->v_com = qqtoc(vals[0]->v_num, &_qzero_);
+			vals[0]->v_type = V_COM;
 		}
 	}
-	if (arg1.v_type == V_COM) {
+	if (vals[0]->v_type == V_COM) {
 
 		/*
 		 * case: argument was COMPLEX or
 		 *	 trig function returned NULL and argument was converted to COMPLEX
 		 */
-		c = c_acrd(arg1.v_com, eps);
+		c = c_acrd(vals[0]->v_com, eps);
 		if (c == NULL) {
 			return error_value(E_ACRD_3);
 		}
@@ -12424,7 +12402,7 @@ f_acrd(int count, VALUE **vals)
 			result.v_type = V_NUM;
 		}
 	}
-	if (arg1.v_type != V_NUM && arg1.v_type != V_COM) {
+	if (vals[0]->v_type != V_NUM && vals[0]->v_type != V_COM) {
 
 		/*
 		 * case: argument type is not valid for this function
