@@ -79,12 +79,22 @@
 #
 # Uncomment these lines:
 #
-# FSANITIZE:= -fsanitize=undefined -fsanitize=address -fsanitize=bool -fsanitize=bounds
-# FSANITIZE+= -fsanitize=enum -fsanitize=vptr -fsanitize=integer-divide-by-zero
-# FSANITIZE+= -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow
-# FSANITIZE+= -fsanitize=nonnull-attribute -fsanitize=returns-nonnull-attribute
-# FSANITIZE+= -fsanitize=null -fsanitize=shift -fsanitize=signed-integer-overflow
-# FSANITIZE+= -fsanitize=unreachable -fsanitize=vla-bound
+# FSANITIZE:= -fsanitize=address
+# FSANITIZE:= -fsanitize=bool
+# FSANITIZE:= -fsanitize=bounds
+# FSANITIZE+= -fsanitize=enum
+# FSANITIZE+= -fsanitize=float-cast-overflow
+# FSANITIZE+= -fsanitize=float-divide-by-zero
+# FSANITIZE+= -fsanitize=integer-divide-by-zero
+# FSANITIZE+= -fsanitize=nonnull-attribute
+# FSANITIZE+= -fsanitize=null
+# FSANITIZE+= -fsanitize=returns-nonnull-attribute
+# FSANITIZE+= -fsanitize=shift
+# FSANITIZE+= -fsanitize=signed-integer-overflow
+# FSANITIZE:= -fsanitize=undefined
+# FSANITIZE+= -fsanitize=unreachable
+# FSANITIZE+= -fsanitize=vla-bound
+# FSANITIZE+= -fsanitize=vptr
 # CFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
 # LDFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
 # CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1
@@ -98,25 +108,43 @@
 #
 # This comment block was tested under:
 #
-#	macOS 13.5 with clang version 14.0.3 (clang-1403.0.22.14.1)
+#	macOS 14.0 with clang version 15.0.7 (Red Hat 15.0.7-2.el9)
 #
 # For more info for clang to Diagnosing memory, thread, and crash issues early, see:
 #
 #    https://developer.apple.com/documentation/xcode/diagnosing-memory-thread-and-crash-issues-early
 #
-# NOTE: With the above version, these are NOT supported:
-#
-#    UNSUPPORTED_FSANITIZE:= -fsanitize-nullability-return
-#
 # Uncomment these lines:
 #
-# FSANITIZE:= -fsanitize=undefined -fsanitize=address -fsanitize=bool -fsanitize=bounds
-# FSANITIZE+= -fsanitize=enum -fsanitize=vptr -fsanitize=integer-divide-by-zero
-# FSANITIZE+= -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow
-# FSANITIZE+= -fsanitize=nonnull-attribute -fsanitize=nullability-arg
-# FSANITIZE+= -fsanitize=nullability-assign -fsanitize=returns-nonnull-attribute
-# FSANITIZE+= -fsanitize=null -fsanitize=object-size -fsanitize=shift
-# FSANITIZE+= -fsanitize=signed-integer-overflow -fsanitize=unreachable -fsanitize=vla-bound
+# These values are presented in the order listed for the above mentioned URL:
+#
+# FSANITIZE:= -fsanitize=alignment
+# FSANITIZE:= -fsanitize=bool
+# FSANITIZE:= -fsanitize=bounds
+# FSANITIZE+= -fsanitize=enum
+# FSANITIZE+= -fsanitize=vptr
+# FSANITIZE+= -fsanitize=integer-divide-by-zero
+# FSANITIZE+= -fsanitize=float-divide-by-zero
+# FSANITIZE+= -fsanitize=float-cast-overflow
+# FSANITIZE+= -fsanitize=nonnull-attribute
+# FSANITIZE+= -fsanitize=nullability-arg
+# FSANITIZE+= -fsanitize=nullability-assign
+# FSANITIZE+= -fsanitize=returns-nonnull-attribute
+# FSANITIZE+= -fsanitize=nullability-return
+# FSANITIZE+= -fsanitize=null
+# FSANITIZE+= -fsanitize=object-size
+# FSANITIZE+= -fsanitize=shift
+# FSANITIZE+= -fsanitize=signed-integer-overflow
+# FSANITIZE:= -fsanitize=undefined
+# FSANITIZE+= -fsanitize=unreachable
+# FSANITIZE+= -fsanitize=vla-bound
+#
+# We also observe these options, while NOT order listed the above mentioned URL, work:
+#
+# FSANITIZE:= -fsanitize=address
+#
+# We combine the above FSANITIZE with these compile and link options:
+#
 # CFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
 # LDFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
 # CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1
