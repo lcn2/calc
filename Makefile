@@ -3215,19 +3215,17 @@ prep:
 	${Q}echo
 	${Q}echo '=-=-=-=-=-= end of ${UPDATE_VER} =-=-=-=-=-='
 	${Q}echo
-	${Q}echo '=-=-=-=-=-= start of chk_tree pass #1 =-=-=-=-=-='
-	${Q}echo
-	-./chk_tree
-	${Q}echo
-	${Q}echo '=-=-=-=-=-= end of chk_tree pass #1 =-=-=-=-=-='
-	${Q}echo
 	${Q}echo '=-=-=-=-=-= start of ${MAKE} chk =-=-=-=-=-='
 	${Q}echo
 	${MAKE} -s chk
 	${Q}echo
 	${Q}echo '=-=-=-=-=-= end of ${MAKE} chk =-=-=-=-=-='
 	${Q}echo
-	${Q}echo All is OK
+	@${Q}if ! ./chk_tree >/dev/null 2>&1; then \
+	    echo almost satifactory except for chk_tree; \
+	else \
+	    echo All is OK; \
+	fi
 	${Q}echo
 
 run:
