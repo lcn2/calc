@@ -161,6 +161,28 @@ if [[ -d .git ]]; then
 	EXIT_CODE=15
 	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
+
+    # verify that master branch is not ahead of 'origin/master'
+    #
+    GIT_MASTER=$(git rev-list --count master)
+    GIT_ORIGIN_MASTER=$(git rev-list --count origin/master)
+    if [[ $GIT_MASTER == $GIT_ORIGIN_MASTER ]]; then
+	echo "$0: ERROR: master branch is ahead of origin/master" 1>&2
+	git status master
+	EXIT_CODE=16
+	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+    fi
+
+    # verify that branch is not ahead of 'origin/HEAD'
+    #
+    GIT_HEAD=$(git rev-list --count HEAD)
+    GIT_ORIGIN_HEAD=$(git rev-list --count origin/HEAD)
+    if [[ $GIT_HEAD == $GIT_ORIGIN_HEAD ]]; then
+	echo "$0: ERROR: HEAD is ahead of origin/HEAD" 1>&2
+	git status HEAD
+	EXIT_CODE=17
+	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+    fi
 fi
 
 # collect make buildlist file list
@@ -192,7 +214,7 @@ if [[ ${#DISTLIST_ALSO_IN_BUILDLIST[@]} -ne 0 ]]; then
     #
     echo "$0: ERROR: distlist files found in buildlist" 1>&2
     echo "$0: ERROR: distlist files found in buildlist: ${DISTLIST_ALSO_IN_BUILDLIST[*]}" 1>&2
-    EXIT_CODE=16
+    EXIT_CODE=18
     echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
 fi
 
@@ -250,7 +272,7 @@ if [[ ${#UNKNOWN_FILE[@]} -ne 0 ]]; then
     #
     echo "$0: ERROR: files that are neither built nor distlist are found" 1>&2
     echo "$0: ERROR: distlist files found in buildlist: ${UNKNOWN_FILE[*]}" 1>&2
-    EXIT_CODE=16
+    EXIT_CODE=19
     echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
 fi
 
