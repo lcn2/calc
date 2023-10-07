@@ -260,6 +260,9 @@ fi
 # We ignore .*.swp files as they are a result of vim sessions.
 # We ignore *.out files as they are used to collect information.
 # We ignore single letter files as they are used for temporary files.
+# We ignore files containing the any of the following in any letter case:
+#
+#	foo bar baz curds whey rmme
 #
 declare -a FINDFILE
 mapfile -t FINDFILE < <(find . -type f \
@@ -267,7 +270,9 @@ mapfile -t FINDFILE < <(find . -type f \
 	! -path './.git/*' ! -name .git \
 	! -path './.github/*' ! -name .github \
 	! -name 'CODE_OF_CONDUCT.md' ! -name 'CONTRIBUTING.md' ! -name '.gitignore' ! -name 'SECURITY.md'  \
-	! -name '*.swp' ! -name '*.out' ! -name '?' |
+	! -name '*.swp' ! -name '?' ! -iname '*.out*' \
+	! -iname '*foo*' ! -iname '*bar*' ! -iname '*baz*' \
+	! -iname '*curds*' ! -iname '*whey*' ! -iname '*rmmee' -print |
 	sed -e 's/^\.\///' | sort -u)
 if [[ ${#FINDFILE[@]} -le 0 ]]; then
     echo "$0: ERROR: find file is empty" 1>&2
@@ -313,6 +318,27 @@ if [[ ${#UNKNOWN_FILE[@]} -ne 0 ]]; then
     echo "$0: ERROR: files that are neither built nor distlist are found" 1>&2
     echo "$0: ERROR: distlist files found in buildlist: ${UNKNOWN_FILE[*]}" 1>&2
     EXIT_CODE=27
+    echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+fi
+
+# Look for a find in distlist that would otherwise be ignored
+#
+# We ignore for trailblank and FINDFILE, filenames with a single letter, and files
+# that end in .out, and files  containing the any of the following
+# in any letter case:
+#
+#	foo bar baz curds whey rmme
+#
+# So we will object is any distlist file is one of these ignored filenames.
+#
+INVALID_DISTLIST=$(printf '%s\n' "${DISTLIST[@]}" | \
+		   tr '[:upper:]' '[:lower:]' | \
+		   sed -n -e '/^.$/p' -e '/.*foo.*/p' -e '/.*bar.*/p' -e '/.*baz.*/p' \
+			  -e '/.*curds.*/p' -e '/.*whey.*/p' -e '/.*rmme.*/p' |
+		   tr '\n' ' ')
+if [[ -n $INVALID_DISTLIST ]]; then
+    echo "$0: ERROR: distlist contains invalid filename(s): $INVALID_DISTLIST" 1>&2
+    EXIT_CODE=28
     echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
 fi
 

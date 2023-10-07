@@ -212,7 +212,7 @@ if [[ -n $BACKUP_MAKEILES ]]; then
     echo
     echo "# You need execute the following to remove backup Makefiles:"
     echo
-    echo "$BACKUP_MAKEILES" | while read file; do
+    echo "$BACKUP_MAKEILES" | while read -r file; do
 	echo "rm -f $file"
     done
     EXIT_CODE=7
