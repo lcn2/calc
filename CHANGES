@@ -1,3 +1,17 @@
+The following are the changes from calc version 2.15.0.2 to date:
+
+    Updated BUGS about MSYS2 on Windows compiling of calc.
+
+    Added more git related checks and sanity checks to chk_tree.
+
+    Added ${FSANITIZE} make variable to Makefile.config to hold
+    common Address Sanitizer (ASAN) optins to modern Linux and macOS.
+    The Address Sanitizer is NOT enabled not compiled in by default.
+    Improved comments in Makefile.local for RHEL9.2 (Linux) and for
+    macOS 14.0 that, when uncommented and calc is recompiled (i.e.,
+    make clobber all) will enable the Address Sanitizer (ASAN) for calc.
+
+
 The following are the changes from calc version 2.14.3.5 to 2.15.0.1:
 
     The tarball for calc version 2.15.0.0 was missing version.h.

@@ -38,6 +38,14 @@ export EXIT_CODE=0
 # We exclude binary files, RCS source code history, intermediate
 # compiled files, patch droppings and compiled binary libraries.
 #
+# We also ignore filenames with a single letter, and files
+# that end in .out, and files  containing the any of the following
+# in any letter case:
+#
+#	foo bar baz curds whey rmme
+#
+# Such files are temporary/test files and are not part of calc.
+#
 # Last, we have two files that have long lines that, for now,
 # we cannot be as picky about without significant work.
 #
@@ -53,7 +61,9 @@ LEADING_SPACES_BEFORE_TAB=$(
 	      -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
 	      -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
 	      -name 'sample_many-static' -o -name 'sample_rand-static' -o \
-	      -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' \
+	      -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' -o \
+	      -name '?' -o -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+	      -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
 	   \) -prune -o -type f -print0 | \
     xargs -0 egrep -l '^	*  *	'
 )
@@ -68,6 +78,14 @@ fi
 #
 # We exclude binary files, RCS source code history, intermediate
 # compiled files, patch droppings and compiled binary libraries.
+#
+# We also ignore filenames with a single letter, and files
+# that end in .out, and files  containing the any of the following
+# in any letter case:
+#
+#	foo bar baz curds whey rmme
+#
+# Such files are temporary/test files and are not part of calc.
 #
 # Last, we have two files that have long lines that, for now,
 # we cannot be as picky about without significant work.
@@ -84,7 +102,8 @@ TRAILING_WHITESPACE=$(
 	      -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
 	      -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
 	      -name 'sample_many-static' -o -name 'sample_rand-static' -o \
-	      -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' \
+	      -name '?' -o -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+	      -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
 	   \) -prune -o -type f -print0 | \
     xargs -0 egrep -l '[	 ]$'
 )
@@ -139,6 +158,14 @@ fi
 # We exclude binary files, source code history, intermediate
 # compiled files, patch droppings and compiled binary libraries.
 #
+# We also ignore filenames with a single letter, and files
+# that end in .out, and files  containing the any of the following
+# in any letter case:
+#
+#	foo bar baz curds whey rmme
+#
+# Such files are temporary/test files and are not part of calc.
+#
 # Last, we have files that have long lines that, for now,
 # we cannot be as picky about without significant work.
 #
@@ -155,7 +182,8 @@ PICKY_PHASE_1=$(
 	      -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
 	      -name 'sample_many-static' -o -name 'sample_rand-static' -o \
 	      -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' -o \
-	      -name '.gitignore' -o -name 'README.md' -o -name '.lldbinit' \
+	      -name '?' -o -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+	      -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
 	   \) -prune -o -type f -print0 | \
     if [[ -x /usr/local/bin/picky ]]; then
 	xargs -0 /usr/local/bin/picky -s -v -w132

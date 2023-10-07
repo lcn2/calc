@@ -46,6 +46,11 @@ fi
 #
 declare -a DISTDIR
 mapfile -t DISTDIR < <(make -s distdir | grep -v '^make\[[0-9]*\]: ' | sort -u)
+if [[ ${#DISTDIR[@]} -le 0 ]]; then
+    echo "$0: ERROR: distdir is empty" 1>&2
+    EXIT_CODE=11
+    echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+fi
 
 # collect directories
 #
@@ -58,6 +63,11 @@ mapfile -t FINDDIR < <(find . -type d \
 	! -path './.git/*' ! -name .git \
 	! -path './.github/*' ! -name .github | \
 	sed -e 's/^\.\///' | sort -u)
+if [[ ${#FINDDIR[@]} -le 0 ]]; then
+    echo "$0: ERROR: find dir is empty" 1>&2
+    EXIT_CODE=12
+    echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+fi
 
 # compare DISTDIR and FINDDIR
 #
@@ -81,7 +91,7 @@ if [[ ${#DIFF_DISTDIR_FINDDIR[@]} -ne 0 ]]; then
     if [[ ${#ONLY_DISTDIR[@]} -ne 0 ]]; then
 	echo "$0: ERROR: found only in distdir: ${ONLY_DISTDIR[*]}" 1>&2
     fi
-    EXIT_CODE=11
+    EXIT_CODE=13
     echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
 fi
 
@@ -91,7 +101,7 @@ make distlist >/dev/null 2>&1
 status="$?"
 if [[ $status -ne 0 ]]; then
     echo "$0: ERROR: make distlist exit code: $status" 1>&2
-    EXIT_CODE=12
+    EXIT_CODE=14
     echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
 fi
 
@@ -99,6 +109,11 @@ fi
 #
 declare -a DISTLIST
 mapfile -t DISTLIST < <(make -s distlist | grep -v '^make\[[0-9]*\]: ' | sort -u)
+if [[ ${#DISTLIST[@]} -le 0 ]]; then
+    echo "$0: ERROR: distlist is empty" 1>&2
+    EXIT_CODE=15
+    echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+fi
 declare -A DISTLIST_A
 for i in "${DISTLIST[@]}"; do
     DISTLIST_A["$i"]="$i"
@@ -116,6 +131,11 @@ if [[ -d .git ]]; then
     mapfile -t GITLS < <(git ls |
 	grep -v -E '^\.github/|^\.gitignore$|^CODE_OF_CONDUCT\.md$|^CONTRIBUTING\.md$|^SECURITY\.md$' |
 	sort -u)
+    if [[ ${#GITLS[@]} -le 0 ]]; then
+	echo "$0: ERROR: git ls is empty" 1>&2
+	EXIT_CODE=16
+	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+    fi
 
     # compare DISTLIST and GITLS
     #
@@ -139,7 +159,7 @@ if [[ -d .git ]]; then
 	if [[ ${#ONLY_DISTLIST[@]} -ne 0 ]]; then
 	    echo "$0: ERROR: found only in distlist: ${ONLY_DISTLIST[*]}" 1>&2
 	fi
-	EXIT_CODE=13
+	EXIT_CODE=17
 	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 
@@ -149,7 +169,7 @@ if [[ -d .git ]]; then
     if [[ -n $GIT_STATUS ]] || ! git diff --cached --quiet --exit-code; then
 	echo "$0: ERROR: there are staged uncommitted changes" 1>&2
 	git status --short
-	EXIT_CODE=14
+	EXIT_CODE=18
 	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 
@@ -158,7 +178,7 @@ if [[ -d .git ]]; then
     if ! git diff --quiet --exit-code; then
 	echo "$0: ERROR: there are unstaged changes" 1>&2
 	git status --untracked-files=no --porcelain --short
-	EXIT_CODE=15
+	EXIT_CODE=19
 	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 
@@ -169,12 +189,12 @@ if [[ -d .git ]]; then
     if [[ $GIT_MASTER -gt $GIT_ORIGIN_MASTER ]]; then
 	echo "$0: ERROR: master branch is behind of origin/master" 1>&2
 	git status master
-	EXIT_CODE=16
+	EXIT_CODE=20
 	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     elif [[ $GIT_MASTER -lt $GIT_ORIGIN_MASTER ]]; then
 	echo "$0: ERROR: master branch is ahead of origin/master" 1>&2
 	git status master
-	EXIT_CODE=17
+	EXIT_CODE=21
 	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 
@@ -185,12 +205,12 @@ if [[ -d .git ]]; then
     if [[ $GIT_HEAD -gt $GIT_ORIGIN_HEAD ]]; then
 	echo "$0: ERROR: HEAD is behind of origin/HEAD" 1>&2
 	git status HEAD
-	EXIT_CODE=18
+	EXIT_CODE=22
 	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     elif [[ $GIT_HEAD -lt $GIT_ORIGIN_HEAD ]]; then
 	echo "$0: ERROR: HEAD is ahead of origin/HEAD" 1>&2
 	git status HEAD
-	EXIT_CODE=19
+	EXIT_CODE=23
 	echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
     fi
 fi
@@ -199,6 +219,11 @@ fi
 #
 declare -a BUILDLIST
 mapfile -t BUILDLIST < <(make -s buildlist | grep -v '^make\[[0-9]*\]: ' | sort -u)
+if [[ ${#BUILDLIST[@]} -le 0 ]]; then
+    echo "$0: ERROR: buildlist is empty" 1>&2
+    EXIT_CODE=24
+    echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+fi
 declare -A BUILDLIST_A
 for i in "${BUILDLIST[@]}"; do
     BUILDLIST_A["$i"]="$i"
@@ -224,7 +249,7 @@ if [[ ${#DISTLIST_ALSO_IN_BUILDLIST[@]} -ne 0 ]]; then
     #
     echo "$0: ERROR: distlist files found in buildlist" 1>&2
     echo "$0: ERROR: distlist files found in buildlist: ${DISTLIST_ALSO_IN_BUILDLIST[*]}" 1>&2
-    EXIT_CODE=20
+    EXIT_CODE=25
     echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
 fi
 
@@ -244,6 +269,11 @@ mapfile -t FINDFILE < <(find . -type f \
 	! -name 'CODE_OF_CONDUCT.md' ! -name 'CONTRIBUTING.md' ! -name '.gitignore' ! -name 'SECURITY.md'  \
 	! -name '*.swp' ! -name '*.out' ! -name '?' |
 	sed -e 's/^\.\///' | sort -u)
+if [[ ${#FINDFILE[@]} -le 0 ]]; then
+    echo "$0: ERROR: find file is empty" 1>&2
+    EXIT_CODE=26
+    echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
+fi
 
 # look for something in FINDFILE that in neither DISTLIST nor BUILDLIST
 #
@@ -282,7 +312,7 @@ if [[ ${#UNKNOWN_FILE[@]} -ne 0 ]]; then
     #
     echo "$0: ERROR: files that are neither built nor distlist are found" 1>&2
     echo "$0: ERROR: distlist files found in buildlist: ${UNKNOWN_FILE[*]}" 1>&2
-    EXIT_CODE=21
+    EXIT_CODE=27
     echo "$0: Warning: set EXIT_CODE: $EXIT_CODE" 1>&2
 fi
 

@@ -50,103 +50,51 @@
 ###################################################################
 
 ####
-#
 # Force calc to install under /usr/local
 #
-# BINDIR:= /usr/local/bin
-# LIBDIR:= /usr/local/lib
-# CALC_SHAREDIR:= /usr/local/share/calc
-# CALC_INCDIR:= /usr/local/include/calc
-#
+# PREFIX:= /usr/local
+# BINDIR:= ${PREFIX}/bin
+# LIBDIR:= ${PREFIX}/lib
+# CALC_SHAREDIR:= ${PREFIX}/share/calc
+# CALC_INCDIR:= ${PREFIX}/include/calc
 ####
 
 ####
-# RHEL Diagnosing memory, thread, and crash issues:
-#
-# For more info see: https://github.com/google/sanitizers/wiki/AddressSanitizer
+# macOS Address Sanitizer (ASAN)
 #
 # This comment block was tested under:
 #
-#	RHEL9 gcc version 11.3.1 20221121 (Red Hat 11.3.1-4) (GCC)
+# 	macOS 14.0 with Apple clang version 15.0.0 (clang-1500.0.40.1) for arm64
 #
-# with:
+# See the FSANITIZE comment block in Makefile.config for common FSANITIZE values and more info.
 #
-#	libasan-11.3.1-4.3.el9.x86_64 libubsan-11.3.1-4.3.el9.x86_64
+# To use the Address Sanitizer, uncomment this set set of lines and recompile (make clobber all):
 #
-# NOTE: With the above version, these are NOT supported:
-#
-#    UNSUPPORTED_FSANITIZE:= -fsanitize=nullability-arg -fsanitize=nullability-assign
-#
-# Uncomment these lines:
-#
-# FSANITIZE:= -fsanitize=address
-# FSANITIZE:= -fsanitize=bool
-# FSANITIZE:= -fsanitize=bounds
-# FSANITIZE+= -fsanitize=enum
-# FSANITIZE+= -fsanitize=float-cast-overflow
-# FSANITIZE+= -fsanitize=float-divide-by-zero
-# FSANITIZE+= -fsanitize=integer-divide-by-zero
-# FSANITIZE+= -fsanitize=nonnull-attribute
-# FSANITIZE+= -fsanitize=null
-# FSANITIZE+= -fsanitize=returns-nonnull-attribute
-# FSANITIZE+= -fsanitize=shift
-# FSANITIZE+= -fsanitize=signed-integer-overflow
-# FSANITIZE:= -fsanitize=undefined
-# FSANITIZE+= -fsanitize=unreachable
-# FSANITIZE+= -fsanitize=vla-bound
-# FSANITIZE+= -fsanitize=vptr
-# CFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
-# LDFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
-# CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1
-# DEBUG:= -O0 -g
-####
-
-####
-# macOS Diagnosing memory, thread, and crash issues:
-#
-# For more info see: https://github.com/google/sanitizers/wiki/AddressSanitizer
-#
-# This comment block was tested under:
-#
-#	macOS 14.0 with clang version 15.0.7 (Red Hat 15.0.7-2.el9)
-#
-# For more info for clang to Diagnosing memory, thread, and crash issues early, see:
-#
-#    https://developer.apple.com/documentation/xcode/diagnosing-memory-thread-and-crash-issues-early
-#
-# Uncomment these lines:
-#
-# These values are presented in the order listed for the above mentioned URL:
-#
-# FSANITIZE:= -fsanitize=alignment
-# FSANITIZE:= -fsanitize=bool
-# FSANITIZE:= -fsanitize=bounds
-# FSANITIZE+= -fsanitize=enum
-# FSANITIZE+= -fsanitize=vptr
-# FSANITIZE+= -fsanitize=integer-divide-by-zero
-# FSANITIZE+= -fsanitize=float-divide-by-zero
-# FSANITIZE+= -fsanitize=float-cast-overflow
-# FSANITIZE+= -fsanitize=nonnull-attribute
 # FSANITIZE+= -fsanitize=nullability-arg
 # FSANITIZE+= -fsanitize=nullability-assign
-# FSANITIZE+= -fsanitize=returns-nonnull-attribute
 # FSANITIZE+= -fsanitize=nullability-return
-# FSANITIZE+= -fsanitize=null
-# FSANITIZE+= -fsanitize=object-size
-# FSANITIZE+= -fsanitize=shift
-# FSANITIZE+= -fsanitize=signed-integer-overflow
-# FSANITIZE:= -fsanitize=undefined
-# FSANITIZE+= -fsanitize=unreachable
-# FSANITIZE+= -fsanitize=vla-bound
-#
-# We also observe these options, while NOT order listed the above mentioned URL, work:
-#
-# FSANITIZE:= -fsanitize=address
-#
-# We combine the above FSANITIZE with these compile and link options:
-#
-# CFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
-# LDFLAGS+= -Wno-invalid-command-line-argument ${FSANITIZE} -fno-omit-frame-pointer
-# CALC_ENV+= ASAN_OPTIONS=detect_stack_use_after_return=1
+# CFLAGS+= ${FSANITIZE}
+# LDFLAGS+= ${FSANITIZE}
 # DEBUG:= -O0 -g3
 ####
+
+####
+# RHEL (Linux) Address Sanitizer (ASAN)
+#
+# This comment block was tested under:
+#
+#	RHEL9.2 with clang version 15.0.7 (Red Hat 15.0.7-2.el9) for x86_64
+#
+# with these RPMs installed:
+#
+# 	libasan-11.3.1-4.3.el9.x86_64 libubsan-11.3.1-4.3.el9.x86_64
+#
+# See the FSANITIZE comment block in Makefile.config for common FSANITIZE values and more info.
+#
+# To use the Address Sanitizer, uncomment this set set of lines and recompile (make clobber all):
+#
+# FSANITIZE+= -fsanitize=bounds
+# CFLAGS+= ${FSANITIZE}
+# LDFLAGS+= ${FSANITIZE}
+# DEBUG:= -O0 -g3
+###
