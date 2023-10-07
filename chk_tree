@@ -166,7 +166,7 @@ if [[ -d .git ]]; then
     #
     GIT_MASTER=$(git rev-list --count master)
     GIT_ORIGIN_MASTER=$(git rev-list --count origin/master)
-    if [[ $GIT_MASTER == $GIT_ORIGIN_MASTER ]]; then
+    if [[ $GIT_MASTER -ne $GIT_ORIGIN_MASTER ]]; then
 	echo "$0: ERROR: master branch is ahead of origin/master" 1>&2
 	git status master
 	EXIT_CODE=16
@@ -177,7 +177,7 @@ if [[ -d .git ]]; then
     #
     GIT_HEAD=$(git rev-list --count HEAD)
     GIT_ORIGIN_HEAD=$(git rev-list --count origin/HEAD)
-    if [[ $GIT_HEAD == $GIT_ORIGIN_HEAD ]]; then
+    if [[ $GIT_HEAD -ne $GIT_ORIGIN_HEAD ]]; then
 	echo "$0: ERROR: HEAD is ahead of origin/HEAD" 1>&2
 	git status HEAD
 	EXIT_CODE=17
