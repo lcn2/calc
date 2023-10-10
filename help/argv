@@ -14,7 +14,7 @@ DESCRIPTION
     strings available, including the program or script name.
 
     If the numeric arg is supplied, then the corresponding command line
-    string is return, if it exists.  Otherwise a nul() value is returned.
+    string is return, if it exists.  Otherwise a null() value is returned.
 
     In keeping with the argc/argv convention of C, argv(0) will refer
     to the name of the program.  If the -f filename argument is used,
