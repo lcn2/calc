@@ -4246,7 +4246,7 @@ The following are the changes from calc version 2.11.5t0 to 2.11.5t1.1:
     Fixed calc path in help/script.
 
     Added read-only parameter, config("windows") to indicate if the system
-    is MS windowz WIN32 like system.
+    is MS Windows WIN32 like system.
 
     Configuration values that used to return "true" or "false" now return
     1 (a true value) or 0 (a false value).  Thus one can do:
