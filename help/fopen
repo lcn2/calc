@@ -46,7 +46,7 @@ DESCRIPTION
 
 	Some non-POSIX systems such as MS Windows treat text files
 	and binary files differently.  In text mode MS Windows consider
-	"\r\n" and end-of-line character.  On an Apple MAC, the
+	"\r\n" an end-of-line character.  On an Apple MAC, the
 	text mode end-of-line character is "\r".
 
     Names of files are subject to ~ expansion just like the C or

@@ -152,7 +152,7 @@ Command sequence
     exit string
 
 	The action of these commands depends on where they are used.
-	At the interactive level, they will cause calc it edit.
+	At the interactive level, they will cause calc to exit.
 	This is the normal way to leave the calculator.  In any
 	other use, they will stop the current calculation as if
 	an error had occurred.
