@@ -2,7 +2,7 @@ NAME
     mattrans - matrix transpose
 
 SYNOPSIS
-    matdim(m)
+    mattrans(m)
 
 TYPES
     m		2-dimensional matrix

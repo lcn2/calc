@@ -8,18 +8,17 @@ TYPES
     return	string
 
 DESCRIPTION
-   The ctime() builtin returns the string formed by the first 24
+   The ctime() builtin returns the string formed by the
    characters returned by the C library function, ctime(): E.g.
 
-	"Mon Oct 28 00:47:00 1996"
-
-   The 25th ctime() character, '\n' is removed.
+	"Mon Oct 28 00:47:00 1996\n"
 
 EXAMPLE
     ; ## NOTE: Your output will likely vary:
 
     ; printf("The time is now %s.\n", ctime())
-    The time is now Mon Apr 15 12:41:44 1996.
+    The time is now Mon Apr 15 12:41:44 1996
+.
 
 LIMITS
     none
