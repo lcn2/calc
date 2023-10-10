@@ -2,7 +2,7 @@ NAME
     matfill - fill a matrix with specified value or values
 
 SYNOPSIS
-    mat(m, x [, y])
+    matfill(m, x [, y])
 
 TYPES
     m		matrix

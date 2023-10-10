@@ -1,5 +1,5 @@
 NAME
-    randbit - Blum-Blum-Shub pseudo-random number generator
+    randombit - Blum-Blum-Shub pseudo-random number generator
 
 SYNOPSIS
     randombit([x])
