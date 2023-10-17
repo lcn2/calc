@@ -510,6 +510,8 @@ libcalc${LIB_EXT_VER}: libcalc${LIB_EXT_VERSION}
 #
 ###
 
+# Note: The :\(...-sed pattern below allows word wrapping at the separators
+# of long path names (typically CALCPATH and CALCRC).
 calc.1: calc.man ${MK_SET}
 	${RM} -f $@
 	${Q} echo forming calc.1 from calc.man
@@ -523,7 +525,8 @@ calc.1: calc.man ${MK_SET}
 	        -e 's,$${CUSTOMINCDIR},${CUSTOMINCDIR},g' \
 	        -e 's,$${HELPDIR},${HELPDIR},g' \
 	        -e 's,$${CUSTOMHELPDIR},${CUSTOMHELPDIR},g' \
-	        -e 's,$${CALCRC},${CALCRC},g' < calc.man > calc.1
+	        -e 's,$${CALCRC},${CALCRC},g' \
+	        -e 's,:\([/.~]\),:\\:\1,g' < calc.man > calc.1
 	${Q} echo calc.1 formed
 
 calc.usage: calc.1 ${MK_SET}
