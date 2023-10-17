@@ -501,7 +501,7 @@ version number and exit.
 
 .TP
 .B \-\-
-The double dash indicates to calc that no more option follow.
+The double dash indicates to calc that no more options follow.
 Thus calc will ignore a later argument on the command line
 even if it starts with a dash.
 This is useful when entering negative values on the command line as in:
@@ -543,7 +543,7 @@ will not evaluate any
 arguments but instead make them available
 as strings to the argv() builtin function.
 
-Sufficiently simple commands with no no characters like
+Sufficiently simple commands with no characters like
 parentheses, brackets, semicolons, '*', which have special
 interpretations in UNIX shells may be entered, possibly with
 spaces, until the terminating newline.
@@ -804,7 +804,7 @@ the rest of the file will be processed in
 Note that
 .B \-s
 .B \-f
-must at the end of the initial ``#!'' line.
+must be at the end of the initial ``#!'' line.
 Any other optional
 .B "optional_other_flags"
 must come before
@@ -973,7 +973,7 @@ Before a variable is assigned a value it has the value of zero.
 .PP
 The scope of a variable may be global, local to a file, or local to a
 procedure.
-Values may be grouped together in a matrix, or into a
+Values may be grouped together in a matrix, or into
 a list that permits stack and queue style operations.
 .PP
 For more information use the following
