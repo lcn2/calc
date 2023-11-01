@@ -114,15 +114,20 @@ main(int UNUSED(argc), char **argv)
 	/*
 	 * Big Endian
 	 */
+	/*
+	 * Use casts to (HALF *) because SWAP_HALF_IN_B* might expand to
+	 * a simple assignment and SWAP_HALF_IN_FILEPOS might get a
+	 * (HALF *) and a (FILEPOS *) which are not assignment-compatible.
+	 */
 	if (fileposlen == 64) {
 		printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
-		       "\tSWAP_HALF_IN_B64(dest, src)\n");
+		       "\tSWAP_HALF_IN_B64((HALF *)dest, (HALF *)src)\n");
 	} else if (fileposlen == 32) {
 		printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
-		       "\tSWAP_HALF_IN_B32(dest, src)\n");
+		       "\tSWAP_HALF_IN_B32((HALF *)dest, (HALF *)src)\n");
 	} else if (fileposlen%BASEB == 0) {
 		printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
-		       "\tswap_HALFs(dest, src, %d)\n",
+		       "\tswap_HALFs((HALF *)dest, (HALF *)src, %d)\n",
 		       fileposlen/BASEB);
 	} else {
 		fprintf(stderr, "%s: unexpected BIG_ENDIAN FILEPOS bit size: %d\n",
