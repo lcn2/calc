@@ -15,6 +15,10 @@ The following are the changes from calc version 2.15.0.2 to date:
     acovercos, ahaversin, ahavercos, ahacovercos, aexsec,
     aexcsc, and acrd.
 
+    Fixed a compile eorr in zmath.h that impacted legacy 32-bit bit
+    endian machines.  Thanks goes to GitHub user @gromit1811 for
+    pull request.
+
 
 The following are the changes from calc version 2.14.3.5 to 2.15.0.1:
 
