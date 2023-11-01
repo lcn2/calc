@@ -534,8 +534,15 @@ Unexpected
 
     Some might be surprised to discover that all of the trigonometric in calc:
 
-	sin, cos, tan, sec, csc, cot
-	asin, acos, atan, asec, acsc, acot
+	sin, cos, tan, cot, sec, csc
+	asin, acos, atan, acot, asec, acsc
+	versin, coversin, vercos, covercos
+	aversin, acoversin, avercos, acovercos
+	haversin, hacoversin, havercos, hacovercos
+	ahaversin, hacoversin, havercos, ahacovercos
+	exsec, aexsec, excsc, aexcsc
+	crd, acrd
+	cas, cis
 
     work in only radians.
 
