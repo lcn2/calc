@@ -18,6 +18,9 @@ The following are the changes from calc version 2.15.0.2 to date:
     Endian machines.  Thanks goes to GitHub user @gromit1811 for their
     pull request.
 
+    Fixed the check for <sys/mount.h> when forming have_sys_mount.h.
+    Thanks goes to GitHub user @gromit1811 for their pull request.
+
 
 The following are the changes from calc version 2.14.3.5 to 2.15.0.1:
 
