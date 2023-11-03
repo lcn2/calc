@@ -1824,7 +1824,7 @@ have_sys_mount.h: ${MK_SET}
 	    echo '#define HAVE_SYS_MOUNT_H	/* yes */' >> $@; \
 	elif [ X"${HAVE_SYS_MOUNT_H}" = X"NO" ]; then \
 	    echo '#undef HAVE_SYS_MOUNT_H  /* no */' >> $@; \
-	elif echo '#include <sys/param.h>' | ${CC} -E - ${S}; then \
+	elif echo '#include <sys/mount.h>' | ${CC} -E - ${S}; then \
 	    echo '#define HAVE_SYS_MOUNT_H	 /* yes */' >> $@; \
 	else \
 	    echo '#undef HAVE_SYS_MOUNT_H	/* no */' >> $@; \
