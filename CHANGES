@@ -1,4 +1,5 @@
 The following are the changes from calc version 2.15.0.2 to date:
+
     Updated BUGS about MSYS2 on Windows compiling of calc.
 
     Added more git related checks and sanity checks to chk_tree.
@@ -20,6 +21,13 @@ The following are the changes from calc version 2.15.0.2 to date:
 
     Fixed the check for <sys/mount.h> when forming have_sys_mount.h.
     Thanks goes to GitHub user @gromit1811 for their pull request.
+
+    Added "STATIC bool blum_initialized = false" to zrandom.c to improve
+    how the code detects if the Blum-Blum-Shub pseudo-random number
+    generator is seeded or not, and how to free the state correctly.
+
+    NOTE: There is a very minor memory leak in zrandom.c that will be
+    fixed in a later release.
 
 
 The following are the changes from calc version 2.14.3.5 to 2.15.0.1:

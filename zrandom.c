@@ -1107,6 +1107,7 @@
  * current Blum generator state
  */
 STATIC RANDOM blum;
+STATIC bool blum_initialized = false;	/* true ==> blum has a seeded and initialized state */
 
 
 /*
@@ -2272,11 +2273,14 @@ zsrandom1(CONST ZVALUE seed, bool need_ret)
 	/*
 	 * initialize state if first call
 	 */
-	if (!blum.seeded) {
+	if (blum_initialized == false || !blum.seeded) {
 		p_blum = randomcopy(&init_blum);
-		randomfree(&blum);
+		if (blum_initialized == true) {
+			randomfree(&blum);
+		}
 		blum = *p_blum;
 		free(p_blum);
+		blum_initialized = true;
 	}
 
 	/*
@@ -2342,6 +2346,9 @@ zsrandom1(CONST ZVALUE seed, bool need_ret)
 	 * reserved seed
 	 */
 	} else {
+		if (ret != NULL) {
+			randomfree(ret);
+		}
 		math_error("srandom seed must be 0 or >= 2^32");
 		not_reached();
 	}
@@ -2384,11 +2391,14 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 	/*
 	 * initialize state if first call
 	 */
-	if (!blum.seeded) {
+	if (blum_initialized == false || !blum.seeded) {
 		p_blum = randomcopy(&init_blum);
-		randomfree(&blum);
+		if (blum_initialized == true) {
+			randomfree(&blum);
+		}
 		blum = *p_blum;
 		free(p_blum);
+		blum_initialized = true;
 	}
 
 	/*
@@ -2409,11 +2419,13 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 		 * preset moduli only if small newn
 		 */
 		if (ziszero(newn)) {
+			randomfree(ret);
 			math_error("srandom newn == 0 reserved for future use");
 			not_reached();
 		}
 		set = (HALF)z1tol(newn);
 		if (!zistiny(newn) || set > BLUM_PREGEN) {
+			randomfree(ret);
 			math_error("srandom small newn must be [1,20]");
 			not_reached();
 		}
@@ -2433,7 +2445,7 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 		 * Otherwise non-zero seeds are processed as 1 arg calls
 		 */
 		} else {
-			zsrandom1(seed, false);
+			(void) zsrandom1(seed, false);
 		}
 
 	/*
@@ -2452,6 +2464,7 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 		 * Blum modulus must be 1 mod 4
 		 */
 		if (newn.v[0] % 4 != 1) {
+			randomfree(ret);
 			math_error("srandom large newn must be 1 mod 4");
 			not_reached();
 		}
@@ -2498,6 +2511,7 @@ zsrandom2(CONST ZVALUE seed, CONST ZVALUE newn)
 	 * reserved newn
 	 */
 	} else {
+		randomfree(ret);
 		math_error("srandom newn must be [1,20] or >= 2^32");
 		not_reached();
 	}
@@ -2543,11 +2557,14 @@ zsrandom4(CONST ZVALUE seed, CONST ZVALUE ip, CONST ZVALUE iq, long trials)
 	/*
 	 * initialize state if first call
 	 */
-	if (!blum.seeded) {
+	if (blum_initialized == false || !blum.seeded) {
 		p_blum = randomcopy(&init_blum);
-		randomfree(&blum);
+		if (blum_initialized == true) {
+			randomfree(&blum);
+		}
 		blum = *p_blum;
 		free(p_blum);
+		blum_initialized = true;
 	}
 
 	/*
@@ -2559,10 +2576,12 @@ zsrandom4(CONST ZVALUE seed, CONST ZVALUE ip, CONST ZVALUE iq, long trials)
 	 * search the 'p' and 'q' Blum prime (3 mod 4) candidates
 	 */
 	if (!znextcand(ip, trials, _zero_, _three_, _four_, &p)) {
+		randomfree(ret);
 		math_error("failed to find 1st Blum prime");
 		not_reached();
 	}
 	if (!znextcand(iq, trials, _zero_, _three_, _four_, &q)) {
+		randomfree(ret);
 		math_error("failed to find 2nd Blum prime");
 		not_reached();
 	}
@@ -2640,11 +2659,14 @@ zsetrandom(CONST RANDOM *state)
 	/*
 	 * initialize state if first call
 	 */
-	if (!blum.seeded) {
+	if (blum_initialized == false || !blum.seeded) {
 		p_blum = randomcopy(&init_blum);
-		randomfree(&blum);
+		if (blum_initialized == true) {
+			randomfree(&blum);
+		}
 		blum = *p_blum;
 		free(p_blum);
+		blum_initialized = true;
 	}
 
 	/*
@@ -2684,11 +2706,14 @@ zrandomskip(long cnt)
 	/*
 	 * initialize state if first call
 	 */
-	if (!blum.seeded) {
+	if (blum_initialized == false || !blum.seeded) {
 		p_blum = randomcopy(&init_blum);
-		randomfree(&blum);
+		if (blum_initialized == true) {
+			randomfree(&blum);
+		}
 		blum = *p_blum;
 		free(p_blum);
+		blum_initialized = true;
 	}
 	loglogn = (long)blum.loglogn;
 	new_r.len = 0;	/* paranoia */
@@ -2798,11 +2823,14 @@ zrandom(long cnt, ZVALUE *res)
 	/*
 	 * initialize state if first call
 	 */
-	if (!blum.seeded) {
+	if (blum_initialized == false || !blum.seeded) {
 		p_blum = randomcopy(&init_blum);
-		randomfree(&blum);
+		if (blum_initialized == true) {
+			randomfree(&blum);
+		}
 		blum = *p_blum;
 		free(p_blum);
+		blum_initialized = true;
 	}
 	loglogn = blum.loglogn;
 	mask = blum.mask;
@@ -3120,16 +3148,18 @@ randomfree(RANDOM *state)
 		not_reached();
 	}
 
-	/* free the values */
+	/* clear the seed */
+	state->seeded = 0;
+	state->bits = 0;	/* paranoia */
+	state->loglogn = 0;	/* paranoia */
+	state->buffer = 0;	/* paranoia */
+	state->mask = 0;	/* paranoia */
+
+	/* free the values - unless they are one of the default states */
 	zfree_random(state->n);
 	zfree_random(state->r);
 
-	/* free it if it is not pre-defined */
-	state->seeded = 0;
-	state->bits = 0;	/* paranoia */
-	state->buffer = 0;
-
-	/* free it if it is not pre-defined */
+	/* free the RANDOM structure if it is NOT our static blum value */
 	if (state != &blum) {
 		free(state);
 	}
@@ -3223,8 +3253,10 @@ randomprint(CONST RANDOM *UNUSED(state), int UNUSED(flags))
 void
 random_libcalc_cleanup(void)
 {
-	/* free our state - let zfree_random protect the default state */
-	randomfree(&blum);
+	/* free our state if seed was initialized - zfree_random protect default states */
+	if (blum_initialized == true && blum.seeded) {
+		randomfree(&blum);
+	}
 	return;
 }
 
@@ -3238,6 +3270,7 @@ random_libcalc_cleanup(void)
 S_FUNC void
 zfree_random(ZVALUE z)
 {
+	/* do not free if NULL or one of the default states */
 	if (z.v != NULL &&
 	    z.v != h_ndefvec && z.v != h_rdefvec && z.v != h_rdefvec_2 &&
 	    z.v != h_nvec01 && z.v != h_rvec01 &&
