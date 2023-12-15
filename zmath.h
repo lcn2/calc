@@ -79,7 +79,7 @@ typedef USB64 FULL;			/* double unit of number storage */
 typedef SB64 SFULL;			/* signed FULL */
 
 #define SWAP_HALF_IN_B64(dest, src)	SWAP_B32_IN_B64(dest, src)
-#define SWAP_HALF_IN_B32(dest, src)	(*(dest) = *(src))
+#define SWAP_HALF_IN_B32(dest, src)	(*((HALF *)(dest)) = *((HALF *)(src)))
 #define SWAP_HALF_IN_FULL(dest, src)	SWAP_B32_IN_B64(dest, src)
 #define SWAP_HALF_IN_HASH(dest, src)	SWAP_B16_IN_HASH(dest, src)
 #define SWAP_HALF_IN_FLAG(dest, src)	SWAP_B16_IN_FLAG(dest, src)
@@ -106,9 +106,9 @@ typedef SB32 SFULL;			/* signed FULL */
 #define SWAP_HALF_IN_FLAG(dest, src)	SWAP_B16_IN_FLAG(dest, src)
 #define SWAP_HALF_IN_bool(dest, src)	SWAP_B16_IN_bool(dest, src)
 #define SWAP_HALF_IN_LEN(dest, src)	SWAP_B16_IN_LEN(dest, src)
-#define SWAP_B32_IN_FULL(dest, src)	(*(dest) = *(src))
+#define SWAP_B32_IN_FULL(dest, src)	(*((FULL *)(dest)) = *((FULL *)(src)))
 #define SWAP_B16_IN_FULL(dest, src)	SWAP_B16_IN_B32(dest, src)
-#define SWAP_B16_IN_HALF(dest, src)	(*(dest) = *(src))
+#define SWAP_B16_IN_HALF(dest, src)	(*((HALF *)(dest)) = *((HALF *)(src)))
 #define SWAP_B8_IN_FULL(dest, src)	SWAP_B8_IN_B32(dest, src)
 #define SWAP_B8_IN_HALF(dest, src)	SWAP_B8_IN_B16(dest, src)
 
@@ -171,19 +171,11 @@ typedef SB32 LEN;			/* calc v2 compatible unit of length storage */
 typedef uintptr_t LEN;			/* unit of length storage */
 #endif /* MAJOR_VER < 3 */
 
-#define SWAP_B32_IN_HASH(dest, src)	(*(dest) = *(src))
-#define SWAP_B16_IN_HASH(dest, src)	SWAP_B16_IN_B32(dest, src)
-#define SWAP_B8_IN_HASH(dest, src)	SWAP_B8_IN_B32(dest, src)
-
-#define SWAP_B32_IN_FLAG(dest, src)	(*(dest) = *(src))
-#define SWAP_B16_IN_FLAG(dest, src)	SWAP_B16_IN_B32(dest, src)
-#define SWAP_B8_IN_FLAG(dest, src)	SWAP_B8_IN_B32(dest, src)
-
-#define SWAP_B32_IN_bool(dest, src)	(*(dest) = *(src))
+#define SWAP_B32_IN_bool(dest, src)	(*((bool *)(dest)) = *((bool *)(src)))
 #define SWAP_B16_IN_bool(dest, src)	SWAP_B16_IN_B32(dest, src)
 #define SWAP_B8_IN_bool(dest, src)	SWAP_B8_IN_B32(dest, src)
 
-#define SWAP_B32_IN_LEN(dest, src)	(*(dest) = *(src))
+#define SWAP_B32_IN_LEN(dest, src)	(*((LEN *)(dest)) = *((LEN *)(src)))
 #define SWAP_B16_IN_LEN(dest, src)	SWAP_B16_IN_B32(dest, src)
 #define SWAP_B8_IN_LEN(dest, src)	SWAP_B8_IN_B32(dest, src)
 

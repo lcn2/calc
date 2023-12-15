@@ -140,7 +140,7 @@ main(int UNUSED(argc), char **argv)
 	 */
 #if defined(HAVE_FILEPOS_SCALAR)
 	printf("#define SWAP_HALF_IN_FILEPOS(dest, src) \\\n"
-	       "\t(*(dest) = *(src))\n");
+	       "\t(*((HALF *)(dest)) = *((HALF *)(src)))\n");
 #else /* HAVE_FILEPOS_SCALAR */
 	/*
 	 * Normally a "(*(dest) = *(src))" would do, but on some

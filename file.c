@@ -1387,7 +1387,7 @@ filepos2z(FILEPOS pos)
 	ret.len = FILEPOS_BITS/BASEB;
 	ret.v = alloc(ret.len);
 	zclearval(ret);
-	SWAP_HALF_IN_FILEPOS(ret.v, &pos);
+	SWAP_HALF_IN_FILEPOS(ret.v, (HALF *)&pos);
 	ret.sign = 0;
 	ztrim(&ret);
 

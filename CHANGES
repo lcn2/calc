@@ -1,3 +1,29 @@
+The following are the changes from calc version 2.15.0.3 to date:
+
+    Fixed bug that caused calc to fail to compile filepos2z() in file.c
+    on little endian machines for the Debian apcalc package.  Thanks to
+    Martin Buck (m at rtin-buck dor de) for for fix.
+
+    Removed unused macros from zmath.h:
+
+	SWAP_B32_IN_HASH(dest, src)
+	SWAP_B16_IN_HASH(dest, src)
+	SWAP_B8_IN_HASH(dest, src)
+	SWAP_B32_IN_FLAG(dest, src)
+	SWAP_B16_IN_FLAG(dest, src)
+	SWAP_B8_IN_FLAG(dest, src)
+
+    When SWAP_HALF_IN_B32(dest, src), SWAP_B32_IN_FULL(dest, src),
+    SWAP_B16_IN_HALF(dest, src), SWAP_B32_IN_bool(dest, src),
+    or SWAP_B32_IN_LEN(dest, src), SWAP_HALF_IN_FILEPOS(dest, src)
+    is an assignment such as:
+
+	(*(dest) = *(src))
+
+    We now case the dest and src pointers to the proper type before
+    referencing and performing the assignment.
+
+
 The following are the changes from calc version 2.15.0.1 to 2.15.0.2:
 
     Updated BUGS about MSYS2 on Windows compiling of calc.
