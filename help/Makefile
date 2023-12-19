@@ -118,7 +118,8 @@ V=@:
 # Files managed by this Makefile #
 ##################################
 
-STD_HELP_FILES_1= intro overview calc
+STD_HELP_FILES_1= intro overview
+BLT_HELP_FILES_1a= calc
 
 STD_HELP_FILES_2= assoc
 BLT_HELP_FILES_3= builtin
@@ -148,7 +149,8 @@ STD_HELP_FILES_17= help
 
 # These files are used in the following order to construct full
 #
-FULL_HELP_FILES= ${STD_HELP_FILES_1}  ${STD_HELP_FILES_2} \
+FULL_HELP_FILES= ${STD_HELP_FILES_1} ${BLT_HELP_FILES_1a} \
+		 ${STD_HELP_FILES_2} \
 		 ${BLT_HELP_FILES_3}  ${STD_HELP_FILES_4} \
 		 ${BLT_HELP_FILES_5}  ${STD_HELP_FILES_6} \
 		 ${SPECIAL_HELP_7}    ${STD_HELP_FILES_8} \
@@ -171,7 +173,8 @@ STD_HELP_FILES= ${STD_HELP_FILES_1}  ${STD_HELP_FILES_2} \
 # Note that ${SPECIAL_HELP_7} is not included in this list
 # because of problems with its name.
 #
-BLT_HELP_FILES= ${BLT_HELP_FILES_3}  ${BLT_HELP_FILES_5} \
+BLT_HELP_FILES= ${BLT_HELP_FILES_1a} \
+		${BLT_HELP_FILES_3}  ${BLT_HELP_FILES_5} \
 		${BLT_HELP_FILES_9}  ${BLT_HELP_FILES_11} \
 		${BLT_HELP_FILES_13} ${BLT_HELP_FILES_16}
 

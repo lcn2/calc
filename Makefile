@@ -3438,7 +3438,7 @@ clobber: clean
 	${RM} -f *.u
 	${RM} -f libcalc.a
 	${RM} -f libcustcalc.a
-	${RM} -f calc.1 calc.cat1
+	${RM} -f calc.1 calc.usage calc.cat1
 	${RM} -f calc.pixie calc.rf calc.Counts calc.cord
 	${RM} -f gen_h Makefile.bak tmp.patch
 	${RM} -rf skel
