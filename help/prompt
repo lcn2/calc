@@ -10,10 +10,43 @@ TYPES
     return	string
 
 DESCRIPTION
-   When prompt(str) is called and input is from a terminal, the string
-   str is displayed and execution is halted until a newline ends a line
-   read from the input; the string formed by the characters in the line
-   (other than the newline) is returned as the value of prompt().
+    When prompt(str) is called and input is from a terminal, the string
+    str is displayed and execution is halted until a newline ends a line
+    read from the input; the string formed by the characters in the line
+    (other than the newline) is returned as the value of prompt().
+
+    Be careful when using prompt(str) while calc is being used as a
+    shell script.  Unless calc is run with the -p command line option,
+    the prompt builtin will fail and return null.  This is because when
+    calc is running as a shell script, calc will close stdin run in in
+    a non-interactive mode.
+
+    The following shell script will always print "got null" because
+    stdin will be closed by calc during startup:
+
+	#!/usr/bin/calc -q -f
+
+	# The prompt will ALWAYS FAIL and return a null value
+	n = prompt("Test> ");
+	if (isnull(n)) {
+	  print("got null");
+	} else {
+	  print("got " + n);
+	}
+
+     However the following shell script (note the -p before the -f in
+     the 1st line) will be interactive, prompt with "Test> " and print
+     the "got" result as expected:
+
+	#!/usr/bin/calc -q -p -f
+
+	n = prompt("Test> ");
+	if (isnull(n)) {
+	  print("got null");
+	} else {
+	  print("got " + n);
+	}
+
 
 EXAMPLE
     ; x = prompt("? ");
@@ -35,9 +68,9 @@ LINK LIBRARY
     none
 
 SEE ALSO
-    fgetfield, fgetline, fgetstr
+    command, fgetfield, fgetline, fgetstr, unexpected
 
-## Copyright (C) 1999-2006  Landon Curt Noll
+## Copyright (C) 1999,2023  Landon Curt Noll
 ##
 ## Calc is open software; you can redistribute it and/or modify it under
 ## the terms of the version 2.1 of the GNU Lesser General Public License

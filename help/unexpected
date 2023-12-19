@@ -563,12 +563,56 @@ Unexpected
 	; print sin(d2r(30))
 	0.5
 
+
     * operator has has a higher precedence than <<
     ==============================================
 
     The * operator has has a higher precedence than <<, which differs from the C language.
     So 3 << 2*5 evaluates to 3072 in C, whereas 3 << 2*5 evaluates to 60 in calc.
 
+
+    prompt builtin returns null in calc shell scripts unless -p is used
+    ===================================================================
+
+    Be careful when using prompt(str) while calc is being used as a
+    shell script.  Unless calc is run with the -p command line option,
+    the prompt builtin will fail and return null.  This is because when
+    calc is running as a shell script, calc will close stdin run in in
+    a non-interactive mode.
+
+    The following shell script will always print "got null" because
+    stdin will be closed by calc during startup:
+
+	#!/usr/bin/calc -q -f
+
+	n = prompt("Test> ");
+	if (isnull(n)) {
+	  print("got null");
+	} else {
+	  print("got " + n);
+	}
+
+     However the following shell script (note the -p before the -f in
+     the 1st line) will be interactive, prompt with "Test> " and print
+     the "got" result as expected:
+
+	#!/usr/bin/calc -q -p -f
+
+	n = prompt("Test> ");
+	if (isnull(n)) {
+	  print("got null");
+	} else {
+	  print("got " + n);
+	}
+
+    Note in the example above, the -p flag must be given before the
+    final -f command line flag.
+
+    A similar problem will occur if the calc shell script attempts
+    to read from standard input (stdin), unless the -p flag is used.
+
+    See "SHELL SCRIPT MODE" in the calc man page for more information
+    about -p and about the "shell script mode".
 
 ## Copyright (C) 1999-2007,2014,2017,2021,2023  Landon Curt Noll
 ##

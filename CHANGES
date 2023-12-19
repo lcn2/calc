@@ -23,6 +23,45 @@ The following are the changes from calc version 2.15.0.3 to date:
     We now case the dest and src pointers to the proper type before
     referencing and performing the assignment.
 
+    Documented unexpected behavior when calc is running in
+    "shell script mode" and the prompt builtin function is used
+    without the -p flag.  Updated help/prompt, help/unexpected
+    and the calc man page accordingly.
+
+    Unless calc is given the -p command line option, calc will reopen
+    stdin as /dev/null instead of just closing stdin.  This prevents
+    subsequent opens grabbing the 1st file descriptor.
+
+    Disable regress tests 4709, 4710, and 7763 because they print
+    multi-byte sequences, which are just fine for calc, the awk
+    used to evaluate the regression suite output in some legacy
+    systems report a "multibyte conversion failure".
+
+    Added a number of missing Makefile variables to the "make env" rule.
+
+    The man command is used to format the calc.1 man page into calc.usage.
+
+    The "help calc" command now prints the formatted calc man page (calc.usage).
+    The "help man" command now prints the formatted calc man page (calc.usage).
+    The "help usage" command now prints the formatted calc man page (calc.usage).
+
+    The file, calc.cat1, is formed by gzipping the calc.usage
+    formatted man page.  The calc.cat1 is installed as the calc
+    cat section 1 man page.
+
+    Updated the Copyright string in version.c to refer to
+    the COPYING file and the "help copying" command.
+
+    Added calc.cat1 to .gitignore.  Using "sort -d -u" to sort .gitignore content.
+
+    Avoiding use of modern [[ and ]] in Makefile for those legacy systems
+    whose shell do not support them.  *sigh*
+
+    Fixed the order of "help full" to match the order of topics listed
+    buy the "help help" command.
+
+    Sorted the halias[] help topics table in help.c using sort -d -u.
+
 
 The following are the changes from calc version 2.15.0.1 to 2.15.0.2:
 

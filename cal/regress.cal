@@ -4879,8 +4879,9 @@ define test_charset()
 	vrfy("\123" == char(0123),	    '4706: "\\123" == char(0123)');
 	vrfy("\123\124" == "ST",	    '4707: "\\123\\124" == "ST"');
 	vrfy("\311" == char(201),	    '4708: "\\311" == char(201)');
-	vrfy("\119" == "\t9",		    '4709: "\\119" == "\t9"');
-	vrfy("\765" == "\365",		    '4710: "\\765" == "\365"');
+/* NOTE: We skip non-ASCII to avoid problems with old awk that cannot handle them */
+/*	vrfy("\119" == "\t9",		    '4709: "\\119" == "\t9"');		  */
+/*	vrfy("\765" == "\365",		    '4710: "\\765" == "\365"');		  */
 	vrfy("\x61" == "a",		    '4711: "\\x61" == "a"');
 	vrfy("\x73" == "s",		    '4712: "\\x73" == "s"');
 	vrfy("\xea" == char(234),	    '4713: "\\xea" == char(234)');
@@ -8191,7 +8192,8 @@ define test_newstring()
 	vrfy(A == "A\255gdef",		'7761: A == "A\\255gdef"');
 	setbit(A, 16, 0);
 	print				'7762: setbit(A, 16, 0);';
-	vrfy(A == "A\255fdef",		'7763: A == "A\255fdef"');
+/* NOTE: We skip non-ASCII to avoid problems with old awk that cannot handle them */
+/*	vrfy(A == "A\255fdef",		'7763: A == "A\255fdef"'); 		  */
 
 	q = "curds" " and " "whey";
 	print				'7764: q = "curds" " and " "whey"';

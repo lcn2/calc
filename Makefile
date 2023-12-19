@@ -321,14 +321,17 @@ STATIC_FIRST_TARGETS= ${LICENSE} .static
 
 # late targets - things needed after the main build phase is complete
 #
-LATE_TARGETS= calc.1 calc.usage \
+LATE_TARGETS= calc.1 calc.usage calc.cat1 \
 	      cal/.all help/.all help/builtin help/errorcodes \
 	      cscript/.all
 
 # calc tools - tools used by the maintainers of the calc source base
 #
-# trailblank - find trailing blanks and other file format picky issues
-# update_ver - update version numbers in Makefile.config
+# Calc supplied tools:
+#
+# TRAILBLANK	- find trailing blanks and other file format picky issues
+# UPDATE_VER	- update version numbers in Makefile.config
+# CALC_TOOLS	- the complete list of calc supplied tools
 #
 TRAILBLANK= trailblank
 UPDATE_VER= update_ver
@@ -529,15 +532,19 @@ calc.1: calc.man ${MK_SET}
 	        -e 's,:\([/.~]\),:\\:\1,g' < calc.man > calc.1
 	${Q} echo calc.1 formed
 
-calc.usage: calc.1 ${MK_SET}
+calc.usage: calc.1
+	${Q} echo forming $@ from calc.1
 	${RM} -f $@
-	${Q} echo forming calc.usage from calc.1
-	${Q} if [ -z "${NROFF}" ]; then \
-	    LESSCHARSET=iso8859 ${CALCPAGER} calc.1; \
-	else \
-	    ${NROFF} -man calc.1; \
-	fi 2>&1 | ${GREP} -E -v 'cannot adjust line' | ${COL} -b > $@
-	${Q} echo calc.usage formed
+	${MAN} ./calc.1 > $@
+	${CHMOD} 0444 $@
+	${Q} echo $@ formed
+
+calc.cat1: calc.usage
+	${Q} echo forming $@ from calc.usage
+	${RM} -f $@
+	${GZIP} --best -f -c calc.usage > $@
+	${CHMOD} 0444 $@
+	${Q} echo $@ formed
 
 
 ##
@@ -563,7 +570,7 @@ sample_many${EXT}: sample_many.o ${CALC_DYNAMIC_LIBS} ${MK_SET}
 ###
 
 hist.o: hist.c ${MK_SET}
-	${CC} ${CFLAGS} ${TERMCONTROL} ${USE_READLINE} ${READLINE_INCLUDE} \
+	${CC} ${CFLAGS} -Wno-strict-prototypes ${TERMCONTROL} ${USE_READLINE} ${READLINE_INCLUDE} \
 	    -c hist.c
 
 seed.o: seed.c ${MK_SET}
@@ -2846,23 +2853,25 @@ env:
 	@echo 'BUILD_C_SRC=${BUILD_C_SRC}'; echo ''
 	@echo 'BUILD_H_SRC=${BUILD_H_SRC}'; echo ''
 	@echo 'BYTE_ORDER=${BYTE_ORDER}'; echo ''
+	@echo 'CALC_BYTE_ORDER=${CALC_BYTE_ORDER}'; echo ''
+	@echo 'CALC_CHARBIT=${CALC_CHARBIT}'; echo ''
+	@echo 'CALC_DYNAMIC_LIBS=${CALC_DYNAMIC_LIBS}'; echo ''
+	@echo 'CALC_ENV=${CALC_ENV}'; echo ''
+	@echo 'CALC_INCDIR=${CALC_INCDIR}'; echo ''
 	@echo 'CALCLIBLIST=${CALCLIBLIST}'; echo ''
 	@echo 'CALCOBJS=${CALCOBJS}'; echo ''
 	@echo 'CALCPAGER=${CALCPAGER}'; echo ''
 	@echo 'CALCPATH=${CALCPATH}'; echo ''
 	@echo 'CALCRC=${CALCRC}'; echo ''
-	@echo 'CALCSRC=${CALCSRC}'; echo ''
-	@echo 'CALC_DYNAMIC_LIBS=${CALC_DYNAMIC_LIBS}'; echo ''
-	@echo 'CALC_ENV=${CALC_ENV}'; echo ''
-	@echo 'CALC_INCDIR=${CALC_INCDIR}'; echo ''
 	@echo 'CALC_SHAREDIR=${CALC_SHAREDIR}'; echo ''
+	@echo 'CALCSRC=${CALCSRC}'; echo ''
 	@echo 'CALC_STATIC_LIBS=${CALC_STATIC_LIBS}'; echo ''
+	@echo 'CALC_TOOLS=${CALC_TOOLS}'; echo ''
 	@echo 'CAT=${CAT}'; echo ''
 	@echo 'CATDIR=${CATDIR}'; echo ''
 	@echo 'CATEXT=${CATEXT}'; echo ''
-	@echo 'CATMODE=${CATMODE}'; echo ''
-	@echo 'CC=${CC}'; echo ''
 	@echo 'CCBAN=${CCBAN}'; echo ''
+	@echo 'CC=${CC}'; echo ''
 	@echo 'CCMISC=${CCMISC}'; echo ''
 	@echo 'CCOPT=${CCOPT}'; echo ''
 	@echo 'CCWARN=${CCWARN}'; echo ''
@@ -2871,32 +2880,36 @@ env:
 	@echo 'CHMOD=${CHMOD}'; echo ''
 	@echo 'CMP=${CMP}'; echo ''
 	@echo 'CO=${CO}'; echo ''
-	@echo 'COL=${COL}'; echo ''
 	@echo 'COMMON_ADD=${COMMON_ADD}'; echo ''
 	@echo 'COMMON_CFLAGS=${COMMON_CFLAGS}'; echo ''
 	@echo 'COMMON_LDFLAGS=${COMMON_LDFLAGS}'; echo ''
 	@echo 'CONFIG_MKF=${CONFIG_MKF}'; echo ''
 	@echo 'CP=${CP}'; echo ''
 	@echo 'CSCRIPT_TARGETS=${CSCRIPT_TARGETS}'; echo ''
+	@echo 'C_SRC=${C_SRC}'; echo ''
 	@echo 'CTAGS=${CTAGS}'; echo ''
 	@echo 'CUSTOMCALDIR=${CUSTOMCALDIR}'; echo ''
 	@echo 'CUSTOMHELPDIR=${CUSTOMHELPDIR}'; echo ''
 	@echo 'CUSTOMINCDIR=${CUSTOMINCDIR}'; echo ''
-	@echo 'C_SRC=${C_SRC}'; echo ''
 	@echo 'DATE=${DATE}'; echo ''
 	@echo 'DEBUG=${DEBUG}'; echo ''
 	@echo 'DEFAULT_LIB_INSTALL_PATH=${DEFAULT_LIB_INSTALL_PATH}'; echo ''
 	@echo 'DEV_BITS=${DEV_BITS}'; echo ''
 	@echo 'DIFF=${DIFF}'; echo ''
 	@echo 'DISTLIST=${DISTLIST}'; echo ''
-	@echo 'E=${E}'; echo ''
+	@echo 'DYNAMIC_FIRST_TARGETS=${DYNAMIC_FIRST_TARGETS}'; echo ''
 	@echo 'EARLY_TARGETS=${EARLY_TARGETS}'; echo ''
+	@echo 'ECHON=${ECHON}'; echo ''
+	@echo 'E=${E}'; echo ''
 	@echo 'EXT=${EXT}'; echo ''
+	@echo 'EXTRA_CFLAGS=${EXTRA_CFLAGS}'; echo ''
+	@echo 'EXTRA_LDFLAGS=${EXTRA_LDFLAGS}'; echo ''
 	@echo 'FMT=${FMT}'; echo ''
 	@echo 'FPOS_BITS=${FPOS_BITS}'; echo ''
 	@echo 'FPOS_POS_BITS=${FPOS_POS_BITS}'; echo ''
+	@echo 'FSANITIZE=${FSANITIZE}'; echo ''
 	@echo 'GREP=${GREP}'; echo ''
-	@echo 'H=${H}'; echo ''
+	@echo 'GZIP=${GZIP}'; echo ''
 	@echo 'HAVE_ARC4RANDOM=${HAVE_ARC4RANDOM}'; echo ''
 	@echo 'HAVE_CONST=${HAVE_CONST}'; echo ''
 	@echo 'HAVE_ENVIRON=${HAVE_ENVIRON}'; echo ''
@@ -2924,11 +2937,11 @@ env:
 	@echo 'HAVE_STRLCPY=${HAVE_STRLCPY}'; echo ''
 	@echo 'HAVE_SYS_MOUNT_H=${HAVE_SYS_MOUNT_H}'; echo ''
 	@echo 'HAVE_SYS_PARAM_H=${HAVE_SYS_PARAM_H}'; echo ''
-	@echo 'HAVE_SYS_TIMES_H=${HAVE_SYS_TIMES_H}'; echo ''
 	@echo 'HAVE_SYS_TIME_H=${HAVE_SYS_TIME_H}'; echo ''
+	@echo 'HAVE_SYS_TIMES_H=${HAVE_SYS_TIMES_H}'; echo ''
 	@echo 'HAVE_SYS_VFS_H=${HAVE_SYS_VFS_H}'; echo ''
-	@echo 'HAVE_TIMES_H=${HAVE_TIMES_H}'; echo ''
 	@echo 'HAVE_TIME_H=${HAVE_TIME_H}'; echo ''
+	@echo 'HAVE_TIMES_H=${HAVE_TIMES_H}'; echo ''
 	@echo 'HAVE_UID_T=${HAVE_UID_T}'; echo ''
 	@echo 'HAVE_UNISTD_H=${HAVE_UNISTD_H}'; echo ''
 	@echo 'HAVE_UNUSED=${HAVE_UNUSED}'; echo ''
@@ -2936,6 +2949,7 @@ env:
 	@echo 'HAVE_USTAT=${HAVE_USTAT}'; echo ''
 	@echo 'HAVE_VSNPRINTF=${HAVE_VSNPRINTF}'; echo ''
 	@echo 'HELPDIR=${HELPDIR}'; echo ''
+	@echo 'H=${H}'; echo ''
 	@echo 'HOSTNAME=${HOSTNAME}'; echo ''
 	@echo 'H_SRC=${H_SRC}'; echo ''
 	@echo 'ICFLAGS=${ICFLAGS}'; echo ''
@@ -2946,46 +2960,48 @@ env:
 	@echo 'LATE_TARGETS=${LATE_TARGETS}'; echo ''
 	@echo 'LCC=${LCC}'; echo ''
 	@echo 'LDCONFIG=${LDCONFIG}'; echo ''
-	@echo 'LDFLAGS=${LDFLAGS}'; echo ''
 	@echo 'LD_DEBUG=${LD_DEBUG}'; echo ''
+	@echo 'LDFLAGS=${LDFLAGS}'; echo ''
 	@echo 'LD_SHARE=${LD_SHARE}'; echo ''
 	@echo 'LIBCALC_SHLIB=${LIBCALC_SHLIB}'; echo ''
 	@echo 'LIBCUSTCALC_SHLIB=${LIBCUSTCALC_SHLIB}'; echo ''
 	@echo 'LIBDIR=${LIBDIR}'; echo ''
+	@echo 'LIB_EXT=${LIB_EXT}'; echo ''
+	@echo 'LIB_EXT_VER=${LIB_EXT_VER}'; echo ''
+	@echo 'LIB_EXT_VERSION=${LIB_EXT_VERSION}'; echo ''
+	@echo 'LIB_H_SRC=${LIB_H_SRC}'; echo ''
 	@echo 'LIBOBJS=${LIBOBJS}'; echo ''
 	@echo 'LIBSRC=${LIBSRC}'; echo ''
-	@echo 'LIB_H_SRC=${LIB_H_SRC}'; echo ''
 	@echo 'LICENSE=${LICENSE}'; echo ''
 	@echo 'LN=${LN}'; echo ''
 	@echo 'LOCAL_MKF=${LOCAL_MKF}'; echo ''
 	@echo 'LONG_BITS=${LONG_BITS}'; echo ''
-	@echo 'MAKE=${MAKE}'; echo ''
+	@echo 'LS=${LS}'; echo ''
 	@echo 'MAKEDEPEND=${MAKEDEPEND}'; echo ''
 	@echo 'MAKE_FILE=${MAKE_FILE}'; echo ''
+	@echo 'MAKE=${MAKE}'; echo ''
+	@echo 'MAN=${MAN}'; echo ''
 	@echo 'MANDIR=${MANDIR}'; echo ''
 	@echo 'MANEXT=${MANEXT}'; echo ''
-	@echo 'MANMAKE=${MANMAKE}'; echo ''
-	@echo 'MANMODE=${MANMODE}'; echo ''
 	@echo 'MINGW=${MINGW}'; echo ''
 	@echo 'MKDIR=${MKDIR}'; echo ''
+	@echo 'MK_SET=${MK_SET}'; echo ''
 	@echo 'MV=${MV}'; echo ''
-	@echo 'NROFF=${NROFF}'; echo ''
-	@echo 'NROFF_ARG=${NROFF_ARG}'; echo ''
 	@echo 'OBJS=${OBJS}'; echo ''
 	@echo 'OFF_T_BITS=${OFF_T_BITS}'; echo ''
 	@echo 'OSNAME=${OSNAME}'; echo ''
+	@echo 'PHONY=${PHONY}'; echo ''
 	@echo 'PREFIX=${PREFIX}'; echo ''
 	@echo 'PURIFY=${PURIFY}'; echo ''
-	@echo 'PWD=${PWD}'; echo ''
 	@echo 'PWDCMD=${PWDCMD}'; echo ''
+	@echo 'PWD=${PWD}'; echo ''
 	@echo 'Q=${Q}'; echo ''
 	@echo 'RANLIB=${RANLIB}'; echo ''
 	@echo 'READLINE_EXTRAS=${READLINE_EXTRAS}'; echo ''
 	@echo 'READLINE_INCLUDE=${READLINE_INCLUDE}'; echo ''
 	@echo 'READLINE_LIB=${READLINE_LIB}'; echo ''
-	@echo 'RM=${RM}'; echo ''
 	@echo 'RMDIR=${RMDIR}'; echo ''
-	@echo 'S=${S}'; echo ''
+	@echo 'RM=${RM}'; echo ''
 	@echo 'SAMPLE_C_SRC=${SAMPLE_C_SRC}'; echo ''
 	@echo 'SAMPLE_H_SRC=${SAMPLE_H_SRC}'; echo ''
 	@echo 'SAMPLE_OBJ=${SAMPLE_OBJ}'; echo ''
@@ -2996,17 +3012,23 @@ env:
 	@echo 'SED=${SED}'; echo ''
 	@echo 'SHELL=${SHELL}'; echo ''
 	@echo 'SORT=${SORT}'; echo ''
-	@echo 'SPLINT=${SPLINT}'; echo ''
 	@echo 'SPLINT_OPTS=${SPLINT_OPTS}'; echo ''
+	@echo 'SPLINT=${SPLINT}'; echo ''
+	@echo 'S=${S}'; echo ''
+	@echo 'STATIC_FIRST_TARGETS=${STATIC_FIRST_TARGETS}'; echo ''
+	@echo 'STRIP=${STRIP}'; echo ''
 	@echo 'SYM_DYNAMIC_LIBS=${SYM_DYNAMIC_LIBS}'; echo ''
-	@echo 'T=${T}'; echo ''
-	@echo 'TARGETS=${TARGETS}'; echo ''
+	@echo 'TAIL=${TAIL}'; echo ''
 	@echo 'TARGET_MKF=${TARGET_MKF}'; echo ''
+	@echo 'TARGETS=${TARGETS}'; echo ''
 	@echo 'TEE=${TEE}'; echo ''
 	@echo 'TERMCONTROL=${TERMCONTROL}'; echo ''
 	@echo 'TOUCH=${TOUCH}'; echo ''
+	@echo 'TRAILBLANK=${TRAILBLANK}'; echo ''
 	@echo 'TRUE=${TRUE}'; echo ''
+	@echo 'T=${T}'; echo ''
 	@echo 'UNAME=${UNAME}'; echo ''
+	@echo 'UPDATE_VER=${UPDATE_VER}'; echo ''
 	@echo 'USE_READLINE=${USE_READLINE}'; echo ''
 	@echo 'UTIL_C_SRC=${UTIL_C_SRC}'; echo ''
 	@echo 'UTIL_FILES=${UTIL_FILES}'; echo ''
@@ -3014,8 +3036,9 @@ env:
 	@echo 'UTIL_OBJS=${UTIL_OBJS}'; echo ''
 	@echo 'UTIL_PROGS=${UTIL_PROGS}'; echo ''
 	@echo 'UTIL_TMP=${UTIL_TMP}'; echo ''
-	@echo 'V=${V}'; echo ''
 	@echo 'VERSION=${VERSION}'; echo ''
+	@echo 'VER=${VER}'; echo ''
+	@echo 'V=${V}'; echo ''
 	@echo 'WNO_ERROR_LONG_LONG=${WNO_ERROR_LONG_LONG}'; echo ''
 	@echo 'WNO_IMPLICT=${WNO_IMPLICT};' echo ''
 	@echo 'WNO_LONG_LONG=${WNO_LONG_LONG}'; echo ''
@@ -3201,9 +3224,9 @@ prep:
 	${Q}echo
 	${MAKE} -s depend
 	${Q}echo
-	@if [[ -f ${MAKE_FILE}.bak ]]; then echo ${MAKE_FILE}.bak exists 1>&2; exit 1; fi
-	@if [[ -f cscript/${MAKE_FILE}.bak ]]; then echo cscript/${MAKE_FILE}.bak exists 1>&2; exit 2; fi
-	@if [[ -f custom/${MAKE_FILE}.bak ]]; then echo custom/${MAKE_FILE}.bak exists 1>&2; exit 3; fi
+	@if [ -f ${MAKE_FILE}.bak ]; then echo ${MAKE_FILE}.bak exists 1>&2; exit 1; fi
+	@if [ -f cscript/${MAKE_FILE}.bak ]; then echo cscript/${MAKE_FILE}.bak exists 1>&2; exit 2; fi
+	@if [ -f custom/${MAKE_FILE}.bak ]; then echo custom/${MAKE_FILE}.bak exists 1>&2; exit 3; fi
 	${Q}echo '=-=-=-=-=-= end of ${MAKE} depend =-=-=-=-=-='
 	${Q}echo
 	${Q}echo '=-=-=-=-=-= start of ${MAKE} testfuncsort =-=-=-=-=-='
@@ -3415,7 +3438,7 @@ clobber: clean
 	${RM} -f *.u
 	${RM} -f libcalc.a
 	${RM} -f libcustcalc.a
-	${RM} -f calc.1 calc.usage
+	${RM} -f calc.1 calc.cat1
 	${RM} -f calc.pixie calc.rf calc.Counts calc.cord
 	${RM} -f gen_h Makefile.bak tmp.patch
 	${RM} -rf skel
@@ -3751,7 +3774,7 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 		echo "removed old ${T}${CALC_INCDIR}/string.h"; \
 	    fi; \
 	done
-	-${Q} if [ -z "${MANDIR}" ]; then \
+	-${Q} if [ -z "${MANDIR}" || ! -s calc.1 ]; then \
 	    ${TRUE}; \
 	else \
 	    if ${CMP} -s calc.1 ${T}${MANDIR}/calc.${MANEXT}; then \
@@ -3765,24 +3788,17 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 		echo "installed ${T}${MANDIR}/calc.${MANEXT}"; \
 	    fi; \
 	fi
-	-${Q} if [ -z "${CATDIR}" ]; then \
+	-${Q} if [ -z "${CATDIR}" || ! -s calc.cat1 ]; then \
 	    ${TRUE}; \
 	else \
-	    if ${CMP} -s calc.1 ${T}${MANDIR}/calc.${MANEXT}; then \
+	    if ${CMP} -s calc.cat1 ${T}${CATDIR}/calc.${MANEXT}; then \
 		${TRUE}; \
 	    else \
-		if [ -n "${NROFF}" ]; then \
-		    ${RM} -f ${T}${CATDIR}/calc.${CATEXT}.new; \
-		    ${NROFF} ${NROFF_ARG} calc.1 > \
-			     ${T}${CATDIR}/calc.${CATEXT}.new; \
-		    ${CHMOD} ${MANMODE} ${T}${MANDIR}/calc.${CATEXT}.new; \
-		    ${MV} -f ${T}${CATDIR}/calc.${CATEXT}.new \
-			  ${T}${CATDIR}/calc.${CATEXT}; \
-		    echo "installed ${T}${CATDIR}/calc.${CATEXT}"; \
-		elif [ -x "${MANNAME}" ]; then \
-		    echo "${MANMAKE} calc.1 ${T}${CATDIR}"; \
-		    ${MANMAKE} calc.1 ${T}${CATDIR}; \
-		fi; \
+		${RM} -f ${T}${CATDIR}/calc.${CATEXT}.new; \
+		${CP} -f calc.cat1 ${T}${CATDIR}/calc.${CATEXT}.new; \
+		${MV} -f ${T}${CATDIR}/calc.${CATEXT}.new \
+		         ${T}${CATDIR}/calc.${CATEXT}; \
+		echo "installed ${T}${CATDIR}/calc.${CATEXT}"; \
 	    fi; \
 	fi
 	${V} # NOTE: misc install cleanup

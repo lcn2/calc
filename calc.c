@@ -543,8 +543,8 @@ main(int argc, char **argv)
 		cmdbuf[cmdlen++] = '\n';
 		cmdbuf[cmdlen] = '\0';
 		if (p_flag != true) {
-			if (fclose(stdin)) {
-				perror("main(): fclose(stdin) failed:");
+			if (freopen("/dev/null", "r", stdin) == NULL) {
+				perror("in main: freopen(\"/dev/null\", \"r\", stdin) failed:");
 			}
 			stdin_closed = true;
 		}

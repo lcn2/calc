@@ -470,6 +470,24 @@ The
 flag overrides
 .BR \-i .
 
+.sp 1
+When running calc as a shell script (see
+.B "SHELL SCRIPT MODE"
+for details), calc will close standard input (stdin)
+during startup
+.B UNLESS
+the
+.B \-p
+flag is given on the command line.
+When calc is running in
+.BR "shell script mode" ,
+shell scripts that call the
+.BR prompt (str)
+builtin will not work properly (the prompt builtin
+will always fail) unless the
+.B \-p
+flag is given on the command line.
+
 .TP
 .B \-q
 Disable the reading of the startup scripts.
@@ -651,7 +669,9 @@ echo chongo was here | calc \-i 'print fgetline(files(0));'
 .fi
 .in -5n
 .sp 1
-This is because without \-p, the interactive parser, in an effort
+This is because without
+.BR \-p ,
+the interactive parser, in an effort
 to parse interactive commands, flushes data on standard input.
 
 .PP
@@ -931,6 +951,67 @@ whereas
 .in -5n
 .sp 1
 will not.
+
+.sp 1
+By default, using calc startup in
+.BR "shell script mode" ,
+calc will close standard input (stdin).
+Thus builtin functions such as
+.BR prompt (str)
+will fail (return a null value).
+Calc shell scripts that call the
+.BR prompt (str)
+builtin will not work properly (the prompt builtin
+will always fail and return a null value) unless the
+.B \-p
+flag is given on the command line.
+
+.sp 1
+The following shell script will always print "got null" because
+stdin will be closed by calc during startup:
+
+.sp 1
+.in +5n
+.nf
+#!/usr/bin/calc \-q \-f
+
+# The prompt will ALWAYS FAIL and return a null value
+n = prompt("Test> ");
+if (isnull(n)) {
+  print("got null");
+} else {
+  print("got " + n);
+}
+.fi
+.in -5n
+.sp 1
+However the following shell script (note the
+.B \-p
+before the
+.B \-f
+in the 1st line) will be interactive, prompt with "Test> " and print
+the "got" result as expected:
+
+.sp 1
+.in +5n
+.nf
+#!/usr/bin/calc \-q \-p \-f
+
+n = prompt("Test> ");
+if (isnull(n)) {
+  print("got null");
+} else {
+  print("got " + n);
+}
+.fi
+.in -5n
+
+.sp 1
+Note in the example above, the
+.B \-p
+flag must be given before the final
+.B \-f
+command line flag.
 
 .PP
 

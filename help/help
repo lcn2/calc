@@ -5,7 +5,7 @@ following topics:
     -----		-----------
     intro		introduction to calc
     overview		overview of calc
-    help		this file
+    calc		calc man page, how to invoke the calc command
 
     assoc		using associations
     builtin		builtin functions
@@ -23,18 +23,17 @@ following topics:
     mat			using matrices
     obj			user defined data types
     operator		math, relational, logic and variable access operators
+    resource		standard calc resource files
+    script		using calc shell scripts
     statement		flow control and declaration statements
     types		builtin data types
     unexpected		unexpected syntax/usage surprises for C programmers
-    usage		how to invoke the calc command
     variable		variables and variable declarations
 
     bindings		input & history character bindings
     custom_cal		information about custom calc resource files
     libcalc		using the arbitrary precision routines in a C program
     new_custom		information about how to add new custom functions
-    resource		standard calc resource files
-    script		using calc shell scripts
     cscript		info on the calc shell scripts supplied with calc
 
     archive		where to get the latest versions of calc
@@ -51,6 +50,7 @@ following topics:
     questions		how to ask simple general question about calc
     release		on calc versions and releases
 
+    help		this file
     full		all of the above (in the above order)
 
 For example:

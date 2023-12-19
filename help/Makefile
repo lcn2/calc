@@ -118,76 +118,62 @@ V=@:
 # Files managed by this Makefile #
 ##################################
 
-STD_HELP_FILES_1= intro overview help
+STD_HELP_FILES_1= intro overview calc
+
 STD_HELP_FILES_2= assoc
-
-BLT_HELP_FILES_3= builtin man
-
-STD_HELP_FILES_4= command config custom define environment expression
-
+BLT_HELP_FILES_3= builtin
+STD_HELP_FILES_4= command config custom define environment
 BLT_HELP_FILES_5= errorcodes
-
-STD_HELP_FILES_6= file history interrupt list mat
-
+STD_HELP_FILES_6= expression file history interrupt list mat
 # because obj is built special (due to confusion with it as
 # a symlink for some built environments, we treat obj specially
 # and call it obj.file
 #
 SPECIAL_HELP_7= obj.file
-
-STD_HELP_FILES_8= operator statement
-
+STD_HELP_FILES_8= operator
 BLT_HELP_FILES_9= resource
+STD_HELP_FILES_10= script statement types unexpected variable
 
-STD_HELP_FILES_10= types script
-
-BLT_HELP_FILES_10a= usage cscript
-
-STD_HELP_FILES_10b= unexpected variable
-
-BLT_HELP_FILES_11= bindings custom_cal libcalc new_custom resource
+BLT_HELP_FILES_11= bindings custom_cal libcalc new_custom cscript
 
 STD_HELP_FILES_12= archive
+BLT_HELP_FILES_13= bugs changes contrib
+STD_HELP_FILES_14= todo wishlist
 
-BLT_HELP_FILES_13= bugs changes
+STD_HELP_FILES_15= credit
+# copyright is printed by help.c is from the Copyright string found in version.c
+BLT_HELP_FILES_16= COPYING COPYING-LGPL questions releases
 
-STD_HELP_FILES_14= credit
-
-BLT_HELP_FILES_14= contrib COPYING COPYING-LGPL questions releases
-
-STD_HELP_FILES_15= wishlist todo
+STD_HELP_FILES_17= help
 
 # These files are used in the following order to construct full
 #
-FULL_HELP_FILES= ${STD_HELP_FILES_1} ${STD_HELP_FILES_2} \
-		${BLT_HELP_FILES_3} ${STD_HELP_FILES_4} \
-		${BLT_HELP_FILES_5} ${STD_HELP_FILES_6} \
-		${SPECIAL_HELP_7} ${STD_HELP_FILES_8} \
-		${BLT_HELP_FILES_9} ${STD_HELP_FILES_10} \
-		${BLT_HELP_FILES_10a} ${STD_HELP_FILES_10b} \
-		${BLT_HELP_FILES_11} ${STD_HELP_FILES_12} \
-		${BLT_HELP_FILES_13} ${STD_HELP_FILES_14} \
-		${BLT_HELP_FILES_14} ${STD_HELP_FILES_15}
+FULL_HELP_FILES= ${STD_HELP_FILES_1}  ${STD_HELP_FILES_2} \
+		 ${BLT_HELP_FILES_3}  ${STD_HELP_FILES_4} \
+		 ${BLT_HELP_FILES_5}  ${STD_HELP_FILES_6} \
+		 ${SPECIAL_HELP_7}    ${STD_HELP_FILES_8} \
+		 ${BLT_HELP_FILES_9}  ${STD_HELP_FILES_10} \
+		 ${BLT_HELP_FILES_11} ${STD_HELP_FILES_12} \
+		 ${BLT_HELP_FILES_13} ${STD_HELP_FILES_14} \
+		 ${STD_HELP_FILES_15} ${BLT_HELP_FILES_16} \
+		 ${STD_HELP_FILES_17}
 
 # These full files are those who are not built or constructed
 #
-STD_HELP_FILES= ${STD_HELP_FILES_1} ${STD_HELP_FILES_2} \
-		${STD_HELP_FILES_4} ${STD_HELP_FILES_6} \
-		${STD_HELP_FILES_8} ${STD_HELP_FILES_10} \
-		${STD_HELP_FILES_10b} \
+STD_HELP_FILES= ${STD_HELP_FILES_1}  ${STD_HELP_FILES_2} \
+		${STD_HELP_FILES_4}  ${STD_HELP_FILES_6} \
+		${STD_HELP_FILES_8}  ${STD_HELP_FILES_10} \
 		${STD_HELP_FILES_12} ${STD_HELP_FILES_14} \
-		${STD_HELP_FILES_15}
+		${STD_HELP_FILES_15} ${STD_HELP_FILES_17}
 
 # These full files are those who are built by this Makefile
 #
 # Note that ${SPECIAL_HELP_7} is not included in this list
 # because of problems with its name.
 #
-BLT_HELP_FILES= ${BLT_HELP_FILES_3} ${BLT_HELP_FILES_5} \
-		${BLT_HELP_FILES_9} \
-		${BLT_HELP_FILES_10a} \
-		${BLT_HELP_FILES_11} ${BLT_HELP_FILES_13} \
-		${BLT_HELP_FILES_14}
+BLT_HELP_FILES= ${BLT_HELP_FILES_3}  ${BLT_HELP_FILES_5} \
+		${BLT_HELP_FILES_9}  ${BLT_HELP_FILES_11} \
+		${BLT_HELP_FILES_13} ${BLT_HELP_FILES_16}
 
 # The detailed list of help files to install
 #
@@ -382,7 +368,7 @@ errorcodes: ../errcode${EXT}
 	    ${TRUE}; \
 	fi
 
-usage: ../calc.usage
+calc: ../calc.usage
 	${RM} -f $@
 	${CP} ../calc.usage $@
 	${CHMOD} 0444 $@
@@ -424,18 +410,6 @@ new_custom: ../custom/HOW_TO_ADD
 copy: blkcpy
 	${RM} -f $@
 	${CP} blkcpy $@
-	${CHMOD} 0444 $@
-	-@if [ -z "${Q}" ]; then \
-	    echo ''; \
-	    echo '=-=-= skipping the ${CAT} of help/$@ =-=-='; \
-	    echo ''; \
-	else \
-	    ${TRUE}; \
-	fi
-
-man: help
-	${RM} -f $@
-	${CP} help $@
 	${CHMOD} 0444 $@
 	-@if [ -z "${Q}" ]; then \
 	    echo ''; \
