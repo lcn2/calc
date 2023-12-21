@@ -1,4 +1,4 @@
-The following are the changes from calc version 2.15.0.3 to 2.15.0.3:
+The following are the changes from calc version 2.15.0.3 to 2.15.0.4:
 
     Fixed bug that caused calc to fail to compile filepos2z() in file.c
     on little endian machines for the Debian apcalc package.  Thanks to
@@ -55,7 +55,8 @@ The following are the changes from calc version 2.15.0.3 to 2.15.0.3:
     Added calc.cat1 to .gitignore.  Using "sort -d -u" to sort .gitignore content.
 
     Avoiding use of modern [[ and ]] in Makefile for those legacy systems
-    whose shell do not support them.  *sigh*
+    whose shell do not support them.  Be sure to use ||'s between []'s
+    to avoid problems with legacy shell such as the Bourne shell. *sigh*
 
     Fixed the order of "help full" to match the order of topics listed
     buy the "help help" command.
