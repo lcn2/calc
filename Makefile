@@ -3774,7 +3774,7 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 		echo "removed old ${T}${CALC_INCDIR}/string.h"; \
 	    fi; \
 	done
-	-${Q} if [ -z "${MANDIR}" || ! -s calc.1 ]; then \
+	-${Q} if [ -z "${MANDIR}" ] || [ ! -s calc.1 ]; then \
 	    ${TRUE}; \
 	else \
 	    if ${CMP} -s calc.1 ${T}${MANDIR}/calc.${MANEXT}; then \
@@ -3788,7 +3788,7 @@ install: ${LIB_H_SRC} ${BUILD_H_SRC} calc.1 all custom/Makefile
 		echo "installed ${T}${MANDIR}/calc.${MANEXT}"; \
 	    fi; \
 	fi
-	-${Q} if [ -z "${CATDIR}" || ! -s calc.cat1 ]; then \
+	-${Q} if [ -z "${CATDIR}" ] || [ ! -s calc.cat1 ]; then \
 	    ${TRUE}; \
 	else \
 	    if ${CMP} -s calc.cat1 ${T}${CATDIR}/calc.${MANEXT}; then \
