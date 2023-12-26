@@ -3478,7 +3478,7 @@ clobber: clean
 	    ${RM} -rf .DS_Store; \
 	fi
 	${RM} -f func.show func.sort
-	${RM} -f outfile
+	${RM} -f outfile have_fpos.h
 	${V} echo '=-=-=-=-= ${MAKE_FILE} end of $@ rule =-=-=-=-='
 
 # install everything

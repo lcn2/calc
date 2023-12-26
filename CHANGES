@@ -1,3 +1,8 @@
+The following are the changes from calc version 2.15.0.4 to date:
+
+     make clobber now removes the legacy file: have_fpos.h
+
+
 The following are the changes from calc version 2.15.0.3 to 2.15.0.4:
 
     Fixed bug that caused calc to fail to compile filepos2z() in file.c
