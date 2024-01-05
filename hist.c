@@ -73,6 +73,8 @@
 #include "banned.h"	/* include after system header <> includes */
 
 
+#define MIN(a,b) (((a) <= (b)) ? (a) : (b))
+
 #if !defined(USE_READLINE)
 
 E_FUNC FILE *curstream(void);
@@ -1472,37 +1474,69 @@ quit_calc(int UNUSED(ch))
  * The readline/history libs do most of the dirty work for us, so we can
  * replace hist_init() and hist_term() with dummies when using readline.
  * For hist_getline() we have to add a newline that readline removed but
- * calc expects. For hist_saveline(), we have to undo this.  hist_getline()
+ * calc expects. For hist_saveline(), we have to undo this. hist_getline()
  * also has to cope with the different memory management schemes of calc and
- * readline.
+ * readline (pointer to target buffer passed to hist_getline() vs. returned
+ * malloc()ed buffer from readline()). While doing that, we also split
+ * multi-line strings potentially returned by readline() in case of
+ * bracketed paste mode even though its documentation promises to only return
+ * single lines. For details, see https://github.com/lcn2/calc/issues/138
+ * and https://lists.gnu.org/archive/html/bug-readline/2024-01/msg00000.html
  */
 
 
 size_t
 hist_getline(char *prompt, char *buf, size_t len)
 {
-	char *line;
+	STATIC char *rlbuf, *rlcur;
 
-	buf[0] = '\0';
-	line = readline(prompt);
-	if (!line) {
-		switch (conf->ctrl_d) {
-		case CTRL_D_NEVER_EOF:
-			return 0;
-		case CTRL_D_VIRGIN_EOF:
-		case CTRL_D_EMPTY_EOF:
-		default:
-			quit_calc(0);
-			not_reached();
+	if (!rlbuf) {
+		rlbuf = rlcur = readline(prompt);
+		if (!rlbuf) {
+			buf[0] = '\0';
+			switch (conf->ctrl_d) {
+			case CTRL_D_NEVER_EOF:
+				return 0;
+			case CTRL_D_VIRGIN_EOF:
+			case CTRL_D_EMPTY_EOF:
+			default:
+				quit_calc(0);
+				not_reached();
+			}
 		}
 	}
-	strlcpy(buf, line, len);
-	buf[len - 2] = '\0';
-	len = strlen(buf);
-	buf[len] = '\n';
-	buf[len + 1] = '\0';
-	free(line);
-	return len + 1;
+
+	/* eol: pointer to trailing newline (if there is one) or \0 */
+	char *eol = strchr(rlcur, '\n');
+	if (!eol) {
+		eol = rlcur + strlen(rlcur);
+	}
+	/* len: length of line in target buffer including (possibly added)
+	 * newline, truncated if buffer is too small. Note that we reduce
+	 * the available buffer size by 1 so that we can safely add the
+	 * newline below.
+	 */
+	len = MIN(len - 1, (size_t)(eol - rlcur + 1));
+	strlcpy(buf, rlcur, len);
+	/* make sure we have a newline and NUL */
+	buf[len - 1] = '\n';
+	buf[len] = '\0';
+
+	/* skip over newline in readline buffer */
+	if (*eol) {
+		eol++;
+	}
+	/* prepare for next invocation: point to next line or free readline
+	 * buffer if we've reached EOL
+	 */
+	if (*eol) {
+		rlcur = eol;
+	} else {
+		free(rlbuf);
+		rlbuf = rlcur = NULL;
+	}
+
+	return len;
 }
 
 
