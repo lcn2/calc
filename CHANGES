@@ -1,6 +1,19 @@
 The following are the changes from calc version 2.15.0.4 to date:
 
-     make clobber now removes the legacy file: have_fpos.h
+     make clobber now removes the legacy files: have_fpos.h, help/man,
+     and help/usage.  The latter 2 are now managed as help aliases
+     in help.c.
+
+     make install now removes the legacy files: ${HELPDIR}/man
+     and ${HELPDIR}/usage.
+
+     Fixed a problem where, when calc was linked with and uses GNU
+     readline then for any multi-line copy-and-paste, only the first
+     line is executed.  Thanks to GitHub user @malfisya for reporting
+     this problem, and thanks to GitHub user @gromit1811 for doing
+     the research needed to overcome deficiencies in the GNU readline
+     documentation, and for supplying the work-a-round to allow
+     multi-line copy-and-paste to work as expected!
 
 
 The following are the changes from calc version 2.15.0.3 to 2.15.0.4:

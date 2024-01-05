@@ -675,7 +675,7 @@ clean:
 	${RM} -f COPYING COPYING-LGPL questions
 
 clobber: clean
-	${RM} -f ${BLT_HELP_FILES} full .all calc
+	${RM} -f ${BLT_HELP_FILES} full .all calc man usage
 	${RM} -f ${SINGULAR_FILES} ${DETAIL_CLONE}
 	-${Q} if [ -e .DS_Store ]; then \
 	    echo ${RM} -rf .DS_Store; \
@@ -742,6 +742,14 @@ install: all
 	-${Q} if [ -f "${T}${HELPDIR}/md5" ]; then \
 	    ${RM} -f ${T}${HELPDIR}/md5; \
 	    echo "removed old ${T}${HELPDIR}/md5"; \
+	fi;
+	-${Q} if [ -f "${T}${HELPDIR}/man" ]; then \
+	    ${RM} -f ${T}${HELPDIR}/man; \
+	    echo "removed old ${T}${HELPDIR}/man"; \
+	fi;
+	-${Q} if [ -f "${T}${HELPDIR}/usage" ]; then \
+	    ${RM} -f ${T}${HELPDIR}/usage; \
+	    echo "removed old ${T}${HELPDIR}/usage"; \
 	fi;
 
 # Try to remove everything that was installed
