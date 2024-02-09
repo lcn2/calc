@@ -1,3 +1,9 @@
+The following are the changes from calc version 2.15.0.5 to 2.15.0.6:
+
+     Thanks to GitHub user @ashamedbit, a long standing memory leak in
+     zrandom.c has been fixed.
+
+
 The following are the changes from calc version 2.15.0.4 to 2.15.0.5:
 
      make clobber now removes the legacy files: have_fpos.h, help/man,
