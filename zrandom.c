@@ -2679,6 +2679,9 @@ zsetrandom(CONST RANDOM *state)
 	 */
 	if (state != NULL) {
 		p_blum = randomcopy(state);
+		if (blum_initialized == true) {
+			randomfree(&blum);
+		}
 		blum = *p_blum;
 		free(p_blum);
 	}
