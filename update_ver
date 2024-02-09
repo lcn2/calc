@@ -169,6 +169,7 @@ for i in $MK_SET1; do
 	echo "$i: $VER_STRING"
     fi
 done
+echo
 if [[ -n $VER_ERR ]]; then
     echo "$0: FATAL: error in finding calc major version string"
     echo "$0: FATAL: exit 10"
@@ -177,15 +178,36 @@ fi
 
 # print other useful calc strings
 #
+export VER_CALC_OUTPUT=$(./ver_calc)
+echo 'Begin text strings used to produce this release:'
+echo 'vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv'
 echo
-echo "calc $(./ver_calc) release"
 echo
-echo 'calc-*'$(./ver_calc)'*'
 echo
-echo "Release v$(./ver_calc)"
+echo "$VER_CALC_OUTPUT"
+echo
+echo "v$VER_CALC_OUTPUT"
+echo
+echo "Release v$VER_CALC_OUTPUT"
+echo
+echo "calc $VER_CALC_OUTPUT release"
+echo
+echo 'For use with sourceforge.net:'
+echo
+echo 'cd /home/pfs/project/calc/calc'
+echo "mkdir $VER_CALC_OUTPUT"
+echo "cd $VER_CALC_OUTPUT"
+echo 'mput calc-*'"$VER_CALC_OUTPUT"'*'
+echo 'put /home/chongo/tmp/README.txt'
+echo 'ls'
+echo
+echo
+echo
+echo '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+echo 'End text strings used to produce this release:'
+echo
 
 # All Done!!! -- Jessica Noll, Age 2
 #
-echo
 echo "VERSION in Makefile.config is up to date"
 exit 0
