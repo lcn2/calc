@@ -1512,7 +1512,7 @@ the following GitHub repo:
 https://github.com/lcn2/calc
 .in -0.5i
 .sp
-The very latest calc souece is found at the top master branch.
+The very latest calc source is found at the top master branch.
 
 .PP
 
