@@ -13,7 +13,7 @@ following topics:
     config		configuration parameters
     custom		information about the custom builtin interface
     define		how to define functions
-    environment		how environment variables effect calc
+    environment		how environment variables affect calc
     errorcodes		calc generated error codes
     expression		expression sequences
     file		using files
