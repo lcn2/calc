@@ -1953,7 +1953,7 @@ qispowerof2(NUMBER *q, NUMBER **qlog2)
 			 * Set *qlog2 to base 2 logarithm of q, which will be a negative value,
 			 * and return true.
 			 */
-			*qlog2 = utoq(log2);
+			**qlog2 = *utoq(log2);
 			(*qlog2)->num.sign = !(*qlog2)->num.sign;		/* set *qlog2 to -log2 */
 			return true;
 		}
