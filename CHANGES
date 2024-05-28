@@ -1,3 +1,10 @@
+The following are the changes from calc version 2.15.0.6 to 2.15.0.7:
+
+    Thanks to GitHub user @bambooleafz a critical bug (GitHub issue
+    #148 - https://github.com/lcn2/calc/issues/148) they identified
+    was fixed.
+
+
 The following are the changes from calc version 2.15.0.5 to 2.15.0.6:
 
      Thanks to GitHub user @ashamedbit, a long standing memory leak in
