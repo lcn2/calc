@@ -3030,6 +3030,24 @@ define test_2600()
 	    strcat(str(tnum++),
 		   ': round(log(1.2+1.2i,1e-10),10) == ',
 		   '0.2296962439+0.3410940885i'));
+	vrfy(log2(0.5) == -1,
+			    strcat(str(tnum++), ': log2(0.5) == -1'));
+	vrfy(log2(0.5) == -1,
+			    strcat(str(tnum++), ': log2(0.5) == -1'));
+	vrfy(log2(0.5) == log2(0.5),
+			    strcat(str(tnum++), ': log2(0.5) == log2(0.5)'));
+	vrfy(0^0 == 1,
+			    strcat(str(tnum++), ': 0^0 == 1'));
+	vrfy(1^0 == 1,
+			    strcat(str(tnum++), ': 1^0 == 1'));
+	vrfy(1^1 == 1,
+			    strcat(str(tnum++), ': 1^1 == 1'));
+	vrfy(2^0 == 1,
+			    strcat(str(tnum++), ': 2^0 == 1'));
+	vrfy(log2(1) == 0,
+			    strcat(str(tnum++), ': log2(1) == 0'));
+	vrfy(log2(1.0) == 0,
+			    strcat(str(tnum++), ': log2(1.0) == 0'));
 	vrfy(log2(2) == 1,
 			    strcat(str(tnum++), ': log2(2) == 1'));
 	vrfy(log2(4) == 2,
