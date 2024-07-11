@@ -814,21 +814,27 @@ u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
 		el = el->e_next,
 		s++
 	) {
-		if (		el		->e_value.v_type != V_LIST	) {	free(pollfds);
-															math_error("%s: argument %d (%s) element %d must be of type list (%s given)",
-																		custname, 1, i_name, s, value_type2str(el->e_value)); }
+		if (		el		->e_value.v_type != V_LIST	) {
+			free(pollfds);
+			math_error("%s: argument %d (%s) element %d must be of type list (%s given)",
+						custname, 1, i_name, s, value_type2str(el->e_value));
+		}
 		
 		LIST* el_list = el->e_value.v_list;
 		LISTELEM* el_el;
 		
 		el_el = el_list->l_first;
 		
-		if (		el_el	->e_value.v_type != V_NUM	) {	free(pollfds);
-															math_error("%s: argument %d (%s) element %d element %d must be of type number (%s given)",
-																		custname, 1, i_name, s, 1, value_type2str(el_el->e_value)); }
-		if (!qisint(el_el	->e_value.v_num)			) {	free(pollfds);
-															math_error("%s: argument %d (%s) element %d element %d must be integer (%s given)",
-																		custname, 1, i_name, s, 1, value_type2str(el_el->e_value)); }
+		if (		el_el	->e_value.v_type != V_NUM	) {
+			free(pollfds);
+			math_error("%s: argument %d (%s) element %d element %d must be of type number (%s given)",
+						custname, 1, i_name, s, 1, value_type2str(el_el->e_value));
+		}
+		if (!qisint(el_el	->e_value.v_num)			) {
+			free(pollfds);
+			math_error("%s: argument %d (%s) element %d element %d must be integer (%s given)",
+						custname, 1, i_name, s, 1, value_type2str(el_el->e_value));
+		}
 		pollfds[s].fd = qtoi(el_el->e_value.v_num);
 		
 		pollfds[s].events	= 0;
@@ -841,25 +847,39 @@ u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
 			el_el = el_el->e_next,
 			el_el_s++
 		) {
-			if (	el_el	->e_value.v_type != V_STR	) {	free(pollfds);
-															math_error("%s: argument %d (%s) element %d element %d must be of type string (%s given)",
-																		custname, 1, i_name, s, el_el_s, value_type2str(el_el->e_value)); }
+			if (	el_el	->e_value.v_type != V_STR	) {
+				free(pollfds);
+				math_error("%s: argument %d (%s) element %d element %d must be of type string (%s given)",
+							custname, 1, i_name, s, el_el_s, value_type2str(el_el->e_value));
+			}
 			
 			char* el_el_str = el_el->e_value.v_str->s_str;
 			if (FALSE); // man poll|gawk 'match($0,"^\\s*POLL([A-Z]+)",m){print(tolower(m[1]))}'
-			else if (!strcmp(el_el_str, "err"		)) pollfds[s].events |= POLLERR;
-			else if (!strcmp(el_el_str, "hup"		)) pollfds[s].events |= POLLHUP;
-			else if (!strcmp(el_el_str, "in"		)) pollfds[s].events |= POLLIN;
-			else if (!strcmp(el_el_str, "nval"		)) pollfds[s].events |= POLLNVAL; //cspell:ignore nval
-			else if (!strcmp(el_el_str, "out"		)) pollfds[s].events |= POLLOUT;
-			else if (!strcmp(el_el_str, "pri"		)) pollfds[s].events |= POLLPRI;
-			else if (!strcmp(el_el_str, "rdband"	)) pollfds[s].events |= POLLRDBAND; //cspell:ignore rdband
-			else if (!strcmp(el_el_str, "rdnorm"	)) pollfds[s].events |= POLLRDNORM; //cspell:ignore rdnorm
-			else if (!strcmp(el_el_str, "wrband"	)) pollfds[s].events |= POLLWRBAND; //cspell:ignore wrband
-			else if (!strcmp(el_el_str, "wrnorm"	)) pollfds[s].events |= POLLWRNORM; //cspell:ignore wrnorm
-			else										  {	free(pollfds);
-															math_error("%s: argument %d (%s) element %d element %d must be a string containing one of the event names from POSIX poll.h or the manual for poll, lowercase without poll prefix (%s given)",
-																		custname, 1, i_name, s, el_el_s, el_el->e_value.v_str->s_str); }
+			else if (!strcmp(el_el_str, "err"))
+				pollfds[s].events |= POLLERR;
+			else if (!strcmp(el_el_str, "hup"))
+				pollfds[s].events |= POLLHUP;
+			else if (!strcmp(el_el_str, "in"))
+				pollfds[s].events |= POLLIN;
+			else if (!strcmp(el_el_str, "nval"))
+				pollfds[s].events |= POLLNVAL; //cspell:ignore nval
+			else if (!strcmp(el_el_str, "out"))
+				pollfds[s].events |= POLLOUT;
+			else if (!strcmp(el_el_str, "pri"))
+				pollfds[s].events |= POLLPRI;
+			else if (!strcmp(el_el_str, "rdband"))
+				pollfds[s].events |= POLLRDBAND; //cspell:ignore rdband
+			else if (!strcmp(el_el_str, "rdnorm"))
+				pollfds[s].events |= POLLRDNORM; //cspell:ignore rdnorm
+			else if (!strcmp(el_el_str, "wrband"))
+				pollfds[s].events |= POLLWRBAND; //cspell:ignore wrband
+			else if (!strcmp(el_el_str, "wrnorm"))
+				pollfds[s].events |= POLLWRNORM; //cspell:ignore wrnorm
+			else {
+				free(pollfds);
+				math_error("%s: argument %d (%s) element %d element %d must be a string containing one of the event names from POSIX poll.h or the manual for poll, lowercase without poll prefix (%s given)",
+							custname, 1, i_name, s, el_el_s, el_el->e_value.v_str->s_str);
+			}
 		}
 		
 		pollfds[s].revents	= 0;
@@ -874,16 +894,26 @@ u_pfe_poll(char *UNUSED(name), int count, VALUE **vals)
 	for (s = 0; s < il->l_count; s++) {
 		VALUE* o = alloc_assoc(assocalloc(0));
 		
-		if ((pollfds[s].revents & POLLERR	) == POLLERR	) associndex_str_int(o->v_assoc, makenewstring("err"	), POLLERR		);
-		if ((pollfds[s].revents & POLLHUP	) == POLLHUP	) associndex_str_int(o->v_assoc, makenewstring("hup"	), POLLHUP		);
-		if ((pollfds[s].revents & POLLIN	) == POLLIN		) associndex_str_int(o->v_assoc, makenewstring("in"		), POLLIN		);
-		if ((pollfds[s].revents & POLLNVAL	) == POLLNVAL	) associndex_str_int(o->v_assoc, makenewstring("nval"	), POLLNVAL		);
-		if ((pollfds[s].revents & POLLOUT	) == POLLOUT	) associndex_str_int(o->v_assoc, makenewstring("out"	), POLLOUT		);
-		if ((pollfds[s].revents & POLLPRI	) == POLLPRI	) associndex_str_int(o->v_assoc, makenewstring("pri"	), POLLPRI		);
-		if ((pollfds[s].revents & POLLRDBAND) == POLLRDBAND	) associndex_str_int(o->v_assoc, makenewstring("rdband"	), POLLRDBAND	);
-		if ((pollfds[s].revents & POLLRDNORM) == POLLRDNORM	) associndex_str_int(o->v_assoc, makenewstring("rdnorm"	), POLLRDNORM	);
-		if ((pollfds[s].revents & POLLWRBAND) == POLLWRBAND	) associndex_str_int(o->v_assoc, makenewstring("wrband"	), POLLWRBAND	);
-		if ((pollfds[s].revents & POLLWRNORM) == POLLWRNORM	) associndex_str_int(o->v_assoc, makenewstring("wrnorm"	), POLLWRNORM	);
+		if ((pollfds[s].revents & POLLERR	) == POLLERR	)
+			associndex_str_int(o->v_assoc, makenewstring("err"		), POLLERR		);
+		if ((pollfds[s].revents & POLLHUP	) == POLLHUP	)
+			associndex_str_int(o->v_assoc, makenewstring("hup"		), POLLHUP		);
+		if ((pollfds[s].revents & POLLIN	) == POLLIN		)
+			associndex_str_int(o->v_assoc, makenewstring("in"		), POLLIN		);
+		if ((pollfds[s].revents & POLLNVAL	) == POLLNVAL	)
+			associndex_str_int(o->v_assoc, makenewstring("nval"		), POLLNVAL		);
+		if ((pollfds[s].revents & POLLOUT	) == POLLOUT	)
+			associndex_str_int(o->v_assoc, makenewstring("out"		), POLLOUT		);
+		if ((pollfds[s].revents & POLLPRI	) == POLLPRI	)
+			associndex_str_int(o->v_assoc, makenewstring("pri"		), POLLPRI		);
+		if ((pollfds[s].revents & POLLRDBAND) == POLLRDBAND	)
+			associndex_str_int(o->v_assoc, makenewstring("rdband"	), POLLRDBAND	);
+		if ((pollfds[s].revents & POLLRDNORM) == POLLRDNORM	)
+			associndex_str_int(o->v_assoc, makenewstring("rdnorm"	), POLLRDNORM	);
+		if ((pollfds[s].revents & POLLWRBAND) == POLLWRBAND	)
+			associndex_str_int(o->v_assoc, makenewstring("wrband"	), POLLWRBAND	);
+		if ((pollfds[s].revents & POLLWRNORM) == POLLWRNORM	)
+			associndex_str_int(o->v_assoc, makenewstring("wrnorm"	), POLLWRNORM	);
 		
 		insertlistlast(ol, o);
 	}
@@ -1105,23 +1135,12 @@ u_pfe_pwrite(char *UNUSED(name), int count, VALUE **vals)
 #define pfe_pfe_SIZE_BUFFER	4096
 #define pfe_pfe_SIZE_INIT	4096
 
-	// next func is verbatim, apart from dprintf, strcat-fix->strlcat and spacing, from ~vike/∂/xcode/vmdbTx-objc/main.m //cspell:ignore strext
-	 				char		*	strext
-		(			char		**								subject
-		,			char		*			with
-		){		//	dprintf(2, "strext(s, w) wh/ |s| = %lu, |w| = %lu, |s| = “%s”, & w = “%s”\n", strlen(*subject), strlen(with), *subject, with)
-		;			size_t		n=	strlen(					  *subject)
-		+							strlen(	with)	;if (	( *subject
-			=		reallocf(								  *subject
-				,				n+1)						)	==	NULL
-			)											return		NULL
-//		;			dprintf(2, "strext(s, w) wh/ n+1 = %lu = (|s| = %lu) + (|w| = %lu) + 1, |s| = “%s”, & w = “%s”\n", n+1, strlen(*subject), strlen(with), *subject, with)
-		;							strlcat(				  *subject
-			,								with
-			,					n+1) // pretty useless use of strlcat but strncat and strcat are "poisoned" giving error attow (w/ -Wall I guess, I dunno), tho we just realloc'd acc2 strlen, what the heck
-		;												return*subject;}
-
-//#define u_pfe_pread_DEBUG(r, n) dprintf(2, "r = %d;will do strext("#n", "#n"b) wh/ |"#n"| = %lu, |"#n"b| = %lu, "#n" = “%s”, & "#n"b = “%s”\n", r, strlen(n), strlen(n##b), n, n##b)
+char* strext(char** subject, char* with) {
+	size_t n = strlen(*subject) + strlen(with);
+	if ((*subject = reallocf(*subject, n+1)) == NULL) return NULL;
+	strlcat(*subject, with, n+1);
+	return *subject;
+}
 
 /*
  * u_pfe_pread - read until eof, close and wait for exit status
@@ -1174,7 +1193,6 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
 		
 		if (FD_ISSET(out, &rcs)) {
 			r = read(out, &ob, pfe_pfe_SIZE_BUFFER);
-//			u_pfe_pread_DEBUG(r, o);
 			if (r < 0) math_error("%s: "__FILE__": %d: (out, %lu) read: %s", custname, __LINE__, strlen(o), strerror(errno));
 			if (r) {
 				ob[r] = '\0';
@@ -1187,7 +1205,6 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
 		}
 		if (FD_ISSET(err, &rcs)) {
 			r = read(err, &eb, pfe_pfe_SIZE_BUFFER);
-//			u_pfe_pread_DEBUG(r, e);
 			if (r < 0) math_error("%s: "__FILE__": %d: (err, %lu) read: %s", custname, __LINE__, strlen(e), strerror(errno));
 			if (r) {
 				eb[r] = '\0';
@@ -1208,18 +1225,16 @@ u_pfe_pread(char *UNUSED(name), int count, VALUE **vals)
 	
 	if (0 > w) math_error("%s: "__FILE__": %d: wait4: %s", custname, __LINE__, strerror(errno));
 	
-	NUMBER* r = itoq
-		(	(	! WIFEXITED		(stt)
-			?0:		WEXITSTATUS	(stt)	)
-		+	(	! WIFSTOPPED	(stt)
-			?0:128+	WSTOPSIG	(stt)	)
-		+	(	! WIFSIGNALED	(stt)
-			?0:128+	WTERMSIG	(stt)	));
+	NUMBER* r = itoq(
+		(!WIFEXITED(stt) ? 0 : WEXITSTATUS(stt)) +
+		(!WIFSTOPPED(stt) ? 0 : 128 + WSTOPSIG(stt)) +
+		(!WIFSIGNALED(stt) ? 0 : 128 + WTERMSIG(stt))
+	);
 
 	LIST* list = listalloc();
-	insertlistlast(list, alloc_num(				r	));
-	insertlistlast(list, alloc_str(makestring(	o)	));
-	insertlistlast(list, alloc_str(makestring(	e)	));
+	insertlistlast(list, alloc_num(r));
+	insertlistlast(list, alloc_str(makestring(o)));
+	insertlistlast(list, alloc_str(makestring(e)));
 	
 	VALUE result;
 	result.v_subtype	= 0;
