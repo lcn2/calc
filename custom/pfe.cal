@@ -1,0 +1,199 @@
+/*
+ * pfe - pipe/fork/exec
+ *
+ * Copyright (c) 2024 Viktor Bergquist
+ *
+ * Calc is open software; you can redistribute it and/or modify it under
+ * the terms of the version 2.1 of the GNU Lesser General Public License
+ * as published by the Free Software Foundation.
+ *
+ * Calc is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU Lesser General
+ * Public License for more details.
+ *
+ * A copy of version 2.1 of the GNU Lesser General Public License is
+ * distributed with calc under the filename COPYING-LGPL.  You should have
+ * received a copy with calc; if not, write to Free Software Foundation, Inc.
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+/*
+ * This file is part of the custom sample calc files.
+ *
+ * NOTE: You must use a calc that was compiled with ALLOW_CUSTOM= -DCUSTOM
+ *	 and run with a -C arg.
+ */
+if (config("compile_custom") == 0) {
+	quit "calc compiled without -DCUSTOM";
+} else if (config("allow_custom") == 0) {
+	quit "calc was run without the -C command line option";
+}
+
+
+define pfe_base_test()
+{
+	local	file;
+	local		fork	=	custom("fork");
+	local		fds		=	custom("pipe");
+	if(			fork){
+		if(					custom("write",		fds[1], "test"	)!=4) quit			"error in write";
+		if(					custom("close",		fds[1]			)	) quit			"error in close";
+		local	rd		=	custom("read",		fds[0]				);
+		local	status	=	assoc
+			()			;	custom("wait4",		&status				);
+		if(		rd		!= "test"									){
+			file		=	fopen("/dev/stderr","w");
+			fprintf(file,"mismatch of read: %s\n", rd);
+			quit;
+		}
+		if(		status
+		  ["exitstatus"]!= 0										){
+			file		=	fopen("/dev/stderr","w");
+			fprintf(file,"mismatch of status: %d\n", status);
+			quit;
+		}
+	} else {
+		if(					custom("close",		fds[1])				) quit			"error in close";
+		local	args	=	list("sh", "-c", "{ read||:;}&&printf %s $REPLY");
+		if(			0	>	custom("dup2",		fds[0],0		)	) quit			"error in dup2";
+		if(				!	custom("execvp",	args[0], args	)	) quit			"error in execvp";
+	}
+}
+
+	;					define		pipe	(					)			=	custom("pipe"						)
+	;					define		fork	(					)			=	custom("fork"						)
+	;					define		close	(fd					)			=	custom("close"	,fd					)
+	;					define		fds		(rdl,wtl,exl,timeout)			=	custom("select"	,rdl,wtl,exl,timeout)
+	;					define		poll	( in,out	,timeout)			=	custom("poll"	, in,out	,timeout)
+	;					define		dup		(src				)			=	custom("dup"	,src				)
+	;					define		dup2	(src,tgt			)			=	custom("dup2"	,src,tgt			)
+	;					define		execvp	(path,args			)			=	custom("execvp"	,path,args			)
+	;					define		wt		(fd,str				)			=	custom("write"	,fd,str				)
+	;					define		rd		(fd					)			=	custom("read"	,fd					)
+	;					define		wait4	(pid,stt,opt,usg	)			=	custom("wait4"	,pid,stt,opt,usg	)
+	
+	;					define		pfe		(in,out,err,args	)			=	custom("pfe"	,in,out,err,args	)
+	;					define		pwrite	(fd,str				)			=	custom("pwrite"	,fd,str				)
+	;					define		pread	(pid,out,err		)			=	custom("pread"	,pid,out,err		)
+	
+	;					define		pfe_test(){
+		;				local	r	p				i	o	e
+		;if(						p	=	pfe(&	i,&	o,&	e,list("sh","-c","read -rd ''||e=$?;printf %s \"$REPLY\""))){
+			;if(							pwrite(	i,"test\n")	!=		5	) quit "bad write"
+			;					r		=	pread(p,	o,	e)
+			;if(				r[0]							!=		0	) quit "bad exit"
+			;if(				r[1]							!="test\n"	) quit "bad read"
+			;}
+		;}
+	
+	;					define		pfe_cal	(in,out,err,args	){
+		;				local							di					=	pipe() ##// dn in
+		;				local							uo					=	pipe() ##// up out
+		;				local							ue					=	pipe() ##// up err
+		
+		;										*in	=	di[	1	]
+		;										*out=	uo[	0	]
+		;										*err=	ue[	0	]
+		
+		;				local	e						pid
+		;if(											pid					=	fork()){
+			;if(						close	(		di[	0	]	)	) quit "pfe: error in parent closing reading child input"
+			;if(						close	(		ue[	1	]	)	) quit "pfe: error in parent closing writing child output"
+			;if(						close	(		uo[	1	]	)	) quit "pfe: error in parent closing writing child error"
+			
+			;			return							pid;}
+		 else{
+		 	;if(						close	(		uo[	0	]	)	) quit "pfe: error in child closing reading output"
+			;if(						close	(		ue[	0	]	)	) quit "pfe: error in child closing reading error"
+			;if(						close	(		di[	1	]	)	) quit "pfe: error in child closing writing input"
+			
+			;if(						dup2	(		di[	0	],0)!=0	) quit "pfe: mismatch in child duplication of input"
+			;if(						dup2	(		uo[	1	],1)!=1	) quit "pfe: mismatch in child duplication of output"
+			;if(						dup2	(		ue[	1	],2)!=2	) quit "pfe: mismatch in child duplication of error"
+			
+			;					e	=	execvp	(		args[0]
+				,										args		);}
+		;}
+	;					define			pwrite_cal(		in,	str				){
+		;				local	w	=	wt		(		in,	str			)
+		;if(					w	!=	strlen	(			str		)	) quit "pwrite: mismatch"
+		;if(							close	(		in			)	) quit "pwrite: error closing"
+		;return					w;}
+	;					define			pread_cal(	pid,out
+		,												err					){
+		;				local	NULL=	null	()
+		
+		;				local	rbl	=	list	(		out
+			,											err				) ##// read base list
+		
+		;				local	oud	= "" ##//out data
+		;				local	erd	= "" ##//err data
+		
+		;while(			local	rbz	=	size
+				(				rbl									)	){
+			;			local	rcl
+			=					rbl ##// read check list
+			;			local	exl	=	list	(		out
+				,										err			)
+			
+			;			local			fdc
+			=							fds
+				(			&	rcl									)
+			
+			;if(0					<	fdc							){
+				;		local	rcz	=	size
+					(			rcl								)	;
+				
+				;for(	local		rcs	=	0
+					;			rcz>rcs
+					;				rcs++){
+					
+					;	local	rcd	=	rd
+						(		rcl[rcs])
+					;if(		rcl[rcs]
+						==								out
+						)if(	rcd!=NULL
+							)	oud=strcat
+							  (	oud
+							  ,	rcd)
+						 else	delete
+							  (	rbl
+							  ,	search
+							   (rbl,					out))	;
+					;if(		rcl[rcs]
+						==								err
+						)if(	rcd!=NULL
+							)	erd=strcat
+							  (	erd
+							  ,	rcd)
+						 else	delete
+							  (	rbl
+							  ,	search
+							   (rbl,					err))	;
+					;}
+				;}
+			;}
+		;				local						stt = assoc()
+		;						pid	=	wait4(		pid
+			,&										stt)
+		;return							list
+			(	(!									stt["exited"	]
+				?0:									stt["exitstatus"]	)
+			+	(!									stt["stopped"	]
+				?0:								128+stt["stopsig"	]	)
+			+	(!									stt["signaled"	]
+				?0:								128+stt["termsig"	]	)
+			,					oud
+			,					erd											);}
+	
+	;					define		pfe_cal_test(){
+		;				local	r	p					i	o	e
+		;if(						p	=	pfe_cal(&	i,&	o,&	e,list("sh","-c","read -rd ''||e=$?;printf %s \"$REPLY\""))){
+			;if(							pwrite_cal(	i,"test\n")	!=		5	) quit "bad write"
+			;					r		=	pread_cal(p,	o,	e)
+			;if(				r[0]								!=		0	) quit "bad exit"
+			;if(				r[1]								!="test\n"	) quit "bad read"
+			;}
+		;}
+	

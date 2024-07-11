@@ -39,6 +39,7 @@ cal/test082.cal
 charbit.h
 chatbit
 chk_c
+.cache/clangd
 conf.h
 const_tmp
 cscript/4dsphere
@@ -53,6 +54,8 @@ cscript/simple
 cscript/square
 custom/.all
 custom/libcustcalc*
+custom/.gitignore
+compile_commands.json
 debug.out
 .dynamic
 endian

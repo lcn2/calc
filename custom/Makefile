@@ -85,13 +85,13 @@ include ${TARGET_MKF}
 #
 # Put your custom calc resource files here.
 #
-CUSTOM_CALC_FILES= argv.cal halflen.cal pzasusb8.cal pmodm127.cal register.cal
+CUSTOM_CALC_FILES= argv.cal halflen.cal pzasusb8.cal pmodm127.cal register.cal pfe.cal
 
 # The custom help files to install
 #
 # Put your custom help files here.
 #
-CUSTOM_HELP= argv devnull help sysinfo pzasusb8 pmodm127 register
+CUSTOM_HELP= argv devnull help sysinfo pzasusb8 pmodm127 register pfe
 
 # Any .h files that are needed by programs that use
 # libcustcalc${LIB_EXT_VERSION}
@@ -110,7 +110,7 @@ CUSTOM_H_SRC=
 # Put your custom .c files here.
 #
 CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c c_pzasusb8.c \
-	c_pmodm127.c c_register.c
+	c_pmodm127.c c_register.c u_pfe.c
 
 # Any .o files that are needed by program that use
 # libcustcalc${LIB_EXT_VERSION}.
@@ -122,7 +122,7 @@ CUSTOM_SRC= c_argv.c c_devnull.c c_help.c c_sysinfo.c c_pzasusb8.c \
 # Put your custom .o files here.
 #
 CUSTOM_OBJ= c_argv.o c_devnull.o c_help.o c_sysinfo.o c_pzasusb8.o \
-	c_pmodm127.o c_register.o
+	c_pmodm127.o c_register.o u_pfe.o
 
 
 ##########################################################################

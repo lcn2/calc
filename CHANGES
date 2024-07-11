@@ -1,3 +1,7 @@
+The following are the changes from calc version 2.15.0.7 to 2.15.0.8:
+
+    Adding support for pipe/fork/exec via custom functions.
+
 The following are the changes from calc version 2.15.0.6 to 2.15.0.7:
 
     Thanks to GitHub user @bambooleafz a critical bug (GitHub issue
