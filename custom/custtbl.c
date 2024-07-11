@@ -79,6 +79,33 @@ E_FUNC VALUE c_pzasusb8(char*, int, VALUE**);
 E_FUNC VALUE c_pmodm127(char*, int, VALUE**);
 E_FUNC VALUE c_register(char*, int, VALUE**);
 
+#define U_FUNC(name) E_FUNC VALUE name(char*, int, VALUE**);
+
+// pipe/fork/exec
+U_FUNC(u_pfe_fork)
+U_FUNC(u_pfe_pipe)
+U_FUNC(u_pfe_close)
+U_FUNC(u_pfe_execvp)
+U_FUNC(u_pfe_dup)
+U_FUNC(u_pfe_dup2)
+U_FUNC(u_pfe_write)
+U_FUNC(u_pfe_read)
+U_FUNC(u_pfe_select)
+U_FUNC(u_pfe_poll)
+
+U_FUNC(u_pfe_wait4)
+
+U_FUNC(u_pfe_pfe)
+U_FUNC(u_pfe_pwrite)
+U_FUNC(u_pfe_pread)
+
+// vike's various additions
+U_FUNC(u_vadd_basename)
+U_FUNC(u_vadd_dirname)
+U_FUNC(u_vadd_getcwd)
+U_FUNC(u_vadd_getpid)
+U_FUNC(u_vadd_getppid)
+U_FUNC(u_vadd_inputname) //cspell:ignore inputname
 
 #endif /* CUSTOM */
 
@@ -135,6 +162,50 @@ CONST struct custom cust[] = {
 
 	{ "register", "get or set customer registers",
 	 1, 2, c_register },
+
+	{ "fork", "create process",
+	 0, 0, u_pfe_fork },
+	{ "pipe", "create descriptor pair for interprocess communication",
+	 0, 0, u_pfe_pipe },
+	{ "dup", "duplicate a file descriptor",
+	 1, 1, u_pfe_dup },
+	{ "dup2", "duplicate a file descriptor",
+	 2, 2, u_pfe_dup2 },
+	{ "close", "remove a file descriptor",
+	 1, 1, u_pfe_close },
+	{ "execvp", "execute a file",
+	 2, 2, u_pfe_execvp },
+	{ "write", "write output",
+	 2, 2, u_pfe_write },
+	{ "read", "read input",
+	 1, 2, u_pfe_read },
+	{ "select", "examine file descriptors",
+	 3, 4, u_pfe_select },
+	{ "poll", "synchronous I/O multiplexing",
+	 2, 3, u_pfe_poll },
+	
+	{ "wait4", "wait for process",
+	 1, 4, u_pfe_wait4 },
+	
+	{ "pfe", "pipe/fork/exec",
+	 4, 4, u_pfe_pfe },
+	{ "pwrite", "write and close",
+	 2, 2, u_pfe_pwrite },
+	{ "pread", "read until eof, close and wait for exit status",
+	 3, 3, u_pfe_pread },
+	
+	{ "getpid", "get calling process identification",
+	 0, 0, u_vadd_getpid },
+	{ "getppid", "get parent process identification",
+	 0, 0, u_vadd_getppid },
+	{ "getcwd", "get working directory pathname",
+	 0, 0, u_vadd_getcwd },
+	{ "inputname", "get name of input",
+	 0, 0, u_vadd_inputname },
+	{ "basename", "extract the base portion of a pathname",
+	 1, 1, u_vadd_basename },
+	{ "dirname", "extract the directory part of a pathname",
+	 1, 1, u_vadd_dirname },
 
 
 #endif /* CUSTOM */

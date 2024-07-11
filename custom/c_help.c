@@ -88,7 +88,7 @@ c_help(char *UNUSED(name), int UNUSED(count), VALUE **vals)
 	/*
 	 * give the help
 	 */
-	customhelp((char *)vals[0]->v_str);
+	customhelp((char *)vals[0]->v_str->s_str);
 
 	/*
 	 * return NULL
