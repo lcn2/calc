@@ -1,8 +1,0 @@
-	;					null(			config("resource_debug"	,0))
-	;					define					inputname	(		) = custom("inputname"		)
-	;					define					dirname		(path	) = custom("dirname",path	)
-	;							p	=	strcat(dirname(inputname()),"/pfe+conf.cal"	)
-	;read $p
-	
-	;pfe_test()
-	

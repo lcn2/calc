@@ -56,6 +56,7 @@ custom/.all
 custom/libcustcalc*
 custom/.gitignore
 compile_commands.json
+compile_flags.txt
 debug.out
 .dynamic
 endian
@@ -187,4 +188,5 @@ unused_tmp
 ustat_tmp
 ver_calc
 vs_tmp
+.vscode
 win32/
