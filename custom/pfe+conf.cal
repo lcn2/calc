@@ -1,0 +1,11 @@
+	
+	;							_	=	config("resource_debug"	,0)
+##	;							_	=	config("trace"			,2)
+	;							_	=	config("tilde"			,0)
+	;							_	=	config("display"		,8)
+	
+	;					define			inputname	(		) = custom("inputname"		)
+	;					define			dirname		(path	) = custom("dirname",path	)
+	;							p	=	strcat(dirname(inputname()),"/pfe.cal"	)
+	;read $p
+	

@@ -1,0 +1,52 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "lldb launch",
+			"cwd": "${workspaceFolder}",
+			"program": "./calc",
+			"env": {
+				"DYLD_LIBRARY_PATH": ".",
+			},
+			"preRunCommands": [
+				"command script import .vscode/launch/_env.py .vscode/launch/env.py",
+			],
+			"args": ["-Cpf", "custom/pfe-launch.cal"],
+		},
+		{
+			"preLaunchTask": "compiledb make clobber all #DEBUG=… w/ macports readline",
+			"type": "lldb",
+			"request": "launch",
+			"name": "lldb launch + compiledb make clobber all #DEBUG=… w/ macports readline",
+			"cwd": "${workspaceFolder}",
+			"program": "./calc",
+			"env": {
+				"DYLD_LIBRARY_PATH": ".",
+			},
+			"preRunCommands": [
+				"command script import .vscode/launch/_env.py .vscode/launch/env.py",
+			],
+			"args": ["-Cpf", "custom/pfe-launch.cal"],
+		},
+		{
+			"preLaunchTask": "compiledb make clobber all #… w/ macports readline",
+			"type": "lldb",
+			"request": "launch",
+			"name": "lldb launch + compiledb make clobber all #… w/ macports readline",
+			"cwd": "${workspaceFolder}",
+			"program": "./calc",
+			"env": {
+				"DYLD_LIBRARY_PATH": ".",
+			},
+			"preRunCommands": [
+				"command script import .vscode/launch/_env.py .vscode/launch/env.py",
+			],
+			"args": ["-Cpf", "custom/pfe-launch.cal"],
+		},
+	]
+}

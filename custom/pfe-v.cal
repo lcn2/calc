@@ -1,0 +1,12 @@
+	;					null(			config("resource_debug"	,0));
+	;					define			inputname	(		) = custom("inputname"		)
+	;					define			dirname		(path	) = custom("dirname",path	)
+	;							p	=	strcat(dirname(inputname()),"/pfe+conf.cal"	)
+	;read $p
+	
+	##// executing personal file with `#!/usr/bin/env bash` in dirs under PATH; vbash cause-of vscode fails to retrieve env (for PATH)
+	;define vbhu(a1,a2,a3,a4,a5){local i,o,e,z,s,args=list("/Users/vike/shell/library/script/system/vbash","vbhu",a1,a2,a3,a4,a5);for(z=size(args),s=0;s<z;s++){local a=args[s];if(!isstr(args[s]))args[s]=strprintf("%d",args[s])};if(local child=pfe(&i,&o,&e,args)){print "i:":i, "o:":o, "e:":e;close(i);local r=pread(child,o,e);if(r[2]){print r[2]:;abort}else	return eval(	r[1])	}}
+	;define vbuh(a1,a2,a3,a4,a5){local i,o,e,z,s,args=list("/Users/vike/shell/library/script/system/vbash","vbuh",a1,a2,a3,a4,a5);for(z=size(args),s=0;s<z;s++){local a=args[s];if(!isstr(args[s]))args[s]=strprintf("%d",args[s])};if(local child=pfe(&i,&o,&e,args)){print "i:":i, "o:":o, "e:":e;close(i);local r=pread(child,o,e);if(r[2]){print r[2]:;abort}else	return			r[1]	}}
+	
+	;print vbuh(vbhu("10m")) ##// 10m expected
+	

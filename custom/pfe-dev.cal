@@ -1,0 +1,203 @@
+	##//cspell:ignore strprintf
+	
+	;							_	=	config("resource_debug"	,0)
+	;					define			inputname	(		) = custom("inputname"		)
+	;					define			dirname		(path	) = custom("dirname",path	)
+	;							p	=	strcat(dirname(inputname()),"/pfe+conf.cal"	)
+	;read $p
+	
+	;																NULL	=	null()
+	;																TRUE	=	1
+	;																FALSE	=	0
+	
+	;														err				=	2
+	;														out				=	1
+	;														in				=	0
+	
+	;													LEAKS				=	eval(getenv("leaks"			)||""	)
+	
+	;													WRITE				=	eval(getenv("write"			)||"1"	)
+	;													WAIT				=	eval(getenv("wait"			)||""	)
+	
+	;							v											=	eval(getenv("verbose"		)||""	)
+	
+	;													di					=	pipe() ##// dn in
+	;													uo					=	pipe() ##// up out
+	;													ue					=	pipe() ##// up err
+	
+	;if(												pid					=	fork()){
+		;						e	=	close	(		di[	in	]	)
+		;						e	=	close	(		ue[	out	]	)
+		;						e	=	close	(		uo[	out	]	)
+		/*
+		;						wtl	=	list	(		di[	out	]	)
+		;						s	=	fds		(null(),wtl)
+		;								print	"parent wtl bef. wt:":wtl
+		/**/##end
+		;						if(	v)	print	"parent writing to child"
+		;if(							WRITE
+			)					c	=	wt		(		di[	out	]	,"parent to child")
+		;						e	=	close	(		di[	out	]	)
+		/*
+		;						rcl	=	list	(		uo[	in	]
+			,											ue[	in	]	)
+		;						s	=	fds							\
+			(					rcl									)
+		;								print	"parent rcl aft. wt bef. sleep:":rcl
+		
+		;												s	=	 1
+		;								sleep	(		s)
+		
+		;						rcl	=	list	(		uo[	in	]
+			,											ue[	in	]	)
+		;						s	=	fds							\
+			(					rcl									)
+		;								print	"parent rcl bef. rd:":rcl
+		/**/##end
+		;						rbl	=	list	(		uo[	in	]
+			,											ue[	in	]		) ##// read base list
+		;												s	=	-1
+		;while(					rbz	=	size							\
+				(				rbl									)	){
+			/**/
+			;if(					v	&&				s	==	-1
+				)										s\
+				=										WAIT
+			;else if(									s){
+				;				if(	v)	printf(	"parent ------ sleep %d; read base size %d\n"
+					,									s
+					,			rbz								)
+				;						sleep	(		s		)	;}
+			/**/##end
+			;					rcl\
+			=					rbl ##// read check list
+			;					exl	=	list	(		uo[	in	]
+				,										ue[	in	]	)
+			;					if(	v)	print	"parent before select"
+				(!										WAIT
+				?""					:strprintf		( " waiting %f"
+					,									WAIT/2))
+			/**/
+			;							fdc\
+			=							fds\
+				(			&	rcl,!					WAIT
+				?				NULL:					WAIT/2)
+			/*##else
+			;							fdc\
+			=							fds\
+				(				rcl
+				,													NULL
+				,				exl,					WAIT)
+			/**/##end
+			;if(0					<	fdc							){
+				;				rcz	=	size						\
+					(			rcl								)	;
+				;				if(	v)	print	"parent select read size"\
+				:	 ":"		rcz									;
+				;for(			rcs	=	0
+					;			rcs
+					<			rcz
+					;			rcs++){
+					;			if(	v)	print	"parent select read "\
+					:			rcs								\
+					:":"										\
+					:			rcl								\
+						[		rcs]							;
+					;			rcd	=	rd						\
+						(		rcl
+							[	rcs])
+					;if(		rcl
+							[		rcs]
+						==								uo[	in	]
+						)if(	rcd!=NULL)			print	##"out:\n"
+							:	rcd:
+						 else{	delete							\
+							  (	rbl
+							  ,	search
+							   (rbl,					uo[	in	]))
+							;	if(	v)	print	"parent read eof - child out"
+							;}
+					;if(		rcl
+							[	rcs]
+						==								ue[	in	]
+						)if(	rcd!=NULL)			print	##"err:\n"
+							:	rcd:
+						 else{	delete							\
+							  (	rbl
+							  ,	search
+							   (rbl,					ue[	in	]))
+							;	if(	v)	print	"parent read eof - child err"
+							;}
+					;}
+				/*
+				;				exz	=	size						\
+					(			exl								)	;
+				;						print	"parent select exception size"\
+				:	 ":"		exz									;
+				;for(			exs	=	0
+					;			exs
+					<			exz
+					;			exs++){
+					;					print	"parent select exception "\
+					:			exs								\
+					:":"										\
+					:			exl								\
+					  [			exs]							;
+					;}
+				/**/##end
+				;}
+			;}
+		;											stt = assoc()
+		;						w	=	wait4(pid,&	stt)
+		;if(						v		&&		stt["exited"	]		){
+			;							print	"parent: child exited with status"
+			:" ":									stt["exitstatus"];}
+		;if(						v		&&		stt["signaled"	]		){
+			;							print	"parent: child signaled by "
+			:										stt["termsig"	]
+			:	(									stt["coredump"	]
+				?									" (with dump)"
+				:									" (no dump)"		)	;}
+		;if(						v		&&		stt["stopped"	]		){
+			;							print	"parent: child stopped by "
+			:										stt["stopsig"	]		;}
+		;print											"stt"				\
+		:	(!										stt["exited"	]
+			?0:										stt["exitstatus"]	)
+		+	(!										stt["stopped"	]
+			?0:									127+stt["stopsig"	]	)
+		+	(!										stt["signaled"	]
+			?0:									127+stt["termsig"	]	)
+		;}\
+	else{
+		;						e	=	close	(		uo[	in	]	)
+		;						e	=	close	(		ue[	in	]	)
+		;						e	=	close	(		di[	out	]	)
+		
+		;															scpt\
+		=															strprintf("read; echo \"outA:$REPLY\"; echo 'errA' >&2;%s echo 'outZ'; exec >&-; echo 'errZ' >&2; exec 2>&-;exit 2"
+			,										!	WAIT ? "" :	strprintf(" sleep %d;"
+				,						floor	(		WAIT*2.5)						))
+		;						if(	v)	print						scpt
+		
+		;												args			=			list\
+			(											"bash"
+			,											"-c")
+		;								append	(		args,		scpt)
+		
+		;						d	=	dup2	(		di[	in	]
+			,												in		)
+		;						d	=	dup2	(		uo[	out	]
+			,												out		)
+		;						d	=	dup2	(		ue[	out	]
+			,												err		)
+		
+		;						e	=	execvp	(		args[0]
+			,											args)
+		
+		;}
+	
+	;if(												LEAKS		){
+		;								print getpid()
+		;								rd		(			in		)
+		;}
