@@ -63,8 +63,8 @@
  */
 #define MAJOR_VER       2       /* level 1: major library version */
 #define MINOR_VER       15      /* level 2: minor library version */
-#define MAJOR_PATCH     0       /* level 3: major software version level */
-#define MINOR_PATCH     7       /* level 4: minor software version level */
+#define MAJOR_PATCH     1       /* level 3: major software version level */
+#define MINOR_PATCH     0       /* level 4: minor software version level */
 
 
 #endif /* !INCLUDE_VERSION_H*/
