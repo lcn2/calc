@@ -5,6 +5,8 @@ The following are the changes from calc version 2.15.0.7 to 2.15.1.0:
     The command `git diff -w` reports no changes.  There is no
     functionality change in calc: only ASCII tabs to ASCII spaces.
 
+    This version will form the basis for the calc v2 to calc v3 fork.
+
 
 The following are the changes from calc version 2.15.0.6 to 2.15.0.7:
 
