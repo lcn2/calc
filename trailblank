@@ -182,8 +182,8 @@ PICKY_PHASE_1=$(
               -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
               -name 'sample_many-static' -o -name 'sample_rand-static' -o \
               -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' -o \
-              -name '?' -o -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
-              -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
+              -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+              -name '.lldbinit' -o -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' \
            \) -prune -o -type f -print0 | \
     if [[ -x /usr/local/bin/picky ]]; then
         xargs -0 /usr/local/bin/picky -s -v -w132
@@ -216,6 +216,35 @@ if [[ -n $BACKUP_MAKEILES ]]; then
         echo "rm -f $file"
     done
     EXIT_CODE=7
+fi
+
+
+# look for ASCII tabs in non-Makefiles
+#
+TABS_FOUND=$(
+    find . \( -path './NOTES' -o -path './calc' -o -path './ver_calc' -o \
+              -name '*.o' -o -name '*.a' -o -name '*ptch*' -o -name 'core*' -o \
+              -name '*.orig' -o -name '*.rej' -o -name '*.bak' -o \
+              -name '*.ptch' -o -name 'core.*' -o \
+              -name '*.so*' -o -name 'calc-static' -o -name 'libcalc.*' -o \
+              -name 'sample_many' -o -name 'sample_rand' -o -name 'errcode' -o \
+              -path './help/funclist' -o -path './have_stdvs' -o \
+              -path './endian' -o -path './no_implicit' -o -name 'chk_c' -o \
+              -path './longbits' -o -name '.*.swp' -o -name 'conf.h' -o \
+              -name '.git' -o -path './custom/libcustcalc*' -o -path './libcustcalc*' -o \
+              -name 'sample_many-static' -o -name 'sample_rand-static' -o \
+              -name 'codeql-analysis.yml' -o -name tags -o -name '*.out' -o \
+              -iname '*foo*' -o -iname '*bar*' -o -iname '*baz*' -o \
+              -name '.lldbinit' -o -iname '*curds*' -o -iname '*whey*' -o -iname '*rmme*' -o \
+              -iname 'Makefile*' -o -name rpm.mk -o -name 'trailblank' \
+           \) -prune -o -type f -print0 | \
+    xargs -0 grep -l -E '	'
+)
+if [[ -n $TABS_FOUND ]]; then
+    echo
+    echo '# ASCII TABs found in non-Makefiles:'
+    echo "$TABS_FOUND"
+    EXIT_CODE=8
 fi
 
 # All Done!!! -- Jessica Noll, Age 2

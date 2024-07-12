@@ -4,8 +4,8 @@
 #
 *~
 *.BAK
-.DS_Store
 core*
+.DS_Store
 *.dSYM/
 *.exe
 *.[oa]
@@ -16,13 +16,11 @@ core*
 # files and directories created during the building of calc and other Makefile actions
 #
 # NOTE: While many of these might be part of a released calc tarball, they are
-#	not consider development source.  Some other file(s) and/or programs
-#	generate these files.
+#       not consider development source.  Some other file(s) and/or programs
+#       generate these files.
 #
 # We sort the list below via: sort -d -u
 #
-Makefile.our
-NOTES
 align32
 align32.h
 align32_tmp
@@ -42,13 +40,13 @@ chk_c
 conf.h
 const_tmp
 cscript/4dsphere
-cscript/README
 cscript/.all
 cscript/fproduct
 cscript/mersenne
 cscript/piforever
 cscript/plus
 cscript/powerterm
+cscript/README
 cscript/simple
 cscript/square
 custom/.all
@@ -128,8 +126,6 @@ have_urandom.h
 have_ustat
 have_ustat.h
 have_varvs
-help/COPYING
-help/COPYING-LGPL
 help/.all
 help/binding
 help/bindings
@@ -140,6 +136,8 @@ help/change
 help/changes
 help/contrib
 help/copy
+help/COPYING
+help/COPYING-LGPL
 help/cscript
 help/custom_cal
 help/errorcode
@@ -163,8 +161,10 @@ libcustcalc.*
 ll_tmp
 longbits
 longbits.h
+Makefile.our
 memmv_tmp
 newstr_tmp
+NOTES
 offscl_tmp
 outfile
 posscl_tmp
